@@ -9,6 +9,7 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { PerfilService } from "../../../autorizacao/perfil/perfil.service";
 import { DiarioService } from "../diario/diario.service";
+import { FilterOperator } from "nestjs-paginate";
 
 // ============================================================================
 
@@ -85,7 +86,11 @@ export class DiarioProfessorService {
         //
       ],
       defaultSortBy: [],
-      filterableColumns: {},
+      filterableColumns: {
+        "perfil.usuario.id": FilterOperator.EQ,
+        "perfil.id": FilterOperator.EQ,
+        "diario.id": FilterOperator.EQ,
+      },
     });
 
     // =========================================================
