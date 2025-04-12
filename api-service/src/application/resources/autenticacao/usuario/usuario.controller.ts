@@ -6,14 +6,27 @@ import { Tokens } from "@ladesa-ro/especificacao";
 import { Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post, Put, UploadedFile } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { UsuarioService } from "./usuario.service";
+import { get } from "lodash";
 
 @Controller("/usuarios")
 @ApiTags("usuarios")
 export class UsuarioController {
   constructor(private usuarioService: UsuarioService) {}
 
-  //
+                      //ADD by Uriel//
+  //===========================================================================
+  @Get("/:idUsuario/ensino")
+  @Operation(Tokens.UsuarioEnsinoFindById)
+  async usuarioEnsinoFindById(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param("idUsuario", ParseUUIDPipe) idUsuario: string,
+  ){
+    return this.usuarioService.usuarioEnsinoFindById(accessContext, idUsuario);
+  }
+  //===========================================================================
 
+  //
+ 
   @Get("/")
   @Operation(Tokens.UsuarioList)
   async usuarioFindAll(
@@ -117,6 +130,8 @@ export class UsuarioController {
       id: dto.params.id,
     });
   }
-
+  
   //
+
+
 }

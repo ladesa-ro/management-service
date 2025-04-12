@@ -26,6 +26,24 @@ export class UsuarioService {
     private imagemService: ImagemService,
     private arquivoService: ArquivoService,
   ) {}
+                  //ADD by Uriel//
+  // =========================================================
+  async usuarioEnsinoFindById(accessContext: AccessContext, idUsuario: string) {
+    const usuario = await this.usuarioFindById(accessContext, { id: idUsuario });
+    if (!usuario) {
+      throw new NotFoundException("Usuário nâo encontrado");
+    }
+
+    const ensinoData = await this.databaseContext.turmaRepository
+    .createQueryBuilder("turma")
+    .innerJoinAndSelect("turma.curso", "curso")
+    .innerJoinAndSelect("curso.disciplinas", "disciplina")
+    .innerJoinAndSelect("turma.diarios", "diario")
+    .innerJoinAndSelect("turma.usuarios", "usuario", "usuario.id = :idUsuario", { idUsuario })
+    .getMany();
+    return {usuario, ensino: ensinoData};
+  }
+  // =========================================================
 
   //
 
