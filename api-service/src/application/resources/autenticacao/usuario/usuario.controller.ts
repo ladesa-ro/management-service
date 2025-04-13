@@ -6,7 +6,7 @@ import { Tokens } from "@ladesa-ro/especificacao";
 import { Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post, Put, UploadedFile } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { UsuarioService } from "./usuario.service";
-import { get } from "lodash";
+import { any } from "valibot";
 
 @Controller("/usuarios")
 @ApiTags("usuarios")
@@ -15,14 +15,23 @@ export class UsuarioController {
 
                       //ADD by Uriel//
   //===========================================================================
+  @Get("/:idUsuario/diarios")
+  @Operation(Tokens.UsuarioDiariosFindById)
+  async findDiariosNyUsuarioId(
+    @Param("idUsuario", ParseUUIDPipe) idUsuario: string,
+  ): Promise<LadesaTypings.Diario[]> {
+    return this.usuarioService.findDiariosByUsuarioIdWithCursos(idUsuario);
+  }
+
+  //////// Foi praticamente um copiar e colar esses dois...
   @Get("/:idUsuario/ensino")
   @Operation(Tokens.UsuarioEnsinoFindById)
-  async usuarioEnsinoFindById(
-    @AccessContextHttp() accessContext: AccessContext,
+  async findEnsinoByUsuarioId(
     @Param("idUsuario", ParseUUIDPipe) idUsuario: string,
-  ){
-    return this.usuarioService.usuarioEnsinoFindById(accessContext, idUsuario);
+  ): Promise<any> {
+    return this.usuarioService.findDiariosByUsuarioIdWithCursos(idUsuario);
   }
+
   //===========================================================================
 
   //

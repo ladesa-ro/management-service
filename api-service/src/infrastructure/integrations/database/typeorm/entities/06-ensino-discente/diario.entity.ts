@@ -1,21 +1,29 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, type Relation } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, type Relation, OneToMany } from "typeorm";
 import { ImagemEntity } from "../00-00-base/imagem.entity";
 import { AmbienteEntity } from "../02-ambientes/ambiente.entity";
 import { DisciplinaEntity } from "../04-ensino-institucional/disciplina.entity";
 import { CalendarioLetivoEntity } from "../05-calendario";
 import { TurmaEntity } from "./turma.entity";
+import { DiarioProfessorEntity } from "./diario-professor.entity";
 
 @Entity("diario")
 export class DiarioEntity implements LadesaTypings.Diario {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
-
   //
 
   @Column({ name: "ativo", type: "boolean", nullable: false })
   ativo!: boolean;
   //
+
+                     //ADD by Uriel//
+  //===========================================================================
+  @OneToMany(() => DiarioProfessorEntity, (diarioProfessor) => diarioProfessor.diario)
+  diarioProfessores!: DiarioProfessorEntity[];
+  //===========================================================================
+
+
 
   @ManyToOne(() => CalendarioLetivoEntity)
   @JoinColumn({ name: "id_calendario_letivo_fk" })
@@ -25,6 +33,7 @@ export class DiarioEntity implements LadesaTypings.Diario {
   @JoinColumn({ name: "id_turma_fk" })
   turma!: Relation<TurmaEntity>;
 
+  
   @ManyToOne(() => DisciplinaEntity)
   @JoinColumn({ name: "id_disciplina_fk" })
   disciplina!: Relation<DisciplinaEntity>;

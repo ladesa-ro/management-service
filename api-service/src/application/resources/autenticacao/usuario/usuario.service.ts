@@ -28,20 +28,28 @@ export class UsuarioService {
   ) {}
                   //ADD by Uriel//
   // =========================================================
-  async usuarioEnsinoFindById(accessContext: AccessContext, idUsuario: string) {
-    const usuario = await this.usuarioFindById(accessContext, { id: idUsuario });
-    if (!usuario) {
-      throw new NotFoundException("Usuário nâo encontrado");
-    }
-
-    const ensinoData = await this.databaseContext.turmaRepository
-    .createQueryBuilder("turma")
-    .innerJoinAndSelect("turma.curso", "curso")
-    .innerJoinAndSelect("curso.disciplinas", "disciplina")
-    .innerJoinAndSelect("turma.diarios", "diario")
-    .innerJoinAndSelect("turma.usuarios", "usuario", "usuario.id = :idUsuario", { idUsuario })
-    .getMany();
-    return {usuario, ensino: ensinoData};
+  async findDiariosByUsuarioIdWithCursos(idUsuario: string): Promise<any> {
+    const qb = this.databaseContext.diarioRepository.createQueryBuilder("diario");
+  
+    qb.innerJoin("diario.diarioProfessores", "diario_professor");
+    qb.innerJoin("diario_professor.perfil", "perfil");
+    qb.innerJoin("perfil.usuario", "usuario");
+    qb.innerJoinAndSelect("diario.turma", "turma");
+    qb.innerJoinAndSelect("turma.curso", "curso");
+  
+    qb.where("usuario.id = :idUsuario", { idUsuario });
+  
+    const diarios = await qb.getMany();
+  
+    return diarios.map((diario) => ({
+      disciplina: diario.disciplina,
+      cursos: [
+        {
+          curso: diario.turma.curso,
+          turmas: [diario.turma],
+        },
+      ],
+    }));
   }
   // =========================================================
 
