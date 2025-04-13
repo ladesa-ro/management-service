@@ -15,13 +15,13 @@ export class UsuarioController {
 
                       //ADD by Uriel//
   //===========================================================================
-  @Get("/:idUsuario/diarios")
-  @Operation(Tokens.UsuarioDiariosFindById)
-  async findDiariosNyUsuarioId(
-    @Param("idUsuario", ParseUUIDPipe) idUsuario: string,
-  ): Promise<LadesaTypings.Diario[]> {
-    return this.usuarioService.findDiariosByUsuarioIdWithCursos(idUsuario);
-  }
+  // @Get("/:idUsuario/diarios")
+  // @Operation(Tokens.UsuarioDiariosFindById)
+  // async findDiariosNyUsuarioId(
+  //   @Param("idUsuario", ParseUUIDPipe) idUsuario: string,
+  // ): Promise<LadesaTypings.Diario[]> {
+  //   return this.usuarioService.findDiariosByUsuarioIdWithCursos(idUsuario);
+  // }
 
   //////// Foi praticamente um copiar e colar esses dois...
   @Get("/:idUsuario/ensino")
