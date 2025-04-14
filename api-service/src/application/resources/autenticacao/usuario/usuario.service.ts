@@ -26,21 +26,21 @@ export class UsuarioService {
     private imagemService: ImagemService,
     private arquivoService: ArquivoService,
   ) {}
-                  //ADD by Uriel//
+  //ADD by Uriel//
   // =========================================================
   async findDiariosByUsuarioIdWithCursos(idUsuario: string): Promise<any> {
     const qb = this.databaseContext.diarioRepository.createQueryBuilder("diario");
-  
+
     qb.innerJoin("diario.diarioProfessores", "diario_professor");
     qb.innerJoin("diario_professor.perfil", "perfil");
     qb.innerJoin("perfil.usuario", "usuario");
     qb.innerJoinAndSelect("diario.turma", "turma");
     qb.innerJoinAndSelect("turma.curso", "curso");
-  
+
     qb.where("usuario.id = :idUsuario", { idUsuario });
-  
+
     const diarios = await qb.getMany();
-  
+
     return diarios.map((diario) => ({
       disciplina: diario.disciplina,
       cursos: [

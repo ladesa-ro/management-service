@@ -5,15 +5,15 @@ import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Tokens } from "@ladesa-ro/especificacao";
 import { Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post, Put, UploadedFile } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import { UsuarioService } from "./usuario.service";
 import { any } from "valibot";
+import { UsuarioService } from "./usuario.service";
 
 @Controller("/usuarios")
 @ApiTags("usuarios")
 export class UsuarioController {
   constructor(private usuarioService: UsuarioService) {}
 
-                      //ADD by Uriel//
+  //ADD by Uriel//
   //===========================================================================
   // @Get("/:idUsuario/diarios")
   // @Operation(Tokens.UsuarioDiariosFindById)
@@ -26,16 +26,14 @@ export class UsuarioController {
   //////// Foi praticamente um copiar e colar esses dois...
   @Get("/:idUsuario/ensino")
   @Operation(Tokens.UsuarioEnsinoFindById)
-  async findEnsinoByUsuarioId(
-    @Param("idUsuario", ParseUUIDPipe) idUsuario: string,
-  ): Promise<any> {
+  async findEnsinoByUsuarioId(@Param("idUsuario", ParseUUIDPipe) idUsuario: string): Promise<any> {
     return this.usuarioService.findDiariosByUsuarioIdWithCursos(idUsuario);
   }
 
   //===========================================================================
 
   //
- 
+
   @Get("/")
   @Operation(Tokens.UsuarioList)
   async usuarioFindAll(
@@ -139,8 +137,6 @@ export class UsuarioController {
       id: dto.params.id,
     });
   }
-  
+
   //
-
-
 }

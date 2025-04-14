@@ -8,26 +8,24 @@ export class DiarioProfessorEntity implements LadesaTypings.DiarioProfessor {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 
-
-
-
-  
   //
 
   @Column({ name: "situacao", type: "bool", nullable: false })
   situacao!: boolean;
 
-                    //Mod by Uriel//  
-//===========================================================================
-  /// as 3 linhas abaixo era 
+  //Mod by Uriel//
+  //===========================================================================
+  /// as 3 linhas abaixo era
   // @ManyToOne(() => DiarioEntity)
   // @JoinColumn({ name: "id_diario_fk" })
   // diario!: LadesaTypings.Diario;
-  @ManyToOne(() => DiarioEntity, (diario) => diario.diarioProfessores)
+  @ManyToOne(
+    () => DiarioEntity,
+    (diario) => diario.diarioProfessores,
+  )
   @JoinColumn({ name: "id_diario_fk" })
   diario!: DiarioEntity;
-//===========================================================================
-
+  //===========================================================================
 
   @ManyToOne(() => PerfilEntity)
   @JoinColumn({ name: "id_perfil_fk" })
