@@ -7,6 +7,7 @@ import type { DiarioProfessorEntity } from "@/infrastructure/integrations/databa
 import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
+import { FilterOperator } from "nestjs-paginate";
 import { PerfilService } from "../../../autorizacao/perfil/perfil.service";
 import { DiarioService } from "../diario/diario.service";
 
@@ -85,7 +86,11 @@ export class DiarioProfessorService {
         //
       ],
       defaultSortBy: [],
-      filterableColumns: {},
+      filterableColumns: {
+        "perfil.usuario.id": FilterOperator.EQ,
+        "perfil.id": FilterOperator.EQ,
+        "diario.id": FilterOperator.EQ,
+      },
     });
 
     // =========================================================
