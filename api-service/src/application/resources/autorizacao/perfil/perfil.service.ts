@@ -24,6 +24,30 @@ export class PerfilService {
     private campusService: CampusService,
     private usuarioService: UsuarioService,
   ) {}
+  //
+
+  async perfilEnsinoFindById(accessContext: AccessContext, idPerfil: string) {
+    const qb = this.vinculoRepository.createQueryBuilder("perfil");
+
+    qb.innerJoinAndSelect("perfil.usuario", "usuario");
+    qb.innerJoinAndSelect("perfil.diarioProfessores", "diario_professor");
+    qb.innerJoinAndSelect("diario_professor.diario", "diario");
+    qb.innerJoinAndSelect("diario.turma", "turma");
+    qb.innerJoinAndSelect("turma.curso", "curso");
+
+    qb.where("perfil.id = :idPerfil", { idPerfil });
+  
+    const perfilEnsino = await qb.getMany();
+  
+    return perfilEnsino.map((perfil) => ({
+      usuario: perfil.usuario,
+      diarios: perfil.diariosProfessor.map((diarioProfessor) => ({
+        disciplina: diarioProfessor.diario.disciplina,
+        turma: diarioProfessor.diario.turma,
+        curso: diarioProfessor.diario.turma.curso,
+      })),
+    }));
+  }
 
   //
 
