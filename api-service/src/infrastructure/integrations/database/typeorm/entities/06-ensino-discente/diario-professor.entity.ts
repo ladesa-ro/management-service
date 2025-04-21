@@ -17,7 +17,7 @@ export class DiarioProfessorEntity implements LadesaTypings.DiarioProfessor {
   @JoinColumn({ name: "id_diario_fk" })
   diario!: LadesaTypings.Diario;
 
-  @ManyToOne(() => PerfilEntity)
+  @ManyToOne(() => PerfilEntity, (perfil) => perfil.diariosProfessor)
   @JoinColumn({ name: "id_perfil_fk" })
   perfil!: LadesaTypings.Perfil;
 
