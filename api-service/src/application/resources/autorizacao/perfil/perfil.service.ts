@@ -38,10 +38,10 @@ export class PerfilService {
     qb.where("perfil.id = :idPerfil", { idPerfil });
   
     const perfilEnsino = await qb.getMany();
-    
+
     return perfilEnsino.map((perfil) => ({
       usuario: perfil.usuario,
-      diarios: perfil.diariosProfessor.map((diarioProfessor) => ({
+      diarios: perfil.diarioProfessores.map((diarioProfessor) => ({
         disciplina: diarioProfessor.diario.disciplina,
         turma: diarioProfessor.diario.turma,
         curso: diarioProfessor.diario.turma.curso,
