@@ -26,10 +26,9 @@ export class ReservaEntity implements LadesaTypings.Reserva {
   @JoinColumn({ name: "id_ambiente_fk" })
   ambiente!: AmbienteEntity;
 
-  @ManyToOne(() => UsuarioEntity)
+  @ManyToOne(() => require("../01-autenticacao/usuario.entity").UsuarioEntity)
   @JoinColumn({ name: "id_usuario_fk" })
-  usuario!: UsuarioEntity;
-
+  usuario!: Required<UsuarioEntity>;
   //
 
   @Column({ name: "date_created", type: "timestamptz", nullable: false })

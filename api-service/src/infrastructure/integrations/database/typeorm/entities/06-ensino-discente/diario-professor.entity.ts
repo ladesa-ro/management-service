@@ -1,5 +1,5 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Relation } from "typeorm";
 import { PerfilEntity } from "../03-autorizacao/perfil.entity";
 import { DiarioEntity } from "./diario.entity";
 
@@ -8,8 +8,6 @@ export class DiarioProfessorEntity implements LadesaTypings.DiarioProfessor {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 
-  //
-
   @Column({ name: "situacao", type: "bool", nullable: false })
   situacao!: boolean;
 
@@ -17,11 +15,9 @@ export class DiarioProfessorEntity implements LadesaTypings.DiarioProfessor {
   @JoinColumn({ name: "id_diario_fk" })
   diario!: LadesaTypings.Diario;
 
-  @ManyToOne(() => PerfilEntity, (perfil) => perfil.diariosProfessor)
+  @ManyToOne(() => require("../03-autorizacao/perfil.entity").PerfilEntity, (perfil) => perfil.diarioProfessores)
   @JoinColumn({ name: "id_perfil_fk" })
-  perfil!: LadesaTypings.Perfil;
-
-  //
+  perfil!: PerfilEntity;
 
   @Column({ name: "date_created", type: "timestamptz", nullable: false })
   dateCreated!: Date;
