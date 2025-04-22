@@ -1,5 +1,5 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, type Relation} from "typeorm";
 import { UsuarioEntity } from "../01-autenticacao/usuario.entity";
 import { AmbienteEntity } from "./ambiente.entity";
 
@@ -26,9 +26,9 @@ export class ReservaEntity implements LadesaTypings.Reserva {
   @JoinColumn({ name: "id_ambiente_fk" })
   ambiente!: AmbienteEntity;
 
-  @ManyToOne(() => require("../01-autenticacao/usuario.entity").UsuarioEntity)
-  @JoinColumn({ name: "id_usuario_fk" })
-  usuario!: Required<UsuarioEntity>;
+  @ManyToOne(() => UsuarioEntity)
+  @JoinColumn({ name: 'id_usuario_fk' })
+  usuario!: Relation<UsuarioEntity>; 
   //
 
   @Column({ name: "date_created", type: "timestamptz", nullable: false })
