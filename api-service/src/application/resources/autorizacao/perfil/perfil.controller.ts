@@ -14,13 +14,14 @@ import { ParseUUIDPipe } from "@nestjs/common/pipes/parse-uuid.pipe";
 export class PerfilController {
   constructor(private vinculoService: PerfilService) {}
 
-  @Get("/:idPerfil/ensino")
+  @Get("/:usuarioId/ensino")
   @Operation(Tokens.PerfilEnsinoFindById)
   async perfilEnsinoFindById(
     @AccessContextHttp() accessContext: AccessContext,
-    @Param("idPerfil", ParseUUIDPipe) idPerfil: string,
+    @Param("usuarioId", ParseUUIDPipe) usuarioId: string,
   ): Promise<any> {
-    return this.vinculoService.perfilEnsinoFindById(accessContext, idPerfil);
+    console.log("ID do Usuário recebido:", usuarioId);
+    return this.vinculoService.perfilEnsinoFindById(accessContext, usuarioId);
   }
 
 

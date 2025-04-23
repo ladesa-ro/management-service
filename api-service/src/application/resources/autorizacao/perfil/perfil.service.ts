@@ -25,21 +25,29 @@ export class PerfilService {
     private usuarioService: UsuarioService,
   ) {}
   //
-
-  async perfilEnsinoFindById(accessContext: AccessContext, idPerfil: string) {
-    const qb = this.vinculoRepository.createQueryBuilder("perfil");
-
-    qb.innerJoinAndSelect("perfil.usuario", "usuario");
-    qb.innerJoinAndSelect("perfil.diarioProfessores", "diario_professor");
-    qb.innerJoinAndSelect("diario_professor.diario", "diario");
-    qb.innerJoinAndSelect("diario.turma", "turma");
-    qb.innerJoinAndSelect("turma.curso", "curso");
-
-    qb.where("perfil.id = :idPerfil", { idPerfil });
+  async perfilEnsinoFindById(accessContext: AccessContext, usuarioId: string) {
+    console.log("Executando query para ID do Usuário:", usuarioId);
   
-    const perfilEnsino = await qb.getMany();
-
-    return perfilEnsino.map((perfil) => ({
+    const qb = this.vinculoRepository.createQueryBuilder("perfil");
+  
+    // Relacionamentos necessários
+    qb.innerJoinAndSelect("perfil.usuario", "usuario");
+    qb.leftJoinAndSelect("perfil.diarioProfessores", "diario_professor");
+    qb.leftJoinAndSelect("diario_professor.diario", "diario");
+    qb.leftJoinAndSelect("diario.turma", "turma");
+    qb.leftJoinAndSelect("turma.curso", "curso");
+  
+    // Filtrar perfis pelo ID do usuário
+    qb.where("perfil.id_usuario_fk = :usuarioId", { usuarioId });
+  
+    const perfis = await qb.getMany();
+  
+    console.log("Resultado da query:", perfis);
+  
+    return perfis.map((perfil) => ({
+      id: perfil.id,
+      ativo: perfil.ativo,
+      cargo: perfil.cargo,
       usuario: perfil.usuario,
       diarios: perfil.diarioProfessores.map((diarioProfessor) => ({
         disciplina: diarioProfessor.diario.disciplina,
