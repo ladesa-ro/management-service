@@ -20,7 +20,6 @@ export class PerfilController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param("usuarioId", ParseUUIDPipe) usuarioId: string,
   ): Promise<any> {
-    console.log("ID do Usuário recebido:", usuarioId);
     return this.vinculoService.perfilEnsinoFindById(accessContext, usuarioId);
   }
 
