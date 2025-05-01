@@ -32,7 +32,7 @@ jobs:
         run: |
           echo "INFISICAL_ENV_SLUG=prod" >> "$GITHUB_ENV"
 
-      - uses: Infisical/secrets-action@v1.0.9
+      - uses: Infisical/secrets-action@v1.0.11
         with:
           domain: ${{ secrets.INFISICAL_DOMAIN }}
           client-id: ${{ secrets.INFISICAL_MACHINE_IDENTITY_CLIENT_ID }}
@@ -80,7 +80,7 @@ jobs:
       - name: determine Infisical env-slug
         run: echo "INFISICAL_ENV_SLUG=prod" >> "$GITHUB_ENV"
 
-      - uses: Infisical/secrets-action@v1.0.9
+      - uses: Infisical/secrets-action@v1.0.11
         with:
           domain: ${{ secrets.INFISICAL_DOMAIN }}
           client-id: ${{ secrets.INFISICAL_MACHINE_IDENTITY_CLIENT_ID }}
