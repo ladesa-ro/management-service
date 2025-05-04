@@ -14,6 +14,15 @@ export class UsuarioController {
 
   //
 
+    @Get("/:idUsuario/ensino")
+  @Operation(Tokens.UsuarioEnsinoFindById)
+  async getPerfilEnsino(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param("idUsuario", ParseUUIDPipe) idUsuario: string,
+  ): Promise<any> {
+    return this.usuarioService.getPerfilEnsino(accessContext, idUsuario);
+  }
+
   @Get("/")
   @Operation(Tokens.UsuarioList)
   async usuarioFindAll(
