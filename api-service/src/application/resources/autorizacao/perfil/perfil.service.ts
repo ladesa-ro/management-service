@@ -5,12 +5,11 @@ import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
 import type { UsuarioEntity } from "@/infrastructure/integrations/database/typeorm/entities";
 import * as LadesaTypings from "@ladesa-ro/especificacao";
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { forwardRef, Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
 import { v4 as uuid } from "uuid";
 import { CampusService } from "../../ambientes/campus/campus.service";
-import { UsuarioService } from "../../autenticacao/usuario/usuario.service";
-
+import { ModuleRef } from "@nestjs/core";
 // ============================================================================
 
 const aliasVinculo = "vinculo";
@@ -19,14 +18,21 @@ const aliasVinculo = "vinculo";
 
 @Injectable()
 export class PerfilService {
+  private _usuarioService: any;
   constructor(
-    private databaseContext: DatabaseContextService,
-    private campusService: CampusService,
-    private usuarioService: UsuarioService,
+    private readonly databaseContext: DatabaseContextService,
+    private readonly campusService: CampusService,
+    private readonly moduleRef: ModuleRef,
   ) {}
+
+  private get usuarioService() {
+    if (!this._usuarioService) {
+      this._usuarioService = this.moduleRef.get("UsuarioService", { strict: false });
+    }
+    return this._usuarioService;
+  }
   //
   async perfilEnsinoFindById(accessContext: AccessContext, usuarioId: string) {
-  
     const qb = this.vinculoRepository.createQueryBuilder("perfil");
   
     qb.innerJoinAndSelect("perfil.usuario", "usuario");
@@ -38,7 +44,7 @@ export class PerfilService {
     qb.where("perfil.id_usuario_fk = :usuarioId", { usuarioId });
   
     const perfis = await qb.getMany();
-    
+  
     return perfis.map((perfil) => ({
       id: perfil.id,
       ativo: perfil.ativo,
