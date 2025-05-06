@@ -7,7 +7,7 @@ import { DatabaseContextService } from "@/infrastructure/integrations/database";
 import type { UsuarioEntity } from "@/infrastructure/integrations/database/typeorm/entities";
 import { KeycloakService } from "@/infrastructure/integrations/identity-provider";
 import * as LadesaTypings from "@ladesa-ro/especificacao";
-import { Injectable, InternalServerErrorException, NotFoundException, ServiceUnavailableException } from "@nestjs/common";
+import { Injectable, Inject,forwardRef , InternalServerErrorException, NotFoundException, ServiceUnavailableException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { ArquivoService } from "../../base/arquivo/arquivo.service";
 import { ImagemService } from "../../base/imagem/imagem.service";
@@ -26,6 +26,7 @@ export class UsuarioService {
     private databaseContext: DatabaseContextService,
     private imagemService: ImagemService,
     private arquivoService: ArquivoService,
+    @Inject(forwardRef(() => PerfilService))
     private perfilService: PerfilService,
   ) {}
   //
