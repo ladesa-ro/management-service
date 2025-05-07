@@ -15,7 +15,7 @@
     "pkg:publish": "bun publish --tag ${PUBLISH_TAG} --auth-type legacy --dry-run"
   },
   "devDependencies": {
-    "@hey-api/openapi-ts": "^0.53.12",
+    "@hey-api/openapi-ts": "^0.67.2",
     "rimraf": "^6.0.1",
     "typescript": "^5.8.3"
   },
