@@ -23,9 +23,9 @@
   },
   "dependencies": {
     "@biomejs/biome": "^1.9.4",
-    "@changesets/cli": "^2.28.0",
+    "@changesets/cli": "^2.29.3",
     "@nx/js": "^20.4.4",
-    "@types/bun": "^1.2.2",
+    "@types/bun": "^1.2.12",
     "nx": "^20.4.4"
   },
   "packageManager": "bun@1.2.0"
