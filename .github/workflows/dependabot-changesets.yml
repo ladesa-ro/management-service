@@ -15,11 +15,23 @@ jobs:
       contents: write
 
     steps:
+      - uses: actions/create-github-app-token@v2
+        id: app-token
+        with:
+          app-id: ${{ secrets.CI_DEPENDABOT_CHANGESETS_APP_ID }}
+          private-key: ${{ secrets.CI_DEPENDABOT_CHANGESETS_APP_PRIVATE_KEY }}
+
+      - name: Get GitHub App User ID
+        id: get-user-id
+        run: echo "user-id=$(gh api "/users/${{ steps.app-token.outputs.app-slug }}[bot]" --jq .id)" >> "$GITHUB_OUTPUT"
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+
       - name: Update PR
         uses: mscharley/dependency-changesets-action@648188b9f7d7cc54e59bcd367f99706325145257
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ steps.app-token.outputs.token }}
           use-conventional-commits: false
           commit-message: "chore(deps): changeset for dependency update [skip dependabot]"
-          author-name: github-actions[bot]
-          author-email: github-actions[bot]@users.noreply.github.com
+          author-name: ${{ steps.app-token.outputs.app-slug }}[bot]
+          author-email: ${{ steps.get-user-id.outputs.user-id }}+${{ steps.app-token.outputs.app-slug }}[bot]@users.noreply.github.com
