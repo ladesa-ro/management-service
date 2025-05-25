@@ -12,7 +12,6 @@ export class AddCamposNovoModeloDiaCalendario1710189999999 implements MigrationI
       }),
     );
 
-    // Adiciona `tipo`
     await queryRunner.addColumn(
       "dia_calendario",
       new TableColumn({
@@ -24,7 +23,16 @@ export class AddCamposNovoModeloDiaCalendario1710189999999 implements MigrationI
       }),
     );
 
-    // Altera `feriado` de boolean para varchar 
+    await queryRunner.addColumn(
+      "dia_calendario",
+      new TableColumn({
+        name: "extra_curricular",
+        type: "boolean",
+        isNullable: false,
+        default: false,
+      }),
+    );
+
     await queryRunner.changeColumn(
       "dia_calendario",
       "feriado",
@@ -37,9 +45,9 @@ export class AddCamposNovoModeloDiaCalendario1710189999999 implements MigrationI
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    // Reverte as alterações
     await queryRunner.dropColumn("dia_calendario", "dia_presencial");
     await queryRunner.dropColumn("dia_calendario", "tipo");
+    await queryRunner.dropColumn("dia_calendario", "extra_curricular");
 
     await queryRunner.changeColumn(
       "dia_calendario",
