@@ -16,7 +16,7 @@
       "version": "1.0.0-next.34",
       "dependencies": {
         "@apollo/server": "^4.12.1",
-        "@apollo/utils.keyvaluecache": "^3.1.0",
+        "@apollo/utils.keyvaluecache": "^4.0.0",
         "@fastify/merge-json-schemas": "^0.2.1",
         "@keycloak/keycloak-admin-client": "^25.0.6",
         "@ladesa-ro/especificacao": "^3.4.1",
@@ -145,7 +145,7 @@
 
     "@apollo/utils.isnodelike": ["@apollo/utils.isnodelike@2.0.1", "", {}, "sha512-w41XyepR+jBEuVpoRM715N2ZD0xMD413UiJx8w5xnAZD2ZkSJnMJBoIzauK83kJpSgNuR6ywbV29jG9NmxjK0Q=="],
 
-    "@apollo/utils.keyvaluecache": ["@apollo/utils.keyvaluecache@3.1.0", "", { "dependencies": { "@apollo/utils.logger": "^3.0.0", "lru-cache": "^10.0.0" } }, "sha512-MM/DKIqpQQbuNG1gNPAlGc45THdWkroTmN8o/J09merFwf/LlZ7+lAfcHFDXIYIknwKmUjJrOMS3OxYbjrz2hA=="],
+    "@apollo/utils.keyvaluecache": ["@apollo/utils.keyvaluecache@4.0.0", "", { "dependencies": { "@apollo/utils.logger": "^3.0.0", "lru-cache": "^11.0.0" } }, "sha512-mKw1myRUkQsGPNB+9bglAuhviodJ2L2MRYLTafCMw5BIo7nbvCPNCkLnIHjZ1NOzH7SnMAr5c9LmXiqsgYqLZw=="],
 
     "@apollo/utils.logger": ["@apollo/utils.logger@2.0.1", "", {}, "sha512-YuplwLHaHf1oviidB7MxnCXAdHp3IqYV8n0momZ3JfLniae92eYqMIx+j5qJFX6WKJPs6q7bczmV4lXIsTu5Pg=="],
 
@@ -2190,8 +2190,6 @@
     "@apollo/server-gateway-interface/@apollo/utils.keyvaluecache": ["@apollo/utils.keyvaluecache@2.1.1", "", { "dependencies": { "@apollo/utils.logger": "^2.0.1", "lru-cache": "^7.14.1" } }, "sha512-qVo5PvUUMD8oB9oYvq4ViCjYAMWnZ5zZwEjNF37L2m1u528x5mueMlU+Cr1UinupCgdB78g+egA1G98rbJ03Vw=="],
 
     "@apollo/utils.keyvaluecache/@apollo/utils.logger": ["@apollo/utils.logger@3.0.0", "", {}, "sha512-M8V8JOTH0F2qEi+ktPfw4RL7MvUycDfKp7aEap2eWXfL5SqWHN6jTLbj5f5fj1cceHpyaUSOZlvlaaryaxZAmg=="],
-
-    "@apollo/utils.keyvaluecache/lru-cache": ["lru-cache@10.4.3", "", {}, "sha512-JNAzZcXrCt42VGLuYz0zfAzDfAvJWW6AfYlDBQyDV5DClI2m5sAmK+OIO7s59XfsRsWHp02jAJrRadPRGTt6SQ=="],
 
     "@babel/core/semver": ["semver@6.3.1", "", { "bin": { "semver": "bin/semver.js" } }, "sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA=="],
 
