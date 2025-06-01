@@ -70,7 +70,7 @@
     "tsx": "^4.19.4",
     "typeorm": "^0.3.24",
     "uuid": "^11.0.5",
-    "valibot": "0.42.1"
+    "valibot": "1.1.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^11.0.7",
