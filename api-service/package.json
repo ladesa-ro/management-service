@@ -1,6 +1,6 @@
 {
   "name": "@ladesa-ro/api.service",
-  "version": "1.0.0-next.34",
+  "version": "1.0.0-next.35",
   "private": true,
   "files": ["generated/**/*", "src/**/*", "tsconfig*.json", "nest-cli.json"],
   "scripts": {
