@@ -23,15 +23,10 @@
   },
   "dependencies": {
     "@biomejs/biome": "^1.9.4",
-<<<<<<< HEAD
-    "@changesets/cli": "^2.29.3",
-    "@nx/js": "^20.4.4",
-    "@types/bun": "^1.2.12",
-=======
+
     "@changesets/cli": "^2.29.4",
     "@nx/js": "^20.4.4",
     "@types/bun": "^1.2.15",
->>>>>>> origin/development
     "nx": "^20.4.4"
   },
   "packageManager": "bun@1.2.0"

@@ -1,11 +1,19 @@
-import { MigrationInterface, QueryRunner } from "typeorm";
+import { MigrationInterface, QueryRunner, TableColumn } from "typeorm";
 
-export class REMOVEDIAPRESENCIAL_1749067926298 implements MigrationInterface {
+export class RemoveDiaPresencial implements MigrationInterface {
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.dropColumn("dia_calendario", "dia_presencial");
+  }
 
-    public async up(queryRunner: QueryRunner): Promise<void> {
-    }
-
-    public async down(queryRunner: QueryRunner): Promise<void> {
-    }
-
+  public async down(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.addColumn(
+      "dia_calendario",
+      new TableColumn({
+        name: "dia_presencial",
+        type: "boolean",
+        isNullable: false,
+        default: false,
+      }),
+    );
+  }
 }
