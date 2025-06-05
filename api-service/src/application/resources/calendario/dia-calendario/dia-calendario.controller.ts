@@ -1,3 +1,4 @@
+import { DiaCalendarioFindOneByIdData } from './../../../../../../integrations/npm/api-client-fetch/src/http/generated/types.gen';
 import { CombinedInput } from "@/application/standards";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
@@ -22,7 +23,15 @@ export class DiaCalendarioController {
   }
 
   //
-
+  @Get("/data/:data")
+  @Operation(Tokens.DiaCalendarioFindOneByData)
+  async DiaCalendarioFindOneByData(
+    @AccessContextHttp() AccessContext: AccessContext,
+    @CombinedInput() dto: {params : { data: string}},
+  ){
+    return this.diaCalendarioService.diaCalendarioFindByData(AccessContext, {data : dto.params.data});
+  }
+  //
   @Get("/:id")
   @Operation(Tokens.DiaCalendarioFindOneById)
   async diaCalendarioFindById(
@@ -32,7 +41,6 @@ export class DiaCalendarioController {
   ) {
     return this.diaCalendarioService.diaCalendarioFindByIdStrict(accessContext, { id: dto.params.id });
   }
-
   //
 
   @Post("/")
