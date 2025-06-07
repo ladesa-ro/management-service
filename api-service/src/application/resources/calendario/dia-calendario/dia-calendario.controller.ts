@@ -23,14 +23,6 @@ export class DiaCalendarioController {
   }
 
   //
-  @Get("/data/:data")
-  @Operation(Tokens.DiaCalendarioFindOneByData)
-  async DiaCalendarioFindOneByData(
-    @AccessContextHttp() AccessContext: AccessContext,
-    @CombinedInput() dto: {params : { data: string}},
-  ){
-    return this.diaCalendarioService.diaCalendarioFindByData(AccessContext, {data : dto.params.data});
-  }
   //
   @Get("/:id")
   @Operation(Tokens.DiaCalendarioFindOneById)
