@@ -53,6 +53,9 @@ export class DiaCalendarioService {
         "data",
         "diaLetivo",
         "feriado",
+        "diaPresencial",
+        "tipo",
+        "extraCurricular",
         //
         "calendario.id",
         "calendario.nome",
@@ -63,6 +66,9 @@ export class DiaCalendarioService {
         "data",
         "diaLetivo",
         "feriado",
+        "diaPresencial",
+        "tipo",
+        "extraCurricular",
         //
         "calendario.id",
         "calendario.nome",
@@ -75,6 +81,9 @@ export class DiaCalendarioService {
         "data",
         "diaLetivo",
         "feriado",
+        "diaPresencial",
+        "tipo",
+        "extraCurricular",
         "calendario.nome",
       ],
       relations: {
