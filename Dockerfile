@@ -14,7 +14,7 @@ ENV BUN_INSTALL_CACHE_DIR="/bun/install/cache"
 RUN mkdir -p /var/lib/ladesa/.sources
 RUN chown -R 1000:1000 /var/lib/ladesa/.sources
 
-WORKDIR "/var/lib/ladesa/.sources/api/"
+WORKDIR "/var/lib/ladesa/.sources/management-service/"
 
 # ========================================
 # DEVELOPMENT AND BUILD DEPENDENCIES
@@ -22,40 +22,38 @@ WORKDIR "/var/lib/ladesa/.sources/api/"
 
 FROM base AS dev-dependencies
 RUN mkdir -p /var/lib/ladesa/.builds
-
-COPY . "/var/lib/ladesa/.sources/api"
-
+COPY . "/var/lib/ladesa/.sources/management-service"
 RUN --mount=type=cache,id=bun,target=/bun/install/cache bun install --frozen-lockfile 
 
 # ========================================
 # API-SERVICE - BUILD
 # ========================================
 
-FROM dev-dependencies AS api-service-builder
-RUN cp -r /var/lib/ladesa/.sources/api/api-service /var/lib/ladesa/.builds/api-service
-WORKDIR /var/lib/ladesa/.builds/api-service
+FROM dev-dependencies AS management-api-service-builder
+RUN cp -r /var/lib/ladesa/.sources/management-service/services/api /var/lib/ladesa/.builds/management-api-service
+WORKDIR /var/lib/ladesa/.builds/management-api-service
 RUN --mount=type=cache,id=bun,target=/bun/install/cache bun install
 
 # ========================================
 # NPM / API-CLIENT-FETCH / DOCS -- BUILD
 # ========================================
 
-FROM dev-dependencies AS docs-npm-api-client-fetch-builder
+FROM dev-dependencies AS management-docs-npm-api-client-fetch-builder
 
 RUN bun run --filter "@ladesa-ro/api-client-fetch.docs" build
-RUN cp -r /var/lib/ladesa/.sources/api/docs/docs-npm-api-client-fetch "/var/lib/ladesa/.builds/npm-api-client-fetch-docs"
+RUN cp -r /var/lib/ladesa/.sources/management-service/services/docs/docs-npm-api-client-fetch "/var/lib/ladesa/.builds/management-docs-npm-api-client-fetch"
 
 # ========================================
 # NPM / API-CLIENT-FETCH / DOCS -- RUNTIME
 # ========================================
 
-FROM nginx:alpine AS docs-npm-api-client-fetch-runtime
+FROM nginx:alpine AS management-docs-npm-api-client-fetch-runtime
 
 COPY \
-  ./docs/docs-npm-api-client-fetch/nginx.conf \
+  ./services/docs/docs-npm-api-client-fetch/nginx.conf \
   /etc/nginx/nginx.conf
 
-COPY --from=docs-npm-api-client-fetch-builder  "/var/lib/ladesa/.builds/npm-api-client-fetch-docs"  "/usr/local/ladesa-ro/services/npm-api-client-fetch-docs"
+COPY --from=management-docs-npm-api-client-fetch-builder  "/var/lib/ladesa/.builds/npm-api-client-fetch-docs"  "/usr/local/ladesa-ro/services/npm-api-client-fetch-docs"
 EXPOSE 80
 
 # ========================================

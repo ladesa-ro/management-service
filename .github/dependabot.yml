@@ -1,17 +1,20 @@
 version: 2
 updates:
   - package-ecosystem: docker
+    rebase-strategy: auto
     directory: "/"
     schedule:
       interval: "monthly"
     open-pull-requests-limit: 10
 
   - package-ecosystem: github-actions
+    rebase-strategy: auto
     directory: "/.github/workflows"
     schedule:
       interval: "monthly"
 
   - package-ecosystem: bun
+    rebase-strategy: auto
     directory: "/"
     schedule:
       interval: "monthly"

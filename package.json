@@ -2,10 +2,17 @@
   "name": "@ladesa-ro/api.root",
   "version": "1.0.0-next.34",
   "private": true,
+  "packageManager": "bun@1.2.0",
   "engines": {
     "bun": "1"
   },
-  "workspaces": [".", "api-service", "docs/*", "integrations/npm/*", "integrations/openapi-json"],
+  "workspaces": [
+    ".",
+    "./services/api",
+    "./services/docs/*",
+    "./packages/integrations/npm/*",
+    "./packages/integrations/openapi-json"
+  ],
   "scripts": {
     "build:all": "nx run-many -t build",
     "generate:all": "nx run-many -t generate",
@@ -27,6 +34,5 @@
     "@nx/js": "^20.4.4",
     "@types/bun": "^1.2.15",
     "nx": "^20.4.4"
-  },
-  "packageManager": "bun@1.2.0"
+  }
 }
