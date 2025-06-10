@@ -2,7 +2,12 @@
   "name": "@ladesa-ro/api.service",
   "version": "1.0.0-next.34",
   "private": true,
-  "files": ["generated/**/*", "src/**/*", "tsconfig*.json", "nest-cli.json"],
+  "files": [
+    "generated/**/*",
+    "src/**/*",
+    "tsconfig*.json",
+    "nest-cli.json"
+  ],
   "scripts": {
     "build": "bun run build:openapi-json",
     "build:openapi-json": "bun run --silent codegen-openapi --apiPrefix=/ --outFile=./generated/openapi.v3.json",
@@ -10,8 +15,8 @@
     "start:debug": "bun run --watch --inspect-wait src/main.ts",
     "start:prod": "bun run src/main.ts",
     "codegen-openapi": "bun run src/scripts/codegen-openapi/main.ts",
-    "typeorm": "bun run ./node_modules/typeorm/cli.js",
-    "typeorm:ds-migration": "bun run ./node_modules/typeorm/cli.js -d src/infrastructure/integrations/database/typeorm/data-sources/migration.data-source.ts",
+    "typeorm": "typeorm",
+    "typeorm:ds-migration": "typeorm -d src/infrastructure/integrations/database/typeorm/data-sources/migration.data-source.ts",
     "typeorm:entity": "bun run typeorm entity:create",
     "typeorm:generate": "bun run typeorm migration:generate",
     "typeorm:create": "bun run typeorm migration:create",

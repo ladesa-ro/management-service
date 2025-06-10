@@ -1,7 +1,6 @@
 {
-  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "tags": ["integrations", "integrations:openapi-json"],
-  "root": "integrations/openapi-json",
   "namedInputs": {
     "default": []
   },
@@ -12,7 +11,10 @@
       "inputs": ["{workspaceRoot}/api-service/generated/openapi.v3.json"],
       "options": {
         "cwd": "{projectRoot}",
-        "commands": ["cp ../../api-service/generated/openapi.v3.json ./json/openapi.v3.json", "bun run --filter '@ladesa-ro/api.root' code-static:fix {projectRoot}/json"],
+        "commands": [
+          "cp ../../../services/api/generated/openapi.v3.json ./json/openapi.v3.json",
+          "pnpm run -w code-static:fix {projectRoot}/json"
+        ],
         "parallel": false
       },
       "outputs": ["{projectRoot}/json/openapi.v3.json"],

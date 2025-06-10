@@ -1,34 +1,41 @@
+x-podman:
+  in_pod: false
+
 services:
-  ladesa-api:
+  ladesa-management-service:
+    container_name: ladesa-management-service
+
+    user: 1000:1000
+    userns_mode: "keep-id:uid=1000,gid=1000"
+
+    command: sh -c "sleep infinity"
     build:
       context: .
-      target: base
-    user: root
-    command: sh -c "sleep infinity"
-    container_name: ladesa-api
-    # working_dir: /var/lib/ladesa/.sources/apiapi-service/
-    working_dir: /var/lib/ladesa/.sources/api
+      target: development-vendors
+
+    working_dir: /ladesa/.sources/management-service
+    volumes:
+      - ./:/ladesa/.sources/management-service:z
+      - ./services/api/volumes/uploaded:/container/uploaded:z
+
+    env_file:
+      - .env
+    environment:
+      - STORAGE_PATH=/container/uploaded
+
     depends_on:
-      - ladesa-api-db
+      - ladesa-management-service-db
     networks:
       - ladesa-net
     ports:
       - 3701:3701
       - 9229:9229
-    volumes:
-      - ./:/var/lib/ladesa/.sources/api
-      - ./api-service/volumes/uploaded:/container/uploaded
-    environment:
-      - STORAGE_PATH=/container/uploaded
-    env_file:
-      - .env
 
-  ladesa-api-db:
-    image: bitnami/postgresql:15
-    container_name: ladesa-api-db
+  ladesa-management-service-db:
+    image: docker.io/bitnami/postgresql:15
+    container_name: ladesa-management-service-db
     volumes:
-      - "ladesa-api-db-data:/bitnami/postgresql"
-      # - './volumes/db/scripts/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d'
+      - "ladesa-management-service-db-data:/bitnami/postgresql"
     networks:
       - ladesa-net
     ports:
@@ -41,5 +48,5 @@ networks:
     external: true
 
 volumes:
-  ladesa-api-db-data:
-  ladesa-api-uploaded-files:
+  ladesa-management-service-db-data:
+  ladesa-management-service-uploaded-files:

@@ -37,7 +37,7 @@ start:
 		-u node \
 		--no-TTY \
 		-d $(d_container_app) \
-			bash -c "bun install && bun run --filter '@ladesa-ro/api.service' migration:run && bun run --filter @ladesa-ro/api.service start:dev" \&;
+			bash -c "pnpm install && pnpm run --filter '@ladesa-ro/api.service' migration:run && pnpm run --filter @ladesa-ro/api.service start:dev" \&;
 
 logs:
 	make setup;

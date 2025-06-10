@@ -1,7 +1,6 @@
 {
-  "$schema": "../node_modules/nx/schemas/project-schema.json",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "tags": ["services", "services:api"],
-  "root": "api-service",
   "sourceRoot": "{projectRoot}/src",
   "implicitDependencies": [],
   "namedInputs": {},

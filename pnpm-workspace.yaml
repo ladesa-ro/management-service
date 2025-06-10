@@ -1,0 +1,8 @@
+forceLegacyDeploy: true
+
+packages:
+  - './'
+  - './services/api'
+  - './services/docs/*'
+  - './packages/integrations/npm/*'
+  - './packages/integrations/openapi-json'

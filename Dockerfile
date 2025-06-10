@@ -1,71 +1,87 @@
 # ========================================
-# CORE IMAGE
+# Management Service / Core Image
 # ========================================
+FROM docker.io/oven/bun:1 AS core
 
-FROM oven/bun:1 AS core
+USER root
+RUN mkdir -p /ladesa
+RUN chown -R 1000:1000 /ladesa
+
+USER 1000:1000
+ENV HOME=/home/bun
+
+ENV BUN_INSTALL_BIN="${HOME}/.local/bin"
+ENV BUN_INSTALL_CACHE_DIR="${HOME}/bun/install/cache"
+
+ENV PATH="$BUN_INSTALL_BIN:$PATH"
+RUN mkdir -p ${BUN_INSTALL_BIN}
+
+USER root
+RUN --mount=type=cache,id=ldsa-management-service-bun,target=${BUN_INSTALL_CACHE_DIR} \
+  chown -R 1000:1000 ${BUN_INSTALL_CACHE_DIR} && \
+  chmod -R 0755 ${BUN_INSTALL_CACHE_DIR}
+USER 1000:1000
+
+# ==============================================
+# Management Service / Development Tools Vendors
+# ==============================================
+FROM core AS development-vendors
+
+ENV PNPM_HOME="${HOME}/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+
+USER root
+RUN --mount=type=cache,id=ldsa-management-service-bun,target=${PNPM_HOME} \
+  chown -R 1000:1000 ${PNPM_HOME} && \
+  chmod -R 0755 ${PNPM_HOME}
+USER 1000:1000
+
+RUN --mount=type=cache,id=ldsa-management-service-bun,target=${BUN_INSTALL_CACHE_DIR} bun install --global @pnpm/exe
+
+# ==========================================================
+# Management Service / Source with All Dependencies
+# ==========================================================
+FROM development-vendors AS source-with-dependencies
+COPY --chown=1000:1000 . "/ladesa/.sources/management-service"
+WORKDIR "/ladesa/.sources/management-service/"
+RUN --mount=type=cache,id=ldsa-management-service-pnpm,target=${PNPM_HOME} pnpm install --frozen-lockfile
 
 # ========================================
-# BASE IMAGE
+# Management Service / API Builder
 # ========================================
+FROM source-with-dependencies AS management-service-api-builder
 
-FROM core AS base
-ENV BUN_INSTALL_CACHE_DIR="/bun/install/cache"
+RUN mkdir -p /ladesa/.builds
+RUN --mount=type=cache,id=ldsa-management-service-pnpm,target=${PNPM_HOME} pnpm deploy --filter=@ladesa-ro/api.service --prod /ladesa/.builds/management-service-api
 
-RUN mkdir -p /var/lib/ladesa/.sources
-RUN chown -R 1000:1000 /var/lib/ladesa/.sources
+WORKDIR /ladesa/.builds/management-service-api
 
-WORKDIR "/var/lib/ladesa/.sources/management-service/"
+# ==========================================================
+# Management Service / API / Docs / NPM Client Fetch Build
+# ==========================================================
+FROM source-with-dependencies AS management-service-api-client-npm-docs-builder
 
-# ========================================
-# DEVELOPMENT AND BUILD DEPENDENCIES
-# ========================================
+RUN pnpm run --filter "@ladesa-ro/api-client-fetch.docs" build
+RUN --mount=type=cache,id=ldsa-management-service-pnpm,target=${PNPM_HOME} pnpm deploy --filter "@ladesa-ro/api-client-fetch.docs" "/ladesa/.builds/management-service-api-client-npm-docs"
 
-FROM base AS dev-dependencies
-RUN mkdir -p /var/lib/ladesa/.builds
-COPY . "/var/lib/ladesa/.sources/management-service"
-RUN --mount=type=cache,id=bun,target=/bun/install/cache bun install --frozen-lockfile 
+# ==========================================================
+# Management Service / API / Docs / NPM Client Fetch Runtime
+# ==========================================================
+FROM docker.io/nginx:alpine AS management-service-api-client-npm-docs-runtime
 
-# ========================================
-# API-SERVICE - BUILD
-# ========================================
+COPY ./services/docs/npm-api-client-fetch/nginx.conf /etc/nginx/nginx.conf
+COPY --from=management-service-api-client-npm-docs-builder "/ladesa/.builds/management-service-api-client-npm-docs" "/ladesa/.builds/management-service-api-client-npm-docs"
 
-FROM dev-dependencies AS management-api-service-builder
-RUN cp -r /var/lib/ladesa/.sources/management-service/services/api /var/lib/ladesa/.builds/management-api-service
-WORKDIR /var/lib/ladesa/.builds/management-api-service
-RUN --mount=type=cache,id=bun,target=/bun/install/cache bun install
-
-# ========================================
-# NPM / API-CLIENT-FETCH / DOCS -- BUILD
-# ========================================
-
-FROM dev-dependencies AS management-docs-npm-api-client-fetch-builder
-
-RUN bun run --filter "@ladesa-ro/api-client-fetch.docs" build
-RUN cp -r /var/lib/ladesa/.sources/management-service/services/docs/docs-npm-api-client-fetch "/var/lib/ladesa/.builds/management-docs-npm-api-client-fetch"
-
-# ========================================
-# NPM / API-CLIENT-FETCH / DOCS -- RUNTIME
-# ========================================
-
-FROM nginx:alpine AS management-docs-npm-api-client-fetch-runtime
-
-COPY \
-  ./services/docs/docs-npm-api-client-fetch/nginx.conf \
-  /etc/nginx/nginx.conf
-
-COPY --from=management-docs-npm-api-client-fetch-builder  "/var/lib/ladesa/.builds/npm-api-client-fetch-docs"  "/usr/local/ladesa-ro/services/npm-api-client-fetch-docs"
 EXPOSE 80
 
 # ========================================
-# API-SERVICE -- RUNTIME
+# Management Service / API Runtime
 # ========================================
 
-FROM core AS api-service-runtime
-USER bun
+FROM core AS management-service-api-runtime
 
-COPY --from=api-service-builder \
-  "/var/lib/ladesa/.builds/api-service" \
-  "/usr/local/ladesa-ro/services/api-service"
-WORKDIR "/usr/local/ladesa-ro/services/api-service"
+COPY --chown=1000:1000 --from=management-service-api-builder "/ladesa/.builds/management-service-api" "/ladesa/.builds/management-service-api"
 
+USER 1000:1000
+WORKDIR "/ladesa/.builds/management-service-api"
 CMD bun run migration:run && bun run start:prod

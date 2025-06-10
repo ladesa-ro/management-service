@@ -1,8 +1,10 @@
 {
   "$schema": "https://typedoc.org/schema.json",
 
-  "entryPoints": ["../../../integrations/npm/api-client-fetch/src/index.ts"],
-  "tsconfig": "../../../integrations/npm/api-client-fetch/tsconfig.json",
+  "entryPoints": [
+    "../../../../packages/integrations/npm/api-client-fetch/src/index.ts"
+  ],
+  "tsconfig": "../../../../packages/integrations/npm/api-client-fetch/tsconfig.json",
 
   "cleanOutputDir": true,
 

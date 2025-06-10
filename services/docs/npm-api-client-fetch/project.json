@@ -1,9 +1,7 @@
 {
-  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
 
   "tags": ["integrations", "integrations:npm"],
-
-  "root": "docs/docs-npm-api-client-fetch",
 
   "namedInputs": {
     "default": ["{projectRoot}/.config/**/*"]
