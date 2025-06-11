@@ -40,8 +40,10 @@ services:
       - ladesa-net
     ports:
       - 127.0.0.1:5432:5432
-    env_file:
-      - .db.env
+    environment:
+      - POSTGRESQL_DATABASE: main
+      - POSTGRESQL_PASSWORD: 7f22682363b549a389e03b7fe512488b
+      # - POSTGRESQL_USERNAME: postgres
 
 networks:
   ladesa-net:
