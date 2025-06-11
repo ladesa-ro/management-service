@@ -2,13 +2,12 @@ import { OfertaFormacaoModule } from "@/domain/resources/ensino/institucional/of
 import { Module } from "@nestjs/common";
 import { CampusModule } from "../../../ambientes/campus/campus.module";
 import { CursoController } from "./curso.controller";
-import { CursoResolver } from "./curso.resolver";
 import { CursoService } from "./curso.service";
 
 @Module({
   imports: [CampusModule, OfertaFormacaoModule],
   controllers: [CursoController],
-  providers: [CursoService, CursoResolver],
+  providers: [CursoService],
   exports: [CursoService],
 })
 export class CursoModule {}

@@ -4,7 +4,6 @@ import { AmbienteModule } from "../../../ambientes/ambiente";
 import { CalendarioLetivoModule } from "../../../calendario/calendario-letivo/calendario-letivo.module";
 import { DisciplinaModule } from "../../institucional/disciplina/disciplina.module";
 import { DiarioController } from "./diario.controller";
-import { DiarioResolver } from "./diario.resolver";
 import { DiarioService } from "./diario.service";
 
 @Module({
@@ -15,7 +14,7 @@ import { DiarioService } from "./diario.service";
     DisciplinaModule,
   ],
   controllers: [DiarioController],
-  providers: [DiarioService, DiarioResolver],
+  providers: [DiarioService],
   exports: [DiarioService],
 })
 export class DiarioModule {}

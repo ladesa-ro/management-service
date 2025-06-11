@@ -1,11 +1,10 @@
 import { Module } from "@nestjs/common";
 import { EstadoController } from "./estado.controller";
-import { EstadoResolver } from "./estado.resolver";
 import { EstadoService } from "./estado.service";
 
 @Module({
   imports: [],
-  providers: [EstadoService, EstadoResolver],
+  providers: [EstadoService],
   exports: [EstadoService],
   controllers: [EstadoController],
 })

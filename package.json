@@ -22,6 +22,7 @@
     "@changesets/cli": "^2.29.4",
     "@nx/js": "^20.4.4",
     "@types/bun": "^1.2.15",
+    "@typespec/compiler": "^1.1.0",
     "nx": "^20.4.4"
   }
 }

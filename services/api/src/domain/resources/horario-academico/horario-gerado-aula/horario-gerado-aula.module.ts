@@ -2,12 +2,11 @@ import { DiarioProfessorModule } from "@/domain/resources/ensino/discente/diario
 import { Module } from "@nestjs/common";
 import { HorarioGeradoModule } from "../horario-gerado/horario-gerado.module";
 import { HorarioGeradoAulaController } from "./horario-gerado-aula.controller";
-import { HorarioGeradoAulaResolver } from "./horario-gerado-aula.resolver";
 import { HorarioGeradoAulaService } from "./horario-gerado-aula.service";
 
 @Module({
   imports: [DiarioProfessorModule, HorarioGeradoModule],
-  providers: [HorarioGeradoAulaService, HorarioGeradoAulaResolver],
+  providers: [HorarioGeradoAulaService],
   controllers: [HorarioGeradoAulaController],
   exports: [HorarioGeradoAulaService],
 })
