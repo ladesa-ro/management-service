@@ -1,5 +1,4 @@
 {
-  "name": "@ladesa-ro/api.service.application.contracts",
   "scripts": {
     "tsp:format": "nx tsp:format",
     "tsp:generate": "nx tsp:generate",
