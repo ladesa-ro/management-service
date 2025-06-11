@@ -1,0 +1,14 @@
+{
+  "name": "@ladesa-ro/api.service.application.contracts",
+  "scripts": {
+    "tsp:format": "nx tsp:format",
+    "tsp:generate": "nx tsp:generate",
+    "generate": "nx tsp:generate"
+  },
+  "devDependencies": {
+    "@typespec/compiler": "^1.0.0",
+    "@typespec/http": "^1.1.0",
+    "@typespec/json-schema": "^1.0.0",
+    "quicktype": "^23.2.6"
+  }
+}

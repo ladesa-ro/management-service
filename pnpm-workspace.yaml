@@ -4,6 +4,7 @@ packages:
   - './'
   - './services/api'
   - './services/api/src/domain/contracts'
+  - './services/api/src/application/contracts'
   - './services/docs/*'
   - './packages/integrations/npm/*'
   - './packages/integrations/openapi-json'
