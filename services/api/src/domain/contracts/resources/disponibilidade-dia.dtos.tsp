@@ -1,22 +1,22 @@
 using Ladesa.Domain.v4.Generics;
 using Ladesa.Domain.v4.Generics.Entities;
 
-namespace Ladesa.Domain.v4.Schemas;
+namespace Ladesa.ManagementService.Domain.Contracts;
 
 /** Visão completa de um DisponibilidadeDia. */
 model DisponibilidadeDiaView {
   ...OmitProperties<DisponibilidadeDia, "intervaloDeTempo" | "disponibilidade">;
-  intervaloDeTempo: IntervaloDeTempoFindOneResultView;
-  disponibilidade: DisponibilidadeFindOneResultView;
+  intervaloDeTempo: IntervaloDeTempoFindOneOutput;
+  disponibilidade: DisponibilidadeFindOneOutput;
 }
 
 /** Dados de entrada para encontrar um DisponibilidadeDia por ID. */
-model DisponibilidadeDiaFindOneInputView {
+model DisponibilidadeDiaFindOneInput {
   id: DisponibilidadeDia.id;
 }
 
 /** Visão FindOne de um DisponibilidadeDia. */
-model DisponibilidadeDiaFindOneResultView {
+model DisponibilidadeDiaFindOneOutput {
   ...PickProperties<DisponibilidadeDiaView, "id">;
   ...PickProperties<DisponibilidadeDiaView, "rrule">;
   ...PickProperties<
@@ -30,16 +30,16 @@ model DisponibilidadeDiaFindOneResultView {
 }
 
 /** Dados de entrada para a criação de um DisponibilidadeDia. */
-model DisponibilidadeDiaInputCreateView {
+model DisponibilidadeDiaCreateInput {
   rrule: DisponibilidadeDia.rrule;
-  intervaloDeTempo: IntervaloDeTempoInputView;
-  disponibilidade: DisponibilidadeFindOneInputView;
+  intervaloDeTempo: IntervaloDeTempoInput;
+  disponibilidade: DisponibilidadeFindOneInput;
 }
 
 /** Dados de entrada para a atualização de um DisponibilidadeDia. */
-model DisponibilidadeDiaInputUpdateView
-  is OptionalProperties<DisponibilidadeDiaInputCreateView>;
+model DisponibilidadeDiaUpdateInput
+  is OptionalProperties<DisponibilidadeDiaCreateInput>;
 
 /** Resultados da busca a DisponibilidadeDia. */
-model DisponibilidadeDiaListResultView
-  is Pagination.Result.View<DisponibilidadeDiaFindOneResultView>;
+model DisponibilidadeDiaListOutput
+  is Pagination.Result.View<DisponibilidadeDiaFindOneOutput>;

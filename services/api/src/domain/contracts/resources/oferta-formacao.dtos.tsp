@@ -1,7 +1,7 @@
 using Ladesa.Domain.v4.Generics;
 using Ladesa.Domain.v4.Generics.Entities;
 
-namespace Ladesa.Domain.v4.Schemas;
+namespace Ladesa.ManagementService.Domain.Contracts;
 
 /** Visão completa de uma oferta de formação. */
 model OfertaFormacaoView {
@@ -11,7 +11,7 @@ model OfertaFormacaoView {
   >;
 
   /** Modalidade da oferta de formação. */
-  modalidade: ModalidadeFindOneResultView;
+  modalidade: ModalidadeFindOneOutput;
 
   /** Array de relações entre a oferta e níveis de formações. */
   ofertaFormacaoNiveisFormacoes: OfertaFormacaoNivelFormacao[];
@@ -21,12 +21,12 @@ model OfertaFormacaoView {
 }
 
 /** Dados de entrada para encontrar uma oferta de formação por ID. */
-model OfertaFormacaoFindOneInputView {
+model OfertaFormacaoFindOneInput {
   id: OfertaFormacao.id;
 }
 
 /** Visão FindOne de uma oferta de formação. */
-model OfertaFormacaoFindOneResultView {
+model OfertaFormacaoFindOneOutput {
   ...PickProperties<OfertaFormacaoView, "id">;
   ...PickProperties<OfertaFormacaoView, "nome">;
   ...PickProperties<OfertaFormacaoView, "slug">;
@@ -38,18 +38,18 @@ model OfertaFormacaoFindOneResultView {
 }
 
 /** Dados de entrada para a criação de uma oferta de formação. */
-model OfertaFormacaoInputCreateView {
+model OfertaFormacaoCreateInput {
   ...PickProperties<OfertaFormacaoView, "nome">;
   ...PickProperties<OfertaFormacaoView, "slug">;
 
   /** Modalidade da oferta de formação. */
-  modalidade: ModalidadeFindOneInputView;
+  modalidade: ModalidadeFindOneInput;
 }
 
 /** Dados de entrada para a atualização de uma oferta de formação. */
-model OfertaFormacaoInputUpdateView
-  is OptionalProperties<OfertaFormacaoInputCreateView>;
+model OfertaFormacaoUpdateInput
+  is OptionalProperties<OfertaFormacaoCreateInput>;
 
 /** Resultados da busca a OfertaFormacaos. */
-model OfertaFormacaoListResultView
-  is Pagination.Result.View<OfertaFormacaoFindOneResultView>;
+model OfertaFormacaoListOutput
+  is Pagination.Result.View<OfertaFormacaoFindOneOutput>;

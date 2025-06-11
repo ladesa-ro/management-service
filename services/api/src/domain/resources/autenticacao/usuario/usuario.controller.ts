@@ -1,10 +1,10 @@
 import { CombinedInput } from "@/application/standards";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Tokens } from "@ladesa-ro/especificacao";
 import { Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post, Put, UploadedFile } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
+import type * as IDomainContracts from "~domain.contracts";
 import { UsuarioService } from "./usuario.service";
 
 @Controller("/usuarios")
@@ -19,8 +19,8 @@ export class UsuarioController {
   async usuarioFindAll(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.UsuarioListOperationInput,
-  ): Promise<LadesaTypings.UsuarioListOperationOutput["success"]> {
+    @CombinedInput() dto: IDomainContracts.UsuarioListOperationInput,
+  ): Promise<IDomainContracts.UsuarioListOperationOutput["success"]> {
     return this.usuarioService.usuarioFindAll(accessContext, dto);
   }
 
@@ -31,7 +31,7 @@ export class UsuarioController {
   async usuarioFindById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.UsuarioFindOneByIdOperationOutput,
+    @CombinedInput() dto: IDomainContracts.UsuarioFindOneByIdOperationOutput,
   ) {
     return this.usuarioService.usuarioFindByIdStrict(accessContext, {
       id: dto.params.id,
@@ -45,7 +45,7 @@ export class UsuarioController {
   async usuarioCreate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.UsuarioCreateOperationInput,
+    @CombinedInput() dto: IDomainContracts.UsuarioCreateOperationInput,
   ) {
     return this.usuarioService.usuarioCreate(accessContext, dto);
   }
@@ -54,7 +54,7 @@ export class UsuarioController {
 
   @Patch("/:id")
   @Operation(Tokens.UsuarioUpdateOneById)
-  async usuarioUpdate(@AccessContextHttp() accessContext: AccessContext, @CombinedInput() dto: LadesaTypings.UsuarioUpdateByIdOperationInput) {
+  async usuarioUpdate(@AccessContextHttp() accessContext: AccessContext, @CombinedInput() dto: IDomainContracts.UsuarioUpdateByIdOperationInput) {
     return this.usuarioService.usuarioUpdate(accessContext, dto);
   }
 
@@ -65,7 +65,7 @@ export class UsuarioController {
   async usuarioGetImagemCapa(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.UsuarioFindOneByIdOperationOutput,
+    @CombinedInput() dto: IDomainContracts.UsuarioFindOneByIdOperationOutput,
   ) {
     return this.usuarioService.usuarioGetImagemCapa(accessContext, dto.params.id);
   }
@@ -88,7 +88,7 @@ export class UsuarioController {
   async usuarioGetImagemPerfil(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.UsuarioFindOneByIdOperationOutput,
+    @CombinedInput() dto: IDomainContracts.UsuarioFindOneByIdOperationOutput,
   ) {
     return this.usuarioService.usuarioGetImagemPerfil(accessContext, dto.params.id);
   }
@@ -111,7 +111,7 @@ export class UsuarioController {
   async usuarioDeleteOneById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.UsuarioDeleteByIdOperationInput,
+    @CombinedInput() dto: IDomainContracts.UsuarioDeleteByIdOperationInput,
   ) {
     return this.usuarioService.usuarioDeleteOneById(accessContext, {
       id: dto.params.id,

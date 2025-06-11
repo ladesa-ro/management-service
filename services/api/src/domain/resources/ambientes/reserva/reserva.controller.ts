@@ -1,10 +1,10 @@
 import { CombinedInput } from "@/application/standards";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Tokens } from "@ladesa-ro/especificacao";
 import { Controller, Delete, Get, Patch, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
+import type * as IDomainContracts from "~domain.contracts";
 import { ReservaService } from "./reserva.service";
 
 @ApiTags("reservas")
@@ -19,8 +19,8 @@ export class ReservaController {
   async reservaFindAll(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.ReservaListOperationInput,
-  ): Promise<LadesaTypings.ReservaListOperationOutput["success"]> {
+    @CombinedInput() dto: IDomainContracts.ReservaListOperationInput,
+  ): Promise<IDomainContracts.ReservaListOperationOutput["success"]> {
     return this.reservaService.reservaFindAll(accessContext, dto);
   }
 
@@ -31,7 +31,7 @@ export class ReservaController {
   async reservaFindById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.ReservaFindOneByIdOperationOutput,
+    @CombinedInput() dto: IDomainContracts.ReservaFindOneByIdOperationOutput,
   ) {
     return this.reservaService.reservaFindByIdStrict(accessContext, {
       id: dto.params.id,
@@ -45,7 +45,7 @@ export class ReservaController {
   async reservaCreate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.ReservaCreateOperationInput,
+    @CombinedInput() dto: IDomainContracts.ReservaCreateOperationInput,
   ) {
     return this.reservaService.reservaCreate(accessContext, dto);
   }
@@ -57,7 +57,7 @@ export class ReservaController {
   async reservaUpdate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.ReservaUpdateByIdOperationInput,
+    @CombinedInput() dto: IDomainContracts.ReservaUpdateByIdOperationInput,
   ) {
     return this.reservaService.reservaUpdate(accessContext, dto);
   }
@@ -69,7 +69,7 @@ export class ReservaController {
   async reservaDeleteOneById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.ReservaDeleteByIdOperationInput,
+    @CombinedInput() dto: IDomainContracts.ReservaDeleteByIdOperationInput,
   ) {
     return this.reservaService.reservaDeleteOneById(accessContext, {
       id: dto.params.id,

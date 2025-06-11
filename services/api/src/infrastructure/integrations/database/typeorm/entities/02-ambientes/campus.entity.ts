@@ -1,11 +1,11 @@
-import * as LadesaTypings from "@ladesa-ro/especificacao";
+import * as IDomainContracts from "@ladesa-ro/especificacao";
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { EnderecoEntity } from "../00-01-base-lugares/endereco.entity";
 import { PerfilEntity } from "../03-autorizacao/perfil.entity";
 import { ModalidadeEntity } from "../04-ensino-institucional/modalidade.entity";
 
 @Entity("campus")
-export class CampusEntity implements LadesaTypings.Campus {
+export class CampusEntity implements IDomainContracts.Campus {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 
@@ -27,7 +27,7 @@ export class CampusEntity implements LadesaTypings.Campus {
 
   @ManyToOne(() => EnderecoEntity)
   @JoinColumn({ name: "id_endereco_fk" })
-  endereco!: LadesaTypings.Endereco;
+  endereco!: IDomainContracts.Endereco;
 
   //
 

@@ -1,10 +1,10 @@
 import { ImagemEntity } from "@/infrastructure/integrations/database/typeorm/entities/00-00-base";
 import { DiarioEntity } from "@/infrastructure/integrations/database/typeorm/entities/06-ensino-discente";
-import * as LadesaTypings from "@ladesa-ro/especificacao";
+import * as IDomainContracts from "@ladesa-ro/especificacao";
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, type Relation } from "typeorm";
 
 @Entity("disciplina")
-export class DisciplinaEntity implements LadesaTypings.Disciplina {
+export class DisciplinaEntity implements IDomainContracts.Disciplina {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 
@@ -29,7 +29,7 @@ export class DisciplinaEntity implements LadesaTypings.Disciplina {
     () => DiarioEntity,
     (diario) => diario.disciplina,
   )
-  diarios!: LadesaTypings.Diario[];
+  diarios!: IDomainContracts.Diario[];
 
   //
 

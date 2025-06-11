@@ -1,7 +1,7 @@
 using Ladesa.Domain.v4.Generics;
 using Ladesa.Domain.v4.Generics.Entities;
 
-namespace Ladesa.Domain.v4.Schemas;
+namespace Ladesa.ManagementService.Domain.Contracts;
 
 /** Visão completa de um DiarioPreferenciaAgrupamento. */
 model DiarioPreferenciaAgrupamentoView {
@@ -9,17 +9,17 @@ model DiarioPreferenciaAgrupamentoView {
     DiarioPreferenciaAgrupamento,
     "intervaloDeTempo" | "diario"
   >;
-  intervaloDeTempo: IntervaloDeTempoFindOneResultView;
-  diario: DiarioFindOneResultView;
+  intervaloDeTempo: IntervaloDeTempoFindOneOutput;
+  diario: DiarioFindOneOutput;
 }
 
 /** Dados de entrada para encontrar um DiarioPreferenciaAgrupamento por ID. */
-model DiarioPreferenciaAgrupamentoFindOneInputView {
+model DiarioPreferenciaAgrupamentoFindOneInput {
   id: DiarioPreferenciaAgrupamento.id;
 }
 
 /** Visão FindOne de um DiarioPreferenciaAgrupamento. */
-model DiarioPreferenciaAgrupamentoFindOneResultView {
+model DiarioPreferenciaAgrupamentoFindOneOutput {
   ...PickProperties<DiarioPreferenciaAgrupamentoView, "id">;
   ...PickProperties<
     DiarioPreferenciaAgrupamentoView,
@@ -36,23 +36,23 @@ model DiarioPreferenciaAgrupamentoFindOneResultView {
 }
 
 /** Dados de entrada para a criação de um DiarioPreferenciaAgrupamento. */
-model DiarioPreferenciaAgrupamentoInputCreateView {
+model DiarioPreferenciaAgrupamentoCreateInput {
   diaSemanaIso: DiarioPreferenciaAgrupamento.diaSemanaIso;
   aulasSeguidas: DiarioPreferenciaAgrupamento.aulasSeguidas;
   dataInicio: DiarioPreferenciaAgrupamento.dataInicio;
   dataFim: DiarioPreferenciaAgrupamento.dataFim;
 
   //
-  intervaloDeTempo: IntervaloDeTempoInputView;
+  intervaloDeTempo: IntervaloDeTempoInput;
 
   //
-  diario: DiarioFindOneInputView;
+  diario: DiarioFindOneInput;
 }
 
 /** Dados de entrada para a atualização de um DiarioPreferenciaAgrupamento. */
-model DiarioPreferenciaAgrupamentoInputUpdateView
-  is OptionalProperties<DiarioPreferenciaAgrupamentoInputCreateView>;
+model DiarioPreferenciaAgrupamentoUpdateInput
+  is OptionalProperties<DiarioPreferenciaAgrupamentoCreateInput>;
 
 /** Resultados da busca de DiarioPreferenciaAgrupamentos. */
-model DiarioPreferenciaAgrupamentoListResultView
-  is Pagination.Result.View<DiarioPreferenciaAgrupamentoFindOneResultView>;
+model DiarioPreferenciaAgrupamentoListOutput
+  is Pagination.Result.View<DiarioPreferenciaAgrupamentoFindOneOutput>;

@@ -1,4 +1,4 @@
-import * as LadesaTypings from "@ladesa-ro/especificacao";
+import * as IDomainContracts from "@ladesa-ro/especificacao";
 import { IBaseAuthzCheck, IBaseAuthzFilter } from "./IBaseAuthz";
 
 // ===================================================================================
@@ -15,20 +15,20 @@ export type IAuthzStatementCidadeFind = IBaseAuthzFilter<"cidade:find">;
 export type IAuthzStatementCampusCreate = IBaseAuthzCheck<
   "campus:create",
   {
-    dto: LadesaTypings.CampusCreateOperationInput;
+    dto: IDomainContracts.CampusCreateOperationInput;
   }
 >;
 export type IAuthzStatementCampusFind = IBaseAuthzFilter<"campus:find">;
 export type IAuthzStatementCampusUpdate = IBaseAuthzFilter<
   "campus:update",
   {
-    dto: LadesaTypings.CampusUpdateOperationInput;
+    dto: IDomainContracts.CampusUpdateOperationInput;
   }
 >;
 export type IAuthzStatementCampusDelete = IBaseAuthzFilter<
   "campus:delete",
   {
-    dto: LadesaTypings.CampusFindOneInputView;
+    dto: IDomainContracts.CampusFindOneInputView;
   }
 >;
 
@@ -37,20 +37,20 @@ export type IAuthzStatementCampusDelete = IBaseAuthzFilter<
 export type IAuthzStatementBlocoCreate = IBaseAuthzCheck<
   "bloco:create",
   {
-    dto: LadesaTypings.BlocoCreateOperationInput;
+    dto: IDomainContracts.BlocoCreateOperationInput;
   }
 >;
 export type IAuthzStatementBlocoFind = IBaseAuthzFilter<"bloco:find">;
 export type IAuthzStatementBlocoUpdate = IBaseAuthzFilter<
   "bloco:update",
   {
-    dto: LadesaTypings.BlocoUpdateByIdOperationInput;
+    dto: IDomainContracts.BlocoUpdateByIdOperationInput;
   }
 >;
 export type IAuthzStatementBlocoDelete = IBaseAuthzFilter<
   "bloco:delete",
   {
-    dto: LadesaTypings.BlocoFindOneInputView;
+    dto: IDomainContracts.BlocoFindOneInputView;
   }
 >;
 
@@ -59,20 +59,20 @@ export type IAuthzStatementBlocoDelete = IBaseAuthzFilter<
 export type IAuthzStatementAmbienteCreate = IBaseAuthzCheck<
   "ambiente:create",
   {
-    dto: LadesaTypings.AmbienteCreateOperationInput;
+    dto: IDomainContracts.AmbienteCreateOperationInput;
   }
 >;
 export type IAuthzStatementAmbienteFind = IBaseAuthzFilter<"ambiente:find">;
 export type IAuthzStatementAmbienteUpdate = IBaseAuthzFilter<
   "ambiente:update",
   {
-    dto: LadesaTypings.AmbienteUpdateByIdOperationInput;
+    dto: IDomainContracts.AmbienteUpdateByIdOperationInput;
   }
 >;
 export type IAuthzStatementAmbienteDelete = IBaseAuthzFilter<
   "ambiente:delete",
   {
-    dto: LadesaTypings.AmbienteFindOneInputView;
+    dto: IDomainContracts.AmbienteFindOneInputView;
   }
 >;
 
@@ -81,20 +81,20 @@ export type IAuthzStatementAmbienteDelete = IBaseAuthzFilter<
 export type IAuthzStatementUsuarioCreate = IBaseAuthzCheck<
   "usuario:create",
   {
-    dto: LadesaTypings.UsuarioCreateOperationInput;
+    dto: IDomainContracts.UsuarioCreateOperationInput;
   }
 >;
 export type IAuthzStatementUsuarioFind = IBaseAuthzFilter<"usuario:find">;
 export type IAuthzStatementUsuarioUpdate = IBaseAuthzFilter<
   "usuario:update",
   {
-    dto: LadesaTypings.UsuarioUpdateByIdOperationInput;
+    dto: IDomainContracts.UsuarioUpdateByIdOperationInput;
   }
 >;
 export type IAuthzStatementUsuarioDelete = IBaseAuthzFilter<
   "usuario:delete",
   {
-    dto: LadesaTypings.UsuarioFindOneInputView;
+    dto: IDomainContracts.UsuarioFindOneInputView;
   }
 >;
 
@@ -103,20 +103,20 @@ export type IAuthzStatementUsuarioDelete = IBaseAuthzFilter<
 export type IAuthzStatementNivelFormacaoCreate = IBaseAuthzCheck<
   "nivel_formacao:create",
   {
-    dto: LadesaTypings.NivelFormacaoCreateOperationInput;
+    dto: IDomainContracts.NivelFormacaoCreateOperationInput;
   }
 >;
 export type IAuthzStatementNivelFormacaoFind = IBaseAuthzFilter<"nivel_formacao:find">;
 export type IAuthzStatementNivelFormacaoUpdate = IBaseAuthzFilter<
   "nivel_formacao:update",
   {
-    dto: LadesaTypings.NivelFormacaoUpdateByIdOperationInput;
+    dto: IDomainContracts.NivelFormacaoUpdateByIdOperationInput;
   }
 >;
 export type IAuthzStatementNivelFormacaoDelete = IBaseAuthzFilter<
   "nivel_formacao:delete",
   {
-    dto: LadesaTypings.NivelFormacaoFindOneInputView;
+    dto: IDomainContracts.NivelFormacaoFindOneInputView;
   }
 >;
 
@@ -125,20 +125,20 @@ export type IAuthzStatementNivelFormacaoDelete = IBaseAuthzFilter<
 export type IAuthzStatementModalidadeCreate = IBaseAuthzCheck<
   "modalidade:create",
   {
-    dto: LadesaTypings.ModalidadeCreateOperationInput;
+    dto: IDomainContracts.ModalidadeCreateOperationInput;
   }
 >;
 export type IAuthzStatementModalidadeFind = IBaseAuthzFilter<"modalidade:find">;
 export type IAuthzStatementModalidadeUpdate = IBaseAuthzFilter<
   "modalidade:update",
   {
-    dto: LadesaTypings.ModalidadeUpdateByIdOperationInput;
+    dto: IDomainContracts.ModalidadeUpdateByIdOperationInput;
   }
 >;
 export type IAuthzStatementModalidadeDelete = IBaseAuthzFilter<
   "modalidade:delete",
   {
-    dto: LadesaTypings.ModalidadeFindOneInputView;
+    dto: IDomainContracts.ModalidadeFindOneInputView;
   }
 >;
 
@@ -147,7 +147,7 @@ export type IAuthzStatementModalidadeDelete = IBaseAuthzFilter<
 export type IAuthzStatementOfertaFormacaoNivelFormacaoCreate = IBaseAuthzCheck<
   "oferta_formacao_nivel_formacao:create",
   {
-    dto: LadesaTypings.OfertaFormacaoNivelFormacaoCreateOperationInput;
+    dto: IDomainContracts.OfertaFormacaoNivelFormacaoCreateOperationInput;
   }
 >;
 export type IAuthzStatementOfertaFormacaoNivelFormacaoFind = IBaseAuthzFilter<"oferta_formacao_nivel_formacao:find">;
@@ -155,13 +155,13 @@ export type IAuthzStatementOfertaFormacaoNivelFormacaoFind = IBaseAuthzFilter<"o
 export type IAuthzStatementOfertaFormacaoNivelFormacaoUpdate = IBaseAuthzFilter<
   "oferta_formacao_nivel_formacao:update",
   {
-    dto: LadesaTypings.OfertaFormacaoNivelFormacaoUpdateByIdOperationInput;
+    dto: IDomainContracts.OfertaFormacaoNivelFormacaoUpdateByIdOperationInput;
   }
 >;
 export type IAuthzStatementOfertaFormacaoNivelFormacaoDelete = IBaseAuthzFilter<
   "oferta_formacao_nivel_formacao:delete",
   {
-    dto: LadesaTypings.OfertaFormacaoNivelFormacaoFindOneInputView;
+    dto: IDomainContracts.OfertaFormacaoNivelFormacaoFindOneInputView;
   }
 >;
 
@@ -170,20 +170,20 @@ export type IAuthzStatementOfertaFormacaoNivelFormacaoDelete = IBaseAuthzFilter<
 export type IAuthzStatementOfertaFormacaoCreate = IBaseAuthzCheck<
   "oferta_formacao:create",
   {
-    dto: LadesaTypings.OfertaFormacaoCreateOperationInput;
+    dto: IDomainContracts.OfertaFormacaoCreateOperationInput;
   }
 >;
 export type IAuthzStatementOfertaFormacaoFind = IBaseAuthzFilter<"oferta_formacao:find">;
 export type IAuthzStatementOfertaFormacaoUpdate = IBaseAuthzFilter<
   "oferta_formacao:update",
   {
-    dto: LadesaTypings.OfertaFormacaoUpdateByIdOperationInput;
+    dto: IDomainContracts.OfertaFormacaoUpdateByIdOperationInput;
   }
 >;
 export type IAuthzStatementOfertaFormacaoDelete = IBaseAuthzFilter<
   "oferta_formacao:delete",
   {
-    dto: LadesaTypings.OfertaFormacaoFindOneInputView;
+    dto: IDomainContracts.OfertaFormacaoFindOneInputView;
   }
 >;
 
@@ -196,19 +196,19 @@ export type IAuthzStatementVinculoFind = IBaseAuthzFilter<"vinculo:find">;
 export type IAuthzStatementCursoCreate = IBaseAuthzCheck<
   "curso:create",
   {
-    dto: LadesaTypings.CursoCreateOperationInput;
+    dto: IDomainContracts.CursoCreateOperationInput;
   }
 >;
 export type IAuthzStatementCursoUpdate = IBaseAuthzFilter<
   "curso:update",
   {
-    dto: LadesaTypings.CursoUpdateByIdOperationInput;
+    dto: IDomainContracts.CursoUpdateByIdOperationInput;
   }
 >;
 export type IAuthzStatementCursoDelete = IBaseAuthzFilter<
   "curso:delete",
   {
-    dto: LadesaTypings.CursoFindOneInputView;
+    dto: IDomainContracts.CursoFindOneInputView;
   }
 >;
 export type IAuthzStatementCursoFind = IBaseAuthzFilter<"curso:find">;
@@ -218,19 +218,19 @@ export type IAuthzStatementCursoFind = IBaseAuthzFilter<"curso:find">;
 export type IAuthzStatementDisciplinaCreate = IBaseAuthzCheck<
   "disciplina:create",
   {
-    dto: LadesaTypings.DisciplinaCreateOperationInput;
+    dto: IDomainContracts.DisciplinaCreateOperationInput;
   }
 >;
 export type IAuthzStatementDisciplinaUpdate = IBaseAuthzFilter<
   "disciplina:update",
   {
-    dto: LadesaTypings.DisciplinaUpdateByIdOperationInput;
+    dto: IDomainContracts.DisciplinaUpdateByIdOperationInput;
   }
 >;
 export type IAuthzStatementDisciplinaDelete = IBaseAuthzFilter<
   "disciplina:delete",
   {
-    dto: LadesaTypings.DisciplinaFindOneInputView;
+    dto: IDomainContracts.DisciplinaFindOneInputView;
   }
 >;
 export type IAuthzStatementDisciplinaFind = IBaseAuthzFilter<"disciplina:find">;
@@ -240,19 +240,19 @@ export type IAuthzStatementDisciplinaFind = IBaseAuthzFilter<"disciplina:find">;
 export type IAuthzStatementTurmaCreate = IBaseAuthzCheck<
   "turma:create",
   {
-    dto: LadesaTypings.TurmaCreateOperationInput;
+    dto: IDomainContracts.TurmaCreateOperationInput;
   }
 >;
 export type IAuthzStatementTurmaUpdate = IBaseAuthzFilter<
   "turma:update",
   {
-    dto: LadesaTypings.TurmaUpdateByIdOperationInput;
+    dto: IDomainContracts.TurmaUpdateByIdOperationInput;
   }
 >;
 export type IAuthzStatementTurmaDelete = IBaseAuthzFilter<
   "turma:delete",
   {
-    dto: LadesaTypings.TurmaFindOneInputView;
+    dto: IDomainContracts.TurmaFindOneInputView;
   }
 >;
 export type IAuthzStatementTurmaFind = IBaseAuthzFilter<"turma:find">;
@@ -262,19 +262,19 @@ export type IAuthzStatementTurmaFind = IBaseAuthzFilter<"turma:find">;
 export type IAuthzStatementDiarioCreate = IBaseAuthzCheck<
   "diario:create",
   {
-    dto: LadesaTypings.DiarioCreateOperationInput;
+    dto: IDomainContracts.DiarioCreateOperationInput;
   }
 >;
 export type IAuthzStatementDiarioUpdate = IBaseAuthzFilter<
   "diario:update",
   {
-    dto: LadesaTypings.DiarioUpdateByIdOperationInput;
+    dto: IDomainContracts.DiarioUpdateByIdOperationInput;
   }
 >;
 export type IAuthzStatementDiarioDelete = IBaseAuthzFilter<
   "diario:delete",
   {
-    dto: LadesaTypings.DiarioFindOneInputView;
+    dto: IDomainContracts.DiarioFindOneInputView;
   }
 >;
 export type IAuthzStatementDiarioFind = IBaseAuthzFilter<"diario:find">;
@@ -284,19 +284,19 @@ export type IAuthzStatementDiarioFind = IBaseAuthzFilter<"diario:find">;
 export type IAuthzStatementReservaCreate = IBaseAuthzCheck<
   "reserva:create",
   {
-    dto: LadesaTypings.ReservaCreateOperationInput;
+    dto: IDomainContracts.ReservaCreateOperationInput;
   }
 >;
 export type IAuthzStatementReservaUpdate = IBaseAuthzFilter<
   "reserva:update",
   {
-    dto: LadesaTypings.ReservaUpdateByIdOperationInput;
+    dto: IDomainContracts.ReservaUpdateByIdOperationInput;
   }
 >;
 export type IAuthzStatementReservaDelete = IBaseAuthzFilter<
   "reserva:delete",
   {
-    dto: LadesaTypings.ReservaFindOneInputView;
+    dto: IDomainContracts.ReservaFindOneInputView;
   }
 >;
 export type IAuthzStatementReservaFind = IBaseAuthzFilter<"reserva:find">;
@@ -306,19 +306,19 @@ export type IAuthzStatementReservaFind = IBaseAuthzFilter<"reserva:find">;
 export type IAuthzStatementCalendarioLetivoCreate = IBaseAuthzCheck<
   "calendario_letivo:create",
   {
-    dto: LadesaTypings.CalendarioLetivoCreateOperationInput;
+    dto: IDomainContracts.CalendarioLetivoCreateOperationInput;
   }
 >;
 export type IAuthzStatementCalendarioLetivoUpdate = IBaseAuthzFilter<
   "calendario_letivo:update",
   {
-    dto: LadesaTypings.CalendarioLetivoUpdateByIdOperationInput;
+    dto: IDomainContracts.CalendarioLetivoUpdateByIdOperationInput;
   }
 >;
 export type IAuthzStatementCalendarioLetivoDelete = IBaseAuthzFilter<
   "calendario_letivo:delete",
   {
-    dto: LadesaTypings.CalendarioLetivoFindOneInputView;
+    dto: IDomainContracts.CalendarioLetivoFindOneInputView;
   }
 >;
 export type IAuthzStatementCalendarioLetivoFind = IBaseAuthzFilter<"calendario_letivo:find">;
@@ -328,7 +328,7 @@ export type IAuthzStatementCalendarioLetivoFind = IBaseAuthzFilter<"calendario_l
 export type IAuthzStatementGradeHorarioOfertaFormacaoCreate = IBaseAuthzCheck<
   "grade_horario_oferta_formacao:create",
   {
-    dto: LadesaTypings.GradeHorarioOfertaFormacaoCreateOperationInput;
+    dto: IDomainContracts.GradeHorarioOfertaFormacaoCreateOperationInput;
   }
 >;
 export type IAuthzStatementGradeHorarioOfertaFormacaoFind = IBaseAuthzFilter<"grade_horario_oferta_formacao:find">;
@@ -336,13 +336,13 @@ export type IAuthzStatementGradeHorarioOfertaFormacaoFind = IBaseAuthzFilter<"gr
 export type IAuthzStatementGradeHorarioOfertaFormacaoUpdate = IBaseAuthzFilter<
   "grade_horario_oferta_formacao:update",
   {
-    dto: LadesaTypings.GradeHorarioOfertaFormacaoUpdateByIdOperationInput;
+    dto: IDomainContracts.GradeHorarioOfertaFormacaoUpdateByIdOperationInput;
   }
 >;
 export type IAuthzStatementGradeHorarioOfertaFormacaoDelete = IBaseAuthzFilter<
   "grade_horario_oferta_formacao:delete",
   {
-    dto: LadesaTypings.GradeHorarioOfertaFormacaoFindOneInputView;
+    dto: IDomainContracts.GradeHorarioOfertaFormacaoFindOneInputView;
   }
 >;
 
@@ -351,7 +351,7 @@ export type IAuthzStatementGradeHorarioOfertaFormacaoDelete = IBaseAuthzFilter<
 export type IAuthzStatementGradeHorarioOfertaFormacaoIntervaloDeTempoCreate = IBaseAuthzCheck<
   "grade_horario_oferta_formacao_intervalo_de_tempo:create",
   {
-    dto: LadesaTypings.GradeHorarioOfertaFormacaoIntervaloDeTempoCreateOperationInput;
+    dto: IDomainContracts.GradeHorarioOfertaFormacaoIntervaloDeTempoCreateOperationInput;
   }
 >;
 export type IAuthzStatementGradeHorarioOfertaFormacaoIntervaloDeTempoFind = IBaseAuthzFilter<"grade_horario_oferta_formacao_intervalo_de_tempo:find">;
@@ -359,13 +359,13 @@ export type IAuthzStatementGradeHorarioOfertaFormacaoIntervaloDeTempoFind = IBas
 export type IAuthzStatementGradeHorarioOfertaFormacaoIntervaloDeTempoUpdate = IBaseAuthzFilter<
   "grade_horario_oferta_formacao_intervalo_de_tempo:update",
   {
-    dto: LadesaTypings.GradeHorarioOfertaFormacaoIntervaloDeTempoUpdateByIdOperationInput;
+    dto: IDomainContracts.GradeHorarioOfertaFormacaoIntervaloDeTempoUpdateByIdOperationInput;
   }
 >;
 export type IAuthzStatementGradeHorarioOfertaFormacaoIntervaloDeTempoDelete = IBaseAuthzFilter<
   "grade_horario_oferta_formacao_intervalo_de_tempo:delete",
   {
-    dto: LadesaTypings.GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInputView;
+    dto: IDomainContracts.GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInputView;
   }
 >;
 
@@ -374,21 +374,21 @@ export type IAuthzStatementGradeHorarioOfertaFormacaoIntervaloDeTempoDelete = IB
 export type IAuthzStatementDiarioProfessorCreate = IBaseAuthzCheck<
   "diario_professor:create",
   {
-    dto: LadesaTypings.DiarioProfessorCreateOperationInput;
+    dto: IDomainContracts.DiarioProfessorCreateOperationInput;
   }
 >;
 
 export type IAuthzStatementDiarioProfessorUpdate = IBaseAuthzFilter<
   "diario_professor:update",
   {
-    dto: LadesaTypings.DiarioProfessorUpdateByIdOperationInput;
+    dto: IDomainContracts.DiarioProfessorUpdateByIdOperationInput;
   }
 >;
 
 export type IAuthzStatementDiarioProfessorDelete = IBaseAuthzFilter<
   "diario_professor:delete",
   {
-    dto: LadesaTypings.DiarioProfessorFindOneInputView;
+    dto: IDomainContracts.DiarioProfessorFindOneInputView;
   }
 >;
 
@@ -399,19 +399,19 @@ export type IAuthzStatementDiarioProfessorFilter = IBaseAuthzFilter<"diario_prof
 export type IAuthzStatementEventoCreate = IBaseAuthzCheck<
   "evento:create",
   {
-    dto: LadesaTypings.EventoCreateOperationInput;
+    dto: IDomainContracts.EventoCreateOperationInput;
   }
 >;
 export type IAuthzStatementEventoUpdate = IBaseAuthzFilter<
   "evento:update",
   {
-    dto: LadesaTypings.EventoUpdateByIdOperationInput;
+    dto: IDomainContracts.EventoUpdateByIdOperationInput;
   }
 >;
 export type IAuthzStatementEventoDelete = IBaseAuthzFilter<
   "evento:delete",
   {
-    dto: LadesaTypings.EventoFindOneInputView;
+    dto: IDomainContracts.EventoFindOneInputView;
   }
 >;
 export type IAuthzStatementEventoFind = IBaseAuthzFilter<"evento:find">;
@@ -421,19 +421,19 @@ export type IAuthzStatementEventoFind = IBaseAuthzFilter<"evento:find">;
 export type IAuthzStatementDiaCalendarioCreate = IBaseAuthzCheck<
   "dia_calendario:create",
   {
-    dto: LadesaTypings.DiaCalendarioCreateOperationInput;
+    dto: IDomainContracts.DiaCalendarioCreateOperationInput;
   }
 >;
 export type IAuthzStatementDiaCalendarioUpdate = IBaseAuthzFilter<
   "dia_calendario:update",
   {
-    dto: LadesaTypings.DiaCalendarioUpdateByIdOperationInput;
+    dto: IDomainContracts.DiaCalendarioUpdateByIdOperationInput;
   }
 >;
 export type IAuthzStatementDiaCalendarioDelete = IBaseAuthzFilter<
   "dia_calendario:delete",
   {
-    dto: LadesaTypings.DiaCalendarioFindOneInputView;
+    dto: IDomainContracts.DiaCalendarioFindOneInputView;
   }
 >;
 export type IAuthzStatementDiaCalendarioFind = IBaseAuthzFilter<"dia_calendario:find">;
@@ -443,19 +443,19 @@ export type IAuthzStatementDiaCalendarioFind = IBaseAuthzFilter<"dia_calendario:
 export type IAuthzStatementEtapaCreate = IBaseAuthzCheck<
   "etapa:create",
   {
-    dto: LadesaTypings.EtapaCreateOperationInput;
+    dto: IDomainContracts.EtapaCreateOperationInput;
   }
 >;
 export type IAuthzStatementEtapaUpdate = IBaseAuthzFilter<
   "etapa:update",
   {
-    dto: LadesaTypings.EtapaUpdateByIdOperationInput;
+    dto: IDomainContracts.EtapaUpdateByIdOperationInput;
   }
 >;
 export type IAuthzStatementEtapaDelete = IBaseAuthzFilter<
   "etapa:delete",
   {
-    dto: LadesaTypings.EtapaFindOneInputView;
+    dto: IDomainContracts.EtapaFindOneInputView;
   }
 >;
 export type IAuthzStatementEtapaFind = IBaseAuthzFilter<"etapa:find">;
@@ -465,19 +465,19 @@ export type IAuthzStatementEtapaFind = IBaseAuthzFilter<"etapa:find">;
 export type IAuthzStatementAulaCreate = IBaseAuthzCheck<
   "aula:create",
   {
-    dto: LadesaTypings.AulaCreateOperationInput;
+    dto: IDomainContracts.AulaCreateOperationInput;
   }
 >;
 export type IAuthzStatementAulaUpdate = IBaseAuthzFilter<
   "aula:update",
   {
-    dto: LadesaTypings.AulaUpdateByIdOperationInput;
+    dto: IDomainContracts.AulaUpdateByIdOperationInput;
   }
 >;
 export type IAuthzStatementAulaDelete = IBaseAuthzFilter<
   "aula:delete",
   {
-    dto: LadesaTypings.AulaFindOneInputView;
+    dto: IDomainContracts.AulaFindOneInputView;
   }
 >;
 export type IAuthzStatementAulaFind = IBaseAuthzFilter<"aula:find">;
@@ -487,19 +487,19 @@ export type IAuthzStatementAulaFind = IBaseAuthzFilter<"aula:find">;
 export type IAuthzStatementDisponibilidadeCreate = IBaseAuthzCheck<
   "disponibilidade:create",
   {
-    dto: LadesaTypings.DisponibilidadeCreateOperationInput;
+    dto: IDomainContracts.DisponibilidadeCreateOperationInput;
   }
 >;
 export type IAuthzStatementDisponibilidadeUpdate = IBaseAuthzFilter<
   "disponibilidade:update",
   {
-    dto: LadesaTypings.DisponibilidadeUpdateByIdOperationInput;
+    dto: IDomainContracts.DisponibilidadeUpdateByIdOperationInput;
   }
 >;
 export type IAuthzStatementDisponibilidadeDelete = IBaseAuthzFilter<
   "disponibilidade:delete",
   {
-    dto: LadesaTypings.DisponibilidadeFindOneInputView;
+    dto: IDomainContracts.DisponibilidadeFindOneInputView;
   }
 >;
 export type IAuthzStatementDisponibilidadeFind = IBaseAuthzFilter<"disponibilidade:find">;
@@ -509,19 +509,19 @@ export type IAuthzStatementDisponibilidadeFind = IBaseAuthzFilter<"disponibilida
 export type IAuthzStatementDisponibilidadeDiaCreate = IBaseAuthzCheck<
   "disponibilidade_dia:create",
   {
-    dto: LadesaTypings.DisponibilidadeDiaCreateOperationInput;
+    dto: IDomainContracts.DisponibilidadeDiaCreateOperationInput;
   }
 >;
 export type IAuthzStatementDisponibilidadeDiaUpdate = IBaseAuthzFilter<
   "disponibilidade_dia:update",
   {
-    dto: LadesaTypings.DisponibilidadeDiaUpdateByIdOperationInput;
+    dto: IDomainContracts.DisponibilidadeDiaUpdateByIdOperationInput;
   }
 >;
 export type IAuthzStatementDisponibilidadeDiaDelete = IBaseAuthzFilter<
   "disponibilidade_dia:delete",
   {
-    dto: LadesaTypings.DisponibilidadeDiaFindOneInputView;
+    dto: IDomainContracts.DisponibilidadeDiaFindOneInputView;
   }
 >;
 export type IAuthzStatementDisponibilidadeDiaFind = IBaseAuthzFilter<"disponibilidade_dia:find">;
@@ -531,19 +531,19 @@ export type IAuthzStatementDisponibilidadeDiaFind = IBaseAuthzFilter<"disponibil
 export type IAuthzStatementTurmaDisponibilidadeCreate = IBaseAuthzCheck<
   "turma_disponibilidade:create",
   {
-    dto: LadesaTypings.TurmaDisponibilidadeCreateOperationInput;
+    dto: IDomainContracts.TurmaDisponibilidadeCreateOperationInput;
   }
 >;
 export type IAuthzStatementTurmaDisponibilidadeUpdate = IBaseAuthzFilter<
   "turma_disponibilidade:update",
   {
-    dto: LadesaTypings.TurmaDisponibilidadeUpdateByIdOperationInput;
+    dto: IDomainContracts.TurmaDisponibilidadeUpdateByIdOperationInput;
   }
 >;
 export type IAuthzStatementTurmaDisponibilidadeDelete = IBaseAuthzFilter<
   "turma_disponibilidade:delete",
   {
-    dto: LadesaTypings.TurmaDisponibilidadeFindOneInputView;
+    dto: IDomainContracts.TurmaDisponibilidadeFindOneInputView;
   }
 >;
 export type IAuthzStatementTurmaDisponibilidadeFind = IBaseAuthzFilter<"turma_disponibilidade:find">;
@@ -553,19 +553,19 @@ export type IAuthzStatementTurmaDisponibilidadeFind = IBaseAuthzFilter<"turma_di
 export type IAuthzStatementProfessorDisponibilidadeCreate = IBaseAuthzCheck<
   "professor_disponibilidade:create",
   {
-    dto: LadesaTypings.ProfessorDisponibilidadeCreateOperationInput;
+    dto: IDomainContracts.ProfessorDisponibilidadeCreateOperationInput;
   }
 >;
 export type IAuthzStatementProfessorDisponibilidadeUpdate = IBaseAuthzFilter<
   "professor_disponibilidade:update",
   {
-    dto: LadesaTypings.ProfessorDisponibilidadeUpdateByIdOperationInput;
+    dto: IDomainContracts.ProfessorDisponibilidadeUpdateByIdOperationInput;
   }
 >;
 export type IAuthzStatementProfessorDisponibilidadeDelete = IBaseAuthzFilter<
   "professor_disponibilidade:delete",
   {
-    dto: LadesaTypings.ProfessorDisponibilidadeFindOneInputView;
+    dto: IDomainContracts.ProfessorDisponibilidadeFindOneInputView;
   }
 >;
 export type IAuthzStatementProfessorDisponibilidadeFind = IBaseAuthzFilter<"professor_disponibilidade:find">;
@@ -575,19 +575,19 @@ export type IAuthzStatementProfessorDisponibilidadeFind = IBaseAuthzFilter<"prof
 export type IAuthzStatementDiarioPreferenciaAgrupamentoCreate = IBaseAuthzCheck<
   "diario_preferencia_agrupamento:create",
   {
-    dto: LadesaTypings.DiarioPreferenciaAgrupamentoCreateOperationInput;
+    dto: IDomainContracts.DiarioPreferenciaAgrupamentoCreateOperationInput;
   }
 >;
 export type IAuthzStatementDiarioPreferenciaAgrupamentoUpdate = IBaseAuthzFilter<
   "diario_preferencia_agrupamento:update",
   {
-    dto: LadesaTypings.DiarioPreferenciaAgrupamentoUpdateByIdOperationInput;
+    dto: IDomainContracts.DiarioPreferenciaAgrupamentoUpdateByIdOperationInput;
   }
 >;
 export type IAuthzStatementDiarioPreferenciaAgrupamentoDelete = IBaseAuthzFilter<
   "diario_preferencia_agrupamento:delete",
   {
-    dto: LadesaTypings.DiarioPreferenciaAgrupamentoFindOneInputView;
+    dto: IDomainContracts.DiarioPreferenciaAgrupamentoFindOneInputView;
   }
 >;
 export type IAuthzStatementDiarioPreferenciaAgrupamentoFind = IBaseAuthzFilter<"diario_preferencia_agrupamento:find">;
@@ -597,19 +597,19 @@ export type IAuthzStatementDiarioPreferenciaAgrupamentoFind = IBaseAuthzFilter<"
 export type IAuthzStatementHorarioGeradoCreate = IBaseAuthzCheck<
   "horario_gerado:create",
   {
-    dto: LadesaTypings.HorarioGeradoCreateOperationInput;
+    dto: IDomainContracts.HorarioGeradoCreateOperationInput;
   }
 >;
 export type IAuthzStatementHorarioGeradoUpdate = IBaseAuthzFilter<
   "horario_gerado:update",
   {
-    dto: LadesaTypings.HorarioGeradoUpdateByIdOperationInput;
+    dto: IDomainContracts.HorarioGeradoUpdateByIdOperationInput;
   }
 >;
 export type IAuthzStatementHorarioGeradoDelete = IBaseAuthzFilter<
   "horario_gerado:delete",
   {
-    dto: LadesaTypings.HorarioGeradoFindOneInputView;
+    dto: IDomainContracts.HorarioGeradoFindOneInputView;
   }
 >;
 export type IAuthzStatementHorarioGeradoFind = IBaseAuthzFilter<"horario_gerado:find">;
@@ -619,19 +619,19 @@ export type IAuthzStatementHorarioGeradoFind = IBaseAuthzFilter<"horario_gerado:
 export type IAuthzStatementHorarioGeradoAulaCreate = IBaseAuthzCheck<
   "horario_gerado_aula:create",
   {
-    dto: LadesaTypings.HorarioGeradoAulaCreateOperationInput;
+    dto: IDomainContracts.HorarioGeradoAulaCreateOperationInput;
   }
 >;
 export type IAuthzStatementHorarioGeradoAulaUpdate = IBaseAuthzFilter<
   "horario_gerado_aula:update",
   {
-    dto: LadesaTypings.HorarioGeradoAulaUpdateByIdOperationInput;
+    dto: IDomainContracts.HorarioGeradoAulaUpdateByIdOperationInput;
   }
 >;
 export type IAuthzStatementHorarioGeradoAulaDelete = IBaseAuthzFilter<
   "horario_gerado_aula:delete",
   {
-    dto: LadesaTypings.HorarioGeradoAulaFindOneInputView;
+    dto: IDomainContracts.HorarioGeradoAulaFindOneInputView;
   }
 >;
 export type IAuthzStatementHorarioGeradoAulaFind = IBaseAuthzFilter<"horario_gerado_aula:find">;

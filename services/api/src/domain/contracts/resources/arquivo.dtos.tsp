@@ -1,4 +1,4 @@
-namespace Ladesa.Domain.v4.Schemas;
+namespace Ladesa.ManagementService.Domain.Contracts;
 
 /**
  * Visão completa de um arquivo.
@@ -10,14 +10,14 @@ model ArquivoView {
 /**
  * Dados de entrada para encontrar um arquivo por id.
  */
-model ArquivoFindOneInputView {
+model ArquivoFindOneInput {
   ...PickProperties<Arquivo, "id">;
 }
 
 /**
  * Dados de saída para encontrar um arquivo por id.
  */
-model ArquivoFindOneResultView {
+model ArquivoFindOneOutput {
   ...PickProperties<ArquivoView, "id">;
 
   //

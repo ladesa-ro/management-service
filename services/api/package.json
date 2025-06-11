@@ -32,7 +32,6 @@
   "dependencies": {
     "@fastify/merge-json-schemas": "^0.2.1",
     "@keycloak/keycloak-admin-client": "^25.0.6",
-    "@ladesa-ro/api.service.domain.contracts": "workspace:*",
     "@ladesa-ro/especificacao": "^3.4.1",
     "@nestjs/common": "^11.1.2",
     "@nestjs/config": "^4.0.2",

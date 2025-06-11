@@ -1,10 +1,10 @@
 import { CombinedInput } from "@/application/standards";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Tokens } from "@ladesa-ro/especificacao";
 import { Controller, Delete, Get, Patch, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
+import type * as IDomainContracts from "~domain.contracts";
 import { OfertaFormacaoNivelFormacaoService } from "./oferta-formacao-nivel-formacao.service";
 
 @ApiTags("ofertas-formacoes-niveis-formacoes")
@@ -20,8 +20,8 @@ export class OfertaFormacaoNivelFormacaoController {
     //
     @AccessContextHttp() accessContext: AccessContext,
     @CombinedInput()
-    dto: LadesaTypings.OfertaFormacaoNivelFormacaoListOperationInput,
-  ): Promise<LadesaTypings.OfertaFormacaoNivelFormacaoListOperationOutput["success"]> {
+    dto: IDomainContracts.OfertaFormacaoNivelFormacaoListOperationInput,
+  ): Promise<IDomainContracts.OfertaFormacaoNivelFormacaoListOperationOutput["success"]> {
     return this.ofertaFormacaoNivelFormacaoService.ofertaFormacaoNivelFormacaoFindAll(accessContext, dto);
   }
 
@@ -33,7 +33,7 @@ export class OfertaFormacaoNivelFormacaoController {
     //
     @AccessContextHttp() accessContext: AccessContext,
     @CombinedInput()
-    dto: LadesaTypings.OfertaFormacaoNivelFormacaoFindOneByIdOperationOutput,
+    dto: IDomainContracts.OfertaFormacaoNivelFormacaoFindOneByIdOperationOutput,
   ) {
     return this.ofertaFormacaoNivelFormacaoService.ofertaFormacaoNivelFormacaoFindByIdStrict(accessContext, {
       id: dto.params.id,
@@ -48,7 +48,7 @@ export class OfertaFormacaoNivelFormacaoController {
     //
     @AccessContextHttp() accessContext: AccessContext,
     @CombinedInput()
-    dto: LadesaTypings.OfertaFormacaoNivelFormacaoCreateOperationInput,
+    dto: IDomainContracts.OfertaFormacaoNivelFormacaoCreateOperationInput,
   ) {
     return this.ofertaFormacaoNivelFormacaoService.ofertaFormacaoNivelFormacaoCreate(accessContext, dto);
   }
@@ -61,7 +61,7 @@ export class OfertaFormacaoNivelFormacaoController {
     //
     @AccessContextHttp() accessContext: AccessContext,
     @CombinedInput()
-    dto: LadesaTypings.OfertaFormacaoNivelFormacaoUpdateByIdOperationInput,
+    dto: IDomainContracts.OfertaFormacaoNivelFormacaoUpdateByIdOperationInput,
   ) {
     return this.ofertaFormacaoNivelFormacaoService.ofertaFormacaoNivelFormacaoUpdate(accessContext, dto);
   }
@@ -74,7 +74,7 @@ export class OfertaFormacaoNivelFormacaoController {
     //
     @AccessContextHttp() accessContext: AccessContext,
     @CombinedInput()
-    dto: LadesaTypings.OfertaFormacaoNivelFormacaoDeleteByIdOperationInput,
+    dto: IDomainContracts.OfertaFormacaoNivelFormacaoDeleteByIdOperationInput,
   ) {
     return this.ofertaFormacaoNivelFormacaoService.ofertaFormacaoNivelFormacaoDeleteOneById(accessContext, {
       id: dto.params.id,

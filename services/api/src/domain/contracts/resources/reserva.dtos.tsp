@@ -1,22 +1,22 @@
 using Ladesa.Domain.v4.Generics;
 using Ladesa.Domain.v4.Generics.Entities;
 
-namespace Ladesa.Domain.v4.Schemas;
+namespace Ladesa.ManagementService.Domain.Contracts;
 
 /** Visão completa de uma Reserva. */
 model ReservaView {
   ...OmitProperties<Reserva, "usuario" | "ambiente">;
-  usuario: UsuarioFindOneResultView;
-  ambiente: AmbienteFindOneResultView;
+  usuario: UsuarioFindOneOutput;
+  ambiente: AmbienteFindOneOutput;
 }
 
 /** Dados de entrada para encontrar uma Reserva por ID. */
-model ReservaFindOneInputView {
+model ReservaFindOneInput {
   id: Reserva.id;
 }
 
 /** Visão FindOne de uma Reserva. */
-model ReservaFindOneResultView {
+model ReservaFindOneOutput {
   //
   ...PickProperties<ReservaView, "id">;
 
@@ -30,14 +30,14 @@ model ReservaFindOneResultView {
 }
 
 /** Dados de entrada para a criação de uma Reserva. */
-model ReservaInputCreateView {
+model ReservaCreateInput {
   ...PickProperties<ReservaView, "situacao" | "motivo" | "tipo" | "rrule">;
-  usuario: UsuarioFindOneInputView;
-  ambiente: AmbienteFindOneInputView;
+  usuario: UsuarioFindOneInput;
+  ambiente: AmbienteFindOneInput;
 }
 
 /** Dados de entrada para a atualização de uma Reserva. */
-model ReservaInputUpdateView is OptionalProperties<ReservaInputCreateView>;
+model ReservaUpdateInput is OptionalProperties<ReservaCreateInput>;
 
 /** Resultados da busca a Reservas. */
-model ReservaListResultView is Pagination.Result.View<ReservaFindOneResultView>;
+model ReservaListOutput is Pagination.Result.View<ReservaFindOneOutput>;

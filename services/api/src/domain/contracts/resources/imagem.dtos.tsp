@@ -1,27 +1,27 @@
 using Ladesa.Domain.v4.Generics;
 using Ladesa.Domain.v4.Generics.Entities;
 
-namespace Ladesa.Domain.v4.Schemas;
+namespace Ladesa.ManagementService.Domain.Contracts;
 
 /**
  * Visão completa de uma Imagem.
  */
 model ImagemView {
   ...OmitProperties<Imagem, "versoes">;
-  versoes: ImagemArquivoFindOneFromImagemResultView[];
+  versoes: ImagemArquivoFindOneFromImagemOutput[];
 }
 
 /**
  * Dados de entrada para encontrar uma imagem por ID.
  */
-model ImagemFindOneInputView {
+model ImagemFindOneInput {
   ...PickProperties<Imagem, "id">;
 }
 
 /**
  * Visão FindOne de uma imagem.
  */
-model ImagemFindOneResultView {
+model ImagemFindOneOutput {
   //
   ...PickProperties<ImagemView, "id">;
 
@@ -35,6 +35,6 @@ model ImagemFindOneResultView {
 /**
  * Visão FindOneFromImagemArquivo de uma imagem.
  */
-model ImagemFindOneFromImagemArquivoResultView {
+model ImagemFindOneFromImagemArquivoOutput {
   ...PickProperties<ImagemView, "id">;
 }

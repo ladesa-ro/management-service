@@ -1,21 +1,21 @@
 using Ladesa.Domain.v4.Generics;
 using Ladesa.Domain.v4.Generics.Entities;
 
-namespace Ladesa.Domain.v4.Schemas;
+namespace Ladesa.ManagementService.Domain.Contracts;
 
 /** Visão completa de uma Etapa. */
 model EtapaView {
   ...OmitProperties<Etapa, "calendario">;
-  calendario: CalendarioLetivoFindOneResultView;
+  calendario: CalendarioLetivoFindOneOutput;
 }
 
 /** Dados de entrada para encontrar uma Etapa por ID. */
-model EtapaFindOneInputView {
+model EtapaFindOneInput {
   id: Etapa.id;
 }
 
 /** Visão FindOne de uma Etapa. */
-model EtapaFindOneResultView {
+model EtapaFindOneOutput {
   ...PickProperties<EtapaView, "id">;
   ...PickProperties<EtapaView, "numero" | "dataInicio" | "dataTermino" | "cor">;
   ...PickProperties<EtapaView, "calendario">;
@@ -23,16 +23,16 @@ model EtapaFindOneResultView {
 }
 
 /** Dados de entrada para a criação de uma Etapa. */
-model EtapaInputCreateView {
+model EtapaCreateInput {
   numero: uint8 | null;
   dataInicio: date;
   dataTermino: date;
   cor: string | null;
-  calendario: CalendarioLetivoFindOneInputView;
+  calendario: CalendarioLetivoFindOneInput;
 }
 
 /** Dados de entrada para a atualização de uma Etapa. */
-model EtapaInputUpdateView is OptionalProperties<EtapaInputCreateView>;
+model EtapaUpdateInput is OptionalProperties<EtapaCreateInput>;
 
 /** Resultados da busca a Etapas. */
-model EtapaListResultView is Pagination.Result.View<EtapaFindOneResultView>;
+model EtapaListOutput is Pagination.Result.View<EtapaFindOneOutput>;

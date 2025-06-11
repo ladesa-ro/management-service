@@ -1,10 +1,10 @@
 import { CombinedInput } from "@/application/standards";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Tokens } from "@ladesa-ro/especificacao";
 import { Controller, Delete, Get, Patch, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
+import type * as IDomainContracts from "~domain.contracts";
 import { TurmaDisponibilidadeService } from "./turma-disponibilidade.service";
 
 @ApiTags("turmas-disponibilidades")
@@ -19,8 +19,8 @@ export class TurmaDisponibilidadeController {
   async turmaDisponibilidadeFindAll(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.TurmaDisponibilidadeListOperationInput,
-  ): Promise<LadesaTypings.TurmaDisponibilidadeListOperationOutput["success"]> {
+    @CombinedInput() dto: IDomainContracts.TurmaDisponibilidadeListOperationInput,
+  ): Promise<IDomainContracts.TurmaDisponibilidadeListOperationOutput["success"]> {
     return this.turmaDisponibilidadeService.turmaDisponibilidadeFindAll(accessContext, dto);
   }
 
@@ -32,7 +32,7 @@ export class TurmaDisponibilidadeController {
     //
     @AccessContextHttp() accessContext: AccessContext,
     @CombinedInput()
-    dto: LadesaTypings.TurmaDisponibilidadeFindOneByIdOperationOutput,
+    dto: IDomainContracts.TurmaDisponibilidadeFindOneByIdOperationOutput,
   ) {
     return this.turmaDisponibilidadeService.turmaDisponibilidadeFindByIdStrict(accessContext, {
       id: dto.params.id,
@@ -46,7 +46,7 @@ export class TurmaDisponibilidadeController {
   async turmaDisponibilidadeCreate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.TurmaDisponibilidadeCreateOperationInput,
+    @CombinedInput() dto: IDomainContracts.TurmaDisponibilidadeCreateOperationInput,
   ) {
     return this.turmaDisponibilidadeService.turmaDisponibilidadeCreate(accessContext, dto);
   }
@@ -59,7 +59,7 @@ export class TurmaDisponibilidadeController {
     //
     @AccessContextHttp() accessContext: AccessContext,
     @CombinedInput()
-    dto: LadesaTypings.TurmaDisponibilidadeUpdateByIdOperationInput,
+    dto: IDomainContracts.TurmaDisponibilidadeUpdateByIdOperationInput,
   ) {
     return this.turmaDisponibilidadeService.turmaDisponibilidadeUpdate(accessContext, dto);
   }
@@ -72,7 +72,7 @@ export class TurmaDisponibilidadeController {
     //
     @AccessContextHttp() accessContext: AccessContext,
     @CombinedInput()
-    dto: LadesaTypings.TurmaDisponibilidadeDeleteByIdOperationInput,
+    dto: IDomainContracts.TurmaDisponibilidadeDeleteByIdOperationInput,
   ) {
     return this.turmaDisponibilidadeService.turmaDisponibilidadeDeleteOneById(accessContext, {
       id: dto.params.id,

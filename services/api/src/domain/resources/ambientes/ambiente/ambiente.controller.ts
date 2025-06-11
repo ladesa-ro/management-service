@@ -1,10 +1,10 @@
 import { CombinedInput } from "@/application/standards";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Tokens } from "@ladesa-ro/especificacao";
 import { Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post, Put, UploadedFile } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
+import type * as IDomainContracts from "~domain.contracts";
 import { AmbienteService } from "./ambiente.service";
 
 @ApiTags("ambientes")
@@ -16,8 +16,8 @@ export class AmbienteController {
   @Operation(Tokens.AmbienteList)
   async ambienteFindAll(
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.AmbienteListOperationInput,
-  ): Promise<LadesaTypings.AmbienteListOperationOutput["success"]> {
+    @CombinedInput() dto: IDomainContracts.AmbienteListOperationInput,
+  ): Promise<IDomainContracts.AmbienteListOperationOutput["success"]> {
     return this.ambienteService.ambienteFindAll(accessContext, dto);
   }
 
@@ -28,7 +28,7 @@ export class AmbienteController {
   async ambienteFindById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.AmbienteFindOneByIdOperationOutput,
+    @CombinedInput() dto: IDomainContracts.AmbienteFindOneByIdOperationOutput,
   ) {
     return this.ambienteService.ambienteFindByIdStrict(accessContext, {
       id: dto.params.id,
@@ -40,7 +40,7 @@ export class AmbienteController {
   async ambienteCreate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.AmbienteCreateOperationInput,
+    @CombinedInput() dto: IDomainContracts.AmbienteCreateOperationInput,
   ) {
     return this.ambienteService.ambienteCreate(accessContext, dto);
   }
@@ -52,7 +52,7 @@ export class AmbienteController {
   async ambienteUpdate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.AmbienteUpdateByIdOperationInput,
+    @CombinedInput() dto: IDomainContracts.AmbienteUpdateByIdOperationInput,
   ) {
     return this.ambienteService.ambienteUpdate(accessContext, dto);
   }
@@ -87,7 +87,7 @@ export class AmbienteController {
   async ambienteDeleteOneById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.AmbienteDeleteByIdOperationInput,
+    @CombinedInput() dto: IDomainContracts.AmbienteDeleteByIdOperationInput,
   ) {
     return this.ambienteService.ambienteDeleteOneById(accessContext, {
       id: dto.params.id,

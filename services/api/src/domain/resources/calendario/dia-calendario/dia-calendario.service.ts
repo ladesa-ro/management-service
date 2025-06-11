@@ -4,10 +4,10 @@ import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
 import type { DiaCalendarioEntity } from "@/infrastructure/integrations/database/typeorm/entities/05-calendario/dia-calendario.entity";
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
+import type * as IDomainContracts from "~domain.contracts";
 import { CalendarioLetivoService } from "../calendario-letivo/calendario-letivo.service";
 
 // ============================================================================
@@ -31,9 +31,9 @@ export class DiaCalendarioService {
 
   async diaCalendarioFindAll(
     accessContext: AccessContext,
-    dto: LadesaTypings.DiaCalendarioListOperationInput | null = null,
+    dto: IDomainContracts.DiaCalendarioListOperationInput | null = null,
     selection?: string[] | boolean,
-  ): Promise<LadesaTypings.DiaCalendarioListOperationOutput["success"]> {
+  ): Promise<IDomainContracts.DiaCalendarioListOperationOutput["success"]> {
     // =========================================================
 
     const qb = this.diaCalendarioRepository.createQueryBuilder(aliasDiaCalendario);
@@ -91,7 +91,7 @@ export class DiaCalendarioService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad(LadesaTypings.Tokens.DiaCalendarioFindOneResultView, qb, aliasDiaCalendario, selection);
+    QbEfficientLoad(IDomainContracts.Tokens.DiaCalendarioFindOneResultView, qb, aliasDiaCalendario, selection);
 
     // =========================================================
 
@@ -105,9 +105,9 @@ export class DiaCalendarioService {
 
   async diaCalendarioFindById(
     accessContext: AccessContext,
-    dto: LadesaTypings.DiaCalendarioFindOneInputView,
+    dto: IDomainContracts.DiaCalendarioFindOneInputView,
     selection?: string[] | boolean,
-  ): Promise<LadesaTypings.DiaCalendarioFindOneResultView | null> {
+  ): Promise<IDomainContracts.DiaCalendarioFindOneResultView | null> {
     // =========================================================
 
     const qb = this.diaCalendarioRepository.createQueryBuilder(aliasDiaCalendario);
@@ -123,7 +123,7 @@ export class DiaCalendarioService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad(LadesaTypings.Tokens.DiaCalendarioFindOneResultView, qb, aliasDiaCalendario, selection);
+    QbEfficientLoad(IDomainContracts.Tokens.DiaCalendarioFindOneResultView, qb, aliasDiaCalendario, selection);
 
     // =========================================================
 
@@ -134,7 +134,7 @@ export class DiaCalendarioService {
     return diaCalendario;
   }
 
-  async diaCalendarioFindByIdStrict(accessContext: AccessContext, dto: LadesaTypings.DiaCalendarioFindOneInputView, selection?: string[] | boolean) {
+  async diaCalendarioFindByIdStrict(accessContext: AccessContext, dto: IDomainContracts.DiaCalendarioFindOneInputView, selection?: string[] | boolean) {
     const diaCalendario = await this.diaCalendarioFindById(accessContext, dto, selection);
 
     if (!diaCalendario) {
@@ -146,9 +146,9 @@ export class DiaCalendarioService {
 
   async diaCalendarioFindByIdSimple(
     accessContext: AccessContext,
-    id: LadesaTypings.DiaCalendarioFindOneInputView["id"],
+    id: IDomainContracts.DiaCalendarioFindOneInputView["id"],
     selection?: string[],
-  ): Promise<LadesaTypings.DiaCalendarioFindOneResultView | null> {
+  ): Promise<IDomainContracts.DiaCalendarioFindOneResultView | null> {
     // =========================================================
 
     const qb = this.diaCalendarioRepository.createQueryBuilder(aliasDiaCalendario);
@@ -164,7 +164,7 @@ export class DiaCalendarioService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad(LadesaTypings.Tokens.DiaCalendarioFindOneResultView, qb, aliasDiaCalendario, selection);
+    QbEfficientLoad(IDomainContracts.Tokens.DiaCalendarioFindOneResultView, qb, aliasDiaCalendario, selection);
 
     // =========================================================
 
@@ -175,7 +175,7 @@ export class DiaCalendarioService {
     return diaCalendario;
   }
 
-  async DiaCalendarioFindByIdSimpleStrict(accessContext: AccessContext, id: LadesaTypings.DiaCalendarioFindOneInputView["id"], selection?: string[]) {
+  async DiaCalendarioFindByIdSimpleStrict(accessContext: AccessContext, id: IDomainContracts.DiaCalendarioFindOneInputView["id"], selection?: string[]) {
     const diaCalendario = await this.diaCalendarioFindByIdSimple(accessContext, id, selection);
 
     if (!diaCalendario) {
@@ -187,7 +187,7 @@ export class DiaCalendarioService {
 
   //
 
-  async diaCalendarioCreate(accessContext: AccessContext, dto: LadesaTypings.DiaCalendarioCreateOperationInput) {
+  async diaCalendarioCreate(accessContext: AccessContext, dto: IDomainContracts.DiaCalendarioCreateOperationInput) {
     // =========================================================
 
     await accessContext.ensurePermission("dia_calendario:create", { dto });
@@ -225,7 +225,7 @@ export class DiaCalendarioService {
     });
   }
 
-  async diaCalendarioUpdate(accessContext: AccessContext, dto: LadesaTypings.DiaCalendarioUpdateByIdOperationInput) {
+  async diaCalendarioUpdate(accessContext: AccessContext, dto: IDomainContracts.DiaCalendarioUpdateByIdOperationInput) {
     // =========================================================
 
     const currentDiaCalendario = await this.diaCalendarioFindByIdStrict(accessContext, {
@@ -271,7 +271,7 @@ export class DiaCalendarioService {
 
   //
 
-  async diaCalendarioDeleteOneById(accessContext: AccessContext, dto: LadesaTypings.DiaCalendarioFindOneInputView) {
+  async diaCalendarioDeleteOneById(accessContext: AccessContext, dto: IDomainContracts.DiaCalendarioFindOneInputView) {
     // =========================================================
 
     await accessContext.ensurePermission("dia_calendario:delete", { dto }, dto.id, this.diaCalendarioRepository.createQueryBuilder(aliasDiaCalendario));

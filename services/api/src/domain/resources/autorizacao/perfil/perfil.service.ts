@@ -4,10 +4,10 @@ import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
 import type { UsuarioEntity } from "@/infrastructure/integrations/database/typeorm/entities";
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
 import { v4 as uuid } from "uuid";
+import type * as IDomainContracts from "~domain.contracts";
 import { CampusService } from "../../ambientes/campus/campus.service";
 import { UsuarioService } from "../../autenticacao/usuario/usuario.service";
 
@@ -48,17 +48,17 @@ export class PerfilService {
       await accessContext.applyFilter("vinculo:find", qb, aliasVinculo, null);
     }
 
-    QbEfficientLoad(LadesaTypings.Tokens.PerfilFindOneResultView, qb, "vinculo");
+    QbEfficientLoad(IDomainContracts.Tokens.PerfilFindOneResultView, qb, "vinculo");
 
     const vinculos = await qb.getMany();
 
     return vinculos;
   }
 
-  async perfilFindAll(accessContext: AccessContext, dto: LadesaTypings.PerfilListOperationInput | null = null, selection?: string[] | boolean) {
+  async perfilFindAll(accessContext: AccessContext, dto: IDomainContracts.PerfilListOperationInput | null = null, selection?: string[] | boolean) {
     const qb = this.vinculoRepository.createQueryBuilder(aliasVinculo);
 
-    QbEfficientLoad(LadesaTypings.Tokens.PerfilFindOneResultView, qb, aliasVinculo, selection);
+    QbEfficientLoad(IDomainContracts.Tokens.PerfilFindOneResultView, qb, aliasVinculo, selection);
 
     await accessContext.applyFilter("vinculo:find", qb, aliasVinculo, null);
 
@@ -98,7 +98,7 @@ export class PerfilService {
     return paginated;
   }
 
-  async perfilFindById(accessContext: AccessContext, dto: LadesaTypings.PerfilFindOneInputView, selection?: string[] | boolean): Promise<LadesaTypings.PerfilFindOneResultView | null> {
+  async perfilFindById(accessContext: AccessContext, dto: IDomainContracts.PerfilFindOneInputView, selection?: string[] | boolean): Promise<IDomainContracts.PerfilFindOneResultView | null> {
     // =========================================================
 
     const qb = this.vinculoRepository.createQueryBuilder(aliasVinculo);
@@ -114,7 +114,7 @@ export class PerfilService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad(LadesaTypings.Tokens.PerfilFindOneResultView, qb, aliasVinculo, selection);
+    QbEfficientLoad(IDomainContracts.Tokens.PerfilFindOneResultView, qb, aliasVinculo, selection);
 
     // =========================================================
 
@@ -125,7 +125,7 @@ export class PerfilService {
     return vinculo;
   }
 
-  async perfilFindByIdStrict(accessContext: AccessContext, dto: LadesaTypings.PerfilFindOneInputView, selection?: string[] | boolean) {
+  async perfilFindByIdStrict(accessContext: AccessContext, dto: IDomainContracts.PerfilFindOneInputView, selection?: string[] | boolean) {
     const vinculo = await this.perfilFindById(accessContext, dto, selection);
 
     if (!vinculo) {
@@ -135,7 +135,7 @@ export class PerfilService {
     return vinculo;
   }
 
-  async perfilSetVinculos(accessContext: AccessContext, dto: LadesaTypings.PerfilUpdateOperationInput) {
+  async perfilSetVinculos(accessContext: AccessContext, dto: IDomainContracts.PerfilUpdateOperationInput) {
     const campus = await this.campusService.campusFindByIdSimpleStrict(accessContext, dto.body.campus.id);
     const usuario = await this.usuarioService.usuarioFindByIdSimpleStrict(accessContext, dto.body.usuario.id);
 

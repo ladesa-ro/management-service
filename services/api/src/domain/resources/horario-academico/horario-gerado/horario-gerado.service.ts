@@ -1,17 +1,17 @@
 import { QbEfficientLoad } from "@/application/standards/ladesa-spec/QbEfficientLoad";
 import {
-  LadesaPaginatedResultDto,
-  LadesaSearch,
+    LadesaPaginatedResultDto,
+    LadesaSearch,
 } from "@/application/standards/ladesa-spec/search/search-strategies";
 import { CalendarioLetivoService } from "@/domain/resources/calendario/calendario-letivo/calendario-letivo.service";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
 import type { HorarioGeradoEntity } from "@/infrastructure/integrations/database/typeorm/entities";
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
+import type * as IDomainContracts from "~domain.contracts";
 
 // ============================================================================
 
@@ -34,9 +34,9 @@ export class HorarioGeradoService {
 
   async horarioGeradoFindAll(
     accessContext: AccessContext,
-    dto: LadesaTypings.HorarioGeradoListOperationInput | null = null,
+    dto: IDomainContracts.HorarioGeradoListOperationInput | null = null,
     selection?: string[] | boolean
-  ): Promise<LadesaTypings.HorarioGeradoListOperationOutput["success"]> {
+  ): Promise<IDomainContracts.HorarioGeradoListOperationOutput["success"]> {
     // =========================================================
 
     const qb =
@@ -109,7 +109,7 @@ export class HorarioGeradoService {
     qb.select([]);
 
     QbEfficientLoad(
-      LadesaTypings.Tokens.HorarioGeradoFindOneResultView,
+      IDomainContracts.Tokens.HorarioGeradoFindOneResultView,
       qb,
       aliasHorarioGerado,
       selection
@@ -131,9 +131,9 @@ export class HorarioGeradoService {
 
   async horarioGeradoFindById(
     accessContext: AccessContext,
-    dto: LadesaTypings.HorarioGeradoFindOneInputView,
+    dto: IDomainContracts.HorarioGeradoFindOneInputView,
     selection?: string[] | boolean
-  ): Promise<LadesaTypings.HorarioGeradoFindOneResultView | null> {
+  ): Promise<IDomainContracts.HorarioGeradoFindOneResultView | null> {
     // =========================================================
 
     const qb =
@@ -157,7 +157,7 @@ export class HorarioGeradoService {
     qb.select([]);
 
     QbEfficientLoad(
-      LadesaTypings.Tokens.HorarioGeradoFindOneResultView,
+      IDomainContracts.Tokens.HorarioGeradoFindOneResultView,
       qb,
       aliasHorarioGerado,
       selection
@@ -174,7 +174,7 @@ export class HorarioGeradoService {
 
   async horarioGeradoFindByIdStrict(
     accessContext: AccessContext,
-    dto: LadesaTypings.HorarioGeradoFindOneInputView,
+    dto: IDomainContracts.HorarioGeradoFindOneInputView,
     selection?: string[] | boolean
   ) {
     const horario = await this.horarioGeradoFindById(
@@ -192,9 +192,9 @@ export class HorarioGeradoService {
 
   async horarioGeradoFindByIdSimple(
     accessContext: AccessContext,
-    id: LadesaTypings.HorarioGeradoFindOneInputView["id"],
+    id: IDomainContracts.HorarioGeradoFindOneInputView["id"],
     selection?: string[]
-  ): Promise<LadesaTypings.HorarioGeradoFindOneResultView | null> {
+  ): Promise<IDomainContracts.HorarioGeradoFindOneResultView | null> {
     // =========================================================
 
     const qb =
@@ -217,7 +217,7 @@ export class HorarioGeradoService {
 
     qb.select([]);
     QbEfficientLoad(
-      LadesaTypings.Tokens.HorarioGeradoFindOneResultView,
+      IDomainContracts.Tokens.HorarioGeradoFindOneResultView,
       qb,
       aliasHorarioGerado,
       selection
@@ -234,7 +234,7 @@ export class HorarioGeradoService {
 
   async horarioGeradoFindByIdSimpleStrict(
     accessContext: AccessContext,
-    id: LadesaTypings.HorarioGeradoFindOneInputView["id"],
+    id: IDomainContracts.HorarioGeradoFindOneInputView["id"],
     selection?: string[]
   ) {
     const horarioGerado = await this.horarioGeradoFindByIdSimple(
@@ -254,7 +254,7 @@ export class HorarioGeradoService {
 
   async horarioGeradoCreate(
     accessContext: AccessContext,
-    dto: LadesaTypings.HorarioGeradoCreateOperationInput
+    dto: IDomainContracts.HorarioGeradoCreateOperationInput
   ) {
     // =========================================================
 
@@ -305,7 +305,7 @@ export class HorarioGeradoService {
 
   async horarioGeradoUpdate(
     accessContext: AccessContext,
-    dto: LadesaTypings.HorarioGeradoUpdateByIdOperationInput
+    dto: IDomainContracts.HorarioGeradoUpdateByIdOperationInput
   ) {
     // =========================================================
 
@@ -372,7 +372,7 @@ export class HorarioGeradoService {
 
   async horarioGeradoDeleteOneById(
     accessContext: AccessContext,
-    dto: LadesaTypings.HorarioGeradoFindOneInputView
+    dto: IDomainContracts.HorarioGeradoFindOneInputView
   ) {
     // =========================================================
 

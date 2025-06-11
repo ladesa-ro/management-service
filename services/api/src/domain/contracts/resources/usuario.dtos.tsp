@@ -1,22 +1,22 @@
 using Ladesa.Domain.v4.Generics;
 using Ladesa.Domain.v4.Generics.Entities;
 
-namespace Ladesa.Domain.v4.Schemas;
+namespace Ladesa.ManagementService.Domain.Contracts;
 
 /** Visão completa de um Usuário. */
 model UsuarioView {
   ...OmitProperties<Usuario, "imagemCapa" | "imagemPerfil">;
-  imagemCapa: ImagemFindOneResultView | null;
-  imagemPerfil: ImagemFindOneResultView | null;
+  imagemCapa: ImagemFindOneOutput | null;
+  imagemPerfil: ImagemFindOneOutput | null;
 }
 
 /** Dados de entrada para encontrar um Usuário por ID. */
-model UsuarioFindOneInputView {
+model UsuarioFindOneInput {
   id: Usuario.id;
 }
 
 /** Visão FindOne de um Usuário. */
-model UsuarioFindOneResultView {
+model UsuarioFindOneOutput {
   //
   ...PickProperties<UsuarioView, "id">;
 
@@ -36,14 +36,14 @@ model UsuarioFindOneResultView {
 }
 
 /** Resultados da busca a usuários. */
-model UsuarioListResultView is Pagination.Result.View<UsuarioFindOneResultView>;
+model UsuarioListOutput is Pagination.Result.View<UsuarioFindOneOutput>;
 
 /** Dados de entrada para a criação de um usuário. */
-model UsuarioInputCreateView {
+model UsuarioCreateInput {
   ...PickProperties<UsuarioView, "nome">;
   ...PickProperties<UsuarioView, "matriculaSiape">;
   ...PickProperties<UsuarioView, "email">;
 }
 
 /** Dados de entrada para a atualização de um Usuário. */
-model UsuarioInputUpdateView is OptionalProperties<UsuarioInputCreateView>;
+model UsuarioUpdateInput is OptionalProperties<UsuarioCreateInput>;

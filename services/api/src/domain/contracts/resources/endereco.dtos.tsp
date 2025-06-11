@@ -1,23 +1,23 @@
 using Ladesa.Domain.v4.Generics;
 using Ladesa.Domain.v4.Generics.Entities;
 
-namespace Ladesa.Domain.v4.Schemas;
+namespace Ladesa.ManagementService.Domain.Contracts;
 
 /** Visão completa de um endereco. */
 model EnderecoView {
   ...OmitProperties<Endereco, "cidade">;
-  cidade: CidadeFindOneResultView;
+  cidade: CidadeFindOneOutput;
 }
 
 /**
  * Dados de entrada para encontrar um endereço por id.
  */
-model EnderecoFindOneInputView is PickProperties<EnderecoView, "id">;
+model EnderecoFindOneInput is PickProperties<EnderecoView, "id">;
 
 /**
  * Visão FindOne de um endereço.
  */
-model EnderecoFindOneResultView {
+model EnderecoFindOneOutput {
   //
   ...PickProperties<EnderecoView, "id">;
 
@@ -48,5 +48,5 @@ model EnderecoInput {
   ...PickProperties<EnderecoView, "bairro">;
   ...PickProperties<EnderecoView, "complemento">;
   ...PickProperties<EnderecoView, "pontoReferencia">;
-  cidade: CidadeFindOneInputView;
+  cidade: CidadeFindOneInput;
 }

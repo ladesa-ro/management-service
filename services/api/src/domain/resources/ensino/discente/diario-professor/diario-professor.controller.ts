@@ -1,10 +1,10 @@
 import { CombinedInput } from "@/application/standards";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Tokens } from "@ladesa-ro/especificacao";
 import { Controller, Delete, Get, Patch, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
+import type * as IDomainContracts from "~domain.contracts";
 import { DiarioProfessorService } from "./diario-professor.service";
 
 @ApiTags("diarios-professores")
@@ -18,8 +18,8 @@ export class DiarioProfessorController {
   @Operation(Tokens.DiarioProfessorList)
   async diarioProfessorFindAll(
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.DiarioProfessorListOperationInput,
-  ): Promise<LadesaTypings.DiarioProfessorListOperationOutput["success"]> {
+    @CombinedInput() dto: IDomainContracts.DiarioProfessorListOperationInput,
+  ): Promise<IDomainContracts.DiarioProfessorListOperationOutput["success"]> {
     return this.diarioProfessorService.diarioProfessorFindAll(accessContext, dto);
   }
 
@@ -31,7 +31,7 @@ export class DiarioProfessorController {
     //
     @AccessContextHttp() accessContext: AccessContext,
     @CombinedInput()
-    dto: LadesaTypings.DiarioProfessorFindOneByIdOperationOutput,
+    dto: IDomainContracts.DiarioProfessorFindOneByIdOperationOutput,
   ) {
     return this.diarioProfessorService.diarioProfessorFindByIdStrict(accessContext, { id: dto.params.id });
   }
@@ -43,7 +43,7 @@ export class DiarioProfessorController {
   async diarioProfessorCreate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.DiarioProfessorCreateOperationInput,
+    @CombinedInput() dto: IDomainContracts.DiarioProfessorCreateOperationInput,
   ) {
     return this.diarioProfessorService.diarioProfessorCreate(accessContext, dto);
   }
@@ -55,7 +55,7 @@ export class DiarioProfessorController {
   async diarioProfessorUpdate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.DiarioProfessorUpdateByIdOperationInput,
+    @CombinedInput() dto: IDomainContracts.DiarioProfessorUpdateByIdOperationInput,
   ) {
     return this.diarioProfessorService.diarioProfessorUpdate(accessContext, dto);
   }
@@ -67,7 +67,7 @@ export class DiarioProfessorController {
   async diarioProfessorDeleteOneById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.DiarioProfessorDeleteByIdOperationInput,
+    @CombinedInput() dto: IDomainContracts.DiarioProfessorDeleteByIdOperationInput,
   ) {
     return this.diarioProfessorService.diarioProfessorDeleteOneById(accessContext, { id: dto.params.id });
   }

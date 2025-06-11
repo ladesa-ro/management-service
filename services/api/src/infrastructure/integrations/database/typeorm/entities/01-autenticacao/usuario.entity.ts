@@ -1,10 +1,10 @@
-import * as LadesaTypings from "@ladesa-ro/especificacao";
+import * as IDomainContracts from "@ladesa-ro/especificacao";
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, type Relation } from "typeorm";
 import { ImagemEntity } from "../00-00-base/imagem.entity";
 import { PerfilEntity } from "../03-autorizacao/perfil.entity";
 
 @Entity("usuario")
-export class UsuarioEntity implements LadesaTypings.Usuario {
+export class UsuarioEntity implements IDomainContracts.Usuario {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 

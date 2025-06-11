@@ -1,7 +1,7 @@
 import { QbEfficientLoad } from "@/application/standards/ladesa-spec/QbEfficientLoad";
 import {
-  LadesaPaginatedResultDto,
-  LadesaSearch,
+    LadesaPaginatedResultDto,
+    LadesaSearch,
 } from "@/application/standards/ladesa-spec/search/search-strategies";
 import { NivelFormacaoService } from "@/domain/resources/ensino/institucional/nivel-formacao/nivel-formacao.service";
 import { OfertaFormacaoService } from "@/domain/resources/ensino/institucional/oferta-formacao/oferta-formacao.service";
@@ -9,10 +9,10 @@ import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
 import type { OfertaFormacaoNivelFormacaoEntity } from "@/infrastructure/integrations/database/typeorm/entities";
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
+import type * as IDomainContracts from "~domain.contracts";
 
 // ============================================================================
 
@@ -36,10 +36,10 @@ export class OfertaFormacaoNivelFormacaoService {
 
   async ofertaFormacaoNivelFormacaoFindAll(
     accessContext: AccessContext,
-    dto: LadesaTypings.OfertaFormacaoNivelFormacaoListOperationInput | null = null,
+    dto: IDomainContracts.OfertaFormacaoNivelFormacaoListOperationInput | null = null,
     selection?: string[]
   ): Promise<
-    LadesaTypings.OfertaFormacaoNivelFormacaoListOperationOutput["success"]
+    IDomainContracts.OfertaFormacaoNivelFormacaoListOperationOutput["success"]
   > {
     // =========================================================
 
@@ -96,7 +96,7 @@ export class OfertaFormacaoNivelFormacaoService {
 
     qb.select([]);
     QbEfficientLoad(
-      LadesaTypings.Tokens.OfertaFormacaoNivelFormacaoView,
+      IDomainContracts.Tokens.OfertaFormacaoNivelFormacaoView,
       qb,
       aliasOfertaFormacaoNivelFormacao,
       selection
@@ -118,9 +118,9 @@ export class OfertaFormacaoNivelFormacaoService {
 
   async ofertaFormacaoNivelFormacaoFindById(
     accessContext: AccessContext | null,
-    dto: LadesaTypings.OfertaFormacaoNivelFormacaoFindOneInputView,
+    dto: IDomainContracts.OfertaFormacaoNivelFormacaoFindOneInputView,
     selection?: string[]
-  ): Promise<LadesaTypings.OfertaFormacaoNivelFormacaoFindOneResultView | null> {
+  ): Promise<IDomainContracts.OfertaFormacaoNivelFormacaoFindOneResultView | null> {
     // =========================================================
 
     const qb = this.ofertaFormacaoNivelFormacaoRepository.createQueryBuilder(
@@ -146,7 +146,7 @@ export class OfertaFormacaoNivelFormacaoService {
 
     qb.select([]);
     QbEfficientLoad(
-      LadesaTypings.Tokens.OfertaFormacaoNivelFormacaoView,
+      IDomainContracts.Tokens.OfertaFormacaoNivelFormacaoView,
       qb,
       aliasOfertaFormacaoNivelFormacao,
       selection
@@ -163,7 +163,7 @@ export class OfertaFormacaoNivelFormacaoService {
 
   async ofertaFormacaoNivelFormacaoFindByIdStrict(
     accessContext: AccessContext,
-    dto: LadesaTypings.OfertaFormacaoNivelFormacaoFindOneInputView,
+    dto: IDomainContracts.OfertaFormacaoNivelFormacaoFindOneInputView,
     selection?: string[]
   ) {
     const ofertaFormacaoNivelFormacao =
@@ -182,9 +182,9 @@ export class OfertaFormacaoNivelFormacaoService {
 
   async ofertaFormacaoNivelFormacaoFindByIdSimple(
     accessContext: AccessContext,
-    id: LadesaTypings.OfertaFormacaoNivelFormacaoFindOneInputView["id"],
+    id: IDomainContracts.OfertaFormacaoNivelFormacaoFindOneInputView["id"],
     selection?: string[]
-  ): Promise<LadesaTypings.OfertaFormacaoNivelFormacaoFindOneResultView | null> {
+  ): Promise<IDomainContracts.OfertaFormacaoNivelFormacaoFindOneResultView | null> {
     // =========================================================
 
     const qb = this.ofertaFormacaoNivelFormacaoRepository.createQueryBuilder(
@@ -208,7 +208,7 @@ export class OfertaFormacaoNivelFormacaoService {
 
     qb.select([]);
     QbEfficientLoad(
-      LadesaTypings.Tokens.OfertaFormacaoNivelFormacaoView,
+      IDomainContracts.Tokens.OfertaFormacaoNivelFormacaoView,
       qb,
       aliasOfertaFormacaoNivelFormacao,
       selection
@@ -225,7 +225,7 @@ export class OfertaFormacaoNivelFormacaoService {
 
   async ofertaFormacaoNivelFormacaoFindByIdSimpleStrict(
     accessContext: AccessContext,
-    id: LadesaTypings.OfertaFormacaoNivelFormacaoFindOneInputView["id"],
+    id: IDomainContracts.OfertaFormacaoNivelFormacaoFindOneInputView["id"],
     selection?: string[]
   ) {
     const ofertaFormacaoNivelFormacao =
@@ -246,7 +246,7 @@ export class OfertaFormacaoNivelFormacaoService {
 
   async ofertaFormacaoNivelFormacaoCreate(
     accessContext: AccessContext,
-    dto: LadesaTypings.OfertaFormacaoNivelFormacaoCreateOperationInput
+    dto: IDomainContracts.OfertaFormacaoNivelFormacaoCreateOperationInput
   ) {
     // =========================================================
 
@@ -322,7 +322,7 @@ export class OfertaFormacaoNivelFormacaoService {
 
   async ofertaFormacaoNivelFormacaoUpdate(
     accessContext: AccessContext,
-    dto: LadesaTypings.OfertaFormacaoNivelFormacaoUpdateByIdOperationInput
+    dto: IDomainContracts.OfertaFormacaoNivelFormacaoUpdateByIdOperationInput
   ) {
     // =========================================================
 
@@ -416,7 +416,7 @@ export class OfertaFormacaoNivelFormacaoService {
 
   async ofertaFormacaoNivelFormacaoDeleteOneById(
     accessContext: AccessContext,
-    dto: LadesaTypings.OfertaFormacaoNivelFormacaoFindOneInputView
+    dto: IDomainContracts.OfertaFormacaoNivelFormacaoFindOneInputView
   ) {
     // =========================================================
 

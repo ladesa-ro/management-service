@@ -1,7 +1,7 @@
 using Ladesa.Domain.v4.Generics;
 using Ladesa.Domain.v4.Generics.Entities;
 
-namespace Ladesa.Domain.v4.Schemas;
+namespace Ladesa.ManagementService.Domain.Contracts;
 
 /** Visão completa de uma modalidade. */
 model ModalidadeView {
@@ -9,12 +9,12 @@ model ModalidadeView {
 }
 
 /** Dados de entrada para encontrar uma modalidade por ID. */
-model ModalidadeFindOneInputView {
+model ModalidadeFindOneInput {
   id: Modalidade.id;
 }
 
 /** Visão FindOne de uma modalidade. */
-model ModalidadeFindOneResultView {
+model ModalidadeFindOneOutput {
   ...PickProperties<ModalidadeView, "id">;
   ...PickProperties<ModalidadeView, "slug">;
   ...PickProperties<
@@ -24,14 +24,12 @@ model ModalidadeFindOneResultView {
 }
 
 /** Dados de entrada para a criação de uma modalidade. */
-model ModalidadeInputCreateView {
+model ModalidadeCreateInput {
   ...PickProperties<ModalidadeView, "slug">;
 }
 
 /** Dados de entrada para a atualização de uma modalidade. */
-model ModalidadeInputUpdateView
-  is OptionalProperties<ModalidadeInputCreateView>;
+model ModalidadeUpdateInput is OptionalProperties<ModalidadeCreateInput>;
 
 /** Resultados da busca a Modalidades. */
-model ModalidadeListResultView
-  is Pagination.Result.View<ModalidadeFindOneResultView>;
+model ModalidadeListOutput is Pagination.Result.View<ModalidadeFindOneOutput>;

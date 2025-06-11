@@ -1,23 +1,23 @@
 using Ladesa.Domain.v4.Generics;
 using Ladesa.Domain.v4.Generics.Entities;
 
-namespace Ladesa.Domain.v4.Schemas;
+namespace Ladesa.ManagementService.Domain.Contracts;
 
 /** Visão completa de uma Turma. */
 model TurmaView {
   ...OmitProperties<Turma, "curso" | "ambientePadraoAula" | "imagemCapa">;
-  curso: CursoFindOneResultView;
-  ambientePadraoAula: AmbienteFindOneResultView | null;
-  imagemCapa: ImagemFindOneResultView | null;
+  curso: CursoFindOneOutput;
+  ambientePadraoAula: AmbienteFindOneOutput | null;
+  imagemCapa: ImagemFindOneOutput | null;
 }
 
 /** Dados de entrada para encontrar uma Turma por ID. */
-model TurmaFindOneInputView {
+model TurmaFindOneInput {
   id: Turma.id;
 }
 
 /** Visão FindOne de uma Turma. */
-model TurmaFindOneResultView {
+model TurmaFindOneOutput {
   //
   ...PickProperties<TurmaView, "id">;
 
@@ -31,14 +31,14 @@ model TurmaFindOneResultView {
 }
 
 /** Dados de entrada para a criação de uma Turma. */
-model TurmaInputCreateView {
+model TurmaCreateInput {
   ...PickProperties<TurmaView, "periodo">;
-  curso: CursoFindOneInputView;
-  ambientePadraoAula: AmbienteFindOneInputView | null;
+  curso: CursoFindOneInput;
+  ambientePadraoAula: AmbienteFindOneInput | null;
 }
 
 /** Dados de entrada para a atualização de uma Turma. */
-model TurmaInputUpdateView is OptionalProperties<TurmaInputCreateView>;
+model TurmaUpdateInput is OptionalProperties<TurmaCreateInput>;
 
 /** Resultados da busca a Turmas. */
-model TurmaListResultView is Pagination.Result.View<TurmaFindOneResultView>;
+model TurmaListOutput is Pagination.Result.View<TurmaFindOneOutput>;

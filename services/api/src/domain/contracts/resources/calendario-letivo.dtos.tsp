@@ -1,22 +1,22 @@
 using Ladesa.Domain.v4.Generics;
 using Ladesa.Domain.v4.Generics.Entities;
 
-namespace Ladesa.Domain.v4.Schemas;
+namespace Ladesa.ManagementService.Domain.Contracts;
 
 /** Visão completa de um calendário letivo. */
 model CalendarioLetivoView {
   ...OmitProperties<CalendarioLetivo, "campus" | "ofertaFormacao">;
-  campus: CampusFindOneResultView;
-  ofertaFormacao: OfertaFormacaoFindOneResultView;
+  campus: CampusFindOneOutput;
+  ofertaFormacao: OfertaFormacaoFindOneOutput;
 }
 
 /** Dados de entrada para encontrar um calendário letivo por ID. */
-model CalendarioLetivoFindOneInputView {
+model CalendarioLetivoFindOneInput {
   id: CalendarioLetivo.id;
 }
 
 /** Visão FindOne de um calendário letivo. */
-model CalendarioLetivoFindOneResultView {
+model CalendarioLetivoFindOneOutput {
   //
   ...PickProperties<CalendarioLetivoView, "id">;
 
@@ -33,16 +33,16 @@ model CalendarioLetivoFindOneResultView {
 }
 
 /** Dados de entrada para a criação de um calendário letivo. */
-model CalendarioLetivoInputCreateView {
+model CalendarioLetivoCreateInput {
   ...PickProperties<CalendarioLetivoView, "nome" | "ano">;
-  campus: CampusFindOneInputView;
-  ofertaFormacao: OfertaFormacaoFindOneInputView;
+  campus: CampusFindOneInput;
+  ofertaFormacao: OfertaFormacaoFindOneInput;
 }
 
 /** Dados de entrada para a atualização de um calendário letivo. */
-model CalendarioLetivoInputUpdateView
-  is OptionalProperties<CalendarioLetivoInputCreateView>;
+model CalendarioLetivoUpdateInput
+  is OptionalProperties<CalendarioLetivoCreateInput>;
 
 /** Resultados da busca a CalendarioLetivos. */
-model CalendarioLetivoListResultView
-  is Pagination.Result.View<CalendarioLetivoFindOneResultView>;
+model CalendarioLetivoListOutput
+  is Pagination.Result.View<CalendarioLetivoFindOneOutput>;

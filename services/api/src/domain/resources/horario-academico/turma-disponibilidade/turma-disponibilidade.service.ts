@@ -1,7 +1,7 @@
 import { QbEfficientLoad } from "@/application/standards/ladesa-spec/QbEfficientLoad";
 import {
-  LadesaPaginatedResultDto,
-  LadesaSearch,
+    LadesaPaginatedResultDto,
+    LadesaSearch,
 } from "@/application/standards/ladesa-spec/search/search-strategies";
 import { TurmaService } from "@/domain/resources/ensino/discente/turma/turma.service";
 import { DisponibilidadeService } from "@/domain/resources/horario-academico/disponibilidade/disponibilidade.service";
@@ -9,10 +9,10 @@ import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
 import type { TurmaDisponibilidadeEntity } from "@/infrastructure/integrations/database/typeorm/entities";
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
+import type * as IDomainContracts from "~domain.contracts";
 
 // ============================================================================
 
@@ -36,9 +36,9 @@ export class TurmaDisponibilidadeService {
 
   async turmaDisponibilidadeFindAll(
     accessContext: AccessContext,
-    dto: LadesaTypings.TurmaDisponibilidadeListOperationInput | null = null,
+    dto: IDomainContracts.TurmaDisponibilidadeListOperationInput | null = null,
     selection?: string[]
-  ): Promise<LadesaTypings.TurmaDisponibilidadeListOperationOutput["success"]> {
+  ): Promise<IDomainContracts.TurmaDisponibilidadeListOperationOutput["success"]> {
     // =========================================================
 
     const qb = this.turmaDisponibilidadeRepository.createQueryBuilder(
@@ -89,7 +89,7 @@ export class TurmaDisponibilidadeService {
 
     qb.select([]);
     QbEfficientLoad(
-      LadesaTypings.Tokens.TurmaDisponibilidadeView,
+      IDomainContracts.Tokens.TurmaDisponibilidadeView,
       qb,
       aliasTurmaDisponibilidade,
       selection
@@ -111,9 +111,9 @@ export class TurmaDisponibilidadeService {
 
   async turmaDisponibilidadeFindById(
     accessContext: AccessContext | null,
-    dto: LadesaTypings.TurmaDisponibilidadeFindOneInputView,
+    dto: IDomainContracts.TurmaDisponibilidadeFindOneInputView,
     selection?: string[]
-  ): Promise<LadesaTypings.TurmaDisponibilidadeFindOneResultView | null> {
+  ): Promise<IDomainContracts.TurmaDisponibilidadeFindOneResultView | null> {
     // =========================================================
 
     const qb = this.turmaDisponibilidadeRepository.createQueryBuilder(
@@ -139,7 +139,7 @@ export class TurmaDisponibilidadeService {
 
     qb.select([]);
     QbEfficientLoad(
-      LadesaTypings.Tokens.TurmaDisponibilidadeView,
+      IDomainContracts.Tokens.TurmaDisponibilidadeView,
       qb,
       aliasTurmaDisponibilidade,
       selection
@@ -156,7 +156,7 @@ export class TurmaDisponibilidadeService {
 
   async turmaDisponibilidadeFindByIdStrict(
     accessContext: AccessContext,
-    dto: LadesaTypings.TurmaDisponibilidadeFindOneInputView,
+    dto: IDomainContracts.TurmaDisponibilidadeFindOneInputView,
     selection?: string[]
   ) {
     const turmaDisponibilidade = await this.turmaDisponibilidadeFindById(
@@ -174,9 +174,9 @@ export class TurmaDisponibilidadeService {
 
   async turmaDisponibilidadeFindByIdSimple(
     accessContext: AccessContext,
-    id: LadesaTypings.TurmaDisponibilidadeFindOneInputView["id"],
+    id: IDomainContracts.TurmaDisponibilidadeFindOneInputView["id"],
     selection?: string[]
-  ): Promise<LadesaTypings.TurmaDisponibilidadeFindOneResultView | null> {
+  ): Promise<IDomainContracts.TurmaDisponibilidadeFindOneResultView | null> {
     // =========================================================
 
     const qb = this.turmaDisponibilidadeRepository.createQueryBuilder(
@@ -200,7 +200,7 @@ export class TurmaDisponibilidadeService {
 
     qb.select([]);
     QbEfficientLoad(
-      LadesaTypings.Tokens.TurmaDisponibilidadeView,
+      IDomainContracts.Tokens.TurmaDisponibilidadeView,
       qb,
       aliasTurmaDisponibilidade,
       selection
@@ -217,7 +217,7 @@ export class TurmaDisponibilidadeService {
 
   async turmaDisponibilidadeFindByIdSimpleStrict(
     accessContext: AccessContext,
-    id: LadesaTypings.TurmaDisponibilidadeFindOneInputView["id"],
+    id: IDomainContracts.TurmaDisponibilidadeFindOneInputView["id"],
     selection?: string[]
   ) {
     const turmaDisponibilidade = await this.turmaDisponibilidadeFindByIdSimple(
@@ -237,7 +237,7 @@ export class TurmaDisponibilidadeService {
 
   async turmaDisponibilidadeCreate(
     accessContext: AccessContext,
-    dto: LadesaTypings.TurmaDisponibilidadeCreateOperationInput
+    dto: IDomainContracts.TurmaDisponibilidadeCreateOperationInput
   ) {
     // =========================================================
 
@@ -299,7 +299,7 @@ export class TurmaDisponibilidadeService {
 
   async turmaDisponibilidadeUpdate(
     accessContext: AccessContext,
-    dto: LadesaTypings.TurmaDisponibilidadeUpdateByIdOperationInput
+    dto: IDomainContracts.TurmaDisponibilidadeUpdateByIdOperationInput
   ) {
     // =========================================================
 
@@ -379,7 +379,7 @@ export class TurmaDisponibilidadeService {
 
   async turmaDisponibilidadeDeleteOneById(
     accessContext: AccessContext,
-    dto: LadesaTypings.TurmaDisponibilidadeFindOneInputView
+    dto: IDomainContracts.TurmaDisponibilidadeFindOneInputView
   ) {
     // =========================================================
 

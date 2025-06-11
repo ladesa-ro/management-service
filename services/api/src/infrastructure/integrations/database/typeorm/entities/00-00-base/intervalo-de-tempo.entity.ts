@@ -1,8 +1,8 @@
-import * as LadesaTypings from "@ladesa-ro/especificacao";
+import * as IDomainContracts from "@ladesa-ro/especificacao";
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity("intervalo_de_tempo")
-export class IntervaloDeTempoEntity implements LadesaTypings.IntervaloDeTempo {
+export class IntervaloDeTempoEntity implements IDomainContracts.IntervaloDeTempo {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 

@@ -1,7 +1,7 @@
 import { QbEfficientLoad } from "@/application/standards/ladesa-spec/QbEfficientLoad";
 import {
-  LadesaPaginatedResultDto,
-  LadesaSearch,
+    LadesaPaginatedResultDto,
+    LadesaSearch,
 } from "@/application/standards/ladesa-spec/search/search-strategies";
 import { CampusService } from "@/domain/resources/ambientes/campus/campus.service";
 import { OfertaFormacaoService } from "@/domain/resources/ensino/institucional/oferta-formacao/oferta-formacao.service";
@@ -9,10 +9,10 @@ import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
 import type { GradeHorarioOfertaFormacaoEntity } from "@/infrastructure/integrations/database/typeorm/entities";
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
+import type * as IDomainContracts from "~domain.contracts";
 
 // ============================================================================
 
@@ -36,10 +36,10 @@ export class GradeHorarioOfertaFormacaoService {
 
   async gradeHorarioOfertaFormacaoFindAll(
     accessContext: AccessContext,
-    dto: LadesaTypings.GradeHorarioOfertaFormacaoListOperationInput | null = null,
+    dto: IDomainContracts.GradeHorarioOfertaFormacaoListOperationInput | null = null,
     selection?: string[]
   ): Promise<
-    LadesaTypings.GradeHorarioOfertaFormacaoListOperationOutput["success"]
+    IDomainContracts.GradeHorarioOfertaFormacaoListOperationOutput["success"]
   > {
     // =========================================================
 
@@ -97,7 +97,7 @@ export class GradeHorarioOfertaFormacaoService {
 
     qb.select([]);
     QbEfficientLoad(
-      LadesaTypings.Tokens.GradeHorarioOfertaFormacaoView,
+      IDomainContracts.Tokens.GradeHorarioOfertaFormacaoView,
       qb,
       aliasGradeHorarioOfertaFormacao,
       selection
@@ -119,9 +119,9 @@ export class GradeHorarioOfertaFormacaoService {
 
   async gradeHorarioOfertaFormacaoFindById(
     accessContext: AccessContext | null,
-    dto: LadesaTypings.GradeHorarioOfertaFormacaoFindOneInputView,
+    dto: IDomainContracts.GradeHorarioOfertaFormacaoFindOneInputView,
     selection?: string[]
-  ): Promise<LadesaTypings.GradeHorarioOfertaFormacaoFindOneResultView | null> {
+  ): Promise<IDomainContracts.GradeHorarioOfertaFormacaoFindOneResultView | null> {
     // =========================================================
 
     const qb = this.gradeHorarioOfertaFormacaoRepository.createQueryBuilder(
@@ -147,7 +147,7 @@ export class GradeHorarioOfertaFormacaoService {
 
     qb.select([]);
     QbEfficientLoad(
-      LadesaTypings.Tokens.GradeHorarioOfertaFormacaoView,
+      IDomainContracts.Tokens.GradeHorarioOfertaFormacaoView,
       qb,
       aliasGradeHorarioOfertaFormacao,
       selection
@@ -164,7 +164,7 @@ export class GradeHorarioOfertaFormacaoService {
 
   async gradeHorarioOfertaFormacaoFindByIdStrict(
     accessContext: AccessContext,
-    dto: LadesaTypings.GradeHorarioOfertaFormacaoFindOneInputView,
+    dto: IDomainContracts.GradeHorarioOfertaFormacaoFindOneInputView,
     selection?: string[]
   ) {
     const gradeHorarioOfertaFormacao =
@@ -183,9 +183,9 @@ export class GradeHorarioOfertaFormacaoService {
 
   async gradeHorarioOfertaFormacaoFindByIdSimple(
     accessContext: AccessContext,
-    id: LadesaTypings.GradeHorarioOfertaFormacaoFindOneInputView["id"],
+    id: IDomainContracts.GradeHorarioOfertaFormacaoFindOneInputView["id"],
     selection?: string[]
-  ): Promise<LadesaTypings.GradeHorarioOfertaFormacaoFindOneResultView | null> {
+  ): Promise<IDomainContracts.GradeHorarioOfertaFormacaoFindOneResultView | null> {
     // =========================================================
 
     const qb = this.gradeHorarioOfertaFormacaoRepository.createQueryBuilder(
@@ -209,7 +209,7 @@ export class GradeHorarioOfertaFormacaoService {
 
     qb.select([]);
     QbEfficientLoad(
-      LadesaTypings.Tokens.GradeHorarioOfertaFormacaoView,
+      IDomainContracts.Tokens.GradeHorarioOfertaFormacaoView,
       qb,
       aliasGradeHorarioOfertaFormacao,
       selection
@@ -226,7 +226,7 @@ export class GradeHorarioOfertaFormacaoService {
 
   async gradeHorarioOfertaFormacaoFindByIdSimpleStrict(
     accessContext: AccessContext,
-    id: LadesaTypings.GradeHorarioOfertaFormacaoFindOneInputView["id"],
+    id: IDomainContracts.GradeHorarioOfertaFormacaoFindOneInputView["id"],
     selection?: string[]
   ) {
     const gradeHorarioOfertaFormacao =
@@ -247,7 +247,7 @@ export class GradeHorarioOfertaFormacaoService {
 
   async gradeHorarioOfertaFormacaoCreate(
     accessContext: AccessContext,
-    dto: LadesaTypings.GradeHorarioOfertaFormacaoCreateOperationInput
+    dto: IDomainContracts.GradeHorarioOfertaFormacaoCreateOperationInput
   ) {
     // =========================================================
 
@@ -341,7 +341,7 @@ export class GradeHorarioOfertaFormacaoService {
 
   async gradeHorarioOfertaFormacaoUpdate(
     accessContext: AccessContext,
-    dto: LadesaTypings.GradeHorarioOfertaFormacaoUpdateByIdOperationInput
+    dto: IDomainContracts.GradeHorarioOfertaFormacaoUpdateByIdOperationInput
   ) {
     // =========================================================
 
@@ -432,7 +432,7 @@ export class GradeHorarioOfertaFormacaoService {
 
   async gradeHorarioOfertaFormacaoDeleteOneById(
     accessContext: AccessContext,
-    dto: LadesaTypings.GradeHorarioOfertaFormacaoFindOneInputView
+    dto: IDomainContracts.GradeHorarioOfertaFormacaoFindOneInputView
   ) {
     // =========================================================
 

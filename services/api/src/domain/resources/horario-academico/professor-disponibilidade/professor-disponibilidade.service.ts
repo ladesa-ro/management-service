@@ -1,7 +1,7 @@
 import { QbEfficientLoad } from "@/application/standards/ladesa-spec/QbEfficientLoad";
 import {
-  LadesaPaginatedResultDto,
-  LadesaSearch,
+    LadesaPaginatedResultDto,
+    LadesaSearch,
 } from "@/application/standards/ladesa-spec/search/search-strategies";
 import { PerfilService } from "@/domain/resources/autorizacao/perfil/perfil.service";
 import { DisponibilidadeService } from "@/domain/resources/horario-academico/disponibilidade/disponibilidade.service";
@@ -9,10 +9,10 @@ import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
 import type { ProfessorDisponibilidadeEntity } from "@/infrastructure/integrations/database/typeorm/entities";
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
+import type * as IDomainContracts from "~domain.contracts";
 
 // ============================================================================
 
@@ -36,10 +36,10 @@ export class ProfessorDisponibilidadeService {
 
   async professorDisponibilidadeFindAll(
     accessContext: AccessContext,
-    dto: LadesaTypings.ProfessorDisponibilidadeListOperationInput | null = null,
+    dto: IDomainContracts.ProfessorDisponibilidadeListOperationInput | null = null,
     selection?: string[]
   ): Promise<
-    LadesaTypings.ProfessorDisponibilidadeListOperationOutput["success"]
+    IDomainContracts.ProfessorDisponibilidadeListOperationOutput["success"]
   > {
     // =========================================================
 
@@ -91,7 +91,7 @@ export class ProfessorDisponibilidadeService {
 
     qb.select([]);
     QbEfficientLoad(
-      LadesaTypings.Tokens.ProfessorDisponibilidadeView,
+      IDomainContracts.Tokens.ProfessorDisponibilidadeView,
       qb,
       aliasProfessorDisponibilidade,
       selection
@@ -113,9 +113,9 @@ export class ProfessorDisponibilidadeService {
 
   async professorDisponibilidadeFindById(
     accessContext: AccessContext | null,
-    dto: LadesaTypings.ProfessorDisponibilidadeFindOneInputView,
+    dto: IDomainContracts.ProfessorDisponibilidadeFindOneInputView,
     selection?: string[]
-  ): Promise<LadesaTypings.ProfessorDisponibilidadeFindOneResultView | null> {
+  ): Promise<IDomainContracts.ProfessorDisponibilidadeFindOneResultView | null> {
     // =========================================================
 
     const qb = this.professorDisponibilidadeRepository.createQueryBuilder(
@@ -141,7 +141,7 @@ export class ProfessorDisponibilidadeService {
 
     qb.select([]);
     QbEfficientLoad(
-      LadesaTypings.Tokens.ProfessorDisponibilidadeView,
+      IDomainContracts.Tokens.ProfessorDisponibilidadeView,
       qb,
       aliasProfessorDisponibilidade,
       selection
@@ -158,7 +158,7 @@ export class ProfessorDisponibilidadeService {
 
   async professorDisponibilidadeFindByIdStrict(
     accessContext: AccessContext,
-    dto: LadesaTypings.ProfessorDisponibilidadeFindOneInputView,
+    dto: IDomainContracts.ProfessorDisponibilidadeFindOneInputView,
     selection?: string[]
   ) {
     const professorDisponibilidade =
@@ -177,9 +177,9 @@ export class ProfessorDisponibilidadeService {
 
   async professorDisponibilidadeFindByIdSimple(
     accessContext: AccessContext,
-    id: LadesaTypings.ProfessorDisponibilidadeFindOneInputView["id"],
+    id: IDomainContracts.ProfessorDisponibilidadeFindOneInputView["id"],
     selection?: string[]
-  ): Promise<LadesaTypings.ProfessorDisponibilidadeFindOneResultView | null> {
+  ): Promise<IDomainContracts.ProfessorDisponibilidadeFindOneResultView | null> {
     // =========================================================
 
     const qb = this.professorDisponibilidadeRepository.createQueryBuilder(
@@ -203,7 +203,7 @@ export class ProfessorDisponibilidadeService {
 
     qb.select([]);
     QbEfficientLoad(
-      LadesaTypings.Tokens.ProfessorDisponibilidadeView,
+      IDomainContracts.Tokens.ProfessorDisponibilidadeView,
       qb,
       aliasProfessorDisponibilidade,
       selection
@@ -220,7 +220,7 @@ export class ProfessorDisponibilidadeService {
 
   async professorDisponibilidadeFindByIdSimpleStrict(
     accessContext: AccessContext,
-    id: LadesaTypings.ProfessorDisponibilidadeFindOneInputView["id"],
+    id: IDomainContracts.ProfessorDisponibilidadeFindOneInputView["id"],
     selection?: string[]
   ) {
     const professorDisponibilidade =
@@ -241,7 +241,7 @@ export class ProfessorDisponibilidadeService {
 
   async professorDisponibilidadeCreate(
     accessContext: AccessContext,
-    dto: LadesaTypings.ProfessorDisponibilidadeCreateOperationInput
+    dto: IDomainContracts.ProfessorDisponibilidadeCreateOperationInput
   ) {
     // =========================================================
 
@@ -306,7 +306,7 @@ export class ProfessorDisponibilidadeService {
 
   async professorDisponibilidadeUpdate(
     accessContext: AccessContext,
-    dto: LadesaTypings.ProfessorDisponibilidadeUpdateByIdOperationInput
+    dto: IDomainContracts.ProfessorDisponibilidadeUpdateByIdOperationInput
   ) {
     // =========================================================
 
@@ -388,7 +388,7 @@ export class ProfessorDisponibilidadeService {
 
   async professorDisponibilidadeDeleteOneById(
     accessContext: AccessContext,
-    dto: LadesaTypings.ProfessorDisponibilidadeFindOneInputView
+    dto: IDomainContracts.ProfessorDisponibilidadeFindOneInputView
   ) {
     // =========================================================
 

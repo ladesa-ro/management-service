@@ -1,7 +1,7 @@
 using Ladesa.Domain.v4.Generics;
 using Ladesa.Domain.v4.Generics.Entities;
 
-namespace Ladesa.Domain.v4.Schemas;
+namespace Ladesa.ManagementService.Domain.Contracts;
 
 /** Visão completa de uma oferta de formação. */
 model OfertaFormacaoNivelFormacaoView {
@@ -9,17 +9,17 @@ model OfertaFormacaoNivelFormacaoView {
     OfertaFormacaoNivelFormacao,
     "ofertaFormacao" | "nivelFormacao"
   >;
-  ofertaFormacao: OfertaFormacaoFindOneResultView;
-  nivelFormacao: NivelFormacaoFindOneResultView;
+  ofertaFormacao: OfertaFormacaoFindOneOutput;
+  nivelFormacao: NivelFormacaoFindOneOutput;
 }
 
 /** Dados de entrada para encontrar uma oferta de formação por ID. */
-model OfertaFormacaoNivelFormacaoFindOneInputView {
+model OfertaFormacaoNivelFormacaoFindOneInput {
   id: OfertaFormacaoNivelFormacao.id;
 }
 
 /** Visão FindOne de uma oferta de formação. */
-model OfertaFormacaoNivelFormacaoFindOneResultView {
+model OfertaFormacaoNivelFormacaoFindOneOutput {
   ...PickProperties<OfertaFormacaoNivelFormacaoView, "id">;
   ...PickProperties<
     OfertaFormacaoNivelFormacaoView,
@@ -32,15 +32,15 @@ model OfertaFormacaoNivelFormacaoFindOneResultView {
 }
 
 /** Dados de entrada para a criação de uma oferta de formação. */
-model OfertaFormacaoNivelFormacaoInputCreateView {
-  ofertaFormacao: OfertaFormacaoFindOneInputView;
-  nivelFormacao: NivelFormacaoFindOneInputView;
+model OfertaFormacaoNivelFormacaoCreateInput {
+  ofertaFormacao: OfertaFormacaoFindOneInput;
+  nivelFormacao: NivelFormacaoFindOneInput;
 }
 
 /** Dados de entrada para a atualização de uma oferta de formação. */
-model OfertaFormacaoNivelFormacaoInputUpdateView
-  is OptionalProperties<OfertaFormacaoNivelFormacaoInputCreateView>;
+model OfertaFormacaoNivelFormacaoUpdateInput
+  is OptionalProperties<OfertaFormacaoNivelFormacaoCreateInput>;
 
 /** Resultados da busca a OfertaFormacaoNivelFormacaos. */
-model OfertaFormacaoNivelFormacaoListResultView
-  is Pagination.Result.View<OfertaFormacaoNivelFormacaoFindOneResultView>;
+model OfertaFormacaoNivelFormacaoListOutput
+  is Pagination.Result.View<OfertaFormacaoNivelFormacaoFindOneOutput>;

@@ -1,6 +1,6 @@
 using Ladesa.Domain.v4.Generics;
 using Ladesa.Domain.v4.Generics.Entities;
-using Ladesa.Domain.v4.Schemas;
+using Ladesa.ManagementService.Domain.Contracts;
 
 /** Visão completa de uma oferta de formação. */
 model GradeHorarioOfertaFormacaoIntervaloDeTempoView {
@@ -8,17 +8,17 @@ model GradeHorarioOfertaFormacaoIntervaloDeTempoView {
     GradeHorarioOfertaFormacaoIntervaloDeTempo,
     "gradeHorarioOfertaFormacao" | "intervaloDeTempo"
   >;
-  gradeHorarioOfertaFormacao: GradeHorarioOfertaFormacaoFindOneResultView;
-  intervaloDeTempo: IntervaloDeTempoFindOneResultView;
+  gradeHorarioOfertaFormacao: GradeHorarioOfertaFormacaoFindOneOutput;
+  intervaloDeTempo: IntervaloDeTempoFindOneOutput;
 }
 
 /** Dados de entrada para encontrar uma oferta de formação por ID. */
-model GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInputView {
+model GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInput {
   id: GradeHorarioOfertaFormacaoIntervaloDeTempo.id;
 }
 
 /** Visão FindOne de uma oferta de formação. */
-model GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneResultView {
+model GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutput {
   ...PickProperties<GradeHorarioOfertaFormacaoIntervaloDeTempoView, "id">;
   ...PickProperties<
     GradeHorarioOfertaFormacaoIntervaloDeTempoView,
@@ -31,15 +31,15 @@ model GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneResultView {
 }
 
 /** Dados de entrada para a criação de uma oferta de formação. */
-model GradeHorarioOfertaFormacaoIntervaloDeTempoInputCreateView {
-  gradeHorarioOfertaFormacao: GradeHorarioOfertaFormacaoFindOneInputView;
-  intervaloDeTempo: IntervaloDeTempoInputView;
+model GradeHorarioOfertaFormacaoIntervaloDeTempoCreateInput {
+  gradeHorarioOfertaFormacao: GradeHorarioOfertaFormacaoFindOneInput;
+  intervaloDeTempo: IntervaloDeTempoInput;
 }
 
 /** Dados de entrada para a atualização de uma oferta de formação. */
-model GradeHorarioOfertaFormacaoIntervaloDeTempoInputUpdateView
-  is OptionalProperties<GradeHorarioOfertaFormacaoIntervaloDeTempoInputCreateView>;
+model GradeHorarioOfertaFormacaoIntervaloDeTempoUpdateInput
+  is OptionalProperties<GradeHorarioOfertaFormacaoIntervaloDeTempoCreateInput>;
 
 /** Resultados da busca a GradeHorarioOfertaFormacaoIntervaloDeTempos. */
-model GradeHorarioOfertaFormacaoIntervaloDeTempoListResultView
-  is Pagination.Result.View<GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneResultView>;
+model GradeHorarioOfertaFormacaoIntervaloDeTempoListOutput
+  is Pagination.Result.View<GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutput>;

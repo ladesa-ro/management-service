@@ -1,14 +1,14 @@
 using Ladesa.Domain.v4.Generics;
 using Ladesa.Domain.v4.Generics.Entities;
-using Ladesa.Domain.v4.Schemas;
+using Ladesa.ManagementService.Domain.Contracts;
 
 /** Dados de entrada para encontrar uma oferta de formação por ID. */
-model GradeHorarioOfertaFormacaoFindOneInputView {
+model GradeHorarioOfertaFormacaoFindOneInput {
   id: GradeHorarioOfertaFormacao.id;
 }
 
 /** Visão FindOne de uma oferta de formação. */
-model GradeHorarioOfertaFormacaoFindOneResultView {
+model GradeHorarioOfertaFormacaoFindOneOutput {
   ...PickProperties<GradeHorarioOfertaFormacaoView, "id">;
   ...PickProperties<
     GradeHorarioOfertaFormacaoView,
@@ -21,15 +21,15 @@ model GradeHorarioOfertaFormacaoFindOneResultView {
 }
 
 /** Dados de entrada para a criação de uma oferta de formação. */
-model GradeHorarioOfertaFormacaoInputCreateView {
-  campus: CampusFindOneInputView;
-  ofertaFormacao: OfertaFormacaoFindOneInputView;
+model GradeHorarioOfertaFormacaoCreateInput {
+  campus: CampusFindOneInput;
+  ofertaFormacao: OfertaFormacaoFindOneInput;
 }
 
 /** Dados de entrada para a atualização de uma oferta de formação. */
-model GradeHorarioOfertaFormacaoInputUpdateView
-  is OptionalProperties<GradeHorarioOfertaFormacaoInputCreateView>;
+model GradeHorarioOfertaFormacaoUpdateInput
+  is OptionalProperties<GradeHorarioOfertaFormacaoCreateInput>;
 
 /** Resultados da busca a GradeHorarioOfertaFormacaos. */
-model GradeHorarioOfertaFormacaoListResultView
-  is Pagination.Result.View<GradeHorarioOfertaFormacaoFindOneResultView>;
+model GradeHorarioOfertaFormacaoListOutput
+  is Pagination.Result.View<GradeHorarioOfertaFormacaoFindOneOutput>;

@@ -1,17 +1,17 @@
 import { QbEfficientLoad } from "@/application/standards/ladesa-spec/QbEfficientLoad";
 import {
-  LadesaPaginatedResultDto,
-  LadesaSearch,
+    LadesaPaginatedResultDto,
+    LadesaSearch,
 } from "@/application/standards/ladesa-spec/search/search-strategies";
 import { CursoService } from "@/domain/resources/ensino/institucional/curso/curso.service";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
 import type { TurmaEntity } from "@/infrastructure/integrations/database/typeorm/entities";
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
+import type * as IDomainContracts from "~domain.contracts";
 import { AmbienteService } from "../../../ambientes/ambiente/ambiente.service";
 import { ArquivoService } from "../../../base/arquivo/arquivo.service";
 import { ImagemService } from "../../../base/imagem/imagem.service";
@@ -40,9 +40,9 @@ export class TurmaService {
 
   async turmaFindAll(
     accessContext: AccessContext,
-    dto: LadesaTypings.TurmaListOperationInput | null = null,
+    dto: IDomainContracts.TurmaListOperationInput | null = null,
     selection?: string[] | boolean
-  ): Promise<LadesaTypings.TurmaListOperationOutput["success"]> {
+  ): Promise<IDomainContracts.TurmaListOperationOutput["success"]> {
     // =========================================================
 
     const qb = this.turmaRepository.createQueryBuilder(aliasTurma);
@@ -122,7 +122,7 @@ export class TurmaService {
 
     qb.select([]);
     QbEfficientLoad(
-      LadesaTypings.Tokens.TurmaFindOneResultView,
+      IDomainContracts.Tokens.TurmaFindOneResultView,
       qb,
       aliasTurma,
       selection
@@ -144,9 +144,9 @@ export class TurmaService {
 
   async turmaFindById(
     accessContext: AccessContext | null,
-    dto: LadesaTypings.TurmaFindOneInputView,
+    dto: IDomainContracts.TurmaFindOneInputView,
     selection?: string[] | boolean
-  ): Promise<LadesaTypings.TurmaFindOneResultView | null> {
+  ): Promise<IDomainContracts.TurmaFindOneResultView | null> {
     // =========================================================
 
     const qb = this.turmaRepository.createQueryBuilder(aliasTurma);
@@ -165,7 +165,7 @@ export class TurmaService {
 
     qb.select([]);
     QbEfficientLoad(
-      LadesaTypings.Tokens.TurmaFindOneResultView,
+      IDomainContracts.Tokens.TurmaFindOneResultView,
       qb,
       aliasTurma,
       selection
@@ -182,7 +182,7 @@ export class TurmaService {
 
   async turmaFindByIdStrict(
     accessContext: AccessContext | null,
-    dto: LadesaTypings.TurmaFindOneInputView,
+    dto: IDomainContracts.TurmaFindOneInputView,
     selection?: string[] | boolean
   ) {
     const turma = await this.turmaFindById(accessContext, dto, selection);
@@ -196,9 +196,9 @@ export class TurmaService {
 
   async turmaFindByIdSimple(
     accessContext: AccessContext,
-    id: LadesaTypings.TurmaFindOneInputView["id"],
+    id: IDomainContracts.TurmaFindOneInputView["id"],
     selection?: string[]
-  ): Promise<LadesaTypings.TurmaFindOneResultView | null> {
+  ): Promise<IDomainContracts.TurmaFindOneResultView | null> {
     // =========================================================
 
     const qb = this.turmaRepository.createQueryBuilder(aliasTurma);
@@ -215,7 +215,7 @@ export class TurmaService {
 
     qb.select([]);
     QbEfficientLoad(
-      LadesaTypings.Tokens.TurmaFindOneResultView,
+      IDomainContracts.Tokens.TurmaFindOneResultView,
       qb,
       aliasTurma,
       selection
@@ -232,7 +232,7 @@ export class TurmaService {
 
   async turmaFindByIdSimpleStrict(
     accessContext: AccessContext,
-    id: LadesaTypings.TurmaFindOneInputView["id"],
+    id: IDomainContracts.TurmaFindOneInputView["id"],
     selection?: string[]
   ) {
     const turma = await this.turmaFindByIdSimple(accessContext, id, selection);
@@ -248,7 +248,7 @@ export class TurmaService {
 
   async turmaCreate(
     accessContext: AccessContext,
-    dto: LadesaTypings.TurmaCreateOperationInput
+    dto: IDomainContracts.TurmaCreateOperationInput
   ) {
     // =========================================================
 
@@ -307,7 +307,7 @@ export class TurmaService {
 
   async turmaUpdate(
     accessContext: AccessContext,
-    dto: LadesaTypings.TurmaUpdateByIdOperationInput
+    dto: IDomainContracts.TurmaUpdateByIdOperationInput
   ) {
     // =========================================================
 
@@ -401,7 +401,7 @@ export class TurmaService {
 
   async turmaUpdateImagemCapa(
     accessContext: AccessContext,
-    dto: LadesaTypings.TurmaFindOneInputView,
+    dto: IDomainContracts.TurmaFindOneInputView,
     file: Express.Multer.File
   ) {
     // =========================================================
@@ -447,7 +447,7 @@ export class TurmaService {
 
   async turmaDeleteOneById(
     accessContext: AccessContext,
-    dto: LadesaTypings.TurmaFindOneInputView
+    dto: IDomainContracts.TurmaFindOneInputView
   ) {
     // =========================================================
 

@@ -1,8 +1,8 @@
-import * as LadesaTypings from "@ladesa-ro/especificacao";
+import * as IDomainContracts from "@ladesa-ro/especificacao";
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity("nivel_formacao")
-export class NivelFormacaoEntity implements LadesaTypings.NivelFormacao {
+export class NivelFormacaoEntity implements IDomainContracts.NivelFormacao {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 

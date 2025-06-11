@@ -8,10 +8,10 @@ import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
 import type { CalendarioLetivoEntity } from "@/infrastructure/integrations/database/typeorm/entities";
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
+import type * as IDomainContracts from "~domain.contracts";
 import { CampusService } from "../../ambientes/campus/campus.service";
 
 // ============================================================================
@@ -36,9 +36,9 @@ export class CalendarioLetivoService {
 
   async calendarioLetivoFindAll(
     accessContext: AccessContext,
-    dto: LadesaTypings.CalendarioLetivoListOperationInput | null = null,
+    dto: IDomainContracts.CalendarioLetivoListOperationInput | null = null,
     selection?: string[] | boolean
-  ): Promise<LadesaTypings.CalendarioLetivoListOperationOutput["success"]> {
+  ): Promise<IDomainContracts.CalendarioLetivoListOperationOutput["success"]> {
     // =========================================================
 
     const qb = this.calendarioLetivoRepository.createQueryBuilder(
@@ -121,7 +121,7 @@ export class CalendarioLetivoService {
 
     qb.select([]);
     QbEfficientLoad(
-      LadesaTypings.Tokens.CalendarioLetivoFindOneResultView,
+      IDomainContracts.Tokens.CalendarioLetivoFindOneResultView,
       qb,
       aliasCalendarioLetivo,
       selection
@@ -143,9 +143,9 @@ export class CalendarioLetivoService {
 
   async caledarioLetivoFindById(
     accessContext: AccessContext,
-    dto: LadesaTypings.CalendarioLetivoFindOneInputView,
+    dto: IDomainContracts.CalendarioLetivoFindOneInputView,
     selection?: string[] | boolean
-  ): Promise<LadesaTypings.CalendarioLetivoFindOneResultView | null> {
+  ): Promise<IDomainContracts.CalendarioLetivoFindOneResultView | null> {
     // =========================================================
 
     const qb = this.calendarioLetivoRepository.createQueryBuilder(
@@ -169,7 +169,7 @@ export class CalendarioLetivoService {
 
     qb.select([]);
     QbEfficientLoad(
-      LadesaTypings.Tokens.CalendarioLetivoFindOneResultView,
+      IDomainContracts.Tokens.CalendarioLetivoFindOneResultView,
       qb,
       aliasCalendarioLetivo,
       selection
@@ -186,7 +186,7 @@ export class CalendarioLetivoService {
 
   async calendarioLetivoFindByIdStrict(
     accessContext: AccessContext,
-    dto: LadesaTypings.CalendarioLetivoFindOneInputView,
+    dto: IDomainContracts.CalendarioLetivoFindOneInputView,
     selection?: string[] | boolean
   ) {
     const calendarioLetivo = await this.caledarioLetivoFindById(
@@ -204,9 +204,9 @@ export class CalendarioLetivoService {
 
   async calendarioLetivoFindByIdSimple(
     accessContext: AccessContext,
-    id: LadesaTypings.CalendarioLetivoFindOneInputView["id"],
+    id: IDomainContracts.CalendarioLetivoFindOneInputView["id"],
     selection?: string[]
-  ): Promise<LadesaTypings.CalendarioLetivoFindOneResultView | null> {
+  ): Promise<IDomainContracts.CalendarioLetivoFindOneResultView | null> {
     // =========================================================
 
     const qb = this.calendarioLetivoRepository.createQueryBuilder(
@@ -230,7 +230,7 @@ export class CalendarioLetivoService {
 
     qb.select([]);
     QbEfficientLoad(
-      LadesaTypings.Tokens.CalendarioLetivoFindOneResultView,
+      IDomainContracts.Tokens.CalendarioLetivoFindOneResultView,
       qb,
       aliasCalendarioLetivo,
       selection
@@ -247,7 +247,7 @@ export class CalendarioLetivoService {
 
   async calendarioLetivoFindByIdSimpleStrict(
     accessContext: AccessContext,
-    id: LadesaTypings.CalendarioLetivoFindOneInputView["id"],
+    id: IDomainContracts.CalendarioLetivoFindOneInputView["id"],
     selection?: string[]
   ) {
     const calendarioLetivo = await this.calendarioLetivoFindByIdSimple(
@@ -267,7 +267,7 @@ export class CalendarioLetivoService {
 
   async calendarioLetivoCreate(
     accessContext: AccessContext,
-    dto: LadesaTypings.CalendarioLetivoCreateOperationInput
+    dto: IDomainContracts.CalendarioLetivoCreateOperationInput
   ) {
     // =========================================================
 
@@ -325,7 +325,7 @@ export class CalendarioLetivoService {
 
   async calendarioLetivoUpdate(
     accessContext: AccessContext,
-    dto: LadesaTypings.CalendarioLetivoUpdateByIdOperationInput
+    dto: IDomainContracts.CalendarioLetivoUpdateByIdOperationInput
   ) {
     // =========================================================
 
@@ -405,7 +405,7 @@ export class CalendarioLetivoService {
 
   async calendarioLetivoDeleteOneById(
     accessContext: AccessContext,
-    dto: LadesaTypings.CalendarioLetivoFindOneInputView
+    dto: IDomainContracts.CalendarioLetivoFindOneInputView
   ) {
     // =========================================================
 

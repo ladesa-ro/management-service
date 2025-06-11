@@ -1,9 +1,9 @@
-import * as LadesaTypings from "@ladesa-ro/especificacao";
+import * as IDomainContracts from "@ladesa-ro/especificacao";
 import { PaginateQuery } from "nestjs-paginate";
 import * as valibot from "valibot";
 
 export type GenericListInputView = {
-  queries: LadesaTypings.GenericSearchInputView;
+  queries: IDomainContracts.GenericSearchInputView;
 };
 
 const undefinedOrType = (schema: valibot.BaseSchema<any, any, valibot.BaseIssue<any>>) =>

@@ -1,7 +1,7 @@
 using Ladesa.Domain.v4.Generics;
 using Ladesa.Domain.v4.Generics.Entities;
 
-namespace Ladesa.Domain.v4.Schemas;
+namespace Ladesa.ManagementService.Domain.Contracts;
 
 /** Visão completa de um diário. */
 model DiarioView {
@@ -14,20 +14,20 @@ model DiarioView {
       | "ambientePadrao"
       | "imagemCapa"
   >;
-  calendarioLetivo: CalendarioLetivoFindOneResultView;
-  turma: TurmaFindOneResultView;
-  disciplina: DisciplinaFindOneResultView;
-  ambientePadrao: AmbienteFindOneResultView | null;
-  imagemCapa: ImagemFindOneResultView | null;
+  calendarioLetivo: CalendarioLetivoFindOneOutput;
+  turma: TurmaFindOneOutput;
+  disciplina: DisciplinaFindOneOutput;
+  ambientePadrao: AmbienteFindOneOutput | null;
+  imagemCapa: ImagemFindOneOutput | null;
 }
 
 /** Dados de entrada para encontrar um diário por ID. */
-model DiarioFindOneInputView {
+model DiarioFindOneInput {
   id: Diario.id;
 }
 
 /** Visão FindOne de um diário. */
-model DiarioFindOneResultView {
+model DiarioFindOneOutput {
   ...PickProperties<DiarioView, "id" | "ativo">;
   ...PickProperties<
     DiarioView,
@@ -42,16 +42,16 @@ model DiarioFindOneResultView {
 }
 
 /** Dados de entrada para a criação de um diário. */
-model DiarioInputCreateView {
+model DiarioCreateInput {
   ativo: boolean;
-  calendarioLetivo: CalendarioLetivoFindOneInputView;
-  turma: TurmaFindOneInputView;
-  disciplina: DisciplinaFindOneInputView;
-  ambientePadrao: AmbienteFindOneInputView | null;
+  calendarioLetivo: CalendarioLetivoFindOneInput;
+  turma: TurmaFindOneInput;
+  disciplina: DisciplinaFindOneInput;
+  ambientePadrao: AmbienteFindOneInput | null;
 }
 
 /** Dados de entrada para a atualização de um diário. */
-model DiarioInputUpdateView is OptionalProperties<DiarioInputCreateView>;
+model DiarioUpdateInput is OptionalProperties<DiarioCreateInput>;
 
 /** Resultados da busca a Diarios. */
-model DiarioListResultView is Pagination.Result.View<DiarioFindOneResultView>;
+model DiarioListOutput is Pagination.Result.View<DiarioFindOneOutput>;

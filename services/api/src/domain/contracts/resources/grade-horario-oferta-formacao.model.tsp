@@ -1,7 +1,7 @@
 using Ladesa.Domain.v4.Generics;
 using Ladesa.Domain.v4.Generics.Entities;
 
-namespace Ladesa.Domain.v4.Schemas;
+namespace Ladesa.ManagementService.Domain.Contracts;
 
 /** GradeHorarioOfertaFormacao. */
 model GradeHorarioOfertaFormacao {
@@ -19,6 +19,6 @@ model GradeHorarioOfertaFormacao {
 /** Visão completa de uma oferta de formação. */
 model GradeHorarioOfertaFormacaoView {
   ...OmitProperties<GradeHorarioOfertaFormacao, "campus" | "ofertaFormacao">;
-  campus: CampusFindOneResultView;
-  ofertaFormacao: OfertaFormacaoFindOneResultView;
+  campus: CampusFindOneOutput;
+  ofertaFormacao: OfertaFormacaoFindOneOutput;
 }

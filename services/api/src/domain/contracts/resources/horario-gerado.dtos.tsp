@@ -1,21 +1,21 @@
 using Ladesa.Domain.v4.Generics;
 using Ladesa.Domain.v4.Generics.Entities;
 
-namespace Ladesa.Domain.v4.Schemas;
+namespace Ladesa.ManagementService.Domain.Contracts;
 
 /** Visão completa de um HorarioGerado. */
 model HorarioGeradoView {
   ...OmitProperties<HorarioGerado, "calendario">;
-  calendario: CalendarioLetivoFindOneResultView;
+  calendario: CalendarioLetivoFindOneOutput;
 }
 
 /** Dados de entrada para encontrar um HorarioGerado por ID. */
-model HorarioGeradoFindOneInputView {
+model HorarioGeradoFindOneInput {
   id: HorarioGerado.id;
 }
 
 /** Visão FindOne de um HorarioGerado. */
-model HorarioGeradoFindOneResultView {
+model HorarioGeradoFindOneOutput {
   ...PickProperties<HorarioGeradoView, "id">;
   ...PickProperties<
     HorarioGeradoView,
@@ -29,7 +29,7 @@ model HorarioGeradoFindOneResultView {
 }
 
 /** Dados de entrada para a criação de um HorarioGerado. */
-model HorarioGeradoInputCreateView {
+model HorarioGeradoCreateInput {
   status: HorarioGerado.status;
   tipo: HorarioGerado.tipo;
   dataGeracao: HorarioGerado.dataGeracao;
@@ -37,13 +37,12 @@ model HorarioGeradoInputCreateView {
   vigenciaFim: HorarioGerado.vigenciaFim;
 
   //
-  calendario: CalendarioLetivoFindOneInputView;
+  calendario: CalendarioLetivoFindOneInput;
 }
 
 /** Dados de entrada para a atualização de um HorarioGerado. */
-model HorarioGeradoInputUpdateView
-  is OptionalProperties<HorarioGeradoInputCreateView>;
+model HorarioGeradoUpdateInput is OptionalProperties<HorarioGeradoCreateInput>;
 
 /** Resultados da busca de HorariosGerados. */
-model HorarioGeradoListResultView
-  is Pagination.Result.View<HorarioGeradoFindOneResultView>;
+model HorarioGeradoListOutput
+  is Pagination.Result.View<HorarioGeradoFindOneOutput>;

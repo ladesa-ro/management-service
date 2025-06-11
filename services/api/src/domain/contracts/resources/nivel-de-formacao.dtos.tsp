@@ -1,7 +1,7 @@
 using Ladesa.Domain.v4.Generics;
 using Ladesa.Domain.v4.Generics.Entities;
 
-namespace Ladesa.Domain.v4.Schemas;
+namespace Ladesa.ManagementService.Domain.Contracts;
 
 /** Visão completa de um nível de formação. */
 model NivelFormacaoView {
@@ -9,12 +9,12 @@ model NivelFormacaoView {
 }
 
 /** Dados de entrada para encontrar um nível de formação por ID. */
-model NivelFormacaoFindOneInputView {
+model NivelFormacaoFindOneInput {
   id: NivelFormacao.id;
 }
 
 /** Visão FindOne de um nível de formação. */
-model NivelFormacaoFindOneResultView {
+model NivelFormacaoFindOneOutput {
   ...PickProperties<NivelFormacaoView, "id">;
   ...PickProperties<NivelFormacaoView, "slug">;
   ...PickProperties<
@@ -24,14 +24,13 @@ model NivelFormacaoFindOneResultView {
 }
 
 /** Dados de entrada para a criação de um nível de formação. */
-model NivelFormacaoInputCreateView {
+model NivelFormacaoCreateInput {
   ...PickProperties<NivelFormacaoView, "slug">;
 }
 
 /** Dados de entrada para a atualização de um nível de formação. */
-model NivelFormacaoInputUpdateView
-  is OptionalProperties<NivelFormacaoInputCreateView>;
+model NivelFormacaoUpdateInput is OptionalProperties<NivelFormacaoCreateInput>;
 
 /** Resultados da busca aos níveis de formações. */
-model NivelFormacaoListResultView
-  is Pagination.Result.View<NivelFormacaoFindOneResultView>;
+model NivelFormacaoListOutput
+  is Pagination.Result.View<NivelFormacaoFindOneOutput>;

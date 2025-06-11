@@ -1,10 +1,10 @@
 import { CombinedInput } from "@/application/standards";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Tokens } from "@ladesa-ro/especificacao";
 import { Controller, Delete, Get, Patch, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
+import type * as IDomainContracts from "~domain.contracts";
 import { DiaCalendarioService } from "./dia-calendario.service";
 
 @ApiTags("dias-calendarios")
@@ -16,8 +16,8 @@ export class DiaCalendarioController {
   @Operation(Tokens.DiaCalendarioList)
   async diaCalendarioFindAll(
     @AccessContextHttp() clientAccess: AccessContext,
-    @CombinedInput() dto: LadesaTypings.DiaCalendarioListOperationInput,
-  ): Promise<LadesaTypings.DiaCalendarioListOperationOutput["success"]> {
+    @CombinedInput() dto: IDomainContracts.DiaCalendarioListOperationInput,
+  ): Promise<IDomainContracts.DiaCalendarioListOperationOutput["success"]> {
     return this.diaCalendarioService.diaCalendarioFindAll(clientAccess, dto);
   }
 
@@ -28,7 +28,7 @@ export class DiaCalendarioController {
   async diaCalendarioFindById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.DiaCalendarioFindOneByIdOperationOutput,
+    @CombinedInput() dto: IDomainContracts.DiaCalendarioFindOneByIdOperationOutput,
   ) {
     return this.diaCalendarioService.diaCalendarioFindByIdStrict(accessContext, { id: dto.params.id });
   }
@@ -40,7 +40,7 @@ export class DiaCalendarioController {
   async diaCalendarioCreate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.DiaCalendarioCreateOperationInput,
+    @CombinedInput() dto: IDomainContracts.DiaCalendarioCreateOperationInput,
   ) {
     return this.diaCalendarioService.diaCalendarioCreate(accessContext, dto);
   }
@@ -52,7 +52,7 @@ export class DiaCalendarioController {
   async diaCalendarioUpdate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.DiaCalendarioUpdateByIdOperationInput,
+    @CombinedInput() dto: IDomainContracts.DiaCalendarioUpdateByIdOperationInput,
   ) {
     return this.diaCalendarioService.diaCalendarioUpdate(accessContext, dto);
   }
@@ -64,7 +64,7 @@ export class DiaCalendarioController {
   async diaCalendarioDeleteOneById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.DiaCalendarioDeleteByIdOperationInput,
+    @CombinedInput() dto: IDomainContracts.DiaCalendarioDeleteByIdOperationInput,
   ) {
     return this.diaCalendarioService.diaCalendarioDeleteOneById(accessContext, {
       id: dto.params.id,

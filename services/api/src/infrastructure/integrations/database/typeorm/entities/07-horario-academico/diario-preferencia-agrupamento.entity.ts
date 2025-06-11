@@ -1,10 +1,10 @@
 import { IntervaloDeTempoEntity } from "@/infrastructure/integrations/database/typeorm/entities/00-00-base";
-import * as LadesaTypings from "@ladesa-ro/especificacao";
+import * as IDomainContracts from "@ladesa-ro/especificacao";
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { DiarioEntity } from "../06-ensino-discente";
 
 @Entity("diario_preferencia_agrupamento")
-export class DiarioPreferenciaAgrupamentoEntity implements LadesaTypings.DiarioPreferenciaAgrupamento {
+export class DiarioPreferenciaAgrupamentoEntity implements IDomainContracts.DiarioPreferenciaAgrupamento {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 
@@ -26,11 +26,11 @@ export class DiarioPreferenciaAgrupamentoEntity implements LadesaTypings.DiarioP
 
   @ManyToOne(() => IntervaloDeTempoEntity)
   @JoinColumn({ name: "id_intervalo_de_tempo_fk" })
-  intervaloDeTempo!: LadesaTypings.IntervaloDeTempo;
+  intervaloDeTempo!: IDomainContracts.IntervaloDeTempo;
 
   @ManyToOne(() => DiarioEntity)
   @JoinColumn({ name: "id_diario_fk" })
-  diario!: LadesaTypings.Diario;
+  diario!: IDomainContracts.Diario;
 
   //
 

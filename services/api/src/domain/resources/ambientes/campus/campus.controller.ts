@@ -1,10 +1,10 @@
 import { CombinedInput } from "@/application/standards";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Tokens } from "@ladesa-ro/especificacao";
 import { Controller, Delete, Get, Patch, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
+import type * as IDomainContracts from "~domain.contracts";
 import { CampusService } from "./campus.service";
 
 @ApiTags("campi")
@@ -19,8 +19,8 @@ export class CampusController {
   async campusFindAll(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.CampusListOperationInput,
-  ): Promise<LadesaTypings.CampusListOperationOutput["success"]> {
+    @CombinedInput() dto: IDomainContracts.CampusListOperationInput,
+  ): Promise<IDomainContracts.CampusListOperationOutput["success"]> {
     return this.campusService.campusFindAll(accessContext, dto);
   }
 
@@ -31,7 +31,7 @@ export class CampusController {
   async campusFindById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.CampusFindOneByIdOperationOutput,
+    @CombinedInput() dto: IDomainContracts.CampusFindOneByIdOperationOutput,
   ) {
     return this.campusService.campusFindByIdStrict(accessContext, {
       id: dto.params.id,
@@ -45,7 +45,7 @@ export class CampusController {
   async campusCreate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.CampusCreateOperationInput,
+    @CombinedInput() dto: IDomainContracts.CampusCreateOperationInput,
   ) {
     return this.campusService.campusCreate(accessContext, dto);
   }
@@ -57,7 +57,7 @@ export class CampusController {
   async campusUpdate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.CampusUpdateOperationInput,
+    @CombinedInput() dto: IDomainContracts.CampusUpdateOperationInput,
   ) {
     return this.campusService.campusUpdate(accessContext, dto);
   }
@@ -69,7 +69,7 @@ export class CampusController {
   async campusDeleteOneById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.CampusDeleteOneByIdOperationInput,
+    @CombinedInput() dto: IDomainContracts.CampusDeleteOneByIdOperationInput,
   ) {
     return this.campusService.campusDeleteOneById(accessContext, {
       id: dto.params.id,

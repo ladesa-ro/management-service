@@ -1,25 +1,25 @@
 using Ladesa.Domain.v4.Generics;
 
-namespace Ladesa.Domain.v4.Schemas;
+namespace Ladesa.ManagementService.Domain.Contracts;
 
 /** Visão completa de um ambiente. */
 model AmbienteView {
   ...OmitProperties<Ambiente, "bloco" | "imagemCapa">;
-  bloco: BlocoFindOneResultView;
-  imagemCapa: ImagemFindOneResultView | null;
+  bloco: BlocoFindOneOutput;
+  imagemCapa: ImagemFindOneOutput | null;
 }
 
 /**
  * Dados de entrada para encontrar um ambiente por id.
  */
-model AmbienteFindOneInputView {
+model AmbienteFindOneInput {
   id: Ambiente.id;
 }
 
 /**
  * Visão FindOne de um ambiente.
  */
-model AmbienteFindOneResultView {
+model AmbienteFindOneOutput {
   //
   ...PickProperties<AmbienteView, "id">;
 
@@ -42,18 +42,17 @@ model AmbienteFindOneResultView {
 }
 
 /** Dados de entrada para a criação de um ambiente. */
-model AmbienteInputCreateView {
+model AmbienteCreateInput {
   ...PickProperties<AmbienteView, "nome">;
   ...PickProperties<AmbienteView, "descricao">;
   ...PickProperties<AmbienteView, "codigo">;
   ...PickProperties<AmbienteView, "capacidade">;
   ...PickProperties<AmbienteView, "tipo">;
-  bloco: BlocoFindOneInputView;
+  bloco: BlocoFindOneInput;
 }
 
 /** Dados de entrada para a atualização de um ambiente. */
-model AmbienteInputUpdateView is OptionalProperties<AmbienteInputCreateView>;
+model AmbienteUpdateInput is OptionalProperties<AmbienteCreateInput>;
 
 /** Resultados da busca a ambientes. */
-model AmbienteListResultView
-  is Pagination.Result.View<AmbienteFindOneResultView>;
+model AmbienteListOutput is Pagination.Result.View<AmbienteFindOneOutput>;

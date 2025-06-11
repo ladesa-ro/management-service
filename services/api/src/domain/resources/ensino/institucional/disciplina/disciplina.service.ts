@@ -1,7 +1,7 @@
 import { QbEfficientLoad } from "@/application/standards/ladesa-spec/QbEfficientLoad";
 import {
-  LadesaPaginatedResultDto,
-  LadesaSearch,
+    LadesaPaginatedResultDto,
+    LadesaSearch,
 } from "@/application/standards/ladesa-spec/search/search-strategies";
 import { ArquivoService } from "@/domain/resources/base/arquivo/arquivo.service";
 import { ImagemService } from "@/domain/resources/base/imagem/imagem.service";
@@ -9,10 +9,10 @@ import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
 import type { DisciplinaEntity } from "@/infrastructure/integrations/database/typeorm/entities";
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { map, pick } from "lodash";
 import { FilterOperator, FilterSuffix } from "nestjs-paginate";
+import type * as IDomainContracts from "~domain.contracts";
 
 // ============================================================================
 
@@ -36,9 +36,9 @@ export class DisciplinaService {
 
   async disciplinaFindAll(
     accessContext: AccessContext,
-    dto: LadesaTypings.DisciplinaListOperationInput | null = null,
+    dto: IDomainContracts.DisciplinaListOperationInput | null = null,
     selection?: string[] | boolean
-  ): Promise<LadesaTypings.DisciplinaListOperationOutput["success"]> {
+  ): Promise<IDomainContracts.DisciplinaListOperationOutput["success"]> {
     // =========================================================
 
     const qb = this.disciplinaRepository.createQueryBuilder(aliasDisciplina);
@@ -97,7 +97,7 @@ export class DisciplinaService {
 
     qb.select([]);
     QbEfficientLoad(
-      LadesaTypings.Tokens.DisciplinaFindOneResultView,
+      IDomainContracts.Tokens.DisciplinaFindOneResultView,
       qb,
       aliasDisciplina,
       selection
@@ -119,9 +119,9 @@ export class DisciplinaService {
 
   async disciplinaFindById(
     accessContext: AccessContext | null,
-    dto: LadesaTypings.DisciplinaFindOneInputView,
+    dto: IDomainContracts.DisciplinaFindOneInputView,
     selection?: string[] | boolean
-  ): Promise<LadesaTypings.DisciplinaFindOneResultView | null> {
+  ): Promise<IDomainContracts.DisciplinaFindOneResultView | null> {
     // =========================================================
 
     const qb = this.disciplinaRepository.createQueryBuilder(aliasDisciplina);
@@ -145,7 +145,7 @@ export class DisciplinaService {
 
     qb.select([]);
     QbEfficientLoad(
-      LadesaTypings.Tokens.DisciplinaFindOneResultView,
+      IDomainContracts.Tokens.DisciplinaFindOneResultView,
       qb,
       aliasDisciplina,
       selection
@@ -162,7 +162,7 @@ export class DisciplinaService {
 
   async disciplinaFindByIdStrict(
     accessContext: AccessContext | null,
-    dto: LadesaTypings.DisciplinaFindOneInputView,
+    dto: IDomainContracts.DisciplinaFindOneInputView,
     selection?: string[] | boolean
   ) {
     const disciplina = await this.disciplinaFindById(
@@ -180,9 +180,9 @@ export class DisciplinaService {
 
   async disciplinaFindByIdSimple(
     accessContext: AccessContext,
-    id: LadesaTypings.DisciplinaFindOneInputView["id"],
+    id: IDomainContracts.DisciplinaFindOneInputView["id"],
     selection?: string[] | boolean
-  ): Promise<LadesaTypings.DisciplinaFindOneResultView | null> {
+  ): Promise<IDomainContracts.DisciplinaFindOneResultView | null> {
     // =========================================================
 
     const qb = this.disciplinaRepository.createQueryBuilder(aliasDisciplina);
@@ -204,7 +204,7 @@ export class DisciplinaService {
 
     qb.select([]);
     QbEfficientLoad(
-      LadesaTypings.Tokens.DisciplinaFindOneResultView,
+      IDomainContracts.Tokens.DisciplinaFindOneResultView,
       qb,
       aliasDisciplina,
       selection
@@ -221,7 +221,7 @@ export class DisciplinaService {
 
   async disciplinaFindByIdSimpleStrict(
     accessContext: AccessContext,
-    id: LadesaTypings.DisciplinaFindOneInputView["id"],
+    id: IDomainContracts.DisciplinaFindOneInputView["id"],
     selection?: string[]
   ) {
     const disciplina = await this.disciplinaFindByIdSimple(
@@ -241,7 +241,7 @@ export class DisciplinaService {
 
   async disciplinaCreate(
     accessContext: AccessContext,
-    dto: LadesaTypings.DisciplinaCreateOperationInput
+    dto: IDomainContracts.DisciplinaCreateOperationInput
   ) {
     // =========================================================
 
@@ -272,7 +272,7 @@ export class DisciplinaService {
 
   async disciplinaUpdate(
     accessContext: AccessContext,
-    dto: LadesaTypings.DisciplinaUpdateByIdOperationInput
+    dto: IDomainContracts.DisciplinaUpdateByIdOperationInput
   ) {
     // =========================================================
 
@@ -339,7 +339,7 @@ export class DisciplinaService {
 
   async disciplinaUpdateImagemCapa(
     accessContext: AccessContext,
-    dto: LadesaTypings.DisciplinaFindOneInputView,
+    dto: IDomainContracts.DisciplinaFindOneInputView,
     file: Express.Multer.File
   ) {
     // =========================================================
@@ -389,7 +389,7 @@ export class DisciplinaService {
 
   async disciplinaDeleteOneById(
     accessContext: AccessContext,
-    dto: LadesaTypings.DisciplinaFindOneInputView
+    dto: IDomainContracts.DisciplinaFindOneInputView
   ) {
     // =========================================================
 

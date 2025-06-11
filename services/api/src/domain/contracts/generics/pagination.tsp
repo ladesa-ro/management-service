@@ -1,6 +1,6 @@
 using TypeSpec.JsonSchema;
 
-using Ladesa.Domain.v4.Schemas;
+using Ladesa.ManagementService.Domain.Contracts;
 using Ladesa.Domain.v4.Generics.Entities;
 
 @baseUri("ladesa://domain/v4/generics/pagination")
@@ -90,7 +90,7 @@ namespace Input {
   }
 
   #deprecated ""
-  model InputView {
+  model Input {
     ...InputBaseView;
 
     /**
@@ -104,7 +104,7 @@ namespace Input {
     filter?: PaginationFilterView[];
   }
 
-  model GenericSearchInputView {
+  model GenericSearchInput {
     ...InputBaseView;
 
     /**

@@ -1,10 +1,10 @@
 import { CampusEntity } from "@/infrastructure/integrations/database/typeorm/entities/02-ambientes";
 import { OfertaFormacaoEntity } from "@/infrastructure/integrations/database/typeorm/entities/04-ensino-institucional/oferta-formacao.entity";
-import * as LadesaTypings from "@ladesa-ro/especificacao";
+import * as IDomainContracts from "@ladesa-ro/especificacao";
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity("grade_horario_oferta_formacao_intervalo_de_tempo")
-export class GradeHorarioOfertaFormacaoIntervaloDeTempoEntity implements LadesaTypings.GradeHorarioOfertaFormacaoIntervaloDeTempo {
+export class GradeHorarioOfertaFormacaoIntervaloDeTempoEntity implements IDomainContracts.GradeHorarioOfertaFormacaoIntervaloDeTempo {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 
@@ -12,11 +12,11 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoEntity implements LadesaT
 
   @ManyToOne(() => CampusEntity)
   @JoinColumn({ name: "id_intervalo_de_tempo_fk" })
-  intervaloDeTempo!: LadesaTypings.IntervaloDeTempo;
+  intervaloDeTempo!: IDomainContracts.IntervaloDeTempo;
 
   @ManyToOne(() => OfertaFormacaoEntity)
   @JoinColumn({ name: "id_grade_horario_oferta_formacao_fk" })
-  gradeHorarioOfertaFormacao!: LadesaTypings.GradeHorarioOfertaFormacao;
+  gradeHorarioOfertaFormacao!: IDomainContracts.GradeHorarioOfertaFormacao;
 
   //
 

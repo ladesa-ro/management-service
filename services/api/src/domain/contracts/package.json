@@ -1,5 +1,11 @@
 {
+  "version": "0.0.0",
+  "private": true,
   "name": "@ladesa-ro/api.service.domain.contracts",
+  "type": "module",
+  "files": [
+    "./.generated/**/*"
+  ],
   "scripts": {
     "tsp:format": "nx tsp:format",
     "json-schema:generate": "nx json-schema:generate",
@@ -14,7 +20,6 @@
       "types": "./.generated/Ladesa.ManagementService.Domain.Contracts.ts"
     }
   },
-
   "devDependencies": {
     "@typespec/compiler": "^1.0.0",
     "@typespec/json-schema": "^1.0.0",

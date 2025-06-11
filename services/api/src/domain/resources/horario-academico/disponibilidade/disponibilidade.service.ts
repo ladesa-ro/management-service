@@ -4,9 +4,9 @@ import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
 import type { DisponibilidadeEntity } from "@/infrastructure/integrations/database/typeorm/entities";
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { map, pick } from "lodash";
+import type * as IDomainContracts from "~domain.contracts";
 
 // ============================================================================
 
@@ -26,9 +26,9 @@ export class DisponibilidadeService {
 
   async disponibilidadeFindAll(
     accessContext: AccessContext,
-    dto: LadesaTypings.DisponibilidadeListOperationInput | null = null,
+    dto: IDomainContracts.DisponibilidadeListOperationInput | null = null,
     selection?: string[],
-  ): Promise<LadesaTypings.DisponibilidadeListOperationOutput["success"]> {
+  ): Promise<IDomainContracts.DisponibilidadeListOperationOutput["success"]> {
     // =========================================================
 
     const qb = this.disponibilidadeRepository.createQueryBuilder(aliasDisponibilidade);
@@ -74,7 +74,7 @@ export class DisponibilidadeService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad(LadesaTypings.Tokens.DisponibilidadeView, qb, aliasDisponibilidade, selection);
+    QbEfficientLoad(IDomainContracts.Tokens.DisponibilidadeView, qb, aliasDisponibilidade, selection);
 
     // =========================================================
 
@@ -89,9 +89,9 @@ export class DisponibilidadeService {
 
   async disponibilidadeFindById(
     accessContext: AccessContext | null,
-    dto: LadesaTypings.DisponibilidadeFindOneInputView,
+    dto: IDomainContracts.DisponibilidadeFindOneInputView,
     selection?: string[],
-  ): Promise<LadesaTypings.DisponibilidadeFindOneResultView | null> {
+  ): Promise<IDomainContracts.DisponibilidadeFindOneResultView | null> {
     // =========================================================
 
     const qb = this.disponibilidadeRepository.createQueryBuilder(aliasDisponibilidade);
@@ -109,7 +109,7 @@ export class DisponibilidadeService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad(LadesaTypings.Tokens.DisponibilidadeView, qb, aliasDisponibilidade, selection);
+    QbEfficientLoad(IDomainContracts.Tokens.DisponibilidadeView, qb, aliasDisponibilidade, selection);
 
     // =========================================================
 
@@ -120,7 +120,7 @@ export class DisponibilidadeService {
     return disponibilidade;
   }
 
-  async disponibilidadeFindByIdStrict(accessContext: AccessContext, dto: LadesaTypings.DisponibilidadeFindOneInputView, selection?: string[]) {
+  async disponibilidadeFindByIdStrict(accessContext: AccessContext, dto: IDomainContracts.DisponibilidadeFindOneInputView, selection?: string[]) {
     const disponibilidade = await this.disponibilidadeFindById(accessContext, dto, selection);
 
     if (!disponibilidade) {
@@ -132,9 +132,9 @@ export class DisponibilidadeService {
 
   async disponibilidadeFindByIdSimple(
     accessContext: AccessContext,
-    id: LadesaTypings.DisponibilidadeFindOneInputView["id"],
+    id: IDomainContracts.DisponibilidadeFindOneInputView["id"],
     selection?: string[],
-  ): Promise<LadesaTypings.DisponibilidadeFindOneResultView | null> {
+  ): Promise<IDomainContracts.DisponibilidadeFindOneResultView | null> {
     // =========================================================
 
     const qb = this.disponibilidadeRepository.createQueryBuilder(aliasDisponibilidade);
@@ -150,7 +150,7 @@ export class DisponibilidadeService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad(LadesaTypings.Tokens.DisponibilidadeView, qb, aliasDisponibilidade, selection);
+    QbEfficientLoad(IDomainContracts.Tokens.DisponibilidadeView, qb, aliasDisponibilidade, selection);
 
     // =========================================================
 
@@ -161,7 +161,7 @@ export class DisponibilidadeService {
     return disponibilidade;
   }
 
-  async disponibilidadeFindByIdSimpleStrict(accessContext: AccessContext, id: LadesaTypings.DisponibilidadeFindOneInputView["id"], selection?: string[]) {
+  async disponibilidadeFindByIdSimpleStrict(accessContext: AccessContext, id: IDomainContracts.DisponibilidadeFindOneInputView["id"], selection?: string[]) {
     const disponibilidade = await this.disponibilidadeFindByIdSimple(accessContext, id, selection);
 
     if (!disponibilidade) {
@@ -173,7 +173,7 @@ export class DisponibilidadeService {
 
   //
 
-  async disponibilidadeCreate(accessContext: AccessContext, dto: LadesaTypings.DisponibilidadeCreateOperationInput) {
+  async disponibilidadeCreate(accessContext: AccessContext, dto: IDomainContracts.DisponibilidadeCreateOperationInput) {
     // =========================================================
 
     await accessContext.ensurePermission("disponibilidade:create", { dto });
@@ -199,7 +199,7 @@ export class DisponibilidadeService {
     });
   }
 
-  async disponibilidadeUpdate(accessContext: AccessContext, dto: LadesaTypings.DisponibilidadeUpdateByIdOperationInput) {
+  async disponibilidadeUpdate(accessContext: AccessContext, dto: IDomainContracts.DisponibilidadeUpdateByIdOperationInput) {
     // =========================================================
 
     const currentDisponibilidade = await this.disponibilidadeFindByIdStrict(accessContext, {
@@ -233,7 +233,7 @@ export class DisponibilidadeService {
 
   //
 
-  async disponibilidadeDeleteOneById(accessContext: AccessContext, dto: LadesaTypings.DisponibilidadeFindOneInputView) {
+  async disponibilidadeDeleteOneById(accessContext: AccessContext, dto: IDomainContracts.DisponibilidadeFindOneInputView) {
     // =========================================================
 
     await accessContext.ensurePermission("disponibilidade:delete", { dto }, dto.id, this.disponibilidadeRepository.createQueryBuilder(aliasDisponibilidade));

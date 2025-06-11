@@ -1,10 +1,10 @@
 using Ladesa.Domain.v4.Generics;
 using Ladesa.Domain.v4.Generics.Entities;
 
-namespace Ladesa.Domain.v4.Schemas;
+namespace Ladesa.ManagementService.Domain.Contracts;
 
 /** Dados de entrada para autenticação. */
-model AuthLoginInputView {
+model AuthLoginInput {
   /** Matrícula SIAPE. */
   matriculaSiape: string;
 

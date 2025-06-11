@@ -1,10 +1,10 @@
 import { PerfilEntity } from "@/infrastructure/integrations/database/typeorm/entities/03-autorizacao";
 import { DisponibilidadeEntity } from "@/infrastructure/integrations/database/typeorm/entities/07-horario-academico/disponibilidade.entity";
-import * as LadesaTypings from "@ladesa-ro/especificacao";
+import * as IDomainContracts from "@ladesa-ro/especificacao";
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity("professor_disponibilidade")
-export class ProfessorDisponibilidadeEntity implements LadesaTypings.ProfessorDisponibilidade {
+export class ProfessorDisponibilidadeEntity implements IDomainContracts.ProfessorDisponibilidade {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 
@@ -12,11 +12,11 @@ export class ProfessorDisponibilidadeEntity implements LadesaTypings.ProfessorDi
 
   @ManyToOne(() => PerfilEntity)
   @JoinColumn({ name: "id_perfil_fk" })
-  perfil!: LadesaTypings.Perfil;
+  perfil!: IDomainContracts.Perfil;
 
   @ManyToOne(() => DisponibilidadeEntity)
   @JoinColumn({ name: "id_disponibilidade_fk" })
-  disponibilidade!: LadesaTypings.Disponibilidade;
+  disponibilidade!: IDomainContracts.Disponibilidade;
 
   //
 

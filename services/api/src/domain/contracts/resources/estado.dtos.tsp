@@ -1,7 +1,7 @@
 using Ladesa.Domain.v4.Generics;
 using Ladesa.Domain.v4.Generics.Entities;
 
-namespace Ladesa.Domain.v4.Schemas;
+namespace Ladesa.ManagementService.Domain.Contracts;
 
 /** Visão completa de um estado. */
 model EstadoView {
@@ -11,12 +11,12 @@ model EstadoView {
 /**
  * Dados de entrada para encontrar um estado por id.
  */
-model EstadoFindOneInputView is PickProperties<EstadoView, "id">;
+model EstadoFindOneInput is PickProperties<EstadoView, "id">;
 
 /**
  * Visão FindOne de um estado.
  */
-model EstadoFindOneResultView {
+model EstadoFindOneOutput {
   //
   ...PickProperties<EstadoView, "id">;
 
@@ -25,4 +25,4 @@ model EstadoFindOneResultView {
 }
 
 /** Resultados da busca a estados. */
-model EstadoListResultView is Pagination.Result.View<EstadoFindOneResultView>;
+model EstadoListOutput is Pagination.Result.View<EstadoFindOneOutput>;

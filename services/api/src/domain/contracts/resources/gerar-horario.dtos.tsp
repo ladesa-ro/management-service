@@ -1,18 +1,18 @@
 using Ladesa.Domain.v4.Generics;
 using Ladesa.Domain.v4.Generics.Entities;
 
-namespace Ladesa.Domain.v4.Schemas;
+namespace Ladesa.ManagementService.Domain.Contracts;
 
 model GerarHorarioInput {
   dataInicial: date;
   dataFinal: date;
-  professores: PerfilFindOneResultView[];
-  turmas: TurmaFindOneResultView[];
-  intervalos: IntervaloDeTempoFindOneResultView[];
+  professores: PerfilFindOneOutput[];
+  turmas: TurmaFindOneOutput[];
+  intervalos: IntervaloDeTempoFindOneOutput[];
 }
 
 model GerarHorarioOutput {
   dataInicial: date;
   dataFinal: date;
-  aulas: HorarioGeradoAulaFindOneInputView[];
+  aulas: HorarioGeradoAulaFindOneInput[];
 }

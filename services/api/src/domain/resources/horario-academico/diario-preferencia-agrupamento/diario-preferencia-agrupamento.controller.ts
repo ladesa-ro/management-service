@@ -1,10 +1,10 @@
 import { CombinedInput } from "@/application/standards";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Tokens } from "@ladesa-ro/especificacao";
 import { Controller, Delete, Get, Patch, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
+import type * as IDomainContracts from "~domain.contracts";
 import { DiarioPreferenciaAgrupamentoService } from "./diario-preferencia-agrupamento.service";
 
 @ApiTags("diarios-preferencia-agrupamento")
@@ -17,8 +17,8 @@ export class DiarioPreferenciaAgrupamentoController {
   async diarioPreferenciaAgrupamentoFindAll(
     @AccessContextHttp() clientAccess: AccessContext,
     @CombinedInput()
-    dto: LadesaTypings.DiarioPreferenciaAgrupamentoListOperationInput,
-  ): Promise<LadesaTypings.DiarioPreferenciaAgrupamentoListOperationOutput["success"]> {
+    dto: IDomainContracts.DiarioPreferenciaAgrupamentoListOperationInput,
+  ): Promise<IDomainContracts.DiarioPreferenciaAgrupamentoListOperationOutput["success"]> {
     return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoFindAll(clientAccess, dto);
   }
 
@@ -30,7 +30,7 @@ export class DiarioPreferenciaAgrupamentoController {
     //
     @AccessContextHttp() accessContext: AccessContext,
     @CombinedInput()
-    dto: LadesaTypings.DiarioPreferenciaAgrupamentoFindByIdOperationOutput,
+    dto: IDomainContracts.DiarioPreferenciaAgrupamentoFindByIdOperationOutput,
   ) {
     return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoFindByIdStrict(accessContext, { id: dto.params.id });
   }
@@ -43,7 +43,7 @@ export class DiarioPreferenciaAgrupamentoController {
     //
     @AccessContextHttp() accessContext: AccessContext,
     @CombinedInput()
-    dto: LadesaTypings.DiarioPreferenciaAgrupamentoCreateOperationInput,
+    dto: IDomainContracts.DiarioPreferenciaAgrupamentoCreateOperationInput,
   ) {
     return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoCreate(accessContext, dto);
   }
@@ -56,7 +56,7 @@ export class DiarioPreferenciaAgrupamentoController {
     //
     @AccessContextHttp() accessContext: AccessContext,
     @CombinedInput()
-    dto: LadesaTypings.DiarioPreferenciaAgrupamentoUpdateByIdOperationInput,
+    dto: IDomainContracts.DiarioPreferenciaAgrupamentoUpdateByIdOperationInput,
   ) {
     return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoUpdate(accessContext, dto);
   }
@@ -69,7 +69,7 @@ export class DiarioPreferenciaAgrupamentoController {
     //
     @AccessContextHttp() accessContext: AccessContext,
     @CombinedInput()
-    dto: LadesaTypings.DiarioPreferenciaAgrupamentoDeleteByIdOperationInput,
+    dto: IDomainContracts.DiarioPreferenciaAgrupamentoDeleteByIdOperationInput,
   ) {
     return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoDeleteOneById(accessContext, { id: dto.params.id });
   }

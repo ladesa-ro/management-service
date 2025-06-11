@@ -1,10 +1,10 @@
 import { ModalidadeEntity } from "@/infrastructure/integrations/database/typeorm/entities/04-ensino-institucional/modalidade.entity";
 import { OfertaFormacaoNivelFormacaoEntity } from "@/infrastructure/integrations/database/typeorm/entities/04-ensino-institucional/oferta-formacao-nivel-formacao.entity";
-import * as LadesaTypings from "@ladesa-ro/especificacao";
+import * as IDomainContracts from "@ladesa-ro/especificacao";
 import { AfterLoad, Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, type Relation } from "typeorm";
 
 @Entity("oferta_formacao")
-export class OfertaFormacaoEntity implements LadesaTypings.OfertaFormacao {
+export class OfertaFormacaoEntity implements IDomainContracts.OfertaFormacao {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 
@@ -24,9 +24,9 @@ export class OfertaFormacaoEntity implements LadesaTypings.OfertaFormacao {
     () => OfertaFormacaoNivelFormacaoEntity,
     (ofeForNivFor) => ofeForNivFor.ofertaFormacao,
   )
-  ofertaFormacaoNiveisFormacoes!: Relation<LadesaTypings.OfertaFormacaoNivelFormacao>[];
+  ofertaFormacaoNiveisFormacoes!: Relation<IDomainContracts.OfertaFormacaoNivelFormacao>[];
 
-  niveisFormacoes!: Relation<LadesaTypings.NivelFormacao>[];
+  niveisFormacoes!: Relation<IDomainContracts.NivelFormacao>[];
 
   @AfterLoad()
   updateNiveisFormacoes() {

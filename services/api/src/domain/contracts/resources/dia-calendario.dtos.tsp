@@ -1,21 +1,21 @@
 using Ladesa.Domain.v4.Generics;
 using Ladesa.Domain.v4.Generics.Entities;
 
-namespace Ladesa.Domain.v4.Schemas;
+namespace Ladesa.ManagementService.Domain.Contracts;
 
 /** Visão completa de um DiaCalendario. */
 model DiaCalendarioView {
   ...OmitProperties<DiaCalendario, "calendario">;
-  calendario: CalendarioLetivoFindOneResultView;
+  calendario: CalendarioLetivoFindOneOutput;
 }
 
 /** Dados de entrada para encontrar um DiaCalendario por ID. */
-model DiaCalendarioFindOneInputView {
+model DiaCalendarioFindOneInput {
   id: DiaCalendario.id;
 }
 
 /** Visão FindOne de um DiaCalendario. */
-model DiaCalendarioFindOneResultView {
+model DiaCalendarioFindOneOutput {
   ...PickProperties<DiaCalendarioView, "id">;
   ...PickProperties<DiaCalendarioView, "data" | "diaLetivo" | "feriado">;
   ...PickProperties<DiaCalendarioView, "calendario">;
@@ -26,17 +26,16 @@ model DiaCalendarioFindOneResultView {
 }
 
 /** Dados de entrada para a criação de um DiaCalendario. */
-model DiaCalendarioInputCreateView {
+model DiaCalendarioCreateInput {
   data: date;
   feriado: boolean;
   diaLetivo: boolean;
-  calendario: CalendarioLetivoFindOneInputView | null;
+  calendario: CalendarioLetivoFindOneInput | null;
 }
 
 /** Dados de entrada para a atualização de um DiaCalendario. */
-model DiaCalendarioInputUpdateView
-  is OptionalProperties<DiaCalendarioInputCreateView>;
+model DiaCalendarioUpdateInput is OptionalProperties<DiaCalendarioCreateInput>;
 
 /** Resultados da busca a DiaCalendarios. */
-model DiaCalendarioListResultView
-  is Pagination.Result.View<DiaCalendarioFindOneResultView>;
+model DiaCalendarioListOutput
+  is Pagination.Result.View<DiaCalendarioFindOneOutput>;

@@ -1,21 +1,21 @@
 using Ladesa.Domain.v4.Generics;
 using Ladesa.Domain.v4.Generics.Entities;
 
-namespace Ladesa.Domain.v4.Schemas;
+namespace Ladesa.ManagementService.Domain.Contracts;
 
 /** Dados de entrada para refresh de autenticação. */
-model AuthRefreshInputView {
+model AuthRefreshInput {
   /** Token de refresh. */
   refreshToken: string;
 }
 
 /** Informações sobre o ator.. */
-model AuthWhoAmIResultView {
+model AuthWhoAmIOutput {
   /** Usuário autenticado. */
-  usuario: UsuarioFindOneResultView | null;
+  usuario: UsuarioFindOneOutput | null;
 
   /** Vínculos do usuário logado. */
-  perfisAtivos: PerfilFindOneResultView[];
+  perfisAtivos: PerfilFindOneOutput[];
 }
 
 /** Credenciais de sessão. */
@@ -46,7 +46,7 @@ model AuthSessionCredentialsView {
 }
 
 /** Dados de entrada para definir a senha inicial. */
-model AuthCredentialsSetInitialPasswordInputView {
+model AuthCredentialsSetInitialPasswordInput {
   /** Matrícula SIAPE. */
   matriculaSiape: string;
 
@@ -55,7 +55,7 @@ model AuthCredentialsSetInitialPasswordInputView {
 }
 
 /** Dados de entrada para autenticação. */
-model AuthRecoverPasswordInputView {
+model AuthRecoverPasswordInput {
   /** E-mail. */
   email: string;
 }

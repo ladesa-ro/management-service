@@ -1,10 +1,10 @@
 import { CombinedInput } from "@/application/standards";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Tokens } from "@ladesa-ro/especificacao";
 import { Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post, Put, UploadedFile } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
+import type * as IDomainContracts from "~domain.contracts";
 import { BlocoService } from "./bloco.service";
 
 @ApiTags("blocos")
@@ -19,8 +19,8 @@ export class BlocoController {
   async blocoFindAll(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() combinedInput: LadesaTypings.BlocoListOperationInput,
-  ): Promise<LadesaTypings.BlocoListOperationOutput["success"]> {
+    @CombinedInput() combinedInput: IDomainContracts.BlocoListOperationInput,
+  ): Promise<IDomainContracts.BlocoListOperationOutput["success"]> {
     return this.blocoService.blocoFindAll(accessContext, combinedInput);
   }
 
@@ -43,7 +43,7 @@ export class BlocoController {
   async blocoCreate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() combinedInput: LadesaTypings.BlocoCreateOperationInput,
+    @CombinedInput() combinedInput: IDomainContracts.BlocoCreateOperationInput,
   ) {
     return this.blocoService.blocoCreate(accessContext, combinedInput);
   }
@@ -55,7 +55,7 @@ export class BlocoController {
   async blocoUpdate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() combinedInput: LadesaTypings.BlocoUpdateByIdOperationInput,
+    @CombinedInput() combinedInput: IDomainContracts.BlocoUpdateByIdOperationInput,
   ) {
     return this.blocoService.blocoUpdate(accessContext, combinedInput);
   }
@@ -90,7 +90,7 @@ export class BlocoController {
   async blocoDeleteOneById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() combinedInput: LadesaTypings.BlocoDeleteByIdOperationInput,
+    @CombinedInput() combinedInput: IDomainContracts.BlocoDeleteByIdOperationInput,
   ) {
     return this.blocoService.blocoDeleteOneById(accessContext, {
       id: combinedInput.params.id,

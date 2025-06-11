@@ -4,10 +4,10 @@ import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
 import type { DiarioProfessorEntity } from "@/infrastructure/integrations/database/typeorm/entities";
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
+import type * as IDomainContracts from "~domain.contracts";
 import { PerfilService } from "../../../autorizacao/perfil/perfil.service";
 import { DiarioService } from "../diario/diario.service";
 
@@ -33,9 +33,9 @@ export class DiarioProfessorService {
 
   async diarioProfessorFindAll(
     accessContext: AccessContext,
-    dto: LadesaTypings.DiarioProfessorListOperationInput | null = null,
+    dto: IDomainContracts.DiarioProfessorListOperationInput | null = null,
     selection?: string[] | boolean,
-  ): Promise<LadesaTypings.DiarioProfessorListOperationOutput["success"]> {
+  ): Promise<IDomainContracts.DiarioProfessorListOperationOutput["success"]> {
     // =========================================================
 
     const qb = this.diarioProfessorRepository.createQueryBuilder(aliasDiarioProfessor);
@@ -96,7 +96,7 @@ export class DiarioProfessorService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad(LadesaTypings.Tokens.DiarioProfessorFindOneResultView, qb, aliasDiarioProfessor, selection);
+    QbEfficientLoad(IDomainContracts.Tokens.DiarioProfessorFindOneResultView, qb, aliasDiarioProfessor, selection);
 
     // =========================================================
 
@@ -110,9 +110,9 @@ export class DiarioProfessorService {
 
   async diarioProfessorFindById(
     accessContext: AccessContext,
-    dto: LadesaTypings.DiarioProfessorFindOneInputView,
+    dto: IDomainContracts.DiarioProfessorFindOneInputView,
     selection?: string[] | boolean,
-  ): Promise<LadesaTypings.DiarioProfessorFindOneResultView | null> {
+  ): Promise<IDomainContracts.DiarioProfessorFindOneResultView | null> {
     // =========================================================
 
     const qb = this.diarioProfessorRepository.createQueryBuilder(aliasDiarioProfessor);
@@ -128,7 +128,7 @@ export class DiarioProfessorService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad(LadesaTypings.Tokens.DiarioProfessorFindOneResultView, qb, aliasDiarioProfessor, selection);
+    QbEfficientLoad(IDomainContracts.Tokens.DiarioProfessorFindOneResultView, qb, aliasDiarioProfessor, selection);
 
     // =========================================================
 
@@ -139,7 +139,7 @@ export class DiarioProfessorService {
     return diarioProfessor;
   }
 
-  async diarioProfessorFindByIdStrict(accessContext: AccessContext, dto: LadesaTypings.DiarioProfessorFindOneInputView, selection?: string[] | boolean) {
+  async diarioProfessorFindByIdStrict(accessContext: AccessContext, dto: IDomainContracts.DiarioProfessorFindOneInputView, selection?: string[] | boolean) {
     const diarioProfessor = await this.diarioProfessorFindById(accessContext, dto, selection);
 
     if (!diarioProfessor) {
@@ -151,9 +151,9 @@ export class DiarioProfessorService {
 
   async diarioProfessorFindByIdSimple(
     accessContext: AccessContext,
-    id: LadesaTypings.DiarioProfessorFindOneInputView["id"],
+    id: IDomainContracts.DiarioProfessorFindOneInputView["id"],
     selection?: string[] | boolean,
-  ): Promise<LadesaTypings.DiarioProfessorFindOneResultView | null> {
+  ): Promise<IDomainContracts.DiarioProfessorFindOneResultView | null> {
     // =========================================================
 
     const qb = this.diarioProfessorRepository.createQueryBuilder(aliasDiarioProfessor);
@@ -169,7 +169,7 @@ export class DiarioProfessorService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad(LadesaTypings.Tokens.DiarioProfessorFindOneResultView, qb, aliasDiarioProfessor, selection);
+    QbEfficientLoad(IDomainContracts.Tokens.DiarioProfessorFindOneResultView, qb, aliasDiarioProfessor, selection);
 
     // =========================================================
 
@@ -180,7 +180,7 @@ export class DiarioProfessorService {
     return diarioProfessor;
   }
 
-  async diarioProfessorFindByIdSimpleStrict(accessContext: AccessContext, id: LadesaTypings.DiarioProfessorFindOneInputView["id"], selection?: string[] | boolean) {
+  async diarioProfessorFindByIdSimpleStrict(accessContext: AccessContext, id: IDomainContracts.DiarioProfessorFindOneInputView["id"], selection?: string[] | boolean) {
     const diarioProfessor = await this.diarioProfessorFindByIdSimple(accessContext, id, selection);
 
     if (!diarioProfessor) {
@@ -192,7 +192,7 @@ export class DiarioProfessorService {
 
   //
 
-  async diarioProfessorCreate(accessContext: AccessContext, dto: LadesaTypings.DiarioProfessorCreateOperationInput) {
+  async diarioProfessorCreate(accessContext: AccessContext, dto: IDomainContracts.DiarioProfessorCreateOperationInput) {
     // =========================================================
 
     await accessContext.ensurePermission("diario_professor:create", { dto });
@@ -250,7 +250,7 @@ export class DiarioProfessorService {
     });
   }
 
-  async diarioProfessorUpdate(accessContext: AccessContext, dto: LadesaTypings.DiarioProfessorUpdateByIdOperationInput) {
+  async diarioProfessorUpdate(accessContext: AccessContext, dto: IDomainContracts.DiarioProfessorUpdateByIdOperationInput) {
     // =========================================================
 
     const currentDiarioProfessor = await this.diarioProfessorFindByIdStrict(accessContext, {
@@ -316,7 +316,7 @@ export class DiarioProfessorService {
 
   //
 
-  async diarioProfessorDeleteOneById(accessContext: AccessContext, dto: LadesaTypings.DiarioProfessorFindOneInputView) {
+  async diarioProfessorDeleteOneById(accessContext: AccessContext, dto: IDomainContracts.DiarioProfessorFindOneInputView) {
     // =========================================================
 
     await accessContext.ensurePermission("diario_professor:delete", { dto }, dto.id, this.diarioProfessorRepository.createQueryBuilder(aliasDiarioProfessor));

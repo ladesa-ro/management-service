@@ -1,7 +1,7 @@
 using Ladesa.Domain.v4.Generics;
 using Ladesa.Domain.v4.Generics.Entities;
 
-namespace Ladesa.Domain.v4.Schemas;
+namespace Ladesa.ManagementService.Domain.Contracts;
 
 /** Visão completa de um HorarioGeradoAula. */
 model HorarioGeradoAulaView {
@@ -9,18 +9,18 @@ model HorarioGeradoAulaView {
     HorarioGeradoAula,
     "intervaloDeTempo" | "diarioProfessor" | "horarioGerado"
   >;
-  intervaloDeTempo: IntervaloDeTempoFindOneResultView;
-  diarioProfessor: DiarioProfessorFindOneResultView;
-  horarioGerado: HorarioGeradoFindOneResultView;
+  intervaloDeTempo: IntervaloDeTempoFindOneOutput;
+  diarioProfessor: DiarioProfessorFindOneOutput;
+  horarioGerado: HorarioGeradoFindOneOutput;
 }
 
 /** Dados de entrada para encontrar um HorarioGeradoAula por ID. */
-model HorarioGeradoAulaFindOneInputView {
+model HorarioGeradoAulaFindOneInput {
   id: HorarioGeradoAula.id;
 }
 
 /** Visão FindOne de um HorarioGeradoAula. */
-model HorarioGeradoAulaFindOneResultView {
+model HorarioGeradoAulaFindOneOutput {
   ...PickProperties<HorarioGeradoAulaView, "id" | "data">;
   ...PickProperties<
     HorarioGeradoAulaView,
@@ -33,17 +33,17 @@ model HorarioGeradoAulaFindOneResultView {
 }
 
 /** Dados de entrada para a criação de um HorarioGeradoAula. */
-model HorarioGeradoAulaInputCreateView {
+model HorarioGeradoAulaCreateInput {
   data: HorarioGeradoAula.data;
-  intervaloDeTempo: IntervaloDeTempoInputView;
-  diarioProfessor: DiarioProfessorFindOneInputView;
-  horarioGerado: HorarioGeradoFindOneInputView;
+  intervaloDeTempo: IntervaloDeTempoInput;
+  diarioProfessor: DiarioProfessorFindOneInput;
+  horarioGerado: HorarioGeradoFindOneInput;
 }
 
 /** Dados de entrada para a atualização de um HorarioGeradoAula. */
-model HorarioGeradoAulaInputUpdateView
-  is OptionalProperties<HorarioGeradoAulaInputCreateView>;
+model HorarioGeradoAulaUpdateInput
+  is OptionalProperties<HorarioGeradoAulaCreateInput>;
 
 /** Resultados da busca de HorarioGeradoAulas. */
-model HorarioGeradoAulaListResultView
-  is Pagination.Result.View<HorarioGeradoAulaFindOneResultView>;
+model HorarioGeradoAulaListOutput
+  is Pagination.Result.View<HorarioGeradoAulaFindOneOutput>;

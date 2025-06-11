@@ -1,10 +1,10 @@
 import { CombinedInput } from "@/application/standards";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Tokens } from "@ladesa-ro/especificacao";
 import { Controller, Get } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
+import type * as IDomainContracts from "~domain.contracts";
 import { EstadoService } from "./estado.service";
 
 @ApiTags("estados")
@@ -17,8 +17,8 @@ export class EstadoController {
   async findAll(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.EstadoListOperationInput,
-  ): Promise<LadesaTypings.EstadoListOperationOutput["success"]> {
+    @CombinedInput() dto: IDomainContracts.EstadoListOperationInput,
+  ): Promise<IDomainContracts.EstadoListOperationOutput["success"]> {
     return this.estadoService.findAll(accessContext, dto);
   }
 
@@ -27,7 +27,7 @@ export class EstadoController {
   async findById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.EstadoFindOneByIdOperationOutput,
+    @CombinedInput() dto: IDomainContracts.EstadoFindOneByIdOperationOutput,
   ) {
     return this.estadoService.findByIdStrict(accessContext, {
       id: dto.params.id,

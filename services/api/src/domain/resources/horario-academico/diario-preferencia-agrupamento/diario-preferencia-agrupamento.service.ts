@@ -1,7 +1,7 @@
 import { QbEfficientLoad } from "@/application/standards/ladesa-spec/QbEfficientLoad";
 import {
-  LadesaPaginatedResultDto,
-  LadesaSearch,
+    LadesaPaginatedResultDto,
+    LadesaSearch,
 } from "@/application/standards/ladesa-spec/search/search-strategies";
 import { IntervaloDeTempoService } from "@/domain/resources/base/intervalo-de-tempo/intervalo-de-tempo.service";
 import { DiarioService } from "@/domain/resources/ensino/discente/diario/diario.service";
@@ -9,10 +9,10 @@ import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
 import type { DiarioPreferenciaAgrupamentoEntity } from "@/infrastructure/integrations/database/typeorm/entities";
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
+import type * as IDomainContracts from "~domain.contracts";
 
 // ============================================================================
 
@@ -36,10 +36,10 @@ export class DiarioPreferenciaAgrupamentoService {
 
   async diarioPreferenciaAgrupamentoFindAll(
     accessContext: AccessContext,
-    dto: LadesaTypings.DiarioPreferenciaAgrupamentoListOperationInput | null = null,
+    dto: IDomainContracts.DiarioPreferenciaAgrupamentoListOperationInput | null = null,
     selection?: string[] | boolean
   ): Promise<
-    LadesaTypings.DiarioPreferenciaAgrupamentoListOperationOutput["success"]
+    IDomainContracts.DiarioPreferenciaAgrupamentoListOperationOutput["success"]
   > {
     // =========================================================
 
@@ -114,7 +114,7 @@ export class DiarioPreferenciaAgrupamentoService {
 
     qb.select([]);
     QbEfficientLoad(
-      LadesaTypings.Tokens.DiarioPreferenciaAgrupamentoFindOneResultView,
+      IDomainContracts.Tokens.DiarioPreferenciaAgrupamentoFindOneResultView,
       qb,
       aliasDiarioPreferenciaAgrupamento,
       selection
@@ -136,9 +136,9 @@ export class DiarioPreferenciaAgrupamentoService {
 
   async diarioPreferenciaAgrupamentoFindById(
     accessContext: AccessContext,
-    dto: LadesaTypings.DiarioPreferenciaAgrupamentoFindOneInputView,
+    dto: IDomainContracts.DiarioPreferenciaAgrupamentoFindOneInputView,
     selection?: string[] | boolean
-  ): Promise<LadesaTypings.DiarioPreferenciaAgrupamentoFindOneResultView | null> {
+  ): Promise<IDomainContracts.DiarioPreferenciaAgrupamentoFindOneResultView | null> {
     // =========================================================
 
     const qb = this.diarioPreferenciaAgrupamentoRepository.createQueryBuilder(
@@ -164,7 +164,7 @@ export class DiarioPreferenciaAgrupamentoService {
 
     qb.select([]);
     QbEfficientLoad(
-      LadesaTypings.Tokens.DiarioPreferenciaAgrupamentoFindOneResultView,
+      IDomainContracts.Tokens.DiarioPreferenciaAgrupamentoFindOneResultView,
       qb,
       aliasDiarioPreferenciaAgrupamento,
       selection
@@ -180,7 +180,7 @@ export class DiarioPreferenciaAgrupamentoService {
 
   async diarioPreferenciaAgrupamentoFindByIdStrict(
     accessContext: AccessContext,
-    dto: LadesaTypings.DiarioPreferenciaAgrupamentoFindOneInputView,
+    dto: IDomainContracts.DiarioPreferenciaAgrupamentoFindOneInputView,
     selection?: string[] | boolean
   ) {
     const diarioPreferenciaAgrupamento =
@@ -199,9 +199,9 @@ export class DiarioPreferenciaAgrupamentoService {
 
   async diarioPreferenciaAgrupamentoFindByIdSimple(
     accessContext: AccessContext,
-    id: LadesaTypings.DiarioPreferenciaAgrupamentoFindOneInputView["id"],
+    id: IDomainContracts.DiarioPreferenciaAgrupamentoFindOneInputView["id"],
     selection?: string[]
-  ): Promise<LadesaTypings.DiarioPreferenciaAgrupamentoFindOneResultView | null> {
+  ): Promise<IDomainContracts.DiarioPreferenciaAgrupamentoFindOneResultView | null> {
     // =========================================================
 
     const qb = this.diarioPreferenciaAgrupamentoRepository.createQueryBuilder(
@@ -225,7 +225,7 @@ export class DiarioPreferenciaAgrupamentoService {
 
     qb.select([]);
     QbEfficientLoad(
-      LadesaTypings.Tokens.DiarioPreferenciaAgrupamentoFindOneResultView,
+      IDomainContracts.Tokens.DiarioPreferenciaAgrupamentoFindOneResultView,
       qb,
       aliasDiarioPreferenciaAgrupamento,
       selection
@@ -242,7 +242,7 @@ export class DiarioPreferenciaAgrupamentoService {
 
   async diarioPreferenciaAgrupamentoFindByIdSimpleStrict(
     accessContext: AccessContext,
-    id: LadesaTypings.DiarioPreferenciaAgrupamentoFindOneInputView["id"],
+    id: IDomainContracts.DiarioPreferenciaAgrupamentoFindOneInputView["id"],
     selection?: string[]
   ) {
     const diarioPreferenciaAgrupamento =
@@ -263,7 +263,7 @@ export class DiarioPreferenciaAgrupamentoService {
 
   async diarioPreferenciaAgrupamentoCreate(
     accessContext: AccessContext,
-    dto: LadesaTypings.DiarioPreferenciaAgrupamentoCreateOperationInput
+    dto: IDomainContracts.DiarioPreferenciaAgrupamentoCreateOperationInput
   ) {
     // =========================================================
 
@@ -341,7 +341,7 @@ export class DiarioPreferenciaAgrupamentoService {
 
   async diarioPreferenciaAgrupamentoUpdate(
     accessContext: AccessContext,
-    dto: LadesaTypings.DiarioPreferenciaAgrupamentoUpdateByIdOperationInput
+    dto: IDomainContracts.DiarioPreferenciaAgrupamentoUpdateByIdOperationInput
   ) {
     // =========================================================
 
@@ -434,7 +434,7 @@ export class DiarioPreferenciaAgrupamentoService {
 
   async diarioPreferenciaAgrupamentoDeleteOneById(
     accessContext: AccessContext,
-    dto: LadesaTypings.DiarioPreferenciaAgrupamentoFindOneInputView
+    dto: IDomainContracts.DiarioPreferenciaAgrupamentoFindOneInputView
   ) {
     // =========================================================
 

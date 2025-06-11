@@ -1,22 +1,22 @@
 using Ladesa.Domain.v4.Generics;
 using Ladesa.Domain.v4.Generics.Entities;
 
-namespace Ladesa.Domain.v4.Schemas;
+namespace Ladesa.ManagementService.Domain.Contracts;
 
 /** Visão completa de um DiarioProfessor. */
 model DiarioProfessorView {
   ...OmitProperties<DiarioProfessor, "perfil" | "diario">;
-  perfil: PerfilFindOneResultView;
-  diario: DiarioFindOneResultView;
+  perfil: PerfilFindOneOutput;
+  diario: DiarioFindOneOutput;
 }
 
 /** Dados de entrada para encontrar um DiarioProfessor por ID. */
-model DiarioProfessorFindOneInputView {
+model DiarioProfessorFindOneInput {
   id: DiarioProfessor.id;
 }
 
 /** Visão FindOne de um DiarioProfessor. */
-model DiarioProfessorFindOneResultView {
+model DiarioProfessorFindOneOutput {
   ...PickProperties<DiarioProfessorView, "id">;
   ...PickProperties<DiarioProfessorView, "situacao">;
   ...PickProperties<DiarioProfessorView, "perfil" | "diario">;
@@ -27,16 +27,16 @@ model DiarioProfessorFindOneResultView {
 }
 
 /** Dados de entrada para a criação de um DiarioProfessor. */
-model DiarioProfessorInputCreateView {
+model DiarioProfessorCreateInput {
   situacao: boolean;
-  perfil: PerfilFindOneInputView;
-  diario: DiarioFindOneInputView;
+  perfil: PerfilFindOneInput;
+  diario: DiarioFindOneInput;
 }
 
 /** Dados de entrada para a atualização de um DiarioProfessor. */
-model DiarioProfessorInputUpdateView
-  is OptionalProperties<DiarioProfessorInputCreateView>;
+model DiarioProfessorUpdateInput
+  is OptionalProperties<DiarioProfessorCreateInput>;
 
 /** Resultados da busca a DiarioProfessor. */
-model DiarioProfessorListResultView
-  is Pagination.Result.View<DiarioProfessorFindOneResultView>;
+model DiarioProfessorListOutput
+  is Pagination.Result.View<DiarioProfessorFindOneOutput>;

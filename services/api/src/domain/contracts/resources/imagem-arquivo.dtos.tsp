@@ -1,28 +1,28 @@
 using Ladesa.Domain.v4.Generics;
 using Ladesa.Domain.v4.Generics.Entities;
 
-namespace Ladesa.Domain.v4.Schemas;
+namespace Ladesa.ManagementService.Domain.Contracts;
 
 /**
  * Visão completa de uma versão de uma imagem.
  */
 model ImagemArquivoView {
   ...OmitProperties<ImagemArquivo, "imagem" | "arquivo">;
-  imagem: ImagemFindOneFromImagemArquivoResultView;
-  arquivo: ArquivoFindOneResultView;
+  imagem: ImagemFindOneFromImagemArquivoOutput;
+  arquivo: ArquivoFindOneOutput;
 }
 
 /**
  * Dados de entrada para encontrar uma versão de uma imagem por ID.
  */
-model ImagemArquivoFindOneInputView {
+model ImagemArquivoFindOneInput {
   ...PickProperties<Imagem, "id">;
 }
 
 /**
  * Visão FindOne de uma versão de uma versão de imagem.
  */
-model ImagemArquivoFindOneResultView {
+model ImagemArquivoFindOneOutput {
   ...PickProperties<ImagemArquivoView, "id">;
 
   //
@@ -46,7 +46,7 @@ model ImagemArquivoFindOneResultView {
 /**
  * Visão FindOneFromImagem de uma versão de imagem.
  */
-model ImagemArquivoFindOneFromImagemResultView {
+model ImagemArquivoFindOneFromImagemOutput {
   ...PickProperties<ImagemArquivoView, "id">;
 
   //

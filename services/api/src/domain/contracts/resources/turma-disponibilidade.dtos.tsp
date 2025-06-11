@@ -1,22 +1,22 @@
 using Ladesa.Domain.v4.Generics;
 using Ladesa.Domain.v4.Generics.Entities;
 
-namespace Ladesa.Domain.v4.Schemas;
+namespace Ladesa.ManagementService.Domain.Contracts;
 
 /** Visão completa de uma TurmaDisponibilidade. */
 model TurmaDisponibilidadeView {
   ...OmitProperties<TurmaDisponibilidade, "disponibilidade" | "turma">;
-  disponibilidade: DisponibilidadeFindOneResultView;
-  turma: TurmaFindOneResultView;
+  disponibilidade: DisponibilidadeFindOneOutput;
+  turma: TurmaFindOneOutput;
 }
 
 /** Dados de entrada para encontrar uma TurmaDisponibilidade por ID. */
-model TurmaDisponibilidadeFindOneInputView {
+model TurmaDisponibilidadeFindOneInput {
   id: TurmaDisponibilidade.id;
 }
 
 /** Visão FindOne de uma TurmaDisponibilidade. */
-model TurmaDisponibilidadeFindOneResultView {
+model TurmaDisponibilidadeFindOneOutput {
   ...PickProperties<TurmaDisponibilidadeView, "id">;
   ...PickProperties<TurmaDisponibilidadeView, "disponibilidade" | "turma">;
   ...PickProperties<
@@ -26,15 +26,15 @@ model TurmaDisponibilidadeFindOneResultView {
 }
 
 /** Dados de entrada para a criação de uma TurmaDisponibilidade. */
-model TurmaDisponibilidadeInputCreateView {
-  disponibilidade: DisponibilidadeFindOneInputView;
-  turma: TurmaFindOneInputView;
+model TurmaDisponibilidadeCreateInput {
+  disponibilidade: DisponibilidadeFindOneInput;
+  turma: TurmaFindOneInput;
 }
 
 /** Dados de entrada para a atualização de uma TurmaDisponibilidade. */
-model TurmaDisponibilidadeInputUpdateView
-  is OptionalProperties<TurmaDisponibilidadeInputCreateView>;
+model TurmaDisponibilidadeUpdateInput
+  is OptionalProperties<TurmaDisponibilidadeCreateInput>;
 
 /** Resultados da busca a TurmaDisponibilidades. */
-model TurmaDisponibilidadeListResultView
-  is Pagination.Result.View<TurmaDisponibilidadeFindOneResultView>;
+model TurmaDisponibilidadeListOutput
+  is Pagination.Result.View<TurmaDisponibilidadeFindOneOutput>;

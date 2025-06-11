@@ -1,10 +1,10 @@
 import { CombinedInput } from "@/application/standards";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Tokens } from "@ladesa-ro/especificacao";
 import { Controller, Get } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
+import type * as IDomainContracts from "~domain.contracts";
 import { CidadeService } from "./cidade.service";
 
 @ApiTags("cidades")
@@ -19,8 +19,8 @@ export class CidadeController {
   async findAll(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.CidadeListOperationInput,
-  ): Promise<LadesaTypings.CidadeListOperationOutput["success"]> {
+    @CombinedInput() dto: IDomainContracts.CidadeListOperationInput,
+  ): Promise<IDomainContracts.CidadeListOperationOutput["success"]> {
     return this.cidadeService.findAll(accessContext, dto);
   }
 
@@ -31,8 +31,8 @@ export class CidadeController {
   async findById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.CidadeFindOneByIdOperationOutput,
-  ): Promise<LadesaTypings.CidadeFindOneResultView> {
+    @CombinedInput() dto: IDomainContracts.CidadeFindOneByIdOperationOutput,
+  ): Promise<IDomainContracts.CidadeFindOneResultView> {
     return this.cidadeService.findByIdStrict(accessContext, {
       id: dto.params.id,
     });

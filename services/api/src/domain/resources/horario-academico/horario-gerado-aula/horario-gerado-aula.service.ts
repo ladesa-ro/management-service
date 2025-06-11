@@ -1,7 +1,7 @@
 import { QbEfficientLoad } from "@/application/standards/ladesa-spec/QbEfficientLoad";
 import {
-  LadesaPaginatedResultDto,
-  LadesaSearch,
+    LadesaPaginatedResultDto,
+    LadesaSearch,
 } from "@/application/standards/ladesa-spec/search/search-strategies";
 import { IntervaloDeTempoService } from "@/domain/resources/base/intervalo-de-tempo/intervalo-de-tempo.service";
 import { DiarioProfessorService } from "@/domain/resources/ensino/discente/diario-professor/diario-professor.service";
@@ -9,10 +9,10 @@ import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
 import type { HorarioGeradoAulaEntity } from "@/infrastructure/integrations/database/typeorm/entities";
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
+import type * as IDomainContracts from "~domain.contracts";
 import { HorarioGeradoService } from "../horario-gerado/horario-gerado.service";
 
 // ============================================================================
@@ -38,9 +38,9 @@ export class HorarioGeradoAulaService {
 
   async horarioGeradoAulaFindAll(
     accessContext: AccessContext,
-    dto: LadesaTypings.HorarioGeradoAulaListOperationInput | null = null,
+    dto: IDomainContracts.HorarioGeradoAulaListOperationInput | null = null,
     selection?: string[] | boolean
-  ): Promise<LadesaTypings.HorarioGeradoAulaListOperationOutput["success"]> {
+  ): Promise<IDomainContracts.HorarioGeradoAulaListOperationOutput["success"]> {
     // =========================================================
 
     const qb = this.horarioGeradoAulaRepository.createQueryBuilder(
@@ -119,7 +119,7 @@ export class HorarioGeradoAulaService {
 
     qb.select([]);
     QbEfficientLoad(
-      LadesaTypings.Tokens.HorarioGeradoAulaFindOneResultView,
+      IDomainContracts.Tokens.HorarioGeradoAulaFindOneResultView,
       qb,
       aliasHorarioGeradoAula,
       selection
@@ -141,9 +141,9 @@ export class HorarioGeradoAulaService {
 
   async horarioGeradoAulaFindById(
     accessContext: AccessContext,
-    dto: LadesaTypings.HorarioGeradoAulaFindOneInputView,
+    dto: IDomainContracts.HorarioGeradoAulaFindOneInputView,
     selection?: string[] | boolean
-  ): Promise<LadesaTypings.HorarioGeradoAulaFindOneResultView | null> {
+  ): Promise<IDomainContracts.HorarioGeradoAulaFindOneResultView | null> {
     // =========================================================
 
     const qb = this.horarioGeradoAulaRepository.createQueryBuilder(
@@ -167,7 +167,7 @@ export class HorarioGeradoAulaService {
 
     qb.select([]);
     QbEfficientLoad(
-      LadesaTypings.Tokens.HorarioGeradoAulaFindOneResultView,
+      IDomainContracts.Tokens.HorarioGeradoAulaFindOneResultView,
       qb,
       aliasHorarioGeradoAula,
       selection
@@ -183,7 +183,7 @@ export class HorarioGeradoAulaService {
 
   async horarioGeradoAulaFindByIdStrict(
     accessContext: AccessContext,
-    dto: LadesaTypings.HorarioGeradoAulaFindOneInputView,
+    dto: IDomainContracts.HorarioGeradoAulaFindOneInputView,
     selection?: string[] | boolean
   ) {
     const horarioGeradoAula = await this.horarioGeradoAulaFindById(
@@ -201,9 +201,9 @@ export class HorarioGeradoAulaService {
 
   async horarioGeradoAulaFindByIdSimple(
     accessContext: AccessContext,
-    id: LadesaTypings.HorarioGeradoAulaFindOneInputView["id"],
+    id: IDomainContracts.HorarioGeradoAulaFindOneInputView["id"],
     selection?: string[]
-  ): Promise<LadesaTypings.HorarioGeradoAulaFindOneResultView | null> {
+  ): Promise<IDomainContracts.HorarioGeradoAulaFindOneResultView | null> {
     // =========================================================
 
     const qb = this.horarioGeradoAulaRepository.createQueryBuilder(
@@ -227,7 +227,7 @@ export class HorarioGeradoAulaService {
 
     qb.select([]);
     QbEfficientLoad(
-      LadesaTypings.Tokens.HorarioGeradoAulaFindOneResultView,
+      IDomainContracts.Tokens.HorarioGeradoAulaFindOneResultView,
       qb,
       aliasHorarioGeradoAula,
       selection
@@ -244,7 +244,7 @@ export class HorarioGeradoAulaService {
 
   async horarioGeradoAulaFindByIdSimpleStrict(
     accessContext: AccessContext,
-    id: LadesaTypings.HorarioGeradoAulaFindOneInputView["id"],
+    id: IDomainContracts.HorarioGeradoAulaFindOneInputView["id"],
     selection?: string[]
   ) {
     const horarioGeradoAula = await this.horarioGeradoAulaFindByIdSimple(
@@ -264,7 +264,7 @@ export class HorarioGeradoAulaService {
 
   async HorarioGeradoAulaCreate(
     accessContext: AccessContext,
-    dto: LadesaTypings.HorarioGeradoAulaCreateOperationInput
+    dto: IDomainContracts.HorarioGeradoAulaCreateOperationInput
   ) {
     // =========================================================
 
@@ -337,7 +337,7 @@ export class HorarioGeradoAulaService {
 
   async HorarioGeradoAulaUpdate(
     accessContext: AccessContext,
-    dto: LadesaTypings.HorarioGeradoAulaUpdateByIdOperationInput
+    dto: IDomainContracts.HorarioGeradoAulaUpdateByIdOperationInput
   ) {
     // =========================================================
 
@@ -437,7 +437,7 @@ export class HorarioGeradoAulaService {
 
   async horarioGeradoAulaDeleteOneById(
     accessContext: AccessContext,
-    dto: LadesaTypings.HorarioGeradoAulaFindOneInputView
+    dto: IDomainContracts.HorarioGeradoAulaFindOneInputView
   ) {
     // =========================================================
 

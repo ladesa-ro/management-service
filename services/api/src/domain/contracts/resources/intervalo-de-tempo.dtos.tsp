@@ -1,7 +1,7 @@
 using Ladesa.Domain.v4.Generics;
 using Ladesa.Domain.v4.Generics.Entities;
 
-namespace Ladesa.Domain.v4.Schemas;
+namespace Ladesa.ManagementService.Domain.Contracts;
 
 /** Visão completa de um Intervalo de Tempo. */
 model IntervaloDeTempoView {
@@ -9,7 +9,7 @@ model IntervaloDeTempoView {
 }
 
 /** Visão FindOne de um Intervalo de Tempo. */
-model IntervaloDeTempoFindOneResultView {
+model IntervaloDeTempoFindOneOutput {
   ...PickProperties<IntervaloDeTempoView, "id">;
   ...PickProperties<IntervaloDeTempoView, "periodoInicio">;
   ...PickProperties<IntervaloDeTempoView, "periodoFim">;
@@ -20,7 +20,7 @@ model IntervaloDeTempoFindOneResultView {
 }
 
 /** Dados de entrada para um Intervalo de Tempo. */
-model IntervaloDeTempoInputView {
+model IntervaloDeTempoInput {
   ...PickProperties<IntervaloDeTempoView, "periodoInicio">;
   ...PickProperties<IntervaloDeTempoView, "periodoFim">;
 }

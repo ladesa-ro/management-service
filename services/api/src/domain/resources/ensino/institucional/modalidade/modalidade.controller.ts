@@ -1,10 +1,10 @@
 import { CombinedInput } from "@/application/standards";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Tokens } from "@ladesa-ro/especificacao";
 import { Controller, Delete, Get, Patch, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
+import type * as IDomainContracts from "~domain.contracts";
 import { ModalidadeService } from "./modalidade.service";
 
 @ApiTags("modalidades")
@@ -19,8 +19,8 @@ export class ModalidadeController {
   async modalidadeFindAll(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.ModalidadeListOperationInput,
-  ): Promise<LadesaTypings.ModalidadeListOperationOutput["success"]> {
+    @CombinedInput() dto: IDomainContracts.ModalidadeListOperationInput,
+  ): Promise<IDomainContracts.ModalidadeListOperationOutput["success"]> {
     return this.modalidadeService.modalidadeFindAll(accessContext, dto);
   }
 
@@ -31,7 +31,7 @@ export class ModalidadeController {
   async modalidadeFindById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.ModalidadeFindOneByIdOperationOutput,
+    @CombinedInput() dto: IDomainContracts.ModalidadeFindOneByIdOperationOutput,
   ) {
     return this.modalidadeService.modalidadeFindByIdStrict(accessContext, {
       id: dto.params.id,
@@ -45,7 +45,7 @@ export class ModalidadeController {
   async modalidadeCreate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.ModalidadeCreateOperationInput,
+    @CombinedInput() dto: IDomainContracts.ModalidadeCreateOperationInput,
   ) {
     return this.modalidadeService.modalidadeCreate(accessContext, dto);
   }
@@ -57,7 +57,7 @@ export class ModalidadeController {
   async modalidadeUpdate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.ModalidadeUpdateByIdOperationInput,
+    @CombinedInput() dto: IDomainContracts.ModalidadeUpdateByIdOperationInput,
   ) {
     return this.modalidadeService.modalidadeUpdate(accessContext, dto);
   }
@@ -69,7 +69,7 @@ export class ModalidadeController {
   async modalidadeDeleteOneById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.ModalidadeDeleteByIdOperationInput,
+    @CombinedInput() dto: IDomainContracts.ModalidadeDeleteByIdOperationInput,
   ) {
     return this.modalidadeService.modalidadeDeleteOneById(accessContext, {
       id: dto.params.id,

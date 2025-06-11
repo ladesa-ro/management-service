@@ -1,6 +1,5 @@
 import { ExecutionContext, Injectable, UnauthorizedException } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
-import { GqlExecutionContext } from "@nestjs/graphql";
 import { AuthGuard } from "@nestjs/passport";
 import { NEEDS_AUTH_KEY } from "./AuthResourceProtectionLevel";
 import { AuthStrategy } from "./AuthStrategy";
@@ -12,8 +11,9 @@ export class AuthGuardJwt extends AuthGuard(AuthStrategy.ACCESS_TOKEN) {
   }
 
   getRequest(context: ExecutionContext) {
-    const ctx = GqlExecutionContext.create(context);
-    return ctx.getContext().req;
+    // const ctx = GqlExecutionContext.create(context);
+    // const req = ctx.getContext().req;
+    return context.switchToHttp().getRequest();
   }
 
   handleRequest(err: any, user: any, _info: any, context: ExecutionContext) {

@@ -3,9 +3,9 @@ import { LadesaPaginatedResultDto, LadesaSearch } from "@/application/standards/
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { map } from "lodash";
+import type * as IDomainContracts from "~domain.contracts";
 
 const aliasEstado = "estado";
 
@@ -19,7 +19,7 @@ export class EstadoService {
 
   //
 
-  async findAll(accessContext: AccessContext, dto: LadesaTypings.EstadoListOperationInput | null = null, selection?: string[]): Promise<LadesaTypings.EstadoListOperationOutput["success"]> {
+  async findAll(accessContext: AccessContext, dto: IDomainContracts.EstadoListOperationInput | null = null, selection?: string[]): Promise<IDomainContracts.EstadoListOperationOutput["success"]> {
     // =========================================================
 
     const qb = this.baseEstadoRepository.createQueryBuilder(aliasEstado);
@@ -57,7 +57,7 @@ export class EstadoService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad(LadesaTypings.Tokens.EstadoView, qb, aliasEstado, selection);
+    QbEfficientLoad(IDomainContracts.Tokens.EstadoView, qb, aliasEstado, selection);
 
     // =========================================================
 
@@ -70,7 +70,7 @@ export class EstadoService {
     return LadesaPaginatedResultDto(paginated);
   }
 
-  async findById(accessContext: AccessContext, dto: LadesaTypings.EstadoFindOneInputView, selection?: string[]) {
+  async findById(accessContext: AccessContext, dto: IDomainContracts.EstadoFindOneInputView, selection?: string[]) {
     // =========================================================
 
     const qb = this.baseEstadoRepository.createQueryBuilder("estado");
@@ -86,7 +86,7 @@ export class EstadoService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad(LadesaTypings.Tokens.EstadoView, qb, aliasEstado, selection);
+    QbEfficientLoad(IDomainContracts.Tokens.EstadoView, qb, aliasEstado, selection);
 
     // =========================================================
 
@@ -97,7 +97,7 @@ export class EstadoService {
     return estado;
   }
 
-  async findByIdStrict(accessContext: AccessContext, dto: LadesaTypings.EstadoFindOneInputView, selection?: string[]) {
+  async findByIdStrict(accessContext: AccessContext, dto: IDomainContracts.EstadoFindOneInputView, selection?: string[]) {
     const estado = await this.findById(accessContext, dto, selection);
 
     if (!estado) {

@@ -1,10 +1,10 @@
 import { CombinedInput } from "@/application/standards";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Tokens } from "@ladesa-ro/especificacao";
 import { Controller, Delete, Get, Patch, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
+import type * as IDomainContracts from "~domain.contracts";
 import { GradeHorarioOfertaFormacaoService } from "./grade-horario-oferta-formacao.service";
 
 @ApiTags("grades-horarios-ofertas-formacoes")
@@ -20,8 +20,8 @@ export class GradeHorarioOfertaFormacaoController {
     //
     @AccessContextHttp() accessContext: AccessContext,
     @CombinedInput()
-    dto: LadesaTypings.GradeHorarioOfertaFormacaoListOperationInput,
-  ): Promise<LadesaTypings.GradeHorarioOfertaFormacaoListOperationOutput["success"]> {
+    dto: IDomainContracts.GradeHorarioOfertaFormacaoListOperationInput,
+  ): Promise<IDomainContracts.GradeHorarioOfertaFormacaoListOperationOutput["success"]> {
     return this.gradeHorarioOfertaFormacaoService.gradeHorarioOfertaFormacaoFindAll(accessContext, dto);
   }
 
@@ -33,7 +33,7 @@ export class GradeHorarioOfertaFormacaoController {
     //
     @AccessContextHttp() accessContext: AccessContext,
     @CombinedInput()
-    dto: LadesaTypings.GradeHorarioOfertaFormacaoFindOneByIdOperationOutput,
+    dto: IDomainContracts.GradeHorarioOfertaFormacaoFindOneByIdOperationOutput,
   ) {
     return this.gradeHorarioOfertaFormacaoService.gradeHorarioOfertaFormacaoFindByIdStrict(accessContext, {
       id: dto.params.id,
@@ -48,7 +48,7 @@ export class GradeHorarioOfertaFormacaoController {
     //
     @AccessContextHttp() accessContext: AccessContext,
     @CombinedInput()
-    dto: LadesaTypings.GradeHorarioOfertaFormacaoCreateOperationInput,
+    dto: IDomainContracts.GradeHorarioOfertaFormacaoCreateOperationInput,
   ) {
     return this.gradeHorarioOfertaFormacaoService.gradeHorarioOfertaFormacaoCreate(accessContext, dto);
   }
@@ -61,7 +61,7 @@ export class GradeHorarioOfertaFormacaoController {
     //
     @AccessContextHttp() accessContext: AccessContext,
     @CombinedInput()
-    dto: LadesaTypings.GradeHorarioOfertaFormacaoUpdateByIdOperationInput,
+    dto: IDomainContracts.GradeHorarioOfertaFormacaoUpdateByIdOperationInput,
   ) {
     return this.gradeHorarioOfertaFormacaoService.gradeHorarioOfertaFormacaoUpdate(accessContext, dto);
   }
@@ -74,7 +74,7 @@ export class GradeHorarioOfertaFormacaoController {
     //
     @AccessContextHttp() accessContext: AccessContext,
     @CombinedInput()
-    dto: LadesaTypings.GradeHorarioOfertaFormacaoDeleteByIdOperationInput,
+    dto: IDomainContracts.GradeHorarioOfertaFormacaoDeleteByIdOperationInput,
   ) {
     return this.gradeHorarioOfertaFormacaoService.gradeHorarioOfertaFormacaoDeleteOneById(accessContext, {
       id: dto.params.id,

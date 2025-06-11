@@ -1,16 +1,16 @@
 import { QbEfficientLoad } from "@/application/standards/ladesa-spec/QbEfficientLoad";
 import {
-  LadesaPaginatedResultDto,
-  LadesaSearch,
+    LadesaPaginatedResultDto,
+    LadesaSearch,
 } from "@/application/standards/ladesa-spec/search/search-strategies";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures/pagination/paginateConfig";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
 import type { AmbienteEntity } from "@/infrastructure/integrations/database/typeorm/entities";
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
+import type * as IDomainContracts from "~domain.contracts";
 import { ArquivoService } from "../../base/arquivo/arquivo.service";
 import { ImagemService } from "../../base/imagem/imagem.service";
 import { BlocoService } from "../bloco/bloco.service";
@@ -38,9 +38,9 @@ export class AmbienteService {
 
   async ambienteFindAll(
     accessContext: AccessContext,
-    dto: LadesaTypings.AmbienteListOperationInput | null = null,
+    dto: IDomainContracts.AmbienteListOperationInput | null = null,
     selection?: string[] | boolean
-  ): Promise<LadesaTypings.AmbienteListOperationOutput["success"]> {
+  ): Promise<IDomainContracts.AmbienteListOperationOutput["success"]> {
     // =========================================================
 
     const qb = this.ambienteRepository.createQueryBuilder(aliasAmbiente);
@@ -111,7 +111,7 @@ export class AmbienteService {
     qb.select([]);
 
     QbEfficientLoad(
-      LadesaTypings.Tokens.AmbienteFindOneResultView,
+      IDomainContracts.Tokens.AmbienteFindOneResultView,
       qb,
       aliasAmbiente,
       selection
@@ -133,9 +133,9 @@ export class AmbienteService {
 
   async ambienteFindById(
     accessContext: AccessContext | null,
-    dto: LadesaTypings.AmbienteFindOneInputView,
+    dto: IDomainContracts.AmbienteFindOneInputView,
     selection?: string[] | boolean
-  ): Promise<LadesaTypings.AmbienteFindOneResultView | null> {
+  ): Promise<IDomainContracts.AmbienteFindOneResultView | null> {
     // =========================================================
 
     const qb = this.ambienteRepository.createQueryBuilder(aliasAmbiente);
@@ -154,7 +154,7 @@ export class AmbienteService {
 
     qb.select([]);
     QbEfficientLoad(
-      LadesaTypings.Tokens.AmbienteFindOneResultView,
+      IDomainContracts.Tokens.AmbienteFindOneResultView,
       qb,
       aliasAmbiente,
       selection
@@ -171,7 +171,7 @@ export class AmbienteService {
 
   async ambienteFindByIdStrict(
     accessContext: AccessContext | null,
-    dto: LadesaTypings.AmbienteFindOneInputView,
+    dto: IDomainContracts.AmbienteFindOneInputView,
     selection?: string[] | boolean
   ) {
     const ambiente = await this.ambienteFindById(accessContext, dto, selection);
@@ -187,7 +187,7 @@ export class AmbienteService {
 
   async ambienteCreate(
     accessContext: AccessContext,
-    dto: LadesaTypings.AmbienteCreateOperationInput
+    dto: IDomainContracts.AmbienteCreateOperationInput
   ) {
     // =========================================================
 
@@ -233,7 +233,7 @@ export class AmbienteService {
 
   async ambienteUpdate(
     accessContext: AccessContext,
-    dto: LadesaTypings.AmbienteUpdateByIdOperationInput
+    dto: IDomainContracts.AmbienteUpdateByIdOperationInput
   ) {
     // =========================================================
 
@@ -296,7 +296,7 @@ export class AmbienteService {
 
   async ambienteUpdateImagemCapa(
     accessContext: AccessContext,
-    dto: LadesaTypings.AmbienteFindOneInputView,
+    dto: IDomainContracts.AmbienteFindOneInputView,
     file: Express.Multer.File
   ) {
     // =========================================================
@@ -346,7 +346,7 @@ export class AmbienteService {
 
   async ambienteDeleteOneById(
     accessContext: AccessContext,
-    dto: LadesaTypings.AmbienteFindOneInputView
+    dto: IDomainContracts.AmbienteFindOneInputView
   ) {
     // =========================================================
 

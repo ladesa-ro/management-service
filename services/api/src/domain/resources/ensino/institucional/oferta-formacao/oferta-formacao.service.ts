@@ -1,17 +1,17 @@
 import { QbEfficientLoad } from "@/application/standards/ladesa-spec/QbEfficientLoad";
 import {
-  LadesaPaginatedResultDto,
-  LadesaSearch,
+    LadesaPaginatedResultDto,
+    LadesaSearch,
 } from "@/application/standards/ladesa-spec/search/search-strategies";
 import { ModalidadeService } from "@/domain/resources/ensino/institucional/modalidade/modalidade.service";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
 import type { OfertaFormacaoEntity } from "@/infrastructure/integrations/database/typeorm/entities";
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
+import type * as IDomainContracts from "~domain.contracts";
 
 // ============================================================================
 
@@ -34,9 +34,9 @@ export class OfertaFormacaoService {
 
   async ofertaFormacaoFindAll(
     accessContext: AccessContext,
-    dto: LadesaTypings.OfertaFormacaoListOperationInput | null = null,
+    dto: IDomainContracts.OfertaFormacaoListOperationInput | null = null,
     selection?: string[]
-  ): Promise<LadesaTypings.OfertaFormacaoListOperationOutput["success"]> {
+  ): Promise<IDomainContracts.OfertaFormacaoListOperationOutput["success"]> {
     // =========================================================
 
     const qb =
@@ -95,7 +95,7 @@ export class OfertaFormacaoService {
 
     qb.select([]);
     QbEfficientLoad(
-      LadesaTypings.Tokens.OfertaFormacaoView,
+      IDomainContracts.Tokens.OfertaFormacaoView,
       qb,
       aliasOfertaFormacao,
       selection
@@ -117,9 +117,9 @@ export class OfertaFormacaoService {
 
   async ofertaFormacaoFindById(
     accessContext: AccessContext | null,
-    dto: LadesaTypings.OfertaFormacaoFindOneInputView,
+    dto: IDomainContracts.OfertaFormacaoFindOneInputView,
     selection?: string[]
-  ): Promise<LadesaTypings.OfertaFormacaoFindOneResultView | null> {
+  ): Promise<IDomainContracts.OfertaFormacaoFindOneResultView | null> {
     // =========================================================
 
     const qb =
@@ -144,7 +144,7 @@ export class OfertaFormacaoService {
 
     qb.select([]);
     QbEfficientLoad(
-      LadesaTypings.Tokens.OfertaFormacaoView,
+      IDomainContracts.Tokens.OfertaFormacaoView,
       qb,
       aliasOfertaFormacao,
       selection
@@ -161,7 +161,7 @@ export class OfertaFormacaoService {
 
   async ofertaFormacaoFindByIdStrict(
     accessContext: AccessContext,
-    dto: LadesaTypings.OfertaFormacaoFindOneInputView,
+    dto: IDomainContracts.OfertaFormacaoFindOneInputView,
     selection?: string[]
   ) {
     const ofertaFormacao = await this.ofertaFormacaoFindById(
@@ -179,9 +179,9 @@ export class OfertaFormacaoService {
 
   async ofertaFormacaoFindByIdSimple(
     accessContext: AccessContext,
-    id: LadesaTypings.OfertaFormacaoFindOneInputView["id"],
+    id: IDomainContracts.OfertaFormacaoFindOneInputView["id"],
     selection?: string[]
-  ): Promise<LadesaTypings.OfertaFormacaoFindOneResultView | null> {
+  ): Promise<IDomainContracts.OfertaFormacaoFindOneResultView | null> {
     // =========================================================
 
     const qb =
@@ -204,7 +204,7 @@ export class OfertaFormacaoService {
 
     qb.select([]);
     QbEfficientLoad(
-      LadesaTypings.Tokens.OfertaFormacaoView,
+      IDomainContracts.Tokens.OfertaFormacaoView,
       qb,
       aliasOfertaFormacao,
       selection
@@ -221,7 +221,7 @@ export class OfertaFormacaoService {
 
   async ofertaFormacaoFindByIdSimpleStrict(
     accessContext: AccessContext,
-    id: LadesaTypings.OfertaFormacaoFindOneInputView["id"],
+    id: IDomainContracts.OfertaFormacaoFindOneInputView["id"],
     selection?: string[]
   ) {
     const ofertaFormacao = await this.ofertaFormacaoFindByIdSimple(
@@ -241,7 +241,7 @@ export class OfertaFormacaoService {
 
   async ofertaFormacaoCreate(
     accessContext: AccessContext,
-    dto: LadesaTypings.OfertaFormacaoCreateOperationInput
+    dto: IDomainContracts.OfertaFormacaoCreateOperationInput
   ) {
     // =========================================================
 
@@ -286,7 +286,7 @@ export class OfertaFormacaoService {
 
   async ofertaFormacaoUpdate(
     accessContext: AccessContext,
-    dto: LadesaTypings.OfertaFormacaoUpdateByIdOperationInput
+    dto: IDomainContracts.OfertaFormacaoUpdateByIdOperationInput
   ) {
     // =========================================================
 
@@ -348,7 +348,7 @@ export class OfertaFormacaoService {
 
   async ofertaFormacaoDeleteOneById(
     accessContext: AccessContext,
-    dto: LadesaTypings.OfertaFormacaoFindOneInputView
+    dto: IDomainContracts.OfertaFormacaoFindOneInputView
   ) {
     // =========================================================
 

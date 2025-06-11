@@ -10,6 +10,8 @@ export const appDataSourceProvider: Provider = {
   useFactory: async (appConfigService: AppConfigService) => {
     const options = appConfigService.getTypeOrmAppDataSourceOptions();
 
+    console.log({ options })
+
     const dataSource = new DataSource(options);
 
     console.log("[INFO] app data source created.");

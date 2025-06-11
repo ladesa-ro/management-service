@@ -1,23 +1,23 @@
 using Ladesa.Domain.v4.Generics;
 using Ladesa.Domain.v4.Generics.Entities;
 
-namespace Ladesa.Domain.v4.Schemas;
+namespace Ladesa.ManagementService.Domain.Contracts;
 
 /** Visão completa de um Curso. */
 model CursoView {
   ...OmitProperties<Curso, "campus" | "ofertaFormacao" | "imagemCapa">;
-  campus: CampusFindOneResultView;
-  ofertaFormacao: OfertaFormacaoFindOneResultView;
-  imagemCapa: ImagemFindOneResultView | null;
+  campus: CampusFindOneOutput;
+  ofertaFormacao: OfertaFormacaoFindOneOutput;
+  imagemCapa: ImagemFindOneOutput | null;
 }
 
 /** Dados de entrada para encontrar um Curso por ID. */
-model CursoFindOneInputView {
+model CursoFindOneInput {
   id: Curso.id;
 }
 
 /** Visão FindOne de um Curso. */
-model CursoFindOneResultView {
+model CursoFindOneOutput {
   //
   ...PickProperties<CursoView, "id">;
 
@@ -31,14 +31,14 @@ model CursoFindOneResultView {
 }
 
 /** Dados de entrada para a criação de um Curso. */
-model CursoInputCreateView {
+model CursoCreateInput {
   ...PickProperties<CursoView, "nome" | "nomeAbreviado">;
-  campus: CampusFindOneInputView;
-  ofertaFormacao: OfertaFormacaoFindOneInputView;
+  campus: CampusFindOneInput;
+  ofertaFormacao: OfertaFormacaoFindOneInput;
 }
 
 /** Dados de entrada para a atualização de um Curso. */
-model CursoInputUpdateView is OptionalProperties<CursoInputCreateView>;
+model CursoUpdateInput is OptionalProperties<CursoCreateInput>;
 
 /** Resultados da busca a Cursos. */
-model CursoListResultView is Pagination.Result.View<CursoFindOneResultView>;
+model CursoListOutput is Pagination.Result.View<CursoFindOneOutput>;

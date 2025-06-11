@@ -4,9 +4,9 @@ import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
 import type { NivelFormacaoEntity } from "@/infrastructure/integrations/database/typeorm/entities";
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { map, pick } from "lodash";
+import type * as IDomainContracts from "~domain.contracts";
 
 // ============================================================================
 
@@ -26,9 +26,9 @@ export class NivelFormacaoService {
 
   async nivelFormacaoFindAll(
     accessContext: AccessContext,
-    dto: LadesaTypings.NivelFormacaoListOperationInput | null = null,
+    dto: IDomainContracts.NivelFormacaoListOperationInput | null = null,
     selection?: string[],
-  ): Promise<LadesaTypings.NivelFormacaoListOperationOutput["success"]> {
+  ): Promise<IDomainContracts.NivelFormacaoListOperationOutput["success"]> {
     // =========================================================
 
     const qb = this.nivelFormacaoRepository.createQueryBuilder(aliasNivelFormacao);
@@ -72,7 +72,7 @@ export class NivelFormacaoService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad(LadesaTypings.Tokens.NivelFormacaoView, qb, aliasNivelFormacao, selection);
+    QbEfficientLoad(IDomainContracts.Tokens.NivelFormacaoView, qb, aliasNivelFormacao, selection);
 
     // =========================================================
 
@@ -86,9 +86,9 @@ export class NivelFormacaoService {
 
   async nivelFormacaoFindById(
     accessContext: AccessContext | null,
-    dto: LadesaTypings.NivelFormacaoFindOneInputView,
+    dto: IDomainContracts.NivelFormacaoFindOneInputView,
     selection?: string[],
-  ): Promise<LadesaTypings.NivelFormacaoFindOneResultView | null> {
+  ): Promise<IDomainContracts.NivelFormacaoFindOneResultView | null> {
     // =========================================================
 
     const qb = this.nivelFormacaoRepository.createQueryBuilder(aliasNivelFormacao);
@@ -106,7 +106,7 @@ export class NivelFormacaoService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad(LadesaTypings.Tokens.NivelFormacaoView, qb, aliasNivelFormacao, selection);
+    QbEfficientLoad(IDomainContracts.Tokens.NivelFormacaoView, qb, aliasNivelFormacao, selection);
 
     // =========================================================
 
@@ -117,7 +117,7 @@ export class NivelFormacaoService {
     return nivelFormacao;
   }
 
-  async nivelFormacaoFindByIdStrict(accessContext: AccessContext, dto: LadesaTypings.NivelFormacaoFindOneInputView, selection?: string[]) {
+  async nivelFormacaoFindByIdStrict(accessContext: AccessContext, dto: IDomainContracts.NivelFormacaoFindOneInputView, selection?: string[]) {
     const nivelFormacao = await this.nivelFormacaoFindById(accessContext, dto, selection);
 
     if (!nivelFormacao) {
@@ -129,9 +129,9 @@ export class NivelFormacaoService {
 
   async nivelFormacaoFindByIdSimple(
     accessContext: AccessContext,
-    id: LadesaTypings.NivelFormacaoFindOneInputView["id"],
+    id: IDomainContracts.NivelFormacaoFindOneInputView["id"],
     selection?: string[],
-  ): Promise<LadesaTypings.NivelFormacaoFindOneResultView | null> {
+  ): Promise<IDomainContracts.NivelFormacaoFindOneResultView | null> {
     // =========================================================
 
     const qb = this.nivelFormacaoRepository.createQueryBuilder(aliasNivelFormacao);
@@ -147,7 +147,7 @@ export class NivelFormacaoService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad(LadesaTypings.Tokens.NivelFormacaoView, qb, aliasNivelFormacao, selection);
+    QbEfficientLoad(IDomainContracts.Tokens.NivelFormacaoView, qb, aliasNivelFormacao, selection);
 
     // =========================================================
 
@@ -158,7 +158,7 @@ export class NivelFormacaoService {
     return nivelFormacao;
   }
 
-  async nivelFormacaoFindByIdSimpleStrict(accessContext: AccessContext, id: LadesaTypings.NivelFormacaoFindOneInputView["id"], selection?: string[]) {
+  async nivelFormacaoFindByIdSimpleStrict(accessContext: AccessContext, id: IDomainContracts.NivelFormacaoFindOneInputView["id"], selection?: string[]) {
     const nivelFormacao = await this.nivelFormacaoFindByIdSimple(accessContext, id, selection);
 
     if (!nivelFormacao) {
@@ -170,7 +170,7 @@ export class NivelFormacaoService {
 
   //
 
-  async nivelFormacaoCreate(accessContext: AccessContext, dto: LadesaTypings.NivelFormacaoCreateOperationInput) {
+  async nivelFormacaoCreate(accessContext: AccessContext, dto: IDomainContracts.NivelFormacaoCreateOperationInput) {
     // =========================================================
 
     await accessContext.ensurePermission("nivel_formacao:create", { dto });
@@ -196,7 +196,7 @@ export class NivelFormacaoService {
     });
   }
 
-  async nivelFormacaoUpdate(accessContext: AccessContext, dto: LadesaTypings.NivelFormacaoUpdateByIdOperationInput) {
+  async nivelFormacaoUpdate(accessContext: AccessContext, dto: IDomainContracts.NivelFormacaoUpdateByIdOperationInput) {
     // =========================================================
 
     const currentNivelFormacao = await this.nivelFormacaoFindByIdStrict(accessContext, {
@@ -230,7 +230,7 @@ export class NivelFormacaoService {
 
   //
 
-  async nivelFormacaoDeleteOneById(accessContext: AccessContext, dto: LadesaTypings.NivelFormacaoFindOneInputView) {
+  async nivelFormacaoDeleteOneById(accessContext: AccessContext, dto: IDomainContracts.NivelFormacaoFindOneInputView) {
     // =========================================================
 
     await accessContext.ensurePermission("nivel_formacao:delete", { dto }, dto.id, this.nivelFormacaoRepository.createQueryBuilder(aliasNivelFormacao));

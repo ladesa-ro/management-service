@@ -1,7 +1,7 @@
 import { QbEfficientLoad } from "@/application/standards/ladesa-spec/QbEfficientLoad";
 import {
-  LadesaPaginatedResultDto,
-  LadesaSearch,
+    LadesaPaginatedResultDto,
+    LadesaSearch,
 } from "@/application/standards/ladesa-spec/search/search-strategies";
 import { IntervaloDeTempoService } from "@/domain/resources/base/intervalo-de-tempo/intervalo-de-tempo.service";
 import { DisponibilidadeService } from "@/domain/resources/horario-academico/disponibilidade/disponibilidade.service";
@@ -9,10 +9,10 @@ import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
 import type { DisponibilidadeDiaEntity } from "@/infrastructure/integrations/database/typeorm/entities";
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
+import type * as IDomainContracts from "~domain.contracts";
 
 // ============================================================================
 
@@ -36,9 +36,9 @@ export class DisponibilidadeDiaService {
 
   async disponibilidadeDiaFindAll(
     accessContext: AccessContext,
-    dto: LadesaTypings.DisponibilidadeDiaListOperationInput | null = null,
+    dto: IDomainContracts.DisponibilidadeDiaListOperationInput | null = null,
     selection?: string[] | boolean
-  ): Promise<LadesaTypings.DisponibilidadeDiaListOperationOutput["success"]> {
+  ): Promise<IDomainContracts.DisponibilidadeDiaListOperationOutput["success"]> {
     // =========================================================
 
     const qb = this.disponibilidadeDiaRepository.createQueryBuilder(
@@ -107,7 +107,7 @@ export class DisponibilidadeDiaService {
 
     qb.select([]);
     QbEfficientLoad(
-      LadesaTypings.Tokens.DisponibilidadeDiaFindOneResultView,
+      IDomainContracts.Tokens.DisponibilidadeDiaFindOneResultView,
       qb,
       aliasDisponibilidadeDia,
       selection
@@ -129,9 +129,9 @@ export class DisponibilidadeDiaService {
 
   async disponibilidadeDiaFindById(
     accessContext: AccessContext,
-    dto: LadesaTypings.DisponibilidadeDiaFindOneInputView,
+    dto: IDomainContracts.DisponibilidadeDiaFindOneInputView,
     selection?: string[] | boolean
-  ): Promise<LadesaTypings.DisponibilidadeDiaFindOneResultView | null> {
+  ): Promise<IDomainContracts.DisponibilidadeDiaFindOneResultView | null> {
     // =========================================================
 
     const qb = this.disponibilidadeDiaRepository.createQueryBuilder(
@@ -157,7 +157,7 @@ export class DisponibilidadeDiaService {
 
     qb.select([]);
     QbEfficientLoad(
-      LadesaTypings.Tokens.DisponibilidadeDiaFindOneResultView,
+      IDomainContracts.Tokens.DisponibilidadeDiaFindOneResultView,
       qb,
       aliasDisponibilidadeDia,
       selection
@@ -173,7 +173,7 @@ export class DisponibilidadeDiaService {
 
   async disponibilidadeDiaFindByIdStrict(
     accessContext: AccessContext,
-    dto: LadesaTypings.DisponibilidadeDiaFindOneInputView,
+    dto: IDomainContracts.DisponibilidadeDiaFindOneInputView,
     selection?: string[] | boolean
   ) {
     const disponibilidadeDia = await this.disponibilidadeDiaFindById(
@@ -191,9 +191,9 @@ export class DisponibilidadeDiaService {
 
   async disponibilidadeDiaFindByIdSimple(
     accessContext: AccessContext,
-    id: LadesaTypings.DisponibilidadeDiaFindOneInputView["id"],
+    id: IDomainContracts.DisponibilidadeDiaFindOneInputView["id"],
     selection?: string[]
-  ): Promise<LadesaTypings.DisponibilidadeDiaFindOneResultView | null> {
+  ): Promise<IDomainContracts.DisponibilidadeDiaFindOneResultView | null> {
     // =========================================================
 
     const qb = this.disponibilidadeDiaRepository.createQueryBuilder(
@@ -217,7 +217,7 @@ export class DisponibilidadeDiaService {
 
     qb.select([]);
     QbEfficientLoad(
-      LadesaTypings.Tokens.DisponibilidadeDiaFindOneResultView,
+      IDomainContracts.Tokens.DisponibilidadeDiaFindOneResultView,
       qb,
       aliasDisponibilidadeDia,
       selection
@@ -234,7 +234,7 @@ export class DisponibilidadeDiaService {
 
   async disponibilidadeDiaFindByIdSimpleStrict(
     accessContext: AccessContext,
-    id: LadesaTypings.DisponibilidadeDiaFindOneInputView["id"],
+    id: IDomainContracts.DisponibilidadeDiaFindOneInputView["id"],
     selection?: string[]
   ) {
     const disponibilidadeDia = await this.disponibilidadeDiaFindByIdSimple(
@@ -254,7 +254,7 @@ export class DisponibilidadeDiaService {
 
   async disponibilidadeDiaCreate(
     accessContext: AccessContext,
-    dto: LadesaTypings.DisponibilidadeDiaCreateOperationInput
+    dto: IDomainContracts.DisponibilidadeDiaCreateOperationInput
   ) {
     // =========================================================
 
@@ -313,7 +313,7 @@ export class DisponibilidadeDiaService {
 
   async disponibilidadeDiaUpdate(
     accessContext: AccessContext,
-    dto: LadesaTypings.DisponibilidadeDiaUpdateByIdOperationInput
+    dto: IDomainContracts.DisponibilidadeDiaUpdateByIdOperationInput
   ) {
     // =========================================================
 
@@ -399,7 +399,7 @@ export class DisponibilidadeDiaService {
 
   async disponibilidadeDiaDeleteOneById(
     accessContext: AccessContext,
-    dto: LadesaTypings.DisponibilidadeDiaFindOneInputView
+    dto: IDomainContracts.DisponibilidadeDiaFindOneInputView
   ) {
     // =========================================================
 

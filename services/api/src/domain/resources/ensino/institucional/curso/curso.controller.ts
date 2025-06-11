@@ -1,10 +1,10 @@
 import { CombinedInput } from "@/application/standards";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Tokens } from "@ladesa-ro/especificacao";
 import { Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post, Put, UploadedFile } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
+import type * as IDomainContracts from "~domain.contracts";
 import { CursoService } from "./curso.service";
 
 @ApiTags("cursos")
@@ -19,8 +19,8 @@ export class CursoController {
   async cursoFindAll(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.CursoListOperationInput,
-  ): Promise<LadesaTypings.CursoListOperationOutput["success"]> {
+    @CombinedInput() dto: IDomainContracts.CursoListOperationInput,
+  ): Promise<IDomainContracts.CursoListOperationOutput["success"]> {
     return this.cursoService.cursoFindAll(accessContext, dto);
   }
 
@@ -31,7 +31,7 @@ export class CursoController {
   async cursoFindById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.CursoFindOneByIdOperationOutput,
+    @CombinedInput() dto: IDomainContracts.CursoFindOneByIdOperationOutput,
   ) {
     return this.cursoService.cursoFindByIdStrict(accessContext, {
       id: dto.params.id,
@@ -45,7 +45,7 @@ export class CursoController {
   async cursoCreate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.CursoCreateOperationInput,
+    @CombinedInput() dto: IDomainContracts.CursoCreateOperationInput,
   ) {
     return this.cursoService.cursoCreate(accessContext, dto);
   }
@@ -54,7 +54,7 @@ export class CursoController {
 
   @Patch("/:id")
   @Operation(Tokens.CursoUpdateOneById)
-  async cursoUpdate(@AccessContextHttp() accessContext: AccessContext, @CombinedInput() dto: LadesaTypings.CursoUpdateByIdOperationInput) {
+  async cursoUpdate(@AccessContextHttp() accessContext: AccessContext, @CombinedInput() dto: IDomainContracts.CursoUpdateByIdOperationInput) {
     return this.cursoService.cursoUpdate(accessContext, dto);
   }
 
@@ -88,7 +88,7 @@ export class CursoController {
   async cursoDeleteOneById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.CursoFindOneByIdOperationOutput,
+    @CombinedInput() dto: IDomainContracts.CursoFindOneByIdOperationOutput,
   ) {
     return this.cursoService.cursoDeleteOneById(accessContext, {
       id: dto.params.id,

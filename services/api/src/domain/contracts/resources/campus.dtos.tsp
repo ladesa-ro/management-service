@@ -1,25 +1,25 @@
 using Ladesa.Domain.v4.Generics;
 using Ladesa.Domain.v4.Generics.Entities;
 
-namespace Ladesa.Domain.v4.Schemas;
+namespace Ladesa.ManagementService.Domain.Contracts;
 
 /** Visão completa de um campus. */
 model CampusView {
   ...OmitProperties<Campus, "endereco">;
-  endereco: EnderecoFindOneResultView;
+  endereco: EnderecoFindOneOutput;
 }
 
 /**
  * Dados de entrada para encontrar um campus por id.
  */
-model CampusFindOneInputView {
+model CampusFindOneInput {
   id: Campus.id;
 }
 
 /**
  * Visão FindOne de um campus.
  */
-model CampusFindOneResultView {
+model CampusFindOneOutput {
   //
   ...PickProperties<CampusView, "id">;
 
@@ -36,12 +36,12 @@ model CampusFindOneResultView {
 }
 
 /** Resultados da busca a campi. */
-model CampusListResultView is Pagination.Result.View<CampusFindOneResultView>;
+model CampusListOutput is Pagination.Result.View<CampusFindOneOutput>;
 
 /**
  * Dados de entrada para a criação de um campus.
  */
-model CampusInputCreateView {
+model CampusCreateInput {
   ...PickProperties<CampusView, "nomeFantasia">;
   ...PickProperties<CampusView, "razaoSocial">;
   ...PickProperties<CampusView, "apelido">;
@@ -50,4 +50,4 @@ model CampusInputCreateView {
 }
 
 /** Dados de entrada para a atualização de um campus. */
-model CampusInputUpdateView is OptionalProperties<CampusInputCreateView>;
+model CampusUpdateInput is OptionalProperties<CampusCreateInput>;

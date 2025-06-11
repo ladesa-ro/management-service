@@ -1,27 +1,27 @@
 using Ladesa.Domain.v4.Generics;
 using Ladesa.Domain.v4.Generics.Entities;
 
-namespace Ladesa.Domain.v4.Schemas;
+namespace Ladesa.ManagementService.Domain.Contracts;
 
 /** Visão completa de um bloco. */
 model BlocoView {
   ...OmitProperties<Bloco, "campus" | "ambientes" | "imagemCapa">;
-  campus: CampusFindOneResultView;
-  imagemCapa: ImagemFindOneResultView | null;
-  ambientes: AmbienteFindOneResultView[];
+  campus: CampusFindOneOutput;
+  imagemCapa: ImagemFindOneOutput | null;
+  ambientes: AmbienteFindOneOutput[];
 }
 
 /**
  * Dados de entrada para encontrar um bloco por id.
  */
-model BlocoFindOneInputView {
+model BlocoFindOneInput {
   id: Bloco.id;
 }
 
 /**
  * Visão FindOne de um bloco.
  */
-model BlocoFindOneResultView {
+model BlocoFindOneOutput {
   //
   ...PickProperties<BlocoView, "id">;
 
@@ -38,14 +38,14 @@ model BlocoFindOneResultView {
 }
 
 /** Dados de entrada para a criação de um bloco. */
-model BlocoInputCreateView {
+model BlocoCreateInput {
   ...PickProperties<BlocoView, "nome">;
   ...PickProperties<BlocoView, "codigo">;
-  campus: CampusFindOneInputView;
+  campus: CampusFindOneInput;
 }
 
 /** Dados de entrada para a atualização de um bloco. */
-model BlocoInputUpdateView is OptionalProperties<BlocoInputCreateView>;
+model BlocoUpdateInput is OptionalProperties<BlocoCreateInput>;
 
 /** Resultados da busca a blocos. */
-model BlocoListResultView is Pagination.Result.View<BlocoFindOneResultView>;
+model BlocoListOutput is Pagination.Result.View<BlocoFindOneOutput>;

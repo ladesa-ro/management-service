@@ -4,10 +4,10 @@ import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
 import type { BlocoEntity } from "@/infrastructure/integrations/database/typeorm/entities";
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
+import type * as IDomainContracts from "~domain.contracts";
 import { ArquivoService } from "../../base/arquivo/arquivo.service";
 import { ImagemService } from "../../base/imagem/imagem.service";
 import { CampusService } from "../campus/campus.service";
@@ -36,9 +36,9 @@ export class BlocoService {
   async blocoFindAll(
     //
     accessContext: AccessContext,
-    dto: LadesaTypings.BlocoListOperationInput | null = null,
+    dto: IDomainContracts.BlocoListOperationInput | null = null,
     selection?: string[] | boolean,
-  ): Promise<LadesaTypings.BlocoListOperationOutput["success"]> {
+  ): Promise<IDomainContracts.BlocoListOperationOutput["success"]> {
     // =========================================================
 
     const qb = this.blocoRepository.createQueryBuilder(aliasBloco);
@@ -96,7 +96,7 @@ export class BlocoService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad(LadesaTypings.Tokens.BlocoFindOneResultView, qb, aliasBloco, selection);
+    QbEfficientLoad(IDomainContracts.Tokens.BlocoFindOneResultView, qb, aliasBloco, selection);
 
     // =========================================================
     const pageItemsView = await qb.andWhereInIds(map(paginated.data, "id")).getMany();
@@ -106,7 +106,7 @@ export class BlocoService {
     return LadesaPaginatedResultDto(paginated);
   }
 
-  async blocoFindById(accessContext: AccessContext | null, dto: LadesaTypings.BlocoFindOneInputView, selection?: string[] | boolean): Promise<LadesaTypings.BlocoFindOneResultView | null> {
+  async blocoFindById(accessContext: AccessContext | null, dto: IDomainContracts.BlocoFindOneInputView, selection?: string[] | boolean): Promise<IDomainContracts.BlocoFindOneResultView | null> {
     // =========================================================
 
     const qb = this.blocoRepository.createQueryBuilder(aliasBloco);
@@ -124,7 +124,7 @@ export class BlocoService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad(LadesaTypings.Tokens.BlocoFindOneResultView, qb, aliasBloco, selection);
+    QbEfficientLoad(IDomainContracts.Tokens.BlocoFindOneResultView, qb, aliasBloco, selection);
 
     // =========================================================
 
@@ -135,7 +135,7 @@ export class BlocoService {
     return bloco;
   }
 
-  async blocoFindByIdStrict(accessContext: AccessContext | null, dto: LadesaTypings.BlocoFindOneInputView, selection?: string[] | boolean) {
+  async blocoFindByIdStrict(accessContext: AccessContext | null, dto: IDomainContracts.BlocoFindOneInputView, selection?: string[] | boolean) {
     const bloco = await this.blocoFindById(accessContext, dto, selection);
 
     if (!bloco) {
@@ -145,7 +145,7 @@ export class BlocoService {
     return bloco;
   }
 
-  async blocoFindByIdSimple(accessContext: AccessContext, id: LadesaTypings.BlocoFindOneInputView["id"], selection?: string[]): Promise<LadesaTypings.BlocoFindOneResultView | null> {
+  async blocoFindByIdSimple(accessContext: AccessContext, id: IDomainContracts.BlocoFindOneInputView["id"], selection?: string[]): Promise<IDomainContracts.BlocoFindOneResultView | null> {
     // =========================================================
 
     const qb = this.blocoRepository.createQueryBuilder(aliasBloco);
@@ -161,7 +161,7 @@ export class BlocoService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad(LadesaTypings.Tokens.BlocoFindOneResultView, qb, aliasBloco, selection);
+    QbEfficientLoad(IDomainContracts.Tokens.BlocoFindOneResultView, qb, aliasBloco, selection);
 
     // =========================================================
 
@@ -172,7 +172,7 @@ export class BlocoService {
     return bloco;
   }
 
-  async blocoFindByIdSimpleStrict(accessContext: AccessContext, id: LadesaTypings.BlocoFindOneInputView["id"], selection?: string[]) {
+  async blocoFindByIdSimpleStrict(accessContext: AccessContext, id: IDomainContracts.BlocoFindOneInputView["id"], selection?: string[]) {
     const bloco = await this.blocoFindByIdSimple(accessContext, id, selection);
 
     if (!bloco) {
@@ -199,7 +199,7 @@ export class BlocoService {
     throw new NotFoundException();
   }
 
-  async blocoUpdateImagemCapa(accessContext: AccessContext, dto: LadesaTypings.BlocoFindOneInputView, file: Express.Multer.File) {
+  async blocoUpdateImagemCapa(accessContext: AccessContext, dto: IDomainContracts.BlocoFindOneInputView, file: Express.Multer.File) {
     // =========================================================
 
     const currentBloco = await this.blocoFindByIdStrict(accessContext, {
@@ -233,7 +233,7 @@ export class BlocoService {
 
   //
 
-  async blocoCreate(accessContext: AccessContext, dto: LadesaTypings.BlocoCreateOperationInput) {
+  async blocoCreate(accessContext: AccessContext, dto: IDomainContracts.BlocoCreateOperationInput) {
     // =========================================================
 
     await accessContext.ensurePermission("bloco:create", { dto });
@@ -267,7 +267,7 @@ export class BlocoService {
     return this.blocoFindByIdStrict(accessContext, { id: bloco.id });
   }
 
-  async blocoUpdate(accessContext: AccessContext, dto: LadesaTypings.BlocoUpdateByIdOperationInput) {
+  async blocoUpdate(accessContext: AccessContext, dto: IDomainContracts.BlocoUpdateByIdOperationInput) {
     // =========================================================
 
     const currentBloco = await this.blocoFindByIdStrict(accessContext, {
@@ -301,7 +301,7 @@ export class BlocoService {
 
   //
 
-  async blocoDeleteOneById(accessContext: AccessContext, dto: LadesaTypings.BlocoFindOneInputView) {
+  async blocoDeleteOneById(accessContext: AccessContext, dto: IDomainContracts.BlocoFindOneInputView) {
     // =========================================================
 
     await accessContext.ensurePermission("bloco:delete", { dto }, dto.id, this.blocoRepository.createQueryBuilder(aliasBloco));

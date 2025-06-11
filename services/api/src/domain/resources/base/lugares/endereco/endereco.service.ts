@@ -2,9 +2,9 @@ import { QbEfficientLoad } from "@/application/standards";
 import { ensureValidResult, makeValidatorForEntity } from "@/application/standards/especificacao/business-logic/Validation/ajv-validate";
 import { AccessContext } from "@/infrastructure/access-context";
 import { DatabaseContextService } from "@/infrastructure/integrations";
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { pick } from "lodash";
+import type * as IDomainContracts from "~domain.contracts";
 
 // ============================================================================
 
@@ -24,7 +24,7 @@ export class EnderecoService {
 
   //
 
-  async internalFindOneById(id: LadesaTypings.Endereco["id"]) {
+  async internalFindOneById(id: IDomainContracts.Endereco["id"]) {
     const endereco = await this.enderecoRepository.findOne({
       where: {
         id: id,
@@ -34,7 +34,7 @@ export class EnderecoService {
     return endereco;
   }
 
-  async internalFindOneByIdStrict(id: LadesaTypings.Endereco["id"]) {
+  async internalFindOneByIdStrict(id: IDomainContracts.Endereco["id"]) {
     const endereco = await this.internalFindOneById(id);
 
     if (!endereco) {
@@ -44,8 +44,8 @@ export class EnderecoService {
     return endereco;
   }
 
-  async internalEnderecoCreateOrUpdate(id: LadesaTypings.Endereco["id"] | null, payload: LadesaTypings.EnderecoInput) {
-    const enderecoInputValidator = await makeValidatorForEntity<LadesaTypings.EnderecoInput>(LadesaTypings.Tokens.EnderecoInputView);
+  async internalEnderecoCreateOrUpdate(id: IDomainContracts.Endereco["id"] | null, payload: IDomainContracts.EnderecoInput) {
+    const enderecoInputValidator = await makeValidatorForEntity<IDomainContracts.EnderecoInput>(IDomainContracts.Tokens.EnderecoInputView);
 
     const result = await enderecoInputValidator(payload);
 
@@ -67,7 +67,7 @@ export class EnderecoService {
       cidade: {
         id: dto.cidade.id,
       },
-    } as LadesaTypings.EnderecoInput;
+    } as IDomainContracts.EnderecoInput;
 
     this.enderecoRepository.merge(endereco, enderecoInputDto);
 
@@ -78,7 +78,7 @@ export class EnderecoService {
 
   //
 
-  async findById(accessContext: AccessContext, dto: LadesaTypings.EnderecoFindOneInputView, selection?: string[] | boolean): Promise<LadesaTypings.EnderecoFindOneResultView | null> {
+  async findById(accessContext: AccessContext, dto: IDomainContracts.EnderecoFindOneInputView, selection?: string[] | boolean): Promise<IDomainContracts.EnderecoFindOneResultView | null> {
     const qb = this.enderecoRepository.createQueryBuilder(aliasEndereco);
 
     // =========================================================
@@ -92,7 +92,7 @@ export class EnderecoService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad(LadesaTypings.Tokens.EnderecoFindOneResultView, qb, aliasEndereco, selection);
+    QbEfficientLoad(IDomainContracts.Tokens.EnderecoFindOneResultView, qb, aliasEndereco, selection);
 
     // =========================================================
 
@@ -103,7 +103,7 @@ export class EnderecoService {
     return endereco;
   }
 
-  async findByIdStrict(requestContext: AccessContext, dto: LadesaTypings.EnderecoFindOneInputView) {
+  async findByIdStrict(requestContext: AccessContext, dto: IDomainContracts.EnderecoFindOneInputView) {
     const endereco = await this.findById(requestContext, dto);
 
     if (!endereco) {

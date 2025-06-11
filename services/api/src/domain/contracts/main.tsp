@@ -93,4 +93,4 @@ using TypeSpec.JsonSchema;
 
 @jsonSchema
 @baseUri("ladesa://domain/v4/")
-namespace Ladesa.Domain.v4.Schemas;
+namespace Ladesa.ManagementService.Domain.Contracts;

@@ -1,22 +1,22 @@
 using Ladesa.Domain.v4.Generics;
 using Ladesa.Domain.v4.Generics.Entities;
 
-namespace Ladesa.Domain.v4.Schemas;
+namespace Ladesa.ManagementService.Domain.Contracts;
 
 /** Visão completa de um Vínculo. */
 model PerfilView {
   ...OmitProperties<Perfil, "campus" | "usuario">;
-  campus: CampusFindOneResultView;
-  usuario: UsuarioFindOneResultView;
+  campus: CampusFindOneOutput;
+  usuario: UsuarioFindOneOutput;
 }
 
 /** Dados de entrada para encontrar um Vínculo por ID. */
-model PerfilFindOneInputView {
+model PerfilFindOneInput {
   id: Perfil.id;
 }
 
 /** Visão FindOne de um Vínculo. */
-model PerfilFindOneResultView {
+model PerfilFindOneOutput {
   //
   ...PickProperties<PerfilView, "id">;
 
@@ -34,13 +34,13 @@ model PerfilFindOneResultView {
 }
 
 /** Resultados da busca a Vínculos. */
-model PerfilListResultView is Pagination.Result.View<PerfilFindOneResultView>;
+model PerfilListOutput is Pagination.Result.View<PerfilFindOneOutput>;
 
 /** Dados de entrada para a alteração de vínculo de um Usuário a um Campus. */
 model PerfilUpdateView {
   /** Cargos do usuário no vínculo. */
   cargos: string[];
 
-  campus: CampusFindOneInputView;
-  usuario: UsuarioFindOneInputView;
+  campus: CampusFindOneInput;
+  usuario: UsuarioFindOneInput;
 }

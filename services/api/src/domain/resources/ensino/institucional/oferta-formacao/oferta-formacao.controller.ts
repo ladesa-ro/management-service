@@ -1,10 +1,10 @@
 import { CombinedInput } from "@/application/standards";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Tokens } from "@ladesa-ro/especificacao";
 import { Controller, Delete, Get, Patch, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
+import type * as IDomainContracts from "~domain.contracts";
 import { OfertaFormacaoService } from "./oferta-formacao.service";
 
 @ApiTags("ofertas-formacoes")
@@ -19,8 +19,8 @@ export class OfertaFormacaoController {
   async ofertaFormacaoFindAll(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.OfertaFormacaoListOperationInput,
-  ): Promise<LadesaTypings.OfertaFormacaoListOperationOutput["success"]> {
+    @CombinedInput() dto: IDomainContracts.OfertaFormacaoListOperationInput,
+  ): Promise<IDomainContracts.OfertaFormacaoListOperationOutput["success"]> {
     return this.ofertaFormacaoService.ofertaFormacaoFindAll(accessContext, dto);
   }
 
@@ -31,7 +31,7 @@ export class OfertaFormacaoController {
   async ofertaFormacaoFindById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.OfertaFormacaoFindOneByIdOperationOutput,
+    @CombinedInput() dto: IDomainContracts.OfertaFormacaoFindOneByIdOperationOutput,
   ) {
     return this.ofertaFormacaoService.ofertaFormacaoFindByIdStrict(accessContext, {
       id: dto.params.id,
@@ -45,7 +45,7 @@ export class OfertaFormacaoController {
   async ofertaFormacaoCreate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.OfertaFormacaoCreateOperationInput,
+    @CombinedInput() dto: IDomainContracts.OfertaFormacaoCreateOperationInput,
   ) {
     return this.ofertaFormacaoService.ofertaFormacaoCreate(accessContext, dto);
   }
@@ -57,7 +57,7 @@ export class OfertaFormacaoController {
   async ofertaFormacaoUpdate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.OfertaFormacaoUpdateByIdOperationInput,
+    @CombinedInput() dto: IDomainContracts.OfertaFormacaoUpdateByIdOperationInput,
   ) {
     return this.ofertaFormacaoService.ofertaFormacaoUpdate(accessContext, dto);
   }
@@ -69,7 +69,7 @@ export class OfertaFormacaoController {
   async ofertaFormacaoDeleteOneById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.OfertaFormacaoDeleteByIdOperationInput,
+    @CombinedInput() dto: IDomainContracts.OfertaFormacaoDeleteByIdOperationInput,
   ) {
     return this.ofertaFormacaoService.ofertaFormacaoDeleteOneById(accessContext, {
       id: dto.params.id,

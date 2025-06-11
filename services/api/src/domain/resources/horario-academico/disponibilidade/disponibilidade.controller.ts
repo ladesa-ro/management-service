@@ -1,10 +1,10 @@
 import { CombinedInput } from "@/application/standards";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Tokens } from "@ladesa-ro/especificacao";
 import { Controller, Delete, Get, Patch, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
+import type * as IDomainContracts from "~domain.contracts";
 import { DisponibilidadeService } from "./disponibilidade.service";
 
 @ApiTags("disponibilidades")
@@ -19,8 +19,8 @@ export class DisponibilidadeController {
   async disponibilidadeFindAll(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.DisponibilidadeListOperationInput,
-  ): Promise<LadesaTypings.DisponibilidadeListOperationOutput["success"]> {
+    @CombinedInput() dto: IDomainContracts.DisponibilidadeListOperationInput,
+  ): Promise<IDomainContracts.DisponibilidadeListOperationOutput["success"]> {
     return this.disponibilidadeService.disponibilidadeFindAll(accessContext, dto);
   }
 
@@ -32,7 +32,7 @@ export class DisponibilidadeController {
     //
     @AccessContextHttp() accessContext: AccessContext,
     @CombinedInput()
-    dto: LadesaTypings.DisponibilidadeFindOneByIdOperationOutput,
+    dto: IDomainContracts.DisponibilidadeFindOneByIdOperationOutput,
   ) {
     return this.disponibilidadeService.disponibilidadeFindByIdStrict(accessContext, {
       id: dto.params.id,
@@ -46,7 +46,7 @@ export class DisponibilidadeController {
   async disponibilidadeCreate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.DisponibilidadeCreateOperationInput,
+    @CombinedInput() dto: IDomainContracts.DisponibilidadeCreateOperationInput,
   ) {
     return this.disponibilidadeService.disponibilidadeCreate(accessContext, dto);
   }
@@ -58,7 +58,7 @@ export class DisponibilidadeController {
   async disponibilidadeUpdate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.DisponibilidadeUpdateByIdOperationInput,
+    @CombinedInput() dto: IDomainContracts.DisponibilidadeUpdateByIdOperationInput,
   ) {
     return this.disponibilidadeService.disponibilidadeUpdate(accessContext, dto);
   }
@@ -70,7 +70,7 @@ export class DisponibilidadeController {
   async disponibilidadeDeleteOneById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.DisponibilidadeDeleteByIdOperationInput,
+    @CombinedInput() dto: IDomainContracts.DisponibilidadeDeleteByIdOperationInput,
   ) {
     return this.disponibilidadeService.disponibilidadeDeleteOneById(accessContext, {
       id: dto.params.id,

@@ -1,17 +1,17 @@
 import { QbEfficientLoad } from "@/application/standards/ladesa-spec/QbEfficientLoad";
 import {
-  LadesaPaginatedResultDto,
-  LadesaSearch,
+    LadesaPaginatedResultDto,
+    LadesaSearch,
 } from "@/application/standards/ladesa-spec/search/search-strategies";
 import { IntervaloDeTempoService } from "@/domain/resources/base/intervalo-de-tempo/intervalo-de-tempo.service";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
 import type { AulaEntity } from "@/infrastructure/integrations/database/typeorm/entities";
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
+import type * as IDomainContracts from "~domain.contracts";
 import { AmbienteService } from "../../../ambientes/ambiente/ambiente.service";
 import { DiarioService } from "../diario/diario.service";
 
@@ -38,9 +38,9 @@ export class AulaService {
 
   async aulaFindAll(
     accessContext: AccessContext,
-    dto: LadesaTypings.AulaListOperationInput | null = null,
+    dto: IDomainContracts.AulaListOperationInput | null = null,
     selection?: string[] | boolean
-  ): Promise<LadesaTypings.AulaListOperationOutput["success"]> {
+  ): Promise<IDomainContracts.AulaListOperationOutput["success"]> {
     // =========================================================
 
     const qb = this.aulaRepository.createQueryBuilder(aliasAula);
@@ -103,7 +103,7 @@ export class AulaService {
 
     qb.select([]);
     QbEfficientLoad(
-      LadesaTypings.Tokens.AulaFindOneResultView,
+      IDomainContracts.Tokens.AulaFindOneResultView,
       qb,
       aliasAula,
       selection
@@ -125,9 +125,9 @@ export class AulaService {
 
   async aulaFindById(
     accessContext: AccessContext,
-    dto: LadesaTypings.AulaFindOneInputView,
+    dto: IDomainContracts.AulaFindOneInputView,
     selection?: string[] | boolean
-  ): Promise<LadesaTypings.AulaFindOneResultView | null> {
+  ): Promise<IDomainContracts.AulaFindOneResultView | null> {
     // =========================================================
 
     const qb = this.aulaRepository.createQueryBuilder(aliasAula);
@@ -144,7 +144,7 @@ export class AulaService {
 
     qb.select([]);
     QbEfficientLoad(
-      LadesaTypings.Tokens.AulaFindOneResultView,
+      IDomainContracts.Tokens.AulaFindOneResultView,
       qb,
       aliasAula,
       selection
@@ -161,7 +161,7 @@ export class AulaService {
 
   async aulaFindByIdStrict(
     accessContext: AccessContext,
-    dto: LadesaTypings.AulaFindOneInputView,
+    dto: IDomainContracts.AulaFindOneInputView,
     selection?: string[] | boolean
   ) {
     const aula = await this.aulaFindById(accessContext, dto, selection);
@@ -175,9 +175,9 @@ export class AulaService {
 
   async aulaFindByIdSimple(
     accessContext: AccessContext,
-    id: LadesaTypings.AulaFindOneInputView["id"],
+    id: IDomainContracts.AulaFindOneInputView["id"],
     selection?: string[] | boolean
-  ): Promise<LadesaTypings.AulaFindOneResultView | null> {
+  ): Promise<IDomainContracts.AulaFindOneResultView | null> {
     // =========================================================
 
     const qb = this.aulaRepository.createQueryBuilder(aliasAula);
@@ -194,7 +194,7 @@ export class AulaService {
 
     qb.select([]);
     QbEfficientLoad(
-      LadesaTypings.Tokens.AulaFindOneResultView,
+      IDomainContracts.Tokens.AulaFindOneResultView,
       qb,
       aliasAula,
       selection
@@ -211,7 +211,7 @@ export class AulaService {
 
   async aulaFindByIdSimpleStrict(
     accessContext: AccessContext,
-    id: LadesaTypings.AulaFindOneInputView["id"],
+    id: IDomainContracts.AulaFindOneInputView["id"],
     selection?: string[] | boolean
   ) {
     const aula = await this.aulaFindByIdSimple(accessContext, id, selection);
@@ -227,7 +227,7 @@ export class AulaService {
 
   async aulaCreate(
     accessContext: AccessContext,
-    dto: LadesaTypings.AulaCreateOperationInput
+    dto: IDomainContracts.AulaCreateOperationInput
   ) {
     // =========================================================
 
@@ -287,7 +287,7 @@ export class AulaService {
 
   async aulaUpdate(
     accessContext: AccessContext,
-    dto: LadesaTypings.AulaUpdateByIdOperationInput
+    dto: IDomainContracts.AulaUpdateByIdOperationInput
   ) {
     // =========================================================
 
@@ -375,7 +375,7 @@ export class AulaService {
 
   async aulaDeleteOneById(
     accessContext: AccessContext,
-    dto: LadesaTypings.AulaFindOneInputView
+    dto: IDomainContracts.AulaFindOneInputView
   ) {
     // =========================================================
 

@@ -1,17 +1,17 @@
 import { QbEfficientLoad } from "@/application/standards/ladesa-spec/QbEfficientLoad";
 import {
-  LadesaPaginatedResultDto,
-  LadesaSearch,
+    LadesaPaginatedResultDto,
+    LadesaSearch,
 } from "@/application/standards/ladesa-spec/search/search-strategies";
 import { TurmaService } from "@/domain/resources/ensino/discente/turma/turma.service";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
 import type { DiarioEntity } from "@/infrastructure/integrations/database/typeorm/entities";
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
+import type * as IDomainContracts from "~domain.contracts";
 import { AmbienteService } from "../../../ambientes/ambiente/ambiente.service";
 import { CalendarioLetivoService } from "../../../calendario/calendario-letivo/calendario-letivo.service";
 import { DisciplinaService } from "../../institucional/disciplina/disciplina.service";
@@ -40,9 +40,9 @@ export class DiarioService {
 
   async diarioFindAll(
     accessContext: AccessContext,
-    dto: LadesaTypings.DiarioListOperationInput | null = null,
+    dto: IDomainContracts.DiarioListOperationInput | null = null,
     selection?: string[] | boolean
-  ): Promise<LadesaTypings.DiarioListOperationOutput["success"]> {
+  ): Promise<IDomainContracts.DiarioListOperationOutput["success"]> {
     // =========================================================
 
     const qb = this.diarioRepository.createQueryBuilder(aliasDiario);
@@ -104,7 +104,7 @@ export class DiarioService {
 
     qb.select([]);
     QbEfficientLoad(
-      LadesaTypings.Tokens.DiarioFindOneResultView,
+      IDomainContracts.Tokens.DiarioFindOneResultView,
       qb,
       aliasDiario,
       selection
@@ -126,9 +126,9 @@ export class DiarioService {
 
   async diarioFindById(
     accessContext: AccessContext,
-    dto: LadesaTypings.DiarioFindOneInputView,
+    dto: IDomainContracts.DiarioFindOneInputView,
     selection?: string[] | boolean
-  ): Promise<LadesaTypings.DiarioFindOneResultView | null> {
+  ): Promise<IDomainContracts.DiarioFindOneResultView | null> {
     // =========================================================
 
     const qb = this.diarioRepository.createQueryBuilder(aliasDiario);
@@ -145,7 +145,7 @@ export class DiarioService {
 
     qb.select([]);
     QbEfficientLoad(
-      LadesaTypings.Tokens.DiarioFindOneResultView,
+      IDomainContracts.Tokens.DiarioFindOneResultView,
       qb,
       aliasDiario,
       selection
@@ -162,7 +162,7 @@ export class DiarioService {
 
   async diarioFindByIdStrict(
     accessContext: AccessContext,
-    dto: LadesaTypings.DiarioFindOneInputView,
+    dto: IDomainContracts.DiarioFindOneInputView,
     selection?: string[] | boolean
   ) {
     const diario = await this.diarioFindById(accessContext, dto, selection);
@@ -176,9 +176,9 @@ export class DiarioService {
 
   async diarioFindByIdSimple(
     accessContext: AccessContext,
-    id: LadesaTypings.DiarioFindOneInputView["id"],
+    id: IDomainContracts.DiarioFindOneInputView["id"],
     selection?: string[] | boolean
-  ): Promise<LadesaTypings.DiarioFindOneResultView | null> {
+  ): Promise<IDomainContracts.DiarioFindOneResultView | null> {
     // =========================================================
 
     const qb = this.diarioRepository.createQueryBuilder(aliasDiario);
@@ -195,7 +195,7 @@ export class DiarioService {
 
     qb.select([]);
     QbEfficientLoad(
-      LadesaTypings.Tokens.DiarioFindOneResultView,
+      IDomainContracts.Tokens.DiarioFindOneResultView,
       qb,
       aliasDiario,
       selection
@@ -212,7 +212,7 @@ export class DiarioService {
 
   async diarioFindByIdSimpleStrict(
     accessContext: AccessContext,
-    id: LadesaTypings.DiarioFindOneInputView["id"],
+    id: IDomainContracts.DiarioFindOneInputView["id"],
     selection?: string[] | boolean
   ) {
     const diario = await this.diarioFindByIdSimple(
@@ -232,7 +232,7 @@ export class DiarioService {
 
   async diarioCreate(
     accessContext: AccessContext,
-    dto: LadesaTypings.DiarioCreateOperationInput
+    dto: IDomainContracts.DiarioCreateOperationInput
   ) {
     // =========================================================
 
@@ -303,7 +303,7 @@ export class DiarioService {
 
   async diarioUpdate(
     accessContext: AccessContext,
-    dto: LadesaTypings.DiarioUpdateByIdOperationInput
+    dto: IDomainContracts.DiarioUpdateByIdOperationInput
   ) {
     // =========================================================
 
@@ -410,7 +410,7 @@ export class DiarioService {
 
   async diarioDeleteOneById(
     accessContext: AccessContext,
-    dto: LadesaTypings.DiarioFindOneInputView
+    dto: IDomainContracts.DiarioFindOneInputView
   ) {
     // =========================================================
 
