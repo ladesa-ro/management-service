@@ -2,14 +2,13 @@ using Ladesa.Domain.v4.Generics;
 using Ladesa.Domain.v4.Generics.Entities;
 
 /** Tipos de dias possíveis no calendário. */
-
 union TipoDiaCalendario {
-  "Aula Presencial";
-  "Aula Não Presencial (Letiva)";
-  "Feriado";
-  "Sábado";
-  "Domingo";
-  "Outro";
+  "Aula Presencial",
+  "Aula Não Presencial (Letiva)",
+  "Feriado",
+  "Sábado",
+  "Domingo",
+  "Outro",
 }
 /** Representa um dia no calendário. */
 model DiaCalendario {
@@ -19,7 +18,7 @@ model DiaCalendario {
   /** Indica se o dia é letivo */
   diaLetivo: boolean;
 
-  /** Indica se o dia é presencial*/
+  /** Indica se o dia é presencial */
   diaPresencial: boolean;
 
   /** Tipo do dia (presencial, feriado, sábado, etc.) */
@@ -40,7 +39,6 @@ model GetCalendarioInput {
   /** Mês a ser consultado (opcional) */
   mes?: int8;
 }
-
 
 /** Retorno da consulta de calendário. */
 model GetCalendarioOutput {

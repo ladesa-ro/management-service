@@ -1,9 +1,10 @@
 {
   "name": "@ladesa-ro/api.service.domain.contracts",
   "scripts": {
-    "generate:json-schema": "tsp compile --config ./tspconfig.yaml --output-dir ./.generated ./main.tsp",
-    "generate:typescript": "quicktype --src-lang schema --src './.generated/Ladesa.ManagementService.Domain.Contracts.json#$defs/' -o './.generated/Ladesa.ManagementService.Domain.Contracts.ts' --just-types --no-nice-property-names --no-runtime-typecheck --acronym-style original",
-    "generate": "bun run generate:json-schema && bun run generate:typescript"
+    "tsp:format": "nx tsp:format",
+    "json-schema:generate": "nx json-schema:generate",
+    "typescript:generate": "nx typescript:generate",
+    "generate": "nx json-schema:generate && nx typescript:generate"
   },
   "exports": {
     "json-schema": {
