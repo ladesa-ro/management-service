@@ -1,5 +1,4 @@
 import { COMBINED_INPUT_PARAM, type ICombinedInputParamMetadata } from "@/application/standards/especificacao/business-logic/CombinedInput";
-import { GraphQlOperationInputAdapter } from "@/application/standards/especificacao/business-logic/Decorators/Operation/Adapters";
 import type { ISpecDecorateHandler, ISpecDecorateOperationContext } from "@/application/standards/especificacao/business-logic/Decorators/Operation/Core/ISpecDecorateHandler";
 import { OPERATION_KEY } from "@/application/standards/especificacao/business-logic/Decorators/Tokens";
 import { dtoCompiler } from "@/application/standards/especificacao/business-logic/DtoCompiler";
@@ -74,11 +73,7 @@ export class SpecDecorate implements ISpecDecorate {
               const executionContextType = executionContext.getType<string>();
 
               switch (executionContextType) {
-                case "graphql": {
-                  const [, input] = executionContext.getArgs();
-
-                  return GraphQlOperationInputAdapter.DecombineOperationInput(operationNode, input);
-                }
+                
 
                 case "http": {
                   const httpContext = executionContext.switchToHttp();
