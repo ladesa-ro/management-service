@@ -21,7 +21,7 @@ export class DiaCalendarioEntity implements LadesaTypings.DiaCalendario {
   @Column({ name: "dia_presencial", type: "bool", nullable: false })
   diaPresencial!: boolean;
 
-  @Column({ name: "tipo", type: "varchar", length: 50, nullable: false, default: "'Outro'" })
+  @Column({ name: "tipo", type: "varchar", length: 50, nullable: false, default: 'Outro' })
   tipo!: string;
 
   @Column({ name: "extra_curricular", type: "bool", nullable: false })
