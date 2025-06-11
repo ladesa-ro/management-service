@@ -41,7 +41,8 @@
         "oderwat.indent-rainbow",
         "YoavBls.pretty-ts-errors",
         "Gruntfuggly.todo-tree",
-        "meganrogge.template-string-converter"
+        "meganrogge.template-string-converter",
+        "typespec.typespec-vscode"
       ],
       "settings": {
         "terminal.integrated.profiles.linux": {
