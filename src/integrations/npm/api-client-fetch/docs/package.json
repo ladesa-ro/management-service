@@ -1,0 +1,19 @@
+{
+  "name": "@ladesa-ro/api-client-fetch.docs",
+  "version": "1.0.0-next.34",
+  "files": [
+    "dist/**/*.*"
+  ],
+  "private": true,
+  "scripts": {
+    "watch": "nx watch",
+    "build": "nx build",
+    "serve": "nx serve",
+    "dev": "nx dev"
+  },
+  "devDependencies": {
+    "serve": "^14.2.4",
+    "typedoc": "^0.28.5",
+    "typedoc-plugin-mdn-links": "^5.0.2"
+  }
+}

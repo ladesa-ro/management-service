@@ -1,20 +1,16 @@
-volumes
-.pnpm-store
+.nx 
 
 output
-
-# compiled output
 dist
-node_modules
-.wireit
+
+*.env
+volumes
 
 semicolon_delimited_script
 
-plopfile.mjs
-
-*.env
-
 ###################################################################
+
+node_modules
 
 # Logs
 logs
@@ -24,6 +20,7 @@ pnpm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
+.pnpm-store
 
 # OS
 .DS_Store

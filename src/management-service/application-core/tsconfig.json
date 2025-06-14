@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "incremental": true,
+    "skipLibCheck": true,
+    "strictNullChecks": true,
+    "noImplicitAny": false,
+
+    "lib": ["esnext"],
+    "target": "esnext",
+    "module": "NodeNext",
+
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+
+    "baseUrl": "./src",
+    "paths": {
+      "@/*": ["./*"],
+    },
+
+  },
+  "exclude": ["scripts"]
+}

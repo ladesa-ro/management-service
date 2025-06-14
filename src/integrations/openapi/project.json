@@ -1,0 +1,33 @@
+{
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "tags": [
+    "integrations",
+    "integrations:openapi"
+  ],
+  "namedInputs": {
+    "default": []
+  },
+  "targets": {
+    "build": {
+      "cache": true,
+      "inputs": [
+        "{workspaceRoot}/modules/application/contracts/dist/tsp-output/openapi.v3.json"
+      ],
+      "outputs": [
+        "{projectRoot}/json/openapi.v3.json"
+      ],
+      "dependsOn": [
+        "@ladesa-ro/management-service.application.contracts:build"
+      ],
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "{projectRoot}",
+        "commands": [
+          "cp ../../application/contracts/dist/tsp-output/openapi.v3.json ./json/openapi.v3.json",
+          "pnpm run -w code-static:fix {projectRoot}/json"
+        ],
+        "parallel": false
+      }
+    }
+  }
+}

@@ -4,7 +4,7 @@
   "name": "Ladesa - Management Service - DEV",
 
   "initializeCommand": "podman network create --ignore ladesa-net",
-  "postStartCommand": "pnpm install --force; bunx nx daemon --start;",
+  "postStartCommand": "bun install; bunx nx daemon --start;",
 
   "shutdownAction": "stopCompose",
   "postCreateCommand": "cat /etc/os-release",
@@ -19,7 +19,8 @@
   // https://containers.dev/features
   "features": {
     "ghcr.io/devcontainers/features/git:1": {},
-    "ghcr.io/devcontainers/features/github-cli:1": {}
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    // "ghcr.io/devcontainers-extra/features/podman-homebrew:1": {}
   },
 
   "updateRemoteUserUID": true,

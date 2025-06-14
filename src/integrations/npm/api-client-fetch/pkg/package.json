@@ -1,0 +1,36 @@
+{
+  "name": "@ladesa-ro/api-client-fetch",
+  "version": "1.0.0-next.35",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "files": ["*.md", "dist/**/*.*"],
+  "scripts": {
+    "cleanup:dist": "nx cleanup:dist",
+    "cleanup:generated": "nx cleanup:generated",
+    "generate:client": "nx generate:client",
+    "prebuild": "rimraf dist",
+    "build": "nx build",
+    "dev": "nx dev",
+    "test": "tsc --noEmit",
+    "pkg:publish": "bun publish --tag ${PUBLISH_TAG} --auth-type legacy --dry-run"
+  },
+  "devDependencies": {
+    "@hey-api/openapi-ts": "^0.53.12",
+    "typescript": "catalog:"
+  },
+  "description": "Ladesa - Management Service - NPM API Client Library",
+  "homepage": "https://github.com/ladesa-ro/management-service/tree/development/modules/integrations/npm/api-client-fetch/pkg/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ladesa-ro/management-service.git"
+  },
+  "author": "Gabriel R. Antunes <gabrielrodantunes@gmail.com>",
+  "bugs": {
+    "url": "https://github.com/ladesa-ro/management-service/issues"
+  },
+  "keywords": ["ladesa-ro", "api", "client", "fetch", "sisgha", "sisgea", "management-service"],
+  "publishConfig": {
+    "provenance": true,
+    "access": "public"
+  }
+}

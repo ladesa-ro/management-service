@@ -1,0 +1,59 @@
+{
+  "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
+  "tags": ["integrations", "integrations:npm", "integrations:npm:client:fetch"],
+  "namedInputs": {
+    "default": ["{projectRoot}/src/**/*", "{projectRoot}/package.json", "{projectRoot}/openapi-ts.config.mjs", "{projectRoot}/tsconfig.json"]
+  },
+  "targets": {
+    "cleanup:dist": {
+      "cache": false,
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["rimraf dist"],
+        "cwd": "{projectRoot}",
+        "parallel": false
+      }
+    },
+    "cleanup:generated": {
+      "cache": false,
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["rimraf ./src/http/generated"],
+        "cwd": "{projectRoot}",
+        "parallel": false
+      }
+    },
+    "build": {
+      "inputs": ["default"],
+      "dependsOn": ["cleanup:dist", "generate:client"],
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "{projectRoot}",
+        "command": "tsc -p tsconfig.json"
+      },
+      "outputs": ["{projectRoot}/dist/**/*"]
+    },
+    "generate:client": {
+      "cache": true,
+      "executor": "nx:run-commands",
+      "inputs": ["{workspaceRoot}/modules/integrations/openapi/json/openapi.v3.json"],
+      "options": {
+        "cwd": "{projectRoot}",
+        "commands": ["bun run cleanup:generated", "bunx openapi-ts", "pnpm run -w code-static:fix {projectRoot}"],
+        "parallel": false
+      },
+      "outputs": ["{projectRoot}/src/http/generated/**/*"],
+      "dependsOn": ["cleanup:generated", "@ladesa-ro/management-service.integrations.openapi:generate"]
+    },
+    "dev": {
+      "cache": false,
+      "executor": "nx:run-commands",
+      "inputs": ["default"],
+      "options": {
+        "commands": ["nx watch --projects=@ladesa-ro/api-client-fetch -- nx run @ladesa-ro/api-client-fetch:build"],
+        "cwd": "{projectRoot}",
+        "parallel": false
+      }
+    }
+  }
+}

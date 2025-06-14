@@ -1,0 +1,21 @@
+{
+  "name": "@ladesa-ro/management-service.infrastructure",
+  "private": true,
+  "dependencies": {
+    "@nestjs/common": "catalog:nestjs",
+    "@keycloak/keycloak-admin-client": "^25.0.6",
+    "nestjs-paginate": "^11.1.1",
+    "openid-client": "^6.5.1"
+  },
+  "peerDependencies": {
+    "@nestjs/common": "catalog:nestjs"
+  },
+  "devDependencies": {
+    "typescript": "catalog:"
+  },
+  "exports": {
+    "./*": {
+      "import": "./src/*"
+    }
+  }
+}

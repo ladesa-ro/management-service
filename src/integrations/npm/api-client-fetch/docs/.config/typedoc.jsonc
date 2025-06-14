@@ -1,0 +1,27 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+
+  "entryPoints": [
+    "../../pkg/src/index.ts"
+  ],
+  "tsconfig": "../../pkg/tsconfig.json",
+
+  "cleanOutputDir": true,
+
+  "out": "../dist",
+
+  "basePath": "../../../../../../",
+
+  "includeVersion": true,
+  "searchInComments": true,
+  "searchInDocuments": true,
+
+  "navigationLinks": {
+    "Documentação do Ladesa": "https://docs.ladesa.com.br/"
+  },
+
+  "plugin": ["typedoc-plugin-mdn-links"]
+
+  // "hostedBaseUrl": "https://docs.ladesa.com.br/packages/npm/api-client-fetch/",
+  // "useHostedBaseUrlForAbsoluteLinks": true
+}

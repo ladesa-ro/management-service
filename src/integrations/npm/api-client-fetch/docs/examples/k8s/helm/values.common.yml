@@ -1,0 +1,48 @@
+applicationName: ladesa-ro-docs-packages-npm-api-client-fetch
+
+deployment:
+  replicas: 1
+  enabled: false
+
+  containerSecurityContext:
+    runAsNonRoot: false
+    readOnlyRootFilesystem: false
+
+  ports:
+    - containerPort: 80
+      name: web-port
+
+  resources:
+    requests:
+      cpu: "50m"
+      memory: "250Mi"
+
+  readinessProbe:
+    httpGet:
+      path: /
+      port: 80
+    initialDelaySeconds: 5
+    periodSeconds: 10
+  livenessProbe:
+    httpGet:
+      path: /
+      port: 80
+    initialDelaySeconds: 10
+    periodSeconds: 15
+  startupProbe:
+    httpGet:
+      path: /
+      port: 80
+    failureThreshold: 30
+    periodSeconds: 10
+
+service:
+  enabled: true
+  type: NodePort
+  ports:
+    - name: web-management-service
+      port: 80
+      targetPort: web-port
+
+ingress:
+  enabled: false

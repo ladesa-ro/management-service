@@ -6,7 +6,6 @@
     "**/.hg": true,
     "**/.DS_Store": true,
     "**/Thumbs.db": true,
-    "**/node_modules": true,
-    "**/.pnpm-store": true,
+    "**/node_modules": false
   }
 }

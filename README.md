@@ -22,7 +22,7 @@ npm install @ladesa-ro/api-client-fetch@latest
 ### Obter o código fonte do projeto
 
 ```bash
-git clone https://github.com/ladesa-ro/api.git
+git clone https://github.com/ladesa-ro/management-service.git
 cd api
 ```
 
@@ -31,7 +31,7 @@ cd api
 [`./api-service`](./api-service/)
 
 ```bash
-cd api-service
+cd api-management-service
 ```
 
 > A pasta API service contém o código fonte do Serviço de API, que utiliza o framework NestJS no NodeJS.
@@ -117,12 +117,12 @@ O projeto conta com um [arquivo make](./Makefile) que comporta scrips destinados
 <!-- Badges / Actions / Release  -->
 
 [action-release-src]: https://img.shields.io/github/actions/workflow/status/ladesa-ro/api/ci-release.yml?style=flat&logo=github&logoColor=white&label=Release&branch=development&labelColor=18181B
-[action-release-href]: https://github.com/ladesa-ro/api/actions/workflows/ci-release.yml?query=branch%3Adevelopment
+[action-release-href]: https://github.com/ladesa-ro/management-service/actions/workflows/ci-release.yml?query=branch%3Adevelopment
 
 <!-- Badges / Actions / Autofix  -->
 
 [action-autofix-src]: https://img.shields.io/github/actions/workflow/status/ladesa-ro/api/autofix.yml?style=flat&logo=github&logoColor=white&label=Generate%20Integrations&branch=development&labelColor=18181B
-[action-autofix-href]: https://github.com/ladesa-ro/api/actions/workflows/autofix.yml?query=branch%3Adevelopment
+[action-autofix-href]: https://github.com/ladesa-ro/management-service/actions/workflows/autofix.yml?query=branch%3Adevelopment
 
 <!-- Badges / Integrations / NPM -->
 

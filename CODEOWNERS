@@ -1,7 +1,5 @@
-/.github                                   @ladesa-ro/security
-CODEOWNERS                                 @ladesa-ro/security
-package.json                               @ladesa-ro/security
-pnpm-lock.yaml                             @ladesa-ro/security
-pnpm-workspace.yaml                        @ladesa-ro/security
-**/*.sh                                    @ladesa-ro/security
-.husky/**/*                                @ladesa-ro/security
+/.github                                    @ladesa-ro/security
+.husky/**/*                                 @ladesa-ro/security
+CODEOWNERS                                  @ladesa-ro/security
+**/package.json                             @ladesa-ro/security
+**/*.sh                                     @ladesa-ro/security

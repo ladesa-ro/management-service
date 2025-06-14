@@ -1,0 +1,33 @@
+{
+  "compilerOptions": {
+    "strict": true,
+
+    "lib": ["esnext"],
+    "target": "es2022",
+    "module": "NodeNext",
+    "resolveJsonModule": true,
+    "removeComments": true,
+
+    "strictNullChecks": true,
+    "noImplicitAny": false,
+
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+
+    "declaration": true,
+    "sourceMap": true,
+
+    
+    "baseUrl": "./src",
+    
+    "paths": {
+      "@/*": ["./*"]
+    },
+
+    "incremental": true,
+    "skipLibCheck": true
+  }
+}
