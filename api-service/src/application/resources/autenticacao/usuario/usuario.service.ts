@@ -7,7 +7,7 @@ import { DatabaseContextService } from "@/infrastructure/integrations/database";
 import type { UsuarioEntity } from "@/infrastructure/integrations/database/typeorm/entities";
 import { KeycloakService } from "@/infrastructure/integrations/identity-provider";
 import * as LadesaTypings from "@ladesa-ro/especificacao";
-import { Injectable, Inject,forwardRef , InternalServerErrorException, NotFoundException, ServiceUnavailableException } from "@nestjs/common";
+import { Injectable, Inject, forwardRef, InternalServerErrorException, NotFoundException, ServiceUnavailableException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { ArquivoService } from "../../base/arquivo/arquivo.service";
 import { ImagemService } from "../../base/imagem/imagem.service";
@@ -32,11 +32,11 @@ export class UsuarioService {
   //
   async getPerfilEnsino(accessContext: AccessContext, idUsuario: string): Promise<any> {
     const perfis = await this.perfilService.perfilEnsinoFindById(accessContext, idUsuario);
-  
+
     if (!perfis || perfis.length === 0) {
       throw new NotFoundException(`Nenhum perfil de ensino encontrado para o usuário com ID ${idUsuario}.`);
     }
-  
+
     return perfis;
   }
 

@@ -16,13 +16,9 @@ export class PerfilController {
 
   @Get("/:usuarioId/ensino")
   @Operation(Tokens.PerfilEnsinoFindById)
-  async perfilEnsinoFindById(
-    @AccessContextHttp() accessContext: AccessContext,
-    @Param("usuarioId", ParseUUIDPipe) usuarioId: string,
-  ): Promise<any> {
+  async perfilEnsinoFindById(@AccessContextHttp() accessContext: AccessContext, @Param("usuarioId", ParseUUIDPipe) usuarioId: string): Promise<any> {
     return this.vinculoService.perfilEnsinoFindById(accessContext, usuarioId);
   }
-
 
   @Get("/")
   @Operation(Tokens.PerfilList)

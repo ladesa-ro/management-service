@@ -23,7 +23,7 @@ export class AulaEntity implements LadesaTypings.Aula {
 
   @ManyToOne(() => IntervaloDeTempoEntity)
   @JoinColumn({ name: "id_intervalo_de_tempo_fk" })
-  intervaloDeTempo!: Relation<IntervaloDeTempoEntity>
+  intervaloDeTempo!: Relation<IntervaloDeTempoEntity>;
 
   @ManyToOne(() => DiarioEntity)
   @JoinColumn({ name: "id_diario_fk" })

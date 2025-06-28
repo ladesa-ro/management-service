@@ -1,4 +1,4 @@
-import { DiaCalendarioFindOneByIdData } from './../../../../../../integrations/npm/api-client-fetch/src/http/generated/types.gen';
+import { DiaCalendarioFindOneByIdData } from "./../../../../../../integrations/npm/api-client-fetch/src/http/generated/types.gen";
 import { CombinedInput } from "@/application/standards";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";

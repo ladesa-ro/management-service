@@ -6,11 +6,8 @@ import { UsuarioService } from "./usuario.service";
 import { PerfilModule } from "../../autorizacao/perfil/perfil.module";
 
 @Module({
-  imports: [
-    forwardRef(() => PerfilModule),
-    KeycloakModule, 
-  ],
-    controllers: [UsuarioController],
+  imports: [forwardRef(() => PerfilModule), KeycloakModule],
+  controllers: [UsuarioController],
   providers: [UsuarioService, UsuarioResolver],
   exports: [UsuarioService],
 })
