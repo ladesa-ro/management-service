@@ -1,8 +1,8 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, type Relation } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, type Relation } from "typeorm";
 import { UsuarioEntity } from "../01-autenticacao/usuario.entity";
 import { CampusEntity } from "../02-ambientes/campus.entity";
-import { DiarioProfessorEntity } from "../06-ensino-discente/diario-professor.entity";
+
 @Entity("perfil")
 export class PerfilEntity implements LadesaTypings.Perfil {
   @PrimaryGeneratedColumn("uuid")
@@ -24,12 +24,11 @@ export class PerfilEntity implements LadesaTypings.Perfil {
   )
   @JoinColumn({ name: "id_campus_fk" })
   campus!: Relation<CampusEntity>;
-  
-  @OneToMany(() => DiarioProfessorEntity, (diarioProfessor) => diarioProfessor.perfil)
-  diarioProfessores!: DiarioProfessorEntity[];
 
-
-  @ManyToOne(() => require("../01-autenticacao/usuario.entity").UsuarioEntity, (usuario) => usuario.vinculos)
+  @ManyToOne(
+    () => UsuarioEntity,
+    (usuario) => usuario.vinculos,
+  )
   @JoinColumn({ name: "id_usuario_fk" })
   usuario!: Relation<UsuarioEntity>;
 
