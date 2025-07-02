@@ -655,119 +655,21 @@
         "tags": ["autenticacao"]
       }
     },
-    "/usuarios": {
+    "/usuarios/{idUsuario}/ensino": {
       "get": {
-        "description": "Sem descrição.",
-        "operationId": "UsuarioList",
+        "description": "Ambiente.",
+        "operationId": "UsuarioController_getEnsino",
         "parameters": [
           {
-            "name": "page",
-            "required": false,
-            "in": "query",
-            "description": "Página de consulta.",
-            "kind": "schema",
+            "name": "idUsuario",
+            "required": true,
+            "in": "path",
             "schema": {
-              "minimum": 1,
-              "description": "Página de consulta.",
-              "type": "integer"
-            }
-          },
-          {
-            "name": "limit",
-            "required": false,
-            "in": "query",
-            "description": "Limite da quantidade de resultados por página.",
-            "kind": "schema",
-            "schema": {
-              "minimum": 1,
-              "description": "Limite da quantidade de resultados por página.",
-              "type": "integer"
-            }
-          },
-          {
-            "name": "search",
-            "required": false,
-            "in": "query",
-            "description": "Busca textual.",
-            "kind": "schema",
-            "schema": {
-              "description": "Busca textual.",
               "type": "string"
             }
-          },
-          {
-            "name": "sortBy",
-            "required": false,
-            "in": "query",
-            "description": "Ordenação.",
-            "kind": "schema",
-            "schema": {
-              "type": "array",
-              "nullable": false,
-              "items": {
-                "nullable": false,
-                "type": "string"
-              }
-            }
           }
         ],
         "responses": {
-          "200": {
-            "nullable": false,
-            "description": "Resultados da busca a usuários.",
-            "kind": "type",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UsuarioListResultView"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "O solicitante não tem permissão para executar esta ação."
-          },
-          "404": {
-            "description": "Registro não encontrado."
-          }
-        },
-        "security": [
-          {
-            "bearer": []
-          }
-        ],
-        "summary": "",
-        "tags": ["usuarios"]
-      },
-      "post": {
-        "description": "Sem descrição.",
-        "operationId": "UsuarioCreate",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "description": "Dados de entrada para a criação de um usuário.",
-          "kind": "type",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UsuarioInputCreateView"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "nullable": false,
-            "description": "Visão FindOne de um Usuário.",
-            "kind": "type",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UsuarioFindOneResultView"
-                }
-              }
-            }
-          },
           "403": {
             "description": "O solicitante não tem permissão para executar esta ação."
           },
@@ -922,6 +824,52 @@
               "application/json": {
                 "schema": {
                   "type": "boolean"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "O solicitante não tem permissão para executar esta ação."
+          },
+          "404": {
+            "description": "Registro não encontrado."
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "",
+        "tags": ["usuarios"]
+      }
+    },
+    "/usuarios": {
+      "post": {
+        "description": "Sem descrição.",
+        "operationId": "UsuarioCreate",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "description": "Dados de entrada para a criação de um usuário.",
+          "kind": "type",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UsuarioInputCreateView"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "nullable": false,
+            "description": "Visão FindOne de um Usuário.",
+            "kind": "type",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsuarioFindOneResultView"
                 }
               }
             }
@@ -1200,6 +1148,37 @@
         ],
         "summary": "",
         "tags": ["usuarios"]
+      }
+    },
+    "/vinculos/{usuarioId}/ensino": {
+      "get": {
+        "description": "Ambiente.",
+        "operationId": "PerfilController_perfilEnsinoFindById",
+        "parameters": [
+          {
+            "name": "usuarioId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "403": {
+            "description": "O solicitante não tem permissão para executar esta ação."
+          },
+          "404": {
+            "description": "Registro não encontrado."
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "",
+        "tags": ["perfis"]
       }
     },
     "/vinculos": {
@@ -10967,41 +10946,6 @@
           }
         },
         "required": ["email"]
-      },
-      "UsuarioListResultView": {
-        "type": "object",
-        "properties": {
-          "meta": {
-            "nullable": false,
-            "description": "Metadados da busca.",
-            "kind": "type",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/PaginatedResultMetaView"
-              }
-            ]
-          },
-          "data": {
-            "nullable": false,
-            "description": "Visão FindOne de um Usuário.",
-            "kind": "type",
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/UsuarioFindOneResultView"
-            }
-          },
-          "links": {
-            "nullable": false,
-            "description": "Links da busca.",
-            "kind": "type",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/PaginatedResultLinksView"
-              }
-            ]
-          }
-        },
-        "required": ["meta", "data", "links"]
       },
       "UsuarioInputCreateView": {
         "type": "object",

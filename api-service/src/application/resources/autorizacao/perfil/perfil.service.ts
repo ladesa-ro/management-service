@@ -34,17 +34,17 @@ export class PerfilService {
   //
   async perfilEnsinoFindById(accessContext: AccessContext, usuarioId: string) {
     const qb = this.vinculoRepository.createQueryBuilder("perfil");
-  
+
     qb.innerJoinAndSelect("perfil.usuario", "usuario");
     qb.leftJoinAndSelect("perfil.diarioProfessores", "diario_professor");
     qb.leftJoinAndSelect("diario_professor.diario", "diario");
     qb.leftJoinAndSelect("diario.turma", "turma");
     qb.leftJoinAndSelect("turma.curso", "curso");
-  
+
     qb.where("perfil.id_usuario_fk = :usuarioId", { usuarioId });
-  
+
     const perfis = await qb.getMany();
-  
+
     return perfis.map((perfil) => ({
       id: perfil.id,
       ativo: perfil.ativo,

@@ -24,7 +24,7 @@ export class AddCamposNovoModeloDiaCalendario1710189999999 implements MigrationI
       }),
     );
 
-    // Altera `feriado` de boolean para varchar 
+    // Altera `feriado` de boolean para varchar
     await queryRunner.changeColumn(
       "dia_calendario",
       "feriado",

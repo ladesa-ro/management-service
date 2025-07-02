@@ -259,6 +259,7 @@ import type {
   OfertaFormacaoNivelFormacaoUpdateOneByIdResponse,
   OfertaFormacaoUpdateOneByIdData,
   OfertaFormacaoUpdateOneByIdResponse,
+  PerfilControllerPerfilEnsinoFindByIdData,
   PerfilListData,
   PerfilListResponse,
   PerfilUpdateOneByIdData,
@@ -307,6 +308,7 @@ import type {
   TurmaSetImagemCapaResponse,
   TurmaUpdateOneByIdData,
   TurmaUpdateOneByIdResponse,
+  UsuarioControllerGetEnsinoData,
   UsuarioCreateData,
   UsuarioCreateResponse,
   UsuarioDeleteOneByIdData,
@@ -317,8 +319,6 @@ import type {
   UsuarioGetImagemCapaResponse,
   UsuarioGetImagemPerfilData,
   UsuarioGetImagemPerfilResponse,
-  UsuarioListData,
-  UsuarioListResponse,
   UsuarioSetImagemCapaData,
   UsuarioSetImagemCapaResponse,
   UsuarioSetImagemPerfilData,
@@ -587,45 +587,18 @@ export class UsuariosService {
   constructor(public readonly httpRequest: BaseHttpRequest) {}
 
   /**
-   * Sem descrição.
+   * Ambiente.
    * @param data The data for the request.
-   * @param data.page Página de consulta.
-   * @param data.limit Limite da quantidade de resultados por página.
-   * @param data.search Busca textual.
-   * @param data.sortBy Ordenação.
-   * @returns UsuarioListResultView Resultados da busca a usuários.
+   * @param data.idUsuario
    * @throws ApiError
    */
-  public usuarioList(data: UsuarioListData = {}): CancelablePromise<UsuarioListResponse> {
+  public usuarioControllerGetEnsino(data: UsuarioControllerGetEnsinoData): CancelablePromise<void> {
     return this.httpRequest.request({
       method: "GET",
-      url: "/usuarios",
-      query: {
-        page: data.page,
-        limit: data.limit,
-        search: data.search,
-        sortBy: data.sortBy,
+      url: "/usuarios/{idUsuario}/ensino",
+      path: {
+        idUsuario: data.idUsuario,
       },
-      errors: {
-        403: "O solicitante não tem permissão para executar esta ação.",
-        404: "Registro não encontrado.",
-      },
-    });
-  }
-
-  /**
-   * Sem descrição.
-   * @param data The data for the request.
-   * @param data.requestBody Dados de entrada para a criação de um usuário.
-   * @returns UsuarioFindOneResultView Visão FindOne de um Usuário.
-   * @throws ApiError
-   */
-  public usuarioCreate(data: UsuarioCreateData): CancelablePromise<UsuarioCreateResponse> {
-    return this.httpRequest.request({
-      method: "POST",
-      url: "/usuarios",
-      body: data.requestBody,
-      mediaType: "application/json",
       errors: {
         403: "O solicitante não tem permissão para executar esta ação.",
         404: "Registro não encontrado.",
@@ -692,6 +665,26 @@ export class UsuariosService {
       path: {
         id: data.id,
       },
+      errors: {
+        403: "O solicitante não tem permissão para executar esta ação.",
+        404: "Registro não encontrado.",
+      },
+    });
+  }
+
+  /**
+   * Sem descrição.
+   * @param data The data for the request.
+   * @param data.requestBody Dados de entrada para a criação de um usuário.
+   * @returns UsuarioFindOneResultView Visão FindOne de um Usuário.
+   * @throws ApiError
+   */
+  public usuarioCreate(data: UsuarioCreateData): CancelablePromise<UsuarioCreateResponse> {
+    return this.httpRequest.request({
+      method: "POST",
+      url: "/usuarios",
+      body: data.requestBody,
+      mediaType: "application/json",
       errors: {
         403: "O solicitante não tem permissão para executar esta ação.",
         404: "Registro não encontrado.",
@@ -792,6 +785,26 @@ export class UsuariosService {
 
 export class PerfisService {
   constructor(public readonly httpRequest: BaseHttpRequest) {}
+
+  /**
+   * Ambiente.
+   * @param data The data for the request.
+   * @param data.usuarioId
+   * @throws ApiError
+   */
+  public perfilControllerPerfilEnsinoFindById(data: PerfilControllerPerfilEnsinoFindByIdData): CancelablePromise<void> {
+    return this.httpRequest.request({
+      method: "GET",
+      url: "/vinculos/{usuarioId}/ensino",
+      path: {
+        usuarioId: data.usuarioId,
+      },
+      errors: {
+        403: "O solicitante não tem permissão para executar esta ação.",
+        404: "Registro não encontrado.",
+      },
+    });
+  }
 
   /**
    * Sem descrição.

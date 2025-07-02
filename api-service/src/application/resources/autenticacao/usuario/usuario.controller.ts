@@ -18,14 +18,14 @@ export class UsuarioController {
   @Operation(Tokens.UsuarioEnsinoFindById)
   async getEnsino(
     @AccessContextHttp() accessContext: AccessContext, //talvez erro... <====
-    @Param("idUsuario", ParseUUIDPipe) idUsuario: string
+    @Param("idUsuario", ParseUUIDPipe) idUsuario: string,
   ): Promise<any> {
     const perfis = await this.usuarioService.getPerfilEnsino(accessContext, idUsuario);
-    
-    const groupedDiario: Record<string, Record<string, { curso: any, turmas: any[] }>> = {};
-    
-    perfis.forEach(perfil => {
-      perfil.diarios.forEach(diario => {
+
+    const groupedDiario: Record<string, Record<string, { curso: any; turmas: any[] }>> = {};
+
+    perfis.forEach((perfil) => {
+      perfil.diarios.forEach((diario) => {
         if (!diario.disciplina || !diario.turma || !diario.turma.curso) return;
         const discName = diario.disciplina.nome;
         const cursoId = diario.turma.curso.id;
@@ -35,17 +35,17 @@ export class UsuarioController {
         if (!groupedDiario[discName][cursoId]) {
           groupedDiario[discName][cursoId] = { curso: diario.turma.curso, turmas: [] };
         }
-        if (!groupedDiario[discName][cursoId].turmas.find(t => t.id === diario.turma.id)) {
+        if (!groupedDiario[discName][cursoId].turmas.find((t) => t.id === diario.turma.id)) {
           groupedDiario[discName][cursoId].turmas.push(diario.turma);
         }
       });
     });
-    
-    const result = Object.keys(groupedDiario).map(disciplinaNome => ({
+
+    const result = Object.keys(groupedDiario).map((disciplinaNome) => ({
       disciplina: { nome: disciplinaNome },
       cursos: Object.values(groupedDiario[disciplinaNome]),
     }));
-    
+
     return result;
   }
   //

@@ -34,7 +34,10 @@ export class UsuarioEntity implements LadesaTypings.Usuario {
 
   //
 
-  @OneToMany(() => PerfilEntity, (perfil) => perfil.usuario)
+  @OneToMany(
+    () => PerfilEntity,
+    (perfil) => perfil.usuario,
+  )
   vinculos!: PerfilEntity[];
 
   //

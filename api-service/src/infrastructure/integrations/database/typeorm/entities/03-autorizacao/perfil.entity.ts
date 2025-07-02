@@ -24,12 +24,17 @@ export class PerfilEntity implements LadesaTypings.Perfil {
   )
   @JoinColumn({ name: "id_campus_fk" })
   campus!: Relation<CampusEntity>;
-  
-  @OneToMany(() => DiarioProfessorEntity, (diarioProfessor) => diarioProfessor.perfil)
+
+  @OneToMany(
+    () => DiarioProfessorEntity,
+    (diarioProfessor) => diarioProfessor.perfil,
+  )
   diarioProfessores!: DiarioProfessorEntity[];
 
-
-  @ManyToOne(() => require("../01-autenticacao/usuario.entity").UsuarioEntity, (usuario) => usuario.vinculos)
+  @ManyToOne(
+    () => require("../01-autenticacao/usuario.entity").UsuarioEntity,
+    (usuario) => usuario.vinculos,
+  )
   @JoinColumn({ name: "id_usuario_fk" })
   usuario!: Relation<UsuarioEntity>;
 

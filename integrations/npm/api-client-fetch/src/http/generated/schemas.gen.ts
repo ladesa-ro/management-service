@@ -857,42 +857,6 @@ export const $AuthRecoverPasswordInputView = {
   required: ["email"],
 } as const;
 
-export const $UsuarioListResultView = {
-  type: "object",
-  properties: {
-    meta: {
-      nullable: false,
-      description: "Metadados da busca.",
-      kind: "type",
-      allOf: [
-        {
-          $ref: "#/components/schemas/PaginatedResultMetaView",
-        },
-      ],
-    },
-    data: {
-      nullable: false,
-      description: "Visão FindOne de um Usuário.",
-      kind: "type",
-      type: "array",
-      items: {
-        $ref: "#/components/schemas/UsuarioFindOneResultView",
-      },
-    },
-    links: {
-      nullable: false,
-      description: "Links da busca.",
-      kind: "type",
-      allOf: [
-        {
-          $ref: "#/components/schemas/PaginatedResultLinksView",
-        },
-      ],
-    },
-  },
-  required: ["meta", "data", "links"],
-} as const;
-
 export const $UsuarioInputCreateView = {
   type: "object",
   properties: {

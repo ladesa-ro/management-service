@@ -464,21 +464,6 @@ export type AuthRecoverPasswordInputView = {
   email: string;
 };
 
-export type UsuarioListResultView = {
-  /**
-   * Metadados da busca.
-   */
-  meta: PaginatedResultMetaView;
-  /**
-   * Visão FindOne de um Usuário.
-   */
-  data: Array<UsuarioFindOneResultView>;
-  /**
-   * Links da busca.
-   */
-  links: PaginatedResultLinksView;
-};
-
 export type UsuarioInputCreateView = {
   /**
    * Nome do usuário.
@@ -3021,35 +3006,9 @@ export type AuthRecoverPasswordData = {
 
 export type AuthRecoverPasswordResponse = boolean;
 
-export type UsuarioListData = {
-  /**
-   * Limite da quantidade de resultados por página.
-   */
-  limit?: number;
-  /**
-   * Página de consulta.
-   */
-  page?: number;
-  /**
-   * Busca textual.
-   */
-  search?: string;
-  /**
-   * Ordenação.
-   */
-  sortBy?: Array<string>;
+export type UsuarioControllerGetEnsinoData = {
+  idUsuario: string;
 };
-
-export type UsuarioListResponse = UsuarioListResultView;
-
-export type UsuarioCreateData = {
-  /**
-   * Dados de entrada para a criação de um usuário.
-   */
-  requestBody: UsuarioInputCreateView;
-};
-
-export type UsuarioCreateResponse = UsuarioFindOneResultView;
 
 export type UsuarioFindOneByIdData = {
   /**
@@ -3081,6 +3040,15 @@ export type UsuarioDeleteOneByIdData = {
 };
 
 export type UsuarioDeleteOneByIdResponse = boolean;
+
+export type UsuarioCreateData = {
+  /**
+   * Dados de entrada para a criação de um usuário.
+   */
+  requestBody: UsuarioInputCreateView;
+};
+
+export type UsuarioCreateResponse = UsuarioFindOneResultView;
 
 export type UsuarioGetImagemCapaData = {
   /**
@@ -3123,6 +3091,10 @@ export type UsuarioSetImagemPerfilData = {
 };
 
 export type UsuarioSetImagemPerfilResponse = boolean;
+
+export type PerfilControllerPerfilEnsinoFindByIdData = {
+  usuarioId: string;
+};
 
 export type PerfilListData = {
   filterAtivo?: Array<string>;
