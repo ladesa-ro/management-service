@@ -1,7 +1,9 @@
-.nx 
+.nx
+.wireit
 
-output
 dist
+.dist
+output
 
 *.env
 volumes

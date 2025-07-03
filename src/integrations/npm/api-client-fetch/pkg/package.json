@@ -16,7 +16,7 @@
   },
   "devDependencies": {
     "@hey-api/openapi-ts": "^0.53.12",
-    "typescript": "catalog:"
+    "typescript": "catalog:development"
   },
   "description": "Ladesa - Management Service - NPM API Client Library",
   "homepage": "https://github.com/ladesa-ro/management-service/tree/development/modules/integrations/npm/api-client-fetch/pkg/",

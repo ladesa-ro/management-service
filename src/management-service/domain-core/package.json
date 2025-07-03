@@ -2,6 +2,18 @@
   "name": "@ladesa-ro/management-service.domain",
   "private": true,
   "main": "./src/index.ts",
+  "scripts": {
+    "unit:dev": "wireit",
+    "build": "wireit"
+  },
+  "wireit": {
+    "build": {
+      "dependencies": ["../domain-contracts:build"]
+    },
+    "unit:dev": {
+      "dependencies": ["../domain-contracts:unit:dev"]
+    }
+  },
   "dependencies": {
     "@ladesa-ro/management-service.domain.contracts": "workspace:*",
     "@ladesa-ro/management-service.infrastructure": "workspace:*",
@@ -14,6 +26,7 @@
   },
   "devDependencies": {
     "@standard-schema/spec": "^1.0.0",
-    "typescript": "catalog:"
+    "typescript": "catalog:development",
+    "wireit": "catalog:wireit"
   }
 }

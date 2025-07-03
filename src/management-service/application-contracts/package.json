@@ -1,5 +1,5 @@
 {
-  "name": "@ladesa-ro/management-service.domain.contracts",
+  "name": "@ladesa-ro/management-service.application.contracts",
   "private": true,
   "scripts": {
     "build": "wireit",
@@ -14,33 +14,35 @@
       "output": ["dist/tsp-output/**"],
       "clean": true
     },
-    "build:quicktype": {
-      "command": "mkdir -p dist/ts && quicktype --src-lang schema --src './dist/tsp-output/json-schema/schema.json#$defs/' -o './dist/ts/schema.ts' --just-types --no-nice-property-names --no-runtime-typecheck --acronym-style original",
+    "build:openapi-ts": {
+      "command": "mkdir -p dist/ts && openapi-typescript ./dist/tsp-output/openapi.v3.json -o ./dist/ts/schema.d.ts",
       "files": ["./dist/tsp-output/json-schema/schema.json"],
-      "output": ["./dist/ts/schema.ts"],
+      "output": ["./dist/ts/schema.d.ts"],
       "dependencies": ["build:tsp"],
       "clean": true
     },
     "build": {
-      "dependencies": ["build:tsp", "build:quicktype"]
+      "dependencies": ["build:tsp", "build:openapi-ts"]
     }
   },
   "exports": {
-    "./typings": {
-      "types": "./dist/ts/schema.ts"
+    "./openapi-v3-typings": {
+      "types": "./dist/ts/schema.d.ts"
     },
-    "./json-schema": {
-      "default": "./dist/tsp-output/json-schema/schema.json"
-    },
-    ".": {
-      "typespec": "./src/modules.tsp"
+    "./openapi-v3-schema": {
+      "default": "./dist/tsp-output/openapi.v3.json"
     }
   },
   "devDependencies": {
+    "@ladesa-ro/management-service.domain.contracts": "workspace:*",
     "@typespec/compiler": "catalog:typespec",
+    "@typespec/http": "catalog:typespec",
     "@typespec/json-schema": "catalog:typespec",
+    "@typespec/openapi": "catalog:typespec",
+    "@typespec/openapi3": "catalog:typespec",
+    "@typespec/rest": "catalog:typespec",
+    "openapi-typescript": "^7.8.0",
     "quicktype": "catalog:quicktype",
-    "nodemon": "catalog:development",
-    "wireit": "catalog:wireit"
+    "nodemon": "catalog:development"
   }
 }

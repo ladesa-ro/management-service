@@ -23,7 +23,8 @@
     "@changesets/cli": "^2.29.4",
     "@types/bun": "^1.2.16",
     "nx": "^21.2.0",
-    "rimraf": "^6.0.1"
+    "rimraf": "^6.0.1",
+    "wireit": "catalog:development"
   },
   "workspaces": {
     "packages": [
@@ -35,10 +36,17 @@
       "./infrastructure"
     ],
     "catalog": {
-      "typescript": "^5.8.3",
-      "quicktype": "^23.2.6"
+
     },
     "catalogs": {
+      "quicktype": {
+        "quicktype": "^23.2.6"
+      },
+      "development": {
+        "typescript": "^5.8.3",
+        "nodemon": "^3.1.10",
+        "wireit": "^0.14.12"
+      },
       "nestjs": {
         "@nestjs/common": "^11.1.3"
       },

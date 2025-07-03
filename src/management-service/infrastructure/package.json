@@ -11,7 +11,7 @@
     "@nestjs/common": "catalog:nestjs"
   },
   "devDependencies": {
-    "typescript": "catalog:"
+    "typescript": "catalog:development"
   },
   "exports": {
     "./*": {
