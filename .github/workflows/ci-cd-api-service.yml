@@ -35,7 +35,7 @@ jobs:
             echo "INFISICAL_ENV_SLUG=${SLUG_DEV}" >> "$GITHUB_ENV"
           fi
 
-      - uses: Infisical/secrets-action@v1.0.11
+      - uses: Infisical/secrets-action@v1.0.12
         with:
           domain: ${{ secrets.INFISICAL_DOMAIN }}
           client-id: ${{ secrets.INFISICAL_MACHINE_IDENTITY_CLIENT_ID }}
@@ -93,7 +93,7 @@ jobs:
             echo "INFISICAL_ENV_SLUG=${SLUG_DEV}" >> "$GITHUB_ENV"
           fi
 
-      - uses: Infisical/secrets-action@v1.0.11
+      - uses: Infisical/secrets-action@v1.0.12
         with:
           domain: ${{ secrets.INFISICAL_DOMAIN }}
           client-id: ${{ secrets.INFISICAL_MACHINE_IDENTITY_CLIENT_ID }}
