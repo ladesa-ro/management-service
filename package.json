@@ -22,9 +22,9 @@
     "chore:update": "nx exec -- bun update && bun run code-static:fix"
   },
   "dependencies": {
-    "@biomejs/biome": "^1.9.4",
+    "@biomejs/biome": "^2.1.2",
     "@changesets/cli": "^2.29.5",
-    "@nx/js": "^20.8.2",
+    "@nx/js": "^21.3.2",
     "@types/bun": "^1.2.19",
     "nx": "^20.8.2"
   }
