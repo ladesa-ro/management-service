@@ -1,0 +1,4 @@
+
+model Placeholder {
+    placeholder: boolean;
+}
