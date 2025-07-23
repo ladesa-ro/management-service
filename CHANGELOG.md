@@ -1,5 +1,11 @@
 # @ladesa-ro/api
 
+## 1.0.0-next.35
+
+### Patch Changes
+
+- c2a72b8: chore: remove node.Dockerfile
+
 ## 1.0.0-next.34
 
 ### Patch Changes

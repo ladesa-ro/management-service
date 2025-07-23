@@ -1,6 +1,6 @@
 {
   "name": "@ladesa-ro/api-client-fetch",
-  "version": "1.0.0-next.35",
+  "version": "1.0.0-next.36",
   "main": "dist/index.js",
   "license": "MIT",
   "description": "LADESA - Biblioteca de integração a API - Pacote NPM.",
