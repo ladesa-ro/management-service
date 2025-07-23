@@ -61,7 +61,7 @@
     "jwks-rsa": "^3.2.0",
     "lodash": "^4.17.21",
     "lru-cache": "^11.1.0",
-    "nestjs-paginate": "^11.1.1",
+    "nestjs-paginate": "^12.5.1",
     "openid-client": "^6.6.2",
     "passport": "^0.7.0",
     "passport-http-bearer": "^1.0.1",
