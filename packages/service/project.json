@@ -1,9 +1,102 @@
 {
-  "$schema": "../node_modules/nx/schemas/project-schema.json",
-  "tags": ["services", "services:api"],
-  "root": "api-service",
-  "sourceRoot": "{projectRoot}/src",
-  "implicitDependencies": [],
-  "namedInputs": {},
-  "targets": {}
+  "$schema": "./node_modules/nx/schemas/project-schema.json",
+  "namedInputs": {
+    "source": [
+      "{projectRoot}/lib/**/*",
+      "{projectRoot}/bun.lock",
+      "{projectRoot}/bunfig.toml",
+      "{projectRoot}/nx.json",
+      "{projectRoot}/package.json",
+      "{projectRoot}/project.json",
+      "{projectRoot}/tsconfig.json"
+    ]
+  },
+  "targets": {
+    "application:build": {
+      "cache": true,
+      "executor": "nx:run-commands",
+      "inputs": ["source"],
+      "outputs": ["{projectRoot}/.dist/server"],
+      "options": {
+        "cwd": "{projectRoot}",
+        "parallel": false,
+        "commands": ["rm -rf .dist/server && mkdir -p .dist", "bun build --bytecode --compile --minify-whitespace --minify-syntax --outfile .dist/server lib/main.ts"]
+      },
+      "dependsOn": ["contracts:application:build", "contracts:domain:build"]
+    },
+    "application:dev": {
+      "cache": false,
+      "continuous": true,
+      "dependsOn": ["contracts:domain:build", "contracts:application:build", "contracts:domain:dev", "contracts:application:dev"],
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["bun run --watch --hot lib/main.ts"],
+        "cwd": "{projectRoot}",
+        "parallel": false
+      }
+    },
+    "application:debug": {
+      "cache": false,
+      "continuous": true,
+      "dependsOn": ["contracts:domain:build", "contracts:application:build", "contracts:domain:dev", "contracts:application:dev"],
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["bun run --watch --inspect-wait lib/main.ts"],
+        "cwd": "{projectRoot}",
+        "parallel": false
+      }
+    },
+    "contracts:domain:build": {
+      "cache": true,
+      "executor": "nx:run-commands",
+      "inputs": ["{projectRoot}/lib/contracts/domain/**/*"],
+      "options": {
+        "commands": [
+          "mkdir -p lib/domain/.generated",
+          "tsp compile lib/contracts/domain/main.tsp --config lib/contracts/domain/tspconfig.yaml --output-dir lib/domain/.generated",
+          "quicktype --src-lang schema --src './lib/domain/.generated/schema.json#$defs/' -o './lib/domain/.generated/schema.ts' --just-types --no-nice-property-names --no-runtime-typecheck --acronym-style original"
+        ],
+        "cwd": "{projectRoot}",
+        "parallel": false
+      },
+      "outputs": ["{projectRoot}/lib/domain/.generated/**/*"]
+    },
+    "contracts:domain:dev": {
+      "cache": false,
+      "continuous": true,
+      "dependsOn": [],
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["nodemon -e '*' --watch ./lib/contracts/domain --exec 'bun run contracts:domain:build' -L"],
+        "cwd": "{projectRoot}",
+        "parallel": false
+      }
+    },
+    "contracts:application:build": {
+      "cache": true,
+      "executor": "nx:run-commands",
+      "inputs": ["{projectRoot}/lib/contracts/domain/**/*", "{projectRoot}/lib/contracts/application/**/*"],
+      "options": {
+        "commands": [
+          "mkdir -p lib/application/.generated",
+          "tsp compile lib/contracts/application/main.tsp --config lib/contracts/application/tspconfig.yaml --output-dir lib/application/.generated",
+          "openapi-typescript ./lib/application/.generated/openapi.v3.json -o ./lib/application/.generated/openapi.v3.d.ts"
+        ],
+        "cwd": "{projectRoot}",
+        "parallel": false
+      },
+      "outputs": ["{projectRoot}/lib/application/.generated/**/*"]
+    },
+    "contracts:application:dev": {
+      "cache": false,
+      "continuous": true,
+      "dependsOn": [],
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["nodemon -e '*' --watch ./lib/contracts/domain --watch ./lib/contracts/application --exec 'bun run contracts:application:build' -L"],
+        "cwd": "{projectRoot}",
+        "parallel": false
+      }
+    }
+  }
 }

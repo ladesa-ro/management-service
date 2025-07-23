@@ -1,33 +1,27 @@
 {
   "compilerOptions": {
     "strict": true,
-
     "lib": ["esnext"],
     "target": "es2022",
     "module": "NodeNext",
     "resolveJsonModule": true,
     "removeComments": true,
-
     "strictNullChecks": true,
     "noImplicitAny": false,
-
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-
     "declaration": true,
     "sourceMap": true,
-
     "outDir": "./dist",
-    "baseUrl": "./src",
+    "baseUrl": "./lib",
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@/application/#/*": ["./application/.generated/*"],
+      "@/domain/#/*": ["./domain/.generated/*"]
     },
-
     "incremental": true,
-
     "skipLibCheck": true
   },
   "exclude": ["scripts"]

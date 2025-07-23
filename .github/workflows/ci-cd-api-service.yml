@@ -8,10 +8,6 @@ on:
     paths:
       - .github/workflows/ci-cd-api-service.yml
       - packages/service/**/*
-      - package.json
-      - bun.lock
-      - bun.toml
-      - Dockerfile*
 
 concurrency:
   group: ci-cd-${{ github.ref }}
