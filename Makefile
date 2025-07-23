@@ -1,30 +1,45 @@
 MAKEFLAGS += --silent
 
 d_network=ladesa-net
-d_container_app=ladesa-api
+d_container_app=ladesa-management-service
 
-compose_options=--file docker-compose.yml -p ladesa-api
+DOCKER=docker
+
+COMPOSE_OPTIONS=--file docker-compose.yml -p ladesa-management-service
+COMPOSE_COMMAND=$(DOCKER) compose $(COMPOSE_OPTIONS)
+
+INSIDE_PATH?=./
 
 setup:
 	$(shell (cd .; find . -type f -name "*.example" -exec sh -c 'cp -n {} $$(basename {} .example)' \;))
-	$(shell (bash -c "docker network create $(d_network) &>/dev/null"))
+	$(shell (bash -c "$(DOCKER) network create $(d_network) &>/dev/null"))
 	
-	echo "baixando imagens base dos containers, isso pode levar alguns minutos..."
-	docker compose $(compose_options) build
+	echo "baixando e buildando as imagens dos containers, aguarde um instante"
+	$(COMPOSE_COMMAND) build
 
-prepare:
-	# docker compose $(compose_options) exec $(d_container_app) bash -c "bun install && bunx nx daemon --start";
-	docker compose $(compose_options) exec $(d_container_app) bash -c "ls -la";
+post-init:
+	$(COMPOSE_COMMAND) exec -u bun $(d_container_app) bash -c "bun install && bunx nx daemon --start";
 
 up:
 	make setup;
-	docker compose $(compose_options) up --remove-orphans -d;
-	make prepare;
+	$(COMPOSE_COMMAND) up --remove-orphans -d --no-recreate;
+	make post-init;
 
 up-recreate:
 	make setup;
-	docker compose $(compose_options) up --remove-orphans -d --force-recreate;
-	make prepare;
+	$(COMPOSE_COMMAND) up --remove-orphans -d --force-recreate;
+	make post-init;
+
+stop:
+	make setup;
+	$(COMPOSE_COMMAND) stop;
+
+down:
+	make setup;
+	$(COMPOSE_COMMAND) down --remove-orphans;
+
+cleanup:
+	$(COMPOSE_COMMAND) down --remove-orphans -v;
 
 start:
 	make setup;
@@ -32,7 +47,7 @@ start:
 	make down;
 	make up;
 
-	docker compose $(compose_options) \
+	$(COMPOSE_COMMAND) \
 		exec \
 		-u node \
 		--no-TTY \
@@ -41,28 +56,10 @@ start:
 
 logs:
 	make setup;
-	docker compose $(compose_options) logs -f;
+	$(COMPOSE_COMMAND) logs -f;
 
-INSIDE_PATH?=./
-
-shell:
-	make setup;
-	make up;
-	
-	docker compose $(compose_options) exec $(d_container_app) bash -c "cd $(INSIDE_PATH); clear; bash";
+shell-1000:
+	$(COMPOSE_COMMAND) exec -u bun $(d_container_app) bash -c "cd $(INSIDE_PATH); clear; bash";
 
 shell-root:
-	make setup;
-	make up;
-	docker compose $(compose_options) exec -u root $(d_container_app) bash -c "cd $(INSIDE_PATH); clear; bash";
-
-stop:
-	make setup;
-	docker compose $(compose_options) stop;
-
-down:
-	make setup;
-	docker compose $(compose_options) down --remove-orphans;
-
-cleanup:
-	docker compose $(compose_options) down --remove-orphans -v;
+	$(COMPOSE_COMMAND) exec -u root $(d_container_app) bash -c "cd $(INSIDE_PATH); clear; bash";
