@@ -1,7 +1,7 @@
 # ========================================
 # Management Service / Core Image
 # ========================================
-FROM docker.io/oven/bun:1 AS core
+FROM docker.io/oven/bun:1.2.19 AS core
 
 USER root
 RUN mkdir -p /ladesa
@@ -49,7 +49,7 @@ RUN bun run build --filter=@ladesa-ro/management-service.application --prod /lad
 WORKDIR /ladesa/.builds/management-service-api
 
 # ==========================================================
-# Management Service / API / Docs / NPM Client Fetch Build
+#packages Management Service / API / Docs / NPM Client Fetch Build
 # ==========================================================
 FROM source-with-dependencies AS management-service-api-client-npm-docs-builder
 

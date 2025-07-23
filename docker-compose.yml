@@ -9,19 +9,21 @@ services:
     userns_mode: "keep-id:uid=1000,gid=1000"
 
     command: sh -c "sleep infinity"
+
     build:
-      context: ./management-service
+      context: .
+      dockerfile: ./Dockerfile
       target: development-vendors
 
     working_dir: /ladesa/.sources/management-service
+
     volumes:
-      - ./management-service:/ladesa/.sources/management-service:z
-      - ./management-service/volumes/uploaded:/container/uploaded:z
+      - ./:/ladesa/.sources/management-service:z
 
     env_file:
-      - ./management-service/.env
+      - ./.env
     environment:
-      - STORAGE_PATH=/container/uploaded
+      - STORAGE_PATH=/ladesa/.sources/management-service/uploaded
 
     depends_on:
       - ladesa-management-service-db

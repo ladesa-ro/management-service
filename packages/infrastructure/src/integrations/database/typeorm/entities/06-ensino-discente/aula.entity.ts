@@ -1,7 +1,7 @@
 import { IntervaloDeTempoEntity } from "@/integrations/database/typeorm/entities/00-00-base";
 import * as IDomainContracts from "@ladesa-ro/especificacao";
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, type Relation } from "typeorm";
-import { DiarioEntity } from ".";
+import { DiarioEntity } from "./index";
 import { AmbienteEntity } from "../02-ambientes/ambiente.entity";
 
 @Entity("aula")

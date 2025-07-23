@@ -26,10 +26,6 @@
     "test:e2e": "vitest run --config ./vitest.config.e2e.ts",
     "check:static": "tsc --noEmit"
   },
-  "scripts": {
-    "unit:dev": "wireit",
-    "build": "wireit"
-  },
   "wireit": {
     "build": {
       "dependencies": ["../application-contracts:build", "../domain-core:build"]

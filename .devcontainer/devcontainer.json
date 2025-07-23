@@ -1,7 +1,7 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the
 // README at: https://github.com/devcontainers/templates/tree/main/src/docker-existing-docker-compose
 {
-  "name": "Ladesa - Management Service - DEV",
+  "name": "Ladesa - Management Service",
 
   "initializeCommand": "podman network create --ignore ladesa-net",
   "postStartCommand": "bun install; bunx nx daemon --start;",
@@ -11,7 +11,7 @@
 
   "remoteUser": "bun",
   "service": "ladesa-management-service",
-  "dockerComposeFile": ["../docker-compose.yml", "docker-compose.yml"],
+  "dockerComposeFile": ["../docker-compose.yml"],
   "workspaceFolder": "/ladesa/.sources/management-service",
 
   // "forwardPorts": [],
@@ -20,7 +20,6 @@
   "features": {
     "ghcr.io/devcontainers/features/git:1": {},
     "ghcr.io/devcontainers/features/github-cli:1": {},
-    // "ghcr.io/devcontainers-extra/features/podman-homebrew:1": {}
   },
 
   "updateRemoteUserUID": true,

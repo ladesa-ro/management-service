@@ -1,4 +1,0 @@
-version: "3.8"
-services:
-  ladesa-management-service:
-    command: sleep infinity

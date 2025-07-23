@@ -29,10 +29,10 @@
   "workspaces": {
     "packages": [
       "./",
-      "./application-contracts",
-      "./application-core",
-      "./domain-contracts",
-      "./domain-core",
+      "./contracts/application",
+      "./application",
+      "./contracts/domain",
+      "./domain",
       "./infrastructure"
     ],
     "catalog": {
