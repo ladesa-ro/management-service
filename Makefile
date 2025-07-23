@@ -59,7 +59,7 @@ logs:
 	$(COMPOSE_COMMAND) logs -f;
 
 shell-1000:
-	$(COMPOSE_COMMAND) exec -u bun $(d_container_app) bash -c "cd $(INSIDE_PATH); clear; bash";
+	$(COMPOSE_COMMAND) exec -u bun -w /ladesa/.sources/management-service/packages/service $(d_container_app) bash -c "cd $(INSIDE_PATH); clear; bash";
 
 shell-root:
-	$(COMPOSE_COMMAND) exec -u root $(d_container_app) bash -c "cd $(INSIDE_PATH); clear; bash";
+	$(COMPOSE_COMMAND) exec -u root -w /ladesa/.sources/management-service/packages/service $(d_container_app) bash -c "cd $(INSIDE_PATH); clear; bash";

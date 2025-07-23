@@ -18,7 +18,7 @@
     "target": "es2017",
     "sourceMap": true,
 
-    "baseUrl": ".",
+    "baseUrl": "./",
     "outDir": "./dist",
 
     "incremental": true,

@@ -7,9 +7,10 @@ on:
       - development
     paths:
       - .github/workflows/ci-cd-docs-npm-api-client-fetch.yml
-      - docs/docs-npm-api-client-fetch/**/*
-      - integrations/npm/api-client-fetch/**/*
-      - pnpm-lock.yaml
+      - packages/docs/docs-npm-api-client-fetch/**/*
+      - packages/integrations/npm/api-client-fetch/**/*
+      - bun.lock
+      - bun.toml
       - package.json
       - Dockerfile*
 

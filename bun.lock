@@ -11,7 +11,29 @@
         "nx": "^20.8.2",
       },
     },
-    "api-service": {
+    "packages/docs/docs-npm-api-client-fetch": {
+      "name": "@ladesa-ro/api-client-fetch.docs",
+      "version": "1.0.0-next.34",
+      "devDependencies": {
+        "serve": "^14.2.4",
+        "typedoc": "^0.28.7",
+        "typedoc-plugin-mdn-links": "^5.0.5",
+      },
+    },
+    "packages/integrations/npm/api-client-fetch": {
+      "name": "@ladesa-ro/api-client-fetch",
+      "version": "1.0.0-next.35",
+      "devDependencies": {
+        "@hey-api/openapi-ts": "^0.53.12",
+        "rimraf": "^6.0.1",
+        "typescript": "^5.8.3",
+      },
+    },
+    "packages/integrations/openapi-json": {
+      "name": "@ladesa-ro/api.integrations.openapi-json",
+      "version": "1.0.0-next.35",
+    },
+    "packages/service": {
       "name": "@ladesa-ro/api.service",
       "version": "1.0.0-next.34",
       "dependencies": {
@@ -90,28 +112,6 @@
         "vite-tsconfig-paths": "^5.1.4",
         "vitest": "^3.2.4",
       },
-    },
-    "docs/docs-npm-api-client-fetch": {
-      "name": "@ladesa-ro/api-client-fetch.docs",
-      "version": "1.0.0-next.34",
-      "devDependencies": {
-        "serve": "^14.2.4",
-        "typedoc": "^0.28.7",
-        "typedoc-plugin-mdn-links": "^5.0.5",
-      },
-    },
-    "integrations/npm/api-client-fetch": {
-      "name": "@ladesa-ro/api-client-fetch",
-      "version": "1.0.0-next.35",
-      "devDependencies": {
-        "@hey-api/openapi-ts": "^0.53.12",
-        "rimraf": "^6.0.1",
-        "typescript": "^5.8.3",
-      },
-    },
-    "integrations/openapi-json": {
-      "name": "@ladesa-ro/api.integrations.openapi-json",
-      "version": "1.0.0-next.35",
     },
   },
   "packages": {
@@ -585,13 +585,13 @@
 
     "@keycloak/keycloak-admin-client": ["@keycloak/keycloak-admin-client@25.0.6", "", { "dependencies": { "camelize-ts": "^3.0.0", "url-join": "^5.0.0", "url-template": "^3.1.1" } }, "sha512-rUvo6L0aT9+y/R2wFhDKb+lRD5rwj36XwnIGIbmC2HeQVfgroYB5u/79yc/Mo0inBFNIG8VuiwjRzU878fRE0Q=="],
 
-    "@ladesa-ro/api-client-fetch": ["@ladesa-ro/api-client-fetch@workspace:integrations/npm/api-client-fetch"],
+    "@ladesa-ro/api-client-fetch": ["@ladesa-ro/api-client-fetch@workspace:packages/integrations/npm/api-client-fetch"],
 
-    "@ladesa-ro/api-client-fetch.docs": ["@ladesa-ro/api-client-fetch.docs@workspace:docs/docs-npm-api-client-fetch"],
+    "@ladesa-ro/api-client-fetch.docs": ["@ladesa-ro/api-client-fetch.docs@workspace:packages/docs/docs-npm-api-client-fetch"],
 
-    "@ladesa-ro/api.integrations.openapi-json": ["@ladesa-ro/api.integrations.openapi-json@workspace:integrations/openapi-json"],
+    "@ladesa-ro/api.integrations.openapi-json": ["@ladesa-ro/api.integrations.openapi-json@workspace:packages/integrations/openapi-json"],
 
-    "@ladesa-ro/api.service": ["@ladesa-ro/api.service@workspace:api-service"],
+    "@ladesa-ro/api.service": ["@ladesa-ro/api.service@workspace:packages/service"],
 
     "@ladesa-ro/especificacao": ["@ladesa-ro/especificacao@3.4.1", "", {}, "sha512-X/xBe+EijQsl/WceRSZ2d+7MeWJK/7kPwuMBfQHpuxikYgGkc6Ri53EMjZXUJZeBhSyAena8dznHvBjwiAx5AA=="],
 

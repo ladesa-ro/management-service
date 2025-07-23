@@ -9,13 +9,14 @@ FROM docker.io/oven/bun:1.2.19 AS core
 # ========================================
 
 FROM core AS base
+
 ENV BUN_INSTALL_CACHE_DIR="/home/bun/.bun/install/cache"
 ENV BUN_TMPDIR="/home/bun/.bun/tmp"
 
 RUN mkdir -p /ladesa/.sources
 RUN chown -R 1000:1000 /ladesa/.sources
 
-WORKDIR "/ladesa/.sources/api/"
+WORKDIR "/ladesa/.sources/management-service/"
 
 # ========================================
 # DEVELOPMENT AND BUILD DEPENDENCIES
@@ -24,18 +25,18 @@ WORKDIR "/ladesa/.sources/api/"
 FROM base AS dev-dependencies
 RUN mkdir -p /ladesa/.builds
 
-COPY . "/ladesa/.sources/api"
+COPY . "/ladesa/.sources/management-service/"
 
-RUN --mount=type=cache,id=bun,target=/bun/install/cache bun install --frozen-lockfile 
+RUN --mount=type=cache,id=bun,target=${BUN_INSTALL_CACHE_DIR} bun install --frozen-lockfile
 
 # ========================================
 # API-SERVICE - BUILD
 # ========================================
 
 FROM dev-dependencies AS api-service-builder
-RUN cp -r /ladesa/.sources/api/api-service /ladesa/.builds/api-service
-WORKDIR /ladesa/.builds/api-service
-RUN --mount=type=cache,id=bun,target=/bun/install/cache bun install
+RUN cp -r /ladesa/.sources/management-service /ladesa/.builds/management-service
+WORKDIR /ladesa/.builds/management-service
+RUN --mount=type=cache,id=bun,target=${BUN_INSTALL_CACHE_DIR} bun install
 
 # ========================================
 # NPM / API-CLIENT-FETCH / DOCS -- BUILD
@@ -52,11 +53,9 @@ RUN cp -r /ladesa/.sources/api/docs/docs-npm-api-client-fetch "/ladesa/.builds/n
 
 FROM nginx:alpine AS docs-npm-api-client-fetch-runtime
 
-COPY \
-  ./docs/docs-npm-api-client-fetch/nginx.conf \
-  /etc/nginx/nginx.conf
+COPY ./packages/docs/docs-npm-api-client-fetch/nginx.conf /etc/nginx/nginx.conf
 
-COPY --from=docs-npm-api-client-fetch-builder  "/ladesa/.builds/npm-api-client-fetch-docs"  "/usr/local/ladesa-ro/services/npm-api-client-fetch-docs"
+COPY --from=docs-npm-api-client-fetch-builder  "/ladesa/.builds/npm-api-client-fetch-docs"  "/ladesa/services/npm-api-client-fetch-docs"
 EXPOSE 80
 
 # ========================================
@@ -67,8 +66,9 @@ FROM core AS api-service-runtime
 USER bun
 
 COPY --from=api-service-builder \
-  "/ladesa/.builds/api-service" \
-  "/usr/local/ladesa-ro/services/api-service"
-WORKDIR "/usr/local/ladesa-ro/services/api-service"
+  "/ladesa/.builds/management-service" \
+  "/ladesa/services/management-service"
+
+WORKDIR "/ladesa/services/management-service/packages/service"
 
 CMD bun run migration:run && bun run start:prod

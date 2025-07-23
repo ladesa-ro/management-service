@@ -7,9 +7,10 @@ on:
       - development
     paths:
       - .github/workflows/ci-cd-api-service.yml
-      - api-service/**/*
+      - packages/service/**/*
       - package.json
-      - pnpm-lock.yaml
+      - bun.lock
+      - bun.toml
       - Dockerfile*
 
 concurrency:

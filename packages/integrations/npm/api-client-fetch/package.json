@@ -11,7 +11,7 @@
     "dev": "tsc -p tsconfig.json --watch",
     "generate": "nx run generate",
     "generate:client": "nx run generate:client",
-    "cleanup:generated": "rimraf ./src/http/generated",
+    "cleanup:generated": "rimraf src/http/generated",
     "pkg:publish": "bun publish --tag ${PUBLISH_TAG} --auth-type legacy --dry-run"
   },
   "devDependencies": {
