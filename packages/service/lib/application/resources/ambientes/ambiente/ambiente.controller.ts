@@ -4,6 +4,8 @@ import { Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post, Put, Upload
 import { ApiTags } from "@nestjs/swagger";
 import { CombinedInput } from "@/application/standards";
 import { Operation } from "@/application/standards/especificacao/business-logic";
+import { HttpOperationInput } from "@/application/standards-new/HttpOperation";
+import type { IApiDoc } from "@/application/standards-new/openapi";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { AmbienteService } from "./ambiente.service";
 
@@ -13,11 +15,7 @@ export class AmbienteController {
   constructor(private ambienteService: AmbienteService) {}
 
   @Get("/")
-  @Operation(Tokens.AmbienteList)
-  async ambienteFindAll(
-    @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.AmbienteListOperationInput,
-  ): Promise<LadesaTypings.AmbienteListOperationOutput["success"]> {
+  async ambienteFindAll(@AccessContextHttp() accessContext: AccessContext, @HttpOperationInput("AmbienteList") dto: IApiDoc.operations["AmbienteList"]) {
     return this.ambienteService.ambienteFindAll(accessContext, dto);
   }
 

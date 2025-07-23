@@ -8,7 +8,7 @@ import { apiReference } from "@scalar/nestjs-api-reference";
 import openapi from "@/application/#/openapi.v3.json";
 import { AppModule } from "./application/app.module";
 
-async function setupApp() {
+async function setup() {
   const app = await NestFactory.create(AppModule);
 
   //
@@ -43,7 +43,7 @@ async function setupApp() {
   expressApp.get(`${prefix}docs/openapi.v3.json`, (req, res) => res.send(openapi));
 
   app.use(
-    `${prefix}docs/scalar`,
+    `${prefix}docs`,
     apiReference({
       url: `${prefix}docs/openapi.v3.json`,
     }),
@@ -58,7 +58,7 @@ async function setupApp() {
 
 async function bootstrap() {
   //
-  const app = await setupApp();
+  const app = await setup();
   const appConfigService = app.get(AppConfigService);
   const port = appConfigService.getRuntimePort();
   await app.listen(port);
