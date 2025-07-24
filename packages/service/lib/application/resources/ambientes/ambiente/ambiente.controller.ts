@@ -1,13 +1,30 @@
-import * as LadesaTypings from "@ladesa-ro/especificacao";
-import { Tokens } from "@ladesa-ro/especificacao";
-import { Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post, Put, UploadedFile } from "@nestjs/common";
+import {
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseUUIDPipe,
+  Patch,
+  Post,
+  Put,
+  UploadedFile,
+} from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
+
 import { CombinedInput } from "@/application/standards";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { HttpOperationInput } from "@/application/standards-new/HttpOperation";
 import type { IApiDoc } from "@/application/standards-new/openapi";
-import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
+
+import {
+  AccessContext,
+  AccessContextHttp,
+} from "@/infrastructure/access-context";
+
 import { AmbienteService } from "./ambiente.service";
+
+import * as LadesaTypings from "@ladesa-ro/especificacao";
+import { Tokens } from "@ladesa-ro/especificacao";
 
 @ApiTags("ambientes")
 @Controller("/ambientes")
@@ -15,82 +32,67 @@ export class AmbienteController {
   constructor(private ambienteService: AmbienteService) {}
 
   @Get("/")
-  async ambienteFindAll(@AccessContextHttp() accessContext: AccessContext, @HttpOperationInput("AmbienteList") dto: IApiDoc.operations["AmbienteList"]) {
+  async ambienteFindAll(
+    @AccessContextHttp() accessContext: AccessContext,
+    @HttpOperationInput("AmbienteList") dto: IApiDoc.operations["AmbienteList"]
+  ) {
     return this.ambienteService.ambienteFindAll(accessContext, dto);
   }
 
-  //
-
   @Get("/:id")
-  @Operation(Tokens.AmbienteFindOneById)
   async ambienteFindById(
-    //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.AmbienteFindOneByIdOperationOutput,
+    @HttpOperationInput("AmbienteFindOneById") dto: IApiDoc.operations["AmbienteFindOneById"]
   ) {
     return this.ambienteService.ambienteFindByIdStrict(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 
   @Post("/")
-  @Operation(Tokens.AmbienteCreate)
   async ambienteCreate(
-    //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.AmbienteCreateOperationInput,
-  ) {
+    @HttpOperationInput("AmbienteCreate") dto: IApiDoc.operations["AmbienteCreate"]) {
     return this.ambienteService.ambienteCreate(accessContext, dto);
   }
 
-  //
-
   @Patch("/:id")
-  @Operation(Tokens.AmbienteUpdateOneById)
   async ambienteUpdate(
-    //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.AmbienteUpdateByIdOperationInput,
-  ) {
+    @HttpOperationInput("AmbienteUpdateOneById") dto: IApiDoc.operations["AmbienteUpdateOneById"]) {
     return this.ambienteService.ambienteUpdate(accessContext, dto);
   }
 
-  //
-
   @Get("/:id/imagem/capa")
-  @Operation(Tokens.AmbienteGetImagemCapa)
   async ambienteGetImagemCapa(
-    //
     @AccessContextHttp() accessContext: AccessContext,
-    @Param("id", ParseUUIDPipe) id: string,
+    @HttpOperationInput("AmbienteGetImagemCapa") dto: IApiDoc.operations["AmbienteGetImagemCapa"],
+    @Param("id", ParseUUIDPipe) id: string
   ) {
     return this.ambienteService.ambienteGetImagemCapa(accessContext, id);
   }
 
   @Put("/:id/imagem/capa")
-  @Operation(Tokens.AmbienteSetImagemCapa)
   async ambienteImagemCapaSave(
-    //
     @AccessContextHttp() accessContext: AccessContext,
+    @HttpOperationInput("AmbienteSetImagemCapa") dto: IApiDoc.operations["AmbienteSetImagemCapa"],
     @UploadedFile() file: Express.Multer.File,
-    @Param("id", ParseUUIDPipe) id: string,
+    @Param("id", ParseUUIDPipe) id: string
   ) {
-    return this.ambienteService.ambienteUpdateImagemCapa(accessContext, { id }, file);
+    return this.ambienteService.ambienteUpdateImagemCapa(
+      accessContext,
+      { id },
+      file
+    );
   }
-
-  //
 
   @Delete("/:id")
-  @Operation(Tokens.AmbienteDeleteOneById)
   async ambienteDeleteOneById(
-    //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.AmbienteDeleteByIdOperationInput,
+    @HttpOperationInput("AmbienteDeleteOneById") dto: IApiDoc.operations["AmbienteDeleteOneById"]  
   ) {
     return this.ambienteService.ambienteDeleteOneById(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
-
-  //
 }
