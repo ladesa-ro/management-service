@@ -1,4 +1,5 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
+import { IDomain } from "@/domain/domain-contracts";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
@@ -33,9 +34,9 @@ export class GradeHorarioOfertaFormacaoService {
 
   async gradeHorarioOfertaFormacaoFindAll(
     accessContext: AccessContext,
-    dto: LadesaTypings.GradeHorarioOfertaFormacaoListOperationInput | null = null,
+    dto: IDomain.GradeHorarioOfertaFormacaoListInput | null = null,
     selection?: string[],
-  ): Promise<LadesaTypings.GradeHorarioOfertaFormacaoListOperationOutput["success"]> {
+  ): Promise<IDomain.GradeHorarioOfertaFormacaoListOutput["success"]> {
     // =========================================================
 
     const qb = this.gradeHorarioOfertaFormacaoRepository.createQueryBuilder(aliasGradeHorarioOfertaFormacao);
@@ -98,9 +99,9 @@ export class GradeHorarioOfertaFormacaoService {
 
   async gradeHorarioOfertaFormacaoFindById(
     accessContext: AccessContext | null,
-    dto: LadesaTypings.GradeHorarioOfertaFormacaoFindOneInputView,
+    dto: IDomain.GradeHorarioOfertaFormacaoFindOneInput,
     selection?: string[],
-  ): Promise<LadesaTypings.GradeHorarioOfertaFormacaoFindOneResultView | null> {
+  ): Promise<IDomain.GradeHorarioOfertaFormacaoFindOneOutput | null> {
     // =========================================================
 
     const qb = this.gradeHorarioOfertaFormacaoRepository.createQueryBuilder(aliasGradeHorarioOfertaFormacao);
@@ -129,7 +130,7 @@ export class GradeHorarioOfertaFormacaoService {
     return gradeHorarioOfertaFormacao;
   }
 
-  async gradeHorarioOfertaFormacaoFindByIdStrict(accessContext: AccessContext, dto: LadesaTypings.GradeHorarioOfertaFormacaoFindOneInputView, selection?: string[]) {
+  async gradeHorarioOfertaFormacaoFindByIdStrict(accessContext: AccessContext, dto: IDomain.GradeHorarioOfertaFormacaoFindOneInput, selection?: string[]) {
     const gradeHorarioOfertaFormacao = await this.gradeHorarioOfertaFormacaoFindById(accessContext, dto, selection);
 
     if (!gradeHorarioOfertaFormacao) {
@@ -141,9 +142,9 @@ export class GradeHorarioOfertaFormacaoService {
 
   async gradeHorarioOfertaFormacaoFindByIdSimple(
     accessContext: AccessContext,
-    id: LadesaTypings.GradeHorarioOfertaFormacaoFindOneInputView["id"],
+    id: IDomain.GradeHorarioOfertaFormacaoFindOneInput["id"],
     selection?: string[],
-  ): Promise<LadesaTypings.GradeHorarioOfertaFormacaoFindOneResultView | null> {
+  ): Promise<IDomain.GradeHorarioOfertaFormacaoFindOneOutput | null> {
     // =========================================================
 
     const qb = this.gradeHorarioOfertaFormacaoRepository.createQueryBuilder(aliasGradeHorarioOfertaFormacao);
@@ -170,7 +171,7 @@ export class GradeHorarioOfertaFormacaoService {
     return gradeHorarioOfertaFormacao;
   }
 
-  async gradeHorarioOfertaFormacaoFindByIdSimpleStrict(accessContext: AccessContext, id: LadesaTypings.GradeHorarioOfertaFormacaoFindOneInputView["id"], selection?: string[]) {
+  async gradeHorarioOfertaFormacaoFindByIdSimpleStrict(accessContext: AccessContext, id: IDomain.GradeHorarioOfertaFormacaoFindOneInput["id"], selection?: string[]) {
     const gradeHorarioOfertaFormacao = await this.gradeHorarioOfertaFormacaoFindByIdSimple(accessContext, id, selection);
 
     if (!gradeHorarioOfertaFormacao) {
@@ -182,7 +183,7 @@ export class GradeHorarioOfertaFormacaoService {
 
   //
 
-  async gradeHorarioOfertaFormacaoCreate(accessContext: AccessContext, dto: LadesaTypings.GradeHorarioOfertaFormacaoCreateOperationInput) {
+  async gradeHorarioOfertaFormacaoCreate(accessContext: AccessContext, dto: IDomain.GradeHorarioOfertaFormacaoCreateInput) {
     // =========================================================
 
     await accessContext.ensurePermission("grade_horario_oferta_formacao:create", { dto });
@@ -244,7 +245,7 @@ export class GradeHorarioOfertaFormacaoService {
     });
   }
 
-  async gradeHorarioOfertaFormacaoUpdate(accessContext: AccessContext, dto: LadesaTypings.GradeHorarioOfertaFormacaoUpdateByIdOperationInput) {
+  async gradeHorarioOfertaFormacaoUpdate(accessContext: AccessContext, dto: IDomain.GradeHorarioOfertaFormacaoUpdateByIdInput) {
     // =========================================================
 
     const currentGradeHorarioOfertaFormacao = await this.gradeHorarioOfertaFormacaoFindByIdStrict(accessContext, {
@@ -300,7 +301,7 @@ export class GradeHorarioOfertaFormacaoService {
 
   //
 
-  async gradeHorarioOfertaFormacaoDeleteOneById(accessContext: AccessContext, dto: LadesaTypings.GradeHorarioOfertaFormacaoFindOneInputView) {
+  async gradeHorarioOfertaFormacaoDeleteOneById(accessContext: AccessContext, dto: IDomain.GradeHorarioOfertaFormacaoFindOneInput) {
     // =========================================================
 
     await accessContext.ensurePermission("grade_horario_oferta_formacao:delete", { dto }, dto.id, this.gradeHorarioOfertaFormacaoRepository.createQueryBuilder(aliasGradeHorarioOfertaFormacao));

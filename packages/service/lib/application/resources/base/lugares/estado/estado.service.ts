@@ -1,4 +1,5 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
+import { IDomain } from "@/domain/domain-contracts";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { map } from "lodash";
 import { QbEfficientLoad } from "@/application/standards/ladesa-spec/QbEfficientLoad";
@@ -19,7 +20,7 @@ export class EstadoService {
 
   //
 
-  async findAll(accessContext: AccessContext, dto: LadesaTypings.EstadoListOperationInput | null = null, selection?: string[]): Promise<LadesaTypings.EstadoListOperationOutput["success"]> {
+  async findAll(accessContext: AccessContext, dto: IDomain.EstadoListInput | null = null, selection?: string[]): Promise<IDomain.EstadoListOutput["success"]> {
     // =========================================================
 
     const qb = this.baseEstadoRepository.createQueryBuilder(aliasEstado);
@@ -70,7 +71,7 @@ export class EstadoService {
     return LadesaPaginatedResultDto(paginated);
   }
 
-  async findById(accessContext: AccessContext, dto: LadesaTypings.EstadoFindOneInputView, selection?: string[]) {
+  async findById(accessContext: AccessContext, dto: IDomain.EstadoFindOneInput, selection?: string[]) {
     // =========================================================
 
     const qb = this.baseEstadoRepository.createQueryBuilder("estado");
@@ -97,7 +98,7 @@ export class EstadoService {
     return estado;
   }
 
-  async findByIdStrict(accessContext: AccessContext, dto: LadesaTypings.EstadoFindOneInputView, selection?: string[]) {
+  async findByIdStrict(accessContext: AccessContext, dto: IDomain.EstadoFindOneInput, selection?: string[]) {
     const estado = await this.findById(accessContext, dto, selection);
 
     if (!estado) {

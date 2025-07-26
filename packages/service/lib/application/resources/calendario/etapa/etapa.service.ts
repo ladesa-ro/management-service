@@ -1,4 +1,5 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
+import { IDomain } from "@/domain/domain-contracts";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
@@ -31,9 +32,9 @@ export class EtapaService {
 
   async etapaFindAll(
     accessContext: AccessContext,
-    dto: LadesaTypings.EtapaListOperationInput | null = null,
+    dto: IDomain.EtapaListInput | null = null,
     selection?: string[] | boolean,
-  ): Promise<LadesaTypings.EtapaListOperationOutput["success"]> {
+  ): Promise<IDomain.EtapaListOutput["success"]> {
     // =========================================================
 
     const qb = this.etapaRepository.createQueryBuilder(aliasEtapa);
@@ -106,7 +107,7 @@ export class EtapaService {
     return LadesaPaginatedResultDto(paginated);
   }
 
-  async etapaFindById(accessContext: AccessContext, dto: LadesaTypings.EtapaFindOneInputView, selection?: string[] | boolean): Promise<LadesaTypings.EtapaFindOneResultView | null> {
+  async etapaFindById(accessContext: AccessContext, dto: IDomain.EtapaFindOneInput, selection?: string[] | boolean): Promise<IDomain.EtapaFindOneOutput | null> {
     // =========================================================
 
     const qb = this.etapaRepository.createQueryBuilder(aliasEtapa);
@@ -134,7 +135,7 @@ export class EtapaService {
     return etapa;
   }
 
-  async etapaFindByIdStrict(accessContext: AccessContext, dto: LadesaTypings.EtapaFindOneInputView, selection?: string[] | boolean) {
+  async etapaFindByIdStrict(accessContext: AccessContext, dto: IDomain.EtapaFindOneInput, selection?: string[] | boolean) {
     const etapa = await this.etapaFindById(accessContext, dto, selection);
 
     if (!etapa) {
@@ -144,7 +145,7 @@ export class EtapaService {
     return etapa;
   }
 
-  async etapaFindByIdSimple(accessContext: AccessContext, id: LadesaTypings.EtapaFindOneInputView["id"], selection?: string[]): Promise<LadesaTypings.EtapaFindOneResultView | null> {
+  async etapaFindByIdSimple(accessContext: AccessContext, id: IDomain.EtapaFindOneInput["id"], selection?: string[]): Promise<IDomain.EtapaFindOneOutput | null> {
     // =========================================================
 
     const qb = this.etapaRepository.createQueryBuilder(aliasEtapa);
@@ -171,7 +172,7 @@ export class EtapaService {
     return etapa;
   }
 
-  async EtapaFindByIdSimpleStrict(accessContext: AccessContext, id: LadesaTypings.EtapaFindOneInputView["id"], selection?: string[]) {
+  async EtapaFindByIdSimpleStrict(accessContext: AccessContext, id: IDomain.EtapaFindOneInput["id"], selection?: string[]) {
     const etapa = await this.etapaFindByIdSimple(accessContext, id, selection);
 
     if (!etapa) {
@@ -183,7 +184,7 @@ export class EtapaService {
 
   //
 
-  async etapaCreate(accessContext: AccessContext, dto: LadesaTypings.EtapaCreateOperationInput) {
+  async etapaCreate(accessContext: AccessContext, dto: IDomain.EtapaCreateInput) {
     // =========================================================
 
     await accessContext.ensurePermission("etapa:create", { dto });
@@ -219,7 +220,7 @@ export class EtapaService {
     return this.etapaFindByIdStrict(accessContext, { id: etapa.id });
   }
 
-  async etapaUpdate(accessContext: AccessContext, dto: LadesaTypings.EtapaUpdateByIdOperationInput) {
+  async etapaUpdate(accessContext: AccessContext, dto: IDomain.EtapaUpdateByIdInput) {
     // =========================================================
 
     const currentEtapa = await this.etapaFindByIdStrict(accessContext, {
@@ -263,7 +264,7 @@ export class EtapaService {
 
   //
 
-  async etapaDeleteOneById(accessContext: AccessContext, dto: LadesaTypings.EtapaFindOneInputView) {
+  async etapaDeleteOneById(accessContext: AccessContext, dto: IDomain.EtapaFindOneInput) {
     // =========================================================
 
     await accessContext.ensurePermission("etapa:delete", { dto }, dto.id, this.etapaRepository.createQueryBuilder(aliasEtapa));

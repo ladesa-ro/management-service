@@ -1,4 +1,5 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
+import { IDomain } from "@/domain/domain-contracts";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { pick } from "lodash";
 import { QbEfficientLoad } from "@/application/standards";
@@ -78,7 +79,7 @@ export class EnderecoService {
 
   //
 
-  async findById(accessContext: AccessContext, dto: LadesaTypings.EnderecoFindOneInputView, selection?: string[] | boolean): Promise<LadesaTypings.EnderecoFindOneResultView | null> {
+  async findById(accessContext: AccessContext, dto: IDomain.EnderecoFindOneInput, selection?: string[] | boolean): Promise<IDomain.EnderecoFindOneOutput | null> {
     const qb = this.enderecoRepository.createQueryBuilder(aliasEndereco);
 
     // =========================================================
@@ -103,7 +104,7 @@ export class EnderecoService {
     return endereco;
   }
 
-  async findByIdStrict(requestContext: AccessContext, dto: LadesaTypings.EnderecoFindOneInputView) {
+  async findByIdStrict(requestContext: AccessContext, dto: IDomain.EnderecoFindOneInput) {
     const endereco = await this.findById(requestContext, dto);
 
     if (!endereco) {

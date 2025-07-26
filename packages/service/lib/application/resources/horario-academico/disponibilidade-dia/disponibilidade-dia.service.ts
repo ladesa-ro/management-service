@@ -1,4 +1,5 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
+import { IDomain } from "@/domain/domain-contracts";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
@@ -33,9 +34,9 @@ export class DisponibilidadeDiaService {
 
   async disponibilidadeDiaFindAll(
     accessContext: AccessContext,
-    dto: LadesaTypings.DisponibilidadeDiaListOperationInput | null = null,
+    dto: IDomain.DisponibilidadeDiaListInput | null = null,
     selection?: string[] | boolean,
-  ): Promise<LadesaTypings.DisponibilidadeDiaListOperationOutput["success"]> {
+  ): Promise<IDomain.DisponibilidadeDiaListOutput["success"]> {
     // =========================================================
 
     const qb = this.disponibilidadeDiaRepository.createQueryBuilder(aliasDisponibilidadeDia);
@@ -110,9 +111,9 @@ export class DisponibilidadeDiaService {
 
   async disponibilidadeDiaFindById(
     accessContext: AccessContext,
-    dto: LadesaTypings.DisponibilidadeDiaFindOneInputView,
+    dto: IDomain.DisponibilidadeDiaFindOneInput,
     selection?: string[] | boolean,
-  ): Promise<LadesaTypings.DisponibilidadeDiaFindOneResultView | null> {
+  ): Promise<IDomain.DisponibilidadeDiaFindOneOutput | null> {
     // =========================================================
 
     const qb = this.disponibilidadeDiaRepository.createQueryBuilder(aliasDisponibilidadeDia);
@@ -140,7 +141,7 @@ export class DisponibilidadeDiaService {
     return disponibilidadeDia;
   }
 
-  async disponibilidadeDiaFindByIdStrict(accessContext: AccessContext, dto: LadesaTypings.DisponibilidadeDiaFindOneInputView, selection?: string[] | boolean) {
+  async disponibilidadeDiaFindByIdStrict(accessContext: AccessContext, dto: IDomain.DisponibilidadeDiaFindOneInput, selection?: string[] | boolean) {
     const disponibilidadeDia = await this.disponibilidadeDiaFindById(accessContext, dto, selection);
 
     if (!disponibilidadeDia) {
@@ -152,9 +153,9 @@ export class DisponibilidadeDiaService {
 
   async disponibilidadeDiaFindByIdSimple(
     accessContext: AccessContext,
-    id: LadesaTypings.DisponibilidadeDiaFindOneInputView["id"],
+    id: IDomain.DisponibilidadeDiaFindOneInput["id"],
     selection?: string[],
-  ): Promise<LadesaTypings.DisponibilidadeDiaFindOneResultView | null> {
+  ): Promise<IDomain.DisponibilidadeDiaFindOneOutput | null> {
     // =========================================================
 
     const qb = this.disponibilidadeDiaRepository.createQueryBuilder(aliasDisponibilidadeDia);
@@ -181,7 +182,7 @@ export class DisponibilidadeDiaService {
     return disponibilidadeDia;
   }
 
-  async disponibilidadeDiaFindByIdSimpleStrict(accessContext: AccessContext, id: LadesaTypings.DisponibilidadeDiaFindOneInputView["id"], selection?: string[]) {
+  async disponibilidadeDiaFindByIdSimpleStrict(accessContext: AccessContext, id: IDomain.DisponibilidadeDiaFindOneInput["id"], selection?: string[]) {
     const disponibilidadeDia = await this.disponibilidadeDiaFindByIdSimple(accessContext, id, selection);
 
     if (!disponibilidadeDia) {
@@ -193,7 +194,7 @@ export class DisponibilidadeDiaService {
 
   //
 
-  async disponibilidadeDiaCreate(accessContext: AccessContext, dto: LadesaTypings.DisponibilidadeDiaCreateOperationInput) {
+  async disponibilidadeDiaCreate(accessContext: AccessContext, dto: IDomain.DisponibilidadeDiaCreateInput) {
     // =========================================================
 
     await accessContext.ensurePermission("disponibilidade_dia:create", { dto });
@@ -241,7 +242,7 @@ export class DisponibilidadeDiaService {
     });
   }
 
-  async disponibilidadeDiaUpdate(accessContext: AccessContext, dto: LadesaTypings.DisponibilidadeDiaUpdateByIdOperationInput) {
+  async disponibilidadeDiaUpdate(accessContext: AccessContext, dto: IDomain.DisponibilidadeDiaUpdateByIdInput) {
     // =========================================================
 
     const currentDisponibilidadeDia = await this.disponibilidadeDiaFindByIdStrict(accessContext, {
@@ -297,7 +298,7 @@ export class DisponibilidadeDiaService {
 
   //
 
-  async disponibilidadeDiaDeleteOneById(accessContext: AccessContext, dto: LadesaTypings.DisponibilidadeDiaFindOneInputView) {
+  async disponibilidadeDiaDeleteOneById(accessContext: AccessContext, dto: IDomain.DisponibilidadeDiaFindOneInput) {
     // =========================================================
 
     await accessContext.ensurePermission("disponibilidade_dia:delete", { dto }, dto.id, this.disponibilidadeDiaRepository.createQueryBuilder(aliasDisponibilidadeDia));

@@ -1,4 +1,5 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
+import { IDomain } from "@/domain/domain-contracts";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
@@ -33,9 +34,9 @@ export class ProfessorDisponibilidadeService {
 
   async professorDisponibilidadeFindAll(
     accessContext: AccessContext,
-    dto: LadesaTypings.ProfessorDisponibilidadeListOperationInput | null = null,
+    dto: IDomain.ProfessorDisponibilidadeListInput | null = null,
     selection?: string[],
-  ): Promise<LadesaTypings.ProfessorDisponibilidadeListOperationOutput["success"]> {
+  ): Promise<IDomain.ProfessorDisponibilidadeListOutput["success"]> {
     // =========================================================
 
     const qb = this.professorDisponibilidadeRepository.createQueryBuilder(aliasProfessorDisponibilidade);
@@ -92,9 +93,9 @@ export class ProfessorDisponibilidadeService {
 
   async professorDisponibilidadeFindById(
     accessContext: AccessContext | null,
-    dto: LadesaTypings.ProfessorDisponibilidadeFindOneInputView,
+    dto: IDomain.ProfessorDisponibilidadeFindOneInput,
     selection?: string[],
-  ): Promise<LadesaTypings.ProfessorDisponibilidadeFindOneResultView | null> {
+  ): Promise<IDomain.ProfessorDisponibilidadeFindOneOutput | null> {
     // =========================================================
 
     const qb = this.professorDisponibilidadeRepository.createQueryBuilder(aliasProfessorDisponibilidade);
@@ -123,7 +124,7 @@ export class ProfessorDisponibilidadeService {
     return professorDisponibilidade;
   }
 
-  async professorDisponibilidadeFindByIdStrict(accessContext: AccessContext, dto: LadesaTypings.ProfessorDisponibilidadeFindOneInputView, selection?: string[]) {
+  async professorDisponibilidadeFindByIdStrict(accessContext: AccessContext, dto: IDomain.ProfessorDisponibilidadeFindOneInput, selection?: string[]) {
     const professorDisponibilidade = await this.professorDisponibilidadeFindById(accessContext, dto, selection);
 
     if (!professorDisponibilidade) {
@@ -135,9 +136,9 @@ export class ProfessorDisponibilidadeService {
 
   async professorDisponibilidadeFindByIdSimple(
     accessContext: AccessContext,
-    id: LadesaTypings.ProfessorDisponibilidadeFindOneInputView["id"],
+    id: IDomain.ProfessorDisponibilidadeFindOneInput["id"],
     selection?: string[],
-  ): Promise<LadesaTypings.ProfessorDisponibilidadeFindOneResultView | null> {
+  ): Promise<IDomain.ProfessorDisponibilidadeFindOneOutput | null> {
     // =========================================================
 
     const qb = this.professorDisponibilidadeRepository.createQueryBuilder(aliasProfessorDisponibilidade);
@@ -164,7 +165,7 @@ export class ProfessorDisponibilidadeService {
     return professorDisponibilidade;
   }
 
-  async professorDisponibilidadeFindByIdSimpleStrict(accessContext: AccessContext, id: LadesaTypings.ProfessorDisponibilidadeFindOneInputView["id"], selection?: string[]) {
+  async professorDisponibilidadeFindByIdSimpleStrict(accessContext: AccessContext, id: IDomain.ProfessorDisponibilidadeFindOneInput["id"], selection?: string[]) {
     const professorDisponibilidade = await this.professorDisponibilidadeFindByIdSimple(accessContext, id, selection);
 
     if (!professorDisponibilidade) {
@@ -176,7 +177,7 @@ export class ProfessorDisponibilidadeService {
 
   //
 
-  async professorDisponibilidadeCreate(accessContext: AccessContext, dto: LadesaTypings.ProfessorDisponibilidadeCreateOperationInput) {
+  async professorDisponibilidadeCreate(accessContext: AccessContext, dto: IDomain.ProfessorDisponibilidadeCreateInput) {
     // =========================================================
 
     await accessContext.ensurePermission("professor_disponibilidade:create", {
@@ -228,7 +229,7 @@ export class ProfessorDisponibilidadeService {
     });
   }
 
-  async professorDisponibilidadeUpdate(accessContext: AccessContext, dto: LadesaTypings.ProfessorDisponibilidadeUpdateByIdOperationInput) {
+  async professorDisponibilidadeUpdate(accessContext: AccessContext, dto: IDomain.ProfessorDisponibilidadeUpdateByIdInput) {
     // =========================================================
 
     const currentProfessorDisponibilidade = await this.professorDisponibilidadeFindByIdStrict(accessContext, {
@@ -284,7 +285,7 @@ export class ProfessorDisponibilidadeService {
 
   //
 
-  async professorDisponibilidadeDeleteOneById(accessContext: AccessContext, dto: LadesaTypings.ProfessorDisponibilidadeFindOneInputView) {
+  async professorDisponibilidadeDeleteOneById(accessContext: AccessContext, dto: IDomain.ProfessorDisponibilidadeFindOneInput) {
     // =========================================================
 
     await accessContext.ensurePermission("professor_disponibilidade:delete", { dto }, dto.id, this.professorDisponibilidadeRepository.createQueryBuilder(aliasProfessorDisponibilidade));

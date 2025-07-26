@@ -1,4 +1,5 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
+import { IDomain } from "@/domain/domain-contracts";
 import { Injectable, InternalServerErrorException, NotFoundException, ServiceUnavailableException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { ValidationFailedException } from "@/application/standards";
@@ -35,7 +36,7 @@ export class UsuarioService {
 
   //
 
-  async internalFindByMatriculaSiape(matriculaSiape: string, selection?: string[] | boolean): Promise<LadesaTypings.UsuarioFindOneResultView | null> {
+  async internalFindByMatriculaSiape(matriculaSiape: string, selection?: string[] | boolean): Promise<IDomain.UsuarioFindOneOutput | null> {
     // =========================================================
 
     const qb = this.usuarioRepository.createQueryBuilder(aliasUsuario);
@@ -63,9 +64,9 @@ export class UsuarioService {
 
   async usuarioFindAll(
     accessContext: AccessContext,
-    dto: LadesaTypings.UsuarioListOperationInput | null = null,
+    dto: IDomain.UsuarioListInput | null = null,
     selection?: string[] | boolean,
-  ): Promise<LadesaTypings.UsuarioListOperationOutput["success"]> {
+  ): Promise<IDomain.UsuarioListOutput["success"]> {
     // =========================================================
 
     const qb = this.usuarioRepository.createQueryBuilder(aliasUsuario);
@@ -128,7 +129,7 @@ export class UsuarioService {
     return LadesaPaginatedResultDto(paginated);
   }
 
-  async usuarioFindById(accessContext: AccessContext | null, dto: LadesaTypings.UsuarioFindOneInputView, selection?: string[] | boolean): Promise<LadesaTypings.UsuarioFindOneResultView | null> {
+  async usuarioFindById(accessContext: AccessContext | null, dto: IDomain.UsuarioFindOneInput, selection?: string[] | boolean): Promise<IDomain.UsuarioFindOneOutput | null> {
     // =========================================================
 
     const qb = this.usuarioRepository.createQueryBuilder(aliasUsuario);
@@ -157,7 +158,7 @@ export class UsuarioService {
     return usuario;
   }
 
-  async usuarioFindByIdStrict(accessContext: AccessContext | null, dto: LadesaTypings.UsuarioFindOneInputView, selection?: string[] | boolean) {
+  async usuarioFindByIdStrict(accessContext: AccessContext | null, dto: IDomain.UsuarioFindOneInput, selection?: string[] | boolean) {
     const usuario = await this.usuarioFindById(accessContext, dto, selection);
 
     if (!usuario) {
@@ -167,7 +168,7 @@ export class UsuarioService {
     return usuario;
   }
 
-  async usuarioFindByIdSimple(accessContext: AccessContext, id: LadesaTypings.UsuarioFindOneInputView["id"], selection?: string[]): Promise<LadesaTypings.UsuarioFindOneResultView | null> {
+  async usuarioFindByIdSimple(accessContext: AccessContext, id: IDomain.UsuarioFindOneInput["id"], selection?: string[]): Promise<IDomain.UsuarioFindOneOutput | null> {
     // =========================================================
 
     const qb = this.usuarioRepository.createQueryBuilder(aliasUsuario);
@@ -194,7 +195,7 @@ export class UsuarioService {
     return usuario;
   }
 
-  async usuarioFindByIdSimpleStrict(accessContext: AccessContext, id: LadesaTypings.UsuarioFindOneInputView["id"], selection?: string[]) {
+  async usuarioFindByIdSimpleStrict(accessContext: AccessContext, id: IDomain.UsuarioFindOneInput["id"], selection?: string[]) {
     const usuario = await this.usuarioFindByIdSimple(accessContext, id, selection);
 
     if (!usuario) {
@@ -221,7 +222,7 @@ export class UsuarioService {
     throw new NotFoundException();
   }
 
-  async usuarioUpdateImagemCapa(accessContext: AccessContext, dto: LadesaTypings.UsuarioFindOneInputView, file: Express.Multer.File) {
+  async usuarioUpdateImagemCapa(accessContext: AccessContext, dto: IDomain.UsuarioFindOneInput, file: Express.Multer.File) {
     // =========================================================
 
     const currentUsuario = await this.usuarioFindByIdStrict(accessContext, {
@@ -278,7 +279,7 @@ export class UsuarioService {
 
   //
 
-  async usuarioUpdateImagemPerfil(accessContext: AccessContext, dto: LadesaTypings.UsuarioFindOneInputView, file: Express.Multer.File) {
+  async usuarioUpdateImagemPerfil(accessContext: AccessContext, dto: IDomain.UsuarioFindOneInput, file: Express.Multer.File) {
     // =========================================================
 
     const currentUsuario = await this.usuarioFindByIdStrict(accessContext, {
@@ -318,7 +319,7 @@ export class UsuarioService {
     return true;
   }
 
-  async usuarioCreate(accessContext: AccessContext, dto: LadesaTypings.UsuarioCreateOperationInput) {
+  async usuarioCreate(accessContext: AccessContext, dto: IDomain.UsuarioCreateInput) {
     // =========================================================
 
     await accessContext.ensurePermission("usuario:create", { dto });
@@ -367,7 +368,7 @@ export class UsuarioService {
 
   //
 
-  async usuarioUpdate(accessContext: AccessContext, dto: LadesaTypings.UsuarioUpdateByIdOperationInput) {
+  async usuarioUpdate(accessContext: AccessContext, dto: IDomain.UsuarioUpdateByIdInput) {
     // =========================================================
 
     const currentUsuario = await this.usuarioFindByIdStrict(accessContext, {
@@ -437,7 +438,7 @@ export class UsuarioService {
     return this.usuarioFindByIdStrict(accessContext, { id: usuario.id });
   }
 
-  async usuarioDeleteOneById(accessContext: AccessContext, dto: LadesaTypings.UsuarioFindOneInputView) {
+  async usuarioDeleteOneById(accessContext: AccessContext, dto: IDomain.UsuarioFindOneInput) {
     // =========================================================
 
     await accessContext.ensurePermission("usuario:delete", { dto }, dto.id, this.usuarioRepository.createQueryBuilder(aliasUsuario));

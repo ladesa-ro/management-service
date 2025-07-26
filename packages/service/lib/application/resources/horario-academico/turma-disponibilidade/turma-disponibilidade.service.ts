@@ -1,4 +1,5 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
+import { IDomain } from "@/domain/domain-contracts";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
@@ -33,9 +34,9 @@ export class TurmaDisponibilidadeService {
 
   async turmaDisponibilidadeFindAll(
     accessContext: AccessContext,
-    dto: LadesaTypings.TurmaDisponibilidadeListOperationInput | null = null,
+    dto: IDomain.TurmaDisponibilidadeListInput | null = null,
     selection?: string[],
-  ): Promise<LadesaTypings.TurmaDisponibilidadeListOperationOutput["success"]> {
+  ): Promise<IDomain.TurmaDisponibilidadeListOutput["success"]> {
     // =========================================================
 
     const qb = this.turmaDisponibilidadeRepository.createQueryBuilder(aliasTurmaDisponibilidade);
@@ -92,9 +93,9 @@ export class TurmaDisponibilidadeService {
 
   async turmaDisponibilidadeFindById(
     accessContext: AccessContext | null,
-    dto: LadesaTypings.TurmaDisponibilidadeFindOneInputView,
+    dto: IDomain.TurmaDisponibilidadeFindOneInput,
     selection?: string[],
-  ): Promise<LadesaTypings.TurmaDisponibilidadeFindOneResultView | null> {
+  ): Promise<IDomain.TurmaDisponibilidadeFindOneOutput | null> {
     // =========================================================
 
     const qb = this.turmaDisponibilidadeRepository.createQueryBuilder(aliasTurmaDisponibilidade);
@@ -123,7 +124,7 @@ export class TurmaDisponibilidadeService {
     return turmaDisponibilidade;
   }
 
-  async turmaDisponibilidadeFindByIdStrict(accessContext: AccessContext, dto: LadesaTypings.TurmaDisponibilidadeFindOneInputView, selection?: string[]) {
+  async turmaDisponibilidadeFindByIdStrict(accessContext: AccessContext, dto: IDomain.TurmaDisponibilidadeFindOneInput, selection?: string[]) {
     const turmaDisponibilidade = await this.turmaDisponibilidadeFindById(accessContext, dto, selection);
 
     if (!turmaDisponibilidade) {
@@ -135,9 +136,9 @@ export class TurmaDisponibilidadeService {
 
   async turmaDisponibilidadeFindByIdSimple(
     accessContext: AccessContext,
-    id: LadesaTypings.TurmaDisponibilidadeFindOneInputView["id"],
+    id: IDomain.TurmaDisponibilidadeFindOneInput["id"],
     selection?: string[],
-  ): Promise<LadesaTypings.TurmaDisponibilidadeFindOneResultView | null> {
+  ): Promise<IDomain.TurmaDisponibilidadeFindOneOutput | null> {
     // =========================================================
 
     const qb = this.turmaDisponibilidadeRepository.createQueryBuilder(aliasTurmaDisponibilidade);
@@ -164,7 +165,7 @@ export class TurmaDisponibilidadeService {
     return turmaDisponibilidade;
   }
 
-  async turmaDisponibilidadeFindByIdSimpleStrict(accessContext: AccessContext, id: LadesaTypings.TurmaDisponibilidadeFindOneInputView["id"], selection?: string[]) {
+  async turmaDisponibilidadeFindByIdSimpleStrict(accessContext: AccessContext, id: IDomain.TurmaDisponibilidadeFindOneInput["id"], selection?: string[]) {
     const turmaDisponibilidade = await this.turmaDisponibilidadeFindByIdSimple(accessContext, id, selection);
 
     if (!turmaDisponibilidade) {
@@ -176,7 +177,7 @@ export class TurmaDisponibilidadeService {
 
   //
 
-  async turmaDisponibilidadeCreate(accessContext: AccessContext, dto: LadesaTypings.TurmaDisponibilidadeCreateOperationInput) {
+  async turmaDisponibilidadeCreate(accessContext: AccessContext, dto: IDomain.TurmaDisponibilidadeCreateInput) {
     // =========================================================
 
     await accessContext.ensurePermission("turma_disponibilidade:create", {
@@ -228,7 +229,7 @@ export class TurmaDisponibilidadeService {
     });
   }
 
-  async turmaDisponibilidadeUpdate(accessContext: AccessContext, dto: LadesaTypings.TurmaDisponibilidadeUpdateByIdOperationInput) {
+  async turmaDisponibilidadeUpdate(accessContext: AccessContext, dto: IDomain.TurmaDisponibilidadeUpdateByIdInput) {
     // =========================================================
 
     const currentTurmaDisponibilidade = await this.turmaDisponibilidadeFindByIdStrict(accessContext, {
@@ -284,7 +285,7 @@ export class TurmaDisponibilidadeService {
 
   //
 
-  async turmaDisponibilidadeDeleteOneById(accessContext: AccessContext, dto: LadesaTypings.TurmaDisponibilidadeFindOneInputView) {
+  async turmaDisponibilidadeDeleteOneById(accessContext: AccessContext, dto: IDomain.TurmaDisponibilidadeFindOneInput) {
     // =========================================================
 
     await accessContext.ensurePermission("turma_disponibilidade:delete", { dto }, dto.id, this.turmaDisponibilidadeRepository.createQueryBuilder(aliasTurmaDisponibilidade));

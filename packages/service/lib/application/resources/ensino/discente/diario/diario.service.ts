@@ -1,4 +1,5 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
+import { IDomain } from "@/domain/domain-contracts";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
@@ -37,9 +38,9 @@ export class DiarioService {
 
   async diarioFindAll(
     accessContext: AccessContext,
-    dto: LadesaTypings.DiarioListOperationInput | null = null,
+    dto: IDomain.DiarioListInput | null = null,
     selection?: string[] | boolean,
-  ): Promise<LadesaTypings.DiarioListOperationOutput["success"]> {
+  ): Promise<IDomain.DiarioListOutput["success"]> {
     // =========================================================
 
     const qb = this.diarioRepository.createQueryBuilder(aliasDiario);
@@ -112,7 +113,7 @@ export class DiarioService {
     return LadesaPaginatedResultDto(paginated);
   }
 
-  async diarioFindById(accessContext: AccessContext, dto: LadesaTypings.DiarioFindOneInputView, selection?: string[] | boolean): Promise<LadesaTypings.DiarioFindOneResultView | null> {
+  async diarioFindById(accessContext: AccessContext, dto: IDomain.DiarioFindOneInput, selection?: string[] | boolean): Promise<IDomain.DiarioFindOneOutput | null> {
     // =========================================================
 
     const qb = this.diarioRepository.createQueryBuilder(aliasDiario);
@@ -139,7 +140,7 @@ export class DiarioService {
     return diario;
   }
 
-  async diarioFindByIdStrict(accessContext: AccessContext, dto: LadesaTypings.DiarioFindOneInputView, selection?: string[] | boolean) {
+  async diarioFindByIdStrict(accessContext: AccessContext, dto: IDomain.DiarioFindOneInput, selection?: string[] | boolean) {
     const diario = await this.diarioFindById(accessContext, dto, selection);
 
     if (!diario) {
@@ -149,7 +150,7 @@ export class DiarioService {
     return diario;
   }
 
-  async diarioFindByIdSimple(accessContext: AccessContext, id: LadesaTypings.DiarioFindOneInputView["id"], selection?: string[] | boolean): Promise<LadesaTypings.DiarioFindOneResultView | null> {
+  async diarioFindByIdSimple(accessContext: AccessContext, id: IDomain.DiarioFindOneInput["id"], selection?: string[] | boolean): Promise<IDomain.DiarioFindOneOutput | null> {
     // =========================================================
 
     const qb = this.diarioRepository.createQueryBuilder(aliasDiario);
@@ -176,7 +177,7 @@ export class DiarioService {
     return diario;
   }
 
-  async diarioFindByIdSimpleStrict(accessContext: AccessContext, id: LadesaTypings.DiarioFindOneInputView["id"], selection?: string[] | boolean) {
+  async diarioFindByIdSimpleStrict(accessContext: AccessContext, id: IDomain.DiarioFindOneInput["id"], selection?: string[] | boolean) {
     const diario = await this.diarioFindByIdSimple(accessContext, id, selection);
 
     if (!diario) {
@@ -188,7 +189,7 @@ export class DiarioService {
 
   //
 
-  async diarioCreate(accessContext: AccessContext, dto: LadesaTypings.DiarioCreateOperationInput) {
+  async diarioCreate(accessContext: AccessContext, dto: IDomain.DiarioCreateInput) {
     // =========================================================
 
     await accessContext.ensurePermission("diario:create", { dto });
@@ -242,7 +243,7 @@ export class DiarioService {
     return this.diarioFindByIdStrict(accessContext, { id: diario.id });
   }
 
-  async diarioUpdate(accessContext: AccessContext, dto: LadesaTypings.DiarioUpdateByIdOperationInput) {
+  async diarioUpdate(accessContext: AccessContext, dto: IDomain.DiarioUpdateByIdInput) {
     // =========================================================
 
     const currentDiario = await this.diarioFindByIdStrict(accessContext, {
@@ -316,7 +317,7 @@ export class DiarioService {
 
   //
 
-  async diarioDeleteOneById(accessContext: AccessContext, dto: LadesaTypings.DiarioFindOneInputView) {
+  async diarioDeleteOneById(accessContext: AccessContext, dto: IDomain.DiarioFindOneInput) {
     // =========================================================
 
     await accessContext.ensurePermission("diario:delete", { dto }, dto.id, this.diarioRepository.createQueryBuilder(aliasDiario));

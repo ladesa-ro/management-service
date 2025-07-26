@@ -1,4 +1,5 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
+import { IDomain } from "@/domain/domain-contracts";
 import { Injectable } from "@nestjs/common";
 import { pick } from "lodash";
 import type { AccessContext } from "@/infrastructure/access-context";
@@ -16,7 +17,7 @@ export class IntervaloDeTempoService {
 
   //
 
-  async intervaloCreateOrUpdate(accessContext: AccessContext | null, dto: LadesaTypings.IntervaloDeTempoInputView) {
+  async intervaloCreateOrUpdate(accessContext: AccessContext | null, dto: IDomain.IntervaloDeTempoInput) {
     const intervalExisting = await this.intervaloFindOne(dto);
 
     if (intervalExisting) return intervalExisting;
@@ -34,7 +35,7 @@ export class IntervaloDeTempoService {
     return this.intervaloTempoRepository.findOneByOrFail({ id: newInterval.id });
   }
 
-  private async intervaloFindOne(dto: LadesaTypings.IntervaloDeTempoInputView) {
+  private async intervaloFindOne(dto: IDomain.IntervaloDeTempoInput) {
     return this.intervaloTempoRepository.findOne({
       where: {
         periodoFim: dto.periodoFim,

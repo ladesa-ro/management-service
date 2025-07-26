@@ -1,4 +1,5 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
+import { IDomain } from "@/domain/domain-contracts";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { map, pick } from "lodash";
 import { QbEfficientLoad } from "@/application/standards/ladesa-spec/QbEfficientLoad";
@@ -26,9 +27,9 @@ export class NivelFormacaoService {
 
   async nivelFormacaoFindAll(
     accessContext: AccessContext,
-    dto: LadesaTypings.NivelFormacaoListOperationInput | null = null,
+    dto: IDomain.NivelFormacaoListInput | null = null,
     selection?: string[],
-  ): Promise<LadesaTypings.NivelFormacaoListOperationOutput["success"]> {
+  ): Promise<IDomain.NivelFormacaoListOutput["success"]> {
     // =========================================================
 
     const qb = this.nivelFormacaoRepository.createQueryBuilder(aliasNivelFormacao);
@@ -86,9 +87,9 @@ export class NivelFormacaoService {
 
   async nivelFormacaoFindById(
     accessContext: AccessContext | null,
-    dto: LadesaTypings.NivelFormacaoFindOneInputView,
+    dto: IDomain.NivelFormacaoFindOneInput,
     selection?: string[],
-  ): Promise<LadesaTypings.NivelFormacaoFindOneResultView | null> {
+  ): Promise<IDomain.NivelFormacaoFindOneOutput | null> {
     // =========================================================
 
     const qb = this.nivelFormacaoRepository.createQueryBuilder(aliasNivelFormacao);
@@ -117,7 +118,7 @@ export class NivelFormacaoService {
     return nivelFormacao;
   }
 
-  async nivelFormacaoFindByIdStrict(accessContext: AccessContext, dto: LadesaTypings.NivelFormacaoFindOneInputView, selection?: string[]) {
+  async nivelFormacaoFindByIdStrict(accessContext: AccessContext, dto: IDomain.NivelFormacaoFindOneInput, selection?: string[]) {
     const nivelFormacao = await this.nivelFormacaoFindById(accessContext, dto, selection);
 
     if (!nivelFormacao) {
@@ -129,9 +130,9 @@ export class NivelFormacaoService {
 
   async nivelFormacaoFindByIdSimple(
     accessContext: AccessContext,
-    id: LadesaTypings.NivelFormacaoFindOneInputView["id"],
+    id: IDomain.NivelFormacaoFindOneInput["id"],
     selection?: string[],
-  ): Promise<LadesaTypings.NivelFormacaoFindOneResultView | null> {
+  ): Promise<IDomain.NivelFormacaoFindOneOutput | null> {
     // =========================================================
 
     const qb = this.nivelFormacaoRepository.createQueryBuilder(aliasNivelFormacao);
@@ -158,7 +159,7 @@ export class NivelFormacaoService {
     return nivelFormacao;
   }
 
-  async nivelFormacaoFindByIdSimpleStrict(accessContext: AccessContext, id: LadesaTypings.NivelFormacaoFindOneInputView["id"], selection?: string[]) {
+  async nivelFormacaoFindByIdSimpleStrict(accessContext: AccessContext, id: IDomain.NivelFormacaoFindOneInput["id"], selection?: string[]) {
     const nivelFormacao = await this.nivelFormacaoFindByIdSimple(accessContext, id, selection);
 
     if (!nivelFormacao) {
@@ -170,7 +171,7 @@ export class NivelFormacaoService {
 
   //
 
-  async nivelFormacaoCreate(accessContext: AccessContext, dto: LadesaTypings.NivelFormacaoCreateOperationInput) {
+  async nivelFormacaoCreate(accessContext: AccessContext, dto: IDomain.NivelFormacaoCreateInput) {
     // =========================================================
 
     await accessContext.ensurePermission("nivel_formacao:create", { dto });
@@ -196,7 +197,7 @@ export class NivelFormacaoService {
     });
   }
 
-  async nivelFormacaoUpdate(accessContext: AccessContext, dto: LadesaTypings.NivelFormacaoUpdateByIdOperationInput) {
+  async nivelFormacaoUpdate(accessContext: AccessContext, dto: IDomain.NivelFormacaoUpdateByIdInput) {
     // =========================================================
 
     const currentNivelFormacao = await this.nivelFormacaoFindByIdStrict(accessContext, {
@@ -230,7 +231,7 @@ export class NivelFormacaoService {
 
   //
 
-  async nivelFormacaoDeleteOneById(accessContext: AccessContext, dto: LadesaTypings.NivelFormacaoFindOneInputView) {
+  async nivelFormacaoDeleteOneById(accessContext: AccessContext, dto: IDomain.NivelFormacaoFindOneInput) {
     // =========================================================
 
     await accessContext.ensurePermission("nivel_formacao:delete", { dto }, dto.id, this.nivelFormacaoRepository.createQueryBuilder(aliasNivelFormacao));

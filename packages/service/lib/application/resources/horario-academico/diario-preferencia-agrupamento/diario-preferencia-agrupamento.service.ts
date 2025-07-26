@@ -1,4 +1,5 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
+import { IDomain } from "@/domain/domain-contracts";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
@@ -33,9 +34,9 @@ export class DiarioPreferenciaAgrupamentoService {
 
   async diarioPreferenciaAgrupamentoFindAll(
     accessContext: AccessContext,
-    dto: LadesaTypings.DiarioPreferenciaAgrupamentoListOperationInput | null = null,
+    dto: IDomain.DiarioPreferenciaAgrupamentoListInput | null = null,
     selection?: string[] | boolean,
-  ): Promise<LadesaTypings.DiarioPreferenciaAgrupamentoListOperationOutput["success"]> {
+  ): Promise<IDomain.DiarioPreferenciaAgrupamentoListOutput["success"]> {
     // =========================================================
 
     const qb = this.diarioPreferenciaAgrupamentoRepository.createQueryBuilder(aliasDiarioPreferenciaAgrupamento);
@@ -115,9 +116,9 @@ export class DiarioPreferenciaAgrupamentoService {
 
   async diarioPreferenciaAgrupamentoFindById(
     accessContext: AccessContext,
-    dto: LadesaTypings.DiarioPreferenciaAgrupamentoFindOneInputView,
+    dto: IDomain.DiarioPreferenciaAgrupamentoFindOneInput,
     selection?: string[] | boolean,
-  ): Promise<LadesaTypings.DiarioPreferenciaAgrupamentoFindOneResultView | null> {
+  ): Promise<IDomain.DiarioPreferenciaAgrupamentoFindOneOutput | null> {
     // =========================================================
 
     const qb = this.diarioPreferenciaAgrupamentoRepository.createQueryBuilder(aliasDiarioPreferenciaAgrupamento);
@@ -145,7 +146,7 @@ export class DiarioPreferenciaAgrupamentoService {
     return diarioPreferenciaAgrupamento;
   }
 
-  async diarioPreferenciaAgrupamentoFindByIdStrict(accessContext: AccessContext, dto: LadesaTypings.DiarioPreferenciaAgrupamentoFindOneInputView, selection?: string[] | boolean) {
+  async diarioPreferenciaAgrupamentoFindByIdStrict(accessContext: AccessContext, dto: IDomain.DiarioPreferenciaAgrupamentoFindOneInput, selection?: string[] | boolean) {
     const diarioPreferenciaAgrupamento = await this.diarioPreferenciaAgrupamentoFindById(accessContext, dto, selection);
 
     if (!diarioPreferenciaAgrupamento) {
@@ -157,9 +158,9 @@ export class DiarioPreferenciaAgrupamentoService {
 
   async diarioPreferenciaAgrupamentoFindByIdSimple(
     accessContext: AccessContext,
-    id: LadesaTypings.DiarioPreferenciaAgrupamentoFindOneInputView["id"],
+    id: IDomain.DiarioPreferenciaAgrupamentoFindOneInput["id"],
     selection?: string[],
-  ): Promise<LadesaTypings.DiarioPreferenciaAgrupamentoFindOneResultView | null> {
+  ): Promise<IDomain.DiarioPreferenciaAgrupamentoFindOneOutput | null> {
     // =========================================================
 
     const qb = this.diarioPreferenciaAgrupamentoRepository.createQueryBuilder(aliasDiarioPreferenciaAgrupamento);
@@ -186,7 +187,7 @@ export class DiarioPreferenciaAgrupamentoService {
     return diarioPreferenciaAgrupamento;
   }
 
-  async diarioPreferenciaAgrupamentoFindByIdSimpleStrict(accessContext: AccessContext, id: LadesaTypings.DiarioPreferenciaAgrupamentoFindOneInputView["id"], selection?: string[]) {
+  async diarioPreferenciaAgrupamentoFindByIdSimpleStrict(accessContext: AccessContext, id: IDomain.DiarioPreferenciaAgrupamentoFindOneInput["id"], selection?: string[]) {
     const diarioPreferenciaAgrupamento = await this.diarioPreferenciaAgrupamentoFindByIdSimple(accessContext, id, selection);
 
     if (!diarioPreferenciaAgrupamento) {
@@ -198,7 +199,7 @@ export class DiarioPreferenciaAgrupamentoService {
 
   //
 
-  async diarioPreferenciaAgrupamentoCreate(accessContext: AccessContext, dto: LadesaTypings.DiarioPreferenciaAgrupamentoCreateOperationInput) {
+  async diarioPreferenciaAgrupamentoCreate(accessContext: AccessContext, dto: IDomain.DiarioPreferenciaAgrupamentoCreateInput) {
     // =========================================================
 
     await accessContext.ensurePermission("diario_preferencia_agrupamento:create", { dto });
@@ -246,7 +247,7 @@ export class DiarioPreferenciaAgrupamentoService {
     });
   }
 
-  async diarioPreferenciaAgrupamentoUpdate(accessContext: AccessContext, dto: LadesaTypings.DiarioPreferenciaAgrupamentoUpdateByIdOperationInput) {
+  async diarioPreferenciaAgrupamentoUpdate(accessContext: AccessContext, dto: IDomain.DiarioPreferenciaAgrupamentoUpdateByIdInput) {
     // =========================================================
 
     const currentDiarioPreferenciaAgrupamento = await this.diarioPreferenciaAgrupamentoFindByIdStrict(accessContext, {
@@ -307,7 +308,7 @@ export class DiarioPreferenciaAgrupamentoService {
 
   //
 
-  async diarioPreferenciaAgrupamentoDeleteOneById(accessContext: AccessContext, dto: LadesaTypings.DiarioPreferenciaAgrupamentoFindOneInputView) {
+  async diarioPreferenciaAgrupamentoDeleteOneById(accessContext: AccessContext, dto: IDomain.DiarioPreferenciaAgrupamentoFindOneInput) {
     // =========================================================
 
     await accessContext.ensurePermission("diario_preferencia_agrupamento:delete", { dto }, dto.id, this.diarioPreferenciaAgrupamentoRepository.createQueryBuilder(aliasDiarioPreferenciaAgrupamento));

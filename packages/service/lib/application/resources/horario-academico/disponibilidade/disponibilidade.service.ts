@@ -1,4 +1,5 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
+import { IDomain } from "@/domain/domain-contracts";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { map, pick } from "lodash";
 import { QbEfficientLoad } from "@/application/standards/ladesa-spec/QbEfficientLoad";
@@ -26,9 +27,9 @@ export class DisponibilidadeService {
 
   async disponibilidadeFindAll(
     accessContext: AccessContext,
-    dto: LadesaTypings.DisponibilidadeListOperationInput | null = null,
+    dto: IDomain.DisponibilidadeListInput | null = null,
     selection?: string[],
-  ): Promise<LadesaTypings.DisponibilidadeListOperationOutput["success"]> {
+  ): Promise<IDomain.DisponibilidadeListOutput["success"]> {
     // =========================================================
 
     const qb = this.disponibilidadeRepository.createQueryBuilder(aliasDisponibilidade);
@@ -89,9 +90,9 @@ export class DisponibilidadeService {
 
   async disponibilidadeFindById(
     accessContext: AccessContext | null,
-    dto: LadesaTypings.DisponibilidadeFindOneInputView,
+    dto: IDomain.DisponibilidadeFindOneInput,
     selection?: string[],
-  ): Promise<LadesaTypings.DisponibilidadeFindOneResultView | null> {
+  ): Promise<IDomain.DisponibilidadeFindOneOutput | null> {
     // =========================================================
 
     const qb = this.disponibilidadeRepository.createQueryBuilder(aliasDisponibilidade);
@@ -120,7 +121,7 @@ export class DisponibilidadeService {
     return disponibilidade;
   }
 
-  async disponibilidadeFindByIdStrict(accessContext: AccessContext, dto: LadesaTypings.DisponibilidadeFindOneInputView, selection?: string[]) {
+  async disponibilidadeFindByIdStrict(accessContext: AccessContext, dto: IDomain.DisponibilidadeFindOneInput, selection?: string[]) {
     const disponibilidade = await this.disponibilidadeFindById(accessContext, dto, selection);
 
     if (!disponibilidade) {
@@ -132,9 +133,9 @@ export class DisponibilidadeService {
 
   async disponibilidadeFindByIdSimple(
     accessContext: AccessContext,
-    id: LadesaTypings.DisponibilidadeFindOneInputView["id"],
+    id: IDomain.DisponibilidadeFindOneInput["id"],
     selection?: string[],
-  ): Promise<LadesaTypings.DisponibilidadeFindOneResultView | null> {
+  ): Promise<IDomain.DisponibilidadeFindOneOutput | null> {
     // =========================================================
 
     const qb = this.disponibilidadeRepository.createQueryBuilder(aliasDisponibilidade);
@@ -161,7 +162,7 @@ export class DisponibilidadeService {
     return disponibilidade;
   }
 
-  async disponibilidadeFindByIdSimpleStrict(accessContext: AccessContext, id: LadesaTypings.DisponibilidadeFindOneInputView["id"], selection?: string[]) {
+  async disponibilidadeFindByIdSimpleStrict(accessContext: AccessContext, id: IDomain.DisponibilidadeFindOneInput["id"], selection?: string[]) {
     const disponibilidade = await this.disponibilidadeFindByIdSimple(accessContext, id, selection);
 
     if (!disponibilidade) {
@@ -173,7 +174,7 @@ export class DisponibilidadeService {
 
   //
 
-  async disponibilidadeCreate(accessContext: AccessContext, dto: LadesaTypings.DisponibilidadeCreateOperationInput) {
+  async disponibilidadeCreate(accessContext: AccessContext, dto: IDomain.DisponibilidadeCreateInput) {
     // =========================================================
 
     await accessContext.ensurePermission("disponibilidade:create", { dto });
@@ -199,7 +200,7 @@ export class DisponibilidadeService {
     });
   }
 
-  async disponibilidadeUpdate(accessContext: AccessContext, dto: LadesaTypings.DisponibilidadeUpdateByIdOperationInput) {
+  async disponibilidadeUpdate(accessContext: AccessContext, dto: IDomain.DisponibilidadeUpdateByIdInput) {
     // =========================================================
 
     const currentDisponibilidade = await this.disponibilidadeFindByIdStrict(accessContext, {
@@ -233,7 +234,7 @@ export class DisponibilidadeService {
 
   //
 
-  async disponibilidadeDeleteOneById(accessContext: AccessContext, dto: LadesaTypings.DisponibilidadeFindOneInputView) {
+  async disponibilidadeDeleteOneById(accessContext: AccessContext, dto: IDomain.DisponibilidadeFindOneInput) {
     // =========================================================
 
     await accessContext.ensurePermission("disponibilidade:delete", { dto }, dto.id, this.disponibilidadeRepository.createQueryBuilder(aliasDisponibilidade));

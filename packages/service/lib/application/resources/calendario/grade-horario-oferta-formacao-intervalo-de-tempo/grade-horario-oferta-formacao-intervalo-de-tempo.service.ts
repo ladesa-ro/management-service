@@ -1,4 +1,5 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
+import { IDomain } from "@/domain/domain-contracts";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
@@ -33,9 +34,9 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService {
 
   async gradeHorarioOfertaFormacaoIntervaloDeTempoFindAll(
     accessContext: AccessContext,
-    dto: LadesaTypings.GradeHorarioOfertaFormacaoIntervaloDeTempoListOperationInput | null = null,
+    dto: IDomain.GradeHorarioOfertaFormacaoIntervaloDeTempoListInput | null = null,
     selection?: string[],
-  ): Promise<LadesaTypings.GradeHorarioOfertaFormacaoIntervaloDeTempoListOperationOutput["success"]> {
+  ): Promise<IDomain.GradeHorarioOfertaFormacaoIntervaloDeTempoListOutput["success"]> {
     // =========================================================
 
     const qb = this.gradeHorarioOfertaFormacaoIntervaloDeTempoRepository.createQueryBuilder(aliasGradeHorarioOfertaFormacaoIntervaloDeTempo);
@@ -93,9 +94,9 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService {
 
   async gradeHorarioOfertaFormacaoIntervaloDeTempoFindById(
     accessContext: AccessContext | null,
-    dto: LadesaTypings.GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInputView,
+    dto: IDomain.GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInput,
     selection?: string[],
-  ): Promise<LadesaTypings.GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneResultView | null> {
+  ): Promise<IDomain.GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutput | null> {
     // =========================================================
 
     const qb = this.gradeHorarioOfertaFormacaoIntervaloDeTempoRepository.createQueryBuilder(aliasGradeHorarioOfertaFormacaoIntervaloDeTempo);
@@ -126,7 +127,7 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService {
     return gradeHorarioOfertaFormacaoIntervaloDeTempo;
   }
 
-  async gradeHorarioOfertaFormacaoIntervaloDeTempoFindByIdStrict(accessContext: AccessContext, dto: LadesaTypings.GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInputView, selection?: string[]) {
+  async gradeHorarioOfertaFormacaoIntervaloDeTempoFindByIdStrict(accessContext: AccessContext, dto: IDomain.GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInput, selection?: string[]) {
     const gradeHorarioOfertaFormacaoIntervaloDeTempo = await this.gradeHorarioOfertaFormacaoIntervaloDeTempoFindById(accessContext, dto, selection);
 
     if (!gradeHorarioOfertaFormacaoIntervaloDeTempo) {
@@ -138,9 +139,9 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService {
 
   async gradeHorarioOfertaFormacaoIntervaloDeTempoFindByIdSimple(
     accessContext: AccessContext,
-    id: LadesaTypings.GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInputView["id"],
+    id: IDomain.GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInput["id"],
     selection?: string[],
-  ): Promise<LadesaTypings.GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneResultView | null> {
+  ): Promise<IDomain.GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutput | null> {
     // =========================================================
 
     const qb = this.gradeHorarioOfertaFormacaoIntervaloDeTempoRepository.createQueryBuilder(aliasGradeHorarioOfertaFormacaoIntervaloDeTempo);
@@ -171,7 +172,7 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService {
 
   async gradeHorarioOfertaFormacaoIntervaloDeTempoFindByIdSimpleStrict(
     accessContext: AccessContext,
-    id: LadesaTypings.GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInputView["id"],
+    id: IDomain.GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInput["id"],
     selection?: string[],
   ) {
     const gradeHorarioOfertaFormacaoIntervaloDeTempo = await this.gradeHorarioOfertaFormacaoIntervaloDeTempoFindByIdSimple(accessContext, id, selection);
@@ -185,7 +186,7 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService {
 
   //
 
-  async gradeHorarioOfertaFormacaoIntervaloDeTempoCreate(accessContext: AccessContext, dto: LadesaTypings.GradeHorarioOfertaFormacaoIntervaloDeTempoCreateOperationInput) {
+  async gradeHorarioOfertaFormacaoIntervaloDeTempoCreate(accessContext: AccessContext, dto: IDomain.GradeHorarioOfertaFormacaoIntervaloDeTempoCreateInput) {
     // =========================================================
 
     await accessContext.ensurePermission("grade_horario_oferta_formacao_intervalo_de_tempo:create", { dto });
@@ -233,7 +234,7 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService {
     return this.gradeHorarioOfertaFormacaoIntervaloDeTempoFindByIdStrict(accessContext, { id: gradeHorarioOfertaFormacaoIntervaloDeTempo.id });
   }
 
-  async gradeHorarioOfertaFormacaoIntervaloDeTempoUpdate(accessContext: AccessContext, dto: LadesaTypings.GradeHorarioOfertaFormacaoIntervaloDeTempoUpdateByIdOperationInput) {
+  async gradeHorarioOfertaFormacaoIntervaloDeTempoUpdate(accessContext: AccessContext, dto: IDomain.GradeHorarioOfertaFormacaoIntervaloDeTempoUpdateByIdInput) {
     // =========================================================
 
     const currentGradeHorarioOfertaFormacaoIntervaloDeTempo = await this.gradeHorarioOfertaFormacaoIntervaloDeTempoFindByIdStrict(accessContext, {
@@ -295,7 +296,7 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService {
 
   //
 
-  async gradeHorarioOfertaFormacaoIntervaloDeTempoDeleteOneById(accessContext: AccessContext, dto: LadesaTypings.GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInputView) {
+  async gradeHorarioOfertaFormacaoIntervaloDeTempoDeleteOneById(accessContext: AccessContext, dto: IDomain.GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInput) {
     // =========================================================
 
     await accessContext.ensurePermission(

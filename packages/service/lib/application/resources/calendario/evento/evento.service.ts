@@ -1,4 +1,5 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
+import { IDomain } from "@/domain/domain-contracts";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
@@ -31,9 +32,9 @@ export class EventoService {
 
   async eventoFindAll(
     accessContext: AccessContext,
-    dto: LadesaTypings.EventoListOperationInput | null = null,
+    dto: IDomain.EventoListInput | null = null,
     selection?: string[] | boolean,
-  ): Promise<LadesaTypings.EventoListOperationOutput["success"]> {
+  ): Promise<IDomain.EventoListOutput["success"]> {
     // =========================================================
 
     const qb = this.eventoRepository.createQueryBuilder(aliasEvento);
@@ -102,7 +103,7 @@ export class EventoService {
     return LadesaPaginatedResultDto(paginated);
   }
 
-  async eventoFindById(accessContext: AccessContext, dto: LadesaTypings.EventoFindOneInputView, selection?: string[] | boolean): Promise<LadesaTypings.EventoFindOneResultView | null> {
+  async eventoFindById(accessContext: AccessContext, dto: IDomain.EventoFindOneInput, selection?: string[] | boolean): Promise<IDomain.EventoFindOneOutput | null> {
     // =========================================================
 
     const qb = this.eventoRepository.createQueryBuilder(aliasEvento);
@@ -128,7 +129,7 @@ export class EventoService {
     return evento;
   }
 
-  async eventoFindByIdStrict(accessContext: AccessContext, dto: LadesaTypings.EventoFindOneInputView, selection?: string[] | boolean) {
+  async eventoFindByIdStrict(accessContext: AccessContext, dto: IDomain.EventoFindOneInput, selection?: string[] | boolean) {
     const evento = await this.eventoFindById(accessContext, dto, selection);
 
     if (!evento) {
@@ -138,7 +139,7 @@ export class EventoService {
     return evento;
   }
 
-  async eventoFindByIdSimple(accessContext: AccessContext, id: LadesaTypings.EventoFindOneInputView["id"], selection?: string[]): Promise<LadesaTypings.EventoFindOneResultView | null> {
+  async eventoFindByIdSimple(accessContext: AccessContext, id: IDomain.EventoFindOneInput["id"], selection?: string[]): Promise<IDomain.EventoFindOneOutput | null> {
     // =========================================================
 
     const qb = this.eventoRepository.createQueryBuilder(aliasEvento);
@@ -165,7 +166,7 @@ export class EventoService {
     return evento;
   }
 
-  async EventoFindByIdSimpleStrict(accessContext: AccessContext, id: LadesaTypings.EventoFindOneInputView["id"], selection?: string[]) {
+  async EventoFindByIdSimpleStrict(accessContext: AccessContext, id: IDomain.EventoFindOneInput["id"], selection?: string[]) {
     const evento = await this.eventoFindByIdSimple(accessContext, id, selection);
 
     if (!evento) {
@@ -177,7 +178,7 @@ export class EventoService {
 
   //
 
-  async eventoCreate(accessContext: AccessContext, dto: LadesaTypings.EventoCreateOperationInput) {
+  async eventoCreate(accessContext: AccessContext, dto: IDomain.EventoCreateInput) {
     // =========================================================
 
     await accessContext.ensurePermission("evento:create", { dto });
@@ -213,7 +214,7 @@ export class EventoService {
     return this.eventoFindByIdStrict(accessContext, { id: evento.id });
   }
 
-  async eventoUpdate(accessContext: AccessContext, dto: LadesaTypings.EventoUpdateByIdOperationInput) {
+  async eventoUpdate(accessContext: AccessContext, dto: IDomain.EventoUpdateByIdInput) {
     // =========================================================
 
     const currentEvento = await this.eventoFindByIdStrict(accessContext, {
@@ -257,7 +258,7 @@ export class EventoService {
 
   //
 
-  async eventoDeleteOneById(accessContext: AccessContext, dto: LadesaTypings.EventoFindOneInputView) {
+  async eventoDeleteOneById(accessContext: AccessContext, dto: IDomain.EventoFindOneInput) {
     // =========================================================
 
     await accessContext.ensurePermission("evento:delete", { dto }, dto.id, this.eventoRepository.createQueryBuilder(aliasEvento));

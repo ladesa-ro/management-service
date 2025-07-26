@@ -1,4 +1,5 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
+import { IDomain } from "@/domain/domain-contracts";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
@@ -33,7 +34,7 @@ export class AulaService {
 
   //
 
-  async aulaFindAll(accessContext: AccessContext, dto: LadesaTypings.AulaListOperationInput | null = null, selection?: string[] | boolean): Promise<LadesaTypings.AulaListOperationOutput["success"]> {
+  async aulaFindAll(accessContext: AccessContext, dto: IDomain.AulaListInput | null = null, selection?: string[] | boolean): Promise<IDomain.AulaListOutput["success"]> {
     // =========================================================
 
     const qb = this.aulaRepository.createQueryBuilder(aliasAula);
@@ -107,7 +108,7 @@ export class AulaService {
     return LadesaPaginatedResultDto(paginated);
   }
 
-  async aulaFindById(accessContext: AccessContext, dto: LadesaTypings.AulaFindOneInputView, selection?: string[] | boolean): Promise<LadesaTypings.AulaFindOneResultView | null> {
+  async aulaFindById(accessContext: AccessContext, dto: IDomain.AulaFindOneInput, selection?: string[] | boolean): Promise<IDomain.AulaFindOneOutput | null> {
     // =========================================================
 
     const qb = this.aulaRepository.createQueryBuilder(aliasAula);
@@ -134,7 +135,7 @@ export class AulaService {
     return aula;
   }
 
-  async aulaFindByIdStrict(accessContext: AccessContext, dto: LadesaTypings.AulaFindOneInputView, selection?: string[] | boolean) {
+  async aulaFindByIdStrict(accessContext: AccessContext, dto: IDomain.AulaFindOneInput, selection?: string[] | boolean) {
     const aula = await this.aulaFindById(accessContext, dto, selection);
 
     if (!aula) {
@@ -144,7 +145,7 @@ export class AulaService {
     return aula;
   }
 
-  async aulaFindByIdSimple(accessContext: AccessContext, id: LadesaTypings.AulaFindOneInputView["id"], selection?: string[] | boolean): Promise<LadesaTypings.AulaFindOneResultView | null> {
+  async aulaFindByIdSimple(accessContext: AccessContext, id: IDomain.AulaFindOneInput["id"], selection?: string[] | boolean): Promise<IDomain.AulaFindOneOutput | null> {
     // =========================================================
 
     const qb = this.aulaRepository.createQueryBuilder(aliasAula);
@@ -171,7 +172,7 @@ export class AulaService {
     return aula;
   }
 
-  async aulaFindByIdSimpleStrict(accessContext: AccessContext, id: LadesaTypings.AulaFindOneInputView["id"], selection?: string[] | boolean) {
+  async aulaFindByIdSimpleStrict(accessContext: AccessContext, id: IDomain.AulaFindOneInput["id"], selection?: string[] | boolean) {
     const aula = await this.aulaFindByIdSimple(accessContext, id, selection);
 
     if (!aula) {
@@ -183,7 +184,7 @@ export class AulaService {
 
   //
 
-  async aulaCreate(accessContext: AccessContext, dto: LadesaTypings.AulaCreateOperationInput) {
+  async aulaCreate(accessContext: AccessContext, dto: IDomain.AulaCreateInput) {
     // =========================================================
 
     await accessContext.ensurePermission("aula:create", { dto });
@@ -231,7 +232,7 @@ export class AulaService {
     return this.aulaFindByIdStrict(accessContext, { id: aula.id });
   }
 
-  async aulaUpdate(accessContext: AccessContext, dto: LadesaTypings.AulaUpdateByIdOperationInput) {
+  async aulaUpdate(accessContext: AccessContext, dto: IDomain.AulaUpdateByIdInput) {
     // =========================================================
 
     const currentAula = await this.aulaFindByIdStrict(accessContext, {
@@ -292,7 +293,7 @@ export class AulaService {
 
   //
 
-  async aulaDeleteOneById(accessContext: AccessContext, dto: LadesaTypings.AulaFindOneInputView) {
+  async aulaDeleteOneById(accessContext: AccessContext, dto: IDomain.AulaFindOneInput) {
     // =========================================================
 
     await accessContext.ensurePermission("aula:delete", { dto }, dto.id, this.aulaRepository.createQueryBuilder(aliasAula));

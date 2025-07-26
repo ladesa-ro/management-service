@@ -1,4 +1,5 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
+import { IDomain } from "@/domain/domain-contracts";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
@@ -33,9 +34,9 @@ export class DiarioProfessorService {
 
   async diarioProfessorFindAll(
     accessContext: AccessContext,
-    dto: LadesaTypings.DiarioProfessorListOperationInput | null = null,
+    dto: IDomain.DiarioProfessorListInput | null = null,
     selection?: string[] | boolean,
-  ): Promise<LadesaTypings.DiarioProfessorListOperationOutput["success"]> {
+  ): Promise<IDomain.DiarioProfessorListOutput["success"]> {
     // =========================================================
 
     const qb = this.diarioProfessorRepository.createQueryBuilder(aliasDiarioProfessor);
@@ -110,9 +111,9 @@ export class DiarioProfessorService {
 
   async diarioProfessorFindById(
     accessContext: AccessContext,
-    dto: LadesaTypings.DiarioProfessorFindOneInputView,
+    dto: IDomain.DiarioProfessorFindOneInput,
     selection?: string[] | boolean,
-  ): Promise<LadesaTypings.DiarioProfessorFindOneResultView | null> {
+  ): Promise<IDomain.DiarioProfessorFindOneOutput | null> {
     // =========================================================
 
     const qb = this.diarioProfessorRepository.createQueryBuilder(aliasDiarioProfessor);
@@ -139,7 +140,7 @@ export class DiarioProfessorService {
     return diarioProfessor;
   }
 
-  async diarioProfessorFindByIdStrict(accessContext: AccessContext, dto: LadesaTypings.DiarioProfessorFindOneInputView, selection?: string[] | boolean) {
+  async diarioProfessorFindByIdStrict(accessContext: AccessContext, dto: IDomain.DiarioProfessorFindOneInput, selection?: string[] | boolean) {
     const diarioProfessor = await this.diarioProfessorFindById(accessContext, dto, selection);
 
     if (!diarioProfessor) {
@@ -151,9 +152,9 @@ export class DiarioProfessorService {
 
   async diarioProfessorFindByIdSimple(
     accessContext: AccessContext,
-    id: LadesaTypings.DiarioProfessorFindOneInputView["id"],
+    id: IDomain.DiarioProfessorFindOneInput["id"],
     selection?: string[] | boolean,
-  ): Promise<LadesaTypings.DiarioProfessorFindOneResultView | null> {
+  ): Promise<IDomain.DiarioProfessorFindOneOutput | null> {
     // =========================================================
 
     const qb = this.diarioProfessorRepository.createQueryBuilder(aliasDiarioProfessor);
@@ -180,7 +181,7 @@ export class DiarioProfessorService {
     return diarioProfessor;
   }
 
-  async diarioProfessorFindByIdSimpleStrict(accessContext: AccessContext, id: LadesaTypings.DiarioProfessorFindOneInputView["id"], selection?: string[] | boolean) {
+  async diarioProfessorFindByIdSimpleStrict(accessContext: AccessContext, id: IDomain.DiarioProfessorFindOneInput["id"], selection?: string[] | boolean) {
     const diarioProfessor = await this.diarioProfessorFindByIdSimple(accessContext, id, selection);
 
     if (!diarioProfessor) {
@@ -192,7 +193,7 @@ export class DiarioProfessorService {
 
   //
 
-  async diarioProfessorCreate(accessContext: AccessContext, dto: LadesaTypings.DiarioProfessorCreateOperationInput) {
+  async diarioProfessorCreate(accessContext: AccessContext, dto: IDomain.DiarioProfessorCreateInput) {
     // =========================================================
 
     await accessContext.ensurePermission("diario_professor:create", { dto });
@@ -250,7 +251,7 @@ export class DiarioProfessorService {
     });
   }
 
-  async diarioProfessorUpdate(accessContext: AccessContext, dto: LadesaTypings.DiarioProfessorUpdateByIdOperationInput) {
+  async diarioProfessorUpdate(accessContext: AccessContext, dto: IDomain.DiarioProfessorUpdateByIdInput) {
     // =========================================================
 
     const currentDiarioProfessor = await this.diarioProfessorFindByIdStrict(accessContext, {
@@ -316,7 +317,7 @@ export class DiarioProfessorService {
 
   //
 
-  async diarioProfessorDeleteOneById(accessContext: AccessContext, dto: LadesaTypings.DiarioProfessorFindOneInputView) {
+  async diarioProfessorDeleteOneById(accessContext: AccessContext, dto: IDomain.DiarioProfessorFindOneInput) {
     // =========================================================
 
     await accessContext.ensurePermission("diario_professor:delete", { dto }, dto.id, this.diarioProfessorRepository.createQueryBuilder(aliasDiarioProfessor));

@@ -1,4 +1,5 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
+import { IDomain } from "@/domain/domain-contracts";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
@@ -33,9 +34,9 @@ export class OfertaFormacaoNivelFormacaoService {
 
   async ofertaFormacaoNivelFormacaoFindAll(
     accessContext: AccessContext,
-    dto: LadesaTypings.OfertaFormacaoNivelFormacaoListOperationInput | null = null,
+    dto: IDomain.OfertaFormacaoNivelFormacaoListInput | null = null,
     selection?: string[],
-  ): Promise<LadesaTypings.OfertaFormacaoNivelFormacaoListOperationOutput["success"]> {
+  ): Promise<IDomain.OfertaFormacaoNivelFormacaoListOutput["success"]> {
     // =========================================================
 
     const qb = this.ofertaFormacaoNivelFormacaoRepository.createQueryBuilder(aliasOfertaFormacaoNivelFormacao);
@@ -97,9 +98,9 @@ export class OfertaFormacaoNivelFormacaoService {
 
   async ofertaFormacaoNivelFormacaoFindById(
     accessContext: AccessContext | null,
-    dto: LadesaTypings.OfertaFormacaoNivelFormacaoFindOneInputView,
+    dto: IDomain.OfertaFormacaoNivelFormacaoFindOneInput,
     selection?: string[],
-  ): Promise<LadesaTypings.OfertaFormacaoNivelFormacaoFindOneResultView | null> {
+  ): Promise<IDomain.OfertaFormacaoNivelFormacaoFindOneOutput | null> {
     // =========================================================
 
     const qb = this.ofertaFormacaoNivelFormacaoRepository.createQueryBuilder(aliasOfertaFormacaoNivelFormacao);
@@ -128,7 +129,7 @@ export class OfertaFormacaoNivelFormacaoService {
     return ofertaFormacaoNivelFormacao;
   }
 
-  async ofertaFormacaoNivelFormacaoFindByIdStrict(accessContext: AccessContext, dto: LadesaTypings.OfertaFormacaoNivelFormacaoFindOneInputView, selection?: string[]) {
+  async ofertaFormacaoNivelFormacaoFindByIdStrict(accessContext: AccessContext, dto: IDomain.OfertaFormacaoNivelFormacaoFindOneInput, selection?: string[]) {
     const ofertaFormacaoNivelFormacao = await this.ofertaFormacaoNivelFormacaoFindById(accessContext, dto, selection);
 
     if (!ofertaFormacaoNivelFormacao) {
@@ -140,9 +141,9 @@ export class OfertaFormacaoNivelFormacaoService {
 
   async ofertaFormacaoNivelFormacaoFindByIdSimple(
     accessContext: AccessContext,
-    id: LadesaTypings.OfertaFormacaoNivelFormacaoFindOneInputView["id"],
+    id: IDomain.OfertaFormacaoNivelFormacaoFindOneInput["id"],
     selection?: string[],
-  ): Promise<LadesaTypings.OfertaFormacaoNivelFormacaoFindOneResultView | null> {
+  ): Promise<IDomain.OfertaFormacaoNivelFormacaoFindOneOutput | null> {
     // =========================================================
 
     const qb = this.ofertaFormacaoNivelFormacaoRepository.createQueryBuilder(aliasOfertaFormacaoNivelFormacao);
@@ -169,7 +170,7 @@ export class OfertaFormacaoNivelFormacaoService {
     return ofertaFormacaoNivelFormacao;
   }
 
-  async ofertaFormacaoNivelFormacaoFindByIdSimpleStrict(accessContext: AccessContext, id: LadesaTypings.OfertaFormacaoNivelFormacaoFindOneInputView["id"], selection?: string[]) {
+  async ofertaFormacaoNivelFormacaoFindByIdSimpleStrict(accessContext: AccessContext, id: IDomain.OfertaFormacaoNivelFormacaoFindOneInput["id"], selection?: string[]) {
     const ofertaFormacaoNivelFormacao = await this.ofertaFormacaoNivelFormacaoFindByIdSimple(accessContext, id, selection);
 
     if (!ofertaFormacaoNivelFormacao) {
@@ -181,7 +182,7 @@ export class OfertaFormacaoNivelFormacaoService {
 
   //
 
-  async ofertaFormacaoNivelFormacaoCreate(accessContext: AccessContext, dto: LadesaTypings.OfertaFormacaoNivelFormacaoCreateOperationInput) {
+  async ofertaFormacaoNivelFormacaoCreate(accessContext: AccessContext, dto: IDomain.OfertaFormacaoNivelFormacaoCreateInput) {
     // =========================================================
 
     await accessContext.ensurePermission("oferta_formacao_nivel_formacao:create", { dto });
@@ -231,7 +232,7 @@ export class OfertaFormacaoNivelFormacaoService {
     });
   }
 
-  async ofertaFormacaoNivelFormacaoUpdate(accessContext: AccessContext, dto: LadesaTypings.OfertaFormacaoNivelFormacaoUpdateByIdOperationInput) {
+  async ofertaFormacaoNivelFormacaoUpdate(accessContext: AccessContext, dto: IDomain.OfertaFormacaoNivelFormacaoUpdateByIdInput) {
     // =========================================================
 
     const currentOfertaFormacaoNivelFormacao = await this.ofertaFormacaoNivelFormacaoFindByIdStrict(accessContext, {
@@ -292,7 +293,7 @@ export class OfertaFormacaoNivelFormacaoService {
 
   //
 
-  async ofertaFormacaoNivelFormacaoDeleteOneById(accessContext: AccessContext, dto: LadesaTypings.OfertaFormacaoNivelFormacaoFindOneInputView) {
+  async ofertaFormacaoNivelFormacaoDeleteOneById(accessContext: AccessContext, dto: IDomain.OfertaFormacaoNivelFormacaoFindOneInput) {
     // =========================================================
 
     await accessContext.ensurePermission("oferta_formacao_nivel_formacao:delete", { dto }, dto.id, this.ofertaFormacaoNivelFormacaoRepository.createQueryBuilder(aliasOfertaFormacaoNivelFormacao));

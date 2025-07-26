@@ -1,4 +1,5 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
+import { IDomain } from "@/domain/domain-contracts";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
@@ -37,9 +38,9 @@ export class CursoService {
 
   async cursoFindAll(
     accessContext: AccessContext,
-    dto: LadesaTypings.CursoListOperationInput | null = null,
+    dto: IDomain.CursoListInput | null = null,
     selection?: string[] | boolean,
-  ): Promise<LadesaTypings.CursoListOperationOutput["success"]> {
+  ): Promise<IDomain.CursoListOutput["success"]> {
     // =========================================================
 
     const qb = this.cursoRepository.createQueryBuilder(aliasCurso);
@@ -120,7 +121,7 @@ export class CursoService {
     return LadesaPaginatedResultDto(paginated);
   }
 
-  async cursoFindById(accessContext: AccessContext | null, dto: LadesaTypings.CursoFindOneInputView, selection?: string[] | boolean): Promise<LadesaTypings.CursoFindOneResultView | null> {
+  async cursoFindById(accessContext: AccessContext | null, dto: IDomain.CursoFindOneInput, selection?: string[] | boolean): Promise<IDomain.CursoFindOneOutput | null> {
     // =========================================================
 
     const qb = this.cursoRepository.createQueryBuilder(aliasCurso);
@@ -149,7 +150,7 @@ export class CursoService {
     return curso;
   }
 
-  async cursoFindByIdStrict(accessContext: AccessContext | null, dto: LadesaTypings.CursoFindOneInputView, selection?: string[] | boolean) {
+  async cursoFindByIdStrict(accessContext: AccessContext | null, dto: IDomain.CursoFindOneInput, selection?: string[] | boolean) {
     const curso = await this.cursoFindById(accessContext, dto, selection);
 
     if (!curso) {
@@ -159,7 +160,7 @@ export class CursoService {
     return curso;
   }
 
-  async cursoFindByIdSimple(accessContext: AccessContext, id: LadesaTypings.CursoFindOneInputView["id"], selection?: string[]): Promise<LadesaTypings.CursoFindOneResultView | null> {
+  async cursoFindByIdSimple(accessContext: AccessContext, id: IDomain.CursoFindOneInput["id"], selection?: string[]): Promise<IDomain.CursoFindOneOutput | null> {
     // =========================================================
 
     const qb = this.cursoRepository.createQueryBuilder(aliasCurso);
@@ -186,7 +187,7 @@ export class CursoService {
     return curso;
   }
 
-  async cursoFindByIdSimpleStrict(accessContext: AccessContext, id: LadesaTypings.CursoFindOneInputView["id"], selection?: string[]) {
+  async cursoFindByIdSimpleStrict(accessContext: AccessContext, id: IDomain.CursoFindOneInput["id"], selection?: string[]) {
     const curso = await this.cursoFindByIdSimple(accessContext, id, selection);
 
     if (!curso) {
@@ -198,7 +199,7 @@ export class CursoService {
 
   //
 
-  async cursoCreate(accessContext: AccessContext, dto: LadesaTypings.CursoCreateOperationInput) {
+  async cursoCreate(accessContext: AccessContext, dto: IDomain.CursoCreateInput) {
     // =========================================================
 
     await accessContext.ensurePermission("curso:create", { dto });
@@ -242,7 +243,7 @@ export class CursoService {
     return this.cursoFindByIdStrict(accessContext, { id: curso.id });
   }
 
-  async cursoUpdate(accessContext: AccessContext, dto: LadesaTypings.CursoUpdateByIdOperationInput) {
+  async cursoUpdate(accessContext: AccessContext, dto: IDomain.CursoUpdateByIdInput) {
     // =========================================================
 
     const currentCurso = await this.cursoFindByIdStrict(accessContext, {
@@ -313,7 +314,7 @@ export class CursoService {
     throw new NotFoundException();
   }
 
-  async cursoUpdateImagemCapa(accessContext: AccessContext, dto: LadesaTypings.CursoFindOneInputView, file: Express.Multer.File) {
+  async cursoUpdateImagemCapa(accessContext: AccessContext, dto: IDomain.CursoFindOneInput, file: Express.Multer.File) {
     // =========================================================
 
     const currentCurso = await this.cursoFindByIdStrict(accessContext, {
@@ -355,7 +356,7 @@ export class CursoService {
 
   //
 
-  async cursoDeleteOneById(accessContext: AccessContext, dto: LadesaTypings.CursoFindOneInputView) {
+  async cursoDeleteOneById(accessContext: AccessContext, dto: IDomain.CursoFindOneInput) {
     // =========================================================
 
     await accessContext.ensurePermission("curso:delete", { dto }, dto.id, this.cursoRepository.createQueryBuilder(aliasCurso));

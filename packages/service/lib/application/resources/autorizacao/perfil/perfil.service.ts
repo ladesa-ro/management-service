@@ -1,4 +1,5 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
+import { IDomain } from "@/domain/domain-contracts";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
 import { v4 as uuid } from "uuid";
@@ -55,7 +56,7 @@ export class PerfilService {
     return vinculos;
   }
 
-  async perfilFindAll(accessContext: AccessContext, dto: LadesaTypings.PerfilListOperationInput | null = null, selection?: string[] | boolean) {
+  async perfilFindAll(accessContext: AccessContext, dto: IDomain.PerfilListInput | null = null, selection?: string[] | boolean) {
     const qb = this.vinculoRepository.createQueryBuilder(aliasVinculo);
 
     QbEfficientLoad(LadesaTypings.Tokens.PerfilFindOneResultView, qb, aliasVinculo, selection);
@@ -98,7 +99,7 @@ export class PerfilService {
     return paginated;
   }
 
-  async perfilFindById(accessContext: AccessContext, dto: LadesaTypings.PerfilFindOneInputView, selection?: string[] | boolean): Promise<LadesaTypings.PerfilFindOneResultView | null> {
+  async perfilFindById(accessContext: AccessContext, dto: IDomain.PerfilFindOneInput, selection?: string[] | boolean): Promise<IDomain.PerfilFindOneOutput | null> {
     // =========================================================
 
     const qb = this.vinculoRepository.createQueryBuilder(aliasVinculo);
@@ -125,7 +126,7 @@ export class PerfilService {
     return vinculo;
   }
 
-  async perfilFindByIdStrict(accessContext: AccessContext, dto: LadesaTypings.PerfilFindOneInputView, selection?: string[] | boolean) {
+  async perfilFindByIdStrict(accessContext: AccessContext, dto: IDomain.PerfilFindOneInput, selection?: string[] | boolean) {
     const vinculo = await this.perfilFindById(accessContext, dto, selection);
 
     if (!vinculo) {
@@ -135,7 +136,7 @@ export class PerfilService {
     return vinculo;
   }
 
-  async perfilSetVinculos(accessContext: AccessContext, dto: LadesaTypings.PerfilUpdateOperationInput) {
+  async perfilSetVinculos(accessContext: AccessContext, dto: IDomain.PerfilUpdateInput) {
     const campus = await this.campusService.campusFindByIdSimpleStrict(accessContext, dto.body.campus.id);
     const usuario = await this.usuarioService.usuarioFindByIdSimpleStrict(accessContext, dto.body.usuario.id);
 

@@ -1,5 +1,6 @@
 import { RequiredActionAlias } from "@keycloak/keycloak-admin-client/lib/defs/requiredActionProviderRepresentation";
 import * as LadesaTypings from "@ladesa-ro/especificacao";
+import { IDomain } from "@/domain/domain-contracts";
 import { BadRequestException, ForbiddenException, HttpException, Injectable, ServiceUnavailableException } from "@nestjs/common";
 import * as client from "openid-client";
 import type { AccessContext } from "@/infrastructure/access-context";
@@ -26,7 +27,7 @@ export class AutenticacaoService {
 
   //
 
-  async whoAmI(accessContext: AccessContext): Promise<LadesaTypings.AuthWhoAmIResultView> {
+  async whoAmI(accessContext: AccessContext): Promise<IDomain.AuthWhoAmIOutput> {
     const usuario = accessContext.requestActor
       ? await this.usuarioService.usuarioFindById(accessContext, {
           id: accessContext.requestActor.id,
@@ -48,7 +49,7 @@ export class AutenticacaoService {
     };
   }
 
-  async login(accessContext: AccessContext, dto: LadesaTypings.AuthLoginOperationInput): Promise<LadesaTypings.AuthLoginOperationOutput["success"]> {
+  async login(accessContext: AccessContext, dto: IDomain.AuthLoginInput): Promise<IDomain.AuthLoginOutput["success"]> {
     if (accessContext.requestActor !== null) {
       throw new BadRequestException("Você não pode usar a rota de login caso já esteja logado.");
     }
@@ -80,7 +81,7 @@ export class AutenticacaoService {
     throw new ForbiddenException("Credenciais inválidas.");
   }
 
-  async refresh(_: AccessContext, dto: LadesaTypings.AuthRefreshOperationInput): Promise<LadesaTypings.AuthLoginOperationOutput["success"]> {
+  async refresh(_: AccessContext, dto: IDomain.AuthRefreshInput): Promise<IDomain.AuthLoginOutput["success"]> {
     let config: client.Configuration;
 
     try {
@@ -104,8 +105,8 @@ export class AutenticacaoService {
 
   async definirSenha(
     _accessContext: AccessContext,
-    dto: LadesaTypings.AuthCredentialsSetInitialPasswordOperationInput,
-  ): Promise<LadesaTypings.AuthCredentialsSetInitialPasswordOperationOutput["success"]> {
+    dto: IDomain.AuthCredentialsSetInitialPasswordInput,
+  ): Promise<IDomain.AuthCredentialsSetInitialPasswordOutput["success"]> {
     try {
       const kcAdminClient = await this.keycloakService.getAdminClient();
 
@@ -152,7 +153,7 @@ export class AutenticacaoService {
     }
   }
 
-  async recoverPassword(_accessContext: AccessContext | null, dto: LadesaTypings.AuthRecoverPasswordOperationInput) {
+  async recoverPassword(_accessContext: AccessContext | null, dto: IDomain.AuthRecoverPasswordInput) {
     const kcAdminClient = await this.keycloakService.getAdminClient();
 
     const [user] = await kcAdminClient.users.find({ email: dto.body.email }, { catchNotFound: true });

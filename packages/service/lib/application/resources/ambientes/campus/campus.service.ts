@@ -1,4 +1,5 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
+import { IDomain } from "@/domain/domain-contracts";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { get, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
@@ -32,9 +33,9 @@ export class CampusService {
 
   async campusFindAll(
     accessContext: AccessContext,
-    dto: LadesaTypings.CampusListOperationInput | null = null,
+    dto: IDomain.CampusListInput | null = null,
     selection?: string[] | boolean,
-  ): Promise<LadesaTypings.CampusListOperationOutput["success"]> {
+  ): Promise<IDomain.CampusListOutput["success"]> {
     // =========================================================
 
     const qb = this.campusRepository.createQueryBuilder(aliasCampus);
@@ -129,7 +130,7 @@ export class CampusService {
     return LadesaPaginatedResultDto(paginated);
   }
 
-  async campusFindById(accessContext: AccessContext, dto: LadesaTypings.CampusFindOneInputView, selection?: string[] | boolean): Promise<LadesaTypings.CampusFindOneResultView | null> {
+  async campusFindById(accessContext: AccessContext, dto: IDomain.CampusFindOneInput, selection?: string[] | boolean): Promise<IDomain.CampusFindOneOutput | null> {
     // =========================================================
 
     const qb = this.campusRepository.createQueryBuilder(aliasCampus);
@@ -156,7 +157,7 @@ export class CampusService {
     return campus;
   }
 
-  async campusFindByIdStrict(accessContext: AccessContext, dto: LadesaTypings.CampusFindOneInputView, selection?: string[] | boolean) {
+  async campusFindByIdStrict(accessContext: AccessContext, dto: IDomain.CampusFindOneInput, selection?: string[] | boolean) {
     const campus = await this.campusFindById(accessContext, dto, selection);
 
     if (!campus) {
@@ -166,7 +167,7 @@ export class CampusService {
     return campus;
   }
 
-  async campusFindByIdSimple(accessContext: AccessContext, id: LadesaTypings.CampusFindOneInputView["id"], selection?: string[] | boolean): Promise<LadesaTypings.CampusFindOneResultView | null> {
+  async campusFindByIdSimple(accessContext: AccessContext, id: IDomain.CampusFindOneInput["id"], selection?: string[] | boolean): Promise<IDomain.CampusFindOneOutput | null> {
     // =========================================================
 
     const qb = this.campusRepository.createQueryBuilder(aliasCampus);
@@ -193,7 +194,7 @@ export class CampusService {
     return campus;
   }
 
-  async campusFindByIdSimpleStrict(accessContext: AccessContext, id: LadesaTypings.CampusFindOneInputView["id"], selection?: string[] | boolean) {
+  async campusFindByIdSimpleStrict(accessContext: AccessContext, id: IDomain.CampusFindOneInput["id"], selection?: string[] | boolean) {
     const campus = await this.campusFindByIdSimple(accessContext, id, selection);
 
     if (!campus) {
@@ -205,7 +206,7 @@ export class CampusService {
 
   //
 
-  async campusCreate(accessContext: AccessContext, dto: LadesaTypings.CampusCreateOperationInput) {
+  async campusCreate(accessContext: AccessContext, dto: IDomain.CampusCreateInput) {
     // =========================================================
 
     await accessContext.ensurePermission("campus:create", { dto });
@@ -247,7 +248,7 @@ export class CampusService {
     return this.campusFindByIdStrict(accessContext, { id: campus.id });
   }
 
-  async campusUpdate(accessContext: AccessContext, dto: LadesaTypings.CampusUpdateOperationInput) {
+  async campusUpdate(accessContext: AccessContext, dto: IDomain.CampusUpdateInput) {
     // =========================================================
 
     const currentCampus = await this.campusFindByIdStrict(accessContext, {
@@ -345,7 +346,7 @@ export class CampusService {
 
   //
 
-  async campusDeleteOneById(accessContext: AccessContext, dto: LadesaTypings.CampusFindOneInputView) {
+  async campusDeleteOneById(accessContext: AccessContext, dto: IDomain.CampusFindOneInput) {
     // =========================================================
 
     await accessContext.ensurePermission("campus:delete", { dto }, dto.id, this.campusRepository.createQueryBuilder(aliasCampus));

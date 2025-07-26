@@ -1,4 +1,5 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
+import { IDomain } from "@/domain/domain-contracts";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { map } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
@@ -22,7 +23,7 @@ export class CidadeService {
 
   //
 
-  async findAll(accessContext: AccessContext, dto: LadesaTypings.CidadeListOperationInput | null = null, selection?: string[]) {
+  async findAll(accessContext: AccessContext, dto: IDomain.CidadeListInput | null = null, selection?: string[]) {
     // =========================================================
 
     const qb = this.cidadeRepository.createQueryBuilder("cidade");
@@ -78,7 +79,7 @@ export class CidadeService {
     return LadesaPaginatedResultDto(paginated);
   }
 
-  async findById(accessContext: AccessContext, dto: LadesaTypings.CidadeFindOneInputView, selection?: string[]) {
+  async findById(accessContext: AccessContext, dto: IDomain.CidadeFindOneInput, selection?: string[]) {
     // =========================================================
 
     const { cidadeRepository: baseCidadeRepository } = this.databaseContextService;
@@ -109,7 +110,7 @@ export class CidadeService {
     return cidade;
   }
 
-  async findByIdStrict(accessContext: AccessContext, dto: LadesaTypings.CidadeFindOneInputView, selection?: string[]) {
+  async findByIdStrict(accessContext: AccessContext, dto: IDomain.CidadeFindOneInput, selection?: string[]) {
     const cidade = await this.findById(accessContext, dto, selection);
 
     if (!cidade) {

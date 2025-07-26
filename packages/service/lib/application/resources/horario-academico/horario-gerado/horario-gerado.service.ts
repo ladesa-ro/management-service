@@ -1,4 +1,5 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
+import { IDomain } from "@/domain/domain-contracts";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
@@ -31,9 +32,9 @@ export class HorarioGeradoService {
 
   async horarioGeradoFindAll(
     accessContext: AccessContext,
-    dto: LadesaTypings.HorarioGeradoListOperationInput | null = null,
+    dto: IDomain.HorarioGeradoListInput | null = null,
     selection?: string[] | boolean,
-  ): Promise<LadesaTypings.HorarioGeradoListOperationOutput["success"]> {
+  ): Promise<IDomain.HorarioGeradoListOutput["success"]> {
     // =========================================================
 
     const qb = this.horarioGeradoRepository.createQueryBuilder(aliasHorarioGerado);
@@ -113,9 +114,9 @@ export class HorarioGeradoService {
 
   async horarioGeradoFindById(
     accessContext: AccessContext,
-    dto: LadesaTypings.HorarioGeradoFindOneInputView,
+    dto: IDomain.HorarioGeradoFindOneInput,
     selection?: string[] | boolean,
-  ): Promise<LadesaTypings.HorarioGeradoFindOneResultView | null> {
+  ): Promise<IDomain.HorarioGeradoFindOneOutput | null> {
     // =========================================================
 
     const qb = this.horarioGeradoRepository.createQueryBuilder(aliasHorarioGerado);
@@ -143,7 +144,7 @@ export class HorarioGeradoService {
     return horario;
   }
 
-  async horarioGeradoFindByIdStrict(accessContext: AccessContext, dto: LadesaTypings.HorarioGeradoFindOneInputView, selection?: string[] | boolean) {
+  async horarioGeradoFindByIdStrict(accessContext: AccessContext, dto: IDomain.HorarioGeradoFindOneInput, selection?: string[] | boolean) {
     const horario = await this.horarioGeradoFindById(accessContext, dto, selection);
 
     if (!horario) {
@@ -155,9 +156,9 @@ export class HorarioGeradoService {
 
   async horarioGeradoFindByIdSimple(
     accessContext: AccessContext,
-    id: LadesaTypings.HorarioGeradoFindOneInputView["id"],
+    id: IDomain.HorarioGeradoFindOneInput["id"],
     selection?: string[],
-  ): Promise<LadesaTypings.HorarioGeradoFindOneResultView | null> {
+  ): Promise<IDomain.HorarioGeradoFindOneOutput | null> {
     // =========================================================
 
     const qb = this.horarioGeradoRepository.createQueryBuilder(aliasHorarioGerado);
@@ -184,7 +185,7 @@ export class HorarioGeradoService {
     return horario;
   }
 
-  async horarioGeradoFindByIdSimpleStrict(accessContext: AccessContext, id: LadesaTypings.HorarioGeradoFindOneInputView["id"], selection?: string[]) {
+  async horarioGeradoFindByIdSimpleStrict(accessContext: AccessContext, id: IDomain.HorarioGeradoFindOneInput["id"], selection?: string[]) {
     const horarioGerado = await this.horarioGeradoFindByIdSimple(accessContext, id, selection);
 
     if (!horarioGerado) {
@@ -196,7 +197,7 @@ export class HorarioGeradoService {
 
   //
 
-  async horarioGeradoCreate(accessContext: AccessContext, dto: LadesaTypings.HorarioGeradoCreateOperationInput) {
+  async horarioGeradoCreate(accessContext: AccessContext, dto: IDomain.HorarioGeradoCreateInput) {
     // =========================================================
 
     await accessContext.ensurePermission("horario_gerado:create", { dto });
@@ -234,7 +235,7 @@ export class HorarioGeradoService {
     });
   }
 
-  async horarioGeradoUpdate(accessContext: AccessContext, dto: LadesaTypings.HorarioGeradoUpdateByIdOperationInput) {
+  async horarioGeradoUpdate(accessContext: AccessContext, dto: IDomain.HorarioGeradoUpdateByIdInput) {
     // =========================================================
 
     const currentHorarioGerado = await this.horarioGeradoFindByIdStrict(accessContext, {
@@ -280,7 +281,7 @@ export class HorarioGeradoService {
 
   //
 
-  async horarioGeradoDeleteOneById(accessContext: AccessContext, dto: LadesaTypings.HorarioGeradoFindOneInputView) {
+  async horarioGeradoDeleteOneById(accessContext: AccessContext, dto: IDomain.HorarioGeradoFindOneInput) {
     // =========================================================
 
     await accessContext.ensurePermission("horario_gerado:delete", { dto }, dto.id, this.horarioGeradoRepository.createQueryBuilder(aliasHorarioGerado));
