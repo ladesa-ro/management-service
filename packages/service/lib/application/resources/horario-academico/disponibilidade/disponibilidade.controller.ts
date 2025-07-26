@@ -2,10 +2,11 @@ import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Tokens } from "@ladesa-ro/especificacao";
 import { Controller, Delete, Get, Patch, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import { CombinedInput } from "@/application/standards";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { DisponibilidadeService } from "./disponibilidade.service";
+import { HttpOperationInput } from "@/application/standards-new/HttpOperation";
+import { IApiDoc } from "@/application/standards-new/openapi";
 
 @ApiTags("disponibilidades")
 @Controller("/disponibilidades")
@@ -33,7 +34,7 @@ export class DisponibilidadeController {
     @HttpOperationInput("DisponibilidadeFindById") dto: IApiDoc.operations["DisponibilidadeFindById"],
   ) {
     return this.disponibilidadeService.disponibilidadeFindByIdStrict(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 
@@ -68,7 +69,7 @@ export class DisponibilidadeController {
     @HttpOperationInput("DisponibilidadeDeleteOneById") dto: IApiDoc.operations["DisponibilidadeDeleteOneById"],
   ) {
     return this.disponibilidadeService.disponibilidadeDeleteOneById(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 

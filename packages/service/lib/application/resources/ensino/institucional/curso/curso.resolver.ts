@@ -1,10 +1,11 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Tokens } from "@ladesa-ro/especificacao";
 import { Resolver } from "@nestjs/graphql";
-import { CombinedInput } from "@/application/standards";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { CursoService } from "./curso.service";
+import { HttpOperationInput } from "@/application/standards-new/HttpOperation";
+import { IApiDoc } from "@/application/standards-new/openapi";
 
 @Resolver()
 export class CursoResolver {
@@ -14,54 +15,54 @@ export class CursoResolver {
   ) {}
 
   //
-  @Operation(Tokens.CursoList)
+  
   async cursoFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.CursoListOperationInput,
+    @HttpOperationInput("CursoFindAll") dto: IApiDoc.operations["CursoFindAll"],
   ) {
     return this.cursoService.cursoFindAll(accessContext, dto);
   }
 
   //
-  @Operation(Tokens.CursoFindOneById)
+  
   async cursoFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.CursoFindOneByIdOperationOutput,
+    @HttpOperationInput("CursoFindOneById") dto: IApiDoc.operations["CursoFindOneById"],
   ) {
     return this.cursoService.cursoFindByIdStrict(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 
   //
-  @Operation(Tokens.CursoCreate)
+  
   async cursoCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.CursoCreateOperationInput,
+    @HttpOperationInput("CursoCreate") dto: IApiDoc.operations["CursoCreate"],
   ) {
     return this.cursoService.cursoCreate(accessContext, dto);
   }
 
-  @Operation(Tokens.CursoUpdateOneById)
+  
   async cursoUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.CursoUpdateByIdOperationInput,
+    @HttpOperationInput("CursoUpdate") dto: IApiDoc.operations["CursoUpdate"],
   ) {
     return this.cursoService.cursoUpdate(accessContext, dto);
   }
 
-  @Operation(Tokens.CursoDeleteOneById)
+  
   async cursoDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.CursoDeleteByIdOperationInput,
+    @HttpOperationInput("CursoDeleteOneById") dto: IApiDoc.operations["CursoDeleteOneById"],
   ) {
     return this.cursoService.cursoDeleteOneById(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 }

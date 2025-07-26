@@ -1,67 +1,68 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Tokens } from "@ladesa-ro/especificacao";
 import { Resolver } from "@nestjs/graphql";
-import { CombinedInput } from "@/application/standards";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { DisponibilidadeDiaService } from "./disponibilidade-dia.service";
+import { HttpOperationInput } from "@/application/standards-new/HttpOperation";
+import { IApiDoc } from "@/application/standards-new/openapi";
 
 @Resolver()
 export class DisponibilidadeDiaResolver {
   constructor(private disponibilidadeDiaService: DisponibilidadeDiaService) {}
 
   //
-  @Operation(Tokens.DisponibilidadeDiaList)
+  
   async disponibilidadeDiaFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput()
-    dto: LadesaTypings.DisponibilidadeDiaListOperationInput,
+    
+    @HttpOperationInput("DisponibilidadeDiaFindAll") dto: IApiDoc.operations["DisponibilidadeDiaFindAll"],
   ) {
     return this.disponibilidadeDiaService.disponibilidadeDiaFindAll(accessContext, dto);
   }
 
   //
-  @Operation(Tokens.DisponibilidadeDiaFindOneById)
+  
   async disponibilidadeDiaFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput()
-    dto: LadesaTypings.DisponibilidadeDiaFindOneByIdOperationOutput,
+    
+    @HttpOperationInput("DisponibilidadeDiaFindOneById") dto: IApiDoc.operations["DisponibilidadeDiaFindOneById"],
   ) {
-    return this.disponibilidadeDiaService.disponibilidadeDiaFindByIdStrict(accessContext, { id: dto.params.id });
+    return this.disponibilidadeDiaService.disponibilidadeDiaFindByIdStrict(accessContext, { id: dto.parameters.path.id });
   }
 
   //
-  @Operation(Tokens.DisponibilidadeDiaCreate)
+  
   async disponibilidadeDiaCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput()
-    dto: LadesaTypings.DisponibilidadeDiaCreateOperationInput,
+    
+    @HttpOperationInput("DisponibilidadeDiaCreate") dto: IApiDoc.operations["DisponibilidadeDiaCreate"],
   ) {
     return this.disponibilidadeDiaService.disponibilidadeDiaCreate(accessContext, dto);
   }
 
   //
-  @Operation(Tokens.DisponibilidadeDiaUpdateOneById)
+  
   async disponibilidadeDiaUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput()
-    dto: LadesaTypings.DisponibilidadeDiaUpdateByIdOperationInput,
+    
+    @HttpOperationInput("DisponibilidadeDiaUpdate") dto: IApiDoc.operations["DisponibilidadeDiaUpdate"],
   ) {
     return this.disponibilidadeDiaService.disponibilidadeDiaUpdate(accessContext, dto);
   }
 
   //
-  @Operation(Tokens.DisponibilidadeDiaDeleteOneById)
+  
   async disponibilidadeDiaOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput()
-    dto: LadesaTypings.DisponibilidadeDiaDeleteByIdOperationInput,
+    
+    @HttpOperationInput("DisponibilidadeDiaOneById") dto: IApiDoc.operations["DisponibilidadeDiaOneById"],
   ) {
-    return this.disponibilidadeDiaService.disponibilidadeDiaDeleteOneById(accessContext, { id: dto.params.id });
+    return this.disponibilidadeDiaService.disponibilidadeDiaDeleteOneById(accessContext, { id: dto.parameters.path.id });
   }
 }

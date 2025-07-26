@@ -2,10 +2,12 @@ import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Tokens } from "@ladesa-ro/especificacao";
 import { Info as GqlInfo, Resolver as GqlResolver } from "@nestjs/graphql";
 import type { GraphQLResolveInfo } from "graphql";
-import { CombinedInput, graphqlExtractSelection } from "@/application/standards";
+import { graphqlExtractSelection } from "@/application/standards";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { OfertaFormacaoService } from "./oferta-formacao.service";
+import { HttpOperationInput } from "@/application/standards-new/HttpOperation";
+import { IApiDoc } from "@/application/standards-new/openapi";
 
 @GqlResolver()
 export class OfertaFormacaoResolver {
@@ -15,61 +17,61 @@ export class OfertaFormacaoResolver {
   ) {}
 
   //
-  @Operation(Tokens.OfertaFormacaoList)
+  
   async ofertaFormacaoFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.OfertaFormacaoListOperationInput,
+    @HttpOperationInput("OfertaFormacaoFindAll") dto: IApiDoc.operations["OfertaFormacaoFindAll"],
     @GqlInfo() info: GraphQLResolveInfo,
   ) {
     return this.ofertaFormacaoService.ofertaFormacaoFindAll(accessContext, dto, graphqlExtractSelection(info, "paginated"));
   }
 
   //
-  @Operation(Tokens.OfertaFormacaoFindOneById)
+  
   async ofertaFormacaoFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput()
-    dto: LadesaTypings.OfertaFormacaoFindOneByIdOperationOutput,
+    
+    @HttpOperationInput("OfertaFormacaoFindOneById") dto: IApiDoc.operations["OfertaFormacaoFindOneById"],
     @GqlInfo() info: GraphQLResolveInfo,
   ) {
     return this.ofertaFormacaoService.ofertaFormacaoFindByIdStrict(
       accessContext,
       {
-        id: dto.params.id,
+        id: dto.parameters.path.id,
       },
       ["id", ...graphqlExtractSelection(info)],
     );
   }
 
   //
-  @Operation(Tokens.OfertaFormacaoCreate)
+  
   async ofertaFormacaoCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.OfertaFormacaoCreateOperationInput,
+    @HttpOperationInput("OfertaFormacaoCreate") dto: IApiDoc.operations["OfertaFormacaoCreate"],
   ) {
     return this.ofertaFormacaoService.ofertaFormacaoCreate(accessContext, dto);
   }
 
-  @Operation(Tokens.OfertaFormacaoUpdateOneById)
+  
   async ofertaFormacaoUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.OfertaFormacaoUpdateByIdOperationInput,
+    @HttpOperationInput("OfertaFormacaoUpdate") dto: IApiDoc.operations["OfertaFormacaoUpdate"],
   ) {
     return this.ofertaFormacaoService.ofertaFormacaoUpdate(accessContext, dto);
   }
 
-  @Operation(Tokens.OfertaFormacaoDeleteOneById)
+  
   async ofertaFormacaoDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.OfertaFormacaoDeleteByIdOperationInput,
+    @HttpOperationInput("OfertaFormacaoDeleteOneById") dto: IApiDoc.operations["OfertaFormacaoDeleteOneById"],
   ) {
     return this.ofertaFormacaoService.ofertaFormacaoDeleteOneById(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 }

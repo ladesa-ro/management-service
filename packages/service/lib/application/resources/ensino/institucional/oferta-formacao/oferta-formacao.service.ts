@@ -225,12 +225,12 @@ export class OfertaFormacaoService {
     // =========================================================
 
     const currentOfertaFormacao = await this.ofertaFormacaoFindByIdStrict(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
 
     // =========================================================
 
-    await accessContext.ensurePermission("oferta_formacao:update", { dto }, dto.params.id, this.ofertaFormacaoRepository.createQueryBuilder(aliasOfertaFormacao));
+    await accessContext.ensurePermission("oferta_formacao:update", { dto }, dto.parameters.path.id, this.ofertaFormacaoRepository.createQueryBuilder(aliasOfertaFormacao));
 
     const dtoOfertaFormacao = pick(dto.body, ["nome", "slug"]);
 

@@ -192,12 +192,12 @@ export class ModalidadeService {
     // =========================================================
 
     const currentModalidade = await this.modalidadeFindByIdStrict(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
 
     // =========================================================
 
-    await accessContext.ensurePermission("modalidade:update", { dto }, dto.params.id, this.modalidadeRepository.createQueryBuilder(aliasModalidade));
+    await accessContext.ensurePermission("modalidade:update", { dto }, dto.parameters.path.id, this.modalidadeRepository.createQueryBuilder(aliasModalidade));
 
     const dtoModalidade = pick(dto.body, ["nome", "slug"]);
 

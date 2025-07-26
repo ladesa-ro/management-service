@@ -1,64 +1,65 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Tokens } from "@ladesa-ro/especificacao";
 import { Resolver } from "@nestjs/graphql";
-import { CombinedInput } from "@/application/standards";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { DiaCalendarioService } from "./dia-calendario.service";
+import { HttpOperationInput } from "@/application/standards-new/HttpOperation";
+import { IApiDoc } from "@/application/standards-new/openapi";
 
 @Resolver()
 export class DiaCalendarioResolver {
   constructor(private diaCalendarioService: DiaCalendarioService) {}
 
   //
-  @Operation(Tokens.DiaCalendarioList)
+  
   async diaCalendarioFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.DiaCalendarioListOperationInput,
+    @HttpOperationInput("DiaCalendarioFindAll") dto: IApiDoc.operations["DiaCalendarioFindAll"],
   ) {
     return this.diaCalendarioService.diaCalendarioFindAll(accessContext, dto);
   }
 
   //
-  @Operation(Tokens.DiaCalendarioFindOneById)
+  
   async diaCalendarioFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.DiaCalendarioFindOneByIdOperationOutput,
+    @HttpOperationInput("DiaCalendarioFindOneById") dto: IApiDoc.operations["DiaCalendarioFindOneById"],
   ) {
-    return this.diaCalendarioService.diaCalendarioFindByIdStrict(accessContext, { id: dto.params.id });
+    return this.diaCalendarioService.diaCalendarioFindByIdStrict(accessContext, { id: dto.parameters.path.id });
   }
 
   //
-  @Operation(Tokens.DiaCalendarioCreate)
+  
   async diaCalendarioCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.DiaCalendarioCreateOperationInput,
+    @HttpOperationInput("DiaCalendarioCreate") dto: IApiDoc.operations["DiaCalendarioCreate"],
   ) {
     return this.diaCalendarioService.diaCalendarioCreate(accessContext, dto);
   }
 
   //
-  @Operation(Tokens.DiaCalendarioUpdateOneById)
+  
   async diaCalendarioUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.DiaCalendarioUpdateByIdOperationInput,
+    @HttpOperationInput("DiaCalendarioUpdate") dto: IApiDoc.operations["DiaCalendarioUpdate"],
   ) {
     return this.diaCalendarioService.diaCalendarioUpdate(accessContext, dto);
   }
 
   //
-  @Operation(Tokens.DiaCalendarioDeleteOneById)
+  
   async diaCalendarioDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.DiaCalendarioDeleteByIdOperationInput,
+    @HttpOperationInput("DiaCalendarioDeleteOneById") dto: IApiDoc.operations["DiaCalendarioDeleteOneById"],
   ) {
     return this.diaCalendarioService.diaCalendarioDeleteOneById(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 }

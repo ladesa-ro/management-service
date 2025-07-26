@@ -1,64 +1,65 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Tokens } from "@ladesa-ro/especificacao";
 import { Resolver } from "@nestjs/graphql";
-import { CombinedInput } from "@/application/standards";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { HorarioGeradoAulaService } from "./horario-gerado-aula.service";
+import { HttpOperationInput } from "@/application/standards-new/HttpOperation";
+import { IApiDoc } from "@/application/standards-new/openapi";
 
 @Resolver()
 export class HorarioGeradoAulaResolver {
   constructor(private horarioGeradoAulaService: HorarioGeradoAulaService) {}
 
   //
-  @Operation(Tokens.HorarioGeradoAulaList)
+  
   async horarioGeradoAulaFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.HorarioGeradoAulaListOperationInput,
+    @HttpOperationInput("HorarioGeradoAulaFindAll") dto: IApiDoc.operations["HorarioGeradoAulaFindAll"],
   ) {
     return this.horarioGeradoAulaService.horarioGeradoAulaFindAll(accessContext, dto);
   }
 
   //
-  @Operation(Tokens.HorarioGeradoAulaFindOneById)
+  
   async horarioGeradoAulaFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.HorarioGeradoAulaFindByIdOperationOutput,
+    @HttpOperationInput("HorarioGeradoAulaFindOneById") dto: IApiDoc.operations["HorarioGeradoAulaFindOneById"],
   ) {
-    return this.horarioGeradoAulaService.horarioGeradoAulaFindByIdStrict(accessContext, { id: dto.params.id });
+    return this.horarioGeradoAulaService.horarioGeradoAulaFindByIdStrict(accessContext, { id: dto.parameters.path.id });
   }
 
   //
-  @Operation(Tokens.HorarioGeradoAulaCreate)
+  
   async horarioGeradoAulaCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.HorarioGeradoAulaCreateOperationInput,
+    @HttpOperationInput("HorarioGeradoAulaCreate") dto: IApiDoc.operations["HorarioGeradoAulaCreate"],
   ) {
     return this.horarioGeradoAulaService.HorarioGeradoAulaCreate(accessContext, dto);
   }
 
   //
-  @Operation(Tokens.HorarioGeradoAulaUpdateOneById)
+  
   async horarioGeradoAulaUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput()
-    dto: LadesaTypings.HorarioGeradoAulaUpdateByIdOperationInput,
+    
+    @HttpOperationInput("HorarioGeradoAulaUpdate") dto: IApiDoc.operations["HorarioGeradoAulaUpdate"],
   ) {
     return this.horarioGeradoAulaService.HorarioGeradoAulaUpdate(accessContext, dto);
   }
 
   //
-  @Operation(Tokens.HorarioGeradoAulaDeleteOneById)
+  
   async horarioGeradoAulaOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput()
-    dto: LadesaTypings.HorarioGeradoAulaDeleteByIdOperationInput,
+    
+    @HttpOperationInput("HorarioGeradoAulaOneById") dto: IApiDoc.operations["HorarioGeradoAulaOneById"],
   ) {
-    return this.horarioGeradoAulaService.horarioGeradoAulaDeleteOneById(accessContext, { id: dto.params.id });
+    return this.horarioGeradoAulaService.horarioGeradoAulaDeleteOneById(accessContext, { id: dto.parameters.path.id });
   }
 }

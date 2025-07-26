@@ -2,10 +2,12 @@ import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Tokens } from "@ladesa-ro/especificacao";
 import { Info as GqlInfo, Resolver as GqlResolver } from "@nestjs/graphql";
 import type { GraphQLResolveInfo } from "graphql";
-import { CombinedInput, graphqlExtractSelection } from "@/application/standards";
+import { graphqlExtractSelection } from "@/application/standards";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { ModalidadeService } from "./modalidade.service";
+import { HttpOperationInput } from "@/application/standards-new/HttpOperation";
+import { IApiDoc } from "@/application/standards-new/openapi";
 
 @GqlResolver()
 export class ModalidadeResolver {
@@ -15,54 +17,54 @@ export class ModalidadeResolver {
   ) {}
 
   //
-  @Operation(Tokens.ModalidadeList)
+  
   async modalidadeFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.ModalidadeListOperationInput,
+    @HttpOperationInput("ModalidadeFindAll") dto: IApiDoc.operations["ModalidadeFindAll"],
     @GqlInfo() info: GraphQLResolveInfo,
   ) {
     return this.modalidadeService.modalidadeFindAll(accessContext, dto, graphqlExtractSelection(info, "paginated"));
   }
 
   //
-  @Operation(Tokens.ModalidadeFindOneById)
+  
   async modalidadeFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.ModalidadeFindOneByIdOperationOutput,
+    @HttpOperationInput("ModalidadeFindOneById") dto: IApiDoc.operations["ModalidadeFindOneById"],
     @GqlInfo() info: GraphQLResolveInfo,
   ) {
-    return this.modalidadeService.modalidadeFindByIdStrict(accessContext, { id: dto.params.id }, ["id", ...graphqlExtractSelection(info)]);
+    return this.modalidadeService.modalidadeFindByIdStrict(accessContext, { id: dto.parameters.path.id }, ["id", ...graphqlExtractSelection(info)]);
   }
 
   //
-  @Operation(Tokens.ModalidadeCreate)
+  
   async modalidadeCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.ModalidadeCreateOperationInput,
+    @HttpOperationInput("ModalidadeCreate") dto: IApiDoc.operations["ModalidadeCreate"],
   ) {
     return this.modalidadeService.modalidadeCreate(accessContext, dto);
   }
 
-  @Operation(Tokens.ModalidadeUpdateOneById)
+  
   async modalidadeUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.ModalidadeUpdateByIdOperationInput,
+    @HttpOperationInput("ModalidadeUpdate") dto: IApiDoc.operations["ModalidadeUpdate"],
   ) {
     return this.modalidadeService.modalidadeUpdate(accessContext, dto);
   }
 
-  @Operation(Tokens.ModalidadeDeleteOneById)
+  
   async modalidadeDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.ModalidadeDeleteByIdOperationInput,
+    @HttpOperationInput("ModalidadeDeleteOneById") dto: IApiDoc.operations["ModalidadeDeleteOneById"],
   ) {
     return this.modalidadeService.modalidadeDeleteOneById(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 }

@@ -2,10 +2,11 @@ import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Tokens } from "@ladesa-ro/especificacao";
 import { Controller, Delete, Get, Patch, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import { CombinedInput } from "@/application/standards";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { NivelFormacaoService } from "./nivel-formacao.service";
+import { HttpOperationInput } from "@/application/standards-new/HttpOperation";
+import { IApiDoc } from "@/application/standards-new/openapi";
 
 @ApiTags("niveis-formacoes")
 @Controller("/niveis-formacoes")
@@ -32,7 +33,7 @@ export class NivelFormacaoController {
     @HttpOperationInput("NivelformacaoFindById") dto: IApiDoc.operations["NivelformacaoFindById"],
   ) {
     return this.nivelformacaoService.nivelFormacaoFindByIdStrict(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 
@@ -67,7 +68,7 @@ export class NivelFormacaoController {
     @HttpOperationInput("NivelformacaoDeleteOneById") dto: IApiDoc.operations["NivelformacaoDeleteOneById"],
   ) {
     return this.nivelformacaoService.nivelFormacaoDeleteOneById(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 

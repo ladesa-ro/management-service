@@ -1,58 +1,59 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Tokens } from "@ladesa-ro/especificacao";
 import { Resolver } from "@nestjs/graphql";
-import { CombinedInput } from "@/application/standards";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { DiarioProfessorService } from "./diario-professor.service";
+import { HttpOperationInput } from "@/application/standards-new/HttpOperation";
+import { IApiDoc } from "@/application/standards-new/openapi";
 
 @Resolver()
 export class DiarioProfessorResolver {
   constructor(private diarioProfessorService: DiarioProfessorService) {}
 
-  @Operation(Tokens.DiarioProfessorList)
+  
   async diarioProfessorFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.DiarioProfessorListOperationInput,
+    @HttpOperationInput("DiarioProfessorFindAll") dto: IApiDoc.operations["DiarioProfessorFindAll"],
   ) {
     return this.diarioProfessorService.diarioProfessorFindAll(accessContext, dto);
   }
 
-  @Operation(Tokens.DiarioProfessorFindOneById)
+  
   async diarioProfessorFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput()
-    dto: LadesaTypings.DiarioProfessorFindOneByIdOperationOutput,
+    
+    @HttpOperationInput("DiarioProfessorFindOneById") dto: IApiDoc.operations["DiarioProfessorFindOneById"],
   ) {
-    return this.diarioProfessorService.diarioProfessorFindByIdStrict(accessContext, { id: dto.params.id });
+    return this.diarioProfessorService.diarioProfessorFindByIdStrict(accessContext, { id: dto.parameters.path.id });
   }
 
-  @Operation(Tokens.DiarioProfessorCreate)
+  
   async diarioProfessorCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.DiarioProfessorCreateOperationInput,
+    @HttpOperationInput("DiarioProfessorCreate") dto: IApiDoc.operations["DiarioProfessorCreate"],
   ) {
     return this.diarioProfessorService.diarioProfessorCreate(accessContext, dto);
   }
 
-  @Operation(Tokens.DiarioProfessorUpdateOneById)
+  
   async diarioProfessorUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.DiarioProfessorUpdateByIdOperationInput,
+    @HttpOperationInput("DiarioProfessorUpdate") dto: IApiDoc.operations["DiarioProfessorUpdate"],
   ) {
     return this.diarioProfessorService.diarioProfessorUpdate(accessContext, dto);
   }
 
-  @Operation(Tokens.DiarioProfessorDeleteOneById)
+  
   async diarioProfessorDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.DiarioProfessorDeleteByIdOperationInput,
+    @HttpOperationInput("DiarioProfessorDeleteOneById") dto: IApiDoc.operations["DiarioProfessorDeleteOneById"],
   ) {
-    return this.diarioProfessorService.diarioProfessorDeleteOneById(accessContext, { id: dto.params.id });
+    return this.diarioProfessorService.diarioProfessorDeleteOneById(accessContext, { id: dto.parameters.path.id });
   }
 }

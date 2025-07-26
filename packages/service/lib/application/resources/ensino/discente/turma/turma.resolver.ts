@@ -1,10 +1,11 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Tokens } from "@ladesa-ro/especificacao";
 import { Resolver } from "@nestjs/graphql";
-import { CombinedInput } from "@/application/standards";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { TurmaService } from "./turma.service";
+import { HttpOperationInput } from "@/application/standards-new/HttpOperation";
+import { IApiDoc } from "@/application/standards-new/openapi";
 
 @Resolver()
 export class TurmaResolver {
@@ -14,54 +15,54 @@ export class TurmaResolver {
   ) {}
 
   //
-  @Operation(Tokens.TurmaList)
+  
   async turmaFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.TurmaListOperationInput,
+    @HttpOperationInput("TurmaFindAll") dto: IApiDoc.operations["TurmaFindAll"],
   ) {
     return this.turmaService.turmaFindAll(accessContext, dto);
   }
 
   //
-  @Operation(Tokens.TurmaFindOneById)
+  
   async turmaFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.TurmaFindOneByIdOperationOutput,
+    @HttpOperationInput("TurmaFindOneById") dto: IApiDoc.operations["TurmaFindOneById"],
   ) {
     return this.turmaService.turmaFindByIdStrict(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 
   //
-  @Operation(Tokens.TurmaCreate)
+  
   async turmaCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.TurmaCreateOperationInput,
+    @HttpOperationInput("TurmaCreate") dto: IApiDoc.operations["TurmaCreate"],
   ) {
     return this.turmaService.turmaCreate(accessContext, dto);
   }
 
-  @Operation(Tokens.TurmaUpdateOneById)
+  
   async turmaUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.TurmaUpdateByIdOperationInput,
+    @HttpOperationInput("TurmaUpdate") dto: IApiDoc.operations["TurmaUpdate"],
   ) {
     return this.turmaService.turmaUpdate(accessContext, dto);
   }
 
-  @Operation(Tokens.TurmaDeleteOneById)
+  
   async turmaDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.TurmaFindOneByIdOperationOutput,
+    @HttpOperationInput("TurmaDeleteOneById") dto: IApiDoc.operations["TurmaDeleteOneById"],
   ) {
     return this.turmaService.turmaDeleteOneById(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 }

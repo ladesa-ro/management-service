@@ -200,12 +200,12 @@ export class NivelFormacaoService {
     // =========================================================
 
     const currentNivelFormacao = await this.nivelFormacaoFindByIdStrict(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
 
     // =========================================================
 
-    await accessContext.ensurePermission("nivel_formacao:update", { dto }, dto.params.id, this.nivelFormacaoRepository.createQueryBuilder(aliasNivelFormacao));
+    await accessContext.ensurePermission("nivel_formacao:update", { dto }, dto.parameters.path.id, this.nivelFormacaoRepository.createQueryBuilder(aliasNivelFormacao));
 
     const dtoNivelFormacao = pick(dto.body, ["slug"]);
 

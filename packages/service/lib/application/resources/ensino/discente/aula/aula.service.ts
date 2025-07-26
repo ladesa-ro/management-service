@@ -235,12 +235,12 @@ export class AulaService {
     // =========================================================
 
     const currentAula = await this.aulaFindByIdStrict(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
 
     // =========================================================
 
-    await accessContext.ensurePermission("aula:update", { dto }, dto.params.id, this.aulaRepository.createQueryBuilder(aliasAula));
+    await accessContext.ensurePermission("aula:update", { dto }, dto.parameters.path.id, this.aulaRepository.createQueryBuilder(aliasAula));
 
     const dtoAula = pick(dto.body, ["formato", "data", "intervaloDeTempo", "diario", "ambiente"]);
 

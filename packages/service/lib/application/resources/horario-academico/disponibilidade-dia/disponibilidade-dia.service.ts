@@ -245,12 +245,12 @@ export class DisponibilidadeDiaService {
     // =========================================================
 
     const currentDisponibilidadeDia = await this.disponibilidadeDiaFindByIdStrict(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
 
     // =========================================================
 
-    await accessContext.ensurePermission("disponibilidade_dia:update", { dto }, dto.params.id, this.disponibilidadeDiaRepository.createQueryBuilder(aliasDisponibilidadeDia));
+    await accessContext.ensurePermission("disponibilidade_dia:update", { dto }, dto.parameters.path.id, this.disponibilidadeDiaRepository.createQueryBuilder(aliasDisponibilidadeDia));
 
     const dtoDisponibilidadeDia = pick(dto.body, ["diaSemanaIso", "aulasSeguidas", "dataInicio", "dataFim"]);
 

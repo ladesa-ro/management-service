@@ -1,11 +1,10 @@
-import * as LadesaTypings from "@ladesa-ro/especificacao";
-import { Tokens } from "@ladesa-ro/especificacao";
 import { Info as GqlInfo, Resolver as GqlResolver } from "@nestjs/graphql";
 import type { GraphQLResolveInfo } from "graphql";
-import { CombinedInput, graphqlExtractSelection } from "@/application/standards";
-import { Operation } from "@/application/standards/especificacao/business-logic";
+import { graphqlExtractSelection } from "@/application/standards";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { AmbienteService } from "./ambiente.service";
+import { HttpOperationInput } from "@/application/standards-new/HttpOperation";
+import type { IApiDoc } from "@/application/standards-new/openapi";
 
 @GqlResolver()
 export class AmbienteResolver {
@@ -15,55 +14,55 @@ export class AmbienteResolver {
   ) {}
 
   //
-  @Operation(Tokens.AmbienteList)
+  
   async ambienteFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.AmbienteListOperationInput,
+    @HttpOperationInput("AmbienteList") dto: IApiDoc.operations["AmbienteList"],
     @GqlInfo() info: GraphQLResolveInfo,
   ) {
     return this.ambienteService.ambienteFindAll(accessContext, dto, graphqlExtractSelection(info, "paginated"));
   }
 
   //
-  @Operation(Tokens.AmbienteFindOneById)
+  
   async ambienteFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.AmbienteFindOneByIdOperationOutput,
+    @HttpOperationInput("AmbienteFindOneById") dto: IApiDoc.operations["AmbienteFindOneById"],
   ) {
     return this.ambienteService.ambienteFindByIdStrict(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 
   //
-  @Operation(Tokens.AmbienteCreate)
+  
   async ambienteCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.AmbienteCreateOperationInput,
+    @HttpOperationInput("AmbienteCreate") dto: IApiDoc.operations["AmbienteCreate"],
   ) {
     return this.ambienteService.ambienteCreate(accessContext, dto);
   }
 
-  @Operation(Tokens.AmbienteUpdateOneById)
+  
   async ambienteUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.AmbienteUpdateByIdOperationInput,
+    @HttpOperationInput("AmbienteUpdate") dto: IApiDoc.operations["AmbienteUpdate"],
   ) {
     return this.ambienteService.ambienteUpdate(accessContext, dto);
   }
 
-  @Operation(Tokens.AmbienteDeleteOneById)
+  
   async ambienteDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.AmbienteDeleteByIdOperationInput,
+    @HttpOperationInput("AmbienteDeleteOneById") dto: IApiDoc.operations["AmbienteDeleteOneById"],
   ) {
     return this.ambienteService.ambienteDeleteOneById(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 }

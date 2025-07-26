@@ -1,66 +1,67 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Tokens } from "@ladesa-ro/especificacao";
 import { Resolver } from "@nestjs/graphql";
-import { CombinedInput } from "@/application/standards";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { EventoService } from "./evento.service";
+import { HttpOperationInput } from "@/application/standards-new/HttpOperation";
+import { IApiDoc } from "@/application/standards-new/openapi";
 
 @Resolver()
 export class EventoResolver {
   constructor(private eventoService: EventoService) {}
 
   //
-  @Operation(Tokens.EventoList)
+  
   async eventoFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.EventoListOperationInput,
+    @HttpOperationInput("EventoFindAll") dto: IApiDoc.operations["EventoFindAll"],
   ) {
     return this.eventoService.eventoFindAll(accessContext, dto);
   }
 
   //
-  @Operation(Tokens.EventoFindOneById)
+  
   async eventoFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.EventoFindOneByIdOperationOutput,
+    @HttpOperationInput("EventoFindOneById") dto: IApiDoc.operations["EventoFindOneById"],
   ) {
     return this.eventoService.eventoFindByIdStrict(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 
   //
-  @Operation(Tokens.EventoCreate)
+  
   async eventoCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.EventoCreateOperationInput,
+    @HttpOperationInput("EventoCreate") dto: IApiDoc.operations["EventoCreate"],
   ) {
     return this.eventoService.eventoCreate(accessContext, dto);
   }
 
   //
-  @Operation(Tokens.EventoUpdateOneById)
+  
   async eventoUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.EventoUpdateByIdOperationInput,
+    @HttpOperationInput("EventoUpdate") dto: IApiDoc.operations["EventoUpdate"],
   ) {
     return this.eventoService.eventoUpdate(accessContext, dto);
   }
 
   //
-  @Operation(Tokens.EventoDeleteOneById)
+  
   async eventoDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.EventoDeleteByIdOperationInput,
+    @HttpOperationInput("EventoDeleteOneById") dto: IApiDoc.operations["EventoDeleteOneById"],
   ) {
     return this.eventoService.eventoDeleteOneById(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 }

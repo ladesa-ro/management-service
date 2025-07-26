@@ -210,12 +210,12 @@ export class DisciplinaService {
     // =========================================================
 
     const currentDisciplina = await this.disciplinaFindByIdStrict(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
 
     // =========================================================
 
-    await accessContext.ensurePermission("disciplina:update", { dto }, dto.params.id, this.disciplinaRepository.createQueryBuilder(aliasDisciplina));
+    await accessContext.ensurePermission("disciplina:update", { dto }, dto.parameters.path.id, this.disciplinaRepository.createQueryBuilder(aliasDisciplina));
 
     const dtoDisciplina = pick(dto.body, ["nome", "nomeAbreviado", "cargaHoraria"]);
 

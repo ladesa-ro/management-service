@@ -238,12 +238,12 @@ export class HorarioGeradoService {
     // =========================================================
 
     const currentHorarioGerado = await this.horarioGeradoFindByIdStrict(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
 
     // =========================================================
 
-    await accessContext.ensurePermission("horario_gerado:update", { dto }, dto.params.id, this.horarioGeradoRepository.createQueryBuilder(aliasHorarioGerado));
+    await accessContext.ensurePermission("horario_gerado:update", { dto }, dto.parameters.path.id, this.horarioGeradoRepository.createQueryBuilder(aliasHorarioGerado));
 
     const dtoHorarioGerado = pick(dto.body, ["status", "tipo", "dataGeracao", "vigenciaInicio", "vigenciaFim"]);
 

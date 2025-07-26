@@ -1,10 +1,11 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Tokens } from "@ladesa-ro/especificacao";
 import { Resolver as GqlResolver } from "@nestjs/graphql";
-import { CombinedInput } from "@/application/standards";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { PerfilService } from "./perfil.service";
+import { HttpOperationInput } from "@/application/standards-new/HttpOperation";
+import { IApiDoc } from "@/application/standards-new/openapi";
 
 @GqlResolver()
 export class PerfilResolver {
@@ -15,20 +16,20 @@ export class PerfilResolver {
 
   //
 
-  @Operation(Tokens.PerfilList)
+  
   async vinculoFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.PerfilListOperationInput,
+    @HttpOperationInput("VinculoFindAll") dto: IApiDoc.operations["VinculoFindAll"],
   ) {
     return this.perfilService.perfilFindAll(accessContext, dto);
   }
 
-  @Operation(Tokens.PerfilUpdateOneById)
+  
   async vinculoSetVinculos(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.PerfilUpdateOperationInput,
+    @HttpOperationInput("VinculoSetVinculos") dto: IApiDoc.operations["VinculoSetVinculos"],
   ) {
     return this.perfilService.perfilSetVinculos(accessContext, dto);
   }

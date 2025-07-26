@@ -1,10 +1,11 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Tokens } from "@ladesa-ro/especificacao";
 import { Resolver } from "@nestjs/graphql";
-import { CombinedInput } from "@/application/standards";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { BlocoService } from "./bloco.service";
+import { HttpOperationInput } from "@/application/standards-new/HttpOperation";
+import { IApiDoc } from "@/application/standards-new/openapi";
 
 @Resolver()
 export class BlocoResolver {
@@ -15,54 +16,54 @@ export class BlocoResolver {
 
   //
 
-  @Operation(Tokens.BlocoList)
+  
   async blocoFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.BlocoListOperationInput,
+    @HttpOperationInput("BlocoFindAll") dto: IApiDoc.operations["BlocoFindAll"],
   ) {
     return this.blocoService.blocoFindAll(accessContext, dto);
   }
 
   //
-  @Operation(Tokens.BlocoFindOneById)
+  
   async blocoFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.BlocoFindOneByIdOperationOutput,
+    @HttpOperationInput("BlocoFindOneById") dto: IApiDoc.operations["BlocoFindOneById"],
   ) {
     return this.blocoService.blocoFindByIdStrict(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 
   //
-  @Operation(Tokens.BlocoCreate)
+  
   async blocoCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.BlocoCreateOperationInput,
+    @HttpOperationInput("BlocoCreate") dto: IApiDoc.operations["BlocoCreate"],
   ) {
     return this.blocoService.blocoCreate(accessContext, dto);
   }
 
-  @Operation(Tokens.BlocoUpdateOneById)
+  
   async blocoUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.BlocoUpdateByIdOperationInput,
+    @HttpOperationInput("BlocoUpdate") dto: IApiDoc.operations["BlocoUpdate"],
   ) {
     return this.blocoService.blocoUpdate(accessContext, dto);
   }
 
-  @Operation(Tokens.BlocoDeleteOneById)
+  
   async blocoDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.BlocoDeleteByIdOperationInput,
+    @HttpOperationInput("BlocoDeleteOneById") dto: IApiDoc.operations["BlocoDeleteOneById"],
   ) {
     return this.blocoService.blocoDeleteOneById(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 }

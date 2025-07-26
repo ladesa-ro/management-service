@@ -229,12 +229,12 @@ export class DiaCalendarioService {
     // =========================================================
 
     const currentDiaCalendario = await this.diaCalendarioFindByIdStrict(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
 
     // =========================================================
 
-    await accessContext.ensurePermission("dia_calendario:update", { dto }, dto.params.id, this.diaCalendarioRepository.createQueryBuilder(aliasDiaCalendario));
+    await accessContext.ensurePermission("dia_calendario:update", { dto }, dto.parameters.path.id, this.diaCalendarioRepository.createQueryBuilder(aliasDiaCalendario));
 
     const dtoDiaCalendario = pick(dto.body, ["data", "dia_letivo", "feriado"]) as Pick<typeof dto.body, "data" | "diaLetivo" | "feriado">;
 

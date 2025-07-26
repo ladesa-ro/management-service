@@ -248,12 +248,12 @@ export class GradeHorarioOfertaFormacaoService {
     // =========================================================
 
     const currentGradeHorarioOfertaFormacao = await this.gradeHorarioOfertaFormacaoFindByIdStrict(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
 
     // =========================================================
 
-    await accessContext.ensurePermission("grade_horario_oferta_formacao:update", { dto }, dto.params.id, this.gradeHorarioOfertaFormacaoRepository.createQueryBuilder(aliasGradeHorarioOfertaFormacao));
+    await accessContext.ensurePermission("grade_horario_oferta_formacao:update", { dto }, dto.parameters.path.id, this.gradeHorarioOfertaFormacaoRepository.createQueryBuilder(aliasGradeHorarioOfertaFormacao));
 
     const dtoGradeHorarioOfertaFormacao = pick(dto.body, ["nome", "slug"]);
 

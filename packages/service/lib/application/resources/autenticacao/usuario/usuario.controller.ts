@@ -2,10 +2,11 @@ import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Tokens } from "@ladesa-ro/especificacao";
 import { Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post, Put, UploadedFile } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import { CombinedInput } from "@/application/standards";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { UsuarioService } from "./usuario.service";
+import { HttpOperationInput } from "@/application/standards-new/HttpOperation";
+import { IApiDoc } from "@/application/standards-new/openapi";
 
 @Controller("/usuarios")
 @ApiTags("usuarios")
@@ -32,7 +33,7 @@ export class UsuarioController {
     @HttpOperationInput("UsuarioFindById") dto: IApiDoc.operations["UsuarioFindById"],
   ) {
     return this.usuarioService.usuarioFindByIdStrict(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 
@@ -62,7 +63,7 @@ export class UsuarioController {
     @AccessContextHttp() accessContext: AccessContext,
     @HttpOperationInput("UsuarioGetImagemCapa") dto: IApiDoc.operations["UsuarioGetImagemCapa"],
   ) {
-    return this.usuarioService.usuarioGetImagemCapa(accessContext, dto.params.id);
+    return this.usuarioService.usuarioGetImagemCapa(accessContext, dto.parameters.path.id);
   }
 
   @Put("/:id/imagem/capa")
@@ -82,7 +83,7 @@ export class UsuarioController {
     @AccessContextHttp() accessContext: AccessContext,
     @HttpOperationInput("UsuarioGetImagemPerfil") dto: IApiDoc.operations["UsuarioGetImagemPerfil"],
   ) {
-    return this.usuarioService.usuarioGetImagemPerfil(accessContext, dto.params.id);
+    return this.usuarioService.usuarioGetImagemPerfil(accessContext, dto.parameters.path.id);
   }
 
   @Put("/:id/imagem/perfil")
@@ -103,7 +104,7 @@ export class UsuarioController {
     @HttpOperationInput("UsuarioDeleteOneById") dto: IApiDoc.operations["UsuarioDeleteOneById"],
   ) {
     return this.usuarioService.usuarioDeleteOneById(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 

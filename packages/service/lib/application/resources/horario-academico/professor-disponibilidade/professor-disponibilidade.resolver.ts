@@ -2,10 +2,12 @@ import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Tokens } from "@ladesa-ro/especificacao";
 import { Info as GqlInfo, Resolver as GqlResolver } from "@nestjs/graphql";
 import type { GraphQLResolveInfo } from "graphql";
-import { CombinedInput, graphqlExtractSelection } from "@/application/standards";
+import { graphqlExtractSelection } from "@/application/standards";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { ProfessorDisponibilidadeService } from "./professor-disponibilidade.service";
+import { HttpOperationInput } from "@/application/standards-new/HttpOperation";
+import { IApiDoc } from "@/application/standards-new/openapi";
 
 @GqlResolver()
 export class ProfessorDisponibilidadeResolver {
@@ -15,65 +17,65 @@ export class ProfessorDisponibilidadeResolver {
   ) {}
 
   //
-  @Operation(Tokens.ProfessorDisponibilidadeList)
+  
   async professorDisponibilidadeFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput()
-    dto: LadesaTypings.ProfessorDisponibilidadeListOperationInput,
+    
+    @HttpOperationInput("ProfessorDisponibilidadeFindAll") dto: IApiDoc.operations["ProfessorDisponibilidadeFindAll"],
     @GqlInfo() info: GraphQLResolveInfo,
   ) {
     return this.professorDisponibilidadeService.professorDisponibilidadeFindAll(accessContext, dto, graphqlExtractSelection(info, "paginated"));
   }
 
   //
-  @Operation(Tokens.ProfessorDisponibilidadeFindOneById)
+  
   async professorDisponibilidadeFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput()
-    dto: LadesaTypings.ProfessorDisponibilidadeFindOneByIdOperationOutput,
+    
+    @HttpOperationInput("ProfessorDisponibilidadeFindOneById") dto: IApiDoc.operations["ProfessorDisponibilidadeFindOneById"],
     @GqlInfo() info: GraphQLResolveInfo,
   ) {
     return this.professorDisponibilidadeService.professorDisponibilidadeFindByIdStrict(
       accessContext,
       {
-        id: dto.params.id,
+        id: dto.parameters.path.id,
       },
       ["id", ...graphqlExtractSelection(info)],
     );
   }
 
   //
-  @Operation(Tokens.ProfessorDisponibilidadeCreate)
+  
   async professorDisponibilidadeCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput()
-    dto: LadesaTypings.ProfessorDisponibilidadeCreateOperationInput,
+    
+    @HttpOperationInput("ProfessorDisponibilidadeCreate") dto: IApiDoc.operations["ProfessorDisponibilidadeCreate"],
   ) {
     return this.professorDisponibilidadeService.professorDisponibilidadeCreate(accessContext, dto);
   }
 
-  @Operation(Tokens.ProfessorDisponibilidadeUpdateOneById)
+  
   async professorDisponibilidadeUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput()
-    dto: LadesaTypings.ProfessorDisponibilidadeUpdateByIdOperationInput,
+    
+    @HttpOperationInput("ProfessorDisponibilidadeUpdate") dto: IApiDoc.operations["ProfessorDisponibilidadeUpdate"],
   ) {
     return this.professorDisponibilidadeService.professorDisponibilidadeUpdate(accessContext, dto);
   }
 
-  @Operation(Tokens.ProfessorDisponibilidadeDeleteOneById)
+  
   async professorDisponibilidadeDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput()
-    dto: LadesaTypings.ProfessorDisponibilidadeDeleteByIdOperationInput,
+    
+    @HttpOperationInput("ProfessorDisponibilidadeDeleteOneById") dto: IApiDoc.operations["ProfessorDisponibilidadeDeleteOneById"],
   ) {
     return this.professorDisponibilidadeService.professorDisponibilidadeDeleteOneById(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 }

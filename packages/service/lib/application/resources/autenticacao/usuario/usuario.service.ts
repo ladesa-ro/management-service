@@ -371,7 +371,7 @@ export class UsuarioService {
     // =========================================================
 
     const currentUsuario = await this.usuarioFindByIdStrict(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
 
     const currentMatriculaSiape = currentUsuario.matriculaSiape ?? (await this.internalResolveMatriculaSiape(currentUsuario.id));
@@ -384,11 +384,11 @@ export class UsuarioService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("usuario:update", { dto }, dto.params.id, this.usuarioRepository.createQueryBuilder(aliasUsuario));
+    await accessContext.ensurePermission("usuario:update", { dto }, dto.parameters.path.id, this.usuarioRepository.createQueryBuilder(aliasUsuario));
 
     const input = pick(dto.body, ["nome", "matriculaSiape", "email"]);
 
-    await this.ensureDtoAvailability(input, dto.params.id);
+    await this.ensureDtoAvailability(input, dto.parameters.path.id);
 
     const usuario = {
       id: currentUsuario.id,

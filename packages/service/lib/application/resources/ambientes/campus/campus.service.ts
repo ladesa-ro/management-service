@@ -251,12 +251,12 @@ export class CampusService {
     // =========================================================
 
     const currentCampus = await this.campusFindByIdStrict(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
 
     // =========================================================
 
-    await accessContext.ensurePermission("campus:update", { dto }, dto.params.id, this.campusRepository.createQueryBuilder(aliasCampus));
+    await accessContext.ensurePermission("campus:update", { dto }, dto.parameters.path.id, this.campusRepository.createQueryBuilder(aliasCampus));
 
     const campus = await this.databaseContext.transaction(async ({ databaseContext: { campusRepository } }) => {
       const dtoCampus = pick(dto.body, ["nomeFantasia", "razaoSocial", "apelido", "cnpj"]);

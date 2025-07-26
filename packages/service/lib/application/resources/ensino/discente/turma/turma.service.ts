@@ -258,12 +258,12 @@ export class TurmaService {
     // =========================================================
 
     const currentTurma = await this.turmaFindByIdStrict(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
 
     // =========================================================
 
-    await accessContext.ensurePermission("turma:update", { dto }, dto.params.id, this.turmaRepository.createQueryBuilder(aliasTurma));
+    await accessContext.ensurePermission("turma:update", { dto }, dto.parameters.path.id, this.turmaRepository.createQueryBuilder(aliasTurma));
 
     const dtoTurma = pick(dto.body, ["periodo"]);
 

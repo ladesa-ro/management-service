@@ -1,10 +1,11 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Tokens } from "@ladesa-ro/especificacao";
 import { Resolver } from "@nestjs/graphql";
-import { CombinedInput } from "@/application/standards";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { ReservaService } from "./reserva.service";
+import { HttpOperationInput } from "@/application/standards-new/HttpOperation";
+import { IApiDoc } from "@/application/standards-new/openapi";
 
 @Resolver()
 export class ReservaResolver {
@@ -14,54 +15,54 @@ export class ReservaResolver {
   ) {}
 
   //
-  @Operation(Tokens.ReservaList)
+  
   async reservaFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.ReservaListOperationInput,
+    @HttpOperationInput("ReservaFindAll") dto: IApiDoc.operations["ReservaFindAll"],
   ) {
     return this.reservaService.reservaFindAll(accessContext, dto);
   }
 
   //
-  @Operation(Tokens.ReservaFindOneById)
+  
   async reservaFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.ReservaFindOneByIdOperationOutput,
+    @HttpOperationInput("ReservaFindOneById") dto: IApiDoc.operations["ReservaFindOneById"],
   ) {
     return this.reservaService.reservaFindByIdStrict(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 
   //
-  @Operation(Tokens.ReservaCreate)
+  
   async reservaCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.ReservaCreateOperationInput,
+    @HttpOperationInput("ReservaCreate") dto: IApiDoc.operations["ReservaCreate"],
   ) {
     return this.reservaService.reservaCreate(accessContext, dto);
   }
 
-  @Operation(Tokens.ReservaUpdateOneById)
+  
   async reservaUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.ReservaUpdateByIdOperationInput,
+    @HttpOperationInput("ReservaUpdate") dto: IApiDoc.operations["ReservaUpdate"],
   ) {
     return this.reservaService.reservaUpdate(accessContext, dto);
   }
 
-  @Operation(Tokens.ReservaDeleteOneById)
+  
   async reservaDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.ReservaDeleteByIdOperationInput,
+    @HttpOperationInput("ReservaDeleteOneById") dto: IApiDoc.operations["ReservaDeleteOneById"],
   ) {
     return this.reservaService.reservaDeleteOneById(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 }

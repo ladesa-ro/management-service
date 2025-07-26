@@ -2,10 +2,12 @@ import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Tokens } from "@ladesa-ro/especificacao";
 import { Info as GqlInfo, Resolver as GqlResolver } from "@nestjs/graphql";
 import type { GraphQLResolveInfo } from "graphql";
-import { CombinedInput, graphqlExtractSelection } from "@/application/standards";
+import { graphqlExtractSelection } from "@/application/standards";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { NivelFormacaoService } from "./nivel-formacao.service";
+import { HttpOperationInput } from "@/application/standards-new/HttpOperation";
+import { IApiDoc } from "@/application/standards-new/openapi";
 
 @GqlResolver()
 export class NivelFormacaoResolver {
@@ -15,54 +17,54 @@ export class NivelFormacaoResolver {
   ) {}
 
   //
-  @Operation(Tokens.NivelFormacaoList)
+  
   async nivelFormacaoFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.NivelFormacaoListOperationInput,
+    @HttpOperationInput("NivelFormacaoFindAll") dto: IApiDoc.operations["NivelFormacaoFindAll"],
     @GqlInfo() info: GraphQLResolveInfo,
   ) {
     return this.nivelFormacaoService.nivelFormacaoFindAll(accessContext, dto, graphqlExtractSelection(info, "paginated"));
   }
 
   //
-  @Operation(Tokens.NivelFormacaoFindOneById)
+  
   async nivelFormacaoFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.NivelFormacaoFindOneByIdOperationOutput,
+    @HttpOperationInput("NivelFormacaoFindOneById") dto: IApiDoc.operations["NivelFormacaoFindOneById"],
     @GqlInfo() info: GraphQLResolveInfo,
   ) {
-    return this.nivelFormacaoService.nivelFormacaoFindByIdStrict(accessContext, { id: dto.params.id }, ["id", ...graphqlExtractSelection(info)]);
+    return this.nivelFormacaoService.nivelFormacaoFindByIdStrict(accessContext, { id: dto.parameters.path.id }, ["id", ...graphqlExtractSelection(info)]);
   }
 
   //
-  @Operation(Tokens.NivelFormacaoCreate)
+  
   async nivelFormacaoCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.NivelFormacaoCreateOperationInput,
+    @HttpOperationInput("NivelFormacaoCreate") dto: IApiDoc.operations["NivelFormacaoCreate"],
   ) {
     return this.nivelFormacaoService.nivelFormacaoCreate(accessContext, dto);
   }
 
-  @Operation(Tokens.NivelFormacaoUpdateOneById)
+  
   async nivelFormacaoUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.NivelFormacaoUpdateByIdOperationInput,
+    @HttpOperationInput("NivelFormacaoUpdate") dto: IApiDoc.operations["NivelFormacaoUpdate"],
   ) {
     return this.nivelFormacaoService.nivelFormacaoUpdate(accessContext, dto);
   }
 
-  @Operation(Tokens.NivelFormacaoDeleteOneById)
+  
   async nivelFormacaoDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.NivelFormacaoDeleteByIdOperationInput,
+    @HttpOperationInput("NivelFormacaoDeleteOneById") dto: IApiDoc.operations["NivelFormacaoDeleteOneById"],
   ) {
     return this.nivelFormacaoService.nivelFormacaoDeleteOneById(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 }
