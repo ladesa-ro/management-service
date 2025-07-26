@@ -1,10 +1,11 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Tokens } from "@ladesa-ro/especificacao";
 import { Resolver } from "@nestjs/graphql";
-import { CombinedInput } from "@/application/standards";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { EtapaService } from "./etapa.service";
+import { HttpOperationInput } from "@/application/standards-new/HttpOperation";
+import { IApiDoc } from "@/application/standards-new/openapi";
 
 @Resolver()
 export class EtapaResolver {
