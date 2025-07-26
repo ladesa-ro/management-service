@@ -51,7 +51,7 @@
   },
   "overrides": [
     {
-      "includes": ["**/{src,test}/**/*.ts"],
+      "includes": ["**/{src,test,lib}/**/*.ts"],
       "linter": {
         "rules": {
           "complexity": {
@@ -60,6 +60,7 @@
             "noAdjacentSpacesInRegex": "error"
           },
           "correctness": {
+            "noUnusedImports": "error",
             "noConstAssign": "error",
             "noConstantCondition": "error",
             "noEmptyCharacterClassInRegex": "error",
