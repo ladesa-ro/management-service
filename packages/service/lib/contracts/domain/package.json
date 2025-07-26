@@ -1,0 +1,32 @@
+{
+  "name": "@ladesa-ro/management-service.domain",
+  "private": true,
+  "main": "src/index.ts",
+  "scripts": {
+    "unit:dev": "wireit",
+    "build": "wireit"
+  },
+  "wireit": {
+    "build": {
+      "dependencies": ["../domain-contracts:build"]
+    },
+    "unit:dev": {
+      "dependencies": ["../domain-contracts:unit:dev"]
+    }
+  },
+  "dependencies": {
+    "@ladesa-ro/management-service.domain.contracts": "workspace:*",
+    "@ladesa-ro/management-service.infrastructure": "workspace:*",
+    "@nestjs/common": "catalog:nestjs",
+    "ajv": "^8.17.1",
+    "nestjs-paginate": "^11.1.1"
+  },
+  "peerDependencies": {
+    "@nestjs/common": "catalog:nestjs"
+  },
+  "devDependencies": {
+    "@standard-schema/spec": "^1.0.0",
+    "typescript": "catalog:development",
+    "wireit": "catalog:wireit"
+  }
+}

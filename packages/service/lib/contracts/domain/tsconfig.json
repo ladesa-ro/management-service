@@ -1,0 +1,36 @@
+{
+  "compilerOptions": {
+    "strict": true,
+
+    "lib": ["esnext"],
+    "target": "es2022",
+    "module": "preserve",
+
+    "resolveJsonModule": true,
+    "removeComments": true,
+
+    "strictNullChecks": true,
+    "noImplicitAny": false,
+
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+
+    "verbatimModuleSyntax": true,
+
+    "declaration": true,
+    "sourceMap": true,
+
+    
+    "baseUrl": "./src",
+    
+    "paths": {
+      "@/*": ["./*"]
+    },
+
+    "incremental": true,
+    "skipLibCheck": true
+  }
+}
