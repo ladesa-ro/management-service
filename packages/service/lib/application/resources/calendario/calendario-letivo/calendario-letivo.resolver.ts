@@ -11,52 +11,52 @@ export class CalendarioLetivoResolver {
   constructor(private calendarioLetivoService: CalendarioLetivoService) {}
 
   //
-  @Operation(Tokens.CalendarioLetivoList)
+  
   async calendarioLetivoFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.CalendarioLetivoListOperationInput,
+    @HttpOperationInput("CalendarioLetivoFindAll") dto: IApiDoc.operations["CalendarioLetivoFindAll"],
   ) {
     return this.calendarioLetivoService.calendarioLetivoFindAll(accessContext, dto);
   }
 
   //
-  @Operation(Tokens.CalendarioLetivoFindOneById)
+  
   async calendarioLetivoFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput()
-    dto: LadesaTypings.CalendarioLetivoFindOneByIdOperationOutput,
+    
+    @HttpOperationInput("CalendarioLetivoFindOneById") dto: IApiDoc.operations["CalendarioLetivoFindOneById"],
   ) {
     return this.calendarioLetivoService.calendarioLetivoFindByIdStrict(accessContext, { id: dto.params.id });
   }
 
   //
-  @Operation(Tokens.CalendarioLetivoCreate)
+  
   async calendarioLetivoCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.CalendarioLetivoCreateOperationInput,
+    @HttpOperationInput("CalendarioLetivoCreate") dto: IApiDoc.operations["CalendarioLetivoCreate"],
   ) {
     return this.calendarioLetivoService.calendarioLetivoCreate(accessContext, dto);
   }
 
   //
-  @Operation(Tokens.CalendarioLetivoUpdateOneById)
+  
   async calendarioLetivoUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.CalendarioLetivoUpdateByIdOperationInput,
+    @HttpOperationInput("CalendarioLetivoUpdate") dto: IApiDoc.operations["CalendarioLetivoUpdate"],
   ) {
     return this.calendarioLetivoService.calendarioLetivoUpdate(accessContext, dto);
   }
 
   //
-  @Operation(Tokens.CalendarioLetivoDeleteOneById)
+  
   async calendarioLetivoDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.CalendarioLetivoDeleteByIdOperationInput,
+    @HttpOperationInput("CalendarioLetivoDeleteOneById") dto: IApiDoc.operations["CalendarioLetivoDeleteOneById"],
   ) {
     return this.calendarioLetivoService.calendarioLetivoDeleteOneById(accessContext, { id: dto.params.id });
   }

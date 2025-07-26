@@ -15,51 +15,51 @@ export class NivelFormacaoResolver {
   ) {}
 
   //
-  @Operation(Tokens.NivelFormacaoList)
+  
   async nivelFormacaoFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.NivelFormacaoListOperationInput,
+    @HttpOperationInput("NivelFormacaoFindAll") dto: IApiDoc.operations["NivelFormacaoFindAll"],
     @GqlInfo() info: GraphQLResolveInfo,
   ) {
     return this.nivelFormacaoService.nivelFormacaoFindAll(accessContext, dto, graphqlExtractSelection(info, "paginated"));
   }
 
   //
-  @Operation(Tokens.NivelFormacaoFindOneById)
+  
   async nivelFormacaoFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.NivelFormacaoFindOneByIdOperationOutput,
+    @HttpOperationInput("NivelFormacaoFindOneById") dto: IApiDoc.operations["NivelFormacaoFindOneById"],
     @GqlInfo() info: GraphQLResolveInfo,
   ) {
     return this.nivelFormacaoService.nivelFormacaoFindByIdStrict(accessContext, { id: dto.params.id }, ["id", ...graphqlExtractSelection(info)]);
   }
 
   //
-  @Operation(Tokens.NivelFormacaoCreate)
+  
   async nivelFormacaoCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.NivelFormacaoCreateOperationInput,
+    @HttpOperationInput("NivelFormacaoCreate") dto: IApiDoc.operations["NivelFormacaoCreate"],
   ) {
     return this.nivelFormacaoService.nivelFormacaoCreate(accessContext, dto);
   }
 
-  @Operation(Tokens.NivelFormacaoUpdateOneById)
+  
   async nivelFormacaoUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.NivelFormacaoUpdateByIdOperationInput,
+    @HttpOperationInput("NivelFormacaoUpdate") dto: IApiDoc.operations["NivelFormacaoUpdate"],
   ) {
     return this.nivelFormacaoService.nivelFormacaoUpdate(accessContext, dto);
   }
 
-  @Operation(Tokens.NivelFormacaoDeleteOneById)
+  
   async nivelFormacaoDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.NivelFormacaoDeleteByIdOperationInput,
+    @HttpOperationInput("NivelFormacaoDeleteOneById") dto: IApiDoc.operations["NivelFormacaoDeleteOneById"],
   ) {
     return this.nivelFormacaoService.nivelFormacaoDeleteOneById(accessContext, {
       id: dto.params.id,

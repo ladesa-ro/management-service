@@ -15,20 +15,20 @@ export class PerfilResolver {
 
   //
 
-  @Operation(Tokens.PerfilList)
+  
   async vinculoFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.PerfilListOperationInput,
+    @HttpOperationInput("VinculoFindAll") dto: IApiDoc.operations["VinculoFindAll"],
   ) {
     return this.perfilService.perfilFindAll(accessContext, dto);
   }
 
-  @Operation(Tokens.PerfilUpdateOneById)
+  
   async vinculoSetVinculos(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.PerfilUpdateOperationInput,
+    @HttpOperationInput("VinculoSetVinculos") dto: IApiDoc.operations["VinculoSetVinculos"],
   ) {
     return this.perfilService.perfilSetVinculos(accessContext, dto);
   }

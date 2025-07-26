@@ -11,21 +11,21 @@ export class EventoResolver {
   constructor(private eventoService: EventoService) {}
 
   //
-  @Operation(Tokens.EventoList)
+  
   async eventoFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.EventoListOperationInput,
+    @HttpOperationInput("EventoFindAll") dto: IApiDoc.operations["EventoFindAll"],
   ) {
     return this.eventoService.eventoFindAll(accessContext, dto);
   }
 
   //
-  @Operation(Tokens.EventoFindOneById)
+  
   async eventoFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.EventoFindOneByIdOperationOutput,
+    @HttpOperationInput("EventoFindOneById") dto: IApiDoc.operations["EventoFindOneById"],
   ) {
     return this.eventoService.eventoFindByIdStrict(accessContext, {
       id: dto.params.id,
@@ -33,31 +33,31 @@ export class EventoResolver {
   }
 
   //
-  @Operation(Tokens.EventoCreate)
+  
   async eventoCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.EventoCreateOperationInput,
+    @HttpOperationInput("EventoCreate") dto: IApiDoc.operations["EventoCreate"],
   ) {
     return this.eventoService.eventoCreate(accessContext, dto);
   }
 
   //
-  @Operation(Tokens.EventoUpdateOneById)
+  
   async eventoUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.EventoUpdateByIdOperationInput,
+    @HttpOperationInput("EventoUpdate") dto: IApiDoc.operations["EventoUpdate"],
   ) {
     return this.eventoService.eventoUpdate(accessContext, dto);
   }
 
   //
-  @Operation(Tokens.EventoDeleteOneById)
+  
   async eventoDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.EventoDeleteByIdOperationInput,
+    @HttpOperationInput("EventoDeleteOneById") dto: IApiDoc.operations["EventoDeleteOneById"],
   ) {
     return this.eventoService.eventoDeleteOneById(accessContext, {
       id: dto.params.id,

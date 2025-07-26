@@ -15,21 +15,21 @@ export class BlocoResolver {
 
   //
 
-  @Operation(Tokens.BlocoList)
+  
   async blocoFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.BlocoListOperationInput,
+    @HttpOperationInput("BlocoFindAll") dto: IApiDoc.operations["BlocoFindAll"],
   ) {
     return this.blocoService.blocoFindAll(accessContext, dto);
   }
 
   //
-  @Operation(Tokens.BlocoFindOneById)
+  
   async blocoFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.BlocoFindOneByIdOperationOutput,
+    @HttpOperationInput("BlocoFindOneById") dto: IApiDoc.operations["BlocoFindOneById"],
   ) {
     return this.blocoService.blocoFindByIdStrict(accessContext, {
       id: dto.params.id,
@@ -37,29 +37,29 @@ export class BlocoResolver {
   }
 
   //
-  @Operation(Tokens.BlocoCreate)
+  
   async blocoCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.BlocoCreateOperationInput,
+    @HttpOperationInput("BlocoCreate") dto: IApiDoc.operations["BlocoCreate"],
   ) {
     return this.blocoService.blocoCreate(accessContext, dto);
   }
 
-  @Operation(Tokens.BlocoUpdateOneById)
+  
   async blocoUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.BlocoUpdateByIdOperationInput,
+    @HttpOperationInput("BlocoUpdate") dto: IApiDoc.operations["BlocoUpdate"],
   ) {
     return this.blocoService.blocoUpdate(accessContext, dto);
   }
 
-  @Operation(Tokens.BlocoDeleteOneById)
+  
   async blocoDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.BlocoDeleteByIdOperationInput,
+    @HttpOperationInput("BlocoDeleteOneById") dto: IApiDoc.operations["BlocoDeleteOneById"],
   ) {
     return this.blocoService.blocoDeleteOneById(accessContext, {
       id: dto.params.id,

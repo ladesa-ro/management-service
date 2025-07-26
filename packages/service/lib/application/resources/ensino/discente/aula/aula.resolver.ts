@@ -14,21 +14,21 @@ export class AulaResolver {
   ) {}
 
   //
-  @Operation(Tokens.AulaList)
+  
   async aulaFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.AulaListOperationInput,
+    @HttpOperationInput("AulaFindAll") dto: IApiDoc.operations["AulaFindAll"],
   ) {
     return this.aulaService.aulaFindAll(accessContext, dto);
   }
 
   //
-  @Operation(Tokens.AulaFindOneById)
+  
   async aulaFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.AulaFindOneByIdOperationOutput,
+    @HttpOperationInput("AulaFindOneById") dto: IApiDoc.operations["AulaFindOneById"],
   ) {
     return this.aulaService.aulaFindByIdStrict(accessContext, {
       id: dto.params.id,
@@ -36,29 +36,29 @@ export class AulaResolver {
   }
 
   //
-  @Operation(Tokens.AulaCreate)
+  
   async aulaCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.AulaCreateOperationInput,
+    @HttpOperationInput("AulaCreate") dto: IApiDoc.operations["AulaCreate"],
   ) {
     return this.aulaService.aulaCreate(accessContext, dto);
   }
 
-  @Operation(Tokens.AulaUpdateOneById)
+  
   async aulaUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.AulaUpdateByIdOperationInput,
+    @HttpOperationInput("AulaUpdate") dto: IApiDoc.operations["AulaUpdate"],
   ) {
     return this.aulaService.aulaUpdate(accessContext, dto);
   }
 
-  @Operation(Tokens.AulaDeleteOneById)
+  
   async aulaDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.AulaDeleteByIdOperationInput,
+    @HttpOperationInput("AulaDeleteOneById") dto: IApiDoc.operations["AulaDeleteOneById"],
   ) {
     return this.aulaService.aulaDeleteOneById(accessContext, {
       id: dto.params.id,

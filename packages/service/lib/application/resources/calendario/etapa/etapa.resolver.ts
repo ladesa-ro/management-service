@@ -11,21 +11,21 @@ export class EtapaResolver {
   constructor(private etapaService: EtapaService) {}
 
   //
-  @Operation(Tokens.EtapaList)
+  
   async etapaFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.EtapaListOperationInput,
+    @HttpOperationInput("EtapaFindAll") dto: IApiDoc.operations["EtapaFindAll"],
   ) {
     return this.etapaService.etapaFindAll(accessContext, dto);
   }
 
   //
-  @Operation(Tokens.EtapaFindOneById)
+  
   async etapaFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.EtapaFindOneByIdOperationOutput,
+    @HttpOperationInput("EtapaFindOneById") dto: IApiDoc.operations["EtapaFindOneById"],
   ) {
     return this.etapaService.etapaFindByIdStrict(accessContext, {
       id: dto.params.id,
@@ -33,31 +33,31 @@ export class EtapaResolver {
   }
 
   //
-  @Operation(Tokens.EtapaCreate)
+  
   async etapaCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.EtapaCreateOperationInput,
+    @HttpOperationInput("EtapaCreate") dto: IApiDoc.operations["EtapaCreate"],
   ) {
     return this.etapaService.etapaCreate(accessContext, dto);
   }
 
   //
-  @Operation(Tokens.EtapaUpdateOneById)
+  
   async etapaUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.EtapaUpdateByIdOperationInput,
+    @HttpOperationInput("EtapaUpdate") dto: IApiDoc.operations["EtapaUpdate"],
   ) {
     return this.etapaService.etapaUpdate(accessContext, dto);
   }
 
   //
-  @Operation(Tokens.EtapaDeleteOneById)
+  
   async etapaDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.EtapaDeleteByIdOperationInput,
+    @HttpOperationInput("EtapaDeleteOneById") dto: IApiDoc.operations["EtapaDeleteOneById"],
   ) {
     return this.etapaService.etapaDeleteOneById(accessContext, {
       id: dto.params.id,

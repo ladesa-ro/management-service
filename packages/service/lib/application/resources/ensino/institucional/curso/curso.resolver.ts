@@ -14,21 +14,21 @@ export class CursoResolver {
   ) {}
 
   //
-  @Operation(Tokens.CursoList)
+  
   async cursoFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.CursoListOperationInput,
+    @HttpOperationInput("CursoFindAll") dto: IApiDoc.operations["CursoFindAll"],
   ) {
     return this.cursoService.cursoFindAll(accessContext, dto);
   }
 
   //
-  @Operation(Tokens.CursoFindOneById)
+  
   async cursoFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.CursoFindOneByIdOperationOutput,
+    @HttpOperationInput("CursoFindOneById") dto: IApiDoc.operations["CursoFindOneById"],
   ) {
     return this.cursoService.cursoFindByIdStrict(accessContext, {
       id: dto.params.id,
@@ -36,29 +36,29 @@ export class CursoResolver {
   }
 
   //
-  @Operation(Tokens.CursoCreate)
+  
   async cursoCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.CursoCreateOperationInput,
+    @HttpOperationInput("CursoCreate") dto: IApiDoc.operations["CursoCreate"],
   ) {
     return this.cursoService.cursoCreate(accessContext, dto);
   }
 
-  @Operation(Tokens.CursoUpdateOneById)
+  
   async cursoUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.CursoUpdateByIdOperationInput,
+    @HttpOperationInput("CursoUpdate") dto: IApiDoc.operations["CursoUpdate"],
   ) {
     return this.cursoService.cursoUpdate(accessContext, dto);
   }
 
-  @Operation(Tokens.CursoDeleteOneById)
+  
   async cursoDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.CursoDeleteByIdOperationInput,
+    @HttpOperationInput("CursoDeleteOneById") dto: IApiDoc.operations["CursoDeleteOneById"],
   ) {
     return this.cursoService.cursoDeleteOneById(accessContext, {
       id: dto.params.id,

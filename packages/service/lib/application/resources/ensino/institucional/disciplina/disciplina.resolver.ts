@@ -14,21 +14,21 @@ export class DisciplinaResolver {
   ) {}
 
   //
-  @Operation(Tokens.DisciplinaList)
+  
   async disciplinaFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.DisciplinaListOperationInput,
+    @HttpOperationInput("DisciplinaFindAll") dto: IApiDoc.operations["DisciplinaFindAll"],
   ) {
     return this.disciplinaService.disciplinaFindAll(accessContext, dto);
   }
 
   //
-  @Operation(Tokens.DisciplinaFindOneById)
+  
   async disciplinaFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.DisciplinaFindOneByIdOperationOutput,
+    @HttpOperationInput("DisciplinaFindOneById") dto: IApiDoc.operations["DisciplinaFindOneById"],
   ) {
     return this.disciplinaService.disciplinaFindByIdStrict(accessContext, {
       id: dto.params.id,
@@ -36,29 +36,29 @@ export class DisciplinaResolver {
   }
 
   //
-  @Operation(Tokens.DisciplinaCreate)
+  
   async disciplinaCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.DisciplinaCreateOperationInput,
+    @HttpOperationInput("DisciplinaCreate") dto: IApiDoc.operations["DisciplinaCreate"],
   ) {
     return this.disciplinaService.disciplinaCreate(accessContext, dto);
   }
 
-  @Operation(Tokens.DisciplinaUpdateOneById)
+  
   async disciplinaUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.DisciplinaUpdateByIdOperationInput,
+    @HttpOperationInput("DisciplinaUpdate") dto: IApiDoc.operations["DisciplinaUpdate"],
   ) {
     return this.disciplinaService.disciplinaUpdate(accessContext, dto);
   }
 
-  @Operation(Tokens.DisciplinaDeleteOneById)
+  
   async disciplinaDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.DisciplinaDeleteByIdOperationInput,
+    @HttpOperationInput("DisciplinaDeleteOneById") dto: IApiDoc.operations["DisciplinaDeleteOneById"],
   ) {
     return this.disciplinaService.disciplinaDeleteOneById(accessContext, {
       id: dto.params.id,

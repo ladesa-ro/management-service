@@ -15,23 +15,23 @@ export class TurmaDisponibilidadeResolver {
   ) {}
 
   //
-  @Operation(Tokens.TurmaDisponibilidadeList)
+  
   async turmaDisponibilidadeFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.TurmaDisponibilidadeListOperationInput,
+    @HttpOperationInput("TurmaDisponibilidadeFindAll") dto: IApiDoc.operations["TurmaDisponibilidadeFindAll"],
     @GqlInfo() info: GraphQLResolveInfo,
   ) {
     return this.turmaDisponibilidadeService.turmaDisponibilidadeFindAll(accessContext, dto, graphqlExtractSelection(info, "paginated"));
   }
 
   //
-  @Operation(Tokens.TurmaDisponibilidadeFindOneById)
+  
   async turmaDisponibilidadeFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput()
-    dto: LadesaTypings.TurmaDisponibilidadeFindOneByIdOperationOutput,
+    
+    @HttpOperationInput("TurmaDisponibilidadeFindOneById") dto: IApiDoc.operations["TurmaDisponibilidadeFindOneById"],
     @GqlInfo() info: GraphQLResolveInfo,
   ) {
     return this.turmaDisponibilidadeService.turmaDisponibilidadeFindByIdStrict(
@@ -44,31 +44,31 @@ export class TurmaDisponibilidadeResolver {
   }
 
   //
-  @Operation(Tokens.TurmaDisponibilidadeCreate)
+  
   async turmaDisponibilidadeCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.TurmaDisponibilidadeCreateOperationInput,
+    @HttpOperationInput("TurmaDisponibilidadeCreate") dto: IApiDoc.operations["TurmaDisponibilidadeCreate"],
   ) {
     return this.turmaDisponibilidadeService.turmaDisponibilidadeCreate(accessContext, dto);
   }
 
-  @Operation(Tokens.TurmaDisponibilidadeUpdateOneById)
+  
   async turmaDisponibilidadeUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput()
-    dto: LadesaTypings.TurmaDisponibilidadeUpdateByIdOperationInput,
+    
+    @HttpOperationInput("TurmaDisponibilidadeUpdate") dto: IApiDoc.operations["TurmaDisponibilidadeUpdate"],
   ) {
     return this.turmaDisponibilidadeService.turmaDisponibilidadeUpdate(accessContext, dto);
   }
 
-  @Operation(Tokens.TurmaDisponibilidadeDeleteOneById)
+  
   async turmaDisponibilidadeDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput()
-    dto: LadesaTypings.TurmaDisponibilidadeDeleteByIdOperationInput,
+    
+    @HttpOperationInput("TurmaDisponibilidadeDeleteOneById") dto: IApiDoc.operations["TurmaDisponibilidadeDeleteOneById"],
   ) {
     return this.turmaDisponibilidadeService.turmaDisponibilidadeDeleteOneById(accessContext, {
       id: dto.params.id,

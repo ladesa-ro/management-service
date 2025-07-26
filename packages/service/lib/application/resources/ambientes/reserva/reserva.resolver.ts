@@ -14,21 +14,21 @@ export class ReservaResolver {
   ) {}
 
   //
-  @Operation(Tokens.ReservaList)
+  
   async reservaFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.ReservaListOperationInput,
+    @HttpOperationInput("ReservaFindAll") dto: IApiDoc.operations["ReservaFindAll"],
   ) {
     return this.reservaService.reservaFindAll(accessContext, dto);
   }
 
   //
-  @Operation(Tokens.ReservaFindOneById)
+  
   async reservaFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.ReservaFindOneByIdOperationOutput,
+    @HttpOperationInput("ReservaFindOneById") dto: IApiDoc.operations["ReservaFindOneById"],
   ) {
     return this.reservaService.reservaFindByIdStrict(accessContext, {
       id: dto.params.id,
@@ -36,29 +36,29 @@ export class ReservaResolver {
   }
 
   //
-  @Operation(Tokens.ReservaCreate)
+  
   async reservaCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.ReservaCreateOperationInput,
+    @HttpOperationInput("ReservaCreate") dto: IApiDoc.operations["ReservaCreate"],
   ) {
     return this.reservaService.reservaCreate(accessContext, dto);
   }
 
-  @Operation(Tokens.ReservaUpdateOneById)
+  
   async reservaUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.ReservaUpdateByIdOperationInput,
+    @HttpOperationInput("ReservaUpdate") dto: IApiDoc.operations["ReservaUpdate"],
   ) {
     return this.reservaService.reservaUpdate(accessContext, dto);
   }
 
-  @Operation(Tokens.ReservaDeleteOneById)
+  
   async reservaDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.ReservaDeleteByIdOperationInput,
+    @HttpOperationInput("ReservaDeleteOneById") dto: IApiDoc.operations["ReservaDeleteOneById"],
   ) {
     return this.reservaService.reservaDeleteOneById(accessContext, {
       id: dto.params.id,

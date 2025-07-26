@@ -15,22 +15,22 @@ export class EstadoResolver {
   ) {}
 
   // ========================================================
-  @Operation(Tokens.EstadoList)
+  
   async estadoFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.EstadoListOperationInput,
+    @HttpOperationInput("EstadoFindAll") dto: IApiDoc.operations["EstadoFindAll"],
     @Info() info: GraphQLResolveInfo,
   ) {
     return this.estadoService.findAll(accessContext, dto, graphqlExtractSelection(info, "paginated"));
   }
 
   // ========================================================
-  @Operation(Tokens.EstadoFindOneById)
+  
   async estadoFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.EstadoFindOneByIdOperationOutput,
+    @HttpOperationInput("EstadoFindOneById") dto: IApiDoc.operations["EstadoFindOneById"],
     @Info() info: GraphQLResolveInfo,
   ) {
     return this.estadoService.findByIdStrict(accessContext, { id: dto.params.id }, graphqlExtractSelection(info));

@@ -14,21 +14,21 @@ export class CampusResolver {
   ) {}
 
   //
-  @Operation(Tokens.CampusList)
+  
   async campusFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.CampusListOperationInput,
+    @HttpOperationInput("CampusFindAll") dto: IApiDoc.operations["CampusFindAll"],
   ) {
     return this.campusService.campusFindAll(accessContext, dto);
   }
 
   //
-  @Operation(Tokens.CampusFindOneById)
+  
   async campusFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.CampusFindOneByIdOperationOutput,
+    @HttpOperationInput("CampusFindOneById") dto: IApiDoc.operations["CampusFindOneById"],
   ) {
     return this.campusService.campusFindByIdStrict(accessContext, {
       id: dto.params.id,
@@ -36,29 +36,29 @@ export class CampusResolver {
   }
 
   //
-  @Operation(Tokens.CampusCreate)
+  
   async campusCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.CampusCreateOperationInput,
+    @HttpOperationInput("CampusCreate") dto: IApiDoc.operations["CampusCreate"],
   ) {
     return this.campusService.campusCreate(accessContext, dto);
   }
 
-  @Operation(Tokens.CampusUpdateOneById)
+  
   async campusUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.CampusUpdateOperationInput,
+    @HttpOperationInput("CampusUpdate") dto: IApiDoc.operations["CampusUpdate"],
   ) {
     return this.campusService.campusUpdate(accessContext, dto);
   }
 
-  @Operation(Tokens.CampusDeleteOneById)
+  
   async campusDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.CampusDeleteOneByIdOperationInput,
+    @HttpOperationInput("CampusDeleteOneById") dto: IApiDoc.operations["CampusDeleteOneById"],
   ) {
     return this.campusService.campusDeleteOneById(accessContext, {
       id: dto.params.id,

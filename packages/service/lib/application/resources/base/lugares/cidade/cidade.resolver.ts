@@ -16,22 +16,22 @@ export class CidadeResolver {
 
   // ========================================================
 
-  @Operation(Tokens.CidadeList)
+  
   async cidadeFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.CidadeListOperationInput,
+    @HttpOperationInput("CidadeFindAll") dto: IApiDoc.operations["CidadeFindAll"],
     @Info() info: GraphQLResolveInfo,
   ) {
     return this.cidadeService.findAll(accessContext, dto, graphqlExtractSelection(info, "paginated"));
   }
 
   // ========================================================
-  @Operation(Tokens.CidadeFindOneById)
+  
   async cidadeFindById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.CidadeFindOneByIdOperationOutput,
+    @HttpOperationInput("CidadeFindById") dto: IApiDoc.operations["CidadeFindById"],
     @Info() info: GraphQLResolveInfo,
   ) {
     return this.cidadeService.findByIdStrict(accessContext, { id: dto.params.id }, graphqlExtractSelection(info));

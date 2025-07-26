@@ -15,52 +15,52 @@ export class DisponibilidadeResolver {
   ) {}
 
   //
-  @Operation(Tokens.DisponibilidadeList)
+  
   async disponibilidadeFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.DisponibilidadeListOperationInput,
+    @HttpOperationInput("DisponibilidadeFindAll") dto: IApiDoc.operations["DisponibilidadeFindAll"],
     @GqlInfo() info: GraphQLResolveInfo,
   ) {
     return this.disponibilidadeService.disponibilidadeFindAll(accessContext, dto, graphqlExtractSelection(info, "paginated"));
   }
 
   //
-  @Operation(Tokens.DisponibilidadeFindOneById)
+  
   async disponibilidadeFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput()
-    dto: LadesaTypings.DisponibilidadeFindOneByIdOperationOutput,
+    
+    @HttpOperationInput("DisponibilidadeFindOneById") dto: IApiDoc.operations["DisponibilidadeFindOneById"],
     @GqlInfo() info: GraphQLResolveInfo,
   ) {
     return this.disponibilidadeService.disponibilidadeFindByIdStrict(accessContext, { id: dto.params.id }, ["id", ...graphqlExtractSelection(info)]);
   }
 
   //
-  @Operation(Tokens.DisponibilidadeCreate)
+  
   async disponibilidadeCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.DisponibilidadeCreateOperationInput,
+    @HttpOperationInput("DisponibilidadeCreate") dto: IApiDoc.operations["DisponibilidadeCreate"],
   ) {
     return this.disponibilidadeService.disponibilidadeCreate(accessContext, dto);
   }
 
-  @Operation(Tokens.DisponibilidadeUpdateOneById)
+  
   async disponibilidadeUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.DisponibilidadeUpdateByIdOperationInput,
+    @HttpOperationInput("DisponibilidadeUpdate") dto: IApiDoc.operations["DisponibilidadeUpdate"],
   ) {
     return this.disponibilidadeService.disponibilidadeUpdate(accessContext, dto);
   }
 
-  @Operation(Tokens.DisponibilidadeDeleteOneById)
+  
   async disponibilidadeDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.DisponibilidadeDeleteByIdOperationInput,
+    @HttpOperationInput("DisponibilidadeDeleteOneById") dto: IApiDoc.operations["DisponibilidadeDeleteOneById"],
   ) {
     return this.disponibilidadeService.disponibilidadeDeleteOneById(accessContext, {
       id: dto.params.id,

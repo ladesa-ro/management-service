@@ -15,24 +15,24 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoResolver {
   ) {}
 
   //
-  @Operation(Tokens.GradeHorarioOfertaFormacaoIntervaloDeTempoList)
+  
   async gradeHorarioOfertaFormacaoIntervaloDeTempoFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput()
-    dto: LadesaTypings.GradeHorarioOfertaFormacaoIntervaloDeTempoListOperationInput,
+    
+    @HttpOperationInput("GradeHorarioOfertaFormacaoIntervaloDeTempoFindAll") dto: IApiDoc.operations["GradeHorarioOfertaFormacaoIntervaloDeTempoFindAll"],
     @GqlInfo() info: GraphQLResolveInfo,
   ) {
     return this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.gradeHorarioOfertaFormacaoIntervaloDeTempoFindAll(accessContext, dto, graphqlExtractSelection(info, "paginated"));
   }
 
   //
-  @Operation(Tokens.GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneById)
+  
   async gradeHorarioOfertaFormacaoIntervaloDeTempoFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput()
-    dto: LadesaTypings.GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneByIdOperationOutput,
+    
+    @HttpOperationInput("GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneById") dto: IApiDoc.operations["GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneById"],
     @GqlInfo() info: GraphQLResolveInfo,
   ) {
     return this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.gradeHorarioOfertaFormacaoIntervaloDeTempoFindByIdStrict(
@@ -45,32 +45,32 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoResolver {
   }
 
   //
-  @Operation(Tokens.GradeHorarioOfertaFormacaoIntervaloDeTempoCreate)
+  
   async gradeHorarioOfertaFormacaoIntervaloDeTempoCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput()
-    dto: LadesaTypings.GradeHorarioOfertaFormacaoIntervaloDeTempoCreateOperationInput,
+    
+    @HttpOperationInput("GradeHorarioOfertaFormacaoIntervaloDeTempoCreate") dto: IApiDoc.operations["GradeHorarioOfertaFormacaoIntervaloDeTempoCreate"],
   ) {
     return this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.gradeHorarioOfertaFormacaoIntervaloDeTempoCreate(accessContext, dto);
   }
 
-  @Operation(Tokens.GradeHorarioOfertaFormacaoIntervaloDeTempoUpdateOneById)
+  
   async gradeHorarioOfertaFormacaoIntervaloDeTempoUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput()
-    dto: LadesaTypings.GradeHorarioOfertaFormacaoIntervaloDeTempoUpdateByIdOperationInput,
+    
+    @HttpOperationInput("GradeHorarioOfertaFormacaoIntervaloDeTempoUpdate") dto: IApiDoc.operations["GradeHorarioOfertaFormacaoIntervaloDeTempoUpdate"],
   ) {
     return this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.gradeHorarioOfertaFormacaoIntervaloDeTempoUpdate(accessContext, dto);
   }
 
-  @Operation(Tokens.GradeHorarioOfertaFormacaoIntervaloDeTempoDeleteOneById)
+  
   async gradeHorarioOfertaFormacaoIntervaloDeTempoDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput()
-    dto: LadesaTypings.GradeHorarioOfertaFormacaoIntervaloDeTempoDeleteByIdOperationInput,
+    
+    @HttpOperationInput("GradeHorarioOfertaFormacaoIntervaloDeTempoDeleteOneById") dto: IApiDoc.operations["GradeHorarioOfertaFormacaoIntervaloDeTempoDeleteOneById"],
   ) {
     return this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.gradeHorarioOfertaFormacaoIntervaloDeTempoDeleteOneById(accessContext, {
       id: dto.params.id,

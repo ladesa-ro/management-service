@@ -11,56 +11,56 @@ export class DiarioPreferenciaAgrupamentoResolver {
   constructor(private diarioPreferenciaAgrupamentoService: DiarioPreferenciaAgrupamentoService) {}
 
   //
-  @Operation(Tokens.DiarioPreferenciaAgrupamentoList)
+  
   async diarioPreferenciaAgrupamentoFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput()
-    dto: LadesaTypings.DiarioPreferenciaAgrupamentoListOperationInput,
+    
+    @HttpOperationInput("DiarioPreferenciaAgrupamentoFindAll") dto: IApiDoc.operations["DiarioPreferenciaAgrupamentoFindAll"],
   ) {
     return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoFindAll(accessContext, dto);
   }
 
   //
-  @Operation(Tokens.DiarioPreferenciaAgrupamentoFindOneById)
+  
   async diarioPreferenciaAgrupamentoFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput()
-    dto: LadesaTypings.DiarioPreferenciaAgrupamentoFindByIdOperationOutput,
+    
+    @HttpOperationInput("DiarioPreferenciaAgrupamentoFindOneById") dto: IApiDoc.operations["DiarioPreferenciaAgrupamentoFindOneById"],
   ) {
     return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoFindByIdStrict(accessContext, { id: dto.params.id });
   }
 
   //
-  @Operation(Tokens.DiarioPreferenciaAgrupamentoCreate)
+  
   async diarioPreferenciaAgrupamentoCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput()
-    dto: LadesaTypings.DiarioPreferenciaAgrupamentoCreateOperationInput,
+    
+    @HttpOperationInput("DiarioPreferenciaAgrupamentoCreate") dto: IApiDoc.operations["DiarioPreferenciaAgrupamentoCreate"],
   ) {
     return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoCreate(accessContext, dto);
   }
 
   //
-  @Operation(Tokens.DiarioPreferenciaAgrupamentoUpdateOneById)
+  
   async diarioPreferenciaAgrupamentoUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput()
-    dto: LadesaTypings.DiarioPreferenciaAgrupamentoUpdateByIdOperationInput,
+    
+    @HttpOperationInput("DiarioPreferenciaAgrupamentoUpdate") dto: IApiDoc.operations["DiarioPreferenciaAgrupamentoUpdate"],
   ) {
     return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoUpdate(accessContext, dto);
   }
 
   //
-  @Operation(Tokens.DiarioPreferenciaAgrupamentoDeleteOneById)
+  
   async diarioPreferenciaAgrupamentoOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @CombinedInput()
-    dto: LadesaTypings.DiarioPreferenciaAgrupamentoDeleteByIdOperationInput,
+    
+    @HttpOperationInput("DiarioPreferenciaAgrupamentoOneById") dto: IApiDoc.operations["DiarioPreferenciaAgrupamentoOneById"],
   ) {
     return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoDeleteOneById(accessContext, { id: dto.params.id });
   }
