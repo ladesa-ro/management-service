@@ -13,21 +13,19 @@ export class PerfilController {
   constructor(private vinculoService: PerfilService) {}
 
   @Get("/")
-  @Operation(Tokens.PerfilList)
   async findAll(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.PerfilListOperationInput,
+    @HttpOperationInput("FindAll") dto: IApiDoc.operations["FindAll"],
   ) {
     return this.vinculoService.perfilFindAll(accessContext, dto);
   }
 
   @Post("/")
-  @Operation(Tokens.PerfilUpdateOneById)
   async vinculoSetVinculos(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.PerfilUpdateOperationInput,
+    @HttpOperationInput("VinculoSetVinculos") dto: IApiDoc.operations["VinculoSetVinculos"],
   ) {
     return this.vinculoService.perfilSetVinculos(accessContext, dto);
   }

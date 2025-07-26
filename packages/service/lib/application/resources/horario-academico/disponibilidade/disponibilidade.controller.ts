@@ -15,11 +15,10 @@ export class DisponibilidadeController {
   //
 
   @Get("/")
-  @Operation(Tokens.DisponibilidadeList)
   async disponibilidadeFindAll(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.DisponibilidadeListOperationInput,
+    @HttpOperationInput("DisponibilidadeFindAll") dto: IApiDoc.operations["DisponibilidadeFindAll"],
   ): Promise<LadesaTypings.DisponibilidadeListOperationOutput["success"]> {
     return this.disponibilidadeService.disponibilidadeFindAll(accessContext, dto);
   }
@@ -27,12 +26,11 @@ export class DisponibilidadeController {
   //
 
   @Get("/:id")
-  @Operation(Tokens.DisponibilidadeFindOneById)
   async disponibilidadeFindById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput()
-    dto: LadesaTypings.DisponibilidadeFindOneByIdOperationOutput,
+    
+    @HttpOperationInput("DisponibilidadeFindById") dto: IApiDoc.operations["DisponibilidadeFindById"],
   ) {
     return this.disponibilidadeService.disponibilidadeFindByIdStrict(accessContext, {
       id: dto.params.id,
@@ -42,11 +40,10 @@ export class DisponibilidadeController {
   //
 
   @Post("/")
-  @Operation(Tokens.DisponibilidadeCreate)
   async disponibilidadeCreate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.DisponibilidadeCreateOperationInput,
+    @HttpOperationInput("DisponibilidadeCreate") dto: IApiDoc.operations["DisponibilidadeCreate"],
   ) {
     return this.disponibilidadeService.disponibilidadeCreate(accessContext, dto);
   }
@@ -54,11 +51,10 @@ export class DisponibilidadeController {
   //
 
   @Patch("/:id")
-  @Operation(Tokens.DisponibilidadeUpdateOneById)
   async disponibilidadeUpdate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.DisponibilidadeUpdateByIdOperationInput,
+    @HttpOperationInput("DisponibilidadeUpdate") dto: IApiDoc.operations["DisponibilidadeUpdate"],
   ) {
     return this.disponibilidadeService.disponibilidadeUpdate(accessContext, dto);
   }
@@ -66,11 +62,10 @@ export class DisponibilidadeController {
   //
 
   @Delete("/:id")
-  @Operation(Tokens.DisponibilidadeDeleteOneById)
   async disponibilidadeDeleteOneById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.DisponibilidadeDeleteByIdOperationInput,
+    @HttpOperationInput("DisponibilidadeDeleteOneById") dto: IApiDoc.operations["DisponibilidadeDeleteOneById"],
   ) {
     return this.disponibilidadeService.disponibilidadeDeleteOneById(accessContext, {
       id: dto.params.id,

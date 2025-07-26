@@ -15,11 +15,10 @@ export class UsuarioController {
   //
 
   @Get("/")
-  @Operation(Tokens.UsuarioList)
   async usuarioFindAll(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.UsuarioListOperationInput,
+    @HttpOperationInput("UsuarioFindAll") dto: IApiDoc.operations["UsuarioFindAll"],
   ): Promise<LadesaTypings.UsuarioListOperationOutput["success"]> {
     return this.usuarioService.usuarioFindAll(accessContext, dto);
   }
@@ -27,11 +26,10 @@ export class UsuarioController {
   //
 
   @Get("/:id")
-  @Operation(Tokens.UsuarioFindOneById)
   async usuarioFindById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.UsuarioFindOneByIdOperationOutput,
+    @HttpOperationInput("UsuarioFindById") dto: IApiDoc.operations["UsuarioFindById"],
   ) {
     return this.usuarioService.usuarioFindByIdStrict(accessContext, {
       id: dto.params.id,
@@ -41,11 +39,10 @@ export class UsuarioController {
   //
 
   @Post("/")
-  @Operation(Tokens.UsuarioCreate)
   async usuarioCreate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.UsuarioCreateOperationInput,
+    @HttpOperationInput("UsuarioCreate") dto: IApiDoc.operations["UsuarioCreate"],
   ) {
     return this.usuarioService.usuarioCreate(accessContext, dto);
   }
@@ -53,30 +50,26 @@ export class UsuarioController {
   //
 
   @Patch("/:id")
-  @Operation(Tokens.UsuarioUpdateOneById)
-  async usuarioUpdate(@AccessContextHttp() accessContext: AccessContext, @CombinedInput() dto: LadesaTypings.UsuarioUpdateByIdOperationInput) {
+  async usuarioUpdate(@AccessContextHttp() accessContext: AccessContext, @HttpOperationInput("UsuarioUpdate") dto: IApiDoc.operations["UsuarioUpdate"]) {
     return this.usuarioService.usuarioUpdate(accessContext, dto);
   }
 
   //
 
   @Get("/:id/imagem/capa")
-  @Operation(Tokens.UsuarioGetImagemCapa)
   async usuarioGetImagemCapa(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.UsuarioFindOneByIdOperationOutput,
+    @HttpOperationInput("UsuarioGetImagemCapa") dto: IApiDoc.operations["UsuarioGetImagemCapa"],
   ) {
     return this.usuarioService.usuarioGetImagemCapa(accessContext, dto.params.id);
   }
 
   @Put("/:id/imagem/capa")
-  @Operation(Tokens.UsuarioSetImagemCapa)
   async usuarioImagemCapaSave(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @UploadedFile() file: Express.Multer.File,
-    @Param("id", ParseUUIDPipe) id: string,
+    @UploadedFile() file: Express.Multer.File
   ) {
     return this.usuarioService.usuarioUpdateImagemCapa(accessContext, { id }, file);
   }
@@ -84,22 +77,19 @@ export class UsuarioController {
   //
 
   @Get("/:id/imagem/perfil")
-  @Operation(Tokens.UsuarioGetImagemPerfil)
   async usuarioGetImagemPerfil(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.UsuarioFindOneByIdOperationOutput,
+    @HttpOperationInput("UsuarioGetImagemPerfil") dto: IApiDoc.operations["UsuarioGetImagemPerfil"],
   ) {
     return this.usuarioService.usuarioGetImagemPerfil(accessContext, dto.params.id);
   }
 
   @Put("/:id/imagem/perfil")
-  @Operation(Tokens.UsuarioSetImagemPerfil)
   async usuarioImagemPerfilSave(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @UploadedFile() file: Express.Multer.File,
-    @Param("id", ParseUUIDPipe) id: string,
+    @UploadedFile() file: Express.Multer.File
   ) {
     return this.usuarioService.usuarioUpdateImagemPerfil(accessContext, { id }, file);
   }
@@ -107,11 +97,10 @@ export class UsuarioController {
   //
 
   @Delete("/:id")
-  @Operation(Tokens.UsuarioDeleteOneById)
   async usuarioDeleteOneById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.UsuarioDeleteByIdOperationInput,
+    @HttpOperationInput("UsuarioDeleteOneById") dto: IApiDoc.operations["UsuarioDeleteOneById"],
   ) {
     return this.usuarioService.usuarioDeleteOneById(accessContext, {
       id: dto.params.id,

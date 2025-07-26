@@ -15,11 +15,10 @@ export class CursoController {
   //
 
   @Get("/")
-  @Operation(Tokens.CursoList)
   async cursoFindAll(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.CursoListOperationInput,
+    @HttpOperationInput("CursoFindAll") dto: IApiDoc.operations["CursoFindAll"],
   ): Promise<LadesaTypings.CursoListOperationOutput["success"]> {
     return this.cursoService.cursoFindAll(accessContext, dto);
   }
@@ -27,11 +26,10 @@ export class CursoController {
   //
 
   @Get("/:id")
-  @Operation(Tokens.CursoFindOneById)
   async cursoFindById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.CursoFindOneByIdOperationOutput,
+    @HttpOperationInput("CursoFindById") dto: IApiDoc.operations["CursoFindById"],
   ) {
     return this.cursoService.cursoFindByIdStrict(accessContext, {
       id: dto.params.id,
@@ -41,11 +39,10 @@ export class CursoController {
   //
 
   @Post("/")
-  @Operation(Tokens.CursoCreate)
   async cursoCreate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.CursoCreateOperationInput,
+    @HttpOperationInput("CursoCreate") dto: IApiDoc.operations["CursoCreate"],
   ) {
     return this.cursoService.cursoCreate(accessContext, dto);
   }
@@ -53,30 +50,25 @@ export class CursoController {
   //
 
   @Patch("/:id")
-  @Operation(Tokens.CursoUpdateOneById)
-  async cursoUpdate(@AccessContextHttp() accessContext: AccessContext, @CombinedInput() dto: LadesaTypings.CursoUpdateByIdOperationInput) {
+  async cursoUpdate(@AccessContextHttp() accessContext: AccessContext, @HttpOperationInput("CursoUpdate") dto: IApiDoc.operations["CursoUpdate"]) {
     return this.cursoService.cursoUpdate(accessContext, dto);
   }
 
   //
 
   @Get("/:id/imagem/capa")
-  @Operation(Tokens.CursoGetImagemCapa)
   async cursoGetImagemCapa(
     //
-    @AccessContextHttp() accessContext: AccessContext,
-    @Param("id", ParseUUIDPipe) id: string,
+    @AccessContextHttp() accessContext: AccessContext
   ) {
     return this.cursoService.cursoGetImagemCapa(accessContext, id);
   }
 
   @Put("/:id/imagem/capa")
-  @Operation(Tokens.CursoSetImagemCapa)
   async cursoImagemCapaSave(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @UploadedFile() file: Express.Multer.File,
-    @Param("id", ParseUUIDPipe) id: string,
+    @UploadedFile() file: Express.Multer.File
   ) {
     return this.cursoService.cursoUpdateImagemCapa(accessContext, { id }, file);
   }
@@ -84,11 +76,10 @@ export class CursoController {
   //
 
   @Delete("/:id")
-  @Operation(Tokens.CursoDeleteOneById)
   async cursoDeleteOneById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.CursoFindOneByIdOperationOutput,
+    @HttpOperationInput("CursoDeleteOneById") dto: IApiDoc.operations["CursoDeleteOneById"],
   ) {
     return this.cursoService.cursoDeleteOneById(accessContext, {
       id: dto.params.id,

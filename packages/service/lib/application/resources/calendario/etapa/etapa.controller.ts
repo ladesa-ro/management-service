@@ -13,19 +13,17 @@ export class EtapaController {
   constructor(private etapaService: EtapaService) {}
 
   @Get("/")
-  @Operation(Tokens.EtapaList)
-  async etapaFindAll(@AccessContextHttp() clientAccess: AccessContext, @CombinedInput() dto: LadesaTypings.EtapaListOperationInput): Promise<LadesaTypings.EtapaListOperationOutput["success"]> {
+  async etapaFindAll(@AccessContextHttp() clientAccess: AccessContext, @HttpOperationInput("EtapaFindAll") dto: IApiDoc.operations["EtapaFindAll"]): Promise<LadesaTypings.EtapaListOperationOutput["success"]> {
     return this.etapaService.etapaFindAll(clientAccess, dto);
   }
 
   //
 
   @Get("/:id")
-  @Operation(Tokens.EtapaFindOneById)
   async etapaFindById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.EtapaFindOneByIdOperationOutput,
+    @HttpOperationInput("EtapaFindById") dto: IApiDoc.operations["EtapaFindById"],
   ) {
     return this.etapaService.etapaFindByIdStrict(accessContext, {
       id: dto.params.id,
@@ -35,11 +33,10 @@ export class EtapaController {
   //
 
   @Post("/")
-  @Operation(Tokens.EtapaCreate)
   async etapaCreate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.EtapaCreateOperationInput,
+    @HttpOperationInput("EtapaCreate") dto: IApiDoc.operations["EtapaCreate"],
   ) {
     return this.etapaService.etapaCreate(accessContext, dto);
   }
@@ -47,11 +44,10 @@ export class EtapaController {
   //
 
   @Patch("/:id")
-  @Operation(Tokens.EtapaUpdateOneById)
   async etapaUpdate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.EtapaUpdateByIdOperationInput,
+    @HttpOperationInput("EtapaUpdate") dto: IApiDoc.operations["EtapaUpdate"],
   ) {
     return this.etapaService.etapaUpdate(accessContext, dto);
   }
@@ -59,11 +55,10 @@ export class EtapaController {
   //
 
   @Delete("/:id")
-  @Operation(Tokens.EtapaDeleteOneById)
   async etapaDeleteOneById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.EtapaDeleteByIdOperationInput,
+    @HttpOperationInput("EtapaDeleteOneById") dto: IApiDoc.operations["EtapaDeleteOneById"],
   ) {
     return this.etapaService.etapaDeleteOneById(accessContext, {
       id: dto.params.id,

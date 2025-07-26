@@ -15,12 +15,11 @@ export class OfertaFormacaoNivelFormacaoController {
   //
 
   @Get("/")
-  @Operation(Tokens.OfertaFormacaoNivelFormacaoList)
   async ofertaFormacaoNivelFormacaoFindAll(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput()
-    dto: LadesaTypings.OfertaFormacaoNivelFormacaoListOperationInput,
+    
+    @HttpOperationInput("OfertaFormacaoNivelFormacaoFindAll") dto: IApiDoc.operations["OfertaFormacaoNivelFormacaoFindAll"],
   ): Promise<LadesaTypings.OfertaFormacaoNivelFormacaoListOperationOutput["success"]> {
     return this.ofertaFormacaoNivelFormacaoService.ofertaFormacaoNivelFormacaoFindAll(accessContext, dto);
   }
@@ -28,12 +27,11 @@ export class OfertaFormacaoNivelFormacaoController {
   //
 
   @Get("/:id")
-  @Operation(Tokens.OfertaFormacaoNivelFormacaoFindOneById)
   async ofertaFormacaoNivelFormacaoFindById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput()
-    dto: LadesaTypings.OfertaFormacaoNivelFormacaoFindOneByIdOperationOutput,
+    
+    @HttpOperationInput("OfertaFormacaoNivelFormacaoFindById") dto: IApiDoc.operations["OfertaFormacaoNivelFormacaoFindById"],
   ) {
     return this.ofertaFormacaoNivelFormacaoService.ofertaFormacaoNivelFormacaoFindByIdStrict(accessContext, {
       id: dto.params.id,
@@ -43,12 +41,11 @@ export class OfertaFormacaoNivelFormacaoController {
   //
 
   @Post("/")
-  @Operation(Tokens.OfertaFormacaoNivelFormacaoCreate)
   async ofertaFormacaoNivelFormacaoCreate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput()
-    dto: LadesaTypings.OfertaFormacaoNivelFormacaoCreateOperationInput,
+    
+    @HttpOperationInput("OfertaFormacaoNivelFormacaoCreate") dto: IApiDoc.operations["OfertaFormacaoNivelFormacaoCreate"],
   ) {
     return this.ofertaFormacaoNivelFormacaoService.ofertaFormacaoNivelFormacaoCreate(accessContext, dto);
   }
@@ -56,12 +53,11 @@ export class OfertaFormacaoNivelFormacaoController {
   //
 
   @Patch("/:id")
-  @Operation(Tokens.OfertaFormacaoNivelFormacaoUpdateOneById)
   async ofertaFormacaoNivelFormacaoUpdate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput()
-    dto: LadesaTypings.OfertaFormacaoNivelFormacaoUpdateByIdOperationInput,
+    
+    @HttpOperationInput("OfertaFormacaoNivelFormacaoUpdate") dto: IApiDoc.operations["OfertaFormacaoNivelFormacaoUpdate"],
   ) {
     return this.ofertaFormacaoNivelFormacaoService.ofertaFormacaoNivelFormacaoUpdate(accessContext, dto);
   }
@@ -69,12 +65,11 @@ export class OfertaFormacaoNivelFormacaoController {
   //
 
   @Delete("/:id")
-  @Operation(Tokens.OfertaFormacaoNivelFormacaoDeleteOneById)
   async ofertaFormacaoNivelFormacaoDeleteOneById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput()
-    dto: LadesaTypings.OfertaFormacaoNivelFormacaoDeleteByIdOperationInput,
+    
+    @HttpOperationInput("OfertaFormacaoNivelFormacaoDeleteOneById") dto: IApiDoc.operations["OfertaFormacaoNivelFormacaoDeleteOneById"],
   ) {
     return this.ofertaFormacaoNivelFormacaoService.ofertaFormacaoNivelFormacaoDeleteOneById(accessContext, {
       id: dto.params.id,

@@ -13,21 +13,19 @@ export class EstadoController {
   constructor(private estadoService: EstadoService) {}
 
   @Get("/")
-  @Operation(Tokens.EstadoList)
   async findAll(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.EstadoListOperationInput,
+    @HttpOperationInput("FindAll") dto: IApiDoc.operations["FindAll"],
   ): Promise<LadesaTypings.EstadoListOperationOutput["success"]> {
     return this.estadoService.findAll(accessContext, dto);
   }
 
   @Get("/:id")
-  @Operation(Tokens.EstadoFindOneById)
   async findById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.EstadoFindOneByIdOperationOutput,
+    @HttpOperationInput("FindById") dto: IApiDoc.operations["FindById"],
   ) {
     return this.estadoService.findByIdStrict(accessContext, {
       id: dto.params.id,

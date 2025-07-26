@@ -15,12 +15,11 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoController {
   //
 
   @Get("/")
-  @Operation(Tokens.GradeHorarioOfertaFormacaoIntervaloDeTempoList)
   async gradeHorarioOfertaFormacaoIntervaloDeTempoFindAll(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput()
-    dto: LadesaTypings.GradeHorarioOfertaFormacaoIntervaloDeTempoListOperationInput,
+    
+    @HttpOperationInput("GradeHorarioOfertaFormacaoIntervaloDeTempoFindAll") dto: IApiDoc.operations["GradeHorarioOfertaFormacaoIntervaloDeTempoFindAll"],
   ): Promise<LadesaTypings.GradeHorarioOfertaFormacaoIntervaloDeTempoListOperationOutput["success"]> {
     return this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.gradeHorarioOfertaFormacaoIntervaloDeTempoFindAll(accessContext, dto);
   }
@@ -28,12 +27,11 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoController {
   //
 
   @Get("/:id")
-  @Operation(Tokens.GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneById)
   async gradeHorarioOfertaFormacaoIntervaloDeTempoFindById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput()
-    dto: LadesaTypings.GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneByIdOperationOutput,
+    
+    @HttpOperationInput("GradeHorarioOfertaFormacaoIntervaloDeTempoFindById") dto: IApiDoc.operations["GradeHorarioOfertaFormacaoIntervaloDeTempoFindById"],
   ) {
     return this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.gradeHorarioOfertaFormacaoIntervaloDeTempoFindByIdStrict(accessContext, {
       id: dto.params.id,
@@ -43,12 +41,11 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoController {
   //
 
   @Post("/")
-  @Operation(Tokens.GradeHorarioOfertaFormacaoIntervaloDeTempoCreate)
   async gradeHorarioOfertaFormacaoIntervaloDeTempoCreate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput()
-    dto: LadesaTypings.GradeHorarioOfertaFormacaoIntervaloDeTempoCreateOperationInput,
+    
+    @HttpOperationInput("GradeHorarioOfertaFormacaoIntervaloDeTempoCreate") dto: IApiDoc.operations["GradeHorarioOfertaFormacaoIntervaloDeTempoCreate"],
   ) {
     return this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.gradeHorarioOfertaFormacaoIntervaloDeTempoCreate(accessContext, dto);
   }
@@ -56,12 +53,11 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoController {
   //
 
   @Patch("/:id")
-  @Operation(Tokens.GradeHorarioOfertaFormacaoIntervaloDeTempoUpdateOneById)
   async gradeHorarioOfertaFormacaoIntervaloDeTempoUpdate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput()
-    dto: LadesaTypings.GradeHorarioOfertaFormacaoIntervaloDeTempoUpdateByIdOperationInput,
+    
+    @HttpOperationInput("GradeHorarioOfertaFormacaoIntervaloDeTempoUpdate") dto: IApiDoc.operations["GradeHorarioOfertaFormacaoIntervaloDeTempoUpdate"],
   ) {
     return this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.gradeHorarioOfertaFormacaoIntervaloDeTempoUpdate(accessContext, dto);
   }
@@ -69,12 +65,11 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoController {
   //
 
   @Delete("/:id")
-  @Operation(Tokens.GradeHorarioOfertaFormacaoIntervaloDeTempoDeleteOneById)
   async gradeHorarioOfertaFormacaoIntervaloDeTempoDeleteOneById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput()
-    dto: LadesaTypings.GradeHorarioOfertaFormacaoIntervaloDeTempoDeleteByIdOperationInput,
+    
+    @HttpOperationInput("GradeHorarioOfertaFormacaoIntervaloDeTempoDeleteOneById") dto: IApiDoc.operations["GradeHorarioOfertaFormacaoIntervaloDeTempoDeleteOneById"],
   ) {
     return this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.gradeHorarioOfertaFormacaoIntervaloDeTempoDeleteOneById(accessContext, {
       id: dto.params.id,

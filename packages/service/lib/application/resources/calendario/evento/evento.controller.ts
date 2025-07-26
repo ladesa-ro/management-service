@@ -13,19 +13,17 @@ export class EventoController {
   constructor(private eventoService: EventoService) {}
 
   @Get("/")
-  @Operation(Tokens.EventoList)
-  async eventoFindAll(@AccessContextHttp() clientAccess: AccessContext, @CombinedInput() dto: LadesaTypings.EventoListOperationInput): Promise<LadesaTypings.EventoListOperationOutput["success"]> {
+  async eventoFindAll(@AccessContextHttp() clientAccess: AccessContext, @HttpOperationInput("EventoFindAll") dto: IApiDoc.operations["EventoFindAll"]): Promise<LadesaTypings.EventoListOperationOutput["success"]> {
     return this.eventoService.eventoFindAll(clientAccess, dto);
   }
 
   //
 
   @Get("/:id")
-  @Operation(Tokens.EventoFindOneById)
   async eventoFindById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.EventoFindOneByIdOperationOutput,
+    @HttpOperationInput("EventoFindById") dto: IApiDoc.operations["EventoFindById"],
   ) {
     return this.eventoService.eventoFindByIdStrict(accessContext, {
       id: dto.params.id,
@@ -35,11 +33,10 @@ export class EventoController {
   //
 
   @Post("/")
-  @Operation(Tokens.EventoCreate)
   async eventoCreate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.EventoCreateOperationInput,
+    @HttpOperationInput("EventoCreate") dto: IApiDoc.operations["EventoCreate"],
   ) {
     return this.eventoService.eventoCreate(accessContext, dto);
   }
@@ -47,11 +44,10 @@ export class EventoController {
   //
 
   @Patch("/:id")
-  @Operation(Tokens.EventoUpdateOneById)
   async eventoUpdate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.EventoUpdateByIdOperationInput,
+    @HttpOperationInput("EventoUpdate") dto: IApiDoc.operations["EventoUpdate"],
   ) {
     return this.eventoService.eventoUpdate(accessContext, dto);
   }
@@ -59,11 +55,10 @@ export class EventoController {
   //
 
   @Delete("/:id")
-  @Operation(Tokens.EventoDeleteOneById)
   async eventoDeleteOneById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.EventoDeleteByIdOperationInput,
+    @HttpOperationInput("EventoDeleteOneById") dto: IApiDoc.operations["EventoDeleteOneById"],
   ) {
     return this.eventoService.eventoDeleteOneById(accessContext, {
       id: dto.params.id,

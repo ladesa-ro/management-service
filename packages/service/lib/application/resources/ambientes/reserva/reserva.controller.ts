@@ -15,11 +15,10 @@ export class ReservaController {
   //
 
   @Get("/")
-  @Operation(Tokens.ReservaList)
   async reservaFindAll(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.ReservaListOperationInput,
+    @HttpOperationInput("ReservaFindAll") dto: IApiDoc.operations["ReservaFindAll"],
   ): Promise<LadesaTypings.ReservaListOperationOutput["success"]> {
     return this.reservaService.reservaFindAll(accessContext, dto);
   }
@@ -27,11 +26,10 @@ export class ReservaController {
   //
 
   @Get("/:id")
-  @Operation(Tokens.ReservaFindOneById)
   async reservaFindById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.ReservaFindOneByIdOperationOutput,
+    @HttpOperationInput("ReservaFindById") dto: IApiDoc.operations["ReservaFindById"],
   ) {
     return this.reservaService.reservaFindByIdStrict(accessContext, {
       id: dto.params.id,
@@ -41,11 +39,10 @@ export class ReservaController {
   //
 
   @Post("/")
-  @Operation(Tokens.ReservaCreate)
   async reservaCreate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.ReservaCreateOperationInput,
+    @HttpOperationInput("ReservaCreate") dto: IApiDoc.operations["ReservaCreate"],
   ) {
     return this.reservaService.reservaCreate(accessContext, dto);
   }
@@ -53,11 +50,10 @@ export class ReservaController {
   //
 
   @Patch("/:id")
-  @Operation(Tokens.ReservaUpdateOneById)
   async reservaUpdate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.ReservaUpdateByIdOperationInput,
+    @HttpOperationInput("ReservaUpdate") dto: IApiDoc.operations["ReservaUpdate"],
   ) {
     return this.reservaService.reservaUpdate(accessContext, dto);
   }
@@ -65,11 +61,10 @@ export class ReservaController {
   //
 
   @Delete("/:id")
-  @Operation(Tokens.ReservaDeleteOneById)
   async reservaDeleteOneById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.ReservaDeleteByIdOperationInput,
+    @HttpOperationInput("ReservaDeleteOneById") dto: IApiDoc.operations["ReservaDeleteOneById"],
   ) {
     return this.reservaService.reservaDeleteOneById(accessContext, {
       id: dto.params.id,

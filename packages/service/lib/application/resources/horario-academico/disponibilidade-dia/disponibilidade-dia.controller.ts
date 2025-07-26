@@ -13,11 +13,10 @@ export class DisponibilidadeDiaController {
   constructor(private disponibilidadeDiaService: DisponibilidadeDiaService) {}
 
   @Get("/")
-  @Operation(Tokens.DisponibilidadeDiaList)
   async disponibilidadeDiaFindAll(
     @AccessContextHttp() clientAccess: AccessContext,
-    @CombinedInput()
-    dto: LadesaTypings.DisponibilidadeDiaListOperationInput,
+    
+    @HttpOperationInput("DisponibilidadeDiaFindAll") dto: IApiDoc.operations["DisponibilidadeDiaFindAll"],
   ): Promise<LadesaTypings.DisponibilidadeDiaListOperationOutput["success"]> {
     return this.disponibilidadeDiaService.disponibilidadeDiaFindAll(clientAccess, dto);
   }
@@ -25,12 +24,11 @@ export class DisponibilidadeDiaController {
   //
 
   @Get("/:id")
-  @Operation(Tokens.DisponibilidadeDiaFindOneById)
   async disponibilidadeDiaFindById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput()
-    dto: LadesaTypings.DisponibilidadeDiaFindOneByIdOperationOutput,
+    
+    @HttpOperationInput("DisponibilidadeDiaFindById") dto: IApiDoc.operations["DisponibilidadeDiaFindById"],
   ) {
     return this.disponibilidadeDiaService.disponibilidadeDiaFindByIdStrict(accessContext, { id: dto.params.id });
   }
@@ -38,12 +36,11 @@ export class DisponibilidadeDiaController {
   //
 
   @Post("/")
-  @Operation(Tokens.DisponibilidadeDiaCreate)
   async disponibilidadeDiaCreate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput()
-    dto: LadesaTypings.DisponibilidadeDiaCreateOperationInput,
+    
+    @HttpOperationInput("DisponibilidadeDiaCreate") dto: IApiDoc.operations["DisponibilidadeDiaCreate"],
   ) {
     return this.disponibilidadeDiaService.disponibilidadeDiaCreate(accessContext, dto);
   }
@@ -51,12 +48,11 @@ export class DisponibilidadeDiaController {
   //
 
   @Patch("/:id")
-  @Operation(Tokens.DisponibilidadeDiaUpdateOneById)
   async disponibilidadeDiaUpdate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput()
-    dto: LadesaTypings.DisponibilidadeDiaUpdateByIdOperationInput,
+    
+    @HttpOperationInput("DisponibilidadeDiaUpdate") dto: IApiDoc.operations["DisponibilidadeDiaUpdate"],
   ) {
     return this.disponibilidadeDiaService.disponibilidadeDiaUpdate(accessContext, dto);
   }
@@ -64,12 +60,11 @@ export class DisponibilidadeDiaController {
   //
 
   @Delete("/:id")
-  @Operation(Tokens.DisponibilidadeDiaDeleteOneById)
   async disponibilidadeDiaDeleteOneById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput()
-    dto: LadesaTypings.DisponibilidadeDiaDeleteByIdOperationInput,
+    
+    @HttpOperationInput("DisponibilidadeDiaDeleteOneById") dto: IApiDoc.operations["DisponibilidadeDiaDeleteOneById"],
   ) {
     return this.disponibilidadeDiaService.disponibilidadeDiaDeleteOneById(accessContext, { id: dto.params.id });
   }

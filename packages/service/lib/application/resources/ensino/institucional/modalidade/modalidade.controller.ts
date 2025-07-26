@@ -15,11 +15,10 @@ export class ModalidadeController {
   //
 
   @Get("/")
-  @Operation(Tokens.ModalidadeList)
   async modalidadeFindAll(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.ModalidadeListOperationInput,
+    @HttpOperationInput("ModalidadeFindAll") dto: IApiDoc.operations["ModalidadeFindAll"],
   ): Promise<LadesaTypings.ModalidadeListOperationOutput["success"]> {
     return this.modalidadeService.modalidadeFindAll(accessContext, dto);
   }
@@ -27,11 +26,10 @@ export class ModalidadeController {
   //
 
   @Get("/:id")
-  @Operation(Tokens.ModalidadeFindOneById)
   async modalidadeFindById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.ModalidadeFindOneByIdOperationOutput,
+    @HttpOperationInput("ModalidadeFindById") dto: IApiDoc.operations["ModalidadeFindById"],
   ) {
     return this.modalidadeService.modalidadeFindByIdStrict(accessContext, {
       id: dto.params.id,
@@ -41,11 +39,10 @@ export class ModalidadeController {
   //
 
   @Post("/")
-  @Operation(Tokens.ModalidadeCreate)
   async modalidadeCreate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.ModalidadeCreateOperationInput,
+    @HttpOperationInput("ModalidadeCreate") dto: IApiDoc.operations["ModalidadeCreate"],
   ) {
     return this.modalidadeService.modalidadeCreate(accessContext, dto);
   }
@@ -53,11 +50,10 @@ export class ModalidadeController {
   //
 
   @Patch("/:id")
-  @Operation(Tokens.ModalidadeUpdateOneById)
   async modalidadeUpdate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.ModalidadeUpdateByIdOperationInput,
+    @HttpOperationInput("ModalidadeUpdate") dto: IApiDoc.operations["ModalidadeUpdate"],
   ) {
     return this.modalidadeService.modalidadeUpdate(accessContext, dto);
   }
@@ -65,11 +61,10 @@ export class ModalidadeController {
   //
 
   @Delete("/:id")
-  @Operation(Tokens.ModalidadeDeleteOneById)
   async modalidadeDeleteOneById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.ModalidadeDeleteByIdOperationInput,
+    @HttpOperationInput("ModalidadeDeleteOneById") dto: IApiDoc.operations["ModalidadeDeleteOneById"],
   ) {
     return this.modalidadeService.modalidadeDeleteOneById(accessContext, {
       id: dto.params.id,

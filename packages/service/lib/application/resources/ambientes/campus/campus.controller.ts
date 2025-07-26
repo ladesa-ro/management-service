@@ -1,9 +1,8 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
-import { Tokens } from "@ladesa-ro/especificacao";
+import { HttpOperationInput } from "@/application/standards-new/HttpOperation";
+import type { IApiDoc } from "@/application/standards-new/openapi";
 import { Controller, Delete, Get, Patch, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import { CombinedInput } from "@/application/standards";
-import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { CampusService } from "./campus.service";
 
@@ -15,11 +14,10 @@ export class CampusController {
   //
 
   @Get("/")
-  @Operation(Tokens.CampusList)
   async campusFindAll(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.CampusListOperationInput,
+    @HttpOperationInput("CampusList") dto: IApiDoc.operations["CampusList"],
   ): Promise<LadesaTypings.CampusListOperationOutput["success"]> {
     return this.campusService.campusFindAll(accessContext, dto);
   }
@@ -27,11 +25,10 @@ export class CampusController {
   //
 
   @Get("/:id")
-  @Operation(Tokens.CampusFindOneById)
   async campusFindById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.CampusFindOneByIdOperationOutput,
+    @HttpOperationInput("CampusFindById") dto: IApiDoc.operations["CampusFindById"],
   ) {
     return this.campusService.campusFindByIdStrict(accessContext, {
       id: dto.params.id,
@@ -41,11 +38,10 @@ export class CampusController {
   //
 
   @Post("/")
-  @Operation(Tokens.CampusCreate)
   async campusCreate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.CampusCreateOperationInput,
+    @HttpOperationInput("CampusCreate") dto: IApiDoc.operations["CampusCreate"],
   ) {
     return this.campusService.campusCreate(accessContext, dto);
   }
@@ -53,11 +49,10 @@ export class CampusController {
   //
 
   @Patch("/:id")
-  @Operation(Tokens.CampusUpdateOneById)
   async campusUpdate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.CampusUpdateOperationInput,
+    @HttpOperationInput("CampusUpdate") dto: IApiDoc.operations["CampusUpdate"],
   ) {
     return this.campusService.campusUpdate(accessContext, dto);
   }
@@ -65,11 +60,10 @@ export class CampusController {
   //
 
   @Delete("/:id")
-  @Operation(Tokens.CampusDeleteOneById)
   async campusDeleteOneById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.CampusDeleteOneByIdOperationInput,
+    @HttpOperationInput("CampusDeleteOneById") dto: IApiDoc.operations["CampusDeleteOneById"],
   ) {
     return this.campusService.campusDeleteOneById(accessContext, {
       id: dto.params.id,

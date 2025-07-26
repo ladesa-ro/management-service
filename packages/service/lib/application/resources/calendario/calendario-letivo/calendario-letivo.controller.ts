@@ -13,10 +13,9 @@ export class CalendarioLetivoController {
   constructor(private calendarioLetivoService: CalendarioLetivoService) {}
 
   @Get("/")
-  @Operation(Tokens.CalendarioLetivoList)
   async calendarioFindAll(
     @AccessContextHttp() clientAccess: AccessContext,
-    @CombinedInput() dto: LadesaTypings.CalendarioLetivoListOperationInput,
+    @HttpOperationInput("CalendarioFindAll") dto: IApiDoc.operations["CalendarioFindAll"],
   ): Promise<LadesaTypings.CalendarioLetivoListOperationOutput["success"]> {
     return this.calendarioLetivoService.calendarioLetivoFindAll(clientAccess, dto);
   }
@@ -24,12 +23,11 @@ export class CalendarioLetivoController {
   //
 
   @Get("/:id")
-  @Operation(Tokens.CalendarioLetivoFindOneById)
   async calendarioLetivoFindById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput()
-    dto: LadesaTypings.CalendarioLetivoFindOneByIdOperationOutput,
+    
+    @HttpOperationInput("CalendarioLetivoFindById") dto: IApiDoc.operations["CalendarioLetivoFindById"],
   ) {
     return this.calendarioLetivoService.calendarioLetivoFindByIdStrict(accessContext, { id: dto.params.id });
   }
@@ -37,11 +35,10 @@ export class CalendarioLetivoController {
   //
 
   @Post("/")
-  @Operation(Tokens.CalendarioLetivoCreate)
   async campusCreate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.CalendarioLetivoCreateOperationInput,
+    @HttpOperationInput("CampusCreate") dto: IApiDoc.operations["CampusCreate"],
   ) {
     return this.calendarioLetivoService.calendarioLetivoCreate(accessContext, dto);
   }
@@ -49,11 +46,10 @@ export class CalendarioLetivoController {
   //
 
   @Patch("/:id")
-  @Operation(Tokens.CalendarioLetivoUpdateOneById)
   async calendarioLetivoUpdate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.CalendarioLetivoUpdateByIdOperationInput,
+    @HttpOperationInput("CalendarioLetivoUpdate") dto: IApiDoc.operations["CalendarioLetivoUpdate"],
   ) {
     return this.calendarioLetivoService.calendarioLetivoUpdate(accessContext, dto);
   }
@@ -61,11 +57,10 @@ export class CalendarioLetivoController {
   //
 
   @Delete("/:id")
-  @Operation(Tokens.CalendarioLetivoDeleteOneById)
   async CalendarioLetivoDeleteOneById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.CalendarioLetivoDeleteByIdOperationInput,
+    @HttpOperationInput("CalendarioLetivoDeleteOneById") dto: IApiDoc.operations["CalendarioLetivoDeleteOneById"],
   ) {
     return this.calendarioLetivoService.calendarioLetivoDeleteOneById(accessContext, { id: dto.params.id });
   }

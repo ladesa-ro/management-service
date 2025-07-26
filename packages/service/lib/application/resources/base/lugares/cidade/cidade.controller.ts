@@ -15,11 +15,10 @@ export class CidadeController {
   // ========================================================
 
   @Get("/")
-  @Operation(Tokens.CidadeList)
   async findAll(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.CidadeListOperationInput,
+    @HttpOperationInput("FindAll") dto: IApiDoc.operations["FindAll"],
   ): Promise<LadesaTypings.CidadeListOperationOutput["success"]> {
     return this.cidadeService.findAll(accessContext, dto);
   }
@@ -27,11 +26,10 @@ export class CidadeController {
   // ========================================================
 
   @Get("/:id")
-  @Operation(Tokens.CidadeFindOneById)
   async findById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.CidadeFindOneByIdOperationOutput,
+    @HttpOperationInput("FindById") dto: IApiDoc.operations["FindById"],
   ): Promise<LadesaTypings.CidadeFindOneResultView> {
     return this.cidadeService.findByIdStrict(accessContext, {
       id: dto.params.id,

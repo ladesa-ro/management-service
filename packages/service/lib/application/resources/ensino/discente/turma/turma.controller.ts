@@ -15,11 +15,10 @@ export class TurmaController {
   //
 
   @Get("/")
-  @Operation(Tokens.TurmaList)
   async turmaFindAll(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.TurmaListOperationInput,
+    @HttpOperationInput("TurmaFindAll") dto: IApiDoc.operations["TurmaFindAll"],
   ): Promise<LadesaTypings.TurmaListOperationOutput["success"]> {
     return this.turmaService.turmaFindAll(accessContext, dto);
   }
@@ -27,11 +26,10 @@ export class TurmaController {
   //
 
   @Get("/:id")
-  @Operation(Tokens.TurmaFindOneById)
   async turmaFindById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.TurmaFindOneByIdOperationOutput,
+    @HttpOperationInput("TurmaFindById") dto: IApiDoc.operations["TurmaFindById"],
   ) {
     return this.turmaService.turmaFindByIdStrict(accessContext, {
       id: dto.params.id,
@@ -41,11 +39,10 @@ export class TurmaController {
   //
 
   @Post("/")
-  @Operation(Tokens.TurmaCreate)
   async turmaCreate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.TurmaCreateOperationInput,
+    @HttpOperationInput("TurmaCreate") dto: IApiDoc.operations["TurmaCreate"],
   ) {
     return this.turmaService.turmaCreate(accessContext, dto);
   }
@@ -53,11 +50,10 @@ export class TurmaController {
   //
 
   @Patch("/:id")
-  @Operation(Tokens.TurmaUpdateOneById)
   async turmaUpdate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.TurmaUpdateByIdOperationInput,
+    @HttpOperationInput("TurmaUpdate") dto: IApiDoc.operations["TurmaUpdate"],
   ) {
     return this.turmaService.turmaUpdate(accessContext, dto);
   }
@@ -65,22 +61,18 @@ export class TurmaController {
   //
 
   @Get("/:id/imagem/capa")
-  @Operation(Tokens.TurmaGetImagemCapa)
   async turmaGetImagemCapa(
     //
-    @AccessContextHttp() accessContext: AccessContext,
-    @Param("id", ParseUUIDPipe) id: string,
+    @AccessContextHttp() accessContext: AccessContext
   ) {
     return this.turmaService.turmaGetImagemCapa(accessContext, id);
   }
 
   @Put("/:id/imagem/capa")
-  @Operation(Tokens.TurmaSetImagemCapa)
   async turmaImagemCapaSave(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @UploadedFile() file: Express.Multer.File,
-    @Param("id", ParseUUIDPipe) id: string,
+    @UploadedFile() file: Express.Multer.File
   ) {
     return this.turmaService.turmaUpdateImagemCapa(accessContext, { id }, file);
   }
@@ -88,11 +80,10 @@ export class TurmaController {
   //
 
   @Delete("/:id")
-  @Operation(Tokens.TurmaDeleteOneById)
   async turmaDeleteOneById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.TurmaDeleteByIdOperationInput,
+    @HttpOperationInput("TurmaDeleteOneById") dto: IApiDoc.operations["TurmaDeleteOneById"],
   ) {
     return this.turmaService.turmaDeleteOneById(accessContext, {
       id: dto.params.id,

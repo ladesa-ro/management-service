@@ -11,14 +11,12 @@ export class ArquivoController {
   constructor(private arquivoService: ArquivoService) {}
 
   @Get(":id")
-  @Operation(Tokens.ArquivoGetFile)
   async getFile(
     @AccessContextHttp() accessContext: AccessContext,
-    @Param("id") id: string,
     @Query("acesso.recurso.id") acessoRecursoId: string,
     @Query("acesso.recurso.nome") acessoRecursoNome: string,
   ): Promise<StreamableFile> {
-    return this.arquivoService.getStreamableFile(accessContext, id, {
+    return this.arquivoService.getStreamableFile(accessContext, id {
       id: acessoRecursoId,
       nome: acessoRecursoNome,
     });
