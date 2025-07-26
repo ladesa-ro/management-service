@@ -1,6 +1,8 @@
 import { Controller, Get } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { GerarHorarioService } from "./gerar-horario.service";
+import { HttpOperationInput } from "@/application/standards-new/HttpOperation";
+import { IApiDoc } from "@/application/standards-new/openapi";
 
 @ApiTags("gerar-horario")
 @Controller("/gerar-horario")

@@ -2,10 +2,11 @@ import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Tokens } from "@ladesa-ro/especificacao";
 import { Controller, Get } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import { CombinedInput } from "@/application/standards";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { EstadoService } from "./estado.service";
+import { HttpOperationInput } from "@/application/standards-new/HttpOperation";
+import { IApiDoc } from "@/application/standards-new/openapi";
 
 @ApiTags("estados")
 @Controller("/base/estados")

@@ -6,7 +6,7 @@ const project = new Project({
 });
 
 // Defina o padrão de arquivos que você quer alterar no final da linha
-const files = project.addSourceFilesAtPaths("packages/service/lib/application/resources/**/*.resolver.ts");
+const files = project.addSourceFilesAtPaths("packages/service/lib/application/resources/**/*.controller.ts");
 
 for (const sourceFile of files) {
   const importDecls = sourceFile.getImportDeclarations();
