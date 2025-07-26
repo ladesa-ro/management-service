@@ -15,12 +15,11 @@ export class ProfessorDisponibilidadeController {
   //
 
   @Get("/")
-  @Operation(Tokens.ProfessorDisponibilidadeList)
   async professorDisponibilidadeFindAll(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput()
-    dto: LadesaTypings.ProfessorDisponibilidadeListOperationInput,
+    
+    @HttpOperationInput("ProfessorDisponibilidadeFindAll") dto: IApiDoc.operations["ProfessorDisponibilidadeFindAll"],
   ): Promise<LadesaTypings.ProfessorDisponibilidadeListOperationOutput["success"]> {
     return this.professorDisponibilidadeService.professorDisponibilidadeFindAll(accessContext, dto);
   }
@@ -28,12 +27,11 @@ export class ProfessorDisponibilidadeController {
   //
 
   @Get("/:id")
-  @Operation(Tokens.ProfessorDisponibilidadeFindOneById)
   async professorDisponibilidadeFindById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput()
-    dto: LadesaTypings.ProfessorDisponibilidadeFindOneByIdOperationOutput,
+    
+    @HttpOperationInput("ProfessorDisponibilidadeFindById") dto: IApiDoc.operations["ProfessorDisponibilidadeFindById"],
   ) {
     return this.professorDisponibilidadeService.professorDisponibilidadeFindByIdStrict(accessContext, {
       id: dto.params.id,
@@ -43,12 +41,11 @@ export class ProfessorDisponibilidadeController {
   //
 
   @Post("/")
-  @Operation(Tokens.ProfessorDisponibilidadeCreate)
   async professorDisponibilidadeCreate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput()
-    dto: LadesaTypings.ProfessorDisponibilidadeCreateOperationInput,
+    
+    @HttpOperationInput("ProfessorDisponibilidadeCreate") dto: IApiDoc.operations["ProfessorDisponibilidadeCreate"],
   ) {
     return this.professorDisponibilidadeService.professorDisponibilidadeCreate(accessContext, dto);
   }
@@ -56,12 +53,11 @@ export class ProfessorDisponibilidadeController {
   //
 
   @Patch("/:id")
-  @Operation(Tokens.ProfessorDisponibilidadeUpdateOneById)
   async professorDisponibilidadeUpdate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput()
-    dto: LadesaTypings.ProfessorDisponibilidadeUpdateByIdOperationInput,
+    
+    @HttpOperationInput("ProfessorDisponibilidadeUpdate") dto: IApiDoc.operations["ProfessorDisponibilidadeUpdate"],
   ) {
     return this.professorDisponibilidadeService.professorDisponibilidadeUpdate(accessContext, dto);
   }
@@ -69,12 +65,11 @@ export class ProfessorDisponibilidadeController {
   //
 
   @Delete("/:id")
-  @Operation(Tokens.ProfessorDisponibilidadeDeleteOneById)
   async professorDisponibilidadeDeleteOneById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput()
-    dto: LadesaTypings.ProfessorDisponibilidadeDeleteByIdOperationInput,
+    
+    @HttpOperationInput("ProfessorDisponibilidadeDeleteOneById") dto: IApiDoc.operations["ProfessorDisponibilidadeDeleteOneById"],
   ) {
     return this.professorDisponibilidadeService.professorDisponibilidadeDeleteOneById(accessContext, {
       id: dto.params.id,

@@ -15,11 +15,10 @@ export class TurmaDisponibilidadeController {
   //
 
   @Get("/")
-  @Operation(Tokens.TurmaDisponibilidadeList)
   async turmaDisponibilidadeFindAll(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.TurmaDisponibilidadeListOperationInput,
+    @HttpOperationInput("TurmaDisponibilidadeFindAll") dto: IApiDoc.operations["TurmaDisponibilidadeFindAll"],
   ): Promise<LadesaTypings.TurmaDisponibilidadeListOperationOutput["success"]> {
     return this.turmaDisponibilidadeService.turmaDisponibilidadeFindAll(accessContext, dto);
   }
@@ -27,12 +26,11 @@ export class TurmaDisponibilidadeController {
   //
 
   @Get("/:id")
-  @Operation(Tokens.TurmaDisponibilidadeFindOneById)
   async turmaDisponibilidadeFindById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput()
-    dto: LadesaTypings.TurmaDisponibilidadeFindOneByIdOperationOutput,
+    
+    @HttpOperationInput("TurmaDisponibilidadeFindById") dto: IApiDoc.operations["TurmaDisponibilidadeFindById"],
   ) {
     return this.turmaDisponibilidadeService.turmaDisponibilidadeFindByIdStrict(accessContext, {
       id: dto.params.id,
@@ -42,11 +40,10 @@ export class TurmaDisponibilidadeController {
   //
 
   @Post("/")
-  @Operation(Tokens.TurmaDisponibilidadeCreate)
   async turmaDisponibilidadeCreate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.TurmaDisponibilidadeCreateOperationInput,
+    @HttpOperationInput("TurmaDisponibilidadeCreate") dto: IApiDoc.operations["TurmaDisponibilidadeCreate"],
   ) {
     return this.turmaDisponibilidadeService.turmaDisponibilidadeCreate(accessContext, dto);
   }
@@ -54,12 +51,11 @@ export class TurmaDisponibilidadeController {
   //
 
   @Patch("/:id")
-  @Operation(Tokens.TurmaDisponibilidadeUpdateOneById)
   async turmaDisponibilidadeUpdate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput()
-    dto: LadesaTypings.TurmaDisponibilidadeUpdateByIdOperationInput,
+    
+    @HttpOperationInput("TurmaDisponibilidadeUpdate") dto: IApiDoc.operations["TurmaDisponibilidadeUpdate"],
   ) {
     return this.turmaDisponibilidadeService.turmaDisponibilidadeUpdate(accessContext, dto);
   }
@@ -67,12 +63,11 @@ export class TurmaDisponibilidadeController {
   //
 
   @Delete("/:id")
-  @Operation(Tokens.TurmaDisponibilidadeDeleteOneById)
   async turmaDisponibilidadeDeleteOneById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput()
-    dto: LadesaTypings.TurmaDisponibilidadeDeleteByIdOperationInput,
+    
+    @HttpOperationInput("TurmaDisponibilidadeDeleteOneById") dto: IApiDoc.operations["TurmaDisponibilidadeDeleteOneById"],
   ) {
     return this.turmaDisponibilidadeService.turmaDisponibilidadeDeleteOneById(accessContext, {
       id: dto.params.id,

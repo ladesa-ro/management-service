@@ -15,10 +15,9 @@ export class DiarioProfessorController {
   //
 
   @Get("/")
-  @Operation(Tokens.DiarioProfessorList)
   async diarioProfessorFindAll(
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.DiarioProfessorListOperationInput,
+    @HttpOperationInput("DiarioProfessorFindAll") dto: IApiDoc.operations["DiarioProfessorFindAll"],
   ): Promise<LadesaTypings.DiarioProfessorListOperationOutput["success"]> {
     return this.diarioProfessorService.diarioProfessorFindAll(accessContext, dto);
   }
@@ -26,12 +25,11 @@ export class DiarioProfessorController {
   //
 
   @Get("/:id")
-  @Operation(Tokens.DiarioProfessorFindOneById)
   async diarioProfessorFindById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput()
-    dto: LadesaTypings.DiarioProfessorFindOneByIdOperationOutput,
+    
+    @HttpOperationInput("DiarioProfessorFindById") dto: IApiDoc.operations["DiarioProfessorFindById"],
   ) {
     return this.diarioProfessorService.diarioProfessorFindByIdStrict(accessContext, { id: dto.params.id });
   }
@@ -39,11 +37,10 @@ export class DiarioProfessorController {
   //
 
   @Post("/")
-  @Operation(Tokens.DiarioProfessorCreate)
   async diarioProfessorCreate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.DiarioProfessorCreateOperationInput,
+    @HttpOperationInput("DiarioProfessorCreate") dto: IApiDoc.operations["DiarioProfessorCreate"],
   ) {
     return this.diarioProfessorService.diarioProfessorCreate(accessContext, dto);
   }
@@ -51,11 +48,10 @@ export class DiarioProfessorController {
   //
 
   @Patch("/:id")
-  @Operation(Tokens.DiarioProfessorUpdateOneById)
   async diarioProfessorUpdate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.DiarioProfessorUpdateByIdOperationInput,
+    @HttpOperationInput("DiarioProfessorUpdate") dto: IApiDoc.operations["DiarioProfessorUpdate"],
   ) {
     return this.diarioProfessorService.diarioProfessorUpdate(accessContext, dto);
   }
@@ -63,11 +59,10 @@ export class DiarioProfessorController {
   //
 
   @Delete("/:id")
-  @Operation(Tokens.DiarioProfessorDeleteOneById)
   async diarioProfessorDeleteOneById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.DiarioProfessorDeleteByIdOperationInput,
+    @HttpOperationInput("DiarioProfessorDeleteOneById") dto: IApiDoc.operations["DiarioProfessorDeleteOneById"],
   ) {
     return this.diarioProfessorService.diarioProfessorDeleteOneById(accessContext, { id: dto.params.id });
   }

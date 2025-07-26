@@ -60,7 +60,7 @@ export class AmbienteController {
     @AccessContextHttp() accessContext: AccessContext,
     @HttpOperationInput("AmbienteGetImagemCapa") dto: IApiDoc.operations["AmbienteGetImagemCapa"]
   ) {
-    return this.ambienteService.ambienteGetImagemCapa(accessContext, dto.parameters.path.id);
+    return this.ambienteService.ambienteGetImagemCapa(accessContext, id);
   }
 
   @Put("/:id/imagem/capa")

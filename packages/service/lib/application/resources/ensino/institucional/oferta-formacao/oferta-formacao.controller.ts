@@ -15,11 +15,10 @@ export class OfertaFormacaoController {
   //
 
   @Get("/")
-  @Operation(Tokens.OfertaFormacaoList)
   async ofertaFormacaoFindAll(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.OfertaFormacaoListOperationInput,
+    @HttpOperationInput("OfertaFormacaoFindAll") dto: IApiDoc.operations["OfertaFormacaoFindAll"],
   ): Promise<LadesaTypings.OfertaFormacaoListOperationOutput["success"]> {
     return this.ofertaFormacaoService.ofertaFormacaoFindAll(accessContext, dto);
   }
@@ -27,11 +26,10 @@ export class OfertaFormacaoController {
   //
 
   @Get("/:id")
-  @Operation(Tokens.OfertaFormacaoFindOneById)
   async ofertaFormacaoFindById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.OfertaFormacaoFindOneByIdOperationOutput,
+    @HttpOperationInput("OfertaFormacaoFindById") dto: IApiDoc.operations["OfertaFormacaoFindById"],
   ) {
     return this.ofertaFormacaoService.ofertaFormacaoFindByIdStrict(accessContext, {
       id: dto.params.id,
@@ -41,11 +39,10 @@ export class OfertaFormacaoController {
   //
 
   @Post("/")
-  @Operation(Tokens.OfertaFormacaoCreate)
   async ofertaFormacaoCreate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.OfertaFormacaoCreateOperationInput,
+    @HttpOperationInput("OfertaFormacaoCreate") dto: IApiDoc.operations["OfertaFormacaoCreate"],
   ) {
     return this.ofertaFormacaoService.ofertaFormacaoCreate(accessContext, dto);
   }
@@ -53,11 +50,10 @@ export class OfertaFormacaoController {
   //
 
   @Patch("/:id")
-  @Operation(Tokens.OfertaFormacaoUpdateOneById)
   async ofertaFormacaoUpdate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.OfertaFormacaoUpdateByIdOperationInput,
+    @HttpOperationInput("OfertaFormacaoUpdate") dto: IApiDoc.operations["OfertaFormacaoUpdate"],
   ) {
     return this.ofertaFormacaoService.ofertaFormacaoUpdate(accessContext, dto);
   }
@@ -65,11 +61,10 @@ export class OfertaFormacaoController {
   //
 
   @Delete("/:id")
-  @Operation(Tokens.OfertaFormacaoDeleteOneById)
   async ofertaFormacaoDeleteOneById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.OfertaFormacaoDeleteByIdOperationInput,
+    @HttpOperationInput("OfertaFormacaoDeleteOneById") dto: IApiDoc.operations["OfertaFormacaoDeleteOneById"],
   ) {
     return this.ofertaFormacaoService.ofertaFormacaoDeleteOneById(accessContext, {
       id: dto.params.id,

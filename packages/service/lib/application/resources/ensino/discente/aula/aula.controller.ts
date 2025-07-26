@@ -15,11 +15,10 @@ export class AulaController {
   //
 
   @Get("/")
-  @Operation(Tokens.AulaList)
   async aulaFindAll(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.AulaListOperationInput,
+    @HttpOperationInput("AulaFindAll") dto: IApiDoc.operations["AulaFindAll"],
   ): Promise<LadesaTypings.AulaListOperationOutput["success"]> {
     return this.aulaService.aulaFindAll(accessContext, dto);
   }
@@ -27,11 +26,10 @@ export class AulaController {
   //
 
   @Get("/:id")
-  @Operation(Tokens.AulaFindOneById)
   async aulaFindById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.AulaFindOneByIdOperationOutput,
+    @HttpOperationInput("AulaFindById") dto: IApiDoc.operations["AulaFindById"],
   ) {
     return this.aulaService.aulaFindByIdStrict(accessContext, {
       id: dto.params.id,
@@ -41,11 +39,10 @@ export class AulaController {
   //
 
   @Post("/")
-  @Operation(Tokens.AulaCreate)
   async aulaCreate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.AulaCreateOperationInput,
+    @HttpOperationInput("AulaCreate") dto: IApiDoc.operations["AulaCreate"],
   ) {
     return this.aulaService.aulaCreate(accessContext, dto);
   }
@@ -53,11 +50,10 @@ export class AulaController {
   //
 
   @Patch("/:id")
-  @Operation(Tokens.AulaUpdateOneById)
   async aulaUpdate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.AulaUpdateByIdOperationInput,
+    @HttpOperationInput("AulaUpdate") dto: IApiDoc.operations["AulaUpdate"],
   ) {
     return this.aulaService.aulaUpdate(accessContext, dto);
   }
@@ -65,11 +61,10 @@ export class AulaController {
   //
 
   @Delete("/:id")
-  @Operation(Tokens.AulaDeleteOneById)
   async aulaDeleteOneById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.AulaDeleteByIdOperationInput,
+    @HttpOperationInput("AulaDeleteOneById") dto: IApiDoc.operations["AulaDeleteOneById"],
   ) {
     return this.aulaService.aulaDeleteOneById(accessContext, {
       id: dto.params.id,

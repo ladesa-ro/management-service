@@ -15,11 +15,10 @@ export class DiarioController {
   //
 
   @Get("/")
-  @Operation(Tokens.DiarioList)
   async diarioFindAll(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.DiarioListOperationInput,
+    @HttpOperationInput("DiarioFindAll") dto: IApiDoc.operations["DiarioFindAll"],
   ): Promise<LadesaTypings.DiarioListOperationOutput["success"]> {
     return this.diarioService.diarioFindAll(accessContext, dto);
   }
@@ -27,11 +26,10 @@ export class DiarioController {
   //
 
   @Get("/:id")
-  @Operation(Tokens.DiarioFindOneById)
   async diarioFindById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.DiarioFindOneByIdOperationOutput,
+    @HttpOperationInput("DiarioFindById") dto: IApiDoc.operations["DiarioFindById"],
   ) {
     return this.diarioService.diarioFindByIdStrict(accessContext, {
       id: dto.params.id,
@@ -41,11 +39,10 @@ export class DiarioController {
   //
 
   @Post("/")
-  @Operation(Tokens.DiarioCreate)
   async diarioCreate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.DiarioCreateOperationInput,
+    @HttpOperationInput("DiarioCreate") dto: IApiDoc.operations["DiarioCreate"],
   ) {
     return this.diarioService.diarioCreate(accessContext, dto);
   }
@@ -53,11 +50,10 @@ export class DiarioController {
   //
 
   @Patch("/:id")
-  @Operation(Tokens.DiarioUpdateOneById)
   async diarioUpdate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.DiarioUpdateByIdOperationInput,
+    @HttpOperationInput("DiarioUpdate") dto: IApiDoc.operations["DiarioUpdate"],
   ) {
     return this.diarioService.diarioUpdate(accessContext, dto);
   }
@@ -65,11 +61,10 @@ export class DiarioController {
   //
 
   @Delete("/:id")
-  @Operation(Tokens.DiarioDeleteOneById)
   async diarioDeleteOneById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.DiarioDeleteByIdOperationInput,
+    @HttpOperationInput("DiarioDeleteOneById") dto: IApiDoc.operations["DiarioDeleteOneById"],
   ) {
     return this.diarioService.diarioDeleteOneById(accessContext, {
       id: dto.params.id,
