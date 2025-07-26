@@ -15,11 +15,10 @@ export class DisciplinaController {
   //
 
   @Get("/")
-  @Operation(Tokens.DisciplinaList)
   async disciplinaFindAll(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.DisciplinaListOperationInput,
+    @HttpOperationInput("DisciplinaFindAll") dto: IApiDoc.operations["DisciplinaFindAll"],
   ): Promise<LadesaTypings.DisciplinaListOperationOutput["success"]> {
     return this.disciplinaService.disciplinaFindAll(accessContext, dto);
   }
@@ -27,11 +26,10 @@ export class DisciplinaController {
   //
 
   @Get("/:id")
-  @Operation(Tokens.DisciplinaFindOneById)
   async disciplinaFindById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.DisciplinaFindOneByIdOperationOutput,
+    @HttpOperationInput("DisciplinaFindById") dto: IApiDoc.operations["DisciplinaFindById"],
   ) {
     return this.disciplinaService.disciplinaFindByIdStrict(accessContext, {
       id: dto.params.id,
@@ -41,11 +39,10 @@ export class DisciplinaController {
   //
 
   @Post("/")
-  @Operation(Tokens.DisciplinaCreate)
   async disciplinaCreate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.DisciplinaCreateOperationInput,
+    @HttpOperationInput("DisciplinaCreate") dto: IApiDoc.operations["DisciplinaCreate"],
   ) {
     return this.disciplinaService.disciplinaCreate(accessContext, dto);
   }
@@ -53,11 +50,10 @@ export class DisciplinaController {
   //
 
   @Patch("/:id")
-  @Operation(Tokens.DisciplinaUpdateOneById)
   async disciplinaUpdate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.DisciplinaUpdateByIdOperationInput,
+    @HttpOperationInput("DisciplinaUpdate") dto: IApiDoc.operations["DisciplinaUpdate"],
   ) {
     return this.disciplinaService.disciplinaUpdate(accessContext, dto);
   }
@@ -65,22 +61,18 @@ export class DisciplinaController {
   //
 
   @Get("/:id/imagem/capa")
-  @Operation(Tokens.DisciplinaGetImagemCapa)
   async disciplinaGetImagemCapa(
     //
-    @AccessContextHttp() accessContext: AccessContext,
-    @Param("id", ParseUUIDPipe) id: string,
+    @AccessContextHttp() accessContext: AccessContext
   ) {
     return this.disciplinaService.disciplinaGetImagemCapa(accessContext, id);
   }
 
   @Put("/:id/imagem/capa")
-  @Operation(Tokens.DisciplinaSetImagemCapa)
   async disciplinaImagemCapaSave(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @UploadedFile() file: Express.Multer.File,
-    @Param("id", ParseUUIDPipe) id: string,
+    @UploadedFile() file: Express.Multer.File
   ) {
     return this.disciplinaService.disciplinaUpdateImagemCapa(accessContext, { id }, file);
   }
@@ -88,11 +80,10 @@ export class DisciplinaController {
   //
 
   @Delete("/:id")
-  @Operation(Tokens.DisciplinaDeleteOneById)
   async disciplinaDeleteOneById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.DisciplinaDeleteByIdOperationInput,
+    @HttpOperationInput("DisciplinaDeleteOneById") dto: IApiDoc.operations["DisciplinaDeleteOneById"],
   ) {
     return this.disciplinaService.disciplinaDeleteOneById(accessContext, {
       id: dto.params.id,

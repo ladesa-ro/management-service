@@ -13,10 +13,9 @@ export class HorarioGeradoAulaController {
   constructor(private horarioGeradoAulaService: HorarioGeradoAulaService) {}
 
   @Get("/")
-  @Operation(Tokens.HorarioGeradoAulaList)
   async horarioGeradoAulaFindAll(
     @AccessContextHttp() clientAccess: AccessContext,
-    @CombinedInput() dto: LadesaTypings.HorarioGeradoAulaListOperationInput,
+    @HttpOperationInput("HorarioGeradoAulaFindAll") dto: IApiDoc.operations["HorarioGeradoAulaFindAll"],
   ): Promise<LadesaTypings.HorarioGeradoAulaListOperationOutput["success"]> {
     return this.horarioGeradoAulaService.horarioGeradoAulaFindAll(clientAccess, dto);
   }
@@ -24,11 +23,10 @@ export class HorarioGeradoAulaController {
   //
 
   @Get("/:id")
-  @Operation(Tokens.HorarioGeradoAulaFindOneById)
   async horarioGeradoAulaFindById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.HorarioGeradoAulaFindByIdOperationOutput,
+    @HttpOperationInput("HorarioGeradoAulaFindById") dto: IApiDoc.operations["HorarioGeradoAulaFindById"],
   ) {
     return this.horarioGeradoAulaService.horarioGeradoAulaFindByIdStrict(accessContext, { id: dto.params.id });
   }
@@ -36,11 +34,10 @@ export class HorarioGeradoAulaController {
   //
 
   @Post("/")
-  @Operation(Tokens.HorarioGeradoAulaCreate)
   async horarioGeradoAulaCreate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.HorarioGeradoAulaCreateOperationInput,
+    @HttpOperationInput("HorarioGeradoAulaCreate") dto: IApiDoc.operations["HorarioGeradoAulaCreate"],
   ) {
     return this.horarioGeradoAulaService.HorarioGeradoAulaCreate(accessContext, dto);
   }
@@ -48,12 +45,11 @@ export class HorarioGeradoAulaController {
   //
 
   @Patch("/:id")
-  @Operation(Tokens.HorarioGeradoAulaUpdateOneById)
   async HorarioGeradoAulaUpdate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput()
-    dto: LadesaTypings.HorarioGeradoAulaUpdateByIdOperationInput,
+    
+    @HttpOperationInput("HorarioGeradoAulaUpdate") dto: IApiDoc.operations["HorarioGeradoAulaUpdate"],
   ) {
     return this.horarioGeradoAulaService.HorarioGeradoAulaUpdate(accessContext, dto);
   }
@@ -61,12 +57,11 @@ export class HorarioGeradoAulaController {
   //
 
   @Delete("/:id")
-  @Operation(Tokens.HorarioGeradoAulaDeleteOneById)
   async HorarioGeradoAulaDeleteOneById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput()
-    dto: LadesaTypings.HorarioGeradoAulaDeleteByIdOperationInput,
+    
+    @HttpOperationInput("HorarioGeradoAulaDeleteOneById") dto: IApiDoc.operations["HorarioGeradoAulaDeleteOneById"],
   ) {
     return this.horarioGeradoAulaService.horarioGeradoAulaDeleteOneById(accessContext, { id: dto.params.id });
   }

@@ -14,7 +14,6 @@ export class AutenticacaoController {
   constructor(private readonly autenticacaoService: AutenticacaoService) {}
 
   @Get("/quem-sou-eu")
-  @Operation(Tokens.AuthWhoAmI)
   whoAmI(
     //
     @AccessContextHttp() accessContext: AccessContext,
@@ -24,7 +23,6 @@ export class AutenticacaoController {
 
   @Post("/login")
   @Public()
-  @Operation(Tokens.AuthLogin)
   login(
     //
     @AccessContextHttp() accessContext: AccessContext,
@@ -35,7 +33,6 @@ export class AutenticacaoController {
 
   @Post("/login/refresh")
   @Public()
-  @Operation(Tokens.AuthRefresh)
   refresh(
     //
     @AccessContextHttp() accessContext: AccessContext,
@@ -45,7 +42,6 @@ export class AutenticacaoController {
   }
 
   @Post("/definir-senha")
-  @Operation(Tokens.AuthSetInitialPassword)
   definirSenha(
     //
     @AccessContextHttp() accessContext: AccessContext,
@@ -56,7 +52,6 @@ export class AutenticacaoController {
   }
 
   @Post("/redefinir-senha")
-  @Operation(Tokens.AuthRecoverPassword)
   redefinirSenha(@AccessContextHttp() accessContext: AccessContext, @CombinedInput() dto: LadesaTypings.AuthRecoverPasswordOperationInput) {
     return this.autenticacaoService.recoverPassword(accessContext, dto);
   }

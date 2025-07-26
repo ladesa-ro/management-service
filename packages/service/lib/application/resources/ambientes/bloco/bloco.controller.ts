@@ -15,23 +15,20 @@ export class BlocoController {
   //
 
   @Get("/")
-  @Operation(Tokens.BlocoList)
   async blocoFindAll(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() combinedInput: LadesaTypings.BlocoListOperationInput,
+    @HttpOperationInput("BlocoFindAll") dto: IApiDoc.operations["BlocoFindAll"],
   ): Promise<LadesaTypings.BlocoListOperationOutput["success"]> {
-    return this.blocoService.blocoFindAll(accessContext, combinedInput);
+    return this.blocoService.blocoFindAll(accessContext, dto);
   }
 
   //
 
   @Get("/:id")
-  @Operation(Tokens.BlocoFindOneById)
   async blocoFindById(
     //
-    @AccessContextHttp() accessContext: AccessContext,
-    @Param("id", ParseUUIDPipe) id: string,
+    @AccessContextHttp() accessContext: AccessContext
   ) {
     return this.blocoService.blocoFindByIdStrict(accessContext, { id });
   }
@@ -39,46 +36,40 @@ export class BlocoController {
   //
 
   @Post("/")
-  @Operation(Tokens.BlocoCreate)
   async blocoCreate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() combinedInput: LadesaTypings.BlocoCreateOperationInput,
+    @HttpOperationInput("BlocoCreate") dto: IApiDoc.operations["BlocoCreate"],
   ) {
-    return this.blocoService.blocoCreate(accessContext, combinedInput);
+    return this.blocoService.blocoCreate(accessContext, dto);
   }
 
   //
 
   @Patch("/:id")
-  @Operation(Tokens.BlocoUpdateOneById)
   async blocoUpdate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() combinedInput: LadesaTypings.BlocoUpdateByIdOperationInput,
+    @HttpOperationInput("BlocoUpdate") dto: IApiDoc.operations["BlocoUpdate"],
   ) {
-    return this.blocoService.blocoUpdate(accessContext, combinedInput);
+    return this.blocoService.blocoUpdate(accessContext, dto);
   }
 
   //
 
   @Get("/:id/imagem/capa")
-  @Operation(Tokens.BlocoGetImagemCapa)
   async blocoGetImagemCapa(
     //
-    @AccessContextHttp() accessContext: AccessContext,
-    @Param("id", ParseUUIDPipe) id: string,
+    @AccessContextHttp() accessContext: AccessContext
   ) {
     return this.blocoService.blocoGetImagemCapa(accessContext, id);
   }
 
   @Put("/:id/imagem/capa")
-  @Operation(Tokens.BlocoSetImagemCapa)
   async blocoImagemCapaSave(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @UploadedFile() file: Express.Multer.File,
-    @Param("id", ParseUUIDPipe) id: string,
+    @UploadedFile() file: Express.Multer.File
   ) {
     return this.blocoService.blocoUpdateImagemCapa(accessContext, { id }, file);
   }
@@ -86,14 +77,13 @@ export class BlocoController {
   //
 
   @Delete("/:id")
-  @Operation(Tokens.BlocoDeleteOneById)
   async blocoDeleteOneById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() combinedInput: LadesaTypings.BlocoDeleteByIdOperationInput,
+    @HttpOperationInput("BlocoDeleteOneById") dto: IApiDoc.operations["BlocoDeleteOneById"],
   ) {
     return this.blocoService.blocoDeleteOneById(accessContext, {
-      id: combinedInput.params.id,
+      id: dto.params.id,
     });
   }
 

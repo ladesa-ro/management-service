@@ -3,28 +3,20 @@ import {
   Delete,
   Get,
   Param,
-  ParseUUIDPipe,
   Patch,
   Post,
   Put,
   UploadedFile,
 } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-
-import { CombinedInput } from "@/application/standards";
-import { Operation } from "@/application/standards/especificacao/business-logic";
 import { HttpOperationInput } from "@/application/standards-new/HttpOperation";
 import type { IApiDoc } from "@/application/standards-new/openapi";
-
 import {
   AccessContext,
   AccessContextHttp,
 } from "@/infrastructure/access-context";
-
 import { AmbienteService } from "./ambiente.service";
-
-import * as LadesaTypings from "@ladesa-ro/especificacao";
-import { Tokens } from "@ladesa-ro/especificacao";
+import { ID } from "@nestjs/graphql";
 
 @ApiTags("ambientes")
 @Controller("/ambientes")
@@ -66,8 +58,7 @@ export class AmbienteController {
   @Get("/:id/imagem/capa")
   async ambienteGetImagemCapa(
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("AmbienteGetImagemCapa") dto: IApiDoc.operations["AmbienteGetImagemCapa"],
-    @Param("id", ParseUUIDPipe) id: string
+    @HttpOperationInput("AmbienteGetImagemCapa") dto: IApiDoc.operations["AmbienteGetImagemCapa"]
   ) {
     return this.ambienteService.ambienteGetImagemCapa(accessContext, id);
   }
@@ -76,12 +67,11 @@ export class AmbienteController {
   async ambienteImagemCapaSave(
     @AccessContextHttp() accessContext: AccessContext,
     @HttpOperationInput("AmbienteSetImagemCapa") dto: IApiDoc.operations["AmbienteSetImagemCapa"],
-    @UploadedFile() file: Express.Multer.File,
-    @Param("id", ParseUUIDPipe) id: string
+    @UploadedFile() file: Express.Multer.File
   ) {
     return this.ambienteService.ambienteUpdateImagemCapa(
       accessContext,
-      { id },
+      { ID: dto.parameters.path.id },
       file
     );
   }

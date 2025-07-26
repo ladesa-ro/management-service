@@ -13,11 +13,10 @@ export class DiarioPreferenciaAgrupamentoController {
   constructor(private diarioPreferenciaAgrupamentoService: DiarioPreferenciaAgrupamentoService) {}
 
   @Get("/")
-  @Operation(Tokens.DiarioPreferenciaAgrupamentoList)
   async diarioPreferenciaAgrupamentoFindAll(
     @AccessContextHttp() clientAccess: AccessContext,
-    @CombinedInput()
-    dto: LadesaTypings.DiarioPreferenciaAgrupamentoListOperationInput,
+    
+    @HttpOperationInput("DiarioPreferenciaAgrupamentoFindAll") dto: IApiDoc.operations["DiarioPreferenciaAgrupamentoFindAll"],
   ): Promise<LadesaTypings.DiarioPreferenciaAgrupamentoListOperationOutput["success"]> {
     return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoFindAll(clientAccess, dto);
   }
@@ -25,12 +24,11 @@ export class DiarioPreferenciaAgrupamentoController {
   //
 
   @Get("/:id")
-  @Operation(Tokens.DiarioPreferenciaAgrupamentoFindOneById)
   async diarioPreferenciaAgrupamentoFindById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput()
-    dto: LadesaTypings.DiarioPreferenciaAgrupamentoFindByIdOperationOutput,
+    
+    @HttpOperationInput("DiarioPreferenciaAgrupamentoFindById") dto: IApiDoc.operations["DiarioPreferenciaAgrupamentoFindById"],
   ) {
     return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoFindByIdStrict(accessContext, { id: dto.params.id });
   }
@@ -38,12 +36,11 @@ export class DiarioPreferenciaAgrupamentoController {
   //
 
   @Post("/")
-  @Operation(Tokens.DiarioPreferenciaAgrupamentoCreate)
   async diarioPreferenciaAgrupamentoCreate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput()
-    dto: LadesaTypings.DiarioPreferenciaAgrupamentoCreateOperationInput,
+    
+    @HttpOperationInput("DiarioPreferenciaAgrupamentoCreate") dto: IApiDoc.operations["DiarioPreferenciaAgrupamentoCreate"],
   ) {
     return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoCreate(accessContext, dto);
   }
@@ -51,12 +48,11 @@ export class DiarioPreferenciaAgrupamentoController {
   //
 
   @Patch("/:id")
-  @Operation(Tokens.DiarioPreferenciaAgrupamentoUpdateOneById)
   async diarioPreferenciaAgrupamentoUpdate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput()
-    dto: LadesaTypings.DiarioPreferenciaAgrupamentoUpdateByIdOperationInput,
+    
+    @HttpOperationInput("DiarioPreferenciaAgrupamentoUpdate") dto: IApiDoc.operations["DiarioPreferenciaAgrupamentoUpdate"],
   ) {
     return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoUpdate(accessContext, dto);
   }
@@ -64,12 +60,11 @@ export class DiarioPreferenciaAgrupamentoController {
   //
 
   @Delete("/:id")
-  @Operation(Tokens.DiarioPreferenciaAgrupamentoDeleteOneById)
   async diarioPreferenciaAgrupamentoDeleteOneById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput()
-    dto: LadesaTypings.DiarioPreferenciaAgrupamentoDeleteByIdOperationInput,
+    
+    @HttpOperationInput("DiarioPreferenciaAgrupamentoDeleteOneById") dto: IApiDoc.operations["DiarioPreferenciaAgrupamentoDeleteOneById"],
   ) {
     return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoDeleteOneById(accessContext, { id: dto.params.id });
   }
