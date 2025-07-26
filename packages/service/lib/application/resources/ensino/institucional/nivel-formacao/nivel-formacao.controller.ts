@@ -5,7 +5,7 @@ import { ApiTags } from "@nestjs/swagger";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { NivelFormacaoService } from "./nivel-formacao.service";
-import { HttpOperationInput } from "@/application/standards-new/HttpOperation";
+import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { IApiDoc } from "@/application/standards-new/openapi";
 
 @ApiTags("niveis-formacoes")
@@ -19,7 +19,7 @@ export class NivelFormacaoController {
   async nivelformacaoFindAll(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("NivelformacaoFindAll") dto: IApiDoc.operations["NivelformacaoFindAll"],
+    @HttpOperationInput("NivelformacaoFindAll") dto: IOperationInput<"NivelformacaoFindAll">,
   ): Promise<LadesaTypings.NivelFormacaoListOperationOutput["success"]> {
     return this.nivelformacaoService.nivelFormacaoFindAll(accessContext, dto);
   }
@@ -30,7 +30,7 @@ export class NivelFormacaoController {
   async nivelformacaoFindById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("NivelformacaoFindById") dto: IApiDoc.operations["NivelformacaoFindById"],
+    @HttpOperationInput("NivelformacaoFindById") dto: IOperationInput<"NivelformacaoFindById">,
   ) {
     return this.nivelformacaoService.nivelFormacaoFindByIdStrict(accessContext, {
       id: dto.parameters.path.id,
@@ -43,7 +43,7 @@ export class NivelFormacaoController {
   async nivelformacaoCreate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("NivelformacaoCreate") dto: IApiDoc.operations["NivelformacaoCreate"],
+    @HttpOperationInput("NivelformacaoCreate") dto: IOperationInput<"NivelformacaoCreate">,
   ) {
     return this.nivelformacaoService.nivelFormacaoCreate(accessContext, dto);
   }
@@ -54,7 +54,7 @@ export class NivelFormacaoController {
   async nivelformacaoUpdate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("NivelformacaoUpdate") dto: IApiDoc.operations["NivelformacaoUpdate"],
+    @HttpOperationInput("NivelformacaoUpdate") dto: IOperationInput<"NivelformacaoUpdate">,
   ) {
     return this.nivelformacaoService.nivelFormacaoUpdate(accessContext, dto);
   }
@@ -65,7 +65,7 @@ export class NivelFormacaoController {
   async nivelformacaoDeleteOneById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("NivelformacaoDeleteOneById") dto: IApiDoc.operations["NivelformacaoDeleteOneById"],
+    @HttpOperationInput("NivelformacaoDeleteOneById") dto: IOperationInput<"NivelformacaoDeleteOneById">,
   ) {
     return this.nivelformacaoService.nivelFormacaoDeleteOneById(accessContext, {
       id: dto.parameters.path.id,

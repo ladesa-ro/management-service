@@ -5,7 +5,7 @@ import { ApiTags } from "@nestjs/swagger";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { EventoService } from "./evento.service";
-import { HttpOperationInput } from "@/application/standards-new/HttpOperation";
+import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { IApiDoc } from "@/application/standards-new/openapi";
 
 @ApiTags("eventos")
@@ -14,7 +14,7 @@ export class EventoController {
   constructor(private eventoService: EventoService) {}
 
   @Get("/")
-  async eventoFindAll(@AccessContextHttp() clientAccess: AccessContext, @HttpOperationInput("EventoFindAll") dto: IApiDoc.operations["EventoFindAll"]): Promise<LadesaTypings.EventoListOperationOutput["success"]> {
+  async eventoFindAll(@AccessContextHttp() clientAccess: AccessContext, @HttpOperationInput("EventoFindAll") dto: IOperationInput<"EventoFindAll">): Promise<LadesaTypings.EventoListOperationOutput["success"]> {
     return this.eventoService.eventoFindAll(clientAccess, dto);
   }
 
@@ -24,7 +24,7 @@ export class EventoController {
   async eventoFindById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("EventoFindById") dto: IApiDoc.operations["EventoFindById"],
+    @HttpOperationInput("EventoFindById") dto: IOperationInput<"EventoFindById">,
   ) {
     return this.eventoService.eventoFindByIdStrict(accessContext, {
       id: dto.parameters.path.id,
@@ -37,7 +37,7 @@ export class EventoController {
   async eventoCreate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("EventoCreate") dto: IApiDoc.operations["EventoCreate"],
+    @HttpOperationInput("EventoCreate") dto: IOperationInput<"EventoCreate">,
   ) {
     return this.eventoService.eventoCreate(accessContext, dto);
   }
@@ -48,7 +48,7 @@ export class EventoController {
   async eventoUpdate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("EventoUpdate") dto: IApiDoc.operations["EventoUpdate"],
+    @HttpOperationInput("EventoUpdate") dto: IOperationInput<"EventoUpdate">,
   ) {
     return this.eventoService.eventoUpdate(accessContext, dto);
   }
@@ -59,7 +59,7 @@ export class EventoController {
   async eventoDeleteOneById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("EventoDeleteOneById") dto: IApiDoc.operations["EventoDeleteOneById"],
+    @HttpOperationInput("EventoDeleteOneById") dto: IOperationInput<"EventoDeleteOneById">,
   ) {
     return this.eventoService.eventoDeleteOneById(accessContext, {
       id: dto.parameters.path.id,

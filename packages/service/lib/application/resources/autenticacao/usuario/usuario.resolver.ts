@@ -4,7 +4,7 @@ import { Resolver } from "@nestjs/graphql";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { UsuarioService } from "./usuario.service";
-import { HttpOperationInput } from "@/application/standards-new/HttpOperation";
+import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { IApiDoc } from "@/application/standards-new/openapi";
 
 @Resolver()
@@ -19,7 +19,7 @@ export class UsuarioResolver {
   async usuarioFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("UsuarioFindAll") dto: IApiDoc.operations["UsuarioFindAll"],
+    @HttpOperationInput("UsuarioFindAll") dto: IOperationInput<"UsuarioFindAll">,
   ) {
     return this.usuarioService.usuarioFindAll(accessContext, dto);
   }
@@ -29,7 +29,7 @@ export class UsuarioResolver {
   async usuarioFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("UsuarioFindOneById") dto: IApiDoc.operations["UsuarioFindOneById"],
+    @HttpOperationInput("UsuarioFindOneById") dto: IOperationInput<"UsuarioFindOneById">,
   ) {
     return this.usuarioService.usuarioFindByIdStrict(accessContext, {
       id: dto.parameters.path.id,
@@ -41,7 +41,7 @@ export class UsuarioResolver {
   async usuarioCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("UsuarioCreate") dto: IApiDoc.operations["UsuarioCreate"],
+    @HttpOperationInput("UsuarioCreate") dto: IOperationInput<"UsuarioCreate">,
   ) {
     return this.usuarioService.usuarioCreate(accessContext, dto);
   }
@@ -50,7 +50,7 @@ export class UsuarioResolver {
   async usuarioUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("UsuarioUpdate") dto: IApiDoc.operations["UsuarioUpdate"],
+    @HttpOperationInput("UsuarioUpdate") dto: IOperationInput<"UsuarioUpdate">,
   ) {
     return this.usuarioService.usuarioUpdate(accessContext, dto);
   }
@@ -59,7 +59,7 @@ export class UsuarioResolver {
   async usuarioDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("UsuarioDeleteOneById") dto: IApiDoc.operations["UsuarioDeleteOneById"],
+    @HttpOperationInput("UsuarioDeleteOneById") dto: IOperationInput<"UsuarioDeleteOneById">,
   ) {
     return this.usuarioService.usuarioDeleteOneById(accessContext, {
       id: dto.parameters.path.id,

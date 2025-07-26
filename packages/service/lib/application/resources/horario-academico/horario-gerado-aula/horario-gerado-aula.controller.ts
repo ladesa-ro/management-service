@@ -5,7 +5,7 @@ import { ApiTags } from "@nestjs/swagger";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { HorarioGeradoAulaService } from "./horario-gerado-aula.service";
-import { HttpOperationInput } from "@/application/standards-new/HttpOperation";
+import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { IApiDoc } from "@/application/standards-new/openapi";
 
 @ApiTags("horarios-gerados-aula")
@@ -16,7 +16,7 @@ export class HorarioGeradoAulaController {
   @Get("/")
   async horarioGeradoAulaFindAll(
     @AccessContextHttp() clientAccess: AccessContext,
-    @HttpOperationInput("HorarioGeradoAulaFindAll") dto: IApiDoc.operations["HorarioGeradoAulaFindAll"],
+    @HttpOperationInput("HorarioGeradoAulaFindAll") dto: IOperationInput<"HorarioGeradoAulaFindAll">,
   ): Promise<LadesaTypings.HorarioGeradoAulaListOperationOutput["success"]> {
     return this.horarioGeradoAulaService.horarioGeradoAulaFindAll(clientAccess, dto);
   }
@@ -27,7 +27,7 @@ export class HorarioGeradoAulaController {
   async horarioGeradoAulaFindById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("HorarioGeradoAulaFindById") dto: IApiDoc.operations["HorarioGeradoAulaFindById"],
+    @HttpOperationInput("HorarioGeradoAulaFindById") dto: IOperationInput<"HorarioGeradoAulaFindById">,
   ) {
     return this.horarioGeradoAulaService.horarioGeradoAulaFindByIdStrict(accessContext, { id: dto.parameters.path.id });
   }
@@ -38,7 +38,7 @@ export class HorarioGeradoAulaController {
   async horarioGeradoAulaCreate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("HorarioGeradoAulaCreate") dto: IApiDoc.operations["HorarioGeradoAulaCreate"],
+    @HttpOperationInput("HorarioGeradoAulaCreate") dto: IOperationInput<"HorarioGeradoAulaCreate">,
   ) {
     return this.horarioGeradoAulaService.HorarioGeradoAulaCreate(accessContext, dto);
   }
@@ -50,7 +50,7 @@ export class HorarioGeradoAulaController {
     //
     @AccessContextHttp() accessContext: AccessContext,
     
-    @HttpOperationInput("HorarioGeradoAulaUpdate") dto: IApiDoc.operations["HorarioGeradoAulaUpdate"],
+    @HttpOperationInput("HorarioGeradoAulaUpdate") dto: IOperationInput<"HorarioGeradoAulaUpdate">,
   ) {
     return this.horarioGeradoAulaService.HorarioGeradoAulaUpdate(accessContext, dto);
   }
@@ -62,7 +62,7 @@ export class HorarioGeradoAulaController {
     //
     @AccessContextHttp() accessContext: AccessContext,
     
-    @HttpOperationInput("HorarioGeradoAulaDeleteOneById") dto: IApiDoc.operations["HorarioGeradoAulaDeleteOneById"],
+    @HttpOperationInput("HorarioGeradoAulaDeleteOneById") dto: IOperationInput<"HorarioGeradoAulaDeleteOneById">,
   ) {
     return this.horarioGeradoAulaService.horarioGeradoAulaDeleteOneById(accessContext, { id: dto.parameters.path.id });
   }

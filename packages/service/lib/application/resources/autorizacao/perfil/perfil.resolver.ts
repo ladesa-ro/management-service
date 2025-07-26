@@ -4,7 +4,7 @@ import { Resolver as GqlResolver } from "@nestjs/graphql";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { PerfilService } from "./perfil.service";
-import { HttpOperationInput } from "@/application/standards-new/HttpOperation";
+import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { IApiDoc } from "@/application/standards-new/openapi";
 
 @GqlResolver()
@@ -20,7 +20,7 @@ export class PerfilResolver {
   async vinculoFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("VinculoFindAll") dto: IApiDoc.operations["VinculoFindAll"],
+    @HttpOperationInput("VinculoFindAll") dto: IOperationInput<"VinculoFindAll">,
   ) {
     return this.perfilService.perfilFindAll(accessContext, dto);
   }
@@ -29,7 +29,7 @@ export class PerfilResolver {
   async vinculoSetVinculos(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("VinculoSetVinculos") dto: IApiDoc.operations["VinculoSetVinculos"],
+    @HttpOperationInput("VinculoSetVinculos") dto: IOperationInput<"VinculoSetVinculos">,
   ) {
     return this.perfilService.perfilSetVinculos(accessContext, dto);
   }

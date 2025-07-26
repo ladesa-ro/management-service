@@ -4,7 +4,7 @@ import { Resolver } from "@nestjs/graphql";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { BlocoService } from "./bloco.service";
-import { HttpOperationInput } from "@/application/standards-new/HttpOperation";
+import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { IApiDoc } from "@/application/standards-new/openapi";
 
 @Resolver()
@@ -20,7 +20,7 @@ export class BlocoResolver {
   async blocoFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("BlocoFindAll") dto: IApiDoc.operations["BlocoFindAll"],
+    @HttpOperationInput("BlocoFindAll") dto: IOperationInput<"BlocoFindAll">,
   ) {
     return this.blocoService.blocoFindAll(accessContext, dto);
   }
@@ -30,7 +30,7 @@ export class BlocoResolver {
   async blocoFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("BlocoFindOneById") dto: IApiDoc.operations["BlocoFindOneById"],
+    @HttpOperationInput("BlocoFindOneById") dto: IOperationInput<"BlocoFindOneById">,
   ) {
     return this.blocoService.blocoFindByIdStrict(accessContext, {
       id: dto.parameters.path.id,
@@ -42,7 +42,7 @@ export class BlocoResolver {
   async blocoCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("BlocoCreate") dto: IApiDoc.operations["BlocoCreate"],
+    @HttpOperationInput("BlocoCreate") dto: IOperationInput<"BlocoCreate">,
   ) {
     return this.blocoService.blocoCreate(accessContext, dto);
   }
@@ -51,7 +51,7 @@ export class BlocoResolver {
   async blocoUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("BlocoUpdate") dto: IApiDoc.operations["BlocoUpdate"],
+    @HttpOperationInput("BlocoUpdate") dto: IOperationInput<"BlocoUpdate">,
   ) {
     return this.blocoService.blocoUpdate(accessContext, dto);
   }
@@ -60,7 +60,7 @@ export class BlocoResolver {
   async blocoDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("BlocoDeleteOneById") dto: IApiDoc.operations["BlocoDeleteOneById"],
+    @HttpOperationInput("BlocoDeleteOneById") dto: IOperationInput<"BlocoDeleteOneById">,
   ) {
     return this.blocoService.blocoDeleteOneById(accessContext, {
       id: dto.parameters.path.id,

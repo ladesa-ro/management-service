@@ -5,7 +5,7 @@ import { ApiTags } from "@nestjs/swagger";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { ProfessorDisponibilidadeService } from "./professor-disponibilidade.service";
-import { HttpOperationInput } from "@/application/standards-new/HttpOperation";
+import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { IApiDoc } from "@/application/standards-new/openapi";
 
 @ApiTags("professores-disponibilidades")
@@ -20,7 +20,7 @@ export class ProfessorDisponibilidadeController {
     //
     @AccessContextHttp() accessContext: AccessContext,
     
-    @HttpOperationInput("ProfessorDisponibilidadeFindAll") dto: IApiDoc.operations["ProfessorDisponibilidadeFindAll"],
+    @HttpOperationInput("ProfessorDisponibilidadeFindAll") dto: IOperationInput<"ProfessorDisponibilidadeFindAll">,
   ): Promise<LadesaTypings.ProfessorDisponibilidadeListOperationOutput["success"]> {
     return this.professorDisponibilidadeService.professorDisponibilidadeFindAll(accessContext, dto);
   }
@@ -32,7 +32,7 @@ export class ProfessorDisponibilidadeController {
     //
     @AccessContextHttp() accessContext: AccessContext,
     
-    @HttpOperationInput("ProfessorDisponibilidadeFindById") dto: IApiDoc.operations["ProfessorDisponibilidadeFindById"],
+    @HttpOperationInput("ProfessorDisponibilidadeFindById") dto: IOperationInput<"ProfessorDisponibilidadeFindById">,
   ) {
     return this.professorDisponibilidadeService.professorDisponibilidadeFindByIdStrict(accessContext, {
       id: dto.parameters.path.id,
@@ -46,7 +46,7 @@ export class ProfessorDisponibilidadeController {
     //
     @AccessContextHttp() accessContext: AccessContext,
     
-    @HttpOperationInput("ProfessorDisponibilidadeCreate") dto: IApiDoc.operations["ProfessorDisponibilidadeCreate"],
+    @HttpOperationInput("ProfessorDisponibilidadeCreate") dto: IOperationInput<"ProfessorDisponibilidadeCreate">,
   ) {
     return this.professorDisponibilidadeService.professorDisponibilidadeCreate(accessContext, dto);
   }
@@ -58,7 +58,7 @@ export class ProfessorDisponibilidadeController {
     //
     @AccessContextHttp() accessContext: AccessContext,
     
-    @HttpOperationInput("ProfessorDisponibilidadeUpdate") dto: IApiDoc.operations["ProfessorDisponibilidadeUpdate"],
+    @HttpOperationInput("ProfessorDisponibilidadeUpdate") dto: IOperationInput<"ProfessorDisponibilidadeUpdate">,
   ) {
     return this.professorDisponibilidadeService.professorDisponibilidadeUpdate(accessContext, dto);
   }
@@ -70,7 +70,7 @@ export class ProfessorDisponibilidadeController {
     //
     @AccessContextHttp() accessContext: AccessContext,
     
-    @HttpOperationInput("ProfessorDisponibilidadeDeleteOneById") dto: IApiDoc.operations["ProfessorDisponibilidadeDeleteOneById"],
+    @HttpOperationInput("ProfessorDisponibilidadeDeleteOneById") dto: IOperationInput<"ProfessorDisponibilidadeDeleteOneById">,
   ) {
     return this.professorDisponibilidadeService.professorDisponibilidadeDeleteOneById(accessContext, {
       id: dto.parameters.path.id,

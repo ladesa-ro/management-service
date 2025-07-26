@@ -5,7 +5,7 @@ import { ApiTags } from "@nestjs/swagger";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { EtapaService } from "./etapa.service";
-import { HttpOperationInput } from "@/application/standards-new/HttpOperation";
+import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { IApiDoc } from "@/application/standards-new/openapi";
 
 @ApiTags("etapas")
@@ -14,7 +14,7 @@ export class EtapaController {
   constructor(private etapaService: EtapaService) {}
 
   @Get("/")
-  async etapaFindAll(@AccessContextHttp() clientAccess: AccessContext, @HttpOperationInput("EtapaFindAll") dto: IApiDoc.operations["EtapaFindAll"]): Promise<LadesaTypings.EtapaListOperationOutput["success"]> {
+  async etapaFindAll(@AccessContextHttp() clientAccess: AccessContext, @HttpOperationInput("EtapaFindAll") dto: IOperationInput<"EtapaFindAll">): Promise<LadesaTypings.EtapaListOperationOutput["success"]> {
     return this.etapaService.etapaFindAll(clientAccess, dto);
   }
 
@@ -24,7 +24,7 @@ export class EtapaController {
   async etapaFindById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("EtapaFindById") dto: IApiDoc.operations["EtapaFindById"],
+    @HttpOperationInput("EtapaFindById") dto: IOperationInput<"EtapaFindById">,
   ) {
     return this.etapaService.etapaFindByIdStrict(accessContext, {
       id: dto.parameters.path.id,
@@ -37,7 +37,7 @@ export class EtapaController {
   async etapaCreate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("EtapaCreate") dto: IApiDoc.operations["EtapaCreate"],
+    @HttpOperationInput("EtapaCreate") dto: IOperationInput<"EtapaCreate">,
   ) {
     return this.etapaService.etapaCreate(accessContext, dto);
   }
@@ -48,7 +48,7 @@ export class EtapaController {
   async etapaUpdate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("EtapaUpdate") dto: IApiDoc.operations["EtapaUpdate"],
+    @HttpOperationInput("EtapaUpdate") dto: IOperationInput<"EtapaUpdate">,
   ) {
     return this.etapaService.etapaUpdate(accessContext, dto);
   }
@@ -59,7 +59,7 @@ export class EtapaController {
   async etapaDeleteOneById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("EtapaDeleteOneById") dto: IApiDoc.operations["EtapaDeleteOneById"],
+    @HttpOperationInput("EtapaDeleteOneById") dto: IOperationInput<"EtapaDeleteOneById">,
   ) {
     return this.etapaService.etapaDeleteOneById(accessContext, {
       id: dto.parameters.path.id,

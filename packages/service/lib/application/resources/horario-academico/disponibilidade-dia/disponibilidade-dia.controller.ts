@@ -5,7 +5,7 @@ import { ApiTags } from "@nestjs/swagger";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { DisponibilidadeDiaService } from "./disponibilidade-dia.service";
-import { HttpOperationInput } from "@/application/standards-new/HttpOperation";
+import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { IApiDoc } from "@/application/standards-new/openapi";
 
 @ApiTags("diarios-preferencia-agrupamento")
@@ -17,7 +17,7 @@ export class DisponibilidadeDiaController {
   async disponibilidadeDiaFindAll(
     @AccessContextHttp() clientAccess: AccessContext,
     
-    @HttpOperationInput("DisponibilidadeDiaFindAll") dto: IApiDoc.operations["DisponibilidadeDiaFindAll"],
+    @HttpOperationInput("DisponibilidadeDiaFindAll") dto: IOperationInput<"DisponibilidadeDiaFindAll">,
   ): Promise<LadesaTypings.DisponibilidadeDiaListOperationOutput["success"]> {
     return this.disponibilidadeDiaService.disponibilidadeDiaFindAll(clientAccess, dto);
   }
@@ -29,7 +29,7 @@ export class DisponibilidadeDiaController {
     //
     @AccessContextHttp() accessContext: AccessContext,
     
-    @HttpOperationInput("DisponibilidadeDiaFindById") dto: IApiDoc.operations["DisponibilidadeDiaFindById"],
+    @HttpOperationInput("DisponibilidadeDiaFindById") dto: IOperationInput<"DisponibilidadeDiaFindById">,
   ) {
     return this.disponibilidadeDiaService.disponibilidadeDiaFindByIdStrict(accessContext, { id: dto.parameters.path.id });
   }
@@ -41,7 +41,7 @@ export class DisponibilidadeDiaController {
     //
     @AccessContextHttp() accessContext: AccessContext,
     
-    @HttpOperationInput("DisponibilidadeDiaCreate") dto: IApiDoc.operations["DisponibilidadeDiaCreate"],
+    @HttpOperationInput("DisponibilidadeDiaCreate") dto: IOperationInput<"DisponibilidadeDiaCreate">,
   ) {
     return this.disponibilidadeDiaService.disponibilidadeDiaCreate(accessContext, dto);
   }
@@ -53,7 +53,7 @@ export class DisponibilidadeDiaController {
     //
     @AccessContextHttp() accessContext: AccessContext,
     
-    @HttpOperationInput("DisponibilidadeDiaUpdate") dto: IApiDoc.operations["DisponibilidadeDiaUpdate"],
+    @HttpOperationInput("DisponibilidadeDiaUpdate") dto: IOperationInput<"DisponibilidadeDiaUpdate">,
   ) {
     return this.disponibilidadeDiaService.disponibilidadeDiaUpdate(accessContext, dto);
   }
@@ -65,7 +65,7 @@ export class DisponibilidadeDiaController {
     //
     @AccessContextHttp() accessContext: AccessContext,
     
-    @HttpOperationInput("DisponibilidadeDiaDeleteOneById") dto: IApiDoc.operations["DisponibilidadeDiaDeleteOneById"],
+    @HttpOperationInput("DisponibilidadeDiaDeleteOneById") dto: IOperationInput<"DisponibilidadeDiaDeleteOneById">,
   ) {
     return this.disponibilidadeDiaService.disponibilidadeDiaDeleteOneById(accessContext, { id: dto.parameters.path.id });
   }

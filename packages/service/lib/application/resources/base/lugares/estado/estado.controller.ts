@@ -5,7 +5,7 @@ import { ApiTags } from "@nestjs/swagger";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { EstadoService } from "./estado.service";
-import { HttpOperationInput } from "@/application/standards-new/HttpOperation";
+import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { IApiDoc } from "@/application/standards-new/openapi";
 
 @ApiTags("estados")
@@ -17,7 +17,7 @@ export class EstadoController {
   async findAll(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("FindAll") dto: IApiDoc.operations["FindAll"],
+    @HttpOperationInput("FindAll") dto: IOperationInput<"FindAll">,
   ): Promise<LadesaTypings.EstadoListOperationOutput["success"]> {
     return this.estadoService.findAll(accessContext, dto);
   }
@@ -26,7 +26,7 @@ export class EstadoController {
   async findById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("FindById") dto: IApiDoc.operations["FindById"],
+    @HttpOperationInput("FindById") dto: IOperationInput<"FindById">,
   ) {
     return this.estadoService.findByIdStrict(accessContext, {
       id: dto.parameters.path.id,

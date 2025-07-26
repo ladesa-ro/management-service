@@ -4,7 +4,7 @@ import { Resolver } from "@nestjs/graphql";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { ReservaService } from "./reserva.service";
-import { HttpOperationInput } from "@/application/standards-new/HttpOperation";
+import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { IApiDoc } from "@/application/standards-new/openapi";
 
 @Resolver()
@@ -19,7 +19,7 @@ export class ReservaResolver {
   async reservaFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("ReservaFindAll") dto: IApiDoc.operations["ReservaFindAll"],
+    @HttpOperationInput("ReservaFindAll") dto: IOperationInput<"ReservaFindAll">,
   ) {
     return this.reservaService.reservaFindAll(accessContext, dto);
   }
@@ -29,7 +29,7 @@ export class ReservaResolver {
   async reservaFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("ReservaFindOneById") dto: IApiDoc.operations["ReservaFindOneById"],
+    @HttpOperationInput("ReservaFindOneById") dto: IOperationInput<"ReservaFindOneById">,
   ) {
     return this.reservaService.reservaFindByIdStrict(accessContext, {
       id: dto.parameters.path.id,
@@ -41,7 +41,7 @@ export class ReservaResolver {
   async reservaCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("ReservaCreate") dto: IApiDoc.operations["ReservaCreate"],
+    @HttpOperationInput("ReservaCreate") dto: IOperationInput<"ReservaCreate">,
   ) {
     return this.reservaService.reservaCreate(accessContext, dto);
   }
@@ -50,7 +50,7 @@ export class ReservaResolver {
   async reservaUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("ReservaUpdate") dto: IApiDoc.operations["ReservaUpdate"],
+    @HttpOperationInput("ReservaUpdate") dto: IOperationInput<"ReservaUpdate">,
   ) {
     return this.reservaService.reservaUpdate(accessContext, dto);
   }
@@ -59,7 +59,7 @@ export class ReservaResolver {
   async reservaDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("ReservaDeleteOneById") dto: IApiDoc.operations["ReservaDeleteOneById"],
+    @HttpOperationInput("ReservaDeleteOneById") dto: IOperationInput<"ReservaDeleteOneById">,
   ) {
     return this.reservaService.reservaDeleteOneById(accessContext, {
       id: dto.parameters.path.id,

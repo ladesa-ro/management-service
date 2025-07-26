@@ -4,7 +4,7 @@ import { Resolver } from "@nestjs/graphql";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { DiaCalendarioService } from "./dia-calendario.service";
-import { HttpOperationInput } from "@/application/standards-new/HttpOperation";
+import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { IApiDoc } from "@/application/standards-new/openapi";
 
 @Resolver()
@@ -16,7 +16,7 @@ export class DiaCalendarioResolver {
   async diaCalendarioFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("DiaCalendarioFindAll") dto: IApiDoc.operations["DiaCalendarioFindAll"],
+    @HttpOperationInput("DiaCalendarioFindAll") dto: IOperationInput<"DiaCalendarioFindAll">,
   ) {
     return this.diaCalendarioService.diaCalendarioFindAll(accessContext, dto);
   }
@@ -26,7 +26,7 @@ export class DiaCalendarioResolver {
   async diaCalendarioFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("DiaCalendarioFindOneById") dto: IApiDoc.operations["DiaCalendarioFindOneById"],
+    @HttpOperationInput("DiaCalendarioFindOneById") dto: IOperationInput<"DiaCalendarioFindOneById">,
   ) {
     return this.diaCalendarioService.diaCalendarioFindByIdStrict(accessContext, { id: dto.parameters.path.id });
   }
@@ -36,7 +36,7 @@ export class DiaCalendarioResolver {
   async diaCalendarioCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("DiaCalendarioCreate") dto: IApiDoc.operations["DiaCalendarioCreate"],
+    @HttpOperationInput("DiaCalendarioCreate") dto: IOperationInput<"DiaCalendarioCreate">,
   ) {
     return this.diaCalendarioService.diaCalendarioCreate(accessContext, dto);
   }
@@ -46,7 +46,7 @@ export class DiaCalendarioResolver {
   async diaCalendarioUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("DiaCalendarioUpdate") dto: IApiDoc.operations["DiaCalendarioUpdate"],
+    @HttpOperationInput("DiaCalendarioUpdate") dto: IOperationInput<"DiaCalendarioUpdate">,
   ) {
     return this.diaCalendarioService.diaCalendarioUpdate(accessContext, dto);
   }
@@ -56,7 +56,7 @@ export class DiaCalendarioResolver {
   async diaCalendarioDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("DiaCalendarioDeleteOneById") dto: IApiDoc.operations["DiaCalendarioDeleteOneById"],
+    @HttpOperationInput("DiaCalendarioDeleteOneById") dto: IOperationInput<"DiaCalendarioDeleteOneById">,
   ) {
     return this.diaCalendarioService.diaCalendarioDeleteOneById(accessContext, {
       id: dto.parameters.path.id,

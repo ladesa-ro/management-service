@@ -9,7 +9,7 @@ import {
   UploadedFile,
 } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import { HttpOperationInput } from "@/application/standards-new/HttpOperation";
+import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import type { IApiDoc } from "@/application/standards-new/openapi";
 import {
   AccessContext,
@@ -26,7 +26,7 @@ export class AmbienteController {
   @Get("/")
   async ambienteFindAll(
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("AmbienteList") dto: IApiDoc.operations["AmbienteList"]
+    @HttpOperationInput("AmbienteList") dto: IOperationInput<"AmbienteList">
   ) {
     return this.ambienteService.ambienteFindAll(accessContext, dto);
   }
@@ -34,7 +34,7 @@ export class AmbienteController {
   @Get("/:id")
   async ambienteFindById(
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("AmbienteFindOneById") dto: IApiDoc.operations["AmbienteFindOneById"]
+    @HttpOperationInput("AmbienteFindOneById") dto: IOperationInput<"AmbienteFindOneById">
   ) {
     return this.ambienteService.ambienteFindByIdStrict(accessContext, {
       id: dto.parameters.path.id,
@@ -44,21 +44,21 @@ export class AmbienteController {
   @Post("/")
   async ambienteCreate(
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("AmbienteCreate") dto: IApiDoc.operations["AmbienteCreate"]) {
+    @HttpOperationInput("AmbienteCreate") dto: IOperationInput<"AmbienteCreate">) {
     return this.ambienteService.ambienteCreate(accessContext, dto);
   }
 
   @Patch("/:id")
   async ambienteUpdate(
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("AmbienteUpdateOneById") dto: IApiDoc.operations["AmbienteUpdateOneById"]) {
+    @HttpOperationInput("AmbienteUpdateOneById") dto: IOperationInput<"AmbienteUpdateOneById">) {
     return this.ambienteService.ambienteUpdate(accessContext, dto);
   }
 
   @Get("/:id/imagem/capa")
   async ambienteGetImagemCapa(
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("AmbienteGetImagemCapa") dto: IApiDoc.operations["AmbienteGetImagemCapa"]
+    @HttpOperationInput("AmbienteGetImagemCapa") dto: IOperationInput<"AmbienteGetImagemCapa">
   ) {
     return this.ambienteService.ambienteGetImagemCapa(accessContext, id);
   }
@@ -66,7 +66,7 @@ export class AmbienteController {
   @Put("/:id/imagem/capa")
   async ambienteImagemCapaSave(
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("AmbienteSetImagemCapa") dto: IApiDoc.operations["AmbienteSetImagemCapa"],
+    @HttpOperationInput("AmbienteSetImagemCapa") dto: IOperationInput<"AmbienteSetImagemCapa">,
     @UploadedFile() file: Express.Multer.File
   ) {
     return this.ambienteService.ambienteUpdateImagemCapa(
@@ -79,7 +79,7 @@ export class AmbienteController {
   @Delete("/:id")
   async ambienteDeleteOneById(
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("AmbienteDeleteOneById") dto: IApiDoc.operations["AmbienteDeleteOneById"]  
+    @HttpOperationInput("AmbienteDeleteOneById") dto: IOperationInput<"AmbienteDeleteOneById">  
   ) {
     return this.ambienteService.ambienteDeleteOneById(accessContext, {
       id: dto.parameters.path.id,

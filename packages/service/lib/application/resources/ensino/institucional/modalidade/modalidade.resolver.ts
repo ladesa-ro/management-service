@@ -6,7 +6,7 @@ import { graphqlExtractSelection } from "@/application/standards";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { ModalidadeService } from "./modalidade.service";
-import { HttpOperationInput } from "@/application/standards-new/HttpOperation";
+import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { IApiDoc } from "@/application/standards-new/openapi";
 
 @GqlResolver()
@@ -21,7 +21,7 @@ export class ModalidadeResolver {
   async modalidadeFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("ModalidadeFindAll") dto: IApiDoc.operations["ModalidadeFindAll"],
+    @HttpOperationInput("ModalidadeFindAll") dto: IOperationInput<"ModalidadeFindAll">,
     @GqlInfo() info: GraphQLResolveInfo,
   ) {
     return this.modalidadeService.modalidadeFindAll(accessContext, dto, graphqlExtractSelection(info, "paginated"));
@@ -32,7 +32,7 @@ export class ModalidadeResolver {
   async modalidadeFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("ModalidadeFindOneById") dto: IApiDoc.operations["ModalidadeFindOneById"],
+    @HttpOperationInput("ModalidadeFindOneById") dto: IOperationInput<"ModalidadeFindOneById">,
     @GqlInfo() info: GraphQLResolveInfo,
   ) {
     return this.modalidadeService.modalidadeFindByIdStrict(accessContext, { id: dto.parameters.path.id }, ["id", ...graphqlExtractSelection(info)]);
@@ -43,7 +43,7 @@ export class ModalidadeResolver {
   async modalidadeCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("ModalidadeCreate") dto: IApiDoc.operations["ModalidadeCreate"],
+    @HttpOperationInput("ModalidadeCreate") dto: IOperationInput<"ModalidadeCreate">,
   ) {
     return this.modalidadeService.modalidadeCreate(accessContext, dto);
   }
@@ -52,7 +52,7 @@ export class ModalidadeResolver {
   async modalidadeUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("ModalidadeUpdate") dto: IApiDoc.operations["ModalidadeUpdate"],
+    @HttpOperationInput("ModalidadeUpdate") dto: IOperationInput<"ModalidadeUpdate">,
   ) {
     return this.modalidadeService.modalidadeUpdate(accessContext, dto);
   }
@@ -61,7 +61,7 @@ export class ModalidadeResolver {
   async modalidadeDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("ModalidadeDeleteOneById") dto: IApiDoc.operations["ModalidadeDeleteOneById"],
+    @HttpOperationInput("ModalidadeDeleteOneById") dto: IOperationInput<"ModalidadeDeleteOneById">,
   ) {
     return this.modalidadeService.modalidadeDeleteOneById(accessContext, {
       id: dto.parameters.path.id,

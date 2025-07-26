@@ -6,7 +6,7 @@ import { graphqlExtractSelection } from "@/application/standards";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { ProfessorDisponibilidadeService } from "./professor-disponibilidade.service";
-import { HttpOperationInput } from "@/application/standards-new/HttpOperation";
+import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { IApiDoc } from "@/application/standards-new/openapi";
 
 @GqlResolver()
@@ -22,7 +22,7 @@ export class ProfessorDisponibilidadeResolver {
     //
     @AccessContextGraphQl() accessContext: AccessContext,
     
-    @HttpOperationInput("ProfessorDisponibilidadeFindAll") dto: IApiDoc.operations["ProfessorDisponibilidadeFindAll"],
+    @HttpOperationInput("ProfessorDisponibilidadeFindAll") dto: IOperationInput<"ProfessorDisponibilidadeFindAll">,
     @GqlInfo() info: GraphQLResolveInfo,
   ) {
     return this.professorDisponibilidadeService.professorDisponibilidadeFindAll(accessContext, dto, graphqlExtractSelection(info, "paginated"));
@@ -34,7 +34,7 @@ export class ProfessorDisponibilidadeResolver {
     //
     @AccessContextGraphQl() accessContext: AccessContext,
     
-    @HttpOperationInput("ProfessorDisponibilidadeFindOneById") dto: IApiDoc.operations["ProfessorDisponibilidadeFindOneById"],
+    @HttpOperationInput("ProfessorDisponibilidadeFindOneById") dto: IOperationInput<"ProfessorDisponibilidadeFindOneById">,
     @GqlInfo() info: GraphQLResolveInfo,
   ) {
     return this.professorDisponibilidadeService.professorDisponibilidadeFindByIdStrict(
@@ -52,7 +52,7 @@ export class ProfessorDisponibilidadeResolver {
     //
     @AccessContextGraphQl() accessContext: AccessContext,
     
-    @HttpOperationInput("ProfessorDisponibilidadeCreate") dto: IApiDoc.operations["ProfessorDisponibilidadeCreate"],
+    @HttpOperationInput("ProfessorDisponibilidadeCreate") dto: IOperationInput<"ProfessorDisponibilidadeCreate">,
   ) {
     return this.professorDisponibilidadeService.professorDisponibilidadeCreate(accessContext, dto);
   }
@@ -62,7 +62,7 @@ export class ProfessorDisponibilidadeResolver {
     //
     @AccessContextGraphQl() accessContext: AccessContext,
     
-    @HttpOperationInput("ProfessorDisponibilidadeUpdate") dto: IApiDoc.operations["ProfessorDisponibilidadeUpdate"],
+    @HttpOperationInput("ProfessorDisponibilidadeUpdate") dto: IOperationInput<"ProfessorDisponibilidadeUpdate">,
   ) {
     return this.professorDisponibilidadeService.professorDisponibilidadeUpdate(accessContext, dto);
   }
@@ -72,7 +72,7 @@ export class ProfessorDisponibilidadeResolver {
     //
     @AccessContextGraphQl() accessContext: AccessContext,
     
-    @HttpOperationInput("ProfessorDisponibilidadeDeleteOneById") dto: IApiDoc.operations["ProfessorDisponibilidadeDeleteOneById"],
+    @HttpOperationInput("ProfessorDisponibilidadeDeleteOneById") dto: IOperationInput<"ProfessorDisponibilidadeDeleteOneById">,
   ) {
     return this.professorDisponibilidadeService.professorDisponibilidadeDeleteOneById(accessContext, {
       id: dto.parameters.path.id,

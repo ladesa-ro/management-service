@@ -5,7 +5,7 @@ import { ApiTags } from "@nestjs/swagger";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { UsuarioService } from "./usuario.service";
-import { HttpOperationInput } from "@/application/standards-new/HttpOperation";
+import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { IApiDoc } from "@/application/standards-new/openapi";
 
 @Controller("/usuarios")
@@ -19,7 +19,7 @@ export class UsuarioController {
   async usuarioFindAll(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("UsuarioFindAll") dto: IApiDoc.operations["UsuarioFindAll"],
+    @HttpOperationInput("UsuarioFindAll") dto: IOperationInput<"UsuarioFindAll">,
   ): Promise<LadesaTypings.UsuarioListOperationOutput["success"]> {
     return this.usuarioService.usuarioFindAll(accessContext, dto);
   }
@@ -30,7 +30,7 @@ export class UsuarioController {
   async usuarioFindById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("UsuarioFindById") dto: IApiDoc.operations["UsuarioFindById"],
+    @HttpOperationInput("UsuarioFindById") dto: IOperationInput<"UsuarioFindById">,
   ) {
     return this.usuarioService.usuarioFindByIdStrict(accessContext, {
       id: dto.parameters.path.id,
@@ -43,7 +43,7 @@ export class UsuarioController {
   async usuarioCreate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("UsuarioCreate") dto: IApiDoc.operations["UsuarioCreate"],
+    @HttpOperationInput("UsuarioCreate") dto: IOperationInput<"UsuarioCreate">,
   ) {
     return this.usuarioService.usuarioCreate(accessContext, dto);
   }
@@ -51,7 +51,7 @@ export class UsuarioController {
   //
 
   @Patch("/:id")
-  async usuarioUpdate(@AccessContextHttp() accessContext: AccessContext, @HttpOperationInput("UsuarioUpdate") dto: IApiDoc.operations["UsuarioUpdate"]) {
+  async usuarioUpdate(@AccessContextHttp() accessContext: AccessContext, @HttpOperationInput("UsuarioUpdate") dto: IOperationInput<"UsuarioUpdate">) {
     return this.usuarioService.usuarioUpdate(accessContext, dto);
   }
 
@@ -61,7 +61,7 @@ export class UsuarioController {
   async usuarioGetImagemCapa(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("UsuarioGetImagemCapa") dto: IApiDoc.operations["UsuarioGetImagemCapa"],
+    @HttpOperationInput("UsuarioGetImagemCapa") dto: IOperationInput<"UsuarioGetImagemCapa">,
   ) {
     return this.usuarioService.usuarioGetImagemCapa(accessContext, dto.parameters.path.id);
   }
@@ -81,7 +81,7 @@ export class UsuarioController {
   async usuarioGetImagemPerfil(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("UsuarioGetImagemPerfil") dto: IApiDoc.operations["UsuarioGetImagemPerfil"],
+    @HttpOperationInput("UsuarioGetImagemPerfil") dto: IOperationInput<"UsuarioGetImagemPerfil">,
   ) {
     return this.usuarioService.usuarioGetImagemPerfil(accessContext, dto.parameters.path.id);
   }
@@ -101,7 +101,7 @@ export class UsuarioController {
   async usuarioDeleteOneById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("UsuarioDeleteOneById") dto: IApiDoc.operations["UsuarioDeleteOneById"],
+    @HttpOperationInput("UsuarioDeleteOneById") dto: IOperationInput<"UsuarioDeleteOneById">,
   ) {
     return this.usuarioService.usuarioDeleteOneById(accessContext, {
       id: dto.parameters.path.id,

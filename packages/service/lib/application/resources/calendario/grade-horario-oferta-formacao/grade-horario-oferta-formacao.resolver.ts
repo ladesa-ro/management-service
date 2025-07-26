@@ -6,7 +6,7 @@ import { graphqlExtractSelection } from "@/application/standards";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { GradeHorarioOfertaFormacaoService } from "./grade-horario-oferta-formacao.service";
-import { HttpOperationInput } from "@/application/standards-new/HttpOperation";
+import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { IApiDoc } from "@/application/standards-new/openapi";
 
 @GqlResolver()
@@ -22,7 +22,7 @@ export class GradeHorarioOfertaFormacaoResolver {
     //
     @AccessContextGraphQl() accessContext: AccessContext,
     
-    @HttpOperationInput("GradeHorarioOfertaFormacaoFindAll") dto: IApiDoc.operations["GradeHorarioOfertaFormacaoFindAll"],
+    @HttpOperationInput("GradeHorarioOfertaFormacaoFindAll") dto: IOperationInput<"GradeHorarioOfertaFormacaoFindAll">,
     @GqlInfo() info: GraphQLResolveInfo,
   ) {
     return this.gradeHorarioOfertaFormacaoService.gradeHorarioOfertaFormacaoFindAll(accessContext, dto, graphqlExtractSelection(info, "paginated"));
@@ -34,7 +34,7 @@ export class GradeHorarioOfertaFormacaoResolver {
     //
     @AccessContextGraphQl() accessContext: AccessContext,
     
-    @HttpOperationInput("GradeHorarioOfertaFormacaoFindOneById") dto: IApiDoc.operations["GradeHorarioOfertaFormacaoFindOneById"],
+    @HttpOperationInput("GradeHorarioOfertaFormacaoFindOneById") dto: IOperationInput<"GradeHorarioOfertaFormacaoFindOneById">,
     @GqlInfo() info: GraphQLResolveInfo,
   ) {
     return this.gradeHorarioOfertaFormacaoService.gradeHorarioOfertaFormacaoFindByIdStrict(
@@ -52,7 +52,7 @@ export class GradeHorarioOfertaFormacaoResolver {
     //
     @AccessContextGraphQl() accessContext: AccessContext,
     
-    @HttpOperationInput("GradeHorarioOfertaFormacaoCreate") dto: IApiDoc.operations["GradeHorarioOfertaFormacaoCreate"],
+    @HttpOperationInput("GradeHorarioOfertaFormacaoCreate") dto: IOperationInput<"GradeHorarioOfertaFormacaoCreate">,
   ) {
     return this.gradeHorarioOfertaFormacaoService.gradeHorarioOfertaFormacaoCreate(accessContext, dto);
   }
@@ -62,7 +62,7 @@ export class GradeHorarioOfertaFormacaoResolver {
     //
     @AccessContextGraphQl() accessContext: AccessContext,
     
-    @HttpOperationInput("GradeHorarioOfertaFormacaoUpdate") dto: IApiDoc.operations["GradeHorarioOfertaFormacaoUpdate"],
+    @HttpOperationInput("GradeHorarioOfertaFormacaoUpdate") dto: IOperationInput<"GradeHorarioOfertaFormacaoUpdate">,
   ) {
     return this.gradeHorarioOfertaFormacaoService.gradeHorarioOfertaFormacaoUpdate(accessContext, dto);
   }
@@ -72,7 +72,7 @@ export class GradeHorarioOfertaFormacaoResolver {
     //
     @AccessContextGraphQl() accessContext: AccessContext,
     
-    @HttpOperationInput("GradeHorarioOfertaFormacaoDeleteOneById") dto: IApiDoc.operations["GradeHorarioOfertaFormacaoDeleteOneById"],
+    @HttpOperationInput("GradeHorarioOfertaFormacaoDeleteOneById") dto: IOperationInput<"GradeHorarioOfertaFormacaoDeleteOneById">,
   ) {
     return this.gradeHorarioOfertaFormacaoService.gradeHorarioOfertaFormacaoDeleteOneById(accessContext, {
       id: dto.parameters.path.id,

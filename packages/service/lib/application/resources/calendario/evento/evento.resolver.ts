@@ -4,7 +4,7 @@ import { Resolver } from "@nestjs/graphql";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { EventoService } from "./evento.service";
-import { HttpOperationInput } from "@/application/standards-new/HttpOperation";
+import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { IApiDoc } from "@/application/standards-new/openapi";
 
 @Resolver()
@@ -16,7 +16,7 @@ export class EventoResolver {
   async eventoFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("EventoFindAll") dto: IApiDoc.operations["EventoFindAll"],
+    @HttpOperationInput("EventoFindAll") dto: IOperationInput<"EventoFindAll">,
   ) {
     return this.eventoService.eventoFindAll(accessContext, dto);
   }
@@ -26,7 +26,7 @@ export class EventoResolver {
   async eventoFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("EventoFindOneById") dto: IApiDoc.operations["EventoFindOneById"],
+    @HttpOperationInput("EventoFindOneById") dto: IOperationInput<"EventoFindOneById">,
   ) {
     return this.eventoService.eventoFindByIdStrict(accessContext, {
       id: dto.parameters.path.id,
@@ -38,7 +38,7 @@ export class EventoResolver {
   async eventoCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("EventoCreate") dto: IApiDoc.operations["EventoCreate"],
+    @HttpOperationInput("EventoCreate") dto: IOperationInput<"EventoCreate">,
   ) {
     return this.eventoService.eventoCreate(accessContext, dto);
   }
@@ -48,7 +48,7 @@ export class EventoResolver {
   async eventoUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("EventoUpdate") dto: IApiDoc.operations["EventoUpdate"],
+    @HttpOperationInput("EventoUpdate") dto: IOperationInput<"EventoUpdate">,
   ) {
     return this.eventoService.eventoUpdate(accessContext, dto);
   }
@@ -58,7 +58,7 @@ export class EventoResolver {
   async eventoDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("EventoDeleteOneById") dto: IApiDoc.operations["EventoDeleteOneById"],
+    @HttpOperationInput("EventoDeleteOneById") dto: IOperationInput<"EventoDeleteOneById">,
   ) {
     return this.eventoService.eventoDeleteOneById(accessContext, {
       id: dto.parameters.path.id,

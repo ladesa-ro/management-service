@@ -5,7 +5,7 @@ import { ApiTags } from "@nestjs/swagger";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { TurmaDisponibilidadeService } from "./turma-disponibilidade.service";
-import { HttpOperationInput } from "@/application/standards-new/HttpOperation";
+import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { IApiDoc } from "@/application/standards-new/openapi";
 
 @ApiTags("turmas-disponibilidades")
@@ -19,7 +19,7 @@ export class TurmaDisponibilidadeController {
   async turmaDisponibilidadeFindAll(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("TurmaDisponibilidadeFindAll") dto: IApiDoc.operations["TurmaDisponibilidadeFindAll"],
+    @HttpOperationInput("TurmaDisponibilidadeFindAll") dto: IOperationInput<"TurmaDisponibilidadeFindAll">,
   ): Promise<LadesaTypings.TurmaDisponibilidadeListOperationOutput["success"]> {
     return this.turmaDisponibilidadeService.turmaDisponibilidadeFindAll(accessContext, dto);
   }
@@ -31,7 +31,7 @@ export class TurmaDisponibilidadeController {
     //
     @AccessContextHttp() accessContext: AccessContext,
     
-    @HttpOperationInput("TurmaDisponibilidadeFindById") dto: IApiDoc.operations["TurmaDisponibilidadeFindById"],
+    @HttpOperationInput("TurmaDisponibilidadeFindById") dto: IOperationInput<"TurmaDisponibilidadeFindById">,
   ) {
     return this.turmaDisponibilidadeService.turmaDisponibilidadeFindByIdStrict(accessContext, {
       id: dto.parameters.path.id,
@@ -44,7 +44,7 @@ export class TurmaDisponibilidadeController {
   async turmaDisponibilidadeCreate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("TurmaDisponibilidadeCreate") dto: IApiDoc.operations["TurmaDisponibilidadeCreate"],
+    @HttpOperationInput("TurmaDisponibilidadeCreate") dto: IOperationInput<"TurmaDisponibilidadeCreate">,
   ) {
     return this.turmaDisponibilidadeService.turmaDisponibilidadeCreate(accessContext, dto);
   }
@@ -56,7 +56,7 @@ export class TurmaDisponibilidadeController {
     //
     @AccessContextHttp() accessContext: AccessContext,
     
-    @HttpOperationInput("TurmaDisponibilidadeUpdate") dto: IApiDoc.operations["TurmaDisponibilidadeUpdate"],
+    @HttpOperationInput("TurmaDisponibilidadeUpdate") dto: IOperationInput<"TurmaDisponibilidadeUpdate">,
   ) {
     return this.turmaDisponibilidadeService.turmaDisponibilidadeUpdate(accessContext, dto);
   }
@@ -68,7 +68,7 @@ export class TurmaDisponibilidadeController {
     //
     @AccessContextHttp() accessContext: AccessContext,
     
-    @HttpOperationInput("TurmaDisponibilidadeDeleteOneById") dto: IApiDoc.operations["TurmaDisponibilidadeDeleteOneById"],
+    @HttpOperationInput("TurmaDisponibilidadeDeleteOneById") dto: IOperationInput<"TurmaDisponibilidadeDeleteOneById">,
   ) {
     return this.turmaDisponibilidadeService.turmaDisponibilidadeDeleteOneById(accessContext, {
       id: dto.parameters.path.id,

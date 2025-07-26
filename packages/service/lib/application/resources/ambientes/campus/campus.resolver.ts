@@ -4,7 +4,7 @@ import { Resolver } from "@nestjs/graphql";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { CampusService } from "./campus.service";
-import { HttpOperationInput } from "@/application/standards-new/HttpOperation";
+import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { IApiDoc } from "@/application/standards-new/openapi";
 
 @Resolver()
@@ -19,7 +19,7 @@ export class CampusResolver {
   async campusFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("CampusFindAll") dto: IApiDoc.operations["CampusFindAll"],
+    @HttpOperationInput("CampusFindAll") dto: IOperationInput<"CampusFindAll">,
   ) {
     return this.campusService.campusFindAll(accessContext, dto);
   }
@@ -29,7 +29,7 @@ export class CampusResolver {
   async campusFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("CampusFindOneById") dto: IApiDoc.operations["CampusFindOneById"],
+    @HttpOperationInput("CampusFindOneById") dto: IOperationInput<"CampusFindOneById">,
   ) {
     return this.campusService.campusFindByIdStrict(accessContext, {
       id: dto.parameters.path.id,
@@ -41,7 +41,7 @@ export class CampusResolver {
   async campusCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("CampusCreate") dto: IApiDoc.operations["CampusCreate"],
+    @HttpOperationInput("CampusCreate") dto: IOperationInput<"CampusCreate">,
   ) {
     return this.campusService.campusCreate(accessContext, dto);
   }
@@ -50,7 +50,7 @@ export class CampusResolver {
   async campusUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("CampusUpdate") dto: IApiDoc.operations["CampusUpdate"],
+    @HttpOperationInput("CampusUpdate") dto: IOperationInput<"CampusUpdate">,
   ) {
     return this.campusService.campusUpdate(accessContext, dto);
   }
@@ -59,7 +59,7 @@ export class CampusResolver {
   async campusDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("CampusDeleteOneById") dto: IApiDoc.operations["CampusDeleteOneById"],
+    @HttpOperationInput("CampusDeleteOneById") dto: IOperationInput<"CampusDeleteOneById">,
   ) {
     return this.campusService.campusDeleteOneById(accessContext, {
       id: dto.parameters.path.id,

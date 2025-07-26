@@ -4,7 +4,7 @@ import { Resolver } from "@nestjs/graphql";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { CursoService } from "./curso.service";
-import { HttpOperationInput } from "@/application/standards-new/HttpOperation";
+import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { IApiDoc } from "@/application/standards-new/openapi";
 
 @Resolver()
@@ -19,7 +19,7 @@ export class CursoResolver {
   async cursoFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("CursoFindAll") dto: IApiDoc.operations["CursoFindAll"],
+    @HttpOperationInput("CursoFindAll") dto: IOperationInput<"CursoFindAll">,
   ) {
     return this.cursoService.cursoFindAll(accessContext, dto);
   }
@@ -29,7 +29,7 @@ export class CursoResolver {
   async cursoFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("CursoFindOneById") dto: IApiDoc.operations["CursoFindOneById"],
+    @HttpOperationInput("CursoFindOneById") dto: IOperationInput<"CursoFindOneById">,
   ) {
     return this.cursoService.cursoFindByIdStrict(accessContext, {
       id: dto.parameters.path.id,
@@ -41,7 +41,7 @@ export class CursoResolver {
   async cursoCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("CursoCreate") dto: IApiDoc.operations["CursoCreate"],
+    @HttpOperationInput("CursoCreate") dto: IOperationInput<"CursoCreate">,
   ) {
     return this.cursoService.cursoCreate(accessContext, dto);
   }
@@ -50,7 +50,7 @@ export class CursoResolver {
   async cursoUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("CursoUpdate") dto: IApiDoc.operations["CursoUpdate"],
+    @HttpOperationInput("CursoUpdate") dto: IOperationInput<"CursoUpdate">,
   ) {
     return this.cursoService.cursoUpdate(accessContext, dto);
   }
@@ -59,7 +59,7 @@ export class CursoResolver {
   async cursoDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("CursoDeleteOneById") dto: IApiDoc.operations["CursoDeleteOneById"],
+    @HttpOperationInput("CursoDeleteOneById") dto: IOperationInput<"CursoDeleteOneById">,
   ) {
     return this.cursoService.cursoDeleteOneById(accessContext, {
       id: dto.parameters.path.id,

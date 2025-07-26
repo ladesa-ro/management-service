@@ -5,7 +5,7 @@ import { ApiTags } from "@nestjs/swagger";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { AulaService } from "./aula.service";
-import { HttpOperationInput } from "@/application/standards-new/HttpOperation";
+import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { IApiDoc } from "@/application/standards-new/openapi";
 
 @ApiTags("aulas")
@@ -19,7 +19,7 @@ export class AulaController {
   async aulaFindAll(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("AulaFindAll") dto: IApiDoc.operations["AulaFindAll"],
+    @HttpOperationInput("AulaFindAll") dto: IOperationInput<"AulaFindAll">,
   ): Promise<LadesaTypings.AulaListOperationOutput["success"]> {
     return this.aulaService.aulaFindAll(accessContext, dto);
   }
@@ -30,7 +30,7 @@ export class AulaController {
   async aulaFindById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("AulaFindById") dto: IApiDoc.operations["AulaFindById"],
+    @HttpOperationInput("AulaFindById") dto: IOperationInput<"AulaFindById">,
   ) {
     return this.aulaService.aulaFindByIdStrict(accessContext, {
       id: dto.parameters.path.id,
@@ -43,7 +43,7 @@ export class AulaController {
   async aulaCreate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("AulaCreate") dto: IApiDoc.operations["AulaCreate"],
+    @HttpOperationInput("AulaCreate") dto: IOperationInput<"AulaCreate">,
   ) {
     return this.aulaService.aulaCreate(accessContext, dto);
   }
@@ -54,7 +54,7 @@ export class AulaController {
   async aulaUpdate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("AulaUpdate") dto: IApiDoc.operations["AulaUpdate"],
+    @HttpOperationInput("AulaUpdate") dto: IOperationInput<"AulaUpdate">,
   ) {
     return this.aulaService.aulaUpdate(accessContext, dto);
   }
@@ -65,7 +65,7 @@ export class AulaController {
   async aulaDeleteOneById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("AulaDeleteOneById") dto: IApiDoc.operations["AulaDeleteOneById"],
+    @HttpOperationInput("AulaDeleteOneById") dto: IOperationInput<"AulaDeleteOneById">,
   ) {
     return this.aulaService.aulaDeleteOneById(accessContext, {
       id: dto.parameters.path.id,

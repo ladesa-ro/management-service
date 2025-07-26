@@ -5,7 +5,7 @@ import { ApiTags } from "@nestjs/swagger";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { ReservaService } from "./reserva.service";
-import { HttpOperationInput } from "@/application/standards-new/HttpOperation";
+import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { IApiDoc } from "@/application/standards-new/openapi";
 
 @ApiTags("reservas")
@@ -19,7 +19,7 @@ export class ReservaController {
   async reservaFindAll(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("ReservaFindAll") dto: IApiDoc.operations["ReservaFindAll"],
+    @HttpOperationInput("ReservaFindAll") dto: IOperationInput<"ReservaFindAll">,
   ): Promise<LadesaTypings.ReservaListOperationOutput["success"]> {
     return this.reservaService.reservaFindAll(accessContext, dto);
   }
@@ -30,7 +30,7 @@ export class ReservaController {
   async reservaFindById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("ReservaFindById") dto: IApiDoc.operations["ReservaFindById"],
+    @HttpOperationInput("ReservaFindById") dto: IOperationInput<"ReservaFindById">,
   ) {
     return this.reservaService.reservaFindByIdStrict(accessContext, {
       id: dto.parameters.path.id,
@@ -43,7 +43,7 @@ export class ReservaController {
   async reservaCreate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("ReservaCreate") dto: IApiDoc.operations["ReservaCreate"],
+    @HttpOperationInput("ReservaCreate") dto: IOperationInput<"ReservaCreate">,
   ) {
     return this.reservaService.reservaCreate(accessContext, dto);
   }
@@ -54,7 +54,7 @@ export class ReservaController {
   async reservaUpdate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("ReservaUpdate") dto: IApiDoc.operations["ReservaUpdate"],
+    @HttpOperationInput("ReservaUpdate") dto: IOperationInput<"ReservaUpdate">,
   ) {
     return this.reservaService.reservaUpdate(accessContext, dto);
   }
@@ -65,7 +65,7 @@ export class ReservaController {
   async reservaDeleteOneById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("ReservaDeleteOneById") dto: IApiDoc.operations["ReservaDeleteOneById"],
+    @HttpOperationInput("ReservaDeleteOneById") dto: IOperationInput<"ReservaDeleteOneById">,
   ) {
     return this.reservaService.reservaDeleteOneById(accessContext, {
       id: dto.parameters.path.id,

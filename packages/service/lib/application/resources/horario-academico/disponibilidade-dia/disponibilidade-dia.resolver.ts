@@ -4,7 +4,7 @@ import { Resolver } from "@nestjs/graphql";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { DisponibilidadeDiaService } from "./disponibilidade-dia.service";
-import { HttpOperationInput } from "@/application/standards-new/HttpOperation";
+import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { IApiDoc } from "@/application/standards-new/openapi";
 
 @Resolver()
@@ -17,7 +17,7 @@ export class DisponibilidadeDiaResolver {
     //
     @AccessContextGraphQl() accessContext: AccessContext,
     
-    @HttpOperationInput("DisponibilidadeDiaFindAll") dto: IApiDoc.operations["DisponibilidadeDiaFindAll"],
+    @HttpOperationInput("DisponibilidadeDiaFindAll") dto: IOperationInput<"DisponibilidadeDiaFindAll">,
   ) {
     return this.disponibilidadeDiaService.disponibilidadeDiaFindAll(accessContext, dto);
   }
@@ -28,7 +28,7 @@ export class DisponibilidadeDiaResolver {
     //
     @AccessContextGraphQl() accessContext: AccessContext,
     
-    @HttpOperationInput("DisponibilidadeDiaFindOneById") dto: IApiDoc.operations["DisponibilidadeDiaFindOneById"],
+    @HttpOperationInput("DisponibilidadeDiaFindOneById") dto: IOperationInput<"DisponibilidadeDiaFindOneById">,
   ) {
     return this.disponibilidadeDiaService.disponibilidadeDiaFindByIdStrict(accessContext, { id: dto.parameters.path.id });
   }
@@ -39,7 +39,7 @@ export class DisponibilidadeDiaResolver {
     //
     @AccessContextGraphQl() accessContext: AccessContext,
     
-    @HttpOperationInput("DisponibilidadeDiaCreate") dto: IApiDoc.operations["DisponibilidadeDiaCreate"],
+    @HttpOperationInput("DisponibilidadeDiaCreate") dto: IOperationInput<"DisponibilidadeDiaCreate">,
   ) {
     return this.disponibilidadeDiaService.disponibilidadeDiaCreate(accessContext, dto);
   }
@@ -50,7 +50,7 @@ export class DisponibilidadeDiaResolver {
     //
     @AccessContextGraphQl() accessContext: AccessContext,
     
-    @HttpOperationInput("DisponibilidadeDiaUpdate") dto: IApiDoc.operations["DisponibilidadeDiaUpdate"],
+    @HttpOperationInput("DisponibilidadeDiaUpdate") dto: IOperationInput<"DisponibilidadeDiaUpdate">,
   ) {
     return this.disponibilidadeDiaService.disponibilidadeDiaUpdate(accessContext, dto);
   }
@@ -61,7 +61,7 @@ export class DisponibilidadeDiaResolver {
     //
     @AccessContextGraphQl() accessContext: AccessContext,
     
-    @HttpOperationInput("DisponibilidadeDiaOneById") dto: IApiDoc.operations["DisponibilidadeDiaOneById"],
+    @HttpOperationInput("DisponibilidadeDiaOneById") dto: IOperationInput<"DisponibilidadeDiaOneById">,
   ) {
     return this.disponibilidadeDiaService.disponibilidadeDiaDeleteOneById(accessContext, { id: dto.parameters.path.id });
   }

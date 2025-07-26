@@ -4,7 +4,7 @@ import { Resolver } from "@nestjs/graphql";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { CalendarioLetivoService } from "./calendario-letivo.service";
-import { HttpOperationInput } from "@/application/standards-new/HttpOperation";
+import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { IApiDoc } from "@/application/standards-new/openapi";
 
 @Resolver()
@@ -16,7 +16,7 @@ export class CalendarioLetivoResolver {
   async calendarioLetivoFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("CalendarioLetivoFindAll") dto: IApiDoc.operations["CalendarioLetivoFindAll"],
+    @HttpOperationInput("CalendarioLetivoFindAll") dto: IOperationInput<"CalendarioLetivoFindAll">,
   ) {
     return this.calendarioLetivoService.calendarioLetivoFindAll(accessContext, dto);
   }
@@ -27,7 +27,7 @@ export class CalendarioLetivoResolver {
     //
     @AccessContextGraphQl() accessContext: AccessContext,
     
-    @HttpOperationInput("CalendarioLetivoFindOneById") dto: IApiDoc.operations["CalendarioLetivoFindOneById"],
+    @HttpOperationInput("CalendarioLetivoFindOneById") dto: IOperationInput<"CalendarioLetivoFindOneById">,
   ) {
     return this.calendarioLetivoService.calendarioLetivoFindByIdStrict(accessContext, { id: dto.parameters.path.id });
   }
@@ -37,7 +37,7 @@ export class CalendarioLetivoResolver {
   async calendarioLetivoCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("CalendarioLetivoCreate") dto: IApiDoc.operations["CalendarioLetivoCreate"],
+    @HttpOperationInput("CalendarioLetivoCreate") dto: IOperationInput<"CalendarioLetivoCreate">,
   ) {
     return this.calendarioLetivoService.calendarioLetivoCreate(accessContext, dto);
   }
@@ -47,7 +47,7 @@ export class CalendarioLetivoResolver {
   async calendarioLetivoUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("CalendarioLetivoUpdate") dto: IApiDoc.operations["CalendarioLetivoUpdate"],
+    @HttpOperationInput("CalendarioLetivoUpdate") dto: IOperationInput<"CalendarioLetivoUpdate">,
   ) {
     return this.calendarioLetivoService.calendarioLetivoUpdate(accessContext, dto);
   }
@@ -57,7 +57,7 @@ export class CalendarioLetivoResolver {
   async calendarioLetivoDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("CalendarioLetivoDeleteOneById") dto: IApiDoc.operations["CalendarioLetivoDeleteOneById"],
+    @HttpOperationInput("CalendarioLetivoDeleteOneById") dto: IOperationInput<"CalendarioLetivoDeleteOneById">,
   ) {
     return this.calendarioLetivoService.calendarioLetivoDeleteOneById(accessContext, { id: dto.parameters.path.id });
   }

@@ -6,7 +6,7 @@ import { graphqlExtractSelection } from "@/application/standards";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { CidadeService } from "./cidade.service";
-import { HttpOperationInput } from "@/application/standards-new/HttpOperation";
+import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { IApiDoc } from "@/application/standards-new/openapi";
 
 @Resolver()
@@ -22,7 +22,7 @@ export class CidadeResolver {
   async cidadeFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("CidadeFindAll") dto: IApiDoc.operations["CidadeFindAll"],
+    @HttpOperationInput("CidadeFindAll") dto: IOperationInput<"CidadeFindAll">,
     @Info() info: GraphQLResolveInfo,
   ) {
     return this.cidadeService.findAll(accessContext, dto, graphqlExtractSelection(info, "paginated"));
@@ -33,7 +33,7 @@ export class CidadeResolver {
   async cidadeFindById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("CidadeFindById") dto: IApiDoc.operations["CidadeFindById"],
+    @HttpOperationInput("CidadeFindById") dto: IOperationInput<"CidadeFindById">,
     @Info() info: GraphQLResolveInfo,
   ) {
     return this.cidadeService.findByIdStrict(accessContext, { id: dto.parameters.path.id }, graphqlExtractSelection(info));

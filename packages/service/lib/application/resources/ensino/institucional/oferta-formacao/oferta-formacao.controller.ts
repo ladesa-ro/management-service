@@ -5,7 +5,7 @@ import { ApiTags } from "@nestjs/swagger";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { OfertaFormacaoService } from "./oferta-formacao.service";
-import { HttpOperationInput } from "@/application/standards-new/HttpOperation";
+import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { IApiDoc } from "@/application/standards-new/openapi";
 
 @ApiTags("ofertas-formacoes")
@@ -19,7 +19,7 @@ export class OfertaFormacaoController {
   async ofertaFormacaoFindAll(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("OfertaFormacaoFindAll") dto: IApiDoc.operations["OfertaFormacaoFindAll"],
+    @HttpOperationInput("OfertaFormacaoFindAll") dto: IOperationInput<"OfertaFormacaoFindAll">,
   ): Promise<LadesaTypings.OfertaFormacaoListOperationOutput["success"]> {
     return this.ofertaFormacaoService.ofertaFormacaoFindAll(accessContext, dto);
   }
@@ -30,7 +30,7 @@ export class OfertaFormacaoController {
   async ofertaFormacaoFindById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("OfertaFormacaoFindById") dto: IApiDoc.operations["OfertaFormacaoFindById"],
+    @HttpOperationInput("OfertaFormacaoFindById") dto: IOperationInput<"OfertaFormacaoFindById">,
   ) {
     return this.ofertaFormacaoService.ofertaFormacaoFindByIdStrict(accessContext, {
       id: dto.parameters.path.id,
@@ -43,7 +43,7 @@ export class OfertaFormacaoController {
   async ofertaFormacaoCreate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("OfertaFormacaoCreate") dto: IApiDoc.operations["OfertaFormacaoCreate"],
+    @HttpOperationInput("OfertaFormacaoCreate") dto: IOperationInput<"OfertaFormacaoCreate">,
   ) {
     return this.ofertaFormacaoService.ofertaFormacaoCreate(accessContext, dto);
   }
@@ -54,7 +54,7 @@ export class OfertaFormacaoController {
   async ofertaFormacaoUpdate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("OfertaFormacaoUpdate") dto: IApiDoc.operations["OfertaFormacaoUpdate"],
+    @HttpOperationInput("OfertaFormacaoUpdate") dto: IOperationInput<"OfertaFormacaoUpdate">,
   ) {
     return this.ofertaFormacaoService.ofertaFormacaoUpdate(accessContext, dto);
   }
@@ -65,7 +65,7 @@ export class OfertaFormacaoController {
   async ofertaFormacaoDeleteOneById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("OfertaFormacaoDeleteOneById") dto: IApiDoc.operations["OfertaFormacaoDeleteOneById"],
+    @HttpOperationInput("OfertaFormacaoDeleteOneById") dto: IOperationInput<"OfertaFormacaoDeleteOneById">,
   ) {
     return this.ofertaFormacaoService.ofertaFormacaoDeleteOneById(accessContext, {
       id: dto.parameters.path.id,

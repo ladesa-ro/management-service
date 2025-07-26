@@ -5,7 +5,7 @@ import { ApiTags } from "@nestjs/swagger";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { BlocoService } from "./bloco.service";
-import { HttpOperationInput } from "@/application/standards-new/HttpOperation";
+import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { IApiDoc } from "@/application/standards-new/openapi";
 
 @ApiTags("blocos")
@@ -19,7 +19,7 @@ export class BlocoController {
   async blocoFindAll(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("BlocoFindAll") dto: IApiDoc.operations["BlocoFindAll"],
+    @HttpOperationInput("BlocoFindAll") dto: IOperationInput<"BlocoFindAll">,
   ): Promise<LadesaTypings.BlocoListOperationOutput["success"]> {
     return this.blocoService.blocoFindAll(accessContext, dto);
   }
@@ -40,7 +40,7 @@ export class BlocoController {
   async blocoCreate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("BlocoCreate") dto: IApiDoc.operations["BlocoCreate"],
+    @HttpOperationInput("BlocoCreate") dto: IOperationInput<"BlocoCreate">,
   ) {
     return this.blocoService.blocoCreate(accessContext, dto);
   }
@@ -51,7 +51,7 @@ export class BlocoController {
   async blocoUpdate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("BlocoUpdate") dto: IApiDoc.operations["BlocoUpdate"],
+    @HttpOperationInput("BlocoUpdate") dto: IOperationInput<"BlocoUpdate">,
   ) {
     return this.blocoService.blocoUpdate(accessContext, dto);
   }
@@ -81,7 +81,7 @@ export class BlocoController {
   async blocoDeleteOneById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("BlocoDeleteOneById") dto: IApiDoc.operations["BlocoDeleteOneById"],
+    @HttpOperationInput("BlocoDeleteOneById") dto: IOperationInput<"BlocoDeleteOneById">,
   ) {
     return this.blocoService.blocoDeleteOneById(accessContext, {
       id: dto.parameters.path.id,

@@ -4,7 +4,7 @@ import { Resolver } from "@nestjs/graphql";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { TurmaService } from "./turma.service";
-import { HttpOperationInput } from "@/application/standards-new/HttpOperation";
+import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { IApiDoc } from "@/application/standards-new/openapi";
 
 @Resolver()
@@ -19,7 +19,7 @@ export class TurmaResolver {
   async turmaFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("TurmaFindAll") dto: IApiDoc.operations["TurmaFindAll"],
+    @HttpOperationInput("TurmaFindAll") dto: IOperationInput<"TurmaFindAll">,
   ) {
     return this.turmaService.turmaFindAll(accessContext, dto);
   }
@@ -29,7 +29,7 @@ export class TurmaResolver {
   async turmaFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("TurmaFindOneById") dto: IApiDoc.operations["TurmaFindOneById"],
+    @HttpOperationInput("TurmaFindOneById") dto: IOperationInput<"TurmaFindOneById">,
   ) {
     return this.turmaService.turmaFindByIdStrict(accessContext, {
       id: dto.parameters.path.id,
@@ -41,7 +41,7 @@ export class TurmaResolver {
   async turmaCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("TurmaCreate") dto: IApiDoc.operations["TurmaCreate"],
+    @HttpOperationInput("TurmaCreate") dto: IOperationInput<"TurmaCreate">,
   ) {
     return this.turmaService.turmaCreate(accessContext, dto);
   }
@@ -50,7 +50,7 @@ export class TurmaResolver {
   async turmaUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("TurmaUpdate") dto: IApiDoc.operations["TurmaUpdate"],
+    @HttpOperationInput("TurmaUpdate") dto: IOperationInput<"TurmaUpdate">,
   ) {
     return this.turmaService.turmaUpdate(accessContext, dto);
   }
@@ -59,7 +59,7 @@ export class TurmaResolver {
   async turmaDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("TurmaDeleteOneById") dto: IApiDoc.operations["TurmaDeleteOneById"],
+    @HttpOperationInput("TurmaDeleteOneById") dto: IOperationInput<"TurmaDeleteOneById">,
   ) {
     return this.turmaService.turmaDeleteOneById(accessContext, {
       id: dto.parameters.path.id,

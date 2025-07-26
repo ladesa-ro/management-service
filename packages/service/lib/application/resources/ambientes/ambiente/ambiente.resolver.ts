@@ -3,7 +3,7 @@ import type { GraphQLResolveInfo } from "graphql";
 import { graphqlExtractSelection } from "@/application/standards";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { AmbienteService } from "./ambiente.service";
-import { HttpOperationInput } from "@/application/standards-new/HttpOperation";
+import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import type { IApiDoc } from "@/application/standards-new/openapi";
 
 @GqlResolver()
@@ -18,7 +18,7 @@ export class AmbienteResolver {
   async ambienteFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("AmbienteList") dto: IApiDoc.operations["AmbienteList"],
+    @HttpOperationInput("AmbienteList") dto: IOperationInput<"AmbienteList">,
     @GqlInfo() info: GraphQLResolveInfo,
   ) {
     return this.ambienteService.ambienteFindAll(accessContext, dto, graphqlExtractSelection(info, "paginated"));
@@ -29,7 +29,7 @@ export class AmbienteResolver {
   async ambienteFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("AmbienteFindOneById") dto: IApiDoc.operations["AmbienteFindOneById"],
+    @HttpOperationInput("AmbienteFindOneById") dto: IOperationInput<"AmbienteFindOneById">,
   ) {
     return this.ambienteService.ambienteFindByIdStrict(accessContext, {
       id: dto.parameters.path.id,
@@ -41,7 +41,7 @@ export class AmbienteResolver {
   async ambienteCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("AmbienteCreate") dto: IApiDoc.operations["AmbienteCreate"],
+    @HttpOperationInput("AmbienteCreate") dto: IOperationInput<"AmbienteCreate">,
   ) {
     return this.ambienteService.ambienteCreate(accessContext, dto);
   }
@@ -50,7 +50,7 @@ export class AmbienteResolver {
   async ambienteUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("AmbienteUpdate") dto: IApiDoc.operations["AmbienteUpdate"],
+    @HttpOperationInput("AmbienteUpdate") dto: IOperationInput<"AmbienteUpdate">,
   ) {
     return this.ambienteService.ambienteUpdate(accessContext, dto);
   }
@@ -59,7 +59,7 @@ export class AmbienteResolver {
   async ambienteDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("AmbienteDeleteOneById") dto: IApiDoc.operations["AmbienteDeleteOneById"],
+    @HttpOperationInput("AmbienteDeleteOneById") dto: IOperationInput<"AmbienteDeleteOneById">,
   ) {
     return this.ambienteService.ambienteDeleteOneById(accessContext, {
       id: dto.parameters.path.id,

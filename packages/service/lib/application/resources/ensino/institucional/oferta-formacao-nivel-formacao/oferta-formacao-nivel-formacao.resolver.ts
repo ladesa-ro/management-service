@@ -6,7 +6,7 @@ import { graphqlExtractSelection } from "@/application/standards";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { OfertaFormacaoNivelFormacaoService } from "./oferta-formacao-nivel-formacao.service";
-import { HttpOperationInput } from "@/application/standards-new/HttpOperation";
+import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { IApiDoc } from "@/application/standards-new/openapi";
 
 @GqlResolver()
@@ -22,7 +22,7 @@ export class OfertaFormacaoNivelFormacaoResolver {
     //
     @AccessContextGraphQl() accessContext: AccessContext,
     
-    @HttpOperationInput("OfertaFormacaoNivelFormacaoFindAll") dto: IApiDoc.operations["OfertaFormacaoNivelFormacaoFindAll"],
+    @HttpOperationInput("OfertaFormacaoNivelFormacaoFindAll") dto: IOperationInput<"OfertaFormacaoNivelFormacaoFindAll">,
     @GqlInfo() info: GraphQLResolveInfo,
   ) {
     return this.ofertaFormacaoNivelFormacaoService.ofertaFormacaoNivelFormacaoFindAll(accessContext, dto, graphqlExtractSelection(info, "paginated"));
@@ -34,7 +34,7 @@ export class OfertaFormacaoNivelFormacaoResolver {
     //
     @AccessContextGraphQl() accessContext: AccessContext,
     
-    @HttpOperationInput("OfertaFormacaoNivelFormacaoFindOneById") dto: IApiDoc.operations["OfertaFormacaoNivelFormacaoFindOneById"],
+    @HttpOperationInput("OfertaFormacaoNivelFormacaoFindOneById") dto: IOperationInput<"OfertaFormacaoNivelFormacaoFindOneById">,
     @GqlInfo() info: GraphQLResolveInfo,
   ) {
     return this.ofertaFormacaoNivelFormacaoService.ofertaFormacaoNivelFormacaoFindByIdStrict(
@@ -52,7 +52,7 @@ export class OfertaFormacaoNivelFormacaoResolver {
     //
     @AccessContextGraphQl() accessContext: AccessContext,
     
-    @HttpOperationInput("OfertaFormacaoNivelFormacaoCreate") dto: IApiDoc.operations["OfertaFormacaoNivelFormacaoCreate"],
+    @HttpOperationInput("OfertaFormacaoNivelFormacaoCreate") dto: IOperationInput<"OfertaFormacaoNivelFormacaoCreate">,
   ) {
     return this.ofertaFormacaoNivelFormacaoService.ofertaFormacaoNivelFormacaoCreate(accessContext, dto);
   }
@@ -62,7 +62,7 @@ export class OfertaFormacaoNivelFormacaoResolver {
     //
     @AccessContextGraphQl() accessContext: AccessContext,
     
-    @HttpOperationInput("OfertaFormacaoNivelFormacaoUpdate") dto: IApiDoc.operations["OfertaFormacaoNivelFormacaoUpdate"],
+    @HttpOperationInput("OfertaFormacaoNivelFormacaoUpdate") dto: IOperationInput<"OfertaFormacaoNivelFormacaoUpdate">,
   ) {
     return this.ofertaFormacaoNivelFormacaoService.ofertaFormacaoNivelFormacaoUpdate(accessContext, dto);
   }
@@ -72,7 +72,7 @@ export class OfertaFormacaoNivelFormacaoResolver {
     //
     @AccessContextGraphQl() accessContext: AccessContext,
     
-    @HttpOperationInput("OfertaFormacaoNivelFormacaoDeleteOneById") dto: IApiDoc.operations["OfertaFormacaoNivelFormacaoDeleteOneById"],
+    @HttpOperationInput("OfertaFormacaoNivelFormacaoDeleteOneById") dto: IOperationInput<"OfertaFormacaoNivelFormacaoDeleteOneById">,
   ) {
     return this.ofertaFormacaoNivelFormacaoService.ofertaFormacaoNivelFormacaoDeleteOneById(accessContext, {
       id: dto.parameters.path.id,

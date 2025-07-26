@@ -4,7 +4,7 @@ import { Resolver } from "@nestjs/graphql";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { DiarioService } from "./diario.service";
-import { HttpOperationInput } from "@/application/standards-new/HttpOperation";
+import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { IApiDoc } from "@/application/standards-new/openapi";
 
 @Resolver()
@@ -19,7 +19,7 @@ export class DiarioResolver {
   async diarioFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("DiarioFindAll") dto: IApiDoc.operations["DiarioFindAll"],
+    @HttpOperationInput("DiarioFindAll") dto: IOperationInput<"DiarioFindAll">,
   ) {
     return this.diarioService.diarioFindAll(accessContext, dto);
   }
@@ -29,7 +29,7 @@ export class DiarioResolver {
   async diarioFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("DiarioFindOneById") dto: IApiDoc.operations["DiarioFindOneById"],
+    @HttpOperationInput("DiarioFindOneById") dto: IOperationInput<"DiarioFindOneById">,
   ) {
     return this.diarioService.diarioFindByIdStrict(accessContext, {
       id: dto.parameters.path.id,
@@ -41,7 +41,7 @@ export class DiarioResolver {
   async diarioCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("DiarioCreate") dto: IApiDoc.operations["DiarioCreate"],
+    @HttpOperationInput("DiarioCreate") dto: IOperationInput<"DiarioCreate">,
   ) {
     return this.diarioService.diarioCreate(accessContext, dto);
   }
@@ -50,7 +50,7 @@ export class DiarioResolver {
   async diarioUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("DiarioUpdate") dto: IApiDoc.operations["DiarioUpdate"],
+    @HttpOperationInput("DiarioUpdate") dto: IOperationInput<"DiarioUpdate">,
   ) {
     return this.diarioService.diarioUpdate(accessContext, dto);
   }
@@ -59,7 +59,7 @@ export class DiarioResolver {
   async diarioDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("DiarioDeleteOneById") dto: IApiDoc.operations["DiarioDeleteOneById"],
+    @HttpOperationInput("DiarioDeleteOneById") dto: IOperationInput<"DiarioDeleteOneById">,
   ) {
     return this.diarioService.diarioDeleteOneById(accessContext, {
       id: dto.parameters.path.id,

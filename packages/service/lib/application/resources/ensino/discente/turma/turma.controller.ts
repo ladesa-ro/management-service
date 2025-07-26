@@ -5,7 +5,7 @@ import { ApiTags } from "@nestjs/swagger";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { TurmaService } from "./turma.service";
-import { HttpOperationInput } from "@/application/standards-new/HttpOperation";
+import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { IApiDoc } from "@/application/standards-new/openapi";
 
 @ApiTags("turmas")
@@ -19,7 +19,7 @@ export class TurmaController {
   async turmaFindAll(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("TurmaFindAll") dto: IApiDoc.operations["TurmaFindAll"],
+    @HttpOperationInput("TurmaFindAll") dto: IOperationInput<"TurmaFindAll">,
   ): Promise<LadesaTypings.TurmaListOperationOutput["success"]> {
     return this.turmaService.turmaFindAll(accessContext, dto);
   }
@@ -30,7 +30,7 @@ export class TurmaController {
   async turmaFindById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("TurmaFindById") dto: IApiDoc.operations["TurmaFindById"],
+    @HttpOperationInput("TurmaFindById") dto: IOperationInput<"TurmaFindById">,
   ) {
     return this.turmaService.turmaFindByIdStrict(accessContext, {
       id: dto.parameters.path.id,
@@ -43,7 +43,7 @@ export class TurmaController {
   async turmaCreate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("TurmaCreate") dto: IApiDoc.operations["TurmaCreate"],
+    @HttpOperationInput("TurmaCreate") dto: IOperationInput<"TurmaCreate">,
   ) {
     return this.turmaService.turmaCreate(accessContext, dto);
   }
@@ -54,7 +54,7 @@ export class TurmaController {
   async turmaUpdate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("TurmaUpdate") dto: IApiDoc.operations["TurmaUpdate"],
+    @HttpOperationInput("TurmaUpdate") dto: IOperationInput<"TurmaUpdate">,
   ) {
     return this.turmaService.turmaUpdate(accessContext, dto);
   }
@@ -84,7 +84,7 @@ export class TurmaController {
   async turmaDeleteOneById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("TurmaDeleteOneById") dto: IApiDoc.operations["TurmaDeleteOneById"],
+    @HttpOperationInput("TurmaDeleteOneById") dto: IOperationInput<"TurmaDeleteOneById">,
   ) {
     return this.turmaService.turmaDeleteOneById(accessContext, {
       id: dto.parameters.path.id,

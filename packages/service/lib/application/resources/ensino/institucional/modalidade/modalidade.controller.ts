@@ -5,7 +5,7 @@ import { ApiTags } from "@nestjs/swagger";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { ModalidadeService } from "./modalidade.service";
-import { HttpOperationInput } from "@/application/standards-new/HttpOperation";
+import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { IApiDoc } from "@/application/standards-new/openapi";
 
 @ApiTags("modalidades")
@@ -19,7 +19,7 @@ export class ModalidadeController {
   async modalidadeFindAll(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("ModalidadeList") dto: IApiDoc.operations["ModalidadeList"],
+    @HttpOperationInput("ModalidadeList") dto: IOperationInput<"ModalidadeList">,
   ): Promise<LadesaTypings.ModalidadeListOperationOutput["success"]> {
     return this.modalidadeService.modalidadeFindAll(accessContext, dto);
   }
@@ -30,7 +30,7 @@ export class ModalidadeController {
   async modalidadeFindById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("ModalidadeDeleteOneById") dto: IApiDoc.operations["ModalidadeDeleteOneById"],
+    @HttpOperationInput("ModalidadeDeleteOneById") dto: IOperationInput<"ModalidadeDeleteOneById">,
   ) {
     return this.modalidadeService.modalidadeFindByIdStrict(accessContext, {
       id: dto.parameters.path.id,
@@ -43,7 +43,7 @@ export class ModalidadeController {
   async modalidadeCreate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("ModalidadeCreate") dto: IApiDoc.operations["ModalidadeCreate"],
+    @HttpOperationInput("ModalidadeCreate") dto: IOperationInput<"ModalidadeCreate">,
   ) {
     return this.modalidadeService.modalidadeCreate(accessContext, dto);
   }
@@ -54,7 +54,7 @@ export class ModalidadeController {
   async modalidadeUpdate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("ModalidadeUpdateOneById") dto: IApiDoc.operations["ModalidadeUpdateOneById"],
+    @HttpOperationInput("ModalidadeUpdateOneById") dto: IOperationInput<"ModalidadeUpdateOneById">,
   ) {
     return this.modalidadeService.modalidadeUpdate(accessContext, dto);
   }
@@ -65,7 +65,7 @@ export class ModalidadeController {
   async modalidadeDeleteOneById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("ModalidadeDeleteOneById") dto: IApiDoc.operations["ModalidadeDeleteOneById"],
+    @HttpOperationInput("ModalidadeDeleteOneById") dto: IOperationInput<"ModalidadeDeleteOneById">,
   ) {
     return this.modalidadeService.modalidadeDeleteOneById(accessContext, {
       id: dto.parameters.path.id,

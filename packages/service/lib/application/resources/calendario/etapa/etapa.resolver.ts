@@ -4,7 +4,7 @@ import { Resolver } from "@nestjs/graphql";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { EtapaService } from "./etapa.service";
-import { HttpOperationInput } from "@/application/standards-new/HttpOperation";
+import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { IApiDoc } from "@/application/standards-new/openapi";
 
 @Resolver()
@@ -16,7 +16,7 @@ export class EtapaResolver {
   async etapaFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("EtapaFindAll") dto: IApiDoc.operations["EtapaFindAll"],
+    @HttpOperationInput("EtapaFindAll") dto: IOperationInput<"EtapaFindAll">,
   ) {
     return this.etapaService.etapaFindAll(accessContext, dto);
   }
@@ -26,7 +26,7 @@ export class EtapaResolver {
   async etapaFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("EtapaFindOneById") dto: IApiDoc.operations["EtapaFindOneById"],
+    @HttpOperationInput("EtapaFindOneById") dto: IOperationInput<"EtapaFindOneById">,
   ) {
     return this.etapaService.etapaFindByIdStrict(accessContext, {
       id: dto.parameters.path.id,
@@ -38,7 +38,7 @@ export class EtapaResolver {
   async etapaCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("EtapaCreate") dto: IApiDoc.operations["EtapaCreate"],
+    @HttpOperationInput("EtapaCreate") dto: IOperationInput<"EtapaCreate">,
   ) {
     return this.etapaService.etapaCreate(accessContext, dto);
   }
@@ -48,7 +48,7 @@ export class EtapaResolver {
   async etapaUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("EtapaUpdate") dto: IApiDoc.operations["EtapaUpdate"],
+    @HttpOperationInput("EtapaUpdate") dto: IOperationInput<"EtapaUpdate">,
   ) {
     return this.etapaService.etapaUpdate(accessContext, dto);
   }
@@ -58,7 +58,7 @@ export class EtapaResolver {
   async etapaDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("EtapaDeleteOneById") dto: IApiDoc.operations["EtapaDeleteOneById"],
+    @HttpOperationInput("EtapaDeleteOneById") dto: IOperationInput<"EtapaDeleteOneById">,
   ) {
     return this.etapaService.etapaDeleteOneById(accessContext, {
       id: dto.parameters.path.id,

@@ -4,7 +4,7 @@ import { Resolver } from "@nestjs/graphql";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { DisciplinaService } from "./disciplina.service";
-import { HttpOperationInput } from "@/application/standards-new/HttpOperation";
+import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { IApiDoc } from "@/application/standards-new/openapi";
 
 @Resolver()
@@ -19,7 +19,7 @@ export class DisciplinaResolver {
   async disciplinaFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("DisciplinaFindAll") dto: IApiDoc.operations["DisciplinaFindAll"],
+    @HttpOperationInput("DisciplinaFindAll") dto: IOperationInput<"DisciplinaFindAll">,
   ) {
     return this.disciplinaService.disciplinaFindAll(accessContext, dto);
   }
@@ -29,7 +29,7 @@ export class DisciplinaResolver {
   async disciplinaFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("DisciplinaFindOneById") dto: IApiDoc.operations["DisciplinaFindOneById"],
+    @HttpOperationInput("DisciplinaFindOneById") dto: IOperationInput<"DisciplinaFindOneById">,
   ) {
     return this.disciplinaService.disciplinaFindByIdStrict(accessContext, {
       id: dto.parameters.path.id,
@@ -41,7 +41,7 @@ export class DisciplinaResolver {
   async disciplinaCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("DisciplinaCreate") dto: IApiDoc.operations["DisciplinaCreate"],
+    @HttpOperationInput("DisciplinaCreate") dto: IOperationInput<"DisciplinaCreate">,
   ) {
     return this.disciplinaService.disciplinaCreate(accessContext, dto);
   }
@@ -50,7 +50,7 @@ export class DisciplinaResolver {
   async disciplinaUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("DisciplinaUpdate") dto: IApiDoc.operations["DisciplinaUpdate"],
+    @HttpOperationInput("DisciplinaUpdate") dto: IOperationInput<"DisciplinaUpdate">,
   ) {
     return this.disciplinaService.disciplinaUpdate(accessContext, dto);
   }
@@ -59,7 +59,7 @@ export class DisciplinaResolver {
   async disciplinaDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("DisciplinaDeleteOneById") dto: IApiDoc.operations["DisciplinaDeleteOneById"],
+    @HttpOperationInput("DisciplinaDeleteOneById") dto: IOperationInput<"DisciplinaDeleteOneById">,
   ) {
     return this.disciplinaService.disciplinaDeleteOneById(accessContext, {
       id: dto.parameters.path.id,

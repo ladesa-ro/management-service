@@ -2,11 +2,13 @@ import { createParamDecorator } from "@nestjs/common";
 import type { Request } from "express";
 import type { IApiDoc } from "./openapi";
 
-type OperationName = keyof IApiDoc.operations;
+type IOperationName = keyof IApiDoc.operations;
 
-export const HttpOperation = (operationName: OperationName) => {};
+export type IOperationInput<OperationName extends IOperationName> = {
+  parameters: IApiDoc.operations[OperationName]["parameters"]
+};
 
-export const HttpOperationInput = createParamDecorator(async (operationName: OperationName, ctx: ExecutionContext) => {
+export const HttpOperationInput = createParamDecorator(async (operationName: IOperationName, ctx: ExecutionContext) => {
   const request: Request = ctx.switchToHttp().getRequest();
 
   const operationInput: {
@@ -23,3 +25,4 @@ export const HttpOperationInput = createParamDecorator(async (operationName: Ope
 
   return operationInput;
 });
+

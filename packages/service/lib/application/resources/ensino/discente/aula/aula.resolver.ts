@@ -4,7 +4,7 @@ import { Resolver } from "@nestjs/graphql";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { AulaService } from "./aula.service";
-import { HttpOperationInput } from "@/application/standards-new/HttpOperation";
+import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { IApiDoc } from "@/application/standards-new/openapi";
 
 @Resolver()
@@ -19,7 +19,7 @@ export class AulaResolver {
   async aulaFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("AulaFindAll") dto: IApiDoc.operations["AulaFindAll"],
+    @HttpOperationInput("AulaFindAll") dto: IOperationInput<"AulaFindAll">,
   ) {
     return this.aulaService.aulaFindAll(accessContext, dto);
   }
@@ -29,7 +29,7 @@ export class AulaResolver {
   async aulaFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("AulaFindOneById") dto: IApiDoc.operations["AulaFindOneById"],
+    @HttpOperationInput("AulaFindOneById") dto: IOperationInput<"AulaFindOneById">,
   ) {
     return this.aulaService.aulaFindByIdStrict(accessContext, {
       id: dto.parameters.path.id,
@@ -41,7 +41,7 @@ export class AulaResolver {
   async aulaCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("AulaCreate") dto: IApiDoc.operations["AulaCreate"],
+    @HttpOperationInput("AulaCreate") dto: IOperationInput<"AulaCreate">,
   ) {
     return this.aulaService.aulaCreate(accessContext, dto);
   }
@@ -50,7 +50,7 @@ export class AulaResolver {
   async aulaUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("AulaUpdate") dto: IApiDoc.operations["AulaUpdate"],
+    @HttpOperationInput("AulaUpdate") dto: IOperationInput<"AulaUpdate">,
   ) {
     return this.aulaService.aulaUpdate(accessContext, dto);
   }
@@ -59,7 +59,7 @@ export class AulaResolver {
   async aulaDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("AulaDeleteOneById") dto: IApiDoc.operations["AulaDeleteOneById"],
+    @HttpOperationInput("AulaDeleteOneById") dto: IOperationInput<"AulaDeleteOneById">,
   ) {
     return this.aulaService.aulaDeleteOneById(accessContext, {
       id: dto.parameters.path.id,

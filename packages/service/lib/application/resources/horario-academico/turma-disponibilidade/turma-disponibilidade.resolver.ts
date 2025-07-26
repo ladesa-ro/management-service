@@ -6,7 +6,7 @@ import { graphqlExtractSelection } from "@/application/standards";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { TurmaDisponibilidadeService } from "./turma-disponibilidade.service";
-import { HttpOperationInput } from "@/application/standards-new/HttpOperation";
+import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { IApiDoc } from "@/application/standards-new/openapi";
 
 @GqlResolver()
@@ -21,7 +21,7 @@ export class TurmaDisponibilidadeResolver {
   async turmaDisponibilidadeFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("TurmaDisponibilidadeFindAll") dto: IApiDoc.operations["TurmaDisponibilidadeFindAll"],
+    @HttpOperationInput("TurmaDisponibilidadeFindAll") dto: IOperationInput<"TurmaDisponibilidadeFindAll">,
     @GqlInfo() info: GraphQLResolveInfo,
   ) {
     return this.turmaDisponibilidadeService.turmaDisponibilidadeFindAll(accessContext, dto, graphqlExtractSelection(info, "paginated"));
@@ -33,7 +33,7 @@ export class TurmaDisponibilidadeResolver {
     //
     @AccessContextGraphQl() accessContext: AccessContext,
     
-    @HttpOperationInput("TurmaDisponibilidadeFindOneById") dto: IApiDoc.operations["TurmaDisponibilidadeFindOneById"],
+    @HttpOperationInput("TurmaDisponibilidadeFindOneById") dto: IOperationInput<"TurmaDisponibilidadeFindOneById">,
     @GqlInfo() info: GraphQLResolveInfo,
   ) {
     return this.turmaDisponibilidadeService.turmaDisponibilidadeFindByIdStrict(
@@ -50,7 +50,7 @@ export class TurmaDisponibilidadeResolver {
   async turmaDisponibilidadeCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("TurmaDisponibilidadeCreate") dto: IApiDoc.operations["TurmaDisponibilidadeCreate"],
+    @HttpOperationInput("TurmaDisponibilidadeCreate") dto: IOperationInput<"TurmaDisponibilidadeCreate">,
   ) {
     return this.turmaDisponibilidadeService.turmaDisponibilidadeCreate(accessContext, dto);
   }
@@ -60,7 +60,7 @@ export class TurmaDisponibilidadeResolver {
     //
     @AccessContextGraphQl() accessContext: AccessContext,
     
-    @HttpOperationInput("TurmaDisponibilidadeUpdate") dto: IApiDoc.operations["TurmaDisponibilidadeUpdate"],
+    @HttpOperationInput("TurmaDisponibilidadeUpdate") dto: IOperationInput<"TurmaDisponibilidadeUpdate">,
   ) {
     return this.turmaDisponibilidadeService.turmaDisponibilidadeUpdate(accessContext, dto);
   }
@@ -70,7 +70,7 @@ export class TurmaDisponibilidadeResolver {
     //
     @AccessContextGraphQl() accessContext: AccessContext,
     
-    @HttpOperationInput("TurmaDisponibilidadeDeleteOneById") dto: IApiDoc.operations["TurmaDisponibilidadeDeleteOneById"],
+    @HttpOperationInput("TurmaDisponibilidadeDeleteOneById") dto: IOperationInput<"TurmaDisponibilidadeDeleteOneById">,
   ) {
     return this.turmaDisponibilidadeService.turmaDisponibilidadeDeleteOneById(accessContext, {
       id: dto.parameters.path.id,

@@ -4,7 +4,7 @@ import { Resolver } from "@nestjs/graphql";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { DiarioProfessorService } from "./diario-professor.service";
-import { HttpOperationInput } from "@/application/standards-new/HttpOperation";
+import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { IApiDoc } from "@/application/standards-new/openapi";
 
 @Resolver()
@@ -15,7 +15,7 @@ export class DiarioProfessorResolver {
   async diarioProfessorFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("DiarioProfessorFindAll") dto: IApiDoc.operations["DiarioProfessorFindAll"],
+    @HttpOperationInput("DiarioProfessorFindAll") dto: IOperationInput<"DiarioProfessorFindAll">,
   ) {
     return this.diarioProfessorService.diarioProfessorFindAll(accessContext, dto);
   }
@@ -25,7 +25,7 @@ export class DiarioProfessorResolver {
     //
     @AccessContextGraphQl() accessContext: AccessContext,
     
-    @HttpOperationInput("DiarioProfessorFindOneById") dto: IApiDoc.operations["DiarioProfessorFindOneById"],
+    @HttpOperationInput("DiarioProfessorFindOneById") dto: IOperationInput<"DiarioProfessorFindOneById">,
   ) {
     return this.diarioProfessorService.diarioProfessorFindByIdStrict(accessContext, { id: dto.parameters.path.id });
   }
@@ -34,7 +34,7 @@ export class DiarioProfessorResolver {
   async diarioProfessorCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("DiarioProfessorCreate") dto: IApiDoc.operations["DiarioProfessorCreate"],
+    @HttpOperationInput("DiarioProfessorCreate") dto: IOperationInput<"DiarioProfessorCreate">,
   ) {
     return this.diarioProfessorService.diarioProfessorCreate(accessContext, dto);
   }
@@ -43,7 +43,7 @@ export class DiarioProfessorResolver {
   async diarioProfessorUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("DiarioProfessorUpdate") dto: IApiDoc.operations["DiarioProfessorUpdate"],
+    @HttpOperationInput("DiarioProfessorUpdate") dto: IOperationInput<"DiarioProfessorUpdate">,
   ) {
     return this.diarioProfessorService.diarioProfessorUpdate(accessContext, dto);
   }
@@ -52,7 +52,7 @@ export class DiarioProfessorResolver {
   async diarioProfessorDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("DiarioProfessorDeleteOneById") dto: IApiDoc.operations["DiarioProfessorDeleteOneById"],
+    @HttpOperationInput("DiarioProfessorDeleteOneById") dto: IOperationInput<"DiarioProfessorDeleteOneById">,
   ) {
     return this.diarioProfessorService.diarioProfessorDeleteOneById(accessContext, { id: dto.parameters.path.id });
   }

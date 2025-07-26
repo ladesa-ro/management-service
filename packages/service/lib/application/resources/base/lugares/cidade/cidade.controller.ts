@@ -5,7 +5,7 @@ import { ApiTags } from "@nestjs/swagger";
 import { Operation } from "@/application/standards/especificacao/business-logic";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { CidadeService } from "./cidade.service";
-import { HttpOperationInput } from "@/application/standards-new/HttpOperation";
+import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { IApiDoc } from "@/application/standards-new/openapi";
 
 @ApiTags("cidades")
@@ -19,7 +19,7 @@ export class CidadeController {
   async findAll(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("FindAll") dto: IApiDoc.operations["FindAll"],
+    @HttpOperationInput("FindAll") dto: IOperationInput<"FindAll">,
   ): Promise<LadesaTypings.CidadeListOperationOutput["success"]> {
     return this.cidadeService.findAll(accessContext, dto);
   }
@@ -30,7 +30,7 @@ export class CidadeController {
   async findById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("FindById") dto: IApiDoc.operations["FindById"],
+    @HttpOperationInput("FindById") dto: IOperationInput<"FindById">,
   ): Promise<LadesaTypings.CidadeFindOneResultView> {
     return this.cidadeService.findByIdStrict(accessContext, {
       id: dto.parameters.path.id,
