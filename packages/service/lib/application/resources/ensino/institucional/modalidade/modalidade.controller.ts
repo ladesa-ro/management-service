@@ -32,7 +32,7 @@ export class ModalidadeController {
     @HttpOperationInput("ModalidadeFindById") dto: IApiDoc.operations["ModalidadeFindById"],
   ) {
     return this.modalidadeService.modalidadeFindByIdStrict(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 
@@ -67,7 +67,7 @@ export class ModalidadeController {
     @HttpOperationInput("ModalidadeDeleteOneById") dto: IApiDoc.operations["ModalidadeDeleteOneById"],
   ) {
     return this.modalidadeService.modalidadeDeleteOneById(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 

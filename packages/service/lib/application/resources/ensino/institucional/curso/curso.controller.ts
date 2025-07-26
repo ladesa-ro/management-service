@@ -32,7 +32,7 @@ export class CursoController {
     @HttpOperationInput("CursoFindById") dto: IApiDoc.operations["CursoFindById"],
   ) {
     return this.cursoService.cursoFindByIdStrict(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 
@@ -82,7 +82,7 @@ export class CursoController {
     @HttpOperationInput("CursoDeleteOneById") dto: IApiDoc.operations["CursoDeleteOneById"],
   ) {
     return this.cursoService.cursoDeleteOneById(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 

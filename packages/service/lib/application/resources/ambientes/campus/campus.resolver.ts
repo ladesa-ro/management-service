@@ -32,7 +32,7 @@ export class CampusResolver {
     @HttpOperationInput("CampusFindOneById") dto: IApiDoc.operations["CampusFindOneById"],
   ) {
     return this.campusService.campusFindByIdStrict(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 
@@ -62,7 +62,7 @@ export class CampusResolver {
     @HttpOperationInput("CampusDeleteOneById") dto: IApiDoc.operations["CampusDeleteOneById"],
   ) {
     return this.campusService.campusDeleteOneById(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 }

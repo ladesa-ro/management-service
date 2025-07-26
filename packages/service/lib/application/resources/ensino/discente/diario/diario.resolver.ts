@@ -32,7 +32,7 @@ export class DiarioResolver {
     @HttpOperationInput("DiarioFindOneById") dto: IApiDoc.operations["DiarioFindOneById"],
   ) {
     return this.diarioService.diarioFindByIdStrict(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 
@@ -62,7 +62,7 @@ export class DiarioResolver {
     @HttpOperationInput("DiarioDeleteOneById") dto: IApiDoc.operations["DiarioDeleteOneById"],
   ) {
     return this.diarioService.diarioDeleteOneById(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 }

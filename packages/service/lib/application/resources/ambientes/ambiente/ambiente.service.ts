@@ -198,12 +198,12 @@ export class AmbienteService {
     // =========================================================
 
     const currentAmbiente = await this.ambienteFindByIdStrict(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
 
     // =========================================================
 
-    await accessContext.ensurePermission("ambiente:update", { dto }, dto.params.id, this.ambienteRepository.createQueryBuilder(aliasAmbiente));
+    await accessContext.ensurePermission("ambiente:update", { dto }, dto.parameters.path.id, this.ambienteRepository.createQueryBuilder(aliasAmbiente));
 
     const dtoAmbiente = pick(dto.body, ["nome", "descricao", "codigo", "capacidade", "tipo"]);
 

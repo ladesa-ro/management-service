@@ -26,7 +26,7 @@ export class EventoController {
     @HttpOperationInput("EventoFindById") dto: IApiDoc.operations["EventoFindById"],
   ) {
     return this.eventoService.eventoFindByIdStrict(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 
@@ -61,7 +61,7 @@ export class EventoController {
     @HttpOperationInput("EventoDeleteOneById") dto: IApiDoc.operations["EventoDeleteOneById"],
   ) {
     return this.eventoService.eventoDeleteOneById(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 

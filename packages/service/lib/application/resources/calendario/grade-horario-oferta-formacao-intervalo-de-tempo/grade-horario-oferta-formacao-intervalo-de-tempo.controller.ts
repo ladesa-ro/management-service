@@ -34,7 +34,7 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoController {
     @HttpOperationInput("GradeHorarioOfertaFormacaoIntervaloDeTempoFindById") dto: IApiDoc.operations["GradeHorarioOfertaFormacaoIntervaloDeTempoFindById"],
   ) {
     return this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.gradeHorarioOfertaFormacaoIntervaloDeTempoFindByIdStrict(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 
@@ -72,7 +72,7 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoController {
     @HttpOperationInput("GradeHorarioOfertaFormacaoIntervaloDeTempoDeleteOneById") dto: IApiDoc.operations["GradeHorarioOfertaFormacaoIntervaloDeTempoDeleteOneById"],
   ) {
     return this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.gradeHorarioOfertaFormacaoIntervaloDeTempoDeleteOneById(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 

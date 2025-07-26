@@ -28,7 +28,7 @@ export class HorarioGeradoAulaResolver {
     @AccessContextGraphQl() accessContext: AccessContext,
     @HttpOperationInput("HorarioGeradoAulaFindOneById") dto: IApiDoc.operations["HorarioGeradoAulaFindOneById"],
   ) {
-    return this.horarioGeradoAulaService.horarioGeradoAulaFindByIdStrict(accessContext, { id: dto.params.id });
+    return this.horarioGeradoAulaService.horarioGeradoAulaFindByIdStrict(accessContext, { id: dto.parameters.path.id });
   }
 
   //
@@ -60,6 +60,6 @@ export class HorarioGeradoAulaResolver {
     
     @HttpOperationInput("HorarioGeradoAulaOneById") dto: IApiDoc.operations["HorarioGeradoAulaOneById"],
   ) {
-    return this.horarioGeradoAulaService.horarioGeradoAulaDeleteOneById(accessContext, { id: dto.params.id });
+    return this.horarioGeradoAulaService.horarioGeradoAulaDeleteOneById(accessContext, { id: dto.parameters.path.id });
   }
 }

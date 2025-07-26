@@ -33,7 +33,7 @@ export class BlocoResolver {
     @HttpOperationInput("BlocoFindOneById") dto: IApiDoc.operations["BlocoFindOneById"],
   ) {
     return this.blocoService.blocoFindByIdStrict(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 
@@ -63,7 +63,7 @@ export class BlocoResolver {
     @HttpOperationInput("BlocoDeleteOneById") dto: IApiDoc.operations["BlocoDeleteOneById"],
   ) {
     return this.blocoService.blocoDeleteOneById(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 }

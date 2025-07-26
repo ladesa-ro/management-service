@@ -246,12 +246,12 @@ export class DiarioService {
     // =========================================================
 
     const currentDiario = await this.diarioFindByIdStrict(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
 
     // =========================================================
 
-    await accessContext.ensurePermission("diario:update", { dto }, dto.params.id, this.diarioRepository.createQueryBuilder(aliasDiario));
+    await accessContext.ensurePermission("diario:update", { dto }, dto.parameters.path.id, this.diarioRepository.createQueryBuilder(aliasDiario));
 
     const dtoDiario = pick(dto.body, ["ativo", "ano", "etapa", "turma", "disciplina", "ambientePadrao"]);
 

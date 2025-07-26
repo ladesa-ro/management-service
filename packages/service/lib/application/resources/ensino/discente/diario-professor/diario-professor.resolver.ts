@@ -27,7 +27,7 @@ export class DiarioProfessorResolver {
     
     @HttpOperationInput("DiarioProfessorFindOneById") dto: IApiDoc.operations["DiarioProfessorFindOneById"],
   ) {
-    return this.diarioProfessorService.diarioProfessorFindByIdStrict(accessContext, { id: dto.params.id });
+    return this.diarioProfessorService.diarioProfessorFindByIdStrict(accessContext, { id: dto.parameters.path.id });
   }
 
   
@@ -54,6 +54,6 @@ export class DiarioProfessorResolver {
     @AccessContextGraphQl() accessContext: AccessContext,
     @HttpOperationInput("DiarioProfessorDeleteOneById") dto: IApiDoc.operations["DiarioProfessorDeleteOneById"],
   ) {
-    return this.diarioProfessorService.diarioProfessorDeleteOneById(accessContext, { id: dto.params.id });
+    return this.diarioProfessorService.diarioProfessorDeleteOneById(accessContext, { id: dto.parameters.path.id });
   }
 }

@@ -237,7 +237,7 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService {
     // =========================================================
 
     const currentGradeHorarioOfertaFormacaoIntervaloDeTempo = await this.gradeHorarioOfertaFormacaoIntervaloDeTempoFindByIdStrict(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
 
     // =========================================================
@@ -245,7 +245,7 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService {
     await accessContext.ensurePermission(
       "grade_horario_oferta_formacao_intervalo_de_tempo:update",
       { dto },
-      dto.params.id,
+      dto.parameters.path.id,
       this.gradeHorarioOfertaFormacaoIntervaloDeTempoRepository.createQueryBuilder(aliasGradeHorarioOfertaFormacaoIntervaloDeTempo),
     );
 

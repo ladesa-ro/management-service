@@ -254,12 +254,12 @@ export class DiarioProfessorService {
     // =========================================================
 
     const currentDiarioProfessor = await this.diarioProfessorFindByIdStrict(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
 
     // =========================================================
 
-    await accessContext.ensurePermission("diario_professor:update", { dto }, dto.params.id, this.diarioProfessorRepository.createQueryBuilder(aliasDiarioProfessor));
+    await accessContext.ensurePermission("diario_professor:update", { dto }, dto.parameters.path.id, this.diarioProfessorRepository.createQueryBuilder(aliasDiarioProfessor));
 
     const dtoDiarioProfessor = pick(dto.body, ["situacao"]);
 

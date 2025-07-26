@@ -36,7 +36,7 @@ export class DisponibilidadeResolver {
     @HttpOperationInput("DisponibilidadeFindOneById") dto: IApiDoc.operations["DisponibilidadeFindOneById"],
     @GqlInfo() info: GraphQLResolveInfo,
   ) {
-    return this.disponibilidadeService.disponibilidadeFindByIdStrict(accessContext, { id: dto.params.id }, ["id", ...graphqlExtractSelection(info)]);
+    return this.disponibilidadeService.disponibilidadeFindByIdStrict(accessContext, { id: dto.parameters.path.id }, ["id", ...graphqlExtractSelection(info)]);
   }
 
   //
@@ -65,7 +65,7 @@ export class DisponibilidadeResolver {
     @HttpOperationInput("DisponibilidadeDeleteOneById") dto: IApiDoc.operations["DisponibilidadeDeleteOneById"],
   ) {
     return this.disponibilidadeService.disponibilidadeDeleteOneById(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 }

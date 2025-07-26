@@ -30,7 +30,7 @@ export class DisponibilidadeDiaController {
     
     @HttpOperationInput("DisponibilidadeDiaFindById") dto: IApiDoc.operations["DisponibilidadeDiaFindById"],
   ) {
-    return this.disponibilidadeDiaService.disponibilidadeDiaFindByIdStrict(accessContext, { id: dto.params.id });
+    return this.disponibilidadeDiaService.disponibilidadeDiaFindByIdStrict(accessContext, { id: dto.parameters.path.id });
   }
 
   //
@@ -66,7 +66,7 @@ export class DisponibilidadeDiaController {
     
     @HttpOperationInput("DisponibilidadeDiaDeleteOneById") dto: IApiDoc.operations["DisponibilidadeDiaDeleteOneById"],
   ) {
-    return this.disponibilidadeDiaService.disponibilidadeDiaDeleteOneById(accessContext, { id: dto.params.id });
+    return this.disponibilidadeDiaService.disponibilidadeDiaDeleteOneById(accessContext, { id: dto.parameters.path.id });
   }
 
   //

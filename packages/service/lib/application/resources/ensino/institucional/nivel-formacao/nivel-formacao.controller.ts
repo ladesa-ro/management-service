@@ -32,7 +32,7 @@ export class NivelFormacaoController {
     @HttpOperationInput("NivelformacaoFindById") dto: IApiDoc.operations["NivelformacaoFindById"],
   ) {
     return this.nivelformacaoService.nivelFormacaoFindByIdStrict(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 
@@ -67,7 +67,7 @@ export class NivelFormacaoController {
     @HttpOperationInput("NivelformacaoDeleteOneById") dto: IApiDoc.operations["NivelformacaoDeleteOneById"],
   ) {
     return this.nivelformacaoService.nivelFormacaoDeleteOneById(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 

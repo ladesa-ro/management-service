@@ -29,7 +29,7 @@ export class CalendarioLetivoController {
     
     @HttpOperationInput("CalendarioLetivoFindById") dto: IApiDoc.operations["CalendarioLetivoFindById"],
   ) {
-    return this.calendarioLetivoService.calendarioLetivoFindByIdStrict(accessContext, { id: dto.params.id });
+    return this.calendarioLetivoService.calendarioLetivoFindByIdStrict(accessContext, { id: dto.parameters.path.id });
   }
 
   //
@@ -62,7 +62,7 @@ export class CalendarioLetivoController {
     @AccessContextHttp() accessContext: AccessContext,
     @HttpOperationInput("CalendarioLetivoDeleteOneById") dto: IApiDoc.operations["CalendarioLetivoDeleteOneById"],
   ) {
-    return this.calendarioLetivoService.calendarioLetivoDeleteOneById(accessContext, { id: dto.params.id });
+    return this.calendarioLetivoService.calendarioLetivoDeleteOneById(accessContext, { id: dto.parameters.path.id });
   }
 
   //

@@ -28,7 +28,7 @@ export class HorarioGeradoController {
     @AccessContextHttp() accessContext: AccessContext,
     @HttpOperationInput("HorarioGeradoFindById") dto: IApiDoc.operations["HorarioGeradoFindById"],
   ) {
-    return this.horarioGeradoService.horarioGeradoFindByIdStrict(accessContext, { id: dto.params.id });
+    return this.horarioGeradoService.horarioGeradoFindByIdStrict(accessContext, { id: dto.parameters.path.id });
   }
 
   //
@@ -62,7 +62,7 @@ export class HorarioGeradoController {
     @HttpOperationInput("HorarioGeradoDeleteOneById") dto: IApiDoc.operations["HorarioGeradoDeleteOneById"],
   ) {
     return this.horarioGeradoService.horarioGeradoDeleteOneById(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 

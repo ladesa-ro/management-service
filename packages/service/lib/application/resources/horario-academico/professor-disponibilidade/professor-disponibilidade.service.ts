@@ -232,12 +232,12 @@ export class ProfessorDisponibilidadeService {
     // =========================================================
 
     const currentProfessorDisponibilidade = await this.professorDisponibilidadeFindByIdStrict(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
 
     // =========================================================
 
-    await accessContext.ensurePermission("professor_disponibilidade:update", { dto }, dto.params.id, this.professorDisponibilidadeRepository.createQueryBuilder(aliasProfessorDisponibilidade));
+    await accessContext.ensurePermission("professor_disponibilidade:update", { dto }, dto.parameters.path.id, this.professorDisponibilidadeRepository.createQueryBuilder(aliasProfessorDisponibilidade));
 
     const dtoProfessorDisponibilidade = pick(dto.body, []);
 

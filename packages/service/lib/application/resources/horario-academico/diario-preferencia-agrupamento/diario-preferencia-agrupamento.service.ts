@@ -250,7 +250,7 @@ export class DiarioPreferenciaAgrupamentoService {
     // =========================================================
 
     const currentDiarioPreferenciaAgrupamento = await this.diarioPreferenciaAgrupamentoFindByIdStrict(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
 
     // =========================================================
@@ -258,7 +258,7 @@ export class DiarioPreferenciaAgrupamentoService {
     await accessContext.ensurePermission(
       "diario_preferencia_agrupamento:update",
       { dto },
-      dto.params.id,
+      dto.parameters.path.id,
       this.diarioPreferenciaAgrupamentoRepository.createQueryBuilder(aliasDiarioPreferenciaAgrupamento),
     );
 

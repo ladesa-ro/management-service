@@ -32,7 +32,7 @@ export class UsuarioResolver {
     @HttpOperationInput("UsuarioFindOneById") dto: IApiDoc.operations["UsuarioFindOneById"],
   ) {
     return this.usuarioService.usuarioFindByIdStrict(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 
@@ -62,7 +62,7 @@ export class UsuarioResolver {
     @HttpOperationInput("UsuarioDeleteOneById") dto: IApiDoc.operations["UsuarioDeleteOneById"],
   ) {
     return this.usuarioService.usuarioDeleteOneById(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 }

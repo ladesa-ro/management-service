@@ -32,7 +32,7 @@ export class UsuarioController {
     @HttpOperationInput("UsuarioFindById") dto: IApiDoc.operations["UsuarioFindById"],
   ) {
     return this.usuarioService.usuarioFindByIdStrict(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 
@@ -62,7 +62,7 @@ export class UsuarioController {
     @AccessContextHttp() accessContext: AccessContext,
     @HttpOperationInput("UsuarioGetImagemCapa") dto: IApiDoc.operations["UsuarioGetImagemCapa"],
   ) {
-    return this.usuarioService.usuarioGetImagemCapa(accessContext, dto.params.id);
+    return this.usuarioService.usuarioGetImagemCapa(accessContext, dto.parameters.path.id);
   }
 
   @Put("/:id/imagem/capa")
@@ -82,7 +82,7 @@ export class UsuarioController {
     @AccessContextHttp() accessContext: AccessContext,
     @HttpOperationInput("UsuarioGetImagemPerfil") dto: IApiDoc.operations["UsuarioGetImagemPerfil"],
   ) {
-    return this.usuarioService.usuarioGetImagemPerfil(accessContext, dto.params.id);
+    return this.usuarioService.usuarioGetImagemPerfil(accessContext, dto.parameters.path.id);
   }
 
   @Put("/:id/imagem/perfil")
@@ -103,7 +103,7 @@ export class UsuarioController {
     @HttpOperationInput("UsuarioDeleteOneById") dto: IApiDoc.operations["UsuarioDeleteOneById"],
   ) {
     return this.usuarioService.usuarioDeleteOneById(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 

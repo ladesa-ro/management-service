@@ -32,7 +32,7 @@ export class OfertaFormacaoController {
     @HttpOperationInput("OfertaFormacaoFindById") dto: IApiDoc.operations["OfertaFormacaoFindById"],
   ) {
     return this.ofertaFormacaoService.ofertaFormacaoFindByIdStrict(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 
@@ -67,7 +67,7 @@ export class OfertaFormacaoController {
     @HttpOperationInput("OfertaFormacaoDeleteOneById") dto: IApiDoc.operations["OfertaFormacaoDeleteOneById"],
   ) {
     return this.ofertaFormacaoService.ofertaFormacaoDeleteOneById(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 

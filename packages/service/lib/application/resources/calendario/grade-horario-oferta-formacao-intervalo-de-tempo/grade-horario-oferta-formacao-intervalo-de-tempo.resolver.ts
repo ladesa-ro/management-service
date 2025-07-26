@@ -40,7 +40,7 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoResolver {
     return this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.gradeHorarioOfertaFormacaoIntervaloDeTempoFindByIdStrict(
       accessContext,
       {
-        id: dto.params.id,
+        id: dto.parameters.path.id,
       },
       ["id", ...graphqlExtractSelection(info)],
     );
@@ -75,7 +75,7 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoResolver {
     @HttpOperationInput("GradeHorarioOfertaFormacaoIntervaloDeTempoDeleteOneById") dto: IApiDoc.operations["GradeHorarioOfertaFormacaoIntervaloDeTempoDeleteOneById"],
   ) {
     return this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.gradeHorarioOfertaFormacaoIntervaloDeTempoDeleteOneById(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 }

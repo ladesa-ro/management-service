@@ -35,7 +35,7 @@ export class ModalidadeResolver {
     @HttpOperationInput("ModalidadeFindOneById") dto: IApiDoc.operations["ModalidadeFindOneById"],
     @GqlInfo() info: GraphQLResolveInfo,
   ) {
-    return this.modalidadeService.modalidadeFindByIdStrict(accessContext, { id: dto.params.id }, ["id", ...graphqlExtractSelection(info)]);
+    return this.modalidadeService.modalidadeFindByIdStrict(accessContext, { id: dto.parameters.path.id }, ["id", ...graphqlExtractSelection(info)]);
   }
 
   //
@@ -64,7 +64,7 @@ export class ModalidadeResolver {
     @HttpOperationInput("ModalidadeDeleteOneById") dto: IApiDoc.operations["ModalidadeDeleteOneById"],
   ) {
     return this.modalidadeService.modalidadeDeleteOneById(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 }

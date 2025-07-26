@@ -34,7 +34,7 @@ export class ProfessorDisponibilidadeController {
     @HttpOperationInput("ProfessorDisponibilidadeFindById") dto: IApiDoc.operations["ProfessorDisponibilidadeFindById"],
   ) {
     return this.professorDisponibilidadeService.professorDisponibilidadeFindByIdStrict(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 
@@ -72,7 +72,7 @@ export class ProfessorDisponibilidadeController {
     @HttpOperationInput("ProfessorDisponibilidadeDeleteOneById") dto: IApiDoc.operations["ProfessorDisponibilidadeDeleteOneById"],
   ) {
     return this.professorDisponibilidadeService.professorDisponibilidadeDeleteOneById(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 

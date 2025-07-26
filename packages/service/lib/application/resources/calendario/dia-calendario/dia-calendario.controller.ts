@@ -28,7 +28,7 @@ export class DiaCalendarioController {
     @AccessContextHttp() accessContext: AccessContext,
     @HttpOperationInput("DiaCalendarioFindById") dto: IApiDoc.operations["DiaCalendarioFindById"],
   ) {
-    return this.diaCalendarioService.diaCalendarioFindByIdStrict(accessContext, { id: dto.params.id });
+    return this.diaCalendarioService.diaCalendarioFindByIdStrict(accessContext, { id: dto.parameters.path.id });
   }
 
   //
@@ -62,7 +62,7 @@ export class DiaCalendarioController {
     @HttpOperationInput("DiaCalendarioDeleteOneById") dto: IApiDoc.operations["DiaCalendarioDeleteOneById"],
   ) {
     return this.diaCalendarioService.diaCalendarioDeleteOneById(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 

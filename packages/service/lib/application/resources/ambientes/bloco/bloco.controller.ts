@@ -83,7 +83,7 @@ export class BlocoController {
     @HttpOperationInput("BlocoDeleteOneById") dto: IApiDoc.operations["BlocoDeleteOneById"],
   ) {
     return this.blocoService.blocoDeleteOneById(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 

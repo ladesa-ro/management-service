@@ -26,7 +26,7 @@ export class EtapaController {
     @HttpOperationInput("EtapaFindById") dto: IApiDoc.operations["EtapaFindById"],
   ) {
     return this.etapaService.etapaFindByIdStrict(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 
@@ -61,7 +61,7 @@ export class EtapaController {
     @HttpOperationInput("EtapaDeleteOneById") dto: IApiDoc.operations["EtapaDeleteOneById"],
   ) {
     return this.etapaService.etapaDeleteOneById(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 

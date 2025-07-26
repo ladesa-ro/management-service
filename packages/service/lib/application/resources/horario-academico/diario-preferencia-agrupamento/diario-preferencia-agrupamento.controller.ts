@@ -30,7 +30,7 @@ export class DiarioPreferenciaAgrupamentoController {
     
     @HttpOperationInput("DiarioPreferenciaAgrupamentoFindById") dto: IApiDoc.operations["DiarioPreferenciaAgrupamentoFindById"],
   ) {
-    return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoFindByIdStrict(accessContext, { id: dto.params.id });
+    return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoFindByIdStrict(accessContext, { id: dto.parameters.path.id });
   }
 
   //
@@ -66,7 +66,7 @@ export class DiarioPreferenciaAgrupamentoController {
     
     @HttpOperationInput("DiarioPreferenciaAgrupamentoDeleteOneById") dto: IApiDoc.operations["DiarioPreferenciaAgrupamentoDeleteOneById"],
   ) {
-    return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoDeleteOneById(accessContext, { id: dto.params.id });
+    return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoDeleteOneById(accessContext, { id: dto.parameters.path.id });
   }
 
   //

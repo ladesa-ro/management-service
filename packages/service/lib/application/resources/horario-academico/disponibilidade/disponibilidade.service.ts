@@ -203,12 +203,12 @@ export class DisponibilidadeService {
     // =========================================================
 
     const currentDisponibilidade = await this.disponibilidadeFindByIdStrict(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
 
     // =========================================================
 
-    await accessContext.ensurePermission("disponibilidade:update", { dto }, dto.params.id, this.disponibilidadeRepository.createQueryBuilder(aliasDisponibilidade));
+    await accessContext.ensurePermission("disponibilidade:update", { dto }, dto.parameters.path.id, this.disponibilidadeRepository.createQueryBuilder(aliasDisponibilidade));
 
     const dtoDisponibilidade = pick(dto.body, ["dataInicio", "dataFim"]);
 

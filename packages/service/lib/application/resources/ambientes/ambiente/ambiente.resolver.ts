@@ -32,7 +32,7 @@ export class AmbienteResolver {
     @HttpOperationInput("AmbienteFindOneById") dto: IApiDoc.operations["AmbienteFindOneById"],
   ) {
     return this.ambienteService.ambienteFindByIdStrict(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 
@@ -62,7 +62,7 @@ export class AmbienteResolver {
     @HttpOperationInput("AmbienteDeleteOneById") dto: IApiDoc.operations["AmbienteDeleteOneById"],
   ) {
     return this.ambienteService.ambienteDeleteOneById(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 }

@@ -247,12 +247,12 @@ export class ReservaService {
     // =========================================================
 
     const currentReserva = await this.reservaFindByIdStrict(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
 
     // =========================================================
 
-    await accessContext.ensurePermission("reserva:update", { dto }, dto.params.id, this.reservaRepository.createQueryBuilder(aliasReserva));
+    await accessContext.ensurePermission("reserva:update", { dto }, dto.parameters.path.id, this.reservaRepository.createQueryBuilder(aliasReserva));
 
     const dtoReserva = pick(dto.body, ["situacao", "motivo", "tipo", "rrule"]);
 

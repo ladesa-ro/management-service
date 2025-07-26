@@ -223,12 +223,12 @@ export class EtapaService {
     // =========================================================
 
     const currentEtapa = await this.etapaFindByIdStrict(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
 
     // =========================================================
 
-    await accessContext.ensurePermission("etapa:update", { dto }, dto.params.id, this.etapaRepository.createQueryBuilder(aliasEtapa));
+    await accessContext.ensurePermission("etapa:update", { dto }, dto.parameters.path.id, this.etapaRepository.createQueryBuilder(aliasEtapa));
 
     const dtoEtapa = pick(dto.body, ["numero", "cor", "dataInicio", "dataTermino"]);
 

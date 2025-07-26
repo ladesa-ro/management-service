@@ -246,12 +246,12 @@ export class CursoService {
     // =========================================================
 
     const currentCurso = await this.cursoFindByIdStrict(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
 
     // =========================================================
 
-    await accessContext.ensurePermission("curso:update", { dto }, dto.params.id, this.cursoRepository.createQueryBuilder(aliasCurso));
+    await accessContext.ensurePermission("curso:update", { dto }, dto.parameters.path.id, this.cursoRepository.createQueryBuilder(aliasCurso));
 
     const dtoCurso = pick(dto.body, ["nome", "nomeAbreviado"]);
 

@@ -39,7 +39,7 @@ export class TurmaDisponibilidadeResolver {
     return this.turmaDisponibilidadeService.turmaDisponibilidadeFindByIdStrict(
       accessContext,
       {
-        id: dto.params.id,
+        id: dto.parameters.path.id,
       },
       ["id", ...graphqlExtractSelection(info)],
     );
@@ -73,7 +73,7 @@ export class TurmaDisponibilidadeResolver {
     @HttpOperationInput("TurmaDisponibilidadeDeleteOneById") dto: IApiDoc.operations["TurmaDisponibilidadeDeleteOneById"],
   ) {
     return this.turmaDisponibilidadeService.turmaDisponibilidadeDeleteOneById(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 }

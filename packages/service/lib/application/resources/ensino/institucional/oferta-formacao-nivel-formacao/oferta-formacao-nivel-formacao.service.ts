@@ -235,7 +235,7 @@ export class OfertaFormacaoNivelFormacaoService {
     // =========================================================
 
     const currentOfertaFormacaoNivelFormacao = await this.ofertaFormacaoNivelFormacaoFindByIdStrict(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
 
     // =========================================================
@@ -243,7 +243,7 @@ export class OfertaFormacaoNivelFormacaoService {
     await accessContext.ensurePermission(
       "oferta_formacao_nivel_formacao:update",
       { dto },
-      dto.params.id,
+      dto.parameters.path.id,
       this.ofertaFormacaoNivelFormacaoRepository.createQueryBuilder(aliasOfertaFormacaoNivelFormacao),
     );
 

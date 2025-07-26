@@ -32,7 +32,7 @@ export class TurmaResolver {
     @HttpOperationInput("TurmaFindOneById") dto: IApiDoc.operations["TurmaFindOneById"],
   ) {
     return this.turmaService.turmaFindByIdStrict(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 
@@ -62,7 +62,7 @@ export class TurmaResolver {
     @HttpOperationInput("TurmaDeleteOneById") dto: IApiDoc.operations["TurmaDeleteOneById"],
   ) {
     return this.turmaService.turmaDeleteOneById(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 }

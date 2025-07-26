@@ -33,7 +33,7 @@ export class DisponibilidadeController {
     @HttpOperationInput("DisponibilidadeFindById") dto: IApiDoc.operations["DisponibilidadeFindById"],
   ) {
     return this.disponibilidadeService.disponibilidadeFindByIdStrict(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 
@@ -68,7 +68,7 @@ export class DisponibilidadeController {
     @HttpOperationInput("DisponibilidadeDeleteOneById") dto: IApiDoc.operations["DisponibilidadeDeleteOneById"],
   ) {
     return this.disponibilidadeService.disponibilidadeDeleteOneById(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 

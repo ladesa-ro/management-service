@@ -258,12 +258,12 @@ export class CalendarioLetivoService {
     // =========================================================
 
     const currentCalendarioLetivo = await this.calendarioLetivoFindByIdStrict(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
 
     // =========================================================
 
-    await accessContext.ensurePermission("calendario_letivo:update", { dto }, dto.params.id, this.calendarioLetivoRepository.createQueryBuilder(aliasCalendarioLetivo));
+    await accessContext.ensurePermission("calendario_letivo:update", { dto }, dto.parameters.path.id, this.calendarioLetivoRepository.createQueryBuilder(aliasCalendarioLetivo));
 
     const dtoCalendarioLetivo = pick(dto.body, ["nome", "ano"]);
 

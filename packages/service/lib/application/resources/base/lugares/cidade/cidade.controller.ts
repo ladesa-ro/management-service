@@ -32,7 +32,7 @@ export class CidadeController {
     @HttpOperationInput("FindById") dto: IApiDoc.operations["FindById"],
   ): Promise<LadesaTypings.CidadeFindOneResultView> {
     return this.cidadeService.findByIdStrict(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 }

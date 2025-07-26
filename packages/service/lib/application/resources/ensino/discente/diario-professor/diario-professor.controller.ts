@@ -31,7 +31,7 @@ export class DiarioProfessorController {
     
     @HttpOperationInput("DiarioProfessorFindById") dto: IApiDoc.operations["DiarioProfessorFindById"],
   ) {
-    return this.diarioProfessorService.diarioProfessorFindByIdStrict(accessContext, { id: dto.params.id });
+    return this.diarioProfessorService.diarioProfessorFindByIdStrict(accessContext, { id: dto.parameters.path.id });
   }
 
   //
@@ -64,7 +64,7 @@ export class DiarioProfessorController {
     @AccessContextHttp() accessContext: AccessContext,
     @HttpOperationInput("DiarioProfessorDeleteOneById") dto: IApiDoc.operations["DiarioProfessorDeleteOneById"],
   ) {
-    return this.diarioProfessorService.diarioProfessorDeleteOneById(accessContext, { id: dto.params.id });
+    return this.diarioProfessorService.diarioProfessorDeleteOneById(accessContext, { id: dto.parameters.path.id });
   }
 
   //

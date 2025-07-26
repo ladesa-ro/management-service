@@ -35,7 +35,7 @@ export class EstadoResolver {
     @HttpOperationInput("EstadoFindOneById") dto: IApiDoc.operations["EstadoFindOneById"],
     @Info() info: GraphQLResolveInfo,
   ) {
-    return this.estadoService.findByIdStrict(accessContext, { id: dto.params.id }, graphqlExtractSelection(info));
+    return this.estadoService.findByIdStrict(accessContext, { id: dto.parameters.path.id }, graphqlExtractSelection(info));
   }
 
   // ========================================================

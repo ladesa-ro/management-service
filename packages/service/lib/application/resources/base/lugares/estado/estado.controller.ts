@@ -28,7 +28,7 @@ export class EstadoController {
     @HttpOperationInput("FindById") dto: IApiDoc.operations["FindById"],
   ) {
     return this.estadoService.findByIdStrict(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 }

@@ -29,7 +29,7 @@ export class EtapaResolver {
     @HttpOperationInput("EtapaFindOneById") dto: IApiDoc.operations["EtapaFindOneById"],
   ) {
     return this.etapaService.etapaFindByIdStrict(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 
@@ -61,7 +61,7 @@ export class EtapaResolver {
     @HttpOperationInput("EtapaDeleteOneById") dto: IApiDoc.operations["EtapaDeleteOneById"],
   ) {
     return this.etapaService.etapaDeleteOneById(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 }

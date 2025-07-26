@@ -32,7 +32,7 @@ export class AulaResolver {
     @HttpOperationInput("AulaFindOneById") dto: IApiDoc.operations["AulaFindOneById"],
   ) {
     return this.aulaService.aulaFindByIdStrict(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 
@@ -62,7 +62,7 @@ export class AulaResolver {
     @HttpOperationInput("AulaDeleteOneById") dto: IApiDoc.operations["AulaDeleteOneById"],
   ) {
     return this.aulaService.aulaDeleteOneById(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 }

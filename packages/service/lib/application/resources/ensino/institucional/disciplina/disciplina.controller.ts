@@ -32,7 +32,7 @@ export class DisciplinaController {
     @HttpOperationInput("DisciplinaFindById") dto: IApiDoc.operations["DisciplinaFindById"],
   ) {
     return this.disciplinaService.disciplinaFindByIdStrict(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 
@@ -86,7 +86,7 @@ export class DisciplinaController {
     @HttpOperationInput("DisciplinaDeleteOneById") dto: IApiDoc.operations["DisciplinaDeleteOneById"],
   ) {
     return this.disciplinaService.disciplinaDeleteOneById(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 

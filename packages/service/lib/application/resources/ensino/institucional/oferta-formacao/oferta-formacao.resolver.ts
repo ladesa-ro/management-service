@@ -39,7 +39,7 @@ export class OfertaFormacaoResolver {
     return this.ofertaFormacaoService.ofertaFormacaoFindByIdStrict(
       accessContext,
       {
-        id: dto.params.id,
+        id: dto.parameters.path.id,
       },
       ["id", ...graphqlExtractSelection(info)],
     );
@@ -71,7 +71,7 @@ export class OfertaFormacaoResolver {
     @HttpOperationInput("OfertaFormacaoDeleteOneById") dto: IApiDoc.operations["OfertaFormacaoDeleteOneById"],
   ) {
     return this.ofertaFormacaoService.ofertaFormacaoDeleteOneById(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 }

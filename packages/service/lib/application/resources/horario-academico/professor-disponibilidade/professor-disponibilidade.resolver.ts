@@ -40,7 +40,7 @@ export class ProfessorDisponibilidadeResolver {
     return this.professorDisponibilidadeService.professorDisponibilidadeFindByIdStrict(
       accessContext,
       {
-        id: dto.params.id,
+        id: dto.parameters.path.id,
       },
       ["id", ...graphqlExtractSelection(info)],
     );
@@ -75,7 +75,7 @@ export class ProfessorDisponibilidadeResolver {
     @HttpOperationInput("ProfessorDisponibilidadeDeleteOneById") dto: IApiDoc.operations["ProfessorDisponibilidadeDeleteOneById"],
   ) {
     return this.professorDisponibilidadeService.professorDisponibilidadeDeleteOneById(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 }

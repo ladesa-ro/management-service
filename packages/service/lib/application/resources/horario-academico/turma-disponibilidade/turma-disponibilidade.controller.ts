@@ -33,7 +33,7 @@ export class TurmaDisponibilidadeController {
     @HttpOperationInput("TurmaDisponibilidadeFindById") dto: IApiDoc.operations["TurmaDisponibilidadeFindById"],
   ) {
     return this.turmaDisponibilidadeService.turmaDisponibilidadeFindByIdStrict(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 
@@ -70,7 +70,7 @@ export class TurmaDisponibilidadeController {
     @HttpOperationInput("TurmaDisponibilidadeDeleteOneById") dto: IApiDoc.operations["TurmaDisponibilidadeDeleteOneById"],
   ) {
     return this.turmaDisponibilidadeService.turmaDisponibilidadeDeleteOneById(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 

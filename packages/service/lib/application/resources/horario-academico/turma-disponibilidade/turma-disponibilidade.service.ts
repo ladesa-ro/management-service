@@ -232,12 +232,12 @@ export class TurmaDisponibilidadeService {
     // =========================================================
 
     const currentTurmaDisponibilidade = await this.turmaDisponibilidadeFindByIdStrict(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
 
     // =========================================================
 
-    await accessContext.ensurePermission("turma_disponibilidade:update", { dto }, dto.params.id, this.turmaDisponibilidadeRepository.createQueryBuilder(aliasTurmaDisponibilidade));
+    await accessContext.ensurePermission("turma_disponibilidade:update", { dto }, dto.parameters.path.id, this.turmaDisponibilidadeRepository.createQueryBuilder(aliasTurmaDisponibilidade));
 
     const dtoTurmaDisponibilidade = pick(dto.body, []);
 

@@ -265,12 +265,12 @@ export class HorarioGeradoAulaService {
     // =========================================================
 
     const currentHorarioGeradoAula = await this.horarioGeradoAulaFindByIdStrict(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
 
     // =========================================================
 
-    await accessContext.ensurePermission("horario_gerado_aula:update", { dto }, dto.params.id, this.horarioGeradoAulaRepository.createQueryBuilder(aliasHorarioGeradoAula));
+    await accessContext.ensurePermission("horario_gerado_aula:update", { dto }, dto.parameters.path.id, this.horarioGeradoAulaRepository.createQueryBuilder(aliasHorarioGeradoAula));
 
     const dtoHorarioGeradoAula = pick(dto.body, ["diaSemanaIso"]);
 

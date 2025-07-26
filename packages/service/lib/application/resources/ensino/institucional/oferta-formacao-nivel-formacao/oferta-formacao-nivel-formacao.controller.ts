@@ -34,7 +34,7 @@ export class OfertaFormacaoNivelFormacaoController {
     @HttpOperationInput("OfertaFormacaoNivelFormacaoFindById") dto: IApiDoc.operations["OfertaFormacaoNivelFormacaoFindById"],
   ) {
     return this.ofertaFormacaoNivelFormacaoService.ofertaFormacaoNivelFormacaoFindByIdStrict(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 
@@ -72,7 +72,7 @@ export class OfertaFormacaoNivelFormacaoController {
     @HttpOperationInput("OfertaFormacaoNivelFormacaoDeleteOneById") dto: IApiDoc.operations["OfertaFormacaoNivelFormacaoDeleteOneById"],
   ) {
     return this.ofertaFormacaoNivelFormacaoService.ofertaFormacaoNivelFormacaoDeleteOneById(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 

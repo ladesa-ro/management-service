@@ -32,7 +32,7 @@ export class ReservaResolver {
     @HttpOperationInput("ReservaFindOneById") dto: IApiDoc.operations["ReservaFindOneById"],
   ) {
     return this.reservaService.reservaFindByIdStrict(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 
@@ -62,7 +62,7 @@ export class ReservaResolver {
     @HttpOperationInput("ReservaDeleteOneById") dto: IApiDoc.operations["ReservaDeleteOneById"],
   ) {
     return this.reservaService.reservaDeleteOneById(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 }

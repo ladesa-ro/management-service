@@ -271,12 +271,12 @@ export class BlocoService {
     // =========================================================
 
     const currentBloco = await this.blocoFindByIdStrict(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
 
     // =========================================================
 
-    await accessContext.ensurePermission("bloco:update", { dto }, dto.params.id, this.blocoRepository.createQueryBuilder(aliasBloco));
+    await accessContext.ensurePermission("bloco:update", { dto }, dto.parameters.path.id, this.blocoRepository.createQueryBuilder(aliasBloco));
 
     // =========================================================
 

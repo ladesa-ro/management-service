@@ -36,6 +36,6 @@ export class CidadeResolver {
     @HttpOperationInput("CidadeFindById") dto: IApiDoc.operations["CidadeFindById"],
     @Info() info: GraphQLResolveInfo,
   ) {
-    return this.cidadeService.findByIdStrict(accessContext, { id: dto.params.id }, graphqlExtractSelection(info));
+    return this.cidadeService.findByIdStrict(accessContext, { id: dto.parameters.path.id }, graphqlExtractSelection(info));
   }
 }

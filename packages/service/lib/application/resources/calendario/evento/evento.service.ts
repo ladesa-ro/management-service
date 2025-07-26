@@ -217,12 +217,12 @@ export class EventoService {
     // =========================================================
 
     const currentEvento = await this.eventoFindByIdStrict(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
 
     // =========================================================
 
-    await accessContext.ensurePermission("evento:update", { dto }, dto.params.id, this.eventoRepository.createQueryBuilder(aliasEvento));
+    await accessContext.ensurePermission("evento:update", { dto }, dto.parameters.path.id, this.eventoRepository.createQueryBuilder(aliasEvento));
 
     const dtoEvento = pick(dto.body, ["nome", "cor", "rrule"]);
 

@@ -35,7 +35,7 @@ export class NivelFormacaoResolver {
     @HttpOperationInput("NivelFormacaoFindOneById") dto: IApiDoc.operations["NivelFormacaoFindOneById"],
     @GqlInfo() info: GraphQLResolveInfo,
   ) {
-    return this.nivelFormacaoService.nivelFormacaoFindByIdStrict(accessContext, { id: dto.params.id }, ["id", ...graphqlExtractSelection(info)]);
+    return this.nivelFormacaoService.nivelFormacaoFindByIdStrict(accessContext, { id: dto.parameters.path.id }, ["id", ...graphqlExtractSelection(info)]);
   }
 
   //
@@ -64,7 +64,7 @@ export class NivelFormacaoResolver {
     @HttpOperationInput("NivelFormacaoDeleteOneById") dto: IApiDoc.operations["NivelFormacaoDeleteOneById"],
   ) {
     return this.nivelFormacaoService.nivelFormacaoDeleteOneById(accessContext, {
-      id: dto.params.id,
+      id: dto.parameters.path.id,
     });
   }
 }
