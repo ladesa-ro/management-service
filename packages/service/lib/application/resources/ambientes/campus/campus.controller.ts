@@ -1,8 +1,7 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
-import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
-import type { IApiDoc } from "@/application/standards-new/openapi";
 import { Controller, Delete, Get, Patch, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
+import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { CampusService } from "./campus.service";
 

@@ -1,12 +1,9 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
-import { Tokens } from "@ladesa-ro/especificacao";
-import { Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post, Put, UploadedFile } from "@nestjs/common";
+import { Controller, Delete, Get, Patch, Post, Put, UploadedFile } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import { Operation } from "@/application/standards/especificacao/business-logic";
+import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { DisciplinaService } from "./disciplina.service";
-import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
-import { IApiDoc } from "@/application/standards-new/openapi";
 
 @ApiTags("disciplinas")
 @Controller("/disciplinas")
@@ -64,7 +61,7 @@ export class DisciplinaController {
   @Get("/:id/imagem/capa")
   async disciplinaGetImagemCapa(
     //
-    @AccessContextHttp() accessContext: AccessContext
+    @AccessContextHttp() accessContext: AccessContext,
   ) {
     return this.disciplinaService.disciplinaGetImagemCapa(accessContext, id);
   }
@@ -73,7 +70,7 @@ export class DisciplinaController {
   async disciplinaImagemCapaSave(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @UploadedFile() file: Express.Multer.File
+    @UploadedFile() file: Express.Multer.File,
   ) {
     return this.disciplinaService.disciplinaUpdateImagemCapa(accessContext, { id }, file);
   }

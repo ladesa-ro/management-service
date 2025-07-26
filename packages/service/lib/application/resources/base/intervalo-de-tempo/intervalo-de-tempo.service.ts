@@ -1,7 +1,6 @@
-import * as LadesaTypings from "@ladesa-ro/especificacao";
-import { IDomain } from "@/domain/domain-contracts";
 import { Injectable } from "@nestjs/common";
 import { pick } from "lodash";
+import { IDomain } from "@/domain/domain-contracts";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
 

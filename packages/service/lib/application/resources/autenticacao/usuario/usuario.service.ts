@@ -1,10 +1,10 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
-import { IDomain } from "@/domain/domain-contracts";
 import { Injectable, InternalServerErrorException, NotFoundException, ServiceUnavailableException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { ValidationFailedException } from "@/application/standards";
 import { QbEfficientLoad } from "@/application/standards/ladesa-spec/QbEfficientLoad";
 import { LadesaPaginatedResultDto, LadesaSearch } from "@/application/standards/ladesa-spec/search/search-strategies";
+import { IDomain } from "@/domain/domain-contracts";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
@@ -62,11 +62,7 @@ export class UsuarioService {
 
   //
 
-  async usuarioFindAll(
-    accessContext: AccessContext,
-    dto: IDomain.UsuarioListInput | null = null,
-    selection?: string[] | boolean,
-  ): Promise<IDomain.UsuarioListOutput["success"]> {
+  async usuarioFindAll(accessContext: AccessContext, dto: IDomain.UsuarioListInput | null = null, selection?: string[] | boolean): Promise<IDomain.UsuarioListOutput["success"]> {
     // =========================================================
 
     const qb = this.usuarioRepository.createQueryBuilder(aliasUsuario);

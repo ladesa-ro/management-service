@@ -1,18 +1,14 @@
-import * as LadesaTypings from "@ladesa-ro/especificacao";
-import { Tokens } from "@ladesa-ro/especificacao";
 import { Resolver } from "@nestjs/graphql";
-import { Operation } from "@/application/standards/especificacao/business-logic";
+import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { HorarioGeradoService } from "./horario-gerado.service";
-import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
-import { IApiDoc } from "@/application/standards-new/openapi";
 
 @Resolver()
 export class HorarioGeradoResolver {
   constructor(private horarioGeradoService: HorarioGeradoService) {}
 
   //
-  
+
   async horarioGeradoFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -22,7 +18,7 @@ export class HorarioGeradoResolver {
   }
 
   //
-  
+
   async horarioGeradoFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -32,7 +28,7 @@ export class HorarioGeradoResolver {
   }
 
   //
-  
+
   async horarioGeradoCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -42,7 +38,7 @@ export class HorarioGeradoResolver {
   }
 
   //
-  
+
   async horarioGeradoUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -52,7 +48,7 @@ export class HorarioGeradoResolver {
   }
 
   //
-  
+
   async horarioGeradoDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,

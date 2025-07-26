@@ -1,8 +1,7 @@
 import { RequiredActionAlias } from "@keycloak/keycloak-admin-client/lib/defs/requiredActionProviderRepresentation";
-import * as LadesaTypings from "@ladesa-ro/especificacao";
-import { IDomain } from "@/domain/domain-contracts";
 import { BadRequestException, ForbiddenException, HttpException, Injectable, ServiceUnavailableException } from "@nestjs/common";
 import * as client from "openid-client";
+import { IDomain } from "@/domain/domain-contracts";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
 import { KeycloakService, OpenidConnectService } from "@/infrastructure/integrations/identity-provider";
@@ -103,10 +102,7 @@ export class AutenticacaoService {
     throw new ForbiddenException("Credenciais inválidas ou expiradas.");
   }
 
-  async definirSenha(
-    _accessContext: AccessContext,
-    dto: IDomain.AuthCredentialsSetInitialPasswordInput,
-  ): Promise<IDomain.AuthCredentialsSetInitialPasswordOutput["success"]> {
+  async definirSenha(_accessContext: AccessContext, dto: IDomain.AuthCredentialsSetInitialPasswordInput): Promise<IDomain.AuthCredentialsSetInitialPasswordOutput["success"]> {
     try {
       const kcAdminClient = await this.keycloakService.getAdminClient();
 

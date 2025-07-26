@@ -5,10 +5,6 @@ import { BrokerAsPromised as Broker, BrokerConfig } from "rascal";
 export class MessageBrokerContainerService {
   #broker: Broker | null = null;
 
-  constructor(
-    //
-  ) {}
-
   async setup() {
     if (this.#broker === null) {
       const config = this.getConfig();

@@ -1,12 +1,9 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
-import { Tokens } from "@ladesa-ro/especificacao";
 import { Controller, Delete, Get, Patch, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import { Operation } from "@/application/standards/especificacao/business-logic";
+import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { GradeHorarioOfertaFormacaoService } from "./grade-horario-oferta-formacao.service";
-import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
-import { IApiDoc } from "@/application/standards-new/openapi";
 
 @ApiTags("grades-horarios-ofertas-formacoes")
 @Controller("/grades-horarios-ofertas-formacoes")
@@ -19,7 +16,7 @@ export class GradeHorarioOfertaFormacaoController {
   async gradeHorarioOfertaFormacaoFindAll(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    
+
     @HttpOperationInput("GradeHorarioOfertaFormacaoFindAll") dto: IOperationInput<"GradeHorarioOfertaFormacaoFindAll">,
   ): Promise<LadesaTypings.GradeHorarioOfertaFormacaoListOperationOutput["success"]> {
     return this.gradeHorarioOfertaFormacaoService.gradeHorarioOfertaFormacaoFindAll(accessContext, dto);
@@ -31,7 +28,7 @@ export class GradeHorarioOfertaFormacaoController {
   async gradeHorarioOfertaFormacaoFindById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    
+
     @HttpOperationInput("GradeHorarioOfertaFormacaoFindById") dto: IOperationInput<"GradeHorarioOfertaFormacaoFindById">,
   ) {
     return this.gradeHorarioOfertaFormacaoService.gradeHorarioOfertaFormacaoFindByIdStrict(accessContext, {
@@ -45,7 +42,7 @@ export class GradeHorarioOfertaFormacaoController {
   async gradeHorarioOfertaFormacaoCreate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    
+
     @HttpOperationInput("GradeHorarioOfertaFormacaoCreate") dto: IOperationInput<"GradeHorarioOfertaFormacaoCreate">,
   ) {
     return this.gradeHorarioOfertaFormacaoService.gradeHorarioOfertaFormacaoCreate(accessContext, dto);
@@ -57,7 +54,7 @@ export class GradeHorarioOfertaFormacaoController {
   async gradeHorarioOfertaFormacaoUpdate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    
+
     @HttpOperationInput("GradeHorarioOfertaFormacaoUpdate") dto: IOperationInput<"GradeHorarioOfertaFormacaoUpdate">,
   ) {
     return this.gradeHorarioOfertaFormacaoService.gradeHorarioOfertaFormacaoUpdate(accessContext, dto);
@@ -69,7 +66,7 @@ export class GradeHorarioOfertaFormacaoController {
   async gradeHorarioOfertaFormacaoDeleteOneById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    
+
     @HttpOperationInput("GradeHorarioOfertaFormacaoDeleteOneById") dto: IOperationInput<"GradeHorarioOfertaFormacaoDeleteOneById">,
   ) {
     return this.gradeHorarioOfertaFormacaoService.gradeHorarioOfertaFormacaoDeleteOneById(accessContext, {

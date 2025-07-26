@@ -1,12 +1,9 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
-import { Tokens } from "@ladesa-ro/especificacao";
-import { Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post, Put, UploadedFile } from "@nestjs/common";
+import { Controller, Delete, Get, Patch, Post, Put, UploadedFile } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import { Operation } from "@/application/standards/especificacao/business-logic";
+import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { UsuarioService } from "./usuario.service";
-import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
-import { IApiDoc } from "@/application/standards-new/openapi";
 
 @Controller("/usuarios")
 @ApiTags("usuarios")
@@ -70,7 +67,7 @@ export class UsuarioController {
   async usuarioImagemCapaSave(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @UploadedFile() file: Express.Multer.File
+    @UploadedFile() file: Express.Multer.File,
   ) {
     return this.usuarioService.usuarioUpdateImagemCapa(accessContext, { id }, file);
   }
@@ -90,7 +87,7 @@ export class UsuarioController {
   async usuarioImagemPerfilSave(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @UploadedFile() file: Express.Multer.File
+    @UploadedFile() file: Express.Multer.File,
   ) {
     return this.usuarioService.usuarioUpdateImagemPerfil(accessContext, { id }, file);
   }

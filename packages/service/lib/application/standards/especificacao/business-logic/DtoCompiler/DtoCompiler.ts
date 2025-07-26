@@ -17,7 +17,7 @@ const CursorContractNode = valibot.union([
   }),
 ]);
 
-const CursorContract = valibot.union([valibot.string(), CursorContractNode]);
+const _CursorContract = valibot.union([valibot.string(), CursorContractNode]);
 
 export interface IDtoCompiler extends GenericClassCompilerFromUnispecEntity {
   graphQlNodeCompiler: GraphQlNodeCompiler;
@@ -70,7 +70,6 @@ export class DtoCompiler extends GenericClassCompilerFromUnispecEntity implement
       const output = valibot.safeParse(NodeTypeObjectEntity, node);
       console.debug(output.issues);
       console.debug(node);
-      debugger;
 
       throw new Error("You must provide a NodeTypeObjectEntity to DtoCompiler#CompileClass");
     }

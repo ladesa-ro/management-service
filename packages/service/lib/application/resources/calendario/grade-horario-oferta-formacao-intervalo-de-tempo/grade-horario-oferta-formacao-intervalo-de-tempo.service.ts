@@ -1,5 +1,4 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
-import { IDomain } from "@/domain/domain-contracts";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
@@ -7,6 +6,7 @@ import { IntervaloDeTempoService } from "@/application/resources/base/intervalo-
 import { GradeHorarioOfertaFormacaoService } from "@/application/resources/calendario/grade-horario-oferta-formacao/grade-horario-oferta-formacao.service";
 import { QbEfficientLoad } from "@/application/standards/ladesa-spec/QbEfficientLoad";
 import { LadesaPaginatedResultDto, LadesaSearch } from "@/application/standards/ladesa-spec/search/search-strategies";
+import { IDomain } from "@/domain/domain-contracts";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
@@ -170,11 +170,7 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService {
     return gradeHorarioOfertaFormacaoIntervaloDeTempo;
   }
 
-  async gradeHorarioOfertaFormacaoIntervaloDeTempoFindByIdSimpleStrict(
-    accessContext: AccessContext,
-    id: IDomain.GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInput["id"],
-    selection?: string[],
-  ) {
+  async gradeHorarioOfertaFormacaoIntervaloDeTempoFindByIdSimpleStrict(accessContext: AccessContext, id: IDomain.GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInput["id"], selection?: string[]) {
     const gradeHorarioOfertaFormacaoIntervaloDeTempo = await this.gradeHorarioOfertaFormacaoIntervaloDeTempoFindByIdSimple(accessContext, id, selection);
 
     if (!gradeHorarioOfertaFormacaoIntervaloDeTempo) {

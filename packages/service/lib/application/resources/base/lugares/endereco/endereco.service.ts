@@ -1,9 +1,9 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
-import { IDomain } from "@/domain/domain-contracts";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { pick } from "lodash";
 import { QbEfficientLoad } from "@/application/standards";
 import { ensureValidResult, makeValidatorForEntity } from "@/application/standards/especificacao/business-logic/Validation/ajv-validate";
+import { IDomain } from "@/domain/domain-contracts";
 import { AccessContext } from "@/infrastructure/access-context";
 import { DatabaseContextService } from "@/infrastructure/integrations";
 

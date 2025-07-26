@@ -1,13 +1,9 @@
-import * as LadesaTypings from "@ladesa-ro/especificacao";
-import { Tokens } from "@ladesa-ro/especificacao";
 import { Info as GqlInfo, Resolver as GqlResolver } from "@nestjs/graphql";
 import type { GraphQLResolveInfo } from "graphql";
 import { graphqlExtractSelection } from "@/application/standards";
-import { Operation } from "@/application/standards/especificacao/business-logic";
+import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { DisponibilidadeService } from "./disponibilidade.service";
-import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
-import { IApiDoc } from "@/application/standards-new/openapi";
 
 @GqlResolver()
 export class DisponibilidadeResolver {
@@ -17,7 +13,7 @@ export class DisponibilidadeResolver {
   ) {}
 
   //
-  
+
   async disponibilidadeFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -28,11 +24,11 @@ export class DisponibilidadeResolver {
   }
 
   //
-  
+
   async disponibilidadeFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    
+
     @HttpOperationInput("DisponibilidadeFindOneById") dto: IOperationInput<"DisponibilidadeFindOneById">,
     @GqlInfo() info: GraphQLResolveInfo,
   ) {
@@ -40,7 +36,7 @@ export class DisponibilidadeResolver {
   }
 
   //
-  
+
   async disponibilidadeCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -49,7 +45,6 @@ export class DisponibilidadeResolver {
     return this.disponibilidadeService.disponibilidadeCreate(accessContext, dto);
   }
 
-  
   async disponibilidadeUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -58,7 +53,6 @@ export class DisponibilidadeResolver {
     return this.disponibilidadeService.disponibilidadeUpdate(accessContext, dto);
   }
 
-  
   async disponibilidadeDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,

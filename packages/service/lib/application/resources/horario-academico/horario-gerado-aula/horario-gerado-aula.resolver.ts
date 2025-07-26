@@ -1,18 +1,14 @@
-import * as LadesaTypings from "@ladesa-ro/especificacao";
-import { Tokens } from "@ladesa-ro/especificacao";
 import { Resolver } from "@nestjs/graphql";
-import { Operation } from "@/application/standards/especificacao/business-logic";
+import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { HorarioGeradoAulaService } from "./horario-gerado-aula.service";
-import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
-import { IApiDoc } from "@/application/standards-new/openapi";
 
 @Resolver()
 export class HorarioGeradoAulaResolver {
   constructor(private horarioGeradoAulaService: HorarioGeradoAulaService) {}
 
   //
-  
+
   async horarioGeradoAulaFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -22,7 +18,7 @@ export class HorarioGeradoAulaResolver {
   }
 
   //
-  
+
   async horarioGeradoAulaFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -32,7 +28,7 @@ export class HorarioGeradoAulaResolver {
   }
 
   //
-  
+
   async horarioGeradoAulaCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -42,22 +38,22 @@ export class HorarioGeradoAulaResolver {
   }
 
   //
-  
+
   async horarioGeradoAulaUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    
+
     @HttpOperationInput("HorarioGeradoAulaUpdate") dto: IOperationInput<"HorarioGeradoAulaUpdate">,
   ) {
     return this.horarioGeradoAulaService.HorarioGeradoAulaUpdate(accessContext, dto);
   }
 
   //
-  
+
   async horarioGeradoAulaOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    
+
     @HttpOperationInput("HorarioGeradoAulaOneById") dto: IOperationInput<"HorarioGeradoAulaOneById">,
   ) {
     return this.horarioGeradoAulaService.horarioGeradoAulaDeleteOneById(accessContext, { id: dto.parameters.path.id });

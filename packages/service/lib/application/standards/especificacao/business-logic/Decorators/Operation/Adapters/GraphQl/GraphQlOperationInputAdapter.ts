@@ -88,7 +88,7 @@ export class GraphQlOperationInputAdapter {
   }
 
   BuildCombinedTypeForOperation(operation: INodeTypeObjectOperation): IGraphQlRepresentation {
-    const combinedInputView = this.BuildCombinedEntityForOperationInput(operation);
+    const _combinedInputView = this.BuildCombinedEntityForOperationInput(operation);
 
     // TODO
 

@@ -1,11 +1,7 @@
-import * as LadesaTypings from "@ladesa-ro/especificacao";
-import { Tokens } from "@ladesa-ro/especificacao";
 import { Resolver } from "@nestjs/graphql";
-import { Operation } from "@/application/standards/especificacao/business-logic";
+import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { CursoService } from "./curso.service";
-import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
-import { IApiDoc } from "@/application/standards-new/openapi";
 
 @Resolver()
 export class CursoResolver {
@@ -15,7 +11,7 @@ export class CursoResolver {
   ) {}
 
   //
-  
+
   async cursoFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -25,7 +21,7 @@ export class CursoResolver {
   }
 
   //
-  
+
   async cursoFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -37,7 +33,7 @@ export class CursoResolver {
   }
 
   //
-  
+
   async cursoCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -46,7 +42,6 @@ export class CursoResolver {
     return this.cursoService.cursoCreate(accessContext, dto);
   }
 
-  
   async cursoUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -55,7 +50,6 @@ export class CursoResolver {
     return this.cursoService.cursoUpdate(accessContext, dto);
   }
 
-  
   async cursoDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,

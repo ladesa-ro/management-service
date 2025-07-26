@@ -1,12 +1,9 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
-import { Tokens } from "@ladesa-ro/especificacao";
 import { Controller, Delete, Get, Patch, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import { Operation } from "@/application/standards/especificacao/business-logic";
+import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { HorarioGeradoAulaService } from "./horario-gerado-aula.service";
-import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
-import { IApiDoc } from "@/application/standards-new/openapi";
 
 @ApiTags("horarios-gerados-aula")
 @Controller("/horarios-gerados-aula")
@@ -49,7 +46,7 @@ export class HorarioGeradoAulaController {
   async HorarioGeradoAulaUpdate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    
+
     @HttpOperationInput("HorarioGeradoAulaUpdate") dto: IOperationInput<"HorarioGeradoAulaUpdate">,
   ) {
     return this.horarioGeradoAulaService.HorarioGeradoAulaUpdate(accessContext, dto);
@@ -61,7 +58,7 @@ export class HorarioGeradoAulaController {
   async HorarioGeradoAulaDeleteOneById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    
+
     @HttpOperationInput("HorarioGeradoAulaDeleteOneById") dto: IOperationInput<"HorarioGeradoAulaDeleteOneById">,
   ) {
     return this.horarioGeradoAulaService.horarioGeradoAulaDeleteOneById(accessContext, { id: dto.parameters.path.id });

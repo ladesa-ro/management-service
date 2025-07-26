@@ -1,11 +1,7 @@
-import * as LadesaTypings from "@ladesa-ro/especificacao";
-import { Tokens } from "@ladesa-ro/especificacao";
 import { Resolver } from "@nestjs/graphql";
-import { Operation } from "@/application/standards/especificacao/business-logic";
+import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { ReservaService } from "./reserva.service";
-import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
-import { IApiDoc } from "@/application/standards-new/openapi";
 
 @Resolver()
 export class ReservaResolver {
@@ -15,7 +11,7 @@ export class ReservaResolver {
   ) {}
 
   //
-  
+
   async reservaFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -25,7 +21,7 @@ export class ReservaResolver {
   }
 
   //
-  
+
   async reservaFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -37,7 +33,7 @@ export class ReservaResolver {
   }
 
   //
-  
+
   async reservaCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -46,7 +42,6 @@ export class ReservaResolver {
     return this.reservaService.reservaCreate(accessContext, dto);
   }
 
-  
   async reservaUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -55,7 +50,6 @@ export class ReservaResolver {
     return this.reservaService.reservaUpdate(accessContext, dto);
   }
 
-  
   async reservaDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,

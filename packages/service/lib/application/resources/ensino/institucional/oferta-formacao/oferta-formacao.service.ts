@@ -1,11 +1,11 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
-import { IDomain } from "@/domain/domain-contracts";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
 import { ModalidadeService } from "@/application/resources/ensino/institucional/modalidade/modalidade.service";
 import { QbEfficientLoad } from "@/application/standards/ladesa-spec/QbEfficientLoad";
 import { LadesaPaginatedResultDto, LadesaSearch } from "@/application/standards/ladesa-spec/search/search-strategies";
+import { IDomain } from "@/domain/domain-contracts";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
@@ -30,11 +30,7 @@ export class OfertaFormacaoService {
 
   //
 
-  async ofertaFormacaoFindAll(
-    accessContext: AccessContext,
-    dto: IDomain.OfertaFormacaoListInput | null = null,
-    selection?: string[],
-  ): Promise<IDomain.OfertaFormacaoListOutput["success"]> {
+  async ofertaFormacaoFindAll(accessContext: AccessContext, dto: IDomain.OfertaFormacaoListInput | null = null, selection?: string[]): Promise<IDomain.OfertaFormacaoListOutput["success"]> {
     // =========================================================
 
     const qb = this.ofertaFormacaoRepository.createQueryBuilder(aliasOfertaFormacao);
@@ -98,11 +94,7 @@ export class OfertaFormacaoService {
     return LadesaPaginatedResultDto(paginated);
   }
 
-  async ofertaFormacaoFindById(
-    accessContext: AccessContext | null,
-    dto: IDomain.OfertaFormacaoFindOneInput,
-    selection?: string[],
-  ): Promise<IDomain.OfertaFormacaoFindOneOutput | null> {
+  async ofertaFormacaoFindById(accessContext: AccessContext | null, dto: IDomain.OfertaFormacaoFindOneInput, selection?: string[]): Promise<IDomain.OfertaFormacaoFindOneOutput | null> {
     // =========================================================
 
     const qb = this.ofertaFormacaoRepository.createQueryBuilder(aliasOfertaFormacao);
@@ -141,11 +133,7 @@ export class OfertaFormacaoService {
     return ofertaFormacao;
   }
 
-  async ofertaFormacaoFindByIdSimple(
-    accessContext: AccessContext,
-    id: IDomain.OfertaFormacaoFindOneInput["id"],
-    selection?: string[],
-  ): Promise<IDomain.OfertaFormacaoFindOneOutput | null> {
+  async ofertaFormacaoFindByIdSimple(accessContext: AccessContext, id: IDomain.OfertaFormacaoFindOneInput["id"], selection?: string[]): Promise<IDomain.OfertaFormacaoFindOneOutput | null> {
     // =========================================================
 
     const qb = this.ofertaFormacaoRepository.createQueryBuilder(aliasOfertaFormacao);

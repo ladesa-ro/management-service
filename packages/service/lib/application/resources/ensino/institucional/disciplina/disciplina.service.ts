@@ -1,5 +1,4 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
-import { IDomain } from "@/domain/domain-contracts";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { map, pick } from "lodash";
 import { FilterOperator, FilterSuffix } from "nestjs-paginate";
@@ -7,6 +6,7 @@ import { ArquivoService } from "@/application/resources/base/arquivo/arquivo.ser
 import { ImagemService } from "@/application/resources/base/imagem/imagem.service";
 import { QbEfficientLoad } from "@/application/standards/ladesa-spec/QbEfficientLoad";
 import { LadesaPaginatedResultDto, LadesaSearch } from "@/application/standards/ladesa-spec/search/search-strategies";
+import { IDomain } from "@/domain/domain-contracts";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
@@ -32,11 +32,7 @@ export class DisciplinaService {
 
   //
 
-  async disciplinaFindAll(
-    accessContext: AccessContext,
-    dto: IDomain.DisciplinaListInput | null = null,
-    selection?: string[] | boolean,
-  ): Promise<IDomain.DisciplinaListOutput["success"]> {
+  async disciplinaFindAll(accessContext: AccessContext, dto: IDomain.DisciplinaListInput | null = null, selection?: string[] | boolean): Promise<IDomain.DisciplinaListOutput["success"]> {
     // =========================================================
 
     const qb = this.disciplinaRepository.createQueryBuilder(aliasDisciplina);
@@ -97,11 +93,7 @@ export class DisciplinaService {
     return LadesaPaginatedResultDto(paginated);
   }
 
-  async disciplinaFindById(
-    accessContext: AccessContext | null,
-    dto: IDomain.DisciplinaFindOneInput,
-    selection?: string[] | boolean,
-  ): Promise<IDomain.DisciplinaFindOneOutput | null> {
+  async disciplinaFindById(accessContext: AccessContext | null, dto: IDomain.DisciplinaFindOneInput, selection?: string[] | boolean): Promise<IDomain.DisciplinaFindOneOutput | null> {
     // =========================================================
 
     const qb = this.disciplinaRepository.createQueryBuilder(aliasDisciplina);
@@ -140,11 +132,7 @@ export class DisciplinaService {
     return disciplina;
   }
 
-  async disciplinaFindByIdSimple(
-    accessContext: AccessContext,
-    id: IDomain.DisciplinaFindOneInput["id"],
-    selection?: string[] | boolean,
-  ): Promise<IDomain.DisciplinaFindOneOutput | null> {
+  async disciplinaFindByIdSimple(accessContext: AccessContext, id: IDomain.DisciplinaFindOneInput["id"], selection?: string[] | boolean): Promise<IDomain.DisciplinaFindOneOutput | null> {
     // =========================================================
 
     const qb = this.disciplinaRepository.createQueryBuilder(aliasDisciplina);

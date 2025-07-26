@@ -1,13 +1,9 @@
-import * as LadesaTypings from "@ladesa-ro/especificacao";
-import { Tokens } from "@ladesa-ro/especificacao";
 import { Info as GqlInfo, Resolver as GqlResolver } from "@nestjs/graphql";
 import type { GraphQLResolveInfo } from "graphql";
 import { graphqlExtractSelection } from "@/application/standards";
-import { Operation } from "@/application/standards/especificacao/business-logic";
+import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { OfertaFormacaoService } from "./oferta-formacao.service";
-import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
-import { IApiDoc } from "@/application/standards-new/openapi";
 
 @GqlResolver()
 export class OfertaFormacaoResolver {
@@ -17,7 +13,7 @@ export class OfertaFormacaoResolver {
   ) {}
 
   //
-  
+
   async ofertaFormacaoFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -28,11 +24,11 @@ export class OfertaFormacaoResolver {
   }
 
   //
-  
+
   async ofertaFormacaoFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    
+
     @HttpOperationInput("OfertaFormacaoFindOneById") dto: IOperationInput<"OfertaFormacaoFindOneById">,
     @GqlInfo() info: GraphQLResolveInfo,
   ) {
@@ -46,7 +42,7 @@ export class OfertaFormacaoResolver {
   }
 
   //
-  
+
   async ofertaFormacaoCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -55,7 +51,6 @@ export class OfertaFormacaoResolver {
     return this.ofertaFormacaoService.ofertaFormacaoCreate(accessContext, dto);
   }
 
-  
   async ofertaFormacaoUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -64,7 +59,6 @@ export class OfertaFormacaoResolver {
     return this.ofertaFormacaoService.ofertaFormacaoUpdate(accessContext, dto);
   }
 
-  
   async ofertaFormacaoDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,

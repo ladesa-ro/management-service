@@ -1,11 +1,11 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
-import { IDomain } from "@/domain/domain-contracts";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
 import { OfertaFormacaoService } from "@/application/resources/ensino/institucional/oferta-formacao/oferta-formacao.service";
 import { QbEfficientLoad } from "@/application/standards/ladesa-spec/QbEfficientLoad";
 import { LadesaPaginatedResultDto, LadesaSearch } from "@/application/standards/ladesa-spec/search/search-strategies";
+import { IDomain } from "@/domain/domain-contracts";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
@@ -123,11 +123,7 @@ export class CalendarioLetivoService {
     return LadesaPaginatedResultDto(paginated);
   }
 
-  async caledarioLetivoFindById(
-    accessContext: AccessContext,
-    dto: IDomain.CalendarioLetivoFindOneInput,
-    selection?: string[] | boolean,
-  ): Promise<IDomain.CalendarioLetivoFindOneOutput | null> {
+  async caledarioLetivoFindById(accessContext: AccessContext, dto: IDomain.CalendarioLetivoFindOneInput, selection?: string[] | boolean): Promise<IDomain.CalendarioLetivoFindOneOutput | null> {
     // =========================================================
 
     const qb = this.calendarioLetivoRepository.createQueryBuilder(aliasCalendarioLetivo);
@@ -164,11 +160,7 @@ export class CalendarioLetivoService {
     return calendarioLetivo;
   }
 
-  async calendarioLetivoFindByIdSimple(
-    accessContext: AccessContext,
-    id: IDomain.CalendarioLetivoFindOneInput["id"],
-    selection?: string[],
-  ): Promise<IDomain.CalendarioLetivoFindOneOutput | null> {
+  async calendarioLetivoFindByIdSimple(accessContext: AccessContext, id: IDomain.CalendarioLetivoFindOneInput["id"], selection?: string[]): Promise<IDomain.CalendarioLetivoFindOneOutput | null> {
     // =========================================================
 
     const qb = this.calendarioLetivoRepository.createQueryBuilder(aliasCalendarioLetivo);

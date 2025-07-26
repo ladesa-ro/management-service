@@ -1,10 +1,10 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
-import { IDomain } from "@/domain/domain-contracts";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
 import { QbEfficientLoad } from "@/application/standards/ladesa-spec/QbEfficientLoad";
 import { LadesaPaginatedResultDto, LadesaSearch } from "@/application/standards/ladesa-spec/search/search-strategies";
+import { IDomain } from "@/domain/domain-contracts";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
@@ -30,11 +30,7 @@ export class DiaCalendarioService {
 
   //
 
-  async diaCalendarioFindAll(
-    accessContext: AccessContext,
-    dto: IDomain.DiaCalendarioListInput | null = null,
-    selection?: string[] | boolean,
-  ): Promise<IDomain.DiaCalendarioListOutput["success"]> {
+  async diaCalendarioFindAll(accessContext: AccessContext, dto: IDomain.DiaCalendarioListInput | null = null, selection?: string[] | boolean): Promise<IDomain.DiaCalendarioListOutput["success"]> {
     // =========================================================
 
     const qb = this.diaCalendarioRepository.createQueryBuilder(aliasDiaCalendario);
@@ -104,11 +100,7 @@ export class DiaCalendarioService {
     return LadesaPaginatedResultDto(paginated);
   }
 
-  async diaCalendarioFindById(
-    accessContext: AccessContext,
-    dto: IDomain.DiaCalendarioFindOneInput,
-    selection?: string[] | boolean,
-  ): Promise<IDomain.DiaCalendarioFindOneOutput | null> {
+  async diaCalendarioFindById(accessContext: AccessContext, dto: IDomain.DiaCalendarioFindOneInput, selection?: string[] | boolean): Promise<IDomain.DiaCalendarioFindOneOutput | null> {
     // =========================================================
 
     const qb = this.diaCalendarioRepository.createQueryBuilder(aliasDiaCalendario);
@@ -145,11 +137,7 @@ export class DiaCalendarioService {
     return diaCalendario;
   }
 
-  async diaCalendarioFindByIdSimple(
-    accessContext: AccessContext,
-    id: IDomain.DiaCalendarioFindOneInput["id"],
-    selection?: string[],
-  ): Promise<IDomain.DiaCalendarioFindOneOutput | null> {
+  async diaCalendarioFindByIdSimple(accessContext: AccessContext, id: IDomain.DiaCalendarioFindOneInput["id"], selection?: string[]): Promise<IDomain.DiaCalendarioFindOneOutput | null> {
     // =========================================================
 
     const qb = this.diaCalendarioRepository.createQueryBuilder(aliasDiaCalendario);

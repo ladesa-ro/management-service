@@ -117,7 +117,6 @@ export class SpecNodesStoreFromNpmPackage implements ISpecNodesStore {
       if (references) {
         cursor = this.GetNodeWithId(references);
       } else {
-        debugger;
         console.debug({ cursor, references });
         throw new TypeError("Invalid cursor");
       }

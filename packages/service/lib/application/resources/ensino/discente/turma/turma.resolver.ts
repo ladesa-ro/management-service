@@ -1,11 +1,7 @@
-import * as LadesaTypings from "@ladesa-ro/especificacao";
-import { Tokens } from "@ladesa-ro/especificacao";
 import { Resolver } from "@nestjs/graphql";
-import { Operation } from "@/application/standards/especificacao/business-logic";
+import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { TurmaService } from "./turma.service";
-import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
-import { IApiDoc } from "@/application/standards-new/openapi";
 
 @Resolver()
 export class TurmaResolver {
@@ -15,7 +11,7 @@ export class TurmaResolver {
   ) {}
 
   //
-  
+
   async turmaFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -25,7 +21,7 @@ export class TurmaResolver {
   }
 
   //
-  
+
   async turmaFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -37,7 +33,7 @@ export class TurmaResolver {
   }
 
   //
-  
+
   async turmaCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -46,7 +42,6 @@ export class TurmaResolver {
     return this.turmaService.turmaCreate(accessContext, dto);
   }
 
-  
   async turmaUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -55,7 +50,6 @@ export class TurmaResolver {
     return this.turmaService.turmaUpdate(accessContext, dto);
   }
 
-  
   async turmaDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,

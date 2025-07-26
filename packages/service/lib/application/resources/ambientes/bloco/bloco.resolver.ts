@@ -1,11 +1,7 @@
-import * as LadesaTypings from "@ladesa-ro/especificacao";
-import { Tokens } from "@ladesa-ro/especificacao";
 import { Resolver } from "@nestjs/graphql";
-import { Operation } from "@/application/standards/especificacao/business-logic";
+import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { BlocoService } from "./bloco.service";
-import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
-import { IApiDoc } from "@/application/standards-new/openapi";
 
 @Resolver()
 export class BlocoResolver {
@@ -16,7 +12,6 @@ export class BlocoResolver {
 
   //
 
-  
   async blocoFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -26,7 +21,7 @@ export class BlocoResolver {
   }
 
   //
-  
+
   async blocoFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -38,7 +33,7 @@ export class BlocoResolver {
   }
 
   //
-  
+
   async blocoCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -47,7 +42,6 @@ export class BlocoResolver {
     return this.blocoService.blocoCreate(accessContext, dto);
   }
 
-  
   async blocoUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -56,7 +50,6 @@ export class BlocoResolver {
     return this.blocoService.blocoUpdate(accessContext, dto);
   }
 
-  
   async blocoDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,

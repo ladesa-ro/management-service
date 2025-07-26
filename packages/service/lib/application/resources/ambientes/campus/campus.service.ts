@@ -1,11 +1,11 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
-import { IDomain } from "@/domain/domain-contracts";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { get, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
 import { v4 } from "uuid";
 import { QbEfficientLoad } from "@/application/standards/ladesa-spec/QbEfficientLoad";
 import { LadesaPaginatedResultDto, LadesaSearch } from "@/application/standards/ladesa-spec/search/search-strategies";
+import { IDomain } from "@/domain/domain-contracts";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
@@ -31,11 +31,7 @@ export class CampusService {
 
   //
 
-  async campusFindAll(
-    accessContext: AccessContext,
-    dto: IDomain.CampusListInput | null = null,
-    selection?: string[] | boolean,
-  ): Promise<IDomain.CampusListOutput["success"]> {
+  async campusFindAll(accessContext: AccessContext, dto: IDomain.CampusListInput | null = null, selection?: string[] | boolean): Promise<IDomain.CampusListOutput["success"]> {
     // =========================================================
 
     const qb = this.campusRepository.createQueryBuilder(aliasCampus);

@@ -1,11 +1,7 @@
-import * as LadesaTypings from "@ladesa-ro/especificacao";
-import { Tokens } from "@ladesa-ro/especificacao";
 import { Resolver } from "@nestjs/graphql";
-import { Operation } from "@/application/standards/especificacao/business-logic";
+import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { DiarioService } from "./diario.service";
-import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
-import { IApiDoc } from "@/application/standards-new/openapi";
 
 @Resolver()
 export class DiarioResolver {
@@ -15,7 +11,7 @@ export class DiarioResolver {
   ) {}
 
   //
-  
+
   async diarioFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -25,7 +21,7 @@ export class DiarioResolver {
   }
 
   //
-  
+
   async diarioFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -37,7 +33,7 @@ export class DiarioResolver {
   }
 
   //
-  
+
   async diarioCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -46,7 +42,6 @@ export class DiarioResolver {
     return this.diarioService.diarioCreate(accessContext, dto);
   }
 
-  
   async diarioUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -55,7 +50,6 @@ export class DiarioResolver {
     return this.diarioService.diarioUpdate(accessContext, dto);
   }
 
-  
   async diarioDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,

@@ -1,11 +1,7 @@
-import * as LadesaTypings from "@ladesa-ro/especificacao";
-import { Tokens } from "@ladesa-ro/especificacao";
 import { Resolver } from "@nestjs/graphql";
-import { Operation } from "@/application/standards/especificacao/business-logic";
+import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { DisciplinaService } from "./disciplina.service";
-import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
-import { IApiDoc } from "@/application/standards-new/openapi";
 
 @Resolver()
 export class DisciplinaResolver {
@@ -15,7 +11,7 @@ export class DisciplinaResolver {
   ) {}
 
   //
-  
+
   async disciplinaFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -25,7 +21,7 @@ export class DisciplinaResolver {
   }
 
   //
-  
+
   async disciplinaFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -37,7 +33,7 @@ export class DisciplinaResolver {
   }
 
   //
-  
+
   async disciplinaCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -46,7 +42,6 @@ export class DisciplinaResolver {
     return this.disciplinaService.disciplinaCreate(accessContext, dto);
   }
 
-  
   async disciplinaUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -55,7 +50,6 @@ export class DisciplinaResolver {
     return this.disciplinaService.disciplinaUpdate(accessContext, dto);
   }
 
-  
   async disciplinaDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,

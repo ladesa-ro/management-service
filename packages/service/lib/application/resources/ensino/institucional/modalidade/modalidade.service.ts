@@ -1,9 +1,9 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
-import { IDomain } from "@/domain/domain-contracts";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { map, pick } from "lodash";
 import { QbEfficientLoad } from "@/application/standards/ladesa-spec/QbEfficientLoad";
 import { LadesaPaginatedResultDto, LadesaSearch } from "@/application/standards/ladesa-spec/search/search-strategies";
+import { IDomain } from "@/domain/domain-contracts";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
@@ -25,11 +25,7 @@ export class ModalidadeService {
 
   //
 
-  async modalidadeFindAll(
-    accessContext: AccessContext,
-    dto: IDomain.ModalidadeListInput | null = null,
-    selection?: string[],
-  ): Promise<IDomain.ModalidadeListOutput["success"]> {
+  async modalidadeFindAll(accessContext: AccessContext, dto: IDomain.ModalidadeListInput | null = null, selection?: string[]): Promise<IDomain.ModalidadeListOutput["success"]> {
     // =========================================================
 
     const qb = this.modalidadeRepository.createQueryBuilder(aliasModalidade);

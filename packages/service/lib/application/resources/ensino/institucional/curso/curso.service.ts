@@ -1,10 +1,10 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
-import { IDomain } from "@/domain/domain-contracts";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
 import { QbEfficientLoad } from "@/application/standards/ladesa-spec/QbEfficientLoad";
 import { LadesaPaginatedResultDto, LadesaSearch } from "@/application/standards/ladesa-spec/search/search-strategies";
+import { IDomain } from "@/domain/domain-contracts";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
@@ -36,11 +36,7 @@ export class CursoService {
 
   //
 
-  async cursoFindAll(
-    accessContext: AccessContext,
-    dto: IDomain.CursoListInput | null = null,
-    selection?: string[] | boolean,
-  ): Promise<IDomain.CursoListOutput["success"]> {
+  async cursoFindAll(accessContext: AccessContext, dto: IDomain.CursoListInput | null = null, selection?: string[] | boolean): Promise<IDomain.CursoListOutput["success"]> {
     // =========================================================
 
     const qb = this.cursoRepository.createQueryBuilder(aliasCurso);

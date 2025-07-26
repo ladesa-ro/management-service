@@ -1,10 +1,10 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
-import { IDomain } from "@/domain/domain-contracts";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
 import { QbEfficientLoad } from "@/application/standards/ladesa-spec/QbEfficientLoad";
 import { LadesaPaginatedResultDto, LadesaSearch } from "@/application/standards/ladesa-spec/search/search-strategies";
+import { IDomain } from "@/domain/domain-contracts";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
@@ -32,11 +32,7 @@ export class ReservaService {
 
   //
 
-  async reservaFindAll(
-    accessContext: AccessContext,
-    dto: IDomain.ReservaListInput | null = null,
-    selection?: string[] | boolean,
-  ): Promise<IDomain.ReservaListOutput["success"]> {
+  async reservaFindAll(accessContext: AccessContext, dto: IDomain.ReservaListInput | null = null, selection?: string[] | boolean): Promise<IDomain.ReservaListOutput["success"]> {
     // =========================================================
 
     const qb = this.reservaRepository.createQueryBuilder(aliasReserva);
@@ -45,7 +41,7 @@ export class ReservaService {
 
     await accessContext.applyFilter("reserva:find", qb, aliasReserva, null);
 
-    const dateOperations = [FilterOperator.EQ, FilterOperator.GT, FilterOperator.GTE, FilterOperator.LT, FilterOperator.LTE] as const;
+    const _dateOperations = [FilterOperator.EQ, FilterOperator.GT, FilterOperator.GTE, FilterOperator.LT, FilterOperator.LTE] as const;
 
     // =========================================================
 

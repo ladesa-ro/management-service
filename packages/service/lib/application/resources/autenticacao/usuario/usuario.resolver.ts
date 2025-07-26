@@ -1,11 +1,7 @@
-import * as LadesaTypings from "@ladesa-ro/especificacao";
-import { Tokens } from "@ladesa-ro/especificacao";
 import { Resolver } from "@nestjs/graphql";
-import { Operation } from "@/application/standards/especificacao/business-logic";
+import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { UsuarioService } from "./usuario.service";
-import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
-import { IApiDoc } from "@/application/standards-new/openapi";
 
 @Resolver()
 export class UsuarioResolver {
@@ -15,7 +11,7 @@ export class UsuarioResolver {
   ) {}
 
   //
-  
+
   async usuarioFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -25,7 +21,7 @@ export class UsuarioResolver {
   }
 
   //
-  
+
   async usuarioFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -37,7 +33,7 @@ export class UsuarioResolver {
   }
 
   //
-  
+
   async usuarioCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -46,7 +42,6 @@ export class UsuarioResolver {
     return this.usuarioService.usuarioCreate(accessContext, dto);
   }
 
-  
   async usuarioUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -55,7 +50,6 @@ export class UsuarioResolver {
     return this.usuarioService.usuarioUpdate(accessContext, dto);
   }
 
-  
   async usuarioDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,

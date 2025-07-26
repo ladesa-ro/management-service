@@ -1,5 +1,4 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
-import { IDomain } from "@/domain/domain-contracts";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
@@ -7,6 +6,7 @@ import { PerfilService } from "@/application/resources/autorizacao/perfil/perfil
 import { DisponibilidadeService } from "@/application/resources/horario-academico/disponibilidade/disponibilidade.service";
 import { QbEfficientLoad } from "@/application/standards/ladesa-spec/QbEfficientLoad";
 import { LadesaPaginatedResultDto, LadesaSearch } from "@/application/standards/ladesa-spec/search/search-strategies";
+import { IDomain } from "@/domain/domain-contracts";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
@@ -238,7 +238,12 @@ export class ProfessorDisponibilidadeService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("professor_disponibilidade:update", { dto }, dto.parameters.path.id, this.professorDisponibilidadeRepository.createQueryBuilder(aliasProfessorDisponibilidade));
+    await accessContext.ensurePermission(
+      "professor_disponibilidade:update",
+      { dto },
+      dto.parameters.path.id,
+      this.professorDisponibilidadeRepository.createQueryBuilder(aliasProfessorDisponibilidade),
+    );
 
     const dtoProfessorDisponibilidade = pick(dto.body, []);
 

@@ -1,11 +1,11 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
-import { IDomain } from "@/domain/domain-contracts";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
 import { CursoService } from "@/application/resources/ensino/institucional/curso/curso.service";
 import { QbEfficientLoad } from "@/application/standards/ladesa-spec/QbEfficientLoad";
 import { LadesaPaginatedResultDto, LadesaSearch } from "@/application/standards/ladesa-spec/search/search-strategies";
+import { IDomain } from "@/domain/domain-contracts";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
@@ -36,11 +36,7 @@ export class TurmaService {
 
   //
 
-  async turmaFindAll(
-    accessContext: AccessContext,
-    dto: IDomain.TurmaListInput | null = null,
-    selection?: string[] | boolean,
-  ): Promise<IDomain.TurmaListOutput["success"]> {
+  async turmaFindAll(accessContext: AccessContext, dto: IDomain.TurmaListInput | null = null, selection?: string[] | boolean): Promise<IDomain.TurmaListOutput["success"]> {
     // =========================================================
 
     const qb = this.turmaRepository.createQueryBuilder(aliasTurma);

@@ -1,7 +1,6 @@
 import { writeFile } from "node:fs/promises";
 import type { Readable } from "node:stream";
 import * as LadesaTypings from "@ladesa-ro/especificacao";
-import { IDomain } from "@/domain/domain-contracts";
 import { ForbiddenException, Inject, Injectable, NotFoundException, ServiceUnavailableException, StreamableFile } from "@nestjs/common";
 import jetpack, { createReadStream } from "fs-jetpack";
 import { v4 } from "uuid";

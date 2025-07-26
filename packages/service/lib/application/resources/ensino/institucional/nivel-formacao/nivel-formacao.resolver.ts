@@ -1,13 +1,9 @@
-import * as LadesaTypings from "@ladesa-ro/especificacao";
-import { Tokens } from "@ladesa-ro/especificacao";
 import { Info as GqlInfo, Resolver as GqlResolver } from "@nestjs/graphql";
 import type { GraphQLResolveInfo } from "graphql";
 import { graphqlExtractSelection } from "@/application/standards";
-import { Operation } from "@/application/standards/especificacao/business-logic";
+import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { NivelFormacaoService } from "./nivel-formacao.service";
-import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
-import { IApiDoc } from "@/application/standards-new/openapi";
 
 @GqlResolver()
 export class NivelFormacaoResolver {
@@ -17,7 +13,7 @@ export class NivelFormacaoResolver {
   ) {}
 
   //
-  
+
   async nivelFormacaoFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -28,7 +24,7 @@ export class NivelFormacaoResolver {
   }
 
   //
-  
+
   async nivelFormacaoFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -39,7 +35,7 @@ export class NivelFormacaoResolver {
   }
 
   //
-  
+
   async nivelFormacaoCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -48,7 +44,6 @@ export class NivelFormacaoResolver {
     return this.nivelFormacaoService.nivelFormacaoCreate(accessContext, dto);
   }
 
-  
   async nivelFormacaoUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -57,7 +52,6 @@ export class NivelFormacaoResolver {
     return this.nivelFormacaoService.nivelFormacaoUpdate(accessContext, dto);
   }
 
-  
   async nivelFormacaoDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,

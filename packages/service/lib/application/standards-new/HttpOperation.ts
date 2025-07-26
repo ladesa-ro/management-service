@@ -5,7 +5,7 @@ import type { IApiDoc } from "./openapi";
 type IOperationName = keyof IApiDoc.operations;
 
 export type IOperationInput<OperationName extends IOperationName> = {
-  parameters: IApiDoc.operations[OperationName]["parameters"]
+  parameters: IApiDoc.operations[OperationName]["parameters"];
 };
 
 export const HttpOperationInput = createParamDecorator(async (operationName: IOperationName, ctx: ExecutionContext) => {
@@ -25,4 +25,3 @@ export const HttpOperationInput = createParamDecorator(async (operationName: IOp
 
   return operationInput;
 });
-

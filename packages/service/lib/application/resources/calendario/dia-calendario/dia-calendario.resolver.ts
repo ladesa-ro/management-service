@@ -1,18 +1,14 @@
-import * as LadesaTypings from "@ladesa-ro/especificacao";
-import { Tokens } from "@ladesa-ro/especificacao";
 import { Resolver } from "@nestjs/graphql";
-import { Operation } from "@/application/standards/especificacao/business-logic";
+import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { DiaCalendarioService } from "./dia-calendario.service";
-import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
-import { IApiDoc } from "@/application/standards-new/openapi";
 
 @Resolver()
 export class DiaCalendarioResolver {
   constructor(private diaCalendarioService: DiaCalendarioService) {}
 
   //
-  
+
   async diaCalendarioFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -22,7 +18,7 @@ export class DiaCalendarioResolver {
   }
 
   //
-  
+
   async diaCalendarioFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -32,7 +28,7 @@ export class DiaCalendarioResolver {
   }
 
   //
-  
+
   async diaCalendarioCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -42,7 +38,7 @@ export class DiaCalendarioResolver {
   }
 
   //
-  
+
   async diaCalendarioUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -52,7 +48,7 @@ export class DiaCalendarioResolver {
   }
 
   //
-  
+
   async diaCalendarioDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,

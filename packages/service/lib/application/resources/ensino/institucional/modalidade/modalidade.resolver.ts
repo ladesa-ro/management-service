@@ -1,13 +1,9 @@
-import * as LadesaTypings from "@ladesa-ro/especificacao";
-import { Tokens } from "@ladesa-ro/especificacao";
 import { Info as GqlInfo, Resolver as GqlResolver } from "@nestjs/graphql";
 import type { GraphQLResolveInfo } from "graphql";
 import { graphqlExtractSelection } from "@/application/standards";
-import { Operation } from "@/application/standards/especificacao/business-logic";
+import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { ModalidadeService } from "./modalidade.service";
-import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
-import { IApiDoc } from "@/application/standards-new/openapi";
 
 @GqlResolver()
 export class ModalidadeResolver {
@@ -17,7 +13,7 @@ export class ModalidadeResolver {
   ) {}
 
   //
-  
+
   async modalidadeFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -28,7 +24,7 @@ export class ModalidadeResolver {
   }
 
   //
-  
+
   async modalidadeFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -39,7 +35,7 @@ export class ModalidadeResolver {
   }
 
   //
-  
+
   async modalidadeCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -48,7 +44,6 @@ export class ModalidadeResolver {
     return this.modalidadeService.modalidadeCreate(accessContext, dto);
   }
 
-  
   async modalidadeUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -57,7 +52,6 @@ export class ModalidadeResolver {
     return this.modalidadeService.modalidadeUpdate(accessContext, dto);
   }
 
-  
   async modalidadeDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,

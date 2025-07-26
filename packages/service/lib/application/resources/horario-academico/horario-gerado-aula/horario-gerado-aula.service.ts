@@ -1,5 +1,4 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
-import { IDomain } from "@/domain/domain-contracts";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
@@ -7,6 +6,7 @@ import { IntervaloDeTempoService } from "@/application/resources/base/intervalo-
 import { DiarioProfessorService } from "@/application/resources/ensino/discente/diario-professor/diario-professor.service";
 import { QbEfficientLoad } from "@/application/standards/ladesa-spec/QbEfficientLoad";
 import { LadesaPaginatedResultDto, LadesaSearch } from "@/application/standards/ladesa-spec/search/search-strategies";
+import { IDomain } from "@/domain/domain-contracts";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
@@ -121,11 +121,7 @@ export class HorarioGeradoAulaService {
     return LadesaPaginatedResultDto(paginated);
   }
 
-  async horarioGeradoAulaFindById(
-    accessContext: AccessContext,
-    dto: IDomain.HorarioGeradoAulaFindOneInput,
-    selection?: string[] | boolean,
-  ): Promise<IDomain.HorarioGeradoAulaFindOneOutput | null> {
+  async horarioGeradoAulaFindById(accessContext: AccessContext, dto: IDomain.HorarioGeradoAulaFindOneInput, selection?: string[] | boolean): Promise<IDomain.HorarioGeradoAulaFindOneOutput | null> {
     // =========================================================
 
     const qb = this.horarioGeradoAulaRepository.createQueryBuilder(aliasHorarioGeradoAula);
@@ -161,11 +157,7 @@ export class HorarioGeradoAulaService {
     return horarioGeradoAula;
   }
 
-  async horarioGeradoAulaFindByIdSimple(
-    accessContext: AccessContext,
-    id: IDomain.HorarioGeradoAulaFindOneInput["id"],
-    selection?: string[],
-  ): Promise<IDomain.HorarioGeradoAulaFindOneOutput | null> {
+  async horarioGeradoAulaFindByIdSimple(accessContext: AccessContext, id: IDomain.HorarioGeradoAulaFindOneInput["id"], selection?: string[]): Promise<IDomain.HorarioGeradoAulaFindOneOutput | null> {
     // =========================================================
 
     const qb = this.horarioGeradoAulaRepository.createQueryBuilder(aliasHorarioGeradoAula);

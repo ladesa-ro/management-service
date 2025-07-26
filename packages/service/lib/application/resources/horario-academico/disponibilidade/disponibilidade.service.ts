@@ -1,9 +1,9 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
-import { IDomain } from "@/domain/domain-contracts";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { map, pick } from "lodash";
 import { QbEfficientLoad } from "@/application/standards/ladesa-spec/QbEfficientLoad";
 import { LadesaPaginatedResultDto, LadesaSearch } from "@/application/standards/ladesa-spec/search/search-strategies";
+import { IDomain } from "@/domain/domain-contracts";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
@@ -25,11 +25,7 @@ export class DisponibilidadeService {
 
   //
 
-  async disponibilidadeFindAll(
-    accessContext: AccessContext,
-    dto: IDomain.DisponibilidadeListInput | null = null,
-    selection?: string[],
-  ): Promise<IDomain.DisponibilidadeListOutput["success"]> {
+  async disponibilidadeFindAll(accessContext: AccessContext, dto: IDomain.DisponibilidadeListInput | null = null, selection?: string[]): Promise<IDomain.DisponibilidadeListOutput["success"]> {
     // =========================================================
 
     const qb = this.disponibilidadeRepository.createQueryBuilder(aliasDisponibilidade);
@@ -88,11 +84,7 @@ export class DisponibilidadeService {
     return LadesaPaginatedResultDto(paginated);
   }
 
-  async disponibilidadeFindById(
-    accessContext: AccessContext | null,
-    dto: IDomain.DisponibilidadeFindOneInput,
-    selection?: string[],
-  ): Promise<IDomain.DisponibilidadeFindOneOutput | null> {
+  async disponibilidadeFindById(accessContext: AccessContext | null, dto: IDomain.DisponibilidadeFindOneInput, selection?: string[]): Promise<IDomain.DisponibilidadeFindOneOutput | null> {
     // =========================================================
 
     const qb = this.disponibilidadeRepository.createQueryBuilder(aliasDisponibilidade);
@@ -131,11 +123,7 @@ export class DisponibilidadeService {
     return disponibilidade;
   }
 
-  async disponibilidadeFindByIdSimple(
-    accessContext: AccessContext,
-    id: IDomain.DisponibilidadeFindOneInput["id"],
-    selection?: string[],
-  ): Promise<IDomain.DisponibilidadeFindOneOutput | null> {
+  async disponibilidadeFindByIdSimple(accessContext: AccessContext, id: IDomain.DisponibilidadeFindOneInput["id"], selection?: string[]): Promise<IDomain.DisponibilidadeFindOneOutput | null> {
     // =========================================================
 
     const qb = this.disponibilidadeRepository.createQueryBuilder(aliasDisponibilidade);

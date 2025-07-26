@@ -1,5 +1,4 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
-import { IDomain } from "@/domain/domain-contracts";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
@@ -7,6 +6,7 @@ import { CampusService } from "@/application/resources/ambientes/campus/campus.s
 import { OfertaFormacaoService } from "@/application/resources/ensino/institucional/oferta-formacao/oferta-formacao.service";
 import { QbEfficientLoad } from "@/application/standards/ladesa-spec/QbEfficientLoad";
 import { LadesaPaginatedResultDto, LadesaSearch } from "@/application/standards/ladesa-spec/search/search-strategies";
+import { IDomain } from "@/domain/domain-contracts";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
@@ -254,7 +254,12 @@ export class GradeHorarioOfertaFormacaoService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("grade_horario_oferta_formacao:update", { dto }, dto.parameters.path.id, this.gradeHorarioOfertaFormacaoRepository.createQueryBuilder(aliasGradeHorarioOfertaFormacao));
+    await accessContext.ensurePermission(
+      "grade_horario_oferta_formacao:update",
+      { dto },
+      dto.parameters.path.id,
+      this.gradeHorarioOfertaFormacaoRepository.createQueryBuilder(aliasGradeHorarioOfertaFormacao),
+    );
 
     const dtoGradeHorarioOfertaFormacao = pick(dto.body, ["nome", "slug"]);
 

@@ -1,11 +1,7 @@
-import * as LadesaTypings from "@ladesa-ro/especificacao";
-import { Tokens } from "@ladesa-ro/especificacao";
 import { Resolver } from "@nestjs/graphql";
-import { Operation } from "@/application/standards/especificacao/business-logic";
+import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { AulaService } from "./aula.service";
-import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
-import { IApiDoc } from "@/application/standards-new/openapi";
 
 @Resolver()
 export class AulaResolver {
@@ -15,7 +11,7 @@ export class AulaResolver {
   ) {}
 
   //
-  
+
   async aulaFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -25,7 +21,7 @@ export class AulaResolver {
   }
 
   //
-  
+
   async aulaFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -37,7 +33,7 @@ export class AulaResolver {
   }
 
   //
-  
+
   async aulaCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -46,7 +42,6 @@ export class AulaResolver {
     return this.aulaService.aulaCreate(accessContext, dto);
   }
 
-  
   async aulaUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -55,7 +50,6 @@ export class AulaResolver {
     return this.aulaService.aulaUpdate(accessContext, dto);
   }
 
-  
   async aulaDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,

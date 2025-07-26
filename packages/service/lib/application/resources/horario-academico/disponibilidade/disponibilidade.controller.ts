@@ -1,12 +1,9 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
-import { Tokens } from "@ladesa-ro/especificacao";
 import { Controller, Delete, Get, Patch, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import { Operation } from "@/application/standards/especificacao/business-logic";
+import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { DisponibilidadeService } from "./disponibilidade.service";
-import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
-import { IApiDoc } from "@/application/standards-new/openapi";
 
 @ApiTags("disponibilidades")
 @Controller("/disponibilidades")
@@ -30,7 +27,7 @@ export class DisponibilidadeController {
   async disponibilidadeFindById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    
+
     @HttpOperationInput("DisponibilidadeFindById") dto: IOperationInput<"DisponibilidadeFindById">,
   ) {
     return this.disponibilidadeService.disponibilidadeFindByIdStrict(accessContext, {

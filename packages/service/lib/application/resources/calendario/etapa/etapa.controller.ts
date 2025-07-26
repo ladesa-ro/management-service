@@ -1,12 +1,9 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
-import { Tokens } from "@ladesa-ro/especificacao";
 import { Controller, Delete, Get, Patch, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import { Operation } from "@/application/standards/especificacao/business-logic";
+import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { EtapaService } from "./etapa.service";
-import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
-import { IApiDoc } from "@/application/standards-new/openapi";
 
 @ApiTags("etapas")
 @Controller("/etapas")
@@ -14,7 +11,10 @@ export class EtapaController {
   constructor(private etapaService: EtapaService) {}
 
   @Get("/")
-  async etapaFindAll(@AccessContextHttp() clientAccess: AccessContext, @HttpOperationInput("EtapaFindAll") dto: IOperationInput<"EtapaFindAll">): Promise<LadesaTypings.EtapaListOperationOutput["success"]> {
+  async etapaFindAll(
+    @AccessContextHttp() clientAccess: AccessContext,
+    @HttpOperationInput("EtapaFindAll") dto: IOperationInput<"EtapaFindAll">,
+  ): Promise<LadesaTypings.EtapaListOperationOutput["success"]> {
     return this.etapaService.etapaFindAll(clientAccess, dto);
   }
 

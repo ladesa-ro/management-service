@@ -1,12 +1,9 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
-import { Tokens } from "@ladesa-ro/especificacao";
-import { Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post, Put, UploadedFile } from "@nestjs/common";
+import { Controller, Delete, Get, Patch, Post, Put, UploadedFile } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import { Operation } from "@/application/standards/especificacao/business-logic";
+import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { BlocoService } from "./bloco.service";
-import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
-import { IApiDoc } from "@/application/standards-new/openapi";
 
 @ApiTags("blocos")
 @Controller("/blocos")
@@ -29,7 +26,7 @@ export class BlocoController {
   @Get("/:id")
   async blocoFindById(
     //
-    @AccessContextHttp() accessContext: AccessContext
+    @AccessContextHttp() accessContext: AccessContext,
   ) {
     return this.blocoService.blocoFindByIdStrict(accessContext, { id });
   }
@@ -61,7 +58,7 @@ export class BlocoController {
   @Get("/:id/imagem/capa")
   async blocoGetImagemCapa(
     //
-    @AccessContextHttp() accessContext: AccessContext
+    @AccessContextHttp() accessContext: AccessContext,
   ) {
     return this.blocoService.blocoGetImagemCapa(accessContext, id);
   }
@@ -70,7 +67,7 @@ export class BlocoController {
   async blocoImagemCapaSave(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @UploadedFile() file: Express.Multer.File
+    @UploadedFile() file: Express.Multer.File,
   ) {
     return this.blocoService.blocoUpdateImagemCapa(accessContext, { id }, file);
   }

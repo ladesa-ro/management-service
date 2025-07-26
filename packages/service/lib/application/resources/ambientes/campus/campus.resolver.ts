@@ -1,11 +1,7 @@
-import * as LadesaTypings from "@ladesa-ro/especificacao";
-import { Tokens } from "@ladesa-ro/especificacao";
 import { Resolver } from "@nestjs/graphql";
-import { Operation } from "@/application/standards/especificacao/business-logic";
+import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { CampusService } from "./campus.service";
-import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
-import { IApiDoc } from "@/application/standards-new/openapi";
 
 @Resolver()
 export class CampusResolver {
@@ -15,7 +11,7 @@ export class CampusResolver {
   ) {}
 
   //
-  
+
   async campusFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -25,7 +21,7 @@ export class CampusResolver {
   }
 
   //
-  
+
   async campusFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -37,7 +33,7 @@ export class CampusResolver {
   }
 
   //
-  
+
   async campusCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -46,7 +42,6 @@ export class CampusResolver {
     return this.campusService.campusCreate(accessContext, dto);
   }
 
-  
   async campusUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -55,7 +50,6 @@ export class CampusResolver {
     return this.campusService.campusUpdate(accessContext, dto);
   }
 
-  
   async campusDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,

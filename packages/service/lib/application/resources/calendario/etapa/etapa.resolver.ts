@@ -1,18 +1,14 @@
-import * as LadesaTypings from "@ladesa-ro/especificacao";
-import { Tokens } from "@ladesa-ro/especificacao";
 import { Resolver } from "@nestjs/graphql";
-import { Operation } from "@/application/standards/especificacao/business-logic";
+import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { EtapaService } from "./etapa.service";
-import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
-import { IApiDoc } from "@/application/standards-new/openapi";
 
 @Resolver()
 export class EtapaResolver {
   constructor(private etapaService: EtapaService) {}
 
   //
-  
+
   async etapaFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -22,7 +18,7 @@ export class EtapaResolver {
   }
 
   //
-  
+
   async etapaFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -34,7 +30,7 @@ export class EtapaResolver {
   }
 
   //
-  
+
   async etapaCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -44,7 +40,7 @@ export class EtapaResolver {
   }
 
   //
-  
+
   async etapaUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -54,7 +50,7 @@ export class EtapaResolver {
   }
 
   //
-  
+
   async etapaDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,

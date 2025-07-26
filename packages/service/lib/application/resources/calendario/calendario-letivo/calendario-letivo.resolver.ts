@@ -1,18 +1,14 @@
-import * as LadesaTypings from "@ladesa-ro/especificacao";
-import { Tokens } from "@ladesa-ro/especificacao";
 import { Resolver } from "@nestjs/graphql";
-import { Operation } from "@/application/standards/especificacao/business-logic";
+import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { CalendarioLetivoService } from "./calendario-letivo.service";
-import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
-import { IApiDoc } from "@/application/standards-new/openapi";
 
 @Resolver()
 export class CalendarioLetivoResolver {
   constructor(private calendarioLetivoService: CalendarioLetivoService) {}
 
   //
-  
+
   async calendarioLetivoFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -22,18 +18,18 @@ export class CalendarioLetivoResolver {
   }
 
   //
-  
+
   async calendarioLetivoFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    
+
     @HttpOperationInput("CalendarioLetivoFindOneById") dto: IOperationInput<"CalendarioLetivoFindOneById">,
   ) {
     return this.calendarioLetivoService.calendarioLetivoFindByIdStrict(accessContext, { id: dto.parameters.path.id });
   }
 
   //
-  
+
   async calendarioLetivoCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -43,7 +39,7 @@ export class CalendarioLetivoResolver {
   }
 
   //
-  
+
   async calendarioLetivoUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
@@ -53,7 +49,7 @@ export class CalendarioLetivoResolver {
   }
 
   //
-  
+
   async calendarioLetivoDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
