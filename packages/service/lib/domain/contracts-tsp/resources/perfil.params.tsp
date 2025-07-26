@@ -42,7 +42,7 @@ model PerfilListInput {
 model PerfilListOutput is Pagination.Output.View<PerfilFindOneOutput>;
 
 /** Dados de entrada para a alteração de vínculo de um Usuário a um Campus. */
-model PerfilUpdateView {
+model PerfilUpdateInput {
   /** Cargos do usuário no vínculo. */
   cargos: string[];
 

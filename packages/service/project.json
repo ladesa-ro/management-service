@@ -49,11 +49,11 @@
     "contracts:domain:build": {
       "cache": true,
       "executor": "nx:run-commands",
-      "inputs": ["{projectRoot}/lib/contracts/domain/**/*"],
+      "inputs": ["{projectRoot}/lib/domain/contracts-tsp/**/*"],
       "options": {
         "commands": [
           "mkdir -p lib/domain/.generated",
-          "tsp compile lib/contracts/domain/main.tsp --config lib/contracts/domain/tspconfig.yaml --output-dir lib/domain/.generated",
+          "tsp compile lib/domain/contracts-tsp/main.tsp --config lib/domain/contracts-tsp/tspconfig.yaml --output-dir lib/domain/.generated",
           "quicktype --src-lang schema --src './lib/domain/.generated/schema.json#$defs/' -o './lib/domain/.generated/schema.ts' --just-types --no-nice-property-names --no-runtime-typecheck --acronym-style original"
         ],
         "cwd": "{projectRoot}",
@@ -67,7 +67,7 @@
       "dependsOn": [],
       "executor": "nx:run-commands",
       "options": {
-        "commands": ["nodemon -e '*' --watch ./lib/contracts/domain --exec 'bun run contracts:domain:build' -L"],
+        "commands": ["nodemon -e '*' --watch ./lib/domain/contracts-tsp --exec 'bun run contracts:domain:build' -L"],
         "cwd": "{projectRoot}",
         "parallel": false
       }
@@ -75,11 +75,11 @@
     "contracts:application:build": {
       "cache": true,
       "executor": "nx:run-commands",
-      "inputs": ["{projectRoot}/lib/contracts/domain/**/*", "{projectRoot}/lib/contracts/application/**/*"],
+      "inputs": ["{projectRoot}/lib/domain/contracts-tsp/**/*", "{projectRoot}/lib/application/contracts-tsp/**/*"],
       "options": {
         "commands": [
           "mkdir -p lib/application/.generated",
-          "tsp compile lib/contracts/application/main.tsp --config lib/contracts/application/tspconfig.yaml --output-dir lib/application/.generated",
+          "tsp compile lib/application/contracts-tsp/main.tsp --config lib/application/contracts-tsp/tspconfig.yaml --output-dir lib/application/.generated",
           "openapi-typescript ./lib/application/.generated/openapi.v3.json -o ./lib/application/.generated/openapi.v3.d.ts"
         ],
         "cwd": "{projectRoot}",
@@ -93,7 +93,7 @@
       "dependsOn": [],
       "executor": "nx:run-commands",
       "options": {
-        "commands": ["nodemon -e '*' --watch ./lib/contracts/domain --watch ./lib/contracts/application --exec 'bun run contracts:application:build' -L"],
+        "commands": ["nodemon -e '*' --watch ./lib/domain/contracts-tsp --watch ./lib/application/contracts-tsp --exec 'bun run contracts:application:build' -L"],
         "cwd": "{projectRoot}",
         "parallel": false
       }
