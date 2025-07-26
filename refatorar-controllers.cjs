@@ -10,7 +10,11 @@ const path = require('path');
 const project = new Project();
 
 // Refatora todos os controllers no diretório packages/service/lib/application/resources
-project.addSourceFilesAtPaths('packages/service/lib/application/resources/**/*.controller.ts');
+
+//project.addSourceFilesAtPaths('packages/service/lib/application/resources/**/*.controller.ts'); //altera os controllers
+
+project.addSourceFilesAtPaths("packages/service/lib/application/resources/**/*.resolver.ts"); //altera os resolvers
+
 
 project.getSourceFiles().forEach(sourceFile => {
   let mudou = false;
