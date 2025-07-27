@@ -3,6 +3,7 @@
   "version": "2.0.0-alpha",
   "private": true,
   "dependencies": {
+    "@apidevtools/swagger-parser": "catalog:infrastructure/openapi",
     "@apollo/server": "catalog:infrastructure/graphl",
     "@apollo/utils.keyvaluecache": "catalog:infrastructure/graphl",
     "@fastify/merge-json-schemas": "catalog:infrastructure/validation/json-schema",
@@ -36,6 +37,7 @@
     "lodash": "catalog:infrastructure/utils",
     "lru-cache": "catalog:infrastructure/utils",
     "nestjs-paginate": "catalog:infrastructure/ingrations/db-client-typeorm",
+    "openapi-backend": "catalog:infrastructure/openapi",
     "openid-client": "catalog:infrastructure/protocols/openid-connect",
     "passport": "catalog:infrastructure/express/passport",
     "passport-http-bearer": "catalog:infrastructure/express/passport",
@@ -216,6 +218,10 @@
         "rxjs": "^7.8.2",
         "sharp": "^0.34.3",
         "uuid": "^11.1.0"
+      },
+      "infrastructure/openapi": {
+        "@apidevtools/swagger-parser": "^12.0.0",
+        "openapi-backend": "^5.13.0"
       },
       "infrastructure/validation/ajv": {
         "ajv": "^8.17.1",

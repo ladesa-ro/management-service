@@ -18,8 +18,8 @@
     "baseUrl": "./lib",
     "paths": {
       "@/*": ["./*"],
-      "@/application/#/*": ["./application/.generated/*"],
-      "@/domain/#/*": ["./domain/.generated/*"]
+      "@/application/#/*": ["./application/contracts/.generated/*"],
+      "@/domain/#/*": ["./domain/contracts/.generated/*"]
     },
     "incremental": true,
     "skipLibCheck": true

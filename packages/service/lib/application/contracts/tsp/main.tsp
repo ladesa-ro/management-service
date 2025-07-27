@@ -2,7 +2,7 @@ import "@typespec/http";
 import "@typespec/json-schema";
 import "@typespec/openapi";
 import "@typespec/openapi3";
-import "../../domain/contracts-tsp/main.tsp";
+import "../../../domain/contracts/tsp/main.tsp";
 
 using Http;
 using OpenAPI;
@@ -668,12 +668,12 @@ op AmbienteList(
   /**
    * Página de consulta.
    */
-  @minValue(1) @query(#{ explode: true }) page?: integer,
+  @minValue(1) @query(#{ explode: true }) page?: integer = 1,
 
   /**
    * Limite da quantidade de resultados por página.
    */
-  @minValue(1) @query(#{ explode: true }) limit?: integer,
+  @minValue(1) @query(#{ explode: true }) limit?: integer = 20,
 
   /**
    * Busca textual.

@@ -30,7 +30,7 @@
       "dependsOn": ["contracts:domain:build", "contracts:application:build", "contracts:domain:dev", "contracts:application:dev"],
       "executor": "nx:run-commands",
       "options": {
-        "commands": ["bun run --watch --hot lib/main.ts"],
+        "commands": ["bun run --hot lib/main.ts"],
         "cwd": "{projectRoot}",
         "parallel": false
       }
@@ -49,17 +49,17 @@
     "contracts:domain:build": {
       "cache": true,
       "executor": "nx:run-commands",
-      "inputs": ["{projectRoot}/lib/domain/contracts-tsp/**/*"],
+      "inputs": ["{projectRoot}/lib/domain/contracts/tsp/**/*"],
       "options": {
         "commands": [
-          "mkdir -p lib/domain/.generated",
-          "tsp compile lib/domain/contracts-tsp/main.tsp --config lib/domain/contracts-tsp/tspconfig.yaml --output-dir lib/domain/.generated",
-          "quicktype --src-lang schema --src './lib/domain/.generated/schema.json#$defs/' -o './lib/domain/.generated/schema.ts' --just-types --no-nice-property-names --no-runtime-typecheck --acronym-style original"
+          "mkdir -p lib/domain/contracts/.generated",
+          "tsp compile lib/domain/contracts/tsp/main.tsp --config lib/domain/contracts/tsp/tspconfig.yaml --output-dir lib/domain/contracts/.generated",
+          "quicktype --src-lang schema --src './lib/domain/contracts/.generated/schema.json#$defs/' -o './lib/domain/contracts/.generated/schema.ts' --just-types --no-nice-property-names --no-runtime-typecheck --acronym-style original"
         ],
         "cwd": "{projectRoot}",
         "parallel": false
       },
-      "outputs": ["{projectRoot}/lib/domain/.generated/**/*"]
+      "outputs": ["{projectRoot}/lib/domain/contracts/.generated/**/*"]
     },
     "contracts:domain:dev": {
       "cache": false,
@@ -67,7 +67,7 @@
       "dependsOn": [],
       "executor": "nx:run-commands",
       "options": {
-        "commands": ["nodemon -e '*' --watch ./lib/domain/contracts-tsp --exec 'bun run contracts:domain:build' -L"],
+        "commands": ["nodemon -e '*' --watch ./lib/domain/contracts/tsp --exec 'bun run contracts:domain:build' -L"],
         "cwd": "{projectRoot}",
         "parallel": false
       }
@@ -75,17 +75,17 @@
     "contracts:application:build": {
       "cache": true,
       "executor": "nx:run-commands",
-      "inputs": ["{projectRoot}/lib/domain/contracts-tsp/**/*", "{projectRoot}/lib/application/contracts-tsp/**/*"],
+      "inputs": ["{projectRoot}/lib/domain/contracts/tsp/**/*", "{projectRoot}/lib/application/contracts/tsp/**/*"],
       "options": {
         "commands": [
-          "mkdir -p lib/application/.generated",
-          "tsp compile lib/application/contracts-tsp/main.tsp --config lib/application/contracts-tsp/tspconfig.yaml --output-dir lib/application/.generated",
-          "openapi-typescript ./lib/application/.generated/openapi.v3.json -o ./lib/application/.generated/openapi.v3.d.ts"
+          "mkdir -p lib/application/contracts/.generated",
+          "tsp compile lib/application/contracts/tsp/main.tsp --config lib/application/contracts/tsp/tspconfig.yaml --output-dir lib/application/contracts/.generated",
+          "openapi-typescript ./lib/application/contracts/.generated/openapi.v3.json -o ./lib/application/contracts/.generated/openapi.v3.d.ts"
         ],
         "cwd": "{projectRoot}",
         "parallel": false
       },
-      "outputs": ["{projectRoot}/lib/application/.generated/**/*"]
+      "outputs": ["{projectRoot}/lib/application/contracts/.generated/**/*"]
     },
     "contracts:application:dev": {
       "cache": false,
@@ -93,7 +93,7 @@
       "dependsOn": [],
       "executor": "nx:run-commands",
       "options": {
-        "commands": ["nodemon -e '*' --watch ./lib/domain/contracts-tsp --watch ./lib/application/contracts-tsp --exec 'bun run contracts:application:build' -L"],
+        "commands": ["nodemon -e '*' --watch ./lib/domain/contracts/tsp --watch ./lib/application/contracts/tsp --exec 'bun run contracts:application:build' -L"],
         "cwd": "{projectRoot}",
         "parallel": false
       }
