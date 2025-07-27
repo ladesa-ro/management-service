@@ -11,11 +11,8 @@ export class DiarioEntity implements LadesaTypings.Diario {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 
-  //
-
   @Column({ name: "ativo", type: "boolean", nullable: false })
   ativo!: boolean;
-  //
 
   @ManyToOne(() => CalendarioLetivoEntity)
   @JoinColumn({ name: "id_calendario_letivo_fk" })
@@ -36,8 +33,6 @@ export class DiarioEntity implements LadesaTypings.Diario {
   @ManyToOne(() => ImagemEntity)
   @JoinColumn({ name: "id_imagem_capa_fk" })
   imagemCapa!: Relation<ImagemEntity> | null;
-
-  //
 
   @Column({ name: "date_created", type: "timestamptz", nullable: false })
   dateCreated!: Date;

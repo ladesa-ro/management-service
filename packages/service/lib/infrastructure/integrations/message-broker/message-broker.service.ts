@@ -3,11 +3,7 @@ import { MessageBrokerContainerService } from "./message-broker-container.servic
 
 @Injectable()
 export class MessageBrokerService {
-  constructor(
-    //
-
-    private messageBrokerContainerService: MessageBrokerContainerService,
-  ) {}
+  constructor(private messageBrokerContainerService: MessageBrokerContainerService) {}
 
   async publishDbEvent() {
     try {

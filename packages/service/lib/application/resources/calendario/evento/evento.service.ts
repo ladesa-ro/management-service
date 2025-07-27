@@ -28,8 +28,6 @@ export class EventoService {
     return this.databaseContext.eventoRepository;
   }
 
-  //
-
   async eventoFindAll(accessContext: AccessContext, dto: IDomain.EventoListInput | null = null, selection?: string[] | boolean): Promise<IDomain.EventoListOutput["success"]> {
     // =========================================================
 
@@ -46,32 +44,28 @@ export class EventoService {
       { ...dto },
       {
         select: [
-          //
           "id",
-          //
+
           "nome",
           "cor",
-          //
+
           "rrule",
-          //
+
           "calendario.id",
           "calendario.nome",
           "calendario.ano",
         ],
         sortableColumns: [
-          //
           "nome",
           "cor",
-          //
+
           "calendario.id",
           "calendario.nome",
           "calendario.ano",
-          //
         ],
         searchableColumns: [
-          //
           "id",
-          //
+
           "nome",
           "cor",
         ],
@@ -175,8 +169,6 @@ export class EventoService {
     return evento;
   }
 
-  //
-
   async eventoCreate(accessContext: AccessContext, dto: IDomain.EventoCreateInput) {
     // =========================================================
 
@@ -254,8 +246,6 @@ export class EventoService {
 
     return this.eventoFindByIdStrict(accessContext, { id: evento.id });
   }
-
-  //
 
   async eventoDeleteOneById(accessContext: AccessContext, dto: IDomain.EventoFindOneInput) {
     // =========================================================

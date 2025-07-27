@@ -15,7 +15,7 @@ export class CreateTableDiarioPreferenciaAgrupamento1710186667700 implements Mig
             isPrimary: true,
             default: "gen_random_uuid()",
           },
-          //
+
           {
             name: "data_inicio",
             type: "timestamptz",
@@ -49,7 +49,7 @@ export class CreateTableDiarioPreferenciaAgrupamento1710186667700 implements Mig
             type: "uuid",
             isNullable: false,
           },
-          //
+
           {
             name: "date_created",
             type: "timestamptz",

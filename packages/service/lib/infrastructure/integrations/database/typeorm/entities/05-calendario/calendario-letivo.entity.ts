@@ -8,8 +8,6 @@ export class CalendarioLetivoEntity implements LadesaTypings.CalendarioLetivo {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 
-  //
-
   @Column({ name: "nome", type: "text" })
   nome!: string;
 
@@ -25,8 +23,6 @@ export class CalendarioLetivoEntity implements LadesaTypings.CalendarioLetivo {
   @ManyToOne(() => OfertaFormacaoEntity)
   @JoinColumn({ name: "id_oferta_formacao_fk" })
   ofertaFormacao!: LadesaTypings.OfertaFormacao;
-
-  //
 
   @Column({ name: "date_created", type: "timestamptz", nullable: false })
   dateCreated!: Date;

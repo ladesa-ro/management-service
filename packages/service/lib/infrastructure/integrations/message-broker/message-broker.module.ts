@@ -4,17 +4,7 @@ import { MessageBrokerContainerService } from "./message-broker-container.servic
 import { MessageBrokerSubscribeService } from "./message-broker-subscribe.service";
 
 @Module({
-  providers: [
-    //
-    MessageBrokerService,
-    MessageBrokerContainerService,
-    MessageBrokerSubscribeService,
-  ],
-  exports: [
-    //
-    MessageBrokerService,
-    MessageBrokerContainerService,
-    MessageBrokerSubscribeService,
-  ],
+  providers: [MessageBrokerService, MessageBrokerContainerService, MessageBrokerSubscribeService],
+  exports: [MessageBrokerService, MessageBrokerContainerService, MessageBrokerSubscribeService],
 })
 export class MessageBrokerModule {}

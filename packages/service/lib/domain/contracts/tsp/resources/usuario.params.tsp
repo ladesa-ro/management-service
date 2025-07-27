@@ -16,7 +16,7 @@ model UsuarioFindOneInput {
 
 /** Visão FindOne de um Usuário. */
 model UsuarioFindOneOutput {
-  //
+
   ...PickProperties<UsuarioView, "id">;
 
   ...PickProperties<UsuarioView, "nome">;
@@ -24,13 +24,10 @@ model UsuarioFindOneOutput {
   ...PickProperties<UsuarioView, "email">;
   ...PickProperties<UsuarioView, "isSuperUser">;
 
-  //
   ...PickProperties<UsuarioView, "imagemCapa">;
 
-  //
   ...PickProperties<UsuarioView, "imagemPerfil">;
 
-  //
   ...PickProperties<UsuarioView, "dateCreated" | "dateUpdated" | "dateDeleted">;
 }
 

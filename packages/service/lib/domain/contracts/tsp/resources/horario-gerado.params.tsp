@@ -35,7 +35,6 @@ model HorarioGeradoCreateInput {
   vigenciaInicio: HorarioGerado.vigenciaInicio;
   vigenciaFim: HorarioGerado.vigenciaFim;
 
-  //
   calendario: CalendarioLetivoFindOneInput;
 }
 

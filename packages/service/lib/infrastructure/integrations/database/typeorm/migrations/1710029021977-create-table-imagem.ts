@@ -16,15 +16,11 @@ export class CreateTableImagem1710029021977 implements MigrationInterface {
             default: "gen_random_uuid()",
           },
 
-          //
-
           {
             name: "descricao",
             type: "text",
             isNullable: true,
           },
-
-          //
 
           {
             name: "date_created",

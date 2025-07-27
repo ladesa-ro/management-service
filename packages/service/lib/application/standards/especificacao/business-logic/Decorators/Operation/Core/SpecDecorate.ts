@@ -60,7 +60,6 @@ export class SpecDecorate implements ISpecDecorate {
 
     context.methodDecorators.push(SetMetadata(OPERATION_KEY, context.meta));
 
-    //
     context.AddMethodDecorator((target, propertyKey, descriptor) => {
       if (descriptor.value) {
         const combinedInputParam: ICombinedInputParamMetadata = Reflect.getMetadata(COMBINED_INPUT_PARAM, descriptor.value);
@@ -110,7 +109,6 @@ export class SpecDecorate implements ISpecDecorate {
         }
       }
     });
-    //
 
     return applyDecorators(...context.methodDecorators);
   }

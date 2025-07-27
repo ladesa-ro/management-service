@@ -8,15 +8,9 @@ import { DisponibilidadeService } from "./disponibilidade.service";
 
 @GqlResolver()
 export class DisponibilidadeResolver {
-  constructor(
-    //
-    private disponibilidadeService: DisponibilidadeService,
-  ) {}
-
-  //
+  constructor(private disponibilidadeService: DisponibilidadeService) {}
 
   async disponibilidadeFindAll(
-    //
     @AccessContextGraphQl() accessContext: AccessContext,
     @AppRequest("DisponibilidadeFindAll") dto: IAppRequest<"DisponibilidadeFindAll">,
     @GqlInfo() info: GraphQLResolveInfo,
@@ -24,10 +18,7 @@ export class DisponibilidadeResolver {
     return this.disponibilidadeService.disponibilidadeFindAll(accessContext, dto, graphqlExtractSelection(info, "paginated"));
   }
 
-  //
-
   async disponibilidadeFindOneById(
-    //
     @AccessContextGraphQl() accessContext: AccessContext,
 
     @AppRequest("DisponibilidadeFindOneById") dto: IAppRequest<"DisponibilidadeFindOneById">,
@@ -36,29 +27,15 @@ export class DisponibilidadeResolver {
     return this.disponibilidadeService.disponibilidadeFindByIdStrict(accessContext, { id: dto.parameters.path.id }, ["id", ...graphqlExtractSelection(info)]);
   }
 
-  //
-
-  async disponibilidadeCreate(
-    //
-    @AccessContextGraphQl() accessContext: AccessContext,
-    @AppRequest("DisponibilidadeCreate") dto: IAppRequest<"DisponibilidadeCreate">,
-  ) {
+  async disponibilidadeCreate(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("DisponibilidadeCreate") dto: IAppRequest<"DisponibilidadeCreate">) {
     return this.disponibilidadeService.disponibilidadeCreate(accessContext, dto);
   }
 
-  async disponibilidadeUpdate(
-    //
-    @AccessContextGraphQl() accessContext: AccessContext,
-    @AppRequest("DisponibilidadeUpdate") dto: IAppRequest<"DisponibilidadeUpdate">,
-  ) {
+  async disponibilidadeUpdate(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("DisponibilidadeUpdate") dto: IAppRequest<"DisponibilidadeUpdate">) {
     return this.disponibilidadeService.disponibilidadeUpdate(accessContext, dto);
   }
 
-  async disponibilidadeDeleteOneById(
-    //
-    @AccessContextGraphQl() accessContext: AccessContext,
-    @AppRequest("DisponibilidadeDeleteOneById") dto: IAppRequest<"DisponibilidadeDeleteOneById">,
-  ) {
+  async disponibilidadeDeleteOneById(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("DisponibilidadeDeleteOneById") dto: IAppRequest<"DisponibilidadeDeleteOneById">) {
     return this.disponibilidadeService.disponibilidadeDeleteOneById(accessContext, {
       id: dto.parameters.path.id,
     });

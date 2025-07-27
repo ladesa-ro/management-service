@@ -16,15 +16,13 @@ model ReservaFindOneInput {
 
 /** Visão FindOne de uma Reserva. */
 model ReservaFindOneOutput {
-  //
+
   ...PickProperties<ReservaView, "id">;
 
   ...PickProperties<ReservaView, "situacao" | "motivo" | "tipo" | "rrule">;
 
-  //
   ...PickProperties<ReservaView, "usuario" | "ambiente">;
 
-  //
   ...PickProperties<ReservaView, "dateCreated" | "dateUpdated" | "dateDeleted">;
 }
 

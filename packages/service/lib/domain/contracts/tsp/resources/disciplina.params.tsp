@@ -15,17 +15,15 @@ model DisciplinaFindOneInput {
 
 /** Visão FindOne de uma Disciplina. */
 model DisciplinaFindOneOutput {
-  //
+
   ...PickProperties<DisciplinaView, "id">;
 
   ...PickProperties<DisciplinaView, "nome">;
   ...PickProperties<DisciplinaView, "nomeAbreviado">;
   ...PickProperties<DisciplinaView, "cargaHoraria">;
 
-  //
   ...PickProperties<DisciplinaView, "imagemCapa">;
 
-  //
   ...PickProperties<
     DisciplinaView,
     "dateCreated" | "dateUpdated" | "dateDeleted"

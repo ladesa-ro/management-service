@@ -8,15 +8,9 @@ import { GradeHorarioOfertaFormacaoIntervaloDeTempoService } from "./grade-horar
 
 @GqlResolver()
 export class GradeHorarioOfertaFormacaoIntervaloDeTempoResolver {
-  constructor(
-    //
-    private gradeHorarioOfertaFormacaoIntervaloDeTempoService: GradeHorarioOfertaFormacaoIntervaloDeTempoService,
-  ) {}
-
-  //
+  constructor(private gradeHorarioOfertaFormacaoIntervaloDeTempoService: GradeHorarioOfertaFormacaoIntervaloDeTempoService) {}
 
   async gradeHorarioOfertaFormacaoIntervaloDeTempoFindAll(
-    //
     @AccessContextGraphQl() accessContext: AccessContext,
 
     @AppRequest("GradeHorarioOfertaFormacaoIntervaloDeTempoFindAll") dto: IAppRequest<"GradeHorarioOfertaFormacaoIntervaloDeTempoFindAll">,
@@ -25,10 +19,7 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoResolver {
     return this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.gradeHorarioOfertaFormacaoIntervaloDeTempoFindAll(accessContext, dto, graphqlExtractSelection(info, "paginated"));
   }
 
-  //
-
   async gradeHorarioOfertaFormacaoIntervaloDeTempoFindOneById(
-    //
     @AccessContextGraphQl() accessContext: AccessContext,
 
     @AppRequest("GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneById") dto: IAppRequest<"GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneById">,
@@ -43,10 +34,7 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoResolver {
     );
   }
 
-  //
-
   async gradeHorarioOfertaFormacaoIntervaloDeTempoCreate(
-    //
     @AccessContextGraphQl() accessContext: AccessContext,
 
     @AppRequest("GradeHorarioOfertaFormacaoIntervaloDeTempoCreate") dto: IAppRequest<"GradeHorarioOfertaFormacaoIntervaloDeTempoCreate">,
@@ -55,7 +43,6 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoResolver {
   }
 
   async gradeHorarioOfertaFormacaoIntervaloDeTempoUpdate(
-    //
     @AccessContextGraphQl() accessContext: AccessContext,
 
     @AppRequest("GradeHorarioOfertaFormacaoIntervaloDeTempoUpdate") dto: IAppRequest<"GradeHorarioOfertaFormacaoIntervaloDeTempoUpdate">,
@@ -64,7 +51,6 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoResolver {
   }
 
   async gradeHorarioOfertaFormacaoIntervaloDeTempoDeleteOneById(
-    //
     @AccessContextGraphQl() accessContext: AccessContext,
 
     @AppRequest("GradeHorarioOfertaFormacaoIntervaloDeTempoDeleteOneById") dto: IAppRequest<"GradeHorarioOfertaFormacaoIntervaloDeTempoDeleteOneById">,

@@ -15,7 +15,7 @@ export class CreateTableIntervaloDeTempo1710107116819 implements MigrationInterf
             isPrimary: true,
             default: "gen_random_uuid()",
           },
-          //
+
           {
             name: "perido_inicio",
             type: "time",
@@ -26,7 +26,7 @@ export class CreateTableIntervaloDeTempo1710107116819 implements MigrationInterf
             type: "time",
             isNullable: false,
           },
-          //
+
           {
             name: "date_created",
             type: "timestamptz",

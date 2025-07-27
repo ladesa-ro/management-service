@@ -17,15 +17,13 @@ model TurmaFindOneInput {
 
 /** Visão FindOne de uma Turma. */
 model TurmaFindOneOutput {
-  //
+
   ...PickProperties<TurmaView, "id">;
 
   ...PickProperties<TurmaView, "periodo">;
 
-  //
   ...PickProperties<TurmaView, "curso" | "ambientePadraoAula" | "imagemCapa">;
 
-  //
   ...PickProperties<TurmaView, "dateCreated" | "dateUpdated" | "dateDeleted">;
 }
 

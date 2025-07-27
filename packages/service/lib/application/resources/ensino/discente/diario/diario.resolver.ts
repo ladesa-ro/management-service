@@ -6,56 +6,27 @@ import { DiarioService } from "./diario.service";
 
 @Resolver()
 export class DiarioResolver {
-  constructor(
-    //
-    private diarioService: DiarioService,
-  ) {}
+  constructor(private diarioService: DiarioService) {}
 
-  //
-
-  async diarioFindAll(
-    //
-    @AccessContextGraphQl() accessContext: AccessContext,
-    @AppRequest("DiarioFindAll") dto: IAppRequest<"DiarioFindAll">,
-  ) {
+  async diarioFindAll(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("DiarioFindAll") dto: IAppRequest<"DiarioFindAll">) {
     return this.diarioService.diarioFindAll(accessContext, dto);
   }
 
-  //
-
-  async diarioFindOneById(
-    //
-    @AccessContextGraphQl() accessContext: AccessContext,
-    @AppRequest("DiarioFindOneById") dto: IAppRequest<"DiarioFindOneById">,
-  ) {
+  async diarioFindOneById(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("DiarioFindOneById") dto: IAppRequest<"DiarioFindOneById">) {
     return this.diarioService.diarioFindByIdStrict(accessContext, {
       id: dto.parameters.path.id,
     });
   }
 
-  //
-
-  async diarioCreate(
-    //
-    @AccessContextGraphQl() accessContext: AccessContext,
-    @AppRequest("DiarioCreate") dto: IAppRequest<"DiarioCreate">,
-  ) {
+  async diarioCreate(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("DiarioCreate") dto: IAppRequest<"DiarioCreate">) {
     return this.diarioService.diarioCreate(accessContext, dto);
   }
 
-  async diarioUpdate(
-    //
-    @AccessContextGraphQl() accessContext: AccessContext,
-    @AppRequest("DiarioUpdate") dto: IAppRequest<"DiarioUpdate">,
-  ) {
+  async diarioUpdate(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("DiarioUpdate") dto: IAppRequest<"DiarioUpdate">) {
     return this.diarioService.diarioUpdate(accessContext, dto);
   }
 
-  async diarioDeleteOneById(
-    //
-    @AccessContextGraphQl() accessContext: AccessContext,
-    @AppRequest("DiarioDeleteOneById") dto: IAppRequest<"DiarioDeleteOneById">,
-  ) {
+  async diarioDeleteOneById(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("DiarioDeleteOneById") dto: IAppRequest<"DiarioDeleteOneById">) {
     return this.diarioService.diarioDeleteOneById(accessContext, {
       id: dto.parameters.path.id,
     });

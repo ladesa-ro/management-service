@@ -248,10 +248,6 @@ export class EnvironmentConfigService implements IConfig {
     return options as DataSourceOptions;
   }
 
-  //
-
-  //
-
   getOidcClientCredentials(): IConfigIntegrateAuthOidcClientCredentials {
     const issuer = this.nestConfigService.get<string>("OAUTH2_CLIENT_PROVIDER_OIDC_ISSUER");
     const clientId = this.nestConfigService.get<string>("OAUTH2_CLIENT_REGISTRATION_LOGIN_CLIENT_ID");
@@ -267,8 +263,6 @@ export class EnvironmentConfigService implements IConfig {
       clientSecret,
     };
   }
-
-  //
 
   getKeycloakConfigCredentials(): IConfigIntegrateAuthKeycloakCredentials {
     const baseUrl = this.nestConfigService.get<string>("KC_BASE_URL");
@@ -299,6 +293,4 @@ export class EnvironmentConfigService implements IConfig {
       clientSecret,
     };
   }
-
-  //
 }

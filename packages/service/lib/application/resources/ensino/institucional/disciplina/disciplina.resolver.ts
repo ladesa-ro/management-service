@@ -6,56 +6,27 @@ import { DisciplinaService } from "./disciplina.service";
 
 @Resolver()
 export class DisciplinaResolver {
-  constructor(
-    //
-    private disciplinaService: DisciplinaService,
-  ) {}
+  constructor(private disciplinaService: DisciplinaService) {}
 
-  //
-
-  async disciplinaFindAll(
-    //
-    @AccessContextGraphQl() accessContext: AccessContext,
-    @AppRequest("DisciplinaFindAll") dto: IAppRequest<"DisciplinaFindAll">,
-  ) {
+  async disciplinaFindAll(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("DisciplinaFindAll") dto: IAppRequest<"DisciplinaFindAll">) {
     return this.disciplinaService.disciplinaFindAll(accessContext, dto);
   }
 
-  //
-
-  async disciplinaFindOneById(
-    //
-    @AccessContextGraphQl() accessContext: AccessContext,
-    @AppRequest("DisciplinaFindOneById") dto: IAppRequest<"DisciplinaFindOneById">,
-  ) {
+  async disciplinaFindOneById(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("DisciplinaFindOneById") dto: IAppRequest<"DisciplinaFindOneById">) {
     return this.disciplinaService.disciplinaFindByIdStrict(accessContext, {
       id: dto.parameters.path.id,
     });
   }
 
-  //
-
-  async disciplinaCreate(
-    //
-    @AccessContextGraphQl() accessContext: AccessContext,
-    @AppRequest("DisciplinaCreate") dto: IAppRequest<"DisciplinaCreate">,
-  ) {
+  async disciplinaCreate(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("DisciplinaCreate") dto: IAppRequest<"DisciplinaCreate">) {
     return this.disciplinaService.disciplinaCreate(accessContext, dto);
   }
 
-  async disciplinaUpdate(
-    //
-    @AccessContextGraphQl() accessContext: AccessContext,
-    @AppRequest("DisciplinaUpdate") dto: IAppRequest<"DisciplinaUpdate">,
-  ) {
+  async disciplinaUpdate(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("DisciplinaUpdate") dto: IAppRequest<"DisciplinaUpdate">) {
     return this.disciplinaService.disciplinaUpdate(accessContext, dto);
   }
 
-  async disciplinaDeleteOneById(
-    //
-    @AccessContextGraphQl() accessContext: AccessContext,
-    @AppRequest("DisciplinaDeleteOneById") dto: IAppRequest<"DisciplinaDeleteOneById">,
-  ) {
+  async disciplinaDeleteOneById(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("DisciplinaDeleteOneById") dto: IAppRequest<"DisciplinaDeleteOneById">) {
     return this.disciplinaService.disciplinaDeleteOneById(accessContext, {
       id: dto.parameters.path.id,
     });

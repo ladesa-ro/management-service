@@ -19,33 +19,18 @@ export class HorarioGeradoAulaController {
     return this.horarioGeradoAulaService.horarioGeradoAulaFindAll(clientAccess, dto);
   }
 
-  //
-
   @Get("/:id")
-  async horarioGeradoAulaFindById(
-    //
-    @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("HorarioGeradoAulaFindById") dto: IAppRequest<"HorarioGeradoAulaFindById">,
-  ) {
+  async horarioGeradoAulaFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("HorarioGeradoAulaFindById") dto: IAppRequest<"HorarioGeradoAulaFindById">) {
     return this.horarioGeradoAulaService.horarioGeradoAulaFindByIdStrict(accessContext, { id: dto.parameters.path.id });
   }
 
-  //
-
   @Post("/")
-  async horarioGeradoAulaCreate(
-    //
-    @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("HorarioGeradoAulaCreate") dto: IAppRequest<"HorarioGeradoAulaCreate">,
-  ) {
+  async horarioGeradoAulaCreate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("HorarioGeradoAulaCreate") dto: IAppRequest<"HorarioGeradoAulaCreate">) {
     return this.horarioGeradoAulaService.HorarioGeradoAulaCreate(accessContext, dto);
   }
 
-  //
-
   @Patch("/:id")
   async HorarioGeradoAulaUpdate(
-    //
     @AccessContextHttp() accessContext: AccessContext,
 
     @AppRequest("HorarioGeradoAulaUpdate") dto: IAppRequest<"HorarioGeradoAulaUpdate">,
@@ -53,17 +38,12 @@ export class HorarioGeradoAulaController {
     return this.horarioGeradoAulaService.HorarioGeradoAulaUpdate(accessContext, dto);
   }
 
-  //
-
   @Delete("/:id")
   async HorarioGeradoAulaDeleteOneById(
-    //
     @AccessContextHttp() accessContext: AccessContext,
 
     @AppRequest("HorarioGeradoAulaDeleteOneById") dto: IAppRequest<"HorarioGeradoAulaDeleteOneById">,
   ) {
     return this.horarioGeradoAulaService.horarioGeradoAulaDeleteOneById(accessContext, { id: dto.parameters.path.id });
   }
-
-  //
 }

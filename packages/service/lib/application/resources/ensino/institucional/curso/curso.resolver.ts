@@ -6,56 +6,27 @@ import { CursoService } from "./curso.service";
 
 @Resolver()
 export class CursoResolver {
-  constructor(
-    //
-    private cursoService: CursoService,
-  ) {}
+  constructor(private cursoService: CursoService) {}
 
-  //
-
-  async cursoFindAll(
-    //
-    @AccessContextGraphQl() accessContext: AccessContext,
-    @AppRequest("CursoFindAll") dto: IAppRequest<"CursoFindAll">,
-  ) {
+  async cursoFindAll(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("CursoFindAll") dto: IAppRequest<"CursoFindAll">) {
     return this.cursoService.cursoFindAll(accessContext, dto);
   }
 
-  //
-
-  async cursoFindOneById(
-    //
-    @AccessContextGraphQl() accessContext: AccessContext,
-    @AppRequest("CursoFindOneById") dto: IAppRequest<"CursoFindOneById">,
-  ) {
+  async cursoFindOneById(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("CursoFindOneById") dto: IAppRequest<"CursoFindOneById">) {
     return this.cursoService.cursoFindByIdStrict(accessContext, {
       id: dto.parameters.path.id,
     });
   }
 
-  //
-
-  async cursoCreate(
-    //
-    @AccessContextGraphQl() accessContext: AccessContext,
-    @AppRequest("CursoCreate") dto: IAppRequest<"CursoCreate">,
-  ) {
+  async cursoCreate(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("CursoCreate") dto: IAppRequest<"CursoCreate">) {
     return this.cursoService.cursoCreate(accessContext, dto);
   }
 
-  async cursoUpdate(
-    //
-    @AccessContextGraphQl() accessContext: AccessContext,
-    @AppRequest("CursoUpdate") dto: IAppRequest<"CursoUpdate">,
-  ) {
+  async cursoUpdate(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("CursoUpdate") dto: IAppRequest<"CursoUpdate">) {
     return this.cursoService.cursoUpdate(accessContext, dto);
   }
 
-  async cursoDeleteOneById(
-    //
-    @AccessContextGraphQl() accessContext: AccessContext,
-    @AppRequest("CursoDeleteOneById") dto: IAppRequest<"CursoDeleteOneById">,
-  ) {
+  async cursoDeleteOneById(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("CursoDeleteOneById") dto: IAppRequest<"CursoDeleteOneById">) {
     return this.cursoService.cursoDeleteOneById(accessContext, {
       id: dto.parameters.path.id,
     });

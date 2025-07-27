@@ -2,9 +2,7 @@ import { OfertaFormacaoNivelFormacaoEntity } from "@/infrastructure/integrations
 import { createRepositoryFactory, IRepositoryFactoryOutput } from "../../helpers/create-repository-factory";
 
 export const createOfertaFormacaoNivelFormacaoRepository = createRepositoryFactory((ds) => {
-  return ds.getRepository(OfertaFormacaoNivelFormacaoEntity).extend({
-    //
-  });
+  return ds.getRepository(OfertaFormacaoNivelFormacaoEntity).extend({});
 });
 
 export type OfertaFormacaoNivelFormacaoRepository = IRepositoryFactoryOutput<typeof createOfertaFormacaoNivelFormacaoRepository>;

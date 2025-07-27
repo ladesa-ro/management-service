@@ -8,8 +8,6 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoEntity implements LadesaT
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 
-  //
-
   @ManyToOne(() => CampusEntity)
   @JoinColumn({ name: "id_intervalo_de_tempo_fk" })
   intervaloDeTempo!: LadesaTypings.IntervaloDeTempo;
@@ -17,8 +15,6 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoEntity implements LadesaT
   @ManyToOne(() => OfertaFormacaoEntity)
   @JoinColumn({ name: "id_grade_horario_oferta_formacao_fk" })
   gradeHorarioOfertaFormacao!: LadesaTypings.GradeHorarioOfertaFormacao;
-
-  //
 
   @Column({ name: "date_created", type: "timestamptz", nullable: false })
   dateCreated!: Date;

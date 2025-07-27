@@ -9,12 +9,8 @@ export class TurmaEntity implements LadesaTypings.Turma {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 
-  //
-
   @Column({ name: "periodo", type: "text", nullable: false })
   periodo!: string;
-
-  //
 
   @ManyToOne(() => AmbienteEntity)
   @JoinColumn({ name: "id_ambiente_padrao_aula_fk" })
@@ -27,8 +23,6 @@ export class TurmaEntity implements LadesaTypings.Turma {
   @ManyToOne(() => ImagemEntity)
   @JoinColumn({ name: "id_imagem_capa_fk" })
   imagemCapa!: Relation<ImagemEntity> | null;
-
-  //
 
   @Column({ name: "date_created", type: "timestamptz", nullable: false })
   dateCreated!: Date;

@@ -21,8 +21,6 @@ export class EstadoService {
     return this.databaseContext.estadoRepository;
   }
 
-  //
-
   async findAll(accessContext: AccessContext, dto: IDomain.EstadoListInput | null = null, selection?: string[]): Promise<IDomain.EstadoListOutput["success"]> {
     // =========================================================
 
@@ -39,25 +37,10 @@ export class EstadoService {
       { ...dto },
       {
         ...paginateConfig,
-        select: [
-          //
-          "id",
-        ],
-        searchableColumns: [
-          //
-          "nome",
-          "sigla",
-        ],
-        sortableColumns: [
-          //
-          "id",
-          "nome",
-          "sigla",
-        ],
-        defaultSortBy: [
-          //
-          ["nome", "ASC"],
-        ],
+        select: ["id"],
+        searchableColumns: ["nome", "sigla"],
+        sortableColumns: ["id", "nome", "sigla"],
+        defaultSortBy: [["nome", "ASC"]],
         filterableColumns: {},
       },
     );

@@ -38,5 +38,4 @@ export class AutenticacaoResolver {
   // ) {
   //   return this.autenticacaoService.definirSenha(accessContext, dto);
   // }
-  //
 }

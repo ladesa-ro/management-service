@@ -7,8 +7,6 @@ export class ArquivoEntity implements LadesaTypings.Arquivo {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 
-  //
-
   @Column({ name: "name", type: "text", nullable: true })
   name!: string;
 
@@ -21,8 +19,6 @@ export class ArquivoEntity implements LadesaTypings.Arquivo {
   @Column({ name: "storage_type", type: "text", nullable: true })
   storageType!: string;
 
-  //
-
   @Column({ name: "date_created", type: "timestamptz", nullable: false })
   dateCreated!: Date;
 
@@ -31,8 +27,6 @@ export class ArquivoEntity implements LadesaTypings.Arquivo {
 
   @Column({ name: "date_deleted", type: "timestamptz", nullable: true })
   dateDeleted!: null | Date;
-
-  //
 
   @OneToMany(
     () => ImagemArquivoEntity,

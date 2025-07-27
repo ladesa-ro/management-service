@@ -5,10 +5,6 @@ import { INodeType, NodeType } from "@/application/standards/especificacao/infra
 
 export type INodeCore = INodeType | INodeBase;
 
-export const NodeCore = valibot.union([
-  //
-  valibot.lazy(() => NodeType),
-  valibot.lazy(() => NodeBase),
-]);
+export const NodeCore = valibot.union([valibot.lazy(() => NodeType), valibot.lazy(() => NodeBase)]);
 
 export const CheckNodeCore = BuildCheckType<any, INodeCore>(NodeCore);

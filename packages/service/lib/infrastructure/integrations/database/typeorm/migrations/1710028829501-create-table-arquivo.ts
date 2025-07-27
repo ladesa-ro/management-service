@@ -16,8 +16,6 @@ export class CreateTableArquivo1710028829501 implements MigrationInterface {
             default: "gen_random_uuid()",
           },
 
-          //
-
           {
             name: "name",
             type: "text",
@@ -41,8 +39,6 @@ export class CreateTableArquivo1710028829501 implements MigrationInterface {
             type: "text",
             isNullable: true,
           },
-
-          //
 
           {
             name: "date_created",

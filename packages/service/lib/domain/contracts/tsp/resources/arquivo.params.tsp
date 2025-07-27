@@ -20,14 +20,12 @@ model ArquivoFindOneInput {
 model ArquivoFindOneOutput {
   ...PickProperties<ArquivoView, "id">;
 
-  //
 
   ...PickProperties<
     ArquivoView,
     "name" | "mimeType" | "sizeBytes" | "storageType"
   >;
 
-  //
 
   ...PickProperties<ArquivoView, "dateCreated" | "dateUpdated" | "dateDeleted">;
 }

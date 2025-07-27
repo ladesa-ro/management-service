@@ -28,8 +28,6 @@ export class DiaCalendarioService {
     return this.databaseContext.diaCalendarioRepository;
   }
 
-  //
-
   async diaCalendarioFindAll(accessContext: AccessContext, dto: IDomain.DiaCalendarioListInput | null = null, selection?: string[] | boolean): Promise<IDomain.DiaCalendarioListOutput["success"]> {
     // =========================================================
 
@@ -46,31 +44,28 @@ export class DiaCalendarioService {
       { ...dto },
       {
         select: [
-          //
           "id",
-          //
+
           "data",
           "diaLetivo",
           "feriado",
-          //
+
           "calendario.id",
           "calendario.nome",
           "calendario.ano",
         ],
         sortableColumns: [
-          //
           "data",
           "diaLetivo",
           "feriado",
-          //
+
           "calendario.id",
           "calendario.nome",
           "calendario.ano",
         ],
         searchableColumns: [
-          //
           "id",
-          //
+
           "data",
           "diaLetivo",
           "feriado",
@@ -177,8 +172,6 @@ export class DiaCalendarioService {
     return diaCalendario;
   }
 
-  //
-
   async diaCalendarioCreate(accessContext: AccessContext, dto: IDomain.DiaCalendarioCreateInput) {
     // =========================================================
 
@@ -260,8 +253,6 @@ export class DiaCalendarioService {
       id: diaCalendario.id,
     });
   }
-
-  //
 
   async diaCalendarioDeleteOneById(accessContext: AccessContext, dto: IDomain.DiaCalendarioFindOneInput) {
     // =========================================================

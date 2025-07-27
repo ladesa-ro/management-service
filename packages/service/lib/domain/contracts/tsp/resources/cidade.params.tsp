@@ -17,7 +17,7 @@ model CidadeFindOneInput is PickProperties<CidadeView, "id">;
  * Visão FindOne de uma cidade.
  */
 model CidadeFindOneOutput {
-  //
+
   ...PickProperties<CidadeView, "id">;
 
   ...PickProperties<CidadeView, "nome">;

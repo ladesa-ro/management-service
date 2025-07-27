@@ -20,11 +20,8 @@ export class DisponibilidadeDiaController {
     return this.disponibilidadeDiaService.disponibilidadeDiaFindAll(clientAccess, dto);
   }
 
-  //
-
   @Get("/:id")
   async disponibilidadeDiaFindById(
-    //
     @AccessContextHttp() accessContext: AccessContext,
 
     @AppRequest("DisponibilidadeDiaFindById") dto: IAppRequest<"DisponibilidadeDiaFindById">,
@@ -32,11 +29,8 @@ export class DisponibilidadeDiaController {
     return this.disponibilidadeDiaService.disponibilidadeDiaFindByIdStrict(accessContext, { id: dto.parameters.path.id });
   }
 
-  //
-
   @Post("/")
   async disponibilidadeDiaCreate(
-    //
     @AccessContextHttp() accessContext: AccessContext,
 
     @AppRequest("DisponibilidadeDiaCreate") dto: IAppRequest<"DisponibilidadeDiaCreate">,
@@ -44,11 +38,8 @@ export class DisponibilidadeDiaController {
     return this.disponibilidadeDiaService.disponibilidadeDiaCreate(accessContext, dto);
   }
 
-  //
-
   @Patch("/:id")
   async disponibilidadeDiaUpdate(
-    //
     @AccessContextHttp() accessContext: AccessContext,
 
     @AppRequest("DisponibilidadeDiaUpdate") dto: IAppRequest<"DisponibilidadeDiaUpdate">,
@@ -56,17 +47,12 @@ export class DisponibilidadeDiaController {
     return this.disponibilidadeDiaService.disponibilidadeDiaUpdate(accessContext, dto);
   }
 
-  //
-
   @Delete("/:id")
   async disponibilidadeDiaDeleteOneById(
-    //
     @AccessContextHttp() accessContext: AccessContext,
 
     @AppRequest("DisponibilidadeDiaDeleteOneById") dto: IAppRequest<"DisponibilidadeDiaDeleteOneById">,
   ) {
     return this.disponibilidadeDiaService.disponibilidadeDiaDeleteOneById(accessContext, { id: dto.parameters.path.id });
   }
-
-  //
 }

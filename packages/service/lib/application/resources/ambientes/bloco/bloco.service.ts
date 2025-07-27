@@ -33,14 +33,7 @@ export class BlocoService {
     return this.databaseContext.blocoRepository;
   }
 
-  //
-
-  async blocoFindAll(
-    //
-    accessContext: AccessContext,
-    dto: IDomain.BlocoListInput | null = null,
-    selection?: string[] | boolean,
-  ): Promise<IDomain.BlocoListOutput["success"]> {
+  async blocoFindAll(accessContext: AccessContext, dto: IDomain.BlocoListInput | null = null, selection?: string[] | boolean): Promise<IDomain.BlocoListOutput["success"]> {
     // =========================================================
 
     const qb = this.blocoRepository.createQueryBuilder(aliasBloco);
@@ -56,13 +49,12 @@ export class BlocoService {
       { ...dto },
       {
         select: [
-          //
           "id",
-          //
+
           "nome",
           "codigo",
           "dateCreated",
-          //
+
           "campus.id",
           "campus.razaoSocial",
           "campus.nomeFantasia",
@@ -71,22 +63,19 @@ export class BlocoService {
           campus: true,
         },
         sortableColumns: [
-          //
           "nome",
           "codigo",
           "dateCreated",
-          //
+
           "campus.id",
           "campus.razaoSocial",
           "campus.nomeFantasia",
         ],
         searchableColumns: [
-          //
           "id",
-          //
+
           "nome",
           "codigo",
-          //
         ],
         defaultSortBy: [
           ["nome", "ASC"],
@@ -187,8 +176,6 @@ export class BlocoService {
     return bloco;
   }
 
-  //
-
   async blocoGetImagemCapa(accessContext: AccessContext | null, id: string) {
     const bloco = await this.blocoFindByIdStrict(accessContext, { id: id });
 
@@ -235,8 +222,6 @@ export class BlocoService {
 
     return true;
   }
-
-  //
 
   async blocoCreate(accessContext: AccessContext, dto: IDomain.BlocoCreateInput) {
     // =========================================================
@@ -303,8 +288,6 @@ export class BlocoService {
 
     return this.blocoFindByIdStrict(accessContext, { id: bloco.id });
   }
-
-  //
 
   async blocoDeleteOneById(accessContext: AccessContext, dto: IDomain.BlocoFindOneInput) {
     // =========================================================

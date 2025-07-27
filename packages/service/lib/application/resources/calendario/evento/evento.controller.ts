@@ -16,53 +16,27 @@ export class EventoController {
     return this.eventoService.eventoFindAll(clientAccess, dto);
   }
 
-  //
-
   @Get("/:id")
-  async eventoFindById(
-    //
-    @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("EventoFindById") dto: IAppRequest<"EventoFindById">,
-  ) {
+  async eventoFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("EventoFindById") dto: IAppRequest<"EventoFindById">) {
     return this.eventoService.eventoFindByIdStrict(accessContext, {
       id: dto.parameters.path.id,
     });
   }
 
-  //
-
   @Post("/")
-  async eventoCreate(
-    //
-    @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("EventoCreate") dto: IAppRequest<"EventoCreate">,
-  ) {
+  async eventoCreate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("EventoCreate") dto: IAppRequest<"EventoCreate">) {
     return this.eventoService.eventoCreate(accessContext, dto);
   }
 
-  //
-
   @Patch("/:id")
-  async eventoUpdate(
-    //
-    @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("EventoUpdate") dto: IAppRequest<"EventoUpdate">,
-  ) {
+  async eventoUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("EventoUpdate") dto: IAppRequest<"EventoUpdate">) {
     return this.eventoService.eventoUpdate(accessContext, dto);
   }
 
-  //
-
   @Delete("/:id")
-  async eventoDeleteOneById(
-    //
-    @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("EventoDeleteOneById") dto: IAppRequest<"EventoDeleteOneById">,
-  ) {
+  async eventoDeleteOneById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("EventoDeleteOneById") dto: IAppRequest<"EventoDeleteOneById">) {
     return this.eventoService.eventoDeleteOneById(accessContext, {
       id: dto.parameters.path.id,
     });
   }
-
-  //
 }

@@ -27,8 +27,6 @@ export class PerfilService {
     private searchService: SearchService,
   ) {}
 
-  //
-
   get usuarioRepository() {
     return this.databaseContext.usuarioRepository;
   }
@@ -36,8 +34,6 @@ export class PerfilService {
   get vinculoRepository() {
     return this.databaseContext.perfilRepository;
   }
-
-  //
 
   async perfilGetAllActive(accessContext: AccessContext | null, usuarioId: UsuarioEntity["id"]) {
     const qb = this.vinculoRepository.createQueryBuilder("vinculo");
@@ -146,8 +142,6 @@ export class PerfilService {
     const usuario = await this.usuarioService.usuarioFindByIdSimpleStrict(accessContext, dto.body.usuario.id);
 
     const vinculosParaManter = new Set();
-
-    //
 
     const vinculosExistentesUsuarioCampus = await this.vinculoRepository
       .createQueryBuilder("vinculo")

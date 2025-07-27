@@ -7,11 +7,4 @@ import { INodeTypeString, NodeTypeString } from "@/application/standards/especif
 
 export type INodeType = INodeTypeArray | INodeTypeBoolean | INodeTypeString | INodeTypeNull | INodeTypeObject;
 
-export const NodeType = valibot.union([
-  //
-  NodeTypeArray,
-  NodeTypeBoolean,
-  NodeTypeString,
-  NodeTypeNull,
-  NodeTypeObject,
-]);
+export const NodeType = valibot.union([NodeTypeArray, NodeTypeBoolean, NodeTypeString, NodeTypeNull, NodeTypeObject]);

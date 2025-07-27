@@ -1,8 +1,6 @@
 export interface IConfigRuntime {
-  //
   getRuntimeVersion(): string;
 
-  //
   getRuntimePort(): number;
 
   getRuntimeNodeEnv(): string;
@@ -11,16 +9,12 @@ export interface IConfigRuntime {
 
   getRuntimeIsDevelopment(): boolean;
 
-  //
   getRuntimePrefix(): null | string;
 
-  //
   getSwaggerServers(): null | string[];
 
-  //
   getStoragePath(): string;
 
-  //
   getRuntimeBuildTime(): Date;
 
   getRuntimeGitCommitHash(): string | null;

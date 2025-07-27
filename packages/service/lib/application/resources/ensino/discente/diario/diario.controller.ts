@@ -11,64 +11,32 @@ import { DiarioService } from "./diario.service";
 export class DiarioController {
   constructor(private diarioService: DiarioService) {}
 
-  //
-
   @Get("/")
-  async diarioFindAll(
-    //
-    @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("DiarioFindAll") dto: IAppRequest<"DiarioFindAll">,
-  ): Promise<LadesaTypings.DiarioListOperationOutput["success"]> {
+  async diarioFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DiarioFindAll") dto: IAppRequest<"DiarioFindAll">): Promise<LadesaTypings.DiarioListOperationOutput["success"]> {
     return this.diarioService.diarioFindAll(accessContext, dto);
   }
 
-  //
-
   @Get("/:id")
-  async diarioFindById(
-    //
-    @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("DiarioFindById") dto: IAppRequest<"DiarioFindById">,
-  ) {
+  async diarioFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DiarioFindById") dto: IAppRequest<"DiarioFindById">) {
     return this.diarioService.diarioFindByIdStrict(accessContext, {
       id: dto.parameters.path.id,
     });
   }
 
-  //
-
   @Post("/")
-  async diarioCreate(
-    //
-    @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("DiarioCreate") dto: IAppRequest<"DiarioCreate">,
-  ) {
+  async diarioCreate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DiarioCreate") dto: IAppRequest<"DiarioCreate">) {
     return this.diarioService.diarioCreate(accessContext, dto);
   }
 
-  //
-
   @Patch("/:id")
-  async diarioUpdate(
-    //
-    @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("DiarioUpdate") dto: IAppRequest<"DiarioUpdate">,
-  ) {
+  async diarioUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DiarioUpdate") dto: IAppRequest<"DiarioUpdate">) {
     return this.diarioService.diarioUpdate(accessContext, dto);
   }
 
-  //
-
   @Delete("/:id")
-  async diarioDeleteOneById(
-    //
-    @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("DiarioDeleteOneById") dto: IAppRequest<"DiarioDeleteOneById">,
-  ) {
+  async diarioDeleteOneById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DiarioDeleteOneById") dto: IAppRequest<"DiarioDeleteOneById">) {
     return this.diarioService.diarioDeleteOneById(accessContext, {
       id: dto.parameters.path.id,
     });
   }
-
-  //
 }

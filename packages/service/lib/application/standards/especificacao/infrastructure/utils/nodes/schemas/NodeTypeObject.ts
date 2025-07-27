@@ -6,11 +6,6 @@ import { INodeTypeObjectOperation, NodeTypeObjectOperation } from "@/application
 
 export type INodeTypeObject = INodeTypeObjectBase | INodeTypeObjectEntity | INodeTypeObjectOperation;
 
-export const NodeTypeObject = valibot.variant("x-unispec-kind", [
-  //
-  NodeTypeObjectBase,
-  NodeTypeObjectEntity,
-  NodeTypeObjectOperation,
-]);
+export const NodeTypeObject = valibot.variant("x-unispec-kind", [NodeTypeObjectBase, NodeTypeObjectEntity, NodeTypeObjectOperation]);
 
 export const CheckNodeTypeObject = BuildCheckType<any, INodeTypeObject>(NodeTypeObject);

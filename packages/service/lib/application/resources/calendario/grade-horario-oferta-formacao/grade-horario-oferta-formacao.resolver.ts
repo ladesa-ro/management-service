@@ -8,15 +8,9 @@ import { GradeHorarioOfertaFormacaoService } from "./grade-horario-oferta-formac
 
 @GqlResolver()
 export class GradeHorarioOfertaFormacaoResolver {
-  constructor(
-    //
-    private gradeHorarioOfertaFormacaoService: GradeHorarioOfertaFormacaoService,
-  ) {}
-
-  //
+  constructor(private gradeHorarioOfertaFormacaoService: GradeHorarioOfertaFormacaoService) {}
 
   async gradeHorarioOfertaFormacaoFindAll(
-    //
     @AccessContextGraphQl() accessContext: AccessContext,
 
     @AppRequest("GradeHorarioOfertaFormacaoFindAll") dto: IAppRequest<"GradeHorarioOfertaFormacaoFindAll">,
@@ -25,10 +19,7 @@ export class GradeHorarioOfertaFormacaoResolver {
     return this.gradeHorarioOfertaFormacaoService.gradeHorarioOfertaFormacaoFindAll(accessContext, dto, graphqlExtractSelection(info, "paginated"));
   }
 
-  //
-
   async gradeHorarioOfertaFormacaoFindOneById(
-    //
     @AccessContextGraphQl() accessContext: AccessContext,
 
     @AppRequest("GradeHorarioOfertaFormacaoFindOneById") dto: IAppRequest<"GradeHorarioOfertaFormacaoFindOneById">,
@@ -43,10 +34,7 @@ export class GradeHorarioOfertaFormacaoResolver {
     );
   }
 
-  //
-
   async gradeHorarioOfertaFormacaoCreate(
-    //
     @AccessContextGraphQl() accessContext: AccessContext,
 
     @AppRequest("GradeHorarioOfertaFormacaoCreate") dto: IAppRequest<"GradeHorarioOfertaFormacaoCreate">,
@@ -55,7 +43,6 @@ export class GradeHorarioOfertaFormacaoResolver {
   }
 
   async gradeHorarioOfertaFormacaoUpdate(
-    //
     @AccessContextGraphQl() accessContext: AccessContext,
 
     @AppRequest("GradeHorarioOfertaFormacaoUpdate") dto: IAppRequest<"GradeHorarioOfertaFormacaoUpdate">,
@@ -64,7 +51,6 @@ export class GradeHorarioOfertaFormacaoResolver {
   }
 
   async gradeHorarioOfertaFormacaoDeleteOneById(
-    //
     @AccessContextGraphQl() accessContext: AccessContext,
 
     @AppRequest("GradeHorarioOfertaFormacaoDeleteOneById") dto: IAppRequest<"GradeHorarioOfertaFormacaoDeleteOneById">,

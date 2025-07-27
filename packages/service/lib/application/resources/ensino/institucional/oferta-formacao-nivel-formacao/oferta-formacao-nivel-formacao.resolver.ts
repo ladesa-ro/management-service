@@ -8,15 +8,9 @@ import { OfertaFormacaoNivelFormacaoService } from "./oferta-formacao-nivel-form
 
 @GqlResolver()
 export class OfertaFormacaoNivelFormacaoResolver {
-  constructor(
-    //
-    private ofertaFormacaoNivelFormacaoService: OfertaFormacaoNivelFormacaoService,
-  ) {}
-
-  //
+  constructor(private ofertaFormacaoNivelFormacaoService: OfertaFormacaoNivelFormacaoService) {}
 
   async ofertaFormacaoNivelFormacaoFindAll(
-    //
     @AccessContextGraphQl() accessContext: AccessContext,
 
     @AppRequest("OfertaFormacaoNivelFormacaoFindAll") dto: IAppRequest<"OfertaFormacaoNivelFormacaoFindAll">,
@@ -25,10 +19,7 @@ export class OfertaFormacaoNivelFormacaoResolver {
     return this.ofertaFormacaoNivelFormacaoService.ofertaFormacaoNivelFormacaoFindAll(accessContext, dto, graphqlExtractSelection(info, "paginated"));
   }
 
-  //
-
   async ofertaFormacaoNivelFormacaoFindOneById(
-    //
     @AccessContextGraphQl() accessContext: AccessContext,
 
     @AppRequest("OfertaFormacaoNivelFormacaoFindOneById") dto: IAppRequest<"OfertaFormacaoNivelFormacaoFindOneById">,
@@ -43,10 +34,7 @@ export class OfertaFormacaoNivelFormacaoResolver {
     );
   }
 
-  //
-
   async ofertaFormacaoNivelFormacaoCreate(
-    //
     @AccessContextGraphQl() accessContext: AccessContext,
 
     @AppRequest("OfertaFormacaoNivelFormacaoCreate") dto: IAppRequest<"OfertaFormacaoNivelFormacaoCreate">,
@@ -55,7 +43,6 @@ export class OfertaFormacaoNivelFormacaoResolver {
   }
 
   async ofertaFormacaoNivelFormacaoUpdate(
-    //
     @AccessContextGraphQl() accessContext: AccessContext,
 
     @AppRequest("OfertaFormacaoNivelFormacaoUpdate") dto: IAppRequest<"OfertaFormacaoNivelFormacaoUpdate">,
@@ -64,7 +51,6 @@ export class OfertaFormacaoNivelFormacaoResolver {
   }
 
   async ofertaFormacaoNivelFormacaoDeleteOneById(
-    //
     @AccessContextGraphQl() accessContext: AccessContext,
 
     @AppRequest("OfertaFormacaoNivelFormacaoDeleteOneById") dto: IAppRequest<"OfertaFormacaoNivelFormacaoDeleteOneById">,

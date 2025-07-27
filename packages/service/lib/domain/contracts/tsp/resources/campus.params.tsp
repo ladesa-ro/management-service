@@ -19,7 +19,7 @@ model CampusFindOneInput {
  * Visão FindOne de um campus.
  */
 model CampusFindOneOutput {
-  //
+
   ...PickProperties<CampusView, "id">;
 
   ...PickProperties<CampusView, "nomeFantasia">;
@@ -27,10 +27,8 @@ model CampusFindOneOutput {
   ...PickProperties<CampusView, "apelido">;
   ...PickProperties<CampusView, "cnpj">;
 
-  //
   ...PickProperties<CampusView, "endereco">;
 
-  //
   ...PickProperties<CampusView, "dateCreated" | "dateUpdated" | "dateDeleted">;
 }
 

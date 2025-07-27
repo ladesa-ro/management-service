@@ -8,55 +8,25 @@ import { EventoService } from "./evento.service";
 export class EventoResolver {
   constructor(private eventoService: EventoService) {}
 
-  //
-
-  async eventoFindAll(
-    //
-    @AccessContextGraphQl() accessContext: AccessContext,
-    @AppRequest("EventoFindAll") dto: IAppRequest<"EventoFindAll">,
-  ) {
+  async eventoFindAll(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("EventoFindAll") dto: IAppRequest<"EventoFindAll">) {
     return this.eventoService.eventoFindAll(accessContext, dto);
   }
 
-  //
-
-  async eventoFindOneById(
-    //
-    @AccessContextGraphQl() accessContext: AccessContext,
-    @AppRequest("EventoFindOneById") dto: IAppRequest<"EventoFindOneById">,
-  ) {
+  async eventoFindOneById(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("EventoFindOneById") dto: IAppRequest<"EventoFindOneById">) {
     return this.eventoService.eventoFindByIdStrict(accessContext, {
       id: dto.parameters.path.id,
     });
   }
 
-  //
-
-  async eventoCreate(
-    //
-    @AccessContextGraphQl() accessContext: AccessContext,
-    @AppRequest("EventoCreate") dto: IAppRequest<"EventoCreate">,
-  ) {
+  async eventoCreate(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("EventoCreate") dto: IAppRequest<"EventoCreate">) {
     return this.eventoService.eventoCreate(accessContext, dto);
   }
 
-  //
-
-  async eventoUpdate(
-    //
-    @AccessContextGraphQl() accessContext: AccessContext,
-    @AppRequest("EventoUpdate") dto: IAppRequest<"EventoUpdate">,
-  ) {
+  async eventoUpdate(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("EventoUpdate") dto: IAppRequest<"EventoUpdate">) {
     return this.eventoService.eventoUpdate(accessContext, dto);
   }
 
-  //
-
-  async eventoDeleteOneById(
-    //
-    @AccessContextGraphQl() accessContext: AccessContext,
-    @AppRequest("EventoDeleteOneById") dto: IAppRequest<"EventoDeleteOneById">,
-  ) {
+  async eventoDeleteOneById(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("EventoDeleteOneById") dto: IAppRequest<"EventoDeleteOneById">) {
     return this.eventoService.eventoDeleteOneById(accessContext, {
       id: dto.parameters.path.id,
     });

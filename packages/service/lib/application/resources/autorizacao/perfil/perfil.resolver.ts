@@ -6,26 +6,13 @@ import { PerfilService } from "./perfil.service";
 
 @GqlResolver()
 export class PerfilResolver {
-  constructor(
-    //
-    private perfilService: PerfilService,
-  ) {}
+  constructor(private perfilService: PerfilService) {}
 
-  //
-
-  async vinculoFindAll(
-    //
-    @AccessContextGraphQl() accessContext: AccessContext,
-    @AppRequest("VinculoFindAll") dto: IAppRequest<"VinculoFindAll">,
-  ) {
+  async vinculoFindAll(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("VinculoFindAll") dto: IAppRequest<"VinculoFindAll">) {
     return this.perfilService.perfilFindAll(accessContext, dto);
   }
 
-  async vinculoSetVinculos(
-    //
-    @AccessContextGraphQl() accessContext: AccessContext,
-    @AppRequest("VinculoSetVinculos") dto: IAppRequest<"VinculoSetVinculos">,
-  ) {
+  async vinculoSetVinculos(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("VinculoSetVinculos") dto: IAppRequest<"VinculoSetVinculos">) {
     return this.perfilService.perfilSetVinculos(accessContext, dto);
   }
 }

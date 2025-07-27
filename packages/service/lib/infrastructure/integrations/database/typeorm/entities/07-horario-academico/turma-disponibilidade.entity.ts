@@ -18,8 +18,6 @@ export class TurmaDisponibilidadeEntity implements LadesaTypings.TurmaDisponibil
   @JoinColumn({ name: "id_disponibilidade_fk" })
   disponibilidade!: LadesaTypings.Disponibilidade;
 
-  //
-
   @Column({ name: "date_created", type: "timestamptz", nullable: false })
   dateCreated!: Date;
 

@@ -8,8 +8,6 @@ export class OfertaFormacaoNivelFormacaoEntity implements LadesaTypings.OfertaFo
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 
-  //
-
   @ManyToOne(() => NivelFormacaoEntity)
   @JoinColumn({ name: "id_nivel_formacao_fk" })
   nivelFormacao!: LadesaTypings.NivelFormacao;
@@ -17,8 +15,6 @@ export class OfertaFormacaoNivelFormacaoEntity implements LadesaTypings.OfertaFo
   @ManyToOne(() => OfertaFormacaoEntity)
   @JoinColumn({ name: "id_oferta_formacao_fk" })
   ofertaFormacao!: LadesaTypings.OfertaFormacao;
-
-  //
 
   @Column({ name: "date_created", type: "timestamptz", nullable: false })
   dateCreated!: Date;

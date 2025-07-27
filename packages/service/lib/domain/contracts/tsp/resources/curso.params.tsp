@@ -17,15 +17,13 @@ model CursoFindOneInput {
 
 /** Visão FindOne de um Curso. */
 model CursoFindOneOutput {
-  //
+
   ...PickProperties<CursoView, "id">;
 
   ...PickProperties<CursoView, "nome" | "nomeAbreviado">;
 
-  //
   ...PickProperties<CursoView, "campus" | "ofertaFormacao" | "imagemCapa">;
 
-  //
   ...PickProperties<CursoView, "dateCreated" | "dateUpdated" | "dateDeleted">;
 }
 

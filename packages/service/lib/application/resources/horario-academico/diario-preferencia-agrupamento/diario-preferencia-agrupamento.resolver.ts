@@ -8,10 +8,7 @@ import { DiarioPreferenciaAgrupamentoService } from "./diario-preferencia-agrupa
 export class DiarioPreferenciaAgrupamentoResolver {
   constructor(private diarioPreferenciaAgrupamentoService: DiarioPreferenciaAgrupamentoService) {}
 
-  //
-
   async diarioPreferenciaAgrupamentoFindAll(
-    //
     @AccessContextGraphQl() accessContext: AccessContext,
 
     @AppRequest("DiarioPreferenciaAgrupamentoFindAll") dto: IAppRequest<"DiarioPreferenciaAgrupamentoFindAll">,
@@ -19,10 +16,7 @@ export class DiarioPreferenciaAgrupamentoResolver {
     return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoFindAll(accessContext, dto);
   }
 
-  //
-
   async diarioPreferenciaAgrupamentoFindOneById(
-    //
     @AccessContextGraphQl() accessContext: AccessContext,
 
     @AppRequest("DiarioPreferenciaAgrupamentoFindOneById") dto: IAppRequest<"DiarioPreferenciaAgrupamentoFindOneById">,
@@ -30,10 +24,7 @@ export class DiarioPreferenciaAgrupamentoResolver {
     return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoFindByIdStrict(accessContext, { id: dto.parameters.path.id });
   }
 
-  //
-
   async diarioPreferenciaAgrupamentoCreate(
-    //
     @AccessContextGraphQl() accessContext: AccessContext,
 
     @AppRequest("DiarioPreferenciaAgrupamentoCreate") dto: IAppRequest<"DiarioPreferenciaAgrupamentoCreate">,
@@ -41,10 +32,7 @@ export class DiarioPreferenciaAgrupamentoResolver {
     return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoCreate(accessContext, dto);
   }
 
-  //
-
   async diarioPreferenciaAgrupamentoUpdate(
-    //
     @AccessContextGraphQl() accessContext: AccessContext,
 
     @AppRequest("DiarioPreferenciaAgrupamentoUpdate") dto: IAppRequest<"DiarioPreferenciaAgrupamentoUpdate">,
@@ -52,10 +40,7 @@ export class DiarioPreferenciaAgrupamentoResolver {
     return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoUpdate(accessContext, dto);
   }
 
-  //
-
   async diarioPreferenciaAgrupamentoOneById(
-    //
     @AccessContextGraphQl() accessContext: AccessContext,
 
     @AppRequest("DiarioPreferenciaAgrupamentoOneById") dto: IAppRequest<"DiarioPreferenciaAgrupamentoOneById">,

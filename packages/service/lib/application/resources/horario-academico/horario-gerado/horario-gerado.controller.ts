@@ -19,51 +19,25 @@ export class HorarioGeradoController {
     return this.horarioGeradoService.horarioGeradoFindAll(clientAccess, dto);
   }
 
-  //
-
   @Get("/:id")
-  async horarioGeradoFindById(
-    //
-    @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("HorarioGeradoFindById") dto: IAppRequest<"HorarioGeradoFindById">,
-  ) {
+  async horarioGeradoFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("HorarioGeradoFindById") dto: IAppRequest<"HorarioGeradoFindById">) {
     return this.horarioGeradoService.horarioGeradoFindByIdStrict(accessContext, { id: dto.parameters.path.id });
   }
 
-  //
-
   @Post("/")
-  async horarioGeradoCreate(
-    //
-    @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("HorarioGeradoCreate") dto: IAppRequest<"HorarioGeradoCreate">,
-  ) {
+  async horarioGeradoCreate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("HorarioGeradoCreate") dto: IAppRequest<"HorarioGeradoCreate">) {
     return this.horarioGeradoService.horarioGeradoCreate(accessContext, dto);
   }
 
-  //
-
   @Patch("/:id")
-  async horarioGeradoUpdate(
-    //
-    @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("HorarioGeradoUpdate") dto: IAppRequest<"HorarioGeradoUpdate">,
-  ) {
+  async horarioGeradoUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("HorarioGeradoUpdate") dto: IAppRequest<"HorarioGeradoUpdate">) {
     return this.horarioGeradoService.horarioGeradoUpdate(accessContext, dto);
   }
 
-  //
-
   @Delete("/:id")
-  async horarioGeradoDeleteOneById(
-    //
-    @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("HorarioGeradoDeleteOneById") dto: IAppRequest<"HorarioGeradoDeleteOneById">,
-  ) {
+  async horarioGeradoDeleteOneById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("HorarioGeradoDeleteOneById") dto: IAppRequest<"HorarioGeradoDeleteOneById">) {
     return this.horarioGeradoService.horarioGeradoDeleteOneById(accessContext, {
       id: dto.parameters.path.id,
     });
   }
-
-  //
 }

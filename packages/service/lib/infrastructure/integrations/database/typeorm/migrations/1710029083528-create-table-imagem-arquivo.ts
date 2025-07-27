@@ -16,8 +16,6 @@ export class CreateTableImagemArquivo1710029083528 implements MigrationInterface
             default: "gen_random_uuid()",
           },
 
-          //
-
           {
             name: "largura",
             type: "int",
@@ -42,8 +40,6 @@ export class CreateTableImagemArquivo1710029083528 implements MigrationInterface
             isNullable: false,
           },
 
-          //
-
           {
             name: "id_imagem_fk",
             type: "uuid",
@@ -55,8 +51,6 @@ export class CreateTableImagemArquivo1710029083528 implements MigrationInterface
             type: "uuid",
             isNullable: false,
           },
-
-          //
 
           {
             name: "date_created",

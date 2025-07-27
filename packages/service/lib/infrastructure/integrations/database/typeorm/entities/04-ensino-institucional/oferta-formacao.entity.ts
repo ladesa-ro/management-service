@@ -8,8 +8,6 @@ export class OfertaFormacaoEntity implements LadesaTypings.OfertaFormacao {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 
-  //
-
   @Column({ name: "nome", type: "text", nullable: false })
   nome!: string;
 
@@ -30,7 +28,6 @@ export class OfertaFormacaoEntity implements LadesaTypings.OfertaFormacao {
   @Column({ name: "date_created", type: "timestamptz", nullable: false })
   dateCreated!: Date;
 
-  //
   @Column({ name: "date_updated", type: "timestamptz", nullable: false })
   dateUpdated!: Date;
   @Column({ name: "date_deleted", type: "timestamptz", nullable: true })

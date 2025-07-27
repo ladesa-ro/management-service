@@ -35,8 +35,6 @@ export class DiarioService {
     return this.databaseContext.diarioRepository;
   }
 
-  //
-
   async diarioFindAll(accessContext: AccessContext, dto: IDomain.DiarioListInput | null = null, selection?: string[] | boolean): Promise<IDomain.DiarioListOutput["success"]> {
     // =========================================================
 
@@ -54,23 +52,20 @@ export class DiarioService {
       {
         ...paginateConfig,
         select: [
-          //
           "id",
-          //
+
           "ativo",
-          //
+
           "turma.id",
           "turma.periodo",
           "disciplina.id",
           "disciplina.nome",
           "ambientePadrao.id",
           "ambientePadrao.nome",
-          //
         ],
         sortableColumns: [
-          //
           "ativo",
-          //
+
           "disciplina.nome",
           "ambientePadrao.nome",
         ],
@@ -80,15 +75,13 @@ export class DiarioService {
           ambientePadrao: true,
         },
         searchableColumns: [
-          //
           "id",
-          //
+
           "ativo",
           "ano",
           "etapa",
           "turma.periodo",
           "disciplina.nome",
-          //
         ],
         defaultSortBy: [],
         filterableColumns: {
@@ -187,8 +180,6 @@ export class DiarioService {
 
     return diario;
   }
-
-  //
 
   async diarioCreate(accessContext: AccessContext, dto: IDomain.DiarioCreateInput) {
     // =========================================================
@@ -315,8 +306,6 @@ export class DiarioService {
 
     return this.diarioFindByIdStrict(accessContext, { id: diario.id });
   }
-
-  //
 
   async diarioDeleteOneById(accessContext: AccessContext, dto: IDomain.DiarioFindOneInput) {
     // =========================================================

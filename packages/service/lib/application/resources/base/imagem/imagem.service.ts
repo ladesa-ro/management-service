@@ -9,7 +9,6 @@ type ISaveImageOptions = {
   minHeight: number;
 
   transforms: {
-    //
     outputAs: "jpeg";
   }[];
 };
@@ -20,8 +19,6 @@ export class ImagemService {
     private arquivoService: ArquivoService,
     private databaseContextService: DatabaseContextService,
   ) {}
-
-  //
 
   async saveImage(file: Express.Multer.File, options: ISaveImageOptions) {
     const name = file.originalname;

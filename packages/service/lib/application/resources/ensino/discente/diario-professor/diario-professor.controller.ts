@@ -11,8 +11,6 @@ import { DiarioProfessorService } from "./diario-professor.service";
 export class DiarioProfessorController {
   constructor(private diarioProfessorService: DiarioProfessorService) {}
 
-  //
-
   @Get("/")
   async diarioProfessorFindAll(
     @AccessContextHttp() accessContext: AccessContext,
@@ -21,11 +19,8 @@ export class DiarioProfessorController {
     return this.diarioProfessorService.diarioProfessorFindAll(accessContext, dto);
   }
 
-  //
-
   @Get("/:id")
   async diarioProfessorFindById(
-    //
     @AccessContextHttp() accessContext: AccessContext,
 
     @AppRequest("DiarioProfessorFindById") dto: IAppRequest<"DiarioProfessorFindById">,
@@ -33,38 +28,18 @@ export class DiarioProfessorController {
     return this.diarioProfessorService.diarioProfessorFindByIdStrict(accessContext, { id: dto.parameters.path.id });
   }
 
-  //
-
   @Post("/")
-  async diarioProfessorCreate(
-    //
-    @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("DiarioProfessorCreate") dto: IAppRequest<"DiarioProfessorCreate">,
-  ) {
+  async diarioProfessorCreate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DiarioProfessorCreate") dto: IAppRequest<"DiarioProfessorCreate">) {
     return this.diarioProfessorService.diarioProfessorCreate(accessContext, dto);
   }
 
-  //
-
   @Patch("/:id")
-  async diarioProfessorUpdate(
-    //
-    @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("DiarioProfessorUpdate") dto: IAppRequest<"DiarioProfessorUpdate">,
-  ) {
+  async diarioProfessorUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DiarioProfessorUpdate") dto: IAppRequest<"DiarioProfessorUpdate">) {
     return this.diarioProfessorService.diarioProfessorUpdate(accessContext, dto);
   }
 
-  //
-
   @Delete("/:id")
-  async diarioProfessorDeleteOneById(
-    //
-    @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("DiarioProfessorDeleteOneById") dto: IAppRequest<"DiarioProfessorDeleteOneById">,
-  ) {
+  async diarioProfessorDeleteOneById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DiarioProfessorDeleteOneById") dto: IAppRequest<"DiarioProfessorDeleteOneById">) {
     return this.diarioProfessorService.diarioProfessorDeleteOneById(accessContext, { id: dto.parameters.path.id });
   }
-
-  //
 }

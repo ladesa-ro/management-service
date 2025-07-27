@@ -15,25 +15,25 @@ export class CreateTableDisponibilidadeDia1710186549006 implements MigrationInte
             isPrimary: true,
             default: "gen_random_uuid()",
           },
-          //
+
           {
             name: "rrule",
             type: "int",
             isNullable: false,
           },
-          //
+
           {
             name: "id_disponibilidade_fk",
             type: "uuid",
             isNullable: false,
           },
-          //
+
           {
             name: "id_intervalo_de_tempo_fk",
             type: "uuid",
             isNullable: false,
           },
-          //
+
           {
             name: "date_created",
             type: "timestamptz",
@@ -52,7 +52,6 @@ export class CreateTableDisponibilidadeDia1710186549006 implements MigrationInte
             type: "timestamptz",
             isNullable: true,
           },
-          //
         ],
         foreignKeys: [
           {

@@ -15,7 +15,7 @@ export class CreateTableDiaCalendario1710185205777 implements MigrationInterface
             isPrimary: true,
             default: "gen_random_uuid()",
           },
-          //
+
           {
             name: "data",
             type: "date",
@@ -31,13 +31,13 @@ export class CreateTableDiaCalendario1710185205777 implements MigrationInterface
             type: "bool",
             isNullable: false,
           },
-          //
+
           {
             name: "id_calendario_letivo_fk",
             type: "uuid",
             isNullable: false,
           },
-          //
+
           {
             name: "date_created",
             type: "timestamptz",

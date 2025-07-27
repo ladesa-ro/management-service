@@ -8,12 +8,8 @@ export class DisponibilidadeDiaEntity implements LadesaTypings.DisponibilidadeDi
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 
-  //
-
   @Column({ name: "rrule", type: "text", nullable: false })
   rrule!: string;
-
-  //
 
   @ManyToOne(() => DisponibilidadeEntity)
   @JoinColumn({ name: "id_disponibilidade__fk" })
@@ -22,8 +18,6 @@ export class DisponibilidadeDiaEntity implements LadesaTypings.DisponibilidadeDi
   @ManyToOne(() => IntervaloDeTempoEntity)
   @JoinColumn({ name: "id_intervalo_de_tempo_fk" })
   intervaloDeTempo!: LadesaTypings.IntervaloDeTempoFindOneResultView;
-
-  //
 
   @Column({ name: "date_created", type: "timestamptz", nullable: false })
   dateCreated!: Date;

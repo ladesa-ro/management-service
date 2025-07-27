@@ -10,12 +10,8 @@ export class ImagemEntity implements LadesaTypings.Imagem {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 
-  //
-
   @Column({ name: "descricao", type: "text", nullable: true })
   descricao!: string | null;
-
-  //
 
   @OneToMany(
     () => ImagemArquivoEntity,
@@ -26,8 +22,6 @@ export class ImagemEntity implements LadesaTypings.Imagem {
   )
   versoes!: ImagemArquivoEntity[];
 
-  //
-
   @Column({ name: "date_created", type: "timestamptz", nullable: false })
   dateCreated!: Date;
 
@@ -36,8 +30,6 @@ export class ImagemEntity implements LadesaTypings.Imagem {
 
   @Column({ name: "date_deleted", type: "timestamptz", nullable: true })
   dateDeleted!: null | Date;
-
-  //
 
   @OneToMany(
     () => BlocoEntity,

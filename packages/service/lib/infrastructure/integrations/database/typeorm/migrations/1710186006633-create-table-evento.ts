@@ -15,7 +15,7 @@ export class CreateTableEvento1710186006633 implements MigrationInterface {
             isPrimary: true,
             default: "gen_random_uuid()",
           },
-          //
+
           {
             name: "nome",
             type: "text",
@@ -31,13 +31,13 @@ export class CreateTableEvento1710186006633 implements MigrationInterface {
             type: "text",
             isNullable: true,
           },
-          //
+
           {
             name: "id_calendario_letivo_fk",
             type: "uuid",
             isNullable: false,
           },
-          //
+
           {
             name: "date_created",
             type: "timestamptz",

@@ -31,8 +31,6 @@ export class ProfessorDisponibilidadeService {
     return this.databaseContext.professorDisponibilidadeRepository;
   }
 
-  //
-
   async professorDisponibilidadeFindAll(
     accessContext: AccessContext,
     dto: IDomain.ProfessorDisponibilidadeListInput | null = null,
@@ -54,25 +52,16 @@ export class ProfessorDisponibilidadeService {
       {
         ...paginateConfig,
         select: [
-          //
           "id",
-          //
+
           "dateCreated",
-          //
         ],
         relations: {
           perfil: true,
           disponibilidade: true,
         },
-        sortableColumns: [
-          //
-          "dateCreated",
-        ],
-        searchableColumns: [
-          //
-          "id",
-          //
-        ],
+        sortableColumns: ["dateCreated"],
+        searchableColumns: ["id"],
         defaultSortBy: [["dateCreated", "ASC"]],
         filterableColumns: {
           "perfil.id": [FilterOperator.EQ],
@@ -179,8 +168,6 @@ export class ProfessorDisponibilidadeService {
 
     return professorDisponibilidade;
   }
-
-  //
 
   async professorDisponibilidadeCreate(accessContext: AccessContext, dto: IDomain.ProfessorDisponibilidadeCreateInput) {
     // =========================================================
@@ -292,8 +279,6 @@ export class ProfessorDisponibilidadeService {
       id: professorDisponibilidade.id,
     });
   }
-
-  //
 
   async professorDisponibilidadeDeleteOneById(accessContext: AccessContext, dto: IDomain.ProfessorDisponibilidadeFindOneInput) {
     // =========================================================

@@ -4,8 +4,4 @@ import { INodeRef, NodeRef } from "@/application/standards/especificacao/infrast
 
 export type INode = INodeCore | INodeRef;
 
-export const Node = valibot.union([
-  //
-  valibot.lazy(() => NodeCore),
-  valibot.lazy(() => NodeRef),
-]);
+export const Node = valibot.union([valibot.lazy(() => NodeCore), valibot.lazy(() => NodeRef)]);

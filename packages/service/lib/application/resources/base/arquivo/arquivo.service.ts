@@ -59,11 +59,7 @@ export class ArquivoService {
 
     if (acesso) {
       if (acesso.nome === "bloco" && isValidUuid(acesso.id)) {
-        qb
-          //
-          .innerJoin("arquivo.versao", "versao")
-          .innerJoin("versao.imagem", "imagem")
-          .innerJoin("imagem.blocoCapa", "blocoCapa");
+        qb.innerJoin("arquivo.versao", "versao").innerJoin("versao.imagem", "imagem").innerJoin("imagem.blocoCapa", "blocoCapa");
 
         if (accessContext) {
           await accessContext.applyFilter("bloco:find", qb, "blocoCapa", null);
@@ -71,11 +67,7 @@ export class ArquivoService {
 
         qb.andWhere("blocoCapa.id = :blocoId", { blocoId: acesso.id });
       } else if (acesso.nome === "ambiente" && isValidUuid(acesso.id)) {
-        qb
-          //
-          .innerJoin("arquivo.versao", "versao")
-          .innerJoin("versao.imagem", "imagem")
-          .innerJoin("imagem.ambienteCapa", "ambienteCapa");
+        qb.innerJoin("arquivo.versao", "versao").innerJoin("versao.imagem", "imagem").innerJoin("imagem.ambienteCapa", "ambienteCapa");
 
         if (accessContext) {
           await accessContext.applyFilter("ambiente:find", qb, "ambienteCapa", null);
@@ -83,9 +75,7 @@ export class ArquivoService {
 
         qb.andWhere("ambienteCapa.id = :ambienteId", { ambienteId: acesso.id });
       } else if (acesso.nome === "usuario" && isValidUuid(acesso.id)) {
-        qb
-          //
-          .innerJoin("arquivo.versao", "versao")
+        qb.innerJoin("arquivo.versao", "versao")
           .innerJoin("versao.imagem", "imagem")
           .leftJoin(UsuarioEntity, "usuario", "(usuario.id_imagem_capa_fk = imagem.id OR usuario.id_imagem_perfil_fk = imagem.id)");
 
@@ -156,12 +146,11 @@ export class ArquivoService {
 
     await this.arquivoRepository.save(<ArquivoEntity>{
       id,
-      //
+
       name: dto.name,
       mimeType: mimeType,
       sizeBytes: sizeBytes,
       storageType: "filesystem",
-      //
     });
 
     return {

@@ -16,8 +16,6 @@ export class CreateTableCalendarioLetivo1710185161829 implements MigrationInterf
             default: "gen_random_uuid()",
           },
 
-          //
-
           {
             name: "nome",
             type: "text",
@@ -30,7 +28,6 @@ export class CreateTableCalendarioLetivo1710185161829 implements MigrationInterf
             isNullable: false,
           },
 
-          //
           {
             name: "id_campus_fk",
             type: "uuid",
@@ -41,7 +38,7 @@ export class CreateTableCalendarioLetivo1710185161829 implements MigrationInterf
             type: "uuid",
             isNullable: false,
           },
-          //
+
           {
             name: "date_created",
             type: "timestamptz",

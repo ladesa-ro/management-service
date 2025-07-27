@@ -35,8 +35,6 @@ export class TurmaService {
     return this.databaseContext.turmaRepository;
   }
 
-  //
-
   async turmaFindAll(accessContext: AccessContext, dto: IDomain.TurmaListInput | null = null, selection?: string[] | boolean): Promise<IDomain.TurmaListOutput["success"]> {
     // =========================================================
 
@@ -54,22 +52,19 @@ export class TurmaService {
       {
         ...paginateConfig,
         select: [
-          //
           "id",
-          //
+
           "periodo",
-          //
         ],
         sortableColumns: [
-          //
           "periodo",
-          //
+
           "ambientePadraoAula.nome",
           "ambientePadraoAula.descricao",
           "ambientePadraoAula.codigo",
           "ambientePadraoAula.capacidade",
           "ambientePadraoAula.tipo",
-          //
+
           "curso.nome",
           "curso.nomeAbreviado",
           "curso.campus.id",
@@ -83,23 +78,17 @@ export class TurmaService {
           ambientePadraoAula: true,
         },
         searchableColumns: [
-          //
           "id",
-          //
+
           "periodo",
-          //
         ],
-        defaultSortBy: [
-          //
-          ["periodo", "ASC"],
-        ],
+        defaultSortBy: [["periodo", "ASC"]],
         filterableColumns: {
-          //
           "ambientePadraoAula.nome": [FilterOperator.EQ],
           "ambientePadraoAula.codigo": [FilterOperator.EQ],
           "ambientePadraoAula.capacidade": [FilterOperator.EQ, FilterOperator.GT, FilterOperator.GTE, FilterOperator.LT, FilterOperator.LTE],
           "ambientePadraoAula.tipo": [FilterOperator.EQ],
-          //
+
           "curso.id": [FilterOperator.EQ],
           "curso.nome": [FilterOperator.EQ],
           "curso.nomeAbreviado": [FilterOperator.EQ],
@@ -201,8 +190,6 @@ export class TurmaService {
 
     return turma;
   }
-
-  //
 
   async turmaCreate(accessContext: AccessContext, dto: IDomain.TurmaCreateInput) {
     // =========================================================
@@ -318,8 +305,6 @@ export class TurmaService {
     return this.turmaFindByIdStrict(accessContext, { id: turma.id });
   }
 
-  //
-
   async turmaGetImagemCapa(accessContext: AccessContext | null, id: string) {
     const turma = await this.turmaFindByIdStrict(accessContext, { id: id });
 
@@ -374,8 +359,6 @@ export class TurmaService {
 
     return true;
   }
-
-  //
 
   async turmaDeleteOneById(accessContext: AccessContext, dto: IDomain.TurmaFindOneInput) {
     // =========================================================

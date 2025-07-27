@@ -16,8 +16,6 @@ export class CreateTableEndereco1710183783857 implements MigrationInterface {
             default: "gen_random_uuid()",
           },
 
-          //
-
           {
             name: "cep",
             type: "text",
@@ -54,14 +52,10 @@ export class CreateTableEndereco1710183783857 implements MigrationInterface {
             isNullable: true,
           },
 
-          //
-
           {
             name: "id_cidade_fk",
             type: "int",
           },
-
-          //
 
           {
             name: "date_created",

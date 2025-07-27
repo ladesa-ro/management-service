@@ -11,11 +11,8 @@ import { GradeHorarioOfertaFormacaoService } from "./grade-horario-oferta-formac
 export class GradeHorarioOfertaFormacaoController {
   constructor(private gradeHorarioOfertaFormacaoService: GradeHorarioOfertaFormacaoService) {}
 
-  //
-
   @Get("/")
   async gradeHorarioOfertaFormacaoFindAll(
-    //
     @AccessContextHttp() accessContext: AccessContext,
 
     @AppRequest("GradeHorarioOfertaFormacaoFindAll") dto: IAppRequest<"GradeHorarioOfertaFormacaoFindAll">,
@@ -23,11 +20,8 @@ export class GradeHorarioOfertaFormacaoController {
     return this.gradeHorarioOfertaFormacaoService.gradeHorarioOfertaFormacaoFindAll(accessContext, dto);
   }
 
-  //
-
   @Get("/:id")
   async gradeHorarioOfertaFormacaoFindById(
-    //
     @AccessContextHttp() accessContext: AccessContext,
 
     @AppRequest("GradeHorarioOfertaFormacaoFindById") dto: IAppRequest<"GradeHorarioOfertaFormacaoFindById">,
@@ -37,11 +31,8 @@ export class GradeHorarioOfertaFormacaoController {
     });
   }
 
-  //
-
   @Post("/")
   async gradeHorarioOfertaFormacaoCreate(
-    //
     @AccessContextHttp() accessContext: AccessContext,
 
     @AppRequest("GradeHorarioOfertaFormacaoCreate") dto: IAppRequest<"GradeHorarioOfertaFormacaoCreate">,
@@ -49,11 +40,8 @@ export class GradeHorarioOfertaFormacaoController {
     return this.gradeHorarioOfertaFormacaoService.gradeHorarioOfertaFormacaoCreate(accessContext, dto);
   }
 
-  //
-
   @Patch("/:id")
   async gradeHorarioOfertaFormacaoUpdate(
-    //
     @AccessContextHttp() accessContext: AccessContext,
 
     @AppRequest("GradeHorarioOfertaFormacaoUpdate") dto: IAppRequest<"GradeHorarioOfertaFormacaoUpdate">,
@@ -61,11 +49,8 @@ export class GradeHorarioOfertaFormacaoController {
     return this.gradeHorarioOfertaFormacaoService.gradeHorarioOfertaFormacaoUpdate(accessContext, dto);
   }
 
-  //
-
   @Delete("/:id")
   async gradeHorarioOfertaFormacaoDeleteOneById(
-    //
     @AccessContextHttp() accessContext: AccessContext,
 
     @AppRequest("GradeHorarioOfertaFormacaoDeleteOneById") dto: IAppRequest<"GradeHorarioOfertaFormacaoDeleteOneById">,
@@ -74,6 +59,4 @@ export class GradeHorarioOfertaFormacaoController {
       id: dto.parameters.path.id,
     });
   }
-
-  //
 }

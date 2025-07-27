@@ -8,7 +8,6 @@ import { IdentityProviderModule } from "./identity-provider/identity-provider.mo
 
 @Module({
   imports: [
-    //
     IntegrationDatabaseModule,
     IntegrationGraphQLModule,
     IntegrationHttpModule,

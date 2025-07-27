@@ -15,7 +15,7 @@ export class CreateTableHorarioGerado1710196577865 implements MigrationInterface
             isPrimary: true,
             default: "gen_random_uuid()",
           },
-          //
+
           {
             name: "status",
             type: "text",
@@ -46,7 +46,7 @@ export class CreateTableHorarioGerado1710196577865 implements MigrationInterface
             type: "uuid",
             isNullable: false,
           },
-          //
+
           {
             name: "date_created",
             type: "timestamptz",

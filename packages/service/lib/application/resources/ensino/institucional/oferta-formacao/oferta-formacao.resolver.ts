@@ -8,15 +8,9 @@ import { OfertaFormacaoService } from "./oferta-formacao.service";
 
 @GqlResolver()
 export class OfertaFormacaoResolver {
-  constructor(
-    //
-    private ofertaFormacaoService: OfertaFormacaoService,
-  ) {}
-
-  //
+  constructor(private ofertaFormacaoService: OfertaFormacaoService) {}
 
   async ofertaFormacaoFindAll(
-    //
     @AccessContextGraphQl() accessContext: AccessContext,
     @AppRequest("OfertaFormacaoFindAll") dto: IAppRequest<"OfertaFormacaoFindAll">,
     @GqlInfo() info: GraphQLResolveInfo,
@@ -24,10 +18,7 @@ export class OfertaFormacaoResolver {
     return this.ofertaFormacaoService.ofertaFormacaoFindAll(accessContext, dto, graphqlExtractSelection(info, "paginated"));
   }
 
-  //
-
   async ofertaFormacaoFindOneById(
-    //
     @AccessContextGraphQl() accessContext: AccessContext,
 
     @AppRequest("OfertaFormacaoFindOneById") dto: IAppRequest<"OfertaFormacaoFindOneById">,
@@ -42,29 +33,15 @@ export class OfertaFormacaoResolver {
     );
   }
 
-  //
-
-  async ofertaFormacaoCreate(
-    //
-    @AccessContextGraphQl() accessContext: AccessContext,
-    @AppRequest("OfertaFormacaoCreate") dto: IAppRequest<"OfertaFormacaoCreate">,
-  ) {
+  async ofertaFormacaoCreate(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("OfertaFormacaoCreate") dto: IAppRequest<"OfertaFormacaoCreate">) {
     return this.ofertaFormacaoService.ofertaFormacaoCreate(accessContext, dto);
   }
 
-  async ofertaFormacaoUpdate(
-    //
-    @AccessContextGraphQl() accessContext: AccessContext,
-    @AppRequest("OfertaFormacaoUpdate") dto: IAppRequest<"OfertaFormacaoUpdate">,
-  ) {
+  async ofertaFormacaoUpdate(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("OfertaFormacaoUpdate") dto: IAppRequest<"OfertaFormacaoUpdate">) {
     return this.ofertaFormacaoService.ofertaFormacaoUpdate(accessContext, dto);
   }
 
-  async ofertaFormacaoDeleteOneById(
-    //
-    @AccessContextGraphQl() accessContext: AccessContext,
-    @AppRequest("OfertaFormacaoDeleteOneById") dto: IAppRequest<"OfertaFormacaoDeleteOneById">,
-  ) {
+  async ofertaFormacaoDeleteOneById(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("OfertaFormacaoDeleteOneById") dto: IAppRequest<"OfertaFormacaoDeleteOneById">) {
     return this.ofertaFormacaoService.ofertaFormacaoDeleteOneById(accessContext, {
       id: dto.parameters.path.id,
     });

@@ -16,8 +16,6 @@ export class CreateTableUsuario1710183812355 implements MigrationInterface {
             default: "gen_random_uuid()",
           },
 
-          //
-
           {
             name: "nome",
             type: "text",
@@ -36,8 +34,6 @@ export class CreateTableUsuario1710183812355 implements MigrationInterface {
             isNullable: true,
           },
 
-          //
-
           {
             name: "id_imagem_perfil_fk",
             type: "uuid",
@@ -50,16 +46,12 @@ export class CreateTableUsuario1710183812355 implements MigrationInterface {
             isNullable: true,
           },
 
-          //
-
           {
             name: "is_super_user",
             type: "boolean",
             isNullable: false,
             default: "FALSE",
           },
-
-          //
 
           {
             name: "date_created",

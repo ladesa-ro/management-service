@@ -16,8 +16,6 @@ export class CreateTablePerfil1710183984056 implements MigrationInterface {
             default: "gen_random_uuid()",
           },
 
-          //
-
           {
             name: "ativo",
             type: "boolean",
@@ -31,8 +29,6 @@ export class CreateTablePerfil1710183984056 implements MigrationInterface {
             isNullable: false,
           },
 
-          //
-
           {
             name: "id_campus_fk",
             type: "uuid",
@@ -44,8 +40,6 @@ export class CreateTablePerfil1710183984056 implements MigrationInterface {
             type: "uuid",
             isNullable: false,
           },
-
-          //
 
           {
             name: "date_created",

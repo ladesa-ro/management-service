@@ -12,20 +12,12 @@ export class EstadoController {
   constructor(private estadoService: EstadoService) {}
 
   @Get("/")
-  async findAll(
-    //
-    @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("FindAll") dto: IAppRequest<"FindAll">,
-  ): Promise<LadesaTypings.EstadoListOperationOutput["success"]> {
+  async findAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("FindAll") dto: IAppRequest<"FindAll">): Promise<LadesaTypings.EstadoListOperationOutput["success"]> {
     return this.estadoService.findAll(accessContext, dto);
   }
 
   @Get("/:id")
-  async findById(
-    //
-    @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("FindById") dto: IAppRequest<"FindById">,
-  ) {
+  async findById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("FindById") dto: IAppRequest<"FindById">) {
     return this.estadoService.findByIdStrict(accessContext, {
       id: dto.parameters.path.id,
     });

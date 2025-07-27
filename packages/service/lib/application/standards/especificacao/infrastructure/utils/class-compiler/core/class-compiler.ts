@@ -46,7 +46,6 @@ export abstract class ClassCompiler<ClassCompilerTypings extends IClassCompilerT
   }
 
   CompileClass(node: IClassCompilerTypingsInferNode<ClassCompilerTypings>, classesMap: Map<string, any> = new Map()) {
-    //
     const classContext = {
       node,
       classesMap,

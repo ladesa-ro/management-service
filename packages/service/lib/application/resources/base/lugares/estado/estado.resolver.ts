@@ -8,30 +8,17 @@ import { EstadoService } from "./estado.service";
 
 @Resolver()
 export class EstadoResolver {
-  constructor(
-    //
-    private estadoService: EstadoService,
-  ) {}
+  constructor(private estadoService: EstadoService) {}
 
   // ========================================================
 
-  async estadoFindAll(
-    //
-    @AccessContextGraphQl() accessContext: AccessContext,
-    @AppRequest("EstadoFindAll") dto: IAppRequest<"EstadoFindAll">,
-    @Info() info: GraphQLResolveInfo,
-  ) {
+  async estadoFindAll(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("EstadoFindAll") dto: IAppRequest<"EstadoFindAll">, @Info() info: GraphQLResolveInfo) {
     return this.estadoService.findAll(accessContext, dto, graphqlExtractSelection(info, "paginated"));
   }
 
   // ========================================================
 
-  async estadoFindOneById(
-    //
-    @AccessContextGraphQl() accessContext: AccessContext,
-    @AppRequest("EstadoFindOneById") dto: IAppRequest<"EstadoFindOneById">,
-    @Info() info: GraphQLResolveInfo,
-  ) {
+  async estadoFindOneById(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("EstadoFindOneById") dto: IAppRequest<"EstadoFindOneById">, @Info() info: GraphQLResolveInfo) {
     return this.estadoService.findByIdStrict(accessContext, { id: dto.parameters.path.id }, graphqlExtractSelection(info));
   }
 

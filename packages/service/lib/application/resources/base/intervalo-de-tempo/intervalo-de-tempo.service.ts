@@ -14,8 +14,6 @@ export class IntervaloDeTempoService {
     return this.databaseContext.intervaloDeTempoRepository;
   }
 
-  //
-
   async intervaloCreateOrUpdate(accessContext: AccessContext | null, dto: IDomain.IntervaloDeTempoInput) {
     const intervalExisting = await this.intervaloFindOne(dto);
 

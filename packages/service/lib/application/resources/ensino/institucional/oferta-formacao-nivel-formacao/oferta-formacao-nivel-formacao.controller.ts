@@ -11,11 +11,8 @@ import { OfertaFormacaoNivelFormacaoService } from "./oferta-formacao-nivel-form
 export class OfertaFormacaoNivelFormacaoController {
   constructor(private ofertaFormacaoNivelFormacaoService: OfertaFormacaoNivelFormacaoService) {}
 
-  //
-
   @Get("/")
   async ofertaFormacaoNivelFormacaoFindAll(
-    //
     @AccessContextHttp() accessContext: AccessContext,
 
     @AppRequest("OfertaFormacaoNivelFormacaoFindAll") dto: IAppRequest<"OfertaFormacaoNivelFormacaoFindAll">,
@@ -23,11 +20,8 @@ export class OfertaFormacaoNivelFormacaoController {
     return this.ofertaFormacaoNivelFormacaoService.ofertaFormacaoNivelFormacaoFindAll(accessContext, dto);
   }
 
-  //
-
   @Get("/:id")
   async ofertaFormacaoNivelFormacaoFindById(
-    //
     @AccessContextHttp() accessContext: AccessContext,
 
     @AppRequest("OfertaFormacaoNivelFormacaoFindById") dto: IAppRequest<"OfertaFormacaoNivelFormacaoFindById">,
@@ -37,11 +31,8 @@ export class OfertaFormacaoNivelFormacaoController {
     });
   }
 
-  //
-
   @Post("/")
   async ofertaFormacaoNivelFormacaoCreate(
-    //
     @AccessContextHttp() accessContext: AccessContext,
 
     @AppRequest("OfertaFormacaoNivelFormacaoCreate") dto: IAppRequest<"OfertaFormacaoNivelFormacaoCreate">,
@@ -49,11 +40,8 @@ export class OfertaFormacaoNivelFormacaoController {
     return this.ofertaFormacaoNivelFormacaoService.ofertaFormacaoNivelFormacaoCreate(accessContext, dto);
   }
 
-  //
-
   @Patch("/:id")
   async ofertaFormacaoNivelFormacaoUpdate(
-    //
     @AccessContextHttp() accessContext: AccessContext,
 
     @AppRequest("OfertaFormacaoNivelFormacaoUpdate") dto: IAppRequest<"OfertaFormacaoNivelFormacaoUpdate">,
@@ -61,11 +49,8 @@ export class OfertaFormacaoNivelFormacaoController {
     return this.ofertaFormacaoNivelFormacaoService.ofertaFormacaoNivelFormacaoUpdate(accessContext, dto);
   }
 
-  //
-
   @Delete("/:id")
   async ofertaFormacaoNivelFormacaoDeleteOneById(
-    //
     @AccessContextHttp() accessContext: AccessContext,
 
     @AppRequest("OfertaFormacaoNivelFormacaoDeleteOneById") dto: IAppRequest<"OfertaFormacaoNivelFormacaoDeleteOneById">,
@@ -74,6 +59,4 @@ export class OfertaFormacaoNivelFormacaoController {
       id: dto.parameters.path.id,
     });
   }
-
-  //
 }

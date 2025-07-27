@@ -8,8 +8,6 @@ export class UsuarioEntity implements LadesaTypings.Usuario {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 
-  //
-
   @Column({ name: "nome", type: "text", nullable: true })
   nome!: string | null;
 
@@ -22,8 +20,6 @@ export class UsuarioEntity implements LadesaTypings.Usuario {
   @Column({ name: "is_super_user", type: "boolean", nullable: false })
   isSuperUser!: boolean;
 
-  //
-
   @ManyToOne(() => ImagemEntity)
   @JoinColumn({ name: "id_imagem_capa_fk" })
   imagemCapa!: Relation<ImagemEntity> | null;
@@ -32,15 +28,11 @@ export class UsuarioEntity implements LadesaTypings.Usuario {
   @JoinColumn({ name: "id_imagem_perfil_fk" })
   imagemPerfil!: Relation<ImagemEntity> | null;
 
-  //
-
   @OneToMany(
     () => PerfilEntity,
     (vinculo) => vinculo.usuario,
   )
   vinculos!: PerfilEntity[];
-
-  //
 
   @Column({ name: "date_created", type: "timestamptz", nullable: false })
   dateCreated!: Date;

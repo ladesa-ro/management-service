@@ -15,9 +15,7 @@ export class AccessContext implements IAccessContext {
   constructor(
     readonly databaseContext: DatabaseContextService,
     readonly requestActor: IRequestActor | null,
-  ) {
-    //
-  }
+  ) {}
 
   get statements() {
     return this.#policy.statements;

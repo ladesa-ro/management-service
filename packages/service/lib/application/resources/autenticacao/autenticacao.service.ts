@@ -18,13 +18,9 @@ export class AutenticacaoService {
     private openidConnectService: OpenidConnectService,
   ) {}
 
-  //
-
   get usuarioRepository() {
     return this.databaseContext.usuarioRepository;
   }
-
-  //
 
   async whoAmI(accessContext: AccessContext): Promise<IDomain.AuthWhoAmIOutput> {
     const usuario = accessContext.requestActor

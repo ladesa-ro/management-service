@@ -15,7 +15,7 @@ export class CreateTableDisponibilidade1710186218589 implements MigrationInterfa
             isPrimary: true,
             default: "gen_random_uuid()",
           },
-          //
+
           {
             name: "data_inicio",
             type: "date",
@@ -26,7 +26,7 @@ export class CreateTableDisponibilidade1710186218589 implements MigrationInterfa
             type: "date",
             isNullable: true,
           },
-          //
+
           {
             name: "date_created",
             type: "timestamptz",

@@ -8,11 +8,7 @@ export class MessageBrokerSubscribeService implements OnModuleInit {
 
   #subscription: SubscriberSessionAsPromised | null = null;
 
-  constructor(
-    //
-
-    private messageBrokerContainerService: MessageBrokerContainerService,
-  ) {}
+  constructor(private messageBrokerContainerService: MessageBrokerContainerService) {}
 
   onModuleInit() {
     this.setup();

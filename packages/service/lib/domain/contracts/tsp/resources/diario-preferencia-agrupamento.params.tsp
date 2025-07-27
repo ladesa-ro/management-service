@@ -41,10 +41,8 @@ model DiarioPreferenciaAgrupamentoCreateInput {
   dataInicio: DiarioPreferenciaAgrupamento.dataInicio;
   dataFim: DiarioPreferenciaAgrupamento.dataFim;
 
-  //
   intervaloDeTempo: IntervaloDeTempoInput;
 
-  //
   diario: DiarioFindOneInput;
 }
 

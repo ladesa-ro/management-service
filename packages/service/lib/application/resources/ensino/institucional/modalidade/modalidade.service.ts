@@ -26,8 +26,6 @@ export class ModalidadeService {
     return this.databaseContext.modalidadeRepository;
   }
 
-  //
-
   async modalidadeFindAll(accessContext: AccessContext, dto: IDomain.ModalidadeListInput | null = null, selection?: string[]): Promise<IDomain.ModalidadeListOutput["success"]> {
     // =========================================================
 
@@ -45,27 +43,18 @@ export class ModalidadeService {
       {
         ...paginateConfig,
         select: [
-          //
           "id",
-          //
-          "nome",
-          "slug",
-          "dateCreated",
-          //
-        ],
-        sortableColumns: [
-          //
+
           "nome",
           "slug",
           "dateCreated",
         ],
+        sortableColumns: ["nome", "slug", "dateCreated"],
         searchableColumns: [
-          //
           "id",
-          //
+
           "nome",
           "slug",
-          //
         ],
         defaultSortBy: [
           ["nome", "ASC"],
@@ -166,8 +155,6 @@ export class ModalidadeService {
     return modalidade;
   }
 
-  //
-
   async modalidadeCreate(accessContext: AccessContext, dto: IDomain.ModalidadeCreateInput) {
     // =========================================================
 
@@ -221,8 +208,6 @@ export class ModalidadeService {
 
     return this.modalidadeFindByIdStrict(accessContext, { id: modalidade.id });
   }
-
-  //
 
   async modalidadeDeleteOneById(accessContext: AccessContext, dto: IDomain.ModalidadeFindOneInput) {
     // =========================================================

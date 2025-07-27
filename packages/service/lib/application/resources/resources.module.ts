@@ -13,7 +13,6 @@ import { HorarioAcademicoModule } from "./horario-academico/horario-academico.mo
 
 @Module({
   imports: [
-    //
     BaseModule,
     BaseLugaresModule,
     AutenticacaoModule,

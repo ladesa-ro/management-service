@@ -16,8 +16,6 @@ export class CreateTableOfertaFormacaoNivelFormacao1710184380912 implements Migr
             default: "gen_random_uuid()",
           },
 
-          //
-
           {
             name: "id_oferta_formacao_fk",
             type: "uuid",
@@ -29,8 +27,6 @@ export class CreateTableOfertaFormacaoNivelFormacao1710184380912 implements Migr
             type: "uuid",
             isNullable: false,
           },
-
-          //
 
           {
             name: "date_created",

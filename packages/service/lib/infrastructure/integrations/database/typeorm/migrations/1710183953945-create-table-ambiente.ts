@@ -16,8 +16,6 @@ export class CreateTableAmbiente1710183953945 implements MigrationInterface {
             default: "gen_random_uuid()",
           },
 
-          //
-
           {
             name: "nome",
             type: "text",
@@ -48,8 +46,6 @@ export class CreateTableAmbiente1710183953945 implements MigrationInterface {
             isNullable: true,
           },
 
-          //
-
           {
             name: "id_bloco_fk",
             type: "uuid",
@@ -60,8 +56,6 @@ export class CreateTableAmbiente1710183953945 implements MigrationInterface {
             type: "uuid",
             isNullable: true,
           },
-
-          //
 
           {
             name: "date_created",

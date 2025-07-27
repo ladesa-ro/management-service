@@ -18,8 +18,6 @@ export class ProfessorDisponibilidadeEntity implements LadesaTypings.ProfessorDi
   @JoinColumn({ name: "id_disponibilidade_fk" })
   disponibilidade!: LadesaTypings.Disponibilidade;
 
-  //
-
   @Column({ name: "date_created", type: "timestamptz", nullable: false })
   dateCreated!: Date;
 

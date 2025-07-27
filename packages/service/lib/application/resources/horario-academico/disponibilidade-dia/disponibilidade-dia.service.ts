@@ -31,8 +31,6 @@ export class DisponibilidadeDiaService {
     return this.databaseContext.disponibilidadeDiaRepository;
   }
 
-  //
-
   async disponibilidadeDiaFindAll(
     accessContext: AccessContext,
     dto: IDomain.DisponibilidadeDiaListInput | null = null,
@@ -54,36 +52,33 @@ export class DisponibilidadeDiaService {
       {
         ...paginateConfig,
         select: [
-          //
           "id",
-          //
+
           "rrule",
-          //
+
           "disponibilidade.id",
           "disponibilidade.dataInicio",
           "disponibilidade.dataFim",
-          //
+
           "intervaloDeTempo.id",
           "intervaloDeTempo.periodoInicio",
           "intervaloDeTempo.periodoFim",
         ],
         sortableColumns: [
-          //
           "disponibilidade.dataInicio",
           "disponibilidade.dataFim",
-          //
+
           "intervaloDeTempo.periodoInicio",
           "intervaloDeTempo.periodoFim",
         ],
         searchableColumns: [
-          //
           "id",
-          //
+
           "rrule",
-          //
+
           "disponibilidade.dataInicio",
           "disponibilidade.dataFim",
-          //
+
           "intervaloDeTempo.periodoInicio",
           "intervaloDeTempo.periodoFim",
         ],
@@ -193,8 +188,6 @@ export class DisponibilidadeDiaService {
     return disponibilidadeDia;
   }
 
-  //
-
   async disponibilidadeDiaCreate(accessContext: AccessContext, dto: IDomain.DisponibilidadeDiaCreateInput) {
     // =========================================================
 
@@ -296,8 +289,6 @@ export class DisponibilidadeDiaService {
       id: disponibilidadeDia.id,
     });
   }
-
-  //
 
   async disponibilidadeDiaDeleteOneById(accessContext: AccessContext, dto: IDomain.DisponibilidadeDiaFindOneInput) {
     // =========================================================

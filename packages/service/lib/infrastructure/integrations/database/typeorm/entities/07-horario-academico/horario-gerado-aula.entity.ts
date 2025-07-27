@@ -9,12 +9,8 @@ export class HorarioGeradoAulaEntity implements LadesaTypings.HorarioGeradoAula 
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 
-  //
-
   @Column({ name: "data", type: "date", nullable: false })
   data!: Date;
-
-  //
 
   @ManyToOne(() => DiarioProfessorEntity)
   @JoinColumn({ name: "id_diario_professor_fk" })
@@ -27,8 +23,6 @@ export class HorarioGeradoAulaEntity implements LadesaTypings.HorarioGeradoAula 
   @ManyToOne(() => IntervaloDeTempoEntity)
   @JoinColumn({ name: "id_intervalo_de_tempo_fk" })
   intervaloDeTempo!: LadesaTypings.IntervaloDeTempo;
-
-  //
 
   @Column({ name: "date_created", type: "timestamptz", nullable: false })
   dateCreated!: Date;

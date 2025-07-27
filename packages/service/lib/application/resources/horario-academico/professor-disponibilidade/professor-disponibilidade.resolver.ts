@@ -8,15 +8,9 @@ import { ProfessorDisponibilidadeService } from "./professor-disponibilidade.ser
 
 @GqlResolver()
 export class ProfessorDisponibilidadeResolver {
-  constructor(
-    //
-    private professorDisponibilidadeService: ProfessorDisponibilidadeService,
-  ) {}
-
-  //
+  constructor(private professorDisponibilidadeService: ProfessorDisponibilidadeService) {}
 
   async professorDisponibilidadeFindAll(
-    //
     @AccessContextGraphQl() accessContext: AccessContext,
 
     @AppRequest("ProfessorDisponibilidadeFindAll") dto: IAppRequest<"ProfessorDisponibilidadeFindAll">,
@@ -25,10 +19,7 @@ export class ProfessorDisponibilidadeResolver {
     return this.professorDisponibilidadeService.professorDisponibilidadeFindAll(accessContext, dto, graphqlExtractSelection(info, "paginated"));
   }
 
-  //
-
   async professorDisponibilidadeFindOneById(
-    //
     @AccessContextGraphQl() accessContext: AccessContext,
 
     @AppRequest("ProfessorDisponibilidadeFindOneById") dto: IAppRequest<"ProfessorDisponibilidadeFindOneById">,
@@ -43,10 +34,7 @@ export class ProfessorDisponibilidadeResolver {
     );
   }
 
-  //
-
   async professorDisponibilidadeCreate(
-    //
     @AccessContextGraphQl() accessContext: AccessContext,
 
     @AppRequest("ProfessorDisponibilidadeCreate") dto: IAppRequest<"ProfessorDisponibilidadeCreate">,
@@ -55,7 +43,6 @@ export class ProfessorDisponibilidadeResolver {
   }
 
   async professorDisponibilidadeUpdate(
-    //
     @AccessContextGraphQl() accessContext: AccessContext,
 
     @AppRequest("ProfessorDisponibilidadeUpdate") dto: IAppRequest<"ProfessorDisponibilidadeUpdate">,
@@ -64,7 +51,6 @@ export class ProfessorDisponibilidadeResolver {
   }
 
   async professorDisponibilidadeDeleteOneById(
-    //
     @AccessContextGraphQl() accessContext: AccessContext,
 
     @AppRequest("ProfessorDisponibilidadeDeleteOneById") dto: IAppRequest<"ProfessorDisponibilidadeDeleteOneById">,

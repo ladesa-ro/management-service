@@ -31,8 +31,6 @@ export class DiarioProfessorService {
     return this.databaseContext.diarioProfessorRepository;
   }
 
-  //
-
   async diarioProfessorFindAll(
     accessContext: AccessContext,
     dto: IDomain.DiarioProfessorListInput | null = null,
@@ -54,17 +52,15 @@ export class DiarioProfessorService {
       {
         ...paginateConfig,
         select: [
-          //
           "id",
-          //
+
           "situacao",
-          //
+
           "diario.id",
-          //
+
           "perfil.id",
           "perfil.campus.id",
           "perfil.usuario.id",
-          //
         ],
         relations: {
           diario: true,
@@ -73,22 +69,14 @@ export class DiarioProfessorService {
             usuario: true,
           },
         },
-        sortableColumns: [
-          //
-          "situacao",
-          "diario.id",
-          "perfil.campus.id",
-          "perfil.usuario.id",
-        ],
+        sortableColumns: ["situacao", "diario.id", "perfil.campus.id", "perfil.usuario.id"],
         searchableColumns: [
-          //
           "id",
-          //
+
           "situacao",
           "diario.id",
           "perfil.campus.id",
           "perfil.usuario.id",
-          //
         ],
         defaultSortBy: [],
         filterableColumns: {
@@ -191,8 +179,6 @@ export class DiarioProfessorService {
 
     return diarioProfessor;
   }
-
-  //
 
   async diarioProfessorCreate(accessContext: AccessContext, dto: IDomain.DiarioProfessorCreateInput) {
     // =========================================================
@@ -315,8 +301,6 @@ export class DiarioProfessorService {
       id: diarioProfessor.id,
     });
   }
-
-  //
 
   async diarioProfessorDeleteOneById(accessContext: AccessContext, dto: IDomain.DiarioProfessorFindOneInput) {
     // =========================================================

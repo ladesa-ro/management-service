@@ -4,8 +4,6 @@ import * as repositories from "../typeorm/repositories";
 export class DatabaseContext {
   constructor(readonly ds: DataSource | EntityManager) {}
 
-  //
-
   get dataSource() {
     if (this.ds instanceof DataSource) {
       return this.ds;
@@ -30,8 +28,6 @@ export class DatabaseContext {
     return repositories.createImagemRepository(this.ds);
   }
 
-  //
-
   // =====================================================
   // == [ BASE ] =========================================
   // =====================================================
@@ -51,8 +47,6 @@ export class DatabaseContext {
   get cidadeRepository() {
     return repositories.createCidadeRepository(this.ds);
   }
-
-  //
 
   // =====================================================
   // == [ BASE / LUGARES ] ===============================

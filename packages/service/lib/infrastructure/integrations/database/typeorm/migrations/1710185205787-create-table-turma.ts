@@ -16,15 +16,11 @@ export class CreateTableTurma1710185205787 implements MigrationInterface {
             default: "gen_random_uuid()",
           },
 
-          //
-
           {
             name: "periodo",
             type: "text",
             isNullable: false,
           },
-
-          //
 
           {
             name: "id_ambiente_padrao_aula_fk",
@@ -42,7 +38,7 @@ export class CreateTableTurma1710185205787 implements MigrationInterface {
             type: "uuid",
             isNullable: true,
           },
-          //
+
           {
             name: "date_created",
             type: "timestamptz",

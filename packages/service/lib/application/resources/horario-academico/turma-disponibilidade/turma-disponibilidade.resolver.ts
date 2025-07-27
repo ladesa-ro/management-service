@@ -8,15 +8,9 @@ import { TurmaDisponibilidadeService } from "./turma-disponibilidade.service";
 
 @GqlResolver()
 export class TurmaDisponibilidadeResolver {
-  constructor(
-    //
-    private turmaDisponibilidadeService: TurmaDisponibilidadeService,
-  ) {}
-
-  //
+  constructor(private turmaDisponibilidadeService: TurmaDisponibilidadeService) {}
 
   async turmaDisponibilidadeFindAll(
-    //
     @AccessContextGraphQl() accessContext: AccessContext,
     @AppRequest("TurmaDisponibilidadeFindAll") dto: IAppRequest<"TurmaDisponibilidadeFindAll">,
     @GqlInfo() info: GraphQLResolveInfo,
@@ -24,10 +18,7 @@ export class TurmaDisponibilidadeResolver {
     return this.turmaDisponibilidadeService.turmaDisponibilidadeFindAll(accessContext, dto, graphqlExtractSelection(info, "paginated"));
   }
 
-  //
-
   async turmaDisponibilidadeFindOneById(
-    //
     @AccessContextGraphQl() accessContext: AccessContext,
 
     @AppRequest("TurmaDisponibilidadeFindOneById") dto: IAppRequest<"TurmaDisponibilidadeFindOneById">,
@@ -42,18 +33,11 @@ export class TurmaDisponibilidadeResolver {
     );
   }
 
-  //
-
-  async turmaDisponibilidadeCreate(
-    //
-    @AccessContextGraphQl() accessContext: AccessContext,
-    @AppRequest("TurmaDisponibilidadeCreate") dto: IAppRequest<"TurmaDisponibilidadeCreate">,
-  ) {
+  async turmaDisponibilidadeCreate(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("TurmaDisponibilidadeCreate") dto: IAppRequest<"TurmaDisponibilidadeCreate">) {
     return this.turmaDisponibilidadeService.turmaDisponibilidadeCreate(accessContext, dto);
   }
 
   async turmaDisponibilidadeUpdate(
-    //
     @AccessContextGraphQl() accessContext: AccessContext,
 
     @AppRequest("TurmaDisponibilidadeUpdate") dto: IAppRequest<"TurmaDisponibilidadeUpdate">,
@@ -62,7 +46,6 @@ export class TurmaDisponibilidadeResolver {
   }
 
   async turmaDisponibilidadeDeleteOneById(
-    //
     @AccessContextGraphQl() accessContext: AccessContext,
 
     @AppRequest("TurmaDisponibilidadeDeleteOneById") dto: IAppRequest<"TurmaDisponibilidadeDeleteOneById">,

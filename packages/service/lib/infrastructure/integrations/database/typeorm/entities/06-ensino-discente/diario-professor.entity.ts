@@ -8,8 +8,6 @@ export class DiarioProfessorEntity implements LadesaTypings.DiarioProfessor {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 
-  //
-
   @Column({ name: "situacao", type: "bool", nullable: false })
   situacao!: boolean;
 
@@ -20,8 +18,6 @@ export class DiarioProfessorEntity implements LadesaTypings.DiarioProfessor {
   @ManyToOne(() => PerfilEntity)
   @JoinColumn({ name: "id_perfil_fk" })
   perfil!: LadesaTypings.Perfil;
-
-  //
 
   @Column({ name: "date_created", type: "timestamptz", nullable: false })
   dateCreated!: Date;

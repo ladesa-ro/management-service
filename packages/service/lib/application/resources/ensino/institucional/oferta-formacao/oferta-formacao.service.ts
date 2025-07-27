@@ -29,8 +29,6 @@ export class OfertaFormacaoService {
     return this.databaseContext.ofertaFormacaoRepository;
   }
 
-  //
-
   async ofertaFormacaoFindAll(accessContext: AccessContext, dto: IDomain.OfertaFormacaoListInput | null = null, selection?: string[]): Promise<IDomain.OfertaFormacaoListOutput["success"]> {
     // =========================================================
 
@@ -48,31 +46,22 @@ export class OfertaFormacaoService {
       {
         ...paginateConfig,
         select: [
-          //
           "id",
-          //
+
           "nome",
           "slug",
-          //
+
           "dateCreated",
-          //
         ],
         relations: {
           modalidade: true,
         },
-        sortableColumns: [
-          //
-          "nome",
-          "slug",
-          "dateCreated",
-        ],
+        sortableColumns: ["nome", "slug", "dateCreated"],
         searchableColumns: [
-          //
           "id",
-          //
+
           "nome",
           "slug",
-          //
         ],
         defaultSortBy: [
           ["nome", "ASC"],
@@ -175,8 +164,6 @@ export class OfertaFormacaoService {
     return ofertaFormacao;
   }
 
-  //
-
   async ofertaFormacaoCreate(accessContext: AccessContext, dto: IDomain.OfertaFormacaoCreateInput) {
     // =========================================================
 
@@ -258,8 +245,6 @@ export class OfertaFormacaoService {
       id: ofertaFormacao.id,
     });
   }
-
-  //
 
   async ofertaFormacaoDeleteOneById(accessContext: AccessContext, dto: IDomain.OfertaFormacaoFindOneInput) {
     // =========================================================

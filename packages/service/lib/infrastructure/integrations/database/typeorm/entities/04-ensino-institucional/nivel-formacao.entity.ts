@@ -6,12 +6,8 @@ export class NivelFormacaoEntity implements LadesaTypings.NivelFormacao {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 
-  //
-
   @Column({ name: "slug", type: "text", nullable: false })
   slug!: string;
-
-  //
 
   @Column({ name: "date_created", type: "timestamptz", nullable: false })
   dateCreated!: Date;

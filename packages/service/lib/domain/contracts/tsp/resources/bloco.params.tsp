@@ -21,18 +21,16 @@ model BlocoFindOneInput {
  * Visão FindOne de um bloco.
  */
 model BlocoFindOneOutput {
-  //
+
   ...PickProperties<BlocoView, "id">;
 
   ...PickProperties<BlocoView, "nome">;
   ...PickProperties<BlocoView, "codigo">;
 
-  //
   ...PickProperties<BlocoView, "campus">;
 
   ...PickProperties<BlocoView, "imagemCapa">;
 
-  //
   ...PickProperties<BlocoView, "dateCreated" | "dateUpdated" | "dateDeleted">;
 }
 

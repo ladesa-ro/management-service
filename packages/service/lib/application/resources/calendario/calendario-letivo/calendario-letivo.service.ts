@@ -30,8 +30,6 @@ export class CalendarioLetivoService {
     return this.databaseContext.calendarioLetivoRepository;
   }
 
-  //
-
   async calendarioLetivoFindAll(
     accessContext: AccessContext,
     dto: IDomain.CalendarioLetivoListInput | null = null,
@@ -52,47 +50,42 @@ export class CalendarioLetivoService {
       { ...dto },
       {
         select: [
-          //
           "id",
-          //
+
           "nome",
           "ano",
           "campus",
           "ofertaFormacao",
-          //
+
           "campus.id",
           "campus.cnpj",
           "campus.razaoSocial",
           "campus.nomeFantasia",
-          //
+
           "ofertaFormacao.id",
           "ofertaFormacao.nome",
           "ofertaFormacao.slug",
-          //
         ],
         sortableColumns: [
-          //
           "nome",
           "ano",
-          //
+
           "campus.id",
           "campus.cnpj",
           "campus.razaoSocial",
           "campus.nomeFantasia",
-          //
+
           "ofertaFormacao.id",
           "ofertaFormacao.nome",
           "ofertaFormacao.slug",
         ],
         searchableColumns: [
-          //
           "id",
-          //
+
           "nome",
           "ano",
           "campus",
           "ofertaFormacao",
-          //
         ],
         relations: {
           campus: true,
@@ -200,8 +193,6 @@ export class CalendarioLetivoService {
     return calendarioLetivo;
   }
 
-  //
-
   async calendarioLetivoCreate(accessContext: AccessContext, dto: IDomain.CalendarioLetivoCreateInput) {
     // =========================================================
 
@@ -305,8 +296,6 @@ export class CalendarioLetivoService {
       id: calendarioLetivo.id,
     });
   }
-
-  //
 
   async calendarioLetivoDeleteOneById(accessContext: AccessContext, dto: IDomain.CalendarioLetivoFindOneInput) {
     // =========================================================

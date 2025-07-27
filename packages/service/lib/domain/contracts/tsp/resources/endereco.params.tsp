@@ -17,7 +17,7 @@ model EnderecoFindOneInput is PickProperties<EnderecoView, "id">;
  * Visão FindOne de um endereço.
  */
 model EnderecoFindOneOutput {
-  //
+
   ...PickProperties<EnderecoView, "id">;
 
   ...PickProperties<EnderecoView, "cep">;
@@ -27,10 +27,8 @@ model EnderecoFindOneOutput {
   ...PickProperties<EnderecoView, "complemento">;
   ...PickProperties<EnderecoView, "pontoReferencia">;
 
-  //
   ...PickProperties<EnderecoView, "cidade">;
 
-  //
   ...PickProperties<
     EnderecoView,
     "dateCreated" | "dateUpdated" | "dateDeleted"

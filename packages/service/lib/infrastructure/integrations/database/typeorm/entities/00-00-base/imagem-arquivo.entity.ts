@@ -8,8 +8,6 @@ export class ImagemArquivoEntity implements LadesaTypings.ImagemArquivo {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 
-  //
-
   @Column({ name: "largura", type: "int", nullable: false })
   largura!: number;
 
@@ -22,8 +20,6 @@ export class ImagemArquivoEntity implements LadesaTypings.ImagemArquivo {
   @Column({ name: "mime_type", type: "text", nullable: false })
   mimeType!: string;
 
-  //
-
   @ManyToOne(() => ImagemEntity)
   @JoinColumn({ name: "id_imagem_fk" })
   imagem!: Relation<ImagemEntity>;
@@ -31,8 +27,6 @@ export class ImagemArquivoEntity implements LadesaTypings.ImagemArquivo {
   @ManyToOne(() => ArquivoEntity)
   @JoinColumn({ name: "id_arquivo_fk" })
   arquivo!: Relation<ArquivoEntity>;
-
-  //
 
   @Column({ name: "date_created", type: "timestamptz", nullable: false })
   dateCreated!: Date;

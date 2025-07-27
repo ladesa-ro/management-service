@@ -8,55 +8,25 @@ import { EtapaService } from "./etapa.service";
 export class EtapaResolver {
   constructor(private etapaService: EtapaService) {}
 
-  //
-
-  async etapaFindAll(
-    //
-    @AccessContextGraphQl() accessContext: AccessContext,
-    @AppRequest("EtapaFindAll") dto: IAppRequest<"EtapaFindAll">,
-  ) {
+  async etapaFindAll(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("EtapaFindAll") dto: IAppRequest<"EtapaFindAll">) {
     return this.etapaService.etapaFindAll(accessContext, dto);
   }
 
-  //
-
-  async etapaFindOneById(
-    //
-    @AccessContextGraphQl() accessContext: AccessContext,
-    @AppRequest("EtapaFindOneById") dto: IAppRequest<"EtapaFindOneById">,
-  ) {
+  async etapaFindOneById(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("EtapaFindOneById") dto: IAppRequest<"EtapaFindOneById">) {
     return this.etapaService.etapaFindByIdStrict(accessContext, {
       id: dto.parameters.path.id,
     });
   }
 
-  //
-
-  async etapaCreate(
-    //
-    @AccessContextGraphQl() accessContext: AccessContext,
-    @AppRequest("EtapaCreate") dto: IAppRequest<"EtapaCreate">,
-  ) {
+  async etapaCreate(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("EtapaCreate") dto: IAppRequest<"EtapaCreate">) {
     return this.etapaService.etapaCreate(accessContext, dto);
   }
 
-  //
-
-  async etapaUpdate(
-    //
-    @AccessContextGraphQl() accessContext: AccessContext,
-    @AppRequest("EtapaUpdate") dto: IAppRequest<"EtapaUpdate">,
-  ) {
+  async etapaUpdate(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("EtapaUpdate") dto: IAppRequest<"EtapaUpdate">) {
     return this.etapaService.etapaUpdate(accessContext, dto);
   }
 
-  //
-
-  async etapaDeleteOneById(
-    //
-    @AccessContextGraphQl() accessContext: AccessContext,
-    @AppRequest("EtapaDeleteOneById") dto: IAppRequest<"EtapaDeleteOneById">,
-  ) {
+  async etapaDeleteOneById(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("EtapaDeleteOneById") dto: IAppRequest<"EtapaDeleteOneById">) {
     return this.etapaService.etapaDeleteOneById(accessContext, {
       id: dto.parameters.path.id,
     });

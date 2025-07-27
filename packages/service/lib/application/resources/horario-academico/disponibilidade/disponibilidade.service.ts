@@ -26,8 +26,6 @@ export class DisponibilidadeService {
     return this.databaseContext.disponibilidadeRepository;
   }
 
-  //
-
   async disponibilidadeFindAll(accessContext: AccessContext, dto: IDomain.DisponibilidadeListInput | null = null, selection?: string[]): Promise<IDomain.DisponibilidadeListOutput["success"]> {
     // =========================================================
 
@@ -45,27 +43,18 @@ export class DisponibilidadeService {
       {
         ...paginateConfig,
         select: [
-          //
           "id",
-          //
-          "dataInicio",
-          "dataFim",
-          "dateCreated",
-          //
-        ],
-        sortableColumns: [
-          //
+
           "dataInicio",
           "dataFim",
           "dateCreated",
         ],
+        sortableColumns: ["dataInicio", "dataFim", "dateCreated"],
         searchableColumns: [
-          //
           "id",
-          //
+
           "dataInicio",
           "dataFim",
-          //
         ],
         defaultSortBy: [
           ["dataInicio", "ASC"],
@@ -167,8 +156,6 @@ export class DisponibilidadeService {
     return disponibilidade;
   }
 
-  //
-
   async disponibilidadeCreate(accessContext: AccessContext, dto: IDomain.DisponibilidadeCreateInput) {
     // =========================================================
 
@@ -226,8 +213,6 @@ export class DisponibilidadeService {
       id: disponibilidade.id,
     });
   }
-
-  //
 
   async disponibilidadeDeleteOneById(accessContext: AccessContext, dto: IDomain.DisponibilidadeFindOneInput) {
     // =========================================================

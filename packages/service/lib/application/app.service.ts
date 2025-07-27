@@ -4,7 +4,6 @@ import { AppConfigService } from "@/infrastructure/config";
 @Injectable()
 export class AppService {
   constructor(
-    //
     @Inject(AppConfigService)
     readonly configService: AppConfigService,
   ) {}

@@ -7,8 +7,6 @@ export class HorarioGeradoEntity implements LadesaTypings.HorarioGerado {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 
-  //
-
   @Column({ name: "status", type: "text", nullable: true })
   status!: string | null;
 
@@ -23,13 +21,10 @@ export class HorarioGeradoEntity implements LadesaTypings.HorarioGerado {
 
   @Column({ name: "vigencia_fim", type: "timestamptz", nullable: false })
   vigenciaFim!: Date | null;
-  //
 
   @ManyToOne(() => CalendarioLetivoEntity)
   @JoinColumn({ name: "id_calendario_letivo_fk" })
   calendario!: LadesaTypings.CalendarioLetivo;
-
-  //
 
   @Column({ name: "date_created", type: "timestamptz", nullable: false })
   dateCreated!: Date;

@@ -2,9 +2,7 @@ import { EstadoEntity } from "@/infrastructure/integrations/database/typeorm/ent
 import { createRepositoryFactory, IRepositoryFactoryOutput } from "../../helpers/create-repository-factory";
 
 export const createEstadoRepository = createRepositoryFactory((ds) => {
-  return ds.getRepository(EstadoEntity).extend({
-    //
-  });
+  return ds.getRepository(EstadoEntity).extend({});
 });
 
 export type IEstadoRepository = IRepositoryFactoryOutput<typeof createEstadoRepository>;

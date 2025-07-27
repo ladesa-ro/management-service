@@ -35,8 +35,6 @@ export class CursoService {
     return this.databaseContext.cursoRepository;
   }
 
-  //
-
   async cursoFindAll(accessContext: AccessContext, dto: IDomain.CursoListInput | null = null, selection?: string[] | boolean): Promise<IDomain.CursoListOutput["success"]> {
     // =========================================================
 
@@ -54,47 +52,39 @@ export class CursoService {
       {
         ...paginateConfig,
         select: [
-          //
           "id",
-          //
+
           "nome",
           "nomeAbreviado",
           "campus",
           "ofertaFormacao",
-          //
         ],
         sortableColumns: [
-          //
           "nome",
           "nomeAbreviado",
-          //
+
           "campus.id",
           "campus.cnpj",
           "campus.razaoSocial",
           "campus.nomeFantasia",
-          //
+
           "ofertaFormacao.id",
           "ofertaFormacao.nome",
           "ofertaFormacao.slug",
         ],
         searchableColumns: [
-          //
           "id",
-          //
+
           "nome",
           "nomeAbreviado",
           "campus",
           "ofertaFormacao",
-          //
         ],
         relations: {
           campus: true,
           ofertaFormacao: true,
         },
-        defaultSortBy: [
-          //
-          ["nome", "ASC"],
-        ],
+        defaultSortBy: [["nome", "ASC"]],
         filterableColumns: {
           "campus.id": [FilterOperator.EQ],
           "campus.cnpj": [FilterOperator.EQ],
@@ -198,8 +188,6 @@ export class CursoService {
     return curso;
   }
 
-  //
-
   async cursoCreate(accessContext: AccessContext, dto: IDomain.CursoCreateInput) {
     // =========================================================
 
@@ -298,8 +286,6 @@ export class CursoService {
     return this.cursoFindByIdStrict(accessContext, { id: curso.id });
   }
 
-  //
-
   async cursoGetImagemCapa(accessContext: AccessContext | null, id: string) {
     const curso = await this.cursoFindByIdStrict(accessContext, { id: id });
 
@@ -354,8 +340,6 @@ export class CursoService {
 
     return true;
   }
-
-  //
 
   async cursoDeleteOneById(accessContext: AccessContext, dto: IDomain.CursoFindOneInput) {
     // =========================================================

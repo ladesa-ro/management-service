@@ -16,8 +16,6 @@ export class CreateTableCurso1710184451782 implements MigrationInterface {
             default: "gen_random_uuid()",
           },
 
-          //
-
           {
             name: "nome",
             type: "text",
@@ -30,7 +28,6 @@ export class CreateTableCurso1710184451782 implements MigrationInterface {
             isNullable: false,
           },
 
-          //
           {
             name: "id_campus_fk",
             type: "uuid",
@@ -46,7 +43,7 @@ export class CreateTableCurso1710184451782 implements MigrationInterface {
             type: "uuid",
             isNullable: true,
           },
-          //
+
           {
             name: "date_created",
             type: "timestamptz",

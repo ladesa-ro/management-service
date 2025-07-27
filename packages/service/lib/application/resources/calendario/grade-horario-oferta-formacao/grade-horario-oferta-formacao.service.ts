@@ -31,8 +31,6 @@ export class GradeHorarioOfertaFormacaoService {
     return this.databaseContext.gradeHorarioOfertaFormacaoRepository;
   }
 
-  //
-
   async gradeHorarioOfertaFormacaoFindAll(
     accessContext: AccessContext,
     dto: IDomain.GradeHorarioOfertaFormacaoListInput | null = null,
@@ -54,11 +52,9 @@ export class GradeHorarioOfertaFormacaoService {
       {
         ...paginateConfig,
         select: [
-          //
           "id",
-          //
+
           "dateCreated",
-          //
         ],
         relations: {
           campus: true,
@@ -67,17 +63,8 @@ export class GradeHorarioOfertaFormacaoService {
             modalidade: true,
           },
         },
-        sortableColumns: [
-          //
-
-          "dateCreated",
-        ],
-        searchableColumns: [
-          //
-          "id",
-
-          //
-        ],
+        sortableColumns: ["dateCreated"],
+        searchableColumns: ["id"],
         defaultSortBy: [["dateCreated", "ASC"]],
         filterableColumns: {
           "campus.id": [FilterOperator.EQ],
@@ -185,8 +172,6 @@ export class GradeHorarioOfertaFormacaoService {
 
     return gradeHorarioOfertaFormacao;
   }
-
-  //
 
   async gradeHorarioOfertaFormacaoCreate(accessContext: AccessContext, dto: IDomain.GradeHorarioOfertaFormacaoCreateInput) {
     // =========================================================
@@ -308,8 +293,6 @@ export class GradeHorarioOfertaFormacaoService {
       id: gradeHorarioOfertaFormacao.id,
     });
   }
-
-  //
 
   async gradeHorarioOfertaFormacaoDeleteOneById(accessContext: AccessContext, dto: IDomain.GradeHorarioOfertaFormacaoFindOneInput) {
     // =========================================================

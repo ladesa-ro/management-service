@@ -17,8 +17,6 @@ export class CreateTableGradeHorarioOfertaFormacao1710185161900 implements Migra
             default: "gen_random_uuid()",
           },
 
-          //
-
           {
             name: "id_campus_fk",
             type: "uuid",
@@ -30,8 +28,6 @@ export class CreateTableGradeHorarioOfertaFormacao1710185161900 implements Migra
             type: "uuid",
             isNullable: false,
           },
-
-          //
 
           {
             name: "date_created",

@@ -31,8 +31,6 @@ export class DiarioPreferenciaAgrupamentoService {
     return this.databaseContext.diarioPreferenciaAgrupamentoRepository;
   }
 
-  //
-
   async diarioPreferenciaAgrupamentoFindAll(
     accessContext: AccessContext,
     dto: IDomain.DiarioPreferenciaAgrupamentoListInput | null = null,
@@ -54,38 +52,35 @@ export class DiarioPreferenciaAgrupamentoService {
       {
         ...paginateConfig,
         select: [
-          //
           "id",
-          //
+
           "diaSemanaIso",
           "aulasSeguidas",
           "dataInicio",
           "dataFim",
           "diario",
           "intervaloDeTempo",
-          //
+
           "diario.id",
           "diario.ativo",
-          //
+
           "intervaloDeTempo.id",
           "intervaloDeTempo.periodoInicio",
           "intervaloDeTempo.periodoFim",
         ],
         sortableColumns: [
-          //
           "diaSemanaIso",
           "aulasSeguidas",
           "dataInicio",
           "dataFim",
           "diario",
-          //
+
           "diario.id",
           "intervaloDeTempo.id",
         ],
         searchableColumns: [
-          //
           "id",
-          //
+
           "diaSemanaIso",
           "aulasSeguidas",
           "dataInicio",
@@ -202,8 +197,6 @@ export class DiarioPreferenciaAgrupamentoService {
     return diarioPreferenciaAgrupamento;
   }
 
-  //
-
   async diarioPreferenciaAgrupamentoCreate(accessContext: AccessContext, dto: IDomain.DiarioPreferenciaAgrupamentoCreateInput) {
     // =========================================================
 
@@ -310,8 +303,6 @@ export class DiarioPreferenciaAgrupamentoService {
       id: diarioPreferenciaAgrupamento.id,
     });
   }
-
-  //
 
   async diarioPreferenciaAgrupamentoDeleteOneById(accessContext: AccessContext, dto: IDomain.DiarioPreferenciaAgrupamentoFindOneInput) {
     // =========================================================

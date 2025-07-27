@@ -14,13 +14,13 @@ export class CreateTableNivelFormacao1710184210042 implements MigrationInterface
             isPrimary: true,
             default: "gen_random_uuid()",
           },
-          //
+
           {
             name: "slug",
             type: "text",
             isNullable: false,
           },
-          //
+
           {
             name: "date_created",
             type: "timestamptz",

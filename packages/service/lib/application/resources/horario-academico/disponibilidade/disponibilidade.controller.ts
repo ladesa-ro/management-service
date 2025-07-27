@@ -11,22 +11,16 @@ import { DisponibilidadeService } from "./disponibilidade.service";
 export class DisponibilidadeController {
   constructor(private disponibilidadeService: DisponibilidadeService) {}
 
-  //
-
   @Get("/")
   async disponibilidadeFindAll(
-    //
     @AccessContextHttp() accessContext: AccessContext,
     @AppRequest("DisponibilidadeFindAll") dto: IAppRequest<"DisponibilidadeFindAll">,
   ): Promise<LadesaTypings.DisponibilidadeListOperationOutput["success"]> {
     return this.disponibilidadeService.disponibilidadeFindAll(accessContext, dto);
   }
 
-  //
-
   @Get("/:id")
   async disponibilidadeFindById(
-    //
     @AccessContextHttp() accessContext: AccessContext,
 
     @AppRequest("DisponibilidadeFindById") dto: IAppRequest<"DisponibilidadeFindById">,
@@ -36,40 +30,20 @@ export class DisponibilidadeController {
     });
   }
 
-  //
-
   @Post("/")
-  async disponibilidadeCreate(
-    //
-    @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("DisponibilidadeCreate") dto: IAppRequest<"DisponibilidadeCreate">,
-  ) {
+  async disponibilidadeCreate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DisponibilidadeCreate") dto: IAppRequest<"DisponibilidadeCreate">) {
     return this.disponibilidadeService.disponibilidadeCreate(accessContext, dto);
   }
 
-  //
-
   @Patch("/:id")
-  async disponibilidadeUpdate(
-    //
-    @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("DisponibilidadeUpdate") dto: IAppRequest<"DisponibilidadeUpdate">,
-  ) {
+  async disponibilidadeUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DisponibilidadeUpdate") dto: IAppRequest<"DisponibilidadeUpdate">) {
     return this.disponibilidadeService.disponibilidadeUpdate(accessContext, dto);
   }
 
-  //
-
   @Delete("/:id")
-  async disponibilidadeDeleteOneById(
-    //
-    @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("DisponibilidadeDeleteOneById") dto: IAppRequest<"DisponibilidadeDeleteOneById">,
-  ) {
+  async disponibilidadeDeleteOneById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DisponibilidadeDeleteOneById") dto: IAppRequest<"DisponibilidadeDeleteOneById">) {
     return this.disponibilidadeService.disponibilidadeDeleteOneById(accessContext, {
       id: dto.parameters.path.id,
     });
   }
-
-  //
 }

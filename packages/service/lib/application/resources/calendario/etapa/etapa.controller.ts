@@ -16,53 +16,27 @@ export class EtapaController {
     return this.etapaService.etapaFindAll(clientAccess, dto);
   }
 
-  //
-
   @Get("/:id")
-  async etapaFindById(
-    //
-    @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("EtapaFindById") dto: IAppRequest<"EtapaFindById">,
-  ) {
+  async etapaFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("EtapaFindById") dto: IAppRequest<"EtapaFindById">) {
     return this.etapaService.etapaFindByIdStrict(accessContext, {
       id: dto.parameters.path.id,
     });
   }
 
-  //
-
   @Post("/")
-  async etapaCreate(
-    //
-    @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("EtapaCreate") dto: IAppRequest<"EtapaCreate">,
-  ) {
+  async etapaCreate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("EtapaCreate") dto: IAppRequest<"EtapaCreate">) {
     return this.etapaService.etapaCreate(accessContext, dto);
   }
 
-  //
-
   @Patch("/:id")
-  async etapaUpdate(
-    //
-    @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("EtapaUpdate") dto: IAppRequest<"EtapaUpdate">,
-  ) {
+  async etapaUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("EtapaUpdate") dto: IAppRequest<"EtapaUpdate">) {
     return this.etapaService.etapaUpdate(accessContext, dto);
   }
 
-  //
-
   @Delete("/:id")
-  async etapaDeleteOneById(
-    //
-    @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("EtapaDeleteOneById") dto: IAppRequest<"EtapaDeleteOneById">,
-  ) {
+  async etapaDeleteOneById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("EtapaDeleteOneById") dto: IAppRequest<"EtapaDeleteOneById">) {
     return this.etapaService.etapaDeleteOneById(accessContext, {
       id: dto.parameters.path.id,
     });
   }
-
-  //
 }

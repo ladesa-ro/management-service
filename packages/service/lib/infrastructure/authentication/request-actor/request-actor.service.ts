@@ -11,13 +11,9 @@ export class RequestActorService {
     private dabaseContextService: DatabaseContextService,
   ) {}
 
-  //
-
   get usuarioRepository() {
     return this.dabaseContextService.usuarioRepository;
   }
-
-  //
 
   async getCurrentFuncionarioByAccessToken(accessToken?: string): Promise<IRequestActor> {
     if (typeof accessToken === "string") {
@@ -41,14 +37,7 @@ export class RequestActorService {
   private async getCurrentUsuarioByMatriculaSiape(matriculaSiape: string): Promise<IRequestActor> {
     const usuario = await this.usuarioRepository
       .createQueryBuilder("usuario")
-      .select([
-        //
-        "usuario.id",
-        "usuario.nome",
-        "usuario.matriculaSiape",
-        "usuario.email",
-        "usuario.isSuperUser",
-      ])
+      .select(["usuario.id", "usuario.nome", "usuario.matriculaSiape", "usuario.email", "usuario.isSuperUser"])
       .where("usuario.matriculaSiape = :matriculaSiape", {
         matriculaSiape: matriculaSiape,
       })
@@ -57,14 +46,7 @@ export class RequestActorService {
 
     if (usuario) {
       return {
-        ...pick(usuario, [
-          //
-          "id",
-          "nome",
-          "matriculaSiape",
-          "email",
-          "isSuperUser",
-        ]),
+        ...pick(usuario, ["id", "nome", "matriculaSiape", "email", "isSuperUser"]),
       };
     }
 

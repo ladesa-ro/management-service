@@ -20,7 +20,7 @@ model AmbienteFindOneInput {
  * Visão FindOne de um ambiente.
  */
 model AmbienteFindOneOutput {
-  //
+
   ...PickProperties<AmbienteView, "id">;
 
   ...PickProperties<AmbienteView, "nome">;
@@ -29,12 +29,10 @@ model AmbienteFindOneOutput {
   ...PickProperties<AmbienteView, "capacidade">;
   ...PickProperties<AmbienteView, "tipo">;
 
-  //
   ...PickProperties<AmbienteView, "bloco">;
 
   ...PickProperties<AmbienteView, "imagemCapa">;
 
-  //
   ...PickProperties<
     AmbienteView,
     "dateCreated" | "dateUpdated" | "dateDeleted"

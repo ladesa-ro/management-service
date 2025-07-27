@@ -11,64 +11,35 @@ import { NivelFormacaoService } from "./nivel-formacao.service";
 export class NivelFormacaoController {
   constructor(private nivelformacaoService: NivelFormacaoService) {}
 
-  //
-
   @Get("/")
   async nivelformacaoFindAll(
-    //
     @AccessContextHttp() accessContext: AccessContext,
     @AppRequest("NivelformacaoFindAll") dto: IAppRequest<"NivelformacaoFindAll">,
   ): Promise<LadesaTypings.NivelFormacaoListOperationOutput["success"]> {
     return this.nivelformacaoService.nivelFormacaoFindAll(accessContext, dto);
   }
 
-  //
-
   @Get("/:id")
-  async nivelformacaoFindById(
-    //
-    @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("NivelformacaoFindById") dto: IAppRequest<"NivelformacaoFindById">,
-  ) {
+  async nivelformacaoFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("NivelformacaoFindById") dto: IAppRequest<"NivelformacaoFindById">) {
     return this.nivelformacaoService.nivelFormacaoFindByIdStrict(accessContext, {
       id: dto.parameters.path.id,
     });
   }
 
-  //
-
   @Post("/")
-  async nivelformacaoCreate(
-    //
-    @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("NivelformacaoCreate") dto: IAppRequest<"NivelformacaoCreate">,
-  ) {
+  async nivelformacaoCreate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("NivelformacaoCreate") dto: IAppRequest<"NivelformacaoCreate">) {
     return this.nivelformacaoService.nivelFormacaoCreate(accessContext, dto);
   }
 
-  //
-
   @Patch("/:id")
-  async nivelformacaoUpdate(
-    //
-    @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("NivelformacaoUpdate") dto: IAppRequest<"NivelformacaoUpdate">,
-  ) {
+  async nivelformacaoUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("NivelformacaoUpdate") dto: IAppRequest<"NivelformacaoUpdate">) {
     return this.nivelformacaoService.nivelFormacaoUpdate(accessContext, dto);
   }
 
-  //
-
   @Delete("/:id")
-  async nivelformacaoDeleteOneById(
-    //
-    @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("NivelformacaoDeleteOneById") dto: IAppRequest<"NivelformacaoDeleteOneById">,
-  ) {
+  async nivelformacaoDeleteOneById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("NivelformacaoDeleteOneById") dto: IAppRequest<"NivelformacaoDeleteOneById">) {
     return this.nivelformacaoService.nivelFormacaoDeleteOneById(accessContext, {
       id: dto.parameters.path.id,
     });
   }
-
-  //
 }

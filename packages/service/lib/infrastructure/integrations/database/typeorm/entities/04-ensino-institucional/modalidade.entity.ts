@@ -6,15 +6,11 @@ export class ModalidadeEntity implements LadesaTypings.Modalidade {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 
-  //
-
   @Column({ name: "nome", type: "text", nullable: false })
   nome!: string;
 
   @Column({ name: "slug", type: "text", nullable: false })
   slug!: string;
-
-  //
 
   @Column({ name: "date_created", type: "timestamptz", nullable: false })
   dateCreated!: Date;

@@ -31,8 +31,6 @@ export class OfertaFormacaoNivelFormacaoService {
     return this.databaseContext.ofertaFormacaoNivelFormacaoRepository;
   }
 
-  //
-
   async ofertaFormacaoNivelFormacaoFindAll(
     accessContext: AccessContext,
     dto: IDomain.OfertaFormacaoNivelFormacaoListInput | null = null,
@@ -54,11 +52,9 @@ export class OfertaFormacaoNivelFormacaoService {
       {
         ...paginateConfig,
         select: [
-          //
           "id",
-          //
+
           "dateCreated",
-          //
         ],
         relations: {
           nivelFormacao: true,
@@ -66,17 +62,8 @@ export class OfertaFormacaoNivelFormacaoService {
             modalidade: true,
           },
         },
-        sortableColumns: [
-          //
-
-          "dateCreated",
-        ],
-        searchableColumns: [
-          //
-          "id",
-
-          //
-        ],
+        sortableColumns: ["dateCreated"],
+        searchableColumns: ["id"],
         defaultSortBy: [["dateCreated", "ASC"]],
         filterableColumns: {
           "nivelFormacao.id": [FilterOperator.EQ],
@@ -184,8 +171,6 @@ export class OfertaFormacaoNivelFormacaoService {
 
     return ofertaFormacaoNivelFormacao;
   }
-
-  //
 
   async ofertaFormacaoNivelFormacaoCreate(accessContext: AccessContext, dto: IDomain.OfertaFormacaoNivelFormacaoCreateInput) {
     // =========================================================
@@ -295,8 +280,6 @@ export class OfertaFormacaoNivelFormacaoService {
       id: ofertaFormacaoNivelFormacao.id,
     });
   }
-
-  //
 
   async ofertaFormacaoNivelFormacaoDeleteOneById(accessContext: AccessContext, dto: IDomain.OfertaFormacaoNivelFormacaoFindOneInput) {
     // =========================================================

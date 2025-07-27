@@ -21,13 +21,12 @@ model ImagemFindOneInput {
  * Visão FindOne de uma imagem.
  */
 model ImagemFindOneOutput {
-  //
+
   ...PickProperties<ImagemView, "id">;
 
   ...PickProperties<ImagemView, "descricao">;
   ...PickProperties<ImagemView, "versoes">;
 
-  //
   ...PickProperties<ImagemView, "dateCreated" | "dateUpdated" | "dateDeleted">;
 }
 

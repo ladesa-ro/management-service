@@ -32,8 +32,6 @@ export class AmbienteService {
     return this.databaseContext.ambienteRepository;
   }
 
-  //
-
   async ambienteFindAll(accessContext: AccessContext, input: IDomain.AmbienteListInput | null = null, selection?: string[] | boolean): Promise<IDomain.AmbienteListOutput["success"]> {
     // =========================================================
 
@@ -50,16 +48,15 @@ export class AmbienteService {
       { ...input },
       {
         select: [
-          //
           "id",
-          //
+
           "nome",
           "descricao",
           "codigo",
           "capacidade",
           "tipo",
           "dateCreated",
-          //
+
           "bloco.id",
           "bloco.campus.id",
         ],
@@ -69,28 +66,25 @@ export class AmbienteService {
           },
         },
         sortableColumns: [
-          //
           "nome",
           "descricao",
           "codigo",
           "capacidade",
           "tipo",
-          //
+
           "dateCreated",
-          //
+
           "bloco.id",
           "bloco.campus.id",
         ],
         searchableColumns: [
-          //
           "id",
-          //
+
           "nome",
           "descricao",
           "codigo",
           "capacidade",
           "tipo",
-          //
         ],
         defaultSortBy: [
           ["nome", "ASC"],
@@ -158,8 +152,6 @@ export class AmbienteService {
     return ambiente;
   }
 
-  //
-
   async ambienteCreate(accessContext: AccessContext, dto: IDomain.AmbienteCreateInput) {
     // =========================================================
 
@@ -224,8 +216,6 @@ export class AmbienteService {
     return this.ambienteFindByIdStrict(accessContext, { id: ambiente.id });
   }
 
-  //
-
   async ambienteGetImagemCapa(accessContext: AccessContext | null, id: string) {
     const ambiente = await this.ambienteFindByIdStrict(accessContext, {
       id: id,
@@ -283,8 +273,6 @@ export class AmbienteService {
 
     return true;
   }
-
-  //
 
   async ambienteDeleteOneById(accessContext: AccessContext, dto: IDomain.AmbienteFindOneInput) {
     // =========================================================

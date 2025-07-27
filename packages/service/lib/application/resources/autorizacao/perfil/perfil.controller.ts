@@ -11,20 +11,12 @@ export class PerfilController {
   constructor(private vinculoService: PerfilService) {}
 
   @Get("/")
-  async findAll(
-    //
-    @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("FindAll") dto: IAppRequest<"FindAll">,
-  ) {
+  async findAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("FindAll") dto: IAppRequest<"FindAll">) {
     return this.vinculoService.perfilFindAll(accessContext, dto);
   }
 
   @Post("/")
-  async vinculoSetVinculos(
-    //
-    @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("VinculoSetVinculos") dto: IAppRequest<"VinculoSetVinculos">,
-  ) {
+  async vinculoSetVinculos(@AccessContextHttp() accessContext: AccessContext, @AppRequest("VinculoSetVinculos") dto: IAppRequest<"VinculoSetVinculos">) {
     return this.vinculoService.perfilSetVinculos(accessContext, dto);
   }
 }

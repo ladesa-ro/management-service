@@ -16,8 +16,6 @@ export class CreateTableCampus1710183840854 implements MigrationInterface {
             default: "gen_random_uuid()",
           },
 
-          //
-
           {
             name: "nome_fantasia",
             type: "text",
@@ -42,14 +40,10 @@ export class CreateTableCampus1710183840854 implements MigrationInterface {
             isNullable: false,
           },
 
-          //
-
           {
             name: "id_endereco_fk",
             type: "uuid",
           },
-
-          //
 
           {
             name: "date_created",

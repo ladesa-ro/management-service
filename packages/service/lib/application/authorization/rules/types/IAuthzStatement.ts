@@ -671,7 +671,6 @@ export type IAuthzStatementCheck =
 // =====================
 
 export type IAuthzStatementFilter =
-  //
   | IAuthzStatementEnderecoFind
   | IAuthzStatementEstadoFind
   | IAuthzStatementCidadeFind

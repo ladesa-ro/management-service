@@ -91,8 +91,6 @@ export class SpecNodesStoreFromNpmPackage implements ISpecNodesStore {
     throw new Error(`operation not found: ${name}`);
   }
 
-  //
-
   GetNestedRefs(initialCursor: string | INodeRef | INodeCore): (INodeCore | INodeRef)[] {
     const composedNodeLayers: (INodeCore | INodeRef)[] = [];
 

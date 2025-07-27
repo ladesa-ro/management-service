@@ -6,56 +6,27 @@ import { AulaService } from "./aula.service";
 
 @Resolver()
 export class AulaResolver {
-  constructor(
-    //
-    private aulaService: AulaService,
-  ) {}
+  constructor(private aulaService: AulaService) {}
 
-  //
-
-  async aulaFindAll(
-    //
-    @AccessContextGraphQl() accessContext: AccessContext,
-    @AppRequest("AulaFindAll") dto: IAppRequest<"AulaFindAll">,
-  ) {
+  async aulaFindAll(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("AulaFindAll") dto: IAppRequest<"AulaFindAll">) {
     return this.aulaService.aulaFindAll(accessContext, dto);
   }
 
-  //
-
-  async aulaFindOneById(
-    //
-    @AccessContextGraphQl() accessContext: AccessContext,
-    @AppRequest("AulaFindOneById") dto: IAppRequest<"AulaFindOneById">,
-  ) {
+  async aulaFindOneById(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("AulaFindOneById") dto: IAppRequest<"AulaFindOneById">) {
     return this.aulaService.aulaFindByIdStrict(accessContext, {
       id: dto.parameters.path.id,
     });
   }
 
-  //
-
-  async aulaCreate(
-    //
-    @AccessContextGraphQl() accessContext: AccessContext,
-    @AppRequest("AulaCreate") dto: IAppRequest<"AulaCreate">,
-  ) {
+  async aulaCreate(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("AulaCreate") dto: IAppRequest<"AulaCreate">) {
     return this.aulaService.aulaCreate(accessContext, dto);
   }
 
-  async aulaUpdate(
-    //
-    @AccessContextGraphQl() accessContext: AccessContext,
-    @AppRequest("AulaUpdate") dto: IAppRequest<"AulaUpdate">,
-  ) {
+  async aulaUpdate(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("AulaUpdate") dto: IAppRequest<"AulaUpdate">) {
     return this.aulaService.aulaUpdate(accessContext, dto);
   }
 
-  async aulaDeleteOneById(
-    //
-    @AccessContextGraphQl() accessContext: AccessContext,
-    @AppRequest("AulaDeleteOneById") dto: IAppRequest<"AulaDeleteOneById">,
-  ) {
+  async aulaDeleteOneById(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("AulaDeleteOneById") dto: IAppRequest<"AulaDeleteOneById">) {
     return this.aulaService.aulaDeleteOneById(accessContext, {
       id: dto.parameters.path.id,
     });

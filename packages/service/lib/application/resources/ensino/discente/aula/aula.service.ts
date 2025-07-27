@@ -33,8 +33,6 @@ export class AulaService {
     return this.databaseContext.aulaRepository;
   }
 
-  //
-
   async aulaFindAll(accessContext: AccessContext, dto: IDomain.AulaListInput | null = null, selection?: string[] | boolean): Promise<IDomain.AulaListOutput["success"]> {
     // =========================================================
 
@@ -52,12 +50,11 @@ export class AulaService {
       {
         ...paginateConfig,
         select: [
-          //
           "id",
-          //
+
           "formato",
           "data",
-          //
+
           "intervaloDeTempo.id",
           "intervaloDeTempo.periodoInicio",
           "intervaloDeTempo.periodoFim",
@@ -65,13 +62,11 @@ export class AulaService {
           "diario.ativo",
           "ambiente.id",
           "ambiente.nome",
-          //
         ],
         sortableColumns: [
-          //
           "data",
           "formato",
-          //
+
           "diario.ativo",
           "ambiente.nome",
         ],
@@ -81,13 +76,11 @@ export class AulaService {
           intervaloDeTempo: true,
         },
         searchableColumns: [
-          //
           "id",
-          //
+
           "formato",
           "data",
           "ambiente.nome",
-          //
         ],
         defaultSortBy: [],
         filterableColumns: {
@@ -186,8 +179,6 @@ export class AulaService {
 
     return aula;
   }
-
-  //
 
   async aulaCreate(accessContext: AccessContext, dto: IDomain.AulaCreateInput) {
     // =========================================================
@@ -295,8 +286,6 @@ export class AulaService {
 
     return this.aulaFindByIdStrict(accessContext, { id: aula.id });
   }
-
-  //
 
   async aulaDeleteOneById(accessContext: AccessContext, dto: IDomain.AulaFindOneInput) {
     // =========================================================

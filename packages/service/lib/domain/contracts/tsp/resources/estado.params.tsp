@@ -16,7 +16,7 @@ model EstadoFindOneInput is PickProperties<EstadoView, "id">;
  * Visão FindOne de um estado.
  */
 model EstadoFindOneOutput {
-  //
+
   ...PickProperties<EstadoView, "id">;
 
   ...PickProperties<EstadoView, "nome">;

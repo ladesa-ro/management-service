@@ -11,11 +11,8 @@ import { GradeHorarioOfertaFormacaoIntervaloDeTempoService } from "./grade-horar
 export class GradeHorarioOfertaFormacaoIntervaloDeTempoController {
   constructor(private gradeHorarioOfertaFormacaoIntervaloDeTempoService: GradeHorarioOfertaFormacaoIntervaloDeTempoService) {}
 
-  //
-
   @Get("/")
   async gradeHorarioOfertaFormacaoIntervaloDeTempoFindAll(
-    //
     @AccessContextHttp() accessContext: AccessContext,
 
     @AppRequest("GradeHorarioOfertaFormacaoIntervaloDeTempoFindAll") dto: IAppRequest<"GradeHorarioOfertaFormacaoIntervaloDeTempoFindAll">,
@@ -23,11 +20,8 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoController {
     return this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.gradeHorarioOfertaFormacaoIntervaloDeTempoFindAll(accessContext, dto);
   }
 
-  //
-
   @Get("/:id")
   async gradeHorarioOfertaFormacaoIntervaloDeTempoFindById(
-    //
     @AccessContextHttp() accessContext: AccessContext,
 
     @AppRequest("GradeHorarioOfertaFormacaoIntervaloDeTempoFindById") dto: IAppRequest<"GradeHorarioOfertaFormacaoIntervaloDeTempoFindById">,
@@ -37,11 +31,8 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoController {
     });
   }
 
-  //
-
   @Post("/")
   async gradeHorarioOfertaFormacaoIntervaloDeTempoCreate(
-    //
     @AccessContextHttp() accessContext: AccessContext,
 
     @AppRequest("GradeHorarioOfertaFormacaoIntervaloDeTempoCreate") dto: IAppRequest<"GradeHorarioOfertaFormacaoIntervaloDeTempoCreate">,
@@ -49,11 +40,8 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoController {
     return this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.gradeHorarioOfertaFormacaoIntervaloDeTempoCreate(accessContext, dto);
   }
 
-  //
-
   @Patch("/:id")
   async gradeHorarioOfertaFormacaoIntervaloDeTempoUpdate(
-    //
     @AccessContextHttp() accessContext: AccessContext,
 
     @AppRequest("GradeHorarioOfertaFormacaoIntervaloDeTempoUpdate") dto: IAppRequest<"GradeHorarioOfertaFormacaoIntervaloDeTempoUpdate">,
@@ -61,11 +49,8 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoController {
     return this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.gradeHorarioOfertaFormacaoIntervaloDeTempoUpdate(accessContext, dto);
   }
 
-  //
-
   @Delete("/:id")
   async gradeHorarioOfertaFormacaoIntervaloDeTempoDeleteOneById(
-    //
     @AccessContextHttp() accessContext: AccessContext,
 
     @AppRequest("GradeHorarioOfertaFormacaoIntervaloDeTempoDeleteOneById") dto: IAppRequest<"GradeHorarioOfertaFormacaoIntervaloDeTempoDeleteOneById">,
@@ -74,6 +59,4 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoController {
       id: dto.parameters.path.id,
     });
   }
-
-  //
 }

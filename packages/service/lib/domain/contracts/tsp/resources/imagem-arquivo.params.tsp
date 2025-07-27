@@ -24,7 +24,6 @@ model ImagemArquivoFindOneInput {
 model ImagemArquivoFindOneOutput {
   ...PickProperties<ImagemArquivoView, "id">;
 
-  //
 
   ...PickProperties<
     ImagemArquivoView,
@@ -34,7 +33,6 @@ model ImagemArquivoFindOneOutput {
   ...PickProperties<ImagemArquivoView, "imagem">;
   ...PickProperties<ImagemArquivoView, "arquivo">;
 
-  //
 
   ...PickProperties<
     ImagemArquivoView,
@@ -48,7 +46,6 @@ model ImagemArquivoFindOneOutput {
 model ImagemArquivoFindOneFromImagemOutput {
   ...PickProperties<ImagemArquivoView, "id">;
 
-  //
 
   ...PickProperties<
     ImagemArquivoView,
@@ -57,7 +54,6 @@ model ImagemArquivoFindOneFromImagemOutput {
 
   ...PickProperties<ImagemArquivoView, "arquivo">;
 
-  //
 
   ...PickProperties<
     ImagemArquivoView,

@@ -31,8 +31,6 @@ export class DisciplinaService {
     return this.databaseContext.disciplinaRepository;
   }
 
-  //
-
   async disciplinaFindAll(accessContext: AccessContext, dto: IDomain.DisciplinaListInput | null = null, selection?: string[] | boolean): Promise<IDomain.DisciplinaListOutput["success"]> {
     // =========================================================
 
@@ -51,32 +49,21 @@ export class DisciplinaService {
         ...paginateConfig,
         relations: { diarios: true },
         select: [
-          //
           "id",
-          //
+
           "nome",
           "nomeAbreviado",
           "cargaHoraria",
-          //
         ],
-        sortableColumns: [
-          //
-          "nome",
-          "cargaHoraria",
-        ],
+        sortableColumns: ["nome", "cargaHoraria"],
         searchableColumns: [
-          //
           "id",
-          //
+
           "nome",
           "nomeAbreviado",
           "cargaHoraria",
-          //
         ],
-        defaultSortBy: [
-          //
-          ["nome", "ASC"],
-        ],
+        defaultSortBy: [["nome", "ASC"]],
         filterableColumns: {
           "diarios.id": [FilterOperator.EQ, FilterOperator.NULL, FilterSuffix.NOT],
         },
@@ -174,8 +161,6 @@ export class DisciplinaService {
     return disciplina;
   }
 
-  //
-
   async disciplinaCreate(accessContext: AccessContext, dto: IDomain.DisciplinaCreateInput) {
     // =========================================================
 
@@ -229,8 +214,6 @@ export class DisciplinaService {
 
     return this.disciplinaFindByIdStrict(accessContext, { id: disciplina.id });
   }
-
-  //
 
   async disciplinaGetImagemCapa(accessContext: AccessContext | null, id: string) {
     const disciplina = await this.disciplinaFindByIdStrict(accessContext, {
@@ -286,8 +269,6 @@ export class DisciplinaService {
 
     return true;
   }
-
-  //
 
   async disciplinaDeleteOneById(accessContext: AccessContext, dto: IDomain.DisciplinaFindOneInput) {
     // =========================================================

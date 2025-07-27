@@ -29,8 +29,6 @@ export class HorarioGeradoService {
     return this.databaseContext.horarioGeradoRepository;
   }
 
-  //
-
   async horarioGeradoFindAll(accessContext: AccessContext, dto: IDomain.HorarioGeradoListInput | null = null, selection?: string[] | boolean): Promise<IDomain.HorarioGeradoListOutput["success"]> {
     // =========================================================
 
@@ -48,36 +46,33 @@ export class HorarioGeradoService {
       {
         ...paginateConfig,
         select: [
-          //
           "id",
-          //
+
           "status",
           "tipo",
           "dataGeracao",
           "vigenciaInicio",
           "vigenciaFim",
           "calendario",
-          //
+
           "calendario.id",
           "calendario.nome",
           "calendario.ano",
         ],
         sortableColumns: [
-          //
           "status",
           "tipo",
           "dataGeracao",
           "vigenciaInicio",
           "vigenciaFim",
-          //
+
           "calendario.id",
           "calendario.nome",
           "calendario.ano",
         ],
         searchableColumns: [
-          //
           "id",
-          //
+
           "status",
           "tipo",
           "dataGeracao",
@@ -188,8 +183,6 @@ export class HorarioGeradoService {
     return horarioGerado;
   }
 
-  //
-
   async horarioGeradoCreate(accessContext: AccessContext, dto: IDomain.HorarioGeradoCreateInput) {
     // =========================================================
 
@@ -271,8 +264,6 @@ export class HorarioGeradoService {
       id: horarioGerado.id,
     });
   }
-
-  //
 
   async horarioGeradoDeleteOneById(accessContext: AccessContext, dto: IDomain.HorarioGeradoFindOneInput) {
     // =========================================================

@@ -7,8 +7,6 @@ export class EnderecoEntity implements LadesaTypings.Endereco {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 
-  //
-
   @Column({ name: "cep", type: "text", nullable: false })
   cep!: string;
 
@@ -27,13 +25,9 @@ export class EnderecoEntity implements LadesaTypings.Endereco {
   @Column({ name: "ponto_referencia", type: "text", nullable: true })
   pontoReferencia!: string | null;
 
-  //
-
   @ManyToOne(() => CidadeEntity, {})
   @JoinColumn({ name: "id_cidade_fk" })
   cidade!: LadesaTypings.Cidade;
-
-  //
 
   @Column({ name: "date_created", type: "timestamptz", nullable: false })
   dateCreated!: Date;

@@ -26,8 +26,6 @@ export class NivelFormacaoService {
     return this.databaseContext.nivelFormacaoRepository;
   }
 
-  //
-
   async nivelFormacaoFindAll(accessContext: AccessContext, dto: IDomain.NivelFormacaoListInput | null = null, selection?: string[]): Promise<IDomain.NivelFormacaoListOutput["success"]> {
     // =========================================================
 
@@ -45,25 +43,17 @@ export class NivelFormacaoService {
       {
         ...paginateConfig,
         select: [
-          //
           "id",
-          //
+
           "slug",
-          //
-          "dateCreated",
-          //
-        ],
-        sortableColumns: [
-          //
-          "slug",
+
           "dateCreated",
         ],
+        sortableColumns: ["slug", "dateCreated"],
         searchableColumns: [
-          //
           "id",
-          //
+
           "slug",
-          //
         ],
         defaultSortBy: [
           ["slug", "ASC"],
@@ -164,8 +154,6 @@ export class NivelFormacaoService {
     return nivelFormacao;
   }
 
-  //
-
   async nivelFormacaoCreate(accessContext: AccessContext, dto: IDomain.NivelFormacaoCreateInput) {
     // =========================================================
 
@@ -223,8 +211,6 @@ export class NivelFormacaoService {
       id: nivelFormacao.id,
     });
   }
-
-  //
 
   async nivelFormacaoDeleteOneById(accessContext: AccessContext, dto: IDomain.NivelFormacaoFindOneInput) {
     // =========================================================

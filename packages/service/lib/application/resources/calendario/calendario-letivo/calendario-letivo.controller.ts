@@ -19,11 +19,8 @@ export class CalendarioLetivoController {
     return this.calendarioLetivoService.calendarioLetivoFindAll(clientAccess, dto);
   }
 
-  //
-
   @Get("/:id")
   async calendarioLetivoFindById(
-    //
     @AccessContextHttp() accessContext: AccessContext,
 
     @AppRequest("CalendarioLetivoFindById") dto: IAppRequest<"CalendarioLetivoFindById">,
@@ -31,38 +28,18 @@ export class CalendarioLetivoController {
     return this.calendarioLetivoService.calendarioLetivoFindByIdStrict(accessContext, { id: dto.parameters.path.id });
   }
 
-  //
-
   @Post("/")
-  async campusCreate(
-    //
-    @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("CampusCreate") dto: IAppRequest<"CampusCreate">,
-  ) {
+  async campusCreate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CampusCreate") dto: IAppRequest<"CampusCreate">) {
     return this.calendarioLetivoService.calendarioLetivoCreate(accessContext, dto);
   }
 
-  //
-
   @Patch("/:id")
-  async calendarioLetivoUpdate(
-    //
-    @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("CalendarioLetivoUpdate") dto: IAppRequest<"CalendarioLetivoUpdate">,
-  ) {
+  async calendarioLetivoUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CalendarioLetivoUpdate") dto: IAppRequest<"CalendarioLetivoUpdate">) {
     return this.calendarioLetivoService.calendarioLetivoUpdate(accessContext, dto);
   }
 
-  //
-
   @Delete("/:id")
-  async CalendarioLetivoDeleteOneById(
-    //
-    @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("CalendarioLetivoDeleteOneById") dto: IAppRequest<"CalendarioLetivoDeleteOneById">,
-  ) {
+  async CalendarioLetivoDeleteOneById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CalendarioLetivoDeleteOneById") dto: IAppRequest<"CalendarioLetivoDeleteOneById">) {
     return this.calendarioLetivoService.calendarioLetivoDeleteOneById(accessContext, { id: dto.parameters.path.id });
   }
-
-  //
 }

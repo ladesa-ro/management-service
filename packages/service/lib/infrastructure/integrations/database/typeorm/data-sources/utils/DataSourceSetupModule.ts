@@ -3,11 +3,7 @@ import { ConfigModule as NestConfigModule } from "@nestjs/config";
 import { AppConfigModule } from "@/infrastructure/config";
 
 @Module({
-  imports: [
-    //
-    NestConfigModule.forRoot({ isGlobal: true }),
-    AppConfigModule,
-  ],
+  imports: [NestConfigModule.forRoot({ isGlobal: true }), AppConfigModule],
   providers: [
     // ...
   ],

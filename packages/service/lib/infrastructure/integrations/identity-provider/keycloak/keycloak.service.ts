@@ -13,7 +13,6 @@ export class KeycloakService {
   #authInterval: NodeJS.Timeout | null = null;
 
   constructor(
-    //
     @Inject(AppConfigService)
     readonly appConfigService: AppConfigService,
   ) {}
@@ -119,8 +118,6 @@ export class KeycloakService {
 
     return credentials;
   }
-
-  //
 
   private async clearAuthInterval() {
     if (this.#authInterval !== null) {

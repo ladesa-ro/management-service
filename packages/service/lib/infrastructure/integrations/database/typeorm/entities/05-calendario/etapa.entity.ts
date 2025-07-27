@@ -7,8 +7,6 @@ export class EtapaEntity implements LadesaTypings.Etapa {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 
-  //
-
   @Column({ name: "numero", type: "int" })
   numero!: number | null;
 
@@ -26,8 +24,6 @@ export class EtapaEntity implements LadesaTypings.Etapa {
   @ManyToOne(() => CalendarioLetivoEntity)
   @JoinColumn({ name: "id_calendario_letivo_fk" })
   calendario!: LadesaTypings.CalendarioLetivo;
-
-  //
 
   @Column({ name: "date_created", type: "timestamptz", nullable: false })
   dateCreated!: Date;

@@ -9,15 +9,11 @@ export class CursoEntity implements LadesaTypings.Curso {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 
-  //
-
   @Column({ name: "nome", type: "text", nullable: false })
   nome!: string;
 
   @Column({ name: "nome_abreviado", type: "text", nullable: false })
   nomeAbreviado!: string;
-
-  //
 
   @ManyToOne(() => CampusEntity)
   @JoinColumn({ name: "id_campus_fk" })
@@ -30,8 +26,6 @@ export class CursoEntity implements LadesaTypings.Curso {
   @ManyToOne(() => ImagemEntity)
   @JoinColumn({ name: "id_imagem_capa_fk" })
   imagemCapa!: Relation<ImagemEntity> | null;
-
-  //
 
   @Column({ name: "date_created", type: "timestamptz", nullable: false })
   dateCreated!: Date;

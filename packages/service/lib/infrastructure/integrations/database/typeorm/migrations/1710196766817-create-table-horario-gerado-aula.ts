@@ -15,7 +15,7 @@ export class CreateTableHorarioGeradoAula1710196766817 implements MigrationInter
             isPrimary: true,
             default: "gen_random_uuid()",
           },
-          //
+
           {
             name: "data",
             type: "date",
@@ -40,7 +40,6 @@ export class CreateTableHorarioGeradoAula1710196766817 implements MigrationInter
             isNullable: false,
           },
 
-          //
           {
             name: "date_created",
             type: "timestamptz",

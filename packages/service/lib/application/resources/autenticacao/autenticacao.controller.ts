@@ -12,39 +12,24 @@ export class AutenticacaoController {
   constructor(private readonly autenticacaoService: AutenticacaoService) {}
 
   @Get("/quem-sou-eu")
-  whoAmI(
-    //
-    @AccessContextHttp() accessContext: AccessContext,
-  ) {
+  whoAmI(@AccessContextHttp() accessContext: AccessContext) {
     return this.autenticacaoService.whoAmI(accessContext);
   }
 
   @Post("/login")
   @Public()
-  login(
-    //
-    @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("AuthLoginInput") dto: IAppRequest<"AuthLoginInput">,
-  ) {
+  login(@AccessContextHttp() accessContext: AccessContext, @AppRequest("AuthLoginInput") dto: IAppRequest<"AuthLoginInput">) {
     return this.autenticacaoService.login(accessContext, dto);
   }
 
   @Post("/login/refresh")
   @Public()
-  refresh(
-    //
-    @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("AuthRefreshInput") dto: IAppRequest<"AuthRefreshInput">,
-  ) {
+  refresh(@AccessContextHttp() accessContext: AccessContext, @AppRequest("AuthRefreshInput") dto: IAppRequest<"AuthRefreshInput">) {
     return this.autenticacaoService.refresh(accessContext, dto);
   }
 
   @Post("/definir-senha")
-  definirSenha(
-    //
-    @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("AuthCredentialsSetInitialPasswordInput") dto: IAppRequest<"AuthCredentialsSetInitialPasswordInput">,
-  ) {
+  definirSenha(@AccessContextHttp() accessContext: AccessContext, @AppRequest("AuthCredentialsSetInitialPasswordInput") dto: IAppRequest<"AuthCredentialsSetInitialPasswordInput">) {
     return this.autenticacaoService.definirSenha(accessContext, dto);
   }
 

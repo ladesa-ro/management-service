@@ -18,13 +18,9 @@ export class CidadeService {
     private searchService: SearchService,
   ) {}
 
-  //
-
   get cidadeRepository() {
     return this.databaseContextService.cidadeRepository;
   }
-
-  //
 
   async findAll(accessContext: AccessContext, dto: IDomain.CidadeListInput | null = null, selection?: string[]) {
     // =========================================================
@@ -43,15 +39,13 @@ export class CidadeService {
       {
         ...paginateConfig,
         select: [
-          //
           "id",
-          //
+
           "nome",
-          //
+
           "estado.id",
           "estado.sigla",
           "estado.nome",
-          //
         ],
         relations: {
           estado: true,

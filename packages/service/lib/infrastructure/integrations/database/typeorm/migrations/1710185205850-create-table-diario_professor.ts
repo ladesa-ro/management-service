@@ -16,8 +16,6 @@ export class CreateTableDiarioProfessor1710185205850 implements MigrationInterfa
             default: "gen_random_uuid()",
           },
 
-          //
-
           {
             name: "situacao",
             type: "bool",
@@ -29,13 +27,13 @@ export class CreateTableDiarioProfessor1710185205850 implements MigrationInterfa
             type: "uuid",
             isNullable: false,
           },
-          //
+
           {
             name: "id_perfil_fk",
             type: "uuid",
             isNullable: false,
           },
-          //
+
           {
             name: "date_created",
             type: "timestamptz",

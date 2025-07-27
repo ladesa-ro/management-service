@@ -9,8 +9,6 @@ export class CampusEntity implements LadesaTypings.Campus {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 
-  //
-
   @Column({ name: "nome_fantasia", type: "text", nullable: false })
   nomeFantasia!: string;
 
@@ -23,13 +21,9 @@ export class CampusEntity implements LadesaTypings.Campus {
   @Column({ name: "cnpj", type: "text", nullable: false })
   cnpj!: string;
 
-  //
-
   @ManyToOne(() => EnderecoEntity)
   @JoinColumn({ name: "id_endereco_fk" })
   endereco!: LadesaTypings.Endereco;
-
-  //
 
   @OneToMany(
     () => PerfilEntity,
@@ -38,8 +32,6 @@ export class CampusEntity implements LadesaTypings.Campus {
   vinculos!: PerfilEntity[];
 
   modalidades!: ModalidadeEntity[];
-
-  //
 
   @Column({ name: "date_created", type: "timestamptz", nullable: false })
   dateCreated!: Date;

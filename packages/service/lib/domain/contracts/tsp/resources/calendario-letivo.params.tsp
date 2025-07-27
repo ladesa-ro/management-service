@@ -16,15 +16,13 @@ model CalendarioLetivoFindOneInput {
 
 /** Visão FindOne de um calendário letivo. */
 model CalendarioLetivoFindOneOutput {
-  //
+
   ...PickProperties<CalendarioLetivoView, "id">;
 
   ...PickProperties<CalendarioLetivoView, "nome" | "ano">;
 
-  //
   ...PickProperties<CalendarioLetivoView, "campus" | "ofertaFormacao">;
 
-  //
   ...PickProperties<
     CalendarioLetivoView,
     "dateCreated" | "dateUpdated" | "dateDeleted"

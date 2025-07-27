@@ -17,8 +17,6 @@ export class CreateTableGradeHorarioOfertaFormacaoIntervaloDeTempo1710185162000 
             default: "gen_random_uuid()",
           },
 
-          //
-
           {
             name: "id_grade_horario_oferta_formacao_fk",
             type: "uuid",
@@ -30,8 +28,6 @@ export class CreateTableGradeHorarioOfertaFormacaoIntervaloDeTempo1710185162000 
             type: "uuid",
             isNullable: false,
           },
-
-          //
 
           {
             name: "date_created",

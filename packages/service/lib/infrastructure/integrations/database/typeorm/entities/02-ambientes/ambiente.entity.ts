@@ -8,8 +8,6 @@ export class AmbienteEntity implements LadesaTypings.Ambiente {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 
-  //
-
   @Column({ name: "nome", type: "text", nullable: false })
   nome!: string;
 
@@ -25,8 +23,6 @@ export class AmbienteEntity implements LadesaTypings.Ambiente {
   @Column({ name: "tipo", type: "text", nullable: true })
   tipo!: string | null;
 
-  //
-
   @ManyToOne(() => BlocoEntity)
   @JoinColumn({ name: "id_bloco_fk" })
   bloco!: BlocoEntity;
@@ -34,8 +30,6 @@ export class AmbienteEntity implements LadesaTypings.Ambiente {
   @ManyToOne(() => ImagemEntity)
   @JoinColumn({ name: "id_imagem_capa_fk" })
   imagemCapa!: Relation<ImagemEntity> | null;
-
-  //
 
   @Column({ name: "date_created", type: "timestamptz", nullable: false })
   dateCreated!: Date;

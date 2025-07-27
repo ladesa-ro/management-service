@@ -16,8 +16,6 @@ export class CreateTableReserva1710183953950 implements MigrationInterface {
             default: "gen_random_uuid()",
           },
 
-          //
-
           {
             name: "situacao",
             type: "text",
@@ -42,8 +40,6 @@ export class CreateTableReserva1710183953950 implements MigrationInterface {
             isNullable: false,
           },
 
-          //
-
           {
             name: "id_ambiente_fk",
             type: "uuid",
@@ -55,7 +51,7 @@ export class CreateTableReserva1710183953950 implements MigrationInterface {
             type: "uuid",
             isNullable: false,
           },
-          //
+
           {
             name: "date_created",
             type: "timestamptz",

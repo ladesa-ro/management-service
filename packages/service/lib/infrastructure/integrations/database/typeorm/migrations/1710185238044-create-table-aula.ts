@@ -16,8 +16,6 @@ export class CreateTableAula1710185238044 implements MigrationInterface {
             default: "gen_random_uuid()",
           },
 
-          //
-
           {
             name: "data",
             type: "date",
@@ -45,7 +43,7 @@ export class CreateTableAula1710185238044 implements MigrationInterface {
             type: "uuid",
             isNullable: true,
           },
-          //
+
           {
             name: "date_created",
             type: "timestamptz",

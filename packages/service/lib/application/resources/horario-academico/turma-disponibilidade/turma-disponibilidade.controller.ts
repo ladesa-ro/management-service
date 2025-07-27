@@ -11,22 +11,16 @@ import { TurmaDisponibilidadeService } from "./turma-disponibilidade.service";
 export class TurmaDisponibilidadeController {
   constructor(private turmaDisponibilidadeService: TurmaDisponibilidadeService) {}
 
-  //
-
   @Get("/")
   async turmaDisponibilidadeFindAll(
-    //
     @AccessContextHttp() accessContext: AccessContext,
     @AppRequest("TurmaDisponibilidadeFindAll") dto: IAppRequest<"TurmaDisponibilidadeFindAll">,
   ): Promise<LadesaTypings.TurmaDisponibilidadeListOperationOutput["success"]> {
     return this.turmaDisponibilidadeService.turmaDisponibilidadeFindAll(accessContext, dto);
   }
 
-  //
-
   @Get("/:id")
   async turmaDisponibilidadeFindById(
-    //
     @AccessContextHttp() accessContext: AccessContext,
 
     @AppRequest("TurmaDisponibilidadeFindById") dto: IAppRequest<"TurmaDisponibilidadeFindById">,
@@ -36,22 +30,13 @@ export class TurmaDisponibilidadeController {
     });
   }
 
-  //
-
   @Post("/")
-  async turmaDisponibilidadeCreate(
-    //
-    @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("TurmaDisponibilidadeCreate") dto: IAppRequest<"TurmaDisponibilidadeCreate">,
-  ) {
+  async turmaDisponibilidadeCreate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("TurmaDisponibilidadeCreate") dto: IAppRequest<"TurmaDisponibilidadeCreate">) {
     return this.turmaDisponibilidadeService.turmaDisponibilidadeCreate(accessContext, dto);
   }
 
-  //
-
   @Patch("/:id")
   async turmaDisponibilidadeUpdate(
-    //
     @AccessContextHttp() accessContext: AccessContext,
 
     @AppRequest("TurmaDisponibilidadeUpdate") dto: IAppRequest<"TurmaDisponibilidadeUpdate">,
@@ -59,11 +44,8 @@ export class TurmaDisponibilidadeController {
     return this.turmaDisponibilidadeService.turmaDisponibilidadeUpdate(accessContext, dto);
   }
 
-  //
-
   @Delete("/:id")
   async turmaDisponibilidadeDeleteOneById(
-    //
     @AccessContextHttp() accessContext: AccessContext,
 
     @AppRequest("TurmaDisponibilidadeDeleteOneById") dto: IAppRequest<"TurmaDisponibilidadeDeleteOneById">,
@@ -72,6 +54,4 @@ export class TurmaDisponibilidadeController {
       id: dto.parameters.path.id,
     });
   }
-
-  //
 }

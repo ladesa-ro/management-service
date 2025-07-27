@@ -8,8 +8,6 @@ export class DiarioPreferenciaAgrupamentoEntity implements LadesaTypings.DiarioP
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 
-  //
-
   @Column({ name: "data_inicio", type: "timestamptz", nullable: false })
   dataInicio!: Date;
 
@@ -22,8 +20,6 @@ export class DiarioPreferenciaAgrupamentoEntity implements LadesaTypings.DiarioP
   @Column({ name: "aulas_seguidas", type: "int", nullable: false })
   aulasSeguidas!: number;
 
-  //
-
   @ManyToOne(() => IntervaloDeTempoEntity)
   @JoinColumn({ name: "id_intervalo_de_tempo_fk" })
   intervaloDeTempo!: LadesaTypings.IntervaloDeTempo;
@@ -31,8 +27,6 @@ export class DiarioPreferenciaAgrupamentoEntity implements LadesaTypings.DiarioP
   @ManyToOne(() => DiarioEntity)
   @JoinColumn({ name: "id_diario_fk" })
   diario!: LadesaTypings.Diario;
-
-  //
 
   @Column({ name: "date_created", type: "timestamptz", nullable: false })
   dateCreated!: Date;

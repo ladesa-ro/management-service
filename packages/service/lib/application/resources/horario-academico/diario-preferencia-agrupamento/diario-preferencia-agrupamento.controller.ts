@@ -20,11 +20,8 @@ export class DiarioPreferenciaAgrupamentoController {
     return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoFindAll(clientAccess, dto);
   }
 
-  //
-
   @Get("/:id")
   async diarioPreferenciaAgrupamentoFindById(
-    //
     @AccessContextHttp() accessContext: AccessContext,
 
     @AppRequest("DiarioPreferenciaAgrupamentoFindById") dto: IAppRequest<"DiarioPreferenciaAgrupamentoFindById">,
@@ -32,11 +29,8 @@ export class DiarioPreferenciaAgrupamentoController {
     return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoFindByIdStrict(accessContext, { id: dto.parameters.path.id });
   }
 
-  //
-
   @Post("/")
   async diarioPreferenciaAgrupamentoCreate(
-    //
     @AccessContextHttp() accessContext: AccessContext,
 
     @AppRequest("DiarioPreferenciaAgrupamentoCreate") dto: IAppRequest<"DiarioPreferenciaAgrupamentoCreate">,
@@ -44,11 +38,8 @@ export class DiarioPreferenciaAgrupamentoController {
     return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoCreate(accessContext, dto);
   }
 
-  //
-
   @Patch("/:id")
   async diarioPreferenciaAgrupamentoUpdate(
-    //
     @AccessContextHttp() accessContext: AccessContext,
 
     @AppRequest("DiarioPreferenciaAgrupamentoUpdate") dto: IAppRequest<"DiarioPreferenciaAgrupamentoUpdate">,
@@ -56,17 +47,12 @@ export class DiarioPreferenciaAgrupamentoController {
     return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoUpdate(accessContext, dto);
   }
 
-  //
-
   @Delete("/:id")
   async diarioPreferenciaAgrupamentoDeleteOneById(
-    //
     @AccessContextHttp() accessContext: AccessContext,
 
     @AppRequest("DiarioPreferenciaAgrupamentoDeleteOneById") dto: IAppRequest<"DiarioPreferenciaAgrupamentoDeleteOneById">,
   ) {
     return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoDeleteOneById(accessContext, { id: dto.parameters.path.id });
   }
-
-  //
 }

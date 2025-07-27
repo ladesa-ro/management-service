@@ -16,19 +16,16 @@ model PerfilFindOneInput {
 
 /** Visão FindOne de um Vínculo. */
 model PerfilFindOneOutput {
-  //
+
   ...PickProperties<PerfilView, "id">;
 
   ...PickProperties<PerfilView, "ativo">;
   ...PickProperties<PerfilView, "cargo">;
 
-  //
   ...PickProperties<PerfilView, "campus">;
 
-  //
   ...PickProperties<PerfilView, "usuario">;
 
-  //
   ...PickProperties<PerfilView, "dateCreated" | "dateUpdated" | "dateDeleted">;
 }
 

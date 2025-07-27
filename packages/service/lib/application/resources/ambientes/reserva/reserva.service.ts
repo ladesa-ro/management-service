@@ -30,8 +30,6 @@ export class ReservaService {
     return this.databaseContext.reservaRepository;
   }
 
-  //
-
   async reservaFindAll(accessContext: AccessContext, dto: IDomain.ReservaListInput | null = null, selection?: string[] | boolean): Promise<IDomain.ReservaListOutput["success"]> {
     // =========================================================
 
@@ -49,18 +47,13 @@ export class ReservaService {
       qb,
       { ...dto },
       {
-        select: [
-          //
-          "id",
-          //
-        ],
+        select: ["id"],
         sortableColumns: [
-          //
           "situacao",
           "motivo",
           "tipo",
           "rrule",
-          //
+
           "ambiente.id",
           "ambiente.nome",
           "ambiente.capacidade",
@@ -68,20 +61,18 @@ export class ReservaService {
           "ambiente.bloco.nome",
         ],
         searchableColumns: [
-          //
           "id",
-          //
+
           "situacao",
           "motivo",
           "tipo",
           "rrule",
-          //
+
           "ambiente.nome",
           "ambiente.descricao",
           "ambiente.codigo",
           "ambiente.bloco.nome",
           "ambiente.bloco.codigo",
-          //
         ],
         relations: {
           ambiente: {
@@ -195,8 +186,6 @@ export class ReservaService {
     return reserva;
   }
 
-  //
-
   async reservaCreate(accessContext: AccessContext, dto: IDomain.ReservaCreateInput) {
     // =========================================================
 
@@ -296,8 +285,6 @@ export class ReservaService {
 
     return this.reservaFindByIdStrict(accessContext, { id: reserva.id });
   }
-
-  //
 
   async reservaDeleteOneById(accessContext: AccessContext, dto: IDomain.ReservaFindOneInput) {
     // =========================================================

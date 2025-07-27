@@ -14,7 +14,7 @@ export class CreateTableOfertaFormacao1710184310042 implements MigrationInterfac
             isPrimary: true,
             default: "gen_random_uuid()",
           },
-          //
+
           {
             name: "nome",
             type: "text",
@@ -30,7 +30,7 @@ export class CreateTableOfertaFormacao1710184310042 implements MigrationInterfac
             type: "uuid",
             isNullable: false,
           },
-          //
+
           {
             name: "date_created",
             type: "timestamptz",

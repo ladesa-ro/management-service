@@ -8,8 +8,6 @@ export class ReservaEntity implements LadesaTypings.Reserva {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 
-  //
-
   @Column({ name: "situacao", type: "text", nullable: false })
   situacao!: string;
 
@@ -29,8 +27,6 @@ export class ReservaEntity implements LadesaTypings.Reserva {
   @ManyToOne(() => UsuarioEntity)
   @JoinColumn({ name: "id_usuario_fk" })
   usuario!: UsuarioEntity;
-
-  //
 
   @Column({ name: "date_created", type: "timestamptz", nullable: false })
   dateCreated!: Date;

@@ -8,40 +8,19 @@ import { HorarioGeradoAulaService } from "./horario-gerado-aula.service";
 export class HorarioGeradoAulaResolver {
   constructor(private horarioGeradoAulaService: HorarioGeradoAulaService) {}
 
-  //
-
-  async horarioGeradoAulaFindAll(
-    //
-    @AccessContextGraphQl() accessContext: AccessContext,
-    @AppRequest("HorarioGeradoAulaFindAll") dto: IAppRequest<"HorarioGeradoAulaFindAll">,
-  ) {
+  async horarioGeradoAulaFindAll(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("HorarioGeradoAulaFindAll") dto: IAppRequest<"HorarioGeradoAulaFindAll">) {
     return this.horarioGeradoAulaService.horarioGeradoAulaFindAll(accessContext, dto);
   }
 
-  //
-
-  async horarioGeradoAulaFindOneById(
-    //
-    @AccessContextGraphQl() accessContext: AccessContext,
-    @AppRequest("HorarioGeradoAulaFindOneById") dto: IAppRequest<"HorarioGeradoAulaFindOneById">,
-  ) {
+  async horarioGeradoAulaFindOneById(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("HorarioGeradoAulaFindOneById") dto: IAppRequest<"HorarioGeradoAulaFindOneById">) {
     return this.horarioGeradoAulaService.horarioGeradoAulaFindByIdStrict(accessContext, { id: dto.parameters.path.id });
   }
 
-  //
-
-  async horarioGeradoAulaCreate(
-    //
-    @AccessContextGraphQl() accessContext: AccessContext,
-    @AppRequest("HorarioGeradoAulaCreate") dto: IAppRequest<"HorarioGeradoAulaCreate">,
-  ) {
+  async horarioGeradoAulaCreate(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("HorarioGeradoAulaCreate") dto: IAppRequest<"HorarioGeradoAulaCreate">) {
     return this.horarioGeradoAulaService.HorarioGeradoAulaCreate(accessContext, dto);
   }
 
-  //
-
   async horarioGeradoAulaUpdate(
-    //
     @AccessContextGraphQl() accessContext: AccessContext,
 
     @AppRequest("HorarioGeradoAulaUpdate") dto: IAppRequest<"HorarioGeradoAulaUpdate">,
@@ -49,10 +28,7 @@ export class HorarioGeradoAulaResolver {
     return this.horarioGeradoAulaService.HorarioGeradoAulaUpdate(accessContext, dto);
   }
 
-  //
-
   async horarioGeradoAulaOneById(
-    //
     @AccessContextGraphQl() accessContext: AccessContext,
 
     @AppRequest("HorarioGeradoAulaOneById") dto: IAppRequest<"HorarioGeradoAulaOneById">,

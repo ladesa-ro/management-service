@@ -16,8 +16,6 @@ export class CreateTableDisciplina1710184490462 implements MigrationInterface {
             default: "gen_random_uuid()",
           },
 
-          //
-
           {
             name: "nome",
             type: "text",
@@ -35,14 +33,13 @@ export class CreateTableDisciplina1710184490462 implements MigrationInterface {
             type: "int",
             isNullable: false,
           },
-          //
 
           {
             name: "id_imagem_capa_fk",
             type: "uuid",
             isNullable: true,
           },
-          //
+
           {
             name: "date_created",
             type: "timestamptz",

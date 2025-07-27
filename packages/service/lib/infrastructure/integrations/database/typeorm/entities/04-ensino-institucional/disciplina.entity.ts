@@ -8,8 +8,6 @@ export class DisciplinaEntity implements LadesaTypings.Disciplina {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 
-  //
-
   @Column({ name: "nome", type: "text", nullable: false })
   nome!: string;
 
@@ -18,8 +16,6 @@ export class DisciplinaEntity implements LadesaTypings.Disciplina {
 
   @Column({ name: "carga_horaria", type: "int", nullable: false })
   cargaHoraria!: number;
-
-  //
 
   @ManyToOne(() => ImagemEntity)
   @JoinColumn({ name: "id_imagem_capa_fk" })
@@ -30,8 +26,6 @@ export class DisciplinaEntity implements LadesaTypings.Disciplina {
     (diario) => diario.disciplina,
   )
   diarios!: LadesaTypings.Diario[];
-
-  //
 
   @Column({ name: "date_created", type: "timestamptz", nullable: false })
   dateCreated!: Date;

@@ -31,8 +31,6 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService {
     return this.databaseContext.gradeHorarioOfertaFormacaoIntervaloDeTempoRepository;
   }
 
-  //
-
   async gradeHorarioOfertaFormacaoIntervaloDeTempoFindAll(
     accessContext: AccessContext,
     dto: IDomain.GradeHorarioOfertaFormacaoIntervaloDeTempoListInput | null = null,
@@ -54,26 +52,16 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService {
       {
         ...paginateConfig,
         select: [
-          //
           "id",
-          //
+
           "dateCreated",
-          //
         ],
         relations: {
           gradeHorarioOfertaFormacao: true,
           intervaloDeTempo: true,
         },
-        sortableColumns: [
-          //
-
-          "dateCreated",
-        ],
-        searchableColumns: [
-          //
-          "id",
-          //
-        ],
+        sortableColumns: ["dateCreated"],
+        searchableColumns: ["id"],
         defaultSortBy: [["dateCreated", "ASC"]],
         filterableColumns: {
           "gradeHorarioOfertaFormacao.id": [FilterOperator.EQ],
@@ -185,8 +173,6 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService {
     return gradeHorarioOfertaFormacaoIntervaloDeTempo;
   }
 
-  //
-
   async gradeHorarioOfertaFormacaoIntervaloDeTempoCreate(accessContext: AccessContext, dto: IDomain.GradeHorarioOfertaFormacaoIntervaloDeTempoCreateInput) {
     // =========================================================
 
@@ -294,8 +280,6 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService {
 
     return this.gradeHorarioOfertaFormacaoIntervaloDeTempoFindByIdStrict(accessContext, { id: gradeHorarioOfertaFormacaoIntervaloDeTempo.id });
   }
-
-  //
 
   async gradeHorarioOfertaFormacaoIntervaloDeTempoDeleteOneById(accessContext: AccessContext, dto: IDomain.GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInput) {
     // =========================================================

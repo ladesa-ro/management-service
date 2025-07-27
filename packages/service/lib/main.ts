@@ -11,11 +11,7 @@ import { AppModule } from "./application/app.module";
 async function setup() {
   const app = await NestFactory.create(AppModule);
 
-  //
-
   const configService = app.get(AppConfigService);
-
-  //
 
   app.use(
     helmet({
@@ -26,19 +22,14 @@ async function setup() {
 
   app.enableCors();
 
-  //
-
   const prefix = configService.getRuntimePrefix();
 
   if (prefix) {
     app.setGlobalPrefix(prefix, { exclude: ["health"] });
   }
 
-  //
-
   app.use(compression());
 
-  //
   const expressApp = app.getHttpAdapter().getInstance<Express>();
   expressApp.get(`${prefix}docs/openapi.v3.json`, (req, res) => res.send(openapi));
 
@@ -51,13 +42,10 @@ async function setup() {
 
   SwaggerModule.setup(`${prefix}docs/swagger`, app, openapi);
 
-  //
-
   return app;
 }
 
 async function bootstrap() {
-  //
   const app = await setup();
   const appConfigService = app.get(AppConfigService);
   const port = appConfigService.getRuntimePort();

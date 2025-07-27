@@ -8,15 +8,11 @@ export class PerfilEntity implements LadesaTypings.Perfil {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 
-  //
-
   @Column({ name: "ativo", type: "boolean" })
   ativo!: boolean;
 
   @Column({ name: "cargo", type: "text" })
   cargo!: string;
-
-  //
 
   @ManyToOne(
     () => CampusEntity,
@@ -31,8 +27,6 @@ export class PerfilEntity implements LadesaTypings.Perfil {
   )
   @JoinColumn({ name: "id_usuario_fk" })
   usuario!: Relation<UsuarioEntity>;
-
-  //
 
   @Column({ name: "date_created", type: "timestamptz", nullable: false })
   dateCreated!: Date;

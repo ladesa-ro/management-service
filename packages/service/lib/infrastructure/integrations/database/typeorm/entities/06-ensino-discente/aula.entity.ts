@@ -9,15 +9,11 @@ export class AulaEntity implements LadesaTypings.Aula {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 
-  //
-
   @Column({ name: "data", type: "date", nullable: false })
   data!: Date;
 
   @Column({ name: "modalidade", type: "text", nullable: true })
   modalidade!: string | null;
-
-  //
 
   // chaves estrangeiras
 
@@ -32,8 +28,6 @@ export class AulaEntity implements LadesaTypings.Aula {
   @ManyToOne(() => AmbienteEntity)
   @JoinColumn({ name: "id_ambiente_fk" })
   ambiente!: AmbienteEntity | null;
-
-  //
 
   @Column({ name: "date_created", type: "timestamptz", nullable: false })
   dateCreated!: Date;

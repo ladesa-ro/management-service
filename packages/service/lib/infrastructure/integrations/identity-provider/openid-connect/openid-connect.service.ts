@@ -9,7 +9,6 @@ export class OpenidConnectService {
   #initialized = false;
 
   constructor(
-    //
     @Inject(AppConfigService)
     readonly appConfigService: AppConfigService,
   ) {}

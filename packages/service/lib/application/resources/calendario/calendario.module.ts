@@ -8,7 +8,6 @@ import { EventoModule } from "./evento/evento.module";
 
 @Module({
   imports: [
-    //
     CalendarioLetivoModule,
     GradeHorarioOfertaFormacaoModule,
     GradeHorarioOfertaFormacaoIntervaloDeTempoModule,

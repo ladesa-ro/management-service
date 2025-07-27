@@ -11,64 +11,32 @@ import { CampusService } from "./campus.service";
 export class CampusController {
   constructor(private campusService: CampusService) {}
 
-  //
-
   @Get("/")
-  async campusFindAll(
-    //
-    @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("CampusList") dto: IAppRequest<"CampusList">,
-  ): Promise<LadesaTypings.CampusListOperationOutput["success"]> {
+  async campusFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CampusList") dto: IAppRequest<"CampusList">): Promise<LadesaTypings.CampusListOperationOutput["success"]> {
     return this.campusService.campusFindAll(accessContext, dto);
   }
 
-  //
-
   @Get("/:id")
-  async campusFindById(
-    //
-    @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("CampusFindById") dto: IAppRequest<"CampusFindById">,
-  ) {
+  async campusFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CampusFindById") dto: IAppRequest<"CampusFindById">) {
     return this.campusService.campusFindByIdStrict(accessContext, {
       id: dto.parameters.path.id,
     });
   }
 
-  //
-
   @Post("/")
-  async campusCreate(
-    //
-    @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("CampusCreate") dto: IAppRequest<"CampusCreate">,
-  ) {
+  async campusCreate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CampusCreate") dto: IAppRequest<"CampusCreate">) {
     return this.campusService.campusCreate(accessContext, dto);
   }
 
-  //
-
   @Patch("/:id")
-  async campusUpdate(
-    //
-    @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("CampusUpdate") dto: IAppRequest<"CampusUpdate">,
-  ) {
+  async campusUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CampusUpdate") dto: IAppRequest<"CampusUpdate">) {
     return this.campusService.campusUpdate(accessContext, dto);
   }
 
-  //
-
   @Delete("/:id")
-  async campusDeleteOneById(
-    //
-    @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("CampusDeleteOneById") dto: IAppRequest<"CampusDeleteOneById">,
-  ) {
+  async campusDeleteOneById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CampusDeleteOneById") dto: IAppRequest<"CampusDeleteOneById">) {
     return this.campusService.campusDeleteOneById(accessContext, {
       id: dto.parameters.path.id,
     });
   }
-
-  //
 }

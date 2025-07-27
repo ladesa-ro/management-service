@@ -14,22 +14,14 @@ export class CidadeController {
   // ========================================================
 
   @Get("/")
-  async findAll(
-    //
-    @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("FindAll") dto: IAppRequest<"FindAll">,
-  ): Promise<LadesaTypings.CidadeListOperationOutput["success"]> {
+  async findAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("FindAll") dto: IAppRequest<"FindAll">): Promise<LadesaTypings.CidadeListOperationOutput["success"]> {
     return this.cidadeService.findAll(accessContext, dto);
   }
 
   // ========================================================
 
   @Get("/:id")
-  async findById(
-    //
-    @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("FindById") dto: IAppRequest<"FindById">,
-  ): Promise<LadesaTypings.CidadeFindOneResultView> {
+  async findById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("FindById") dto: IAppRequest<"FindById">): Promise<LadesaTypings.CidadeFindOneResultView> {
     return this.cidadeService.findByIdStrict(accessContext, {
       id: dto.parameters.path.id,
     });

@@ -29,8 +29,6 @@ export class CampusService {
     return this.databaseContext.campusRepository;
   }
 
-  //
-
   async campusFindAll(accessContext: AccessContext, dto: IDomain.CampusListInput | null = null, selection?: string[] | boolean): Promise<IDomain.CampusListOutput["success"]> {
     // =========================================================
 
@@ -47,15 +45,14 @@ export class CampusService {
       { ...dto },
       {
         select: [
-          //
           "id",
-          //
+
           "nomeFantasia",
           "razaoSocial",
           "apelido",
           "cnpj",
           "dateCreated",
-          //
+
           "endereco.cidade.id",
           "endereco.cidade.nome",
           "endereco.cidade.estado.id",
@@ -70,15 +67,14 @@ export class CampusService {
           },
         },
         sortableColumns: [
-          //
           "id",
-          //
+
           "nomeFantasia",
           "razaoSocial",
           "apelido",
           "cnpj",
           "dateCreated",
-          //
+
           "endereco.cidade.id",
           "endereco.cidade.nome",
           "endereco.cidade.estado.id",
@@ -86,15 +82,14 @@ export class CampusService {
           "endereco.cidade.estado.sigla",
         ],
         searchableColumns: [
-          //
           "id",
-          //
+
           "nomeFantasia",
           "razaoSocial",
           "apelido",
           "cnpj",
           "dateCreated",
-          //
+
           "endereco.cidade.nome",
           "endereco.cidade.estado.nome",
           "endereco.cidade.estado.sigla",
@@ -202,8 +197,6 @@ export class CampusService {
 
     return campus;
   }
-
-  //
 
   async campusCreate(accessContext: AccessContext, dto: IDomain.CampusCreateInput) {
     // =========================================================
@@ -342,8 +335,6 @@ export class CampusService {
 
     return this.campusFindByIdStrict(accessContext, { id: campus.id });
   }
-
-  //
 
   async campusDeleteOneById(accessContext: AccessContext, dto: IDomain.CampusFindOneInput) {
     // =========================================================

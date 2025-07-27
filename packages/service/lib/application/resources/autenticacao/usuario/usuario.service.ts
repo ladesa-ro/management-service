@@ -29,13 +29,9 @@ export class UsuarioService {
     private searchService: SearchService,
   ) {}
 
-  //
-
   get usuarioRepository() {
     return this.databaseContext.usuarioRepository;
   }
-
-  //
 
   async internalFindByMatriculaSiape(matriculaSiape: string, selection?: string[] | boolean): Promise<IDomain.UsuarioFindOneOutput | null> {
     // =========================================================
@@ -61,8 +57,6 @@ export class UsuarioService {
     return usuario;
   }
 
-  //
-
   async usuarioFindAll(accessContext: AccessContext, dto: IDomain.UsuarioListInput | null = null, selection?: string[] | boolean): Promise<IDomain.UsuarioListOutput["success"]> {
     // =========================================================
 
@@ -80,32 +74,27 @@ export class UsuarioService {
       {
         ...paginateConfig,
         select: [
-          //
           "id",
-          //
+
           "nome",
           "matriculaSiape",
           "email",
-          //
+
           "dateCreated",
-          //
         ],
         sortableColumns: [
-          //
           "nome",
           "matriculaSiape",
           "email",
-          //
+
           "dateCreated",
         ],
         searchableColumns: [
-          //
           "id",
-          //
+
           "nome",
           "matriculaSiape",
           "email",
-          //
         ],
         defaultSortBy: [
           ["nome", "ASC"],
@@ -206,8 +195,6 @@ export class UsuarioService {
     return usuario;
   }
 
-  //
-
   async usuarioGetImagemCapa(accessContext: AccessContext | null, id: string) {
     const usuario = await this.usuarioFindByIdStrict(accessContext, { id: id });
 
@@ -277,8 +264,6 @@ export class UsuarioService {
 
     throw new NotFoundException();
   }
-
-  //
 
   async usuarioUpdateImagemPerfil(accessContext: AccessContext, dto: IDomain.UsuarioFindOneInput, file: Express.Multer.File) {
     // =========================================================
@@ -366,8 +351,6 @@ export class UsuarioService {
 
     return this.usuarioFindByIdStrict(accessContext, { id: usuario.id });
   }
-
-  //
 
   async usuarioUpdate(accessContext: AccessContext, dto: IDomain.UsuarioUpdateByIdInput) {
     // =========================================================
@@ -502,8 +485,6 @@ export class UsuarioService {
     return isAvailable;
   }
 
-  //
-
   private async ensureDtoAvailability(dto: Partial<Pick<LadesaTypings.Usuario, "email" | "matriculaSiape">>, currentUsuarioId: string | null = null) {
     // ===================================
 
@@ -567,8 +548,6 @@ export class UsuarioService {
     const usuario = await qb.getOneOrFail();
     return usuario[property];
   }
-
-  //
 
   private async internalResolveMatriculaSiape(id: string) {
     return this.internalResolveSimpleProperty(id, "matriculaSiape");

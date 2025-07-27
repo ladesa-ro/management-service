@@ -16,8 +16,6 @@ export class CreateTableDiario1710185205797 implements MigrationInterface {
             default: "gen_random_uuid()",
           },
 
-          //
-
           {
             name: "ativo",
             type: "boolean",
@@ -25,7 +23,6 @@ export class CreateTableDiario1710185205797 implements MigrationInterface {
             default: "TRUE",
           },
 
-          //
           {
             name: "id_calendario_letivo_fk",
             type: "uuid",
@@ -54,7 +51,7 @@ export class CreateTableDiario1710185205797 implements MigrationInterface {
             type: "uuid",
             isNullable: true,
           },
-          //
+
           {
             name: "date_created",
             type: "timestamptz",

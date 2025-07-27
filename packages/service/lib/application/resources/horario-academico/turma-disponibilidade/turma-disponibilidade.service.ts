@@ -30,8 +30,6 @@ export class TurmaDisponibilidadeService {
     return this.databaseContext.turmaDisponibilidadeRepository;
   }
 
-  //
-
   async turmaDisponibilidadeFindAll(
     accessContext: AccessContext,
     dto: IDomain.TurmaDisponibilidadeListInput | null = null,
@@ -52,25 +50,16 @@ export class TurmaDisponibilidadeService {
       { ...dto },
       {
         select: [
-          //
           "id",
-          //
+
           "dateCreated",
-          //
         ],
         relations: {
           turma: true,
           disponibilidade: true,
         },
-        sortableColumns: [
-          //
-          "dateCreated",
-        ],
-        searchableColumns: [
-          //
-          "id",
-          //
-        ],
+        sortableColumns: ["dateCreated"],
+        searchableColumns: ["id"],
         defaultSortBy: [["dateCreated", "ASC"]],
         filterableColumns: {
           "turma.id": [FilterOperator.EQ],
@@ -178,8 +167,6 @@ export class TurmaDisponibilidadeService {
     return turmaDisponibilidade;
   }
 
-  //
-
   async turmaDisponibilidadeCreate(accessContext: AccessContext, dto: IDomain.TurmaDisponibilidadeCreateInput) {
     // =========================================================
 
@@ -285,8 +272,6 @@ export class TurmaDisponibilidadeService {
       id: turmaDisponibilidade.id,
     });
   }
-
-  //
 
   async turmaDisponibilidadeDeleteOneById(accessContext: AccessContext, dto: IDomain.TurmaDisponibilidadeFindOneInput) {
     // =========================================================

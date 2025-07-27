@@ -7,12 +7,8 @@ import { GerarHorarioService } from "./gerar-horario.service";
 export class GerarHorarioController {
   constructor(private gerarHorarioService: GerarHorarioService) {}
 
-  //
-
   @Get("/")
   async modalidadeFindAll() {
     return this.gerarHorarioService.publishMessage();
   }
-
-  //
 }

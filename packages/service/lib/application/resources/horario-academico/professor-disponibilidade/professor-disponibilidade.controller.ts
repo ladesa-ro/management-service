@@ -11,11 +11,8 @@ import { ProfessorDisponibilidadeService } from "./professor-disponibilidade.ser
 export class ProfessorDisponibilidadeController {
   constructor(private professorDisponibilidadeService: ProfessorDisponibilidadeService) {}
 
-  //
-
   @Get("/")
   async professorDisponibilidadeFindAll(
-    //
     @AccessContextHttp() accessContext: AccessContext,
 
     @AppRequest("ProfessorDisponibilidadeFindAll") dto: IAppRequest<"ProfessorDisponibilidadeFindAll">,
@@ -23,11 +20,8 @@ export class ProfessorDisponibilidadeController {
     return this.professorDisponibilidadeService.professorDisponibilidadeFindAll(accessContext, dto);
   }
 
-  //
-
   @Get("/:id")
   async professorDisponibilidadeFindById(
-    //
     @AccessContextHttp() accessContext: AccessContext,
 
     @AppRequest("ProfessorDisponibilidadeFindById") dto: IAppRequest<"ProfessorDisponibilidadeFindById">,
@@ -37,11 +31,8 @@ export class ProfessorDisponibilidadeController {
     });
   }
 
-  //
-
   @Post("/")
   async professorDisponibilidadeCreate(
-    //
     @AccessContextHttp() accessContext: AccessContext,
 
     @AppRequest("ProfessorDisponibilidadeCreate") dto: IAppRequest<"ProfessorDisponibilidadeCreate">,
@@ -49,11 +40,8 @@ export class ProfessorDisponibilidadeController {
     return this.professorDisponibilidadeService.professorDisponibilidadeCreate(accessContext, dto);
   }
 
-  //
-
   @Patch("/:id")
   async professorDisponibilidadeUpdate(
-    //
     @AccessContextHttp() accessContext: AccessContext,
 
     @AppRequest("ProfessorDisponibilidadeUpdate") dto: IAppRequest<"ProfessorDisponibilidadeUpdate">,
@@ -61,11 +49,8 @@ export class ProfessorDisponibilidadeController {
     return this.professorDisponibilidadeService.professorDisponibilidadeUpdate(accessContext, dto);
   }
 
-  //
-
   @Delete("/:id")
   async professorDisponibilidadeDeleteOneById(
-    //
     @AccessContextHttp() accessContext: AccessContext,
 
     @AppRequest("ProfessorDisponibilidadeDeleteOneById") dto: IAppRequest<"ProfessorDisponibilidadeDeleteOneById">,
@@ -74,6 +59,4 @@ export class ProfessorDisponibilidadeController {
       id: dto.parameters.path.id,
     });
   }
-
-  //
 }

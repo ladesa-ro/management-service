@@ -28,8 +28,6 @@ export class EtapaService {
     return this.databaseContext.etapaRepository;
   }
 
-  //
-
   async etapaFindAll(accessContext: AccessContext, dto: IDomain.EtapaListInput | null = null, selection?: string[] | boolean): Promise<IDomain.EtapaListOutput["success"]> {
     // =========================================================
 
@@ -46,33 +44,30 @@ export class EtapaService {
       { ...dto },
       {
         select: [
-          //
           "id",
-          //
+
           "numero",
           "dataInicio",
           "dataTermino",
           "cor",
-          //
+
           "calendario.id",
           "calendario.nome",
           "calendario.ano",
         ],
         sortableColumns: [
-          //
           "numero",
           "dataInicio",
           "dataInicio",
           "cor",
-          //
+
           "calendario.id",
           "calendario.nome",
           "calendario.ano",
         ],
         searchableColumns: [
-          //
           "id",
-          //
+
           "numero",
           "dataInicio",
           "dataTermino",
@@ -181,8 +176,6 @@ export class EtapaService {
     return etapa;
   }
 
-  //
-
   async etapaCreate(accessContext: AccessContext, dto: IDomain.EtapaCreateInput) {
     // =========================================================
 
@@ -260,8 +253,6 @@ export class EtapaService {
 
     return this.etapaFindByIdStrict(accessContext, { id: etapa.id });
   }
-
-  //
 
   async etapaDeleteOneById(accessContext: AccessContext, dto: IDomain.EtapaFindOneInput) {
     // =========================================================

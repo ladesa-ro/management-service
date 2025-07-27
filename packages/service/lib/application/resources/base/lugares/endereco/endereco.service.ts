@@ -17,13 +17,9 @@ const aliasEndereco = "endereco";
 export class EnderecoService {
   constructor(private databaseContext: DatabaseContextService) {}
 
-  //
-
   get enderecoRepository() {
     return this.databaseContext.enderecoRepository;
   }
-
-  //
 
   async internalFindOneById(id: LadesaTypings.Endereco["id"]) {
     const endereco = await this.enderecoRepository.findOne({
@@ -76,8 +72,6 @@ export class EnderecoService {
 
     return endereco;
   }
-
-  //
 
   async findById(accessContext: AccessContext, dto: IDomain.EnderecoFindOneInput, selection?: string[] | boolean): Promise<IDomain.EnderecoFindOneOutput | null> {
     const qb = this.enderecoRepository.createQueryBuilder(aliasEndereco);

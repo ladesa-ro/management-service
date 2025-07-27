@@ -33,8 +33,6 @@ export class HorarioGeradoAulaService {
     return this.databaseContext.horarioGeradoAulaRepository;
   }
 
-  //
-
   async horarioGeradoAulaFindAll(
     accessContext: AccessContext,
     dto: IDomain.HorarioGeradoAulaListInput | null = null,
@@ -56,21 +54,20 @@ export class HorarioGeradoAulaService {
       {
         ...paginateConfig,
         select: [
-          //
           "id",
-          //
+
           "diaSemanaIso",
           "horarioGerado",
           "diarioProfessor",
           "intervaloDeTempo",
-          //
+
           "diarioProfessor.id",
           "diarioProfessor.situacao",
-          //
+
           "intervaloDeTempo.id",
           "intervaloDeTempo.periodoInicio",
           "intervaloDeTempo.periodoFim",
-          //
+
           "horarioGerado.id",
           "horarioGerado.status",
           "horarioGerado.tipo",
@@ -79,20 +76,18 @@ export class HorarioGeradoAulaService {
           "horarioGerado.vigenciaFim",
         ],
         sortableColumns: [
-          //
           "diaSemanaIso",
           "horarioGerado",
           "diarioProfessor",
           "intervaloDeTempo",
-          //
+
           "diarioProfessor.id",
           "intervaloDeTempo.id",
           "horarioGerado.id",
         ],
         searchableColumns: [
-          //
           "id",
-          //
+
           "diaSemanaIso",
           "horarioGerado",
           "diarioProfessor",
@@ -198,8 +193,6 @@ export class HorarioGeradoAulaService {
 
     return horarioGeradoAula;
   }
-
-  //
 
   async HorarioGeradoAulaCreate(accessContext: AccessContext, dto: IDomain.HorarioGeradoAulaCreateInput) {
     // =========================================================
@@ -322,8 +315,6 @@ export class HorarioGeradoAulaService {
       id: horarioGeradoAula.id,
     });
   }
-
-  //
 
   async horarioGeradoAulaDeleteOneById(accessContext: AccessContext, dto: IDomain.HorarioGeradoAulaFindOneInput) {
     // =========================================================
