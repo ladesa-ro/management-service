@@ -1,7 +1,7 @@
 import { castArray } from "lodash";
 import type { SelectQueryBuilder } from "typeorm";
 import { AuthzPolicyPublic, type IAuthzStatement, type IAuthzStatementFilter, type IBaseAuthzFilterFn, type IBaseAuthzStatementContext } from "@/application/authorization";
-import { createForbiddenExceptionForAction } from "@/application/standards";
+import { createForbiddenExceptionForAction } from "@/application/contracts";
 import type { IRequestActor } from "@/infrastructure/authentication";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
 import type { IAccessContext } from "./access-context.types";

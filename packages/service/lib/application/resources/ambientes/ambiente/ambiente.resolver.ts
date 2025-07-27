@@ -2,8 +2,8 @@ import { Info as GqlInfo, Resolver as GqlResolver } from "@nestjs/graphql";
 import type { GraphQLResolveInfo } from "graphql";
 import { type IAppRequest } from "@/application/contracts/openapi/document/app-openapi-typings";
 import { AppRequest } from "@/application/contracts/openapi/utils/app-request";
-import { graphqlExtractSelection } from "@/application/standards";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
+import { graphqlExtractSelection } from "@/infrastructure/integrations";
 import { AmbienteService } from "./ambiente.service";
 
 @GqlResolver()

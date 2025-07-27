@@ -1,6 +1,6 @@
 import { uniq } from "lodash";
 import { SelectQueryBuilder } from "typeorm";
-import { CheckNodeTypeArray, CheckNodeTypeObjectEntity, getSpecNodesStore, INodeCore, INodeTypeObjectEntity, ISpecNodesStore } from "@/application/standards/especificacao";
+import { CheckNodeTypeArray, CheckNodeTypeObjectEntity, getSpecNodesStore, INodeCore, INodeTypeObjectEntity, ISpecNodesStore } from "@/application/contracts/especificacao";
 
 // ==========================
 

@@ -1,8 +1,7 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { pick } from "lodash";
-import { QbEfficientLoad } from "@/application/standards";
-import { ensureValidResult, makeValidatorForEntity } from "@/application/standards/especificacao/business-logic/Validation/ajv-validate";
+import { QbEfficientLoad } from "@/application/contracts";
 import { IDomain } from "@/domain/contracts/integration";
 import { AccessContext } from "@/infrastructure/access-context";
 import { DatabaseContextService } from "@/infrastructure/integrations";
@@ -21,7 +20,7 @@ export class EnderecoService {
     return this.databaseContext.enderecoRepository;
   }
 
-  async internalFindOneById(id: LadesaTypings.Endereco["id"]) {
+  async internalFindOneById(id: IDomain.Endereco["id"]) {
     const endereco = await this.enderecoRepository.findOne({
       where: {
         id: id,
@@ -31,7 +30,7 @@ export class EnderecoService {
     return endereco;
   }
 
-  async internalFindOneByIdStrict(id: LadesaTypings.Endereco["id"]) {
+  async internalFindOneByIdStrict(id: IDomain.Endereco["id"]) {
     const endereco = await this.internalFindOneById(id);
 
     if (!endereco) {
@@ -41,13 +40,7 @@ export class EnderecoService {
     return endereco;
   }
 
-  async internalEnderecoCreateOrUpdate(id: LadesaTypings.Endereco["id"] | null, payload: LadesaTypings.EnderecoInput) {
-    const enderecoInputValidator = await makeValidatorForEntity<LadesaTypings.EnderecoInput>(LadesaTypings.Tokens.EnderecoInputView);
-
-    const result = await enderecoInputValidator(payload);
-
-    const dto = ensureValidResult(result);
-
+  async internalEnderecoCreateOrUpdate(id: IDomain.Endereco["id"] | null, dto: IDomain.EnderecoInput) {
     const endereco = this.enderecoRepository.create();
 
     if (id) {
@@ -58,13 +51,13 @@ export class EnderecoService {
       }
     }
 
-    const enderecoInputDto = {
+    const enderecoInputDto = <IDomain.EnderecoInput>{
       ...pick(dto, ["cep", "logradouro", "numero", "bairro", "complemento", "pontoReferencia"]),
 
       cidade: {
         id: dto.cidade.id,
       },
-    } as LadesaTypings.EnderecoInput;
+    };
 
     this.enderecoRepository.merge(endereco, enderecoInputDto);
 

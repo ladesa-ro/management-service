@@ -1,9 +1,9 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Injectable, InternalServerErrorException, NotFoundException, ServiceUnavailableException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
+import { ValidationFailedException } from "@/application/contracts";
+import { QbEfficientLoad } from "@/application/contracts/QbEfficientLoad";
 import { SearchService } from "@/application/helpers/search.service";
-import { ValidationFailedException } from "@/application/standards";
-import { QbEfficientLoad } from "@/application/standards/ladesa-spec/QbEfficientLoad";
 import { IDomain } from "@/domain/contracts/integration";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";

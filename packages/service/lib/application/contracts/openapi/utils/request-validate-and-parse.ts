@@ -1,9 +1,9 @@
 import * as SwaggerParser from "@apidevtools/swagger-parser";
 import addFormats from "ajv-formats";
 import OpenAPIBackend from "openapi-backend";
+import { ValidationFailedException } from "@/application/contracts";
 import { AppApiDoc } from "@/application/contracts/openapi/document/app-openapi-document";
 import { IAppRequestRepresentationGeneric } from "@/application/interfaces/i-app-request-representation-generic";
-import { ValidationFailedException } from "@/application/standards";
 
 const openApiBackend = new OpenAPIBackend({
   definition: AppApiDoc,

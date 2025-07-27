@@ -1,7 +1,7 @@
 import { type ArgumentsHost, Catch, HttpException } from "@nestjs/common";
 import type { GqlExceptionFilter as NestGqlExceptionFilter } from "@nestjs/graphql";
 import type { Request, Response } from "express";
-import { ValidationFailedException } from "@/application/standards";
+import { ValidationFailedException } from "@/application/contracts";
 
 @Catch(HttpException)
 export class GqlExceptionFilter implements NestGqlExceptionFilter {
