@@ -2,11 +2,11 @@ import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
+import { SearchService } from "@/application/helpers/search.service";
 import { CampusService } from "@/application/resources/ambientes/campus/campus.service";
 import { OfertaFormacaoService } from "@/application/resources/ensino/institucional/oferta-formacao/oferta-formacao.service";
 import { QbEfficientLoad } from "@/application/standards/ladesa-spec/QbEfficientLoad";
-import { LadesaPaginatedResultDto, LadesaSearch } from "@/application/standards/ladesa-spec/search/search-strategies";
-import { IDomain } from "@/domain/domain-contracts";
+import { IDomain } from "@/domain/contracts/integration";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
@@ -24,6 +24,7 @@ export class GradeHorarioOfertaFormacaoService {
     private databaseContext: DatabaseContextService,
     private campusService: CampusService,
     private ofertaFormacaoService: OfertaFormacaoService,
+    private searchService: SearchService,
   ) {}
 
   get gradeHorarioOfertaFormacaoRepository() {
@@ -47,40 +48,44 @@ export class GradeHorarioOfertaFormacaoService {
 
     // =========================================================
 
-    const paginated = await LadesaSearch("#/", dto, qb, {
-      ...paginateConfig,
-      select: [
-        //
-        "id",
-        //
-        "dateCreated",
-        //
-      ],
-      relations: {
-        campus: true,
+    const paginated = await this.searchService.search(
+      qb,
+      { ...dto },
+      {
+        ...paginateConfig,
+        select: [
+          //
+          "id",
+          //
+          "dateCreated",
+          //
+        ],
+        relations: {
+          campus: true,
 
-        ofertaFormacao: {
-          modalidade: true,
+          ofertaFormacao: {
+            modalidade: true,
+          },
+        },
+        sortableColumns: [
+          //
+
+          "dateCreated",
+        ],
+        searchableColumns: [
+          //
+          "id",
+
+          //
+        ],
+        defaultSortBy: [["dateCreated", "ASC"]],
+        filterableColumns: {
+          "campus.id": [FilterOperator.EQ],
+          "ofertaFormacao.id": [FilterOperator.EQ],
+          "ofertaFormacao.modalidade.id": [FilterOperator.EQ],
         },
       },
-      sortableColumns: [
-        //
-
-        "dateCreated",
-      ],
-      searchableColumns: [
-        //
-        "id",
-
-        //
-      ],
-      defaultSortBy: [["dateCreated", "ASC"]],
-      filterableColumns: {
-        "campus.id": [FilterOperator.EQ],
-        "ofertaFormacao.id": [FilterOperator.EQ],
-        "ofertaFormacao.modalidade.id": [FilterOperator.EQ],
-      },
-    });
+    );
 
     // =========================================================
 
@@ -94,7 +99,7 @@ export class GradeHorarioOfertaFormacaoService {
 
     // =========================================================
 
-    return LadesaPaginatedResultDto(paginated);
+    return paginated;
   }
 
   async gradeHorarioOfertaFormacaoFindById(

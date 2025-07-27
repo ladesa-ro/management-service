@@ -1,7 +1,8 @@
 import { Info as GqlInfo, Resolver as GqlResolver } from "@nestjs/graphql";
 import type { GraphQLResolveInfo } from "graphql";
+import { type IAppRequest } from "@/application/contracts/openapi/document/app-openapi-typings";
+import { AppRequest } from "@/application/contracts/openapi/utils/app-request";
 import { graphqlExtractSelection } from "@/application/standards";
-import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { TurmaDisponibilidadeService } from "./turma-disponibilidade.service";
 
@@ -17,7 +18,7 @@ export class TurmaDisponibilidadeResolver {
   async turmaDisponibilidadeFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("TurmaDisponibilidadeFindAll") dto: IOperationInput<"TurmaDisponibilidadeFindAll">,
+    @AppRequest("TurmaDisponibilidadeFindAll") dto: IAppRequest<"TurmaDisponibilidadeFindAll">,
     @GqlInfo() info: GraphQLResolveInfo,
   ) {
     return this.turmaDisponibilidadeService.turmaDisponibilidadeFindAll(accessContext, dto, graphqlExtractSelection(info, "paginated"));
@@ -29,7 +30,7 @@ export class TurmaDisponibilidadeResolver {
     //
     @AccessContextGraphQl() accessContext: AccessContext,
 
-    @HttpOperationInput("TurmaDisponibilidadeFindOneById") dto: IOperationInput<"TurmaDisponibilidadeFindOneById">,
+    @AppRequest("TurmaDisponibilidadeFindOneById") dto: IAppRequest<"TurmaDisponibilidadeFindOneById">,
     @GqlInfo() info: GraphQLResolveInfo,
   ) {
     return this.turmaDisponibilidadeService.turmaDisponibilidadeFindByIdStrict(
@@ -46,7 +47,7 @@ export class TurmaDisponibilidadeResolver {
   async turmaDisponibilidadeCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("TurmaDisponibilidadeCreate") dto: IOperationInput<"TurmaDisponibilidadeCreate">,
+    @AppRequest("TurmaDisponibilidadeCreate") dto: IAppRequest<"TurmaDisponibilidadeCreate">,
   ) {
     return this.turmaDisponibilidadeService.turmaDisponibilidadeCreate(accessContext, dto);
   }
@@ -55,7 +56,7 @@ export class TurmaDisponibilidadeResolver {
     //
     @AccessContextGraphQl() accessContext: AccessContext,
 
-    @HttpOperationInput("TurmaDisponibilidadeUpdate") dto: IOperationInput<"TurmaDisponibilidadeUpdate">,
+    @AppRequest("TurmaDisponibilidadeUpdate") dto: IAppRequest<"TurmaDisponibilidadeUpdate">,
   ) {
     return this.turmaDisponibilidadeService.turmaDisponibilidadeUpdate(accessContext, dto);
   }
@@ -64,7 +65,7 @@ export class TurmaDisponibilidadeResolver {
     //
     @AccessContextGraphQl() accessContext: AccessContext,
 
-    @HttpOperationInput("TurmaDisponibilidadeDeleteOneById") dto: IOperationInput<"TurmaDisponibilidadeDeleteOneById">,
+    @AppRequest("TurmaDisponibilidadeDeleteOneById") dto: IAppRequest<"TurmaDisponibilidadeDeleteOneById">,
   ) {
     return this.turmaDisponibilidadeService.turmaDisponibilidadeDeleteOneById(accessContext, {
       id: dto.parameters.path.id,

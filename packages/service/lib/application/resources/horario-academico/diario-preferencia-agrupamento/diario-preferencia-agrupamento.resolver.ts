@@ -1,5 +1,6 @@
 import { Resolver } from "@nestjs/graphql";
-import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
+import { type IAppRequest } from "@/application/contracts/openapi/document/app-openapi-typings";
+import { AppRequest } from "@/application/contracts/openapi/utils/app-request";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { DiarioPreferenciaAgrupamentoService } from "./diario-preferencia-agrupamento.service";
 
@@ -13,7 +14,7 @@ export class DiarioPreferenciaAgrupamentoResolver {
     //
     @AccessContextGraphQl() accessContext: AccessContext,
 
-    @HttpOperationInput("DiarioPreferenciaAgrupamentoFindAll") dto: IOperationInput<"DiarioPreferenciaAgrupamentoFindAll">,
+    @AppRequest("DiarioPreferenciaAgrupamentoFindAll") dto: IAppRequest<"DiarioPreferenciaAgrupamentoFindAll">,
   ) {
     return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoFindAll(accessContext, dto);
   }
@@ -24,7 +25,7 @@ export class DiarioPreferenciaAgrupamentoResolver {
     //
     @AccessContextGraphQl() accessContext: AccessContext,
 
-    @HttpOperationInput("DiarioPreferenciaAgrupamentoFindOneById") dto: IOperationInput<"DiarioPreferenciaAgrupamentoFindOneById">,
+    @AppRequest("DiarioPreferenciaAgrupamentoFindOneById") dto: IAppRequest<"DiarioPreferenciaAgrupamentoFindOneById">,
   ) {
     return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoFindByIdStrict(accessContext, { id: dto.parameters.path.id });
   }
@@ -35,7 +36,7 @@ export class DiarioPreferenciaAgrupamentoResolver {
     //
     @AccessContextGraphQl() accessContext: AccessContext,
 
-    @HttpOperationInput("DiarioPreferenciaAgrupamentoCreate") dto: IOperationInput<"DiarioPreferenciaAgrupamentoCreate">,
+    @AppRequest("DiarioPreferenciaAgrupamentoCreate") dto: IAppRequest<"DiarioPreferenciaAgrupamentoCreate">,
   ) {
     return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoCreate(accessContext, dto);
   }
@@ -46,7 +47,7 @@ export class DiarioPreferenciaAgrupamentoResolver {
     //
     @AccessContextGraphQl() accessContext: AccessContext,
 
-    @HttpOperationInput("DiarioPreferenciaAgrupamentoUpdate") dto: IOperationInput<"DiarioPreferenciaAgrupamentoUpdate">,
+    @AppRequest("DiarioPreferenciaAgrupamentoUpdate") dto: IAppRequest<"DiarioPreferenciaAgrupamentoUpdate">,
   ) {
     return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoUpdate(accessContext, dto);
   }
@@ -57,7 +58,7 @@ export class DiarioPreferenciaAgrupamentoResolver {
     //
     @AccessContextGraphQl() accessContext: AccessContext,
 
-    @HttpOperationInput("DiarioPreferenciaAgrupamentoOneById") dto: IOperationInput<"DiarioPreferenciaAgrupamentoOneById">,
+    @AppRequest("DiarioPreferenciaAgrupamentoOneById") dto: IAppRequest<"DiarioPreferenciaAgrupamentoOneById">,
   ) {
     return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoDeleteOneById(accessContext, { id: dto.parameters.path.id });
   }

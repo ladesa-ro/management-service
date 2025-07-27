@@ -1,7 +1,8 @@
 import { Info as GqlInfo, Resolver as GqlResolver } from "@nestjs/graphql";
 import type { GraphQLResolveInfo } from "graphql";
+import { type IAppRequest } from "@/application/contracts/openapi/document/app-openapi-typings";
+import { AppRequest } from "@/application/contracts/openapi/utils/app-request";
 import { graphqlExtractSelection } from "@/application/standards";
-import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { ModalidadeService } from "./modalidade.service";
 
@@ -17,7 +18,7 @@ export class ModalidadeResolver {
   async modalidadeFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("ModalidadeFindAll") dto: IOperationInput<"ModalidadeFindAll">,
+    @AppRequest("ModalidadeFindAll") dto: IAppRequest<"ModalidadeFindAll">,
     @GqlInfo() info: GraphQLResolveInfo,
   ) {
     return this.modalidadeService.modalidadeFindAll(accessContext, dto, graphqlExtractSelection(info, "paginated"));
@@ -28,7 +29,7 @@ export class ModalidadeResolver {
   async modalidadeFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("ModalidadeFindOneById") dto: IOperationInput<"ModalidadeFindOneById">,
+    @AppRequest("ModalidadeFindOneById") dto: IAppRequest<"ModalidadeFindOneById">,
     @GqlInfo() info: GraphQLResolveInfo,
   ) {
     return this.modalidadeService.modalidadeFindByIdStrict(accessContext, { id: dto.parameters.path.id }, ["id", ...graphqlExtractSelection(info)]);
@@ -39,7 +40,7 @@ export class ModalidadeResolver {
   async modalidadeCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("ModalidadeCreate") dto: IOperationInput<"ModalidadeCreate">,
+    @AppRequest("ModalidadeCreate") dto: IAppRequest<"ModalidadeCreate">,
   ) {
     return this.modalidadeService.modalidadeCreate(accessContext, dto);
   }
@@ -47,7 +48,7 @@ export class ModalidadeResolver {
   async modalidadeUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("ModalidadeUpdate") dto: IOperationInput<"ModalidadeUpdate">,
+    @AppRequest("ModalidadeUpdate") dto: IAppRequest<"ModalidadeUpdate">,
   ) {
     return this.modalidadeService.modalidadeUpdate(accessContext, dto);
   }
@@ -55,7 +56,7 @@ export class ModalidadeResolver {
   async modalidadeDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("ModalidadeDeleteOneById") dto: IOperationInput<"ModalidadeDeleteOneById">,
+    @AppRequest("ModalidadeDeleteOneById") dto: IAppRequest<"ModalidadeDeleteOneById">,
   ) {
     return this.modalidadeService.modalidadeDeleteOneById(accessContext, {
       id: dto.parameters.path.id,

@@ -2,10 +2,10 @@ import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
+import { SearchService } from "@/application/helpers/search.service";
 import { CursoService } from "@/application/resources/ensino/institucional/curso/curso.service";
 import { QbEfficientLoad } from "@/application/standards/ladesa-spec/QbEfficientLoad";
-import { LadesaPaginatedResultDto, LadesaSearch } from "@/application/standards/ladesa-spec/search/search-strategies";
-import { IDomain } from "@/domain/domain-contracts";
+import { IDomain } from "@/domain/contracts/integration";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
@@ -28,6 +28,7 @@ export class TurmaService {
     private cursoService: CursoService,
     private imagemService: ImagemService,
     private arquivoService: ArquivoService,
+    private searchService: SearchService,
   ) {}
 
   get turmaRepository() {
@@ -47,64 +48,68 @@ export class TurmaService {
 
     // =========================================================
 
-    const paginated = await LadesaSearch("#/", dto, qb, {
-      ...paginateConfig,
-      select: [
-        //
-        "id",
-        //
-        "periodo",
-        //
-      ],
-      sortableColumns: [
-        //
-        "periodo",
-        //
-        "ambientePadraoAula.nome",
-        "ambientePadraoAula.descricao",
-        "ambientePadraoAula.codigo",
-        "ambientePadraoAula.capacidade",
-        "ambientePadraoAula.tipo",
-        //
-        "curso.nome",
-        "curso.nomeAbreviado",
-        "curso.campus.id",
-        "curso.modalidade.id",
-        "curso.modalidade.nome",
-      ],
-      relations: {
-        curso: {
-          campus: true,
+    const paginated = await this.searchService.search(
+      qb,
+      { ...dto },
+      {
+        ...paginateConfig,
+        select: [
+          //
+          "id",
+          //
+          "periodo",
+          //
+        ],
+        sortableColumns: [
+          //
+          "periodo",
+          //
+          "ambientePadraoAula.nome",
+          "ambientePadraoAula.descricao",
+          "ambientePadraoAula.codigo",
+          "ambientePadraoAula.capacidade",
+          "ambientePadraoAula.tipo",
+          //
+          "curso.nome",
+          "curso.nomeAbreviado",
+          "curso.campus.id",
+          "curso.modalidade.id",
+          "curso.modalidade.nome",
+        ],
+        relations: {
+          curso: {
+            campus: true,
+          },
+          ambientePadraoAula: true,
         },
-        ambientePadraoAula: true,
+        searchableColumns: [
+          //
+          "id",
+          //
+          "periodo",
+          //
+        ],
+        defaultSortBy: [
+          //
+          ["periodo", "ASC"],
+        ],
+        filterableColumns: {
+          //
+          "ambientePadraoAula.nome": [FilterOperator.EQ],
+          "ambientePadraoAula.codigo": [FilterOperator.EQ],
+          "ambientePadraoAula.capacidade": [FilterOperator.EQ, FilterOperator.GT, FilterOperator.GTE, FilterOperator.LT, FilterOperator.LTE],
+          "ambientePadraoAula.tipo": [FilterOperator.EQ],
+          //
+          "curso.id": [FilterOperator.EQ],
+          "curso.nome": [FilterOperator.EQ],
+          "curso.nomeAbreviado": [FilterOperator.EQ],
+          "curso.campus.id": [FilterOperator.EQ],
+          "curso.modalidade.id": [FilterOperator.EQ],
+          "curso.modalidade.nome": [FilterOperator.EQ],
+          "curso.modalidade.slug": [FilterOperator.EQ],
+        },
       },
-      searchableColumns: [
-        //
-        "id",
-        //
-        "periodo",
-        //
-      ],
-      defaultSortBy: [
-        //
-        ["periodo", "ASC"],
-      ],
-      filterableColumns: {
-        //
-        "ambientePadraoAula.nome": [FilterOperator.EQ],
-        "ambientePadraoAula.codigo": [FilterOperator.EQ],
-        "ambientePadraoAula.capacidade": [FilterOperator.EQ, FilterOperator.GT, FilterOperator.GTE, FilterOperator.LT, FilterOperator.LTE],
-        "ambientePadraoAula.tipo": [FilterOperator.EQ],
-        //
-        "curso.id": [FilterOperator.EQ],
-        "curso.nome": [FilterOperator.EQ],
-        "curso.nomeAbreviado": [FilterOperator.EQ],
-        "curso.campus.id": [FilterOperator.EQ],
-        "curso.modalidade.id": [FilterOperator.EQ],
-        "curso.modalidade.nome": [FilterOperator.EQ],
-        "curso.modalidade.slug": [FilterOperator.EQ],
-      },
-    });
+    );
 
     // =========================================================
 
@@ -118,7 +123,7 @@ export class TurmaService {
 
     // =========================================================
 
-    return LadesaPaginatedResultDto(paginated);
+    return paginated;
   }
 
   async turmaFindById(accessContext: AccessContext | null, dto: IDomain.TurmaFindOneInput, selection?: string[] | boolean): Promise<IDomain.TurmaFindOneOutput | null> {

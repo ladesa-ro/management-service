@@ -2,10 +2,10 @@ import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
+import { SearchService } from "@/application/helpers/search.service";
 import { IntervaloDeTempoService } from "@/application/resources/base/intervalo-de-tempo/intervalo-de-tempo.service";
 import { QbEfficientLoad } from "@/application/standards/ladesa-spec/QbEfficientLoad";
-import { LadesaPaginatedResultDto, LadesaSearch } from "@/application/standards/ladesa-spec/search/search-strategies";
-import { IDomain } from "@/domain/domain-contracts";
+import { IDomain } from "@/domain/contracts/integration";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
@@ -26,6 +26,7 @@ export class AulaService {
     private diarioService: DiarioService,
     private intervaloService: IntervaloDeTempoService,
     private ambienteService: AmbienteService,
+    private searchService: SearchService,
   ) {}
 
   get aulaRepository() {
@@ -45,53 +46,57 @@ export class AulaService {
 
     // =========================================================
 
-    const paginated = await LadesaSearch("#/", dto, qb, {
-      ...paginateConfig,
-      select: [
-        //
-        "id",
-        //
-        "formato",
-        "data",
-        //
-        "intervaloDeTempo.id",
-        "intervaloDeTempo.periodoInicio",
-        "intervaloDeTempo.periodoFim",
-        "diario.id",
-        "diario.ativo",
-        "ambiente.id",
-        "ambiente.nome",
-        //
-      ],
-      sortableColumns: [
-        //
-        "data",
-        "formato",
-        //
-        "diario.ativo",
-        "ambiente.nome",
-      ],
-      relations: {
-        ambiente: true,
-        diario: true,
-        intervaloDeTempo: true,
+    const paginated = await this.searchService.search(
+      qb,
+      { ...dto },
+      {
+        ...paginateConfig,
+        select: [
+          //
+          "id",
+          //
+          "formato",
+          "data",
+          //
+          "intervaloDeTempo.id",
+          "intervaloDeTempo.periodoInicio",
+          "intervaloDeTempo.periodoFim",
+          "diario.id",
+          "diario.ativo",
+          "ambiente.id",
+          "ambiente.nome",
+          //
+        ],
+        sortableColumns: [
+          //
+          "data",
+          "formato",
+          //
+          "diario.ativo",
+          "ambiente.nome",
+        ],
+        relations: {
+          ambiente: true,
+          diario: true,
+          intervaloDeTempo: true,
+        },
+        searchableColumns: [
+          //
+          "id",
+          //
+          "formato",
+          "data",
+          "ambiente.nome",
+          //
+        ],
+        defaultSortBy: [],
+        filterableColumns: {
+          "intervaloDeTempo.id": [FilterOperator.EQ],
+          "diario.id": [FilterOperator.EQ],
+          "ambiente.id": [FilterOperator.EQ],
+        },
       },
-      searchableColumns: [
-        //
-        "id",
-        //
-        "formato",
-        "data",
-        "ambiente.nome",
-        //
-      ],
-      defaultSortBy: [],
-      filterableColumns: {
-        "intervaloDeTempo.id": [FilterOperator.EQ],
-        "diario.id": [FilterOperator.EQ],
-        "ambiente.id": [FilterOperator.EQ],
-      },
-    });
+    );
 
     // =========================================================
 
@@ -105,7 +110,7 @@ export class AulaService {
 
     // =========================================================
 
-    return LadesaPaginatedResultDto(paginated);
+    return paginated;
   }
 
   async aulaFindById(accessContext: AccessContext, dto: IDomain.AulaFindOneInput, selection?: string[] | boolean): Promise<IDomain.AulaFindOneOutput | null> {

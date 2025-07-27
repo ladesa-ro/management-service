@@ -1,9 +1,9 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { map, pick } from "lodash";
+import { SearchService } from "@/application/helpers/search.service";
 import { QbEfficientLoad } from "@/application/standards/ladesa-spec/QbEfficientLoad";
-import { LadesaPaginatedResultDto, LadesaSearch } from "@/application/standards/ladesa-spec/search/search-strategies";
-import { IDomain } from "@/domain/domain-contracts";
+import { IDomain } from "@/domain/contracts/integration";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
@@ -17,7 +17,10 @@ const aliasModalidade = "modalidade";
 
 @Injectable()
 export class ModalidadeService {
-  constructor(private databaseContext: DatabaseContextService) {}
+  constructor(
+    private databaseContext: DatabaseContextService,
+    private searchService: SearchService,
+  ) {}
 
   get modalidadeRepository() {
     return this.databaseContext.modalidadeRepository;
@@ -36,37 +39,41 @@ export class ModalidadeService {
 
     // =========================================================
 
-    const paginated = await LadesaSearch("#/", dto, qb, {
-      ...paginateConfig,
-      select: [
-        //
-        "id",
-        //
-        "nome",
-        "slug",
-        "dateCreated",
-        //
-      ],
-      sortableColumns: [
-        //
-        "nome",
-        "slug",
-        "dateCreated",
-      ],
-      searchableColumns: [
-        //
-        "id",
-        //
-        "nome",
-        "slug",
-        //
-      ],
-      defaultSortBy: [
-        ["nome", "ASC"],
-        ["dateCreated", "ASC"],
-      ],
-      filterableColumns: {},
-    });
+    const paginated = await this.searchService.search(
+      qb,
+      { ...dto },
+      {
+        ...paginateConfig,
+        select: [
+          //
+          "id",
+          //
+          "nome",
+          "slug",
+          "dateCreated",
+          //
+        ],
+        sortableColumns: [
+          //
+          "nome",
+          "slug",
+          "dateCreated",
+        ],
+        searchableColumns: [
+          //
+          "id",
+          //
+          "nome",
+          "slug",
+          //
+        ],
+        defaultSortBy: [
+          ["nome", "ASC"],
+          ["dateCreated", "ASC"],
+        ],
+        filterableColumns: {},
+      },
+    );
 
     // =========================================================
 
@@ -80,7 +87,7 @@ export class ModalidadeService {
 
     // =========================================================
 
-    return LadesaPaginatedResultDto(paginated);
+    return paginated;
   }
 
   async modalidadeFindById(accessContext: AccessContext | null, dto: IDomain.ModalidadeFindOneInput, selection?: string[]): Promise<IDomain.ModalidadeFindOneOutput | null> {

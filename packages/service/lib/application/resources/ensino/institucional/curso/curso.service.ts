@@ -2,9 +2,9 @@ import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
+import { SearchService } from "@/application/helpers/search.service";
 import { QbEfficientLoad } from "@/application/standards/ladesa-spec/QbEfficientLoad";
-import { LadesaPaginatedResultDto, LadesaSearch } from "@/application/standards/ladesa-spec/search/search-strategies";
-import { IDomain } from "@/domain/domain-contracts";
+import { IDomain } from "@/domain/contracts/integration";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
@@ -28,6 +28,7 @@ export class CursoService {
     private ofertaFormacaoService: OfertaFormacaoService,
     private imagemService: ImagemService,
     private arquivoService: ArquivoService,
+    private searchService: SearchService,
   ) {}
 
   get cursoRepository() {
@@ -47,60 +48,64 @@ export class CursoService {
 
     // =========================================================
 
-    const paginated = await LadesaSearch("#/", dto, qb, {
-      ...paginateConfig,
-      select: [
-        //
-        "id",
-        //
-        "nome",
-        "nomeAbreviado",
-        "campus",
-        "ofertaFormacao",
-        //
-      ],
-      sortableColumns: [
-        //
-        "nome",
-        "nomeAbreviado",
-        //
-        "campus.id",
-        "campus.cnpj",
-        "campus.razaoSocial",
-        "campus.nomeFantasia",
-        //
-        "ofertaFormacao.id",
-        "ofertaFormacao.nome",
-        "ofertaFormacao.slug",
-      ],
-      searchableColumns: [
-        //
-        "id",
-        //
-        "nome",
-        "nomeAbreviado",
-        "campus",
-        "ofertaFormacao",
-        //
-      ],
-      relations: {
-        campus: true,
-        ofertaFormacao: true,
+    const paginated = await this.searchService.search(
+      qb,
+      { ...dto },
+      {
+        ...paginateConfig,
+        select: [
+          //
+          "id",
+          //
+          "nome",
+          "nomeAbreviado",
+          "campus",
+          "ofertaFormacao",
+          //
+        ],
+        sortableColumns: [
+          //
+          "nome",
+          "nomeAbreviado",
+          //
+          "campus.id",
+          "campus.cnpj",
+          "campus.razaoSocial",
+          "campus.nomeFantasia",
+          //
+          "ofertaFormacao.id",
+          "ofertaFormacao.nome",
+          "ofertaFormacao.slug",
+        ],
+        searchableColumns: [
+          //
+          "id",
+          //
+          "nome",
+          "nomeAbreviado",
+          "campus",
+          "ofertaFormacao",
+          //
+        ],
+        relations: {
+          campus: true,
+          ofertaFormacao: true,
+        },
+        defaultSortBy: [
+          //
+          ["nome", "ASC"],
+        ],
+        filterableColumns: {
+          "campus.id": [FilterOperator.EQ],
+          "campus.cnpj": [FilterOperator.EQ],
+          "campus.razaoSocial": [FilterOperator.EQ],
+          "campus.nomeFantasia": [FilterOperator.EQ],
+          "ofertaFormacao.id": [FilterOperator.EQ],
+          "ofertaFormacao.nome": [FilterOperator.EQ],
+          "ofertaFormacao.slug": [FilterOperator.EQ],
+        },
       },
-      defaultSortBy: [
-        //
-        ["nome", "ASC"],
-      ],
-      filterableColumns: {
-        "campus.id": [FilterOperator.EQ],
-        "campus.cnpj": [FilterOperator.EQ],
-        "campus.razaoSocial": [FilterOperator.EQ],
-        "campus.nomeFantasia": [FilterOperator.EQ],
-        "ofertaFormacao.id": [FilterOperator.EQ],
-        "ofertaFormacao.nome": [FilterOperator.EQ],
-        "ofertaFormacao.slug": [FilterOperator.EQ],
-      },
-    });
+    );
 
     // =========================================================
 
@@ -114,7 +119,7 @@ export class CursoService {
 
     // =========================================================
 
-    return LadesaPaginatedResultDto(paginated);
+    return paginated;
   }
 
   async cursoFindById(accessContext: AccessContext | null, dto: IDomain.CursoFindOneInput, selection?: string[] | boolean): Promise<IDomain.CursoFindOneOutput | null> {

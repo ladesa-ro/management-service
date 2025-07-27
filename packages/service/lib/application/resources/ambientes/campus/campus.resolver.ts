@@ -1,5 +1,6 @@
 import { Resolver } from "@nestjs/graphql";
-import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
+import { type IAppRequest } from "@/application/contracts/openapi/document/app-openapi-typings";
+import { AppRequest } from "@/application/contracts/openapi/utils/app-request";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { CampusService } from "./campus.service";
 
@@ -15,7 +16,7 @@ export class CampusResolver {
   async campusFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("CampusFindAll") dto: IOperationInput<"CampusFindAll">,
+    @AppRequest("CampusFindAll") dto: IAppRequest<"CampusFindAll">,
   ) {
     return this.campusService.campusFindAll(accessContext, dto);
   }
@@ -25,7 +26,7 @@ export class CampusResolver {
   async campusFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("CampusFindOneById") dto: IOperationInput<"CampusFindOneById">,
+    @AppRequest("CampusFindOneById") dto: IAppRequest<"CampusFindOneById">,
   ) {
     return this.campusService.campusFindByIdStrict(accessContext, {
       id: dto.parameters.path.id,
@@ -37,7 +38,7 @@ export class CampusResolver {
   async campusCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("CampusCreate") dto: IOperationInput<"CampusCreate">,
+    @AppRequest("CampusCreate") dto: IAppRequest<"CampusCreate">,
   ) {
     return this.campusService.campusCreate(accessContext, dto);
   }
@@ -45,7 +46,7 @@ export class CampusResolver {
   async campusUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("CampusUpdate") dto: IOperationInput<"CampusUpdate">,
+    @AppRequest("CampusUpdate") dto: IAppRequest<"CampusUpdate">,
   ) {
     return this.campusService.campusUpdate(accessContext, dto);
   }
@@ -53,7 +54,7 @@ export class CampusResolver {
   async campusDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("CampusDeleteOneById") dto: IOperationInput<"CampusDeleteOneById">,
+    @AppRequest("CampusDeleteOneById") dto: IAppRequest<"CampusDeleteOneById">,
   ) {
     return this.campusService.campusDeleteOneById(accessContext, {
       id: dto.parameters.path.id,

@@ -1,7 +1,8 @@
 import { Info, Resolver } from "@nestjs/graphql";
 import type { GraphQLResolveInfo } from "graphql";
+import { type IAppRequest } from "@/application/contracts/openapi/document/app-openapi-typings";
+import { AppRequest } from "@/application/contracts/openapi/utils/app-request";
 import { graphqlExtractSelection } from "@/application/standards";
-import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { EstadoService } from "./estado.service";
 
@@ -17,7 +18,7 @@ export class EstadoResolver {
   async estadoFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("EstadoFindAll") dto: IOperationInput<"EstadoFindAll">,
+    @AppRequest("EstadoFindAll") dto: IAppRequest<"EstadoFindAll">,
     @Info() info: GraphQLResolveInfo,
   ) {
     return this.estadoService.findAll(accessContext, dto, graphqlExtractSelection(info, "paginated"));
@@ -28,7 +29,7 @@ export class EstadoResolver {
   async estadoFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("EstadoFindOneById") dto: IOperationInput<"EstadoFindOneById">,
+    @AppRequest("EstadoFindOneById") dto: IAppRequest<"EstadoFindOneById">,
     @Info() info: GraphQLResolveInfo,
   ) {
     return this.estadoService.findByIdStrict(accessContext, { id: dto.parameters.path.id }, graphqlExtractSelection(info));

@@ -2,12 +2,11 @@ import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
+import { SearchService } from "@/application/helpers/search.service";
 import { OfertaFormacaoService } from "@/application/resources/ensino/institucional/oferta-formacao/oferta-formacao.service";
 import { QbEfficientLoad } from "@/application/standards/ladesa-spec/QbEfficientLoad";
-import { LadesaPaginatedResultDto, LadesaSearch } from "@/application/standards/ladesa-spec/search/search-strategies";
-import { IDomain } from "@/domain/domain-contracts";
+import { IDomain } from "@/domain/contracts/integration";
 import type { AccessContext } from "@/infrastructure/access-context";
-import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
 import type { CalendarioLetivoEntity } from "@/infrastructure/integrations/database/typeorm/entities";
 import { CampusService } from "../../ambientes/campus/campus.service";
@@ -22,6 +21,7 @@ const aliasCalendarioLetivo = "calendarioLetivo";
 export class CalendarioLetivoService {
   constructor(
     private databaseContext: DatabaseContextService,
+    private searchService: SearchService,
     private campusService: CampusService,
     private ofertaFormacaoService: OfertaFormacaoService,
   ) {}
@@ -47,66 +47,69 @@ export class CalendarioLetivoService {
 
     // =========================================================
 
-    const paginated = await LadesaSearch("#/", dto, qb, {
-      ...paginateConfig,
-      select: [
-        //
-        "id",
-        //
-        "nome",
-        "ano",
-        "campus",
-        "ofertaFormacao",
-        //
-        "campus.id",
-        "campus.cnpj",
-        "campus.razaoSocial",
-        "campus.nomeFantasia",
-        //
-        "ofertaFormacao.id",
-        "ofertaFormacao.nome",
-        "ofertaFormacao.slug",
-        //
-      ],
-      sortableColumns: [
-        //
-        "nome",
-        "ano",
-        //
-        "campus.id",
-        "campus.cnpj",
-        "campus.razaoSocial",
-        "campus.nomeFantasia",
-        //
-        "ofertaFormacao.id",
-        "ofertaFormacao.nome",
-        "ofertaFormacao.slug",
-      ],
-      searchableColumns: [
-        //
-        "id",
-        //
-        "nome",
-        "ano",
-        "campus",
-        "ofertaFormacao",
-        //
-      ],
-      relations: {
-        campus: true,
-        ofertaFormacao: true,
+    const paginated = await this.searchService.search(
+      qb,
+      { ...dto },
+      {
+        select: [
+          //
+          "id",
+          //
+          "nome",
+          "ano",
+          "campus",
+          "ofertaFormacao",
+          //
+          "campus.id",
+          "campus.cnpj",
+          "campus.razaoSocial",
+          "campus.nomeFantasia",
+          //
+          "ofertaFormacao.id",
+          "ofertaFormacao.nome",
+          "ofertaFormacao.slug",
+          //
+        ],
+        sortableColumns: [
+          //
+          "nome",
+          "ano",
+          //
+          "campus.id",
+          "campus.cnpj",
+          "campus.razaoSocial",
+          "campus.nomeFantasia",
+          //
+          "ofertaFormacao.id",
+          "ofertaFormacao.nome",
+          "ofertaFormacao.slug",
+        ],
+        searchableColumns: [
+          //
+          "id",
+          //
+          "nome",
+          "ano",
+          "campus",
+          "ofertaFormacao",
+          //
+        ],
+        relations: {
+          campus: true,
+          ofertaFormacao: true,
+        },
+        defaultSortBy: [],
+        filterableColumns: {
+          "campus.id": [FilterOperator.EQ],
+          "campus.cnpj": [FilterOperator.EQ],
+          "campus.razaoSocial": [FilterOperator.EQ],
+          "campus.nomeFantasia": [FilterOperator.EQ],
+          "ofertaFormacao.id": [FilterOperator.EQ],
+          "ofertaFormacao.nome": [FilterOperator.EQ],
+          "ofertaFormacao.slug": [FilterOperator.EQ],
+        },
       },
-      defaultSortBy: [],
-      filterableColumns: {
-        "campus.id": [FilterOperator.EQ],
-        "campus.cnpj": [FilterOperator.EQ],
-        "campus.razaoSocial": [FilterOperator.EQ],
-        "campus.nomeFantasia": [FilterOperator.EQ],
-        "ofertaFormacao.id": [FilterOperator.EQ],
-        "ofertaFormacao.nome": [FilterOperator.EQ],
-        "ofertaFormacao.slug": [FilterOperator.EQ],
-      },
-    });
+    );
 
     // =========================================================
 
@@ -120,7 +123,7 @@ export class CalendarioLetivoService {
 
     // =========================================================
 
-    return LadesaPaginatedResultDto(paginated);
+    return paginated;
   }
 
   async caledarioLetivoFindById(accessContext: AccessContext, dto: IDomain.CalendarioLetivoFindOneInput, selection?: string[] | boolean): Promise<IDomain.CalendarioLetivoFindOneOutput | null> {

@@ -1,5 +1,6 @@
 import { Resolver } from "@nestjs/graphql";
-import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
+import { type IAppRequest } from "@/application/contracts/openapi/document/app-openapi-typings";
+import { AppRequest } from "@/application/contracts/openapi/utils/app-request";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { HorarioGeradoService } from "./horario-gerado.service";
 
@@ -12,7 +13,7 @@ export class HorarioGeradoResolver {
   async horarioGeradoFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("HorarioGeradoFindAll") dto: IOperationInput<"HorarioGeradoFindAll">,
+    @AppRequest("HorarioGeradoFindAll") dto: IAppRequest<"HorarioGeradoFindAll">,
   ) {
     return this.horarioGeradoService.horarioGeradoFindAll(accessContext, dto);
   }
@@ -22,7 +23,7 @@ export class HorarioGeradoResolver {
   async horarioGeradoFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("HorarioGeradoFindOneById") dto: IOperationInput<"HorarioGeradoFindOneById">,
+    @AppRequest("HorarioGeradoFindOneById") dto: IAppRequest<"HorarioGeradoFindOneById">,
   ) {
     return this.horarioGeradoService.horarioGeradoFindByIdStrict(accessContext, { id: dto.parameters.path.id });
   }
@@ -32,7 +33,7 @@ export class HorarioGeradoResolver {
   async horarioGeradoCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("HorarioGeradoCreate") dto: IOperationInput<"HorarioGeradoCreate">,
+    @AppRequest("HorarioGeradoCreate") dto: IAppRequest<"HorarioGeradoCreate">,
   ) {
     return this.horarioGeradoService.horarioGeradoCreate(accessContext, dto);
   }
@@ -42,7 +43,7 @@ export class HorarioGeradoResolver {
   async horarioGeradoUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("HorarioGeradoUpdate") dto: IOperationInput<"HorarioGeradoUpdate">,
+    @AppRequest("HorarioGeradoUpdate") dto: IAppRequest<"HorarioGeradoUpdate">,
   ) {
     return this.horarioGeradoService.horarioGeradoUpdate(accessContext, dto);
   }
@@ -52,7 +53,7 @@ export class HorarioGeradoResolver {
   async horarioGeradoDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("HorarioGeradoDeleteOneById") dto: IOperationInput<"HorarioGeradoDeleteOneById">,
+    @AppRequest("HorarioGeradoDeleteOneById") dto: IAppRequest<"HorarioGeradoDeleteOneById">,
   ) {
     return this.horarioGeradoService.horarioGeradoDeleteOneById(accessContext, {
       id: dto.parameters.path.id,

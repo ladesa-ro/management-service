@@ -2,13 +2,12 @@ import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
+import { SearchService } from "@/application/helpers/search.service";
 import { TurmaService } from "@/application/resources/ensino/discente/turma/turma.service";
 import { DisponibilidadeService } from "@/application/resources/horario-academico/disponibilidade/disponibilidade.service";
 import { QbEfficientLoad } from "@/application/standards/ladesa-spec/QbEfficientLoad";
-import { LadesaPaginatedResultDto, LadesaSearch } from "@/application/standards/ladesa-spec/search/search-strategies";
-import { IDomain } from "@/domain/domain-contracts";
+import { IDomain } from "@/domain/contracts/integration";
 import type { AccessContext } from "@/infrastructure/access-context";
-import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
 import type { TurmaDisponibilidadeEntity } from "@/infrastructure/integrations/database/typeorm/entities";
 
@@ -24,6 +23,7 @@ export class TurmaDisponibilidadeService {
     private databaseContext: DatabaseContextService,
     private turmaService: TurmaService,
     private disponibilidadeService: DisponibilidadeService,
+    private searchService: SearchService,
   ) {}
 
   get turmaDisponibilidadeRepository() {
@@ -47,34 +47,37 @@ export class TurmaDisponibilidadeService {
 
     // =========================================================
 
-    const paginated = await LadesaSearch("#/", dto, qb, {
-      ...paginateConfig,
-      select: [
-        //
-        "id",
-        //
-        "dateCreated",
-        //
-      ],
-      relations: {
-        turma: true,
-        disponibilidade: true,
+    const paginated = await this.searchService.search(
+      qb,
+      { ...dto },
+      {
+        select: [
+          //
+          "id",
+          //
+          "dateCreated",
+          //
+        ],
+        relations: {
+          turma: true,
+          disponibilidade: true,
+        },
+        sortableColumns: [
+          //
+          "dateCreated",
+        ],
+        searchableColumns: [
+          //
+          "id",
+          //
+        ],
+        defaultSortBy: [["dateCreated", "ASC"]],
+        filterableColumns: {
+          "turma.id": [FilterOperator.EQ],
+          "disponibilidade.id": [FilterOperator.EQ],
+        },
       },
-      sortableColumns: [
-        //
-        "dateCreated",
-      ],
-      searchableColumns: [
-        //
-        "id",
-        //
-      ],
-      defaultSortBy: [["dateCreated", "ASC"]],
-      filterableColumns: {
-        "turma.id": [FilterOperator.EQ],
-        "disponibilidade.id": [FilterOperator.EQ],
-      },
-    });
+    );
 
     // =========================================================
 
@@ -88,7 +91,7 @@ export class TurmaDisponibilidadeService {
 
     // =========================================================
 
-    return LadesaPaginatedResultDto(paginated);
+    return paginated;
   }
 
   async turmaDisponibilidadeFindById(

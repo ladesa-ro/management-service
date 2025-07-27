@@ -1,7 +1,8 @@
 import { Info, Resolver } from "@nestjs/graphql";
 import type { GraphQLResolveInfo } from "graphql";
+import { type IAppRequest } from "@/application/contracts/openapi/document/app-openapi-typings";
+import { AppRequest } from "@/application/contracts/openapi/utils/app-request";
 import { graphqlExtractSelection } from "@/application/standards";
-import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { CidadeService } from "./cidade.service";
 
@@ -17,7 +18,7 @@ export class CidadeResolver {
   async cidadeFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("CidadeFindAll") dto: IOperationInput<"CidadeFindAll">,
+    @AppRequest("CidadeFindAll") dto: IAppRequest<"CidadeFindAll">,
     @Info() info: GraphQLResolveInfo,
   ) {
     return this.cidadeService.findAll(accessContext, dto, graphqlExtractSelection(info, "paginated"));
@@ -28,7 +29,7 @@ export class CidadeResolver {
   async cidadeFindById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("CidadeFindById") dto: IOperationInput<"CidadeFindById">,
+    @AppRequest("CidadeFindById") dto: IAppRequest<"CidadeFindById">,
     @Info() info: GraphQLResolveInfo,
   ) {
     return this.cidadeService.findByIdStrict(accessContext, { id: dto.parameters.path.id }, graphqlExtractSelection(info));

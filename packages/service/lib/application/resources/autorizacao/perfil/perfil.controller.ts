@@ -1,6 +1,7 @@
 import { Controller, Get, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
+import { type IAppRequest } from "@/application/contracts/openapi/document/app-openapi-typings";
+import { AppRequest } from "@/application/contracts/openapi/utils/app-request";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { PerfilService } from "./perfil.service";
 
@@ -13,7 +14,7 @@ export class PerfilController {
   async findAll(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("FindAll") dto: IOperationInput<"FindAll">,
+    @AppRequest("FindAll") dto: IAppRequest<"FindAll">,
   ) {
     return this.vinculoService.perfilFindAll(accessContext, dto);
   }
@@ -22,7 +23,7 @@ export class PerfilController {
   async vinculoSetVinculos(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("VinculoSetVinculos") dto: IOperationInput<"VinculoSetVinculos">,
+    @AppRequest("VinculoSetVinculos") dto: IAppRequest<"VinculoSetVinculos">,
   ) {
     return this.vinculoService.perfilSetVinculos(accessContext, dto);
   }

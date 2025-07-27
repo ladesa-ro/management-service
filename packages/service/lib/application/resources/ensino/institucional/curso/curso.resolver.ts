@@ -1,5 +1,6 @@
 import { Resolver } from "@nestjs/graphql";
-import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
+import { type IAppRequest } from "@/application/contracts/openapi/document/app-openapi-typings";
+import { AppRequest } from "@/application/contracts/openapi/utils/app-request";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { CursoService } from "./curso.service";
 
@@ -15,7 +16,7 @@ export class CursoResolver {
   async cursoFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("CursoFindAll") dto: IOperationInput<"CursoFindAll">,
+    @AppRequest("CursoFindAll") dto: IAppRequest<"CursoFindAll">,
   ) {
     return this.cursoService.cursoFindAll(accessContext, dto);
   }
@@ -25,7 +26,7 @@ export class CursoResolver {
   async cursoFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("CursoFindOneById") dto: IOperationInput<"CursoFindOneById">,
+    @AppRequest("CursoFindOneById") dto: IAppRequest<"CursoFindOneById">,
   ) {
     return this.cursoService.cursoFindByIdStrict(accessContext, {
       id: dto.parameters.path.id,
@@ -37,7 +38,7 @@ export class CursoResolver {
   async cursoCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("CursoCreate") dto: IOperationInput<"CursoCreate">,
+    @AppRequest("CursoCreate") dto: IAppRequest<"CursoCreate">,
   ) {
     return this.cursoService.cursoCreate(accessContext, dto);
   }
@@ -45,7 +46,7 @@ export class CursoResolver {
   async cursoUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("CursoUpdate") dto: IOperationInput<"CursoUpdate">,
+    @AppRequest("CursoUpdate") dto: IAppRequest<"CursoUpdate">,
   ) {
     return this.cursoService.cursoUpdate(accessContext, dto);
   }
@@ -53,7 +54,7 @@ export class CursoResolver {
   async cursoDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("CursoDeleteOneById") dto: IOperationInput<"CursoDeleteOneById">,
+    @AppRequest("CursoDeleteOneById") dto: IAppRequest<"CursoDeleteOneById">,
   ) {
     return this.cursoService.cursoDeleteOneById(accessContext, {
       id: dto.parameters.path.id,

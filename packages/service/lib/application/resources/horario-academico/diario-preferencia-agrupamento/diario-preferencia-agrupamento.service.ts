@@ -2,11 +2,11 @@ import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
+import { SearchService } from "@/application/helpers/search.service";
 import { IntervaloDeTempoService } from "@/application/resources/base/intervalo-de-tempo/intervalo-de-tempo.service";
 import { DiarioService } from "@/application/resources/ensino/discente/diario/diario.service";
 import { QbEfficientLoad } from "@/application/standards/ladesa-spec/QbEfficientLoad";
-import { LadesaPaginatedResultDto, LadesaSearch } from "@/application/standards/ladesa-spec/search/search-strategies";
-import { IDomain } from "@/domain/domain-contracts";
+import { IDomain } from "@/domain/contracts/integration";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
@@ -24,6 +24,7 @@ export class DiarioPreferenciaAgrupamentoService {
     private databaseContext: DatabaseContextService,
     private DiarioService: DiarioService,
     private intervaloDeTempoService: IntervaloDeTempoService,
+    private searchService: SearchService,
   ) {}
 
   get diarioPreferenciaAgrupamentoRepository() {
@@ -47,57 +48,61 @@ export class DiarioPreferenciaAgrupamentoService {
 
     // =========================================================
 
-    const paginated = await LadesaSearch("#/", dto, qb, {
-      ...paginateConfig,
-      select: [
-        //
-        "id",
-        //
-        "diaSemanaIso",
-        "aulasSeguidas",
-        "dataInicio",
-        "dataFim",
-        "diario",
-        "intervaloDeTempo",
-        //
-        "diario.id",
-        "diario.ativo",
-        //
-        "intervaloDeTempo.id",
-        "intervaloDeTempo.periodoInicio",
-        "intervaloDeTempo.periodoFim",
-      ],
-      sortableColumns: [
-        //
-        "diaSemanaIso",
-        "aulasSeguidas",
-        "dataInicio",
-        "dataFim",
-        "diario",
-        //
-        "diario.id",
-        "intervaloDeTempo.id",
-      ],
-      searchableColumns: [
-        //
-        "id",
-        //
-        "diaSemanaIso",
-        "aulasSeguidas",
-        "dataInicio",
-        "dataFim",
-        "diario",
-        "intervaloDeTempo",
-      ],
-      relations: {
-        diario: true,
-        intervaloDeTempo: true,
+    const paginated = await this.searchService.search(
+      qb,
+      { ...dto },
+      {
+        ...paginateConfig,
+        select: [
+          //
+          "id",
+          //
+          "diaSemanaIso",
+          "aulasSeguidas",
+          "dataInicio",
+          "dataFim",
+          "diario",
+          "intervaloDeTempo",
+          //
+          "diario.id",
+          "diario.ativo",
+          //
+          "intervaloDeTempo.id",
+          "intervaloDeTempo.periodoInicio",
+          "intervaloDeTempo.periodoFim",
+        ],
+        sortableColumns: [
+          //
+          "diaSemanaIso",
+          "aulasSeguidas",
+          "dataInicio",
+          "dataFim",
+          "diario",
+          //
+          "diario.id",
+          "intervaloDeTempo.id",
+        ],
+        searchableColumns: [
+          //
+          "id",
+          //
+          "diaSemanaIso",
+          "aulasSeguidas",
+          "dataInicio",
+          "dataFim",
+          "diario",
+          "intervaloDeTempo",
+        ],
+        relations: {
+          diario: true,
+          intervaloDeTempo: true,
+        },
+        defaultSortBy: [],
+        filterableColumns: {
+          "diario.id": [FilterOperator.EQ],
+        },
       },
-      defaultSortBy: [],
-      filterableColumns: {
-        "diario.id": [FilterOperator.EQ],
-      },
-    });
+    );
 
     // =========================================================
 
@@ -111,7 +116,7 @@ export class DiarioPreferenciaAgrupamentoService {
 
     // =========================================================
 
-    return LadesaPaginatedResultDto(paginated);
+    return paginated;
   }
 
   async diarioPreferenciaAgrupamentoFindById(

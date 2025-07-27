@@ -2,11 +2,11 @@ import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
+import { SearchService } from "@/application/helpers/search.service";
 import { PerfilService } from "@/application/resources/autorizacao/perfil/perfil.service";
 import { DisponibilidadeService } from "@/application/resources/horario-academico/disponibilidade/disponibilidade.service";
 import { QbEfficientLoad } from "@/application/standards/ladesa-spec/QbEfficientLoad";
-import { LadesaPaginatedResultDto, LadesaSearch } from "@/application/standards/ladesa-spec/search/search-strategies";
-import { IDomain } from "@/domain/domain-contracts";
+import { IDomain } from "@/domain/contracts/integration";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
@@ -24,6 +24,7 @@ export class ProfessorDisponibilidadeService {
     private databaseContext: DatabaseContextService,
     private perfilService: PerfilService,
     private disponibilidadeService: DisponibilidadeService,
+    private searchService: SearchService,
   ) {}
 
   get professorDisponibilidadeRepository() {
@@ -47,34 +48,38 @@ export class ProfessorDisponibilidadeService {
 
     // =========================================================
 
-    const paginated = await LadesaSearch("#/", dto, qb, {
-      ...paginateConfig,
-      select: [
-        //
-        "id",
-        //
-        "dateCreated",
-        //
-      ],
-      relations: {
-        perfil: true,
-        disponibilidade: true,
+    const paginated = await this.searchService.search(
+      qb,
+      { ...dto },
+      {
+        ...paginateConfig,
+        select: [
+          //
+          "id",
+          //
+          "dateCreated",
+          //
+        ],
+        relations: {
+          perfil: true,
+          disponibilidade: true,
+        },
+        sortableColumns: [
+          //
+          "dateCreated",
+        ],
+        searchableColumns: [
+          //
+          "id",
+          //
+        ],
+        defaultSortBy: [["dateCreated", "ASC"]],
+        filterableColumns: {
+          "perfil.id": [FilterOperator.EQ],
+          "disponibilidade.id": [FilterOperator.EQ],
+        },
       },
-      sortableColumns: [
-        //
-        "dateCreated",
-      ],
-      searchableColumns: [
-        //
-        "id",
-        //
-      ],
-      defaultSortBy: [["dateCreated", "ASC"]],
-      filterableColumns: {
-        "perfil.id": [FilterOperator.EQ],
-        "disponibilidade.id": [FilterOperator.EQ],
-      },
-    });
+    );
 
     // =========================================================
 
@@ -88,7 +93,7 @@ export class ProfessorDisponibilidadeService {
 
     // =========================================================
 
-    return LadesaPaginatedResultDto(paginated);
+    return paginated;
   }
 
   async professorDisponibilidadeFindById(

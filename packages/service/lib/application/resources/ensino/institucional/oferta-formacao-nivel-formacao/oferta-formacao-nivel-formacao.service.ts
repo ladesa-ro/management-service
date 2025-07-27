@@ -2,11 +2,11 @@ import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
+import { SearchService } from "@/application/helpers/search.service";
 import { NivelFormacaoService } from "@/application/resources/ensino/institucional/nivel-formacao/nivel-formacao.service";
 import { OfertaFormacaoService } from "@/application/resources/ensino/institucional/oferta-formacao/oferta-formacao.service";
 import { QbEfficientLoad } from "@/application/standards/ladesa-spec/QbEfficientLoad";
-import { LadesaPaginatedResultDto, LadesaSearch } from "@/application/standards/ladesa-spec/search/search-strategies";
-import { IDomain } from "@/domain/domain-contracts";
+import { IDomain } from "@/domain/contracts/integration";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
@@ -24,6 +24,7 @@ export class OfertaFormacaoNivelFormacaoService {
     private databaseContext: DatabaseContextService,
     private ofertaFormacaoService: OfertaFormacaoService,
     private nivelFormacaoService: NivelFormacaoService,
+    private searchService: SearchService,
   ) {}
 
   get ofertaFormacaoNivelFormacaoRepository() {
@@ -47,39 +48,43 @@ export class OfertaFormacaoNivelFormacaoService {
 
     // =========================================================
 
-    const paginated = await LadesaSearch("#/", dto, qb, {
-      ...paginateConfig,
-      select: [
-        //
-        "id",
-        //
-        "dateCreated",
-        //
-      ],
-      relations: {
-        nivelFormacao: true,
-        ofertaFormacao: {
-          modalidade: true,
+    const paginated = await this.searchService.search(
+      qb,
+      { ...dto },
+      {
+        ...paginateConfig,
+        select: [
+          //
+          "id",
+          //
+          "dateCreated",
+          //
+        ],
+        relations: {
+          nivelFormacao: true,
+          ofertaFormacao: {
+            modalidade: true,
+          },
+        },
+        sortableColumns: [
+          //
+
+          "dateCreated",
+        ],
+        searchableColumns: [
+          //
+          "id",
+
+          //
+        ],
+        defaultSortBy: [["dateCreated", "ASC"]],
+        filterableColumns: {
+          "nivelFormacao.id": [FilterOperator.EQ],
+          "ofertaFormacao.id": [FilterOperator.EQ],
+          "ofertaFormacao.modalidade.id": [FilterOperator.EQ],
         },
       },
-      sortableColumns: [
-        //
-
-        "dateCreated",
-      ],
-      searchableColumns: [
-        //
-        "id",
-
-        //
-      ],
-      defaultSortBy: [["dateCreated", "ASC"]],
-      filterableColumns: {
-        "nivelFormacao.id": [FilterOperator.EQ],
-        "ofertaFormacao.id": [FilterOperator.EQ],
-        "ofertaFormacao.modalidade.id": [FilterOperator.EQ],
-      },
-    });
+    );
 
     // =========================================================
 
@@ -93,7 +98,7 @@ export class OfertaFormacaoNivelFormacaoService {
 
     // =========================================================
 
-    return LadesaPaginatedResultDto(paginated);
+    return paginated;
   }
 
   async ofertaFormacaoNivelFormacaoFindById(

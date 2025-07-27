@@ -1,7 +1,8 @@
 import { Info as GqlInfo, Resolver as GqlResolver } from "@nestjs/graphql";
 import type { GraphQLResolveInfo } from "graphql";
+import { type IAppRequest } from "@/application/contracts/openapi/document/app-openapi-typings";
+import { AppRequest } from "@/application/contracts/openapi/utils/app-request";
 import { graphqlExtractSelection } from "@/application/standards";
-import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { DisponibilidadeService } from "./disponibilidade.service";
 
@@ -17,7 +18,7 @@ export class DisponibilidadeResolver {
   async disponibilidadeFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("DisponibilidadeFindAll") dto: IOperationInput<"DisponibilidadeFindAll">,
+    @AppRequest("DisponibilidadeFindAll") dto: IAppRequest<"DisponibilidadeFindAll">,
     @GqlInfo() info: GraphQLResolveInfo,
   ) {
     return this.disponibilidadeService.disponibilidadeFindAll(accessContext, dto, graphqlExtractSelection(info, "paginated"));
@@ -29,7 +30,7 @@ export class DisponibilidadeResolver {
     //
     @AccessContextGraphQl() accessContext: AccessContext,
 
-    @HttpOperationInput("DisponibilidadeFindOneById") dto: IOperationInput<"DisponibilidadeFindOneById">,
+    @AppRequest("DisponibilidadeFindOneById") dto: IAppRequest<"DisponibilidadeFindOneById">,
     @GqlInfo() info: GraphQLResolveInfo,
   ) {
     return this.disponibilidadeService.disponibilidadeFindByIdStrict(accessContext, { id: dto.parameters.path.id }, ["id", ...graphqlExtractSelection(info)]);
@@ -40,7 +41,7 @@ export class DisponibilidadeResolver {
   async disponibilidadeCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("DisponibilidadeCreate") dto: IOperationInput<"DisponibilidadeCreate">,
+    @AppRequest("DisponibilidadeCreate") dto: IAppRequest<"DisponibilidadeCreate">,
   ) {
     return this.disponibilidadeService.disponibilidadeCreate(accessContext, dto);
   }
@@ -48,7 +49,7 @@ export class DisponibilidadeResolver {
   async disponibilidadeUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("DisponibilidadeUpdate") dto: IOperationInput<"DisponibilidadeUpdate">,
+    @AppRequest("DisponibilidadeUpdate") dto: IAppRequest<"DisponibilidadeUpdate">,
   ) {
     return this.disponibilidadeService.disponibilidadeUpdate(accessContext, dto);
   }
@@ -56,7 +57,7 @@ export class DisponibilidadeResolver {
   async disponibilidadeDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("DisponibilidadeDeleteOneById") dto: IOperationInput<"DisponibilidadeDeleteOneById">,
+    @AppRequest("DisponibilidadeDeleteOneById") dto: IAppRequest<"DisponibilidadeDeleteOneById">,
   ) {
     return this.disponibilidadeService.disponibilidadeDeleteOneById(accessContext, {
       id: dto.parameters.path.id,

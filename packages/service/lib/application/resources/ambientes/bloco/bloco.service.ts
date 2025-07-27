@@ -2,11 +2,10 @@ import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
+import { SearchService } from "@/application/helpers/search.service";
 import { QbEfficientLoad } from "@/application/standards/ladesa-spec/QbEfficientLoad";
-import { LadesaPaginatedResultDto, LadesaSearch } from "@/application/standards/ladesa-spec/search/search-strategies";
-import { IDomain } from "@/domain/domain-contracts";
+import { IDomain } from "@/domain/contracts/integration";
 import type { AccessContext } from "@/infrastructure/access-context";
-import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
 import type { BlocoEntity } from "@/infrastructure/integrations/database/typeorm/entities";
 import { ArquivoService } from "../../base/arquivo/arquivo.service";
@@ -26,6 +25,8 @@ export class BlocoService {
     private databaseContext: DatabaseContextService,
     private imagemService: ImagemService,
     private arquivoService: ArquivoService,
+
+    private searchService: SearchService,
   ) {}
 
   get blocoRepository() {
@@ -50,49 +51,52 @@ export class BlocoService {
 
     // =========================================================
 
-    const paginated = await LadesaSearch("/blocos", dto, qb, {
-      ...paginateConfig,
-      select: [
-        //
-        "id",
-        //
-        "nome",
-        "codigo",
-        "dateCreated",
-        //
-        "campus.id",
-        "campus.razaoSocial",
-        "campus.nomeFantasia",
-      ],
-      relations: {
-        campus: true,
+    const paginated = await this.searchService.search(
+      qb,
+      { ...dto },
+      {
+        select: [
+          //
+          "id",
+          //
+          "nome",
+          "codigo",
+          "dateCreated",
+          //
+          "campus.id",
+          "campus.razaoSocial",
+          "campus.nomeFantasia",
+        ],
+        relations: {
+          campus: true,
+        },
+        sortableColumns: [
+          //
+          "nome",
+          "codigo",
+          "dateCreated",
+          //
+          "campus.id",
+          "campus.razaoSocial",
+          "campus.nomeFantasia",
+        ],
+        searchableColumns: [
+          //
+          "id",
+          //
+          "nome",
+          "codigo",
+          //
+        ],
+        defaultSortBy: [
+          ["nome", "ASC"],
+          ["dateCreated", "ASC"],
+        ],
+        filterableColumns: {
+          "campus.id": [FilterOperator.EQ],
+        },
       },
-      sortableColumns: [
-        //
-        "nome",
-        "codigo",
-        "dateCreated",
-        //
-        "campus.id",
-        "campus.razaoSocial",
-        "campus.nomeFantasia",
-      ],
-      searchableColumns: [
-        //
-        "id",
-        //
-        "nome",
-        "codigo",
-        //
-      ],
-      defaultSortBy: [
-        ["nome", "ASC"],
-        ["dateCreated", "ASC"],
-      ],
-      filterableColumns: {
-        "campus.id": [FilterOperator.EQ],
-      },
-    });
+    );
 
     // =========================================================
 
@@ -104,7 +108,7 @@ export class BlocoService {
     paginated.data = paginated.data.map((paginated) => pageItemsView.find((i) => i.id === paginated.id)!);
     // =========================================================
 
-    return LadesaPaginatedResultDto(paginated);
+    return paginated;
   }
 
   async blocoFindById(accessContext: AccessContext | null, dto: IDomain.BlocoFindOneInput, selection?: string[] | boolean): Promise<IDomain.BlocoFindOneOutput | null> {

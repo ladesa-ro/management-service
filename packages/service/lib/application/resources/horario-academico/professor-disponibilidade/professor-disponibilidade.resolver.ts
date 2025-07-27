@@ -1,7 +1,8 @@
 import { Info as GqlInfo, Resolver as GqlResolver } from "@nestjs/graphql";
 import type { GraphQLResolveInfo } from "graphql";
+import { type IAppRequest } from "@/application/contracts/openapi/document/app-openapi-typings";
+import { AppRequest } from "@/application/contracts/openapi/utils/app-request";
 import { graphqlExtractSelection } from "@/application/standards";
-import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { ProfessorDisponibilidadeService } from "./professor-disponibilidade.service";
 
@@ -18,7 +19,7 @@ export class ProfessorDisponibilidadeResolver {
     //
     @AccessContextGraphQl() accessContext: AccessContext,
 
-    @HttpOperationInput("ProfessorDisponibilidadeFindAll") dto: IOperationInput<"ProfessorDisponibilidadeFindAll">,
+    @AppRequest("ProfessorDisponibilidadeFindAll") dto: IAppRequest<"ProfessorDisponibilidadeFindAll">,
     @GqlInfo() info: GraphQLResolveInfo,
   ) {
     return this.professorDisponibilidadeService.professorDisponibilidadeFindAll(accessContext, dto, graphqlExtractSelection(info, "paginated"));
@@ -30,7 +31,7 @@ export class ProfessorDisponibilidadeResolver {
     //
     @AccessContextGraphQl() accessContext: AccessContext,
 
-    @HttpOperationInput("ProfessorDisponibilidadeFindOneById") dto: IOperationInput<"ProfessorDisponibilidadeFindOneById">,
+    @AppRequest("ProfessorDisponibilidadeFindOneById") dto: IAppRequest<"ProfessorDisponibilidadeFindOneById">,
     @GqlInfo() info: GraphQLResolveInfo,
   ) {
     return this.professorDisponibilidadeService.professorDisponibilidadeFindByIdStrict(
@@ -48,7 +49,7 @@ export class ProfessorDisponibilidadeResolver {
     //
     @AccessContextGraphQl() accessContext: AccessContext,
 
-    @HttpOperationInput("ProfessorDisponibilidadeCreate") dto: IOperationInput<"ProfessorDisponibilidadeCreate">,
+    @AppRequest("ProfessorDisponibilidadeCreate") dto: IAppRequest<"ProfessorDisponibilidadeCreate">,
   ) {
     return this.professorDisponibilidadeService.professorDisponibilidadeCreate(accessContext, dto);
   }
@@ -57,7 +58,7 @@ export class ProfessorDisponibilidadeResolver {
     //
     @AccessContextGraphQl() accessContext: AccessContext,
 
-    @HttpOperationInput("ProfessorDisponibilidadeUpdate") dto: IOperationInput<"ProfessorDisponibilidadeUpdate">,
+    @AppRequest("ProfessorDisponibilidadeUpdate") dto: IAppRequest<"ProfessorDisponibilidadeUpdate">,
   ) {
     return this.professorDisponibilidadeService.professorDisponibilidadeUpdate(accessContext, dto);
   }
@@ -66,7 +67,7 @@ export class ProfessorDisponibilidadeResolver {
     //
     @AccessContextGraphQl() accessContext: AccessContext,
 
-    @HttpOperationInput("ProfessorDisponibilidadeDeleteOneById") dto: IOperationInput<"ProfessorDisponibilidadeDeleteOneById">,
+    @AppRequest("ProfessorDisponibilidadeDeleteOneById") dto: IAppRequest<"ProfessorDisponibilidadeDeleteOneById">,
   ) {
     return this.professorDisponibilidadeService.professorDisponibilidadeDeleteOneById(accessContext, {
       id: dto.parameters.path.id,

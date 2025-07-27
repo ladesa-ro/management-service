@@ -3,7 +3,7 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { pick } from "lodash";
 import { QbEfficientLoad } from "@/application/standards";
 import { ensureValidResult, makeValidatorForEntity } from "@/application/standards/especificacao/business-logic/Validation/ajv-validate";
-import { IDomain } from "@/domain/domain-contracts";
+import { IDomain } from "@/domain/contracts/integration";
 import { AccessContext } from "@/infrastructure/access-context";
 import { DatabaseContextService } from "@/infrastructure/integrations";
 

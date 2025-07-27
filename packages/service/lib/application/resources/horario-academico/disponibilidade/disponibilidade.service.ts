@@ -1,9 +1,9 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { map, pick } from "lodash";
+import { SearchService } from "@/application/helpers/search.service";
 import { QbEfficientLoad } from "@/application/standards/ladesa-spec/QbEfficientLoad";
-import { LadesaPaginatedResultDto, LadesaSearch } from "@/application/standards/ladesa-spec/search/search-strategies";
-import { IDomain } from "@/domain/domain-contracts";
+import { IDomain } from "@/domain/contracts/integration";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
@@ -17,7 +17,10 @@ const aliasDisponibilidade = "disponibilidade";
 
 @Injectable()
 export class DisponibilidadeService {
-  constructor(private databaseContext: DatabaseContextService) {}
+  constructor(
+    private databaseContext: DatabaseContextService,
+    private searchService: SearchService,
+  ) {}
 
   get disponibilidadeRepository() {
     return this.databaseContext.disponibilidadeRepository;
@@ -36,37 +39,41 @@ export class DisponibilidadeService {
 
     // =========================================================
 
-    const paginated = await LadesaSearch("#/", dto, qb, {
-      ...paginateConfig,
-      select: [
-        //
-        "id",
-        //
-        "dataInicio",
-        "dataFim",
-        "dateCreated",
-        //
-      ],
-      sortableColumns: [
-        //
-        "dataInicio",
-        "dataFim",
-        "dateCreated",
-      ],
-      searchableColumns: [
-        //
-        "id",
-        //
-        "dataInicio",
-        "dataFim",
-        //
-      ],
-      defaultSortBy: [
-        ["dataInicio", "ASC"],
-        ["dataFim", "ASC"],
-      ],
-      filterableColumns: {},
-    });
+    const paginated = await this.searchService.search(
+      qb,
+      { ...dto },
+      {
+        ...paginateConfig,
+        select: [
+          //
+          "id",
+          //
+          "dataInicio",
+          "dataFim",
+          "dateCreated",
+          //
+        ],
+        sortableColumns: [
+          //
+          "dataInicio",
+          "dataFim",
+          "dateCreated",
+        ],
+        searchableColumns: [
+          //
+          "id",
+          //
+          "dataInicio",
+          "dataFim",
+          //
+        ],
+        defaultSortBy: [
+          ["dataInicio", "ASC"],
+          ["dataFim", "ASC"],
+        ],
+        filterableColumns: {},
+      },
+    );
 
     // =========================================================
 
@@ -81,7 +88,7 @@ export class DisponibilidadeService {
 
     // =========================================================
 
-    return LadesaPaginatedResultDto(paginated);
+    return paginated;
   }
 
   async disponibilidadeFindById(accessContext: AccessContext | null, dto: IDomain.DisponibilidadeFindOneInput, selection?: string[]): Promise<IDomain.DisponibilidadeFindOneOutput | null> {

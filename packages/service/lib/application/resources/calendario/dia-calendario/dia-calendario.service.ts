@@ -2,11 +2,10 @@ import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
+import { SearchService } from "@/application/helpers/search.service";
 import { QbEfficientLoad } from "@/application/standards/ladesa-spec/QbEfficientLoad";
-import { LadesaPaginatedResultDto, LadesaSearch } from "@/application/standards/ladesa-spec/search/search-strategies";
-import { IDomain } from "@/domain/domain-contracts";
+import { IDomain } from "@/domain/contracts/integration";
 import type { AccessContext } from "@/infrastructure/access-context";
-import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
 import type { DiaCalendarioEntity } from "@/infrastructure/integrations/database/typeorm/entities/05-calendario/dia-calendario.entity";
 import { CalendarioLetivoService } from "../calendario-letivo/calendario-letivo.service";
@@ -22,6 +21,7 @@ export class DiaCalendarioService {
   constructor(
     private databaseContext: DatabaseContextService,
     private calendarioLetivoService: CalendarioLetivoService,
+    private searchService: SearchService,
   ) {}
 
   get diaCalendarioRepository() {
@@ -41,49 +41,52 @@ export class DiaCalendarioService {
 
     // =========================================================
 
-    const paginated = await LadesaSearch("#/", dto, qb, {
-      ...paginateConfig,
-      select: [
-        //
-        "id",
-        //
-        "data",
-        "diaLetivo",
-        "feriado",
-        //
-        "calendario.id",
-        "calendario.nome",
-        "calendario.ano",
-      ],
-      sortableColumns: [
-        //
-        "data",
-        "diaLetivo",
-        "feriado",
-        //
-        "calendario.id",
-        "calendario.nome",
-        "calendario.ano",
-      ],
-      searchableColumns: [
-        //
-        "id",
-        //
-        "data",
-        "diaLetivo",
-        "feriado",
-        "calendario.nome",
-      ],
-      relations: {
-        calendario: true,
+    const paginated = await this.searchService.search(
+      qb,
+      { ...dto },
+      {
+        select: [
+          //
+          "id",
+          //
+          "data",
+          "diaLetivo",
+          "feriado",
+          //
+          "calendario.id",
+          "calendario.nome",
+          "calendario.ano",
+        ],
+        sortableColumns: [
+          //
+          "data",
+          "diaLetivo",
+          "feriado",
+          //
+          "calendario.id",
+          "calendario.nome",
+          "calendario.ano",
+        ],
+        searchableColumns: [
+          //
+          "id",
+          //
+          "data",
+          "diaLetivo",
+          "feriado",
+          "calendario.nome",
+        ],
+        relations: {
+          calendario: true,
+        },
+        defaultSortBy: [],
+        filterableColumns: {
+          "calendario.id": [FilterOperator.EQ],
+          "calendario.nome": [FilterOperator.EQ],
+          "calendario.ano": [FilterOperator.EQ],
+        },
       },
-      defaultSortBy: [],
-      filterableColumns: {
-        "calendario.id": [FilterOperator.EQ],
-        "calendario.nome": [FilterOperator.EQ],
-        "calendario.ano": [FilterOperator.EQ],
-      },
-    });
+    );
 
     // =========================================================
 
@@ -97,7 +100,7 @@ export class DiaCalendarioService {
 
     // =========================================================
 
-    return LadesaPaginatedResultDto(paginated);
+    return paginated;
   }
 
   async diaCalendarioFindById(accessContext: AccessContext, dto: IDomain.DiaCalendarioFindOneInput, selection?: string[] | boolean): Promise<IDomain.DiaCalendarioFindOneOutput | null> {

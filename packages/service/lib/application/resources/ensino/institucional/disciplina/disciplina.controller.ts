@@ -1,7 +1,8 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Controller, Delete, Get, Patch, Post, Put, UploadedFile } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
+import { type IAppRequest } from "@/application/contracts/openapi/document/app-openapi-typings";
+import { AppRequest } from "@/application/contracts/openapi/utils/app-request";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { DisciplinaService } from "./disciplina.service";
 
@@ -16,7 +17,7 @@ export class DisciplinaController {
   async disciplinaFindAll(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("DisciplinaFindAll") dto: IOperationInput<"DisciplinaFindAll">,
+    @AppRequest("DisciplinaFindAll") dto: IAppRequest<"DisciplinaFindAll">,
   ): Promise<LadesaTypings.DisciplinaListOperationOutput["success"]> {
     return this.disciplinaService.disciplinaFindAll(accessContext, dto);
   }
@@ -27,7 +28,7 @@ export class DisciplinaController {
   async disciplinaFindById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("DisciplinaFindById") dto: IOperationInput<"DisciplinaFindById">,
+    @AppRequest("DisciplinaFindById") dto: IAppRequest<"DisciplinaFindById">,
   ) {
     return this.disciplinaService.disciplinaFindByIdStrict(accessContext, {
       id: dto.parameters.path.id,
@@ -40,7 +41,7 @@ export class DisciplinaController {
   async disciplinaCreate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("DisciplinaCreate") dto: IOperationInput<"DisciplinaCreate">,
+    @AppRequest("DisciplinaCreate") dto: IAppRequest<"DisciplinaCreate">,
   ) {
     return this.disciplinaService.disciplinaCreate(accessContext, dto);
   }
@@ -51,7 +52,7 @@ export class DisciplinaController {
   async disciplinaUpdate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("DisciplinaUpdate") dto: IOperationInput<"DisciplinaUpdate">,
+    @AppRequest("DisciplinaUpdate") dto: IAppRequest<"DisciplinaUpdate">,
   ) {
     return this.disciplinaService.disciplinaUpdate(accessContext, dto);
   }
@@ -81,7 +82,7 @@ export class DisciplinaController {
   async disciplinaDeleteOneById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("DisciplinaDeleteOneById") dto: IOperationInput<"DisciplinaDeleteOneById">,
+    @AppRequest("DisciplinaDeleteOneById") dto: IAppRequest<"DisciplinaDeleteOneById">,
   ) {
     return this.disciplinaService.disciplinaDeleteOneById(accessContext, {
       id: dto.parameters.path.id,

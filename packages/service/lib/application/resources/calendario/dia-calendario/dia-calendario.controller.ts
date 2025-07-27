@@ -1,7 +1,8 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Controller, Delete, Get, Patch, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
+import { type IAppRequest } from "@/application/contracts/openapi/document/app-openapi-typings";
+import { AppRequest } from "@/application/contracts/openapi/utils/app-request";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { DiaCalendarioService } from "./dia-calendario.service";
 
@@ -13,7 +14,7 @@ export class DiaCalendarioController {
   @Get("/")
   async diaCalendarioFindAll(
     @AccessContextHttp() clientAccess: AccessContext,
-    @HttpOperationInput("DiaCalendarioFindAll") dto: IOperationInput<"DiaCalendarioFindAll">,
+    @AppRequest("DiaCalendarioFindAll") dto: IAppRequest<"DiaCalendarioFindAll">,
   ): Promise<LadesaTypings.DiaCalendarioListOperationOutput["success"]> {
     return this.diaCalendarioService.diaCalendarioFindAll(clientAccess, dto);
   }
@@ -24,7 +25,7 @@ export class DiaCalendarioController {
   async diaCalendarioFindById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("DiaCalendarioFindById") dto: IOperationInput<"DiaCalendarioFindById">,
+    @AppRequest("DiaCalendarioFindById") dto: IAppRequest<"DiaCalendarioFindById">,
   ) {
     return this.diaCalendarioService.diaCalendarioFindByIdStrict(accessContext, { id: dto.parameters.path.id });
   }
@@ -35,7 +36,7 @@ export class DiaCalendarioController {
   async diaCalendarioCreate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("DiaCalendarioCreate") dto: IOperationInput<"DiaCalendarioCreate">,
+    @AppRequest("DiaCalendarioCreate") dto: IAppRequest<"DiaCalendarioCreate">,
   ) {
     return this.diaCalendarioService.diaCalendarioCreate(accessContext, dto);
   }
@@ -46,7 +47,7 @@ export class DiaCalendarioController {
   async diaCalendarioUpdate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("DiaCalendarioUpdate") dto: IOperationInput<"DiaCalendarioUpdate">,
+    @AppRequest("DiaCalendarioUpdate") dto: IAppRequest<"DiaCalendarioUpdate">,
   ) {
     return this.diaCalendarioService.diaCalendarioUpdate(accessContext, dto);
   }
@@ -57,7 +58,7 @@ export class DiaCalendarioController {
   async diaCalendarioDeleteOneById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("DiaCalendarioDeleteOneById") dto: IOperationInput<"DiaCalendarioDeleteOneById">,
+    @AppRequest("DiaCalendarioDeleteOneById") dto: IAppRequest<"DiaCalendarioDeleteOneById">,
   ) {
     return this.diaCalendarioService.diaCalendarioDeleteOneById(accessContext, {
       id: dto.parameters.path.id,

@@ -2,11 +2,10 @@ import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
+import { SearchService } from "@/application/helpers/search.service";
 import { QbEfficientLoad } from "@/application/standards/ladesa-spec/QbEfficientLoad";
-import { LadesaPaginatedResultDto, LadesaSearch } from "@/application/standards/ladesa-spec/search/search-strategies";
-import { IDomain } from "@/domain/domain-contracts";
+import { IDomain } from "@/domain/contracts/integration";
 import type { AccessContext } from "@/infrastructure/access-context";
-import { paginateConfig } from "@/infrastructure/fixtures/pagination/paginateConfig";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
 import type { AmbienteEntity } from "@/infrastructure/integrations/database/typeorm/entities";
 import { ArquivoService } from "../../base/arquivo/arquivo.service";
@@ -26,6 +25,7 @@ export class AmbienteService {
     private databaseContext: DatabaseContextService,
     private imagemService: ImagemService,
     private arquivoService: ArquivoService,
+    private searchService: SearchService,
   ) {}
 
   get ambienteRepository() {
@@ -34,7 +34,7 @@ export class AmbienteService {
 
   //
 
-  async ambienteFindAll(accessContext: AccessContext, dto: IDomain.AmbienteListInput | null = null, selection?: string[] | boolean): Promise<IDomain.AmbienteListOutput["success"]> {
+  async ambienteFindAll(accessContext: AccessContext, input: IDomain.AmbienteListInput | null = null, selection?: string[] | boolean): Promise<IDomain.AmbienteListOutput["success"]> {
     // =========================================================
 
     const qb = this.ambienteRepository.createQueryBuilder(aliasAmbiente);
@@ -45,60 +45,63 @@ export class AmbienteService {
 
     // =========================================================
 
-    const paginated = await LadesaSearch("/ambientes", dto, qb, {
-      ...paginateConfig,
-      select: [
-        //
-        "id",
-        //
-        "nome",
-        "descricao",
-        "codigo",
-        "capacidade",
-        "tipo",
-        "dateCreated",
-        //
-        "bloco.id",
-        "bloco.campus.id",
-      ],
-      relations: {
-        bloco: {
-          campus: true,
+    const paginated = await this.searchService.search(
+      qb,
+      { ...input },
+      {
+        select: [
+          //
+          "id",
+          //
+          "nome",
+          "descricao",
+          "codigo",
+          "capacidade",
+          "tipo",
+          "dateCreated",
+          //
+          "bloco.id",
+          "bloco.campus.id",
+        ],
+        relations: {
+          bloco: {
+            campus: true,
+          },
+        },
+        sortableColumns: [
+          //
+          "nome",
+          "descricao",
+          "codigo",
+          "capacidade",
+          "tipo",
+          //
+          "dateCreated",
+          //
+          "bloco.id",
+          "bloco.campus.id",
+        ],
+        searchableColumns: [
+          //
+          "id",
+          //
+          "nome",
+          "descricao",
+          "codigo",
+          "capacidade",
+          "tipo",
+          //
+        ],
+        defaultSortBy: [
+          ["nome", "ASC"],
+          ["dateCreated", "ASC"],
+        ],
+        filterableColumns: {
+          "bloco.id": [FilterOperator.EQ],
+          "bloco.campus.id": [FilterOperator.EQ],
         },
       },
-      sortableColumns: [
-        //
-        "nome",
-        "descricao",
-        "codigo",
-        "capacidade",
-        "tipo",
-        //
-        "dateCreated",
-        //
-        "bloco.id",
-        "bloco.campus.id",
-      ],
-      searchableColumns: [
-        //
-        "id",
-        //
-        "nome",
-        "descricao",
-        "codigo",
-        "capacidade",
-        "tipo",
-        //
-      ],
-      defaultSortBy: [
-        ["nome", "ASC"],
-        ["dateCreated", "ASC"],
-      ],
-      filterableColumns: {
-        "bloco.id": [FilterOperator.EQ],
-        "bloco.campus.id": [FilterOperator.EQ],
-      },
-    });
+    );
 
     // =========================================================
 
@@ -113,7 +116,7 @@ export class AmbienteService {
 
     // =========================================================
 
-    return LadesaPaginatedResultDto(paginated);
+    return paginated;
   }
 
   async ambienteFindById(accessContext: AccessContext | null, dto: IDomain.AmbienteFindOneInput, selection?: string[] | boolean): Promise<IDomain.AmbienteFindOneOutput | null> {

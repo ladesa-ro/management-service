@@ -1,5 +1,6 @@
 import { Resolver } from "@nestjs/graphql";
-import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
+import { type IAppRequest } from "@/application/contracts/openapi/document/app-openapi-typings";
+import { AppRequest } from "@/application/contracts/openapi/utils/app-request";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { AulaService } from "./aula.service";
 
@@ -15,7 +16,7 @@ export class AulaResolver {
   async aulaFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("AulaFindAll") dto: IOperationInput<"AulaFindAll">,
+    @AppRequest("AulaFindAll") dto: IAppRequest<"AulaFindAll">,
   ) {
     return this.aulaService.aulaFindAll(accessContext, dto);
   }
@@ -25,7 +26,7 @@ export class AulaResolver {
   async aulaFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("AulaFindOneById") dto: IOperationInput<"AulaFindOneById">,
+    @AppRequest("AulaFindOneById") dto: IAppRequest<"AulaFindOneById">,
   ) {
     return this.aulaService.aulaFindByIdStrict(accessContext, {
       id: dto.parameters.path.id,
@@ -37,7 +38,7 @@ export class AulaResolver {
   async aulaCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("AulaCreate") dto: IOperationInput<"AulaCreate">,
+    @AppRequest("AulaCreate") dto: IAppRequest<"AulaCreate">,
   ) {
     return this.aulaService.aulaCreate(accessContext, dto);
   }
@@ -45,7 +46,7 @@ export class AulaResolver {
   async aulaUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("AulaUpdate") dto: IOperationInput<"AulaUpdate">,
+    @AppRequest("AulaUpdate") dto: IAppRequest<"AulaUpdate">,
   ) {
     return this.aulaService.aulaUpdate(accessContext, dto);
   }
@@ -53,7 +54,7 @@ export class AulaResolver {
   async aulaDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("AulaDeleteOneById") dto: IOperationInput<"AulaDeleteOneById">,
+    @AppRequest("AulaDeleteOneById") dto: IAppRequest<"AulaDeleteOneById">,
   ) {
     return this.aulaService.aulaDeleteOneById(accessContext, {
       id: dto.parameters.path.id,

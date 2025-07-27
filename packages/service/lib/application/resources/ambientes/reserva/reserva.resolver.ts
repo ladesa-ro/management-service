@@ -1,5 +1,6 @@
 import { Resolver } from "@nestjs/graphql";
-import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
+import { type IAppRequest } from "@/application/contracts/openapi/document/app-openapi-typings";
+import { AppRequest } from "@/application/contracts/openapi/utils/app-request";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { ReservaService } from "./reserva.service";
 
@@ -15,7 +16,7 @@ export class ReservaResolver {
   async reservaFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("ReservaFindAll") dto: IOperationInput<"ReservaFindAll">,
+    @AppRequest("ReservaFindAll") dto: IAppRequest<"ReservaFindAll">,
   ) {
     return this.reservaService.reservaFindAll(accessContext, dto);
   }
@@ -25,7 +26,7 @@ export class ReservaResolver {
   async reservaFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("ReservaFindOneById") dto: IOperationInput<"ReservaFindOneById">,
+    @AppRequest("ReservaFindOneById") dto: IAppRequest<"ReservaFindOneById">,
   ) {
     return this.reservaService.reservaFindByIdStrict(accessContext, {
       id: dto.parameters.path.id,
@@ -37,7 +38,7 @@ export class ReservaResolver {
   async reservaCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("ReservaCreate") dto: IOperationInput<"ReservaCreate">,
+    @AppRequest("ReservaCreate") dto: IAppRequest<"ReservaCreate">,
   ) {
     return this.reservaService.reservaCreate(accessContext, dto);
   }
@@ -45,7 +46,7 @@ export class ReservaResolver {
   async reservaUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("ReservaUpdate") dto: IOperationInput<"ReservaUpdate">,
+    @AppRequest("ReservaUpdate") dto: IAppRequest<"ReservaUpdate">,
   ) {
     return this.reservaService.reservaUpdate(accessContext, dto);
   }
@@ -53,7 +54,7 @@ export class ReservaResolver {
   async reservaDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("ReservaDeleteOneById") dto: IOperationInput<"ReservaDeleteOneById">,
+    @AppRequest("ReservaDeleteOneById") dto: IAppRequest<"ReservaDeleteOneById">,
   ) {
     return this.reservaService.reservaDeleteOneById(accessContext, {
       id: dto.parameters.path.id,

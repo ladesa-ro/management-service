@@ -1,7 +1,8 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Controller, Delete, Get, Patch, Post, Put, UploadedFile } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
+import { type IAppRequest } from "@/application/contracts/openapi/document/app-openapi-typings";
+import { AppRequest } from "@/application/contracts/openapi/utils/app-request";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { CursoService } from "./curso.service";
 
@@ -16,7 +17,7 @@ export class CursoController {
   async cursoFindAll(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("CursoFindAll") dto: IOperationInput<"CursoFindAll">,
+    @AppRequest("CursoFindAll") dto: IAppRequest<"CursoFindAll">,
   ): Promise<LadesaTypings.CursoListOperationOutput["success"]> {
     return this.cursoService.cursoFindAll(accessContext, dto);
   }
@@ -27,7 +28,7 @@ export class CursoController {
   async cursoFindById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("CursoFindById") dto: IOperationInput<"CursoFindById">,
+    @AppRequest("CursoFindById") dto: IAppRequest<"CursoFindById">,
   ) {
     return this.cursoService.cursoFindByIdStrict(accessContext, {
       id: dto.parameters.path.id,
@@ -40,7 +41,7 @@ export class CursoController {
   async cursoCreate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("CursoCreate") dto: IOperationInput<"CursoCreate">,
+    @AppRequest("CursoCreate") dto: IAppRequest<"CursoCreate">,
   ) {
     return this.cursoService.cursoCreate(accessContext, dto);
   }
@@ -48,7 +49,7 @@ export class CursoController {
   //
 
   @Patch("/:id")
-  async cursoUpdate(@AccessContextHttp() accessContext: AccessContext, @HttpOperationInput("CursoUpdate") dto: IOperationInput<"CursoUpdate">) {
+  async cursoUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CursoUpdate") dto: IAppRequest<"CursoUpdate">) {
     return this.cursoService.cursoUpdate(accessContext, dto);
   }
 
@@ -77,7 +78,7 @@ export class CursoController {
   async cursoDeleteOneById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("CursoDeleteOneById") dto: IOperationInput<"CursoDeleteOneById">,
+    @AppRequest("CursoDeleteOneById") dto: IAppRequest<"CursoDeleteOneById">,
   ) {
     return this.cursoService.cursoDeleteOneById(accessContext, {
       id: dto.parameters.path.id,

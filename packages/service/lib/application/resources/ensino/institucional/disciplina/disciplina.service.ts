@@ -2,11 +2,11 @@ import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { map, pick } from "lodash";
 import { FilterOperator, FilterSuffix } from "nestjs-paginate";
+import { SearchService } from "@/application/helpers/search.service";
 import { ArquivoService } from "@/application/resources/base/arquivo/arquivo.service";
 import { ImagemService } from "@/application/resources/base/imagem/imagem.service";
 import { QbEfficientLoad } from "@/application/standards/ladesa-spec/QbEfficientLoad";
-import { LadesaPaginatedResultDto, LadesaSearch } from "@/application/standards/ladesa-spec/search/search-strategies";
-import { IDomain } from "@/domain/domain-contracts";
+import { IDomain } from "@/domain/contracts/integration";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
@@ -24,6 +24,7 @@ export class DisciplinaService {
     private databaseContext: DatabaseContextService,
     private imagemService: ImagemService,
     private arquivoService: ArquivoService,
+    private searchService: SearchService,
   ) {}
 
   get disciplinaRepository() {
@@ -43,40 +44,44 @@ export class DisciplinaService {
 
     // =========================================================
 
-    const paginated = await LadesaSearch("#/", dto, qb, {
-      ...paginateConfig,
-      relations: { diarios: true },
-      select: [
-        //
-        "id",
-        //
-        "nome",
-        "nomeAbreviado",
-        "cargaHoraria",
-        //
-      ],
-      sortableColumns: [
-        //
-        "nome",
-        "cargaHoraria",
-      ],
-      searchableColumns: [
-        //
-        "id",
-        //
-        "nome",
-        "nomeAbreviado",
-        "cargaHoraria",
-        //
-      ],
-      defaultSortBy: [
-        //
-        ["nome", "ASC"],
-      ],
-      filterableColumns: {
-        "diarios.id": [FilterOperator.EQ, FilterOperator.NULL, FilterSuffix.NOT],
+    const paginated = await this.searchService.search(
+      qb,
+      { ...dto },
+      {
+        ...paginateConfig,
+        relations: { diarios: true },
+        select: [
+          //
+          "id",
+          //
+          "nome",
+          "nomeAbreviado",
+          "cargaHoraria",
+          //
+        ],
+        sortableColumns: [
+          //
+          "nome",
+          "cargaHoraria",
+        ],
+        searchableColumns: [
+          //
+          "id",
+          //
+          "nome",
+          "nomeAbreviado",
+          "cargaHoraria",
+          //
+        ],
+        defaultSortBy: [
+          //
+          ["nome", "ASC"],
+        ],
+        filterableColumns: {
+          "diarios.id": [FilterOperator.EQ, FilterOperator.NULL, FilterSuffix.NOT],
+        },
       },
-    });
+    );
 
     // =========================================================
 
@@ -90,7 +95,7 @@ export class DisciplinaService {
 
     // =========================================================
 
-    return LadesaPaginatedResultDto(paginated);
+    return paginated;
   }
 
   async disciplinaFindById(accessContext: AccessContext | null, dto: IDomain.DisciplinaFindOneInput, selection?: string[] | boolean): Promise<IDomain.DisciplinaFindOneOutput | null> {

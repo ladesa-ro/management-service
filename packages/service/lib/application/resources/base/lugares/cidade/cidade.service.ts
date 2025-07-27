@@ -2,9 +2,9 @@ import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { map } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
+import { SearchService } from "@/application/helpers/search.service";
 import { QbEfficientLoad } from "@/application/standards/ladesa-spec/QbEfficientLoad";
-import { LadesaPaginatedResultDto, LadesaSearch } from "@/application/standards/ladesa-spec/search/search-strategies";
-import { IDomain } from "@/domain/domain-contracts";
+import { IDomain } from "@/domain/contracts/integration";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
@@ -13,7 +13,10 @@ const aliasCidade = "cidade";
 
 @Injectable()
 export class CidadeService {
-  constructor(private databaseContextService: DatabaseContextService) {}
+  constructor(
+    private databaseContextService: DatabaseContextService,
+    private searchService: SearchService,
+  ) {}
 
   //
 
@@ -34,34 +37,38 @@ export class CidadeService {
 
     // =========================================================
 
-    const paginated = await LadesaSearch("/cidades", dto, qb.clone(), {
-      ...paginateConfig,
-      select: [
-        //
-        "id",
-        //
-        "nome",
-        //
-        "estado.id",
-        "estado.sigla",
-        "estado.nome",
-        //
-      ],
-      relations: {
-        estado: true,
+    const paginated = await this.searchService.search(
+      qb,
+      { ...dto },
+      {
+        ...paginateConfig,
+        select: [
+          //
+          "id",
+          //
+          "nome",
+          //
+          "estado.id",
+          "estado.sigla",
+          "estado.nome",
+          //
+        ],
+        relations: {
+          estado: true,
+        },
+        sortableColumns: ["id", "nome", "estado.nome", "estado.sigla"],
+        searchableColumns: ["nome", "estado.nome", "estado.sigla"],
+        defaultSortBy: [
+          ["nome", "ASC"],
+          ["estado.nome", "ASC"],
+        ],
+        filterableColumns: {
+          "estado.id": [FilterOperator.EQ],
+          "estado.nome": [FilterOperator.EQ],
+          "estado.sigla": [FilterOperator.EQ],
+        },
       },
-      sortableColumns: ["id", "nome", "estado.nome", "estado.sigla"],
-      searchableColumns: ["nome", "estado.nome", "estado.sigla"],
-      defaultSortBy: [
-        ["nome", "ASC"],
-        ["estado.nome", "ASC"],
-      ],
-      filterableColumns: {
-        "estado.id": [FilterOperator.EQ],
-        "estado.nome": [FilterOperator.EQ],
-        "estado.sigla": [FilterOperator.EQ],
-      },
-    });
+    );
 
     // =========================================================
 
@@ -76,7 +83,7 @@ export class CidadeService {
 
     // =========================================================
 
-    return LadesaPaginatedResultDto(paginated);
+    return paginated;
   }
 
   async findById(accessContext: AccessContext, dto: IDomain.CidadeFindOneInput, selection?: string[]) {

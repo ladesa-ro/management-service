@@ -1,6 +1,7 @@
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Controller, Get, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
+import { type IAppRequest } from "@/application/contracts/openapi/document/app-openapi-typings";
+import { AppRequest } from "@/application/contracts/openapi/utils/app-request";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { Public } from "@/infrastructure/authentication";
 import { AutenticacaoService } from "./autenticacao.service";
@@ -23,7 +24,7 @@ export class AutenticacaoController {
   login(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.AuthLoginOperationInput,
+    @AppRequest("AuthLoginInput") dto: IAppRequest<"AuthLoginInput">,
   ) {
     return this.autenticacaoService.login(accessContext, dto);
   }
@@ -33,7 +34,7 @@ export class AutenticacaoController {
   refresh(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput() dto: LadesaTypings.AuthRefreshOperationInput,
+    @AppRequest("AuthRefreshInput") dto: IAppRequest<"AuthRefreshInput">,
   ) {
     return this.autenticacaoService.refresh(accessContext, dto);
   }
@@ -42,14 +43,13 @@ export class AutenticacaoController {
   definirSenha(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @CombinedInput()
-    dto: LadesaTypings.AuthCredentialsSetInitialPasswordOperationInput,
+    @AppRequest("AuthCredentialsSetInitialPasswordInput") dto: IAppRequest<"AuthCredentialsSetInitialPasswordInput">,
   ) {
     return this.autenticacaoService.definirSenha(accessContext, dto);
   }
 
   @Post("/redefinir-senha")
-  redefinirSenha(@AccessContextHttp() accessContext: AccessContext, @CombinedInput() dto: LadesaTypings.AuthRecoverPasswordOperationInput) {
+  redefinirSenha(@AccessContextHttp() accessContext: AccessContext, @AppRequest("AuthRecoverPasswordInput") dto: IAppRequest<"AuthRecoverPasswordInput">) {
     return this.autenticacaoService.recoverPassword(accessContext, dto);
   }
 }

@@ -1,4 +1,3 @@
-
 import { Controller, Get, Query, type StreamableFile } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
@@ -15,7 +14,7 @@ export class ArquivoController {
     @Query("acesso.recurso.id") acessoRecursoId: string,
     @Query("acesso.recurso.nome") acessoRecursoNome: string,
   ): Promise<StreamableFile> {
-    return this.arquivoService.getStreamableFile(accessContext, id {
+    return this.arquivoService.getStreamableFile(accessContext, id, {
       id: acessoRecursoId,
       nome: acessoRecursoNome,
     });

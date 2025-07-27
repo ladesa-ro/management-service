@@ -1,5 +1,6 @@
 import { Resolver } from "@nestjs/graphql";
-import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
+import { type IAppRequest } from "@/application/contracts/openapi/document/app-openapi-typings";
+import { AppRequest } from "@/application/contracts/openapi/utils/app-request";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { EventoService } from "./evento.service";
 
@@ -12,7 +13,7 @@ export class EventoResolver {
   async eventoFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("EventoFindAll") dto: IOperationInput<"EventoFindAll">,
+    @AppRequest("EventoFindAll") dto: IAppRequest<"EventoFindAll">,
   ) {
     return this.eventoService.eventoFindAll(accessContext, dto);
   }
@@ -22,7 +23,7 @@ export class EventoResolver {
   async eventoFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("EventoFindOneById") dto: IOperationInput<"EventoFindOneById">,
+    @AppRequest("EventoFindOneById") dto: IAppRequest<"EventoFindOneById">,
   ) {
     return this.eventoService.eventoFindByIdStrict(accessContext, {
       id: dto.parameters.path.id,
@@ -34,7 +35,7 @@ export class EventoResolver {
   async eventoCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("EventoCreate") dto: IOperationInput<"EventoCreate">,
+    @AppRequest("EventoCreate") dto: IAppRequest<"EventoCreate">,
   ) {
     return this.eventoService.eventoCreate(accessContext, dto);
   }
@@ -44,7 +45,7 @@ export class EventoResolver {
   async eventoUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("EventoUpdate") dto: IOperationInput<"EventoUpdate">,
+    @AppRequest("EventoUpdate") dto: IAppRequest<"EventoUpdate">,
   ) {
     return this.eventoService.eventoUpdate(accessContext, dto);
   }
@@ -54,7 +55,7 @@ export class EventoResolver {
   async eventoDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("EventoDeleteOneById") dto: IOperationInput<"EventoDeleteOneById">,
+    @AppRequest("EventoDeleteOneById") dto: IAppRequest<"EventoDeleteOneById">,
   ) {
     return this.eventoService.eventoDeleteOneById(accessContext, {
       id: dto.parameters.path.id,

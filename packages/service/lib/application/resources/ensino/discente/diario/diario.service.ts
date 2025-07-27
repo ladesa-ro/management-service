@@ -2,10 +2,10 @@ import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
+import { SearchService } from "@/application/helpers/search.service";
 import { TurmaService } from "@/application/resources/ensino/discente/turma/turma.service";
 import { QbEfficientLoad } from "@/application/standards/ladesa-spec/QbEfficientLoad";
-import { LadesaPaginatedResultDto, LadesaSearch } from "@/application/standards/ladesa-spec/search/search-strategies";
-import { IDomain } from "@/domain/domain-contracts";
+import { IDomain } from "@/domain/contracts/integration";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
@@ -28,6 +28,7 @@ export class DiarioService {
     private turmaService: TurmaService,
     private disciplinaService: DisciplinaService,
     private ambienteService: AmbienteService,
+    private searchService: SearchService,
   ) {}
 
   get diarioRepository() {
@@ -47,52 +48,56 @@ export class DiarioService {
 
     // =========================================================
 
-    const paginated = await LadesaSearch("#/", dto, qb, {
-      ...paginateConfig,
-      select: [
-        //
-        "id",
-        //
-        "ativo",
-        //
-        "turma.id",
-        "turma.periodo",
-        "disciplina.id",
-        "disciplina.nome",
-        "ambientePadrao.id",
-        "ambientePadrao.nome",
-        //
-      ],
-      sortableColumns: [
-        //
-        "ativo",
-        //
-        "disciplina.nome",
-        "ambientePadrao.nome",
-      ],
-      relations: {
-        turma: true,
-        disciplina: true,
-        ambientePadrao: true,
+    const paginated = await this.searchService.search(
+      qb,
+      { ...dto },
+      {
+        ...paginateConfig,
+        select: [
+          //
+          "id",
+          //
+          "ativo",
+          //
+          "turma.id",
+          "turma.periodo",
+          "disciplina.id",
+          "disciplina.nome",
+          "ambientePadrao.id",
+          "ambientePadrao.nome",
+          //
+        ],
+        sortableColumns: [
+          //
+          "ativo",
+          //
+          "disciplina.nome",
+          "ambientePadrao.nome",
+        ],
+        relations: {
+          turma: true,
+          disciplina: true,
+          ambientePadrao: true,
+        },
+        searchableColumns: [
+          //
+          "id",
+          //
+          "ativo",
+          "ano",
+          "etapa",
+          "turma.periodo",
+          "disciplina.nome",
+          //
+        ],
+        defaultSortBy: [],
+        filterableColumns: {
+          "turma.id": [FilterOperator.EQ],
+          "disciplina.id": [FilterOperator.EQ],
+          "ambientePadrao.id": [FilterOperator.EQ],
+        },
       },
-      searchableColumns: [
-        //
-        "id",
-        //
-        "ativo",
-        "ano",
-        "etapa",
-        "turma.periodo",
-        "disciplina.nome",
-        //
-      ],
-      defaultSortBy: [],
-      filterableColumns: {
-        "turma.id": [FilterOperator.EQ],
-        "disciplina.id": [FilterOperator.EQ],
-        "ambientePadrao.id": [FilterOperator.EQ],
-      },
-    });
+    );
 
     // =========================================================
 
@@ -106,7 +111,7 @@ export class DiarioService {
 
     // =========================================================
 
-    return LadesaPaginatedResultDto(paginated);
+    return paginated;
   }
 
   async diarioFindById(accessContext: AccessContext, dto: IDomain.DiarioFindOneInput, selection?: string[] | boolean): Promise<IDomain.DiarioFindOneOutput | null> {

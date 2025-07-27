@@ -2,11 +2,10 @@ import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
+import { SearchService } from "@/application/helpers/search.service";
 import { QbEfficientLoad } from "@/application/standards/ladesa-spec/QbEfficientLoad";
-import { LadesaPaginatedResultDto, LadesaSearch } from "@/application/standards/ladesa-spec/search/search-strategies";
-import { IDomain } from "@/domain/domain-contracts";
+import { IDomain } from "@/domain/contracts/integration";
 import type { AccessContext } from "@/infrastructure/access-context";
-import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
 import type { EventoEntity } from "@/infrastructure/integrations/database/typeorm/entities/05-calendario/evento.entity";
 import { CalendarioLetivoService } from "../calendario-letivo/calendario-letivo.service";
@@ -22,6 +21,7 @@ export class EventoService {
   constructor(
     private databaseContext: DatabaseContextService,
     private calendarioLetivoService: CalendarioLetivoService,
+    private searchService: SearchService,
   ) {}
 
   get eventoRepository() {
@@ -41,48 +41,51 @@ export class EventoService {
 
     // =========================================================
 
-    const paginated = await LadesaSearch("#/", dto, qb, {
-      ...paginateConfig,
-      select: [
-        //
-        "id",
-        //
-        "nome",
-        "cor",
-        //
-        "rrule",
-        //
-        "calendario.id",
-        "calendario.nome",
-        "calendario.ano",
-      ],
-      sortableColumns: [
-        //
-        "nome",
-        "cor",
-        //
-        "calendario.id",
-        "calendario.nome",
-        "calendario.ano",
-        //
-      ],
-      searchableColumns: [
-        //
-        "id",
-        //
-        "nome",
-        "cor",
-      ],
-      relations: {
-        calendario: true,
+    const paginated = await this.searchService.search(
+      qb,
+      { ...dto },
+      {
+        select: [
+          //
+          "id",
+          //
+          "nome",
+          "cor",
+          //
+          "rrule",
+          //
+          "calendario.id",
+          "calendario.nome",
+          "calendario.ano",
+        ],
+        sortableColumns: [
+          //
+          "nome",
+          "cor",
+          //
+          "calendario.id",
+          "calendario.nome",
+          "calendario.ano",
+          //
+        ],
+        searchableColumns: [
+          //
+          "id",
+          //
+          "nome",
+          "cor",
+        ],
+        relations: {
+          calendario: true,
+        },
+        defaultSortBy: [],
+        filterableColumns: {
+          "calendario.id": [FilterOperator.EQ],
+          "calendario.nome": [FilterOperator.EQ],
+          "calendario.ano": [FilterOperator.EQ],
+        },
       },
-      defaultSortBy: [],
-      filterableColumns: {
-        "calendario.id": [FilterOperator.EQ],
-        "calendario.nome": [FilterOperator.EQ],
-        "calendario.ano": [FilterOperator.EQ],
-      },
-    });
+    );
 
     // =========================================================
 
@@ -96,7 +99,7 @@ export class EventoService {
 
     // =========================================================
 
-    return LadesaPaginatedResultDto(paginated);
+    return paginated;
   }
 
   async eventoFindById(accessContext: AccessContext, dto: IDomain.EventoFindOneInput, selection?: string[] | boolean): Promise<IDomain.EventoFindOneOutput | null> {

@@ -1,7 +1,8 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Controller, Delete, Get, Patch, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
+import { type IAppRequest } from "@/application/contracts/openapi/document/app-openapi-typings";
+import { AppRequest } from "@/application/contracts/openapi/utils/app-request";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { HorarioGeradoService } from "./horario-gerado.service";
 
@@ -13,7 +14,7 @@ export class HorarioGeradoController {
   @Get("/")
   async horarioGeradoFindAll(
     @AccessContextHttp() clientAccess: AccessContext,
-    @HttpOperationInput("HorarioGeradoFindAll") dto: IOperationInput<"HorarioGeradoFindAll">,
+    @AppRequest("HorarioGeradoFindAll") dto: IAppRequest<"HorarioGeradoFindAll">,
   ): Promise<LadesaTypings.HorarioGeradoListOperationOutput["success"]> {
     return this.horarioGeradoService.horarioGeradoFindAll(clientAccess, dto);
   }
@@ -24,7 +25,7 @@ export class HorarioGeradoController {
   async horarioGeradoFindById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("HorarioGeradoFindById") dto: IOperationInput<"HorarioGeradoFindById">,
+    @AppRequest("HorarioGeradoFindById") dto: IAppRequest<"HorarioGeradoFindById">,
   ) {
     return this.horarioGeradoService.horarioGeradoFindByIdStrict(accessContext, { id: dto.parameters.path.id });
   }
@@ -35,7 +36,7 @@ export class HorarioGeradoController {
   async horarioGeradoCreate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("HorarioGeradoCreate") dto: IOperationInput<"HorarioGeradoCreate">,
+    @AppRequest("HorarioGeradoCreate") dto: IAppRequest<"HorarioGeradoCreate">,
   ) {
     return this.horarioGeradoService.horarioGeradoCreate(accessContext, dto);
   }
@@ -46,7 +47,7 @@ export class HorarioGeradoController {
   async horarioGeradoUpdate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("HorarioGeradoUpdate") dto: IOperationInput<"HorarioGeradoUpdate">,
+    @AppRequest("HorarioGeradoUpdate") dto: IAppRequest<"HorarioGeradoUpdate">,
   ) {
     return this.horarioGeradoService.horarioGeradoUpdate(accessContext, dto);
   }
@@ -57,7 +58,7 @@ export class HorarioGeradoController {
   async horarioGeradoDeleteOneById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("HorarioGeradoDeleteOneById") dto: IOperationInput<"HorarioGeradoDeleteOneById">,
+    @AppRequest("HorarioGeradoDeleteOneById") dto: IAppRequest<"HorarioGeradoDeleteOneById">,
   ) {
     return this.horarioGeradoService.horarioGeradoDeleteOneById(accessContext, {
       id: dto.parameters.path.id,

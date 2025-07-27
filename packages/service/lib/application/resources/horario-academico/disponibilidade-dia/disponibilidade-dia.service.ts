@@ -2,11 +2,11 @@ import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
+import { SearchService } from "@/application/helpers/search.service";
 import { IntervaloDeTempoService } from "@/application/resources/base/intervalo-de-tempo/intervalo-de-tempo.service";
 import { DisponibilidadeService } from "@/application/resources/horario-academico/disponibilidade/disponibilidade.service";
 import { QbEfficientLoad } from "@/application/standards/ladesa-spec/QbEfficientLoad";
-import { LadesaPaginatedResultDto, LadesaSearch } from "@/application/standards/ladesa-spec/search/search-strategies";
-import { IDomain } from "@/domain/domain-contracts";
+import { IDomain } from "@/domain/contracts/integration";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
@@ -24,6 +24,7 @@ export class DisponibilidadeDiaService {
     private databaseContext: DatabaseContextService,
     private disponibilidadeService: DisponibilidadeService,
     private intervaloDeTempoService: IntervaloDeTempoService,
+    private searchService: SearchService,
   ) {}
 
   get disponibilidadeDiaRepository() {
@@ -47,52 +48,56 @@ export class DisponibilidadeDiaService {
 
     // =========================================================
 
-    const paginated = await LadesaSearch("#/", dto, qb, {
-      ...paginateConfig,
-      select: [
-        //
-        "id",
-        //
-        "rrule",
-        //
-        "disponibilidade.id",
-        "disponibilidade.dataInicio",
-        "disponibilidade.dataFim",
-        //
-        "intervaloDeTempo.id",
-        "intervaloDeTempo.periodoInicio",
-        "intervaloDeTempo.periodoFim",
-      ],
-      sortableColumns: [
-        //
-        "disponibilidade.dataInicio",
-        "disponibilidade.dataFim",
-        //
-        "intervaloDeTempo.periodoInicio",
-        "intervaloDeTempo.periodoFim",
-      ],
-      searchableColumns: [
-        //
-        "id",
-        //
-        "rrule",
-        //
-        "disponibilidade.dataInicio",
-        "disponibilidade.dataFim",
-        //
-        "intervaloDeTempo.periodoInicio",
-        "intervaloDeTempo.periodoFim",
-      ],
-      relations: {
-        disponibilidade: true,
-        intervaloDeTempo: true,
+    const paginated = await this.searchService.search(
+      qb,
+      { ...dto },
+      {
+        ...paginateConfig,
+        select: [
+          //
+          "id",
+          //
+          "rrule",
+          //
+          "disponibilidade.id",
+          "disponibilidade.dataInicio",
+          "disponibilidade.dataFim",
+          //
+          "intervaloDeTempo.id",
+          "intervaloDeTempo.periodoInicio",
+          "intervaloDeTempo.periodoFim",
+        ],
+        sortableColumns: [
+          //
+          "disponibilidade.dataInicio",
+          "disponibilidade.dataFim",
+          //
+          "intervaloDeTempo.periodoInicio",
+          "intervaloDeTempo.periodoFim",
+        ],
+        searchableColumns: [
+          //
+          "id",
+          //
+          "rrule",
+          //
+          "disponibilidade.dataInicio",
+          "disponibilidade.dataFim",
+          //
+          "intervaloDeTempo.periodoInicio",
+          "intervaloDeTempo.periodoFim",
+        ],
+        relations: {
+          disponibilidade: true,
+          intervaloDeTempo: true,
+        },
+        defaultSortBy: [],
+        filterableColumns: {
+          "disponibilidade.id": [FilterOperator.EQ],
+          "intervaloDeTempo.id": [FilterOperator.EQ],
+        },
       },
-      defaultSortBy: [],
-      filterableColumns: {
-        "disponibilidade.id": [FilterOperator.EQ],
-        "intervaloDeTempo.id": [FilterOperator.EQ],
-      },
-    });
+    );
 
     // =========================================================
 
@@ -106,7 +111,7 @@ export class DisponibilidadeDiaService {
 
     // =========================================================
 
-    return LadesaPaginatedResultDto(paginated);
+    return paginated;
   }
 
   async disponibilidadeDiaFindById(accessContext: AccessContext, dto: IDomain.DisponibilidadeDiaFindOneInput, selection?: string[] | boolean): Promise<IDomain.DisponibilidadeDiaFindOneOutput | null> {

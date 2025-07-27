@@ -1,9 +1,9 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { map, pick } from "lodash";
+import { SearchService } from "@/application/helpers/search.service";
 import { QbEfficientLoad } from "@/application/standards/ladesa-spec/QbEfficientLoad";
-import { LadesaPaginatedResultDto, LadesaSearch } from "@/application/standards/ladesa-spec/search/search-strategies";
-import { IDomain } from "@/domain/domain-contracts";
+import { IDomain } from "@/domain/contracts/integration";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
@@ -17,7 +17,10 @@ const aliasNivelFormacao = "nivel_formacao";
 
 @Injectable()
 export class NivelFormacaoService {
-  constructor(private databaseContext: DatabaseContextService) {}
+  constructor(
+    private databaseContext: DatabaseContextService,
+    private searchService: SearchService,
+  ) {}
 
   get nivelFormacaoRepository() {
     return this.databaseContext.nivelFormacaoRepository;
@@ -36,35 +39,39 @@ export class NivelFormacaoService {
 
     // =========================================================
 
-    const paginated = await LadesaSearch("#/", dto, qb, {
-      ...paginateConfig,
-      select: [
-        //
-        "id",
-        //
-        "slug",
-        //
-        "dateCreated",
-        //
-      ],
-      sortableColumns: [
-        //
-        "slug",
-        "dateCreated",
-      ],
-      searchableColumns: [
-        //
-        "id",
-        //
-        "slug",
-        //
-      ],
-      defaultSortBy: [
-        ["slug", "ASC"],
-        ["dateCreated", "ASC"],
-      ],
-      filterableColumns: {},
-    });
+    const paginated = await this.searchService.search(
+      qb,
+      { ...dto },
+      {
+        ...paginateConfig,
+        select: [
+          //
+          "id",
+          //
+          "slug",
+          //
+          "dateCreated",
+          //
+        ],
+        sortableColumns: [
+          //
+          "slug",
+          "dateCreated",
+        ],
+        searchableColumns: [
+          //
+          "id",
+          //
+          "slug",
+          //
+        ],
+        defaultSortBy: [
+          ["slug", "ASC"],
+          ["dateCreated", "ASC"],
+        ],
+        filterableColumns: {},
+      },
+    );
 
     // =========================================================
 
@@ -78,7 +85,7 @@ export class NivelFormacaoService {
 
     // =========================================================
 
-    return LadesaPaginatedResultDto(paginated);
+    return paginated;
   }
 
   async nivelFormacaoFindById(accessContext: AccessContext | null, dto: IDomain.NivelFormacaoFindOneInput, selection?: string[]): Promise<IDomain.NivelFormacaoFindOneOutput | null> {

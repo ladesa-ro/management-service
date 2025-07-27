@@ -1,5 +1,6 @@
 import { Resolver } from "@nestjs/graphql";
-import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
+import { type IAppRequest } from "@/application/contracts/openapi/document/app-openapi-typings";
+import { AppRequest } from "@/application/contracts/openapi/utils/app-request";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { EtapaService } from "./etapa.service";
 
@@ -12,7 +13,7 @@ export class EtapaResolver {
   async etapaFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("EtapaFindAll") dto: IOperationInput<"EtapaFindAll">,
+    @AppRequest("EtapaFindAll") dto: IAppRequest<"EtapaFindAll">,
   ) {
     return this.etapaService.etapaFindAll(accessContext, dto);
   }
@@ -22,7 +23,7 @@ export class EtapaResolver {
   async etapaFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("EtapaFindOneById") dto: IOperationInput<"EtapaFindOneById">,
+    @AppRequest("EtapaFindOneById") dto: IAppRequest<"EtapaFindOneById">,
   ) {
     return this.etapaService.etapaFindByIdStrict(accessContext, {
       id: dto.parameters.path.id,
@@ -34,7 +35,7 @@ export class EtapaResolver {
   async etapaCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("EtapaCreate") dto: IOperationInput<"EtapaCreate">,
+    @AppRequest("EtapaCreate") dto: IAppRequest<"EtapaCreate">,
   ) {
     return this.etapaService.etapaCreate(accessContext, dto);
   }
@@ -44,7 +45,7 @@ export class EtapaResolver {
   async etapaUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("EtapaUpdate") dto: IOperationInput<"EtapaUpdate">,
+    @AppRequest("EtapaUpdate") dto: IAppRequest<"EtapaUpdate">,
   ) {
     return this.etapaService.etapaUpdate(accessContext, dto);
   }
@@ -54,7 +55,7 @@ export class EtapaResolver {
   async etapaDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("EtapaDeleteOneById") dto: IOperationInput<"EtapaDeleteOneById">,
+    @AppRequest("EtapaDeleteOneById") dto: IAppRequest<"EtapaDeleteOneById">,
   ) {
     return this.etapaService.etapaDeleteOneById(accessContext, {
       id: dto.parameters.path.id,

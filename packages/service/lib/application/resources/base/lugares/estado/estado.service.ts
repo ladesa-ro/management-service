@@ -1,9 +1,9 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { map } from "lodash";
+import { SearchService } from "@/application/helpers/search.service";
 import { QbEfficientLoad } from "@/application/standards/ladesa-spec/QbEfficientLoad";
-import { LadesaPaginatedResultDto, LadesaSearch } from "@/application/standards/ladesa-spec/search/search-strategies";
-import { IDomain } from "@/domain/domain-contracts";
+import { IDomain } from "@/domain/contracts/integration";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
@@ -12,7 +12,10 @@ const aliasEstado = "estado";
 
 @Injectable()
 export class EstadoService {
-  constructor(private databaseContext: DatabaseContextService) {}
+  constructor(
+    private databaseContext: DatabaseContextService,
+    private searchService: SearchService,
+  ) {}
 
   get baseEstadoRepository() {
     return this.databaseContext.estadoRepository;
@@ -31,29 +34,33 @@ export class EstadoService {
 
     // =========================================================
 
-    const paginated = await LadesaSearch("/estado", dto ?? null, qb, {
-      ...paginateConfig,
-      select: [
-        //
-        "id",
-      ],
-      searchableColumns: [
-        //
-        "nome",
-        "sigla",
-      ],
-      sortableColumns: [
-        //
-        "id",
-        "nome",
-        "sigla",
-      ],
-      defaultSortBy: [
-        //
-        ["nome", "ASC"],
-      ],
-      filterableColumns: {},
-    });
+    const paginated = await this.searchService.search(
+      qb,
+      { ...dto },
+      {
+        ...paginateConfig,
+        select: [
+          //
+          "id",
+        ],
+        searchableColumns: [
+          //
+          "nome",
+          "sigla",
+        ],
+        sortableColumns: [
+          //
+          "id",
+          "nome",
+          "sigla",
+        ],
+        defaultSortBy: [
+          //
+          ["nome", "ASC"],
+        ],
+        filterableColumns: {},
+      },
+    );
 
     // =========================================================
 
@@ -68,7 +75,7 @@ export class EstadoService {
 
     // =========================================================
 
-    return LadesaPaginatedResultDto(paginated);
+    return paginated;
   }
 
   async findById(accessContext: AccessContext, dto: IDomain.EstadoFindOneInput, selection?: string[]) {

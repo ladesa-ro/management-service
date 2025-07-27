@@ -2,10 +2,10 @@ import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
+import { SearchService } from "@/application/helpers/search.service";
 import { IntervaloDeTempoService } from "@/application/resources/base/intervalo-de-tempo/intervalo-de-tempo.service";
 import { DiarioProfessorService } from "@/application/resources/ensino/discente/diario-professor/diario-professor.service";
 import { QbEfficientLoad } from "@/application/standards/ladesa-spec/QbEfficientLoad";
-import { LadesaPaginatedResultDto, LadesaSearch } from "@/application/standards/ladesa-spec/search/search-strategies";
 import { IDomain } from "@/domain/domain-contracts";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
@@ -26,6 +26,7 @@ export class HorarioGeradoAulaService {
     private diarioProfessorService: DiarioProfessorService,
     private horarioGeradoService: HorarioGeradoService,
     private intervaloDeTempoService: IntervaloDeTempoService,
+    private searchService: SearchService,
   ) {}
 
   get horarioGeradoAulaRepository() {
@@ -49,62 +50,66 @@ export class HorarioGeradoAulaService {
 
     // =========================================================
 
-    const paginated = await LadesaSearch("#/", dto, qb, {
-      ...paginateConfig,
-      select: [
-        //
-        "id",
-        //
-        "diaSemanaIso",
-        "horarioGerado",
-        "diarioProfessor",
-        "intervaloDeTempo",
-        //
-        "diarioProfessor.id",
-        "diarioProfessor.situacao",
-        //
-        "intervaloDeTempo.id",
-        "intervaloDeTempo.periodoInicio",
-        "intervaloDeTempo.periodoFim",
-        //
-        "horarioGerado.id",
-        "horarioGerado.status",
-        "horarioGerado.tipo",
-        "horarioGerado.dataGeracao",
-        "horarioGerado.vigenciaInicio",
-        "horarioGerado.vigenciaFim",
-      ],
-      sortableColumns: [
-        //
-        "diaSemanaIso",
-        "horarioGerado",
-        "diarioProfessor",
-        "intervaloDeTempo",
-        //
-        "diarioProfessor.id",
-        "intervaloDeTempo.id",
-        "horarioGerado.id",
-      ],
-      searchableColumns: [
-        //
-        "id",
-        //
-        "diaSemanaIso",
-        "horarioGerado",
-        "diarioProfessor",
-        "intervaloDeTempo",
-      ],
-      relations: {
-        diarioProfessor: true,
-        intervaloDeTempo: true,
-        horarioGerado: true,
+    const paginated = await this.searchService.search(
+      qb,
+      { ...dto },
+      {
+        ...paginateConfig,
+        select: [
+          //
+          "id",
+          //
+          "diaSemanaIso",
+          "horarioGerado",
+          "diarioProfessor",
+          "intervaloDeTempo",
+          //
+          "diarioProfessor.id",
+          "diarioProfessor.situacao",
+          //
+          "intervaloDeTempo.id",
+          "intervaloDeTempo.periodoInicio",
+          "intervaloDeTempo.periodoFim",
+          //
+          "horarioGerado.id",
+          "horarioGerado.status",
+          "horarioGerado.tipo",
+          "horarioGerado.dataGeracao",
+          "horarioGerado.vigenciaInicio",
+          "horarioGerado.vigenciaFim",
+        ],
+        sortableColumns: [
+          //
+          "diaSemanaIso",
+          "horarioGerado",
+          "diarioProfessor",
+          "intervaloDeTempo",
+          //
+          "diarioProfessor.id",
+          "intervaloDeTempo.id",
+          "horarioGerado.id",
+        ],
+        searchableColumns: [
+          //
+          "id",
+          //
+          "diaSemanaIso",
+          "horarioGerado",
+          "diarioProfessor",
+          "intervaloDeTempo",
+        ],
+        relations: {
+          diarioProfessor: true,
+          intervaloDeTempo: true,
+          horarioGerado: true,
+        },
+        defaultSortBy: [],
+        filterableColumns: {
+          // 'diarioProfessor.id': [FilterOperator.EQ],
+          "horarioGerado.id": [FilterOperator.EQ],
+        },
       },
-      defaultSortBy: [],
-      filterableColumns: {
-        // 'diarioProfessor.id': [FilterOperator.EQ],
-        "horarioGerado.id": [FilterOperator.EQ],
-      },
-    });
+    );
 
     // =========================================================
 
@@ -118,7 +123,7 @@ export class HorarioGeradoAulaService {
 
     // =========================================================
 
-    return LadesaPaginatedResultDto(paginated);
+    return paginated;
   }
 
   async horarioGeradoAulaFindById(accessContext: AccessContext, dto: IDomain.HorarioGeradoAulaFindOneInput, selection?: string[] | boolean): Promise<IDomain.HorarioGeradoAulaFindOneOutput | null> {

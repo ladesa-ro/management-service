@@ -1,7 +1,8 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Controller, Get } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
+import { type IAppRequest } from "@/application/contracts/openapi/document/app-openapi-typings";
+import { AppRequest } from "@/application/contracts/openapi/utils/app-request";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { EstadoService } from "./estado.service";
 
@@ -14,7 +15,7 @@ export class EstadoController {
   async findAll(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("FindAll") dto: IOperationInput<"FindAll">,
+    @AppRequest("FindAll") dto: IAppRequest<"FindAll">,
   ): Promise<LadesaTypings.EstadoListOperationOutput["success"]> {
     return this.estadoService.findAll(accessContext, dto);
   }
@@ -23,7 +24,7 @@ export class EstadoController {
   async findById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("FindById") dto: IOperationInput<"FindById">,
+    @AppRequest("FindById") dto: IAppRequest<"FindById">,
   ) {
     return this.estadoService.findByIdStrict(accessContext, {
       id: dto.parameters.path.id,

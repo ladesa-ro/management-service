@@ -2,11 +2,10 @@ import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
+import { SearchService } from "@/application/helpers/search.service";
 import { QbEfficientLoad } from "@/application/standards/ladesa-spec/QbEfficientLoad";
-import { LadesaPaginatedResultDto, LadesaSearch } from "@/application/standards/ladesa-spec/search/search-strategies";
-import { IDomain } from "@/domain/domain-contracts";
+import { IDomain } from "@/domain/contracts/integration";
 import type { AccessContext } from "@/infrastructure/access-context";
-import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
 import type { ReservaEntity } from "@/infrastructure/integrations/database/typeorm/entities";
 import { UsuarioService } from "../../autenticacao/usuario/usuario.service";
@@ -24,6 +23,7 @@ export class ReservaService {
     private databaseContext: DatabaseContextService,
     private usuarioService: UsuarioService,
     private ambienteService: AmbienteService,
+    private searchService: SearchService,
   ) {}
 
   get reservaRepository() {
@@ -45,63 +45,66 @@ export class ReservaService {
 
     // =========================================================
 
-    const paginated = await LadesaSearch("#/", dto, qb, {
-      ...paginateConfig,
-      select: [
-        //
-        "id",
-        //
-      ],
-      sortableColumns: [
-        //
-        "situacao",
-        "motivo",
-        "tipo",
-        "rrule",
-        //
-        "ambiente.id",
-        "ambiente.nome",
-        "ambiente.capacidade",
-        "ambiente.bloco.codigo",
-        "ambiente.bloco.nome",
-      ],
-      searchableColumns: [
-        //
-        "id",
-        //
-        "situacao",
-        "motivo",
-        "tipo",
-        "rrule",
-        //
-        "ambiente.nome",
-        "ambiente.descricao",
-        "ambiente.codigo",
-        "ambiente.bloco.nome",
-        "ambiente.bloco.codigo",
-        //
-      ],
-      relations: {
-        ambiente: {
-          bloco: {
-            campus: true,
+    const paginated = await this.searchService.search(
+      qb,
+      { ...dto },
+      {
+        select: [
+          //
+          "id",
+          //
+        ],
+        sortableColumns: [
+          //
+          "situacao",
+          "motivo",
+          "tipo",
+          "rrule",
+          //
+          "ambiente.id",
+          "ambiente.nome",
+          "ambiente.capacidade",
+          "ambiente.bloco.codigo",
+          "ambiente.bloco.nome",
+        ],
+        searchableColumns: [
+          //
+          "id",
+          //
+          "situacao",
+          "motivo",
+          "tipo",
+          "rrule",
+          //
+          "ambiente.nome",
+          "ambiente.descricao",
+          "ambiente.codigo",
+          "ambiente.bloco.nome",
+          "ambiente.bloco.codigo",
+          //
+        ],
+        relations: {
+          ambiente: {
+            bloco: {
+              campus: true,
+            },
           },
+          usuario: true,
+          // intervaloDeTempo: true,
         },
-        usuario: true,
-        // intervaloDeTempo: true,
+
+        defaultSortBy: [],
+
+        filterableColumns: {
+          situacao: [FilterOperator.EQ],
+          tipo: [FilterOperator.EQ],
+
+          "ambiente.id": [FilterOperator.EQ],
+          "ambiente.bloco.id": [FilterOperator.EQ],
+          "ambiente.bloco.campus.id": [FilterOperator.EQ],
+        },
       },
-
-      defaultSortBy: [],
-
-      filterableColumns: {
-        situacao: [FilterOperator.EQ],
-        tipo: [FilterOperator.EQ],
-
-        "ambiente.id": [FilterOperator.EQ],
-        "ambiente.bloco.id": [FilterOperator.EQ],
-        "ambiente.bloco.campus.id": [FilterOperator.EQ],
-      },
-    });
+    );
 
     // =========================================================
 
@@ -115,7 +118,7 @@ export class ReservaService {
 
     // =========================================================
 
-    return LadesaPaginatedResultDto(paginated);
+    return paginated;
   }
 
   async reservaFindById(accessContext: AccessContext, dto: IDomain.ReservaFindOneInput, selection?: string[] | boolean): Promise<IDomain.ReservaFindOneOutput | null> {

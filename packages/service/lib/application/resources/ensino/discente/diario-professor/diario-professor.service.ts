@@ -2,9 +2,9 @@ import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
+import { SearchService } from "@/application/helpers/search.service";
 import { QbEfficientLoad } from "@/application/standards/ladesa-spec/QbEfficientLoad";
-import { LadesaPaginatedResultDto, LadesaSearch } from "@/application/standards/ladesa-spec/search/search-strategies";
-import { IDomain } from "@/domain/domain-contracts";
+import { IDomain } from "@/domain/contracts/integration";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
@@ -24,6 +24,7 @@ export class DiarioProfessorService {
     private diarioService: DiarioService,
     private perfilService: PerfilService,
     private databaseContext: DatabaseContextService,
+    private searchService: SearchService,
   ) {}
 
   get diarioProfessorRepository() {
@@ -47,52 +48,56 @@ export class DiarioProfessorService {
 
     // =========================================================
 
-    const paginated = await LadesaSearch("#/", dto, qb, {
-      ...paginateConfig,
-      select: [
-        //
-        "id",
-        //
-        "situacao",
-        //
-        "diario.id",
-        //
-        "perfil.id",
-        "perfil.campus.id",
-        "perfil.usuario.id",
-        //
-      ],
-      relations: {
-        diario: true,
-        perfil: {
-          campus: true,
-          usuario: true,
+    const paginated = await this.searchService.search(
+      qb,
+      { ...dto },
+      {
+        ...paginateConfig,
+        select: [
+          //
+          "id",
+          //
+          "situacao",
+          //
+          "diario.id",
+          //
+          "perfil.id",
+          "perfil.campus.id",
+          "perfil.usuario.id",
+          //
+        ],
+        relations: {
+          diario: true,
+          perfil: {
+            campus: true,
+            usuario: true,
+          },
+        },
+        sortableColumns: [
+          //
+          "situacao",
+          "diario.id",
+          "perfil.campus.id",
+          "perfil.usuario.id",
+        ],
+        searchableColumns: [
+          //
+          "id",
+          //
+          "situacao",
+          "diario.id",
+          "perfil.campus.id",
+          "perfil.usuario.id",
+          //
+        ],
+        defaultSortBy: [],
+        filterableColumns: {
+          "perfil.usuario.id": FilterOperator.EQ,
+          "perfil.id": FilterOperator.EQ,
+          "diario.id": FilterOperator.EQ,
         },
       },
-      sortableColumns: [
-        //
-        "situacao",
-        "diario.id",
-        "perfil.campus.id",
-        "perfil.usuario.id",
-      ],
-      searchableColumns: [
-        //
-        "id",
-        //
-        "situacao",
-        "diario.id",
-        "perfil.campus.id",
-        "perfil.usuario.id",
-        //
-      ],
-      defaultSortBy: [],
-      filterableColumns: {
-        "perfil.usuario.id": FilterOperator.EQ,
-        "perfil.id": FilterOperator.EQ,
-        "diario.id": FilterOperator.EQ,
-      },
-    });
+    );
 
     // =========================================================
 
@@ -106,7 +111,7 @@ export class DiarioProfessorService {
 
     // =========================================================
 
-    return LadesaPaginatedResultDto(paginated);
+    return paginated;
   }
 
   async diarioProfessorFindById(accessContext: AccessContext, dto: IDomain.DiarioProfessorFindOneInput, selection?: string[] | boolean): Promise<IDomain.DiarioProfessorFindOneOutput | null> {

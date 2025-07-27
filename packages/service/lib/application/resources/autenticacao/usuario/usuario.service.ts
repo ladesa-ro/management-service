@@ -1,10 +1,10 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Injectable, InternalServerErrorException, NotFoundException, ServiceUnavailableException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
+import { SearchService } from "@/application/helpers/search.service";
 import { ValidationFailedException } from "@/application/standards";
 import { QbEfficientLoad } from "@/application/standards/ladesa-spec/QbEfficientLoad";
-import { LadesaPaginatedResultDto, LadesaSearch } from "@/application/standards/ladesa-spec/search/search-strategies";
-import { IDomain } from "@/domain/domain-contracts";
+import { IDomain } from "@/domain/contracts/integration";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
@@ -26,6 +26,7 @@ export class UsuarioService {
     private databaseContext: DatabaseContextService,
     private imagemService: ImagemService,
     private arquivoService: ArquivoService,
+    private searchService: SearchService,
   ) {}
 
   //
@@ -73,43 +74,47 @@ export class UsuarioService {
 
     // =========================================================
 
-    const paginated = await LadesaSearch("#/", dto, qb, {
-      ...paginateConfig,
-      select: [
-        //
-        "id",
-        //
-        "nome",
-        "matriculaSiape",
-        "email",
-        //
-        "dateCreated",
-        //
-      ],
-      sortableColumns: [
-        //
-        "nome",
-        "matriculaSiape",
-        "email",
-        //
-        "dateCreated",
-      ],
-      searchableColumns: [
-        //
-        "id",
-        //
-        "nome",
-        "matriculaSiape",
-        "email",
-        //
-      ],
-      defaultSortBy: [
-        ["nome", "ASC"],
-        ["dateCreated", "ASC"],
-        ["matriculaSiape", "ASC"],
-      ],
-      filterableColumns: {},
-    });
+    const paginated = await this.searchService.search(
+      qb,
+      { ...dto },
+      {
+        ...paginateConfig,
+        select: [
+          //
+          "id",
+          //
+          "nome",
+          "matriculaSiape",
+          "email",
+          //
+          "dateCreated",
+          //
+        ],
+        sortableColumns: [
+          //
+          "nome",
+          "matriculaSiape",
+          "email",
+          //
+          "dateCreated",
+        ],
+        searchableColumns: [
+          //
+          "id",
+          //
+          "nome",
+          "matriculaSiape",
+          "email",
+          //
+        ],
+        defaultSortBy: [
+          ["nome", "ASC"],
+          ["dateCreated", "ASC"],
+          ["matriculaSiape", "ASC"],
+        ],
+        filterableColumns: {},
+      },
+    );
 
     // =========================================================
 
@@ -122,7 +127,7 @@ export class UsuarioService {
 
     // =========================================================
 
-    return LadesaPaginatedResultDto(paginated);
+    return paginated;
   }
 
   async usuarioFindById(accessContext: AccessContext | null, dto: IDomain.UsuarioFindOneInput, selection?: string[] | boolean): Promise<IDomain.UsuarioFindOneOutput | null> {

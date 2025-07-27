@@ -2,9 +2,9 @@ import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
 import { v4 as uuid } from "uuid";
+import { SearchService } from "@/application/helpers/search.service";
 import { QbEfficientLoad } from "@/application/standards/ladesa-spec/QbEfficientLoad";
-import { LadesaSearch } from "@/application/standards/ladesa-spec/search/search-strategies";
-import { IDomain } from "@/domain/domain-contracts";
+import { IDomain } from "@/domain/contracts/integration";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
@@ -24,6 +24,7 @@ export class PerfilService {
     private databaseContext: DatabaseContextService,
     private campusService: CampusService,
     private usuarioService: UsuarioService,
+    private searchService: SearchService,
   ) {}
 
   //
@@ -63,38 +64,42 @@ export class PerfilService {
 
     await accessContext.applyFilter("vinculo:find", qb, aliasVinculo, null);
 
-    const paginated = LadesaSearch("#/", dto, qb, {
-      ...paginateConfig,
+    const paginated = await this.searchService.search(
+      qb,
+      { ...dto },
+      {
+        ...paginateConfig,
 
-      relations: {
-        campus: true,
-        usuario: true,
+        relations: {
+          campus: true,
+          usuario: true,
+        },
+
+        select: [
+          "id",
+          "ativo",
+          "cargo",
+          "campus.id",
+          "campus.nomeFantasia",
+          "campus.razaoSocial",
+          "campus.apelido",
+          "campus.cnpj",
+          "usuario.id",
+          "usuario.matriculaSiape",
+          "usuario.email",
+          "dateCreated",
+        ],
+
+        searchableColumns: ["cargo"],
+
+        filterableColumns: {
+          ativo: [FilterOperator.EQ],
+          cargo: [FilterOperator.EQ],
+          "campus.id": [FilterOperator.EQ],
+          "usuario.id": [FilterOperator.EQ],
+        },
       },
-
-      select: [
-        "id",
-        "ativo",
-        "cargo",
-        "campus.id",
-        "campus.nomeFantasia",
-        "campus.razaoSocial",
-        "campus.apelido",
-        "campus.cnpj",
-        "usuario.id",
-        "usuario.matriculaSiape",
-        "usuario.email",
-        "dateCreated",
-      ],
-
-      searchableColumns: ["cargo"],
-
-      filterableColumns: {
-        ativo: [FilterOperator.EQ],
-        cargo: [FilterOperator.EQ],
-        "campus.id": [FilterOperator.EQ],
-        "usuario.id": [FilterOperator.EQ],
-      },
-    });
+    );
 
     return paginated;
   }

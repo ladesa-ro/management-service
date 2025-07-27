@@ -1,7 +1,8 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Controller, Delete, Get, Patch, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
+import { type IAppRequest } from "@/application/contracts/openapi/document/app-openapi-typings";
+import { AppRequest } from "@/application/contracts/openapi/utils/app-request";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { DiarioPreferenciaAgrupamentoService } from "./diario-preferencia-agrupamento.service";
 
@@ -14,7 +15,7 @@ export class DiarioPreferenciaAgrupamentoController {
   async diarioPreferenciaAgrupamentoFindAll(
     @AccessContextHttp() clientAccess: AccessContext,
 
-    @HttpOperationInput("DiarioPreferenciaAgrupamentoFindAll") dto: IOperationInput<"DiarioPreferenciaAgrupamentoFindAll">,
+    @AppRequest("DiarioPreferenciaAgrupamentoFindAll") dto: IAppRequest<"DiarioPreferenciaAgrupamentoFindAll">,
   ): Promise<LadesaTypings.DiarioPreferenciaAgrupamentoListOperationOutput["success"]> {
     return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoFindAll(clientAccess, dto);
   }
@@ -26,7 +27,7 @@ export class DiarioPreferenciaAgrupamentoController {
     //
     @AccessContextHttp() accessContext: AccessContext,
 
-    @HttpOperationInput("DiarioPreferenciaAgrupamentoFindById") dto: IOperationInput<"DiarioPreferenciaAgrupamentoFindById">,
+    @AppRequest("DiarioPreferenciaAgrupamentoFindById") dto: IAppRequest<"DiarioPreferenciaAgrupamentoFindById">,
   ) {
     return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoFindByIdStrict(accessContext, { id: dto.parameters.path.id });
   }
@@ -38,7 +39,7 @@ export class DiarioPreferenciaAgrupamentoController {
     //
     @AccessContextHttp() accessContext: AccessContext,
 
-    @HttpOperationInput("DiarioPreferenciaAgrupamentoCreate") dto: IOperationInput<"DiarioPreferenciaAgrupamentoCreate">,
+    @AppRequest("DiarioPreferenciaAgrupamentoCreate") dto: IAppRequest<"DiarioPreferenciaAgrupamentoCreate">,
   ) {
     return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoCreate(accessContext, dto);
   }
@@ -50,7 +51,7 @@ export class DiarioPreferenciaAgrupamentoController {
     //
     @AccessContextHttp() accessContext: AccessContext,
 
-    @HttpOperationInput("DiarioPreferenciaAgrupamentoUpdate") dto: IOperationInput<"DiarioPreferenciaAgrupamentoUpdate">,
+    @AppRequest("DiarioPreferenciaAgrupamentoUpdate") dto: IAppRequest<"DiarioPreferenciaAgrupamentoUpdate">,
   ) {
     return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoUpdate(accessContext, dto);
   }
@@ -62,7 +63,7 @@ export class DiarioPreferenciaAgrupamentoController {
     //
     @AccessContextHttp() accessContext: AccessContext,
 
-    @HttpOperationInput("DiarioPreferenciaAgrupamentoDeleteOneById") dto: IOperationInput<"DiarioPreferenciaAgrupamentoDeleteOneById">,
+    @AppRequest("DiarioPreferenciaAgrupamentoDeleteOneById") dto: IAppRequest<"DiarioPreferenciaAgrupamentoDeleteOneById">,
   ) {
     return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoDeleteOneById(accessContext, { id: dto.parameters.path.id });
   }

@@ -2,11 +2,11 @@ import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
+import { SearchService } from "@/application/helpers/search.service";
 import { IntervaloDeTempoService } from "@/application/resources/base/intervalo-de-tempo/intervalo-de-tempo.service";
 import { GradeHorarioOfertaFormacaoService } from "@/application/resources/calendario/grade-horario-oferta-formacao/grade-horario-oferta-formacao.service";
 import { QbEfficientLoad } from "@/application/standards/ladesa-spec/QbEfficientLoad";
-import { LadesaPaginatedResultDto, LadesaSearch } from "@/application/standards/ladesa-spec/search/search-strategies";
-import { IDomain } from "@/domain/domain-contracts";
+import { IDomain } from "@/domain/contracts/integration";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
@@ -24,6 +24,7 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService {
     private databaseContext: DatabaseContextService,
     private intervaloDeTempoService: IntervaloDeTempoService,
     private gradeHorarioOfertaFormacaoService: GradeHorarioOfertaFormacaoService,
+    private searchService: SearchService,
   ) {}
 
   get gradeHorarioOfertaFormacaoIntervaloDeTempoRepository() {
@@ -47,35 +48,39 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService {
 
     // =========================================================
 
-    const paginated = await LadesaSearch("#/", dto, qb, {
-      ...paginateConfig,
-      select: [
-        //
-        "id",
-        //
-        "dateCreated",
-        //
-      ],
-      relations: {
-        gradeHorarioOfertaFormacao: true,
-        intervaloDeTempo: true,
-      },
-      sortableColumns: [
-        //
+    const paginated = await this.searchService.search(
+      qb,
+      { ...dto },
+      {
+        ...paginateConfig,
+        select: [
+          //
+          "id",
+          //
+          "dateCreated",
+          //
+        ],
+        relations: {
+          gradeHorarioOfertaFormacao: true,
+          intervaloDeTempo: true,
+        },
+        sortableColumns: [
+          //
 
-        "dateCreated",
-      ],
-      searchableColumns: [
-        //
-        "id",
-        //
-      ],
-      defaultSortBy: [["dateCreated", "ASC"]],
-      filterableColumns: {
-        "gradeHorarioOfertaFormacao.id": [FilterOperator.EQ],
-        "intervaloDeTempo.id": [FilterOperator.EQ],
+          "dateCreated",
+        ],
+        searchableColumns: [
+          //
+          "id",
+          //
+        ],
+        defaultSortBy: [["dateCreated", "ASC"]],
+        filterableColumns: {
+          "gradeHorarioOfertaFormacao.id": [FilterOperator.EQ],
+          "intervaloDeTempo.id": [FilterOperator.EQ],
+        },
       },
-    });
+    );
 
     // =========================================================
 
@@ -89,7 +94,7 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService {
 
     // =========================================================
 
-    return LadesaPaginatedResultDto(paginated);
+    return paginated;
   }
 
   async gradeHorarioOfertaFormacaoIntervaloDeTempoFindById(

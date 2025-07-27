@@ -1,7 +1,8 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Controller, Delete, Get, Patch, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
+import { type IAppRequest } from "@/application/contracts/openapi/document/app-openapi-typings";
+import { AppRequest } from "@/application/contracts/openapi/utils/app-request";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { DisponibilidadeDiaService } from "./disponibilidade-dia.service";
 
@@ -14,7 +15,7 @@ export class DisponibilidadeDiaController {
   async disponibilidadeDiaFindAll(
     @AccessContextHttp() clientAccess: AccessContext,
 
-    @HttpOperationInput("DisponibilidadeDiaFindAll") dto: IOperationInput<"DisponibilidadeDiaFindAll">,
+    @AppRequest("DisponibilidadeDiaFindAll") dto: IAppRequest<"DisponibilidadeDiaFindAll">,
   ): Promise<LadesaTypings.DisponibilidadeDiaListOperationOutput["success"]> {
     return this.disponibilidadeDiaService.disponibilidadeDiaFindAll(clientAccess, dto);
   }
@@ -26,7 +27,7 @@ export class DisponibilidadeDiaController {
     //
     @AccessContextHttp() accessContext: AccessContext,
 
-    @HttpOperationInput("DisponibilidadeDiaFindById") dto: IOperationInput<"DisponibilidadeDiaFindById">,
+    @AppRequest("DisponibilidadeDiaFindById") dto: IAppRequest<"DisponibilidadeDiaFindById">,
   ) {
     return this.disponibilidadeDiaService.disponibilidadeDiaFindByIdStrict(accessContext, { id: dto.parameters.path.id });
   }
@@ -38,7 +39,7 @@ export class DisponibilidadeDiaController {
     //
     @AccessContextHttp() accessContext: AccessContext,
 
-    @HttpOperationInput("DisponibilidadeDiaCreate") dto: IOperationInput<"DisponibilidadeDiaCreate">,
+    @AppRequest("DisponibilidadeDiaCreate") dto: IAppRequest<"DisponibilidadeDiaCreate">,
   ) {
     return this.disponibilidadeDiaService.disponibilidadeDiaCreate(accessContext, dto);
   }
@@ -50,7 +51,7 @@ export class DisponibilidadeDiaController {
     //
     @AccessContextHttp() accessContext: AccessContext,
 
-    @HttpOperationInput("DisponibilidadeDiaUpdate") dto: IOperationInput<"DisponibilidadeDiaUpdate">,
+    @AppRequest("DisponibilidadeDiaUpdate") dto: IAppRequest<"DisponibilidadeDiaUpdate">,
   ) {
     return this.disponibilidadeDiaService.disponibilidadeDiaUpdate(accessContext, dto);
   }
@@ -62,7 +63,7 @@ export class DisponibilidadeDiaController {
     //
     @AccessContextHttp() accessContext: AccessContext,
 
-    @HttpOperationInput("DisponibilidadeDiaDeleteOneById") dto: IOperationInput<"DisponibilidadeDiaDeleteOneById">,
+    @AppRequest("DisponibilidadeDiaDeleteOneById") dto: IAppRequest<"DisponibilidadeDiaDeleteOneById">,
   ) {
     return this.disponibilidadeDiaService.disponibilidadeDiaDeleteOneById(accessContext, { id: dto.parameters.path.id });
   }

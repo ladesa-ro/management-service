@@ -2,10 +2,10 @@ import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
+import { SearchService } from "@/application/helpers/search.service";
 import { CalendarioLetivoService } from "@/application/resources/calendario/calendario-letivo/calendario-letivo.service";
 import { QbEfficientLoad } from "@/application/standards/ladesa-spec/QbEfficientLoad";
-import { LadesaPaginatedResultDto, LadesaSearch } from "@/application/standards/ladesa-spec/search/search-strategies";
-import { IDomain } from "@/domain/domain-contracts";
+import { IDomain } from "@/domain/contracts/integration";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
@@ -22,6 +22,7 @@ export class HorarioGeradoService {
   constructor(
     private databaseContext: DatabaseContextService,
     private calendarioLetivoService: CalendarioLetivoService,
+    private searchService: SearchService,
   ) {}
 
   get horarioGeradoRepository() {
@@ -41,56 +42,60 @@ export class HorarioGeradoService {
 
     // =========================================================
 
-    const paginated = await LadesaSearch("#/", dto, qb, {
-      ...paginateConfig,
-      select: [
-        //
-        "id",
-        //
-        "status",
-        "tipo",
-        "dataGeracao",
-        "vigenciaInicio",
-        "vigenciaFim",
-        "calendario",
-        //
-        "calendario.id",
-        "calendario.nome",
-        "calendario.ano",
-      ],
-      sortableColumns: [
-        //
-        "status",
-        "tipo",
-        "dataGeracao",
-        "vigenciaInicio",
-        "vigenciaFim",
-        //
-        "calendario.id",
-        "calendario.nome",
-        "calendario.ano",
-      ],
-      searchableColumns: [
-        //
-        "id",
-        //
-        "status",
-        "tipo",
-        "dataGeracao",
-        "vigenciaInicio",
-        "vigenciaFim",
-        "calendario",
-      ],
-      relations: {
-        calendario: true,
+    const paginated = await this.searchService.search(
+      qb,
+      { ...dto },
+      {
+        ...paginateConfig,
+        select: [
+          //
+          "id",
+          //
+          "status",
+          "tipo",
+          "dataGeracao",
+          "vigenciaInicio",
+          "vigenciaFim",
+          "calendario",
+          //
+          "calendario.id",
+          "calendario.nome",
+          "calendario.ano",
+        ],
+        sortableColumns: [
+          //
+          "status",
+          "tipo",
+          "dataGeracao",
+          "vigenciaInicio",
+          "vigenciaFim",
+          //
+          "calendario.id",
+          "calendario.nome",
+          "calendario.ano",
+        ],
+        searchableColumns: [
+          //
+          "id",
+          //
+          "status",
+          "tipo",
+          "dataGeracao",
+          "vigenciaInicio",
+          "vigenciaFim",
+          "calendario",
+        ],
+        relations: {
+          calendario: true,
+        },
+        defaultSortBy: [],
+        filterableColumns: {
+          "calendario.id": [FilterOperator.EQ],
+          "calendario.nome": [FilterOperator.EQ],
+          "calendario.ano": [FilterOperator.EQ],
+        },
       },
-      defaultSortBy: [],
-      filterableColumns: {
-        "calendario.id": [FilterOperator.EQ],
-        "calendario.nome": [FilterOperator.EQ],
-        "calendario.ano": [FilterOperator.EQ],
-      },
-    });
+    );
 
     // =========================================================
 
@@ -105,7 +110,7 @@ export class HorarioGeradoService {
 
     // =========================================================
 
-    return LadesaPaginatedResultDto(paginated);
+    return paginated;
   }
 
   async horarioGeradoFindById(accessContext: AccessContext, dto: IDomain.HorarioGeradoFindOneInput, selection?: string[] | boolean): Promise<IDomain.HorarioGeradoFindOneOutput | null> {

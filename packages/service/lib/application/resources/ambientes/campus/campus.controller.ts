@@ -1,7 +1,8 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Controller, Delete, Get, Patch, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
+import { type IAppRequest } from "@/application/contracts/openapi/document/app-openapi-typings";
+import { AppRequest } from "@/application/contracts/openapi/utils/app-request";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { CampusService } from "./campus.service";
 
@@ -16,7 +17,7 @@ export class CampusController {
   async campusFindAll(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("CampusList") dto: IOperationInput<"CampusList">,
+    @AppRequest("CampusList") dto: IAppRequest<"CampusList">,
   ): Promise<LadesaTypings.CampusListOperationOutput["success"]> {
     return this.campusService.campusFindAll(accessContext, dto);
   }
@@ -27,7 +28,7 @@ export class CampusController {
   async campusFindById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("CampusFindById") dto: IOperationInput<"CampusFindById">,
+    @AppRequest("CampusFindById") dto: IAppRequest<"CampusFindById">,
   ) {
     return this.campusService.campusFindByIdStrict(accessContext, {
       id: dto.parameters.path.id,
@@ -40,7 +41,7 @@ export class CampusController {
   async campusCreate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("CampusCreate") dto: IOperationInput<"CampusCreate">,
+    @AppRequest("CampusCreate") dto: IAppRequest<"CampusCreate">,
   ) {
     return this.campusService.campusCreate(accessContext, dto);
   }
@@ -51,7 +52,7 @@ export class CampusController {
   async campusUpdate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("CampusUpdate") dto: IOperationInput<"CampusUpdate">,
+    @AppRequest("CampusUpdate") dto: IAppRequest<"CampusUpdate">,
   ) {
     return this.campusService.campusUpdate(accessContext, dto);
   }
@@ -62,7 +63,7 @@ export class CampusController {
   async campusDeleteOneById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("CampusDeleteOneById") dto: IOperationInput<"CampusDeleteOneById">,
+    @AppRequest("CampusDeleteOneById") dto: IAppRequest<"CampusDeleteOneById">,
   ) {
     return this.campusService.campusDeleteOneById(accessContext, {
       id: dto.parameters.path.id,

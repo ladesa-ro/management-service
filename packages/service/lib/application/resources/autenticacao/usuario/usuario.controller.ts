@@ -1,7 +1,8 @@
 import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Controller, Delete, Get, Patch, Post, Put, UploadedFile } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
+import { type IAppRequest } from "@/application/contracts/openapi/document/app-openapi-typings";
+import { AppRequest } from "@/application/contracts/openapi/utils/app-request";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { UsuarioService } from "./usuario.service";
 
@@ -16,7 +17,7 @@ export class UsuarioController {
   async usuarioFindAll(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("UsuarioFindAll") dto: IOperationInput<"UsuarioFindAll">,
+    @AppRequest("UsuarioFindAll") dto: IAppRequest<"UsuarioFindAll">,
   ): Promise<LadesaTypings.UsuarioListOperationOutput["success"]> {
     return this.usuarioService.usuarioFindAll(accessContext, dto);
   }
@@ -27,7 +28,7 @@ export class UsuarioController {
   async usuarioFindById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("UsuarioFindById") dto: IOperationInput<"UsuarioFindById">,
+    @AppRequest("UsuarioFindById") dto: IAppRequest<"UsuarioFindById">,
   ) {
     return this.usuarioService.usuarioFindByIdStrict(accessContext, {
       id: dto.parameters.path.id,
@@ -40,7 +41,7 @@ export class UsuarioController {
   async usuarioCreate(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("UsuarioCreate") dto: IOperationInput<"UsuarioCreate">,
+    @AppRequest("UsuarioCreate") dto: IAppRequest<"UsuarioCreate">,
   ) {
     return this.usuarioService.usuarioCreate(accessContext, dto);
   }
@@ -48,7 +49,7 @@ export class UsuarioController {
   //
 
   @Patch("/:id")
-  async usuarioUpdate(@AccessContextHttp() accessContext: AccessContext, @HttpOperationInput("UsuarioUpdate") dto: IOperationInput<"UsuarioUpdate">) {
+  async usuarioUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("UsuarioUpdate") dto: IAppRequest<"UsuarioUpdate">) {
     return this.usuarioService.usuarioUpdate(accessContext, dto);
   }
 
@@ -58,7 +59,7 @@ export class UsuarioController {
   async usuarioGetImagemCapa(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("UsuarioGetImagemCapa") dto: IOperationInput<"UsuarioGetImagemCapa">,
+    @AppRequest("UsuarioGetImagemCapa") dto: IAppRequest<"UsuarioGetImagemCapa">,
   ) {
     return this.usuarioService.usuarioGetImagemCapa(accessContext, dto.parameters.path.id);
   }
@@ -78,7 +79,7 @@ export class UsuarioController {
   async usuarioGetImagemPerfil(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("UsuarioGetImagemPerfil") dto: IOperationInput<"UsuarioGetImagemPerfil">,
+    @AppRequest("UsuarioGetImagemPerfil") dto: IAppRequest<"UsuarioGetImagemPerfil">,
   ) {
     return this.usuarioService.usuarioGetImagemPerfil(accessContext, dto.parameters.path.id);
   }
@@ -98,7 +99,7 @@ export class UsuarioController {
   async usuarioDeleteOneById(
     //
     @AccessContextHttp() accessContext: AccessContext,
-    @HttpOperationInput("UsuarioDeleteOneById") dto: IOperationInput<"UsuarioDeleteOneById">,
+    @AppRequest("UsuarioDeleteOneById") dto: IAppRequest<"UsuarioDeleteOneById">,
   ) {
     return this.usuarioService.usuarioDeleteOneById(accessContext, {
       id: dto.parameters.path.id,

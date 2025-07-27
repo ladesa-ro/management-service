@@ -1,7 +1,8 @@
 import { Info as GqlInfo, Resolver as GqlResolver } from "@nestjs/graphql";
 import type { GraphQLResolveInfo } from "graphql";
+import { type IAppRequest } from "@/application/contracts/openapi/document/app-openapi-typings";
+import { AppRequest } from "@/application/contracts/openapi/utils/app-request";
 import { graphqlExtractSelection } from "@/application/standards";
-import { HttpOperationInput, IOperationInput } from "@/application/standards-new/HttpOperation";
 import { type AccessContext, AccessContextGraphQl } from "@/infrastructure/access-context";
 import { NivelFormacaoService } from "./nivel-formacao.service";
 
@@ -17,7 +18,7 @@ export class NivelFormacaoResolver {
   async nivelFormacaoFindAll(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("NivelFormacaoFindAll") dto: IOperationInput<"NivelFormacaoFindAll">,
+    @AppRequest("NivelFormacaoFindAll") dto: IAppRequest<"NivelFormacaoFindAll">,
     @GqlInfo() info: GraphQLResolveInfo,
   ) {
     return this.nivelFormacaoService.nivelFormacaoFindAll(accessContext, dto, graphqlExtractSelection(info, "paginated"));
@@ -28,7 +29,7 @@ export class NivelFormacaoResolver {
   async nivelFormacaoFindOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("NivelFormacaoFindOneById") dto: IOperationInput<"NivelFormacaoFindOneById">,
+    @AppRequest("NivelFormacaoFindOneById") dto: IAppRequest<"NivelFormacaoFindOneById">,
     @GqlInfo() info: GraphQLResolveInfo,
   ) {
     return this.nivelFormacaoService.nivelFormacaoFindByIdStrict(accessContext, { id: dto.parameters.path.id }, ["id", ...graphqlExtractSelection(info)]);
@@ -39,7 +40,7 @@ export class NivelFormacaoResolver {
   async nivelFormacaoCreate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("NivelFormacaoCreate") dto: IOperationInput<"NivelFormacaoCreate">,
+    @AppRequest("NivelFormacaoCreate") dto: IAppRequest<"NivelFormacaoCreate">,
   ) {
     return this.nivelFormacaoService.nivelFormacaoCreate(accessContext, dto);
   }
@@ -47,7 +48,7 @@ export class NivelFormacaoResolver {
   async nivelFormacaoUpdate(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("NivelFormacaoUpdate") dto: IOperationInput<"NivelFormacaoUpdate">,
+    @AppRequest("NivelFormacaoUpdate") dto: IAppRequest<"NivelFormacaoUpdate">,
   ) {
     return this.nivelFormacaoService.nivelFormacaoUpdate(accessContext, dto);
   }
@@ -55,7 +56,7 @@ export class NivelFormacaoResolver {
   async nivelFormacaoDeleteOneById(
     //
     @AccessContextGraphQl() accessContext: AccessContext,
-    @HttpOperationInput("NivelFormacaoDeleteOneById") dto: IOperationInput<"NivelFormacaoDeleteOneById">,
+    @AppRequest("NivelFormacaoDeleteOneById") dto: IAppRequest<"NivelFormacaoDeleteOneById">,
   ) {
     return this.nivelFormacaoService.nivelFormacaoDeleteOneById(accessContext, {
       id: dto.parameters.path.id,
