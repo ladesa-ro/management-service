@@ -235,9 +235,7 @@ export class ReservaService {
   async reservaUpdate(accessContext: AccessContext, dto: IDomain.ReservaUpdateByIdInput) {
     // =========================================================
 
-    const currentReserva = await this.reservaFindByIdStrict(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    const currentReserva = await this.reservaFindByIdStrict(accessContext, dto);
 
     // =========================================================
 

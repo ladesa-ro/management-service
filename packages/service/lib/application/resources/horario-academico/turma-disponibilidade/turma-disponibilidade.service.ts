@@ -222,9 +222,7 @@ export class TurmaDisponibilidadeService {
   async turmaDisponibilidadeUpdate(accessContext: AccessContext, dto: IDomain.TurmaDisponibilidadeUpdateByIdInput) {
     // =========================================================
 
-    const currentTurmaDisponibilidade = await this.turmaDisponibilidadeFindByIdStrict(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    const currentTurmaDisponibilidade = await this.turmaDisponibilidadeFindByIdStrict(accessContext, dto);
 
     // =========================================================
 

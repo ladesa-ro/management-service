@@ -1,6 +1,6 @@
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Controller, Delete, Get, Patch, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
+import { requestRepresentationMergeToDomain } from "@/application/contracts/generic-adapters";
 import { type IAppRequest } from "@/application/contracts/openapi/document/app-openapi-typings";
 import { AppRequest } from "@/application/contracts/openapi/utils/app-request";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
@@ -12,11 +12,9 @@ export class DiarioProfessorController {
   constructor(private diarioProfessorService: DiarioProfessorService) {}
 
   @Get("/")
-  async diarioProfessorFindAll(
-    @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("DiarioProfessorFindAll") dto: IAppRequest<"DiarioProfessorFindAll">,
-  ): Promise<LadesaTypings.DiarioProfessorListOperationOutput["success"]> {
-    return this.diarioProfessorService.diarioProfessorFindAll(accessContext, dto);
+  async diarioProfessorFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DiarioProfessorFindAll") dto: IAppRequest<"DiarioProfessorFindAll">) {
+    const domain: IDomain.DiarioProfessorListInput = requestRepresentationMergeToDomain(dto);
+    return this.diarioProfessorService.diarioProfessorFindAll(accessContext, domain);
   }
 
   @Get("/:id")
@@ -30,12 +28,14 @@ export class DiarioProfessorController {
 
   @Post("/")
   async diarioProfessorCreate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DiarioProfessorCreate") dto: IAppRequest<"DiarioProfessorCreate">) {
-    return this.diarioProfessorService.diarioProfessorCreate(accessContext, dto);
+    const domain: IDomain.DiarioProfessorCreateInput = requestRepresentationMergeToDomain(dto);
+    return this.diarioProfessorService.diarioProfessorCreate(accessContext, domain);
   }
 
   @Patch("/:id")
   async diarioProfessorUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DiarioProfessorUpdate") dto: IAppRequest<"DiarioProfessorUpdate">) {
-    return this.diarioProfessorService.diarioProfessorUpdate(accessContext, dto);
+    const domain: IDomain.DiarioProfessorUpdateInput = requestRepresentationMergeToDomain(dto);
+    return this.diarioProfessorService.diarioProfessorUpdate(accessContext, domain);
   }
 
   @Delete("/:id")

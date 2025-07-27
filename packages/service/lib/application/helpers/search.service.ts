@@ -10,8 +10,8 @@ type SearchOptions = {
   search?: null | string;
 
   sortBy?: string[];
-
-  [`filter.${string}`]?: string[] | string;
+} & {
+  [key in `filter.${string}`]?: string[] | string;
 };
 
 @Injectable()

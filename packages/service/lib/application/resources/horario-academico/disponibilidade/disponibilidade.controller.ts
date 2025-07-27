@@ -1,6 +1,6 @@
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Controller, Delete, Get, Patch, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
+import { requestRepresentationMergeToDomain } from "@/application/contracts/generic-adapters";
 import { type IAppRequest } from "@/application/contracts/openapi/document/app-openapi-typings";
 import { AppRequest } from "@/application/contracts/openapi/utils/app-request";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
@@ -12,11 +12,9 @@ export class DisponibilidadeController {
   constructor(private disponibilidadeService: DisponibilidadeService) {}
 
   @Get("/")
-  async disponibilidadeFindAll(
-    @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("DisponibilidadeFindAll") dto: IAppRequest<"DisponibilidadeFindAll">,
-  ): Promise<LadesaTypings.DisponibilidadeListOperationOutput["success"]> {
-    return this.disponibilidadeService.disponibilidadeFindAll(accessContext, dto);
+  async disponibilidadeFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DisponibilidadeFindAll") dto: IAppRequest<"DisponibilidadeFindAll">) {
+    const domain: IDomain.DisponibilidadeListInput = requestRepresentationMergeToDomain(dto);
+    return this.disponibilidadeService.disponibilidadeFindAll(accessContext, domain);
   }
 
   @Get("/:id")
@@ -25,25 +23,25 @@ export class DisponibilidadeController {
 
     @AppRequest("DisponibilidadeFindById") dto: IAppRequest<"DisponibilidadeFindById">,
   ) {
-    return this.disponibilidadeService.disponibilidadeFindByIdStrict(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    const domain: IDomain.DisponibilidadeFindOneInput = requestRepresentationMergeToDomain(dto);
+    return this.disponibilidadeService.disponibilidadeFindByIdStrict(accessContext, domain);
   }
 
   @Post("/")
   async disponibilidadeCreate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DisponibilidadeCreate") dto: IAppRequest<"DisponibilidadeCreate">) {
-    return this.disponibilidadeService.disponibilidadeCreate(accessContext, dto);
+    const domain: IDomain.DisponibilidadeCreateInput = requestRepresentationMergeToDomain(dto);
+    return this.disponibilidadeService.disponibilidadeCreate(accessContext, domain);
   }
 
   @Patch("/:id")
   async disponibilidadeUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DisponibilidadeUpdate") dto: IAppRequest<"DisponibilidadeUpdate">) {
-    return this.disponibilidadeService.disponibilidadeUpdate(accessContext, dto);
+    const domain: IDomain.DisponibilidadeUpdateInput = requestRepresentationMergeToDomain(dto);
+    return this.disponibilidadeService.disponibilidadeUpdate(accessContext, domain);
   }
 
   @Delete("/:id")
   async disponibilidadeDeleteOneById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DisponibilidadeDeleteOneById") dto: IAppRequest<"DisponibilidadeDeleteOneById">) {
-    return this.disponibilidadeService.disponibilidadeDeleteOneById(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    const domain: IDomain.DisponibilidadeFindOneInput = requestRepresentationMergeToDomain(dto);
+    return this.disponibilidadeService.disponibilidadeDeleteOneById(accessContext, domain);
   }
 }

@@ -1,4 +1,3 @@
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Controller, Get } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { type IAppRequest } from "@/application/contracts/openapi/document/app-openapi-typings";
@@ -12,14 +11,12 @@ export class EstadoController {
   constructor(private estadoService: EstadoService) {}
 
   @Get("/")
-  async findAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("FindAll") dto: IAppRequest<"FindAll">): Promise<LadesaTypings.EstadoListOperationOutput["success"]> {
+  async findAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("FindAll") dto: IAppRequest<"FindAll">) {
     return this.estadoService.findAll(accessContext, dto);
   }
 
   @Get("/:id")
   async findById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("FindById") dto: IAppRequest<"FindById">) {
-    return this.estadoService.findByIdStrict(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    return this.estadoService.findByIdStrict(accessContext, dto);
   }
 }

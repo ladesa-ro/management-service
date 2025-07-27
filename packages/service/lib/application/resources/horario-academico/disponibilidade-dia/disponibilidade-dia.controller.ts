@@ -1,6 +1,6 @@
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Controller, Delete, Get, Patch, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
+import { requestRepresentationMergeToDomain } from "@/application/contracts/generic-adapters";
 import { type IAppRequest } from "@/application/contracts/openapi/document/app-openapi-typings";
 import { AppRequest } from "@/application/contracts/openapi/utils/app-request";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
@@ -13,11 +13,12 @@ export class DisponibilidadeDiaController {
 
   @Get("/")
   async disponibilidadeDiaFindAll(
-    @AccessContextHttp() clientAccess: AccessContext,
+    @AccessContextHttp() accessContext: AccessContext,
 
     @AppRequest("DisponibilidadeDiaFindAll") dto: IAppRequest<"DisponibilidadeDiaFindAll">,
-  ): Promise<LadesaTypings.DisponibilidadeDiaListOperationOutput["success"]> {
-    return this.disponibilidadeDiaService.disponibilidadeDiaFindAll(clientAccess, dto);
+  ) {
+    const domain: IDomain.DisponibilidadeDiaListInput = requestRepresentationMergeToDomain(dto);
+    return this.disponibilidadeDiaService.disponibilidadeDiaFindAll(accessContext, domain);
   }
 
   @Get("/:id")
@@ -35,7 +36,8 @@ export class DisponibilidadeDiaController {
 
     @AppRequest("DisponibilidadeDiaCreate") dto: IAppRequest<"DisponibilidadeDiaCreate">,
   ) {
-    return this.disponibilidadeDiaService.disponibilidadeDiaCreate(accessContext, dto);
+    const domain: IDomain.DisponibilidadeDiaCreateInput = requestRepresentationMergeToDomain(dto);
+    return this.disponibilidadeDiaService.disponibilidadeDiaCreate(accessContext, domain);
   }
 
   @Patch("/:id")
@@ -44,7 +46,8 @@ export class DisponibilidadeDiaController {
 
     @AppRequest("DisponibilidadeDiaUpdate") dto: IAppRequest<"DisponibilidadeDiaUpdate">,
   ) {
-    return this.disponibilidadeDiaService.disponibilidadeDiaUpdate(accessContext, dto);
+    const domain: IDomain.DisponibilidadeDiaUpdateInput = requestRepresentationMergeToDomain(dto);
+    return this.disponibilidadeDiaService.disponibilidadeDiaUpdate(accessContext, domain);
   }
 
   @Delete("/:id")

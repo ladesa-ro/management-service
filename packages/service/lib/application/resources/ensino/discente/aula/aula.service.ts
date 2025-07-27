@@ -231,9 +231,7 @@ export class AulaService {
   async aulaUpdate(accessContext: AccessContext, dto: IDomain.AulaUpdateByIdInput) {
     // =========================================================
 
-    const currentAula = await this.aulaFindByIdStrict(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    const currentAula = await this.aulaFindByIdStrict(accessContext, dto);
 
     // =========================================================
 

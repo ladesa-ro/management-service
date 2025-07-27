@@ -215,9 +215,7 @@ export class EtapaService {
   async etapaUpdate(accessContext: AccessContext, dto: IDomain.EtapaUpdateByIdInput) {
     // =========================================================
 
-    const currentEtapa = await this.etapaFindByIdStrict(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    const currentEtapa = await this.etapaFindByIdStrict(accessContext, dto);
 
     // =========================================================
 

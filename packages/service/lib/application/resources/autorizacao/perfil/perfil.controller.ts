@@ -1,5 +1,6 @@
 import { Controller, Get, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
+import { requestRepresentationMergeToDomain } from "@/application/contracts/generic-adapters";
 import { type IAppRequest } from "@/application/contracts/openapi/document/app-openapi-typings";
 import { AppRequest } from "@/application/contracts/openapi/utils/app-request";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
@@ -12,7 +13,8 @@ export class PerfilController {
 
   @Get("/")
   async findAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("FindAll") dto: IAppRequest<"FindAll">) {
-    return this.vinculoService.perfilFindAll(accessContext, dto);
+    const domain: IDomain.VinculoListInput = requestRepresentationMergeToDomain(dto);
+    return this.vinculoService.perfilFindAll(accessContext, domain);
   }
 
   @Post("/")

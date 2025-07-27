@@ -239,9 +239,7 @@ export class DisponibilidadeDiaService {
   async disponibilidadeDiaUpdate(accessContext: AccessContext, dto: IDomain.DisponibilidadeDiaUpdateByIdInput) {
     // =========================================================
 
-    const currentDisponibilidadeDia = await this.disponibilidadeDiaFindByIdStrict(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    const currentDisponibilidadeDia = await this.disponibilidadeDiaFindByIdStrict(accessContext, dto);
 
     // =========================================================
 

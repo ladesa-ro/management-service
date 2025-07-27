@@ -260,9 +260,7 @@ export class BlocoService {
   async blocoUpdate(accessContext: AccessContext, dto: IDomain.BlocoUpdateByIdInput) {
     // =========================================================
 
-    const currentBloco = await this.blocoFindByIdStrict(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    const currentBloco = await this.blocoFindByIdStrict(accessContext, dto);
 
     // =========================================================
 

@@ -1,6 +1,6 @@
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Controller, Delete, Get, Patch, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
+import { requestRepresentationMergeToDomain } from "@/application/contracts/generic-adapters";
 import { type IAppRequest } from "@/application/contracts/openapi/document/app-openapi-typings";
 import { AppRequest } from "@/application/contracts/openapi/utils/app-request";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
@@ -12,11 +12,9 @@ export class HorarioGeradoController {
   constructor(private horarioGeradoService: HorarioGeradoService) {}
 
   @Get("/")
-  async horarioGeradoFindAll(
-    @AccessContextHttp() clientAccess: AccessContext,
-    @AppRequest("HorarioGeradoFindAll") dto: IAppRequest<"HorarioGeradoFindAll">,
-  ): Promise<LadesaTypings.HorarioGeradoListOperationOutput["success"]> {
-    return this.horarioGeradoService.horarioGeradoFindAll(clientAccess, dto);
+  async horarioGeradoFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("HorarioGeradoFindAll") dto: IAppRequest<"HorarioGeradoFindAll">) {
+    const domain: IDomain.HorarioGeradoListInput = requestRepresentationMergeToDomain(dto);
+    return this.horarioGeradoService.horarioGeradoFindAll(accessContext, domain);
   }
 
   @Get("/:id")
@@ -26,18 +24,19 @@ export class HorarioGeradoController {
 
   @Post("/")
   async horarioGeradoCreate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("HorarioGeradoCreate") dto: IAppRequest<"HorarioGeradoCreate">) {
-    return this.horarioGeradoService.horarioGeradoCreate(accessContext, dto);
+    const domain: IDomain.HorarioGeradoCreateInput = requestRepresentationMergeToDomain(dto);
+    return this.horarioGeradoService.horarioGeradoCreate(accessContext, domain);
   }
 
   @Patch("/:id")
   async horarioGeradoUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("HorarioGeradoUpdate") dto: IAppRequest<"HorarioGeradoUpdate">) {
-    return this.horarioGeradoService.horarioGeradoUpdate(accessContext, dto);
+    const domain: IDomain.HorarioGeradoUpdateInput = requestRepresentationMergeToDomain(dto);
+    return this.horarioGeradoService.horarioGeradoUpdate(accessContext, domain);
   }
 
   @Delete("/:id")
   async horarioGeradoDeleteOneById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("HorarioGeradoDeleteOneById") dto: IAppRequest<"HorarioGeradoDeleteOneById">) {
-    return this.horarioGeradoService.horarioGeradoDeleteOneById(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    const domain: IDomain.HorarioGeradoFindOneInput = requestRepresentationMergeToDomain(dto);
+    return this.horarioGeradoService.horarioGeradoDeleteOneById(accessContext, domain);
   }
 }

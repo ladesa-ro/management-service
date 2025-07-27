@@ -185,9 +185,7 @@ export class DisponibilidadeService {
   async disponibilidadeUpdate(accessContext: AccessContext, dto: IDomain.DisponibilidadeUpdateByIdInput) {
     // =========================================================
 
-    const currentDisponibilidade = await this.disponibilidadeFindByIdStrict(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    const currentDisponibilidade = await this.disponibilidadeFindByIdStrict(accessContext, dto);
 
     // =========================================================
 

@@ -182,9 +182,7 @@ export class ModalidadeService {
   async modalidadeUpdate(accessContext: AccessContext, dto: IDomain.ModalidadeUpdateByIdInput) {
     // =========================================================
 
-    const currentModalidade = await this.modalidadeFindByIdStrict(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    const currentModalidade = await this.modalidadeFindByIdStrict(accessContext, dto);
 
     // =========================================================
 

@@ -183,9 +183,7 @@ export class NivelFormacaoService {
   async nivelFormacaoUpdate(accessContext: AccessContext, dto: IDomain.NivelFormacaoUpdateByIdInput) {
     // =========================================================
 
-    const currentNivelFormacao = await this.nivelFormacaoFindByIdStrict(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    const currentNivelFormacao = await this.nivelFormacaoFindByIdStrict(accessContext, dto);
 
     // =========================================================
 

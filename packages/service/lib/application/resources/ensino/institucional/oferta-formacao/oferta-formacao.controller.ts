@@ -1,6 +1,6 @@
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Controller, Delete, Get, Patch, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
+import { requestRepresentationMergeToDomain } from "@/application/contracts/generic-adapters";
 import { type IAppRequest } from "@/application/contracts/openapi/document/app-openapi-typings";
 import { AppRequest } from "@/application/contracts/openapi/utils/app-request";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
@@ -12,34 +12,32 @@ export class OfertaFormacaoController {
   constructor(private ofertaFormacaoService: OfertaFormacaoService) {}
 
   @Get("/")
-  async ofertaFormacaoFindAll(
-    @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("OfertaFormacaoFindAll") dto: IAppRequest<"OfertaFormacaoFindAll">,
-  ): Promise<LadesaTypings.OfertaFormacaoListOperationOutput["success"]> {
-    return this.ofertaFormacaoService.ofertaFormacaoFindAll(accessContext, dto);
+  async ofertaFormacaoFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("OfertaFormacaoFindAll") dto: IAppRequest<"OfertaFormacaoFindAll">) {
+    const domain: IDomain.OfertaFormacaoListInput = requestRepresentationMergeToDomain(dto);
+    return this.ofertaFormacaoService.ofertaFormacaoFindAll(accessContext, domain);
   }
 
   @Get("/:id")
   async ofertaFormacaoFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("OfertaFormacaoFindById") dto: IAppRequest<"OfertaFormacaoFindById">) {
-    return this.ofertaFormacaoService.ofertaFormacaoFindByIdStrict(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    const domain: IDomain.OfertaFormacaoFindOneInput = requestRepresentationMergeToDomain(dto);
+    return this.ofertaFormacaoService.ofertaFormacaoFindByIdStrict(accessContext, domain);
   }
 
   @Post("/")
   async ofertaFormacaoCreate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("OfertaFormacaoCreate") dto: IAppRequest<"OfertaFormacaoCreate">) {
-    return this.ofertaFormacaoService.ofertaFormacaoCreate(accessContext, dto);
+    const domain: IDomain.OfertaFormacaoCreateInput = requestRepresentationMergeToDomain(dto);
+    return this.ofertaFormacaoService.ofertaFormacaoCreate(accessContext, domain);
   }
 
   @Patch("/:id")
   async ofertaFormacaoUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("OfertaFormacaoUpdate") dto: IAppRequest<"OfertaFormacaoUpdate">) {
-    return this.ofertaFormacaoService.ofertaFormacaoUpdate(accessContext, dto);
+    const domain: IDomain.OfertaFormacaoUpdateInput = requestRepresentationMergeToDomain(dto);
+    return this.ofertaFormacaoService.ofertaFormacaoUpdate(accessContext, domain);
   }
 
   @Delete("/:id")
   async ofertaFormacaoDeleteOneById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("OfertaFormacaoDeleteOneById") dto: IAppRequest<"OfertaFormacaoDeleteOneById">) {
-    return this.ofertaFormacaoService.ofertaFormacaoDeleteOneById(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    const domain: IDomain.OfertaFormacaoFindOneInput = requestRepresentationMergeToDomain(dto);
+    return this.ofertaFormacaoService.ofertaFormacaoDeleteOneById(accessContext, domain);
   }
 }

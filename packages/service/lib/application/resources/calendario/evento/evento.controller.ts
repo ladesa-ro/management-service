@@ -1,6 +1,6 @@
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Controller, Delete, Get, Patch, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
+import { requestRepresentationMergeToDomain } from "@/application/contracts/generic-adapters";
 import { type IAppRequest } from "@/application/contracts/openapi/document/app-openapi-typings";
 import { AppRequest } from "@/application/contracts/openapi/utils/app-request";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
@@ -12,31 +12,32 @@ export class EventoController {
   constructor(private eventoService: EventoService) {}
 
   @Get("/")
-  async eventoFindAll(@AccessContextHttp() clientAccess: AccessContext, @AppRequest("EventoFindAll") dto: IAppRequest<"EventoFindAll">): Promise<LadesaTypings.EventoListOperationOutput["success"]> {
-    return this.eventoService.eventoFindAll(clientAccess, dto);
+  async eventoFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("EventoFindAll") dto: IAppRequest<"EventoFindAll">) {
+    const domain: IDomain.EventoListInput = requestRepresentationMergeToDomain(dto);
+    return this.eventoService.eventoFindAll(accessContext, domain);
   }
 
   @Get("/:id")
   async eventoFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("EventoFindById") dto: IAppRequest<"EventoFindById">) {
-    return this.eventoService.eventoFindByIdStrict(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    const domain: IDomain.EventoFindOneInput = requestRepresentationMergeToDomain(dto);
+    return this.eventoService.eventoFindByIdStrict(accessContext, domain);
   }
 
   @Post("/")
   async eventoCreate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("EventoCreate") dto: IAppRequest<"EventoCreate">) {
-    return this.eventoService.eventoCreate(accessContext, dto);
+    const domain: IDomain.EventoCreateInput = requestRepresentationMergeToDomain(dto);
+    return this.eventoService.eventoCreate(accessContext, domain);
   }
 
   @Patch("/:id")
   async eventoUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("EventoUpdate") dto: IAppRequest<"EventoUpdate">) {
-    return this.eventoService.eventoUpdate(accessContext, dto);
+    const domain: IDomain.EventoUpdateInput = requestRepresentationMergeToDomain(dto);
+    return this.eventoService.eventoUpdate(accessContext, domain);
   }
 
   @Delete("/:id")
   async eventoDeleteOneById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("EventoDeleteOneById") dto: IAppRequest<"EventoDeleteOneById">) {
-    return this.eventoService.eventoDeleteOneById(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    const domain: IDomain.EventoFindOneInput = requestRepresentationMergeToDomain(dto);
+    return this.eventoService.eventoDeleteOneById(accessContext, domain);
   }
 }

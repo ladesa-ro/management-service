@@ -208,9 +208,7 @@ export class EventoService {
   async eventoUpdate(accessContext: AccessContext, dto: IDomain.EventoUpdateByIdInput) {
     // =========================================================
 
-    const currentEvento = await this.eventoFindByIdStrict(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    const currentEvento = await this.eventoFindByIdStrict(accessContext, dto);
 
     // =========================================================
 

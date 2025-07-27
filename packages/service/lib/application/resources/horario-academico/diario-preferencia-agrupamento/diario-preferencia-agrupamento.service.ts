@@ -248,9 +248,7 @@ export class DiarioPreferenciaAgrupamentoService {
   async diarioPreferenciaAgrupamentoUpdate(accessContext: AccessContext, dto: IDomain.DiarioPreferenciaAgrupamentoUpdateByIdInput) {
     // =========================================================
 
-    const currentDiarioPreferenciaAgrupamento = await this.diarioPreferenciaAgrupamentoFindByIdStrict(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    const currentDiarioPreferenciaAgrupamento = await this.diarioPreferenciaAgrupamentoFindByIdStrict(accessContext, dto);
 
     // =========================================================
 

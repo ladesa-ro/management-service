@@ -205,9 +205,7 @@ export class OfertaFormacaoService {
   async ofertaFormacaoUpdate(accessContext: AccessContext, dto: IDomain.OfertaFormacaoUpdateByIdInput) {
     // =========================================================
 
-    const currentOfertaFormacao = await this.ofertaFormacaoFindByIdStrict(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    const currentOfertaFormacao = await this.ofertaFormacaoFindByIdStrict(accessContext, dto);
 
     // =========================================================
 

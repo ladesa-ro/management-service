@@ -224,9 +224,7 @@ export class ProfessorDisponibilidadeService {
   async professorDisponibilidadeUpdate(accessContext: AccessContext, dto: IDomain.ProfessorDisponibilidadeUpdateByIdInput) {
     // =========================================================
 
-    const currentProfessorDisponibilidade = await this.professorDisponibilidadeFindByIdStrict(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    const currentProfessorDisponibilidade = await this.professorDisponibilidadeFindByIdStrict(accessContext, dto);
 
     // =========================================================
 

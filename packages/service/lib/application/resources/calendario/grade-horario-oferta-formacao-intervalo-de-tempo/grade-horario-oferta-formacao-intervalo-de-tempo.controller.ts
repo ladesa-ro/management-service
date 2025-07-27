@@ -1,6 +1,6 @@
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Controller, Delete, Get, Patch, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
+import { requestRepresentationMergeToDomain } from "@/application/contracts/generic-adapters";
 import { type IAppRequest } from "@/application/contracts/openapi/document/app-openapi-typings";
 import { AppRequest } from "@/application/contracts/openapi/utils/app-request";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
@@ -16,8 +16,9 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoController {
     @AccessContextHttp() accessContext: AccessContext,
 
     @AppRequest("GradeHorarioOfertaFormacaoIntervaloDeTempoFindAll") dto: IAppRequest<"GradeHorarioOfertaFormacaoIntervaloDeTempoFindAll">,
-  ): Promise<LadesaTypings.GradeHorarioOfertaFormacaoIntervaloDeTempoListOperationOutput["success"]> {
-    return this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.gradeHorarioOfertaFormacaoIntervaloDeTempoFindAll(accessContext, dto);
+  ) {
+    const domain: IDomain.GradeHorarioOfertaFormacaoIntervaloDeTempoListInput = requestRepresentationMergeToDomain(dto);
+    return this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.gradeHorarioOfertaFormacaoIntervaloDeTempoFindAll(accessContext, domain);
   }
 
   @Get("/:id")
@@ -26,9 +27,8 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoController {
 
     @AppRequest("GradeHorarioOfertaFormacaoIntervaloDeTempoFindById") dto: IAppRequest<"GradeHorarioOfertaFormacaoIntervaloDeTempoFindById">,
   ) {
-    return this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.gradeHorarioOfertaFormacaoIntervaloDeTempoFindByIdStrict(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    const domain: IDomain.GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInput = requestRepresentationMergeToDomain(dto);
+    return this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.gradeHorarioOfertaFormacaoIntervaloDeTempoFindByIdStrict(accessContext, domain);
   }
 
   @Post("/")
@@ -37,7 +37,8 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoController {
 
     @AppRequest("GradeHorarioOfertaFormacaoIntervaloDeTempoCreate") dto: IAppRequest<"GradeHorarioOfertaFormacaoIntervaloDeTempoCreate">,
   ) {
-    return this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.gradeHorarioOfertaFormacaoIntervaloDeTempoCreate(accessContext, dto);
+    const domain: IDomain.GradeHorarioOfertaFormacaoIntervaloDeTempoCreateInput = requestRepresentationMergeToDomain(dto);
+    return this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.gradeHorarioOfertaFormacaoIntervaloDeTempoCreate(accessContext, domain);
   }
 
   @Patch("/:id")
@@ -46,7 +47,8 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoController {
 
     @AppRequest("GradeHorarioOfertaFormacaoIntervaloDeTempoUpdate") dto: IAppRequest<"GradeHorarioOfertaFormacaoIntervaloDeTempoUpdate">,
   ) {
-    return this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.gradeHorarioOfertaFormacaoIntervaloDeTempoUpdate(accessContext, dto);
+    const domain: IDomain.GradeHorarioOfertaFormacaoIntervaloDeTempoUpdateInput = requestRepresentationMergeToDomain(dto);
+    return this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.gradeHorarioOfertaFormacaoIntervaloDeTempoUpdate(accessContext, domain);
   }
 
   @Delete("/:id")
@@ -55,8 +57,7 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoController {
 
     @AppRequest("GradeHorarioOfertaFormacaoIntervaloDeTempoDeleteOneById") dto: IAppRequest<"GradeHorarioOfertaFormacaoIntervaloDeTempoDeleteOneById">,
   ) {
-    return this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.gradeHorarioOfertaFormacaoIntervaloDeTempoDeleteOneById(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    const domain: IDomain.GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInput = requestRepresentationMergeToDomain(dto);
+    return this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.gradeHorarioOfertaFormacaoIntervaloDeTempoDeleteOneById(accessContext, domain);
   }
 }

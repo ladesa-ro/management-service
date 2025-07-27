@@ -246,9 +246,7 @@ export class TurmaService {
   async turmaUpdate(accessContext: AccessContext, dto: IDomain.TurmaUpdateByIdInput) {
     // =========================================================
 
-    const currentTurma = await this.turmaFindByIdStrict(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    const currentTurma = await this.turmaFindByIdStrict(accessContext, dto);
 
     // =========================================================
 

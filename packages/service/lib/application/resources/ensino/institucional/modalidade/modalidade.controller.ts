@@ -1,6 +1,6 @@
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Controller, Delete, Get, Patch, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
+import { requestRepresentationMergeToDomain } from "@/application/contracts/generic-adapters";
 import { type IAppRequest } from "@/application/contracts/openapi/document/app-openapi-typings";
 import { AppRequest } from "@/application/contracts/openapi/utils/app-request";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
@@ -12,34 +12,32 @@ export class ModalidadeController {
   constructor(private modalidadeService: ModalidadeService) {}
 
   @Get("/")
-  async modalidadeFindAll(
-    @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("ModalidadeList") dto: IAppRequest<"ModalidadeList">,
-  ): Promise<LadesaTypings.ModalidadeListOperationOutput["success"]> {
-    return this.modalidadeService.modalidadeFindAll(accessContext, dto);
+  async modalidadeFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("ModalidadeList") dto: IAppRequest<"ModalidadeList">) {
+    const domain: IDomain.ModalidadeListInput = requestRepresentationMergeToDomain(dto);
+    return this.modalidadeService.modalidadeFindAll(accessContext, domain);
   }
 
   @Get("/:id")
   async modalidadeFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("ModalidadeDeleteOneById") dto: IAppRequest<"ModalidadeDeleteOneById">) {
-    return this.modalidadeService.modalidadeFindByIdStrict(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    const domain: IDomain.ModalidadeFindOneInput = requestRepresentationMergeToDomain(dto);
+    return this.modalidadeService.modalidadeFindByIdStrict(accessContext, domain);
   }
 
   @Post("/")
   async modalidadeCreate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("ModalidadeCreate") dto: IAppRequest<"ModalidadeCreate">) {
-    return this.modalidadeService.modalidadeCreate(accessContext, dto);
+    const domain: IDomain.ModalidadeCreateInput = requestRepresentationMergeToDomain(dto);
+    return this.modalidadeService.modalidadeCreate(accessContext, domain);
   }
 
   @Patch("/:id")
   async modalidadeUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("ModalidadeUpdateOneById") dto: IAppRequest<"ModalidadeUpdateOneById">) {
-    return this.modalidadeService.modalidadeUpdate(accessContext, dto);
+    const domain: IDomain.ModalidadeUpdateInput = requestRepresentationMergeToDomain(dto);
+    return this.modalidadeService.modalidadeUpdate(accessContext, domain);
   }
 
   @Delete("/:id")
   async modalidadeDeleteOneById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("ModalidadeDeleteOneById") dto: IAppRequest<"ModalidadeDeleteOneById">) {
-    return this.modalidadeService.modalidadeDeleteOneById(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    const domain: IDomain.ModalidadeFindOneInput = requestRepresentationMergeToDomain(dto);
+    return this.modalidadeService.modalidadeDeleteOneById(accessContext, domain);
   }
 }

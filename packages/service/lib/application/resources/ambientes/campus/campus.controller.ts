@@ -1,6 +1,6 @@
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Controller, Delete, Get, Patch, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
+import { requestRepresentationMergeToDomain } from "@/application/contracts/generic-adapters";
 import { type IAppRequest } from "@/application/contracts/openapi/document/app-openapi-typings";
 import { AppRequest } from "@/application/contracts/openapi/utils/app-request";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
@@ -12,31 +12,32 @@ export class CampusController {
   constructor(private campusService: CampusService) {}
 
   @Get("/")
-  async campusFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CampusList") dto: IAppRequest<"CampusList">): Promise<LadesaTypings.CampusListOperationOutput["success"]> {
-    return this.campusService.campusFindAll(accessContext, dto);
+  async campusFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CampusList") dto: IAppRequest<"CampusList">) {
+    const domain: IDomain.CampusListInput = requestRepresentationMergeToDomain(dto);
+    return this.campusService.campusFindAll(accessContext, domain);
   }
 
   @Get("/:id")
   async campusFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CampusFindById") dto: IAppRequest<"CampusFindById">) {
-    return this.campusService.campusFindByIdStrict(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    const domain: IDomain.CampusFindOneInput = requestRepresentationMergeToDomain(dto);
+    return this.campusService.campusFindByIdStrict(accessContext, domain);
   }
 
   @Post("/")
   async campusCreate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CampusCreate") dto: IAppRequest<"CampusCreate">) {
-    return this.campusService.campusCreate(accessContext, dto);
+    const domain: IDomain.CampusCreateInput = requestRepresentationMergeToDomain(dto);
+    return this.campusService.campusCreate(accessContext, domain);
   }
 
   @Patch("/:id")
   async campusUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CampusUpdate") dto: IAppRequest<"CampusUpdate">) {
-    return this.campusService.campusUpdate(accessContext, dto);
+    const domain: IDomain.CampusUpdateInput = requestRepresentationMergeToDomain(dto);
+    return this.campusService.campusUpdate(accessContext, domain);
   }
 
   @Delete("/:id")
   async campusDeleteOneById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CampusDeleteOneById") dto: IAppRequest<"CampusDeleteOneById">) {
-    return this.campusService.campusDeleteOneById(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    const domain: IDomain.CampusFindOneInput = requestRepresentationMergeToDomain(dto);
+    return this.campusService.campusDeleteOneById(accessContext, domain);
   }
 }

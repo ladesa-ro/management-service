@@ -1,6 +1,6 @@
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Controller, Delete, Get, Patch, Post, Put, UploadedFile } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
+import { requestRepresentationMergeToDomain } from "@/application/contracts/generic-adapters";
 import { type IAppRequest } from "@/application/contracts/openapi/document/app-openapi-typings";
 import { AppRequest } from "@/application/contracts/openapi/utils/app-request";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
@@ -12,41 +12,44 @@ export class CursoController {
   constructor(private cursoService: CursoService) {}
 
   @Get("/")
-  async cursoFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CursoFindAll") dto: IAppRequest<"CursoFindAll">): Promise<LadesaTypings.CursoListOperationOutput["success"]> {
-    return this.cursoService.cursoFindAll(accessContext, dto);
+  async cursoFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CursoFindAll") dto: IAppRequest<"CursoFindAll">) {
+    const domain: IDomain.CursoListInput = requestRepresentationMergeToDomain(dto);
+    return this.cursoService.cursoFindAll(accessContext, domain);
   }
 
   @Get("/:id")
   async cursoFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CursoFindById") dto: IAppRequest<"CursoFindById">) {
-    return this.cursoService.cursoFindByIdStrict(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    const domain: IDomain.CursoFindOneInput = requestRepresentationMergeToDomain(dto);
+    return this.cursoService.cursoFindByIdStrict(accessContext, domain);
   }
 
   @Post("/")
   async cursoCreate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CursoCreate") dto: IAppRequest<"CursoCreate">) {
-    return this.cursoService.cursoCreate(accessContext, dto);
+    const domain: IDomain.CursoCreateInput = requestRepresentationMergeToDomain(dto);
+    return this.cursoService.cursoCreate(accessContext, domain);
   }
 
   @Patch("/:id")
   async cursoUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CursoUpdate") dto: IAppRequest<"CursoUpdate">) {
-    return this.cursoService.cursoUpdate(accessContext, dto);
+    const domain: IDomain.CursoUpdateInput = requestRepresentationMergeToDomain(dto);
+    return this.cursoService.cursoUpdate(accessContext, domain);
   }
 
   @Get("/:id/imagem/capa")
-  async cursoGetImagemCapa(@AccessContextHttp() accessContext: AccessContext) {
-    return this.cursoService.cursoGetImagemCapa(accessContext, id);
+  async cursoGetImagemCapa(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CursoGetImagemCapa") dto: IAppRequest<"CursoGetImagemCapa">) {
+    const domain: IDomain.CursoFindOneInput = requestRepresentationMergeToDomain(dto);
+    return this.cursoService.cursoGetImagemCapa(accessContext, domain);
   }
 
   @Put("/:id/imagem/capa")
-  async cursoImagemCapaSave(@AccessContextHttp() accessContext: AccessContext, @UploadedFile() file: Express.Multer.File) {
-    return this.cursoService.cursoUpdateImagemCapa(accessContext, { id }, file);
+  async cursoImagemCapaSave(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CursoSetImagemCapa") dto: IAppRequest<"CursoSetImagemCapa">, @UploadedFile() file: Express.Multer.File) {
+    const domain: IDomain.CursoFindOneInput = requestRepresentationMergeToDomain(dto);
+    return this.cursoService.cursoUpdateImagemCapa(accessContext, domain, file);
   }
 
   @Delete("/:id")
   async cursoDeleteOneById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CursoDeleteOneById") dto: IAppRequest<"CursoDeleteOneById">) {
-    return this.cursoService.cursoDeleteOneById(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    const domain: IDomain.CursoFindOneInput = requestRepresentationMergeToDomain(dto);
+    return this.cursoService.cursoDeleteOneById(accessContext, domain);
   }
 }

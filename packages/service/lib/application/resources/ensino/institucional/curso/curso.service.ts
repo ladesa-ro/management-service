@@ -235,9 +235,7 @@ export class CursoService {
   async cursoUpdate(accessContext: AccessContext, dto: IDomain.CursoUpdateByIdInput) {
     // =========================================================
 
-    const currentCurso = await this.cursoFindByIdStrict(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    const currentCurso = await this.cursoFindByIdStrict(accessContext, dto);
 
     // =========================================================
 

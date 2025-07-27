@@ -189,9 +189,7 @@ export class AmbienteService {
   async ambienteUpdate(accessContext: AccessContext, dto: IDomain.AmbienteUpdateByIdInput) {
     // =========================================================
 
-    const currentAmbiente = await this.ambienteFindByIdStrict(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    const currentAmbiente = await this.ambienteFindByIdStrict(accessContext, dto);
 
     // =========================================================
 

@@ -1,6 +1,6 @@
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Controller, Delete, Get, Patch, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
+import { requestRepresentationMergeToDomain } from "@/application/contracts/generic-adapters";
 import { type IAppRequest } from "@/application/contracts/openapi/document/app-openapi-typings";
 import { AppRequest } from "@/application/contracts/openapi/utils/app-request";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
@@ -16,8 +16,9 @@ export class ProfessorDisponibilidadeController {
     @AccessContextHttp() accessContext: AccessContext,
 
     @AppRequest("ProfessorDisponibilidadeFindAll") dto: IAppRequest<"ProfessorDisponibilidadeFindAll">,
-  ): Promise<LadesaTypings.ProfessorDisponibilidadeListOperationOutput["success"]> {
-    return this.professorDisponibilidadeService.professorDisponibilidadeFindAll(accessContext, dto);
+  ) {
+    const domain: IDomain.ProfessorDisponibilidadeListInput = requestRepresentationMergeToDomain(dto);
+    return this.professorDisponibilidadeService.professorDisponibilidadeFindAll(accessContext, domain);
   }
 
   @Get("/:id")
@@ -26,9 +27,8 @@ export class ProfessorDisponibilidadeController {
 
     @AppRequest("ProfessorDisponibilidadeFindById") dto: IAppRequest<"ProfessorDisponibilidadeFindById">,
   ) {
-    return this.professorDisponibilidadeService.professorDisponibilidadeFindByIdStrict(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    const domain: IDomain.ProfessorDisponibilidadeFindOneInput = requestRepresentationMergeToDomain(dto);
+    return this.professorDisponibilidadeService.professorDisponibilidadeFindByIdStrict(accessContext, domain);
   }
 
   @Post("/")
@@ -37,7 +37,8 @@ export class ProfessorDisponibilidadeController {
 
     @AppRequest("ProfessorDisponibilidadeCreate") dto: IAppRequest<"ProfessorDisponibilidadeCreate">,
   ) {
-    return this.professorDisponibilidadeService.professorDisponibilidadeCreate(accessContext, dto);
+    const domain: IDomain.ProfessorDisponibilidadeCreateInput = requestRepresentationMergeToDomain(dto);
+    return this.professorDisponibilidadeService.professorDisponibilidadeCreate(accessContext, domain);
   }
 
   @Patch("/:id")
@@ -46,7 +47,8 @@ export class ProfessorDisponibilidadeController {
 
     @AppRequest("ProfessorDisponibilidadeUpdate") dto: IAppRequest<"ProfessorDisponibilidadeUpdate">,
   ) {
-    return this.professorDisponibilidadeService.professorDisponibilidadeUpdate(accessContext, dto);
+    const domain: IDomain.ProfessorDisponibilidadeUpdateInput = requestRepresentationMergeToDomain(dto);
+    return this.professorDisponibilidadeService.professorDisponibilidadeUpdate(accessContext, domain);
   }
 
   @Delete("/:id")
@@ -55,8 +57,7 @@ export class ProfessorDisponibilidadeController {
 
     @AppRequest("ProfessorDisponibilidadeDeleteOneById") dto: IAppRequest<"ProfessorDisponibilidadeDeleteOneById">,
   ) {
-    return this.professorDisponibilidadeService.professorDisponibilidadeDeleteOneById(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    const domain: IDomain.ProfessorDisponibilidadeFindOneInput = requestRepresentationMergeToDomain(dto);
+    return this.professorDisponibilidadeService.professorDisponibilidadeDeleteOneById(accessContext, domain);
   }
 }

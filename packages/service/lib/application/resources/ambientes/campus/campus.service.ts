@@ -243,9 +243,7 @@ export class CampusService {
   async campusUpdate(accessContext: AccessContext, dto: IDomain.CampusUpdateInput) {
     // =========================================================
 
-    const currentCampus = await this.campusFindByIdStrict(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    const currentCampus = await this.campusFindByIdStrict(accessContext, dto);
 
     // =========================================================
 

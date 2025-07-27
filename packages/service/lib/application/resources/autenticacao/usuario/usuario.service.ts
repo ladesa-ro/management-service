@@ -355,9 +355,7 @@ export class UsuarioService {
   async usuarioUpdate(accessContext: AccessContext, dto: IDomain.UsuarioUpdateByIdInput) {
     // =========================================================
 
-    const currentUsuario = await this.usuarioFindByIdStrict(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    const currentUsuario = await this.usuarioFindByIdStrict(accessContext, dto);
 
     const currentMatriculaSiape = currentUsuario.matriculaSiape ?? (await this.internalResolveMatriculaSiape(currentUsuario.id));
 

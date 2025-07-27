@@ -1,19 +1,11 @@
 import { Controller, Delete, Get, Patch, Post, Put, UploadedFile } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
+import { requestRepresentationMergeToDomain } from "@/application/contracts/generic-adapters";
 import { type IAppRequest } from "@/application/contracts/openapi/document/app-openapi-typings";
 import { AppRequest } from "@/application/contracts/openapi/utils/app-request";
-import { type IAppRequestRepresentationGeneric } from "@/application/interfaces/i-app-request-representation-generic";
 import { type IDomain } from "@/domain/contracts/integration";
 import { AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { AmbienteService } from "./ambiente.service";
-
-const mergeAll = <RequestRepresentation extends IAppRequestRepresentationGeneric>(requestRepresentation: RequestRepresentation) => {
-  return {
-    ...requestRepresentation.params,
-    ...requestRepresentation.query,
-    ...requestRepresentation.body,
-  };
-};
 
 @ApiTags("ambientes")
 @Controller("/ambientes")
@@ -22,31 +14,31 @@ export class AmbienteController {
 
   @Get("/")
   async ambienteFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("AmbienteList") dto: IAppRequest<"AmbienteList">) {
-    const domain: IDomain.AmbienteListInput = mergeAll(dto);
+    const domain: IDomain.AmbienteListInput = requestRepresentationMergeToDomain(dto);
     return this.ambienteService.ambienteFindAll(accessContext, domain);
   }
 
   @Get("/:id")
   async ambienteFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("AmbienteFindOneById") dto: IAppRequest<"AmbienteFindOneById">) {
-    const domain: IDomain.AmbienteFindOneInput = MergeAllAdapter.adapt(dto);
+    const domain: IDomain.AmbienteFindOneInput = requestRepresentationMergeToDomain(dto);
     return this.ambienteService.ambienteFindByIdStrict(accessContext, domain);
   }
 
   @Post("/")
   async ambienteCreate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("AmbienteCreate") dto: IAppRequest<"AmbienteCreate">) {
-    const domain: IDomain.AmbienteCreateInput = MergeAllAdapter.adapt(dto);
+    const domain: IDomain.AmbienteCreateInput = requestRepresentationMergeToDomain(dto);
     return this.ambienteService.ambienteCreate(accessContext, domain);
   }
 
   @Patch("/:id")
   async ambienteUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("AmbienteUpdateOneById") dto: IAppRequest<"AmbienteUpdateOneById">) {
-    const domain: IDomain.AmbienteUpdateInput = MergeAllAdapter.adapt(dto);
+    const domain: IDomain.AmbienteUpdateInput = requestRepresentationMergeToDomain(dto);
     return this.ambienteService.ambienteUpdate(accessContext, domain);
   }
 
   @Get("/:id/imagem/capa")
   async ambienteGetImagemCapa(@AccessContextHttp() accessContext: AccessContext, @AppRequest("AmbienteGetImagemCapa") dto: IAppRequest<"AmbienteGetImagemCapa">) {
-    const domain: IDomain.AmbienteFindOneInput = MergeAllAdapter.adapt(dto);
+    const domain: IDomain.AmbienteFindOneInput = requestRepresentationMergeToDomain(dto);
     return this.ambienteService.ambienteGetImagemCapa(accessContext, domain);
   }
 
@@ -56,12 +48,13 @@ export class AmbienteController {
     @AppRequest("AmbienteSetImagemCapa") dto: IAppRequest<"AmbienteSetImagemCapa">,
     @UploadedFile() file: Express.Multer.File,
   ) {
-    return this.ambienteService.ambienteUpdateImagemCapa(accessContext, { id: dto.parameters.path.id }, file);
+    const domain: IDomain.AmbienteFindOneInput = requestRepresentationMergeToDomain(dto);
+    return this.ambienteService.ambienteUpdateImagemCapa(accessContext, domain, file);
   }
 
   @Delete("/:id")
   async ambienteDeleteOneById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("AmbienteDeleteOneById") dto: IAppRequest<"AmbienteDeleteOneById">) {
-    const domain: IDomain.AmbienteFindOneInput = MergeAllAdapter.adapt(dto);
+    const domain: IDomain.AmbienteFindOneInput = requestRepresentationMergeToDomain(dto);
     return this.ambienteService.ambienteDeleteOneById(accessContext, domain);
   }
 }

@@ -1,12 +1,12 @@
-import type * as ILadesaMSOpenApiTypings from "@/application/#/openapi.v3";
+import type * as IAppApiDoc from "@/application/#/openapi.v3";
 import { IAppRequestRepresentationGeneric } from "@/application/interfaces/i-app-request-representation-generic";
 
-export type { ILadesaMSOpenApiTypings };
+export type { IAppApiDoc };
 
-export type IApiDocOperationKey = keyof ILadesaMSOpenApiTypings.operations;
-export type IApiDocOperationByKey<OperationName extends IApiDocOperationKey> = ILadesaMSOpenApiTypings.operations[OperationName];
+export type IApiDocOperationKey = keyof IAppApiDoc.operations;
+export type IApiDocOperationByKey<OperationName extends IApiDocOperationKey> = IAppApiDoc.operations[OperationName];
 
-export type IApiDocOperation = ILadesaMSOpenApiTypings.operations[keyof ILadesaMSOpenApiTypings.operations];
+export type IApiDocOperation = IAppApiDoc.operations[keyof IAppApiDoc.operations];
 
 export type IAppRequest<OperationKey extends IApiDocOperationKey> = IAppRequestRepresentationGeneric & {
   method: IApiDocOperationByKey<OperationKey>["method"];

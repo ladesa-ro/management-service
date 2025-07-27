@@ -188,9 +188,7 @@ export class DisciplinaService {
   async disciplinaUpdate(accessContext: AccessContext, dto: IDomain.DisciplinaUpdateByIdInput) {
     // =========================================================
 
-    const currentDisciplina = await this.disciplinaFindByIdStrict(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    const currentDisciplina = await this.disciplinaFindByIdStrict(accessContext, dto);
 
     // =========================================================
 

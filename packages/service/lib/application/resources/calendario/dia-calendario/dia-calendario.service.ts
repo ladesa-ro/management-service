@@ -213,9 +213,7 @@ export class DiaCalendarioService {
   async diaCalendarioUpdate(accessContext: AccessContext, dto: IDomain.DiaCalendarioUpdateByIdInput) {
     // =========================================================
 
-    const currentDiaCalendario = await this.diaCalendarioFindByIdStrict(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    const currentDiaCalendario = await this.diaCalendarioFindByIdStrict(accessContext, dto);
 
     // =========================================================
 

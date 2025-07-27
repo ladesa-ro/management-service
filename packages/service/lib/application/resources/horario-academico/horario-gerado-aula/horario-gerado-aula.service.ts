@@ -255,9 +255,7 @@ export class HorarioGeradoAulaService {
   async HorarioGeradoAulaUpdate(accessContext: AccessContext, dto: IDomain.HorarioGeradoAulaUpdateByIdInput) {
     // =========================================================
 
-    const currentHorarioGeradoAula = await this.horarioGeradoAulaFindByIdStrict(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    const currentHorarioGeradoAula = await this.horarioGeradoAulaFindByIdStrict(accessContext, dto);
 
     // =========================================================
 

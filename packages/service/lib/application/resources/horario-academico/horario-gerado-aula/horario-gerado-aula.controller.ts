@@ -1,6 +1,6 @@
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Controller, Delete, Get, Patch, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
+import { requestRepresentationMergeToDomain } from "@/application/contracts/generic-adapters";
 import { type IAppRequest } from "@/application/contracts/openapi/document/app-openapi-typings";
 import { AppRequest } from "@/application/contracts/openapi/utils/app-request";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
@@ -12,11 +12,9 @@ export class HorarioGeradoAulaController {
   constructor(private horarioGeradoAulaService: HorarioGeradoAulaService) {}
 
   @Get("/")
-  async horarioGeradoAulaFindAll(
-    @AccessContextHttp() clientAccess: AccessContext,
-    @AppRequest("HorarioGeradoAulaFindAll") dto: IAppRequest<"HorarioGeradoAulaFindAll">,
-  ): Promise<LadesaTypings.HorarioGeradoAulaListOperationOutput["success"]> {
-    return this.horarioGeradoAulaService.horarioGeradoAulaFindAll(clientAccess, dto);
+  async horarioGeradoAulaFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("HorarioGeradoAulaFindAll") dto: IAppRequest<"HorarioGeradoAulaFindAll">) {
+    const domain: IDomain.HorarioGeradoAulaListInput = requestRepresentationMergeToDomain(dto);
+    return this.horarioGeradoAulaService.horarioGeradoAulaFindAll(accessContext, domain);
   }
 
   @Get("/:id")
@@ -26,7 +24,8 @@ export class HorarioGeradoAulaController {
 
   @Post("/")
   async horarioGeradoAulaCreate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("HorarioGeradoAulaCreate") dto: IAppRequest<"HorarioGeradoAulaCreate">) {
-    return this.horarioGeradoAulaService.HorarioGeradoAulaCreate(accessContext, dto);
+    const domain: IDomain.HorarioGeradoAulaCreateInput = requestRepresentationMergeToDomain(dto);
+    return this.horarioGeradoAulaService.horarioGeradoAulaCreate(accessContext, domain);
   }
 
   @Patch("/:id")
@@ -35,7 +34,8 @@ export class HorarioGeradoAulaController {
 
     @AppRequest("HorarioGeradoAulaUpdate") dto: IAppRequest<"HorarioGeradoAulaUpdate">,
   ) {
-    return this.horarioGeradoAulaService.HorarioGeradoAulaUpdate(accessContext, dto);
+    const domain: IDomain.HorarioGeradoAulaUpdateInput = requestRepresentationMergeToDomain(dto);
+    return this.horarioGeradoAulaService.horarioGeradoAulaUpdate(accessContext, domain);
   }
 
   @Delete("/:id")

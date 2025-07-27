@@ -1,6 +1,6 @@
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Controller, Delete, Get, Patch, Post, Put, UploadedFile } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
+import { requestRepresentationMergeToDomain } from "@/application/contracts/generic-adapters";
 import { type IAppRequest } from "@/application/contracts/openapi/document/app-openapi-typings";
 import { AppRequest } from "@/application/contracts/openapi/utils/app-request";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
@@ -12,28 +12,27 @@ export class UsuarioController {
   constructor(private usuarioService: UsuarioService) {}
 
   @Get("/")
-  async usuarioFindAll(
-    @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("UsuarioFindAll") dto: IAppRequest<"UsuarioFindAll">,
-  ): Promise<LadesaTypings.UsuarioListOperationOutput["success"]> {
-    return this.usuarioService.usuarioFindAll(accessContext, dto);
+  async usuarioFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("UsuarioFindAll") dto: IAppRequest<"UsuarioFindAll">) {
+    const domain: IDomain.UsuarioListInput = requestRepresentationMergeToDomain(dto);
+    return this.usuarioService.usuarioFindAll(accessContext, domain);
   }
 
   @Get("/:id")
   async usuarioFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("UsuarioFindById") dto: IAppRequest<"UsuarioFindById">) {
-    return this.usuarioService.usuarioFindByIdStrict(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    const domain: IDomain.UsuarioFindOneInput = requestRepresentationMergeToDomain(dto);
+    return this.usuarioService.usuarioFindByIdStrict(accessContext, domain);
   }
 
   @Post("/")
   async usuarioCreate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("UsuarioCreate") dto: IAppRequest<"UsuarioCreate">) {
-    return this.usuarioService.usuarioCreate(accessContext, dto);
+    const domain: IDomain.UsuarioCreateInput = requestRepresentationMergeToDomain(dto);
+    return this.usuarioService.usuarioCreate(accessContext, domain);
   }
 
   @Patch("/:id")
   async usuarioUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("UsuarioUpdate") dto: IAppRequest<"UsuarioUpdate">) {
-    return this.usuarioService.usuarioUpdate(accessContext, dto);
+    const domain: IDomain.UsuarioUpdateInput = requestRepresentationMergeToDomain(dto);
+    return this.usuarioService.usuarioUpdate(accessContext, domain);
   }
 
   @Get("/:id/imagem/capa")
@@ -42,8 +41,13 @@ export class UsuarioController {
   }
 
   @Put("/:id/imagem/capa")
-  async usuarioImagemCapaSave(@AccessContextHttp() accessContext: AccessContext, @UploadedFile() file: Express.Multer.File) {
-    return this.usuarioService.usuarioUpdateImagemCapa(accessContext, { id }, file);
+  async usuarioImagemCapaSave(
+    @AccessContextHttp() accessContext: AccessContext,
+    @AppRequest("UsuarioSetImagemCapa") dto: IAppRequest<"UsuarioSetImagemCapa">,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    const domain: IDomain.UsuarioFindOneInput = requestRepresentationMergeToDomain(dto);
+    return this.usuarioService.usuarioUpdateImagemCapa(accessContext, domain, file);
   }
 
   @Get("/:id/imagem/perfil")
@@ -52,14 +56,17 @@ export class UsuarioController {
   }
 
   @Put("/:id/imagem/perfil")
-  async usuarioImagemPerfilSave(@AccessContextHttp() accessContext: AccessContext, @UploadedFile() file: Express.Multer.File) {
-    return this.usuarioService.usuarioUpdateImagemPerfil(accessContext, { id }, file);
+  async usuarioImagemPerfilSave(
+    @AccessContextHttp() accessContext: AccessContext,
+    @AppRequest("UsuarioSetImagemPerfil") dto: IAppRequest<"UsuarioSetImagemPerfil">,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    return this.usuarioService.usuarioUpdateImagemPerfil(accessContext, dto, file);
   }
 
   @Delete("/:id")
   async usuarioDeleteOneById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("UsuarioDeleteOneById") dto: IAppRequest<"UsuarioDeleteOneById">) {
-    return this.usuarioService.usuarioDeleteOneById(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    const domain: IDomain.UsuarioFindOneInput = requestRepresentationMergeToDomain(dto);
+    return this.usuarioService.usuarioDeleteOneById(accessContext, domain);
   }
 }

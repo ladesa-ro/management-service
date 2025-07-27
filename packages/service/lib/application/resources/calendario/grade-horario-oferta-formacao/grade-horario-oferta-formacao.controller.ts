@@ -1,6 +1,6 @@
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Controller, Delete, Get, Patch, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
+import { requestRepresentationMergeToDomain } from "@/application/contracts/generic-adapters";
 import { type IAppRequest } from "@/application/contracts/openapi/document/app-openapi-typings";
 import { AppRequest } from "@/application/contracts/openapi/utils/app-request";
 import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
@@ -16,8 +16,9 @@ export class GradeHorarioOfertaFormacaoController {
     @AccessContextHttp() accessContext: AccessContext,
 
     @AppRequest("GradeHorarioOfertaFormacaoFindAll") dto: IAppRequest<"GradeHorarioOfertaFormacaoFindAll">,
-  ): Promise<LadesaTypings.GradeHorarioOfertaFormacaoListOperationOutput["success"]> {
-    return this.gradeHorarioOfertaFormacaoService.gradeHorarioOfertaFormacaoFindAll(accessContext, dto);
+  ) {
+    const domain: IDomain.GradeHorarioOfertaFormacaoListInput = requestRepresentationMergeToDomain(dto);
+    return this.gradeHorarioOfertaFormacaoService.gradeHorarioOfertaFormacaoFindAll(accessContext, domain);
   }
 
   @Get("/:id")
@@ -26,9 +27,8 @@ export class GradeHorarioOfertaFormacaoController {
 
     @AppRequest("GradeHorarioOfertaFormacaoFindById") dto: IAppRequest<"GradeHorarioOfertaFormacaoFindById">,
   ) {
-    return this.gradeHorarioOfertaFormacaoService.gradeHorarioOfertaFormacaoFindByIdStrict(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    const domain: IDomain.GradeHorarioOfertaFormacaoFindOneInput = requestRepresentationMergeToDomain(dto);
+    return this.gradeHorarioOfertaFormacaoService.gradeHorarioOfertaFormacaoFindByIdStrict(accessContext, domain);
   }
 
   @Post("/")
@@ -37,7 +37,8 @@ export class GradeHorarioOfertaFormacaoController {
 
     @AppRequest("GradeHorarioOfertaFormacaoCreate") dto: IAppRequest<"GradeHorarioOfertaFormacaoCreate">,
   ) {
-    return this.gradeHorarioOfertaFormacaoService.gradeHorarioOfertaFormacaoCreate(accessContext, dto);
+    const domain: IDomain.GradeHorarioOfertaFormacaoCreateInput = requestRepresentationMergeToDomain(dto);
+    return this.gradeHorarioOfertaFormacaoService.gradeHorarioOfertaFormacaoCreate(accessContext, domain);
   }
 
   @Patch("/:id")
@@ -46,7 +47,8 @@ export class GradeHorarioOfertaFormacaoController {
 
     @AppRequest("GradeHorarioOfertaFormacaoUpdate") dto: IAppRequest<"GradeHorarioOfertaFormacaoUpdate">,
   ) {
-    return this.gradeHorarioOfertaFormacaoService.gradeHorarioOfertaFormacaoUpdate(accessContext, dto);
+    const domain: IDomain.GradeHorarioOfertaFormacaoUpdateInput = requestRepresentationMergeToDomain(dto);
+    return this.gradeHorarioOfertaFormacaoService.gradeHorarioOfertaFormacaoUpdate(accessContext, domain);
   }
 
   @Delete("/:id")
@@ -55,8 +57,7 @@ export class GradeHorarioOfertaFormacaoController {
 
     @AppRequest("GradeHorarioOfertaFormacaoDeleteOneById") dto: IAppRequest<"GradeHorarioOfertaFormacaoDeleteOneById">,
   ) {
-    return this.gradeHorarioOfertaFormacaoService.gradeHorarioOfertaFormacaoDeleteOneById(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    const domain: IDomain.GradeHorarioOfertaFormacaoFindOneInput = requestRepresentationMergeToDomain(dto);
+    return this.gradeHorarioOfertaFormacaoService.gradeHorarioOfertaFormacaoDeleteOneById(accessContext, domain);
   }
 }

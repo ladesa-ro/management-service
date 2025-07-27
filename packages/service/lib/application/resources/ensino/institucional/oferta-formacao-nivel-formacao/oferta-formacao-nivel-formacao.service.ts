@@ -225,9 +225,7 @@ export class OfertaFormacaoNivelFormacaoService {
   async ofertaFormacaoNivelFormacaoUpdate(accessContext: AccessContext, dto: IDomain.OfertaFormacaoNivelFormacaoUpdateByIdInput) {
     // =========================================================
 
-    const currentOfertaFormacaoNivelFormacao = await this.ofertaFormacaoNivelFormacaoFindByIdStrict(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    const currentOfertaFormacaoNivelFormacao = await this.ofertaFormacaoNivelFormacaoFindByIdStrict(accessContext, dto);
 
     // =========================================================
 

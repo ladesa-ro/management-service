@@ -238,9 +238,7 @@ export class GradeHorarioOfertaFormacaoService {
   async gradeHorarioOfertaFormacaoUpdate(accessContext: AccessContext, dto: IDomain.GradeHorarioOfertaFormacaoUpdateByIdInput) {
     // =========================================================
 
-    const currentGradeHorarioOfertaFormacao = await this.gradeHorarioOfertaFormacaoFindByIdStrict(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    const currentGradeHorarioOfertaFormacao = await this.gradeHorarioOfertaFormacaoFindByIdStrict(accessContext, dto);
 
     // =========================================================
 

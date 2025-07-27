@@ -244,9 +244,7 @@ export class CalendarioLetivoService {
   async calendarioLetivoUpdate(accessContext: AccessContext, dto: IDomain.CalendarioLetivoUpdateByIdInput) {
     // =========================================================
 
-    const currentCalendarioLetivo = await this.calendarioLetivoFindByIdStrict(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    const currentCalendarioLetivo = await this.calendarioLetivoFindByIdStrict(accessContext, dto);
 
     // =========================================================
 

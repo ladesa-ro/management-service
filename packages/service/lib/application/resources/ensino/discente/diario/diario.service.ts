@@ -238,9 +238,7 @@ export class DiarioService {
   async diarioUpdate(accessContext: AccessContext, dto: IDomain.DiarioUpdateByIdInput) {
     // =========================================================
 
-    const currentDiario = await this.diarioFindByIdStrict(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    const currentDiario = await this.diarioFindByIdStrict(accessContext, dto);
 
     // =========================================================
 
