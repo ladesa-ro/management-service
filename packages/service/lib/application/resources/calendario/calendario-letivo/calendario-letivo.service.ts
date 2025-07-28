@@ -247,7 +247,7 @@ export class CalendarioLetivoService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("calendario_letivo:update", { dto }, dto.parameters.path.id, this.calendarioLetivoRepository.createQueryBuilder(aliasCalendarioLetivo));
+    await accessContext.ensurePermission("calendario_letivo:update", { dto }, dto.path.id, this.calendarioLetivoRepository.createQueryBuilder(aliasCalendarioLetivo));
 
     const dtoCalendarioLetivo = pick(dto.body, ["nome", "ano"]);
 

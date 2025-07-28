@@ -24,20 +24,18 @@ export class DisponibilidadeResolver {
     @AppRequest("DisponibilidadeFindOneById") dto: IAppRequest<"DisponibilidadeFindOneById">,
     @GqlInfo() info: GraphQLResolveInfo,
   ) {
-    return this.disponibilidadeService.disponibilidadeFindByIdStrict(accessContext, { id: dto.parameters.path.id }, ["id", ...graphqlExtractSelection(info)]);
+    return this.disponibilidadeService.disponibilidadeFindByIdStrict(accessContext, { id: dto.path.id }, ["id", ...graphqlExtractSelection(info)]);
   }
 
   async disponibilidadeCreate(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("DisponibilidadeCreate") dto: IAppRequest<"DisponibilidadeCreate">) {
     return this.disponibilidadeService.disponibilidadeCreate(accessContext, dto);
   }
 
-  async disponibilidadeUpdate(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("DisponibilidadeUpdate") dto: IAppRequest<"DisponibilidadeUpdate">) {
+  async disponibilidadeUpdate(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("DisponibilidadeUpdate") dto: IAppRequest<"DisponibilidadeUpdateOneById">) {
     return this.disponibilidadeService.disponibilidadeUpdate(accessContext, dto);
   }
 
   async disponibilidadeDeleteOneById(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("DisponibilidadeDeleteOneById") dto: IAppRequest<"DisponibilidadeDeleteOneById">) {
-    return this.disponibilidadeService.disponibilidadeDeleteOneById(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    return this.disponibilidadeService.disponibilidadeDeleteOneById(accessContext, dto);
   }
 }

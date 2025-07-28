@@ -238,7 +238,7 @@ export class CursoService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("curso:update", { dto }, dto.parameters.path.id, this.cursoRepository.createQueryBuilder(aliasCurso));
+    await accessContext.ensurePermission("curso:update", { dto }, dto.path.id, this.cursoRepository.createQueryBuilder(aliasCurso));
 
     const dtoCurso = pick(dto.body, ["nome", "nomeAbreviado"]);
 

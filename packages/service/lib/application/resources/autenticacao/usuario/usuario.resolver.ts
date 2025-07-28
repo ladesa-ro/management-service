@@ -13,22 +13,18 @@ export class UsuarioResolver {
   }
 
   async usuarioFindOneById(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("UsuarioFindOneById") dto: IAppRequest<"UsuarioFindOneById">) {
-    return this.usuarioService.usuarioFindByIdStrict(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    return this.usuarioService.usuarioFindByIdStrict(accessContext, dto);
   }
 
   async usuarioCreate(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("UsuarioCreate") dto: IAppRequest<"UsuarioCreate">) {
     return this.usuarioService.usuarioCreate(accessContext, dto);
   }
 
-  async usuarioUpdate(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("UsuarioUpdate") dto: IAppRequest<"UsuarioUpdate">) {
+  async usuarioUpdate(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("UsuarioUpdate") dto: IAppRequest<"UsuarioUpdateOneById">) {
     return this.usuarioService.usuarioUpdate(accessContext, dto);
   }
 
   async usuarioDeleteOneById(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("UsuarioDeleteOneById") dto: IAppRequest<"UsuarioDeleteOneById">) {
-    return this.usuarioService.usuarioDeleteOneById(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    return this.usuarioService.usuarioDeleteOneById(accessContext, dto);
   }
 }

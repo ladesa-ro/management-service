@@ -188,7 +188,7 @@ export class DisponibilidadeService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("disponibilidade:update", { dto }, dto.parameters.path.id, this.disponibilidadeRepository.createQueryBuilder(aliasDisponibilidade));
+    await accessContext.ensurePermission("disponibilidade:update", { dto }, dto.path.id, this.disponibilidadeRepository.createQueryBuilder(aliasDisponibilidade));
 
     const dtoDisponibilidade = pick(dto.body, ["dataInicio", "dataFim"]);
 

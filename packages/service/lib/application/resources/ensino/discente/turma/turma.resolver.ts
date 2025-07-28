@@ -13,22 +13,18 @@ export class TurmaResolver {
   }
 
   async turmaFindOneById(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("TurmaFindOneById") dto: IAppRequest<"TurmaFindOneById">) {
-    return this.turmaService.turmaFindByIdStrict(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    return this.turmaService.turmaFindByIdStrict(accessContext, dto);
   }
 
   async turmaCreate(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("TurmaCreate") dto: IAppRequest<"TurmaCreate">) {
     return this.turmaService.turmaCreate(accessContext, dto);
   }
 
-  async turmaUpdate(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("TurmaUpdate") dto: IAppRequest<"TurmaUpdate">) {
+  async turmaUpdate(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("TurmaUpdate") dto: IAppRequest<"TurmaUpdateOneById">) {
     return this.turmaService.turmaUpdate(accessContext, dto);
   }
 
   async turmaDeleteOneById(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("TurmaDeleteOneById") dto: IAppRequest<"TurmaDeleteOneById">) {
-    return this.turmaService.turmaDeleteOneById(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    return this.turmaService.turmaDeleteOneById(accessContext, dto);
   }
 }

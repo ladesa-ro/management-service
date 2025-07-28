@@ -13,20 +13,18 @@ export class DiaCalendarioResolver {
   }
 
   async diaCalendarioFindOneById(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("DiaCalendarioFindOneById") dto: IAppRequest<"DiaCalendarioFindOneById">) {
-    return this.diaCalendarioService.diaCalendarioFindByIdStrict(accessContext, { id: dto.parameters.path.id });
+    return this.diaCalendarioService.diaCalendarioFindByIdStrict(accessContext, { id: dto.path.id });
   }
 
   async diaCalendarioCreate(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("DiaCalendarioCreate") dto: IAppRequest<"DiaCalendarioCreate">) {
     return this.diaCalendarioService.diaCalendarioCreate(accessContext, dto);
   }
 
-  async diaCalendarioUpdate(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("DiaCalendarioUpdate") dto: IAppRequest<"DiaCalendarioUpdate">) {
+  async diaCalendarioUpdate(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("DiaCalendarioUpdate") dto: IAppRequest<"DiaCalendarioUpdateOneById">) {
     return this.diaCalendarioService.diaCalendarioUpdate(accessContext, dto);
   }
 
   async diaCalendarioDeleteOneById(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("DiaCalendarioDeleteOneById") dto: IAppRequest<"DiaCalendarioDeleteOneById">) {
-    return this.diaCalendarioService.diaCalendarioDeleteOneById(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    return this.diaCalendarioService.diaCalendarioDeleteOneById(accessContext, dto);
   }
 }

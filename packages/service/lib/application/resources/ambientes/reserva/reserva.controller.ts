@@ -3,7 +3,8 @@ import { ApiTags } from "@nestjs/swagger";
 import { requestRepresentationMergeToDomain } from "@/application/contracts/generic-adapters";
 import { type IAppRequest } from "@/application/contracts/openapi/document/app-openapi-typings";
 import { AppRequest } from "@/application/contracts/openapi/utils/app-request";
-import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
+import { type IDomain } from "@/domain/contracts/integration";
+import { AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { ReservaService } from "./reserva.service";
 
 @ApiTags("reservas")
@@ -18,7 +19,7 @@ export class ReservaController {
   }
 
   @Get("/:id")
-  async reservaFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("ReservaFindById") dto: IAppRequest<"ReservaFindById">) {
+  async reservaFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("ReservaFindById") dto: IAppRequest<"ReservaFindOneById">) {
     const domain: IDomain.ReservaFindOneInput = requestRepresentationMergeToDomain(dto);
     return this.reservaService.reservaFindByIdStrict(accessContext, domain);
   }
@@ -30,7 +31,7 @@ export class ReservaController {
   }
 
   @Patch("/:id")
-  async reservaUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("ReservaUpdate") dto: IAppRequest<"ReservaUpdate">) {
+  async reservaUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("ReservaUpdate") dto: IAppRequest<"ReservaUpdateOneById">) {
     const domain: IDomain.ReservaUpdateInput = requestRepresentationMergeToDomain(dto);
     return this.reservaService.reservaUpdate(accessContext, domain);
   }

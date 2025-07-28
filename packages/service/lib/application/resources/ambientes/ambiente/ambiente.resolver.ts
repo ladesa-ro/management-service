@@ -15,22 +15,18 @@ export class AmbienteResolver {
   }
 
   async ambienteFindOneById(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("AmbienteFindOneById") dto: IAppRequest<"AmbienteFindOneById">) {
-    return this.ambienteService.ambienteFindByIdStrict(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    return this.ambienteService.ambienteFindByIdStrict(accessContext, dto);
   }
 
   async ambienteCreate(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("AmbienteCreate") dto: IAppRequest<"AmbienteCreate">) {
     return this.ambienteService.ambienteCreate(accessContext, dto);
   }
 
-  async ambienteUpdate(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("AmbienteUpdate") dto: IAppRequest<"AmbienteUpdate">) {
+  async ambienteUpdate(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("AmbienteUpdate") dto: IAppRequest<"AmbienteUpdateOneById">) {
     return this.ambienteService.ambienteUpdate(accessContext, dto);
   }
 
   async ambienteDeleteOneById(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("AmbienteDeleteOneById") dto: IAppRequest<"AmbienteDeleteOneById">) {
-    return this.ambienteService.ambienteDeleteOneById(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    return this.ambienteService.ambienteDeleteOneById(accessContext, dto);
   }
 }

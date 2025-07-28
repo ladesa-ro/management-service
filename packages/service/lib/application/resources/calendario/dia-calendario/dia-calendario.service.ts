@@ -216,7 +216,7 @@ export class DiaCalendarioService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("dia_calendario:update", { dto }, dto.parameters.path.id, this.diaCalendarioRepository.createQueryBuilder(aliasDiaCalendario));
+    await accessContext.ensurePermission("dia_calendario:update", { dto }, dto.path.id, this.diaCalendarioRepository.createQueryBuilder(aliasDiaCalendario));
 
     const dtoDiaCalendario = pick(dto.body, ["data", "dia_letivo", "feriado"]) as Pick<typeof dto.body, "data" | "diaLetivo" | "feriado">;
 

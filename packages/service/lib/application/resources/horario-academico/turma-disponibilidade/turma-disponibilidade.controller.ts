@@ -3,7 +3,8 @@ import { ApiTags } from "@nestjs/swagger";
 import { requestRepresentationMergeToDomain } from "@/application/contracts/generic-adapters";
 import { type IAppRequest } from "@/application/contracts/openapi/document/app-openapi-typings";
 import { AppRequest } from "@/application/contracts/openapi/utils/app-request";
-import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
+import { type IDomain } from "@/domain/contracts/integration";
+import { AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { TurmaDisponibilidadeService } from "./turma-disponibilidade.service";
 
 @ApiTags("turmas-disponibilidades")
@@ -18,11 +19,7 @@ export class TurmaDisponibilidadeController {
   }
 
   @Get("/:id")
-  async turmaDisponibilidadeFindById(
-    @AccessContextHttp() accessContext: AccessContext,
-
-    @AppRequest("TurmaDisponibilidadeFindById") dto: IAppRequest<"TurmaDisponibilidadeFindById">,
-  ) {
+  async turmaDisponibilidadeFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("TurmaDisponibilidadeFindById") dto: IAppRequest<"TurmaDisponibilidadeFindOneById">) {
     const domain: IDomain.TurmaDisponibilidadeFindOneInput = requestRepresentationMergeToDomain(dto);
     return this.turmaDisponibilidadeService.turmaDisponibilidadeFindByIdStrict(accessContext, domain);
   }
@@ -37,7 +34,7 @@ export class TurmaDisponibilidadeController {
   async turmaDisponibilidadeUpdate(
     @AccessContextHttp() accessContext: AccessContext,
 
-    @AppRequest("TurmaDisponibilidadeUpdate") dto: IAppRequest<"TurmaDisponibilidadeUpdate">,
+    @AppRequest("TurmaDisponibilidadeUpdate") dto: IAppRequest<"TurmaDisponibilidadeUpdateOneById">,
   ) {
     const domain: IDomain.TurmaDisponibilidadeUpdateInput = requestRepresentationMergeToDomain(dto);
     return this.turmaDisponibilidadeService.turmaDisponibilidadeUpdate(accessContext, domain);

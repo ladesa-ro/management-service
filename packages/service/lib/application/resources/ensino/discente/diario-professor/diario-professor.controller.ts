@@ -3,7 +3,8 @@ import { ApiTags } from "@nestjs/swagger";
 import { requestRepresentationMergeToDomain } from "@/application/contracts/generic-adapters";
 import { type IAppRequest } from "@/application/contracts/openapi/document/app-openapi-typings";
 import { AppRequest } from "@/application/contracts/openapi/utils/app-request";
-import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
+import { type IDomain } from "@/domain/contracts/integration";
+import { AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { DiarioProfessorService } from "./diario-professor.service";
 
 @ApiTags("diarios-professores")
@@ -21,9 +22,9 @@ export class DiarioProfessorController {
   async diarioProfessorFindById(
     @AccessContextHttp() accessContext: AccessContext,
 
-    @AppRequest("DiarioProfessorFindById") dto: IAppRequest<"DiarioProfessorFindById">,
+    @AppRequest("DiarioProfessorFindById") dto: IAppRequest<"DiarioProfessorFindOneById">,
   ) {
-    return this.diarioProfessorService.diarioProfessorFindByIdStrict(accessContext, { id: dto.parameters.path.id });
+    return this.diarioProfessorService.diarioProfessorFindByIdStrict(accessContext, { id: dto.path.id });
   }
 
   @Post("/")
@@ -33,13 +34,13 @@ export class DiarioProfessorController {
   }
 
   @Patch("/:id")
-  async diarioProfessorUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DiarioProfessorUpdate") dto: IAppRequest<"DiarioProfessorUpdate">) {
+  async diarioProfessorUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DiarioProfessorUpdate") dto: IAppRequest<"DiarioProfessorUpdateOneById">) {
     const domain: IDomain.DiarioProfessorUpdateInput = requestRepresentationMergeToDomain(dto);
     return this.diarioProfessorService.diarioProfessorUpdate(accessContext, domain);
   }
 
   @Delete("/:id")
   async diarioProfessorDeleteOneById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DiarioProfessorDeleteOneById") dto: IAppRequest<"DiarioProfessorDeleteOneById">) {
-    return this.diarioProfessorService.diarioProfessorDeleteOneById(accessContext, { id: dto.parameters.path.id });
+    return this.diarioProfessorService.diarioProfessorDeleteOneById(accessContext, { id: dto.path.id });
   }
 }

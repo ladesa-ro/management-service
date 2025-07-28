@@ -19,7 +19,7 @@ export class EstadoResolver {
   // ========================================================
 
   async estadoFindOneById(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("EstadoFindOneById") dto: IAppRequest<"EstadoFindOneById">, @Info() info: GraphQLResolveInfo) {
-    return this.estadoService.findByIdStrict(accessContext, { id: dto.parameters.path.id }, graphqlExtractSelection(info));
+    return this.estadoService.findByIdStrict(accessContext, { id: dto.path.id }, graphqlExtractSelection(info));
   }
 
   // ========================================================

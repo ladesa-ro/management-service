@@ -3,7 +3,8 @@ import { ApiTags } from "@nestjs/swagger";
 import { requestRepresentationMergeToDomain } from "@/application/contracts/generic-adapters";
 import { type IAppRequest } from "@/application/contracts/openapi/document/app-openapi-typings";
 import { AppRequest } from "@/application/contracts/openapi/utils/app-request";
-import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
+import { type IDomain } from "@/domain/contracts/integration";
+import { AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { UsuarioService } from "./usuario.service";
 
 @Controller("/usuarios")
@@ -18,7 +19,7 @@ export class UsuarioController {
   }
 
   @Get("/:id")
-  async usuarioFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("UsuarioFindById") dto: IAppRequest<"UsuarioFindById">) {
+  async usuarioFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("UsuarioFindById") dto: IAppRequest<"UsuarioFindOneById">) {
     const domain: IDomain.UsuarioFindOneInput = requestRepresentationMergeToDomain(dto);
     return this.usuarioService.usuarioFindByIdStrict(accessContext, domain);
   }
@@ -30,14 +31,14 @@ export class UsuarioController {
   }
 
   @Patch("/:id")
-  async usuarioUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("UsuarioUpdate") dto: IAppRequest<"UsuarioUpdate">) {
+  async usuarioUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("UsuarioUpdate") dto: IAppRequest<"UsuarioUpdateOneById">) {
     const domain: IDomain.UsuarioUpdateInput = requestRepresentationMergeToDomain(dto);
     return this.usuarioService.usuarioUpdate(accessContext, domain);
   }
 
   @Get("/:id/imagem/capa")
   async usuarioGetImagemCapa(@AccessContextHttp() accessContext: AccessContext, @AppRequest("UsuarioGetImagemCapa") dto: IAppRequest<"UsuarioGetImagemCapa">) {
-    return this.usuarioService.usuarioGetImagemCapa(accessContext, dto.parameters.path.id);
+    return this.usuarioService.usuarioGetImagemCapa(accessContext, dto.path.id);
   }
 
   @Put("/:id/imagem/capa")
@@ -52,7 +53,7 @@ export class UsuarioController {
 
   @Get("/:id/imagem/perfil")
   async usuarioGetImagemPerfil(@AccessContextHttp() accessContext: AccessContext, @AppRequest("UsuarioGetImagemPerfil") dto: IAppRequest<"UsuarioGetImagemPerfil">) {
-    return this.usuarioService.usuarioGetImagemPerfil(accessContext, dto.parameters.path.id);
+    return this.usuarioService.usuarioGetImagemPerfil(accessContext, dto.path.id);
   }
 
   @Put("/:id/imagem/perfil")

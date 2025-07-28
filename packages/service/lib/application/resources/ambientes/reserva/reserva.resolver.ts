@@ -13,22 +13,18 @@ export class ReservaResolver {
   }
 
   async reservaFindOneById(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("ReservaFindOneById") dto: IAppRequest<"ReservaFindOneById">) {
-    return this.reservaService.reservaFindByIdStrict(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    return this.reservaService.reservaFindByIdStrict(accessContext, dto);
   }
 
   async reservaCreate(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("ReservaCreate") dto: IAppRequest<"ReservaCreate">) {
     return this.reservaService.reservaCreate(accessContext, dto);
   }
 
-  async reservaUpdate(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("ReservaUpdate") dto: IAppRequest<"ReservaUpdate">) {
+  async reservaUpdate(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("ReservaUpdate") dto: IAppRequest<"ReservaUpdateOneById">) {
     return this.reservaService.reservaUpdate(accessContext, dto);
   }
 
   async reservaDeleteOneById(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("ReservaDeleteOneById") dto: IAppRequest<"ReservaDeleteOneById">) {
-    return this.reservaService.reservaDeleteOneById(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    return this.reservaService.reservaDeleteOneById(accessContext, dto);
   }
 }

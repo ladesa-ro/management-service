@@ -3,7 +3,8 @@ import { ApiTags } from "@nestjs/swagger";
 import { requestRepresentationMergeToDomain } from "@/application/contracts/generic-adapters";
 import { type IAppRequest } from "@/application/contracts/openapi/document/app-openapi-typings";
 import { AppRequest } from "@/application/contracts/openapi/utils/app-request";
-import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
+import { type IDomain } from "@/domain/contracts/integration";
+import { AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { ProfessorDisponibilidadeService } from "./professor-disponibilidade.service";
 
 @ApiTags("professores-disponibilidades")
@@ -25,7 +26,7 @@ export class ProfessorDisponibilidadeController {
   async professorDisponibilidadeFindById(
     @AccessContextHttp() accessContext: AccessContext,
 
-    @AppRequest("ProfessorDisponibilidadeFindById") dto: IAppRequest<"ProfessorDisponibilidadeFindById">,
+    @AppRequest("ProfessorDisponibilidadeFindById") dto: IAppRequest<"ProfessorDisponibilidadeFindOneById">,
   ) {
     const domain: IDomain.ProfessorDisponibilidadeFindOneInput = requestRepresentationMergeToDomain(dto);
     return this.professorDisponibilidadeService.professorDisponibilidadeFindByIdStrict(accessContext, domain);
@@ -45,7 +46,7 @@ export class ProfessorDisponibilidadeController {
   async professorDisponibilidadeUpdate(
     @AccessContextHttp() accessContext: AccessContext,
 
-    @AppRequest("ProfessorDisponibilidadeUpdate") dto: IAppRequest<"ProfessorDisponibilidadeUpdate">,
+    @AppRequest("ProfessorDisponibilidadeUpdate") dto: IAppRequest<"ProfessorDisponibilidadeUpdateOneById">,
   ) {
     const domain: IDomain.ProfessorDisponibilidadeUpdateInput = requestRepresentationMergeToDomain(dto);
     return this.professorDisponibilidadeService.professorDisponibilidadeUpdate(accessContext, domain);

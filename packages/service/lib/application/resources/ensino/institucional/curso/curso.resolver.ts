@@ -13,22 +13,18 @@ export class CursoResolver {
   }
 
   async cursoFindOneById(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("CursoFindOneById") dto: IAppRequest<"CursoFindOneById">) {
-    return this.cursoService.cursoFindByIdStrict(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    return this.cursoService.cursoFindByIdStrict(accessContext, dto);
   }
 
   async cursoCreate(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("CursoCreate") dto: IAppRequest<"CursoCreate">) {
     return this.cursoService.cursoCreate(accessContext, dto);
   }
 
-  async cursoUpdate(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("CursoUpdate") dto: IAppRequest<"CursoUpdate">) {
+  async cursoUpdate(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("CursoUpdate") dto: IAppRequest<"CursoUpdateOneById">) {
     return this.cursoService.cursoUpdate(accessContext, dto);
   }
 
   async cursoDeleteOneById(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("CursoDeleteOneById") dto: IAppRequest<"CursoDeleteOneById">) {
-    return this.cursoService.cursoDeleteOneById(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    return this.cursoService.cursoDeleteOneById(accessContext, dto);
   }
 }

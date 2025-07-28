@@ -13,7 +13,7 @@ export class HorarioGeradoAulaResolver {
   }
 
   async horarioGeradoAulaFindOneById(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("HorarioGeradoAulaFindOneById") dto: IAppRequest<"HorarioGeradoAulaFindOneById">) {
-    return this.horarioGeradoAulaService.horarioGeradoAulaFindByIdStrict(accessContext, { id: dto.parameters.path.id });
+    return this.horarioGeradoAulaService.horarioGeradoAulaFindByIdStrict(accessContext, { id: dto.path.id });
   }
 
   async horarioGeradoAulaCreate(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("HorarioGeradoAulaCreate") dto: IAppRequest<"HorarioGeradoAulaCreate">) {
@@ -23,7 +23,7 @@ export class HorarioGeradoAulaResolver {
   async horarioGeradoAulaUpdate(
     @AccessContextGraphQl() accessContext: AccessContext,
 
-    @AppRequest("HorarioGeradoAulaUpdate") dto: IAppRequest<"HorarioGeradoAulaUpdate">,
+    @AppRequest("HorarioGeradoAulaUpdate") dto: IAppRequest<"HorarioGeradoAulaUpdateOneById">,
   ) {
     return this.horarioGeradoAulaService.HorarioGeradoAulaUpdate(accessContext, dto);
   }
@@ -33,6 +33,6 @@ export class HorarioGeradoAulaResolver {
 
     @AppRequest("HorarioGeradoAulaOneById") dto: IAppRequest<"HorarioGeradoAulaOneById">,
   ) {
-    return this.horarioGeradoAulaService.horarioGeradoAulaDeleteOneById(accessContext, { id: dto.parameters.path.id });
+    return this.horarioGeradoAulaService.horarioGeradoAulaDeleteOneById(accessContext, { id: dto.path.id });
   }
 }

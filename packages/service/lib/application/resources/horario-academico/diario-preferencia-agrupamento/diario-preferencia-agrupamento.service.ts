@@ -254,7 +254,7 @@ export class DiarioPreferenciaAgrupamentoService {
     await accessContext.ensurePermission(
       "diario_preferencia_agrupamento:update",
       { dto },
-      dto.parameters.path.id,
+      dto.path.id,
       this.diarioPreferenciaAgrupamentoRepository.createQueryBuilder(aliasDiarioPreferenciaAgrupamento),
     );
 

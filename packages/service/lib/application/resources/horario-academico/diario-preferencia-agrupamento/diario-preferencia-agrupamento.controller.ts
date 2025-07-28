@@ -3,7 +3,8 @@ import { ApiTags } from "@nestjs/swagger";
 import { requestRepresentationMergeToDomain } from "@/application/contracts/generic-adapters";
 import { type IAppRequest } from "@/application/contracts/openapi/document/app-openapi-typings";
 import { AppRequest } from "@/application/contracts/openapi/utils/app-request";
-import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
+import { type IDomain } from "@/domain/contracts/integration";
+import { AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { DiarioPreferenciaAgrupamentoService } from "./diario-preferencia-agrupamento.service";
 
 @ApiTags("diarios-preferencia-agrupamento")
@@ -25,9 +26,9 @@ export class DiarioPreferenciaAgrupamentoController {
   async diarioPreferenciaAgrupamentoFindById(
     @AccessContextHttp() accessContext: AccessContext,
 
-    @AppRequest("DiarioPreferenciaAgrupamentoFindById") dto: IAppRequest<"DiarioPreferenciaAgrupamentoFindById">,
+    @AppRequest("DiarioPreferenciaAgrupamentoFindById") dto: IAppRequest<"DiarioPreferenciaAgrupamentoFindOneById">,
   ) {
-    return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoFindByIdStrict(accessContext, { id: dto.parameters.path.id });
+    return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoFindByIdStrict(accessContext, { id: dto.path.id });
   }
 
   @Post("/")
@@ -44,7 +45,7 @@ export class DiarioPreferenciaAgrupamentoController {
   async diarioPreferenciaAgrupamentoUpdate(
     @AccessContextHttp() accessContext: AccessContext,
 
-    @AppRequest("DiarioPreferenciaAgrupamentoUpdate") dto: IAppRequest<"DiarioPreferenciaAgrupamentoUpdate">,
+    @AppRequest("DiarioPreferenciaAgrupamentoUpdate") dto: IAppRequest<"DiarioPreferenciaAgrupamentoUpdateOneById">,
   ) {
     const domain: IDomain.DiarioPreferenciaAgrupamentoUpdateInput = requestRepresentationMergeToDomain(dto);
     return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoUpdate(accessContext, domain);
@@ -56,6 +57,6 @@ export class DiarioPreferenciaAgrupamentoController {
 
     @AppRequest("DiarioPreferenciaAgrupamentoDeleteOneById") dto: IAppRequest<"DiarioPreferenciaAgrupamentoDeleteOneById">,
   ) {
-    return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoDeleteOneById(accessContext, { id: dto.parameters.path.id });
+    return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoDeleteOneById(accessContext, { id: dto.path.id });
   }
 }

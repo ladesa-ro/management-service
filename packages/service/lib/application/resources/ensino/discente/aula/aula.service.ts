@@ -234,7 +234,7 @@ export class AulaService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("aula:update", { dto }, dto.parameters.path.id, this.aulaRepository.createQueryBuilder(aliasAula));
+    await accessContext.ensurePermission("aula:update", { dto }, dto.path.id, this.aulaRepository.createQueryBuilder(aliasAula));
 
     const dtoAula = pick(dto.body, ["formato", "data", "intervaloDeTempo", "diario", "ambiente"]);
 

@@ -185,7 +185,7 @@ export class ModalidadeService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("modalidade:update", { dto }, dto.parameters.path.id, this.modalidadeRepository.createQueryBuilder(aliasModalidade));
+    await accessContext.ensurePermission("modalidade:update", { dto }, dto.path.id, this.modalidadeRepository.createQueryBuilder(aliasModalidade));
 
     const dtoModalidade = pick(dto.body, ["nome", "slug"]);
 

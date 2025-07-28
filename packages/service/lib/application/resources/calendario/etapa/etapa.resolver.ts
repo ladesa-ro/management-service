@@ -13,22 +13,18 @@ export class EtapaResolver {
   }
 
   async etapaFindOneById(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("EtapaFindOneById") dto: IAppRequest<"EtapaFindOneById">) {
-    return this.etapaService.etapaFindByIdStrict(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    return this.etapaService.etapaFindByIdStrict(accessContext, dto);
   }
 
   async etapaCreate(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("EtapaCreate") dto: IAppRequest<"EtapaCreate">) {
     return this.etapaService.etapaCreate(accessContext, dto);
   }
 
-  async etapaUpdate(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("EtapaUpdate") dto: IAppRequest<"EtapaUpdate">) {
+  async etapaUpdate(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("EtapaUpdate") dto: IAppRequest<"EtapaUpdateOneById">) {
     return this.etapaService.etapaUpdate(accessContext, dto);
   }
 
   async etapaDeleteOneById(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("EtapaDeleteOneById") dto: IAppRequest<"EtapaDeleteOneById">) {
-    return this.etapaService.etapaDeleteOneById(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    return this.etapaService.etapaDeleteOneById(accessContext, dto);
   }
 }

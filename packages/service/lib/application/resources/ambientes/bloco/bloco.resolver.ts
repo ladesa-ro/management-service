@@ -13,22 +13,18 @@ export class BlocoResolver {
   }
 
   async blocoFindOneById(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("BlocoFindOneById") dto: IAppRequest<"BlocoFindOneById">) {
-    return this.blocoService.blocoFindByIdStrict(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    return this.blocoService.blocoFindByIdStrict(accessContext, dto);
   }
 
   async blocoCreate(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("BlocoCreate") dto: IAppRequest<"BlocoCreate">) {
     return this.blocoService.blocoCreate(accessContext, dto);
   }
 
-  async blocoUpdate(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("BlocoUpdate") dto: IAppRequest<"BlocoUpdate">) {
+  async blocoUpdate(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("BlocoUpdate") dto: IAppRequest<"BlocoUpdateOneById">) {
     return this.blocoService.blocoUpdate(accessContext, dto);
   }
 
   async blocoDeleteOneById(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("BlocoDeleteOneById") dto: IAppRequest<"BlocoDeleteOneById">) {
-    return this.blocoService.blocoDeleteOneById(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    return this.blocoService.blocoDeleteOneById(accessContext, dto);
   }
 }

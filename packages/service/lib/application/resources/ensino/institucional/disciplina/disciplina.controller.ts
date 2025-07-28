@@ -3,7 +3,8 @@ import { ApiTags } from "@nestjs/swagger";
 import { requestRepresentationMergeToDomain } from "@/application/contracts/generic-adapters";
 import { type IAppRequest } from "@/application/contracts/openapi/document/app-openapi-typings";
 import { AppRequest } from "@/application/contracts/openapi/utils/app-request";
-import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
+import { type IDomain } from "@/domain/contracts/integration";
+import { AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { DisciplinaService } from "./disciplina.service";
 
 @ApiTags("disciplinas")
@@ -18,7 +19,7 @@ export class DisciplinaController {
   }
 
   @Get("/:id")
-  async disciplinaFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DisciplinaFindById") dto: IAppRequest<"DisciplinaFindById">) {
+  async disciplinaFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DisciplinaFindById") dto: IAppRequest<"DisciplinaFindOneById">) {
     const domain: IDomain.DisciplinaFindOneInput = requestRepresentationMergeToDomain(dto);
     return this.disciplinaService.disciplinaFindByIdStrict(accessContext, domain);
   }
@@ -30,7 +31,7 @@ export class DisciplinaController {
   }
 
   @Patch("/:id")
-  async disciplinaUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DisciplinaUpdate") dto: IAppRequest<"DisciplinaUpdate">) {
+  async disciplinaUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DisciplinaUpdate") dto: IAppRequest<"DisciplinaUpdateOneById">) {
     const domain: IDomain.DisciplinaUpdateInput = requestRepresentationMergeToDomain(dto);
     return this.disciplinaService.disciplinaUpdate(accessContext, domain);
   }

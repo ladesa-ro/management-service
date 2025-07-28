@@ -3,7 +3,8 @@ import { ApiTags } from "@nestjs/swagger";
 import { requestRepresentationMergeToDomain } from "@/application/contracts/generic-adapters";
 import { type IAppRequest } from "@/application/contracts/openapi/document/app-openapi-typings";
 import { AppRequest } from "@/application/contracts/openapi/utils/app-request";
-import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
+import { type IDomain } from "@/domain/contracts/integration";
+import { AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { EventoService } from "./evento.service";
 
 @ApiTags("eventos")
@@ -18,7 +19,7 @@ export class EventoController {
   }
 
   @Get("/:id")
-  async eventoFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("EventoFindById") dto: IAppRequest<"EventoFindById">) {
+  async eventoFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("EventoFindById") dto: IAppRequest<"EventoFindOneById">) {
     const domain: IDomain.EventoFindOneInput = requestRepresentationMergeToDomain(dto);
     return this.eventoService.eventoFindByIdStrict(accessContext, domain);
   }
@@ -30,7 +31,7 @@ export class EventoController {
   }
 
   @Patch("/:id")
-  async eventoUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("EventoUpdate") dto: IAppRequest<"EventoUpdate">) {
+  async eventoUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("EventoUpdate") dto: IAppRequest<"EventoUpdateOneById">) {
     const domain: IDomain.EventoUpdateInput = requestRepresentationMergeToDomain(dto);
     return this.eventoService.eventoUpdate(accessContext, domain);
   }

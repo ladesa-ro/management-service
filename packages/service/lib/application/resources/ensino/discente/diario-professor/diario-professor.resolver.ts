@@ -17,18 +17,18 @@ export class DiarioProfessorResolver {
 
     @AppRequest("DiarioProfessorFindOneById") dto: IAppRequest<"DiarioProfessorFindOneById">,
   ) {
-    return this.diarioProfessorService.diarioProfessorFindByIdStrict(accessContext, { id: dto.parameters.path.id });
+    return this.diarioProfessorService.diarioProfessorFindByIdStrict(accessContext, { id: dto.path.id });
   }
 
   async diarioProfessorCreate(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("DiarioProfessorCreate") dto: IAppRequest<"DiarioProfessorCreate">) {
     return this.diarioProfessorService.diarioProfessorCreate(accessContext, dto);
   }
 
-  async diarioProfessorUpdate(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("DiarioProfessorUpdate") dto: IAppRequest<"DiarioProfessorUpdate">) {
+  async diarioProfessorUpdate(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("DiarioProfessorUpdate") dto: IAppRequest<"DiarioProfessorUpdateOneById">) {
     return this.diarioProfessorService.diarioProfessorUpdate(accessContext, dto);
   }
 
   async diarioProfessorDeleteOneById(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("DiarioProfessorDeleteOneById") dto: IAppRequest<"DiarioProfessorDeleteOneById">) {
-    return this.diarioProfessorService.diarioProfessorDeleteOneById(accessContext, { id: dto.parameters.path.id });
+    return this.diarioProfessorService.diarioProfessorDeleteOneById(accessContext, { id: dto.path.id });
   }
 }

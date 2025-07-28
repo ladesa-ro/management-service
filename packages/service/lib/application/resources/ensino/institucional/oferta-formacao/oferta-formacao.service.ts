@@ -208,7 +208,7 @@ export class OfertaFormacaoService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("oferta_formacao:update", { dto }, dto.parameters.path.id, this.ofertaFormacaoRepository.createQueryBuilder(aliasOfertaFormacao));
+    await accessContext.ensurePermission("oferta_formacao:update", { dto }, dto.path.id, this.ofertaFormacaoRepository.createQueryBuilder(aliasOfertaFormacao));
 
     const dtoOfertaFormacao = pick(dto.body, ["nome", "slug"]);
 

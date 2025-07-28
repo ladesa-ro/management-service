@@ -238,7 +238,7 @@ export class ReservaService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("reserva:update", { dto }, dto.parameters.path.id, this.reservaRepository.createQueryBuilder(aliasReserva));
+    await accessContext.ensurePermission("reserva:update", { dto }, dto.path.id, this.reservaRepository.createQueryBuilder(aliasReserva));
 
     const dtoReserva = pick(dto.body, ["situacao", "motivo", "tipo", "rrule"]);
 

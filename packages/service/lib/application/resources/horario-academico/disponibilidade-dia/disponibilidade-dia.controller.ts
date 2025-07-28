@@ -3,7 +3,8 @@ import { ApiTags } from "@nestjs/swagger";
 import { requestRepresentationMergeToDomain } from "@/application/contracts/generic-adapters";
 import { type IAppRequest } from "@/application/contracts/openapi/document/app-openapi-typings";
 import { AppRequest } from "@/application/contracts/openapi/utils/app-request";
-import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
+import { type IDomain } from "@/domain/contracts/integration";
+import { AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { DisponibilidadeDiaService } from "./disponibilidade-dia.service";
 
 @ApiTags("diarios-preferencia-agrupamento")
@@ -25,9 +26,9 @@ export class DisponibilidadeDiaController {
   async disponibilidadeDiaFindById(
     @AccessContextHttp() accessContext: AccessContext,
 
-    @AppRequest("DisponibilidadeDiaFindById") dto: IAppRequest<"DisponibilidadeDiaFindById">,
+    @AppRequest("DisponibilidadeDiaFindById") dto: IAppRequest<"DisponibilidadeDiaFindOneById">,
   ) {
-    return this.disponibilidadeDiaService.disponibilidadeDiaFindByIdStrict(accessContext, { id: dto.parameters.path.id });
+    return this.disponibilidadeDiaService.disponibilidadeDiaFindByIdStrict(accessContext, { id: dto.path.id });
   }
 
   @Post("/")
@@ -44,7 +45,7 @@ export class DisponibilidadeDiaController {
   async disponibilidadeDiaUpdate(
     @AccessContextHttp() accessContext: AccessContext,
 
-    @AppRequest("DisponibilidadeDiaUpdate") dto: IAppRequest<"DisponibilidadeDiaUpdate">,
+    @AppRequest("DisponibilidadeDiaUpdate") dto: IAppRequest<"DisponibilidadeDiaUpdateOneById">,
   ) {
     const domain: IDomain.DisponibilidadeDiaUpdateInput = requestRepresentationMergeToDomain(dto);
     return this.disponibilidadeDiaService.disponibilidadeDiaUpdate(accessContext, domain);
@@ -56,6 +57,6 @@ export class DisponibilidadeDiaController {
 
     @AppRequest("DisponibilidadeDiaDeleteOneById") dto: IAppRequest<"DisponibilidadeDiaDeleteOneById">,
   ) {
-    return this.disponibilidadeDiaService.disponibilidadeDiaDeleteOneById(accessContext, { id: dto.parameters.path.id });
+    return this.disponibilidadeDiaService.disponibilidadeDiaDeleteOneById(accessContext, { id: dto.path.id });
   }
 }

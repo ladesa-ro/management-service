@@ -27,7 +27,7 @@ export class TurmaDisponibilidadeResolver {
     return this.turmaDisponibilidadeService.turmaDisponibilidadeFindByIdStrict(
       accessContext,
       {
-        id: dto.parameters.path.id,
+        id: dto.path.id,
       },
       ["id", ...graphqlExtractSelection(info)],
     );
@@ -40,7 +40,7 @@ export class TurmaDisponibilidadeResolver {
   async turmaDisponibilidadeUpdate(
     @AccessContextGraphQl() accessContext: AccessContext,
 
-    @AppRequest("TurmaDisponibilidadeUpdate") dto: IAppRequest<"TurmaDisponibilidadeUpdate">,
+    @AppRequest("TurmaDisponibilidadeUpdate") dto: IAppRequest<"TurmaDisponibilidadeUpdateOneById">,
   ) {
     return this.turmaDisponibilidadeService.turmaDisponibilidadeUpdate(accessContext, dto);
   }
@@ -50,8 +50,6 @@ export class TurmaDisponibilidadeResolver {
 
     @AppRequest("TurmaDisponibilidadeDeleteOneById") dto: IAppRequest<"TurmaDisponibilidadeDeleteOneById">,
   ) {
-    return this.turmaDisponibilidadeService.turmaDisponibilidadeDeleteOneById(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    return this.turmaDisponibilidadeService.turmaDisponibilidadeDeleteOneById(accessContext, dto);
   }
 }

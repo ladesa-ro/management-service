@@ -21,7 +21,7 @@ export class DisponibilidadeDiaResolver {
 
     @AppRequest("DisponibilidadeDiaFindOneById") dto: IAppRequest<"DisponibilidadeDiaFindOneById">,
   ) {
-    return this.disponibilidadeDiaService.disponibilidadeDiaFindByIdStrict(accessContext, { id: dto.parameters.path.id });
+    return this.disponibilidadeDiaService.disponibilidadeDiaFindByIdStrict(accessContext, { id: dto.path.id });
   }
 
   async disponibilidadeDiaCreate(
@@ -35,7 +35,7 @@ export class DisponibilidadeDiaResolver {
   async disponibilidadeDiaUpdate(
     @AccessContextGraphQl() accessContext: AccessContext,
 
-    @AppRequest("DisponibilidadeDiaUpdate") dto: IAppRequest<"DisponibilidadeDiaUpdate">,
+    @AppRequest("DisponibilidadeDiaUpdate") dto: IAppRequest<"DisponibilidadeDiaUpdateOneById">,
   ) {
     return this.disponibilidadeDiaService.disponibilidadeDiaUpdate(accessContext, dto);
   }
@@ -45,6 +45,6 @@ export class DisponibilidadeDiaResolver {
 
     @AppRequest("DisponibilidadeDiaOneById") dto: IAppRequest<"DisponibilidadeDiaOneById">,
   ) {
-    return this.disponibilidadeDiaService.disponibilidadeDiaDeleteOneById(accessContext, { id: dto.parameters.path.id });
+    return this.disponibilidadeDiaService.disponibilidadeDiaDeleteOneById(accessContext, { id: dto.path.id });
   }
 }

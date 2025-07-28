@@ -230,7 +230,7 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService {
     await accessContext.ensurePermission(
       "grade_horario_oferta_formacao_intervalo_de_tempo:update",
       { dto },
-      dto.parameters.path.id,
+      dto.path.id,
       this.gradeHorarioOfertaFormacaoIntervaloDeTempoRepository.createQueryBuilder(aliasGradeHorarioOfertaFormacaoIntervaloDeTempo),
     );
 

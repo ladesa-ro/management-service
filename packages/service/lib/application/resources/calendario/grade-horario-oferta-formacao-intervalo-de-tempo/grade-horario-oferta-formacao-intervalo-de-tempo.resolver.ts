@@ -28,7 +28,7 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoResolver {
     return this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.gradeHorarioOfertaFormacaoIntervaloDeTempoFindByIdStrict(
       accessContext,
       {
-        id: dto.parameters.path.id,
+        id: dto.path.id,
       },
       ["id", ...graphqlExtractSelection(info)],
     );
@@ -45,7 +45,7 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoResolver {
   async gradeHorarioOfertaFormacaoIntervaloDeTempoUpdate(
     @AccessContextGraphQl() accessContext: AccessContext,
 
-    @AppRequest("GradeHorarioOfertaFormacaoIntervaloDeTempoUpdate") dto: IAppRequest<"GradeHorarioOfertaFormacaoIntervaloDeTempoUpdate">,
+    @AppRequest("GradeHorarioOfertaFormacaoIntervaloDeTempoUpdate") dto: IAppRequest<"GradeHorarioOfertaFormacaoIntervaloDeTempoUpdateOneById">,
   ) {
     return this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.gradeHorarioOfertaFormacaoIntervaloDeTempoUpdate(accessContext, dto);
   }
@@ -55,8 +55,6 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoResolver {
 
     @AppRequest("GradeHorarioOfertaFormacaoIntervaloDeTempoDeleteOneById") dto: IAppRequest<"GradeHorarioOfertaFormacaoIntervaloDeTempoDeleteOneById">,
   ) {
-    return this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.gradeHorarioOfertaFormacaoIntervaloDeTempoDeleteOneById(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    return this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.gradeHorarioOfertaFormacaoIntervaloDeTempoDeleteOneById(accessContext, dto);
   }
 }

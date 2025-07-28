@@ -13,22 +13,18 @@ export class EventoResolver {
   }
 
   async eventoFindOneById(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("EventoFindOneById") dto: IAppRequest<"EventoFindOneById">) {
-    return this.eventoService.eventoFindByIdStrict(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    return this.eventoService.eventoFindByIdStrict(accessContext, dto);
   }
 
   async eventoCreate(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("EventoCreate") dto: IAppRequest<"EventoCreate">) {
     return this.eventoService.eventoCreate(accessContext, dto);
   }
 
-  async eventoUpdate(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("EventoUpdate") dto: IAppRequest<"EventoUpdate">) {
+  async eventoUpdate(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("EventoUpdate") dto: IAppRequest<"EventoUpdateOneById">) {
     return this.eventoService.eventoUpdate(accessContext, dto);
   }
 
   async eventoDeleteOneById(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("EventoDeleteOneById") dto: IAppRequest<"EventoDeleteOneById">) {
-    return this.eventoService.eventoDeleteOneById(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    return this.eventoService.eventoDeleteOneById(accessContext, dto);
   }
 }

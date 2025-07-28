@@ -218,7 +218,7 @@ export class EtapaService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("etapa:update", { dto }, dto.parameters.path.id, this.etapaRepository.createQueryBuilder(aliasEtapa));
+    await accessContext.ensurePermission("etapa:update", { dto }, dto.path.id, this.etapaRepository.createQueryBuilder(aliasEtapa));
 
     const dtoEtapa = pick(dto.body, ["numero", "cor", "dataInicio", "dataTermino"]);
 

@@ -227,7 +227,7 @@ export class HorarioGeradoService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("horario_gerado:update", { dto }, dto.parameters.path.id, this.horarioGeradoRepository.createQueryBuilder(aliasHorarioGerado));
+    await accessContext.ensurePermission("horario_gerado:update", { dto }, dto.path.id, this.horarioGeradoRepository.createQueryBuilder(aliasHorarioGerado));
 
     const dtoHorarioGerado = pick(dto.body, ["status", "tipo", "dataGeracao", "vigenciaInicio", "vigenciaFim"]);
 

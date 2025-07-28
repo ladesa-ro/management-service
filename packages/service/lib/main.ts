@@ -5,7 +5,8 @@ import helmet from "helmet";
 import { AppConfigService } from "@/infrastructure/config";
 import "reflect-metadata";
 import { apiReference } from "@scalar/nestjs-api-reference";
-import openapi from "@/application/#/openapi.v3.json";
+import { type Express } from "express";
+import { AppApiDoc } from "@/application/contracts/openapi/document/app-openapi-document";
 import { AppModule } from "./application/app.module";
 
 async function setup() {
@@ -30,8 +31,8 @@ async function setup() {
 
   app.use(compression());
 
-  const expressApp = app.getHttpAdapter().getInstance<Express>();
-  expressApp.get(`${prefix}docs/openapi.v3.json`, (req, res) => res.send(openapi));
+  const expressApp = app.getHttpAdapter().getInstance() as Express;
+  expressApp.get(`${prefix}docs/openapi.v3.json`, (req, res) => res.send(AppApiDoc));
 
   app.use(
     `${prefix}docs`,
@@ -40,7 +41,7 @@ async function setup() {
     }),
   );
 
-  SwaggerModule.setup(`${prefix}docs/swagger`, app, openapi);
+  SwaggerModule.setup(`${prefix}docs/swagger`, app, AppApiDoc as any);
 
   return app;
 }

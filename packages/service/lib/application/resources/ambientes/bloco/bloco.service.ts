@@ -263,7 +263,7 @@ export class BlocoService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("bloco:update", { dto }, dto.parameters.path.id, this.blocoRepository.createQueryBuilder(aliasBloco));
+    await accessContext.ensurePermission("bloco:update", { dto }, dto.path.id, this.blocoRepository.createQueryBuilder(aliasBloco));
 
     // =========================================================
 

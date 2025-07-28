@@ -3,7 +3,8 @@ import { ApiTags } from "@nestjs/swagger";
 import { requestRepresentationMergeToDomain } from "@/application/contracts/generic-adapters";
 import { type IAppRequest } from "@/application/contracts/openapi/document/app-openapi-typings";
 import { AppRequest } from "@/application/contracts/openapi/utils/app-request";
-import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
+import { type IDomain } from "@/domain/contracts/integration";
+import { AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { OfertaFormacaoService } from "./oferta-formacao.service";
 
 @ApiTags("ofertas-formacoes")
@@ -18,7 +19,7 @@ export class OfertaFormacaoController {
   }
 
   @Get("/:id")
-  async ofertaFormacaoFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("OfertaFormacaoFindById") dto: IAppRequest<"OfertaFormacaoFindById">) {
+  async ofertaFormacaoFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("OfertaFormacaoFindById") dto: IAppRequest<"OfertaFormacaoFindOneById">) {
     const domain: IDomain.OfertaFormacaoFindOneInput = requestRepresentationMergeToDomain(dto);
     return this.ofertaFormacaoService.ofertaFormacaoFindByIdStrict(accessContext, domain);
   }
@@ -30,7 +31,7 @@ export class OfertaFormacaoController {
   }
 
   @Patch("/:id")
-  async ofertaFormacaoUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("OfertaFormacaoUpdate") dto: IAppRequest<"OfertaFormacaoUpdate">) {
+  async ofertaFormacaoUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("OfertaFormacaoUpdate") dto: IAppRequest<"OfertaFormacaoUpdateOneById">) {
     const domain: IDomain.OfertaFormacaoUpdateInput = requestRepresentationMergeToDomain(dto);
     return this.ofertaFormacaoService.ofertaFormacaoUpdate(accessContext, domain);
   }

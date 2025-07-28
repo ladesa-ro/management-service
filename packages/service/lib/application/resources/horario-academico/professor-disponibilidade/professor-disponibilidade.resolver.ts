@@ -28,7 +28,7 @@ export class ProfessorDisponibilidadeResolver {
     return this.professorDisponibilidadeService.professorDisponibilidadeFindByIdStrict(
       accessContext,
       {
-        id: dto.parameters.path.id,
+        id: dto.path.id,
       },
       ["id", ...graphqlExtractSelection(info)],
     );
@@ -45,7 +45,7 @@ export class ProfessorDisponibilidadeResolver {
   async professorDisponibilidadeUpdate(
     @AccessContextGraphQl() accessContext: AccessContext,
 
-    @AppRequest("ProfessorDisponibilidadeUpdate") dto: IAppRequest<"ProfessorDisponibilidadeUpdate">,
+    @AppRequest("ProfessorDisponibilidadeUpdate") dto: IAppRequest<"ProfessorDisponibilidadeUpdateOneById">,
   ) {
     return this.professorDisponibilidadeService.professorDisponibilidadeUpdate(accessContext, dto);
   }
@@ -55,8 +55,6 @@ export class ProfessorDisponibilidadeResolver {
 
     @AppRequest("ProfessorDisponibilidadeDeleteOneById") dto: IAppRequest<"ProfessorDisponibilidadeDeleteOneById">,
   ) {
-    return this.professorDisponibilidadeService.professorDisponibilidadeDeleteOneById(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    return this.professorDisponibilidadeService.professorDisponibilidadeDeleteOneById(accessContext, dto);
   }
 }

@@ -19,20 +19,18 @@ export class NivelFormacaoResolver {
     @AppRequest("NivelFormacaoFindOneById") dto: IAppRequest<"NivelFormacaoFindOneById">,
     @GqlInfo() info: GraphQLResolveInfo,
   ) {
-    return this.nivelFormacaoService.nivelFormacaoFindByIdStrict(accessContext, { id: dto.parameters.path.id }, ["id", ...graphqlExtractSelection(info)]);
+    return this.nivelFormacaoService.nivelFormacaoFindByIdStrict(accessContext, { id: dto.path.id }, ["id", ...graphqlExtractSelection(info)]);
   }
 
   async nivelFormacaoCreate(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("NivelFormacaoCreate") dto: IAppRequest<"NivelFormacaoCreate">) {
     return this.nivelFormacaoService.nivelFormacaoCreate(accessContext, dto);
   }
 
-  async nivelFormacaoUpdate(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("NivelFormacaoUpdate") dto: IAppRequest<"NivelFormacaoUpdate">) {
+  async nivelFormacaoUpdate(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("NivelFormacaoUpdate") dto: IAppRequest<"NivelFormacaoUpdateOneById">) {
     return this.nivelFormacaoService.nivelFormacaoUpdate(accessContext, dto);
   }
 
   async nivelFormacaoDeleteOneById(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("NivelFormacaoDeleteOneById") dto: IAppRequest<"NivelFormacaoDeleteOneById">) {
-    return this.nivelFormacaoService.nivelFormacaoDeleteOneById(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    return this.nivelFormacaoService.nivelFormacaoDeleteOneById(accessContext, dto);
   }
 }

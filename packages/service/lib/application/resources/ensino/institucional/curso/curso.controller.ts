@@ -3,7 +3,8 @@ import { ApiTags } from "@nestjs/swagger";
 import { requestRepresentationMergeToDomain } from "@/application/contracts/generic-adapters";
 import { type IAppRequest } from "@/application/contracts/openapi/document/app-openapi-typings";
 import { AppRequest } from "@/application/contracts/openapi/utils/app-request";
-import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
+import { type IDomain } from "@/domain/contracts/integration";
+import { AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { CursoService } from "./curso.service";
 
 @ApiTags("cursos")
@@ -18,7 +19,7 @@ export class CursoController {
   }
 
   @Get("/:id")
-  async cursoFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CursoFindById") dto: IAppRequest<"CursoFindById">) {
+  async cursoFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CursoFindById") dto: IAppRequest<"CursoFindOneById">) {
     const domain: IDomain.CursoFindOneInput = requestRepresentationMergeToDomain(dto);
     return this.cursoService.cursoFindByIdStrict(accessContext, domain);
   }
@@ -30,7 +31,7 @@ export class CursoController {
   }
 
   @Patch("/:id")
-  async cursoUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CursoUpdate") dto: IAppRequest<"CursoUpdate">) {
+  async cursoUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CursoUpdate") dto: IAppRequest<"CursoUpdateOneById">) {
     const domain: IDomain.CursoUpdateInput = requestRepresentationMergeToDomain(dto);
     return this.cursoService.cursoUpdate(accessContext, domain);
   }

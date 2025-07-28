@@ -3,7 +3,8 @@ import { ApiTags } from "@nestjs/swagger";
 import { requestRepresentationMergeToDomain } from "@/application/contracts/generic-adapters";
 import { type IAppRequest } from "@/application/contracts/openapi/document/app-openapi-typings";
 import { AppRequest } from "@/application/contracts/openapi/utils/app-request";
-import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
+import { type IDomain } from "@/domain/contracts/integration";
+import { AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { CampusService } from "./campus.service";
 
 @ApiTags("campi")
@@ -18,7 +19,7 @@ export class CampusController {
   }
 
   @Get("/:id")
-  async campusFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CampusFindById") dto: IAppRequest<"CampusFindById">) {
+  async campusFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CampusFindById") dto: IAppRequest<"CampusFindOneById">) {
     const domain: IDomain.CampusFindOneInput = requestRepresentationMergeToDomain(dto);
     return this.campusService.campusFindByIdStrict(accessContext, domain);
   }
@@ -30,7 +31,7 @@ export class CampusController {
   }
 
   @Patch("/:id")
-  async campusUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CampusUpdate") dto: IAppRequest<"CampusUpdate">) {
+  async campusUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CampusUpdate") dto: IAppRequest<"CampusUpdateOneById">) {
     const domain: IDomain.CampusUpdateInput = requestRepresentationMergeToDomain(dto);
     return this.campusService.campusUpdate(accessContext, domain);
   }

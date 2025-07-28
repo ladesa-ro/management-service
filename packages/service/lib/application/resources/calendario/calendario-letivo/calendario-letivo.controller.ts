@@ -22,9 +22,9 @@ export class CalendarioLetivoController {
   async calendarioLetivoFindById(
     @AccessContextHttp() accessContext: AccessContext,
 
-    @AppRequest("CalendarioLetivoFindById") dto: IAppRequest<"CalendarioLetivoFindById">,
+    @AppRequest("CalendarioLetivoFindById") dto: IAppRequest<"CalendarioLetivoFindOneById">,
   ) {
-    return this.calendarioLetivoService.calendarioLetivoFindByIdStrict(accessContext, { id: dto.parameters.path.id });
+    return this.calendarioLetivoService.calendarioLetivoFindByIdStrict(accessContext, { id: dto.path.id });
   }
 
   @Post("/")
@@ -34,13 +34,13 @@ export class CalendarioLetivoController {
   }
 
   @Patch("/:id")
-  async calendarioLetivoUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CalendarioLetivoUpdate") dto: IAppRequest<"CalendarioLetivoUpdate">) {
+  async calendarioLetivoUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CalendarioLetivoUpdate") dto: IAppRequest<"CalendarioLetivoUpdateOneById">) {
     const domain: IDomain.CalendarioLetivoUpdateInput = requestRepresentationMergeToDomain(dto);
     return this.calendarioLetivoService.calendarioLetivoUpdate(accessContext, domain);
   }
 
   @Delete("/:id")
   async CalendarioLetivoDeleteOneById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CalendarioLetivoDeleteOneById") dto: IAppRequest<"CalendarioLetivoDeleteOneById">) {
-    return this.calendarioLetivoService.calendarioLetivoDeleteOneById(accessContext, { id: dto.parameters.path.id });
+    return this.calendarioLetivoService.calendarioLetivoDeleteOneById(accessContext, { id: dto.path.id });
   }
 }

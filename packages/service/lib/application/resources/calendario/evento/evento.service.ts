@@ -211,7 +211,7 @@ export class EventoService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("evento:update", { dto }, dto.parameters.path.id, this.eventoRepository.createQueryBuilder(aliasEvento));
+    await accessContext.ensurePermission("evento:update", { dto }, dto.path.id, this.eventoRepository.createQueryBuilder(aliasEvento));
 
     const dtoEvento = pick(dto.body, ["nome", "cor", "rrule"]);
 

@@ -241,7 +241,7 @@ export class DiarioService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("diario:update", { dto }, dto.parameters.path.id, this.diarioRepository.createQueryBuilder(aliasDiario));
+    await accessContext.ensurePermission("diario:update", { dto }, dto.path.id, this.diarioRepository.createQueryBuilder(aliasDiario));
 
     const dtoDiario = pick(dto.body, ["ativo", "ano", "etapa", "turma", "disciplina", "ambientePadrao"]);
 

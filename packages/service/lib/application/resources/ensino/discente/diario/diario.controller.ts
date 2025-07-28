@@ -3,7 +3,8 @@ import { ApiTags } from "@nestjs/swagger";
 import { requestRepresentationMergeToDomain } from "@/application/contracts/generic-adapters";
 import { type IAppRequest } from "@/application/contracts/openapi/document/app-openapi-typings";
 import { AppRequest } from "@/application/contracts/openapi/utils/app-request";
-import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
+import { type IDomain } from "@/domain/contracts/integration";
+import { AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { DiarioService } from "./diario.service";
 
 @ApiTags("diarios")
@@ -18,7 +19,7 @@ export class DiarioController {
   }
 
   @Get("/:id")
-  async diarioFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DiarioFindById") dto: IAppRequest<"DiarioFindById">) {
+  async diarioFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DiarioFindById") dto: IAppRequest<"DiarioFindOneById">) {
     const domain: IDomain.DiarioFindOneInput = requestRepresentationMergeToDomain(dto);
     return this.diarioService.diarioFindByIdStrict(accessContext, domain);
   }
@@ -30,7 +31,7 @@ export class DiarioController {
   }
 
   @Patch("/:id")
-  async diarioUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DiarioUpdate") dto: IAppRequest<"DiarioUpdate">) {
+  async diarioUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DiarioUpdate") dto: IAppRequest<"DiarioUpdateOneById">) {
     const domain: IDomain.DiarioUpdateInput = requestRepresentationMergeToDomain(dto);
     return this.diarioService.diarioUpdate(accessContext, domain);
   }

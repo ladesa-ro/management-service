@@ -3,7 +3,8 @@ import { ApiTags } from "@nestjs/swagger";
 import { requestRepresentationMergeToDomain } from "@/application/contracts/generic-adapters";
 import { type IAppRequest } from "@/application/contracts/openapi/document/app-openapi-typings";
 import { AppRequest } from "@/application/contracts/openapi/utils/app-request";
-import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
+import { type IDomain } from "@/domain/contracts/integration";
+import { AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { HorarioGeradoService } from "./horario-gerado.service";
 
 @ApiTags("horarios-gerados")
@@ -18,8 +19,8 @@ export class HorarioGeradoController {
   }
 
   @Get("/:id")
-  async horarioGeradoFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("HorarioGeradoFindById") dto: IAppRequest<"HorarioGeradoFindById">) {
-    return this.horarioGeradoService.horarioGeradoFindByIdStrict(accessContext, { id: dto.parameters.path.id });
+  async horarioGeradoFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("HorarioGeradoFindById") dto: IAppRequest<"HorarioGeradoFindOneById">) {
+    return this.horarioGeradoService.horarioGeradoFindByIdStrict(accessContext, { id: dto.path.id });
   }
 
   @Post("/")
@@ -29,7 +30,7 @@ export class HorarioGeradoController {
   }
 
   @Patch("/:id")
-  async horarioGeradoUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("HorarioGeradoUpdate") dto: IAppRequest<"HorarioGeradoUpdate">) {
+  async horarioGeradoUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("HorarioGeradoUpdate") dto: IAppRequest<"HorarioGeradoUpdateOneById">) {
     const domain: IDomain.HorarioGeradoUpdateInput = requestRepresentationMergeToDomain(dto);
     return this.horarioGeradoService.horarioGeradoUpdate(accessContext, domain);
   }

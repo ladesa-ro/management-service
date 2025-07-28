@@ -13,22 +13,18 @@ export class AulaResolver {
   }
 
   async aulaFindOneById(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("AulaFindOneById") dto: IAppRequest<"AulaFindOneById">) {
-    return this.aulaService.aulaFindByIdStrict(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    return this.aulaService.aulaFindByIdStrict(accessContext, dto);
   }
 
   async aulaCreate(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("AulaCreate") dto: IAppRequest<"AulaCreate">) {
     return this.aulaService.aulaCreate(accessContext, dto);
   }
 
-  async aulaUpdate(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("AulaUpdate") dto: IAppRequest<"AulaUpdate">) {
+  async aulaUpdate(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("AulaUpdate") dto: IAppRequest<"AulaUpdateOneById">) {
     return this.aulaService.aulaUpdate(accessContext, dto);
   }
 
   async aulaDeleteOneById(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("AulaDeleteOneById") dto: IAppRequest<"AulaDeleteOneById">) {
-    return this.aulaService.aulaDeleteOneById(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    return this.aulaService.aulaDeleteOneById(accessContext, dto);
   }
 }

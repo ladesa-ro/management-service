@@ -13,11 +13,11 @@ export class DisponibilidadeDiaEntity implements IDomain.DisponibilidadeDia {
 
   @ManyToOne(() => DisponibilidadeEntity)
   @JoinColumn({ name: "id_disponibilidade__fk" })
-  disponibilidade!: IDomain.DisponibilidadeFindOneResultView;
+  disponibilidade!: IDomain.DisponibilidadeFindOneOutput;
 
   @ManyToOne(() => IntervaloDeTempoEntity)
   @JoinColumn({ name: "id_intervalo_de_tempo_fk" })
-  intervaloDeTempo!: IDomain.IntervaloDeTempoFindOneResultView;
+  intervaloDeTempo!: IDomain.IntervaloDeTempoFindOneOutput;
 
   @Column({ name: "date_created", type: "timestamptz", nullable: false })
   dateCreated!: Date;

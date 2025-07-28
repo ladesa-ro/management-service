@@ -13,22 +13,18 @@ export class CampusResolver {
   }
 
   async campusFindOneById(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("CampusFindOneById") dto: IAppRequest<"CampusFindOneById">) {
-    return this.campusService.campusFindByIdStrict(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    return this.campusService.campusFindByIdStrict(accessContext, dto);
   }
 
   async campusCreate(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("CampusCreate") dto: IAppRequest<"CampusCreate">) {
     return this.campusService.campusCreate(accessContext, dto);
   }
 
-  async campusUpdate(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("CampusUpdate") dto: IAppRequest<"CampusUpdate">) {
+  async campusUpdate(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("CampusUpdate") dto: IAppRequest<"CampusUpdateOneById">) {
     return this.campusService.campusUpdate(accessContext, dto);
   }
 
   async campusDeleteOneById(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("CampusDeleteOneById") dto: IAppRequest<"CampusDeleteOneById">) {
-    return this.campusService.campusDeleteOneById(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    return this.campusService.campusDeleteOneById(accessContext, dto);
   }
 }

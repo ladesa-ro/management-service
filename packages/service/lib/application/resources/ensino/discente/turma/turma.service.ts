@@ -249,7 +249,7 @@ export class TurmaService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("turma:update", { dto }, dto.parameters.path.id, this.turmaRepository.createQueryBuilder(aliasTurma));
+    await accessContext.ensurePermission("turma:update", { dto }, dto.path.id, this.turmaRepository.createQueryBuilder(aliasTurma));
 
     const dtoTurma = pick(dto.body, ["periodo"]);
 

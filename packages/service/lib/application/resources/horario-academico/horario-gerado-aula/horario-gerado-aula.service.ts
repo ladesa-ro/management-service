@@ -5,7 +5,7 @@ import { QbEfficientLoad } from "@/application/contracts/qb-efficient-load";
 import { SearchService } from "@/application/helpers/search.service";
 import { IntervaloDeTempoService } from "@/application/resources/base/intervalo-de-tempo/intervalo-de-tempo.service";
 import { DiarioProfessorService } from "@/application/resources/ensino/discente/diario-professor/diario-professor.service";
-import { IDomain } from "@/domain/domain-contracts";
+import { IDomain } from "@/domain/contracts";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
@@ -258,7 +258,7 @@ export class HorarioGeradoAulaService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("horario_gerado_aula:update", { dto }, dto.parameters.path.id, this.horarioGeradoAulaRepository.createQueryBuilder(aliasHorarioGeradoAula));
+    await accessContext.ensurePermission("horario_gerado_aula:update", { dto }, dto.path.id, this.horarioGeradoAulaRepository.createQueryBuilder(aliasHorarioGeradoAula));
 
     const dtoHorarioGeradoAula = pick(dto.body, ["diaSemanaIso"]);
 

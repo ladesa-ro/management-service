@@ -366,11 +366,11 @@ export class UsuarioService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("usuario:update", { dto }, dto.parameters.path.id, this.usuarioRepository.createQueryBuilder(aliasUsuario));
+    await accessContext.ensurePermission("usuario:update", { dto }, dto.path.id, this.usuarioRepository.createQueryBuilder(aliasUsuario));
 
     const input = pick(dto.body, ["nome", "matriculaSiape", "email"]);
 
-    await this.ensureDtoAvailability(input, dto.parameters.path.id);
+    await this.ensureDtoAvailability(input, dto.path.id);
 
     const usuario = {
       id: currentUsuario.id,

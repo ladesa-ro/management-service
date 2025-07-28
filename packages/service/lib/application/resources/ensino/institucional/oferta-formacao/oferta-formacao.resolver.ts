@@ -27,7 +27,7 @@ export class OfertaFormacaoResolver {
     return this.ofertaFormacaoService.ofertaFormacaoFindByIdStrict(
       accessContext,
       {
-        id: dto.parameters.path.id,
+        id: dto.path.id,
       },
       ["id", ...graphqlExtractSelection(info)],
     );
@@ -37,13 +37,11 @@ export class OfertaFormacaoResolver {
     return this.ofertaFormacaoService.ofertaFormacaoCreate(accessContext, dto);
   }
 
-  async ofertaFormacaoUpdate(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("OfertaFormacaoUpdate") dto: IAppRequest<"OfertaFormacaoUpdate">) {
+  async ofertaFormacaoUpdate(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("OfertaFormacaoUpdate") dto: IAppRequest<"OfertaFormacaoUpdateOneById">) {
     return this.ofertaFormacaoService.ofertaFormacaoUpdate(accessContext, dto);
   }
 
   async ofertaFormacaoDeleteOneById(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("OfertaFormacaoDeleteOneById") dto: IAppRequest<"OfertaFormacaoDeleteOneById">) {
-    return this.ofertaFormacaoService.ofertaFormacaoDeleteOneById(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    return this.ofertaFormacaoService.ofertaFormacaoDeleteOneById(accessContext, dto);
   }
 }

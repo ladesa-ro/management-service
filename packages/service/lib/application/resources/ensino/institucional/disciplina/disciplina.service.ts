@@ -191,7 +191,7 @@ export class DisciplinaService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("disciplina:update", { dto }, dto.parameters.path.id, this.disciplinaRepository.createQueryBuilder(aliasDisciplina));
+    await accessContext.ensurePermission("disciplina:update", { dto }, dto.path.id, this.disciplinaRepository.createQueryBuilder(aliasDisciplina));
 
     const dtoDisciplina = pick(dto.body, ["nome", "nomeAbreviado", "cargaHoraria"]);
 

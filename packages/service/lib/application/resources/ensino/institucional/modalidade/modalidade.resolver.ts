@@ -19,20 +19,18 @@ export class ModalidadeResolver {
     @AppRequest("ModalidadeFindOneById") dto: IAppRequest<"ModalidadeFindOneById">,
     @GqlInfo() info: GraphQLResolveInfo,
   ) {
-    return this.modalidadeService.modalidadeFindByIdStrict(accessContext, { id: dto.parameters.path.id }, ["id", ...graphqlExtractSelection(info)]);
+    return this.modalidadeService.modalidadeFindByIdStrict(accessContext, { id: dto.path.id }, ["id", ...graphqlExtractSelection(info)]);
   }
 
   async modalidadeCreate(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("ModalidadeCreate") dto: IAppRequest<"ModalidadeCreate">) {
     return this.modalidadeService.modalidadeCreate(accessContext, dto);
   }
 
-  async modalidadeUpdate(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("ModalidadeUpdate") dto: IAppRequest<"ModalidadeUpdate">) {
+  async modalidadeUpdate(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("ModalidadeUpdate") dto: IAppRequest<"ModalidadeUpdateOneById">) {
     return this.modalidadeService.modalidadeUpdate(accessContext, dto);
   }
 
   async modalidadeDeleteOneById(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("ModalidadeDeleteOneById") dto: IAppRequest<"ModalidadeDeleteOneById">) {
-    return this.modalidadeService.modalidadeDeleteOneById(accessContext, {
-      id: dto.parameters.path.id,
-    });
+    return this.modalidadeService.modalidadeDeleteOneById(accessContext, dto);
   }
 }

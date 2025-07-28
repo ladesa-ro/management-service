@@ -225,7 +225,7 @@ export class TurmaDisponibilidadeService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("turma_disponibilidade:update", { dto }, dto.parameters.path.id, this.turmaDisponibilidadeRepository.createQueryBuilder(aliasTurmaDisponibilidade));
+    await accessContext.ensurePermission("turma_disponibilidade:update", { dto }, dto.path.id, this.turmaDisponibilidadeRepository.createQueryBuilder(aliasTurmaDisponibilidade));
 
     const dtoTurmaDisponibilidade = pick(dto.body, []);
 

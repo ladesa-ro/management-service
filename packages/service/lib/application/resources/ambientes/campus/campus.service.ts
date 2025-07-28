@@ -246,7 +246,7 @@ export class CampusService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("campus:update", { dto }, dto.parameters.path.id, this.campusRepository.createQueryBuilder(aliasCampus));
+    await accessContext.ensurePermission("campus:update", { dto }, dto.path.id, this.campusRepository.createQueryBuilder(aliasCampus));
 
     const campus = await this.databaseContext.transaction(async ({ databaseContext: { campusRepository } }) => {
       const dtoCampus = pick(dto.body, ["nomeFantasia", "razaoSocial", "apelido", "cnpj"]);

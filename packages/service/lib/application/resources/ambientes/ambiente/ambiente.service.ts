@@ -192,7 +192,7 @@ export class AmbienteService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("ambiente:update", { dto }, dto.parameters.path.id, this.ambienteRepository.createQueryBuilder(aliasAmbiente));
+    await accessContext.ensurePermission("ambiente:update", { dto }, dto.path.id, this.ambienteRepository.createQueryBuilder(aliasAmbiente));
 
     const dtoAmbiente = pick(dto.body, ["nome", "descricao", "codigo", "capacidade", "tipo"]);
 

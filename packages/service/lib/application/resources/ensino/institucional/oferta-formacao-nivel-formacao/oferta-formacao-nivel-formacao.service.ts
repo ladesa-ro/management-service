@@ -231,7 +231,7 @@ export class OfertaFormacaoNivelFormacaoService {
     await accessContext.ensurePermission(
       "oferta_formacao_nivel_formacao:update",
       { dto },
-      dto.parameters.path.id,
+      dto.path.id,
       this.ofertaFormacaoNivelFormacaoRepository.createQueryBuilder(aliasOfertaFormacaoNivelFormacao),
     );
 

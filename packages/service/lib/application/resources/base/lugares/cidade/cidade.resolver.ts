@@ -18,7 +18,7 @@ export class CidadeResolver {
 
   // ========================================================
 
-  async cidadeFindById(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("CidadeFindById") dto: IAppRequest<"CidadeFindById">, @Info() info: GraphQLResolveInfo) {
-    return this.cidadeService.findByIdStrict(accessContext, { id: dto.parameters.path.id }, graphqlExtractSelection(info));
+  async cidadeFindById(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("CidadeFindById") dto: IAppRequest<"CidadeFindOneById">, @Info() info: GraphQLResolveInfo) {
+    return this.cidadeService.findByIdStrict(accessContext, { id: dto.path.id }, graphqlExtractSelection(info));
   }
 }
