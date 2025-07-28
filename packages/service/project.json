@@ -30,7 +30,7 @@
       "dependsOn": ["contracts:domain:build", "contracts:application:build", "contracts:domain:dev", "contracts:application:dev"],
       "executor": "nx:run-commands",
       "options": {
-        "commands": ["bun run --hot lib/main.ts"],
+        "commands": ["bun run --watch lib/main.ts"],
         "cwd": "{projectRoot}",
         "parallel": false
       }
