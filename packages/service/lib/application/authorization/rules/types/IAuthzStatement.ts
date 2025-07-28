@@ -1,3 +1,4 @@
+import { IDomain } from "@/domain/contracts/integration";
 import { IBaseAuthzCheck, IBaseAuthzFilter } from "./IBaseAuthz";
 
 // ===================================================================================

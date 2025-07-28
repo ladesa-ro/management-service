@@ -32,7 +32,9 @@ async function setup() {
   app.use(compression());
 
   const expressApp = app.getHttpAdapter().getInstance() as Express;
-  expressApp.get(`${prefix}docs/openapi.v3.json`, (req, res) => res.send(AppApiDoc));
+  expressApp.get(`${prefix}docs/openapi.v3.json`, (req, res) => {
+    res.json(AppApiDoc);
+  });
 
   app.use(
     `${prefix}docs`,
