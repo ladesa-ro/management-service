@@ -1,10 +1,10 @@
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { type IDomain } from "@/domain/contracts/integration";
 import { IntervaloDeTempoEntity } from "@/infrastructure/integrations/database/typeorm/entities/00-00-base";
 import { DisponibilidadeEntity } from "./disponibilidade.entity";
 
 @Entity("disponibilidade_dia")
-export class DisponibilidadeDiaEntity implements LadesaTypings.DisponibilidadeDia {
+export class DisponibilidadeDiaEntity implements IDomain.DisponibilidadeDia {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 
@@ -13,11 +13,11 @@ export class DisponibilidadeDiaEntity implements LadesaTypings.DisponibilidadeDi
 
   @ManyToOne(() => DisponibilidadeEntity)
   @JoinColumn({ name: "id_disponibilidade__fk" })
-  disponibilidade!: LadesaTypings.DisponibilidadeFindOneResultView;
+  disponibilidade!: IDomain.DisponibilidadeFindOneResultView;
 
   @ManyToOne(() => IntervaloDeTempoEntity)
   @JoinColumn({ name: "id_intervalo_de_tempo_fk" })
-  intervaloDeTempo!: LadesaTypings.IntervaloDeTempoFindOneResultView;
+  intervaloDeTempo!: IDomain.IntervaloDeTempoFindOneResultView;
 
   @Column({ name: "date_created", type: "timestamptz", nullable: false })
   dateCreated!: Date;

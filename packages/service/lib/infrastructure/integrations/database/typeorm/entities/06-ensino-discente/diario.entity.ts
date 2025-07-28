@@ -1,5 +1,5 @@
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, type Relation } from "typeorm";
+import { type IDomain } from "@/domain/contracts/integration";
 import { ImagemEntity } from "../00-00-base/imagem.entity";
 import { AmbienteEntity } from "../02-ambientes/ambiente.entity";
 import { DisciplinaEntity } from "../04-ensino-institucional/disciplina.entity";
@@ -7,7 +7,7 @@ import { CalendarioLetivoEntity } from "../05-calendario";
 import { TurmaEntity } from "./turma.entity";
 
 @Entity("diario")
-export class DiarioEntity implements LadesaTypings.Diario {
+export class DiarioEntity implements IDomain.Diario {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 

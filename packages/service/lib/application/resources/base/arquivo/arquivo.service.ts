@@ -1,9 +1,9 @@
 import { writeFile } from "node:fs/promises";
 import type { Readable } from "node:stream";
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { ForbiddenException, Inject, Injectable, NotFoundException, ServiceUnavailableException, StreamableFile } from "@nestjs/common";
 import jetpack, { createReadStream } from "fs-jetpack";
 import { v4 } from "uuid";
+import { type IDomain } from "@/domain/contracts/integration";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { AppConfigService } from "@/infrastructure/config";
 import { isValidUuid } from "@/infrastructure/fixtures/validation/isValidUuid";
@@ -31,12 +31,12 @@ export class ArquivoService {
     return this.appConfigService.getStoragePath();
   }
 
-  async dataExists(id: LadesaTypings.Arquivo["id"]) {
+  async dataExists(id: IDomain.Arquivo["id"]) {
     const fileFullPath = this.datGetFilePath(id);
     return jetpack.exists(fileFullPath);
   }
 
-  async dataReadAsStream(id: LadesaTypings.Arquivo["id"]): Promise<Readable | null> {
+  async dataReadAsStream(id: IDomain.Arquivo["id"]): Promise<Readable | null> {
     if (await this.dataExists(id)) {
       const fileFullPath = this.datGetFilePath(id);
       const fileReadStream = createReadStream(fileFullPath);
@@ -46,7 +46,7 @@ export class ArquivoService {
     return null;
   }
 
-  async getFile(accessContext: AccessContext | null, id: LadesaTypings.Arquivo["id"], acesso: IGetFileAcesso | null) {
+  async getFile(accessContext: AccessContext | null, id: IDomain.Arquivo["id"], acesso: IGetFileAcesso | null) {
     const qb = this.arquivoRepository.createQueryBuilder("arquivo");
 
     qb.where("arquivo.id = :arquivoId", { arquivoId: id });
@@ -111,7 +111,7 @@ export class ArquivoService {
     };
   }
 
-  async getStreamableFile(accessContext: AccessContext | null, id: LadesaTypings.Arquivo["id"], acesso: IGetFileAcesso | null) {
+  async getStreamableFile(accessContext: AccessContext | null, id: IDomain.Arquivo["id"], acesso: IGetFileAcesso | null) {
     const file = await this.getFile(accessContext, id, acesso);
 
     if (!file.stream) {
@@ -124,13 +124,13 @@ export class ArquivoService {
     });
   }
 
-  async dataSave(id: LadesaTypings.Arquivo["id"], data: NodeJS.ArrayBufferView | Readable) {
+  async dataSave(id: IDomain.Arquivo["id"], data: NodeJS.ArrayBufferView | Readable) {
     const fileFullPath = this.datGetFilePath(id);
     await writeFile(fileFullPath, data);
     return true;
   }
 
-  async arquivoCreate(dto: Pick<LadesaTypings.Arquivo, "name" | "mimeType">, data: NodeJS.ArrayBufferView | Readable): Promise<Pick<ArquivoEntity, "id">> {
+  async arquivoCreate(dto: Pick<IDomain.Arquivo, "name" | "mimeType">, data: NodeJS.ArrayBufferView | Readable): Promise<Pick<ArquivoEntity, "id">> {
     let id: string;
 
     do {
@@ -158,7 +158,7 @@ export class ArquivoService {
     };
   }
 
-  private datGetFilePath(id: LadesaTypings.Arquivo["id"]) {
+  private datGetFilePath(id: IDomain.Arquivo["id"]) {
     jetpack.dir(this.storagePath);
     return `${this.storagePath}/${id}`;
   }

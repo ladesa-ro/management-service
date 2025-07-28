@@ -1,4 +1,3 @@
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { IBaseAuthzCheck, IBaseAuthzFilter } from "./IBaseAuthz";
 
 // ===================================================================================

@@ -1,9 +1,8 @@
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { map, pick } from "lodash";
-import { QbEfficientLoad } from "@/application/contracts/QbEfficientLoad";
+import { QbEfficientLoad } from "@/application/contracts/qb-efficient-load";
 import { SearchService } from "@/application/helpers/search.service";
-import { IDomain } from "@/domain/contracts/integration";
+import { type IDomain } from "@/domain/contracts/integration";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
@@ -67,7 +66,7 @@ export class DisponibilidadeService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad(LadesaTypings.Tokens.DisponibilidadeView, qb, aliasDisponibilidade, selection);
+    QbEfficientLoad("DisponibilidadeFindOneOutput", qb, aliasDisponibilidade, selection);
 
     // =========================================================
 
@@ -98,7 +97,7 @@ export class DisponibilidadeService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad(LadesaTypings.Tokens.DisponibilidadeView, qb, aliasDisponibilidade, selection);
+    QbEfficientLoad("DisponibilidadeFindOneOutput", qb, aliasDisponibilidade, selection);
 
     // =========================================================
 
@@ -135,7 +134,7 @@ export class DisponibilidadeService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad(LadesaTypings.Tokens.DisponibilidadeView, qb, aliasDisponibilidade, selection);
+    QbEfficientLoad("DisponibilidadeFindOneOutput", qb, aliasDisponibilidade, selection);
 
     // =========================================================
 

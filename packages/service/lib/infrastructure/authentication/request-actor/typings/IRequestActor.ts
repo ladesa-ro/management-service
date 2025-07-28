@@ -1,3 +1,3 @@
-import * as LadesaTypings from "@ladesa-ro/especificacao";
+import { type IDomain } from "@/domain/contracts/integration";
 
-export type IRequestActor = null | Pick<LadesaTypings.Usuario, "id" | "nome" | "matriculaSiape" | "email" | "isSuperUser">;
+export type IRequestActor = null | Pick<IDomain.Usuario, "id" | "nome" | "matriculaSiape" | "email" | "isSuperUser">;

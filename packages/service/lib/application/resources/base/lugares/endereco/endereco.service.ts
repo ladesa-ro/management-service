@@ -1,8 +1,7 @@
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { pick } from "lodash";
 import { QbEfficientLoad } from "@/application/contracts";
-import { IDomain } from "@/domain/contracts/integration";
+import { type IDomain } from "@/domain/contracts/integration";
 import { AccessContext } from "@/infrastructure/access-context";
 import { DatabaseContextService } from "@/infrastructure/integrations";
 
@@ -80,7 +79,7 @@ export class EnderecoService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad(LadesaTypings.Tokens.EnderecoFindOneResultView, qb, aliasEndereco, selection);
+    QbEfficientLoad("EnderecoFindOneOutput", qb, aliasEndereco, selection);
 
     // =========================================================
 

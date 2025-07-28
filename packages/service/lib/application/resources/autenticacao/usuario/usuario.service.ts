@@ -1,10 +1,9 @@
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Injectable, InternalServerErrorException, NotFoundException, ServiceUnavailableException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { ValidationFailedException } from "@/application/contracts";
-import { QbEfficientLoad } from "@/application/contracts/QbEfficientLoad";
+import { QbEfficientLoad } from "@/application/contracts/qb-efficient-load";
 import { SearchService } from "@/application/helpers/search.service";
-import { IDomain } from "@/domain/contracts/integration";
+import { type IDomain } from "@/domain/contracts/integration";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
@@ -47,7 +46,7 @@ export class UsuarioService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad(LadesaTypings.Tokens.UsuarioFindOneResultView, qb, aliasUsuario, selection);
+    QbEfficientLoad("UsuarioFindOneOutput", qb, aliasUsuario, selection);
     // =========================================================
 
     const usuario = await qb.getOne();
@@ -108,7 +107,7 @@ export class UsuarioService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad(LadesaTypings.Tokens.UsuarioFindOneResultView, qb, aliasUsuario, selection);
+    QbEfficientLoad("UsuarioFindOneOutput", qb, aliasUsuario, selection);
     // =========================================================
 
     const pageItemsView = await qb.andWhereInIds(map(paginated.data, "id")).getMany();
@@ -137,7 +136,7 @@ export class UsuarioService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad(LadesaTypings.Tokens.UsuarioFindOneResultView, qb, aliasUsuario, selection);
+    QbEfficientLoad("UsuarioFindOneOutput", qb, aliasUsuario, selection);
 
     // =========================================================
 
@@ -174,7 +173,7 @@ export class UsuarioService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad(LadesaTypings.Tokens.UsuarioFindOneResultView, qb, aliasUsuario, selection);
+    QbEfficientLoad("UsuarioFindOneOutput", qb, aliasUsuario, selection);
 
     // =========================================================
 
@@ -483,7 +482,7 @@ export class UsuarioService {
     return isAvailable;
   }
 
-  private async ensureDtoAvailability(dto: Partial<Pick<LadesaTypings.Usuario, "email" | "matriculaSiape">>, currentUsuarioId: string | null = null) {
+  private async ensureDtoAvailability(dto: Partial<Pick<IDomain.Usuario, "email" | "matriculaSiape">>, currentUsuarioId: string | null = null) {
     // ===================================
 
     let isEmailAvailable = true;

@@ -1,4 +1,4 @@
-export * from "./AppStandards";
+export * from "./app-standards";
 export * from "./exceptions";
 export * from "./generic-adapters";
-export * from "./QbEfficientLoad";
+export * from "./qb-efficient-load";

@@ -1,9 +1,9 @@
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { type IDomain } from "@/domain/contracts/integration";
 import { CidadeEntity } from "./cidade.entity";
 
 @Entity("endereco")
-export class EnderecoEntity implements LadesaTypings.Endereco {
+export class EnderecoEntity implements IDomain.Endereco {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 
@@ -27,7 +27,7 @@ export class EnderecoEntity implements LadesaTypings.Endereco {
 
   @ManyToOne(() => CidadeEntity, {})
   @JoinColumn({ name: "id_cidade_fk" })
-  cidade!: LadesaTypings.Cidade;
+  cidade!: IDomain.Cidade;
 
   @Column({ name: "date_created", type: "timestamptz", nullable: false })
   dateCreated!: Date;

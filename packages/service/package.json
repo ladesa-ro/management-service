@@ -8,7 +8,6 @@
     "@apollo/utils.keyvaluecache": "catalog:infrastructure/graphl",
     "@fastify/merge-json-schemas": "catalog:infrastructure/validation/json-schema",
     "@keycloak/keycloak-admin-client": "catalog:infrastructure/integrations/keycloak",
-    "@ladesa-ro/especificacao": "^3.4.1",
     "@nestjs/apollo": "catalog:infrastructure/nest/runtime",
     "@nestjs/common": "catalog:infrastructure/nest/runtime",
     "@nestjs/config": "catalog:infrastructure/nest/runtime",
@@ -32,6 +31,7 @@
     "graphql": "catalog:infrastructure/graphl",
     "graphql-list-fields": "catalog:infrastructure/graphl",
     "helmet": "catalog:infrastructure/express",
+    "json-schema-ref-resolver": "catalog:infrastructure/validation/json-schema",
     "jsonwebtoken": "catalog:infrastructure/protocols/jwt",
     "jwks-rsa": "catalog:infrastructure/protocols/jwt",
     "lodash": "catalog:infrastructure/utils",
@@ -229,6 +229,7 @@
       },
       "infrastructure/validation/json-schema": {
         "@fastify/merge-json-schemas": "^0.2.1",
+        "json-schema-ref-resolver": "^3.0.0",
         "@types/json-schema": "^7.0.15"
       },
       "infrastructure/validation/valibot": {

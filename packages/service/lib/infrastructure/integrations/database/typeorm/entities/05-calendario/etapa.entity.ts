@@ -1,9 +1,9 @@
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { type IDomain } from "@/domain/contracts/integration";
 import { CalendarioLetivoEntity } from "./calendario-letivo.entity";
 
 @Entity("etapa")
-export class EtapaEntity implements LadesaTypings.Etapa {
+export class EtapaEntity implements IDomain.Etapa {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 
@@ -23,7 +23,7 @@ export class EtapaEntity implements LadesaTypings.Etapa {
 
   @ManyToOne(() => CalendarioLetivoEntity)
   @JoinColumn({ name: "id_calendario_letivo_fk" })
-  calendario!: LadesaTypings.CalendarioLetivo;
+  calendario!: IDomain.CalendarioLetivo;
 
   @Column({ name: "date_created", type: "timestamptz", nullable: false })
   dateCreated!: Date;

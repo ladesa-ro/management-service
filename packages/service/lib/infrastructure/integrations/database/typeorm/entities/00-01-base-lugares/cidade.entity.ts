@@ -1,9 +1,9 @@
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm";
+import { type IDomain } from "@/domain/contracts/integration";
 import { EstadoEntity } from "./estado.entity";
 
 @Entity("base_cidade")
-export class CidadeEntity implements LadesaTypings.Cidade {
+export class CidadeEntity implements IDomain.Cidade {
   @PrimaryColumn({ name: "id", type: "integer" })
   id!: number;
 

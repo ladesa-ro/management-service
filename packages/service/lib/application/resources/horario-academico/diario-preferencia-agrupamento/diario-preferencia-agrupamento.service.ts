@@ -1,12 +1,11 @@
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
-import { QbEfficientLoad } from "@/application/contracts/QbEfficientLoad";
+import { QbEfficientLoad } from "@/application/contracts/qb-efficient-load";
 import { SearchService } from "@/application/helpers/search.service";
 import { IntervaloDeTempoService } from "@/application/resources/base/intervalo-de-tempo/intervalo-de-tempo.service";
 import { DiarioService } from "@/application/resources/ensino/discente/diario/diario.service";
-import { IDomain } from "@/domain/contracts/integration";
+import { type IDomain } from "@/domain/contracts/integration";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
@@ -102,7 +101,7 @@ export class DiarioPreferenciaAgrupamentoService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad(LadesaTypings.Tokens.DiarioPreferenciaAgrupamentoFindOneResultView, qb, aliasDiarioPreferenciaAgrupamento, selection);
+    QbEfficientLoad("DiarioPreferenciaAgrupamentoFindOneOutput", qb, aliasDiarioPreferenciaAgrupamento, selection);
 
     // =========================================================
 
@@ -136,7 +135,7 @@ export class DiarioPreferenciaAgrupamentoService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad(LadesaTypings.Tokens.DiarioPreferenciaAgrupamentoFindOneResultView, qb, aliasDiarioPreferenciaAgrupamento, selection);
+    QbEfficientLoad("DiarioPreferenciaAgrupamentoFindOneOutput", qb, aliasDiarioPreferenciaAgrupamento, selection);
     // =========================================================
 
     const diarioPreferenciaAgrupamento = await qb.getOne();
@@ -176,7 +175,7 @@ export class DiarioPreferenciaAgrupamentoService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad(LadesaTypings.Tokens.DiarioPreferenciaAgrupamentoFindOneResultView, qb, aliasDiarioPreferenciaAgrupamento, selection);
+    QbEfficientLoad("DiarioPreferenciaAgrupamentoFindOneOutput", qb, aliasDiarioPreferenciaAgrupamento, selection);
 
     // =========================================================
 

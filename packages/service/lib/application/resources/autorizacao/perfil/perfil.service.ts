@@ -1,10 +1,9 @@
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
 import { v4 as uuid } from "uuid";
-import { QbEfficientLoad } from "@/application/contracts/QbEfficientLoad";
+import { QbEfficientLoad } from "@/application/contracts/qb-efficient-load";
 import { SearchService } from "@/application/helpers/search.service";
-import { IDomain } from "@/domain/contracts/integration";
+import { type IDomain } from "@/domain/contracts/integration";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
@@ -46,7 +45,7 @@ export class PerfilService {
       await accessContext.applyFilter("vinculo:find", qb, aliasVinculo, null);
     }
 
-    QbEfficientLoad(LadesaTypings.Tokens.PerfilFindOneResultView, qb, "vinculo");
+    QbEfficientLoad("PerfilFindOneOutput", qb, "vinculo");
 
     const vinculos = await qb.getMany();
 
@@ -56,7 +55,7 @@ export class PerfilService {
   async perfilFindAll(accessContext: AccessContext, dto: IDomain.PerfilListInput | null = null, selection?: string[] | boolean) {
     const qb = this.vinculoRepository.createQueryBuilder(aliasVinculo);
 
-    QbEfficientLoad(LadesaTypings.Tokens.PerfilFindOneResultView, qb, aliasVinculo, selection);
+    QbEfficientLoad("PerfilFindOneOutput", qb, aliasVinculo, selection);
 
     await accessContext.applyFilter("vinculo:find", qb, aliasVinculo, null);
 
@@ -116,7 +115,7 @@ export class PerfilService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad(LadesaTypings.Tokens.PerfilFindOneResultView, qb, aliasVinculo, selection);
+    QbEfficientLoad("PerfilFindOneOutput", qb, aliasVinculo, selection);
 
     // =========================================================
 

@@ -1,12 +1,11 @@
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
-import { QbEfficientLoad } from "@/application/contracts/QbEfficientLoad";
+import { QbEfficientLoad } from "@/application/contracts/qb-efficient-load";
 import { SearchService } from "@/application/helpers/search.service";
 import { IntervaloDeTempoService } from "@/application/resources/base/intervalo-de-tempo/intervalo-de-tempo.service";
 import { GradeHorarioOfertaFormacaoService } from "@/application/resources/calendario/grade-horario-oferta-formacao/grade-horario-oferta-formacao.service";
-import { IDomain } from "@/domain/contracts/integration";
+import { type IDomain } from "@/domain/contracts/integration";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
@@ -73,7 +72,7 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad(LadesaTypings.Tokens.GradeHorarioOfertaFormacaoIntervaloDeTempoView, qb, aliasGradeHorarioOfertaFormacaoIntervaloDeTempo, selection);
+    QbEfficientLoad("GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutput", qb, aliasGradeHorarioOfertaFormacaoIntervaloDeTempo, selection);
 
     // =========================================================
 
@@ -109,7 +108,7 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad(LadesaTypings.Tokens.GradeHorarioOfertaFormacaoIntervaloDeTempoView, qb, aliasGradeHorarioOfertaFormacaoIntervaloDeTempo, selection);
+    QbEfficientLoad("GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutput", qb, aliasGradeHorarioOfertaFormacaoIntervaloDeTempo, selection);
 
     // =========================================================
 
@@ -152,7 +151,7 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad(LadesaTypings.Tokens.GradeHorarioOfertaFormacaoIntervaloDeTempoView, qb, aliasGradeHorarioOfertaFormacaoIntervaloDeTempo, selection);
+    QbEfficientLoad("GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutput", qb, aliasGradeHorarioOfertaFormacaoIntervaloDeTempo, selection);
 
     // =========================================================
 

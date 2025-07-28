@@ -1,10 +1,9 @@
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
-import { QbEfficientLoad } from "@/application/contracts/QbEfficientLoad";
+import { QbEfficientLoad } from "@/application/contracts/qb-efficient-load";
 import { SearchService } from "@/application/helpers/search.service";
-import { IDomain } from "@/domain/contracts/integration";
+import { type IDomain } from "@/domain/contracts/integration";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
 import type { EtapaEntity } from "@/infrastructure/integrations/database/typeorm/entities/05-calendario/etapa.entity";
@@ -89,7 +88,7 @@ export class EtapaService {
 
     qb.select([]);
 
-    QbEfficientLoad(LadesaTypings.Tokens.EtapaFindOneResultView, qb, aliasEtapa, selection);
+    QbEfficientLoad("EtapaFindOneOutput", qb, aliasEtapa, selection);
 
     // =========================================================
 
@@ -118,7 +117,7 @@ export class EtapaService {
 
     qb.select([]);
 
-    QbEfficientLoad(LadesaTypings.Tokens.EtapaFindOneResultView, qb, aliasEtapa, selection);
+    QbEfficientLoad("EtapaFindOneOutput", qb, aliasEtapa, selection);
 
     // =========================================================
 
@@ -155,7 +154,7 @@ export class EtapaService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad(LadesaTypings.Tokens.EtapaFindOneResultView, qb, aliasEtapa, selection);
+    QbEfficientLoad("EtapaFindOneOutput", qb, aliasEtapa, selection);
 
     // =========================================================
 

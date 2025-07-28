@@ -1,9 +1,8 @@
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { map } from "lodash";
-import { QbEfficientLoad } from "@/application/contracts/QbEfficientLoad";
+import { QbEfficientLoad } from "@/application/contracts/qb-efficient-load";
 import { SearchService } from "@/application/helpers/search.service";
-import { IDomain } from "@/domain/contracts/integration";
+import { type IDomain } from "@/domain/contracts/integration";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
@@ -48,7 +47,7 @@ export class EstadoService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad(LadesaTypings.Tokens.EstadoView, qb, aliasEstado, selection);
+    QbEfficientLoad("EstadoFindOneOutput", qb, aliasEstado, selection);
 
     // =========================================================
 
@@ -77,7 +76,7 @@ export class EstadoService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad(LadesaTypings.Tokens.EstadoView, qb, aliasEstado, selection);
+    QbEfficientLoad("EstadoFindOneOutput", qb, aliasEstado, selection);
 
     // =========================================================
 

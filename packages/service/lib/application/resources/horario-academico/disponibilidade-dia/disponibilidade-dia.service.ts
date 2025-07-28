@@ -1,12 +1,11 @@
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
-import { QbEfficientLoad } from "@/application/contracts/QbEfficientLoad";
+import { QbEfficientLoad } from "@/application/contracts/qb-efficient-load";
 import { SearchService } from "@/application/helpers/search.service";
 import { IntervaloDeTempoService } from "@/application/resources/base/intervalo-de-tempo/intervalo-de-tempo.service";
 import { DisponibilidadeService } from "@/application/resources/horario-academico/disponibilidade/disponibilidade.service";
-import { IDomain } from "@/domain/contracts/integration";
+import { type IDomain } from "@/domain/contracts/integration";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
@@ -97,7 +96,7 @@ export class DisponibilidadeDiaService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad(LadesaTypings.Tokens.DisponibilidadeDiaFindOneResultView, qb, aliasDisponibilidadeDia, selection);
+    QbEfficientLoad("DisponibilidadeDiaFindOneOutput", qb, aliasDisponibilidadeDia, selection);
 
     // =========================================================
 
@@ -127,7 +126,7 @@ export class DisponibilidadeDiaService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad(LadesaTypings.Tokens.DisponibilidadeDiaFindOneResultView, qb, aliasDisponibilidadeDia, selection);
+    QbEfficientLoad("DisponibilidadeDiaFindOneOutput", qb, aliasDisponibilidadeDia, selection);
     // =========================================================
 
     const disponibilidadeDia = await qb.getOne();
@@ -167,7 +166,7 @@ export class DisponibilidadeDiaService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad(LadesaTypings.Tokens.DisponibilidadeDiaFindOneResultView, qb, aliasDisponibilidadeDia, selection);
+    QbEfficientLoad("DisponibilidadeDiaFindOneOutput", qb, aliasDisponibilidadeDia, selection);
 
     // =========================================================
 

@@ -1,10 +1,9 @@
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
-import { QbEfficientLoad } from "@/application/contracts/QbEfficientLoad";
+import { QbEfficientLoad } from "@/application/contracts/qb-efficient-load";
 import { SearchService } from "@/application/helpers/search.service";
-import { IDomain } from "@/domain/contracts/integration";
+import { type IDomain } from "@/domain/contracts/integration";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
@@ -100,7 +99,7 @@ export class CursoService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad(LadesaTypings.Tokens.CursoFindOneResultView, qb, aliasCurso, selection);
+    QbEfficientLoad("CursoFindOneOutput", qb, aliasCurso, selection);
 
     // =========================================================
 
@@ -130,7 +129,7 @@ export class CursoService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad(LadesaTypings.Tokens.CursoFindOneResultView, qb, aliasCurso, selection);
+    QbEfficientLoad("CursoFindOneOutput", qb, aliasCurso, selection);
 
     // =========================================================
 
@@ -167,7 +166,7 @@ export class CursoService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad(LadesaTypings.Tokens.CursoFindOneResultView, qb, aliasCurso, selection);
+    QbEfficientLoad("CursoFindOneOutput", qb, aliasCurso, selection);
 
     // =========================================================
 

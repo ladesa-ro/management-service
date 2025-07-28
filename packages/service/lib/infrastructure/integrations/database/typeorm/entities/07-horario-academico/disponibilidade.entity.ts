@@ -1,8 +1,8 @@
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { type IDomain } from "@/domain/contracts/integration";
 
 @Entity("disponibilidade")
-export class DisponibilidadeEntity implements LadesaTypings.Disponibilidade {
+export class DisponibilidadeEntity implements IDomain.Disponibilidade {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 

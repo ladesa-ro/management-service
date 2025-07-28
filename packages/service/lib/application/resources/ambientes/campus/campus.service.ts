@@ -1,11 +1,10 @@
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { get, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
 import { v4 } from "uuid";
-import { QbEfficientLoad } from "@/application/contracts/QbEfficientLoad";
+import { QbEfficientLoad } from "@/application/contracts/qb-efficient-load";
 import { SearchService } from "@/application/helpers/search.service";
-import { IDomain } from "@/domain/contracts/integration";
+import { type IDomain } from "@/domain/contracts/integration";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
 import type { CampusEntity } from "@/infrastructure/integrations/database/typeorm/entities";
@@ -112,7 +111,7 @@ export class CampusService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad(LadesaTypings.Tokens.CampusFindOneResultView, qb, aliasCampus, selection);
+    await QbEfficientLoad("CampusFindOneOutput", qb, aliasCampus, selection);
 
     // =========================================================
 
@@ -140,7 +139,7 @@ export class CampusService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad(LadesaTypings.Tokens.CampusFindOneResultView, qb, aliasCampus, selection);
+    QbEfficientLoad("CampusFindOneOutput", qb, aliasCampus, selection);
 
     // =========================================================
 
@@ -177,7 +176,7 @@ export class CampusService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad(LadesaTypings.Tokens.CampusFindOneResultView, qb, aliasCampus, selection);
+    QbEfficientLoad("CampusFindOneOutput", qb, aliasCampus, selection);
 
     // =========================================================
 

@@ -4,36 +4,49 @@ import OpenAPIBackend from "openapi-backend";
 import { ValidationFailedException } from "@/application/contracts";
 import { AppApiDoc } from "@/application/contracts/openapi/document/app-openapi-document";
 import { IAppRequestRepresentationGeneric } from "@/application/interfaces/i-app-request-representation-generic";
+import { lazyAsync } from "@/infrastructure/utils/lazy";
 
-const openApiBackend = new OpenAPIBackend({
-  definition: AppApiDoc,
+const getOpenApiBackend = lazyAsync(async () => {
+  const openApiBackend = new OpenAPIBackend({
+    definition: AppApiDoc,
 
-  validate: true,
-  coerceTypes: true,
+    validate: true,
+    coerceTypes: true,
+    quick: true,
 
-  customizeAjv: (ajv) => {
-    addFormats(ajv, { mode: "full" });
+    customizeAjv: (ajv) => {
+      addFormats(ajv, { mode: "full" });
 
-    ajv.addFormat("uint16", {
-      type: "number",
-      validate: (x) => Number.isInteger(x) && x >= 0 && x <= 2 ** 16 - 1,
-    });
+      ajv.addFormat("uint16", {
+        type: "number",
+        validate: (x) => Number.isInteger(x) && x >= 0 && x <= 2 ** 16 - 1,
+      });
 
-    ajv.addFormat("uint8", {
-      type: "number",
-      validate: (x) => Number.isInteger(x) && x >= 0 && x <= 2 ** 8 - 1,
-    });
+      ajv.addFormat("uint8", {
+        type: "number",
+        validate: (x) => Number.isInteger(x) && x >= 0 && x <= 2 ** 8 - 1,
+      });
 
-    return ajv;
-  },
+      return ajv;
+    },
+  });
+
+  console.log("carregando especificação do openapi, por favor aguarde...");
+  await openApiBackend.init();
+  console.log("carregado com sucesso!");
+
+  return openApiBackend;
 });
 
-console.log("carregando especificação do openapi, por favor aguarde...");
-await openApiBackend.init();
-const api = await SwaggerParser.validate(AppApiDoc);
-console.log("API name: %s, Version: %s", api.info.title, api.info.version);
+export const getSwaggerDoc = lazyAsync(async () => {
+  const api = await SwaggerParser.validate(AppApiDoc);
+  console.log("API name: %s, Version: %s", api.info.title, api.info.version);
+  return api;
+});
 
 export const requestValidateAndParse = async (requestRepresentation: IAppRequestRepresentationGeneric) => {
+  const openApiBackend = await getOpenApiBackend();
+
   const result = openApiBackend.validateRequest(requestRepresentation);
 
   if (!result.valid) {

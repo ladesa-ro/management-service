@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { pick } from "lodash";
-import { IDomain } from "@/domain/contracts/integration";
+import { type IDomain } from "@/domain/contracts/integration";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
 

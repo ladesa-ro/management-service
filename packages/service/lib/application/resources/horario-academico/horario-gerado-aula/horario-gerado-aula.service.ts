@@ -1,8 +1,7 @@
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
-import { QbEfficientLoad } from "@/application/contracts/QbEfficientLoad";
+import { QbEfficientLoad } from "@/application/contracts/qb-efficient-load";
 import { SearchService } from "@/application/helpers/search.service";
 import { IntervaloDeTempoService } from "@/application/resources/base/intervalo-de-tempo/intervalo-de-tempo.service";
 import { DiarioProfessorService } from "@/application/resources/ensino/discente/diario-professor/diario-professor.service";
@@ -109,7 +108,7 @@ export class HorarioGeradoAulaService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad(LadesaTypings.Tokens.HorarioGeradoAulaFindOneResultView, qb, aliasHorarioGeradoAula, selection);
+    QbEfficientLoad("HorarioGeradoAulaFindOneOutput", qb, aliasHorarioGeradoAula, selection);
 
     // =========================================================
 
@@ -137,7 +136,7 @@ export class HorarioGeradoAulaService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad(LadesaTypings.Tokens.HorarioGeradoAulaFindOneResultView, qb, aliasHorarioGeradoAula, selection);
+    QbEfficientLoad("HorarioGeradoAulaFindOneOutput", qb, aliasHorarioGeradoAula, selection);
     // =========================================================
 
     const horarioGeradoAula = await qb.getOne();
@@ -173,7 +172,7 @@ export class HorarioGeradoAulaService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad(LadesaTypings.Tokens.HorarioGeradoAulaFindOneResultView, qb, aliasHorarioGeradoAula, selection);
+    QbEfficientLoad("HorarioGeradoAulaFindOneOutput", qb, aliasHorarioGeradoAula, selection);
 
     // =========================================================
 

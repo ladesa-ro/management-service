@@ -1,12 +1,11 @@
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { map, pick } from "lodash";
 import { FilterOperator, FilterSuffix } from "nestjs-paginate";
-import { QbEfficientLoad } from "@/application/contracts/QbEfficientLoad";
+import { QbEfficientLoad } from "@/application/contracts/qb-efficient-load";
 import { SearchService } from "@/application/helpers/search.service";
 import { ArquivoService } from "@/application/resources/base/arquivo/arquivo.service";
 import { ImagemService } from "@/application/resources/base/imagem/imagem.service";
-import { IDomain } from "@/domain/contracts/integration";
+import { type IDomain } from "@/domain/contracts/integration";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
@@ -73,7 +72,7 @@ export class DisciplinaService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad(LadesaTypings.Tokens.DisciplinaFindOneResultView, qb, aliasDisciplina, selection);
+    QbEfficientLoad("DisciplinaFindOneOutput", qb, aliasDisciplina, selection);
 
     // =========================================================
 
@@ -103,7 +102,7 @@ export class DisciplinaService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad(LadesaTypings.Tokens.DisciplinaFindOneResultView, qb, aliasDisciplina, selection);
+    QbEfficientLoad("DisciplinaFindOneOutput", qb, aliasDisciplina, selection);
 
     // =========================================================
 
@@ -140,7 +139,7 @@ export class DisciplinaService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad(LadesaTypings.Tokens.DisciplinaFindOneResultView, qb, aliasDisciplina, selection);
+    QbEfficientLoad("DisciplinaFindOneOutput", qb, aliasDisciplina, selection);
 
     // =========================================================
 

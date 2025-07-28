@@ -1,11 +1,11 @@
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, type Relation } from "typeorm";
+import { type IDomain } from "@/domain/contracts/integration";
 import { ImagemEntity } from "../00-00-base/imagem.entity";
 import { AmbienteEntity } from "./ambiente.entity";
 import { CampusEntity } from "./campus.entity";
 
 @Entity("bloco")
-export class BlocoEntity implements LadesaTypings.Bloco {
+export class BlocoEntity implements IDomain.Bloco {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 

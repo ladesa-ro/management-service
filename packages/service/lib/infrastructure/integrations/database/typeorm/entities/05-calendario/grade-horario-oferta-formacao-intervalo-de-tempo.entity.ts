@@ -1,20 +1,20 @@
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { type IDomain } from "@/domain/contracts/integration";
 import { CampusEntity } from "@/infrastructure/integrations/database/typeorm/entities/02-ambientes";
 import { OfertaFormacaoEntity } from "@/infrastructure/integrations/database/typeorm/entities/04-ensino-institucional/oferta-formacao.entity";
 
 @Entity("grade_horario_oferta_formacao_intervalo_de_tempo")
-export class GradeHorarioOfertaFormacaoIntervaloDeTempoEntity implements LadesaTypings.GradeHorarioOfertaFormacaoIntervaloDeTempo {
+export class GradeHorarioOfertaFormacaoIntervaloDeTempoEntity implements IDomain.GradeHorarioOfertaFormacaoIntervaloDeTempo {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 
   @ManyToOne(() => CampusEntity)
   @JoinColumn({ name: "id_intervalo_de_tempo_fk" })
-  intervaloDeTempo!: LadesaTypings.IntervaloDeTempo;
+  intervaloDeTempo!: IDomain.IntervaloDeTempo;
 
   @ManyToOne(() => OfertaFormacaoEntity)
   @JoinColumn({ name: "id_grade_horario_oferta_formacao_fk" })
-  gradeHorarioOfertaFormacao!: LadesaTypings.GradeHorarioOfertaFormacao;
+  gradeHorarioOfertaFormacao!: IDomain.GradeHorarioOfertaFormacao;
 
   @Column({ name: "date_created", type: "timestamptz", nullable: false })
   dateCreated!: Date;

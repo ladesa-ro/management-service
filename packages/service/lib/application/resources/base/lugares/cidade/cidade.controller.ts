@@ -1,4 +1,3 @@
-import * as LadesaTypings from "@ladesa-ro/especificacao";
 import { Controller, Get } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { type IAppRequest } from "@/application/contracts/openapi/document/app-openapi-typings";
@@ -21,7 +20,7 @@ export class CidadeController {
   // ========================================================
 
   @Get("/:id")
-  async findById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("FindById") dto: IAppRequest<"FindById">): Promise<LadesaTypings.CidadeFindOneResultView> {
+  async findById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("FindById") dto: IAppRequest<"FindById">) {
     return this.cidadeService.findByIdStrict(accessContext, dto);
   }
 }
