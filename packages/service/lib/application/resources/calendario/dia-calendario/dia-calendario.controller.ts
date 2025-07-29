@@ -20,7 +20,8 @@ export class DiaCalendarioController {
 
   @Get("/:id")
   async diaCalendarioFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DiaCalendarioFindById") dto: IAppRequest<"DiaCalendarioFindOneById">) {
-    return this.diaCalendarioService.diaCalendarioFindByIdStrict(accessContext, { id: dto.id });
+    const domain: IDomain.DiaCalendarioFindOneInput = requestRepresentationMergeToDomain(dto);
+    return this.diaCalendarioService.diaCalendarioFindByIdStrict(accessContext, domain);
   }
 
   @Post("/")
