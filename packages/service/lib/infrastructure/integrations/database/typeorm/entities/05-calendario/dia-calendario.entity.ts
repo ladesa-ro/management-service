@@ -13,8 +13,17 @@ export class DiaCalendarioEntity implements IDomain.DiaCalendario {
   @Column({ name: "dia_letivo", type: "bool", nullable: false })
   diaLetivo!: boolean;
 
-  @Column({ name: "feriado", type: "bool", nullable: false })
-  feriado!: boolean;
+  @Column({ name: "feriado", type: "text", nullable: false })
+  feriado!: string;
+
+  @Column({ name: "dia_presencial", type: "bool", nullable: false })
+  diaPresencial!: boolean;
+
+  @Column({ name: "tipo", type: "varchar", length: 50, nullable: false, default: 'Outro' })
+  tipo!: IDomain.TipoDiaCalendario;
+
+  @Column({ name: "extra_curricular", type: "bool", nullable: false })
+  extraCurricular!: boolean;
 
   //Chaves Estrangeiras
 

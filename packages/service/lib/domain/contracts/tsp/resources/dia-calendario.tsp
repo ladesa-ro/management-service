@@ -34,5 +34,14 @@ model DiaCalendario {
   /** Calendario. */
   calendario: CalendarioLetivo;
 
+  //** Indica se o dia é aula presecial ou não presencial*/
+  DiaPresencial: boolean;
+
+  /** Indica o tipo do feriado, se é nacional, estadual ou municipal*/
+  Tipo: TipoDiaCalendario;
+
+  /** Indica se o dia é extracurricular */
+  extraCurricular: boolean;
+
   ...EntityDated;
 }
