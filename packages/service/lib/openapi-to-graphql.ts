@@ -5,33 +5,6 @@ import { printSchema } from "graphql";
 import { type OpenAPIV3 } from "openapi-types";
 import { AppApiDoc } from "@/application/contracts/openapi/document/app-openapi-document";
 
-function _mapJsonType(schema: OpenAPIV3.SchemaObject): { type: string; nullable: boolean } {
-  const { type, nullable } = schema;
-  const isNullable = nullable ?? false;
-
-  switch (type) {
-    case "string":
-      return { type: "String", nullable: isNullable };
-    case "integer":
-      return { type: "Int", nullable: isNullable };
-    case "number":
-      return { type: "Float", nullable: isNullable };
-    case "boolean":
-      return { type: "Boolean", nullable: isNullable };
-
-    case "array":
-      if (schema.items && !Array.isArray(schema.items)) {
-        const inner = _mapJsonType(schema.items as OpenAPIV3.SchemaObject);
-        return { type: `[${inner.type}]`, nullable: isNullable };
-      }
-      return { type: "[JSON]", nullable: isNullable };
-
-    case "object":
-    default:
-      return { type: "JSON", nullable: isNullable };
-  }
-}
-
 async function generateSchema(doc: OpenAPIV3.Document) {
   const builder = new SchemaBuilder({});
 
@@ -91,14 +64,98 @@ async function generateSchema(doc: OpenAPIV3.Document) {
   builder.mutationType({});
   builder.scalarType("JSON", { serialize: (v) => v });
 
+  const _inputObjects = {
+    refs: new Map(),
+  };
+
+  const _outputObjects = {
+    refs: new Map(),
+  };
+
+  const claimReference = (mode: "input" | "output", schema: OpenAPIV3.SchemaObject) => {
+    console.log(mode, schema);
+    return {
+      type: "JSON",
+      nullable: false,
+    };
+  };
+
+  const mapJsonType = (
+    mode: "input" | "output",
+    schema: OpenAPIV3.SchemaObject,
+  ): {
+    type: string;
+    nullable: boolean;
+  } => {
+    if ("$ref" in schema) {
+      return claimReference(mode, schema);
+    }
+
+    const { type, nullable } = schema;
+    const isNullable = nullable ?? false;
+
+    switch (type) {
+      case "string": {
+        return {
+          type: "String",
+          nullable: isNullable,
+        };
+      }
+      case "integer": {
+        return {
+          type: "Int",
+          nullable: isNullable,
+        };
+      }
+
+      case "number": {
+        return {
+          type: "Float",
+          nullable: isNullable,
+        };
+      }
+      case "boolean": {
+        return {
+          type: "Boolean",
+          nullable: isNullable,
+        };
+      }
+
+      case "array": {
+        if (schema?.items && !Array.isArray(schema.items)) {
+          const inner = mapJsonType(mode, schema.items as OpenAPIV3.SchemaObject);
+
+          return {
+            type: `[${inner.type}]`,
+            nullable: isNullable,
+          };
+        }
+
+        return {
+          type: "[JSON]",
+          nullable: isNullable,
+        };
+      }
+
+      case "object":
+      default: {
+        return {
+          type: "JSON",
+          nullable: isNullable,
+        };
+      }
+    }
+  };
+
   const buildArgs = (t: any, queryOrMutation: any) => {
     const args = new Map();
 
     for (const [argName, arg] of queryOrMutation.args) {
+      console.log(argName, arg.schema, mapJsonType("input", arg.schema));
       args.set(
         argName,
         t.arg({
-          type: "String",
+          ...mapJsonType("input", arg.schema),
           required: arg.required,
           description: arg.description,
         }),
@@ -113,7 +170,7 @@ async function generateSchema(doc: OpenAPIV3.Document) {
       case "query": {
         builder.queryField(queryOrMutation.name, (t) => {
           return t.field({
-            type: "JSON",
+            ...mapJsonType("output", queryOrMutation.jsonResponse),
             args: buildArgs(t, queryOrMutation),
             description: queryOrMutation.description,
           });
@@ -125,7 +182,7 @@ async function generateSchema(doc: OpenAPIV3.Document) {
       case "mutation": {
         builder.mutationField(queryOrMutation.name, (t) => {
           return t.field({
-            type: "JSON",
+            ...mapJsonType("output", queryOrMutation.jsonResponse),
             args: buildArgs(t, queryOrMutation),
             description: queryOrMutation.description,
           });
@@ -134,6 +191,16 @@ async function generateSchema(doc: OpenAPIV3.Document) {
         break;
       }
     }
+  }
+
+  for (const _outputObjectsToRegisterElement of Object.entries({})) {
+    const _GiraffeInput = builder.inputType("GiraffeInput", {
+      fields: (t) => ({
+        name: t.string({ required: true }),
+        birthdate: t.string({ required: true }),
+        height: t.float({ required: true }),
+      }),
+    });
   }
 
   return printSchema(builder.toSchema());
