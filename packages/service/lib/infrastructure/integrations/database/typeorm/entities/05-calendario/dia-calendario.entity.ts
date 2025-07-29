@@ -1,7 +1,6 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { type IDomain } from "@/domain/contracts/integration";
 import { CalendarioLetivoEntity } from "./calendario-letivo.entity";
-import { TipoDiaCalendario } from "@/domain/contracts/.generated/schema";
 
 @Entity("dia_calendario")
 export class DiaCalendarioEntity implements IDomain.DiaCalendario {
@@ -14,14 +13,14 @@ export class DiaCalendarioEntity implements IDomain.DiaCalendario {
   @Column({ name: "dia_letivo", type: "bool", nullable: false })
   diaLetivo!: boolean;
 
-  @Column({ name: "feriado", type: "bool", nullable: false })
+  @Column({ name: "feriado", type: "text", nullable: false })
   feriado!: string;
 
   @Column({ name: "dia_presencial", type: "bool", nullable: false })
   diaPresencial!: boolean;
 
   @Column({ name: "tipo", type: "varchar", length: 50, nullable: false, default: 'Outro' })
-  tipo!: TipoDiaCalendario;
+  tipo!: IDomain.TipoDiaCalendario;
 
   @Column({ name: "extra_curricular", type: "bool", nullable: false })
   extraCurricular!: boolean;

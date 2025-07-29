@@ -28,7 +28,7 @@ model DiaCalendarioFindOneOutput {
 /** Dados de entrada para a criação de um DiaCalendario. */
 model DiaCalendarioCreateInput {
   data: date;
-  feriado: boolean;
+  feriado: string|null;
   diaLetivo: boolean;
   calendario: CalendarioLetivoFindOneInput | null;
   diaPresencial: boolean;
