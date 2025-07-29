@@ -20,6 +20,7 @@
         "@nestjs/schedule": "catalog:infrastructure/nest/runtime",
         "@nestjs/swagger": "catalog:infrastructure/nest/runtime",
         "@nestjs/throttler": "catalog:infrastructure/nest/runtime",
+        "@pothos/core": "^4.8.0",
         "@scalar/nestjs-api-reference": "catalog:infrastructure/express",
         "ajv": "catalog:infrastructure/validation/ajv",
         "ajv-formats": "catalog:infrastructure/validation/ajv",
@@ -556,6 +557,8 @@
     "@paralleldrive/cuid2": ["@paralleldrive/cuid2@2.2.2", "", { "dependencies": { "@noble/hashes": "^1.1.5" } }, "sha512-ZOBkgDwEdoYVlSeRbYYXs0S9MejQofiVYoTbKzy/6GQa39/q5tQU2IX46+shYnUkpEl3wc+J6wRlar7r2EK2xA=="],
 
     "@pkgjs/parseargs": ["@pkgjs/parseargs@0.11.0", "", {}, "sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg=="],
+
+    "@pothos/core": ["@pothos/core@4.8.0", "", { "peerDependencies": { "graphql": "^16.10.0" } }, "sha512-2AUfsit2nbK31u7IDThvFR3cTiXESLMvOov6RP8jN8XUyirH4HeCg2e/6wiVHCpTeJo1K0CHWkf+szUovKo+Lg=="],
 
     "@protobufjs/aspromise": ["@protobufjs/aspromise@1.1.2", "", {}, "sha512-j+gKExEuLmKwvz3OgROXtrJ2UG2x8Ch2YZUxahh+s1F2HZ+wAceUNLkvy6zKCPVRkU++ZWQrdxsUeQXmcg4uoQ=="],
 

@@ -19,6 +19,7 @@
     "@nestjs/schedule": "catalog:infrastructure/nest/runtime",
     "@nestjs/swagger": "catalog:infrastructure/nest/runtime",
     "@nestjs/throttler": "catalog:infrastructure/nest/runtime",
+    "@pothos/core": "^4.8.0",
     "@scalar/nestjs-api-reference": "catalog:infrastructure/express",
     "ajv": "catalog:infrastructure/validation/ajv",
     "ajv-formats": "catalog:infrastructure/validation/ajv",
