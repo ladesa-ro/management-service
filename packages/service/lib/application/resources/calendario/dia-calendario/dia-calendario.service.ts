@@ -52,6 +52,11 @@ export class DiaCalendarioService {
           "calendario.id",
           "calendario.nome",
           "calendario.ano",
+          
+          "diaPresencial",
+          "tipo",
+          "extrCurricular",
+
         ],
         sortableColumns: [
           "data",
