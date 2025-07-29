@@ -13,14 +13,14 @@ export class DiaCalendarioController {
   constructor(private diaCalendarioService: DiaCalendarioService) {}
 
   @Get("/")
-  async diaCalendarioFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DiaCalendarioFindAll") dto: IAppRequest<"DiaCalendarioFindAll">) {
+  async diaCalendarioFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DiaCalendarioList") dto: IAppRequest<"DiaCalendarioList">) {
     const domain: IDomain.DiaCalendarioListInput = requestRepresentationMergeToDomain(dto);
     return this.diaCalendarioService.diaCalendarioFindAll(accessContext, domain);
   }
 
   @Get("/:id")
   async diaCalendarioFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DiaCalendarioFindById") dto: IAppRequest<"DiaCalendarioFindOneById">) {
-    return this.diaCalendarioService.diaCalendarioFindByIdStrict(accessContext, { id: dto.path.id });
+    return this.diaCalendarioService.diaCalendarioFindByIdStrict(accessContext, { id: dto.id });
   }
 
   @Post("/")
