@@ -31,7 +31,7 @@ model DiaCalendarioCreateInput {
   diaLetivo: boolean;
   calendario: CalendarioLetivoFindOneInput | null;
   diaPresencial: boolean;
-  tipo: string;
+  tipo: TipoDiaCalendario;
   extraCurricular: boolean;
 }
 
