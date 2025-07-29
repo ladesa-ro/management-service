@@ -55,7 +55,7 @@ export class DiaCalendarioService {
           
           "diaPresencial",
           "tipo",
-          "extrCurricular",
+          "extraCurricular",
 
         ],
         sortableColumns: [
