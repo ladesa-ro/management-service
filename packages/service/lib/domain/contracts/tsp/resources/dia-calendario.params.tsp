@@ -18,6 +18,7 @@ model DiaCalendarioFindOneOutput {
   ...PickProperties<DiaCalendarioView, "id">;
   ...PickProperties<DiaCalendarioView, "data" | "diaLetivo" | "feriado">;
   ...PickProperties<DiaCalendarioView, "calendario">;
+  ...PickProperties<DiaCalendarioView, "diaPresencial" | "Tipo" | "extraCurricular" >;
   ...PickProperties<
     DiaCalendarioView,
     "dateCreated" | "dateUpdated" | "dateDeleted"
@@ -31,7 +32,7 @@ model DiaCalendarioCreateInput {
   diaLetivo: boolean;
   calendario: CalendarioLetivoFindOneInput | null;
   diaPresencial: boolean;
-  tipo: TipoDiaCalendario;
+  tipo: string;
   extraCurricular: boolean;
 }
 
