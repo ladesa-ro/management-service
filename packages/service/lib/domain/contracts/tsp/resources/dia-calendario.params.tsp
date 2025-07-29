@@ -30,6 +30,9 @@ model DiaCalendarioCreateInput {
   feriado: boolean;
   diaLetivo: boolean;
   calendario: CalendarioLetivoFindOneInput | null;
+  diaPresencial: boolean;
+  tipo: string;
+  extraCurricular: boolean;
 }
 
 /** Dados de entrada para a atualização de um DiaCalendario. */
