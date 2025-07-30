@@ -8,7 +8,7 @@ import { ReservaService } from "./reserva.service";
 export class ReservaResolver {
   constructor(private reservaService: ReservaService) {}
 
-  async reservaFindAll(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("ReservaFindAll") dto: IAppRequest<"ReservaFindAll">) {
+  async reservaFindAll(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("ReservaList") dto: IAppRequest<"ReservaList">) {
     return this.reservaService.reservaFindAll(accessContext, dto);
   }
 

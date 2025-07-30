@@ -15,8 +15,7 @@ export class DisponibilidadeDiaController {
   @Get("/")
   async disponibilidadeDiaFindAll(
     @AccessContextHttp() accessContext: AccessContext,
-
-    @AppRequest("DisponibilidadeDiaFindAll") dto: IAppRequest<"DisponibilidadeDiaFindAll">,
+    @AppRequest("DisponibilidadeDiaList") dto: IAppRequest<"DisponibilidadeDiaList">,
   ) {
     const domain: IDomain.DisponibilidadeDiaListInput = requestRepresentationMergeToDomain(dto);
     return this.disponibilidadeDiaService.disponibilidadeDiaFindAll(accessContext, domain);

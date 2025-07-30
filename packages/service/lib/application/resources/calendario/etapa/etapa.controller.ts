@@ -13,7 +13,7 @@ export class EtapaController {
   constructor(private etapaService: EtapaService) {}
 
   @Get("/")
-  async etapaFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("EtapaFindAll") dto: IAppRequest<"EtapaFindAll">) {
+  async etapaFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("EtapaList") dto: IAppRequest<"EtapaList">) {
     const domain: IDomain.EtapaListInput = requestRepresentationMergeToDomain(dto);
     return this.etapaService.etapaFindAll(accessContext, domain);
   }

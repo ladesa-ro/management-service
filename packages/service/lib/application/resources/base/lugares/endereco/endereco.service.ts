@@ -39,7 +39,7 @@ export class EnderecoService {
     return endereco;
   }
 
-  async internalEnderecoCreateOrUpdate(id: IDomain.Endereco["id"] | null, dto: IDomain.EnderecoInput) {
+  async internalEnderecoCreateOrUpdate(id: IDomain.Endereco["id"] | null, domain: IDomain.EnderecoInput) {
     const endereco = this.enderecoRepository.create();
 
     if (id) {
@@ -51,10 +51,10 @@ export class EnderecoService {
     }
 
     const enderecoInputDto = <IDomain.EnderecoInput>{
-      ...pick(dto, ["cep", "logradouro", "numero", "bairro", "complemento", "pontoReferencia"]),
+      ...pick(domain, ["cep", "logradouro", "numero", "bairro", "complemento", "pontoReferencia"]),
 
       cidade: {
-        id: dto.cidade.id,
+        id: domain.cidade.id,
       },
     };
 
@@ -65,7 +65,7 @@ export class EnderecoService {
     return endereco;
   }
 
-  async findById(accessContext: AccessContext, dto: IDomain.EnderecoFindOneInput, selection?: string[] | boolean): Promise<IDomain.EnderecoFindOneOutput | null> {
+  async findById(accessContext: AccessContext, domain: IDomain.EnderecoFindOneInput, selection?: string[] | boolean): Promise<IDomain.EnderecoFindOneOutput | null> {
     const qb = this.enderecoRepository.createQueryBuilder(aliasEndereco);
 
     // =========================================================
@@ -74,7 +74,7 @@ export class EnderecoService {
 
     // =========================================================
 
-    qb.andWhere(`${aliasEndereco}.id = :id`, { id: dto.id });
+    qb.andWhere(`${aliasEndereco}.id = :id`, {id: domain.id});
 
     // =========================================================
 
@@ -90,8 +90,8 @@ export class EnderecoService {
     return endereco;
   }
 
-  async findByIdStrict(requestContext: AccessContext, dto: IDomain.EnderecoFindOneInput) {
-    const endereco = await this.findById(requestContext, dto);
+  async findByIdStrict(requestContext: AccessContext, domain: IDomain.EnderecoFindOneInput) {
+    const endereco = await this.findById(requestContext, domain);
 
     if (!endereco) {
       throw new NotFoundException();

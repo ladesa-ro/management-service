@@ -8,7 +8,7 @@ import { DiarioService } from "./diario.service";
 export class DiarioResolver {
   constructor(private diarioService: DiarioService) {}
 
-  async diarioFindAll(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("DiarioFindAll") dto: IAppRequest<"DiarioFindAll">) {
+  async diarioFindAll(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("DiarioList") dto: IAppRequest<"DiarioList">) {
     return this.diarioService.diarioFindAll(accessContext, dto);
   }
 

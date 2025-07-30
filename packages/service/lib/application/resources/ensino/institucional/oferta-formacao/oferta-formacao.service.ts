@@ -28,7 +28,7 @@ export class OfertaFormacaoService {
     return this.databaseContext.ofertaFormacaoRepository;
   }
 
-  async ofertaFormacaoFindAll(accessContext: AccessContext, dto: IDomain.OfertaFormacaoListInput | null = null, selection?: string[]): Promise<IDomain.OfertaFormacaoListOutput["success"]> {
+  async ofertaFormacaoFindAll(accessContext: AccessContext, domain: IDomain.OfertaFormacaoListInput | null = null, selection?: string[]): Promise<IDomain.OfertaFormacaoListOutput["success"]> {
     // =========================================================
 
     const qb = this.ofertaFormacaoRepository.createQueryBuilder(aliasOfertaFormacao);
@@ -41,7 +41,7 @@ export class OfertaFormacaoService {
 
     const paginated = await this.searchService.search(
       qb,
-      { ...dto },
+      {...domain},
       {
         ...paginateConfig,
         select: [
@@ -87,7 +87,7 @@ export class OfertaFormacaoService {
     return paginated;
   }
 
-  async ofertaFormacaoFindById(accessContext: AccessContext | null, dto: IDomain.OfertaFormacaoFindOneInput, selection?: string[]): Promise<IDomain.OfertaFormacaoFindOneOutput | null> {
+  async ofertaFormacaoFindById(accessContext: AccessContext | null, domain: IDomain.OfertaFormacaoFindOneInput, selection?: string[]): Promise<IDomain.OfertaFormacaoFindOneOutput | null> {
     // =========================================================
 
     const qb = this.ofertaFormacaoRepository.createQueryBuilder(aliasOfertaFormacao);
@@ -100,7 +100,7 @@ export class OfertaFormacaoService {
 
     // =========================================================
 
-    qb.andWhere(`${aliasOfertaFormacao}.id = :id`, { id: dto.id });
+    qb.andWhere(`${aliasOfertaFormacao}.id = :id`, {id: domain.id});
 
     // =========================================================
 
@@ -116,8 +116,8 @@ export class OfertaFormacaoService {
     return ofertaFormacao;
   }
 
-  async ofertaFormacaoFindByIdStrict(accessContext: AccessContext, dto: IDomain.OfertaFormacaoFindOneInput, selection?: string[]) {
-    const ofertaFormacao = await this.ofertaFormacaoFindById(accessContext, dto, selection);
+  async ofertaFormacaoFindByIdStrict(accessContext: AccessContext, domain: IDomain.OfertaFormacaoFindOneInput, selection?: string[]) {
+    const ofertaFormacao = await this.ofertaFormacaoFindById(accessContext, domain, selection);
 
     if (!ofertaFormacao) {
       throw new NotFoundException();
@@ -163,14 +163,14 @@ export class OfertaFormacaoService {
     return ofertaFormacao;
   }
 
-  async ofertaFormacaoCreate(accessContext: AccessContext, dto: IDomain.OfertaFormacaoCreateInput) {
+  async ofertaFormacaoCreate(accessContext: AccessContext, domain: IDomain.OfertaFormacaoCreateInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("oferta_formacao:create", { dto });
+    await accessContext.ensurePermission("oferta_formacao:create", {dto: domain});
 
     // =========================================================
 
-    const dtoOfertaFormacao = pick(dto.body, ["nome", "slug"]);
+    const dtoOfertaFormacao = pick(domain, ["nome", "slug"]);
 
     const ofertaFormacao = this.ofertaFormacaoRepository.create();
 
@@ -180,8 +180,8 @@ export class OfertaFormacaoService {
 
     // =========================================================
 
-    if (dto.body.modalidade) {
-      const modalidade = await this.modalidadeService.modalidadeFindByIdSimpleStrict(accessContext, dto.body.modalidade.id);
+    if (domain.modalidade) {
+      const modalidade = await this.modalidadeService.modalidadeFindByIdSimpleStrict(accessContext, domain.body.modalidade.id);
 
       this.ofertaFormacaoRepository.merge(ofertaFormacao, {
         modalidade: {
@@ -201,16 +201,16 @@ export class OfertaFormacaoService {
     });
   }
 
-  async ofertaFormacaoUpdate(accessContext: AccessContext, dto: IDomain.OfertaFormacaoUpdateByIdInput) {
+  async ofertaFormacaoUpdate(accessContext: AccessContext, domain: IDomain.OfertaFormacaoUpdateInput) {
     // =========================================================
 
-    const currentOfertaFormacao = await this.ofertaFormacaoFindByIdStrict(accessContext, dto);
+    const currentOfertaFormacao = await this.ofertaFormacaoFindByIdStrict(accessContext, domain);
 
     // =========================================================
 
-    await accessContext.ensurePermission("oferta_formacao:update", { dto }, dto.path.id, this.ofertaFormacaoRepository.createQueryBuilder(aliasOfertaFormacao));
+    await accessContext.ensurePermission("oferta_formacao:update", {dto: domain}, domain.id, this.ofertaFormacaoRepository.createQueryBuilder(aliasOfertaFormacao));
 
-    const dtoOfertaFormacao = pick(dto.body, ["nome", "slug"]);
+    const dtoOfertaFormacao = pick(domain, ["nome", "slug"]);
 
     const ofertaFormacao = <OfertaFormacaoEntity>{
       id: currentOfertaFormacao.id,
@@ -222,8 +222,8 @@ export class OfertaFormacaoService {
 
     // =========================================================
 
-    if (has(dto.body, "modalidade") && dto.body.modalidade !== undefined) {
-      const modalidade = dto.body.modalidade && (await this.modalidadeService.modalidadeFindByIdSimpleStrict(accessContext, dto.body.modalidade.id));
+    if (has(domain, "modalidade") && domain.modalidade !== undefined) {
+      const modalidade = domain.modalidade && (await this.modalidadeService.modalidadeFindByIdSimpleStrict(accessContext, domain.body.modalidade.id));
 
       this.ofertaFormacaoRepository.merge(ofertaFormacao, {
         modalidade: modalidade && {
@@ -243,14 +243,14 @@ export class OfertaFormacaoService {
     });
   }
 
-  async ofertaFormacaoDeleteOneById(accessContext: AccessContext, dto: IDomain.OfertaFormacaoFindOneInput) {
+  async ofertaFormacaoDeleteOneById(accessContext: AccessContext, domain: IDomain.OfertaFormacaoFindOneInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("oferta_formacao:delete", { dto }, dto.id, this.ofertaFormacaoRepository.createQueryBuilder(aliasOfertaFormacao));
+    await accessContext.ensurePermission("oferta_formacao:delete", {dto: domain}, domain.id, this.ofertaFormacaoRepository.createQueryBuilder(aliasOfertaFormacao));
 
     // =========================================================
 
-    const ofertaFormacao = await this.ofertaFormacaoFindByIdStrict(accessContext, dto);
+    const ofertaFormacao = await this.ofertaFormacaoFindByIdStrict(accessContext, domain);
 
     // =========================================================
 

@@ -13,7 +13,7 @@ export class TurmaController {
   constructor(private turmaService: TurmaService) {}
 
   @Get("/")
-  async turmaFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("TurmaFindAll") dto: IAppRequest<"TurmaFindAll">) {
+  async turmaFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("TurmaList") dto: IAppRequest<"TurmaList">) {
     const domain: IDomain.TurmaListInput = requestRepresentationMergeToDomain(dto);
     return this.turmaService.turmaFindAll(accessContext, domain);
   }

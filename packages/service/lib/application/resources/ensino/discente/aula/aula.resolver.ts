@@ -8,7 +8,7 @@ import { AulaService } from "./aula.service";
 export class AulaResolver {
   constructor(private aulaService: AulaService) {}
 
-  async aulaFindAll(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("AulaFindAll") dto: IAppRequest<"AulaFindAll">) {
+  async aulaFindAll(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("AulaList") dto: IAppRequest<"AulaList">) {
     return this.aulaService.aulaFindAll(accessContext, dto);
   }
 

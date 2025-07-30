@@ -13,7 +13,7 @@ export class DisponibilidadeController {
   constructor(private disponibilidadeService: DisponibilidadeService) {}
 
   @Get("/")
-  async disponibilidadeFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DisponibilidadeFindAll") dto: IAppRequest<"DisponibilidadeFindAll">) {
+  async disponibilidadeFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DisponibilidadeList") dto: IAppRequest<"DisponibilidadeList">) {
     const domain: IDomain.DisponibilidadeListInput = requestRepresentationMergeToDomain(dto);
     return this.disponibilidadeService.disponibilidadeFindAll(accessContext, domain);
   }

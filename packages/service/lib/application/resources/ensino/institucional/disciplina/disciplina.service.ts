@@ -30,7 +30,7 @@ export class DisciplinaService {
     return this.databaseContext.disciplinaRepository;
   }
 
-  async disciplinaFindAll(accessContext: AccessContext, dto: IDomain.DisciplinaListInput | null = null, selection?: string[] | boolean): Promise<IDomain.DisciplinaListOutput["success"]> {
+  async disciplinaFindAll(accessContext: AccessContext, domain: IDomain.DisciplinaListInput | null = null, selection?: string[] | boolean): Promise<IDomain.DisciplinaListOutput["success"]> {
     // =========================================================
 
     const qb = this.disciplinaRepository.createQueryBuilder(aliasDisciplina);
@@ -43,7 +43,7 @@ export class DisciplinaService {
 
     const paginated = await this.searchService.search(
       qb,
-      { ...dto },
+      {...domain},
       {
         ...paginateConfig,
         relations: { diarios: true },
@@ -84,7 +84,7 @@ export class DisciplinaService {
     return paginated;
   }
 
-  async disciplinaFindById(accessContext: AccessContext | null, dto: IDomain.DisciplinaFindOneInput, selection?: string[] | boolean): Promise<IDomain.DisciplinaFindOneOutput | null> {
+  async disciplinaFindById(accessContext: AccessContext | null, domain: IDomain.DisciplinaFindOneInput, selection?: string[] | boolean): Promise<IDomain.DisciplinaFindOneOutput | null> {
     // =========================================================
 
     const qb = this.disciplinaRepository.createQueryBuilder(aliasDisciplina);
@@ -97,7 +97,7 @@ export class DisciplinaService {
 
     // =========================================================
 
-    qb.andWhere(`${aliasDisciplina}.id = :id`, { id: dto.id });
+    qb.andWhere(`${aliasDisciplina}.id = :id`, {id: domain.id});
 
     // =========================================================
 
@@ -113,8 +113,8 @@ export class DisciplinaService {
     return disciplina;
   }
 
-  async disciplinaFindByIdStrict(accessContext: AccessContext | null, dto: IDomain.DisciplinaFindOneInput, selection?: string[] | boolean) {
-    const disciplina = await this.disciplinaFindById(accessContext, dto, selection);
+  async disciplinaFindByIdStrict(accessContext: AccessContext | null, domain: IDomain.DisciplinaFindOneInput, selection?: string[] | boolean) {
+    const disciplina = await this.disciplinaFindById(accessContext, domain, selection);
 
     if (!disciplina) {
       throw new NotFoundException();
@@ -160,14 +160,14 @@ export class DisciplinaService {
     return disciplina;
   }
 
-  async disciplinaCreate(accessContext: AccessContext, dto: IDomain.DisciplinaCreateInput) {
+  async disciplinaCreate(accessContext: AccessContext, domain: IDomain.DisciplinaCreateInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("disciplina:create", { dto });
+    await accessContext.ensurePermission("disciplina:create", {dto: domain});
 
     // =========================================================
 
-    const dtoDisciplina = pick(dto.body, ["nome", "nomeAbreviado", "cargaHoraria"]);
+    const dtoDisciplina = pick(domain, ["nome", "nomeAbreviado", "cargaHoraria"]);
 
     const disciplina = this.disciplinaRepository.create();
 
@@ -184,16 +184,16 @@ export class DisciplinaService {
     return this.disciplinaFindByIdStrict(accessContext, { id: disciplina.id });
   }
 
-  async disciplinaUpdate(accessContext: AccessContext, dto: IDomain.DisciplinaUpdateByIdInput) {
+  async disciplinaUpdate(accessContext: AccessContext, domain: IDomain.DisciplinaUpdateInput) {
     // =========================================================
 
-    const currentDisciplina = await this.disciplinaFindByIdStrict(accessContext, dto);
+    const currentDisciplina = await this.disciplinaFindByIdStrict(accessContext, domain);
 
     // =========================================================
 
-    await accessContext.ensurePermission("disciplina:update", { dto }, dto.path.id, this.disciplinaRepository.createQueryBuilder(aliasDisciplina));
+    await accessContext.ensurePermission("disciplina:update", {dto: domain}, domain.id, this.disciplinaRepository.createQueryBuilder(aliasDisciplina));
 
-    const dtoDisciplina = pick(dto.body, ["nome", "nomeAbreviado", "cargaHoraria"]);
+    const dtoDisciplina = pick(domain, ["nome", "nomeAbreviado", "cargaHoraria"]);
 
     const disciplina = {
       id: currentDisciplina.id,
@@ -229,10 +229,10 @@ export class DisciplinaService {
     throw new NotFoundException();
   }
 
-  async disciplinaUpdateImagemCapa(accessContext: AccessContext, dto: IDomain.DisciplinaFindOneInput, file: Express.Multer.File) {
+  async disciplinaUpdateImagemCapa(accessContext: AccessContext, domain: IDomain.DisciplinaFindOneInput, file: Express.Multer.File) {
     // =========================================================
 
-    const currentDisciplina = await this.disciplinaFindByIdStrict(accessContext, { id: dto.id });
+    const currentDisciplina = await this.disciplinaFindByIdStrict(accessContext, {id: domain.id});
 
     // =========================================================
 
@@ -267,14 +267,14 @@ export class DisciplinaService {
     return true;
   }
 
-  async disciplinaDeleteOneById(accessContext: AccessContext, dto: IDomain.DisciplinaFindOneInput) {
+  async disciplinaDeleteOneById(accessContext: AccessContext, domain: IDomain.DisciplinaFindOneInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("disciplina:delete", { dto }, dto.id, this.disciplinaRepository.createQueryBuilder(aliasDisciplina));
+    await accessContext.ensurePermission("disciplina:delete", {dto: domain}, domain.id, this.disciplinaRepository.createQueryBuilder(aliasDisciplina));
 
     // =========================================================
 
-    const disciplina = await this.disciplinaFindByIdStrict(accessContext, dto);
+    const disciplina = await this.disciplinaFindByIdStrict(accessContext, domain);
 
     // =========================================================
 

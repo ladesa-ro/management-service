@@ -28,7 +28,7 @@ export class CampusService {
     return this.databaseContext.campusRepository;
   }
 
-  async campusFindAll(accessContext: AccessContext, dto: IDomain.CampusListInput | null = null, selection?: string[] | boolean): Promise<IDomain.CampusListOutput["success"]> {
+  async campusFindAll(accessContext: AccessContext, domain: IDomain.CampusListInput | null = null, selection?: string[] | boolean): Promise<IDomain.CampusListOutput["success"]> {
     // =========================================================
 
     const qb = this.campusRepository.createQueryBuilder(aliasCampus);
@@ -41,7 +41,7 @@ export class CampusService {
 
     const paginated = await this.searchService.search(
       qb,
-      { ...dto },
+      {...domain},
       {
         select: [
           "id",
@@ -123,7 +123,7 @@ export class CampusService {
     return paginated;
   }
 
-  async campusFindById(accessContext: AccessContext, dto: IDomain.CampusFindOneInput, selection?: string[] | boolean): Promise<IDomain.CampusFindOneOutput | null> {
+  async campusFindById(accessContext: AccessContext, domain: IDomain.CampusFindOneInput, selection?: string[] | boolean): Promise<IDomain.CampusFindOneOutput | null> {
     // =========================================================
 
     const qb = this.campusRepository.createQueryBuilder(aliasCampus);
@@ -134,7 +134,7 @@ export class CampusService {
 
     // =========================================================
 
-    qb.andWhere(`${aliasCampus}.id = :id`, { id: dto.id });
+    qb.andWhere(`${aliasCampus}.id = :id`, {id: domain.id});
 
     // =========================================================
 
@@ -150,8 +150,8 @@ export class CampusService {
     return campus;
   }
 
-  async campusFindByIdStrict(accessContext: AccessContext, dto: IDomain.CampusFindOneInput, selection?: string[] | boolean) {
-    const campus = await this.campusFindById(accessContext, dto, selection);
+  async campusFindByIdStrict(accessContext: AccessContext, domain: IDomain.CampusFindOneInput, selection?: string[] | boolean) {
+    const campus = await this.campusFindById(accessContext, domain, selection);
 
     if (!campus) {
       throw new NotFoundException();
@@ -197,17 +197,17 @@ export class CampusService {
     return campus;
   }
 
-  async campusCreate(accessContext: AccessContext, dto: IDomain.CampusCreateInput) {
+  async campusCreate(accessContext: AccessContext, domain: IDomain.CampusCreateInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("campus:create", { dto });
+    await accessContext.ensurePermission("campus:create", {dto: domain});
 
     // =========================================================
 
     const campus = await this.databaseContext.transaction(async ({ databaseContext: { campusRepository } }) => {
       // =========================================================
 
-      const dtoCampus = pick(dto.body, ["nomeFantasia", "razaoSocial", "apelido", "cnpj"]);
+      const dtoCampus = pick(domain, ["nomeFantasia", "razaoSocial", "apelido", "cnpj"]);
 
       const campus = campusRepository.create();
 
@@ -221,7 +221,7 @@ export class CampusService {
 
       // =========================================================
 
-      const endereco = await this.enderecoService.internalEnderecoCreateOrUpdate(null, dto.body.endereco);
+      const endereco = await this.enderecoService.internalEnderecoCreateOrUpdate(null, domain.endereco);
 
       campusRepository.merge(campus, {
         endereco: {
@@ -239,17 +239,17 @@ export class CampusService {
     return this.campusFindByIdStrict(accessContext, { id: campus.id });
   }
 
-  async campusUpdate(accessContext: AccessContext, dto: IDomain.CampusUpdateInput) {
+  async campusUpdate(accessContext: AccessContext, domain: IDomain.CampusUpdateInput) {
     // =========================================================
 
-    const currentCampus = await this.campusFindByIdStrict(accessContext, dto);
+    const currentCampus = await this.campusFindByIdStrict(accessContext, domain);
 
     // =========================================================
 
-    await accessContext.ensurePermission("campus:update", { dto }, dto.path.id, this.campusRepository.createQueryBuilder(aliasCampus));
+    await accessContext.ensurePermission("campus:update", {dto: domain}, domain.id, this.campusRepository.createQueryBuilder(aliasCampus));
 
     const campus = await this.databaseContext.transaction(async ({ databaseContext: { campusRepository } }) => {
-      const dtoCampus = pick(dto.body, ["nomeFantasia", "razaoSocial", "apelido", "cnpj"]);
+      const dtoCampus = pick(domain, ["nomeFantasia", "razaoSocial", "apelido", "cnpj"]);
 
       const campus = {
         id: currentCampus.id,
@@ -263,7 +263,7 @@ export class CampusService {
 
       // =========================================================
 
-      const dtoEndereco = get(dto.body, "endereco");
+      const dtoEndereco = get(domain, "endereco");
 
       if (dtoEndereco) {
         const endereco = await this.enderecoService.internalEnderecoCreateOrUpdate(currentCampus.endereco.id, dtoEndereco);
@@ -281,8 +281,8 @@ export class CampusService {
 
       // =========================================================
 
-      // if (has(dto, 'modalidades')) {
-      //   const modalidades = get(dto, 'modalidades')!;
+      // if (has(domain, 'modalidades')) {
+      //   const modalidades = get(domain, 'modalidades')!;
 
       //   const currentCampusPossuiModalidades = await campusPossuiModalidadeRepository
       //     //
@@ -333,14 +333,14 @@ export class CampusService {
     return this.campusFindByIdStrict(accessContext, { id: campus.id });
   }
 
-  async campusDeleteOneById(accessContext: AccessContext, dto: IDomain.CampusFindOneInput) {
+  async campusDeleteOneById(accessContext: AccessContext, domain: IDomain.CampusFindOneInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("campus:delete", { dto }, dto.id, this.campusRepository.createQueryBuilder(aliasCampus));
+    await accessContext.ensurePermission("campus:delete", {dto: domain}, domain.id, this.campusRepository.createQueryBuilder(aliasCampus));
 
     // =========================================================
 
-    const campus = await this.campusFindByIdStrict(accessContext, dto);
+    const campus = await this.campusFindByIdStrict(accessContext, domain);
 
     // =========================================================
 

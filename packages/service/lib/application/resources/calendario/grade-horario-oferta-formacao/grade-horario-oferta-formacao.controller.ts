@@ -15,8 +15,7 @@ export class GradeHorarioOfertaFormacaoController {
   @Get("/")
   async gradeHorarioOfertaFormacaoFindAll(
     @AccessContextHttp() accessContext: AccessContext,
-
-    @AppRequest("GradeHorarioOfertaFormacaoFindAll") dto: IAppRequest<"GradeHorarioOfertaFormacaoFindAll">,
+    @AppRequest("GradeHorarioOfertaFormacaoList") dto: IAppRequest<"GradeHorarioOfertaFormacaoList">,
   ) {
     const domain: IDomain.GradeHorarioOfertaFormacaoListInput = requestRepresentationMergeToDomain(dto);
     return this.gradeHorarioOfertaFormacaoService.gradeHorarioOfertaFormacaoFindAll(accessContext, domain);

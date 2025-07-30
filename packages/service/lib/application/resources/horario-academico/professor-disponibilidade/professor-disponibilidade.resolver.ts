@@ -12,8 +12,7 @@ export class ProfessorDisponibilidadeResolver {
 
   async professorDisponibilidadeFindAll(
     @AccessContextGraphQl() accessContext: AccessContext,
-
-    @AppRequest("ProfessorDisponibilidadeFindAll") dto: IAppRequest<"ProfessorDisponibilidadeFindAll">,
+    @AppRequest("ProfessorDisponibilidadeList") dto: IAppRequest<"ProfessorDisponibilidadeList">,
     @GqlInfo() info: GraphQLResolveInfo,
   ) {
     return this.professorDisponibilidadeService.professorDisponibilidadeFindAll(accessContext, dto, graphqlExtractSelection(info, "paginated"));

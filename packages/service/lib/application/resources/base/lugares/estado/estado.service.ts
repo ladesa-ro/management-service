@@ -20,7 +20,7 @@ export class EstadoService {
     return this.databaseContext.estadoRepository;
   }
 
-  async findAll(accessContext: AccessContext, dto: IDomain.EstadoListInput | null = null, selection?: string[]): Promise<IDomain.EstadoListOutput["success"]> {
+  async findAll(accessContext: AccessContext, domain: IDomain.EstadoListInput | null = null, selection?: string[]): Promise<IDomain.EstadoListOutput["success"]> {
     // =========================================================
 
     const qb = this.baseEstadoRepository.createQueryBuilder(aliasEstado);
@@ -33,7 +33,7 @@ export class EstadoService {
 
     const paginated = await this.searchService.search(
       qb,
-      { ...dto },
+      {...domain},
       {
         ...paginateConfig,
         select: ["id"],
@@ -60,7 +60,7 @@ export class EstadoService {
     return paginated;
   }
 
-  async findById(accessContext: AccessContext, dto: IDomain.EstadoFindOneInput, selection?: string[]) {
+  async findById(accessContext: AccessContext, domain: IDomain.EstadoFindOneInput, selection?: string[]) {
     // =========================================================
 
     const qb = this.baseEstadoRepository.createQueryBuilder("estado");
@@ -71,7 +71,7 @@ export class EstadoService {
 
     // =========================================================
 
-    qb.andWhere(`${aliasEstado}.id = :id`, { id: dto.id });
+    qb.andWhere(`${aliasEstado}.id = :id`, {id: domain.id});
 
     // =========================================================
 
@@ -87,8 +87,8 @@ export class EstadoService {
     return estado;
   }
 
-  async findByIdStrict(accessContext: AccessContext, dto: IDomain.EstadoFindOneInput, selection?: string[]) {
-    const estado = await this.findById(accessContext, dto, selection);
+  async findByIdStrict(accessContext: AccessContext, domain: IDomain.EstadoFindOneInput, selection?: string[]) {
+    const estado = await this.findById(accessContext, domain, selection);
 
     if (!estado) {
       throw new NotFoundException();

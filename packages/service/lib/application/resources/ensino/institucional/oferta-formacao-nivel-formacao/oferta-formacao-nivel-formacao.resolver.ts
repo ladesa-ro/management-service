@@ -12,8 +12,7 @@ export class OfertaFormacaoNivelFormacaoResolver {
 
   async ofertaFormacaoNivelFormacaoFindAll(
     @AccessContextGraphQl() accessContext: AccessContext,
-
-    @AppRequest("OfertaFormacaoNivelFormacaoFindAll") dto: IAppRequest<"OfertaFormacaoNivelFormacaoFindAll">,
+    @AppRequest("OfertaFormacaoNivelFormacaoList") dto: IAppRequest<"OfertaFormacaoNivelFormacaoList">,
     @GqlInfo() info: GraphQLResolveInfo,
   ) {
     return this.ofertaFormacaoNivelFormacaoService.ofertaFormacaoNivelFormacaoFindAll(accessContext, dto, graphqlExtractSelection(info, "paginated"));

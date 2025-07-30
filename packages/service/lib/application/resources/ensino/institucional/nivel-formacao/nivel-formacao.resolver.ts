@@ -10,7 +10,7 @@ import { NivelFormacaoService } from "./nivel-formacao.service";
 export class NivelFormacaoResolver {
   constructor(private nivelFormacaoService: NivelFormacaoService) {}
 
-  async nivelFormacaoFindAll(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("NivelFormacaoFindAll") dto: IAppRequest<"NivelFormacaoFindAll">, @GqlInfo() info: GraphQLResolveInfo) {
+  async nivelFormacaoFindAll(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("NivelFormacaoList") dto: IAppRequest<"NivelFormacaoList">, @GqlInfo() info: GraphQLResolveInfo) {
     return this.nivelFormacaoService.nivelFormacaoFindAll(accessContext, dto, graphqlExtractSelection(info, "paginated"));
   }
 

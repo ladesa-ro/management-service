@@ -8,7 +8,7 @@ import { TurmaService } from "./turma.service";
 export class TurmaResolver {
   constructor(private turmaService: TurmaService) {}
 
-  async turmaFindAll(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("TurmaFindAll") dto: IAppRequest<"TurmaFindAll">) {
+  async turmaFindAll(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("TurmaList") dto: IAppRequest<"TurmaList">) {
     return this.turmaService.turmaFindAll(accessContext, dto);
   }
 

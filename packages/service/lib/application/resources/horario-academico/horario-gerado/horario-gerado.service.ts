@@ -3,7 +3,9 @@ import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
 import { QbEfficientLoad } from "@/application/contracts/qb-efficient-load";
 import { SearchService } from "@/application/helpers/search.service";
-import { CalendarioLetivoService } from "@/application/resources/calendario/calendario-letivo/calendario-letivo.service";
+import {
+  CalendarioLetivoService
+} from "@/application/resources/calendario/calendario-letivo/calendario-letivo.service";
 import { type IDomain } from "@/domain/contracts/integration";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
@@ -28,7 +30,7 @@ export class HorarioGeradoService {
     return this.databaseContext.horarioGeradoRepository;
   }
 
-  async horarioGeradoFindAll(accessContext: AccessContext, dto: IDomain.HorarioGeradoListInput | null = null, selection?: string[] | boolean): Promise<IDomain.HorarioGeradoListOutput["success"]> {
+  async horarioGeradoFindAll(accessContext: AccessContext, domain: IDomain.HorarioGeradoListInput | null = null, selection?: string[] | boolean): Promise<IDomain.HorarioGeradoListOutput["success"]> {
     // =========================================================
 
     const qb = this.horarioGeradoRepository.createQueryBuilder(aliasHorarioGerado);
@@ -41,7 +43,7 @@ export class HorarioGeradoService {
 
     const paginated = await this.searchService.search(
       qb,
-      { ...dto },
+      {...domain},
       {
         ...paginateConfig,
         select: [
@@ -107,7 +109,7 @@ export class HorarioGeradoService {
     return paginated;
   }
 
-  async horarioGeradoFindById(accessContext: AccessContext, dto: IDomain.HorarioGeradoFindOneInput, selection?: string[] | boolean): Promise<IDomain.HorarioGeradoFindOneOutput | null> {
+  async horarioGeradoFindById(accessContext: AccessContext, domain: IDomain.HorarioGeradoFindOneInput, selection?: string[] | boolean): Promise<IDomain.HorarioGeradoFindOneOutput | null> {
     // =========================================================
 
     const qb = this.horarioGeradoRepository.createQueryBuilder(aliasHorarioGerado);
@@ -118,7 +120,7 @@ export class HorarioGeradoService {
 
     // =========================================================
 
-    qb.andWhere(`${aliasHorarioGerado}.id = :id`, { id: dto.id });
+    qb.andWhere(`${aliasHorarioGerado}.id = :id`, {id: domain.id});
 
     // =========================================================
 
@@ -135,8 +137,8 @@ export class HorarioGeradoService {
     return horario;
   }
 
-  async horarioGeradoFindByIdStrict(accessContext: AccessContext, dto: IDomain.HorarioGeradoFindOneInput, selection?: string[] | boolean) {
-    const horario = await this.horarioGeradoFindById(accessContext, dto, selection);
+  async horarioGeradoFindByIdStrict(accessContext: AccessContext, domain: IDomain.HorarioGeradoFindOneInput, selection?: string[] | boolean) {
+    const horario = await this.horarioGeradoFindById(accessContext, domain, selection);
 
     if (!horario) {
       throw new NotFoundException();
@@ -182,14 +184,14 @@ export class HorarioGeradoService {
     return horarioGerado;
   }
 
-  async horarioGeradoCreate(accessContext: AccessContext, dto: IDomain.HorarioGeradoCreateInput) {
+  async horarioGeradoCreate(accessContext: AccessContext, domain: IDomain.HorarioGeradoCreateInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("horario_gerado:create", { dto });
+    await accessContext.ensurePermission("horario_gerado:create", {dto: domain});
 
     // =========================================================
 
-    const dtoHorarioGerado = pick(dto.body, ["status", "tipo", "dataGeracao", "vigenciaInicio", "vigenciaFim"]);
+    const dtoHorarioGerado = pick(domain, ["status", "tipo", "dataGeracao", "vigenciaInicio", "vigenciaFim"]);
 
     const horarioGerado = this.horarioGeradoRepository.create();
 
@@ -199,8 +201,8 @@ export class HorarioGeradoService {
 
     // =========================================================
 
-    if (dto.body.calendario) {
-      const calendario = await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(accessContext, dto.body.calendario.id);
+    if (domain.calendario) {
+      const calendario = await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(accessContext, domain.body.calendario.id);
 
       this.horarioGeradoRepository.merge(horarioGerado, {
         calendario: {
@@ -220,16 +222,16 @@ export class HorarioGeradoService {
     });
   }
 
-  async horarioGeradoUpdate(accessContext: AccessContext, dto: IDomain.HorarioGeradoUpdateByIdInput) {
+  async horarioGeradoUpdate(accessContext: AccessContext, domain: IDomain.HorarioGeradoUpdateInput) {
     // =========================================================
 
-    const currentHorarioGerado = await this.horarioGeradoFindByIdStrict(accessContext, dto);
+    const currentHorarioGerado = await this.horarioGeradoFindByIdStrict(accessContext, domain);
 
     // =========================================================
 
-    await accessContext.ensurePermission("horario_gerado:update", { dto }, dto.path.id, this.horarioGeradoRepository.createQueryBuilder(aliasHorarioGerado));
+    await accessContext.ensurePermission("horario_gerado:update", {dto: domain}, domain.id, this.horarioGeradoRepository.createQueryBuilder(aliasHorarioGerado));
 
-    const dtoHorarioGerado = pick(dto.body, ["status", "tipo", "dataGeracao", "vigenciaInicio", "vigenciaFim"]);
+    const dtoHorarioGerado = pick(domain, ["status", "tipo", "dataGeracao", "vigenciaInicio", "vigenciaFim"]);
 
     const horarioGerado = {
       id: currentHorarioGerado.id,
@@ -241,8 +243,8 @@ export class HorarioGeradoService {
 
     // =========================================================
 
-    if (has(dto.body, "calendario") && dto.body.calendario !== undefined) {
-      const calendario = await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(accessContext, dto.body.calendario!.id);
+    if (has(domain, "calendario") && domain.calendario !== undefined) {
+      const calendario = await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(accessContext, domain.body.calendario!.id);
 
       this.horarioGeradoRepository.merge(horarioGerado, {
         calendario: {
@@ -262,14 +264,14 @@ export class HorarioGeradoService {
     });
   }
 
-  async horarioGeradoDeleteOneById(accessContext: AccessContext, dto: IDomain.HorarioGeradoFindOneInput) {
+  async horarioGeradoDeleteOneById(accessContext: AccessContext, domain: IDomain.HorarioGeradoFindOneInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("horario_gerado:delete", { dto }, dto.id, this.horarioGeradoRepository.createQueryBuilder(aliasHorarioGerado));
+    await accessContext.ensurePermission("horario_gerado:delete", {dto: domain}, domain.id, this.horarioGeradoRepository.createQueryBuilder(aliasHorarioGerado));
 
     // =========================================================
 
-    const horarioGerado = await this.horarioGeradoFindByIdStrict(accessContext, dto);
+    const horarioGerado = await this.horarioGeradoFindByIdStrict(accessContext, domain);
 
     // =========================================================
 

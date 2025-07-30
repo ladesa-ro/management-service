@@ -8,7 +8,7 @@ import { EtapaService } from "./etapa.service";
 export class EtapaResolver {
   constructor(private etapaService: EtapaService) {}
 
-  async etapaFindAll(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("EtapaFindAll") dto: IAppRequest<"EtapaFindAll">) {
+  async etapaFindAll(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("EtapaList") dto: IAppRequest<"EtapaList">) {
     return this.etapaService.etapaFindAll(accessContext, dto);
   }
 

@@ -52,7 +52,7 @@ export class PerfilService {
     return vinculos;
   }
 
-  async perfilFindAll(accessContext: AccessContext, dto: IDomain.PerfilListInput | null = null, selection?: string[] | boolean) {
+  async perfilFindAll(accessContext: AccessContext, domain: IDomain.PerfilListInput | null = null, selection?: string[] | boolean) {
     const qb = this.vinculoRepository.createQueryBuilder(aliasVinculo);
 
     await QbEfficientLoad("PerfilFindOneOutput", qb, aliasVinculo, selection);
@@ -61,7 +61,7 @@ export class PerfilService {
 
     const paginated = await this.searchService.search(
       qb,
-      { ...dto },
+      {...domain},
       {
         ...paginateConfig,
 
@@ -99,7 +99,7 @@ export class PerfilService {
     return paginated;
   }
 
-  async perfilFindById(accessContext: AccessContext, dto: IDomain.PerfilFindOneInput, selection?: string[] | boolean): Promise<IDomain.PerfilFindOneOutput | null> {
+  async perfilFindById(accessContext: AccessContext, domain: IDomain.PerfilFindOneInput, selection?: string[] | boolean): Promise<IDomain.PerfilFindOneOutput | null> {
     // =========================================================
 
     const qb = this.vinculoRepository.createQueryBuilder(aliasVinculo);
@@ -110,7 +110,7 @@ export class PerfilService {
 
     // =========================================================
 
-    qb.andWhere(`${aliasVinculo}.id = :id`, { id: dto.id });
+    qb.andWhere(`${aliasVinculo}.id = :id`, {id: domain.id});
 
     // =========================================================
 
@@ -126,8 +126,8 @@ export class PerfilService {
     return vinculo;
   }
 
-  async perfilFindByIdStrict(accessContext: AccessContext, dto: IDomain.PerfilFindOneInput, selection?: string[] | boolean) {
-    const vinculo = await this.perfilFindById(accessContext, dto, selection);
+  async perfilFindByIdStrict(accessContext: AccessContext, domain: IDomain.PerfilFindOneInput, selection?: string[] | boolean) {
+    const vinculo = await this.perfilFindById(accessContext, domain, selection);
 
     if (!vinculo) {
       throw new NotFoundException();
@@ -136,9 +136,9 @@ export class PerfilService {
     return vinculo;
   }
 
-  async perfilSetVinculos(accessContext: AccessContext, dto: IDomain.PerfilUpdateInput) {
-    const campus = await this.campusService.campusFindByIdSimpleStrict(accessContext, dto.body.campus.id);
-    const usuario = await this.usuarioService.usuarioFindByIdSimpleStrict(accessContext, dto.body.usuario.id);
+  async perfilSetVinculos(accessContext: AccessContext, domain: IDomain.PerfilUpdateInput) {
+    const campus = await this.campusService.campusFindByIdSimpleStrict(accessContext, domain.body.campus.id);
+    const usuario = await this.usuarioService.usuarioFindByIdSimpleStrict(accessContext, domain.body.usuario.id);
 
     const vinculosParaManter = new Set();
 
@@ -151,7 +151,7 @@ export class PerfilService {
       .select(["vinculo", "campus", "usuario"])
       .getMany();
 
-    for (const cargo of dto.body.cargos) {
+    for (const cargo of domain.cargos) {
       const vinculoExistente = vinculosExistentesUsuarioCampus.find((vinculo) => vinculo.cargo === cargo);
 
       if (vinculoExistente) {

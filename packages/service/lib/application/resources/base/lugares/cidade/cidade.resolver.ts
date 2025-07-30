@@ -12,7 +12,7 @@ export class CidadeResolver {
 
   // ========================================================
 
-  async cidadeFindAll(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("CidadeFindAll") dto: IAppRequest<"CidadeFindAll">, @Info() info: GraphQLResolveInfo) {
+  async cidadeFindAll(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("CidadeList") dto: IAppRequest<"CidadeList">, @Info() info: GraphQLResolveInfo) {
     return this.cidadeService.findAll(accessContext, dto, graphqlExtractSelection(info, "paginated"));
   }
 

@@ -32,7 +32,7 @@ export class AulaService {
     return this.databaseContext.aulaRepository;
   }
 
-  async aulaFindAll(accessContext: AccessContext, dto: IDomain.AulaListInput | null = null, selection?: string[] | boolean): Promise<IDomain.AulaListOutput["success"]> {
+  async aulaFindAll(accessContext: AccessContext, domain: IDomain.AulaListInput | null = null, selection?: string[] | boolean): Promise<IDomain.AulaListOutput["success"]> {
     // =========================================================
 
     const qb = this.aulaRepository.createQueryBuilder(aliasAula);
@@ -45,7 +45,7 @@ export class AulaService {
 
     const paginated = await this.searchService.search(
       qb,
-      { ...dto },
+      {...domain},
       {
         ...paginateConfig,
         select: [
@@ -105,7 +105,7 @@ export class AulaService {
     return paginated;
   }
 
-  async aulaFindById(accessContext: AccessContext, dto: IDomain.AulaFindOneInput, selection?: string[] | boolean): Promise<IDomain.AulaFindOneOutput | null> {
+  async aulaFindById(accessContext: AccessContext, domain: IDomain.AulaFindOneInput, selection?: string[] | boolean): Promise<IDomain.AulaFindOneOutput | null> {
     // =========================================================
 
     const qb = this.aulaRepository.createQueryBuilder(aliasAula);
@@ -116,7 +116,7 @@ export class AulaService {
 
     // =========================================================
 
-    qb.andWhere(`${aliasAula}.id = :id`, { id: dto.id });
+    qb.andWhere(`${aliasAula}.id = :id`, {id: domain.id});
 
     // =========================================================
 
@@ -132,8 +132,8 @@ export class AulaService {
     return aula;
   }
 
-  async aulaFindByIdStrict(accessContext: AccessContext, dto: IDomain.AulaFindOneInput, selection?: string[] | boolean) {
-    const aula = await this.aulaFindById(accessContext, dto, selection);
+  async aulaFindByIdStrict(accessContext: AccessContext, domain: IDomain.AulaFindOneInput, selection?: string[] | boolean) {
+    const aula = await this.aulaFindById(accessContext, domain, selection);
 
     if (!aula) {
       throw new NotFoundException();
@@ -179,14 +179,14 @@ export class AulaService {
     return aula;
   }
 
-  async aulaCreate(accessContext: AccessContext, dto: IDomain.AulaCreateInput) {
+  async aulaCreate(accessContext: AccessContext, domain: IDomain.AulaCreateInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("aula:create", { dto });
+    await accessContext.ensurePermission("aula:create", {dto: domain});
 
     // =========================================================
 
-    const dtoAula = pick(dto.body, ["formato", "data"]);
+    const dtoAula = pick(domain, ["formato", "data"]);
 
     const aula = this.aulaRepository.create();
 
@@ -196,9 +196,9 @@ export class AulaService {
 
     // =========================================================
 
-    if (dto.body.ambiente && dto.body.ambiente !== null) {
+    if (domain.ambiente && domain.ambiente !== null) {
       const ambiente = await this.ambienteService.ambienteFindByIdStrict(accessContext, {
-        id: dto.body.ambiente.id,
+        id: domain.ambiente.id,
       });
       this.aulaRepository.merge(aula, { ambiente: { id: ambiente.id } });
     } else {
@@ -207,12 +207,12 @@ export class AulaService {
 
     // =========================================================
 
-    const diario = await this.diarioService.diarioFindByIdSimpleStrict(accessContext, dto.body.diario.id);
+    const diario = await this.diarioService.diarioFindByIdSimpleStrict(accessContext, domain.body.diario.id);
     this.aulaRepository.merge(aula, { diario: { id: diario.id } });
 
     // =========================================================
 
-    const intervalo = await this.intervaloService.intervaloCreateOrUpdate(accessContext, dto.body.intervaloDeTempo);
+    const intervalo = await this.intervaloService.intervaloCreateOrUpdate(accessContext, domain.body.intervaloDeTempo);
 
     this.aulaRepository.merge(aula, {
       intervaloDeTempo: { id: intervalo!.id },
@@ -227,16 +227,16 @@ export class AulaService {
     return this.aulaFindByIdStrict(accessContext, { id: aula.id });
   }
 
-  async aulaUpdate(accessContext: AccessContext, dto: IDomain.AulaUpdateByIdInput) {
+  async aulaUpdate(accessContext: AccessContext, domain: IDomain.AulaUpdateInput) {
     // =========================================================
 
-    const currentAula = await this.aulaFindByIdStrict(accessContext, dto);
+    const currentAula = await this.aulaFindByIdStrict(accessContext, domain);
 
     // =========================================================
 
-    await accessContext.ensurePermission("aula:update", { dto }, dto.path.id, this.aulaRepository.createQueryBuilder(aliasAula));
+    await accessContext.ensurePermission("aula:update", {dto: domain}, domain.id, this.aulaRepository.createQueryBuilder(aliasAula));
 
-    const dtoAula = pick(dto.body, ["formato", "data", "intervaloDeTempo", "diario", "ambiente"]);
+    const dtoAula = pick(domain, ["formato", "data", "intervaloDeTempo", "diario", "ambiente"]);
 
     const aula = {
       id: currentAula.id,
@@ -248,9 +248,9 @@ export class AulaService {
 
     // =========================================================
 
-    if (has(dto.body, "ambiente") && dto.body.ambiente !== undefined) {
-      if (dto.body.ambiente !== null) {
-        const ambiente = await this.ambienteService.ambienteFindByIdStrict(accessContext, { id: dto.body.ambiente.id });
+    if (has(domain, "ambiente") && domain.ambiente !== undefined) {
+      if (domain.ambiente !== null) {
+        const ambiente = await this.ambienteService.ambienteFindByIdStrict(accessContext, {id: domain.ambiente.id});
 
         this.aulaRepository.merge(aula, { ambiente: { id: ambiente.id } });
       } else {
@@ -260,16 +260,16 @@ export class AulaService {
 
     // =========================================================
 
-    if (has(dto.body, "diario") && dto.body.diario !== undefined) {
-      const diario = await this.diarioService.diarioFindByIdSimpleStrict(accessContext, dto.body.diario.id);
+    if (has(domain, "diario") && domain.diario !== undefined) {
+      const diario = await this.diarioService.diarioFindByIdSimpleStrict(accessContext, domain.body.diario.id);
 
       this.aulaRepository.merge(aula, { diario: { id: diario.id } });
     }
 
     // =========================================================
 
-    if (has(dto.body, "intervaloDeTempo") && dto.body.intervaloDeTempo !== undefined) {
-      const intervaloDeTempo = await this.intervaloService.intervaloCreateOrUpdate(accessContext, dto.body.intervaloDeTempo);
+    if (has(domain, "intervaloDeTempo") && domain.intervaloDeTempo !== undefined) {
+      const intervaloDeTempo = await this.intervaloService.intervaloCreateOrUpdate(accessContext, domain.body.intervaloDeTempo);
       this.aulaRepository.merge(aula, {
         intervaloDeTempo: { id: intervaloDeTempo!.id },
       });
@@ -284,14 +284,14 @@ export class AulaService {
     return this.aulaFindByIdStrict(accessContext, { id: aula.id });
   }
 
-  async aulaDeleteOneById(accessContext: AccessContext, dto: IDomain.AulaFindOneInput) {
+  async aulaDeleteOneById(accessContext: AccessContext, domain: IDomain.AulaFindOneInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("aula:delete", { dto }, dto.id, this.aulaRepository.createQueryBuilder(aliasAula));
+    await accessContext.ensurePermission("aula:delete", {dto: domain}, domain.id, this.aulaRepository.createQueryBuilder(aliasAula));
 
     // =========================================================
 
-    const aula = await this.aulaFindByIdStrict(accessContext, dto);
+    const aula = await this.aulaFindByIdStrict(accessContext, domain);
 
     // =========================================================
 

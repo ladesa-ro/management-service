@@ -10,11 +10,7 @@ import { OfertaFormacaoService } from "./oferta-formacao.service";
 export class OfertaFormacaoResolver {
   constructor(private ofertaFormacaoService: OfertaFormacaoService) {}
 
-  async ofertaFormacaoFindAll(
-    @AccessContextGraphQl() accessContext: AccessContext,
-    @AppRequest("OfertaFormacaoFindAll") dto: IAppRequest<"OfertaFormacaoFindAll">,
-    @GqlInfo() info: GraphQLResolveInfo,
-  ) {
+  async ofertaFormacaoFindAll(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("OfertaFormacaoList") dto: IAppRequest<"OfertaFormacaoList">, @GqlInfo() info: GraphQLResolveInfo) {
     return this.ofertaFormacaoService.ofertaFormacaoFindAll(accessContext, dto, graphqlExtractSelection(info, "paginated"));
   }
 

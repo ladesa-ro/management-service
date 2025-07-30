@@ -15,8 +15,7 @@ export class OfertaFormacaoNivelFormacaoController {
   @Get("/")
   async ofertaFormacaoNivelFormacaoFindAll(
     @AccessContextHttp() accessContext: AccessContext,
-
-    @AppRequest("OfertaFormacaoNivelFormacaoFindAll") dto: IAppRequest<"OfertaFormacaoNivelFormacaoFindAll">,
+    @AppRequest("OfertaFormacaoNivelFormacaoList") dto: IAppRequest<"OfertaFormacaoNivelFormacaoList">,
   ) {
     const domain: IDomain.OfertaFormacaoNivelFormacaoListInput = requestRepresentationMergeToDomain(dto);
     return this.ofertaFormacaoNivelFormacaoService.ofertaFormacaoNivelFormacaoFindAll(accessContext, domain);

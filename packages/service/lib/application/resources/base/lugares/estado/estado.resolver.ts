@@ -12,7 +12,7 @@ export class EstadoResolver {
 
   // ========================================================
 
-  async estadoFindAll(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("EstadoFindAll") dto: IAppRequest<"EstadoFindAll">, @Info() info: GraphQLResolveInfo) {
+  async estadoFindAll(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("EstadoList") dto: IAppRequest<"EstadoList">, @Info() info: GraphQLResolveInfo) {
     return this.estadoService.findAll(accessContext, dto, graphqlExtractSelection(info, "paginated"));
   }
 

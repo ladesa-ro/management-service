@@ -13,7 +13,7 @@ export class HorarioGeradoController {
   constructor(private horarioGeradoService: HorarioGeradoService) {}
 
   @Get("/")
-  async horarioGeradoFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("HorarioGeradoFindAll") dto: IAppRequest<"HorarioGeradoFindAll">) {
+  async horarioGeradoFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("HorarioGeradoList") dto: IAppRequest<"HorarioGeradoList">) {
     const domain: IDomain.HorarioGeradoListInput = requestRepresentationMergeToDomain(dto);
     return this.horarioGeradoService.horarioGeradoFindAll(accessContext, domain);
   }

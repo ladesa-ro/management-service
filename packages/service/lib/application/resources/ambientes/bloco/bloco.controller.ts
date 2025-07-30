@@ -13,7 +13,7 @@ export class BlocoController {
   constructor(private blocoService: BlocoService) {}
 
   @Get("/")
-  async blocoFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("BlocoFindAll") dto: IAppRequest<"BlocoFindAll">) {
+  async blocoFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("BlocoList") dto: IAppRequest<"BlocoList">) {
     const domain: IDomain.BlocoListInput = requestRepresentationMergeToDomain(dto);
     return this.blocoService.blocoFindAll(accessContext, domain);
   }

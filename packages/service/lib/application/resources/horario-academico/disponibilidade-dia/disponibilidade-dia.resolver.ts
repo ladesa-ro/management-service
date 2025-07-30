@@ -10,8 +10,7 @@ export class DisponibilidadeDiaResolver {
 
   async disponibilidadeDiaFindAll(
     @AccessContextGraphQl() accessContext: AccessContext,
-
-    @AppRequest("DisponibilidadeDiaFindAll") dto: IAppRequest<"DisponibilidadeDiaFindAll">,
+    @AppRequest("DisponibilidadeDiaList") dto: IAppRequest<"DisponibilidadeDiaList">,
   ) {
     return this.disponibilidadeDiaService.disponibilidadeDiaFindAll(accessContext, dto);
   }

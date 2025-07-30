@@ -3,7 +3,9 @@ import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
 import { QbEfficientLoad } from "@/application/contracts/qb-efficient-load";
 import { SearchService } from "@/application/helpers/search.service";
-import { OfertaFormacaoService } from "@/application/resources/ensino/institucional/oferta-formacao/oferta-formacao.service";
+import {
+  OfertaFormacaoService
+} from "@/application/resources/ensino/institucional/oferta-formacao/oferta-formacao.service";
 import { type IDomain } from "@/domain/contracts/integration";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
@@ -31,7 +33,7 @@ export class CalendarioLetivoService {
 
   async calendarioLetivoFindAll(
     accessContext: AccessContext,
-    dto: IDomain.CalendarioLetivoListInput | null = null,
+    domain: IDomain.CalendarioLetivoListInput | null = null,
     selection?: string[] | boolean,
   ): Promise<IDomain.CalendarioLetivoListOutput["success"]> {
     // =========================================================
@@ -46,7 +48,7 @@ export class CalendarioLetivoService {
 
     const paginated = await this.searchService.search(
       qb,
-      { ...dto },
+      {...domain},
       {
         select: [
           "id",
@@ -118,7 +120,7 @@ export class CalendarioLetivoService {
     return paginated;
   }
 
-  async caledarioLetivoFindById(accessContext: AccessContext, dto: IDomain.CalendarioLetivoFindOneInput, selection?: string[] | boolean): Promise<IDomain.CalendarioLetivoFindOneOutput | null> {
+  async caledarioLetivoFindById(accessContext: AccessContext, domain: IDomain.CalendarioLetivoFindOneInput, selection?: string[] | boolean): Promise<IDomain.CalendarioLetivoFindOneOutput | null> {
     // =========================================================
 
     const qb = this.calendarioLetivoRepository.createQueryBuilder(aliasCalendarioLetivo);
@@ -129,7 +131,7 @@ export class CalendarioLetivoService {
 
     // =========================================================
 
-    qb.andWhere(`${aliasCalendarioLetivo}.id = :id`, { id: dto.id });
+    qb.andWhere(`${aliasCalendarioLetivo}.id = :id`, {id: domain.id});
 
     // =========================================================
 
@@ -145,8 +147,8 @@ export class CalendarioLetivoService {
     return calendarioLetivo;
   }
 
-  async calendarioLetivoFindByIdStrict(accessContext: AccessContext, dto: IDomain.CalendarioLetivoFindOneInput, selection?: string[] | boolean) {
-    const calendarioLetivo = await this.caledarioLetivoFindById(accessContext, dto, selection);
+  async calendarioLetivoFindByIdStrict(accessContext: AccessContext, domain: IDomain.CalendarioLetivoFindOneInput, selection?: string[] | boolean) {
+    const calendarioLetivo = await this.caledarioLetivoFindById(accessContext, domain, selection);
 
     if (!calendarioLetivo) {
       throw new NotFoundException();
@@ -192,14 +194,14 @@ export class CalendarioLetivoService {
     return calendarioLetivo;
   }
 
-  async calendarioLetivoCreate(accessContext: AccessContext, dto: IDomain.CalendarioLetivoCreateInput) {
+  async calendarioLetivoCreate(accessContext: AccessContext, domain: IDomain.CalendarioLetivoCreateInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("calendario_letivo:create", { dto });
+    await accessContext.ensurePermission("calendario_letivo:create", {dto: domain});
 
     // =========================================================
 
-    const dtoCalendarioLetivo = pick(dto.body, ["nome", "ano"]);
+    const dtoCalendarioLetivo = pick(domain, ["nome", "ano"]);
 
     const calendarioLetivo = this.calendarioLetivoRepository.create();
 
@@ -209,7 +211,7 @@ export class CalendarioLetivoService {
 
     // =========================================================
 
-    const campus = await this.campusService.campusFindByIdSimpleStrict(accessContext, dto.body.campus.id);
+    const campus = await this.campusService.campusFindByIdSimpleStrict(accessContext, domain.body.campus.id);
 
     this.calendarioLetivoRepository.merge(calendarioLetivo, {
       campus: {
@@ -219,8 +221,8 @@ export class CalendarioLetivoService {
 
     // =========================================================
 
-    if (dto.body.ofertaFormacao) {
-      const ofertaFormacao = await this.ofertaFormacaoService.ofertaFormacaoFindByIdSimpleStrict(accessContext, dto.body.ofertaFormacao.id);
+    if (domain.ofertaFormacao) {
+      const ofertaFormacao = await this.ofertaFormacaoService.ofertaFormacaoFindByIdSimpleStrict(accessContext, domain.body.ofertaFormacao.id);
 
       this.calendarioLetivoRepository.merge(calendarioLetivo, {
         ofertaFormacao: {
@@ -240,16 +242,16 @@ export class CalendarioLetivoService {
     });
   }
 
-  async calendarioLetivoUpdate(accessContext: AccessContext, dto: IDomain.CalendarioLetivoUpdateByIdInput) {
+  async calendarioLetivoUpdate(accessContext: AccessContext, domain: IDomain.CalendarioLetivoUpdateInput) {
     // =========================================================
 
-    const currentCalendarioLetivo = await this.calendarioLetivoFindByIdStrict(accessContext, dto);
+    const currentCalendarioLetivo = await this.calendarioLetivoFindByIdStrict(accessContext, domain);
 
     // =========================================================
 
-    await accessContext.ensurePermission("calendario_letivo:update", { dto }, dto.path.id, this.calendarioLetivoRepository.createQueryBuilder(aliasCalendarioLetivo));
+    await accessContext.ensurePermission("calendario_letivo:update", {dto: domain}, domain.id, this.calendarioLetivoRepository.createQueryBuilder(aliasCalendarioLetivo));
 
-    const dtoCalendarioLetivo = pick(dto.body, ["nome", "ano"]);
+    const dtoCalendarioLetivo = pick(domain, ["nome", "ano"]);
 
     const calendarioLetivo = {
       id: currentCalendarioLetivo.id,
@@ -261,8 +263,8 @@ export class CalendarioLetivoService {
 
     // =========================================================
 
-    if (has(dto.body, "campus") && dto.body.campus !== undefined) {
-      const campus = await this.campusService.campusFindByIdSimpleStrict(accessContext, dto.body.campus.id);
+    if (has(domain, "campus") && domain.campus !== undefined) {
+      const campus = await this.campusService.campusFindByIdSimpleStrict(accessContext, domain.body.campus.id);
 
       this.calendarioLetivoRepository.merge(calendarioLetivo, {
         campus: {
@@ -273,8 +275,8 @@ export class CalendarioLetivoService {
 
     // =========================================================
 
-    if (has(dto.body, "ofertaFormacao") && dto.body.ofertaFormacao !== undefined) {
-      const ofertaFormacao = dto.body.ofertaFormacao && (await this.ofertaFormacaoService.ofertaFormacaoFindByIdSimpleStrict(accessContext, dto.body.ofertaFormacao.id));
+    if (has(domain, "ofertaFormacao") && domain.ofertaFormacao !== undefined) {
+      const ofertaFormacao = domain.ofertaFormacao && (await this.ofertaFormacaoService.ofertaFormacaoFindByIdSimpleStrict(accessContext, domain.body.ofertaFormacao.id));
 
       this.calendarioLetivoRepository.merge(calendarioLetivo, {
         ofertaFormacao: ofertaFormacao && {
@@ -294,14 +296,14 @@ export class CalendarioLetivoService {
     });
   }
 
-  async calendarioLetivoDeleteOneById(accessContext: AccessContext, dto: IDomain.CalendarioLetivoFindOneInput) {
+  async calendarioLetivoDeleteOneById(accessContext: AccessContext, domain: IDomain.CalendarioLetivoFindOneInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("calendario_letivo:delete", { dto }, dto.id, this.calendarioLetivoRepository.createQueryBuilder(aliasCalendarioLetivo));
+    await accessContext.ensurePermission("calendario_letivo:delete", {dto: domain}, domain.id, this.calendarioLetivoRepository.createQueryBuilder(aliasCalendarioLetivo));
 
     // =========================================================
 
-    const calendarioLetivo = await this.calendarioLetivoFindByIdStrict(accessContext, dto);
+    const calendarioLetivo = await this.calendarioLetivoFindByIdStrict(accessContext, domain);
 
     // =========================================================
 

@@ -10,6 +10,8 @@ COMPOSE_COMMAND=$(DOCKER) compose $(COMPOSE_OPTIONS)
 
 INSIDE_PATH?=./
 
+SHELL_WORKING_DIR=/ladesa/.sources/management-service/service
+
 setup:
 	$(shell (cd .; find . -type f -name "*.example" -exec sh -c 'cp -n {} $$(basename {} .example)' \;))
 	$(shell (bash -c "$(DOCKER) network create $(d_network) &>/dev/null"))
@@ -29,6 +31,7 @@ up:
 	make setup;
 	$(COMPOSE_COMMAND) up --remove-orphans -d --force-recreate;
 	make post-init;
+	make shell-1000;
 
 stop:
 	make setup;
@@ -59,7 +62,7 @@ logs:
 	$(COMPOSE_COMMAND) logs -f;
 
 shell-1000:
-	$(COMPOSE_COMMAND) exec -u bun -w /ladesa/.sources/management-service $(d_container_app) bash -c "cd $(INSIDE_PATH); clear; bash";
+	$(COMPOSE_COMMAND) exec -u bun -w $(SHELL_WORKING_DIR) $(d_container_app) bash -c "cd $(INSIDE_PATH); clear; bash";
 
 shell-root:
-	$(COMPOSE_COMMAND) exec -u root -w /ladesa/.sources/management-service $(d_container_app) bash -c "cd $(INSIDE_PATH); clear; bash";
+	$(COMPOSE_COMMAND) exec -u root -w $(SHELL_WORKING_DIR) $(d_container_app) bash -c "cd $(INSIDE_PATH); clear; bash";

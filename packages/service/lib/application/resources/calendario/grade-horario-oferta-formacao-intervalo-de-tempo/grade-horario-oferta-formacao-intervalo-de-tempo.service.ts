@@ -4,12 +4,16 @@ import { FilterOperator } from "nestjs-paginate";
 import { QbEfficientLoad } from "@/application/contracts/qb-efficient-load";
 import { SearchService } from "@/application/helpers/search.service";
 import { IntervaloDeTempoService } from "@/application/resources/base/intervalo-de-tempo/intervalo-de-tempo.service";
-import { GradeHorarioOfertaFormacaoService } from "@/application/resources/calendario/grade-horario-oferta-formacao/grade-horario-oferta-formacao.service";
+import {
+  GradeHorarioOfertaFormacaoService
+} from "@/application/resources/calendario/grade-horario-oferta-formacao/grade-horario-oferta-formacao.service";
 import { type IDomain } from "@/domain/contracts/integration";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
-import type { GradeHorarioOfertaFormacaoIntervaloDeTempoEntity } from "@/infrastructure/integrations/database/typeorm/entities";
+import type {
+  GradeHorarioOfertaFormacaoIntervaloDeTempoEntity
+} from "@/infrastructure/integrations/database/typeorm/entities";
 
 // ============================================================================
 
@@ -32,7 +36,7 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService {
 
   async gradeHorarioOfertaFormacaoIntervaloDeTempoFindAll(
     accessContext: AccessContext,
-    dto: IDomain.GradeHorarioOfertaFormacaoIntervaloDeTempoListInput | null = null,
+    domain: IDomain.GradeHorarioOfertaFormacaoIntervaloDeTempoListInput | null = null,
     selection?: string[],
   ): Promise<IDomain.GradeHorarioOfertaFormacaoIntervaloDeTempoListOutput["success"]> {
     // =========================================================
@@ -47,7 +51,7 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService {
 
     const paginated = await this.searchService.search(
       qb,
-      { ...dto },
+      {...domain},
       {
         ...paginateConfig,
         select: [
@@ -86,7 +90,7 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService {
 
   async gradeHorarioOfertaFormacaoIntervaloDeTempoFindById(
     accessContext: AccessContext | null,
-    dto: IDomain.GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInput,
+    domain: IDomain.GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInput,
     selection?: string[],
   ): Promise<IDomain.GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutput | null> {
     // =========================================================
@@ -102,7 +106,7 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService {
     // =========================================================
 
     qb.andWhere(`${aliasGradeHorarioOfertaFormacaoIntervaloDeTempo}.id = :id`, {
-      id: dto.id,
+      id: domain.id,
     });
 
     // =========================================================
@@ -119,8 +123,8 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService {
     return gradeHorarioOfertaFormacaoIntervaloDeTempo;
   }
 
-  async gradeHorarioOfertaFormacaoIntervaloDeTempoFindByIdStrict(accessContext: AccessContext, dto: IDomain.GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInput, selection?: string[]) {
-    const gradeHorarioOfertaFormacaoIntervaloDeTempo = await this.gradeHorarioOfertaFormacaoIntervaloDeTempoFindById(accessContext, dto, selection);
+  async gradeHorarioOfertaFormacaoIntervaloDeTempoFindByIdStrict(accessContext: AccessContext, domain: IDomain.GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInput, selection?: string[]) {
+    const gradeHorarioOfertaFormacaoIntervaloDeTempo = await this.gradeHorarioOfertaFormacaoIntervaloDeTempoFindById(accessContext, domain, selection);
 
     if (!gradeHorarioOfertaFormacaoIntervaloDeTempo) {
       throw new NotFoundException();
@@ -172,14 +176,14 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService {
     return gradeHorarioOfertaFormacaoIntervaloDeTempo;
   }
 
-  async gradeHorarioOfertaFormacaoIntervaloDeTempoCreate(accessContext: AccessContext, dto: IDomain.GradeHorarioOfertaFormacaoIntervaloDeTempoCreateInput) {
+  async gradeHorarioOfertaFormacaoIntervaloDeTempoCreate(accessContext: AccessContext, domain: IDomain.GradeHorarioOfertaFormacaoIntervaloDeTempoCreateInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("grade_horario_oferta_formacao_intervalo_de_tempo:create", { dto });
+    await accessContext.ensurePermission("grade_horario_oferta_formacao_intervalo_de_tempo:create", {dto: domain});
 
     // =========================================================
 
-    const dtoGradeHorarioOfertaFormacaoIntervaloDeTempo = pick(dto.body, []);
+    const dtoGradeHorarioOfertaFormacaoIntervaloDeTempo = pick(domain, []);
 
     const gradeHorarioOfertaFormacaoIntervaloDeTempo = this.gradeHorarioOfertaFormacaoIntervaloDeTempoRepository.create();
 
@@ -189,8 +193,8 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService {
 
     // =========================================================
 
-    if (dto.body.gradeHorarioOfertaFormacao) {
-      const gradeHorarioOfertaFormacao = await this.gradeHorarioOfertaFormacaoService.gradeHorarioOfertaFormacaoFindByIdSimpleStrict(accessContext, dto.body.gradeHorarioOfertaFormacao.id);
+    if (domain.gradeHorarioOfertaFormacao) {
+      const gradeHorarioOfertaFormacao = await this.gradeHorarioOfertaFormacaoService.gradeHorarioOfertaFormacaoFindByIdSimpleStrict(accessContext, domain.body.gradeHorarioOfertaFormacao.id);
 
       this.gradeHorarioOfertaFormacaoIntervaloDeTempoRepository.merge(gradeHorarioOfertaFormacaoIntervaloDeTempo, {
         gradeHorarioOfertaFormacao: {
@@ -201,8 +205,8 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService {
 
     // =========================================================
 
-    if (dto.body.intervaloDeTempo) {
-      const intervaloDeTempo = await this.intervaloDeTempoService.intervaloCreateOrUpdate(accessContext, dto.body.intervaloDeTempo);
+    if (domain.intervaloDeTempo) {
+      const intervaloDeTempo = await this.intervaloDeTempoService.intervaloCreateOrUpdate(accessContext, domain.body.intervaloDeTempo);
 
       this.gradeHorarioOfertaFormacaoIntervaloDeTempoRepository.merge(gradeHorarioOfertaFormacaoIntervaloDeTempo, {
         intervaloDeTempo: {
@@ -220,21 +224,21 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService {
     return this.gradeHorarioOfertaFormacaoIntervaloDeTempoFindByIdStrict(accessContext, { id: gradeHorarioOfertaFormacaoIntervaloDeTempo.id });
   }
 
-  async gradeHorarioOfertaFormacaoIntervaloDeTempoUpdate(accessContext: AccessContext, dto: IDomain.GradeHorarioOfertaFormacaoIntervaloDeTempoUpdateByIdInput) {
+  async gradeHorarioOfertaFormacaoIntervaloDeTempoUpdate(accessContext: AccessContext, domain: IDomain.GradeHorarioOfertaFormacaoIntervaloDeTempoUpdateInput) {
     // =========================================================
 
-    const currentGradeHorarioOfertaFormacaoIntervaloDeTempo = await this.gradeHorarioOfertaFormacaoIntervaloDeTempoFindByIdStrict(accessContext, dto);
+    const currentGradeHorarioOfertaFormacaoIntervaloDeTempo = await this.gradeHorarioOfertaFormacaoIntervaloDeTempoFindByIdStrict(accessContext, domain);
 
     // =========================================================
 
     await accessContext.ensurePermission(
       "grade_horario_oferta_formacao_intervalo_de_tempo:update",
-      { dto },
-      dto.path.id,
+      {dto: domain},
+      domain.id,
       this.gradeHorarioOfertaFormacaoIntervaloDeTempoRepository.createQueryBuilder(aliasGradeHorarioOfertaFormacaoIntervaloDeTempo),
     );
 
-    const dtoGradeHorarioOfertaFormacaoIntervaloDeTempo = pick(dto.body, ["nome", "slug"]);
+    const dtoGradeHorarioOfertaFormacaoIntervaloDeTempo = pick(domain, ["nome", "slug"]);
 
     const gradeHorarioOfertaFormacaoIntervaloDeTempo = <GradeHorarioOfertaFormacaoIntervaloDeTempoEntity>{
       id: currentGradeHorarioOfertaFormacaoIntervaloDeTempo.id,
@@ -246,9 +250,9 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService {
 
     // =========================================================
 
-    if (has(dto.body, "gradeHorarioOfertaFormacao") && dto.body.gradeHorarioOfertaFormacao !== undefined) {
+    if (has(domain, "gradeHorarioOfertaFormacao") && domain.gradeHorarioOfertaFormacao !== undefined) {
       const gradeHorarioOfertaFormacao =
-        dto.body.gradeHorarioOfertaFormacao && (await this.gradeHorarioOfertaFormacaoService.gradeHorarioOfertaFormacaoFindByIdSimpleStrict(accessContext, dto.body.gradeHorarioOfertaFormacao.id));
+        domain.gradeHorarioOfertaFormacao && (await this.gradeHorarioOfertaFormacaoService.gradeHorarioOfertaFormacaoFindByIdSimpleStrict(accessContext, domain.body.gradeHorarioOfertaFormacao.id));
 
       this.gradeHorarioOfertaFormacaoIntervaloDeTempoRepository.merge(gradeHorarioOfertaFormacaoIntervaloDeTempo, {
         gradeHorarioOfertaFormacao: gradeHorarioOfertaFormacao && {
@@ -259,8 +263,8 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService {
 
     // =========================================================
 
-    if (has(dto.body, "intervaloDeTempo") && dto.body.intervaloDeTempo !== undefined) {
-      const intervaloDeTempo = dto.body.intervaloDeTempo && (await this.intervaloDeTempoService.intervaloCreateOrUpdate(accessContext, dto.body.intervaloDeTempo));
+    if (has(domain, "intervaloDeTempo") && domain.intervaloDeTempo !== undefined) {
+      const intervaloDeTempo = domain.intervaloDeTempo && (await this.intervaloDeTempoService.intervaloCreateOrUpdate(accessContext, domain.body.intervaloDeTempo));
 
       this.gradeHorarioOfertaFormacaoIntervaloDeTempoRepository.merge(gradeHorarioOfertaFormacaoIntervaloDeTempo, {
         intervaloDeTempo: intervaloDeTempo && {
@@ -278,19 +282,19 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService {
     return this.gradeHorarioOfertaFormacaoIntervaloDeTempoFindByIdStrict(accessContext, { id: gradeHorarioOfertaFormacaoIntervaloDeTempo.id });
   }
 
-  async gradeHorarioOfertaFormacaoIntervaloDeTempoDeleteOneById(accessContext: AccessContext, dto: IDomain.GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInput) {
+  async gradeHorarioOfertaFormacaoIntervaloDeTempoDeleteOneById(accessContext: AccessContext, domain: IDomain.GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInput) {
     // =========================================================
 
     await accessContext.ensurePermission(
       "grade_horario_oferta_formacao_intervalo_de_tempo:delete",
-      { dto },
-      dto.id,
+      {dto: domain},
+      domain.id,
       this.gradeHorarioOfertaFormacaoIntervaloDeTempoRepository.createQueryBuilder(aliasGradeHorarioOfertaFormacaoIntervaloDeTempo),
     );
 
     // =========================================================
 
-    const gradeHorarioOfertaFormacaoIntervaloDeTempo = await this.gradeHorarioOfertaFormacaoIntervaloDeTempoFindByIdStrict(accessContext, dto);
+    const gradeHorarioOfertaFormacaoIntervaloDeTempo = await this.gradeHorarioOfertaFormacaoIntervaloDeTempoFindByIdStrict(accessContext, domain);
 
     // =========================================================
 

@@ -8,7 +8,7 @@ import { UsuarioService } from "./usuario.service";
 export class UsuarioResolver {
   constructor(private usuarioService: UsuarioService) {}
 
-  async usuarioFindAll(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("UsuarioFindAll") dto: IAppRequest<"UsuarioFindAll">) {
+  async usuarioFindAll(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("UsuarioList") dto: IAppRequest<"UsuarioList">) {
     return this.usuarioService.usuarioFindAll(accessContext, dto);
   }
 

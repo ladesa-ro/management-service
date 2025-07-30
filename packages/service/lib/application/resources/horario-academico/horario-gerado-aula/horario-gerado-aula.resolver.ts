@@ -8,7 +8,7 @@ import { HorarioGeradoAulaService } from "./horario-gerado-aula.service";
 export class HorarioGeradoAulaResolver {
   constructor(private horarioGeradoAulaService: HorarioGeradoAulaService) {}
 
-  async horarioGeradoAulaFindAll(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("HorarioGeradoAulaFindAll") dto: IAppRequest<"HorarioGeradoAulaFindAll">) {
+  async horarioGeradoAulaFindAll(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("HorarioGeradoAulaList") dto: IAppRequest<"HorarioGeradoAulaList">) {
     return this.horarioGeradoAulaService.horarioGeradoAulaFindAll(accessContext, dto);
   }
 

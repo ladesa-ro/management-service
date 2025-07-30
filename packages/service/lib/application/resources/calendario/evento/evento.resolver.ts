@@ -8,7 +8,7 @@ import { EventoService } from "./evento.service";
 export class EventoResolver {
   constructor(private eventoService: EventoService) {}
 
-  async eventoFindAll(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("EventoFindAll") dto: IAppRequest<"EventoFindAll">) {
+  async eventoFindAll(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("EventoList") dto: IAppRequest<"EventoList">) {
     return this.eventoService.eventoFindAll(accessContext, dto);
   }
 

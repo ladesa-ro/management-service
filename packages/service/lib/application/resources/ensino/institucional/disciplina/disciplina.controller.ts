@@ -13,7 +13,7 @@ export class DisciplinaController {
   constructor(private disciplinaService: DisciplinaService) {}
 
   @Get("/")
-  async disciplinaFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DisciplinaFindAll") dto: IAppRequest<"DisciplinaFindAll">) {
+  async disciplinaFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DisciplinaList") dto: IAppRequest<"DisciplinaList">) {
     const domain: IDomain.DisciplinaListInput = requestRepresentationMergeToDomain(dto);
     return this.disciplinaService.disciplinaFindAll(accessContext, domain);
   }

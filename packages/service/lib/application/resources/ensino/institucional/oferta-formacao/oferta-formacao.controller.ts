@@ -13,7 +13,7 @@ export class OfertaFormacaoController {
   constructor(private ofertaFormacaoService: OfertaFormacaoService) {}
 
   @Get("/")
-  async ofertaFormacaoFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("OfertaFormacaoFindAll") dto: IAppRequest<"OfertaFormacaoFindAll">) {
+  async ofertaFormacaoFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("OfertaFormacaoList") dto: IAppRequest<"OfertaFormacaoList">) {
     const domain: IDomain.OfertaFormacaoListInput = requestRepresentationMergeToDomain(dto);
     return this.ofertaFormacaoService.ofertaFormacaoFindAll(accessContext, domain);
   }

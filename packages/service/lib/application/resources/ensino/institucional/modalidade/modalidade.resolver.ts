@@ -10,7 +10,7 @@ import { ModalidadeService } from "./modalidade.service";
 export class ModalidadeResolver {
   constructor(private modalidadeService: ModalidadeService) {}
 
-  async modalidadeFindAll(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("ModalidadeFindAll") dto: IAppRequest<"ModalidadeFindAll">, @GqlInfo() info: GraphQLResolveInfo) {
+  async modalidadeFindAll(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("ModalidadeList") dto: IAppRequest<"ModalidadeList">, @GqlInfo() info: GraphQLResolveInfo) {
     return this.modalidadeService.modalidadeFindAll(accessContext, dto, graphqlExtractSelection(info, "paginated"));
   }
 

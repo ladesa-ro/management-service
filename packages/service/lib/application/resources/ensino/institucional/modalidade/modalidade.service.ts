@@ -25,7 +25,7 @@ export class ModalidadeService {
     return this.databaseContext.modalidadeRepository;
   }
 
-  async modalidadeFindAll(accessContext: AccessContext, dto: IDomain.ModalidadeListInput | null = null, selection?: string[]): Promise<IDomain.ModalidadeListOutput["success"]> {
+  async modalidadeFindAll(accessContext: AccessContext, domain: IDomain.ModalidadeListInput | null = null, selection?: string[]): Promise<IDomain.ModalidadeListOutput["success"]> {
     // =========================================================
 
     const qb = this.modalidadeRepository.createQueryBuilder(aliasModalidade);
@@ -38,7 +38,7 @@ export class ModalidadeService {
 
     const paginated = await this.searchService.search(
       qb,
-      { ...dto },
+      {...domain},
       {
         ...paginateConfig,
         select: [
@@ -78,7 +78,7 @@ export class ModalidadeService {
     return paginated;
   }
 
-  async modalidadeFindById(accessContext: AccessContext | null, dto: IDomain.ModalidadeFindOneInput, selection?: string[]): Promise<IDomain.ModalidadeFindOneOutput | null> {
+  async modalidadeFindById(accessContext: AccessContext | null, domain: IDomain.ModalidadeFindOneInput, selection?: string[]): Promise<IDomain.ModalidadeFindOneOutput | null> {
     // =========================================================
 
     const qb = this.modalidadeRepository.createQueryBuilder(aliasModalidade);
@@ -91,7 +91,7 @@ export class ModalidadeService {
 
     // =========================================================
 
-    qb.andWhere(`${aliasModalidade}.id = :id`, { id: dto.id });
+    qb.andWhere(`${aliasModalidade}.id = :id`, {id: domain.id});
 
     // =========================================================
 
@@ -107,8 +107,8 @@ export class ModalidadeService {
     return modalidade;
   }
 
-  async modalidadeFindByIdStrict(accessContext: AccessContext, dto: IDomain.ModalidadeFindOneInput, selection?: string[]) {
-    const modalidade = await this.modalidadeFindById(accessContext, dto, selection);
+  async modalidadeFindByIdStrict(accessContext: AccessContext, domain: IDomain.ModalidadeFindOneInput, selection?: string[]) {
+    const modalidade = await this.modalidadeFindById(accessContext, domain, selection);
 
     if (!modalidade) {
       throw new NotFoundException();
@@ -154,14 +154,14 @@ export class ModalidadeService {
     return modalidade;
   }
 
-  async modalidadeCreate(accessContext: AccessContext, dto: IDomain.ModalidadeCreateInput) {
+  async modalidadeCreate(accessContext: AccessContext, domain: IDomain.ModalidadeCreateInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("modalidade:create", { dto });
+    await accessContext.ensurePermission("modalidade:create", {dto: domain});
 
     // =========================================================
 
-    const dtoModalidade = pick(dto.body, ["nome", "slug"]);
+    const dtoModalidade = pick(domain, ["nome", "slug"]);
 
     const modalidade = this.modalidadeRepository.create();
 
@@ -178,16 +178,16 @@ export class ModalidadeService {
     return this.modalidadeFindByIdStrict(accessContext, { id: modalidade.id });
   }
 
-  async modalidadeUpdate(accessContext: AccessContext, dto: IDomain.ModalidadeUpdateByIdInput) {
+  async modalidadeUpdate(accessContext: AccessContext, domain: IDomain.ModalidadeUpdateInput) {
     // =========================================================
 
-    const currentModalidade = await this.modalidadeFindByIdStrict(accessContext, dto);
+    const currentModalidade = await this.modalidadeFindByIdStrict(accessContext, domain);
 
     // =========================================================
 
-    await accessContext.ensurePermission("modalidade:update", { dto }, dto.path.id, this.modalidadeRepository.createQueryBuilder(aliasModalidade));
+    await accessContext.ensurePermission("modalidade:update", {dto: domain}, domain.id, this.modalidadeRepository.createQueryBuilder(aliasModalidade));
 
-    const dtoModalidade = pick(dto.body, ["nome", "slug"]);
+    const dtoModalidade = pick(domain, ["nome", "slug"]);
 
     const modalidade = <ModalidadeEntity>{
       id: currentModalidade.id,
@@ -206,14 +206,14 @@ export class ModalidadeService {
     return this.modalidadeFindByIdStrict(accessContext, { id: modalidade.id });
   }
 
-  async modalidadeDeleteOneById(accessContext: AccessContext, dto: IDomain.ModalidadeFindOneInput) {
+  async modalidadeDeleteOneById(accessContext: AccessContext, domain: IDomain.ModalidadeFindOneInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("modalidade:delete", { dto }, dto.id, this.modalidadeRepository.createQueryBuilder(aliasModalidade));
+    await accessContext.ensurePermission("modalidade:delete", {dto: domain}, domain.id, this.modalidadeRepository.createQueryBuilder(aliasModalidade));
 
     // =========================================================
 
-    const modalidade = await this.modalidadeFindByIdStrict(accessContext, dto);
+    const modalidade = await this.modalidadeFindByIdStrict(accessContext, domain);
 
     // =========================================================
 

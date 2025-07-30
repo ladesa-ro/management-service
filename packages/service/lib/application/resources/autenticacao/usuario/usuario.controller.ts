@@ -13,7 +13,7 @@ export class UsuarioController {
   constructor(private usuarioService: UsuarioService) {}
 
   @Get("/")
-  async usuarioFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("UsuarioFindAll") dto: IAppRequest<"UsuarioFindAll">) {
+  async usuarioFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("UsuarioList") dto: IAppRequest<"UsuarioList">) {
     const domain: IDomain.UsuarioListInput = requestRepresentationMergeToDomain(dto);
     return this.usuarioService.usuarioFindAll(accessContext, domain);
   }

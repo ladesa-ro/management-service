@@ -12,7 +12,7 @@ export class TurmaDisponibilidadeResolver {
 
   async turmaDisponibilidadeFindAll(
     @AccessContextGraphQl() accessContext: AccessContext,
-    @AppRequest("TurmaDisponibilidadeFindAll") dto: IAppRequest<"TurmaDisponibilidadeFindAll">,
+    @AppRequest("TurmaDisponibilidadeList") dto: IAppRequest<"TurmaDisponibilidadeList">,
     @GqlInfo() info: GraphQLResolveInfo,
   ) {
     return this.turmaDisponibilidadeService.turmaDisponibilidadeFindAll(accessContext, dto, graphqlExtractSelection(info, "paginated"));

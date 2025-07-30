@@ -13,7 +13,7 @@ export class CalendarioLetivoController {
   constructor(private calendarioLetivoService: CalendarioLetivoService) {}
 
   @Get("/")
-  async calendarioFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CalendarioFindAll") dto: IAppRequest<"CalendarioFindAll">) {
+  async calendarioFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CalendarioList") dto: IAppRequest<"CalendarioList">) {
     const domain: IDomain.CalendarioLetivoListInput = requestRepresentationMergeToDomain(dto);
     return this.calendarioLetivoService.calendarioLetivoFindAll(accessContext, domain);
   }

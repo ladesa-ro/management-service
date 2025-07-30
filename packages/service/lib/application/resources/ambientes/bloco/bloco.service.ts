@@ -32,7 +32,7 @@ export class BlocoService {
     return this.databaseContext.blocoRepository;
   }
 
-  async blocoFindAll(accessContext: AccessContext, dto: IDomain.BlocoListInput | null = null, selection?: string[] | boolean): Promise<IDomain.BlocoListOutput["success"]> {
+  async blocoFindAll(accessContext: AccessContext, domain: IDomain.BlocoListInput | null = null, selection?: string[] | boolean): Promise<IDomain.BlocoListOutput["success"]> {
     // =========================================================
 
     const qb = this.blocoRepository.createQueryBuilder(aliasBloco);
@@ -45,7 +45,7 @@ export class BlocoService {
 
     const paginated = await this.searchService.search(
       qb,
-      { ...dto },
+      {...domain},
       {
         select: [
           "id",
@@ -99,7 +99,7 @@ export class BlocoService {
     return paginated;
   }
 
-  async blocoFindById(accessContext: AccessContext | null, dto: IDomain.BlocoFindOneInput, selection?: string[] | boolean): Promise<IDomain.BlocoFindOneOutput | null> {
+  async blocoFindById(accessContext: AccessContext | null, domain: IDomain.BlocoFindOneInput, selection?: string[] | boolean): Promise<IDomain.BlocoFindOneOutput | null> {
     // =========================================================
 
     const qb = this.blocoRepository.createQueryBuilder(aliasBloco);
@@ -112,7 +112,7 @@ export class BlocoService {
 
     // =========================================================
 
-    qb.andWhere(`${aliasBloco}.id = :id`, { id: dto.id });
+    qb.andWhere(`${aliasBloco}.id = :id`, {id: domain.id});
 
     // =========================================================
 
@@ -128,8 +128,8 @@ export class BlocoService {
     return bloco;
   }
 
-  async blocoFindByIdStrict(accessContext: AccessContext | null, dto: IDomain.BlocoFindOneInput, selection?: string[] | boolean) {
-    const bloco = await this.blocoFindById(accessContext, dto, selection);
+  async blocoFindByIdStrict(accessContext: AccessContext | null, domain: IDomain.BlocoFindOneInput, selection?: string[] | boolean) {
+    const bloco = await this.blocoFindById(accessContext, domain, selection);
 
     if (!bloco) {
       throw new NotFoundException();
@@ -190,11 +190,11 @@ export class BlocoService {
     throw new NotFoundException();
   }
 
-  async blocoUpdateImagemCapa(accessContext: AccessContext, dto: IDomain.BlocoFindOneInput, file: Express.Multer.File) {
+  async blocoUpdateImagemCapa(accessContext: AccessContext, domain: IDomain.BlocoFindOneInput, file: Express.Multer.File) {
     // =========================================================
 
     const currentBloco = await this.blocoFindByIdStrict(accessContext, {
-      id: dto.id,
+      id: domain.id,
     });
 
     // =========================================================
@@ -222,14 +222,14 @@ export class BlocoService {
     return true;
   }
 
-  async blocoCreate(accessContext: AccessContext, dto: IDomain.BlocoCreateInput) {
+  async blocoCreate(accessContext: AccessContext, domain: IDomain.BlocoCreateInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("bloco:create", { dto });
+    await accessContext.ensurePermission("bloco:create", {dto: domain});
 
     // =========================================================
 
-    const dtoBloco = pick(dto.body, ["nome", "codigo"]);
+    const dtoBloco = pick(domain, ["nome", "codigo"]);
 
     const bloco = this.blocoRepository.create();
 
@@ -239,7 +239,7 @@ export class BlocoService {
 
     // =========================================================
 
-    const campus = await this.campusService.campusFindByIdSimpleStrict(accessContext, dto.body.campus.id);
+    const campus = await this.campusService.campusFindByIdSimpleStrict(accessContext, domain.body.campus.id);
 
     this.blocoRepository.merge(bloco, {
       campus: {
@@ -256,18 +256,18 @@ export class BlocoService {
     return this.blocoFindByIdStrict(accessContext, { id: bloco.id });
   }
 
-  async blocoUpdate(accessContext: AccessContext, dto: IDomain.BlocoUpdateByIdInput) {
+  async blocoUpdate(accessContext: AccessContext, domain: IDomain.BlocoUpdateInput) {
     // =========================================================
 
-    const currentBloco = await this.blocoFindByIdStrict(accessContext, dto);
-
-    // =========================================================
-
-    await accessContext.ensurePermission("bloco:update", { dto }, dto.path.id, this.blocoRepository.createQueryBuilder(aliasBloco));
+    const currentBloco = await this.blocoFindByIdStrict(accessContext, domain);
 
     // =========================================================
 
-    const dtoBloco = pick(dto.body, ["nome", "codigo"]);
+    await accessContext.ensurePermission("bloco:update", {dto: domain}, domain.id, this.blocoRepository.createQueryBuilder(aliasBloco));
+
+    // =========================================================
+
+    const dtoBloco = pick(domain, ["nome", "codigo"]);
 
     const bloco = {
       id: currentBloco.id,
@@ -286,14 +286,14 @@ export class BlocoService {
     return this.blocoFindByIdStrict(accessContext, { id: bloco.id });
   }
 
-  async blocoDeleteOneById(accessContext: AccessContext, dto: IDomain.BlocoFindOneInput) {
+  async blocoDeleteOneById(accessContext: AccessContext, domain: IDomain.BlocoFindOneInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("bloco:delete", { dto }, dto.id, this.blocoRepository.createQueryBuilder(aliasBloco));
+    await accessContext.ensurePermission("bloco:delete", {dto: domain}, domain.id, this.blocoRepository.createQueryBuilder(aliasBloco));
 
     // =========================================================
 
-    const bloco = await this.blocoFindByIdStrict(accessContext, dto);
+    const bloco = await this.blocoFindByIdStrict(accessContext, domain);
 
     // =========================================================
 

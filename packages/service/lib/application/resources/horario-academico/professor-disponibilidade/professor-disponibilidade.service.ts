@@ -4,7 +4,9 @@ import { FilterOperator } from "nestjs-paginate";
 import { QbEfficientLoad } from "@/application/contracts/qb-efficient-load";
 import { SearchService } from "@/application/helpers/search.service";
 import { PerfilService } from "@/application/resources/autorizacao/perfil/perfil.service";
-import { DisponibilidadeService } from "@/application/resources/horario-academico/disponibilidade/disponibilidade.service";
+import {
+  DisponibilidadeService
+} from "@/application/resources/horario-academico/disponibilidade/disponibilidade.service";
 import { type IDomain } from "@/domain/contracts/integration";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
@@ -32,7 +34,7 @@ export class ProfessorDisponibilidadeService {
 
   async professorDisponibilidadeFindAll(
     accessContext: AccessContext,
-    dto: IDomain.ProfessorDisponibilidadeListInput | null = null,
+    domain: IDomain.ProfessorDisponibilidadeListInput | null = null,
     selection?: string[],
   ): Promise<IDomain.ProfessorDisponibilidadeListOutput["success"]> {
     // =========================================================
@@ -47,7 +49,7 @@ export class ProfessorDisponibilidadeService {
 
     const paginated = await this.searchService.search(
       qb,
-      { ...dto },
+      {...domain},
       {
         ...paginateConfig,
         select: [
@@ -86,7 +88,7 @@ export class ProfessorDisponibilidadeService {
 
   async professorDisponibilidadeFindById(
     accessContext: AccessContext | null,
-    dto: IDomain.ProfessorDisponibilidadeFindOneInput,
+    domain: IDomain.ProfessorDisponibilidadeFindOneInput,
     selection?: string[],
   ): Promise<IDomain.ProfessorDisponibilidadeFindOneOutput | null> {
     // =========================================================
@@ -101,7 +103,7 @@ export class ProfessorDisponibilidadeService {
 
     // =========================================================
 
-    qb.andWhere(`${aliasProfessorDisponibilidade}.id = :id`, { id: dto.id });
+    qb.andWhere(`${aliasProfessorDisponibilidade}.id = :id`, {id: domain.id});
 
     // =========================================================
 
@@ -117,8 +119,8 @@ export class ProfessorDisponibilidadeService {
     return professorDisponibilidade;
   }
 
-  async professorDisponibilidadeFindByIdStrict(accessContext: AccessContext, dto: IDomain.ProfessorDisponibilidadeFindOneInput, selection?: string[]) {
-    const professorDisponibilidade = await this.professorDisponibilidadeFindById(accessContext, dto, selection);
+  async professorDisponibilidadeFindByIdStrict(accessContext: AccessContext, domain: IDomain.ProfessorDisponibilidadeFindOneInput, selection?: string[]) {
+    const professorDisponibilidade = await this.professorDisponibilidadeFindById(accessContext, domain, selection);
 
     if (!professorDisponibilidade) {
       throw new NotFoundException();
@@ -168,16 +170,16 @@ export class ProfessorDisponibilidadeService {
     return professorDisponibilidade;
   }
 
-  async professorDisponibilidadeCreate(accessContext: AccessContext, dto: IDomain.ProfessorDisponibilidadeCreateInput) {
+  async professorDisponibilidadeCreate(accessContext: AccessContext, domain: IDomain.ProfessorDisponibilidadeCreateInput) {
     // =========================================================
 
     await accessContext.ensurePermission("professor_disponibilidade:create", {
-      dto,
+      dto: domain,
     });
 
     // =========================================================
 
-    const dtoProfessorDisponibilidade = pick(dto.body, []);
+    const dtoProfessorDisponibilidade = pick(domain, []);
 
     const professorDisponibilidade = this.professorDisponibilidadeRepository.create();
 
@@ -187,8 +189,8 @@ export class ProfessorDisponibilidadeService {
 
     // =========================================================
 
-    if (dto.body.perfil) {
-      const perfil = await this.perfilService.perfilFindByIdStrict(accessContext, dto.body.perfil);
+    if (domain.perfil) {
+      const perfil = await this.perfilService.perfilFindByIdStrict(accessContext, domain.body.perfil);
 
       this.professorDisponibilidadeRepository.merge(professorDisponibilidade, {
         perfil: {
@@ -199,8 +201,8 @@ export class ProfessorDisponibilidadeService {
 
     // =========================================================
 
-    if (dto.body.disponibilidade) {
-      const disponibilidade = await this.disponibilidadeService.disponibilidadeFindByIdSimpleStrict(accessContext, dto.body.disponibilidade.id);
+    if (domain.disponibilidade) {
+      const disponibilidade = await this.disponibilidadeService.disponibilidadeFindByIdSimpleStrict(accessContext, domain.body.disponibilidade.id);
 
       this.professorDisponibilidadeRepository.merge(professorDisponibilidade, {
         disponibilidade: {
@@ -220,16 +222,16 @@ export class ProfessorDisponibilidadeService {
     });
   }
 
-  async professorDisponibilidadeUpdate(accessContext: AccessContext, dto: IDomain.ProfessorDisponibilidadeUpdateByIdInput) {
+  async professorDisponibilidadeUpdate(accessContext: AccessContext, domain: IDomain.ProfessorDisponibilidadeUpdateInput) {
     // =========================================================
 
-    const currentProfessorDisponibilidade = await this.professorDisponibilidadeFindByIdStrict(accessContext, dto);
+    const currentProfessorDisponibilidade = await this.professorDisponibilidadeFindByIdStrict(accessContext, domain);
 
     // =========================================================
 
-    await accessContext.ensurePermission("professor_disponibilidade:update", { dto }, dto.path.id, this.professorDisponibilidadeRepository.createQueryBuilder(aliasProfessorDisponibilidade));
+    await accessContext.ensurePermission("professor_disponibilidade:update", {dto: domain}, domain.id, this.professorDisponibilidadeRepository.createQueryBuilder(aliasProfessorDisponibilidade));
 
-    const dtoProfessorDisponibilidade = pick(dto.body, []);
+    const dtoProfessorDisponibilidade = pick(domain, []);
 
     const professorDisponibilidade = <ProfessorDisponibilidadeEntity>{
       id: currentProfessorDisponibilidade.id,
@@ -241,8 +243,8 @@ export class ProfessorDisponibilidadeService {
 
     // =========================================================
 
-    if (has(dto.body, "perfil") && dto.body.perfil !== undefined) {
-      const perfil = dto.body.perfil && (await this.perfilService.perfilFindByIdStrict(accessContext, dto.body.perfil));
+    if (has(domain, "perfil") && domain.perfil !== undefined) {
+      const perfil = domain.perfil && (await this.perfilService.perfilFindByIdStrict(accessContext, domain.body.perfil));
 
       this.professorDisponibilidadeRepository.merge(professorDisponibilidade, {
         perfil: perfil && {
@@ -251,8 +253,8 @@ export class ProfessorDisponibilidadeService {
       });
     }
 
-    if (has(dto.body, "disponibilidade") && dto.body.disponibilidade !== undefined) {
-      const disponibilidade = dto.body.disponibilidade && (await this.disponibilidadeService.disponibilidadeFindByIdSimpleStrict(accessContext, dto.body.disponibilidade.id));
+    if (has(domain, "disponibilidade") && domain.disponibilidade !== undefined) {
+      const disponibilidade = domain.disponibilidade && (await this.disponibilidadeService.disponibilidadeFindByIdSimpleStrict(accessContext, domain.body.disponibilidade.id));
 
       this.professorDisponibilidadeRepository.merge(professorDisponibilidade, {
         disponibilidade: disponibilidade && {
@@ -272,14 +274,14 @@ export class ProfessorDisponibilidadeService {
     });
   }
 
-  async professorDisponibilidadeDeleteOneById(accessContext: AccessContext, dto: IDomain.ProfessorDisponibilidadeFindOneInput) {
+  async professorDisponibilidadeDeleteOneById(accessContext: AccessContext, domain: IDomain.ProfessorDisponibilidadeFindOneInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("professor_disponibilidade:delete", { dto }, dto.id, this.professorDisponibilidadeRepository.createQueryBuilder(aliasProfessorDisponibilidade));
+    await accessContext.ensurePermission("professor_disponibilidade:delete", {dto: domain}, domain.id, this.professorDisponibilidadeRepository.createQueryBuilder(aliasProfessorDisponibilidade));
 
     // =========================================================
 
-    const professorDisponibilidade = await this.professorDisponibilidadeFindByIdStrict(accessContext, dto);
+    const professorDisponibilidade = await this.professorDisponibilidadeFindByIdStrict(accessContext, domain);
 
     // =========================================================
 

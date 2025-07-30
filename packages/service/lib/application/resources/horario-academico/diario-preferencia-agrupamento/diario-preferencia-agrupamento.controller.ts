@@ -15,8 +15,7 @@ export class DiarioPreferenciaAgrupamentoController {
   @Get("/")
   async diarioPreferenciaAgrupamentoFindAll(
     @AccessContextHttp() accessContext: AccessContext,
-
-    @AppRequest("DiarioPreferenciaAgrupamentoFindAll") dto: IAppRequest<"DiarioPreferenciaAgrupamentoFindAll">,
+    @AppRequest("DiarioPreferenciaAgrupamentoList") dto: IAppRequest<"DiarioPreferenciaAgrupamentoList">,
   ) {
     const domain: IDomain.DiarioPreferenciaAgrupamentoListInput = requestRepresentationMergeToDomain(dto);
     return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoFindAll(accessContext, domain);

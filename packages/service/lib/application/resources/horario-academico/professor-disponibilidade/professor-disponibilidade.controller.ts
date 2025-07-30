@@ -15,8 +15,7 @@ export class ProfessorDisponibilidadeController {
   @Get("/")
   async professorDisponibilidadeFindAll(
     @AccessContextHttp() accessContext: AccessContext,
-
-    @AppRequest("ProfessorDisponibilidadeFindAll") dto: IAppRequest<"ProfessorDisponibilidadeFindAll">,
+    @AppRequest("ProfessorDisponibilidadeList") dto: IAppRequest<"ProfessorDisponibilidadeList">,
   ) {
     const domain: IDomain.ProfessorDisponibilidadeListInput = requestRepresentationMergeToDomain(dto);
     return this.professorDisponibilidadeService.professorDisponibilidadeFindAll(accessContext, domain);

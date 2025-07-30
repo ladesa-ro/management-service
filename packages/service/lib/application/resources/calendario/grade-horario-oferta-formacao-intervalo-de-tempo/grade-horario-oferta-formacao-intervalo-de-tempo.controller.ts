@@ -5,7 +5,9 @@ import { type IAppRequest } from "@/application/contracts/openapi/document/app-o
 import { AppRequest } from "@/application/contracts/openapi/utils/app-request";
 import { type IDomain } from "@/domain/contracts/integration";
 import { AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
-import { GradeHorarioOfertaFormacaoIntervaloDeTempoService } from "./grade-horario-oferta-formacao-intervalo-de-tempo.service";
+import {
+  GradeHorarioOfertaFormacaoIntervaloDeTempoService
+} from "./grade-horario-oferta-formacao-intervalo-de-tempo.service";
 
 @ApiTags("grades-horarios-ofertas-formacoes-intervalos-de-tempo")
 @Controller("/grades-horarios-ofertas-formacoes-intervalos-de-tempo")
@@ -15,8 +17,7 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoController {
   @Get("/")
   async gradeHorarioOfertaFormacaoIntervaloDeTempoFindAll(
     @AccessContextHttp() accessContext: AccessContext,
-
-    @AppRequest("GradeHorarioOfertaFormacaoIntervaloDeTempoFindAll") dto: IAppRequest<"GradeHorarioOfertaFormacaoIntervaloDeTempoFindAll">,
+    @AppRequest("GradeHorarioOfertaFormacaoIntervaloDeTempoList") dto: IAppRequest<"GradeHorarioOfertaFormacaoIntervaloDeTempoList">,
   ) {
     const domain: IDomain.GradeHorarioOfertaFormacaoIntervaloDeTempoListInput = requestRepresentationMergeToDomain(dto);
     return this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.gradeHorarioOfertaFormacaoIntervaloDeTempoFindAll(accessContext, domain);

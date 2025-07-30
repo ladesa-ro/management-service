@@ -1,6 +1,13 @@
 import { writeFile } from "node:fs/promises";
 import type { Readable } from "node:stream";
-import { ForbiddenException, Inject, Injectable, NotFoundException, ServiceUnavailableException, StreamableFile } from "@nestjs/common";
+import {
+  ForbiddenException,
+  Inject,
+  Injectable,
+  NotFoundException,
+  ServiceUnavailableException,
+  StreamableFile
+} from "@nestjs/common";
 import jetpack, { createReadStream } from "fs-jetpack";
 import { v4 } from "uuid";
 import { type IDomain } from "@/domain/contracts/integration";
@@ -130,7 +137,7 @@ export class ArquivoService {
     return true;
   }
 
-  async arquivoCreate(dto: Pick<IDomain.Arquivo, "name" | "mimeType">, data: NodeJS.ArrayBufferView | Readable): Promise<Pick<ArquivoEntity, "id">> {
+  async arquivoCreate(domain: Pick<IDomain.Arquivo, "name" | "mimeType">, data: NodeJS.ArrayBufferView | Readable): Promise<Pick<ArquivoEntity, "id">> {
     let id: string;
 
     do {
@@ -142,12 +149,12 @@ export class ArquivoService {
     // TODO: sizeBytes
     const sizeBytes = 0;
     // TODO: mimeType
-    const mimeType = dto.mimeType;
+    const mimeType = domain.mimeType;
 
     await this.arquivoRepository.save(<ArquivoEntity>{
       id,
 
-      name: dto.name,
+      name: domain.name,
       mimeType: mimeType,
       sizeBytes: sizeBytes,
       storageType: "filesystem",

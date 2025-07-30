@@ -8,7 +8,7 @@ import { DisciplinaService } from "./disciplina.service";
 export class DisciplinaResolver {
   constructor(private disciplinaService: DisciplinaService) {}
 
-  async disciplinaFindAll(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("DisciplinaFindAll") dto: IAppRequest<"DisciplinaFindAll">) {
+  async disciplinaFindAll(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("DisciplinaList") dto: IAppRequest<"DisciplinaList">) {
     return this.disciplinaService.disciplinaFindAll(accessContext, dto);
   }
 

@@ -21,7 +21,7 @@ export class CidadeService {
     return this.databaseContextService.cidadeRepository;
   }
 
-  async findAll(accessContext: AccessContext, dto: IDomain.CidadeListInput | null = null, selection?: string[]) {
+  async findAll(accessContext: AccessContext, domain: IDomain.CidadeListInput | null = null, selection?: string[]) {
     // =========================================================
 
     const qb = this.cidadeRepository.createQueryBuilder("cidade");
@@ -34,7 +34,7 @@ export class CidadeService {
 
     const paginated = await this.searchService.search(
       qb,
-      { ...dto },
+      {...domain},
       {
         ...paginateConfig,
         select: [
@@ -79,7 +79,7 @@ export class CidadeService {
     return paginated;
   }
 
-  async findById(accessContext: AccessContext, dto: IDomain.CidadeFindOneInput, selection?: string[]) {
+  async findById(accessContext: AccessContext, domain: IDomain.CidadeFindOneInput, selection?: string[]) {
     // =========================================================
 
     const { cidadeRepository: baseCidadeRepository } = this.databaseContextService;
@@ -94,7 +94,7 @@ export class CidadeService {
 
     // =========================================================
 
-    qb.andWhere("cidade.id = :id", { id: dto.id });
+    qb.andWhere("cidade.id = :id", {id: domain.id});
 
     // =========================================================
 
@@ -110,8 +110,8 @@ export class CidadeService {
     return cidade;
   }
 
-  async findByIdStrict(accessContext: AccessContext, dto: IDomain.CidadeFindOneInput, selection?: string[]) {
-    const cidade = await this.findById(accessContext, dto, selection);
+  async findByIdStrict(accessContext: AccessContext, domain: IDomain.CidadeFindOneInput, selection?: string[]) {
+    const cidade = await this.findById(accessContext, domain, selection);
 
     if (!cidade) {
       throw new NotFoundException();

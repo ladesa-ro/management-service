@@ -10,8 +10,7 @@ export class DiarioPreferenciaAgrupamentoResolver {
 
   async diarioPreferenciaAgrupamentoFindAll(
     @AccessContextGraphQl() accessContext: AccessContext,
-
-    @AppRequest("DiarioPreferenciaAgrupamentoFindAll") dto: IAppRequest<"DiarioPreferenciaAgrupamentoFindAll">,
+    @AppRequest("DiarioPreferenciaAgrupamentoList") dto: IAppRequest<"DiarioPreferenciaAgrupamentoList">,
   ) {
     return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoFindAll(accessContext, dto);
   }

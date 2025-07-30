@@ -8,7 +8,7 @@ import { CursoService } from "./curso.service";
 export class CursoResolver {
   constructor(private cursoService: CursoService) {}
 
-  async cursoFindAll(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("CursoFindAll") dto: IAppRequest<"CursoFindAll">) {
+  async cursoFindAll(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("CursoList") dto: IAppRequest<"CursoList">) {
     return this.cursoService.cursoFindAll(accessContext, dto);
   }
 

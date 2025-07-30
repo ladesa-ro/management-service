@@ -8,7 +8,7 @@ import { CampusService } from "./campus.service";
 export class CampusResolver {
   constructor(private campusService: CampusService) {}
 
-  async campusFindAll(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("CampusFindAll") dto: IAppRequest<"CampusFindAll">) {
+  async campusFindAll(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("CampusList") dto: IAppRequest<"CampusList">) {
     return this.campusService.campusFindAll(accessContext, dto);
   }
 

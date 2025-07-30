@@ -13,7 +13,7 @@ export class AulaController {
   constructor(private aulaService: AulaService) {}
 
   @Get("/")
-  async aulaFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("AulaFindAll") dto: IAppRequest<"AulaFindAll">) {
+  async aulaFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("AulaList") dto: IAppRequest<"AulaList">) {
     const domain: IDomain.AulaListInput = requestRepresentationMergeToDomain(dto);
     return this.aulaService.aulaFindAll(accessContext, domain);
   }

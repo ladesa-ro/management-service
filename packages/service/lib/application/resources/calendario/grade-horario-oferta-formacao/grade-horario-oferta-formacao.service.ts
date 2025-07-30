@@ -4,7 +4,9 @@ import { FilterOperator } from "nestjs-paginate";
 import { QbEfficientLoad } from "@/application/contracts/qb-efficient-load";
 import { SearchService } from "@/application/helpers/search.service";
 import { CampusService } from "@/application/resources/ambientes/campus/campus.service";
-import { OfertaFormacaoService } from "@/application/resources/ensino/institucional/oferta-formacao/oferta-formacao.service";
+import {
+  OfertaFormacaoService
+} from "@/application/resources/ensino/institucional/oferta-formacao/oferta-formacao.service";
 import { type IDomain } from "@/domain/contracts/integration";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
@@ -32,7 +34,7 @@ export class GradeHorarioOfertaFormacaoService {
 
   async gradeHorarioOfertaFormacaoFindAll(
     accessContext: AccessContext,
-    dto: IDomain.GradeHorarioOfertaFormacaoListInput | null = null,
+    domain: IDomain.GradeHorarioOfertaFormacaoListInput | null = null,
     selection?: string[],
   ): Promise<IDomain.GradeHorarioOfertaFormacaoListOutput["success"]> {
     // =========================================================
@@ -47,7 +49,7 @@ export class GradeHorarioOfertaFormacaoService {
 
     const paginated = await this.searchService.search(
       qb,
-      { ...dto },
+      {...domain},
       {
         ...paginateConfig,
         select: [
@@ -90,7 +92,7 @@ export class GradeHorarioOfertaFormacaoService {
 
   async gradeHorarioOfertaFormacaoFindById(
     accessContext: AccessContext | null,
-    dto: IDomain.GradeHorarioOfertaFormacaoFindOneInput,
+    domain: IDomain.GradeHorarioOfertaFormacaoFindOneInput,
     selection?: string[],
   ): Promise<IDomain.GradeHorarioOfertaFormacaoFindOneOutput | null> {
     // =========================================================
@@ -105,7 +107,7 @@ export class GradeHorarioOfertaFormacaoService {
 
     // =========================================================
 
-    qb.andWhere(`${aliasGradeHorarioOfertaFormacao}.id = :id`, { id: dto.id });
+    qb.andWhere(`${aliasGradeHorarioOfertaFormacao}.id = :id`, {id: domain.id});
 
     // =========================================================
 
@@ -121,8 +123,8 @@ export class GradeHorarioOfertaFormacaoService {
     return gradeHorarioOfertaFormacao;
   }
 
-  async gradeHorarioOfertaFormacaoFindByIdStrict(accessContext: AccessContext, dto: IDomain.GradeHorarioOfertaFormacaoFindOneInput, selection?: string[]) {
-    const gradeHorarioOfertaFormacao = await this.gradeHorarioOfertaFormacaoFindById(accessContext, dto, selection);
+  async gradeHorarioOfertaFormacaoFindByIdStrict(accessContext: AccessContext, domain: IDomain.GradeHorarioOfertaFormacaoFindOneInput, selection?: string[]) {
+    const gradeHorarioOfertaFormacao = await this.gradeHorarioOfertaFormacaoFindById(accessContext, domain, selection);
 
     if (!gradeHorarioOfertaFormacao) {
       throw new NotFoundException();
@@ -172,14 +174,14 @@ export class GradeHorarioOfertaFormacaoService {
     return gradeHorarioOfertaFormacao;
   }
 
-  async gradeHorarioOfertaFormacaoCreate(accessContext: AccessContext, dto: IDomain.GradeHorarioOfertaFormacaoCreateInput) {
+  async gradeHorarioOfertaFormacaoCreate(accessContext: AccessContext, domain: IDomain.GradeHorarioOfertaFormacaoCreateInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("grade_horario_oferta_formacao:create", { dto });
+    await accessContext.ensurePermission("grade_horario_oferta_formacao:create", {dto: domain});
 
     // =========================================================
 
-    const dtoGradeHorarioOfertaFormacao = pick(dto.body, []);
+    const dtoGradeHorarioOfertaFormacao = pick(domain, []);
 
     const gradeHorarioOfertaFormacao = this.gradeHorarioOfertaFormacaoRepository.create();
 
@@ -189,8 +191,8 @@ export class GradeHorarioOfertaFormacaoService {
 
     // =========================================================
 
-    if (dto.body.ofertaFormacao) {
-      const ofertaFormacao = await this.ofertaFormacaoService.ofertaFormacaoFindByIdSimpleStrict(accessContext, dto.body.ofertaFormacao.id);
+    if (domain.ofertaFormacao) {
+      const ofertaFormacao = await this.ofertaFormacaoService.ofertaFormacaoFindByIdSimpleStrict(accessContext, domain.body.ofertaFormacao.id);
 
       this.gradeHorarioOfertaFormacaoRepository.merge(gradeHorarioOfertaFormacao, {
         ofertaFormacao: {
@@ -201,8 +203,8 @@ export class GradeHorarioOfertaFormacaoService {
 
     // =========================================================
 
-    if (dto.body.campus) {
-      const campus = await this.campusService.campusFindByIdSimpleStrict(accessContext, dto.body.campus.id);
+    if (domain.campus) {
+      const campus = await this.campusService.campusFindByIdSimpleStrict(accessContext, domain.body.campus.id);
 
       this.gradeHorarioOfertaFormacaoRepository.merge(gradeHorarioOfertaFormacao, {
         campus: {
@@ -213,8 +215,8 @@ export class GradeHorarioOfertaFormacaoService {
 
     // =========================================================
 
-    if (dto.body.ofertaFormacao) {
-      const ofertaFormacao = await this.ofertaFormacaoService.ofertaFormacaoFindByIdSimpleStrict(accessContext, dto.body.ofertaFormacao.id);
+    if (domain.ofertaFormacao) {
+      const ofertaFormacao = await this.ofertaFormacaoService.ofertaFormacaoFindByIdSimpleStrict(accessContext, domain.body.ofertaFormacao.id);
 
       this.gradeHorarioOfertaFormacaoRepository.merge(gradeHorarioOfertaFormacao, {
         ofertaFormacao: {
@@ -234,16 +236,21 @@ export class GradeHorarioOfertaFormacaoService {
     });
   }
 
-  async gradeHorarioOfertaFormacaoUpdate(accessContext: AccessContext, dto: IDomain.GradeHorarioOfertaFormacaoUpdateByIdInput) {
+  async gradeHorarioOfertaFormacaoUpdate(accessContext: AccessContext, domain: IDomain.GradeHorarioOfertaFormacaoUpdateInput) {
     // =========================================================
 
-    const currentGradeHorarioOfertaFormacao = await this.gradeHorarioOfertaFormacaoFindByIdStrict(accessContext, dto);
+    const currentGradeHorarioOfertaFormacao = await this.gradeHorarioOfertaFormacaoFindByIdStrict(accessContext, domain);
 
     // =========================================================
 
-    await accessContext.ensurePermission("grade_horario_oferta_formacao:update", { dto }, dto.path.id, this.gradeHorarioOfertaFormacaoRepository.createQueryBuilder(aliasGradeHorarioOfertaFormacao));
+    await accessContext.ensurePermission(
+      "grade_horario_oferta_formacao:update",
+      {dto: domain},
+      domain.id,
+      this.gradeHorarioOfertaFormacaoRepository.createQueryBuilder(aliasGradeHorarioOfertaFormacao),
+    );
 
-    const dtoGradeHorarioOfertaFormacao = pick(dto.body, ["nome", "slug"]);
+    const dtoGradeHorarioOfertaFormacao = pick(domain, ["nome", "slug"]);
 
     const gradeHorarioOfertaFormacao = <GradeHorarioOfertaFormacaoEntity>{
       id: currentGradeHorarioOfertaFormacao.id,
@@ -255,8 +262,8 @@ export class GradeHorarioOfertaFormacaoService {
 
     // =========================================================
 
-    if (has(dto.body, "campus") && dto.body.campus !== undefined) {
-      const campus = dto.body.campus && (await this.campusService.campusFindByIdSimpleStrict(accessContext, dto.body.campus.id));
+    if (has(domain, "campus") && domain.campus !== undefined) {
+      const campus = domain.campus && (await this.campusService.campusFindByIdSimpleStrict(accessContext, domain.body.campus.id));
 
       this.gradeHorarioOfertaFormacaoRepository.merge(gradeHorarioOfertaFormacao, {
         campus: campus && {
@@ -265,8 +272,8 @@ export class GradeHorarioOfertaFormacaoService {
       });
     }
 
-    if (has(dto.body, "ofertaFormacao") && dto.body.ofertaFormacao !== undefined) {
-      const ofertaFormacao = dto.body.ofertaFormacao && (await this.ofertaFormacaoService.ofertaFormacaoFindByIdSimpleStrict(accessContext, dto.body.ofertaFormacao.id));
+    if (has(domain, "ofertaFormacao") && domain.ofertaFormacao !== undefined) {
+      const ofertaFormacao = domain.ofertaFormacao && (await this.ofertaFormacaoService.ofertaFormacaoFindByIdSimpleStrict(accessContext, domain.body.ofertaFormacao.id));
 
       this.gradeHorarioOfertaFormacaoRepository.merge(gradeHorarioOfertaFormacao, {
         ofertaFormacao: ofertaFormacao && {
@@ -286,14 +293,19 @@ export class GradeHorarioOfertaFormacaoService {
     });
   }
 
-  async gradeHorarioOfertaFormacaoDeleteOneById(accessContext: AccessContext, dto: IDomain.GradeHorarioOfertaFormacaoFindOneInput) {
+  async gradeHorarioOfertaFormacaoDeleteOneById(accessContext: AccessContext, domain: IDomain.GradeHorarioOfertaFormacaoFindOneInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("grade_horario_oferta_formacao:delete", { dto }, dto.id, this.gradeHorarioOfertaFormacaoRepository.createQueryBuilder(aliasGradeHorarioOfertaFormacao));
+    await accessContext.ensurePermission(
+      "grade_horario_oferta_formacao:delete",
+      {dto: domain},
+      domain.id,
+      this.gradeHorarioOfertaFormacaoRepository.createQueryBuilder(aliasGradeHorarioOfertaFormacao),
+    );
 
     // =========================================================
 
-    const gradeHorarioOfertaFormacao = await this.gradeHorarioOfertaFormacaoFindByIdStrict(accessContext, dto);
+    const gradeHorarioOfertaFormacao = await this.gradeHorarioOfertaFormacaoFindByIdStrict(accessContext, domain);
 
     // =========================================================
 

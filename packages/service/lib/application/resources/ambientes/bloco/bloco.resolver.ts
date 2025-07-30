@@ -8,7 +8,7 @@ import { BlocoService } from "./bloco.service";
 export class BlocoResolver {
   constructor(private blocoService: BlocoService) {}
 
-  async blocoFindAll(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("BlocoFindAll") dto: IAppRequest<"BlocoFindAll">) {
+  async blocoFindAll(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("BlocoList") dto: IAppRequest<"BlocoList">) {
     return this.blocoService.blocoFindAll(accessContext, dto);
   }
 

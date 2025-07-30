@@ -32,7 +32,7 @@ export class DiarioPreferenciaAgrupamentoService {
 
   async diarioPreferenciaAgrupamentoFindAll(
     accessContext: AccessContext,
-    dto: IDomain.DiarioPreferenciaAgrupamentoListInput | null = null,
+    domain: IDomain.DiarioPreferenciaAgrupamentoListInput | null = null,
     selection?: string[] | boolean,
   ): Promise<IDomain.DiarioPreferenciaAgrupamentoListOutput["success"]> {
     // =========================================================
@@ -47,7 +47,7 @@ export class DiarioPreferenciaAgrupamentoService {
 
     const paginated = await this.searchService.search(
       qb,
-      { ...dto },
+      {...domain},
       {
         ...paginateConfig,
         select: [
@@ -115,7 +115,7 @@ export class DiarioPreferenciaAgrupamentoService {
 
   async diarioPreferenciaAgrupamentoFindById(
     accessContext: AccessContext,
-    dto: IDomain.DiarioPreferenciaAgrupamentoFindOneInput,
+    domain: IDomain.DiarioPreferenciaAgrupamentoFindOneInput,
     selection?: string[] | boolean,
   ): Promise<IDomain.DiarioPreferenciaAgrupamentoFindOneOutput | null> {
     // =========================================================
@@ -129,7 +129,7 @@ export class DiarioPreferenciaAgrupamentoService {
     // =========================================================
 
     qb.andWhere(`${aliasDiarioPreferenciaAgrupamento}.id = :id`, {
-      id: dto.id,
+      id: domain.id,
     });
 
     // =========================================================
@@ -145,8 +145,8 @@ export class DiarioPreferenciaAgrupamentoService {
     return diarioPreferenciaAgrupamento;
   }
 
-  async diarioPreferenciaAgrupamentoFindByIdStrict(accessContext: AccessContext, dto: IDomain.DiarioPreferenciaAgrupamentoFindOneInput, selection?: string[] | boolean) {
-    const diarioPreferenciaAgrupamento = await this.diarioPreferenciaAgrupamentoFindById(accessContext, dto, selection);
+  async diarioPreferenciaAgrupamentoFindByIdStrict(accessContext: AccessContext, domain: IDomain.DiarioPreferenciaAgrupamentoFindOneInput, selection?: string[] | boolean) {
+    const diarioPreferenciaAgrupamento = await this.diarioPreferenciaAgrupamentoFindById(accessContext, domain, selection);
 
     if (!diarioPreferenciaAgrupamento) {
       throw new NotFoundException();
@@ -196,14 +196,14 @@ export class DiarioPreferenciaAgrupamentoService {
     return diarioPreferenciaAgrupamento;
   }
 
-  async diarioPreferenciaAgrupamentoCreate(accessContext: AccessContext, dto: IDomain.DiarioPreferenciaAgrupamentoCreateInput) {
+  async diarioPreferenciaAgrupamentoCreate(accessContext: AccessContext, domain: IDomain.DiarioPreferenciaAgrupamentoCreateInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("diario_preferencia_agrupamento:create", { dto });
+    await accessContext.ensurePermission("diario_preferencia_agrupamento:create", {dto: domain});
 
     // =========================================================
 
-    const dtoDiarioPreferenciaAgrupamento = pick(dto.body, ["diaSemanaIso", "aulasSeguidas", "dataInicio", "dataFim"]);
+    const dtoDiarioPreferenciaAgrupamento = pick(domain, ["diaSemanaIso", "aulasSeguidas", "dataInicio", "dataFim"]);
 
     const diarioPreferenciaAgrupamento = this.diarioPreferenciaAgrupamentoRepository.create();
 
@@ -213,8 +213,8 @@ export class DiarioPreferenciaAgrupamentoService {
 
     // =========================================================
 
-    if (dto.body.diario) {
-      const diario = await this.DiarioService.diarioFindByIdStrict(accessContext, dto.body.diario);
+    if (domain.diario) {
+      const diario = await this.DiarioService.diarioFindByIdStrict(accessContext, domain.body.diario);
 
       this.diarioPreferenciaAgrupamentoRepository.merge(diarioPreferenciaAgrupamento, {
         diario: {
@@ -223,8 +223,8 @@ export class DiarioPreferenciaAgrupamentoService {
       });
     }
 
-    if (dto.body.intervaloDeTempo) {
-      const intervalo = await this.intervaloDeTempoService.intervaloCreateOrUpdate(accessContext, dto.body.intervaloDeTempo);
+    if (domain.intervaloDeTempo) {
+      const intervalo = await this.intervaloDeTempoService.intervaloCreateOrUpdate(accessContext, domain.body.intervaloDeTempo);
 
       this.diarioPreferenciaAgrupamentoRepository.merge(diarioPreferenciaAgrupamento, {
         intervaloDeTempo: {
@@ -244,21 +244,21 @@ export class DiarioPreferenciaAgrupamentoService {
     });
   }
 
-  async diarioPreferenciaAgrupamentoUpdate(accessContext: AccessContext, dto: IDomain.DiarioPreferenciaAgrupamentoUpdateByIdInput) {
+  async diarioPreferenciaAgrupamentoUpdate(accessContext: AccessContext, domain: IDomain.DiarioPreferenciaAgrupamentoUpdateInput) {
     // =========================================================
 
-    const currentDiarioPreferenciaAgrupamento = await this.diarioPreferenciaAgrupamentoFindByIdStrict(accessContext, dto);
+    const currentDiarioPreferenciaAgrupamento = await this.diarioPreferenciaAgrupamentoFindByIdStrict(accessContext, domain);
 
     // =========================================================
 
     await accessContext.ensurePermission(
       "diario_preferencia_agrupamento:update",
-      { dto },
-      dto.path.id,
+      {dto: domain},
+      domain.id,
       this.diarioPreferenciaAgrupamentoRepository.createQueryBuilder(aliasDiarioPreferenciaAgrupamento),
     );
 
-    const dtoDiarioPreferenciaAgrupamento = pick(dto.body, ["diaSemanaIso", "aulasSeguidas", "dataInicio", "dataFim"]);
+    const dtoDiarioPreferenciaAgrupamento = pick(domain, ["diaSemanaIso", "aulasSeguidas", "dataInicio", "dataFim"]);
 
     const diarioPreferenciaAgrupamento = {
       id: currentDiarioPreferenciaAgrupamento.id,
@@ -270,8 +270,8 @@ export class DiarioPreferenciaAgrupamentoService {
 
     // =========================================================
 
-    if (has(dto.body, "diario") && dto.body.diario !== undefined) {
-      const diario = await this.DiarioService.diarioFindByIdStrict(accessContext, dto.body.diario);
+    if (has(domain, "diario") && domain.diario !== undefined) {
+      const diario = await this.DiarioService.diarioFindByIdStrict(accessContext, domain.body.diario);
 
       this.diarioPreferenciaAgrupamentoRepository.merge(diarioPreferenciaAgrupamento, {
         diario: {
@@ -280,8 +280,8 @@ export class DiarioPreferenciaAgrupamentoService {
       });
     }
 
-    if (has(dto.body, "intervaloDeTempo") && dto.body.intervaloDeTempo !== undefined) {
-      const intervaloDeTempo = await this.intervaloDeTempoService.intervaloCreateOrUpdate(accessContext, dto.body.intervaloDeTempo!);
+    if (has(domain, "intervaloDeTempo") && domain.intervaloDeTempo !== undefined) {
+      const intervaloDeTempo = await this.intervaloDeTempoService.intervaloCreateOrUpdate(accessContext, domain.body.intervaloDeTempo!);
 
       this.diarioPreferenciaAgrupamentoRepository.merge(diarioPreferenciaAgrupamento, {
         intervaloDeTempo: {
@@ -301,14 +301,19 @@ export class DiarioPreferenciaAgrupamentoService {
     });
   }
 
-  async diarioPreferenciaAgrupamentoDeleteOneById(accessContext: AccessContext, dto: IDomain.DiarioPreferenciaAgrupamentoFindOneInput) {
+  async diarioPreferenciaAgrupamentoDeleteOneById(accessContext: AccessContext, domain: IDomain.DiarioPreferenciaAgrupamentoFindOneInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("diario_preferencia_agrupamento:delete", { dto }, dto.id, this.diarioPreferenciaAgrupamentoRepository.createQueryBuilder(aliasDiarioPreferenciaAgrupamento));
+    await accessContext.ensurePermission(
+      "diario_preferencia_agrupamento:delete",
+      {dto: domain},
+      domain.id,
+      this.diarioPreferenciaAgrupamentoRepository.createQueryBuilder(aliasDiarioPreferenciaAgrupamento),
+    );
 
     // =========================================================
 
-    const diarioPreferenciaAgrupamento = await this.diarioPreferenciaAgrupamentoFindByIdStrict(accessContext, dto);
+    const diarioPreferenciaAgrupamento = await this.diarioPreferenciaAgrupamentoFindByIdStrict(accessContext, domain);
 
     // =========================================================
 

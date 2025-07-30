@@ -1,5 +1,11 @@
 import { RequiredActionAlias } from "@keycloak/keycloak-admin-client/lib/defs/requiredActionProviderRepresentation";
-import { BadRequestException, ForbiddenException, HttpException, Injectable, ServiceUnavailableException } from "@nestjs/common";
+import {
+  BadRequestException,
+  ForbiddenException,
+  HttpException,
+  Injectable,
+  ServiceUnavailableException
+} from "@nestjs/common";
 import * as client from "openid-client";
 import { type IDomain } from "@/domain/contracts/integration";
 import type { AccessContext } from "@/infrastructure/access-context";
@@ -44,7 +50,7 @@ export class AutenticacaoService {
     };
   }
 
-  async login(accessContext: AccessContext, dto: IDomain.AuthLoginInput): Promise<IDomain.AuthLoginOutput["success"]> {
+  async login(accessContext: AccessContext, domain: IDomain.AuthLoginInput): Promise<IDomain.AuthLoginOutput["success"]> {
     if (accessContext.requestActor !== null) {
       throw new BadRequestException("Você não pode usar a rota de login caso já esteja logado.");
     }
@@ -57,13 +63,13 @@ export class AutenticacaoService {
       throw new ServiceUnavailableException();
     }
 
-    const { usuario, userRepresentation } = await this.findByMatriculaSiape(dto.body.matriculaSiape);
+    const {usuario, userRepresentation} = await this.findByMatriculaSiape(domain.matriculaSiape);
 
     try {
       if (usuario && userRepresentation?.username) {
         const tokenset = await client.genericGrantRequest(config, "password", {
           username: userRepresentation.username,
-          password: dto.body.senha,
+          password: domain.senha,
           scope: "openid profile",
         });
 
@@ -76,7 +82,7 @@ export class AutenticacaoService {
     throw new ForbiddenException("Credenciais inválidas.");
   }
 
-  async refresh(_: AccessContext, dto: IDomain.AuthRefreshInput): Promise<IDomain.AuthLoginOutput["success"]> {
+  async refresh(_: AccessContext, domain: IDomain.AuthRefreshInput): Promise<IDomain.AuthLoginOutput["success"]> {
     let config: client.Configuration;
 
     try {
@@ -86,7 +92,7 @@ export class AutenticacaoService {
     }
 
     try {
-      const refreshToken = dto.body.refreshToken;
+      const refreshToken = domain.refreshToken;
 
       if (refreshToken) {
         const tokenset = await client.refreshTokenGrant(config, refreshToken);
@@ -98,11 +104,11 @@ export class AutenticacaoService {
     throw new ForbiddenException("Credenciais inválidas ou expiradas.");
   }
 
-  async definirSenha(_accessContext: AccessContext, dto: IDomain.AuthCredentialsSetInitialPasswordInput): Promise<IDomain.AuthCredentialsSetInitialPasswordOutput["success"]> {
+  async definirSenha(_accessContext: AccessContext, domain: IDomain.AuthCredentialsSetInitialPasswordInput): Promise<IDomain.AuthCredentialsSetInitialPasswordOutput["success"]> {
     try {
       const kcAdminClient = await this.keycloakService.getAdminClient();
 
-      const { usuario, userRepresentation } = await this.findByMatriculaSiape(dto.body.matriculaSiape);
+      const {usuario, userRepresentation} = await this.findByMatriculaSiape(domain.matriculaSiape);
 
       if (!usuario || !userRepresentation) {
         throw new ForbiddenException("Usuário indisponível.");
@@ -118,7 +124,7 @@ export class AutenticacaoService {
           credential: {
             type: "password",
             temporary: false,
-            value: dto.body.senha,
+            value: domain.senha,
           },
         });
         await kcAdminClient.users.update(
@@ -145,10 +151,10 @@ export class AutenticacaoService {
     }
   }
 
-  async recoverPassword(_accessContext: AccessContext | null, dto: IDomain.AuthRecoverPasswordInput) {
+  async recoverPassword(_accessContext: AccessContext | null, domain: IDomain.AuthRecoverPasswordInput) {
     const kcAdminClient = await this.keycloakService.getAdminClient();
 
-    const [user] = await kcAdminClient.users.find({ email: dto.body.email }, { catchNotFound: true });
+    const [user] = await kcAdminClient.users.find({email: domain.email}, {catchNotFound: true});
 
     if (user && user.id) {
       return kcAdminClient.users

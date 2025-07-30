@@ -13,7 +13,7 @@ export class EventoController {
   constructor(private eventoService: EventoService) {}
 
   @Get("/")
-  async eventoFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("EventoFindAll") dto: IAppRequest<"EventoFindAll">) {
+  async eventoFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("EventoList") dto: IAppRequest<"EventoList">) {
     const domain: IDomain.EventoListInput = requestRepresentationMergeToDomain(dto);
     return this.eventoService.eventoFindAll(accessContext, domain);
   }

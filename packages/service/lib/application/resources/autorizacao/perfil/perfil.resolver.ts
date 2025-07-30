@@ -8,7 +8,7 @@ import { PerfilService } from "./perfil.service";
 export class PerfilResolver {
   constructor(private perfilService: PerfilService) {}
 
-  async vinculoFindAll(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("VinculoFindAll") dto: IAppRequest<"VinculoFindAll">) {
+  async vinculoFindAll(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("VinculoList") dto: IAppRequest<"VinculoList">) {
     return this.perfilService.perfilFindAll(accessContext, dto);
   }
 

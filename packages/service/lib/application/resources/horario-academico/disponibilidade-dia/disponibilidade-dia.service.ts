@@ -4,7 +4,9 @@ import { FilterOperator } from "nestjs-paginate";
 import { QbEfficientLoad } from "@/application/contracts/qb-efficient-load";
 import { SearchService } from "@/application/helpers/search.service";
 import { IntervaloDeTempoService } from "@/application/resources/base/intervalo-de-tempo/intervalo-de-tempo.service";
-import { DisponibilidadeService } from "@/application/resources/horario-academico/disponibilidade/disponibilidade.service";
+import {
+  DisponibilidadeService
+} from "@/application/resources/horario-academico/disponibilidade/disponibilidade.service";
 import { type IDomain } from "@/domain/contracts/integration";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
@@ -32,7 +34,7 @@ export class DisponibilidadeDiaService {
 
   async disponibilidadeDiaFindAll(
     accessContext: AccessContext,
-    dto: IDomain.DisponibilidadeDiaListInput | null = null,
+    domain: IDomain.DisponibilidadeDiaListInput | null = null,
     selection?: string[] | boolean,
   ): Promise<IDomain.DisponibilidadeDiaListOutput["success"]> {
     // =========================================================
@@ -47,7 +49,7 @@ export class DisponibilidadeDiaService {
 
     const paginated = await this.searchService.search(
       qb,
-      { ...dto },
+      {...domain},
       {
         ...paginateConfig,
         select: [
@@ -108,7 +110,11 @@ export class DisponibilidadeDiaService {
     return paginated;
   }
 
-  async disponibilidadeDiaFindById(accessContext: AccessContext, dto: IDomain.DisponibilidadeDiaFindOneInput, selection?: string[] | boolean): Promise<IDomain.DisponibilidadeDiaFindOneOutput | null> {
+  async disponibilidadeDiaFindById(
+    accessContext: AccessContext,
+    domain: IDomain.DisponibilidadeDiaFindOneInput,
+    selection?: string[] | boolean,
+  ): Promise<IDomain.DisponibilidadeDiaFindOneOutput | null> {
     // =========================================================
 
     const qb = this.disponibilidadeDiaRepository.createQueryBuilder(aliasDisponibilidadeDia);
@@ -120,7 +126,7 @@ export class DisponibilidadeDiaService {
     // =========================================================
 
     qb.andWhere(`${aliasDisponibilidadeDia}.id = :id`, {
-      id: dto.id,
+      id: domain.id,
     });
 
     // =========================================================
@@ -136,8 +142,8 @@ export class DisponibilidadeDiaService {
     return disponibilidadeDia;
   }
 
-  async disponibilidadeDiaFindByIdStrict(accessContext: AccessContext, dto: IDomain.DisponibilidadeDiaFindOneInput, selection?: string[] | boolean) {
-    const disponibilidadeDia = await this.disponibilidadeDiaFindById(accessContext, dto, selection);
+  async disponibilidadeDiaFindByIdStrict(accessContext: AccessContext, domain: IDomain.DisponibilidadeDiaFindOneInput, selection?: string[] | boolean) {
+    const disponibilidadeDia = await this.disponibilidadeDiaFindById(accessContext, domain, selection);
 
     if (!disponibilidadeDia) {
       throw new NotFoundException();
@@ -187,14 +193,14 @@ export class DisponibilidadeDiaService {
     return disponibilidadeDia;
   }
 
-  async disponibilidadeDiaCreate(accessContext: AccessContext, dto: IDomain.DisponibilidadeDiaCreateInput) {
+  async disponibilidadeDiaCreate(accessContext: AccessContext, domain: IDomain.DisponibilidadeDiaCreateInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("disponibilidade_dia:create", { dto });
+    await accessContext.ensurePermission("disponibilidade_dia:create", {dto: domain});
 
     // =========================================================
 
-    const dtoDisponibilidadeDia = pick(dto.body, ["rrule"]);
+    const dtoDisponibilidadeDia = pick(domain, ["rrule"]);
 
     const disponibilidadeDia = this.disponibilidadeDiaRepository.create();
 
@@ -204,8 +210,8 @@ export class DisponibilidadeDiaService {
 
     // =========================================================
 
-    if (dto.body.disponibilidade) {
-      const disponibilidade = await this.disponibilidadeService.disponibilidadeFindByIdStrict(accessContext, dto.body.disponibilidade);
+    if (domain.disponibilidade) {
+      const disponibilidade = await this.disponibilidadeService.disponibilidadeFindByIdStrict(accessContext, domain.body.disponibilidade);
 
       this.disponibilidadeDiaRepository.merge(disponibilidadeDia, {
         disponibilidade: {
@@ -214,8 +220,8 @@ export class DisponibilidadeDiaService {
       });
     }
 
-    if (dto.body.intervaloDeTempo) {
-      const intervalo = await this.intervaloDeTempoService.intervaloCreateOrUpdate(accessContext, dto.body.intervaloDeTempo);
+    if (domain.intervaloDeTempo) {
+      const intervalo = await this.intervaloDeTempoService.intervaloCreateOrUpdate(accessContext, domain.body.intervaloDeTempo);
 
       this.disponibilidadeDiaRepository.merge(disponibilidadeDia, {
         intervaloDeTempo: {
@@ -235,16 +241,16 @@ export class DisponibilidadeDiaService {
     });
   }
 
-  async disponibilidadeDiaUpdate(accessContext: AccessContext, dto: IDomain.DisponibilidadeDiaUpdateByIdInput) {
+  async disponibilidadeDiaUpdate(accessContext: AccessContext, domain: IDomain.DisponibilidadeDiaUpdateInput) {
     // =========================================================
 
-    const currentDisponibilidadeDia = await this.disponibilidadeDiaFindByIdStrict(accessContext, dto);
+    const currentDisponibilidadeDia = await this.disponibilidadeDiaFindByIdStrict(accessContext, domain);
 
     // =========================================================
 
-    await accessContext.ensurePermission("disponibilidade_dia:update", { dto }, dto.path.id, this.disponibilidadeDiaRepository.createQueryBuilder(aliasDisponibilidadeDia));
+    await accessContext.ensurePermission("disponibilidade_dia:update", {dto: domain}, domain.id, this.disponibilidadeDiaRepository.createQueryBuilder(aliasDisponibilidadeDia));
 
-    const dtoDisponibilidadeDia = pick(dto.body, ["diaSemanaIso", "aulasSeguidas", "dataInicio", "dataFim"]);
+    const dtoDisponibilidadeDia = pick(domain, ["diaSemanaIso", "aulasSeguidas", "dataInicio", "dataFim"]);
 
     const disponibilidadeDia = {
       id: currentDisponibilidadeDia.id,
@@ -256,8 +262,8 @@ export class DisponibilidadeDiaService {
 
     // =========================================================
 
-    if (has(dto.body, "disponibilidade") && dto.body.disponibilidade !== undefined) {
-      const disponibilidade = await this.disponibilidadeService.disponibilidadeFindByIdStrict(accessContext, dto.body.disponibilidade);
+    if (has(domain, "disponibilidade") && domain.disponibilidade !== undefined) {
+      const disponibilidade = await this.disponibilidadeService.disponibilidadeFindByIdStrict(accessContext, domain.body.disponibilidade);
 
       this.disponibilidadeDiaRepository.merge(disponibilidadeDia, {
         disponibilidade: {
@@ -266,8 +272,8 @@ export class DisponibilidadeDiaService {
       });
     }
 
-    if (has(dto.body, "intervaloDeTempo") && dto.body.intervaloDeTempo !== undefined) {
-      const intervaloDeTempo = await this.intervaloDeTempoService.intervaloCreateOrUpdate(accessContext, dto.body.intervaloDeTempo!);
+    if (has(domain, "intervaloDeTempo") && domain.intervaloDeTempo !== undefined) {
+      const intervaloDeTempo = await this.intervaloDeTempoService.intervaloCreateOrUpdate(accessContext, domain.body.intervaloDeTempo!);
 
       this.disponibilidadeDiaRepository.merge(disponibilidadeDia, {
         intervaloDeTempo: {
@@ -287,14 +293,14 @@ export class DisponibilidadeDiaService {
     });
   }
 
-  async disponibilidadeDiaDeleteOneById(accessContext: AccessContext, dto: IDomain.DisponibilidadeDiaFindOneInput) {
+  async disponibilidadeDiaDeleteOneById(accessContext: AccessContext, domain: IDomain.DisponibilidadeDiaFindOneInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("disponibilidade_dia:delete", { dto }, dto.id, this.disponibilidadeDiaRepository.createQueryBuilder(aliasDisponibilidadeDia));
+    await accessContext.ensurePermission("disponibilidade_dia:delete", {dto: domain}, domain.id, this.disponibilidadeDiaRepository.createQueryBuilder(aliasDisponibilidadeDia));
 
     // =========================================================
 
-    const disponibilidadeDia = await this.disponibilidadeDiaFindByIdStrict(accessContext, dto);
+    const disponibilidadeDia = await this.disponibilidadeDiaFindByIdStrict(accessContext, domain);
 
     // =========================================================
 

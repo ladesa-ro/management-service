@@ -13,7 +13,7 @@ export class NivelFormacaoController {
   constructor(private nivelformacaoService: NivelFormacaoService) {}
 
   @Get("/")
-  async nivelformacaoFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("NivelformacaoFindAll") dto: IAppRequest<"NivelformacaoFindAll">) {
+  async nivelformacaoFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("NivelformacaoList") dto: IAppRequest<"NivelformacaoList">) {
     const domain: IDomain.NivelformacaoListInput = requestRepresentationMergeToDomain(dto);
     return this.nivelformacaoService.nivelFormacaoFindAll(accessContext, domain);
   }

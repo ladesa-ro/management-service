@@ -14,12 +14,12 @@ export class IntervaloDeTempoService {
     return this.databaseContext.intervaloDeTempoRepository;
   }
 
-  async intervaloCreateOrUpdate(accessContext: AccessContext | null, dto: IDomain.IntervaloDeTempoInput) {
-    const intervalExisting = await this.intervaloFindOne(dto);
+  async intervaloCreateOrUpdate(accessContext: AccessContext | null, domain: IDomain.IntervaloDeTempoInput) {
+    const intervalExisting = await this.intervaloFindOne(domain);
 
     if (intervalExisting) return intervalExisting;
 
-    const dtoInterval = pick(dto, ["periodoInicio", "periodoFim"]);
+    const dtoInterval = pick(domain, ["periodoInicio", "periodoFim"]);
 
     const newInterval = this.intervaloTempoRepository.create();
 
@@ -32,11 +32,11 @@ export class IntervaloDeTempoService {
     return this.intervaloTempoRepository.findOneByOrFail({ id: newInterval.id });
   }
 
-  private async intervaloFindOne(dto: IDomain.IntervaloDeTempoInput) {
+  private async intervaloFindOne(domain: IDomain.IntervaloDeTempoInput) {
     return this.intervaloTempoRepository.findOne({
       where: {
-        periodoFim: dto.periodoFim,
-        periodoInicio: dto.periodoInicio,
+        periodoFim: domain.periodoFim,
+        periodoInicio: domain.periodoInicio,
       },
     });
   }

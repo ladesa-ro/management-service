@@ -185,7 +185,7 @@ export class AmbienteService {
     return this.ambienteFindByIdStrict(accessContext, { id: ambiente.id });
   }
 
-  async ambienteUpdate(accessContext: AccessContext, domain: IDomain.AmbienteUpdateByIdInput) {
+  async ambienteUpdate(accessContext: AccessContext, domain: IDomain.AmbienteUpdateInput) {
     // =========================================================
 
     const currentAmbiente = await this.ambienteFindByIdStrict(accessContext, domain);
@@ -278,18 +278,18 @@ export class AmbienteService {
 
     // =========================================================
 
-    const bloco = await this.ambienteFindByIdStrict(accessContext, domain);
+    const ambiente = await this.ambienteFindByIdStrict(accessContext, domain);
 
     // =========================================================
 
-    if (bloco) {
+    if (ambiente) {
       await this.ambienteRepository
         .createQueryBuilder(aliasAmbiente)
         .update()
         .set({
           dateDeleted: "NOW()",
         })
-        .where("id = :blocoId", { blocoId: bloco.id })
+        .where("id = :blocoId", {blocoId: ambiente.id})
         .andWhere("dateDeleted IS NULL")
         .execute();
     }

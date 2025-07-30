@@ -8,7 +8,7 @@ import { CalendarioLetivoService } from "./calendario-letivo.service";
 export class CalendarioLetivoResolver {
   constructor(private calendarioLetivoService: CalendarioLetivoService) {}
 
-  async calendarioLetivoFindAll(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("CalendarioLetivoFindAll") dto: IAppRequest<"CalendarioLetivoFindAll">) {
+  async calendarioLetivoFindAll(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("CalendarioLetivoList") dto: IAppRequest<"CalendarioLetivoList">) {
     return this.calendarioLetivoService.calendarioLetivoFindAll(accessContext, dto);
   }
 

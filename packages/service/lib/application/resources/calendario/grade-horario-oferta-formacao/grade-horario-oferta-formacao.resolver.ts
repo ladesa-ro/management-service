@@ -12,8 +12,7 @@ export class GradeHorarioOfertaFormacaoResolver {
 
   async gradeHorarioOfertaFormacaoFindAll(
     @AccessContextGraphQl() accessContext: AccessContext,
-
-    @AppRequest("GradeHorarioOfertaFormacaoFindAll") dto: IAppRequest<"GradeHorarioOfertaFormacaoFindAll">,
+    @AppRequest("GradeHorarioOfertaFormacaoList") dto: IAppRequest<"GradeHorarioOfertaFormacaoList">,
     @GqlInfo() info: GraphQLResolveInfo,
   ) {
     return this.gradeHorarioOfertaFormacaoService.gradeHorarioOfertaFormacaoFindAll(accessContext, dto, graphqlExtractSelection(info, "paginated"));

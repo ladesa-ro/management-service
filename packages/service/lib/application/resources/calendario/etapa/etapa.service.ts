@@ -27,7 +27,7 @@ export class EtapaService {
     return this.databaseContext.etapaRepository;
   }
 
-  async etapaFindAll(accessContext: AccessContext, dto: IDomain.EtapaListInput | null = null, selection?: string[] | boolean): Promise<IDomain.EtapaListOutput["success"]> {
+  async etapaFindAll(accessContext: AccessContext, domain: IDomain.EtapaListInput | null = null, selection?: string[] | boolean): Promise<IDomain.EtapaListOutput["success"]> {
     // =========================================================
 
     const qb = this.etapaRepository.createQueryBuilder(aliasEtapa);
@@ -40,7 +40,7 @@ export class EtapaService {
 
     const paginated = await this.searchService.search(
       qb,
-      { ...dto },
+      {...domain},
       {
         select: [
           "id",
@@ -100,7 +100,7 @@ export class EtapaService {
     return paginated;
   }
 
-  async etapaFindById(accessContext: AccessContext, dto: IDomain.EtapaFindOneInput, selection?: string[] | boolean): Promise<IDomain.EtapaFindOneOutput | null> {
+  async etapaFindById(accessContext: AccessContext, domain: IDomain.EtapaFindOneInput, selection?: string[] | boolean): Promise<IDomain.EtapaFindOneOutput | null> {
     // =========================================================
 
     const qb = this.etapaRepository.createQueryBuilder(aliasEtapa);
@@ -111,7 +111,7 @@ export class EtapaService {
 
     // =========================================================
 
-    qb.andWhere(`${aliasEtapa}.id = :id`, { id: dto.id });
+    qb.andWhere(`${aliasEtapa}.id = :id`, {id: domain.id});
 
     // =========================================================
 
@@ -128,8 +128,8 @@ export class EtapaService {
     return etapa;
   }
 
-  async etapaFindByIdStrict(accessContext: AccessContext, dto: IDomain.EtapaFindOneInput, selection?: string[] | boolean) {
-    const etapa = await this.etapaFindById(accessContext, dto, selection);
+  async etapaFindByIdStrict(accessContext: AccessContext, domain: IDomain.EtapaFindOneInput, selection?: string[] | boolean) {
+    const etapa = await this.etapaFindById(accessContext, domain, selection);
 
     if (!etapa) {
       throw new NotFoundException();
@@ -175,14 +175,14 @@ export class EtapaService {
     return etapa;
   }
 
-  async etapaCreate(accessContext: AccessContext, dto: IDomain.EtapaCreateInput) {
+  async etapaCreate(accessContext: AccessContext, domain: IDomain.EtapaCreateInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("etapa:create", { dto });
+    await accessContext.ensurePermission("etapa:create", {dto: domain});
 
     // =========================================================
 
-    const dtoEtapa = pick(dto.body, ["numero", "cor", "dataInicio", "dataTermino"]);
+    const dtoEtapa = pick(domain, ["numero", "cor", "dataInicio", "dataTermino"]);
 
     const etapa = this.etapaRepository.create();
 
@@ -192,8 +192,8 @@ export class EtapaService {
 
     // =========================================================
 
-    if (dto.body.calendario) {
-      const calendario = await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(accessContext, dto.body.calendario.id);
+    if (domain.calendario) {
+      const calendario = await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(accessContext, domain.body.calendario.id);
 
       this.etapaRepository.merge(etapa, {
         calendario: {
@@ -211,16 +211,16 @@ export class EtapaService {
     return this.etapaFindByIdStrict(accessContext, { id: etapa.id });
   }
 
-  async etapaUpdate(accessContext: AccessContext, dto: IDomain.EtapaUpdateByIdInput) {
+  async etapaUpdate(accessContext: AccessContext, domain: IDomain.EtapaUpdateInput) {
     // =========================================================
 
-    const currentEtapa = await this.etapaFindByIdStrict(accessContext, dto);
+    const currentEtapa = await this.etapaFindByIdStrict(accessContext, domain);
 
     // =========================================================
 
-    await accessContext.ensurePermission("etapa:update", { dto }, dto.path.id, this.etapaRepository.createQueryBuilder(aliasEtapa));
+    await accessContext.ensurePermission("etapa:update", {dto: domain}, domain.id, this.etapaRepository.createQueryBuilder(aliasEtapa));
 
-    const dtoEtapa = pick(dto.body, ["numero", "cor", "dataInicio", "dataTermino"]);
+    const dtoEtapa = pick(domain, ["numero", "cor", "dataInicio", "dataTermino"]);
 
     const etapa = {
       id: currentEtapa.id,
@@ -232,8 +232,8 @@ export class EtapaService {
 
     // =========================================================
 
-    if (has(dto.body, "calendario") && dto.body.calendario !== undefined) {
-      const calendario = await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(accessContext, dto.body.calendario!.id);
+    if (has(domain, "calendario") && domain.calendario !== undefined) {
+      const calendario = await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(accessContext, domain.body.calendario!.id);
 
       this.etapaRepository.merge(etapa, {
         calendario: {
@@ -251,14 +251,14 @@ export class EtapaService {
     return this.etapaFindByIdStrict(accessContext, { id: etapa.id });
   }
 
-  async etapaDeleteOneById(accessContext: AccessContext, dto: IDomain.EtapaFindOneInput) {
+  async etapaDeleteOneById(accessContext: AccessContext, domain: IDomain.EtapaFindOneInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("etapa:delete", { dto }, dto.id, this.etapaRepository.createQueryBuilder(aliasEtapa));
+    await accessContext.ensurePermission("etapa:delete", {dto: domain}, domain.id, this.etapaRepository.createQueryBuilder(aliasEtapa));
 
     // =========================================================
 
-    const etapa = await this.etapaFindByIdStrict(accessContext, dto);
+    const etapa = await this.etapaFindByIdStrict(accessContext, domain);
 
     // =========================================================
 

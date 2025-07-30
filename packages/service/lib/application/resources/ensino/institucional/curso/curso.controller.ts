@@ -13,7 +13,7 @@ export class CursoController {
   constructor(private cursoService: CursoService) {}
 
   @Get("/")
-  async cursoFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CursoFindAll") dto: IAppRequest<"CursoFindAll">) {
+  async cursoFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CursoList") dto: IAppRequest<"CursoList">) {
     const domain: IDomain.CursoListInput = requestRepresentationMergeToDomain(dto);
     return this.cursoService.cursoFindAll(accessContext, domain);
   }

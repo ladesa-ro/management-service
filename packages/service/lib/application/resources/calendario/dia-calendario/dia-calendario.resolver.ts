@@ -8,7 +8,7 @@ import { DiaCalendarioService } from "./dia-calendario.service";
 export class DiaCalendarioResolver {
   constructor(private diaCalendarioService: DiaCalendarioService) {}
 
-  async diaCalendarioFindAll(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("DiaCalendarioFindAll") dto: IAppRequest<"DiaCalendarioFindAll">) {
+  async diaCalendarioFindAll(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("DiaCalendarioList") dto: IAppRequest<"DiaCalendarioList">) {
     return this.diaCalendarioService.diaCalendarioFindAll(accessContext, dto);
   }
 

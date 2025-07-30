@@ -1,4 +1,9 @@
-import { Injectable, InternalServerErrorException, NotFoundException, ServiceUnavailableException } from "@nestjs/common";
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+  ServiceUnavailableException
+} from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { ValidationFailedException } from "@/application/contracts";
 import { QbEfficientLoad } from "@/application/contracts/qb-efficient-load";
@@ -56,7 +61,7 @@ export class UsuarioService {
     return usuario;
   }
 
-  async usuarioFindAll(accessContext: AccessContext, dto: IDomain.UsuarioListInput | null = null, selection?: string[] | boolean): Promise<IDomain.UsuarioListOutput["success"]> {
+  async usuarioFindAll(accessContext: AccessContext, domain: IDomain.UsuarioListInput | null = null, selection?: string[] | boolean): Promise<IDomain.UsuarioListOutput["success"]> {
     // =========================================================
 
     const qb = this.usuarioRepository.createQueryBuilder(aliasUsuario);
@@ -69,7 +74,7 @@ export class UsuarioService {
 
     const paginated = await this.searchService.search(
       qb,
-      { ...dto },
+      {...domain},
       {
         ...paginateConfig,
         select: [
@@ -118,7 +123,7 @@ export class UsuarioService {
     return paginated;
   }
 
-  async usuarioFindById(accessContext: AccessContext | null, dto: IDomain.UsuarioFindOneInput, selection?: string[] | boolean): Promise<IDomain.UsuarioFindOneOutput | null> {
+  async usuarioFindById(accessContext: AccessContext | null, domain: IDomain.UsuarioFindOneInput, selection?: string[] | boolean): Promise<IDomain.UsuarioFindOneOutput | null> {
     // =========================================================
 
     const qb = this.usuarioRepository.createQueryBuilder(aliasUsuario);
@@ -131,7 +136,7 @@ export class UsuarioService {
 
     // =========================================================
 
-    qb.andWhere(`${aliasUsuario}.id = :id`, { id: dto.id });
+    qb.andWhere(`${aliasUsuario}.id = :id`, {id: domain.id});
 
     // =========================================================
 
@@ -147,8 +152,8 @@ export class UsuarioService {
     return usuario;
   }
 
-  async usuarioFindByIdStrict(accessContext: AccessContext | null, dto: IDomain.UsuarioFindOneInput, selection?: string[] | boolean) {
-    const usuario = await this.usuarioFindById(accessContext, dto, selection);
+  async usuarioFindByIdStrict(accessContext: AccessContext | null, domain: IDomain.UsuarioFindOneInput, selection?: string[] | boolean) {
+    const usuario = await this.usuarioFindById(accessContext, domain, selection);
 
     if (!usuario) {
       throw new NotFoundException();
@@ -209,11 +214,11 @@ export class UsuarioService {
     throw new NotFoundException();
   }
 
-  async usuarioUpdateImagemCapa(accessContext: AccessContext, dto: IDomain.UsuarioFindOneInput, file: Express.Multer.File) {
+  async usuarioUpdateImagemCapa(accessContext: AccessContext, domain: IDomain.UsuarioFindOneInput, file: Express.Multer.File) {
     // =========================================================
 
     const currentUsuario = await this.usuarioFindByIdStrict(accessContext, {
-      id: dto.id,
+      id: domain.id,
     });
 
     // =========================================================
@@ -264,11 +269,11 @@ export class UsuarioService {
     throw new NotFoundException();
   }
 
-  async usuarioUpdateImagemPerfil(accessContext: AccessContext, dto: IDomain.UsuarioFindOneInput, file: Express.Multer.File) {
+  async usuarioUpdateImagemPerfil(accessContext: AccessContext, domain: IDomain.UsuarioFindOneInput, file: Express.Multer.File) {
     // =========================================================
 
     const currentUsuario = await this.usuarioFindByIdStrict(accessContext, {
-      id: dto.id,
+      id: domain.id,
     });
 
     // =========================================================
@@ -304,14 +309,14 @@ export class UsuarioService {
     return true;
   }
 
-  async usuarioCreate(accessContext: AccessContext, dto: IDomain.UsuarioCreateInput) {
+  async usuarioCreate(accessContext: AccessContext, domain: IDomain.UsuarioCreateInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("usuario:create", { dto });
+    await accessContext.ensurePermission("usuario:create", {dto: domain});
 
     // =========================================================
 
-    const input = pick(dto.body, ["nome", "matriculaSiape", "email"]);
+    const input = pick(domain, ["nome", "matriculaSiape", "email"]);
 
     await this.ensureDtoAvailability(input, null);
 
@@ -351,10 +356,10 @@ export class UsuarioService {
     return this.usuarioFindByIdStrict(accessContext, { id: usuario.id });
   }
 
-  async usuarioUpdate(accessContext: AccessContext, dto: IDomain.UsuarioUpdateByIdInput) {
+  async usuarioUpdate(accessContext: AccessContext, domain: IDomain.UsuarioUpdateInput) {
     // =========================================================
 
-    const currentUsuario = await this.usuarioFindByIdStrict(accessContext, dto);
+    const currentUsuario = await this.usuarioFindByIdStrict(accessContext, domain);
 
     const currentMatriculaSiape = currentUsuario.matriculaSiape ?? (await this.internalResolveMatriculaSiape(currentUsuario.id));
 
@@ -366,11 +371,11 @@ export class UsuarioService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("usuario:update", { dto }, dto.path.id, this.usuarioRepository.createQueryBuilder(aliasUsuario));
+    await accessContext.ensurePermission("usuario:update", {dto: domain}, domain.id, this.usuarioRepository.createQueryBuilder(aliasUsuario));
 
-    const input = pick(dto.body, ["nome", "matriculaSiape", "email"]);
+    const input = pick(domain, ["nome", "matriculaSiape", "email"]);
 
-    await this.ensureDtoAvailability(input, dto.path.id);
+    await this.ensureDtoAvailability(input, domain.id);
 
     const usuario = {
       id: currentUsuario.id,
@@ -385,8 +390,8 @@ export class UsuarioService {
     await this.databaseContext.transaction(async ({ databaseContext: { usuarioRepository } }) => {
       await usuarioRepository.save(usuario);
 
-      const changedEmail = has(dto, "email");
-      const changedMatriculaSiape = has(dto, "matriculaSiape");
+      const changedEmail = has(domain, "email");
+      const changedMatriculaSiape = has(domain, "matriculaSiape");
 
       if (changedEmail || changedMatriculaSiape) {
         const kcAdminClient = await this.keycloakService.getAdminClient();
@@ -407,7 +412,7 @@ export class UsuarioService {
           await kcAdminClient.users.update(
             { id: kcUser.id! },
             {
-              email: dto.body.email ?? undefined,
+              email: domain.email ?? undefined,
             },
           );
         }
@@ -419,14 +424,14 @@ export class UsuarioService {
     return this.usuarioFindByIdStrict(accessContext, { id: usuario.id });
   }
 
-  async usuarioDeleteOneById(accessContext: AccessContext, dto: IDomain.UsuarioFindOneInput) {
+  async usuarioDeleteOneById(accessContext: AccessContext, domain: IDomain.UsuarioFindOneInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("usuario:delete", { dto }, dto.id, this.usuarioRepository.createQueryBuilder(aliasUsuario));
+    await accessContext.ensurePermission("usuario:delete", {dto: domain}, domain.id, this.usuarioRepository.createQueryBuilder(aliasUsuario));
 
     // =========================================================
 
-    const usuario = await this.usuarioFindByIdStrict(accessContext, dto);
+    const usuario = await this.usuarioFindByIdStrict(accessContext, domain);
 
     // =========================================================
 
@@ -482,7 +487,7 @@ export class UsuarioService {
     return isAvailable;
   }
 
-  private async ensureDtoAvailability(dto: Partial<Pick<IDomain.Usuario, "email" | "matriculaSiape">>, currentUsuarioId: string | null = null) {
+  private async ensureDtoAvailability(domain: Partial<Pick<IDomain.Usuario, "email" | "matriculaSiape">>, currentUsuarioId: string | null = null) {
     // ===================================
 
     let isEmailAvailable = true;
@@ -490,7 +495,7 @@ export class UsuarioService {
 
     // ===================================
 
-    const email = dto.email;
+    const email = domain.email;
 
     if (email) {
       isEmailAvailable = await this.checkEmailAvailability(email, currentUsuarioId);
@@ -498,7 +503,7 @@ export class UsuarioService {
 
     // ===================================
 
-    const matriculaSiape = dto.matriculaSiape;
+    const matriculaSiape = domain.matriculaSiape;
 
     if (matriculaSiape) {
       isMatriculaSiapeAvailable = await this.checkMatriculaSiapeAvailability(matriculaSiape, currentUsuarioId);

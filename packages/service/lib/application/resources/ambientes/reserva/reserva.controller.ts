@@ -13,7 +13,7 @@ export class ReservaController {
   constructor(private reservaService: ReservaService) {}
 
   @Get("/")
-  async reservaFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("ReservaFindAll") dto: IAppRequest<"ReservaFindAll">) {
+  async reservaFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("ReservaList") dto: IAppRequest<"ReservaList">) {
     const domain: IDomain.ReservaListInput = requestRepresentationMergeToDomain(dto);
     return this.reservaService.reservaFindAll(accessContext, domain);
   }

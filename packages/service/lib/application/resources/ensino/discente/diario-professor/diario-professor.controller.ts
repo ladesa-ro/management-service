@@ -13,7 +13,7 @@ export class DiarioProfessorController {
   constructor(private diarioProfessorService: DiarioProfessorService) {}
 
   @Get("/")
-  async diarioProfessorFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DiarioProfessorFindAll") dto: IAppRequest<"DiarioProfessorFindAll">) {
+  async diarioProfessorFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DiarioProfessorList") dto: IAppRequest<"DiarioProfessorList">) {
     const domain: IDomain.DiarioProfessorListInput = requestRepresentationMergeToDomain(dto);
     return this.diarioProfessorService.diarioProfessorFindAll(accessContext, domain);
   }

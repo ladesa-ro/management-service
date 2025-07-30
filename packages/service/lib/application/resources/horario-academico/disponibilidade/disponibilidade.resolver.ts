@@ -10,11 +10,7 @@ import { DisponibilidadeService } from "./disponibilidade.service";
 export class DisponibilidadeResolver {
   constructor(private disponibilidadeService: DisponibilidadeService) {}
 
-  async disponibilidadeFindAll(
-    @AccessContextGraphQl() accessContext: AccessContext,
-    @AppRequest("DisponibilidadeFindAll") dto: IAppRequest<"DisponibilidadeFindAll">,
-    @GqlInfo() info: GraphQLResolveInfo,
-  ) {
+  async disponibilidadeFindAll(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("DisponibilidadeList") dto: IAppRequest<"DisponibilidadeList">, @GqlInfo() info: GraphQLResolveInfo) {
     return this.disponibilidadeService.disponibilidadeFindAll(accessContext, dto, graphqlExtractSelection(info, "paginated"));
   }
 

@@ -27,7 +27,7 @@ export class EventoService {
     return this.databaseContext.eventoRepository;
   }
 
-  async eventoFindAll(accessContext: AccessContext, dto: IDomain.EventoListInput | null = null, selection?: string[] | boolean): Promise<IDomain.EventoListOutput["success"]> {
+  async eventoFindAll(accessContext: AccessContext, domain: IDomain.EventoListInput | null = null, selection?: string[] | boolean): Promise<IDomain.EventoListOutput["success"]> {
     // =========================================================
 
     const qb = this.eventoRepository.createQueryBuilder(aliasEvento);
@@ -40,7 +40,7 @@ export class EventoService {
 
     const paginated = await this.searchService.search(
       qb,
-      { ...dto },
+      {...domain},
       {
         select: [
           "id",
@@ -95,7 +95,7 @@ export class EventoService {
     return paginated;
   }
 
-  async eventoFindById(accessContext: AccessContext, dto: IDomain.EventoFindOneInput, selection?: string[] | boolean): Promise<IDomain.EventoFindOneOutput | null> {
+  async eventoFindById(accessContext: AccessContext, domain: IDomain.EventoFindOneInput, selection?: string[] | boolean): Promise<IDomain.EventoFindOneOutput | null> {
     // =========================================================
 
     const qb = this.eventoRepository.createQueryBuilder(aliasEvento);
@@ -106,7 +106,7 @@ export class EventoService {
 
     // =========================================================
 
-    qb.andWhere(`${aliasEvento}.id = :id`, { id: dto.id });
+    qb.andWhere(`${aliasEvento}.id = :id`, {id: domain.id});
 
     // =========================================================
 
@@ -121,8 +121,8 @@ export class EventoService {
     return evento;
   }
 
-  async eventoFindByIdStrict(accessContext: AccessContext, dto: IDomain.EventoFindOneInput, selection?: string[] | boolean) {
-    const evento = await this.eventoFindById(accessContext, dto, selection);
+  async eventoFindByIdStrict(accessContext: AccessContext, domain: IDomain.EventoFindOneInput, selection?: string[] | boolean) {
+    const evento = await this.eventoFindById(accessContext, domain, selection);
 
     if (!evento) {
       throw new NotFoundException();
@@ -168,14 +168,14 @@ export class EventoService {
     return evento;
   }
 
-  async eventoCreate(accessContext: AccessContext, dto: IDomain.EventoCreateInput) {
+  async eventoCreate(accessContext: AccessContext, domain: IDomain.EventoCreateInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("evento:create", { dto });
+    await accessContext.ensurePermission("evento:create", {dto: domain});
 
     // =========================================================
 
-    const dtoEvento = pick(dto.body, ["nome", "cor", "rrule"]);
+    const dtoEvento = pick(domain, ["nome", "cor", "rrule"]);
 
     const evento = this.eventoRepository.create();
 
@@ -185,8 +185,8 @@ export class EventoService {
 
     // =========================================================
 
-    if (dto.body.calendario) {
-      const calendario = await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(accessContext, dto.body.calendario.id);
+    if (domain.calendario) {
+      const calendario = await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(accessContext, domain.body.calendario.id);
 
       this.eventoRepository.merge(evento, {
         calendario: {
@@ -204,16 +204,16 @@ export class EventoService {
     return this.eventoFindByIdStrict(accessContext, { id: evento.id });
   }
 
-  async eventoUpdate(accessContext: AccessContext, dto: IDomain.EventoUpdateByIdInput) {
+  async eventoUpdate(accessContext: AccessContext, domain: IDomain.EventoUpdateInput) {
     // =========================================================
 
-    const currentEvento = await this.eventoFindByIdStrict(accessContext, dto);
+    const currentEvento = await this.eventoFindByIdStrict(accessContext, domain);
 
     // =========================================================
 
-    await accessContext.ensurePermission("evento:update", { dto }, dto.path.id, this.eventoRepository.createQueryBuilder(aliasEvento));
+    await accessContext.ensurePermission("evento:update", {dto: domain}, domain.id, this.eventoRepository.createQueryBuilder(aliasEvento));
 
-    const dtoEvento = pick(dto.body, ["nome", "cor", "rrule"]);
+    const dtoEvento = pick(domain, ["nome", "cor", "rrule"]);
 
     const evento = {
       id: currentEvento.id,
@@ -225,8 +225,8 @@ export class EventoService {
 
     // =========================================================
 
-    if (has(dto.body, "calendario") && dto.body.calendario !== undefined) {
-      const calendario = await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(accessContext, dto.body.calendario!.id);
+    if (has(domain, "calendario") && domain.calendario !== undefined) {
+      const calendario = await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(accessContext, domain.body.calendario!.id);
 
       this.eventoRepository.merge(evento, {
         calendario: {
@@ -244,14 +244,14 @@ export class EventoService {
     return this.eventoFindByIdStrict(accessContext, { id: evento.id });
   }
 
-  async eventoDeleteOneById(accessContext: AccessContext, dto: IDomain.EventoFindOneInput) {
+  async eventoDeleteOneById(accessContext: AccessContext, domain: IDomain.EventoFindOneInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("evento:delete", { dto }, dto.id, this.eventoRepository.createQueryBuilder(aliasEvento));
+    await accessContext.ensurePermission("evento:delete", {dto: domain}, domain.id, this.eventoRepository.createQueryBuilder(aliasEvento));
 
     // =========================================================
 
-    const evento = await this.eventoFindByIdStrict(accessContext, dto);
+    const evento = await this.eventoFindByIdStrict(accessContext, domain);
 
     // =========================================================
 

@@ -13,7 +13,7 @@ export class TurmaDisponibilidadeController {
   constructor(private turmaDisponibilidadeService: TurmaDisponibilidadeService) {}
 
   @Get("/")
-  async turmaDisponibilidadeFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("TurmaDisponibilidadeFindAll") dto: IAppRequest<"TurmaDisponibilidadeFindAll">) {
+  async turmaDisponibilidadeFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("TurmaDisponibilidadeList") dto: IAppRequest<"TurmaDisponibilidadeList">) {
     const domain: IDomain.TurmaDisponibilidadeListInput = requestRepresentationMergeToDomain(dto);
     return this.turmaDisponibilidadeService.turmaDisponibilidadeFindAll(accessContext, domain);
   }
