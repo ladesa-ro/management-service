@@ -6,7 +6,7 @@ services:
     container_name: ladesa-management-service
     user: root
     build:
-      context: ./service
+      context: packages/service
       target: devcontainer
     command:
       - sleep
@@ -18,10 +18,10 @@ services:
     ports:
       - "3701:3701"
       - "9229:9229"
-    working_dir: /ladesa/.sources/management-service
+    working_dir: /ladesa/.sources/management-service/service
     userns_mode: keep-id:uid=1000,gid=1000
     volumes:
-      - ./service:/ladesa/.sources/management-service:z
+      - ./packages/service:/ladesa/.sources/management-service/service:z
       - ladesa-management-service-uploaded-files:/container/uploaded
     environment:
       - STORAGE_PATH=/container/uploaded

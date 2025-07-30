@@ -16,7 +16,7 @@ ENV BUN_TMPDIR="/home/bun/.bun/tmp"
 RUN mkdir -p /ladesa/.sources
 RUN chown -R 1000:1000 /ladesa/.sources
 
-WORKDIR "/ladesa/.sources/management-service/"
+WORKDIR "/ladesa/.sources/management-service/service"
 
 FROM base AS devcontainer
 
@@ -27,7 +27,7 @@ FROM base AS devcontainer
 FROM base AS dev-dependencies
 RUN mkdir -p /ladesa/.builds
 
-COPY . "/ladesa/.sources/management-service/"
+COPY . "/ladesa/.sources/management-service/service"
 
 RUN --mount=type=cache,id=bun,target=${BUN_INSTALL_CACHE_DIR} bun install --frozen-lockfile
 
@@ -37,7 +37,7 @@ RUN --mount=type=cache,id=bun,target=${BUN_INSTALL_CACHE_DIR} bun install --froz
 
 FROM dev-dependencies AS management-service-builder
 
-RUN cp -r /ladesa/.sources/management-service /ladesa/.builds/management-service
+RUN cp -r /ladesa/.sources/management-service/service /ladesa/.builds/management-service
 
 WORKDIR /ladesa/.builds/management-service
 RUN --mount=type=cache,id=bun,target=${BUN_INSTALL_CACHE_DIR} bun install
@@ -75,4 +75,4 @@ COPY --from=management-service-builder \
 
 WORKDIR "/ladesa/services/management-service/packages/service"
 
-CMD bun run migration:run && bun run start:prod
+CMD bun run migration:run && bun run start

@@ -36,7 +36,7 @@ cd api-service
 
 > A pasta API service contém o código fonte do Serviço de API, que utiliza o framework NestJS no NodeJS.
 
-### Serviços do [docker-compose.yml](packages/docker-compose.yml)
+### Serviços do [docker-compose.yml](docker-compose.yml)
 
 | Host            | Endereço         | Descrição                | Plataforma Base                   |
 | --------------- | ---------------- | ------------------------ | --------------------------------- |
@@ -45,7 +45,7 @@ cd api-service
 
 ### Scripts Make
 
-O projeto conta com um [arquivo make](packages/Makefile) que comporta scrips destinados ao desenvolvimento da aplicação.
+O projeto conta com um [arquivo make](Makefile) que comporta scrips destinados ao desenvolvimento da aplicação.
 
 <details>
 <summary>Visão geral dos scripts make</summary>
