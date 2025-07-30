@@ -99,7 +99,7 @@ export class CursoService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("CursoFindOneOutput", qb, aliasCurso, selection);
+    await QbEfficientLoad("CursoFindOneOutput", qb, aliasCurso, selection);
 
     // =========================================================
 
@@ -129,7 +129,7 @@ export class CursoService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("CursoFindOneOutput", qb, aliasCurso, selection);
+    await QbEfficientLoad("CursoFindOneOutput", qb, aliasCurso, selection);
 
     // =========================================================
 
@@ -166,7 +166,7 @@ export class CursoService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("CursoFindOneOutput", qb, aliasCurso, selection);
+    await QbEfficientLoad("CursoFindOneOutput", qb, aliasCurso, selection);
 
     // =========================================================
 

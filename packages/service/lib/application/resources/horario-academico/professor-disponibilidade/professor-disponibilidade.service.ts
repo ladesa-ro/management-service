@@ -72,7 +72,7 @@ export class ProfessorDisponibilidadeService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("ProfessorDisponibilidadeFindOneOutput", qb, aliasProfessorDisponibilidade, selection);
+    await QbEfficientLoad("ProfessorDisponibilidadeFindOneOutput", qb, aliasProfessorDisponibilidade, selection);
 
     // =========================================================
 
@@ -106,7 +106,7 @@ export class ProfessorDisponibilidadeService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("ProfessorDisponibilidadeFindOneOutput", qb, aliasProfessorDisponibilidade, selection);
+    await QbEfficientLoad("ProfessorDisponibilidadeFindOneOutput", qb, aliasProfessorDisponibilidade, selection);
 
     // =========================================================
 
@@ -147,7 +147,7 @@ export class ProfessorDisponibilidadeService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("ProfessorDisponibilidadeFindOneOutput", qb, aliasProfessorDisponibilidade, selection);
+    await QbEfficientLoad("ProfessorDisponibilidadeFindOneOutput", qb, aliasProfessorDisponibilidade, selection);
 
     // =========================================================
 

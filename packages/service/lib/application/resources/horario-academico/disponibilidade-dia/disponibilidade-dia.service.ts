@@ -96,7 +96,7 @@ export class DisponibilidadeDiaService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("DisponibilidadeDiaFindOneOutput", qb, aliasDisponibilidadeDia, selection);
+    await QbEfficientLoad("DisponibilidadeDiaFindOneOutput", qb, aliasDisponibilidadeDia, selection);
 
     // =========================================================
 
@@ -126,7 +126,7 @@ export class DisponibilidadeDiaService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("DisponibilidadeDiaFindOneOutput", qb, aliasDisponibilidadeDia, selection);
+    await QbEfficientLoad("DisponibilidadeDiaFindOneOutput", qb, aliasDisponibilidadeDia, selection);
     // =========================================================
 
     const disponibilidadeDia = await qb.getOne();
@@ -166,7 +166,7 @@ export class DisponibilidadeDiaService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("DisponibilidadeDiaFindOneOutput", qb, aliasDisponibilidadeDia, selection);
+    await QbEfficientLoad("DisponibilidadeDiaFindOneOutput", qb, aliasDisponibilidadeDia, selection);
 
     // =========================================================
 

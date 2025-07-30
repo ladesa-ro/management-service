@@ -94,7 +94,7 @@ export class DiarioService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("DiarioFindOneOutput", qb, aliasDiario, selection);
+    await QbEfficientLoad("DiarioFindOneOutput", qb, aliasDiario, selection);
 
     // =========================================================
 
@@ -122,7 +122,7 @@ export class DiarioService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("DiarioFindOneOutput", qb, aliasDiario, selection);
+    await QbEfficientLoad("DiarioFindOneOutput", qb, aliasDiario, selection);
 
     // =========================================================
 
@@ -159,7 +159,7 @@ export class DiarioService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("DiarioFindOneOutput", qb, aliasDiario, selection);
+    await QbEfficientLoad("DiarioFindOneOutput", qb, aliasDiario, selection);
 
     // =========================================================
 

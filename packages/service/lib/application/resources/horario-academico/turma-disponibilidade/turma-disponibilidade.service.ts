@@ -70,7 +70,7 @@ export class TurmaDisponibilidadeService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("TurmaDisponibilidadeFindOneOutput", qb, aliasTurmaDisponibilidade, selection);
+    await QbEfficientLoad("TurmaDisponibilidadeFindOneOutput", qb, aliasTurmaDisponibilidade, selection);
 
     // =========================================================
 
@@ -104,7 +104,7 @@ export class TurmaDisponibilidadeService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("TurmaDisponibilidadeFindOneOutput", qb, aliasTurmaDisponibilidade, selection);
+    await QbEfficientLoad("TurmaDisponibilidadeFindOneOutput", qb, aliasTurmaDisponibilidade, selection);
 
     // =========================================================
 
@@ -145,7 +145,7 @@ export class TurmaDisponibilidadeService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("TurmaDisponibilidadeFindOneOutput", qb, aliasTurmaDisponibilidade, selection);
+    await QbEfficientLoad("TurmaDisponibilidadeFindOneOutput", qb, aliasTurmaDisponibilidade, selection);
 
     // =========================================================
 

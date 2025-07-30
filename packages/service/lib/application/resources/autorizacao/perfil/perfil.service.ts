@@ -45,7 +45,7 @@ export class PerfilService {
       await accessContext.applyFilter("vinculo:find", qb, aliasVinculo, null);
     }
 
-    QbEfficientLoad("PerfilFindOneOutput", qb, "vinculo");
+    await QbEfficientLoad("PerfilFindOneOutput", qb, "vinculo");
 
     const vinculos = await qb.getMany();
 
@@ -55,7 +55,7 @@ export class PerfilService {
   async perfilFindAll(accessContext: AccessContext, dto: IDomain.PerfilListInput | null = null, selection?: string[] | boolean) {
     const qb = this.vinculoRepository.createQueryBuilder(aliasVinculo);
 
-    QbEfficientLoad("PerfilFindOneOutput", qb, aliasVinculo, selection);
+    await QbEfficientLoad("PerfilFindOneOutput", qb, aliasVinculo, selection);
 
     await accessContext.applyFilter("vinculo:find", qb, aliasVinculo, null);
 
@@ -115,7 +115,7 @@ export class PerfilService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("PerfilFindOneOutput", qb, aliasVinculo, selection);
+    await QbEfficientLoad("PerfilFindOneOutput", qb, aliasVinculo, selection);
 
     // =========================================================
 

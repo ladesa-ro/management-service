@@ -66,7 +66,7 @@ export class ModalidadeService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("ModalidadeFindOneOutput", qb, aliasModalidade, selection);
+    await QbEfficientLoad("ModalidadeFindOneOutput", qb, aliasModalidade, selection);
 
     // =========================================================
 
@@ -96,7 +96,7 @@ export class ModalidadeService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("ModalidadeFindOneOutput", qb, aliasModalidade, selection);
+    await QbEfficientLoad("ModalidadeFindOneOutput", qb, aliasModalidade, selection);
 
     // =========================================================
 
@@ -133,7 +133,7 @@ export class ModalidadeService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("ModalidadeFindOneOutput", qb, aliasModalidade, selection);
+    await QbEfficientLoad("ModalidadeFindOneOutput", qb, aliasModalidade, selection);
 
     // =========================================================
 

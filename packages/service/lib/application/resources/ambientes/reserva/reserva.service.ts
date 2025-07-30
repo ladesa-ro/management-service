@@ -99,7 +99,7 @@ export class ReservaService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("ReservaFindOneOutput", qb, aliasReserva, selection);
+    await QbEfficientLoad("ReservaFindOneOutput", qb, aliasReserva, selection);
 
     // =========================================================
 
@@ -127,7 +127,7 @@ export class ReservaService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("ReservaFindOneOutput", qb, aliasReserva, selection);
+    await QbEfficientLoad("ReservaFindOneOutput", qb, aliasReserva, selection);
 
     // =========================================================
 
@@ -164,7 +164,7 @@ export class ReservaService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("ReservaFindOneOutput", qb, aliasReserva, selection);
+    await QbEfficientLoad("ReservaFindOneOutput", qb, aliasReserva, selection);
 
     // =========================================================
 

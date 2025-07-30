@@ -108,7 +108,7 @@ export class HorarioGeradoAulaService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("HorarioGeradoAulaFindOneOutput", qb, aliasHorarioGeradoAula, selection);
+    await QbEfficientLoad("HorarioGeradoAulaFindOneOutput", qb, aliasHorarioGeradoAula, selection);
 
     // =========================================================
 
@@ -136,7 +136,7 @@ export class HorarioGeradoAulaService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("HorarioGeradoAulaFindOneOutput", qb, aliasHorarioGeradoAula, selection);
+    await QbEfficientLoad("HorarioGeradoAulaFindOneOutput", qb, aliasHorarioGeradoAula, selection);
     // =========================================================
 
     const horarioGeradoAula = await qb.getOne();
@@ -172,7 +172,7 @@ export class HorarioGeradoAulaService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("HorarioGeradoAulaFindOneOutput", qb, aliasHorarioGeradoAula, selection);
+    await QbEfficientLoad("HorarioGeradoAulaFindOneOutput", qb, aliasHorarioGeradoAula, selection);
 
     // =========================================================
 

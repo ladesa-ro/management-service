@@ -72,7 +72,7 @@ export class DisciplinaService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("DisciplinaFindOneOutput", qb, aliasDisciplina, selection);
+    await QbEfficientLoad("DisciplinaFindOneOutput", qb, aliasDisciplina, selection);
 
     // =========================================================
 
@@ -102,7 +102,7 @@ export class DisciplinaService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("DisciplinaFindOneOutput", qb, aliasDisciplina, selection);
+    await QbEfficientLoad("DisciplinaFindOneOutput", qb, aliasDisciplina, selection);
 
     // =========================================================
 
@@ -139,7 +139,7 @@ export class DisciplinaService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("DisciplinaFindOneOutput", qb, aliasDisciplina, selection);
+    await QbEfficientLoad("DisciplinaFindOneOutput", qb, aliasDisciplina, selection);
 
     // =========================================================
 

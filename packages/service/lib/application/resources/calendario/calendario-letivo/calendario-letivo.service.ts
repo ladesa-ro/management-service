@@ -106,7 +106,7 @@ export class CalendarioLetivoService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("CalendarioLetivoFindOneOutput", qb, aliasCalendarioLetivo, selection);
+    await QbEfficientLoad("CalendarioLetivoFindOneOutput", qb, aliasCalendarioLetivo, selection);
 
     // =========================================================
 
@@ -134,7 +134,7 @@ export class CalendarioLetivoService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("CalendarioLetivoFindOneOutput", qb, aliasCalendarioLetivo, selection);
+    await QbEfficientLoad("CalendarioLetivoFindOneOutput", qb, aliasCalendarioLetivo, selection);
 
     // =========================================================
 
@@ -171,7 +171,7 @@ export class CalendarioLetivoService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("CalendarioLetivoFindOneOutput", qb, aliasCalendarioLetivo, selection);
+    await QbEfficientLoad("CalendarioLetivoFindOneOutput", qb, aliasCalendarioLetivo, selection);
 
     // =========================================================
 

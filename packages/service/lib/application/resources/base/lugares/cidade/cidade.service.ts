@@ -67,7 +67,7 @@ export class CidadeService {
 
     qb.select([]);
 
-    QbEfficientLoad("CidadeFindOneOutput", qb, aliasCidade, selection);
+    await QbEfficientLoad("CidadeFindOneOutput", qb, aliasCidade, selection);
 
     // =========================================================
 
@@ -99,7 +99,7 @@ export class CidadeService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("CidadeFindOneOutput", qb, aliasCidade, selection);
+    await QbEfficientLoad("CidadeFindOneOutput", qb, aliasCidade, selection);
 
     // =========================================================
 

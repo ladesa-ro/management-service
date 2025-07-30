@@ -93,7 +93,7 @@ export class AulaService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("AulaFindOneOutput", qb, aliasAula, selection);
+    await QbEfficientLoad("AulaFindOneOutput", qb, aliasAula, selection);
 
     // =========================================================
 
@@ -121,7 +121,7 @@ export class AulaService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("AulaFindOneOutput", qb, aliasAula, selection);
+    await QbEfficientLoad("AulaFindOneOutput", qb, aliasAula, selection);
 
     // =========================================================
 
@@ -158,7 +158,7 @@ export class AulaService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("AulaFindOneOutput", qb, aliasAula, selection);
+    await QbEfficientLoad("AulaFindOneOutput", qb, aliasAula, selection);
 
     // =========================================================
 

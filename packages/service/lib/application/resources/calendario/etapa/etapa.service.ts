@@ -88,7 +88,7 @@ export class EtapaService {
 
     qb.select([]);
 
-    QbEfficientLoad("EtapaFindOneOutput", qb, aliasEtapa, selection);
+    await QbEfficientLoad("EtapaFindOneOutput", qb, aliasEtapa, selection);
 
     // =========================================================
 
@@ -117,7 +117,7 @@ export class EtapaService {
 
     qb.select([]);
 
-    QbEfficientLoad("EtapaFindOneOutput", qb, aliasEtapa, selection);
+    await QbEfficientLoad("EtapaFindOneOutput", qb, aliasEtapa, selection);
 
     // =========================================================
 
@@ -154,7 +154,7 @@ export class EtapaService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("EtapaFindOneOutput", qb, aliasEtapa, selection);
+    await QbEfficientLoad("EtapaFindOneOutput", qb, aliasEtapa, selection);
 
     // =========================================================
 

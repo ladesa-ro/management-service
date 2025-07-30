@@ -75,7 +75,7 @@ export class OfertaFormacaoService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("OfertaFormacaoFindOneOutput", qb, aliasOfertaFormacao, selection);
+    await QbEfficientLoad("OfertaFormacaoFindOneOutput", qb, aliasOfertaFormacao, selection);
 
     // =========================================================
 
@@ -105,7 +105,7 @@ export class OfertaFormacaoService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("OfertaFormacaoFindOneOutput", qb, aliasOfertaFormacao, selection);
+    await QbEfficientLoad("OfertaFormacaoFindOneOutput", qb, aliasOfertaFormacao, selection);
 
     // =========================================================
 
@@ -142,7 +142,7 @@ export class OfertaFormacaoService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("OfertaFormacaoFindOneOutput", qb, aliasOfertaFormacao, selection);
+    await QbEfficientLoad("OfertaFormacaoFindOneOutput", qb, aliasOfertaFormacao, selection);
 
     // =========================================================
 

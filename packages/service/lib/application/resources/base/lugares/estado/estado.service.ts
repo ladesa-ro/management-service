@@ -47,7 +47,7 @@ export class EstadoService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("EstadoFindOneOutput", qb, aliasEstado, selection);
+    await QbEfficientLoad("EstadoFindOneOutput", qb, aliasEstado, selection);
 
     // =========================================================
 
@@ -76,7 +76,7 @@ export class EstadoService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("EstadoFindOneOutput", qb, aliasEstado, selection);
+    await QbEfficientLoad("EstadoFindOneOutput", qb, aliasEstado, selection);
 
     // =========================================================
 

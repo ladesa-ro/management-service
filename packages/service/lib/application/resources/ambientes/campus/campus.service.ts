@@ -139,7 +139,7 @@ export class CampusService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("CampusFindOneOutput", qb, aliasCampus, selection);
+    await QbEfficientLoad("CampusFindOneOutput", qb, aliasCampus, selection);
 
     // =========================================================
 
@@ -176,7 +176,7 @@ export class CampusService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("CampusFindOneOutput", qb, aliasCampus, selection);
+    await QbEfficientLoad("CampusFindOneOutput", qb, aliasCampus, selection);
 
     // =========================================================
 

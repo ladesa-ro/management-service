@@ -46,7 +46,7 @@ export class UsuarioService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("UsuarioFindOneOutput", qb, aliasUsuario, selection);
+    await QbEfficientLoad("UsuarioFindOneOutput", qb, aliasUsuario, selection);
     // =========================================================
 
     const usuario = await qb.getOne();
@@ -107,7 +107,7 @@ export class UsuarioService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("UsuarioFindOneOutput", qb, aliasUsuario, selection);
+    await QbEfficientLoad("UsuarioFindOneOutput", qb, aliasUsuario, selection);
     // =========================================================
 
     const pageItemsView = await qb.andWhereInIds(map(paginated.data, "id")).getMany();
@@ -136,7 +136,7 @@ export class UsuarioService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("UsuarioFindOneOutput", qb, aliasUsuario, selection);
+    await QbEfficientLoad("UsuarioFindOneOutput", qb, aliasUsuario, selection);
 
     // =========================================================
 
@@ -173,7 +173,7 @@ export class UsuarioService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("UsuarioFindOneOutput", qb, aliasUsuario, selection);
+    await QbEfficientLoad("UsuarioFindOneOutput", qb, aliasUsuario, selection);
 
     // =========================================================
 

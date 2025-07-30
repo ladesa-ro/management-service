@@ -89,7 +89,7 @@ export class DiaCalendarioService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("DiaCalendarioFindOneOutput", qb, aliasDiaCalendario, selection);
+    await QbEfficientLoad("DiaCalendarioFindOneOutput", qb, aliasDiaCalendario, selection);
 
     // =========================================================
 
@@ -117,7 +117,7 @@ export class DiaCalendarioService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("DiaCalendarioFindOneOutput", qb, aliasDiaCalendario, selection);
+    await QbEfficientLoad("DiaCalendarioFindOneOutput", qb, aliasDiaCalendario, selection);
 
     // =========================================================
 
@@ -154,7 +154,7 @@ export class DiaCalendarioService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("DiaCalendarioFindOneOutput", qb, aliasDiaCalendario, selection);
+    await QbEfficientLoad("DiaCalendarioFindOneOutput", qb, aliasDiaCalendario, selection);
 
     // =========================================================
 

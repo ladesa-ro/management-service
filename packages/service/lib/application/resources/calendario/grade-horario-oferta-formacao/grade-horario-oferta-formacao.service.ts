@@ -76,7 +76,7 @@ export class GradeHorarioOfertaFormacaoService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("GradeHorarioOfertaFormacaoFindOneOutput", qb, aliasGradeHorarioOfertaFormacao, selection);
+    await QbEfficientLoad("GradeHorarioOfertaFormacaoFindOneOutput", qb, aliasGradeHorarioOfertaFormacao, selection);
 
     // =========================================================
 
@@ -110,7 +110,7 @@ export class GradeHorarioOfertaFormacaoService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("GradeHorarioOfertaFormacaoFindOneOutput", qb, aliasGradeHorarioOfertaFormacao, selection);
+    await QbEfficientLoad("GradeHorarioOfertaFormacaoFindOneOutput", qb, aliasGradeHorarioOfertaFormacao, selection);
 
     // =========================================================
 
@@ -151,7 +151,7 @@ export class GradeHorarioOfertaFormacaoService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("GradeHorarioOfertaFormacaoFindOneOutput", qb, aliasGradeHorarioOfertaFormacao, selection);
+    await QbEfficientLoad("GradeHorarioOfertaFormacaoFindOneOutput", qb, aliasGradeHorarioOfertaFormacao, selection);
 
     // =========================================================
 

@@ -65,7 +65,7 @@ export class NivelFormacaoService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("NivelFormacaoFindOneOutput", qb, aliasNivelFormacao, selection);
+    await QbEfficientLoad("NivelFormacaoFindOneOutput", qb, aliasNivelFormacao, selection);
 
     // =========================================================
 
@@ -95,7 +95,7 @@ export class NivelFormacaoService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("NivelFormacaoFindOneOutput", qb, aliasNivelFormacao, selection);
+    await QbEfficientLoad("NivelFormacaoFindOneOutput", qb, aliasNivelFormacao, selection);
 
     // =========================================================
 
@@ -132,7 +132,7 @@ export class NivelFormacaoService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("NivelFormacaoFindOneOutput", qb, aliasNivelFormacao, selection);
+    await QbEfficientLoad("NivelFormacaoFindOneOutput", qb, aliasNivelFormacao, selection);
 
     // =========================================================
 

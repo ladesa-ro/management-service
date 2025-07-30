@@ -79,7 +79,7 @@ export class EnderecoService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("EnderecoFindOneOutput", qb, aliasEndereco, selection);
+    await QbEfficientLoad("EnderecoFindOneOutput", qb, aliasEndereco, selection);
 
     // =========================================================
 

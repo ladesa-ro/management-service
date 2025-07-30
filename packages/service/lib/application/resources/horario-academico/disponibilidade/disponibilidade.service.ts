@@ -66,7 +66,7 @@ export class DisponibilidadeService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("DisponibilidadeFindOneOutput", qb, aliasDisponibilidade, selection);
+    await QbEfficientLoad("DisponibilidadeFindOneOutput", qb, aliasDisponibilidade, selection);
 
     // =========================================================
 
@@ -97,7 +97,7 @@ export class DisponibilidadeService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("DisponibilidadeFindOneOutput", qb, aliasDisponibilidade, selection);
+    await QbEfficientLoad("DisponibilidadeFindOneOutput", qb, aliasDisponibilidade, selection);
 
     // =========================================================
 
@@ -134,7 +134,7 @@ export class DisponibilidadeService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("DisponibilidadeFindOneOutput", qb, aliasDisponibilidade, selection);
+    await QbEfficientLoad("DisponibilidadeFindOneOutput", qb, aliasDisponibilidade, selection);
 
     // =========================================================
 

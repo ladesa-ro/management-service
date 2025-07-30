@@ -101,7 +101,7 @@ export class DiarioPreferenciaAgrupamentoService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("DiarioPreferenciaAgrupamentoFindOneOutput", qb, aliasDiarioPreferenciaAgrupamento, selection);
+    await QbEfficientLoad("DiarioPreferenciaAgrupamentoFindOneOutput", qb, aliasDiarioPreferenciaAgrupamento, selection);
 
     // =========================================================
 
@@ -135,7 +135,7 @@ export class DiarioPreferenciaAgrupamentoService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("DiarioPreferenciaAgrupamentoFindOneOutput", qb, aliasDiarioPreferenciaAgrupamento, selection);
+    await QbEfficientLoad("DiarioPreferenciaAgrupamentoFindOneOutput", qb, aliasDiarioPreferenciaAgrupamento, selection);
     // =========================================================
 
     const diarioPreferenciaAgrupamento = await qb.getOne();
@@ -175,7 +175,7 @@ export class DiarioPreferenciaAgrupamentoService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("DiarioPreferenciaAgrupamentoFindOneOutput", qb, aliasDiarioPreferenciaAgrupamento, selection);
+    await QbEfficientLoad("DiarioPreferenciaAgrupamentoFindOneOutput", qb, aliasDiarioPreferenciaAgrupamento, selection);
 
     // =========================================================
 

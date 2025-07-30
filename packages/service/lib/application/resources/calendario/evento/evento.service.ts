@@ -83,7 +83,7 @@ export class EventoService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("EventoFindOneOutput", qb, aliasEvento, selection);
+    await QbEfficientLoad("EventoFindOneOutput", qb, aliasEvento, selection);
 
     // =========================================================
 
@@ -111,7 +111,7 @@ export class EventoService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("EventoFindOneOutput", qb, aliasEvento, selection);
+    await QbEfficientLoad("EventoFindOneOutput", qb, aliasEvento, selection);
     // =========================================================
 
     const evento = await qb.getOne();
@@ -147,7 +147,7 @@ export class EventoService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("EventoFindOneOutput", qb, aliasEvento, selection);
+    await QbEfficientLoad("EventoFindOneOutput", qb, aliasEvento, selection);
 
     // =========================================================
 

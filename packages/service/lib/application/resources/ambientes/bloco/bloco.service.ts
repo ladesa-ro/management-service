@@ -89,7 +89,7 @@ export class BlocoService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("BlocoFindOneOutput", qb, aliasBloco, selection);
+    await QbEfficientLoad("BlocoFindOneOutput", qb, aliasBloco, selection);
 
     // =========================================================
     const pageItemsView = await qb.andWhereInIds(map(paginated.data, "id")).getMany();
@@ -117,7 +117,7 @@ export class BlocoService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("BlocoFindOneOutput", qb, aliasBloco, selection);
+    await QbEfficientLoad("BlocoFindOneOutput", qb, aliasBloco, selection);
 
     // =========================================================
 
@@ -154,7 +154,7 @@ export class BlocoService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("BlocoFindOneOutput", qb, aliasBloco, selection);
+    await QbEfficientLoad("BlocoFindOneOutput", qb, aliasBloco, selection);
 
     // =========================================================
 

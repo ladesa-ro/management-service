@@ -102,7 +102,7 @@ export class TurmaService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("TurmaFindOneOutput", qb, aliasTurma, selection);
+    await QbEfficientLoad("TurmaFindOneOutput", qb, aliasTurma, selection);
 
     // =========================================================
 
@@ -132,7 +132,7 @@ export class TurmaService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("TurmaFindOneOutput", qb, aliasTurma, selection);
+    await QbEfficientLoad("TurmaFindOneOutput", qb, aliasTurma, selection);
 
     // =========================================================
 
@@ -169,7 +169,7 @@ export class TurmaService {
     // =========================================================
 
     qb.select([]);
-    QbEfficientLoad("TurmaFindOneOutput", qb, aliasTurma, selection);
+    await QbEfficientLoad("TurmaFindOneOutput", qb, aliasTurma, selection);
 
     // =========================================================
 
