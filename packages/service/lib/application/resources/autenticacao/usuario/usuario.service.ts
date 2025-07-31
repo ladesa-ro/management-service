@@ -27,9 +27,10 @@ export class UsuarioService {
     private arquivoService: ArquivoService,
     private searchService: SearchService,
   ) {}
-
+  // ==================================================================
   async usuarioEnsinoById(accessContext: AccessContext | null, domain: IDomain.UsuarioFindOneInput, selection?: string[] | boolean): Promise<IDomain.UsuarioEnsinoOutput | null> {
     const usuario = await this.usuarioFindByIdStrict(accessContext, domain, selection);
+
     const disciplinas = await this.databaseContext.disciplinaRepository.find({
       where: {
         diarios: {
@@ -58,6 +59,7 @@ export class UsuarioService {
         cursos: [],
       };
 
+      // ==================================================================
       const cursos = await this.databaseContext.cursoRepository.find({
         where: {
           turmas: {
@@ -84,11 +86,43 @@ export class UsuarioService {
           curso: curso,
           turmas: [],
         };
-        vinculoDisciplina.cursos.push(vinculoCurso);
-      }
+        //vinculoDisciplina.cursos.push(vinculoCurso);
+        // ==================================================================
 
+        // diario tem turma
+        const turmas = await this.databaseContext.turmaRepository.find({
+          where: {
+            curso: {
+              id: curso.id,
+            },
+            diarios: {
+              ativo: true,
+              disciplina: {
+                id: disciplina.id,
+              },
+              diariosProfessores: {
+                situacao: true,
+                perfil: {
+                  usuario: {
+                    id: usuario.id,
+                  },
+                },
+              },
+            },
+          },
+        });
+
+        for (const turma of turmas) {
+          vinculoCurso.turmas.push(turma);
+        }
+
+        vinculoDisciplina.cursos.push(vinculoCurso);
+        // ==================================================================
+
+      }
       ensino.disciplinas.push(vinculoDisciplina);
     }
+
     return ensino;
   }
 
