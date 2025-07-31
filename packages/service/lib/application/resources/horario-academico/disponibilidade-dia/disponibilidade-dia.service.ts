@@ -4,9 +4,7 @@ import { FilterOperator } from "nestjs-paginate";
 import { QbEfficientLoad } from "@/application/contracts/qb-efficient-load";
 import { SearchService } from "@/application/helpers/search.service";
 import { IntervaloDeTempoService } from "@/application/resources/base/intervalo-de-tempo/intervalo-de-tempo.service";
-import {
-  DisponibilidadeService
-} from "@/application/resources/horario-academico/disponibilidade/disponibilidade.service";
+import { DisponibilidadeService } from "@/application/resources/horario-academico/disponibilidade/disponibilidade.service";
 import { type IDomain } from "@/domain/contracts/integration";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
@@ -49,7 +47,7 @@ export class DisponibilidadeDiaService {
 
     const paginated = await this.searchService.search(
       qb,
-      {...domain},
+      { ...domain },
       {
         ...paginateConfig,
         select: [
@@ -196,7 +194,7 @@ export class DisponibilidadeDiaService {
   async disponibilidadeDiaCreate(accessContext: AccessContext, domain: IDomain.DisponibilidadeDiaCreateInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("disponibilidade_dia:create", {dto: domain});
+    await accessContext.ensurePermission("disponibilidade_dia:create", { dto: domain });
 
     // =========================================================
 
@@ -248,7 +246,7 @@ export class DisponibilidadeDiaService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("disponibilidade_dia:update", {dto: domain}, domain.id, this.disponibilidadeDiaRepository.createQueryBuilder(aliasDisponibilidadeDia));
+    await accessContext.ensurePermission("disponibilidade_dia:update", { dto: domain }, domain.id, this.disponibilidadeDiaRepository.createQueryBuilder(aliasDisponibilidadeDia));
 
     const dtoDisponibilidadeDia = pick(domain, ["diaSemanaIso", "aulasSeguidas", "dataInicio", "dataFim"]);
 
@@ -296,7 +294,7 @@ export class DisponibilidadeDiaService {
   async disponibilidadeDiaDeleteOneById(accessContext: AccessContext, domain: IDomain.DisponibilidadeDiaFindOneInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("disponibilidade_dia:delete", {dto: domain}, domain.id, this.disponibilidadeDiaRepository.createQueryBuilder(aliasDisponibilidadeDia));
+    await accessContext.ensurePermission("disponibilidade_dia:delete", { dto: domain }, domain.id, this.disponibilidadeDiaRepository.createQueryBuilder(aliasDisponibilidadeDia));
 
     // =========================================================
 

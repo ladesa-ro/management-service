@@ -289,7 +289,7 @@ export class AmbienteService {
         .set({
           dateDeleted: "NOW()",
         })
-        .where("id = :blocoId", {blocoId: ambiente.id})
+        .where("id = :blocoId", { blocoId: ambiente.id })
         .andWhere("dateDeleted IS NULL")
         .execute();
     }

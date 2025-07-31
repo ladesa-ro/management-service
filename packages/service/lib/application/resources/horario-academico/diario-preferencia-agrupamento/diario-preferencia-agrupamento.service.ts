@@ -47,7 +47,7 @@ export class DiarioPreferenciaAgrupamentoService {
 
     const paginated = await this.searchService.search(
       qb,
-      {...domain},
+      { ...domain },
       {
         ...paginateConfig,
         select: [
@@ -199,7 +199,7 @@ export class DiarioPreferenciaAgrupamentoService {
   async diarioPreferenciaAgrupamentoCreate(accessContext: AccessContext, domain: IDomain.DiarioPreferenciaAgrupamentoCreateInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("diario_preferencia_agrupamento:create", {dto: domain});
+    await accessContext.ensurePermission("diario_preferencia_agrupamento:create", { dto: domain });
 
     // =========================================================
 
@@ -253,7 +253,7 @@ export class DiarioPreferenciaAgrupamentoService {
 
     await accessContext.ensurePermission(
       "diario_preferencia_agrupamento:update",
-      {dto: domain},
+      { dto: domain },
       domain.id,
       this.diarioPreferenciaAgrupamentoRepository.createQueryBuilder(aliasDiarioPreferenciaAgrupamento),
     );
@@ -306,7 +306,7 @@ export class DiarioPreferenciaAgrupamentoService {
 
     await accessContext.ensurePermission(
       "diario_preferencia_agrupamento:delete",
-      {dto: domain},
+      { dto: domain },
       domain.id,
       this.diarioPreferenciaAgrupamentoRepository.createQueryBuilder(aliasDiarioPreferenciaAgrupamento),
     );

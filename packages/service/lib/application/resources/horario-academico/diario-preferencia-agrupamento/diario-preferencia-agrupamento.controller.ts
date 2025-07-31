@@ -13,10 +13,7 @@ export class DiarioPreferenciaAgrupamentoController {
   constructor(private diarioPreferenciaAgrupamentoService: DiarioPreferenciaAgrupamentoService) {}
 
   @Get("/")
-  async diarioPreferenciaAgrupamentoFindAll(
-    @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("DiarioPreferenciaAgrupamentoList") dto: IAppRequest<"DiarioPreferenciaAgrupamentoList">,
-  ) {
+  async diarioPreferenciaAgrupamentoFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DiarioPreferenciaAgrupamentoList") dto: IAppRequest<"DiarioPreferenciaAgrupamentoList">) {
     const domain: IDomain.DiarioPreferenciaAgrupamentoListInput = requestRepresentationMergeToDomain(dto);
     return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoFindAll(accessContext, domain);
   }

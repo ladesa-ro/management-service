@@ -13,10 +13,7 @@ export class DisponibilidadeDiaController {
   constructor(private disponibilidadeDiaService: DisponibilidadeDiaService) {}
 
   @Get("/")
-  async disponibilidadeDiaFindAll(
-    @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("DisponibilidadeDiaList") dto: IAppRequest<"DisponibilidadeDiaList">,
-  ) {
+  async disponibilidadeDiaFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DisponibilidadeDiaList") dto: IAppRequest<"DisponibilidadeDiaList">) {
     const domain: IDomain.DisponibilidadeDiaListInput = requestRepresentationMergeToDomain(dto);
     return this.disponibilidadeDiaService.disponibilidadeDiaFindAll(accessContext, domain);
   }

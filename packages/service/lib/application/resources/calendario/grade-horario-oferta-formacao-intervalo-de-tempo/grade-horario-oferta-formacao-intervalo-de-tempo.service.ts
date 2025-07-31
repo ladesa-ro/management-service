@@ -4,16 +4,12 @@ import { FilterOperator } from "nestjs-paginate";
 import { QbEfficientLoad } from "@/application/contracts/qb-efficient-load";
 import { SearchService } from "@/application/helpers/search.service";
 import { IntervaloDeTempoService } from "@/application/resources/base/intervalo-de-tempo/intervalo-de-tempo.service";
-import {
-  GradeHorarioOfertaFormacaoService
-} from "@/application/resources/calendario/grade-horario-oferta-formacao/grade-horario-oferta-formacao.service";
+import { GradeHorarioOfertaFormacaoService } from "@/application/resources/calendario/grade-horario-oferta-formacao/grade-horario-oferta-formacao.service";
 import { type IDomain } from "@/domain/contracts/integration";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
-import type {
-  GradeHorarioOfertaFormacaoIntervaloDeTempoEntity
-} from "@/infrastructure/integrations/database/typeorm/entities";
+import type { GradeHorarioOfertaFormacaoIntervaloDeTempoEntity } from "@/infrastructure/integrations/database/typeorm/entities";
 
 // ============================================================================
 
@@ -51,7 +47,7 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService {
 
     const paginated = await this.searchService.search(
       qb,
-      {...domain},
+      { ...domain },
       {
         ...paginateConfig,
         select: [
@@ -179,7 +175,7 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService {
   async gradeHorarioOfertaFormacaoIntervaloDeTempoCreate(accessContext: AccessContext, domain: IDomain.GradeHorarioOfertaFormacaoIntervaloDeTempoCreateInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("grade_horario_oferta_formacao_intervalo_de_tempo:create", {dto: domain});
+    await accessContext.ensurePermission("grade_horario_oferta_formacao_intervalo_de_tempo:create", { dto: domain });
 
     // =========================================================
 
@@ -233,7 +229,7 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService {
 
     await accessContext.ensurePermission(
       "grade_horario_oferta_formacao_intervalo_de_tempo:update",
-      {dto: domain},
+      { dto: domain },
       domain.id,
       this.gradeHorarioOfertaFormacaoIntervaloDeTempoRepository.createQueryBuilder(aliasGradeHorarioOfertaFormacaoIntervaloDeTempo),
     );
@@ -287,7 +283,7 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService {
 
     await accessContext.ensurePermission(
       "grade_horario_oferta_formacao_intervalo_de_tempo:delete",
-      {dto: domain},
+      { dto: domain },
       domain.id,
       this.gradeHorarioOfertaFormacaoIntervaloDeTempoRepository.createQueryBuilder(aliasGradeHorarioOfertaFormacaoIntervaloDeTempo),
     );

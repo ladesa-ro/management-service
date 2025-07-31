@@ -4,9 +4,7 @@ import { FilterOperator } from "nestjs-paginate";
 import { QbEfficientLoad } from "@/application/contracts/qb-efficient-load";
 import { SearchService } from "@/application/helpers/search.service";
 import { IntervaloDeTempoService } from "@/application/resources/base/intervalo-de-tempo/intervalo-de-tempo.service";
-import {
-  DiarioProfessorService
-} from "@/application/resources/ensino/discente/diario-professor/diario-professor.service";
+import { DiarioProfessorService } from "@/application/resources/ensino/discente/diario-professor/diario-professor.service";
 import { IDomain } from "@/domain/contracts";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
@@ -51,7 +49,7 @@ export class HorarioGeradoAulaService {
 
     const paginated = await this.searchService.search(
       qb,
-      {...domain},
+      { ...domain },
       {
         ...paginateConfig,
         select: [
@@ -133,7 +131,7 @@ export class HorarioGeradoAulaService {
 
     // =========================================================
 
-    qb.andWhere(`${aliasHorarioGeradoAula}.id = :id`, {id: domain.id});
+    qb.andWhere(`${aliasHorarioGeradoAula}.id = :id`, { id: domain.id });
 
     // =========================================================
 
@@ -198,7 +196,7 @@ export class HorarioGeradoAulaService {
   async HorarioGeradoAulaCreate(accessContext: AccessContext, domain: IDomain.HorarioGeradoAulaCreateInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("horario_gerado_aula:create", {dto: domain});
+    await accessContext.ensurePermission("horario_gerado_aula:create", { dto: domain });
 
     // =========================================================
 
@@ -260,7 +258,7 @@ export class HorarioGeradoAulaService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("horario_gerado_aula:update", {dto: domain}, domain.id, this.horarioGeradoAulaRepository.createQueryBuilder(aliasHorarioGeradoAula));
+    await accessContext.ensurePermission("horario_gerado_aula:update", { dto: domain }, domain.id, this.horarioGeradoAulaRepository.createQueryBuilder(aliasHorarioGeradoAula));
 
     const dtoHorarioGeradoAula = pick(domain, ["diaSemanaIso"]);
 
@@ -318,7 +316,7 @@ export class HorarioGeradoAulaService {
   async horarioGeradoAulaDeleteOneById(accessContext: AccessContext, domain: IDomain.HorarioGeradoAulaFindOneInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("horario_gerado_aula:delete", {dto: domain}, domain.id, this.horarioGeradoAulaRepository.createQueryBuilder(aliasHorarioGeradoAula));
+    await accessContext.ensurePermission("horario_gerado_aula:delete", { dto: domain }, domain.id, this.horarioGeradoAulaRepository.createQueryBuilder(aliasHorarioGeradoAula));
 
     // =========================================================
 

@@ -25,7 +25,7 @@ export class DisciplinaEntity implements IDomain.Disciplina {
     () => DiarioEntity,
     (diario) => diario.disciplina,
   )
-  diarios!: IDomain.Diario[];
+  diarios!: Relation<DiarioEntity>[];
 
   @Column({ name: "date_created", type: "timestamptz", nullable: false })
   dateCreated!: Date;

@@ -1,11 +1,5 @@
 import { RequiredActionAlias } from "@keycloak/keycloak-admin-client/lib/defs/requiredActionProviderRepresentation";
-import {
-  BadRequestException,
-  ForbiddenException,
-  HttpException,
-  Injectable,
-  ServiceUnavailableException
-} from "@nestjs/common";
+import { BadRequestException, ForbiddenException, HttpException, Injectable, ServiceUnavailableException } from "@nestjs/common";
 import * as client from "openid-client";
 import { type IDomain } from "@/domain/contracts/integration";
 import type { AccessContext } from "@/infrastructure/access-context";
@@ -63,7 +57,7 @@ export class AutenticacaoService {
       throw new ServiceUnavailableException();
     }
 
-    const {usuario, userRepresentation} = await this.findByMatriculaSiape(domain.matriculaSiape);
+    const { usuario, userRepresentation } = await this.findByMatriculaSiape(domain.matriculaSiape);
 
     try {
       if (usuario && userRepresentation?.username) {
@@ -108,7 +102,7 @@ export class AutenticacaoService {
     try {
       const kcAdminClient = await this.keycloakService.getAdminClient();
 
-      const {usuario, userRepresentation} = await this.findByMatriculaSiape(domain.matriculaSiape);
+      const { usuario, userRepresentation } = await this.findByMatriculaSiape(domain.matriculaSiape);
 
       if (!usuario || !userRepresentation) {
         throw new ForbiddenException("Usuário indisponível.");
@@ -154,7 +148,7 @@ export class AutenticacaoService {
   async recoverPassword(_accessContext: AccessContext | null, domain: IDomain.AuthRecoverPasswordInput) {
     const kcAdminClient = await this.keycloakService.getAdminClient();
 
-    const [user] = await kcAdminClient.users.find({email: domain.email}, {catchNotFound: true});
+    const [user] = await kcAdminClient.users.find({ email: domain.email }, { catchNotFound: true });
 
     if (user && user.id) {
       return kcAdminClient.users

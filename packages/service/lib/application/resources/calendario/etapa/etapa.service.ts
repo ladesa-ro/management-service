@@ -40,7 +40,7 @@ export class EtapaService {
 
     const paginated = await this.searchService.search(
       qb,
-      {...domain},
+      { ...domain },
       {
         select: [
           "id",
@@ -111,7 +111,7 @@ export class EtapaService {
 
     // =========================================================
 
-    qb.andWhere(`${aliasEtapa}.id = :id`, {id: domain.id});
+    qb.andWhere(`${aliasEtapa}.id = :id`, { id: domain.id });
 
     // =========================================================
 
@@ -178,7 +178,7 @@ export class EtapaService {
   async etapaCreate(accessContext: AccessContext, domain: IDomain.EtapaCreateInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("etapa:create", {dto: domain});
+    await accessContext.ensurePermission("etapa:create", { dto: domain });
 
     // =========================================================
 
@@ -218,7 +218,7 @@ export class EtapaService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("etapa:update", {dto: domain}, domain.id, this.etapaRepository.createQueryBuilder(aliasEtapa));
+    await accessContext.ensurePermission("etapa:update", { dto: domain }, domain.id, this.etapaRepository.createQueryBuilder(aliasEtapa));
 
     const dtoEtapa = pick(domain, ["numero", "cor", "dataInicio", "dataTermino"]);
 
@@ -254,7 +254,7 @@ export class EtapaService {
   async etapaDeleteOneById(accessContext: AccessContext, domain: IDomain.EtapaFindOneInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("etapa:delete", {dto: domain}, domain.id, this.etapaRepository.createQueryBuilder(aliasEtapa));
+    await accessContext.ensurePermission("etapa:delete", { dto: domain }, domain.id, this.etapaRepository.createQueryBuilder(aliasEtapa));
 
     // =========================================================
 

@@ -44,7 +44,7 @@ export class ReservaService {
 
     const paginated = await this.searchService.search(
       qb,
-      {...domain},
+      { ...domain },
       {
         select: ["id"],
         sortableColumns: [
@@ -122,7 +122,7 @@ export class ReservaService {
 
     // =========================================================
 
-    qb.andWhere(`${aliasReserva}.id = :id`, {id: domain.id});
+    qb.andWhere(`${aliasReserva}.id = :id`, { id: domain.id });
 
     // =========================================================
 
@@ -188,7 +188,7 @@ export class ReservaService {
   async reservaCreate(accessContext: AccessContext, domain: IDomain.ReservaCreateInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("reserva:create", {dto: domain});
+    await accessContext.ensurePermission("reserva:create", { dto: domain });
 
     // =========================================================
 
@@ -202,7 +202,7 @@ export class ReservaService {
 
     // =========================================================
 
-    const ambiente = await this.ambienteService.ambienteFindByIdStrict(accessContext, {id: domain.ambiente.id});
+    const ambiente = await this.ambienteService.ambienteFindByIdStrict(accessContext, { id: domain.ambiente.id });
 
     this.reservaRepository.merge(reserva, {
       ambiente: {
@@ -238,7 +238,7 @@ export class ReservaService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("reserva:update", {dto: domain}, domain.id, this.reservaRepository.createQueryBuilder(aliasReserva));
+    await accessContext.ensurePermission("reserva:update", { dto: domain }, domain.id, this.reservaRepository.createQueryBuilder(aliasReserva));
 
     const dtoReserva = pick(domain, ["situacao", "motivo", "tipo", "rrule"]);
 
@@ -253,7 +253,7 @@ export class ReservaService {
     // =========================================================
 
     if (has(domain, "ambiente") && domain.ambiente !== undefined) {
-      const ambiente = await this.ambienteService.ambienteFindByIdStrict(accessContext, {id: domain.ambiente.id});
+      const ambiente = await this.ambienteService.ambienteFindByIdStrict(accessContext, { id: domain.ambiente.id });
 
       this.reservaRepository.merge(reserva, {
         ambiente: {
@@ -286,7 +286,7 @@ export class ReservaService {
   async reservaDeleteOneById(accessContext: AccessContext, domain: IDomain.ReservaFindOneInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("reserva:delete", {dto: domain}, domain.id, this.reservaRepository.createQueryBuilder(aliasReserva));
+    await accessContext.ensurePermission("reserva:delete", { dto: domain }, domain.id, this.reservaRepository.createQueryBuilder(aliasReserva));
 
     // =========================================================
 

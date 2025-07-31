@@ -45,7 +45,7 @@ export class AulaService {
 
     const paginated = await this.searchService.search(
       qb,
-      {...domain},
+      { ...domain },
       {
         ...paginateConfig,
         select: [
@@ -116,7 +116,7 @@ export class AulaService {
 
     // =========================================================
 
-    qb.andWhere(`${aliasAula}.id = :id`, {id: domain.id});
+    qb.andWhere(`${aliasAula}.id = :id`, { id: domain.id });
 
     // =========================================================
 
@@ -182,7 +182,7 @@ export class AulaService {
   async aulaCreate(accessContext: AccessContext, domain: IDomain.AulaCreateInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("aula:create", {dto: domain});
+    await accessContext.ensurePermission("aula:create", { dto: domain });
 
     // =========================================================
 
@@ -234,7 +234,7 @@ export class AulaService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("aula:update", {dto: domain}, domain.id, this.aulaRepository.createQueryBuilder(aliasAula));
+    await accessContext.ensurePermission("aula:update", { dto: domain }, domain.id, this.aulaRepository.createQueryBuilder(aliasAula));
 
     const dtoAula = pick(domain, ["formato", "data", "intervaloDeTempo", "diario", "ambiente"]);
 
@@ -250,7 +250,7 @@ export class AulaService {
 
     if (has(domain, "ambiente") && domain.ambiente !== undefined) {
       if (domain.ambiente !== null) {
-        const ambiente = await this.ambienteService.ambienteFindByIdStrict(accessContext, {id: domain.ambiente.id});
+        const ambiente = await this.ambienteService.ambienteFindByIdStrict(accessContext, { id: domain.ambiente.id });
 
         this.aulaRepository.merge(aula, { ambiente: { id: ambiente.id } });
       } else {
@@ -287,7 +287,7 @@ export class AulaService {
   async aulaDeleteOneById(accessContext: AccessContext, domain: IDomain.AulaFindOneInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("aula:delete", {dto: domain}, domain.id, this.aulaRepository.createQueryBuilder(aliasAula));
+    await accessContext.ensurePermission("aula:delete", { dto: domain }, domain.id, this.aulaRepository.createQueryBuilder(aliasAula));
 
     // =========================================================
 
