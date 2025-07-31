@@ -4,8 +4,8 @@ import { ImagemEntity } from "../00-00-base/imagem.entity";
 import { AmbienteEntity } from "../02-ambientes/ambiente.entity";
 import { DisciplinaEntity } from "../04-ensino-institucional/disciplina.entity";
 import { CalendarioLetivoEntity } from "../05-calendario";
-import { TurmaEntity } from "./turma.entity";
 import { DiarioProfessorEntity } from "./diario-professor.entity";
+import { TurmaEntity } from "./turma.entity";
 
 @Entity("diario")
 export class DiarioEntity implements IDomain.Diario {
@@ -35,9 +35,11 @@ export class DiarioEntity implements IDomain.Diario {
   @JoinColumn({ name: "id_imagem_capa_fk" })
   imagemCapa!: Relation<ImagemEntity> | null;
 
-  @OneToMany(() => DiarioProfessorEntity, (diarioProfessor)=> diarioProfessor.diario)
-  diariosProfessores!: Relation<DiarioProfessorEntity>[]
-   
+  @OneToMany(
+    () => DiarioProfessorEntity,
+    (diarioProfessor) => diarioProfessor.diario,
+  )
+  diariosProfessores!: Relation<DiarioProfessorEntity>[];
 
   @Column({ name: "date_created", type: "timestamptz", nullable: false })
   dateCreated!: Date;

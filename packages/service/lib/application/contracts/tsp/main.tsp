@@ -282,7 +282,7 @@ op UsuarioFindOneById(
  * Sem descrição.
  */
 @tag("usuarios")
-@route("/api/v1/usuario/{id}/ensino")
+@route("/api/v1/usuarios/{id}/ensino")
 @get
 op UsuarioEnsinoById(
   /**

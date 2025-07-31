@@ -30,7 +30,20 @@ export class UsuarioService {
 
   async usuarioEnsinoById(accessContext: AccessContext | null, domain: IDomain.UsuarioFindOneInput, selection?: string[] | boolean): Promise<IDomain.UsuarioEnsinoOutput | null> {
     const usuario = await this.usuarioFindByIdStrict(accessContext, domain, selection);
-    const disciplinas = [];
+    const disciplinas = await this.databaseContext.disciplinaRepository.find({
+      where: {
+        diarios: {
+          diariosProfessores: {
+            situacao: true,
+            perfil: {
+              usuario: {
+                id: usuario.id,
+              },
+            },
+          },
+        },
+      },
+    });
 
     return {
       usuario: usuario,
