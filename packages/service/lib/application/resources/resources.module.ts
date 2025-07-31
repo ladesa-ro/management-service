@@ -1,7 +1,6 @@
 import { Module } from "@nestjs/common";
 import { AutorizacaoModule } from "@/application/resources/autorizacao/autorizacao.module";
 import { BaseLugaresModule } from "@/application/resources/base/lugares/base-lugares.module";
-import { EnsinoDiscenteModule } from "@/application/resources/ensino/discente/ensino-discente.module";
 import { AmbientesModule } from "./ambientes/ambientes.module";
 import { AutenticacaoModule } from "./autenticacao/autenticacao.module";
 import { BaseModule } from "./base/base.module";
@@ -20,7 +19,6 @@ import { HorarioAcademicoModule } from "./horario-academico/horario-academico.mo
     AutorizacaoModule,
     EnsinoInstitucionalModule,
     CalendarioModule,
-    EnsinoDiscenteModule,
     HorarioAcademicoModule,
     /*GerarHorarioModule*/
   ],
