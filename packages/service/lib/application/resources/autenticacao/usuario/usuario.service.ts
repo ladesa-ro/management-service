@@ -91,34 +91,35 @@ export class UsuarioService {
 
         // diario tem turma
         const turmas = await this.databaseContext.turmaRepository.find({
-          where: {
-            curso: {
-              id: curso.id,
-            },
-            diarios: {
-              ativo: true,
-              disciplina: {
-                id: disciplina.id,
+          where: [
+            {
+              curso: {
+                id: curso.id,
               },
-              diariosProfessores: {
-                situacao: true,
-                perfil: {
-                  usuario: {
-                    id: usuario.id,
+              diarios: {
+                ativo: true,
+                disciplina: {
+                  id: disciplina.id,
+                },
+                diariosProfessores: {
+                  situacao: true,
+                  perfil: {
+                    usuario: {
+                      id: usuario.id,
+                    },
                   },
                 },
               },
             },
-          },
+          ],
         });
 
         for (const turma of turmas) {
-          vinculoCurso.turmas.push(turma);
+          vinculoCurso.turmas.push({turma:turma});
         }
 
         vinculoDisciplina.cursos.push(vinculoCurso);
         // ==================================================================
-
       }
       ensino.disciplinas.push(vinculoDisciplina);
     }
