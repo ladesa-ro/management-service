@@ -282,6 +282,23 @@ op UsuarioFindOneById(
  * Sem descrição.
  */
 @tag("usuarios")
+@route("/api/v1/usuario/{id}/ensino")
+@get
+op UsuarioEnsinoById(
+  /**
+   * Identificador do registro (uuid).
+   */
+  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "Usuario")
+  @format("uuid")
+  @path
+  id: string,
+): UsuarioEnsinoOutput | ForbiddenResponse | NotFoundResponse;
+
+
+/**
+ * Sem descrição.
+ */
+@tag("usuarios")
 @route("/api/v1/usuarios/{id}")
 @patch
 op UsuarioUpdateOneById(
