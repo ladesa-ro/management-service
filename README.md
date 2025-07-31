@@ -1,11 +1,11 @@
 # Web API Integrada
 
-[![CI/CD - Release][action-release-src]][action-release-href]
+[![CI/CD - Release][action-release-src]][action-release-href]  
 [![Autofix][action-autofix-src]][action-autofix-href]
 
 ## Ambientes
 
-Instância Pública de Desenvolvimento: <https://dev.ladesa.com.br/api>.
+Instância Pública de Desenvolvimento: <https://dev.ladesa.com.br/api>
 
 ## Integrações
 
@@ -43,9 +43,45 @@ cd api-service
 | `ladesa-api`    | `localhost:3701` | Aplicação NodeJS.        | `docker.io/library/node:22`       |
 | `ladesa-api-db` | `localhost:5432` | Banco de dados postgres. | `docker.io/bitnami/postgresql:15` |
 
+### Subir a aplicação localmente
+
+1. Suba os containers da aplicação e do banco de dados:
+
+    ```sh
+    make up
+    ```
+
+2. Dentro do container, inicie o servidor de desenvolvimento:
+
+    ```sh
+    bun run dev
+    ```
+
+3. Para encerrar o processo de desenvolvimento, pressione:
+
+    ```sh
+    CTRL+C
+    ```
+
+    > Isso para o processo `bun run dev` e retorna ao shell do container.
+
+4. Para sair do container:
+
+    ```sh
+    exit
+    ```
+
+    > Ou use o atalho `CTRL+D`.
+
+5. Para parar os containers da aplicação e do banco de dados:
+
+    ```sh
+    make down
+    ```
+
 ### Scripts Make
 
-O projeto conta com um [arquivo make](Makefile) que comporta scrips destinados ao desenvolvimento da aplicação.
+O projeto conta com um [arquivo make](Makefile) que comporta scripts destinados ao desenvolvimento da aplicação.
 
 <details>
 <summary>Visão geral dos scripts make</summary>
@@ -56,7 +92,7 @@ O projeto conta com um [arquivo make](Makefile) que comporta scrips destinados a
   make setup;
   ```
 
-  > Configura o ambiente de deselvolvimento, como a criação da rede ladesa-net e os arquivos .env.
+  > Configura o ambiente de desenvolvimento, como a criação da rede `ladesa-net` e os arquivos `.env`.
 
 - `up`
 
@@ -64,7 +100,7 @@ O projeto conta com um [arquivo make](Makefile) que comporta scrips destinados a
   make up;
   ```
 
-  > Inicia os containers da api e do banco de dados usando o docker.
+  > Inicia os containers da API e do banco de dados usando o Docker.
 
 - `shell`
 
@@ -72,13 +108,7 @@ O projeto conta com um [arquivo make](Makefile) que comporta scrips destinados a
   make shell;
   ```
 
-  > Inicia os containers docker e abre o bash na aplicação node.
-
-  - Após este processo, talvez você queira executar dentro do shell do container:
-
-    ```sh
-    bun run start:dev;
-    ```
+  > Inicia os containers Docker e abre o bash na aplicação Node.
 
 - `down`
 
@@ -102,7 +132,7 @@ O projeto conta com um [arquivo make](Makefile) que comporta scrips destinados a
   make logs;
   ```
 
-  > Mostra os registros dos containers
+  > Mostra os registros dos containers.
 
 </details>
 
@@ -116,12 +146,12 @@ O projeto conta com um [arquivo make](Makefile) que comporta scrips destinados a
 
 <!-- Badges / Actions / Release  -->
 
-[action-release-src]: https://img.shields.io/github/actions/workflow/status/ladesa-ro/api/ci-release.yml?style=flat&logo=github&logoColor=white&label=Release&branch=development&labelColor=18181B
+[action-release-src]: https://img.shields.io/github/actions/workflow/status/ladesa-ro/api/ci-release.yml?style=flat&logo=github&logoColor=white&label=Release&branch=development&labelColor=18181B  
 [action-release-href]: https://github.com/ladesa-ro/api/actions/workflows/ci-release.yml?query=branch%3Adevelopment
 
 <!-- Badges / Actions / Autofix  -->
 
-[action-autofix-src]: https://img.shields.io/github/actions/workflow/status/ladesa-ro/api/autofix.yml?style=flat&logo=github&logoColor=white&label=Generate%20Integrations&branch=development&labelColor=18181B
+[action-autofix-src]: https://img.shields.io/github/actions/workflow/status/ladesa-ro/api/autofix.yml?style=flat&logo=github&logoColor=white&label=Generate%20Integrations&branch=development&labelColor=18181B  
 [action-autofix-href]: https://github.com/ladesa-ro/api/actions/workflows/autofix.yml?query=branch%3Adevelopment
 
 <!-- Badges / Integrations / NPM -->
