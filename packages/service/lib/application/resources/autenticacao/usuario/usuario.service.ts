@@ -53,10 +53,39 @@ export class UsuarioService {
     };
 
     for (const disciplina of disciplinas) {
-      const vinculoDisciplina = {
+      const vinculoDisciplina: IDomain.UsuarioEnsinoOutput["disciplinas"][number] = {
         disciplina: disciplina,
         cursos: [],
       };
+
+      const cursos = await this.databaseContext.cursoRepository.find({
+        where: {
+          turmas: {
+            diarios: {
+              disciplina: {
+                id: disciplina.id,
+              },
+              ativo: true,
+              diariosProfessores: {
+                situacao: true,
+                perfil: {
+                  usuario: {
+                    id: usuario.id,
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+
+      for (const curso of cursos) {
+        const vinculoCurso: IDomain.UsuarioEnsinoOutput["disciplinas"][number]["cursos"][number] = {
+          curso: curso,
+          turmas: [],
+        };
+        vinculoDisciplina.cursos.push(vinculoCurso);
+      }
 
       ensino.disciplinas.push(vinculoDisciplina);
     }
