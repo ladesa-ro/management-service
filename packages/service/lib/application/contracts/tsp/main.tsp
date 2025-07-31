@@ -153,6 +153,16 @@ op CidadeFindOneById(
 @get
 op AuthWhoAmI(): AuthWhoAmIOutput | ForbiddenResponse | NotFoundResponse;
 
+
+/**
+ * Obtêm informações sobre o estado de autenticação do ator.
+ */
+@tag("autenticacao")
+@route("/api/v1/autenticacao/quem-sou-eu/ensino")
+@get
+op AuthWhoAmIEnsino(): UsuarioEnsinoOutput | ForbiddenResponse | NotFoundResponse;
+
+
 /**
  * Operação de login.
  */
