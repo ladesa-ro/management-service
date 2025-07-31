@@ -52,13 +52,11 @@ model UsuarioUpdateInput is OptionalProperties<UsuarioCreateInput>;
 
 model UsuarioEnsinoOutput {
     usuario: UsuarioFindOneOutput;
-    disciplinas: {
+    disciplinas: Array<{
         disciplina: DisciplinaFindOneOutput;
-        cursos: {
+        cursos: Array<{
             curso: CursoFindOneOutput;
-            turmas: {
-                turma: TurmaFindOneOutput;
-            }[]
-        }[]
-    }[]
+            turmas: Array<{turma: TurmaFindOneOutput;}>
+        }>
+    }>
 }

@@ -33,6 +33,7 @@ export class UsuarioService {
     const disciplinas = await this.databaseContext.disciplinaRepository.find({
       where: {
         diarios: {
+          ativo: true,
           diariosProfessores: {
             situacao: true,
             perfil: {
@@ -45,10 +46,21 @@ export class UsuarioService {
       },
     });
 
-    return {
+    // discipina > diario > turma > curso
+    const ensino: IDomain.UsuarioEnsinoOutput = {
       usuario: usuario,
-      disciplinas: disciplinas,
+      disciplinas: [],
     };
+
+    for (const disciplina of disciplinas) {
+      const vinculoDisciplina = {
+        disciplina: disciplina,
+        cursos: [],
+      };
+
+      ensino.disciplinas.push(vinculoDisciplina);
+    }
+    return ensino;
   }
 
   get usuarioRepository() {
