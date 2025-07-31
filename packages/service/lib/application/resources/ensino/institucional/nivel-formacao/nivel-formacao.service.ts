@@ -38,7 +38,7 @@ export class NivelFormacaoService {
 
     const paginated = await this.searchService.search(
       qb,
-      {...domain},
+      { ...domain },
       {
         ...paginateConfig,
         select: [
@@ -90,7 +90,7 @@ export class NivelFormacaoService {
 
     // =========================================================
 
-    qb.andWhere(`${aliasNivelFormacao}.id = :id`, {id: domain.id});
+    qb.andWhere(`${aliasNivelFormacao}.id = :id`, { id: domain.id });
 
     // =========================================================
 
@@ -156,7 +156,7 @@ export class NivelFormacaoService {
   async nivelFormacaoCreate(accessContext: AccessContext, domain: IDomain.NivelFormacaoCreateInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("nivel_formacao:create", {dto: domain});
+    await accessContext.ensurePermission("nivel_formacao:create", { dto: domain });
 
     // =========================================================
 
@@ -186,7 +186,7 @@ export class NivelFormacaoService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("nivel_formacao:update", {dto: domain}, domain.id, this.nivelFormacaoRepository.createQueryBuilder(aliasNivelFormacao));
+    await accessContext.ensurePermission("nivel_formacao:update", { dto: domain }, domain.id, this.nivelFormacaoRepository.createQueryBuilder(aliasNivelFormacao));
 
     const dtoNivelFormacao = pick(domain, ["slug"]);
 
@@ -212,7 +212,7 @@ export class NivelFormacaoService {
   async nivelFormacaoDeleteOneById(accessContext: AccessContext, domain: IDomain.NivelFormacaoFindOneInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("nivel_formacao:delete", {dto: domain}, domain.id, this.nivelFormacaoRepository.createQueryBuilder(aliasNivelFormacao));
+    await accessContext.ensurePermission("nivel_formacao:delete", { dto: domain }, domain.id, this.nivelFormacaoRepository.createQueryBuilder(aliasNivelFormacao));
 
     // =========================================================
 

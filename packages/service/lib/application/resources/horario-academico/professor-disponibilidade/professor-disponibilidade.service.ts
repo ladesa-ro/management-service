@@ -4,9 +4,7 @@ import { FilterOperator } from "nestjs-paginate";
 import { QbEfficientLoad } from "@/application/contracts/qb-efficient-load";
 import { SearchService } from "@/application/helpers/search.service";
 import { PerfilService } from "@/application/resources/autorizacao/perfil/perfil.service";
-import {
-  DisponibilidadeService
-} from "@/application/resources/horario-academico/disponibilidade/disponibilidade.service";
+import { DisponibilidadeService } from "@/application/resources/horario-academico/disponibilidade/disponibilidade.service";
 import { type IDomain } from "@/domain/contracts/integration";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
@@ -49,7 +47,7 @@ export class ProfessorDisponibilidadeService {
 
     const paginated = await this.searchService.search(
       qb,
-      {...domain},
+      { ...domain },
       {
         ...paginateConfig,
         select: [
@@ -103,7 +101,7 @@ export class ProfessorDisponibilidadeService {
 
     // =========================================================
 
-    qb.andWhere(`${aliasProfessorDisponibilidade}.id = :id`, {id: domain.id});
+    qb.andWhere(`${aliasProfessorDisponibilidade}.id = :id`, { id: domain.id });
 
     // =========================================================
 
@@ -229,7 +227,7 @@ export class ProfessorDisponibilidadeService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("professor_disponibilidade:update", {dto: domain}, domain.id, this.professorDisponibilidadeRepository.createQueryBuilder(aliasProfessorDisponibilidade));
+    await accessContext.ensurePermission("professor_disponibilidade:update", { dto: domain }, domain.id, this.professorDisponibilidadeRepository.createQueryBuilder(aliasProfessorDisponibilidade));
 
     const dtoProfessorDisponibilidade = pick(domain, []);
 
@@ -277,7 +275,7 @@ export class ProfessorDisponibilidadeService {
   async professorDisponibilidadeDeleteOneById(accessContext: AccessContext, domain: IDomain.ProfessorDisponibilidadeFindOneInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("professor_disponibilidade:delete", {dto: domain}, domain.id, this.professorDisponibilidadeRepository.createQueryBuilder(aliasProfessorDisponibilidade));
+    await accessContext.ensurePermission("professor_disponibilidade:delete", { dto: domain }, domain.id, this.professorDisponibilidadeRepository.createQueryBuilder(aliasProfessorDisponibilidade));
 
     // =========================================================
 

@@ -4,9 +4,7 @@ import { FilterOperator } from "nestjs-paginate";
 import { QbEfficientLoad } from "@/application/contracts/qb-efficient-load";
 import { SearchService } from "@/application/helpers/search.service";
 import { CampusService } from "@/application/resources/ambientes/campus/campus.service";
-import {
-  OfertaFormacaoService
-} from "@/application/resources/ensino/institucional/oferta-formacao/oferta-formacao.service";
+import { OfertaFormacaoService } from "@/application/resources/ensino/institucional/oferta-formacao/oferta-formacao.service";
 import { type IDomain } from "@/domain/contracts/integration";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
@@ -49,7 +47,7 @@ export class GradeHorarioOfertaFormacaoService {
 
     const paginated = await this.searchService.search(
       qb,
-      {...domain},
+      { ...domain },
       {
         ...paginateConfig,
         select: [
@@ -107,7 +105,7 @@ export class GradeHorarioOfertaFormacaoService {
 
     // =========================================================
 
-    qb.andWhere(`${aliasGradeHorarioOfertaFormacao}.id = :id`, {id: domain.id});
+    qb.andWhere(`${aliasGradeHorarioOfertaFormacao}.id = :id`, { id: domain.id });
 
     // =========================================================
 
@@ -177,7 +175,7 @@ export class GradeHorarioOfertaFormacaoService {
   async gradeHorarioOfertaFormacaoCreate(accessContext: AccessContext, domain: IDomain.GradeHorarioOfertaFormacaoCreateInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("grade_horario_oferta_formacao:create", {dto: domain});
+    await accessContext.ensurePermission("grade_horario_oferta_formacao:create", { dto: domain });
 
     // =========================================================
 
@@ -245,7 +243,7 @@ export class GradeHorarioOfertaFormacaoService {
 
     await accessContext.ensurePermission(
       "grade_horario_oferta_formacao:update",
-      {dto: domain},
+      { dto: domain },
       domain.id,
       this.gradeHorarioOfertaFormacaoRepository.createQueryBuilder(aliasGradeHorarioOfertaFormacao),
     );
@@ -298,7 +296,7 @@ export class GradeHorarioOfertaFormacaoService {
 
     await accessContext.ensurePermission(
       "grade_horario_oferta_formacao:delete",
-      {dto: domain},
+      { dto: domain },
       domain.id,
       this.gradeHorarioOfertaFormacaoRepository.createQueryBuilder(aliasGradeHorarioOfertaFormacao),
     );

@@ -12,6 +12,12 @@ import { UsuarioService } from "./usuario.service";
 export class UsuarioController {
   constructor(private usuarioService: UsuarioService) {}
 
+  @Get("/:id/ensino")
+  async usuarioEnsinoById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("UsuarioEnsinoById") dto: IAppRequest<"UsuarioEnsinoById">) {
+    const domain: IDomain.UsuarioFindOneInput = requestRepresentationMergeToDomain(dto);
+    return this.usuarioService.usuarioEnsinoById(accessContext, domain);
+  }
+
   @Get("/")
   async usuarioFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("UsuarioList") dto: IAppRequest<"UsuarioList">) {
     const domain: IDomain.UsuarioListInput = requestRepresentationMergeToDomain(dto);

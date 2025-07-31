@@ -47,7 +47,7 @@ export class DiarioProfessorService {
 
     const paginated = await this.searchService.search(
       qb,
-      {...domain},
+      { ...domain },
       {
         ...paginateConfig,
         select: [
@@ -112,7 +112,7 @@ export class DiarioProfessorService {
 
     // =========================================================
 
-    qb.andWhere(`${aliasDiarioProfessor}.id = :id`, {id: domain.id});
+    qb.andWhere(`${aliasDiarioProfessor}.id = :id`, { id: domain.id });
 
     // =========================================================
 
@@ -182,7 +182,7 @@ export class DiarioProfessorService {
   async diarioProfessorCreate(accessContext: AccessContext, domain: IDomain.DiarioProfessorCreateInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("diario_professor:create", {dto: domain});
+    await accessContext.ensurePermission("diario_professor:create", { dto: domain });
 
     // =========================================================
 
@@ -244,7 +244,7 @@ export class DiarioProfessorService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("diario_professor:update", {dto: domain}, domain.id, this.diarioProfessorRepository.createQueryBuilder(aliasDiarioProfessor));
+    await accessContext.ensurePermission("diario_professor:update", { dto: domain }, domain.id, this.diarioProfessorRepository.createQueryBuilder(aliasDiarioProfessor));
 
     const dtoDiarioProfessor = pick(domain, ["situacao"]);
 
@@ -302,7 +302,7 @@ export class DiarioProfessorService {
   async diarioProfessorDeleteOneById(accessContext: AccessContext, domain: IDomain.DiarioProfessorFindOneInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("diario_professor:delete", {dto: domain}, domain.id, this.diarioProfessorRepository.createQueryBuilder(aliasDiarioProfessor));
+    await accessContext.ensurePermission("diario_professor:delete", { dto: domain }, domain.id, this.diarioProfessorRepository.createQueryBuilder(aliasDiarioProfessor));
 
     // =========================================================
 

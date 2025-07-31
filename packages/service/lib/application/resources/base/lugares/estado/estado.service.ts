@@ -33,7 +33,7 @@ export class EstadoService {
 
     const paginated = await this.searchService.search(
       qb,
-      {...domain},
+      { ...domain },
       {
         ...paginateConfig,
         select: ["id"],
@@ -71,7 +71,7 @@ export class EstadoService {
 
     // =========================================================
 
-    qb.andWhere(`${aliasEstado}.id = :id`, {id: domain.id});
+    qb.andWhere(`${aliasEstado}.id = :id`, { id: domain.id });
 
     // =========================================================
 

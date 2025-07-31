@@ -45,7 +45,7 @@ export class BlocoService {
 
     const paginated = await this.searchService.search(
       qb,
-      {...domain},
+      { ...domain },
       {
         select: [
           "id",
@@ -112,7 +112,7 @@ export class BlocoService {
 
     // =========================================================
 
-    qb.andWhere(`${aliasBloco}.id = :id`, {id: domain.id});
+    qb.andWhere(`${aliasBloco}.id = :id`, { id: domain.id });
 
     // =========================================================
 
@@ -225,7 +225,7 @@ export class BlocoService {
   async blocoCreate(accessContext: AccessContext, domain: IDomain.BlocoCreateInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("bloco:create", {dto: domain});
+    await accessContext.ensurePermission("bloco:create", { dto: domain });
 
     // =========================================================
 
@@ -263,7 +263,7 @@ export class BlocoService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("bloco:update", {dto: domain}, domain.id, this.blocoRepository.createQueryBuilder(aliasBloco));
+    await accessContext.ensurePermission("bloco:update", { dto: domain }, domain.id, this.blocoRepository.createQueryBuilder(aliasBloco));
 
     // =========================================================
 
@@ -289,7 +289,7 @@ export class BlocoService {
   async blocoDeleteOneById(accessContext: AccessContext, domain: IDomain.BlocoFindOneInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("bloco:delete", {dto: domain}, domain.id, this.blocoRepository.createQueryBuilder(aliasBloco));
+    await accessContext.ensurePermission("bloco:delete", { dto: domain }, domain.id, this.blocoRepository.createQueryBuilder(aliasBloco));
 
     // =========================================================
 

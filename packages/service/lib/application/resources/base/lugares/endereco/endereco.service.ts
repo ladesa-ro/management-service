@@ -74,7 +74,7 @@ export class EnderecoService {
 
     // =========================================================
 
-    qb.andWhere(`${aliasEndereco}.id = :id`, {id: domain.id});
+    qb.andWhere(`${aliasEndereco}.id = :id`, { id: domain.id });
 
     // =========================================================
 

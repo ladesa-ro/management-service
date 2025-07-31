@@ -47,7 +47,7 @@ export class TurmaService {
 
     const paginated = await this.searchService.search(
       qb,
-      {...domain},
+      { ...domain },
       {
         ...paginateConfig,
         select: [
@@ -127,7 +127,7 @@ export class TurmaService {
 
     // =========================================================
 
-    qb.andWhere(`${aliasTurma}.id = :id`, {id: domain.id});
+    qb.andWhere(`${aliasTurma}.id = :id`, { id: domain.id });
 
     // =========================================================
 
@@ -193,7 +193,7 @@ export class TurmaService {
   async turmaCreate(accessContext: AccessContext, domain: IDomain.TurmaCreateInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("turma:create", {dto: domain});
+    await accessContext.ensurePermission("turma:create", { dto: domain });
 
     // =========================================================
 
@@ -249,7 +249,7 @@ export class TurmaService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("turma:update", {dto: domain}, domain.id, this.turmaRepository.createQueryBuilder(aliasTurma));
+    await accessContext.ensurePermission("turma:update", { dto: domain }, domain.id, this.turmaRepository.createQueryBuilder(aliasTurma));
 
     const dtoTurma = pick(domain, ["periodo"]);
 
@@ -360,7 +360,7 @@ export class TurmaService {
   async turmaDeleteOneById(accessContext: AccessContext, domain: IDomain.TurmaFindOneInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("turma:delete", {dto: domain}, domain.id, this.turmaRepository.createQueryBuilder(aliasTurma));
+    await accessContext.ensurePermission("turma:delete", { dto: domain }, domain.id, this.turmaRepository.createQueryBuilder(aliasTurma));
 
     // =========================================================
 

@@ -6,9 +6,7 @@ import { SearchService } from "@/application/helpers/search.service";
 import { type IDomain } from "@/domain/contracts/integration";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
-import type {
-  DiaCalendarioEntity
-} from "@/infrastructure/integrations/database/typeorm/entities/05-calendario/dia-calendario.entity";
+import type { DiaCalendarioEntity } from "@/infrastructure/integrations/database/typeorm/entities/05-calendario/dia-calendario.entity";
 import { CalendarioLetivoService } from "../calendario-letivo/calendario-letivo.service";
 
 // ============================================================================
@@ -42,7 +40,7 @@ export class DiaCalendarioService {
 
     const paginated = await this.searchService.search(
       qb,
-      {...domain},
+      { ...domain },
       {
         select: [
           "id",
@@ -114,7 +112,7 @@ export class DiaCalendarioService {
 
     // =========================================================
 
-    qb.andWhere(`${aliasDiaCalendario}.id = :id`, {id: domain.id});
+    qb.andWhere(`${aliasDiaCalendario}.id = :id`, { id: domain.id });
 
     // =========================================================
 
@@ -180,7 +178,7 @@ export class DiaCalendarioService {
   async diaCalendarioCreate(accessContext: AccessContext, domain: IDomain.DiaCalendarioCreateInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("dia_calendario:create", {dto: domain});
+    await accessContext.ensurePermission("dia_calendario:create", { dto: domain });
 
     // =========================================================
 
@@ -222,7 +220,7 @@ export class DiaCalendarioService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("dia_calendario:update", {dto: domain}, domain.id, this.diaCalendarioRepository.createQueryBuilder(aliasDiaCalendario));
+    await accessContext.ensurePermission("dia_calendario:update", { dto: domain }, domain.id, this.diaCalendarioRepository.createQueryBuilder(aliasDiaCalendario));
 
     const dtoDiaCalendario = pick(domain, ["data", "dia_letivo", "feriado"]) as Pick<typeof domain, "data" | "diaLetivo" | "feriado">;
 
@@ -260,7 +258,7 @@ export class DiaCalendarioService {
   async diaCalendarioDeleteOneById(accessContext: AccessContext, domain: IDomain.DiaCalendarioFindOneInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("dia_calendario:delete", {dto: domain}, domain.id, this.diaCalendarioRepository.createQueryBuilder(aliasDiaCalendario));
+    await accessContext.ensurePermission("dia_calendario:delete", { dto: domain }, domain.id, this.diaCalendarioRepository.createQueryBuilder(aliasDiaCalendario));
 
     // =========================================================
 

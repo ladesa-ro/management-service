@@ -8,10 +8,7 @@ import { DisponibilidadeDiaService } from "./disponibilidade-dia.service";
 export class DisponibilidadeDiaResolver {
   constructor(private disponibilidadeDiaService: DisponibilidadeDiaService) {}
 
-  async disponibilidadeDiaFindAll(
-    @AccessContextGraphQl() accessContext: AccessContext,
-    @AppRequest("DisponibilidadeDiaList") dto: IAppRequest<"DisponibilidadeDiaList">,
-  ) {
+  async disponibilidadeDiaFindAll(@AccessContextGraphQl() accessContext: AccessContext, @AppRequest("DisponibilidadeDiaList") dto: IAppRequest<"DisponibilidadeDiaList">) {
     return this.disponibilidadeDiaService.disponibilidadeDiaFindAll(accessContext, dto);
   }
 

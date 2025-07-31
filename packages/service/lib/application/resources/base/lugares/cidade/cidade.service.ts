@@ -34,7 +34,7 @@ export class CidadeService {
 
     const paginated = await this.searchService.search(
       qb,
-      {...domain},
+      { ...domain },
       {
         ...paginateConfig,
         select: [
@@ -94,7 +94,7 @@ export class CidadeService {
 
     // =========================================================
 
-    qb.andWhere("cidade.id = :id", {id: domain.id});
+    qb.andWhere("cidade.id = :id", { id: domain.id });
 
     // =========================================================
 

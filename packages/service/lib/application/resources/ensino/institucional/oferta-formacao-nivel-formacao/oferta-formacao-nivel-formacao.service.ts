@@ -3,12 +3,8 @@ import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
 import { QbEfficientLoad } from "@/application/contracts/qb-efficient-load";
 import { SearchService } from "@/application/helpers/search.service";
-import {
-  NivelFormacaoService
-} from "@/application/resources/ensino/institucional/nivel-formacao/nivel-formacao.service";
-import {
-  OfertaFormacaoService
-} from "@/application/resources/ensino/institucional/oferta-formacao/oferta-formacao.service";
+import { NivelFormacaoService } from "@/application/resources/ensino/institucional/nivel-formacao/nivel-formacao.service";
+import { OfertaFormacaoService } from "@/application/resources/ensino/institucional/oferta-formacao/oferta-formacao.service";
 import { type IDomain } from "@/domain/contracts/integration";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
@@ -51,7 +47,7 @@ export class OfertaFormacaoNivelFormacaoService {
 
     const paginated = await this.searchService.search(
       qb,
-      {...domain},
+      { ...domain },
       {
         ...paginateConfig,
         select: [
@@ -108,7 +104,7 @@ export class OfertaFormacaoNivelFormacaoService {
 
     // =========================================================
 
-    qb.andWhere(`${aliasOfertaFormacaoNivelFormacao}.id = :id`, {id: domain.id});
+    qb.andWhere(`${aliasOfertaFormacaoNivelFormacao}.id = :id`, { id: domain.id });
 
     // =========================================================
 
@@ -178,7 +174,7 @@ export class OfertaFormacaoNivelFormacaoService {
   async ofertaFormacaoNivelFormacaoCreate(accessContext: AccessContext, domain: IDomain.OfertaFormacaoNivelFormacaoCreateInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("oferta_formacao_nivel_formacao:create", {dto: domain});
+    await accessContext.ensurePermission("oferta_formacao_nivel_formacao:create", { dto: domain });
 
     // =========================================================
 
@@ -234,7 +230,7 @@ export class OfertaFormacaoNivelFormacaoService {
 
     await accessContext.ensurePermission(
       "oferta_formacao_nivel_formacao:update",
-      {dto: domain},
+      { dto: domain },
       domain.id,
       this.ofertaFormacaoNivelFormacaoRepository.createQueryBuilder(aliasOfertaFormacaoNivelFormacao),
     );
@@ -287,7 +283,7 @@ export class OfertaFormacaoNivelFormacaoService {
 
     await accessContext.ensurePermission(
       "oferta_formacao_nivel_formacao:delete",
-      {dto: domain},
+      { dto: domain },
       domain.id,
       this.ofertaFormacaoNivelFormacaoRepository.createQueryBuilder(aliasOfertaFormacaoNivelFormacao),
     );

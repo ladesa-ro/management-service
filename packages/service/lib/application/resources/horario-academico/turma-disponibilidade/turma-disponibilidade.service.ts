@@ -4,9 +4,7 @@ import { FilterOperator } from "nestjs-paginate";
 import { QbEfficientLoad } from "@/application/contracts/qb-efficient-load";
 import { SearchService } from "@/application/helpers/search.service";
 import { TurmaService } from "@/application/resources/ensino/discente/turma/turma.service";
-import {
-  DisponibilidadeService
-} from "@/application/resources/horario-academico/disponibilidade/disponibilidade.service";
+import { DisponibilidadeService } from "@/application/resources/horario-academico/disponibilidade/disponibilidade.service";
 import { type IDomain } from "@/domain/contracts/integration";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
@@ -48,7 +46,7 @@ export class TurmaDisponibilidadeService {
 
     const paginated = await this.searchService.search(
       qb,
-      {...domain},
+      { ...domain },
       {
         select: [
           "id",
@@ -101,7 +99,7 @@ export class TurmaDisponibilidadeService {
 
     // =========================================================
 
-    qb.andWhere(`${aliasTurmaDisponibilidade}.id = :id`, {id: domain.id});
+    qb.andWhere(`${aliasTurmaDisponibilidade}.id = :id`, { id: domain.id });
 
     // =========================================================
 
@@ -227,7 +225,7 @@ export class TurmaDisponibilidadeService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("turma_disponibilidade:update", {dto: domain}, domain.id, this.turmaDisponibilidadeRepository.createQueryBuilder(aliasTurmaDisponibilidade));
+    await accessContext.ensurePermission("turma_disponibilidade:update", { dto: domain }, domain.id, this.turmaDisponibilidadeRepository.createQueryBuilder(aliasTurmaDisponibilidade));
 
     const dtoTurmaDisponibilidade = pick(domain, []);
 
@@ -275,7 +273,7 @@ export class TurmaDisponibilidadeService {
   async turmaDisponibilidadeDeleteOneById(accessContext: AccessContext, domain: IDomain.TurmaDisponibilidadeFindOneInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("turma_disponibilidade:delete", {dto: domain}, domain.id, this.turmaDisponibilidadeRepository.createQueryBuilder(aliasTurmaDisponibilidade));
+    await accessContext.ensurePermission("turma_disponibilidade:delete", { dto: domain }, domain.id, this.turmaDisponibilidadeRepository.createQueryBuilder(aliasTurmaDisponibilidade));
 
     // =========================================================
 
