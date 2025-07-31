@@ -23,6 +23,11 @@
                       "enum": ["up"],
                       "description": "Status desta aplicação."
                     },
+                    "adoniranBarbosa": {
+                      "type": "string",
+                      "enum": ["chico buarque"],
+                      "description": "jorge ben jor"
+                    },
                     "prefix": {
                       "description": "Prefixo do serviço API.",
                       "oneOf": [
