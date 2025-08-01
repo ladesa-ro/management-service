@@ -22,6 +22,7 @@ namespace LadesaAPI;
 op AppController_getHello(): Body<{
   service: "@ladesa-ro/api.service";
   status: "up";
+  adoniranBarbosa: "chico buarque";
 
   @TypeSpec.JsonSchema.oneOf
   prefix?: string | unknown;
