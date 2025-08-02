@@ -13,10 +13,7 @@ export class ProfessorDisponibilidadeController {
   constructor(private professorDisponibilidadeService: ProfessorDisponibilidadeService) {}
 
   @Get("/")
-  async professorDisponibilidadeFindAll(
-    @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("ProfessorDisponibilidadeList") dto: IAppRequest<"ProfessorDisponibilidadeList">,
-  ) {
+  async professorDisponibilidadeFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("ProfessorDisponibilidadeList") dto: IAppRequest<"ProfessorDisponibilidadeList">) {
     const domain: IDomain.ProfessorDisponibilidadeListInput = requestRepresentationMergeToDomain(dto);
     return this.professorDisponibilidadeService.professorDisponibilidadeFindAll(accessContext, domain);
   }

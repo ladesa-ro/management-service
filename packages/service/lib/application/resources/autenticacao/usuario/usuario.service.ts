@@ -1,9 +1,4 @@
-import {
-  Injectable,
-  InternalServerErrorException,
-  NotFoundException,
-  ServiceUnavailableException
-} from "@nestjs/common";
+import { Injectable, InternalServerErrorException, NotFoundException, ServiceUnavailableException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { ValidationFailedException } from "@/application/contracts";
 import { QbEfficientLoad } from "@/application/contracts/qb-efficient-load";
@@ -32,6 +27,105 @@ export class UsuarioService {
     private arquivoService: ArquivoService,
     private searchService: SearchService,
   ) {}
+  // ==================================================================
+  async usuarioEnsinoById(accessContext: AccessContext | null, domain: IDomain.UsuarioFindOneInput, selection?: string[] | boolean): Promise<IDomain.UsuarioEnsinoOutput | null> {
+    const usuario = await this.usuarioFindByIdStrict(accessContext, domain, selection);
+
+    const disciplinas = await this.databaseContext.disciplinaRepository.find({
+      where: {
+        diarios: {
+          ativo: true,
+          diariosProfessores: {
+            situacao: true,
+            perfil: {
+              usuario: {
+                id: usuario.id,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    // discipina > diario > turma > curso
+    const ensino: IDomain.UsuarioEnsinoOutput = {
+      usuario: usuario,
+      disciplinas: [],
+    };
+
+    for (const disciplina of disciplinas) {
+      const vinculoDisciplina: IDomain.UsuarioEnsinoOutput["disciplinas"][number] = {
+        disciplina: disciplina,
+        cursos: [],
+      };
+
+      // ==================================================================
+      const cursos = await this.databaseContext.cursoRepository.find({
+        where: {
+          turmas: {
+            diarios: {
+              disciplina: {
+                id: disciplina.id,
+              },
+              ativo: true,
+              diariosProfessores: {
+                situacao: true,
+                perfil: {
+                  usuario: {
+                    id: usuario.id,
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+
+      for (const curso of cursos) {
+        const vinculoCurso: IDomain.UsuarioEnsinoOutput["disciplinas"][number]["cursos"][number] = {
+          curso: curso,
+          turmas: [],
+        };
+        //vinculoDisciplina.cursos.push(vinculoCurso);
+        // ==================================================================
+
+        // diario tem turma
+        const turmas = await this.databaseContext.turmaRepository.find({
+          where: [
+            {
+              curso: {
+                id: curso.id,
+              },
+              diarios: {
+                ativo: true,
+                disciplina: {
+                  id: disciplina.id,
+                },
+                diariosProfessores: {
+                  situacao: true,
+                  perfil: {
+                    usuario: {
+                      id: usuario.id,
+                    },
+                  },
+                },
+              },
+            },
+          ],
+        });
+
+        for (const turma of turmas) {
+          vinculoCurso.turmas.push({turma:turma});
+        }
+
+        vinculoDisciplina.cursos.push(vinculoCurso);
+        // ==================================================================
+      }
+      ensino.disciplinas.push(vinculoDisciplina);
+    }
+
+    return ensino;
+  }
 
   get usuarioRepository() {
     return this.databaseContext.usuarioRepository;
@@ -74,7 +168,7 @@ export class UsuarioService {
 
     const paginated = await this.searchService.search(
       qb,
-      {...domain},
+      { ...domain },
       {
         ...paginateConfig,
         select: [
@@ -136,7 +230,7 @@ export class UsuarioService {
 
     // =========================================================
 
-    qb.andWhere(`${aliasUsuario}.id = :id`, {id: domain.id});
+    qb.andWhere(`${aliasUsuario}.id = :id`, { id: domain.id });
 
     // =========================================================
 
@@ -312,7 +406,7 @@ export class UsuarioService {
   async usuarioCreate(accessContext: AccessContext, domain: IDomain.UsuarioCreateInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("usuario:create", {dto: domain});
+    await accessContext.ensurePermission("usuario:create", { dto: domain });
 
     // =========================================================
 
@@ -371,7 +465,7 @@ export class UsuarioService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("usuario:update", {dto: domain}, domain.id, this.usuarioRepository.createQueryBuilder(aliasUsuario));
+    await accessContext.ensurePermission("usuario:update", { dto: domain }, domain.id, this.usuarioRepository.createQueryBuilder(aliasUsuario));
 
     const input = pick(domain, ["nome", "matriculaSiape", "email"]);
 
@@ -427,7 +521,7 @@ export class UsuarioService {
   async usuarioDeleteOneById(accessContext: AccessContext, domain: IDomain.UsuarioFindOneInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("usuario:delete", {dto: domain}, domain.id, this.usuarioRepository.createQueryBuilder(aliasUsuario));
+    await accessContext.ensurePermission("usuario:delete", { dto: domain }, domain.id, this.usuarioRepository.createQueryBuilder(aliasUsuario));
 
     // =========================================================
 

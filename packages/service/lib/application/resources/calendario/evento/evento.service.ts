@@ -40,7 +40,7 @@ export class EventoService {
 
     const paginated = await this.searchService.search(
       qb,
-      {...domain},
+      { ...domain },
       {
         select: [
           "id",
@@ -106,7 +106,7 @@ export class EventoService {
 
     // =========================================================
 
-    qb.andWhere(`${aliasEvento}.id = :id`, {id: domain.id});
+    qb.andWhere(`${aliasEvento}.id = :id`, { id: domain.id });
 
     // =========================================================
 
@@ -171,7 +171,7 @@ export class EventoService {
   async eventoCreate(accessContext: AccessContext, domain: IDomain.EventoCreateInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("evento:create", {dto: domain});
+    await accessContext.ensurePermission("evento:create", { dto: domain });
 
     // =========================================================
 
@@ -211,7 +211,7 @@ export class EventoService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("evento:update", {dto: domain}, domain.id, this.eventoRepository.createQueryBuilder(aliasEvento));
+    await accessContext.ensurePermission("evento:update", { dto: domain }, domain.id, this.eventoRepository.createQueryBuilder(aliasEvento));
 
     const dtoEvento = pick(domain, ["nome", "cor", "rrule"]);
 
@@ -247,7 +247,7 @@ export class EventoService {
   async eventoDeleteOneById(accessContext: AccessContext, domain: IDomain.EventoFindOneInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("evento:delete", {dto: domain}, domain.id, this.eventoRepository.createQueryBuilder(aliasEvento));
+    await accessContext.ensurePermission("evento:delete", { dto: domain }, domain.id, this.eventoRepository.createQueryBuilder(aliasEvento));
 
     // =========================================================
 

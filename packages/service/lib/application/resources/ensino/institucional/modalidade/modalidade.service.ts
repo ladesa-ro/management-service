@@ -38,7 +38,7 @@ export class ModalidadeService {
 
     const paginated = await this.searchService.search(
       qb,
-      {...domain},
+      { ...domain },
       {
         ...paginateConfig,
         select: [
@@ -91,7 +91,7 @@ export class ModalidadeService {
 
     // =========================================================
 
-    qb.andWhere(`${aliasModalidade}.id = :id`, {id: domain.id});
+    qb.andWhere(`${aliasModalidade}.id = :id`, { id: domain.id });
 
     // =========================================================
 
@@ -157,7 +157,7 @@ export class ModalidadeService {
   async modalidadeCreate(accessContext: AccessContext, domain: IDomain.ModalidadeCreateInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("modalidade:create", {dto: domain});
+    await accessContext.ensurePermission("modalidade:create", { dto: domain });
 
     // =========================================================
 
@@ -185,7 +185,7 @@ export class ModalidadeService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("modalidade:update", {dto: domain}, domain.id, this.modalidadeRepository.createQueryBuilder(aliasModalidade));
+    await accessContext.ensurePermission("modalidade:update", { dto: domain }, domain.id, this.modalidadeRepository.createQueryBuilder(aliasModalidade));
 
     const dtoModalidade = pick(domain, ["nome", "slug"]);
 
@@ -209,7 +209,7 @@ export class ModalidadeService {
   async modalidadeDeleteOneById(accessContext: AccessContext, domain: IDomain.ModalidadeFindOneInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("modalidade:delete", {dto: domain}, domain.id, this.modalidadeRepository.createQueryBuilder(aliasModalidade));
+    await accessContext.ensurePermission("modalidade:delete", { dto: domain }, domain.id, this.modalidadeRepository.createQueryBuilder(aliasModalidade));
 
     // =========================================================
 

@@ -1,8 +1,9 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, type Relation } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, type Relation } from "typeorm";
 import { type IDomain } from "@/domain/contracts/integration";
 import { OfertaFormacaoEntity } from "@/infrastructure/integrations/database/typeorm/entities/04-ensino-institucional/oferta-formacao.entity";
 import { ImagemEntity } from "../00-00-base/imagem.entity";
 import { CampusEntity } from "../02-ambientes/campus.entity";
+import { TurmaEntity } from "../06-ensino-discente";
 
 @Entity("curso")
 export class CursoEntity implements IDomain.Curso {
@@ -26,6 +27,12 @@ export class CursoEntity implements IDomain.Curso {
   @ManyToOne(() => ImagemEntity)
   @JoinColumn({ name: "id_imagem_capa_fk" })
   imagemCapa!: Relation<ImagemEntity> | null;
+
+  @OneToMany(
+    () => TurmaEntity,
+    (turma) => turma.curso,
+  )
+  turmas!: Relation<TurmaEntity>[];
 
   @Column({ name: "date_created", type: "timestamptz", nullable: false })
   dateCreated!: Date;

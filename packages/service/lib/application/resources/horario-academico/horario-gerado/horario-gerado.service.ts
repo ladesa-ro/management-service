@@ -3,9 +3,7 @@ import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
 import { QbEfficientLoad } from "@/application/contracts/qb-efficient-load";
 import { SearchService } from "@/application/helpers/search.service";
-import {
-  CalendarioLetivoService
-} from "@/application/resources/calendario/calendario-letivo/calendario-letivo.service";
+import { CalendarioLetivoService } from "@/application/resources/calendario/calendario-letivo/calendario-letivo.service";
 import { type IDomain } from "@/domain/contracts/integration";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
@@ -43,7 +41,7 @@ export class HorarioGeradoService {
 
     const paginated = await this.searchService.search(
       qb,
-      {...domain},
+      { ...domain },
       {
         ...paginateConfig,
         select: [
@@ -120,7 +118,7 @@ export class HorarioGeradoService {
 
     // =========================================================
 
-    qb.andWhere(`${aliasHorarioGerado}.id = :id`, {id: domain.id});
+    qb.andWhere(`${aliasHorarioGerado}.id = :id`, { id: domain.id });
 
     // =========================================================
 
@@ -187,7 +185,7 @@ export class HorarioGeradoService {
   async horarioGeradoCreate(accessContext: AccessContext, domain: IDomain.HorarioGeradoCreateInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("horario_gerado:create", {dto: domain});
+    await accessContext.ensurePermission("horario_gerado:create", { dto: domain });
 
     // =========================================================
 
@@ -229,7 +227,7 @@ export class HorarioGeradoService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("horario_gerado:update", {dto: domain}, domain.id, this.horarioGeradoRepository.createQueryBuilder(aliasHorarioGerado));
+    await accessContext.ensurePermission("horario_gerado:update", { dto: domain }, domain.id, this.horarioGeradoRepository.createQueryBuilder(aliasHorarioGerado));
 
     const dtoHorarioGerado = pick(domain, ["status", "tipo", "dataGeracao", "vigenciaInicio", "vigenciaFim"]);
 
@@ -267,7 +265,7 @@ export class HorarioGeradoService {
   async horarioGeradoDeleteOneById(accessContext: AccessContext, domain: IDomain.HorarioGeradoFindOneInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("horario_gerado:delete", {dto: domain}, domain.id, this.horarioGeradoRepository.createQueryBuilder(aliasHorarioGerado));
+    await accessContext.ensurePermission("horario_gerado:delete", { dto: domain }, domain.id, this.horarioGeradoRepository.createQueryBuilder(aliasHorarioGerado));
 
     // =========================================================
 

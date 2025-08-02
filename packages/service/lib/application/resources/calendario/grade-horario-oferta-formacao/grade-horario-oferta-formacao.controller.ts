@@ -13,10 +13,7 @@ export class GradeHorarioOfertaFormacaoController {
   constructor(private gradeHorarioOfertaFormacaoService: GradeHorarioOfertaFormacaoService) {}
 
   @Get("/")
-  async gradeHorarioOfertaFormacaoFindAll(
-    @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("GradeHorarioOfertaFormacaoList") dto: IAppRequest<"GradeHorarioOfertaFormacaoList">,
-  ) {
+  async gradeHorarioOfertaFormacaoFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("GradeHorarioOfertaFormacaoList") dto: IAppRequest<"GradeHorarioOfertaFormacaoList">) {
     const domain: IDomain.GradeHorarioOfertaFormacaoListInput = requestRepresentationMergeToDomain(dto);
     return this.gradeHorarioOfertaFormacaoService.gradeHorarioOfertaFormacaoFindAll(accessContext, domain);
   }

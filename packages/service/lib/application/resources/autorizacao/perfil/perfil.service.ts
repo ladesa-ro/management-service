@@ -61,7 +61,7 @@ export class PerfilService {
 
     const paginated = await this.searchService.search(
       qb,
-      {...domain},
+      { ...domain },
       {
         ...paginateConfig,
 
@@ -110,7 +110,7 @@ export class PerfilService {
 
     // =========================================================
 
-    qb.andWhere(`${aliasVinculo}.id = :id`, {id: domain.id});
+    qb.andWhere(`${aliasVinculo}.id = :id`, { id: domain.id });
 
     // =========================================================
 

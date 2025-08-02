@@ -3,9 +3,7 @@ import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
 import { QbEfficientLoad } from "@/application/contracts/qb-efficient-load";
 import { SearchService } from "@/application/helpers/search.service";
-import {
-  OfertaFormacaoService
-} from "@/application/resources/ensino/institucional/oferta-formacao/oferta-formacao.service";
+import { OfertaFormacaoService } from "@/application/resources/ensino/institucional/oferta-formacao/oferta-formacao.service";
 import { type IDomain } from "@/domain/contracts/integration";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
@@ -48,7 +46,7 @@ export class CalendarioLetivoService {
 
     const paginated = await this.searchService.search(
       qb,
-      {...domain},
+      { ...domain },
       {
         select: [
           "id",
@@ -131,7 +129,7 @@ export class CalendarioLetivoService {
 
     // =========================================================
 
-    qb.andWhere(`${aliasCalendarioLetivo}.id = :id`, {id: domain.id});
+    qb.andWhere(`${aliasCalendarioLetivo}.id = :id`, { id: domain.id });
 
     // =========================================================
 
@@ -197,7 +195,7 @@ export class CalendarioLetivoService {
   async calendarioLetivoCreate(accessContext: AccessContext, domain: IDomain.CalendarioLetivoCreateInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("calendario_letivo:create", {dto: domain});
+    await accessContext.ensurePermission("calendario_letivo:create", { dto: domain });
 
     // =========================================================
 
@@ -249,7 +247,7 @@ export class CalendarioLetivoService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("calendario_letivo:update", {dto: domain}, domain.id, this.calendarioLetivoRepository.createQueryBuilder(aliasCalendarioLetivo));
+    await accessContext.ensurePermission("calendario_letivo:update", { dto: domain }, domain.id, this.calendarioLetivoRepository.createQueryBuilder(aliasCalendarioLetivo));
 
     const dtoCalendarioLetivo = pick(domain, ["nome", "ano"]);
 
@@ -299,7 +297,7 @@ export class CalendarioLetivoService {
   async calendarioLetivoDeleteOneById(accessContext: AccessContext, domain: IDomain.CalendarioLetivoFindOneInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("calendario_letivo:delete", {dto: domain}, domain.id, this.calendarioLetivoRepository.createQueryBuilder(aliasCalendarioLetivo));
+    await accessContext.ensurePermission("calendario_letivo:delete", { dto: domain }, domain.id, this.calendarioLetivoRepository.createQueryBuilder(aliasCalendarioLetivo));
 
     // =========================================================
 

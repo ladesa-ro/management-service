@@ -49,3 +49,14 @@ model UsuarioCreateInput {
 
 /** Dados de entrada para a atualização de um Usuário. */
 model UsuarioUpdateInput is OptionalProperties<UsuarioCreateInput>;
+
+model UsuarioEnsinoOutput {
+    usuario: UsuarioFindOneOutput;
+    disciplinas: Array<{
+        disciplina: DisciplinaFindOneOutput;
+        cursos: Array<{
+            curso: CursoFindOneOutput;
+            turmas: Array<{turma: TurmaFindOneOutput;}>
+        }>
+    }>
+}

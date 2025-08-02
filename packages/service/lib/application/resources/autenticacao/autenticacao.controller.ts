@@ -1,15 +1,27 @@
-import { Controller, Get, Post } from "@nestjs/common";
+import { BadRequestException, Controller, Get, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { type IAppRequest } from "@/application/contracts/openapi/document/app-openapi-typings";
 import { AppRequest } from "@/application/contracts/openapi/utils/app-request";
 import { AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { Public } from "@/infrastructure/authentication";
 import { AutenticacaoService } from "./autenticacao.service";
+import { UsuarioService } from "./usuario/usuario.service";
+import { throwError } from "rxjs";
+
 
 @ApiTags("autenticacao")
 @Controller("/autenticacao")
 export class AutenticacaoController {
-  constructor(private readonly autenticacaoService: AutenticacaoService) {}
+  constructor(private readonly autenticacaoService: AutenticacaoService, private usuarioService:UsuarioService) {}
+
+  @Get("/quem-sou-eu/ensino")
+  whoAmIEnsino(@AccessContextHttp() accessContext:AccessContext){
+    const idUsuario = accessContext.requestActor?.id;
+    if(!idUsuario){
+      throw new BadRequestException();
+    }
+    return this.usuarioService.usuarioEnsinoById(accessContext, {id: idUsuario} )
+  }
 
   @Get("/quem-sou-eu")
   whoAmI(@AccessContextHttp() accessContext: AccessContext) {

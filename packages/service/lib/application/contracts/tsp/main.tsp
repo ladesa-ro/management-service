@@ -22,6 +22,7 @@ namespace LadesaAPI;
 op AppController_getHello(): Body<{
   service: "@ladesa-ro/api.service";
   status: "up";
+  adoniranBarbosa: "chico buarque";
 
   @TypeSpec.JsonSchema.oneOf
   prefix?: string | unknown;
@@ -153,6 +154,16 @@ op CidadeFindOneById(
 @get
 op AuthWhoAmI(): AuthWhoAmIOutput | ForbiddenResponse | NotFoundResponse;
 
+
+/**
+ * Obtêm informações sobre o estado de autenticação do ator.
+ */
+@tag("autenticacao")
+@route("/api/v1/autenticacao/quem-sou-eu/ensino")
+@get
+op AuthWhoAmIEnsino(): UsuarioEnsinoOutput | ForbiddenResponse | NotFoundResponse;
+
+
 /**
  * Operação de login.
  */
@@ -277,6 +288,23 @@ op UsuarioFindOneById(
   @path
   id: string,
 ): UsuarioFindOneOutput | ForbiddenResponse | NotFoundResponse;
+
+/**
+ * Sem descrição.
+ */
+@tag("usuarios")
+@route("/api/v1/usuarios/{id}/ensino")
+@get
+op UsuarioEnsinoById(
+  /**
+   * Identificador do registro (uuid).
+   */
+  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "Usuario")
+  @format("uuid")
+  @path
+  id: string,
+): UsuarioEnsinoOutput | ForbiddenResponse | NotFoundResponse;
+
 
 /**
  * Sem descrição.

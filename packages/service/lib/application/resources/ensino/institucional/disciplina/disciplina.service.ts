@@ -43,7 +43,7 @@ export class DisciplinaService {
 
     const paginated = await this.searchService.search(
       qb,
-      {...domain},
+      { ...domain },
       {
         ...paginateConfig,
         relations: { diarios: true },
@@ -97,7 +97,7 @@ export class DisciplinaService {
 
     // =========================================================
 
-    qb.andWhere(`${aliasDisciplina}.id = :id`, {id: domain.id});
+    qb.andWhere(`${aliasDisciplina}.id = :id`, { id: domain.id });
 
     // =========================================================
 
@@ -163,7 +163,7 @@ export class DisciplinaService {
   async disciplinaCreate(accessContext: AccessContext, domain: IDomain.DisciplinaCreateInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("disciplina:create", {dto: domain});
+    await accessContext.ensurePermission("disciplina:create", { dto: domain });
 
     // =========================================================
 
@@ -191,7 +191,7 @@ export class DisciplinaService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("disciplina:update", {dto: domain}, domain.id, this.disciplinaRepository.createQueryBuilder(aliasDisciplina));
+    await accessContext.ensurePermission("disciplina:update", { dto: domain }, domain.id, this.disciplinaRepository.createQueryBuilder(aliasDisciplina));
 
     const dtoDisciplina = pick(domain, ["nome", "nomeAbreviado", "cargaHoraria"]);
 
@@ -232,7 +232,7 @@ export class DisciplinaService {
   async disciplinaUpdateImagemCapa(accessContext: AccessContext, domain: IDomain.DisciplinaFindOneInput, file: Express.Multer.File) {
     // =========================================================
 
-    const currentDisciplina = await this.disciplinaFindByIdStrict(accessContext, {id: domain.id});
+    const currentDisciplina = await this.disciplinaFindByIdStrict(accessContext, { id: domain.id });
 
     // =========================================================
 
@@ -270,7 +270,7 @@ export class DisciplinaService {
   async disciplinaDeleteOneById(accessContext: AccessContext, domain: IDomain.DisciplinaFindOneInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("disciplina:delete", {dto: domain}, domain.id, this.disciplinaRepository.createQueryBuilder(aliasDisciplina));
+    await accessContext.ensurePermission("disciplina:delete", { dto: domain }, domain.id, this.disciplinaRepository.createQueryBuilder(aliasDisciplina));
 
     // =========================================================
 

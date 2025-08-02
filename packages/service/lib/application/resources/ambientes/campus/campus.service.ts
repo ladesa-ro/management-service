@@ -41,7 +41,7 @@ export class CampusService {
 
     const paginated = await this.searchService.search(
       qb,
-      {...domain},
+      { ...domain },
       {
         select: [
           "id",
@@ -134,7 +134,7 @@ export class CampusService {
 
     // =========================================================
 
-    qb.andWhere(`${aliasCampus}.id = :id`, {id: domain.id});
+    qb.andWhere(`${aliasCampus}.id = :id`, { id: domain.id });
 
     // =========================================================
 
@@ -200,7 +200,7 @@ export class CampusService {
   async campusCreate(accessContext: AccessContext, domain: IDomain.CampusCreateInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("campus:create", {dto: domain});
+    await accessContext.ensurePermission("campus:create", { dto: domain });
 
     // =========================================================
 
@@ -246,7 +246,7 @@ export class CampusService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("campus:update", {dto: domain}, domain.id, this.campusRepository.createQueryBuilder(aliasCampus));
+    await accessContext.ensurePermission("campus:update", { dto: domain }, domain.id, this.campusRepository.createQueryBuilder(aliasCampus));
 
     const campus = await this.databaseContext.transaction(async ({ databaseContext: { campusRepository } }) => {
       const dtoCampus = pick(domain, ["nomeFantasia", "razaoSocial", "apelido", "cnpj"]);
@@ -336,7 +336,7 @@ export class CampusService {
   async campusDeleteOneById(accessContext: AccessContext, domain: IDomain.CampusFindOneInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("campus:delete", {dto: domain}, domain.id, this.campusRepository.createQueryBuilder(aliasCampus));
+    await accessContext.ensurePermission("campus:delete", { dto: domain }, domain.id, this.campusRepository.createQueryBuilder(aliasCampus));
 
     // =========================================================
 

@@ -13,10 +13,7 @@ export class OfertaFormacaoNivelFormacaoController {
   constructor(private ofertaFormacaoNivelFormacaoService: OfertaFormacaoNivelFormacaoService) {}
 
   @Get("/")
-  async ofertaFormacaoNivelFormacaoFindAll(
-    @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("OfertaFormacaoNivelFormacaoList") dto: IAppRequest<"OfertaFormacaoNivelFormacaoList">,
-  ) {
+  async ofertaFormacaoNivelFormacaoFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("OfertaFormacaoNivelFormacaoList") dto: IAppRequest<"OfertaFormacaoNivelFormacaoList">) {
     const domain: IDomain.OfertaFormacaoNivelFormacaoListInput = requestRepresentationMergeToDomain(dto);
     return this.ofertaFormacaoNivelFormacaoService.ofertaFormacaoNivelFormacaoFindAll(accessContext, domain);
   }

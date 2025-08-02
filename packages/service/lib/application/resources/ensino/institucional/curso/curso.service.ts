@@ -47,7 +47,7 @@ export class CursoService {
 
     const paginated = await this.searchService.search(
       qb,
-      {...domain},
+      { ...domain },
       {
         ...paginateConfig,
         select: [
@@ -124,7 +124,7 @@ export class CursoService {
 
     // =========================================================
 
-    qb.andWhere(`${aliasCurso}.id = :id`, {id: domain.id});
+    qb.andWhere(`${aliasCurso}.id = :id`, { id: domain.id });
 
     // =========================================================
 
@@ -190,7 +190,7 @@ export class CursoService {
   async cursoCreate(accessContext: AccessContext, domain: IDomain.CursoCreateInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("curso:create", {dto: domain});
+    await accessContext.ensurePermission("curso:create", { dto: domain });
 
     // =========================================================
 
@@ -238,7 +238,7 @@ export class CursoService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("curso:update", {dto: domain}, domain.id, this.cursoRepository.createQueryBuilder(aliasCurso));
+    await accessContext.ensurePermission("curso:update", { dto: domain }, domain.id, this.cursoRepository.createQueryBuilder(aliasCurso));
 
     const dtoCurso = pick(domain, ["nome", "nomeAbreviado"]);
 
@@ -341,7 +341,7 @@ export class CursoService {
   async cursoDeleteOneById(accessContext: AccessContext, domain: IDomain.CursoFindOneInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("curso:delete", {dto: domain}, domain.id, this.cursoRepository.createQueryBuilder(aliasCurso));
+    await accessContext.ensurePermission("curso:delete", { dto: domain }, domain.id, this.cursoRepository.createQueryBuilder(aliasCurso));
 
     // =========================================================
 

@@ -38,7 +38,7 @@ export class DisponibilidadeService {
 
     const paginated = await this.searchService.search(
       qb,
-      {...domain},
+      { ...domain },
       {
         ...paginateConfig,
         select: [
@@ -92,7 +92,7 @@ export class DisponibilidadeService {
 
     // =========================================================
 
-    qb.andWhere(`${aliasDisponibilidade}.id = :id`, {id: domain.id});
+    qb.andWhere(`${aliasDisponibilidade}.id = :id`, { id: domain.id });
 
     // =========================================================
 
@@ -158,7 +158,7 @@ export class DisponibilidadeService {
   async disponibilidadeCreate(accessContext: AccessContext, domain: IDomain.DisponibilidadeCreateInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("disponibilidade:create", {dto: domain});
+    await accessContext.ensurePermission("disponibilidade:create", { dto: domain });
 
     // =========================================================
 
@@ -188,7 +188,7 @@ export class DisponibilidadeService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("disponibilidade:update", {dto: domain}, domain.id, this.disponibilidadeRepository.createQueryBuilder(aliasDisponibilidade));
+    await accessContext.ensurePermission("disponibilidade:update", { dto: domain }, domain.id, this.disponibilidadeRepository.createQueryBuilder(aliasDisponibilidade));
 
     const dtoDisponibilidade = pick(domain, ["dataInicio", "dataFim"]);
 
@@ -214,7 +214,7 @@ export class DisponibilidadeService {
   async disponibilidadeDeleteOneById(accessContext: AccessContext, domain: IDomain.DisponibilidadeFindOneInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("disponibilidade:delete", {dto: domain}, domain.id, this.disponibilidadeRepository.createQueryBuilder(aliasDisponibilidade));
+    await accessContext.ensurePermission("disponibilidade:delete", { dto: domain }, domain.id, this.disponibilidadeRepository.createQueryBuilder(aliasDisponibilidade));
 
     // =========================================================
 

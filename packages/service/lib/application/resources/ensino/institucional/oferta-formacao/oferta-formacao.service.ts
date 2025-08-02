@@ -41,7 +41,7 @@ export class OfertaFormacaoService {
 
     const paginated = await this.searchService.search(
       qb,
-      {...domain},
+      { ...domain },
       {
         ...paginateConfig,
         select: [
@@ -100,7 +100,7 @@ export class OfertaFormacaoService {
 
     // =========================================================
 
-    qb.andWhere(`${aliasOfertaFormacao}.id = :id`, {id: domain.id});
+    qb.andWhere(`${aliasOfertaFormacao}.id = :id`, { id: domain.id });
 
     // =========================================================
 
@@ -166,7 +166,7 @@ export class OfertaFormacaoService {
   async ofertaFormacaoCreate(accessContext: AccessContext, domain: IDomain.OfertaFormacaoCreateInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("oferta_formacao:create", {dto: domain});
+    await accessContext.ensurePermission("oferta_formacao:create", { dto: domain });
 
     // =========================================================
 
@@ -208,7 +208,7 @@ export class OfertaFormacaoService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("oferta_formacao:update", {dto: domain}, domain.id, this.ofertaFormacaoRepository.createQueryBuilder(aliasOfertaFormacao));
+    await accessContext.ensurePermission("oferta_formacao:update", { dto: domain }, domain.id, this.ofertaFormacaoRepository.createQueryBuilder(aliasOfertaFormacao));
 
     const dtoOfertaFormacao = pick(domain, ["nome", "slug"]);
 
@@ -246,7 +246,7 @@ export class OfertaFormacaoService {
   async ofertaFormacaoDeleteOneById(accessContext: AccessContext, domain: IDomain.OfertaFormacaoFindOneInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("oferta_formacao:delete", {dto: domain}, domain.id, this.ofertaFormacaoRepository.createQueryBuilder(aliasOfertaFormacao));
+    await accessContext.ensurePermission("oferta_formacao:delete", { dto: domain }, domain.id, this.ofertaFormacaoRepository.createQueryBuilder(aliasOfertaFormacao));
 
     // =========================================================
 
