@@ -367,6 +367,21 @@ op UsuarioSetImagemCapa(
   },
 ): Body<boolean> | ForbiddenResponse | NotFoundResponse;
 
+
+
+@tag("perfil")
+@route("/api/v1/perfil/{id}/ensino")
+@get
+op perfilEnsinoById(
+  /**
+   * Identificador do registro (uuid).
+   */
+  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "Usuario")
+  @format("uuid")
+  @path
+  id: string,
+): PerfilEnsinoOutput | ForbiddenResponse | NotFoundResponse;
+
 /**
  * Obtêm a imagem de perfil.
  */
