@@ -12,6 +12,11 @@ import { PerfilService } from "./perfil.service";
 export class PerfilController {
   constructor(private vinculoService: PerfilService) {}
 
+  @Get("/ensino/:id")
+  async perfilEnsinoById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("perfilEnsinoById") dto: IAppRequest<"perfilEnsinoById">) {
+    const domain: IDomain.PerfilFindOneInput = requestRepresentationMergeToDomain(dto);
+    return this.vinculoService.perfilEnsinoById(accessContext, domain);
+  }
   @Get("/")
   async findAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("FindAll") dto: IAppRequest<"FindAll">) {
     const domain: IDomain.VinculoListInput = requestRepresentationMergeToDomain(dto);
