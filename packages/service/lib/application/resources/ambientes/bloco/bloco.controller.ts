@@ -39,7 +39,7 @@ export class BlocoController {
   @Get("/:id/imagem/capa")
   async blocoGetImagemCapa(@AccessContextHttp() accessContext: AccessContext, @AppRequest("BlocoGetImagemCapa") dto: IAppRequest<"BlocoGetImagemCapa">) {
     const domain: IDomain.BlocoFindOneInput = requestRepresentationMergeToDomain(dto);
-    return this.blocoService.blocoGetImagemCapa(accessContext, domain);
+    return this.blocoService.blocoGetImagemCapa(accessContext, domain.id);
   }
 
   @Put("/:id/imagem/capa")

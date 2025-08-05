@@ -39,7 +39,7 @@ export class TurmaController {
   @Get("/:id/imagem/capa")
   async turmaGetImagemCapa(@AccessContextHttp() accessContext: AccessContext, @AppRequest("TurmaGetImagemCapa") dto: IAppRequest<"TurmaGetImagemCapa">) {
     const domain: IDomain.TurmaFindOneInput = requestRepresentationMergeToDomain(dto);
-    return this.turmaService.turmaGetImagemCapa(accessContext, domain);
+    return this.turmaService.turmaGetImagemCapa(accessContext, domain.id);
   }
 
   @Put("/:id/imagem/capa")

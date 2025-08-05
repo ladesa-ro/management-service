@@ -9,12 +9,14 @@ export type IApiDocOperationByKey<OperationName extends IApiDocOperationKey> = I
 export type IApiDocOperation = IAppApiDoc.operations[keyof IAppApiDoc.operations];
 
 export type IAppRequest<OperationKey extends IApiDocOperationKey> = IAppRequestRepresentationGeneric & {
-  method: IApiDocOperationByKey<OperationKey>["method"];
-  path: IApiDocOperationByKey<OperationKey>["path"];
+  method: IApiDocOperationByKey<OperationKey> extends { method: infer M } ? M : never;
+  path: IApiDocOperationByKey<OperationKey> extends { path: infer P } ? P : never;
 
   headers: IApiDocOperationByKey<OperationKey>["parameters"]["header"];
   query: IApiDocOperationByKey<OperationKey>["parameters"]["query"];
   params: IApiDocOperationByKey<OperationKey>["parameters"]["path"];
 
-  body: IApiDocOperationByKey<OperationKey>["requestBody"]["content"]["application/json"];
+  body: IApiDocOperationByKey<OperationKey> extends { requestBody: { content: { "application/json": infer B } } }
+    ? B
+    : never;
 };

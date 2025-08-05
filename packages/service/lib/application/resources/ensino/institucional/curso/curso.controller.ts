@@ -39,7 +39,7 @@ export class CursoController {
   @Get("/:id/imagem/capa")
   async cursoGetImagemCapa(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CursoGetImagemCapa") dto: IAppRequest<"CursoGetImagemCapa">) {
     const domain: IDomain.CursoFindOneInput = requestRepresentationMergeToDomain(dto);
-    return this.cursoService.cursoGetImagemCapa(accessContext, domain);
+    return this.cursoService.cursoGetImagemCapa(accessContext, domain.id);
   }
 
   @Put("/:id/imagem/capa")

@@ -39,7 +39,7 @@ export class DisciplinaController {
   @Get("/:id/imagem/capa")
   async disciplinaGetImagemCapa(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DisciplinaGetImagemCapa") dto: IAppRequest<"DisciplinaGetImagemCapa">) {
     const domain: IDomain.DisciplinaFindOneInput = requestRepresentationMergeToDomain(dto);
-    return this.disciplinaService.disciplinaGetImagemCapa(accessContext, domain);
+    return this.disciplinaService.disciplinaGetImagemCapa(accessContext, domain.id);
   }
 
   @Put("/:id/imagem/capa")
