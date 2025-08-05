@@ -26,100 +26,10 @@ export class PerfilService {
     private searchService: SearchService,
   ) {}
 
-  async perfilEnsinoById(accessContext: AccessContext | null, domain: IDomain.PerfilFindOneInput, selection?: string[] | boolean): Promise<IDomain.PerfilEnsinoOutput | null> {
+  async perfilEnsinoById(accessContext: AccessContext, domain: IDomain.PerfilFindOneInput, selection?: string[] | boolean): Promise<IDomain.UsuarioEnsinoOutput | null> {
     const perfil = await this.perfilFindByIdStrict(accessContext, domain, selection);
-
-    // Corrige: pega o usuário do perfil
     const usuario = perfil.usuario;
-
-    const disciplinas = await this.databaseContext.disciplinaRepository.find({
-      where: {
-        diarios: {
-          ativo: true,
-          diariosProfessores: {
-            situacao: true,
-            perfil: {
-              usuario: {
-                id: usuario.id,
-              },
-            },
-          },
-        },
-      },
-    });
-
-    const ensino: IDomain.PerfilEnsinoOutput = {
-      perfil,
-      disciplinas: [],
-    };
-
-    for (const disciplina of disciplinas) {
-      const vinculoDisciplina: IDomain.PerfilEnsinoOutput["disciplinas"][number] = {
-        disciplina: disciplina,
-        cursos: [],
-      };
-
-      const cursos = await this.databaseContext.cursoRepository.find({
-        where: {
-          turmas: {
-            diarios: {
-              disciplina: {
-                id: disciplina.id,
-              },
-              ativo: true,
-              diariosProfessores: {
-                situacao: true,
-                perfil: {
-                  usuario: {
-                    id: usuario.id,
-                  },
-                },
-              },
-            },
-          },
-        },
-      });
-
-      for (const curso of cursos) {
-        const vinculoCurso: IDomain.PerfilEnsinoOutput["disciplinas"][number]["cursos"][number] = {
-          curso: curso,
-          turmas: [],
-        };
-
-        const turmas = await this.databaseContext.turmaRepository.find({
-          where: [
-            {
-              curso: {
-                id: curso.id,
-              },
-              diarios: {
-                ativo: true,
-                disciplina: {
-                  id: disciplina.id,
-                },
-                diariosProfessores: {
-                  situacao: true,
-                  perfil: {
-                    usuario: {
-                      id: usuario.id,
-                    },
-                  },
-                },
-              },
-            },
-          ],
-        });
-
-        for (const turma of turmas) {
-          vinculoCurso.turmas.push({ turma: turma });
-        }
-
-        vinculoDisciplina.cursos.push(vinculoCurso);
-      }
-      ensino.disciplinas.push(vinculoDisciplina);
-    }
-
-    return ensino;
+    return this.usuarioService.usuarioEnsinoById(accessContext, { id: usuario.id }, selection);
   }
 
   get usuarioRepository() {
