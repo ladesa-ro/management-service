@@ -367,12 +367,10 @@ op UsuarioSetImagemCapa(
   },
 ): Body<boolean> | ForbiddenResponse | NotFoundResponse;
 
-
-
-@tag("perfil")
-@route("/api/v1/perfil/{id}/ensino")
+@tag("perfis")
+@route("/api/v1/perfis/{id}/ensino")
 @get
-op perfilEnsinoById(
+op PerfilEnsinoById(
   /**
    * Identificador do registro (uuid).
    */
