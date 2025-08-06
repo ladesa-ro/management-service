@@ -39,7 +39,7 @@ export class AmbienteController {
   @Get("/:id/imagem/capa")
   async ambienteGetImagemCapa(@AccessContextHttp() accessContext: AccessContext, @AppRequest("AmbienteGetImagemCapa") dto: IAppRequest<"AmbienteGetImagemCapa">) {
     const domain: IDomain.AmbienteFindOneInput = requestRepresentationMergeToDomain(dto);
-    return this.ambienteService.ambienteGetImagemCapa(accessContext, domain);
+    return this.ambienteService.ambienteGetImagemCapa(accessContext, domain.id);
   }
 
   @Put("/:id/imagem/capa")
