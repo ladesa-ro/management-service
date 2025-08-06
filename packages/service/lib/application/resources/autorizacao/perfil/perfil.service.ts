@@ -26,6 +26,12 @@ export class PerfilService {
     private searchService: SearchService,
   ) {}
 
+  async perfilEnsinoById(accessContext: AccessContext, domain: IDomain.PerfilFindOneInput, selection?: string[] | boolean): Promise<IDomain.UsuarioEnsinoOutput | null> {
+    const perfil = await this.perfilFindByIdStrict(accessContext, domain, selection);
+    const usuario = perfil.usuario;
+    return this.usuarioService.usuarioEnsinoById(accessContext, { id: usuario.id }, selection);
+  }
+
   get usuarioRepository() {
     return this.databaseContext.usuarioRepository;
   }

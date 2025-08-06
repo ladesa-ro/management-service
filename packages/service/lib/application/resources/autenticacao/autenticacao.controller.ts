@@ -6,21 +6,22 @@ import { AccessContext, AccessContextHttp } from "@/infrastructure/access-contex
 import { Public } from "@/infrastructure/authentication";
 import { AutenticacaoService } from "./autenticacao.service";
 import { UsuarioService } from "./usuario/usuario.service";
-import { throwError } from "rxjs";
-
 
 @ApiTags("autenticacao")
 @Controller("/autenticacao")
 export class AutenticacaoController {
-  constructor(private readonly autenticacaoService: AutenticacaoService, private usuarioService:UsuarioService) {}
+  constructor(
+    private readonly autenticacaoService: AutenticacaoService,
+    private usuarioService: UsuarioService,
+  ) {}
 
   @Get("/quem-sou-eu/ensino")
-  whoAmIEnsino(@AccessContextHttp() accessContext:AccessContext){
+  whoAmIEnsino(@AccessContextHttp() accessContext: AccessContext) {
     const idUsuario = accessContext.requestActor?.id;
-    if(!idUsuario){
+    if (!idUsuario) {
       throw new BadRequestException();
     }
-    return this.usuarioService.usuarioEnsinoById(accessContext, {id: idUsuario} )
+    return this.usuarioService.usuarioEnsinoById(accessContext, { id: idUsuario });
   }
 
   @Get("/quem-sou-eu")

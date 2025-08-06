@@ -46,3 +46,14 @@ model PerfilUpdateInput {
   campus: CampusFindOneInput;
   usuario: UsuarioFindOneInput;
 }
+
+model PerfilEnsinoOutput {
+      usuario: UsuarioFindOneOutput;
+    disciplinas: Array<{
+        disciplina: DisciplinaFindOneOutput;
+        cursos: Array<{
+            curso: CursoFindOneOutput;
+            turmas: Array<{turma: TurmaFindOneOutput;}>
+        }>
+    }>
+}

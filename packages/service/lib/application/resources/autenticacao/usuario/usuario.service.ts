@@ -115,7 +115,7 @@ export class UsuarioService {
         });
 
         for (const turma of turmas) {
-          vinculoCurso.turmas.push({turma:turma});
+          vinculoCurso.turmas.push({ turma: turma });
         }
 
         vinculoDisciplina.cursos.push(vinculoCurso);
