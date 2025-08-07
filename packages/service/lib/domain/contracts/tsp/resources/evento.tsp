@@ -18,5 +18,11 @@ model Evento {
   /** Calendario. */
   calendario: CalendarioLetivo;
 
+  /** Data de início do evento. */
+  data_inicio: date | null;
+  
+  /** Data de Termino do evento. */
+  data_fim: date | null;
+  
   ...EntityDated;
 }
