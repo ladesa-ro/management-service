@@ -18,6 +18,7 @@ model EventoFindOneOutput {
   ...PickProperties<EventoView, "id">;
   ...PickProperties<EventoView, "nome" | "rrule" | "cor">;
   ...PickProperties<EventoView, "calendario">;
+  ...PickProperties<EventoView, "data_inicio" | "data_fim">;
   ...PickProperties<EventoView, "dateCreated" | "dateUpdated" | "dateDeleted">;
 }
 
@@ -27,6 +28,8 @@ model EventoCreateInput {
   rrule: string;
   cor: string | null;
   calendario: CalendarioLetivoFindOneInput;
+  data_inicio?: utcDateTime;
+  data_fim?: utcDateTime;   
 }
 
 /** Dados de entrada para a atualização de um Evento. */
@@ -35,7 +38,7 @@ model EventoUpdateInput is OptionalProperties<EventoCreateInput>;
 model EventoListInput {
   ...Pagination.Input.View;
   sortBy?: Pagination.Input.SortConstraints<"dateCreated">;
-  `filter.id`: Pagination.Input.Filters.eq[];
+  `filter.id`: Pagination.Input.Filters.eq[];  
 }
 
 /** Resultados da busca a Eventos. */
