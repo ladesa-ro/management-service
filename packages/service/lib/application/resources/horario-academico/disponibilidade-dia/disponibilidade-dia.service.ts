@@ -47,7 +47,20 @@ export class DisponibilidadeDiaService {
 
     const paginated = await this.searchService.search(
       qb,
-      { ...domain },
+      domain
+        ? {
+            ...domain,
+            sortBy: domain.sortBy
+              ? (domain.sortBy as any[]).map((s) =>
+                  typeof s === "string"
+                    ? s
+                    : Array.isArray(s)
+                    ? s.join(":")
+                    : `${s.column}:${s.direction ?? "ASC"}`
+                )
+              : undefined,
+          }
+        : {},
       {
         ...paginateConfig,
         select: [
@@ -242,13 +255,13 @@ export class DisponibilidadeDiaService {
   async disponibilidadeDiaUpdate(accessContext: AccessContext, domain: IDomain.DisponibilidadeDiaUpdateInput) {
     // =========================================================
 
-    const currentDisponibilidadeDia = await this.disponibilidadeDiaFindByIdStrict(accessContext, domain);
+    const currentDisponibilidadeDia = await this.disponibilidadeDiaFindByIdStrict(accessContext, {id: domain.id});
 
     // =========================================================
 
     await accessContext.ensurePermission("disponibilidade_dia:update", { dto: domain }, domain.id, this.disponibilidadeDiaRepository.createQueryBuilder(aliasDisponibilidadeDia));
 
-    const dtoDisponibilidadeDia = pick(domain, ["diaSemanaIso", "aulasSeguidas", "dataInicio", "dataFim"]);
+    const dtoDisponibilidadeDia = pick(domain, ["rrule"]);
 
     const disponibilidadeDia = {
       id: currentDisponibilidadeDia.id,

@@ -47,7 +47,10 @@ export class DiarioProfessorService {
 
     const paginated = await this.searchService.search(
       qb,
-      { ...domain },
+      {
+        ...domain,
+        sortBy: domain?.sortBy ? (domain.sortBy as unknown as string[]) : undefined,
+      },
       {
         ...paginateConfig,
         select: [
@@ -240,7 +243,7 @@ export class DiarioProfessorService {
   async diarioProfessorUpdate(accessContext: AccessContext, domain: IDomain.DiarioProfessorUpdateInput) {
     // =========================================================
 
-    const currentDiarioProfessor = await this.diarioProfessorFindByIdStrict(accessContext, domain);
+    const currentDiarioProfessor = await this.diarioProfessorFindByIdStrict(accessContext, {id: domain.id});
 
     // =========================================================
 

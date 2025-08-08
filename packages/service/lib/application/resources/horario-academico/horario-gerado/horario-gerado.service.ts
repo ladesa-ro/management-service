@@ -223,7 +223,7 @@ export class HorarioGeradoService {
   async horarioGeradoUpdate(accessContext: AccessContext, domain: IDomain.HorarioGeradoUpdateInput) {
     // =========================================================
 
-    const currentHorarioGerado = await this.horarioGeradoFindByIdStrict(accessContext, domain);
+    const currentHorarioGerado = await this.horarioGeradoFindByIdStrict(accessContext, {id: domain.id});
 
     // =========================================================
 

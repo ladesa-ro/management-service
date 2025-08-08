@@ -47,7 +47,20 @@ export class ProfessorDisponibilidadeService {
 
     const paginated = await this.searchService.search(
       qb,
-      { ...domain },
+      domain
+        ? {
+            ...domain,
+            sortBy: domain.sortBy
+              ? (domain.sortBy as any[]).map((s) =>
+                  typeof s === "string"
+                    ? s
+                    : Array.isArray(s)
+                    ? s.join(":")
+                    : `${s.column}:${s.direction ?? "ASC"}`
+                )
+              : undefined,
+          }
+        : {},
       {
         ...paginateConfig,
         select: [
@@ -223,7 +236,7 @@ export class ProfessorDisponibilidadeService {
   async professorDisponibilidadeUpdate(accessContext: AccessContext, domain: IDomain.ProfessorDisponibilidadeUpdateInput) {
     // =========================================================
 
-    const currentProfessorDisponibilidade = await this.professorDisponibilidadeFindByIdStrict(accessContext, domain);
+    const currentProfessorDisponibilidade = await this.professorDisponibilidadeFindByIdStrict(accessContext, {id: domain.id});
 
     // =========================================================
 
