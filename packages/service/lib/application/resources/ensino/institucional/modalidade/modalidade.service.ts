@@ -38,7 +38,20 @@ export class ModalidadeService {
 
     const paginated = await this.searchService.search(
       qb,
-      { ...domain },
+      domain
+        ? {
+            ...domain,
+            sortBy: domain.sortBy
+              ? (domain.sortBy as any[]).map((s) =>
+                  typeof s === "string"
+                    ? s
+                    : Array.isArray(s)
+                    ? s.join(":")
+                    : `${s.column}:${s.direction ?? "ASC"}`
+                )
+              : undefined,
+          }
+        : {},
       {
         ...paginateConfig,
         select: [
@@ -181,7 +194,7 @@ export class ModalidadeService {
   async modalidadeUpdate(accessContext: AccessContext, domain: IDomain.ModalidadeUpdateInput) {
     // =========================================================
 
-    const currentModalidade = await this.modalidadeFindByIdStrict(accessContext, domain);
+    const currentModalidade = await this.modalidadeFindByIdStrict(accessContext, {id: domain.id});
 
     // =========================================================
 

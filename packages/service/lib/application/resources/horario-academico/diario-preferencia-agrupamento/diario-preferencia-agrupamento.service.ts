@@ -47,7 +47,20 @@ export class DiarioPreferenciaAgrupamentoService {
 
     const paginated = await this.searchService.search(
       qb,
-      { ...domain },
+      domain
+        ? {
+            ...domain,
+            sortBy: domain.sortBy
+              ? (domain.sortBy as any[]).map((s) =>
+                  typeof s === "string"
+                    ? s
+                    : Array.isArray(s)
+                    ? s.join(":")
+                    : `${s.column}:${s.direction ?? "ASC"}`
+                )
+              : undefined,
+          }
+        : {},
       {
         ...paginateConfig,
         select: [
@@ -247,7 +260,7 @@ export class DiarioPreferenciaAgrupamentoService {
   async diarioPreferenciaAgrupamentoUpdate(accessContext: AccessContext, domain: IDomain.DiarioPreferenciaAgrupamentoUpdateInput) {
     // =========================================================
 
-    const currentDiarioPreferenciaAgrupamento = await this.diarioPreferenciaAgrupamentoFindByIdStrict(accessContext, domain);
+    const currentDiarioPreferenciaAgrupamento = await this.diarioPreferenciaAgrupamentoFindByIdStrict(accessContext, {id: domain.id});
 
     // =========================================================
 

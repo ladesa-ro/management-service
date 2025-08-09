@@ -46,7 +46,20 @@ export class CalendarioLetivoService {
 
     const paginated = await this.searchService.search(
       qb,
-      { ...domain },
+      domain
+        ? {
+            ...domain,
+            sortBy: domain.sortBy
+              ? (domain.sortBy as any[]).map((s) =>
+                  typeof s === "string"
+                    ? s
+                    : Array.isArray(s)
+                    ? s.join(":")
+                    : `${s.column}:${s.direction ?? "ASC"}`
+                )
+              : undefined,
+          }
+        : {},
       {
         select: [
           "id",
@@ -243,7 +256,7 @@ export class CalendarioLetivoService {
   async calendarioLetivoUpdate(accessContext: AccessContext, domain: IDomain.CalendarioLetivoUpdateInput) {
     // =========================================================
 
-    const currentCalendarioLetivo = await this.calendarioLetivoFindByIdStrict(accessContext, domain);
+    const currentCalendarioLetivo = await this.calendarioLetivoFindByIdStrict(accessContext, {id: domain.id});
 
     // =========================================================
 

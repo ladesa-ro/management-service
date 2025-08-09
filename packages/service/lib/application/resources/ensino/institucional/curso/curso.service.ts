@@ -47,7 +47,20 @@ export class CursoService {
 
     const paginated = await this.searchService.search(
       qb,
-      { ...domain },
+      domain
+        ? {
+            ...domain,
+            sortBy: domain.sortBy
+              ? (domain.sortBy as any[]).map((s) =>
+                  typeof s === "string"
+                    ? s
+                    : Array.isArray(s)
+                    ? s.join(":")
+                    : `${s.column}:${s.direction ?? "ASC"}`
+                )
+              : undefined,
+          }
+        : {},
       {
         ...paginateConfig,
         select: [
@@ -234,7 +247,7 @@ export class CursoService {
   async cursoUpdate(accessContext: AccessContext, domain: IDomain.CursoUpdateInput) {
     // =========================================================
 
-    const currentCurso = await this.cursoFindByIdStrict(accessContext, domain);
+    const currentCurso = await this.cursoFindByIdStrict(accessContext, {id: domain.id});
 
     // =========================================================
 

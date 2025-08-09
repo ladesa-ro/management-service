@@ -45,7 +45,20 @@ export class AulaService {
 
     const paginated = await this.searchService.search(
       qb,
-      { ...domain },
+      domain
+        ? {
+            ...domain,
+            sortBy: domain.sortBy
+              ? (domain.sortBy as any[]).map((s) =>
+                  typeof s === "string"
+                    ? s
+                    : Array.isArray(s)
+                    ? s.join(":")
+                    : `${s.column}:${s.direction ?? "ASC"}`
+                )
+              : undefined,
+          }
+        : {},
       {
         ...paginateConfig,
         select: [
@@ -230,7 +243,7 @@ export class AulaService {
   async aulaUpdate(accessContext: AccessContext, domain: IDomain.AulaUpdateInput) {
     // =========================================================
 
-    const currentAula = await this.aulaFindByIdStrict(accessContext, domain);
+    const currentAula = await this.aulaFindByIdStrict(accessContext, {id: domain.id});
 
     // =========================================================
 

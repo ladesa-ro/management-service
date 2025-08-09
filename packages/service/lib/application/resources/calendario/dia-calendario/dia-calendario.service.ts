@@ -40,7 +40,20 @@ export class DiaCalendarioService {
 
     const paginated = await this.searchService.search(
       qb,
-      { ...domain },
+      domain
+        ? {
+            ...domain,
+            sortBy: domain.sortBy
+              ? (domain.sortBy as any[]).map((s) =>
+                  typeof s === "string"
+                    ? s
+                    : Array.isArray(s)
+                    ? s.join(":")
+                    : `${s.column}:${s.direction ?? "ASC"}`
+                )
+              : undefined,
+          }
+        : {},
       {
         select: [
           "id",
@@ -216,7 +229,7 @@ export class DiaCalendarioService {
   async diaCalendarioUpdate(accessContext: AccessContext, domain: IDomain.DiaCalendarioUpdateInput) {
     // =========================================================
 
-    const currentDiaCalendario = await this.diaCalendarioFindByIdStrict(accessContext, domain);
+    const currentDiaCalendario = await this.diaCalendarioFindByIdStrict(accessContext, {id: domain.id});
 
     // =========================================================
 
