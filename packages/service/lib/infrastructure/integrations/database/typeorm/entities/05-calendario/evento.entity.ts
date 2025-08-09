@@ -16,6 +16,12 @@ export class EventoEntity implements IDomain.Evento {
   @Column({ name: "cor", type: "text" })
   cor!: string | null;
 
+  @Column({ name: "data_inicio", type: "timestamp", nullable: true })
+  data_inicio!: Date | null;
+
+  @Column({ name: "data_fim", type: "timestamp", nullable: true })
+  data_fim!: Date | null;
+
   //Chaves Estrangeiras
 
   @ManyToOne(() => CalendarioLetivoEntity)
