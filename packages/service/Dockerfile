@@ -1,78 +1,120 @@
-# ========================================
-# CORE IMAGE
-# ========================================
+# ==========================================
+# IMAGEM BASE DO SISTEMA OPERACIONAL
+# ==========================================
 
-FROM docker.io/oven/bun:1.2.19 AS core
+FROM debian:12-slim AS os-core
 
-# ========================================
-# BASE IMAGE
-# ========================================
+RUN useradd -m -u 1000 -s /bin/bash happy
+ENV HOME=/home/happy
 
-FROM core AS base
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    apt-get update -y && apt-get install -y --no-install-recommends \
+    curl \
+    ca-certificates \
+    unzip \
+    && rm -rf /var/lib/apt/lists/*
 
-ENV BUN_INSTALL_CACHE_DIR="/home/bun/.bun/install/cache"
-ENV BUN_TMPDIR="/home/bun/.bun/tmp"
+# ==========================================
+# IMAGEM DE RUNTIME DO SISTEMA
+# ==========================================
 
-RUN mkdir -p /ladesa/.sources
-RUN chown -R 1000:1000 /ladesa/.sources
+FROM os-core AS os-runtime
+USER root
 
-WORKDIR "/ladesa/.sources/management-service/service"
+# Configuração do ambiente Bun
+ENV BUN_INSTALL="/opt/bun"
+ENV BUN_INSTALL_CACHE_DIR="/home/happy/.bun/tmp"
+ENV PATH="/opt/bun/bin:$PATH"
 
-FROM base AS devcontainer
+# Instalação do Bun na versão específica para garantir consistência
+RUN curl -fsSL https://bun.sh/install | bash -s "bun-v1.2.20"
 
-# ========================================
-# DEVELOPMENT AND BUILD DEPENDENCIES
-# ========================================
+# Instalação de dependências com cache eficiente
+RUN --mount=type=cache,id=bun,target=${BUN_INSTALL_CACHE_DIR} \
+    mkdir -p "${BUN_INSTALL_CACHE_DIR}" && chmod -R 777 "${BUN_INSTALL_CACHE_DIR}"
 
-FROM base AS dev-dependencies
-RUN mkdir -p /ladesa/.builds
+# Retorna ao usuário não privilegiado após instalação
+USER 1000:1000
 
-COPY . "/ladesa/.sources/management-service/service"
+# ==========================================
+# IMAGEM DE DESENVOLVIMENTO DO SISTEMA
+# ==========================================
 
+FROM os-runtime AS os-development
+
+USER 1000:1000
+WORKDIR "/source/packages/service"
+
+# ==========================================
+# IMAGEM PARA AMBIENTE DE DESENVOLVIMENTO
+# ==========================================
+
+FROM os-development AS devcontainer
+USER 1000:1000
+
+# ==========================================
+# INSTALAÇÃO DE DEPENDÊNCIAS DE PRODUÇÃO
+# ==========================================
+
+FROM os-development AS source-with-production-dependencies
+
+USER 1000:1000
+COPY --chown=1000:1000 package.json bun.lock* bun.toml* ./
+
+# Instalação de dependências com cache eficiente
+RUN --mount=type=cache,id=bun,target=${BUN_INSTALL_CACHE_DIR} \
+    bun install --frozen-lockfile --production
+
+COPY --chown=1000:1000 . .
+
+# ==========================================
+# INSTALAÇÃO DE DEPENDÊNCIAS DE DESENVOLVIMENTO
+# ==========================================
+
+FROM source-with-production-dependencies AS source-with-dev-dependencies
+USER 1000:1000
 RUN --mount=type=cache,id=bun,target=${BUN_INSTALL_CACHE_DIR} bun install --frozen-lockfile
 
-# ========================================
-# MANAGEMENT-SERVICE - BUILD
-# ========================================
+# ==========================================
+# ETAPA DE COMPILAÇÃO DA APLICAÇÃO
+# ==========================================
 
-FROM dev-dependencies AS management-service-builder
+FROM source-with-dev-dependencies AS build
+USER 1000:1000
+RUN bun run build
 
-RUN cp -r /ladesa/.sources/management-service/service /ladesa/.builds/management-service
+# ==========================================
+# IMAGEM FINAL DE EXECUÇÃO
+# ==========================================
 
-WORKDIR /ladesa/.builds/management-service
-RUN --mount=type=cache,id=bun,target=${BUN_INSTALL_CACHE_DIR} bun install
+FROM os-runtime AS runtime
 
-## ========================================
-## NPM / API-CLIENT-FETCH / DOCS -- BUILD
-## ========================================
-#
-#FROM dev-dependencies AS docs-npm-api-client-fetch-builder
-#
-#RUN bun run --filter "@ladesa-ro/api-client-fetch.docs" build
-#RUN cp -r /ladesa/.sources/api/docs/docs-npm-api-client-fetch "/ladesa/.builds/npm-api-client-fetch-docs"
-#
-## ========================================
-## NPM / API-CLIENT-FETCH / DOCS -- RUNTIME
-## ========================================
-#
-#FROM nginx:alpine AS docs-npm-api-client-fetch-runtime
-#
-#COPY packages/integrations/npm/api-client-fetch/docs-npm-api-client-fetch/nginx.conf /etc/nginx/nginx.conf
-#
-#COPY --from=docs-npm-api-client-fetch-builder  "/ladesa/.builds/npm-api-client-fetch-docs"  "/ladesa/services/npm-api-client-fetch-docs"
-#EXPOSE 80
+# Metadados da imagem para documentação e rastreabilidade
+LABEL maintainer="Equipe de Desenvolvimento"
+LABEL version="1.0"
+LABEL description="Serviço de gerenciamento da aplicação"
 
-# ========================================
-# MANAGEMENT-SERVICE -- RUNTIME
-# ========================================
+# Configurações de ambiente para produção
+ENV NODE_ENV=production
+ENV PORT=3000
 
-FROM core AS management-service-runtime
+# Expõe a porta da aplicação
+EXPOSE $PORT
 
-USER bun
-COPY --from=management-service-builder \
-  "/ladesa/.builds/management-service" \
-  "/ladesa/services/management-service"
+# Mantém consistência utilizando o mesmo usuário em toda a aplicação
+USER happy
 
-WORKDIR "/ladesa/services/management-service/packages/service"
+# Copia apenas os arquivos necessários da etapa de build para a imagem final
+# Corrigido: usa o estágio 'build' em vez de 'builder' inexistente
+COPY --from=build --chown=1000:1000 /source/packages/service /app/packages/service
 
+# Define o diretório de trabalho para a aplicação
+WORKDIR "/app/packages/service"
+
+# Configuração de healthcheck para monitoramento da aplicação
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:$PORT/health || exit 1
+
+# Comando de inicialização: executa as migrações e inicia a aplicação
 CMD bun run migration:run && bun run start

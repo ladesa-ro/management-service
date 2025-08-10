@@ -99,7 +99,7 @@
     "contracts:application:dev": "nx contracts:application:dev --outputStyle stream",
     "dev": "bun run application:dev",
     "build": "bun run application:build",
-    "start": "./.dist/server",
+    "start": "bun run lib/main.ts",
     "check:static": "tsc --noEmit",
     "test": "vitest run",
     "test:cov": "vitest run --coverage",

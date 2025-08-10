@@ -11,11 +11,14 @@
 **/*.env
 **/*.env*
 
+**/.nx
+**/volumes
+
 Dockerfile
 *.dockerignore
 
+examples
+test
 dist
+.dist
 .wireit
-
-volumes
-.nx

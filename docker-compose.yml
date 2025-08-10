@@ -18,10 +18,10 @@ services:
     ports:
       - "3701:3701"
       - "9229:9229"
-    working_dir: /ladesa/.sources/management-service/service
+    working_dir: /source/packages/service
     userns_mode: keep-id:uid=1000,gid=1000
     volumes:
-      - ./packages/service:/ladesa/.sources/management-service/service:z
+      - ./packages/service:/source/packages/service:z
       - ladesa-management-service-uploaded-files:/container/uploaded
     environment:
       - STORAGE_PATH=/container/uploaded

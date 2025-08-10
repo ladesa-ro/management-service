@@ -20,7 +20,11 @@
       "options": {
         "cwd": "{projectRoot}",
         "parallel": false,
-        "commands": ["rm -rf .dist/server && mkdir -p .dist", "bun build --bytecode --compile --minify-whitespace --minify-syntax --outfile .dist/server lib/main.ts"]
+        "commands": [
+          "mkdir -p .dist",
+          "rm -rf .dist/server .dist/openapi.v3.json",
+          "cp ./lib/application/contracts/.generated/openapi.v3.json ./.dist/openapi.v3.json"
+        ]
       },
       "dependsOn": ["contracts:application:build", "contracts:domain:build"]
     },
