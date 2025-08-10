@@ -1,0 +1,122 @@
+name: "autofix"
+
+on:
+  push:
+    branches:
+      - development
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.sha }}
+
+env:
+  has_changes: false
+
+  observe_path: .
+
+  commit_author_name: "github-actions[bot]"
+  commit_author_email: "41898282+github-actions[bot]@users.noreply.github.com"
+  commit_message: "chore: autofix code"
+
+  commit_branch: github-actions-bot/autofix-development
+
+  pr_target_branch: development
+
+jobs:
+  job:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+      pull-requests: write
+      repository-projects: write
+
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v4
+
+      - name: install
+        uses: ./.github/actions/prepare/install
+        with:
+          install-bun: "true"
+
+      - name: "generate integrations"
+        uses: ./.github/actions/prepare/generate
+        with:
+          workspace-generate: "true"
+
+      - name: format everything
+        run: bunx nx run @ladesa-ro/api.root:format:fix ${observe_path};
+
+      - name: check if has changes
+        run: |
+          if git status --porcelain | grep -q -E "^\?\? ${observe_path}|^ M ${observe_path}"; then
+            echo "has_changes=true" >> $GITHUB_ENV
+          else
+            echo "has_changes=false" >> $GITHUB_ENV
+          fi
+
+      - name: autofix - set up git
+        if: env.has_changes == 'true'
+        run: |
+          git config --global user.name "${commit_author_name}"
+          git config --global user.email "${commit_author_email}"
+
+      - name: autofix - commit and push
+        if: env.has_changes == 'true'
+        run: |
+          git add -A ${observe_path};
+          git commit -m "${commit_message}";
+
+          if git show-ref --verify --quiet refs/heads/${commit_branch}; then
+            git branch -D ${commit_branch}
+          fi
+
+          git checkout -b ${commit_branch}
+          git push origin ${commit_branch} --force
+
+      - name: autofix - has changes - create or update pull request
+        if: env.has_changes == 'true'
+        run: |
+          # source: https://github.com/cli/cli/discussions/5792#discussioncomment-10410197
+          PR_URL="$(gh pr list -B "${pr_target_branch}" -H "${commit_branch}" --state open --json url --jq .[].url)"
+
+          NOW=$(date +'%Y-%m-%dT%H:%M:%S')
+
+          PR_TITLE="${commit_message}"
+          PR_BODY="**Workflow**: ${{ github.workflow }}\n**Job**: ${{ github.job }}.\n**Run number**: ${{ github.run_number }}.\nUpdated at: ${NOW}."
+          PR_BODY_FILE="/tmp/pr-body.txt"
+
+          echo -e "${PR_BODY}" > ${PR_BODY_FILE}
+
+          if [[ -n "${PR_URL}" ]]; then
+              echo "PR already exists -> ${PR_URL}"
+              gh pr edit \
+                "${PR_URL}" \
+                --title "${PR_TITLE}" \
+                --body-file "${PR_BODY_FILE}" \
+              ;
+          else
+            gh pr create \
+              -B "${{ env.pr_target_branch }}" \
+              -H "${{ env.commit_branch }}" \
+              --title "${PR_TITLE}" \
+              --body-file "${PR_BODY_FILE}" \
+            ;
+          fi
+
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: autofix - no changes - delete branch and pull request if has no changes
+        if: env.has_changes == 'false'
+        run: |
+          # source: https://github.com/cli/cli/discussions/5792#discussioncomment-10410197
+          PR_URL="$(gh pr list -B "${pr_target_branch}" -H "${commit_branch}" --state open --json url --jq .[].url)"
+
+          if [[ -n "${PR_URL}" ]]; then
+            gh pr close "${PR_URL}" -d;
+          fi
+
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
