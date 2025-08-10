@@ -98,11 +98,12 @@ jobs:
           env-slug: ${{ secrets.INFISICAL_ENV_SLUG }}
 
       - name: Implantação da aplicação no Kubernetes via Helm
-        uses: ladesa-ro/esteira-ci-cd/actions/deploy-k8s-stakater-application@81c9ff2dc7568c5046a041152e9664109da21bb8
-        with:
-          # Configurações para o Helm deploy no Kubernetes
-          helm-values: ${{ env.DEPLOY_HELM_VALUES }}
-          deployment: ${{ env.K8S_DEPLOYMENT }}
-          namespace: ${{ env.K8S_NAMESPACE }}
-          helm-release-name: ${{ env.K8S_DEPLOYMENT }}
-          helm-release-extra-options: ${{ env.DEPLOY_HELM_EXTRA_OPTIONS }}
+        env:
+          K8S_NAMESPACE: ${{ env.K8S_NAMESPACE  }}
+          K8S_DEPLOYMENT: ${{ env.K8S_DEPLOYMENT }}
+
+          HELM_RELEASE_NAME: ${{ env.K8S_DEPLOYMENT }}
+          HELM_RELEASE_VALUES: ${{ env.DEPLOY_HELM_VALUES }}
+          HELM_RELEASE_EXTRA_OPTIONS: ${{ env.DEPLOY_HELM_EXTRA_OPTIONS }}
+        shell: bash
+        run: ./.github/utils/cd-deploy.sh
