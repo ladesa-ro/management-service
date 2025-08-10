@@ -34,6 +34,8 @@ RUN curl -fsSL https://bun.sh/install | bash -s "bun-v1.2.20"
 RUN --mount=type=cache,id=bun,target=${BUN_INSTALL_CACHE_DIR} \
     mkdir -p "${BUN_INSTALL_CACHE_DIR}" && chmod -R 777 "${BUN_INSTALL_CACHE_DIR}"
 
+RUN mkdir -p "${BUN_INSTALL_CACHE_DIR}" && chown -R 1000:1000 "${BUN_INSTALL_CACHE_DIR}"
+
 # Retorna ao usuário não privilegiado após instalação
 USER 1000:1000
 
@@ -52,6 +54,7 @@ WORKDIR "/source/packages/service"
 
 FROM os-development AS devcontainer
 USER 1000:1000
+
 
 # ==========================================
 # INSTALAÇÃO DE DEPENDÊNCIAS DE PRODUÇÃO
