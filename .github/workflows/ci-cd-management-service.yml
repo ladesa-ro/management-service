@@ -107,4 +107,4 @@ jobs:
           HELM_RELEASE_VALUES: ${{ env.DEPLOY_HELM_VALUES }}
           HELM_RELEASE_EXTRA_OPTIONS: ${{ env.DEPLOY_HELM_EXTRA_OPTIONS }}
         shell: bash
-        run: ./.github/utils/cd-deploy.sh
+        run: bash ./.github/utils/cd-deploy.sh
