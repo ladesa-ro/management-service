@@ -12,7 +12,8 @@ on:
       - main
     paths:
       # Apenas quando alterações forem feitas neste arquivo ou em arquivos do serviço
-      - ci-cd-management-service.yml
+      - .github/workflows/ci-cd-management-service.yml
+      - .github/utils/cd-deploy.sh
       - packages/service/**/*
 
 # Evita execuções simultâneas do mesmo workflow
