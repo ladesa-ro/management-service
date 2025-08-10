@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - development
+      - FOCO-FORCA-FE
     paths:
       - .github/workflows/ci-cd-api-service.yml
       - packages/service/**/*
@@ -58,7 +58,7 @@ jobs:
         with:
           context: ./packages/service
           target: "runtime"
-          tags: ${{ env.REGISTRY_URL }}/${{ github.ref_name }}:${{ env.IMAGE_NAME  }}
+          tags: ${{ env.REGISTRY_URL }}/development:${{ env.IMAGE_NAME  }}
           push: true
           load: false
           no-cache: false
@@ -70,7 +70,7 @@ jobs:
     needs: [ci-image]
 
     environment:
-      name: ${{ github.ref_name == 'development' && 'development' || 'production' }}
+      name: development
       url: ${{ vars.DEPLOY_URL }}
 
     steps:
@@ -81,12 +81,7 @@ jobs:
         env:
           SLUG_DEV: ${{ secrets.INFISICAL_ENV_SLUG_DEV }}
           SLUG_PROD: ${{ secrets.INFISICAL_ENV_SLUG_PROD }}
-        run: |
-          if [[ $GITHUB_REF_NAME == 'production' ]]; then
-            echo "INFISICAL_ENV_SLUG=${SLUG_PROD}" >> "$GITHUB_ENV"
-          else
-            echo "INFISICAL_ENV_SLUG=${SLUG_DEV}" >> "$GITHUB_ENV"
-          fi
+        run: echo "INFISICAL_ENV_SLUG=${SLUG_DEV}" >> "$GITHUB_ENV"
 
       - uses: Infisical/secrets-action@v1.0.12
         with:
