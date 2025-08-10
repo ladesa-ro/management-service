@@ -1,6 +1,6 @@
 # Web API Integrada
 
-[![CI/CD - Release][action-release-src]][action-release-href]  
+[![CI/CD - Management Service][action-ci-cd-management-service-src]][action-ci-cd-management-service-href]  
 [![Autofix][action-autofix-src]][action-autofix-href]
 
 ## Ambientes
@@ -146,8 +146,8 @@ O projeto conta com um [arquivo make](Makefile) que comporta scripts destinados 
 
 <!-- Badges / Actions / Release  -->
 
-[action-release-src]: https://img.shields.io/github/actions/workflow/status/ladesa-ro/api/ci-release.yml?style=flat&logo=github&logoColor=white&label=Release&branch=development&labelColor=18181B  
-[action-release-href]: https://github.com/ladesa-ro/api/actions/workflows/ci-release.yml?query=branch%3Adevelopment
+[action-ci-cd-management-service-src]: https://img.shields.io/github/actions/workflow/status/ladesa-ro/management-service/ci-cd-management-service.yml?style=flat&logo=github&logoColor=white&label=Release&branch=development&labelColor=18181B  
+[action-ci-cd-management-service-href]: https://github.com/ladesa-ro/management-service/actions/workflows/ci-cd-management-service.yml?query=branch%3Adevelopment
 
 <!-- Badges / Actions / Autofix  -->
 
