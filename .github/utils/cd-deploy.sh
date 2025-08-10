@@ -3,8 +3,9 @@
 set -xe;
 
 echo "${HELM_RELEASE_VALUES}" | helm upgrade -i "${HELM_RELEASE_NAME}" \
-  stakater/application \
+  application \
   --repo https://stakater.github.io/stakater-charts \
+  --version 6.5.0 \
   --namespace "${K8S_NAMESPACE}" \
   ${HELM_RELEASE_EXTRA_OPTIONS} \
   -f - \
