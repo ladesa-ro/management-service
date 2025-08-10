@@ -46,7 +46,6 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: Login into Registry
-        if: ${{ inputs.push-image == 'true' }}
         uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY_URL }}
@@ -58,7 +57,7 @@ jobs:
         with:
           context: ./packages/service
           target: "runtime"
-          tags: ${{ env.REGISTRY_URL }}/development:${{ env.IMAGE_NAME  }}
+          tags: ${{ env.REGISTRY_URL }}/${{ env.IMAGE_NAME  }}:development
           push: true
           load: false
           no-cache: false
