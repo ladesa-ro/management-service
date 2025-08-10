@@ -154,7 +154,6 @@ op CidadeFindOneById(
 @get
 op AuthWhoAmI(): AuthWhoAmIOutput | ForbiddenResponse | NotFoundResponse;
 
-
 /**
  * Obtêm informações sobre o estado de autenticação do ator.
  */
@@ -162,7 +161,6 @@ op AuthWhoAmI(): AuthWhoAmIOutput | ForbiddenResponse | NotFoundResponse;
 @route("/api/v1/autenticacao/quem-sou-eu/ensino")
 @get
 op AuthWhoAmIEnsino(): UsuarioEnsinoOutput | ForbiddenResponse | NotFoundResponse;
-
 
 /**
  * Operação de login.
@@ -267,7 +265,10 @@ op UsuarioDeleteOneById(
   /**
    * Identificador do registro (uuid).
    */
-  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "Usuario")
+  @TypeSpec.JsonSchema.extension(
+    "x-unispec-constraint-entity-exists",
+    "Usuario"
+  )
   @format("uuid")
   @path
   id: string,
@@ -283,7 +284,10 @@ op UsuarioFindOneById(
   /**
    * Identificador do registro (uuid).
    */
-  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "Usuario")
+  @TypeSpec.JsonSchema.extension(
+    "x-unispec-constraint-entity-exists",
+    "Usuario"
+  )
   @format("uuid")
   @path
   id: string,
@@ -299,12 +303,14 @@ op UsuarioEnsinoById(
   /**
    * Identificador do registro (uuid).
    */
-  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "Usuario")
+  @TypeSpec.JsonSchema.extension(
+    "x-unispec-constraint-entity-exists",
+    "Usuario"
+  )
   @format("uuid")
   @path
   id: string,
 ): UsuarioEnsinoOutput | ForbiddenResponse | NotFoundResponse;
-
 
 /**
  * Sem descrição.
@@ -316,7 +322,10 @@ op UsuarioUpdateOneById(
   /**
    * Identificador do registro (uuid).
    */
-  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "Usuario")
+  @TypeSpec.JsonSchema.extension(
+    "x-unispec-constraint-entity-exists",
+    "Usuario"
+  )
   @format("uuid")
   @path
   id: string,
@@ -337,7 +346,10 @@ op UsuarioGetImagemCapa(
   /**
    * Identificador do registro (uuid).
    */
-  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "Usuario")
+  @TypeSpec.JsonSchema.extension(
+    "x-unispec-constraint-entity-exists",
+    "Usuario"
+  )
   @format("uuid")
   @path
   id: string,
@@ -356,7 +368,10 @@ op UsuarioSetImagemCapa(
   /**
    * Identificador do registro (uuid).
    */
-  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "Usuario")
+  @TypeSpec.JsonSchema.extension(
+    "x-unispec-constraint-entity-exists",
+    "Usuario"
+  )
   @format("uuid")
   @path
   id: string,
@@ -374,7 +389,10 @@ op PerfilEnsinoById(
   /**
    * Identificador do registro (uuid).
    */
-  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "Usuario")
+  @TypeSpec.JsonSchema.extension(
+    "x-unispec-constraint-entity-exists",
+    "Usuario"
+  )
   @format("uuid")
   @path
   id: string,
@@ -390,7 +408,10 @@ op UsuarioGetImagemPerfil(
   /**
    * Identificador do registro (uuid).
    */
-  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "Usuario")
+  @TypeSpec.JsonSchema.extension(
+    "x-unispec-constraint-entity-exists",
+    "Usuario"
+  )
   @format("uuid")
   @path
   id: string,
@@ -409,7 +430,10 @@ op UsuarioSetImagemPerfil(
   /**
    * Identificador do registro (uuid).
    */
-  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "Usuario")
+  @TypeSpec.JsonSchema.extension(
+    "x-unispec-constraint-entity-exists",
+    "Usuario"
+  )
   @format("uuid")
   @path
   id: string,
@@ -753,7 +777,10 @@ op AmbienteDeleteOneById(
   /**
    * Identificador do registro (uuid).
    */
-  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "Ambiente")
+  @TypeSpec.JsonSchema.extension(
+    "x-unispec-constraint-entity-exists",
+    "Ambiente"
+  )
   @format("uuid")
   @path
   id: string,
@@ -769,7 +796,10 @@ op AmbienteFindOneById(
   /**
    * Identificador do registro (uuid).
    */
-  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "Ambiente")
+  @TypeSpec.JsonSchema.extension(
+    "x-unispec-constraint-entity-exists",
+    "Ambiente"
+  )
   @format("uuid")
   @path
   id: string,
@@ -785,7 +815,10 @@ op AmbienteUpdateOneById(
   /**
    * Identificador do registro (uuid).
    */
-  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "Ambiente")
+  @TypeSpec.JsonSchema.extension(
+    "x-unispec-constraint-entity-exists",
+    "Ambiente"
+  )
   @format("uuid")
   @path
   id: string,
@@ -806,7 +839,10 @@ op AmbienteGetImagemCapa(
   /**
    * Identificador do registro (uuid).
    */
-  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "Ambiente")
+  @TypeSpec.JsonSchema.extension(
+    "x-unispec-constraint-entity-exists",
+    "Ambiente"
+  )
   @format("uuid")
   @path
   id: string,
@@ -825,7 +861,10 @@ op AmbienteSetImagemCapa(
   /**
    * Identificador do registro (uuid).
    */
-  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "Ambiente")
+  @TypeSpec.JsonSchema.extension(
+    "x-unispec-constraint-entity-exists",
+    "Ambiente"
+  )
   @format("uuid")
   @path
   id: string,
@@ -892,7 +931,10 @@ op ReservaDeleteOneById(
   /**
    * Identificador do registro (uuid).
    */
-  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "Reserva")
+  @TypeSpec.JsonSchema.extension(
+    "x-unispec-constraint-entity-exists",
+    "Reserva"
+  )
   @format("uuid")
   @path
   id: string,
@@ -908,7 +950,10 @@ op ReservaFindOneById(
   /**
    * Identificador do registro (uuid).
    */
-  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "Reserva")
+  @TypeSpec.JsonSchema.extension(
+    "x-unispec-constraint-entity-exists",
+    "Reserva"
+  )
   @format("uuid")
   @path
   id: string,
@@ -924,7 +969,10 @@ op ReservaUpdateOneById(
   /**
    * Identificador do registro (uuid).
    */
-  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "Reserva")
+  @TypeSpec.JsonSchema.extension(
+    "x-unispec-constraint-entity-exists",
+    "Reserva"
+  )
   @format("uuid")
   @path
   id: string,
@@ -986,7 +1034,10 @@ op NivelFormacaoDeleteOneById(
   /**
    * Identificador do registro (uuid).
    */
-  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "NivelFormacao")
+  @TypeSpec.JsonSchema.extension(
+    "x-unispec-constraint-entity-exists",
+    "NivelFormacao"
+  )
   @format("uuid")
   @path
   id: string,
@@ -1002,7 +1053,10 @@ op NivelFormacaoFindOneById(
   /**
    * Identificador do registro (uuid).
    */
-  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "NivelFormacao")
+  @TypeSpec.JsonSchema.extension(
+    "x-unispec-constraint-entity-exists",
+    "NivelFormacao"
+  )
   @format("uuid")
   @path
   id: string,
@@ -1018,7 +1072,10 @@ op NivelFormacaoUpdateOneById(
   /**
    * Identificador do registro (uuid).
    */
-  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "NivelFormacao")
+  @TypeSpec.JsonSchema.extension(
+    "x-unispec-constraint-entity-exists",
+    "NivelFormacao"
+  )
   @format("uuid")
   @path
   id: string,
@@ -1080,7 +1137,10 @@ op ModalidadeDeleteOneById(
   /**
    * Identificador do registro (uuid).
    */
-  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "Modalidade")
+  @TypeSpec.JsonSchema.extension(
+    "x-unispec-constraint-entity-exists",
+    "Modalidade"
+  )
   @format("uuid")
   @path
   id: string,
@@ -1096,7 +1156,10 @@ op ModalidadeFindOneById(
   /**
    * Identificador do registro (uuid).
    */
-  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "Modalidade")
+  @TypeSpec.JsonSchema.extension(
+    "x-unispec-constraint-entity-exists",
+    "Modalidade"
+  )
   @format("uuid")
   @path
   id: string,
@@ -1112,7 +1175,10 @@ op ModalidadeUpdateOneById(
   /**
    * Identificador do registro (uuid).
    */
-  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "Modalidade")
+  @TypeSpec.JsonSchema.extension(
+    "x-unispec-constraint-entity-exists",
+    "Modalidade"
+  )
   @format("uuid")
   @path
   id: string,
@@ -1174,7 +1240,10 @@ op OfertaFormacaoDeleteOneById(
   /**
    * Identificador do registro (uuid).
    */
-  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "OfertaFormacao")
+  @TypeSpec.JsonSchema.extension(
+    "x-unispec-constraint-entity-exists",
+    "OfertaFormacao"
+  )
   @format("uuid")
   @path
   id: string,
@@ -1190,7 +1259,10 @@ op OfertaFormacaoFindOneById(
   /**
    * Identificador do registro (uuid).
    */
-  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "OfertaFormacao")
+  @TypeSpec.JsonSchema.extension(
+    "x-unispec-constraint-entity-exists",
+    "OfertaFormacao"
+  )
   @format("uuid")
   @path
   id: string,
@@ -1206,7 +1278,10 @@ op OfertaFormacaoUpdateOneById(
   /**
    * Identificador do registro (uuid).
    */
-  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "OfertaFormacao")
+  @TypeSpec.JsonSchema.extension(
+    "x-unispec-constraint-entity-exists",
+    "OfertaFormacao"
+  )
   @format("uuid")
   @path
   id: string,
@@ -1268,7 +1343,10 @@ op OfertaFormacaoNivelFormacaoDeleteOneById(
   /**
    * Identificador do registro (uuid).
    */
-  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "OfertaFormacaoNivelFormacao")
+  @TypeSpec.JsonSchema.extension(
+    "x-unispec-constraint-entity-exists",
+    "OfertaFormacaoNivelFormacao"
+  )
   @format("uuid")
   @path
   id: string,
@@ -1284,7 +1362,10 @@ op OfertaFormacaoNivelFormacaoFindOneById(
   /**
    * Identificador do registro (uuid).
    */
-  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "OfertaFormacaoNivelFormacao")
+  @TypeSpec.JsonSchema.extension(
+    "x-unispec-constraint-entity-exists",
+    "OfertaFormacaoNivelFormacao"
+  )
   @format("uuid")
   @path
   id: string,
@@ -1300,7 +1381,10 @@ op OfertaFormacaoNivelFormacaoUpdateOneById(
   /**
    * Identificador do registro (uuid).
    */
-  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "OfertaFormacaoNivelFormacao")
+  @TypeSpec.JsonSchema.extension(
+    "x-unispec-constraint-entity-exists",
+    "OfertaFormacaoNivelFormacao"
+  )
   @format("uuid")
   @path
   id: string,
@@ -1501,7 +1585,10 @@ op DisciplinaDeleteOneById(
   /**
    * Identificador do registro (uuid).
    */
-  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "Disciplina")
+  @TypeSpec.JsonSchema.extension(
+    "x-unispec-constraint-entity-exists",
+    "Disciplina"
+  )
   @format("uuid")
   @path
   id: string,
@@ -1517,7 +1604,10 @@ op DisciplinaFindOneById(
   /**
    * Identificador do registro (uuid).
    */
-  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "Disciplina")
+  @TypeSpec.JsonSchema.extension(
+    "x-unispec-constraint-entity-exists",
+    "Disciplina"
+  )
   @format("uuid")
   @path
   id: string,
@@ -1533,7 +1623,10 @@ op DisciplinaUpdateOneById(
   /**
    * Identificador do registro (uuid).
    */
-  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "Disciplina")
+  @TypeSpec.JsonSchema.extension(
+    "x-unispec-constraint-entity-exists",
+    "Disciplina"
+  )
   @format("uuid")
   @path
   id: string,
@@ -1554,7 +1647,10 @@ op DisciplinaGetImagemCapa(
   /**
    * Identificador do registro (uuid).
    */
-  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "Disciplina")
+  @TypeSpec.JsonSchema.extension(
+    "x-unispec-constraint-entity-exists",
+    "Disciplina"
+  )
   @format("uuid")
   @path
   id: string,
@@ -1573,7 +1669,10 @@ op DisciplinaSetImagemCapa(
   /**
    * Identificador do registro (uuid).
    */
-  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "Disciplina")
+  @TypeSpec.JsonSchema.extension(
+    "x-unispec-constraint-entity-exists",
+    "Disciplina"
+  )
   @format("uuid")
   @path
   id: string,
@@ -1638,7 +1737,10 @@ op CalendarioLetivoDeleteOneById(
   /**
    * Identificador do registro (uuid).
    */
-  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "CalendarioLetivo")
+  @TypeSpec.JsonSchema.extension(
+    "x-unispec-constraint-entity-exists",
+    "CalendarioLetivo"
+  )
   @format("uuid")
   @path
   id: string,
@@ -1654,7 +1756,10 @@ op CalendarioLetivoFindOneById(
   /**
    * Identificador do registro (uuid).
    */
-  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "CalendarioLetivo")
+  @TypeSpec.JsonSchema.extension(
+    "x-unispec-constraint-entity-exists",
+    "CalendarioLetivo"
+  )
   @format("uuid")
   @path
   id: string,
@@ -1670,7 +1775,10 @@ op CalendarioLetivoUpdateOneById(
   /**
    * Identificador do registro (uuid).
    */
-  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "CalendarioLetivo")
+  @TypeSpec.JsonSchema.extension(
+    "x-unispec-constraint-entity-exists",
+    "CalendarioLetivo"
+  )
   @format("uuid")
   @path
   id: string,
@@ -1732,7 +1840,10 @@ op GradeHorarioOfertaFormacaoDeleteOneById(
   /**
    * Identificador do registro (uuid).
    */
-  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "GradeHorarioOfertaFormacao")
+  @TypeSpec.JsonSchema.extension(
+    "x-unispec-constraint-entity-exists",
+    "GradeHorarioOfertaFormacao"
+  )
   @format("uuid")
   @path
   id: string,
@@ -1748,7 +1859,10 @@ op GradeHorarioOfertaFormacaoFindOneById(
   /**
    * Identificador do registro (uuid).
    */
-  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "GradeHorarioOfertaFormacao")
+  @TypeSpec.JsonSchema.extension(
+    "x-unispec-constraint-entity-exists",
+    "GradeHorarioOfertaFormacao"
+  )
   @format("uuid")
   @path
   id: string,
@@ -1764,7 +1878,10 @@ op GradeHorarioOfertaFormacaoUpdateOneById(
   /**
    * Identificador do registro (uuid).
    */
-  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "GradeHorarioOfertaFormacao")
+  @TypeSpec.JsonSchema.extension(
+    "x-unispec-constraint-entity-exists",
+    "GradeHorarioOfertaFormacao"
+  )
   @format("uuid")
   @path
   id: string,
@@ -1826,7 +1943,10 @@ op GradeHorarioOfertaFormacaoIntervaloDeTempoDeleteOneById(
   /**
    * Identificador do registro (uuid).
    */
-  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "GradeHorarioOfertaFormacaoIntervaloDeTempo")
+  @TypeSpec.JsonSchema.extension(
+    "x-unispec-constraint-entity-exists",
+    "GradeHorarioOfertaFormacaoIntervaloDeTempo"
+  )
   @format("uuid")
   @path
   id: string,
@@ -1842,7 +1962,10 @@ op GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneById(
   /**
    * Identificador do registro (uuid).
    */
-  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "GradeHorarioOfertaFormacaoIntervaloDeTempo")
+  @TypeSpec.JsonSchema.extension(
+    "x-unispec-constraint-entity-exists",
+    "GradeHorarioOfertaFormacaoIntervaloDeTempo"
+  )
   @format("uuid")
   @path
   id: string,
@@ -1858,7 +1981,10 @@ op GradeHorarioOfertaFormacaoIntervaloDeTempoUpdateOneById(
   /**
    * Identificador do registro (uuid).
    */
-  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "GradeHorarioOfertaFormacaoIntervaloDeTempo")
+  @TypeSpec.JsonSchema.extension(
+    "x-unispec-constraint-entity-exists",
+    "GradeHorarioOfertaFormacaoIntervaloDeTempo"
+  )
   @format("uuid")
   @path
   id: string,
@@ -2018,7 +2144,10 @@ op DiaCalendarioDeleteOneById(
   /**
    * Identificador do registro (uuid).
    */
-  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "DiaCalendario")
+  @TypeSpec.JsonSchema.extension(
+    "x-unispec-constraint-entity-exists",
+    "DiaCalendario"
+  )
   @format("uuid")
   @path
   id: string,
@@ -2034,7 +2163,10 @@ op DiaCalendarioFindOneById(
   /**
    * Identificador do registro (uuid).
    */
-  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "DiaCalendario")
+  @TypeSpec.JsonSchema.extension(
+    "x-unispec-constraint-entity-exists",
+    "DiaCalendario"
+  )
   @format("uuid")
   @path
   id: string,
@@ -2050,7 +2182,10 @@ op DiaCalendarioUpdateOneById(
   /**
    * Identificador do registro (uuid).
    */
-  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "DiaCalendario")
+  @TypeSpec.JsonSchema.extension(
+    "x-unispec-constraint-entity-exists",
+    "DiaCalendario"
+  )
   @format("uuid")
   @path
   id: string,
@@ -2453,7 +2588,10 @@ op DiarioProfessorDeleteOneById(
   /**
    * Identificador do registro (uuid).
    */
-  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "DiarioProfessor")
+  @TypeSpec.JsonSchema.extension(
+    "x-unispec-constraint-entity-exists",
+    "DiarioProfessor"
+  )
   @format("uuid")
   @path
   id: string,
@@ -2469,7 +2607,10 @@ op DiarioProfessorFindOneById(
   /**
    * Identificador do registro (uuid).
    */
-  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "DiarioProfessor")
+  @TypeSpec.JsonSchema.extension(
+    "x-unispec-constraint-entity-exists",
+    "DiarioProfessor"
+  )
   @format("uuid")
   @path
   id: string,
@@ -2485,7 +2626,10 @@ op DiarioProfessorUpdateOneById(
   /**
    * Identificador do registro (uuid).
    */
-  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "DiarioProfessor")
+  @TypeSpec.JsonSchema.extension(
+    "x-unispec-constraint-entity-exists",
+    "DiarioProfessor"
+  )
   @format("uuid")
   @path
   id: string,
@@ -2644,7 +2788,10 @@ op DisponibilidadeDeleteOneById(
   /**
    * Identificador do registro (uuid).
    */
-  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "Disponibilidade")
+  @TypeSpec.JsonSchema.extension(
+    "x-unispec-constraint-entity-exists",
+    "Disponibilidade"
+  )
   @format("uuid")
   @path
   id: string,
@@ -2660,7 +2807,10 @@ op DisponibilidadeFindOneById(
   /**
    * Identificador do registro (uuid).
    */
-  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "Disponibilidade")
+  @TypeSpec.JsonSchema.extension(
+    "x-unispec-constraint-entity-exists",
+    "Disponibilidade"
+  )
   @format("uuid")
   @path
   id: string,
@@ -2676,7 +2826,10 @@ op DisponibilidadeUpdateOneById(
   /**
    * Identificador do registro (uuid).
    */
-  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "Disponibilidade")
+  @TypeSpec.JsonSchema.extension(
+    "x-unispec-constraint-entity-exists",
+    "Disponibilidade"
+  )
   @format("uuid")
   @path
   id: string,
@@ -2740,7 +2893,10 @@ op DiarioPreferenciaAgrupamentoDeleteOneById(
   /**
    * Identificador do registro (uuid).
    */
-  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "DiarioPreferenciaAgrupamento")
+  @TypeSpec.JsonSchema.extension(
+    "x-unispec-constraint-entity-exists",
+    "DiarioPreferenciaAgrupamento"
+  )
   @format("uuid")
   @path
   id: string,
@@ -2756,7 +2912,10 @@ op DiarioPreferenciaAgrupamentoFindOneById(
   /**
    * Identificador do registro (uuid).
    */
-  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "DiarioPreferenciaAgrupamento")
+  @TypeSpec.JsonSchema.extension(
+    "x-unispec-constraint-entity-exists",
+    "DiarioPreferenciaAgrupamento"
+  )
   @format("uuid")
   @path
   id: string,
@@ -2772,7 +2931,10 @@ op DiarioPreferenciaAgrupamentoUpdateOneById(
   /**
    * Identificador do registro (uuid).
    */
-  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "DiarioPreferenciaAgrupamento")
+  @TypeSpec.JsonSchema.extension(
+    "x-unispec-constraint-entity-exists",
+    "DiarioPreferenciaAgrupamento"
+  )
   @format("uuid")
   @path
   id: string,
@@ -2836,7 +2998,10 @@ op TurmaDisponibilidadeDeleteOneById(
   /**
    * Identificador do registro (uuid).
    */
-  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "TurmaDisponibilidade")
+  @TypeSpec.JsonSchema.extension(
+    "x-unispec-constraint-entity-exists",
+    "TurmaDisponibilidade"
+  )
   @format("uuid")
   @path
   id: string,
@@ -2852,7 +3017,10 @@ op TurmaDisponibilidadeFindOneById(
   /**
    * Identificador do registro (uuid).
    */
-  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "TurmaDisponibilidade")
+  @TypeSpec.JsonSchema.extension(
+    "x-unispec-constraint-entity-exists",
+    "TurmaDisponibilidade"
+  )
   @format("uuid")
   @path
   id: string,
@@ -2868,7 +3036,10 @@ op TurmaDisponibilidadeUpdateOneById(
   /**
    * Identificador do registro (uuid).
    */
-  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "TurmaDisponibilidade")
+  @TypeSpec.JsonSchema.extension(
+    "x-unispec-constraint-entity-exists",
+    "TurmaDisponibilidade"
+  )
   @format("uuid")
   @path
   id: string,
@@ -2932,7 +3103,10 @@ op ProfessorDisponibilidadeDeleteOneById(
   /**
    * Identificador do registro (uuid).
    */
-  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "ProfessorDisponibilidade")
+  @TypeSpec.JsonSchema.extension(
+    "x-unispec-constraint-entity-exists",
+    "ProfessorDisponibilidade"
+  )
   @format("uuid")
   @path
   id: string,
@@ -2948,7 +3122,10 @@ op ProfessorDisponibilidadeFindOneById(
   /**
    * Identificador do registro (uuid).
    */
-  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "ProfessorDisponibilidade")
+  @TypeSpec.JsonSchema.extension(
+    "x-unispec-constraint-entity-exists",
+    "ProfessorDisponibilidade"
+  )
   @format("uuid")
   @path
   id: string,
@@ -2964,7 +3141,10 @@ op ProfessorDisponibilidadeUpdateOneById(
   /**
    * Identificador do registro (uuid).
    */
-  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "ProfessorDisponibilidade")
+  @TypeSpec.JsonSchema.extension(
+    "x-unispec-constraint-entity-exists",
+    "ProfessorDisponibilidade"
+  )
   @format("uuid")
   @path
   id: string,
@@ -3026,7 +3206,10 @@ op HorarioGeradoDeleteOneById(
   /**
    * Identificador do registro (uuid).
    */
-  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "HorarioGerado")
+  @TypeSpec.JsonSchema.extension(
+    "x-unispec-constraint-entity-exists",
+    "HorarioGerado"
+  )
   @format("uuid")
   @path
   id: string,
@@ -3042,7 +3225,10 @@ op HorarioGeradoFindOneById(
   /**
    * Identificador do registro (uuid).
    */
-  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "HorarioGerado")
+  @TypeSpec.JsonSchema.extension(
+    "x-unispec-constraint-entity-exists",
+    "HorarioGerado"
+  )
   @format("uuid")
   @path
   id: string,
@@ -3058,7 +3244,10 @@ op HorarioGeradoUpdateOneById(
   /**
    * Identificador do registro (uuid).
    */
-  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "HorarioGerado")
+  @TypeSpec.JsonSchema.extension(
+    "x-unispec-constraint-entity-exists",
+    "HorarioGerado"
+  )
   @format("uuid")
   @path
   id: string,
@@ -3120,7 +3309,10 @@ op HorarioGeradoAulaDeleteOneById(
   /**
    * Identificador do registro (uuid).
    */
-  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "HorarioGeradoAula")
+  @TypeSpec.JsonSchema.extension(
+    "x-unispec-constraint-entity-exists",
+    "HorarioGeradoAula"
+  )
   @format("uuid")
   @path
   id: string,
@@ -3136,7 +3328,10 @@ op HorarioGeradoAulaFindOneById(
   /**
    * Identificador do registro (uuid).
    */
-  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "HorarioGeradoAula")
+  @TypeSpec.JsonSchema.extension(
+    "x-unispec-constraint-entity-exists",
+    "HorarioGeradoAula"
+  )
   @format("uuid")
   @path
   id: string,
@@ -3152,7 +3347,10 @@ op HorarioGeradoAulaUpdateOneById(
   /**
    * Identificador do registro (uuid).
    */
-  @TypeSpec.JsonSchema.extension("x-unispec-constraint-entity-exists", "HorarioGeradoAula")
+  @TypeSpec.JsonSchema.extension(
+    "x-unispec-constraint-entity-exists",
+    "HorarioGeradoAula"
+  )
   @format("uuid")
   @path
   id: string,

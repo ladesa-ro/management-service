@@ -39,11 +39,24 @@ export class CampusService {
 
     // =========================================================
 
-    const paginated = await this.searchService.search(
-      qb,
-      { ...domain },
-      {
-        select: [
+      const paginated = await this.searchService.search(
+    qb,
+    domain
+      ? {
+          ...domain,
+          sortBy: domain.sortBy
+            ? (domain.sortBy as any[]).map((s) =>
+                typeof s === "string"
+                  ? s
+                  : Array.isArray(s)
+                  ? s.join(":")
+                  : `${s.column}:${s.direction ?? "ASC"}`
+              )
+            : undefined,
+        }
+      : {},
+    {
+      select: [
           "id",
 
           "nomeFantasia",
@@ -242,7 +255,7 @@ export class CampusService {
   async campusUpdate(accessContext: AccessContext, domain: IDomain.CampusUpdateInput) {
     // =========================================================
 
-    const currentCampus = await this.campusFindByIdStrict(accessContext, domain);
+    const currentCampus = await this.campusFindByIdStrict(accessContext, {id: domain.id});
 
     // =========================================================
 

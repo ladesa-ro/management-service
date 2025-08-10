@@ -44,9 +44,22 @@ export class TurmaDisponibilidadeService {
 
     // =========================================================
 
-    const paginated = await this.searchService.search(
+        const paginated = await this.searchService.search(
       qb,
-      { ...domain },
+      domain
+        ? {
+            ...domain,
+            sortBy: domain.sortBy
+              ? (domain.sortBy as any[]).map((s) =>
+                  typeof s === "string"
+                    ? s
+                    : Array.isArray(s)
+                    ? s.join(":")
+                    : `${s.column}:${s.direction ?? "ASC"}`
+                )
+              : undefined,
+          }
+        : {},
       {
         select: [
           "id",
@@ -221,7 +234,7 @@ export class TurmaDisponibilidadeService {
   async turmaDisponibilidadeUpdate(accessContext: AccessContext, domain: IDomain.TurmaDisponibilidadeUpdateInput) {
     // =========================================================
 
-    const currentTurmaDisponibilidade = await this.turmaDisponibilidadeFindByIdStrict(accessContext, domain);
+    const currentTurmaDisponibilidade = await this.turmaDisponibilidadeFindByIdStrict(accessContext, {id: domain.id});
 
     // =========================================================
 

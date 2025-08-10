@@ -38,7 +38,20 @@ export class DisponibilidadeService {
 
     const paginated = await this.searchService.search(
       qb,
-      { ...domain },
+      domain
+        ? {
+            ...domain,
+            sortBy: domain.sortBy
+              ? (domain.sortBy as any[]).map((s) =>
+                  typeof s === "string"
+                    ? s
+                    : Array.isArray(s)
+                    ? s.join(":")
+                    : `${s.column}:${s.direction ?? "ASC"}`
+                )
+              : undefined,
+          }
+        : {},
       {
         ...paginateConfig,
         select: [
@@ -184,7 +197,7 @@ export class DisponibilidadeService {
   async disponibilidadeUpdate(accessContext: AccessContext, domain: IDomain.DisponibilidadeUpdateInput) {
     // =========================================================
 
-    const currentDisponibilidade = await this.disponibilidadeFindByIdStrict(accessContext, domain);
+    const currentDisponibilidade = await this.disponibilidadeFindByIdStrict(accessContext, {id: domain.id});
 
     // =========================================================
 

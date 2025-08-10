@@ -40,7 +40,20 @@ export class EtapaService {
 
     const paginated = await this.searchService.search(
       qb,
-      { ...domain },
+      domain
+        ? {
+            ...domain,
+            sortBy: domain.sortBy
+              ? (domain.sortBy as any[]).map((s) =>
+                  typeof s === "string"
+                    ? s
+                    : Array.isArray(s)
+                    ? s.join(":")
+                    : `${s.column}:${s.direction ?? "ASC"}`
+                )
+              : undefined,
+          }
+        : {},
       {
         select: [
           "id",
@@ -214,7 +227,7 @@ export class EtapaService {
   async etapaUpdate(accessContext: AccessContext, domain: IDomain.EtapaUpdateInput) {
     // =========================================================
 
-    const currentEtapa = await this.etapaFindByIdStrict(accessContext, domain);
+    const currentEtapa = await this.etapaFindByIdStrict(accessContext, { id: domain.id });
 
     // =========================================================
 

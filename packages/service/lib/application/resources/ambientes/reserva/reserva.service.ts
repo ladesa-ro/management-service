@@ -42,9 +42,22 @@ export class ReservaService {
 
     // =========================================================
 
-    const paginated = await this.searchService.search(
+        const paginated = await this.searchService.search(
       qb,
-      { ...domain },
+      domain
+        ? {
+            ...domain,
+            sortBy: domain.sortBy
+              ? (domain.sortBy as any[]).map((s) =>
+                  typeof s === "string"
+                    ? s
+                    : Array.isArray(s)
+                    ? s.join(":")
+                    : `${s.column}:${s.direction ?? "ASC"}`
+                )
+              : undefined,
+          }
+        : {},
       {
         select: ["id"],
         sortableColumns: [
@@ -234,7 +247,7 @@ export class ReservaService {
   async reservaUpdate(accessContext: AccessContext, domain: IDomain.ReservaUpdateInput) {
     // =========================================================
 
-    const currentReserva = await this.reservaFindByIdStrict(accessContext, domain);
+    const currentReserva = await this.reservaFindByIdStrict(accessContext, { id: domain.id });
 
     // =========================================================
 

@@ -21,7 +21,7 @@ export class EventoService {
     private databaseContext: DatabaseContextService,
     private calendarioLetivoService: CalendarioLetivoService,
     private searchService: SearchService,
-  ) {}
+  ) { }
 
   get eventoRepository() {
     return this.databaseContext.eventoRepository;
@@ -38,9 +38,22 @@ export class EventoService {
 
     // =========================================================
 
-    const paginated = await this.searchService.search(
+        const paginated = await this.searchService.search(
       qb,
-      { ...domain },
+      domain
+        ? {
+            ...domain,
+            sortBy: domain.sortBy
+              ? (domain.sortBy as any[]).map((s) =>
+                  typeof s === "string"
+                    ? s
+                    : Array.isArray(s)
+                    ? s.join(":")
+                    : `${s.column}:${s.direction ?? "ASC"}`
+                )
+              : undefined,
+          }
+        : {},
       {
         select: [
           "id",
@@ -50,6 +63,9 @@ export class EventoService {
 
           "rrule",
 
+          "data_inicio",
+          "data_fim",
+
           "calendario.id",
           "calendario.nome",
           "calendario.ano",
@@ -57,6 +73,9 @@ export class EventoService {
         sortableColumns: [
           "nome",
           "cor",
+
+          "data_inicio",
+          "data_fim",
 
           "calendario.id",
           "calendario.nome",
@@ -67,6 +86,9 @@ export class EventoService {
 
           "nome",
           "cor",
+
+          "data_inicio",
+          "data_fim",
         ],
         relations: {
           calendario: true,
@@ -76,6 +98,8 @@ export class EventoService {
           "calendario.id": [FilterOperator.EQ],
           "calendario.nome": [FilterOperator.EQ],
           "calendario.ano": [FilterOperator.EQ],
+          "data_inicio": [FilterOperator.GTE, FilterOperator.LTE],
+          "data_fim": [FilterOperator.GTE, FilterOperator.LTE],
         },
       },
     );
@@ -207,7 +231,7 @@ export class EventoService {
   async eventoUpdate(accessContext: AccessContext, domain: IDomain.EventoUpdateInput) {
     // =========================================================
 
-    const currentEvento = await this.eventoFindByIdStrict(accessContext, domain);
+    const currentEvento = await this.eventoFindByIdStrict(accessContext, {id: domain.id});
 
     // =========================================================
 
