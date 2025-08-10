@@ -2,9 +2,10 @@
 
 set -xe;
 
-echo "${HELM_RELEASE_VALUES}" | helm upgrade -i ${HELM_RELEASE_NAME} \
-  https://stakater.github.io/stakater-charts/application \
-  --namespace="${K8S_NAMESPACE}" \
+echo "${HELM_RELEASE_VALUES}" | helm upgrade -i "${HELM_RELEASE_NAME}" \
+  stakater/application \
+  --repo https://stakater.github.io/stakater-charts \
+  --namespace "${K8S_NAMESPACE}" \
   ${HELM_RELEASE_EXTRA_OPTIONS} \
   -f - \
 ;
