@@ -36,14 +36,14 @@ async function setup() {
     res.json(AppApiDoc);
   });
 
+  SwaggerModule.setup(`${prefix}docs/swagger`, app, AppApiDoc as any);
+
   app.use(
     `${prefix}docs`,
     apiReference({
       url: `${prefix}docs/openapi.v3.json`,
     }),
   );
-
-  SwaggerModule.setup(`${prefix}docs/swagger`, app, AppApiDoc as any);
 
   return app;
 }
