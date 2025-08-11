@@ -6,7 +6,7 @@
   "build": {
     "context": "../../",
     "dockerfile": "../../Dockerfile",
-    target: "source-with-dev-dependencies"
+    "target": "source-with-dev-dependencies"
   },
 
   "remoteUser": "1000",

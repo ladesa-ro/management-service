@@ -169,13 +169,9 @@ jobs:
           # Comandos a serem executados dentro do container
           runCmd: |
             echo "=== Iniciando build do cliente NPM ==="
-            echo "Diretório atual: $(pwd)"
-            echo "Conteúdo do diretório:"
-            ls -la
-
-            # TODO: Implementar publicação do cliente NPM
-            # O comando abaixo está comentado e precisa ser configurado:
-            # bunx pkg-pr-new publish --comment=update './integrations/npm/api-client-fetch'
-
+            bun run --filter '@ladesa-ro/management-service-client' build
             echo "=== Build do cliente NPM concluído ==="
-            echo "NOTA: Publicação ainda não implementada - aguardando configuração"
+            
+            echo "=== Iniciando pulicação do cliente NPM ==="
+            bunx pkg-pr-new publish --comment=update './packages/integrations/npm/client-pkg'
+            echo "=== Publicação do cliente NPM concluído ==="
