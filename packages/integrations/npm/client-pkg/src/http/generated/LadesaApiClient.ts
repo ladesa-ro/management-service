@@ -1,41 +1,42 @@
 import type { BaseHttpRequest } from "./core/BaseHttpRequest";
+import { FetchHttpRequest } from "./core/FetchHttpRequest";
 import type { OpenAPIConfig } from "./core/OpenAPI";
 import { Interceptors } from "./core/OpenAPI";
-import { FetchHttpRequest } from "./core/FetchHttpRequest";
-
-import { AmbientesService } from "./services.gen";
-import { ArquivosService } from "./services.gen";
-import { AulasService } from "./services.gen";
-import { AutenticacaoService } from "./services.gen";
-import { BaseService } from "./services.gen";
-import { BlocosService } from "./services.gen";
-import { CalendariosLetivosService } from "./services.gen";
-import { CampiService } from "./services.gen";
-import { CidadesService } from "./services.gen";
-import { CursosService } from "./services.gen";
-import { DiariosService } from "./services.gen";
-import { DiariosPreferenciaAgrupamentoService } from "./services.gen";
-import { DiariosProfessoresService } from "./services.gen";
-import { DiasCalendariosService } from "./services.gen";
-import { DisciplinasService } from "./services.gen";
-import { DisponibilidadesService } from "./services.gen";
-import { EstadosService } from "./services.gen";
-import { EtapasService } from "./services.gen";
-import { EventosService } from "./services.gen";
-import { GradesHorariosOfertasFormacoesService } from "./services.gen";
-import { GradesHorariosOfertasFormacoesIntervalosDeTempoService } from "./services.gen";
-import { HorariosGeradosService } from "./services.gen";
-import { HorariosGeradosAulaService } from "./services.gen";
-import { ModalidadesService } from "./services.gen";
-import { NiveisFormacoesService } from "./services.gen";
-import { OfertasFormacoesService } from "./services.gen";
-import { OfertasFormacoesNiveisFormacoesService } from "./services.gen";
-import { PerfisService } from "./services.gen";
-import { ProfessoresDisponibilidadesService } from "./services.gen";
-import { ReservasService } from "./services.gen";
-import { TurmasService } from "./services.gen";
-import { TurmasDisponibilidadesService } from "./services.gen";
-import { UsuariosService } from "./services.gen";
+import {
+  AmbientesService,
+  ArquivosService,
+  AulasService,
+  AutenticacaoService,
+  BaseService,
+  BlocosService,
+  CalendariosLetivosService,
+  CampiService,
+  CidadesService,
+  CursosService,
+  DiariosPreferenciaAgrupamentoService,
+  DiariosProfessoresService,
+  DiariosService,
+  DiasCalendariosService,
+  DisciplinasService,
+  DisponibilidadesService,
+  EstadosService,
+  EtapasService,
+  EventosService,
+  GradesHorariosOfertasFormacoesIntervalosDeTempoService,
+  GradesHorariosOfertasFormacoesService,
+  HorariosGeradosAulaService,
+  HorariosGeradosService,
+  ModalidadesService,
+  NiveisFormacoesService,
+  OfertasFormacoesNiveisFormacoesService,
+  OfertasFormacoesService,
+  PerfisService,
+  ProfessoresDisponibilidadesService,
+  ReservasService,
+  TurmasDisponibilidadesService,
+  TurmasService,
+  UsuariosService,
+} from "./services.gen";
 
 type HttpRequestConstructor = new (config: OpenAPIConfig) => BaseHttpRequest;
 

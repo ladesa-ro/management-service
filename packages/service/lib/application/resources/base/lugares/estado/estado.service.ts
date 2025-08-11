@@ -36,15 +36,7 @@ export class EstadoService {
       domain
         ? {
             ...domain,
-            sortBy: domain.sortBy
-              ? (domain.sortBy as any[]).map((s) =>
-                  typeof s === "string"
-                    ? s
-                    : Array.isArray(s)
-                    ? s.join(":")
-                    : `${s.column}:${s.direction ?? "ASC"}`
-                )
-              : undefined,
+            sortBy: domain.sortBy ? (domain.sortBy as any[]).map((s) => (typeof s === "string" ? s : Array.isArray(s) ? s.join(":") : `${s.column}:${s.direction ?? "ASC"}`)) : undefined,
           }
         : {},
       {

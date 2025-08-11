@@ -47,9 +47,9 @@ export class OfertaFormacaoNivelFormacaoService {
 
     const paginated = await this.searchService.search(
       qb,
-      { 
-        ...domain, 
-        sortBy: domain?.sortBy ? domain.sortBy.map((s: any) => s.toString()) : undefined 
+      {
+        ...domain,
+        sortBy: domain?.sortBy ? domain.sortBy.map((s: any) => s.toString()) : undefined,
       },
       {
         ...paginateConfig,
@@ -227,7 +227,7 @@ export class OfertaFormacaoNivelFormacaoService {
   async ofertaFormacaoNivelFormacaoUpdate(accessContext: AccessContext, domain: IDomain.OfertaFormacaoNivelFormacaoUpdateInput) {
     // =========================================================
 
-    const currentOfertaFormacaoNivelFormacao = await this.ofertaFormacaoNivelFormacaoFindByIdStrict(accessContext, {id: domain.id});
+    const currentOfertaFormacaoNivelFormacao = await this.ofertaFormacaoNivelFormacaoFindByIdStrict(accessContext, { id: domain.id });
 
     // =========================================================
 

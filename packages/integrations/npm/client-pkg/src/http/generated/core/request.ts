@@ -1,8 +1,8 @@
 import { ApiError } from "./ApiError";
 import type { ApiRequestOptions } from "./ApiRequestOptions";
 import type { ApiResult } from "./ApiResult";
-import { CancelablePromise } from "./CancelablePromise";
 import type { OnCancel } from "./CancelablePromise";
+import { CancelablePromise } from "./CancelablePromise";
 import type { OpenAPIConfig } from "./OpenAPI";
 
 export const isString = (value: unknown): value is string => {
@@ -24,7 +24,7 @@ export const isFormData = (value: unknown): value is FormData => {
 export const base64 = (str: string): string => {
   try {
     return btoa(str);
-  } catch (err) {
+  } catch (_err) {
     // @ts-ignore
     return Buffer.from(str).toString("base64");
   }
@@ -62,7 +62,7 @@ const getUrl = (config: OpenAPIConfig, options: ApiRequestOptions): string => {
   const encoder = config.ENCODE_PATH || encodeURI;
 
   const path = options.url.replace("{api-version}", config.VERSION).replace(/{(.*?)}/g, (substring: string, group: string) => {
-    if (options.path?.hasOwnProperty(group)) {
+    if (options?.path && Object.hasOwn(options.path, group)) {
       return encoder(String(options.path[group]));
     }
     return substring;
@@ -291,7 +291,7 @@ export const catchErrorCodes = (options: ApiRequestOptions, result: ApiResult): 
     const errorBody = (() => {
       try {
         return JSON.stringify(result.body, null, 2);
-      } catch (e) {
+      } catch (_e) {
         return undefined;
       }
     })();

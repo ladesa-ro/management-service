@@ -1,8 +1,8 @@
-import type { OpenAPIV3 } from "openapi-types";
-import { camelCase } from "change-case";
 import SwaggerParser from "@apidevtools/swagger-parser";
-import { merge, openApiMergeRules } from "allof-merge";
 import SchemaBuilder from "@pothos/core";
+import { merge, openApiMergeRules } from "allof-merge";
+import { camelCase } from "change-case";
+import type { OpenAPIV3 } from "openapi-types";
 
 type IOperationMetadata = {
   method: string;
@@ -10,7 +10,7 @@ type IOperationMetadata = {
   description: string;
   jsonResponse: OpenAPIV3.SchemaObject;
   parameters: OpenAPIV3.ParameterObject[];
-}
+};
 
 type IQueryOrMutationMetadata = {
   name: string;
@@ -20,37 +20,36 @@ type IQueryOrMutationMetadata = {
 
   jsonResponse: OpenAPIV3.SchemaObject;
   parameters: OpenAPIV3.ParameterObject[];
-}
+};
 
-type IMappedType = {}
+// type IMappedType = {};
 
 export class OpenApiToGraphQLSchema {
-
   public async handleDocument(originalDoc: OpenAPIV3.Document) {
     const parser = new SwaggerParser();
 
     const docBundled = await parser.bundle(originalDoc, {
-      dereference: {circular: false},
+      dereference: { circular: false },
     });
 
     const docBundledCombined = merge(docBundled, {
       mergeRefSibling: false,
       mergeCombinarySibling: false,
       onMergeError: (msg) => {
-        throw new Error(msg)
+        throw new Error(msg);
       },
-      rules: openApiMergeRules("3.1.x")
+      rules: openApiMergeRules("3.1.x"),
     });
 
-    return docBundledCombined
+    return docBundledCombined;
   }
 
-  public* extractOperationsMetadataFromDocument(doc: OpenAPIV3.Document): Iterable<IOperationMetadata> {
+  public *extractOperationsMetadataFromDocument(doc: OpenAPIV3.Document): Iterable<IOperationMetadata> {
     if (!doc || !doc.paths) return;
 
     for (const path of Object.values(doc.paths)) {
       for (const [method, operation] of Object.entries(path)) {
-        const {operationId, parameters, description} = operation;
+        const { operationId, parameters, description } = operation;
 
         const jsonResponse = operation.responses?.["200"]?.content?.["application/json"]?.["schema"];
 
@@ -65,16 +64,10 @@ export class OpenApiToGraphQLSchema {
         };
       }
     }
-  };
+  }
 
-  public* extractQueriesAndMutationsMetadata(doc: OpenAPIV3.Document): Iterable<IQueryOrMutationMetadata> {
-    for (const {
-      method,
-      operationId,
-      jsonResponse,
-      parameters,
-      description
-    } of this.extractOperationsMetadataFromDocument(doc)) {
+  public *extractQueriesAndMutationsMetadata(doc: OpenAPIV3.Document): Iterable<IQueryOrMutationMetadata> {
+    for (const { method, operationId, jsonResponse, parameters, description } of this.extractOperationsMetadataFromDocument(doc)) {
       const mode = method.toLowerCase() === "get" ? "query" : "mutation";
 
       const name = camelCase(operationId);
@@ -103,26 +96,25 @@ export class OpenApiToGraphQLSchema {
     }
   }
 
-  public* extractTypesFromDocument(doc: OpenAPIV3.Document) {
+  public *extractTypesFromDocument(doc: OpenAPIV3.Document) {
     if (!doc || !doc.components) return;
-
 
     type IExtractedTypeMetadata = {
       name: string;
       mode: "input" | "output";
       schema: OpenAPIV3.SchemaObject;
-    }
+    };
 
-    const extractedSchemas = new Map<string, IExtractedTypeMetadata>();
+    const _extractedSchemas = new Map<string, IExtractedTypeMetadata>();
 
-    for (const [schemaName, schemaDefinition] of Object.entries(doc?.components?.schemas ?? {})) {
+    for (const [_schemaName, _schemaDefinition] of Object.entries(doc?.components?.schemas ?? {})) {
       // TODO: implementar lógica correta e incluir em extractedTypes
+      yield* [];
     }
   }
 
   getNameForNode(mode: "input" | "output", node: OpenAPIV3.SchemaObject) {
     if (mode === "input") {
-
     }
   }
 
@@ -131,15 +123,18 @@ export class OpenApiToGraphQLSchema {
 
     builder.queryType({});
     builder.mutationType({});
-    builder.scalarType("JSON", {serialize: (v) => v});
+    builder.scalarType("JSON", { serialize: (v) => v });
 
     const handledDocument = await this.handleDocument(originalDocument);
 
-    const prccessedQueue = new Map();
+    const _prccessedQueue = new Map();
 
-    const buildFieldTypeForSchema = (options: { mode: "input" | "output", schema: OpenAPIV3.SchemaObject }): {
-      type: string | [string],
-      description: string
+    const buildFieldTypeForSchema = (options: {
+      mode: "input" | "output";
+      schema: OpenAPIV3.SchemaObject;
+    }): {
+      type: string | [string];
+      description: string;
     } => {
       // TODO: if present in ProcessedQueue, return from there
 
@@ -151,20 +146,18 @@ export class OpenApiToGraphQLSchema {
        * 3 - its a schema for input request body or parameters?
        */
 
-        // TODO: add the target schema at the first, but if some dependency is found that was not processed yet, then add it to start of the queue;
-      const processQueue = new Set();
-
-
-    }
+      // TODO: add the target schema at the first, but if some dependency is found that was not processed yet, then add it to start of the queue;
+      const _processQueue = new Set();
+    };
 
     for (const queryOrMutation of this.extractQueriesAndMutationsMetadata(handledDocument)) {
-      const {name, mode, description, jsonSchema} = queryOrMutation
+      const { name, mode, description, jsonSchema } = queryOrMutation;
 
       switch (mode) {
         case "query": {
           builder.queryField(name, (t) => {
             return t.field({
-              ...buildFieldTypeForSchema({mode: "output", schema: jsonSchema, fallbackName: `${name}Output`}),
+              ...buildFieldTypeForSchema({ mode: "output", schema: jsonSchema, fallbackName: `${name}Output` }),
 
               //args: buildArgs(t, queryOrMutation),
               description: description,
@@ -177,7 +170,7 @@ export class OpenApiToGraphQLSchema {
         case "mutation": {
           builder.mutationField(name, (t) => {
             return t.field({
-              ...buildFieldTypeForSchema({mode: "output", schema: jsonSchema, fallbackName: `${name}Output`}),
+              ...buildFieldTypeForSchema({ mode: "output", schema: jsonSchema, fallbackName: `${name}Output` }),
 
               // args: buildArgs(t, queryOrMutation),
               description: description,
@@ -188,7 +181,6 @@ export class OpenApiToGraphQLSchema {
         }
       }
     }
-
 
     return builder.toSchema();
   }
