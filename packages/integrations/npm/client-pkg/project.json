@@ -21,7 +21,7 @@
       "inputs": ["{workspaceRoot}/packages/integrations/openapi-json/json/openapi.v3.json"],
       "options": {
         "cwd": "{projectRoot}",
-        "commands": ["bun run cleanup:generated", "bunx openapi-ts"],
+        "commands": ["bun run cleanup:generated", "bunx openapi-ts", "bun run --filter '@ladesa-ro/management-service.repo' code:fix"],
         "parallel": false
       },
       "outputs": ["{projectRoot}/src/http/generated/**/*"],

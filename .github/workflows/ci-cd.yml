@@ -147,6 +147,10 @@ jobs:
     environment:
       name: ci-cd-management-service-dev
 
+    permissions:
+      contents: read
+      packages: write
+
     steps:
       # Step 1: Checkout do código-fonte
       - name: Checkout do código-fonte
@@ -173,5 +177,5 @@ jobs:
             echo "=== Build do cliente NPM concluído ==="
             
             echo "=== Iniciando pulicação do cliente NPM ==="
-            bunx pkg-pr-new publish --comment=update './packages/integrations/npm/client-pkg'
+            bunx pkg-pr-new publish --comment=update  --packageManager="bun" './packages/integrations/npm/client-pkg'
             echo "=== Publicação do cliente NPM concluído ==="
