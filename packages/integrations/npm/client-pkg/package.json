@@ -1,5 +1,6 @@
 {
   "name": "@ladesa-ro/management-service-client",
+  "type": "commonjs",
   "version": "1.0.0-alpha",
   "main": "dist/index.js",
   "license": "MIT",
@@ -29,7 +30,7 @@
   "homepage": "https://github.com/ladesa-ro/management-service/tree/development/integrations/npm/api-client-fetch#readme",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ladesa-ro/management-service.git"
+    "url": "git+https://github.com/ladesa-ro/management-service.git"
   },
   "author": "Gabriel R. Antunes <gabrielrodantunes@gmail.com>",
   "bugs": {
