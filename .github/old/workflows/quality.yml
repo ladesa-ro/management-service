@@ -46,7 +46,7 @@ jobs:
         run: |
           git stash -u;
 
-          bunx nx run @ladesa-ro/api.root:code-static:check;
+          bunx nx run :code:check;
 
           if [ `git stash list | wc -l` -gt 0 ]; then
             git stash pop;

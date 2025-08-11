@@ -43,20 +43,12 @@ export class BlocoService {
 
     // =========================================================
 
-        const paginated = await this.searchService.search(
+    const paginated = await this.searchService.search(
       qb,
       domain
         ? {
             ...domain,
-            sortBy: domain.sortBy
-              ? (domain.sortBy as any[]).map((s) =>
-                  typeof s === "string"
-                    ? s
-                    : Array.isArray(s)
-                    ? s.join(":")
-                    : `${s.column}:${s.direction ?? "ASC"}`
-                )
-              : undefined,
+            sortBy: domain.sortBy ? (domain.sortBy as any[]).map((s) => (typeof s === "string" ? s : Array.isArray(s) ? s.join(":") : `${s.column}:${s.direction ?? "ASC"}`)) : undefined,
           }
         : {},
       {
@@ -272,7 +264,7 @@ export class BlocoService {
   async blocoUpdate(accessContext: AccessContext, domain: IDomain.BlocoUpdateInput) {
     // =========================================================
 
-    const currentBloco = await this.blocoFindByIdStrict(accessContext, {id: domain.id});
+    const currentBloco = await this.blocoFindByIdStrict(accessContext, { id: domain.id });
 
     // =========================================================
 

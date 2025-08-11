@@ -43,15 +43,7 @@ export class DiaCalendarioService {
       domain
         ? {
             ...domain,
-            sortBy: domain.sortBy
-              ? (domain.sortBy as any[]).map((s) =>
-                  typeof s === "string"
-                    ? s
-                    : Array.isArray(s)
-                    ? s.join(":")
-                    : `${s.column}:${s.direction ?? "ASC"}`
-                )
-              : undefined,
+            sortBy: domain.sortBy ? (domain.sortBy as any[]).map((s) => (typeof s === "string" ? s : Array.isArray(s) ? s.join(":") : `${s.column}:${s.direction ?? "ASC"}`)) : undefined,
           }
         : {},
       {
@@ -229,7 +221,7 @@ export class DiaCalendarioService {
   async diaCalendarioUpdate(accessContext: AccessContext, domain: IDomain.DiaCalendarioUpdateInput) {
     // =========================================================
 
-    const currentDiaCalendario = await this.diaCalendarioFindByIdStrict(accessContext, {id: domain.id});
+    const currentDiaCalendario = await this.diaCalendarioFindByIdStrict(accessContext, { id: domain.id });
 
     // =========================================================
 

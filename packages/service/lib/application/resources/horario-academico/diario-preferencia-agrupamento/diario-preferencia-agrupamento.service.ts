@@ -50,15 +50,7 @@ export class DiarioPreferenciaAgrupamentoService {
       domain
         ? {
             ...domain,
-            sortBy: domain.sortBy
-              ? (domain.sortBy as any[]).map((s) =>
-                  typeof s === "string"
-                    ? s
-                    : Array.isArray(s)
-                    ? s.join(":")
-                    : `${s.column}:${s.direction ?? "ASC"}`
-                )
-              : undefined,
+            sortBy: domain.sortBy ? (domain.sortBy as any[]).map((s) => (typeof s === "string" ? s : Array.isArray(s) ? s.join(":") : `${s.column}:${s.direction ?? "ASC"}`)) : undefined,
           }
         : {},
       {
@@ -260,7 +252,7 @@ export class DiarioPreferenciaAgrupamentoService {
   async diarioPreferenciaAgrupamentoUpdate(accessContext: AccessContext, domain: IDomain.DiarioPreferenciaAgrupamentoUpdateInput) {
     // =========================================================
 
-    const currentDiarioPreferenciaAgrupamento = await this.diarioPreferenciaAgrupamentoFindByIdStrict(accessContext, {id: domain.id});
+    const currentDiarioPreferenciaAgrupamento = await this.diarioPreferenciaAgrupamentoFindByIdStrict(accessContext, { id: domain.id });
 
     // =========================================================
 

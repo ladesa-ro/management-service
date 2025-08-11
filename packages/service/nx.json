@@ -1,7 +1,0 @@
-{
-  "$schema": "../../node_modules/nx/schemas/nx-schema.json",
-  "cli": {
-    "packageManager": "bun"
-  },
-  "defaultBase": "development"
-}

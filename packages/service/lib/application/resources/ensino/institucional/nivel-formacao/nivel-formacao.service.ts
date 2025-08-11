@@ -41,15 +41,7 @@ export class NivelFormacaoService {
       domain
         ? {
             ...domain,
-            sortBy: domain.sortBy
-              ? (domain.sortBy as any[]).map((s) =>
-                  typeof s === "string"
-                    ? s
-                    : Array.isArray(s)
-                    ? s.join(":")
-                    : `${s.column}:${s.direction ?? "ASC"}`
-                )
-              : undefined,
+            sortBy: domain.sortBy ? (domain.sortBy as any[]).map((s) => (typeof s === "string" ? s : Array.isArray(s) ? s.join(":") : `${s.column}:${s.direction ?? "ASC"}`)) : undefined,
           }
         : {},
       {
@@ -195,7 +187,7 @@ export class NivelFormacaoService {
   async nivelFormacaoUpdate(accessContext: AccessContext, domain: IDomain.NivelFormacaoUpdateInput) {
     // =========================================================
 
-    const currentNivelFormacao = await this.nivelFormacaoFindByIdStrict(accessContext, {id: domain.id});
+    const currentNivelFormacao = await this.nivelFormacaoFindByIdStrict(accessContext, { id: domain.id });
 
     // =========================================================
 

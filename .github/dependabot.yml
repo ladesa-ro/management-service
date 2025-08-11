@@ -12,9 +12,9 @@ updates:
       interval: "monthly"
 
   - package-ecosystem: bun
-    directory: "/"
+    directory: "/packages/service"
     schedule:
-      interval: "monthly"
+      interval: "daily"
     groups:
       openapi-ts:
         applies-to: version-updates

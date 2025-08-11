@@ -10,10 +10,12 @@ COMMAND_TOOL_OCI_COMPOSE=$(COMMAND_TOOL_OCI_RUNTIME) compose
 COMMAND_COMPOSE_SERVICE_OPTIONS=--file docker-compose.yml -p ladesa-management-service
 COMMAND_COMPOSE_SERVICE=$(COMMAND_TOOL_OCI_COMPOSE) $(COMMAND_COMPOSE_SERVICE_OPTIONS)
 
+SHELL_INSIDE=zsh
 SHELL_INSIDE_PATH?=./
-SHELL_WORKING_DIR=/source/packages/service
+SHELL_WORKING_DIR=/ladesa/management-service/packages/service
 
 setup:
+	$(shell bash -c "mkdir -p volumes/history && touch volumes/history/{root,happy}-{bash,zsh}")
 	$(shell (cd .; find . -type f -name "*.example" -exec sh -c 'cp -n {} $$(basename {} .example)' \;))
 	$(shell (bash -c "$(COMMAND_TOOL_OCI_RUNTIME) network create $(COMPOSE_SERVICE_NETWORK) &>/dev/null"))
 	
@@ -28,9 +30,12 @@ up-no-recreate:
 	$(COMMAND_COMPOSE_SERVICE) up --remove-orphans -d --no-recreate;
 	make post-init;
 
-up:
+up-clean:
 	make setup;
 	$(COMMAND_COMPOSE_SERVICE) up --remove-orphans -d --force-recreate;
+
+up:
+	make up-clean;
 	make post-init;
 	make shell-1000;
 
@@ -63,7 +68,7 @@ logs:
 	$(COMMAND_COMPOSE_SERVICE) logs -f;
 
 shell-1000:
-	$(COMMAND_COMPOSE_SERVICE) exec -u $(COMPOSE_SERVICE_USER) -w $(SHELL_WORKING_DIR) $(COMPOSE_SERVICE_APP) bash -c "cd $(SHELL_INSIDE_PATH); clear; bash";
+	$(COMMAND_COMPOSE_SERVICE) exec -u $(COMPOSE_SERVICE_USER) -w $(SHELL_WORKING_DIR) $(COMPOSE_SERVICE_APP) bash -c "cd $(SHELL_INSIDE_PATH); clear; $(SHELL_INSIDE)";
 
 shell-root:
-	$(COMMAND_COMPOSE_SERVICE) exec -u root -w $(SHELL_WORKING_DIR) $(COMPOSE_SERVICE_APP) bash -c "cd $(SHELL_INSIDE_PATH); clear; bash";
+	$(COMMAND_COMPOSE_SERVICE) exec -u root -w $(SHELL_WORKING_DIR) $(COMPOSE_SERVICE_APP) bash -c "cd $(SHELL_INSIDE_PATH); clear; $(SHELL_INSIDE)";

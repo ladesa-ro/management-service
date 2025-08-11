@@ -1,10 +1,8 @@
 generated:
 	rm -rf packages/generated;
 	
-	docker run --rm \
-		-u 1000 \
-		-v $${PWD}:/local openapitools/openapi-generator-cli generate \
-		-i https://dev.ladesa.com.br/api/doc-api-json \
+	bunx @openapitools/openapi-generator-cli generate \
+		-i https://dev.ladesa.com.br/api/v1/docs/openapi.v3.json \
 		-g dart-dio \
 		-c /local/config.yml \
 		-o /local/packages/generated

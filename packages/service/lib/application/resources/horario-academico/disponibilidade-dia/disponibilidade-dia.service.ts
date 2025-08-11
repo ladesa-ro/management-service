@@ -50,15 +50,7 @@ export class DisponibilidadeDiaService {
       domain
         ? {
             ...domain,
-            sortBy: domain.sortBy
-              ? (domain.sortBy as any[]).map((s) =>
-                  typeof s === "string"
-                    ? s
-                    : Array.isArray(s)
-                    ? s.join(":")
-                    : `${s.column}:${s.direction ?? "ASC"}`
-                )
-              : undefined,
+            sortBy: domain.sortBy ? (domain.sortBy as any[]).map((s) => (typeof s === "string" ? s : Array.isArray(s) ? s.join(":") : `${s.column}:${s.direction ?? "ASC"}`)) : undefined,
           }
         : {},
       {
@@ -255,7 +247,7 @@ export class DisponibilidadeDiaService {
   async disponibilidadeDiaUpdate(accessContext: AccessContext, domain: IDomain.DisponibilidadeDiaUpdateInput) {
     // =========================================================
 
-    const currentDisponibilidadeDia = await this.disponibilidadeDiaFindByIdStrict(accessContext, {id: domain.id});
+    const currentDisponibilidadeDia = await this.disponibilidadeDiaFindByIdStrict(accessContext, { id: domain.id });
 
     // =========================================================
 

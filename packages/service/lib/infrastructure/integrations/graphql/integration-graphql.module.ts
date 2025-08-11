@@ -19,7 +19,7 @@ import { GraphQLModule } from "@nestjs/graphql";
           }),
         );
       */
-      playground: false,
+      graphiql: true,
 
       useGlobalPrefix: true,
       autoSchemaFile: true,

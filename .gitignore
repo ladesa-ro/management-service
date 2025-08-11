@@ -1,5 +1,11 @@
 dist
 semicolon_delimited_script
+**/.nx/cache
+**/.nx/workspace-data
+**/node_modules
+
+**/.dist
+**/.generated
 
 *.env
 
@@ -50,11 +56,3 @@ pids
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
-
-**/.nx/cache
-**/.nx/workspace-data
-**/node_modules
-**/volumes
-
-**/.dist
-**/.generated

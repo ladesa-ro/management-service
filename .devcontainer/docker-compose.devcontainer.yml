@@ -1,0 +1,62 @@
+version: '3.8'
+
+x-podman:
+  in_pod: false
+
+services:
+  ladesa-management-service:
+    # Sobrescrever configurações específicas para desenvolvimento
+    build:
+      context: .
+      target: devcontainer
+      dockerfile: ./Dockerfile
+    volumes:
+      # Adicionar cache de bun para melhor performance
+      - bun-cache:/home/happy/.bun:z
+      # Cache do Git para melhor performance
+      - git-cache:/home/happy/.gitconfig:z
+      # Configurações do VS Code
+      - vscode-server:/home/happy/.vscode-server:z
+      # Configurações do WebStorm
+      - jetbrains-cache:/home/happy/.cache/JetBrains:z
+      - jetbrains-config:/home/happy/.config/JetBrains:z
+
+    environment:
+      # Configurações para desenvolvimento
+      - NODE_ENV=development
+      - DEBUG=*
+      # Configurações específicas para IDEs
+      - VSCODE_IPC_HOOK_CLI=/tmp/vscode-ipc.sock
+      # Configurações para Podman
+      - CONTAINER_HOST=unix:///run/user/1000/podman/podman.sock
+      # Configurações para debugging
+      - NODE_OPTIONS=--inspect=0.0.0.0:9229
+
+    # Capabilities necessárias para desenvolvimento
+    cap_add:
+      - SYS_PTRACE
+
+    # Security options para Podman
+    security_opt:
+      - apparmor:unconfined
+      - seccomp:unconfined
+
+    # Configurações de rede para desenvolvimento
+    hostname: ladesa-dev
+
+    # Manter o container rodando
+    tty: true
+    stdin_open: true
+
+volumes:
+  # Volumes para cache e performance
+  bun-cache:
+    driver: local
+  git-cache:
+    driver: local
+  vscode-server:
+    driver: local
+  jetbrains-cache:
+    driver: local
+  jetbrains-config:
+    driver: local

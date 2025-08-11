@@ -47,9 +47,9 @@ export class TurmaService {
 
     const paginated = await this.searchService.search(
       qb,
-      { 
-        ...domain, 
-        sortBy: domain?.sortBy ? (domain.sortBy as any[]).map(String) : undefined 
+      {
+        ...domain,
+        sortBy: domain?.sortBy ? (domain.sortBy as any[]).map(String) : undefined,
       },
       {
         ...paginateConfig,
@@ -248,7 +248,7 @@ export class TurmaService {
   async turmaUpdate(accessContext: AccessContext, domain: IDomain.TurmaUpdateInput) {
     // =========================================================
 
-    const currentTurma = await this.turmaFindByIdStrict(accessContext, {id: domain.id});
+    const currentTurma = await this.turmaFindByIdStrict(accessContext, { id: domain.id });
 
     // =========================================================
 

@@ -4,9 +4,10 @@ x-podman:
 services:
   ladesa-management-service:
     container_name: ladesa-management-service
+    hostname: ladesa-management-service
     user: root
     build:
-      context: packages/service
+      context: .
       target: devcontainer
     command:
       - sleep
@@ -18,11 +19,15 @@ services:
     ports:
       - "3701:3701"
       - "9229:9229"
-    working_dir: /source/packages/service
+    working_dir: /ladesa/management-service
     userns_mode: keep-id:uid=1000,gid=1000
     volumes:
-      - ./packages/service:/source/packages/service:z
+      - .:/ladesa/management-service:z
       - ladesa-management-service-uploaded-files:/container/uploaded
+      - ./volumes/history/root-zsh:/root/.zsh_history:z
+      - ./volumes/history/root-bash:/root/.bash_history:z
+      - ./volumes/history/happy-zsh:/home/happy/.zsh_history:z
+      - ./volumes/history/happy-bash:/home/happy/.bash_history:z
     environment:
       - STORAGE_PATH=/container/uploaded
     env_file:

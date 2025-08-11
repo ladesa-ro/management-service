@@ -1,0 +1,19 @@
+{
+  "name": "@ladesa-ro/management-service-client.docs",
+  "version": "1.0.0-alpha",
+  "files": [
+    "dist/**/*.*"
+  ],
+  "private": true,
+  "scripts": {
+    "watch": "nx run watch",
+    "build": "nx run build",
+    "serve": "nx run serve",
+    "dev": "nx run dev"
+  },
+  "devDependencies": {
+    "serve": "^14.2.4",
+    "typedoc": "^0.28.7",
+    "typedoc-plugin-mdn-links": "^5.0.5"
+  }
+}

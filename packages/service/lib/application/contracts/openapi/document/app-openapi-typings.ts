@@ -16,7 +16,5 @@ export type IAppRequest<OperationKey extends IApiDocOperationKey> = IAppRequestR
   query: IApiDocOperationByKey<OperationKey>["parameters"]["query"];
   params: IApiDocOperationByKey<OperationKey>["parameters"]["path"];
 
-  body: IApiDocOperationByKey<OperationKey> extends { requestBody: { content: { "application/json": infer B } } }
-    ? B
-    : never;
+  body: IApiDocOperationByKey<OperationKey> extends { requestBody: { content: { "application/json": infer B } } } ? B : never;
 };

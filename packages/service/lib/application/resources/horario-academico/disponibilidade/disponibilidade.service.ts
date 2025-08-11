@@ -41,15 +41,7 @@ export class DisponibilidadeService {
       domain
         ? {
             ...domain,
-            sortBy: domain.sortBy
-              ? (domain.sortBy as any[]).map((s) =>
-                  typeof s === "string"
-                    ? s
-                    : Array.isArray(s)
-                    ? s.join(":")
-                    : `${s.column}:${s.direction ?? "ASC"}`
-                )
-              : undefined,
+            sortBy: domain.sortBy ? (domain.sortBy as any[]).map((s) => (typeof s === "string" ? s : Array.isArray(s) ? s.join(":") : `${s.column}:${s.direction ?? "ASC"}`)) : undefined,
           }
         : {},
       {
@@ -197,7 +189,7 @@ export class DisponibilidadeService {
   async disponibilidadeUpdate(accessContext: AccessContext, domain: IDomain.DisponibilidadeUpdateInput) {
     // =========================================================
 
-    const currentDisponibilidade = await this.disponibilidadeFindByIdStrict(accessContext, {id: domain.id});
+    const currentDisponibilidade = await this.disponibilidadeFindByIdStrict(accessContext, { id: domain.id });
 
     // =========================================================
 

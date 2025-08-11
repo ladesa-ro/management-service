@@ -41,20 +41,12 @@ export class DisciplinaService {
 
     // =========================================================
 
-        const paginated = await this.searchService.search(
+    const paginated = await this.searchService.search(
       qb,
       domain
         ? {
             ...domain,
-            sortBy: domain.sortBy
-              ? (domain.sortBy as any[]).map((s) =>
-                  typeof s === "string"
-                    ? s
-                    : Array.isArray(s)
-                    ? s.join(":")
-                    : `${s.column}:${s.direction ?? "ASC"}`
-                )
-              : undefined,
+            sortBy: domain.sortBy ? (domain.sortBy as any[]).map((s) => (typeof s === "string" ? s : Array.isArray(s) ? s.join(":") : `${s.column}:${s.direction ?? "ASC"}`)) : undefined,
           }
         : {},
       {
@@ -200,7 +192,7 @@ export class DisciplinaService {
   async disciplinaUpdate(accessContext: AccessContext, domain: IDomain.DisciplinaUpdateInput) {
     // =========================================================
 
-    const currentDisciplina = await this.disciplinaFindByIdStrict(accessContext, {id: domain.id});
+    const currentDisciplina = await this.disciplinaFindByIdStrict(accessContext, { id: domain.id });
 
     // =========================================================
 

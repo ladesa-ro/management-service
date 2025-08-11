@@ -11,10 +11,10 @@ Instância Pública de Desenvolvimento: <https://dev.ladesa.com.br/api>
 
 ### Cliente JavaScript
 
-[![NPM Package: @ladesa-ro/api-client-fetch latest version][npm-package-latest-version-src]][npm-package-versions-href]
+[![NPM Package: @ladesa-ro/management-service-client latest version][npm-package-latest-version-src]][npm-package-versions-href]
 
 ```sh
-npm install @ladesa-ro/api-client-fetch@latest
+npm install @ladesa-ro/management-service-client@latest
 ```
 
 ## Desenvolvimento
@@ -22,7 +22,7 @@ npm install @ladesa-ro/api-client-fetch@latest
 ### Obter o código fonte do projeto
 
 ```bash
-git clone https://github.com/ladesa-ro/api.git
+git clone https://github.com/ladesa-ro/management-service.git
 cd api
 ```
 
@@ -152,12 +152,12 @@ O projeto conta com um [arquivo make](Makefile) que comporta scripts destinados 
 <!-- Badges / Actions / Autofix  -->
 
 [action-autofix-src]: https://img.shields.io/github/actions/workflow/status/ladesa-ro/api/autofix.yml?style=flat&logo=github&logoColor=white&label=Generate%20Integrations&branch=development&labelColor=18181B  
-[action-autofix-href]: https://github.com/ladesa-ro/api/actions/workflows/autofix.yml?query=branch%3Adevelopment
+[action-autofix-href]: https://github.com/ladesa-ro/management-service/actions/workflows/autofix.yml?query=branch%3Adevelopment
 
 <!-- Badges / Integrations / NPM -->
 
-[npm-package-versions-href]: https://www.npmjs.com/package/@ladesa-ro/api-client-fetch?activeTab=versions
+[npm-package-versions-href]: https://www.npmjs.com/package/@ladesa-ro/management-service-client?activeTab=versions
 
 <!-- Badges / Integrations / NPM / Latest -->
 
-[npm-package-latest-version-src]: https://img.shields.io/badge/dynamic/json?url=https://registry.npmjs.com/@ladesa-ro/api-client-fetch&query=$[%22dist-tags%22].latest&prefix=v&style=flat&logo=npm&logoColor=white&label=@latest&labelColor=%23CB3837&style=flat&colorA=18181B&colorB=ffffff
+[npm-package-latest-version-src]: https://img.shields.io/badge/dynamic/json?url=https://registry.npmjs.com/@ladesa-ro/management-service-client&query=$[%22dist-tags%22].latest&prefix=v&style=flat&logo=npm&logoColor=white&label=@latest&labelColor=%23CB3837&style=flat&colorA=18181B&colorB=ffffff

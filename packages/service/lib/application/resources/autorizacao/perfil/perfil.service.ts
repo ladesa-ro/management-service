@@ -67,9 +67,9 @@ export class PerfilService {
 
     const paginated = await this.searchService.search(
       qb,
-      { 
-        ...domain, 
-        sortBy: domain?.sortBy ? (domain.sortBy as unknown as string[]) : undefined 
+      {
+        ...domain,
+        sortBy: domain?.sortBy ? (domain.sortBy as unknown as string[]) : undefined,
       },
       {
         ...paginateConfig,

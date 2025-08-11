@@ -1,0 +1,10 @@
+{
+  "name": "@ladesa-ro/management-service.integrations.openapi",
+  "private": true,
+  "files": [
+    "lib/**/*"
+  ],
+  "scripts": {
+    "generate": "nx run generate"
+  }
+}
