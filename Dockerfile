@@ -76,7 +76,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 USER 1000:1000
 SHELL ["zsh"]
 RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-RUN sed -i 's/^ZSH_THEME=.*/ZSH_THEME="nicoulaj"/' ~/.zshrc
+RUN sed -i 's/^ZSH_THEME=.*/ZSH_THEME="josh"/' ~/.zshrc
 
 # ==========================================
 # INSTALAÇÃO DE DEPENDÊNCIAS DE PRODUÇÃO
@@ -115,7 +115,7 @@ RUN bun run build
 FROM os-runtime AS runtime
 
 # Metadados da imagem para documentação e rastreabilidade
-LABEL maintainer="Equipe de Desenvolvimento"
+LABEL maintainer="Equipe de Desenvolvimento do Ladesa"
 LABEL version="1.0"
 LABEL description="Serviço de gerenciamento da aplicação"
 
@@ -131,10 +131,10 @@ USER happy
 
 # Copia apenas os arquivos necessários da etapa de build para a imagem final
 # Corrigido: usa o estágio 'build' em vez de 'builder' inexistente
-COPY --from=build --chown=1000:1000 /ladesa/management-service /app/packages/service
+COPY --from=build --chown=1000:1000 /ladesa/management-service /ladesa/management-service
 
 # Define o diretório de trabalho para a aplicação
-WORKDIR "/app/packages/service"
+WORKDIR "/ladesa/management-service"
 
 # Configuração de healthcheck para monitoramento da aplicação
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \

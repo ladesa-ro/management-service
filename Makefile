@@ -12,9 +12,10 @@ COMMAND_COMPOSE_SERVICE=$(COMMAND_TOOL_OCI_COMPOSE) $(COMMAND_COMPOSE_SERVICE_OP
 
 SHELL_INSIDE=zsh
 SHELL_INSIDE_PATH?=./
-SHELL_WORKING_DIR=/ladesa/management-service
+SHELL_WORKING_DIR=/ladesa/management-service/packages/service
 
 setup:
+	$(shell bash -c "mkdir -p volumes/history && touch volumes/history/{root,happy}-{bash,zsh}")
 	$(shell (cd .; find . -type f -name "*.example" -exec sh -c 'cp -n {} $$(basename {} .example)' \;))
 	$(shell (bash -c "$(COMMAND_TOOL_OCI_RUNTIME) network create $(COMPOSE_SERVICE_NETWORK) &>/dev/null"))
 	
@@ -32,11 +33,10 @@ up-no-recreate:
 up-clean:
 	make setup;
 	$(COMMAND_COMPOSE_SERVICE) up --remove-orphans -d --force-recreate;
-	make post-init;
-	make shell-1000;
 
 up:
 	make up-clean;
+	make post-init;
 	make shell-1000;
 
 stop:
