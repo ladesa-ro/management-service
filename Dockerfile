@@ -139,7 +139,7 @@ USER happy
 COPY --from=service-build --chown=1000:1000 /ladesa/management-service /ladesa/management-service
 
 # Define o diretório de trabalho para a aplicação
-WORKDIR "/ladesa/management-service"
+WORKDIR "/ladesa/management-service/packages/service"
 
 # Configuração de healthcheck para monitoramento da aplicação
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
