@@ -1,6 +1,5 @@
-# Pipeline de CI/CD para o Serviço de Gerenciamento
-# Responsável por construir, testar e implantar o serviço em ambiente de desenvolvimento
-name: CI/CD - Management Service
+# Pipeline de CI/CD
+name: CI/CD
 
 # Configuração de gatilhos do workflow
 on:
@@ -12,8 +11,8 @@ on:
       - main
     paths:
       # Apenas quando alterações forem feitas neste arquivo ou em arquivos do serviço
-      - .github/workflows/ci-cd-management-service.yml
-      - .github/utils/cd-deploy.sh
+      - ci-cd.yml
+      - .github/utils/deploy-k8s-helm-stakater-application.sh
       - packages/service/**/*
 
 # Evita execuções simultâneas do mesmo workflow
@@ -107,4 +106,4 @@ jobs:
           HELM_RELEASE_VALUES: ${{ env.DEPLOY_HELM_VALUES }}
           HELM_RELEASE_EXTRA_OPTIONS: ${{ env.DEPLOY_HELM_EXTRA_OPTIONS }}
         shell: bash
-        run: bash ./.github/utils/cd-deploy.sh
+        run: bash .github/utils/deploy-k8s-helm-stakater-application.sh

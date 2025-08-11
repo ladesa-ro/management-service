@@ -4,6 +4,8 @@
 
 FROM debian:12-slim AS os-core
 
+ENV DEBIAN_FRONTEND=noninteractive
+
 RUN useradd -m -u 1000 -s /bin/bash happy
 ENV HOME=/home/happy
 
@@ -24,8 +26,8 @@ USER root
 
 # Configuração do ambiente Bun
 ENV BUN_INSTALL="/opt/bun"
-ENV BUN_INSTALL_CACHE_DIR="/home/happy/.bun/tmp"
-ENV PATH="/opt/bun/bin:$PATH"
+ENV BUN_INSTALL_CACHE_DIR="${HOME}/.bun/tmp"
+ENV PATH="${BUN_INSTALL}/bin:$PATH"
 
 # Instalação do Bun na versão específica para garantir consistência
 RUN curl -fsSL https://bun.sh/install | bash -s "bun-v1.2.20"
@@ -45,16 +47,36 @@ USER 1000:1000
 
 FROM os-runtime AS os-development
 
+USER root
+
+RUN apt-get update && \
+    apt-get install -y git vim openjdk-17-jdk && \
+    rm -rf /var/lib/apt/lists/*
+
+# Define as variáveis de ambiente para o Java
+ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+ENV PATH="${JAVA_HOME}/bin:${PATH}"
+
 USER 1000:1000
-WORKDIR "/source/packages/service"
+WORKDIR "/ladesa/management-service"
 
 # ==========================================
 # IMAGEM PARA AMBIENTE DE DESENVOLVIMENTO
 # ==========================================
 
 FROM os-development AS devcontainer
-USER 1000:1000
 
+USER root
+
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    apt-get update -y && apt-get install -y zsh && \
+    rm -rf /var/lib/apt/lists/*
+
+USER 1000:1000
+SHELL ["zsh"]
+RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+RUN sed -i 's/^ZSH_THEME=.*/ZSH_THEME="nicoulaj"/' ~/.zshrc
 
 # ==========================================
 # INSTALAÇÃO DE DEPENDÊNCIAS DE PRODUÇÃO
@@ -63,13 +85,13 @@ USER 1000:1000
 FROM os-development AS source-with-production-dependencies
 
 USER 1000:1000
-COPY --chown=1000:1000 package.json bun.lock* bun.toml* ./
+COPY --chown=1000:1000 packages/service/package.json bun.lock* bun.toml* ./
 
 # Instalação de dependências com cache eficiente
 RUN --mount=type=cache,id=bun,target=${BUN_INSTALL_CACHE_DIR} \
     bun install --frozen-lockfile --production
 
-COPY --chown=1000:1000 . .
+COPY --chown=1000:1000 packages/service .
 
 # ==========================================
 # INSTALAÇÃO DE DEPENDÊNCIAS DE DESENVOLVIMENTO
@@ -110,7 +132,7 @@ USER happy
 
 # Copia apenas os arquivos necessários da etapa de build para a imagem final
 # Corrigido: usa o estágio 'build' em vez de 'builder' inexistente
-COPY --from=build --chown=1000:1000 /source/packages/service /app/packages/service
+COPY --from=build --chown=1000:1000 /ladesa/management-service /app/packages/service
 
 # Define o diretório de trabalho para a aplicação
 WORKDIR "/app/packages/service"

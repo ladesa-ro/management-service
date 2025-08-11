@@ -10,8 +10,9 @@ COMMAND_TOOL_OCI_COMPOSE=$(COMMAND_TOOL_OCI_RUNTIME) compose
 COMMAND_COMPOSE_SERVICE_OPTIONS=--file docker-compose.yml -p ladesa-management-service
 COMMAND_COMPOSE_SERVICE=$(COMMAND_TOOL_OCI_COMPOSE) $(COMMAND_COMPOSE_SERVICE_OPTIONS)
 
+SHELL_INSIDE=zsh
 SHELL_INSIDE_PATH?=./
-SHELL_WORKING_DIR=/source/packages/service
+SHELL_WORKING_DIR=/ladesa/management-service
 
 setup:
 	$(shell (cd .; find . -type f -name "*.example" -exec sh -c 'cp -n {} $$(basename {} .example)' \;))
@@ -63,7 +64,7 @@ logs:
 	$(COMMAND_COMPOSE_SERVICE) logs -f;
 
 shell-1000:
-	$(COMMAND_COMPOSE_SERVICE) exec -u $(COMPOSE_SERVICE_USER) -w $(SHELL_WORKING_DIR) $(COMPOSE_SERVICE_APP) bash -c "cd $(SHELL_INSIDE_PATH); clear; bash";
+	$(COMMAND_COMPOSE_SERVICE) exec -u $(COMPOSE_SERVICE_USER) -w $(SHELL_WORKING_DIR) $(COMPOSE_SERVICE_APP) bash -c "cd $(SHELL_INSIDE_PATH); clear; $(SHELL_INSIDE)";
 
 shell-root:
-	$(COMMAND_COMPOSE_SERVICE) exec -u root -w $(SHELL_WORKING_DIR) $(COMPOSE_SERVICE_APP) bash -c "cd $(SHELL_INSIDE_PATH); clear; bash";
+	$(COMMAND_COMPOSE_SERVICE) exec -u root -w $(SHELL_WORKING_DIR) $(COMPOSE_SERVICE_APP) bash -c "cd $(SHELL_INSIDE_PATH); clear; $(SHELL_INSIDE)";

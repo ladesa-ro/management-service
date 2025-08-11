@@ -17,8 +17,8 @@
 Dockerfile
 *.dockerignore
 
-examples
-test
-dist
-.dist
-.wireit
+packages/*/test
+packages/*/dist
+packages/*/.dist
+
+Makefile
