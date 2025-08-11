@@ -4,8 +4,8 @@
   "name": "Ladesa Management Service DevContaine for CI CD",
 
   "build": {
-    "context": "../../../",
-    "dockerfile": "../../../Dockerfile",
+    "context": "../../",
+    "dockerfile": "../../Dockerfile",
     target: "source-with-dev-dependencies"
   },
 
