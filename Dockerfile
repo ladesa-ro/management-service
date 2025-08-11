@@ -57,6 +57,11 @@ RUN apt-get update && \
 ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
 ENV PATH="${JAVA_HOME}/bin:${PATH}"
 
+RUN curl -fsSL https://deb.nodesource.com/setup_24.x | bash -
+
+RUN apt-get install -y nodejs \
+    && rm -rf /var/lib/apt/lists/*
+
 USER 1000:1000
 WORKDIR "/ladesa/management-service"
 

@@ -177,5 +177,5 @@ jobs:
             echo "=== Build do cliente NPM concluído ==="
             
             echo "=== Iniciando pulicação do cliente NPM ==="
-            bunx pkg-pr-new publish --comment=update  --packageManager="bun" './packages/integrations/npm/client-pkg'
+            npx pkg-pr-new publish --comment=update  --packageManager="bun" './packages/integrations/npm/client-pkg'
             echo "=== Publicação do cliente NPM concluído ==="
