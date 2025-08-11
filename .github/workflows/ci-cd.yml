@@ -34,6 +34,9 @@ jobs:
     name: "CI: Construção e Publicação da Imagem de Contêiner"
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: read
+
     # Environment específico para o job de CI, contém secrets e variáveis necessárias
     environment:
       name: ci-cd-management-service-dev
@@ -92,6 +95,9 @@ jobs:
   service-cd-cluster:
     name: "CD: Implantação no Cluster Kubernetes"
     runs-on: deploy  # Runner customizado com acesso ao cluster K8s
+
+    permissions:
+      contents: read
 
     # Dependência explícita - só executa após o sucesso do job anterior
     # Garante que a imagem esteja disponível antes do deploy
@@ -164,7 +170,10 @@ jobs:
           # Configurações da imagem do devcontainer
           imageName: registry.ladesa.local/management-service/devcontainer
           imageTag: latest
-          inheritEnv: true  # Herdar variáveis de ambiente do runner
+
+          env: |
+            GITHUB_TOKEN=${GITHUB_TOKEN}
+
 
           # Arquivo de configuração específico para CI/CD
           configFile: .devcontainer/ci-cd/devcontainer.json
