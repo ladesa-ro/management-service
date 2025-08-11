@@ -6,6 +6,7 @@ import { AccessContext, AccessContextHttp } from "@/infrastructure/access-contex
 import { Public } from "@/infrastructure/authentication";
 import { AutenticacaoService } from "./autenticacao.service";
 import { UsuarioService } from "./usuario/usuario.service";
+import { requestRepresentationMergeToDomain } from "@/application/contracts";
 
 @ApiTags("autenticacao")
 @Controller("/autenticacao")
@@ -31,23 +32,27 @@ export class AutenticacaoController {
 
   @Post("/login")
   @Public()
-  login(@AccessContextHttp() accessContext: AccessContext, @AppRequest("AuthLoginInput") dto: IAppRequest<"AuthLoginInput">) {
-    return this.autenticacaoService.login(accessContext, dto);
+  login(@AccessContextHttp() accessContext: AccessContext, @AppRequest("AuthLogin") dto: IAppRequest<"AuthLogin">) {
+    const domain = requestRepresentationMergeToDomain(dto)
+    return this.autenticacaoService.login(accessContext, domain);
   }
 
   @Post("/login/refresh")
   @Public()
-  refresh(@AccessContextHttp() accessContext: AccessContext, @AppRequest("AuthRefreshInput") dto: IAppRequest<"AuthRefreshInput">) {
-    return this.autenticacaoService.refresh(accessContext, dto);
+  refresh(@AccessContextHttp() accessContext: AccessContext, @AppRequest("AuthRefresh") dto: IAppRequest<"AuthRefreshInput">) {
+    const domain = requestRepresentationMergeToDomain(dto);
+    return this.autenticacaoService.refresh(accessContext, domain);
   }
 
   @Post("/definir-senha")
-  definirSenha(@AccessContextHttp() accessContext: AccessContext, @AppRequest("AuthCredentialsSetInitialPasswordInput") dto: IAppRequest<"AuthCredentialsSetInitialPasswordInput">) {
-    return this.autenticacaoService.definirSenha(accessContext, dto);
+  definirSenha(@AccessContextHttp() accessContext: AccessContext, @AppRequest("AuthSetInitialPassword") dto: IAppRequest<"AuthSetInitialPassword">) {
+    const domain = requestRepresentationMergeToDomain(dto);
+    return this.autenticacaoService.definirSenha(accessContext, domain);
   }
 
   @Post("/redefinir-senha")
-  redefinirSenha(@AccessContextHttp() accessContext: AccessContext, @AppRequest("AuthRecoverPasswordInput") dto: IAppRequest<"AuthRecoverPasswordInput">) {
-    return this.autenticacaoService.recoverPassword(accessContext, dto);
+  redefinirSenha(@AccessContextHttp() accessContext: AccessContext, @AppRequest("AuthRecoverPassword") dto: IAppRequest<"AuthRecoverPassword">) {
+    const domain = requestRepresentationMergeToDomain(dto);
+    return this.autenticacaoService.recoverPassword(accessContext, domain);
   }
 }
