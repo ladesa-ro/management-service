@@ -17,7 +17,7 @@ using Ladesa.ManagementService.Domain.Contracts;
 namespace LadesaAPI;
 
 @tag("base")
-@route("/api/v1")
+@route("")
 @get
 op AppController_getHello(): Body<{
   service: "@ladesa-ro/api.service";
@@ -41,7 +41,7 @@ op AppController_getHello(): Body<{
  * Obtêm o conteúdo de um Arquivo.
  */
 @tag("arquivos")
-@route("/api/v1/arquivos/{id}")
+@route("/arquivos/{id}")
 @get
 op ArquivoGetFile(
   @path id: string,
@@ -66,7 +66,7 @@ op ArquivoGetFile(
  * Sem descrição.
  */
 @tag("estados")
-@route("/api/v1/base/estados")
+@route("/base/estados")
 @get
 op EstadoList(
   /**
@@ -94,7 +94,7 @@ op EstadoList(
  * Sem descrição.
  */
 @tag("estados")
-@route("/api/v1/base/estados/{id}")
+@route("/base/estados/{id}")
 @get
 op EstadoFindOneById(
   /**
@@ -107,7 +107,7 @@ op EstadoFindOneById(
  * Sem descrição.
  */
 @tag("cidades")
-@route("/api/v1/base/cidades")
+@route("/base/cidades")
 @get
 op CidadeList(
   /**
@@ -137,7 +137,7 @@ op CidadeList(
  * Sem descrição.
  */
 @tag("cidades")
-@route("/api/v1/base/cidades/{id}")
+@route("/base/cidades/{id}")
 @get
 op CidadeFindOneById(
   /**
@@ -150,7 +150,7 @@ op CidadeFindOneById(
  * Obtêm informações sobre o estado de autenticação do ator.
  */
 @tag("autenticacao")
-@route("/api/v1/autenticacao/quem-sou-eu")
+@route("/autenticacao/quem-sou-eu")
 @get
 op AuthWhoAmI(): AuthWhoAmIOutput | ForbiddenResponse | NotFoundResponse;
 
@@ -158,7 +158,7 @@ op AuthWhoAmI(): AuthWhoAmIOutput | ForbiddenResponse | NotFoundResponse;
  * Obtêm informações sobre o estado de autenticação do ator.
  */
 @tag("autenticacao")
-@route("/api/v1/autenticacao/quem-sou-eu/ensino")
+@route("/autenticacao/quem-sou-eu/ensino")
 @get
 op AuthWhoAmIEnsino(): UsuarioEnsinoOutput | ForbiddenResponse | NotFoundResponse;
 
@@ -166,7 +166,7 @@ op AuthWhoAmIEnsino(): UsuarioEnsinoOutput | ForbiddenResponse | NotFoundRespons
  * Operação de login.
  */
 @tag("autenticacao")
-@route("/api/v1/autenticacao/login")
+@route("/autenticacao/login")
 @post
 op AuthLogin(
   /**
@@ -179,7 +179,7 @@ op AuthLogin(
  * Obtêm as credenciais de sessão por meio do envio do token de refresh.
  */
 @tag("autenticacao")
-@route("/api/v1/autenticacao/login/refresh")
+@route("/autenticacao/login/refresh")
 @post
 op AuthRefresh(
   /**
@@ -192,7 +192,7 @@ op AuthRefresh(
  * Operação para definir a senha inicial.
  */
 @tag("autenticacao")
-@route("/api/v1/autenticacao/definir-senha")
+@route("/autenticacao/definir-senha")
 @post
 op AuthSetInitialPassword(
   /**
@@ -205,7 +205,7 @@ op AuthSetInitialPassword(
  * Operação de login.
  */
 @tag("autenticacao")
-@route("/api/v1/autenticacao/redefinir-senha")
+@route("/autenticacao/redefinir-senha")
 @post
 op AuthRecoverPassword(
   /**
@@ -218,7 +218,7 @@ op AuthRecoverPassword(
  * Sem descrição.
  */
 @tag("usuarios")
-@route("/api/v1/usuarios")
+@route("/usuarios")
 @get
 op UsuarioList(
   /**
@@ -246,7 +246,7 @@ op UsuarioList(
  * Sem descrição.
  */
 @tag("usuarios")
-@route("/api/v1/usuarios")
+@route("/usuarios")
 @post
 op UsuarioCreate(
   /**
@@ -259,7 +259,7 @@ op UsuarioCreate(
  * Sem descrição.
  */
 @tag("usuarios")
-@route("/api/v1/usuarios/{id}")
+@route("/usuarios/{id}")
 @delete
 op UsuarioDeleteOneById(
   /**
@@ -278,7 +278,7 @@ op UsuarioDeleteOneById(
  * Sem descrição.
  */
 @tag("usuarios")
-@route("/api/v1/usuarios/{id}")
+@route("/usuarios/{id}")
 @get
 op UsuarioFindOneById(
   /**
@@ -297,7 +297,7 @@ op UsuarioFindOneById(
  * Sem descrição.
  */
 @tag("usuarios")
-@route("/api/v1/usuarios/{id}/ensino")
+@route("/usuarios/{id}/ensino")
 @get
 op UsuarioEnsinoById(
   /**
@@ -316,7 +316,7 @@ op UsuarioEnsinoById(
  * Sem descrição.
  */
 @tag("usuarios")
-@route("/api/v1/usuarios/{id}")
+@route("/usuarios/{id}")
 @patch
 op UsuarioUpdateOneById(
   /**
@@ -340,7 +340,7 @@ op UsuarioUpdateOneById(
  * Sem descrição.
  */
 @tag("usuarios")
-@route("/api/v1/usuarios/{id}/imagem/capa")
+@route("/usuarios/{id}/imagem/capa")
 @get
 op UsuarioGetImagemCapa(
   /**
@@ -362,7 +362,7 @@ op UsuarioGetImagemCapa(
  * Sem descrição.
  */
 @tag("usuarios")
-@route("/api/v1/usuarios/{id}/imagem/capa")
+@route("/usuarios/{id}/imagem/capa")
 @put
 op UsuarioSetImagemCapa(
   /**
@@ -383,7 +383,7 @@ op UsuarioSetImagemCapa(
 ): Body<boolean> | ForbiddenResponse | NotFoundResponse;
 
 @tag("perfis")
-@route("/api/v1/perfis/{id}/ensino")
+@route("/perfis/{id}/ensino")
 @get
 op PerfilEnsinoById(
   /**
@@ -402,7 +402,7 @@ op PerfilEnsinoById(
  * Obtêm a imagem de perfil.
  */
 @tag("usuarios")
-@route("/api/v1/usuarios/{id}/imagem/perfil")
+@route("/usuarios/{id}/imagem/perfil")
 @get
 op UsuarioGetImagemPerfil(
   /**
@@ -424,7 +424,7 @@ op UsuarioGetImagemPerfil(
  * Define a imagem de perfil.
  */
 @tag("usuarios")
-@route("/api/v1/usuarios/{id}/imagem/perfil")
+@route("/usuarios/{id}/imagem/perfil")
 @put
 op UsuarioSetImagemPerfil(
   /**
@@ -448,7 +448,7 @@ op UsuarioSetImagemPerfil(
  * Sem descrição.
  */
 @tag("perfis")
-@route("/api/v1/perfis")
+@route("/perfis")
 @get
 op PerfilList(
   /**
@@ -481,7 +481,7 @@ op PerfilList(
  * Sem descrição.
  */
 @tag("perfis")
-@route("/api/v1/perfis")
+@route("/perfis")
 @post
 op PerfilUpdateOneById(
   /**
@@ -494,7 +494,7 @@ op PerfilUpdateOneById(
  * Sem descrição.
  */
 @tag("campi")
-@route("/api/v1/campi")
+@route("/campi")
 @get
 op CampusList(
   /**
@@ -525,7 +525,7 @@ op CampusList(
  * Operação de criação de um campus.
  */
 @tag("campi")
-@route("/api/v1/campi")
+@route("/campi")
 @post
 op CampusCreate(
   /**
@@ -538,7 +538,7 @@ op CampusCreate(
  * Sem descrição.
  */
 @tag("campi")
-@route("/api/v1/campi/{id}")
+@route("/campi/{id}")
 @delete
 op CampusDeleteOneById(
   /**
@@ -554,7 +554,7 @@ op CampusDeleteOneById(
  * Sem descrição.
  */
 @tag("campi")
-@route("/api/v1/campi/{id}")
+@route("/campi/{id}")
 @get
 op CampusFindOneById(
   /**
@@ -570,7 +570,7 @@ op CampusFindOneById(
  * Operação de atualização de um campus.
  */
 @tag("campi")
-@route("/api/v1/campi/{id}")
+@route("/campi/{id}")
 @patch
 op CampusUpdateOneById(
   /**
@@ -591,7 +591,7 @@ op CampusUpdateOneById(
  * Sem descrição.
  */
 @tag("blocos")
-@route("/api/v1/blocos")
+@route("/blocos")
 @get
 op BlocoList(
   /**
@@ -621,7 +621,7 @@ op BlocoList(
  * Sem descrição.
  */
 @tag("blocos")
-@route("/api/v1/blocos")
+@route("/blocos")
 @post
 op BlocoCreate(
   /**
@@ -634,7 +634,7 @@ op BlocoCreate(
  * Sem descrição.
  */
 @tag("blocos")
-@route("/api/v1/blocos/{id}")
+@route("/blocos/{id}")
 @delete
 op BlocoDeleteOneById(
   /**
@@ -650,7 +650,7 @@ op BlocoDeleteOneById(
  * Sem descrição.
  */
 @tag("blocos")
-@route("/api/v1/blocos/{id}")
+@route("/blocos/{id}")
 @get
 op BlocoFindOneById(
   /**
@@ -666,7 +666,7 @@ op BlocoFindOneById(
  * Sem descrição.
  */
 @tag("blocos")
-@route("/api/v1/blocos/{id}")
+@route("/blocos/{id}")
 @patch
 op BlocoUpdateOneById(
   /**
@@ -687,7 +687,7 @@ op BlocoUpdateOneById(
  * Sem descrição.
  */
 @tag("blocos")
-@route("/api/v1/blocos/{id}/imagem/capa")
+@route("/blocos/{id}/imagem/capa")
 @get
 op BlocoGetImagemCapa(
   /**
@@ -706,7 +706,7 @@ op BlocoGetImagemCapa(
  * Sem descrição.
  */
 @tag("blocos")
-@route("/api/v1/blocos/{id}/imagem/capa")
+@route("/blocos/{id}/imagem/capa")
 @put
 op BlocoSetImagemCapa(
   /**
@@ -727,7 +727,7 @@ op BlocoSetImagemCapa(
  * Sem descrição.
  */
 @tag("ambientes")
-@route("/api/v1/ambientes")
+@route("/ambientes")
 @get
 op AmbienteList(
   /**
@@ -758,7 +758,7 @@ op AmbienteList(
  * Sem descrição.
  */
 @tag("ambientes")
-@route("/api/v1/ambientes")
+@route("/ambientes")
 @post
 op AmbienteCreate(
   /**
@@ -771,7 +771,7 @@ op AmbienteCreate(
  * Sem descrição.
  */
 @tag("ambientes")
-@route("/api/v1/ambientes/{id}")
+@route("/ambientes/{id}")
 @delete
 op AmbienteDeleteOneById(
   /**
@@ -790,7 +790,7 @@ op AmbienteDeleteOneById(
  * Sem descrição.
  */
 @tag("ambientes")
-@route("/api/v1/ambientes/{id}")
+@route("/ambientes/{id}")
 @get
 op AmbienteFindOneById(
   /**
@@ -809,7 +809,7 @@ op AmbienteFindOneById(
  * Sem descrição.
  */
 @tag("ambientes")
-@route("/api/v1/ambientes/{id}")
+@route("/ambientes/{id}")
 @patch
 op AmbienteUpdateOneById(
   /**
@@ -833,7 +833,7 @@ op AmbienteUpdateOneById(
  * Sem descrição.
  */
 @tag("ambientes")
-@route("/api/v1/ambientes/{id}/imagem/capa")
+@route("/ambientes/{id}/imagem/capa")
 @get
 op AmbienteGetImagemCapa(
   /**
@@ -855,7 +855,7 @@ op AmbienteGetImagemCapa(
  * Sem descrição.
  */
 @tag("ambientes")
-@route("/api/v1/ambientes/{id}/imagem/capa")
+@route("/ambientes/{id}/imagem/capa")
 @put
 op AmbienteSetImagemCapa(
   /**
@@ -879,7 +879,7 @@ op AmbienteSetImagemCapa(
  * Sem descrição.
  */
 @tag("reservas")
-@route("/api/v1/reservas")
+@route("/reservas")
 @get
 op ReservaList(
   /**
@@ -912,7 +912,7 @@ op ReservaList(
  * Sem descrição.
  */
 @tag("reservas")
-@route("/api/v1/reservas")
+@route("/reservas")
 @post
 op ReservaCreate(
   /**
@@ -925,7 +925,7 @@ op ReservaCreate(
  * Sem descrição.
  */
 @tag("reservas")
-@route("/api/v1/reservas/{id}")
+@route("/reservas/{id}")
 @delete
 op ReservaDeleteOneById(
   /**
@@ -944,7 +944,7 @@ op ReservaDeleteOneById(
  * Sem descrição.
  */
 @tag("reservas")
-@route("/api/v1/reservas/{id}")
+@route("/reservas/{id}")
 @get
 op ReservaFindOneById(
   /**
@@ -963,7 +963,7 @@ op ReservaFindOneById(
  * Sem descrição.
  */
 @tag("reservas")
-@route("/api/v1/reservas/{id}")
+@route("/reservas/{id}")
 @patch
 op ReservaUpdateOneById(
   /**
@@ -987,7 +987,7 @@ op ReservaUpdateOneById(
  * Sem descrição.
  */
 @tag("niveis-formacoes")
-@route("/api/v1/niveis-formacoes")
+@route("/niveis-formacoes")
 @get
 op NivelFormacaoList(
   /**
@@ -1015,7 +1015,7 @@ op NivelFormacaoList(
  * Sem descrição.
  */
 @tag("niveis-formacoes")
-@route("/api/v1/niveis-formacoes")
+@route("/niveis-formacoes")
 @post
 op NivelFormacaoCreate(
   /**
@@ -1028,7 +1028,7 @@ op NivelFormacaoCreate(
  * Sem descrição.
  */
 @tag("niveis-formacoes")
-@route("/api/v1/niveis-formacoes/{id}")
+@route("/niveis-formacoes/{id}")
 @delete
 op NivelFormacaoDeleteOneById(
   /**
@@ -1047,7 +1047,7 @@ op NivelFormacaoDeleteOneById(
  * Sem descrição.
  */
 @tag("niveis-formacoes")
-@route("/api/v1/niveis-formacoes/{id}")
+@route("/niveis-formacoes/{id}")
 @get
 op NivelFormacaoFindOneById(
   /**
@@ -1066,7 +1066,7 @@ op NivelFormacaoFindOneById(
  * Sem descrição.
  */
 @tag("niveis-formacoes")
-@route("/api/v1/niveis-formacoes/{id}")
+@route("/niveis-formacoes/{id}")
 @patch
 op NivelFormacaoUpdateOneById(
   /**
@@ -1090,7 +1090,7 @@ op NivelFormacaoUpdateOneById(
  * Sem descrição.
  */
 @tag("modalidades")
-@route("/api/v1/modalidades")
+@route("/modalidades")
 @get
 op ModalidadeList(
   /**
@@ -1118,7 +1118,7 @@ op ModalidadeList(
  * Sem descrição.
  */
 @tag("modalidades")
-@route("/api/v1/modalidades")
+@route("/modalidades")
 @post
 op ModalidadeCreate(
   /**
@@ -1131,7 +1131,7 @@ op ModalidadeCreate(
  * Sem descrição.
  */
 @tag("modalidades")
-@route("/api/v1/modalidades/{id}")
+@route("/modalidades/{id}")
 @delete
 op ModalidadeDeleteOneById(
   /**
@@ -1150,7 +1150,7 @@ op ModalidadeDeleteOneById(
  * Sem descrição.
  */
 @tag("modalidades")
-@route("/api/v1/modalidades/{id}")
+@route("/modalidades/{id}")
 @get
 op ModalidadeFindOneById(
   /**
@@ -1169,7 +1169,7 @@ op ModalidadeFindOneById(
  * Sem descrição.
  */
 @tag("modalidades")
-@route("/api/v1/modalidades/{id}")
+@route("/modalidades/{id}")
 @patch
 op ModalidadeUpdateOneById(
   /**
@@ -1193,7 +1193,7 @@ op ModalidadeUpdateOneById(
  * Sem descrição.
  */
 @tag("ofertas-formacoes")
-@route("/api/v1/ofertas-formacoes")
+@route("/ofertas-formacoes")
 @get
 op OfertaFormacaoList(
   /**
@@ -1221,7 +1221,7 @@ op OfertaFormacaoList(
  * Sem descrição.
  */
 @tag("ofertas-formacoes")
-@route("/api/v1/ofertas-formacoes")
+@route("/ofertas-formacoes")
 @post
 op OfertaFormacaoCreate(
   /**
@@ -1234,7 +1234,7 @@ op OfertaFormacaoCreate(
  * Sem descrição.
  */
 @tag("ofertas-formacoes")
-@route("/api/v1/ofertas-formacoes/{id}")
+@route("/ofertas-formacoes/{id}")
 @delete
 op OfertaFormacaoDeleteOneById(
   /**
@@ -1253,7 +1253,7 @@ op OfertaFormacaoDeleteOneById(
  * Sem descrição.
  */
 @tag("ofertas-formacoes")
-@route("/api/v1/ofertas-formacoes/{id}")
+@route("/ofertas-formacoes/{id}")
 @get
 op OfertaFormacaoFindOneById(
   /**
@@ -1272,7 +1272,7 @@ op OfertaFormacaoFindOneById(
  * Sem descrição.
  */
 @tag("ofertas-formacoes")
-@route("/api/v1/ofertas-formacoes/{id}")
+@route("/ofertas-formacoes/{id}")
 @patch
 op OfertaFormacaoUpdateOneById(
   /**
@@ -1296,7 +1296,7 @@ op OfertaFormacaoUpdateOneById(
  * Sem descrição.
  */
 @tag("ofertas-formacoes-niveis-formacoes")
-@route("/api/v1/ofertas-formacoes-niveis-formacoes")
+@route("/ofertas-formacoes-niveis-formacoes")
 @get
 op OfertaFormacaoNivelFormacaoList(
   /**
@@ -1324,7 +1324,7 @@ op OfertaFormacaoNivelFormacaoList(
  * Sem descrição.
  */
 @tag("ofertas-formacoes-niveis-formacoes")
-@route("/api/v1/ofertas-formacoes-niveis-formacoes")
+@route("/ofertas-formacoes-niveis-formacoes")
 @post
 op OfertaFormacaoNivelFormacaoCreate(
   /**
@@ -1337,7 +1337,7 @@ op OfertaFormacaoNivelFormacaoCreate(
  * Sem descrição.
  */
 @tag("ofertas-formacoes-niveis-formacoes")
-@route("/api/v1/ofertas-formacoes-niveis-formacoes/{id}")
+@route("/ofertas-formacoes-niveis-formacoes/{id}")
 @delete
 op OfertaFormacaoNivelFormacaoDeleteOneById(
   /**
@@ -1356,7 +1356,7 @@ op OfertaFormacaoNivelFormacaoDeleteOneById(
  * Sem descrição.
  */
 @tag("ofertas-formacoes-niveis-formacoes")
-@route("/api/v1/ofertas-formacoes-niveis-formacoes/{id}")
+@route("/ofertas-formacoes-niveis-formacoes/{id}")
 @get
 op OfertaFormacaoNivelFormacaoFindOneById(
   /**
@@ -1375,7 +1375,7 @@ op OfertaFormacaoNivelFormacaoFindOneById(
  * Sem descrição.
  */
 @tag("ofertas-formacoes-niveis-formacoes")
-@route("/api/v1/ofertas-formacoes-niveis-formacoes/{id}")
+@route("/ofertas-formacoes-niveis-formacoes/{id}")
 @patch
 op OfertaFormacaoNivelFormacaoUpdateOneById(
   /**
@@ -1399,7 +1399,7 @@ op OfertaFormacaoNivelFormacaoUpdateOneById(
  * Sem descrição.
  */
 @tag("cursos")
-@route("/api/v1/cursos")
+@route("/cursos")
 @get
 op CursoList(
   /**
@@ -1430,7 +1430,7 @@ op CursoList(
  * Sem descrição.
  */
 @tag("cursos")
-@route("/api/v1/cursos")
+@route("/cursos")
 @post
 op CursoCreate(
   /**
@@ -1443,7 +1443,7 @@ op CursoCreate(
  * Sem descrição.
  */
 @tag("cursos")
-@route("/api/v1/cursos/{id}")
+@route("/cursos/{id}")
 @delete
 op CursoDeleteOneById(
   /**
@@ -1459,7 +1459,7 @@ op CursoDeleteOneById(
  * Sem descrição.
  */
 @tag("cursos")
-@route("/api/v1/cursos/{id}")
+@route("/cursos/{id}")
 @get
 op CursoFindOneById(
   /**
@@ -1475,7 +1475,7 @@ op CursoFindOneById(
  * Sem descrição.
  */
 @tag("cursos")
-@route("/api/v1/cursos/{id}")
+@route("/cursos/{id}")
 @patch
 op CursoUpdateOneById(
   /**
@@ -1496,7 +1496,7 @@ op CursoUpdateOneById(
  * Sem descrição.
  */
 @tag("cursos")
-@route("/api/v1/cursos/{id}/imagem/capa")
+@route("/cursos/{id}/imagem/capa")
 @get
 op CursoGetImagemCapa(
   /**
@@ -1515,7 +1515,7 @@ op CursoGetImagemCapa(
  * Sem descrição.
  */
 @tag("cursos")
-@route("/api/v1/cursos/{id}/imagem/capa")
+@route("/cursos/{id}/imagem/capa")
 @put
 op CursoSetImagemCapa(
   /**
@@ -1536,7 +1536,7 @@ op CursoSetImagemCapa(
  * Sem descrição.
  */
 @tag("disciplinas")
-@route("/api/v1/disciplinas")
+@route("/disciplinas")
 @get
 op DisciplinaList(
   /**
@@ -1566,7 +1566,7 @@ op DisciplinaList(
  * Sem descrição.
  */
 @tag("disciplinas")
-@route("/api/v1/disciplinas")
+@route("/disciplinas")
 @post
 op DisciplinaCreate(
   /**
@@ -1579,7 +1579,7 @@ op DisciplinaCreate(
  * Sem descrição.
  */
 @tag("disciplinas")
-@route("/api/v1/disciplinas/{id}")
+@route("/disciplinas/{id}")
 @delete
 op DisciplinaDeleteOneById(
   /**
@@ -1598,7 +1598,7 @@ op DisciplinaDeleteOneById(
  * Sem descrição.
  */
 @tag("disciplinas")
-@route("/api/v1/disciplinas/{id}")
+@route("/disciplinas/{id}")
 @get
 op DisciplinaFindOneById(
   /**
@@ -1617,7 +1617,7 @@ op DisciplinaFindOneById(
  * Sem descrição.
  */
 @tag("disciplinas")
-@route("/api/v1/disciplinas/{id}")
+@route("/disciplinas/{id}")
 @patch
 op DisciplinaUpdateOneById(
   /**
@@ -1641,7 +1641,7 @@ op DisciplinaUpdateOneById(
  * Sem descrição.
  */
 @tag("disciplinas")
-@route("/api/v1/disciplinas/{id}/imagem/capa")
+@route("/disciplinas/{id}/imagem/capa")
 @get
 op DisciplinaGetImagemCapa(
   /**
@@ -1663,7 +1663,7 @@ op DisciplinaGetImagemCapa(
  * Sem descrição.
  */
 @tag("disciplinas")
-@route("/api/v1/disciplinas/{id}/imagem/capa")
+@route("/disciplinas/{id}/imagem/capa")
 @put
 op DisciplinaSetImagemCapa(
   /**
@@ -1687,7 +1687,7 @@ op DisciplinaSetImagemCapa(
  * Sem descrição.
  */
 @tag("calendarios-letivos")
-@route("/api/v1/calendarios-letivos")
+@route("/calendarios-letivos")
 @get
 op CalendarioLetivoList(
   /**
@@ -1718,7 +1718,7 @@ op CalendarioLetivoList(
  * Sem descrição.
  */
 @tag("calendarios-letivos")
-@route("/api/v1/calendarios-letivos")
+@route("/calendarios-letivos")
 @post
 op CalendarioLetivoCreate(
   /**
@@ -1731,7 +1731,7 @@ op CalendarioLetivoCreate(
  * Sem descrição.
  */
 @tag("calendarios-letivos")
-@route("/api/v1/calendarios-letivos/{id}")
+@route("/calendarios-letivos/{id}")
 @delete
 op CalendarioLetivoDeleteOneById(
   /**
@@ -1750,7 +1750,7 @@ op CalendarioLetivoDeleteOneById(
  * Sem descrição.
  */
 @tag("calendarios-letivos")
-@route("/api/v1/calendarios-letivos/{id}")
+@route("/calendarios-letivos/{id}")
 @get
 op CalendarioLetivoFindOneById(
   /**
@@ -1769,7 +1769,7 @@ op CalendarioLetivoFindOneById(
  * Sem descrição.
  */
 @tag("calendarios-letivos")
-@route("/api/v1/calendarios-letivos/{id}")
+@route("/calendarios-letivos/{id}")
 @patch
 op CalendarioLetivoUpdateOneById(
   /**
@@ -1793,7 +1793,7 @@ op CalendarioLetivoUpdateOneById(
  * Sem descrição.
  */
 @tag("grades-horarios-ofertas-formacoes")
-@route("/api/v1/grades-horarios-ofertas-formacoes")
+@route("/grades-horarios-ofertas-formacoes")
 @get
 op GradeHorarioOfertaFormacaoList(
   /**
@@ -1821,7 +1821,7 @@ op GradeHorarioOfertaFormacaoList(
  * Sem descrição.
  */
 @tag("grades-horarios-ofertas-formacoes")
-@route("/api/v1/grades-horarios-ofertas-formacoes")
+@route("/grades-horarios-ofertas-formacoes")
 @post
 op GradeHorarioOfertaFormacaoCreate(
   /**
@@ -1834,7 +1834,7 @@ op GradeHorarioOfertaFormacaoCreate(
  * Sem descrição.
  */
 @tag("grades-horarios-ofertas-formacoes")
-@route("/api/v1/grades-horarios-ofertas-formacoes/{id}")
+@route("/grades-horarios-ofertas-formacoes/{id}")
 @delete
 op GradeHorarioOfertaFormacaoDeleteOneById(
   /**
@@ -1853,7 +1853,7 @@ op GradeHorarioOfertaFormacaoDeleteOneById(
  * Sem descrição.
  */
 @tag("grades-horarios-ofertas-formacoes")
-@route("/api/v1/grades-horarios-ofertas-formacoes/{id}")
+@route("/grades-horarios-ofertas-formacoes/{id}")
 @get
 op GradeHorarioOfertaFormacaoFindOneById(
   /**
@@ -1872,7 +1872,7 @@ op GradeHorarioOfertaFormacaoFindOneById(
  * Sem descrição.
  */
 @tag("grades-horarios-ofertas-formacoes")
-@route("/api/v1/grades-horarios-ofertas-formacoes/{id}")
+@route("/grades-horarios-ofertas-formacoes/{id}")
 @patch
 op GradeHorarioOfertaFormacaoUpdateOneById(
   /**
@@ -1896,7 +1896,7 @@ op GradeHorarioOfertaFormacaoUpdateOneById(
  * Sem descrição.
  */
 @tag("grades-horarios-ofertas-formacoes-intervalos-de-tempo")
-@route("/api/v1/grades-horarios-ofertas-formacoes-intervalos-de-tempo")
+@route("/grades-horarios-ofertas-formacoes-intervalos-de-tempo")
 @get
 op GradeHorarioOfertaFormacaoIntervaloDeTempoList(
   /**
@@ -1924,7 +1924,7 @@ op GradeHorarioOfertaFormacaoIntervaloDeTempoList(
  * Sem descrição.
  */
 @tag("grades-horarios-ofertas-formacoes-intervalos-de-tempo")
-@route("/api/v1/grades-horarios-ofertas-formacoes-intervalos-de-tempo")
+@route("/grades-horarios-ofertas-formacoes-intervalos-de-tempo")
 @post
 op GradeHorarioOfertaFormacaoIntervaloDeTempoCreate(
   /**
@@ -1937,7 +1937,7 @@ op GradeHorarioOfertaFormacaoIntervaloDeTempoCreate(
  * Sem descrição.
  */
 @tag("grades-horarios-ofertas-formacoes-intervalos-de-tempo")
-@route("/api/v1/grades-horarios-ofertas-formacoes-intervalos-de-tempo/{id}")
+@route("/grades-horarios-ofertas-formacoes-intervalos-de-tempo/{id}")
 @delete
 op GradeHorarioOfertaFormacaoIntervaloDeTempoDeleteOneById(
   /**
@@ -1956,7 +1956,7 @@ op GradeHorarioOfertaFormacaoIntervaloDeTempoDeleteOneById(
  * Sem descrição.
  */
 @tag("grades-horarios-ofertas-formacoes-intervalos-de-tempo")
-@route("/api/v1/grades-horarios-ofertas-formacoes-intervalos-de-tempo/{id}")
+@route("/grades-horarios-ofertas-formacoes-intervalos-de-tempo/{id}")
 @get
 op GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneById(
   /**
@@ -1975,7 +1975,7 @@ op GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneById(
  * Sem descrição.
  */
 @tag("grades-horarios-ofertas-formacoes-intervalos-de-tempo")
-@route("/api/v1/grades-horarios-ofertas-formacoes-intervalos-de-tempo/{id}")
+@route("/grades-horarios-ofertas-formacoes-intervalos-de-tempo/{id}")
 @patch
 op GradeHorarioOfertaFormacaoIntervaloDeTempoUpdateOneById(
   /**
@@ -1999,7 +1999,7 @@ op GradeHorarioOfertaFormacaoIntervaloDeTempoUpdateOneById(
  * Sem descrição.
  */
 @tag("eventos")
-@route("/api/v1/eventos")
+@route("/eventos")
 @get
 op EventoList(
   /**
@@ -2029,7 +2029,7 @@ op EventoList(
  * Sem descrição.
  */
 @tag("eventos")
-@route("/api/v1/eventos")
+@route("/eventos")
 @post
 op EventoCreate(
   /**
@@ -2042,7 +2042,7 @@ op EventoCreate(
  * Sem descrição.
  */
 @tag("eventos")
-@route("/api/v1/eventos/{id}")
+@route("/eventos/{id}")
 @delete
 op EventoDeleteOneById(
   /**
@@ -2058,7 +2058,7 @@ op EventoDeleteOneById(
  * Sem descrição.
  */
 @tag("eventos")
-@route("/api/v1/eventos/{id}")
+@route("/eventos/{id}")
 @get
 op EventoFindOneById(
   /**
@@ -2074,7 +2074,7 @@ op EventoFindOneById(
  * Sem descrição.
  */
 @tag("eventos")
-@route("/api/v1/eventos/{id}")
+@route("/eventos/{id}")
 @patch
 op EventoUpdateOneById(
   /**
@@ -2095,7 +2095,7 @@ op EventoUpdateOneById(
  * Sem descrição.
  */
 @tag("dias-calendarios")
-@route("/api/v1/dias-calendario")
+@route("/dias-calendario")
 @get
 op DiaCalendarioList(
   /**
@@ -2125,7 +2125,7 @@ op DiaCalendarioList(
  * Sem descrição.
  */
 @tag("dias-calendarios")
-@route("/api/v1/dias-calendario")
+@route("/dias-calendario")
 @post
 op DiaCalendarioCreate(
   /**
@@ -2138,7 +2138,7 @@ op DiaCalendarioCreate(
  * Sem descrição.
  */
 @tag("dias-calendarios")
-@route("/api/v1/dias-calendario/{id}")
+@route("/dias-calendario/{id}")
 @delete
 op DiaCalendarioDeleteOneById(
   /**
@@ -2157,7 +2157,7 @@ op DiaCalendarioDeleteOneById(
  * Sem descrição.
  */
 @tag("dias-calendarios")
-@route("/api/v1/dias-calendario/{id}")
+@route("/dias-calendario/{id}")
 @get
 op DiaCalendarioFindOneById(
   /**
@@ -2176,7 +2176,7 @@ op DiaCalendarioFindOneById(
  * Sem descrição.
  */
 @tag("dias-calendarios")
-@route("/api/v1/dias-calendario/{id}")
+@route("/dias-calendario/{id}")
 @patch
 op DiaCalendarioUpdateOneById(
   /**
@@ -2200,7 +2200,7 @@ op DiaCalendarioUpdateOneById(
  * Sem descrição.
  */
 @tag("etapas")
-@route("/api/v1/etapas")
+@route("/etapas")
 @get
 op EtapaList(
   /**
@@ -2230,7 +2230,7 @@ op EtapaList(
  * Sem descrição.
  */
 @tag("etapas")
-@route("/api/v1/etapas")
+@route("/etapas")
 @post
 op EtapaCreate(
   /**
@@ -2243,7 +2243,7 @@ op EtapaCreate(
  * Sem descrição.
  */
 @tag("etapas")
-@route("/api/v1/etapas/{id}")
+@route("/etapas/{id}")
 @delete
 op EtapaDeleteOneById(
   /**
@@ -2259,7 +2259,7 @@ op EtapaDeleteOneById(
  * Sem descrição.
  */
 @tag("etapas")
-@route("/api/v1/etapas/{id}")
+@route("/etapas/{id}")
 @get
 op EtapaFindOneById(
   /**
@@ -2275,7 +2275,7 @@ op EtapaFindOneById(
  * Sem descrição.
  */
 @tag("etapas")
-@route("/api/v1/etapas/{id}")
+@route("/etapas/{id}")
 @patch
 op EtapaUpdateOneById(
   /**
@@ -2296,7 +2296,7 @@ op EtapaUpdateOneById(
  * Sem descrição.
  */
 @tag("turmas")
-@route("/api/v1/turmas")
+@route("/turmas")
 @get
 op TurmaList(
   /**
@@ -2333,7 +2333,7 @@ op TurmaList(
  * Sem descrição.
  */
 @tag("turmas")
-@route("/api/v1/turmas")
+@route("/turmas")
 @post
 op TurmaCreate(
   /**
@@ -2346,7 +2346,7 @@ op TurmaCreate(
  * Sem descrição.
  */
 @tag("turmas")
-@route("/api/v1/turmas/{id}")
+@route("/turmas/{id}")
 @delete
 op TurmaDeleteOneById(
   /**
@@ -2362,7 +2362,7 @@ op TurmaDeleteOneById(
  * Sem descrição.
  */
 @tag("turmas")
-@route("/api/v1/turmas/{id}")
+@route("/turmas/{id}")
 @get
 op TurmaFindOneById(
   /**
@@ -2378,7 +2378,7 @@ op TurmaFindOneById(
  * Sem descrição.
  */
 @tag("turmas")
-@route("/api/v1/turmas/{id}")
+@route("/turmas/{id}")
 @patch
 op TurmaUpdateOneById(
   /**
@@ -2399,7 +2399,7 @@ op TurmaUpdateOneById(
  * Sem descrição.
  */
 @tag("turmas")
-@route("/api/v1/turmas/{id}/imagem/capa")
+@route("/turmas/{id}/imagem/capa")
 @get
 op TurmaGetImagemCapa(
   /**
@@ -2418,7 +2418,7 @@ op TurmaGetImagemCapa(
  * Sem descrição.
  */
 @tag("turmas")
-@route("/api/v1/turmas/{id}/imagem/capa")
+@route("/turmas/{id}/imagem/capa")
 @put
 op TurmaSetImagemCapa(
   /**
@@ -2439,7 +2439,7 @@ op TurmaSetImagemCapa(
  * Sem descrição.
  */
 @tag("diarios")
-@route("/api/v1/diarios")
+@route("/diarios")
 @get
 op DiarioList(
   /**
@@ -2472,7 +2472,7 @@ op DiarioList(
  * Sem descrição.
  */
 @tag("diarios")
-@route("/api/v1/diarios")
+@route("/diarios")
 @post
 op DiarioCreate(
   /**
@@ -2485,7 +2485,7 @@ op DiarioCreate(
  * Sem descrição.
  */
 @tag("diarios")
-@route("/api/v1/diarios/{id}")
+@route("/diarios/{id}")
 @delete
 op DiarioDeleteOneById(
   /**
@@ -2501,7 +2501,7 @@ op DiarioDeleteOneById(
  * Sem descrição.
  */
 @tag("diarios")
-@route("/api/v1/diarios/{id}")
+@route("/diarios/{id}")
 @get
 op DiarioFindOneById(
   /**
@@ -2517,7 +2517,7 @@ op DiarioFindOneById(
  * Sem descrição.
  */
 @tag("diarios")
-@route("/api/v1/diarios/{id}")
+@route("/diarios/{id}")
 @patch
 op DiarioUpdateOneById(
   /**
@@ -2538,7 +2538,7 @@ op DiarioUpdateOneById(
  * Sem descrição.
  */
 @tag("diarios-professores")
-@route("/api/v1/diarios-professores")
+@route("/diarios-professores")
 @get
 op DiarioProfessorList(
   /**
@@ -2569,7 +2569,7 @@ op DiarioProfessorList(
  * Sem descrição.
  */
 @tag("diarios-professores")
-@route("/api/v1/diarios-professores")
+@route("/diarios-professores")
 @post
 op DiarioProfessorCreate(
   /**
@@ -2582,7 +2582,7 @@ op DiarioProfessorCreate(
  * Sem descrição.
  */
 @tag("diarios-professores")
-@route("/api/v1/diarios-professores/{id}")
+@route("/diarios-professores/{id}")
 @delete
 op DiarioProfessorDeleteOneById(
   /**
@@ -2601,7 +2601,7 @@ op DiarioProfessorDeleteOneById(
  * Sem descrição.
  */
 @tag("diarios-professores")
-@route("/api/v1/diarios-professores/{id}")
+@route("/diarios-professores/{id}")
 @get
 op DiarioProfessorFindOneById(
   /**
@@ -2620,7 +2620,7 @@ op DiarioProfessorFindOneById(
  * Sem descrição.
  */
 @tag("diarios-professores")
-@route("/api/v1/diarios-professores/{id}")
+@route("/diarios-professores/{id}")
 @patch
 op DiarioProfessorUpdateOneById(
   /**
@@ -2644,7 +2644,7 @@ op DiarioProfessorUpdateOneById(
  * Sem descrição.
  */
 @tag("aulas")
-@route("/api/v1/aulas")
+@route("/aulas")
 @get
 op AulaList(
   /**
@@ -2675,7 +2675,7 @@ op AulaList(
  * Sem descrição.
  */
 @tag("aulas")
-@route("/api/v1/aulas")
+@route("/aulas")
 @post
 op AulaCreate(
   /**
@@ -2688,7 +2688,7 @@ op AulaCreate(
  * Sem descrição.
  */
 @tag("aulas")
-@route("/api/v1/aulas/{id}")
+@route("/aulas/{id}")
 @delete
 op AulaDeleteOneById(
   /**
@@ -2704,7 +2704,7 @@ op AulaDeleteOneById(
  * Sem descrição.
  */
 @tag("aulas")
-@route("/api/v1/aulas/{id}")
+@route("/aulas/{id}")
 @get
 op AulaFindOneById(
   /**
@@ -2720,7 +2720,7 @@ op AulaFindOneById(
  * Sem descrição.
  */
 @tag("aulas")
-@route("/api/v1/aulas/{id}")
+@route("/aulas/{id}")
 @patch
 op AulaUpdateOneById(
   /**
@@ -2741,7 +2741,7 @@ op AulaUpdateOneById(
  * Sem descrição.
  */
 @tag("disponibilidades")
-@route("/api/v1/disponibilidades")
+@route("/disponibilidades")
 @get
 op DisponibilidadeList(
   /**
@@ -2769,7 +2769,7 @@ op DisponibilidadeList(
  * Sem descrição.
  */
 @tag("disponibilidades")
-@route("/api/v1/disponibilidades")
+@route("/disponibilidades")
 @post
 op DisponibilidadeCreate(
   /**
@@ -2782,7 +2782,7 @@ op DisponibilidadeCreate(
  * Sem descrição.
  */
 @tag("disponibilidades")
-@route("/api/v1/disponibilidades/{id}")
+@route("/disponibilidades/{id}")
 @delete
 op DisponibilidadeDeleteOneById(
   /**
@@ -2801,7 +2801,7 @@ op DisponibilidadeDeleteOneById(
  * Sem descrição.
  */
 @tag("disponibilidades")
-@route("/api/v1/disponibilidades/{id}")
+@route("/disponibilidades/{id}")
 @get
 op DisponibilidadeFindOneById(
   /**
@@ -2820,7 +2820,7 @@ op DisponibilidadeFindOneById(
  * Sem descrição.
  */
 @tag("disponibilidades")
-@route("/api/v1/disponibilidades/{id}")
+@route("/disponibilidades/{id}")
 @patch
 op DisponibilidadeUpdateOneById(
   /**
@@ -2844,7 +2844,7 @@ op DisponibilidadeUpdateOneById(
  * Sem descrição.
  */
 @tag("diarios-preferencia-agrupamento")
-@route("/api/v1/diarios-preferencia-agrupamento")
+@route("/diarios-preferencia-agrupamento")
 @get
 op DiarioPreferenciaAgrupamentoList(
   /**
@@ -2874,7 +2874,7 @@ op DiarioPreferenciaAgrupamentoList(
  * Sem descrição.
  */
 @tag("diarios-preferencia-agrupamento")
-@route("/api/v1/diarios-preferencia-agrupamento")
+@route("/diarios-preferencia-agrupamento")
 @post
 op DiarioPreferenciaAgrupamentoCreate(
   /**
@@ -2887,7 +2887,7 @@ op DiarioPreferenciaAgrupamentoCreate(
  * Sem descrição.
  */
 @tag("diarios-preferencia-agrupamento")
-@route("/api/v1/diarios-preferencia-agrupamento/{id}")
+@route("/diarios-preferencia-agrupamento/{id}")
 @delete
 op DiarioPreferenciaAgrupamentoDeleteOneById(
   /**
@@ -2906,7 +2906,7 @@ op DiarioPreferenciaAgrupamentoDeleteOneById(
  * Sem descrição.
  */
 @tag("diarios-preferencia-agrupamento")
-@route("/api/v1/diarios-preferencia-agrupamento/{id}")
+@route("/diarios-preferencia-agrupamento/{id}")
 @get
 op DiarioPreferenciaAgrupamentoFindOneById(
   /**
@@ -2925,7 +2925,7 @@ op DiarioPreferenciaAgrupamentoFindOneById(
  * Sem descrição.
  */
 @tag("diarios-preferencia-agrupamento")
-@route("/api/v1/diarios-preferencia-agrupamento/{id}")
+@route("/diarios-preferencia-agrupamento/{id}")
 @patch
 op DiarioPreferenciaAgrupamentoUpdateOneById(
   /**
@@ -2949,7 +2949,7 @@ op DiarioPreferenciaAgrupamentoUpdateOneById(
  * Sem descrição.
  */
 @tag("turmas-disponibilidades")
-@route("/api/v1/turmas-disponibilidades")
+@route("/turmas-disponibilidades")
 @get
 op TurmaDisponibilidadeList(
   /**
@@ -2979,7 +2979,7 @@ op TurmaDisponibilidadeList(
  * Sem descrição.
  */
 @tag("turmas-disponibilidades")
-@route("/api/v1/turmas-disponibilidades")
+@route("/turmas-disponibilidades")
 @post
 op TurmaDisponibilidadeCreate(
   /**
@@ -2992,7 +2992,7 @@ op TurmaDisponibilidadeCreate(
  * Sem descrição.
  */
 @tag("turmas-disponibilidades")
-@route("/api/v1/turmas-disponibilidades/{id}")
+@route("/turmas-disponibilidades/{id}")
 @delete
 op TurmaDisponibilidadeDeleteOneById(
   /**
@@ -3011,7 +3011,7 @@ op TurmaDisponibilidadeDeleteOneById(
  * Sem descrição.
  */
 @tag("turmas-disponibilidades")
-@route("/api/v1/turmas-disponibilidades/{id}")
+@route("/turmas-disponibilidades/{id}")
 @get
 op TurmaDisponibilidadeFindOneById(
   /**
@@ -3030,7 +3030,7 @@ op TurmaDisponibilidadeFindOneById(
  * Sem descrição.
  */
 @tag("turmas-disponibilidades")
-@route("/api/v1/turmas-disponibilidades/{id}")
+@route("/turmas-disponibilidades/{id}")
 @patch
 op TurmaDisponibilidadeUpdateOneById(
   /**
@@ -3054,7 +3054,7 @@ op TurmaDisponibilidadeUpdateOneById(
  * Sem descrição.
  */
 @tag("professores-disponibilidades")
-@route("/api/v1/professores-disponibilidades")
+@route("/professores-disponibilidades")
 @get
 op ProfessorDisponibilidadeList(
   /**
@@ -3084,7 +3084,7 @@ op ProfessorDisponibilidadeList(
  * Sem descrição.
  */
 @tag("professores-disponibilidades")
-@route("/api/v1/professores-disponibilidades")
+@route("/professores-disponibilidades")
 @post
 op ProfessorDisponibilidadeCreate(
   /**
@@ -3097,7 +3097,7 @@ op ProfessorDisponibilidadeCreate(
  * Sem descrição.
  */
 @tag("professores-disponibilidades")
-@route("/api/v1/professores-disponibilidades/{id}")
+@route("/professores-disponibilidades/{id}")
 @delete
 op ProfessorDisponibilidadeDeleteOneById(
   /**
@@ -3116,7 +3116,7 @@ op ProfessorDisponibilidadeDeleteOneById(
  * Sem descrição.
  */
 @tag("professores-disponibilidades")
-@route("/api/v1/professores-disponibilidades/{id}")
+@route("/professores-disponibilidades/{id}")
 @get
 op ProfessorDisponibilidadeFindOneById(
   /**
@@ -3135,7 +3135,7 @@ op ProfessorDisponibilidadeFindOneById(
  * Sem descrição.
  */
 @tag("professores-disponibilidades")
-@route("/api/v1/professores-disponibilidades/{id}")
+@route("/professores-disponibilidades/{id}")
 @patch
 op ProfessorDisponibilidadeUpdateOneById(
   /**
@@ -3159,7 +3159,7 @@ op ProfessorDisponibilidadeUpdateOneById(
  * Sem descrição.
  */
 @tag("horarios-gerados")
-@route("/api/v1/horarios-gerados")
+@route("/horarios-gerados")
 @get
 op HorarioGeradoList(
   /**
@@ -3187,7 +3187,7 @@ op HorarioGeradoList(
  * Sem descrição.
  */
 @tag("horarios-gerados")
-@route("/api/v1/horarios-gerados")
+@route("/horarios-gerados")
 @post
 op HorarioGeradoCreate(
   /**
@@ -3200,7 +3200,7 @@ op HorarioGeradoCreate(
  * Sem descrição.
  */
 @tag("horarios-gerados")
-@route("/api/v1/horarios-gerados/{id}")
+@route("/horarios-gerados/{id}")
 @delete
 op HorarioGeradoDeleteOneById(
   /**
@@ -3219,7 +3219,7 @@ op HorarioGeradoDeleteOneById(
  * Sem descrição.
  */
 @tag("horarios-gerados")
-@route("/api/v1/horarios-gerados/{id}")
+@route("/horarios-gerados/{id}")
 @get
 op HorarioGeradoFindOneById(
   /**
@@ -3238,7 +3238,7 @@ op HorarioGeradoFindOneById(
  * Sem descrição.
  */
 @tag("horarios-gerados")
-@route("/api/v1/horarios-gerados/{id}")
+@route("/horarios-gerados/{id}")
 @patch
 op HorarioGeradoUpdateOneById(
   /**
@@ -3262,7 +3262,7 @@ op HorarioGeradoUpdateOneById(
  * Sem descrição.
  */
 @tag("horarios-gerados-aula")
-@route("/api/v1/horarios-gerados-aula")
+@route("/horarios-gerados-aula")
 @get
 op HorarioGeradoAulaList(
   /**
@@ -3290,7 +3290,7 @@ op HorarioGeradoAulaList(
  * Sem descrição.
  */
 @tag("horarios-gerados-aula")
-@route("/api/v1/horarios-gerados-aula")
+@route("/horarios-gerados-aula")
 @post
 op HorarioGeradoAulaCreate(
   /**
@@ -3303,7 +3303,7 @@ op HorarioGeradoAulaCreate(
  * Sem descrição.
  */
 @tag("horarios-gerados-aula")
-@route("/api/v1/horarios-gerados-aula/{id}")
+@route("/horarios-gerados-aula/{id}")
 @delete
 op HorarioGeradoAulaDeleteOneById(
   /**
@@ -3322,7 +3322,7 @@ op HorarioGeradoAulaDeleteOneById(
  * Sem descrição.
  */
 @tag("horarios-gerados-aula")
-@route("/api/v1/horarios-gerados-aula/{id}")
+@route("/horarios-gerados-aula/{id}")
 @get
 op HorarioGeradoAulaFindOneById(
   /**
@@ -3341,7 +3341,7 @@ op HorarioGeradoAulaFindOneById(
  * Sem descrição.
  */
 @tag("horarios-gerados-aula")
-@route("/api/v1/horarios-gerados-aula/{id}")
+@route("/horarios-gerados-aula/{id}")
 @patch
 op HorarioGeradoAulaUpdateOneById(
   /**

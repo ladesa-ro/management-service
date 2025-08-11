@@ -9,7 +9,9 @@ export interface IConfigRuntime {
 
   getRuntimeIsDevelopment(): boolean;
 
-  getRuntimePrefix(): null | string;
+  getRuntimePrefix(): string;
+
+  withRuntimePrefix(path: string): string;
 
   getSwaggerServers(): null | string[];
 
