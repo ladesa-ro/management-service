@@ -53,7 +53,6 @@
         "@types/express": "^5.0.3",
         "@types/multer": "^1.4.13",
         "compression": "^1.8.1",
-        "@scalar/nestjs-api-reference": "^0.5.11",
         "helmet": "^8.1.0"
       },
       "infrastructure/express/passport": {
@@ -98,7 +97,6 @@
         "@nestjs/passport": "^11.0.5",
         "@nestjs/platform-express": "^11.1.5",
         "@nestjs/schedule": "^6.0.0",
-        "@nestjs/swagger": "^11.2.0",
         "@nestjs/throttler": "^6.4.0"
       },
       "infrastructure/protocols/jwt": {

@@ -57,6 +57,11 @@ RUN apt-get update && \
 ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
 ENV PATH="${JAVA_HOME}/bin:${PATH}"
 
+RUN curl -fsSL https://deb.nodesource.com/setup_24.x | bash -
+
+RUN apt-get install -y nodejs \
+    && rm -rf /var/lib/apt/lists/*
+
 USER 1000:1000
 WORKDIR "/ladesa/management-service"
 
@@ -134,7 +139,7 @@ USER happy
 COPY --from=service-build --chown=1000:1000 /ladesa/management-service /ladesa/management-service
 
 # Define o diretório de trabalho para a aplicação
-WORKDIR "/ladesa/management-service"
+WORKDIR "/ladesa/management-service/packages/service"
 
 # Configuração de healthcheck para monitoramento da aplicação
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \

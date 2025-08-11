@@ -5,7 +5,10 @@ import type { DataSourceOptions } from "typeorm";
 import * as entities from "@/infrastructure/integrations/database/typeorm/entities";
 import pkg from "../../../../../package.json";
 import type { IConfig } from "../../types";
-import type { IConfigIntegrateAuthKeycloakCredentials, IConfigIntegrateAuthOidcClientCredentials } from "../../types/IConfigIntegrateAuth";
+import type {
+  IConfigIntegrateAuthKeycloakCredentials,
+  IConfigIntegrateAuthOidcClientCredentials
+} from "../../types/IConfigIntegrateAuth";
 
 const now = new Date();
 
@@ -79,10 +82,16 @@ export class EnvironmentConfigService implements IConfig {
     const apiPrefix = this.nestConfigService.get<string>("API_PREFIX");
 
     if (apiPrefix) {
-      return apiPrefix;
+      return apiPrefix.endsWith("/") ? apiPrefix : `${apiPrefix}/`;
     }
 
     return "/";
+  }
+
+  withRuntimePrefix(path:string) {
+    const prefix = this.getRuntimePrefix()
+    const normalizedPath = path.startsWith("/") ? path.slice(1) : path;
+    return `${prefix}${normalizedPath}`;
   }
 
   getRuntimeIsProduction(): boolean {

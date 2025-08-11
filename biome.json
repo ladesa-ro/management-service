@@ -7,12 +7,12 @@
   },
   "files": {
     "ignoreUnknown": true,
-    "includes": ["**", "!**/.nx", "!**/.dist", "!**/.generated"]
+    "includes": ["**", "!**/.nx", "!**/.dist", "!**/.generated", "!**/generated"]
   },
   "formatter": {
     "enabled": true,
     "useEditorconfig": true,
-    "formatWithErrors": false,
+    "formatWithErrors": true,
     "indentStyle": "space",
     "indentWidth": 2,
     "lineEnding": "lf",

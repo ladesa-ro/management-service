@@ -5,10 +5,11 @@ import { AppController } from "./app.controller";
 import { AppResolver } from "./app.resolver";
 import { AppService } from "./app.service";
 import { ResourcesModule } from "./resources/resources.module";
+import { DocsController } from "./docs.controller";
 
 @Module({
   imports: [SearchModule, ResourcesModule, InfrastructureModule],
-  controllers: [AppController],
+  controllers: [DocsController, AppController],
   providers: [AppService, AppResolver],
 })
 export class AppModule {}
