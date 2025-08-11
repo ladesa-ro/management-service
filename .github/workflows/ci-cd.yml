@@ -1,137 +1,181 @@
-# Pipeline de CI/CD
+# Pipeline de CI/CD para o Management Service
+# Este workflow automatiza a construção, teste e implantação da aplicação
 name: CI/CD
 
-# Configuração de gatilhos do workflow
+# Configuração de gatilhos (triggers) do workflow
 on:
-  # Permite execução manual do workflow através da interface do GitHub
+  # Permite execução manual do workflow através da interface do GitHub Actions
+  # Útil para deploys em situações específicas ou debugging
   workflow_dispatch:
+
   # Executa automaticamente quando houver push para a branch main
   push:
     branches:
       - main
+    # Configuração de filtros de caminho - o workflow só executa quando arquivos específicos são alterados
+    # Isso otimiza o uso de recursos e evita execuções desnecessárias
     paths:
-      # Apenas quando alterações forem feitas neste arquivo ou em arquivos do serviço
-      - .github/workflows/ci-cd.yml
-      - .devcontainer/ci-cd/**/*
-      - .github/utils/deploy-k8s-helm-stakater-application.sh
-      - packages/service/**/*
+      - .github/workflows/ci-cd.yml          # Alterações no próprio workflow
+      - .devcontainer/ci-cd/**/*             # Alterações no container de desenvolvimento
+      - .github/utils/deploy-k8s-helm-stakater-application.sh  # Alterações no script de deploy
+      - packages/service/**/*                # Alterações no código do serviço
 
-# Evita execuções simultâneas do mesmo workflow
+# Configuração de concorrência para evitar execuções simultâneas do mesmo workflow
+# Isso previne conflitos de deploy e garante que apenas uma versão seja implantada por vez
 concurrency:
   group: ci-cd-${{ github.ref }}
+  # cancel-in-progress: true poderia ser adicionado para cancelar execuções em andamento
 
 jobs:
-  # Job para construção e publicação da imagem de contêiner
+  # ========================================
+  # JOB 1: CONSTRUÇÃO E PUBLICAÇÃO DA IMAGEM DOCKER
+  # ========================================
   service-ci-image:
     name: "CI: Construção e Publicação da Imagem de Contêiner"
     runs-on: ubuntu-latest
 
+    # Environment específico para o job de CI, contém secrets e variáveis necessárias
     environment:
       name: ci-cd-management-service-dev
 
     steps:
+      # Step 1: Fazer checkout do código-fonte do repositório
       - name: Checkout do código-fonte
         uses: actions/checkout@v4
 
+      # Step 2: Obter secrets do Infisical para o processo de build
+      # Infisical é usado como gerenciador de secrets centralizado
       - name: Obtenção de segredos do Infisical para build
         uses: Infisical/secrets-action@a663da43e1541832614bfd9dcf9ab67381ea2b98
         with:
-          # Configuração de acesso ao Infisical para obter variáveis de ambiente seguras
-          domain: ${{ secrets.INFISICAL_DOMAIN }}
-          client-id: ${{ secrets.INFISICAL_CLIENT_ID }}
-          client-secret: ${{ secrets.INFISICAL_CLIENT_SECRET }}
+          # Configurações de conexão com o Infisical
+          domain: ${{ secrets.INFISICAL_DOMAIN }}           # URL do servidor Infisical
+          client-id: ${{ secrets.INFISICAL_CLIENT_ID }}     # ID do cliente para autenticação
+          client-secret: ${{ secrets.INFISICAL_CLIENT_SECRET }} # Secret do cliente
 
-          project-slug: ${{ secrets.INFISICAL_PROJECT_SLUG }}
-          secret-path: ${{ secrets.INFISICAL_VARS_BUILD_PUSH }}
+          # Configurações do projeto e ambiente no Infisical
+          project-slug: ${{ secrets.INFISICAL_PROJECT_SLUG }}   # Identificador do projeto
+          secret-path: ${{ secrets.INFISICAL_VARS_BUILD_PUSH }} # Caminho dos secrets para build/push
+          env-slug: ${{ secrets.INFISICAL_ENV_SLUG }}           # Ambiente (dev, staging, prod)
 
-          env-slug: ${{ secrets.INFISICAL_ENV_SLUG }}
-
+      # Step 3: Configurar Docker Buildx para builds avançados
+      # Buildx permite builds multi-arquitetura e caching avançado
       - name: Configuração do Docker Buildx
         uses: docker/setup-buildx-action@e468171a9de216ec08956ac3ada2f0791b6bd435
 
+      # Step 4: Autenticar no registry de contêineres
+      # Necessário para fazer push da imagem construída
       - name: Autenticação no Registry de Contêineres
         uses: docker/login-action@184bdaa0721073962dff0199f1fb9940f07167d1
         with:
-          registry: ${{ env.REGISTRY_URL }}
-          username: ${{ env.REGISTRY_USERNAME }}
-          password: ${{ env.REGISTRY_TOKEN }}
+          registry: ${{ env.REGISTRY_URL }}      # URL do registry (obtida do Infisical)
+          username: ${{ env.REGISTRY_USERNAME }} # Username para autenticação
+          password: ${{ env.REGISTRY_TOKEN }}    # Token/password para autenticação
 
+      # Step 5: Construir e publicar a imagem Docker
       - name: Construção e publicação da imagem de contêiner
         uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83
         with:
-          # Diretório contendo o Dockerfile
-          context: .
-          # Estágio do Dockerfile a ser utilizado
-          target: "service-runtime"
-          # Tag para a imagem construída
+          context: .                    # Diretório raiz como contexto de build
+          target: "service-runtime"     # Estágio específico do Dockerfile (multi-stage build)
+          # Tag da imagem usando padrão: registry/nome:tag
           tags: ${{ env.REGISTRY_URL }}/${{ env.IMAGE_NAME  }}:development
-          # Configurações de cache e push
-          push: true
-          load: false
-          no-cache: false
 
-  # Job para implantação da aplicação no cluster Kubernetes
+          # Configurações de otimização e publicação
+          push: true      # Fazer push da imagem para o registry
+          load: false     # Não carregar a imagem localmente (economiza espaço)
+          no-cache: false # Usar cache quando possível para acelerar builds
+
+  # ========================================
+  # JOB 2: IMPLANTAÇÃO NO CLUSTER KUBERNETES
+  # ========================================
   service-cd-cluster:
     name: "CD: Implantação no Cluster Kubernetes"
-    runs-on: deploy
-    # Este job depende da conclusão bem-sucedida do job ci-image
+    runs-on: deploy  # Runner customizado com acesso ao cluster K8s
+
+    # Dependência explícita - só executa após o sucesso do job anterior
+    # Garante que a imagem esteja disponível antes do deploy
     needs: [service-ci-image]
 
+    # Environment para deploy com URL de monitoramento
     environment:
       name: ci-cd-management-service-dev
-      url: ${{ vars.DEPLOY_URL }}
+      url: ${{ vars.DEPLOY_URL }}  # URL da aplicação após deploy
 
     steps:
+      # Step 1: Checkout do código (necessário para scripts de deploy)
       - name: Checkout do código-fonte
         uses: actions/checkout@v4
 
+      # Step 2: Obter secrets específicos para deploy do Infisical
+      # Diferentes secrets podem ser necessários para CI vs CD
       - name: Obtenção de segredos do Infisical para deploy
         uses: Infisical/secrets-action@a663da43e1541832614bfd9dcf9ab67381ea2b98
         with:
-          # Configuração de acesso ao Infisical para obter variáveis de ambiente seguras
+          # Configurações de conexão (mesmas do job anterior)
           domain: ${{ secrets.INFISICAL_DOMAIN }}
           client-id: ${{ secrets.INFISICAL_CLIENT_ID }}
           client-secret: ${{ secrets.INFISICAL_CLIENT_SECRET }}
 
           project-slug: ${{ secrets.INFISICAL_PROJECT_SLUG }}
-          secret-path: ${{ secrets.INFISICAL_VARS_DEPLOY }}
-
+          secret-path: ${{ secrets.INFISICAL_VARS_DEPLOY }}  # Caminho específico para secrets de deploy
           env-slug: ${{ secrets.INFISICAL_ENV_SLUG }}
 
+      # Step 3: Executar deploy via Helm no Kubernetes
       - name: Implantação da aplicação no Kubernetes via Helm
         env:
-          K8S_NAMESPACE: ${{ env.K8S_NAMESPACE  }}
-          K8S_DEPLOYMENT: ${{ env.K8S_DEPLOYMENT }}
+          # Configurações do cluster Kubernetes
+          K8S_NAMESPACE: ${{ env.K8S_NAMESPACE  }}   # Namespace onde a app será implantada
+          K8S_DEPLOYMENT: ${{ env.K8S_DEPLOYMENT }} # Nome do deployment
 
-          HELM_RELEASE_NAME: ${{ env.K8S_DEPLOYMENT }}
-          HELM_RELEASE_VALUES: ${{ env.DEPLOY_HELM_VALUES }}
-          HELM_RELEASE_EXTRA_OPTIONS: ${{ env.DEPLOY_HELM_EXTRA_OPTIONS }}
+          # Configurações do Helm (gerenciador de pacotes do Kubernetes)
+          HELM_RELEASE_NAME: ${{ env.K8S_DEPLOYMENT }}           # Nome da release Helm
+          HELM_RELEASE_VALUES: ${{ env.DEPLOY_HELM_VALUES }}     # Arquivo de valores customizados
+          HELM_RELEASE_EXTRA_OPTIONS: ${{ env.DEPLOY_HELM_EXTRA_OPTIONS }} # Opções adicionais
         shell: bash
+        # Executa script customizado para deploy via Helm com integração Stakater
         run: bash .github/utils/deploy-k8s-helm-stakater-application.sh
 
+  # ========================================
+  # JOB 3: CONSTRUÇÃO E PUBLICAÇÃO DO CLIENT NPM
+  # ========================================
   service-client-ci-npm:
     name: "CI: Construção e Publicação do Client NPM"
     runs-on: ubuntu-latest
 
+    # Environment para publicação do cliente NPM
     environment:
       name: ci-cd-management-service-dev
 
     steps:
+      # Step 1: Checkout do código-fonte
       - name: Checkout do código-fonte
         uses: actions/checkout@v4
 
-      - name: Run dev-container
+      # Step 2: Executar container de desenvolvimento para build do cliente NPM
+      # Usa devcontainer para garantir ambiente consistente
+      - name: Execução do container de desenvolvimento
         uses: devcontainers/ci@8bf61b26e9c3a98f69cb6ce2f88d24ff59b785c6
         with:
+          # Configurações da imagem do devcontainer
           imageName: registry.ladesa.local/management-service/devcontainer
           imageTag: latest
-          inheritEnv: true
+          inheritEnv: true  # Herdar variáveis de ambiente do runner
 
+          # Arquivo de configuração específico para CI/CD
           configFile: .devcontainer/ci-cd/devcontainer.json
-          push: never
+          push: never  # Não fazer push da imagem do devcontainer
 
+          # Comandos a serem executados dentro do container
           runCmd: |
-            echo "Hello, World!"
-            pwd
-            ls
+            echo "=== Iniciando build do cliente NPM ==="
+            echo "Diretório atual: $(pwd)"
+            echo "Conteúdo do diretório:"
+            ls -la
+
+            # TODO: Implementar publicação do cliente NPM
+            # O comando abaixo está comentado e precisa ser configurado:
             # bunx pkg-pr-new publish --comment=update './integrations/npm/api-client-fetch'
+
+            echo "=== Build do cliente NPM concluído ==="
+            echo "NOTA: Publicação ainda não implementada - aguardando configuração"
