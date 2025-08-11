@@ -1,6 +1,10 @@
 {
   "private": true,
   "workspaces": {
+    "packages": [
+      "./packages/service",
+      "./packages/integrations/npm/api-client-fetch"
+    ],
     "catalogs": {
       "dev/nx": {
         "nx": "^21.3.4"
@@ -127,9 +131,6 @@
         "supertest": "^7.1.4",
         "vitest": "^3.2.4"
       }
-    },
-    "packages": [
-      "./packages/service"
-    ]
+    }
   }
 }

@@ -85,13 +85,12 @@ RUN sed -i 's/^ZSH_THEME=.*/ZSH_THEME="nicoulaj"/' ~/.zshrc
 FROM os-development AS source-with-production-dependencies
 
 USER 1000:1000
-COPY --chown=1000:1000 packages/service/package.json bun.lock* bun.toml* ./
+
+COPY --chown=1000:1000 . .
 
 # Instalação de dependências com cache eficiente
 RUN --mount=type=cache,id=bun,target=${BUN_INSTALL_CACHE_DIR} \
     bun install --frozen-lockfile --production
-
-COPY --chown=1000:1000 packages/service .
 
 # ==========================================
 # INSTALAÇÃO DE DEPENDÊNCIAS DE DESENVOLVIMENTO
