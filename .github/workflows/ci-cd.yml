@@ -171,9 +171,9 @@ jobs:
           imageName: registry.ladesa.local/management-service/devcontainer
           imageTag: latest
 
+          inheritEnv: true
           env: |
-            GITHUB_TOKEN=${GITHUB_TOKEN}
-
+            HOME=/home/happy
 
           # Arquivo de configuração específico para CI/CD
           configFile: .devcontainer/ci-cd/devcontainer.json
