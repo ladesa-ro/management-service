@@ -21,7 +21,7 @@ concurrency:
 
 jobs:
   # Job para construção e publicação da imagem de contêiner
-  ci-image:
+  service-ci-image:
     name: "CI: Construção e Publicação da Imagem de Contêiner"
     runs-on: ubuntu-latest
 
@@ -70,11 +70,11 @@ jobs:
           no-cache: false
 
   # Job para implantação da aplicação no cluster Kubernetes
-  cd-cluster:
+  service-cd-cluster:
     name: "CD: Implantação no Cluster Kubernetes"
     runs-on: deploy
     # Este job depende da conclusão bem-sucedida do job ci-image
-    needs: [ci-image]
+    needs: [service-ci-image]
 
     environment:
       name: ci-cd-management-service-dev
@@ -107,3 +107,24 @@ jobs:
           HELM_RELEASE_EXTRA_OPTIONS: ${{ env.DEPLOY_HELM_EXTRA_OPTIONS }}
         shell: bash
         run: bash .github/utils/deploy-k8s-helm-stakater-application.sh
+
+  service-client-ci-npm:
+    name: "CI: Construção e Publicação do Client NPM"
+    runs-on: ubuntu-latest
+
+    environment:
+      name: ci-cd-management-service-dev
+
+    steps:
+      - name: Checkout do código-fonte
+        uses: actions/checkout@v4
+
+      - name: Run dev-container
+        uses: devcontainers/ci@8bf61b26e9c3a98f69cb6ce2f88d24ff59b785c6
+        with:
+          push: never
+          runCmd: |
+            echo "Hello, World!"
+            pwd
+            ls
+            # bunx pkg-pr-new publish --comment=update './integrations/npm/api-client-fetch'

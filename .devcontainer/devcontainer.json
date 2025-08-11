@@ -1,0 +1,118 @@
+{
+  "name": "Ladesa Management Service",
+  "dockerComposeFile": ["../docker-compose.yml", "docker-compose.devcontainer.yml"],
+  "service": "ladesa-management-service",
+  "workspaceFolder": "/ladesa/management-service",
+  "shutdownAction": "stopCompose",
+
+  // Configurações para VS Code
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        // TypeScript/JavaScript
+        "ms-vscode.vscode-typescript-next",
+        "bradlc.vscode-tailwindcss",
+        "esbenp.prettier-vscode",
+        "biomejs.biome",
+
+        // Node.js/Bun
+        "ms-vscode.js-debug",
+        "oven.bun-vscode",
+
+        // Database
+        "ms-mssql.mssql",
+        "mtxr.sqltools",
+        "mtxr.sqltools-driver-pg",
+
+        // Docker/Containers
+        "ms-azuretools.vscode-docker",
+        "ms-vscode-remote.remote-containers",
+
+        // Git
+        "eamodio.gitlens",
+        "mhutchie.git-graph",
+
+        // Utilities
+        "ms-vscode.vscode-json",
+        "redhat.vscode-yaml",
+        "christian-kohler.path-intellisense",
+        "streetsidesoftware.code-spell-checker",
+        "ms-vscode.vscode-eslint",
+
+        // GraphQL/API
+        "graphql.vscode-graphql",
+        "ms-vscode.vscode-openapi",
+        "42crunch.vscode-openapi",
+
+        // Testing
+        "vitest.explorer"
+      ],
+      "settings": {
+        "typescript.preferences.importModuleSpecifier": "relative",
+        "typescript.suggest.autoImports": true,
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "biomejs.biome",
+        "editor.codeActionsOnSave": {
+          "source.organizeImports": "explicit",
+          "source.fixAll": "explicit"
+        },
+        "files.associations": {
+          "*.env*": "dotenv"
+        },
+        "terminal.integrated.defaultProfile.linux": "zsh",
+        "terminal.integrated.profiles.linux": {
+          "zsh": {
+            "path": "/bin/zsh"
+          }
+        }
+      }
+    }
+  },
+
+  // Portas para desenvolvimento
+  "forwardPorts": [3701, 9229, 5432],
+  "portsAttributes": {
+    "3701": {
+      "label": "Application",
+      "onAutoForward": "notify"
+    },
+    "9229": {
+      "label": "Debug",
+      "onAutoForward": "silent"
+    },
+    "5432": {
+      "label": "PostgreSQL",
+      "onAutoForward": "silent"
+    }
+  },
+
+  // Comandos pós-criação
+  "postCreateCommand": "bun install",
+  "postStartCommand": "echo 'Devcontainer iniciado com sucesso!'",
+
+  // Configurações do usuário
+  "remoteUser": "happy",
+  "containerUser": "happy",
+
+  // Configurações específicas para Podman
+  "containerEnv": {
+    "CONTAINER_HOST": "unix:///run/user/1000/podman/podman.sock"
+  },
+
+  // Mounts adicionais para desenvolvimento
+  "mounts": [
+    "source=/run/user/1000/podman/podman.sock,target=/run/user/1000/podman/podman.sock,type=bind",
+    "source=${localWorkspaceFolder}/.vscode,target=/ladesa/management-service/.vscode,type=bind,consistency=cached"
+  ],
+
+  // Features do Dev Container
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {
+      "version": "latest",
+      "ppa": true
+    },
+    "ghcr.io/devcontainers/features/github-cli:1": {
+      "version": "latest"
+    }
+  }
+}
