@@ -11,7 +11,8 @@ on:
       - main
     paths:
       # Apenas quando alterações forem feitas neste arquivo ou em arquivos do serviço
-      - ci-cd.yml
+      - .github/workflows/ci-cd.yml
+      - .devcontainer/ci-cd/**/*
       - .github/utils/deploy-k8s-helm-stakater-application.sh
       - packages/service/**/*
 
