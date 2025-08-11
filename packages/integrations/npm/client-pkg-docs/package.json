@@ -1,7 +1,9 @@
 {
-  "name": "@ladesa-ro/api-client-fetch.docs",
-  "version": "1.0.0-next.34",
-  "files": ["dist/**/*.*"],
+  "name": "@ladesa-ro/management-service-client.docs",
+  "version": "1.0.0-alpha",
+  "files": [
+    "dist/**/*.*"
+  ],
   "private": true,
   "scripts": {
     "watch": "nx run watch",

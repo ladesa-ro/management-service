@@ -1,10 +1,7 @@
 /** @type {import('@hey-api/openapi-ts').UserConfig} */
 
 export default {
-
-
   base: "#",
-
 
   client: "legacy/fetch",
 
@@ -18,13 +15,11 @@ export default {
     name: (name) => `$${name}`,
   },
 
-
-  input: "../../openapi-json/json/openapi.v3.json",
+  input: "../../openapi/lib/openapi.v3.json",
 
   output: {
     lint: "biome",
     format: "biome",
     path: "./src/http/generated",
   },
-
 };

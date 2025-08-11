@@ -1,9 +1,27 @@
 {
+  "name": "@ladesa-ro/management-service.repo",
+  "version": "1.0.0-alpha",
   "private": true,
+  "devDependencies": {
+    "@biomejs/biome": "catalog:lint",
+    "nx": "catalog:dev/nx"
+  },
+  "scripts": {
+    "all:build": "nx run-many -t build --outputStyle stream",
+    "code:check": "biome check .",
+    "code:check:format": "biome format",
+    "code:check:lint": "biome lint",
+    "code:fix": "biome check --write --unsafe",
+    "code:fix:format": "biome format --write --unsafe",
+    "code:fix:lint": "biome lint --write --unsafe"
+  },
   "workspaces": {
     "packages": [
+      ".",
       "./packages/service",
-      "./packages/integrations/npm/api-client-fetch"
+      "./packages/integrations/openapi",
+      "./packages/integrations/npm/client-pkg",
+      "./packages/integrations/npm/client-pkg-docs"
     ],
     "catalogs": {
       "dev/nx": {

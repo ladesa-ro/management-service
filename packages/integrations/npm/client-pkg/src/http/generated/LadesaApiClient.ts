@@ -1,7 +1,7 @@
 import type { BaseHttpRequest } from "./core/BaseHttpRequest";
-import { FetchHttpRequest } from "./core/FetchHttpRequest";
 import type { OpenAPIConfig } from "./core/OpenAPI";
 import { Interceptors } from "./core/OpenAPI";
+import { FetchHttpRequest } from "./core/FetchHttpRequest";
 
 import { AmbientesService } from "./services.gen";
 import { ArquivosService } from "./services.gen";

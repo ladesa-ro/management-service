@@ -1,6 +1,6 @@
 {
   "name": "@ladesa-ro/management-service",
-  "version": "2.0.0-alpha",
+  "version": "1.0.0-alpha",
   "private": true,
   "dependencies": {
     "@apidevtools/swagger-parser": "catalog:infrastructure/openapi",
@@ -56,7 +56,6 @@
     "valibot": "catalog:infrastructure/validation/valibot"
   },
   "devDependencies": {
-    "@biomejs/biome": "catalog:lint",
     "@nestjs/cli": "catalog:infrastructure/nest/dev",
     "@nestjs/schematics": "catalog:infrastructure/nest/dev",
     "@nestjs/testing": "catalog:test",
@@ -80,7 +79,6 @@
     "@typespec/rest": "catalog:dev/typespec",
     "@vitest/coverage-v8": "catalog:test",
     "nodemon": "catalog:dev",
-    "nx": "catalog:dev/nx",
     "openapi-typescript": "catalog:dev/typespec",
     "pathe": "catalog:infrastructure/utils",
     "quicktype": "catalog:dev/quicktype",
@@ -115,12 +113,6 @@
     "typeorm:entity": "bun run typeorm entity:create",
     "typeorm:generate": "bun run typeorm migration:generate",
     "migration:revert": "bun run typeorm:ds-migration migration:revert",
-    "migration:run": "bun run typeorm:ds-migration migration:run",
-    "code:check": "biome check .",
-    "code:check:format": "biome format .",
-    "code:check:lint": "biome lint .",
-    "code:fix": "biome check --write --unsafe .",
-    "code:fix:format": "biome format --write --unsafe .",
-    "code:fix:lint": "biome lint --write --unsafe ."
+    "migration:run": "bun run typeorm:ds-migration migration:run"
   }
 }

@@ -104,15 +104,15 @@ RUN --mount=type=cache,id=bun,target=${BUN_INSTALL_CACHE_DIR} bun install --froz
 # ETAPA DE COMPILAÇÃO DA APLICAÇÃO
 # ==========================================
 
-FROM source-with-dev-dependencies AS build
+FROM source-with-dev-dependencies AS service-build
 USER 1000:1000
-RUN bun run build
+RUN bun run --filter "@ladesa-ro/management-service" build
 
 # ==========================================
 # IMAGEM FINAL DE EXECUÇÃO
 # ==========================================
 
-FROM os-runtime AS runtime
+FROM os-runtime AS service-runtime
 
 # Metadados da imagem para documentação e rastreabilidade
 LABEL maintainer="Equipe de Desenvolvimento do Ladesa"
@@ -131,7 +131,7 @@ USER happy
 
 # Copia apenas os arquivos necessários da etapa de build para a imagem final
 # Corrigido: usa o estágio 'build' em vez de 'builder' inexistente
-COPY --from=build --chown=1000:1000 /ladesa/management-service /ladesa/management-service
+COPY --from=service-build --chown=1000:1000 /ladesa/management-service /ladesa/management-service
 
 # Define o diretório de trabalho para a aplicação
 WORKDIR "/ladesa/management-service"

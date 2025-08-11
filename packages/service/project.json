@@ -1,5 +1,5 @@
 {
-  "$schema": "./node_modules/nx/schemas/project-schema.json",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "namedInputs": {
     "source": [
       "{projectRoot}/lib/**/*",
@@ -20,11 +20,7 @@
       "options": {
         "cwd": "{projectRoot}",
         "parallel": false,
-        "commands": [
-          "mkdir -p .dist",
-          "rm -rf .dist/server .dist/openapi.v3.json",
-          "cp ./lib/application/contracts/.generated/openapi.v3.json ./.dist/openapi.v3.json"
-        ]
+        "commands": ["mkdir -p .dist", "rm -rf .dist/server .dist/openapi.v3.json", "cp ./lib/application/contracts/.generated/openapi.v3.json ./.dist/openapi.v3.json"]
       },
       "dependsOn": ["contracts:application:build", "contracts:domain:build"]
     },
