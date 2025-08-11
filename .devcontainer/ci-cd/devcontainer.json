@@ -1,0 +1,19 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/docker-existing-dockerfile
+{
+  "name": "Ladesa Management Service DevContaine for CI CD",
+
+  "build": {
+    "context": "../../../",
+    "dockerfile": "Dockerfile",
+    target: "source-with-dev-dependencies"
+  },
+
+  "remoteUser": "1000",
+  "workspaceFolder": "/ladesa/management-service",
+  "customizations": {
+    "jetbrains": {
+      "backend": "IntelliJ"
+    }
+  }
+}
