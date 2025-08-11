@@ -29,10 +29,14 @@ up-no-recreate:
 	$(COMMAND_COMPOSE_SERVICE) up --remove-orphans -d --no-recreate;
 	make post-init;
 
-up:
+up-clean:
 	make setup;
 	$(COMMAND_COMPOSE_SERVICE) up --remove-orphans -d --force-recreate;
 	make post-init;
+	make shell-1000;
+
+up:
+	make up-clean;
 	make shell-1000;
 
 stop:
