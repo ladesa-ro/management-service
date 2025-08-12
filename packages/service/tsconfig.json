@@ -18,7 +18,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./*"],
-      "@/infrastructure/*": ["./lib/infrastructure/*"], 
+      "@/infrastructure/*": ["./lib/infrastructure/*"],
       "@/application/#/*": ["./application/contracts/.generated/*"],
       "@/domain/#/*": ["./domain/contracts/.generated/*"]
     },
