@@ -15,9 +15,10 @@
     "declaration": true,
     "sourceMap": true,
     "outDir": "./dist",
-    "baseUrl": "./lib",
+    "baseUrl": ".",
     "paths": {
       "@/*": ["./*"],
+      "@/infrastructure/*": ["./lib/infrastructure/*"], 
       "@/application/#/*": ["./application/contracts/.generated/*"],
       "@/domain/#/*": ["./domain/contracts/.generated/*"]
     },
