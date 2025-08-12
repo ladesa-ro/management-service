@@ -1,7 +1,8 @@
 import { MigrationInterface, QueryRunner, Table } from "typeorm";
 
-const tableName = "indisponibilidade_professor";
-export class CreateTableIndisponibilidadeProfessor1754870894487 implements MigrationInterface {
+const tableName = "professor_disponibilidade";
+
+export class CreateTableProfessorDisponibilidade1733495227010 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
@@ -14,27 +15,13 @@ export class CreateTableIndisponibilidadeProfessor1754870894487 implements Migra
             default: "gen_random_uuid()",
           },
           {
-            name: "id_professor_perfil_fk",
+            name: "id_perfil_fk",
             type: "uuid",
-            isPrimary: false,
             isNullable: false,
           },
           {
-            name: "indisponibilidade_inicio",
-            type: "timestamptz",
-            isPrimary: false,
-            isNullable: false,
-          },
-          {
-            name: "indisponibilidade_termino",
-            type: "timestamptz",
-            isPrimary: false,
-            isNullable: false,
-          },
-          {
-            name: "motivo",
-            type: "varchar(90)", 
-            isPrimary: false,
+            name: "id_disponibilidade_fk",
+            type: "uuid",
             isNullable: false,
           },
           {
@@ -49,7 +36,6 @@ export class CreateTableIndisponibilidadeProfessor1754870894487 implements Migra
             isNullable: false,
             default: "NOW()",
           },
-
           {
             name: "date_deleted",
             type: "timestamptz",
@@ -58,17 +44,30 @@ export class CreateTableIndisponibilidadeProfessor1754870894487 implements Migra
         ],
         foreignKeys: [
           {
-            name: `fk__${tableName}__depende__professor`,
-            columnNames: ["id_professor_perfil_fk"],
+            name: `fk__${tableName}__depende__perfil`,
+            columnNames: ["id_perfil_fk"],
             referencedColumnNames: ["id"],
             referencedTableName: "perfil",
+          },
+          {
+            name: `fk__${tableName}__depende__disponibilidade`,
+            columnNames: ["id_disponibilidade_fk"],
+            referencedColumnNames: ["id"],
+            referencedTableName: "disponibilidade",
           },
         ],
       }),
     );
+
+    await queryRunner.query(`
+      CREATE TRIGGER change_date_updated_table_${tableName}
+        BEFORE UPDATE ON ${tableName}
+        FOR EACH ROW
+          EXECUTE FUNCTION change_date_updated();
+    `);
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable(tableName);
+    await queryRunner.dropTable(tableName, true, true, true);
   }
 }
