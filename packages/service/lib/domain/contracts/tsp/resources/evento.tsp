@@ -24,5 +24,8 @@ model Evento {
   /** Data de Termino do evento. */
   data_fim: date | null;
   
+  /** Local de ocorrencia do evento */
+  local: string | null;
+  
   ...EntityDated;
 }
