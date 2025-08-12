@@ -107,7 +107,7 @@
     "test:watch": "vitest",
     "typeorm": "typeorm",
     "typeorm:create": "bun run typeorm migration:create",
-    "typeorm:ds-migration": "bun run --bun ./node_modules/typeorm/cli.js -d lib/infrastructure/integrations/database/typeorm/data-sources/migration.data-source.ts",
+    "typeorm:ds-migration": "bun run typeorm -d lib/infrastructure/integrations/database/typeorm/data-sources/migration.data-source.ts",
     "typeorm:generate": "bun run typeorm migration:generate",
     "migration:revert": "bun run typeorm:ds-migration migration:revert",
     "migration:run": "bun run typeorm:ds-migration migration:run"
