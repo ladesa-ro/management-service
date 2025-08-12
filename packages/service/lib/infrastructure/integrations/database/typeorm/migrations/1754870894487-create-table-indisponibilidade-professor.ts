@@ -1,8 +1,8 @@
 import { MigrationInterface, QueryRunner, Table } from "typeorm";
 
-const tableName = "professor_disponibilidade";
+const tableName = "indisponibilidade_professor";
 
-export class CreateTableProfessorDisponibilidade1733495227010 implements MigrationInterface {
+export class CreateTableIndisponibilidadeProfessor1733495227011 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
@@ -15,13 +15,24 @@ export class CreateTableProfessorDisponibilidade1733495227010 implements Migrati
             default: "gen_random_uuid()",
           },
           {
-            name: "id_perfil_fk",
+            name: "id_disponibilidade_professor_fk",
             type: "uuid",
             isNullable: false,
           },
           {
-            name: "id_disponibilidade_fk",
-            type: "uuid",
+            name: "indisponibilidade_inicio",
+            type: "timestamptz",
+            isNullable: false,
+          },
+          {
+            name: "indisponibilidade_termino",
+            type: "timestamptz",
+            isNullable: false,
+          },
+          {
+            name: "motivo",
+            type: "varchar",
+            length: "90",
             isNullable: false,
           },
           {
@@ -44,16 +55,11 @@ export class CreateTableProfessorDisponibilidade1733495227010 implements Migrati
         ],
         foreignKeys: [
           {
-            name: `fk__${tableName}__depende__perfil`,
-            columnNames: ["id_perfil_fk"],
+            name: `fk__${tableName}__depende__professor_disponibilidade`,
+            columnNames: ["id_disponibilidade_professor_fk"],
             referencedColumnNames: ["id"],
-            referencedTableName: "perfil",
-          },
-          {
-            name: `fk__${tableName}__depende__disponibilidade`,
-            columnNames: ["id_disponibilidade_fk"],
-            referencedColumnNames: ["id"],
-            referencedTableName: "disponibilidade",
+            referencedTableName: "professor_disponibilidade",
+            onDelete: "CASCADE",
           },
         ],
       }),
