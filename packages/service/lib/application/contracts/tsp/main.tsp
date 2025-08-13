@@ -354,7 +354,7 @@ op UsuarioGetImagemCapa(
   @path
   id: string,
 
-  @query imgCapa?: string,
+  @query(#{explode: true}) imgCapa?: string,
 ): {
   @header contentType: "image/jpeg";
   @body body: bytes;
@@ -418,7 +418,7 @@ op UsuarioGetImagemPerfil(
   @path
   id: string,
 
-  @query imgCapa?: string,
+  @query(#{explode: true}) imgCapa?: string,
 ): {
   @header contentType: "image/jpeg";
   @body body: bytes;
@@ -702,7 +702,7 @@ op BlocoGetImagemCapa(
   @path
   id: string,
 
-  @query imgCapa?: string,
+  @query(#{explode: true}) imgCapa?: string,
 ): {
   @header contentType: "image/jpeg";
   @body body: bytes;
@@ -853,7 +853,7 @@ op AmbienteGetImagemCapa(
   @path
   id: string,
 
-  @query imgCapa?: string,
+  @query(#{explode: true}) imgCapa?: string,
 ): {
   @header contentType: "image/jpeg";
   @body body: bytes;
@@ -1515,7 +1515,7 @@ op CursoGetImagemCapa(
   @path
   id: string,
 
-  @query imgCapa?: string,
+  @query(#{explode: true}) imgCapa?: string,
 ): {
   @header contentType: "image/jpeg";
   @body body: bytes;
@@ -1665,7 +1665,7 @@ op DisciplinaGetImagemCapa(
   @path
   id: string,
 
-  @query imgCapa?: string,
+  @query(#{explode: true}) imgCapa?: string,
 ): {
   @header contentType: "image/jpeg";
   @body body: bytes;
@@ -2422,7 +2422,7 @@ op TurmaGetImagemCapa(
   @path
   id: string,
 
-  @query imgCapa?: string,
+  @query(#{explode: true}) imgCapa?: string,
 ): {
   @header contentType: "image/jpeg";
   @body body: bytes;
