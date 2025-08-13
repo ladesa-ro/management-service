@@ -28,8 +28,8 @@ model EventoCreateInput {
   rrule: string;
   cor: string | null;
   calendario: CalendarioLetivoFindOneInput;
-  data_inicio?: utcDateTime;
-  data_fim?: utcDateTime;   
+  data_inicio?: date;
+  data_fim?: date;
 }
 
 /** Dados de entrada para a atualização de um Evento. */
