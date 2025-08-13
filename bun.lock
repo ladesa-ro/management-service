@@ -226,7 +226,6 @@
     "infrastructure/validation/json-schema": {
       "@fastify/merge-json-schemas": "^0.2.1",
       "@types/json-schema": "^7.0.15",
-      "json-schema-ref-resolver": "^3.0.0",
     },
     "infrastructure/validation/valibot": {
       "valibot": "0.42.1",
