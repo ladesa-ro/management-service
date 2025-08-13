@@ -191,7 +191,7 @@ export class EventoService {
 
     // =========================================================
 
-    const dtoEvento = pick(domain, ["nome", "cor", "rrule"]);
+    const dtoEvento = pick(domain, ["nome", "cor", "rrule", "data_inicio", "data_fim"]);
 
     const evento = this.eventoRepository.create();
 
@@ -229,7 +229,7 @@ export class EventoService {
 
     await accessContext.ensurePermission("evento:update", { dto: domain }, domain.id, this.eventoRepository.createQueryBuilder(aliasEvento));
 
-    const dtoEvento = pick(domain, ["nome", "cor", "rrule"]);
+    const dtoEvento = pick(domain, ["nome", "cor", "rrule", "data_inicio", "data_fim"]);
 
     const evento = {
       id: currentEvento.id,
