@@ -15,8 +15,8 @@ export class DocsController {
   }
 
   private getCurrentApiPath(req: Request) {
-    const protocol = req.protocol;
-    const host = req.get("host");
+    const protocol = req.headers['x-forwarded-proto'] || req.protocol;
+    const host = req.headers['x-forwarded-host'] || req.get("host");
 
     // Obter o prefixo da API do serviço de configuração
     const prefix = this.configService.getRuntimePrefix();
