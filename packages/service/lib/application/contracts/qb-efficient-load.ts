@@ -1,30 +1,7 @@
-import { RefResolver } from "json-schema-ref-resolver";
 import { uniq } from "lodash";
 import { SelectQueryBuilder } from "typeorm";
-import { getDomainSchemaParsed, type IDomainSchemaDef } from "@/domain/contracts/integration";
+import { type IDomainSchemaDef } from "@/domain/contracts/integration";
 import { compileDomainModels, IModelRepresentation } from "@/domain/contracts/poc";
-import { lazyAsync } from "@/infrastructure/utils/lazy";
-
-// ==========================
-
-const _getRefResolver = lazyAsync(async () => {
-  const refResolver = new RefResolver({
-    allowEqualDuplicates: true,
-    insertRefSymbol: true,
-  });
-
-  const domainSchema = await getDomainSchemaParsed();
-
-  for (const $def of Object.values(domainSchema.$defs)) {
-    refResolver.addSchema($def);
-  }
-
-  return {
-    getDerefSchema: (schemaId: string) => {
-      return refResolver.getDerefSchema(schemaId);
-    },
-  };
-});
 
 export const QbEfficientLoadCore = async (modelRepresentation: IModelRepresentation, qb: SelectQueryBuilder<any>, alias: string, selection: boolean | string[] = true, parent: string[] = []) => {
   let counter = 0;
