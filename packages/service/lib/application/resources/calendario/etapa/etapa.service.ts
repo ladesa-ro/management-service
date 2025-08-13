@@ -198,7 +198,7 @@ export class EtapaService {
     // =========================================================
 
     if (domain.calendario) {
-      const calendario = await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(accessContext, domain.body.calendario.id);
+      const calendario = await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(accessContext, domain.calendario.id);
 
       this.etapaRepository.merge(etapa, {
         calendario: {
@@ -238,7 +238,7 @@ export class EtapaService {
     // =========================================================
 
     if (has(domain, "calendario") && domain.calendario !== undefined) {
-      const calendario = await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(accessContext, domain.body.calendario!.id);
+      const calendario = await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(accessContext, domain.calendario!.id);
 
       this.etapaRepository.merge(etapa, {
         calendario: {

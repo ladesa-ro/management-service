@@ -214,7 +214,7 @@ export class DisponibilidadeDiaService {
     // =========================================================
 
     if (domain.disponibilidade) {
-      const disponibilidade = await this.disponibilidadeService.disponibilidadeFindByIdStrict(accessContext, domain.body.disponibilidade);
+      const disponibilidade = await this.disponibilidadeService.disponibilidadeFindByIdStrict(accessContext, domain.disponibilidade);
 
       this.disponibilidadeDiaRepository.merge(disponibilidadeDia, {
         disponibilidade: {
@@ -224,7 +224,7 @@ export class DisponibilidadeDiaService {
     }
 
     if (domain.intervaloDeTempo) {
-      const intervalo = await this.intervaloDeTempoService.intervaloCreateOrUpdate(accessContext, domain.body.intervaloDeTempo);
+      const intervalo = await this.intervaloDeTempoService.intervaloCreateOrUpdate(accessContext, domain.intervaloDeTempo);
 
       this.disponibilidadeDiaRepository.merge(disponibilidadeDia, {
         intervaloDeTempo: {
@@ -266,7 +266,7 @@ export class DisponibilidadeDiaService {
     // =========================================================
 
     if (has(domain, "disponibilidade") && domain.disponibilidade !== undefined) {
-      const disponibilidade = await this.disponibilidadeService.disponibilidadeFindByIdStrict(accessContext, domain.body.disponibilidade);
+      const disponibilidade = await this.disponibilidadeService.disponibilidadeFindByIdStrict(accessContext, domain.disponibilidade);
 
       this.disponibilidadeDiaRepository.merge(disponibilidadeDia, {
         disponibilidade: {
@@ -276,7 +276,7 @@ export class DisponibilidadeDiaService {
     }
 
     if (has(domain, "intervaloDeTempo") && domain.intervaloDeTempo !== undefined) {
-      const intervaloDeTempo = await this.intervaloDeTempoService.intervaloCreateOrUpdate(accessContext, domain.body.intervaloDeTempo!);
+      const intervaloDeTempo = await this.intervaloDeTempoService.intervaloCreateOrUpdate(accessContext, domain.intervaloDeTempo!);
 
       this.disponibilidadeDiaRepository.merge(disponibilidadeDia, {
         intervaloDeTempo: {

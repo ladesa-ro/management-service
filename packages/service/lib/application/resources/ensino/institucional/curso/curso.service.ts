@@ -209,7 +209,7 @@ export class CursoService {
 
     // =========================================================
 
-    const campus = await this.campusService.campusFindByIdSimpleStrict(accessContext, domain.body.campus.id);
+    const campus = await this.campusService.campusFindByIdSimpleStrict(accessContext, domain.campus.id);
 
     this.cursoRepository.merge(curso, {
       campus: {
@@ -219,7 +219,7 @@ export class CursoService {
 
     // =========================================================
 
-    const ofertaFormacao = await this.ofertaFormacaoService.ofertaFormacaoFindByIdSimpleStrict(accessContext, domain.body.ofertaFormacao.id);
+    const ofertaFormacao = await this.ofertaFormacaoService.ofertaFormacaoFindByIdSimpleStrict(accessContext, domain.ofertaFormacao.id);
 
     this.cursoRepository.merge(curso, {
       ofertaFormacao: {
@@ -258,7 +258,7 @@ export class CursoService {
     // =========================================================
 
     if (has(domain, "campus") && domain.campus !== undefined) {
-      const campus = await this.campusService.campusFindByIdSimpleStrict(accessContext, domain.body.campus.id);
+      const campus = await this.campusService.campusFindByIdSimpleStrict(accessContext, domain.campus.id);
 
       this.cursoRepository.merge(curso, {
         campus: {
@@ -270,7 +270,7 @@ export class CursoService {
     // =========================================================
 
     if (has(domain, "ofertaFormacao") && domain.ofertaFormacao !== undefined) {
-      const ofertaFormacao = await this.ofertaFormacaoService.ofertaFormacaoFindByIdSimpleStrict(accessContext, domain.body.ofertaFormacao.id);
+      const ofertaFormacao = await this.ofertaFormacaoService.ofertaFormacaoFindByIdSimpleStrict(accessContext, domain.ofertaFormacao.id);
 
       this.cursoRepository.merge(curso, {
         ofertaFormacao: {
