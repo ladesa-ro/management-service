@@ -1,28 +1,22 @@
-import { type JSONSchema7 } from "json-schema";
 import { RefResolver } from "json-schema-ref-resolver";
 import { uniq } from "lodash";
 import { SelectQueryBuilder } from "typeorm";
-import { DomainSchema, type IDomainSchemaDef } from "@/domain/contracts/integration";
+import { getDomainSchemaParsed, type IDomainSchemaDef } from "@/domain/contracts/integration";
+import { compileDomainModels, IModelRepresentation } from "@/domain/contracts/poc";
 import { lazyAsync } from "@/infrastructure/utils/lazy";
 
 // ==========================
 
-const getRefResolver = lazyAsync(async () => {
+const _getRefResolver = lazyAsync(async () => {
   const refResolver = new RefResolver({
     allowEqualDuplicates: true,
     insertRefSymbol: true,
   });
 
-  const bundleClone = structuredClone(DomainSchema);
+  const domainSchema = await getDomainSchemaParsed();
 
-  for (const schema of Object.values(bundleClone.$defs)) {
-    const schemaClone = structuredClone(schema);
-
-    for (const $def of Object.values(schemaClone.$defs ?? {})) {
-      delete $def["description"];
-    }
-
-    refResolver.addSchema(schemaClone);
+  for (const $def of Object.values(domainSchema.$defs)) {
+    refResolver.addSchema($def);
   }
 
   return {
@@ -32,11 +26,7 @@ const getRefResolver = lazyAsync(async () => {
   };
 });
 
-export const QbEfficientLoadCore = async (entityDef: JSONSchema7, qb: SelectQueryBuilder<any>, alias: string, selection: boolean | string[] = true, parent: string[] = []) => {
-  if (entityDef.type !== "object") {
-    throw new Error(`Expected entityDef to be an object, got ${entityDef.type}`);
-  }
-
+export const QbEfficientLoadCore = async (modelRepresentation: IModelRepresentation, qb: SelectQueryBuilder<any>, alias: string, selection: boolean | string[] = true, parent: string[] = []) => {
   let counter = 0;
 
   let rootSelection: boolean | string[];
@@ -50,13 +40,15 @@ export const QbEfficientLoadCore = async (entityDef: JSONSchema7, qb: SelectQuer
   const expressionAlias = qb.expressionMap.findAliasByName(alias);
   const metadata = expressionAlias?.metadata;
 
-  const propertiesMap = metadata.propertiesMap;
+  const propertiesMap = metadata?.createPropertiesMap();
 
-  for (const [propertyKey, propertySchema] of Object.entries(entityDef.properties)) {
+  for (const propertyRepresentation of modelRepresentation.properties) {
     counter++;
 
+    const propertyKey = propertyRepresentation.name;
+
     if (!Object.hasOwn(propertiesMap, propertyKey)) {
-      console.warn(`-> entity ${metadata.name} dont have path ${propertyKey}.`);
+      console.warn(`-> entity ${metadata?.name} dont have path ${propertyKey}.`);
       continue;
     }
 
@@ -72,28 +64,29 @@ export const QbEfficientLoadCore = async (entityDef: JSONSchema7, qb: SelectQuer
 
     const subPath = `${alias}.${propertyKey}`;
 
-    let cursor: JsonSchema = propertySchema;
+    if (propertyRepresentation.mode === "reference") {
+      const referenceName = propertyRepresentation.reference.name;
 
-    if (propertySchema.type === "array") {
-      cursor = propertySchema.items;
-    }
-
-    if (cursor.type === "object") {
-      const ref = cursor[Symbol.for("json-schema-ref")]?.replace(".json", "");
-
-      if (parent.includes(ref)) {
-        console.warn(`${QbEfficientLoad.name}: detected infinite recursion for ${ref}`);
-        console.debug({ propertyNodeEntityId: ref, parent });
+      if (parent.includes(referenceName)) {
+        console.warn(`${QbEfficientLoad.name}: detected infinite recursion for ${referenceName}`);
+        console.debug({ propertyNodeEntityId: referenceName, parent });
         continue;
       }
 
-      const childSelection = rootSelection === true ? true : uniq(rootSelection.filter((i) => i.startsWith(`${propertyKey}.`)).map((i) => i.slice(i.indexOf(".") + 1)));
+      let childSelection: boolean | string[];
+
+      if (typeof rootSelection === "boolean") {
+        childSelection = rootSelection;
+      } else {
+        childSelection = uniq(rootSelection.filter((i) => i.startsWith(`${propertyKey}.`)).map((i) => i.slice(i.indexOf(".") + 1)));
+      }
 
       const childAlias = `${alias}_${propertyKey[0]}${counter}`;
 
       qb.leftJoin(subPath, childAlias);
 
-      await QbEfficientLoadCore(cursor, qb, childAlias, childSelection, [...parent, ref]);
+      const domainModels = await compileDomainModels();
+      await QbEfficientLoadCore(domainModels.getModelRepresentation(referenceName), qb, childAlias, childSelection, [...parent, referenceName]);
     } else {
       qb.addSelect(subPath);
     }
@@ -101,8 +94,7 @@ export const QbEfficientLoadCore = async (entityDef: JSONSchema7, qb: SelectQuer
 };
 
 export const QbEfficientLoad = async (entityDefRef: IDomainSchemaDef, qb: SelectQueryBuilder<any>, alias: string, selection: boolean | string[] = true, parent: string[] = []) => {
-  const { getDerefSchema } = await getRefResolver();
-  const entityDef = getDerefSchema(`${entityDefRef}.json`);
-
-  return QbEfficientLoadCore(entityDef, qb, alias, selection, parent);
+  const domainModels = await compileDomainModels();
+  const model = domainModels.getModelRepresentation(entityDefRef);
+  return QbEfficientLoadCore(model, qb, alias, selection, parent);
 };
