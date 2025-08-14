@@ -211,7 +211,7 @@ export class HorarioGeradoAulaService {
     // =========================================================
 
     if (domain.diarioProfessor) {
-      const diario = await this.diarioProfessorService.diarioProfessorFindByIdStrict(accessContext, domain.body.diarioProfessor);
+      const diario = await this.diarioProfessorService.diarioProfessorFindByIdStrict(accessContext, domain.diarioProfessor);
 
       this.horarioGeradoAulaRepository.merge(horarioGeradoAula, {
         diarioProfessor: {
@@ -221,7 +221,7 @@ export class HorarioGeradoAulaService {
     }
 
     if (domain.horarioGerado) {
-      const horarioGerado = await this.horarioGeradoService.horarioGeradoFindByIdStrict(accessContext, domain.body.horarioGerado);
+      const horarioGerado = await this.horarioGeradoService.horarioGeradoFindByIdStrict(accessContext, domain.horarioGerado);
 
       this.horarioGeradoAulaRepository.merge(horarioGeradoAula, {
         horarioGerado: {
@@ -231,7 +231,7 @@ export class HorarioGeradoAulaService {
     }
 
     if (domain.intervaloDeTempo) {
-      const intervalo = await this.intervaloDeTempoService.intervaloCreateOrUpdate(accessContext, domain.body.intervaloDeTempo);
+      const intervalo = await this.intervaloDeTempoService.intervaloCreateOrUpdate(accessContext, domain.intervaloDeTempo);
 
       this.horarioGeradoAulaRepository.merge(horarioGeradoAula, {
         intervaloDeTempo: {
@@ -273,7 +273,7 @@ export class HorarioGeradoAulaService {
     // =========================================================
 
     if (has(domain, "diarioProfessor") && domain.diarioProfessor !== undefined) {
-      const diarioProfessor = await this.diarioProfessorService.diarioProfessorFindByIdStrict(accessContext, domain.body.diarioProfessor!);
+      const diarioProfessor = await this.diarioProfessorService.diarioProfessorFindByIdStrict(accessContext, domain.diarioProfessor!);
 
       this.horarioGeradoAulaRepository.merge(horarioGeradoAula, {
         diarioProfessor: {
@@ -283,7 +283,7 @@ export class HorarioGeradoAulaService {
     }
 
     if (has(domain, "horarioGerado") && domain.horarioGerado !== undefined) {
-      const horarioGerado = await this.horarioGeradoService.horarioGeradoFindByIdStrict(accessContext, domain.body.horarioGerado);
+      const horarioGerado = await this.horarioGeradoService.horarioGeradoFindByIdStrict(accessContext, domain.horarioGerado);
 
       this.horarioGeradoAulaRepository.merge(horarioGeradoAula, {
         horarioGerado: {
@@ -293,7 +293,7 @@ export class HorarioGeradoAulaService {
     }
 
     if (has(domain, "intervaloDeTempo") && domain.intervaloDeTempo !== undefined) {
-      const intervaloDeTempo = await this.intervaloDeTempoService.intervaloCreateOrUpdate(accessContext, domain.body.intervaloDeTempo!);
+      const intervaloDeTempo = await this.intervaloDeTempoService.intervaloCreateOrUpdate(accessContext, domain.intervaloDeTempo!);
 
       this.horarioGeradoAulaRepository.merge(horarioGeradoAula, {
         intervaloDeTempo: {

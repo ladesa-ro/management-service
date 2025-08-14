@@ -214,7 +214,7 @@ export class CalendarioLetivoService {
 
     // =========================================================
 
-    const campus = await this.campusService.campusFindByIdSimpleStrict(accessContext, domain.body.campus.id);
+    const campus = await this.campusService.campusFindByIdSimpleStrict(accessContext, domain.campus.id);
 
     this.calendarioLetivoRepository.merge(calendarioLetivo, {
       campus: {
@@ -225,7 +225,7 @@ export class CalendarioLetivoService {
     // =========================================================
 
     if (domain.ofertaFormacao) {
-      const ofertaFormacao = await this.ofertaFormacaoService.ofertaFormacaoFindByIdSimpleStrict(accessContext, domain.body.ofertaFormacao.id);
+      const ofertaFormacao = await this.ofertaFormacaoService.ofertaFormacaoFindByIdSimpleStrict(accessContext, domain.ofertaFormacao.id);
 
       this.calendarioLetivoRepository.merge(calendarioLetivo, {
         ofertaFormacao: {
@@ -267,7 +267,7 @@ export class CalendarioLetivoService {
     // =========================================================
 
     if (has(domain, "campus") && domain.campus !== undefined) {
-      const campus = await this.campusService.campusFindByIdSimpleStrict(accessContext, domain.body.campus.id);
+      const campus = await this.campusService.campusFindByIdSimpleStrict(accessContext, domain.campus.id);
 
       this.calendarioLetivoRepository.merge(calendarioLetivo, {
         campus: {
@@ -279,7 +279,7 @@ export class CalendarioLetivoService {
     // =========================================================
 
     if (has(domain, "ofertaFormacao") && domain.ofertaFormacao !== undefined) {
-      const ofertaFormacao = domain.ofertaFormacao && (await this.ofertaFormacaoService.ofertaFormacaoFindByIdSimpleStrict(accessContext, domain.body.ofertaFormacao.id));
+      const ofertaFormacao = domain.ofertaFormacao && (await this.ofertaFormacaoService.ofertaFormacaoFindByIdSimpleStrict(accessContext, domain.ofertaFormacao.id));
 
       this.calendarioLetivoRepository.merge(calendarioLetivo, {
         ofertaFormacao: ofertaFormacao && {
