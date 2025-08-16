@@ -1,3 +1,4 @@
+import 'module-alias/register';
 import { AppConfigService } from "@/infrastructure/config";
 import "reflect-metadata";
 import { DataSource, type DataSourceOptions } from "typeorm";

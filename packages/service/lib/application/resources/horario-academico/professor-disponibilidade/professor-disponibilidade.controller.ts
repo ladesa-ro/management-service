@@ -19,11 +19,7 @@ export class ProfessorDisponibilidadeController {
   }
 
   @Get("/:id")
-  async professorDisponibilidadeFindById(
-    @AccessContextHttp() accessContext: AccessContext,
-
-    @AppRequest("ProfessorDisponibilidadeFindById") dto: IAppRequest<"ProfessorDisponibilidadeFindOneById">,
-  ) {
+  async professorDisponibilidadeFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("ProfessorDisponibilidadeList") dto: IAppRequest<"ProfessorDisponibilidadeList">) {
     const domain: IDomain.ProfessorDisponibilidadeFindOneInput = requestRepresentationMergeToDomain(dto);
     return this.professorDisponibilidadeService.professorDisponibilidadeFindByIdStrict(accessContext, domain);
   }
