@@ -212,12 +212,12 @@ export class AulaService {
 
     // =========================================================
 
-    const diario = await this.diarioService.diarioFindByIdSimpleStrict(accessContext, domain.diario.id);
+    const diario = await this.diarioService.diarioFindByIdSimpleStrict(accessContext, domain.body.diario.id);
     this.aulaRepository.merge(aula, { diario: { id: diario.id } });
 
     // =========================================================
 
-    const intervalo = await this.intervaloService.intervaloCreateOrUpdate(accessContext, domain.intervaloDeTempo);
+    const intervalo = await this.intervaloService.intervaloCreateOrUpdate(accessContext, domain.body.intervaloDeTempo);
 
     this.aulaRepository.merge(aula, {
       intervaloDeTempo: { id: intervalo!.id },
@@ -266,7 +266,7 @@ export class AulaService {
     // =========================================================
 
     if (has(domain, "diario") && domain.diario !== undefined) {
-      const diario = await this.diarioService.diarioFindByIdSimpleStrict(accessContext, domain.diario.id);
+      const diario = await this.diarioService.diarioFindByIdSimpleStrict(accessContext, domain.body.diario.id);
 
       this.aulaRepository.merge(aula, { diario: { id: diario.id } });
     }
@@ -274,7 +274,7 @@ export class AulaService {
     // =========================================================
 
     if (has(domain, "intervaloDeTempo") && domain.intervaloDeTempo !== undefined) {
-      const intervaloDeTempo = await this.intervaloService.intervaloCreateOrUpdate(accessContext, domain.intervaloDeTempo);
+      const intervaloDeTempo = await this.intervaloService.intervaloCreateOrUpdate(accessContext, domain.body.intervaloDeTempo);
       this.aulaRepository.merge(aula, {
         intervaloDeTempo: { id: intervaloDeTempo!.id },
       });

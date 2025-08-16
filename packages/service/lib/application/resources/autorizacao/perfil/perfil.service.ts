@@ -146,8 +146,8 @@ export class PerfilService {
   }
 
   async perfilSetVinculos(accessContext: AccessContext, domain: IDomain.PerfilUpdateInput) {
-    const campus = await this.campusService.campusFindByIdSimpleStrict(accessContext, domain.campus.id);
-    const usuario = await this.usuarioService.usuarioFindByIdSimpleStrict(accessContext, domain.usuario.id);
+    const campus = await this.campusService.campusFindByIdSimpleStrict(accessContext, domain.body.campus.id);
+    const usuario = await this.usuarioService.usuarioFindByIdSimpleStrict(accessContext, domain.body.usuario.id);
 
     const vinculosParaManter = new Set();
 

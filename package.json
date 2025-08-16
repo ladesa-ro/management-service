@@ -131,6 +131,7 @@
       },
       "infrastructure/validation/json-schema": {
         "@fastify/merge-json-schemas": "^0.2.1",
+        "json-schema-ref-resolver": "^3.0.0",
         "@types/json-schema": "^7.0.15"
       },
       "infrastructure/validation/valibot": {

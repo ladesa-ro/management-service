@@ -353,8 +353,6 @@ op UsuarioGetImagemCapa(
   @format("uuid")
   @path
   id: string,
-
-  @query(#{explode: true}) imgCapa?: string,
 ): {
   @header contentType: "image/jpeg";
   @body body: bytes;
@@ -417,8 +415,6 @@ op UsuarioGetImagemPerfil(
   @format("uuid")
   @path
   id: string,
-
-  @query(#{explode: true}) imgCapa?: string,
 ): {
   @header contentType: "image/jpeg";
   @body body: bytes;
@@ -701,8 +697,6 @@ op BlocoGetImagemCapa(
   @format("uuid")
   @path
   id: string,
-
-  @query(#{explode: true}) imgCapa?: string,
 ): {
   @header contentType: "image/jpeg";
   @body body: bytes;
@@ -852,8 +846,6 @@ op AmbienteGetImagemCapa(
   @format("uuid")
   @path
   id: string,
-
-  @query(#{explode: true}) imgCapa?: string,
 ): {
   @header contentType: "image/jpeg";
   @body body: bytes;
@@ -1514,8 +1506,6 @@ op CursoGetImagemCapa(
   @format("uuid")
   @path
   id: string,
-
-  @query(#{explode: true}) imgCapa?: string,
 ): {
   @header contentType: "image/jpeg";
   @body body: bytes;
@@ -1664,8 +1654,6 @@ op DisciplinaGetImagemCapa(
   @format("uuid")
   @path
   id: string,
-
-  @query(#{explode: true}) imgCapa?: string,
 ): {
   @header contentType: "image/jpeg";
   @body body: bytes;
@@ -2421,8 +2409,6 @@ op TurmaGetImagemCapa(
   @format("uuid")
   @path
   id: string,
-
-  @query(#{explode: true}) imgCapa?: string,
 ): {
   @header contentType: "image/jpeg";
   @body body: bytes;

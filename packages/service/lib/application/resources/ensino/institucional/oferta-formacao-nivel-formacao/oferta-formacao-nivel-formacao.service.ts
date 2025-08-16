@@ -192,7 +192,7 @@ export class OfertaFormacaoNivelFormacaoService {
     // =========================================================
 
     if (domain.ofertaFormacao) {
-      const ofertaFormacao = await this.ofertaFormacaoService.ofertaFormacaoFindByIdSimpleStrict(accessContext, domain.ofertaFormacao.id);
+      const ofertaFormacao = await this.ofertaFormacaoService.ofertaFormacaoFindByIdSimpleStrict(accessContext, domain.body.ofertaFormacao.id);
 
       this.ofertaFormacaoNivelFormacaoRepository.merge(ofertaFormacaoNivelFormacao, {
         ofertaFormacao: {
@@ -204,7 +204,7 @@ export class OfertaFormacaoNivelFormacaoService {
     // =========================================================
 
     if (domain.nivelFormcao) {
-      const nivelFormacao = await this.nivelFormacaoService.nivelFormacaoFindByIdSimpleStrict(accessContext, domain.nivelFormcao.id);
+      const nivelFormacao = await this.nivelFormacaoService.nivelFormacaoFindByIdSimpleStrict(accessContext, domain.body.nivelFormcao.id);
 
       this.ofertaFormacaoNivelFormacaoRepository.merge(ofertaFormacaoNivelFormacao, {
         nivelFormacao: {
@@ -251,7 +251,7 @@ export class OfertaFormacaoNivelFormacaoService {
     // =========================================================
 
     if (has(domain, "ofertaFormacao") && domain.ofertaFormacao !== undefined) {
-      const ofertaFormacao = domain.ofertaFormacao && (await this.ofertaFormacaoService.ofertaFormacaoFindByIdSimpleStrict(accessContext, domain.ofertaFormacao.id));
+      const ofertaFormacao = domain.ofertaFormacao && (await this.ofertaFormacaoService.ofertaFormacaoFindByIdSimpleStrict(accessContext, domain.body.ofertaFormacao.id));
 
       this.ofertaFormacaoNivelFormacaoRepository.merge(ofertaFormacaoNivelFormacao, {
         ofertaFormacao: ofertaFormacao && {
@@ -261,7 +261,7 @@ export class OfertaFormacaoNivelFormacaoService {
     }
 
     if (has(domain, "nivelFormacao") && domain.nivelFormacao !== undefined) {
-      const nivelFormacao = domain.nivelFormacao && (await this.nivelFormacaoService.nivelFormacaoFindByIdSimpleStrict(accessContext, domain.nivelFormacao.id));
+      const nivelFormacao = domain.nivelFormacao && (await this.nivelFormacaoService.nivelFormacaoFindByIdSimpleStrict(accessContext, domain.body.nivelFormacao.id));
 
       this.ofertaFormacaoNivelFormacaoRepository.merge(ofertaFormacaoNivelFormacao, {
         nivelFormacao: nivelFormacao && {
