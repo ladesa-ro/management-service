@@ -31,7 +31,6 @@
     "graphql": "catalog:infrastructure/graphl",
     "graphql-list-fields": "catalog:infrastructure/graphl",
     "helmet": "catalog:infrastructure/express",
-    "json-schema-ref-resolver": "catalog:infrastructure/validation/json-schema",
     "jsonwebtoken": "catalog:infrastructure/protocols/jwt",
     "jwks-rsa": "catalog:infrastructure/protocols/jwt",
     "lodash": "catalog:infrastructure/utils",

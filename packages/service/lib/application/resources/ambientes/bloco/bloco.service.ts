@@ -244,7 +244,7 @@ export class BlocoService {
 
     // =========================================================
 
-    const campus = await this.campusService.campusFindByIdSimpleStrict(accessContext, domain.body.campus.id);
+    const campus = await this.campusService.campusFindByIdSimpleStrict(accessContext, domain.campus.id);
 
     this.blocoRepository.merge(bloco, {
       campus: {
