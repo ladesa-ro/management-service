@@ -198,7 +198,7 @@ export class DiaCalendarioService {
     // =========================================================
 
     if (domain.calendario) {
-      const calendario = await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(accessContext, domain.calendario.id);
+      const calendario = await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(accessContext, domain.body.calendario.id);
 
       this.diaCalendarioRepository.merge(diaCalendario, {
         calendario: {
@@ -240,7 +240,7 @@ export class DiaCalendarioService {
     // =========================================================
 
     if (has(domain, "calendario") && domain.calendario !== undefined) {
-      const calendario = await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(accessContext, domain.calendario!.id);
+      const calendario = await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(accessContext, domain.body.calendario!.id);
 
       this.diaCalendarioRepository.merge(diaCalendario, {
         calendario: {

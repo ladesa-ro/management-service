@@ -219,7 +219,7 @@ export class DiarioPreferenciaAgrupamentoService {
     // =========================================================
 
     if (domain.diario) {
-      const diario = await this.DiarioService.diarioFindByIdStrict(accessContext, domain.diario);
+      const diario = await this.DiarioService.diarioFindByIdStrict(accessContext, domain.body.diario);
 
       this.diarioPreferenciaAgrupamentoRepository.merge(diarioPreferenciaAgrupamento, {
         diario: {
@@ -229,7 +229,7 @@ export class DiarioPreferenciaAgrupamentoService {
     }
 
     if (domain.intervaloDeTempo) {
-      const intervalo = await this.intervaloDeTempoService.intervaloCreateOrUpdate(accessContext, domain.intervaloDeTempo);
+      const intervalo = await this.intervaloDeTempoService.intervaloCreateOrUpdate(accessContext, domain.body.intervaloDeTempo);
 
       this.diarioPreferenciaAgrupamentoRepository.merge(diarioPreferenciaAgrupamento, {
         intervaloDeTempo: {
@@ -276,7 +276,7 @@ export class DiarioPreferenciaAgrupamentoService {
     // =========================================================
 
     if (has(domain, "diario") && domain.diario !== undefined) {
-      const diario = await this.DiarioService.diarioFindByIdStrict(accessContext, domain.diario);
+      const diario = await this.DiarioService.diarioFindByIdStrict(accessContext, domain.body.diario);
 
       this.diarioPreferenciaAgrupamentoRepository.merge(diarioPreferenciaAgrupamento, {
         diario: {
@@ -286,7 +286,7 @@ export class DiarioPreferenciaAgrupamentoService {
     }
 
     if (has(domain, "intervaloDeTempo") && domain.intervaloDeTempo !== undefined) {
-      const intervaloDeTempo = await this.intervaloDeTempoService.intervaloCreateOrUpdate(accessContext, domain.intervaloDeTempo!);
+      const intervaloDeTempo = await this.intervaloDeTempoService.intervaloCreateOrUpdate(accessContext, domain.body.intervaloDeTempo!);
 
       this.diarioPreferenciaAgrupamentoRepository.merge(diarioPreferenciaAgrupamento, {
         intervaloDeTempo: {

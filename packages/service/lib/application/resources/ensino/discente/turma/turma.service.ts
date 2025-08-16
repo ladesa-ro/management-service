@@ -228,7 +228,7 @@ export class TurmaService {
 
     // =========================================================
 
-    const curso = await this.cursoService.cursoFindByIdSimpleStrict(accessContext, domain.curso.id);
+    const curso = await this.cursoService.cursoFindByIdSimpleStrict(accessContext, domain.body.curso.id);
 
     this.turmaRepository.merge(turma, {
       curso: {
@@ -287,7 +287,7 @@ export class TurmaService {
     // =========================================================
 
     if (has(domain, "curso") && domain.curso !== undefined) {
-      const curso = await this.cursoService.cursoFindByIdSimpleStrict(accessContext, domain.curso.id);
+      const curso = await this.cursoService.cursoFindByIdSimpleStrict(accessContext, domain.body.curso.id);
 
       this.turmaRepository.merge(turma, {
         curso: {
