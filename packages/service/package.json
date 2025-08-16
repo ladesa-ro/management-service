@@ -111,8 +111,8 @@
     "typeorm:create": "bun run typeorm migration:create",
     "typeorm:ds-migration": "bun run typeorm -d lib/infrastructure/integrations/database/typeorm/data-sources/migration.data-source.ts",
     "typeorm:generate": "bun run typeorm migration:generate",
-    "migration:generate": "TS_NODE_PROJECT=tsconfig.json node -r ts-node/register -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d lib/infrastructure/integrations/database/typeorm/data-sources/migration.data-source.ts migration:generate",
-    "migration:run": "TS_NODE_PROJECT=tsconfig.json node -r ts-node/register -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d lib/infrastructure/integrations/database/typeorm/data-sources/migration.data-source.ts migration:run",
-    "migration:revert": "TS_NODE_PROJECT=tsconfig.json node -r ts-node/register -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d lib/infrastructure/integrations/database/typeorm/data-sources/migration.data-source.ts migration:revert"
+    "migration:generate": "bunx tsx -r ts-node/register -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d lib/infrastructure/integrations/database/typeorm/data-sources/migration.data-source.ts migration:generate",
+    "migration:run": "bunx tsx -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d lib/infrastructure/integrations/database/typeorm/data-sources/migration.data-source.ts migration:run",
+    "migration:revert": "bunx tsx -r ts-node/register -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d lib/infrastructure/integrations/database/typeorm/data-sources/migration.data-source.ts migration:revert"
   }
 }
