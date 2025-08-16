@@ -29,14 +29,9 @@ model EventoCreateInput {
   rrule: string;
   cor: string | null;
   calendario: CalendarioLetivoFindOneInput;
-<<<<<<< HEAD
   data_inicio?: utcDateTime;
   data_fim?: utcDateTime;   
   local?: string | null;
-=======
-  data_inicio?: date;
-  data_fim?: date;
->>>>>>> origin/main
 }
 
 /** Dados de entrada para a atualização de um Evento. */
