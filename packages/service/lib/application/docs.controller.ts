@@ -1,21 +1,22 @@
 import { Controller, Get, Inject, Req } from "@nestjs/common";
-import { AppApiDocAny } from "@/application/contracts/openapi/document/app-openapi-document";
 import type { Request } from "express";
+import { AppApiDocAny } from "@/application/contracts/openapi/document/app-openapi-document";
 import { AppConfigService } from "@/infrastructure/config";
 
 @Controller("/docs")
 export class DocsController {
-  constructor(@Inject(AppConfigService)
-              readonly configService: AppConfigService,) {
-  }
+  constructor(
+    @Inject(AppConfigService)
+    readonly configService: AppConfigService,
+  ) {}
 
   private getCurrentApiUrl() {
     return this.configService.withRuntimePrefix("/docs/openapi.v3.json");
   }
 
   private getCurrentApiPath(req: Request) {
-    const protocol = req.protocol;
-    const host = req.get('host');
+    const protocol = req.headers['x-forwarded-proto'] || req.protocol;
+    const host = req.headers['x-forwarded-host'] || req.get("host");
 
     // Obter o prefixo da API do serviço de configuração
     const prefix = this.configService.getRuntimePrefix();
@@ -33,12 +34,11 @@ export class DocsController {
       servers: [
         {
           url: serverUrl,
-          description: 'Servidor Atual'
-        }
-      ]
+          description: "Servidor Atual",
+        },
+      ],
     };
   }
-
 
   @Get("/swagger")
   getSwaggerDocs() {
@@ -71,12 +71,11 @@ export class DocsController {
       </script>
       </body>
     </html>
-    `
+    `;
   }
 
   @Get("/")
   getScalarDocs() {
-
     return `
     <!DOCTYPE html>
     <html>
@@ -102,6 +101,6 @@ export class DocsController {
         </script>
       </body>
     </html>
-    `
+    `;
   }
 }

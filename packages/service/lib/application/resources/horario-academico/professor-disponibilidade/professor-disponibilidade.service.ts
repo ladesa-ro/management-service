@@ -193,7 +193,7 @@ export class ProfessorDisponibilidadeService {
     // =========================================================
 
     if (domain.perfil) {
-      const perfil = await this.perfilService.perfilFindByIdStrict(accessContext, domain.body.perfil);
+      const perfil = await this.perfilService.perfilFindByIdStrict(accessContext, domain.perfil);
 
       this.professorDisponibilidadeRepository.merge(professorDisponibilidade, {
         perfil: {
@@ -205,7 +205,7 @@ export class ProfessorDisponibilidadeService {
     // =========================================================
 
     if (domain.disponibilidade) {
-      const disponibilidade = await this.disponibilidadeService.disponibilidadeFindByIdSimpleStrict(accessContext, domain.body.disponibilidade.id);
+      const disponibilidade = await this.disponibilidadeService.disponibilidadeFindByIdSimpleStrict(accessContext, domain.disponibilidade.id);
 
       this.professorDisponibilidadeRepository.merge(professorDisponibilidade, {
         disponibilidade: {
@@ -247,7 +247,7 @@ export class ProfessorDisponibilidadeService {
     // =========================================================
 
     if (has(domain, "perfil") && domain.perfil !== undefined) {
-      const perfil = domain.perfil && (await this.perfilService.perfilFindByIdStrict(accessContext, domain.body.perfil));
+      const perfil = domain.perfil && (await this.perfilService.perfilFindByIdStrict(accessContext, domain.perfil));
 
       this.professorDisponibilidadeRepository.merge(professorDisponibilidade, {
         perfil: perfil && {
@@ -257,7 +257,7 @@ export class ProfessorDisponibilidadeService {
     }
 
     if (has(domain, "disponibilidade") && domain.disponibilidade !== undefined) {
-      const disponibilidade = domain.disponibilidade && (await this.disponibilidadeService.disponibilidadeFindByIdSimpleStrict(accessContext, domain.body.disponibilidade.id));
+      const disponibilidade = domain.disponibilidade && (await this.disponibilidadeService.disponibilidadeFindByIdSimpleStrict(accessContext, domain.disponibilidade.id));
 
       this.professorDisponibilidadeRepository.merge(professorDisponibilidade, {
         disponibilidade: disponibilidade && {

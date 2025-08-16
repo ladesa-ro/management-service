@@ -213,20 +213,20 @@ export class DiarioService {
 
     // =========================================================
 
-    const calendarioLetivo = await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(accessContext, domain.body.calendarioLetivo.id);
+    const calendarioLetivo = await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(accessContext, domain.calendarioLetivo.id);
     this.diarioRepository.merge(diario, {
       calendarioLetivo: { id: calendarioLetivo.id },
     });
 
     // =========================================================
 
-    const disciplina = await this.disciplinaService.disciplinaFindByIdSimpleStrict(accessContext, domain.body.disciplina.id);
+    const disciplina = await this.disciplinaService.disciplinaFindByIdSimpleStrict(accessContext, domain.disciplina.id);
 
     this.diarioRepository.merge(diario, { disciplina: { id: disciplina.id } });
 
     // =========================================================
 
-    const turma = await this.turmaService.turmaFindByIdSimpleStrict(accessContext, domain.body.turma.id);
+    const turma = await this.turmaService.turmaFindByIdSimpleStrict(accessContext, domain.turma.id);
 
     this.diarioRepository.merge(diario, { turma: { id: turma.id } });
 
@@ -277,7 +277,7 @@ export class DiarioService {
     // =========================================================
 
     if (has(domain, "disciplina") && domain.disciplina !== undefined) {
-      const disciplina = await this.disciplinaService.disciplinaFindByIdSimpleStrict(accessContext, domain.body.disciplina.id);
+      const disciplina = await this.disciplinaService.disciplinaFindByIdSimpleStrict(accessContext, domain.disciplina.id);
 
       this.diarioRepository.merge(diario, {
         disciplina: { id: disciplina.id },
@@ -287,14 +287,14 @@ export class DiarioService {
     // =========================================================
 
     if (has(domain, "turma") && domain.turma !== undefined) {
-      const turma = await this.turmaService.turmaFindByIdSimpleStrict(accessContext, domain.body.turma.id);
+      const turma = await this.turmaService.turmaFindByIdSimpleStrict(accessContext, domain.turma.id);
       this.diarioRepository.merge(diario, { turma: { id: turma.id } });
     }
 
     // =========================================================
 
     if (has(domain, "calendarioLetivo") && domain.calendarioLetivo !== undefined) {
-      const calendarioLetivo = await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(accessContext, domain.body.calendarioLetivo.id);
+      const calendarioLetivo = await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(accessContext, domain.calendarioLetivo.id);
       this.diarioRepository.merge(diario, {
         calendarioLetivo: { id: calendarioLetivo.id },
       });
