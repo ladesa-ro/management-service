@@ -82,6 +82,8 @@
     "quicktype": "catalog:dev/quicktype",
     "source-map-support": "catalog:dev",
     "supertest": "catalog:test",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
     "type-fest": "catalog:dev",
     "typescript": "catalog:dev",
     "unplugin-swc": "^1.5.5",
@@ -109,11 +111,8 @@
     "typeorm:create": "bun run typeorm migration:create",
     "typeorm:ds-migration": "bun run typeorm -d lib/infrastructure/integrations/database/typeorm/data-sources/migration.data-source.ts",
     "typeorm:generate": "bun run typeorm migration:generate",
-    "migration:revert": "bun run typeorm:ds-migration migration:revert",
-    "migration:run": "bun run typeorm:ds-migration migration:run"
-  },
-  "_moduleAliases": {
-    "@": "./lib",
-    "@/infrastructure": "./lib/infrastructure"
+    "migration:generate": "TS_NODE_PROJECT=tsconfig.json node -r ts-node/register -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d lib/infrastructure/integrations/database/typeorm/data-sources/migration.data-source.ts migration:generate",
+    "migration:run": "TS_NODE_PROJECT=tsconfig.json node -r ts-node/register -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d lib/infrastructure/integrations/database/typeorm/data-sources/migration.data-source.ts migration:run",
+    "migration:revert": "TS_NODE_PROJECT=tsconfig.json node -r ts-node/register -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d lib/infrastructure/integrations/database/typeorm/data-sources/migration.data-source.ts migration:revert"
   }
 }
