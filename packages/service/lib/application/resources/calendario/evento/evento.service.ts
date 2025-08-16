@@ -191,7 +191,7 @@ export class EventoService {
 
     // =========================================================
 
-    const dtoEvento = pick(domain, ["nome", "cor", "rrule", "data_inicio", "data_fim"]);
+    const dtoEvento = pick(domain, ["nome", "cor", "rrule"]);
 
     const evento = this.eventoRepository.create();
 
@@ -202,7 +202,7 @@ export class EventoService {
     // =========================================================
 
     if (domain.calendario) {
-      const calendario = await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(accessContext, domain.calendario.id);
+      const calendario = await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(accessContext, domain.body.calendario.id);
 
       this.eventoRepository.merge(evento, {
         calendario: {
@@ -229,7 +229,7 @@ export class EventoService {
 
     await accessContext.ensurePermission("evento:update", { dto: domain }, domain.id, this.eventoRepository.createQueryBuilder(aliasEvento));
 
-    const dtoEvento = pick(domain, ["nome", "cor", "rrule", "data_inicio", "data_fim"]);
+    const dtoEvento = pick(domain, ["nome", "cor", "rrule"]);
 
     const evento = {
       id: currentEvento.id,
@@ -242,7 +242,7 @@ export class EventoService {
     // =========================================================
 
     if (has(domain, "calendario") && domain.calendario !== undefined) {
-      const calendario = await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(accessContext, domain.calendario!.id);
+      const calendario = await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(accessContext, domain.body.calendario!.id);
 
       this.eventoRepository.merge(evento, {
         calendario: {

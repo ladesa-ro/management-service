@@ -270,7 +270,7 @@ export class ReservaService {
     // =========================================================
 
     if (has(domain, "usuario") && domain.usuario !== undefined) {
-      const usuario = await this.usuarioService.usuarioFindByIdSimpleStrict(accessContext, domain.usuario.id);
+      const usuario = await this.usuarioService.usuarioFindByIdSimpleStrict(accessContext, domain.body.usuario.id);
 
       this.reservaRepository.merge(reserva, {
         usuario: {

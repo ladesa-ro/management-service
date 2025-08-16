@@ -1,14 +1,13 @@
 import { Controller, Get, Inject, Req } from "@nestjs/common";
-import type { Request } from "express";
 import { AppApiDocAny } from "@/application/contracts/openapi/document/app-openapi-document";
+import type { Request } from "express";
 import { AppConfigService } from "@/infrastructure/config";
 
 @Controller("/docs")
 export class DocsController {
-  constructor(
-    @Inject(AppConfigService)
-    readonly configService: AppConfigService,
-  ) {}
+  constructor(@Inject(AppConfigService)
+              readonly configService: AppConfigService,) {
+  }
 
   private getCurrentApiUrl() {
     return this.configService.withRuntimePrefix("/docs/openapi.v3.json");
@@ -34,11 +33,12 @@ export class DocsController {
       servers: [
         {
           url: serverUrl,
-          description: "Servidor Atual",
-        },
-      ],
+          description: 'Servidor Atual'
+        }
+      ]
     };
   }
+
 
   @Get("/swagger")
   getSwaggerDocs() {
@@ -71,11 +71,12 @@ export class DocsController {
       </script>
       </body>
     </html>
-    `;
+    `
   }
 
   @Get("/")
   getScalarDocs() {
+
     return `
     <!DOCTYPE html>
     <html>
@@ -101,6 +102,6 @@ export class DocsController {
         </script>
       </body>
     </html>
-    `;
+    `
   }
 }
