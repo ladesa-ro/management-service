@@ -186,7 +186,7 @@ export class OfertaFormacaoService {
     // =========================================================
 
     if (domain.modalidade) {
-      const modalidade = await this.modalidadeService.modalidadeFindByIdSimpleStrict(accessContext, domain.body.modalidade.id);
+      const modalidade = await this.modalidadeService.modalidadeFindByIdSimpleStrict(accessContext, domain.modalidade.id);
 
       this.ofertaFormacaoRepository.merge(ofertaFormacao, {
         modalidade: {
@@ -228,7 +228,7 @@ export class OfertaFormacaoService {
     // =========================================================
 
     if (has(domain, "modalidade") && domain.modalidade !== undefined) {
-      const modalidade = domain.modalidade && (await this.modalidadeService.modalidadeFindByIdSimpleStrict(accessContext, domain.body.modalidade.id));
+      const modalidade = domain.modalidade && (await this.modalidadeService.modalidadeFindByIdSimpleStrict(accessContext, domain.modalidade.id));
 
       this.ofertaFormacaoRepository.merge(ofertaFormacao, {
         modalidade: modalidade && {

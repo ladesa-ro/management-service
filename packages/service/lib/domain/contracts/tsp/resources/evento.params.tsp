@@ -19,7 +19,6 @@ model EventoFindOneOutput {
   ...PickProperties<EventoView, "nome" | "rrule" | "cor">;
   ...PickProperties<EventoView, "calendario">;
   ...PickProperties<EventoView, "data_inicio" | "data_fim">;
-  ...PickProperties<EventoView, "local">;
   ...PickProperties<EventoView, "dateCreated" | "dateUpdated" | "dateDeleted">;
 }
 
@@ -29,9 +28,8 @@ model EventoCreateInput {
   rrule: string;
   cor: string | null;
   calendario: CalendarioLetivoFindOneInput;
-  data_inicio?: utcDateTime;
-  data_fim?: utcDateTime;   
-  local?: string | null;
+  data_inicio?: date;
+  data_fim?: date;
 }
 
 /** Dados de entrada para a atualização de um Evento. */

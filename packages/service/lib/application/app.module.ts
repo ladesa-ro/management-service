@@ -4,8 +4,8 @@ import { InfrastructureModule } from "@/infrastructure/infrastructure.module";
 import { AppController } from "./app.controller";
 import { AppResolver } from "./app.resolver";
 import { AppService } from "./app.service";
-import { ResourcesModule } from "./resources/resources.module";
 import { DocsController } from "./docs.controller";
+import { ResourcesModule } from "./resources/resources.module";
 
 @Module({
   imports: [SearchModule, ResourcesModule, InfrastructureModule],

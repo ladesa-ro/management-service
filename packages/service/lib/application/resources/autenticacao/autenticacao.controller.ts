@@ -1,12 +1,12 @@
 import { BadRequestException, Controller, Get, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
+import { requestRepresentationMergeToDomain } from "@/application/contracts";
 import { type IAppRequest } from "@/application/contracts/openapi/document/app-openapi-typings";
 import { AppRequest } from "@/application/contracts/openapi/utils/app-request";
 import { AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { Public } from "@/infrastructure/authentication";
 import { AutenticacaoService } from "./autenticacao.service";
 import { UsuarioService } from "./usuario/usuario.service";
-import { requestRepresentationMergeToDomain } from "@/application/contracts";
 
 @ApiTags("autenticacao")
 @Controller("/autenticacao")
@@ -33,7 +33,7 @@ export class AutenticacaoController {
   @Post("/login")
   @Public()
   login(@AccessContextHttp() accessContext: AccessContext, @AppRequest("AuthLogin") dto: IAppRequest<"AuthLogin">) {
-    const domain = requestRepresentationMergeToDomain(dto)
+    const domain = requestRepresentationMergeToDomain(dto);
     return this.autenticacaoService.login(accessContext, domain);
   }
 
