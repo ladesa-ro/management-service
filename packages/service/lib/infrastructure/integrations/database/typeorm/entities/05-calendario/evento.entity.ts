@@ -22,7 +22,7 @@ export class EventoEntity implements IDomain.Evento {
   @Column({ name: "data_fim", type: "timestamp", nullable: true })
   data_fim!: Date | null;
 
-  @Column({name: "local", type: "text", nullable: true})
+  @Column({ name: "local", type: "text", nullable: true })
   local!: string | null;
 
   //Chaves Estrangeiras

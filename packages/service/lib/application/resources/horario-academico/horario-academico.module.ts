@@ -7,13 +7,6 @@ import { HorarioGeradoModule } from "./horario-gerado/horario-gerado.module";
 import { HorarioGeradoAulaModule } from "./horario-gerado-aula/horario-gerado-aula.module";
 
 @Module({
-  imports: [
-    DisponibilidadeModule,
-    DisponibilidadeDiaModule,
-    TurmaDisponibilidadeModule,
-    DiarioPreferenciaAgrupamentoModule,
-    HorarioGeradoModule,
-    HorarioGeradoAulaModule,
-  ],
+  imports: [DisponibilidadeModule, DisponibilidadeDiaModule, TurmaDisponibilidadeModule, DiarioPreferenciaAgrupamentoModule, HorarioGeradoModule, HorarioGeradoAulaModule],
 })
 export class HorarioAcademicoModule {}

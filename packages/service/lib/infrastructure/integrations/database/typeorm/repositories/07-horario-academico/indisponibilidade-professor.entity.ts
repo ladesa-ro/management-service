@@ -1,11 +1,11 @@
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, RelationId } from "typeorm";
 import { PerfilEntity } from "@/infrastructure/integrations/database/typeorm/entities/index.js";
-import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn, RelationId } from "typeorm";
 
 @Entity({ name: "indisponibilidade_professor" })
 export class IndisponibilidadeProfessorEntity {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
-@Column({ name: "indisponibilidade_inicio", type: "timestamptz" })
+  @Column({ name: "indisponibilidade_inicio", type: "timestamptz" })
   indisponibilidade_inicio!: Date;
 
   @Column({ name: "indisponibilidade_termino", type: "timestamptz" })
