@@ -2335,10 +2335,13 @@ op TurmaList(
   @query(#{ explode: true }) `filter.ambientePadraoAula.codigo`?: string[],
   @query(#{ explode: true }) `filter.ambientePadraoAula.capacidade`?: string[],
   @query(#{ explode: true }) `filter.ambientePadraoAula.tipo`?: string[],
+  @query(#{ explode: true }) `filter.curso.id`?: string[],
   @query(#{ explode: true }) `filter.curso.nome`?: string[],
   @query(#{ explode: true }) `filter.curso.nomeAbreviado`?: string[],
   @query(#{ explode: true }) `filter.curso.campus.id`?: string[],
-  @query(#{ explode: true }) `filter.curso.modalidade.id`?: string[],
+  @query(#{ explode: true }) `filter.curso.ofertaFormacao.id`?: string[],
+  @query(#{ explode: true }) `filter.curso.ofertaFormacao.nome`?: string[],
+  @query(#{ explode: true }) `filter.curso.ofertaFormacao.slug`?: string[],
 ): TurmaListOutput | ForbiddenResponse | NotFoundResponse;
 
 /**

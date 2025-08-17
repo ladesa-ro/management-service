@@ -95,9 +95,10 @@ export class TurmaService {
           "curso.nome": [FilterOperator.EQ],
           "curso.nomeAbreviado": [FilterOperator.EQ],
           "curso.campus.id": [FilterOperator.EQ],
-          "curso.modalidade.id": [FilterOperator.EQ],
-          "curso.modalidade.nome": [FilterOperator.EQ],
-          "curso.modalidade.slug": [FilterOperator.EQ],
+
+          "curso.ofertaFormacao.id": [FilterOperator.EQ],
+          "curso.ofertaFormacao.nome": [FilterOperator.EQ],
+          "curso.ofertaFormacao.slug": [FilterOperator.EQ],
         },
       },
     );
