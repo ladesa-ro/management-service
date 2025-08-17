@@ -15,7 +15,7 @@ export class CreateTableIndisponibilidadeProfessor1733495227011 implements Migra
             default: "gen_random_uuid()",
           },
           {
-            name: "id_disponibilidade_professor_fk",
+            name: "id_perfil_fk",
             type: "uuid",
             isNullable: false,
           },
@@ -55,10 +55,10 @@ export class CreateTableIndisponibilidadeProfessor1733495227011 implements Migra
         ],
         foreignKeys: [
           {
-            name: `fk__${tableName}__depende__professor_disponibilidade`,
-            columnNames: ["id_disponibilidade_professor_fk"],
+            name: `fk__${tableName}__depende__perfil`,
+            columnNames: ["id_perfil_fk"],
             referencedColumnNames: ["id"],
-            referencedTableName: "professor_disponibilidade",
+            referencedTableName: "perfil",
             onDelete: "CASCADE",
           },
         ],
