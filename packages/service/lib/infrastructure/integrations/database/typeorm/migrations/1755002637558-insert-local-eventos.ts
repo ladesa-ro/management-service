@@ -2,7 +2,7 @@ import { MigrationInterface, QueryRunner, TableColumn } from "typeorm";
 
 export class InsertLocalEventos1755002637558 implements MigrationInterface {
     public async up(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query("eventos", [
+        await queryRunner.addColumn("evento", 
             new TableColumn({
                 name: "local",
                 type: "varchar",
@@ -10,7 +10,7 @@ export class InsertLocalEventos1755002637558 implements MigrationInterface {
                 default: "'Instituto Federal de Educação, Ciência e Tecnologia de Rondônia - IFRO'",
                 isNullable: true,
             }),
-        ])
+        );
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
