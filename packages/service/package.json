@@ -112,7 +112,7 @@
     "typeorm:ds-migration": "bun run typeorm -d lib/infrastructure/integrations/database/typeorm/data-sources/migration.data-source.ts",
     "typeorm:generate": "bun run typeorm migration:generate",
     "migration:generate": "bunx tsx -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d lib/infrastructure/integrations/database/typeorm/data-sources/migration.data-source.ts migration:generate",
-    "migration:run": "bunx tsx -r ./node_modules/typeorm/cli.js -d lib/infrastructure/integrations/database/typeorm/data-sources/migration.data-source.ts migration:run",
+    "migration:run": "bunx tsx -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d lib/infrastructure/integrations/database/typeorm/data-sources/migration.data-source.ts migration:run",
     "migration:revert": "bunx tsx -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d lib/infrastructure/integrations/database/typeorm/data-sources/migration.data-source.ts migration:revert"
   }
 }
