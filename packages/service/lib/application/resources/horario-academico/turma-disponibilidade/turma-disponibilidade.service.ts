@@ -191,7 +191,7 @@ export class TurmaDisponibilidadeService {
     // =========================================================
 
     if (domain.turma) {
-      const turma = await this.turmaService.turmaFindByIdSimpleStrict(accessContext, domain.body.turma.id);
+      const turma = await this.turmaService.turmaFindByIdSimpleStrict(accessContext, domain.turma.id);
 
       this.turmaDisponibilidadeRepository.merge(turmaDisponibilidade, {
         turma: {
@@ -203,7 +203,7 @@ export class TurmaDisponibilidadeService {
     // =========================================================
 
     if (domain.disponibilidade) {
-      const disponibilidade = await this.disponibilidadeService.disponibilidadeFindByIdSimpleStrict(accessContext, domain.body.disponibilidade.id);
+      const disponibilidade = await this.disponibilidadeService.disponibilidadeFindByIdSimpleStrict(accessContext, domain.disponibilidade.id);
 
       this.turmaDisponibilidadeRepository.merge(turmaDisponibilidade, {
         disponibilidade: {
@@ -245,7 +245,7 @@ export class TurmaDisponibilidadeService {
     // =========================================================
 
     if (has(domain, "turma") && domain.turma !== undefined) {
-      const turma = domain.turma && (await this.turmaService.turmaFindByIdSimpleStrict(accessContext, domain.body.turma.id));
+      const turma = domain.turma && (await this.turmaService.turmaFindByIdSimpleStrict(accessContext, domain.turma.id));
 
       this.turmaDisponibilidadeRepository.merge(turmaDisponibilidade, {
         turma: turma && {
@@ -255,7 +255,7 @@ export class TurmaDisponibilidadeService {
     }
 
     if (has(domain, "disponibilidade") && domain.disponibilidade !== undefined) {
-      const disponibilidade = domain.disponibilidade && (await this.disponibilidadeService.disponibilidadeFindByIdSimpleStrict(accessContext, domain.body.disponibilidade.id));
+      const disponibilidade = domain.disponibilidade && (await this.disponibilidadeService.disponibilidadeFindByIdSimpleStrict(accessContext, domain.disponibilidade.id));
 
       this.turmaDisponibilidadeRepository.merge(turmaDisponibilidade, {
         disponibilidade: disponibilidade && {

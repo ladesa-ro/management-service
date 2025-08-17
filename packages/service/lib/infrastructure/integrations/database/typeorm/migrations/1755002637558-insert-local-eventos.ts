@@ -13,7 +13,7 @@ export class InsertLocalEventos1755002637558 implements MigrationInterface {
         );
     }
 
-    public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropColumns("eventos", ["local"]);
-    }
+  public async down(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.dropColumns("evento", ["local"]);
+  }
 }

@@ -30,7 +30,7 @@ model EventoCreateInput {
   cor: string | null;
   calendario: CalendarioLetivoFindOneInput;
   data_inicio?: utcDateTime;
-  data_fim?: utcDateTime;   
+  data_fim?: utcDateTime;
   local?: string | null;
 }
 
