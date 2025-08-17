@@ -1,4 +1,4 @@
-import { AppConfigService } from "@/infrastructure/config";
+import { type AppConfigService } from "@/infrastructure/config";
 import "reflect-metadata";
 import { DataSource, type DataSourceOptions } from "typeorm";
 import { getDataSourceAppConfigService } from "./utils/getDataSourceEnvironmentConfigService";
