@@ -1,0 +1,28 @@
+using Ladesa.ManagementService.Generics;
+
+namespace Ladesa.ManagementService;
+
+/** DiarioPreferenciaAgrupamento. */
+model DiarioPreferenciaAgrupamento {
+  ...EntityIdUuid;
+
+  /** Início da vigência da preferência de agrupamento. */
+  dataInicio: date;
+
+  /** Fim da vigência da preferência de agrupamento. */
+  dataFim: date | null;
+
+  /** Dia da semana. */
+  diaSemanaIso: uint8;
+
+  /** Quantidade de aulas seguidas. */
+  aulasSeguidas: uint8;
+
+  /** Intervalo de tempo. */
+  intervaloDeTempo: IntervaloDeTempo;
+
+  /** Diário vinculado. */
+  diario: Diario;
+
+  ...EntityDated;
+}

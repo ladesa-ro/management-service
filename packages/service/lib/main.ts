@@ -1,9 +1,9 @@
 import { NestFactory } from "@nestjs/core";
 import compression from "compression";
 import helmet from "helmet";
-import { AppConfigService } from "@/infrastructure/config";
+import { AppConfigService } from "@/shared/infrastructure/config";
 import "reflect-metadata";
-import { AppModule } from "./application/app.module";
+import { AppModule } from "@/legacy/application/app.module";
 
 async function setup() {
   const app = await NestFactory.create(AppModule);
