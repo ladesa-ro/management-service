@@ -21,7 +21,7 @@
     "@pothos/core": "^4.8.0",
     "ajv": "catalog:infrastructure/validation/ajv",
     "ajv-formats": "catalog:infrastructure/validation/ajv",
-    "allof-merge": "^0.6.6",
+    "allof-merge": "^0.6.7",
     "amqplib": "catalog:infrastructure/integrations/amqp",
     "change-case": "catalog:infrastructure/utils",
     "compression": "catalog:infrastructure/express",
@@ -82,7 +82,7 @@
     "supertest": "catalog:test",
     "type-fest": "catalog:dev",
     "typescript": "catalog:dev",
-    "unplugin-swc": "^1.5.5",
+    "unplugin-swc": "^1.5.6",
     "vite-tsconfig-paths": "catalog:dev",
     "vitest": "catalog:test"
   },
