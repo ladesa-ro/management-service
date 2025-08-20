@@ -50,11 +50,11 @@ FROM os-runtime AS os-development
 USER root
 
 RUN apt-get update && \
-    apt-get install -y git vim openjdk-17-jdk && \
+    apt-get install -y git vim openjdk-21-jdk && \
     rm -rf /var/lib/apt/lists/*
 
 # Define as variáveis de ambiente para o Java
-ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+ENV JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
 ENV PATH="${JAVA_HOME}/bin:${PATH}"
 
 RUN curl -fsSL https://deb.nodesource.com/setup_24.x | bash -
