@@ -22,7 +22,7 @@ export class DisponibilidadeController {
   async disponibilidadeFindById(
     @AccessContextHttp() accessContext: AccessContext,
 
-    @AppRequest("DisponibilidadeFindById") dto: IAppRequest<"DisponibilidadeFindOneById">,
+    @AppRequest("DisponibilidadeFindOneById") dto: IAppRequest<"DisponibilidadeFindOneById">,
   ) {
     const domain: IDomain.DisponibilidadeFindOneInput = requestRepresentationMergeToDomain(dto);
     return this.disponibilidadeService.disponibilidadeFindByIdStrict(accessContext, domain);
@@ -35,7 +35,7 @@ export class DisponibilidadeController {
   }
 
   @Patch("/:id")
-  async disponibilidadeUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DisponibilidadeUpdate") dto: IAppRequest<"DisponibilidadeUpdateOneById">) {
+  async disponibilidadeUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DisponibilidadeUpdateOneById") dto: IAppRequest<"DisponibilidadeUpdateOneById">) {
     const domain: IDomain.DisponibilidadeUpdateInput = requestRepresentationMergeToDomain(dto);
     return this.disponibilidadeService.disponibilidadeUpdate(accessContext, domain);
   }

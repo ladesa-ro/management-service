@@ -19,7 +19,7 @@ export class EtapaController {
   }
 
   @Get("/:id")
-  async etapaFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("EtapaFindById") dto: IAppRequest<"EtapaFindOneById">) {
+  async etapaFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("EtapaFindOneById") dto: IAppRequest<"EtapaFindOneById">) {
     const domain: IDomain.EtapaFindOneInput = requestRepresentationMergeToDomain(dto);
     return this.etapaService.etapaFindByIdStrict(accessContext, domain);
   }
@@ -31,7 +31,7 @@ export class EtapaController {
   }
 
   @Patch("/:id")
-  async etapaUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("EtapaUpdate") dto: IAppRequest<"EtapaUpdateOneById">) {
+  async etapaUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("EtapaUpdateOneById") dto: IAppRequest<"EtapaUpdateOneById">) {
     const domain: IDomain.EtapaUpdateInput = requestRepresentationMergeToDomain(dto);
     return this.etapaService.etapaUpdate(accessContext, domain);
   }

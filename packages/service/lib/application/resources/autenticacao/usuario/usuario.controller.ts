@@ -25,7 +25,7 @@ export class UsuarioController {
   }
 
   @Get("/:id")
-  async usuarioFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("UsuarioFindById") dto: IAppRequest<"UsuarioFindOneById">) {
+  async usuarioFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("UsuarioFindOneById") dto: IAppRequest<"UsuarioFindOneById">) {
     const domain: IDomain.UsuarioFindOneInput = requestRepresentationMergeToDomain(dto);
     return this.usuarioService.usuarioFindByIdStrict(accessContext, domain);
   }
@@ -37,7 +37,7 @@ export class UsuarioController {
   }
 
   @Patch("/:id")
-  async usuarioUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("UsuarioUpdate") dto: IAppRequest<"UsuarioUpdateOneById">) {
+  async usuarioUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("UsuarioUpdateOneById") dto: IAppRequest<"UsuarioUpdateOneById">) {
     const domain: IDomain.UsuarioUpdateInput = requestRepresentationMergeToDomain(dto);
     return this.usuarioService.usuarioUpdate(accessContext, domain);
   }
@@ -62,7 +62,8 @@ export class UsuarioController {
 
   @Get("/:id/imagem/perfil")
   async usuarioGetImagemPerfil(@AccessContextHttp() accessContext: AccessContext, @AppRequest("UsuarioGetImagemPerfil") dto: IAppRequest<"UsuarioGetImagemPerfil">) {
-    return this.usuarioService.usuarioGetImagemPerfil(accessContext, dto.path.id);
+    const domain: IDomain.UsuarioFindOneInput = requestRepresentationMergeToDomain(dto);
+    return this.usuarioService.usuarioGetImagemPerfil(accessContext, domain.id);
   }
 
   @Put("/:id/imagem/perfil")

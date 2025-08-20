@@ -19,7 +19,7 @@ export class ReservaController {
   }
 
   @Get("/:id")
-  async reservaFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("ReservaFindById") dto: IAppRequest<"ReservaFindOneById">) {
+  async reservaFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("ReservaFindOneById") dto: IAppRequest<"ReservaFindOneById">) {
     const domain: IDomain.ReservaFindOneInput = requestRepresentationMergeToDomain(dto);
     return this.reservaService.reservaFindByIdStrict(accessContext, domain);
   }
@@ -31,7 +31,7 @@ export class ReservaController {
   }
 
   @Patch("/:id")
-  async reservaUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("ReservaUpdate") dto: IAppRequest<"ReservaUpdateOneById">) {
+  async reservaUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("ReservaUpdateOneById") dto: IAppRequest<"ReservaUpdateOneById">) {
     const domain: IDomain.ReservaUpdateInput = requestRepresentationMergeToDomain(dto);
     return this.reservaService.reservaUpdate(accessContext, domain);
   }

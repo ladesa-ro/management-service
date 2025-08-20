@@ -19,7 +19,7 @@ export class CursoController {
   }
 
   @Get("/:id")
-  async cursoFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CursoFindById") dto: IAppRequest<"CursoFindOneById">) {
+  async cursoFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CursoFindOneById") dto: IAppRequest<"CursoFindOneById">) {
     const domain: IDomain.CursoFindOneInput = requestRepresentationMergeToDomain(dto);
     return this.cursoService.cursoFindByIdStrict(accessContext, domain);
   }
@@ -31,7 +31,7 @@ export class CursoController {
   }
 
   @Patch("/:id")
-  async cursoUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CursoUpdate") dto: IAppRequest<"CursoUpdateOneById">) {
+  async cursoUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CursoUpdateOneById") dto: IAppRequest<"CursoUpdateOneById">) {
     const domain: IDomain.CursoUpdateInput = requestRepresentationMergeToDomain(dto);
     return this.cursoService.cursoUpdate(accessContext, domain);
   }

@@ -22,9 +22,10 @@ export class DiarioProfessorController {
   async diarioProfessorFindById(
     @AccessContextHttp() accessContext: AccessContext,
 
-    @AppRequest("DiarioProfessorFindById") dto: IAppRequest<"DiarioProfessorFindOneById">,
+    @AppRequest("DiarioProfessorFindOneById") dto: IAppRequest<"DiarioProfessorFindOneById">,
   ) {
-    return this.diarioProfessorService.diarioProfessorFindByIdStrict(accessContext, { id: dto.path.id });
+    const domain: IDomain.DiarioProfessorFindOneInput = requestRepresentationMergeToDomain(dto);
+    return this.diarioProfessorService.diarioProfessorFindByIdStrict(accessContext, domain);
   }
 
   @Post("/")
@@ -34,13 +35,14 @@ export class DiarioProfessorController {
   }
 
   @Patch("/:id")
-  async diarioProfessorUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DiarioProfessorUpdate") dto: IAppRequest<"DiarioProfessorUpdateOneById">) {
+  async diarioProfessorUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DiarioProfessorUpdateOneById") dto: IAppRequest<"DiarioProfessorUpdateOneById">) {
     const domain: IDomain.DiarioProfessorUpdateInput = requestRepresentationMergeToDomain(dto);
     return this.diarioProfessorService.diarioProfessorUpdate(accessContext, domain);
   }
 
   @Delete("/:id")
   async diarioProfessorDeleteOneById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DiarioProfessorDeleteOneById") dto: IAppRequest<"DiarioProfessorDeleteOneById">) {
-    return this.diarioProfessorService.diarioProfessorDeleteOneById(accessContext, { id: dto.path.id });
+    const domain: IDomain.DiarioProfessorFindOneInput = requestRepresentationMergeToDomain(dto);
+    return this.diarioProfessorService.diarioProfessorDeleteOneById(accessContext, domain);
   }
 }

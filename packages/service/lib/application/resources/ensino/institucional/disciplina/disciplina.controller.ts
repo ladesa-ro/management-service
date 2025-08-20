@@ -19,7 +19,7 @@ export class DisciplinaController {
   }
 
   @Get("/:id")
-  async disciplinaFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DisciplinaFindById") dto: IAppRequest<"DisciplinaFindOneById">) {
+  async disciplinaFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DisciplinaFindOneById") dto: IAppRequest<"DisciplinaFindOneById">) {
     const domain: IDomain.DisciplinaFindOneInput = requestRepresentationMergeToDomain(dto);
     return this.disciplinaService.disciplinaFindByIdStrict(accessContext, domain);
   }
@@ -31,7 +31,7 @@ export class DisciplinaController {
   }
 
   @Patch("/:id")
-  async disciplinaUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DisciplinaUpdate") dto: IAppRequest<"DisciplinaUpdateOneById">) {
+  async disciplinaUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DisciplinaUpdateOneById") dto: IAppRequest<"DisciplinaUpdateOneById">) {
     const domain: IDomain.DisciplinaUpdateInput = requestRepresentationMergeToDomain(dto);
     return this.disciplinaService.disciplinaUpdate(accessContext, domain);
   }

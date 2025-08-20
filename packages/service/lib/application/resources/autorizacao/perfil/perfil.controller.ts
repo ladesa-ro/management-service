@@ -24,7 +24,7 @@ export class PerfilController {
   }
 
   @Post("/")
-  async setVinculos(@AccessContextHttp() accessContext: AccessContext, @AppRequest("PerfilUpdateInput") dto: IAppRequest<"PerfilUpdateOneById">) {
+  async setVinculos(@AccessContextHttp() accessContext: AccessContext, @AppRequest("PerfilUpdateOneById") dto: IAppRequest<"PerfilUpdateOneById">) {
     const domain: IDomain.PerfilUpdateInput = requestRepresentationMergeToDomain(dto);
     return this.vinculoService.perfilSetVinculos(accessContext, domain);
   }

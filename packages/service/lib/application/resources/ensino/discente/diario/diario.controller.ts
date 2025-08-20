@@ -19,7 +19,7 @@ export class DiarioController {
   }
 
   @Get("/:id")
-  async diarioFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DiarioFindById") dto: IAppRequest<"DiarioFindOneById">) {
+  async diarioFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DiarioFindOneById") dto: IAppRequest<"DiarioFindOneById">) {
     const domain: IDomain.DiarioFindOneInput = requestRepresentationMergeToDomain(dto);
     return this.diarioService.diarioFindByIdStrict(accessContext, domain);
   }
@@ -31,7 +31,7 @@ export class DiarioController {
   }
 
   @Patch("/:id")
-  async diarioUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DiarioUpdate") dto: IAppRequest<"DiarioUpdateOneById">) {
+  async diarioUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DiarioUpdateOneById") dto: IAppRequest<"DiarioUpdateOneById">) {
     const domain: IDomain.DiarioUpdateInput = requestRepresentationMergeToDomain(dto);
     return this.diarioService.diarioUpdate(accessContext, domain);
   }

@@ -19,7 +19,7 @@ export class DiaCalendarioController {
   }
 
   @Get("/:id")
-  async diaCalendarioFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DiaCalendarioFindById") dto: IAppRequest<"DiaCalendarioFindOneById">) {
+  async diaCalendarioFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DiaCalendarioFindOneById") dto: IAppRequest<"DiaCalendarioFindOneById">) {
     const domain: IDomain.DiaCalendarioFindOneInput = requestRepresentationMergeToDomain(dto);
     return this.diaCalendarioService.diaCalendarioFindByIdStrict(accessContext, domain);
   }
@@ -31,7 +31,7 @@ export class DiaCalendarioController {
   }
 
   @Patch("/:id")
-  async diaCalendarioUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DiaCalendarioUpdate") dto: IAppRequest<"DiaCalendarioUpdateOneById">) {
+  async diaCalendarioUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DiaCalendarioUpdateOneById") dto: IAppRequest<"DiaCalendarioUpdateOneById">) {
     const domain: IDomain.DiaCalendarioUpdateInput = requestRepresentationMergeToDomain(dto);
     return this.diaCalendarioService.diaCalendarioUpdate(accessContext, domain);
   }

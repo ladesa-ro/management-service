@@ -22,9 +22,10 @@ export class DiarioPreferenciaAgrupamentoController {
   async diarioPreferenciaAgrupamentoFindById(
     @AccessContextHttp() accessContext: AccessContext,
 
-    @AppRequest("DiarioPreferenciaAgrupamentoFindById") dto: IAppRequest<"DiarioPreferenciaAgrupamentoFindOneById">,
+    @AppRequest("DiarioPreferenciaAgrupamentoFindOneById") dto: IAppRequest<"DiarioPreferenciaAgrupamentoFindOneById">,
   ) {
-    return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoFindByIdStrict(accessContext, { id: dto.path.id });
+    const domain: IDomain.DiarioPreferenciaAgrupamentoFindOneInput = requestRepresentationMergeToDomain(dto);
+    return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoFindByIdStrict(accessContext, domain);
   }
 
   @Post("/")
@@ -41,7 +42,7 @@ export class DiarioPreferenciaAgrupamentoController {
   async diarioPreferenciaAgrupamentoUpdate(
     @AccessContextHttp() accessContext: AccessContext,
 
-    @AppRequest("DiarioPreferenciaAgrupamentoUpdate") dto: IAppRequest<"DiarioPreferenciaAgrupamentoUpdateOneById">,
+    @AppRequest("DiarioPreferenciaAgrupamentoUpdateOneById") dto: IAppRequest<"DiarioPreferenciaAgrupamentoUpdateOneById">,
   ) {
     const domain: IDomain.DiarioPreferenciaAgrupamentoUpdateInput = requestRepresentationMergeToDomain(dto);
     return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoUpdate(accessContext, domain);
@@ -53,6 +54,7 @@ export class DiarioPreferenciaAgrupamentoController {
 
     @AppRequest("DiarioPreferenciaAgrupamentoDeleteOneById") dto: IAppRequest<"DiarioPreferenciaAgrupamentoDeleteOneById">,
   ) {
-    return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoDeleteOneById(accessContext, { id: dto.path.id });
+    const domain: IDomain.DiarioPreferenciaAgrupamentoFindOneInput = requestRepresentationMergeToDomain(dto);
+    return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoDeleteOneById(accessContext, domain);
   }
 }
