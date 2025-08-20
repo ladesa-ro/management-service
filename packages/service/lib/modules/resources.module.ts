@@ -11,7 +11,9 @@ import { CidadeModule } from "@/modules/cidade/cidade.module";
 import { CursoModule } from "@/modules/curso/curso.module";
 import { DiaCalendarioModule } from "@/modules/dia-calendario/dia-calendario.module";
 import { DiarioModule } from "@/modules/diario/diario.module";
-import { DiarioPreferenciaAgrupamentoModule } from "@/modules/diario-preferencia-agrupamento/diario-preferencia-agrupamento.module";
+import {
+  DiarioPreferenciaAgrupamentoModule
+} from "@/modules/diario-preferencia-agrupamento/diario-preferencia-agrupamento.module";
 import { DiarioProfessorModule } from "@/modules/diario-professor/diario-professor.module";
 import { DisciplinaModule } from "@/modules/disciplina/disciplina.module";
 import { DisponibilidadeModule } from "@/modules/disponibilidade/disponibilidade.module";
@@ -19,9 +21,12 @@ import { EnderecoModule } from "@/modules/endereco/endereco.module";
 import { EstadoModule } from "@/modules/estado/estado.module";
 import { EtapaModule } from "@/modules/etapa/etapa.module";
 import { EventoModule } from "@/modules/evento/evento.module";
-import { GerarHorarioModule } from "@/modules/gerar-horario/gerar-horario.module";
-import { GradeHorarioOfertaFormacaoModule } from "@/modules/grade-horario-oferta-formacao/grade-horario-oferta-formacao.module";
-import { GradeHorarioOfertaFormacaoIntervaloDeTempoModule } from "@/modules/grade-horario-oferta-formacao-intervalo-de-tempo/grade-horario-oferta-formacao-intervalo-de-tempo.module";
+import {
+  GradeHorarioOfertaFormacaoModule
+} from "@/modules/grade-horario-oferta-formacao/grade-horario-oferta-formacao.module";
+import {
+  GradeHorarioOfertaFormacaoIntervaloDeTempoModule
+} from "@/modules/grade-horario-oferta-formacao-intervalo-de-tempo/grade-horario-oferta-formacao-intervalo-de-tempo.module";
 import { HealthModule } from "@/modules/health/health.module";
 import { HorarioGeradoModule } from "@/modules/horario-gerado/horario-gerado.module";
 import { HorarioGeradoAulaModule } from "@/modules/horario-gerado-aula/horario-gerado-aula.module";
@@ -31,7 +36,9 @@ import { IntervaloDeTempoModule } from "@/modules/intervalo-de-tempo/intervalo-d
 import { ModalidadeModule } from "@/modules/modalidade/modalidade.module";
 import { NivelFormacaoModule } from "@/modules/nivel-formacao/nivel-formacao.module";
 import { OfertaFormacaoModule } from "@/modules/oferta-formacao/oferta-formacao.module";
-import { OfertaFormacaoNivelFormacaoModule } from "@/modules/oferta-formacao-nivel-formacao/oferta-formacao-nivel-formacao.module";
+import {
+  OfertaFormacaoNivelFormacaoModule
+} from "@/modules/oferta-formacao-nivel-formacao/oferta-formacao-nivel-formacao.module";
 import { PerfilModule } from "@/modules/perfil/perfil.module";
 import { ProfessorDisponibilidadeModule } from "@/modules/professor-disponibilidade/professor-disponibilidade.module";
 import { ReservaModule } from "@/modules/reserva/reserva.module";
@@ -72,7 +79,7 @@ import { UsuarioModule } from "@/modules/usuario/usuario.module";
     AutenticacaoModule,
     DiarioModule,
     TurmaModule,
-    GerarHorarioModule,
+    // GerarHorarioModule,
     DiaCalendarioModule,
     EnderecoModule,
     EstadoModule,
@@ -82,4 +89,5 @@ import { UsuarioModule } from "@/modules/usuario/usuario.module";
     DiarioProfessorModule,
   ],
 })
-export class ResourcesModule {}
+export class ResourcesModule {
+}
