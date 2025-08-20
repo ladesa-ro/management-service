@@ -17,7 +17,7 @@ on:
     paths:
       - .github/workflows/ci-cd.yml          # Alterações no próprio workflow
       - .devcontainer/ci-cd/**/*             # Alterações no container de desenvolvimento
-      - .github/utils/deploy-k8s-helm-stakater-application.sh  # Alterações no script de deploy
+      - ../utils/deploy-k8s-helm-stakater-api.sh  # Alterações no script de deploy
       - packages/service/**/*                # Alterações no código do serviço
 
 # Configuração de concorrência para evitar execuções simultâneas do mesmo workflow
