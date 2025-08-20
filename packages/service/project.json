@@ -15,22 +15,37 @@
     "build": {
       "cache": true,
       "executor": "nx:run-commands",
-      "inputs": ["source"],
-      "outputs": ["{projectRoot}/.dist/server"],
+      "inputs": [
+        "source"
+      ],
+      "outputs": [
+        "{projectRoot}/.dist/openapi.v3.json"
+      ],
       "options": {
         "cwd": "{projectRoot}",
         "parallel": false,
-        "commands": ["mkdir -p .dist", "rm -rf .dist/server .dist/openapi.v3.json", "cp ./lib/application/contracts/.generated/openapi.v3.json ./.dist/openapi.v3.json"]
+        "commands": [
+          "mkdir -p .dist",
+          "rm -rf .dist/openapi.v3.json",
+          "cp ./lib/.generated/tsp/openapi.v3.json ./.dist/openapi.v3.json"
+        ]
       },
-      "dependsOn": ["tsp:build"]
+      "dependsOn": [
+        "tsp:build"
+      ]
     },
     "dev": {
       "cache": false,
       "continuous": true,
-      "dependsOn": ["tsp:build", "tsp:dev"],
+      "dependsOn": [
+        "tsp:build",
+        "tsp:dev"
+      ],
       "executor": "nx:run-commands",
       "options": {
-        "commands": ["bun run --watch lib/main.ts"],
+        "commands": [
+          "bun run --watch lib/main.ts"
+        ],
         "cwd": "{projectRoot}",
         "parallel": false
       }
@@ -38,10 +53,15 @@
     "debug": {
       "cache": false,
       "continuous": true,
-      "dependsOn": ["tsp:build", "tsp:dev"],
+      "dependsOn": [
+        "tsp:build",
+        "tsp:dev"
+      ],
       "executor": "nx:run-commands",
       "options": {
-        "commands": ["bun run --watch --inspect-wait lib/main.ts"],
+        "commands": [
+          "bun run --watch --inspect-wait lib/main.ts"
+        ],
         "cwd": "{projectRoot}",
         "parallel": false
       }
@@ -49,7 +69,10 @@
     "tsp:build": {
       "cache": true,
       "executor": "nx:run-commands",
-      "inputs": ["{projectRoot}/lib/**/*.tsp", "{projectRoot}/tspconfig.yaml"],
+      "inputs": [
+        "{projectRoot}/lib/**/*.tsp",
+        "{projectRoot}/tspconfig.yaml"
+      ],
       "options": {
         "commands": [
           "mkdir -p lib/.generated/tsp",
@@ -60,7 +83,9 @@
         "cwd": "{projectRoot}",
         "parallel": false
       },
-      "outputs": ["{projectRoot}/lib/.generated/tsp/**/*"]
+      "outputs": [
+        "{projectRoot}/lib/.generated/tsp/**/*"
+      ]
     },
     "tsp:dev": {
       "cache": false,
@@ -68,7 +93,9 @@
       "dependsOn": [],
       "executor": "nx:run-commands",
       "options": {
-        "commands": ["nodemon --watch 'lib/**/*.tsp' -e tsp --exec 'bun run tsp:build' -L"],
+        "commands": [
+          "nodemon --watch 'lib/**/*.tsp' -e tsp --exec 'bun run tsp:build' -L"
+        ],
         "cwd": "{projectRoot}",
         "parallel": false
       }

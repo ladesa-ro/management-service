@@ -1,7 +1,9 @@
 {
   "compilerOptions": {
     "strict": true,
-    "lib": ["esnext"],
+    "lib": [
+      "esnext"
+    ],
     "target": "es2022",
     "module": "NodeNext",
     "resolveJsonModule": true,
@@ -14,16 +16,26 @@
     "allowSyntheticDefaultImports": true,
     "declaration": true,
     "sourceMap": true,
-    "outDir": "./dist",
+    "outDir": "./.dist",
     "baseUrl": "./lib",
     "paths": {
-      "@/*": ["./*"],
-      "@@/tsp/*": ["./.generated/tsp/*"],
-      "@/application/#/*": ["./application/contracts/.generated/*"],
-      "@/domain/#/*": ["./domain/contracts/.generated/*"]
+      "@/*": [
+        "./*"
+      ],
+      "@@/tsp/*": [
+        "./.generated/tsp/*"
+      ],
+      "@/application/#/*": [
+        "./application/contracts/.generated/*"
+      ],
+      "@/domain/#/*": [
+        "./domain/contracts/.generated/*"
+      ]
     },
     "incremental": true,
     "skipLibCheck": true
   },
-  "exclude": ["scripts"]
+  "exclude": [
+    "scripts"
+  ]
 }
