@@ -1,15 +1,14 @@
 import { Module } from "@nestjs/common";
 import { APP_FILTER } from "@nestjs/core";
+import { IdentityProviderModule } from "@/shared";
 import { IntegrationDatabaseModule } from "./database/integration-database.module";
-import { IntegrationGraphQLModule } from "./graphql";
 import { GqlExceptionFilter } from "./graphql/exception-filters/GqlExceptionFilter";
 import { IntegrationHttpModule } from "./http";
-import { IdentityProviderModule } from "./identity-provider/identity-provider.module";
 
 @Module({
   imports: [
     IntegrationDatabaseModule,
-    IntegrationGraphQLModule,
+    // IntegrationGraphQLModule,
     IntegrationHttpModule,
     IdentityProviderModule,
     // MessageBrokerModule,
@@ -21,4 +20,5 @@ import { IdentityProviderModule } from "./identity-provider/identity-provider.mo
     },
   ],
 })
-export class IntegrationsModule {}
+export class IntegrationsModule {
+}

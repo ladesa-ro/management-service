@@ -2,7 +2,17 @@
 
 import * as path from "node:path";
 import * as process from "node:process";
-import { CompilerHost, compile, getTypeName, IntrinsicType, Namespace, NodeHost, Program, resolveCompilerOptions, Type } from "@typespec/compiler";
+import {
+  compile,
+  CompilerHost,
+  getTypeName,
+  IntrinsicType,
+  Namespace,
+  NodeHost,
+  Program,
+  resolveCompilerOptions,
+  Type
+} from "@typespec/compiler";
 import { SyntaxKind } from "@typespec/compiler/ast";
 import { lazyAsync } from "@/shared/infrastructure/utils/lazy";
 
@@ -35,7 +45,7 @@ const compileProgram = async () => {
 
   // Chama o compile passando o código como string
   // const source = fs.readFileSync(, "utf-8");
-  const pathToMainTsp = path.resolve(__dirname, "./tsp/main.tsp");
+  const pathToMainTsp = path.resolve(__dirname, "../../main.tsp");
 
   const [compilerOptions, _diagnostics] = await resolveCompilerOptions(host, {
     cwd: process.cwd(),
@@ -62,12 +72,12 @@ export type IPropertyRepresentation = {
 } & (
   | { mode: "simple" }
   | {
-      mode: "reference";
-      reference: {
-        name: string;
-      };
-    }
-);
+  mode: "reference";
+  reference: {
+    name: string;
+  };
+}
+  );
 
 export type IModelRepresentation = {
   name: string;
@@ -77,7 +87,7 @@ export type IModelRepresentation = {
 export const compileDomainModels = lazyAsync(async () => {
   const program = await compileProgram();
 
-  const allowedNamespaces = ["Ladesa.ManagementService.Domain.Contracts"];
+  const allowedNamespaces = ["Ladesa.ManagementService"];
 
   const getAllowedNamespaces = function* () {
     for (const allowedNamespace of allowedNamespaces) {
@@ -90,13 +100,13 @@ export const compileDomainModels = lazyAsync(async () => {
   const getAllowedNamespacesModels = function* () {
     for (const namespace of getAllowedNamespaces()) {
       for (const model of getNamespaceQualifiedModels(namespace)) {
-        yield { model, namespace };
+        yield {model, namespace};
       }
     }
   };
 
   const getModelsRepresentations = function* () {
-    for (const { model } of getAllowedNamespacesModels()) {
+    for (const {model} of getAllowedNamespacesModels()) {
       const modelRepresentation: IModelRepresentation = {
         name: model.name,
         properties: [],

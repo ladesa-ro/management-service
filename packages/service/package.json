@@ -89,9 +89,9 @@
   "scripts": {
     "tsp:build": "nx tsp:build --outputStyle stream",
     "tsp:dev": "nx tsp:dev --outputStyle stream",
-    "dev": "bun run dev",
-    "build": "bun run build",
-    "debug": "bun run debug",
+    "dev": "nx dev",
+    "build": "nx build",
+    "debug": "nx debug",
     "start": "bun run lib/main.ts",
     "check:static": "tsc --noEmit",
     "test": "vitest run",
