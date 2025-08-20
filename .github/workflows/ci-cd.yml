@@ -44,7 +44,7 @@ jobs:
     steps:
       # Step 1: Fazer checkout do código-fonte do repositório
       - name: Checkout do código-fonte
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       # Step 2: Obter secrets do Infisical para o processo de build
       # Infisical é usado como gerenciador de secrets centralizado
@@ -111,7 +111,7 @@ jobs:
     steps:
       # Step 1: Checkout do código (necessário para scripts de deploy)
       - name: Checkout do código-fonte
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       # Step 2: Obter secrets específicos para deploy do Infisical
       # Diferentes secrets podem ser necessários para CI vs CD
@@ -160,7 +160,7 @@ jobs:
     steps:
       # Step 1: Checkout do código-fonte
       - name: Checkout do código-fonte
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       # Step 2: Executar container de desenvolvimento para build do cliente NPM
       # Usa devcontainer para garantir ambiente consistente
