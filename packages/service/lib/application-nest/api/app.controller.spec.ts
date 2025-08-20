@@ -18,7 +18,7 @@ describe("AppController", () => {
   describe("root", () => {
     it('should return "Hello World!"', () => {
       expect(appController.getHello()).toEqual({
-        service: "@ladesa-ro/api.service",
+        service: "@ladesa-ro/presentation.service",
         status: "up",
       });
     });

@@ -23,7 +23,7 @@ npm install @ladesa-ro/management-service-client@latest
 
 ```bash
 git clone https://github.com/ladesa-ro/management-service.git
-cd api
+cd presentation
 ```
 
 ### Estrutura de Pastas
@@ -31,7 +31,7 @@ cd api
 [`./api-service`](packages/api-service/)
 
 ```bash
-cd api-service
+cd presentation-service
 ```
 
 > A pasta API service contém o código fonte do Serviço de API, que utiliza o framework NestJS no NodeJS.
@@ -39,7 +39,7 @@ cd api-service
 ### Serviços do [docker-compose.yml](docker-compose.yml)
 
 | Host            | Endereço         | Descrição                | Plataforma Base                   |
-| --------------- | ---------------- | ------------------------ | --------------------------------- |
+|-----------------|------------------|--------------------------|-----------------------------------|
 | `ladesa-api`    | `localhost:3701` | Aplicação NodeJS.        | `docker.io/library/node:22`       |
 | `ladesa-api-db` | `localhost:5432` | Banco de dados postgres. | `docker.io/bitnami/postgresql:15` |
 
@@ -63,7 +63,7 @@ cd api-service
     CTRL+C
     ```
 
-    > Isso para o processo `bun run dev` e retorna ao shell do container.
+   > Isso para o processo `bun run dev` e retorna ao shell do container.
 
 4. Para sair do container:
 
@@ -71,7 +71,7 @@ cd api-service
     exit
     ```
 
-    > Ou use o atalho `CTRL+D`.
+   > Ou use o atalho `CTRL+D`.
 
 5. Para parar os containers da aplicação e do banco de dados:
 
@@ -146,12 +146,14 @@ O projeto conta com um [arquivo make](Makefile) que comporta scripts destinados 
 
 <!-- Badges / Actions / Release  -->
 
-[action-ci-cd-management-service-src]: https://img.shields.io/github/actions/workflow/status/ladesa-ro/management-service/ci-cd-management-service.yml?style=flat&logo=github&logoColor=white&label=Release&branch=development&labelColor=18181B  
+[action-ci-cd-management-service-src]: https://img.shields.io/github/actions/workflow/status/ladesa-ro/management-service/ci-cd-management-service.yml?style=flat&logo=github&logoColor=white&label=Release&branch=development&labelColor=18181B
+
 [action-ci-cd-management-service-href]: https://github.com/ladesa-ro/management-service/actions/workflows/ci-cd-management-service.yml?query=branch%3Adevelopment
 
 <!-- Badges / Actions / Autofix  -->
 
-[action-autofix-src]: https://img.shields.io/github/actions/workflow/status/ladesa-ro/api/autofix.yml?style=flat&logo=github&logoColor=white&label=Generate%20Integrations&branch=development&labelColor=18181B  
+[action-autofix-src]: https://img.shields.io/github/actions/workflow/status/ladesa-ro/api/autofix.yml?style=flat&logo=github&logoColor=white&label=Generate%20Integrations&branch=development&labelColor=18181B
+
 [action-autofix-href]: https://github.com/ladesa-ro/management-service/actions/workflows/autofix.yml?query=branch%3Adevelopment
 
 <!-- Badges / Integrations / NPM -->

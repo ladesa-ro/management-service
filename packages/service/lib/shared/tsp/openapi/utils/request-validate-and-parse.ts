@@ -2,8 +2,8 @@ import SwaggerParser from "@apidevtools/swagger-parser";
 import addFormats from "ajv-formats";
 import OpenAPIBackend from "openapi-backend";
 import { IAppRequestRepresentationGeneric } from "@/__legacy/interfaces/i-app-request-representation-generic";
+import { lazyAsync } from "@/infrastructure/utils/lazy";
 import { ValidationFailedException } from "@/shared";
-import { lazyAsync } from "@/shared/infrastructure/utils/lazy";
 import { AppApiDocAny } from "@/shared/tsp/openapi/document/app-openapi-document";
 
 const getOpenApiBackend = lazyAsync(async () => {

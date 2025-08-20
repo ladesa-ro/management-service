@@ -1,7 +1,7 @@
 import { NestFactory } from "@nestjs/core";
 import compression from "compression";
 import helmet from "helmet";
-import { AppConfigService } from "@/shared/infrastructure/config";
+import { AppConfigService } from "@/infrastructure/config";
 import "reflect-metadata";
 import { AppModule } from "@/application-nest/app.module";
 

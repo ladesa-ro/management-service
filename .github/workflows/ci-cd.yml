@@ -101,7 +101,7 @@ jobs:
 
     # Dependência explícita - só executa após o sucesso do job anterior
     # Garante que a imagem esteja disponível antes do deploy
-    needs: [service-ci-image]
+    needs: [ service-ci-image ]
 
     # Environment para deploy com URL de monitoramento
     environment:
@@ -140,7 +140,7 @@ jobs:
           HELM_RELEASE_EXTRA_OPTIONS: ${{ env.DEPLOY_HELM_EXTRA_OPTIONS }} # Opções adicionais
         shell: bash
         # Executa script customizado para deploy via Helm com integração Stakater
-        run: bash .github/utils/deploy-k8s-helm-stakater-application.sh
+        run: bash .github/utils/deploy-k8s-helm-stakater-api.sh
 
   # ========================================
   # JOB 3: CONSTRUÇÃO E PUBLICAÇÃO DO CLIENT NPM
