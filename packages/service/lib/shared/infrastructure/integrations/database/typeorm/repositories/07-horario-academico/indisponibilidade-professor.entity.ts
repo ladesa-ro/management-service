@@ -1,6 +1,5 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, RelationId } from "typeorm";
-import { PerfilEntity } from "@/infrastructure/integrations/database/typeorm/entities/index.js";
-
+import { PerfilEntity } from "@/shared/infrastructure/integrations/database/typeorm/entities/index.js";
 @Entity({ name: "indisponibilidade_professor" })
 export class IndisponibilidadeProfessorEntity {
   @PrimaryGeneratedColumn("uuid")

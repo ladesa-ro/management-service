@@ -10,24 +10,6 @@ export class DocsController {
     readonly configService: AppConfigService,
   ) {}
 
-<<<<<<< HEAD:packages/service/lib/application/docs.controller.ts
-  private getCurrentApiUrl() {
-    return this.configService.withRuntimePrefix("/docs/openapi.v3.json");
-  }
-
-  private getCurrentApiPath(req: Request) {
-    const protocol = req.headers["x-forwarded-proto"] || req.protocol;
-    const host = req.headers["x-forwarded-host"] || req.get("host");
-
-    // Obter o prefixo da API do serviço de configuração
-    const prefix = this.configService.getRuntimePrefix();
-
-    // Construir a URL do servidor com o prefixo da API
-    return `${protocol}://${host}${prefix}`;
-  }
-
-=======
->>>>>>> origin/main:packages/service/lib/modules/docs/docs.controller.ts
   @Get("openapi.v3.json")
   getOpenApiSpec(@Req() req: Request) {
     const serverUrl = this.getCurrentApiPath(req);
