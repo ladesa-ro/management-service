@@ -1,14 +1,13 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
-import { QbEfficientLoad } from "@/contracts/qb-efficient-load";
-import { SearchService } from "@/legacy/application/helpers/search.service";
-import { CalendarioLetivoService } from "@/legacy/application/resources/calendario/calendario-letivo/calendario-letivo.service";
-import { type IDomain } from "@/legacy/domain/contracts/integration";
+import { CalendarioLetivoService } from "@/modules/calendario-letivo/domain/calendario-letivo.service";
+import { QbEfficientLoad, SearchService } from "@/shared";
 import type { AccessContext } from "@/shared/infrastructure/access-context";
 import { paginateConfig } from "@/shared/infrastructure/fixtures";
 import { DatabaseContextService } from "@/shared/infrastructure/integrations/database";
 import type { HorarioGeradoEntity } from "@/shared/infrastructure/integrations/database/typeorm/entities";
+import { type IDomain } from "@/shared/tsp/schema/typings";
 
 // ============================================================================
 
@@ -220,7 +219,7 @@ export class HorarioGeradoService {
     });
   }
 
-  async horarioGeradoUpdate(accessContext: AccessContext, domain: IDomain.HorarioGeradoUpdateInput) {
+  async horarioGeradoUpdate(accessContext: AccessContext, domain: IDomain.HorarioGeradoFindOneInput & IDomain.HorarioGeradoUpdateInput) {
     // =========================================================
 
     const currentHorarioGerado = await this.horarioGeradoFindByIdStrict(accessContext, { id: domain.id });

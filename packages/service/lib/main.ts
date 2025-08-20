@@ -3,7 +3,7 @@ import compression from "compression";
 import helmet from "helmet";
 import { AppConfigService } from "@/shared/infrastructure/config";
 import "reflect-metadata";
-import { AppModule } from "@/legacy/application/app.module";
+import { AppModule } from "@/application-nest/app.module";
 
 async function setup() {
   const app = await NestFactory.create(AppModule);

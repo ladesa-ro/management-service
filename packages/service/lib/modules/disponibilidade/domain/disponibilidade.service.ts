@@ -1,12 +1,11 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { map, pick } from "lodash";
-import { QbEfficientLoad } from "@/contracts/qb-efficient-load";
-import { SearchService } from "@/legacy/application/helpers/search.service";
-import { type IDomain } from "@/legacy/domain/contracts/integration";
+import { QbEfficientLoad, SearchService } from "@/shared";
 import type { AccessContext } from "@/shared/infrastructure/access-context";
 import { paginateConfig } from "@/shared/infrastructure/fixtures";
 import { DatabaseContextService } from "@/shared/infrastructure/integrations/database";
 import type { DisponibilidadeEntity } from "@/shared/infrastructure/integrations/database/typeorm/entities";
+import { type IDomain } from "@/shared/tsp/schema/typings";
 
 // ============================================================================
 
@@ -36,37 +35,28 @@ export class DisponibilidadeService {
 
     // =========================================================
 
-    const paginated = await this.searchService.search(
-      qb,
-      domain
-        ? {
-            ...domain,
-            sortBy: domain.sortBy ? (domain.sortBy as any[]).map((s) => (typeof s === "string" ? s : Array.isArray(s) ? s.join(":") : `${s.column}:${s.direction ?? "ASC"}`)) : undefined,
-          }
-        : {},
-      {
-        ...paginateConfig,
-        select: [
-          "id",
+    const paginated = await this.searchService.search(qb, domain, {
+      ...paginateConfig,
+      select: [
+        "id",
 
-          "dataInicio",
-          "dataFim",
-          "dateCreated",
-        ],
-        sortableColumns: ["dataInicio", "dataFim", "dateCreated"],
-        searchableColumns: [
-          "id",
+        "dataInicio",
+        "dataFim",
+        "dateCreated",
+      ],
+      sortableColumns: ["dataInicio", "dataFim", "dateCreated"],
+      searchableColumns: [
+        "id",
 
-          "dataInicio",
-          "dataFim",
-        ],
-        defaultSortBy: [
-          ["dataInicio", "ASC"],
-          ["dataFim", "ASC"],
-        ],
-        filterableColumns: {},
-      },
-    );
+        "dataInicio",
+        "dataFim",
+      ],
+      defaultSortBy: [
+        ["dataInicio", "ASC"],
+        ["dataFim", "ASC"],
+      ],
+      filterableColumns: {},
+    });
 
     // =========================================================
 
@@ -186,7 +176,7 @@ export class DisponibilidadeService {
     });
   }
 
-  async disponibilidadeUpdate(accessContext: AccessContext, domain: IDomain.DisponibilidadeUpdateInput) {
+  async disponibilidadeUpdate(accessContext: AccessContext, domain: IDomain.DisponibilidadeFindOneInput & IDomain.DisponibilidadeUpdateInput) {
     // =========================================================
 
     const currentDisponibilidade = await this.disponibilidadeFindByIdStrict(accessContext, { id: domain.id });

@@ -9,5 +9,4 @@ import { ImagemService } from "./domain/imagem.service";
   providers: [ImagemService],
   exports: [ImagemService],
 })
-export class ImagemModule {
-}
+export class ImagemModule {}

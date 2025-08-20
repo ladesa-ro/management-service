@@ -1,17 +1,13 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
-import { QbEfficientLoad } from "@/contracts/qb-efficient-load";
-import { SearchService } from "@/legacy/application/helpers/search.service";
-import { type IDomain } from "@/legacy/domain/contracts/integration";
-import { ArquivoService } from "@/modules/arquivo/arquivo.service";
-import { CampusService } from "@/modules/campus/campus.service";
-import { ImagemService } from "@/modules/imagem/imagem.service";
-import type { AccessContext } from "@/shared/infrastructure/access-context";
+import { ArquivoService } from "@/modules/arquivo/domain/arquivo.service";
+import { CampusService } from "@/modules/campus/domain/campus.service";
+import { ImagemService } from "@/modules/imagem/domain/imagem.service";
+import { OfertaFormacaoService } from "@/modules/oferta-formacao/domain/oferta-formacao.service";
+import { AccessContext, DatabaseContextService, IDomain, QbEfficientLoad, SearchService } from "@/shared";
 import { paginateConfig } from "@/shared/infrastructure/fixtures";
-import { DatabaseContextService } from "@/shared/infrastructure/integrations/database";
-import type { CursoEntity } from "@/shared/infrastructure/integrations/database/typeorm/entities";
-import { OfertaFormacaoService } from "../oferta-formacao/oferta-formacao.service";
+import { CursoEntity } from "@/shared/infrastructure/integrations/database/typeorm/entities";
 
 // ============================================================================
 
@@ -45,61 +41,52 @@ export class CursoService {
 
     // =========================================================
 
-    const paginated = await this.searchService.search(
-      qb,
-      domain
-        ? {
-            ...domain,
-            sortBy: domain.sortBy ? (domain.sortBy as any[]).map((s) => (typeof s === "string" ? s : Array.isArray(s) ? s.join(":") : `${s.column}:${s.direction ?? "ASC"}`)) : undefined,
-          }
-        : {},
-      {
-        ...paginateConfig,
-        select: [
-          "id",
+    const paginated = await this.searchService.search(qb, domain, {
+      ...paginateConfig,
+      select: [
+        "id",
 
-          "nome",
-          "nomeAbreviado",
-          "campus",
-          "ofertaFormacao",
-        ],
-        sortableColumns: [
-          "nome",
-          "nomeAbreviado",
+        "nome",
+        "nomeAbreviado",
+        "campus",
+        "ofertaFormacao",
+      ],
+      sortableColumns: [
+        "nome",
+        "nomeAbreviado",
 
-          "campus.id",
-          "campus.cnpj",
-          "campus.razaoSocial",
-          "campus.nomeFantasia",
+        "campus.id",
+        "campus.cnpj",
+        "campus.razaoSocial",
+        "campus.nomeFantasia",
 
-          "ofertaFormacao.id",
-          "ofertaFormacao.nome",
-          "ofertaFormacao.slug",
-        ],
-        searchableColumns: [
-          "id",
+        "ofertaFormacao.id",
+        "ofertaFormacao.nome",
+        "ofertaFormacao.slug",
+      ],
+      searchableColumns: [
+        "id",
 
-          "nome",
-          "nomeAbreviado",
-          "campus",
-          "ofertaFormacao",
-        ],
-        relations: {
-          campus: true,
-          ofertaFormacao: true,
-        },
-        defaultSortBy: [["nome", "ASC"]],
-        filterableColumns: {
-          "campus.id": [FilterOperator.EQ],
-          "campus.cnpj": [FilterOperator.EQ],
-          "campus.razaoSocial": [FilterOperator.EQ],
-          "campus.nomeFantasia": [FilterOperator.EQ],
-          "ofertaFormacao.id": [FilterOperator.EQ],
-          "ofertaFormacao.nome": [FilterOperator.EQ],
-          "ofertaFormacao.slug": [FilterOperator.EQ],
-        },
+        "nome",
+        "nomeAbreviado",
+        "campus",
+        "ofertaFormacao",
+      ],
+      relations: {
+        campus: true,
+        ofertaFormacao: true,
       },
-    );
+      defaultSortBy: [["nome", "ASC"]],
+      filterableColumns: {
+        "campus.id": [FilterOperator.EQ],
+        "campus.cnpj": [FilterOperator.EQ],
+        "campus.razaoSocial": [FilterOperator.EQ],
+        "campus.nomeFantasia": [FilterOperator.EQ],
+        "ofertaFormacao.id": [FilterOperator.EQ],
+        "ofertaFormacao.nome": [FilterOperator.EQ],
+        "ofertaFormacao.slug": [FilterOperator.EQ],
+      },
+    });
 
     // =========================================================
 
@@ -236,7 +223,7 @@ export class CursoService {
     return this.cursoFindByIdStrict(accessContext, { id: curso.id });
   }
 
-  async cursoUpdate(accessContext: AccessContext, domain: IDomain.CursoUpdateInput) {
+  async cursoUpdate(accessContext: AccessContext, domain: IDomain.CursoFindOneInput & IDomain.CursoUpdateInput) {
     // =========================================================
 
     const currentCurso = await this.cursoFindByIdStrict(accessContext, { id: domain.id });

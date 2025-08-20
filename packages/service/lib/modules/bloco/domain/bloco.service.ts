@@ -1,15 +1,11 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
-import { QbEfficientLoad } from "@/contracts/qb-efficient-load";
-import { SearchService } from "@/legacy/application/helpers/search.service";
-import { type IDomain } from "@/legacy/domain/contracts/integration";
-import { ArquivoService } from "@/modules/arquivo/arquivo.service";
-import { ImagemService } from "@/modules/imagem/imagem.service";
-import type { AccessContext } from "@/shared/infrastructure/access-context";
-import { DatabaseContextService } from "@/shared/infrastructure/integrations/database";
-import type { BlocoEntity } from "@/shared/infrastructure/integrations/database/typeorm/entities";
-import { CampusService } from "../campus/campus.service";
+import { ArquivoService } from "@/modules/arquivo/domain/arquivo.service";
+import { CampusService } from "@/modules/campus/domain/campus.service";
+import { ImagemService } from "@/modules/imagem/domain/imagem.service";
+import { AccessContext, DatabaseContextService, IDomain, QbEfficientLoad, SearchService } from "@/shared";
+import { BlocoEntity } from "@/shared/infrastructure/integrations/database/typeorm/entities";
 
 // ============================================================================
 
@@ -31,7 +27,7 @@ export class BlocoService {
     return this.databaseContext.blocoRepository;
   }
 
-  async blocoFindAll(accessContext: AccessContext, domain: IDomain.BlocoListInput | null = null, selection?: string[] | boolean): Promise<IDomain.BlocoListOutput["success"]> {
+  async blocoFindAll(accessContext: AccessContext, domain: IDomain.BlocoListInput, selection?: string[] | boolean): Promise<IDomain.BlocoListOutput["success"]> {
     // =========================================================
 
     const qb = this.blocoRepository.createQueryBuilder(aliasBloco);
@@ -42,53 +38,39 @@ export class BlocoService {
 
     // =========================================================
 
-    const paginated = await this.searchService.search(
-      qb,
-      domain
-        ? {
-            ...domain,
-            sortBy: domain.sortBy ? (domain.sortBy as any[]).map((s) => (typeof s === "string" ? s : Array.isArray(s) ? s.join(":") : `${s.column}:${s.direction ?? "ASC"}`)) : undefined,
-          }
-        : {},
-      {
-        select: [
-          "id",
+    const paginated = await this.searchService.search(qb, domain, {
+      select: [
+        "id",
 
-          "nome",
-          "codigo",
-          "dateCreated",
+        "nome",
+        "codigo",
+        "dateCreated",
 
-          "campus.id",
-          "campus.razaoSocial",
-          "campus.nomeFantasia",
-        ],
-        relations: {
-          campus: true,
-        },
-        sortableColumns: [
-          "nome",
-          "codigo",
-          "dateCreated",
-
-          "campus.id",
-          "campus.razaoSocial",
-          "campus.nomeFantasia",
-        ],
-        searchableColumns: [
-          "id",
-
-          "nome",
-          "codigo",
-        ],
-        defaultSortBy: [
-          ["nome", "ASC"],
-          ["dateCreated", "ASC"],
-        ],
-        filterableColumns: {
-          "campus.id": [FilterOperator.EQ],
-        },
+        "campus.id",
+        "campus.razaoSocial",
+        "campus.nomeFantasia",
+      ],
+      relations: {
+        campus: true,
       },
-    );
+      sortableColumns: [
+        "nome",
+        "codigo",
+        "dateCreated",
+
+        "campus.id",
+        "campus.razaoSocial",
+        "campus.nomeFantasia",
+      ],
+      searchableColumns: ["id", "nome", "codigo"],
+      defaultSortBy: [
+        ["nome", "ASC"],
+        ["dateCreated", "ASC"],
+      ],
+      filterableColumns: {
+        "campus.id": [FilterOperator.EQ],
+      },
+    });
 
     // =========================================================
 
@@ -260,7 +242,7 @@ export class BlocoService {
     return this.blocoFindByIdStrict(accessContext, { id: bloco.id });
   }
 
-  async blocoUpdate(accessContext: AccessContext, domain: IDomain.BlocoUpdateInput) {
+  async blocoUpdate(accessContext: AccessContext, domain: IDomain.BlocoFindOneInput & IDomain.BlocoUpdateInput) {
     // =========================================================
 
     const currentBloco = await this.blocoFindByIdStrict(accessContext, { id: domain.id });

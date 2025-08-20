@@ -1,9 +1,9 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { pick } from "lodash";
-import { QbEfficientLoad } from "@/contracts";
-import { type IDomain } from "@/legacy/domain/contracts/integration";
+import { QbEfficientLoad } from "@/shared";
 import { AccessContext } from "@/shared/infrastructure/access-context";
 import { DatabaseContextService } from "@/shared/infrastructure/integrations";
+import { type IDomain } from "@/shared/tsp/schema/typings";
 
 // ============================================================================
 

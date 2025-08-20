@@ -1,17 +1,15 @@
 import { Controller, Delete, Get, Patch, Post, Put, UploadedFile } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import { requestRepresentationMergeToDomain } from "@/contracts/generic-adapters";
-import { type IAppRequest } from "@/contracts/openapi/document/app-openapi-typings";
-import { AppRequest } from "@/contracts/openapi/utils/app-request";
-import { type IDomain } from "@/legacy/domain/contracts/integration";
+import { AppRequest, requestRepresentationMergeToDomain } from "@/shared";
 import { AccessContext, AccessContextHttp } from "@/shared/infrastructure/access-context";
-import { TurmaService } from "./domain/turma.service";
+import { type IAppRequest } from "@/shared/tsp/openapi/document/app-openapi-typings";
+import { type IDomain } from "@/shared/tsp/schema/typings";
+import { TurmaService } from "../domain/turma.service";
 
 @ApiTags("turmas")
 @Controller("/turmas")
 export class TurmaController {
-  constructor(private turmaService: TurmaService) {
-  }
+  constructor(private turmaService: TurmaService) {}
 
   @Get("/")
   async turmaFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("TurmaList") dto: IAppRequest<"TurmaList">) {
@@ -20,7 +18,7 @@ export class TurmaController {
   }
 
   @Get("/:id")
-  async turmaFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("TurmaFindById") dto: IAppRequest<"TurmaFindOneById">) {
+  async turmaFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("TurmaFindOneById") dto: IAppRequest<"TurmaFindOneById">) {
     const domain: IDomain.TurmaFindOneInput = requestRepresentationMergeToDomain(dto);
     return this.turmaService.turmaFindByIdStrict(accessContext, domain);
   }
@@ -32,8 +30,8 @@ export class TurmaController {
   }
 
   @Patch("/:id")
-  async turmaUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("TurmaUpdate") dto: IAppRequest<"TurmaUpdateOneById">) {
-    const domain: IDomain.TurmaUpdateInput = requestRepresentationMergeToDomain(dto);
+  async turmaUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("TurmaUpdateOneById") dto: IAppRequest<"TurmaUpdateOneById">) {
+    const domain: IDomain.TurmaFindOneInput & IDomain.TurmaUpdateInput = requestRepresentationMergeToDomain(dto);
     return this.turmaService.turmaUpdate(accessContext, domain);
   }
 

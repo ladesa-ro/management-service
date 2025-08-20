@@ -1,16 +1,12 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
-import { QbEfficientLoad } from "@/contracts/qb-efficient-load";
-import { SearchService } from "@/legacy/application/helpers/search.service";
-import { DiarioProfessorService } from "@/legacy/application/resources/ensino/discente/diario-professor/diario-professor.service";
-import { IDomain } from "@/legacy/domain/contracts";
-import { IntervaloDeTempoService } from "@/modules/intervalo-de-tempo/intervalo-de-tempo.service";
-import type { AccessContext } from "@/shared/infrastructure/access-context";
+import { DiarioProfessorService } from "@/modules/diario-professor/domain/diario-professor.service";
+import { HorarioGeradoService } from "@/modules/horario-gerado/domain/horario-gerado.service";
+import { IntervaloDeTempoService } from "@/modules/intervalo-de-tempo/domain/intervalo-de-tempo.service";
+import { AccessContext, DatabaseContextService, IDomain, QbEfficientLoad, SearchService } from "@/shared";
 import { paginateConfig } from "@/shared/infrastructure/fixtures";
-import { DatabaseContextService } from "@/shared/infrastructure/integrations/database";
-import type { HorarioGeradoAulaEntity } from "@/shared/infrastructure/integrations/database/typeorm/entities";
-import { HorarioGeradoService } from "../horario-gerado/horario-gerado.service";
+import { HorarioGeradoAulaEntity } from "@/shared/infrastructure/integrations/database/typeorm/entities";
 
 // ============================================================================
 
@@ -193,7 +189,7 @@ export class HorarioGeradoAulaService {
     return horarioGeradoAula;
   }
 
-  async HorarioGeradoAulaCreate(accessContext: AccessContext, domain: IDomain.HorarioGeradoAulaCreateInput) {
+  async horarioGeradoAulaCreate(accessContext: AccessContext, domain: IDomain.HorarioGeradoAulaCreateInput) {
     // =========================================================
 
     await accessContext.ensurePermission("horario_gerado_aula:create", { dto: domain });
@@ -251,7 +247,7 @@ export class HorarioGeradoAulaService {
     });
   }
 
-  async HorarioGeradoAulaUpdate(accessContext: AccessContext, domain: IDomain.HorarioGeradoAulaUpdateInput) {
+  async HorarioGeradoAulaUpdate(accessContext: AccessContext, domain: IDomain.HorarioGeradoAulaFindOneInput & IDomain.HorarioGeradoAulaUpdateInput) {
     // =========================================================
 
     const currentHorarioGeradoAula = await this.horarioGeradoAulaFindByIdStrict(accessContext, domain);

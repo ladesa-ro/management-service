@@ -1,12 +1,11 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { map } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
-import { QbEfficientLoad } from "@/contracts/qb-efficient-load";
-import { SearchService } from "@/legacy/application/helpers/search.service";
-import { type IDomain } from "@/legacy/domain/contracts/integration";
+import { QbEfficientLoad, SearchService } from "@/shared";
 import type { AccessContext } from "@/shared/infrastructure/access-context";
 import { paginateConfig } from "@/shared/infrastructure/fixtures";
 import { DatabaseContextService } from "@/shared/infrastructure/integrations/database";
+import { type IDomain } from "@/shared/tsp/schema/typings";
 
 const aliasCidade = "cidade";
 
@@ -32,41 +31,32 @@ export class CidadeService {
 
     // =========================================================
 
-    const paginated = await this.searchService.search(
-      qb,
-      domain
-        ? {
-            ...domain,
-            sortBy: domain.sortBy ? (domain.sortBy as any[]).map((s) => (typeof s === "string" ? s : Array.isArray(s) ? s.join(":") : `${s.column}:${s.direction ?? "ASC"}`)) : undefined,
-          }
-        : {},
-      {
-        ...paginateConfig,
-        select: [
-          "id",
+    const paginated = await this.searchService.search(qb, domain, {
+      ...paginateConfig,
+      select: [
+        "id",
 
-          "nome",
+        "nome",
 
-          "estado.id",
-          "estado.sigla",
-          "estado.nome",
-        ],
-        relations: {
-          estado: true,
-        },
-        sortableColumns: ["id", "nome", "estado.nome", "estado.sigla"],
-        searchableColumns: ["nome", "estado.nome", "estado.sigla"],
-        defaultSortBy: [
-          ["nome", "ASC"],
-          ["estado.nome", "ASC"],
-        ],
-        filterableColumns: {
-          "estado.id": [FilterOperator.EQ],
-          "estado.nome": [FilterOperator.EQ],
-          "estado.sigla": [FilterOperator.EQ],
-        },
+        "estado.id",
+        "estado.sigla",
+        "estado.nome",
+      ],
+      relations: {
+        estado: true,
       },
-    );
+      sortableColumns: ["id", "nome", "estado.nome", "estado.sigla"],
+      searchableColumns: ["nome", "estado.nome", "estado.sigla"],
+      defaultSortBy: [
+        ["nome", "ASC"],
+        ["estado.nome", "ASC"],
+      ],
+      filterableColumns: {
+        "estado.id": [FilterOperator.EQ],
+        "estado.nome": [FilterOperator.EQ],
+        "estado.sigla": [FilterOperator.EQ],
+      },
+    });
 
     // =========================================================
 

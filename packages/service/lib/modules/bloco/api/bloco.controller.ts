@@ -1,17 +1,15 @@
 import { Controller, Delete, Get, Patch, Post, Put, UploadedFile } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import { requestRepresentationMergeToDomain } from "@/contracts/generic-adapters";
-import { type IAppRequest } from "@/contracts/openapi/document/app-openapi-typings";
-import { AppRequest } from "@/contracts/openapi/utils/app-request";
-import { type IDomain } from "@/legacy/domain/contracts/integration";
+import { AppRequest, requestRepresentationMergeToDomain } from "@/shared";
 import { AccessContext, AccessContextHttp } from "@/shared/infrastructure/access-context";
-import { BlocoService } from "./domain/bloco.service";
+import { type IAppRequest } from "@/shared/tsp/openapi/document/app-openapi-typings";
+import { type IDomain } from "@/shared/tsp/schema/typings";
+import { BlocoService } from "../domain/bloco.service";
 
 @ApiTags("blocos")
 @Controller("/blocos")
 export class BlocoController {
-  constructor(private blocoService: BlocoService) {
-  }
+  constructor(private blocoService: BlocoService) {}
 
   @Get("/")
   async blocoFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("BlocoList") dto: IAppRequest<"BlocoList">) {
@@ -32,8 +30,8 @@ export class BlocoController {
   }
 
   @Patch("/:id")
-  async blocoUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("BlocoUpdate") dto: IAppRequest<"BlocoUpdateOneById">) {
-    const domain: IDomain.BlocoUpdateInput = requestRepresentationMergeToDomain(dto);
+  async blocoUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("BlocoUpdateOneById") dto: IAppRequest<"BlocoUpdateOneById">) {
+    const domain: IDomain.BlocoFindOneInput & IDomain.BlocoUpdateInput = requestRepresentationMergeToDomain(dto);
     return this.blocoService.blocoUpdate(accessContext, domain);
   }
 

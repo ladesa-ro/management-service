@@ -1,16 +1,14 @@
 import { Injectable, InternalServerErrorException, NotFoundException, ServiceUnavailableException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
-import { ValidationFailedException } from "@/contracts";
-import { QbEfficientLoad } from "@/contracts/qb-efficient-load";
-import { SearchService } from "@/legacy/application/helpers/search.service";
-import { type IDomain } from "@/legacy/domain/contracts/integration";
-import { ArquivoService } from "@/modules/arquivo/arquivo.service";
-import { ImagemService } from "@/modules/imagem/imagem.service";
+import { ArquivoService } from "@/modules/arquivo/domain/arquivo.service";
+import { ImagemService } from "@/modules/imagem/domain/imagem.service";
+import { QbEfficientLoad, SearchService, ValidationFailedException } from "@/shared";
 import type { AccessContext } from "@/shared/infrastructure/access-context";
 import { paginateConfig } from "@/shared/infrastructure/fixtures";
 import { DatabaseContextService } from "@/shared/infrastructure/integrations/database";
 import type { UsuarioEntity } from "@/shared/infrastructure/integrations/database/typeorm/entities";
 import { KeycloakService } from "@/shared/infrastructure/integrations/identity-provider";
+import { type IDomain } from "@/shared/tsp/schema/typings";
 
 // ============================================================================
 
@@ -451,7 +449,7 @@ export class UsuarioService {
     return this.usuarioFindByIdStrict(accessContext, { id: usuario.id });
   }
 
-  async usuarioUpdate(accessContext: AccessContext, domain: IDomain.UsuarioUpdateInput) {
+  async usuarioUpdate(accessContext: AccessContext, domain: IDomain.UsuarioFindOneInput & IDomain.UsuarioUpdateInput) {
     // =========================================================
 
     const currentUsuario = await this.usuarioFindByIdStrict(accessContext, domain);

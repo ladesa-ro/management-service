@@ -1,17 +1,15 @@
 import { Controller, Delete, Get, Patch, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import { requestRepresentationMergeToDomain } from "@/contracts/generic-adapters";
-import { type IAppRequest } from "@/contracts/openapi/document/app-openapi-typings";
-import { AppRequest } from "@/contracts/openapi/utils/app-request";
-import { type IDomain } from "@/legacy/domain/contracts/integration";
+import { AppRequest, requestRepresentationMergeToDomain } from "@/shared";
 import { AccessContext, AccessContextHttp } from "@/shared/infrastructure/access-context";
-import { OfertaFormacaoService } from "./domain/oferta-formacao.service";
+import { type IAppRequest } from "@/shared/tsp/openapi/document/app-openapi-typings";
+import { type IDomain } from "@/shared/tsp/schema/typings";
+import { OfertaFormacaoService } from "../domain/oferta-formacao.service";
 
 @ApiTags("ofertas-formacoes")
 @Controller("/ofertas-formacoes")
 export class OfertaFormacaoController {
-  constructor(private ofertaFormacaoService: OfertaFormacaoService) {
-  }
+  constructor(private ofertaFormacaoService: OfertaFormacaoService) {}
 
   @Get("/")
   async ofertaFormacaoFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("OfertaFormacaoList") dto: IAppRequest<"OfertaFormacaoList">) {
@@ -20,7 +18,7 @@ export class OfertaFormacaoController {
   }
 
   @Get("/:id")
-  async ofertaFormacaoFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("OfertaFormacaoFindById") dto: IAppRequest<"OfertaFormacaoFindOneById">) {
+  async ofertaFormacaoFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("OfertaFormacaoFindOneById") dto: IAppRequest<"OfertaFormacaoFindOneById">) {
     const domain: IDomain.OfertaFormacaoFindOneInput = requestRepresentationMergeToDomain(dto);
     return this.ofertaFormacaoService.ofertaFormacaoFindByIdStrict(accessContext, domain);
   }
@@ -32,8 +30,8 @@ export class OfertaFormacaoController {
   }
 
   @Patch("/:id")
-  async ofertaFormacaoUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("OfertaFormacaoUpdate") dto: IAppRequest<"OfertaFormacaoUpdateOneById">) {
-    const domain: IDomain.OfertaFormacaoUpdateInput = requestRepresentationMergeToDomain(dto);
+  async ofertaFormacaoUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("OfertaFormacaoUpdateOneById") dto: IAppRequest<"OfertaFormacaoUpdateOneById">) {
+    const domain: IDomain.OfertaFormacaoFindOneInput & IDomain.OfertaFormacaoUpdateInput = requestRepresentationMergeToDomain(dto);
     return this.ofertaFormacaoService.ofertaFormacaoUpdate(accessContext, domain);
   }
 

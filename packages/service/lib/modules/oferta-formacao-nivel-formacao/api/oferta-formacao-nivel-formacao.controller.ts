@@ -1,17 +1,12 @@
 import { Controller, Delete, Get, Patch, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import { requestRepresentationMergeToDomain } from "@/contracts/generic-adapters";
-import { type IAppRequest } from "@/contracts/openapi/document/app-openapi-typings";
-import { AppRequest } from "@/contracts/openapi/utils/app-request";
-import { type IDomain } from "@/legacy/domain/contracts/integration";
-import { AccessContext, AccessContextHttp } from "@/shared/infrastructure/access-context";
-import { OfertaFormacaoNivelFormacaoService } from "./domain/oferta-formacao-nivel-formacao.service";
+import { OfertaFormacaoNivelFormacaoService } from "@/modules/oferta-formacao-nivel-formacao/domain/oferta-formacao-nivel-formacao.service";
+import { AccessContext, AccessContextHttp, AppRequest, type IAppRequest, type IDomain, requestRepresentationMergeToDomain } from "@/shared";
 
 @ApiTags("ofertas-formacoes-niveis-formacoes")
 @Controller("/ofertas-formacoes-niveis-formacoes")
 export class OfertaFormacaoNivelFormacaoController {
-  constructor(private ofertaFormacaoNivelFormacaoService: OfertaFormacaoNivelFormacaoService) {
-  }
+  constructor(private ofertaFormacaoNivelFormacaoService: OfertaFormacaoNivelFormacaoService) {}
 
   @Get("/")
   async ofertaFormacaoNivelFormacaoFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("OfertaFormacaoNivelFormacaoList") dto: IAppRequest<"OfertaFormacaoNivelFormacaoList">) {
@@ -22,7 +17,7 @@ export class OfertaFormacaoNivelFormacaoController {
   @Get("/:id")
   async ofertaFormacaoNivelFormacaoFindById(
     @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("OfertaFormacaoNivelFormacaoFindById") dto: IAppRequest<"OfertaFormacaoNivelFormacaoFindOneById">,
+    @AppRequest("OfertaFormacaoNivelFormacaoFindOneById") dto: IAppRequest<"OfertaFormacaoNivelFormacaoFindOneById">,
   ) {
     const domain: IDomain.OfertaFormacaoNivelFormacaoFindOneInput = requestRepresentationMergeToDomain(dto);
     return this.ofertaFormacaoNivelFormacaoService.ofertaFormacaoNivelFormacaoFindByIdStrict(accessContext, domain);
@@ -37,9 +32,9 @@ export class OfertaFormacaoNivelFormacaoController {
   @Patch("/:id")
   async ofertaFormacaoNivelFormacaoUpdate(
     @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("OfertaFormacaoNivelFormacaoUpdate") dto: IAppRequest<"OfertaFormacaoNivelFormacaoUpdateOneById">,
+    @AppRequest("OfertaFormacaoNivelFormacaoUpdateOneById") dto: IAppRequest<"OfertaFormacaoNivelFormacaoUpdateOneById">,
   ) {
-    const domain: IDomain.OfertaFormacaoNivelFormacaoUpdateInput = requestRepresentationMergeToDomain(dto);
+    const domain: IDomain.OfertaFormacaoNivelFormacaoFindOneInput & IDomain.OfertaFormacaoNivelFormacaoUpdateInput = requestRepresentationMergeToDomain(dto);
     return this.ofertaFormacaoNivelFormacaoService.ofertaFormacaoNivelFormacaoUpdate(accessContext, domain);
   }
 

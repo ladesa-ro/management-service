@@ -1,15 +1,13 @@
 import { Module } from "@nestjs/common";
+import { UsuarioModule } from "@/modules/usuario/usuario.module";
 import { AmbienteModule } from "../ambiente/ambiente.module";
-import { UsuarioModule } from "../legacy/application/resources/autenticacao/usuario/usuario.module";
 import { ReservaController } from "./api/reserva.controller";
-import { ReservaResolver } from "./reserva.resolver";
 import { ReservaService } from "./domain/reserva.service";
 
 @Module({
   imports: [UsuarioModule, AmbienteModule],
   controllers: [ReservaController],
-  providers: [ReservaService, ReservaResolver],
+  providers: [ReservaService],
   exports: [ReservaService],
 })
-export class ReservaModule {
-}
+export class ReservaModule {}

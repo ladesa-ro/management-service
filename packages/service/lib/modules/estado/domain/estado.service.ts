@@ -1,11 +1,10 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { map } from "lodash";
-import { QbEfficientLoad } from "@/contracts/qb-efficient-load";
-import { SearchService } from "@/legacy/application/helpers/search.service";
-import { type IDomain } from "@/legacy/domain/contracts/integration";
+import { QbEfficientLoad, SearchService } from "@/shared";
 import type { AccessContext } from "@/shared/infrastructure/access-context";
 import { paginateConfig } from "@/shared/infrastructure/fixtures";
 import { DatabaseContextService } from "@/shared/infrastructure/integrations/database";
+import { type IDomain } from "@/shared/tsp/schema/typings";
 
 const aliasEstado = "estado";
 
@@ -31,23 +30,14 @@ export class EstadoService {
 
     // =========================================================
 
-    const paginated = await this.searchService.search(
-      qb,
-      domain
-        ? {
-            ...domain,
-            sortBy: domain.sortBy ? (domain.sortBy as any[]).map((s) => (typeof s === "string" ? s : Array.isArray(s) ? s.join(":") : `${s.column}:${s.direction ?? "ASC"}`)) : undefined,
-          }
-        : {},
-      {
-        ...paginateConfig,
-        select: ["id"],
-        searchableColumns: ["nome", "sigla"],
-        sortableColumns: ["id", "nome", "sigla"],
-        defaultSortBy: [["nome", "ASC"]],
-        filterableColumns: {},
-      },
-    );
+    const paginated = await this.searchService.search(qb, domain, {
+      ...paginateConfig,
+      select: ["id"],
+      searchableColumns: ["nome", "sigla"],
+      sortableColumns: ["id", "nome", "sigla"],
+      defaultSortBy: [["nome", "ASC"]],
+      filterableColumns: {},
+    });
 
     // =========================================================
 

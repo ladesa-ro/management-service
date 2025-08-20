@@ -1,8 +1,8 @@
 import { Controller, Get } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import { type IAppRequest } from "@/contracts/openapi/document/app-openapi-typings";
-import { AppRequest } from "@/contracts/openapi/utils/app-request";
+import { AppRequest, IDomain, requestRepresentationMergeToDomain } from "@/shared";
 import { AccessContext, AccessContextHttp } from "@/shared/infrastructure/access-context";
+import { type IAppRequest } from "@/shared/tsp/openapi/document/app-openapi-typings";
 import { EstadoService } from "../domain/estado.service";
 
 @ApiTags("estados")
@@ -12,11 +12,13 @@ export class EstadoController {
 
   @Get("/")
   async findAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("EstadoList") dto: IAppRequest<"EstadoList">) {
-    return this.estadoService.findAll(accessContext, dto);
+    const domain: IDomain.EstadoListInput = requestRepresentationMergeToDomain(dto);
+    return this.estadoService.findAll(accessContext, domain);
   }
 
   @Get("/:id")
   async findById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("EstadoFindOneById") dto: IAppRequest<"EstadoFindOneById">) {
-    return this.estadoService.findByIdStrict(accessContext, dto);
+    const domain: IDomain.EstadoFindOneInput = requestRepresentationMergeToDomain(dto);
+    return this.estadoService.findByIdStrict(accessContext, domain);
   }
 }

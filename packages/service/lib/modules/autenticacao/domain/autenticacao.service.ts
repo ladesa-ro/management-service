@@ -1,12 +1,12 @@
 import { RequiredActionAlias } from "@keycloak/keycloak-admin-client/lib/defs/requiredActionProviderRepresentation";
 import { BadRequestException, ForbiddenException, HttpException, Injectable, ServiceUnavailableException } from "@nestjs/common";
 import * as client from "openid-client";
-import { type IDomain } from "@/legacy/domain/contracts/integration";
-import { PerfilService } from "@/modules/perfil/perfil.service";
-import { UsuarioService } from "@/modules/usuario/usuario.service";
+import { PerfilService } from "@/modules/perfil/domain/perfil.service";
+import { UsuarioService } from "@/modules/usuario/domain/usuario.service";
 import type { AccessContext } from "@/shared/infrastructure/access-context";
 import { DatabaseContextService } from "@/shared/infrastructure/integrations/database";
 import { KeycloakService, OpenidConnectService } from "@/shared/infrastructure/integrations/identity-provider";
+import { type IDomain } from "@/shared/tsp/schema/typings";
 
 @Injectable()
 export class AutenticacaoService {
@@ -44,7 +44,7 @@ export class AutenticacaoService {
     };
   }
 
-  async login(accessContext: AccessContext, domain: IDomain.AuthLoginInput): Promise<IDomain.AuthLoginOutput["success"]> {
+  async login(accessContext: AccessContext, domain: IDomain.AuthLoginInput): Promise<IDomain.AuthSessionCredentialsView> {
     if (accessContext.requestActor !== null) {
       throw new BadRequestException("Você não pode usar a rota de login caso já esteja logado.");
     }
@@ -76,7 +76,7 @@ export class AutenticacaoService {
     throw new ForbiddenException("Credenciais inválidas.");
   }
 
-  async refresh(_: AccessContext, domain: IDomain.AuthRefreshInput): Promise<IDomain.AuthLoginOutput["success"]> {
+  async refresh(_: AccessContext, domain: IDomain.AuthRefreshInput): Promise<IDomain.AuthSessionCredentialsView> {
     let config: client.Configuration;
 
     try {
@@ -98,7 +98,7 @@ export class AutenticacaoService {
     throw new ForbiddenException("Credenciais inválidas ou expiradas.");
   }
 
-  async definirSenha(_accessContext: AccessContext, domain: IDomain.AuthCredentialsSetInitialPasswordInput): Promise<IDomain.AuthCredentialsSetInitialPasswordOutput["success"]> {
+  async definirSenha(_accessContext: AccessContext, domain: IDomain.AuthCredentialsSetInitialPasswordInput) {
     try {
       const kcAdminClient = await this.keycloakService.getAdminClient();
 
@@ -166,7 +166,7 @@ export class AutenticacaoService {
   }
 
   private formatTokenSet(tokenset: client.TokenEndpointResponse & client.TokenEndpointResponseHelpers) {
-    return {
+    return <IDomain.AuthSessionCredentialsView>{
       access_token: tokenset.access_token ?? null,
       token_type: tokenset.token_type ?? null,
       id_token: tokenset.id_token ?? null,

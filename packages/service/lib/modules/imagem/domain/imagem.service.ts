@@ -1,8 +1,8 @@
 import { Injectable, ServiceUnavailableException, UnprocessableEntityException } from "@nestjs/common";
 import sharp from "sharp";
 import { v4 } from "uuid";
+import { ArquivoService } from "@/modules/arquivo/domain/arquivo.service";
 import { DatabaseContextService } from "@/shared/infrastructure/integrations/database";
-import { ArquivoService } from "../arquivo/arquivo.service";
 
 type ISaveImageOptions = {
   minWidth: number;

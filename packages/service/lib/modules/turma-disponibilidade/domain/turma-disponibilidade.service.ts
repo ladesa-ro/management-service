@@ -1,14 +1,13 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
-import { QbEfficientLoad } from "@/contracts/qb-efficient-load";
-import { SearchService } from "@/legacy/application/helpers/search.service";
-import { TurmaService } from "@/legacy/application/resources/ensino/discente/turma/turma.service";
-import { DisponibilidadeService } from "@/legacy/application/resources/horario-academico/disponibilidade/disponibilidade.service";
-import { type IDomain } from "@/legacy/domain/contracts/integration";
+import { DisponibilidadeService } from "@/modules/disponibilidade/domain/disponibilidade.service";
+import { TurmaService } from "@/modules/turma/domain/turma.service";
+import { QbEfficientLoad, SearchService } from "@/shared";
 import type { AccessContext } from "@/shared/infrastructure/access-context";
 import { DatabaseContextService } from "@/shared/infrastructure/integrations/database";
 import type { TurmaDisponibilidadeEntity } from "@/shared/infrastructure/integrations/database/typeorm/entities";
+import { type IDomain } from "@/shared/tsp/schema/typings";
 
 // ============================================================================
 
@@ -44,33 +43,24 @@ export class TurmaDisponibilidadeService {
 
     // =========================================================
 
-    const paginated = await this.searchService.search(
-      qb,
-      domain
-        ? {
-            ...domain,
-            sortBy: domain.sortBy ? (domain.sortBy as any[]).map((s) => (typeof s === "string" ? s : Array.isArray(s) ? s.join(":") : `${s.column}:${s.direction ?? "ASC"}`)) : undefined,
-          }
-        : {},
-      {
-        select: [
-          "id",
+    const paginated = await this.searchService.search(qb, domain, {
+      select: [
+        "id",
 
-          "dateCreated",
-        ],
-        relations: {
-          turma: true,
-          disponibilidade: true,
-        },
-        sortableColumns: ["dateCreated"],
-        searchableColumns: ["id"],
-        defaultSortBy: [["dateCreated", "ASC"]],
-        filterableColumns: {
-          "turma.id": [FilterOperator.EQ],
-          "disponibilidade.id": [FilterOperator.EQ],
-        },
+        "dateCreated",
+      ],
+      relations: {
+        turma: true,
+        disponibilidade: true,
       },
-    );
+      sortableColumns: ["dateCreated"],
+      searchableColumns: ["id"],
+      defaultSortBy: [["dateCreated", "ASC"]],
+      filterableColumns: {
+        "turma.id": [FilterOperator.EQ],
+        "disponibilidade.id": [FilterOperator.EQ],
+      },
+    });
 
     // =========================================================
 
@@ -223,7 +213,7 @@ export class TurmaDisponibilidadeService {
     });
   }
 
-  async turmaDisponibilidadeUpdate(accessContext: AccessContext, domain: IDomain.TurmaDisponibilidadeUpdateInput) {
+  async turmaDisponibilidadeUpdate(accessContext: AccessContext, domain: IDomain.TurmaDisponibilidadeFindOneInput & IDomain.TurmaDisponibilidadeUpdateInput) {
     // =========================================================
 
     const currentTurmaDisponibilidade = await this.turmaDisponibilidadeFindByIdStrict(accessContext, { id: domain.id });

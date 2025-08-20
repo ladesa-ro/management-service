@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { CidadeController } from "./application/cidade.controller";
+import { CidadeController } from "@/modules/cidade/api/cidade.controller";
 import { CidadeService } from "./domain/cidade.service";
 
 @Module({

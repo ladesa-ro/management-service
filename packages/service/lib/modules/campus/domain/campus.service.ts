@@ -2,13 +2,12 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { get, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
 import { v4 } from "uuid";
-import { QbEfficientLoad } from "@/contracts/qb-efficient-load";
-import { SearchService } from "@/legacy/application/helpers/search.service";
-import { type IDomain } from "@/legacy/domain/contracts/integration";
-import { EnderecoService } from "@/modules/endereco/endereco.service";
+import { EnderecoService } from "@/modules/endereco/domain/endereco.service";
+import { QbEfficientLoad, SearchService } from "@/shared";
 import type { AccessContext } from "@/shared/infrastructure/access-context";
 import { DatabaseContextService } from "@/shared/infrastructure/integrations/database";
 import type { CampusEntity } from "@/shared/infrastructure/integrations/database/typeorm/entities";
+import { type IDomain } from "@/shared/tsp/schema/typings";
 
 // ============================================================================
 
@@ -39,79 +38,70 @@ export class CampusService {
 
     // =========================================================
 
-    const paginated = await this.searchService.search(
-      qb,
-      domain
-        ? {
-            ...domain,
-            sortBy: domain.sortBy ? (domain.sortBy as any[]).map((s) => (typeof s === "string" ? s : Array.isArray(s) ? s.join(":") : `${s.column}:${s.direction ?? "ASC"}`)) : undefined,
-          }
-        : {},
-      {
-        select: [
-          "id",
+    const paginated = await this.searchService.search(qb, domain, {
+      select: [
+        "id",
 
-          "nomeFantasia",
-          "razaoSocial",
-          "apelido",
-          "cnpj",
-          "dateCreated",
+        "nomeFantasia",
+        "razaoSocial",
+        "apelido",
+        "cnpj",
+        "dateCreated",
 
-          "endereco.cidade.id",
-          "endereco.cidade.nome",
-          "endereco.cidade.estado.id",
-          "endereco.cidade.estado.nome",
-          "endereco.cidade.estado.sigla",
-        ],
-        relations: {
-          endereco: {
-            cidade: {
-              estado: true,
-            },
+        "endereco.cidade.id",
+        "endereco.cidade.nome",
+        "endereco.cidade.estado.id",
+        "endereco.cidade.estado.nome",
+        "endereco.cidade.estado.sigla",
+      ],
+      relations: {
+        endereco: {
+          cidade: {
+            estado: true,
           },
         },
-        sortableColumns: [
-          "id",
-
-          "nomeFantasia",
-          "razaoSocial",
-          "apelido",
-          "cnpj",
-          "dateCreated",
-
-          "endereco.cidade.id",
-          "endereco.cidade.nome",
-          "endereco.cidade.estado.id",
-          "endereco.cidade.estado.nome",
-          "endereco.cidade.estado.sigla",
-        ],
-        searchableColumns: [
-          "id",
-
-          "nomeFantasia",
-          "razaoSocial",
-          "apelido",
-          "cnpj",
-          "dateCreated",
-
-          "endereco.cidade.nome",
-          "endereco.cidade.estado.nome",
-          "endereco.cidade.estado.sigla",
-        ],
-        defaultSortBy: [
-          ["nomeFantasia", "ASC"],
-          ["endereco.cidade.estado.nome", "ASC"],
-          ["dateCreated", "ASC"],
-        ],
-        filterableColumns: {
-          "endereco.cidade.id": [FilterOperator.EQ],
-          "endereco.cidade.nome": [FilterOperator.EQ],
-          "endereco.cidade.estado.id": [FilterOperator.EQ],
-          "endereco.cidade.estado.nome": [FilterOperator.EQ],
-          "endereco.cidade.estado.sigla": [FilterOperator.EQ],
-        },
       },
-    );
+      sortableColumns: [
+        "id",
+
+        "nomeFantasia",
+        "razaoSocial",
+        "apelido",
+        "cnpj",
+        "dateCreated",
+
+        "endereco.cidade.id",
+        "endereco.cidade.nome",
+        "endereco.cidade.estado.id",
+        "endereco.cidade.estado.nome",
+        "endereco.cidade.estado.sigla",
+      ],
+      searchableColumns: [
+        "id",
+
+        "nomeFantasia",
+        "razaoSocial",
+        "apelido",
+        "cnpj",
+        "dateCreated",
+
+        "endereco.cidade.nome",
+        "endereco.cidade.estado.nome",
+        "endereco.cidade.estado.sigla",
+      ],
+      defaultSortBy: [
+        ["nomeFantasia", "ASC"],
+        ["endereco.cidade.estado.nome", "ASC"],
+        ["dateCreated", "ASC"],
+      ],
+      filterableColumns: {
+        "endereco.cidade.id": [FilterOperator.EQ],
+        "endereco.cidade.nome": [FilterOperator.EQ],
+        "endereco.cidade.estado.id": [FilterOperator.EQ],
+        "endereco.cidade.estado.nome": [FilterOperator.EQ],
+        "endereco.cidade.estado.sigla": [FilterOperator.EQ],
+      },
+    });
 
     // =========================================================
 
@@ -244,7 +234,7 @@ export class CampusService {
     return this.campusFindByIdStrict(accessContext, { id: campus.id });
   }
 
-  async campusUpdate(accessContext: AccessContext, domain: IDomain.CampusUpdateInput) {
+  async campusUpdate(accessContext: AccessContext, domain: IDomain.CampusFindOneInput & IDomain.CampusUpdateInput) {
     // =========================================================
 
     const currentCampus = await this.campusFindByIdStrict(accessContext, { id: domain.id });

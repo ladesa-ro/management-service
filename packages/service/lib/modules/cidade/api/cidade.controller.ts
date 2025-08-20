@@ -1,8 +1,8 @@
 import { Controller, Get } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import { type IAppRequest } from "@/contracts/openapi/document/app-openapi-typings";
-import { AppRequest } from "@/contracts/openapi/utils/app-request";
+import { AppRequest, IDomain, requestRepresentationMergeToDomain } from "@/shared";
 import { AccessContext, AccessContextHttp } from "@/shared/infrastructure/access-context";
+import { type IAppRequest } from "@/shared/tsp/openapi/document/app-openapi-typings";
 import { CidadeService } from "../domain/cidade.service";
 
 @ApiTags("cidades")
@@ -14,13 +14,15 @@ export class CidadeController {
 
   @Get("/")
   async findAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CidadeList") dto: IAppRequest<"CidadeList">) {
-    return this.cidadeService.findAll(accessContext, dto);
+    const domain: IDomain.CidadeListInput = requestRepresentationMergeToDomain(dto);
+    return this.cidadeService.findAll(accessContext, domain);
   }
 
   // ========================================================
 
   @Get("/:id")
   async findById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CidadeFindOneById") dto: IAppRequest<"CidadeFindOneById">) {
-    return this.cidadeService.findByIdStrict(accessContext, dto);
+    const domain: IDomain.CidadeFindOneInput = requestRepresentationMergeToDomain(dto);
+    return this.cidadeService.findByIdStrict(accessContext, domain);
   }
 }

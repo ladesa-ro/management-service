@@ -1,15 +1,13 @@
 import { Module } from "@nestjs/common";
-import { AmbienteModule } from "../ambiente";
-import { DiarioModule } from "../diario/diario.module";
-import { AulaController } from "./api/aula.controller";
-import { AulaResolver } from "./aula.resolver";
-import { AulaService } from "./domain/aula.service";
+import { AmbienteModule } from "@/modules/ambiente/ambiente.module";
+import { AulaController } from "@/modules/aula/api/aula.controller";
+import { AulaService } from "@/modules/aula/domain/aula.service";
+import { DiarioModule } from "@/modules/diario/diario.module";
 
 @Module({
   imports: [DiarioModule, AmbienteModule],
   controllers: [AulaController],
-  providers: [AulaService, AulaResolver],
+  providers: [AulaService],
   exports: [AulaService],
 })
-export class AulaModule {
-}
+export class AulaModule {}

@@ -1,7 +1,6 @@
 import { Controller, Get, type StreamableFile } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import type { IAppRequest } from "@/contracts/openapi/document/app-openapi-typings";
-import { AppRequest } from "@/contracts/openapi/utils/app-request";
+import { AppRequest, IAppRequest } from "@/shared";
 import { AccessContext, AccessContextHttp } from "@/shared/infrastructure/access-context";
 import { ArquivoService } from "../domain/arquivo.service";
 
@@ -12,9 +11,9 @@ export class ArquivoController {
 
   @Get(":id")
   async getFile(@AccessContextHttp() accessContext: AccessContext, @AppRequest("ArquivoGetFile") dto: IAppRequest<"ArquivoGetFile">): Promise<StreamableFile> {
-    return this.arquivoService.getStreamableFile(accessContext, dto.query.id, {
-      id: dto.query.acessoRecursoId,
-      nome: dto.query.acessoRecursoNome,
+    return this.arquivoService.getStreamableFile(accessContext, dto.params.id, {
+      id: dto.query["acesso.recurso.id"],
+      nome: dto.query["acesso.recurso.nome"],
     });
   }
 }

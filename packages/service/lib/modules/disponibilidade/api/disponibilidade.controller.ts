@@ -1,17 +1,12 @@
 import { Controller, Delete, Get, Patch, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import { requestRepresentationMergeToDomain } from "@/contracts/generic-adapters";
-import { type IAppRequest } from "@/contracts/openapi/document/app-openapi-typings";
-import { AppRequest } from "@/contracts/openapi/utils/app-request";
-import { type IDomain } from "@/legacy/domain/contracts/integration";
-import { AccessContext, AccessContextHttp } from "@/shared/infrastructure/access-context";
-import { DisponibilidadeService } from "./domain/disponibilidade.service";
+import { DisponibilidadeService } from "@/modules/disponibilidade/domain/disponibilidade.service";
+import { AccessContext, AccessContextHttp, AppRequest, type IAppRequest, type IDomain, requestRepresentationMergeToDomain } from "@/shared";
 
 @ApiTags("disponibilidades")
 @Controller("/disponibilidades")
 export class DisponibilidadeController {
-  constructor(private disponibilidadeService: DisponibilidadeService) {
-  }
+  constructor(private disponibilidadeService: DisponibilidadeService) {}
 
   @Get("/")
   async disponibilidadeFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DisponibilidadeList") dto: IAppRequest<"DisponibilidadeList">) {
@@ -20,7 +15,7 @@ export class DisponibilidadeController {
   }
 
   @Get("/:id")
-  async disponibilidadeFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DisponibilidadeFindById") dto: IAppRequest<"DisponibilidadeFindOneById">) {
+  async disponibilidadeFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DisponibilidadeFindOneById") dto: IAppRequest<"DisponibilidadeFindOneById">) {
     const domain: IDomain.DisponibilidadeFindOneInput = requestRepresentationMergeToDomain(dto);
     return this.disponibilidadeService.disponibilidadeFindByIdStrict(accessContext, domain);
   }
@@ -32,8 +27,8 @@ export class DisponibilidadeController {
   }
 
   @Patch("/:id")
-  async disponibilidadeUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DisponibilidadeUpdate") dto: IAppRequest<"DisponibilidadeUpdateOneById">) {
-    const domain: IDomain.DisponibilidadeUpdateInput = requestRepresentationMergeToDomain(dto);
+  async disponibilidadeUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DisponibilidadeUpdateOneById") dto: IAppRequest<"DisponibilidadeUpdateOneById">) {
+    const domain: IDomain.DisponibilidadeFindOneInput & IDomain.DisponibilidadeUpdateInput = requestRepresentationMergeToDomain(dto);
     return this.disponibilidadeService.disponibilidadeUpdate(accessContext, domain);
   }
 

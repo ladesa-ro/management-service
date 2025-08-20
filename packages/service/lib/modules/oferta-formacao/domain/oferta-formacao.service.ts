@@ -1,14 +1,13 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
-import { QbEfficientLoad } from "@/contracts/qb-efficient-load";
-import { SearchService } from "@/legacy/application/helpers/search.service";
-import { ModalidadeService } from "@/legacy/application/resources/ensino/institucional/modalidade/modalidade.service";
-import { type IDomain } from "@/legacy/domain/contracts/integration";
+import { ModalidadeService } from "@/modules/modalidade/domain/modalidade.service";
+import { QbEfficientLoad, SearchService } from "@/shared";
 import type { AccessContext } from "@/shared/infrastructure/access-context";
 import { paginateConfig } from "@/shared/infrastructure/fixtures";
 import { DatabaseContextService } from "@/shared/infrastructure/integrations/database";
 import type { OfertaFormacaoEntity } from "@/shared/infrastructure/integrations/database/typeorm/entities";
+import { type IDomain } from "@/shared/tsp/schema/typings";
 
 // ============================================================================
 
@@ -39,43 +38,34 @@ export class OfertaFormacaoService {
 
     // =========================================================
 
-    const paginated = await this.searchService.search(
-      qb,
-      domain
-        ? {
-            ...domain,
-            sortBy: domain.sortBy ? (domain.sortBy as any[]).map((s) => (typeof s === "string" ? s : Array.isArray(s) ? s.join(":") : `${s.column}:${s.direction ?? "ASC"}`)) : undefined,
-          }
-        : {},
-      {
-        ...paginateConfig,
-        select: [
-          "id",
+    const paginated = await this.searchService.search(qb, domain, {
+      ...paginateConfig,
+      select: [
+        "id",
 
-          "nome",
-          "slug",
+        "nome",
+        "slug",
 
-          "dateCreated",
-        ],
-        relations: {
-          modalidade: true,
-        },
-        sortableColumns: ["nome", "slug", "dateCreated"],
-        searchableColumns: [
-          "id",
-
-          "nome",
-          "slug",
-        ],
-        defaultSortBy: [
-          ["nome", "ASC"],
-          ["dateCreated", "ASC"],
-        ],
-        filterableColumns: {
-          "modalidade.id": [FilterOperator.EQ],
-        },
+        "dateCreated",
+      ],
+      relations: {
+        modalidade: true,
       },
-    );
+      sortableColumns: ["nome", "slug", "dateCreated"],
+      searchableColumns: [
+        "id",
+
+        "nome",
+        "slug",
+      ],
+      defaultSortBy: [
+        ["nome", "ASC"],
+        ["dateCreated", "ASC"],
+      ],
+      filterableColumns: {
+        "modalidade.id": [FilterOperator.EQ],
+      },
+    });
 
     // =========================================================
 
@@ -206,7 +196,7 @@ export class OfertaFormacaoService {
     });
   }
 
-  async ofertaFormacaoUpdate(accessContext: AccessContext, domain: IDomain.OfertaFormacaoUpdateInput) {
+  async ofertaFormacaoUpdate(accessContext: AccessContext, domain: IDomain.OfertaFormacaoFindOneInput & IDomain.OfertaFormacaoUpdateInput) {
     // =========================================================
 
     const currentOfertaFormacao = await this.ofertaFormacaoFindByIdStrict(accessContext, { id: domain.id });

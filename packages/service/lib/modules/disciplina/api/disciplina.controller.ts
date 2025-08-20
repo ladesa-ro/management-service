@@ -1,17 +1,15 @@
 import { Controller, Delete, Get, Patch, Post, Put, UploadedFile } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import { requestRepresentationMergeToDomain } from "@/contracts/generic-adapters";
-import { type IAppRequest } from "@/contracts/openapi/document/app-openapi-typings";
-import { AppRequest } from "@/contracts/openapi/utils/app-request";
-import { type IDomain } from "@/legacy/domain/contracts/integration";
+import { AppRequest, requestRepresentationMergeToDomain } from "@/shared";
 import { AccessContext, AccessContextHttp } from "@/shared/infrastructure/access-context";
-import { DisciplinaService } from "./domain/disciplina.service";
+import { type IAppRequest } from "@/shared/tsp/openapi/document/app-openapi-typings";
+import { type IDomain } from "@/shared/tsp/schema/typings";
+import { DisciplinaService } from "../domain/disciplina.service";
 
 @ApiTags("disciplinas")
 @Controller("/disciplinas")
 export class DisciplinaController {
-  constructor(private disciplinaService: DisciplinaService) {
-  }
+  constructor(private disciplinaService: DisciplinaService) {}
 
   @Get("/")
   async disciplinaFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DisciplinaList") dto: IAppRequest<"DisciplinaList">) {
@@ -20,7 +18,7 @@ export class DisciplinaController {
   }
 
   @Get("/:id")
-  async disciplinaFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DisciplinaFindById") dto: IAppRequest<"DisciplinaFindOneById">) {
+  async disciplinaFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DisciplinaFindOneById") dto: IAppRequest<"DisciplinaFindOneById">) {
     const domain: IDomain.DisciplinaFindOneInput = requestRepresentationMergeToDomain(dto);
     return this.disciplinaService.disciplinaFindByIdStrict(accessContext, domain);
   }
@@ -32,8 +30,8 @@ export class DisciplinaController {
   }
 
   @Patch("/:id")
-  async disciplinaUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DisciplinaUpdate") dto: IAppRequest<"DisciplinaUpdateOneById">) {
-    const domain: IDomain.DisciplinaUpdateInput = requestRepresentationMergeToDomain(dto);
+  async disciplinaUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DisciplinaUpdateOneById") dto: IAppRequest<"DisciplinaUpdateOneById">) {
+    const domain: IDomain.DisciplinaFindOneInput & IDomain.DisciplinaUpdateInput = requestRepresentationMergeToDomain(dto);
     return this.disciplinaService.disciplinaUpdate(accessContext, domain);
   }
 

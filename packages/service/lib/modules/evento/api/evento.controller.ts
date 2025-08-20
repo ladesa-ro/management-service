@@ -1,17 +1,15 @@
 import { Controller, Delete, Get, Patch, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import { requestRepresentationMergeToDomain } from "@/contracts/generic-adapters";
-import { type IAppRequest } from "@/contracts/openapi/document/app-openapi-typings";
-import { AppRequest } from "@/contracts/openapi/utils/app-request";
-import { type IDomain } from "@/legacy/domain/contracts/integration";
+import { AppRequest, requestRepresentationMergeToDomain } from "@/shared";
 import { AccessContext, AccessContextHttp } from "@/shared/infrastructure/access-context";
-import { EventoService } from "./domain/evento.service";
+import { type IAppRequest } from "@/shared/tsp/openapi/document/app-openapi-typings";
+import { type IDomain } from "@/shared/tsp/schema/typings";
+import { EventoService } from "../domain/evento.service";
 
 @ApiTags("eventos")
 @Controller("/eventos")
 export class EventoController {
-  constructor(private eventoService: EventoService) {
-  }
+  constructor(private eventoService: EventoService) {}
 
   @Get("/")
   async eventoFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("EventoList") dto: IAppRequest<"EventoList">) {
@@ -20,7 +18,7 @@ export class EventoController {
   }
 
   @Get("/:id")
-  async eventoFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("EventoFindById") dto: IAppRequest<"EventoFindOneById">) {
+  async eventoFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("EventoFindOneById") dto: IAppRequest<"EventoFindOneById">) {
     const domain: IDomain.EventoFindOneInput = requestRepresentationMergeToDomain(dto);
     return this.eventoService.eventoFindByIdStrict(accessContext, domain);
   }
@@ -32,8 +30,8 @@ export class EventoController {
   }
 
   @Patch("/:id")
-  async eventoUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("EventoUpdate") dto: IAppRequest<"EventoUpdateOneById">) {
-    const domain: IDomain.EventoUpdateInput = requestRepresentationMergeToDomain(dto);
+  async eventoUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("EventoUpdateOneById") dto: IAppRequest<"EventoUpdateOneById">) {
+    const domain: IDomain.EventoFindOneInput & IDomain.EventoUpdateInput = requestRepresentationMergeToDomain(dto);
     return this.eventoService.eventoUpdate(accessContext, domain);
   }
 

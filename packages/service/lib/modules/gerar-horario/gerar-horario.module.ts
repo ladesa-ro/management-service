@@ -9,5 +9,4 @@ import { GerarHorarioService } from "./domain/gerar-horario.service";
   providers: [GerarHorarioService],
   exports: [GerarHorarioService],
 })
-export class GerarHorarioModule {
-}
+export class GerarHorarioModule {}

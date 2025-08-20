@@ -1,17 +1,15 @@
 import { Controller, Delete, Get, Patch, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import { requestRepresentationMergeToDomain } from "@/contracts/generic-adapters";
-import { type IAppRequest } from "@/contracts/openapi/document/app-openapi-typings";
-import { AppRequest } from "@/contracts/openapi/utils/app-request";
-import { type IDomain } from "@/legacy/domain/contracts/integration";
+import { AppRequest, requestRepresentationMergeToDomain } from "@/shared";
 import { AccessContext, AccessContextHttp } from "@/shared/infrastructure/access-context";
-import { AulaService } from "./domain/aula.service";
+import { type IAppRequest } from "@/shared/tsp/openapi/document/app-openapi-typings";
+import { type IDomain } from "@/shared/tsp/schema/typings";
+import { AulaService } from "../domain/aula.service";
 
 @ApiTags("aulas")
 @Controller("/aulas")
 export class AulaController {
-  constructor(private aulaService: AulaService) {
-  }
+  constructor(private aulaService: AulaService) {}
 
   @Get("/")
   async aulaFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("AulaList") dto: IAppRequest<"AulaList">) {
@@ -20,7 +18,7 @@ export class AulaController {
   }
 
   @Get("/:id")
-  async aulaFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("AulaFindById") dto: IAppRequest<"AulaFindOneById">) {
+  async aulaFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("AulaFindOneById") dto: IAppRequest<"AulaFindOneById">) {
     const domain: IDomain.AulaFindOneInput = requestRepresentationMergeToDomain(dto);
     return this.aulaService.aulaFindByIdStrict(accessContext, domain);
   }
@@ -32,8 +30,8 @@ export class AulaController {
   }
 
   @Patch("/:id")
-  async aulaUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("AulaUpdate") dto: IAppRequest<"AulaUpdateOneById">) {
-    const domain: IDomain.AulaUpdateInput = requestRepresentationMergeToDomain(dto);
+  async aulaUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("AulaUpdateOneById") dto: IAppRequest<"AulaUpdateOneById">) {
+    const domain: IDomain.AulaFindOneInput & IDomain.AulaUpdateInput = requestRepresentationMergeToDomain(dto);
     return this.aulaService.aulaUpdate(accessContext, domain);
   }
 

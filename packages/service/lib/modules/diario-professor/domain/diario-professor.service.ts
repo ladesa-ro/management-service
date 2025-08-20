@@ -1,15 +1,14 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
-import { QbEfficientLoad } from "@/contracts/qb-efficient-load";
-import { SearchService } from "@/legacy/application/helpers/search.service";
-import { type IDomain } from "@/legacy/domain/contracts/integration";
-import { PerfilService } from "@/modules/perfil/perfil.service";
+import { DiarioService } from "@/modules/diario/domain/diario.service";
+import { PerfilService } from "@/modules/perfil/domain/perfil.service";
+import { QbEfficientLoad, SearchService } from "@/shared";
 import type { AccessContext } from "@/shared/infrastructure/access-context";
 import { paginateConfig } from "@/shared/infrastructure/fixtures";
 import { DatabaseContextService } from "@/shared/infrastructure/integrations/database";
 import type { DiarioProfessorEntity } from "@/shared/infrastructure/integrations/database/typeorm/entities";
-import { DiarioService } from "../diario/diario.service";
+import { type IDomain } from "@/shared/tsp/schema/typings";
 
 // ============================================================================
 
@@ -240,7 +239,7 @@ export class DiarioProfessorService {
     });
   }
 
-  async diarioProfessorUpdate(accessContext: AccessContext, domain: IDomain.DiarioProfessorUpdateInput) {
+  async diarioProfessorUpdate(accessContext: AccessContext, domain: IDomain.DiarioProfessorFindOneInput & IDomain.DiarioProfessorUpdateInput) {
     // =========================================================
 
     const currentDiarioProfessor = await this.diarioProfessorFindByIdStrict(accessContext, { id: domain.id });

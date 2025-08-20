@@ -9,5 +9,4 @@ import { AutorizacaoService } from "./domain/autorizacao.service";
   providers: [AutorizacaoService],
   exports: [AutorizacaoService],
 })
-export class AutorizacaoModule {
-}
+export class AutorizacaoModule {}

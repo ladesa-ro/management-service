@@ -1,16 +1,14 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
-import { QbEfficientLoad } from "@/contracts/qb-efficient-load";
-import { SearchService } from "@/legacy/application/helpers/search.service";
-import { TurmaService } from "@/legacy/application/resources/ensino/discente/turma/turma.service";
-import { type IDomain } from "@/legacy/domain/contracts/integration";
-import { AmbienteService } from "@/modules/ambiente/ambiente.service";
-import { CalendarioLetivoService } from "@/modules/calendario-letivo/calendario-letivo.service";
-import { DisciplinaService } from "@/modules/disciplina/disciplina.service";
+import { AmbienteService } from "@/modules/ambiente/domain/ambiente.service";
+import { CalendarioLetivoService } from "@/modules/calendario-letivo/domain/calendario-letivo.service";
+import { DisciplinaService } from "@/modules/disciplina/domain/disciplina.service";
+import { TurmaService } from "@/modules/turma/domain/turma.service";
+import { IDomain, SearchService } from "@/shared";
 import type { AccessContext } from "@/shared/infrastructure/access-context";
 import { paginateConfig } from "@/shared/infrastructure/fixtures";
-import { DatabaseContextService } from "@/shared/infrastructure/integrations/database";
+import { DatabaseContextService, QbEfficientLoad } from "@/shared/infrastructure/integrations/database";
 import type { DiarioEntity } from "@/shared/infrastructure/integrations/database/typeorm/entities";
 
 // ============================================================================
@@ -45,56 +43,47 @@ export class DiarioService {
 
     // =========================================================
 
-    const paginated = await this.searchService.search(
-      qb,
-      domain
-        ? {
-            ...domain,
-            sortBy: domain.sortBy ? (domain.sortBy as any[]).map((s) => (typeof s === "string" ? s : Array.isArray(s) ? s.join(":") : `${s.column}:${s.direction ?? "ASC"}`)) : undefined,
-          }
-        : {},
-      {
-        ...paginateConfig,
-        select: [
-          "id",
+    const paginated = await this.searchService.search(qb, domain, {
+      ...paginateConfig,
+      select: [
+        "id",
 
-          "ativo",
+        "ativo",
 
-          "turma.id",
-          "turma.periodo",
-          "disciplina.id",
-          "disciplina.nome",
-          "ambientePadrao.id",
-          "ambientePadrao.nome",
-        ],
-        sortableColumns: [
-          "ativo",
+        "turma.id",
+        "turma.periodo",
+        "disciplina.id",
+        "disciplina.nome",
+        "ambientePadrao.id",
+        "ambientePadrao.nome",
+      ],
+      sortableColumns: [
+        "ativo",
 
-          "disciplina.nome",
-          "ambientePadrao.nome",
-        ],
-        relations: {
-          turma: true,
-          disciplina: true,
-          ambientePadrao: true,
-        },
-        searchableColumns: [
-          "id",
-
-          "ativo",
-          "ano",
-          "etapa",
-          "turma.periodo",
-          "disciplina.nome",
-        ],
-        defaultSortBy: [],
-        filterableColumns: {
-          "turma.id": [FilterOperator.EQ],
-          "disciplina.id": [FilterOperator.EQ],
-          "ambientePadrao.id": [FilterOperator.EQ],
-        },
+        "disciplina.nome",
+        "ambientePadrao.nome",
+      ],
+      relations: {
+        turma: true,
+        disciplina: true,
+        ambientePadrao: true,
       },
-    );
+      searchableColumns: [
+        "id",
+
+        "ativo",
+        "ano",
+        "etapa",
+        "turma.periodo",
+        "disciplina.nome",
+      ],
+      defaultSortBy: [],
+      filterableColumns: {
+        "turma.id": [FilterOperator.EQ],
+        "disciplina.id": [FilterOperator.EQ],
+        "ambientePadrao.id": [FilterOperator.EQ],
+      },
+    });
 
     // =========================================================
 
@@ -239,7 +228,7 @@ export class DiarioService {
     return this.diarioFindByIdStrict(accessContext, { id: diario.id });
   }
 
-  async diarioUpdate(accessContext: AccessContext, domain: IDomain.DiarioUpdateInput) {
+  async diarioUpdate(accessContext: AccessContext, domain: IDomain.DiarioFindOneInput & IDomain.DiarioUpdateInput) {
     // =========================================================
 
     const currentDiario = await this.diarioFindByIdStrict(accessContext, { id: domain.id });

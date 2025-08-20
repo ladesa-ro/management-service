@@ -1,13 +1,11 @@
 import { Module } from "@nestjs/common";
 import { DisponibilidadeController } from "./api/disponibilidade.controller";
-import { DisponibilidadeResolver } from "./disponibilidade.resolver";
 import { DisponibilidadeService } from "./domain/disponibilidade.service";
 
 @Module({
   imports: [],
   controllers: [DisponibilidadeController],
-  providers: [DisponibilidadeService, DisponibilidadeResolver],
+  providers: [DisponibilidadeService],
   exports: [DisponibilidadeService],
 })
-export class DisponibilidadeModule {
-}
+export class DisponibilidadeModule {}

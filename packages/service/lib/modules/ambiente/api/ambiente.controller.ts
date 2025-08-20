@@ -1,17 +1,12 @@
 import { Controller, Delete, Get, Patch, Post, Put, UploadedFile } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import { requestRepresentationMergeToDomain } from "@/contracts/generic-adapters";
-import { type IAppRequest } from "@/contracts/openapi/document/app-openapi-typings";
-import { AppRequest } from "@/contracts/openapi/utils/app-request";
-import { type IDomain } from "@/legacy/domain/contracts/integration";
-import { AccessContext, AccessContextHttp } from "@/shared/infrastructure/access-context";
-import { AmbienteService } from "./domain/ambiente.service";
+import { AccessContext, AccessContextHttp, AppRequest, type IAppRequest, type IDomain, requestRepresentationMergeToDomain } from "@/shared";
+import { AmbienteService } from "../domain/ambiente.service";
 
 @ApiTags("ambientes")
 @Controller("/ambientes")
 export class AmbienteController {
-  constructor(private ambienteService: AmbienteService) {
-  }
+  constructor(private ambienteService: AmbienteService) {}
 
   @Get("/")
   async ambienteFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("AmbienteList") dto: IAppRequest<"AmbienteList">) {
@@ -33,7 +28,7 @@ export class AmbienteController {
 
   @Patch("/:id")
   async ambienteUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("AmbienteUpdateOneById") dto: IAppRequest<"AmbienteUpdateOneById">) {
-    const domain: IDomain.AmbienteUpdateInput = requestRepresentationMergeToDomain(dto);
+    const domain: IDomain.AmbienteFindOneInput & IDomain.AmbienteUpdateInput = requestRepresentationMergeToDomain(dto);
     return this.ambienteService.ambienteUpdate(accessContext, domain);
   }
 

@@ -1,17 +1,15 @@
 import { Controller, Delete, Get, Patch, Post, Put, UploadedFile } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import { requestRepresentationMergeToDomain } from "@/contracts/generic-adapters";
-import { type IAppRequest } from "@/contracts/openapi/document/app-openapi-typings";
-import { AppRequest } from "@/contracts/openapi/utils/app-request";
-import { type IDomain } from "@/legacy/domain/contracts/integration";
+import { AppRequest, requestRepresentationMergeToDomain } from "@/shared";
 import { AccessContext, AccessContextHttp } from "@/shared/infrastructure/access-context";
-import { UsuarioService } from "./domain/usuario.service";
+import { type IAppRequest } from "@/shared/tsp/openapi/document/app-openapi-typings";
+import { type IDomain } from "@/shared/tsp/schema/typings";
+import { UsuarioService } from "../domain/usuario.service";
 
 @Controller("/usuarios")
 @ApiTags("usuarios")
 export class UsuarioController {
-  constructor(private usuarioService: UsuarioService) {
-  }
+  constructor(private usuarioService: UsuarioService) {}
 
   @Get("/:id/ensino")
   async usuarioEnsinoById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("UsuarioEnsinoById") dto: IAppRequest<"UsuarioEnsinoById">) {
@@ -26,7 +24,7 @@ export class UsuarioController {
   }
 
   @Get("/:id")
-  async usuarioFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("UsuarioFindById") dto: IAppRequest<"UsuarioFindOneById">) {
+  async usuarioFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("UsuarioFindOneById") dto: IAppRequest<"UsuarioFindOneById">) {
     const domain: IDomain.UsuarioFindOneInput = requestRepresentationMergeToDomain(dto);
     return this.usuarioService.usuarioFindByIdStrict(accessContext, domain);
   }
@@ -38,8 +36,8 @@ export class UsuarioController {
   }
 
   @Patch("/:id")
-  async usuarioUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("UsuarioUpdate") dto: IAppRequest<"UsuarioUpdateOneById">) {
-    const domain: IDomain.UsuarioUpdateInput = requestRepresentationMergeToDomain(dto);
+  async usuarioUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("UsuarioUpdateOneById") dto: IAppRequest<"UsuarioUpdateOneById">) {
+    const domain: IDomain.UsuarioFindOneInput & IDomain.UsuarioUpdateInput = requestRepresentationMergeToDomain(dto);
     return this.usuarioService.usuarioUpdate(accessContext, domain);
   }
 
@@ -48,7 +46,7 @@ export class UsuarioController {
     @AccessContextHttp() accessContext: AccessContext,
     @AppRequest("UsuarioGetImagemCapa") dto: any, // Temporarily use 'any' to bypass the type error
   ) {
-    return this.usuarioService.usuarioGetImagemCapa(accessContext, dto.path.id);
+    return this.usuarioService.usuarioGetImagemCapa(accessContext, dto.params.id);
   }
 
   @Put("/:id/imagem/capa")
@@ -63,16 +61,18 @@ export class UsuarioController {
 
   @Get("/:id/imagem/perfil")
   async usuarioGetImagemPerfil(@AccessContextHttp() accessContext: AccessContext, @AppRequest("UsuarioGetImagemPerfil") dto: IAppRequest<"UsuarioGetImagemPerfil">) {
-    return this.usuarioService.usuarioGetImagemPerfil(accessContext, dto.path.id);
+    const domain: IDomain.UsuarioFindOneInput = requestRepresentationMergeToDomain(dto);
+    return this.usuarioService.usuarioGetImagemPerfil(accessContext, domain.id);
   }
 
   @Put("/:id/imagem/perfil")
   async usuarioImagemPerfilSave(
+    @UploadedFile() file: Express.Multer.File,
     @AccessContextHttp() accessContext: AccessContext,
     @AppRequest("UsuarioSetImagemPerfil") dto: IAppRequest<"UsuarioSetImagemPerfil">,
-    @UploadedFile() file: Express.Multer.File,
   ) {
-    return this.usuarioService.usuarioUpdateImagemPerfil(accessContext, dto, file);
+    const domain: IDomain.UsuarioFindOneInput = requestRepresentationMergeToDomain(dto);
+    return this.usuarioService.usuarioUpdateImagemPerfil(accessContext, domain, file);
   }
 
   @Delete("/:id")

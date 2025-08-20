@@ -1,14 +1,13 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
-import { QbEfficientLoad } from "@/contracts/qb-efficient-load";
-import { SearchService } from "@/legacy/application/helpers/search.service";
-import { type IDomain } from "@/legacy/domain/contracts/integration";
+import { AmbienteService } from "@/modules/ambiente/domain/ambiente.service";
+import { UsuarioService } from "@/modules/usuario/domain/usuario.service";
+import { QbEfficientLoad, SearchService } from "@/shared";
 import type { AccessContext } from "@/shared/infrastructure/access-context";
 import { DatabaseContextService } from "@/shared/infrastructure/integrations/database";
 import type { ReservaEntity } from "@/shared/infrastructure/integrations/database/typeorm/entities";
-import { AmbienteService } from "../ambiente/ambiente.service";
-import { UsuarioService } from "../legacy/application/resources/autenticacao/usuario/usuario.service";
+import { type IDomain } from "@/shared/tsp/schema/typings";
 
 // ============================================================================
 
@@ -42,64 +41,55 @@ export class ReservaService {
 
     // =========================================================
 
-    const paginated = await this.searchService.search(
-      qb,
-      domain
-        ? {
-            ...domain,
-            sortBy: domain.sortBy ? (domain.sortBy as any[]).map((s) => (typeof s === "string" ? s : Array.isArray(s) ? s.join(":") : `${s.column}:${s.direction ?? "ASC"}`)) : undefined,
-          }
-        : {},
-      {
-        select: ["id"],
-        sortableColumns: [
-          "situacao",
-          "motivo",
-          "tipo",
-          "rrule",
+    const paginated = await this.searchService.search(qb, domain, {
+      select: ["id"],
+      sortableColumns: [
+        "situacao",
+        "motivo",
+        "tipo",
+        "rrule",
 
-          "ambiente.id",
-          "ambiente.nome",
-          "ambiente.capacidade",
-          "ambiente.bloco.codigo",
-          "ambiente.bloco.nome",
-        ],
-        searchableColumns: [
-          "id",
+        "ambiente.id",
+        "ambiente.nome",
+        "ambiente.capacidade",
+        "ambiente.bloco.codigo",
+        "ambiente.bloco.nome",
+      ],
+      searchableColumns: [
+        "id",
 
-          "situacao",
-          "motivo",
-          "tipo",
-          "rrule",
+        "situacao",
+        "motivo",
+        "tipo",
+        "rrule",
 
-          "ambiente.nome",
-          "ambiente.descricao",
-          "ambiente.codigo",
-          "ambiente.bloco.nome",
-          "ambiente.bloco.codigo",
-        ],
-        relations: {
-          ambiente: {
-            bloco: {
-              campus: true,
-            },
+        "ambiente.nome",
+        "ambiente.descricao",
+        "ambiente.codigo",
+        "ambiente.bloco.nome",
+        "ambiente.bloco.codigo",
+      ],
+      relations: {
+        ambiente: {
+          bloco: {
+            campus: true,
           },
-          usuario: true,
-          // intervaloDeTempo: true,
         },
-
-        defaultSortBy: [],
-
-        filterableColumns: {
-          situacao: [FilterOperator.EQ],
-          tipo: [FilterOperator.EQ],
-
-          "ambiente.id": [FilterOperator.EQ],
-          "ambiente.bloco.id": [FilterOperator.EQ],
-          "ambiente.bloco.campus.id": [FilterOperator.EQ],
-        },
+        usuario: true,
+        // intervaloDeTempo: true,
       },
-    );
+
+      defaultSortBy: [],
+
+      filterableColumns: {
+        situacao: [FilterOperator.EQ],
+        tipo: [FilterOperator.EQ],
+
+        "ambiente.id": [FilterOperator.EQ],
+        "ambiente.bloco.id": [FilterOperator.EQ],
+        "ambiente.bloco.campus.id": [FilterOperator.EQ],
+      },
+    });
 
     // =========================================================
 
@@ -236,7 +226,7 @@ export class ReservaService {
     return this.reservaFindByIdStrict(accessContext, { id: reserva.id });
   }
 
-  async reservaUpdate(accessContext: AccessContext, domain: IDomain.ReservaUpdateInput) {
+  async reservaUpdate(accessContext: AccessContext, domain: IDomain.ReservaFindOneInput & IDomain.ReservaUpdateInput) {
     // =========================================================
 
     const currentReserva = await this.reservaFindByIdStrict(accessContext, { id: domain.id });

@@ -1,15 +1,14 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { map, pick } from "lodash";
 import { FilterOperator, FilterSuffix } from "nestjs-paginate";
-import { QbEfficientLoad } from "@/contracts/qb-efficient-load";
-import { SearchService } from "@/legacy/application/helpers/search.service";
-import { type IDomain } from "@/legacy/domain/contracts/integration";
-import { ArquivoService } from "@/modules/arquivo/arquivo.service";
-import { ImagemService } from "@/modules/imagem/imagem.service";
+import { ArquivoService } from "@/modules/arquivo/domain/arquivo.service";
+import { ImagemService } from "@/modules/imagem/domain/imagem.service";
+import { QbEfficientLoad, SearchService } from "@/shared";
 import type { AccessContext } from "@/shared/infrastructure/access-context";
 import { paginateConfig } from "@/shared/infrastructure/fixtures";
 import { DatabaseContextService } from "@/shared/infrastructure/integrations/database";
 import type { DisciplinaEntity } from "@/shared/infrastructure/integrations/database/typeorm/entities";
+import { type IDomain } from "@/shared/tsp/schema/typings";
 
 // ============================================================================
 
@@ -41,38 +40,29 @@ export class DisciplinaService {
 
     // =========================================================
 
-    const paginated = await this.searchService.search(
-      qb,
-      domain
-        ? {
-            ...domain,
-            sortBy: domain.sortBy ? (domain.sortBy as any[]).map((s) => (typeof s === "string" ? s : Array.isArray(s) ? s.join(":") : `${s.column}:${s.direction ?? "ASC"}`)) : undefined,
-          }
-        : {},
-      {
-        ...paginateConfig,
-        relations: { diarios: true },
-        select: [
-          "id",
+    const paginated = await this.searchService.search(qb, domain, {
+      ...paginateConfig,
+      relations: { diarios: true },
+      select: [
+        "id",
 
-          "nome",
-          "nomeAbreviado",
-          "cargaHoraria",
-        ],
-        sortableColumns: ["nome", "cargaHoraria"],
-        searchableColumns: [
-          "id",
+        "nome",
+        "nomeAbreviado",
+        "cargaHoraria",
+      ],
+      sortableColumns: ["nome", "cargaHoraria"],
+      searchableColumns: [
+        "id",
 
-          "nome",
-          "nomeAbreviado",
-          "cargaHoraria",
-        ],
-        defaultSortBy: [["nome", "ASC"]],
-        filterableColumns: {
-          "diarios.id": [FilterOperator.EQ, FilterOperator.NULL, FilterSuffix.NOT],
-        },
+        "nome",
+        "nomeAbreviado",
+        "cargaHoraria",
+      ],
+      defaultSortBy: [["nome", "ASC"]],
+      filterableColumns: {
+        "diarios.id": [FilterOperator.EQ, FilterOperator.NULL, FilterSuffix.NOT],
       },
-    );
+    });
 
     // =========================================================
 
@@ -189,7 +179,7 @@ export class DisciplinaService {
     return this.disciplinaFindByIdStrict(accessContext, { id: disciplina.id });
   }
 
-  async disciplinaUpdate(accessContext: AccessContext, domain: IDomain.DisciplinaUpdateInput) {
+  async disciplinaUpdate(accessContext: AccessContext, domain: IDomain.DisciplinaFindOneInput & IDomain.DisciplinaUpdateInput) {
     // =========================================================
 
     const currentDisciplina = await this.disciplinaFindByIdStrict(accessContext, { id: domain.id });

@@ -1,12 +1,11 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { map, pick } from "lodash";
-import { QbEfficientLoad } from "@/contracts/qb-efficient-load";
-import { SearchService } from "@/legacy/application/helpers/search.service";
-import { type IDomain } from "@/legacy/domain/contracts/integration";
+import { QbEfficientLoad, SearchService } from "@/shared";
 import type { AccessContext } from "@/shared/infrastructure/access-context";
 import { paginateConfig } from "@/shared/infrastructure/fixtures";
 import { DatabaseContextService } from "@/shared/infrastructure/integrations/database";
 import type { NivelFormacaoEntity } from "@/shared/infrastructure/integrations/database/typeorm/entities";
+import { type IDomain } from "@/shared/tsp/schema/typings";
 
 // ============================================================================
 
@@ -36,36 +35,27 @@ export class NivelFormacaoService {
 
     // =========================================================
 
-    const paginated = await this.searchService.search(
-      qb,
-      domain
-        ? {
-            ...domain,
-            sortBy: domain.sortBy ? (domain.sortBy as any[]).map((s) => (typeof s === "string" ? s : Array.isArray(s) ? s.join(":") : `${s.column}:${s.direction ?? "ASC"}`)) : undefined,
-          }
-        : {},
-      {
-        ...paginateConfig,
-        select: [
-          "id",
+    const paginated = await this.searchService.search(qb, domain, {
+      ...paginateConfig,
+      select: [
+        "id",
 
-          "slug",
+        "slug",
 
-          "dateCreated",
-        ],
-        sortableColumns: ["slug", "dateCreated"],
-        searchableColumns: [
-          "id",
+        "dateCreated",
+      ],
+      sortableColumns: ["slug", "dateCreated"],
+      searchableColumns: [
+        "id",
 
-          "slug",
-        ],
-        defaultSortBy: [
-          ["slug", "ASC"],
-          ["dateCreated", "ASC"],
-        ],
-        filterableColumns: {},
-      },
-    );
+        "slug",
+      ],
+      defaultSortBy: [
+        ["slug", "ASC"],
+        ["dateCreated", "ASC"],
+      ],
+      filterableColumns: {},
+    });
 
     // =========================================================
 
@@ -184,7 +174,7 @@ export class NivelFormacaoService {
     });
   }
 
-  async nivelFormacaoUpdate(accessContext: AccessContext, domain: IDomain.NivelFormacaoUpdateInput) {
+  async nivelFormacaoUpdate(accessContext: AccessContext, domain: IDomain.NivelFormacaoFindOneInput & IDomain.NivelFormacaoUpdateInput) {
     // =========================================================
 
     const currentNivelFormacao = await this.nivelFormacaoFindByIdStrict(accessContext, { id: domain.id });

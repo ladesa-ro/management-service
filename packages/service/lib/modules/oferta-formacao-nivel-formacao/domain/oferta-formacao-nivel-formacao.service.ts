@@ -1,15 +1,14 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
-import { QbEfficientLoad } from "@/contracts/qb-efficient-load";
-import { SearchService } from "@/legacy/application/helpers/search.service";
-import { NivelFormacaoService } from "@/legacy/application/resources/ensino/institucional/nivel-formacao/nivel-formacao.service";
-import { OfertaFormacaoService } from "@/legacy/application/resources/ensino/institucional/oferta-formacao/oferta-formacao.service";
-import { type IDomain } from "@/legacy/domain/contracts/integration";
+import { NivelFormacaoService } from "@/modules/nivel-formacao/domain/nivel-formacao.service";
+import { OfertaFormacaoService } from "@/modules/oferta-formacao/domain/oferta-formacao.service";
+import { QbEfficientLoad, SearchService } from "@/shared";
 import type { AccessContext } from "@/shared/infrastructure/access-context";
 import { paginateConfig } from "@/shared/infrastructure/fixtures";
 import { DatabaseContextService } from "@/shared/infrastructure/integrations/database";
 import type { OfertaFormacaoNivelFormacaoEntity } from "@/shared/infrastructure/integrations/database/typeorm/entities";
+import { type IDomain } from "@/shared/tsp/schema/typings";
 
 // ============================================================================
 
@@ -224,7 +223,7 @@ export class OfertaFormacaoNivelFormacaoService {
     });
   }
 
-  async ofertaFormacaoNivelFormacaoUpdate(accessContext: AccessContext, domain: IDomain.OfertaFormacaoNivelFormacaoUpdateInput) {
+  async ofertaFormacaoNivelFormacaoUpdate(accessContext: AccessContext, domain: IDomain.OfertaFormacaoNivelFormacaoFindOneInput & IDomain.OfertaFormacaoNivelFormacaoUpdateInput) {
     // =========================================================
 
     const currentOfertaFormacaoNivelFormacao = await this.ofertaFormacaoNivelFormacaoFindByIdStrict(accessContext, { id: domain.id });

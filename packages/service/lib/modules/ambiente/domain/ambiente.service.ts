@@ -1,15 +1,13 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
-import { QbEfficientLoad } from "@/contracts/qb-efficient-load";
-import { SearchService } from "@/legacy/application/helpers/search.service";
-import { type IDomain } from "@/legacy/domain/contracts/integration";
-import { ArquivoService } from "@/modules/arquivo/arquivo.service";
-import { ImagemService } from "@/modules/imagem/imagem.service";
-import type { AccessContext } from "@/shared/infrastructure/access-context";
-import { DatabaseContextService } from "@/shared/infrastructure/integrations/database";
-import type { AmbienteEntity } from "@/shared/infrastructure/integrations/database/typeorm/entities";
-import { BlocoService } from "../bloco/bloco.service";
+import { ArquivoService } from "@/modules/arquivo/domain/arquivo.service";
+import { BlocoService } from "@/modules/bloco/domain/bloco.service";
+import { ImagemService } from "@/modules/imagem/domain/imagem.service";
+import { AccessContext, IDomain, QbEfficientLoad } from "@/shared";
+import { DatabaseContextService } from "@/shared/infrastructure/integrations/database/context/database-context.service";
+import { AmbienteEntity } from "@/shared/infrastructure/integrations/database/typeorm/entities";
+import { SearchService } from "@/shared/search/search.service";
 
 // ============================================================================
 
@@ -42,64 +40,55 @@ export class AmbienteService {
 
     // =========================================================
 
-    const paginated = await this.searchService.search(
-      qb,
-      domain
-        ? {
-            ...domain,
-            sortBy: domain.sortBy ? (domain.sortBy as any[]).map((s) => (typeof s === "string" ? s : Array.isArray(s) ? s.join(":") : `${s.column}:${s.direction ?? "ASC"}`)) : undefined,
-          }
-        : {},
-      {
-        select: [
-          "id",
+    const paginated = await this.searchService.search(qb, domain, {
+      select: [
+        "id",
 
-          "nome",
-          "descricao",
-          "codigo",
-          "capacidade",
-          "tipo",
-          "dateCreated",
+        "nome",
+        "descricao",
+        "codigo",
+        "capacidade",
+        "tipo",
+        "dateCreated",
 
-          "bloco.id",
-          "bloco.campus.id",
-        ],
-        relations: {
-          bloco: {
-            campus: true,
-          },
-        },
-        sortableColumns: [
-          "nome",
-          "descricao",
-          "codigo",
-          "capacidade",
-          "tipo",
-
-          "dateCreated",
-
-          "bloco.id",
-          "bloco.campus.id",
-        ],
-        searchableColumns: [
-          "id",
-
-          "nome",
-          "descricao",
-          "codigo",
-          "capacidade",
-          "tipo",
-        ],
-        defaultSortBy: [
-          ["nome", "ASC"],
-          ["dateCreated", "ASC"],
-        ],
-        filterableColumns: {
-          "bloco.id": [FilterOperator.EQ],
-          "bloco.campus.id": [FilterOperator.EQ],
+        "bloco.id",
+        "bloco.campus.id",
+      ],
+      relations: {
+        bloco: {
+          campus: true,
         },
       },
-    );
+      sortableColumns: [
+        "nome",
+        "descricao",
+        "codigo",
+        "capacidade",
+        "tipo",
+
+        "dateCreated",
+
+        "bloco.id",
+        "bloco.campus.id",
+      ],
+      searchableColumns: [
+        "id",
+
+        "nome",
+        "descricao",
+        "codigo",
+        "capacidade",
+        "tipo",
+      ],
+      defaultSortBy: [
+        ["nome", "ASC"],
+        ["dateCreated", "ASC"],
+      ],
+      filterableColumns: {
+        "bloco.id": [FilterOperator.EQ],
+        "bloco.campus.id": [FilterOperator.EQ],
+      },
+    });
 
     // =========================================================
 
@@ -190,7 +179,7 @@ export class AmbienteService {
     return this.ambienteFindByIdStrict(accessContext, { id: ambiente.id });
   }
 
-  async ambienteUpdate(accessContext: AccessContext, domain: IDomain.AmbienteUpdateInput) {
+  async ambienteUpdate(accessContext: AccessContext, domain: IDomain.AmbienteFindOneInput & IDomain.AmbienteUpdateInput) {
     // =========================================================
 
     const currentAmbiente = await this.ambienteFindByIdStrict(accessContext, domain);

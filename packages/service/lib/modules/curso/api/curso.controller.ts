@@ -1,17 +1,15 @@
 import { Controller, Delete, Get, Patch, Post, Put, UploadedFile } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import { requestRepresentationMergeToDomain } from "@/contracts/generic-adapters";
-import { type IAppRequest } from "@/contracts/openapi/document/app-openapi-typings";
-import { AppRequest } from "@/contracts/openapi/utils/app-request";
-import { type IDomain } from "@/legacy/domain/contracts/integration";
+import { AppRequest, requestRepresentationMergeToDomain } from "@/shared";
 import { AccessContext, AccessContextHttp } from "@/shared/infrastructure/access-context";
-import { CursoService } from "./domain/curso.service";
+import { type IAppRequest } from "@/shared/tsp/openapi/document/app-openapi-typings";
+import { type IDomain } from "@/shared/tsp/schema/typings";
+import { CursoService } from "../domain/curso.service";
 
 @ApiTags("cursos")
 @Controller("/cursos")
 export class CursoController {
-  constructor(private cursoService: CursoService) {
-  }
+  constructor(private cursoService: CursoService) {}
 
   @Get("/")
   async cursoFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CursoList") dto: IAppRequest<"CursoList">) {
@@ -20,7 +18,7 @@ export class CursoController {
   }
 
   @Get("/:id")
-  async cursoFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CursoFindById") dto: IAppRequest<"CursoFindOneById">) {
+  async cursoFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CursoFindOneById") dto: IAppRequest<"CursoFindOneById">) {
     const domain: IDomain.CursoFindOneInput = requestRepresentationMergeToDomain(dto);
     return this.cursoService.cursoFindByIdStrict(accessContext, domain);
   }
@@ -32,8 +30,8 @@ export class CursoController {
   }
 
   @Patch("/:id")
-  async cursoUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CursoUpdate") dto: IAppRequest<"CursoUpdateOneById">) {
-    const domain: IDomain.CursoUpdateInput = requestRepresentationMergeToDomain(dto);
+  async cursoUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CursoUpdateOneById") dto: IAppRequest<"CursoUpdateOneById">) {
+    const domain: IDomain.CursoFindOneInput & IDomain.CursoUpdateInput = requestRepresentationMergeToDomain(dto);
     return this.cursoService.cursoUpdate(accessContext, domain);
   }
 

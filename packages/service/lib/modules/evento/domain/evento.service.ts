@@ -1,13 +1,12 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
-import { QbEfficientLoad } from "@/contracts/qb-efficient-load";
-import { SearchService } from "@/legacy/application/helpers/search.service";
-import { type IDomain } from "@/legacy/domain/contracts/integration";
+import { CalendarioLetivoService } from "@/modules/calendario-letivo/domain/calendario-letivo.service";
+import { QbEfficientLoad, SearchService } from "@/shared";
 import type { AccessContext } from "@/shared/infrastructure/access-context";
 import { DatabaseContextService } from "@/shared/infrastructure/integrations/database";
 import type { EventoEntity } from "@/shared/infrastructure/integrations/database/typeorm/entities/05-calendario/evento.entity";
-import { CalendarioLetivoService } from "../calendario-letivo/calendario-letivo.service";
+import { type IDomain } from "@/shared/tsp/schema/typings";
 
 // ============================================================================
 
@@ -38,63 +37,54 @@ export class EventoService {
 
     // =========================================================
 
-    const paginated = await this.searchService.search(
-      qb,
-      domain
-        ? {
-            ...domain,
-            sortBy: domain.sortBy ? (domain.sortBy as any[]).map((s) => (typeof s === "string" ? s : Array.isArray(s) ? s.join(":") : `${s.column}:${s.direction ?? "ASC"}`)) : undefined,
-          }
-        : {},
-      {
-        select: [
-          "id",
+    const paginated = await this.searchService.search(qb, domain, {
+      select: [
+        "id",
 
-          "nome",
-          "cor",
+        "nome",
+        "cor",
 
-          "rrule",
+        "rrule",
 
-          "data_inicio",
-          "data_fim",
+        "data_inicio",
+        "data_fim",
 
-          "calendario.id",
-          "calendario.nome",
-          "calendario.ano",
-        ],
-        sortableColumns: [
-          "nome",
-          "cor",
+        "calendario.id",
+        "calendario.nome",
+        "calendario.ano",
+      ],
+      sortableColumns: [
+        "nome",
+        "cor",
 
-          "data_inicio",
-          "data_fim",
+        "data_inicio",
+        "data_fim",
 
-          "calendario.id",
-          "calendario.nome",
-          "calendario.ano",
-        ],
-        searchableColumns: [
-          "id",
+        "calendario.id",
+        "calendario.nome",
+        "calendario.ano",
+      ],
+      searchableColumns: [
+        "id",
 
-          "nome",
-          "cor",
+        "nome",
+        "cor",
 
-          "data_inicio",
-          "data_fim",
-        ],
-        relations: {
-          calendario: true,
-        },
-        defaultSortBy: [],
-        filterableColumns: {
-          "calendario.id": [FilterOperator.EQ],
-          "calendario.nome": [FilterOperator.EQ],
-          "calendario.ano": [FilterOperator.EQ],
-          data_inicio: [FilterOperator.GTE, FilterOperator.LTE],
-          data_fim: [FilterOperator.GTE, FilterOperator.LTE],
-        },
+        "data_inicio",
+        "data_fim",
+      ],
+      relations: {
+        calendario: true,
       },
-    );
+      defaultSortBy: [],
+      filterableColumns: {
+        "calendario.id": [FilterOperator.EQ],
+        "calendario.nome": [FilterOperator.EQ],
+        "calendario.ano": [FilterOperator.EQ],
+        data_inicio: [FilterOperator.GTE, FilterOperator.LTE],
+        data_fim: [FilterOperator.GTE, FilterOperator.LTE],
+      },
+    });
 
     // =========================================================
 
@@ -220,7 +210,7 @@ export class EventoService {
     return this.eventoFindByIdStrict(accessContext, { id: evento.id });
   }
 
-  async eventoUpdate(accessContext: AccessContext, domain: IDomain.EventoUpdateInput) {
+  async eventoUpdate(accessContext: AccessContext, domain: IDomain.EventoFindOneInput & IDomain.EventoUpdateInput) {
     // =========================================================
 
     const currentEvento = await this.eventoFindByIdStrict(accessContext, { id: domain.id });

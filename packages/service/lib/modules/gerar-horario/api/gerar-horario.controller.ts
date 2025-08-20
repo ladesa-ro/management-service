@@ -1,12 +1,11 @@
 import { Controller, Get } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import { GerarHorarioService } from "./domain/gerar-horario.service";
+import { GerarHorarioService } from "../domain/gerar-horario.service";
 
 @ApiTags("gerar-horario")
 @Controller("/gerar-horario")
 export class GerarHorarioController {
-  constructor(private gerarHorarioService: GerarHorarioService) {
-  }
+  constructor(private gerarHorarioService: GerarHorarioService) {}
 
   @Get("/")
   async modalidadeFindAll() {

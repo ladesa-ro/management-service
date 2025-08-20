@@ -1,16 +1,16 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
-import { QbEfficientLoad } from "@/contracts/qb-efficient-load";
-import { SearchService } from "@/legacy/application/helpers/search.service";
-import { type IDomain } from "@/legacy/domain/contracts/integration";
-import { AmbienteService } from "@/modules/ambiente/ambiente.service";
-import { IntervaloDeTempoService } from "@/modules/intervalo-de-tempo/intervalo-de-tempo.service";
+import { AmbienteService } from "@/modules/ambiente/domain/ambiente.service";
+import { IntervaloDeTempoService } from "@/modules/intervalo-de-tempo/domain/intervalo-de-tempo.service";
 import type { AccessContext } from "@/shared/infrastructure/access-context";
 import { paginateConfig } from "@/shared/infrastructure/fixtures";
-import { DatabaseContextService } from "@/shared/infrastructure/integrations/database";
+import { QbEfficientLoad } from "@/shared/infrastructure/integrations/database";
+import { DatabaseContextService } from "@/shared/infrastructure/integrations/database/context/database-context.service";
 import type { AulaEntity } from "@/shared/infrastructure/integrations/database/typeorm/entities";
-import { DiarioService } from "../diario/diario.service";
+import { SearchService } from "@/shared/search/search.service";
+import { type IDomain } from "@/shared/tsp/schema/typings";
+import { DiarioService } from "../../diario/domain/diario.service";
 
 // ============================================================================
 
@@ -43,57 +43,48 @@ export class AulaService {
 
     // =========================================================
 
-    const paginated = await this.searchService.search(
-      qb,
-      domain
-        ? {
-            ...domain,
-            sortBy: domain.sortBy ? (domain.sortBy as any[]).map((s) => (typeof s === "string" ? s : Array.isArray(s) ? s.join(":") : `${s.column}:${s.direction ?? "ASC"}`)) : undefined,
-          }
-        : {},
-      {
-        ...paginateConfig,
-        select: [
-          "id",
+    const paginated = await this.searchService.search(qb, domain, {
+      ...paginateConfig,
+      select: [
+        "id",
 
-          "formato",
-          "data",
+        "formato",
+        "data",
 
-          "intervaloDeTempo.id",
-          "intervaloDeTempo.periodoInicio",
-          "intervaloDeTempo.periodoFim",
-          "diario.id",
-          "diario.ativo",
-          "ambiente.id",
-          "ambiente.nome",
-        ],
-        sortableColumns: [
-          "data",
-          "formato",
+        "intervaloDeTempo.id",
+        "intervaloDeTempo.periodoInicio",
+        "intervaloDeTempo.periodoFim",
+        "diario.id",
+        "diario.ativo",
+        "ambiente.id",
+        "ambiente.nome",
+      ],
+      sortableColumns: [
+        "data",
+        "formato",
 
-          "diario.ativo",
-          "ambiente.nome",
-        ],
-        relations: {
-          ambiente: true,
-          diario: true,
-          intervaloDeTempo: true,
-        },
-        searchableColumns: [
-          "id",
-
-          "formato",
-          "data",
-          "ambiente.nome",
-        ],
-        defaultSortBy: [],
-        filterableColumns: {
-          "intervaloDeTempo.id": [FilterOperator.EQ],
-          "diario.id": [FilterOperator.EQ],
-          "ambiente.id": [FilterOperator.EQ],
-        },
+        "diario.ativo",
+        "ambiente.nome",
+      ],
+      relations: {
+        ambiente: true,
+        diario: true,
+        intervaloDeTempo: true,
       },
-    );
+      searchableColumns: [
+        "id",
+
+        "formato",
+        "data",
+        "ambiente.nome",
+      ],
+      defaultSortBy: [],
+      filterableColumns: {
+        "intervaloDeTempo.id": [FilterOperator.EQ],
+        "diario.id": [FilterOperator.EQ],
+        "ambiente.id": [FilterOperator.EQ],
+      },
+    });
 
     // =========================================================
 
@@ -232,7 +223,7 @@ export class AulaService {
     return this.aulaFindByIdStrict(accessContext, { id: aula.id });
   }
 
-  async aulaUpdate(accessContext: AccessContext, domain: IDomain.AulaUpdateInput) {
+  async aulaUpdate(accessContext: AccessContext, domain: IDomain.AulaFindOneInput & IDomain.AulaUpdateInput) {
     // =========================================================
 
     const currentAula = await this.aulaFindByIdStrict(accessContext, { id: domain.id });

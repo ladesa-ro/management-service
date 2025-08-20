@@ -1,15 +1,14 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
-import { QbEfficientLoad } from "@/contracts/qb-efficient-load";
-import { SearchService } from "@/legacy/application/helpers/search.service";
-import { GradeHorarioOfertaFormacaoService } from "@/legacy/application/resources/calendario/grade-horario-oferta-formacao/grade-horario-oferta-formacao.service";
-import { type IDomain } from "@/legacy/domain/contracts/integration";
-import { IntervaloDeTempoService } from "@/modules/intervalo-de-tempo/intervalo-de-tempo.service";
+import { GradeHorarioOfertaFormacaoService } from "@/modules/grade-horario-oferta-formacao/domain/grade-horario-oferta-formacao.service";
+import { IntervaloDeTempoService } from "@/modules/intervalo-de-tempo/domain/intervalo-de-tempo.service";
+import { QbEfficientLoad, SearchService } from "@/shared";
 import type { AccessContext } from "@/shared/infrastructure/access-context";
 import { paginateConfig } from "@/shared/infrastructure/fixtures";
 import { DatabaseContextService } from "@/shared/infrastructure/integrations/database";
 import type { GradeHorarioOfertaFormacaoIntervaloDeTempoEntity } from "@/shared/infrastructure/integrations/database/typeorm/entities";
+import { type IDomain } from "@/shared/tsp/schema/typings";
 
 // ============================================================================
 
@@ -220,7 +219,10 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService {
     return this.gradeHorarioOfertaFormacaoIntervaloDeTempoFindByIdStrict(accessContext, { id: gradeHorarioOfertaFormacaoIntervaloDeTempo.id });
   }
 
-  async gradeHorarioOfertaFormacaoIntervaloDeTempoUpdate(accessContext: AccessContext, domain: IDomain.GradeHorarioOfertaFormacaoIntervaloDeTempoUpdateInput) {
+  async gradeHorarioOfertaFormacaoIntervaloDeTempoUpdate(
+    accessContext: AccessContext,
+    domain: IDomain.GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInput & IDomain.GradeHorarioOfertaFormacaoIntervaloDeTempoUpdateInput,
+  ) {
     // =========================================================
 
     const currentGradeHorarioOfertaFormacaoIntervaloDeTempo = await this.gradeHorarioOfertaFormacaoIntervaloDeTempoFindByIdStrict(accessContext, domain);

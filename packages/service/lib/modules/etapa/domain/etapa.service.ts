@@ -1,13 +1,12 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
-import { QbEfficientLoad } from "@/contracts/qb-efficient-load";
-import { SearchService } from "@/legacy/application/helpers/search.service";
-import { type IDomain } from "@/legacy/domain/contracts/integration";
+import { CalendarioLetivoService } from "@/modules/calendario-letivo/domain/calendario-letivo.service";
+import { QbEfficientLoad, SearchService } from "@/shared";
 import type { AccessContext } from "@/shared/infrastructure/access-context";
 import { DatabaseContextService } from "@/shared/infrastructure/integrations/database";
 import type { EtapaEntity } from "@/shared/infrastructure/integrations/database/typeorm/entities/05-calendario/etapa.entity";
-import { CalendarioLetivoService } from "../calendario-letivo/calendario-letivo.service";
+import { type IDomain } from "@/shared/tsp/schema/typings";
 
 // ============================================================================
 
@@ -38,56 +37,47 @@ export class EtapaService {
 
     // =========================================================
 
-    const paginated = await this.searchService.search(
-      qb,
-      domain
-        ? {
-            ...domain,
-            sortBy: domain.sortBy ? (domain.sortBy as any[]).map((s) => (typeof s === "string" ? s : Array.isArray(s) ? s.join(":") : `${s.column}:${s.direction ?? "ASC"}`)) : undefined,
-          }
-        : {},
-      {
-        select: [
-          "id",
+    const paginated = await this.searchService.search(qb, domain, {
+      select: [
+        "id",
 
-          "numero",
-          "dataInicio",
-          "dataTermino",
-          "cor",
+        "numero",
+        "dataInicio",
+        "dataTermino",
+        "cor",
 
-          "calendario.id",
-          "calendario.nome",
-          "calendario.ano",
-        ],
-        sortableColumns: [
-          "numero",
-          "dataInicio",
-          "dataInicio",
-          "cor",
+        "calendario.id",
+        "calendario.nome",
+        "calendario.ano",
+      ],
+      sortableColumns: [
+        "numero",
+        "dataInicio",
+        "dataInicio",
+        "cor",
 
-          "calendario.id",
-          "calendario.nome",
-          "calendario.ano",
-        ],
-        searchableColumns: [
-          "id",
+        "calendario.id",
+        "calendario.nome",
+        "calendario.ano",
+      ],
+      searchableColumns: [
+        "id",
 
-          "numero",
-          "dataInicio",
-          "dataTermino",
-          "cor",
-        ],
-        relations: {
-          calendario: true,
-        },
-        defaultSortBy: [],
-        filterableColumns: {
-          "calendario.id": [FilterOperator.EQ],
-          "calendario.nome": [FilterOperator.EQ],
-          "calendario.ano": [FilterOperator.EQ],
-        },
+        "numero",
+        "dataInicio",
+        "dataTermino",
+        "cor",
+      ],
+      relations: {
+        calendario: true,
       },
-    );
+      defaultSortBy: [],
+      filterableColumns: {
+        "calendario.id": [FilterOperator.EQ],
+        "calendario.nome": [FilterOperator.EQ],
+        "calendario.ano": [FilterOperator.EQ],
+      },
+    });
 
     // =========================================================
 
@@ -216,7 +206,7 @@ export class EtapaService {
     return this.etapaFindByIdStrict(accessContext, { id: etapa.id });
   }
 
-  async etapaUpdate(accessContext: AccessContext, domain: IDomain.EtapaUpdateInput) {
+  async etapaUpdate(accessContext: AccessContext, domain: IDomain.EtapaFindOneInput & IDomain.EtapaUpdateInput) {
     // =========================================================
 
     const currentEtapa = await this.etapaFindByIdStrict(accessContext, { id: domain.id });

@@ -1,17 +1,15 @@
 import { Controller, Delete, Get, Patch, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import { requestRepresentationMergeToDomain } from "@/contracts/generic-adapters";
-import { type IAppRequest } from "@/contracts/openapi/document/app-openapi-typings";
-import { AppRequest } from "@/contracts/openapi/utils/app-request";
-import { type IDomain } from "@/legacy/domain/contracts/integration";
+import { AppRequest, requestRepresentationMergeToDomain } from "@/shared";
 import { AccessContext, AccessContextHttp } from "@/shared/infrastructure/access-context";
-import { DiarioService } from "./domain/diario.service";
+import { type IAppRequest } from "@/shared/tsp/openapi/document/app-openapi-typings";
+import { type IDomain } from "@/shared/tsp/schema/typings";
+import { DiarioService } from "../domain/diario.service";
 
 @ApiTags("diarios")
 @Controller("/diarios")
 export class DiarioController {
-  constructor(private diarioService: DiarioService) {
-  }
+  constructor(private diarioService: DiarioService) {}
 
   @Get("/")
   async diarioFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DiarioList") dto: IAppRequest<"DiarioList">) {
@@ -20,7 +18,7 @@ export class DiarioController {
   }
 
   @Get("/:id")
-  async diarioFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DiarioFindById") dto: IAppRequest<"DiarioFindOneById">) {
+  async diarioFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DiarioFindOneById") dto: IAppRequest<"DiarioFindOneById">) {
     const domain: IDomain.DiarioFindOneInput = requestRepresentationMergeToDomain(dto);
     return this.diarioService.diarioFindByIdStrict(accessContext, domain);
   }
@@ -32,8 +30,8 @@ export class DiarioController {
   }
 
   @Patch("/:id")
-  async diarioUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DiarioUpdate") dto: IAppRequest<"DiarioUpdateOneById">) {
-    const domain: IDomain.DiarioUpdateInput = requestRepresentationMergeToDomain(dto);
+  async diarioUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DiarioUpdateOneById") dto: IAppRequest<"DiarioUpdateOneById">) {
+    const domain: IDomain.DiarioFindOneInput & IDomain.DiarioUpdateInput = requestRepresentationMergeToDomain(dto);
     return this.diarioService.diarioUpdate(accessContext, domain);
   }
 

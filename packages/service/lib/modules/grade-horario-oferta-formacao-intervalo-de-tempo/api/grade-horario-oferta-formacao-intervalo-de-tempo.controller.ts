@@ -1,19 +1,15 @@
 import { Controller, Delete, Get, Patch, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import { requestRepresentationMergeToDomain } from "@/contracts/generic-adapters";
-import { type IAppRequest } from "@/contracts/openapi/document/app-openapi-typings";
-import { AppRequest } from "@/contracts/openapi/utils/app-request";
-import { type IDomain } from "@/legacy/domain/contracts/integration";
+import { AppRequest, requestRepresentationMergeToDomain } from "@/shared";
 import { AccessContext, AccessContextHttp } from "@/shared/infrastructure/access-context";
-import {
-  GradeHorarioOfertaFormacaoIntervaloDeTempoService
-} from "./domain/grade-horario-oferta-formacao-intervalo-de-tempo.service";
+import { type IAppRequest } from "@/shared/tsp/openapi/document/app-openapi-typings";
+import { type IDomain } from "@/shared/tsp/schema/typings";
+import { GradeHorarioOfertaFormacaoIntervaloDeTempoService } from "../domain/grade-horario-oferta-formacao-intervalo-de-tempo.service";
 
 @ApiTags("grades-horarios-ofertas-formacoes-intervalos-de-tempo")
 @Controller("/grades-horarios-ofertas-formacoes-intervalos-de-tempo")
 export class GradeHorarioOfertaFormacaoIntervaloDeTempoController {
-  constructor(private gradeHorarioOfertaFormacaoIntervaloDeTempoService: GradeHorarioOfertaFormacaoIntervaloDeTempoService) {
-  }
+  constructor(private gradeHorarioOfertaFormacaoIntervaloDeTempoService: GradeHorarioOfertaFormacaoIntervaloDeTempoService) {}
 
   @Get("/")
   async gradeHorarioOfertaFormacaoIntervaloDeTempoFindAll(
@@ -27,7 +23,7 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoController {
   @Get("/:id")
   async gradeHorarioOfertaFormacaoIntervaloDeTempoFindById(
     @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("GradeHorarioOfertaFormacaoIntervaloDeTempoFindById") dto: IAppRequest<"GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneById">,
+    @AppRequest("GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneById") dto: IAppRequest<"GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneById">,
   ) {
     const domain: IDomain.GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInput = requestRepresentationMergeToDomain(dto);
     return this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.gradeHorarioOfertaFormacaoIntervaloDeTempoFindByIdStrict(accessContext, domain);
@@ -45,9 +41,9 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoController {
   @Patch("/:id")
   async gradeHorarioOfertaFormacaoIntervaloDeTempoUpdate(
     @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("GradeHorarioOfertaFormacaoIntervaloDeTempoUpdate") dto: IAppRequest<"GradeHorarioOfertaFormacaoIntervaloDeTempoUpdateOneById">,
+    @AppRequest("GradeHorarioOfertaFormacaoIntervaloDeTempoUpdateOneById") dto: IAppRequest<"GradeHorarioOfertaFormacaoIntervaloDeTempoUpdateOneById">,
   ) {
-    const domain: IDomain.GradeHorarioOfertaFormacaoIntervaloDeTempoUpdateInput = requestRepresentationMergeToDomain(dto);
+    const domain: IDomain.GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInput & IDomain.GradeHorarioOfertaFormacaoIntervaloDeTempoUpdateInput = requestRepresentationMergeToDomain(dto);
     return this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.gradeHorarioOfertaFormacaoIntervaloDeTempoUpdate(accessContext, domain);
   }
 

@@ -1,15 +1,14 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
-import { QbEfficientLoad } from "@/contracts/qb-efficient-load";
-import { SearchService } from "@/legacy/application/helpers/search.service";
-import { OfertaFormacaoService } from "@/legacy/application/resources/ensino/institucional/oferta-formacao/oferta-formacao.service";
-import { type IDomain } from "@/legacy/domain/contracts/integration";
-import { CampusService } from "@/modules/campus/campus.service";
+import { CampusService } from "@/modules/campus/domain/campus.service";
+import { OfertaFormacaoService } from "@/modules/oferta-formacao/domain/oferta-formacao.service";
+import { QbEfficientLoad, SearchService } from "@/shared";
 import type { AccessContext } from "@/shared/infrastructure/access-context";
 import { paginateConfig } from "@/shared/infrastructure/fixtures";
 import { DatabaseContextService } from "@/shared/infrastructure/integrations/database";
 import type { GradeHorarioOfertaFormacaoEntity } from "@/shared/infrastructure/integrations/database/typeorm/entities";
+import { type IDomain } from "@/shared/tsp/schema/typings";
 
 // ============================================================================
 
@@ -234,7 +233,7 @@ export class GradeHorarioOfertaFormacaoService {
     });
   }
 
-  async gradeHorarioOfertaFormacaoUpdate(accessContext: AccessContext, domain: IDomain.GradeHorarioOfertaFormacaoUpdateInput) {
+  async gradeHorarioOfertaFormacaoUpdate(accessContext: AccessContext, domain: IDomain.GradeHorarioOfertaFormacaoFindOneInput & IDomain.GradeHorarioOfertaFormacaoUpdateInput) {
     // =========================================================
 
     const currentGradeHorarioOfertaFormacao = await this.gradeHorarioOfertaFormacaoFindByIdStrict(accessContext, domain);

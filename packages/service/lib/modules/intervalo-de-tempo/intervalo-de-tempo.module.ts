@@ -8,5 +8,4 @@ import { IntervaloDeTempoService } from "./domain/intervalo-de-tempo.service";
   exports: [IntervaloDeTempoService],
   controllers: [],
 })
-export class IntervaloDeTempoModule {
-}
+export class IntervaloDeTempoModule {}

@@ -1,15 +1,14 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
 import { v4 as uuid } from "uuid";
-import { QbEfficientLoad } from "@/contracts/qb-efficient-load";
-import { SearchService } from "@/legacy/application/helpers/search.service";
-import { type IDomain } from "@/legacy/domain/contracts/integration";
-import { CampusService } from "@/modules/campus/campus.service";
-import { UsuarioService } from "@/modules/usuario/usuario.service";
+import { CampusService } from "@/modules/campus/domain/campus.service";
+import { UsuarioService } from "@/modules/usuario/domain/usuario.service";
+import { QbEfficientLoad, SearchService } from "@/shared";
 import type { AccessContext } from "@/shared/infrastructure/access-context";
 import { paginateConfig } from "@/shared/infrastructure/fixtures";
 import { DatabaseContextService } from "@/shared/infrastructure/integrations/database";
 import type { UsuarioEntity } from "@/shared/infrastructure/integrations/database/typeorm/entities";
+import { type IDomain } from "@/shared/tsp/schema/typings";
 
 // ============================================================================
 
@@ -145,7 +144,7 @@ export class PerfilService {
     return vinculo;
   }
 
-  async perfilSetVinculos(accessContext: AccessContext, domain: IDomain.PerfilUpdateInput) {
+  async perfilSetVinculos(accessContext: AccessContext, domain: IDomain.PerfilFindOneInput & IDomain.PerfilUpdateInput) {
     const campus = await this.campusService.campusFindByIdSimpleStrict(accessContext, domain.campus.id);
     const usuario = await this.usuarioService.usuarioFindByIdSimpleStrict(accessContext, domain.usuario.id);
 

@@ -1,12 +1,11 @@
 import { BadRequestException, Controller, Get, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import { requestRepresentationMergeToDomain } from "@/contracts";
-import { type IAppRequest } from "@/contracts/openapi/document/app-openapi-typings";
-import { AppRequest } from "@/contracts/openapi/utils/app-request";
-import { UsuarioService } from "@/modules/usuario/usuario.service";
+import { UsuarioService } from "@/modules/usuario/domain/usuario.service";
+import { AppRequest, requestRepresentationMergeToDomain } from "@/shared";
 import { AccessContext, AccessContextHttp } from "@/shared/infrastructure/access-context";
 import { Public } from "@/shared/infrastructure/authentication";
-import { AutenticacaoService } from "./domain/autenticacao.service";
+import { type IAppRequest } from "@/shared/tsp/openapi/document/app-openapi-typings";
+import { AutenticacaoService } from "../domain/autenticacao.service";
 
 @ApiTags("autenticacao")
 @Controller("/autenticacao")
@@ -14,8 +13,7 @@ export class AutenticacaoController {
   constructor(
     private readonly autenticacaoService: AutenticacaoService,
     private usuarioService: UsuarioService,
-  ) {
-  }
+  ) {}
 
   @Get("/quem-sou-eu/ensino")
   whoAmIEnsino(@AccessContextHttp() accessContext: AccessContext) {
@@ -23,7 +21,7 @@ export class AutenticacaoController {
     if (!idUsuario) {
       throw new BadRequestException();
     }
-    return this.usuarioService.usuarioEnsinoById(accessContext, {id: idUsuario});
+    return this.usuarioService.usuarioEnsinoById(accessContext, { id: idUsuario });
   }
 
   @Get("/quem-sou-eu")
@@ -40,7 +38,7 @@ export class AutenticacaoController {
 
   @Post("/login/refresh")
   @Public()
-  refresh(@AccessContextHttp() accessContext: AccessContext, @AppRequest("AuthRefresh") dto: IAppRequest<"AuthRefreshInput">) {
+  refresh(@AccessContextHttp() accessContext: AccessContext, @AppRequest("AuthRefresh") dto: IAppRequest<"AuthRefresh">) {
     const domain = requestRepresentationMergeToDomain(dto);
     return this.autenticacaoService.refresh(accessContext, domain);
   }

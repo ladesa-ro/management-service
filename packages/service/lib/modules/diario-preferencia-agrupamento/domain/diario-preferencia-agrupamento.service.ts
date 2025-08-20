@@ -1,11 +1,9 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
-import { QbEfficientLoad } from "@/contracts/qb-efficient-load";
-import { SearchService } from "@/legacy/application/helpers/search.service";
-import { DiarioService } from "@/legacy/application/resources/ensino/discente/diario/diario.service";
-import { type IDomain } from "@/legacy/domain/contracts/integration";
-import { IntervaloDeTempoService } from "@/modules/intervalo-de-tempo/intervalo-de-tempo.service";
+import { DiarioService } from "@/modules/diario/domain/diario.service";
+import { IntervaloDeTempoService } from "@/modules/intervalo-de-tempo/domain/intervalo-de-tempo.service";
+import { IDomain, QbEfficientLoad, SearchService } from "@/shared";
 import type { AccessContext } from "@/shared/infrastructure/access-context";
 import { paginateConfig } from "@/shared/infrastructure/fixtures";
 import { DatabaseContextService } from "@/shared/infrastructure/integrations/database";
@@ -45,63 +43,54 @@ export class DiarioPreferenciaAgrupamentoService {
 
     // =========================================================
 
-    const paginated = await this.searchService.search(
-      qb,
-      domain
-        ? {
-            ...domain,
-            sortBy: domain.sortBy ? (domain.sortBy as any[]).map((s) => (typeof s === "string" ? s : Array.isArray(s) ? s.join(":") : `${s.column}:${s.direction ?? "ASC"}`)) : undefined,
-          }
-        : {},
-      {
-        ...paginateConfig,
-        select: [
-          "id",
+    const paginated = await this.searchService.search(qb, domain, {
+      ...paginateConfig,
+      select: [
+        "id",
 
-          "diaSemanaIso",
-          "aulasSeguidas",
-          "dataInicio",
-          "dataFim",
-          "diario",
-          "intervaloDeTempo",
+        "diaSemanaIso",
+        "aulasSeguidas",
+        "dataInicio",
+        "dataFim",
+        "diario",
+        "intervaloDeTempo",
 
-          "diario.id",
-          "diario.ativo",
+        "diario.id",
+        "diario.ativo",
 
-          "intervaloDeTempo.id",
-          "intervaloDeTempo.periodoInicio",
-          "intervaloDeTempo.periodoFim",
-        ],
-        sortableColumns: [
-          "diaSemanaIso",
-          "aulasSeguidas",
-          "dataInicio",
-          "dataFim",
-          "diario",
+        "intervaloDeTempo.id",
+        "intervaloDeTempo.periodoInicio",
+        "intervaloDeTempo.periodoFim",
+      ],
+      sortableColumns: [
+        "diaSemanaIso",
+        "aulasSeguidas",
+        "dataInicio",
+        "dataFim",
+        "diario",
 
-          "diario.id",
-          "intervaloDeTempo.id",
-        ],
-        searchableColumns: [
-          "id",
+        "diario.id",
+        "intervaloDeTempo.id",
+      ],
+      searchableColumns: [
+        "id",
 
-          "diaSemanaIso",
-          "aulasSeguidas",
-          "dataInicio",
-          "dataFim",
-          "diario",
-          "intervaloDeTempo",
-        ],
-        relations: {
-          diario: true,
-          intervaloDeTempo: true,
-        },
-        defaultSortBy: [],
-        filterableColumns: {
-          "diario.id": [FilterOperator.EQ],
-        },
+        "diaSemanaIso",
+        "aulasSeguidas",
+        "dataInicio",
+        "dataFim",
+        "diario",
+        "intervaloDeTempo",
+      ],
+      relations: {
+        diario: true,
+        intervaloDeTempo: true,
       },
-    );
+      defaultSortBy: [],
+      filterableColumns: {
+        "diario.id": [FilterOperator.EQ],
+      },
+    });
 
     // =========================================================
 
@@ -249,7 +238,7 @@ export class DiarioPreferenciaAgrupamentoService {
     });
   }
 
-  async diarioPreferenciaAgrupamentoUpdate(accessContext: AccessContext, domain: IDomain.DiarioPreferenciaAgrupamentoUpdateInput) {
+  async diarioPreferenciaAgrupamentoUpdate(accessContext: AccessContext, domain: IDomain.DiarioPreferenciaAgrupamentoFindOneInput & IDomain.DiarioPreferenciaAgrupamentoUpdateInput) {
     // =========================================================
 
     const currentDiarioPreferenciaAgrupamento = await this.diarioPreferenciaAgrupamentoFindByIdStrict(accessContext, { id: domain.id });

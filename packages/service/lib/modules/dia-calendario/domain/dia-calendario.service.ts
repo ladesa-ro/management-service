@@ -1,13 +1,12 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
-import { QbEfficientLoad } from "@/contracts/qb-efficient-load";
-import { SearchService } from "@/legacy/application/helpers/search.service";
-import { type IDomain } from "@/legacy/domain/contracts/integration";
+import { CalendarioLetivoService } from "@/modules/calendario-letivo/domain/calendario-letivo.service";
+import { QbEfficientLoad, SearchService } from "@/shared";
 import type { AccessContext } from "@/shared/infrastructure/access-context";
 import { DatabaseContextService } from "@/shared/infrastructure/integrations/database";
 import type { DiaCalendarioEntity } from "@/shared/infrastructure/integrations/database/typeorm/entities/05-calendario/dia-calendario.entity";
-import { CalendarioLetivoService } from "../calendario-letivo/calendario-letivo.service";
+import { type IDomain } from "@/shared/tsp/schema/typings";
 
 // ============================================================================
 
@@ -38,58 +37,49 @@ export class DiaCalendarioService {
 
     // =========================================================
 
-    const paginated = await this.searchService.search(
-      qb,
-      domain
-        ? {
-            ...domain,
-            sortBy: domain.sortBy ? (domain.sortBy as any[]).map((s) => (typeof s === "string" ? s : Array.isArray(s) ? s.join(":") : `${s.column}:${s.direction ?? "ASC"}`)) : undefined,
-          }
-        : {},
-      {
-        select: [
-          "id",
+    const paginated = await this.searchService.search(qb, domain, {
+      select: [
+        "id",
 
-          "data",
-          "diaLetivo",
-          "feriado",
+        "data",
+        "diaLetivo",
+        "feriado",
 
-          "calendario.id",
-          "calendario.nome",
-          "calendario.ano",
+        "calendario.id",
+        "calendario.nome",
+        "calendario.ano",
 
-          "diaPresencial",
-          "tipo",
-          "extraCurricular",
-        ],
-        sortableColumns: [
-          "data",
-          "diaLetivo",
-          "feriado",
+        "diaPresencial",
+        "tipo",
+        "extraCurricular",
+      ],
+      sortableColumns: [
+        "data",
+        "diaLetivo",
+        "feriado",
 
-          "calendario.id",
-          "calendario.nome",
-          "calendario.ano",
-        ],
-        searchableColumns: [
-          "id",
+        "calendario.id",
+        "calendario.nome",
+        "calendario.ano",
+      ],
+      searchableColumns: [
+        "id",
 
-          "data",
-          "diaLetivo",
-          "feriado",
-          "calendario.nome",
-        ],
-        relations: {
-          calendario: true,
-        },
-        defaultSortBy: [],
-        filterableColumns: {
-          "calendario.id": [FilterOperator.EQ],
-          "calendario.nome": [FilterOperator.EQ],
-          "calendario.ano": [FilterOperator.EQ],
-        },
+        "data",
+        "diaLetivo",
+        "feriado",
+        "calendario.nome",
+      ],
+      relations: {
+        calendario: true,
       },
-    );
+      defaultSortBy: [],
+      filterableColumns: {
+        "calendario.id": [FilterOperator.EQ],
+        "calendario.nome": [FilterOperator.EQ],
+        "calendario.ano": [FilterOperator.EQ],
+      },
+    });
 
     // =========================================================
 
@@ -218,7 +208,7 @@ export class DiaCalendarioService {
     });
   }
 
-  async diaCalendarioUpdate(accessContext: AccessContext, domain: IDomain.DiaCalendarioUpdateInput) {
+  async diaCalendarioUpdate(accessContext: AccessContext, domain: IDomain.DiaCalendarioFindOneInput & IDomain.DiaCalendarioUpdateInput) {
     // =========================================================
 
     const currentDiaCalendario = await this.diaCalendarioFindByIdStrict(accessContext, { id: domain.id });

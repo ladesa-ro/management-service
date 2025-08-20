@@ -1,15 +1,14 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
-import { QbEfficientLoad } from "@/contracts/qb-efficient-load";
-import { SearchService } from "@/legacy/application/helpers/search.service";
-import { PerfilService } from "@/legacy/application/resources/autorizacao/perfil/perfil.service";
-import { DisponibilidadeService } from "@/legacy/application/resources/horario-academico/disponibilidade/disponibilidade.service";
-import { type IDomain } from "@/legacy/domain/contracts/integration";
+import { DisponibilidadeService } from "@/modules/disponibilidade/domain/disponibilidade.service";
+import { PerfilService } from "@/modules/perfil/domain/perfil.service";
+import { QbEfficientLoad, SearchService } from "@/shared";
 import type { AccessContext } from "@/shared/infrastructure/access-context";
 import { paginateConfig } from "@/shared/infrastructure/fixtures";
 import { DatabaseContextService } from "@/shared/infrastructure/integrations/database";
 import type { ProfessorDisponibilidadeEntity } from "@/shared/infrastructure/integrations/database/typeorm/entities";
+import { type IDomain } from "@/shared/tsp/schema/typings";
 
 // ============================================================================
 
@@ -45,34 +44,25 @@ export class ProfessorDisponibilidadeService {
 
     // =========================================================
 
-    const paginated = await this.searchService.search(
-      qb,
-      domain
-        ? {
-            ...domain,
-            sortBy: domain.sortBy ? (domain.sortBy as any[]).map((s) => (typeof s === "string" ? s : Array.isArray(s) ? s.join(":") : `${s.column}:${s.direction ?? "ASC"}`)) : undefined,
-          }
-        : {},
-      {
-        ...paginateConfig,
-        select: [
-          "id",
+    const paginated = await this.searchService.search(qb, domain, {
+      ...paginateConfig,
+      select: [
+        "id",
 
-          "dateCreated",
-        ],
-        relations: {
-          perfil: true,
-          disponibilidade: true,
-        },
-        sortableColumns: ["dateCreated"],
-        searchableColumns: ["id"],
-        defaultSortBy: [["dateCreated", "ASC"]],
-        filterableColumns: {
-          "perfil.id": [FilterOperator.EQ],
-          "disponibilidade.id": [FilterOperator.EQ],
-        },
+        "dateCreated",
+      ],
+      relations: {
+        perfil: true,
+        disponibilidade: true,
       },
-    );
+      sortableColumns: ["dateCreated"],
+      searchableColumns: ["id"],
+      defaultSortBy: [["dateCreated", "ASC"]],
+      filterableColumns: {
+        "perfil.id": [FilterOperator.EQ],
+        "disponibilidade.id": [FilterOperator.EQ],
+      },
+    });
 
     // =========================================================
 
@@ -225,7 +215,7 @@ export class ProfessorDisponibilidadeService {
     });
   }
 
-  async professorDisponibilidadeUpdate(accessContext: AccessContext, domain: IDomain.ProfessorDisponibilidadeUpdateInput) {
+  async professorDisponibilidadeUpdate(accessContext: AccessContext, domain: IDomain.ProfessorDisponibilidadeFindOneInput & IDomain.ProfessorDisponibilidadeUpdateInput) {
     // =========================================================
 
     const currentProfessorDisponibilidade = await this.professorDisponibilidadeFindByIdStrict(accessContext, { id: domain.id });

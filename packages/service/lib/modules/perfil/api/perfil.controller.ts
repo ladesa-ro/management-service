@@ -1,17 +1,15 @@
 import { Controller, Get, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import { requestRepresentationMergeToDomain } from "@/contracts/generic-adapters";
-import { type IAppRequest } from "@/contracts/openapi/document/app-openapi-typings";
-import { AppRequest } from "@/contracts/openapi/utils/app-request";
-import { type IDomain } from "@/legacy/domain/contracts/integration";
+import { AppRequest, requestRepresentationMergeToDomain } from "@/shared";
 import { AccessContext, AccessContextHttp } from "@/shared/infrastructure/access-context";
-import { PerfilService } from "./domain/perfil.service";
+import { type IAppRequest } from "@/shared/tsp/openapi/document/app-openapi-typings";
+import { type IDomain } from "@/shared/tsp/schema/typings";
+import { PerfilService } from "../domain/perfil.service";
 
 @Controller("/perfis")
 @ApiTags("perfis")
 export class PerfilController {
-  constructor(private vinculoService: PerfilService) {
-  }
+  constructor(private vinculoService: PerfilService) {}
 
   @Get("/:id/ensino")
   async perfilEnsinoById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("PerfilEnsinoById") dto: IAppRequest<"PerfilEnsinoById">) {
@@ -26,8 +24,8 @@ export class PerfilController {
   }
 
   @Post("/")
-  async setVinculos(@AccessContextHttp() accessContext: AccessContext, @AppRequest("PerfilUpdateInput") dto: IAppRequest<"PerfilUpdateOneById">) {
-    const domain: IDomain.PerfilUpdateInput = requestRepresentationMergeToDomain(dto);
+  async setVinculos(@AccessContextHttp() accessContext: AccessContext, @AppRequest("PerfilUpdateOneById") dto: IAppRequest<"PerfilUpdateOneById">) {
+    const domain: IDomain.PerfilFindOneInput & IDomain.PerfilUpdateInput = requestRepresentationMergeToDomain(dto);
     return this.vinculoService.perfilSetVinculos(accessContext, domain);
   }
 }

@@ -1,17 +1,13 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
-import { QbEfficientLoad } from "@/contracts/qb-efficient-load";
-import { SearchService } from "@/legacy/application/helpers/search.service";
-import { CursoService } from "@/legacy/application/resources/ensino/institucional/curso/curso.service";
-import { type IDomain } from "@/legacy/domain/contracts/integration";
-import { AmbienteService } from "@/modules/ambiente/ambiente.service";
-import { ArquivoService } from "@/modules/arquivo/arquivo.service";
-import { ImagemService } from "@/modules/imagem/imagem.service";
-import type { AccessContext } from "@/shared/infrastructure/access-context";
+import { AmbienteService } from "@/modules/ambiente/domain/ambiente.service";
+import { ArquivoService } from "@/modules/arquivo/domain/arquivo.service";
+import { CursoService } from "@/modules/curso/domain/curso.service";
+import { ImagemService } from "@/modules/imagem/domain/imagem.service";
+import { AccessContext, DatabaseContextService, IDomain, QbEfficientLoad, SearchService } from "@/shared";
 import { paginateConfig } from "@/shared/infrastructure/fixtures";
-import { DatabaseContextService } from "@/shared/infrastructure/integrations/database";
-import type { TurmaEntity } from "@/shared/infrastructure/integrations/database/typeorm/entities";
+import { TurmaEntity } from "@/shared/infrastructure/integrations/database/typeorm/entities";
 
 // ============================================================================
 
@@ -246,7 +242,7 @@ export class TurmaService {
     return this.turmaFindByIdStrict(accessContext, { id: turma.id });
   }
 
-  async turmaUpdate(accessContext: AccessContext, domain: IDomain.TurmaUpdateInput) {
+  async turmaUpdate(accessContext: AccessContext, domain: IDomain.TurmaFindOneInput & IDomain.TurmaUpdateInput) {
     // =========================================================
 
     const currentTurma = await this.turmaFindByIdStrict(accessContext, { id: domain.id });
