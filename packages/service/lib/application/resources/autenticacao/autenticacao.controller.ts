@@ -39,7 +39,7 @@ export class AutenticacaoController {
 
   @Post("/login/refresh")
   @Public()
-  refresh(@AccessContextHttp() accessContext: AccessContext, @AppRequest("AuthRefresh") dto: IAppRequest<"AuthRefreshInput">) {
+  refresh(@AccessContextHttp() accessContext: AccessContext, @AppRequest("AuthRefresh") dto: IAppRequest<"AuthRefresh">) {
     const domain = requestRepresentationMergeToDomain(dto);
     return this.autenticacaoService.refresh(accessContext, domain);
   }

@@ -19,7 +19,7 @@ export class TurmaController {
   }
 
   @Get("/:id")
-  async turmaFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("TurmaFindById") dto: IAppRequest<"TurmaFindOneById">) {
+  async turmaFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("TurmaFindOneById") dto: IAppRequest<"TurmaFindOneById">) {
     const domain: IDomain.TurmaFindOneInput = requestRepresentationMergeToDomain(dto);
     return this.turmaService.turmaFindByIdStrict(accessContext, domain);
   }
@@ -31,7 +31,7 @@ export class TurmaController {
   }
 
   @Patch("/:id")
-  async turmaUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("TurmaUpdate") dto: IAppRequest<"TurmaUpdateOneById">) {
+  async turmaUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("TurmaUpdateOneById") dto: IAppRequest<"TurmaUpdateOneById">) {
     const domain: IDomain.TurmaUpdateInput = requestRepresentationMergeToDomain(dto);
     return this.turmaService.turmaUpdate(accessContext, domain);
   }

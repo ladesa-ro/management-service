@@ -22,7 +22,7 @@ export class GradeHorarioOfertaFormacaoController {
   async gradeHorarioOfertaFormacaoFindById(
     @AccessContextHttp() accessContext: AccessContext,
 
-    @AppRequest("GradeHorarioOfertaFormacaoFindById") dto: IAppRequest<"GradeHorarioOfertaFormacaoFindOneById">,
+    @AppRequest("GradeHorarioOfertaFormacaoFindOneById") dto: IAppRequest<"GradeHorarioOfertaFormacaoFindOneById">,
   ) {
     const domain: IDomain.GradeHorarioOfertaFormacaoFindOneInput = requestRepresentationMergeToDomain(dto);
     return this.gradeHorarioOfertaFormacaoService.gradeHorarioOfertaFormacaoFindByIdStrict(accessContext, domain);
@@ -42,7 +42,7 @@ export class GradeHorarioOfertaFormacaoController {
   async gradeHorarioOfertaFormacaoUpdate(
     @AccessContextHttp() accessContext: AccessContext,
 
-    @AppRequest("GradeHorarioOfertaFormacaoUpdate") dto: IAppRequest<"GradeHorarioOfertaFormacaoUpdateOneById">,
+    @AppRequest("GradeHorarioOfertaFormacaoUpdateOneById") dto: IAppRequest<"GradeHorarioOfertaFormacaoUpdateOneById">,
   ) {
     const domain: IDomain.GradeHorarioOfertaFormacaoUpdateInput = requestRepresentationMergeToDomain(dto);
     return this.gradeHorarioOfertaFormacaoService.gradeHorarioOfertaFormacaoUpdate(accessContext, domain);

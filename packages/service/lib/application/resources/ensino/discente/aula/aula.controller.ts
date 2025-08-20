@@ -19,7 +19,7 @@ export class AulaController {
   }
 
   @Get("/:id")
-  async aulaFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("AulaFindById") dto: IAppRequest<"AulaFindOneById">) {
+  async aulaFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("AulaFindOneById") dto: IAppRequest<"AulaFindOneById">) {
     const domain: IDomain.AulaFindOneInput = requestRepresentationMergeToDomain(dto);
     return this.aulaService.aulaFindByIdStrict(accessContext, domain);
   }
@@ -31,7 +31,7 @@ export class AulaController {
   }
 
   @Patch("/:id")
-  async aulaUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("AulaUpdate") dto: IAppRequest<"AulaUpdateOneById">) {
+  async aulaUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("AulaUpdateOneById") dto: IAppRequest<"AulaUpdateOneById">) {
     const domain: IDomain.AulaUpdateInput = requestRepresentationMergeToDomain(dto);
     return this.aulaService.aulaUpdate(accessContext, domain);
   }

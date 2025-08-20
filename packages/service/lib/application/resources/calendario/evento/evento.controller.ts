@@ -19,7 +19,7 @@ export class EventoController {
   }
 
   @Get("/:id")
-  async eventoFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("EventoFindById") dto: IAppRequest<"EventoFindOneById">) {
+  async eventoFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("EventoFindOneById") dto: IAppRequest<"EventoFindOneById">) {
     const domain: IDomain.EventoFindOneInput = requestRepresentationMergeToDomain(dto);
     return this.eventoService.eventoFindByIdStrict(accessContext, domain);
   }
@@ -31,7 +31,7 @@ export class EventoController {
   }
 
   @Patch("/:id")
-  async eventoUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("EventoUpdate") dto: IAppRequest<"EventoUpdateOneById">) {
+  async eventoUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("EventoUpdateOneById") dto: IAppRequest<"EventoUpdateOneById">) {
     const domain: IDomain.EventoUpdateInput = requestRepresentationMergeToDomain(dto);
     return this.eventoService.eventoUpdate(accessContext, domain);
   }

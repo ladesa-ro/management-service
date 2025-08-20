@@ -19,7 +19,7 @@ export class CampusController {
   }
 
   @Get("/:id")
-  async campusFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CampusFindById") dto: IAppRequest<"CampusFindOneById">) {
+  async campusFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CampusFindOneById") dto: IAppRequest<"CampusFindOneById">) {
     const domain: IDomain.CampusFindOneInput = requestRepresentationMergeToDomain(dto);
     return this.campusService.campusFindByIdStrict(accessContext, domain);
   }
@@ -31,7 +31,7 @@ export class CampusController {
   }
 
   @Patch("/:id")
-  async campusUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CampusUpdate") dto: IAppRequest<"CampusUpdateOneById">) {
+  async campusUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CampusUpdateOneById") dto: IAppRequest<"CampusUpdateOneById">) {
     const domain: IDomain.CampusUpdateInput = requestRepresentationMergeToDomain(dto);
     return this.campusService.campusUpdate(accessContext, domain);
   }

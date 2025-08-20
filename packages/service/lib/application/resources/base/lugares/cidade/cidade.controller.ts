@@ -13,14 +13,14 @@ export class CidadeController {
   // ========================================================
 
   @Get("/")
-  async findAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("FindAll") dto: IAppRequest<"FindAll">) {
+  async findAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CidadeList") dto: IAppRequest<"CidadeList">) {
     return this.cidadeService.findAll(accessContext, dto);
   }
 
   // ========================================================
 
   @Get("/:id")
-  async findById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("FindById") dto: IAppRequest<"FindById">) {
+  async findById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CidadeFindOneById") dto: IAppRequest<"CidadeFindOneById">) {
     return this.cidadeService.findByIdStrict(accessContext, dto);
   }
 }

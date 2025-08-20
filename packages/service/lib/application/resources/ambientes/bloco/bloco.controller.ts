@@ -31,7 +31,7 @@ export class BlocoController {
   }
 
   @Patch("/:id")
-  async blocoUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("BlocoUpdate") dto: IAppRequest<"BlocoUpdateOneById">) {
+  async blocoUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("BlocoUpdateOneById") dto: IAppRequest<"BlocoUpdateOneById">) {
     const domain: IDomain.BlocoUpdateInput = requestRepresentationMergeToDomain(dto);
     return this.blocoService.blocoUpdate(accessContext, domain);
   }

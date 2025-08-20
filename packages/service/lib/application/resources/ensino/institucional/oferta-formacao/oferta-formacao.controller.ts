@@ -19,7 +19,7 @@ export class OfertaFormacaoController {
   }
 
   @Get("/:id")
-  async ofertaFormacaoFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("OfertaFormacaoFindById") dto: IAppRequest<"OfertaFormacaoFindOneById">) {
+  async ofertaFormacaoFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("OfertaFormacaoFindOneById") dto: IAppRequest<"OfertaFormacaoFindOneById">) {
     const domain: IDomain.OfertaFormacaoFindOneInput = requestRepresentationMergeToDomain(dto);
     return this.ofertaFormacaoService.ofertaFormacaoFindByIdStrict(accessContext, domain);
   }
@@ -31,7 +31,7 @@ export class OfertaFormacaoController {
   }
 
   @Patch("/:id")
-  async ofertaFormacaoUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("OfertaFormacaoUpdate") dto: IAppRequest<"OfertaFormacaoUpdateOneById">) {
+  async ofertaFormacaoUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("OfertaFormacaoUpdateOneById") dto: IAppRequest<"OfertaFormacaoUpdateOneById">) {
     const domain: IDomain.OfertaFormacaoUpdateInput = requestRepresentationMergeToDomain(dto);
     return this.ofertaFormacaoService.ofertaFormacaoUpdate(accessContext, domain);
   }

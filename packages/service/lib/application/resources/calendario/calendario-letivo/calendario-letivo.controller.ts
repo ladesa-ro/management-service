@@ -13,18 +13,16 @@ export class CalendarioLetivoController {
   constructor(private calendarioLetivoService: CalendarioLetivoService) {}
 
   @Get("/")
-  async calendarioFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CalendarioList") dto: IAppRequest<"CalendarioList">) {
+  async calendarioFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CalendarioList") dto: IAppRequest<"CalendarioLetivoList">) {
     const domain: IDomain.CalendarioLetivoListInput = requestRepresentationMergeToDomain(dto);
     return this.calendarioLetivoService.calendarioLetivoFindAll(accessContext, domain);
   }
 
   @Get("/:id")
   async calendarioLetivoFindById(
-    @AccessContextHttp() accessContext: AccessContext,
-
-    @AppRequest("CalendarioLetivoFindById") dto: IAppRequest<"CalendarioLetivoFindOneById">,
-  ) {
-    return this.calendarioLetivoService.calendarioLetivoFindByIdStrict(accessContext, { id: dto.path.id });
+    @AccessContextHttp() accessContext: AccessContext, @AppRequest("CalendarioLetivoFindById") dto: IAppRequest<"CalendarioLetivoFindOneById">,) {
+    const domain: IDomain.CalendarioLetivoFindOneInput = requestRepresentationMergeToDomain(dto);
+    return this.calendarioLetivoService.calendarioLetivoFindByIdStrict(accessContext, { id: domain.id });
   }
 
   @Post("/")
@@ -41,6 +39,7 @@ export class CalendarioLetivoController {
 
   @Delete("/:id")
   async CalendarioLetivoDeleteOneById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CalendarioLetivoDeleteOneById") dto: IAppRequest<"CalendarioLetivoDeleteOneById">) {
-    return this.calendarioLetivoService.calendarioLetivoDeleteOneById(accessContext, { id: dto.path.id });
+    const domain: IDomain.CalendarioLetivoFindOneInput = requestRepresentationMergeToDomain(dto);
+    return this.calendarioLetivoService.calendarioLetivoDeleteOneById(accessContext, { id: domain.id });
   }
 }
