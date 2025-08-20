@@ -2,7 +2,7 @@
 # IMAGEM BASE DO SISTEMA OPERACIONAL
 # ==========================================
 
-FROM debian:12-slim AS os-core
+FROM debian:13-slim AS os-core
 
 ENV DEBIAN_FRONTEND=noninteractive
 
