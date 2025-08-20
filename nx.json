@@ -3,5 +3,8 @@
   "cli": {
     "packageManager": "bun"
   },
+  "tui": {
+    "enabled": false
+  },
   "defaultBase": "development"
 }
