@@ -17,7 +17,7 @@ on:
     paths:
       - .github/workflows/ci-cd.yml          # Alterações no próprio workflow
       - .devcontainer/ci-cd/**/*             # Alterações no container de desenvolvimento
-      - .github/utils/deploy-k8s-helm-stakater-application.sh  # Alterações no script de deploy
+      - ../utils/deploy-k8s-helm-stakater-api.sh  # Alterações no script de deploy
       - packages/service/**/*                # Alterações no código do serviço
 
 # Configuração de concorrência para evitar execuções simultâneas do mesmo workflow
@@ -44,7 +44,7 @@ jobs:
     steps:
       # Step 1: Fazer checkout do código-fonte do repositório
       - name: Checkout do código-fonte
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       # Step 2: Obter secrets do Infisical para o processo de build
       # Infisical é usado como gerenciador de secrets centralizado
@@ -101,7 +101,7 @@ jobs:
 
     # Dependência explícita - só executa após o sucesso do job anterior
     # Garante que a imagem esteja disponível antes do deploy
-    needs: [service-ci-image]
+    needs: [ service-ci-image ]
 
     # Environment para deploy com URL de monitoramento
     environment:
@@ -111,7 +111,7 @@ jobs:
     steps:
       # Step 1: Checkout do código (necessário para scripts de deploy)
       - name: Checkout do código-fonte
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       # Step 2: Obter secrets específicos para deploy do Infisical
       # Diferentes secrets podem ser necessários para CI vs CD
@@ -140,7 +140,7 @@ jobs:
           HELM_RELEASE_EXTRA_OPTIONS: ${{ env.DEPLOY_HELM_EXTRA_OPTIONS }} # Opções adicionais
         shell: bash
         # Executa script customizado para deploy via Helm com integração Stakater
-        run: bash .github/utils/deploy-k8s-helm-stakater-application.sh
+        run: bash .github/utils/deploy-k8s-helm-stakater-api.sh
 
   # ========================================
   # JOB 3: CONSTRUÇÃO E PUBLICAÇÃO DO CLIENT NPM
@@ -160,7 +160,7 @@ jobs:
     steps:
       # Step 1: Checkout do código-fonte
       - name: Checkout do código-fonte
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       # Step 2: Executar container de desenvolvimento para build do cliente NPM
       # Usa devcontainer para garantir ambiente consistente

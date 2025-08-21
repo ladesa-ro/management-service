@@ -2,19 +2,9 @@
 
 import * as path from "node:path";
 import * as process from "node:process";
-import {
-  compile,
-  CompilerHost,
-  getTypeName,
-  IntrinsicType,
-  Namespace,
-  NodeHost,
-  Program,
-  resolveCompilerOptions,
-  Type
-} from "@typespec/compiler";
+import { CompilerHost, compile, getTypeName, IntrinsicType, Namespace, NodeHost, Program, resolveCompilerOptions, Type } from "@typespec/compiler";
 import { SyntaxKind } from "@typespec/compiler/ast";
-import { lazyAsync } from "@/shared/infrastructure/utils/lazy";
+import { lazyAsync } from "@/infrastructure/utils/lazy";
 
 const findNamespace = (program: Program, fullName: string) => {
   let currentNs = program.getGlobalNamespaceType();
@@ -72,12 +62,12 @@ export type IPropertyRepresentation = {
 } & (
   | { mode: "simple" }
   | {
-  mode: "reference";
-  reference: {
-    name: string;
-  };
-}
-  );
+      mode: "reference";
+      reference: {
+        name: string;
+      };
+    }
+);
 
 export type IModelRepresentation = {
   name: string;
@@ -100,13 +90,13 @@ export const compileDomainModels = lazyAsync(async () => {
   const getAllowedNamespacesModels = function* () {
     for (const namespace of getAllowedNamespaces()) {
       for (const model of getNamespaceQualifiedModels(namespace)) {
-        yield {model, namespace};
+        yield { model, namespace };
       }
     }
   };
 
   const getModelsRepresentations = function* () {
-    for (const {model} of getAllowedNamespacesModels()) {
+    for (const { model } of getAllowedNamespacesModels()) {
       const modelRepresentation: IModelRepresentation = {
         name: model.name,
         properties: [],

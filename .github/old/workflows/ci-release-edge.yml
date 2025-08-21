@@ -38,4 +38,4 @@ jobs:
           workspace-build: "true"
 
       - name: "publish to pkg.pr.new"
-        run: bunx pkg-pr-new publish --comment=update './integrations/npm/api-client-fetch'
+        run: bunx pkg-pr-new publish --comment=update './integrations/npm/presentation-client-fetch'

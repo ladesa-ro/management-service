@@ -1,4 +1,4 @@
-name: CI/CD - integrations/npm/api-client-fetch-docs
+name: CI/CD - integrations/npm/presentation-client-fetch-docs
 
 on:
   workflow_dispatch:
@@ -6,9 +6,9 @@ on:
     branches:
       - development
     paths:
-      - ci-cd-docs-npm-api-client-fetch.yml
-      - packages/integrations/npm/api-client-fetch/docs-npm-api-client-fetch/**/*
-      - ../../../packages/integrations/npm/api-client-fetch/src
+      - ci-cd-docs-npm-presentation-client-fetch.yml
+      - packages/integrations/npm/presentation-client-fetch/docs-npm-presentation-client-fetch/**/*
+      - ../../../packages/integrations/npm/presentation-client-fetch/src
       - ../../../packages/service/bun.lock
       - ../../../packages/service/bun.toml
       - package.json
@@ -59,7 +59,7 @@ jobs:
           image-name: ${{ env.IMAGE_NAME  }}
 
           build-image: "true"
-          build-target-tag: "docs-npm-api-client-fetch-runtime"
+          build-target-tag: "docs-npm-presentation-client-fetch-runtime"
 
           push-image: "true"
           push-image-registry-url: ${{ env.REGISTRY_URL }}
@@ -68,7 +68,7 @@ jobs:
     name: deploy to Cluster
 
     runs-on: deploy
-    needs: [ci-image]
+    needs: [ ci-image ]
 
     environment:
       name: docs-npm-client-fetch
