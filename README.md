@@ -5,7 +5,7 @@
 
 ## Ambientes
 
-Instância Pública de Desenvolvimento: <https://dev.ladesa.com.br/api>
+Instância Pública de Desenvolvimento: <https://dev.ladesa.com.br/api/v1/docs/>
 
 ## Integrações
 
