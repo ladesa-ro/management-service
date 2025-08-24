@@ -63,9 +63,10 @@ export class CreateTableIndisponibilidadeProfessor1754870894487 implements Migra
           },
         ],
       }),
+      true 
     );
-
     await queryRunner.query(`
+      DROP TRIGGER IF EXISTS change_date_updated_table_${tableName} ON ${tableName};
       CREATE TRIGGER change_date_updated_table_${tableName}
         BEFORE UPDATE ON ${tableName}
         FOR EACH ROW
