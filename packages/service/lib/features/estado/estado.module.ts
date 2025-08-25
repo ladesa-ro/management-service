@@ -1,11 +1,13 @@
 import { Module } from "@nestjs/common";
-import { EstadoController } from "@/features/estado/api/estado.controller";
-import { EstadoService } from "./domain/estado.service";
+import { EstadoApplicationService } from "@/features/estado/application/estado-application-service";
+import { EstadoRepositoryProvider } from "@/features/estado/infrastructure/estado.repository.provider";
+import { EstadoController } from "@/features/estado/presentation/rest/estado.controller";
 
 @Module({
   imports: [],
-  providers: [EstadoService],
-  exports: [EstadoService],
+  providers: [EstadoApplicationService, EstadoRepositoryProvider],
+  exports: [EstadoApplicationService],
   controllers: [EstadoController],
 })
-export class EstadoModule {}
+export class EstadoModule {
+}

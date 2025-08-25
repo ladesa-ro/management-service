@@ -3,7 +3,9 @@ import compression from "compression";
 import helmet from "helmet";
 import { AppConfigService } from "@/infrastructure/config";
 import "reflect-metadata";
+import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { AppModule } from "@/application-nest/app.module";
+import { getSchemas } from "@/shared-novo";
 
 async function setup() {
   const app = await NestFactory.create(AppModule);
@@ -36,6 +38,24 @@ async function setup() {
   if (prefix) {
     app.setGlobalPrefix(prefix, {exclude: ["health"]});
   }
+
+  const config = new DocumentBuilder().setTitle("Exemplo DDD com Schemas").setDescription("API com Estado e Cidade").setVersion("1.0").build();
+
+  const documentFactory = () => {
+    const document = SwaggerModule.createDocument(app, config);
+
+    document.components = {
+      ...document.components,
+      schemas: {
+        ...document.components?.schemas,
+        ...getSchemas(),
+      },
+    };
+
+    return document;
+  };
+
+  SwaggerModule.setup(`${prefix}docs/teste.json`, app, documentFactory);
 
   app.use(compression());
 
