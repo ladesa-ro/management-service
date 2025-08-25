@@ -32,7 +32,7 @@ import { NivelFormacaoModule } from "@/features/nivel-formacao/nivel-formacao.mo
 import { OfertaFormacaoModule } from "@/features/oferta-formacao/oferta-formacao.module";
 import { OfertaFormacaoNivelFormacaoModule } from "@/features/oferta-formacao-nivel-formacao/oferta-formacao-nivel-formacao.module";
 import { PerfilModule } from "@/features/perfil/perfil.module";
-import { ProfessorDisponibilidadeModule } from "@/features/professor-disponibilidade/professor-disponibilidade.module";
+import { ProfessorIndisponibilidadeModule } from "@/features/professor-indisponibilidade/professor-indisponibilidade.module";
 import { ReservaModule } from "@/features/reserva/reserva.module";
 import { TurmaModule } from "@/features/turma/turma.module";
 import { TurmaDisponibilidadeModule } from "@/features/turma-disponibilidade/turma-disponibilidade.module";
@@ -42,7 +42,7 @@ import { UsuarioModule } from "@/features/usuario/usuario.module";
   imports: [
     ModalidadeModule,
     PerfilModule,
-    ProfessorDisponibilidadeModule,
+    ProfessorIndisponibilidadeModule,
     CursoModule,
     IntervaloDeTempoModule,
     AutorizacaoModule,
