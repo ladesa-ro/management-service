@@ -1,7 +1,8 @@
 import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 
-@Entity({ name: "indisponibilidade_professor" })
-export class IndisponibilidadeProfessorEntity {
+@Entity("professor_indisponibilidade")
+export class professorIndisponibilidade {
+
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 
