@@ -14,9 +14,6 @@ import "./features/modalidade/api/modalidade.routes.tsp";
 import "./features/perfil/domain/perfil.model.tsp";
 import "./features/perfil/domain/perfil.params.tsp";
 import "./features/perfil/api/perfil.routes.tsp";
-import "./features/professor-indisponibilidade/domain/professor-disponibilidade.params.tsp";
-import "./features/professor-indisponibilidade/domain/professor-disponibilidade.model.tsp";
-import "./features/professor-indisponibilidade/api/professor-disponibilidade.routes.tsp";
 import "./features/curso/domain/curso.params.tsp";
 import "./features/curso/domain/curso.model.tsp";
 import "./features/curso/api/curso.routes.tsp";
@@ -122,7 +119,6 @@ import "./features/diario-professor/api/diario-professor.routes.tsp";
 import "./features/professor-indisponibilidade/domain/professor-indisponibilidade.params.tsp";
 import "./features/professor-indisponibilidade/domain/professor-indisponibilidade.model.tsp";
 import "./features/professor-indisponibilidade/api/professor-indisponibilidade.routes.tsp";
-
 
 using Http;
 using OpenAPI;
