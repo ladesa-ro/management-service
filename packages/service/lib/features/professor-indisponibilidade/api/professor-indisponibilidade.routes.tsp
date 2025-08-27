@@ -25,7 +25,7 @@ op ProfessorIndisponibilidadeList(
   /** Ordenaçao. */
   @query(#{ explode: true }) sortBy?: string[],
   /** Filtro por perfil (uuid). */
-  @query(#{ explode: true }) `filter.id_perfil_fk`?: string[],
+  @query id_perfil_fk?: string,
 ): ProfessorIndisponibilidadeListOutput | ForbiddenResponse | NotFoundResponse;
 
 /**

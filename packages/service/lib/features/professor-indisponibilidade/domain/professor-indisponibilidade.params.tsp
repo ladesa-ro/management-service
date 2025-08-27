@@ -23,20 +23,20 @@ model ProfessorIndisponibilidadeView {
 
 /** Lista todas as indisponibilidades*/
 model ProfessorIndisponibilidadeListOutput {
-  items: ProfessorIndisponibilidade[];
+  items: ProfessorIndisponibilidadeView[];
   total?: integer;
 }
+model ProfessorIndisponibilidadeListInput {
+  id_perfil_fk: string;
+}
+
 
 /**Lista uma indisponibilidade*/
 model ProfessorIndisponibilidadeFindOneOutput {
-  item: ProfessorIndisponibilidade;
+  item: ProfessorIndisponibilidadeView;
 }
-
-/** Cria uma indisponibilidade*/
-model ProfessorIndisponibilidadeCreateInput {
-  indisponibilidade_inicio: string;
-  indisponibilidade_termino: string;
-  motivo: string;
+model ProfessorIndisponibilidadeFindOneInput {
+  item: ProfessorIndisponibilidadeView;
 }
 
 /** Atualiza uma indisponibilidade*/
@@ -45,6 +45,24 @@ model ProfessorIndisponibilidadeUpdateInput {
   indisponibilidade_termino?: string;
   motivo?: string;
 }
+
+
+model ProfessorIndisponibilidadeCreateOutput {
+  id_perfil_fk?: string;
+  indisponibilidade_inicio: string;
+  indisponibilidade_termino: string;
+  motivo: string;
+}
+/** Cria uma indisponibilidade*/
+model ProfessorIndisponibilidadeCreateInput {
+  id_perfil_fk?: string;
+  indisponibilidade_inicio: string;
+  indisponibilidade_termino: string;
+  motivo: string;
+}
+
+
+
 
 
 
