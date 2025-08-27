@@ -2,8 +2,8 @@ import { PerfilEntity } from "@/infrastructure/integrations/database/typeorm/ent
 import type { IDomain } from "@/shared/tsp/schema/typings";
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from "typeorm";
 
-@Entity("professor_indisponibilidade")
-export class professorIndisponibilidadeEntity implements IDomain.ProfessorIndisponibilidade {
+@Entity("indisponibilidade_professor")
+export class ProfessorIndisponibilidadeEntity implements IDomain.ProfessorIndisponibilidade {
 
   @PrimaryGeneratedColumn("uuid")
   id!: string;
