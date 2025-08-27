@@ -38,7 +38,7 @@ op ProfessorIndisponibilidadeCreate(
   /** Identificador do perfil do professor (uuid). */
   @format("uuid") @path id_perfil: string,
   /** Dados de entrada para criaçao. */
-  @body body: ProfessorIndisponibilidadeCreateInput,
+  @key key: ProfessorIndisponibilidadeCreateInput,
 ): ProfessorIndisponibilidadeFindOneOutput | ForbiddenResponse | NotFoundResponse;
 
 /**
