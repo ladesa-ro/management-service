@@ -181,10 +181,10 @@ export class DatabaseContext {
   get turmaDisponibilidadeRepository() {
     return repositories.createTurmaDisponibilidadeRepository(this.ds);
   }
-
-  get professorDisponibilidadeRepository() {
-    return repositories.createProfessorDisponibilidadeRepository(this.ds);
-  }
+  
+  // get professorDisponibilidadeRepository() {
+  //   return repositories.createProfessorDisponibilidadeRepository(this.ds);
+  // }
 
   get diarioPreferenciaAgrupamentoRepository() {
     return repositories.createDiarioPreferenciaAgrupamentoRepository(this.ds);
