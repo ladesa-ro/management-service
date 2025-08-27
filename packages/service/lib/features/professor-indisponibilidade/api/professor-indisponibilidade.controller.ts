@@ -36,7 +36,7 @@ export class ProfessorIndisponibilidadeController {
   @Get("/professores/:id_perfil/indisponibilidades")
   async professorIndisponibilidadeListByProfessor(
     @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("ProfessorIndisponibilidadeListByProfessor") dto: IAppRequest<"ProfessorIndisponibilidadeListByProfessor">,
+    @AppRequest("ProfessorIndisponibilidadeList") dto: IAppRequest<"ProfessorIndisponibilidadeList">,
   ) {
     const domain = requestRepresentationMergeToDomain(dto) as any;
     return this.professorIndisponibilidadeService.listByProfessor(domain.id_perfil);
@@ -55,7 +55,7 @@ export class ProfessorIndisponibilidadeController {
   @Patch("/indisponibilidades/:id")
   async professorIndisponibilidadeUpdate(
     @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("ProfessorIndisponibilidadeUpdate") dto: IAppRequest<"ProfessorIndisponibilidadeUpdate">,
+    @AppRequest("ProfessorIndisponibilidadeUpdateOneById") dto: IAppRequest<"ProfessorIndisponibilidadeUpdateOneById">,
   ) {
     const domain = requestRepresentationMergeToDomain(dto) as IDomain.ProfessorIndisponibilidadeUpdateInput & IDomain.ProfessorIndisponibilidadeUpdateInput & any;
     return this.professorIndisponibilidadeService.update(domain.id, domain);
