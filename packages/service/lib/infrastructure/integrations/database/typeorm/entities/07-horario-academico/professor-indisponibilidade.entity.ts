@@ -8,9 +8,9 @@ export class ProfessorIndisponibilidadeEntity implements IDomain.ProfessorIndisp
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 
-  @ManyToOne(() => UsuarioEntity, (usuario) => usuario.vinculos)
+  @ManyToOne(() => UsuarioEntity, "vinculos")
   @JoinColumn({ name: "id_perfil_fk" })
-  perfil!: Relation<UsuarioEntity> & IDomain.Perfil;
+  perfil!: UsuarioEntity & IDomain.Perfil;
 
   @Column({ name: "indisponibilidade_inicio", type: "timestamptz" })
   indisponibilidadeInicio!: Date;
@@ -27,6 +27,6 @@ export class ProfessorIndisponibilidadeEntity implements IDomain.ProfessorIndisp
   @Column({ name: "date_updated", type: "timestamptz", default: () => "NOW()" })
   dateUpdated!: Date;
 
-  @Column({ name: "dateDeleted", type: "timestamptz", nullable: true })
+  @Column({ name: "date_deleted", type: "timestamptz", nullable: true })
   dateDeleted!: Date | null;
 }

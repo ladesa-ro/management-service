@@ -2,8 +2,6 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColum
 import { type IDomain } from "@/shared/tsp/schema/typings";
 import { ImagemEntity } from "../00-00-base/imagem.entity";
 import { PerfilEntity } from "../03-autorizacao/perfil.entity";
-import { ProfessorIndisponibilidadeService } from "@/features/professor-indisponibilidade/domain/professor-indisponibilidade.service";
-import { ProfessorIndisponibilidadeEntity } from "@/infrastructure/integrations/database/typeorm/entities/07-horario-academico";
 
 @Entity("usuario")
 export class UsuarioEntity implements IDomain.Usuario {
@@ -29,11 +27,6 @@ export class UsuarioEntity implements IDomain.Usuario {
   @ManyToOne(() => ImagemEntity)
   @JoinColumn({ name: "id_imagem_perfil_fk" })
   imagemPerfil!: Relation<ImagemEntity> | null;
-
-  @OneToMany(
-    () => ProfessorIndisponibilidadeEntity,
-    (indisponibilidade) => indisponibilidade.id
-  )
 
   @OneToMany(
     () => PerfilEntity,
