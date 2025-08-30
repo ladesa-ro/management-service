@@ -30,7 +30,7 @@ export class UsuarioEntity implements IDomain.Usuario {
   @JoinColumn({ name: "id_imagem_perfil_fk" })
   imagemPerfil!: Relation<ImagemEntity> | null;
 
-  @ManyToOne(
+  @OneToMany(
     () => ProfessorIndisponibilidadeEntity,
     (indisponibilidade) => indisponibilidade.id
   )
