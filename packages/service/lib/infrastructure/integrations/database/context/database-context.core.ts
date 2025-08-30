@@ -165,7 +165,6 @@ export class DatabaseContext {
   get diarioProfessorRepository() {
     return repositories.createDiarioProfessorRepository(this.ds);
   }
-
   get aulaRepository() {
     return repositories.createAulaRepository(this.ds);
   }
@@ -181,9 +180,13 @@ export class DatabaseContext {
   get turmaDisponibilidadeRepository() {
     return repositories.createTurmaDisponibilidadeRepository(this.ds);
   }
+  
+  // get professorDisponibilidadeRepository() {
+  //   return repositories.createProfessorDisponibilidadeRepository(this.ds);
+  // }
 
-  get professorDisponibilidadeRepository() {
-    return repositories.createProfessorDisponibilidadeRepository(this.ds);
+  get professorIndisponibilidadeRepository() {
+    return repositories.createProfessorIndisponibilidadeRepository(this.ds);
   }
 
   get diarioPreferenciaAgrupamentoRepository() {
