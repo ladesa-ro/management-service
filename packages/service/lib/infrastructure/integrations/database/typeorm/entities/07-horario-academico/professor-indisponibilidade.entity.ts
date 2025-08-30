@@ -1,6 +1,6 @@
 import { PerfilEntity } from "@/infrastructure/integrations/database/typeorm/entities/03-autorizacao";
 import type { IDomain } from "@/shared/tsp/schema/typings";
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, DeleteDateColumn, Relation } from "typeorm";
 
 @Entity("indisponibilidade_professor")
 export class ProfessorIndisponibilidadeEntity implements IDomain.ProfessorIndisponibilidade {
@@ -10,11 +10,10 @@ export class ProfessorIndisponibilidadeEntity implements IDomain.ProfessorIndisp
 
   @ManyToOne(() => PerfilEntity)
   @JoinColumn({ name: "id_perfil_fk" })
-  perfil!: IDomain.Perfil;
+  perfil!: PerfilEntity;
 
   @Column({ name: "id_perfil_fk", type: "uuid" })
   id_perfil_fk!: string;
-
   @Column({ name: "indisponibilidade_inicio", type: "timestamptz" })
   indisponibilidade_inicio!: Date;
 
