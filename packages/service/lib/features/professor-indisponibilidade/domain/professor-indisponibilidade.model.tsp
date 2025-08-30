@@ -8,10 +8,10 @@ model ProfessorIndisponibilidade{
   perfil : Perfil;
 
   /** Horario de inicio*/
-  indisponibilidade_inicio : utcDateTime;
+  indisponibilidadeInicio : utcDateTime;
 
   /** Horario de termino*/
-  indisponibilidade_termino : utcDateTime;
+  indisponibilidadeTermino : utcDateTime;
 
   /** Breve descricao do motivo de indisponibilidade*/
   motivo : string;

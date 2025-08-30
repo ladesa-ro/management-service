@@ -1,6 +1,6 @@
-import { PerfilEntity } from "@/infrastructure/integrations/database/typeorm/entities/03-autorizacao";
+import { UsuarioEntity } from "@/infrastructure/integrations/database/typeorm/entities/01-autenticacao";
 import type { IDomain } from "@/shared/tsp/schema/typings";
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, DeleteDateColumn, Relation } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, DeleteDateColumn, Relation, OneToMany } from "typeorm";
 
 @Entity("indisponibilidade_professor")
 export class ProfessorIndisponibilidadeEntity implements IDomain.ProfessorIndisponibilidade {
@@ -8,17 +8,15 @@ export class ProfessorIndisponibilidadeEntity implements IDomain.ProfessorIndisp
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 
-  @ManyToOne(() => PerfilEntity)
+  @ManyToOne(() => UsuarioEntity, (usuario) => usuario.vinculos)
   @JoinColumn({ name: "id_perfil_fk" })
-  perfil!: PerfilEntity;
+  perfil!: Relation<UsuarioEntity> & IDomain.Perfil;
 
-  @Column({ name: "id_perfil_fk", type: "uuid" })
-  id_perfil_fk!: string;
   @Column({ name: "indisponibilidade_inicio", type: "timestamptz" })
-  indisponibilidade_inicio!: Date;
+  indisponibilidadeInicio!: Date;
 
   @Column({ name: "indisponibilidade_termino", type: "timestamptz" })
-  indisponibilidade_termino!: Date;
+  indisponibilidadeTermino!: Date;
 
   @Column({ name: "motivo", type: "varchar", length: 90 })
   motivo!: string;
@@ -29,6 +27,6 @@ export class ProfessorIndisponibilidadeEntity implements IDomain.ProfessorIndisp
   @Column({ name: "date_updated", type: "timestamptz", default: () => "NOW()" })
   dateUpdated!: Date;
 
-  @Column({ name: "date_deleted", type: "timestamptz", nullable: true })
+  @Column({ name: "dateDeleted", type: "timestamptz", nullable: true })
   dateDeleted!: Date | null;
 }

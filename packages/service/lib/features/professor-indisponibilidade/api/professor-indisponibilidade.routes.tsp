@@ -14,7 +14,7 @@ namespace Ladesa.ManagementService;
 @route("/indisponibilidades")
 @get
 op ProfessorIndisponibilidadeList(
-  @query id_perfil_fk?: string,
+  @query idPerfilFk?: string,
 ): ProfessorIndisponibilidadeListOutput | ForbiddenResponse | NotFoundResponse;
 
 /** Criar para um professor (perfil) */
