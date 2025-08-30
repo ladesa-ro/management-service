@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Patch, Delete, BadRequestException } from "@nestjs/common";
+import { BadRequestException, Controller, Delete, Get, Patch, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { AppRequest, requestRepresentationMergeToDomain } from "@/shared";
@@ -12,10 +12,7 @@ export class ProfessorIndisponibilidadeController {
   constructor(private readonly professorIndisponibilidadeService: ProfessorIndisponibilidadeService) {}
 
   @Get("/")
-  async professorIndisponibilidadeList(
-    @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("ProfessorIndisponibilidadeList") dto: IAppRequest<"ProfessorIndisponibilidadeList">
-  ) {
+  async professorIndisponibilidadeList(@AccessContextHttp() accessContext: AccessContext, @AppRequest("ProfessorIndisponibilidadeList") dto: IAppRequest<"ProfessorIndisponibilidadeList">) {
     const domain = requestRepresentationMergeToDomain(dto) as any;
     return this.professorIndisponibilidadeService.indisponibilidadeFindAll(accessContext, domain);
   }
@@ -23,37 +20,31 @@ export class ProfessorIndisponibilidadeController {
   @Get("/:id")
   async professorIndisponibilidadeFindOneById(
     @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("ProfessorIndisponibilidadeFindOneById") dto: IAppRequest<"ProfessorIndisponibilidadeFindOneById">
+    @AppRequest("ProfessorIndisponibilidadeFindOneById") dto: IAppRequest<"ProfessorIndisponibilidadeFindOneById">,
   ) {
     const domain = requestRepresentationMergeToDomain(dto) as any;
     return this.professorIndisponibilidadeService.indisponibilidadeFindByIdStrict(accessContext, domain.id);
   }
 
-@Get("/professores/:id_perfil")
-async professorIndisponibilidadeListByProfessor(
-  @AccessContextHttp() accessContext: AccessContext,
-  @AppRequest("ProfessorIndisponibilidadeList") dto: IAppRequest<"ProfessorIndisponibilidadeList">
-) {
-  const idPerfil = dto.path; 
-  if (!idPerfil) throw new BadRequestException();
-  return this.professorIndisponibilidadeService.listByProfessor(accessContext, idPerfil);
-}
+  @Get("/professores/:id_perfil")
+  async professorIndisponibilidadeListByProfessor(@AccessContextHttp() accessContext: AccessContext, @AppRequest("ProfessorIndisponibilidadeList") dto: IAppRequest<"ProfessorIndisponibilidadeList">) {
+    const idPerfil = dto.path;
+    if (!idPerfil) throw new BadRequestException();
+    return this.professorIndisponibilidadeService.listByProfessor(accessContext, idPerfil);
+  }
 
-@Post("/professores/:id_perfil")
-async professorIndisponibilidadeCreate(
-  @AccessContextHttp() accessContext: AccessContext,
-  @AppRequest("ProfessorIndisponibilidadeCreate") dto: IAppRequest<"ProfessorIndisponibilidadeCreate">
-) {
-  const domain = requestRepresentationMergeToDomain(dto) as IDomain.ProfessorIndisponibilidadeCreateInput & any;
-  const idPerfil = dto.path; 
-  if (!idPerfil) throw new BadRequestException();
-  return this.professorIndisponibilidadeService.createForProfessor(accessContext, idPerfil, domain);
-}
+  @Post("/professores/:id_perfil")
+  async professorIndisponibilidadeCreate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("ProfessorIndisponibilidadeCreate") dto: IAppRequest<"ProfessorIndisponibilidadeCreate">) {
+    const domain = requestRepresentationMergeToDomain(dto) as IDomain.ProfessorIndisponibilidadeCreateInput & any;
+    const idPerfil = dto.path;
+    if (!idPerfil) throw new BadRequestException();
+    return this.professorIndisponibilidadeService.createForProfessor(accessContext, idPerfil, domain);
+  }
 
   @Patch("/:id")
   async professorIndisponibilidadeUpdate(
     @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("ProfessorIndisponibilidadeUpdateOneById") dto: IAppRequest<"ProfessorIndisponibilidadeUpdateOneById">
+    @AppRequest("ProfessorIndisponibilidadeUpdateOneById") dto: IAppRequest<"ProfessorIndisponibilidadeUpdateOneById">,
   ) {
     const domain = requestRepresentationMergeToDomain(dto) as IDomain.ProfessorIndisponibilidadeUpdateInput & any;
     if (!domain.id) throw new BadRequestException();
@@ -63,7 +54,7 @@ async professorIndisponibilidadeCreate(
   @Delete("/:id")
   async professorIndisponibilidadeDeleteOneById(
     @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("ProfessorIndisponibilidadeDeleteOneById") dto: IAppRequest<"ProfessorIndisponibilidadeDeleteOneById">
+    @AppRequest("ProfessorIndisponibilidadeDeleteOneById") dto: IAppRequest<"ProfessorIndisponibilidadeDeleteOneById">,
   ) {
     const domain = requestRepresentationMergeToDomain(dto) as any;
     if (!domain.id) throw new BadRequestException();

@@ -1,10 +1,9 @@
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { UsuarioEntity } from "@/infrastructure/integrations/database/typeorm/entities/01-autenticacao";
 import type { IDomain } from "@/shared/tsp/schema/typings";
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, DeleteDateColumn, Relation, OneToMany } from "typeorm";
 
 @Entity("indisponibilidade_professor")
 export class ProfessorIndisponibilidadeEntity implements IDomain.ProfessorIndisponibilidade {
-
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 
