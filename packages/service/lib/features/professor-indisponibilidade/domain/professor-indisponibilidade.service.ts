@@ -107,7 +107,6 @@ export class ProfessorIndisponibilidadeService {
     // const indisponibilidade = await this.
   }
 
-  // TODO : Fazer um find by ID tanto com PERFIL & IDindisponibilidade
   async indisponibilidadeFindByIdSimple(accessContext: AccessContext, id: IDomain.ProfessorIndisponibilidadeFindOneInput['idPerfilFk'], selection?: string[]): Promise<IDomain.ProfessorIndisponibilidadeFindOneOutput['success']> {
 
     // =========================================================
@@ -122,14 +121,22 @@ export class ProfessorIndisponibilidadeService {
 
     // =========================================================
 
-    qb.andWhere(`#${aliasIndisponibilidade}.id = :id`, { id });
+    // qb.andWhere(`perfil.id = :idPerfil`, { idPerfil: id });
 
+    qb.andWhere(`${aliasIndisponibilidade}.id_perfil_fk = :idPerfil`, { idPerfil: id });
     // =========================================================
 
     qb.select([]);
     await QbEfficientLoad('ProfessorIndisponibilidadeFindOneOutput', qb, aliasIndisponibilidade, selection);
 
+    // =========================================================
 
+    const indisponibilidade = await qb.getOne();
+
+    // =========================================================
+
+    return indisponibilidade!;
 
   }
+
 }
