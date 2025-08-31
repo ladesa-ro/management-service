@@ -139,4 +139,14 @@ export class ProfessorIndisponibilidadeService {
 
   }
 
+  async indisponibilidadeFindByIdSimpleStrict(accesContext: AccessContext, id: IDomain.ProfessorIndisponibilidadeFindOneInput['idPerfilFk'], selection?: string[]) {
+
+    const indisponibilidade = await this.indisponibilidadeFindByIdSimple(accesContext, id, selection);
+
+    if (!indisponibilidade){
+       throw new Error('Indisponibilidade não encontrada');
+    }
+
+    return indisponibilidade;
+  }
 }
