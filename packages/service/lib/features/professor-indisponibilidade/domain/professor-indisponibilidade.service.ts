@@ -92,6 +92,39 @@ export class ProfessorIndisponibilidadeService {
     return paginated;
   }
 
+async indisponibilidadeFindById(accessContext: AccessContext | null, domain: IDomain.ProfessorIndisponibilidadeFindOneInput, selection?: string[] | boolean): Promise<IDomain.ProfessorIndisponibilidadeFindOneOutput['success']> {
+
+  // =========================================================
+
+  const qb = this.indisponibilidadeRepository.createQueryBuilder(aliasIndisponibilidade)
+  .leftJoinAndSelect(`${aliasIndisponibilidade}.perfil`, "perfil");
+
+  // =========================================================
+
+  // if (accessContext){
+  //   await accessContext.applyFilter('vinculo:find', qb, aliasIndisponibilidade, null);
+  // }
+
+  // =========================================================
+
+  qb.andWhere(`${aliasIndisponibilidade}.id = :id`, { id: domain.id });
+  // =========================================================
+
+  qb.select([]);
+  await QbEfficientLoad('ProfessorIndisponibilidadeFindOneOutput', qb, aliasIndisponibilidade, selection);
+
+  // =========================================================
+
+  const indisponibilidade = await qb.getOne();
+  
+  console.log(qb.getSql()); 
+  console.log(indisponibilidade);
+  
+  // =========================================================
+  return indisponibilidade!;
+
+}
+
   async indisponibilidadeFindByIdStrict(accessContext: AccessContext | null, domain: IDomain.ProfessorIndisponibilidadeFindOneInput, selection?: string[] | boolean) {
 
   // =========================================================
@@ -108,7 +141,6 @@ export class ProfessorIndisponibilidadeService {
   }
 
   async indisponibilidadeFindByIdSimple(accessContext: AccessContext, id: IDomain.ProfessorIndisponibilidadeFindOneInput['idPerfilFk'], selection?: string[]): Promise<IDomain.ProfessorIndisponibilidadeFindOneOutput['success']> {
-
     // =========================================================
 
     const qb = this.indisponibilidadeRepository
