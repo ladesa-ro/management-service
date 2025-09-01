@@ -3,10 +3,10 @@ import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
 import { CampusService } from "@/features/campus/domain/campus.service";
 import { OfertaFormacaoService } from "@/features/oferta-formacao/domain/oferta-formacao.service";
-import type { AccessContext } from "@/infrastructure/access-context";
-import { DatabaseContextService } from "@/infrastructure/integrations/database";
-import type { CalendarioLetivoEntity } from "@/infrastructure/integrations/database/typeorm/entities";
-import { IDomain, QbEfficientLoad, SearchService } from "@/shared";
+import type { AccessContext } from "@/infrastructure-antigo/access-context";
+import { DatabaseContextService } from "@/infrastructure-antigo/integrations/database";
+import type { CalendarioLetivoEntity } from "@/infrastructure-antigo/integrations/database/typeorm/entities";
+import { IDomain, QbEfficientLoad, SearchService } from "@/shared-antigo";
 
 // ============================================================================
 

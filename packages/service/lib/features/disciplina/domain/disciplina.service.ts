@@ -3,12 +3,12 @@ import { map, pick } from "lodash";
 import { FilterOperator, FilterSuffix } from "nestjs-paginate";
 import { ArquivoService } from "@/features/arquivo/domain/arquivo.service";
 import { ImagemService } from "@/features/imagem/domain/imagem.service";
-import type { AccessContext } from "@/infrastructure/access-context";
-import { paginateConfig } from "@/infrastructure/fixtures";
-import { DatabaseContextService } from "@/infrastructure/integrations/database";
-import type { DisciplinaEntity } from "@/infrastructure/integrations/database/typeorm/entities";
-import { QbEfficientLoad, SearchService } from "@/shared";
-import { type IDomain } from "@/shared/tsp/schema/typings";
+import type { AccessContext } from "@/infrastructure-antigo/access-context";
+import { paginateConfig } from "@/infrastructure-antigo/fixtures";
+import { DatabaseContextService } from "@/infrastructure-antigo/integrations/database";
+import type { DisciplinaEntity } from "@/infrastructure-antigo/integrations/database/typeorm/entities";
+import { QbEfficientLoad, SearchService } from "@/shared-antigo";
+import { type IDomain } from "@/shared-antigo/tsp/schema/typings";
 
 // ============================================================================
 

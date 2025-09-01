@@ -1,6 +1,6 @@
 import { Static, Type } from "@sinclair/typebox";
 import { Estado } from "@/features/estado/domain/entities/estado.entity";
-import { BaseEntityIntIdSchema, registerSchema, SchemaId } from "@/shared-novo";
+import { BaseEntityIntIdSchema, registerSchema, SchemaId } from "@/shared";
 
 export const EstadoSchema = registerSchema(
   SchemaId.Estado,

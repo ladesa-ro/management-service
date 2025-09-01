@@ -1,4 +1,4 @@
-import { BaseIntIdEntity, ScalarIntId } from "@/shared-novo";
+import { BaseIntIdEntity, ScalarIntId } from "@/shared";
 
 export type Estado = BaseIntIdEntity & {
   id: ScalarIntId;

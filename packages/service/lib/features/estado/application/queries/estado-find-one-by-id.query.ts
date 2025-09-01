@@ -1,21 +1,9 @@
-import {
-  EstadoFindOneByIdInputDto,
-  EstadoFindOneByIdOutputDto,
-  EstadoFindOneByIdOutputSchema
-} from "@/features/estado/application/dtos/estado-find-one-by-id.dto";
+import { EstadoFindOneByIdInputDto, EstadoFindOneByIdOutputDto, EstadoFindOneByIdOutputSchema } from "@/features/estado/application/dtos/estado-find-one-by-id.dto";
 import { EstadoForbiddenReadError, EstadoNaoEncontradoError } from "@/features/estado/application/errors/estado.errors";
 import type { IEstadoAuthorizationPort, IEstadoRepositoryPort } from "@/features/estado/application/ports";
-import { BaseQuery, getAllowedSelectionFromSchema } from "@/shared-novo";
-import { IBaseOperationMetadata } from "@/shared-novo/common/application/operations/base.operation";
+import { BaseQuery, getAllowedSelectionFromSchema } from "@/shared";
 
 export class EstadoFindOneByIdQuery extends BaseQuery {
-  static meta: IBaseOperationMetadata = {
-    operationId: "EstadoFindOneById",
-    summary: "Operação para encontrar um estado pelo id",
-    description: "Operação para encontrar um estado pelo id",
-    responseSchemaFactory: () => EstadoFindOneByIdOutputSchema,
-  };
-
   constructor(private readonly estadoRepository: IEstadoRepositoryPort) {
     super();
   }

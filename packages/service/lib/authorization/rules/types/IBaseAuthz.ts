@@ -1,6 +1,6 @@
 import { Promisable } from "type-fest";
 import { SelectQueryBuilder } from "typeorm";
-import type { AccessContext } from "@/infrastructure/access-context";
+import type { AccessContext } from "@/infrastructure-antigo/access-context";
 
 export interface IBaseAuthzStatement<Kind extends string, Action extends string, Payload> {
   statementKind: Kind;

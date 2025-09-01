@@ -4,8 +4,8 @@ import { FilterOperator } from "nestjs-paginate";
 import { ArquivoService } from "@/features/arquivo/domain/arquivo.service";
 import { CampusService } from "@/features/campus/domain/campus.service";
 import { ImagemService } from "@/features/imagem/domain/imagem.service";
-import { BlocoEntity } from "@/infrastructure/integrations/database/typeorm/entities";
-import { AccessContext, DatabaseContextService, IDomain, QbEfficientLoad, SearchService } from "@/shared";
+import { BlocoEntity } from "@/infrastructure-antigo/integrations/database/typeorm/entities";
+import { AccessContext, DatabaseContextService, IDomain, QbEfficientLoad, SearchService } from "@/shared-antigo";
 
 // ============================================================================
 

@@ -1,4 +1,4 @@
-import { type IDomain } from "@/shared";
+import { type IDomain } from "@/shared-antigo";
 import { IBaseAuthzCheck, IBaseAuthzFilter } from "./IBaseAuthz";
 
 // ===================================================================================

@@ -4,9 +4,9 @@ import { FilterOperator } from "nestjs-paginate";
 import { DiarioProfessorService } from "@/features/diario-professor/domain/diario-professor.service";
 import { HorarioGeradoService } from "@/features/horario-gerado/domain/horario-gerado.service";
 import { IntervaloDeTempoService } from "@/features/intervalo-de-tempo/domain/intervalo-de-tempo.service";
-import { paginateConfig } from "@/infrastructure/fixtures";
-import { HorarioGeradoAulaEntity } from "@/infrastructure/integrations/database/typeorm/entities";
-import { AccessContext, DatabaseContextService, IDomain, QbEfficientLoad, SearchService } from "@/shared";
+import { paginateConfig } from "@/infrastructure-antigo/fixtures";
+import { HorarioGeradoAulaEntity } from "@/infrastructure-antigo/integrations/database/typeorm/entities";
+import { AccessContext, DatabaseContextService, IDomain, QbEfficientLoad, SearchService } from "@/shared-antigo";
 
 // ============================================================================
 

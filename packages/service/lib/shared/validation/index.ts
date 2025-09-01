@@ -1,1 +1,1 @@
-export * from "./isValidUuid";
+export * from "./is-valid-uuid";

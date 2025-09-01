@@ -1,7 +1,7 @@
 import { Controller, Get, type StreamableFile } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import { AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
-import { AppRequest, type IAppRequest } from "@/shared";
+import { AccessContext, AccessContextHttp } from "@/infrastructure-antigo/access-context";
+import { AppRequest, type IAppRequest } from "@/shared-antigo";
 import { ArquivoService } from "../domain/arquivo.service";
 
 @ApiTags("arquivos")

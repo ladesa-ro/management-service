@@ -3,11 +3,11 @@ import { get, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
 import { v4 } from "uuid";
 import { EnderecoService } from "@/features/endereco/domain/endereco.service";
-import type { AccessContext } from "@/infrastructure/access-context";
-import { DatabaseContextService } from "@/infrastructure/integrations/database";
-import type { CampusEntity } from "@/infrastructure/integrations/database/typeorm/entities";
-import { QbEfficientLoad, SearchService } from "@/shared";
-import { type IDomain } from "@/shared/tsp/schema/typings";
+import type { AccessContext } from "@/infrastructure-antigo/access-context";
+import { DatabaseContextService } from "@/infrastructure-antigo/integrations/database";
+import type { CampusEntity } from "@/infrastructure-antigo/integrations/database/typeorm/entities";
+import { QbEfficientLoad, SearchService } from "@/shared-antigo";
+import { type IDomain } from "@/shared-antigo/tsp/schema/typings";
 
 // ============================================================================
 

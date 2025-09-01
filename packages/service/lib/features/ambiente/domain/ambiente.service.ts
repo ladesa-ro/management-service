@@ -4,10 +4,10 @@ import { FilterOperator } from "nestjs-paginate";
 import { ArquivoService } from "@/features/arquivo/domain/arquivo.service";
 import { BlocoService } from "@/features/bloco/domain/bloco.service";
 import { ImagemService } from "@/features/imagem/domain/imagem.service";
-import { DatabaseContextService } from "@/infrastructure/integrations/database/context/database-context.service";
-import { AmbienteEntity } from "@/infrastructure/integrations/database/typeorm/entities";
-import { AccessContext, IDomain, QbEfficientLoad } from "@/shared";
-import { SearchService } from "@/shared/search/search.service";
+import { DatabaseContextService } from "@/infrastructure-antigo/integrations/database/context/database-context.service";
+import { AmbienteEntity } from "@/infrastructure-antigo/integrations/database/typeorm/entities";
+import { AccessContext, IDomain, QbEfficientLoad } from "@/shared-antigo";
+import { SearchService } from "@/shared-antigo/search/search.service";
 
 // ============================================================================
 

@@ -5,11 +5,11 @@ import { AmbienteService } from "@/features/ambiente/domain/ambiente.service";
 import { CalendarioLetivoService } from "@/features/calendario-letivo/domain/calendario-letivo.service";
 import { DisciplinaService } from "@/features/disciplina/domain/disciplina.service";
 import { TurmaService } from "@/features/turma/domain/turma.service";
-import type { AccessContext } from "@/infrastructure/access-context";
-import { paginateConfig } from "@/infrastructure/fixtures";
-import { DatabaseContextService, QbEfficientLoad } from "@/infrastructure/integrations/database";
-import type { DiarioEntity } from "@/infrastructure/integrations/database/typeorm/entities";
-import { IDomain, SearchService } from "@/shared";
+import type { AccessContext } from "@/infrastructure-antigo/access-context";
+import { paginateConfig } from "@/infrastructure-antigo/fixtures";
+import { DatabaseContextService, QbEfficientLoad } from "@/infrastructure-antigo/integrations/database";
+import type { DiarioEntity } from "@/infrastructure-antigo/integrations/database/typeorm/entities";
+import { IDomain, SearchService } from "@/shared-antigo";
 
 // ============================================================================
 

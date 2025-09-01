@@ -3,10 +3,10 @@ import { BadRequestException, ForbiddenException, HttpException, Injectable, Ser
 import * as client from "openid-client";
 import { PerfilService } from "@/features/perfil/domain/perfil.service";
 import { UsuarioService } from "@/features/usuario/domain/usuario.service";
-import type { AccessContext } from "@/infrastructure/access-context";
-import { DatabaseContextService } from "@/infrastructure/integrations/database";
-import { KeycloakService, OpenidConnectService } from "@/infrastructure/integrations/identity-provider";
-import { type IDomain } from "@/shared/tsp/schema/typings";
+import type { AccessContext } from "@/infrastructure-antigo/access-context";
+import { DatabaseContextService } from "@/infrastructure-antigo/integrations/database";
+import { KeycloakService, OpenidConnectService } from "@/infrastructure-antigo/integrations/identity-provider";
+import { type IDomain } from "@/shared-antigo/tsp/schema/typings";
 
 @Injectable()
 export class AutenticacaoService {

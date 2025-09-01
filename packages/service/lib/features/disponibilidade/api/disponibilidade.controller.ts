@@ -1,7 +1,7 @@
 import { Controller, Delete, Get, Patch, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { DisponibilidadeService } from "@/features/disponibilidade/domain/disponibilidade.service";
-import { AccessContext, AccessContextHttp, AppRequest, type IAppRequest, type IDomain, requestRepresentationMergeToDomain } from "@/shared";
+import { AccessContext, AccessContextHttp, AppRequest, type IAppRequest, type IDomain, requestRepresentationMergeToDomain } from "@/shared-antigo";
 
 @ApiTags("disponibilidades")
 @Controller("/disponibilidades")

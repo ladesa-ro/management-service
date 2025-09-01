@@ -1,11 +1,11 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { map } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
-import type { AccessContext } from "@/infrastructure/access-context";
-import { paginateConfig } from "@/infrastructure/fixtures";
-import { DatabaseContextService } from "@/infrastructure/integrations/database";
-import { QbEfficientLoad, SearchService } from "@/shared";
-import { type IDomain } from "@/shared/tsp/schema/typings";
+import type { AccessContext } from "@/infrastructure-antigo/access-context";
+import { paginateConfig } from "@/infrastructure-antigo/fixtures";
+import { DatabaseContextService } from "@/infrastructure-antigo/integrations/database";
+import { QbEfficientLoad, SearchService } from "@/shared-antigo";
+import { type IDomain } from "@/shared-antigo/tsp/schema/typings";
 
 const aliasCidade = "cidade";
 

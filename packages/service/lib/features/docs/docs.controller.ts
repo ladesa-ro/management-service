@@ -1,7 +1,7 @@
 import { Controller, Get, Inject, Req } from "@nestjs/common";
 import type { Request } from "express";
-import { AppConfigService } from "@/infrastructure/config";
-import { AppApiDocAny } from "@/shared";
+import { AppConfigService } from "@/infrastructure-antigo/config";
+import { AppApiDocAny } from "@/shared-antigo";
 
 @Controller("/docs")
 export class DocsController {

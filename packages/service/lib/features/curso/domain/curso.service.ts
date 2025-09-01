@@ -5,9 +5,9 @@ import { ArquivoService } from "@/features/arquivo/domain/arquivo.service";
 import { CampusService } from "@/features/campus/domain/campus.service";
 import { ImagemService } from "@/features/imagem/domain/imagem.service";
 import { OfertaFormacaoService } from "@/features/oferta-formacao/domain/oferta-formacao.service";
-import { paginateConfig } from "@/infrastructure/fixtures";
-import { CursoEntity } from "@/infrastructure/integrations/database/typeorm/entities";
-import { AccessContext, DatabaseContextService, IDomain, QbEfficientLoad, SearchService } from "@/shared";
+import { paginateConfig } from "@/infrastructure-antigo/fixtures";
+import { CursoEntity } from "@/infrastructure-antigo/integrations/database/typeorm/entities";
+import { AccessContext, DatabaseContextService, IDomain, QbEfficientLoad, SearchService } from "@/shared-antigo";
 
 // ============================================================================
 

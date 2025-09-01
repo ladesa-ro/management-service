@@ -1,7 +1,7 @@
 import { Controller, Delete, Get, Patch, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { DiarioPreferenciaAgrupamentoService } from "@/features/diario-preferencia-agrupamento/domain/diario-preferencia-agrupamento.service";
-import { AccessContext, AccessContextHttp, AppRequest, type IAppRequest, type IDomain, requestRepresentationMergeToDomain } from "@/shared";
+import { AccessContext, AccessContextHttp, AppRequest, type IAppRequest, type IDomain, requestRepresentationMergeToDomain } from "@/shared-antigo";
 
 @ApiTags("diarios-preferencia-agrupamento")
 @Controller("/diarios-preferencia-agrupamento")

@@ -3,12 +3,12 @@ import type { Readable } from "node:stream";
 import { ForbiddenException, Inject, Injectable, NotFoundException, ServiceUnavailableException, StreamableFile } from "@nestjs/common";
 import jetpack, { createReadStream } from "fs-jetpack";
 import { v4 } from "uuid";
-import type { AccessContext } from "@/infrastructure/access-context";
-import { AppConfigService } from "@/infrastructure/config";
-import { DatabaseContextService } from "@/infrastructure/integrations/database/context/database-context.service";
-import { type ArquivoEntity, UsuarioEntity } from "@/infrastructure/integrations/database/typeorm/entities";
-import { isValidUuid } from "@/shared";
-import { type IDomain } from "@/shared/tsp/schema/typings";
+import type { AccessContext } from "@/infrastructure-antigo/access-context";
+import { AppConfigService } from "@/infrastructure-antigo/config";
+import { DatabaseContextService } from "@/infrastructure-antigo/integrations/database/context/database-context.service";
+import { type ArquivoEntity, UsuarioEntity } from "@/infrastructure-antigo/integrations/database/typeorm/entities";
+import { isValidUuid } from "@/shared-antigo";
+import { type IDomain } from "@/shared-antigo/tsp/schema/typings";
 
 type IGetFileAcesso = null | {
   nome?: string;

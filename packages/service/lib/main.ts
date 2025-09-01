@@ -1,11 +1,11 @@
 import { NestFactory } from "@nestjs/core";
 import compression from "compression";
 import helmet from "helmet";
-import { AppConfigService } from "@/infrastructure/config";
+import { AppConfigService } from "@/infrastructure-antigo/config";
 import "reflect-metadata";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
-import { AppModule } from "@/application-nest/app.module";
-import { getSchemas } from "@/shared-novo";
+import { AppModule } from "@/infrastructure/integrations/nestjs/application/app.module";
+import { getSchemas } from "@/shared";
 
 async function setup() {
   const app = await NestFactory.create(AppModule);
@@ -36,7 +36,7 @@ async function setup() {
   const prefix = configService.getRuntimePrefix();
 
   if (prefix) {
-    app.setGlobalPrefix(prefix, {exclude: ["health"]});
+    app.setGlobalPrefix(prefix, { exclude: ["health"] });
   }
 
   const config = new DocumentBuilder().setTitle("Exemplo DDD com Schemas").setDescription("API com Estado e Cidade").setVersion("1.0").build();

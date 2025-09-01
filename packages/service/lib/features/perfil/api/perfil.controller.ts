@@ -1,9 +1,9 @@
 import { Controller, Get, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import { AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
-import { AppRequest, requestRepresentationMergeToDomain } from "@/shared";
-import { type IAppRequest } from "@/shared/tsp/openapi/document/app-openapi-typings";
-import { type IDomain } from "@/shared/tsp/schema/typings";
+import { AccessContext, AccessContextHttp } from "@/infrastructure-antigo/access-context";
+import { AppRequest, requestRepresentationMergeToDomain } from "@/shared-antigo";
+import { type IAppRequest } from "@/shared-antigo/tsp/openapi/document/app-openapi-typings";
+import { type IDomain } from "@/shared-antigo/tsp/schema/typings";
 import { PerfilService } from "../domain/perfil.service";
 
 @Controller("/perfis")

@@ -1,6 +1,6 @@
 import { Static, Type } from "@sinclair/typebox";
 import { EstadoSchema } from "@/features/estado/application/dtos/estado.dto";
-import { FindOneByIdInputSchemaCustom, FindOneByIdOutputSchemaCustom, registerSchema, SchemaId } from "@/shared-novo";
+import { FindOneByIdInputSchemaCustom, FindOneByIdOutputSchemaCustom, registerSchema, SchemaId } from "@/shared";
 
 export const EstadoFindOneByIdInputSchema = registerSchema(SchemaId.EstadoFindOneByIdInput, FindOneByIdInputSchemaCustom(EstadoSchema));
 export type EstadoFindOneByIdInputDto = Static<typeof EstadoFindOneByIdInputSchema>;

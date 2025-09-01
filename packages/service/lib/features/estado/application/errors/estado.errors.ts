@@ -1,4 +1,4 @@
-import { BaseResourceForbiddenReadError, BaseResourceNotFoundError } from "@/shared-novo";
+import { BaseResourceForbiddenReadError, BaseResourceNotFoundError } from "@/shared";
 
 export enum EstadoApplicationErrorCode {
   EstadoNaoEncontrado = "ESTADO_NAO_ENCONTRADO",

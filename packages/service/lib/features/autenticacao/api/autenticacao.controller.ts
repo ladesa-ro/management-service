@@ -1,10 +1,10 @@
 import { BadRequestException, Controller, Get, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { UsuarioService } from "@/features/usuario/domain/usuario.service";
-import { AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
-import { Public } from "@/infrastructure/authentication";
-import { AppRequest, requestRepresentationMergeToDomain } from "@/shared";
-import { type IAppRequest } from "@/shared/tsp/openapi/document/app-openapi-typings";
+import { AccessContext, AccessContextHttp } from "@/infrastructure-antigo/access-context";
+import { Public } from "@/infrastructure-antigo/authentication";
+import { AppRequest, requestRepresentationMergeToDomain } from "@/shared-antigo";
+import { type IAppRequest } from "@/shared-antigo/tsp/openapi/document/app-openapi-typings";
 import { AutenticacaoService } from "../domain/autenticacao.service";
 
 @ApiTags("autenticacao")

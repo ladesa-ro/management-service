@@ -5,9 +5,9 @@ import { AmbienteService } from "@/features/ambiente/domain/ambiente.service";
 import { ArquivoService } from "@/features/arquivo/domain/arquivo.service";
 import { CursoService } from "@/features/curso/domain/curso.service";
 import { ImagemService } from "@/features/imagem/domain/imagem.service";
-import { paginateConfig } from "@/infrastructure/fixtures";
-import { TurmaEntity } from "@/infrastructure/integrations/database/typeorm/entities";
-import { AccessContext, DatabaseContextService, IDomain, QbEfficientLoad, SearchService } from "@/shared";
+import { paginateConfig } from "@/infrastructure-antigo/fixtures";
+import { TurmaEntity } from "@/infrastructure-antigo/integrations/database/typeorm/entities";
+import { AccessContext, DatabaseContextService, IDomain, QbEfficientLoad, SearchService } from "@/shared-antigo";
 
 // ============================================================================
 

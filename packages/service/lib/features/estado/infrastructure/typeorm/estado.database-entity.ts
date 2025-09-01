@@ -1,20 +1,17 @@
 import { Column, Entity, OneToMany, PrimaryColumn } from "typeorm";
-import { type IDomain } from "@/shared/tsp/schema/typings";
-import {
-  CidadeEntity
-} from "../../../../infrastructure/integrations/database/typeorm/entities/00-01-base-lugares/cidade.entity";
+import { CidadeEntity } from "@/infrastructure-antigo/integrations/database/typeorm/entities";
 
 @Entity("base_estado")
-export class EstadoDatabaseEntity implements IDomain.Estado {
-  @PrimaryColumn({name: "id", type: "integer"})
+export class EstadoDatabaseEntity {
+  @PrimaryColumn({ name: "id", type: "integer" })
   id!: number;
 
   // ...
 
-  @Column({name: "nome", nullable: false, type: "text"})
+  @Column({ name: "nome", nullable: false, type: "text" })
   nome!: string;
 
-  @Column({name: "sigla", nullable: false, type: "text"})
+  @Column({ name: "sigla", nullable: false, type: "text" })
   sigla!: string;
 
   // ...

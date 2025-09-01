@@ -3,11 +3,11 @@ import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
 import { DisponibilidadeService } from "@/features/disponibilidade/domain/disponibilidade.service";
 import { TurmaService } from "@/features/turma/domain/turma.service";
-import type { AccessContext } from "@/infrastructure/access-context";
-import { DatabaseContextService } from "@/infrastructure/integrations/database";
-import type { TurmaDisponibilidadeEntity } from "@/infrastructure/integrations/database/typeorm/entities";
-import { QbEfficientLoad, SearchService } from "@/shared";
-import { type IDomain } from "@/shared/tsp/schema/typings";
+import type { AccessContext } from "@/infrastructure-antigo/access-context";
+import { DatabaseContextService } from "@/infrastructure-antigo/integrations/database";
+import type { TurmaDisponibilidadeEntity } from "@/infrastructure-antigo/integrations/database/typeorm/entities";
+import { QbEfficientLoad, SearchService } from "@/shared-antigo";
+import { type IDomain } from "@/shared-antigo/tsp/schema/typings";
 
 // ============================================================================
 

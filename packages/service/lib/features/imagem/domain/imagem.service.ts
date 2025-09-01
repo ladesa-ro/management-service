@@ -2,7 +2,7 @@ import { Injectable, ServiceUnavailableException, UnprocessableEntityException }
 import sharp from "sharp";
 import { v4 } from "uuid";
 import { ArquivoService } from "@/features/arquivo/domain/arquivo.service";
-import { DatabaseContextService } from "@/infrastructure/integrations/database";
+import { DatabaseContextService } from "@/infrastructure-antigo/integrations/database";
 
 type ISaveImageOptions = {
   minWidth: number;

@@ -1,13 +1,7 @@
 import { Static } from "@sinclair/typebox";
 import { EstadoSchema } from "@/features/estado/application/dtos/estado.dto";
 import { EstadoListSettings } from "@/features/estado/application/queries/estado-list.settings";
-import { registerSchema, SchemaId } from "@/shared-novo";
-import {
-  ListInputDtoCustom,
-  ListInputSchemaCustom,
-  ListOutputDtoCustom,
-  ListOutputSchemaCustom
-} from "@/shared-novo/resource/queries/features/list";
+import { ListInputDtoCustom, ListInputSchemaCustom, ListOutputDtoCustom, ListOutputSchemaCustom, registerSchema, SchemaId } from "@/shared";
 
 export const EstadoListInputSchema = registerSchema(SchemaId.EstadoListInput, ListInputSchemaCustom(EstadoListSettings));
 export type EstadoListInputDto = ListInputDtoCustom;

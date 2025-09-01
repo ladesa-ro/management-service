@@ -2,13 +2,13 @@ import { Injectable, InternalServerErrorException, NotFoundException, ServiceUna
 import { has, map, pick } from "lodash";
 import { ArquivoService } from "@/features/arquivo/domain/arquivo.service";
 import { ImagemService } from "@/features/imagem/domain/imagem.service";
-import type { AccessContext } from "@/infrastructure/access-context";
-import { paginateConfig } from "@/infrastructure/fixtures";
-import { DatabaseContextService } from "@/infrastructure/integrations/database";
-import type { UsuarioEntity } from "@/infrastructure/integrations/database/typeorm/entities";
-import { KeycloakService } from "@/infrastructure/integrations/identity-provider";
-import { QbEfficientLoad, SearchService, ValidationFailedException } from "@/shared";
-import { type IDomain } from "@/shared/tsp/schema/typings";
+import type { AccessContext } from "@/infrastructure-antigo/access-context";
+import { paginateConfig } from "@/infrastructure-antigo/fixtures";
+import { DatabaseContextService } from "@/infrastructure-antigo/integrations/database";
+import type { UsuarioEntity } from "@/infrastructure-antigo/integrations/database/typeorm/entities";
+import { KeycloakService } from "@/infrastructure-antigo/integrations/identity-provider";
+import { QbEfficientLoad, SearchService, ValidationFailedException } from "@/shared-antigo";
+import { type IDomain } from "@/shared-antigo/tsp/schema/typings";
 
 // ============================================================================
 

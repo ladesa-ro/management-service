@@ -1,4 +1,4 @@
-import { FilterRuleOperator, ListSettings, SortByMode } from "@/shared-novo";
+import { FilterRuleOperator, ListSettings, SortByMode } from "@/shared";
 
 export const EstadoListSettings = {
   resource: {
@@ -8,14 +8,11 @@ export const EstadoListSettings = {
     },
   },
   sortBy: {
-    allowedColumns: ["nome", "dateCreated"],
-    defaultSortBy: [["dateCreated", SortByMode.DESC]],
+    allowedColumns: ["id", "nome"],
+    defaultSortBy: [{ property: "nome", order: SortByMode.ASC }],
   },
   filters: {
-    allowedFilters: [
-      ["nome", [FilterRuleOperator.EQ]],
-      ["dateCreated", [FilterRuleOperator.EQ, FilterRuleOperator.GT, FilterRuleOperator.GTE, FilterRuleOperator.LT, FilterRuleOperator.LTE, FilterRuleOperator.BETWEEN]],
-    ],
+    allowedFilters: [["nome", [FilterRuleOperator.EQ]]],
   },
   searchableColumns: ["nome"],
 } satisfies ListSettings;

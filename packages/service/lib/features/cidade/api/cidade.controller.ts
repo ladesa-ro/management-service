@@ -1,8 +1,8 @@
 import { Controller, Get } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import { AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
-import { AppRequest, IDomain, requestRepresentationMergeToDomain } from "@/shared";
-import { type IAppRequest } from "@/shared/tsp/openapi/document/app-openapi-typings";
+import { AccessContext, AccessContextHttp } from "@/infrastructure-antigo/access-context";
+import { AppRequest, IDomain, requestRepresentationMergeToDomain } from "@/shared-antigo";
+import { type IAppRequest } from "@/shared-antigo/tsp/openapi/document/app-openapi-typings";
 import { CidadeService } from "../domain/cidade.service";
 
 @ApiTags("cidades")

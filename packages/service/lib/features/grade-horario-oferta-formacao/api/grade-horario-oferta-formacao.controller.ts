@@ -1,7 +1,7 @@
 import { Controller, Delete, Get, Patch, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { GradeHorarioOfertaFormacaoService } from "@/features/grade-horario-oferta-formacao/domain/grade-horario-oferta-formacao.service";
-import { AccessContext, AccessContextHttp, AppRequest, type IAppRequest, type IDomain, requestRepresentationMergeToDomain } from "@/shared";
+import { AccessContext, AccessContextHttp, AppRequest, type IAppRequest, type IDomain, requestRepresentationMergeToDomain } from "@/shared-antigo";
 
 @ApiTags("grades-horarios-ofertas-formacoes")
 @Controller("/grades-horarios-ofertas-formacoes")

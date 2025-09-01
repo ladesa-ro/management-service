@@ -3,11 +3,11 @@ import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
 import { DiarioService } from "@/features/diario/domain/diario.service";
 import { IntervaloDeTempoService } from "@/features/intervalo-de-tempo/domain/intervalo-de-tempo.service";
-import type { AccessContext } from "@/infrastructure/access-context";
-import { paginateConfig } from "@/infrastructure/fixtures";
-import { DatabaseContextService } from "@/infrastructure/integrations/database";
-import type { DiarioPreferenciaAgrupamentoEntity } from "@/infrastructure/integrations/database/typeorm/entities";
-import { IDomain, QbEfficientLoad, SearchService } from "@/shared";
+import type { AccessContext } from "@/infrastructure-antigo/access-context";
+import { paginateConfig } from "@/infrastructure-antigo/fixtures";
+import { DatabaseContextService } from "@/infrastructure-antigo/integrations/database";
+import type { DiarioPreferenciaAgrupamentoEntity } from "@/infrastructure-antigo/integrations/database/typeorm/entities";
+import { IDomain, QbEfficientLoad, SearchService } from "@/shared-antigo";
 
 // ============================================================================
 

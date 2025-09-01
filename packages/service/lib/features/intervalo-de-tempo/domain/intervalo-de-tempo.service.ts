@@ -1,8 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import { pick } from "lodash";
-import type { AccessContext } from "@/infrastructure/access-context";
-import { DatabaseContextService } from "@/infrastructure/integrations/database";
-import { type IDomain } from "@/shared/tsp/schema/typings";
+import type { AccessContext } from "@/infrastructure-antigo/access-context";
+import { DatabaseContextService } from "@/infrastructure-antigo/integrations/database";
+import { type IDomain } from "@/shared-antigo/tsp/schema/typings";
 
 // ============================================================================
 
