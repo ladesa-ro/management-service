@@ -11,6 +11,9 @@ export class ProfessorIndisponibilidadeEntity implements IDomain.ProfessorIndisp
   @JoinColumn({ name: "id_perfil_fk" })
   perfil!: UsuarioEntity & IDomain.Perfil;
 
+  @Column({ name: "id_perfil_fk" })
+  idPerfilFk!: string;
+
   @Column({ name: "indisponibilidade_inicio", type: "timestamptz" })
   indisponibilidadeInicio!: Date;
 

@@ -23,7 +23,7 @@ export class ProfessorIndisponibilidadeController {
     @AppRequest("ProfessorIndisponibilidadeFindOneById") dto: IAppRequest<"ProfessorIndisponibilidadeFindOneById">,
   ) {
     const domain = requestRepresentationMergeToDomain(dto) as any;
-    return this.professorIndisponibilidadeService.indisponibilidadeFindByIdStrict(accessContext, domain.id);
+    return this.professorIndisponibilidadeService.indisponibilidadeFindByIdSimple(accessContext, domain.id);
   }
 
   @Get("/professores/:id_perfil")
