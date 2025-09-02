@@ -6,6 +6,7 @@ import { DatabaseContextService } from "@/infrastructure/integrations/database";
 import { QbEfficientLoad, SearchService } from "@/shared";
 import type { IDomain } from "@/shared/tsp/schema/typings";
 
+//TODO? Verificar e atualizar a funcao FindAll
 // ============================================================================
 
 const aliasIndisponibilidade = "indisponibilidade";
@@ -92,74 +93,45 @@ export class ProfessorIndisponibilidadeService {
     return paginated;
   }
 
-async indisponibilidadeFindById(accessContext: AccessContext | null, domain: IDomain.ProfessorIndisponibilidadeFindOneInput, selection?: string[] | boolean): Promise<IDomain.ProfessorIndisponibilidadeFindOneOutput['success']> {
-
-  // =========================================================
-
-  const qb = this.indisponibilidadeRepository.createQueryBuilder(aliasIndisponibilidade)
-  .leftJoinAndSelect(`${aliasIndisponibilidade}.perfil`, "perfil");
-
-  // =========================================================
-
-  // if (accessContext){
-  //   await accessContext.applyFilter('vinculo:find', qb, aliasIndisponibilidade, null);
-  // }
-
-  // =========================================================
-
-  qb.andWhere(`${aliasIndisponibilidade}.id = :id`, { id: domain.id });
-  // =========================================================
-
-  qb.select([]);
-  await QbEfficientLoad('ProfessorIndisponibilidadeFindOneOutput', qb, aliasIndisponibilidade, selection);
-
-  // =========================================================
-
-  const indisponibilidade = await qb.getOne();
-  
-  console.log(qb.getSql()); 
-  console.log(indisponibilidade);
-  
-  // =========================================================
-  return indisponibilidade!;
-
-}
-
   async indisponibilidadeFindByIdStrict(accessContext: AccessContext | null, domain: IDomain.ProfessorIndisponibilidadeFindOneInput, selection?: string[] | boolean) {
-
-  // =========================================================
-
-    const qb = this.indisponibilidadeRepository.createQueryBuilder
-  
     // =========================================================
-    
-    (aliasIndisponibilidade).leftJoinAndSelect(`${aliasIndisponibilidade}.perfil`, "perfil");
-    
+
+    const _qb = this.indisponibilidadeRepository
+      .createQueryBuilder(
+        // =========================================================
+
+        aliasIndisponibilidade,
+      )
+      .leftJoinAndSelect(`${aliasIndisponibilidade}.perfil`, "perfil");
+
     // =========================================================
 
     // const indisponibilidade = await this.
   }
 
-  async indisponibilidadeFindByIdSimple(accessContext: AccessContext, id: IDomain.ProfessorIndisponibilidadeFindOneInput['idPerfilFk'], selection?: string[]): Promise<IDomain.ProfessorIndisponibilidadeFindOneOutput['success']> {
+  async indisponibilidadeFindByIdSimple(
+    accessContext: AccessContext,
+    id: IDomain.ProfessorIndisponibilidadeFindOneInput["idPerfilFk"],
+    selection?: string[],
+  ): Promise<IDomain.ProfessorIndisponibilidadeFindOneOutput["success"]> {
     // =========================================================
 
-    const qb = this.indisponibilidadeRepository
-    .createQueryBuilder(aliasIndisponibilidade)
-    .leftJoinAndSelect(`${aliasIndisponibilidade}.perfil`, "perfil");
+    const qb = this.indisponibilidadeRepository.createQueryBuilder(aliasIndisponibilidade).leftJoinAndSelect(`${aliasIndisponibilidade}.perfil`, "perfil");
 
     // =========================================================
 
-    await accessContext.applyFilter('vinculo:find', qb, aliasIndisponibilidade, null);
+    await accessContext.applyFilter("vinculo:find", qb, aliasIndisponibilidade, null);
 
     // =========================================================
 
-    // qb.andWhere(`perfil.id = :idPerfil`, { idPerfil: id });
+    qb.andWhere(`${aliasIndisponibilidade}.id = :id`, { id });
 
-    qb.andWhere(`${aliasIndisponibilidade}.id_perfil_fk = :idPerfil`, { idPerfil: id });
+    // Realiza busca pelo id de perfil
+    // qb.andWhere(`${aliasIndisponibilidade}.id_perfil_fk = :idPerfil`, { idPerfil: id });
     // =========================================================
 
     qb.select([]);
-    await QbEfficientLoad('ProfessorIndisponibilidadeFindOneOutput', qb, aliasIndisponibilidade, selection);
+    await QbEfficientLoad("ProfessorIndisponibilidadeFindOneOutput", qb, aliasIndisponibilidade, selection);
 
     // =========================================================
 
@@ -168,15 +140,13 @@ async indisponibilidadeFindById(accessContext: AccessContext | null, domain: IDo
     // =========================================================
 
     return indisponibilidade!;
-
   }
 
-  async indisponibilidadeFindByIdSimpleStrict(accesContext: AccessContext, id: IDomain.ProfessorIndisponibilidadeFindOneInput['idPerfilFk'], selection?: string[]) {
-
+  async indisponibilidadeFindByIdSimpleStrict(accesContext: AccessContext, id: IDomain.ProfessorIndisponibilidadeFindOneInput["idPerfilFk"], selection?: string[]) {
     const indisponibilidade = await this.indisponibilidadeFindByIdSimple(accesContext, id, selection);
 
-    if (!indisponibilidade){
-       throw new Error('Indisponibilidade não encontrada');
+    if (!indisponibilidade) {
+      throw new Error("Indisponibilidade não encontrada");
     }
 
     return indisponibilidade;
