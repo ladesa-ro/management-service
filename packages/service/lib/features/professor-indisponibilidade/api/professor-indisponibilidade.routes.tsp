@@ -11,15 +11,15 @@ namespace Ladesa.ManagementService;
 
 /** Listar (com filtro por id_perfil_fk) */
 @tag("indisponibilidades-professores")
-@route("/indisponibilidades")
+@route("/indisponibilidades/list")
 @get
 op ProfessorIndisponibilidadeList(
-  @query idPerfilFk?: string,
+  @format("uuid") @path idPerfilFk: string,
 ): ProfessorIndisponibilidadeListOutput | ForbiddenResponse | NotFoundResponse;
 
 /** Criar para um professor (perfil) */
 @tag("indisponibilidades-professores")
-@route("/professores/{id_perfil}/indisponibilidades")
+@route("/indisponibilidades/{id_perfil}/create")
 @post
 op ProfessorIndisponibilidadeCreate(
   @format("uuid") @path id_perfil: string,
