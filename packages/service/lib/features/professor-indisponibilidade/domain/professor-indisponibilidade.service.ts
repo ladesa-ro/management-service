@@ -228,7 +228,7 @@ export class ProfessorIndisponibilidadeService {
 
     // =========================================================
 
-    await accessContext.applyFilter("????", this.indisponibilidadeRepository.createQueryBuilder(aliasIndisponibilidade), aliasIndisponibilidade, indisponibilidade);
+    await accessContext.applyFilter("vinculo:find", this.indisponibilidadeRepository.createQueryBuilder(aliasIndisponibilidade), aliasIndisponibilidade, indisponibilidade);
 
     // =========================================================
 
