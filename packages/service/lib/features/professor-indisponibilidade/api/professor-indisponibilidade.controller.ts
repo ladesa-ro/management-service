@@ -11,10 +11,10 @@ import { ProfessorIndisponibilidadeService } from "../domain/professor-indisponi
 export class ProfessorIndisponibilidadeController {
   constructor(private readonly professorIndisponibilidadeService: ProfessorIndisponibilidadeService) {}
 
-  @Get("/")
-  async professorIndisponibilidadeList(@AccessContextHttp() accessContext: AccessContext, @AppRequest("ProfessorIndisponibilidadeList") dto: IAppRequest<"ProfessorIndisponibilidadeList">) {
+  @Get("/list/:idPerfilFk")
+  async professorIndisponibilidadeListById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("ProfessorIndisponibilidadeList") dto: IAppRequest<"ProfessorIndisponibilidadeList">) {
     const domain = requestRepresentationMergeToDomain(dto) as any;
-    return this.professorIndisponibilidadeService.indisponibilidadeFindAll(accessContext, domain);
+    return this.professorIndisponibilidadeService.ProfessorIndisponibilidadeListByPerfil(accessContext, domain.idPerfilFk);
   }
 
   @Get("/:id")
@@ -26,12 +26,6 @@ export class ProfessorIndisponibilidadeController {
     return this.professorIndisponibilidadeService.indisponibilidadeFindByIdSimple(accessContext, domain.id);
   }
 
-  @Get("/professores/:id_perfil")
-  async professorIndisponibilidadeListByProfessor(@AccessContextHttp() accessContext: AccessContext, @AppRequest("ProfessorIndisponibilidadeList") dto: IAppRequest<"ProfessorIndisponibilidadeList">) {
-    const idPerfil = dto.path;
-    if (!idPerfil) throw new BadRequestException();
-    return this.professorIndisponibilidadeService.listByProfessor(accessContext, idPerfil);
-  }
 
   @Post("/professores/:id_perfil")
   async professorIndisponibilidadeCreate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("ProfessorIndisponibilidadeCreate") dto: IAppRequest<"ProfessorIndisponibilidadeCreate">) {
