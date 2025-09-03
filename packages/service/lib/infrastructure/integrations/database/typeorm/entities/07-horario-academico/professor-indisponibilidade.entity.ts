@@ -13,12 +13,28 @@ export class ProfessorIndisponibilidadeEntity implements IDomain.ProfessorIndisp
 
   @Column({ name: "id_perfil_fk" })
   idPerfilFk!: string;
+// ============================================================================
+  @Column({ name: "segunda", type: "time", precision: 0 })
+  segunda!: string; 
 
-  @Column({ name: "indisponibilidade_inicio", type: "timestamptz" })
-  indisponibilidadeInicio!: Date;
+  @Column({ name: "terça", type: "time", precision: 0 })
+  terca!: string;
 
-  @Column({ name: "indisponibilidade_termino", type: "timestamptz" })
-  indisponibilidadeTermino!: Date;
+  @Column({ name: "quarta", type: "time", precision: 0 })
+  quarta!: string;
+  
+  @Column({ name: "quinta", type: "time", precision: 0 })
+  quinta!: string;
+
+  @Column({ name: "sexta", type: "time", precision: 0 })
+  sexta!: string;
+  
+  @Column({ name: "sabado", type: "time", precision: 0 })
+  sabado!: string;
+
+  @Column({ name: "domingo", type: "time", precision: 0 })
+  domingo!: string;
+// ============================================================================
 
   @Column({ name: "motivo", type: "varchar", length: 90 })
   motivo!: string;
