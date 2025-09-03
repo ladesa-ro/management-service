@@ -2,7 +2,7 @@ import { MigrationInterface, QueryRunner, Table } from "typeorm";
 
 const tableName = "indisponibilidade_professor";
 
-export class CreateTableIndisponibilidadeProfessor1733495227011 implements MigrationInterface {
+export class CreateTableIndisponibilidadeProfessor1754870894487 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
@@ -19,16 +19,43 @@ export class CreateTableIndisponibilidadeProfessor1733495227011 implements Migra
             type: "uuid",
             isNullable: false,
           },
+          // ======================================================================
           {
-            name: "indisponibilidade_inicio",
-            type: "timestamptz",
-            isNullable: false,
+            name: "segunda",
+            type: "time",
+            isNullable: true,
           },
           {
-            name: "indisponibilidade_termino",
-            type: "timestamptz",
-            isNullable: false,
+            name: "terça",
+            type: "time",
+            isNullable: true,
           },
+          {
+            name: "quarta",
+            type: "time",
+            isNullable: true,
+          },
+          {
+            name: "quinta",
+            type: "time",
+            isNullable: true,
+          },
+          {
+            name: "sexta",
+            type: "time",
+            isNullable: true,
+          },
+          {
+            name: "sabado",
+            type: "time",
+            isNullable: true,
+          },
+          {
+            name: "domingo",
+            type: "time",
+            isNullable: true,
+          },
+          // ======================================================================
           {
             name: "motivo",
             type: "varchar",
@@ -63,9 +90,11 @@ export class CreateTableIndisponibilidadeProfessor1733495227011 implements Migra
           },
         ],
       }),
+      true,
     );
 
     await queryRunner.query(`
+      DROP TRIGGER IF EXISTS change_date_updated_table_${tableName} ON ${tableName};
       CREATE TRIGGER change_date_updated_table_${tableName}
         BEFORE UPDATE ON ${tableName}
         FOR EACH ROW
