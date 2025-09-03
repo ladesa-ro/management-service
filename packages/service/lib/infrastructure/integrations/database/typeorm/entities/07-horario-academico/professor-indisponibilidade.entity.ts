@@ -17,7 +17,7 @@ export class ProfessorIndisponibilidadeEntity implements IDomain.ProfessorIndisp
   @Column({ name: "segunda", type: "time", precision: 0 })
   segunda!: string; 
 
-  @Column({ name: "terça", type: "time", precision: 0 })
+  @Column({ name: "terca", type: "time", precision: 0 })
   terca!: string;
 
   @Column({ name: "quarta", type: "time", precision: 0 })

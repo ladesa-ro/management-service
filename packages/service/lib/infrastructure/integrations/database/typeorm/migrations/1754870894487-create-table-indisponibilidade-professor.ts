@@ -26,7 +26,7 @@ export class CreateTableIndisponibilidadeProfessor1754870894487 implements Migra
             isNullable: true,
           },
           {
-            name: "terça",
+            name: "terca",
             type: "time",
             isNullable: true,
           },
