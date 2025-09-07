@@ -1,7 +1,7 @@
 import { IRequestRepresentation } from "@/infrastructure";
 import { ListInputDtoCustom, mapRequestListSortByToRulesDto } from "@/shared";
 
-export const requestListDtoToInputDto = <InputDto extends ListInputDtoCustom>(request: IRequestRepresentation): InputDto => {
+export const requestListDtoToInputDto = <InputDto extends ListInputDtoCustom, Req extends Pick<IRequestRepresentation, "query">>(request: Req): InputDto => {
   return {
     page: request.query.page,
     limit: request.query.limit,

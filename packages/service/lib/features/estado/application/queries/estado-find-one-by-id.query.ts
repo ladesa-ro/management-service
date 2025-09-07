@@ -1,4 +1,8 @@
-import { EstadoFindOneByIdInputDto, EstadoFindOneByIdOutputDto, EstadoFindOneByIdOutputSchema } from "@/features/estado/application/dtos/estado-find-one-by-id.dto";
+import { EstadoFindOneByIdOutputSchema } from "@/features/estado";
+import {
+  EstadoFindOneByIdInputDto,
+  EstadoFindOneByIdOutputDto
+} from "@/features/estado/application/dtos/estado-find-one-by-id.dto";
 import { EstadoForbiddenReadError, EstadoNaoEncontradoError } from "@/features/estado/application/errors/estado.errors";
 import type { IEstadoAuthorizationPort, IEstadoRepositoryPort } from "@/features/estado/application/ports";
 import { BaseQuery, getAllowedSelectionFromSchema } from "@/shared";

@@ -1,40 +1,42 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import {
+  CidadeDatabaseEntity
+} from "@/features/cidade/infrastructure/persistence/typeorm/entities/cidade.database-entity";
 import { type IDomain } from "@/shared-antigo/tsp/schema/typings";
-import { CidadeEntity } from "./cidade.entity";
 
 @Entity("endereco")
 export class EnderecoEntity implements IDomain.Endereco {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 
-  @Column({ name: "cep", type: "text", nullable: false })
+  @Column({name: "cep", type: "text", nullable: false})
   cep!: string;
 
-  @Column({ name: "logradouro", type: "text", nullable: false })
+  @Column({name: "logradouro", type: "text", nullable: false})
   logradouro!: string;
 
-  @Column({ name: "numero", type: "int", nullable: false })
+  @Column({name: "numero", type: "int", nullable: false})
   numero!: number;
 
-  @Column({ name: "bairro", type: "text", nullable: false })
+  @Column({name: "bairro", type: "text", nullable: false})
   bairro!: string;
 
-  @Column({ name: "complemento", type: "text", nullable: true })
+  @Column({name: "complemento", type: "text", nullable: true})
   complemento!: string | null;
 
-  @Column({ name: "ponto_referencia", type: "text", nullable: true })
+  @Column({name: "ponto_referencia", type: "text", nullable: true})
   pontoReferencia!: string | null;
 
-  @ManyToOne(() => CidadeEntity, {})
-  @JoinColumn({ name: "id_cidade_fk" })
+  @ManyToOne(() => CidadeDatabaseEntity, {})
+  @JoinColumn({name: "id_cidade_fk"})
   cidade!: IDomain.Cidade;
 
-  @Column({ name: "date_created", type: "timestamptz", nullable: false })
+  @Column({name: "date_created", type: "timestamptz", nullable: false})
   dateCreated!: Date;
 
-  @Column({ name: "date_updated", type: "timestamptz", nullable: false })
+  @Column({name: "date_updated", type: "timestamptz", nullable: false})
   dateUpdated!: Date;
 
-  @Column({ name: "date_deleted", type: "timestamptz", nullable: true })
+  @Column({name: "date_deleted", type: "timestamptz", nullable: true})
   dateDeleted!: null | Date;
 }

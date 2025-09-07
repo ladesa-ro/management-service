@@ -9,32 +9,32 @@ export class AulaEntity implements IDomain.Aula {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 
-  @Column({ name: "data", type: "date", nullable: false })
+  @Column({name: "data", type: "date", nullable: false})
   data!: Date;
 
-  @Column({ name: "modalidade", type: "text", nullable: true })
+  @Column({name: "modalidade", type: "text", nullable: true})
   modalidade!: string | null;
 
   // chaves estrangeiras
 
   @ManyToOne(() => IntervaloDeTempoEntity)
-  @JoinColumn({ name: "id_intervalo_de_tempo_fk" })
-  intervaloDeTempo!: IntervaloDeTempoEntity;
+  @JoinColumn({name: "id_intervalo_de_tempo_fk"})
+  intervaloDeTempo!: Relation<IntervaloDeTempoEntity>;
 
   @ManyToOne(() => DiarioEntity)
-  @JoinColumn({ name: "id_diario_fk" })
+  @JoinColumn({name: "id_diario_fk"})
   diario!: Relation<DiarioEntity>;
 
   @ManyToOne(() => AmbienteEntity)
-  @JoinColumn({ name: "id_ambiente_fk" })
-  ambiente!: AmbienteEntity | null;
+  @JoinColumn({name: "id_ambiente_fk"})
+  ambiente!: Relation<AmbienteEntity> | null;
 
-  @Column({ name: "date_created", type: "timestamptz", nullable: false })
+  @Column({name: "date_created", type: "timestamptz", nullable: false})
   dateCreated!: Date;
 
-  @Column({ name: "date_updated", type: "timestamptz", nullable: false })
+  @Column({name: "date_updated", type: "timestamptz", nullable: false})
   dateUpdated!: Date;
 
-  @Column({ name: "date_deleted", type: "timestamptz", nullable: true })
+  @Column({name: "date_deleted", type: "timestamptz", nullable: true})
   dateDeleted!: null | Date;
 }

@@ -1,8 +1,10 @@
-import { CidadeEntity } from "../../entities/00-01-base-lugares/cidade.entity";
+import {
+  CidadeDatabaseEntity
+} from "@/features/cidade/infrastructure/persistence/typeorm/entities/cidade.database-entity";
 import { createRepositoryFactory, IRepositoryFactoryOutput } from "../../helpers/create-repository-factory";
 
 export const createCidadeRepository = createRepositoryFactory((ds) => {
-  return ds.getRepository(CidadeEntity).extend({});
+  return ds.getRepository(CidadeDatabaseEntity).extend({});
 });
 
 export type ICidadeRepository = IRepositoryFactoryOutput<typeof createCidadeRepository>;

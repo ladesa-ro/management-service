@@ -1,11 +1,15 @@
 import { Module } from "@nestjs/common";
-import { CidadeController } from "@/features/cidade/api/cidade.controller";
-import { CidadeService } from "./domain/cidade.service";
+import { CidadeApplicationService } from "./application/services/cidade.application-service";
+import { CidadeRepositoryProvider } from "./infrastructure/providers/cidade.repository.provider";
+import { CidadeListRoute } from "./presentation";
+import { CidadeFindOneByIdRoute } from "./presentation/rest/routes/cidade-find-one-by-id.route";
+import { CidadeController } from "./presentation/rest/nestjs/cidade.controller";
 
 @Module({
   imports: [],
-  providers: [CidadeService],
-  exports: [CidadeService],
+  providers: [CidadeApplicationService, CidadeRepositoryProvider, CidadeListRoute, CidadeFindOneByIdRoute],
+  exports: [CidadeApplicationService],
   controllers: [CidadeController],
 })
-export class CidadeModule {}
+export class CidadeModule {
+}

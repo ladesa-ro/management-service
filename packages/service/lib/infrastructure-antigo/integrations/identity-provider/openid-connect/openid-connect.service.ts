@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import * as client from "openid-client";
-import { AppConfigService } from "@/infrastructure-antigo/config";
+import { AppConfigService } from "@/infrastructure-antigo/config/tokens/AppConfigService";
 
 @Injectable()
 export class OpenidConnectService {
@@ -11,7 +11,8 @@ export class OpenidConnectService {
   constructor(
     @Inject(AppConfigService)
     readonly appConfigService: AppConfigService,
-  ) {}
+  ) {
+  }
 
   private get oidcClientCredentials() {
     return this.appConfigService.getOidcClientCredentials();

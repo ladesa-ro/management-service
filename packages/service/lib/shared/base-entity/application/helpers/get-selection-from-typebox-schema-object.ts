@@ -1,13 +1,16 @@
-import { TObject, TSchema, TypeGuard } from "@sinclair/typebox";
+import { TObject, TSchema } from "@sinclair/typebox";
 import { merge } from "allof-merge";
 import { JSONSchema7Object } from "json-schema";
+import { getSchemaById } from "@/shared";
 
 const resolveSchema = (schema: TSchema | JSONSchema7Object): "literal" | string[] => {
-  if (TypeGuard.IsRef(schema)) {
-    throw new Error("Not implemented");
-  } else if (TypeGuard.IsObject(schema)) {
-    const processedSchema = merge(schema) as JSONSchema7Object;
+  const processedSchema = merge(schema) as JSONSchema7Object;
 
+  const ref = processedSchema.$ref;
+
+  if (ref && typeof ref === "string") {
+    return resolveSchema(getSchemaById(ref));
+  } else if (schema.type === "object") {
     const properties: string[] = [];
 
     for (const property of Object.entries(processedSchema.properties ?? {})) {
@@ -25,7 +28,7 @@ const resolveSchema = (schema: TSchema | JSONSchema7Object): "literal" | string[
     }
 
     return properties;
-  } else if (TypeGuard.IsArray(schema)) {
+  } else if (schema.type === "array") {
     return resolveSchema(schema.items);
   } else {
     return "literal";

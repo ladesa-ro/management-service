@@ -8,11 +8,11 @@ export type registerSchema = {
    * Register a schema with a name
    * @param name
    * @param schema
-   */ <T = TSchema>(name: SchemaId, schema: T): T;
+   */<T = TSchema>(name: SchemaId, schema: T): T;
 
   /**
    * @deprecated use registerSchema passing SchemaId
-   */ <T = TSchema>(name: Exclude<string, SchemaId>, schema: T): T;
+   */<T = TSchema>(name: Exclude<string, SchemaId>, schema: T): T;
 };
 
 export const registerSchema: registerSchema = (name: SchemaId | string, schema: TSchema) => {
@@ -29,18 +29,20 @@ export const registerSchema: registerSchema = (name: SchemaId | string, schema: 
   return schemaWithId;
 };
 
-export const getSchema = (name: string) => {
-  if (!schemas.has(name)) {
-    throw new Error(`Schema ${name} not registered`);
+export const getSchemaById = (id: string) => {
+  const schema = schemas.get(id);
+
+  if (!schema) {
+    throw new Error(`Schema ${id} not registered`);
   }
 
-  return schemas.get(name);
+  return schema;
 };
 
 export const getSchemas = () => Object.fromEntries(schemas);
 
 export const getSchemaId = <T extends TSchema>(factory: () => T) => {
-  const { $id } = factory();
+  const {$id} = factory();
 
   if (!$id) throw new Error("SchemaId not found");
   if (!schemas.has($id)) throw new Error(`Schema ${$id} not registered`);

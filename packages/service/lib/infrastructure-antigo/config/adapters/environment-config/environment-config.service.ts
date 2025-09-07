@@ -2,11 +2,16 @@ import { Inject, Injectable } from "@nestjs/common";
 import { ConfigService as NestConfigService } from "@nestjs/config";
 import { join } from "path";
 import type { DataSourceOptions } from "typeorm";
-import { EstadoDatabaseEntity } from "@/features/estado/infrastructure/typeorm/estado.database-entity";
+import {
+  EstadoDatabaseEntity
+} from "@/features/estado/infrastructure/persistence/typeorm/entities/estado.database-entity";
 import * as entities from "@/infrastructure-antigo/integrations/database/typeorm/entities";
 import pkg from "../../../../../package.json";
 import type { IConfig } from "../../types";
-import type { IConfigIntegrateAuthKeycloakCredentials, IConfigIntegrateAuthOidcClientCredentials } from "../../types/IConfigIntegrateAuth";
+import type {
+  IConfigIntegrateAuthKeycloakCredentials,
+  IConfigIntegrateAuthOidcClientCredentials
+} from "../../types/IConfigIntegrateAuth";
 
 const now = new Date();
 
@@ -16,7 +21,8 @@ export class EnvironmentConfigService implements IConfig {
     // ...
     @Inject(NestConfigService)
     private nestConfigService: NestConfigService,
-  ) {}
+  ) {
+  }
 
   getRootSrc(): string {
     return join(__dirname, "../../../..");

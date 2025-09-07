@@ -1,7 +1,8 @@
-import { EstadoListInputDto, EstadoListInputSchema, EstadoListOutputDto, EstadoListOutputItemSchema } from "@/features/estado/application/dtos";
+import { EstadoListInputDto, EstadoListOutputDto } from "@/features/estado/application/dtos";
 import type { IEstadoAuthorizationPort, IEstadoRepositoryPort } from "@/features/estado/application/ports";
 import { BaseQuery, getAllowedSelectionFromSchema } from "@/shared";
 import { validateDto } from "@/shared/base-entity/application/helpers/validate-dto";
+import { EstadoListInputSchema, EstadoListOutputItemSchema } from "@/features/estado";
 
 export class EstadoListQuery extends BaseQuery {
   constructor(private readonly estadoRepository: IEstadoRepositoryPort) {

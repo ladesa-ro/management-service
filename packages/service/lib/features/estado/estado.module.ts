@@ -1,9 +1,9 @@
 import { Module } from "@nestjs/common";
-import { EstadoApplicationService } from "@/features/estado/application/estado-application-service";
-import { EstadoRepositoryProvider } from "@/features/estado/infrastructure/estado.repository.provider";
+import { EstadoApplicationService } from "@/features/estado/application/services/estado-application-service";
+import { EstadoRepositoryProvider } from "@/features/estado/infrastructure/providers/estado.repository.provider";
 import { EstadoListRoute } from "@/features/estado/presentation";
-import { EstadoFindOneByIdRoute } from "@/features/estado/presentation/rest/estado-find-one-by-id.route";
 import { EstadoController } from "@/features/estado/presentation/rest/nestjs/estado.controller";
+import { EstadoFindOneByIdRoute } from "@/features/estado/presentation/rest/routes/estado-find-one-by-id.route";
 
 @Module({
   imports: [],
@@ -11,4 +11,5 @@ import { EstadoController } from "@/features/estado/presentation/rest/nestjs/est
   exports: [EstadoApplicationService],
   controllers: [EstadoController],
 })
-export class EstadoModule {}
+export class EstadoModule {
+}

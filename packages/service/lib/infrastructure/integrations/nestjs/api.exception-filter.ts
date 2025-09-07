@@ -1,7 +1,12 @@
-import { type ArgumentsHost, Catch, HttpException } from "@nestjs/common";
+import { type ArgumentsHost, Catch, HttpException, UnprocessableEntityException } from "@nestjs/common";
 import type { Request, Response } from "express";
-import { BaseApplicationError, BaseForbiddenError, BaseNotFoundError, BaseValidationFailedError, PrimitiveError } from "@/shared";
-import { ValidationFailedException } from "@/shared-antigo";
+import {
+  BaseApplicationError,
+  BaseForbiddenError,
+  BaseNotFoundError,
+  BaseValidationFailedError,
+} from "@/shared/base-entity/application/errors";
+import { PrimitiveError } from "@/shared/primitives";
 
 type IStandardResponseError = {
   statusCode: number;
@@ -39,7 +44,7 @@ export class AppExceptionFilter {
 
       const response = exception.getResponse();
 
-      if (exception instanceof ValidationFailedException) {
+      if (exception instanceof UnprocessableEntityException) {
         standardResponseError.errors = response;
       }
     } else if (exception instanceof PrimitiveError) {
@@ -56,6 +61,11 @@ export class AppExceptionFilter {
       }
     }
 
+    if (standardResponseError.statusCode >= 500) {
+      console.error({standardResponseError, exception});
+    }
+
     response.status(standardResponseError.statusCode).json(standardResponseError);
+
   }
 }
