@@ -3,7 +3,7 @@ import { ApiTags } from "@nestjs/swagger";
 import { AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { AppRequest, requestRepresentationMergeToDomain } from "@/shared";
 import type { IAppRequest } from "@/shared/tsp/openapi/document/app-openapi-typings";
-import type { IDomain } from "@/shared/tsp/schema/typings";
+import { IDomain } from "@/shared/tsp/schema/typings";
 import { ProfessorIndisponibilidadeService } from "../domain/professor-indisponibilidade.service";
 
 @ApiTags("indisponibilidades-professores")
@@ -27,13 +27,17 @@ export class ProfessorIndisponibilidadeController {
   }
 
 
-  @Post("/professores/:id_perfil")
-  async professorIndisponibilidadeCreate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("ProfessorIndisponibilidadeCreate") dto: IAppRequest<"ProfessorIndisponibilidadeCreate">) {
-    const domain = requestRepresentationMergeToDomain(dto) as IDomain.ProfessorIndisponibilidadeCreateInput & any;
-    const idPerfil = dto.path;
-    if (!idPerfil) throw new BadRequestException();
-    return this.professorIndisponibilidadeService.createForProfessor(accessContext, idPerfil, domain);
-  }
+@Post("/:id_perfil/create")
+async professorIndisponibilidadeCreate( @AccessContextHttp() accessContext: AccessContext, @AppRequest("ProfessorIndisponibilidadeCreate") dto: IAppRequest<"ProfessorIndisponibilidadeCreate">,
+) {
+    const domain : IDomain.ProfessorIndisponibilidadeCreateInput = requestRepresentationMergeToDomain(dto);
+    return this.professorIndisponibilidadeService.createIndisponibilidade(accessContext, domain);
+}
+
+
+
+
+
 
   @Patch("/:id")
   async professorIndisponibilidadeUpdate(
