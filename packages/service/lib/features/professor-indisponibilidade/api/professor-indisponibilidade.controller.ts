@@ -39,15 +39,18 @@ async professorIndisponibilidadeCreate( @AccessContextHttp() accessContext: Acce
 
 
 
-  @Patch("/:id")
-  async professorIndisponibilidadeUpdate(
-    @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("ProfessorIndisponibilidadeUpdateOneById") dto: IAppRequest<"ProfessorIndisponibilidadeUpdateOneById">,
-  ) {
-    const domain = requestRepresentationMergeToDomain(dto) as IDomain.ProfessorIndisponibilidadeUpdateInput & any;
-    if (!domain.id) throw new BadRequestException();
-    return this.professorIndisponibilidadeService.indisponibilidadeUpdate(accessContext, domain.id, domain);
-  }
+@Patch("/:id")
+async professorIndisponibilidadeUpdate(
+  @AccessContextHttp() accessContext: AccessContext,
+  @AppRequest("ProfessorIndisponibilidadeUpdateOneById") dto: IAppRequest<"ProfessorIndisponibilidadeUpdateOneById">,
+) {
+  const domain: IDomain.ProfessorIndisponibilidadeFindOneInput & IDomain.ProfessorIndisponibilidadeUpdateInput =
+    requestRepresentationMergeToDomain(dto);
+
+  return this.professorIndisponibilidadeService.indisponibilidadeUpdate(accessContext, domain);
+}
+
+
 
   @Delete("/:id")
   async professorIndisponibilidadeDeleteOneById(
