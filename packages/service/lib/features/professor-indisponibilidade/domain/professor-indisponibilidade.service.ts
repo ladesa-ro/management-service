@@ -1,11 +1,11 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
-import { map } from "lodash";
+import { map, pick } from "lodash";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
 import { QbEfficientLoad, SearchService } from "@/shared";
 import type { IDomain } from "@/shared/tsp/schema/typings";
-
+import { ProfessorIndisponibilidadeEntity } from "@/infrastructure/integrations/database/typeorm/entities";
 // ============================================================================
 
 const aliasIndisponibilidade = "indisponibilidade";
@@ -37,7 +37,6 @@ export class ProfessorIndisponibilidadeService {
 
     // =========================================================
 
-    // TODO: conferrir o filtro
     await accessContext.applyFilter(
       "vinculo:find",
       qb,
@@ -107,25 +106,6 @@ export class ProfessorIndisponibilidadeService {
     return paginated;
   }
 
-  async indisponibilidadeFindByIdStrict(
-    accessContext: AccessContext | null,
-    domain: IDomain.ProfessorIndisponibilidadeFindOneInput,
-    selection?: string[] | boolean,
-  ) {
-    // =========================================================
-
-    const _qb = this.indisponibilidadeRepository
-      .createQueryBuilder(
-        // =========================================================
-
-        aliasIndisponibilidade,
-      )
-      .leftJoinAndSelect(`${aliasIndisponibilidade}.perfil`, "perfil");
-
-    // =========================================================
-
-    // const indisponibilidade = await this.
-  }
 
   async indisponibilidadeFindByIdSimple(
     accessContext: AccessContext,
@@ -243,32 +223,7 @@ export class ProfessorIndisponibilidadeService {
 
     return this.indisponibilidadeRepository.save(indisponibilidade);
   }
-
-  async indisponibilidadeUpdate(
-    accessContext: AccessContext,
-    id: IDomain.ProfessorIndisponibilidadeUpdateInput["id"],
-    domain: IDomain.ProfessorIndisponibilidadeUpdateInput,
-  ): Promise<IDomain.ProfessorIndisponibilidadeFindOneOutput["success"]> {
-    // =========================================================
-
-    const indisponibilidade = await this.indisponibilidadeFindByIdSimpleStrict(
-      accessContext,
-      id,
-    );
-
-    // =========================================================
-
-    Object.assign(indisponibilidade, domain);
-
-    // =========================================================
-
-    // await accessContext.applyFilter("????", this.indisponibilidadeRepository.createQueryBuilder(aliasIndisponibilidade), aliasIndisponibilidade, indisponibilidade);
-
-    // =========================================================
-
-    return this.indisponibilidadeRepository.save(indisponibilidade);
-  }
-
+  
   async indisponibilidadeDelete(
     accessContext: AccessContext,
     id: IDomain.ProfessorIndisponibilidadeFindOneInput["id"],
@@ -294,5 +249,35 @@ export class ProfessorIndisponibilidadeService {
     // =========================================================
 
     return this.indisponibilidadeRepository.remove(indisponibilidade);
+  }
+
+   async indisponibilidadeUpdate(
+    accessContext: AccessContext,
+    domain: IDomain.ProfessorIndisponibilidadeFindOneInput & IDomain.ProfessorIndisponibilidadeUpdateInput) {
+    // =========================================================
+
+    const currentIndisponibilidade = await this.indisponibilidadeFindByIdSimpleStrict(accessContext, domain.id);
+    // =========================================================
+
+    await accessContext.ensurePermission("aula:update", {dto: domain}, domain.id, this.indisponibilidadeRepository.createQueryBuilder(aliasIndisponibilidade));
+
+    const dtoIndisponibilidade = pick(domain, [
+      "indisponibilidadeInicio",
+      "indisponibilidadeTermino",
+      "horaInicio",
+      "horaFim",
+      "motivo",
+    ]);
+
+    const indisponibilidade = {
+      id: currentIndisponibilidade.id,
+    } as ProfessorIndisponibilidadeEntity;
+
+   this.indisponibilidadeRepository.merge(indisponibilidade, dtoIndisponibilidade);
+
+    
+    return this.indisponibilidadeRepository.save(indisponibilidade);
+    // =========================================================
+
   }
 }
