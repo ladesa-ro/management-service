@@ -1,3 +1,4 @@
+import { time } from "node:console";
 import { MigrationInterface, QueryRunner, Table } from "typeorm";
 
 const tableName = "indisponibilidade_professor";
@@ -20,40 +21,23 @@ export class CreateTableIndisponibilidadeProfessor1754870894487 implements Migra
             isNullable: false,
           },
           // ======================================================================
+
           {
-            name: "segunda",
-            type: "time",
-            isNullable: true,
+            name: "dia_da_semana",
+            type: "smallint",
+            isNullable: false,
           },
           {
-            name: "terca",
+            name: "hora_inicio",
             type: "time",
-            isNullable: true,
+            precision: 0,
+            isNullable: false,
           },
           {
-            name: "quarta",
+            name: "hora_fim",
             type: "time",
-            isNullable: true,
-          },
-          {
-            name: "quinta",
-            type: "time",
-            isNullable: true,
-          },
-          {
-            name: "sexta",
-            type: "time",
-            isNullable: true,
-          },
-          {
-            name: "sabado",
-            type: "time",
-            isNullable: true,
-          },
-          {
-            name: "domingo",
-            type: "time",
-            isNullable: true,
+            precision: 0,
+            isNullable: false,
           },
           // ======================================================================
           {
@@ -99,6 +83,9 @@ export class CreateTableIndisponibilidadeProfessor1754870894487 implements Migra
         BEFORE UPDATE ON ${tableName}
         FOR EACH ROW
           EXECUTE FUNCTION change_date_updated();
+      
+      ALTER TABLE "${tableName}"
+      ADD CONSTRAINT "CHK_dia_da_semana" CHECK ("dia_da_semana" BETWEEN 0 AND 6);
     `);
   }
 
