@@ -1,3 +1,5 @@
+namespace Ladesa.ManagementService {
+
 model ProfessorIndisponibilidadeView {
   id: string;
   idPerfilFk: string;
@@ -23,6 +25,7 @@ model ProfessorIndisponibilidadeListOutput {
   horaFim: string;
   motivo: string;
 }
+
 model ProfessorIndisponibilidadeListInput {
   idPerfilFk: string;
 }
@@ -31,11 +34,12 @@ model ProfessorIndisponibilidadeListInput {
 model ProfessorIndisponibilidadeFindOneOutput {
   id: string;
   idPerfilFk: string;
-  diaDaSemana: integer;
+  diaDaSemana: int32;
   horaInicio: string;
   horaFim: string;
   motivo: string;
 }
+
 model ProfessorIndisponibilidadeFindOneInput {
   id: string;
   idPerfilFk: string;
@@ -61,10 +65,13 @@ model ProfessorIndisponibilidadeCreateInput {
   horaFim: string;
   motivo: string;
 }
+
 model ProfessorIndisponibilidadeCreateOutput {
   idPerfilFk?: string;
   diaDaSemana: integer;
   horaInicio: string;
   horaFim: string;
   motivo: string;
+}
+
 }
