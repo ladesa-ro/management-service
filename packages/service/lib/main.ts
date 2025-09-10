@@ -34,7 +34,7 @@ async function setup() {
   const prefix = configService.getRuntimePrefix();
 
   if (prefix) {
-    app.setGlobalPrefix(prefix, {exclude: ["health"]});
+    app.setGlobalPrefix(prefix, { exclude: ["health"] });
   }
 
   app.use(compression());
