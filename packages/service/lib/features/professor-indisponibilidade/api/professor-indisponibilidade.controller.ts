@@ -17,14 +17,15 @@ export class ProfessorIndisponibilidadeController {
     return this.professorIndisponibilidadeService.ProfessorIndisponibilidadeListByPerfil(accessContext, domain.idPerfilFk);
   }
 
-  @Get("/:id")
-  async professorIndisponibilidadeFindOneById(
-    @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("ProfessorIndisponibilidadeFindOneById") dto: IAppRequest<"ProfessorIndisponibilidadeFindOneById">,
-  ) {
-    const domain = requestRepresentationMergeToDomain(dto) as any;
-    return this.professorIndisponibilidadeService.indisponibilidadeFindByIdSimple(accessContext, domain.id);
-  }
+@Get("/:id")
+async professorIndisponibilidadeFindOneById(
+  @AccessContextHttp() accessContext: AccessContext,
+  @AppRequest("ProfessorIndisponibilidadeFindOneById") dto: IAppRequest<"ProfessorIndisponibilidadeFindOneById">,
+) {
+  const domain = requestRepresentationMergeToDomain(dto) as IDomain.ProfessorIndisponibilidadeFindOneInput;
+  return this.professorIndisponibilidadeService.indisponibilidadeFindByIdSimple(accessContext, domain.id);
+}
+
 
 
 @Post("/:id_perfil/create")

@@ -109,7 +109,7 @@ export class ProfessorIndisponibilidadeService {
 
   async indisponibilidadeFindByIdSimple(
     accessContext: AccessContext,
-    id: IDomain.ProfessorIndisponibilidadeFindOneInput["idPerfilFk"],
+    id: IDomain.ProfessorIndisponibilidadeFindOneInput["id"],
     selection?: string[],
   ): Promise<IDomain.ProfessorIndisponibilidadeFindOneOutput["success"]> {
     // =========================================================
@@ -131,8 +131,6 @@ export class ProfessorIndisponibilidadeService {
 
     qb.andWhere(`${aliasIndisponibilidade}.id = :id`, { id });
 
-    // Realiza busca pelo id de perfil
-    // qb.andWhere(`${aliasIndisponibilidade}.id_perfil_fk = :idPerfil`, { idPerfil: id });
     // =========================================================
 
     qb.select([]);
