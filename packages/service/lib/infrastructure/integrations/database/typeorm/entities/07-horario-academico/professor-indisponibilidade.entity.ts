@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, RelationId } from "typeorm";
 import { UsuarioEntity } from "@/infrastructure/integrations/database/typeorm/entities/01-autenticacao";
 import type { IDomain } from "@/shared/tsp/schema/typings";
 
@@ -7,33 +7,21 @@ export class ProfessorIndisponibilidadeEntity implements IDomain.ProfessorIndisp
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 
-  @ManyToOne(() => UsuarioEntity, "vinculos")
+ @ManyToOne(() => UsuarioEntity, "vinculos")
   @JoinColumn({ name: "id_perfil_fk" })
   perfil!: UsuarioEntity & IDomain.Perfil;
 
-  @Column({ name: "id_perfil_fk" })
+  @RelationId((self: ProfessorIndisponibilidadeEntity) => self.perfil)
   idPerfilFk!: string;
-// ============================================================================
-  @Column({ name: "segunda", type: "time", precision: 0 })
-  segunda!: string; 
+  // ============================================================================
+  @Column({ name: "dia_da_semana", type: "smallint" })
+  diaDaSemana!: number;
 
-  @Column({ name: "terca", type: "time", precision: 0 })
-  terca!: string;
+  @Column({ name: "hora_inicio", type: "time", precision: 0 })
+  horaInicio!: string;
 
-  @Column({ name: "quarta", type: "time", precision: 0 })
-  quarta!: string;
-  
-  @Column({ name: "quinta", type: "time", precision: 0 })
-  quinta!: string;
-
-  @Column({ name: "sexta", type: "time", precision: 0 })
-  sexta!: string;
-  
-  @Column({ name: "sabado", type: "time", precision: 0 })
-  sabado!: string;
-
-  @Column({ name: "domingo", type: "time", precision: 0 })
-  domingo!: string;
+  @Column({ name: "hora_fim", type: "time", precision: 0 })
+  horaFim!: string; 
 // ============================================================================
 
   @Column({ name: "motivo", type: "varchar", length: 90 })
