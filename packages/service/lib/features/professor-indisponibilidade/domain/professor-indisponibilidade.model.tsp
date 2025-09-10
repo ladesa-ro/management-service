@@ -7,28 +7,16 @@ model ProfessorIndisponibilidade{
   /** Id do perfil*/
   perfil : Perfil;
 
-  /** Horario de inicio*/
-  indisponibilidadeInicio : utcDateTime;
-
-  /** Dias da semana que o professor esta indisponivel */
-  segunda : time;
+  /**diaDaSemana vai de 0 á 6 0 = domingo e sucessivamente até 6 = sabado */
+  diaDaSemana: int8;
   
-  terca : time;
+  /** Hora de inicio da indisponibilidade */
+  horaInicio: time;
   
-  quarta : time;
+  /** Hora de termino da indisponibilidade */
+  horaFim: time;
   
-  quinta : time;
-  
-  sexta : time;
-  
-  sabado : time;
-
-  domingo : time;
-
   // ============================================================================
-
-  /** Horario de termino*/
-  indisponibilidadeTermino : utcDateTime;
 
   /** Breve descricao do motivo de indisponibilidade*/
   motivo : string;
