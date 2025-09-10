@@ -133,13 +133,16 @@ export class ProfessorIndisponibilidadeService {
 
     // =========================================================
 
-    qb.select([]);
-    await QbEfficientLoad(
-      "ProfessorIndisponibilidadeFindOneOutput",
-      qb,
-      aliasIndisponibilidade,
-      selection,
-    );
+    qb.addSelect("perfil.id", "idPerfilFk");
+
+    // =========================================================
+
+  await QbEfficientLoad(
+    "ProfessorIndisponibilidadeFindOneOutput",
+    qb,
+    aliasIndisponibilidade,
+    selection,
+  );
 
     // =========================================================
 
