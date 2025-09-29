@@ -111,7 +111,7 @@ jobs:
             echo "=== Iniciando publicação do cliente NPM ==="
             npx pkg-pr-new publish --comment=update --packageManager="bun" './packages/integrations/npm/client-pkg'
             echo "=== Publicação do cliente NPM concluída ==="
-        cacheFrom: |
-          type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_BASENAME }}/management-service/devcontainer:cache
-        cacheTo: |
-          type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_BASENAME }}/management-service/devcontainer:cache,mode=max
+          cacheFrom: |
+            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_BASENAME }}/management-service/devcontainer:cache
+          cacheTo: |
+            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_BASENAME }}/management-service/devcontainer:cache,mode=max
