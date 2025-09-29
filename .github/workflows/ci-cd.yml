@@ -109,11 +109,13 @@ jobs:
       - name: Prebuild devcontainer
         uses: devcontainers/ci@8bf61b26e9c3a98f69cb6ce2f88d24ff59b785c6
         with:
+          configFile: .devcontainer/ci-cd/devcontainer.json
           imageName: ${{ env.REGISTRY }}/${{ env.IMAGE_BASENAME }}/management-service/devcontainer-gha
-          runCmd: sleep 1
-          push: always
+          imageTag: development
           cacheFrom: ${{ env.REGISTRY }}/${{ env.IMAGE_BASENAME }}/management-service/devcontainer-gha:cache
           cacheTo: ${{ env.REGISTRY }}/${{ env.IMAGE_BASENAME }}/management-service/devcontainer-gha:cache
+          push: always
+          runCmd: sleep 1
 
   service-client-ci-npm:
     name: "CI: Construção e Publicação do Client NPM"
@@ -142,15 +144,15 @@ jobs:
       - name: Execução do container de desenvolvimento
         uses: devcontainers/ci@8bf61b26e9c3a98f69cb6ce2f88d24ff59b785c6
         with:
+          configFile: .devcontainer/ci-cd/devcontainer.json
           imageName: ${{ env.REGISTRY }}/${{ env.IMAGE_BASENAME }}/management-service/devcontainer-gha
+          imageTag: development
           cacheFrom: ${{ env.REGISTRY }}/${{ env.IMAGE_BASENAME }}/management-service/devcontainer-gha:cache
           cacheTo: ${{ env.REGISTRY }}/${{ env.IMAGE_BASENAME }}/management-service/devcontainer-gha:cache
-          imageTag: latest
+          push: never
           inheritEnv: true
           env: |
             HOME=/home/happy
-          configFile: .devcontainer/ci-cd/devcontainer.json
-          push: never
           runCmd: |
             echo "=== Iniciando build do cliente NPM ==="
             bun run --filter '@ladesa-ro/management-service-client' build

@@ -26,17 +26,14 @@ USER root
 
 # Configuração do ambiente Bun
 ENV BUN_INSTALL="/opt/bun"
-ENV BUN_INSTALL_CACHE_DIR="${HOME}/.bun/tmp"
+ENV BUN_INSTALL_CACHE_DIR="/tmp/bun-cache"
 ENV PATH="${BUN_INSTALL}/bin:$PATH"
 
 # Instalação do Bun na versão específica para garantir consistência
 RUN curl -fsSL https://bun.sh/install | bash -s "bun-v1.2.20"
 
-# Instalação de dependências com cache eficiente
-RUN --mount=type=cache,id=bun,target=${BUN_INSTALL_CACHE_DIR} \
-    mkdir -p "${BUN_INSTALL_CACHE_DIR}" && chmod -R 777 "${BUN_INSTALL_CACHE_DIR}"
-
-RUN mkdir -p "${BUN_INSTALL_CACHE_DIR}" && chown -R 1000:1000 "${BUN_INSTALL_CACHE_DIR}"
+# Cria o diretório de cache em /tmp e garante permissões
+RUN mkdir -p "${BUN_INSTALL_CACHE_DIR}" && chmod -R 777 "${BUN_INSTALL_CACHE_DIR}"
 
 # Retorna ao usuário não privilegiado após instalação
 USER 1000:1000
@@ -93,7 +90,7 @@ USER 1000:1000
 COPY --chown=1000:1000 . .
 
 # Instalação de dependências com cache eficiente
-RUN --mount=type=cache,id=bun,target=${BUN_INSTALL_CACHE_DIR} \
+RUN --mount=type=cache,id=bun,target=/tmp/bun-cache \
     bun install --frozen-lockfile --production
 
 # ==========================================
@@ -102,7 +99,8 @@ RUN --mount=type=cache,id=bun,target=${BUN_INSTALL_CACHE_DIR} \
 
 FROM source-with-production-dependencies AS source-with-dev-dependencies
 USER 1000:1000
-RUN --mount=type=cache,id=bun,target=${BUN_INSTALL_CACHE_DIR} bun install --frozen-lockfile
+RUN --mount=type=cache,id=bun,target=/tmp/bun-cache \
+    bun install --frozen-lockfile
 
 # ==========================================
 # ETAPA DE COMPILAÇÃO DA APLICAÇÃO
@@ -118,31 +116,22 @@ RUN bun run --filter "@ladesa-ro/management-service" build
 
 FROM os-runtime AS service-runtime
 
-# Metadados da imagem para documentação e rastreabilidade
 LABEL maintainer="Equipe de Desenvolvimento do Ladesa"
 LABEL version="1.0"
 LABEL description="Serviço de gerenciamento da aplicação"
 
-# Configurações de ambiente para produção
 ENV NODE_ENV=production
 ENV PORT=3000
 
-# Expõe a porta da aplicação
 EXPOSE $PORT
 
-# Mantém consistência utilizando o mesmo usuário em toda a aplicação
 USER happy
 
-# Copia apenas os arquivos necessários da etapa de build para a imagem final
-# Corrigido: usa o estágio 'build' em vez de 'builder' inexistente
 COPY --from=service-build --chown=1000:1000 /ladesa/management-service /ladesa/management-service
 
-# Define o diretório de trabalho para a aplicação
 WORKDIR "/ladesa/management-service/packages/service"
 
-# Configuração de healthcheck para monitoramento da aplicação
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD curl -f http://localhost:$PORT/health || exit 1
 
-# Comando de inicialização: executa as migrações e inicia a aplicação
 CMD bun run migration:run && bun run start
