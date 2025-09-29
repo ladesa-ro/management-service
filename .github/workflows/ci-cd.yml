@@ -14,6 +14,13 @@ on:
 concurrency:
   group: ci-cd-${{ github.ref }}
 
+env:
+  REGISTRY: ghcr.io
+  REGISTRY_USERNAME: ${{ github.actor }}
+  REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  IMAGE_BASENAME: ${{ github.repository }}
+
 jobs:
   service-ci-image:
     name: "CI: Construção e Publicação da Imagem de Container"
@@ -36,9 +43,9 @@ jobs:
       - name: Autenticação no GitHub Container Registry
         uses: docker/login-action@184bdaa0721073962dff0199f1fb9940f07167d1
         with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          registry: ${{ env.REGISTRY }}
+          username: ${{ env.REGISTRY_USERNAME }}
+          password: ${{ env.REGISTRY_TOKEN }}
 
       - name: Construção e publicação da imagem de contêiner
         uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83
@@ -46,9 +53,9 @@ jobs:
           context: .
           target: service-runtime
           push: true
-          tags: ghcr.io/${{ github.repository }}/management-service:development
-          cache-from: type=registry,ref=ghcr.io/${{ github.repository }}/management-service:cache
-          cache-to: type=registry,ref=ghcr.io/${{ github.repository }}/management-service:cache,mode=max
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_BASENAME }}/management-service:development
+          cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_BASENAME }}/management-service:cache-development
+          cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_BASENAME }}/management-service:cache-development,mode=max
 
   service-cd-cluster:
     name: "CD: Implantação no Cluster Kubernetes"
@@ -90,7 +97,7 @@ jobs:
       - name: Execução do container de desenvolvimento
         uses: devcontainers/ci@8bf61b26e9c3a98f69cb6ce2f88d24ff59b785c6
         with:
-          imageName: ghcr.io/${{ github.repository }}/management-service/devcontainer
+          imageName: ${{ env.REGISTRY }}/${{ env.IMAGE_BASENAME }}/management-service/devcontainer
           imageTag: latest
           inheritEnv: true
           env: |
