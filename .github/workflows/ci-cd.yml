@@ -112,8 +112,7 @@ jobs:
           imageName: ${{ env.REGISTRY }}/${{ env.IMAGE_BASENAME }}/management-service/devcontainer-gha
           runCmd: sleep 1
           push: always
-          cacheFrom: ${{ env.REGISTRY }}/${{ env.IMAGE_BASENAME }}/management-service/devcontainer-gha:cache
-          cacheTo: ${{ env.REGISTRY }}/${{ env.IMAGE_BASENAME }}/management-service/devcontainer-gha:cache
+          cacheFrom: ${{ env.REGISTRY }}/${{ env.IMAGE_BASENAME }}/management-service/devcontainer-gha
 
   service-client-ci-npm:
     name: "CI: Construção e Publicação do Client NPM"
