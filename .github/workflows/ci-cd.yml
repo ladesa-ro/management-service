@@ -146,7 +146,6 @@ jobs:
           configFile: .devcontainer/ci-cd/devcontainer.json
           imageName: ${{ env.REGISTRY }}/${{ env.IMAGE_BASENAME }}/management-service/devcontainer-gha
           cacheFrom: ${{ env.REGISTRY }}/${{ env.IMAGE_BASENAME }}/management-service/devcontainer-gha:cache
-          cacheTo: ${{ env.REGISTRY }}/${{ env.IMAGE_BASENAME }}/management-service/devcontainer-gha:cache
           push: never
           inheritEnv: true
           env: |
