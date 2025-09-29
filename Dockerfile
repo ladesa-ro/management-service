@@ -33,7 +33,7 @@ ENV PATH="${BUN_INSTALL}/bin:$PATH"
 RUN curl -fsSL https://bun.sh/install | bash -s "bun-v1.2.20"
 
 # Cria o diretório de cache em /tmp e garante permissões
-RUN mkdir -p "${BUN_INSTALL_CACHE_DIR}" && chmod -R 777 "${BUN_INSTALL_CACHE_DIR}"
+RUN --mount=type=cache,id=bun,target=${BUN_INSTALL_CACHE_DIR},uid=1000,gid=1000 mkdir -p "${BUN_INSTALL_CACHE_DIR}" && chmod -R 777 "${BUN_INSTALL_CACHE_DIR}"
 
 # Retorna ao usuário não privilegiado após instalação
 USER 1000:1000
@@ -90,7 +90,7 @@ USER 1000:1000
 COPY --chown=1000:1000 . .
 
 # Instalação de dependências com cache eficiente
-RUN --mount=type=cache,id=bun,target=/tmp/bun-cache \
+RUN --mount=type=cache,id=bun,target=${BUN_INSTALL_CACHE_DIR},uid=1000,gid=1000 \
     bun install --frozen-lockfile --production
 
 # ==========================================
@@ -99,7 +99,7 @@ RUN --mount=type=cache,id=bun,target=/tmp/bun-cache \
 
 FROM source-with-production-dependencies AS source-with-dev-dependencies
 USER 1000:1000
-RUN --mount=type=cache,id=bun,target=/tmp/bun-cache \
+RUN --mount=type=cache,id=bun,target=${BUN_INSTALL_CACHE_DIR},uid=1000,gid=1000 \
     bun install --frozen-lockfile
 
 # ==========================================
