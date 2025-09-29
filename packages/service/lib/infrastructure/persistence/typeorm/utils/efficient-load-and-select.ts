@@ -3,7 +3,7 @@ import { createAliasesGenerator } from "@/infrastructure/persistence/typeorm/uti
 import { getRelationPaths } from "@/infrastructure/persistence/typeorm/utils/get-relation-paths";
 import { parseSelections } from "@/infrastructure/persistence/typeorm/utils/parse-selections";
 
-export const EfficientLoadAndSelect = (query: SelectQueryBuilder<any>, rawSelections: string[] | null) => {
+export const EfficientLoadAndSelect = (query: SelectQueryBuilder<any>, rawSelections: string[] | null | undefined) => {
   const selections = parseSelections(rawSelections);
   const relationPaths = getRelationPaths(selections);
 

@@ -1,8 +1,10 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, type Relation } from "typeorm";
 import { type IDomain } from "@/shared-antigo/tsp/schema/typings";
+import {
+  CampusDatabaseEntity
+} from "../../../../../../features/campus/infrastructure/persistence/typeorm/entities/campus.database-entity";
 import { ImagemEntity } from "../00-00-base/imagem.entity";
 import { AmbienteEntity } from "./ambiente.entity";
-import { CampusEntity } from "./campus.entity";
 
 @Entity("bloco")
 export class BlocoEntity implements IDomain.Bloco {
@@ -15,9 +17,9 @@ export class BlocoEntity implements IDomain.Bloco {
   @Column({name: "codigo", type: "text", nullable: false})
   codigo!: string;
 
-  @ManyToOne(() => CampusEntity)
+  @ManyToOne(() => CampusDatabaseEntity)
   @JoinColumn({name: "id_campus_fk"})
-  campus!: Relation<CampusEntity>;
+  campus!: Relation<CampusDatabaseEntity>;
 
   @ManyToOne(() => ImagemEntity)
   @JoinColumn({name: "id_imagem_capa_fk"})

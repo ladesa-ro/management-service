@@ -1,9 +1,11 @@
-import { EstadoFindOneByIdInputDto, EstadoFindOneByIdOutputDto, EstadoListInputDto, EstadoListOutputDto } from "@/features/estado/application/dtos";
-import { IBaseRepositoryFindOneByIdPort, IBaseRepositoryListPort } from "@/shared";
+import { Estado } from "@/features/estado";
+import { IFilterRuleGroup } from "@/shared";
+import { EstadoFindOneByIdOutputDto, EstadoListInputDto, EstadoListOutputDto } from "../dtos";
 
 export const ESTADO_REPOSITORY = Symbol("Ladesa.ManagementService.Estado.Ports.Repository");
 
-type RepositoryList = IBaseRepositoryListPort<EstadoListInputDto, EstadoListOutputDto>;
-type RepositoryFindOneById = IBaseRepositoryFindOneByIdPort<EstadoFindOneByIdInputDto["id"], EstadoFindOneByIdOutputDto>;
+export interface IEstadoRepositoryPort {
+  list(allowedFilters: IFilterRuleGroup | true | false, inputDto: EstadoListInputDto, selection?: string[]): Promise<EstadoListOutputDto>;
 
-export interface IEstadoRepositoryPort extends RepositoryList, RepositoryFindOneById {}
+  findOneById(id: Estado["id"], selection?: string[]): Promise<EstadoFindOneByIdOutputDto | null>;
+}

@@ -3,7 +3,7 @@ import {
   EstadoFindOneByIdInputDto,
   EstadoFindOneByIdOutputDto
 } from "@/features/estado/application/dtos/estado-find-one-by-id.dto";
-import { EstadoForbiddenReadError, EstadoNaoEncontradoError } from "@/features/estado/application/errors/estado.errors";
+import { EstadoForbiddenReadError, EstadoNotFoundError } from "@/features/estado/application/errors/estado.errors";
 import type { IEstadoAuthorizationPort, IEstadoRepositoryPort } from "@/features/estado/application/ports";
 import { BaseQuery, getAllowedSelectionFromSchema } from "@/shared";
 
@@ -15,10 +15,10 @@ export class EstadoFindOneByIdQuery extends BaseQuery {
   public async execute(authorization: IEstadoAuthorizationPort, inputDto: EstadoFindOneByIdInputDto): Promise<EstadoFindOneByIdOutputDto> {
     const selection = getAllowedSelectionFromSchema(EstadoFindOneByIdOutputSchema, inputDto.selection);
 
-    const estado = await this.estadoRepository.findById(inputDto.id, selection);
+    const estado = await this.estadoRepository.findOneById(inputDto.id, selection);
 
     if (!estado) {
-      throw new EstadoNaoEncontradoError(`Estado não encontrado (id = ${inputDto.id}).`);
+      throw new EstadoNotFoundError(`Estado não encontrado (id = ${inputDto.id}).`);
     }
 
     const canRead = await authorization.canRead(estado.id);

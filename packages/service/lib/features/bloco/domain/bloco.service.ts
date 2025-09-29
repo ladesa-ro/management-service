@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
 import { ArquivoService } from "@/features/arquivo/domain/arquivo.service";
-import { CampusService } from "@/features/campus/domain/campus.service";
+import { CampusApplicationService } from "@/features/campus/application/services/campus.application-service";
 import { ImagemService } from "@/features/imagem/domain/imagem.service";
 import { BlocoEntity } from "@/infrastructure-antigo/integrations/database/typeorm/entities";
 import { AccessContext, DatabaseContextService, IDomain, QbEfficientLoad, SearchService } from "@/shared-antigo";
@@ -16,12 +16,13 @@ const aliasBloco = "bloco";
 @Injectable()
 export class BlocoService {
   constructor(
-    private campusService: CampusService,
+    private campusService: CampusApplicationService,
     private databaseContext: DatabaseContextService,
     private imagemService: ImagemService,
     private arquivoService: ArquivoService,
     private searchService: SearchService,
-  ) {}
+  ) {
+  }
 
   get blocoRepository() {
     return this.databaseContext.blocoRepository;
@@ -98,7 +99,7 @@ export class BlocoService {
 
     // =========================================================
 
-    qb.andWhere(`${aliasBloco}.id = :id`, { id: domain.id });
+    qb.andWhere(`${aliasBloco}.id = :id`, {id: domain.id});
 
     // =========================================================
 
@@ -135,7 +136,7 @@ export class BlocoService {
 
     // =========================================================
 
-    qb.andWhere(`${aliasBloco}.id = :id`, { id });
+    qb.andWhere(`${aliasBloco}.id = :id`, {id});
 
     // =========================================================
 
@@ -162,13 +163,13 @@ export class BlocoService {
   }
 
   async blocoGetImagemCapa(accessContext: AccessContext | null, id: string) {
-    const bloco = await this.blocoFindByIdStrict(accessContext, { id: id });
+    const bloco = await this.blocoFindByIdStrict(accessContext, {id: id});
 
     if (bloco.imagemCapa) {
       const [versao] = bloco.imagemCapa.versoes;
 
       if (versao) {
-        const { arquivo } = versao;
+        const {arquivo} = versao;
         return this.arquivoService.getStreamableFile(null, arquivo.id, null);
       }
     }
@@ -185,11 +186,11 @@ export class BlocoService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("bloco:update", { dto: { id: currentBloco.id } }, currentBloco.id, this.blocoRepository.createQueryBuilder(aliasBloco));
+    await accessContext.ensurePermission("bloco:update", {dto: {id: currentBloco.id}}, currentBloco.id, this.blocoRepository.createQueryBuilder(aliasBloco));
 
     // =========================================================
 
-    const { imagem } = await this.imagemService.saveBlocoCapa(file);
+    const {imagem} = await this.imagemService.saveBlocoCapa(file);
 
     const bloco = {
       id: currentBloco.id,
@@ -211,7 +212,7 @@ export class BlocoService {
   async blocoCreate(accessContext: AccessContext, domain: IDomain.BlocoCreateInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("bloco:create", { dto: domain });
+    await accessContext.ensurePermission("bloco:create", {dto: domain});
 
     // =========================================================
 
@@ -239,17 +240,17 @@ export class BlocoService {
 
     // =========================================================
 
-    return this.blocoFindByIdStrict(accessContext, { id: bloco.id });
+    return this.blocoFindByIdStrict(accessContext, {id: bloco.id});
   }
 
   async blocoUpdate(accessContext: AccessContext, domain: IDomain.BlocoFindOneInput & IDomain.BlocoUpdateInput) {
     // =========================================================
 
-    const currentBloco = await this.blocoFindByIdStrict(accessContext, { id: domain.id });
+    const currentBloco = await this.blocoFindByIdStrict(accessContext, {id: domain.id});
 
     // =========================================================
 
-    await accessContext.ensurePermission("bloco:update", { dto: domain }, domain.id, this.blocoRepository.createQueryBuilder(aliasBloco));
+    await accessContext.ensurePermission("bloco:update", {dto: domain}, domain.id, this.blocoRepository.createQueryBuilder(aliasBloco));
 
     // =========================================================
 
@@ -269,13 +270,13 @@ export class BlocoService {
 
     // =========================================================
 
-    return this.blocoFindByIdStrict(accessContext, { id: bloco.id });
+    return this.blocoFindByIdStrict(accessContext, {id: bloco.id});
   }
 
   async blocoDeleteOneById(accessContext: AccessContext, domain: IDomain.BlocoFindOneInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("bloco:delete", { dto: domain }, domain.id, this.blocoRepository.createQueryBuilder(aliasBloco));
+    await accessContext.ensurePermission("bloco:delete", {dto: domain}, domain.id, this.blocoRepository.createQueryBuilder(aliasBloco));
 
     // =========================================================
 
@@ -290,7 +291,7 @@ export class BlocoService {
         .set({
           dateDeleted: "NOW()",
         })
-        .where("id = :blocoId", { blocoId: bloco.id })
+        .where("id = :blocoId", {blocoId: bloco.id})
         .andWhere("dateDeleted IS NULL")
         .execute();
     }

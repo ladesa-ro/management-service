@@ -4,7 +4,7 @@ import {
   BaseApplicationError,
   BaseForbiddenError,
   BaseNotFoundError,
-  BaseValidationFailedError,
+  BaseValidationFailedError
 } from "@/shared/base-entity/application/errors";
 import { PrimitiveError } from "@/shared/primitives";
 
@@ -50,6 +50,10 @@ export class AppExceptionFilter {
     } else if (exception instanceof PrimitiveError) {
       standardResponseError.message = exception.message;
 
+      standardResponseError._ = {
+        primitiveError: exception,
+      };
+
       if (exception instanceof BaseValidationFailedError) {
         standardResponseError.errors = exception.errors;
       } else if (exception instanceof BaseForbiddenError) {
@@ -66,6 +70,5 @@ export class AppExceptionFilter {
     }
 
     response.status(standardResponseError.statusCode).json(standardResponseError);
-
   }
 }

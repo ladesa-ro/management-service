@@ -1,19 +1,31 @@
-import { BaseNotFoundError } from "@/shared";
+import { BaseForbiddenError, BaseNotFoundError } from "@/shared";
 
 export class BaseResourceNotFoundError extends BaseNotFoundError {
-  constructor(message: string = "Recurso não encontrado.") {
+  readonly inResource = true;
+
+  constructor(message: string = "Resource not found.") {
     super(message);
   }
 }
 
-export class BaseResourceForbiddenError extends BaseNotFoundError {
-  constructor(message: string = "Acesso negado.") {
+export class BaseResourceForbiddenError extends BaseForbiddenError {
+  constructor(message: string = "Forbidden.") {
     super(message);
   }
 }
 
 export class BaseResourceForbiddenReadError extends BaseResourceForbiddenError {
-  constructor(message: string = "Acesso negado para leitura.") {
-    super(message);
-  }
+  readonly action = "read";
+}
+
+export class BaseResourceForbiddenCreateError extends BaseResourceForbiddenError {
+  readonly action = "create";
+}
+
+export class BaseResourceForbiddenUpdateError extends BaseResourceForbiddenError {
+  readonly action = "update";
+}
+
+export class BaseResourceForbiddenDeleteError extends BaseResourceForbiddenError {
+  readonly action = "delete";
 }

@@ -1,12 +1,29 @@
 import { Module } from "@nestjs/common";
-import { EnderecoModule } from "@/features/endereco/endereco.module";
-import { CampusController } from "./api/campus.controller";
-import { CampusService } from "./domain/campus.service";
+import { CampusRepositoryProvider } from "@/features/campus/infrastructure";
+import {
+  CampusCreateRoute,
+  CampusDeleteOneByIdRoute,
+  CampusFindOneByIdRoute,
+  CampusListRoute,
+  CampusUpdateOneByIdRoute
+} from "@/features/campus/presentation";
+import { CampusApplicationService } from "./application/services/campus.application-service";
+import { CampusController } from "./presentation/rest/nestjs/campus.controller";
 
 @Module({
-  imports: [EnderecoModule],
+  imports: [],
   controllers: [CampusController],
-  providers: [CampusService],
-  exports: [CampusService],
+  providers: [
+    CampusApplicationService,
+    CampusRepositoryProvider,
+
+    CampusListRoute,
+    CampusFindOneByIdRoute,
+    CampusCreateRoute,
+    CampusUpdateOneByIdRoute,
+    CampusDeleteOneByIdRoute,
+  ],
+  exports: [CampusApplicationService],
 })
-export class CampusModule {}
+export class CampusModule {
+}

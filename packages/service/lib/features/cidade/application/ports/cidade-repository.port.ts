@@ -1,15 +1,11 @@
-import {
-  CidadeFindOneByIdInputDto,
-  CidadeFindOneByIdOutputDto,
-  CidadeListInputDto,
-  CidadeListOutputDto
-} from "../dtos";
-import { IBaseRepositoryFindOneByIdPort, IBaseRepositoryListPort } from "@/shared";
+import { Cidade } from "@/features/cidade";
+import { IFilterRuleGroup } from "@/shared";
+import { CidadeFindOneByIdOutputDto, CidadeListInputDto, CidadeListOutputDto } from "../dtos";
 
 export const CIDADE_REPOSITORY = Symbol("Ladesa.ManagementService.Cidade.Ports.Repository");
 
-type RepositoryList = IBaseRepositoryListPort<CidadeListInputDto, CidadeListOutputDto>;
-type RepositoryFindOneById = IBaseRepositoryFindOneByIdPort<CidadeFindOneByIdInputDto["id"], CidadeFindOneByIdOutputDto>;
+export interface ICidadeRepositoryPort {
+  list(allowedFilters: IFilterRuleGroup | true | false, inputDto: CidadeListInputDto, selection?: string[]): Promise<CidadeListOutputDto>;
 
-export interface ICidadeRepositoryPort extends RepositoryList, RepositoryFindOneById {
+  findOneById(id: Cidade["id"], selection?: string[]): Promise<CidadeFindOneByIdOutputDto | null>;
 }

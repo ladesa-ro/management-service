@@ -36,13 +36,15 @@ async function setup() {
   const prefix = configService.getRuntimePrefix();
 
   if (prefix) {
-    app.setGlobalPrefix(prefix, { exclude: ["health"] });
+    app.setGlobalPrefix(prefix, {exclude: ["health"]});
   }
 
   const config = new DocumentBuilder().setTitle("Exemplo DDD com Schemas").setDescription("API com Estado e Cidade").setVersion("1.0").build();
 
   const documentFactory = () => {
     const document = SwaggerModule.createDocument(app, config);
+
+    document.openapi = "3.1.0";
 
     document.components = {
       ...document.components,
@@ -51,6 +53,8 @@ async function setup() {
         ...getSchemas(),
       },
     };
+
+    document.externalDocs;
 
     return document;
   };

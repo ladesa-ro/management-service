@@ -30,7 +30,7 @@ export const registerSchema: registerSchema = (name: SchemaId | string, schema: 
 };
 
 export const getSchemaById = (id: string) => {
-  const schema = schemas.get(id);
+  const schema = schemas.get(id) || schemas.get(id.replace(/^#/, ""));
 
   if (!schema) {
     throw new Error(`Schema ${id} not registered`);
@@ -39,7 +39,17 @@ export const getSchemaById = (id: string) => {
   return schema;
 };
 
-export const getSchemas = () => Object.fromEntries(schemas);
+export const getSchemas = () => {
+  return Object.fromEntries(
+    Object.entries(Object.fromEntries(schemas)).map(([key, schema]) => [
+      key,
+      {
+        $anchor: schema.$id,
+        ...schema,
+      },
+    ]),
+  );
+};
 
 export const getSchemaId = <T extends TSchema>(factory: () => T) => {
   const {$id} = factory();
@@ -51,11 +61,5 @@ export const getSchemaId = <T extends TSchema>(factory: () => T) => {
 };
 
 export const makeReference = <T extends TSchema>(factory: () => T) => {
-  return Type.Ref(getSchemaId(factory));
-};
-
-export const makeOpenApiReference = <T extends TSchema>(factory: () => T) => {
-  return {
-    $ref: `#/components/schemas/${getSchemaId(factory)}`,
-  };
+  return Type.Ref(`#${getSchemaId(factory)}`);
 };

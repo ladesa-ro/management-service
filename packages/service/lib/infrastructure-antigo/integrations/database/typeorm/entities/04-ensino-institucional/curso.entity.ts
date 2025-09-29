@@ -3,8 +3,10 @@ import {
   OfertaFormacaoEntity
 } from "@/infrastructure-antigo/integrations/database/typeorm/entities/04-ensino-institucional/oferta-formacao.entity";
 import { type IDomain } from "@/shared-antigo/tsp/schema/typings";
+import {
+  CampusDatabaseEntity
+} from "../../../../../../features/campus/infrastructure/persistence/typeorm/entities/campus.database-entity";
 import { ImagemEntity } from "../00-00-base/imagem.entity";
-import { CampusEntity } from "../02-ambientes/campus.entity";
 import { TurmaEntity } from "../06-ensino-discente";
 
 @Entity("curso")
@@ -18,9 +20,9 @@ export class CursoEntity implements IDomain.Curso {
   @Column({name: "nome_abreviado", type: "text", nullable: false})
   nomeAbreviado!: string;
 
-  @ManyToOne(() => CampusEntity)
+  @ManyToOne(() => CampusDatabaseEntity)
   @JoinColumn({name: "id_campus_fk"})
-  campus!: Relation<CampusEntity>;
+  campus!: Relation<CampusDatabaseEntity>;
 
   @ManyToOne(() => OfertaFormacaoEntity)
   @JoinColumn({name: "id_oferta_formacao_fk"})

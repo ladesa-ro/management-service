@@ -20,12 +20,9 @@ export class EstadoRepositoryAdapter implements IEstadoRepositoryPort {
     this.estadoRepository = dataSource.getRepository(EstadoDatabaseEntity);
   }
 
-  public async findById(id: number, selection?: string[]): Promise<EstadoFindOneByIdOutputDto | null> {
+  public async findOneById(id: number, selection?: string[]): Promise<EstadoFindOneByIdOutputDto | null> {
     const query = this.estadoRepository.createQueryBuilder("estado");
-
-    const consideredSelection = selection && selection.length > 0 ? selection : ["id"];
-    EfficientLoadAndSelect(query, consideredSelection);
-
+    EfficientLoadAndSelect(query, selection);
     query.andWhere("estado.id = :id", {id});
     return query.getOne();
   }
@@ -33,7 +30,6 @@ export class EstadoRepositoryAdapter implements IEstadoRepositoryPort {
   public async list(allowedFilters: boolean | IFilterRuleGroup, listInputDto: EstadoListInputDto, selection?: string[]): Promise<EstadoListOutputDto> {
     const listSettings: ListSettings = EstadoListSettings;
     const baseRepositoryList = baseEntityListRepositoryProvider(listSettings);
-
     const query = this.estadoRepository.createQueryBuilder("estado");
     return baseRepositoryList(query, allowedFilters, listInputDto, selection);
   }

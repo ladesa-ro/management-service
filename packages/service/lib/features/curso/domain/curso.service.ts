@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
 import { ArquivoService } from "@/features/arquivo/domain/arquivo.service";
-import { CampusService } from "@/features/campus/domain/campus.service";
+import { CampusApplicationService } from "@/features/campus/application/services/campus.application-service";
 import { ImagemService } from "@/features/imagem/domain/imagem.service";
 import { OfertaFormacaoService } from "@/features/oferta-formacao/domain/oferta-formacao.service";
 import { paginateConfig } from "@/infrastructure-antigo/fixtures";
@@ -19,12 +19,13 @@ const aliasCurso = "curso";
 export class CursoService {
   constructor(
     private databaseContext: DatabaseContextService,
-    private campusService: CampusService,
+    private campusService: CampusApplicationService,
     private ofertaFormacaoService: OfertaFormacaoService,
     private imagemService: ImagemService,
     private arquivoService: ArquivoService,
     private searchService: SearchService,
-  ) {}
+  ) {
+  }
 
   get cursoRepository() {
     return this.databaseContext.cursoRepository;
@@ -116,7 +117,7 @@ export class CursoService {
 
     // =========================================================
 
-    qb.andWhere(`${aliasCurso}.id = :id`, { id: domain.id });
+    qb.andWhere(`${aliasCurso}.id = :id`, {id: domain.id});
 
     // =========================================================
 
@@ -153,7 +154,7 @@ export class CursoService {
 
     // =========================================================
 
-    qb.andWhere(`${aliasCurso}.id = :id`, { id });
+    qb.andWhere(`${aliasCurso}.id = :id`, {id});
 
     // =========================================================
 
@@ -182,7 +183,7 @@ export class CursoService {
   async cursoCreate(accessContext: AccessContext, domain: IDomain.CursoCreateInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("curso:create", { dto: domain });
+    await accessContext.ensurePermission("curso:create", {dto: domain});
 
     // =========================================================
 
@@ -220,17 +221,17 @@ export class CursoService {
 
     // =========================================================
 
-    return this.cursoFindByIdStrict(accessContext, { id: curso.id });
+    return this.cursoFindByIdStrict(accessContext, {id: curso.id});
   }
 
   async cursoUpdate(accessContext: AccessContext, domain: IDomain.CursoFindOneInput & IDomain.CursoUpdateInput) {
     // =========================================================
 
-    const currentCurso = await this.cursoFindByIdStrict(accessContext, { id: domain.id });
+    const currentCurso = await this.cursoFindByIdStrict(accessContext, {id: domain.id});
 
     // =========================================================
 
-    await accessContext.ensurePermission("curso:update", { dto: domain }, domain.id, this.cursoRepository.createQueryBuilder(aliasCurso));
+    await accessContext.ensurePermission("curso:update", {dto: domain}, domain.id, this.cursoRepository.createQueryBuilder(aliasCurso));
 
     const dtoCurso = pick(domain, ["nome", "nomeAbreviado"]);
 
@@ -272,17 +273,17 @@ export class CursoService {
 
     // =========================================================
 
-    return this.cursoFindByIdStrict(accessContext, { id: curso.id });
+    return this.cursoFindByIdStrict(accessContext, {id: curso.id});
   }
 
   async cursoGetImagemCapa(accessContext: AccessContext | null, id: string) {
-    const curso = await this.cursoFindByIdStrict(accessContext, { id: id });
+    const curso = await this.cursoFindByIdStrict(accessContext, {id: id});
 
     if (curso.imagemCapa) {
       const [versao] = curso.imagemCapa.versoes;
 
       if (versao) {
-        const { arquivo } = versao;
+        const {arquivo} = versao;
         return this.arquivoService.getStreamableFile(null, arquivo.id, null);
       }
     }
@@ -311,7 +312,7 @@ export class CursoService {
 
     // =========================================================
 
-    const { imagem } = await this.imagemService.saveCursoCapa(file);
+    const {imagem} = await this.imagemService.saveCursoCapa(file);
 
     const curso = this.cursoRepository.merge(this.cursoRepository.create(), {
       id: currentCurso.id,
@@ -333,7 +334,7 @@ export class CursoService {
   async cursoDeleteOneById(accessContext: AccessContext, domain: IDomain.CursoFindOneInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("curso:delete", { dto: domain }, domain.id, this.cursoRepository.createQueryBuilder(aliasCurso));
+    await accessContext.ensurePermission("curso:delete", {dto: domain}, domain.id, this.cursoRepository.createQueryBuilder(aliasCurso));
 
     // =========================================================
 
@@ -348,7 +349,7 @@ export class CursoService {
         .set({
           dateDeleted: "NOW()",
         })
-        .where("id = :cursoId", { cursoId: curso.id })
+        .where("id = :cursoId", {cursoId: curso.id})
         .andWhere("dateDeleted IS NULL")
         .execute();
     }

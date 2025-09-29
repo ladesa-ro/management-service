@@ -1,8 +1,8 @@
+import { CidadeFindOneByIdOutputSchema } from "@/features/cidade/application/schemas";
+import { BaseQuery, getAllowedSelectionFromSchema } from "@/shared";
 import { CidadeFindOneByIdInputDto, CidadeFindOneByIdOutputDto } from "../dtos/cidade-find-one-by-id.dto";
 import { CidadeForbiddenReadError, CidadeNaoEncontradoError } from "../errors/cidade.errors";
 import type { ICidadeAuthorizationPort, ICidadeRepositoryPort } from "../ports";
-import { BaseQuery, getAllowedSelectionFromSchema } from "@/shared";
-import { CidadeFindOneByIdOutputSchema } from "@/features/cidade/application/schemas";
 
 export class CidadeFindOneByIdQuery extends BaseQuery {
   constructor(private readonly cidadeRepository: ICidadeRepositoryPort) {
@@ -12,7 +12,7 @@ export class CidadeFindOneByIdQuery extends BaseQuery {
   public async execute(authorization: ICidadeAuthorizationPort, inputDto: CidadeFindOneByIdInputDto): Promise<CidadeFindOneByIdOutputDto> {
     const selection = getAllowedSelectionFromSchema(CidadeFindOneByIdOutputSchema, inputDto.selection);
 
-    const cidade = await this.cidadeRepository.findById(inputDto.id, selection);
+    const cidade = await this.cidadeRepository.findOneById(inputDto.id, selection);
 
     if (!cidade) {
       throw new CidadeNaoEncontradoError(`Cidade não encontrada (id = ${inputDto.id}).`);

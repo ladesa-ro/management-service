@@ -1,6 +1,8 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { CampusEntity } from "@/infrastructure-antigo/integrations/database/typeorm/entities/02-ambientes";
-import { OfertaFormacaoEntity } from "@/infrastructure-antigo/integrations/database/typeorm/entities/04-ensino-institucional/oferta-formacao.entity";
+import { CampusDatabaseEntity } from "@/infrastructure-antigo/integrations/database/typeorm/entities/02-ambientes";
+import {
+  OfertaFormacaoEntity
+} from "@/infrastructure-antigo/integrations/database/typeorm/entities/04-ensino-institucional/oferta-formacao.entity";
 import { type IDomain } from "@/shared-antigo/tsp/schema/typings";
 
 @Entity("grade_horario_oferta_formacao")
@@ -8,20 +10,20 @@ export class GradeHorarioOfertaFormacaoEntity implements IDomain.GradeHorarioOfe
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 
-  @ManyToOne(() => CampusEntity)
-  @JoinColumn({ name: "id_campus_fk" })
+  @ManyToOne(() => CampusDatabaseEntity)
+  @JoinColumn({name: "id_campus_fk"})
   campus!: IDomain.Campus;
 
   @ManyToOne(() => OfertaFormacaoEntity)
-  @JoinColumn({ name: "id_oferta_formacao_fk" })
+  @JoinColumn({name: "id_oferta_formacao_fk"})
   ofertaFormacao!: IDomain.OfertaFormacao;
 
-  @Column({ name: "date_created", type: "timestamptz", nullable: false })
+  @Column({name: "date_created", type: "timestamptz", nullable: false})
   dateCreated!: Date;
 
-  @Column({ name: "date_updated", type: "timestamptz", nullable: false })
+  @Column({name: "date_updated", type: "timestamptz", nullable: false})
   dateUpdated!: Date;
 
-  @Column({ name: "date_deleted", type: "timestamptz", nullable: true })
+  @Column({name: "date_deleted", type: "timestamptz", nullable: true})
   dateDeleted!: null | Date;
 }

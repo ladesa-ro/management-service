@@ -1,5 +1,5 @@
 import { applyDecorators } from "@nestjs/common";
-import { ApiParam, ApiQuery } from "@nestjs/swagger";
+import { ApiBody, ApiParam, ApiQuery } from "@nestjs/swagger";
 import { TObject, Type, TypeGuard } from "@sinclair/typebox";
 
 export const ApiRequestSchema = (requestRepresentationSchema: TObject) => {
@@ -23,16 +23,26 @@ export const ApiRequestSchema = (requestRepresentationSchema: TObject) => {
   const params = Type.Index(requestRepresentationSchema, ["params"]);
 
   if (TypeGuard.IsObject(params)) {
-    for (const [key, schema] of Object.entries(params)) {
+    for (const [key, schema] of Object.entries(params.properties)) {
       decorators.push(
         ApiParam({
           name: key,
           schema: schema,
-          required: schema.required ?? false,
+          required: params.required?.includes(key) ?? false,
           description: schema.description ?? "Sem documentação.",
         }),
       );
     }
+  }
+
+  const body = Type.Index(requestRepresentationSchema, ["body"]);
+
+  if (!TypeGuard.IsNever(body)) {
+    decorators.push(
+      ApiBody({
+        schema: body,
+      }),
+    );
   }
 
   return applyDecorators(...decorators);

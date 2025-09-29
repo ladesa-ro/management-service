@@ -17,11 +17,13 @@ export const ListInputSchema = Type.Object(
       maximum: 100,
     }),
 
-    search: Type.String({
-      description: "Termo textual da busca.",
-      default: "",
-      minLength: 0,
-    }),
+    search: Type.Optional(
+      Type.String({
+        description: "Termo textual da busca.",
+        default: "",
+        minLength: 0,
+      }),
+    ),
 
     sortBy: Type.Optional(SortByRulesSchema),
     filters: Type.Optional(FilterRuleSchema),

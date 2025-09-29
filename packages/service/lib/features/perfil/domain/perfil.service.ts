@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
 import { v4 as uuid } from "uuid";
-import { CampusService } from "@/features/campus/domain/campus.service";
+import { CampusApplicationService } from "@/features/campus/application/services/campus.application-service";
 import { UsuarioService } from "@/features/usuario/domain/usuario.service";
 import type { AccessContext } from "@/infrastructure-antigo/access-context";
 import { paginateConfig } from "@/infrastructure-antigo/fixtures";
@@ -20,10 +20,11 @@ const aliasVinculo = "vinculo";
 export class PerfilService {
   constructor(
     private databaseContext: DatabaseContextService,
-    private campusService: CampusService,
+    private campusService: CampusApplicationService,
     private usuarioService: UsuarioService,
     private searchService: SearchService,
-  ) {}
+  ) {
+  }
 
   get usuarioRepository() {
     return this.databaseContext.usuarioRepository;
@@ -36,15 +37,15 @@ export class PerfilService {
   async perfilEnsinoById(accessContext: AccessContext, domain: IDomain.PerfilFindOneInput, selection?: string[] | boolean): Promise<IDomain.UsuarioEnsinoOutput | null> {
     const perfil = await this.perfilFindByIdStrict(accessContext, domain, selection);
     const usuario = perfil.usuario;
-    return this.usuarioService.usuarioEnsinoById(accessContext, { id: usuario.id }, selection);
+    return this.usuarioService.usuarioEnsinoById(accessContext, {id: usuario.id}, selection);
   }
 
   async perfilGetAllActive(accessContext: AccessContext | null, usuarioId: UsuarioEntity["id"]) {
     const qb = this.vinculoRepository.createQueryBuilder("vinculo");
 
     qb.innerJoin("vinculo.usuario", "usuario");
-    qb.where("usuario.id = :usuarioId", { usuarioId });
-    qb.andWhere("vinculo.ativo = :ativo", { ativo: true });
+    qb.where("usuario.id = :usuarioId", {usuarioId});
+    qb.andWhere("vinculo.ativo = :ativo", {ativo: true});
 
     if (accessContext) {
       await accessContext.applyFilter("vinculo:find", qb, aliasVinculo, null);
@@ -118,7 +119,7 @@ export class PerfilService {
 
     // =========================================================
 
-    qb.andWhere(`${aliasVinculo}.id = :id`, { id: domain.id });
+    qb.andWhere(`${aliasVinculo}.id = :id`, {id: domain.id});
 
     // =========================================================
 
@@ -154,8 +155,8 @@ export class PerfilService {
       .createQueryBuilder("vinculo")
       .innerJoin("vinculo.campus", "campus")
       .innerJoin("vinculo.usuario", "usuario")
-      .andWhere("campus.id = :campusId", { campusId: campus.id })
-      .andWhere("usuario.id = :usuarioId", { usuarioId: usuario.id })
+      .andWhere("campus.id = :campusId", {campusId: campus.id})
+      .andWhere("usuario.id = :usuarioId", {usuarioId: usuario.id})
       .select(["vinculo", "campus", "usuario"])
       .getMany();
 
@@ -203,7 +204,7 @@ export class PerfilService {
       .set({
         ativo: false,
       })
-      .where("ativo = :isActive", { isActive: true })
+      .where("ativo = :isActive", {isActive: true})
       .andWhereInIds(vinculosParaDesativar.map((vinculo) => vinculo.id))
       .execute();
 

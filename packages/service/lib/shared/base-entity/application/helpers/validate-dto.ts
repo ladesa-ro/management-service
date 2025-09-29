@@ -1,16 +1,17 @@
-import { TSchema } from "@sinclair/typebox";
+import { Static, TSchema } from "@sinclair/typebox";
 import type { ValidateFunction } from "ajv/lib/types";
 import { lazyAsync } from "@/infrastructure-antigo/utils/lazy";
 import { BaseApplicationError, BaseValidationFailedError } from "@/shared";
 
 const getAjv = lazyAsync(async () => {
-  const { Ajv } = await import("ajv");
+  const {default: Ajv} = await import("ajv");
 
-  let ajv = new Ajv({ useDefaults: true, coerceTypes: "array" });
+  let ajv = new Ajv({useDefaults: true, coerceTypes: "array"});
 
-  const { default: addFormats } = (await import("ajv-formats")) as any;
+  const {default: addFormats} = (await import("ajv-formats")) as any;
 
   ajv = addFormats(ajv, ["date-time", "time", "date", "email", "hostname", "ipv4", "ipv6", "uri", "uri-reference", "uuid", "uri-template", "json-pointer", "relative-json-pointer", "regex"]);
+  ajv.addKeyword("$anchor");
 
   return ajv;
 });
@@ -33,7 +34,7 @@ const compileOrGetValidator = async (schema: TSchema): Promise<ValidateFunction<
   return compiledValidator;
 };
 
-export const validateDto = async (schema: TSchema, dto: unknown) => {
+export const validateDto = async <Schema extends TSchema>(schema: Schema, dto: unknown): Promise<Static<Schema>> => {
   const validator = await compileOrGetValidator(schema);
 
   const dtoClone = structuredClone(dto);
@@ -42,6 +43,7 @@ export const validateDto = async (schema: TSchema, dto: unknown) => {
   if (validator.errors) {
     throw new BaseValidationFailedError(validator.errors);
   }
+
   if (!result) throw new BaseApplicationError("Erro desconhecido");
 
   return dtoClone;

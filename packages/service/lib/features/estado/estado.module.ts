@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { EstadoApplicationService } from "@/features/estado/application/services/estado-application-service";
+import { EstadoApplicationService } from "@/features/estado/application/services/estado.application-service";
 import { EstadoRepositoryProvider } from "@/features/estado/infrastructure/providers/estado.repository.provider";
 import { EstadoListRoute } from "@/features/estado/presentation";
 import { EstadoController } from "@/features/estado/presentation/rest/nestjs/estado.controller";

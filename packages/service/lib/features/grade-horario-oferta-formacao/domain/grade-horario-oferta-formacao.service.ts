@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
-import { CampusService } from "@/features/campus/domain/campus.service";
+import { CampusApplicationService } from "@/features/campus/application/services/campus.application-service";
 import { OfertaFormacaoService } from "@/features/oferta-formacao/domain/oferta-formacao.service";
 import type { AccessContext } from "@/infrastructure-antigo/access-context";
 import { paginateConfig } from "@/infrastructure-antigo/fixtures";
@@ -20,10 +20,11 @@ const aliasGradeHorarioOfertaFormacao = "grade_horario_oferta_formacao";
 export class GradeHorarioOfertaFormacaoService {
   constructor(
     private databaseContext: DatabaseContextService,
-    private campusService: CampusService,
+    private campusService: CampusApplicationService,
     private ofertaFormacaoService: OfertaFormacaoService,
     private searchService: SearchService,
-  ) {}
+  ) {
+  }
 
   get gradeHorarioOfertaFormacaoRepository() {
     return this.databaseContext.gradeHorarioOfertaFormacaoRepository;
@@ -46,7 +47,7 @@ export class GradeHorarioOfertaFormacaoService {
 
     const paginated = await this.searchService.search(
       qb,
-      { ...domain },
+      {...domain},
       {
         ...paginateConfig,
         select: [
@@ -104,7 +105,7 @@ export class GradeHorarioOfertaFormacaoService {
 
     // =========================================================
 
-    qb.andWhere(`${aliasGradeHorarioOfertaFormacao}.id = :id`, { id: domain.id });
+    qb.andWhere(`${aliasGradeHorarioOfertaFormacao}.id = :id`, {id: domain.id});
 
     // =========================================================
 
@@ -145,7 +146,7 @@ export class GradeHorarioOfertaFormacaoService {
 
     // =========================================================
 
-    qb.andWhere(`${aliasGradeHorarioOfertaFormacao}.id = :id`, { id });
+    qb.andWhere(`${aliasGradeHorarioOfertaFormacao}.id = :id`, {id});
 
     // =========================================================
 
@@ -174,7 +175,7 @@ export class GradeHorarioOfertaFormacaoService {
   async gradeHorarioOfertaFormacaoCreate(accessContext: AccessContext, domain: IDomain.GradeHorarioOfertaFormacaoCreateInput) {
     // =========================================================
 
-    await accessContext.ensurePermission("grade_horario_oferta_formacao:create", { dto: domain });
+    await accessContext.ensurePermission("grade_horario_oferta_formacao:create", {dto: domain});
 
     // =========================================================
 
@@ -242,7 +243,7 @@ export class GradeHorarioOfertaFormacaoService {
 
     await accessContext.ensurePermission(
       "grade_horario_oferta_formacao:update",
-      { dto: domain },
+      {dto: domain},
       domain.id,
       this.gradeHorarioOfertaFormacaoRepository.createQueryBuilder(aliasGradeHorarioOfertaFormacao),
     );
@@ -295,7 +296,7 @@ export class GradeHorarioOfertaFormacaoService {
 
     await accessContext.ensurePermission(
       "grade_horario_oferta_formacao:delete",
-      { dto: domain },
+      {dto: domain},
       domain.id,
       this.gradeHorarioOfertaFormacaoRepository.createQueryBuilder(aliasGradeHorarioOfertaFormacao),
     );

@@ -1,1 +1,1 @@
-export * from "./estado-application-service";
+export * from "./estado.application-service";

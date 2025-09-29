@@ -20,12 +20,9 @@ export class CidadeRepositoryAdapter implements ICidadeRepositoryPort {
     this.cidadeRepository = dataSource.getRepository(CidadeDatabaseEntity);
   }
 
-  public async findById(id: number, selection?: string[]): Promise<CidadeFindOneByIdOutputDto | null> {
+  public async findOneById(id: number, selection?: string[]): Promise<CidadeFindOneByIdOutputDto | null> {
     const query = this.cidadeRepository.createQueryBuilder("cidade");
-
-    const consideredSelection = selection && selection.length > 0 ? selection : ["id"];
-    EfficientLoadAndSelect(query, consideredSelection);
-
+    EfficientLoadAndSelect(query, selection);
     query.andWhere("cidade.id = :id", {id});
     return query.getOne();
   }
