@@ -27,6 +27,7 @@ USER root
 # Configuração do ambiente Bun
 ENV BUN_INSTALL="/opt/bun"
 ENV BUN_INSTALL_CACHE_DIR="/tmp/bun-cache"
+ENV TMPDIR=/tmp/bun-tmp
 ENV PATH="${BUN_INSTALL}/bin:$PATH"
 
 # Instalação do Bun na versão específica para garantir consistência
@@ -34,6 +35,7 @@ RUN curl -fsSL https://bun.sh/install | bash -s "bun-v1.2.20"
 
 # Cria o diretório de cache em /tmp e garante permissões
 RUN --mount=type=cache,id=bun,target=${BUN_INSTALL_CACHE_DIR},uid=1000,gid=1000 mkdir -p "${BUN_INSTALL_CACHE_DIR}" && chmod -R 777 "${BUN_INSTALL_CACHE_DIR}"
+RUN mkdir -p "${TMPDIR}" && chmod -R 777 "${TMPDIR}"
 
 # Retorna ao usuário não privilegiado após instalação
 USER 1000:1000
@@ -43,21 +45,6 @@ USER 1000:1000
 # ==========================================
 
 FROM os-runtime AS os-development
-
-USER root
-
-RUN apt-get update && \
-    apt-get install -y git vim openjdk-21-jdk && \
-    rm -rf /var/lib/apt/lists/*
-
-# Define as variáveis de ambiente para o Java
-ENV JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
-ENV PATH="${JAVA_HOME}/bin:${PATH}"
-
-RUN curl -fsSL https://deb.nodesource.com/setup_24.x | bash -
-
-RUN apt-get install -y nodejs \
-    && rm -rf /var/lib/apt/lists/*
 
 USER 1000:1000
 WORKDIR "/ladesa/management-service"
@@ -90,7 +77,7 @@ USER 1000:1000
 COPY --chown=1000:1000 . .
 
 # Instalação de dependências com cache eficiente
-RUN --mount=type=cache,id=bun,target=${BUN_INSTALL_CACHE_DIR},uid=1000,gid=1000 \
+RUN --mount=type=cache,id=bun,uid=1000,gid=1000,target=${BUN_INSTALL_CACHE_DIR} \
     bun install --frozen-lockfile --production
 
 # ==========================================
@@ -99,7 +86,7 @@ RUN --mount=type=cache,id=bun,target=${BUN_INSTALL_CACHE_DIR},uid=1000,gid=1000 
 
 FROM source-with-production-dependencies AS source-with-dev-dependencies
 USER 1000:1000
-RUN --mount=type=cache,id=bun,target=${BUN_INSTALL_CACHE_DIR},uid=1000,gid=1000 \
+RUN --mount=type=cache,id=bun,uid=1000,gid=1000,target=${BUN_INSTALL_CACHE_DIR} \
     bun install --frozen-lockfile
 
 # ==========================================
