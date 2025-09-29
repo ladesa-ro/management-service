@@ -112,7 +112,6 @@ jobs:
           imageName: ${{ env.REGISTRY }}/${{ env.IMAGE_BASENAME }}/management-service/devcontainer-gha
           runCmd: sleep 1
           push: always
-          platform: linux/amd64
           cacheFrom: ${{ env.REGISTRY }}/${{ env.IMAGE_BASENAME }}/management-service/devcontainer-gha:cache
           cacheTo: ${{ env.REGISTRY }}/${{ env.IMAGE_BASENAME }}/management-service/devcontainer-gha:cache
 
