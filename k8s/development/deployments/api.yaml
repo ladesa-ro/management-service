@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ladesa-ro-api
+  labels:
+    app: ladesa-ro-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ladesa-ro-api
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: ladesa-ro-api
+    spec:
+      imagePullSecrets:
+        - name: ladesa-registry-pull-secret
+      containers:
+        - name: management-service
+          image: ghcr.io/ladesa-ro/management-service/management-service:development
+          imagePullPolicy: Always
+          ports:
+            - name: web-port
+              containerPort: 3000
+          resources:
+            limits:
+              memory: "2Gi"
+              cpu: "2"
+            requests:
+              cpu: "50m"
+              memory: "250Mi"
+          envFrom:
+            - secretRef:
+                name: ladesa-ro-api-config
+          volumeMounts:
+            - name: uploaded-data
+              mountPath: /var/lib/ladesa-ro-api/uploaded
+          securityContext:
+            runAsNonRoot: false
+            readOnlyRootFilesystem: false
+          readinessProbe:
+            httpGet:
+              path: /health/
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health/
+              port: 3000
+            initialDelaySeconds: 10
+            periodSeconds: 15
+          startupProbe:
+            httpGet:
+              path: /health/
+              port: 3000
+            failureThreshold: 30
+            periodSeconds: 10
+      volumes:
+        - name: uploaded-data
+          persistentVolumeClaim:
+            claimName: ladesa-ro-api-uploaded-pvc
