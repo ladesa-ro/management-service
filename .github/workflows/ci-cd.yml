@@ -111,11 +111,10 @@ jobs:
         with:
           configFile: .devcontainer/ci-cd/devcontainer.json
           imageName: ${{ env.REGISTRY }}/${{ env.IMAGE_BASENAME }}/management-service/devcontainer-gha
-          imageTag: development
+          runCmd: sleep 1
+          push: always
           cacheFrom: ${{ env.REGISTRY }}/${{ env.IMAGE_BASENAME }}/management-service/devcontainer-gha:cache
           cacheTo: ${{ env.REGISTRY }}/${{ env.IMAGE_BASENAME }}/management-service/devcontainer-gha:cache
-          push: always
-          runCmd: sleep 1
 
   service-client-ci-npm:
     name: "CI: Construção e Publicação do Client NPM"
