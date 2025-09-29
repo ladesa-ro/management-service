@@ -20,8 +20,6 @@ spec:
       labels:
         app: ladesa-ro-api
     spec:
-      imagePullSecrets:
-        - name: ladesa-registry-pull-secret
       containers:
         - name: management-service
           image: ghcr.io/ladesa-ro/management-service/management-service:development
