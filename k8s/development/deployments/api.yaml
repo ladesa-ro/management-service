@@ -4,6 +4,7 @@ metadata:
   name: ladesa-ro-api
   labels:
     app: ladesa-ro-api
+  namespace: ladesa-ro-development
 spec:
   replicas: 1
   selector:

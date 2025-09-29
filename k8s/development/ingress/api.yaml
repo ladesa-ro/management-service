@@ -4,6 +4,7 @@ metadata:
   name: ladesa-ro-api-ingress
   annotations:
     cert-manager.io/cluster-issuer: ladesa-ro-issuer-production
+  namespace: ladesa-ro-development
 spec:
   tls:
     - hosts:
