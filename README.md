@@ -163,3 +163,5 @@ O projeto conta com um [arquivo make](Makefile) que comporta scripts destinados 
 <!-- Badges / Integrations / NPM / Latest -->
 
 [npm-package-latest-version-src]: https://img.shields.io/badge/dynamic/json?url=https://registry.npmjs.com/@ladesa-ro/management-service-client&query=$[%22dist-tags%22].latest&prefix=v&style=flat&logo=npm&logoColor=white&label=@latest&labelColor=%23CB3837&style=flat&colorA=18181B&colorB=ffffff
+
+
