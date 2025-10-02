@@ -2,7 +2,7 @@
 # IMAGEM BASE DO SISTEMA OPERACIONAL
 # ==========================================
 
-FROM debian:13-slim AS os-core
+FROM docker.io/debian:13-slim AS os-core
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -59,7 +59,7 @@ USER root
 
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
-    apt-get update -y && apt-get install -y zsh && \
+    apt-get update -y && apt-get install -y git vim zsh && \
     rm -rf /var/lib/apt/lists/*
 
 USER 1000:1000
