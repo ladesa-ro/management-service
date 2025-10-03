@@ -46,7 +46,7 @@
     "rimraf": "catalog:infrastructure/utils",
     "rxjs": "catalog:infrastructure/utils",
     "sharp": "catalog:infrastructure/utils",
-    "ts-morph": "^26.0.0",
+    "ts-morph": "^27.0.0",
     "tslib": "catalog:dev",
     "typeorm": "catalog:infrastructure/ingrations/db-client-typeorm",
     "uuid": "catalog:infrastructure/utils",
