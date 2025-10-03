@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { BadGatewayException, Injectable, NotFoundException } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
 import { v4 as uuid } from "uuid";
 import { CampusService } from "@/features/campus/domain/campus.service";
@@ -33,11 +33,9 @@ export class PerfilService {
     return this.databaseContext.perfilRepository;
   }
 
-  async perfilEnsinoById(accessContext: AccessContext, domain: IDomain.PerfilFindOneInput, selection?: string[] | boolean): Promise<IDomain.UsuarioEnsinoOutput | null> {
-    const perfil = await this.perfilFindByIdStrict(accessContext, domain, selection);
-    const usuario = perfil.usuario;
-    return this.usuarioService.usuarioEnsinoById(accessContext, { id: usuario.id }, selection);
-  }
+
+
+
 
   async perfilGetAllActive(accessContext: AccessContext | null, usuarioId: UsuarioEntity["id"]) {
     const qb = this.vinculoRepository.createQueryBuilder("vinculo");
@@ -82,6 +80,7 @@ export class PerfilService {
           "id",
           "ativo",
           "cargo",
+          "usuario.nome",
           "campus.id",
           "campus.nomeFantasia",
           "campus.razaoSocial",
@@ -107,32 +106,44 @@ export class PerfilService {
     return paginated;
   }
 
-  async perfilFindById(accessContext: AccessContext, domain: IDomain.PerfilFindOneInput, selection?: string[] | boolean): Promise<IDomain.PerfilFindOneOutput | null> {
-    // =========================================================
+  // =========================================================
+  async perfilFindById(
+  accessContext: AccessContext,
+  domain: IDomain.PerfilFindOneInput & { pathId?: string },
+  selection?: string[] | boolean
+): Promise<IDomain.PerfilFindOneOutput | null> {
 
-    const qb = this.vinculoRepository.createQueryBuilder(aliasVinculo);
+  const id = domain.id && domain.id !== "{id}" ? domain.id : domain.pathId;
 
-    // =========================================================
+  const qb = this.vinculoRepository.createQueryBuilder(aliasVinculo);
+  await accessContext.applyFilter("vinculo:find", qb, aliasVinculo, null);
+  qb.andWhere(`${aliasVinculo}.id = :id`, { id });
 
-    await accessContext.applyFilter("vinculo:find", qb, aliasVinculo, null);
+  const paginated = await this.searchService.search(
+    qb,
+    { page: 1, limit: 1 } as any,
+    {
+      ...paginateConfig,
+      relations: { campus: true, usuario: true },
+      select: [
+        "id", "ativo", "cargo",
+        "usuario.nome", "usuario.id", "usuario.matriculaSiape", "usuario.email",
+        "campus.id", "campus.nomeFantasia", "campus.razaoSocial", "campus.apelido", "campus.cnpj",
+        "dateCreated",
+      ],
+      searchableColumns: ["cargo"],
+      filterableColumns: {
+        ativo: [FilterOperator.EQ],
+        cargo: [FilterOperator.EQ],
+        "campus.id": [FilterOperator.EQ],
+        "usuario.id": [FilterOperator.EQ],
+      },
+    }
+  );
 
-    // =========================================================
-
-    qb.andWhere(`${aliasVinculo}.id = :id`, { id: domain.id });
-
-    // =========================================================
-
-    qb.select([]);
-    await QbEfficientLoad("PerfilFindOneOutput", qb, aliasVinculo, selection);
-
-    // =========================================================
-
-    const vinculo = await qb.getOne();
-
-    // =========================================================
-
-    return vinculo;
-  }
+  const item = Array.isArray(paginated) ? paginated[0] : paginated?.data?.[0] ?? null;
+  return (item as IDomain.PerfilFindOneOutput) ?? null;
+}
 
   async perfilFindByIdStrict(accessContext: AccessContext, domain: IDomain.PerfilFindOneInput, selection?: string[] | boolean) {
     const vinculo = await this.perfilFindById(accessContext, domain, selection);

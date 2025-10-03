@@ -14,7 +14,7 @@ export class PerfilController {
   @Get("/:id/ensino")
   async perfilEnsinoById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("PerfilEnsinoById") dto: IAppRequest<"PerfilEnsinoById">) {
     const domain: IDomain.PerfilFindOneInput = requestRepresentationMergeToDomain(dto);
-    return this.vinculoService.perfilEnsinoById(accessContext, domain);
+    return this.vinculoService.perfilFindById(accessContext, domain);
   }
 
   @Get("/")
