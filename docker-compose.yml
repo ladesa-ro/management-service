@@ -1,0 +1,17 @@
+x-podman:
+  in_pod: false
+
+services:
+  ladesa-management-service:
+    build:
+      context: .
+      target: app-development
+    user: happy
+    command:
+      - sleep
+      - infinity
+    volumes:
+      - .:/management-service:z
+    userns_mode: keep-id:uid=1000,gid=1000
+    ports:
+      - "3701:3701"

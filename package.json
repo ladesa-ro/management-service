@@ -1,0 +1,21 @@
+{
+  "name": "@ladesa-ro/management-service",
+  "type": "module",
+  "module": "app/server.ts",
+  "private": true,
+  "scripts": {
+    "code:fix": "bunx biome check --write .",
+    "code:check": "bunx biome check ."
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.2.5",
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "inversify": "^7.10.2",
+    "typebox": "^1.0.26"
+  }
+}
