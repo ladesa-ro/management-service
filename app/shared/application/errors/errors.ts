@@ -6,8 +6,9 @@ export enum ApplicationErrorCode {
   VALIDATION_FAILED = "VALIDATION_FAILED",
 }
 
-export class BaseApplicationError extends PrimitiveError {
+export abstract class BaseApplicationError extends PrimitiveError {
   readonly inApplication = true;
+  abstract readonly applicationCode: ApplicationErrorCode;
 }
 
 export class BaseNotFoundError extends BaseApplicationError {

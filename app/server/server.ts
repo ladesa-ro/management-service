@@ -1,6 +1,6 @@
 import express from "express";
-import { Container } from "inversify";
-import { BaseApplicationError, ROUTE_REGISTRAR, type RouteRegistrar } from "@/shared";
+import type { Container } from "inversify";
+import { ApplicationErrorCode, BaseApplicationError, ROUTE_REGISTRAR, type RouteRegistrar } from "@/shared";
 
 export class Server {
   constructor(private readonly container: Container) {}
@@ -9,9 +9,7 @@ export class Server {
     const app = express();
 
     app.use((req, _res, next) => {
-      const requestContainer = new Container({ parent: this.container });
-      requestContainer.bind("HttpRequest").toConstantValue(req);
-      req.container = requestContainer;
+      req.container = this.container;
       next();
     });
 
@@ -23,11 +21,32 @@ export class Server {
 
     app.use((err: any, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
       if (err instanceof BaseApplicationError) {
-        res.status(500).json(err);
+        let status = 400;
+
+        switch (err.applicationCode) {
+          case ApplicationErrorCode.FORBIDDEN: {
+            status = 401;
+            break;
+          }
+
+          case ApplicationErrorCode.NOT_FOUND: {
+            status = 404;
+            break;
+          }
+
+          case ApplicationErrorCode.VALIDATION_FAILED: {
+            status = 429;
+            break;
+          }
+        }
+
+        res.status(status).json(err);
+        return;
       }
 
-      console.error(err); // log do erro
+      console.error(err);
       res.status(err.status || 500).json({
+        primitive: false,
         message: err.message || "Internal Server Error",
         stack: process.env.NODE_ENV === "development" ? err.stack : undefined,
       });
