@@ -1,5 +1,8 @@
-import { type EstadoListInputDto, EstadoListInputDtoSchema, type EstadoListRequestDto, EstadoListSettings, estadoAuthorizationFromRequest } from "@/features";
+import type { Type } from "typebox";
+import { type EstadoListInputDto, EstadoListInputDtoSchema, EstadoListSettings, estadoAuthorizationFromRequest } from "@/features";
 import { getListRequestSchema, type RequestRepresentationDto, requestListDtoToInputDto, validateDto } from "@/shared";
+
+export type EstadoListRequestDto = Type.Static<typeof EstadoListRoute.requestSchema>;
 
 export class EstadoListRoute {
   static requestSchema = getListRequestSchema(EstadoListInputDtoSchema, EstadoListSettings);
@@ -17,10 +20,10 @@ export class EstadoListRoute {
   constructor(private estadoApplicationService: EstadoApplicationService) {}
 
   async handler(incomingRequest: RequestRepresentationDto) {
-    const authorizationPort = estadoAuthorizationFromRequest();
-
     const request = await validateDto(EstadoListRoute.requestSchema, incomingRequest);
     const dto = EstadoListRoute.requestToDto(request);
+
+    const authorizationPort = estadoAuthorizationFromRequest(request);
 
     return this.estadoApplicationService.estadoList(authorizationPort, dto);
   }

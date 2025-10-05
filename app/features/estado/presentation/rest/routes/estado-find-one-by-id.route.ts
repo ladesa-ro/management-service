@@ -1,6 +1,8 @@
 import { Type } from "typebox";
-import { type EstadoFindOneByIdInputDto, EstadoFindOneByIdInputDtoSchema, type EstadoFindOneByIdRequestDto, estadoAuthorizationFromRequest } from "@/features";
+import { type EstadoFindOneByIdInputDto, EstadoFindOneByIdInputDtoSchema, estadoAuthorizationFromRequest } from "@/features";
 import { type RequestRepresentationDto, RequestRepresentationDtoSchema, validateDto } from "@/shared";
+
+export type EstadoFindOneByIdRequestDto = Type.Static<typeof EstadoFindOneByIdRoute.requestSchema>;
 
 export class EstadoFindOneByIdRoute {
   static requestSchema = Type.Interface([RequestRepresentationDtoSchema], {
@@ -24,10 +26,10 @@ export class EstadoFindOneByIdRoute {
   constructor(private estadoApplicationService: EstadoApplicationService) {}
 
   async handler(incomingRequest: RequestRepresentationDto) {
-    const authorizationPort = estadoAuthorizationFromRequest();
-
     const request = await validateDto(EstadoFindOneByIdRoute.requestSchema, incomingRequest);
     const dto = EstadoFindOneByIdRoute.requestToDto(request);
+
+    const authorizationPort = estadoAuthorizationFromRequest(request);
 
     return this.estadoApplicationService.estadoFindOneById(authorizationPort, dto);
   }
