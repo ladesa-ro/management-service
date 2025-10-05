@@ -5,7 +5,9 @@
   "private": true,
   "scripts": {
     "code:fix": "bunx biome check --unsafe --write .",
-    "code:check": "bunx biome check --unsafe ."
+    "code:check": "bunx biome check --unsafe .",
+    "dev": "bun run --watch app/main.ts",
+    "start": "bun run app/main.ts"
   },
   "devDependencies": {
     "@biomejs/biome": "2.2.5",
