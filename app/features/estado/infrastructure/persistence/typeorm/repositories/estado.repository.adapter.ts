@@ -1,8 +1,9 @@
 import type { DataSource, Repository } from "typeorm";
 import { type EstadoFindOneByIdInputDto, type EstadoFindOneByIdOutputDto, type EstadoListInputDto, type EstadoListOutputDto, EstadoListSettings, type IEstadoRepositoryPort } from "@/features";
 import { EstadoDatabaseEntity } from "@/features/estado/infrastructure";
-import { baseEntityList, EfficientLoadAndSelect, type IFilterRuleGroup, type ListSettingsEntity } from "@/shared";
+import { baseEntityList, EfficientLoadAndSelect, type IFilterRuleGroup, Injectable, type ListSettingsEntity } from "@/shared";
 
+@Injectable("Singleton")
 export class EstadoRepositoryAdapter implements IEstadoRepositoryPort {
   private estadoRepository: Repository<EstadoDatabaseEntity>;
 

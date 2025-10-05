@@ -1,3 +1,4 @@
+import type { SelectQueryBuilder } from "typeorm";
 import type { ListQueryInputDto, ListQueryOutputDto } from "@/shared/features/list/application/dtos/entities";
 import type { IFilterRuleGroup, ListSettingsEntity } from "@/shared/features/list/domain";
 import { EfficientLoadAndSelect, projectPathToQuery } from "@/shared/infrastructure/typeorm/utils";
