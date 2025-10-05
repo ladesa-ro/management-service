@@ -1,5 +1,5 @@
 import { Type } from "typebox";
-import { EstadoDtoSchema } from "@/features";
+import { EstadoDtoSchema } from "@/features/estado/application/schemas/entities";
 
 export const EstadoFindOneByIdInputDtoSchema = Type.Object(
   {

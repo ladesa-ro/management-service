@@ -1,6 +1,6 @@
 import { Type } from "typebox";
 import { EstadoFindOneByIdOutputDtoSchema } from "@/features";
-import { ListQueryInputDtoSchema, ListQueryOutputDtoSchema } from "@/shared/application";
+import { ListQueryInputDtoSchema, ListQueryOutputDtoSchema } from "@/shared/features/list";
 
 export const EstadoListInputDtoSchema = Type.Interface([ListQueryInputDtoSchema], {});
 

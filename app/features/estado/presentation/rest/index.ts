@@ -1,3 +1,3 @@
 export * from "./authz";
-export * from "./nestjs";
+export * from "./estado.routes.ts";
 export * from "./routes";

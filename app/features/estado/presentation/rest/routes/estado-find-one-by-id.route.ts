@@ -1,9 +1,10 @@
 import { Type } from "typebox";
-import { type EstadoFindOneByIdInputDto, EstadoFindOneByIdInputDtoSchema, estadoAuthorizationFromRequest } from "@/features";
-import { type RequestRepresentationDto, RequestRepresentationDtoSchema, validateDto } from "@/shared";
+import { ESTADO_USE_CASES, type EstadoFindOneByIdInputDto, EstadoFindOneByIdInputDtoSchema, estadoAuthorizationFromRequest, type IEstadoUseCasesPort } from "@/features";
+import { Inject, Injectable, type RequestRepresentationDto, RequestRepresentationDtoSchema, validateDto } from "@/shared";
 
 export type EstadoFindOneByIdRequestDto = Type.Static<typeof EstadoFindOneByIdRoute.requestSchema>;
 
+@Injectable("Singleton")
 export class EstadoFindOneByIdRoute {
   static requestSchema = Type.Interface([RequestRepresentationDtoSchema], {
     params: Type.Object({
@@ -23,7 +24,10 @@ export class EstadoFindOneByIdRoute {
     };
   }
 
-  constructor(private estadoApplicationService: EstadoApplicationService) {}
+  constructor(
+    @Inject(ESTADO_USE_CASES)
+    private estadoApplicationService: IEstadoUseCasesPort,
+  ) {}
 
   async handler(incomingRequest: RequestRepresentationDto) {
     const request = await validateDto(EstadoFindOneByIdRoute.requestSchema, incomingRequest);

@@ -2,6 +2,17 @@ x-podman:
   in_pod: false
 
 services:
+  db:
+    image: docker.io/postgres:15
+    restart: always
+    shm_size: 128mb
+    environment:
+      POSTGRES_USER: management-service-user
+      POSTGRES_PASSWORD: management-service-pass
+      POSTGRES_DB: management-service
+    networks:
+      - ladesa-net
+
   ladesa-management-service:
     build:
       context: .
@@ -15,3 +26,11 @@ services:
     userns_mode: keep-id:uid=1000,gid=1000
     ports:
       - "3701:3701"
+    depends_on:
+      - db
+    networks:
+      - ladesa-net
+
+networks:
+  ladesa-net:
+    external: true

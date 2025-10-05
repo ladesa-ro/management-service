@@ -11,8 +11,8 @@ export const RequestRepresentationDtoSchema = Type.Object({
   path: Type.String(),
   headers: Type.Record(Type.String(), Type.Any()),
 
-  params: Type.Unknown(),
+  params: Type.Optional(Type.Any()),
 
-  query: Type.Unknown(),
-  body: Type.Unknown(),
+  query: Type.Optional(Type.Any()),
+  body: Type.Optional(Type.Any()),
 });

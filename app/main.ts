@@ -15,7 +15,7 @@ const start = async () => {
 
   await registerAll(container);
 
-  const server = new Server();
+  const server = new Server(container);
   server.start();
 };
 

@@ -1,1 +1,1 @@
-export * from "./list-query.schemas.ts";
+export * from "./list-query.schemas";

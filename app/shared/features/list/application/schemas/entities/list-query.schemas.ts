@@ -1,5 +1,5 @@
 import { Type } from "typebox";
-import { FilterRuleDtoSchema, SortByRulesDtoSchema } from "@/shared";
+import { FilterRuleDtoSchema, SortByRulesDtoSchema } from "@/shared/features/list/application/schemas/value-objects";
 
 export const ListQueryInputDtoSchema = Type.Object({
   page: Type.Integer({
@@ -11,7 +11,7 @@ export const ListQueryInputDtoSchema = Type.Object({
     maximum: 100,
     default: 20,
   }),
-  search: Type.Optional(Type.Union([Type.String(), Type.Null()])),
+  search: Type.Union([Type.String(), Type.Null()]),
   filters: Type.Optional(FilterRuleDtoSchema),
   sortBy: Type.Optional(SortByRulesDtoSchema),
   selection: Type.Optional(Type.Array(Type.String())),

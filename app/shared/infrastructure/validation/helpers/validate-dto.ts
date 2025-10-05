@@ -41,6 +41,7 @@ export const validateDto = async <Schema extends TSchema>(schema: Schema, dto: u
 
   const result = validator(dtoClone);
   if (validator.errors) {
+    console.debug(schema.properties.query);
     throw new BaseValidationFailedError(validator.errors);
   }
 
