@@ -1,2 +1,1 @@
-export class BaseApplicationOperation {
-}
+export class BaseApplicationOperation {}

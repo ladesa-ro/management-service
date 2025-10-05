@@ -15,7 +15,9 @@
     "typescript": "^5"
   },
   "dependencies": {
+    "express": "^5.1.0",
     "inversify": "^7.10.2",
-    "typebox": "^1.0.26"
+    "typebox": "^1.0.26",
+    "typeorm": "^0.3.27"
   }
 }

@@ -1,2 +1,2 @@
-export * from "./estado-find-one-by-id.dto";
-export * from "./estado-list.dto";
+export * from "./estado-find-one-by-id.dtos.ts";
+export * from "./estado-list.dtos.ts";

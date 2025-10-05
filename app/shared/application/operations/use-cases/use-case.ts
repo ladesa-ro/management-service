@@ -1,5 +1,3 @@
 import { BaseApplicationOperation } from "../operation";
 
-export class BaseApplicationUseCase extends BaseApplicationOperation {
-
-}
+export class BaseApplicationUseCase extends BaseApplicationOperation {}
