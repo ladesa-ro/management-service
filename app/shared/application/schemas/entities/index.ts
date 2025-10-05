@@ -1,1 +1,1 @@
-export * from "./entities.schemas"
+export * from "./entities.schemas";

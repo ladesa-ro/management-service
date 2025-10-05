@@ -1,6 +1,6 @@
-import express from "express"
+import express from "express";
 
-class Server {
+export class Server {
   start() {
     const app = express();
     app.listen(3701);

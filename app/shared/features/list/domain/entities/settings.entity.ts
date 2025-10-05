@@ -1,4 +1,4 @@
-import { FilterRuleOperator, type ISortByRules } from "@/shared/features/list/domain/value-objects";
+import type { FilterRuleOperator, ISortByRules } from "@/shared/features/list/domain/value-objects";
 
 export type ListSettingsEntity = {
   resource: {

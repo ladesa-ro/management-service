@@ -1,14 +1,8 @@
 import { Type } from "typebox";
 
-export const SortByModeDtoSchema = Type.Union(
-  [
-    Type.Literal("ASC"),
-    Type.Literal("DESC")
-  ],
-  {
-    default: "ASC"
-  }
-);
+export const SortByModeDtoSchema = Type.Evaluate(Type.Union([Type.Literal("ASC"), Type.Literal("DESC")]), {
+  default: "ASC",
+});
 
 export const SortByRuleDtoSchema = Type.Object(
   {
@@ -25,19 +19,16 @@ export const SortByRulesDtoSchema = Type.Array(SortByRuleDtoSchema, {
 });
 
 export const SortByRuleDtoSchemaCustom = (allowedColumns: string[]) => {
-  return Type.Evaluate(Type.Intersect(
-    [
+  return Type.Evaluate(
+    Type.Intersect([
       SortByRuleDtoSchema,
       Type.Object({
         property: Type.Union([...allowedColumns.map((column) => Type.Literal(column))]),
       }),
-    ]
-  ));
+    ]),
+  );
 };
 
 export const SortByRulesDtoSchemaCustom = (allowedColumns: string[]) => {
-  return Type.Evaluate(Type.Intersect([
-    SortByRulesDtoSchema,
-    Type.Array(SortByRuleDtoSchemaCustom(allowedColumns))
-  ]));
+  return Type.Evaluate(Type.Intersect([SortByRulesDtoSchema, Type.Array(SortByRuleDtoSchemaCustom(allowedColumns))]));
 };

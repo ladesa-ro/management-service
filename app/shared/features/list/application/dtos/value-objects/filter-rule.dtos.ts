@@ -1,5 +1,5 @@
 import type { Static } from "typebox";
-import {
+import type {
   FilterRuleBaseDtoSchema,
   FilterRuleCompareBetweenDtoSchema,
   FilterRuleCompareDtoSchema,
@@ -7,7 +7,7 @@ import {
   FilterRuleCompareSimpleDtoSchema,
   FilterRuleDtoSchema,
   FilterRuleGroupDtoSchema,
-  FilterRuleOperatorDtoSchema
+  FilterRuleOperatorDtoSchema,
 } from "@/shared/features/list/schemas/value-objects/filter-rule.schemas";
 
 export type FilterRuleOperatorDto = Static<typeof FilterRuleOperatorDtoSchema>;

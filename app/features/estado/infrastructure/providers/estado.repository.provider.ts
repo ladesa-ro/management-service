@@ -1,9 +1,7 @@
-import { Provider } from "@nestjs/common";
-import { DataSource } from "typeorm";
-import { ESTADO_REPOSITORY, IEstadoRepositoryPort } from "@/features/estado/application/ports";
-import {
-  EstadoRepositoryAdapter
-} from "@/features/estado/infrastructure/persistence/typeorm/repositories/estado.repository.adapter";
+import type { Provider } from "@nestjs/common";
+import type { DataSource } from "typeorm";
+import { ESTADO_REPOSITORY, type IEstadoRepositoryPort } from "@/features/estado/application/ports";
+import { EstadoRepositoryAdapter } from "@/features/estado/infrastructure/persistence/typeorm/repositories/estado.repository.adapter";
 import { APP_DATA_SOURCE_TOKEN } from "@/infrastructure/persistence/typeorm/providers/app-data-source.provider";
 
 export const EstadoRepositoryProvider: Provider = {

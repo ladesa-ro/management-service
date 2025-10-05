@@ -1,5 +1,5 @@
-import type { EstadoDto, EstadoFindOneByIdInputDto, EstadoListInputDto, EstadoListOutputItemDto } from "../dtos";
 import type { IFilterRuleGroup } from "../../../../shared";
+import type { EstadoDto, EstadoFindOneByIdInputDto, EstadoListInputDto, EstadoListOutputItemDto } from "../dtos";
 
 export const ESTADO_REPOSITORY = Symbol("Ladesa.ManagementService.Estado.Repository");
 

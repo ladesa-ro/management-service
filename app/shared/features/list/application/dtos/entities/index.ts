@@ -1,1 +1,1 @@
-export * from "./list-query.dtos"
+export * from "./list-query.dtos";

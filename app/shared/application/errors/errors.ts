@@ -1,17 +1,38 @@
 import { PrimitiveError } from "../../primitives";
 
+export enum ApplicationErrorCode {
+  NOT_FOUND = "NOT_FOUND",
+  FORBIDDEN = "FORBIDDEN",
+  VALIDATION_FAILED = "VALIDATION_FAILED",
+}
+
 export class BaseApplicationError extends PrimitiveError {
-  readonly application = true;
+  readonly inApplication = true;
 }
 
 export class BaseNotFoundError extends BaseApplicationError {
-  constructor(message: string = "Não encontrado.") {
+  readonly applicationCode = ApplicationErrorCode.NOT_FOUND;
+
+  constructor(message: string = "Not found.") {
     super(message);
   }
 }
 
 export class BaseForbiddenError extends BaseApplicationError {
-  constructor(message: string = "Acesso negado.") {
+  readonly applicationCode = ApplicationErrorCode.FORBIDDEN;
+
+  constructor(message: string = "Forbidden.") {
     super(message);
+  }
+}
+
+export class BaseValidationFailedError extends BaseApplicationError {
+  readonly applicationCode = ApplicationErrorCode.VALIDATION_FAILED;
+
+  public errors: any[];
+
+  constructor(errors: any[] = [], message: string = "Validation failed.") {
+    super(message);
+    this.errors = errors;
   }
 }

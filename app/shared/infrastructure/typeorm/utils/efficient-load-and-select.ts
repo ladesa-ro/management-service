@@ -1,4 +1,4 @@
-import { SelectQueryBuilder } from "typeorm";
+import type { SelectQueryBuilder } from "typeorm";
 import { createAliasesGenerator } from "./create-aliases-generator";
 import { getRelationPaths } from "./get-relation-paths";
 import { parseSelections } from "./parse-selections";
@@ -7,7 +7,12 @@ export const EfficientLoadAndSelect = (query: SelectQueryBuilder<any>, rawSelect
   const selections = parseSelections(rawSelections);
   const relationPaths = getRelationPaths(selections);
 
-  const mainAlias = query.expressionMap.mainAlias!;
+  const mainAlias = query.expressionMap.mainAlias;
+
+  if (!mainAlias) {
+    throw new Error("Please provide a query builder with main alias!");
+  }
+
   const mainAliasName = mainAlias.name;
   const mainAliasMetadata = mainAlias.metadata;
 

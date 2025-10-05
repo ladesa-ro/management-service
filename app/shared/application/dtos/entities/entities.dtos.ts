@@ -1,11 +1,6 @@
-import { Type } from "typebox";
+import type { Type } from "typebox";
 import type { BaseEntity, BaseEntityDated, BaseEntityIdNumeric, BaseEntityIdUuid } from "../../../domain";
-import {
-  BaseEntityDatedDtoSchema,
-  BaseEntityDtoSchema,
-  BaseEntityIdNumericDtoSchema,
-  BaseEntityIdUuidDtoSchema
-} from "../../schemas/entities/entities.schemas.ts";
+import type { BaseEntityDatedDtoSchema, BaseEntityDtoSchema, BaseEntityIdNumericDtoSchema, BaseEntityIdUuidDtoSchema } from "../../schemas/entities/entities.schemas.ts";
 
 export type BaseEntityDto = Type.Static<typeof BaseEntityDtoSchema> & BaseEntity;
 

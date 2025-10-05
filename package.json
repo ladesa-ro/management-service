@@ -4,19 +4,26 @@
   "module": "app/server.ts",
   "private": true,
   "scripts": {
-    "code:fix": "bunx biome check --write .",
-    "code:check": "bunx biome check ."
+    "code:fix": "bunx biome check --unsafe --write .",
+    "code:check": "bunx biome check --unsafe ."
   },
   "devDependencies": {
     "@biomejs/biome": "2.2.5",
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "@types/express": "^5.0.3",
+    "@types/json-schema": "^7.0.15",
+    "json-schema": "^0.4.0"
   },
   "peerDependencies": {
     "typescript": "^5"
   },
   "dependencies": {
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
+    "allof-merge": "^0.6.7",
     "express": "^5.1.0",
     "inversify": "^7.10.2",
+    "lodash": "^4.17.21",
     "typebox": "^1.0.26",
     "typeorm": "^0.3.27"
   }

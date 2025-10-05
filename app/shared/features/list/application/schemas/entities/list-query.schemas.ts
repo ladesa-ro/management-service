@@ -4,25 +4,17 @@ import { FilterRuleDtoSchema, SortByRulesDtoSchema } from "@/shared";
 export const ListQueryInputDtoSchema = Type.Object({
   page: Type.Integer({
     minimum: 1,
-    default: 1
+    default: 1,
   }),
   limit: Type.Integer({
     minimum: 1,
     maximum: 100,
-    default: 20
+    default: 20,
   }),
-  search: Type.Optional(
-    Type.Union([
-      Type.String(),
-      Type.Null()
-    ])
-  ),
-  filters: Type.Optional(
-    FilterRuleDtoSchema
-  ),
-  sortBy: Type.Optional(
-    SortByRulesDtoSchema
-  )
+  search: Type.Optional(Type.Union([Type.String(), Type.Null()])),
+  filters: Type.Optional(FilterRuleDtoSchema),
+  sortBy: Type.Optional(SortByRulesDtoSchema),
+  selection: Type.Optional(Type.Array(Type.String())),
 });
 
 export const ListQueryOutputDtoSchema = Type.Object({
@@ -32,11 +24,6 @@ export const ListQueryOutputDtoSchema = Type.Object({
     totalItems: Type.Integer(),
     currentPage: Type.Integer(),
     itemsPerPage: Type.Integer(),
-    search: Type.Optional(
-      Type.Union([
-        Type.String(),
-        Type.Null()
-      ])
-    ),
+    search: Type.Optional(Type.Union([Type.String(), Type.Null()])),
   }),
 });

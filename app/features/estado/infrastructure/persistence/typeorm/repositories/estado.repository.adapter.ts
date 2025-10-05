@@ -1,13 +1,6 @@
-import { DataSource, Repository } from "typeorm";
+import type { DataSource, Repository } from "typeorm";
+import { type EstadoFindOneByIdInputDto, type EstadoFindOneByIdOutputDto, type EstadoListInputDto, type EstadoListOutputDto, EstadoListSettings, type IEstadoRepositoryPort } from "@/features";
 import { EstadoDatabaseEntity } from "@/features/estado/infrastructure";
-import {
-  type EstadoFindOneByIdInputDto,
-  type EstadoFindOneByIdOutputDto,
-  type EstadoListInputDto,
-  type EstadoListOutputDto,
-  EstadoListSettings,
-  type IEstadoRepositoryPort
-} from "@/features";
 import { baseEntityList, EfficientLoadAndSelect, type IFilterRuleGroup, type ListSettingsEntity } from "@/shared";
 
 export class EstadoRepositoryAdapter implements IEstadoRepositoryPort {
@@ -20,7 +13,7 @@ export class EstadoRepositoryAdapter implements IEstadoRepositoryPort {
   public async findOneById(dto: EstadoFindOneByIdInputDto, selection?: string[]): Promise<EstadoFindOneByIdOutputDto | null> {
     const query = this.estadoRepository.createQueryBuilder("estado");
     EfficientLoadAndSelect(query, selection);
-    query.andWhere("estado.id = :id", {id: dto.id});
+    query.andWhere("estado.id = :id", { id: dto.id });
     return query.getOne();
   }
 

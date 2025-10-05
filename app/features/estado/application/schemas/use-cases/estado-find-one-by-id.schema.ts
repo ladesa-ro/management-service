@@ -10,6 +10,10 @@ export const EstadoFindOneByIdInputDtoSchema = Type.Object(
   },
 );
 
-export const EstadoFindOneByIdOutputDtoSchema = Type.Interface([EstadoDtoSchema], {}, {
-  $id: "EstadoFindOneByIdOutput",
-});
+export const EstadoFindOneByIdOutputDtoSchema = Type.Interface(
+  [EstadoDtoSchema],
+  {},
+  {
+    $id: "EstadoFindOneByIdOutput",
+  },
+);
