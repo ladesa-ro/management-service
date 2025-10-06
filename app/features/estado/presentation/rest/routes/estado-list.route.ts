@@ -1,18 +1,14 @@
-import type { Type } from "typebox";
-import {
-  ESTADO_USE_CASES,
-  estadoAuthorizationFromRequest,
-  type EstadoListInputDto,
-  EstadoListInputDtoSchema,
-  EstadoListSettings,
-  type IEstadoUseCasesPort
-} from "@/features";
+import { ESTADO_USE_CASES, type EstadoListInputDto, EstadoListInputDtoSchema, EstadoListSettings, estadoAuthorizationFromRequest, type IEstadoUseCasesPort } from "@/features";
 import { type BaseAppRoute, getListRequestSchema, Inject, Injectable, requestListDtoToInputDto } from "@/shared";
+import type { AppSchemaType } from "@/shared/infrastructure/schemas/registry/app-schema.ts";
 
-export type EstadoListRequestDto = Type.Static<typeof EstadoListRoute.requestSchema>;
+export type EstadoListRequestDto = AppSchemaType<typeof EstadoListRoute.requestSchema>;
 
 @Injectable("Singleton")
 export class EstadoListRoute implements BaseAppRoute {
+  static method = "GET";
+  static path = "/base/estados";
+
   static requestSchema = getListRequestSchema(EstadoListInputDtoSchema, EstadoListSettings);
 
   static operation = {

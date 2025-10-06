@@ -1,8 +1,8 @@
-import type { Type } from "typebox";
 import type { EstadoListInputDtoSchema, EstadoListOutputDtoSchema } from "@/features";
+import type { AppSchemaType } from "@/shared/infrastructure/schemas/registry/app-schema.ts";
 
-export type EstadoListInputDto = Type.Static<typeof EstadoListInputDtoSchema>;
+export type EstadoListInputDto = AppSchemaType<typeof EstadoListInputDtoSchema>;
 
-export type EstadoListOutputItemDto = Type.Static<typeof EstadoListOutputDtoSchema>;
+export type EstadoListOutputItemDto = AppSchemaType<typeof EstadoListOutputDtoSchema>;
 
-export type EstadoListOutputDto = Type.Static<typeof EstadoListOutputDtoSchema>;
+export type EstadoListOutputDto = AppSchemaType<typeof EstadoListOutputDtoSchema>;

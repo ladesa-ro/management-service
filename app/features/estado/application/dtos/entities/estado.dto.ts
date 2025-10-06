@@ -1,5 +1,5 @@
-import type { Type } from "typebox";
+import type { AppSchemaType } from "@/shared/infrastructure/schemas/registry/app-schema.ts";
 import type { EstadoEntity } from "../../../domain";
-import type { EstadoDtoSchema } from "../../schemas";
+import type { EstadoSchema } from "../../schemas";
 
-export type EstadoDto = Type.Static<typeof EstadoDtoSchema> & EstadoEntity;
+export type EstadoDto = AppSchemaType<typeof EstadoSchema> & EstadoEntity;

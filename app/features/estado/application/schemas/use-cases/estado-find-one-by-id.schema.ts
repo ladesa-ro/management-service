@@ -1,19 +1,17 @@
 import { Type } from "typebox";
-import { EstadoDtoSchema } from "@/features/estado/application/schemas/entities";
+import { EstadoSchema } from "@/features/estado/application/schemas/entities";
+import { createAppSchema } from "@/shared/infrastructure/schemas/registry/app-schema.ts";
 
-export const EstadoFindOneByIdInputDtoSchema = Type.Object(
-  {
-    id: Type.Index(EstadoDtoSchema, ["id"]),
-  },
-  {
-    $id: "EstadoFindOneByIdInput",
-  },
-);
+export const EstadoFindOneByIdInputSchema = createAppSchema("EstadoFindOneByIdInput", (context) => {
+  const estadoDtoSchema = context.getSchema(EstadoSchema);
 
-export const EstadoFindOneByIdOutputDtoSchema = Type.Interface(
-  [EstadoDtoSchema],
-  {},
-  {
-    $id: "EstadoFindOneByIdOutput",
-  },
-);
+  return Type.Object({
+    id: Type.Index(estadoDtoSchema, ["id"]),
+  });
+});
+
+export const EstadoFindOneByIdOutputSchema = createAppSchema("EstadoFindOneByIdOutput", (context) => {
+  const estadoDtoSchema = context.getSchema(EstadoSchema);
+
+  return Type.Interface([estadoDtoSchema], {});
+});

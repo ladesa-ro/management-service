@@ -1,5 +1,5 @@
 import { DataSource } from "typeorm";
-import { EstadoDatabaseEntity } from "@/features/estado/infrastructure";
+import { EstadoDatabaseEntity } from "@/features/estado/infrastructure/persistence/typeorm/entities";
 
 export const APP_DATA_SOURCE_TOKEN = Symbol("Ladesa.ManagementService.Typeorm.DataSource.App");
 

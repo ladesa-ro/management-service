@@ -2,11 +2,10 @@ import type { Container } from "inversify";
 import { registerEstado } from "@/features/estado/infrastructure/di/register-estado.ts";
 import { Server } from "@/server/server.ts";
 import { createContainer, registerMany } from "@/shared";
-import { registerDataSource } from "@/shared/infrastructure/typeorm/register-data-source.ts";
+import { registerShared } from "@/shared/register-shared.ts";
 
 const registerAll = async (container: Container) => {
-  const composition = [registerDataSource, registerEstado];
-
+  const composition = [registerShared, registerEstado];
   await registerMany(composition)(container);
 };
 

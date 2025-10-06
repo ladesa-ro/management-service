@@ -1,21 +1,21 @@
 import { Type } from "typebox";
-import {
-  ESTADO_USE_CASES,
-  estadoAuthorizationFromRequest,
-  type EstadoFindOneByIdInputDto,
-  EstadoFindOneByIdInputDtoSchema,
-  type IEstadoUseCasesPort
-} from "@/features";
-import { type BaseAppRoute, Inject, Injectable, RequestRepresentationDtoSchema } from "@/shared";
+import { ESTADO_USE_CASES, type EstadoFindOneByIdInputDto, EstadoFindOneByIdInputSchema, estadoAuthorizationFromRequest, type IEstadoUseCasesPort } from "@/features";
+import { type BaseAppRoute, createRequestSchema, Inject, Injectable } from "@/shared";
+import type { AppSchemaType } from "@/shared/infrastructure/schemas/registry/app-schema.ts";
 
-export type EstadoFindOneByIdRequestDto = Type.Static<typeof EstadoFindOneByIdRoute.requestSchema>;
+export type EstadoFindOneByIdRequestDto = AppSchemaType<typeof EstadoFindOneByIdRoute.requestSchema>;
 
 @Injectable("Singleton")
 export class EstadoFindOneByIdRoute implements BaseAppRoute {
-  static requestSchema = Type.Interface([RequestRepresentationDtoSchema], {
-    params: Type.Object({
-      id: Type.Index(EstadoFindOneByIdInputDtoSchema, ["id"]),
-    }),
+  static method = "GET";
+  static path = "/base/estados/:id";
+
+  static requestSchema = createRequestSchema((evaluateContext) => {
+    return {
+      params: Type.Object({
+        id: Type.Index(evaluateContext.getSchema(EstadoFindOneByIdInputSchema), ["id"]),
+      }),
+    };
   });
 
   static operation = {

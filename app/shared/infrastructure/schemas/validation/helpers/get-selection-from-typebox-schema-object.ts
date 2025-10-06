@@ -1,22 +1,22 @@
 import { merge } from "allof-merge";
 import type { JSONSchema7Object } from "json-schema";
 import { type TObject, type TSchema, Type } from "typebox";
-import { getSchemaById } from "../../schemas";
+import type { SchemaRegistry } from "@/shared";
 
-const resolveSchema = (schema: TSchema | JSONSchema7Object): "literal" | string[] => {
+const resolveSchema = (schemaRegistry: SchemaRegistry, schema: TSchema | JSONSchema7Object): "literal" | string[] => {
   const processedSchema = merge(Type.Evaluate(schema)) as JSONSchema7Object;
 
   const ref = processedSchema.$ref;
 
   if (ref && typeof ref === "string") {
-    return resolveSchema(getSchemaById(ref));
+    return resolveSchema(schemaRegistry, schemaRegistry.getSchemaByIdStrict(ref));
   } else if (schema.type === "object") {
     const properties: string[] = [];
 
     for (const property of Object.entries(processedSchema.properties ?? {})) {
       const [key, value] = property;
 
-      const resolvedPropertyValue = resolveSchema(value);
+      const resolvedPropertyValue = resolveSchema(schemaRegistry, value);
 
       if (Array.isArray(resolvedPropertyValue)) {
         for (const resolvedProperty of resolvedPropertyValue) {
@@ -29,7 +29,7 @@ const resolveSchema = (schema: TSchema | JSONSchema7Object): "literal" | string[
 
     return properties;
   } else if (schema.type === "array") {
-    return resolveSchema(schema.items);
+    return resolveSchema(schemaRegistry, schema.items);
   } else {
     return "literal";
   }
@@ -45,8 +45,8 @@ const resolveSchema = (schema: TSchema | JSONSchema7Object): "literal" | string[
  *   O retorno deve ser: ["id", "nome", "estado.id", "estado.nome"]
  * @param schema
  */
-export const getSelectionFromTypeboxSchemaObject = (schema: TObject) => {
-  const resolved = resolveSchema(schema);
+export const getSelectionFromTypeboxSchemaObject = (schemaRegistry: SchemaRegistry, schema: TObject) => {
+  const resolved = resolveSchema(schemaRegistry, schema);
 
   if (resolved === "literal") {
     return [];

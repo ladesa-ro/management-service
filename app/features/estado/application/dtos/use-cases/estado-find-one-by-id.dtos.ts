@@ -1,6 +1,6 @@
-import type { Type } from "typebox";
-import type { EstadoFindOneByIdInputDtoSchema, EstadoFindOneByIdOutputDtoSchema } from "@/features/estado/application/schemas";
+import type { EstadoFindOneByIdInputSchema, EstadoFindOneByIdOutputSchema } from "@/features/estado/application/schemas";
+import type { AppSchemaType } from "@/shared/infrastructure/schemas/registry/app-schema.ts";
 
-export type EstadoFindOneByIdInputDto = Type.Static<typeof EstadoFindOneByIdInputDtoSchema>;
+export type EstadoFindOneByIdInputDto = AppSchemaType<typeof EstadoFindOneByIdInputSchema>;
 
-export type EstadoFindOneByIdOutputDto = Type.Static<typeof EstadoFindOneByIdOutputDtoSchema>;
+export type EstadoFindOneByIdOutputDto = AppSchemaType<typeof EstadoFindOneByIdOutputSchema>;
