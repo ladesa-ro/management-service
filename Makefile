@@ -22,7 +22,7 @@ setup:
 	$(shell (bash -c "$(COMMAND_TOOL_OCI_RUNTIME) network create $(COMPOSE_NETWORK) &>/dev/null"))
 	
 	echo "baixando e construíndo as imagens dos containers, aguarde um instante..."
-	$(COMMAND_COMPOSE_SERVICE) build
+	$(COMMAND_COMPOSE_SERVICE) build > /dev/null
 
 post-init:
 	$(COMMAND_COMPOSE_SERVICE) exec -u $(COMPOSE_APP_USER) $(COMPOSE_APP) bash -c "bun install";
