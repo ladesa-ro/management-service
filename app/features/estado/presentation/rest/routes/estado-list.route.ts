@@ -1,11 +1,18 @@
 import type { Type } from "typebox";
-import { ESTADO_USE_CASES, type EstadoListInputDto, EstadoListInputDtoSchema, EstadoListSettings, estadoAuthorizationFromRequest, type IEstadoUseCasesPort } from "@/features";
-import { getListRequestSchema, Inject, Injectable, type RequestRepresentationDto, requestListDtoToInputDto, validateDto } from "@/shared";
+import {
+  ESTADO_USE_CASES,
+  estadoAuthorizationFromRequest,
+  type EstadoListInputDto,
+  EstadoListInputDtoSchema,
+  EstadoListSettings,
+  type IEstadoUseCasesPort
+} from "@/features";
+import { type BaseAppRoute, getListRequestSchema, Inject, Injectable, requestListDtoToInputDto } from "@/shared";
 
 export type EstadoListRequestDto = Type.Static<typeof EstadoListRoute.requestSchema>;
 
 @Injectable("Singleton")
-export class EstadoListRoute {
+export class EstadoListRoute implements BaseAppRoute {
   static requestSchema = getListRequestSchema(EstadoListInputDtoSchema, EstadoListSettings);
 
   static operation = {
@@ -23,11 +30,9 @@ export class EstadoListRoute {
     private estadoApplicationService: IEstadoUseCasesPort,
   ) {}
 
-  async handler(incomingRequest: RequestRepresentationDto) {
-    const request = await validateDto(EstadoListRoute.requestSchema, incomingRequest);
-    const dto = EstadoListRoute.requestToDto(request);
-
+  async handler(request: EstadoListRequestDto) {
     const authorizationPort = estadoAuthorizationFromRequest(request);
+    const dto = EstadoListRoute.requestToDto(request);
 
     return this.estadoApplicationService.estadoList(authorizationPort, dto);
   }
