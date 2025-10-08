@@ -10,10 +10,5 @@
   },
 
   "remoteUser": "1000",
-  "workspaceFolder": "/ladesa/management-service",
-  "customizations": {
-    "jetbrains": {
-      "backend": "IntelliJ"
-    }
-  }
+  "workspaceFolder": "/ladesa/management-service"
 }

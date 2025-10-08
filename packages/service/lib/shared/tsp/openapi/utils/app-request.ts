@@ -1,7 +1,7 @@
 import { ArgumentMetadata, createParamDecorator, ExecutionContext, Inject, Injectable, PipeTransform } from "@nestjs/common";
 import type { Request as ExpressRequest } from "express";
 import { IAppRequestRepresentationGeneric } from "@/__legacy/interfaces/i-app-request-representation-generic";
-import { AppConfigService } from "@/shared/infrastructure/config";
+import { AppConfigService } from "@/infrastructure/config";
 import { IApiDocOperationKey } from "@/shared/tsp/openapi/document/app-openapi-typings";
 import { requestValidateAndParse } from "@/shared/tsp/openapi/utils/request-validate-and-parse";
 

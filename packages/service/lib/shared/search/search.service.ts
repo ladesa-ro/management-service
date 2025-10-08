@@ -3,7 +3,7 @@ import { PaginateConfig, paginate } from "nestjs-paginate";
 import { PaginateQuery } from "nestjs-paginate/lib/decorator";
 import { type SelectQueryBuilder } from "typeorm";
 import { ObjectLiteral } from "typeorm/common/ObjectLiteral";
-import { paginateConfig } from "@/shared/infrastructure/fixtures";
+import { paginateConfig } from "@/infrastructure/fixtures";
 
 type SearchOptions = {
   limit?: number | null;
