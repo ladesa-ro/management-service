@@ -21,10 +21,6 @@ export class PerfilEntity implements IDomain.Perfil {
   @JoinColumn({ name: "id_campus_fk" })
   campus!: Relation<CampusEntity>;
 
-  @ManyToOne(
-    () => UsuarioEntity,
-    (usuario) => usuario.vinculos,
-  )
   @JoinColumn({ name: "id_usuario_fk" })
   usuario!: Relation<UsuarioEntity>;
 
