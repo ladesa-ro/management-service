@@ -1,7 +1,11 @@
-/.github                                     @ladesa-ro/security
-CODEOWNERS                                 @ladesa-ro/security
-**/package.json                               @ladesa-ro/security
-**/bun.lock                                   @ladesa-ro/security
-**/bun.toml                                   @ladesa-ro/security
-**/*.sh                                    @ladesa-ro/security
-.husky/**/*                                @ladesa-ro/security
+.github/**/* @ladesa-ro/security
+k8s/**/* @ladesa-ro/security @ladesa-ro/devops
+CODEOWNERS  @ladesa-ro/security
+**/package.json @ladesa-ro/security
+**/bun.lock @ladesa-ro/security
+**/bun.toml @ladesa-ro/security
+**/*.sh  @ladesa-ro/security
+Makefile @ladesa-ro/security @ladesa-ro/devops
+Dockerfile @ladesa-ro/security @ladesa-ro/devops
+Dockerfile.dockerignore @ladesa-ro/security @ladesa-ro/devops
+docker-compose.yml @ladesa-ro/security @ladesa-ro/devops
