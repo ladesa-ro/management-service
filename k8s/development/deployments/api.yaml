@@ -5,6 +5,8 @@ metadata:
   labels:
     app: ladesa-ro-api
   namespace: ladesa-ro-development
+  annotations:
+    secrets.infisical.com/auto-reload: "true"
 spec:
   replicas: 1
   selector:

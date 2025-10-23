@@ -37,6 +37,10 @@ op DisciplinaList(
   @query(#{ explode: true }) sortBy?: string[],
 
   @query(#{ explode: true }) `filter.diarios.id`?: string[],
+  @query(#{ explode: true }) `filter.campus.id`?: string[],
+  @query(#{ explode: true }) `filter.professores.id`?: string[],
+  @query(#{ explode: true }) `filter.turma.id`?: string[],
+  
 ): DisciplinaListOutput | ForbiddenResponse | NotFoundResponse;
 
 /**
