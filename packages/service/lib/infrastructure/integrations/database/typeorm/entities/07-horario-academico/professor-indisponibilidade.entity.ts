@@ -7,7 +7,7 @@ export class ProfessorIndisponibilidadeEntity implements IDomain.ProfessorIndisp
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 
- @ManyToOne(() => UsuarioEntity, "vinculos")
+  @ManyToOne(() => UsuarioEntity, "vinculos")
   @JoinColumn({ name: "id_perfil_fk" })
   perfil!: UsuarioEntity & IDomain.Perfil;
 
@@ -21,8 +21,8 @@ export class ProfessorIndisponibilidadeEntity implements IDomain.ProfessorIndisp
   horaInicio!: string;
 
   @Column({ name: "hora_fim", type: "time", precision: 0 })
-  horaFim!: string; 
-// ============================================================================
+  horaFim!: string;
+  // ============================================================================
 
   @Column({ name: "motivo", type: "varchar", length: 90 })
   motivo!: string;
