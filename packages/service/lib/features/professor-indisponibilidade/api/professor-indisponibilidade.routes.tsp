@@ -50,3 +50,10 @@ op ProfessorIndisponibilidadeUpdateOneById(
 op ProfessorIndisponibilidadeDeleteOneById(
   @format("uuid") @path id: string,
 ): Body<boolean> | ForbiddenResponse | NotFoundResponse;
+
+@tag("indisponibilidades-professores")
+@route("/indisponibilidades/rrule-indisponibilidade/{id}")
+@get
+op ProfessorIndisponibilidadeRRuleFindOneById(
+  @format("uuid") @path id: string,
+): ProfessorIndisponibilidadeRRuleOutput | ForbiddenResponse | NotFoundResponse;

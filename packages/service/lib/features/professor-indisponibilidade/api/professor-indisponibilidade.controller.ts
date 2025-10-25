@@ -51,4 +51,14 @@ export class ProfessorIndisponibilidadeController {
     if (!domain.id) throw new BadRequestException();
     return this.professorIndisponibilidadeService.indisponibilidadeDelete(accessContext, domain.id);
   }
+
+  @Get("/rrule-indisponibilidade/:id")
+  async professorIndisponibilidadeRRuleFindOneById(
+    @AccessContextHttp() accessContext: AccessContext,
+    @AppRequest("ProfessorIndisponibilidadeRRuleFindOneById") dto: IAppRequest<"ProfessorIndisponibilidadeRRuleFindOneById">,
+  ) {
+    const domain = requestRepresentationMergeToDomain(dto) as any;
+    return this.professorIndisponibilidadeService.ProfessorIndisponibilidadeRRuleFindOneById(accessContext, domain.id);
+  }
+  
 }

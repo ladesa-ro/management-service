@@ -209,4 +209,39 @@ export class ProfessorIndisponibilidadeService {
     return this.indisponibilidadeRepository.save(indisponibilidade);
     // =========================================================
   }
+
+  
+  async ProfessorIndisponibilidadeRRuleFindOneById(
+    accessContext: AccessContext,
+    id: IDomain.ProfessorIndisponibilidadeRRuleInput["id"],
+  ): Promise<IDomain.ProfessorIndisponibilidadeRRuleOutput["success"]> {
+    // =========================================================
+
+    const qb = this.indisponibilidadeRepository.createQueryBuilder(aliasIndisponibilidade);
+
+    // =========================================================
+
+    await accessContext.applyFilter("vinculo:find", qb, aliasIndisponibilidade, null);
+  
+    // =========================================================
+    qb.andWhere(`${aliasIndisponibilidade}.id = :id`, { id });
+
+    // =========================================================
+
+    const indisponibilidade = await qb.getOne();
+
+    if (!indisponibilidade) {
+      throw new BadRequestException("Indisponibilidade não encontrada");
+    }
+
+    // =========================================================
+
+    return {
+      id: indisponibilidade.id,
+      id_perfil_fk: indisponibilidade.idPerfilFk,
+      rrule: `FREQ=WEEKLY;BYDAY=${["SU","MO","TU","WE","TH","FR","SA"][indisponibilidade.diaDaSemana]}`,
+      data_hora_inicio: indisponibilidade.horaInicio,
+      data_hora_fim: indisponibilidade.horaFim ?? null,
+    }; 
+  }
 }
