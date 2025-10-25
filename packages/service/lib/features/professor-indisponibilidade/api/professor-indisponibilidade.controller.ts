@@ -17,41 +17,30 @@ export class ProfessorIndisponibilidadeController {
     return this.professorIndisponibilidadeService.ProfessorIndisponibilidadeListByPerfil(accessContext, domain.idPerfilFk);
   }
 
-@Get("/:id")
-async professorIndisponibilidadeFindOneById(
-  @AccessContextHttp() accessContext: AccessContext,
-  @AppRequest("ProfessorIndisponibilidadeFindOneById") dto: IAppRequest<"ProfessorIndisponibilidadeFindOneById">,
-) {
-  const domain = requestRepresentationMergeToDomain(dto) as IDomain.ProfessorIndisponibilidadeFindOneInput;
-  return this.professorIndisponibilidadeService.indisponibilidadeFindByIdSimple(accessContext, domain.id);
-}
+  @Get("/:id")
+  async professorIndisponibilidadeFindOneById(
+    @AccessContextHttp() accessContext: AccessContext,
+    @AppRequest("ProfessorIndisponibilidadeFindOneById") dto: IAppRequest<"ProfessorIndisponibilidadeFindOneById">,
+  ) {
+    const domain = requestRepresentationMergeToDomain(dto) as IDomain.ProfessorIndisponibilidadeFindOneInput;
+    return this.professorIndisponibilidadeService.indisponibilidadeFindByIdSimple(accessContext, domain.id);
+  }
 
-
-
-@Post("/:id_perfil/create")
-async professorIndisponibilidadeCreate( @AccessContextHttp() accessContext: AccessContext, @AppRequest("ProfessorIndisponibilidadeCreate") dto: IAppRequest<"ProfessorIndisponibilidadeCreate">,
-) {
-    const domain : IDomain.ProfessorIndisponibilidadeCreateInput = requestRepresentationMergeToDomain(dto);
+  @Post("/:id_perfil/create")
+  async professorIndisponibilidadeCreate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("ProfessorIndisponibilidadeCreate") dto: IAppRequest<"ProfessorIndisponibilidadeCreate">) {
+    const domain: IDomain.ProfessorIndisponibilidadeCreateInput = requestRepresentationMergeToDomain(dto);
     return this.professorIndisponibilidadeService.createIndisponibilidade(accessContext, domain);
-}
+  }
 
+  @Patch("/:id")
+  async professorIndisponibilidadeUpdate(
+    @AccessContextHttp() accessContext: AccessContext,
+    @AppRequest("ProfessorIndisponibilidadeUpdateOneById") dto: IAppRequest<"ProfessorIndisponibilidadeUpdateOneById">,
+  ) {
+    const domain: IDomain.ProfessorIndisponibilidadeFindOneInput & IDomain.ProfessorIndisponibilidadeUpdateInput = requestRepresentationMergeToDomain(dto);
 
-
-
-
-
-@Patch("/:id")
-async professorIndisponibilidadeUpdate(
-  @AccessContextHttp() accessContext: AccessContext,
-  @AppRequest("ProfessorIndisponibilidadeUpdateOneById") dto: IAppRequest<"ProfessorIndisponibilidadeUpdateOneById">,
-) {
-  const domain: IDomain.ProfessorIndisponibilidadeFindOneInput & IDomain.ProfessorIndisponibilidadeUpdateInput =
-    requestRepresentationMergeToDomain(dto);
-
-  return this.professorIndisponibilidadeService.indisponibilidadeUpdate(accessContext, domain);
-}
-
-
+    return this.professorIndisponibilidadeService.indisponibilidadeUpdate(accessContext, domain);
+  }
 
   @Delete("/:id")
   async professorIndisponibilidadeDeleteOneById(
