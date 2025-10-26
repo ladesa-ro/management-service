@@ -28,13 +28,13 @@ export class CreateTableIndisponibilidadeProfessor1754870894487 implements Migra
           },
           {
             name: "hora_inicio",
-            type: "time",
+            type: "timestamp",
             precision: 0,
             isNullable: false,
           },
           {
             name: "hora_fim",
-            type: "time",
+            type: "timestamp",
             precision: 0,
             isNullable: false,
           },
