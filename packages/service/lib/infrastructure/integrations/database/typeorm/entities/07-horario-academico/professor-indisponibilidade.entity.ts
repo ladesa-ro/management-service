@@ -17,10 +17,10 @@ export class ProfessorIndisponibilidadeEntity implements IDomain.ProfessorIndisp
   @Column({ name: "dia_da_semana", type: "smallint" })
   diaDaSemana!: number;
 
-  @Column({ name: "hora_inicio", type: "time", precision: 0 })
+  @Column({ name: "hora_inicio", type: "timestamp", precision: 0 })
   horaInicio!: string;
 
-  @Column({ name: "hora_fim", type: "time", precision: 0 })
+  @Column({ name: "hora_fim", type: "timestamp", precision: 0 })
   horaFim!: string;
   // ============================================================================
 
