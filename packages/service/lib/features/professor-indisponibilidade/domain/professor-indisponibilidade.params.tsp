@@ -74,4 +74,16 @@ model ProfessorIndisponibilidadeCreateOutput {
   motivo: string;
 }
 
+model ProfessorIndisponibilidadeRRuleInput {
+  @format("uuid") // talvez ir p/ string
+  id: string;
+}
+model ProfessorIndisponibilidadeRRuleOutput {
+  idPerfilFk?: string;
+  rrule: string;
+  diaDaSemana: integer;
+  horaInicio: string;
+  horaFim: string;
+}
+
 }

@@ -3,9 +3,10 @@ import { map, pick } from "lodash";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/infrastructure/integrations/database";
+import { ProfessorIndisponibilidadeEntity } from "@/infrastructure/integrations/database/typeorm/entities";
 import { QbEfficientLoad, SearchService } from "@/shared";
 import type { IDomain } from "@/shared/tsp/schema/typings";
-import { ProfessorIndisponibilidadeEntity } from "@/infrastructure/integrations/database/typeorm/entities";
+
 // ============================================================================
 
 const aliasIndisponibilidade = "indisponibilidade";
@@ -31,18 +32,11 @@ export class ProfessorIndisponibilidadeService {
   ): Promise<IDomain.ProfessorIndisponibilidadeListOutput["success"]> {
     // =========================================================
 
-    const qb = this.indisponibilidadeRepository
-      .createQueryBuilder(aliasIndisponibilidade)
-      .leftJoinAndSelect(`${aliasIndisponibilidade}.perfil`, "perfil");
+    const qb = this.indisponibilidadeRepository.createQueryBuilder(aliasIndisponibilidade).leftJoinAndSelect(`${aliasIndisponibilidade}.perfil`, "perfil");
 
     // =========================================================
 
-    await accessContext.applyFilter(
-      "vinculo:find",
-      qb,
-      aliasIndisponibilidade,
-      null,
-    );
+    await accessContext.applyFilter("vinculo:find", qb, aliasIndisponibilidade, null);
     // =========================================================
 
     const paginated = await this.searchService.search(
@@ -58,12 +52,7 @@ export class ProfessorIndisponibilidadeService {
           "motivo",
           "dateCreated",
         ],
-        sortableColumns: [
-          "indisponibilidadeInicio",
-          "indisponibilidadeTermino",
-          "motivo",
-          "dateCreated",
-        ],
+        sortableColumns: ["indisponibilidadeInicio", "indisponibilidadeTermino", "motivo", "dateCreated"],
         searchableColumns: [
           "id",
 
@@ -85,27 +74,17 @@ export class ProfessorIndisponibilidadeService {
     // =========================================================
 
     qb.select([]);
-    await QbEfficientLoad(
-      "ProfessorIndisponibilidadeFindOneOutput",
-      qb,
-      aliasIndisponibilidade,
-      selection,
-    );
+    await QbEfficientLoad("ProfessorIndisponibilidadeFindOneOutput", qb, aliasIndisponibilidade, selection);
 
     // =========================================================
 
-    const pageItemsView = await qb
-      .andWhereInIds(map(paginated.data, "id"))
-      .getMany();
-    paginated.data = paginated.data.map(
-      (paginated) => pageItemsView.find((i) => i.id === paginated.id)!,
-    );
+    const pageItemsView = await qb.andWhereInIds(map(paginated.data, "id")).getMany();
+    paginated.data = paginated.data.map((paginated) => pageItemsView.find((i) => i.id === paginated.id)!);
 
     // =========================================================
 
     return paginated;
   }
-
 
   async indisponibilidadeFindByIdSimple(
     accessContext: AccessContext,
@@ -114,18 +93,11 @@ export class ProfessorIndisponibilidadeService {
   ): Promise<IDomain.ProfessorIndisponibilidadeFindOneOutput["success"]> {
     // =========================================================
 
-    const qb = this.indisponibilidadeRepository
-      .createQueryBuilder(aliasIndisponibilidade)
-      .leftJoinAndSelect(`${aliasIndisponibilidade}.perfil`, "perfil");
+    const qb = this.indisponibilidadeRepository.createQueryBuilder(aliasIndisponibilidade).leftJoinAndSelect(`${aliasIndisponibilidade}.perfil`, "perfil");
 
     // =========================================================
 
-    await accessContext.applyFilter(
-      "vinculo:find",
-      qb,
-      aliasIndisponibilidade,
-      null,
-    );
+    await accessContext.applyFilter("vinculo:find", qb, aliasIndisponibilidade, null);
 
     // =========================================================
 
@@ -137,12 +109,7 @@ export class ProfessorIndisponibilidadeService {
 
     // =========================================================
 
-  await QbEfficientLoad(
-    "ProfessorIndisponibilidadeFindOneOutput",
-    qb,
-    aliasIndisponibilidade,
-    selection,
-  );
+    await QbEfficientLoad("ProfessorIndisponibilidadeFindOneOutput", qb, aliasIndisponibilidade, selection);
 
     // =========================================================
 
@@ -153,16 +120,8 @@ export class ProfessorIndisponibilidadeService {
     return indisponibilidade!;
   }
 
-  async indisponibilidadeFindByIdSimpleStrict(
-    accesContext: AccessContext,
-    id: IDomain.ProfessorIndisponibilidadeFindOneInput["idPerfilFk"],
-    selection?: string[],
-  ) {
-    const indisponibilidade = await this.indisponibilidadeFindByIdSimple(
-      accesContext,
-      id,
-      selection,
-    );
+  async indisponibilidadeFindByIdSimpleStrict(accesContext: AccessContext, id: IDomain.ProfessorIndisponibilidadeFindOneInput["idPerfilFk"], selection?: string[]) {
+    const indisponibilidade = await this.indisponibilidadeFindByIdSimple(accesContext, id, selection);
 
     if (!indisponibilidade) {
       throw new Error("Indisponibilidade não encontrada");
@@ -175,18 +134,11 @@ export class ProfessorIndisponibilidadeService {
     accessContext: AccessContext,
     idPerfil: IDomain.ProfessorIndisponibilidadeListInput["idPerfilFk"],
   ): Promise<IDomain.ProfessorIndisponibilidadeListOutput["success"]> {
-    const qb = this.indisponibilidadeRepository
-      .createQueryBuilder(aliasIndisponibilidade)
-      .leftJoinAndSelect(`${aliasIndisponibilidade}.perfil`, "perfil");
+    const qb = this.indisponibilidadeRepository.createQueryBuilder(aliasIndisponibilidade).leftJoinAndSelect(`${aliasIndisponibilidade}.perfil`, "perfil");
 
     // =========================================================
 
-    await accessContext.applyFilter(
-      "vinculo:find",
-      qb,
-      aliasIndisponibilidade,
-      null,
-    );
+    await accessContext.applyFilter("vinculo:find", qb, aliasIndisponibilidade, null);
 
     // =========================================================
 
@@ -210,8 +162,7 @@ export class ProfessorIndisponibilidadeService {
     };
   }
 
-  async createIndisponibilidade(accessContext: AccessContext, domain: IDomain.ProfessorIndisponibilidadeCreateInput
-  ) {
+  async createIndisponibilidade(accessContext: AccessContext, domain: IDomain.ProfessorIndisponibilidadeCreateInput) {
     if (!domain.idPerfilFk) throw new BadRequestException("id_perfil is required");
 
     const indisponibilidade = this.indisponibilidadeRepository.create({
@@ -224,61 +175,77 @@ export class ProfessorIndisponibilidadeService {
 
     return this.indisponibilidadeRepository.save(indisponibilidade);
   }
-  
-  async indisponibilidadeDelete(
-    accessContext: AccessContext,
-    id: IDomain.ProfessorIndisponibilidadeFindOneInput["id"],
-  ): Promise<IDomain.ProfessorIndisponibilidadeFindOneOutput["success"]> {
+
+  async indisponibilidadeDelete(accessContext: AccessContext, id: IDomain.ProfessorIndisponibilidadeFindOneInput["id"]): Promise<IDomain.ProfessorIndisponibilidadeFindOneOutput["success"]> {
     // =========================================================
 
-    const indisponibilidade = await this.indisponibilidadeFindByIdSimpleStrict(
-      accessContext,
-      id,
-    );
+    const indisponibilidade = await this.indisponibilidadeFindByIdSimpleStrict(accessContext, id);
 
     // =========================================================
 
-    await accessContext.applyFilter(
-      "vinculo:find",
-      this.indisponibilidadeRepository.createQueryBuilder(
-        aliasIndisponibilidade,
-      ),
-      aliasIndisponibilidade,
-      indisponibilidade,
-    );
+    await accessContext.applyFilter("vinculo:find", this.indisponibilidadeRepository.createQueryBuilder(aliasIndisponibilidade), aliasIndisponibilidade, indisponibilidade);
 
     // =========================================================
 
     return this.indisponibilidadeRepository.remove(indisponibilidade);
   }
 
-   async indisponibilidadeUpdate(
-    accessContext: AccessContext,
-    domain: IDomain.ProfessorIndisponibilidadeFindOneInput & IDomain.ProfessorIndisponibilidadeUpdateInput) {
+  async indisponibilidadeUpdate(accessContext: AccessContext, domain: IDomain.ProfessorIndisponibilidadeFindOneInput & IDomain.ProfessorIndisponibilidadeUpdateInput) {
     // =========================================================
 
     const currentIndisponibilidade = await this.indisponibilidadeFindByIdSimpleStrict(accessContext, domain.id);
     // =========================================================
 
-    await accessContext.ensurePermission("aula:update", {dto: domain}, domain.id, this.indisponibilidadeRepository.createQueryBuilder(aliasIndisponibilidade));
+    await accessContext.ensurePermission("aula:update", { dto: domain }, domain.id, this.indisponibilidadeRepository.createQueryBuilder(aliasIndisponibilidade));
 
-    const dtoIndisponibilidade = pick(domain, [
-      "indisponibilidadeInicio",
-      "indisponibilidadeTermino",
-      "horaInicio",
-      "horaFim",
-      "motivo",
-    ]);
+    const dtoIndisponibilidade = pick(domain, ["indisponibilidadeInicio", "indisponibilidadeTermino", "horaInicio", "horaFim", "motivo"]);
 
     const indisponibilidade = {
       id: currentIndisponibilidade.id,
     } as ProfessorIndisponibilidadeEntity;
 
-   this.indisponibilidadeRepository.merge(indisponibilidade, dtoIndisponibilidade);
+    this.indisponibilidadeRepository.merge(indisponibilidade, ...dtoIndisponibilidade);
 
-    
     return this.indisponibilidadeRepository.save(indisponibilidade);
     // =========================================================
+  }
 
+  
+  async ProfessorIndisponibilidadeRRuleFindOneById(
+    accessContext: AccessContext,
+    id: IDomain.ProfessorIndisponibilidadeRRuleInput["id"],
+  ): Promise<IDomain.ProfessorIndisponibilidadeRRuleOutput["success"]> {
+    // =========================================================
+
+    const qb = this.indisponibilidadeRepository.createQueryBuilder(aliasIndisponibilidade);
+
+    // =========================================================
+
+    await accessContext.applyFilter("vinculo:find", qb, aliasIndisponibilidade, null);
+  
+    // =========================================================
+    qb.andWhere(`${aliasIndisponibilidade}.id = :id`, { id });
+
+    // =========================================================
+
+    const indisponibilidade = await qb.getOne();
+
+    if (!indisponibilidade) {
+      throw new BadRequestException("Indisponibilidade não encontrada");
+    }
+
+    // =========================================================
+
+    return {
+      id: indisponibilidade.id,
+      id_perfil_fk: indisponibilidade.idPerfilFk,
+      rrule: `FREQ=WEEKLY;BYDAY=${["SU","MO","TU","WE","TH","FR","SA"][indisponibilidade.diaDaSemana]}`,
+      data_hora_inicio: indisponibilidade.horaInicio
+      ? indisponibilidade.horaInicio.toISOString().replace(/Z$/, "")
+       : null,
+      data_hora_fim: indisponibilidade.horaFim
+      ? indisponibilidade.horaFim.toISOString().replace(/Z$/, "")
+      : null,
+    }; 
   }
 }

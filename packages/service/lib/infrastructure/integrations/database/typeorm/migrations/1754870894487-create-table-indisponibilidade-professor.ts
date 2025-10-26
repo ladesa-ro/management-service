@@ -1,4 +1,3 @@
-import { time } from "node:console";
 import { MigrationInterface, QueryRunner, Table } from "typeorm";
 
 const tableName = "indisponibilidade_professor";
@@ -29,13 +28,13 @@ export class CreateTableIndisponibilidadeProfessor1754870894487 implements Migra
           },
           {
             name: "hora_inicio",
-            type: "time",
+            type: "timestamp",
             precision: 0,
             isNullable: false,
           },
           {
             name: "hora_fim",
-            type: "time",
+            type: "timestamp",
             precision: 0,
             isNullable: false,
           },
@@ -78,15 +77,20 @@ export class CreateTableIndisponibilidadeProfessor1754870894487 implements Migra
     );
 
     await queryRunner.query(`
-      DROP TRIGGER IF EXISTS change_date_updated_table_${tableName} ON ${tableName};
-      CREATE TRIGGER change_date_updated_table_${tableName}
-        BEFORE UPDATE ON ${tableName}
-        FOR EACH ROW
-          EXECUTE FUNCTION change_date_updated();
-      
-      ALTER TABLE "${tableName}"
-      ADD CONSTRAINT "CHK_dia_da_semana" CHECK ("dia_da_semana" BETWEEN 0 AND 6);
-    `);
+    DO $$
+    BEGIN
+      IF NOT EXISTS (
+        SELECT 1 FROM pg_constraint 
+        WHERE conname = 'CHK_dia_da_semana'
+        ) THEN
+        ALTER TABLE "indisponibilidade_professor"
+        ADD CONSTRAINT "CHK_dia_da_semana"
+        CHECK ("dia_da_semana" BETWEEN 0 AND 6);
+      END IF;
+    END
+    $$;
+`);
+
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
