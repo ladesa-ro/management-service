@@ -204,7 +204,7 @@ export class ProfessorIndisponibilidadeService {
       id: currentIndisponibilidade.id,
     } as ProfessorIndisponibilidadeEntity;
 
-    this.indisponibilidadeRepository.merge(indisponibilidade, dtoIndisponibilidade);
+    this.indisponibilidadeRepository.merge(indisponibilidade, ...dtoIndisponibilidade);
 
     return this.indisponibilidadeRepository.save(indisponibilidade);
     // =========================================================
@@ -240,8 +240,12 @@ export class ProfessorIndisponibilidadeService {
       id: indisponibilidade.id,
       id_perfil_fk: indisponibilidade.idPerfilFk,
       rrule: `FREQ=WEEKLY;BYDAY=${["SU","MO","TU","WE","TH","FR","SA"][indisponibilidade.diaDaSemana]}`,
-      data_hora_inicio: indisponibilidade.horaInicio,
-      data_hora_fim: indisponibilidade.horaFim ?? null,
+      data_hora_inicio: indisponibilidade.horaInicio
+      ? indisponibilidade.horaInicio.toISOString().replace(/Z$/, "")
+       : null,
+      data_hora_fim: indisponibilidade.horaFim
+      ? indisponibilidade.horaFim.toISOString().replace(/Z$/, "")
+      : null,
     }; 
   }
 }
