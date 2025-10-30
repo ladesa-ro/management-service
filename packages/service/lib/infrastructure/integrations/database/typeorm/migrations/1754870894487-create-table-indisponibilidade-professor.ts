@@ -63,6 +63,12 @@ export class CreateTableIndisponibilidadeProfessor1754870894487 implements Migra
             isNullable: true,
           },
         ],
+          checks: [
+            { 
+            name: "CHK_dia_da_semana",
+            expression: `"dia_da_semana" BETWEEN 0 AND 6`
+          }
+        ],
         foreignKeys: [
           {
             name: `fk__${tableName}__depende__perfil`,
