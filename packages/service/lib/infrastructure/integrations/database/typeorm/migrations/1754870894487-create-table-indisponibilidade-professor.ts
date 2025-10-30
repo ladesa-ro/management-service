@@ -2,7 +2,9 @@ import { MigrationInterface, QueryRunner, Table } from "typeorm";
 
 const tableName = "indisponibilidade_professor";
 
-export class CreateTableIndisponibilidadeProfessor1754870894487 implements MigrationInterface {
+export class CreateTableIndisponibilidadeProfessor1754870894487
+  implements MigrationInterface
+{
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
@@ -63,11 +65,11 @@ export class CreateTableIndisponibilidadeProfessor1754870894487 implements Migra
             isNullable: true,
           },
         ],
-          checks: [
-            { 
+        checks: [
+          {
             name: "CHK_dia_da_semana",
-            expression: `"dia_da_semana" BETWEEN 0 AND 6`
-          }
+            expression: `"dia_da_semana" BETWEEN 0 AND 6`,
+          },
         ],
         foreignKeys: [
           {
@@ -79,24 +81,8 @@ export class CreateTableIndisponibilidadeProfessor1754870894487 implements Migra
           },
         ],
       }),
-      true,
+      true
     );
-
-    await queryRunner.query(`
-    DO $$
-    BEGIN
-      IF NOT EXISTS (
-        SELECT 1 FROM pg_constraint 
-        WHERE conname = 'CHK_dia_da_semana'
-        ) THEN
-        ALTER TABLE "indisponibilidade_professor"
-        ADD CONSTRAINT "CHK_dia_da_semana"
-        CHECK ("dia_da_semana" BETWEEN 0 AND 6);
-      END IF;
-    END
-    $$;
-`);
-
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
