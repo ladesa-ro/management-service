@@ -12,14 +12,13 @@ model EventoView {
 model EventoFindOneInput {
   id: Evento.id;
 }
-
 /** Visão FindOne de um Evento. */
 model EventoFindOneOutput {
   ...PickProperties<EventoView, "id">;
   ...PickProperties<EventoView, "nome" | "rrule" | "cor">;
   ...PickProperties<EventoView, "calendario">;
   ...PickProperties<EventoView, "data_inicio" | "data_fim">;
-  ...PickProperties<EventoView, "local">;
+  ...PickProperties<EventoView, "ambiente" | "bloco" | "campus">;
   ...PickProperties<EventoView, "dateCreated" | "dateUpdated" | "dateDeleted">;
 }
 
@@ -31,7 +30,7 @@ model EventoCreateInput {
   calendario: CalendarioLetivoFindOneInput;
   data_inicio?: utcDateTime;
   data_fim?: utcDateTime;
-  local?: string | null;
+  id_ambiente: string;
 }
 
 /** Dados de entrada para a atualização de um Evento. */
