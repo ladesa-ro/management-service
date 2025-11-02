@@ -7,7 +7,7 @@ export class CreateColumIdAmbienteFk1762102985075 implements MigrationInterface 
       new TableColumn({
         name: "id_ambiente_fk",
         type: "uuid",
-        isNullable: false,
+        isNullable: true,
       }),
     );
     await queryRunner.createForeignKey(
