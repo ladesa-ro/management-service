@@ -1,6 +1,7 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { type IDomain } from "@/shared/tsp/schema/typings";
 import { CalendarioLetivoEntity } from "./calendario-letivo.entity";
+import { AmbienteEntity } from "@/infrastructure/integrations/database/typeorm/entities/02-ambientes";
 
 @Entity("evento")
 export class EventoEntity implements IDomain.Evento {
@@ -9,6 +10,9 @@ export class EventoEntity implements IDomain.Evento {
 
   @Column({ name: "nome", type: "text" })
   nome!: string | null;
+
+  @Column({ name: "id_ambiente_fk", type: "uuid", nullable: false })
+  id_ambiente!: string;
 
   @Column({ name: "rrule", type: "text", nullable: false })
   rrule!: string;
@@ -22,14 +26,15 @@ export class EventoEntity implements IDomain.Evento {
   @Column({ name: "data_fim", type: "timestamp", nullable: true })
   data_fim!: Date | null;
 
-  @Column({ name: "local", type: "text", nullable: true })
-  local!: string | null;
-
   //Chaves Estrangeiras
 
   @ManyToOne(() => CalendarioLetivoEntity)
   @JoinColumn({ name: "id_calendario_letivo_fk" })
   calendario!: IDomain.CalendarioLetivo;
+
+  @OneToOne(() => AmbienteEntity)
+  @JoinColumn({ name: "id_ambiente_fk" })
+  ambienteEntity!: AmbienteEntity;
 
   @Column({ name: "date_created", type: "timestamptz", nullable: false })
   dateCreated!: Date;
