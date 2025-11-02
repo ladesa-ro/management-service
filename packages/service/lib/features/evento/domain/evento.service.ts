@@ -46,6 +46,8 @@ export class EventoService {
 
         "rrule",
 
+        "ambiente",
+
         "data_inicio",
         "data_fim",
 
@@ -56,6 +58,8 @@ export class EventoService {
       sortableColumns: [
         "nome",
         "cor",
+
+        "ambiente",
 
         "data_inicio",
         "data_fim",
@@ -69,6 +73,8 @@ export class EventoService {
 
         "nome",
         "cor",
+
+        "ambiente",
 
         "data_inicio",
         "data_fim",
@@ -181,7 +187,7 @@ export class EventoService {
 
     // =========================================================
 
-    const dtoEvento = pick(domain, ["nome", "cor", "rrule", "data_inicio", "data_fim"]);
+    const dtoEvento = pick(domain, ["nome", "cor", "rrule", "ambiente","data_inicio", "data_fim"]);
 
     const evento = this.eventoRepository.create();
 
