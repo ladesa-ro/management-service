@@ -30,7 +30,7 @@ model EventoCreateInput {
   calendario: CalendarioLetivoFindOneInput;
   data_inicio?: utcDateTime;
   data_fim?: utcDateTime;
-  id_ambiente: string;
+  id_ambiente: string | null;
 }
 
 /** Dados de entrada para a atualização de um Evento. */
