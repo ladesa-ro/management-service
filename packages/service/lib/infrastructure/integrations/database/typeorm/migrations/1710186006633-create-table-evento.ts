@@ -15,11 +15,6 @@ export class CreateTableEvento1710186006633 implements MigrationInterface {
             default: "gen_random_uuid()",
           },
           {
-            name: "id_ambiente_fk",
-            type: "uuid",
-            isNullable: false,
-          },
-          {
             name: "nome",
             type: "text",
             isNullable: false,
@@ -66,14 +61,6 @@ export class CreateTableEvento1710186006633 implements MigrationInterface {
             columnNames: ["id_calendario_letivo_fk"],
             referencedColumnNames: ["id"],
             referencedTableName: "calendario_letivo",
-            onDelete: "CASCADE",
-            onUpdate: "CASCADE",
-          },
-          {
-            name: `fk__${tableName}__pertence__ambiente`,
-            columnNames: ["id_ambiente_fk"],
-            referencedColumnNames: ["id"],
-            referencedTableName: "ambiente",
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
           },
