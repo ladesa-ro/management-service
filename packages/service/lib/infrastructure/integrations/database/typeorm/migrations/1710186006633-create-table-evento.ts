@@ -7,7 +7,6 @@ export class CreateTableEvento1710186006633 implements MigrationInterface {
     await queryRunner.createTable(
       new Table({
         name: tableName,
-
         columns: [
           {
             name: "id",
@@ -15,7 +14,11 @@ export class CreateTableEvento1710186006633 implements MigrationInterface {
             isPrimary: true,
             default: "gen_random_uuid()",
           },
-
+          {
+            name: "id_ambiente_fk",
+            type: "uuid",
+            isNullable: false,
+          },
           {
             name: "nome",
             type: "text",
@@ -63,6 +66,16 @@ export class CreateTableEvento1710186006633 implements MigrationInterface {
             columnNames: ["id_calendario_letivo_fk"],
             referencedColumnNames: ["id"],
             referencedTableName: "calendario_letivo",
+            onDelete: "CASCADE",
+            onUpdate: "CASCADE",
+          },
+          {
+            name: `fk__${tableName}__pertence__ambiente`,
+            columnNames: ["id_ambiente_fk"],
+            referencedColumnNames: ["id"],
+            referencedTableName: "ambiente",
+            onDelete: "CASCADE",
+            onUpdate: "CASCADE",
           },
         ],
       }),
@@ -77,6 +90,7 @@ export class CreateTableEvento1710186006633 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable(tableName, true, true, true);
-  }
+    await queryRunner.query(`DROP TRIGGER IF EXISTS change_date_updated_table_${tableName} ON ${tableName};`);
+    await queryRunner.dropTable(tableName);
+    }
 }
