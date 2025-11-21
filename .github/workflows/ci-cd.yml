@@ -34,7 +34,7 @@ jobs:
 
     steps:
       - name: Checkout do código-fonte
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@29109295f81e9208d7d86ff1c6c12d2833863392
@@ -74,7 +74,7 @@ jobs:
 
     steps:
       - name: Checkout do código-fonte
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Implantação da aplicação no Kubernetes
         shell: bash
@@ -91,7 +91,7 @@ jobs:
 
     steps:
       - name: Checkout do código-fonte
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@29109295f81e9208d7d86ff1c6c12d2833863392
@@ -132,7 +132,7 @@ jobs:
 
     steps:
       - name: Checkout do código-fonte
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@29109295f81e9208d7d86ff1c6c12d2833863392
