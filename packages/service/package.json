@@ -87,7 +87,7 @@
     "tsconfig-paths": "^4.2.0",
     "type-fest": "catalog:dev",
     "typescript": "catalog:dev",
-    "unplugin-swc": "^1.5.8",
+    "unplugin-swc": "^1.5.9",
     "vite-tsconfig-paths": "catalog:dev",
     "vitest": "catalog:test"
   },
