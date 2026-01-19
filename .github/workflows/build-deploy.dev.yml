@@ -1,4 +1,4 @@
-name: CI/CD
+name: "[DEV] Build, Push & Deploy"
 
 on:
   workflow_dispatch:
@@ -8,7 +8,7 @@ on:
     paths:
       - .github/workflows/ci-cd.yml
       - .devcontainer/ci-cd/**/*
-      - k8s/**/*
+      - .deploy/**/*
       - packages/service/**/*
 
 concurrency:
@@ -21,16 +21,13 @@ env:
   IMAGE_BASENAME: ${{ github.repository }}
 
 jobs:
-  service-ci-image:
-    name: "CI: Construção e Publicação da Imagem de Container"
+  ci:
+    name: "CI: Build & Push"
     runs-on: ubuntu-latest
 
     permissions:
       contents: read
       packages: write
-
-    environment:
-      name: ci-cd-management-service-dev
 
     steps:
       - name: Checkout do código-fonte
@@ -59,17 +56,18 @@ jobs:
           cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_BASENAME }}/management-service:cache-development
           cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_BASENAME }}/management-service:cache-development,mode=max
 
-  service-cd-cluster:
-    name: "CD: Implantação no Cluster Kubernetes"
-    runs-on: deploy
+  cd:
+    name: "CD: Deploy"
+    
+    runs-on: dev-deploy
 
     permissions:
       contents: read
 
-    needs: [ service-ci-image ]
+    needs: [ ci ]
 
     environment:
-      name: ci-cd-management-service-dev
+      name: development
       url: ${{ vars.DEPLOY_URL }}
 
     steps:
@@ -78,7 +76,7 @@ jobs:
 
       - name: Implantação da aplicação no Kubernetes
         shell: bash
-        working-directory: ./k8s/development/
+        working-directory: ./.deploy/development/
         run: bash ./deploy.sh
 
   devcontainer-prebuild:
@@ -116,7 +114,7 @@ jobs:
           push: always
           runCmd: sleep 1
 
-  service-client-ci-npm:
+  ci-npm-client:
     name: "CI: Construção e Publicação do Client NPM"
     runs-on: ubuntu-latest
 
@@ -124,7 +122,7 @@ jobs:
       - devcontainer-prebuild
 
     environment:
-      name: ci-cd-management-service-dev
+      name: development
 
     permissions:
       contents: read
