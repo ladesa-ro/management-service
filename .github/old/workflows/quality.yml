@@ -46,7 +46,7 @@ jobs:
         run: |
           git stash -u;
 
-          bunx nx run :code:check;
+          bun x nx run :code:check;
 
           if [ `git stash list | wc -l` -gt 0 ]; then
             git stash pop;
@@ -60,4 +60,4 @@ jobs:
           fi
 
       - name: require changesets
-        run: bunx changeset status --since=origin/development
+        run: bun x changeset status --since=origin/development

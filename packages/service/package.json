@@ -104,7 +104,7 @@
     "test:debug": "vitest --inspect-brk --inspect --logHeapUsage --threads=false",
     "test:e2e": "vitest run --config ./vitest.config.e2e.ts",
     "test:watch": "vitest",
-    "typeorm": "bunx --bun typeorm",
+    "typeorm": "bun x --bun typeorm",
     "typeorm:create": "bun run typeorm migration:create",
     "typeorm:ds-migration": "bun run typeorm -d lib/infrastructure/integrations/database/typeorm/data-sources/migration.data-source.ts",
     "typeorm:entity": "bun run typeorm entity:create",
