@@ -2,7 +2,7 @@
 # IMAGEM BASE DO SISTEMA OPERACIONAL
 # ==========================================
 
-FROM docker.io/debian:12-slim AS os-core
+FROM docker.io/debian:13-slim AS os-core
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -31,7 +31,7 @@ ENV TMPDIR=/tmp/bun-tmp
 ENV PATH="${BUN_INSTALL}/bin:$PATH"
 
 # Instalação do Bun na versão específica para garantir consistência
-RUN curl -fsSL https://bun.sh/install | bash -s "bun-v1.2.20"
+RUN curl -fsSL https://bun.sh/install | BUN_PROFILE=baseline bash -s "bun-v1.2.20"
 
 # Cria o diretório de cache em /tmp e garante permissões
 RUN --mount=type=cache,id=bun,target=${BUN_INSTALL_CACHE_DIR},uid=1000,gid=1000 mkdir -p "${BUN_INSTALL_CACHE_DIR}" && chmod -R 777 "${BUN_INSTALL_CACHE_DIR}"
