@@ -30,8 +30,21 @@ ENV BUN_INSTALL_CACHE_DIR="/tmp/bun-cache"
 ENV TMPDIR=/tmp/bun-tmp
 ENV PATH="${BUN_INSTALL}/bin:$PATH"
 
-# Instalação do Bun na versão específica para garantir consistência
-RUN curl -fsSL https://bun.sh/install | BUN_PROFILE=baseline bash -s "bun-v1.2.20"
+# Cria diretórios necessários
+RUN mkdir -p "${BUN_INSTALL}/bin" "${BUN_INSTALL_CACHE_DIR}" "${TMPDIR}" \
+    && chmod -R 777 "${BUN_INSTALL_CACHE_DIR}" "${TMPDIR}"
+
+# --- ALTERAÇÃO AQUI ---
+# Baixa diretamente o binário "baseline" para Linux x64
+# Isso garante 100% de certeza que a versão sem AVX2 será usada
+RUN curl -fsSL "https://github.com/oven-sh/bun/releases/download/bun-v1.2.20/bun-linux-x64-baseline.zip" -o bun.zip \
+    && unzip bun.zip \
+    && mv bun-linux-x64-baseline/bun "${BUN_INSTALL}/bin/bun" \
+    && chmod +x "${BUN_INSTALL}/bin/bun" \
+    && rm -rf bun.zip bun-linux-x64-baseline
+
+# Opcional: Verifica se instalou corretamente
+RUN bun --version
 
 # Cria o diretório de cache em /tmp e garante permissões
 RUN --mount=type=cache,id=bun,target=${BUN_INSTALL_CACHE_DIR},uid=1000,gid=1000 mkdir -p "${BUN_INSTALL_CACHE_DIR}" && chmod -R 777 "${BUN_INSTALL_CACHE_DIR}"
