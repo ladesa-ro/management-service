@@ -2,7 +2,7 @@
 # IMAGEM BASE DO SISTEMA OPERACIONAL
 # ==========================================
 
-FROM docker.io/debian:13-slim AS os-core
+FROM docker.io/debian:12-slim AS os-core
 
 ENV DEBIAN_FRONTEND=noninteractive
 
