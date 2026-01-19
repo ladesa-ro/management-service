@@ -37,7 +37,7 @@ RUN mkdir -p "${BUN_INSTALL}/bin" "${BUN_INSTALL_CACHE_DIR}" "${TMPDIR}" \
 # --- ALTERAÇÃO AQUI ---
 # Baixa diretamente o binário "baseline" para Linux x64
 # Isso garante 100% de certeza que a versão sem AVX2 será usada
-RUN curl -fsSL "https://github.com/oven-sh/bun/releases/download/bun-v1.2.20/bun-linux-x64-baseline.zip" -o bun.zip \
+RUN curl -fsSL "https://github.com/oven-sh/bun/releases/download/bun-v1.3.6/bun-linux-x64-baseline.zip" -o bun.zip \
     && unzip bun.zip \
     && mv bun-linux-x64-baseline/bun "${BUN_INSTALL}/bin/bun" \
     && chmod +x "${BUN_INSTALL}/bin/bun" \
