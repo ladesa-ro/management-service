@@ -68,7 +68,7 @@
         "@types/json-schema": "^7.0.15",
         "@types/lodash": "^4.17.20",
         "@types/multer": "^1.4.13",
-        "@types/passport-http-bearer": "^1.0.41",
+        "@types/passport-http-bearer": "^1.0.42",
         "@types/rascal": "^10.2.1",
         "@types/supertest": "^6.0.3",
         "@types/uuid": "^10.0.0",
@@ -633,7 +633,7 @@
 
     "@types/passport": ["@types/passport@1.0.17", "", { "dependencies": { "@types/express": "*" } }, "sha512-aciLyx+wDwT2t2/kJGJR2AEeBz0nJU4WuRX04Wu9Dqc5lSUtwu0WERPHYsLhF9PtseiAMPBGNUOtFjxZ56prsg=="],
 
-    "@types/passport-http-bearer": ["@types/passport-http-bearer@1.0.41", "", { "dependencies": { "@types/express": "*", "@types/koa": "*", "@types/passport": "*" } }, "sha512-ecW+9e8C+0id5iz3YZ+uIarsk/vaRPkKSajt1i1Am66t0mC9gDfQDKXZz9fnPOW2xKUufbmCSou4005VM94Feg=="],
+    "@types/passport-http-bearer": ["@types/passport-http-bearer@1.0.42", "", { "dependencies": { "@types/express": "*", "@types/koa": "*", "@types/passport": "*" } }, "sha512-cGezyf9hy3Cth+zWS779FR9XYhIX/DExsVZURqcSeUU/nhj0Aw8PUhvCyfS35ScwOSd5AFiFhtfWmqHa/2aYZg=="],
 
     "@types/qs": ["@types/qs@6.14.0", "", {}, "sha512-eOunJqu0K1923aExK6y8p6fsihYEn/BYuQ4g0CxAAgFc4b/ZLN4CrsRZ55srTdqoiLzU2B2evC+apEIxprEzkQ=="],
 
