@@ -72,7 +72,7 @@
     "@types/rascal": "^10.2.1",
     "@types/supertest": "^6.0.3",
     "@types/uuid": "^10.0.0",
-    "@typespec/compiler": "^1.0.0",
+    "@typespec/compiler": "^1.8.0",
     "@typespec/http": "^1.0.1",
     "@typespec/json-schema": "^1.0.0",
     "@typespec/openapi3": "^1.0.0",
