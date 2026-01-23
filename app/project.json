@@ -1,5 +1,5 @@
 {
-  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "$schema": "./node_modules/nx/schemas/project-schema.json",
   "namedInputs": {
     "source": [
       "{projectRoot}/lib/**/*",
@@ -30,7 +30,7 @@
       "dependsOn": ["tsp:build", "tsp:dev"],
       "executor": "nx:run-commands",
       "options": {
-        "commands": ["bun run --watch lib/main.ts"],
+        "commands": ["bun run --watch lib/v2/server/main.ts"],
         "cwd": "{projectRoot}",
         "parallel": false
       }
@@ -41,7 +41,7 @@
       "dependsOn": ["tsp:build", "tsp:dev"],
       "executor": "nx:run-commands",
       "options": {
-        "commands": ["bun run --watch --inspect-wait lib/main.ts"],
+        "commands": ["bun run --watch --inspect-wait lib/v2/server/main.ts"],
         "cwd": "{projectRoot}",
         "parallel": false
       }

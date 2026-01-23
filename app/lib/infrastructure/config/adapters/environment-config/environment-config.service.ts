@@ -2,7 +2,7 @@ import { Inject, Injectable } from "@nestjs/common";
 import { ConfigService as NestConfigService } from "@nestjs/config";
 import { join } from "path";
 import type { DataSourceOptions } from "typeorm";
-import * as entities from "@/infrastructure/integrations/database/typeorm/entities";
+import * as entities from "@/v2/infrastructure.database/typeorm/entities";
 import pkg from "../../../../../package.json";
 import type { IConfig } from "../../types";
 import type { IConfigIntegrateAuthKeycloakCredentials, IConfigIntegrateAuthOidcClientCredentials } from "../../types/IConfigIntegrateAuth";
