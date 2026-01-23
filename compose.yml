@@ -7,7 +7,7 @@ services:
     hostname: ladesa-management-service
     user: root
     build:
-      context: .
+      context: ./app
       target: devcontainer
     command:
       - sleep
@@ -20,10 +20,10 @@ services:
       - "3701:3701"
       - "9229:9229"
       - "6499:6499"
-    working_dir: /ladesa/management-service
+    working_dir: /ladesa/management-service-app
     userns_mode: keep-id:uid=1000,gid=1000
     volumes:
-      - .:/ladesa/management-service:z
+      - ./app:/ladesa/management-service-app:z
       - ladesa-management-service-uploaded-files:/container/uploaded
       - ./volumes/history/root-zsh:/root/.zsh_history:z
       - ./volumes/history/root-bash:/root/.bash_history:z

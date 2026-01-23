@@ -7,12 +7,12 @@ COMPOSE_SERVICE_USER=happy
 COMMAND_TOOL_OCI_RUNTIME=docker
 COMMAND_TOOL_OCI_COMPOSE=$(COMMAND_TOOL_OCI_RUNTIME) compose
 
-COMMAND_COMPOSE_SERVICE_OPTIONS=--file docker-compose.yml -p ladesa-management-service
+COMMAND_COMPOSE_SERVICE_OPTIONS=--file compose.yml -p ladesa-management-service
 COMMAND_COMPOSE_SERVICE=$(COMMAND_TOOL_OCI_COMPOSE) $(COMMAND_COMPOSE_SERVICE_OPTIONS)
 
 SHELL_INSIDE=zsh
 SHELL_INSIDE_PATH?=./
-SHELL_WORKING_DIR=/ladesa/management-service/packages/service
+SHELL_WORKING_DIR=/ladesa/management-service-app
 
 setup:
 	$(shell bash -c "mkdir -p volumes/history && touch volumes/history/{root,happy}-{bash,zsh}")

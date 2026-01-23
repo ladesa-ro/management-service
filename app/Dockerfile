@@ -34,16 +34,12 @@ ENV PATH="${BUN_INSTALL}/bin:$PATH"
 RUN mkdir -p "${BUN_INSTALL}/bin" "${BUN_INSTALL_CACHE_DIR}" "${TMPDIR}" \
     && chmod -R 777 "${BUN_INSTALL_CACHE_DIR}" "${TMPDIR}"
 
-# --- ALTERAÇÃO AQUI ---
-# Baixa diretamente o binário "baseline" para Linux x64
-# Isso garante 100% de certeza que a versão sem AVX2 será usada
 RUN curl -fsSL "https://github.com/oven-sh/bun/releases/download/bun-v1.3.6/bun-linux-x64-baseline.zip" -o bun.zip \
     && unzip bun.zip \
     && mv bun-linux-x64-baseline/bun "${BUN_INSTALL}/bin/bun" \
     && chmod +x "${BUN_INSTALL}/bin/bun" \
     && rm -rf bun.zip bun-linux-x64-baseline
 
-# Opcional: Verifica se instalou corretamente
 RUN bun --version
 
 # Cria o diretório de cache em /tmp e garante permissões
@@ -60,7 +56,7 @@ USER 1000:1000
 FROM os-runtime AS os-development
 
 USER 1000:1000
-WORKDIR "/ladesa/management-service"
+WORKDIR "/ladesa/management-service-app"
 
 # ==========================================
 # IMAGEM PARA AMBIENTE DE DESENVOLVIMENTO
@@ -108,7 +104,7 @@ RUN --mount=type=cache,id=bun,uid=1000,gid=1000,target=${BUN_INSTALL_CACHE_DIR} 
 
 FROM source-with-dev-dependencies AS service-build
 USER 1000:1000
-RUN bun run --filter "@ladesa-ro/management-service" build
+RUN bun run build
 
 # ==========================================
 # IMAGEM FINAL DE EXECUÇÃO
@@ -127,9 +123,9 @@ EXPOSE $PORT
 
 USER happy
 
-COPY --from=service-build --chown=1000:1000 /ladesa/management-service /ladesa/management-service
+COPY --from=service-build --chown=1000:1000 /ladesa/management-service-app /ladesa/management-service-app
 
-WORKDIR "/ladesa/management-service/packages/service"
+WORKDIR "/ladesa/management-service-app"
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD curl -f http://localhost:$PORT/health || exit 1
