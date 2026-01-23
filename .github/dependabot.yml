@@ -12,24 +12,6 @@ updates:
       interval: "daily"
 
   - package-ecosystem: bun
-    directory: "/packages/service"
+    directory: "/app"
     schedule:
       interval: "daily"
-    groups:
-      openapi-ts:
-        applies-to: version-updates
-        patterns:
-          - "@hey-presentation/openapi-ts*"
-        update-types:
-          - "minor"
-          - "patch"
-
-      dev-dependencies:
-        applies-to: version-updates
-        patterns:
-          - "*"
-        exclude-patterns:
-          - "@hey-presentation/openapi-ts*"
-        update-types:
-          - "minor"
-          - "patch"
