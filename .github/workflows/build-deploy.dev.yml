@@ -29,23 +29,23 @@ jobs:
       packages: write
 
     steps:
-      - name: [DEV] Checkout do código-fonte
+      - name: "[DEV] Checkout do código-fonte"
         uses: actions/checkout@v5
 
-      - name: [DEV] Set up QEMU
+      - name: "[DEV] Set up QEMU"
         uses: docker/setup-qemu-action@29109295f81e9208d7d86ff1c6c12d2833863392
 
-      - name: [DEV] Set up Docker Buildx
+      - name: "[DEV] Set up Docker Buildx"
         uses: docker/setup-buildx-action@e468171a9de216ec08956ac3ada2f0791b6bd435
 
-      - name: [DEV] Autenticação no GitHub Container Registry
+      - name: "[DEV] Autenticação no GitHub Container Registry"
         uses: docker/login-action@5e57cd118135c172c3672efd75eb46360885c0ef
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ env.REGISTRY_USERNAME }}
           password: ${{ env.REGISTRY_TOKEN }}
 
-      - name: [DEV] Construção e publicação da imagem de contêiner
+      - name: "[DEV] Construção e publicação da imagem de contêiner"
         uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83
         with:
           context: ./app/
@@ -65,10 +65,10 @@ jobs:
       name: development
       url: ${{ vars.DEPLOY_URL }}
     steps:
-      - name: [DEV] Checkout do código-fonte
+      - name: "[DEV] Checkout do código-fonte"
         uses: actions/checkout@v5
 
-      - name: [DEV] Implantação
+      - name: "[DEV] Implantação"
         shell: bash
         working-directory: ./.deploy/development/
         run: bash ./deploy.sh
