@@ -1,10 +1,15 @@
-import { Controller, Delete, Get, Patch, Post } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
+import { Controller, Delete, Get, Patch, Post, Query, Body, Param } from "@nestjs/common";
+import { ApiTags, ApiOperation, ApiOkResponse, ApiCreatedResponse, ApiForbiddenResponse, ApiNotFoundResponse } from "@nestjs/swagger";
 import { AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
-import { AppRequest, requestRepresentationMergeToDomain } from "@/shared";
-import { type IAppRequest } from "@/shared/tsp/openapi/document/app-openapi-typings";
-import { type IDomain } from "@/shared/tsp/schema/typings";
 import { ModalidadeService } from "../domain/modalidade.service";
+import {
+  ModalidadeFindOneOutputDto,
+  ModalidadeListInputDto,
+  ModalidadeListOutputDto,
+  ModalidadeCreateInputDto,
+  ModalidadeUpdateInputDto,
+  ModalidadeFindOneInputDto,
+} from "../dto";
 
 @ApiTags("modalidades")
 @Controller("/modalidades")
@@ -12,32 +17,61 @@ export class ModalidadeController {
   constructor(private modalidadeService: ModalidadeService) {}
 
   @Get("/")
-  async modalidadeFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("ModalidadeList") dto: IAppRequest<"ModalidadeList">) {
-    const domain: IDomain.ModalidadeListInput = requestRepresentationMergeToDomain(dto);
-    return this.modalidadeService.modalidadeFindAll(accessContext, domain);
+  @ApiOperation({ summary: "Lista modalidades" })
+  @ApiOkResponse({ type: ModalidadeListOutputDto })
+  @ApiForbiddenResponse()
+  async modalidadeFindAll(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Query() dto: ModalidadeListInputDto,
+  ): Promise<ModalidadeListOutputDto> {
+    return this.modalidadeService.modalidadeFindAll(accessContext, dto);
   }
 
   @Get("/:id")
-  async modalidadeFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("ModalidadeDeleteOneById") dto: IAppRequest<"ModalidadeDeleteOneById">) {
-    const domain: IDomain.ModalidadeFindOneInput = requestRepresentationMergeToDomain(dto);
-    return this.modalidadeService.modalidadeFindByIdStrict(accessContext, domain);
+  @ApiOperation({ summary: "Busca uma modalidade por ID" })
+  @ApiOkResponse({ type: ModalidadeFindOneOutputDto })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async modalidadeFindById(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: ModalidadeFindOneInputDto,
+  ): Promise<ModalidadeFindOneOutputDto> {
+    return this.modalidadeService.modalidadeFindByIdStrict(accessContext, params);
   }
 
   @Post("/")
-  async modalidadeCreate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("ModalidadeCreate") dto: IAppRequest<"ModalidadeCreate">) {
-    const domain: IDomain.ModalidadeCreateInput = requestRepresentationMergeToDomain(dto);
-    return this.modalidadeService.modalidadeCreate(accessContext, domain);
+  @ApiOperation({ summary: "Cria uma modalidade" })
+  @ApiCreatedResponse({ type: ModalidadeFindOneOutputDto })
+  @ApiForbiddenResponse()
+  async modalidadeCreate(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Body() dto: ModalidadeCreateInputDto,
+  ): Promise<ModalidadeFindOneOutputDto> {
+    return this.modalidadeService.modalidadeCreate(accessContext, dto);
   }
 
   @Patch("/:id")
-  async modalidadeUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("ModalidadeUpdateOneById") dto: IAppRequest<"ModalidadeUpdateOneById">) {
-    const domain: IDomain.ModalidadeFindOneInput & IDomain.ModalidadeUpdateInput = requestRepresentationMergeToDomain(dto);
-    return this.modalidadeService.modalidadeUpdate(accessContext, domain);
+  @ApiOperation({ summary: "Atualiza uma modalidade" })
+  @ApiOkResponse({ type: ModalidadeFindOneOutputDto })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async modalidadeUpdate(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: ModalidadeFindOneInputDto,
+    @Body() dto: ModalidadeUpdateInputDto,
+  ): Promise<ModalidadeFindOneOutputDto> {
+    return this.modalidadeService.modalidadeUpdate(accessContext, { id: params.id, ...dto });
   }
 
   @Delete("/:id")
-  async modalidadeDeleteOneById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("ModalidadeDeleteOneById") dto: IAppRequest<"ModalidadeDeleteOneById">) {
-    const domain: IDomain.ModalidadeFindOneInput = requestRepresentationMergeToDomain(dto);
-    return this.modalidadeService.modalidadeDeleteOneById(accessContext, domain);
+  @ApiOperation({ summary: "Remove uma modalidade" })
+  @ApiOkResponse({ type: Boolean })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async modalidadeDeleteOneById(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: ModalidadeFindOneInputDto,
+  ): Promise<boolean> {
+    return this.modalidadeService.modalidadeDeleteOneById(accessContext, params);
   }
 }

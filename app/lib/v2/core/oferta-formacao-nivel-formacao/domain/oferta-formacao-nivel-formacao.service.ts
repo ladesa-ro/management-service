@@ -8,7 +8,14 @@ import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/v2/infrastructure.database";
 import type { OfertaFormacaoNivelFormacaoEntity } from "@/v2/infrastructure.database/typeorm/entities";
 import { QbEfficientLoad, SearchService } from "@/shared";
-import { type IDomain } from "@/shared/tsp/schema/typings";
+import type {
+  OfertaFormacaoNivelFormacaoFindOneOutputDto,
+  OfertaFormacaoNivelFormacaoListInputDto,
+  OfertaFormacaoNivelFormacaoListOutputDto,
+  OfertaFormacaoNivelFormacaoCreateInputDto,
+  OfertaFormacaoNivelFormacaoUpdateInputDto,
+  OfertaFormacaoNivelFormacaoFindOneInputDto,
+} from "../dto";
 
 // ============================================================================
 
@@ -31,9 +38,9 @@ export class OfertaFormacaoNivelFormacaoService {
 
   async ofertaFormacaoNivelFormacaoFindAll(
     accessContext: AccessContext,
-    domain: IDomain.OfertaFormacaoNivelFormacaoListInput | null = null,
+    dto: OfertaFormacaoNivelFormacaoListInputDto | null = null,
     selection?: string[],
-  ): Promise<IDomain.OfertaFormacaoNivelFormacaoListOutput["success"]> {
+  ): Promise<OfertaFormacaoNivelFormacaoListOutputDto> {
     // =========================================================
 
     const qb = this.ofertaFormacaoNivelFormacaoRepository.createQueryBuilder(aliasOfertaFormacaoNivelFormacao);
@@ -47,8 +54,8 @@ export class OfertaFormacaoNivelFormacaoService {
     const paginated = await this.searchService.search(
       qb,
       {
-        ...domain,
-        sortBy: domain?.sortBy ? domain.sortBy.map((s: any) => s.toString()) : undefined,
+        ...dto,
+        sortBy: dto?.sortBy ? dto.sortBy.map((s: any) => s.toString()) : undefined,
       },
       {
         ...paginateConfig,
@@ -77,7 +84,7 @@ export class OfertaFormacaoNivelFormacaoService {
     // =========================================================
 
     qb.select([]);
-    await QbEfficientLoad("OfertaFormacaoNivelFormacaoFindOneOutput", qb, aliasOfertaFormacaoNivelFormacao, selection);
+    QbEfficientLoad("OfertaFormacaoNivelFormacaoFindOneOutput", qb, aliasOfertaFormacaoNivelFormacao, selection);
 
     // =========================================================
 
@@ -86,14 +93,14 @@ export class OfertaFormacaoNivelFormacaoService {
 
     // =========================================================
 
-    return paginated;
+    return paginated as OfertaFormacaoNivelFormacaoListOutputDto;
   }
 
   async ofertaFormacaoNivelFormacaoFindById(
     accessContext: AccessContext | null,
-    domain: IDomain.OfertaFormacaoNivelFormacaoFindOneInput,
+    dto: OfertaFormacaoNivelFormacaoFindOneInputDto,
     selection?: string[],
-  ): Promise<IDomain.OfertaFormacaoNivelFormacaoFindOneOutput | null> {
+  ): Promise<OfertaFormacaoNivelFormacaoFindOneOutputDto | null> {
     // =========================================================
 
     const qb = this.ofertaFormacaoNivelFormacaoRepository.createQueryBuilder(aliasOfertaFormacaoNivelFormacao);
@@ -106,12 +113,12 @@ export class OfertaFormacaoNivelFormacaoService {
 
     // =========================================================
 
-    qb.andWhere(`${aliasOfertaFormacaoNivelFormacao}.id = :id`, { id: domain.id });
+    qb.andWhere(`${aliasOfertaFormacaoNivelFormacao}.id = :id`, { id: dto.id });
 
     // =========================================================
 
     qb.select([]);
-    await QbEfficientLoad("OfertaFormacaoNivelFormacaoFindOneOutput", qb, aliasOfertaFormacaoNivelFormacao, selection);
+    QbEfficientLoad("OfertaFormacaoNivelFormacaoFindOneOutput", qb, aliasOfertaFormacaoNivelFormacao, selection);
 
     // =========================================================
 
@@ -119,11 +126,11 @@ export class OfertaFormacaoNivelFormacaoService {
 
     // =========================================================
 
-    return ofertaFormacaoNivelFormacao;
+    return ofertaFormacaoNivelFormacao as OfertaFormacaoNivelFormacaoFindOneOutputDto | null;
   }
 
-  async ofertaFormacaoNivelFormacaoFindByIdStrict(accessContext: AccessContext, domain: IDomain.OfertaFormacaoNivelFormacaoFindOneInput, selection?: string[]) {
-    const ofertaFormacaoNivelFormacao = await this.ofertaFormacaoNivelFormacaoFindById(accessContext, domain, selection);
+  async ofertaFormacaoNivelFormacaoFindByIdStrict(accessContext: AccessContext, dto: OfertaFormacaoNivelFormacaoFindOneInputDto, selection?: string[]): Promise<OfertaFormacaoNivelFormacaoFindOneOutputDto> {
+    const ofertaFormacaoNivelFormacao = await this.ofertaFormacaoNivelFormacaoFindById(accessContext, dto, selection);
 
     if (!ofertaFormacaoNivelFormacao) {
       throw new NotFoundException();
@@ -134,9 +141,9 @@ export class OfertaFormacaoNivelFormacaoService {
 
   async ofertaFormacaoNivelFormacaoFindByIdSimple(
     accessContext: AccessContext,
-    id: IDomain.OfertaFormacaoNivelFormacaoFindOneInput["id"],
+    id: OfertaFormacaoNivelFormacaoFindOneInputDto["id"],
     selection?: string[],
-  ): Promise<IDomain.OfertaFormacaoNivelFormacaoFindOneOutput | null> {
+  ): Promise<OfertaFormacaoNivelFormacaoFindOneOutputDto | null> {
     // =========================================================
 
     const qb = this.ofertaFormacaoNivelFormacaoRepository.createQueryBuilder(aliasOfertaFormacaoNivelFormacao);
@@ -152,7 +159,7 @@ export class OfertaFormacaoNivelFormacaoService {
     // =========================================================
 
     qb.select([]);
-    await QbEfficientLoad("OfertaFormacaoNivelFormacaoFindOneOutput", qb, aliasOfertaFormacaoNivelFormacao, selection);
+    QbEfficientLoad("OfertaFormacaoNivelFormacaoFindOneOutput", qb, aliasOfertaFormacaoNivelFormacao, selection);
 
     // =========================================================
 
@@ -160,10 +167,10 @@ export class OfertaFormacaoNivelFormacaoService {
 
     // =========================================================
 
-    return ofertaFormacaoNivelFormacao;
+    return ofertaFormacaoNivelFormacao as OfertaFormacaoNivelFormacaoFindOneOutputDto | null;
   }
 
-  async ofertaFormacaoNivelFormacaoFindByIdSimpleStrict(accessContext: AccessContext, id: IDomain.OfertaFormacaoNivelFormacaoFindOneInput["id"], selection?: string[]) {
+  async ofertaFormacaoNivelFormacaoFindByIdSimpleStrict(accessContext: AccessContext, id: OfertaFormacaoNivelFormacaoFindOneInputDto["id"], selection?: string[]): Promise<OfertaFormacaoNivelFormacaoFindOneOutputDto> {
     const ofertaFormacaoNivelFormacao = await this.ofertaFormacaoNivelFormacaoFindByIdSimple(accessContext, id, selection);
 
     if (!ofertaFormacaoNivelFormacao) {
@@ -173,14 +180,14 @@ export class OfertaFormacaoNivelFormacaoService {
     return ofertaFormacaoNivelFormacao;
   }
 
-  async ofertaFormacaoNivelFormacaoCreate(accessContext: AccessContext, domain: IDomain.OfertaFormacaoNivelFormacaoCreateInput) {
+  async ofertaFormacaoNivelFormacaoCreate(accessContext: AccessContext, dto: OfertaFormacaoNivelFormacaoCreateInputDto): Promise<OfertaFormacaoNivelFormacaoFindOneOutputDto> {
     // =========================================================
 
-    await accessContext.ensurePermission("oferta_formacao_nivel_formacao:create", { dto: domain });
+    await accessContext.ensurePermission("oferta_formacao_nivel_formacao:create", { dto });
 
     // =========================================================
 
-    const dtoOfertaFormacaoNivelFormacao = pick(domain, []);
+    const dtoOfertaFormacaoNivelFormacao = pick(dto, []);
 
     const ofertaFormacaoNivelFormacao = this.ofertaFormacaoNivelFormacaoRepository.create();
 
@@ -190,8 +197,8 @@ export class OfertaFormacaoNivelFormacaoService {
 
     // =========================================================
 
-    if (domain.ofertaFormacao) {
-      const ofertaFormacao = await this.ofertaFormacaoService.ofertaFormacaoFindByIdSimpleStrict(accessContext, domain.ofertaFormacao.id);
+    if (dto.ofertaFormacao) {
+      const ofertaFormacao = await this.ofertaFormacaoService.ofertaFormacaoFindByIdSimpleStrict(accessContext, dto.ofertaFormacao.id);
 
       this.ofertaFormacaoNivelFormacaoRepository.merge(ofertaFormacaoNivelFormacao, {
         ofertaFormacao: {
@@ -202,8 +209,8 @@ export class OfertaFormacaoNivelFormacaoService {
 
     // =========================================================
 
-    if (domain.nivelFormcao) {
-      const nivelFormacao = await this.nivelFormacaoService.nivelFormacaoFindByIdSimpleStrict(accessContext, domain.nivelFormcao.id);
+    if (dto.nivelFormacao) {
+      const nivelFormacao = await this.nivelFormacaoService.nivelFormacaoFindByIdSimpleStrict(accessContext, dto.nivelFormacao.id);
 
       this.ofertaFormacaoNivelFormacaoRepository.merge(ofertaFormacaoNivelFormacao, {
         nivelFormacao: {
@@ -223,21 +230,21 @@ export class OfertaFormacaoNivelFormacaoService {
     });
   }
 
-  async ofertaFormacaoNivelFormacaoUpdate(accessContext: AccessContext, domain: IDomain.OfertaFormacaoNivelFormacaoFindOneInput & IDomain.OfertaFormacaoNivelFormacaoUpdateInput) {
+  async ofertaFormacaoNivelFormacaoUpdate(accessContext: AccessContext, dto: OfertaFormacaoNivelFormacaoFindOneInputDto & OfertaFormacaoNivelFormacaoUpdateInputDto): Promise<OfertaFormacaoNivelFormacaoFindOneOutputDto> {
     // =========================================================
 
-    const currentOfertaFormacaoNivelFormacao = await this.ofertaFormacaoNivelFormacaoFindByIdStrict(accessContext, { id: domain.id });
+    const currentOfertaFormacaoNivelFormacao = await this.ofertaFormacaoNivelFormacaoFindByIdStrict(accessContext, { id: dto.id });
 
     // =========================================================
 
     await accessContext.ensurePermission(
       "oferta_formacao_nivel_formacao:update",
-      { dto: domain },
-      domain.id,
+      { dto },
+      dto.id,
       this.ofertaFormacaoNivelFormacaoRepository.createQueryBuilder(aliasOfertaFormacaoNivelFormacao),
     );
 
-    const dtoOfertaFormacaoNivelFormacao = pick(domain, []);
+    const dtoOfertaFormacaoNivelFormacao = pick(dto, []);
 
     const ofertaFormacaoNivelFormacao = <OfertaFormacaoNivelFormacaoEntity>{
       id: currentOfertaFormacaoNivelFormacao.id,
@@ -249,8 +256,8 @@ export class OfertaFormacaoNivelFormacaoService {
 
     // =========================================================
 
-    if (has(domain, "ofertaFormacao") && domain.ofertaFormacao !== undefined) {
-      const ofertaFormacao = domain.ofertaFormacao && (await this.ofertaFormacaoService.ofertaFormacaoFindByIdSimpleStrict(accessContext, domain.ofertaFormacao.id));
+    if (has(dto, "ofertaFormacao") && dto.ofertaFormacao !== undefined) {
+      const ofertaFormacao = dto.ofertaFormacao && (await this.ofertaFormacaoService.ofertaFormacaoFindByIdSimpleStrict(accessContext, dto.ofertaFormacao.id));
 
       this.ofertaFormacaoNivelFormacaoRepository.merge(ofertaFormacaoNivelFormacao, {
         ofertaFormacao: ofertaFormacao && {
@@ -259,8 +266,8 @@ export class OfertaFormacaoNivelFormacaoService {
       });
     }
 
-    if (has(domain, "nivelFormacao") && domain.nivelFormacao !== undefined) {
-      const nivelFormacao = domain.nivelFormacao && (await this.nivelFormacaoService.nivelFormacaoFindByIdSimpleStrict(accessContext, domain.nivelFormacao.id));
+    if (has(dto, "nivelFormacao") && dto.nivelFormacao !== undefined) {
+      const nivelFormacao = dto.nivelFormacao && (await this.nivelFormacaoService.nivelFormacaoFindByIdSimpleStrict(accessContext, dto.nivelFormacao.id));
 
       this.ofertaFormacaoNivelFormacaoRepository.merge(ofertaFormacaoNivelFormacao, {
         nivelFormacao: nivelFormacao && {
@@ -280,19 +287,19 @@ export class OfertaFormacaoNivelFormacaoService {
     });
   }
 
-  async ofertaFormacaoNivelFormacaoDeleteOneById(accessContext: AccessContext, domain: IDomain.OfertaFormacaoNivelFormacaoFindOneInput) {
+  async ofertaFormacaoNivelFormacaoDeleteOneById(accessContext: AccessContext, dto: OfertaFormacaoNivelFormacaoFindOneInputDto): Promise<boolean> {
     // =========================================================
 
     await accessContext.ensurePermission(
       "oferta_formacao_nivel_formacao:delete",
-      { dto: domain },
-      domain.id,
+      { dto },
+      dto.id,
       this.ofertaFormacaoNivelFormacaoRepository.createQueryBuilder(aliasOfertaFormacaoNivelFormacao),
     );
 
     // =========================================================
 
-    const ofertaFormacaoNivelFormacao = await this.ofertaFormacaoNivelFormacaoFindByIdStrict(accessContext, domain);
+    const ofertaFormacaoNivelFormacao = await this.ofertaFormacaoNivelFormacaoFindByIdStrict(accessContext, dto);
 
     // =========================================================
 

@@ -1,83 +1,139 @@
-import { Controller, Delete, Get, Patch, Post, Put, UploadedFile } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
+import { Controller, Delete, Get, Patch, Post, Put, Query, Body, Param, UploadedFile } from "@nestjs/common";
+import { ApiTags, ApiOperation, ApiOkResponse, ApiCreatedResponse, ApiForbiddenResponse, ApiNotFoundResponse } from "@nestjs/swagger";
 import { AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
-import { AppRequest, requestRepresentationMergeToDomain } from "@/shared";
-import { type IAppRequest } from "@/shared/tsp/openapi/document/app-openapi-typings";
-import { type IDomain } from "@/shared/tsp/schema/typings";
 import { UsuarioService } from "../domain/usuario.service";
+import {
+  UsuarioFindOneOutputDto,
+  UsuarioListInputDto,
+  UsuarioListOutputDto,
+  UsuarioCreateInputDto,
+  UsuarioUpdateInputDto,
+  UsuarioFindOneInputDto,
+} from "../dto";
 
-@Controller("/usuarios")
 @ApiTags("usuarios")
+@Controller("/usuarios")
 export class UsuarioController {
   constructor(private usuarioService: UsuarioService) {}
 
-  @Get("/:id/ensino")
-  async usuarioEnsinoById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("UsuarioEnsinoById") dto: IAppRequest<"UsuarioEnsinoById">) {
-    const domain: IDomain.UsuarioFindOneInput = requestRepresentationMergeToDomain(dto);
-    return this.usuarioService.usuarioEnsinoById(accessContext, domain);
-  }
-
   @Get("/")
-  async usuarioFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("UsuarioList") dto: IAppRequest<"UsuarioList">) {
-    const domain: IDomain.UsuarioListInput = requestRepresentationMergeToDomain(dto);
-    return this.usuarioService.usuarioFindAll(accessContext, domain);
+  @ApiOperation({ summary: "Lista usuarios" })
+  @ApiOkResponse({ type: UsuarioListOutputDto })
+  @ApiForbiddenResponse()
+  async usuarioFindAll(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Query() dto: UsuarioListInputDto,
+  ): Promise<UsuarioListOutputDto> {
+    return this.usuarioService.usuarioFindAll(accessContext, dto);
   }
 
   @Get("/:id")
-  async usuarioFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("UsuarioFindOneById") dto: IAppRequest<"UsuarioFindOneById">) {
-    const domain: IDomain.UsuarioFindOneInput = requestRepresentationMergeToDomain(dto);
-    return this.usuarioService.usuarioFindByIdStrict(accessContext, domain);
+  @ApiOperation({ summary: "Busca um usuario por ID" })
+  @ApiOkResponse({ type: UsuarioFindOneOutputDto })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async usuarioFindById(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: UsuarioFindOneInputDto,
+  ): Promise<UsuarioFindOneOutputDto> {
+    return this.usuarioService.usuarioFindByIdStrict(accessContext, params);
+  }
+
+  @Get("/:id/ensino")
+  @ApiOperation({ summary: "Busca dados de ensino de um usuario" })
+  @ApiOkResponse({ type: UsuarioFindOneOutputDto })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async usuarioEnsinoById(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: UsuarioFindOneInputDto,
+  ): Promise<UsuarioFindOneOutputDto> {
+    return this.usuarioService.usuarioEnsinoById(accessContext, params);
   }
 
   @Post("/")
-  async usuarioCreate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("UsuarioCreate") dto: IAppRequest<"UsuarioCreate">) {
-    const domain: IDomain.UsuarioCreateInput = requestRepresentationMergeToDomain(dto);
-    return this.usuarioService.usuarioCreate(accessContext, domain);
+  @ApiOperation({ summary: "Cria um usuario" })
+  @ApiCreatedResponse({ type: UsuarioFindOneOutputDto })
+  @ApiForbiddenResponse()
+  async usuarioCreate(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Body() dto: UsuarioCreateInputDto,
+  ): Promise<UsuarioFindOneOutputDto> {
+    return this.usuarioService.usuarioCreate(accessContext, dto);
   }
 
   @Patch("/:id")
-  async usuarioUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("UsuarioUpdateOneById") dto: IAppRequest<"UsuarioUpdateOneById">) {
-    const domain: IDomain.UsuarioFindOneInput & IDomain.UsuarioUpdateInput = requestRepresentationMergeToDomain(dto);
-    return this.usuarioService.usuarioUpdate(accessContext, domain);
+  @ApiOperation({ summary: "Atualiza um usuario" })
+  @ApiOkResponse({ type: UsuarioFindOneOutputDto })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async usuarioUpdate(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: UsuarioFindOneInputDto,
+    @Body() dto: UsuarioUpdateInputDto,
+  ): Promise<UsuarioFindOneOutputDto> {
+    return this.usuarioService.usuarioUpdate(accessContext, { id: params.id, ...dto });
   }
 
   @Get("/:id/imagem/capa")
+  @ApiOperation({ summary: "Busca imagem de capa de um usuario" })
+  @ApiOkResponse()
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
   async usuarioGetImagemCapa(
     @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("UsuarioGetImagemCapa") dto: any, // Temporarily use 'any' to bypass the type error
+    @Param() params: UsuarioFindOneInputDto,
   ) {
-    return this.usuarioService.usuarioGetImagemCapa(accessContext, dto.params.id);
+    return this.usuarioService.usuarioGetImagemCapa(accessContext, params.id);
   }
 
   @Put("/:id/imagem/capa")
+  @ApiOperation({ summary: "Define imagem de capa de um usuario" })
+  @ApiOkResponse({ type: UsuarioFindOneOutputDto })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
   async usuarioImagemCapaSave(
     @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("UsuarioSetImagemCapa") dto: IAppRequest<"UsuarioSetImagemCapa">,
+    @Param() params: UsuarioFindOneInputDto,
     @UploadedFile() file: Express.Multer.File,
-  ) {
-    const domain: IDomain.UsuarioFindOneInput = requestRepresentationMergeToDomain(dto);
-    return this.usuarioService.usuarioUpdateImagemCapa(accessContext, domain, file);
+  ): Promise<UsuarioFindOneOutputDto> {
+    return this.usuarioService.usuarioUpdateImagemCapa(accessContext, params, file);
   }
 
   @Get("/:id/imagem/perfil")
-  async usuarioGetImagemPerfil(@AccessContextHttp() accessContext: AccessContext, @AppRequest("UsuarioGetImagemPerfil") dto: IAppRequest<"UsuarioGetImagemPerfil">) {
-    const domain: IDomain.UsuarioFindOneInput = requestRepresentationMergeToDomain(dto);
-    return this.usuarioService.usuarioGetImagemPerfil(accessContext, domain.id);
+  @ApiOperation({ summary: "Busca imagem de perfil de um usuario" })
+  @ApiOkResponse()
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async usuarioGetImagemPerfil(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: UsuarioFindOneInputDto,
+  ) {
+    return this.usuarioService.usuarioGetImagemPerfil(accessContext, params.id);
   }
 
   @Put("/:id/imagem/perfil")
+  @ApiOperation({ summary: "Define imagem de perfil de um usuario" })
+  @ApiOkResponse({ type: UsuarioFindOneOutputDto })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
   async usuarioImagemPerfilSave(
-    @UploadedFile() file: Express.Multer.File,
     @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("UsuarioSetImagemPerfil") dto: IAppRequest<"UsuarioSetImagemPerfil">,
-  ) {
-    const domain: IDomain.UsuarioFindOneInput = requestRepresentationMergeToDomain(dto);
-    return this.usuarioService.usuarioUpdateImagemPerfil(accessContext, domain, file);
+    @Param() params: UsuarioFindOneInputDto,
+    @UploadedFile() file: Express.Multer.File,
+  ): Promise<UsuarioFindOneOutputDto> {
+    return this.usuarioService.usuarioUpdateImagemPerfil(accessContext, params, file);
   }
 
   @Delete("/:id")
-  async usuarioDeleteOneById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("UsuarioDeleteOneById") dto: IAppRequest<"UsuarioDeleteOneById">) {
-    const domain: IDomain.UsuarioFindOneInput = requestRepresentationMergeToDomain(dto);
-    return this.usuarioService.usuarioDeleteOneById(accessContext, domain);
+  @ApiOperation({ summary: "Remove um usuario" })
+  @ApiOkResponse({ type: Boolean })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async usuarioDeleteOneById(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: UsuarioFindOneInputDto,
+  ): Promise<boolean> {
+    return this.usuarioService.usuarioDeleteOneById(accessContext, params);
   }
 }

@@ -1,10 +1,15 @@
-import { Controller, Delete, Get, Patch, Post } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
+import { Controller, Delete, Get, Patch, Post, Query, Body, Param } from "@nestjs/common";
+import { ApiTags, ApiOperation, ApiOkResponse, ApiCreatedResponse, ApiForbiddenResponse, ApiNotFoundResponse } from "@nestjs/swagger";
 import { AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
-import { AppRequest, requestRepresentationMergeToDomain } from "@/shared";
-import { type IAppRequest } from "@/shared/tsp/openapi/document/app-openapi-typings";
-import { type IDomain } from "@/shared/tsp/schema/typings";
 import { EventoService } from "../domain/evento.service";
+import {
+  EventoFindOneOutputDto,
+  EventoListInputDto,
+  EventoListOutputDto,
+  EventoCreateInputDto,
+  EventoUpdateInputDto,
+  EventoFindOneInputDto,
+} from "../dto";
 
 @ApiTags("eventos")
 @Controller("/eventos")
@@ -12,32 +17,61 @@ export class EventoController {
   constructor(private eventoService: EventoService) {}
 
   @Get("/")
-  async eventoFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("EventoList") dto: IAppRequest<"EventoList">) {
-    const domain: IDomain.EventoListInput = requestRepresentationMergeToDomain(dto);
-    return this.eventoService.eventoFindAll(accessContext, domain);
+  @ApiOperation({ summary: "Lista eventos" })
+  @ApiOkResponse({ type: EventoListOutputDto })
+  @ApiForbiddenResponse()
+  async eventoFindAll(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Query() dto: EventoListInputDto,
+  ): Promise<EventoListOutputDto> {
+    return this.eventoService.eventoFindAll(accessContext, dto);
   }
 
   @Get("/:id")
-  async eventoFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("EventoFindOneById") dto: IAppRequest<"EventoFindOneById">) {
-    const domain: IDomain.EventoFindOneInput = requestRepresentationMergeToDomain(dto);
-    return this.eventoService.eventoFindByIdStrict(accessContext, domain);
+  @ApiOperation({ summary: "Busca um evento por ID" })
+  @ApiOkResponse({ type: EventoFindOneOutputDto })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async eventoFindById(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: EventoFindOneInputDto,
+  ): Promise<EventoFindOneOutputDto> {
+    return this.eventoService.eventoFindByIdStrict(accessContext, params);
   }
 
   @Post("/")
-  async eventoCreate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("EventoCreate") dto: IAppRequest<"EventoCreate">) {
-    const domain: IDomain.EventoCreateInput = requestRepresentationMergeToDomain(dto);
-    return this.eventoService.eventoCreate(accessContext, domain);
+  @ApiOperation({ summary: "Cria um evento" })
+  @ApiCreatedResponse({ type: EventoFindOneOutputDto })
+  @ApiForbiddenResponse()
+  async eventoCreate(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Body() dto: EventoCreateInputDto,
+  ): Promise<EventoFindOneOutputDto> {
+    return this.eventoService.eventoCreate(accessContext, dto);
   }
 
   @Patch("/:id")
-  async eventoUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("EventoUpdateOneById") dto: IAppRequest<"EventoUpdateOneById">) {
-    const domain: IDomain.EventoFindOneInput & IDomain.EventoUpdateInput = requestRepresentationMergeToDomain(dto);
-    return this.eventoService.eventoUpdate(accessContext, domain);
+  @ApiOperation({ summary: "Atualiza um evento" })
+  @ApiOkResponse({ type: EventoFindOneOutputDto })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async eventoUpdate(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: EventoFindOneInputDto,
+    @Body() dto: EventoUpdateInputDto,
+  ): Promise<EventoFindOneOutputDto> {
+    return this.eventoService.eventoUpdate(accessContext, { id: params.id, ...dto });
   }
 
   @Delete("/:id")
-  async eventoDeleteOneById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("EventoDeleteOneById") dto: IAppRequest<"EventoDeleteOneById">) {
-    const domain: IDomain.EventoFindOneInput = requestRepresentationMergeToDomain(dto);
-    return this.eventoService.eventoDeleteOneById(accessContext, domain);
+  @ApiOperation({ summary: "Remove um evento" })
+  @ApiOkResponse({ type: Boolean })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async eventoDeleteOneById(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: EventoFindOneInputDto,
+  ): Promise<boolean> {
+    return this.eventoService.eventoDeleteOneById(accessContext, params);
   }
 }

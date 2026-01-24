@@ -8,7 +8,14 @@ import { DatabaseContextService } from "@/v2/infrastructure.database";
 import type { UsuarioEntity } from "@/v2/infrastructure.database/typeorm/entities";
 import { KeycloakService } from "@/infrastructure/integrations/identity-provider";
 import { QbEfficientLoad, SearchService, ValidationFailedException } from "@/shared";
-import { type IDomain } from "@/shared/tsp/schema/typings";
+import type {
+  UsuarioFindOneOutputDto,
+  UsuarioListInputDto,
+  UsuarioListOutputDto,
+  UsuarioCreateInputDto,
+  UsuarioUpdateInputDto,
+  UsuarioFindOneInputDto,
+} from "../dto";
 
 // ============================================================================
 
@@ -31,8 +38,8 @@ export class UsuarioService {
   }
 
   // ==================================================================
-  async usuarioEnsinoById(accessContext: AccessContext | null, domain: IDomain.UsuarioFindOneInput, selection?: string[] | boolean): Promise<IDomain.UsuarioEnsinoOutput | null> {
-    const usuario = await this.usuarioFindByIdStrict(accessContext, domain, selection);
+  async usuarioEnsinoById(accessContext: AccessContext | null, dto: UsuarioFindOneInputDto, selection?: string[] | boolean): Promise<any> {
+    const usuario = await this.usuarioFindByIdStrict(accessContext, dto, selection);
 
     const disciplinas = await this.databaseContext.disciplinaRepository.find({
       where: {
@@ -51,13 +58,13 @@ export class UsuarioService {
     });
 
     // discipina > diario > turma > curso
-    const ensino: IDomain.UsuarioEnsinoOutput = {
+    const ensino: any = {
       usuario: usuario,
       disciplinas: [],
     };
 
     for (const disciplina of disciplinas) {
-      const vinculoDisciplina: IDomain.UsuarioEnsinoOutput["disciplinas"][number] = {
+      const vinculoDisciplina: any = {
         disciplina: disciplina,
         cursos: [],
       };
@@ -85,7 +92,7 @@ export class UsuarioService {
       });
 
       for (const curso of cursos) {
-        const vinculoCurso: IDomain.UsuarioEnsinoOutput["disciplinas"][number]["cursos"][number] = {
+        const vinculoCurso: any = {
           curso: curso,
           turmas: [],
         };
@@ -130,7 +137,7 @@ export class UsuarioService {
     return ensino;
   }
 
-  async internalFindByMatriculaSiape(matriculaSiape: string, selection?: string[] | boolean): Promise<IDomain.UsuarioFindOneOutput | null> {
+  async internalFindByMatriculaSiape(matriculaSiape: string, selection?: string[] | boolean): Promise<UsuarioFindOneOutputDto | null> {
     // =========================================================
 
     const qb = this.usuarioRepository.createQueryBuilder(aliasUsuario);
@@ -144,17 +151,17 @@ export class UsuarioService {
     // =========================================================
 
     qb.select([]);
-    await QbEfficientLoad("UsuarioFindOneOutput", qb, aliasUsuario, selection);
+    QbEfficientLoad("UsuarioFindOneOutput", qb, aliasUsuario, selection);
     // =========================================================
 
     const usuario = await qb.getOne();
 
     // =========================================================
 
-    return usuario;
+    return usuario as UsuarioFindOneOutputDto | null;
   }
 
-  async usuarioFindAll(accessContext: AccessContext, domain: IDomain.UsuarioListInput | null = null, selection?: string[] | boolean): Promise<IDomain.UsuarioListOutput["success"]> {
+  async usuarioFindAll(accessContext: AccessContext, dto: UsuarioListInputDto | null = null, selection?: string[] | boolean): Promise<UsuarioListOutputDto> {
     // =========================================================
 
     const qb = this.usuarioRepository.createQueryBuilder(aliasUsuario);
@@ -167,7 +174,7 @@ export class UsuarioService {
 
     const paginated = await this.searchService.search(
       qb,
-      { ...domain },
+      { ...dto },
       {
         ...paginateConfig,
         select: [
@@ -205,7 +212,7 @@ export class UsuarioService {
     // =========================================================
 
     qb.select([]);
-    await QbEfficientLoad("UsuarioFindOneOutput", qb, aliasUsuario, selection);
+    QbEfficientLoad("UsuarioFindOneOutput", qb, aliasUsuario, selection);
     // =========================================================
 
     const pageItemsView = await qb.andWhereInIds(map(paginated.data, "id")).getMany();
@@ -213,10 +220,10 @@ export class UsuarioService {
 
     // =========================================================
 
-    return paginated;
+    return paginated as UsuarioListOutputDto;
   }
 
-  async usuarioFindById(accessContext: AccessContext | null, domain: IDomain.UsuarioFindOneInput, selection?: string[] | boolean): Promise<IDomain.UsuarioFindOneOutput | null> {
+  async usuarioFindById(accessContext: AccessContext | null, dto: UsuarioFindOneInputDto, selection?: string[] | boolean): Promise<UsuarioFindOneOutputDto | null> {
     // =========================================================
 
     const qb = this.usuarioRepository.createQueryBuilder(aliasUsuario);
@@ -229,12 +236,12 @@ export class UsuarioService {
 
     // =========================================================
 
-    qb.andWhere(`${aliasUsuario}.id = :id`, { id: domain.id });
+    qb.andWhere(`${aliasUsuario}.id = :id`, { id: dto.id });
 
     // =========================================================
 
     qb.select([]);
-    await QbEfficientLoad("UsuarioFindOneOutput", qb, aliasUsuario, selection);
+    QbEfficientLoad("UsuarioFindOneOutput", qb, aliasUsuario, selection);
 
     // =========================================================
 
@@ -242,11 +249,11 @@ export class UsuarioService {
 
     // =========================================================
 
-    return usuario;
+    return usuario as UsuarioFindOneOutputDto | null;
   }
 
-  async usuarioFindByIdStrict(accessContext: AccessContext | null, domain: IDomain.UsuarioFindOneInput, selection?: string[] | boolean) {
-    const usuario = await this.usuarioFindById(accessContext, domain, selection);
+  async usuarioFindByIdStrict(accessContext: AccessContext | null, dto: UsuarioFindOneInputDto, selection?: string[] | boolean): Promise<UsuarioFindOneOutputDto> {
+    const usuario = await this.usuarioFindById(accessContext, dto, selection);
 
     if (!usuario) {
       throw new NotFoundException();
@@ -255,7 +262,7 @@ export class UsuarioService {
     return usuario;
   }
 
-  async usuarioFindByIdSimple(accessContext: AccessContext, id: IDomain.UsuarioFindOneInput["id"], selection?: string[]): Promise<IDomain.UsuarioFindOneOutput | null> {
+  async usuarioFindByIdSimple(accessContext: AccessContext, id: UsuarioFindOneInputDto["id"], selection?: string[]): Promise<UsuarioFindOneOutputDto | null> {
     // =========================================================
 
     const qb = this.usuarioRepository.createQueryBuilder(aliasUsuario);
@@ -271,7 +278,7 @@ export class UsuarioService {
     // =========================================================
 
     qb.select([]);
-    await QbEfficientLoad("UsuarioFindOneOutput", qb, aliasUsuario, selection);
+    QbEfficientLoad("UsuarioFindOneOutput", qb, aliasUsuario, selection);
 
     // =========================================================
 
@@ -279,10 +286,10 @@ export class UsuarioService {
 
     // =========================================================
 
-    return usuario;
+    return usuario as UsuarioFindOneOutputDto | null;
   }
 
-  async usuarioFindByIdSimpleStrict(accessContext: AccessContext, id: IDomain.UsuarioFindOneInput["id"], selection?: string[]) {
+  async usuarioFindByIdSimpleStrict(accessContext: AccessContext, id: UsuarioFindOneInputDto["id"], selection?: string[]): Promise<UsuarioFindOneOutputDto> {
     const usuario = await this.usuarioFindByIdSimple(accessContext, id, selection);
 
     if (!usuario) {
@@ -307,11 +314,11 @@ export class UsuarioService {
     throw new NotFoundException();
   }
 
-  async usuarioUpdateImagemCapa(accessContext: AccessContext, domain: IDomain.UsuarioFindOneInput, file: Express.Multer.File) {
+  async usuarioUpdateImagemCapa(accessContext: AccessContext, dto: UsuarioFindOneInputDto, file: Express.Multer.File) {
     // =========================================================
 
     const currentUsuario = await this.usuarioFindByIdStrict(accessContext, {
-      id: domain.id,
+      id: dto.id,
     });
 
     // =========================================================
@@ -362,11 +369,11 @@ export class UsuarioService {
     throw new NotFoundException();
   }
 
-  async usuarioUpdateImagemPerfil(accessContext: AccessContext, domain: IDomain.UsuarioFindOneInput, file: Express.Multer.File) {
+  async usuarioUpdateImagemPerfil(accessContext: AccessContext, dto: UsuarioFindOneInputDto, file: Express.Multer.File) {
     // =========================================================
 
     const currentUsuario = await this.usuarioFindByIdStrict(accessContext, {
-      id: domain.id,
+      id: dto.id,
     });
 
     // =========================================================
@@ -402,14 +409,14 @@ export class UsuarioService {
     return true;
   }
 
-  async usuarioCreate(accessContext: AccessContext, domain: IDomain.UsuarioCreateInput) {
+  async usuarioCreate(accessContext: AccessContext, dto: UsuarioCreateInputDto): Promise<UsuarioFindOneOutputDto> {
     // =========================================================
 
-    await accessContext.ensurePermission("usuario:create", { dto: domain });
+    await accessContext.ensurePermission("usuario:create", { dto });
 
     // =========================================================
 
-    const input = pick(domain, ["nome", "matriculaSiape", "email"]);
+    const input = pick(dto, ["nome", "matriculaSiape", "email"]);
 
     await this.ensureDtoAvailability(input, null);
 
@@ -449,10 +456,10 @@ export class UsuarioService {
     return this.usuarioFindByIdStrict(accessContext, { id: usuario.id });
   }
 
-  async usuarioUpdate(accessContext: AccessContext, domain: IDomain.UsuarioFindOneInput & IDomain.UsuarioUpdateInput) {
+  async usuarioUpdate(accessContext: AccessContext, dto: UsuarioFindOneInputDto & UsuarioUpdateInputDto): Promise<UsuarioFindOneOutputDto> {
     // =========================================================
 
-    const currentUsuario = await this.usuarioFindByIdStrict(accessContext, domain);
+    const currentUsuario = await this.usuarioFindByIdStrict(accessContext, dto);
 
     const currentMatriculaSiape = currentUsuario.matriculaSiape ?? (await this.internalResolveMatriculaSiape(currentUsuario.id));
 
@@ -464,11 +471,11 @@ export class UsuarioService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("usuario:update", { dto: domain }, domain.id, this.usuarioRepository.createQueryBuilder(aliasUsuario));
+    await accessContext.ensurePermission("usuario:update", { dto }, dto.id, this.usuarioRepository.createQueryBuilder(aliasUsuario));
 
-    const input = pick(domain, ["nome", "matriculaSiape", "email"]);
+    const input = pick(dto, ["nome", "matriculaSiape", "email"]);
 
-    await this.ensureDtoAvailability(input, domain.id);
+    await this.ensureDtoAvailability(input, dto.id);
 
     const usuario = {
       id: currentUsuario.id,
@@ -483,8 +490,8 @@ export class UsuarioService {
     await this.databaseContext.transaction(async ({ databaseContext: { usuarioRepository } }) => {
       await usuarioRepository.save(usuario);
 
-      const changedEmail = has(domain, "email");
-      const changedMatriculaSiape = has(domain, "matriculaSiape");
+      const changedEmail = has(dto, "email");
+      const changedMatriculaSiape = has(dto, "matriculaSiape");
 
       if (changedEmail || changedMatriculaSiape) {
         const kcAdminClient = await this.keycloakService.getAdminClient();
@@ -505,7 +512,7 @@ export class UsuarioService {
           await kcAdminClient.users.update(
             { id: kcUser.id! },
             {
-              email: domain.email ?? undefined,
+              email: dto.email ?? undefined,
             },
           );
         }
@@ -517,14 +524,14 @@ export class UsuarioService {
     return this.usuarioFindByIdStrict(accessContext, { id: usuario.id });
   }
 
-  async usuarioDeleteOneById(accessContext: AccessContext, domain: IDomain.UsuarioFindOneInput) {
+  async usuarioDeleteOneById(accessContext: AccessContext, dto: UsuarioFindOneInputDto): Promise<boolean> {
     // =========================================================
 
-    await accessContext.ensurePermission("usuario:delete", { dto: domain }, domain.id, this.usuarioRepository.createQueryBuilder(aliasUsuario));
+    await accessContext.ensurePermission("usuario:delete", { dto }, dto.id, this.usuarioRepository.createQueryBuilder(aliasUsuario));
 
     // =========================================================
 
-    const usuario = await this.usuarioFindByIdStrict(accessContext, domain);
+    const usuario = await this.usuarioFindByIdStrict(accessContext, dto);
 
     // =========================================================
 
@@ -580,7 +587,7 @@ export class UsuarioService {
     return isAvailable;
   }
 
-  private async ensureDtoAvailability(domain: Partial<Pick<IDomain.Usuario, "email" | "matriculaSiape">>, currentUsuarioId: string | null = null) {
+  private async ensureDtoAvailability(dto: Partial<Pick<UsuarioFindOneOutputDto, "email" | "matriculaSiape">>, currentUsuarioId: string | null = null) {
     // ===================================
 
     let isEmailAvailable = true;
@@ -588,7 +595,7 @@ export class UsuarioService {
 
     // ===================================
 
-    const email = domain.email;
+    const email = dto.email;
 
     if (email) {
       isEmailAvailable = await this.checkEmailAvailability(email, currentUsuarioId);
@@ -596,7 +603,7 @@ export class UsuarioService {
 
     // ===================================
 
-    const matriculaSiape = domain.matriculaSiape;
+    const matriculaSiape = dto.matriculaSiape;
 
     if (matriculaSiape) {
       isMatriculaSiapeAvailable = await this.checkMatriculaSiapeAvailability(matriculaSiape, currentUsuarioId);

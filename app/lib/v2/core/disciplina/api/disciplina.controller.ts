@@ -1,10 +1,15 @@
-import { Controller, Delete, Get, Patch, Post, Put, UploadedFile } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
+import { Controller, Delete, Get, Patch, Post, Put, Query, Body, Param, UploadedFile } from "@nestjs/common";
+import { ApiTags, ApiOperation, ApiOkResponse, ApiCreatedResponse, ApiForbiddenResponse, ApiNotFoundResponse } from "@nestjs/swagger";
 import { AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
-import { AppRequest, requestRepresentationMergeToDomain } from "@/shared";
-import { type IAppRequest } from "@/shared/tsp/openapi/document/app-openapi-typings";
-import { type IDomain } from "@/shared/tsp/schema/typings";
 import { DisciplinaService } from "../domain/disciplina.service";
+import {
+  DisciplinaFindOneOutputDto,
+  DisciplinaListInputDto,
+  DisciplinaListOutputDto,
+  DisciplinaCreateInputDto,
+  DisciplinaUpdateInputDto,
+  DisciplinaFindOneInputDto,
+} from "../dto";
 
 @ApiTags("disciplinas")
 @Controller("/disciplinas")
@@ -12,48 +17,86 @@ export class DisciplinaController {
   constructor(private disciplinaService: DisciplinaService) {}
 
   @Get("/")
-  async disciplinaFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DisciplinaList") dto: IAppRequest<"DisciplinaList">) {
-    const domain: IDomain.DisciplinaListInput = requestRepresentationMergeToDomain(dto);
-    return this.disciplinaService.disciplinaFindAll(accessContext, domain);
+  @ApiOperation({ summary: "Lista disciplinas" })
+  @ApiOkResponse({ type: DisciplinaListOutputDto })
+  @ApiForbiddenResponse()
+  async disciplinaFindAll(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Query() dto: DisciplinaListInputDto,
+  ): Promise<DisciplinaListOutputDto> {
+    return this.disciplinaService.disciplinaFindAll(accessContext, dto);
   }
 
   @Get("/:id")
-  async disciplinaFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DisciplinaFindOneById") dto: IAppRequest<"DisciplinaFindOneById">) {
-    const domain: IDomain.DisciplinaFindOneInput = requestRepresentationMergeToDomain(dto);
-    return this.disciplinaService.disciplinaFindByIdStrict(accessContext, domain);
+  @ApiOperation({ summary: "Busca uma disciplina por ID" })
+  @ApiOkResponse({ type: DisciplinaFindOneOutputDto })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async disciplinaFindById(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: DisciplinaFindOneInputDto,
+  ): Promise<DisciplinaFindOneOutputDto> {
+    return this.disciplinaService.disciplinaFindByIdStrict(accessContext, params);
   }
 
   @Post("/")
-  async disciplinaCreate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DisciplinaCreate") dto: IAppRequest<"DisciplinaCreate">) {
-    const domain: IDomain.DisciplinaCreateInput = requestRepresentationMergeToDomain(dto);
-    return this.disciplinaService.disciplinaCreate(accessContext, domain);
+  @ApiOperation({ summary: "Cria uma disciplina" })
+  @ApiCreatedResponse({ type: DisciplinaFindOneOutputDto })
+  @ApiForbiddenResponse()
+  async disciplinaCreate(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Body() dto: DisciplinaCreateInputDto,
+  ): Promise<DisciplinaFindOneOutputDto> {
+    return this.disciplinaService.disciplinaCreate(accessContext, dto);
   }
 
   @Patch("/:id")
-  async disciplinaUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DisciplinaUpdateOneById") dto: IAppRequest<"DisciplinaUpdateOneById">) {
-    const domain: IDomain.DisciplinaFindOneInput & IDomain.DisciplinaUpdateInput = requestRepresentationMergeToDomain(dto);
-    return this.disciplinaService.disciplinaUpdate(accessContext, domain);
+  @ApiOperation({ summary: "Atualiza uma disciplina" })
+  @ApiOkResponse({ type: DisciplinaFindOneOutputDto })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async disciplinaUpdate(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: DisciplinaFindOneInputDto,
+    @Body() dto: DisciplinaUpdateInputDto,
+  ): Promise<DisciplinaFindOneOutputDto> {
+    return this.disciplinaService.disciplinaUpdate(accessContext, { id: params.id, ...dto });
   }
 
   @Get("/:id/imagem/capa")
-  async disciplinaGetImagemCapa(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DisciplinaGetImagemCapa") dto: IAppRequest<"DisciplinaGetImagemCapa">) {
-    const domain: IDomain.DisciplinaFindOneInput = requestRepresentationMergeToDomain(dto);
-    return this.disciplinaService.disciplinaGetImagemCapa(accessContext, domain.id);
+  @ApiOperation({ summary: "Busca imagem de capa de uma disciplina" })
+  @ApiOkResponse()
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async disciplinaGetImagemCapa(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: DisciplinaFindOneInputDto,
+  ) {
+    return this.disciplinaService.disciplinaGetImagemCapa(accessContext, params.id);
   }
 
   @Put("/:id/imagem/capa")
+  @ApiOperation({ summary: "Define imagem de capa de uma disciplina" })
+  @ApiOkResponse({ type: DisciplinaFindOneOutputDto })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
   async disciplinaImagemCapaSave(
     @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("DisciplinaSetImagemCapa") dto: IAppRequest<"DisciplinaSetImagemCapa">,
+    @Param() params: DisciplinaFindOneInputDto,
     @UploadedFile() file: Express.Multer.File,
-  ) {
-    const domain: IDomain.DisciplinaFindOneInput = requestRepresentationMergeToDomain(dto);
-    return this.disciplinaService.disciplinaUpdateImagemCapa(accessContext, domain, file);
+  ): Promise<DisciplinaFindOneOutputDto> {
+    return this.disciplinaService.disciplinaUpdateImagemCapa(accessContext, params, file);
   }
 
   @Delete("/:id")
-  async disciplinaDeleteOneById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DisciplinaDeleteOneById") dto: IAppRequest<"DisciplinaDeleteOneById">) {
-    const domain: IDomain.DisciplinaFindOneInput = requestRepresentationMergeToDomain(dto);
-    return this.disciplinaService.disciplinaDeleteOneById(accessContext, domain);
+  @ApiOperation({ summary: "Remove uma disciplina" })
+  @ApiOkResponse({ type: Boolean })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async disciplinaDeleteOneById(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: DisciplinaFindOneInputDto,
+  ): Promise<boolean> {
+    return this.disciplinaService.disciplinaDeleteOneById(accessContext, params);
   }
 }

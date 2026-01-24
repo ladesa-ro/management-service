@@ -1,10 +1,15 @@
-import { Controller, Delete, Get, Patch, Post } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
+import { Controller, Delete, Get, Patch, Post, Query, Body, Param } from "@nestjs/common";
+import { ApiTags, ApiOperation, ApiOkResponse, ApiCreatedResponse, ApiForbiddenResponse, ApiNotFoundResponse } from "@nestjs/swagger";
 import { AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
-import { AppRequest, requestRepresentationMergeToDomain } from "@/shared";
-import { type IAppRequest } from "@/shared/tsp/openapi/document/app-openapi-typings";
-import { type IDomain } from "@/shared/tsp/schema/typings";
 import { CampusService } from "../domain/campus.service";
+import {
+  CampusFindOneOutputDto,
+  CampusListInputDto,
+  CampusListOutputDto,
+  CampusCreateInputDto,
+  CampusUpdateInputDto,
+  CampusFindOneInputDto,
+} from "../dto";
 
 @ApiTags("campi")
 @Controller("/campi")
@@ -12,32 +17,61 @@ export class CampusController {
   constructor(private campusService: CampusService) {}
 
   @Get("/")
-  async campusFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CampusList") dto: IAppRequest<"CampusList">) {
-    const domain: IDomain.CampusListInput = requestRepresentationMergeToDomain(dto);
-    return this.campusService.campusFindAll(accessContext, domain);
+  @ApiOperation({ summary: "Lista campi" })
+  @ApiOkResponse({ type: CampusListOutputDto })
+  @ApiForbiddenResponse()
+  async campusFindAll(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Query() dto: CampusListInputDto,
+  ): Promise<CampusListOutputDto> {
+    return this.campusService.campusFindAll(accessContext, dto);
   }
 
   @Get("/:id")
-  async campusFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CampusFindOneById") dto: IAppRequest<"CampusFindOneById">) {
-    const domain: IDomain.CampusFindOneInput = requestRepresentationMergeToDomain(dto);
-    return this.campusService.campusFindByIdStrict(accessContext, domain);
+  @ApiOperation({ summary: "Busca um campus por ID" })
+  @ApiOkResponse({ type: CampusFindOneOutputDto })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async campusFindById(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: CampusFindOneInputDto,
+  ): Promise<CampusFindOneOutputDto> {
+    return this.campusService.campusFindByIdStrict(accessContext, params);
   }
 
   @Post("/")
-  async campusCreate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CampusCreate") dto: IAppRequest<"CampusCreate">) {
-    const domain: IDomain.CampusCreateInput = requestRepresentationMergeToDomain(dto);
-    return this.campusService.campusCreate(accessContext, domain);
+  @ApiOperation({ summary: "Cria um campus" })
+  @ApiCreatedResponse({ type: CampusFindOneOutputDto })
+  @ApiForbiddenResponse()
+  async campusCreate(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Body() dto: CampusCreateInputDto,
+  ): Promise<CampusFindOneOutputDto> {
+    return this.campusService.campusCreate(accessContext, dto);
   }
 
   @Patch("/:id")
-  async campusUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CampusUpdateOneById") dto: IAppRequest<"CampusUpdateOneById">) {
-    const domain: IDomain.CampusFindOneInput & IDomain.CampusUpdateInput = requestRepresentationMergeToDomain(dto);
-    return this.campusService.campusUpdate(accessContext, domain);
+  @ApiOperation({ summary: "Atualiza um campus" })
+  @ApiOkResponse({ type: CampusFindOneOutputDto })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async campusUpdate(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: CampusFindOneInputDto,
+    @Body() dto: CampusUpdateInputDto,
+  ): Promise<CampusFindOneOutputDto> {
+    return this.campusService.campusUpdate(accessContext, { id: params.id, ...dto });
   }
 
   @Delete("/:id")
-  async campusDeleteOneById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CampusDeleteOneById") dto: IAppRequest<"CampusDeleteOneById">) {
-    const domain: IDomain.CampusFindOneInput = requestRepresentationMergeToDomain(dto);
-    return this.campusService.campusDeleteOneById(accessContext, domain);
+  @ApiOperation({ summary: "Remove um campus" })
+  @ApiOkResponse({ type: Boolean })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async campusDeleteOneById(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: CampusFindOneInputDto,
+  ): Promise<boolean> {
+    return this.campusService.campusDeleteOneById(accessContext, params);
   }
 }

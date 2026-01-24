@@ -1,7 +1,15 @@
-import { Controller, Delete, Get, Patch, Post, Put, UploadedFile } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
-import { AccessContext, AccessContextHttp, AppRequest, type IAppRequest, type IDomain, requestRepresentationMergeToDomain } from "@/shared";
+import { Controller, Delete, Get, Patch, Post, Put, Query, Body, Param, UploadedFile } from "@nestjs/common";
+import { ApiTags, ApiOperation, ApiOkResponse, ApiCreatedResponse, ApiForbiddenResponse, ApiNotFoundResponse } from "@nestjs/swagger";
+import { AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { AmbienteService } from "../domain/ambiente.service";
+import {
+  AmbienteFindOneOutputDto,
+  AmbienteListInputDto,
+  AmbienteListOutputDto,
+  AmbienteCreateInputDto,
+  AmbienteUpdateInputDto,
+  AmbienteFindOneInputDto,
+} from "../dto";
 
 @ApiTags("ambientes")
 @Controller("/ambientes")
@@ -9,48 +17,86 @@ export class AmbienteController {
   constructor(private ambienteService: AmbienteService) {}
 
   @Get("/")
-  async ambienteFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("AmbienteList") dto: IAppRequest<"AmbienteList">) {
-    const domain: IDomain.AmbienteListInput = requestRepresentationMergeToDomain(dto);
-    return this.ambienteService.ambienteFindAll(accessContext, domain);
+  @ApiOperation({ summary: "Lista ambientes" })
+  @ApiOkResponse({ type: AmbienteListOutputDto })
+  @ApiForbiddenResponse()
+  async ambienteFindAll(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Query() dto: AmbienteListInputDto,
+  ): Promise<AmbienteListOutputDto> {
+    return this.ambienteService.ambienteFindAll(accessContext, dto);
   }
 
   @Get("/:id")
-  async ambienteFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("AmbienteFindOneById") dto: IAppRequest<"AmbienteFindOneById">) {
-    const domain: IDomain.AmbienteFindOneInput = requestRepresentationMergeToDomain(dto);
-    return this.ambienteService.ambienteFindByIdStrict(accessContext, domain);
+  @ApiOperation({ summary: "Busca um ambiente por ID" })
+  @ApiOkResponse({ type: AmbienteFindOneOutputDto })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async ambienteFindById(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: AmbienteFindOneInputDto,
+  ): Promise<AmbienteFindOneOutputDto> {
+    return this.ambienteService.ambienteFindByIdStrict(accessContext, params);
   }
 
   @Post("/")
-  async ambienteCreate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("AmbienteCreate") dto: IAppRequest<"AmbienteCreate">) {
-    const domain: IDomain.AmbienteCreateInput = requestRepresentationMergeToDomain(dto);
-    return this.ambienteService.ambienteCreate(accessContext, domain);
+  @ApiOperation({ summary: "Cria um ambiente" })
+  @ApiCreatedResponse({ type: AmbienteFindOneOutputDto })
+  @ApiForbiddenResponse()
+  async ambienteCreate(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Body() dto: AmbienteCreateInputDto,
+  ): Promise<AmbienteFindOneOutputDto> {
+    return this.ambienteService.ambienteCreate(accessContext, dto);
   }
 
   @Patch("/:id")
-  async ambienteUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("AmbienteUpdateOneById") dto: IAppRequest<"AmbienteUpdateOneById">) {
-    const domain: IDomain.AmbienteFindOneInput & IDomain.AmbienteUpdateInput = requestRepresentationMergeToDomain(dto);
-    return this.ambienteService.ambienteUpdate(accessContext, domain);
+  @ApiOperation({ summary: "Atualiza um ambiente" })
+  @ApiOkResponse({ type: AmbienteFindOneOutputDto })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async ambienteUpdate(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: AmbienteFindOneInputDto,
+    @Body() dto: AmbienteUpdateInputDto,
+  ): Promise<AmbienteFindOneOutputDto> {
+    return this.ambienteService.ambienteUpdate(accessContext, { id: params.id, ...dto });
   }
 
   @Get("/:id/imagem/capa")
-  async ambienteGetImagemCapa(@AccessContextHttp() accessContext: AccessContext, @AppRequest("AmbienteGetImagemCapa") dto: IAppRequest<"AmbienteGetImagemCapa">) {
-    const domain: IDomain.AmbienteFindOneInput = requestRepresentationMergeToDomain(dto);
-    return this.ambienteService.ambienteGetImagemCapa(accessContext, domain.id);
+  @ApiOperation({ summary: "Obtem a imagem de capa de um ambiente" })
+  @ApiOkResponse()
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async ambienteGetImagemCapa(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: AmbienteFindOneInputDto,
+  ) {
+    return this.ambienteService.ambienteGetImagemCapa(accessContext, params.id);
   }
 
   @Put("/:id/imagem/capa")
+  @ApiOperation({ summary: "Define a imagem de capa de um ambiente" })
+  @ApiOkResponse()
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
   async ambienteUpdateImagemCapa(
     @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("AmbienteSetImagemCapa") dto: IAppRequest<"AmbienteSetImagemCapa">,
+    @Param() params: AmbienteFindOneInputDto,
     @UploadedFile() file: Express.Multer.File,
   ) {
-    const domain: IDomain.AmbienteFindOneInput = requestRepresentationMergeToDomain(dto);
-    return this.ambienteService.ambienteUpdateImagemCapa(accessContext, domain, file);
+    return this.ambienteService.ambienteUpdateImagemCapa(accessContext, params, file);
   }
 
   @Delete("/:id")
-  async ambienteDeleteOneById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("AmbienteDeleteOneById") dto: IAppRequest<"AmbienteDeleteOneById">) {
-    const domain: IDomain.AmbienteFindOneInput = requestRepresentationMergeToDomain(dto);
-    return this.ambienteService.ambienteDeleteOneById(accessContext, domain);
+  @ApiOperation({ summary: "Remove um ambiente" })
+  @ApiOkResponse({ type: Boolean })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async ambienteDeleteOneById(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: AmbienteFindOneInputDto,
+  ): Promise<boolean> {
+    return this.ambienteService.ambienteDeleteOneById(accessContext, params);
   }
 }

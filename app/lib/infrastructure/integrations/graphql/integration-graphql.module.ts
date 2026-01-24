@@ -2,16 +2,23 @@ import { InMemoryLRUCache } from "@apollo/utils.keyvaluecache";
 import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
 import { Module } from "@nestjs/common";
 import { GraphQLModule } from "@nestjs/graphql";
+import * as path from "node:path";
 
 @Module({
   imports: [
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
 
-      graphiql: true,
+      // Code-first schema generation
+      autoSchemaFile: path.join(process.cwd(), "schema.gql"),
+      sortSchema: true,
+      buildSchemaOptions: {
+        numberScalarMode: "integer",
+      },
 
-      useGlobalPrefix: true,
+      playground: true,
       introspection: true,
+      useGlobalPrefix: true,
 
       cache: new InMemoryLRUCache({
         maxSize: Math.pow(2, 20) * 100,

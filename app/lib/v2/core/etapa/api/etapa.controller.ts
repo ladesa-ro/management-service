@@ -1,10 +1,15 @@
-import { Controller, Delete, Get, Patch, Post } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
-import { type AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
-import { AppRequest, requestRepresentationMergeToDomain } from "@/shared";
-import { type IAppRequest } from "@/shared/tsp/openapi/document/app-openapi-typings";
-import { type IDomain } from "@/shared/tsp/schema/typings";
+import { Controller, Delete, Get, Patch, Post, Query, Body, Param } from "@nestjs/common";
+import { ApiTags, ApiOperation, ApiOkResponse, ApiCreatedResponse, ApiForbiddenResponse, ApiNotFoundResponse } from "@nestjs/swagger";
+import { AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { EtapaService } from "../domain/etapa.service";
+import {
+  EtapaFindOneOutputDto,
+  EtapaListInputDto,
+  EtapaListOutputDto,
+  EtapaCreateInputDto,
+  EtapaUpdateInputDto,
+  EtapaFindOneInputDto,
+} from "../dto";
 
 @ApiTags("etapas")
 @Controller("/etapas")
@@ -12,32 +17,61 @@ export class EtapaController {
   constructor(private etapaService: EtapaService) {}
 
   @Get("/")
-  async etapaFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("EtapaList") dto: IAppRequest<"EtapaList">) {
-    const domain: IDomain.EtapaListInput = requestRepresentationMergeToDomain(dto);
-    return this.etapaService.etapaFindAll(accessContext, domain);
+  @ApiOperation({ summary: "Lista etapas" })
+  @ApiOkResponse({ type: EtapaListOutputDto })
+  @ApiForbiddenResponse()
+  async etapaFindAll(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Query() dto: EtapaListInputDto,
+  ): Promise<EtapaListOutputDto> {
+    return this.etapaService.etapaFindAll(accessContext, dto);
   }
 
   @Get("/:id")
-  async etapaFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("EtapaFindOneById") dto: IAppRequest<"EtapaFindOneById">) {
-    const domain: IDomain.EtapaFindOneInput = requestRepresentationMergeToDomain(dto);
-    return this.etapaService.etapaFindByIdStrict(accessContext, domain);
+  @ApiOperation({ summary: "Busca uma etapa por ID" })
+  @ApiOkResponse({ type: EtapaFindOneOutputDto })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async etapaFindById(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: EtapaFindOneInputDto,
+  ): Promise<EtapaFindOneOutputDto> {
+    return this.etapaService.etapaFindByIdStrict(accessContext, params);
   }
 
   @Post("/")
-  async etapaCreate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("EtapaCreate") dto: IAppRequest<"EtapaCreate">) {
-    const domain: IDomain.EtapaCreateInput = requestRepresentationMergeToDomain(dto);
-    return this.etapaService.etapaCreate(accessContext, domain);
+  @ApiOperation({ summary: "Cria uma etapa" })
+  @ApiCreatedResponse({ type: EtapaFindOneOutputDto })
+  @ApiForbiddenResponse()
+  async etapaCreate(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Body() dto: EtapaCreateInputDto,
+  ): Promise<EtapaFindOneOutputDto> {
+    return this.etapaService.etapaCreate(accessContext, dto);
   }
 
   @Patch("/:id")
-  async etapaUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("EtapaUpdateOneById") dto: IAppRequest<"EtapaUpdateOneById">) {
-    const domain: IDomain.EtapaFindOneInput & IDomain.EtapaUpdateInput = requestRepresentationMergeToDomain(dto);
-    return this.etapaService.etapaUpdate(accessContext, domain);
+  @ApiOperation({ summary: "Atualiza uma etapa" })
+  @ApiOkResponse({ type: EtapaFindOneOutputDto })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async etapaUpdate(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: EtapaFindOneInputDto,
+    @Body() dto: EtapaUpdateInputDto,
+  ): Promise<EtapaFindOneOutputDto> {
+    return this.etapaService.etapaUpdate(accessContext, { id: params.id, ...dto });
   }
 
   @Delete("/:id")
-  async etapaDeleteOneById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("EtapaDeleteOneById") dto: IAppRequest<"EtapaDeleteOneById">) {
-    const domain: IDomain.EtapaFindOneInput = requestRepresentationMergeToDomain(dto);
-    return this.etapaService.etapaDeleteOneById(accessContext, domain);
+  @ApiOperation({ summary: "Remove uma etapa" })
+  @ApiOkResponse({ type: Boolean })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async etapaDeleteOneById(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: EtapaFindOneInputDto,
+  ): Promise<boolean> {
+    return this.etapaService.etapaDeleteOneById(accessContext, params);
   }
 }

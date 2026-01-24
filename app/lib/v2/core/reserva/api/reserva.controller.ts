@@ -1,10 +1,15 @@
-import { Controller, Delete, Get, Patch, Post } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
+import { Controller, Delete, Get, Patch, Post, Query, Body, Param } from "@nestjs/common";
+import { ApiTags, ApiOperation, ApiOkResponse, ApiCreatedResponse, ApiForbiddenResponse, ApiNotFoundResponse } from "@nestjs/swagger";
 import { AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
-import { AppRequest, requestRepresentationMergeToDomain } from "@/shared";
-import { type IAppRequest } from "@/shared/tsp/openapi/document/app-openapi-typings";
-import { type IDomain } from "@/shared/tsp/schema/typings";
 import { ReservaService } from "../domain/reserva.service";
+import {
+  ReservaFindOneOutputDto,
+  ReservaListInputDto,
+  ReservaListOutputDto,
+  ReservaCreateInputDto,
+  ReservaUpdateInputDto,
+  ReservaFindOneInputDto,
+} from "../dto";
 
 @ApiTags("reservas")
 @Controller("/reservas")
@@ -12,32 +17,61 @@ export class ReservaController {
   constructor(private reservaService: ReservaService) {}
 
   @Get("/")
-  async reservaFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("ReservaList") dto: IAppRequest<"ReservaList">) {
-    const domain: IDomain.ReservaListInput = requestRepresentationMergeToDomain(dto);
-    return this.reservaService.reservaFindAll(accessContext, domain);
+  @ApiOperation({ summary: "Lista reservas" })
+  @ApiOkResponse({ type: ReservaListOutputDto })
+  @ApiForbiddenResponse()
+  async reservaFindAll(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Query() dto: ReservaListInputDto,
+  ): Promise<ReservaListOutputDto> {
+    return this.reservaService.reservaFindAll(accessContext, dto);
   }
 
   @Get("/:id")
-  async reservaFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("ReservaFindOneById") dto: IAppRequest<"ReservaFindOneById">) {
-    const domain: IDomain.ReservaFindOneInput = requestRepresentationMergeToDomain(dto);
-    return this.reservaService.reservaFindByIdStrict(accessContext, domain);
+  @ApiOperation({ summary: "Busca uma reserva por ID" })
+  @ApiOkResponse({ type: ReservaFindOneOutputDto })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async reservaFindById(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: ReservaFindOneInputDto,
+  ): Promise<ReservaFindOneOutputDto> {
+    return this.reservaService.reservaFindByIdStrict(accessContext, params);
   }
 
   @Post("/")
-  async reservaCreate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("ReservaCreate") dto: IAppRequest<"ReservaCreate">) {
-    const domain: IDomain.ReservaCreateInput = requestRepresentationMergeToDomain(dto);
-    return this.reservaService.reservaCreate(accessContext, domain);
+  @ApiOperation({ summary: "Cria uma reserva" })
+  @ApiCreatedResponse({ type: ReservaFindOneOutputDto })
+  @ApiForbiddenResponse()
+  async reservaCreate(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Body() dto: ReservaCreateInputDto,
+  ): Promise<ReservaFindOneOutputDto> {
+    return this.reservaService.reservaCreate(accessContext, dto);
   }
 
   @Patch("/:id")
-  async reservaUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("ReservaUpdateOneById") dto: IAppRequest<"ReservaUpdateOneById">) {
-    const domain: IDomain.ReservaFindOneInput & IDomain.ReservaUpdateInput = requestRepresentationMergeToDomain(dto);
-    return this.reservaService.reservaUpdate(accessContext, domain);
+  @ApiOperation({ summary: "Atualiza uma reserva" })
+  @ApiOkResponse({ type: ReservaFindOneOutputDto })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async reservaUpdate(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: ReservaFindOneInputDto,
+    @Body() dto: ReservaUpdateInputDto,
+  ): Promise<ReservaFindOneOutputDto> {
+    return this.reservaService.reservaUpdate(accessContext, { id: params.id, ...dto });
   }
 
   @Delete("/:id")
-  async reservaDeleteOneById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("ReservaDeleteOneById") dto: IAppRequest<"ReservaDeleteOneById">) {
-    const domain: IDomain.ReservaFindOneInput = requestRepresentationMergeToDomain(dto);
-    return this.reservaService.reservaDeleteOneById(accessContext, domain);
+  @ApiOperation({ summary: "Remove uma reserva" })
+  @ApiOkResponse({ type: Boolean })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async reservaDeleteOneById(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: ReservaFindOneInputDto,
+  ): Promise<boolean> {
+    return this.reservaService.reservaDeleteOneById(accessContext, params);
   }
 }

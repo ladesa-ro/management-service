@@ -5,7 +5,15 @@ import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/v2/infrastructure.database";
 import { ProfessorIndisponibilidadeEntity } from "@/v2/infrastructure.database/typeorm/entities";
 import { QbEfficientLoad, SearchService } from "@/shared";
-import type { IDomain } from "@/shared/tsp/schema/typings";
+import type {
+  ProfessorIndisponibilidadeFindOneOutputDto,
+  ProfessorIndisponibilidadeListInputDto,
+  ProfessorIndisponibilidadeListOutputDto,
+  ProfessorIndisponibilidadeCreateInputDto,
+  ProfessorIndisponibilidadeUpdateInputDto,
+  ProfessorIndisponibilidadeFindOneInputDto,
+  ProfessorIndisponibilidadeRRuleOutputDto,
+} from "../dto";
 
 // ============================================================================
 
@@ -27,9 +35,9 @@ export class ProfessorIndisponibilidadeService {
 
   async indisponibilidadeFindAll(
     accessContext: AccessContext,
-    domain: IDomain.ProfessorIndisponibilidadeListInput | null = null,
+    dto: ProfessorIndisponibilidadeListInputDto | null = null,
     selection?: string[] | boolean,
-  ): Promise<IDomain.ProfessorIndisponibilidadeListOutput["success"]> {
+  ): Promise<ProfessorIndisponibilidadeListOutputDto> {
     // =========================================================
 
     const qb = this.indisponibilidadeRepository.createQueryBuilder(aliasIndisponibilidade).leftJoinAndSelect(`${aliasIndisponibilidade}.perfil`, "perfil");
@@ -41,7 +49,7 @@ export class ProfessorIndisponibilidadeService {
 
     const paginated = await this.searchService.search(
       qb,
-      { ...domain },
+      { ...dto },
       {
         ...paginateConfig,
         select: [
@@ -74,7 +82,7 @@ export class ProfessorIndisponibilidadeService {
     // =========================================================
 
     qb.select([]);
-    await QbEfficientLoad("ProfessorIndisponibilidadeFindOneOutput", qb, aliasIndisponibilidade, selection);
+    QbEfficientLoad("ProfessorIndisponibilidadeFindOneOutput", qb, aliasIndisponibilidade, selection);
 
     // =========================================================
 
@@ -83,14 +91,14 @@ export class ProfessorIndisponibilidadeService {
 
     // =========================================================
 
-    return paginated;
+    return paginated as ProfessorIndisponibilidadeListOutputDto;
   }
 
   async indisponibilidadeFindByIdSimple(
     accessContext: AccessContext,
-    id: IDomain.ProfessorIndisponibilidadeFindOneInput["id"],
+    id: string,
     selection?: string[],
-  ): Promise<IDomain.ProfessorIndisponibilidadeFindOneOutput["success"]> {
+  ): Promise<ProfessorIndisponibilidadeFindOneOutputDto> {
     // =========================================================
 
     const qb = this.indisponibilidadeRepository.createQueryBuilder(aliasIndisponibilidade).leftJoinAndSelect(`${aliasIndisponibilidade}.perfil`, "perfil");
@@ -109,7 +117,7 @@ export class ProfessorIndisponibilidadeService {
 
     // =========================================================
 
-    await QbEfficientLoad("ProfessorIndisponibilidadeFindOneOutput", qb, aliasIndisponibilidade, selection);
+    QbEfficientLoad("ProfessorIndisponibilidadeFindOneOutput", qb, aliasIndisponibilidade, selection);
 
     // =========================================================
 
@@ -117,10 +125,10 @@ export class ProfessorIndisponibilidadeService {
 
     // =========================================================
 
-    return indisponibilidade!;
+    return indisponibilidade as ProfessorIndisponibilidadeFindOneOutputDto;
   }
 
-  async indisponibilidadeFindByIdSimpleStrict(accesContext: AccessContext, id: IDomain.ProfessorIndisponibilidadeFindOneInput["idPerfilFk"], selection?: string[]) {
+  async indisponibilidadeFindByIdSimpleStrict(accesContext: AccessContext, id: string, selection?: string[]): Promise<ProfessorIndisponibilidadeFindOneOutputDto> {
     const indisponibilidade = await this.indisponibilidadeFindByIdSimple(accesContext, id, selection);
 
     if (!indisponibilidade) {
@@ -132,8 +140,8 @@ export class ProfessorIndisponibilidadeService {
   // ok
   async ProfessorIndisponibilidadeListByPerfil(
     accessContext: AccessContext,
-    idPerfil: IDomain.ProfessorIndisponibilidadeListInput["idPerfilFk"],
-  ): Promise<IDomain.ProfessorIndisponibilidadeListOutput["success"]> {
+    idPerfil: string,
+  ): Promise<ProfessorIndisponibilidadeListOutputDto> {
     const qb = this.indisponibilidadeRepository.createQueryBuilder(aliasIndisponibilidade).leftJoinAndSelect(`${aliasIndisponibilidade}.perfil`, "perfil");
 
     // =========================================================
@@ -159,24 +167,24 @@ export class ProfessorIndisponibilidadeService {
         totalPages: 1,
         currentPage: 1,
       },
-    };
+    } as ProfessorIndisponibilidadeListOutputDto;
   }
 
-  async createIndisponibilidade(accessContext: AccessContext, domain: IDomain.ProfessorIndisponibilidadeCreateInput) {
-    if (!domain.idPerfilFk) throw new BadRequestException("id_perfil is required");
+  async createIndisponibilidade(accessContext: AccessContext, dto: ProfessorIndisponibilidadeCreateInputDto): Promise<ProfessorIndisponibilidadeFindOneOutputDto> {
+    if (!dto.idPerfilFk) throw new BadRequestException("id_perfil is required");
 
     const indisponibilidade = this.indisponibilidadeRepository.create({
-      ...domain,
-      perfil: { id: domain.idPerfilFk } as any,
-      idPerfilFk: domain.idPerfilFk,
-      horaInicio: domain.horaInicio.toString(),
-      horaFim: domain.horaFim.toString(),
+      ...dto,
+      perfil: { id: dto.idPerfilFk } as any,
+      idPerfilFk: dto.idPerfilFk,
+      horaInicio: dto.horaInicio.toString(),
+      horaFim: dto.horaFim.toString(),
     });
 
-    return this.indisponibilidadeRepository.save(indisponibilidade);
+    return this.indisponibilidadeRepository.save(indisponibilidade) as Promise<ProfessorIndisponibilidadeFindOneOutputDto>;
   }
 
-  async indisponibilidadeDelete(accessContext: AccessContext, id: IDomain.ProfessorIndisponibilidadeFindOneInput["id"]): Promise<IDomain.ProfessorIndisponibilidadeFindOneOutput["success"]> {
+  async indisponibilidadeDelete(accessContext: AccessContext, id: string): Promise<ProfessorIndisponibilidadeFindOneOutputDto> {
     // =========================================================
 
     const indisponibilidade = await this.indisponibilidadeFindByIdSimpleStrict(accessContext, id);
@@ -187,18 +195,18 @@ export class ProfessorIndisponibilidadeService {
 
     // =========================================================
 
-    return this.indisponibilidadeRepository.remove(indisponibilidade);
+    return this.indisponibilidadeRepository.remove(indisponibilidade) as Promise<ProfessorIndisponibilidadeFindOneOutputDto>;
   }
 
-  async indisponibilidadeUpdate(accessContext: AccessContext, domain: IDomain.ProfessorIndisponibilidadeFindOneInput & IDomain.ProfessorIndisponibilidadeUpdateInput) {
+  async indisponibilidadeUpdate(accessContext: AccessContext, dto: ProfessorIndisponibilidadeFindOneInputDto & ProfessorIndisponibilidadeUpdateInputDto): Promise<ProfessorIndisponibilidadeFindOneOutputDto> {
     // =========================================================
 
-    const currentIndisponibilidade = await this.indisponibilidadeFindByIdSimpleStrict(accessContext, domain.id);
+    const currentIndisponibilidade = await this.indisponibilidadeFindByIdSimpleStrict(accessContext, dto.id);
     // =========================================================
 
-    await accessContext.ensurePermission("aula:update", { dto: domain }, domain.id, this.indisponibilidadeRepository.createQueryBuilder(aliasIndisponibilidade));
+    await accessContext.ensurePermission("aula:update", { dto }, dto.id, this.indisponibilidadeRepository.createQueryBuilder(aliasIndisponibilidade));
 
-    const dtoIndisponibilidade = pick(domain, ["indisponibilidadeInicio", "indisponibilidadeTermino", "horaInicio", "horaFim", "motivo"]);
+    const dtoIndisponibilidade = pick(dto, ["indisponibilidadeInicio", "indisponibilidadeTermino", "horaInicio", "horaFim", "motivo"]);
 
     const indisponibilidade = {
       id: currentIndisponibilidade.id,
@@ -206,15 +214,15 @@ export class ProfessorIndisponibilidadeService {
 
     this.indisponibilidadeRepository.merge(indisponibilidade, ...dtoIndisponibilidade);
 
-    return this.indisponibilidadeRepository.save(indisponibilidade);
+    return this.indisponibilidadeRepository.save(indisponibilidade) as Promise<ProfessorIndisponibilidadeFindOneOutputDto>;
     // =========================================================
   }
 
-  
+
   async ProfessorIndisponibilidadeRRuleFindOneById(
     accessContext: AccessContext,
-    id: IDomain.ProfessorIndisponibilidadeRRuleInput["id"],
-  ): Promise<IDomain.ProfessorIndisponibilidadeRRuleOutput["success"]> {
+    id: string,
+  ): Promise<ProfessorIndisponibilidadeRRuleOutputDto> {
     // =========================================================
 
     const qb = this.indisponibilidadeRepository.createQueryBuilder(aliasIndisponibilidade);
@@ -222,7 +230,7 @@ export class ProfessorIndisponibilidadeService {
     // =========================================================
 
     await accessContext.applyFilter("vinculo:find", qb, aliasIndisponibilidade, null);
-  
+
     // =========================================================
     qb.andWhere(`${aliasIndisponibilidade}.id = :id`, { id });
 
@@ -246,6 +254,6 @@ export class ProfessorIndisponibilidadeService {
       data_hora_fim: indisponibilidade.horaFim
       ? indisponibilidade.horaFim.toISOString().replace(/Z$/, "")
       : null,
-    }; 
+    } as unknown as ProfessorIndisponibilidadeRRuleOutputDto;
   }
 }

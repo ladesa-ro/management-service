@@ -1,0 +1,81 @@
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { ArgsType, Field, ID, Int, ObjectType, InputType } from "@nestjs/graphql";
+import { IsInt, IsString, IsOptional, IsArray } from "class-validator";
+import { Type } from "class-transformer";
+import { PaginationInputDto, PaginationMetaDto } from "@/shared/dto";
+import {
+  RegisterModel,
+  simpleProperty,
+} from "@/shared/metadata";
+
+// ============================================================================
+// FindOne Output
+// ============================================================================
+
+@ObjectType("Estado")
+@RegisterModel({
+  name: "EstadoFindOneOutput",
+  properties: [
+    simpleProperty("id"),
+    simpleProperty("nome"),
+    simpleProperty("sigla"),
+  ],
+})
+export class EstadoFindOneOutputDto {
+  @ApiProperty({ description: "Identificador do registro (numerico)" })
+  @Field(() => Int)
+  @IsInt()
+  id: number;
+
+  @ApiProperty({ description: "Nome oficial do estado" })
+  @Field()
+  @IsString()
+  nome: string;
+
+  @ApiProperty({ description: "Sigla do estado" })
+  @Field()
+  @IsString()
+  sigla: string;
+}
+
+// ============================================================================
+// List Input/Output
+// ============================================================================
+
+@ArgsType()
+@InputType("EstadoListInput")
+export class EstadoListInputDto extends PaginationInputDto {
+  @ApiPropertyOptional({
+    description: "Filtro por ID",
+    type: [String],
+  })
+  @Field(() => [String], { nullable: true })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  "filter.id"?: string[];
+}
+
+@ObjectType("EstadoListOutput")
+export class EstadoListOutputDto {
+  @ApiProperty({ type: () => PaginationMetaDto, description: "Metadados da busca" })
+  @Field(() => PaginationMetaDto)
+  meta: PaginationMetaDto;
+
+  @ApiProperty({ type: () => [EstadoFindOneOutputDto], description: "Resultados da busca" })
+  @Field(() => [EstadoFindOneOutputDto])
+  data: EstadoFindOneOutputDto[];
+}
+
+// ============================================================================
+// FindOne Input (for path params)
+// ============================================================================
+
+@ArgsType()
+export class EstadoFindOneInputDto {
+  @ApiProperty({ description: "Identificador do registro (numerico)" })
+  @Field(() => Int)
+  @Type(() => Number)
+  @IsInt()
+  id: number;
+}

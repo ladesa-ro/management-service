@@ -1,10 +1,15 @@
-import { Controller, Delete, Get, Patch, Post, Put, UploadedFile } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
+import { Controller, Delete, Get, Patch, Post, Put, Query, Body, Param, UploadedFile } from "@nestjs/common";
+import { ApiTags, ApiOperation, ApiOkResponse, ApiCreatedResponse, ApiForbiddenResponse, ApiNotFoundResponse } from "@nestjs/swagger";
 import { AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
-import { AppRequest, requestRepresentationMergeToDomain } from "@/shared";
-import { type IAppRequest } from "@/shared/tsp/openapi/document/app-openapi-typings";
-import { type IDomain } from "@/shared/tsp/schema/typings";
 import { BlocoService } from "../domain/bloco.service";
+import {
+  BlocoFindOneOutputDto,
+  BlocoListInputDto,
+  BlocoListOutputDto,
+  BlocoCreateInputDto,
+  BlocoUpdateInputDto,
+  BlocoFindOneInputDto,
+} from "../dto";
 
 @ApiTags("blocos")
 @Controller("/blocos")
@@ -12,44 +17,86 @@ export class BlocoController {
   constructor(private blocoService: BlocoService) {}
 
   @Get("/")
-  async blocoFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("BlocoList") dto: IAppRequest<"BlocoList">) {
-    const domain: IDomain.BlocoListInput = requestRepresentationMergeToDomain(dto);
-    return this.blocoService.blocoFindAll(accessContext, domain);
+  @ApiOperation({ summary: "Lista blocos" })
+  @ApiOkResponse({ type: BlocoListOutputDto })
+  @ApiForbiddenResponse()
+  async blocoFindAll(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Query() dto: BlocoListInputDto,
+  ): Promise<BlocoListOutputDto> {
+    return this.blocoService.blocoFindAll(accessContext, dto);
   }
 
   @Get("/:id")
-  async blocoFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("BlocoCreate") dto: IAppRequest<"BlocoCreate">) {
-    const domain: IDomain.BlocoFindOneInput = requestRepresentationMergeToDomain(dto);
-    return this.blocoService.blocoFindByIdStrict(accessContext, domain);
+  @ApiOperation({ summary: "Busca um bloco por ID" })
+  @ApiOkResponse({ type: BlocoFindOneOutputDto })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async blocoFindById(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: BlocoFindOneInputDto,
+  ): Promise<BlocoFindOneOutputDto> {
+    return this.blocoService.blocoFindByIdStrict(accessContext, params);
   }
 
   @Post("/")
-  async blocoCreate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("BlocoCreate") dto: IAppRequest<"BlocoCreate">) {
-    const domain: IDomain.BlocoCreateInput = requestRepresentationMergeToDomain(dto);
-    return this.blocoService.blocoCreate(accessContext, domain);
+  @ApiOperation({ summary: "Cria um bloco" })
+  @ApiCreatedResponse({ type: BlocoFindOneOutputDto })
+  @ApiForbiddenResponse()
+  async blocoCreate(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Body() dto: BlocoCreateInputDto,
+  ): Promise<BlocoFindOneOutputDto> {
+    return this.blocoService.blocoCreate(accessContext, dto);
   }
 
   @Patch("/:id")
-  async blocoUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("BlocoUpdateOneById") dto: IAppRequest<"BlocoUpdateOneById">) {
-    const domain: IDomain.BlocoFindOneInput & IDomain.BlocoUpdateInput = requestRepresentationMergeToDomain(dto);
-    return this.blocoService.blocoUpdate(accessContext, domain);
+  @ApiOperation({ summary: "Atualiza um bloco" })
+  @ApiOkResponse({ type: BlocoFindOneOutputDto })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async blocoUpdate(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: BlocoFindOneInputDto,
+    @Body() dto: BlocoUpdateInputDto,
+  ): Promise<BlocoFindOneOutputDto> {
+    return this.blocoService.blocoUpdate(accessContext, { id: params.id, ...dto });
   }
 
   @Get("/:id/imagem/capa")
-  async blocoGetImagemCapa(@AccessContextHttp() accessContext: AccessContext, @AppRequest("BlocoGetImagemCapa") dto: IAppRequest<"BlocoGetImagemCapa">) {
-    const domain: IDomain.BlocoFindOneInput = requestRepresentationMergeToDomain(dto);
-    return this.blocoService.blocoGetImagemCapa(accessContext, domain.id);
+  @ApiOperation({ summary: "Obtem a imagem de capa de um bloco" })
+  @ApiOkResponse()
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async blocoGetImagemCapa(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: BlocoFindOneInputDto,
+  ) {
+    return this.blocoService.blocoGetImagemCapa(accessContext, params.id);
   }
 
   @Put("/:id/imagem/capa")
-  async blocoImagemCapaSave(@AccessContextHttp() accessContext: AccessContext, @AppRequest("BlocoSetImagemCapa") dto: IAppRequest<"BlocoSetImagemCapa">, @UploadedFile() file: Express.Multer.File) {
-    const domain: IDomain.BlocoFindOneInput = requestRepresentationMergeToDomain(dto);
-    return this.blocoService.blocoUpdateImagemCapa(accessContext, domain, file);
+  @ApiOperation({ summary: "Define a imagem de capa de um bloco" })
+  @ApiOkResponse()
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async blocoImagemCapaSave(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: BlocoFindOneInputDto,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    return this.blocoService.blocoUpdateImagemCapa(accessContext, params, file);
   }
 
   @Delete("/:id")
-  async blocoDeleteOneById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("BlocoDeleteOneById") dto: IAppRequest<"BlocoDeleteOneById">) {
-    const domain: IDomain.BlocoFindOneInput = requestRepresentationMergeToDomain(dto);
-    return this.blocoService.blocoDeleteOneById(accessContext, domain);
+  @ApiOperation({ summary: "Remove um bloco" })
+  @ApiOkResponse({ type: Boolean })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async blocoDeleteOneById(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: BlocoFindOneInputDto,
+  ): Promise<boolean> {
+    return this.blocoService.blocoDeleteOneById(accessContext, params);
   }
 }

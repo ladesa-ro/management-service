@@ -5,7 +5,12 @@ import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/v2/infrastructure.database";
 import { QbEfficientLoad, SearchService } from "@/shared";
-import { type IDomain } from "@/shared/tsp/schema/typings";
+import type {
+  CidadeFindOneOutputDto,
+  CidadeListInputDto,
+  CidadeListOutputDto,
+  CidadeFindOneInputDto,
+} from "../dto";
 
 const aliasCidade = "cidade";
 
@@ -20,7 +25,7 @@ export class CidadeService {
     return this.databaseContextService.cidadeRepository;
   }
 
-  async findAll(accessContext: AccessContext, domain: IDomain.CidadeListInput | null = null, selection?: string[]) {
+  async findAll(accessContext: AccessContext, dto: CidadeListInputDto | null = null, selection?: string[]): Promise<CidadeListOutputDto> {
     // =========================================================
 
     const qb = this.cidadeRepository.createQueryBuilder("cidade");
@@ -31,7 +36,7 @@ export class CidadeService {
 
     // =========================================================
 
-    const paginated = await this.searchService.search(qb, domain, {
+    const paginated = await this.searchService.search(qb, dto, {
       ...paginateConfig,
       select: [
         "id",
@@ -62,7 +67,7 @@ export class CidadeService {
 
     qb.select([]);
 
-    await QbEfficientLoad("CidadeFindOneOutput", qb, aliasCidade, selection);
+    QbEfficientLoad("CidadeFindOneOutput", qb, aliasCidade, selection);
 
     // =========================================================
 
@@ -71,10 +76,10 @@ export class CidadeService {
 
     // =========================================================
 
-    return paginated;
+    return paginated as CidadeListOutputDto;
   }
 
-  async findById(accessContext: AccessContext, domain: IDomain.CidadeFindOneInput, selection?: string[]) {
+  async findById(accessContext: AccessContext, dto: CidadeFindOneInputDto, selection?: string[]): Promise<CidadeFindOneOutputDto | null> {
     // =========================================================
 
     const { cidadeRepository: baseCidadeRepository } = this.databaseContextService;
@@ -89,12 +94,12 @@ export class CidadeService {
 
     // =========================================================
 
-    qb.andWhere("cidade.id = :id", { id: domain.id });
+    qb.andWhere("cidade.id = :id", { id: dto.id });
 
     // =========================================================
 
     qb.select([]);
-    await QbEfficientLoad("CidadeFindOneOutput", qb, aliasCidade, selection);
+    QbEfficientLoad("CidadeFindOneOutput", qb, aliasCidade, selection);
 
     // =========================================================
 
@@ -102,11 +107,11 @@ export class CidadeService {
 
     // =========================================================
 
-    return cidade;
+    return cidade as CidadeFindOneOutputDto | null;
   }
 
-  async findByIdStrict(accessContext: AccessContext, domain: IDomain.CidadeFindOneInput, selection?: string[]) {
-    const cidade = await this.findById(accessContext, domain, selection);
+  async findByIdStrict(accessContext: AccessContext, dto: CidadeFindOneInputDto, selection?: string[]): Promise<CidadeFindOneOutputDto> {
+    const cidade = await this.findById(accessContext, dto, selection);
 
     if (!cidade) {
       throw new NotFoundException();

@@ -5,7 +5,14 @@ import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/v2/infrastructure.database";
 import type { NivelFormacaoEntity } from "@/v2/infrastructure.database/typeorm/entities";
 import { QbEfficientLoad, SearchService } from "@/shared";
-import { type IDomain } from "@/shared/tsp/schema/typings";
+import type {
+  NivelFormacaoFindOneOutputDto,
+  NivelFormacaoListInputDto,
+  NivelFormacaoListOutputDto,
+  NivelFormacaoCreateInputDto,
+  NivelFormacaoUpdateInputDto,
+  NivelFormacaoFindOneInputDto,
+} from "../dto";
 
 // ============================================================================
 
@@ -24,7 +31,7 @@ export class NivelFormacaoService {
     return this.databaseContext.nivelFormacaoRepository;
   }
 
-  async nivelFormacaoFindAll(accessContext: AccessContext, domain: IDomain.NivelFormacaoListInput | null = null, selection?: string[]): Promise<IDomain.NivelFormacaoListOutput["success"]> {
+  async nivelFormacaoFindAll(accessContext: AccessContext, dto: NivelFormacaoListInputDto | null = null, selection?: string[]): Promise<NivelFormacaoListOutputDto> {
     // =========================================================
 
     const qb = this.nivelFormacaoRepository.createQueryBuilder(aliasNivelFormacao);
@@ -35,7 +42,7 @@ export class NivelFormacaoService {
 
     // =========================================================
 
-    const paginated = await this.searchService.search(qb, domain, {
+    const paginated = await this.searchService.search(qb, dto, {
       ...paginateConfig,
       select: [
         "id",
@@ -60,7 +67,7 @@ export class NivelFormacaoService {
     // =========================================================
 
     qb.select([]);
-    await QbEfficientLoad("NivelFormacaoFindOneOutput", qb, aliasNivelFormacao, selection);
+    QbEfficientLoad("NivelFormacaoFindOneOutput", qb, aliasNivelFormacao, selection);
 
     // =========================================================
 
@@ -69,10 +76,10 @@ export class NivelFormacaoService {
 
     // =========================================================
 
-    return paginated;
+    return paginated as NivelFormacaoListOutputDto;
   }
 
-  async nivelFormacaoFindById(accessContext: AccessContext | null, domain: IDomain.NivelFormacaoFindOneInput, selection?: string[]): Promise<IDomain.NivelFormacaoFindOneOutput | null> {
+  async nivelFormacaoFindById(accessContext: AccessContext | null, dto: NivelFormacaoFindOneInputDto, selection?: string[]): Promise<NivelFormacaoFindOneOutputDto | null> {
     // =========================================================
 
     const qb = this.nivelFormacaoRepository.createQueryBuilder(aliasNivelFormacao);
@@ -85,12 +92,12 @@ export class NivelFormacaoService {
 
     // =========================================================
 
-    qb.andWhere(`${aliasNivelFormacao}.id = :id`, { id: domain.id });
+    qb.andWhere(`${aliasNivelFormacao}.id = :id`, { id: dto.id });
 
     // =========================================================
 
     qb.select([]);
-    await QbEfficientLoad("NivelFormacaoFindOneOutput", qb, aliasNivelFormacao, selection);
+    QbEfficientLoad("NivelFormacaoFindOneOutput", qb, aliasNivelFormacao, selection);
 
     // =========================================================
 
@@ -98,11 +105,11 @@ export class NivelFormacaoService {
 
     // =========================================================
 
-    return nivelFormacao;
+    return nivelFormacao as NivelFormacaoFindOneOutputDto | null;
   }
 
-  async nivelFormacaoFindByIdStrict(accessContext: AccessContext, domain: IDomain.NivelFormacaoFindOneInput, selection?: string[]) {
-    const nivelFormacao = await this.nivelFormacaoFindById(accessContext, domain, selection);
+  async nivelFormacaoFindByIdStrict(accessContext: AccessContext, dto: NivelFormacaoFindOneInputDto, selection?: string[]): Promise<NivelFormacaoFindOneOutputDto> {
+    const nivelFormacao = await this.nivelFormacaoFindById(accessContext, dto, selection);
 
     if (!nivelFormacao) {
       throw new NotFoundException();
@@ -111,7 +118,7 @@ export class NivelFormacaoService {
     return nivelFormacao;
   }
 
-  async nivelFormacaoFindByIdSimple(accessContext: AccessContext, id: IDomain.NivelFormacaoFindOneInput["id"], selection?: string[]): Promise<IDomain.NivelFormacaoFindOneOutput | null> {
+  async nivelFormacaoFindByIdSimple(accessContext: AccessContext, id: string, selection?: string[]): Promise<NivelFormacaoFindOneOutputDto | null> {
     // =========================================================
 
     const qb = this.nivelFormacaoRepository.createQueryBuilder(aliasNivelFormacao);
@@ -127,7 +134,7 @@ export class NivelFormacaoService {
     // =========================================================
 
     qb.select([]);
-    await QbEfficientLoad("NivelFormacaoFindOneOutput", qb, aliasNivelFormacao, selection);
+    QbEfficientLoad("NivelFormacaoFindOneOutput", qb, aliasNivelFormacao, selection);
 
     // =========================================================
 
@@ -135,10 +142,10 @@ export class NivelFormacaoService {
 
     // =========================================================
 
-    return nivelFormacao;
+    return nivelFormacao as NivelFormacaoFindOneOutputDto | null;
   }
 
-  async nivelFormacaoFindByIdSimpleStrict(accessContext: AccessContext, id: IDomain.NivelFormacaoFindOneInput["id"], selection?: string[]) {
+  async nivelFormacaoFindByIdSimpleStrict(accessContext: AccessContext, id: string, selection?: string[]): Promise<NivelFormacaoFindOneOutputDto> {
     const nivelFormacao = await this.nivelFormacaoFindByIdSimple(accessContext, id, selection);
 
     if (!nivelFormacao) {
@@ -148,14 +155,14 @@ export class NivelFormacaoService {
     return nivelFormacao;
   }
 
-  async nivelFormacaoCreate(accessContext: AccessContext, domain: IDomain.NivelFormacaoCreateInput) {
+  async nivelFormacaoCreate(accessContext: AccessContext, dto: NivelFormacaoCreateInputDto): Promise<NivelFormacaoFindOneOutputDto> {
     // =========================================================
 
-    await accessContext.ensurePermission("nivel_formacao:create", { dto: domain });
+    await accessContext.ensurePermission("nivel_formacao:create", { dto });
 
     // =========================================================
 
-    const dtoNivelFormacao = pick(domain, ["slug"]);
+    const dtoNivelFormacao = pick(dto, ["slug"]);
 
     const nivelFormacao = this.nivelFormacaoRepository.create();
 
@@ -174,16 +181,16 @@ export class NivelFormacaoService {
     });
   }
 
-  async nivelFormacaoUpdate(accessContext: AccessContext, domain: IDomain.NivelFormacaoFindOneInput & IDomain.NivelFormacaoUpdateInput) {
+  async nivelFormacaoUpdate(accessContext: AccessContext, dto: NivelFormacaoFindOneInputDto & NivelFormacaoUpdateInputDto): Promise<NivelFormacaoFindOneOutputDto> {
     // =========================================================
 
-    const currentNivelFormacao = await this.nivelFormacaoFindByIdStrict(accessContext, { id: domain.id });
+    const currentNivelFormacao = await this.nivelFormacaoFindByIdStrict(accessContext, { id: dto.id });
 
     // =========================================================
 
-    await accessContext.ensurePermission("nivel_formacao:update", { dto: domain }, domain.id, this.nivelFormacaoRepository.createQueryBuilder(aliasNivelFormacao));
+    await accessContext.ensurePermission("nivel_formacao:update", { dto }, dto.id, this.nivelFormacaoRepository.createQueryBuilder(aliasNivelFormacao));
 
-    const dtoNivelFormacao = pick(domain, ["slug"]);
+    const dtoNivelFormacao = pick(dto, ["slug"]);
 
     const nivelFormacao = <NivelFormacaoEntity>{
       id: currentNivelFormacao.id,
@@ -204,14 +211,14 @@ export class NivelFormacaoService {
     });
   }
 
-  async nivelFormacaoDeleteOneById(accessContext: AccessContext, domain: IDomain.NivelFormacaoFindOneInput) {
+  async nivelFormacaoDeleteOneById(accessContext: AccessContext, dto: NivelFormacaoFindOneInputDto): Promise<boolean> {
     // =========================================================
 
-    await accessContext.ensurePermission("nivel_formacao:delete", { dto: domain }, domain.id, this.nivelFormacaoRepository.createQueryBuilder(aliasNivelFormacao));
+    await accessContext.ensurePermission("nivel_formacao:delete", { dto }, dto.id, this.nivelFormacaoRepository.createQueryBuilder(aliasNivelFormacao));
 
     // =========================================================
 
-    const nivelFormacao = await this.nivelFormacaoFindByIdStrict(accessContext, domain);
+    const nivelFormacao = await this.nivelFormacaoFindByIdStrict(accessContext, dto);
 
     // =========================================================
 

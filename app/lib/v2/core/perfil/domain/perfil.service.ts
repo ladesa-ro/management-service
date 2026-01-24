@@ -8,7 +8,13 @@ import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/v2/infrastructure.database";
 import type { UsuarioEntity } from "@/v2/infrastructure.database/typeorm/entities";
 import { QbEfficientLoad, SearchService } from "@/shared";
-import { type IDomain } from "@/shared/tsp/schema/typings";
+import type {
+  PerfilFindOneOutputDto,
+  PerfilListInputDto,
+  PerfilListOutputDto,
+  PerfilUpdateInputDto,
+  PerfilFindOneInputDto,
+} from "../dto";
 
 // ============================================================================
 
@@ -44,25 +50,25 @@ export class PerfilService {
       await accessContext.applyFilter("vinculo:find", qb, aliasVinculo, null);
     }
 
-    await QbEfficientLoad("PerfilFindOneOutput", qb, "vinculo");
+    QbEfficientLoad("PerfilFindOneOutput", qb, "vinculo");
 
     const vinculos = await qb.getMany();
 
     return vinculos;
   }
 
-  async perfilFindAll(accessContext: AccessContext, domain: IDomain.PerfilListInput | null = null, selection?: string[] | boolean) {
+  async perfilFindAll(accessContext: AccessContext, dto: PerfilListInputDto | null = null, selection?: string[] | boolean): Promise<PerfilListOutputDto> {
     const qb = this.vinculoRepository.createQueryBuilder(aliasVinculo);
 
-    await QbEfficientLoad("PerfilFindOneOutput", qb, aliasVinculo, selection);
+    QbEfficientLoad("PerfilFindOneOutput", qb, aliasVinculo, selection);
 
     await accessContext.applyFilter("vinculo:find", qb, aliasVinculo, null);
 
     const paginated = await this.searchService.search(
       qb,
       {
-        ...domain,
-        sortBy: domain?.sortBy ? (domain.sortBy as unknown as string[]) : undefined,
+        ...dto,
+        sortBy: dto?.sortBy ? (dto.sortBy as unknown as string[]) : undefined,
       },
       {
         ...paginateConfig,
@@ -99,12 +105,12 @@ export class PerfilService {
       },
     );
 
-    return paginated;
+    return paginated as PerfilListOutputDto;
   }
 
   // =========================================================
-  async perfilFindById(accessContext: AccessContext, domain: IDomain.PerfilFindOneInput & { pathId?: string }, selection?: string[] | boolean): Promise<IDomain.PerfilFindOneOutput | null> {
-    const id = domain.id && domain.id !== "{id}" ? domain.id : domain.pathId;
+  async perfilFindById(accessContext: AccessContext, dto: PerfilFindOneInputDto & { pathId?: string }, selection?: string[] | boolean): Promise<PerfilFindOneOutputDto | null> {
+    const id = dto.id && dto.id !== "{id}" ? dto.id : dto.pathId;
 
     const qb = this.vinculoRepository.createQueryBuilder(aliasVinculo);
     await accessContext.applyFilter("vinculo:find", qb, aliasVinculo, null);
@@ -138,11 +144,11 @@ export class PerfilService {
     });
 
     const item = Array.isArray(paginated) ? paginated[0] : (paginated?.data?.[0] ?? null);
-    return (item as IDomain.PerfilFindOneOutput) ?? null;
+    return (item as PerfilFindOneOutputDto) ?? null;
   }
 
-  async perfilFindByIdStrict(accessContext: AccessContext, domain: IDomain.PerfilFindOneInput, selection?: string[] | boolean) {
-    const vinculo = await this.perfilFindById(accessContext, domain, selection);
+  async perfilFindByIdStrict(accessContext: AccessContext, dto: PerfilFindOneInputDto, selection?: string[] | boolean): Promise<PerfilFindOneOutputDto> {
+    const vinculo = await this.perfilFindById(accessContext, dto, selection);
 
     if (!vinculo) {
       throw new NotFoundException();
@@ -151,9 +157,9 @@ export class PerfilService {
     return vinculo;
   }
 
-  async perfilSetVinculos(accessContext: AccessContext, domain: IDomain.PerfilFindOneInput & IDomain.PerfilUpdateInput) {
-    const campus = await this.campusService.campusFindByIdSimpleStrict(accessContext, domain.campus.id);
-    const usuario = await this.usuarioService.usuarioFindByIdSimpleStrict(accessContext, domain.usuario.id);
+  async perfilSetVinculos(accessContext: AccessContext, dto: PerfilFindOneInputDto & PerfilUpdateInputDto): Promise<PerfilListOutputDto> {
+    const campus = await this.campusService.campusFindByIdSimpleStrict(accessContext, dto.campus.id);
+    const usuario = await this.usuarioService.usuarioFindByIdSimpleStrict(accessContext, dto.usuario.id);
 
     const vinculosParaManter = new Set();
 
@@ -166,7 +172,7 @@ export class PerfilService {
       .select(["vinculo", "campus", "usuario"])
       .getMany();
 
-    for (const cargo of domain.cargos) {
+    for (const cargo of dto.cargos) {
       const vinculoExistente = vinculosExistentesUsuarioCampus.find((vinculo) => vinculo.cargo === cargo);
 
       if (vinculoExistente) {

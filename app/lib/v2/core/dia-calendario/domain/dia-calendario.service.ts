@@ -6,7 +6,14 @@ import type { AccessContext } from "@/infrastructure/access-context";
 import { DatabaseContextService } from "@/v2/infrastructure.database";
 import type { DiaCalendarioEntity } from "@/v2/infrastructure.database/typeorm/entities/05-calendario/dia-calendario.entity";
 import { QbEfficientLoad, SearchService } from "@/shared";
-import { type IDomain } from "@/shared/tsp/schema/typings";
+import type {
+  DiaCalendarioFindOneOutputDto,
+  DiaCalendarioListInputDto,
+  DiaCalendarioListOutputDto,
+  DiaCalendarioCreateInputDto,
+  DiaCalendarioUpdateInputDto,
+  DiaCalendarioFindOneInputDto,
+} from "../dto";
 
 // ============================================================================
 
@@ -26,7 +33,7 @@ export class DiaCalendarioService {
     return this.databaseContext.diaCalendarioRepository;
   }
 
-  async diaCalendarioFindAll(accessContext: AccessContext, domain: IDomain.DiaCalendarioListInput | null = null, selection?: string[] | boolean): Promise<IDomain.DiaCalendarioListOutput["success"]> {
+  async diaCalendarioFindAll(accessContext: AccessContext, dto: DiaCalendarioListInputDto | null = null, selection?: string[] | boolean): Promise<DiaCalendarioListOutputDto> {
     // =========================================================
 
     const qb = this.diaCalendarioRepository.createQueryBuilder(aliasDiaCalendario);
@@ -37,7 +44,7 @@ export class DiaCalendarioService {
 
     // =========================================================
 
-    const paginated = await this.searchService.search(qb, domain, {
+    const paginated = await this.searchService.search(qb, dto, {
       select: [
         "id",
 
@@ -84,7 +91,7 @@ export class DiaCalendarioService {
     // =========================================================
 
     qb.select([]);
-    await QbEfficientLoad("DiaCalendarioFindOneOutput", qb, aliasDiaCalendario, selection);
+    QbEfficientLoad("DiaCalendarioFindOneOutput", qb, aliasDiaCalendario, selection);
 
     // =========================================================
 
@@ -93,10 +100,10 @@ export class DiaCalendarioService {
 
     // =========================================================
 
-    return paginated;
+    return paginated as DiaCalendarioListOutputDto;
   }
 
-  async diaCalendarioFindById(accessContext: AccessContext, domain: IDomain.DiaCalendarioFindOneInput, selection?: string[] | boolean): Promise<IDomain.DiaCalendarioFindOneOutput | null> {
+  async diaCalendarioFindById(accessContext: AccessContext, dto: DiaCalendarioFindOneInputDto, selection?: string[] | boolean): Promise<DiaCalendarioFindOneOutputDto | null> {
     // =========================================================
 
     const qb = this.diaCalendarioRepository.createQueryBuilder(aliasDiaCalendario);
@@ -107,12 +114,12 @@ export class DiaCalendarioService {
 
     // =========================================================
 
-    qb.andWhere(`${aliasDiaCalendario}.id = :id`, { id: domain.id });
+    qb.andWhere(`${aliasDiaCalendario}.id = :id`, { id: dto.id });
 
     // =========================================================
 
     qb.select([]);
-    await QbEfficientLoad("DiaCalendarioFindOneOutput", qb, aliasDiaCalendario, selection);
+    QbEfficientLoad("DiaCalendarioFindOneOutput", qb, aliasDiaCalendario, selection);
 
     // =========================================================
 
@@ -120,11 +127,11 @@ export class DiaCalendarioService {
 
     // =========================================================
 
-    return diaCalendario;
+    return diaCalendario as DiaCalendarioFindOneOutputDto | null;
   }
 
-  async diaCalendarioFindByIdStrict(accessContext: AccessContext, domain: IDomain.DiaCalendarioFindOneInput, selection?: string[] | boolean) {
-    const diaCalendario = await this.diaCalendarioFindById(accessContext, domain, selection);
+  async diaCalendarioFindByIdStrict(accessContext: AccessContext, dto: DiaCalendarioFindOneInputDto, selection?: string[] | boolean): Promise<DiaCalendarioFindOneOutputDto> {
+    const diaCalendario = await this.diaCalendarioFindById(accessContext, dto, selection);
 
     if (!diaCalendario) {
       throw new NotFoundException();
@@ -133,7 +140,7 @@ export class DiaCalendarioService {
     return diaCalendario;
   }
 
-  async diaCalendarioFindByIdSimple(accessContext: AccessContext, id: IDomain.DiaCalendarioFindOneInput["id"], selection?: string[]): Promise<IDomain.DiaCalendarioFindOneOutput | null> {
+  async diaCalendarioFindByIdSimple(accessContext: AccessContext, id: string, selection?: string[]): Promise<DiaCalendarioFindOneOutputDto | null> {
     // =========================================================
 
     const qb = this.diaCalendarioRepository.createQueryBuilder(aliasDiaCalendario);
@@ -149,7 +156,7 @@ export class DiaCalendarioService {
     // =========================================================
 
     qb.select([]);
-    await QbEfficientLoad("DiaCalendarioFindOneOutput", qb, aliasDiaCalendario, selection);
+    QbEfficientLoad("DiaCalendarioFindOneOutput", qb, aliasDiaCalendario, selection);
 
     // =========================================================
 
@@ -157,10 +164,10 @@ export class DiaCalendarioService {
 
     // =========================================================
 
-    return diaCalendario;
+    return diaCalendario as DiaCalendarioFindOneOutputDto | null;
   }
 
-  async DiaCalendarioFindByIdSimpleStrict(accessContext: AccessContext, id: IDomain.DiaCalendarioFindOneInput["id"], selection?: string[]) {
+  async diaCalendarioFindByIdSimpleStrict(accessContext: AccessContext, id: string, selection?: string[]): Promise<DiaCalendarioFindOneOutputDto> {
     const diaCalendario = await this.diaCalendarioFindByIdSimple(accessContext, id, selection);
 
     if (!diaCalendario) {
@@ -170,14 +177,14 @@ export class DiaCalendarioService {
     return diaCalendario;
   }
 
-  async diaCalendarioCreate(accessContext: AccessContext, domain: IDomain.DiaCalendarioCreateInput) {
+  async diaCalendarioCreate(accessContext: AccessContext, dto: DiaCalendarioCreateInputDto): Promise<DiaCalendarioFindOneOutputDto> {
     // =========================================================
 
-    await accessContext.ensurePermission("dia_calendario:create", { dto: domain });
+    await accessContext.ensurePermission("dia_calendario:create", { dto });
 
     // =========================================================
 
-    const dtoDiaCalendario = pick(domain, ["data", "dia_letivo", "feriado"]) as Pick<typeof domain, "data" | "diaLetivo" | "feriado">;
+    const dtoDiaCalendario = pick(dto, ["data", "dia_letivo", "feriado"]) as Pick<typeof dto, "data" | "diaLetivo" | "feriado">;
 
     const diaCalendario = this.diaCalendarioRepository.create();
 
@@ -187,8 +194,8 @@ export class DiaCalendarioService {
 
     // =========================================================
 
-    if (domain.calendario) {
-      const calendario = await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(accessContext, domain.calendario.id);
+    if (dto.calendario) {
+      const calendario = await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(accessContext, dto.calendario.id);
 
       this.diaCalendarioRepository.merge(diaCalendario, {
         calendario: {
@@ -208,16 +215,16 @@ export class DiaCalendarioService {
     });
   }
 
-  async diaCalendarioUpdate(accessContext: AccessContext, domain: IDomain.DiaCalendarioFindOneInput & IDomain.DiaCalendarioUpdateInput) {
+  async diaCalendarioUpdate(accessContext: AccessContext, dto: DiaCalendarioFindOneInputDto & DiaCalendarioUpdateInputDto): Promise<DiaCalendarioFindOneOutputDto> {
     // =========================================================
 
-    const currentDiaCalendario = await this.diaCalendarioFindByIdStrict(accessContext, { id: domain.id });
+    const currentDiaCalendario = await this.diaCalendarioFindByIdStrict(accessContext, { id: dto.id });
 
     // =========================================================
 
-    await accessContext.ensurePermission("dia_calendario:update", { dto: domain }, domain.id, this.diaCalendarioRepository.createQueryBuilder(aliasDiaCalendario));
+    await accessContext.ensurePermission("dia_calendario:update", { dto }, dto.id, this.diaCalendarioRepository.createQueryBuilder(aliasDiaCalendario));
 
-    const dtoDiaCalendario = pick(domain, ["data", "dia_letivo", "feriado"]) as Pick<typeof domain, "data" | "diaLetivo" | "feriado">;
+    const dtoDiaCalendario = pick(dto, ["data", "dia_letivo", "feriado"]) as Pick<typeof dto, "data" | "diaLetivo" | "feriado">;
 
     const diaCalendario = {
       id: currentDiaCalendario.id,
@@ -229,8 +236,8 @@ export class DiaCalendarioService {
 
     // =========================================================
 
-    if (has(domain, "calendario") && domain.calendario !== undefined) {
-      const calendario = await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(accessContext, domain.calendario!.id);
+    if (has(dto, "calendario") && dto.calendario !== undefined) {
+      const calendario = await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(accessContext, dto.calendario!.id);
 
       this.diaCalendarioRepository.merge(diaCalendario, {
         calendario: {
@@ -250,14 +257,14 @@ export class DiaCalendarioService {
     });
   }
 
-  async diaCalendarioDeleteOneById(accessContext: AccessContext, domain: IDomain.DiaCalendarioFindOneInput) {
+  async diaCalendarioDeleteOneById(accessContext: AccessContext, dto: DiaCalendarioFindOneInputDto): Promise<boolean> {
     // =========================================================
 
-    await accessContext.ensurePermission("dia_calendario:delete", { dto: domain }, domain.id, this.diaCalendarioRepository.createQueryBuilder(aliasDiaCalendario));
+    await accessContext.ensurePermission("dia_calendario:delete", { dto }, dto.id, this.diaCalendarioRepository.createQueryBuilder(aliasDiaCalendario));
 
     // =========================================================
 
-    const diaCalendario = await this.diaCalendarioFindByIdStrict(accessContext, domain);
+    const diaCalendario = await this.diaCalendarioFindByIdStrict(accessContext, dto);
 
     // =========================================================
 

@@ -5,7 +5,14 @@ import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/v2/infrastructure.database";
 import type { DisponibilidadeEntity } from "@/v2/infrastructure.database/typeorm/entities";
 import { QbEfficientLoad, SearchService } from "@/shared";
-import { type IDomain } from "@/shared/tsp/schema/typings";
+import type {
+  DisponibilidadeFindOneOutputDto,
+  DisponibilidadeListInputDto,
+  DisponibilidadeListOutputDto,
+  DisponibilidadeCreateInputDto,
+  DisponibilidadeUpdateInputDto,
+  DisponibilidadeFindOneInputDto,
+} from "../dto";
 
 // ============================================================================
 
@@ -24,7 +31,7 @@ export class DisponibilidadeService {
     return this.databaseContext.disponibilidadeRepository;
   }
 
-  async disponibilidadeFindAll(accessContext: AccessContext, domain: IDomain.DisponibilidadeListInput | null = null, selection?: string[]): Promise<IDomain.DisponibilidadeListOutput["success"]> {
+  async disponibilidadeFindAll(accessContext: AccessContext, dto: DisponibilidadeListInputDto | null = null, selection?: string[]): Promise<DisponibilidadeListOutputDto> {
     // =========================================================
 
     const qb = this.disponibilidadeRepository.createQueryBuilder(aliasDisponibilidade);
@@ -35,7 +42,7 @@ export class DisponibilidadeService {
 
     // =========================================================
 
-    const paginated = await this.searchService.search(qb, domain, {
+    const paginated = await this.searchService.search(qb, dto, {
       ...paginateConfig,
       select: [
         "id",
@@ -61,7 +68,7 @@ export class DisponibilidadeService {
     // =========================================================
 
     qb.select([]);
-    await QbEfficientLoad("DisponibilidadeFindOneOutput", qb, aliasDisponibilidade, selection);
+    QbEfficientLoad("DisponibilidadeFindOneOutput", qb, aliasDisponibilidade, selection);
 
     // =========================================================
 
@@ -71,10 +78,10 @@ export class DisponibilidadeService {
 
     // =========================================================
 
-    return paginated;
+    return paginated as DisponibilidadeListOutputDto;
   }
 
-  async disponibilidadeFindById(accessContext: AccessContext | null, domain: IDomain.DisponibilidadeFindOneInput, selection?: string[]): Promise<IDomain.DisponibilidadeFindOneOutput | null> {
+  async disponibilidadeFindById(accessContext: AccessContext | null, dto: DisponibilidadeFindOneInputDto, selection?: string[]): Promise<DisponibilidadeFindOneOutputDto | null> {
     // =========================================================
 
     const qb = this.disponibilidadeRepository.createQueryBuilder(aliasDisponibilidade);
@@ -87,12 +94,12 @@ export class DisponibilidadeService {
 
     // =========================================================
 
-    qb.andWhere(`${aliasDisponibilidade}.id = :id`, { id: domain.id });
+    qb.andWhere(`${aliasDisponibilidade}.id = :id`, { id: dto.id });
 
     // =========================================================
 
     qb.select([]);
-    await QbEfficientLoad("DisponibilidadeFindOneOutput", qb, aliasDisponibilidade, selection);
+    QbEfficientLoad("DisponibilidadeFindOneOutput", qb, aliasDisponibilidade, selection);
 
     // =========================================================
 
@@ -100,11 +107,11 @@ export class DisponibilidadeService {
 
     // =========================================================
 
-    return disponibilidade;
+    return disponibilidade as DisponibilidadeFindOneOutputDto | null;
   }
 
-  async disponibilidadeFindByIdStrict(accessContext: AccessContext, domain: IDomain.DisponibilidadeFindOneInput, selection?: string[]) {
-    const disponibilidade = await this.disponibilidadeFindById(accessContext, domain, selection);
+  async disponibilidadeFindByIdStrict(accessContext: AccessContext, dto: DisponibilidadeFindOneInputDto, selection?: string[]): Promise<DisponibilidadeFindOneOutputDto> {
+    const disponibilidade = await this.disponibilidadeFindById(accessContext, dto, selection);
 
     if (!disponibilidade) {
       throw new NotFoundException();
@@ -113,7 +120,7 @@ export class DisponibilidadeService {
     return disponibilidade;
   }
 
-  async disponibilidadeFindByIdSimple(accessContext: AccessContext, id: IDomain.DisponibilidadeFindOneInput["id"], selection?: string[]): Promise<IDomain.DisponibilidadeFindOneOutput | null> {
+  async disponibilidadeFindByIdSimple(accessContext: AccessContext, id: string, selection?: string[]): Promise<DisponibilidadeFindOneOutputDto | null> {
     // =========================================================
 
     const qb = this.disponibilidadeRepository.createQueryBuilder(aliasDisponibilidade);
@@ -129,7 +136,7 @@ export class DisponibilidadeService {
     // =========================================================
 
     qb.select([]);
-    await QbEfficientLoad("DisponibilidadeFindOneOutput", qb, aliasDisponibilidade, selection);
+    QbEfficientLoad("DisponibilidadeFindOneOutput", qb, aliasDisponibilidade, selection);
 
     // =========================================================
 
@@ -137,10 +144,10 @@ export class DisponibilidadeService {
 
     // =========================================================
 
-    return disponibilidade;
+    return disponibilidade as DisponibilidadeFindOneOutputDto | null;
   }
 
-  async disponibilidadeFindByIdSimpleStrict(accessContext: AccessContext, id: IDomain.DisponibilidadeFindOneInput["id"], selection?: string[]) {
+  async disponibilidadeFindByIdSimpleStrict(accessContext: AccessContext, id: string, selection?: string[]): Promise<DisponibilidadeFindOneOutputDto> {
     const disponibilidade = await this.disponibilidadeFindByIdSimple(accessContext, id, selection);
 
     if (!disponibilidade) {
@@ -150,14 +157,14 @@ export class DisponibilidadeService {
     return disponibilidade;
   }
 
-  async disponibilidadeCreate(accessContext: AccessContext, domain: IDomain.DisponibilidadeCreateInput) {
+  async disponibilidadeCreate(accessContext: AccessContext, dto: DisponibilidadeCreateInputDto): Promise<DisponibilidadeFindOneOutputDto> {
     // =========================================================
 
-    await accessContext.ensurePermission("disponibilidade:create", { dto: domain });
+    await accessContext.ensurePermission("disponibilidade:create", { dto });
 
     // =========================================================
 
-    const dtoDisponibilidade = pick(domain, ["dataInicio", "dataFim"]);
+    const dtoDisponibilidade = pick(dto, ["dataInicio", "dataFim"]);
 
     const disponibilidade = this.disponibilidadeRepository.create();
 
@@ -176,16 +183,16 @@ export class DisponibilidadeService {
     });
   }
 
-  async disponibilidadeUpdate(accessContext: AccessContext, domain: IDomain.DisponibilidadeFindOneInput & IDomain.DisponibilidadeUpdateInput) {
+  async disponibilidadeUpdate(accessContext: AccessContext, dto: DisponibilidadeFindOneInputDto & DisponibilidadeUpdateInputDto): Promise<DisponibilidadeFindOneOutputDto> {
     // =========================================================
 
-    const currentDisponibilidade = await this.disponibilidadeFindByIdStrict(accessContext, { id: domain.id });
+    const currentDisponibilidade = await this.disponibilidadeFindByIdStrict(accessContext, { id: dto.id });
 
     // =========================================================
 
-    await accessContext.ensurePermission("disponibilidade:update", { dto: domain }, domain.id, this.disponibilidadeRepository.createQueryBuilder(aliasDisponibilidade));
+    await accessContext.ensurePermission("disponibilidade:update", { dto }, dto.id, this.disponibilidadeRepository.createQueryBuilder(aliasDisponibilidade));
 
-    const dtoDisponibilidade = pick(domain, ["dataInicio", "dataFim"]);
+    const dtoDisponibilidade = pick(dto, ["dataInicio", "dataFim"]);
 
     const disponibilidade = <DisponibilidadeEntity>{
       id: currentDisponibilidade.id,
@@ -206,14 +213,14 @@ export class DisponibilidadeService {
     });
   }
 
-  async disponibilidadeDeleteOneById(accessContext: AccessContext, domain: IDomain.DisponibilidadeFindOneInput) {
+  async disponibilidadeDeleteOneById(accessContext: AccessContext, dto: DisponibilidadeFindOneInputDto): Promise<boolean> {
     // =========================================================
 
-    await accessContext.ensurePermission("disponibilidade:delete", { dto: domain }, domain.id, this.disponibilidadeRepository.createQueryBuilder(aliasDisponibilidade));
+    await accessContext.ensurePermission("disponibilidade:delete", { dto }, dto.id, this.disponibilidadeRepository.createQueryBuilder(aliasDisponibilidade));
 
     // =========================================================
 
-    const disponibilidade = await this.disponibilidadeFindByIdStrict(accessContext, domain);
+    const disponibilidade = await this.disponibilidadeFindByIdStrict(accessContext, dto);
 
     // =========================================================
 

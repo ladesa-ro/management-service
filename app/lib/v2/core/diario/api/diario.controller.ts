@@ -1,10 +1,15 @@
-import { Controller, Delete, Get, Patch, Post } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
+import { Controller, Delete, Get, Patch, Post, Query, Body, Param } from "@nestjs/common";
+import { ApiTags, ApiOperation, ApiOkResponse, ApiCreatedResponse, ApiForbiddenResponse, ApiNotFoundResponse } from "@nestjs/swagger";
 import { AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
-import { AppRequest, requestRepresentationMergeToDomain } from "@/shared";
-import { type IAppRequest } from "@/shared/tsp/openapi/document/app-openapi-typings";
-import { type IDomain } from "@/shared/tsp/schema/typings";
 import { DiarioService } from "../domain/diario.service";
+import {
+  DiarioFindOneOutputDto,
+  DiarioListInputDto,
+  DiarioListOutputDto,
+  DiarioCreateInputDto,
+  DiarioUpdateInputDto,
+  DiarioFindOneInputDto,
+} from "../dto";
 
 @ApiTags("diarios")
 @Controller("/diarios")
@@ -12,32 +17,61 @@ export class DiarioController {
   constructor(private diarioService: DiarioService) {}
 
   @Get("/")
-  async diarioFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DiarioList") dto: IAppRequest<"DiarioList">) {
-    const domain: IDomain.DiarioListInput = requestRepresentationMergeToDomain(dto);
-    return this.diarioService.diarioFindAll(accessContext, domain);
+  @ApiOperation({ summary: "Lista diarios" })
+  @ApiOkResponse({ type: DiarioListOutputDto })
+  @ApiForbiddenResponse()
+  async diarioFindAll(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Query() dto: DiarioListInputDto,
+  ): Promise<DiarioListOutputDto> {
+    return this.diarioService.diarioFindAll(accessContext, dto);
   }
 
   @Get("/:id")
-  async diarioFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DiarioFindOneById") dto: IAppRequest<"DiarioFindOneById">) {
-    const domain: IDomain.DiarioFindOneInput = requestRepresentationMergeToDomain(dto);
-    return this.diarioService.diarioFindByIdStrict(accessContext, domain);
+  @ApiOperation({ summary: "Busca um diario por ID" })
+  @ApiOkResponse({ type: DiarioFindOneOutputDto })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async diarioFindById(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: DiarioFindOneInputDto,
+  ): Promise<DiarioFindOneOutputDto> {
+    return this.diarioService.diarioFindByIdStrict(accessContext, params);
   }
 
   @Post("/")
-  async diarioCreate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DiarioCreate") dto: IAppRequest<"DiarioCreate">) {
-    const domain: IDomain.DiarioCreateInput = requestRepresentationMergeToDomain(dto);
-    return this.diarioService.diarioCreate(accessContext, domain);
+  @ApiOperation({ summary: "Cria um diario" })
+  @ApiCreatedResponse({ type: DiarioFindOneOutputDto })
+  @ApiForbiddenResponse()
+  async diarioCreate(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Body() dto: DiarioCreateInputDto,
+  ): Promise<DiarioFindOneOutputDto> {
+    return this.diarioService.diarioCreate(accessContext, dto);
   }
 
   @Patch("/:id")
-  async diarioUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DiarioUpdateOneById") dto: IAppRequest<"DiarioUpdateOneById">) {
-    const domain: IDomain.DiarioFindOneInput & IDomain.DiarioUpdateInput = requestRepresentationMergeToDomain(dto);
-    return this.diarioService.diarioUpdate(accessContext, domain);
+  @ApiOperation({ summary: "Atualiza um diario" })
+  @ApiOkResponse({ type: DiarioFindOneOutputDto })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async diarioUpdate(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: DiarioFindOneInputDto,
+    @Body() dto: DiarioUpdateInputDto,
+  ): Promise<DiarioFindOneOutputDto> {
+    return this.diarioService.diarioUpdate(accessContext, { id: params.id, ...dto });
   }
 
   @Delete("/:id")
-  async diarioDeleteOneById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DiarioDeleteOneById") dto: IAppRequest<"DiarioDeleteOneById">) {
-    const domain: IDomain.DiarioFindOneInput = requestRepresentationMergeToDomain(dto);
-    return this.diarioService.diarioDeleteOneById(accessContext, domain);
+  @ApiOperation({ summary: "Remove um diario" })
+  @ApiOkResponse({ type: Boolean })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async diarioDeleteOneById(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: DiarioFindOneInputDto,
+  ): Promise<boolean> {
+    return this.diarioService.diarioDeleteOneById(accessContext, params);
   }
 }

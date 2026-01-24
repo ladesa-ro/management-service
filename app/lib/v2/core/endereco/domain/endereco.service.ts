@@ -3,7 +3,11 @@ import { pick } from "lodash";
 import { AccessContext } from "@/infrastructure/access-context";
 import { DatabaseContextService } from "@/infrastructure/integrations";
 import { QbEfficientLoad } from "@/shared";
-import { type IDomain } from "@/shared/tsp/schema/typings";
+import type {
+  EnderecoFindOneOutputDto,
+  EnderecoFindOneInputDto,
+  EnderecoInputDto,
+} from "../dto";
 
 // ============================================================================
 
@@ -19,17 +23,17 @@ export class EnderecoService {
     return this.databaseContext.enderecoRepository;
   }
 
-  async internalFindOneById(id: IDomain.Endereco["id"]) {
+  async internalFindOneById(id: string): Promise<EnderecoFindOneOutputDto | null> {
     const endereco = await this.enderecoRepository.findOne({
       where: {
         id: id,
       },
     });
 
-    return endereco;
+    return endereco as EnderecoFindOneOutputDto | null;
   }
 
-  async internalFindOneByIdStrict(id: IDomain.Endereco["id"]) {
+  async internalFindOneByIdStrict(id: string): Promise<EnderecoFindOneOutputDto> {
     const endereco = await this.internalFindOneById(id);
 
     if (!endereco) {
@@ -39,7 +43,7 @@ export class EnderecoService {
     return endereco;
   }
 
-  async internalEnderecoCreateOrUpdate(id: IDomain.Endereco["id"] | null, domain: IDomain.EnderecoInput) {
+  async internalEnderecoCreateOrUpdate(id: string | null, dto: EnderecoInputDto) {
     const endereco = this.enderecoRepository.create();
 
     if (id) {
@@ -50,11 +54,11 @@ export class EnderecoService {
       }
     }
 
-    const enderecoInputDto = <IDomain.EnderecoInput>{
-      ...pick(domain, ["cep", "logradouro", "numero", "bairro", "complemento", "pontoReferencia"]),
+    const enderecoInputDto = <EnderecoInputDto>{
+      ...pick(dto, ["cep", "logradouro", "numero", "bairro", "complemento", "pontoReferencia"]),
 
       cidade: {
-        id: domain.cidade.id,
+        id: dto.cidade.id,
       },
     };
 
@@ -65,7 +69,7 @@ export class EnderecoService {
     return endereco;
   }
 
-  async findById(accessContext: AccessContext, domain: IDomain.EnderecoFindOneInput, selection?: string[] | boolean): Promise<IDomain.EnderecoFindOneOutput | null> {
+  async findById(accessContext: AccessContext, dto: EnderecoFindOneInputDto, selection?: string[] | boolean): Promise<EnderecoFindOneOutputDto | null> {
     const qb = this.enderecoRepository.createQueryBuilder(aliasEndereco);
 
     // =========================================================
@@ -74,12 +78,12 @@ export class EnderecoService {
 
     // =========================================================
 
-    qb.andWhere(`${aliasEndereco}.id = :id`, { id: domain.id });
+    qb.andWhere(`${aliasEndereco}.id = :id`, { id: dto.id });
 
     // =========================================================
 
     qb.select([]);
-    await QbEfficientLoad("EnderecoFindOneOutput", qb, aliasEndereco, selection);
+    QbEfficientLoad("EnderecoFindOneOutput", qb, aliasEndereco, selection);
 
     // =========================================================
 
@@ -87,11 +91,11 @@ export class EnderecoService {
 
     // =========================================================
 
-    return endereco;
+    return endereco as EnderecoFindOneOutputDto | null;
   }
 
-  async findByIdStrict(requestContext: AccessContext, domain: IDomain.EnderecoFindOneInput) {
-    const endereco = await this.findById(requestContext, domain);
+  async findByIdStrict(requestContext: AccessContext, dto: EnderecoFindOneInputDto): Promise<EnderecoFindOneOutputDto> {
+    const endereco = await this.findById(requestContext, dto);
 
     if (!endereco) {
       throw new NotFoundException();

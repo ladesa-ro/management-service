@@ -1,7 +1,15 @@
-import { Controller, Delete, Get, Patch, Post } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
-import { DiarioPreferenciaAgrupamentoService } from "@/v2/core/diario-preferencia-agrupamento/domain/diario-preferencia-agrupamento.service";
-import { AccessContext, AccessContextHttp, AppRequest, type IAppRequest, type IDomain, requestRepresentationMergeToDomain } from "@/shared";
+import { Controller, Delete, Get, Patch, Post, Query, Body, Param } from "@nestjs/common";
+import { ApiTags, ApiOperation, ApiOkResponse, ApiCreatedResponse, ApiForbiddenResponse, ApiNotFoundResponse } from "@nestjs/swagger";
+import { AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
+import { DiarioPreferenciaAgrupamentoService } from "../domain/diario-preferencia-agrupamento.service";
+import {
+  DiarioPreferenciaAgrupamentoFindOneOutputDto,
+  DiarioPreferenciaAgrupamentoListInputDto,
+  DiarioPreferenciaAgrupamentoListOutputDto,
+  DiarioPreferenciaAgrupamentoCreateInputDto,
+  DiarioPreferenciaAgrupamentoUpdateInputDto,
+  DiarioPreferenciaAgrupamentoFindOneInputDto,
+} from "../dto";
 
 @ApiTags("diarios-preferencia-agrupamento")
 @Controller("/diarios-preferencia-agrupamento")
@@ -9,44 +17,61 @@ export class DiarioPreferenciaAgrupamentoController {
   constructor(private diarioPreferenciaAgrupamentoService: DiarioPreferenciaAgrupamentoService) {}
 
   @Get("/")
-  async diarioPreferenciaAgrupamentoFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DiarioPreferenciaAgrupamentoList") dto: IAppRequest<"DiarioPreferenciaAgrupamentoList">) {
-    const domain: IDomain.DiarioPreferenciaAgrupamentoListInput = requestRepresentationMergeToDomain(dto);
-    return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoFindAll(accessContext, domain);
+  @ApiOperation({ summary: "Lista diarios preferencia agrupamento" })
+  @ApiOkResponse({ type: DiarioPreferenciaAgrupamentoListOutputDto })
+  @ApiForbiddenResponse()
+  async diarioPreferenciaAgrupamentoFindAll(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Query() dto: DiarioPreferenciaAgrupamentoListInputDto,
+  ): Promise<DiarioPreferenciaAgrupamentoListOutputDto> {
+    return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoFindAll(accessContext, dto);
   }
 
   @Get("/:id")
+  @ApiOperation({ summary: "Busca um diario preferencia agrupamento por ID" })
+  @ApiOkResponse({ type: DiarioPreferenciaAgrupamentoFindOneOutputDto })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
   async diarioPreferenciaAgrupamentoFindById(
     @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("DiarioPreferenciaAgrupamentoFindOneById") dto: IAppRequest<"DiarioPreferenciaAgrupamentoFindOneById">,
-  ) {
-    const domain: IDomain.DiarioPreferenciaAgrupamentoFindOneInput = requestRepresentationMergeToDomain(dto);
-    return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoFindByIdStrict(accessContext, domain);
+    @Param() params: DiarioPreferenciaAgrupamentoFindOneInputDto,
+  ): Promise<DiarioPreferenciaAgrupamentoFindOneOutputDto> {
+    return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoFindByIdStrict(accessContext, params);
   }
 
   @Post("/")
+  @ApiOperation({ summary: "Cria um diario preferencia agrupamento" })
+  @ApiCreatedResponse({ type: DiarioPreferenciaAgrupamentoFindOneOutputDto })
+  @ApiForbiddenResponse()
   async diarioPreferenciaAgrupamentoCreate(
     @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("DiarioPreferenciaAgrupamentoCreate") dto: IAppRequest<"DiarioPreferenciaAgrupamentoCreate">,
-  ) {
-    const domain: IDomain.DiarioPreferenciaAgrupamentoCreateInput = requestRepresentationMergeToDomain(dto);
-    return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoCreate(accessContext, domain);
+    @Body() dto: DiarioPreferenciaAgrupamentoCreateInputDto,
+  ): Promise<DiarioPreferenciaAgrupamentoFindOneOutputDto> {
+    return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoCreate(accessContext, dto);
   }
 
   @Patch("/:id")
+  @ApiOperation({ summary: "Atualiza um diario preferencia agrupamento" })
+  @ApiOkResponse({ type: DiarioPreferenciaAgrupamentoFindOneOutputDto })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
   async diarioPreferenciaAgrupamentoUpdate(
     @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("DiarioPreferenciaAgrupamentoUpdateOneById") dto: IAppRequest<"DiarioPreferenciaAgrupamentoUpdateOneById">,
-  ) {
-    const domain: IDomain.DiarioPreferenciaAgrupamentoFindOneInput & IDomain.DiarioPreferenciaAgrupamentoUpdateInput = requestRepresentationMergeToDomain(dto);
-    return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoUpdate(accessContext, domain);
+    @Param() params: DiarioPreferenciaAgrupamentoFindOneInputDto,
+    @Body() dto: DiarioPreferenciaAgrupamentoUpdateInputDto,
+  ): Promise<DiarioPreferenciaAgrupamentoFindOneOutputDto> {
+    return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoUpdate(accessContext, { id: params.id, ...dto });
   }
 
   @Delete("/:id")
+  @ApiOperation({ summary: "Remove um diario preferencia agrupamento" })
+  @ApiOkResponse({ type: Boolean })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
   async diarioPreferenciaAgrupamentoDeleteOneById(
     @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("DiarioPreferenciaAgrupamentoDeleteOneById") dto: IAppRequest<"DiarioPreferenciaAgrupamentoDeleteOneById">,
-  ) {
-    const domain: IDomain.DiarioPreferenciaAgrupamentoFindOneInput = requestRepresentationMergeToDomain(dto);
-    return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoDeleteOneById(accessContext, domain);
+    @Param() params: DiarioPreferenciaAgrupamentoFindOneInputDto,
+  ): Promise<boolean> {
+    return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoDeleteOneById(accessContext, params);
   }
 }

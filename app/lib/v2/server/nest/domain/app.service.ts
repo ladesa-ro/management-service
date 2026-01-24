@@ -11,7 +11,6 @@ export class AppService {
   getHello() {
     return {
       status: "up",
-      adoniranBarbosa: "chico buarque",
       service: "@ladesa-ro/presentation.service",
       prefix: this.configService.getRuntimePrefix(),
       version: this.configService.getRuntimeVersion(),

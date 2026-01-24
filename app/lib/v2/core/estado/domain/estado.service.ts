@@ -4,7 +4,12 @@ import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/v2/infrastructure.database";
 import { QbEfficientLoad, SearchService } from "@/shared";
-import { type IDomain } from "@/shared/tsp/schema/typings";
+import type {
+  EstadoFindOneOutputDto,
+  EstadoListInputDto,
+  EstadoListOutputDto,
+  EstadoFindOneInputDto,
+} from "../dto";
 
 const aliasEstado = "estado";
 
@@ -19,7 +24,7 @@ export class EstadoService {
     return this.databaseContext.estadoRepository;
   }
 
-  async findAll(accessContext: AccessContext, domain: IDomain.EstadoListInput | null = null, selection?: string[]): Promise<IDomain.EstadoListOutput> {
+  async findAll(accessContext: AccessContext, dto: EstadoListInputDto | null = null, selection?: string[]): Promise<EstadoListOutputDto> {
     // =========================================================
 
     const qb = this.baseEstadoRepository.createQueryBuilder(aliasEstado);
@@ -30,7 +35,7 @@ export class EstadoService {
 
     // =========================================================
 
-    const paginated = await this.searchService.search(qb, domain, {
+    const paginated = await this.searchService.search(qb, dto, {
       ...paginateConfig,
       select: ["id"],
       searchableColumns: ["nome", "sigla"],
@@ -42,7 +47,7 @@ export class EstadoService {
     // =========================================================
 
     qb.select([]);
-    await QbEfficientLoad("EstadoFindOneOutput", qb, aliasEstado, selection);
+    QbEfficientLoad("EstadoFindOneOutput", qb, aliasEstado, selection);
 
     // =========================================================
 
@@ -52,10 +57,10 @@ export class EstadoService {
 
     // =========================================================
 
-    return paginated;
+    return paginated as EstadoListOutputDto;
   }
 
-  async findById(accessContext: AccessContext, domain: IDomain.EstadoFindOneInput, selection?: string[]) {
+  async findById(accessContext: AccessContext, dto: EstadoFindOneInputDto, selection?: string[]): Promise<EstadoFindOneOutputDto | null> {
     // =========================================================
 
     const qb = this.baseEstadoRepository.createQueryBuilder("estado");
@@ -66,12 +71,12 @@ export class EstadoService {
 
     // =========================================================
 
-    qb.andWhere(`${aliasEstado}.id = :id`, { id: domain.id });
+    qb.andWhere(`${aliasEstado}.id = :id`, { id: dto.id });
 
     // =========================================================
 
     qb.select([]);
-    await QbEfficientLoad("EstadoFindOneOutput", qb, aliasEstado, selection);
+    QbEfficientLoad("EstadoFindOneOutput", qb, aliasEstado, selection);
 
     // =========================================================
 
@@ -79,11 +84,11 @@ export class EstadoService {
 
     // =========================================================
 
-    return estado;
+    return estado as EstadoFindOneOutputDto | null;
   }
 
-  async findByIdStrict(accessContext: AccessContext, domain: IDomain.EstadoFindOneInput, selection?: string[]) {
-    const estado = await this.findById(accessContext, domain, selection);
+  async findByIdStrict(accessContext: AccessContext, dto: EstadoFindOneInputDto, selection?: string[]): Promise<EstadoFindOneOutputDto> {
+    const estado = await this.findById(accessContext, dto, selection);
 
     if (!estado) {
       throw new NotFoundException();

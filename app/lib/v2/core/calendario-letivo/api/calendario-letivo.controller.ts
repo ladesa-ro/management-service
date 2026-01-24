@@ -1,7 +1,15 @@
-import { Controller, Delete, Get, Patch, Post } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
-import { type AccessContext, AccessContextHttp, AppRequest, type IAppRequest, type IDomain, requestRepresentationMergeToDomain } from "@/shared";
+import { Controller, Delete, Get, Patch, Post, Query, Body, Param } from "@nestjs/common";
+import { ApiTags, ApiOperation, ApiOkResponse, ApiCreatedResponse, ApiForbiddenResponse, ApiNotFoundResponse } from "@nestjs/swagger";
+import { AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { CalendarioLetivoService } from "../domain/calendario-letivo.service";
+import {
+  CalendarioLetivoFindOneOutputDto,
+  CalendarioLetivoListInputDto,
+  CalendarioLetivoListOutputDto,
+  CalendarioLetivoCreateInputDto,
+  CalendarioLetivoUpdateInputDto,
+  CalendarioLetivoFindOneInputDto,
+} from "../dto";
 
 @ApiTags("calendarios-letivos")
 @Controller("/calendarios-letivos")
@@ -9,32 +17,61 @@ export class CalendarioLetivoController {
   constructor(private calendarioLetivoService: CalendarioLetivoService) {}
 
   @Get("/")
-  async calendarioFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CalendarioLetivoList") dto: IAppRequest<"CalendarioLetivoList">) {
-    const domain: IDomain.CalendarioLetivoListInput = requestRepresentationMergeToDomain(dto);
-    return this.calendarioLetivoService.calendarioLetivoFindAll(accessContext, domain);
+  @ApiOperation({ summary: "Lista calendarios letivos" })
+  @ApiOkResponse({ type: CalendarioLetivoListOutputDto })
+  @ApiForbiddenResponse()
+  async calendarioLetivoFindAll(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Query() dto: CalendarioLetivoListInputDto,
+  ): Promise<CalendarioLetivoListOutputDto> {
+    return this.calendarioLetivoService.calendarioLetivoFindAll(accessContext, dto);
   }
 
   @Get("/:id")
-  async calendarioLetivoFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CalendarioLetivoFindOneById") dto: IAppRequest<"CalendarioLetivoFindOneById">) {
-    const domain: IDomain.CalendarioLetivoFindOneInput = requestRepresentationMergeToDomain(dto);
-    return this.calendarioLetivoService.calendarioLetivoFindByIdStrict(accessContext, { id: domain.id });
+  @ApiOperation({ summary: "Busca um calendario letivo por ID" })
+  @ApiOkResponse({ type: CalendarioLetivoFindOneOutputDto })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async calendarioLetivoFindById(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: CalendarioLetivoFindOneInputDto,
+  ): Promise<CalendarioLetivoFindOneOutputDto> {
+    return this.calendarioLetivoService.calendarioLetivoFindByIdStrict(accessContext, params);
   }
 
   @Post("/")
-  async campusCreate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CampusCreate") dto: IAppRequest<"CampusCreate">) {
-    const domain: IDomain.CalendarioLetivoCreateInput = requestRepresentationMergeToDomain(dto);
-    return this.calendarioLetivoService.calendarioLetivoCreate(accessContext, domain);
+  @ApiOperation({ summary: "Cria um calendario letivo" })
+  @ApiCreatedResponse({ type: CalendarioLetivoFindOneOutputDto })
+  @ApiForbiddenResponse()
+  async calendarioLetivoCreate(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Body() dto: CalendarioLetivoCreateInputDto,
+  ): Promise<CalendarioLetivoFindOneOutputDto> {
+    return this.calendarioLetivoService.calendarioLetivoCreate(accessContext, dto);
   }
 
   @Patch("/:id")
-  async calendarioLetivoUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CalendarioLetivoUpdateOneById") dto: IAppRequest<"CalendarioLetivoUpdateOneById">) {
-    const domain: IDomain.CalendarioLetivoFindOneInput & IDomain.CalendarioLetivoUpdateInput = requestRepresentationMergeToDomain(dto);
-    return this.calendarioLetivoService.calendarioLetivoUpdate(accessContext, domain);
+  @ApiOperation({ summary: "Atualiza um calendario letivo" })
+  @ApiOkResponse({ type: CalendarioLetivoFindOneOutputDto })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async calendarioLetivoUpdate(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: CalendarioLetivoFindOneInputDto,
+    @Body() dto: CalendarioLetivoUpdateInputDto,
+  ): Promise<CalendarioLetivoFindOneOutputDto> {
+    return this.calendarioLetivoService.calendarioLetivoUpdate(accessContext, { id: params.id, ...dto });
   }
 
   @Delete("/:id")
-  async CalendarioLetivoDeleteOneById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CalendarioLetivoDeleteOneById") dto: IAppRequest<"CalendarioLetivoDeleteOneById">) {
-    const domain: IDomain.CalendarioLetivoFindOneInput = requestRepresentationMergeToDomain(dto);
-    return this.calendarioLetivoService.calendarioLetivoDeleteOneById(accessContext, { id: domain.id });
+  @ApiOperation({ summary: "Remove um calendario letivo" })
+  @ApiOkResponse({ type: Boolean })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async calendarioLetivoDeleteOneById(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: CalendarioLetivoFindOneInputDto,
+  ): Promise<boolean> {
+    return this.calendarioLetivoService.calendarioLetivoDeleteOneById(accessContext, params);
   }
 }

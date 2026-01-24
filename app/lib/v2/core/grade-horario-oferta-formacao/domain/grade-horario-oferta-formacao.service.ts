@@ -8,7 +8,14 @@ import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/v2/infrastructure.database";
 import type { GradeHorarioOfertaFormacaoEntity } from "@/v2/infrastructure.database/typeorm/entities";
 import { QbEfficientLoad, SearchService } from "@/shared";
-import { type IDomain } from "@/shared/tsp/schema/typings";
+import type {
+  GradeHorarioOfertaFormacaoFindOneOutputDto,
+  GradeHorarioOfertaFormacaoListInputDto,
+  GradeHorarioOfertaFormacaoListOutputDto,
+  GradeHorarioOfertaFormacaoCreateInputDto,
+  GradeHorarioOfertaFormacaoUpdateInputDto,
+  GradeHorarioOfertaFormacaoFindOneInputDto,
+} from "../dto";
 
 // ============================================================================
 
@@ -31,9 +38,9 @@ export class GradeHorarioOfertaFormacaoService {
 
   async gradeHorarioOfertaFormacaoFindAll(
     accessContext: AccessContext,
-    domain: IDomain.GradeHorarioOfertaFormacaoListInput | null = null,
+    dto: GradeHorarioOfertaFormacaoListInputDto | null = null,
     selection?: string[],
-  ): Promise<IDomain.GradeHorarioOfertaFormacaoListOutput["success"]> {
+  ): Promise<GradeHorarioOfertaFormacaoListOutputDto> {
     // =========================================================
 
     const qb = this.gradeHorarioOfertaFormacaoRepository.createQueryBuilder(aliasGradeHorarioOfertaFormacao);
@@ -46,7 +53,7 @@ export class GradeHorarioOfertaFormacaoService {
 
     const paginated = await this.searchService.search(
       qb,
-      { ...domain },
+      { ...dto },
       {
         ...paginateConfig,
         select: [
@@ -75,7 +82,7 @@ export class GradeHorarioOfertaFormacaoService {
     // =========================================================
 
     qb.select([]);
-    await QbEfficientLoad("GradeHorarioOfertaFormacaoFindOneOutput", qb, aliasGradeHorarioOfertaFormacao, selection);
+    QbEfficientLoad("GradeHorarioOfertaFormacaoFindOneOutput", qb, aliasGradeHorarioOfertaFormacao, selection);
 
     // =========================================================
 
@@ -84,14 +91,14 @@ export class GradeHorarioOfertaFormacaoService {
 
     // =========================================================
 
-    return paginated;
+    return paginated as GradeHorarioOfertaFormacaoListOutputDto;
   }
 
   async gradeHorarioOfertaFormacaoFindById(
     accessContext: AccessContext | null,
-    domain: IDomain.GradeHorarioOfertaFormacaoFindOneInput,
+    dto: GradeHorarioOfertaFormacaoFindOneInputDto,
     selection?: string[],
-  ): Promise<IDomain.GradeHorarioOfertaFormacaoFindOneOutput | null> {
+  ): Promise<GradeHorarioOfertaFormacaoFindOneOutputDto | null> {
     // =========================================================
 
     const qb = this.gradeHorarioOfertaFormacaoRepository.createQueryBuilder(aliasGradeHorarioOfertaFormacao);
@@ -104,12 +111,12 @@ export class GradeHorarioOfertaFormacaoService {
 
     // =========================================================
 
-    qb.andWhere(`${aliasGradeHorarioOfertaFormacao}.id = :id`, { id: domain.id });
+    qb.andWhere(`${aliasGradeHorarioOfertaFormacao}.id = :id`, { id: dto.id });
 
     // =========================================================
 
     qb.select([]);
-    await QbEfficientLoad("GradeHorarioOfertaFormacaoFindOneOutput", qb, aliasGradeHorarioOfertaFormacao, selection);
+    QbEfficientLoad("GradeHorarioOfertaFormacaoFindOneOutput", qb, aliasGradeHorarioOfertaFormacao, selection);
 
     // =========================================================
 
@@ -117,11 +124,11 @@ export class GradeHorarioOfertaFormacaoService {
 
     // =========================================================
 
-    return gradeHorarioOfertaFormacao;
+    return gradeHorarioOfertaFormacao as GradeHorarioOfertaFormacaoFindOneOutputDto | null;
   }
 
-  async gradeHorarioOfertaFormacaoFindByIdStrict(accessContext: AccessContext, domain: IDomain.GradeHorarioOfertaFormacaoFindOneInput, selection?: string[]) {
-    const gradeHorarioOfertaFormacao = await this.gradeHorarioOfertaFormacaoFindById(accessContext, domain, selection);
+  async gradeHorarioOfertaFormacaoFindByIdStrict(accessContext: AccessContext, dto: GradeHorarioOfertaFormacaoFindOneInputDto, selection?: string[]): Promise<GradeHorarioOfertaFormacaoFindOneOutputDto> {
+    const gradeHorarioOfertaFormacao = await this.gradeHorarioOfertaFormacaoFindById(accessContext, dto, selection);
 
     if (!gradeHorarioOfertaFormacao) {
       throw new NotFoundException();
@@ -132,9 +139,9 @@ export class GradeHorarioOfertaFormacaoService {
 
   async gradeHorarioOfertaFormacaoFindByIdSimple(
     accessContext: AccessContext,
-    id: IDomain.GradeHorarioOfertaFormacaoFindOneInput["id"],
+    id: string,
     selection?: string[],
-  ): Promise<IDomain.GradeHorarioOfertaFormacaoFindOneOutput | null> {
+  ): Promise<GradeHorarioOfertaFormacaoFindOneOutputDto | null> {
     // =========================================================
 
     const qb = this.gradeHorarioOfertaFormacaoRepository.createQueryBuilder(aliasGradeHorarioOfertaFormacao);
@@ -150,7 +157,7 @@ export class GradeHorarioOfertaFormacaoService {
     // =========================================================
 
     qb.select([]);
-    await QbEfficientLoad("GradeHorarioOfertaFormacaoFindOneOutput", qb, aliasGradeHorarioOfertaFormacao, selection);
+    QbEfficientLoad("GradeHorarioOfertaFormacaoFindOneOutput", qb, aliasGradeHorarioOfertaFormacao, selection);
 
     // =========================================================
 
@@ -158,10 +165,10 @@ export class GradeHorarioOfertaFormacaoService {
 
     // =========================================================
 
-    return gradeHorarioOfertaFormacao;
+    return gradeHorarioOfertaFormacao as GradeHorarioOfertaFormacaoFindOneOutputDto | null;
   }
 
-  async gradeHorarioOfertaFormacaoFindByIdSimpleStrict(accessContext: AccessContext, id: IDomain.GradeHorarioOfertaFormacaoFindOneInput["id"], selection?: string[]) {
+  async gradeHorarioOfertaFormacaoFindByIdSimpleStrict(accessContext: AccessContext, id: string, selection?: string[]): Promise<GradeHorarioOfertaFormacaoFindOneOutputDto> {
     const gradeHorarioOfertaFormacao = await this.gradeHorarioOfertaFormacaoFindByIdSimple(accessContext, id, selection);
 
     if (!gradeHorarioOfertaFormacao) {
@@ -171,14 +178,14 @@ export class GradeHorarioOfertaFormacaoService {
     return gradeHorarioOfertaFormacao;
   }
 
-  async gradeHorarioOfertaFormacaoCreate(accessContext: AccessContext, domain: IDomain.GradeHorarioOfertaFormacaoCreateInput) {
+  async gradeHorarioOfertaFormacaoCreate(accessContext: AccessContext, dto: GradeHorarioOfertaFormacaoCreateInputDto): Promise<GradeHorarioOfertaFormacaoFindOneOutputDto> {
     // =========================================================
 
-    await accessContext.ensurePermission("grade_horario_oferta_formacao:create", { dto: domain });
+    await accessContext.ensurePermission("grade_horario_oferta_formacao:create", { dto });
 
     // =========================================================
 
-    const dtoGradeHorarioOfertaFormacao = pick(domain, []);
+    const dtoGradeHorarioOfertaFormacao = pick(dto, []);
 
     const gradeHorarioOfertaFormacao = this.gradeHorarioOfertaFormacaoRepository.create();
 
@@ -188,8 +195,8 @@ export class GradeHorarioOfertaFormacaoService {
 
     // =========================================================
 
-    if (domain.ofertaFormacao) {
-      const ofertaFormacao = await this.ofertaFormacaoService.ofertaFormacaoFindByIdSimpleStrict(accessContext, domain.ofertaFormacao.id);
+    if (dto.ofertaFormacao) {
+      const ofertaFormacao = await this.ofertaFormacaoService.ofertaFormacaoFindByIdSimpleStrict(accessContext, dto.ofertaFormacao.id);
 
       this.gradeHorarioOfertaFormacaoRepository.merge(gradeHorarioOfertaFormacao, {
         ofertaFormacao: {
@@ -200,8 +207,8 @@ export class GradeHorarioOfertaFormacaoService {
 
     // =========================================================
 
-    if (domain.campus) {
-      const campus = await this.campusService.campusFindByIdSimpleStrict(accessContext, domain.campus.id);
+    if (dto.campus) {
+      const campus = await this.campusService.campusFindByIdSimpleStrict(accessContext, dto.campus.id);
 
       this.gradeHorarioOfertaFormacaoRepository.merge(gradeHorarioOfertaFormacao, {
         campus: {
@@ -212,8 +219,8 @@ export class GradeHorarioOfertaFormacaoService {
 
     // =========================================================
 
-    if (domain.ofertaFormacao) {
-      const ofertaFormacao = await this.ofertaFormacaoService.ofertaFormacaoFindByIdSimpleStrict(accessContext, domain.ofertaFormacao.id);
+    if (dto.ofertaFormacao) {
+      const ofertaFormacao = await this.ofertaFormacaoService.ofertaFormacaoFindByIdSimpleStrict(accessContext, dto.ofertaFormacao.id);
 
       this.gradeHorarioOfertaFormacaoRepository.merge(gradeHorarioOfertaFormacao, {
         ofertaFormacao: {
@@ -233,21 +240,21 @@ export class GradeHorarioOfertaFormacaoService {
     });
   }
 
-  async gradeHorarioOfertaFormacaoUpdate(accessContext: AccessContext, domain: IDomain.GradeHorarioOfertaFormacaoFindOneInput & IDomain.GradeHorarioOfertaFormacaoUpdateInput) {
+  async gradeHorarioOfertaFormacaoUpdate(accessContext: AccessContext, dto: GradeHorarioOfertaFormacaoFindOneInputDto & GradeHorarioOfertaFormacaoUpdateInputDto): Promise<GradeHorarioOfertaFormacaoFindOneOutputDto> {
     // =========================================================
 
-    const currentGradeHorarioOfertaFormacao = await this.gradeHorarioOfertaFormacaoFindByIdStrict(accessContext, domain);
+    const currentGradeHorarioOfertaFormacao = await this.gradeHorarioOfertaFormacaoFindByIdStrict(accessContext, dto);
 
     // =========================================================
 
     await accessContext.ensurePermission(
       "grade_horario_oferta_formacao:update",
-      { dto: domain },
-      domain.id,
+      { dto },
+      dto.id,
       this.gradeHorarioOfertaFormacaoRepository.createQueryBuilder(aliasGradeHorarioOfertaFormacao),
     );
 
-    const dtoGradeHorarioOfertaFormacao = pick(domain, ["nome", "slug"]);
+    const dtoGradeHorarioOfertaFormacao = pick(dto, ["nome", "slug"]);
 
     const gradeHorarioOfertaFormacao = <GradeHorarioOfertaFormacaoEntity>{
       id: currentGradeHorarioOfertaFormacao.id,
@@ -259,8 +266,8 @@ export class GradeHorarioOfertaFormacaoService {
 
     // =========================================================
 
-    if (has(domain, "campus") && domain.campus !== undefined) {
-      const campus = domain.campus && (await this.campusService.campusFindByIdSimpleStrict(accessContext, domain.campus.id));
+    if (has(dto, "campus") && dto.campus !== undefined) {
+      const campus = dto.campus && (await this.campusService.campusFindByIdSimpleStrict(accessContext, dto.campus.id));
 
       this.gradeHorarioOfertaFormacaoRepository.merge(gradeHorarioOfertaFormacao, {
         campus: campus && {
@@ -269,8 +276,8 @@ export class GradeHorarioOfertaFormacaoService {
       });
     }
 
-    if (has(domain, "ofertaFormacao") && domain.ofertaFormacao !== undefined) {
-      const ofertaFormacao = domain.ofertaFormacao && (await this.ofertaFormacaoService.ofertaFormacaoFindByIdSimpleStrict(accessContext, domain.ofertaFormacao.id));
+    if (has(dto, "ofertaFormacao") && dto.ofertaFormacao !== undefined) {
+      const ofertaFormacao = dto.ofertaFormacao && (await this.ofertaFormacaoService.ofertaFormacaoFindByIdSimpleStrict(accessContext, dto.ofertaFormacao.id));
 
       this.gradeHorarioOfertaFormacaoRepository.merge(gradeHorarioOfertaFormacao, {
         ofertaFormacao: ofertaFormacao && {
@@ -290,19 +297,19 @@ export class GradeHorarioOfertaFormacaoService {
     });
   }
 
-  async gradeHorarioOfertaFormacaoDeleteOneById(accessContext: AccessContext, domain: IDomain.GradeHorarioOfertaFormacaoFindOneInput) {
+  async gradeHorarioOfertaFormacaoDeleteOneById(accessContext: AccessContext, dto: GradeHorarioOfertaFormacaoFindOneInputDto): Promise<boolean> {
     // =========================================================
 
     await accessContext.ensurePermission(
       "grade_horario_oferta_formacao:delete",
-      { dto: domain },
-      domain.id,
+      { dto },
+      dto.id,
       this.gradeHorarioOfertaFormacaoRepository.createQueryBuilder(aliasGradeHorarioOfertaFormacao),
     );
 
     // =========================================================
 
-    const gradeHorarioOfertaFormacao = await this.gradeHorarioOfertaFormacaoFindByIdStrict(accessContext, domain);
+    const gradeHorarioOfertaFormacao = await this.gradeHorarioOfertaFormacaoFindByIdStrict(accessContext, dto);
 
     // =========================================================
 

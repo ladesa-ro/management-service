@@ -1,10 +1,15 @@
-import { Controller, Delete, Get, Patch, Post } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
+import { Controller, Delete, Get, Patch, Post, Query, Body, Param } from "@nestjs/common";
+import { ApiTags, ApiOperation, ApiOkResponse, ApiCreatedResponse, ApiForbiddenResponse, ApiNotFoundResponse } from "@nestjs/swagger";
 import { AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
-import { AppRequest, requestRepresentationMergeToDomain } from "@/shared";
-import { type IAppRequest } from "@/shared/tsp/openapi/document/app-openapi-typings";
-import { type IDomain } from "@/shared/tsp/schema/typings";
 import { AulaService } from "../domain/aula.service";
+import {
+  AulaFindOneOutputDto,
+  AulaListInputDto,
+  AulaListOutputDto,
+  AulaCreateInputDto,
+  AulaUpdateInputDto,
+  AulaFindOneInputDto,
+} from "../dto";
 
 @ApiTags("aulas")
 @Controller("/aulas")
@@ -12,32 +17,61 @@ export class AulaController {
   constructor(private aulaService: AulaService) {}
 
   @Get("/")
-  async aulaFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("AulaList") dto: IAppRequest<"AulaList">) {
-    const domain: IDomain.AulaListInput = requestRepresentationMergeToDomain(dto);
-    return this.aulaService.aulaFindAll(accessContext, domain);
+  @ApiOperation({ summary: "Lista aulas" })
+  @ApiOkResponse({ type: AulaListOutputDto })
+  @ApiForbiddenResponse()
+  async aulaFindAll(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Query() dto: AulaListInputDto,
+  ): Promise<AulaListOutputDto> {
+    return this.aulaService.aulaFindAll(accessContext, dto);
   }
 
   @Get("/:id")
-  async aulaFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("AulaFindOneById") dto: IAppRequest<"AulaFindOneById">) {
-    const domain: IDomain.AulaFindOneInput = requestRepresentationMergeToDomain(dto);
-    return this.aulaService.aulaFindByIdStrict(accessContext, domain);
+  @ApiOperation({ summary: "Busca uma aula por ID" })
+  @ApiOkResponse({ type: AulaFindOneOutputDto })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async aulaFindById(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: AulaFindOneInputDto,
+  ): Promise<AulaFindOneOutputDto> {
+    return this.aulaService.aulaFindByIdStrict(accessContext, params);
   }
 
   @Post("/")
-  async aulaCreate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("AulaCreate") dto: IAppRequest<"AulaCreate">) {
-    const domain: IDomain.AulaCreateInput = requestRepresentationMergeToDomain(dto);
-    return this.aulaService.aulaCreate(accessContext, domain);
+  @ApiOperation({ summary: "Cria uma aula" })
+  @ApiCreatedResponse({ type: AulaFindOneOutputDto })
+  @ApiForbiddenResponse()
+  async aulaCreate(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Body() dto: AulaCreateInputDto,
+  ): Promise<AulaFindOneOutputDto> {
+    return this.aulaService.aulaCreate(accessContext, dto);
   }
 
   @Patch("/:id")
-  async aulaUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("AulaUpdateOneById") dto: IAppRequest<"AulaUpdateOneById">) {
-    const domain: IDomain.AulaFindOneInput & IDomain.AulaUpdateInput = requestRepresentationMergeToDomain(dto);
-    return this.aulaService.aulaUpdate(accessContext, domain);
+  @ApiOperation({ summary: "Atualiza uma aula" })
+  @ApiOkResponse({ type: AulaFindOneOutputDto })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async aulaUpdate(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: AulaFindOneInputDto,
+    @Body() dto: AulaUpdateInputDto,
+  ): Promise<AulaFindOneOutputDto> {
+    return this.aulaService.aulaUpdate(accessContext, { id: params.id, ...dto });
   }
 
   @Delete("/:id")
-  async aulaDeleteOneById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("AulaDeleteOneById") dto: IAppRequest<"AulaDeleteOneById">) {
-    const domain: IDomain.AulaFindOneInput = requestRepresentationMergeToDomain(dto);
-    return this.aulaService.aulaDeleteOneById(accessContext, domain);
+  @ApiOperation({ summary: "Remove uma aula" })
+  @ApiOkResponse({ type: Boolean })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async aulaDeleteOneById(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: AulaFindOneInputDto,
+  ): Promise<boolean> {
+    return this.aulaService.aulaDeleteOneById(accessContext, params);
   }
 }

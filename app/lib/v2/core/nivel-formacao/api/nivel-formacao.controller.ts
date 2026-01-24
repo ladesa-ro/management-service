@@ -1,10 +1,15 @@
-import { Controller, Delete, Get, Patch, Post } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
+import { Controller, Delete, Get, Patch, Post, Query, Body, Param } from "@nestjs/common";
+import { ApiTags, ApiOperation, ApiOkResponse, ApiCreatedResponse, ApiForbiddenResponse, ApiNotFoundResponse } from "@nestjs/swagger";
 import { AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
-import { AppRequest, requestRepresentationMergeToDomain } from "@/shared";
-import { type IAppRequest } from "@/shared/tsp/openapi/document/app-openapi-typings";
-import { type IDomain } from "@/shared/tsp/schema/typings";
 import { NivelFormacaoService } from "../domain/nivel-formacao.service";
+import {
+  NivelFormacaoFindOneOutputDto,
+  NivelFormacaoListInputDto,
+  NivelFormacaoListOutputDto,
+  NivelFormacaoCreateInputDto,
+  NivelFormacaoUpdateInputDto,
+  NivelFormacaoFindOneInputDto,
+} from "../dto";
 
 @ApiTags("niveis-formacoes")
 @Controller("/niveis-formacoes")
@@ -12,32 +17,61 @@ export class NivelFormacaoController {
   constructor(private nivelformacaoService: NivelFormacaoService) {}
 
   @Get("/")
-  async nivelformacaoFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("NivelFormacaoList") dto: IAppRequest<"NivelFormacaoList">) {
-    const domain: IDomain.NivelFormacaoListInput = requestRepresentationMergeToDomain(dto);
-    return this.nivelformacaoService.nivelFormacaoFindAll(accessContext, domain);
+  @ApiOperation({ summary: "Lista niveis de formacao" })
+  @ApiOkResponse({ type: NivelFormacaoListOutputDto })
+  @ApiForbiddenResponse()
+  async nivelformacaoFindAll(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Query() dto: NivelFormacaoListInputDto,
+  ): Promise<NivelFormacaoListOutputDto> {
+    return this.nivelformacaoService.nivelFormacaoFindAll(accessContext, dto);
   }
 
   @Get("/:id")
-  async nivelformacaoFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("NivelFormacaoFindOneById") dto: IAppRequest<"NivelFormacaoFindOneById">) {
-    const domain: IDomain.NivelFormacaoFindOneInput = requestRepresentationMergeToDomain(dto);
-    return this.nivelformacaoService.nivelFormacaoFindByIdStrict(accessContext, domain);
+  @ApiOperation({ summary: "Busca um nivel de formacao por ID" })
+  @ApiOkResponse({ type: NivelFormacaoFindOneOutputDto })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async nivelformacaoFindById(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: NivelFormacaoFindOneInputDto,
+  ): Promise<NivelFormacaoFindOneOutputDto> {
+    return this.nivelformacaoService.nivelFormacaoFindByIdStrict(accessContext, params);
   }
 
   @Post("/")
-  async nivelformacaoCreate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("NivelFormacaoCreate") dto: IAppRequest<"NivelFormacaoCreate">) {
-    const domain: IDomain.NivelFormacaoCreateInput = requestRepresentationMergeToDomain(dto);
-    return this.nivelformacaoService.nivelFormacaoCreate(accessContext, domain);
+  @ApiOperation({ summary: "Cria um nivel de formacao" })
+  @ApiCreatedResponse({ type: NivelFormacaoFindOneOutputDto })
+  @ApiForbiddenResponse()
+  async nivelformacaoCreate(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Body() dto: NivelFormacaoCreateInputDto,
+  ): Promise<NivelFormacaoFindOneOutputDto> {
+    return this.nivelformacaoService.nivelFormacaoCreate(accessContext, dto);
   }
 
   @Patch("/:id")
-  async nivelformacaoUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("NivelFormacaoUpdateOneById") dto: IAppRequest<"NivelFormacaoUpdateOneById">) {
-    const domain: IDomain.NivelFormacaoFindOneInput & IDomain.NivelFormacaoUpdateInput = requestRepresentationMergeToDomain(dto);
-    return this.nivelformacaoService.nivelFormacaoUpdate(accessContext, domain);
+  @ApiOperation({ summary: "Atualiza um nivel de formacao" })
+  @ApiOkResponse({ type: NivelFormacaoFindOneOutputDto })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async nivelformacaoUpdate(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: NivelFormacaoFindOneInputDto,
+    @Body() dto: NivelFormacaoUpdateInputDto,
+  ): Promise<NivelFormacaoFindOneOutputDto> {
+    return this.nivelformacaoService.nivelFormacaoUpdate(accessContext, { id: params.id, ...dto });
   }
 
   @Delete("/:id")
-  async nivelformacaoDeleteOneById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("NivelFormacaoDeleteOneById") dto: IAppRequest<"NivelFormacaoDeleteOneById">) {
-    const domain: IDomain.NivelFormacaoFindOneInput = requestRepresentationMergeToDomain(dto);
-    return this.nivelformacaoService.nivelFormacaoDeleteOneById(accessContext, domain);
+  @ApiOperation({ summary: "Remove um nivel de formacao" })
+  @ApiOkResponse({ type: Boolean })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async nivelformacaoDeleteOneById(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: NivelFormacaoFindOneInputDto,
+  ): Promise<boolean> {
+    return this.nivelformacaoService.nivelFormacaoDeleteOneById(accessContext, params);
   }
 }

@@ -8,7 +8,7 @@ import { AppConfigService } from "@/infrastructure/config";
 import { DatabaseContextService } from "@/v2/infrastructure.database/context/database-context.service";
 import { type ArquivoEntity, UsuarioEntity } from "@/v2/infrastructure.database/typeorm/entities";
 import { isValidUuid } from "@/shared";
-import { type IDomain } from "@/shared/tsp/schema/typings";
+import type { ArquivoFindOneOutputDto, ArquivoCreateInputDto } from "../dto";
 
 type IGetFileAcesso = null | {
   nome?: string;
@@ -31,12 +31,12 @@ export class ArquivoService {
     return this.appConfigService.getStoragePath();
   }
 
-  async dataExists(id: IDomain.Arquivo["id"]) {
+  async dataExists(id: string): Promise<false | "dir" | "file" | "other"> {
     const fileFullPath = this.datGetFilePath(id);
     return jetpack.exists(fileFullPath);
   }
 
-  async dataReadAsStream(id: IDomain.Arquivo["id"]): Promise<Readable | null> {
+  async dataReadAsStream(id: string): Promise<Readable | null> {
     if (await this.dataExists(id)) {
       const fileFullPath = this.datGetFilePath(id);
       const fileReadStream = createReadStream(fileFullPath);
@@ -46,7 +46,12 @@ export class ArquivoService {
     return null;
   }
 
-  async getFile(accessContext: AccessContext | null, id: IDomain.Arquivo["id"], acesso: IGetFileAcesso | null) {
+  async getFile(accessContext: AccessContext | null, id: string, acesso: IGetFileAcesso | null): Promise<{
+    id: string;
+    nome: string | null;
+    mimeType: string | null;
+    stream: Readable | null;
+  }> {
     const qb = this.arquivoRepository.createQueryBuilder("arquivo");
 
     qb.where("arquivo.id = :arquivoId", { arquivoId: id });
@@ -111,7 +116,7 @@ export class ArquivoService {
     };
   }
 
-  async getStreamableFile(accessContext: AccessContext | null, id: IDomain.Arquivo["id"], acesso: IGetFileAcesso | null) {
+  async getStreamableFile(accessContext: AccessContext | null, id: string, acesso: IGetFileAcesso | null): Promise<StreamableFile> {
     const file = await this.getFile(accessContext, id, acesso);
 
     if (!file.stream) {
@@ -124,13 +129,13 @@ export class ArquivoService {
     });
   }
 
-  async dataSave(id: IDomain.Arquivo["id"], data: NodeJS.ArrayBufferView | Readable) {
+  async dataSave(id: string, data: NodeJS.ArrayBufferView | Readable): Promise<boolean> {
     const fileFullPath = this.datGetFilePath(id);
     await writeFile(fileFullPath, data);
     return true;
   }
 
-  async arquivoCreate(domain: Pick<IDomain.Arquivo, "name" | "mimeType">, data: NodeJS.ArrayBufferView | Readable): Promise<Pick<ArquivoEntity, "id">> {
+  async arquivoCreate(dto: Pick<ArquivoCreateInputDto, "name" | "mimeType">, data: NodeJS.ArrayBufferView | Readable): Promise<Pick<ArquivoEntity, "id">> {
     let id: string;
 
     do {
@@ -142,12 +147,12 @@ export class ArquivoService {
     // TODO: sizeBytes
     const sizeBytes = 0;
     // TODO: mimeType
-    const mimeType = domain.mimeType;
+    const mimeType = dto.mimeType;
 
     await this.arquivoRepository.save(<ArquivoEntity>{
       id,
 
-      name: domain.name,
+      name: dto.name,
       mimeType: mimeType,
       sizeBytes: sizeBytes,
       storageType: "filesystem",
@@ -158,7 +163,7 @@ export class ArquivoService {
     };
   }
 
-  private datGetFilePath(id: IDomain.Arquivo["id"]) {
+  private datGetFilePath(id: string): string {
     jetpack.dir(this.storagePath);
     return `${this.storagePath}/${id}`;
   }

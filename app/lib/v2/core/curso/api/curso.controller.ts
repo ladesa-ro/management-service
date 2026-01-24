@@ -1,10 +1,15 @@
-import { Controller, Delete, Get, Patch, Post, Put, UploadedFile } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
+import { Controller, Delete, Get, Patch, Post, Put, Query, Body, Param, UploadedFile } from "@nestjs/common";
+import { ApiTags, ApiOperation, ApiOkResponse, ApiCreatedResponse, ApiForbiddenResponse, ApiNotFoundResponse } from "@nestjs/swagger";
 import { AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
-import { AppRequest, requestRepresentationMergeToDomain } from "@/shared";
-import { type IAppRequest } from "@/shared/tsp/openapi/document/app-openapi-typings";
-import { type IDomain } from "@/shared/tsp/schema/typings";
 import { CursoService } from "../domain/curso.service";
+import {
+  CursoFindOneOutputDto,
+  CursoListInputDto,
+  CursoListOutputDto,
+  CursoCreateInputDto,
+  CursoUpdateInputDto,
+  CursoFindOneInputDto,
+} from "../dto";
 
 @ApiTags("cursos")
 @Controller("/cursos")
@@ -12,44 +17,86 @@ export class CursoController {
   constructor(private cursoService: CursoService) {}
 
   @Get("/")
-  async cursoFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CursoList") dto: IAppRequest<"CursoList">) {
-    const domain: IDomain.CursoListInput = requestRepresentationMergeToDomain(dto);
-    return this.cursoService.cursoFindAll(accessContext, domain);
+  @ApiOperation({ summary: "Lista cursos" })
+  @ApiOkResponse({ type: CursoListOutputDto })
+  @ApiForbiddenResponse()
+  async cursoFindAll(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Query() dto: CursoListInputDto,
+  ): Promise<CursoListOutputDto> {
+    return this.cursoService.cursoFindAll(accessContext, dto);
   }
 
   @Get("/:id")
-  async cursoFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CursoFindOneById") dto: IAppRequest<"CursoFindOneById">) {
-    const domain: IDomain.CursoFindOneInput = requestRepresentationMergeToDomain(dto);
-    return this.cursoService.cursoFindByIdStrict(accessContext, domain);
+  @ApiOperation({ summary: "Busca um curso por ID" })
+  @ApiOkResponse({ type: CursoFindOneOutputDto })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async cursoFindById(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: CursoFindOneInputDto,
+  ): Promise<CursoFindOneOutputDto> {
+    return this.cursoService.cursoFindByIdStrict(accessContext, params);
   }
 
   @Post("/")
-  async cursoCreate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CursoCreate") dto: IAppRequest<"CursoCreate">) {
-    const domain: IDomain.CursoCreateInput = requestRepresentationMergeToDomain(dto);
-    return this.cursoService.cursoCreate(accessContext, domain);
+  @ApiOperation({ summary: "Cria um curso" })
+  @ApiCreatedResponse({ type: CursoFindOneOutputDto })
+  @ApiForbiddenResponse()
+  async cursoCreate(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Body() dto: CursoCreateInputDto,
+  ): Promise<CursoFindOneOutputDto> {
+    return this.cursoService.cursoCreate(accessContext, dto);
   }
 
   @Patch("/:id")
-  async cursoUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CursoUpdateOneById") dto: IAppRequest<"CursoUpdateOneById">) {
-    const domain: IDomain.CursoFindOneInput & IDomain.CursoUpdateInput = requestRepresentationMergeToDomain(dto);
-    return this.cursoService.cursoUpdate(accessContext, domain);
+  @ApiOperation({ summary: "Atualiza um curso" })
+  @ApiOkResponse({ type: CursoFindOneOutputDto })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async cursoUpdate(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: CursoFindOneInputDto,
+    @Body() dto: CursoUpdateInputDto,
+  ): Promise<CursoFindOneOutputDto> {
+    return this.cursoService.cursoUpdate(accessContext, { id: params.id, ...dto });
   }
 
   @Get("/:id/imagem/capa")
-  async cursoGetImagemCapa(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CursoGetImagemCapa") dto: IAppRequest<"CursoGetImagemCapa">) {
-    const domain: IDomain.CursoFindOneInput = requestRepresentationMergeToDomain(dto);
-    return this.cursoService.cursoGetImagemCapa(accessContext, domain.id);
+  @ApiOperation({ summary: "Busca imagem de capa de um curso" })
+  @ApiOkResponse()
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async cursoGetImagemCapa(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: CursoFindOneInputDto,
+  ) {
+    return this.cursoService.cursoGetImagemCapa(accessContext, params.id);
   }
 
   @Put("/:id/imagem/capa")
-  async cursoImagemCapaSave(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CursoSetImagemCapa") dto: IAppRequest<"CursoSetImagemCapa">, @UploadedFile() file: Express.Multer.File) {
-    const domain: IDomain.CursoFindOneInput = requestRepresentationMergeToDomain(dto);
-    return this.cursoService.cursoUpdateImagemCapa(accessContext, domain, file);
+  @ApiOperation({ summary: "Define imagem de capa de um curso" })
+  @ApiOkResponse({ type: CursoFindOneOutputDto })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async cursoImagemCapaSave(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: CursoFindOneInputDto,
+    @UploadedFile() file: Express.Multer.File,
+  ): Promise<CursoFindOneOutputDto> {
+    return this.cursoService.cursoUpdateImagemCapa(accessContext, params, file);
   }
 
   @Delete("/:id")
-  async cursoDeleteOneById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("CursoDeleteOneById") dto: IAppRequest<"CursoDeleteOneById">) {
-    const domain: IDomain.CursoFindOneInput = requestRepresentationMergeToDomain(dto);
-    return this.cursoService.cursoDeleteOneById(accessContext, domain);
+  @ApiOperation({ summary: "Remove um curso" })
+  @ApiOkResponse({ type: Boolean })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async cursoDeleteOneById(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: CursoFindOneInputDto,
+  ): Promise<boolean> {
+    return this.cursoService.cursoDeleteOneById(accessContext, params);
   }
 }

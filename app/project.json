@@ -16,18 +16,15 @@
       "cache": true,
       "executor": "nx:run-commands",
       "inputs": ["source"],
-      "outputs": ["{projectRoot}/.dist/openapi.v3.json"],
       "options": {
         "cwd": "{projectRoot}",
         "parallel": false,
-        "commands": ["mkdir -p .dist", "rm -rf .dist/openapi.v3.json", "cp ./lib/.generated/tsp/openapi.v3.json ./.dist/openapi.v3.json"]
-      },
-      "dependsOn": ["tsp:build"]
+        "commands": ["echo 'Build completed - using NestJS runtime generation'"]
+      }
     },
     "dev": {
       "cache": false,
       "continuous": true,
-      "dependsOn": ["tsp:build", "tsp:dev"],
       "executor": "nx:run-commands",
       "options": {
         "commands": ["bun run --watch lib/v2/server/main.ts"],
@@ -38,37 +35,9 @@
     "debug": {
       "cache": false,
       "continuous": true,
-      "dependsOn": ["tsp:build", "tsp:dev"],
       "executor": "nx:run-commands",
       "options": {
         "commands": ["bun run --watch --inspect-wait lib/v2/server/main.ts"],
-        "cwd": "{projectRoot}",
-        "parallel": false
-      }
-    },
-    "tsp:build": {
-      "cache": true,
-      "executor": "nx:run-commands",
-      "inputs": ["{projectRoot}/lib/**/*.tsp", "{projectRoot}/tspconfig.yaml"],
-      "options": {
-        "commands": [
-          "mkdir -p lib/.generated/tsp",
-          "tsp compile lib/main.tsp --config tspconfig.yaml --output-dir lib/.generated/tsp",
-          "quicktype --src-lang schema --src './lib/.generated/tsp/schema.json#$defs/' -o './lib/.generated/tsp/schema.ts' --just-types --no-nice-property-names --no-runtime-typecheck --acronym-style original",
-          "openapi-typescript ./lib/.generated/tsp/openapi.v3.json -o ./lib/.generated/tsp/openapi.v3.d.ts"
-        ],
-        "cwd": "{projectRoot}",
-        "parallel": false
-      },
-      "outputs": ["{projectRoot}/lib/.generated/tsp/**/*"]
-    },
-    "tsp:dev": {
-      "cache": false,
-      "continuous": true,
-      "dependsOn": [],
-      "executor": "nx:run-commands",
-      "options": {
-        "commands": ["nodemon --watch 'lib/**/*.tsp' -e tsp --exec 'bun run tsp:build' -L"],
         "cwd": "{projectRoot}",
         "parallel": false
       }

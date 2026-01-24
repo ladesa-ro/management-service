@@ -1,10 +1,15 @@
-import { Controller, Delete, Get, Patch, Post } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
+import { Controller, Delete, Get, Patch, Post, Query, Body, Param } from "@nestjs/common";
+import { ApiTags, ApiOperation, ApiOkResponse, ApiCreatedResponse, ApiForbiddenResponse, ApiNotFoundResponse } from "@nestjs/swagger";
 import { AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
-import { AppRequest, requestRepresentationMergeToDomain } from "@/shared";
-import { type IAppRequest } from "@/shared/tsp/openapi/document/app-openapi-typings";
-import { type IDomain } from "@/shared/tsp/schema/typings";
 import { TurmaDisponibilidadeService } from "../domain/turma-disponibilidade.service";
+import {
+  TurmaDisponibilidadeFindOneOutputDto,
+  TurmaDisponibilidadeListInputDto,
+  TurmaDisponibilidadeListOutputDto,
+  TurmaDisponibilidadeCreateInputDto,
+  TurmaDisponibilidadeUpdateInputDto,
+  TurmaDisponibilidadeFindOneInputDto,
+} from "../dto";
 
 @ApiTags("turmas-disponibilidades")
 @Controller("/turmas-disponibilidades")
@@ -12,32 +17,61 @@ export class TurmaDisponibilidadeController {
   constructor(private turmaDisponibilidadeService: TurmaDisponibilidadeService) {}
 
   @Get("/")
-  async turmaDisponibilidadeFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("TurmaDisponibilidadeList") dto: IAppRequest<"TurmaDisponibilidadeList">) {
-    const domain: IDomain.TurmaDisponibilidadeListInput = requestRepresentationMergeToDomain(dto);
-    return this.turmaDisponibilidadeService.turmaDisponibilidadeFindAll(accessContext, domain);
+  @ApiOperation({ summary: "Lista turmas-disponibilidades" })
+  @ApiOkResponse({ type: TurmaDisponibilidadeListOutputDto })
+  @ApiForbiddenResponse()
+  async turmaDisponibilidadeFindAll(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Query() dto: TurmaDisponibilidadeListInputDto,
+  ): Promise<TurmaDisponibilidadeListOutputDto> {
+    return this.turmaDisponibilidadeService.turmaDisponibilidadeFindAll(accessContext, dto);
   }
 
   @Get("/:id")
-  async turmaDisponibilidadeFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("TurmaDisponibilidadeFindOneById") dto: IAppRequest<"TurmaDisponibilidadeFindOneById">) {
-    const domain: IDomain.TurmaDisponibilidadeFindOneInput = requestRepresentationMergeToDomain(dto);
-    return this.turmaDisponibilidadeService.turmaDisponibilidadeFindByIdStrict(accessContext, domain);
+  @ApiOperation({ summary: "Busca uma turma-disponibilidade por ID" })
+  @ApiOkResponse({ type: TurmaDisponibilidadeFindOneOutputDto })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async turmaDisponibilidadeFindById(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: TurmaDisponibilidadeFindOneInputDto,
+  ): Promise<TurmaDisponibilidadeFindOneOutputDto> {
+    return this.turmaDisponibilidadeService.turmaDisponibilidadeFindByIdStrict(accessContext, params);
   }
 
   @Post("/")
-  async turmaDisponibilidadeCreate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("TurmaDisponibilidadeCreate") dto: IAppRequest<"TurmaDisponibilidadeCreate">) {
-    const domain: IDomain.TurmaDisponibilidadeCreateInput = requestRepresentationMergeToDomain(dto);
-    return this.turmaDisponibilidadeService.turmaDisponibilidadeCreate(accessContext, domain);
+  @ApiOperation({ summary: "Cria uma turma-disponibilidade" })
+  @ApiCreatedResponse({ type: TurmaDisponibilidadeFindOneOutputDto })
+  @ApiForbiddenResponse()
+  async turmaDisponibilidadeCreate(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Body() dto: TurmaDisponibilidadeCreateInputDto,
+  ): Promise<TurmaDisponibilidadeFindOneOutputDto> {
+    return this.turmaDisponibilidadeService.turmaDisponibilidadeCreate(accessContext, dto);
   }
 
   @Patch("/:id")
-  async turmaDisponibilidadeUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("TurmaDisponibilidadeUpdateOneById") dto: IAppRequest<"TurmaDisponibilidadeUpdateOneById">) {
-    const domain: IDomain.TurmaDisponibilidadeFindOneInput & IDomain.TurmaDisponibilidadeUpdateInput = requestRepresentationMergeToDomain(dto);
-    return this.turmaDisponibilidadeService.turmaDisponibilidadeUpdate(accessContext, domain);
+  @ApiOperation({ summary: "Atualiza uma turma-disponibilidade" })
+  @ApiOkResponse({ type: TurmaDisponibilidadeFindOneOutputDto })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async turmaDisponibilidadeUpdate(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: TurmaDisponibilidadeFindOneInputDto,
+    @Body() dto: TurmaDisponibilidadeUpdateInputDto,
+  ): Promise<TurmaDisponibilidadeFindOneOutputDto> {
+    return this.turmaDisponibilidadeService.turmaDisponibilidadeUpdate(accessContext, { id: params.id, ...dto });
   }
 
   @Delete("/:id")
-  async turmaDisponibilidadeDeleteOneById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("TurmaDisponibilidadeDeleteOneById") dto: IAppRequest<"TurmaDisponibilidadeDeleteOneById">) {
-    const domain: IDomain.TurmaDisponibilidadeFindOneInput = requestRepresentationMergeToDomain(dto);
-    return this.turmaDisponibilidadeService.turmaDisponibilidadeDeleteOneById(accessContext, domain);
+  @ApiOperation({ summary: "Remove uma turma-disponibilidade" })
+  @ApiOkResponse({ type: Boolean })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async turmaDisponibilidadeDeleteOneById(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: TurmaDisponibilidadeFindOneInputDto,
+  ): Promise<boolean> {
+    return this.turmaDisponibilidadeService.turmaDisponibilidadeDeleteOneById(accessContext, params);
   }
 }

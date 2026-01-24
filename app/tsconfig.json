@@ -17,10 +17,7 @@
     "outDir": "./.dist",
     "baseUrl": "./lib",
     "paths": {
-      "@/*": ["./*"],
-      "@@/tsp/*": ["./.generated/tsp/*"],
-      "@/application/#/*": ["./application/contracts/.generated/*"],
-      "@/domain/#/*": ["./domain/contracts/.generated/*"]
+      "@/*": ["./*"]
     },
     "incremental": true,
     "skipLibCheck": true

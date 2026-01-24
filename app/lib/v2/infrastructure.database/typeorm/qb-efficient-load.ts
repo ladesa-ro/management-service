@@ -1,9 +1,11 @@
 import { uniq } from "lodash";
 import { SelectQueryBuilder } from "typeorm";
-import { compileDomainModels, IModelRepresentation } from "@/__legacy/pocs/poc";
-import { IDomainSchemaDef } from "@/shared";
+import { modelRegistry, ModelRepresentation, initializeModelDefinitions } from "@/shared/metadata";
 
-export const QbEfficientLoadCore = async (modelRepresentation: IModelRepresentation, qb: SelectQueryBuilder<any>, alias: string, selection: boolean | string[] = true, parent: string[] = []) => {
+// Ensure model definitions are loaded
+initializeModelDefinitions();
+
+export const QbEfficientLoadCore = (modelRepresentation: ModelRepresentation, qb: SelectQueryBuilder<any>, alias: string, selection: boolean | string[] = true, parent: string[] = []) => {
   let counter = 0;
 
   let rootSelection: boolean | string[];
@@ -41,7 +43,7 @@ export const QbEfficientLoadCore = async (modelRepresentation: IModelRepresentat
 
     const subPath = `${alias}.${propertyKey}`;
 
-    if (propertyRepresentation.mode === "reference") {
+    if (propertyRepresentation.mode === "reference" && propertyRepresentation.reference) {
       const referenceName = propertyRepresentation.reference.name;
 
       if (parent.includes(referenceName)) {
@@ -62,16 +64,25 @@ export const QbEfficientLoadCore = async (modelRepresentation: IModelRepresentat
 
       qb.leftJoin(subPath, childAlias);
 
-      const domainModels = await compileDomainModels();
-      await QbEfficientLoadCore(domainModels.getModelRepresentation(referenceName), qb, childAlias, childSelection, [...parent, referenceName]);
+      const referenceModel = modelRegistry.get(referenceName);
+      QbEfficientLoadCore(referenceModel, qb, childAlias, childSelection, [...parent, referenceName]);
     } else {
       qb.addSelect(subPath);
     }
   }
 };
 
-export const QbEfficientLoad = async (entityDefRef: IDomainSchemaDef, qb: SelectQueryBuilder<any>, alias: string, selection: boolean | string[] = true, parent: string[] = []) => {
-  const domainModels = await compileDomainModels();
-  const model = domainModels.getModelRepresentation(entityDefRef);
+/**
+ * Efficiently load entity relations based on model schema definition.
+ * Uses static model metadata registry instead of runtime TypeSpec compilation.
+ *
+ * @param entityDefRef - The model definition name (e.g., "ModalidadeFindOneOutput")
+ * @param qb - TypeORM SelectQueryBuilder
+ * @param alias - The query alias for the root entity
+ * @param selection - Fields to select (true = all, string[] = specific fields)
+ * @param parent - Used internally for recursion tracking
+ */
+export const QbEfficientLoad = (entityDefRef: string, qb: SelectQueryBuilder<any>, alias: string, selection: boolean | string[] = true, parent: string[] = []) => {
+  const model = modelRegistry.get(entityDefRef);
   return QbEfficientLoadCore(model, qb, alias, selection, parent);
 };

@@ -1,10 +1,15 @@
-import { Controller, Delete, Get, Patch, Post } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
+import { Controller, Delete, Get, Patch, Post, Query, Body, Param } from "@nestjs/common";
+import { ApiTags, ApiOperation, ApiOkResponse, ApiCreatedResponse, ApiForbiddenResponse, ApiNotFoundResponse } from "@nestjs/swagger";
 import { AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
-import { AppRequest, requestRepresentationMergeToDomain } from "@/shared";
-import { type IAppRequest } from "@/shared/tsp/openapi/document/app-openapi-typings";
-import { type IDomain } from "@/shared/tsp/schema/typings";
 import { HorarioGeradoAulaService } from "../domain/horario-gerado-aula.service";
+import {
+  HorarioGeradoAulaFindOneOutputDto,
+  HorarioGeradoAulaListInputDto,
+  HorarioGeradoAulaListOutputDto,
+  HorarioGeradoAulaCreateInputDto,
+  HorarioGeradoAulaUpdateInputDto,
+  HorarioGeradoAulaFindOneInputDto,
+} from "../dto";
 
 @ApiTags("horarios-gerados-aula")
 @Controller("/horarios-gerados-aula")
@@ -12,30 +17,61 @@ export class HorarioGeradoAulaController {
   constructor(private horarioGeradoAulaService: HorarioGeradoAulaService) {}
 
   @Get("/")
-  async horarioGeradoAulaFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("HorarioGeradoAulaList") dto: IAppRequest<"HorarioGeradoAulaList">) {
-    const domain: IDomain.HorarioGeradoAulaListInput = requestRepresentationMergeToDomain(dto);
-    return this.horarioGeradoAulaService.horarioGeradoAulaFindAll(accessContext, domain);
+  @ApiOperation({ summary: "Lista horarios gerados de aula" })
+  @ApiOkResponse({ type: HorarioGeradoAulaListOutputDto })
+  @ApiForbiddenResponse()
+  async horarioGeradoAulaFindAll(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Query() dto: HorarioGeradoAulaListInputDto,
+  ): Promise<HorarioGeradoAulaListOutputDto> {
+    return this.horarioGeradoAulaService.horarioGeradoAulaFindAll(accessContext, dto);
   }
 
   @Get("/:id")
-  async horarioGeradoAulaFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("HorarioGeradoAulaFindOneById") dto: IAppRequest<"HorarioGeradoAulaFindOneById">) {
-    return this.horarioGeradoAulaService.horarioGeradoAulaFindByIdStrict(accessContext, { id: dto.params.id });
+  @ApiOperation({ summary: "Busca um horario gerado de aula por ID" })
+  @ApiOkResponse({ type: HorarioGeradoAulaFindOneOutputDto })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async horarioGeradoAulaFindById(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: HorarioGeradoAulaFindOneInputDto,
+  ): Promise<HorarioGeradoAulaFindOneOutputDto> {
+    return this.horarioGeradoAulaService.horarioGeradoAulaFindByIdStrict(accessContext, params);
   }
 
   @Post("/")
-  async horarioGeradoAulaCreate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("HorarioGeradoAulaCreate") dto: IAppRequest<"HorarioGeradoAulaCreate">) {
-    const domain: IDomain.HorarioGeradoAulaCreateInput = requestRepresentationMergeToDomain(dto);
-    return this.horarioGeradoAulaService.horarioGeradoAulaCreate(accessContext, domain);
+  @ApiOperation({ summary: "Cria um horario gerado de aula" })
+  @ApiCreatedResponse({ type: HorarioGeradoAulaFindOneOutputDto })
+  @ApiForbiddenResponse()
+  async horarioGeradoAulaCreate(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Body() dto: HorarioGeradoAulaCreateInputDto,
+  ): Promise<HorarioGeradoAulaFindOneOutputDto> {
+    return this.horarioGeradoAulaService.horarioGeradoAulaCreate(accessContext, dto);
   }
 
   @Patch("/:id")
-  async HorarioGeradoAulaUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("HorarioGeradoAulaUpdateOneById") dto: IAppRequest<"HorarioGeradoAulaUpdateOneById">) {
-    const domain: IDomain.HorarioGeradoAulaFindOneInput & IDomain.HorarioGeradoAulaUpdateInput = requestRepresentationMergeToDomain(dto);
-    return this.horarioGeradoAulaService.horarioGeradoAulaUpdate(accessContext, domain);
+  @ApiOperation({ summary: "Atualiza um horario gerado de aula" })
+  @ApiOkResponse({ type: HorarioGeradoAulaFindOneOutputDto })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async horarioGeradoAulaUpdate(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: HorarioGeradoAulaFindOneInputDto,
+    @Body() dto: HorarioGeradoAulaUpdateInputDto,
+  ): Promise<HorarioGeradoAulaFindOneOutputDto> {
+    return this.horarioGeradoAulaService.horarioGeradoAulaUpdate(accessContext, { id: params.id, ...dto });
   }
 
   @Delete("/:id")
-  async HorarioGeradoAulaDeleteOneById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("HorarioGeradoAulaDeleteOneById") dto: IAppRequest<"HorarioGeradoAulaDeleteOneById">) {
-    return this.horarioGeradoAulaService.horarioGeradoAulaDeleteOneById(accessContext, { id: dto.params.id });
+  @ApiOperation({ summary: "Remove um horario gerado de aula" })
+  @ApiOkResponse({ type: Boolean })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async horarioGeradoAulaDeleteOneById(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: HorarioGeradoAulaFindOneInputDto,
+  ): Promise<boolean> {
+    return this.horarioGeradoAulaService.horarioGeradoAulaDeleteOneById(accessContext, params);
   }
 }

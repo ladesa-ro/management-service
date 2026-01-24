@@ -1,11 +1,18 @@
-import { BadRequestException, Controller, Get, Post } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
+import { BadRequestException, Controller, Get, Post, Body } from "@nestjs/common";
+import { ApiTags, ApiOperation, ApiOkResponse, ApiForbiddenResponse, ApiCreatedResponse, ApiBadRequestResponse } from "@nestjs/swagger";
 import { UsuarioService } from "@/v2/core/usuario/domain/usuario.service";
+import { UsuarioFindOneOutputDto } from "@/v2/core/usuario/dto";
 import { AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { Public } from "@/infrastructure/authentication";
-import { AppRequest, requestRepresentationMergeToDomain } from "@/shared";
-import { type IAppRequest } from "@/shared/tsp/openapi/document/app-openapi-typings";
 import { AutenticacaoService } from "../domain/autenticacao.service";
+import {
+  AuthLoginInputDto,
+  AuthRefreshInputDto,
+  AuthWhoAmIOutputDto,
+  AuthSessionCredentialsDto,
+  AuthCredentialsSetInitialPasswordInputDto,
+  AuthRecoverPasswordInputDto,
+} from "../dto";
 
 @ApiTags("autenticacao")
 @Controller("/autenticacao")
@@ -16,7 +23,11 @@ export class AutenticacaoController {
   ) {}
 
   @Get("/quem-sou-eu/ensino")
-  whoAmIEnsino(@AccessContextHttp() accessContext: AccessContext) {
+  @ApiOperation({ summary: "Retorna informacoes de ensino do usuario logado" })
+  @ApiOkResponse({ type: UsuarioFindOneOutputDto })
+  @ApiForbiddenResponse()
+  @ApiBadRequestResponse()
+  async whoAmIEnsino(@AccessContextHttp() accessContext: AccessContext): Promise<UsuarioFindOneOutputDto> {
     const idUsuario = accessContext.requestActor?.id;
     if (!idUsuario) {
       throw new BadRequestException();
@@ -25,33 +36,56 @@ export class AutenticacaoController {
   }
 
   @Get("/quem-sou-eu")
-  whoAmI(@AccessContextHttp() accessContext: AccessContext) {
+  @ApiOperation({ summary: "Retorna informacoes do usuario logado" })
+  @ApiOkResponse({ type: AuthWhoAmIOutputDto })
+  @ApiForbiddenResponse()
+  async whoAmI(@AccessContextHttp() accessContext: AccessContext): Promise<AuthWhoAmIOutputDto> {
     return this.autenticacaoService.whoAmI(accessContext);
   }
 
   @Post("/login")
   @Public()
-  login(@AccessContextHttp() accessContext: AccessContext, @AppRequest("AuthLogin") dto: IAppRequest<"AuthLogin">) {
-    const domain = requestRepresentationMergeToDomain(dto);
-    return this.autenticacaoService.login(accessContext, domain);
+  @ApiOperation({ summary: "Realiza login com matricula e senha" })
+  @ApiCreatedResponse({ type: AuthSessionCredentialsDto })
+  @ApiForbiddenResponse()
+  async login(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Body() dto: AuthLoginInputDto,
+  ): Promise<AuthSessionCredentialsDto> {
+    return this.autenticacaoService.login(accessContext, dto);
   }
 
   @Post("/login/refresh")
   @Public()
-  refresh(@AccessContextHttp() accessContext: AccessContext, @AppRequest("AuthRefresh") dto: IAppRequest<"AuthRefresh">) {
-    const domain = requestRepresentationMergeToDomain(dto);
-    return this.autenticacaoService.refresh(accessContext, domain);
+  @ApiOperation({ summary: "Atualiza token de acesso usando refresh token" })
+  @ApiCreatedResponse({ type: AuthSessionCredentialsDto })
+  @ApiForbiddenResponse()
+  async refresh(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Body() dto: AuthRefreshInputDto,
+  ): Promise<AuthSessionCredentialsDto> {
+    return this.autenticacaoService.refresh(accessContext, dto);
   }
 
   @Post("/definir-senha")
-  definirSenha(@AccessContextHttp() accessContext: AccessContext, @AppRequest("AuthSetInitialPassword") dto: IAppRequest<"AuthSetInitialPassword">) {
-    const domain = requestRepresentationMergeToDomain(dto);
-    return this.autenticacaoService.definirSenha(accessContext, domain);
+  @ApiOperation({ summary: "Define senha inicial do usuario" })
+  @ApiCreatedResponse({ type: Boolean })
+  @ApiForbiddenResponse()
+  async definirSenha(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Body() dto: AuthCredentialsSetInitialPasswordInputDto,
+  ): Promise<boolean> {
+    return this.autenticacaoService.definirSenha(accessContext, dto);
   }
 
   @Post("/redefinir-senha")
-  redefinirSenha(@AccessContextHttp() accessContext: AccessContext, @AppRequest("AuthRecoverPassword") dto: IAppRequest<"AuthRecoverPassword">) {
-    const domain = requestRepresentationMergeToDomain(dto);
-    return this.autenticacaoService.recoverPassword(accessContext, domain);
+  @ApiOperation({ summary: "Envia email para redefinir senha" })
+  @ApiCreatedResponse({ type: Boolean })
+  @ApiForbiddenResponse()
+  async redefinirSenha(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Body() dto: AuthRecoverPasswordInputDto,
+  ): Promise<boolean> {
+    return this.autenticacaoService.recoverPassword(accessContext, dto);
   }
 }

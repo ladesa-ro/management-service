@@ -8,7 +8,14 @@ import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/v2/infrastructure.database";
 import type { DiarioProfessorEntity } from "@/v2/infrastructure.database/typeorm/entities";
 import { QbEfficientLoad, SearchService } from "@/shared";
-import { type IDomain } from "@/shared/tsp/schema/typings";
+import type {
+  DiarioProfessorFindOneOutputDto,
+  DiarioProfessorListInputDto,
+  DiarioProfessorListOutputDto,
+  DiarioProfessorCreateInputDto,
+  DiarioProfessorUpdateInputDto,
+  DiarioProfessorFindOneInputDto,
+} from "../dto";
 
 // ============================================================================
 
@@ -31,9 +38,9 @@ export class DiarioProfessorService {
 
   async diarioProfessorFindAll(
     accessContext: AccessContext,
-    domain: IDomain.DiarioProfessorListInput | null = null,
+    dto: DiarioProfessorListInputDto | null = null,
     selection?: string[] | boolean,
-  ): Promise<IDomain.DiarioProfessorListOutput["success"]> {
+  ): Promise<DiarioProfessorListOutputDto> {
     // =========================================================
 
     const qb = this.diarioProfessorRepository.createQueryBuilder(aliasDiarioProfessor);
@@ -47,8 +54,8 @@ export class DiarioProfessorService {
     const paginated = await this.searchService.search(
       qb,
       {
-        ...domain,
-        sortBy: domain?.sortBy ? (domain.sortBy as unknown as string[]) : undefined,
+        ...dto,
+        sortBy: dto?.sortBy ? (dto.sortBy as unknown as string[]) : undefined,
       },
       {
         ...paginateConfig,
@@ -91,7 +98,7 @@ export class DiarioProfessorService {
     // =========================================================
 
     qb.select([]);
-    await QbEfficientLoad("DiarioProfessorFindOneOutput", qb, aliasDiarioProfessor, selection);
+    QbEfficientLoad("DiarioProfessorFindOneOutput", qb, aliasDiarioProfessor, selection);
 
     // =========================================================
 
@@ -100,10 +107,10 @@ export class DiarioProfessorService {
 
     // =========================================================
 
-    return paginated;
+    return paginated as DiarioProfessorListOutputDto;
   }
 
-  async diarioProfessorFindById(accessContext: AccessContext, domain: IDomain.DiarioProfessorFindOneInput, selection?: string[] | boolean): Promise<IDomain.DiarioProfessorFindOneOutput | null> {
+  async diarioProfessorFindById(accessContext: AccessContext, dto: DiarioProfessorFindOneInputDto, selection?: string[] | boolean): Promise<DiarioProfessorFindOneOutputDto | null> {
     // =========================================================
 
     const qb = this.diarioProfessorRepository.createQueryBuilder(aliasDiarioProfessor);
@@ -114,12 +121,12 @@ export class DiarioProfessorService {
 
     // =========================================================
 
-    qb.andWhere(`${aliasDiarioProfessor}.id = :id`, { id: domain.id });
+    qb.andWhere(`${aliasDiarioProfessor}.id = :id`, { id: dto.id });
 
     // =========================================================
 
     qb.select([]);
-    await QbEfficientLoad("DiarioProfessorFindOneOutput", qb, aliasDiarioProfessor, selection);
+    QbEfficientLoad("DiarioProfessorFindOneOutput", qb, aliasDiarioProfessor, selection);
 
     // =========================================================
 
@@ -127,11 +134,11 @@ export class DiarioProfessorService {
 
     // =========================================================
 
-    return diarioProfessor;
+    return diarioProfessor as DiarioProfessorFindOneOutputDto | null;
   }
 
-  async diarioProfessorFindByIdStrict(accessContext: AccessContext, domain: IDomain.DiarioProfessorFindOneInput, selection?: string[] | boolean) {
-    const diarioProfessor = await this.diarioProfessorFindById(accessContext, domain, selection);
+  async diarioProfessorFindByIdStrict(accessContext: AccessContext, dto: DiarioProfessorFindOneInputDto, selection?: string[] | boolean): Promise<DiarioProfessorFindOneOutputDto> {
+    const diarioProfessor = await this.diarioProfessorFindById(accessContext, dto, selection);
 
     if (!diarioProfessor) {
       throw new NotFoundException();
@@ -142,9 +149,9 @@ export class DiarioProfessorService {
 
   async diarioProfessorFindByIdSimple(
     accessContext: AccessContext,
-    id: IDomain.DiarioProfessorFindOneInput["id"],
+    id: DiarioProfessorFindOneInputDto["id"],
     selection?: string[] | boolean,
-  ): Promise<IDomain.DiarioProfessorFindOneOutput | null> {
+  ): Promise<DiarioProfessorFindOneOutputDto | null> {
     // =========================================================
 
     const qb = this.diarioProfessorRepository.createQueryBuilder(aliasDiarioProfessor);
@@ -160,7 +167,7 @@ export class DiarioProfessorService {
     // =========================================================
 
     qb.select([]);
-    await QbEfficientLoad("DiarioProfessorFindOneOutput", qb, aliasDiarioProfessor, selection);
+    QbEfficientLoad("DiarioProfessorFindOneOutput", qb, aliasDiarioProfessor, selection);
 
     // =========================================================
 
@@ -168,10 +175,10 @@ export class DiarioProfessorService {
 
     // =========================================================
 
-    return diarioProfessor;
+    return diarioProfessor as DiarioProfessorFindOneOutputDto | null;
   }
 
-  async diarioProfessorFindByIdSimpleStrict(accessContext: AccessContext, id: IDomain.DiarioProfessorFindOneInput["id"], selection?: string[] | boolean) {
+  async diarioProfessorFindByIdSimpleStrict(accessContext: AccessContext, id: DiarioProfessorFindOneInputDto["id"], selection?: string[] | boolean): Promise<DiarioProfessorFindOneOutputDto> {
     const diarioProfessor = await this.diarioProfessorFindByIdSimple(accessContext, id, selection);
 
     if (!diarioProfessor) {
@@ -181,14 +188,14 @@ export class DiarioProfessorService {
     return diarioProfessor;
   }
 
-  async diarioProfessorCreate(accessContext: AccessContext, domain: IDomain.DiarioProfessorCreateInput) {
+  async diarioProfessorCreate(accessContext: AccessContext, dto: DiarioProfessorCreateInputDto): Promise<DiarioProfessorFindOneOutputDto> {
     // =========================================================
 
-    await accessContext.ensurePermission("diario_professor:create", { dto: domain });
+    await accessContext.ensurePermission("diario_professor:create", { dto });
 
     // =========================================================
 
-    const dtoDiarioProfessor = pick(domain, ["situacao"]);
+    const dtoDiarioProfessor = pick(dto, ["situacao"]);
 
     const diarioProfessor = this.diarioProfessorRepository.create();
 
@@ -198,10 +205,10 @@ export class DiarioProfessorService {
 
     // =========================================================
 
-    if (has(domain, "diario") && domain.diario !== undefined) {
-      if (domain.diario !== null) {
+    if (has(dto, "diario") && dto.diario !== undefined) {
+      if (dto.diario !== null) {
         const diario = await this.diarioService.diarioFindByIdStrict(accessContext, {
-          id: domain.diario.id,
+          id: dto.diario.id,
         });
 
         this.diarioProfessorRepository.merge(diarioProfessor, {
@@ -214,10 +221,10 @@ export class DiarioProfessorService {
 
     // =========================================================
 
-    if (has(domain, "perfil") && domain.perfil !== undefined) {
-      if (domain.perfil !== null) {
+    if (has(dto, "perfil") && dto.perfil !== undefined) {
+      if (dto.perfil !== null) {
         const perfil = await this.perfilService.perfilFindByIdStrict(accessContext, {
-          id: domain.perfil.id,
+          id: dto.perfil.id,
         });
 
         this.diarioProfessorRepository.merge(diarioProfessor, {
@@ -239,16 +246,16 @@ export class DiarioProfessorService {
     });
   }
 
-  async diarioProfessorUpdate(accessContext: AccessContext, domain: IDomain.DiarioProfessorFindOneInput & IDomain.DiarioProfessorUpdateInput) {
+  async diarioProfessorUpdate(accessContext: AccessContext, dto: DiarioProfessorFindOneInputDto & DiarioProfessorUpdateInputDto): Promise<DiarioProfessorFindOneOutputDto> {
     // =========================================================
 
-    const currentDiarioProfessor = await this.diarioProfessorFindByIdStrict(accessContext, { id: domain.id });
+    const currentDiarioProfessor = await this.diarioProfessorFindByIdStrict(accessContext, { id: dto.id });
 
     // =========================================================
 
-    await accessContext.ensurePermission("diario_professor:update", { dto: domain }, domain.id, this.diarioProfessorRepository.createQueryBuilder(aliasDiarioProfessor));
+    await accessContext.ensurePermission("diario_professor:update", { dto }, dto.id, this.diarioProfessorRepository.createQueryBuilder(aliasDiarioProfessor));
 
-    const dtoDiarioProfessor = pick(domain, ["situacao"]);
+    const dtoDiarioProfessor = pick(dto, ["situacao"]);
 
     const diarioProfessor = {
       id: currentDiarioProfessor.id,
@@ -260,10 +267,10 @@ export class DiarioProfessorService {
 
     // =========================================================
 
-    if (has(domain, "diario") && domain.diario !== undefined) {
-      if (domain.diario !== null) {
+    if (has(dto, "diario") && dto.diario !== undefined) {
+      if (dto.diario !== null) {
         const diario = await this.diarioService.diarioFindByIdStrict(accessContext, {
-          id: domain.diario.id,
+          id: dto.diario.id,
         });
 
         this.diarioProfessorRepository.merge(diarioProfessor, {
@@ -276,10 +283,10 @@ export class DiarioProfessorService {
 
     // =========================================================
 
-    if (has(domain, "perfil") && domain.perfil !== undefined) {
-      if (domain.perfil !== null) {
+    if (has(dto, "perfil") && dto.perfil !== undefined) {
+      if (dto.perfil !== null) {
         const perfil = await this.perfilService.perfilFindByIdStrict(accessContext, {
-          id: domain.perfil.id,
+          id: dto.perfil.id,
         });
 
         this.diarioProfessorRepository.merge(diarioProfessor, {
@@ -301,14 +308,14 @@ export class DiarioProfessorService {
     });
   }
 
-  async diarioProfessorDeleteOneById(accessContext: AccessContext, domain: IDomain.DiarioProfessorFindOneInput) {
+  async diarioProfessorDeleteOneById(accessContext: AccessContext, dto: DiarioProfessorFindOneInputDto): Promise<boolean> {
     // =========================================================
 
-    await accessContext.ensurePermission("diario_professor:delete", { dto: domain }, domain.id, this.diarioProfessorRepository.createQueryBuilder(aliasDiarioProfessor));
+    await accessContext.ensurePermission("diario_professor:delete", { dto }, dto.id, this.diarioProfessorRepository.createQueryBuilder(aliasDiarioProfessor));
 
     // =========================================================
 
-    const diarioProfessor = await this.diarioProfessorFindByIdStrict(accessContext, domain);
+    const diarioProfessor = await this.diarioProfessorFindByIdStrict(accessContext, dto);
 
     // =========================================================
 

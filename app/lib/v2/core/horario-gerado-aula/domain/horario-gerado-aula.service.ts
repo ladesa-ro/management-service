@@ -4,9 +4,18 @@ import { FilterOperator } from "nestjs-paginate";
 import { DiarioProfessorService } from "@/v2/core/diario-professor/domain/diario-professor.service";
 import { HorarioGeradoService } from "@/v2/core/horario-gerado/domain/horario-gerado.service";
 import { IntervaloDeTempoService } from "@/v2/core/intervalo-de-tempo/domain/intervalo-de-tempo.service";
+import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { HorarioGeradoAulaEntity } from "@/v2/infrastructure.database/typeorm/entities";
-import { AccessContext, DatabaseContextService, IDomain, QbEfficientLoad, SearchService } from "@/shared";
+import { DatabaseContextService, QbEfficientLoad, SearchService } from "@/shared";
+import type {
+  HorarioGeradoAulaFindOneOutputDto,
+  HorarioGeradoAulaListInputDto,
+  HorarioGeradoAulaListOutputDto,
+  HorarioGeradoAulaCreateInputDto,
+  HorarioGeradoAulaUpdateInputDto,
+  HorarioGeradoAulaFindOneInputDto,
+} from "../dto";
 
 // ============================================================================
 
@@ -30,9 +39,9 @@ export class HorarioGeradoAulaService {
 
   async horarioGeradoAulaFindAll(
     accessContext: AccessContext,
-    domain: IDomain.HorarioGeradoAulaListInput | null = null,
+    dto: HorarioGeradoAulaListInputDto | null = null,
     selection?: string[] | boolean,
-  ): Promise<IDomain.HorarioGeradoAulaListOutput["success"]> {
+  ): Promise<HorarioGeradoAulaListOutputDto> {
     // =========================================================
 
     const qb = this.horarioGeradoAulaRepository.createQueryBuilder(aliasHorarioGeradoAula);
@@ -45,7 +54,7 @@ export class HorarioGeradoAulaService {
 
     const paginated = await this.searchService.search(
       qb,
-      { ...domain },
+      { ...dto },
       {
         ...paginateConfig,
         select: [
@@ -104,7 +113,7 @@ export class HorarioGeradoAulaService {
     // =========================================================
 
     qb.select([]);
-    await QbEfficientLoad("HorarioGeradoAulaFindOneOutput", qb, aliasHorarioGeradoAula, selection);
+    QbEfficientLoad("HorarioGeradoAulaFindOneOutput", qb, aliasHorarioGeradoAula, selection);
 
     // =========================================================
 
@@ -113,10 +122,10 @@ export class HorarioGeradoAulaService {
 
     // =========================================================
 
-    return paginated;
+    return paginated as HorarioGeradoAulaListOutputDto;
   }
 
-  async horarioGeradoAulaFindById(accessContext: AccessContext, domain: IDomain.HorarioGeradoAulaFindOneInput, selection?: string[] | boolean): Promise<IDomain.HorarioGeradoAulaFindOneOutput | null> {
+  async horarioGeradoAulaFindById(accessContext: AccessContext, dto: HorarioGeradoAulaFindOneInputDto, selection?: string[] | boolean): Promise<HorarioGeradoAulaFindOneOutputDto | null> {
     // =========================================================
 
     const qb = this.horarioGeradoAulaRepository.createQueryBuilder(aliasHorarioGeradoAula);
@@ -127,23 +136,23 @@ export class HorarioGeradoAulaService {
 
     // =========================================================
 
-    qb.andWhere(`${aliasHorarioGeradoAula}.id = :id`, { id: domain.id });
+    qb.andWhere(`${aliasHorarioGeradoAula}.id = :id`, { id: dto.id });
 
     // =========================================================
 
     qb.select([]);
-    await QbEfficientLoad("HorarioGeradoAulaFindOneOutput", qb, aliasHorarioGeradoAula, selection);
+    QbEfficientLoad("HorarioGeradoAulaFindOneOutput", qb, aliasHorarioGeradoAula, selection);
     // =========================================================
 
     const horarioGeradoAula = await qb.getOne();
 
     // =========================================================
 
-    return horarioGeradoAula;
+    return horarioGeradoAula as HorarioGeradoAulaFindOneOutputDto | null;
   }
 
-  async horarioGeradoAulaFindByIdStrict(accessContext: AccessContext, domain: IDomain.HorarioGeradoAulaFindOneInput, selection?: string[] | boolean) {
-    const horarioGeradoAula = await this.horarioGeradoAulaFindById(accessContext, domain, selection);
+  async horarioGeradoAulaFindByIdStrict(accessContext: AccessContext, dto: HorarioGeradoAulaFindOneInputDto, selection?: string[] | boolean): Promise<HorarioGeradoAulaFindOneOutputDto> {
+    const horarioGeradoAula = await this.horarioGeradoAulaFindById(accessContext, dto, selection);
 
     if (!horarioGeradoAula) {
       throw new NotFoundException();
@@ -152,7 +161,7 @@ export class HorarioGeradoAulaService {
     return horarioGeradoAula;
   }
 
-  async horarioGeradoAulaFindByIdSimple(accessContext: AccessContext, id: IDomain.HorarioGeradoAulaFindOneInput["id"], selection?: string[]): Promise<IDomain.HorarioGeradoAulaFindOneOutput | null> {
+  async horarioGeradoAulaFindByIdSimple(accessContext: AccessContext, id: string, selection?: string[]): Promise<HorarioGeradoAulaFindOneOutputDto | null> {
     // =========================================================
 
     const qb = this.horarioGeradoAulaRepository.createQueryBuilder(aliasHorarioGeradoAula);
@@ -168,7 +177,7 @@ export class HorarioGeradoAulaService {
     // =========================================================
 
     qb.select([]);
-    await QbEfficientLoad("HorarioGeradoAulaFindOneOutput", qb, aliasHorarioGeradoAula, selection);
+    QbEfficientLoad("HorarioGeradoAulaFindOneOutput", qb, aliasHorarioGeradoAula, selection);
 
     // =========================================================
 
@@ -176,10 +185,10 @@ export class HorarioGeradoAulaService {
 
     // =========================================================
 
-    return horarioGeradoAula;
+    return horarioGeradoAula as HorarioGeradoAulaFindOneOutputDto | null;
   }
 
-  async horarioGeradoAulaFindByIdSimpleStrict(accessContext: AccessContext, id: IDomain.HorarioGeradoAulaFindOneInput["id"], selection?: string[]) {
+  async horarioGeradoAulaFindByIdSimpleStrict(accessContext: AccessContext, id: string, selection?: string[]): Promise<HorarioGeradoAulaFindOneOutputDto> {
     const horarioGeradoAula = await this.horarioGeradoAulaFindByIdSimple(accessContext, id, selection);
 
     if (!horarioGeradoAula) {
@@ -189,14 +198,14 @@ export class HorarioGeradoAulaService {
     return horarioGeradoAula;
   }
 
-  async horarioGeradoAulaCreate(accessContext: AccessContext, domain: IDomain.HorarioGeradoAulaCreateInput) {
+  async horarioGeradoAulaCreate(accessContext: AccessContext, dto: HorarioGeradoAulaCreateInputDto): Promise<HorarioGeradoAulaFindOneOutputDto> {
     // =========================================================
 
-    await accessContext.ensurePermission("horario_gerado_aula:create", { dto: domain });
+    await accessContext.ensurePermission("horario_gerado_aula:create", { dto });
 
     // =========================================================
 
-    const dtoHorarioGeradoAula = pick(domain, ["diaSemanaIso"]);
+    const dtoHorarioGeradoAula = pick(dto, ["diaSemanaIso"]);
 
     const horarioGeradoAula = this.horarioGeradoAulaRepository.create();
 
@@ -206,8 +215,8 @@ export class HorarioGeradoAulaService {
 
     // =========================================================
 
-    if (domain.diarioProfessor) {
-      const diario = await this.diarioProfessorService.diarioProfessorFindByIdStrict(accessContext, domain.diarioProfessor);
+    if (dto.diarioProfessor) {
+      const diario = await this.diarioProfessorService.diarioProfessorFindByIdStrict(accessContext, dto.diarioProfessor);
 
       this.horarioGeradoAulaRepository.merge(horarioGeradoAula, {
         diarioProfessor: {
@@ -216,8 +225,8 @@ export class HorarioGeradoAulaService {
       });
     }
 
-    if (domain.horarioGerado) {
-      const horarioGerado = await this.horarioGeradoService.horarioGeradoFindByIdStrict(accessContext, domain.horarioGerado);
+    if (dto.horarioGerado) {
+      const horarioGerado = await this.horarioGeradoService.horarioGeradoFindByIdStrict(accessContext, dto.horarioGerado);
 
       this.horarioGeradoAulaRepository.merge(horarioGeradoAula, {
         horarioGerado: {
@@ -226,8 +235,8 @@ export class HorarioGeradoAulaService {
       });
     }
 
-    if (domain.intervaloDeTempo) {
-      const intervalo = await this.intervaloDeTempoService.intervaloCreateOrUpdate(accessContext, domain.intervaloDeTempo);
+    if (dto.intervaloDeTempo) {
+      const intervalo = await this.intervaloDeTempoService.intervaloCreateOrUpdate(accessContext, dto.intervaloDeTempo);
 
       this.horarioGeradoAulaRepository.merge(horarioGeradoAula, {
         intervaloDeTempo: {
@@ -247,16 +256,16 @@ export class HorarioGeradoAulaService {
     });
   }
 
-  async HorarioGeradoAulaUpdate(accessContext: AccessContext, domain: IDomain.HorarioGeradoAulaFindOneInput & IDomain.HorarioGeradoAulaUpdateInput) {
+  async HorarioGeradoAulaUpdate(accessContext: AccessContext, dto: HorarioGeradoAulaFindOneInputDto & HorarioGeradoAulaUpdateInputDto): Promise<HorarioGeradoAulaFindOneOutputDto> {
     // =========================================================
 
-    const currentHorarioGeradoAula = await this.horarioGeradoAulaFindByIdStrict(accessContext, domain);
+    const currentHorarioGeradoAula = await this.horarioGeradoAulaFindByIdStrict(accessContext, dto);
 
     // =========================================================
 
-    await accessContext.ensurePermission("horario_gerado_aula:update", { dto: domain }, domain.id, this.horarioGeradoAulaRepository.createQueryBuilder(aliasHorarioGeradoAula));
+    await accessContext.ensurePermission("horario_gerado_aula:update", { dto }, dto.id, this.horarioGeradoAulaRepository.createQueryBuilder(aliasHorarioGeradoAula));
 
-    const dtoHorarioGeradoAula = pick(domain, ["diaSemanaIso"]);
+    const dtoHorarioGeradoAula = pick(dto, ["diaSemanaIso"]);
 
     const horarioGeradoAula = {
       id: currentHorarioGeradoAula.id,
@@ -268,8 +277,8 @@ export class HorarioGeradoAulaService {
 
     // =========================================================
 
-    if (has(domain, "diarioProfessor") && domain.diarioProfessor !== undefined) {
-      const diarioProfessor = await this.diarioProfessorService.diarioProfessorFindByIdStrict(accessContext, domain.diarioProfessor!);
+    if (has(dto, "diarioProfessor") && dto.diarioProfessor !== undefined) {
+      const diarioProfessor = await this.diarioProfessorService.diarioProfessorFindByIdStrict(accessContext, dto.diarioProfessor!);
 
       this.horarioGeradoAulaRepository.merge(horarioGeradoAula, {
         diarioProfessor: {
@@ -278,8 +287,8 @@ export class HorarioGeradoAulaService {
       });
     }
 
-    if (has(domain, "horarioGerado") && domain.horarioGerado !== undefined) {
-      const horarioGerado = await this.horarioGeradoService.horarioGeradoFindByIdStrict(accessContext, domain.horarioGerado);
+    if (has(dto, "horarioGerado") && dto.horarioGerado !== undefined) {
+      const horarioGerado = await this.horarioGeradoService.horarioGeradoFindByIdStrict(accessContext, dto.horarioGerado);
 
       this.horarioGeradoAulaRepository.merge(horarioGeradoAula, {
         horarioGerado: {
@@ -288,8 +297,8 @@ export class HorarioGeradoAulaService {
       });
     }
 
-    if (has(domain, "intervaloDeTempo") && domain.intervaloDeTempo !== undefined) {
-      const intervaloDeTempo = await this.intervaloDeTempoService.intervaloCreateOrUpdate(accessContext, domain.intervaloDeTempo!);
+    if (has(dto, "intervaloDeTempo") && dto.intervaloDeTempo !== undefined) {
+      const intervaloDeTempo = await this.intervaloDeTempoService.intervaloCreateOrUpdate(accessContext, dto.intervaloDeTempo!);
 
       this.horarioGeradoAulaRepository.merge(horarioGeradoAula, {
         intervaloDeTempo: {
@@ -309,14 +318,14 @@ export class HorarioGeradoAulaService {
     });
   }
 
-  async horarioGeradoAulaDeleteOneById(accessContext: AccessContext, domain: IDomain.HorarioGeradoAulaFindOneInput) {
+  async horarioGeradoAulaDeleteOneById(accessContext: AccessContext, dto: HorarioGeradoAulaFindOneInputDto): Promise<boolean> {
     // =========================================================
 
-    await accessContext.ensurePermission("horario_gerado_aula:delete", { dto: domain }, domain.id, this.horarioGeradoAulaRepository.createQueryBuilder(aliasHorarioGeradoAula));
+    await accessContext.ensurePermission("horario_gerado_aula:delete", { dto }, dto.id, this.horarioGeradoAulaRepository.createQueryBuilder(aliasHorarioGeradoAula));
 
     // =========================================================
 
-    const horarioGerado = await this.horarioGeradoAulaFindByIdStrict(accessContext, domain);
+    const horarioGerado = await this.horarioGeradoAulaFindByIdStrict(accessContext, dto);
 
     // =========================================================
 

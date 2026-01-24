@@ -1,7 +1,15 @@
-import { Controller, Delete, Get, Patch, Post } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
-import { DisponibilidadeService } from "@/v2/core/disponibilidade/domain/disponibilidade.service";
-import { AccessContext, AccessContextHttp, AppRequest, type IAppRequest, type IDomain, requestRepresentationMergeToDomain } from "@/shared";
+import { Controller, Delete, Get, Patch, Post, Query, Body, Param } from "@nestjs/common";
+import { ApiTags, ApiOperation, ApiOkResponse, ApiCreatedResponse, ApiForbiddenResponse, ApiNotFoundResponse } from "@nestjs/swagger";
+import { AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
+import { DisponibilidadeService } from "../domain/disponibilidade.service";
+import {
+  DisponibilidadeFindOneOutputDto,
+  DisponibilidadeListInputDto,
+  DisponibilidadeListOutputDto,
+  DisponibilidadeCreateInputDto,
+  DisponibilidadeUpdateInputDto,
+  DisponibilidadeFindOneInputDto,
+} from "../dto";
 
 @ApiTags("disponibilidades")
 @Controller("/disponibilidades")
@@ -9,32 +17,61 @@ export class DisponibilidadeController {
   constructor(private disponibilidadeService: DisponibilidadeService) {}
 
   @Get("/")
-  async disponibilidadeFindAll(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DisponibilidadeList") dto: IAppRequest<"DisponibilidadeList">) {
-    const domain: IDomain.DisponibilidadeListInput = requestRepresentationMergeToDomain(dto);
-    return this.disponibilidadeService.disponibilidadeFindAll(accessContext, domain);
+  @ApiOperation({ summary: "Lista disponibilidades" })
+  @ApiOkResponse({ type: DisponibilidadeListOutputDto })
+  @ApiForbiddenResponse()
+  async disponibilidadeFindAll(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Query() dto: DisponibilidadeListInputDto,
+  ): Promise<DisponibilidadeListOutputDto> {
+    return this.disponibilidadeService.disponibilidadeFindAll(accessContext, dto);
   }
 
   @Get("/:id")
-  async disponibilidadeFindById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DisponibilidadeFindOneById") dto: IAppRequest<"DisponibilidadeFindOneById">) {
-    const domain: IDomain.DisponibilidadeFindOneInput = requestRepresentationMergeToDomain(dto);
-    return this.disponibilidadeService.disponibilidadeFindByIdStrict(accessContext, domain);
+  @ApiOperation({ summary: "Busca uma disponibilidade por ID" })
+  @ApiOkResponse({ type: DisponibilidadeFindOneOutputDto })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async disponibilidadeFindById(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: DisponibilidadeFindOneInputDto,
+  ): Promise<DisponibilidadeFindOneOutputDto> {
+    return this.disponibilidadeService.disponibilidadeFindByIdStrict(accessContext, params);
   }
 
   @Post("/")
-  async disponibilidadeCreate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DisponibilidadeCreate") dto: IAppRequest<"DisponibilidadeCreate">) {
-    const domain: IDomain.DisponibilidadeCreateInput = requestRepresentationMergeToDomain(dto);
-    return this.disponibilidadeService.disponibilidadeCreate(accessContext, domain);
+  @ApiOperation({ summary: "Cria uma disponibilidade" })
+  @ApiCreatedResponse({ type: DisponibilidadeFindOneOutputDto })
+  @ApiForbiddenResponse()
+  async disponibilidadeCreate(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Body() dto: DisponibilidadeCreateInputDto,
+  ): Promise<DisponibilidadeFindOneOutputDto> {
+    return this.disponibilidadeService.disponibilidadeCreate(accessContext, dto);
   }
 
   @Patch("/:id")
-  async disponibilidadeUpdate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DisponibilidadeUpdateOneById") dto: IAppRequest<"DisponibilidadeUpdateOneById">) {
-    const domain: IDomain.DisponibilidadeFindOneInput & IDomain.DisponibilidadeUpdateInput = requestRepresentationMergeToDomain(dto);
-    return this.disponibilidadeService.disponibilidadeUpdate(accessContext, domain);
+  @ApiOperation({ summary: "Atualiza uma disponibilidade" })
+  @ApiOkResponse({ type: DisponibilidadeFindOneOutputDto })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async disponibilidadeUpdate(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: DisponibilidadeFindOneInputDto,
+    @Body() dto: DisponibilidadeUpdateInputDto,
+  ): Promise<DisponibilidadeFindOneOutputDto> {
+    return this.disponibilidadeService.disponibilidadeUpdate(accessContext, { id: params.id, ...dto });
   }
 
   @Delete("/:id")
-  async disponibilidadeDeleteOneById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("DisponibilidadeDeleteOneById") dto: IAppRequest<"DisponibilidadeDeleteOneById">) {
-    const domain: IDomain.DisponibilidadeFindOneInput = requestRepresentationMergeToDomain(dto);
-    return this.disponibilidadeService.disponibilidadeDeleteOneById(accessContext, domain);
+  @ApiOperation({ summary: "Remove uma disponibilidade" })
+  @ApiOkResponse({ type: Boolean })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async disponibilidadeDeleteOneById(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: DisponibilidadeFindOneInputDto,
+  ): Promise<boolean> {
+    return this.disponibilidadeService.disponibilidadeDeleteOneById(accessContext, params);
   }
 }

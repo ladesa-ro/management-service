@@ -1,10 +1,17 @@
-import { BadRequestException, Controller, Delete, Get, Patch, Post } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
+import { BadRequestException, Controller, Delete, Get, Patch, Post, Query, Body, Param } from "@nestjs/common";
+import { ApiTags, ApiOperation, ApiOkResponse, ApiCreatedResponse, ApiForbiddenResponse, ApiNotFoundResponse } from "@nestjs/swagger";
 import { AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
-import { AppRequest, requestRepresentationMergeToDomain } from "@/shared";
-import type { IAppRequest } from "@/shared/tsp/openapi/document/app-openapi-typings";
-import { IDomain } from "@/shared/tsp/schema/typings";
 import { ProfessorIndisponibilidadeService } from "../domain/professor-indisponibilidade.service";
+import {
+  ProfessorIndisponibilidadeFindOneOutputDto,
+  ProfessorIndisponibilidadeListOutputDto,
+  ProfessorIndisponibilidadeCreateInputDto,
+  ProfessorIndisponibilidadeUpdateInputDto,
+  ProfessorIndisponibilidadeFindOneInputDto,
+  ProfessorIndisponibilidadeListByPerfilInputDto,
+  ProfessorIndisponibilidadeCreatePerfilInputDto,
+  ProfessorIndisponibilidadeRRuleOutputDto,
+} from "../dto";
 
 @ApiTags("indisponibilidades-professores")
 @Controller("/indisponibilidades")
@@ -12,53 +19,78 @@ export class ProfessorIndisponibilidadeController {
   constructor(private readonly professorIndisponibilidadeService: ProfessorIndisponibilidadeService) {}
 
   @Get("/list/:idPerfilFk")
-  async professorIndisponibilidadeListById(@AccessContextHttp() accessContext: AccessContext, @AppRequest("ProfessorIndisponibilidadeList") dto: IAppRequest<"ProfessorIndisponibilidadeList">) {
-    const domain = requestRepresentationMergeToDomain(dto) as any;
-    return this.professorIndisponibilidadeService.ProfessorIndisponibilidadeListByPerfil(accessContext, domain.idPerfilFk);
+  @ApiOperation({ summary: "Lista indisponibilidades de um professor por perfil" })
+  @ApiOkResponse({ type: ProfessorIndisponibilidadeListOutputDto })
+  @ApiForbiddenResponse()
+  async professorIndisponibilidadeListById(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: ProfessorIndisponibilidadeListByPerfilInputDto,
+  ): Promise<ProfessorIndisponibilidadeListOutputDto> {
+    return this.professorIndisponibilidadeService.ProfessorIndisponibilidadeListByPerfil(accessContext, params.idPerfilFk);
   }
 
   @Get("/:id")
+  @ApiOperation({ summary: "Busca uma indisponibilidade de professor por ID" })
+  @ApiOkResponse({ type: ProfessorIndisponibilidadeFindOneOutputDto })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
   async professorIndisponibilidadeFindOneById(
     @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("ProfessorIndisponibilidadeFindOneById") dto: IAppRequest<"ProfessorIndisponibilidadeFindOneById">,
-  ) {
-    const domain = requestRepresentationMergeToDomain(dto) as IDomain.ProfessorIndisponibilidadeFindOneInput;
-    return this.professorIndisponibilidadeService.indisponibilidadeFindByIdSimple(accessContext, domain.id);
+    @Param() params: ProfessorIndisponibilidadeFindOneInputDto,
+  ): Promise<ProfessorIndisponibilidadeFindOneOutputDto> {
+    return this.professorIndisponibilidadeService.indisponibilidadeFindByIdSimple(accessContext, params.id);
   }
 
   @Post("/:id_perfil/create")
-  async professorIndisponibilidadeCreate(@AccessContextHttp() accessContext: AccessContext, @AppRequest("ProfessorIndisponibilidadeCreate") dto: IAppRequest<"ProfessorIndisponibilidadeCreate">) {
-    const domain: IDomain.ProfessorIndisponibilidadeCreateInput = requestRepresentationMergeToDomain(dto);
-    return this.professorIndisponibilidadeService.createIndisponibilidade(accessContext, domain);
+  @ApiOperation({ summary: "Cria uma indisponibilidade de professor" })
+  @ApiCreatedResponse({ type: ProfessorIndisponibilidadeFindOneOutputDto })
+  @ApiForbiddenResponse()
+  async professorIndisponibilidadeCreate(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: ProfessorIndisponibilidadeCreatePerfilInputDto,
+    @Body() dto: ProfessorIndisponibilidadeCreateInputDto,
+  ): Promise<ProfessorIndisponibilidadeFindOneOutputDto> {
+    return this.professorIndisponibilidadeService.createIndisponibilidade(accessContext, {
+      ...dto,
+      idPerfilFk: params.id_perfil,
+    });
   }
 
   @Patch("/:id")
+  @ApiOperation({ summary: "Atualiza uma indisponibilidade de professor" })
+  @ApiOkResponse({ type: ProfessorIndisponibilidadeFindOneOutputDto })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
   async professorIndisponibilidadeUpdate(
     @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("ProfessorIndisponibilidadeUpdateOneById") dto: IAppRequest<"ProfessorIndisponibilidadeUpdateOneById">,
-  ) {
-    const domain: IDomain.ProfessorIndisponibilidadeFindOneInput & IDomain.ProfessorIndisponibilidadeUpdateInput = requestRepresentationMergeToDomain(dto);
-
-    return this.professorIndisponibilidadeService.indisponibilidadeUpdate(accessContext, domain);
+    @Param() params: ProfessorIndisponibilidadeFindOneInputDto,
+    @Body() dto: ProfessorIndisponibilidadeUpdateInputDto,
+  ): Promise<ProfessorIndisponibilidadeFindOneOutputDto> {
+    return this.professorIndisponibilidadeService.indisponibilidadeUpdate(accessContext, { id: params.id, ...dto });
   }
 
   @Delete("/:id")
+  @ApiOperation({ summary: "Remove uma indisponibilidade de professor" })
+  @ApiOkResponse({ type: Boolean })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
   async professorIndisponibilidadeDeleteOneById(
     @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("ProfessorIndisponibilidadeDeleteOneById") dto: IAppRequest<"ProfessorIndisponibilidadeDeleteOneById">,
-  ) {
-    const domain = requestRepresentationMergeToDomain(dto) as any;
-    if (!domain.id) throw new BadRequestException();
-    return this.professorIndisponibilidadeService.indisponibilidadeDelete(accessContext, domain.id);
+    @Param() params: ProfessorIndisponibilidadeFindOneInputDto,
+  ): Promise<boolean> {
+    if (!params.id) throw new BadRequestException();
+    return this.professorIndisponibilidadeService.indisponibilidadeDelete(accessContext, params.id);
   }
 
   @Get("/rrule-indisponibilidade/:id")
+  @ApiOperation({ summary: "Busca a RRULE de uma indisponibilidade de professor por ID" })
+  @ApiOkResponse({ type: ProfessorIndisponibilidadeRRuleOutputDto })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
   async professorIndisponibilidadeRRuleFindOneById(
     @AccessContextHttp() accessContext: AccessContext,
-    @AppRequest("ProfessorIndisponibilidadeRRuleFindOneById") dto: IAppRequest<"ProfessorIndisponibilidadeRRuleFindOneById">,
-  ) {
-    const domain = requestRepresentationMergeToDomain(dto) as any;
-    return this.professorIndisponibilidadeService.ProfessorIndisponibilidadeRRuleFindOneById(accessContext, domain.id);
+    @Param() params: ProfessorIndisponibilidadeFindOneInputDto,
+  ): Promise<ProfessorIndisponibilidadeRRuleOutputDto> {
+    return this.professorIndisponibilidadeService.ProfessorIndisponibilidadeRRuleFindOneById(accessContext, params.id);
   }
-  
 }

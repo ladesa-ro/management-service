@@ -4,10 +4,19 @@ import { FilterOperator } from "nestjs-paginate";
 import { ArquivoService } from "@/v2/core/arquivo/domain/arquivo.service";
 import { BlocoService } from "@/v2/core/bloco/domain/bloco.service";
 import { ImagemService } from "@/v2/core/imagem/domain/imagem.service";
+import type { AccessContext } from "@/infrastructure/access-context";
 import { DatabaseContextService } from "@/v2/infrastructure.database/context/database-context.service";
-import { AmbienteEntity } from "@/v2/infrastructure.database/typeorm/entities";
-import { AccessContext, IDomain, QbEfficientLoad } from "@/shared";
+import type { AmbienteEntity } from "@/v2/infrastructure.database/typeorm/entities";
+import { QbEfficientLoad } from "@/shared";
 import { SearchService } from "@/shared/search/search.service";
+import type {
+  AmbienteFindOneOutputDto,
+  AmbienteListInputDto,
+  AmbienteListOutputDto,
+  AmbienteCreateInputDto,
+  AmbienteUpdateInputDto,
+  AmbienteFindOneInputDto,
+} from "../dto";
 
 // ============================================================================
 
@@ -29,7 +38,7 @@ export class AmbienteService {
     return this.databaseContext.ambienteRepository;
   }
 
-  async ambienteFindAll(accessContext: AccessContext, domain: IDomain.AmbienteListInput | null = null, selection?: string[] | boolean): Promise<IDomain.AmbienteListOutput["success"]> {
+  async ambienteFindAll(accessContext: AccessContext, dto: AmbienteListInputDto | null = null, selection?: string[] | boolean): Promise<AmbienteListOutputDto> {
     // =========================================================
 
     const qb = this.ambienteRepository.createQueryBuilder(aliasAmbiente);
@@ -40,7 +49,7 @@ export class AmbienteService {
 
     // =========================================================
 
-    const paginated = await this.searchService.search(qb, domain, {
+    const paginated = await this.searchService.search(qb, dto, {
       select: [
         "id",
 
@@ -94,7 +103,7 @@ export class AmbienteService {
 
     qb.select([]);
 
-    await QbEfficientLoad("AmbienteFindOneOutput", qb, aliasAmbiente, selection);
+    QbEfficientLoad("AmbienteFindOneOutput", qb, aliasAmbiente, selection);
 
     // =========================================================
 
@@ -103,10 +112,10 @@ export class AmbienteService {
 
     // =========================================================
 
-    return paginated;
+    return paginated as AmbienteListOutputDto;
   }
 
-  async ambienteFindById(accessContext: AccessContext | null, domain: IDomain.AmbienteFindOneInput, selection?: string[] | boolean): Promise<IDomain.AmbienteFindOneOutput | null> {
+  async ambienteFindById(accessContext: AccessContext | null, dto: AmbienteFindOneInputDto, selection?: string[] | boolean): Promise<AmbienteFindOneOutputDto | null> {
     // =========================================================
 
     const qb = this.ambienteRepository.createQueryBuilder(aliasAmbiente);
@@ -119,12 +128,12 @@ export class AmbienteService {
 
     // =========================================================
 
-    qb.andWhere(`${aliasAmbiente}.id = :id`, { id: domain.id });
+    qb.andWhere(`${aliasAmbiente}.id = :id`, { id: dto.id });
 
     // =========================================================
 
     qb.select([]);
-    await QbEfficientLoad("AmbienteFindOneOutput", qb, aliasAmbiente, selection);
+    QbEfficientLoad("AmbienteFindOneOutput", qb, aliasAmbiente, selection);
 
     // =========================================================
 
@@ -132,11 +141,11 @@ export class AmbienteService {
 
     // =========================================================
 
-    return ambiente;
+    return ambiente as AmbienteFindOneOutputDto | null;
   }
 
-  async ambienteFindByIdStrict(accessContext: AccessContext | null, domain: IDomain.AmbienteFindOneInput, selection?: string[] | boolean) {
-    const ambiente = await this.ambienteFindById(accessContext, domain, selection);
+  async ambienteFindByIdStrict(accessContext: AccessContext | null, dto: AmbienteFindOneInputDto, selection?: string[] | boolean): Promise<AmbienteFindOneOutputDto> {
+    const ambiente = await this.ambienteFindById(accessContext, dto, selection);
 
     if (!ambiente) {
       throw new NotFoundException();
@@ -145,14 +154,14 @@ export class AmbienteService {
     return ambiente;
   }
 
-  async ambienteCreate(accessContext: AccessContext, domain: IDomain.AmbienteCreateInput) {
+  async ambienteCreate(accessContext: AccessContext, dto: AmbienteCreateInputDto): Promise<AmbienteFindOneOutputDto> {
     // =========================================================
 
-    await accessContext.ensurePermission("ambiente:create", { dto: domain });
+    await accessContext.ensurePermission("ambiente:create", { dto });
 
     // =========================================================
 
-    const dtoAmbiente = pick(domain, ["nome", "descricao", "codigo", "capacidade", "tipo"]);
+    const dtoAmbiente = pick(dto, ["nome", "descricao", "codigo", "capacidade", "tipo"]);
 
     const ambiente = this.ambienteRepository.create();
 
@@ -162,7 +171,7 @@ export class AmbienteService {
 
     // =========================================================
 
-    const bloco = await this.blocoService.blocoFindByIdSimpleStrict(accessContext, domain.bloco.id);
+    const bloco = await this.blocoService.blocoFindByIdSimpleStrict(accessContext, dto.bloco.id);
 
     this.ambienteRepository.merge(ambiente, {
       bloco: {
@@ -179,16 +188,16 @@ export class AmbienteService {
     return this.ambienteFindByIdStrict(accessContext, { id: ambiente.id });
   }
 
-  async ambienteUpdate(accessContext: AccessContext, domain: IDomain.AmbienteFindOneInput & IDomain.AmbienteUpdateInput) {
+  async ambienteUpdate(accessContext: AccessContext, dto: AmbienteFindOneInputDto & AmbienteUpdateInputDto): Promise<AmbienteFindOneOutputDto> {
     // =========================================================
 
-    const currentAmbiente = await this.ambienteFindByIdStrict(accessContext, domain);
+    const currentAmbiente = await this.ambienteFindByIdStrict(accessContext, dto);
 
     // =========================================================
 
-    await accessContext.ensurePermission("ambiente:update", { dto: domain }, domain.id, this.ambienteRepository.createQueryBuilder(aliasAmbiente));
+    await accessContext.ensurePermission("ambiente:update", { dto }, dto.id, this.ambienteRepository.createQueryBuilder(aliasAmbiente));
 
-    const dtoAmbiente = pick(domain, ["nome", "descricao", "codigo", "capacidade", "tipo"]);
+    const dtoAmbiente = pick(dto, ["nome", "descricao", "codigo", "capacidade", "tipo"]);
 
     const ambiente = <AmbienteEntity>{
       id: currentAmbiente.id,
@@ -224,11 +233,11 @@ export class AmbienteService {
     throw new NotFoundException();
   }
 
-  async ambienteUpdateImagemCapa(accessContext: AccessContext, domain: IDomain.AmbienteFindOneInput, file: Express.Multer.File) {
+  async ambienteUpdateImagemCapa(accessContext: AccessContext, dto: AmbienteFindOneInputDto, file: Express.Multer.File): Promise<boolean> {
     // =========================================================
 
     const currentAmbiente = await this.ambienteFindByIdStrict(accessContext, {
-      id: domain.id,
+      id: dto.id,
     });
 
     // =========================================================
@@ -265,14 +274,14 @@ export class AmbienteService {
     return true;
   }
 
-  async ambienteDeleteOneById(accessContext: AccessContext, domain: IDomain.AmbienteFindOneInput) {
+  async ambienteDeleteOneById(accessContext: AccessContext, dto: AmbienteFindOneInputDto): Promise<boolean> {
     // =========================================================
 
-    await accessContext.ensurePermission("ambiente:delete", { dto: domain }, domain.id, this.ambienteRepository.createQueryBuilder(aliasAmbiente));
+    await accessContext.ensurePermission("ambiente:delete", { dto }, dto.id, this.ambienteRepository.createQueryBuilder(aliasAmbiente));
 
     // =========================================================
 
-    const ambiente = await this.ambienteFindByIdStrict(accessContext, domain);
+    const ambiente = await this.ambienteFindByIdStrict(accessContext, dto);
 
     // =========================================================
 
