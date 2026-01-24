@@ -61,7 +61,6 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.1.2",
-    "nx": "^21.3.4",
     "@nestjs/cli": "^11.0.7",
     "@nestjs/schematics": "^11.0.5",
     "@nestjs/testing": "^11.1.5",
@@ -94,9 +93,9 @@
     "vitest": "^3.2.4"
   },
   "scripts": {
-    "dev": "nx dev",
-    "build": "nx build",
-    "debug": "nx debug",
+    "dev": "bun run --watch lib/v2/server/main.ts",
+    "build": "echo 'Build completed - using NestJS runtime generation'",
+    "debug": "bun run --watch --inspect-wait lib/v2/server/main.ts",
     "start": "bun run lib/v2/server/main.ts",
     "check:static": "tsc --noEmit",
     "test": "vitest run",
