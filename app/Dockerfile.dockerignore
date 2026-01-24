@@ -5,7 +5,6 @@
 **/.vscode
 **/.idea
 
-**/.pnpm-store
 **/node_modules
 
 **/*.env
@@ -16,8 +15,11 @@
 Dockerfile
 *.dockerignore
 
+Makefile
+
+# deprecated
+
+**/.pnpm-store
 packages/*/test
 packages/*/dist
 packages/*/.dist
-
-Makefile
