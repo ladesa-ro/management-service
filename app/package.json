@@ -5,7 +5,7 @@
   "dependencies": {
     "@apollo/server": "^4.12.2",
     "@apollo/utils.keyvaluecache": "^3.1.0",
-    "@keycloak/keycloak-admin-client": "^25.0.6",
+    "@keycloak/keycloak-admin-client": "^26.5.2",
     "@nestjs/apollo": "^13.2.3",
     "@nestjs/common": "^11.1.12",
     "@nestjs/config": "^4.0.2",
