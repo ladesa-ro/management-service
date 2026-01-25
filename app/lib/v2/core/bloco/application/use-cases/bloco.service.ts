@@ -1,13 +1,10 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
-import { map, pick } from "lodash";
-import { FilterOperator } from "nestjs-paginate";
+import { Inject, Injectable, NotFoundException } from "@nestjs/common";
+import { pick } from "lodash";
 import { ArquivoService } from "@/v2/core/arquivo/application/use-cases/arquivo.service";
 import { CampusService } from "@/v2/core/campus/application/use-cases/campus.service";
 import { ImagemService } from "@/v2/core/imagem/application/use-cases/imagem.service";
 import type { AccessContext } from "@/infrastructure/access-context";
-import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
 import type { BlocoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
-import { QbEfficientLoad, SearchService } from "@/shared";
 import type {
   BlocoCreateInputDto,
   BlocoFindOneInputDto,
@@ -16,116 +13,40 @@ import type {
   BlocoListOutputDto,
   BlocoUpdateInputDto,
 } from "@/v2/adapters/in/http/bloco/dto";
-
-// ============================================================================
-
-const aliasBloco = "bloco";
-
-// ============================================================================
+import type { IBlocoRepositoryPort } from "../ports";
 
 @Injectable()
 export class BlocoService {
   constructor(
+    @Inject("IBlocoRepositoryPort")
+    private blocoRepository: IBlocoRepositoryPort,
     private campusService: CampusService,
-    private databaseContext: DatabaseContextService,
     private imagemService: ImagemService,
     private arquivoService: ArquivoService,
-    private searchService: SearchService,
   ) {}
 
-  get blocoRepository() {
-    return this.databaseContext.blocoRepository;
+  async blocoFindAll(
+    accessContext: AccessContext,
+    dto: BlocoListInputDto,
+    selection?: string[] | boolean,
+  ): Promise<BlocoListOutputDto> {
+    return this.blocoRepository.findAll(accessContext, dto, selection);
   }
 
-  async blocoFindAll(accessContext: AccessContext, dto: BlocoListInputDto, selection?: string[] | boolean): Promise<BlocoListOutputDto> {
-    // =========================================================
-
-    const qb = this.blocoRepository.createQueryBuilder(aliasBloco);
-
-    // =========================================================
-
-    await accessContext.applyFilter("bloco:find", qb, aliasBloco, null);
-
-    // =========================================================
-
-    const paginated = await this.searchService.search(qb, dto, {
-      select: [
-        "id",
-
-        "nome",
-        "codigo",
-        "dateCreated",
-
-        "campus.id",
-        "campus.razaoSocial",
-        "campus.nomeFantasia",
-      ],
-      relations: {
-        campus: true,
-      },
-      sortableColumns: [
-        "nome",
-        "codigo",
-        "dateCreated",
-
-        "campus.id",
-        "campus.razaoSocial",
-        "campus.nomeFantasia",
-      ],
-      searchableColumns: ["id", "nome", "codigo"],
-      defaultSortBy: [
-        ["nome", "ASC"],
-        ["dateCreated", "ASC"],
-      ],
-      filterableColumns: {
-        "campus.id": [FilterOperator.EQ],
-      },
-    });
-
-    // =========================================================
-
-    qb.select([]);
-    QbEfficientLoad("BlocoFindOneOutput", qb, aliasBloco, selection);
-
-    // =========================================================
-    const pageItemsView = await qb.andWhereInIds(map(paginated.data, "id")).getMany();
-    paginated.data = paginated.data.map((paginated) => pageItemsView.find((i) => i.id === paginated.id)!);
-    // =========================================================
-
-    return paginated as unknown as BlocoListOutputDto;
+  async blocoFindById(
+    accessContext: AccessContext | null,
+    dto: BlocoFindOneInputDto,
+    selection?: string[] | boolean,
+  ): Promise<BlocoFindOneOutputDto | null> {
+    return this.blocoRepository.findById(accessContext, dto, selection);
   }
 
-  async blocoFindById(accessContext: AccessContext | null, dto: BlocoFindOneInputDto, selection?: string[] | boolean): Promise<BlocoFindOneOutputDto | null> {
-    // =========================================================
-
-    const qb = this.blocoRepository.createQueryBuilder(aliasBloco);
-
-    // =========================================================
-
-    if (accessContext) {
-      await accessContext.applyFilter("bloco:find", qb, aliasBloco, null);
-    }
-
-    // =========================================================
-
-    qb.andWhere(`${aliasBloco}.id = :id`, { id: dto.id });
-
-    // =========================================================
-
-    qb.select([]);
-    QbEfficientLoad("BlocoFindOneOutput", qb, aliasBloco, selection);
-
-    // =========================================================
-
-    const bloco = await qb.getOne();
-
-    // =========================================================
-
-    return bloco as BlocoFindOneOutputDto | null;
-  }
-
-  async blocoFindByIdStrict(accessContext: AccessContext | null, dto: BlocoFindOneInputDto, selection?: string[] | boolean): Promise<BlocoFindOneOutputDto> {
-    const bloco = await this.blocoFindById(accessContext, dto, selection);
+  async blocoFindByIdStrict(
+    accessContext: AccessContext | null,
+    dto: BlocoFindOneInputDto,
+    selection?: string[] | boolean,
+  ): Promise<BlocoFindOneOutputDto> {
+    const bloco = await this.blocoRepository.findById(accessContext, dto, selection);
 
     if (!bloco) {
       throw new NotFoundException();
@@ -134,35 +55,20 @@ export class BlocoService {
     return bloco;
   }
 
-  async blocoFindByIdSimple(accessContext: AccessContext, id: string, selection?: string[]): Promise<BlocoFindOneOutputDto | null> {
-    // =========================================================
-
-    const qb = this.blocoRepository.createQueryBuilder(aliasBloco);
-
-    // =========================================================
-
-    await accessContext.applyFilter("bloco:find", qb, aliasBloco, null);
-
-    // =========================================================
-
-    qb.andWhere(`${aliasBloco}.id = :id`, { id });
-
-    // =========================================================
-
-    qb.select([]);
-    QbEfficientLoad("BlocoFindOneOutput", qb, aliasBloco, selection);
-
-    // =========================================================
-
-    const bloco = await qb.getOne();
-
-    // =========================================================
-
-    return bloco as BlocoFindOneOutputDto | null;
+  async blocoFindByIdSimple(
+    accessContext: AccessContext,
+    id: string,
+    selection?: string[],
+  ): Promise<BlocoFindOneOutputDto | null> {
+    return this.blocoRepository.findByIdSimple(accessContext, id, selection);
   }
 
-  async blocoFindByIdSimpleStrict(accessContext: AccessContext, id: string, selection?: string[]): Promise<BlocoFindOneOutputDto> {
-    const bloco = await this.blocoFindByIdSimple(accessContext, id, selection);
+  async blocoFindByIdSimpleStrict(
+    accessContext: AccessContext,
+    id: string,
+    selection?: string[],
+  ): Promise<BlocoFindOneOutputDto> {
+    const bloco = await this.blocoRepository.findByIdSimple(accessContext, id, selection);
 
     if (!bloco) {
       throw new NotFoundException();
@@ -186,18 +92,16 @@ export class BlocoService {
     throw new NotFoundException();
   }
 
-  async blocoUpdateImagemCapa(accessContext: AccessContext, dto: BlocoFindOneInputDto, file: Express.Multer.File): Promise<boolean> {
-    // =========================================================
-
+  async blocoUpdateImagemCapa(
+    accessContext: AccessContext,
+    dto: BlocoFindOneInputDto,
+    file: Express.Multer.File,
+  ): Promise<boolean> {
     const currentBloco = await this.blocoFindByIdStrict(accessContext, {
       id: dto.id,
     });
 
-    // =========================================================
-
-    await accessContext.ensurePermission("bloco:update", { dto: { id: currentBloco.id } }, currentBloco.id, this.blocoRepository.createQueryBuilder(aliasBloco as any));
-
-    // =========================================================
+    await accessContext.ensurePermission("bloco:update", { dto: { id: currentBloco.id } }, currentBloco.id);
 
     const { imagem } = await this.imagemService.saveBlocoCapa(file);
 
@@ -213,17 +117,14 @@ export class BlocoService {
 
     await this.blocoRepository.save(bloco);
 
-    // =========================================================
-
     return true;
   }
 
-  async blocoCreate(accessContext: AccessContext, dto: BlocoCreateInputDto): Promise<BlocoFindOneOutputDto> {
-    // =========================================================
-
+  async blocoCreate(
+    accessContext: AccessContext,
+    dto: BlocoCreateInputDto,
+  ): Promise<BlocoFindOneOutputDto> {
     await accessContext.ensurePermission("bloco:create", { dto } as any);
-
-    // =========================================================
 
     const dtoBloco = pick(dto, ["nome", "codigo"]);
 
@@ -233,8 +134,6 @@ export class BlocoService {
       ...dtoBloco,
     });
 
-    // =========================================================
-
     const campus = await this.campusService.campusFindByIdSimpleStrict(accessContext, dto.campus.id);
 
     this.blocoRepository.merge(bloco, {
@@ -243,25 +142,18 @@ export class BlocoService {
       },
     });
 
-    // =========================================================
-
     await this.blocoRepository.save(bloco);
-
-    // =========================================================
 
     return this.blocoFindByIdStrict(accessContext, { id: bloco.id });
   }
 
-  async blocoUpdate(accessContext: AccessContext, dto: BlocoFindOneInputDto & BlocoUpdateInputDto): Promise<BlocoFindOneOutputDto> {
-    // =========================================================
-
+  async blocoUpdate(
+    accessContext: AccessContext,
+    dto: BlocoFindOneInputDto & BlocoUpdateInputDto,
+  ): Promise<BlocoFindOneOutputDto> {
     const currentBloco = await this.blocoFindByIdStrict(accessContext, { id: dto.id });
 
-    // =========================================================
-
-    await accessContext.ensurePermission("bloco:update", { dto }, dto.id, this.blocoRepository.createQueryBuilder(aliasBloco as any));
-
-    // =========================================================
+    await accessContext.ensurePermission("bloco:update", { dto }, dto.id);
 
     const dtoBloco = pick(dto, ["nome", "codigo"]);
 
@@ -273,39 +165,22 @@ export class BlocoService {
       ...dtoBloco,
     });
 
-    // =========================================================
-
     await this.blocoRepository.save(bloco);
-
-    // =========================================================
 
     return this.blocoFindByIdStrict(accessContext, { id: bloco.id });
   }
 
-  async blocoDeleteOneById(accessContext: AccessContext, dto: BlocoFindOneInputDto): Promise<boolean> {
-    // =========================================================
-
-    await accessContext.ensurePermission("bloco:delete", { dto }, dto.id, this.blocoRepository.createQueryBuilder(aliasBloco as any));
-
-    // =========================================================
+  async blocoDeleteOneById(
+    accessContext: AccessContext,
+    dto: BlocoFindOneInputDto,
+  ): Promise<boolean> {
+    await accessContext.ensurePermission("bloco:delete", { dto }, dto.id);
 
     const bloco = await this.blocoFindByIdStrict(accessContext, dto);
 
-    // =========================================================
-
     if (bloco) {
-      await this.blocoRepository
-        .createQueryBuilder(aliasBloco)
-        .update()
-        .set({
-          dateDeleted: "NOW()",
-        })
-        .where("id = :blocoId", { blocoId: bloco.id })
-        .andWhere("dateDeleted IS NULL")
-        .execute();
+      await this.blocoRepository.softDeleteById(bloco.id);
     }
-
-    // =========================================================
 
     return true;
   }
