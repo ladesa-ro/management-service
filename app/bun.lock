@@ -5,7 +5,7 @@
     "": {
       "dependencies": {
         "@apollo/server": "^5.3.0",
-        "@apollo/utils.keyvaluecache": "^3.1.0",
+        "@apollo/utils.keyvaluecache": "^4.0.0",
         "@keycloak/keycloak-admin-client": "^26.5.2",
         "@nestjs/apollo": "^13.2.3",
         "@nestjs/common": "^11.1.12",
@@ -104,7 +104,7 @@
 
     "@apollo/utils.isnodelike": ["@apollo/utils.isnodelike@3.0.0", "", {}, "sha512-xrjyjfkzunZ0DeF6xkHaK5IKR8F1FBq6qV+uZ+h9worIF/2YSzA0uoBxGv6tbTeo9QoIQnRW4PVFzGix5E7n/g=="],
 
-    "@apollo/utils.keyvaluecache": ["@apollo/utils.keyvaluecache@3.1.0", "", { "dependencies": { "@apollo/utils.logger": "^3.0.0", "lru-cache": "^10.0.0" } }, "sha512-MM/DKIqpQQbuNG1gNPAlGc45THdWkroTmN8o/J09merFwf/LlZ7+lAfcHFDXIYIknwKmUjJrOMS3OxYbjrz2hA=="],
+    "@apollo/utils.keyvaluecache": ["@apollo/utils.keyvaluecache@4.0.0", "", { "dependencies": { "@apollo/utils.logger": "^3.0.0", "lru-cache": "^11.0.0" } }, "sha512-mKw1myRUkQsGPNB+9bglAuhviodJ2L2MRYLTafCMw5BIo7nbvCPNCkLnIHjZ1NOzH7SnMAr5c9LmXiqsgYqLZw=="],
 
     "@apollo/utils.logger": ["@apollo/utils.logger@3.0.0", "", {}, "sha512-M8V8JOTH0F2qEi+ktPfw4RL7MvUycDfKp7aEap2eWXfL5SqWHN6jTLbj5f5fj1cceHpyaUSOZlvlaaryaxZAmg=="],
 
@@ -1585,12 +1585,6 @@
     "@angular-devkit/schematics/rxjs": ["rxjs@7.8.1", "", { "dependencies": { "tslib": "^2.1.0" } }, "sha512-AA3TVj+0A2iuIoQkWEK/tqFjBq2j+6PO6Y0zJcvzLAFhEFIO3HL0vls9hWLncZbAAbK0mar7oZ4V079I/qPMxg=="],
 
     "@angular-devkit/schematics-cli/@inquirer/prompts": ["@inquirer/prompts@7.3.2", "", { "dependencies": { "@inquirer/checkbox": "^4.1.2", "@inquirer/confirm": "^5.1.6", "@inquirer/editor": "^4.2.7", "@inquirer/expand": "^4.0.9", "@inquirer/input": "^4.1.6", "@inquirer/number": "^3.0.9", "@inquirer/password": "^4.0.9", "@inquirer/rawlist": "^4.0.9", "@inquirer/search": "^3.0.9", "@inquirer/select": "^4.0.9" }, "peerDependencies": { "@types/node": ">=18" }, "optionalPeers": ["@types/node"] }, "sha512-G1ytyOoHh5BphmEBxSwALin3n1KGNYB6yImbICcRQdzXfOGbuJ9Jske/Of5Sebk339NSGGNfUshnzK8YWkTPsQ=="],
-
-    "@apollo/server/@apollo/utils.keyvaluecache": ["@apollo/utils.keyvaluecache@4.0.0", "", { "dependencies": { "@apollo/utils.logger": "^3.0.0", "lru-cache": "^11.0.0" } }, "sha512-mKw1myRUkQsGPNB+9bglAuhviodJ2L2MRYLTafCMw5BIo7nbvCPNCkLnIHjZ1NOzH7SnMAr5c9LmXiqsgYqLZw=="],
-
-    "@apollo/server-gateway-interface/@apollo/utils.keyvaluecache": ["@apollo/utils.keyvaluecache@4.0.0", "", { "dependencies": { "@apollo/utils.logger": "^3.0.0", "lru-cache": "^11.0.0" } }, "sha512-mKw1myRUkQsGPNB+9bglAuhviodJ2L2MRYLTafCMw5BIo7nbvCPNCkLnIHjZ1NOzH7SnMAr5c9LmXiqsgYqLZw=="],
-
-    "@apollo/utils.keyvaluecache/lru-cache": ["lru-cache@10.4.3", "", {}, "sha512-JNAzZcXrCt42VGLuYz0zfAzDfAvJWW6AfYlDBQyDV5DClI2m5sAmK+OIO7s59XfsRsWHp02jAJrRadPRGTt6SQ=="],
 
     "@babel/code-frame/js-tokens": ["js-tokens@4.0.0", "", {}, "sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ=="],
 
