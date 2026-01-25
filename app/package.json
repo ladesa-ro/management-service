@@ -3,7 +3,7 @@
   "version": "1.0.0-alpha",
   "private": true,
   "dependencies": {
-    "@apollo/server": "^4.12.2",
+    "@apollo/server": "^5.3.0",
     "@apollo/utils.keyvaluecache": "^3.1.0",
     "@keycloak/keycloak-admin-client": "^26.5.2",
     "@nestjs/apollo": "^13.2.3",
