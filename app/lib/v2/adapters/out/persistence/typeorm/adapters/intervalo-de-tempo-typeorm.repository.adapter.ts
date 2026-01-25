@@ -1,9 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import type { DeepPartial } from "typeorm";
 import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
-import type { IIntervaloDeTempoRepositoryPort } from "@/v2/core/intervalo-de-tempo/application/ports";
 import type { IntervaloDeTempoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import type { IntervaloDeTempoInput } from "@/v2/core/intervalo-de-tempo/application/dtos";
+import type { IIntervaloDeTempoRepositoryPort } from "@/v2/core/intervalo-de-tempo/application/ports";
 
 @Injectable()
 export class IntervaloDeTempoTypeOrmRepositoryAdapter implements IIntervaloDeTempoRepositoryPort {

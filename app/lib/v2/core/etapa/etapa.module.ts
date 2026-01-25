@@ -1,9 +1,9 @@
 import { Module } from "@nestjs/common";
-import { CalendarioLetivoModule } from "../calendario-letivo/calendario-letivo.module";
 import { EtapaController } from "@/v2/adapters/in/http/etapa/etapa.controller";
-import { EtapaService } from "@/v2/core/etapa/application/use-cases/etapa.service";
-import { EtapaTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistence/typeorm/adapters";
 import { NestJsPaginateAdapter } from "@/v2/adapters/out/persistence/pagination";
+import { EtapaTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistence/typeorm/adapters";
+import { EtapaService } from "@/v2/core/etapa/application/use-cases/etapa.service";
+import { CalendarioLetivoModule } from "../calendario-letivo/calendario-letivo.module";
 
 /**
  * Módulo Etapa configurado com Arquitetura Hexagonal

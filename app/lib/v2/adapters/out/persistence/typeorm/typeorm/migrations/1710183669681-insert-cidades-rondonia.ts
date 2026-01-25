@@ -72,8 +72,8 @@ export class InsertCidadesRondonia1710183669681 implements MigrationInterface {
     for (const cidade of remainingCidades) {
       await queryRunner.query(
         `DELETE
-                               FROM "base_cidade"
-                               WHERE "id" = $1;`,
+         FROM "base_cidade"
+         WHERE "id" = $1;`,
         [cidade.id],
       );
     }

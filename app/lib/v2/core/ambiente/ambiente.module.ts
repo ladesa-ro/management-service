@@ -1,9 +1,9 @@
 import { Module } from "@nestjs/common";
+import { AmbienteController } from "@/v2/adapters/in/http/ambiente/ambiente.controller";
+import { NestJsPaginateAdapter } from "@/v2/adapters/out/persistence/pagination";
+import { AmbienteTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistence/typeorm/adapters";
 import { AmbienteService } from "@/v2/core/ambiente/application/use-cases/ambiente.service";
 import { BlocoModule } from "../bloco/bloco.module";
-import { AmbienteController } from "@/v2/adapters/in/http/ambiente/ambiente.controller";
-import { AmbienteTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistence/typeorm/adapters";
-import { NestJsPaginateAdapter } from "@/v2/adapters/out/persistence/pagination";
 
 /**
  * Módulo Ambiente configurado com Arquitetura Hexagonal

@@ -11,10 +11,13 @@ import {
 import jetpack, { createReadStream } from "fs-jetpack";
 import { v4 } from "uuid";
 import type { AccessContext } from "@/infrastructure/access-context";
-import { AppConfigService } from "@/v2/infra/config";
-import { UsuarioEntity, type ArquivoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import { isValidUuid } from "@/shared";
 import type { ArquivoCreateInputDto } from "@/v2/adapters/in/http/arquivo/dto";
+import {
+  type ArquivoEntity,
+  UsuarioEntity,
+} from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
+import { AppConfigService } from "@/v2/infra/config";
 import type { IArquivoRepositoryPort } from "../ports";
 
 type IGetFileAcesso = null | {
@@ -72,7 +75,9 @@ export class ArquivoService {
 
     if (acesso) {
       if (acesso.nome === "bloco" && isValidUuid(acesso.id)) {
-        qb.innerJoin("arquivo.versao", "versao").innerJoin("versao.imagem", "imagem").innerJoin("imagem.blocoCapa", "blocoCapa");
+        qb.innerJoin("arquivo.versao", "versao")
+          .innerJoin("versao.imagem", "imagem")
+          .innerJoin("imagem.blocoCapa", "blocoCapa");
 
         if (accessContext) {
           await accessContext.applyFilter("bloco:find", qb, "blocoCapa", null);
@@ -80,7 +85,9 @@ export class ArquivoService {
 
         qb.andWhere("blocoCapa.id = :blocoId", { blocoId: acesso.id });
       } else if (acesso.nome === "ambiente" && isValidUuid(acesso.id)) {
-        qb.innerJoin("arquivo.versao", "versao").innerJoin("versao.imagem", "imagem").innerJoin("imagem.ambienteCapa", "ambienteCapa");
+        qb.innerJoin("arquivo.versao", "versao")
+          .innerJoin("versao.imagem", "imagem")
+          .innerJoin("imagem.ambienteCapa", "ambienteCapa");
 
         if (accessContext) {
           await accessContext.applyFilter("ambiente:find", qb, "ambienteCapa", null);
@@ -90,7 +97,11 @@ export class ArquivoService {
       } else if (acesso.nome === "usuario" && isValidUuid(acesso.id)) {
         qb.innerJoin("arquivo.versao", "versao")
           .innerJoin("versao.imagem", "imagem")
-          .leftJoin(UsuarioEntity, "usuario", "(usuario.id_imagem_capa_fk = imagem.id OR usuario.id_imagem_perfil_fk = imagem.id)");
+          .leftJoin(
+            UsuarioEntity,
+            "usuario",
+            "(usuario.id_imagem_capa_fk = imagem.id OR usuario.id_imagem_perfil_fk = imagem.id)",
+          );
 
         if (accessContext) {
           await accessContext.applyFilter("usuario:find", qb, "usuario", null);
@@ -124,7 +135,11 @@ export class ArquivoService {
     };
   }
 
-  async getStreamableFile(accessContext: AccessContext | null, id: string, acesso: IGetFileAcesso | null): Promise<StreamableFile> {
+  async getStreamableFile(
+    accessContext: AccessContext | null,
+    id: string,
+    acesso: IGetFileAcesso | null,
+  ): Promise<StreamableFile> {
     const file = await this.getFile(accessContext, id, acesso);
 
     if (!file.stream) {
@@ -143,7 +158,10 @@ export class ArquivoService {
     return true;
   }
 
-  async arquivoCreate(dto: Pick<ArquivoCreateInputDto, "name" | "mimeType">, data: NodeJS.ArrayBufferView | Readable): Promise<Pick<ArquivoEntity, "id">> {
+  async arquivoCreate(
+    dto: Pick<ArquivoCreateInputDto, "name" | "mimeType">,
+    data: NodeJS.ArrayBufferView | Readable,
+  ): Promise<Pick<ArquivoEntity, "id">> {
     let id: string;
 
     do {

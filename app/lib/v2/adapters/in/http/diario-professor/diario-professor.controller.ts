@@ -5,7 +5,7 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
-  ApiTags
+  ApiTags,
 } from "@nestjs/swagger";
 import { AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { DiarioProfessorService } from "@/v2/core/diario-professor/application/use-cases/diario-professor.service";
@@ -67,7 +67,10 @@ export class DiarioProfessorController {
     @Param() params: DiarioProfessorFindOneInputDto,
     @Body() dto: DiarioProfessorUpdateInputDto,
   ): Promise<DiarioProfessorFindOneOutputDto> {
-    return this.diarioProfessorService.diarioProfessorUpdate(accessContext, { id: params.id, ...dto });
+    return this.diarioProfessorService.diarioProfessorUpdate(accessContext, {
+      id: params.id,
+      ...dto,
+    });
   }
 
   @Delete("/:id")

@@ -1,16 +1,23 @@
-import { BadRequestException, Body, Controller, Delete, Get, Param, Patch, Post } from "@nestjs/common";
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from "@nestjs/common";
 import {
   ApiCreatedResponse,
   ApiForbiddenResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
-  ApiTags
+  ApiTags,
 } from "@nestjs/swagger";
 import { AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
-import {
-  ProfessorIndisponibilidadeService
-} from "@/v2/core/professor-indisponibilidade/application/use-cases/professor-indisponibilidade.service";
+import { ProfessorIndisponibilidadeService } from "@/v2/core/professor-indisponibilidade/application/use-cases/professor-indisponibilidade.service";
 import {
   ProfessorIndisponibilidadeCreateInputDto,
   ProfessorIndisponibilidadeCreatePerfilInputDto,
@@ -25,7 +32,9 @@ import {
 @ApiTags("indisponibilidades-professores")
 @Controller("/indisponibilidades")
 export class ProfessorIndisponibilidadeController {
-  constructor(private readonly professorIndisponibilidadeService: ProfessorIndisponibilidadeService) {}
+  constructor(
+    private readonly professorIndisponibilidadeService: ProfessorIndisponibilidadeService,
+  ) {}
 
   @Get("/list/:idPerfilFk")
   @ApiOperation({ summary: "Lista indisponibilidades de um professor por perfil" })
@@ -35,7 +44,10 @@ export class ProfessorIndisponibilidadeController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: ProfessorIndisponibilidadeListByPerfilInputDto,
   ): Promise<ProfessorIndisponibilidadeListOutputDto> {
-    return this.professorIndisponibilidadeService.ProfessorIndisponibilidadeListByPerfil(accessContext, params.idPerfilFk);
+    return this.professorIndisponibilidadeService.ProfessorIndisponibilidadeListByPerfil(
+      accessContext,
+      params.idPerfilFk,
+    );
   }
 
   @Get("/:id")
@@ -47,7 +59,10 @@ export class ProfessorIndisponibilidadeController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: ProfessorIndisponibilidadeFindOneInputDto,
   ): Promise<ProfessorIndisponibilidadeFindOneOutputDto> {
-    return this.professorIndisponibilidadeService.indisponibilidadeFindByIdSimple(accessContext, params.id);
+    return this.professorIndisponibilidadeService.indisponibilidadeFindByIdSimple(
+      accessContext,
+      params.id,
+    );
   }
 
   @Post("/:id_perfil/create")
@@ -75,7 +90,10 @@ export class ProfessorIndisponibilidadeController {
     @Param() params: ProfessorIndisponibilidadeFindOneInputDto,
     @Body() dto: ProfessorIndisponibilidadeUpdateInputDto,
   ): Promise<ProfessorIndisponibilidadeFindOneOutputDto> {
-    return this.professorIndisponibilidadeService.indisponibilidadeUpdate(accessContext, { id: params.id, ...dto });
+    return this.professorIndisponibilidadeService.indisponibilidadeUpdate(accessContext, {
+      id: params.id,
+      ...dto,
+    });
   }
 
   @Delete("/:id")
@@ -100,6 +118,9 @@ export class ProfessorIndisponibilidadeController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: ProfessorIndisponibilidadeFindOneInputDto,
   ): Promise<ProfessorIndisponibilidadeRRuleOutputDto> {
-    return this.professorIndisponibilidadeService.ProfessorIndisponibilidadeRRuleFindOneById(accessContext, params.id);
+    return this.professorIndisponibilidadeService.ProfessorIndisponibilidadeRRuleFindOneById(
+      accessContext,
+      params.id,
+    );
   }
 }

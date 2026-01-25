@@ -1,9 +1,9 @@
 import { Module } from "@nestjs/common";
-import { CalendarioLetivoModule } from "../calendario-letivo/calendario-letivo.module";
 import { DiaCalendarioController } from "@/v2/adapters/in/http/dia-calendario/dia-calendario.controller";
-import { DiaCalendarioService } from "@/v2/core/dia-calendario/application/use-cases/dia-calendario.service";
-import { DiaCalendarioTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistence/typeorm/adapters";
 import { NestJsPaginateAdapter } from "@/v2/adapters/out/persistence/pagination";
+import { DiaCalendarioTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistence/typeorm/adapters";
+import { DiaCalendarioService } from "@/v2/core/dia-calendario/application/use-cases/dia-calendario.service";
+import { CalendarioLetivoModule } from "../calendario-letivo/calendario-letivo.module";
 
 /**
  * Módulo DiaCalendario configurado com Arquitetura Hexagonal

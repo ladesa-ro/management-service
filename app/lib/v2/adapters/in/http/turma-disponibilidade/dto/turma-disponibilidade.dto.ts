@@ -1,12 +1,24 @@
-import { ApiProperty, ApiPropertyOptional, PartialType } from "@nestjs/swagger";
 import { ArgsType, Field, ID, InputType, ObjectType } from "@nestjs/graphql";
-import { IsArray, IsDateString, IsOptional, IsString, IsUUID, ValidateNested } from "class-validator";
+import { ApiProperty, ApiPropertyOptional, PartialType } from "@nestjs/swagger";
 import { Type } from "class-transformer";
+import {
+  IsArray,
+  IsDateString,
+  IsOptional,
+  IsString,
+  IsUUID,
+  ValidateNested,
+} from "class-validator";
 import { PaginationInputDto, PaginationMetaDto } from "@/shared/dto";
-import { commonProperties, referenceProperty, RegisterModel, simpleProperty, } from "@/shared/metadata";
+import {
+  commonProperties,
+  RegisterModel,
+  referenceProperty,
+  simpleProperty,
+} from "@/shared/metadata";
 import {
   DisponibilidadeFindOneInputDto,
-  DisponibilidadeFindOneOutputDto
+  DisponibilidadeFindOneOutputDto,
 } from "@/v2/adapters/in/http/disponibilidade/dto";
 import { TurmaFindOneInputDto, TurmaFindOneOutputDto } from "@/v2/adapters/in/http/turma/dto";
 
@@ -83,7 +95,10 @@ export class TurmaDisponibilidadeListOutputDto {
   @Field(() => PaginationMetaDto)
   meta: PaginationMetaDto;
 
-  @ApiProperty({ type: () => [TurmaDisponibilidadeFindOneOutputDto], description: "Resultados da busca" })
+  @ApiProperty({
+    type: () => [TurmaDisponibilidadeFindOneOutputDto],
+    description: "Resultados da busca",
+  })
   @Field(() => [TurmaDisponibilidadeFindOneOutputDto])
   data: TurmaDisponibilidadeFindOneOutputDto[];
 }
@@ -108,7 +123,9 @@ export class TurmaDisponibilidadeCreateInputDto {
 }
 
 @InputType("TurmaDisponibilidadeUpdateInput")
-export class TurmaDisponibilidadeUpdateInputDto extends PartialType(TurmaDisponibilidadeCreateInputDto) {}
+export class TurmaDisponibilidadeUpdateInputDto extends PartialType(
+  TurmaDisponibilidadeCreateInputDto,
+) {}
 
 // ============================================================================
 // FindOne Input (for path params)

@@ -1,6 +1,6 @@
-import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
-import { IsUUID, IsDateString, IsOptional } from "class-validator";
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { IsDateString, IsOptional, IsUUID } from "class-validator";
 
 /**
  * Base DTO for entities identified by UUID.

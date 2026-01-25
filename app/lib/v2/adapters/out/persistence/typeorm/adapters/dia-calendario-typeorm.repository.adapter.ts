@@ -1,19 +1,19 @@
 import { Injectable } from "@nestjs/common";
-import { FilterOperator } from "nestjs-paginate";
 import { map } from "lodash";
+import { FilterOperator } from "nestjs-paginate";
 import type { DeepPartial } from "typeorm";
 import type { AccessContext } from "@/infrastructure/access-context";
-import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
 import { QbEfficientLoad } from "@/shared";
-import type { IPaginationConfig, IPaginationCriteria } from "@/v2/application/ports/pagination";
-import type { IDiaCalendarioRepositoryPort } from "@/v2/core/dia-calendario/application/ports";
 import type {
   DiaCalendarioFindOneInputDto,
   DiaCalendarioFindOneOutputDto,
   DiaCalendarioListInputDto,
   DiaCalendarioListOutputDto,
 } from "@/v2/adapters/in/http/dia-calendario/dto";
+import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
 import type { DiaCalendarioEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities/dia-calendario.entity";
+import type { IPaginationConfig, IPaginationCriteria } from "@/v2/application/ports/pagination";
+import type { IDiaCalendarioRepositoryPort } from "@/v2/core/dia-calendario/application/ports";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
 
 const aliasDiaCalendario = "diaCalendario";
@@ -60,13 +60,7 @@ export class DiaCalendarioTypeOrmRepositoryAdapter implements IDiaCalendarioRepo
         "calendario.nome",
         "calendario.ano",
       ],
-      searchableColumns: [
-        "id",
-        "data",
-        "diaLetivo",
-        "feriado",
-        "calendario.nome",
-      ],
+      searchableColumns: ["id", "data", "diaLetivo", "feriado", "calendario.nome"],
       relations: {
         calendario: true,
       },
@@ -108,7 +102,7 @@ export class DiaCalendarioTypeOrmRepositoryAdapter implements IDiaCalendarioRepo
     qb.select([]);
     QbEfficientLoad("DiaCalendarioFindOneOutput", qb, aliasDiaCalendario, selection);
 
-    return await qb.getOne() as DiaCalendarioFindOneOutputDto | null;
+    return (await qb.getOne()) as DiaCalendarioFindOneOutputDto | null;
   }
 
   async findByIdSimple(
@@ -123,7 +117,7 @@ export class DiaCalendarioTypeOrmRepositoryAdapter implements IDiaCalendarioRepo
     qb.select([]);
     QbEfficientLoad("DiaCalendarioFindOneOutput", qb, aliasDiaCalendario, selection);
 
-    return await qb.getOne() as DiaCalendarioFindOneOutputDto | null;
+    return (await qb.getOne()) as DiaCalendarioFindOneOutputDto | null;
   }
 
   async save(diaCalendario: DeepPartial<DiaCalendarioEntity>): Promise<DiaCalendarioEntity> {
@@ -148,11 +142,17 @@ export class DiaCalendarioTypeOrmRepositoryAdapter implements IDiaCalendarioRepo
       .execute();
   }
 
-  private extractFilters(dto: DtoWithFilters | null | undefined): Record<string, string | string[]> {
+  private extractFilters(
+    dto: DtoWithFilters | null | undefined,
+  ): Record<string, string | string[]> {
     const filters: Record<string, string | string[]> = {};
     if (!dto) return filters;
     for (const [key, value] of Object.entries(dto)) {
-      if (key.startsWith("filter.") && (typeof value === "string" || (Array.isArray(value) && value.every(v => typeof v === "string")))) {
+      if (
+        key.startsWith("filter.") &&
+        (typeof value === "string" ||
+          (Array.isArray(value) && value.every((v) => typeof v === "string")))
+      ) {
         filters[key.replace("filter.", "")] = value;
       }
     }

@@ -1,8 +1,16 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, type Relation } from "typeorm";
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  type Relation,
+} from "typeorm";
 
-import { EnderecoEntity } from "./endereco.entity"
-import { PerfilEntity } from "./perfil.entity"
-import { ModalidadeEntity } from "./modalidade.entity"
+import { EnderecoEntity } from "./endereco.entity";
+import { ModalidadeEntity } from "./modalidade.entity";
+import { PerfilEntity } from "./perfil.entity";
 
 @Entity("campus")
 export class CampusEntity {

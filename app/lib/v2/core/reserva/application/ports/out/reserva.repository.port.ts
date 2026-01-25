@@ -28,7 +28,10 @@ export interface IReservaRepositoryPort {
   ): Promise<ReservaFindOneOutputDto | null>;
 
   save(reserva: DeepPartial<ReservaEntity>): Promise<ReservaEntity>;
+
   create(): ReservaEntity;
+
   merge(reserva: ReservaEntity, data: DeepPartial<ReservaEntity>): void;
+
   softDeleteById(id: string): Promise<void>;
 }

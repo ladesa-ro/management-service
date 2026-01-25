@@ -1,9 +1,9 @@
 import { Module } from "@nestjs/common";
-import { CampusModule } from "../campus/campus.module";
 import { BlocoController } from "@/v2/adapters/in/http/bloco/bloco.controller";
-import { BlocoService } from "@/v2/core/bloco/application/use-cases/bloco.service";
-import { BlocoTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistence/typeorm/adapters";
 import { NestJsPaginateAdapter } from "@/v2/adapters/out/persistence/pagination";
+import { BlocoTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistence/typeorm/adapters";
+import { BlocoService } from "@/v2/core/bloco/application/use-cases/bloco.service";
+import { CampusModule } from "../campus/campus.module";
 
 /**
  * Módulo Bloco configurado com Arquitetura Hexagonal

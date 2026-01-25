@@ -1,3 +1,4 @@
+import { Type } from "class-transformer";
 import {
   IsArray,
   IsBoolean,
@@ -7,7 +8,6 @@ import {
   IsUUID,
   ValidateNested,
 } from "class-validator";
-import { Type } from "class-transformer";
 import { ObjectUuidRef, PaginationInput, PaginationMeta } from "../../../common/application/dtos";
 import { DiarioFindOneOutput, DiarioInputRef } from "../../../diario/application/dtos";
 import { PerfilFindOneOutput, PerfilInputRef } from "../../../perfil/application/dtos";

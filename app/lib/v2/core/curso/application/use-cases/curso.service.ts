@@ -1,11 +1,6 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { has, pick } from "lodash";
-import { ArquivoService } from "@/v2/core/arquivo/application/use-cases/arquivo.service";
-import { CampusService } from "@/v2/core/campus/application/use-cases/campus.service";
-import { ImagemService } from "@/v2/core/imagem/application/use-cases/imagem.service";
-import { OfertaFormacaoService } from "@/v2/core/oferta-formacao/application/use-cases/oferta-formacao.service";
 import type { AccessContext } from "@/infrastructure/access-context";
-import type { CursoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import type {
   CursoCreateInputDto,
   CursoFindOneInputDto,
@@ -14,6 +9,11 @@ import type {
   CursoListOutputDto,
   CursoUpdateInputDto,
 } from "@/v2/adapters/in/http/curso/dto";
+import type { CursoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
+import { ArquivoService } from "@/v2/core/arquivo/application/use-cases/arquivo.service";
+import { CampusService } from "@/v2/core/campus/application/use-cases/campus.service";
+import { ImagemService } from "@/v2/core/imagem/application/use-cases/imagem.service";
+import { OfertaFormacaoService } from "@/v2/core/oferta-formacao/application/use-cases/oferta-formacao.service";
 import type { ICursoRepositoryPort } from "../ports";
 
 @Injectable()
@@ -93,7 +93,10 @@ export class CursoService {
       ...dtoCurso,
     });
 
-    const campus = await this.campusService.campusFindByIdSimpleStrict(accessContext, dto.campus.id);
+    const campus = await this.campusService.campusFindByIdSimpleStrict(
+      accessContext,
+      dto.campus.id,
+    );
 
     this.cursoRepository.merge(curso, {
       campus: {
@@ -101,7 +104,10 @@ export class CursoService {
       },
     });
 
-    const ofertaFormacao = await this.ofertaFormacaoService.ofertaFormacaoFindByIdSimpleStrict(accessContext, dto.ofertaFormacao.id);
+    const ofertaFormacao = await this.ofertaFormacaoService.ofertaFormacaoFindByIdSimpleStrict(
+      accessContext,
+      dto.ofertaFormacao.id,
+    );
 
     this.cursoRepository.merge(curso, {
       ofertaFormacao: {
@@ -133,7 +139,10 @@ export class CursoService {
     });
 
     if (has(dto, "campus") && dto.campus !== undefined) {
-      const campus = await this.campusService.campusFindByIdSimpleStrict(accessContext, dto.campus.id);
+      const campus = await this.campusService.campusFindByIdSimpleStrict(
+        accessContext,
+        dto.campus.id,
+      );
 
       this.cursoRepository.merge(curso, {
         campus: {
@@ -143,7 +152,10 @@ export class CursoService {
     }
 
     if (has(dto, "ofertaFormacao") && dto.ofertaFormacao !== undefined) {
-      const ofertaFormacao = await this.ofertaFormacaoService.ofertaFormacaoFindByIdSimpleStrict(accessContext, dto.ofertaFormacao.id);
+      const ofertaFormacao = await this.ofertaFormacaoService.ofertaFormacaoFindByIdSimpleStrict(
+        accessContext,
+        dto.ofertaFormacao.id,
+      );
 
       this.cursoRepository.merge(curso, {
         ofertaFormacao: {

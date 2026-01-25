@@ -1,11 +1,11 @@
-import { ApiProperty } from "@nestjs/swagger";
 import { Field, InputType, ObjectType } from "@nestjs/graphql";
-import { IsArray, IsDateString, ValidateNested } from "class-validator";
+import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
+import { IsArray, IsDateString, ValidateNested } from "class-validator";
+import { HorarioGeradoAulaFindOneInputDto } from "@/v2/adapters/in/http/horario-gerado-aula/dto";
+import { IntervaloDeTempoFindOneInputDto } from "@/v2/adapters/in/http/intervalo-de-tempo/dto";
 import { PerfilFindOneInputDto } from "@/v2/adapters/in/http/perfil/dto";
 import { TurmaFindOneInputDto } from "@/v2/adapters/in/http/turma/dto";
-import { IntervaloDeTempoFindOneInputDto } from "@/v2/adapters/in/http/intervalo-de-tempo/dto";
-import { HorarioGeradoAulaFindOneInputDto } from "@/v2/adapters/in/http/horario-gerado-aula/dto";
 
 // ============================================================================
 // Gerar Horario Input

@@ -1,8 +1,13 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, type Relation } from "typeorm";
 import {
-  IntervaloDeTempoEntity
-} from "./intervalo-de-tempo.entity";
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  type Relation,
+} from "typeorm";
 import { DiarioEntity } from "./diario.entity";
+import { IntervaloDeTempoEntity } from "./intervalo-de-tempo.entity";
 
 @Entity("diario_preferencia_agrupamento")
 export class DiarioPreferenciaAgrupamentoEntity {

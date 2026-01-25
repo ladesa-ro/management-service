@@ -3,17 +3,17 @@ import { map } from "lodash";
 import type { DeepPartial } from "typeorm";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
-import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
 import { QbEfficientLoad } from "@/shared";
-import type { IPaginationConfig, IPaginationCriteria } from "@/v2/application/ports/pagination";
-import type { IDisponibilidadeRepositoryPort } from "@/v2/core/disponibilidade/application/ports";
 import type {
   DisponibilidadeFindOneInputDto,
   DisponibilidadeFindOneOutputDto,
   DisponibilidadeListInputDto,
   DisponibilidadeListOutputDto,
 } from "@/v2/adapters/in/http/disponibilidade/dto";
+import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
 import type { DisponibilidadeEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
+import type { IPaginationConfig, IPaginationCriteria } from "@/v2/application/ports/pagination";
+import type { IDisponibilidadeRepositoryPort } from "@/v2/core/disponibilidade/application/ports";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
 
 const aliasDisponibilidade = "disponibilidade";
@@ -41,18 +41,9 @@ export class DisponibilidadeTypeOrmRepositoryAdapter implements IDisponibilidade
 
     const config = {
       ...paginateConfig,
-      select: [
-        "id",
-        "dataInicio",
-        "dataFim",
-        "dateCreated",
-      ],
+      select: ["id", "dataInicio", "dataFim", "dateCreated"],
       sortableColumns: ["dataInicio", "dataFim", "dateCreated"],
-      searchableColumns: [
-        "id",
-        "dataInicio",
-        "dataFim",
-      ],
+      searchableColumns: ["id", "dataInicio", "dataFim"],
       defaultSortBy: [
         ["dataInicio", "ASC"],
         ["dataFim", "ASC"],
@@ -92,7 +83,7 @@ export class DisponibilidadeTypeOrmRepositoryAdapter implements IDisponibilidade
     qb.select([]);
     QbEfficientLoad("DisponibilidadeFindOneOutput", qb, aliasDisponibilidade, selection);
 
-    return await qb.getOne() as DisponibilidadeFindOneOutputDto | null;
+    return (await qb.getOne()) as DisponibilidadeFindOneOutputDto | null;
   }
 
   async findByIdSimple(
@@ -107,7 +98,7 @@ export class DisponibilidadeTypeOrmRepositoryAdapter implements IDisponibilidade
     qb.select([]);
     QbEfficientLoad("DisponibilidadeFindOneOutput", qb, aliasDisponibilidade, selection);
 
-    return await qb.getOne() as DisponibilidadeFindOneOutputDto | null;
+    return (await qb.getOne()) as DisponibilidadeFindOneOutputDto | null;
   }
 
   async save(disponibilidade: DeepPartial<DisponibilidadeEntity>): Promise<DisponibilidadeEntity> {
@@ -132,11 +123,17 @@ export class DisponibilidadeTypeOrmRepositoryAdapter implements IDisponibilidade
       .execute();
   }
 
-  private extractFilters(dto: DtoWithFilters | null | undefined): Record<string, string | string[]> {
+  private extractFilters(
+    dto: DtoWithFilters | null | undefined,
+  ): Record<string, string | string[]> {
     const filters: Record<string, string | string[]> = {};
     if (!dto) return filters;
     for (const [key, value] of Object.entries(dto)) {
-      if (key.startsWith("filter.") && (typeof value === "string" || (Array.isArray(value) && value.every(v => typeof v === "string")))) {
+      if (
+        key.startsWith("filter.") &&
+        (typeof value === "string" ||
+          (Array.isArray(value) && value.every((v) => typeof v === "string")))
+      ) {
         filters[key.replace("filter.", "")] = value;
       }
     }

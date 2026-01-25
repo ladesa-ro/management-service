@@ -5,12 +5,10 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
-  ApiTags
+  ApiTags,
 } from "@nestjs/swagger";
 import { AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
-import {
-  DiarioPreferenciaAgrupamentoService
-} from "@/v2/core/diario-preferencia-agrupamento/application/use-cases/diario-preferencia-agrupamento.service";
+import { DiarioPreferenciaAgrupamentoService } from "@/v2/core/diario-preferencia-agrupamento/application/use-cases/diario-preferencia-agrupamento.service";
 import {
   DiarioPreferenciaAgrupamentoCreateInputDto,
   DiarioPreferenciaAgrupamentoFindOneInputDto,
@@ -33,7 +31,10 @@ export class DiarioPreferenciaAgrupamentoController {
     @AccessContextHttp() accessContext: AccessContext,
     @Query() dto: DiarioPreferenciaAgrupamentoListInputDto,
   ): Promise<DiarioPreferenciaAgrupamentoListOutputDto> {
-    return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoFindAll(accessContext, dto);
+    return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoFindAll(
+      accessContext,
+      dto,
+    );
   }
 
   @Get("/:id")
@@ -45,7 +46,10 @@ export class DiarioPreferenciaAgrupamentoController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: DiarioPreferenciaAgrupamentoFindOneInputDto,
   ): Promise<DiarioPreferenciaAgrupamentoFindOneOutputDto> {
-    return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoFindByIdStrict(accessContext, params);
+    return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoFindByIdStrict(
+      accessContext,
+      params,
+    );
   }
 
   @Post("/")
@@ -56,7 +60,10 @@ export class DiarioPreferenciaAgrupamentoController {
     @AccessContextHttp() accessContext: AccessContext,
     @Body() dto: DiarioPreferenciaAgrupamentoCreateInputDto,
   ): Promise<DiarioPreferenciaAgrupamentoFindOneOutputDto> {
-    return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoCreate(accessContext, dto);
+    return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoCreate(
+      accessContext,
+      dto,
+    );
   }
 
   @Patch("/:id")
@@ -69,7 +76,10 @@ export class DiarioPreferenciaAgrupamentoController {
     @Param() params: DiarioPreferenciaAgrupamentoFindOneInputDto,
     @Body() dto: DiarioPreferenciaAgrupamentoUpdateInputDto,
   ): Promise<DiarioPreferenciaAgrupamentoFindOneOutputDto> {
-    return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoUpdate(accessContext, { id: params.id, ...dto });
+    return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoUpdate(
+      accessContext,
+      { id: params.id, ...dto },
+    );
   }
 
   @Delete("/:id")
@@ -81,6 +91,9 @@ export class DiarioPreferenciaAgrupamentoController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: DiarioPreferenciaAgrupamentoFindOneInputDto,
   ): Promise<boolean> {
-    return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoDeleteOneById(accessContext, params);
+    return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoDeleteOneById(
+      accessContext,
+      params,
+    );
   }
 }

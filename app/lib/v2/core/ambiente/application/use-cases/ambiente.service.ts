@@ -1,10 +1,6 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { pick } from "lodash";
-import { ArquivoService } from "@/v2/core/arquivo/application/use-cases/arquivo.service";
-import { BlocoService } from "@/v2/core/bloco/application/use-cases/bloco.service";
-import { ImagemService } from "@/v2/core/imagem/application/use-cases/imagem.service";
 import type { AccessContext } from "@/infrastructure/access-context";
-import type { AmbienteEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import type {
   AmbienteCreateInputDto,
   AmbienteFindOneInputDto,
@@ -13,6 +9,10 @@ import type {
   AmbienteListOutputDto,
   AmbienteUpdateInputDto,
 } from "@/v2/adapters/in/http/ambiente/dto";
+import type { AmbienteEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
+import { ArquivoService } from "@/v2/core/arquivo/application/use-cases/arquivo.service";
+import { BlocoService } from "@/v2/core/bloco/application/use-cases/bloco.service";
+import { ImagemService } from "@/v2/core/imagem/application/use-cases/imagem.service";
 import type { IAmbienteRepositoryPort } from "../ports";
 
 @Injectable()

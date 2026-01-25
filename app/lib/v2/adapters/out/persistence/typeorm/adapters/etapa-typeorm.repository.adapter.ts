@@ -1,19 +1,19 @@
 import { Injectable } from "@nestjs/common";
-import { FilterOperator } from "nestjs-paginate";
 import { map } from "lodash";
+import { FilterOperator } from "nestjs-paginate";
 import type { DeepPartial } from "typeorm";
 import type { AccessContext } from "@/infrastructure/access-context";
-import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
 import { QbEfficientLoad } from "@/shared";
-import type { IPaginationConfig, IPaginationCriteria } from "@/v2/application/ports/pagination";
-import type { IEtapaRepositoryPort } from "@/v2/core/etapa/application/ports";
 import type {
   EtapaFindOneInputDto,
   EtapaFindOneOutputDto,
   EtapaListInputDto,
   EtapaListOutputDto,
 } from "@/v2/adapters/in/http/etapa/dto";
+import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
 import type { EtapaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities/etapa.entity";
+import type { IPaginationConfig, IPaginationCriteria } from "@/v2/application/ports/pagination";
+import type { IEtapaRepositoryPort } from "@/v2/core/etapa/application/ports";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
 
 const aliasEtapa = "etapa";
@@ -59,13 +59,7 @@ export class EtapaTypeOrmRepositoryAdapter implements IEtapaRepositoryPort {
         "calendario.nome",
         "calendario.ano",
       ],
-      searchableColumns: [
-        "id",
-        "numero",
-        "dataInicio",
-        "dataTermino",
-        "cor",
-      ],
+      searchableColumns: ["id", "numero", "dataInicio", "dataTermino", "cor"],
       relations: {
         calendario: true,
       },
@@ -107,7 +101,7 @@ export class EtapaTypeOrmRepositoryAdapter implements IEtapaRepositoryPort {
     qb.select([]);
     QbEfficientLoad("EtapaFindOneOutput", qb, aliasEtapa, selection);
 
-    return await qb.getOne() as EtapaFindOneOutputDto | null;
+    return (await qb.getOne()) as EtapaFindOneOutputDto | null;
   }
 
   async findByIdSimple(
@@ -122,7 +116,7 @@ export class EtapaTypeOrmRepositoryAdapter implements IEtapaRepositoryPort {
     qb.select([]);
     QbEfficientLoad("EtapaFindOneOutput", qb, aliasEtapa, selection);
 
-    return await qb.getOne() as EtapaFindOneOutputDto | null;
+    return (await qb.getOne()) as EtapaFindOneOutputDto | null;
   }
 
   async save(etapa: DeepPartial<EtapaEntity>): Promise<EtapaEntity> {
@@ -147,11 +141,17 @@ export class EtapaTypeOrmRepositoryAdapter implements IEtapaRepositoryPort {
       .execute();
   }
 
-  private extractFilters(dto: DtoWithFilters | null | undefined): Record<string, string | string[]> {
+  private extractFilters(
+    dto: DtoWithFilters | null | undefined,
+  ): Record<string, string | string[]> {
     const filters: Record<string, string | string[]> = {};
     if (!dto) return filters;
     for (const [key, value] of Object.entries(dto)) {
-      if (key.startsWith("filter.") && (typeof value === "string" || (Array.isArray(value) && value.every(v => typeof v === "string")))) {
+      if (
+        key.startsWith("filter.") &&
+        (typeof value === "string" ||
+          (Array.isArray(value) && value.every((v) => typeof v === "string")))
+      ) {
         filters[key.replace("filter.", "")] = value;
       }
     }

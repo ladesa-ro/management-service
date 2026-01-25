@@ -1,10 +1,7 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
-import { CalendarioLetivoService } from "@/v2/core/calendario-letivo/application/use-cases/calendario-letivo.service";
 import type { AccessContext } from "@/infrastructure/access-context";
-import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
-import type { EventoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities/evento.entity";
 import { QbEfficientLoad, SearchService } from "@/shared";
 import type {
   EventoCreateInputDto,
@@ -14,6 +11,9 @@ import type {
   EventoListOutputDto,
   EventoUpdateInputDto,
 } from "@/v2/adapters/in/http/evento/dto";
+import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
+import type { EventoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities/evento.entity";
+import { CalendarioLetivoService } from "@/v2/core/calendario-letivo/application/use-cases/calendario-letivo.service";
 
 // ============================================================================
 
@@ -33,7 +33,11 @@ export class EventoService {
     return this.databaseContext.eventoRepository;
   }
 
-  async eventoFindAll(accessContext: AccessContext, dto: EventoListInputDto | null = null, selection?: string[] | boolean): Promise<EventoListOutputDto> {
+  async eventoFindAll(
+    accessContext: AccessContext,
+    dto: EventoListInputDto | null = null,
+    selection?: string[] | boolean,
+  ): Promise<EventoListOutputDto> {
     // =========================================================
 
     const qb = this.eventoRepository.createQueryBuilder(aliasEvento);
@@ -107,14 +111,20 @@ export class EventoService {
     // =========================================================
 
     const pageItemsView = await qb.andWhereInIds(map(paginated.data, "id")).getMany();
-    paginated.data = paginated.data.map((paginated) => pageItemsView.find((i) => i.id === paginated.id)!);
+    paginated.data = paginated.data.map(
+      (paginated) => pageItemsView.find((i) => i.id === paginated.id)!,
+    );
 
     // =========================================================
 
     return paginated as unknown as EventoListOutputDto;
   }
 
-  async eventoFindById(accessContext: AccessContext, dto: EventoFindOneInputDto, selection?: string[] | boolean): Promise<EventoFindOneOutputDto | null> {
+  async eventoFindById(
+    accessContext: AccessContext,
+    dto: EventoFindOneInputDto,
+    selection?: string[] | boolean,
+  ): Promise<EventoFindOneOutputDto | null> {
     // =========================================================
 
     const qb = this.eventoRepository.createQueryBuilder(aliasEvento);
@@ -140,7 +150,11 @@ export class EventoService {
     return evento as EventoFindOneOutputDto | null;
   }
 
-  async eventoFindByIdStrict(accessContext: AccessContext, dto: EventoFindOneInputDto, selection?: string[] | boolean): Promise<EventoFindOneOutputDto> {
+  async eventoFindByIdStrict(
+    accessContext: AccessContext,
+    dto: EventoFindOneInputDto,
+    selection?: string[] | boolean,
+  ): Promise<EventoFindOneOutputDto> {
     const evento = await this.eventoFindById(accessContext, dto, selection);
 
     if (!evento) {
@@ -150,7 +164,11 @@ export class EventoService {
     return evento;
   }
 
-  async eventoFindByIdSimple(accessContext: AccessContext, id: string, selection?: string[]): Promise<EventoFindOneOutputDto | null> {
+  async eventoFindByIdSimple(
+    accessContext: AccessContext,
+    id: string,
+    selection?: string[],
+  ): Promise<EventoFindOneOutputDto | null> {
     // =========================================================
 
     const qb = this.eventoRepository.createQueryBuilder(aliasEvento);
@@ -177,7 +195,11 @@ export class EventoService {
     return evento as EventoFindOneOutputDto | null;
   }
 
-  async eventoFindByIdSimpleStrict(accessContext: AccessContext, id: string, selection?: string[]): Promise<EventoFindOneOutputDto> {
+  async eventoFindByIdSimpleStrict(
+    accessContext: AccessContext,
+    id: string,
+    selection?: string[],
+  ): Promise<EventoFindOneOutputDto> {
     const evento = await this.eventoFindByIdSimple(accessContext, id, selection);
 
     if (!evento) {
@@ -187,14 +209,17 @@ export class EventoService {
     return evento;
   }
 
-  async eventoCreate(accessContext: AccessContext, dto: EventoCreateInputDto): Promise<EventoFindOneOutputDto> {
+  async eventoCreate(
+    accessContext: AccessContext,
+    dto: EventoCreateInputDto,
+  ): Promise<EventoFindOneOutputDto> {
     // =========================================================
 
     await accessContext.ensurePermission("evento:create", { dto } as any);
 
     // =========================================================
 
-    const dtoEvento = pick(dto, ["nome", "cor", "rrule", "ambiente","data_inicio", "data_fim"]);
+    const dtoEvento = pick(dto, ["nome", "cor", "rrule", "ambiente", "data_inicio", "data_fim"]);
 
     const evento = this.eventoRepository.create();
 
@@ -205,7 +230,10 @@ export class EventoService {
     // =========================================================
 
     if (dto.calendario) {
-      const calendario = await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(accessContext, dto.calendario.id);
+      const calendario = await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(
+        accessContext,
+        dto.calendario.id,
+      );
 
       this.eventoRepository.merge(evento, {
         calendario: {
@@ -223,14 +251,22 @@ export class EventoService {
     return this.eventoFindByIdStrict(accessContext, { id: evento.id });
   }
 
-  async eventoUpdate(accessContext: AccessContext, dto: EventoFindOneInputDto & EventoUpdateInputDto): Promise<EventoFindOneOutputDto> {
+  async eventoUpdate(
+    accessContext: AccessContext,
+    dto: EventoFindOneInputDto & EventoUpdateInputDto,
+  ): Promise<EventoFindOneOutputDto> {
     // =========================================================
 
     const currentEvento = await this.eventoFindByIdStrict(accessContext, { id: dto.id });
 
     // =========================================================
 
-    await accessContext.ensurePermission("evento:update", { dto }, dto.id, this.eventoRepository.createQueryBuilder(aliasEvento as any));
+    await accessContext.ensurePermission(
+      "evento:update",
+      { dto },
+      dto.id,
+      this.eventoRepository.createQueryBuilder(aliasEvento as any),
+    );
 
     const dtoEvento = pick(dto, ["nome", "cor", "rrule", "data_inicio", "data_fim"]);
 
@@ -245,7 +281,10 @@ export class EventoService {
     // =========================================================
 
     if (has(dto, "calendario") && dto.calendario !== undefined) {
-      const calendario = await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(accessContext, dto.calendario!.id);
+      const calendario = await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(
+        accessContext,
+        dto.calendario!.id,
+      );
 
       this.eventoRepository.merge(evento, {
         calendario: {
@@ -263,10 +302,18 @@ export class EventoService {
     return this.eventoFindByIdStrict(accessContext, { id: evento.id });
   }
 
-  async eventoDeleteOneById(accessContext: AccessContext, dto: EventoFindOneInputDto): Promise<boolean> {
+  async eventoDeleteOneById(
+    accessContext: AccessContext,
+    dto: EventoFindOneInputDto,
+  ): Promise<boolean> {
     // =========================================================
 
-    await accessContext.ensurePermission("evento:delete", { dto }, dto.id, this.eventoRepository.createQueryBuilder(aliasEvento as any));
+    await accessContext.ensurePermission(
+      "evento:delete",
+      { dto },
+      dto.id,
+      this.eventoRepository.createQueryBuilder(aliasEvento as any),
+    );
 
     // =========================================================
 

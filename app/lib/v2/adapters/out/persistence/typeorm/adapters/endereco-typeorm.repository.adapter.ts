@@ -1,15 +1,15 @@
 import { Injectable } from "@nestjs/common";
 import type { DeepPartial } from "typeorm";
 import type { AccessContext } from "@/infrastructure/access-context";
-import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
 import { QbEfficientLoad } from "@/shared";
-import type { IEnderecoRepositoryPort } from "@/v2/core/endereco/application/ports";
 import type {
   EnderecoFindOneInputDto,
   EnderecoFindOneOutputDto,
   EnderecoInputDto,
 } from "@/v2/adapters/in/http/endereco/dto";
+import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
 import type { EnderecoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
+import type { IEnderecoRepositoryPort } from "@/v2/core/endereco/application/ports";
 
 const aliasEndereco = "endereco";
 
@@ -19,9 +19,7 @@ const aliasEndereco = "endereco";
  */
 @Injectable()
 export class EnderecoTypeOrmRepositoryAdapter implements IEnderecoRepositoryPort {
-  constructor(
-    private databaseContext: DatabaseContextService,
-  ) {}
+  constructor(private databaseContext: DatabaseContextService) {}
 
   private get enderecoRepository() {
     return this.databaseContext.enderecoRepository;

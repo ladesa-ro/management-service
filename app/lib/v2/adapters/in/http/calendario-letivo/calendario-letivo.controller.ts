@@ -5,7 +5,7 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
-  ApiTags
+  ApiTags,
 } from "@nestjs/swagger";
 import { AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { CalendarioLetivoService } from "@/v2/core/calendario-letivo/application/use-cases/calendario-letivo.service";
@@ -67,7 +67,10 @@ export class CalendarioLetivoController {
     @Param() params: CalendarioLetivoFindOneInputDto,
     @Body() dto: CalendarioLetivoUpdateInputDto,
   ): Promise<CalendarioLetivoFindOneOutputDto> {
-    return this.calendarioLetivoService.calendarioLetivoUpdate(accessContext, { id: params.id, ...dto });
+    return this.calendarioLetivoService.calendarioLetivoUpdate(accessContext, {
+      id: params.id,
+      ...dto,
+    });
   }
 
   @Delete("/:id")

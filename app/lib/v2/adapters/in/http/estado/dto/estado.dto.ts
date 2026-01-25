@@ -1,9 +1,9 @@
-import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { ArgsType, Field, InputType, Int, ObjectType } from "@nestjs/graphql";
-import { IsArray, IsInt, IsOptional, IsString } from "class-validator";
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { Type } from "class-transformer";
+import { IsArray, IsInt, IsOptional, IsString } from "class-validator";
 import { PaginationInputDto, PaginationMetaDto } from "@/shared/dto";
-import { RegisterModel, simpleProperty, } from "@/shared/metadata";
+import { RegisterModel, simpleProperty } from "@/shared/metadata";
 
 // ============================================================================
 // FindOne Output
@@ -12,11 +12,7 @@ import { RegisterModel, simpleProperty, } from "@/shared/metadata";
 @ObjectType("Estado")
 @RegisterModel({
   name: "EstadoFindOneOutput",
-  properties: [
-    simpleProperty("id"),
-    simpleProperty("nome"),
-    simpleProperty("sigla"),
-  ],
+  properties: [simpleProperty("id"), simpleProperty("nome"), simpleProperty("sigla")],
 })
 export class EstadoFindOneOutputDto {
   @ApiProperty({ description: "Identificador do registro (numerico)" })

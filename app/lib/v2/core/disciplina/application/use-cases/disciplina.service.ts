@@ -1,9 +1,6 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { pick } from "lodash";
-import { ArquivoService } from "@/v2/core/arquivo/application/use-cases/arquivo.service";
-import { ImagemService } from "@/v2/core/imagem/application/use-cases/imagem.service";
 import type { AccessContext } from "@/infrastructure/access-context";
-import type { DisciplinaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import type {
   DisciplinaCreateInputDto,
   DisciplinaFindOneInputDto,
@@ -12,6 +9,9 @@ import type {
   DisciplinaListOutputDto,
   DisciplinaUpdateInputDto,
 } from "@/v2/adapters/in/http/disciplina/dto";
+import type { DisciplinaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
+import { ArquivoService } from "@/v2/core/arquivo/application/use-cases/arquivo.service";
+import { ImagemService } from "@/v2/core/imagem/application/use-cases/imagem.service";
 import type { IDisciplinaRepositoryPort } from "../ports";
 
 @Injectable()

@@ -1,8 +1,6 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { has, pick } from "lodash";
-import { CalendarioLetivoService } from "@/v2/core/calendario-letivo/application/use-cases/calendario-letivo.service";
 import type { AccessContext } from "@/infrastructure/access-context";
-import type { EtapaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities/etapa.entity";
 import type {
   EtapaCreateInputDto,
   EtapaFindOneInputDto,
@@ -11,6 +9,8 @@ import type {
   EtapaListOutputDto,
   EtapaUpdateInputDto,
 } from "@/v2/adapters/in/http/etapa/dto";
+import type { EtapaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities/etapa.entity";
+import { CalendarioLetivoService } from "@/v2/core/calendario-letivo/application/use-cases/calendario-letivo.service";
 import type { IEtapaRepositoryPort } from "../ports";
 
 @Injectable()
@@ -88,7 +88,10 @@ export class EtapaService {
     });
 
     if (dto.calendario) {
-      const calendario = await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(accessContext, dto.calendario.id);
+      const calendario = await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(
+        accessContext,
+        dto.calendario.id,
+      );
 
       this.etapaRepository.merge(etapa, {
         calendario: {
@@ -121,7 +124,10 @@ export class EtapaService {
     });
 
     if (has(dto, "calendario") && dto.calendario !== undefined) {
-      const calendario = await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(accessContext, dto.calendario!.id);
+      const calendario = await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(
+        accessContext,
+        dto.calendario!.id,
+      );
 
       this.etapaRepository.merge(etapa, {
         calendario: {

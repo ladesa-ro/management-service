@@ -1,6 +1,6 @@
 import { Global, Module } from "@nestjs/common";
-import { IntervaloDeTempoService } from "@/v2/core/intervalo-de-tempo/application/use-cases/intervalo-de-tempo.service";
 import { IntervaloDeTempoTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistence/typeorm/adapters";
+import { IntervaloDeTempoService } from "@/v2/core/intervalo-de-tempo/application/use-cases/intervalo-de-tempo.service";
 
 /**
  * Módulo IntervaloTempo configurado com Arquitetura Hexagonal

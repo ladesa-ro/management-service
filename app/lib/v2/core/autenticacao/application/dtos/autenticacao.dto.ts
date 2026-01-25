@@ -1,13 +1,7 @@
-import {
-  IsArray,
-  IsInt,
-  IsOptional,
-  IsString,
-  ValidateNested,
-} from "class-validator";
 import { Type } from "class-transformer";
-import { UsuarioFindOneOutput } from "../../../usuario/application/dtos";
+import { IsArray, IsInt, IsOptional, IsString, ValidateNested } from "class-validator";
 import { PerfilFindOneOutput } from "../../../perfil/application/dtos";
+import { UsuarioFindOneOutput } from "../../../usuario/application/dtos";
 
 // ============================================================================
 // Auth Login Input

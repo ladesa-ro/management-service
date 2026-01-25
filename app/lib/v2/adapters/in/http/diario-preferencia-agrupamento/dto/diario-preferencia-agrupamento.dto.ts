@@ -1,9 +1,24 @@
-import { ApiProperty, ApiPropertyOptional, PartialType } from "@nestjs/swagger";
 import { ArgsType, Field, ID, InputType, Int, ObjectType } from "@nestjs/graphql";
-import { IsArray, IsDateString, IsInt, IsOptional, IsString, IsUUID, Max, Min, ValidateNested } from "class-validator";
+import { ApiProperty, ApiPropertyOptional, PartialType } from "@nestjs/swagger";
 import { Type } from "class-transformer";
+import {
+  IsArray,
+  IsDateString,
+  IsInt,
+  IsOptional,
+  IsString,
+  IsUUID,
+  Max,
+  Min,
+  ValidateNested,
+} from "class-validator";
 import { PaginationInputDto, PaginationMetaDto } from "@/shared/dto";
-import { commonProperties, referenceProperty, RegisterModel, simpleProperty, } from "@/shared/metadata";
+import {
+  commonProperties,
+  RegisterModel,
+  referenceProperty,
+  simpleProperty,
+} from "@/shared/metadata";
 import { DiarioFindOneInputDto, DiarioFindOneOutputDto } from "@/v2/adapters/in/http/diario/dto";
 
 // ============================================================================
@@ -81,13 +96,20 @@ export class DiarioPreferenciaAgrupamentoFindOneOutputDto {
   @IsDateString()
   dataInicio: string;
 
-  @ApiPropertyOptional({ description: "Fim da vigencia da preferencia de agrupamento", nullable: true })
+  @ApiPropertyOptional({
+    description: "Fim da vigencia da preferencia de agrupamento",
+    nullable: true,
+  })
   @Field({ nullable: true })
   @IsOptional()
   @IsDateString()
   dataFim: string | null;
 
-  @ApiProperty({ description: "Dia da semana (ISO 8601: 1=Segunda, 7=Domingo)", minimum: 1, maximum: 7 })
+  @ApiProperty({
+    description: "Dia da semana (ISO 8601: 1=Segunda, 7=Domingo)",
+    minimum: 1,
+    maximum: 7,
+  })
   @Field(() => Int)
   @IsInt()
   @Min(1)
@@ -153,7 +175,10 @@ export class DiarioPreferenciaAgrupamentoListOutputDto {
   @Field(() => PaginationMetaDto)
   meta: PaginationMetaDto;
 
-  @ApiProperty({ type: () => [DiarioPreferenciaAgrupamentoFindOneOutputDto], description: "Resultados da busca" })
+  @ApiProperty({
+    type: () => [DiarioPreferenciaAgrupamentoFindOneOutputDto],
+    description: "Resultados da busca",
+  })
   @Field(() => [DiarioPreferenciaAgrupamentoFindOneOutputDto])
   data: DiarioPreferenciaAgrupamentoFindOneOutputDto[];
 }
@@ -169,13 +194,20 @@ export class DiarioPreferenciaAgrupamentoCreateInputDto {
   @IsDateString()
   dataInicio: string;
 
-  @ApiPropertyOptional({ description: "Fim da vigencia da preferencia de agrupamento", nullable: true })
+  @ApiPropertyOptional({
+    description: "Fim da vigencia da preferencia de agrupamento",
+    nullable: true,
+  })
   @Field({ nullable: true })
   @IsOptional()
   @IsDateString()
   dataFim?: string | null;
 
-  @ApiProperty({ description: "Dia da semana (ISO 8601: 1=Segunda, 7=Domingo)", minimum: 1, maximum: 7 })
+  @ApiProperty({
+    description: "Dia da semana (ISO 8601: 1=Segunda, 7=Domingo)",
+    minimum: 1,
+    maximum: 7,
+  })
   @Field(() => Int)
   @IsInt()
   @Min(1)
@@ -202,7 +234,9 @@ export class DiarioPreferenciaAgrupamentoCreateInputDto {
 }
 
 @InputType("DiarioPreferenciaAgrupamentoUpdateInput")
-export class DiarioPreferenciaAgrupamentoUpdateInputDto extends PartialType(DiarioPreferenciaAgrupamentoCreateInputDto) {}
+export class DiarioPreferenciaAgrupamentoUpdateInputDto extends PartialType(
+  DiarioPreferenciaAgrupamentoCreateInputDto,
+) {}
 
 // ============================================================================
 // FindOne Input (for path params)

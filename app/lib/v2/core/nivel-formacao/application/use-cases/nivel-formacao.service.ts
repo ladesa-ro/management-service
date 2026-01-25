@@ -1,7 +1,6 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { pick } from "lodash";
 import type { AccessContext } from "@/infrastructure/access-context";
-import type { NivelFormacaoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import type {
   NivelFormacaoCreateInputDto,
   NivelFormacaoFindOneInputDto,
@@ -10,6 +9,7 @@ import type {
   NivelFormacaoListOutputDto,
   NivelFormacaoUpdateInputDto,
 } from "@/v2/adapters/in/http/nivel-formacao/dto";
+import type { NivelFormacaoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import type { INivelFormacaoRepositoryPort } from "../ports";
 
 @Injectable()
@@ -40,7 +40,11 @@ export class NivelFormacaoService {
     dto: NivelFormacaoFindOneInputDto,
     selection?: string[],
   ): Promise<NivelFormacaoFindOneOutputDto> {
-    const nivelFormacao = await this.nivelFormacaoRepository.findById(accessContext, dto, selection);
+    const nivelFormacao = await this.nivelFormacaoRepository.findById(
+      accessContext,
+      dto,
+      selection,
+    );
 
     if (!nivelFormacao) {
       throw new NotFoundException();
@@ -62,7 +66,11 @@ export class NivelFormacaoService {
     id: string,
     selection?: string[],
   ): Promise<NivelFormacaoFindOneOutputDto> {
-    const nivelFormacao = await this.nivelFormacaoRepository.findByIdSimple(accessContext, id, selection);
+    const nivelFormacao = await this.nivelFormacaoRepository.findByIdSimple(
+      accessContext,
+      id,
+      selection,
+    );
 
     if (!nivelFormacao) {
       throw new NotFoundException();
@@ -96,7 +104,9 @@ export class NivelFormacaoService {
     accessContext: AccessContext,
     dto: NivelFormacaoFindOneInputDto & NivelFormacaoUpdateInputDto,
   ): Promise<NivelFormacaoFindOneOutputDto> {
-    const currentNivelFormacao = await this.nivelFormacaoFindByIdStrict(accessContext, { id: dto.id });
+    const currentNivelFormacao = await this.nivelFormacaoFindByIdStrict(accessContext, {
+      id: dto.id,
+    });
 
     await accessContext.ensurePermission("nivel_formacao:update", { dto }, dto.id);
 

@@ -1,20 +1,20 @@
 import { Injectable } from "@nestjs/common";
-import { FilterOperator, FilterSuffix } from "nestjs-paginate";
 import { map } from "lodash";
+import { FilterOperator, FilterSuffix } from "nestjs-paginate";
 import type { DeepPartial } from "typeorm";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
-import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
 import { QbEfficientLoad } from "@/shared";
-import type { IPaginationConfig, IPaginationCriteria } from "@/v2/application/ports/pagination";
-import type { IDisciplinaRepositoryPort } from "@/v2/core/disciplina/application/ports";
 import type {
   DisciplinaFindOneInputDto,
   DisciplinaFindOneOutputDto,
   DisciplinaListInputDto,
   DisciplinaListOutputDto,
 } from "@/v2/adapters/in/http/disciplina/dto";
+import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
 import type { DisciplinaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
+import type { IPaginationConfig, IPaginationCriteria } from "@/v2/application/ports/pagination";
+import type { IDisciplinaRepositoryPort } from "@/v2/core/disciplina/application/ports";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
 
 const aliasDisciplina = "disciplina";
@@ -84,7 +84,7 @@ export class DisciplinaTypeOrmRepositoryAdapter implements IDisciplinaRepository
     qb.select([]);
     QbEfficientLoad("DisciplinaFindOneOutput", qb, aliasDisciplina, selection);
 
-    return await qb.getOne() as DisciplinaFindOneOutputDto | null;
+    return (await qb.getOne()) as DisciplinaFindOneOutputDto | null;
   }
 
   async findByIdSimple(
@@ -99,7 +99,7 @@ export class DisciplinaTypeOrmRepositoryAdapter implements IDisciplinaRepository
     qb.select([]);
     QbEfficientLoad("DisciplinaFindOneOutput", qb, aliasDisciplina, selection);
 
-    return await qb.getOne() as DisciplinaFindOneOutputDto | null;
+    return (await qb.getOne()) as DisciplinaFindOneOutputDto | null;
   }
 
   async save(disciplina: DeepPartial<DisciplinaEntity>): Promise<DisciplinaEntity> {
@@ -124,11 +124,17 @@ export class DisciplinaTypeOrmRepositoryAdapter implements IDisciplinaRepository
       .execute();
   }
 
-  private extractFilters(dto: DtoWithFilters | null | undefined): Record<string, string | string[]> {
+  private extractFilters(
+    dto: DtoWithFilters | null | undefined,
+  ): Record<string, string | string[]> {
     const filters: Record<string, string | string[]> = {};
     if (!dto) return filters;
     for (const [key, value] of Object.entries(dto)) {
-      if (key.startsWith("filter.") && (typeof value === "string" || (Array.isArray(value) && value.every(v => typeof v === "string")))) {
+      if (
+        key.startsWith("filter.") &&
+        (typeof value === "string" ||
+          (Array.isArray(value) && value.every((v) => typeof v === "string")))
+      ) {
         filters[key.replace("filter.", "")] = value;
       }
     }

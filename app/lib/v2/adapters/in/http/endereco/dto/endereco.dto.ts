@@ -1,8 +1,22 @@
-import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { ArgsType, Field, ID, InputType, Int, ObjectType } from "@nestjs/graphql";
-import { IsDateString, IsInt, IsOptional, IsString, IsUUID, Max, Min, ValidateNested } from "class-validator";
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { Type } from "class-transformer";
-import { commonProperties, referenceProperty, RegisterModel, simpleProperty, } from "@/shared/metadata";
+import {
+  IsDateString,
+  IsInt,
+  IsOptional,
+  IsString,
+  IsUUID,
+  Max,
+  Min,
+  ValidateNested,
+} from "class-validator";
+import {
+  commonProperties,
+  RegisterModel,
+  referenceProperty,
+  simpleProperty,
+} from "@/shared/metadata";
 import { CidadeFindOneInputDto, CidadeFindOneOutputDto } from "@/v2/adapters/in/http/cidade/dto";
 
 // ============================================================================

@@ -5,7 +5,7 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
-  ApiTags
+  ApiTags,
 } from "@nestjs/swagger";
 import { AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { OfertaFormacaoService } from "@/v2/core/oferta-formacao/application/use-cases/oferta-formacao.service";
@@ -67,7 +67,10 @@ export class OfertaFormacaoController {
     @Param() params: OfertaFormacaoFindOneInputDto,
     @Body() dto: OfertaFormacaoUpdateInputDto,
   ): Promise<OfertaFormacaoFindOneOutputDto> {
-    return this.ofertaFormacaoService.ofertaFormacaoUpdate(accessContext, { id: params.id, ...dto });
+    return this.ofertaFormacaoService.ofertaFormacaoUpdate(accessContext, {
+      id: params.id,
+      ...dto,
+    });
   }
 
   @Delete("/:id")

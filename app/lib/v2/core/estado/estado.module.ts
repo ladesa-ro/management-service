@@ -1,8 +1,8 @@
 import { Module } from "@nestjs/common";
 import { EstadoController } from "@/v2/adapters/in/http/estado/estado.controller";
-import { EstadoService } from "@/v2/core/estado/application/use-cases/estado.service";
-import { EstadoTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistence/typeorm/adapters";
 import { NestJsPaginateAdapter } from "@/v2/adapters/out/persistence/pagination";
+import { EstadoTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistence/typeorm/adapters";
+import { EstadoService } from "@/v2/core/estado/application/use-cases/estado.service";
 
 /**
  * Módulo Estado configurado com Arquitetura Hexagonal

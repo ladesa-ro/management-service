@@ -1,9 +1,22 @@
-import { ApiProperty, ApiPropertyOptional, PartialType } from "@nestjs/swagger";
 import { ArgsType, Field, ID, InputType, ObjectType } from "@nestjs/graphql";
-import { IsArray, IsDateString, IsOptional, IsString, IsUUID, MinLength, ValidateNested } from "class-validator";
+import { ApiProperty, ApiPropertyOptional, PartialType } from "@nestjs/swagger";
 import { Type } from "class-transformer";
+import {
+  IsArray,
+  IsDateString,
+  IsOptional,
+  IsString,
+  IsUUID,
+  MinLength,
+  ValidateNested,
+} from "class-validator";
 import { PaginationInputDto, PaginationMetaDto } from "@/shared/dto";
-import { commonProperties, referenceProperty, RegisterModel, simpleProperty, } from "@/shared/metadata";
+import {
+  commonProperties,
+  RegisterModel,
+  referenceProperty,
+  simpleProperty,
+} from "@/shared/metadata";
 import { CampusFindOneInputDto, CampusFindOneOutputDto } from "@/v2/adapters/in/http/campus/dto";
 
 // ============================================================================
@@ -63,7 +76,10 @@ export class ImagemFindOneOutputDto {
   @IsString()
   descricao: string | null;
 
-  @ApiProperty({ description: "Versões da imagem", type: () => [ImagemArquivoFindOneFromImagemOutputDto] })
+  @ApiProperty({
+    description: "Versões da imagem",
+    type: () => [ImagemArquivoFindOneFromImagemOutputDto],
+  })
   @Field(() => [ImagemArquivoFindOneFromImagemOutputDto])
   @IsArray()
   @ValidateNested({ each: true })
@@ -127,7 +143,11 @@ export class BlocoFindOneOutputDto {
   @Type(() => CampusFindOneOutputDto)
   campus: CampusFindOneOutputDto;
 
-  @ApiPropertyOptional({ type: () => ImagemFindOneOutputDto, description: "Imagem de capa do bloco", nullable: true })
+  @ApiPropertyOptional({
+    type: () => ImagemFindOneOutputDto,
+    description: "Imagem de capa do bloco",
+    nullable: true,
+  })
   @Field(() => ImagemFindOneOutputDto, { nullable: true })
   @IsOptional()
   @ValidateNested()

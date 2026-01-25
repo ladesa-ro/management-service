@@ -3,14 +3,10 @@ import {
   Injectable,
   InternalServerErrorException,
   NotFoundException,
-  ServiceUnavailableException
+  ServiceUnavailableException,
 } from "@nestjs/common";
 import { has, pick } from "lodash";
-import { ArquivoService } from "@/v2/core/arquivo/application/use-cases/arquivo.service";
-import { ImagemService } from "@/v2/core/imagem/application/use-cases/imagem.service";
 import type { AccessContext } from "@/infrastructure/access-context";
-import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
-import type { UsuarioEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import { KeycloakService } from "@/infrastructure/integrations/identity-provider";
 import { ValidationFailedException } from "@/shared";
 import type {
@@ -21,6 +17,10 @@ import type {
   UsuarioListOutputDto,
   UsuarioUpdateInputDto,
 } from "@/v2/adapters/in/http/usuario/dto";
+import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
+import type { UsuarioEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
+import { ArquivoService } from "@/v2/core/arquivo/application/use-cases/arquivo.service";
+import { ImagemService } from "@/v2/core/imagem/application/use-cases/imagem.service";
 import type { IUsuarioRepositoryPort } from "../ports";
 
 @Injectable()
@@ -344,9 +344,13 @@ export class UsuarioService {
   ): Promise<UsuarioFindOneOutputDto> {
     const currentUsuario = await this.usuarioFindByIdStrict(accessContext, dto);
 
-    const currentMatriculaSiape = currentUsuario.matriculaSiape ?? (await this.usuarioRepository.resolveProperty(currentUsuario.id, "matriculaSiape"));
+    const currentMatriculaSiape =
+      currentUsuario.matriculaSiape ??
+      (await this.usuarioRepository.resolveProperty(currentUsuario.id, "matriculaSiape"));
 
-    const kcUser = currentMatriculaSiape && (await this.keycloakService.findUserByMatriculaSiape(currentMatriculaSiape));
+    const kcUser =
+      currentMatriculaSiape &&
+      (await this.keycloakService.findUserByMatriculaSiape(currentMatriculaSiape));
 
     if (!kcUser) {
       throw new ServiceUnavailableException();
@@ -432,7 +436,10 @@ export class UsuarioService {
     const matriculaSiape = dto.matriculaSiape;
 
     if (matriculaSiape) {
-      isMatriculaSiapeAvailable = await this.usuarioRepository.isMatriculaSiapeAvailable(matriculaSiape, currentUsuarioId);
+      isMatriculaSiapeAvailable = await this.usuarioRepository.isMatriculaSiapeAvailable(
+        matriculaSiape,
+        currentUsuarioId,
+      );
     }
 
     if (!isMatriculaSiapeAvailable || !isEmailAvailable) {

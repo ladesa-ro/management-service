@@ -1,12 +1,12 @@
 import type { DeepPartial } from "typeorm";
 import type { AccessContext } from "@/infrastructure/access-context";
-import type { DiarioEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import type {
   DiarioFindOneInputDto,
   DiarioFindOneOutputDto,
   DiarioListInputDto,
   DiarioListOutputDto,
 } from "@/v2/adapters/in/http/diario/dto";
+import type { DiarioEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 
 export interface IDiarioRepositoryPort {
   findAll(

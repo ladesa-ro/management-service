@@ -17,7 +17,11 @@ export type SearchOptions = {
 
 @Injectable()
 export class SearchService {
-  public search<T extends ObjectLiteral>(repositoryQb: SelectQueryBuilder<T>, options: SearchOptions | null, config: PaginateConfig<T>) {
+  public search<T extends ObjectLiteral>(
+    repositoryQb: SelectQueryBuilder<T>,
+    options: SearchOptions | null,
+    config: PaginateConfig<T>,
+  ) {
     const paginateQuery: PaginateQuery = {
       limit: options?.limit ?? undefined,
       page: options?.page ?? undefined,
@@ -36,9 +40,7 @@ export class SearchService {
         }
 
         // Convert number arrays to string arrays for nestjs-paginate compatibility
-        const filterValue = Array.isArray(value)
-          ? value.map((v) => String(v))
-          : value;
+        const filterValue = Array.isArray(value) ? value.map((v) => String(v)) : value;
 
         paginateQuery.filter = {
           ...paginateQuery.filter,

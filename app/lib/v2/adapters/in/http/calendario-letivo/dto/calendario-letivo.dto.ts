@@ -1,5 +1,6 @@
-import { ApiProperty, ApiPropertyOptional, PartialType } from "@nestjs/swagger";
 import { ArgsType, Field, ID, InputType, Int, ObjectType } from "@nestjs/graphql";
+import { ApiProperty, ApiPropertyOptional, PartialType } from "@nestjs/swagger";
+import { Type } from "class-transformer";
 import {
   IsArray,
   IsDateString,
@@ -10,15 +11,19 @@ import {
   Max,
   Min,
   MinLength,
-  ValidateNested
+  ValidateNested,
 } from "class-validator";
-import { Type } from "class-transformer";
 import { PaginationInputDto, PaginationMetaDto } from "@/shared/dto";
-import { commonProperties, referenceProperty, RegisterModel, simpleProperty, } from "@/shared/metadata";
+import {
+  commonProperties,
+  RegisterModel,
+  referenceProperty,
+  simpleProperty,
+} from "@/shared/metadata";
 import { CampusFindOneInputDto, CampusFindOneOutputDto } from "@/v2/adapters/in/http/campus/dto";
 import {
   OfertaFormacaoFindOneInputDto,
-  OfertaFormacaoFindOneOutputDto
+  OfertaFormacaoFindOneOutputDto,
 } from "@/v2/adapters/in/http/oferta-formacao/dto";
 
 // ============================================================================
@@ -56,13 +61,19 @@ export class CalendarioLetivoFindOneOutputDto {
   @Max(65535)
   ano: number;
 
-  @ApiProperty({ type: () => CampusFindOneOutputDto, description: "Campus ao qual o calendario letivo pertence" })
+  @ApiProperty({
+    type: () => CampusFindOneOutputDto,
+    description: "Campus ao qual o calendario letivo pertence",
+  })
   @Field(() => CampusFindOneOutputDto)
   @ValidateNested()
   @Type(() => CampusFindOneOutputDto)
   campus: CampusFindOneOutputDto;
 
-  @ApiProperty({ type: () => OfertaFormacaoFindOneOutputDto, description: "Oferta de formacao do calendario letivo" })
+  @ApiProperty({
+    type: () => OfertaFormacaoFindOneOutputDto,
+    description: "Oferta de formacao do calendario letivo",
+  })
   @Field(() => OfertaFormacaoFindOneOutputDto)
   @ValidateNested()
   @Type(() => OfertaFormacaoFindOneOutputDto)
@@ -109,7 +120,10 @@ export class CalendarioLetivoListOutputDto {
   @Field(() => PaginationMetaDto)
   meta: PaginationMetaDto;
 
-  @ApiProperty({ type: () => [CalendarioLetivoFindOneOutputDto], description: "Resultados da busca" })
+  @ApiProperty({
+    type: () => [CalendarioLetivoFindOneOutputDto],
+    description: "Resultados da busca",
+  })
   @Field(() => [CalendarioLetivoFindOneOutputDto])
   data: CalendarioLetivoFindOneOutputDto[];
 }
@@ -133,13 +147,19 @@ export class CalendarioLetivoCreateInputDto {
   @Max(65535)
   ano: number;
 
-  @ApiProperty({ type: () => CampusFindOneInputDto, description: "Campus ao qual o calendario letivo pertence" })
+  @ApiProperty({
+    type: () => CampusFindOneInputDto,
+    description: "Campus ao qual o calendario letivo pertence",
+  })
   @Field(() => CampusFindOneInputDto)
   @ValidateNested()
   @Type(() => CampusFindOneInputDto)
   campus: CampusFindOneInputDto;
 
-  @ApiProperty({ type: () => OfertaFormacaoFindOneInputDto, description: "Oferta de formacao do calendario letivo" })
+  @ApiProperty({
+    type: () => OfertaFormacaoFindOneInputDto,
+    description: "Oferta de formacao do calendario letivo",
+  })
   @Field(() => OfertaFormacaoFindOneInputDto)
   @ValidateNested()
   @Type(() => OfertaFormacaoFindOneInputDto)

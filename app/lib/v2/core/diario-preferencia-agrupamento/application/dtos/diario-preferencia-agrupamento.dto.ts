@@ -1,3 +1,4 @@
+import { Type } from "class-transformer";
 import {
   IsArray,
   IsDate,
@@ -9,10 +10,12 @@ import {
   Min,
   ValidateNested,
 } from "class-validator";
-import { Type } from "class-transformer";
 import { ObjectUuidRef, PaginationInput, PaginationMeta } from "../../../common/application/dtos";
-import { IntervaloDeTempoFindOneOutput, IntervaloDeTempoInputRef } from "../../../intervalo-de-tempo/application/dtos";
 import { DiarioFindOneOutput, DiarioInputRef } from "../../../diario/application/dtos";
+import {
+  IntervaloDeTempoFindOneOutput,
+  IntervaloDeTempoInputRef,
+} from "../../../intervalo-de-tempo/application/dtos";
 
 // ============================================================================
 // FindOne Input/Output

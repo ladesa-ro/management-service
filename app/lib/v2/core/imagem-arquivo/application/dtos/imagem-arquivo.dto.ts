@@ -1,3 +1,4 @@
+import { Type } from "class-transformer";
 import {
   IsArray,
   IsDate,
@@ -9,10 +10,9 @@ import {
   MinLength,
   ValidateNested,
 } from "class-validator";
-import { Type } from "class-transformer";
+import { ArquivoFindOneOutput, ArquivoInputRef } from "../../../arquivo/application/dtos";
 import { ObjectUuidRef, PaginationInput, PaginationMeta } from "../../../common/application/dtos";
 import { ImagemFindOneOutput, ImagemInputRef } from "../../../imagem/application/dtos";
-import { ArquivoFindOneOutput, ArquivoInputRef } from "../../../arquivo/application/dtos";
 
 // ============================================================================
 // FindOne Input/Output

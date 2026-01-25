@@ -1,12 +1,18 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, type Relation } from "typeorm";
-import { ImagemEntity } from "./imagem.entity"
-import { AmbienteEntity } from "./ambiente.entity"
-import { DisciplinaEntity } from "./disciplina.entity"
-import { DiarioProfessorEntity } from "./diario-professor.entity";
-import { TurmaEntity } from "./turma.entity";
 import {
-  CalendarioLetivoEntity
-} from "./calendario-letivo.entity";
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  type Relation,
+} from "typeorm";
+import { AmbienteEntity } from "./ambiente.entity";
+import { CalendarioLetivoEntity } from "./calendario-letivo.entity";
+import { DiarioProfessorEntity } from "./diario-professor.entity";
+import { DisciplinaEntity } from "./disciplina.entity";
+import { ImagemEntity } from "./imagem.entity";
+import { TurmaEntity } from "./turma.entity";
 
 @Entity("diario")
 export class DiarioEntity {

@@ -1,10 +1,6 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { has, pick } from "lodash";
-import { AmbienteService } from "@/v2/core/ambiente/application/use-cases/ambiente.service";
-import { IntervaloDeTempoService } from "@/v2/core/intervalo-de-tempo/application/use-cases/intervalo-de-tempo.service";
-import { DiarioService } from "@/v2/core/diario/application/use-cases/diario.service";
 import type { AccessContext } from "@/infrastructure/access-context";
-import type { AulaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import type {
   AulaCreateInputDto,
   AulaFindOneInputDto,
@@ -13,6 +9,10 @@ import type {
   AulaListOutputDto,
   AulaUpdateInputDto,
 } from "@/v2/adapters/in/http/aula/dto";
+import type { AulaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
+import { AmbienteService } from "@/v2/core/ambiente/application/use-cases/ambiente.service";
+import { DiarioService } from "@/v2/core/diario/application/use-cases/diario.service";
+import { IntervaloDeTempoService } from "@/v2/core/intervalo-de-tempo/application/use-cases/intervalo-de-tempo.service";
 import type { IAulaRepositoryPort } from "../ports";
 
 @Injectable()
@@ -100,10 +100,16 @@ export class AulaService {
       this.aulaRepository.merge(aula, { ambiente: null });
     }
 
-    const diario = await this.diarioService.diarioFindByIdSimpleStrict(accessContext, dto.diario.id);
+    const diario = await this.diarioService.diarioFindByIdSimpleStrict(
+      accessContext,
+      dto.diario.id,
+    );
     this.aulaRepository.merge(aula, { diario: { id: diario.id } });
 
-    const intervalo = await this.intervaloService.intervaloCreateOrUpdate(accessContext, dto.intervaloDeTempo);
+    const intervalo = await this.intervaloService.intervaloCreateOrUpdate(
+      accessContext,
+      dto.intervaloDeTempo,
+    );
 
     this.aulaRepository.merge(aula, {
       intervaloDeTempo: { id: intervalo!.id },
@@ -134,7 +140,9 @@ export class AulaService {
 
     if (has(dto, "ambiente") && dto.ambiente !== undefined) {
       if (dto.ambiente !== null) {
-        const ambiente = await this.ambienteService.ambienteFindByIdStrict(accessContext, { id: dto.ambiente.id });
+        const ambiente = await this.ambienteService.ambienteFindByIdStrict(accessContext, {
+          id: dto.ambiente.id,
+        });
 
         this.aulaRepository.merge(aula, { ambiente: { id: ambiente.id } });
       } else {
@@ -143,13 +151,19 @@ export class AulaService {
     }
 
     if (has(dto, "diario") && dto.diario !== undefined) {
-      const diario = await this.diarioService.diarioFindByIdSimpleStrict(accessContext, dto.diario.id);
+      const diario = await this.diarioService.diarioFindByIdSimpleStrict(
+        accessContext,
+        dto.diario.id,
+      );
 
       this.aulaRepository.merge(aula, { diario: { id: diario.id } });
     }
 
     if (has(dto, "intervaloDeTempo") && dto.intervaloDeTempo !== undefined) {
-      const intervaloDeTempo = await this.intervaloService.intervaloCreateOrUpdate(accessContext, dto.intervaloDeTempo);
+      const intervaloDeTempo = await this.intervaloService.intervaloCreateOrUpdate(
+        accessContext,
+        dto.intervaloDeTempo,
+      );
       this.aulaRepository.merge(aula, {
         intervaloDeTempo: { id: intervaloDeTempo!.id },
       });

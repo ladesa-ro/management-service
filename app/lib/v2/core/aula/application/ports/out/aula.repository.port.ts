@@ -1,12 +1,12 @@
 import type { DeepPartial } from "typeorm";
 import type { AccessContext } from "@/infrastructure/access-context";
-import type { AulaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import type {
   AulaFindOneInputDto,
   AulaFindOneOutputDto,
   AulaListInputDto,
   AulaListOutputDto,
 } from "@/v2/adapters/in/http/aula/dto";
+import type { AulaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 
 export interface IAulaRepositoryPort {
   findAll(

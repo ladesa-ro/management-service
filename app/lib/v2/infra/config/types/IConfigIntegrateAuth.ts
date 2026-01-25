@@ -19,4 +19,6 @@ export interface IConfigIntegrateAuthOidcClient {
   getOidcClientCredentials(): IConfigIntegrateAuthOidcClientCredentials;
 }
 
-export interface IConfigIntegrateAuth extends IConfigIntegrateAuthOidcClient, IConfigIntegrateAuthKeycloak {}
+export interface IConfigIntegrateAuth
+  extends IConfigIntegrateAuthOidcClient,
+    IConfigIntegrateAuthKeycloak {}

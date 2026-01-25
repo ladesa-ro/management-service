@@ -1,10 +1,7 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { get, pick } from "lodash";
 import { v4 } from "uuid";
-import { EnderecoService } from "@/v2/core/endereco/application/use-cases/endereco.service";
 import type { AccessContext } from "@/infrastructure/access-context";
-import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
-import type { CampusEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import type {
   CampusCreateInputDto,
   CampusFindOneInputDto,
@@ -13,6 +10,9 @@ import type {
   CampusListOutputDto,
   CampusUpdateInputDto,
 } from "@/v2/adapters/in/http/campus/dto";
+import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
+import type { CampusEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
+import { EnderecoService } from "@/v2/core/endereco/application/use-cases/endereco.service";
 import type { ICampusRepositoryPort } from "../ports";
 
 @Injectable()
@@ -82,31 +82,36 @@ export class CampusService {
   ): Promise<CampusFindOneOutputDto> {
     await accessContext.ensurePermission("campus:create", { dto } as any);
 
-    const campus = await this.databaseContext.transaction(async ({ databaseContext: { campusRepository } }) => {
-      const dtoCampus = pick(dto, ["nomeFantasia", "razaoSocial", "apelido", "cnpj"]);
+    const campus = await this.databaseContext.transaction(
+      async ({ databaseContext: { campusRepository } }) => {
+        const dtoCampus = pick(dto, ["nomeFantasia", "razaoSocial", "apelido", "cnpj"]);
 
-      const campus = campusRepository.create();
+        const campus = campusRepository.create();
 
-      campusRepository.merge(campus, {
-        ...dtoCampus,
-      });
+        campusRepository.merge(campus, {
+          ...dtoCampus,
+        });
 
-      campusRepository.merge(campus, {
-        id: v4(),
-      });
+        campusRepository.merge(campus, {
+          id: v4(),
+        });
 
-      const endereco = await this.enderecoService.internalEnderecoCreateOrUpdate(null, dto.endereco);
+        const endereco = await this.enderecoService.internalEnderecoCreateOrUpdate(
+          null,
+          dto.endereco,
+        );
 
-      campusRepository.merge(campus, {
-        endereco: {
-          id: endereco.id,
-        },
-      });
+        campusRepository.merge(campus, {
+          endereco: {
+            id: endereco.id,
+          },
+        });
 
-      await campusRepository.save(campus);
+        await campusRepository.save(campus);
 
-      return campus;
-    });
+        return campus;
+      },
+    );
 
     return this.campusFindByIdStrict(accessContext, { id: campus.id });
   }
@@ -119,35 +124,40 @@ export class CampusService {
 
     await accessContext.ensurePermission("campus:update", { dto }, dto.id);
 
-    const campus = await this.databaseContext.transaction(async ({ databaseContext: { campusRepository } }) => {
-      const dtoCampus = pick(dto, ["nomeFantasia", "razaoSocial", "apelido", "cnpj"]);
+    const campus = await this.databaseContext.transaction(
+      async ({ databaseContext: { campusRepository } }) => {
+        const dtoCampus = pick(dto, ["nomeFantasia", "razaoSocial", "apelido", "cnpj"]);
 
-      const campus = {
-        id: currentCampus.id,
-      } as CampusEntity;
-
-      campusRepository.merge(campus, {
-        ...dtoCampus,
-      });
-
-      campusRepository.merge(campus, { id: currentCampus.id });
-
-      const dtoEndereco = get(dto, "endereco");
-
-      if (dtoEndereco) {
-        const endereco = await this.enderecoService.internalEnderecoCreateOrUpdate(currentCampus.endereco.id, dtoEndereco);
+        const campus = {
+          id: currentCampus.id,
+        } as CampusEntity;
 
         campusRepository.merge(campus, {
-          endereco: {
-            id: endereco.id,
-          },
+          ...dtoCampus,
         });
-      }
 
-      await campusRepository.save(campus);
+        campusRepository.merge(campus, { id: currentCampus.id });
 
-      return campus;
-    });
+        const dtoEndereco = get(dto, "endereco");
+
+        if (dtoEndereco) {
+          const endereco = await this.enderecoService.internalEnderecoCreateOrUpdate(
+            currentCampus.endereco.id,
+            dtoEndereco,
+          );
+
+          campusRepository.merge(campus, {
+            endereco: {
+              id: endereco.id,
+            },
+          });
+        }
+
+        await campusRepository.save(campus);
+
+        return campus;
+      },
+    );
 
     return this.campusFindByIdStrict(accessContext, { id: campus.id });
   }

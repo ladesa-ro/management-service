@@ -1,7 +1,7 @@
-import { ApiPropertyOptional } from "@nestjs/swagger";
 import { ArgsType, Field, Int } from "@nestjs/graphql";
+import { ApiPropertyOptional } from "@nestjs/swagger";
 import { Type } from "class-transformer";
-import { IsOptional, IsInt, Min, IsString, IsArray } from "class-validator";
+import { IsArray, IsInt, IsOptional, IsString, Min } from "class-validator";
 
 /**
  * Base pagination input DTO for list queries.

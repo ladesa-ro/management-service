@@ -5,16 +5,16 @@ import type { DeepPartial } from "typeorm";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { QbEfficientLoad } from "@/shared";
-import { DatabaseContextService } from "../context/database-context.service";
-import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
-import type { IHorarioGeradoAulaRepositoryPort } from "@/v2/core/horario-gerado-aula/application/ports";
-import type { HorarioGeradoAulaEntity } from "../typeorm/entities";
 import type {
   HorarioGeradoAulaFindOneInputDto,
   HorarioGeradoAulaFindOneOutputDto,
   HorarioGeradoAulaListInputDto,
   HorarioGeradoAulaListOutputDto,
 } from "@/v2/adapters/in/http/horario-gerado-aula/dto";
+import type { IHorarioGeradoAulaRepositoryPort } from "@/v2/core/horario-gerado-aula/application/ports";
+import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
+import { DatabaseContextService } from "../context/database-context.service";
+import type { HorarioGeradoAulaEntity } from "../typeorm/entities";
 
 const aliasHorarioGeradoAula = "horario_gerado_dia";
 
@@ -138,7 +138,9 @@ export class HorarioGeradoAulaTypeOrmRepositoryAdapter implements IHorarioGerado
     return horarioGeradoAula as HorarioGeradoAulaFindOneOutputDto | null;
   }
 
-  async save(horarioGeradoAula: DeepPartial<HorarioGeradoAulaEntity>): Promise<HorarioGeradoAulaEntity> {
+  async save(
+    horarioGeradoAula: DeepPartial<HorarioGeradoAulaEntity>,
+  ): Promise<HorarioGeradoAulaEntity> {
     return this.repository.save(horarioGeradoAula as HorarioGeradoAulaEntity);
   }
 
@@ -146,7 +148,10 @@ export class HorarioGeradoAulaTypeOrmRepositoryAdapter implements IHorarioGerado
     return this.repository.create();
   }
 
-  merge(horarioGeradoAula: HorarioGeradoAulaEntity, data: DeepPartial<HorarioGeradoAulaEntity>): void {
+  merge(
+    horarioGeradoAula: HorarioGeradoAulaEntity,
+    data: DeepPartial<HorarioGeradoAulaEntity>,
+  ): void {
     this.repository.merge(horarioGeradoAula, data as HorarioGeradoAulaEntity);
   }
 

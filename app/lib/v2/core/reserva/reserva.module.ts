@@ -1,10 +1,10 @@
 import { Module } from "@nestjs/common";
+import { ReservaController } from "@/v2/adapters/in/http/reserva/reserva.controller";
+import { NestJsPaginateAdapter } from "@/v2/adapters/out/persistence/pagination";
+import { ReservaTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistence/typeorm/adapters";
+import { ReservaService } from "@/v2/core/reserva/application/use-cases/reserva.service";
 import { UsuarioModule } from "@/v2/core/usuario/usuario.module";
 import { AmbienteModule } from "../ambiente/ambiente.module";
-import { ReservaController } from "@/v2/adapters/in/http/reserva/reserva.controller";
-import { ReservaService } from "@/v2/core/reserva/application/use-cases/reserva.service";
-import { ReservaTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistence/typeorm/adapters";
-import { NestJsPaginateAdapter } from "@/v2/adapters/out/persistence/pagination";
 
 /**
  * Módulo Reserva configurado com Arquitetura Hexagonal

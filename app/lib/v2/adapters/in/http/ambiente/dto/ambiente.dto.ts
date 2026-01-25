@@ -1,5 +1,6 @@
-import { ApiProperty, ApiPropertyOptional, PartialType } from "@nestjs/swagger";
 import { ArgsType, Field, ID, InputType, Int, ObjectType } from "@nestjs/graphql";
+import { ApiProperty, ApiPropertyOptional, PartialType } from "@nestjs/swagger";
+import { Type } from "class-transformer";
 import {
   IsArray,
   IsDateString,
@@ -9,12 +10,20 @@ import {
   IsUUID,
   Min,
   MinLength,
-  ValidateNested
+  ValidateNested,
 } from "class-validator";
-import { Type } from "class-transformer";
 import { PaginationInputDto, PaginationMetaDto } from "@/shared/dto";
-import { commonProperties, referenceProperty, RegisterModel, simpleProperty, } from "@/shared/metadata";
-import { BlocoFindOneInputDto, BlocoFindOneOutputDto, ImagemFindOneOutputDto } from "@/v2/adapters/in/http/bloco/dto";
+import {
+  commonProperties,
+  RegisterModel,
+  referenceProperty,
+  simpleProperty,
+} from "@/shared/metadata";
+import {
+  BlocoFindOneInputDto,
+  BlocoFindOneOutputDto,
+  ImagemFindOneOutputDto,
+} from "@/v2/adapters/in/http/bloco/dto";
 
 // ============================================================================
 // FindOne Output
@@ -66,19 +75,29 @@ export class AmbienteFindOneOutputDto {
   @Min(0)
   capacidade: number | null;
 
-  @ApiPropertyOptional({ description: "Tipo do ambiente/sala. Ex.: sala aula, auditorio, laboratorio de quimica", nullable: true })
+  @ApiPropertyOptional({
+    description: "Tipo do ambiente/sala. Ex.: sala aula, auditorio, laboratorio de quimica",
+    nullable: true,
+  })
   @Field({ nullable: true })
   @IsOptional()
   @IsString()
   tipo: string | null;
 
-  @ApiProperty({ type: () => BlocoFindOneOutputDto, description: "Bloco que o ambiente/sala pertence" })
+  @ApiProperty({
+    type: () => BlocoFindOneOutputDto,
+    description: "Bloco que o ambiente/sala pertence",
+  })
   @Field(() => BlocoFindOneOutputDto)
   @ValidateNested()
   @Type(() => BlocoFindOneOutputDto)
   bloco: BlocoFindOneOutputDto;
 
-  @ApiPropertyOptional({ type: () => ImagemFindOneOutputDto, description: "Imagem de capa do ambiente", nullable: true })
+  @ApiPropertyOptional({
+    type: () => ImagemFindOneOutputDto,
+    description: "Imagem de capa do ambiente",
+    nullable: true,
+  })
   @Field(() => ImagemFindOneOutputDto, { nullable: true })
   @IsOptional()
   @ValidateNested()
@@ -162,13 +181,19 @@ export class AmbienteCreateInputDto {
   @Min(0)
   capacidade?: number | null;
 
-  @ApiPropertyOptional({ description: "Tipo do ambiente/sala. Ex.: sala aula, auditorio, laboratorio de quimica", nullable: true })
+  @ApiPropertyOptional({
+    description: "Tipo do ambiente/sala. Ex.: sala aula, auditorio, laboratorio de quimica",
+    nullable: true,
+  })
   @Field({ nullable: true })
   @IsOptional()
   @IsString()
   tipo?: string | null;
 
-  @ApiProperty({ type: () => BlocoFindOneInputDto, description: "Bloco que o ambiente/sala pertence" })
+  @ApiProperty({
+    type: () => BlocoFindOneInputDto,
+    description: "Bloco que o ambiente/sala pertence",
+  })
   @Field(() => BlocoFindOneInputDto)
   @ValidateNested()
   @Type(() => BlocoFindOneInputDto)

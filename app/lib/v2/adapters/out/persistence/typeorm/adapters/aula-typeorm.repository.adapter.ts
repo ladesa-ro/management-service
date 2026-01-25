@@ -5,16 +5,16 @@ import type { DeepPartial } from "typeorm";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { QbEfficientLoad } from "@/shared";
-import { DatabaseContextService } from "../context/database-context.service";
-import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
-import type { IAulaRepositoryPort } from "@/v2/core/aula/application/ports";
-import type { AulaEntity } from "../typeorm/entities";
 import type {
   AulaFindOneInputDto,
   AulaFindOneOutputDto,
   AulaListInputDto,
   AulaListOutputDto,
 } from "@/v2/adapters/in/http/aula/dto";
+import type { IAulaRepositoryPort } from "@/v2/core/aula/application/ports";
+import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
+import { DatabaseContextService } from "../context/database-context.service";
+import type { AulaEntity } from "../typeorm/entities";
 
 const aliasAula = "aula";
 

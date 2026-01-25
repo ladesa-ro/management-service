@@ -1,7 +1,6 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { pick } from "lodash";
 import type { AccessContext } from "@/infrastructure/access-context";
-import type { ModalidadeEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import type {
   ModalidadeCreateInputDto,
   ModalidadeFindOneInputDto,
@@ -10,6 +9,7 @@ import type {
   ModalidadeListOutputDto,
   ModalidadeUpdateInputDto,
 } from "@/v2/adapters/in/http/modalidade/dto";
+import type { ModalidadeEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import type { IModalidadeRepositoryPort } from "../ports";
 
 @Injectable()

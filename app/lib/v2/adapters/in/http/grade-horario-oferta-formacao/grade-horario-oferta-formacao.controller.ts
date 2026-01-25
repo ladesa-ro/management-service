@@ -5,12 +5,10 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
-  ApiTags
+  ApiTags,
 } from "@nestjs/swagger";
 import { AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
-import {
-  GradeHorarioOfertaFormacaoService
-} from "@/v2/core/grade-horario-oferta-formacao/application/use-cases/grade-horario-oferta-formacao.service";
+import { GradeHorarioOfertaFormacaoService } from "@/v2/core/grade-horario-oferta-formacao/application/use-cases/grade-horario-oferta-formacao.service";
 import {
   GradeHorarioOfertaFormacaoCreateInputDto,
   GradeHorarioOfertaFormacaoFindOneInputDto,
@@ -33,7 +31,10 @@ export class GradeHorarioOfertaFormacaoController {
     @AccessContextHttp() accessContext: AccessContext,
     @Query() dto: GradeHorarioOfertaFormacaoListInputDto,
   ): Promise<GradeHorarioOfertaFormacaoListOutputDto> {
-    return this.gradeHorarioOfertaFormacaoService.gradeHorarioOfertaFormacaoFindAll(accessContext, dto);
+    return this.gradeHorarioOfertaFormacaoService.gradeHorarioOfertaFormacaoFindAll(
+      accessContext,
+      dto,
+    );
   }
 
   @Get("/:id")
@@ -45,7 +46,10 @@ export class GradeHorarioOfertaFormacaoController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: GradeHorarioOfertaFormacaoFindOneInputDto,
   ): Promise<GradeHorarioOfertaFormacaoFindOneOutputDto> {
-    return this.gradeHorarioOfertaFormacaoService.gradeHorarioOfertaFormacaoFindByIdStrict(accessContext, params);
+    return this.gradeHorarioOfertaFormacaoService.gradeHorarioOfertaFormacaoFindByIdStrict(
+      accessContext,
+      params,
+    );
   }
 
   @Post("/")
@@ -56,7 +60,10 @@ export class GradeHorarioOfertaFormacaoController {
     @AccessContextHttp() accessContext: AccessContext,
     @Body() dto: GradeHorarioOfertaFormacaoCreateInputDto,
   ): Promise<GradeHorarioOfertaFormacaoFindOneOutputDto> {
-    return this.gradeHorarioOfertaFormacaoService.gradeHorarioOfertaFormacaoCreate(accessContext, dto);
+    return this.gradeHorarioOfertaFormacaoService.gradeHorarioOfertaFormacaoCreate(
+      accessContext,
+      dto,
+    );
   }
 
   @Patch("/:id")
@@ -69,7 +76,10 @@ export class GradeHorarioOfertaFormacaoController {
     @Param() params: GradeHorarioOfertaFormacaoFindOneInputDto,
     @Body() dto: GradeHorarioOfertaFormacaoUpdateInputDto,
   ): Promise<GradeHorarioOfertaFormacaoFindOneOutputDto> {
-    return this.gradeHorarioOfertaFormacaoService.gradeHorarioOfertaFormacaoUpdate(accessContext, { id: params.id, ...dto });
+    return this.gradeHorarioOfertaFormacaoService.gradeHorarioOfertaFormacaoUpdate(accessContext, {
+      id: params.id,
+      ...dto,
+    });
   }
 
   @Delete("/:id")
@@ -81,6 +91,9 @@ export class GradeHorarioOfertaFormacaoController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: GradeHorarioOfertaFormacaoFindOneInputDto,
   ): Promise<boolean> {
-    return this.gradeHorarioOfertaFormacaoService.gradeHorarioOfertaFormacaoDeleteOneById(accessContext, params);
+    return this.gradeHorarioOfertaFormacaoService.gradeHorarioOfertaFormacaoDeleteOneById(
+      accessContext,
+      params,
+    );
   }
 }

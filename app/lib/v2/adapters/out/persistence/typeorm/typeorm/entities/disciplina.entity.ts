@@ -1,6 +1,14 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, type Relation } from "typeorm";
-import { ImagemEntity } from "./imagem.entity";
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  type Relation,
+} from "typeorm";
 import { DiarioEntity } from "./diario.entity";
+import { ImagemEntity } from "./imagem.entity";
 
 @Entity("disciplina")
 export class DisciplinaEntity {

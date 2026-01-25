@@ -1,11 +1,17 @@
 import { uniq } from "lodash";
 import { SelectQueryBuilder } from "typeorm";
-import { initializeModelDefinitions, modelRegistry, ModelRepresentation } from "@/shared/metadata";
+import { initializeModelDefinitions, ModelRepresentation, modelRegistry } from "@/shared/metadata";
 
 // Ensure model definitions are loaded
 initializeModelDefinitions();
 
-export const QbEfficientLoadCore = (modelRepresentation: ModelRepresentation, qb: SelectQueryBuilder<any>, alias: string, selection: boolean | string[] = true, parent: string[] = []) => {
+export const QbEfficientLoadCore = (
+  modelRepresentation: ModelRepresentation,
+  qb: SelectQueryBuilder<any>,
+  alias: string,
+  selection: boolean | string[] = true,
+  parent: string[] = [],
+) => {
   let counter = 0;
 
   let rootSelection: boolean | string[];
@@ -35,7 +41,9 @@ export const QbEfficientLoadCore = (modelRepresentation: ModelRepresentation, qb
       continue;
     }
 
-    const includeProperty = Array.isArray(rootSelection) ? rootSelection.includes(propertyKey) : rootSelection;
+    const includeProperty = Array.isArray(rootSelection)
+      ? rootSelection.includes(propertyKey)
+      : rootSelection;
 
     if (!includeProperty) {
       continue;
@@ -57,7 +65,11 @@ export const QbEfficientLoadCore = (modelRepresentation: ModelRepresentation, qb
       if (typeof rootSelection === "boolean") {
         childSelection = rootSelection;
       } else {
-        childSelection = uniq(rootSelection.filter((i) => i.startsWith(`${propertyKey}.`)).map((i) => i.slice(i.indexOf(".") + 1)));
+        childSelection = uniq(
+          rootSelection
+            .filter((i) => i.startsWith(`${propertyKey}.`))
+            .map((i) => i.slice(i.indexOf(".") + 1)),
+        );
       }
 
       const childAlias = `${alias}_${propertyKey[0]}${counter}`;
@@ -65,7 +77,10 @@ export const QbEfficientLoadCore = (modelRepresentation: ModelRepresentation, qb
       qb.leftJoin(subPath, childAlias);
 
       const referenceModel = modelRegistry.get(referenceName);
-      QbEfficientLoadCore(referenceModel, qb, childAlias, childSelection, [...parent, referenceName]);
+      QbEfficientLoadCore(referenceModel, qb, childAlias, childSelection, [
+        ...parent,
+        referenceName,
+      ]);
     } else {
       qb.addSelect(subPath);
     }
@@ -82,7 +97,13 @@ export const QbEfficientLoadCore = (modelRepresentation: ModelRepresentation, qb
  * @param selection - Fields to select (true = all, string[] = specific fields)
  * @param parent - Used internally for recursion tracking
  */
-export const QbEfficientLoad = (entityDefRef: string, qb: SelectQueryBuilder<any>, alias: string, selection: boolean | string[] = true, parent: string[] = []) => {
+export const QbEfficientLoad = (
+  entityDefRef: string,
+  qb: SelectQueryBuilder<any>,
+  alias: string,
+  selection: boolean | string[] = true,
+  parent: string[] = [],
+) => {
   const model = modelRegistry.get(entityDefRef);
   return QbEfficientLoadCore(model, qb, alias, selection, parent);
 };

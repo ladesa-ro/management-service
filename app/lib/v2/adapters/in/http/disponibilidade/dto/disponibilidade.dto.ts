@@ -1,8 +1,8 @@
-import { ApiProperty, ApiPropertyOptional, PartialType } from "@nestjs/swagger";
 import { ArgsType, Field, ID, InputType, ObjectType } from "@nestjs/graphql";
+import { ApiProperty, ApiPropertyOptional, PartialType } from "@nestjs/swagger";
 import { IsArray, IsDateString, IsOptional, IsString, IsUUID } from "class-validator";
 import { PaginationInputDto, PaginationMetaDto } from "@/shared/dto";
-import { commonProperties, RegisterModel, simpleProperty, } from "@/shared/metadata";
+import { commonProperties, RegisterModel, simpleProperty } from "@/shared/metadata";
 
 // ============================================================================
 // FindOne Output
@@ -76,7 +76,10 @@ export class DisponibilidadeListOutputDto {
   @Field(() => PaginationMetaDto)
   meta: PaginationMetaDto;
 
-  @ApiProperty({ type: () => [DisponibilidadeFindOneOutputDto], description: "Resultados da busca" })
+  @ApiProperty({
+    type: () => [DisponibilidadeFindOneOutputDto],
+    description: "Resultados da busca",
+  })
   @Field(() => [DisponibilidadeFindOneOutputDto])
   data: DisponibilidadeFindOneOutputDto[];
 }

@@ -1,10 +1,6 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { pick } from "lodash";
-import { ArquivoService } from "@/v2/core/arquivo/application/use-cases/arquivo.service";
-import { CampusService } from "@/v2/core/campus/application/use-cases/campus.service";
-import { ImagemService } from "@/v2/core/imagem/application/use-cases/imagem.service";
 import type { AccessContext } from "@/infrastructure/access-context";
-import type { BlocoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import type {
   BlocoCreateInputDto,
   BlocoFindOneInputDto,
@@ -13,6 +9,10 @@ import type {
   BlocoListOutputDto,
   BlocoUpdateInputDto,
 } from "@/v2/adapters/in/http/bloco/dto";
+import type { BlocoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
+import { ArquivoService } from "@/v2/core/arquivo/application/use-cases/arquivo.service";
+import { CampusService } from "@/v2/core/campus/application/use-cases/campus.service";
+import { ImagemService } from "@/v2/core/imagem/application/use-cases/imagem.service";
 import type { IBlocoRepositoryPort } from "../ports";
 
 @Injectable()
@@ -101,7 +101,11 @@ export class BlocoService {
       id: dto.id,
     });
 
-    await accessContext.ensurePermission("bloco:update", { dto: { id: currentBloco.id } }, currentBloco.id);
+    await accessContext.ensurePermission(
+      "bloco:update",
+      { dto: { id: currentBloco.id } },
+      currentBloco.id,
+    );
 
     const { imagem } = await this.imagemService.saveBlocoCapa(file);
 
@@ -134,7 +138,10 @@ export class BlocoService {
       ...dtoBloco,
     });
 
-    const campus = await this.campusService.campusFindByIdSimpleStrict(accessContext, dto.campus.id);
+    const campus = await this.campusService.campusFindByIdSimpleStrict(
+      accessContext,
+      dto.campus.id,
+    );
 
     this.blocoRepository.merge(bloco, {
       campus: {

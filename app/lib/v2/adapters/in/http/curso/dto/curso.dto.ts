@@ -1,15 +1,28 @@
-import { ApiProperty, ApiPropertyOptional, PartialType } from "@nestjs/swagger";
 import { ArgsType, Field, ID, InputType, ObjectType } from "@nestjs/graphql";
-import { IsArray, IsDateString, IsOptional, IsString, IsUUID, MinLength, ValidateNested } from "class-validator";
+import { ApiProperty, ApiPropertyOptional, PartialType } from "@nestjs/swagger";
 import { Type } from "class-transformer";
+import {
+  IsArray,
+  IsDateString,
+  IsOptional,
+  IsString,
+  IsUUID,
+  MinLength,
+  ValidateNested,
+} from "class-validator";
 import { PaginationInputDto, PaginationMetaDto } from "@/shared/dto";
-import { commonProperties, referenceProperty, RegisterModel, simpleProperty, } from "@/shared/metadata";
+import {
+  commonProperties,
+  RegisterModel,
+  referenceProperty,
+  simpleProperty,
+} from "@/shared/metadata";
+import { ImagemFindOneOutputDto } from "@/v2/adapters/in/http/bloco/dto";
 import { CampusFindOneInputDto, CampusFindOneOutputDto } from "@/v2/adapters/in/http/campus/dto";
 import {
   OfertaFormacaoFindOneInputDto,
-  OfertaFormacaoFindOneOutputDto
+  OfertaFormacaoFindOneOutputDto,
 } from "@/v2/adapters/in/http/oferta-formacao/dto";
-import { ImagemFindOneOutputDto } from "@/v2/adapters/in/http/bloco/dto";
 
 // ============================================================================
 // FindOne Output
@@ -52,13 +65,20 @@ export class CursoFindOneOutputDto {
   @Type(() => CampusFindOneOutputDto)
   campus: CampusFindOneOutputDto;
 
-  @ApiProperty({ type: () => OfertaFormacaoFindOneOutputDto, description: "Oferta de formacao do curso" })
+  @ApiProperty({
+    type: () => OfertaFormacaoFindOneOutputDto,
+    description: "Oferta de formacao do curso",
+  })
   @Field(() => OfertaFormacaoFindOneOutputDto)
   @ValidateNested()
   @Type(() => OfertaFormacaoFindOneOutputDto)
   ofertaFormacao: OfertaFormacaoFindOneOutputDto;
 
-  @ApiPropertyOptional({ type: () => ImagemFindOneOutputDto, description: "Imagem de capa do curso", nullable: true })
+  @ApiPropertyOptional({
+    type: () => ImagemFindOneOutputDto,
+    description: "Imagem de capa do curso",
+    nullable: true,
+  })
   @Field(() => ImagemFindOneOutputDto, { nullable: true })
   @IsOptional()
   @ValidateNested()
@@ -135,7 +155,10 @@ export class CursoCreateInputDto {
   @Type(() => CampusFindOneInputDto)
   campus: CampusFindOneInputDto;
 
-  @ApiProperty({ type: () => OfertaFormacaoFindOneInputDto, description: "Oferta de formacao do curso" })
+  @ApiProperty({
+    type: () => OfertaFormacaoFindOneInputDto,
+    description: "Oferta de formacao do curso",
+  })
   @Field(() => OfertaFormacaoFindOneInputDto)
   @ValidateNested()
   @Type(() => OfertaFormacaoFindOneInputDto)

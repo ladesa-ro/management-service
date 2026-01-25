@@ -5,12 +5,10 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
-  ApiTags
+  ApiTags,
 } from "@nestjs/swagger";
 import { AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
-import {
-  TurmaDisponibilidadeService
-} from "@/v2/core/turma-disponibilidade/application/use-cases/turma-disponibilidade.service";
+import { TurmaDisponibilidadeService } from "@/v2/core/turma-disponibilidade/application/use-cases/turma-disponibilidade.service";
 import {
   TurmaDisponibilidadeCreateInputDto,
   TurmaDisponibilidadeFindOneInputDto,
@@ -45,7 +43,10 @@ export class TurmaDisponibilidadeController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: TurmaDisponibilidadeFindOneInputDto,
   ): Promise<TurmaDisponibilidadeFindOneOutputDto> {
-    return this.turmaDisponibilidadeService.turmaDisponibilidadeFindByIdStrict(accessContext, params);
+    return this.turmaDisponibilidadeService.turmaDisponibilidadeFindByIdStrict(
+      accessContext,
+      params,
+    );
   }
 
   @Post("/")
@@ -69,7 +70,10 @@ export class TurmaDisponibilidadeController {
     @Param() params: TurmaDisponibilidadeFindOneInputDto,
     @Body() dto: TurmaDisponibilidadeUpdateInputDto,
   ): Promise<TurmaDisponibilidadeFindOneOutputDto> {
-    return this.turmaDisponibilidadeService.turmaDisponibilidadeUpdate(accessContext, { id: params.id, ...dto });
+    return this.turmaDisponibilidadeService.turmaDisponibilidadeUpdate(accessContext, {
+      id: params.id,
+      ...dto,
+    });
   }
 
   @Delete("/:id")
@@ -81,6 +85,9 @@ export class TurmaDisponibilidadeController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: TurmaDisponibilidadeFindOneInputDto,
   ): Promise<boolean> {
-    return this.turmaDisponibilidadeService.turmaDisponibilidadeDeleteOneById(accessContext, params);
+    return this.turmaDisponibilidadeService.turmaDisponibilidadeDeleteOneById(
+      accessContext,
+      params,
+    );
   }
 }

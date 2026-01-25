@@ -1,11 +1,4 @@
-import {
-  IsArray,
-  IsDate,
-  IsOptional,
-  IsString,
-  IsUUID,
-  Matches,
-} from "class-validator";
+import { IsArray, IsDate, IsOptional, IsString, IsUUID, Matches } from "class-validator";
 import { ObjectUuidRef, PaginationInput, PaginationMeta } from "../../../common/application/dtos";
 
 // ============================================================================

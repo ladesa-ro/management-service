@@ -1,8 +1,17 @@
-import { ApiProperty, ApiPropertyOptional, PartialType } from "@nestjs/swagger";
 import { ArgsType, Field, ID, InputType, Int, ObjectType } from "@nestjs/graphql";
-import { IsArray, IsDateString, IsInt, IsOptional, IsString, IsUUID, Min, MinLength } from "class-validator";
+import { ApiProperty, ApiPropertyOptional, PartialType } from "@nestjs/swagger";
+import {
+  IsArray,
+  IsDateString,
+  IsInt,
+  IsOptional,
+  IsString,
+  IsUUID,
+  Min,
+  MinLength,
+} from "class-validator";
 import { PaginationInputDto, PaginationMetaDto } from "@/shared/dto";
-import { commonProperties, RegisterModel, simpleProperty, } from "@/shared/metadata";
+import { commonProperties, RegisterModel, simpleProperty } from "@/shared/metadata";
 
 // ============================================================================
 // FindOne Output

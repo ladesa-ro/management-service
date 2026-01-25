@@ -28,7 +28,10 @@ export interface IDiaCalendarioRepositoryPort {
   ): Promise<DiaCalendarioFindOneOutputDto | null>;
 
   save(diaCalendario: DeepPartial<DiaCalendarioEntity>): Promise<DiaCalendarioEntity>;
+
   create(): DiaCalendarioEntity;
+
   merge(diaCalendario: DiaCalendarioEntity, data: DeepPartial<DiaCalendarioEntity>): void;
+
   softDeleteById(id: string): Promise<void>;
 }

@@ -1,4 +1,9 @@
-import { Inject, Injectable, ServiceUnavailableException, UnprocessableEntityException } from "@nestjs/common";
+import {
+  Inject,
+  Injectable,
+  ServiceUnavailableException,
+  UnprocessableEntityException,
+} from "@nestjs/common";
 import sharp from "sharp";
 import { v4 } from "uuid";
 import { ArquivoService } from "@/v2/core/arquivo/application/use-cases/arquivo.service";
@@ -34,8 +39,13 @@ export class ImagemService {
       throw new UnprocessableEntityException("Formato de imagem não suportada ou inválida.");
     }
 
-    if ((options.minWidth !== null && (!metadata.width || metadata.width < options.minWidth)) || (options.minHeight !== null && (!metadata.height || metadata.height < options.minHeight))) {
-      throw new UnprocessableEntityException(`A imagem deve conter largura mínima de ${options.minWidth}px e altura mínima de ${options.minHeight}px.`);
+    if (
+      (options.minWidth !== null && (!metadata.width || metadata.width < options.minWidth)) ||
+      (options.minHeight !== null && (!metadata.height || metadata.height < options.minHeight))
+    ) {
+      throw new UnprocessableEntityException(
+        `A imagem deve conter largura mínima de ${options.minWidth}px e altura mínima de ${options.minHeight}px.`,
+      );
     }
 
     // ===============================================
@@ -64,7 +74,10 @@ export class ImagemService {
             resolveWithObject: true,
           });
 
-          const arquivo = await this.arquivoService.arquivoCreate({ name, mimeType }, transformedOutput.data);
+          const arquivo = await this.arquivoService.arquivoCreate(
+            { name, mimeType },
+            transformedOutput.data,
+          );
 
           const versao = imagemArquivoRepository.create();
 

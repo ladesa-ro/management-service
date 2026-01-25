@@ -1,10 +1,6 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { has, pick } from "lodash";
-import { DiarioProfessorService } from "@/v2/core/diario-professor/application/use-cases/diario-professor.service";
-import { HorarioGeradoService } from "@/v2/core/horario-gerado/application/use-cases/horario-gerado.service";
-import { IntervaloDeTempoService } from "@/v2/core/intervalo-de-tempo/application/use-cases/intervalo-de-tempo.service";
 import type { AccessContext } from "@/infrastructure/access-context";
-import type { HorarioGeradoAulaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import type {
   HorarioGeradoAulaCreateInputDto,
   HorarioGeradoAulaFindOneInputDto,
@@ -13,6 +9,10 @@ import type {
   HorarioGeradoAulaListOutputDto,
   HorarioGeradoAulaUpdateInputDto,
 } from "@/v2/adapters/in/http/horario-gerado-aula/dto";
+import type { HorarioGeradoAulaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
+import { DiarioProfessorService } from "@/v2/core/diario-professor/application/use-cases/diario-professor.service";
+import { HorarioGeradoService } from "@/v2/core/horario-gerado/application/use-cases/horario-gerado.service";
+import { IntervaloDeTempoService } from "@/v2/core/intervalo-de-tempo/application/use-cases/intervalo-de-tempo.service";
 import type { IHorarioGeradoAulaRepositoryPort } from "../ports";
 
 @Injectable()
@@ -46,7 +46,11 @@ export class HorarioGeradoAulaService {
     dto: HorarioGeradoAulaFindOneInputDto,
     selection?: string[] | boolean,
   ): Promise<HorarioGeradoAulaFindOneOutputDto> {
-    const horarioGeradoAula = await this.horarioGeradoAulaRepository.findById(accessContext, dto, selection);
+    const horarioGeradoAula = await this.horarioGeradoAulaRepository.findById(
+      accessContext,
+      dto,
+      selection,
+    );
 
     if (!horarioGeradoAula) {
       throw new NotFoundException();
@@ -68,7 +72,11 @@ export class HorarioGeradoAulaService {
     id: string,
     selection?: string[],
   ): Promise<HorarioGeradoAulaFindOneOutputDto> {
-    const horarioGeradoAula = await this.horarioGeradoAulaRepository.findByIdSimple(accessContext, id, selection);
+    const horarioGeradoAula = await this.horarioGeradoAulaRepository.findByIdSimple(
+      accessContext,
+      id,
+      selection,
+    );
 
     if (!horarioGeradoAula) {
       throw new NotFoundException();
@@ -92,7 +100,10 @@ export class HorarioGeradoAulaService {
     });
 
     if (dto.diarioProfessor) {
-      const diario = await this.diarioProfessorService.diarioProfessorFindByIdStrict(accessContext, dto.diarioProfessor);
+      const diario = await this.diarioProfessorService.diarioProfessorFindByIdStrict(
+        accessContext,
+        dto.diarioProfessor,
+      );
 
       this.horarioGeradoAulaRepository.merge(horarioGeradoAula, {
         diarioProfessor: {
@@ -102,7 +113,10 @@ export class HorarioGeradoAulaService {
     }
 
     if (dto.horarioGerado) {
-      const horarioGerado = await this.horarioGeradoService.horarioGeradoFindByIdStrict(accessContext, dto.horarioGerado);
+      const horarioGerado = await this.horarioGeradoService.horarioGeradoFindByIdStrict(
+        accessContext,
+        dto.horarioGerado,
+      );
 
       this.horarioGeradoAulaRepository.merge(horarioGeradoAula, {
         horarioGerado: {
@@ -112,7 +126,10 @@ export class HorarioGeradoAulaService {
     }
 
     if (dto.intervaloDeTempo) {
-      const intervalo = await this.intervaloDeTempoService.intervaloCreateOrUpdate(accessContext, dto.intervaloDeTempo);
+      const intervalo = await this.intervaloDeTempoService.intervaloCreateOrUpdate(
+        accessContext,
+        dto.intervaloDeTempo,
+      );
 
       this.horarioGeradoAulaRepository.merge(horarioGeradoAula, {
         intervaloDeTempo: {
@@ -147,7 +164,10 @@ export class HorarioGeradoAulaService {
     });
 
     if (has(dto, "diarioProfessor") && dto.diarioProfessor !== undefined) {
-      const diarioProfessor = await this.diarioProfessorService.diarioProfessorFindByIdStrict(accessContext, dto.diarioProfessor!);
+      const diarioProfessor = await this.diarioProfessorService.diarioProfessorFindByIdStrict(
+        accessContext,
+        dto.diarioProfessor!,
+      );
 
       this.horarioGeradoAulaRepository.merge(horarioGeradoAula, {
         diarioProfessor: {
@@ -157,7 +177,10 @@ export class HorarioGeradoAulaService {
     }
 
     if (has(dto, "horarioGerado") && dto.horarioGerado !== undefined) {
-      const horarioGerado = await this.horarioGeradoService.horarioGeradoFindByIdStrict(accessContext, dto.horarioGerado);
+      const horarioGerado = await this.horarioGeradoService.horarioGeradoFindByIdStrict(
+        accessContext,
+        dto.horarioGerado,
+      );
 
       this.horarioGeradoAulaRepository.merge(horarioGeradoAula, {
         horarioGerado: {
@@ -167,7 +190,10 @@ export class HorarioGeradoAulaService {
     }
 
     if (has(dto, "intervaloDeTempo") && dto.intervaloDeTempo !== undefined) {
-      const intervaloDeTempo = await this.intervaloDeTempoService.intervaloCreateOrUpdate(accessContext, dto.intervaloDeTempo!);
+      const intervaloDeTempo = await this.intervaloDeTempoService.intervaloCreateOrUpdate(
+        accessContext,
+        dto.intervaloDeTempo!,
+      );
 
       this.horarioGeradoAulaRepository.merge(horarioGeradoAula, {
         intervaloDeTempo: {

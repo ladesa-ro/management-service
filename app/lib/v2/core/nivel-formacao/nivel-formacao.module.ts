@@ -1,8 +1,8 @@
 import { Module } from "@nestjs/common";
 import { NivelFormacaoController } from "@/v2/adapters/in/http/nivel-formacao/nivel-formacao.controller";
-import { NivelFormacaoService } from "@/v2/core/nivel-formacao/application/use-cases/nivel-formacao.service";
-import { NivelFormacaoTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistence/typeorm/adapters";
 import { NestJsPaginateAdapter } from "@/v2/adapters/out/persistence/pagination";
+import { NivelFormacaoTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistence/typeorm/adapters";
+import { NivelFormacaoService } from "@/v2/core/nivel-formacao/application/use-cases/nivel-formacao.service";
 
 /**
  * Módulo NivelFormacao configurado com Arquitetura Hexagonal

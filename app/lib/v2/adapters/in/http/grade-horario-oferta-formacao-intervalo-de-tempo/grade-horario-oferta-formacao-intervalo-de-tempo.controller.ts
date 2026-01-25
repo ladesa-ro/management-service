@@ -5,12 +5,10 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
-  ApiTags
+  ApiTags,
 } from "@nestjs/swagger";
 import { AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
-import {
-  GradeHorarioOfertaFormacaoIntervaloDeTempoService
-} from "@/v2/core/grade-horario-oferta-formacao-intervalo-de-tempo/application/use-cases/grade-horario-oferta-formacao-intervalo-de-tempo.service";
+import { GradeHorarioOfertaFormacaoIntervaloDeTempoService } from "@/v2/core/grade-horario-oferta-formacao-intervalo-de-tempo/application/use-cases/grade-horario-oferta-formacao-intervalo-de-tempo.service";
 import {
   GradeHorarioOfertaFormacaoIntervaloDeTempoCreateInputDto,
   GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInputDto,
@@ -23,7 +21,9 @@ import {
 @ApiTags("grades-horarios-ofertas-formacoes-intervalos-de-tempo")
 @Controller("/grades-horarios-ofertas-formacoes-intervalos-de-tempo")
 export class GradeHorarioOfertaFormacaoIntervaloDeTempoController {
-  constructor(private gradeHorarioOfertaFormacaoIntervaloDeTempoService: GradeHorarioOfertaFormacaoIntervaloDeTempoService) {}
+  constructor(
+    private gradeHorarioOfertaFormacaoIntervaloDeTempoService: GradeHorarioOfertaFormacaoIntervaloDeTempoService,
+  ) {}
 
   @Get("/")
   @ApiOperation({ summary: "Lista grades horarios de ofertas de formacoes intervalos de tempo" })
@@ -33,11 +33,16 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoController {
     @AccessContextHttp() accessContext: AccessContext,
     @Query() dto: GradeHorarioOfertaFormacaoIntervaloDeTempoListInputDto,
   ): Promise<GradeHorarioOfertaFormacaoIntervaloDeTempoListOutputDto> {
-    return this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.gradeHorarioOfertaFormacaoIntervaloDeTempoFindAll(accessContext, dto);
+    return this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.gradeHorarioOfertaFormacaoIntervaloDeTempoFindAll(
+      accessContext,
+      dto,
+    );
   }
 
   @Get("/:id")
-  @ApiOperation({ summary: "Busca uma grade horario de oferta de formacao intervalo de tempo por ID" })
+  @ApiOperation({
+    summary: "Busca uma grade horario de oferta de formacao intervalo de tempo por ID",
+  })
   @ApiOkResponse({ type: GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -45,7 +50,10 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInputDto,
   ): Promise<GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputDto> {
-    return this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.gradeHorarioOfertaFormacaoIntervaloDeTempoFindByIdStrict(accessContext, params);
+    return this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.gradeHorarioOfertaFormacaoIntervaloDeTempoFindByIdStrict(
+      accessContext,
+      params,
+    );
   }
 
   @Post("/")
@@ -56,7 +64,10 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoController {
     @AccessContextHttp() accessContext: AccessContext,
     @Body() dto: GradeHorarioOfertaFormacaoIntervaloDeTempoCreateInputDto,
   ): Promise<GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputDto> {
-    return this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.gradeHorarioOfertaFormacaoIntervaloDeTempoCreate(accessContext, dto);
+    return this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.gradeHorarioOfertaFormacaoIntervaloDeTempoCreate(
+      accessContext,
+      dto,
+    );
   }
 
   @Patch("/:id")
@@ -69,7 +80,10 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoController {
     @Param() params: GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInputDto,
     @Body() dto: GradeHorarioOfertaFormacaoIntervaloDeTempoUpdateInputDto,
   ): Promise<GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputDto> {
-    return this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.gradeHorarioOfertaFormacaoIntervaloDeTempoUpdate(accessContext, { id: params.id, ...dto });
+    return this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.gradeHorarioOfertaFormacaoIntervaloDeTempoUpdate(
+      accessContext,
+      { id: params.id, ...dto },
+    );
   }
 
   @Delete("/:id")
@@ -81,6 +95,9 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInputDto,
   ): Promise<boolean> {
-    return this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.gradeHorarioOfertaFormacaoIntervaloDeTempoDeleteOneById(accessContext, params);
+    return this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.gradeHorarioOfertaFormacaoIntervaloDeTempoDeleteOneById(
+      accessContext,
+      params,
+    );
   }
 }

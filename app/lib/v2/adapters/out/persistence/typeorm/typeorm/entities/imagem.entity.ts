@@ -1,9 +1,8 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-
-import { UsuarioEntity } from "./usuario.entity"
-import { AmbienteEntity } from "./ambiente.entity"
-import { BlocoEntity } from "./bloco.entity"
+import { AmbienteEntity } from "./ambiente.entity";
+import { BlocoEntity } from "./bloco.entity";
 import { ImagemArquivoEntity } from "./imagem-arquivo.entity";
+import { UsuarioEntity } from "./usuario.entity";
 
 @Entity("imagem")
 export class ImagemEntity {

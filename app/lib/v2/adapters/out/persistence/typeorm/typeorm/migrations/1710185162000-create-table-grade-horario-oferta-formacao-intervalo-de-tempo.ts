@@ -3,7 +3,9 @@ import { MigrationInterface, QueryRunner, Table } from "typeorm";
 const tableName = "grade_horario_oferta_formacao_intervalo_de_tempo";
 const tableNameSmall = "g_h_o_f_i_d_t";
 
-export class CreateTableGradeHorarioOfertaFormacaoIntervaloDeTempo1710185162000 implements MigrationInterface {
+export class CreateTableGradeHorarioOfertaFormacaoIntervaloDeTempo1710185162000
+  implements MigrationInterface
+{
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({

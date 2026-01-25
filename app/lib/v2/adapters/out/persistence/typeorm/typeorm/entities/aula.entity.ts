@@ -1,9 +1,14 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, type Relation } from "typeorm";
-import { AmbienteEntity } from "./ambiente.entity"
 import {
-  IntervaloDeTempoEntity
-} from "./intervalo-de-tempo.entity";
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  type Relation,
+} from "typeorm";
+import { AmbienteEntity } from "./ambiente.entity";
 import { DiarioEntity } from "./diario.entity";
+import { IntervaloDeTempoEntity } from "./intervalo-de-tempo.entity";
 
 @Entity("aula")
 export class AulaEntity {

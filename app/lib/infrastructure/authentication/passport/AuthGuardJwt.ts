@@ -31,6 +31,11 @@ export class AuthGuardJwt extends AuthGuard(AuthStrategy.ACCESS_TOKEN) {
   }
 
   private checkIfContextNeedsAuth(context: ExecutionContext) {
-    return this.reflector.getAllAndOverride<boolean>(NEEDS_AUTH_KEY, [context.getHandler(), context.getClass()]) ?? false;
+    return (
+      this.reflector.getAllAndOverride<boolean>(NEEDS_AUTH_KEY, [
+        context.getHandler(),
+        context.getClass(),
+      ]) ?? false
+    );
   }
 }

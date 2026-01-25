@@ -1,9 +1,9 @@
-import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { Field, InputType, Int, ObjectType } from "@nestjs/graphql";
-import { IsArray, IsInt, IsOptional, IsString, ValidateNested } from "class-validator";
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { Type } from "class-transformer";
-import { UsuarioFindOneOutputDto } from "@/v2/adapters/in/http/usuario/dto";
+import { IsArray, IsInt, IsOptional, IsString, ValidateNested } from "class-validator";
 import { PerfilFindOneOutputDto } from "@/v2/adapters/in/http/perfil/dto";
+import { UsuarioFindOneOutputDto } from "@/v2/adapters/in/http/usuario/dto";
 
 // ============================================================================
 // Auth Login Input
@@ -40,7 +40,11 @@ export class AuthRefreshInputDto {
 
 @ObjectType("AuthWhoAmI")
 export class AuthWhoAmIOutputDto {
-  @ApiPropertyOptional({ type: () => UsuarioFindOneOutputDto, description: "Usuario autenticado", nullable: true })
+  @ApiPropertyOptional({
+    type: () => UsuarioFindOneOutputDto,
+    description: "Usuario autenticado",
+    nullable: true,
+  })
   @Field(() => UsuarioFindOneOutputDto, { nullable: true })
   @IsOptional()
   @ValidateNested()

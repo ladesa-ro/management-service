@@ -1,6 +1,13 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, type Relation } from "typeorm";
-import { UsuarioEntity } from "./usuario.entity"
-import { CampusEntity } from "./campus.entity"
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  type Relation,
+} from "typeorm";
+import { CampusEntity } from "./campus.entity";
+import { UsuarioEntity } from "./usuario.entity";
 
 @Entity("perfil")
 export class PerfilEntity {
@@ -20,7 +27,10 @@ export class PerfilEntity {
   @JoinColumn({ name: "id_campus_fk" })
   campus!: Relation<CampusEntity>;
 
-  @ManyToOne( () => UsuarioEntity, (usuario) => usuario.vinculos)
+  @ManyToOne(
+    () => UsuarioEntity,
+    (usuario) => usuario.vinculos,
+  )
   @JoinColumn({ name: "id_usuario_fk" })
   usuario!: Relation<UsuarioEntity>;
 

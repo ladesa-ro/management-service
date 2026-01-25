@@ -1,6 +1,13 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, type Relation } from "typeorm";
-import { TurmaEntity } from "./turma.entity";
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  type Relation,
+} from "typeorm";
 import { DisponibilidadeEntity } from "./disponibilidade.entity";
+import { TurmaEntity } from "./turma.entity";
 
 @Entity("turma_disponibilidade")
 export class TurmaDisponibilidadeEntity {

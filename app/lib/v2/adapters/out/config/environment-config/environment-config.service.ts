@@ -3,12 +3,12 @@ import { ConfigService as NestConfigService } from "@nestjs/config";
 import { join } from "path";
 import type { DataSourceOptions } from "typeorm";
 import * as entities from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
-import pkg from "../../../../../../package.json";
 import { IConfig } from "@/v2/infra/config";
 import {
   IConfigIntegrateAuthKeycloakCredentials,
-  IConfigIntegrateAuthOidcClientCredentials
+  IConfigIntegrateAuthOidcClientCredentials,
 } from "@/v2/infra/config/types/IConfigIntegrateAuth";
+import pkg from "../../../../../../package.json";
 
 const now = new Date();
 
@@ -43,7 +43,9 @@ export class EnvironmentConfigService implements IConfig {
   }
 
   getRuntimeNodeEnv(): string {
-    const runtimeNodeEnv = (this.nestConfigService.get<string>("NODE_ENV") ?? "production").trim().toLocaleLowerCase();
+    const runtimeNodeEnv = (this.nestConfigService.get<string>("NODE_ENV") ?? "production")
+      .trim()
+      .toLocaleLowerCase();
 
     return runtimeNodeEnv;
   }
@@ -259,8 +261,12 @@ export class EnvironmentConfigService implements IConfig {
 
   getOidcClientCredentials(): IConfigIntegrateAuthOidcClientCredentials {
     const issuer = this.nestConfigService.get<string>("OAUTH2_CLIENT_PROVIDER_OIDC_ISSUER");
-    const clientId = this.nestConfigService.get<string>("OAUTH2_CLIENT_REGISTRATION_LOGIN_CLIENT_ID");
-    const clientSecret = this.nestConfigService.get<string>("OAUTH2_CLIENT_REGISTRATION_LOGIN_CLIENT_SECRET");
+    const clientId = this.nestConfigService.get<string>(
+      "OAUTH2_CLIENT_REGISTRATION_LOGIN_CLIENT_ID",
+    );
+    const clientSecret = this.nestConfigService.get<string>(
+      "OAUTH2_CLIENT_REGISTRATION_LOGIN_CLIENT_SECRET",
+    );
 
     if (issuer === undefined || clientId === undefined || clientSecret === undefined) {
       throw new Error("Please provide correct OAUTH2_CLIENT credentials.");

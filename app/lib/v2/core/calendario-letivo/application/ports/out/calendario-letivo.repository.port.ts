@@ -28,7 +28,10 @@ export interface ICalendarioLetivoRepositoryPort {
   ): Promise<CalendarioLetivoFindOneOutputDto | null>;
 
   save(calendarioLetivo: DeepPartial<CalendarioLetivoEntity>): Promise<CalendarioLetivoEntity>;
+
   create(): CalendarioLetivoEntity;
+
   merge(calendarioLetivo: CalendarioLetivoEntity, data: DeepPartial<CalendarioLetivoEntity>): void;
+
   softDeleteById(id: string): Promise<void>;
 }

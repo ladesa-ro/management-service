@@ -1,15 +1,11 @@
-import {
-  IsArray,
-  IsDate,
-  IsOptional,
-  IsString,
-  IsUUID,
-  ValidateNested,
-} from "class-validator";
 import { Type } from "class-transformer";
+import { IsArray, IsDate, IsOptional, IsString, IsUUID, ValidateNested } from "class-validator";
 import { ObjectUuidRef, PaginationInput, PaginationMeta } from "../../../common/application/dtos";
+import {
+  DisponibilidadeFindOneOutput,
+  DisponibilidadeInputRef,
+} from "../../../disponibilidade/application/dtos";
 import { TurmaFindOneOutput, TurmaInputRef } from "../../../turma/application/dtos";
-import { DisponibilidadeFindOneOutput, DisponibilidadeInputRef } from "../../../disponibilidade/application/dtos";
 
 // ============================================================================
 // FindOne Input/Output

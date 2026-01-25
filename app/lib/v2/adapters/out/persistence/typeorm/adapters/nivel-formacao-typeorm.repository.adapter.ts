@@ -3,17 +3,17 @@ import { map } from "lodash";
 import type { DeepPartial } from "typeorm";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
-import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
 import { QbEfficientLoad } from "@/shared";
-import type { IPaginationConfig, IPaginationCriteria } from "@/v2/application/ports/pagination";
-import type { INivelFormacaoRepositoryPort } from "@/v2/core/nivel-formacao/application/ports";
 import type {
   NivelFormacaoFindOneInputDto,
   NivelFormacaoFindOneOutputDto,
   NivelFormacaoListInputDto,
   NivelFormacaoListOutputDto,
 } from "@/v2/adapters/in/http/nivel-formacao/dto";
+import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
 import type { NivelFormacaoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
+import type { IPaginationConfig, IPaginationCriteria } from "@/v2/application/ports/pagination";
+import type { INivelFormacaoRepositoryPort } from "@/v2/core/nivel-formacao/application/ports";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
 
 const aliasNivelFormacao = "nivel_formacao";
@@ -49,16 +49,9 @@ export class NivelFormacaoTypeOrmRepositoryAdapter implements INivelFormacaoRepo
 
     const config: IPaginationConfig<NivelFormacaoFindOneOutputDto> = {
       ...paginateConfig,
-      select: [
-        "id",
-        "slug",
-        "dateCreated",
-      ],
+      select: ["id", "slug", "dateCreated"],
       sortableColumns: ["slug", "dateCreated"],
-      searchableColumns: [
-        "id",
-        "slug",
-      ],
+      searchableColumns: ["id", "slug"],
       defaultSortBy: [
         ["slug", "ASC"],
         ["dateCreated", "ASC"],
@@ -149,14 +142,19 @@ export class NivelFormacaoTypeOrmRepositoryAdapter implements INivelFormacaoRepo
   /**
    * Extrai filtros do formato do DTO para o formato de IPaginationCriteria
    */
-  private extractFilters(dto: DtoWithFilters | null | undefined): Record<string, string | string[]> {
+  private extractFilters(
+    dto: DtoWithFilters | null | undefined,
+  ): Record<string, string | string[]> {
     const filters: Record<string, string | string[]> = {};
 
     if (!dto) return filters;
 
     for (const [key, value] of Object.entries(dto)) {
       if (key.startsWith("filter.")) {
-        if (typeof value === "string" || (Array.isArray(value) && value.every(v => typeof v === "string"))) {
+        if (
+          typeof value === "string" ||
+          (Array.isArray(value) && value.every((v) => typeof v === "string"))
+        ) {
           const filterKey = key.replace("filter.", "");
           filters[filterKey] = value;
         }

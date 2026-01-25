@@ -28,7 +28,10 @@ export interface IOfertaFormacaoRepositoryPort {
   ): Promise<OfertaFormacaoFindOneOutputDto | null>;
 
   save(ofertaFormacao: DeepPartial<OfertaFormacaoEntity>): Promise<OfertaFormacaoEntity>;
+
   create(): OfertaFormacaoEntity;
+
   merge(ofertaFormacao: OfertaFormacaoEntity, data: DeepPartial<OfertaFormacaoEntity>): void;
+
   softDeleteById(id: string): Promise<void>;
 }

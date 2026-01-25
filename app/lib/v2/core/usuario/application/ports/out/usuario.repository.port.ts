@@ -80,10 +80,7 @@ export interface IUsuarioRepositoryPort {
    * @param excludeUsuarioId ID do usuário a excluir da verificação (para update)
    * @returns true se disponível, false se já existe
    */
-  isEmailAvailable(
-    email: string,
-    excludeUsuarioId?: string | null,
-  ): Promise<boolean>;
+  isEmailAvailable(email: string, excludeUsuarioId?: string | null): Promise<boolean>;
 
   /**
    * Resolve uma propriedade simples de um usuário por ID

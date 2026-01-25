@@ -5,16 +5,16 @@ import type { DeepPartial } from "typeorm";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { QbEfficientLoad } from "@/shared";
-import { DatabaseContextService } from "../context/database-context.service";
-import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
-import type { IHorarioGeradoRepositoryPort } from "@/v2/core/horario-gerado/application/ports";
-import type { HorarioGeradoEntity } from "../typeorm/entities";
 import type {
   HorarioGeradoFindOneInputDto,
   HorarioGeradoFindOneOutputDto,
   HorarioGeradoListInputDto,
   HorarioGeradoListOutputDto,
 } from "@/v2/adapters/in/http/horario-gerado/dto";
+import type { IHorarioGeradoRepositoryPort } from "@/v2/core/horario-gerado/application/ports";
+import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
+import { DatabaseContextService } from "../context/database-context.service";
+import type { HorarioGeradoEntity } from "../typeorm/entities";
 
 const aliasHorarioGerado = "horario_gerado";
 

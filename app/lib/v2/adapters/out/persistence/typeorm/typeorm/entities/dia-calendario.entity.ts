@@ -1,6 +1,13 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, type Relation } from "typeorm";
-import { CalendarioLetivoEntity } from "./calendario-letivo.entity";
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  type Relation,
+} from "typeorm";
 import { type TipoDiaCalendario } from "@/v2/adapters/in/http/dia-calendario/dto";
+import { CalendarioLetivoEntity } from "./calendario-letivo.entity";
 
 @Entity("dia_calendario")
 export class DiaCalendarioEntity {

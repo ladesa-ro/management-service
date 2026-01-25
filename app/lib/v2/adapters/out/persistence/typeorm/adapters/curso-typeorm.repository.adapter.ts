@@ -1,20 +1,20 @@
 import { Injectable } from "@nestjs/common";
-import { FilterOperator } from "nestjs-paginate";
 import { map } from "lodash";
+import { FilterOperator } from "nestjs-paginate";
 import type { DeepPartial } from "typeorm";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
-import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
 import { QbEfficientLoad } from "@/shared";
-import type { IPaginationConfig, IPaginationCriteria } from "@/v2/application/ports/pagination";
-import type { ICursoRepositoryPort } from "@/v2/core/curso/application/ports";
 import type {
   CursoFindOneInputDto,
   CursoFindOneOutputDto,
   CursoListInputDto,
   CursoListOutputDto,
 } from "@/v2/adapters/in/http/curso/dto";
+import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
 import type { CursoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
+import type { IPaginationConfig, IPaginationCriteria } from "@/v2/application/ports/pagination";
+import type { ICursoRepositoryPort } from "@/v2/core/curso/application/ports";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
 
 const aliasCurso = "curso";
@@ -43,13 +43,7 @@ export class CursoTypeOrmRepositoryAdapter implements ICursoRepositoryPort {
 
     const config = {
       ...paginateConfig,
-      select: [
-        "id",
-        "nome",
-        "nomeAbreviado",
-        "campus",
-        "ofertaFormacao",
-      ],
+      select: ["id", "nome", "nomeAbreviado", "campus", "ofertaFormacao"],
       sortableColumns: [
         "nome",
         "nomeAbreviado",
@@ -61,13 +55,7 @@ export class CursoTypeOrmRepositoryAdapter implements ICursoRepositoryPort {
         "ofertaFormacao.nome",
         "ofertaFormacao.slug",
       ],
-      searchableColumns: [
-        "id",
-        "nome",
-        "nomeAbreviado",
-        "campus",
-        "ofertaFormacao",
-      ],
+      searchableColumns: ["id", "nome", "nomeAbreviado", "campus", "ofertaFormacao"],
       relations: {
         campus: true,
         ofertaFormacao: true,
@@ -164,13 +152,18 @@ export class CursoTypeOrmRepositoryAdapter implements ICursoRepositoryPort {
       .execute();
   }
 
-  private extractFilters(dto: DtoWithFilters | null | undefined): Record<string, string | string[]> {
+  private extractFilters(
+    dto: DtoWithFilters | null | undefined,
+  ): Record<string, string | string[]> {
     const filters: Record<string, string | string[]> = {};
     if (!dto) return filters;
 
     for (const [key, value] of Object.entries(dto)) {
       if (key.startsWith("filter.")) {
-        if (typeof value === "string" || (Array.isArray(value) && value.every(v => typeof v === "string"))) {
+        if (
+          typeof value === "string" ||
+          (Array.isArray(value) && value.every((v) => typeof v === "string"))
+        ) {
           filters[key.replace("filter.", "")] = value;
         }
       }

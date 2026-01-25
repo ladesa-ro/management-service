@@ -1,6 +1,5 @@
 import type { DeepPartial } from "typeorm";
 import type { AccessContext } from "@/infrastructure/access-context";
-import type { IPaginationConfig, IPaginationCriteria, IPaginationResult } from "@/v2/application/ports/pagination";
 import type {
   PerfilFindOneInputDto,
   PerfilFindOneOutputDto,
@@ -8,6 +7,11 @@ import type {
   PerfilListOutputDto,
 } from "@/v2/adapters/in/http/perfil/dto";
 import type { PerfilEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
+import type {
+  IPaginationConfig,
+  IPaginationCriteria,
+  IPaginationResult,
+} from "@/v2/application/ports/pagination";
 
 /**
  * Port de saída para operações de persistência de Perfil
@@ -78,10 +82,7 @@ export interface IPerfilRepositoryPort {
    * @param campusId ID do campus
    * @returns Lista de perfis do usuário no campus
    */
-  findByUsuarioAndCampus(
-    usuarioId: string,
-    campusId: string,
-  ): Promise<PerfilFindOneOutputDto[]>;
+  findByUsuarioAndCampus(usuarioId: string, campusId: string): Promise<PerfilFindOneOutputDto[]>;
 
   /**
    * Desativa perfis por IDs

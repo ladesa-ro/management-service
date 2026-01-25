@@ -1,3 +1,4 @@
+import { Type } from "class-transformer";
 import {
   IsArray,
   IsBoolean,
@@ -7,13 +8,15 @@ import {
   IsUUID,
   ValidateNested,
 } from "class-validator";
-import { Type } from "class-transformer";
-import { ObjectUuidRef, PaginationInput, PaginationMeta } from "../../../common/application/dtos";
-import { CalendarioLetivoFindOneOutput, CalendarioLetivoInputRef } from "../../../calendario-letivo/application/dtos";
-import { TurmaFindOneOutput, TurmaInputRef } from "../../../turma/application/dtos";
-import { DisciplinaFindOneOutput, DisciplinaInputRef } from "../../../disciplina/application/dtos";
 import { AmbienteFindOneOutput, AmbienteInputRef } from "../../../ambiente/application/dtos";
+import {
+  CalendarioLetivoFindOneOutput,
+  CalendarioLetivoInputRef,
+} from "../../../calendario-letivo/application/dtos";
+import { ObjectUuidRef, PaginationInput, PaginationMeta } from "../../../common/application/dtos";
+import { DisciplinaFindOneOutput, DisciplinaInputRef } from "../../../disciplina/application/dtos";
 import { ImagemFindOneOutput, ImagemInputRef } from "../../../imagem/application/dtos";
+import { TurmaFindOneOutput, TurmaInputRef } from "../../../turma/application/dtos";
 
 // ============================================================================
 // FindOne Input/Output

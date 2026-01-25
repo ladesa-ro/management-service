@@ -1,14 +1,10 @@
-import {
-  IsArray,
-  IsDate,
-  IsOptional,
-  IsString,
-  IsUUID,
-  ValidateNested,
-} from "class-validator";
 import { Type } from "class-transformer";
+import { IsArray, IsDate, IsOptional, IsString, IsUUID, ValidateNested } from "class-validator";
+import {
+  CalendarioLetivoFindOneOutput,
+  CalendarioLetivoInputRef,
+} from "../../../calendario-letivo/application/dtos";
 import { ObjectUuidRef, PaginationInput, PaginationMeta } from "../../../common/application/dtos";
-import { CalendarioLetivoFindOneOutput, CalendarioLetivoInputRef } from "../../../calendario-letivo/application/dtos";
 
 // ============================================================================
 // FindOne Input/Output

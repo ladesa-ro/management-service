@@ -1,9 +1,6 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { has, pick } from "lodash";
-import { DiarioService } from "@/v2/core/diario/application/use-cases/diario.service";
-import { PerfilService } from "@/v2/core/perfil/application/use-cases/perfil.service";
 import type { AccessContext } from "@/infrastructure/access-context";
-import type { DiarioProfessorEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import type {
   DiarioProfessorCreateInputDto,
   DiarioProfessorFindOneInputDto,
@@ -12,6 +9,9 @@ import type {
   DiarioProfessorListOutputDto,
   DiarioProfessorUpdateInputDto,
 } from "@/v2/adapters/in/http/diario-professor/dto";
+import type { DiarioProfessorEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
+import { DiarioService } from "@/v2/core/diario/application/use-cases/diario.service";
+import { PerfilService } from "@/v2/core/perfil/application/use-cases/perfil.service";
 import type { IDiarioProfessorRepositoryPort } from "../ports";
 
 @Injectable()
@@ -44,7 +44,11 @@ export class DiarioProfessorService {
     dto: DiarioProfessorFindOneInputDto,
     selection?: string[] | boolean,
   ): Promise<DiarioProfessorFindOneOutputDto> {
-    const diarioProfessor = await this.diarioProfessorRepository.findById(accessContext, dto, selection);
+    const diarioProfessor = await this.diarioProfessorRepository.findById(
+      accessContext,
+      dto,
+      selection,
+    );
 
     if (!diarioProfessor) {
       throw new NotFoundException();
@@ -66,7 +70,11 @@ export class DiarioProfessorService {
     id: DiarioProfessorFindOneInputDto["id"],
     selection?: string[] | boolean,
   ): Promise<DiarioProfessorFindOneOutputDto> {
-    const diarioProfessor = await this.diarioProfessorRepository.findByIdSimple(accessContext, id, selection);
+    const diarioProfessor = await this.diarioProfessorRepository.findByIdSimple(
+      accessContext,
+      id,
+      selection,
+    );
 
     if (!diarioProfessor) {
       throw new NotFoundException();
@@ -128,7 +136,9 @@ export class DiarioProfessorService {
     accessContext: AccessContext,
     dto: DiarioProfessorFindOneInputDto & DiarioProfessorUpdateInputDto,
   ): Promise<DiarioProfessorFindOneOutputDto> {
-    const currentDiarioProfessor = await this.diarioProfessorFindByIdStrict(accessContext, { id: dto.id });
+    const currentDiarioProfessor = await this.diarioProfessorFindByIdStrict(accessContext, {
+      id: dto.id,
+    });
 
     await accessContext.ensurePermission("diario_professor:update", { dto }, dto.id);
 

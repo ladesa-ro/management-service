@@ -1,9 +1,9 @@
 import { INestApplication } from "@nestjs/common";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { apiReference } from "@scalar/nestjs-api-reference";
-import { AppConfigService } from "@/v2/infra/config";
-import { withPrefix } from "@/infrastructure/utils/withPrefix";
 import swaggerUi from "swagger-ui-express";
+import { withPrefix } from "@/infrastructure/utils/withPrefix";
+import { AppConfigService } from "@/v2/infra/config";
 
 export const useDocs = (app: INestApplication) => {
   const configService = app.get<AppConfigService>(AppConfigService);
@@ -11,10 +11,10 @@ export const useDocs = (app: INestApplication) => {
   const prefix = configService.getRuntimePrefix();
 
   const paths = {
-    openapi: withPrefix(prefix, 'docs/openapi.v3.json'),
-    swagger: withPrefix(prefix, 'docs/swagger'),
-    scalar: withPrefix(prefix, 'docs'),
-  }
+    openapi: withPrefix(prefix, "docs/openapi.v3.json"),
+    swagger: withPrefix(prefix, "docs/swagger"),
+    scalar: withPrefix(prefix, "docs"),
+  };
 
   const config = new DocumentBuilder()
     .setTitle("Ladesa Management Service API")
@@ -56,4 +56,4 @@ export const useDocs = (app: INestApplication) => {
       url: paths.openapi,
     }),
   );
-}
+};

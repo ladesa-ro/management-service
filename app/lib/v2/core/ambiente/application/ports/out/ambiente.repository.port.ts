@@ -22,7 +22,10 @@ export interface IAmbienteRepositoryPort {
   ): Promise<AmbienteFindOneOutputDto | null>;
 
   save(ambiente: DeepPartial<AmbienteEntity>): Promise<AmbienteEntity>;
+
   create(): AmbienteEntity;
+
   merge(ambiente: AmbienteEntity, data: DeepPartial<AmbienteEntity>): void;
+
   softDeleteById(id: string): Promise<void>;
 }

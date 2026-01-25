@@ -28,7 +28,10 @@ export interface IEtapaRepositoryPort {
   ): Promise<EtapaFindOneOutputDto | null>;
 
   save(etapa: DeepPartial<EtapaEntity>): Promise<EtapaEntity>;
+
   create(): EtapaEntity;
+
   merge(etapa: EtapaEntity, data: DeepPartial<EtapaEntity>): void;
+
   softDeleteById(id: string): Promise<void>;
 }

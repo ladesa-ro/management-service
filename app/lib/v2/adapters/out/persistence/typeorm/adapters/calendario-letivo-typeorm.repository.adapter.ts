@@ -1,19 +1,19 @@
 import { Injectable } from "@nestjs/common";
-import { FilterOperator } from "nestjs-paginate";
 import { map } from "lodash";
+import { FilterOperator } from "nestjs-paginate";
 import type { DeepPartial } from "typeorm";
 import type { AccessContext } from "@/infrastructure/access-context";
-import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
 import { QbEfficientLoad } from "@/shared";
-import type { IPaginationConfig, IPaginationCriteria } from "@/v2/application/ports/pagination";
-import type { ICalendarioLetivoRepositoryPort } from "@/v2/core/calendario-letivo/application/ports";
 import type {
   CalendarioLetivoFindOneInputDto,
   CalendarioLetivoFindOneOutputDto,
   CalendarioLetivoListInputDto,
   CalendarioLetivoListOutputDto,
 } from "@/v2/adapters/in/http/calendario-letivo/dto";
+import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
 import type { CalendarioLetivoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
+import type { IPaginationConfig, IPaginationCriteria } from "@/v2/application/ports/pagination";
+import type { ICalendarioLetivoRepositoryPort } from "@/v2/core/calendario-letivo/application/ports";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
 
 const aliasCalendarioLetivo = "calendarioLetivo";
@@ -65,13 +65,7 @@ export class CalendarioLetivoTypeOrmRepositoryAdapter implements ICalendarioLeti
         "ofertaFormacao.nome",
         "ofertaFormacao.slug",
       ],
-      searchableColumns: [
-        "id",
-        "nome",
-        "ano",
-        "campus",
-        "ofertaFormacao",
-      ],
+      searchableColumns: ["id", "nome", "ano", "campus", "ofertaFormacao"],
       relations: {
         campus: true,
         ofertaFormacao: true,
@@ -118,7 +112,7 @@ export class CalendarioLetivoTypeOrmRepositoryAdapter implements ICalendarioLeti
     qb.select([]);
     QbEfficientLoad("CalendarioLetivoFindOneOutput", qb, aliasCalendarioLetivo, selection);
 
-    return await qb.getOne() as CalendarioLetivoFindOneOutputDto | null;
+    return (await qb.getOne()) as CalendarioLetivoFindOneOutputDto | null;
   }
 
   async findByIdSimple(
@@ -133,10 +127,12 @@ export class CalendarioLetivoTypeOrmRepositoryAdapter implements ICalendarioLeti
     qb.select([]);
     QbEfficientLoad("CalendarioLetivoFindOneOutput", qb, aliasCalendarioLetivo, selection);
 
-    return await qb.getOne() as CalendarioLetivoFindOneOutputDto | null;
+    return (await qb.getOne()) as CalendarioLetivoFindOneOutputDto | null;
   }
 
-  async save(calendarioLetivo: DeepPartial<CalendarioLetivoEntity>): Promise<CalendarioLetivoEntity> {
+  async save(
+    calendarioLetivo: DeepPartial<CalendarioLetivoEntity>,
+  ): Promise<CalendarioLetivoEntity> {
     return this.calendarioLetivoRepository.save(calendarioLetivo);
   }
 
@@ -158,11 +154,17 @@ export class CalendarioLetivoTypeOrmRepositoryAdapter implements ICalendarioLeti
       .execute();
   }
 
-  private extractFilters(dto: DtoWithFilters | null | undefined): Record<string, string | string[]> {
+  private extractFilters(
+    dto: DtoWithFilters | null | undefined,
+  ): Record<string, string | string[]> {
     const filters: Record<string, string | string[]> = {};
     if (!dto) return filters;
     for (const [key, value] of Object.entries(dto)) {
-      if (key.startsWith("filter.") && (typeof value === "string" || (Array.isArray(value) && value.every(v => typeof v === "string")))) {
+      if (
+        key.startsWith("filter.") &&
+        (typeof value === "string" ||
+          (Array.isArray(value) && value.every((v) => typeof v === "string")))
+      ) {
         filters[key.replace("filter.", "")] = value;
       }
     }

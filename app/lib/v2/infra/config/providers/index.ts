@@ -1,6 +1,6 @@
 import type { Provider } from "@nestjs/common";
-import { AppConfigService } from "../tokens";
 import { EnvironmentConfigService } from "@/v2/adapters/out/config";
+import { AppConfigService } from "../tokens";
 
 export const ProviderAppConfigService: Provider = {
   provide: AppConfigService,

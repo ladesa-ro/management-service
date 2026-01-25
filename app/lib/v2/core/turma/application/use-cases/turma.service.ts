@@ -1,11 +1,6 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { has, pick } from "lodash";
-import { AmbienteService } from "@/v2/core/ambiente/application/use-cases/ambiente.service";
-import { ArquivoService } from "@/v2/core/arquivo/application/use-cases/arquivo.service";
-import { CursoService } from "@/v2/core/curso/application/use-cases/curso.service";
-import { ImagemService } from "@/v2/core/imagem/application/use-cases/imagem.service";
 import type { AccessContext } from "@/infrastructure/access-context";
-import type { TurmaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import type {
   TurmaCreateInputDto,
   TurmaFindOneInputDto,
@@ -14,6 +9,11 @@ import type {
   TurmaListOutputDto,
   TurmaUpdateInputDto,
 } from "@/v2/adapters/in/http/turma/dto";
+import type { TurmaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
+import { AmbienteService } from "@/v2/core/ambiente/application/use-cases/ambiente.service";
+import { ArquivoService } from "@/v2/core/arquivo/application/use-cases/arquivo.service";
+import { CursoService } from "@/v2/core/curso/application/use-cases/curso.service";
+import { ImagemService } from "@/v2/core/imagem/application/use-cases/imagem.service";
 import type { ITurmaRepositoryPort } from "../ports";
 
 @Injectable()
@@ -142,9 +142,12 @@ export class TurmaService {
 
     if (has(dto, "ambientePadraoAula") && dto.ambientePadraoAula !== undefined) {
       if (dto.ambientePadraoAula !== null) {
-        const ambientePadraoAula = await this.ambienteService.ambienteFindByIdStrict(accessContext, {
-          id: dto.ambientePadraoAula.id,
-        });
+        const ambientePadraoAula = await this.ambienteService.ambienteFindByIdStrict(
+          accessContext,
+          {
+            id: dto.ambientePadraoAula.id,
+          },
+        );
 
         this.turmaRepository.merge(turma, {
           ambientePadraoAula: {

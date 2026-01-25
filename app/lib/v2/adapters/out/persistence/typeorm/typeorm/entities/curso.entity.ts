@@ -1,6 +1,14 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, type Relation } from "typeorm";
-import { ImagemEntity } from "./imagem.entity"
-import { CampusEntity } from "./campus.entity"
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  type Relation,
+} from "typeorm";
+import { CampusEntity } from "./campus.entity";
+import { ImagemEntity } from "./imagem.entity";
 import { OfertaFormacaoEntity } from "./oferta-formacao.entity";
 import { TurmaEntity } from "./turma.entity";
 

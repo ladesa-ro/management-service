@@ -47,8 +47,8 @@ export class InsertEstadosBrasil1710183631224 implements MigrationInterface {
     for (const estado of remainingEstados) {
       await queryRunner.query(
         `DELETE
-                               FROM "base_estado"
-                               WHERE "id" = $1;`,
+         FROM "base_estado"
+         WHERE "id" = $1;`,
         [estado.id],
       );
     }

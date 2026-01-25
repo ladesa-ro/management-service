@@ -8,7 +8,13 @@ export const useHelmet = (app: INestApplication) => {
         useDefaults: true,
         directives: {
           defaultSrc: ["'self'"],
-          scriptSrc: ["'self'", "https://cdn.jsdelivr.net", "https://unpkg.com", "'sha256-o7edkv+OgKBSsAFAX2/oZBLyBKkKSwKR4idD6i6+5TM='", "'sha256-E55b/hKtDvu9PwyJMvhVIYqzNZi2Li6+ATCTtQCZepQ='"],
+          scriptSrc: [
+            "'self'",
+            "https://cdn.jsdelivr.net",
+            "https://unpkg.com",
+            "'sha256-o7edkv+OgKBSsAFAX2/oZBLyBKkKSwKR4idD6i6+5TM='",
+            "'sha256-E55b/hKtDvu9PwyJMvhVIYqzNZi2Li6+ATCTtQCZepQ='",
+          ],
           styleSrc: ["'self'", "https://unpkg.com", "'unsafe-inline'"],
           imgSrc: ["'self'", "data:", "https://unpkg.com"],
           fontSrc: ["'self'", "https://unpkg.com", "https://fonts.scalar.com"],
@@ -20,4 +26,4 @@ export const useHelmet = (app: INestApplication) => {
       crossOriginResourcePolicy: false,
     }),
   );
-}
+};

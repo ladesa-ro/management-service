@@ -1,3 +1,4 @@
+import { Type } from "class-transformer";
 import {
   IsArray,
   IsDate,
@@ -7,7 +8,6 @@ import {
   MinLength,
   ValidateNested,
 } from "class-validator";
-import { Type } from "class-transformer";
 import { ObjectUuidRef, PaginationInput, PaginationMeta } from "../../../common/application/dtos";
 import { ModalidadeFindOneOutput, ModalidadeInputRef } from "../../../modalidade/application/dtos";
 

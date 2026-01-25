@@ -1,12 +1,28 @@
-import { ApiProperty, ApiPropertyOptional, PartialType } from "@nestjs/swagger";
 import { ArgsType, Field, ID, InputType, ObjectType } from "@nestjs/graphql";
-import { IsArray, IsDateString, IsOptional, IsString, IsUUID, MinLength, ValidateNested } from "class-validator";
+import { ApiProperty, ApiPropertyOptional, PartialType } from "@nestjs/swagger";
 import { Type } from "class-transformer";
+import {
+  IsArray,
+  IsDateString,
+  IsOptional,
+  IsString,
+  IsUUID,
+  MinLength,
+  ValidateNested,
+} from "class-validator";
 import { PaginationInputDto, PaginationMetaDto } from "@/shared/dto";
-import { commonProperties, referenceProperty, RegisterModel, simpleProperty, } from "@/shared/metadata";
-import { CursoFindOneInputDto, CursoFindOneOutputDto } from "@/v2/adapters/in/http/curso/dto";
-import { AmbienteFindOneInputDto, AmbienteFindOneOutputDto } from "@/v2/adapters/in/http/ambiente/dto";
+import {
+  commonProperties,
+  RegisterModel,
+  referenceProperty,
+  simpleProperty,
+} from "@/shared/metadata";
+import {
+  AmbienteFindOneInputDto,
+  AmbienteFindOneOutputDto,
+} from "@/v2/adapters/in/http/ambiente/dto";
 import { ImagemFindOneOutputDto } from "@/v2/adapters/in/http/bloco/dto";
+import { CursoFindOneInputDto, CursoFindOneOutputDto } from "@/v2/adapters/in/http/curso/dto";
 
 // ============================================================================
 // FindOne Output
@@ -42,14 +58,22 @@ export class TurmaFindOneOutputDto {
   @Type(() => CursoFindOneOutputDto)
   curso: CursoFindOneOutputDto;
 
-  @ApiPropertyOptional({ type: () => AmbienteFindOneOutputDto, description: "Ambiente padrao da sala de aula", nullable: true })
+  @ApiPropertyOptional({
+    type: () => AmbienteFindOneOutputDto,
+    description: "Ambiente padrao da sala de aula",
+    nullable: true,
+  })
   @Field(() => AmbienteFindOneOutputDto, { nullable: true })
   @IsOptional()
   @ValidateNested()
   @Type(() => AmbienteFindOneOutputDto)
   ambientePadraoAula: AmbienteFindOneOutputDto | null;
 
-  @ApiPropertyOptional({ type: () => ImagemFindOneOutputDto, description: "Imagem de capa da turma", nullable: true })
+  @ApiPropertyOptional({
+    type: () => ImagemFindOneOutputDto,
+    description: "Imagem de capa da turma",
+    nullable: true,
+  })
   @Field(() => ImagemFindOneOutputDto, { nullable: true })
   @IsOptional()
   @ValidateNested()
@@ -120,7 +144,11 @@ export class TurmaCreateInputDto {
   @Type(() => CursoFindOneInputDto)
   curso: CursoFindOneInputDto;
 
-  @ApiPropertyOptional({ type: () => AmbienteFindOneInputDto, description: "Ambiente padrao da sala de aula", nullable: true })
+  @ApiPropertyOptional({
+    type: () => AmbienteFindOneInputDto,
+    description: "Ambiente padrao da sala de aula",
+    nullable: true,
+  })
   @Field(() => AmbienteFindOneInputDto, { nullable: true })
   @IsOptional()
   @ValidateNested()

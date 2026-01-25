@@ -26,7 +26,10 @@ export class RequestActorService {
         }
       }
 
-      const tokenSet = await this.integracaoIdentidadeEAcessoServicec.getIdentityResponseFromAccessToken(accessToken);
+      const tokenSet =
+        await this.integracaoIdentidadeEAcessoServicec.getIdentityResponseFromAccessToken(
+          accessToken,
+        );
 
       return this.getCurrentUsuarioByMatriculaSiape(tokenSet.usuario?.matriculaSiape);
     }
@@ -37,7 +40,13 @@ export class RequestActorService {
   private async getCurrentUsuarioByMatriculaSiape(matriculaSiape: string): Promise<IRequestActor> {
     const usuario = await this.usuarioRepository
       .createQueryBuilder("usuario")
-      .select(["usuario.id", "usuario.nome", "usuario.matriculaSiape", "usuario.email", "usuario.isSuperUser"])
+      .select([
+        "usuario.id",
+        "usuario.nome",
+        "usuario.matriculaSiape",
+        "usuario.email",
+        "usuario.isSuperUser",
+      ])
       .where("usuario.matriculaSiape = :matriculaSiape", {
         matriculaSiape: matriculaSiape,
       })

@@ -6,13 +6,11 @@ import {
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
-  type Relation
+  type Relation,
 } from "typeorm";
 import { ModalidadeEntity } from "./modalidade.entity";
-import {
-  OfertaFormacaoNivelFormacaoEntity
-} from "./oferta-formacao-nivel-formacao.entity";
 import { NivelFormacaoEntity } from "./nivel-formacao.entity";
+import { OfertaFormacaoNivelFormacaoEntity } from "./oferta-formacao-nivel-formacao.entity";
 
 @Entity("oferta_formacao")
 export class OfertaFormacaoEntity {
@@ -47,6 +45,8 @@ export class OfertaFormacaoEntity {
 
   @AfterLoad()
   updateNiveisFormacoes() {
-    this.niveisFormacoes = this.ofertaFormacaoNiveisFormacoes?.map(({ nivelFormacao }) => nivelFormacao);
+    this.niveisFormacoes = this.ofertaFormacaoNiveisFormacoes?.map(
+      ({ nivelFormacao }) => nivelFormacao,
+    );
   }
 }

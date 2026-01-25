@@ -1,20 +1,20 @@
 import { Injectable } from "@nestjs/common";
-import { FilterOperator } from "nestjs-paginate";
 import { map } from "lodash";
+import { FilterOperator } from "nestjs-paginate";
 import type { DeepPartial } from "typeorm";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
-import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
 import { QbEfficientLoad } from "@/shared";
-import type { IPaginationConfig, IPaginationCriteria } from "@/v2/application/ports/pagination";
-import type { ITurmaRepositoryPort } from "@/v2/core/turma/application/ports";
 import type {
   TurmaFindOneInputDto,
   TurmaFindOneOutputDto,
   TurmaListInputDto,
   TurmaListOutputDto,
 } from "@/v2/adapters/in/http/turma/dto";
+import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
 import type { TurmaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
+import type { IPaginationConfig, IPaginationCriteria } from "@/v2/application/ports/pagination";
+import type { ITurmaRepositoryPort } from "@/v2/core/turma/application/ports";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
 
 const aliasTurma = "turma";
@@ -42,10 +42,7 @@ export class TurmaTypeOrmRepositoryAdapter implements ITurmaRepositoryPort {
 
     const config = {
       ...paginateConfig,
-      select: [
-        "id",
-        "periodo",
-      ],
+      select: ["id", "periodo"],
       sortableColumns: [
         "periodo",
         "ambientePadraoAula.nome",
@@ -65,15 +62,18 @@ export class TurmaTypeOrmRepositoryAdapter implements ITurmaRepositoryPort {
         },
         ambientePadraoAula: true,
       },
-      searchableColumns: [
-        "id",
-        "periodo",
-      ],
+      searchableColumns: ["id", "periodo"],
       defaultSortBy: [["periodo", "ASC"]],
       filterableColumns: {
         "ambientePadraoAula.nome": [FilterOperator.EQ],
         "ambientePadraoAula.codigo": [FilterOperator.EQ],
-        "ambientePadraoAula.capacidade": [FilterOperator.EQ, FilterOperator.GT, FilterOperator.GTE, FilterOperator.LT, FilterOperator.LTE],
+        "ambientePadraoAula.capacidade": [
+          FilterOperator.EQ,
+          FilterOperator.GT,
+          FilterOperator.GTE,
+          FilterOperator.LT,
+          FilterOperator.LTE,
+        ],
         "ambientePadraoAula.tipo": [FilterOperator.EQ],
         "curso.id": [FilterOperator.EQ],
         "curso.nome": [FilterOperator.EQ],
@@ -117,7 +117,7 @@ export class TurmaTypeOrmRepositoryAdapter implements ITurmaRepositoryPort {
     qb.select([]);
     QbEfficientLoad("TurmaFindOneOutput", qb, aliasTurma, selection);
 
-    return await qb.getOne() as TurmaFindOneOutputDto | null;
+    return (await qb.getOne()) as TurmaFindOneOutputDto | null;
   }
 
   async findByIdSimple(
@@ -132,7 +132,7 @@ export class TurmaTypeOrmRepositoryAdapter implements ITurmaRepositoryPort {
     qb.select([]);
     QbEfficientLoad("TurmaFindOneOutput", qb, aliasTurma, selection);
 
-    return await qb.getOne() as TurmaFindOneOutputDto | null;
+    return (await qb.getOne()) as TurmaFindOneOutputDto | null;
   }
 
   async save(turma: DeepPartial<TurmaEntity>): Promise<TurmaEntity> {
@@ -157,11 +157,17 @@ export class TurmaTypeOrmRepositoryAdapter implements ITurmaRepositoryPort {
       .execute();
   }
 
-  private extractFilters(dto: DtoWithFilters | null | undefined): Record<string, string | string[]> {
+  private extractFilters(
+    dto: DtoWithFilters | null | undefined,
+  ): Record<string, string | string[]> {
     const filters: Record<string, string | string[]> = {};
     if (!dto) return filters;
     for (const [key, value] of Object.entries(dto)) {
-      if (key.startsWith("filter.") && (typeof value === "string" || (Array.isArray(value) && value.every(v => typeof v === "string")))) {
+      if (
+        key.startsWith("filter.") &&
+        (typeof value === "string" ||
+          (Array.isArray(value) && value.every((v) => typeof v === "string")))
+      ) {
         filters[key.replace("filter.", "")] = value;
       }
     }

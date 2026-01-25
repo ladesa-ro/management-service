@@ -1,9 +1,14 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, type Relation } from "typeorm";
-import { HorarioGeradoEntity } from "./horario-gerado.entity";
-import { DiarioProfessorEntity } from "./diario-professor.entity";
 import {
-  IntervaloDeTempoEntity
-} from "./intervalo-de-tempo.entity";
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  type Relation,
+} from "typeorm";
+import { DiarioProfessorEntity } from "./diario-professor.entity";
+import { HorarioGeradoEntity } from "./horario-gerado.entity";
+import { IntervaloDeTempoEntity } from "./intervalo-de-tempo.entity";
 
 @Entity("horario_gerado_aula")
 export class HorarioGeradoAulaEntity {

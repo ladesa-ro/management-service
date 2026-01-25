@@ -1,18 +1,33 @@
-import { ApiProperty, ApiPropertyOptional, PartialType } from "@nestjs/swagger";
 import { ArgsType, Field, ID, InputType, ObjectType } from "@nestjs/graphql";
-import { IsArray, IsDateString, IsOptional, IsString, IsUUID, ValidateNested } from "class-validator";
+import { ApiProperty, ApiPropertyOptional, PartialType } from "@nestjs/swagger";
 import { Type } from "class-transformer";
-import { PaginationInputDto, PaginationMetaDto } from "@/shared/dto";
-import { commonProperties, referenceProperty, RegisterModel, simpleProperty, } from "@/shared/metadata";
 import {
-  IntervaloDeTempoFindOneInputDto,
-  IntervaloDeTempoFindOneOutputDto
-} from "@/v2/adapters/in/http/intervalo-de-tempo/dto";
+  IsArray,
+  IsDateString,
+  IsOptional,
+  IsString,
+  IsUUID,
+  ValidateNested,
+} from "class-validator";
+import { PaginationInputDto, PaginationMetaDto } from "@/shared/dto";
+import {
+  commonProperties,
+  RegisterModel,
+  referenceProperty,
+  simpleProperty,
+} from "@/shared/metadata";
 import {
   DiarioProfessorFindOneInputDto,
-  DiarioProfessorFindOneOutputDto
+  DiarioProfessorFindOneOutputDto,
 } from "@/v2/adapters/in/http/diario-professor/dto";
-import { HorarioGeradoFindOneInputDto, HorarioGeradoFindOneOutputDto } from "@/v2/adapters/in/http/horario-gerado/dto";
+import {
+  HorarioGeradoFindOneInputDto,
+  HorarioGeradoFindOneOutputDto,
+} from "@/v2/adapters/in/http/horario-gerado/dto";
+import {
+  IntervaloDeTempoFindOneInputDto,
+  IntervaloDeTempoFindOneOutputDto,
+} from "@/v2/adapters/in/http/intervalo-de-tempo/dto";
 
 // ============================================================================
 // FindOne Output
@@ -47,13 +62,19 @@ export class HorarioGeradoAulaFindOneOutputDto {
   @Type(() => IntervaloDeTempoFindOneOutputDto)
   intervaloDeTempo: IntervaloDeTempoFindOneOutputDto;
 
-  @ApiProperty({ type: () => DiarioProfessorFindOneOutputDto, description: "Vinculo de diario e professor" })
+  @ApiProperty({
+    type: () => DiarioProfessorFindOneOutputDto,
+    description: "Vinculo de diario e professor",
+  })
   @Field(() => DiarioProfessorFindOneOutputDto)
   @ValidateNested()
   @Type(() => DiarioProfessorFindOneOutputDto)
   diarioProfessor: DiarioProfessorFindOneOutputDto;
 
-  @ApiProperty({ type: () => HorarioGeradoFindOneOutputDto, description: "Horario ao qual a aula pertence" })
+  @ApiProperty({
+    type: () => HorarioGeradoFindOneOutputDto,
+    description: "Horario ao qual a aula pertence",
+  })
   @Field(() => HorarioGeradoFindOneOutputDto)
   @ValidateNested()
   @Type(() => HorarioGeradoFindOneOutputDto)
@@ -100,7 +121,10 @@ export class HorarioGeradoAulaListOutputDto {
   @Field(() => PaginationMetaDto)
   meta: PaginationMetaDto;
 
-  @ApiProperty({ type: () => [HorarioGeradoAulaFindOneOutputDto], description: "Resultados da busca" })
+  @ApiProperty({
+    type: () => [HorarioGeradoAulaFindOneOutputDto],
+    description: "Resultados da busca",
+  })
   @Field(() => [HorarioGeradoAulaFindOneOutputDto])
   data: HorarioGeradoAulaFindOneOutputDto[];
 }
@@ -122,13 +146,19 @@ export class HorarioGeradoAulaCreateInputDto {
   @Type(() => IntervaloDeTempoFindOneInputDto)
   intervaloDeTempo: IntervaloDeTempoFindOneInputDto;
 
-  @ApiProperty({ type: () => DiarioProfessorFindOneInputDto, description: "Vinculo de diario e professor" })
+  @ApiProperty({
+    type: () => DiarioProfessorFindOneInputDto,
+    description: "Vinculo de diario e professor",
+  })
   @Field(() => DiarioProfessorFindOneInputDto)
   @ValidateNested()
   @Type(() => DiarioProfessorFindOneInputDto)
   diarioProfessor: DiarioProfessorFindOneInputDto;
 
-  @ApiProperty({ type: () => HorarioGeradoFindOneInputDto, description: "Horario ao qual a aula pertence" })
+  @ApiProperty({
+    type: () => HorarioGeradoFindOneInputDto,
+    description: "Horario ao qual a aula pertence",
+  })
   @Field(() => HorarioGeradoFindOneInputDto)
   @ValidateNested()
   @Type(() => HorarioGeradoFindOneInputDto)

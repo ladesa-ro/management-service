@@ -4,21 +4,24 @@ import {
   ForbiddenException,
   HttpException,
   Injectable,
-  ServiceUnavailableException
+  ServiceUnavailableException,
 } from "@nestjs/common";
 import * as client from "openid-client";
+import type { AccessContext } from "@/infrastructure/access-context";
+import {
+  KeycloakService,
+  OpenidConnectService,
+} from "@/infrastructure/integrations/identity-provider";
+import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
 import { PerfilService } from "@/v2/core/perfil/application/use-cases/perfil.service";
 import { UsuarioService } from "@/v2/core/usuario/application/use-cases/usuario.service";
-import type { AccessContext } from "@/infrastructure/access-context";
-import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
-import { KeycloakService, OpenidConnectService } from "@/infrastructure/integrations/identity-provider";
 import type {
-  AuthLoginInput,
-  AuthRefreshInput,
   AuthCredentialsSetInitialPasswordInput,
+  AuthLoginInput,
   AuthRecoverPasswordInput,
-  AuthWhoAmIOutput,
+  AuthRefreshInput,
   AuthSessionCredentials,
+  AuthWhoAmIOutput,
 } from "../dtos";
 
 @Injectable()
@@ -57,7 +60,10 @@ export class AutenticacaoService {
     };
   }
 
-  async login(accessContext: AccessContext, domain: AuthLoginInput): Promise<AuthSessionCredentials> {
+  async login(
+    accessContext: AccessContext,
+    domain: AuthLoginInput,
+  ): Promise<AuthSessionCredentials> {
     if (accessContext.requestActor !== null) {
       throw new BadRequestException("Você não pode usar a rota de login caso já esteja logado.");
     }
@@ -111,11 +117,16 @@ export class AutenticacaoService {
     throw new ForbiddenException("Credenciais inválidas ou expiradas.");
   }
 
-  async definirSenha(_accessContext: AccessContext, domain: AuthCredentialsSetInitialPasswordInput) {
+  async definirSenha(
+    _accessContext: AccessContext,
+    domain: AuthCredentialsSetInitialPasswordInput,
+  ) {
     try {
       const kcAdminClient = await this.keycloakService.getAdminClient();
 
-      const { usuario, userRepresentation } = await this.findByMatriculaSiape(domain.matriculaSiape);
+      const { usuario, userRepresentation } = await this.findByMatriculaSiape(
+        domain.matriculaSiape,
+      );
 
       if (!usuario || !userRepresentation) {
         throw new ForbiddenException("Usuário indisponível.");
@@ -125,7 +136,10 @@ export class AutenticacaoService {
         id: userRepresentation.id!,
       });
 
-      if (userRepresentation.requiredActions?.includes("UPDATE_PASSWORD") && userCredentials.length === 0) {
+      if (
+        userRepresentation.requiredActions?.includes("UPDATE_PASSWORD") &&
+        userCredentials.length === 0
+      ) {
         await kcAdminClient.users.resetPassword({
           id: userRepresentation.id!,
           credential: {
@@ -178,7 +192,9 @@ export class AutenticacaoService {
     return false;
   }
 
-  private formatTokenSet(tokenset: client.TokenEndpointResponse & client.TokenEndpointResponseHelpers) {
+  private formatTokenSet(
+    tokenset: client.TokenEndpointResponse & client.TokenEndpointResponseHelpers,
+  ) {
     return <AuthSessionCredentials>{
       access_token: tokenset.access_token ?? null,
       token_type: tokenset.token_type ?? null,

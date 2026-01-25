@@ -5,12 +5,13 @@ import {
   ApiForbiddenResponse,
   ApiOkResponse,
   ApiOperation,
-  ApiTags
+  ApiTags,
 } from "@nestjs/swagger";
-import { UsuarioService } from "@/v2/core/usuario/application/use-cases/usuario.service";
 import { AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { Public } from "@/infrastructure/authentication";
+import { UsuarioFindOneOutputDto } from "@/v2/adapters/in/http/usuario/dto";
 import { AutenticacaoService } from "@/v2/core/autenticacao/application/use-cases/autenticacao.service";
+import { UsuarioService } from "@/v2/core/usuario/application/use-cases/usuario.service";
 import {
   AuthCredentialsSetInitialPasswordInputDto,
   AuthLoginInputDto,
@@ -19,7 +20,6 @@ import {
   AuthSessionCredentialsDto,
   AuthWhoAmIOutputDto,
 } from "./dto";
-import { UsuarioFindOneOutputDto } from "@/v2/adapters/in/http/usuario/dto";
 
 @ApiTags("autenticacao")
 @Controller("/autenticacao")
@@ -34,7 +34,9 @@ export class AutenticacaoController {
   @ApiOkResponse({ type: UsuarioFindOneOutputDto })
   @ApiForbiddenResponse()
   @ApiBadRequestResponse()
-  async whoAmIEnsino(@AccessContextHttp() accessContext: AccessContext): Promise<UsuarioFindOneOutputDto> {
+  async whoAmIEnsino(
+    @AccessContextHttp() accessContext: AccessContext,
+  ): Promise<UsuarioFindOneOutputDto> {
     const idUsuario = accessContext.requestActor?.id;
     if (!idUsuario) {
       throw new BadRequestException();
@@ -47,7 +49,9 @@ export class AutenticacaoController {
   @ApiOkResponse({ type: AuthWhoAmIOutputDto })
   @ApiForbiddenResponse()
   async whoAmI(@AccessContextHttp() accessContext: AccessContext): Promise<AuthWhoAmIOutputDto> {
-    return this.autenticacaoService.whoAmI(accessContext) as unknown as Promise<AuthWhoAmIOutputDto>;
+    return this.autenticacaoService.whoAmI(
+      accessContext,
+    ) as unknown as Promise<AuthWhoAmIOutputDto>;
   }
 
   @Post("/login")

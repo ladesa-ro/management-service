@@ -1,9 +1,9 @@
 import { Module } from "@nestjs/common";
 import { KeycloakModule } from "@/infrastructure/integrations/identity-provider";
 import { UsuarioController } from "@/v2/adapters/in/http/usuario/usuario.controller";
-import { UsuarioService } from "@/v2/core/usuario/application/use-cases/usuario.service";
-import { UsuarioTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistence/typeorm/adapters";
 import { NestJsPaginateAdapter } from "@/v2/adapters/out/persistence/pagination";
+import { UsuarioTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistence/typeorm/adapters";
+import { UsuarioService } from "@/v2/core/usuario/application/use-cases/usuario.service";
 
 /**
  * Módulo Usuario configurado com Arquitetura Hexagonal

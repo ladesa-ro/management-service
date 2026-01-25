@@ -1,6 +1,14 @@
-import { IsArray, IsInt, IsOptional, IsString, Min, MinLength, ValidateNested } from "class-validator";
 import { Type } from "class-transformer";
-import { PaginationInput, PaginationMeta, ObjectIntRef } from "../../../common/application/dtos";
+import {
+  IsArray,
+  IsInt,
+  IsOptional,
+  IsString,
+  Min,
+  MinLength,
+  ValidateNested,
+} from "class-validator";
+import { ObjectIntRef, PaginationInput, PaginationMeta } from "../../../common/application/dtos";
 import { EstadoFindOneOutput } from "../../../estado/application/dtos";
 
 // ============================================================================

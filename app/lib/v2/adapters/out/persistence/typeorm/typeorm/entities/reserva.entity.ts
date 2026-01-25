@@ -1,7 +1,13 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, type Relation } from "typeorm";
-
-import { UsuarioEntity } from "./usuario.entity"
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  type Relation,
+} from "typeorm";
 import { AmbienteEntity } from "./ambiente.entity";
+import { UsuarioEntity } from "./usuario.entity";
 
 @Entity("reserva")
 export class ReservaEntity {

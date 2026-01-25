@@ -11,7 +11,8 @@ export class AuthStrategyAccessToken extends PassportStrategy(Strategy, AuthStra
   }
 
   async validate(accessToken?: string) {
-    const currentUsuario = await this.requestActorService.getCurrentFuncionarioByAccessToken(accessToken);
+    const currentUsuario =
+      await this.requestActorService.getCurrentFuncionarioByAccessToken(accessToken);
 
     if (!currentUsuario) {
       throw new UnauthorizedException("Not authenticated.");

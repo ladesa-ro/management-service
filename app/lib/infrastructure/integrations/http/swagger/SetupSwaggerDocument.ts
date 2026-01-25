@@ -5,7 +5,9 @@ export function SetupSwaggerDocument(configService: IConfig | null = null) {
   const config = new DocumentBuilder();
 
   config.setTitle("Ladesa - API");
-  config.setDescription("API para a consulta e manipulação de dados e procedimentos relacionados ao Sistema de Gestão Acadêmico.");
+  config.setDescription(
+    "API para a consulta e manipulação de dados e procedimentos relacionados ao Sistema de Gestão Acadêmico.",
+  );
   config.setVersion("0.0");
 
   config.addBearerAuth();
@@ -29,12 +31,21 @@ export function SetupSwaggerDocument(configService: IConfig | null = null) {
   config.addTag("niveis-formacoes", "Ensino Institucional / Níveis de Formações");
   config.addTag("modalidades", "Ensino Institucional / Modalidades");
   config.addTag("ofertas-formacoes", "Ensino Institucional / Ofertas de Formações");
-  config.addTag("ofertas-formacoes-niveis-formacoes", "Ensino Institucional / Ofertas de Formações / Níveis de Formação");
+  config.addTag(
+    "ofertas-formacoes-niveis-formacoes",
+    "Ensino Institucional / Ofertas de Formações / Níveis de Formação",
+  );
   config.addTag("cursos", "Ensino Institucional / Cursos");
   config.addTag("disciplinas", "Ensino Institucional / Disciplinas");
 
-  config.addTag("grades-horarios-ofertas-formacoes", "Calendário / Grades de Horário para Ofertas de Formações");
-  config.addTag("grades-horarios-ofertas-formacoes-intervalos-de-tempo", "Calendário / Grades de Horário para Ofertas de Formações / Intervalos de Tempo");
+  config.addTag(
+    "grades-horarios-ofertas-formacoes",
+    "Calendário / Grades de Horário para Ofertas de Formações",
+  );
+  config.addTag(
+    "grades-horarios-ofertas-formacoes-intervalos-de-tempo",
+    "Calendário / Grades de Horário para Ofertas de Formações / Intervalos de Tempo",
+  );
 
   config.addTag("calendarios-letivos", "Calendário / Calendarios Letivos");
   config.addTag("dias-calendarios", "Calendário / Calendarios Letivos / Dias");

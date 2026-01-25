@@ -9,4 +9,4 @@ export const usePrefix = (app: INestApplication) => {
   if (prefix) {
     app.setGlobalPrefix(prefix, { exclude: ["health"] });
   }
-}
+};

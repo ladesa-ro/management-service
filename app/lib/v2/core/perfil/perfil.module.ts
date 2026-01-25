@@ -1,10 +1,10 @@
 import { Module } from "@nestjs/common";
-import { CampusModule } from "@/v2/core/campus/campus.module";
-import { UsuarioModule } from "@/v2/core/usuario/usuario.module";
 import { PerfilController } from "@/v2/adapters/in/http/perfil/perfil.controller";
-import { PerfilService } from "@/v2/core/perfil/application/use-cases/perfil.service";
-import { PerfilTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistence/typeorm/adapters";
 import { NestJsPaginateAdapter } from "@/v2/adapters/out/persistence/pagination";
+import { PerfilTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistence/typeorm/adapters";
+import { CampusModule } from "@/v2/core/campus/campus.module";
+import { PerfilService } from "@/v2/core/perfil/application/use-cases/perfil.service";
+import { UsuarioModule } from "@/v2/core/usuario/usuario.module";
 
 /**
  * Módulo Perfil configurado com Arquitetura Hexagonal

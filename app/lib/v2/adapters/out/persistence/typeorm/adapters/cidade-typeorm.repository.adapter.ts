@@ -1,18 +1,18 @@
 import { Injectable } from "@nestjs/common";
-import { FilterOperator } from "nestjs-paginate";
 import { map } from "lodash";
+import { FilterOperator } from "nestjs-paginate";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
-import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
 import { QbEfficientLoad } from "@/shared";
-import type { IPaginationConfig, IPaginationCriteria } from "@/v2/application/ports/pagination";
-import type { ICidadeRepositoryPort } from "@/v2/core/cidade/application/ports";
 import type {
   CidadeFindOneInputDto,
   CidadeFindOneOutputDto,
   CidadeListInputDto,
   CidadeListOutputDto,
 } from "@/v2/adapters/in/http/cidade/dto";
+import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
+import type { IPaginationConfig, IPaginationCriteria } from "@/v2/application/ports/pagination";
+import type { ICidadeRepositoryPort } from "@/v2/core/cidade/application/ports";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
 
 const aliasCidade = "cidade";
@@ -48,13 +48,7 @@ export class CidadeTypeOrmRepositoryAdapter implements ICidadeRepositoryPort {
 
     const config: IPaginationConfig<CidadeFindOneOutputDto> = {
       ...paginateConfig,
-      select: [
-        "id",
-        "nome",
-        "estado.id",
-        "estado.sigla",
-        "estado.nome",
-      ],
+      select: ["id", "nome", "estado.id", "estado.sigla", "estado.nome"],
       relations: {
         estado: true,
       },
@@ -109,14 +103,19 @@ export class CidadeTypeOrmRepositoryAdapter implements ICidadeRepositoryPort {
   /**
    * Extrai filtros do formato do DTO para o formato de IPaginationCriteria
    */
-  private extractFilters(dto: DtoWithFilters | null | undefined): Record<string, string | string[]> {
+  private extractFilters(
+    dto: DtoWithFilters | null | undefined,
+  ): Record<string, string | string[]> {
     const filters: Record<string, string | string[]> = {};
 
     if (!dto) return filters;
 
     for (const [key, value] of Object.entries(dto)) {
       if (key.startsWith("filter.")) {
-        if (typeof value === "string" || (Array.isArray(value) && value.every(v => typeof v === "string"))) {
+        if (
+          typeof value === "string" ||
+          (Array.isArray(value) && value.every((v) => typeof v === "string"))
+        ) {
           const filterKey = key.replace("filter.", "");
           filters[filterKey] = value;
         }

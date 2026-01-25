@@ -15,6 +15,7 @@ export class InsertCampusDataInicioDataFimEvento1754532660895 implements Migrati
       }),
     ]);
   }
+
   public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.dropColumns("evento", ["data_inicio", "data_fim"]);
   }

@@ -5,12 +5,10 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
-  ApiTags
+  ApiTags,
 } from "@nestjs/swagger";
 import { AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
-import {
-  OfertaFormacaoNivelFormacaoService
-} from "@/v2/core/oferta-formacao-nivel-formacao/application/use-cases/oferta-formacao-nivel-formacao.service";
+import { OfertaFormacaoNivelFormacaoService } from "@/v2/core/oferta-formacao-nivel-formacao/application/use-cases/oferta-formacao-nivel-formacao.service";
 import {
   OfertaFormacaoNivelFormacaoCreateInputDto,
   OfertaFormacaoNivelFormacaoFindOneInputDto,
@@ -33,7 +31,10 @@ export class OfertaFormacaoNivelFormacaoController {
     @AccessContextHttp() accessContext: AccessContext,
     @Query() dto: OfertaFormacaoNivelFormacaoListInputDto,
   ): Promise<OfertaFormacaoNivelFormacaoListOutputDto> {
-    return this.ofertaFormacaoNivelFormacaoService.ofertaFormacaoNivelFormacaoFindAll(accessContext, dto);
+    return this.ofertaFormacaoNivelFormacaoService.ofertaFormacaoNivelFormacaoFindAll(
+      accessContext,
+      dto,
+    );
   }
 
   @Get("/:id")
@@ -45,7 +46,10 @@ export class OfertaFormacaoNivelFormacaoController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: OfertaFormacaoNivelFormacaoFindOneInputDto,
   ): Promise<OfertaFormacaoNivelFormacaoFindOneOutputDto> {
-    return this.ofertaFormacaoNivelFormacaoService.ofertaFormacaoNivelFormacaoFindByIdStrict(accessContext, params);
+    return this.ofertaFormacaoNivelFormacaoService.ofertaFormacaoNivelFormacaoFindByIdStrict(
+      accessContext,
+      params,
+    );
   }
 
   @Post("/")
@@ -56,7 +60,10 @@ export class OfertaFormacaoNivelFormacaoController {
     @AccessContextHttp() accessContext: AccessContext,
     @Body() dto: OfertaFormacaoNivelFormacaoCreateInputDto,
   ): Promise<OfertaFormacaoNivelFormacaoFindOneOutputDto> {
-    return this.ofertaFormacaoNivelFormacaoService.ofertaFormacaoNivelFormacaoCreate(accessContext, dto);
+    return this.ofertaFormacaoNivelFormacaoService.ofertaFormacaoNivelFormacaoCreate(
+      accessContext,
+      dto,
+    );
   }
 
   @Patch("/:id")
@@ -69,7 +76,10 @@ export class OfertaFormacaoNivelFormacaoController {
     @Param() params: OfertaFormacaoNivelFormacaoFindOneInputDto,
     @Body() dto: OfertaFormacaoNivelFormacaoUpdateInputDto,
   ): Promise<OfertaFormacaoNivelFormacaoFindOneOutputDto> {
-    return this.ofertaFormacaoNivelFormacaoService.ofertaFormacaoNivelFormacaoUpdate(accessContext, { id: params.id, ...dto });
+    return this.ofertaFormacaoNivelFormacaoService.ofertaFormacaoNivelFormacaoUpdate(
+      accessContext,
+      { id: params.id, ...dto },
+    );
   }
 
   @Delete("/:id")
@@ -81,6 +91,9 @@ export class OfertaFormacaoNivelFormacaoController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: OfertaFormacaoNivelFormacaoFindOneInputDto,
   ): Promise<boolean> {
-    return this.ofertaFormacaoNivelFormacaoService.ofertaFormacaoNivelFormacaoDeleteOneById(accessContext, params);
+    return this.ofertaFormacaoNivelFormacaoService.ofertaFormacaoNivelFormacaoDeleteOneById(
+      accessContext,
+      params,
+    );
   }
 }

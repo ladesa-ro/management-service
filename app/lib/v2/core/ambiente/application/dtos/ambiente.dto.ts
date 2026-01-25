@@ -1,3 +1,4 @@
+import { Type } from "class-transformer";
 import {
   IsArray,
   IsDate,
@@ -9,9 +10,8 @@ import {
   MinLength,
   ValidateNested,
 } from "class-validator";
-import { Type } from "class-transformer";
-import { ObjectUuidRef, PaginationInput, PaginationMeta } from "../../../common/application/dtos";
 import { BlocoFindOneOutput, BlocoInputRef } from "../../../bloco/application/dtos";
+import { ObjectUuidRef, PaginationInput, PaginationMeta } from "../../../common/application/dtos";
 import { ImagemFindOneOutput, ImagemInputRef } from "../../../imagem/application/dtos";
 
 // ============================================================================

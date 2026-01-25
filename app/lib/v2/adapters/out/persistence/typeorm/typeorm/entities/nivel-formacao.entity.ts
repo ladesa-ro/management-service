@@ -1,6 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
-
 @Entity("nivel_formacao")
 export class NivelFormacaoEntity {
   @PrimaryGeneratedColumn("uuid")

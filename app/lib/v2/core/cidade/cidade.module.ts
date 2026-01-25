@@ -1,8 +1,8 @@
 import { Module } from "@nestjs/common";
 import { CidadeController } from "@/v2/adapters/in/http/cidade/cidade.controller";
-import { CidadeService } from "@/v2/core/cidade/application/use-cases/cidade.service";
-import { CidadeTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistence/typeorm/adapters";
 import { NestJsPaginateAdapter } from "@/v2/adapters/out/persistence/pagination";
+import { CidadeTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistence/typeorm/adapters";
+import { CidadeService } from "@/v2/core/cidade/application/use-cases/cidade.service";
 
 /**
  * Módulo Cidade configurado com Arquitetura Hexagonal

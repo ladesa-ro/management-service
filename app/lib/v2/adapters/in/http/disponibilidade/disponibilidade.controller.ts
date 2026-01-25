@@ -5,7 +5,7 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
-  ApiTags
+  ApiTags,
 } from "@nestjs/swagger";
 import { AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { DisponibilidadeService } from "@/v2/core/disponibilidade/application/use-cases/disponibilidade.service";
@@ -67,7 +67,10 @@ export class DisponibilidadeController {
     @Param() params: DisponibilidadeFindOneInputDto,
     @Body() dto: DisponibilidadeUpdateInputDto,
   ): Promise<DisponibilidadeFindOneOutputDto> {
-    return this.disponibilidadeService.disponibilidadeUpdate(accessContext, { id: params.id, ...dto });
+    return this.disponibilidadeService.disponibilidadeUpdate(accessContext, {
+      id: params.id,
+      ...dto,
+    });
   }
 
   @Delete("/:id")

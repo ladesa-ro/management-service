@@ -1,9 +1,16 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, type Relation } from "typeorm";
-
-import { ImagemEntity } from "./imagem.entity"
-import { AmbienteEntity } from "./ambiente.entity"
-import { CursoEntity } from "./curso.entity"
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  type Relation,
+} from "typeorm";
+import { AmbienteEntity } from "./ambiente.entity";
+import { CursoEntity } from "./curso.entity";
 import { DiarioEntity } from "./diario.entity";
+import { ImagemEntity } from "./imagem.entity";
 
 @Entity("turma")
 export class TurmaEntity {

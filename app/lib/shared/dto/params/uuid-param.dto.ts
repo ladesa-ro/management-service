@@ -1,5 +1,5 @@
-import { ApiProperty } from "@nestjs/swagger";
 import { ArgsType, Field, ID } from "@nestjs/graphql";
+import { ApiProperty } from "@nestjs/swagger";
 import { IsUUID } from "class-validator";
 
 /**

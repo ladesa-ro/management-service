@@ -1,8 +1,8 @@
-import { ApiProperty, ApiPropertyOptional, PartialType } from "@nestjs/swagger";
 import { ArgsType, Field, ID, InputType, Int, ObjectType } from "@nestjs/graphql";
+import { ApiProperty, ApiPropertyOptional, PartialType } from "@nestjs/swagger";
 import { IsDateString, IsInt, IsOptional, IsString, IsUUID, Max, Min } from "class-validator";
 import { PaginationInputDto, PaginationMetaDto } from "@/shared/dto";
-import { commonProperties, RegisterModel, simpleProperty, } from "@/shared/metadata";
+import { commonProperties, RegisterModel, simpleProperty } from "@/shared/metadata";
 
 // ============================================================================
 // FindOne Output
@@ -96,7 +96,10 @@ export class ProfessorIndisponibilidadeListOutputDto {
   @Field(() => PaginationMetaDto)
   meta: PaginationMetaDto;
 
-  @ApiProperty({ type: () => [ProfessorIndisponibilidadeFindOneOutputDto], description: "Resultados da busca" })
+  @ApiProperty({
+    type: () => [ProfessorIndisponibilidadeFindOneOutputDto],
+    description: "Resultados da busca",
+  })
   @Field(() => [ProfessorIndisponibilidadeFindOneOutputDto])
   data: ProfessorIndisponibilidadeFindOneOutputDto[];
 }
@@ -137,7 +140,9 @@ export class ProfessorIndisponibilidadeCreateInputDto {
 }
 
 @InputType("ProfessorIndisponibilidadeUpdateInput")
-export class ProfessorIndisponibilidadeUpdateInputDto extends PartialType(ProfessorIndisponibilidadeCreateInputDto) {}
+export class ProfessorIndisponibilidadeUpdateInputDto extends PartialType(
+  ProfessorIndisponibilidadeCreateInputDto,
+) {}
 
 // ============================================================================
 // FindOne Input (for path params)
@@ -194,7 +199,10 @@ export class ProfessorIndisponibilidadeRRuleViewDto {
   @IsUUID()
   id_perfil_fk: string;
 
-  @ApiProperty({ description: "String RRULE + possivel DTSTART (ex: 'DTSTART:20251025T080000\\nRRULE:FREQ=WEEKLY;BYDAY=MO')" })
+  @ApiProperty({
+    description:
+      "String RRULE + possivel DTSTART (ex: 'DTSTART:20251025T080000\\nRRULE:FREQ=WEEKLY;BYDAY=MO')",
+  })
   @Field()
   @IsString()
   rrule: string;

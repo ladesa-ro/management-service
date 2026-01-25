@@ -1,8 +1,12 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, type Relation } from "typeorm";
-import { CampusEntity } from "./campus.entity";
 import {
-  IntervaloDeTempoEntity
-} from "./intervalo-de-tempo.entity";
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  type Relation,
+} from "typeorm";
+import { IntervaloDeTempoEntity } from "./intervalo-de-tempo.entity";
 import { OfertaFormacaoEntity } from "./oferta-formacao.entity";
 
 @Entity("grade_horario_oferta_formacao_intervalo_de_tempo")

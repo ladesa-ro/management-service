@@ -1,7 +1,6 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { pick } from "lodash";
 import type { AccessContext } from "@/infrastructure/access-context";
-import type { DisponibilidadeEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import type {
   DisponibilidadeCreateInputDto,
   DisponibilidadeFindOneInputDto,
@@ -10,6 +9,7 @@ import type {
   DisponibilidadeListOutputDto,
   DisponibilidadeUpdateInputDto,
 } from "@/v2/adapters/in/http/disponibilidade/dto";
+import type { DisponibilidadeEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import type { IDisponibilidadeRepositoryPort } from "../ports";
 
 @Injectable()
@@ -40,7 +40,11 @@ export class DisponibilidadeService {
     dto: DisponibilidadeFindOneInputDto,
     selection?: string[],
   ): Promise<DisponibilidadeFindOneOutputDto> {
-    const disponibilidade = await this.disponibilidadeRepository.findById(accessContext, dto, selection);
+    const disponibilidade = await this.disponibilidadeRepository.findById(
+      accessContext,
+      dto,
+      selection,
+    );
 
     if (!disponibilidade) {
       throw new NotFoundException();
@@ -62,7 +66,11 @@ export class DisponibilidadeService {
     id: string,
     selection?: string[],
   ): Promise<DisponibilidadeFindOneOutputDto> {
-    const disponibilidade = await this.disponibilidadeRepository.findByIdSimple(accessContext, id, selection);
+    const disponibilidade = await this.disponibilidadeRepository.findByIdSimple(
+      accessContext,
+      id,
+      selection,
+    );
 
     if (!disponibilidade) {
       throw new NotFoundException();
@@ -94,7 +102,9 @@ export class DisponibilidadeService {
     accessContext: AccessContext,
     dto: DisponibilidadeFindOneInputDto & DisponibilidadeUpdateInputDto,
   ): Promise<DisponibilidadeFindOneOutputDto> {
-    const currentDisponibilidade = await this.disponibilidadeFindByIdStrict(accessContext, { id: dto.id });
+    const currentDisponibilidade = await this.disponibilidadeFindByIdStrict(accessContext, {
+      id: dto.id,
+    });
 
     await accessContext.ensurePermission("disponibilidade:update", { dto }, dto.id);
 

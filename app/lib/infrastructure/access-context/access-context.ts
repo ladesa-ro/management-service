@@ -5,11 +5,11 @@ import {
   IAuthzStatement,
   IAuthzStatementFilter,
   IBaseAuthzFilterFn,
-  IBaseAuthzStatementContext
+  IBaseAuthzStatementContext,
 } from "@/authorization";
 import type { IRequestActor } from "@/infrastructure/authentication";
-import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm/context/database-context.service";
 import { createForbiddenExceptionForAction, IAccessContext } from "@/shared";
+import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm/context/database-context.service";
 
 // TODO: fixme
 const DISABLE_PERMISSION_CHECK = true;
@@ -26,7 +26,11 @@ export class AccessContext implements IAccessContext {
     return this.#policy.statements;
   }
 
-  async applyFilter<Statement extends IAuthzStatementFilter, Action extends Statement["action"], Payload extends Statement["payload"]>(
+  async applyFilter<
+    Statement extends IAuthzStatementFilter,
+    Action extends Statement["action"],
+    Payload extends Statement["payload"],
+  >(
     action: Action,
     qb: SelectQueryBuilder<any>,
     alias?: string,
@@ -52,7 +56,11 @@ export class AccessContext implements IAccessContext {
     }
   }
 
-  async verifyPermission<Statement extends IAuthzStatement, Action extends Statement["action"], Payload extends Statement["payload"]>(
+  async verifyPermission<
+    Statement extends IAuthzStatement,
+    Action extends Statement["action"],
+    Payload extends Statement["payload"],
+  >(
     action: Action,
     payload: Payload,
     id: any = null,
@@ -95,7 +103,11 @@ export class AccessContext implements IAccessContext {
     return false;
   }
 
-  async ensurePermission<Statement extends IAuthzStatement, Action extends Statement["action"], Payload extends Statement["payload"]>(
+  async ensurePermission<
+    Statement extends IAuthzStatement,
+    Action extends Statement["action"],
+    Payload extends Statement["payload"],
+  >(
     action: Action,
     payload: Payload,
     id: (number | string) | null = null,
@@ -108,11 +120,19 @@ export class AccessContext implements IAccessContext {
     }
   }
 
-  private getStatementForAction<Statement extends IAuthzStatement, Action extends Statement["action"]>(action: Action) {
-    return (this.statements.find((statement) => statement.action === action) ?? null) as Statement | null;
+  private getStatementForAction<
+    Statement extends IAuthzStatement,
+    Action extends Statement["action"],
+  >(action: Action) {
+    return (this.statements.find((statement) => statement.action === action) ??
+      null) as Statement | null;
   }
 
-  private createAuthzStatementContext<Statement extends IAuthzStatement, Action extends Statement["action"], Payload extends Statement["payload"]>(action: Action, payload: Payload | null) {
+  private createAuthzStatementContext<
+    Statement extends IAuthzStatement,
+    Action extends Statement["action"],
+    Payload extends Statement["payload"],
+  >(action: Action, payload: Payload | null) {
     return {
       action,
       payload,
@@ -200,7 +220,9 @@ export class AccessContext implements IAccessContext {
       case "calendario_letivo:update":
       case "calendario_letivo:delete":
       case "calendario_letivo:find": {
-        return this.databaseContext.calendarioLetivoRepository.createQueryBuilder("calendarioLetivo");
+        return this.databaseContext.calendarioLetivoRepository.createQueryBuilder(
+          "calendarioLetivo",
+        );
       }
 
       case "aula:update":
@@ -224,13 +246,17 @@ export class AccessContext implements IAccessContext {
       case "diario_preferencia_agrupamento:update":
       case "diario_preferencia_agrupamento:delete":
       case "diario_preferencia_agrupamento:find": {
-        return this.databaseContext.diarioPreferenciaAgrupamentoRepository.createQueryBuilder("diario_preferencia_agrupamento");
+        return this.databaseContext.diarioPreferenciaAgrupamentoRepository.createQueryBuilder(
+          "diario_preferencia_agrupamento",
+        );
       }
 
       case "diario_professor:update":
       case "diario_professor:delete":
       case "diario_professor:find": {
-        return this.databaseContext.diarioProfessorRepository.createQueryBuilder("diario_professor");
+        return this.databaseContext.diarioProfessorRepository.createQueryBuilder(
+          "diario_professor",
+        );
       }
 
       case "etapa:update":
@@ -248,13 +274,17 @@ export class AccessContext implements IAccessContext {
       case "grade_horario_oferta_formacao:delete":
       case "grade_horario_oferta_formacao:update":
       case "grade_horario_oferta_formacao:find": {
-        return this.databaseContext.gradeHorarioOfertaFormacaoRepository.createQueryBuilder("grade_horario_oferta_formacao");
+        return this.databaseContext.gradeHorarioOfertaFormacaoRepository.createQueryBuilder(
+          "grade_horario_oferta_formacao",
+        );
       }
 
       case "grade_horario_oferta_formacao_intervalo_de_tempo:delete":
       case "grade_horario_oferta_formacao_intervalo_de_tempo:update":
       case "grade_horario_oferta_formacao_intervalo_de_tempo:find": {
-        return this.databaseContext.gradeHorarioOfertaFormacaoIntervaloDeTempoRepository.createQueryBuilder("grade_horario_oferta_formacao_intervalo_de_tempo");
+        return this.databaseContext.gradeHorarioOfertaFormacaoIntervaloDeTempoRepository.createQueryBuilder(
+          "grade_horario_oferta_formacao_intervalo_de_tempo",
+        );
       }
 
       case "horario_gerado:delete":
@@ -266,7 +296,9 @@ export class AccessContext implements IAccessContext {
       case "horario_gerado_aula:delete":
       case "horario_gerado_aula:update":
       case "horario_gerado_aula:find": {
-        return this.databaseContext.horarioGeradoAulaRepository.createQueryBuilder("horario_gerado_aula");
+        return this.databaseContext.horarioGeradoAulaRepository.createQueryBuilder(
+          "horario_gerado_aula",
+        );
       }
 
       case "nivel_formacao:delete":
@@ -284,19 +316,25 @@ export class AccessContext implements IAccessContext {
       case "oferta_formacao_nivel_formacao:delete":
       case "oferta_formacao_nivel_formacao:update":
       case "oferta_formacao_nivel_formacao:find": {
-        return this.databaseContext.ofertaFormacaoNivelFormacaoRepository.createQueryBuilder("oferta_formacao_nivel_formacao");
+        return this.databaseContext.ofertaFormacaoNivelFormacaoRepository.createQueryBuilder(
+          "oferta_formacao_nivel_formacao",
+        );
       }
 
       case "professor_disponibilidade:delete":
       case "professor_disponibilidade:update":
       case "professor_disponibilidade:find": {
-        return this.databaseContext.professorIndisponibilidadeRepository.createQueryBuilder("professor_indisponibilidade");
+        return this.databaseContext.professorIndisponibilidadeRepository.createQueryBuilder(
+          "professor_indisponibilidade",
+        );
       }
 
       case "turma_disponibilidade:delete":
       case "turma_disponibilidade:update":
       case "turma_disponibilidade:find": {
-        return this.databaseContext.turmaDisponibilidadeRepository.createQueryBuilder("turma_disponibilidade");
+        return this.databaseContext.turmaDisponibilidadeRepository.createQueryBuilder(
+          "turma_disponibilidade",
+        );
       }
 
       default: {

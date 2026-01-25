@@ -1,11 +1,11 @@
 import { Module } from "@nestjs/common";
+import { HorarioGeradoAulaController } from "@/v2/adapters/in/http/horario-gerado-aula/horario-gerado-aula.controller";
+import { NestJsPaginateAdapter } from "@/v2/adapters/out/persistence/pagination";
+import { HorarioGeradoAulaTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistence/typeorm/adapters";
 import { DiarioProfessorModule } from "@/v2/core/diario-professor/diario-professor.module";
+import { HorarioGeradoAulaService } from "@/v2/core/horario-gerado-aula/application/use-cases/horario-gerado-aula.service";
 import { IntervaloDeTempoModule } from "@/v2/core/intervalo-de-tempo/intervalo-de-tempo.module";
 import { HorarioGeradoModule } from "../horario-gerado/horario-gerado.module";
-import { HorarioGeradoAulaController } from "@/v2/adapters/in/http/horario-gerado-aula/horario-gerado-aula.controller";
-import { HorarioGeradoAulaService } from "@/v2/core/horario-gerado-aula/application/use-cases/horario-gerado-aula.service";
-import { HorarioGeradoAulaTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistence/typeorm/adapters";
-import { NestJsPaginateAdapter } from "@/v2/adapters/out/persistence/pagination";
 
 /**
  * Módulo HorarioGeradoAula configurado com Arquitetura Hexagonal

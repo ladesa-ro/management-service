@@ -1,9 +1,17 @@
-import { ApiProperty, ApiPropertyOptional, PartialType } from "@nestjs/swagger";
 import { ArgsType, Field, ID, InputType, ObjectType } from "@nestjs/graphql";
-import { IsArray, IsDateString, IsOptional, IsString, IsUUID, MinLength, ValidateNested } from "class-validator";
+import { ApiProperty, ApiPropertyOptional, PartialType } from "@nestjs/swagger";
 import { Type } from "class-transformer";
+import {
+  IsArray,
+  IsDateString,
+  IsOptional,
+  IsString,
+  IsUUID,
+  MinLength,
+  ValidateNested,
+} from "class-validator";
 import { PaginationInputDto, PaginationMetaDto } from "@/shared/dto";
-import { commonProperties, RegisterModel, simpleProperty, } from "@/shared/metadata";
+import { commonProperties, RegisterModel, simpleProperty } from "@/shared/metadata";
 import { ImagemArquivoFindOneFromImagemOutputDto } from "../../imagem-arquivo/dto";
 
 // ============================================================================
@@ -33,7 +41,10 @@ export class ImagemFindOneOutputDto {
   @MinLength(1)
   descricao: string | null;
 
-  @ApiProperty({ description: "Versões da imagem", type: () => [ImagemArquivoFindOneFromImagemOutputDto] })
+  @ApiProperty({
+    description: "Versões da imagem",
+    type: () => [ImagemArquivoFindOneFromImagemOutputDto],
+  })
   @Field(() => [ImagemArquivoFindOneFromImagemOutputDto])
   @IsArray()
   @ValidateNested({ each: true })

@@ -1,11 +1,24 @@
-import { ApiProperty, ApiPropertyOptional, PartialType } from "@nestjs/swagger";
 import { ArgsType, Field, ID, InputType, ObjectType } from "@nestjs/graphql";
-import { IsArray, IsBoolean, IsDateString, IsOptional, IsString, IsUUID, ValidateNested } from "class-validator";
+import { ApiProperty, ApiPropertyOptional, PartialType } from "@nestjs/swagger";
 import { Type } from "class-transformer";
+import {
+  IsArray,
+  IsBoolean,
+  IsDateString,
+  IsOptional,
+  IsString,
+  IsUUID,
+  ValidateNested,
+} from "class-validator";
 import { PaginationInputDto, PaginationMetaDto } from "@/shared/dto";
-import { commonProperties, referenceProperty, RegisterModel, simpleProperty, } from "@/shared/metadata";
-import { PerfilFindOneInputDto, PerfilFindOneOutputDto } from "@/v2/adapters/in/http/perfil/dto";
+import {
+  commonProperties,
+  RegisterModel,
+  referenceProperty,
+  simpleProperty,
+} from "@/shared/metadata";
 import { DiarioFindOneInputDto, DiarioFindOneOutputDto } from "@/v2/adapters/in/http/diario/dto";
+import { PerfilFindOneInputDto, PerfilFindOneOutputDto } from "@/v2/adapters/in/http/perfil/dto";
 
 // ============================================================================
 // FindOne Output
@@ -86,7 +99,10 @@ export class DiarioProfessorListOutputDto {
   @Field(() => PaginationMetaDto)
   meta: PaginationMetaDto;
 
-  @ApiProperty({ type: () => [DiarioProfessorFindOneOutputDto], description: "Resultados da busca" })
+  @ApiProperty({
+    type: () => [DiarioProfessorFindOneOutputDto],
+    description: "Resultados da busca",
+  })
   @Field(() => [DiarioProfessorFindOneOutputDto])
   data: DiarioProfessorFindOneOutputDto[];
 }

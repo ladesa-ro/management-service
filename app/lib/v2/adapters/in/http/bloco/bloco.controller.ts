@@ -1,11 +1,22 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Query, UploadedFile } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Put,
+  Query,
+  UploadedFile,
+} from "@nestjs/common";
 import {
   ApiCreatedResponse,
   ApiForbiddenResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
-  ApiTags
+  ApiTags,
 } from "@nestjs/swagger";
 import { AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { BlocoService } from "@/v2/core/bloco/application/use-cases/bloco.service";

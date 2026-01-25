@@ -1,14 +1,29 @@
-import { ApiProperty, ApiPropertyOptional, PartialType } from "@nestjs/swagger";
 import { ArgsType, Field, ID, InputType, ObjectType } from "@nestjs/graphql";
-import { IsArray, IsDateString, IsOptional, IsString, IsUUID, ValidateNested } from "class-validator";
+import { ApiProperty, ApiPropertyOptional, PartialType } from "@nestjs/swagger";
 import { Type } from "class-transformer";
+import {
+  IsArray,
+  IsDateString,
+  IsOptional,
+  IsString,
+  IsUUID,
+  ValidateNested,
+} from "class-validator";
 import { PaginationInputDto, PaginationMetaDto } from "@/shared/dto";
-import { commonProperties, referenceProperty, RegisterModel, simpleProperty, } from "@/shared/metadata";
+import {
+  commonProperties,
+  RegisterModel,
+  referenceProperty,
+  simpleProperty,
+} from "@/shared/metadata";
+import {
+  AmbienteFindOneInputDto,
+  AmbienteFindOneOutputDto,
+} from "@/v2/adapters/in/http/ambiente/dto";
 import {
   CalendarioLetivoFindOneInputDto,
-  CalendarioLetivoFindOneOutputDto
+  CalendarioLetivoFindOneOutputDto,
 } from "@/v2/adapters/in/http/calendario-letivo/dto";
-import { AmbienteFindOneInputDto, AmbienteFindOneOutputDto } from "@/v2/adapters/in/http/ambiente/dto";
 
 // ============================================================================
 // FindOne Output
@@ -41,7 +56,9 @@ export class EventoFindOneOutputDto {
   @IsString()
   nome: string | null;
 
-  @ApiProperty({ description: "Regra RRule para a recorrencia do evento. Segue a RFC 5545 do iCalendar" })
+  @ApiProperty({
+    description: "Regra RRule para a recorrencia do evento. Segue a RFC 5545 do iCalendar",
+  })
   @Field()
   @IsString()
   rrule: string;
@@ -64,13 +81,20 @@ export class EventoFindOneOutputDto {
   @IsDateString()
   dataFim: string | null;
 
-  @ApiProperty({ type: () => CalendarioLetivoFindOneOutputDto, description: "Calendario letivo ao qual o evento pertence" })
+  @ApiProperty({
+    type: () => CalendarioLetivoFindOneOutputDto,
+    description: "Calendario letivo ao qual o evento pertence",
+  })
   @Field(() => CalendarioLetivoFindOneOutputDto)
   @ValidateNested()
   @Type(() => CalendarioLetivoFindOneOutputDto)
   calendario: CalendarioLetivoFindOneOutputDto;
 
-  @ApiPropertyOptional({ type: () => AmbienteFindOneOutputDto, description: "Ambiente de ocorrencia do evento", nullable: true })
+  @ApiPropertyOptional({
+    type: () => AmbienteFindOneOutputDto,
+    description: "Ambiente de ocorrencia do evento",
+    nullable: true,
+  })
   @Field(() => AmbienteFindOneOutputDto, { nullable: true })
   @IsOptional()
   @ValidateNested()
@@ -135,7 +159,9 @@ export class EventoCreateInputDto {
   @IsString()
   nome?: string | null;
 
-  @ApiProperty({ description: "Regra RRule para a recorrencia do evento. Segue a RFC 5545 do iCalendar" })
+  @ApiProperty({
+    description: "Regra RRule para a recorrencia do evento. Segue a RFC 5545 do iCalendar",
+  })
   @Field()
   @IsString()
   rrule: string;
@@ -158,13 +184,20 @@ export class EventoCreateInputDto {
   @IsDateString()
   dataFim?: string | null;
 
-  @ApiProperty({ type: () => CalendarioLetivoFindOneInputDto, description: "Calendario letivo ao qual o evento pertence" })
+  @ApiProperty({
+    type: () => CalendarioLetivoFindOneInputDto,
+    description: "Calendario letivo ao qual o evento pertence",
+  })
   @Field(() => CalendarioLetivoFindOneInputDto)
   @ValidateNested()
   @Type(() => CalendarioLetivoFindOneInputDto)
   calendario: CalendarioLetivoFindOneInputDto;
 
-  @ApiPropertyOptional({ type: () => AmbienteFindOneInputDto, description: "Ambiente de ocorrencia do evento", nullable: true })
+  @ApiPropertyOptional({
+    type: () => AmbienteFindOneInputDto,
+    description: "Ambiente de ocorrencia do evento",
+    nullable: true,
+  })
   @Field(() => AmbienteFindOneInputDto, { nullable: true })
   @IsOptional()
   @ValidateNested()

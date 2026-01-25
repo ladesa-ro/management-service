@@ -5,12 +5,10 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
-  ApiTags
+  ApiTags,
 } from "@nestjs/swagger";
 import { AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
-import {
-  HorarioGeradoAulaService
-} from "@/v2/core/horario-gerado-aula/application/use-cases/horario-gerado-aula.service";
+import { HorarioGeradoAulaService } from "@/v2/core/horario-gerado-aula/application/use-cases/horario-gerado-aula.service";
 import {
   HorarioGeradoAulaCreateInputDto,
   HorarioGeradoAulaFindOneInputDto,
@@ -69,7 +67,10 @@ export class HorarioGeradoAulaController {
     @Param() params: HorarioGeradoAulaFindOneInputDto,
     @Body() dto: HorarioGeradoAulaUpdateInputDto,
   ): Promise<HorarioGeradoAulaFindOneOutputDto> {
-    return this.horarioGeradoAulaService.HorarioGeradoAulaUpdate(accessContext, { id: params.id, ...dto });
+    return this.horarioGeradoAulaService.HorarioGeradoAulaUpdate(accessContext, {
+      id: params.id,
+      ...dto,
+    });
   }
 
   @Delete("/:id")

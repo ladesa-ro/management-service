@@ -1,3 +1,4 @@
+import { Type } from "class-transformer";
 import {
   IsArray,
   IsDate,
@@ -7,9 +8,12 @@ import {
   MinLength,
   ValidateNested,
 } from "class-validator";
-import { Type } from "class-transformer";
 import { ObjectUuidRef, PaginationInput, PaginationMeta } from "../../../common/application/dtos";
-import { EnderecoCreateInput, EnderecoFindOneOutput, EnderecoUpdateInput } from "../../../endereco/application/dtos";
+import {
+  EnderecoCreateInput,
+  EnderecoFindOneOutput,
+  EnderecoUpdateInput,
+} from "../../../endereco/application/dtos";
 
 // ============================================================================
 // FindOne Input/Output

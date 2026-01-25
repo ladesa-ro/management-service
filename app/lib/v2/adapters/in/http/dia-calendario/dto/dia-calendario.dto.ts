@@ -1,12 +1,26 @@
-import { ApiProperty, ApiPropertyOptional, PartialType } from "@nestjs/swagger";
 import { ArgsType, Field, ID, InputType, ObjectType } from "@nestjs/graphql";
-import { IsArray, IsBoolean, IsDateString, IsIn, IsOptional, IsString, IsUUID, ValidateNested } from "class-validator";
+import { ApiProperty, ApiPropertyOptional, PartialType } from "@nestjs/swagger";
 import { Type } from "class-transformer";
+import {
+  IsArray,
+  IsBoolean,
+  IsDateString,
+  IsIn,
+  IsOptional,
+  IsString,
+  IsUUID,
+  ValidateNested,
+} from "class-validator";
 import { PaginationInputDto, PaginationMetaDto } from "@/shared/dto";
-import { commonProperties, referenceProperty, RegisterModel, simpleProperty, } from "@/shared/metadata";
+import {
+  commonProperties,
+  RegisterModel,
+  referenceProperty,
+  simpleProperty,
+} from "@/shared/metadata";
 import {
   CalendarioLetivoFindOneInputDto,
-  CalendarioLetivoFindOneOutputDto
+  CalendarioLetivoFindOneOutputDto,
 } from "@/v2/adapters/in/http/calendario-letivo/dto";
 
 // ============================================================================
@@ -84,7 +98,10 @@ export class DiaCalendarioFindOneOutputDto {
   @IsBoolean()
   extraCurricular: boolean;
 
-  @ApiProperty({ type: () => CalendarioLetivoFindOneOutputDto, description: "Calendario letivo ao qual o dia pertence" })
+  @ApiProperty({
+    type: () => CalendarioLetivoFindOneOutputDto,
+    description: "Calendario letivo ao qual o dia pertence",
+  })
   @Field(() => CalendarioLetivoFindOneOutputDto)
   @ValidateNested()
   @Type(() => CalendarioLetivoFindOneOutputDto)
@@ -177,7 +194,10 @@ export class DiaCalendarioCreateInputDto {
   @IsBoolean()
   extraCurricular: boolean;
 
-  @ApiProperty({ type: () => CalendarioLetivoFindOneInputDto, description: "Calendario letivo ao qual o dia pertence" })
+  @ApiProperty({
+    type: () => CalendarioLetivoFindOneInputDto,
+    description: "Calendario letivo ao qual o dia pertence",
+  })
   @Field(() => CalendarioLetivoFindOneInputDto)
   @ValidateNested()
   @Type(() => CalendarioLetivoFindOneInputDto)

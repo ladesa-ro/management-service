@@ -1,19 +1,19 @@
 import { Injectable } from "@nestjs/common";
-import { FilterOperator } from "nestjs-paginate";
 import { map } from "lodash";
+import { FilterOperator } from "nestjs-paginate";
 import type { DeepPartial } from "typeorm";
 import type { AccessContext } from "@/infrastructure/access-context";
-import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
 import { QbEfficientLoad } from "@/shared";
-import type { IPaginationConfig, IPaginationCriteria } from "@/v2/application/ports/pagination";
-import type { IReservaRepositoryPort } from "@/v2/core/reserva/application/ports";
 import type {
   ReservaFindOneInputDto,
   ReservaFindOneOutputDto,
   ReservaListInputDto,
   ReservaListOutputDto,
 } from "@/v2/adapters/in/http/reserva/dto";
+import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
 import type { ReservaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
+import type { IPaginationConfig, IPaginationCriteria } from "@/v2/application/ports/pagination";
+import type { IReservaRepositoryPort } from "@/v2/core/reserva/application/ports";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
 
 const aliasReserva = "reserva";
@@ -112,7 +112,7 @@ export class ReservaTypeOrmRepositoryAdapter implements IReservaRepositoryPort {
     qb.select([]);
     QbEfficientLoad("ReservaFindOneOutput", qb, aliasReserva, selection);
 
-    return await qb.getOne() as ReservaFindOneOutputDto | null;
+    return (await qb.getOne()) as ReservaFindOneOutputDto | null;
   }
 
   async findByIdSimple(
@@ -127,7 +127,7 @@ export class ReservaTypeOrmRepositoryAdapter implements IReservaRepositoryPort {
     qb.select([]);
     QbEfficientLoad("ReservaFindOneOutput", qb, aliasReserva, selection);
 
-    return await qb.getOne() as ReservaFindOneOutputDto | null;
+    return (await qb.getOne()) as ReservaFindOneOutputDto | null;
   }
 
   async save(reserva: DeepPartial<ReservaEntity>): Promise<ReservaEntity> {
@@ -152,11 +152,17 @@ export class ReservaTypeOrmRepositoryAdapter implements IReservaRepositoryPort {
       .execute();
   }
 
-  private extractFilters(dto: DtoWithFilters | null | undefined): Record<string, string | string[]> {
+  private extractFilters(
+    dto: DtoWithFilters | null | undefined,
+  ): Record<string, string | string[]> {
     const filters: Record<string, string | string[]> = {};
     if (!dto) return filters;
     for (const [key, value] of Object.entries(dto)) {
-      if (key.startsWith("filter.") && (typeof value === "string" || (Array.isArray(value) && value.every(v => typeof v === "string")))) {
+      if (
+        key.startsWith("filter.") &&
+        (typeof value === "string" ||
+          (Array.isArray(value) && value.every((v) => typeof v === "string")))
+      ) {
         filters[key.replace("filter.", "")] = value;
       }
     }

@@ -1,10 +1,10 @@
 import { Module } from "@nestjs/common";
-import { CampusModule } from "@/v2/core/campus/campus.module";
-import { OfertaFormacaoModule } from "@/v2/core/oferta-formacao/oferta-formacao.module";
 import { CursoController } from "@/v2/adapters/in/http/curso/curso.controller";
-import { CursoService } from "@/v2/core/curso/application/use-cases/curso.service";
-import { CursoTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistence/typeorm/adapters";
 import { NestJsPaginateAdapter } from "@/v2/adapters/out/persistence/pagination";
+import { CursoTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistence/typeorm/adapters";
+import { CampusModule } from "@/v2/core/campus/campus.module";
+import { CursoService } from "@/v2/core/curso/application/use-cases/curso.service";
+import { OfertaFormacaoModule } from "@/v2/core/oferta-formacao/oferta-formacao.module";
 
 /**
  * Módulo Curso configurado com Arquitetura Hexagonal

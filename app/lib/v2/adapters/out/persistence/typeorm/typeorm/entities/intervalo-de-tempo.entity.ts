@@ -1,6 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
-
 @Entity("intervalo_de_tempo")
 export class IntervaloDeTempoEntity {
   @PrimaryGeneratedColumn("uuid")

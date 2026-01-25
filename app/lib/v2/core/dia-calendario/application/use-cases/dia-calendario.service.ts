@@ -1,8 +1,6 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { has, pick } from "lodash";
-import { CalendarioLetivoService } from "@/v2/core/calendario-letivo/application/use-cases/calendario-letivo.service";
 import type { AccessContext } from "@/infrastructure/access-context";
-import type { DiaCalendarioEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities/dia-calendario.entity";
 import type {
   DiaCalendarioCreateInputDto,
   DiaCalendarioFindOneInputDto,
@@ -11,6 +9,8 @@ import type {
   DiaCalendarioListOutputDto,
   DiaCalendarioUpdateInputDto,
 } from "@/v2/adapters/in/http/dia-calendario/dto";
+import type { DiaCalendarioEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities/dia-calendario.entity";
+import { CalendarioLetivoService } from "@/v2/core/calendario-letivo/application/use-cases/calendario-letivo.service";
 import type { IDiaCalendarioRepositoryPort } from "../ports";
 
 @Injectable()
@@ -42,7 +42,11 @@ export class DiaCalendarioService {
     dto: DiaCalendarioFindOneInputDto,
     selection?: string[] | boolean,
   ): Promise<DiaCalendarioFindOneOutputDto> {
-    const diaCalendario = await this.diaCalendarioRepository.findById(accessContext, dto, selection);
+    const diaCalendario = await this.diaCalendarioRepository.findById(
+      accessContext,
+      dto,
+      selection,
+    );
 
     if (!diaCalendario) {
       throw new NotFoundException();
@@ -64,7 +68,11 @@ export class DiaCalendarioService {
     id: string,
     selection?: string[],
   ): Promise<DiaCalendarioFindOneOutputDto> {
-    const diaCalendario = await this.diaCalendarioRepository.findByIdSimple(accessContext, id, selection);
+    const diaCalendario = await this.diaCalendarioRepository.findByIdSimple(
+      accessContext,
+      id,
+      selection,
+    );
 
     if (!diaCalendario) {
       throw new NotFoundException();
@@ -79,7 +87,10 @@ export class DiaCalendarioService {
   ): Promise<DiaCalendarioFindOneOutputDto> {
     await accessContext.ensurePermission("dia_calendario:create", { dto } as any);
 
-    const dtoDiaCalendario = pick(dto, ["data", "dia_letivo", "feriado"]) as Pick<typeof dto, "data" | "diaLetivo" | "feriado">;
+    const dtoDiaCalendario = pick(dto, ["data", "dia_letivo", "feriado"]) as Pick<
+      typeof dto,
+      "data" | "diaLetivo" | "feriado"
+    >;
 
     const diaCalendario = this.diaCalendarioRepository.create();
 
@@ -88,7 +99,10 @@ export class DiaCalendarioService {
     } as any);
 
     if (dto.calendario) {
-      const calendario = await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(accessContext, dto.calendario.id);
+      const calendario = await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(
+        accessContext,
+        dto.calendario.id,
+      );
 
       this.diaCalendarioRepository.merge(diaCalendario, {
         calendario: {
@@ -106,11 +120,16 @@ export class DiaCalendarioService {
     accessContext: AccessContext,
     dto: DiaCalendarioFindOneInputDto & DiaCalendarioUpdateInputDto,
   ): Promise<DiaCalendarioFindOneOutputDto> {
-    const currentDiaCalendario = await this.diaCalendarioFindByIdStrict(accessContext, { id: dto.id });
+    const currentDiaCalendario = await this.diaCalendarioFindByIdStrict(accessContext, {
+      id: dto.id,
+    });
 
     await accessContext.ensurePermission("dia_calendario:update", { dto }, dto.id);
 
-    const dtoDiaCalendario = pick(dto, ["data", "dia_letivo", "feriado"]) as Pick<typeof dto, "data" | "diaLetivo" | "feriado">;
+    const dtoDiaCalendario = pick(dto, ["data", "dia_letivo", "feriado"]) as Pick<
+      typeof dto,
+      "data" | "diaLetivo" | "feriado"
+    >;
 
     const diaCalendario = {
       id: currentDiaCalendario.id,
@@ -121,7 +140,10 @@ export class DiaCalendarioService {
     } as any);
 
     if (has(dto, "calendario") && dto.calendario !== undefined) {
-      const calendario = await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(accessContext, dto.calendario!.id);
+      const calendario = await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(
+        accessContext,
+        dto.calendario!.id,
+      );
 
       this.diaCalendarioRepository.merge(diaCalendario, {
         calendario: {

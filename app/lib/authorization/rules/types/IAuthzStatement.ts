@@ -154,7 +154,8 @@ export type IAuthzStatementOfertaFormacaoNivelFormacaoCreate = IBaseAuthzCheck<
     dto: DtoInput;
   }
 >;
-export type IAuthzStatementOfertaFormacaoNivelFormacaoFind = IBaseAuthzFilter<"oferta_formacao_nivel_formacao:find">;
+export type IAuthzStatementOfertaFormacaoNivelFormacaoFind =
+  IBaseAuthzFilter<"oferta_formacao_nivel_formacao:find">;
 
 export type IAuthzStatementOfertaFormacaoNivelFormacaoUpdate = IBaseAuthzFilter<
   "oferta_formacao_nivel_formacao:update",
@@ -335,7 +336,8 @@ export type IAuthzStatementGradeHorarioOfertaFormacaoCreate = IBaseAuthzCheck<
     dto: DtoInput;
   }
 >;
-export type IAuthzStatementGradeHorarioOfertaFormacaoFind = IBaseAuthzFilter<"grade_horario_oferta_formacao:find">;
+export type IAuthzStatementGradeHorarioOfertaFormacaoFind =
+  IBaseAuthzFilter<"grade_horario_oferta_formacao:find">;
 
 export type IAuthzStatementGradeHorarioOfertaFormacaoUpdate = IBaseAuthzFilter<
   "grade_horario_oferta_formacao:update",
@@ -358,7 +360,8 @@ export type IAuthzStatementGradeHorarioOfertaFormacaoIntervaloDeTempoCreate = IB
     dto: DtoInput;
   }
 >;
-export type IAuthzStatementGradeHorarioOfertaFormacaoIntervaloDeTempoFind = IBaseAuthzFilter<"grade_horario_oferta_formacao_intervalo_de_tempo:find">;
+export type IAuthzStatementGradeHorarioOfertaFormacaoIntervaloDeTempoFind =
+  IBaseAuthzFilter<"grade_horario_oferta_formacao_intervalo_de_tempo:find">;
 
 export type IAuthzStatementGradeHorarioOfertaFormacaoIntervaloDeTempoUpdate = IBaseAuthzFilter<
   "grade_horario_oferta_formacao_intervalo_de_tempo:update",
@@ -528,7 +531,8 @@ export type IAuthzStatementTurmaDisponibilidadeDelete = IBaseAuthzFilter<
     dto: DtoInput;
   }
 >;
-export type IAuthzStatementTurmaDisponibilidadeFind = IBaseAuthzFilter<"turma_disponibilidade:find">;
+export type IAuthzStatementTurmaDisponibilidadeFind =
+  IBaseAuthzFilter<"turma_disponibilidade:find">;
 
 // =====================
 
@@ -550,7 +554,8 @@ export type IAuthzStatementProfessorDisponibilidadeDelete = IBaseAuthzFilter<
     dto: DtoInput;
   }
 >;
-export type IAuthzStatementProfessorDisponibilidadeFind = IBaseAuthzFilter<"professor_disponibilidade:find">;
+export type IAuthzStatementProfessorDisponibilidadeFind =
+  IBaseAuthzFilter<"professor_disponibilidade:find">;
 
 // =====================
 
@@ -572,7 +577,8 @@ export type IAuthzStatementDiarioPreferenciaAgrupamentoDelete = IBaseAuthzFilter
     dto: DtoInput;
   }
 >;
-export type IAuthzStatementDiarioPreferenciaAgrupamentoFind = IBaseAuthzFilter<"diario_preferencia_agrupamento:find">;
+export type IAuthzStatementDiarioPreferenciaAgrupamentoFind =
+  IBaseAuthzFilter<"diario_preferencia_agrupamento:find">;
 
 // =====================
 
@@ -744,6 +750,8 @@ export type IAuthzStatement = IAuthzStatementFilter | IAuthzStatementCheck;
 
 // ===================================================================================
 
-export const createStatement = <Statement extends IAuthzStatement>(statement: Omit<Statement, "payload">) => statement as Statement;
+export const createStatement = <Statement extends IAuthzStatement>(
+  statement: Omit<Statement, "payload">,
+) => statement as Statement;
 
 // ===================================================================================

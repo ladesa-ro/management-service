@@ -22,7 +22,11 @@ export class OpenidConnectService {
       try {
         const oidcClientCredentials = this.oidcClientCredentials;
 
-        const config = await client.discovery(new URL(oidcClientCredentials.issuer), oidcClientCredentials.clientId, oidcClientCredentials.clientSecret);
+        const config = await client.discovery(
+          new URL(oidcClientCredentials.issuer),
+          oidcClientCredentials.clientId,
+          oidcClientCredentials.clientSecret,
+        );
 
         this.config = config;
 

@@ -1,5 +1,6 @@
-import { ApiProperty, ApiPropertyOptional, PartialType } from "@nestjs/swagger";
 import { ArgsType, Field, ID, InputType, Int, ObjectType } from "@nestjs/graphql";
+import { ApiProperty, ApiPropertyOptional, PartialType } from "@nestjs/swagger";
+import { Type } from "class-transformer";
 import {
   IsArray,
   IsDateString,
@@ -9,11 +10,10 @@ import {
   IsUUID,
   Min,
   MinLength,
-  ValidateNested
+  ValidateNested,
 } from "class-validator";
-import { Type } from "class-transformer";
 import { PaginationInputDto, PaginationMetaDto } from "@/shared/dto";
-import { commonProperties, RegisterModel, simpleProperty, } from "@/shared/metadata";
+import { commonProperties, RegisterModel, simpleProperty } from "@/shared/metadata";
 import { ArquivoFindOneOutputDto } from "../../arquivo/dto";
 
 // ============================================================================

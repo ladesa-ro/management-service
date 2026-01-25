@@ -28,7 +28,10 @@ export interface ITurmaRepositoryPort {
   ): Promise<TurmaFindOneOutputDto | null>;
 
   save(turma: DeepPartial<TurmaEntity>): Promise<TurmaEntity>;
+
   create(): TurmaEntity;
+
   merge(turma: TurmaEntity, data: DeepPartial<TurmaEntity>): void;
+
   softDeleteById(id: string): Promise<void>;
 }

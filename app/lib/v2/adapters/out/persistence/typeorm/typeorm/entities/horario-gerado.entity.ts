@@ -1,7 +1,12 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, type Relation } from "typeorm";
 import {
-  CalendarioLetivoEntity
-} from "./calendario-letivo.entity";
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  type Relation,
+} from "typeorm";
+import { CalendarioLetivoEntity } from "./calendario-letivo.entity";
 
 @Entity("horario_gerado")
 export class HorarioGeradoEntity {

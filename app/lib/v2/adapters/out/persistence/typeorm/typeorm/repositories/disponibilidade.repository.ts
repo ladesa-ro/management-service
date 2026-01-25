@@ -1,8 +1,13 @@
 import { DisponibilidadeEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
-import { createRepositoryFactory, IRepositoryFactoryOutput } from "../helpers/create-repository-factory";
+import {
+  createRepositoryFactory,
+  IRepositoryFactoryOutput,
+} from "../helpers/create-repository-factory";
 
 export const createDisponibilidadeRepository = createRepositoryFactory((ds) => {
   return ds.getRepository(DisponibilidadeEntity).extend({});
 });
 
-export type DisponibilidadeRepository = IRepositoryFactoryOutput<typeof createDisponibilidadeRepository>;
+export type DisponibilidadeRepository = IRepositoryFactoryOutput<
+  typeof createDisponibilidadeRepository
+>;

@@ -1,10 +1,26 @@
-import { ApiProperty, ApiPropertyOptional, PartialType } from "@nestjs/swagger";
 import { ArgsType, Field, ID, InputType, ObjectType } from "@nestjs/graphql";
-import { IsArray, IsDateString, IsOptional, IsString, IsUUID, MinLength, ValidateNested } from "class-validator";
+import { ApiProperty, ApiPropertyOptional, PartialType } from "@nestjs/swagger";
 import { Type } from "class-transformer";
+import {
+  IsArray,
+  IsDateString,
+  IsOptional,
+  IsString,
+  IsUUID,
+  MinLength,
+  ValidateNested,
+} from "class-validator";
 import { PaginationInputDto, PaginationMetaDto } from "@/shared/dto";
-import { commonProperties, referenceProperty, RegisterModel, simpleProperty, } from "@/shared/metadata";
-import { AmbienteFindOneInputDto, AmbienteFindOneOutputDto } from "@/v2/adapters/in/http/ambiente/dto";
+import {
+  commonProperties,
+  RegisterModel,
+  referenceProperty,
+  simpleProperty,
+} from "@/shared/metadata";
+import {
+  AmbienteFindOneInputDto,
+  AmbienteFindOneOutputDto,
+} from "@/v2/adapters/in/http/ambiente/dto";
 
 // ============================================================================
 // Usuario Stub DTOs (forward reference until usuario module has DTOs)
@@ -102,7 +118,9 @@ export class ReservaFindOneOutputDto {
   @MinLength(1)
   tipo: string | null;
 
-  @ApiProperty({ description: "Regra RRule para a recorrencia da reserva. Segue a RFC 5545 do iCalendar" })
+  @ApiProperty({
+    description: "Regra RRule para a recorrencia da reserva. Segue a RFC 5545 do iCalendar",
+  })
   @Field()
   @IsString()
   rrule: string;
@@ -191,7 +209,9 @@ export class ReservaCreateInputDto {
   @MinLength(1)
   tipo?: string | null;
 
-  @ApiProperty({ description: "Regra RRule para a recorrencia da reserva. Segue a RFC 5545 do iCalendar" })
+  @ApiProperty({
+    description: "Regra RRule para a recorrencia da reserva. Segue a RFC 5545 do iCalendar",
+  })
   @Field()
   @IsString()
   rrule: string;

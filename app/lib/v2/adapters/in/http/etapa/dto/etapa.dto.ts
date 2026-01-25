@@ -1,12 +1,27 @@
-import { ApiProperty, ApiPropertyOptional, PartialType } from "@nestjs/swagger";
 import { ArgsType, Field, ID, InputType, Int, ObjectType } from "@nestjs/graphql";
-import { IsArray, IsDateString, IsInt, IsOptional, IsString, IsUUID, Max, Min, ValidateNested } from "class-validator";
+import { ApiProperty, ApiPropertyOptional, PartialType } from "@nestjs/swagger";
 import { Type } from "class-transformer";
+import {
+  IsArray,
+  IsDateString,
+  IsInt,
+  IsOptional,
+  IsString,
+  IsUUID,
+  Max,
+  Min,
+  ValidateNested,
+} from "class-validator";
 import { PaginationInputDto, PaginationMetaDto } from "@/shared/dto";
-import { commonProperties, referenceProperty, RegisterModel, simpleProperty, } from "@/shared/metadata";
+import {
+  commonProperties,
+  RegisterModel,
+  referenceProperty,
+  simpleProperty,
+} from "@/shared/metadata";
 import {
   CalendarioLetivoFindOneInputDto,
-  CalendarioLetivoFindOneOutputDto
+  CalendarioLetivoFindOneOutputDto,
 } from "@/v2/adapters/in/http/calendario-letivo/dto";
 
 // ============================================================================
@@ -56,7 +71,10 @@ export class EtapaFindOneOutputDto {
   @IsString()
   cor: string | null;
 
-  @ApiProperty({ type: () => CalendarioLetivoFindOneOutputDto, description: "Calendario letivo ao qual a etapa pertence" })
+  @ApiProperty({
+    type: () => CalendarioLetivoFindOneOutputDto,
+    description: "Calendario letivo ao qual a etapa pertence",
+  })
   @Field(() => CalendarioLetivoFindOneOutputDto)
   @ValidateNested()
   @Type(() => CalendarioLetivoFindOneOutputDto)
@@ -138,7 +156,10 @@ export class EtapaCreateInputDto {
   @IsString()
   cor?: string | null;
 
-  @ApiProperty({ type: () => CalendarioLetivoFindOneInputDto, description: "Calendario letivo ao qual a etapa pertence" })
+  @ApiProperty({
+    type: () => CalendarioLetivoFindOneInputDto,
+    description: "Calendario letivo ao qual a etapa pertence",
+  })
   @Field(() => CalendarioLetivoFindOneInputDto)
   @ValidateNested()
   @Type(() => CalendarioLetivoFindOneInputDto)

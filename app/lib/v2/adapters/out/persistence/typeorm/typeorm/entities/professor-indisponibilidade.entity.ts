@@ -1,4 +1,12 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, type Relation, RelationId } from "typeorm";
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  type Relation,
+  RelationId,
+} from "typeorm";
 import { UsuarioEntity } from "./usuario.entity";
 
 @Entity("indisponibilidade_professor")

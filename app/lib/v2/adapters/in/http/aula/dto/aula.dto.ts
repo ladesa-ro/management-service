@@ -1,11 +1,27 @@
-import { ApiProperty, ApiPropertyOptional, PartialType } from "@nestjs/swagger";
 import { ArgsType, Field, ID, InputType, ObjectType } from "@nestjs/graphql";
-import { IsArray, IsDateString, IsOptional, IsString, IsUUID, MinLength, ValidateNested } from "class-validator";
+import { ApiProperty, ApiPropertyOptional, PartialType } from "@nestjs/swagger";
 import { Type } from "class-transformer";
+import {
+  IsArray,
+  IsDateString,
+  IsOptional,
+  IsString,
+  IsUUID,
+  MinLength,
+  ValidateNested,
+} from "class-validator";
 import { PaginationInputDto, PaginationMetaDto } from "@/shared/dto";
-import { commonProperties, referenceProperty, RegisterModel, simpleProperty, } from "@/shared/metadata";
+import {
+  commonProperties,
+  RegisterModel,
+  referenceProperty,
+  simpleProperty,
+} from "@/shared/metadata";
+import {
+  AmbienteFindOneInputDto,
+  AmbienteFindOneOutputDto,
+} from "@/v2/adapters/in/http/ambiente/dto";
 import { DiarioFindOneInputDto, DiarioFindOneOutputDto } from "@/v2/adapters/in/http/diario/dto";
-import { AmbienteFindOneInputDto, AmbienteFindOneOutputDto } from "@/v2/adapters/in/http/ambiente/dto";
 
 // ============================================================================
 // IntervaloDeTempo Stub DTOs (forward reference until intervalo-de-tempo module has DTOs)
@@ -88,7 +104,10 @@ export class AulaFindOneOutputDto {
   @MinLength(1)
   modalidade: string | null;
 
-  @ApiProperty({ type: () => IntervaloDeTempoFindOneOutputDto, description: "Intervalo de tempo associado a aula" })
+  @ApiProperty({
+    type: () => IntervaloDeTempoFindOneOutputDto,
+    description: "Intervalo de tempo associado a aula",
+  })
   @Field(() => IntervaloDeTempoFindOneOutputDto)
   @ValidateNested()
   @Type(() => IntervaloDeTempoFindOneOutputDto)
@@ -100,7 +119,11 @@ export class AulaFindOneOutputDto {
   @Type(() => DiarioFindOneOutputDto)
   diario: DiarioFindOneOutputDto;
 
-  @ApiPropertyOptional({ type: () => AmbienteFindOneOutputDto, description: "Ambiente associado a aula", nullable: true })
+  @ApiPropertyOptional({
+    type: () => AmbienteFindOneOutputDto,
+    description: "Ambiente associado a aula",
+    nullable: true,
+  })
   @Field(() => AmbienteFindOneOutputDto, { nullable: true })
   @IsOptional()
   @ValidateNested()
@@ -171,7 +194,10 @@ export class AulaCreateInputDto {
   @MinLength(1)
   modalidade?: string | null;
 
-  @ApiProperty({ type: () => IntervaloDeTempoFindOneInputDto, description: "Intervalo de tempo associado a aula" })
+  @ApiProperty({
+    type: () => IntervaloDeTempoFindOneInputDto,
+    description: "Intervalo de tempo associado a aula",
+  })
   @Field(() => IntervaloDeTempoFindOneInputDto)
   @ValidateNested()
   @Type(() => IntervaloDeTempoFindOneInputDto)
@@ -183,7 +209,11 @@ export class AulaCreateInputDto {
   @Type(() => DiarioFindOneInputDto)
   diario: DiarioFindOneInputDto;
 
-  @ApiPropertyOptional({ type: () => AmbienteFindOneInputDto, description: "Ambiente associado a aula", nullable: true })
+  @ApiPropertyOptional({
+    type: () => AmbienteFindOneInputDto,
+    description: "Ambiente associado a aula",
+    nullable: true,
+  })
   @Field(() => AmbienteFindOneInputDto, { nullable: true })
   @IsOptional()
   @ValidateNested()

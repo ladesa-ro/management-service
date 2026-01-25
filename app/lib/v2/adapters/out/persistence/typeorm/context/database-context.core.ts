@@ -165,6 +165,7 @@ export class DatabaseContext {
   get diarioProfessorRepository() {
     return repositories.createDiarioProfessorRepository(this.ds);
   }
+
   get aulaRepository() {
     return repositories.createAulaRepository(this.ds);
   }
@@ -201,7 +202,9 @@ export class DatabaseContext {
     return repositories.createHorarioGeradoAulaRepository(this.ds);
   }
 
-  async transaction<T>(callback: (context: { databaseContext: DatabaseContext }) => T | Promise<T>): Promise<T> {
+  async transaction<T>(
+    callback: (context: { databaseContext: DatabaseContext }) => T | Promise<T>,
+  ): Promise<T> {
     return this.ds.transaction(async (entityManager) => {
       const databaseContextForTransaction = new DatabaseContext(entityManager);
       return callback({ databaseContext: databaseContextForTransaction });

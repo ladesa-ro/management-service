@@ -3,17 +3,17 @@ import { map } from "lodash";
 import type { DeepPartial } from "typeorm";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
-import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
 import { QbEfficientLoad } from "@/shared";
-import type { IPaginationConfig, IPaginationCriteria } from "@/v2/application/ports/pagination";
-import type { IModalidadeRepositoryPort } from "@/v2/core/modalidade/application/ports";
 import type {
   ModalidadeFindOneInputDto,
   ModalidadeFindOneOutputDto,
   ModalidadeListInputDto,
   ModalidadeListOutputDto,
 } from "@/v2/adapters/in/http/modalidade/dto";
+import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
 import type { ModalidadeEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
+import type { IPaginationConfig, IPaginationCriteria } from "@/v2/application/ports/pagination";
+import type { IModalidadeRepositoryPort } from "@/v2/core/modalidade/application/ports";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
 
 const aliasModalidade = "modalidade";
@@ -49,18 +49,9 @@ export class ModalidadeTypeOrmRepositoryAdapter implements IModalidadeRepository
 
     const config: IPaginationConfig<ModalidadeFindOneOutputDto> = {
       ...paginateConfig,
-      select: [
-        "id",
-        "nome",
-        "slug",
-        "dateCreated",
-      ],
+      select: ["id", "nome", "slug", "dateCreated"],
       sortableColumns: ["nome", "slug", "dateCreated"],
-      searchableColumns: [
-        "id",
-        "nome",
-        "slug",
-      ],
+      searchableColumns: ["id", "nome", "slug"],
       defaultSortBy: [
         ["nome", "ASC"],
         ["dateCreated", "ASC"],
@@ -151,14 +142,19 @@ export class ModalidadeTypeOrmRepositoryAdapter implements IModalidadeRepository
   /**
    * Extrai filtros do formato do DTO para o formato de IPaginationCriteria
    */
-  private extractFilters(dto: DtoWithFilters | null | undefined): Record<string, string | string[]> {
+  private extractFilters(
+    dto: DtoWithFilters | null | undefined,
+  ): Record<string, string | string[]> {
     const filters: Record<string, string | string[]> = {};
 
     if (!dto) return filters;
 
     for (const [key, value] of Object.entries(dto)) {
       if (key.startsWith("filter.")) {
-        if (typeof value === "string" || (Array.isArray(value) && value.every(v => typeof v === "string"))) {
+        if (
+          typeof value === "string" ||
+          (Array.isArray(value) && value.every((v) => typeof v === "string"))
+        ) {
           const filterKey = key.replace("filter.", "");
           filters[filterKey] = value;
         }

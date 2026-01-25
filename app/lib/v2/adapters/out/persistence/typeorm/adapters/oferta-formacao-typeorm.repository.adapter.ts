@@ -1,20 +1,20 @@
 import { Injectable } from "@nestjs/common";
-import { FilterOperator } from "nestjs-paginate";
 import { map } from "lodash";
+import { FilterOperator } from "nestjs-paginate";
 import type { DeepPartial } from "typeorm";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
-import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
 import { QbEfficientLoad } from "@/shared";
-import type { IPaginationConfig, IPaginationCriteria } from "@/v2/application/ports/pagination";
-import type { IOfertaFormacaoRepositoryPort } from "@/v2/core/oferta-formacao/application/ports";
 import type {
   OfertaFormacaoFindOneInputDto,
   OfertaFormacaoFindOneOutputDto,
   OfertaFormacaoListInputDto,
   OfertaFormacaoListOutputDto,
 } from "@/v2/adapters/in/http/oferta-formacao/dto";
+import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
 import type { OfertaFormacaoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
+import type { IPaginationConfig, IPaginationCriteria } from "@/v2/application/ports/pagination";
+import type { IOfertaFormacaoRepositoryPort } from "@/v2/core/oferta-formacao/application/ports";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
 
 const aliasOfertaFormacao = "oferta_formacao";
@@ -42,21 +42,12 @@ export class OfertaFormacaoTypeOrmRepositoryAdapter implements IOfertaFormacaoRe
 
     const config = {
       ...paginateConfig,
-      select: [
-        "id",
-        "nome",
-        "slug",
-        "dateCreated",
-      ],
+      select: ["id", "nome", "slug", "dateCreated"],
       relations: {
         modalidade: true,
       },
       sortableColumns: ["nome", "slug", "dateCreated"],
-      searchableColumns: [
-        "id",
-        "nome",
-        "slug",
-      ],
+      searchableColumns: ["id", "nome", "slug"],
       defaultSortBy: [
         ["nome", "ASC"],
         ["dateCreated", "ASC"],
@@ -98,7 +89,7 @@ export class OfertaFormacaoTypeOrmRepositoryAdapter implements IOfertaFormacaoRe
     qb.select([]);
     QbEfficientLoad("OfertaFormacaoFindOneOutput", qb, aliasOfertaFormacao, selection);
 
-    return await qb.getOne() as OfertaFormacaoFindOneOutputDto | null;
+    return (await qb.getOne()) as OfertaFormacaoFindOneOutputDto | null;
   }
 
   async findByIdSimple(
@@ -113,7 +104,7 @@ export class OfertaFormacaoTypeOrmRepositoryAdapter implements IOfertaFormacaoRe
     qb.select([]);
     QbEfficientLoad("OfertaFormacaoFindOneOutput", qb, aliasOfertaFormacao, selection);
 
-    return await qb.getOne() as OfertaFormacaoFindOneOutputDto | null;
+    return (await qb.getOne()) as OfertaFormacaoFindOneOutputDto | null;
   }
 
   async save(ofertaFormacao: DeepPartial<OfertaFormacaoEntity>): Promise<OfertaFormacaoEntity> {
@@ -138,11 +129,17 @@ export class OfertaFormacaoTypeOrmRepositoryAdapter implements IOfertaFormacaoRe
       .execute();
   }
 
-  private extractFilters(dto: DtoWithFilters | null | undefined): Record<string, string | string[]> {
+  private extractFilters(
+    dto: DtoWithFilters | null | undefined,
+  ): Record<string, string | string[]> {
     const filters: Record<string, string | string[]> = {};
     if (!dto) return filters;
     for (const [key, value] of Object.entries(dto)) {
-      if (key.startsWith("filter.") && (typeof value === "string" || (Array.isArray(value) && value.every(v => typeof v === "string")))) {
+      if (
+        key.startsWith("filter.") &&
+        (typeof value === "string" ||
+          (Array.isArray(value) && value.every((v) => typeof v === "string")))
+      ) {
         filters[key.replace("filter.", "")] = value;
       }
     }

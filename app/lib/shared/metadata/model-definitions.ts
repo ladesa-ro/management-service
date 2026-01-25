@@ -3,12 +3,7 @@
  * Replaces TypeSpec-generated model introspection with static definitions
  */
 
-import {
-  defineModel,
-  simpleProperty,
-  referenceProperty,
-  commonProperties,
-} from "./model-registry";
+import { commonProperties, defineModel, referenceProperty, simpleProperty } from "./model-registry";
 
 // ============================================================================
 // Base/Geographic Entities

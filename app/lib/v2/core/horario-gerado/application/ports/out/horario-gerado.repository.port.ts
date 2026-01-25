@@ -1,12 +1,12 @@
 import type { DeepPartial } from "typeorm";
 import type { AccessContext } from "@/infrastructure/access-context";
-import type { HorarioGeradoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import type {
   HorarioGeradoFindOneInputDto,
   HorarioGeradoFindOneOutputDto,
   HorarioGeradoListInputDto,
   HorarioGeradoListOutputDto,
 } from "@/v2/adapters/in/http/horario-gerado/dto";
+import type { HorarioGeradoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 
 export interface IHorarioGeradoRepositoryPort {
   findAll(

@@ -1,9 +1,9 @@
-import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { ArgsType, Field, InputType, Int, ObjectType } from "@nestjs/graphql";
-import { IsArray, IsInt, IsOptional, IsString, ValidateNested } from "class-validator";
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { Type } from "class-transformer";
+import { IsArray, IsInt, IsOptional, IsString, ValidateNested } from "class-validator";
 import { PaginationInputDto, PaginationMetaDto } from "@/shared/dto";
-import { referenceProperty, RegisterModel, simpleProperty, } from "@/shared/metadata";
+import { RegisterModel, referenceProperty, simpleProperty } from "@/shared/metadata";
 import { EstadoFindOneOutputDto } from "@/v2/adapters/in/http/estado/dto";
 
 // ============================================================================

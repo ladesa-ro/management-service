@@ -3,17 +3,24 @@ import { FilterOperator } from "nestjs-paginate";
 import type { DeepPartial } from "typeorm";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
-import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
 import { QbEfficientLoad } from "@/shared";
-import type { IPaginationConfig, IPaginationCriteria, IPaginationResult } from "@/v2/application/ports/pagination";
-import type { IPerfilRepositoryPort } from "@/v2/core/perfil/application/ports";
 import type {
   PerfilFindOneInputDto,
   PerfilFindOneOutputDto,
   PerfilListInputDto,
   PerfilListOutputDto,
 } from "@/v2/adapters/in/http/perfil/dto";
-import type { PerfilEntity, UsuarioEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
+import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
+import type {
+  PerfilEntity,
+  UsuarioEntity,
+} from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
+import type {
+  IPaginationConfig,
+  IPaginationCriteria,
+  IPaginationResult,
+} from "@/v2/application/ports/pagination";
+import type { IPerfilRepositoryPort } from "@/v2/core/perfil/application/ports";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
 
 const aliasVinculo = "vinculo";
@@ -151,15 +158,9 @@ export class PerfilTypeOrmRepositoryAdapter implements IPerfilRepositoryPort {
       },
     };
 
-    const paginated = await this.paginationAdapter.paginate(
-      qb,
-      { page: 1, limit: 1 },
-      config,
-    );
+    const paginated = await this.paginationAdapter.paginate(qb, { page: 1, limit: 1 }, config);
 
-    const item = Array.isArray(paginated)
-      ? paginated[0]
-      : (paginated?.data?.[0] ?? null);
+    const item = Array.isArray(paginated) ? paginated[0] : (paginated?.data?.[0] ?? null);
     return (item as PerfilFindOneOutputDto) ?? null;
   }
 
@@ -219,7 +220,9 @@ export class PerfilTypeOrmRepositoryAdapter implements IPerfilRepositoryPort {
    * @param dto DTO que pode conter campos filter.* dinâmicos
    * @returns Objeto com filtros no formato esperado pelo IPaginationCriteria
    */
-  private extractFilters(dto: DtoWithFilters | null | undefined): Record<string, string | string[]> {
+  private extractFilters(
+    dto: DtoWithFilters | null | undefined,
+  ): Record<string, string | string[]> {
     const filters: Record<string, string | string[]> = {};
 
     if (!dto) return filters;
@@ -227,7 +230,10 @@ export class PerfilTypeOrmRepositoryAdapter implements IPerfilRepositoryPort {
     for (const [key, value] of Object.entries(dto)) {
       if (key.startsWith("filter.")) {
         // Valida se o valor é string ou array de strings
-        if (typeof value === "string" || (Array.isArray(value) && value.every(v => typeof v === "string"))) {
+        if (
+          typeof value === "string" ||
+          (Array.isArray(value) && value.every((v) => typeof v === "string"))
+        ) {
           const filterKey = key.replace("filter.", "");
           filters[filterKey] = value;
         }

@@ -1,6 +1,13 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, type Relation } from "typeorm";
-import { ImagemEntity } from "./imagem.entity"
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  type Relation,
+} from "typeorm";
 import { BlocoEntity } from "./bloco.entity";
+import { ImagemEntity } from "./imagem.entity";
 
 @Entity("ambiente")
 export class AmbienteEntity {

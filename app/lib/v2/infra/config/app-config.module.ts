@@ -1,7 +1,7 @@
 import { Global, Module } from "@nestjs/common";
 import { ConfigModule as NestConfigModule } from "@nestjs/config";
-import { ProviderAppConfigService } from "./providers";
 import { EnvironmentConfigModule } from "@/v2/adapters/out/config";
+import { ProviderAppConfigService } from "./providers";
 
 @Global()
 @Module({

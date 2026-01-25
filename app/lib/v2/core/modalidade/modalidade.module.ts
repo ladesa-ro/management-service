@@ -1,8 +1,8 @@
 import { Module } from "@nestjs/common";
 import { ModalidadeController } from "@/v2/adapters/in/http/modalidade/modalidade.controller";
-import { ModalidadeService } from "@/v2/core/modalidade/application/use-cases/modalidade.service";
-import { ModalidadeTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistence/typeorm/adapters";
 import { NestJsPaginateAdapter } from "@/v2/adapters/out/persistence/pagination";
+import { ModalidadeTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistence/typeorm/adapters";
+import { ModalidadeService } from "@/v2/core/modalidade/application/use-cases/modalidade.service";
 
 /**
  * Módulo Modalidade configurado com Arquitetura Hexagonal

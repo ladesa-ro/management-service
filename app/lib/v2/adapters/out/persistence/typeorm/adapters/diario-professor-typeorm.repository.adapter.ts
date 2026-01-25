@@ -5,16 +5,16 @@ import type { DeepPartial } from "typeorm";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { QbEfficientLoad } from "@/shared";
-import { DatabaseContextService } from "../context/database-context.service";
-import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
-import type { IDiarioProfessorRepositoryPort } from "@/v2/core/diario-professor/application/ports";
-import type { DiarioProfessorEntity } from "../typeorm/entities";
 import type {
   DiarioProfessorFindOneInputDto,
   DiarioProfessorFindOneOutputDto,
   DiarioProfessorListInputDto,
   DiarioProfessorListOutputDto,
 } from "@/v2/adapters/in/http/diario-professor/dto";
+import type { IDiarioProfessorRepositoryPort } from "@/v2/core/diario-professor/application/ports";
+import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
+import { DatabaseContextService } from "../context/database-context.service";
+import type { DiarioProfessorEntity } from "../typeorm/entities";
 
 const aliasDiarioProfessor = "diario_professor";
 

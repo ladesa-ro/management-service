@@ -1,9 +1,6 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { has, pick } from "lodash";
-import { AmbienteService } from "@/v2/core/ambiente/application/use-cases/ambiente.service";
-import { UsuarioService } from "@/v2/core/usuario/application/use-cases/usuario.service";
 import type { AccessContext } from "@/infrastructure/access-context";
-import type { ReservaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import type {
   ReservaCreateInputDto,
   ReservaFindOneInputDto,
@@ -12,6 +9,9 @@ import type {
   ReservaListOutputDto,
   ReservaUpdateInputDto,
 } from "@/v2/adapters/in/http/reserva/dto";
+import type { ReservaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
+import { AmbienteService } from "@/v2/core/ambiente/application/use-cases/ambiente.service";
+import { UsuarioService } from "@/v2/core/usuario/application/use-cases/usuario.service";
 import type { IReservaRepositoryPort } from "../ports";
 
 @Injectable()
@@ -89,7 +89,9 @@ export class ReservaService {
       ...dtoReserva,
     });
 
-    const ambiente = await this.ambienteService.ambienteFindByIdStrict(accessContext, { id: dto.ambiente.id });
+    const ambiente = await this.ambienteService.ambienteFindByIdStrict(accessContext, {
+      id: dto.ambiente.id,
+    });
 
     this.reservaRepository.merge(reserva, {
       ambiente: {
@@ -97,7 +99,9 @@ export class ReservaService {
       },
     });
 
-    const usuario = await this.usuarioService.usuarioFindByIdStrict(accessContext, { id: dto.usuario.id });
+    const usuario = await this.usuarioService.usuarioFindByIdStrict(accessContext, {
+      id: dto.usuario.id,
+    });
 
     this.reservaRepository.merge(reserva, {
       usuario: {
@@ -129,7 +133,9 @@ export class ReservaService {
     });
 
     if (has(dto, "ambiente") && dto.ambiente !== undefined) {
-      const ambiente = await this.ambienteService.ambienteFindByIdStrict(accessContext, { id: dto.ambiente.id });
+      const ambiente = await this.ambienteService.ambienteFindByIdStrict(accessContext, {
+        id: dto.ambiente.id,
+      });
 
       this.reservaRepository.merge(reserva, {
         ambiente: {
@@ -139,7 +145,10 @@ export class ReservaService {
     }
 
     if (has(dto, "usuario") && dto.usuario !== undefined) {
-      const usuario = await this.usuarioService.usuarioFindByIdSimpleStrict(accessContext, dto.usuario.id);
+      const usuario = await this.usuarioService.usuarioFindByIdSimpleStrict(
+        accessContext,
+        dto.usuario.id,
+      );
 
       this.reservaRepository.merge(reserva, {
         usuario: {

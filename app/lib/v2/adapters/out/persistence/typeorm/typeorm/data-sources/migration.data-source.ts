@@ -3,7 +3,9 @@ import "reflect-metadata";
 import { DataSource, type DataSourceOptions } from "typeorm";
 import { getDataSourceAppConfigService } from "./utils/getDataSourceEnvironmentConfigService";
 
-export const getMigrationDataSource = async (appConfigServiceBase: AppConfigService | null = null) => {
+export const getMigrationDataSource = async (
+  appConfigServiceBase: AppConfigService | null = null,
+) => {
   const appConfigService = await getDataSourceAppConfigService(appConfigServiceBase);
 
   const options = appConfigService.getTypeOrmMigrationDataSourceOptions();

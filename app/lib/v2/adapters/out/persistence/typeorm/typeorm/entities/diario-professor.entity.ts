@@ -1,7 +1,13 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, type Relation } from "typeorm";
-
-import { PerfilEntity } from "./perfil.entity"
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  type Relation,
+} from "typeorm";
 import { DiarioEntity } from "./diario.entity";
+import { PerfilEntity } from "./perfil.entity";
 
 @Entity("diario_professor")
 export class DiarioProfessorEntity {

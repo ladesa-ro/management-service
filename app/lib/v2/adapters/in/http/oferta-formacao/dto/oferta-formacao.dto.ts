@@ -1,10 +1,26 @@
-import { ApiProperty, ApiPropertyOptional, PartialType } from "@nestjs/swagger";
 import { ArgsType, Field, ID, InputType, ObjectType } from "@nestjs/graphql";
-import { IsArray, IsDateString, IsOptional, IsString, IsUUID, MinLength, ValidateNested } from "class-validator";
+import { ApiProperty, ApiPropertyOptional, PartialType } from "@nestjs/swagger";
 import { Type } from "class-transformer";
+import {
+  IsArray,
+  IsDateString,
+  IsOptional,
+  IsString,
+  IsUUID,
+  MinLength,
+  ValidateNested,
+} from "class-validator";
 import { PaginationInputDto, PaginationMetaDto } from "@/shared/dto";
-import { commonProperties, referenceProperty, RegisterModel, simpleProperty, } from "@/shared/metadata";
-import { ModalidadeFindOneInputDto, ModalidadeFindOneOutputDto } from "@/v2/adapters/in/http/modalidade/dto";
+import {
+  commonProperties,
+  RegisterModel,
+  referenceProperty,
+  simpleProperty,
+} from "@/shared/metadata";
+import {
+  ModalidadeFindOneInputDto,
+  ModalidadeFindOneOutputDto,
+} from "@/v2/adapters/in/http/modalidade/dto";
 
 // ============================================================================
 // FindOne Output
@@ -39,7 +55,10 @@ export class OfertaFormacaoFindOneOutputDto {
   @MinLength(1)
   slug: string;
 
-  @ApiProperty({ type: () => ModalidadeFindOneOutputDto, description: "Modalidade da oferta de formacao" })
+  @ApiProperty({
+    type: () => ModalidadeFindOneOutputDto,
+    description: "Modalidade da oferta de formacao",
+  })
   @Field(() => ModalidadeFindOneOutputDto)
   @ValidateNested()
   @Type(() => ModalidadeFindOneOutputDto)
@@ -109,7 +128,10 @@ export class OfertaFormacaoCreateInputDto {
   @MinLength(1)
   slug: string;
 
-  @ApiProperty({ type: () => ModalidadeFindOneInputDto, description: "Modalidade da oferta de formacao" })
+  @ApiProperty({
+    type: () => ModalidadeFindOneInputDto,
+    description: "Modalidade da oferta de formacao",
+  })
   @Field(() => ModalidadeFindOneInputDto)
   @ValidateNested()
   @Type(() => ModalidadeFindOneInputDto)

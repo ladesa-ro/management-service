@@ -28,7 +28,10 @@ export interface IDisciplinaRepositoryPort {
   ): Promise<DisciplinaFindOneOutputDto | null>;
 
   save(disciplina: DeepPartial<DisciplinaEntity>): Promise<DisciplinaEntity>;
+
   create(): DisciplinaEntity;
+
   merge(disciplina: DisciplinaEntity, data: DeepPartial<DisciplinaEntity>): void;
+
   softDeleteById(id: string): Promise<void>;
 }

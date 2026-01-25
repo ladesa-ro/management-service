@@ -28,7 +28,10 @@ export interface IDisponibilidadeRepositoryPort {
   ): Promise<DisponibilidadeFindOneOutputDto | null>;
 
   save(disponibilidade: DeepPartial<DisponibilidadeEntity>): Promise<DisponibilidadeEntity>;
+
   create(): DisponibilidadeEntity;
+
   merge(disponibilidade: DisponibilidadeEntity, data: DeepPartial<DisponibilidadeEntity>): void;
+
   softDeleteById(id: string): Promise<void>;
 }

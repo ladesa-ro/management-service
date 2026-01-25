@@ -1,12 +1,12 @@
 import type { DeepPartial } from "typeorm";
 import type { AccessContext } from "@/infrastructure/access-context";
-import type { HorarioGeradoAulaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import type {
   HorarioGeradoAulaFindOneInputDto,
   HorarioGeradoAulaFindOneOutputDto,
   HorarioGeradoAulaListInputDto,
   HorarioGeradoAulaListOutputDto,
 } from "@/v2/adapters/in/http/horario-gerado-aula/dto";
+import type { HorarioGeradoAulaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 
 export interface IHorarioGeradoAulaRepositoryPort {
   findAll(
@@ -31,7 +31,10 @@ export interface IHorarioGeradoAulaRepositoryPort {
 
   create(): HorarioGeradoAulaEntity;
 
-  merge(horarioGeradoAula: HorarioGeradoAulaEntity, data: DeepPartial<HorarioGeradoAulaEntity>): void;
+  merge(
+    horarioGeradoAula: HorarioGeradoAulaEntity,
+    data: DeepPartial<HorarioGeradoAulaEntity>,
+  ): void;
 
   softDeleteById(id: string): Promise<void>;
 }

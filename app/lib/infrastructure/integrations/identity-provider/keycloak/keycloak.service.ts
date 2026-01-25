@@ -1,8 +1,8 @@
 import type { Credentials } from "@keycloak/keycloak-admin-client/lib/utils/auth";
 import { Inject, Injectable } from "@nestjs/common";
-import { AppConfigService } from "@/v2/infra/config";
 import { KeycloakAdminClient } from "@/infrastructure/fixtures";
 import { wait } from "@/infrastructure/utils";
+import { AppConfigService } from "@/v2/infra/config";
 
 const INTERVAL_AUTH = 58 * 1000;
 
@@ -103,7 +103,10 @@ export class KeycloakService {
 
   async findUserByMatriculaSiape(matriculaSiape: string) {
     const kcAdminClient = await this.getAdminClient();
-    const [userRepresentation] = await kcAdminClient.users.find({ q: `usuario.matriculaSiape:${matriculaSiape}` }, { catchNotFound: true });
+    const [userRepresentation] = await kcAdminClient.users.find(
+      { q: `usuario.matriculaSiape:${matriculaSiape}` },
+      { catchNotFound: true },
+    );
     return userRepresentation;
   }
 

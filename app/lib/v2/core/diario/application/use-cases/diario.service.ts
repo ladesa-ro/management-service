@@ -1,11 +1,6 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { has, pick } from "lodash";
-import { AmbienteService } from "@/v2/core/ambiente/application/use-cases/ambiente.service";
-import { CalendarioLetivoService } from "@/v2/core/calendario-letivo/application/use-cases/calendario-letivo.service";
-import { DisciplinaService } from "@/v2/core/disciplina/application/use-cases/disciplina.service";
-import { TurmaService } from "@/v2/core/turma/application/use-cases/turma.service";
 import type { AccessContext } from "@/infrastructure/access-context";
-import type { DiarioEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import type {
   DiarioCreateInputDto,
   DiarioFindOneInputDto,
@@ -14,6 +9,11 @@ import type {
   DiarioListOutputDto,
   DiarioUpdateInputDto,
 } from "@/v2/adapters/in/http/diario/dto";
+import type { DiarioEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
+import { AmbienteService } from "@/v2/core/ambiente/application/use-cases/ambiente.service";
+import { CalendarioLetivoService } from "@/v2/core/calendario-letivo/application/use-cases/calendario-letivo.service";
+import { DisciplinaService } from "@/v2/core/disciplina/application/use-cases/disciplina.service";
+import { TurmaService } from "@/v2/core/turma/application/use-cases/turma.service";
 import type { IDiarioRepositoryPort } from "../ports";
 
 @Injectable()
@@ -94,7 +94,9 @@ export class DiarioService {
     });
 
     if (dto.ambientePadrao != null) {
-      const ambientePadrao = await this.ambienteService.ambienteFindByIdStrict(accessContext, { id: dto.ambientePadrao.id });
+      const ambientePadrao = await this.ambienteService.ambienteFindByIdStrict(accessContext, {
+        id: dto.ambientePadrao.id,
+      });
       this.diarioRepository.merge(diario, {
         ambientePadrao: { id: ambientePadrao.id },
       });
@@ -102,12 +104,19 @@ export class DiarioService {
       this.diarioRepository.merge(diario, { ambientePadrao: null });
     }
 
-    const calendarioLetivo = await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(accessContext, dto.calendarioLetivo.id);
+    const calendarioLetivo =
+      await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(
+        accessContext,
+        dto.calendarioLetivo.id,
+      );
     this.diarioRepository.merge(diario, {
       calendarioLetivo: { id: calendarioLetivo.id },
     });
 
-    const disciplina = await this.disciplinaService.disciplinaFindByIdSimpleStrict(accessContext, dto.disciplina.id);
+    const disciplina = await this.disciplinaService.disciplinaFindByIdSimpleStrict(
+      accessContext,
+      dto.disciplina.id,
+    );
 
     this.diarioRepository.merge(diario, { disciplina: { id: disciplina.id } });
 
@@ -153,7 +162,10 @@ export class DiarioService {
     }
 
     if (has(dto, "disciplina") && dto.disciplina !== undefined) {
-      const disciplina = await this.disciplinaService.disciplinaFindByIdSimpleStrict(accessContext, dto.disciplina.id);
+      const disciplina = await this.disciplinaService.disciplinaFindByIdSimpleStrict(
+        accessContext,
+        dto.disciplina.id,
+      );
 
       this.diarioRepository.merge(diario, {
         disciplina: { id: disciplina.id },
@@ -166,7 +178,11 @@ export class DiarioService {
     }
 
     if (has(dto, "calendarioLetivo") && dto.calendarioLetivo !== undefined) {
-      const calendarioLetivo = await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(accessContext, dto.calendarioLetivo.id);
+      const calendarioLetivo =
+        await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(
+          accessContext,
+          dto.calendarioLetivo.id,
+        );
       this.diarioRepository.merge(diario, {
         calendarioLetivo: { id: calendarioLetivo.id },
       });

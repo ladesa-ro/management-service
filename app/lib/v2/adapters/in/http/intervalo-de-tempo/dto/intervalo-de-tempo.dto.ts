@@ -1,8 +1,8 @@
-import { ApiProperty, ApiPropertyOptional, PartialType } from "@nestjs/swagger";
 import { ArgsType, Field, ID, InputType, ObjectType } from "@nestjs/graphql";
+import { ApiProperty, ApiPropertyOptional, PartialType } from "@nestjs/swagger";
 import { IsArray, IsDateString, IsOptional, IsString, IsUUID, Matches } from "class-validator";
 import { PaginationInputDto, PaginationMetaDto } from "@/shared/dto";
-import { commonProperties, RegisterModel, simpleProperty, } from "@/shared/metadata";
+import { commonProperties, RegisterModel, simpleProperty } from "@/shared/metadata";
 
 // ============================================================================
 // Constants
@@ -31,13 +31,21 @@ export class IntervaloDeTempoFindOneOutputDto {
   @IsUUID()
   id: string;
 
-  @ApiProperty({ description: "Horario que o intervalo de tempo inicia", format: "time", example: "08:00:00" })
+  @ApiProperty({
+    description: "Horario que o intervalo de tempo inicia",
+    format: "time",
+    example: "08:00:00",
+  })
   @Field()
   @IsString()
   @Matches(TIME_PATTERN, { message: "periodoInicio deve estar no formato HH:MM ou HH:MM:SS" })
   periodoInicio: string;
 
-  @ApiProperty({ description: "Horario que o intervalo de tempo termina", format: "time", example: "09:00:00" })
+  @ApiProperty({
+    description: "Horario que o intervalo de tempo termina",
+    format: "time",
+    example: "09:00:00",
+  })
   @Field()
   @IsString()
   @Matches(TIME_PATTERN, { message: "periodoFim deve estar no formato HH:MM ou HH:MM:SS" })
@@ -84,7 +92,10 @@ export class IntervaloDeTempoListOutputDto {
   @Field(() => PaginationMetaDto)
   meta: PaginationMetaDto;
 
-  @ApiProperty({ type: () => [IntervaloDeTempoFindOneOutputDto], description: "Resultados da busca" })
+  @ApiProperty({
+    type: () => [IntervaloDeTempoFindOneOutputDto],
+    description: "Resultados da busca",
+  })
   @Field(() => [IntervaloDeTempoFindOneOutputDto])
   data: IntervaloDeTempoFindOneOutputDto[];
 }
@@ -95,13 +106,21 @@ export class IntervaloDeTempoListOutputDto {
 
 @InputType("IntervaloDeTempoCreateInput")
 export class IntervaloDeTempoCreateInputDto {
-  @ApiProperty({ description: "Horario que o intervalo de tempo inicia", format: "time", example: "08:00:00" })
+  @ApiProperty({
+    description: "Horario que o intervalo de tempo inicia",
+    format: "time",
+    example: "08:00:00",
+  })
   @Field()
   @IsString()
   @Matches(TIME_PATTERN, { message: "periodoInicio deve estar no formato HH:MM ou HH:MM:SS" })
   periodoInicio: string;
 
-  @ApiProperty({ description: "Horario que o intervalo de tempo termina", format: "time", example: "09:00:00" })
+  @ApiProperty({
+    description: "Horario que o intervalo de tempo termina",
+    format: "time",
+    example: "09:00:00",
+  })
   @Field()
   @IsString()
   @Matches(TIME_PATTERN, { message: "periodoFim deve estar no formato HH:MM ou HH:MM:SS" })
