@@ -47,7 +47,7 @@ export class AutenticacaoController {
   @ApiOkResponse({ type: AuthWhoAmIOutputDto })
   @ApiForbiddenResponse()
   async whoAmI(@AccessContextHttp() accessContext: AccessContext): Promise<AuthWhoAmIOutputDto> {
-    return this.autenticacaoService.whoAmI(accessContext);
+    return this.autenticacaoService.whoAmI(accessContext) as unknown as Promise<AuthWhoAmIOutputDto>;
   }
 
   @Post("/login")

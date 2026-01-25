@@ -1,4 +1,4 @@
-import { Controller, Get } from "@nestjs/common";
+import { Controller, Get, NotFoundException } from "@nestjs/common";
 import { ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { GerarHorarioService } from "@/v2/core/gerar-horario/application/use-cases/gerar-horario.service";
 
@@ -9,8 +9,8 @@ export class GerarHorarioController {
 
   @Get("/")
   @ApiOperation({ summary: "Publica mensagem para geracao de horario" })
-  @ApiOkResponse()
-  async gerarHorarioPublishMessage(): Promise<void> {
+  @ApiOkResponse({ type: String })
+  async gerarHorarioPublishMessage(): Promise<string | NotFoundException> {
     return this.gerarHorarioService.publishMessage();
   }
 }

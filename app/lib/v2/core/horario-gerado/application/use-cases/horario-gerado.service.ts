@@ -110,7 +110,7 @@ export class HorarioGeradoService {
 
     // =========================================================
 
-    return paginated as HorarioGeradoListOutputDto;
+    return paginated as unknown as HorarioGeradoListOutputDto;
   }
 
   async horarioGeradoFindById(accessContext: AccessContext, dto: HorarioGeradoFindOneInputDto, selection?: string[] | boolean): Promise<HorarioGeradoFindOneOutputDto | null> {
@@ -191,7 +191,7 @@ export class HorarioGeradoService {
   async horarioGeradoCreate(accessContext: AccessContext, dto: HorarioGeradoCreateInputDto): Promise<HorarioGeradoFindOneOutputDto> {
     // =========================================================
 
-    await accessContext.ensurePermission("horario_gerado:create", { dto });
+    await accessContext.ensurePermission("horario_gerado:create", { dto } as any);
 
     // =========================================================
 
@@ -233,7 +233,7 @@ export class HorarioGeradoService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("horario_gerado:update", { dto }, dto.id, this.horarioGeradoRepository.createQueryBuilder(aliasHorarioGerado));
+    await accessContext.ensurePermission("horario_gerado:update", { dto }, dto.id, this.horarioGeradoRepository.createQueryBuilder(aliasHorarioGerado as any));
 
     const dtoHorarioGerado = pick(dto, ["status", "tipo", "dataGeracao", "vigenciaInicio", "vigenciaFim"]);
 
@@ -271,7 +271,7 @@ export class HorarioGeradoService {
   async horarioGeradoDeleteOneById(accessContext: AccessContext, dto: HorarioGeradoFindOneInputDto): Promise<boolean> {
     // =========================================================
 
-    await accessContext.ensurePermission("horario_gerado:delete", { dto }, dto.id, this.horarioGeradoRepository.createQueryBuilder(aliasHorarioGerado));
+    await accessContext.ensurePermission("horario_gerado:delete", { dto }, dto.id, this.horarioGeradoRepository.createQueryBuilder(aliasHorarioGerado as any));
 
     // =========================================================
 

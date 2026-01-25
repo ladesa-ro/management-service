@@ -76,7 +76,7 @@ export class NivelFormacaoService {
 
     // =========================================================
 
-    return paginated as NivelFormacaoListOutputDto;
+    return paginated as unknown as NivelFormacaoListOutputDto;
   }
 
   async nivelFormacaoFindById(accessContext: AccessContext | null, dto: NivelFormacaoFindOneInputDto, selection?: string[]): Promise<NivelFormacaoFindOneOutputDto | null> {
@@ -158,7 +158,7 @@ export class NivelFormacaoService {
   async nivelFormacaoCreate(accessContext: AccessContext, dto: NivelFormacaoCreateInputDto): Promise<NivelFormacaoFindOneOutputDto> {
     // =========================================================
 
-    await accessContext.ensurePermission("nivel_formacao:create", { dto });
+    await accessContext.ensurePermission("nivel_formacao:create", { dto } as any);
 
     // =========================================================
 
@@ -188,7 +188,7 @@ export class NivelFormacaoService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("nivel_formacao:update", { dto }, dto.id, this.nivelFormacaoRepository.createQueryBuilder(aliasNivelFormacao));
+    await accessContext.ensurePermission("nivel_formacao:update", { dto }, dto.id, this.nivelFormacaoRepository.createQueryBuilder(aliasNivelFormacao as any));
 
     const dtoNivelFormacao = pick(dto, ["slug"]);
 
@@ -214,7 +214,7 @@ export class NivelFormacaoService {
   async nivelFormacaoDeleteOneById(accessContext: AccessContext, dto: NivelFormacaoFindOneInputDto): Promise<boolean> {
     // =========================================================
 
-    await accessContext.ensurePermission("nivel_formacao:delete", { dto }, dto.id, this.nivelFormacaoRepository.createQueryBuilder(aliasNivelFormacao));
+    await accessContext.ensurePermission("nivel_formacao:delete", { dto }, dto.id, this.nivelFormacaoRepository.createQueryBuilder(aliasNivelFormacao as any));
 
     // =========================================================
 

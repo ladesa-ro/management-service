@@ -5,14 +5,14 @@ import { type SelectQueryBuilder } from "typeorm";
 import { ObjectLiteral } from "typeorm/common/ObjectLiteral";
 import { paginateConfig } from "@/infrastructure/fixtures";
 
-type SearchOptions = {
+export type SearchOptions = {
   limit?: number | null;
   page?: number | null;
   search?: null | string;
 
   sortBy?: string[];
-} & {
-  [key in `filter.${string}`]?: string[] | string;
+
+  [key: string]: string | string[] | number | number[] | null | undefined;
 };
 
 @Injectable()
@@ -35,9 +35,14 @@ export class SearchService {
           continue;
         }
 
+        // Convert number arrays to string arrays for nestjs-paginate compatibility
+        const filterValue = Array.isArray(value)
+          ? value.map((v) => String(v))
+          : value;
+
         paginateQuery.filter = {
           ...paginateQuery.filter,
-          [key.replace(prefix, "")]: value,
+          [key.replace(prefix, "")]: filterValue,
         };
       }
     }

@@ -86,7 +86,7 @@ export class OfertaFormacaoService {
 
     // =========================================================
 
-    return paginated as OfertaFormacaoListOutputDto;
+    return paginated as unknown as OfertaFormacaoListOutputDto;
   }
 
   async ofertaFormacaoFindById(accessContext: AccessContext | null, dto: OfertaFormacaoFindOneInputDto, selection?: string[]): Promise<OfertaFormacaoFindOneOutputDto | null> {
@@ -168,7 +168,7 @@ export class OfertaFormacaoService {
   async ofertaFormacaoCreate(accessContext: AccessContext, dto: OfertaFormacaoCreateInputDto): Promise<OfertaFormacaoFindOneOutputDto> {
     // =========================================================
 
-    await accessContext.ensurePermission("oferta_formacao:create", { dto });
+    await accessContext.ensurePermission("oferta_formacao:create", { dto } as any);
 
     // =========================================================
 
@@ -210,7 +210,7 @@ export class OfertaFormacaoService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("oferta_formacao:update", { dto }, dto.id, this.ofertaFormacaoRepository.createQueryBuilder(aliasOfertaFormacao));
+    await accessContext.ensurePermission("oferta_formacao:update", { dto }, dto.id, this.ofertaFormacaoRepository.createQueryBuilder(aliasOfertaFormacao as any));
 
     const dtoOfertaFormacao = pick(dto, ["nome", "slug"]);
 
@@ -248,7 +248,7 @@ export class OfertaFormacaoService {
   async ofertaFormacaoDeleteOneById(accessContext: AccessContext, dto: OfertaFormacaoFindOneInputDto): Promise<boolean> {
     // =========================================================
 
-    await accessContext.ensurePermission("oferta_formacao:delete", { dto }, dto.id, this.ofertaFormacaoRepository.createQueryBuilder(aliasOfertaFormacao));
+    await accessContext.ensurePermission("oferta_formacao:delete", { dto }, dto.id, this.ofertaFormacaoRepository.createQueryBuilder(aliasOfertaFormacao as any));
 
     // =========================================================
 

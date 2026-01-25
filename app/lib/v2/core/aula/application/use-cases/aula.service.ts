@@ -105,7 +105,7 @@ export class AulaService {
 
     // =========================================================
 
-    return paginated as AulaListOutputDto;
+    return paginated as unknown as AulaListOutputDto;
   }
 
   async aulaFindById(accessContext: AccessContext, dto: AulaFindOneInputDto, selection?: string[] | boolean): Promise<AulaFindOneOutputDto | null> {
@@ -185,7 +185,7 @@ export class AulaService {
   async aulaCreate(accessContext: AccessContext, dto: AulaCreateInputDto): Promise<AulaFindOneOutputDto> {
     // =========================================================
 
-    await accessContext.ensurePermission("aula:create", { dto });
+    await accessContext.ensurePermission("aula:create", { dto } as any);
 
     // =========================================================
 
@@ -237,7 +237,7 @@ export class AulaService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("aula:update", { dto }, dto.id, this.aulaRepository.createQueryBuilder(aliasAula));
+    await accessContext.ensurePermission("aula:update", { dto }, dto.id, this.aulaRepository.createQueryBuilder(aliasAula as any));
 
     const dtoAula = pick(dto, ["formato", "data", "intervaloDeTempo", "diario", "ambiente"]);
 
@@ -290,7 +290,7 @@ export class AulaService {
   async aulaDeleteOneById(accessContext: AccessContext, dto: AulaFindOneInputDto): Promise<boolean> {
     // =========================================================
 
-    await accessContext.ensurePermission("aula:delete", { dto }, dto.id, this.aulaRepository.createQueryBuilder(aliasAula));
+    await accessContext.ensurePermission("aula:delete", { dto }, dto.id, this.aulaRepository.createQueryBuilder(aliasAula as any));
 
     // =========================================================
 

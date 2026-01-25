@@ -80,13 +80,13 @@ export class ProfessorIndisponibilidadeController {
 
   @Delete("/:id")
   @ApiOperation({ summary: "Remove uma indisponibilidade de professor" })
-  @ApiOkResponse({ type: Boolean })
+  @ApiOkResponse({ type: ProfessorIndisponibilidadeFindOneOutputDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async professorIndisponibilidadeDeleteOneById(
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: ProfessorIndisponibilidadeFindOneInputDto,
-  ): Promise<boolean> {
+  ): Promise<ProfessorIndisponibilidadeFindOneOutputDto> {
     if (!params.id) throw new BadRequestException();
     return this.professorIndisponibilidadeService.indisponibilidadeDelete(accessContext, params.id);
   }

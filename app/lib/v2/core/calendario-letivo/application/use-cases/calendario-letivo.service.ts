@@ -117,7 +117,7 @@ export class CalendarioLetivoService {
 
     // =========================================================
 
-    return paginated as CalendarioLetivoListOutputDto;
+    return paginated as unknown as CalendarioLetivoListOutputDto;
   }
 
   async caledarioLetivoFindById(accessContext: AccessContext, dto: CalendarioLetivoFindOneInputDto, selection?: string[] | boolean): Promise<CalendarioLetivoFindOneOutputDto | null> {
@@ -197,7 +197,7 @@ export class CalendarioLetivoService {
   async calendarioLetivoCreate(accessContext: AccessContext, dto: CalendarioLetivoCreateInputDto): Promise<CalendarioLetivoFindOneOutputDto> {
     // =========================================================
 
-    await accessContext.ensurePermission("calendario_letivo:create", { dto });
+    await accessContext.ensurePermission("calendario_letivo:create", { dto } as any);
 
     // =========================================================
 
@@ -249,7 +249,7 @@ export class CalendarioLetivoService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("calendario_letivo:update", { dto }, dto.id, this.calendarioLetivoRepository.createQueryBuilder(aliasCalendarioLetivo));
+    await accessContext.ensurePermission("calendario_letivo:update", { dto }, dto.id, this.calendarioLetivoRepository.createQueryBuilder(aliasCalendarioLetivo as any));
 
     const dtoCalendarioLetivo = pick(dto, ["nome", "ano"]);
 
@@ -299,7 +299,7 @@ export class CalendarioLetivoService {
   async calendarioLetivoDeleteOneById(accessContext: AccessContext, dto: CalendarioLetivoFindOneInputDto): Promise<boolean> {
     // =========================================================
 
-    await accessContext.ensurePermission("calendario_letivo:delete", { dto }, dto.id, this.calendarioLetivoRepository.createQueryBuilder(aliasCalendarioLetivo));
+    await accessContext.ensurePermission("calendario_letivo:delete", { dto }, dto.id, this.calendarioLetivoRepository.createQueryBuilder(aliasCalendarioLetivo as any));
 
     // =========================================================
 

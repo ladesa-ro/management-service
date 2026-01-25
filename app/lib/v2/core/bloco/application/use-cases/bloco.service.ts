@@ -92,7 +92,7 @@ export class BlocoService {
     paginated.data = paginated.data.map((paginated) => pageItemsView.find((i) => i.id === paginated.id)!);
     // =========================================================
 
-    return paginated as BlocoListOutputDto;
+    return paginated as unknown as BlocoListOutputDto;
   }
 
   async blocoFindById(accessContext: AccessContext | null, dto: BlocoFindOneInputDto, selection?: string[] | boolean): Promise<BlocoFindOneOutputDto | null> {
@@ -195,7 +195,7 @@ export class BlocoService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("bloco:update", { dto: { id: currentBloco.id } }, currentBloco.id, this.blocoRepository.createQueryBuilder(aliasBloco));
+    await accessContext.ensurePermission("bloco:update", { dto: { id: currentBloco.id } }, currentBloco.id, this.blocoRepository.createQueryBuilder(aliasBloco as any));
 
     // =========================================================
 
@@ -221,7 +221,7 @@ export class BlocoService {
   async blocoCreate(accessContext: AccessContext, dto: BlocoCreateInputDto): Promise<BlocoFindOneOutputDto> {
     // =========================================================
 
-    await accessContext.ensurePermission("bloco:create", { dto });
+    await accessContext.ensurePermission("bloco:create", { dto } as any);
 
     // =========================================================
 
@@ -259,7 +259,7 @@ export class BlocoService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("bloco:update", { dto }, dto.id, this.blocoRepository.createQueryBuilder(aliasBloco));
+    await accessContext.ensurePermission("bloco:update", { dto }, dto.id, this.blocoRepository.createQueryBuilder(aliasBloco as any));
 
     // =========================================================
 
@@ -285,7 +285,7 @@ export class BlocoService {
   async blocoDeleteOneById(accessContext: AccessContext, dto: BlocoFindOneInputDto): Promise<boolean> {
     // =========================================================
 
-    await accessContext.ensurePermission("bloco:delete", { dto }, dto.id, this.blocoRepository.createQueryBuilder(aliasBloco));
+    await accessContext.ensurePermission("bloco:delete", { dto }, dto.id, this.blocoRepository.createQueryBuilder(aliasBloco as any));
 
     // =========================================================
 

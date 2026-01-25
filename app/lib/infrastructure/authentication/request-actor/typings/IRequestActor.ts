@@ -1,3 +1,3 @@
-import { type IDomain } from "@/shared/tsp/schema/typings";
+import type { UsuarioFindOneOutput } from "@/v2/core/usuario/application/dtos";
 
-export type IRequestActor = null | Pick<IDomain.Usuario, "id" | "nome" | "matriculaSiape" | "email" | "isSuperUser">;
+export type IRequestActor = null | Pick<UsuarioFindOneOutput, "id" | "nome" | "matriculaSiape" | "email" | "isSuperUser">;

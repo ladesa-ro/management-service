@@ -91,7 +91,7 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService {
 
     // =========================================================
 
-    return paginated as GradeHorarioOfertaFormacaoIntervaloDeTempoListOutputDto;
+    return paginated as unknown as GradeHorarioOfertaFormacaoIntervaloDeTempoListOutputDto;
   }
 
   async gradeHorarioOfertaFormacaoIntervaloDeTempoFindById(
@@ -185,7 +185,7 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService {
   async gradeHorarioOfertaFormacaoIntervaloDeTempoCreate(accessContext: AccessContext, dto: GradeHorarioOfertaFormacaoIntervaloDeTempoCreateInputDto): Promise<GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputDto> {
     // =========================================================
 
-    await accessContext.ensurePermission("grade_horario_oferta_formacao_intervalo_de_tempo:create", { dto });
+    await accessContext.ensurePermission("grade_horario_oferta_formacao_intervalo_de_tempo:create", { dto } as any);
 
     // =========================================================
 

@@ -77,7 +77,7 @@ export class ModalidadeService {
 
     // =========================================================
 
-    return paginated as ModalidadeListOutputDto;
+    return paginated as unknown as ModalidadeListOutputDto;
   }
 
   async modalidadeFindById(accessContext: AccessContext | null, dto: ModalidadeFindOneInputDto, selection?: string[]): Promise<ModalidadeFindOneOutputDto | null> {
@@ -159,7 +159,7 @@ export class ModalidadeService {
   async modalidadeCreate(accessContext: AccessContext, dto: ModalidadeCreateInputDto): Promise<ModalidadeFindOneOutputDto> {
     // =========================================================
 
-    await accessContext.ensurePermission("modalidade:create", { dto });
+    await accessContext.ensurePermission("modalidade:create", { dto } as any);
 
     // =========================================================
 
@@ -187,7 +187,7 @@ export class ModalidadeService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("modalidade:update", { dto }, dto.id, this.modalidadeRepository.createQueryBuilder(aliasModalidade));
+    await accessContext.ensurePermission("modalidade:update", { dto }, dto.id, this.modalidadeRepository.createQueryBuilder(aliasModalidade as any));
 
     const dtoModalidade = pick(dto, ["nome", "slug"]);
 
@@ -211,7 +211,7 @@ export class ModalidadeService {
   async modalidadeDeleteOneById(accessContext: AccessContext, dto: ModalidadeFindOneInputDto): Promise<boolean> {
     // =========================================================
 
-    await accessContext.ensurePermission("modalidade:delete", { dto }, dto.id, this.modalidadeRepository.createQueryBuilder(aliasModalidade));
+    await accessContext.ensurePermission("modalidade:delete", { dto }, dto.id, this.modalidadeRepository.createQueryBuilder(aliasModalidade as any));
 
     // =========================================================
 

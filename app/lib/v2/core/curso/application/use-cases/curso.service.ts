@@ -110,7 +110,7 @@ export class CursoService {
 
     // =========================================================
 
-    return paginated as CursoListOutputDto;
+    return paginated as unknown as CursoListOutputDto;
   }
 
   async cursoFindById(accessContext: AccessContext | null, dto: CursoFindOneInputDto, selection?: string[] | boolean): Promise<CursoFindOneOutputDto | null> {
@@ -192,7 +192,7 @@ export class CursoService {
   async cursoCreate(accessContext: AccessContext, dto: CursoCreateInputDto): Promise<CursoFindOneOutputDto> {
     // =========================================================
 
-    await accessContext.ensurePermission("curso:create", { dto });
+    await accessContext.ensurePermission("curso:create", { dto } as any);
 
     // =========================================================
 
@@ -240,7 +240,7 @@ export class CursoService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("curso:update", { dto }, dto.id, this.cursoRepository.createQueryBuilder(aliasCurso));
+    await accessContext.ensurePermission("curso:update", { dto }, dto.id, this.cursoRepository.createQueryBuilder(aliasCurso as any));
 
     const dtoCurso = pick(dto, ["nome", "nomeAbreviado"]);
 
@@ -343,7 +343,7 @@ export class CursoService {
   async cursoDeleteOneById(accessContext: AccessContext, dto: CursoFindOneInputDto): Promise<boolean> {
     // =========================================================
 
-    await accessContext.ensurePermission("curso:delete", { dto }, dto.id, this.cursoRepository.createQueryBuilder(aliasCurso));
+    await accessContext.ensurePermission("curso:delete", { dto }, dto.id, this.cursoRepository.createQueryBuilder(aliasCurso as any));
 
     // =========================================================
 

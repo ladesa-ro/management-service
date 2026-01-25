@@ -6,7 +6,7 @@ import type { AccessContext } from "@/infrastructure/access-context";
 import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
 import type {
   DiaCalendarioEntity
-} from "@/v2/adapters/out/persistence/typeorm/typeorm/entities/05-calendario/dia-calendario.entity";
+} from "@/v2/adapters/out/persistence/typeorm/typeorm/entities/dia-calendario.entity";
 import { QbEfficientLoad, SearchService } from "@/shared";
 import type {
   DiaCalendarioCreateInputDto,
@@ -102,7 +102,7 @@ export class DiaCalendarioService {
 
     // =========================================================
 
-    return paginated as DiaCalendarioListOutputDto;
+    return paginated as unknown as DiaCalendarioListOutputDto;
   }
 
   async diaCalendarioFindById(accessContext: AccessContext, dto: DiaCalendarioFindOneInputDto, selection?: string[] | boolean): Promise<DiaCalendarioFindOneOutputDto | null> {
@@ -182,7 +182,7 @@ export class DiaCalendarioService {
   async diaCalendarioCreate(accessContext: AccessContext, dto: DiaCalendarioCreateInputDto): Promise<DiaCalendarioFindOneOutputDto> {
     // =========================================================
 
-    await accessContext.ensurePermission("dia_calendario:create", { dto });
+    await accessContext.ensurePermission("dia_calendario:create", { dto } as any);
 
     // =========================================================
 
@@ -192,7 +192,7 @@ export class DiaCalendarioService {
 
     this.diaCalendarioRepository.merge(diaCalendario, {
       ...dtoDiaCalendario,
-    });
+    } as any);
 
     // =========================================================
 
@@ -224,7 +224,7 @@ export class DiaCalendarioService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("dia_calendario:update", { dto }, dto.id, this.diaCalendarioRepository.createQueryBuilder(aliasDiaCalendario));
+    await accessContext.ensurePermission("dia_calendario:update", { dto }, dto.id, this.diaCalendarioRepository.createQueryBuilder(aliasDiaCalendario as any));
 
     const dtoDiaCalendario = pick(dto, ["data", "dia_letivo", "feriado"]) as Pick<typeof dto, "data" | "diaLetivo" | "feriado">;
 
@@ -234,7 +234,7 @@ export class DiaCalendarioService {
 
     this.diaCalendarioRepository.merge(diaCalendario, {
       ...dtoDiaCalendario,
-    });
+    } as any);
 
     // =========================================================
 
@@ -262,7 +262,7 @@ export class DiaCalendarioService {
   async diaCalendarioDeleteOneById(accessContext: AccessContext, dto: DiaCalendarioFindOneInputDto): Promise<boolean> {
     // =========================================================
 
-    await accessContext.ensurePermission("dia_calendario:delete", { dto }, dto.id, this.diaCalendarioRepository.createQueryBuilder(aliasDiaCalendario));
+    await accessContext.ensurePermission("dia_calendario:delete", { dto }, dto.id, this.diaCalendarioRepository.createQueryBuilder(aliasDiaCalendario as any));
 
     // =========================================================
 

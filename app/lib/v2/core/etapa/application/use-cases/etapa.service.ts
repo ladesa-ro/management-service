@@ -4,7 +4,7 @@ import { FilterOperator } from "nestjs-paginate";
 import { CalendarioLetivoService } from "@/v2/core/calendario-letivo/application/use-cases/calendario-letivo.service";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
-import type { EtapaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities/05-calendario/etapa.entity";
+import type { EtapaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities/etapa.entity";
 import { QbEfficientLoad, SearchService } from "@/shared";
 import type {
   EtapaCreateInputDto,
@@ -99,7 +99,7 @@ export class EtapaService {
 
     // =========================================================
 
-    return paginated as EtapaListOutputDto;
+    return paginated as unknown as EtapaListOutputDto;
   }
 
   async etapaFindById(accessContext: AccessContext, dto: EtapaFindOneInputDto, selection?: string[] | boolean): Promise<EtapaFindOneOutputDto | null> {
@@ -180,7 +180,7 @@ export class EtapaService {
   async etapaCreate(accessContext: AccessContext, dto: EtapaCreateInputDto): Promise<EtapaFindOneOutputDto> {
     // =========================================================
 
-    await accessContext.ensurePermission("etapa:create", { dto });
+    await accessContext.ensurePermission("etapa:create", { dto } as any);
 
     // =========================================================
 
@@ -220,7 +220,7 @@ export class EtapaService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("etapa:update", { dto }, dto.id, this.etapaRepository.createQueryBuilder(aliasEtapa));
+    await accessContext.ensurePermission("etapa:update", { dto }, dto.id, this.etapaRepository.createQueryBuilder(aliasEtapa as any));
 
     const dtoEtapa = pick(dto, ["numero", "cor", "dataInicio", "dataTermino"]);
 
@@ -256,7 +256,7 @@ export class EtapaService {
   async etapaDeleteOneById(accessContext: AccessContext, dto: EtapaFindOneInputDto): Promise<boolean> {
     // =========================================================
 
-    await accessContext.ensurePermission("etapa:delete", { dto }, dto.id, this.etapaRepository.createQueryBuilder(aliasEtapa));
+    await accessContext.ensurePermission("etapa:delete", { dto }, dto.id, this.etapaRepository.createQueryBuilder(aliasEtapa as any));
 
     // =========================================================
 

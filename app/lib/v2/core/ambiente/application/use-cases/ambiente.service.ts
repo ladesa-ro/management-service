@@ -112,7 +112,7 @@ export class AmbienteService {
 
     // =========================================================
 
-    return paginated as AmbienteListOutputDto;
+    return paginated as unknown as AmbienteListOutputDto;
   }
 
   async ambienteFindById(accessContext: AccessContext | null, dto: AmbienteFindOneInputDto, selection?: string[] | boolean): Promise<AmbienteFindOneOutputDto | null> {
@@ -157,7 +157,7 @@ export class AmbienteService {
   async ambienteCreate(accessContext: AccessContext, dto: AmbienteCreateInputDto): Promise<AmbienteFindOneOutputDto> {
     // =========================================================
 
-    await accessContext.ensurePermission("ambiente:create", { dto });
+    await accessContext.ensurePermission("ambiente:create", { dto } as any);
 
     // =========================================================
 
@@ -195,7 +195,7 @@ export class AmbienteService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("ambiente:update", { dto }, dto.id, this.ambienteRepository.createQueryBuilder(aliasAmbiente));
+    await accessContext.ensurePermission("ambiente:update", { dto }, dto.id, this.ambienteRepository.createQueryBuilder(aliasAmbiente as any));
 
     const dtoAmbiente = pick(dto, ["nome", "descricao", "codigo", "capacidade", "tipo"]);
 
@@ -277,7 +277,7 @@ export class AmbienteService {
   async ambienteDeleteOneById(accessContext: AccessContext, dto: AmbienteFindOneInputDto): Promise<boolean> {
     // =========================================================
 
-    await accessContext.ensurePermission("ambiente:delete", { dto }, dto.id, this.ambienteRepository.createQueryBuilder(aliasAmbiente));
+    await accessContext.ensurePermission("ambiente:delete", { dto }, dto.id, this.ambienteRepository.createQueryBuilder(aliasAmbiente as any));
 
     // =========================================================
 

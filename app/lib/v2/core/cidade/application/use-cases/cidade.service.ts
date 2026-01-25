@@ -71,7 +71,7 @@ export class CidadeService {
 
     // =========================================================
 
-    return paginated as CidadeListOutputDto;
+    return paginated as unknown as CidadeListOutputDto;
   }
 
   async findById(accessContext: AccessContext, dto: CidadeFindOneInputDto, selection?: string[]): Promise<CidadeFindOneOutputDto | null> {

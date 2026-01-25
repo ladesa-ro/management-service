@@ -112,7 +112,7 @@ export class DiarioPreferenciaAgrupamentoService {
 
     // =========================================================
 
-    return paginated as DiarioPreferenciaAgrupamentoListOutputDto;
+    return paginated as unknown as DiarioPreferenciaAgrupamentoListOutputDto;
   }
 
   async diarioPreferenciaAgrupamentoFindById(
@@ -201,7 +201,7 @@ export class DiarioPreferenciaAgrupamentoService {
   async diarioPreferenciaAgrupamentoCreate(accessContext: AccessContext, dto: DiarioPreferenciaAgrupamentoCreateInputDto): Promise<DiarioPreferenciaAgrupamentoFindOneOutputDto> {
     // =========================================================
 
-    await accessContext.ensurePermission("diario_preferencia_agrupamento:create", { dto });
+    await accessContext.ensurePermission("diario_preferencia_agrupamento:create", { dto } as any);
 
     // =========================================================
 

@@ -107,7 +107,7 @@ export class DiarioProfessorService {
 
     // =========================================================
 
-    return paginated as DiarioProfessorListOutputDto;
+    return paginated as unknown as DiarioProfessorListOutputDto;
   }
 
   async diarioProfessorFindById(accessContext: AccessContext, dto: DiarioProfessorFindOneInputDto, selection?: string[] | boolean): Promise<DiarioProfessorFindOneOutputDto | null> {
@@ -191,7 +191,7 @@ export class DiarioProfessorService {
   async diarioProfessorCreate(accessContext: AccessContext, dto: DiarioProfessorCreateInputDto): Promise<DiarioProfessorFindOneOutputDto> {
     // =========================================================
 
-    await accessContext.ensurePermission("diario_professor:create", { dto });
+    await accessContext.ensurePermission("diario_professor:create", { dto } as any);
 
     // =========================================================
 
@@ -253,7 +253,7 @@ export class DiarioProfessorService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("diario_professor:update", { dto }, dto.id, this.diarioProfessorRepository.createQueryBuilder(aliasDiarioProfessor));
+    await accessContext.ensurePermission("diario_professor:update", { dto }, dto.id, this.diarioProfessorRepository.createQueryBuilder(aliasDiarioProfessor as any));
 
     const dtoDiarioProfessor = pick(dto, ["situacao"]);
 
@@ -311,7 +311,7 @@ export class DiarioProfessorService {
   async diarioProfessorDeleteOneById(accessContext: AccessContext, dto: DiarioProfessorFindOneInputDto): Promise<boolean> {
     // =========================================================
 
-    await accessContext.ensurePermission("diario_professor:delete", { dto }, dto.id, this.diarioProfessorRepository.createQueryBuilder(aliasDiarioProfessor));
+    await accessContext.ensurePermission("diario_professor:delete", { dto }, dto.id, this.diarioProfessorRepository.createQueryBuilder(aliasDiarioProfessor as any));
 
     // =========================================================
 

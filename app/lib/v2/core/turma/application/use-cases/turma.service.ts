@@ -121,7 +121,7 @@ export class TurmaService {
 
     // =========================================================
 
-    return paginated as TurmaListOutputDto;
+    return paginated as unknown as TurmaListOutputDto;
   }
 
   async turmaFindById(accessContext: AccessContext | null, dto: TurmaFindOneInputDto, selection?: string[] | boolean): Promise<TurmaFindOneOutputDto | null> {
@@ -203,7 +203,7 @@ export class TurmaService {
   async turmaCreate(accessContext: AccessContext, dto: TurmaCreateInputDto): Promise<TurmaFindOneOutputDto> {
     // =========================================================
 
-    await accessContext.ensurePermission("turma:create", { dto });
+    await accessContext.ensurePermission("turma:create", { dto } as any);
 
     // =========================================================
 
@@ -259,7 +259,7 @@ export class TurmaService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("turma:update", { dto }, dto.id, this.turmaRepository.createQueryBuilder(aliasTurma));
+    await accessContext.ensurePermission("turma:update", { dto }, dto.id, this.turmaRepository.createQueryBuilder(aliasTurma as any));
 
     const dtoTurma = pick(dto, ["periodo"]);
 
@@ -370,7 +370,7 @@ export class TurmaService {
   async turmaDeleteOneById(accessContext: AccessContext, dto: TurmaFindOneInputDto): Promise<boolean> {
     // =========================================================
 
-    await accessContext.ensurePermission("turma:delete", { dto }, dto.id, this.turmaRepository.createQueryBuilder(aliasTurma));
+    await accessContext.ensurePermission("turma:delete", { dto }, dto.id, this.turmaRepository.createQueryBuilder(aliasTurma as any));
 
     // =========================================================
 

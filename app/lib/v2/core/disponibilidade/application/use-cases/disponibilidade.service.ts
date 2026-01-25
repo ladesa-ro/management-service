@@ -78,7 +78,7 @@ export class DisponibilidadeService {
 
     // =========================================================
 
-    return paginated as DisponibilidadeListOutputDto;
+    return paginated as unknown as DisponibilidadeListOutputDto;
   }
 
   async disponibilidadeFindById(accessContext: AccessContext | null, dto: DisponibilidadeFindOneInputDto, selection?: string[]): Promise<DisponibilidadeFindOneOutputDto | null> {
@@ -160,7 +160,7 @@ export class DisponibilidadeService {
   async disponibilidadeCreate(accessContext: AccessContext, dto: DisponibilidadeCreateInputDto): Promise<DisponibilidadeFindOneOutputDto> {
     // =========================================================
 
-    await accessContext.ensurePermission("disponibilidade:create", { dto });
+    await accessContext.ensurePermission("disponibilidade:create", { dto } as any);
 
     // =========================================================
 
@@ -190,7 +190,7 @@ export class DisponibilidadeService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("disponibilidade:update", { dto }, dto.id, this.disponibilidadeRepository.createQueryBuilder(aliasDisponibilidade));
+    await accessContext.ensurePermission("disponibilidade:update", { dto }, dto.id, this.disponibilidadeRepository.createQueryBuilder(aliasDisponibilidade as any));
 
     const dtoDisponibilidade = pick(dto, ["dataInicio", "dataFim"]);
 
@@ -216,7 +216,7 @@ export class DisponibilidadeService {
   async disponibilidadeDeleteOneById(accessContext: AccessContext, dto: DisponibilidadeFindOneInputDto): Promise<boolean> {
     // =========================================================
 
-    await accessContext.ensurePermission("disponibilidade:delete", { dto }, dto.id, this.disponibilidadeRepository.createQueryBuilder(aliasDisponibilidade));
+    await accessContext.ensurePermission("disponibilidade:delete", { dto }, dto.id, this.disponibilidadeRepository.createQueryBuilder(aliasDisponibilidade as any));
 
     // =========================================================
 

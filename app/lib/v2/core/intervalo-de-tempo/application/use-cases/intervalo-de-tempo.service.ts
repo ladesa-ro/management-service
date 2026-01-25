@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { pick } from "lodash";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
-import { type IDomain } from "@/shared/tsp/schema/typings";
+import type { IntervaloDeTempoInput } from "../dtos";
 
 // ============================================================================
 
@@ -14,7 +14,7 @@ export class IntervaloDeTempoService {
     return this.databaseContext.intervaloDeTempoRepository;
   }
 
-  async intervaloCreateOrUpdate(accessContext: AccessContext | null, domain: IDomain.IntervaloDeTempoInput) {
+  async intervaloCreateOrUpdate(accessContext: AccessContext | null, domain: IntervaloDeTempoInput) {
     const intervalExisting = await this.intervaloFindOne(domain);
 
     if (intervalExisting) return intervalExisting;
@@ -32,7 +32,7 @@ export class IntervaloDeTempoService {
     return this.intervaloTempoRepository.findOneByOrFail({ id: newInterval.id });
   }
 
-  private async intervaloFindOne(domain: IDomain.IntervaloDeTempoInput) {
+  private async intervaloFindOne(domain: IntervaloDeTempoInput) {
     return this.intervaloTempoRepository.findOne({
       where: {
         periodoFim: domain.periodoFim,

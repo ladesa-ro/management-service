@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { paginate, type PaginateConfig } from "nestjs-paginate";
 import type { PaginateQuery } from "nestjs-paginate/lib/decorator";
-import type { SelectQueryBuilder } from "typeorm";
+import type { ObjectLiteral, SelectQueryBuilder } from "typeorm";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import type {
   IPaginationConfig,
@@ -16,7 +16,7 @@ import type {
  */
 @Injectable()
 export class NestJsPaginateAdapter implements IPaginationPort {
-  async paginate<T>(
+  async paginate<T extends ObjectLiteral>(
     queryBuilder: SelectQueryBuilder<T>,
     criteria: IPaginationCriteria | null,
     config: IPaginationConfig<T>,

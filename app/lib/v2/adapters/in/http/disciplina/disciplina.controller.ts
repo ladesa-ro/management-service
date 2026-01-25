@@ -84,14 +84,14 @@ export class DisciplinaController {
 
   @Put("/:id/imagem/capa")
   @ApiOperation({ summary: "Define imagem de capa de uma disciplina" })
-  @ApiOkResponse({ type: DisciplinaFindOneOutputDto })
+  @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async disciplinaImagemCapaSave(
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: DisciplinaFindOneInputDto,
     @UploadedFile() file: Express.Multer.File,
-  ): Promise<DisciplinaFindOneOutputDto> {
+  ): Promise<boolean> {
     return this.disciplinaService.disciplinaUpdateImagemCapa(accessContext, params, file);
   }
 

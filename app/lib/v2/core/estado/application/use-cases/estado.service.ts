@@ -52,7 +52,7 @@ export class EstadoService {
 
     // =========================================================
 
-    return paginated as EstadoListOutputDto;
+    return paginated as unknown as EstadoListOutputDto;
   }
 
   async findById(accessContext: AccessContext, dto: EstadoFindOneInputDto, selection?: string[]): Promise<EstadoFindOneOutputDto | null> {

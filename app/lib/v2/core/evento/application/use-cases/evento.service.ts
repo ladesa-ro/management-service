@@ -4,7 +4,7 @@ import { FilterOperator } from "nestjs-paginate";
 import { CalendarioLetivoService } from "@/v2/core/calendario-letivo/application/use-cases/calendario-letivo.service";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
-import type { EventoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities/05-calendario/evento.entity";
+import type { EventoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities/evento.entity";
 import { QbEfficientLoad, SearchService } from "@/shared";
 import type {
   EventoCreateInputDto,
@@ -111,7 +111,7 @@ export class EventoService {
 
     // =========================================================
 
-    return paginated as EventoListOutputDto;
+    return paginated as unknown as EventoListOutputDto;
   }
 
   async eventoFindById(accessContext: AccessContext, dto: EventoFindOneInputDto, selection?: string[] | boolean): Promise<EventoFindOneOutputDto | null> {
@@ -190,7 +190,7 @@ export class EventoService {
   async eventoCreate(accessContext: AccessContext, dto: EventoCreateInputDto): Promise<EventoFindOneOutputDto> {
     // =========================================================
 
-    await accessContext.ensurePermission("evento:create", { dto });
+    await accessContext.ensurePermission("evento:create", { dto } as any);
 
     // =========================================================
 
@@ -230,7 +230,7 @@ export class EventoService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("evento:update", { dto }, dto.id, this.eventoRepository.createQueryBuilder(aliasEvento));
+    await accessContext.ensurePermission("evento:update", { dto }, dto.id, this.eventoRepository.createQueryBuilder(aliasEvento as any));
 
     const dtoEvento = pick(dto, ["nome", "cor", "rrule", "data_inicio", "data_fim"]);
 
@@ -266,7 +266,7 @@ export class EventoService {
   async eventoDeleteOneById(accessContext: AccessContext, dto: EventoFindOneInputDto): Promise<boolean> {
     // =========================================================
 
-    await accessContext.ensurePermission("evento:delete", { dto }, dto.id, this.eventoRepository.createQueryBuilder(aliasEvento));
+    await accessContext.ensurePermission("evento:delete", { dto }, dto.id, this.eventoRepository.createQueryBuilder(aliasEvento as any));
 
     // =========================================================
 

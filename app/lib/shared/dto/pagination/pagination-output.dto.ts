@@ -27,13 +27,12 @@ export class PaginationMetaDto {
   @Field()
   search: string;
 
-  @ApiProperty({ description: "Ordenacao", isArray: true, type: String })
-  @Field(() => [String])
-  sortBy: string[];
+  @ApiProperty({ description: "Ordenacao", isArray: true })
+  @Field(() => [[String]])
+  sortBy: [string, string][];
 
-  @ApiProperty({ description: "Filtros", isArray: true, type: String })
-  @Field(() => [String])
-  filter: string[];
+  @ApiProperty({ description: "Filtros" })
+  filter?: Record<string, string | string[]>;
 }
 
 /**

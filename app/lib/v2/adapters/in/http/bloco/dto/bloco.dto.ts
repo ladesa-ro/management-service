@@ -10,6 +10,46 @@ import { CampusFindOneInputDto, CampusFindOneOutputDto } from "@/v2/adapters/in/
 // Imagem Stub DTOs (forward reference until imagem module has DTOs)
 // ============================================================================
 
+@ObjectType("ArquivoFindOneOutputFromBloco")
+export class ArquivoFindOneOutputFromBlocoDto {
+  @ApiProperty({ description: "Identificador do registro (uuid)", format: "uuid" })
+  @Field(() => ID)
+  @IsUUID()
+  id: string;
+}
+
+@ObjectType("ImagemArquivoFindOneFromImagem")
+export class ImagemArquivoFindOneFromImagemOutputDto {
+  @ApiProperty({ description: "Identificador do registro (uuid)", format: "uuid" })
+  @Field(() => ID)
+  @IsUUID()
+  id: string;
+
+  @ApiProperty({ description: "Largura da imagem" })
+  @Field()
+  largura: number | null;
+
+  @ApiProperty({ description: "Altura da imagem" })
+  @Field()
+  altura: number | null;
+
+  @ApiProperty({ description: "Formato da imagem" })
+  @Field()
+  @IsString()
+  formato: string | null;
+
+  @ApiProperty({ description: "Mime-type da imagem" })
+  @Field()
+  @IsString()
+  mimeType: string | null;
+
+  @ApiProperty({ description: "Arquivo", type: () => ArquivoFindOneOutputFromBlocoDto })
+  @Field(() => ArquivoFindOneOutputFromBlocoDto)
+  @ValidateNested()
+  @Type(() => ArquivoFindOneOutputFromBlocoDto)
+  arquivo: ArquivoFindOneOutputFromBlocoDto;
+}
+
 @ObjectType("ImagemFindOneOutputFromBloco")
 export class ImagemFindOneOutputDto {
   @ApiProperty({ description: "Identificador do registro (uuid)", format: "uuid" })
@@ -22,6 +62,13 @@ export class ImagemFindOneOutputDto {
   @IsOptional()
   @IsString()
   descricao: string | null;
+
+  @ApiProperty({ description: "Versões da imagem", type: () => [ImagemArquivoFindOneFromImagemOutputDto] })
+  @Field(() => [ImagemArquivoFindOneFromImagemOutputDto])
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ImagemArquivoFindOneFromImagemOutputDto)
+  versoes: ImagemArquivoFindOneFromImagemOutputDto[];
 
   @ApiProperty({ description: "Data e hora da criacao do registro" })
   @Field()

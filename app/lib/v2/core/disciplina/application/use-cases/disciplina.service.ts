@@ -83,7 +83,7 @@ export class DisciplinaService {
 
     // =========================================================
 
-    return paginated as DisciplinaListOutputDto;
+    return paginated as unknown as DisciplinaListOutputDto;
   }
 
   async disciplinaFindById(accessContext: AccessContext | null, dto: DisciplinaFindOneInputDto, selection?: string[] | boolean): Promise<DisciplinaFindOneOutputDto | null> {
@@ -165,7 +165,7 @@ export class DisciplinaService {
   async disciplinaCreate(accessContext: AccessContext, dto: DisciplinaCreateInputDto): Promise<DisciplinaFindOneOutputDto> {
     // =========================================================
 
-    await accessContext.ensurePermission("disciplina:create", { dto });
+    await accessContext.ensurePermission("disciplina:create", { dto } as any);
 
     // =========================================================
 
@@ -193,7 +193,7 @@ export class DisciplinaService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("disciplina:update", { dto }, dto.id, this.disciplinaRepository.createQueryBuilder(aliasDisciplina));
+    await accessContext.ensurePermission("disciplina:update", { dto }, dto.id, this.disciplinaRepository.createQueryBuilder(aliasDisciplina as any));
 
     const dtoDisciplina = pick(dto, ["nome", "nomeAbreviado", "cargaHoraria"]);
 
@@ -272,7 +272,7 @@ export class DisciplinaService {
   async disciplinaDeleteOneById(accessContext: AccessContext, dto: DisciplinaFindOneInputDto): Promise<boolean> {
     // =========================================================
 
-    await accessContext.ensurePermission("disciplina:delete", { dto }, dto.id, this.disciplinaRepository.createQueryBuilder(aliasDisciplina));
+    await accessContext.ensurePermission("disciplina:delete", { dto }, dto.id, this.disciplinaRepository.createQueryBuilder(aliasDisciplina as any));
 
     // =========================================================
 

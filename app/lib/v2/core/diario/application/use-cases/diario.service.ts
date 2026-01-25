@@ -105,7 +105,7 @@ export class DiarioService {
 
     // =========================================================
 
-    return paginated as DiarioListOutputDto;
+    return paginated as unknown as DiarioListOutputDto;
   }
 
   async diarioFindById(accessContext: AccessContext, dto: DiarioFindOneInputDto, selection?: string[] | boolean): Promise<DiarioFindOneOutputDto | null> {
@@ -185,7 +185,7 @@ export class DiarioService {
   async diarioCreate(accessContext: AccessContext, dto: DiarioCreateInputDto): Promise<DiarioFindOneOutputDto> {
     // =========================================================
 
-    await accessContext.ensurePermission("diario:create", { dto });
+    await accessContext.ensurePermission("diario:create", { dto } as any);
 
     // =========================================================
 
@@ -199,7 +199,7 @@ export class DiarioService {
 
     // =========================================================
 
-    if (dto.ambientePadrao !== null) {
+    if (dto.ambientePadrao != null) {
       const ambientePadrao = await this.ambienteService.ambienteFindByIdStrict(accessContext, { id: dto.ambientePadrao.id });
       this.diarioRepository.merge(diario, {
         ambientePadrao: { id: ambientePadrao.id },
@@ -243,7 +243,7 @@ export class DiarioService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("diario:update", { dto }, dto.id, this.diarioRepository.createQueryBuilder(aliasDiario));
+    await accessContext.ensurePermission("diario:update", { dto }, dto.id, this.diarioRepository.createQueryBuilder(aliasDiario as any));
 
     const dtoDiario = pick(dto, ["ativo", "ano", "etapa", "turma", "disciplina", "ambientePadrao"]);
 
@@ -309,7 +309,7 @@ export class DiarioService {
   async diarioDeleteOneById(accessContext: AccessContext, dto: DiarioFindOneInputDto): Promise<boolean> {
     // =========================================================
 
-    await accessContext.ensurePermission("diario:delete", { dto }, dto.id, this.diarioRepository.createQueryBuilder(aliasDiario));
+    await accessContext.ensurePermission("diario:delete", { dto }, dto.id, this.diarioRepository.createQueryBuilder(aliasDiario as any));
 
     // =========================================================
 

@@ -225,7 +225,7 @@ export class UsuarioService {
 
     // =========================================================
 
-    return paginated as UsuarioListOutputDto;
+    return paginated as unknown as UsuarioListOutputDto;
   }
 
   async usuarioFindById(accessContext: AccessContext | null, dto: UsuarioFindOneInputDto, selection?: string[] | boolean): Promise<UsuarioFindOneOutputDto | null> {
@@ -417,7 +417,7 @@ export class UsuarioService {
   async usuarioCreate(accessContext: AccessContext, dto: UsuarioCreateInputDto): Promise<UsuarioFindOneOutputDto> {
     // =========================================================
 
-    await accessContext.ensurePermission("usuario:create", { dto });
+    await accessContext.ensurePermission("usuario:create", { dto } as any);
 
     // =========================================================
 
@@ -476,7 +476,7 @@ export class UsuarioService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("usuario:update", { dto }, dto.id, this.usuarioRepository.createQueryBuilder(aliasUsuario));
+    await accessContext.ensurePermission("usuario:update", { dto }, dto.id, this.usuarioRepository.createQueryBuilder(aliasUsuario as any));
 
     const input = pick(dto, ["nome", "matriculaSiape", "email"]);
 
@@ -532,7 +532,7 @@ export class UsuarioService {
   async usuarioDeleteOneById(accessContext: AccessContext, dto: UsuarioFindOneInputDto): Promise<boolean> {
     // =========================================================
 
-    await accessContext.ensurePermission("usuario:delete", { dto }, dto.id, this.usuarioRepository.createQueryBuilder(aliasUsuario));
+    await accessContext.ensurePermission("usuario:delete", { dto }, dto.id, this.usuarioRepository.createQueryBuilder(aliasUsuario as any));
 
     // =========================================================
 

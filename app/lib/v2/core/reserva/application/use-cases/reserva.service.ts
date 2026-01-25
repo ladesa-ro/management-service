@@ -110,7 +110,7 @@ export class ReservaService {
 
     // =========================================================
 
-    return paginated as ReservaListOutputDto;
+    return paginated as unknown as ReservaListOutputDto;
   }
 
   async reservaFindById(accessContext: AccessContext, dto: ReservaFindOneInputDto, selection?: string[] | boolean): Promise<ReservaFindOneOutputDto | null> {
@@ -190,7 +190,7 @@ export class ReservaService {
   async reservaCreate(accessContext: AccessContext, dto: ReservaCreateInputDto): Promise<ReservaFindOneOutputDto> {
     // =========================================================
 
-    await accessContext.ensurePermission("reserva:create", { dto });
+    await accessContext.ensurePermission("reserva:create", { dto } as any);
 
     // =========================================================
 
@@ -240,7 +240,7 @@ export class ReservaService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("reserva:update", { dto }, dto.id, this.reservaRepository.createQueryBuilder(aliasReserva));
+    await accessContext.ensurePermission("reserva:update", { dto }, dto.id, this.reservaRepository.createQueryBuilder(aliasReserva as any));
 
     const dtoReserva = pick(dto, ["situacao", "motivo", "tipo", "rrule"]);
 
@@ -288,7 +288,7 @@ export class ReservaService {
   async reservaDeleteOneById(accessContext: AccessContext, dto: ReservaFindOneInputDto): Promise<boolean> {
     // =========================================================
 
-    await accessContext.ensurePermission("reserva:delete", { dto }, dto.id, this.reservaRepository.createQueryBuilder(aliasReserva));
+    await accessContext.ensurePermission("reserva:delete", { dto }, dto.id, this.reservaRepository.createQueryBuilder(aliasReserva as any));
 
     // =========================================================
 

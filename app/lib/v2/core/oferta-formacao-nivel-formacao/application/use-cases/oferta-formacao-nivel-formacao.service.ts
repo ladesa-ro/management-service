@@ -93,7 +93,7 @@ export class OfertaFormacaoNivelFormacaoService {
 
     // =========================================================
 
-    return paginated as OfertaFormacaoNivelFormacaoListOutputDto;
+    return paginated as unknown as OfertaFormacaoNivelFormacaoListOutputDto;
   }
 
   async ofertaFormacaoNivelFormacaoFindById(
@@ -183,7 +183,7 @@ export class OfertaFormacaoNivelFormacaoService {
   async ofertaFormacaoNivelFormacaoCreate(accessContext: AccessContext, dto: OfertaFormacaoNivelFormacaoCreateInputDto): Promise<OfertaFormacaoNivelFormacaoFindOneOutputDto> {
     // =========================================================
 
-    await accessContext.ensurePermission("oferta_formacao_nivel_formacao:create", { dto });
+    await accessContext.ensurePermission("oferta_formacao_nivel_formacao:create", { dto } as any);
 
     // =========================================================
 

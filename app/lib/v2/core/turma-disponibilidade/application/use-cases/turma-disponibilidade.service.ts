@@ -81,7 +81,7 @@ export class TurmaDisponibilidadeService {
 
     // =========================================================
 
-    return paginated as TurmaDisponibilidadeListOutputDto;
+    return paginated as unknown as TurmaDisponibilidadeListOutputDto;
   }
 
   async turmaDisponibilidadeFindById(
@@ -173,7 +173,7 @@ export class TurmaDisponibilidadeService {
 
     await accessContext.ensurePermission("turma_disponibilidade:create", {
       dto,
-    });
+    } as any);
 
     // =========================================================
 
@@ -227,7 +227,7 @@ export class TurmaDisponibilidadeService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("turma_disponibilidade:update", { dto }, dto.id, this.turmaDisponibilidadeRepository.createQueryBuilder(aliasTurmaDisponibilidade));
+    await accessContext.ensurePermission("turma_disponibilidade:update", { dto }, dto.id, this.turmaDisponibilidadeRepository.createQueryBuilder(aliasTurmaDisponibilidade as any));
 
     const dtoTurmaDisponibilidade = pick(dto, []);
 
@@ -275,7 +275,7 @@ export class TurmaDisponibilidadeService {
   async turmaDisponibilidadeDeleteOneById(accessContext: AccessContext, dto: TurmaDisponibilidadeFindOneInputDto): Promise<boolean> {
     // =========================================================
 
-    await accessContext.ensurePermission("turma_disponibilidade:delete", { dto }, dto.id, this.turmaDisponibilidadeRepository.createQueryBuilder(aliasTurmaDisponibilidade));
+    await accessContext.ensurePermission("turma_disponibilidade:delete", { dto }, dto.id, this.turmaDisponibilidadeRepository.createQueryBuilder(aliasTurmaDisponibilidade as any));
 
     // =========================================================
 

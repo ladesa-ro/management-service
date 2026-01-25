@@ -96,14 +96,14 @@ export class UsuarioController {
 
   @Put("/:id/imagem/capa")
   @ApiOperation({ summary: "Define imagem de capa de um usuario" })
-  @ApiOkResponse({ type: UsuarioFindOneOutputDto })
+  @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async usuarioImagemCapaSave(
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: UsuarioFindOneInputDto,
     @UploadedFile() file: Express.Multer.File,
-  ): Promise<UsuarioFindOneOutputDto> {
+  ): Promise<boolean> {
     return this.usuarioService.usuarioUpdateImagemCapa(accessContext, params, file);
   }
 
@@ -121,14 +121,14 @@ export class UsuarioController {
 
   @Put("/:id/imagem/perfil")
   @ApiOperation({ summary: "Define imagem de perfil de um usuario" })
-  @ApiOkResponse({ type: UsuarioFindOneOutputDto })
+  @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async usuarioImagemPerfilSave(
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: UsuarioFindOneInputDto,
     @UploadedFile() file: Express.Multer.File,
-  ): Promise<UsuarioFindOneOutputDto> {
+  ): Promise<boolean> {
     return this.usuarioService.usuarioUpdateImagemPerfil(accessContext, params, file);
   }
 

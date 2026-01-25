@@ -84,14 +84,14 @@ export class CursoController {
 
   @Put("/:id/imagem/capa")
   @ApiOperation({ summary: "Define imagem de capa de um curso" })
-  @ApiOkResponse({ type: CursoFindOneOutputDto })
+  @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async cursoImagemCapaSave(
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: CursoFindOneInputDto,
     @UploadedFile() file: Express.Multer.File,
-  ): Promise<CursoFindOneOutputDto> {
+  ): Promise<boolean> {
     return this.cursoService.cursoUpdateImagemCapa(accessContext, params, file);
   }
 

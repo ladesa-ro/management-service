@@ -141,9 +141,9 @@ export function RegisterModel(config: {
   name?: string;
   properties: PropertyRepresentation[];
 }): ClassDecorator {
-  return (target: Function) => {
+  return (target) => {
     const modelName = config.name || target.name;
     defineModel(modelName, config.properties);
-    return target;
+    return target as typeof target;
   };
 }

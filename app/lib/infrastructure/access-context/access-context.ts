@@ -290,7 +290,7 @@ export class AccessContext implements IAccessContext {
       case "professor_disponibilidade:delete":
       case "professor_disponibilidade:update":
       case "professor_disponibilidade:find": {
-        return this.databaseContext.professorDisponibilidadeRepository.createQueryBuilder("professor_disponibilidade");
+        return this.databaseContext.professorIndisponibilidadeRepository.createQueryBuilder("professor_indisponibilidade");
       }
 
       case "turma_disponibilidade:delete":

@@ -122,7 +122,7 @@ export class HorarioGeradoAulaService {
 
     // =========================================================
 
-    return paginated as HorarioGeradoAulaListOutputDto;
+    return paginated as unknown as HorarioGeradoAulaListOutputDto;
   }
 
   async horarioGeradoAulaFindById(accessContext: AccessContext, dto: HorarioGeradoAulaFindOneInputDto, selection?: string[] | boolean): Promise<HorarioGeradoAulaFindOneOutputDto | null> {
@@ -201,7 +201,7 @@ export class HorarioGeradoAulaService {
   async horarioGeradoAulaCreate(accessContext: AccessContext, dto: HorarioGeradoAulaCreateInputDto): Promise<HorarioGeradoAulaFindOneOutputDto> {
     // =========================================================
 
-    await accessContext.ensurePermission("horario_gerado_aula:create", { dto });
+    await accessContext.ensurePermission("horario_gerado_aula:create", { dto } as any);
 
     // =========================================================
 
@@ -263,7 +263,7 @@ export class HorarioGeradoAulaService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("horario_gerado_aula:update", { dto }, dto.id, this.horarioGeradoAulaRepository.createQueryBuilder(aliasHorarioGeradoAula));
+    await accessContext.ensurePermission("horario_gerado_aula:update", { dto }, dto.id, this.horarioGeradoAulaRepository.createQueryBuilder(aliasHorarioGeradoAula as any));
 
     const dtoHorarioGeradoAula = pick(dto, ["diaSemanaIso"]);
 
@@ -321,7 +321,7 @@ export class HorarioGeradoAulaService {
   async horarioGeradoAulaDeleteOneById(accessContext: AccessContext, dto: HorarioGeradoAulaFindOneInputDto): Promise<boolean> {
     // =========================================================
 
-    await accessContext.ensurePermission("horario_gerado_aula:delete", { dto }, dto.id, this.horarioGeradoAulaRepository.createQueryBuilder(aliasHorarioGeradoAula));
+    await accessContext.ensurePermission("horario_gerado_aula:delete", { dto }, dto.id, this.horarioGeradoAulaRepository.createQueryBuilder(aliasHorarioGeradoAula as any));
 
     // =========================================================
 

@@ -69,7 +69,7 @@ export class HorarioGeradoAulaController {
     @Param() params: HorarioGeradoAulaFindOneInputDto,
     @Body() dto: HorarioGeradoAulaUpdateInputDto,
   ): Promise<HorarioGeradoAulaFindOneOutputDto> {
-    return this.horarioGeradoAulaService.horarioGeradoAulaUpdate(accessContext, { id: params.id, ...dto });
+    return this.horarioGeradoAulaService.HorarioGeradoAulaUpdate(accessContext, { id: params.id, ...dto });
   }
 
   @Delete("/:id")

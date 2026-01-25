@@ -82,7 +82,7 @@ export class CampusService {
         "endereco.cidade.estado.id",
         "endereco.cidade.estado.nome",
         "endereco.cidade.estado.sigla",
-      ],
+      ] as any[],
       searchableColumns: [
         "id",
 
@@ -95,12 +95,12 @@ export class CampusService {
         "endereco.cidade.nome",
         "endereco.cidade.estado.nome",
         "endereco.cidade.estado.sigla",
-      ],
+      ] as any[],
       defaultSortBy: [
         ["nomeFantasia", "ASC"],
         ["endereco.cidade.estado.nome", "ASC"],
         ["dateCreated", "ASC"],
-      ],
+      ] as any[],
       filterableColumns: {
         "endereco.cidade.id": [FilterOperator.EQ],
         "endereco.cidade.nome": [FilterOperator.EQ],
@@ -122,7 +122,7 @@ export class CampusService {
 
     // =========================================================
 
-    return paginated as CampusListOutputDto;
+    return paginated as unknown as CampusListOutputDto;
   }
 
   async campusFindById(accessContext: AccessContext, dto: CampusFindOneInputDto, selection?: string[] | boolean): Promise<CampusFindOneOutputDto | null> {
@@ -202,7 +202,7 @@ export class CampusService {
   async campusCreate(accessContext: AccessContext, dto: CampusCreateInputDto): Promise<CampusFindOneOutputDto> {
     // =========================================================
 
-    await accessContext.ensurePermission("campus:create", { dto });
+    await accessContext.ensurePermission("campus:create", { dto } as any);
 
     // =========================================================
 
@@ -248,7 +248,7 @@ export class CampusService {
 
     // =========================================================
 
-    await accessContext.ensurePermission("campus:update", { dto }, dto.id, this.campusRepository.createQueryBuilder(aliasCampus));
+    await accessContext.ensurePermission("campus:update", { dto }, dto.id, this.campusRepository.createQueryBuilder(aliasCampus as any));
 
     const campus = await this.databaseContext.transaction(async ({ databaseContext: { campusRepository } }) => {
       const dtoCampus = pick(dto, ["nomeFantasia", "razaoSocial", "apelido", "cnpj"]);
@@ -338,7 +338,7 @@ export class CampusService {
   async campusDeleteOneById(accessContext: AccessContext, dto: CampusFindOneInputDto): Promise<boolean> {
     // =========================================================
 
-    await accessContext.ensurePermission("campus:delete", { dto }, dto.id, this.campusRepository.createQueryBuilder(aliasCampus));
+    await accessContext.ensurePermission("campus:delete", { dto }, dto.id, this.campusRepository.createQueryBuilder(aliasCampus as any));
 
     // =========================================================
 

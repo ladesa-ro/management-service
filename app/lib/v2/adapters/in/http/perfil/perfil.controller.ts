@@ -41,7 +41,7 @@ export class PerfilController {
   async perfilFindById(
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: PerfilFindOneInputDto,
-  ): Promise<PerfilFindOneOutputDto> {
+  ): Promise<PerfilFindOneOutputDto | null> {
     return this.perfilService.perfilFindById(accessContext, params);
   }
 
@@ -53,18 +53,18 @@ export class PerfilController {
   async perfilEnsinoById(
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: PerfilFindOneInputDto,
-  ): Promise<PerfilFindOneOutputDto> {
+  ): Promise<PerfilFindOneOutputDto | null> {
     return this.perfilService.perfilFindById(accessContext, params);
   }
 
   @Post("/")
   @ApiOperation({ summary: "Define vinculos de um perfil" })
-  @ApiCreatedResponse({ type: PerfilFindOneOutputDto })
+  @ApiCreatedResponse({ type: PerfilListOutputDto })
   @ApiForbiddenResponse()
   async setVinculos(
     @AccessContextHttp() accessContext: AccessContext,
-    @Body() dto: PerfilUpdateInputDto,
-  ): Promise<PerfilFindOneOutputDto> {
+    @Body() dto: PerfilFindOneInputDto & PerfilUpdateInputDto,
+  ): Promise<PerfilListOutputDto> {
     return this.perfilService.perfilSetVinculos(accessContext, dto);
   }
 }

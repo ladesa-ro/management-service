@@ -1,4 +1,4 @@
-import type { SelectQueryBuilder } from "typeorm";
+import type { ObjectLiteral, SelectQueryBuilder } from "typeorm";
 import type { IPaginationConfig } from "./pagination-config";
 import type { IPaginationCriteria } from "./pagination-criteria";
 import type { IPaginationResult } from "./pagination-result";
@@ -16,7 +16,7 @@ export interface IPaginationPort {
    * @param config Configuração da paginação para a entidade
    * @returns Resultado paginado com dados e metadados
    */
-  paginate<T>(
+  paginate<T extends ObjectLiteral>(
     queryBuilder: SelectQueryBuilder<T>,
     criteria: IPaginationCriteria | null,
     config: IPaginationConfig<T>,

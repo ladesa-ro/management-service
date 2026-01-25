@@ -12,7 +12,14 @@ import { UsuarioService } from "@/v2/core/usuario/application/use-cases/usuario.
 import type { AccessContext } from "@/infrastructure/access-context";
 import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
 import { KeycloakService, OpenidConnectService } from "@/infrastructure/integrations/identity-provider";
-import { type IDomain } from "@/shared/tsp/schema/typings";
+import type {
+  AuthLoginInput,
+  AuthRefreshInput,
+  AuthCredentialsSetInitialPasswordInput,
+  AuthRecoverPasswordInput,
+  AuthWhoAmIOutput,
+  AuthSessionCredentials,
+} from "../dtos";
 
 @Injectable()
 export class AutenticacaoService {
@@ -28,7 +35,7 @@ export class AutenticacaoService {
     return this.databaseContext.usuarioRepository;
   }
 
-  async whoAmI(accessContext: AccessContext): Promise<IDomain.AuthWhoAmIOutput> {
+  async whoAmI(accessContext: AccessContext): Promise<AuthWhoAmIOutput> {
     const usuario = accessContext.requestActor
       ? await this.usuarioService.usuarioFindById(accessContext, {
           id: accessContext.requestActor.id,
@@ -41,7 +48,7 @@ export class AutenticacaoService {
       return {
         usuario,
         perfisAtivos: perfisAtivos,
-      };
+      } as unknown as AuthWhoAmIOutput;
     }
 
     return {
@@ -50,7 +57,7 @@ export class AutenticacaoService {
     };
   }
 
-  async login(accessContext: AccessContext, domain: IDomain.AuthLoginInput): Promise<IDomain.AuthSessionCredentialsView> {
+  async login(accessContext: AccessContext, domain: AuthLoginInput): Promise<AuthSessionCredentials> {
     if (accessContext.requestActor !== null) {
       throw new BadRequestException("Você não pode usar a rota de login caso já esteja logado.");
     }
@@ -82,7 +89,7 @@ export class AutenticacaoService {
     throw new ForbiddenException("Credenciais inválidas.");
   }
 
-  async refresh(_: AccessContext, domain: IDomain.AuthRefreshInput): Promise<IDomain.AuthSessionCredentialsView> {
+  async refresh(_: AccessContext, domain: AuthRefreshInput): Promise<AuthSessionCredentials> {
     let config: client.Configuration;
 
     try {
@@ -104,7 +111,7 @@ export class AutenticacaoService {
     throw new ForbiddenException("Credenciais inválidas ou expiradas.");
   }
 
-  async definirSenha(_accessContext: AccessContext, domain: IDomain.AuthCredentialsSetInitialPasswordInput) {
+  async definirSenha(_accessContext: AccessContext, domain: AuthCredentialsSetInitialPasswordInput) {
     try {
       const kcAdminClient = await this.keycloakService.getAdminClient();
 
@@ -151,7 +158,7 @@ export class AutenticacaoService {
     }
   }
 
-  async recoverPassword(_accessContext: AccessContext | null, domain: IDomain.AuthRecoverPasswordInput) {
+  async recoverPassword(_accessContext: AccessContext | null, domain: AuthRecoverPasswordInput) {
     const kcAdminClient = await this.keycloakService.getAdminClient();
 
     const [user] = await kcAdminClient.users.find({ email: domain.email }, { catchNotFound: true });
@@ -172,7 +179,7 @@ export class AutenticacaoService {
   }
 
   private formatTokenSet(tokenset: client.TokenEndpointResponse & client.TokenEndpointResponseHelpers) {
-    return <IDomain.AuthSessionCredentialsView>{
+    return <AuthSessionCredentials>{
       access_token: tokenset.access_token ?? null,
       token_type: tokenset.token_type ?? null,
       id_token: tokenset.id_token ?? null,
