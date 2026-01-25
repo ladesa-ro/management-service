@@ -1,45 +1,50 @@
 import { Injectable } from "@nestjs/common";
-import { map } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
-import type { DeepPartial } from "typeorm";
-import type { AccessContext } from "@/infrastructure/access-context";
-import { QbEfficientLoad } from "@/shared";
 import type {
   AmbienteFindOneInputDto,
   AmbienteFindOneOutputDto,
   AmbienteListInputDto,
   AmbienteListOutputDto,
 } from "@/v2/adapters/in/http/ambiente/dto";
-import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
-import type { AmbienteEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
-import type { IPaginationConfig, IPaginationCriteria } from "@/v2/application/ports/pagination";
+import type { IPaginationConfig } from "@/v2/application/ports/pagination";
 import type { IAmbienteRepositoryPort } from "@/v2/core/ambiente/application/ports";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
+import { BaseTypeOrmRepositoryAdapter } from "../base";
+import { DatabaseContextService } from "../context/database-context.service";
+import type { AmbienteEntity } from "../typeorm/entities";
 
-const aliasAmbiente = "ambiente";
-type DtoWithFilters = Record<string, unknown>;
-
+/**
+ * Adapter TypeORM que implementa o port de repositório de Ambiente.
+ * Estende BaseTypeOrmRepositoryAdapter para reutilizar operações CRUD comuns.
+ */
 @Injectable()
-export class AmbienteTypeOrmRepositoryAdapter implements IAmbienteRepositoryPort {
-  constructor(
-    private databaseContext: DatabaseContextService,
-    private paginationAdapter: NestJsPaginateAdapter,
-  ) {}
+export class AmbienteTypeOrmRepositoryAdapter
+  extends BaseTypeOrmRepositoryAdapter<
+    AmbienteEntity,
+    AmbienteListInputDto,
+    AmbienteListOutputDto,
+    AmbienteFindOneInputDto,
+    AmbienteFindOneOutputDto
+  >
+  implements IAmbienteRepositoryPort
+{
+  protected readonly alias = "ambiente";
+  protected readonly authzAction = "ambiente:find";
+  protected readonly outputDtoName = "AmbienteFindOneOutput";
 
-  private get ambienteRepository() {
+  constructor(
+    protected readonly databaseContext: DatabaseContextService,
+    protected readonly paginationAdapter: NestJsPaginateAdapter,
+  ) {
+    super();
+  }
+
+  protected get repository() {
     return this.databaseContext.ambienteRepository;
   }
 
-  async findAll(
-    accessContext: AccessContext,
-    dto: AmbienteListInputDto | null = null,
-    selection?: string[] | boolean,
-  ): Promise<AmbienteListOutputDto> {
-    const qb = this.ambienteRepository.createQueryBuilder(aliasAmbiente);
-
-    await accessContext.applyFilter("ambiente:find", qb, aliasAmbiente, null);
-
-    const config = {
+  protected getPaginateConfig(): IPaginationConfig<AmbienteEntity> {
+    return {
       select: [
         "id",
         "nome",
@@ -75,79 +80,6 @@ export class AmbienteTypeOrmRepositoryAdapter implements IAmbienteRepositoryPort
         "bloco.id": [FilterOperator.EQ],
         "bloco.campus.id": [FilterOperator.EQ],
       },
-    } as IPaginationConfig<AmbienteEntity>;
-
-    const criteria: IPaginationCriteria = {
-      ...dto,
-      sortBy: dto?.sortBy ? (dto.sortBy as unknown as string[]) : undefined,
-      filters: this.extractFilters(dto),
     };
-
-    const paginated = await this.paginationAdapter.paginate(qb, criteria, config);
-
-    qb.select([]);
-    QbEfficientLoad("AmbienteFindOneOutput", qb, aliasAmbiente, selection);
-
-    const pageItemsView = await qb.andWhereInIds(map(paginated.data, "id")).getMany();
-    paginated.data = paginated.data.map((p) => pageItemsView.find((i) => i.id === p.id)!);
-
-    return paginated as unknown as AmbienteListOutputDto;
-  }
-
-  async findById(
-    accessContext: AccessContext | null,
-    dto: AmbienteFindOneInputDto,
-    selection?: string[] | boolean,
-  ): Promise<AmbienteFindOneOutputDto | null> {
-    const qb = this.ambienteRepository.createQueryBuilder(aliasAmbiente);
-
-    if (accessContext) {
-      await accessContext.applyFilter("ambiente:find", qb, aliasAmbiente, null);
-    }
-
-    qb.andWhere(`${aliasAmbiente}.id = :id`, { id: dto.id });
-    qb.select([]);
-    QbEfficientLoad("AmbienteFindOneOutput", qb, aliasAmbiente, selection);
-
-    return (await qb.getOne()) as AmbienteFindOneOutputDto | null;
-  }
-
-  async save(ambiente: DeepPartial<AmbienteEntity>): Promise<AmbienteEntity> {
-    return this.ambienteRepository.save(ambiente);
-  }
-
-  create(): AmbienteEntity {
-    return this.ambienteRepository.create();
-  }
-
-  merge(ambiente: AmbienteEntity, data: DeepPartial<AmbienteEntity>): void {
-    this.ambienteRepository.merge(ambiente, data);
-  }
-
-  async softDeleteById(id: string): Promise<void> {
-    await this.ambienteRepository
-      .createQueryBuilder(aliasAmbiente)
-      .update()
-      .set({ dateDeleted: "NOW()" })
-      .where("id = :id", { id })
-      .andWhere("dateDeleted IS NULL")
-      .execute();
-  }
-
-  private extractFilters(
-    dto: DtoWithFilters | null | undefined,
-  ): Record<string, string | string[]> {
-    const filters: Record<string, string | string[]> = {};
-    if (!dto) return filters;
-    for (const [key, value] of Object.entries(dto)) {
-      if (
-        key.startsWith("filter.") &&
-        (typeof value === "string" ||
-          (Array.isArray(value) && value.every((v) => typeof v === "string")))
-      ) {
-        filters[key.replace("filter.", "")] = value;
-      }
-    }
-    return filters;
   }
 }

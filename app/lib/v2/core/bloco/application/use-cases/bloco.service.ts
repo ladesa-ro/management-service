@@ -1,5 +1,4 @@
-import { Inject, Injectable, NotFoundException } from "@nestjs/common";
-import { pick } from "lodash";
+import { Inject, Injectable, NotFoundException, type StreamableFile } from "@nestjs/common";
 import type { AccessContext } from "@/infrastructure/access-context";
 import type {
   BlocoCreateInputDto,
@@ -13,31 +12,64 @@ import type { BlocoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/
 import { ArquivoService } from "@/v2/core/arquivo/application/use-cases/arquivo.service";
 import { CampusService } from "@/v2/core/campus/application/use-cases/campus.service";
 import { ImagemService } from "@/v2/core/imagem/application/use-cases/imagem.service";
+import { BaseCrudService } from "@/v2/core/shared";
 import type { IBlocoRepositoryPort, IBlocoUseCasePort } from "../ports";
 
 /**
  * Service centralizado para o módulo Bloco.
- * Implementa todos os use cases definidos em IBlocoUseCasePort.
- *
- * Por enquanto, toda a lógica fica aqui. Futuramente, pode ser
- * desmembrado em use cases individuais se necessário.
+ * Estende BaseCrudService para operações CRUD comuns.
+ * Implementa IBlocoUseCasePort para compatibilidade com a interface existente.
  */
 @Injectable()
-export class BlocoService implements IBlocoUseCasePort {
+export class BlocoService
+  extends BaseCrudService<
+    BlocoEntity,
+    BlocoListInputDto,
+    BlocoListOutputDto,
+    BlocoFindOneInputDto,
+    BlocoFindOneOutputDto,
+    BlocoCreateInputDto,
+    BlocoUpdateInputDto
+  >
+  implements IBlocoUseCasePort
+{
+  protected readonly resourceName = "Bloco";
+  protected readonly createAction = "bloco:create";
+  protected readonly updateAction = "bloco:update";
+  protected readonly deleteAction = "bloco:delete";
+  protected readonly createFields = ["nome", "codigo"] as const;
+  protected readonly updateFields = ["nome", "codigo"] as const;
+
   constructor(
     @Inject("IBlocoRepositoryPort")
-    private readonly blocoRepository: IBlocoRepositoryPort,
+    protected readonly repository: IBlocoRepositoryPort,
     private readonly campusService: CampusService,
     private readonly imagemService: ImagemService,
     private readonly arquivoService: ArquivoService,
-  ) {}
+  ) {
+    super();
+  }
+
+  /**
+   * Hook para adicionar relacionamento com Campus durante criação
+   */
+  protected override async beforeCreate(
+    accessContext: AccessContext,
+    entity: BlocoEntity,
+    dto: BlocoCreateInputDto,
+  ): Promise<void> {
+    const campus = await this.campusService.campusFindByIdSimpleStrict(accessContext, dto.campus.id);
+    this.repository.merge(entity, { campus: { id: campus.id } });
+  }
+
+  // Métodos prefixados para compatibilidade com IBlocoUseCasePort
 
   async blocoFindAll(
     accessContext: AccessContext,
     dto: BlocoListInputDto,
     selection?: string[] | boolean,
   ): Promise<BlocoListOutputDto> {
-    return this.blocoRepository.findAll(accessContext, dto, selection);
+    return this.findAll(accessContext, dto, selection);
   }
 
   async blocoFindById(
@@ -45,7 +77,7 @@ export class BlocoService implements IBlocoUseCasePort {
     dto: BlocoFindOneInputDto,
     selection?: string[] | boolean,
   ): Promise<BlocoFindOneOutputDto | null> {
-    return this.blocoRepository.findById(accessContext, dto, selection);
+    return this.findById(accessContext, dto, selection);
   }
 
   async blocoFindByIdStrict(
@@ -53,13 +85,7 @@ export class BlocoService implements IBlocoUseCasePort {
     dto: BlocoFindOneInputDto,
     selection?: string[] | boolean,
   ): Promise<BlocoFindOneOutputDto> {
-    const bloco = await this.blocoRepository.findById(accessContext, dto, selection);
-
-    if (!bloco) {
-      throw new NotFoundException();
-    }
-
-    return bloco;
+    return this.findByIdStrict(accessContext, dto, selection);
   }
 
   async blocoFindByIdSimple(
@@ -67,7 +93,7 @@ export class BlocoService implements IBlocoUseCasePort {
     id: string,
     selection?: string[],
   ): Promise<BlocoFindOneOutputDto | null> {
-    return this.blocoRepository.findByIdSimple(accessContext, id, selection);
+    return this.findByIdSimple(accessContext, id, selection);
   }
 
   async blocoFindByIdSimpleStrict(
@@ -75,17 +101,37 @@ export class BlocoService implements IBlocoUseCasePort {
     id: string,
     selection?: string[],
   ): Promise<BlocoFindOneOutputDto> {
-    const bloco = await this.blocoRepository.findByIdSimple(accessContext, id, selection);
-
-    if (!bloco) {
-      throw new NotFoundException();
-    }
-
-    return bloco;
+    return this.findByIdSimpleStrict(accessContext, id, selection);
   }
 
-  async blocoGetImagemCapa(accessContext: AccessContext | null, id: string) {
-    const bloco = await this.blocoFindByIdStrict(accessContext, { id: id });
+  async blocoCreate(
+    accessContext: AccessContext,
+    dto: BlocoCreateInputDto,
+  ): Promise<BlocoFindOneOutputDto> {
+    return this.create(accessContext, dto);
+  }
+
+  async blocoUpdate(
+    accessContext: AccessContext,
+    dto: BlocoFindOneInputDto & BlocoUpdateInputDto,
+  ): Promise<BlocoFindOneOutputDto> {
+    return this.update(accessContext, dto);
+  }
+
+  async blocoDeleteOneById(
+    accessContext: AccessContext,
+    dto: BlocoFindOneInputDto,
+  ): Promise<boolean> {
+    return this.deleteOneById(accessContext, dto);
+  }
+
+  // Métodos específicos de Bloco (não cobertos pela BaseCrudService)
+
+  async blocoGetImagemCapa(
+    accessContext: AccessContext | null,
+    id: string,
+  ): Promise<StreamableFile> {
+    const bloco = await this.blocoFindByIdStrict(accessContext, { id });
 
     if (bloco.imagemCapa) {
       const [versao] = bloco.imagemCapa.versoes;
@@ -104,97 +150,16 @@ export class BlocoService implements IBlocoUseCasePort {
     dto: BlocoFindOneInputDto,
     file: Express.Multer.File,
   ): Promise<boolean> {
-    const currentBloco = await this.blocoFindByIdStrict(accessContext, {
-      id: dto.id,
-    });
+    const currentBloco = await this.blocoFindByIdStrict(accessContext, { id: dto.id });
 
-    await accessContext.ensurePermission(
-      "bloco:update",
-      { dto: { id: currentBloco.id } },
-      currentBloco.id,
-    );
+    await accessContext.ensurePermission("bloco:update", { dto: { id: currentBloco.id } }, currentBloco.id);
 
     const { imagem } = await this.imagemService.saveBlocoCapa(file);
 
-    const bloco = {
-      id: currentBloco.id,
-    } as BlocoEntity;
+    const bloco = { id: currentBloco.id } as BlocoEntity;
+    this.repository.merge(bloco, { imagemCapa: { id: imagem.id } });
 
-    this.blocoRepository.merge(bloco, {
-      imagemCapa: {
-        id: imagem.id,
-      },
-    });
-
-    await this.blocoRepository.save(bloco);
-
-    return true;
-  }
-
-  async blocoCreate(
-    accessContext: AccessContext,
-    dto: BlocoCreateInputDto,
-  ): Promise<BlocoFindOneOutputDto> {
-    await accessContext.ensurePermission("bloco:create", { dto } as any);
-
-    const dtoBloco = pick(dto, ["nome", "codigo"]);
-
-    const bloco = this.blocoRepository.create();
-
-    this.blocoRepository.merge(bloco, {
-      ...dtoBloco,
-    });
-
-    const campus = await this.campusService.campusFindByIdSimpleStrict(
-      accessContext,
-      dto.campus.id,
-    );
-
-    this.blocoRepository.merge(bloco, {
-      campus: {
-        id: campus.id,
-      },
-    });
-
-    await this.blocoRepository.save(bloco);
-
-    return this.blocoFindByIdStrict(accessContext, { id: bloco.id });
-  }
-
-  async blocoUpdate(
-    accessContext: AccessContext,
-    dto: BlocoFindOneInputDto & BlocoUpdateInputDto,
-  ): Promise<BlocoFindOneOutputDto> {
-    const currentBloco = await this.blocoFindByIdStrict(accessContext, { id: dto.id });
-
-    await accessContext.ensurePermission("bloco:update", { dto }, dto.id);
-
-    const dtoBloco = pick(dto, ["nome", "codigo"]);
-
-    const bloco = {
-      id: currentBloco.id,
-    } as BlocoEntity;
-
-    this.blocoRepository.merge(bloco, {
-      ...dtoBloco,
-    });
-
-    await this.blocoRepository.save(bloco);
-
-    return this.blocoFindByIdStrict(accessContext, { id: bloco.id });
-  }
-
-  async blocoDeleteOneById(
-    accessContext: AccessContext,
-    dto: BlocoFindOneInputDto,
-  ): Promise<boolean> {
-    await accessContext.ensurePermission("bloco:delete", { dto }, dto.id);
-
-    const bloco = await this.blocoFindByIdStrict(accessContext, dto);
-
-    if (bloco) {
-      await this.blocoRepository.softDeleteById(bloco.id);
-    }
+    await this.repository.save(bloco);
 
     return true;
   }

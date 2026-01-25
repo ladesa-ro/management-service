@@ -1,5 +1,4 @@
-import { Inject, Injectable, NotFoundException } from "@nestjs/common";
-import { pick } from "lodash";
+import { Inject, Injectable, NotFoundException, type StreamableFile } from "@nestjs/common";
 import type { AccessContext } from "@/infrastructure/access-context";
 import type {
   AmbienteCreateInputDto,
@@ -13,31 +12,64 @@ import type { AmbienteEntity } from "@/v2/adapters/out/persistence/typeorm/typeo
 import { ArquivoService } from "@/v2/core/arquivo/application/use-cases/arquivo.service";
 import { BlocoService } from "@/v2/core/bloco/application/use-cases/bloco.service";
 import { ImagemService } from "@/v2/core/imagem/application/use-cases/imagem.service";
+import { BaseCrudService } from "@/v2/core/shared";
 import type { IAmbienteRepositoryPort, IAmbienteUseCasePort } from "../ports";
 
 /**
  * Service centralizado para o módulo Ambiente.
- * Implementa todos os use cases definidos em IAmbienteUseCasePort.
- *
- * Por enquanto, toda a lógica fica aqui. Futuramente, pode ser
- * desmembrado em use cases individuais se necessário.
+ * Estende BaseCrudService para operações CRUD comuns.
+ * Implementa IAmbienteUseCasePort para compatibilidade com a interface existente.
  */
 @Injectable()
-export class AmbienteService implements IAmbienteUseCasePort {
+export class AmbienteService
+  extends BaseCrudService<
+    AmbienteEntity,
+    AmbienteListInputDto,
+    AmbienteListOutputDto,
+    AmbienteFindOneInputDto,
+    AmbienteFindOneOutputDto,
+    AmbienteCreateInputDto,
+    AmbienteUpdateInputDto
+  >
+  implements IAmbienteUseCasePort
+{
+  protected readonly resourceName = "Ambiente";
+  protected readonly createAction = "ambiente:create";
+  protected readonly updateAction = "ambiente:update";
+  protected readonly deleteAction = "ambiente:delete";
+  protected readonly createFields = ["nome", "descricao", "codigo", "capacidade", "tipo"] as const;
+  protected readonly updateFields = ["nome", "descricao", "codigo", "capacidade", "tipo"] as const;
+
   constructor(
     @Inject("IAmbienteRepositoryPort")
-    private readonly ambienteRepository: IAmbienteRepositoryPort,
+    protected readonly repository: IAmbienteRepositoryPort,
     private readonly blocoService: BlocoService,
     private readonly imagemService: ImagemService,
     private readonly arquivoService: ArquivoService,
-  ) {}
+  ) {
+    super();
+  }
+
+  /**
+   * Hook para adicionar relacionamento com Bloco durante criação
+   */
+  protected override async beforeCreate(
+    accessContext: AccessContext,
+    entity: AmbienteEntity,
+    dto: AmbienteCreateInputDto,
+  ): Promise<void> {
+    const bloco = await this.blocoService.blocoFindByIdSimpleStrict(accessContext, dto.bloco.id);
+    this.repository.merge(entity, { bloco: { id: bloco.id } });
+  }
+
+  // Métodos prefixados para compatibilidade com IAmbienteUseCasePort
 
   async ambienteFindAll(
     accessContext: AccessContext,
     dto: AmbienteListInputDto | null = null,
     selection?: string[] | boolean,
   ): Promise<AmbienteListOutputDto> {
-    return this.ambienteRepository.findAll(accessContext, dto, selection);
+    return this.findAll(accessContext, dto, selection);
   }
 
   async ambienteFindById(
@@ -45,7 +77,7 @@ export class AmbienteService implements IAmbienteUseCasePort {
     dto: AmbienteFindOneInputDto,
     selection?: string[] | boolean,
   ): Promise<AmbienteFindOneOutputDto | null> {
-    return this.ambienteRepository.findById(accessContext, dto, selection);
+    return this.findById(accessContext, dto, selection);
   }
 
   async ambienteFindByIdStrict(
@@ -53,67 +85,37 @@ export class AmbienteService implements IAmbienteUseCasePort {
     dto: AmbienteFindOneInputDto,
     selection?: string[] | boolean,
   ): Promise<AmbienteFindOneOutputDto> {
-    const ambiente = await this.ambienteRepository.findById(accessContext, dto, selection);
-
-    if (!ambiente) {
-      throw new NotFoundException();
-    }
-
-    return ambiente;
+    return this.findByIdStrict(accessContext, dto, selection);
   }
 
   async ambienteCreate(
     accessContext: AccessContext,
     dto: AmbienteCreateInputDto,
   ): Promise<AmbienteFindOneOutputDto> {
-    await accessContext.ensurePermission("ambiente:create", { dto } as any);
-
-    const dtoAmbiente = pick(dto, ["nome", "descricao", "codigo", "capacidade", "tipo"]);
-
-    const ambiente = this.ambienteRepository.create();
-
-    this.ambienteRepository.merge(ambiente, {
-      ...dtoAmbiente,
-    });
-
-    const bloco = await this.blocoService.blocoFindByIdSimpleStrict(accessContext, dto.bloco.id);
-
-    this.ambienteRepository.merge(ambiente, {
-      bloco: {
-        id: bloco.id,
-      },
-    });
-
-    await this.ambienteRepository.save(ambiente);
-
-    return this.ambienteFindByIdStrict(accessContext, { id: ambiente.id });
+    return this.create(accessContext, dto);
   }
 
   async ambienteUpdate(
     accessContext: AccessContext,
     dto: AmbienteFindOneInputDto & AmbienteUpdateInputDto,
   ): Promise<AmbienteFindOneOutputDto> {
-    const currentAmbiente = await this.ambienteFindByIdStrict(accessContext, dto);
-
-    await accessContext.ensurePermission("ambiente:update", { dto }, dto.id);
-
-    const dtoAmbiente = pick(dto, ["nome", "descricao", "codigo", "capacidade", "tipo"]);
-
-    const ambiente = <AmbienteEntity>{
-      id: currentAmbiente.id,
-    };
-
-    this.ambienteRepository.merge(ambiente, {
-      ...dtoAmbiente,
-    });
-
-    await this.ambienteRepository.save(ambiente);
-
-    return this.ambienteFindByIdStrict(accessContext, { id: ambiente.id });
+    return this.update(accessContext, dto);
   }
 
-  async ambienteGetImagemCapa(accessContext: AccessContext | null, id: string) {
-    const ambiente = await this.ambienteFindByIdStrict(accessContext, { id: id });
+  async ambienteDeleteOneById(
+    accessContext: AccessContext,
+    dto: AmbienteFindOneInputDto,
+  ): Promise<boolean> {
+    return this.deleteOneById(accessContext, dto);
+  }
+
+  // Métodos específicos de Ambiente (não cobertos pela BaseCrudService)
+
+  async ambienteGetImagemCapa(
+    accessContext: AccessContext | null,
+    id: string,
+  ): Promise<StreamableFile> {
+    const ambiente = await this.ambienteFindByIdStrict(accessContext, { id });
 
     if (ambiente.imagemCapa) {
       const [versao] = ambiente.imagemCapa.versoes;
@@ -136,43 +138,17 @@ export class AmbienteService implements IAmbienteUseCasePort {
 
     await accessContext.ensurePermission(
       "ambiente:update",
-      {
-        dto: {
-          id: currentAmbiente.id,
-        },
-      },
+      { dto: { id: currentAmbiente.id } },
       currentAmbiente.id,
     );
 
     const { imagem } = await this.imagemService.saveAmbienteCapa(file);
 
-    const ambiente = this.ambienteRepository.create();
-    this.ambienteRepository.merge(ambiente, {
-      id: currentAmbiente.id,
-    });
+    const ambiente = this.repository.create();
+    this.repository.merge(ambiente, { id: currentAmbiente.id });
+    this.repository.merge(ambiente, { imagemCapa: { id: imagem.id } });
 
-    this.ambienteRepository.merge(ambiente, {
-      imagemCapa: {
-        id: imagem.id,
-      },
-    });
-
-    await this.ambienteRepository.save(ambiente);
-
-    return true;
-  }
-
-  async ambienteDeleteOneById(
-    accessContext: AccessContext,
-    dto: AmbienteFindOneInputDto,
-  ): Promise<boolean> {
-    await accessContext.ensurePermission("ambiente:delete", { dto }, dto.id);
-
-    const ambiente = await this.ambienteFindByIdStrict(accessContext, dto);
-
-    if (ambiente) {
-      await this.ambienteRepository.softDeleteById(ambiente.id);
-    }
+    await this.repository.save(ambiente);
 
     return true;
   }

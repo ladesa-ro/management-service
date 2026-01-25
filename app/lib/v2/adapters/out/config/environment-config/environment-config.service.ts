@@ -104,6 +104,18 @@ export class EnvironmentConfigService implements IConfig {
     return !this.getRuntimeIsProduction();
   }
 
+  getPermissionCheckEnabled(): boolean {
+    const envValue = this.nestConfigService.get<string>("ENABLE_PERMISSION_CHECK");
+
+    // Em producao, sempre habilitado (a menos que explicitamente desabilitado)
+    if (this.getRuntimeIsProduction()) {
+      return envValue !== "false";
+    }
+
+    // Em desenvolvimento, desabilitado por padrao (a menos que explicitamente habilitado)
+    return envValue === "true";
+  }
+
   getSwaggerServers(): string[] | null {
     const swaggerServersRaw = this.nestConfigService.get<string>("SWAGGER_SERVERS");
 

@@ -1,5 +1,4 @@
-import { Inject, Injectable, NotFoundException } from "@nestjs/common";
-import { pick } from "lodash";
+import { Inject, Injectable } from "@nestjs/common";
 import type { AccessContext } from "@/infrastructure/access-context";
 import type {
   ModalidadeCreateInputDto,
@@ -10,28 +9,49 @@ import type {
   ModalidadeUpdateInputDto,
 } from "@/v2/adapters/in/http/modalidade/dto";
 import type { ModalidadeEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
+import { BaseCrudService } from "@/v2/core/shared";
 import type { IModalidadeRepositoryPort, IModalidadeUseCasePort } from "../ports";
 
 /**
  * Service centralizado para o módulo Modalidade.
- * Implementa todos os use cases definidos em IModalidadeUseCasePort.
- *
- * Por enquanto, toda a lógica fica aqui. Futuramente, pode ser
- * desmembrado em use cases individuais se necessário.
+ * Estende BaseCrudService para operações CRUD comuns.
+ * Implementa IModalidadeUseCasePort para compatibilidade com a interface existente.
  */
 @Injectable()
-export class ModalidadeService implements IModalidadeUseCasePort {
+export class ModalidadeService
+  extends BaseCrudService<
+    ModalidadeEntity,
+    ModalidadeListInputDto,
+    ModalidadeListOutputDto,
+    ModalidadeFindOneInputDto,
+    ModalidadeFindOneOutputDto,
+    ModalidadeCreateInputDto,
+    ModalidadeUpdateInputDto
+  >
+  implements IModalidadeUseCasePort
+{
+  protected readonly resourceName = "Modalidade";
+  protected readonly createAction = "modalidade:create";
+  protected readonly updateAction = "modalidade:update";
+  protected readonly deleteAction = "modalidade:delete";
+  protected readonly createFields = ["nome", "slug"] as const;
+  protected readonly updateFields = ["nome", "slug"] as const;
+
   constructor(
     @Inject("IModalidadeRepositoryPort")
-    private readonly modalidadeRepository: IModalidadeRepositoryPort,
-  ) {}
+    protected readonly repository: IModalidadeRepositoryPort,
+  ) {
+    super();
+  }
+
+  // Métodos prefixados para compatibilidade com IModalidadeUseCasePort
 
   async modalidadeFindAll(
     accessContext: AccessContext,
     dto: ModalidadeListInputDto | null = null,
     selection?: string[],
   ): Promise<ModalidadeListOutputDto> {
-    return this.modalidadeRepository.findAll(accessContext, dto, selection);
+    return this.findAll(accessContext, dto, selection);
   }
 
   async modalidadeFindById(
@@ -39,7 +59,7 @@ export class ModalidadeService implements IModalidadeUseCasePort {
     dto: ModalidadeFindOneInputDto,
     selection?: string[],
   ): Promise<ModalidadeFindOneOutputDto | null> {
-    return this.modalidadeRepository.findById(accessContext, dto, selection);
+    return this.findById(accessContext, dto, selection);
   }
 
   async modalidadeFindByIdStrict(
@@ -47,13 +67,7 @@ export class ModalidadeService implements IModalidadeUseCasePort {
     dto: ModalidadeFindOneInputDto,
     selection?: string[],
   ): Promise<ModalidadeFindOneOutputDto> {
-    const modalidade = await this.modalidadeRepository.findById(accessContext, dto, selection);
-
-    if (!modalidade) {
-      throw new NotFoundException();
-    }
-
-    return modalidade;
+    return this.findByIdStrict(accessContext, dto, selection);
   }
 
   async modalidadeFindByIdSimple(
@@ -61,7 +75,7 @@ export class ModalidadeService implements IModalidadeUseCasePort {
     id: string,
     selection?: string[],
   ): Promise<ModalidadeFindOneOutputDto | null> {
-    return this.modalidadeRepository.findByIdSimple(accessContext, id, selection);
+    return this.findByIdSimple(accessContext, id, selection);
   }
 
   async modalidadeFindByIdSimpleStrict(
@@ -69,69 +83,27 @@ export class ModalidadeService implements IModalidadeUseCasePort {
     id: string,
     selection?: string[],
   ): Promise<ModalidadeFindOneOutputDto> {
-    const modalidade = await this.modalidadeRepository.findByIdSimple(accessContext, id, selection);
-
-    if (!modalidade) {
-      throw new NotFoundException();
-    }
-
-    return modalidade;
+    return this.findByIdSimpleStrict(accessContext, id, selection);
   }
 
   async modalidadeCreate(
     accessContext: AccessContext,
     dto: ModalidadeCreateInputDto,
   ): Promise<ModalidadeFindOneOutputDto> {
-    await accessContext.ensurePermission("modalidade:create", { dto } as any);
-
-    const dtoModalidade = pick(dto, ["nome", "slug"]);
-
-    const modalidade = this.modalidadeRepository.create();
-
-    this.modalidadeRepository.merge(modalidade, {
-      ...dtoModalidade,
-    });
-
-    await this.modalidadeRepository.save(modalidade);
-
-    return this.modalidadeFindByIdStrict(accessContext, { id: modalidade.id });
+    return this.create(accessContext, dto);
   }
 
   async modalidadeUpdate(
     accessContext: AccessContext,
     dto: ModalidadeFindOneInputDto & ModalidadeUpdateInputDto,
   ): Promise<ModalidadeFindOneOutputDto> {
-    const currentModalidade = await this.modalidadeFindByIdStrict(accessContext, { id: dto.id });
-
-    await accessContext.ensurePermission("modalidade:update", { dto }, dto.id);
-
-    const dtoModalidade = pick(dto, ["nome", "slug"]);
-
-    const modalidade = <ModalidadeEntity>{
-      id: currentModalidade.id,
-    };
-
-    this.modalidadeRepository.merge(modalidade, {
-      ...dtoModalidade,
-    });
-
-    await this.modalidadeRepository.save(modalidade);
-
-    return this.modalidadeFindByIdStrict(accessContext, { id: modalidade.id });
+    return this.update(accessContext, dto);
   }
 
   async modalidadeDeleteOneById(
     accessContext: AccessContext,
     dto: ModalidadeFindOneInputDto,
   ): Promise<boolean> {
-    await accessContext.ensurePermission("modalidade:delete", { dto }, dto.id);
-
-    const modalidade = await this.modalidadeFindByIdStrict(accessContext, dto);
-
-    if (modalidade) {
-      await this.modalidadeRepository.softDeleteById(modalidade.id);
-    }
-
-    return true;
+    return this.deleteOneById(accessContext, dto);
   }
 }

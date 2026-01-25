@@ -11,16 +11,17 @@ import type { IRequestActor } from "@/infrastructure/authentication";
 import { createForbiddenExceptionForAction, IAccessContext } from "@/shared";
 import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm/context/database-context.service";
 
-// TODO: fixme
-const DISABLE_PERMISSION_CHECK = true;
-
 export class AccessContext implements IAccessContext {
   #policy = new AuthzPolicyPublic();
+  readonly #permissionCheckEnabled: boolean;
 
   constructor(
     readonly databaseContext: DatabaseContextService,
     readonly requestActor: IRequestActor | null,
-  ) {}
+    permissionCheckEnabled = false,
+  ) {
+    this.#permissionCheckEnabled = permissionCheckEnabled;
+  }
 
   get statements() {
     return this.#policy.statements;
@@ -49,7 +50,7 @@ export class AccessContext implements IAccessContext {
         const qbFactory = await filter(context, alias ?? qb.alias);
         qb.andWhere(qbFactory);
       }
-    } else if (DISABLE_PERMISSION_CHECK) {
+    } else if (!this.#permissionCheckEnabled) {
       qb.andWhere("TRUE");
     } else {
       qb.andWhere("FALSE");
@@ -96,7 +97,7 @@ export class AccessContext implements IAccessContext {
       }
     }
 
-    if (DISABLE_PERMISSION_CHECK) {
+    if (!this.#permissionCheckEnabled) {
       return true;
     }
 
