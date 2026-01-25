@@ -20,4 +20,6 @@ export interface IConfigRuntime {
   getRuntimeBuildTime(): Date;
 
   getRuntimeGitCommitHash(): string | null;
+
+  getPermissionCheckEnabled(): boolean;
 }
