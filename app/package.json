@@ -87,7 +87,7 @@
     "test:watch": "vitest",
     "typeorm": "bun x --bun typeorm",
     "typeorm:create": "bun run typeorm migration:create",
-    "typeorm:ds-migration": "bun run typeorm -d lib/v2/infrastructure.database/typeorm/data-sources/migration.data-source.ts",
+    "typeorm:ds-migration": "bun run typeorm -d lib/v2/adapters/out/persistence/typeorm/typeorm/data-sources/migration.data-source.ts",
     "typeorm:entity": "bun run typeorm entity:create",
     "typeorm:generate": "bun run typeorm migration:generate",
     "migration:revert": "bun run typeorm:ds-migration migration:revert",
