@@ -15,7 +15,7 @@ import { AppConfigService } from "@/v2/infra/config";
 import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm/context/database-context.service";
 import { type ArquivoEntity, UsuarioEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import { isValidUuid } from "@/shared";
-import type { ArquivoCreateInputDto } from "../dto";
+import type { ArquivoCreateInputDto } from "@/v2/adapters/in/http/arquivo/dto";
 
 type IGetFileAcesso = null | {
   nome?: string;

@@ -17,7 +17,7 @@ import type {
   CursoListInputDto,
   CursoListOutputDto,
   CursoUpdateInputDto,
-} from "../dto";
+} from "@/v2/adapters/in/http/curso/dto";
 
 // ============================================================================
 

@@ -15,7 +15,7 @@ import type {
   OfertaFormacaoNivelFormacaoListInputDto,
   OfertaFormacaoNivelFormacaoListOutputDto,
   OfertaFormacaoNivelFormacaoUpdateInputDto,
-} from "../dto";
+} from "@/v2/adapters/in/http/oferta-formacao-nivel-formacao/dto";
 
 // ============================================================================
 

@@ -17,7 +17,7 @@ import type {
   TurmaListInputDto,
   TurmaListOutputDto,
   TurmaUpdateInputDto,
-} from "../dto";
+} from "@/v2/adapters/in/http/turma/dto";
 
 // ============================================================================
 

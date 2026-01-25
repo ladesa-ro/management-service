@@ -12,7 +12,7 @@ import type {
   NivelFormacaoListInputDto,
   NivelFormacaoListOutputDto,
   NivelFormacaoUpdateInputDto,
-} from "../dto";
+} from "@/v2/adapters/in/http/nivel-formacao/dto";
 
 // ============================================================================
 

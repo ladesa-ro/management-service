@@ -13,7 +13,7 @@ import type {
   EtapaListInputDto,
   EtapaListOutputDto,
   EtapaUpdateInputDto,
-} from "../dto";
+} from "@/v2/adapters/in/http/etapa/dto";
 
 // ============================================================================
 

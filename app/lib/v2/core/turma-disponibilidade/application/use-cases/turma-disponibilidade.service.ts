@@ -14,7 +14,7 @@ import type {
   TurmaDisponibilidadeListInputDto,
   TurmaDisponibilidadeListOutputDto,
   TurmaDisponibilidadeUpdateInputDto,
-} from "../dto";
+} from "@/v2/adapters/in/http/turma-disponibilidade/dto";
 
 // ============================================================================
 

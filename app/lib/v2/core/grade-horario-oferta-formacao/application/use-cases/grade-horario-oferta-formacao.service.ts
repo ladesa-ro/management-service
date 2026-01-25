@@ -15,7 +15,7 @@ import type {
   GradeHorarioOfertaFormacaoListInputDto,
   GradeHorarioOfertaFormacaoListOutputDto,
   GradeHorarioOfertaFormacaoUpdateInputDto,
-} from "../dto";
+} from "@/v2/adapters/in/http/grade-horario-oferta-formacao/dto";
 
 // ============================================================================
 

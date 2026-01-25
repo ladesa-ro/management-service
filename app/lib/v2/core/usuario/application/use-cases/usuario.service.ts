@@ -20,7 +20,7 @@ import type {
   UsuarioListInputDto,
   UsuarioListOutputDto,
   UsuarioUpdateInputDto,
-} from "../dto";
+} from "@/v2/adapters/in/http/usuario/dto";
 
 // ============================================================================
 

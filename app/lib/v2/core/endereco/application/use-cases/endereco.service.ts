@@ -3,7 +3,7 @@ import { pick } from "lodash";
 import { AccessContext } from "@/infrastructure/access-context";
 import { DatabaseContextService } from "@/infrastructure/integrations";
 import { QbEfficientLoad } from "@/shared";
-import type { EnderecoFindOneInputDto, EnderecoFindOneOutputDto, EnderecoInputDto, } from "../dto";
+import type { EnderecoFindOneInputDto, EnderecoFindOneOutputDto, EnderecoInputDto, } from "@/v2/adapters/in/http/endereco/dto";
 
 // ============================================================================
 

@@ -14,7 +14,7 @@ import type {
   HorarioGeradoListInputDto,
   HorarioGeradoListOutputDto,
   HorarioGeradoUpdateInputDto,
-} from "../dto";
+} from "@/v2/adapters/in/http/horario-gerado/dto";
 
 // ============================================================================
 

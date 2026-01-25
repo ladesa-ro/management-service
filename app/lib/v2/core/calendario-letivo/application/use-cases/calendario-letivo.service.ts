@@ -14,7 +14,7 @@ import type {
   CalendarioLetivoListInputDto,
   CalendarioLetivoListOutputDto,
   CalendarioLetivoUpdateInputDto,
-} from "../dto";
+} from "@/v2/adapters/in/http/calendario-letivo/dto";
 
 // ============================================================================
 

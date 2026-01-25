@@ -13,7 +13,7 @@ import type {
   ProfessorIndisponibilidadeListOutputDto,
   ProfessorIndisponibilidadeRRuleOutputDto,
   ProfessorIndisponibilidadeUpdateInputDto,
-} from "../dto";
+} from "@/v2/adapters/in/http/professor-indisponibilidade/dto";
 
 // ============================================================================
 

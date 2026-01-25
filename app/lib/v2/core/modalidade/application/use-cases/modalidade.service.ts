@@ -12,7 +12,7 @@ import type {
   ModalidadeListInputDto,
   ModalidadeListOutputDto,
   ModalidadeUpdateInputDto,
-} from "../dto";
+} from "@/v2/adapters/in/http/modalidade/dto";
 
 // ============================================================================
 

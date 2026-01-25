@@ -15,7 +15,7 @@ import type {
   DiarioPreferenciaAgrupamentoListInputDto,
   DiarioPreferenciaAgrupamentoListOutputDto,
   DiarioPreferenciaAgrupamentoUpdateInputDto,
-} from "../dto";
+} from "@/v2/adapters/in/http/diario-preferencia-agrupamento/dto";
 
 // ============================================================================
 

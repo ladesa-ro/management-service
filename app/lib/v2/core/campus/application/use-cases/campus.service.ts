@@ -14,7 +14,7 @@ import type {
   CampusListInputDto,
   CampusListOutputDto,
   CampusUpdateInputDto,
-} from "../dto";
+} from "@/v2/adapters/in/http/campus/dto";
 
 // ============================================================================
 

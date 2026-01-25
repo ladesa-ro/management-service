@@ -15,7 +15,7 @@ import type {
   DiarioProfessorListInputDto,
   DiarioProfessorListOutputDto,
   DiarioProfessorUpdateInputDto,
-} from "../dto";
+} from "@/v2/adapters/in/http/diario-professor/dto";
 
 // ============================================================================
 

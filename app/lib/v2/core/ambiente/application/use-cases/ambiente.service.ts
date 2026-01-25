@@ -16,7 +16,7 @@ import type {
   AmbienteListInputDto,
   AmbienteListOutputDto,
   AmbienteUpdateInputDto,
-} from "../dto";
+} from "@/v2/adapters/in/http/ambiente/dto";
 
 // ============================================================================
 

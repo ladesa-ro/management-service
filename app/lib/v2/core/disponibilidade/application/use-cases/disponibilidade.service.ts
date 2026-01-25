@@ -12,7 +12,7 @@ import type {
   DisponibilidadeListInputDto,
   DisponibilidadeListOutputDto,
   DisponibilidadeUpdateInputDto,
-} from "../dto";
+} from "@/v2/adapters/in/http/disponibilidade/dto";
 
 // ============================================================================
 

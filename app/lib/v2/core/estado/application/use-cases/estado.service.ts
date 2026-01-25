@@ -4,7 +4,7 @@ import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
 import { QbEfficientLoad, SearchService } from "@/shared";
-import type { EstadoFindOneInputDto, EstadoFindOneOutputDto, EstadoListInputDto, EstadoListOutputDto, } from "../dto";
+import type { EstadoFindOneInputDto, EstadoFindOneOutputDto, EstadoListInputDto, EstadoListOutputDto, } from "@/v2/adapters/in/http/estado/dto";
 
 const aliasEstado = "estado";
 

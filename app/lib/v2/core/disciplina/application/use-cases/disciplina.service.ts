@@ -15,7 +15,7 @@ import type {
   DisciplinaListInputDto,
   DisciplinaListOutputDto,
   DisciplinaUpdateInputDto,
-} from "../dto";
+} from "@/v2/adapters/in/http/disciplina/dto";
 
 // ============================================================================
 

@@ -14,7 +14,7 @@ import type {
   ReservaListInputDto,
   ReservaListOutputDto,
   ReservaUpdateInputDto,
-} from "../dto";
+} from "@/v2/adapters/in/http/reserva/dto";
 
 // ============================================================================
 

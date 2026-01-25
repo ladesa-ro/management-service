@@ -14,7 +14,7 @@ import type {
   OfertaFormacaoListInputDto,
   OfertaFormacaoListOutputDto,
   OfertaFormacaoUpdateInputDto,
-} from "../dto";
+} from "@/v2/adapters/in/http/oferta-formacao/dto";
 
 // ============================================================================
 

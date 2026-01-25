@@ -19,7 +19,7 @@ import type {
   GradeHorarioOfertaFormacaoIntervaloDeTempoListInputDto,
   GradeHorarioOfertaFormacaoIntervaloDeTempoListOutputDto,
   GradeHorarioOfertaFormacaoIntervaloDeTempoUpdateInputDto,
-} from "../dto";
+} from "@/v2/adapters/in/http/grade-horario-oferta-formacao-intervalo-de-tempo/dto";
 
 // ============================================================================
 

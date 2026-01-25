@@ -11,7 +11,7 @@ import type {
   PerfilListInputDto,
   PerfilListOutputDto,
   PerfilUpdateInputDto,
-} from "../dto";
+} from "@/v2/adapters/in/http/perfil/dto";
 import type { IPerfilRepositoryPort, IPerfilUseCasePort } from "../ports";
 
 // ============================================================================

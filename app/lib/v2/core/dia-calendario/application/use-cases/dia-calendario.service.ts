@@ -15,7 +15,7 @@ import type {
   DiaCalendarioListInputDto,
   DiaCalendarioListOutputDto,
   DiaCalendarioUpdateInputDto,
-} from "../dto";
+} from "@/v2/adapters/in/http/dia-calendario/dto";
 
 // ============================================================================
 

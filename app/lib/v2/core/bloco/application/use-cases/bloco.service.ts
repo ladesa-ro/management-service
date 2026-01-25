@@ -15,7 +15,7 @@ import type {
   BlocoListInputDto,
   BlocoListOutputDto,
   BlocoUpdateInputDto,
-} from "../dto";
+} from "@/v2/adapters/in/http/bloco/dto";
 
 // ============================================================================
 

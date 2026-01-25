@@ -13,7 +13,7 @@ import type {
   EventoListInputDto,
   EventoListOutputDto,
   EventoUpdateInputDto,
-} from "../dto";
+} from "@/v2/adapters/in/http/evento/dto";
 
 // ============================================================================
 

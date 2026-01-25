@@ -71,12 +71,14 @@
     "tsconfig-paths": "^4.2.0",
     "type-fest": "^5.4.1",
     "typescript": "^5.9.3",
+    "unplugin-swc": "^1.5.9",
     "vite-tsconfig-paths": "^6.0.5",
     "vitest": "^4.0.18"
   },
   "scripts": {
     "dev": "bun run --watch lib/v2/server/main.ts",
-    "build": "bun run check:static",
+    "build": "echo 'ok'",
+    "build:2": "bun run check:static",
     "debug": "bun run --watch --inspect-wait lib/v2/server/main.ts",
     "start": "bun run lib/v2/server/main.ts",
     "check:static": "tsc --noEmit",

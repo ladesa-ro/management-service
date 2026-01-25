@@ -15,7 +15,7 @@ import type {
   HorarioGeradoAulaListInputDto,
   HorarioGeradoAulaListOutputDto,
   HorarioGeradoAulaUpdateInputDto,
-} from "../dto";
+} from "@/v2/adapters/in/http/horario-gerado-aula/dto";
 
 // ============================================================================
 

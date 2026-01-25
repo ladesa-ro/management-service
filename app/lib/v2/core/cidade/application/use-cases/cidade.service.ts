@@ -5,7 +5,7 @@ import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
 import { QbEfficientLoad, SearchService } from "@/shared";
-import type { CidadeFindOneInputDto, CidadeFindOneOutputDto, CidadeListInputDto, CidadeListOutputDto, } from "../dto";
+import type { CidadeFindOneInputDto, CidadeFindOneOutputDto, CidadeListInputDto, CidadeListOutputDto } from "@/v2/adapters/in/http/cidade/dto";
 
 const aliasCidade = "cidade";
 

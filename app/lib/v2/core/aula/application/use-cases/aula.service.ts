@@ -16,7 +16,7 @@ import type {
   AulaListInputDto,
   AulaListOutputDto,
   AulaUpdateInputDto,
-} from "../dto";
+} from "@/v2/adapters/in/http/aula/dto";
 import { DiarioService } from "@/v2/core/diario/application/use-cases/diario.service";
 
 // ============================================================================

@@ -17,7 +17,7 @@ import type {
   DiarioListInputDto,
   DiarioListOutputDto,
   DiarioUpdateInputDto,
-} from "../dto";
+} from "@/v2/adapters/in/http/diario/dto";
 
 // ============================================================================
 
