@@ -1,7 +1,7 @@
 import { INestApplication } from "@nestjs/common";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { apiReference } from "@scalar/nestjs-api-reference";
-import { AppConfigService } from "@/infrastructure/config";
+import { AppConfigService } from "@/v2/infra/config";
 import { withPrefix } from "@/infrastructure/utils/withPrefix";
 import swaggerUi from "swagger-ui-express";
 

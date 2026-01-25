@@ -1,5 +1,5 @@
 import { NestFactory } from "@nestjs/core";
-import { AppConfigService } from "@/infrastructure/config";
+import { AppConfigService } from "@/v2/infra/config";
 import "reflect-metadata";
 import { AppModule } from "@/v2/server/nest/app.module";
 import { usePrefix } from "@/v2/server/plugins/use-prefix";

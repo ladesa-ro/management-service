@@ -1,8 +1,14 @@
 import { castArray } from "lodash";
 import type { SelectQueryBuilder } from "typeorm";
-import { AuthzPolicyPublic, IAuthzStatement, IAuthzStatementFilter, IBaseAuthzFilterFn, IBaseAuthzStatementContext } from "@/authorization";
+import {
+  AuthzPolicyPublic,
+  IAuthzStatement,
+  IAuthzStatementFilter,
+  IBaseAuthzFilterFn,
+  IBaseAuthzStatementContext
+} from "@/authorization";
 import type { IRequestActor } from "@/infrastructure/authentication";
-import { DatabaseContextService } from "@/v2/infrastructure.database/context/database-context.service";
+import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm/context/database-context.service";
 import { createForbiddenExceptionForAction, IAccessContext } from "@/shared";
 
 // TODO: fixme

@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { EnderecoService } from "./domain/endereco.service";
+import { EnderecoService } from "@/v2/core/endereco/application/use-cases/endereco.service";
 
 @Module({
   imports: [],

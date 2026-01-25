@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
-import { CidadeController } from "@/v2/core/cidade/api/cidade.controller";
-import { CidadeService } from "./domain/cidade.service";
+import { CidadeController } from "@/v2/adapters/in/http/cidade/cidade.controller";
+import { CidadeService } from "@/v2/core/cidade/application/use-cases/cidade.service";
 
 @Module({
   imports: [],

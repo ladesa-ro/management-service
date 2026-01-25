@@ -1,5 +1,5 @@
 import { Global, Module } from "@nestjs/common";
-import { IntervaloDeTempoService } from "./domain/intervalo-de-tempo.service";
+import { IntervaloDeTempoService } from "@/v2/core/intervalo-de-tempo/application/use-cases/intervalo-de-tempo.service";
 
 @Global()
 @Module({

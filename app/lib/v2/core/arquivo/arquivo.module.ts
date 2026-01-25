@@ -1,6 +1,6 @@
 import { Global, Module } from "@nestjs/common";
-import { ArquivoController } from "./api/arquivo.controller";
-import { ArquivoService } from "./domain/arquivo.service";
+import { ArquivoController } from "@/v2/adapters/in/http/arquivo/arquivo.controller";
+import { ArquivoService } from "@/v2/core/arquivo/application/use-cases/arquivo.service";
 
 @Global()
 @Module({

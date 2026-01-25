@@ -2,9 +2,8 @@ import { Module } from "@nestjs/common";
 import { APP_FILTER } from "@nestjs/core";
 import { IdentityProviderModule } from "@/shared";
 import { GqlExceptionFilter } from "./graphql/exception-filters/GqlExceptionFilter";
-import { IntegrationGraphQLModule } from "./graphql/integration-graphql.module";
 import { IntegrationHttpModule } from "./http";
-import { IntegrationDatabaseModule } from "@/v2/infrastructure.database/integration-database.module";
+import { IntegrationDatabaseModule } from "@/v2/adapters/out/persistence/typeorm/integration-database.module";
 
 @Module({
   imports: [

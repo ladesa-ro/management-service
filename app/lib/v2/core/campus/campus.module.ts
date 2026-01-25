@@ -1,7 +1,7 @@
 import { Module } from "@nestjs/common";
 import { EnderecoModule } from "@/v2/core/endereco/endereco.module";
-import { CampusController } from "./api/campus.controller";
-import { CampusService } from "./domain/campus.service";
+import { CampusController } from "@/v2/adapters/in/http/campus/campus.controller";
+import { CampusService } from "@/v2/core/campus/application/use-cases/campus.service";
 
 @Module({
   imports: [EnderecoModule],

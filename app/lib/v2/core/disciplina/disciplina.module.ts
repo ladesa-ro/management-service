@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
-import { DisciplinaController } from "./api/disciplina.controller";
-import { DisciplinaService } from "./domain/disciplina.service";
+import { DisciplinaController } from "@/v2/adapters/in/http/disciplina/disciplina.controller";
+import { DisciplinaService } from "@/v2/core/disciplina/application/use-cases/disciplina.service";
 
 @Module({
   imports: [],

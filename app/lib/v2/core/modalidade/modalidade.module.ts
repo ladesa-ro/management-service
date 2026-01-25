@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
-import { ModalidadeController } from "./api/modalidade.controller";
-import { ModalidadeService } from "./domain/modalidade.service";
+import { ModalidadeController } from "@/v2/adapters/in/http/modalidade/modalidade.controller";
+import { ModalidadeService } from "@/v2/core/modalidade/application/use-cases/modalidade.service";
 
 @Module({
   imports: [],

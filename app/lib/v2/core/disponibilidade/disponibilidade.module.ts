@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
-import { DisponibilidadeController } from "./api/disponibilidade.controller";
-import { DisponibilidadeService } from "./domain/disponibilidade.service";
+import { DisponibilidadeController } from "@/v2/adapters/in/http/disponibilidade/disponibilidade.controller";
+import { DisponibilidadeService } from "@/v2/core/disponibilidade/application/use-cases/disponibilidade.service";
 
 @Module({
   imports: [],

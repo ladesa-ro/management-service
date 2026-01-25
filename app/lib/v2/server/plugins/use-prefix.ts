@@ -1,5 +1,5 @@
 import { INestApplication } from "@nestjs/common";
-import { AppConfigService } from "@/infrastructure/config";
+import { AppConfigService } from "@/v2/infra/config";
 
 export const usePrefix = (app: INestApplication) => {
   const configService = app.get<AppConfigService>(AppConfigService);

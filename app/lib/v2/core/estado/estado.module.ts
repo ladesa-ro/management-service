@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
-import { EstadoController } from "@/v2/core/estado/api/estado.controller";
-import { EstadoService } from "./domain/estado.service";
+import { EstadoController } from "@/v2/adapters/in/http/estado/estado.controller";
+import { EstadoService } from "@/v2/core/estado/application/use-cases/estado.service";
 
 @Module({
   imports: [],
