@@ -1,7 +1,7 @@
 import { Module } from "@nestjs/common";
 import { AutorizacaoController } from "@/v2/adapters/in/http/autorizacao/autorizacao.controller";
 import { AutorizacaoService } from "@/v2/core/autorizacao/application/use-cases/autorizacao.service";
-import { PerfilModule } from "@/v2/server/modules/perfil.module";
+import { PerfilModule } from "@/v2/server/modules/perfil";
 
 /**
  * Módulo NestJS para Autorizacao

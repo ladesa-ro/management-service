@@ -3,7 +3,7 @@ import { DiaCalendarioController } from "@/v2/adapters/in/http/dia-calendario/di
 import { NestJsPaginateAdapter } from "@/v2/adapters/out/persistence/pagination";
 import { DiaCalendarioTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistence/typeorm/adapters";
 import { DiaCalendarioService } from "@/v2/core/dia-calendario/application/use-cases/dia-calendario.service";
-import { CalendarioLetivoModule } from "@/v2/server/modules/calendario-letivo.module";
+import { CalendarioLetivoModule } from "@/v2/server/modules/calendario-letivo";
 
 @Module({
   imports: [CalendarioLetivoModule],
