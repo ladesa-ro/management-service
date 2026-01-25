@@ -9,14 +9,15 @@ import * as path from "node:path";
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
 
-      // Code-first schema generation
-      autoSchemaFile: path.join(process.cwd(), "schema.gql"),
+      autoSchemaFile: true,
       sortSchema: true,
+
       buildSchemaOptions: {
         numberScalarMode: "integer",
       },
 
-      playground: true,
+      graphiql: true,
+
       introspection: true,
       useGlobalPrefix: true,
 
