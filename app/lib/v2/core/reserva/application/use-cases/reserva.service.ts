@@ -12,10 +12,10 @@ import type {
 import type { ReservaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import { AmbienteService } from "@/v2/core/ambiente/application/use-cases/ambiente.service";
 import { UsuarioService } from "@/v2/core/usuario/application/use-cases/usuario.service";
-import type { IReservaRepositoryPort } from "../ports";
+import type { IReservaRepositoryPort, IReservaUseCasePort } from "../ports";
 
 @Injectable()
-export class ReservaService {
+export class ReservaService implements IReservaUseCasePort {
   constructor(
     @Inject("IReservaRepositoryPort")
     private reservaRepository: IReservaRepositoryPort,

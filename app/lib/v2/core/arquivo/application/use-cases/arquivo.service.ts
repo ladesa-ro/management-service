@@ -18,7 +18,7 @@ import {
   UsuarioEntity,
 } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import { AppConfigService } from "@/v2/infra/config";
-import type { IArquivoRepositoryPort } from "../ports";
+import type { IArquivoRepositoryPort, IArquivoUseCasePort } from "../ports";
 
 type IGetFileAcesso = null | {
   nome?: string;
@@ -26,7 +26,7 @@ type IGetFileAcesso = null | {
 };
 
 @Injectable()
-export class ArquivoService {
+export class ArquivoService implements IArquivoUseCasePort {
   constructor(
     @Inject("IArquivoRepositoryPort")
     private arquivoRepository: IArquivoRepositoryPort,

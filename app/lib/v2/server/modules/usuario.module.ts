@@ -3,8 +3,8 @@ import { KeycloakModule } from "@/infrastructure/integrations/identity-provider"
 import { UsuarioController } from "@/v2/adapters/in/http/usuario/usuario.controller";
 import { NestJsPaginateAdapter } from "@/v2/adapters/out/persistence/pagination";
 import { UsuarioTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistence/typeorm/adapters";
-import { ArquivoModule } from "@/v2/core/arquivo/arquivo.module";
-import { ImagemModule } from "@/v2/core/imagem/imagem.module";
+import { ArquivoModule } from "@/v2/server/modules/arquivo.module";
+import { ImagemModule } from "@/v2/server/modules/imagem.module";
 import { UsuarioService } from "@/v2/core/usuario/application/use-cases/usuario.service";
 
 /**

@@ -2,9 +2,9 @@ import { Module } from "@nestjs/common";
 import { CursoController } from "@/v2/adapters/in/http/curso/curso.controller";
 import { NestJsPaginateAdapter } from "@/v2/adapters/out/persistence/pagination";
 import { CursoTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistence/typeorm/adapters";
-import { ArquivoModule } from "@/v2/core/arquivo/arquivo.module";
+import { ArquivoModule } from "@/v2/server/modules/arquivo.module";
 import { CursoService } from "@/v2/core/curso/application/use-cases/curso.service";
-import { ImagemModule } from "@/v2/core/imagem/imagem.module";
+import { ImagemModule } from "@/v2/server/modules/imagem.module";
 import { CampusModule } from "@/v2/server/modules/campus.module";
 import { OfertaFormacaoModule } from "@/v2/server/modules/oferta-formacao.module";
 

@@ -1,7 +1,7 @@
 import { Global, Module } from "@nestjs/common";
 import { ImagemTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistence/typeorm/adapters";
 import { ImagemService } from "@/v2/core/imagem/application/use-cases/imagem.service";
-import { ArquivoModule } from "../arquivo/arquivo.module";
+import { ArquivoModule } from "@/v2/server/modules/arquivo.module";
 
 /**
  * Módulo Imagem configurado com Arquitetura Hexagonal

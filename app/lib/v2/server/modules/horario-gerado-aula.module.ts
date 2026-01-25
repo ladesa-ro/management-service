@@ -2,17 +2,11 @@ import { Module } from "@nestjs/common";
 import { HorarioGeradoAulaController } from "@/v2/adapters/in/http/horario-gerado-aula/horario-gerado-aula.controller";
 import { NestJsPaginateAdapter } from "@/v2/adapters/out/persistence/pagination";
 import { HorarioGeradoAulaTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistence/typeorm/adapters";
-import { DiarioProfessorModule } from "@/v2/core/diario-professor/diario-professor.module";
 import { HorarioGeradoAulaService } from "@/v2/core/horario-gerado-aula/application/use-cases/horario-gerado-aula.service";
-import { IntervaloDeTempoModule } from "@/v2/core/intervalo-de-tempo/intervalo-de-tempo.module";
-import { HorarioGeradoModule } from "../horario-gerado/horario-gerado.module";
+import { DiarioProfessorModule } from "@/v2/server/modules/diario-professor.module";
+import { HorarioGeradoModule } from "@/v2/server/modules/horario-gerado.module";
+import { IntervaloDeTempoModule } from "@/v2/server/modules/intervalo-de-tempo.module";
 
-/**
- * Módulo HorarioGeradoAula configurado com Arquitetura Hexagonal
- * - HorarioGeradoAulaService: Implementa casos de uso (porta de entrada)
- * - HorarioGeradoAulaTypeOrmRepositoryAdapter: Implementa IHorarioGeradoAulaRepositoryPort (porta de saída)
- * - NestJsPaginateAdapter: Adapter de paginação com nestjs-paginate
- */
 @Module({
   imports: [DiarioProfessorModule, HorarioGeradoModule, IntervaloDeTempoModule],
   providers: [

@@ -14,10 +14,10 @@ import { AmbienteService } from "@/v2/core/ambiente/application/use-cases/ambien
 import { CalendarioLetivoService } from "@/v2/core/calendario-letivo/application/use-cases/calendario-letivo.service";
 import { DisciplinaService } from "@/v2/core/disciplina/application/use-cases/disciplina.service";
 import { TurmaService } from "@/v2/core/turma/application/use-cases/turma.service";
-import type { IDiarioRepositoryPort } from "../ports";
+import type { IDiarioRepositoryPort, IDiarioUseCasePort } from "../ports";
 
 @Injectable()
-export class DiarioService {
+export class DiarioService implements IDiarioUseCasePort {
   constructor(
     @Inject("IDiarioRepositoryPort")
     private diarioRepository: IDiarioRepositoryPort,

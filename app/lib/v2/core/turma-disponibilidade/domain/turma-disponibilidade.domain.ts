@@ -1,11 +1,27 @@
-import { Disponibilidade } from "../../disponibilidade/domain/disponibilidade.domain";
-import { Turma } from "../../turma/domain/turma.domain";
+import type { Disponibilidade } from "@/v2/core/disponibilidade/domain/disponibilidade.domain";
+import type { Turma } from "@/v2/core/turma/domain/turma.domain";
+import type { ITurmaDisponibilidade, ITurmaDisponibilidadeCreate } from "./turma-disponibilidade.types";
 
-export class TurmaDisponibilidade {
+export class TurmaDisponibilidade implements ITurmaDisponibilidade {
   id!: string;
   turma!: Turma;
   disponibilidade!: Disponibilidade;
   dateCreated!: Date;
   dateUpdated!: Date;
   dateDeleted!: Date | null;
+
+  isAtivo(): boolean {
+    return this.dateDeleted === null;
+  }
+
+  static criar(dados: ITurmaDisponibilidadeCreate): TurmaDisponibilidade {
+    const turmaDisponibilidade = new TurmaDisponibilidade();
+    return turmaDisponibilidade;
+  }
+
+  static fromData(dados: ITurmaDisponibilidade): TurmaDisponibilidade {
+    const turmaDisponibilidade = new TurmaDisponibilidade();
+    Object.assign(turmaDisponibilidade, dados);
+    return turmaDisponibilidade;
+  }
 }

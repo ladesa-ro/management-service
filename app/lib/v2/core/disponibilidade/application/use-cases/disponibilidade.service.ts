@@ -10,10 +10,10 @@ import type {
   DisponibilidadeUpdateInputDto,
 } from "@/v2/adapters/in/http/disponibilidade/dto";
 import type { DisponibilidadeEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
-import type { IDisponibilidadeRepositoryPort } from "../ports";
+import type { IDisponibilidadeRepositoryPort, IDisponibilidadeUseCasePort } from "../ports";
 
 @Injectable()
-export class DisponibilidadeService {
+export class DisponibilidadeService implements IDisponibilidadeUseCasePort {
   constructor(
     @Inject("IDisponibilidadeRepositoryPort")
     private disponibilidadeRepository: IDisponibilidadeRepositoryPort,

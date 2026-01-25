@@ -2,19 +2,16 @@ import { Inject, Injectable } from "@nestjs/common";
 import { pick } from "lodash";
 import type { AccessContext } from "@/infrastructure/access-context";
 import type { IntervaloDeTempoInput } from "../dtos";
-import type { IIntervaloDeTempoRepositoryPort } from "../ports";
+import type { IIntervaloDeTempoRepositoryPort, IIntervaloDeTempoUseCasePort } from "../ports";
 
 @Injectable()
-export class IntervaloDeTempoService {
+export class IntervaloDeTempoService implements IIntervaloDeTempoUseCasePort {
   constructor(
     @Inject("IIntervaloDeTempoRepositoryPort")
     private intervaloTempoRepository: IIntervaloDeTempoRepositoryPort,
   ) {}
 
-  async intervaloCreateOrUpdate(
-    accessContext: AccessContext | null,
-    domain: IntervaloDeTempoInput,
-  ) {
+  async intervaloCreateOrUpdate(accessContext: AccessContext | null, domain: IntervaloDeTempoInput) {
     const intervalExisting = await this.intervaloTempoRepository.findOne(domain);
 
     if (intervalExisting) return intervalExisting;

@@ -12,10 +12,10 @@ import type {
 import type { CalendarioLetivoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import { CampusService } from "@/v2/core/campus/application/use-cases/campus.service";
 import { OfertaFormacaoService } from "@/v2/core/oferta-formacao/application/use-cases/oferta-formacao.service";
-import type { ICalendarioLetivoRepositoryPort } from "../ports";
+import type { ICalendarioLetivoRepositoryPort, ICalendarioLetivoUseCasePort } from "../ports";
 
 @Injectable()
-export class CalendarioLetivoService {
+export class CalendarioLetivoService implements ICalendarioLetivoUseCasePort {
   constructor(
     @Inject("ICalendarioLetivoRepositoryPort")
     private calendarioLetivoRepository: ICalendarioLetivoRepositoryPort,

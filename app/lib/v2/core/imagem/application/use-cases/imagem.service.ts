@@ -7,7 +7,7 @@ import {
 import sharp from "sharp";
 import { v4 } from "uuid";
 import { ArquivoService } from "@/v2/core/arquivo/application/use-cases/arquivo.service";
-import type { IImagemTransactionPort } from "../ports";
+import type { IImagemTransactionPort, IImagemUseCasePort } from "../ports";
 
 type ISaveImageOptions = {
   minWidth: number;
@@ -19,7 +19,7 @@ type ISaveImageOptions = {
 };
 
 @Injectable()
-export class ImagemService {
+export class ImagemService implements IImagemUseCasePort {
   constructor(
     private arquivoService: ArquivoService,
     @Inject("IImagemTransactionPort")

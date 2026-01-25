@@ -7,22 +7,24 @@ import { CampusModule } from "@/v2/server/modules/campus.module";
 import { OfertaFormacaoModule } from "@/v2/server/modules/oferta-formacao.module";
 
 /**
- * Módulo CalendarioLetivo configurado com Arquitetura Hexagonal
- * - CalendarioLetivoService: Implementa casos de uso (porta de entrada)
- * - CalendarioLetivoTypeOrmRepositoryAdapter: Implementa ICalendarioLetivoRepositoryPort (porta de saída)
- * - NestJsPaginateAdapter: Adapter de paginação com nestjs-paginate
+ * Módulo NestJS para CalendarioLetivo
+ *
+ * Responsável por:
+ * - Configurar injeção de dependência
+ * - Fazer o binding entre ports e adapters
+ * - Registrar controller, service e repository
  */
 @Module({
   imports: [CampusModule, OfertaFormacaoModule],
+  controllers: [CalendarioLetivoController],
   providers: [
     NestJsPaginateAdapter,
+    CalendarioLetivoService,
     {
       provide: "ICalendarioLetivoRepositoryPort",
       useClass: CalendarioLetivoTypeOrmRepositoryAdapter,
     },
-    CalendarioLetivoService,
   ],
   exports: [CalendarioLetivoService],
-  controllers: [CalendarioLetivoController],
 })
 export class CalendarioLetivoModule {}

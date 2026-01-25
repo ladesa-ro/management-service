@@ -13,10 +13,10 @@ import type { AulaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/e
 import { AmbienteService } from "@/v2/core/ambiente/application/use-cases/ambiente.service";
 import { DiarioService } from "@/v2/core/diario/application/use-cases/diario.service";
 import { IntervaloDeTempoService } from "@/v2/core/intervalo-de-tempo/application/use-cases/intervalo-de-tempo.service";
-import type { IAulaRepositoryPort } from "../ports";
+import type { IAulaRepositoryPort, IAulaUseCasePort } from "../ports";
 
 @Injectable()
-export class AulaService {
+export class AulaService implements IAulaUseCasePort {
   constructor(
     @Inject("IAulaRepositoryPort")
     private aulaRepository: IAulaRepositoryPort,

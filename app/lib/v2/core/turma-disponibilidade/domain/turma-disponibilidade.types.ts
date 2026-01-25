@@ -1,0 +1,16 @@
+import type { IDisponibilidade } from "@/v2/core/disponibilidade/domain/disponibilidade.types";
+import type { ITurma } from "@/v2/core/turma/domain/turma.types";
+
+export interface ITurmaDisponibilidade {
+  id: string;
+  turma: ITurma;
+  disponibilidade: IDisponibilidade;
+  dateCreated: Date;
+  dateUpdated: Date;
+  dateDeleted: Date | null;
+}
+
+export interface ITurmaDisponibilidadeCreate {
+  turma: { id: string };
+  disponibilidade: { id: string };
+}

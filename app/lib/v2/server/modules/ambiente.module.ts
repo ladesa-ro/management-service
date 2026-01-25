@@ -3,8 +3,8 @@ import { AmbienteController } from "@/v2/adapters/in/http/ambiente/ambiente.cont
 import { NestJsPaginateAdapter } from "@/v2/adapters/out/persistence/pagination";
 import { AmbienteTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistence/typeorm/adapters";
 import { AmbienteService } from "@/v2/core/ambiente/application/use-cases/ambiente.service";
-import { ArquivoModule } from "@/v2/core/arquivo/arquivo.module";
-import { ImagemModule } from "@/v2/core/imagem/imagem.module";
+import { ArquivoModule } from "@/v2/server/modules/arquivo.module";
+import { ImagemModule } from "@/v2/server/modules/imagem.module";
 import { BlocoModule } from "@/v2/server/modules/bloco.module";
 
 /**
