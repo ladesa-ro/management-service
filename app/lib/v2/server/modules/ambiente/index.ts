@@ -1,2 +1,2 @@
 export * from "./ambiente.module";
-export * from "./controllers";
+export * from "./http";

@@ -9,7 +9,7 @@ import type {
   PerfilFindOneOutputDto,
   PerfilListInputDto,
   PerfilListOutputDto,
-} from "@/v2/adapters/in/http/perfil/dto";
+} from "@/v2/server/modules/perfil/http/dto";
 import type {
   IPaginationConfig,
   IPaginationCriteria,

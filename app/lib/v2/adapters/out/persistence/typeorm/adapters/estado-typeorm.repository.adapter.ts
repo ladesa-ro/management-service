@@ -5,7 +5,7 @@ import type {
   EstadoFindOneOutputDto,
   EstadoListInputDto,
   EstadoListOutputDto,
-} from "@/v2/adapters/in/http/estado/dto";
+} from "@/v2/server/modules/estado/http/dto";
 import type { IPaginationConfig } from "@/v2/application/ports/pagination";
 import type { IEstadoRepositoryPort } from "@/v2/core/estado/application/ports";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";

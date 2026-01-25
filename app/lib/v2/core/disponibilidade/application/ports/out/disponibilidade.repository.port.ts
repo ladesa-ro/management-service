@@ -5,7 +5,7 @@ import type {
   DisponibilidadeFindOneOutputDto,
   DisponibilidadeListInputDto,
   DisponibilidadeListOutputDto,
-} from "@/v2/adapters/in/http/disponibilidade/dto";
+} from "@/v2/server/modules/disponibilidade/http/dto";
 import type { DisponibilidadeEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 
 export interface IDisponibilidadeRepositoryPort {

@@ -1,2 +1,2 @@
 export * from "./campus.module";
-export * from "./controllers";
+export * from "./http";

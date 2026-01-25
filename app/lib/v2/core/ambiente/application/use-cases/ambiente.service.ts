@@ -7,7 +7,7 @@ import type {
   AmbienteListInputDto,
   AmbienteListOutputDto,
   AmbienteUpdateInputDto,
-} from "@/v2/adapters/in/http/ambiente/dto";
+} from "@/v2/server/modules/ambiente/http/dto";
 import type { AmbienteEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import { ArquivoService } from "@/v2/core/arquivo/application/use-cases/arquivo.service";
 import { BlocoService } from "@/v2/core/bloco/application/use-cases/bloco.service";

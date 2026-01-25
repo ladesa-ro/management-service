@@ -1,2 +1,2 @@
 export * from "./gerar-horario.module";
-export * from "./controllers";
+export * from "./http";

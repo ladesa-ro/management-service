@@ -1,2 +1,2 @@
 export * from "./aula.module";
-export * from "./controllers";
+export * from "./http";

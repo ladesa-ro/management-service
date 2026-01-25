@@ -4,7 +4,7 @@ import type {
   EstadoFindOneOutputDto,
   EstadoListInputDto,
   EstadoListOutputDto,
-} from "@/v2/adapters/in/http/estado/dto";
+} from "@/v2/server/modules/estado/http/dto";
 
 /**
  * Port de entrada para casos de uso de Estado

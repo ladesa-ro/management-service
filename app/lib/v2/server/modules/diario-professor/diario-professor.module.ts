@@ -4,7 +4,7 @@ import { DiarioProfessorTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persi
 import { DiarioProfessorService } from "@/v2/core/diario-professor/application/use-cases/diario-professor.service";
 import { DiarioModule } from "@/v2/server/modules/diario";
 import { PerfilModule } from "@/v2/server/modules/perfil";
-import { DiarioProfessorController } from "./controllers";
+import { DiarioProfessorController } from "./http";
 
 @Module({
   imports: [DiarioModule, PerfilModule],

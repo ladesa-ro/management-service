@@ -5,7 +5,7 @@ import type {
   OfertaFormacaoFindOneOutputDto,
   OfertaFormacaoListInputDto,
   OfertaFormacaoListOutputDto,
-} from "@/v2/adapters/in/http/oferta-formacao/dto";
+} from "@/v2/server/modules/oferta-formacao/http/dto";
 import type { OfertaFormacaoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 
 export interface IOfertaFormacaoRepositoryPort {

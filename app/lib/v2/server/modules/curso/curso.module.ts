@@ -6,7 +6,7 @@ import { CursoService } from "@/v2/core/curso/application/use-cases/curso.servic
 import { ImagemModule } from "@/v2/server/modules/imagem";
 import { CampusModule } from "@/v2/server/modules/campus";
 import { OfertaFormacaoModule } from "@/v2/server/modules/oferta-formacao";
-import { CursoController } from "./controllers";
+import { CursoController } from "./http";
 
 /**
  * Módulo NestJS para Curso

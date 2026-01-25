@@ -5,7 +5,7 @@ import type {
   ModalidadeFindOneOutputDto,
   ModalidadeListInputDto,
   ModalidadeListOutputDto,
-} from "@/v2/adapters/in/http/modalidade/dto";
+} from "@/v2/server/modules/modalidade/http/dto";
 import type { IPaginationConfig } from "@/v2/application/ports/pagination";
 import type { IModalidadeRepositoryPort } from "@/v2/core/modalidade/application/ports";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";

@@ -6,7 +6,7 @@ import type {
   NivelFormacaoListInputDto,
   NivelFormacaoListOutputDto,
   NivelFormacaoUpdateInputDto,
-} from "@/v2/adapters/in/http/nivel-formacao/dto";
+} from "@/v2/server/modules/nivel-formacao/http/dto";
 
 /**
  * Port de entrada para casos de uso de NivelFormacao

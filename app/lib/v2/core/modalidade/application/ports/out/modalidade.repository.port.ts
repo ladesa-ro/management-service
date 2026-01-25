@@ -5,7 +5,7 @@ import type {
   ModalidadeFindOneOutputDto,
   ModalidadeListInputDto,
   ModalidadeListOutputDto,
-} from "@/v2/adapters/in/http/modalidade/dto";
+} from "@/v2/server/modules/modalidade/http/dto";
 import type { ModalidadeEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 
 /**

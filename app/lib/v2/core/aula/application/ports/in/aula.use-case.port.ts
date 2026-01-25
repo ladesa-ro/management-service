@@ -6,7 +6,7 @@ import type {
   AulaListInputDto,
   AulaListOutputDto,
   AulaUpdateInputDto,
-} from "@/v2/adapters/in/http/aula/dto";
+} from "@/v2/server/modules/aula/http/dto";
 
 /**
  * Porta de entrada (use case) para operações de Aula

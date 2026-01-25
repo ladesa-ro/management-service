@@ -6,7 +6,7 @@ import type {
   CidadeFindOneOutputDto,
   CidadeListInputDto,
   CidadeListOutputDto,
-} from "@/v2/adapters/in/http/cidade/dto";
+} from "@/v2/server/modules/cidade/http/dto";
 import type { IPaginationConfig } from "@/v2/application/ports/pagination";
 import type { ICidadeRepositoryPort } from "@/v2/core/cidade/application/ports";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";

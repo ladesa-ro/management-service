@@ -4,7 +4,7 @@ import { DisciplinaTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistenc
 import { ArquivoModule } from "@/v2/server/modules/arquivo";
 import { DisciplinaService } from "@/v2/core/disciplina/application/use-cases/disciplina.service";
 import { ImagemModule } from "@/v2/server/modules/imagem";
-import { DisciplinaController } from "./controllers";
+import { DisciplinaController } from "./http";
 
 /**
  * Módulo NestJS para Disciplina

@@ -3,7 +3,7 @@ import { NestJsPaginateAdapter } from "@/v2/adapters/out/persistence/pagination"
 import { OfertaFormacaoTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistence/typeorm/adapters";
 import { OfertaFormacaoService } from "@/v2/core/oferta-formacao/application/use-cases/oferta-formacao.service";
 import { ModalidadeModule } from "@/v2/server/modules/modalidade";
-import { OfertaFormacaoController } from "./controllers";
+import { OfertaFormacaoController } from "./http";
 
 /**
  * Módulo NestJS para OfertaFormacao

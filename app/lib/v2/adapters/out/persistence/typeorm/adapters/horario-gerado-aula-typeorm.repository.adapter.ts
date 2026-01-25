@@ -6,7 +6,7 @@ import type {
   HorarioGeradoAulaFindOneOutputDto,
   HorarioGeradoAulaListInputDto,
   HorarioGeradoAulaListOutputDto,
-} from "@/v2/adapters/in/http/horario-gerado-aula/dto";
+} from "@/v2/server/modules/horario-gerado-aula/http/dto";
 import type { IPaginationConfig } from "@/v2/application/ports/pagination";
 import type { IHorarioGeradoAulaRepositoryPort } from "@/v2/core/horario-gerado-aula/application/ports";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";

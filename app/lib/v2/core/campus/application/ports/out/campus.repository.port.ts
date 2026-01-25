@@ -5,7 +5,7 @@ import type {
   CampusFindOneOutputDto,
   CampusListInputDto,
   CampusListOutputDto,
-} from "@/v2/adapters/in/http/campus/dto";
+} from "@/v2/server/modules/campus/http/dto";
 import type { CampusEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 
 /**

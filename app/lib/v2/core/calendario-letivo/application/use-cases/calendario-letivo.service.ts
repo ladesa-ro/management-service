@@ -8,7 +8,7 @@ import type {
   CalendarioLetivoListInputDto,
   CalendarioLetivoListOutputDto,
   CalendarioLetivoUpdateInputDto,
-} from "@/v2/adapters/in/http/calendario-letivo/dto";
+} from "@/v2/server/modules/calendario-letivo/http/dto";
 import type { CalendarioLetivoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import { CampusService } from "@/v2/core/campus/application/use-cases/campus.service";
 import { OfertaFormacaoService } from "@/v2/core/oferta-formacao/application/use-cases/oferta-formacao.service";

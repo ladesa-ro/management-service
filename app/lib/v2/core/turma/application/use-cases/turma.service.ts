@@ -8,7 +8,7 @@ import type {
   TurmaListInputDto,
   TurmaListOutputDto,
   TurmaUpdateInputDto,
-} from "@/v2/adapters/in/http/turma/dto";
+} from "@/v2/server/modules/turma/http/dto";
 import type { TurmaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import { AmbienteService } from "@/v2/core/ambiente/application/use-cases/ambiente.service";
 import { ArquivoService } from "@/v2/core/arquivo/application/use-cases/arquivo.service";

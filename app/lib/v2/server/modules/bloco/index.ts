@@ -1,2 +1,2 @@
 export * from "./bloco.module";
-export * from "./controllers";
+export * from "./http";

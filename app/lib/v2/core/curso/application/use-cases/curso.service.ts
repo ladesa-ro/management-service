@@ -8,7 +8,7 @@ import type {
   CursoListInputDto,
   CursoListOutputDto,
   CursoUpdateInputDto,
-} from "@/v2/adapters/in/http/curso/dto";
+} from "@/v2/server/modules/curso/http/dto";
 import type { CursoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import { ArquivoService } from "@/v2/core/arquivo/application/use-cases/arquivo.service";
 import { CampusService } from "@/v2/core/campus/application/use-cases/campus.service";

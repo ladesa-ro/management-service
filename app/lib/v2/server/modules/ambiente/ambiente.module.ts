@@ -5,7 +5,7 @@ import { AmbienteService } from "@/v2/core/ambiente/application/use-cases/ambien
 import { ArquivoModule } from "@/v2/server/modules/arquivo";
 import { ImagemModule } from "@/v2/server/modules/imagem";
 import { BlocoModule } from "@/v2/server/modules/bloco";
-import { AmbienteController } from "./controllers";
+import { AmbienteController } from "./http";
 
 /**
  * Módulo NestJS para Ambiente

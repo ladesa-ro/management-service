@@ -10,7 +10,7 @@ import type {
   TurmaDisponibilidadeListInputDto,
   TurmaDisponibilidadeListOutputDto,
   TurmaDisponibilidadeUpdateInputDto,
-} from "@/v2/adapters/in/http/turma-disponibilidade/dto";
+} from "@/v2/server/modules/turma-disponibilidade/http/dto";
 import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
 import type { TurmaDisponibilidadeEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import { DisponibilidadeService } from "@/v2/core/disponibilidade/application/use-cases/disponibilidade.service";

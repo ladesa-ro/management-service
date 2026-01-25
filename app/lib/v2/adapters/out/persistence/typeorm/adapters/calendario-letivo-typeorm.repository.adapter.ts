@@ -6,7 +6,7 @@ import type {
   CalendarioLetivoFindOneOutputDto,
   CalendarioLetivoListInputDto,
   CalendarioLetivoListOutputDto,
-} from "@/v2/adapters/in/http/calendario-letivo/dto";
+} from "@/v2/server/modules/calendario-letivo/http/dto";
 import type { IPaginationConfig } from "@/v2/application/ports/pagination";
 import type { ICalendarioLetivoRepositoryPort } from "@/v2/core/calendario-letivo/application/ports";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";

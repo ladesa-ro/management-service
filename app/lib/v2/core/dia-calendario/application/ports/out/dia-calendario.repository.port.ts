@@ -5,7 +5,7 @@ import type {
   DiaCalendarioFindOneOutputDto,
   DiaCalendarioListInputDto,
   DiaCalendarioListOutputDto,
-} from "@/v2/adapters/in/http/dia-calendario/dto";
+} from "@/v2/server/modules/dia-calendario/http/dto";
 import type { DiaCalendarioEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities/dia-calendario.entity";
 
 export interface IDiaCalendarioRepositoryPort {

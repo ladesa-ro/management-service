@@ -4,7 +4,7 @@ import { ReservaTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistence/t
 import { ReservaService } from "@/v2/core/reserva/application/use-cases/reserva.service";
 import { AmbienteModule } from "@/v2/server/modules/ambiente";
 import { UsuarioModule } from "@/v2/server/modules/usuario";
-import { ReservaController } from "./controllers";
+import { ReservaController } from "./http";
 
 /**
  * Módulo Reserva configurado com Arquitetura Hexagonal

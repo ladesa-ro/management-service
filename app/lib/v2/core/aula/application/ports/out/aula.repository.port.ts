@@ -5,7 +5,7 @@ import type {
   AulaFindOneOutputDto,
   AulaListInputDto,
   AulaListOutputDto,
-} from "@/v2/adapters/in/http/aula/dto";
+} from "@/v2/server/modules/aula/http/dto";
 import type { AulaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 
 export interface IAulaRepositoryPort {

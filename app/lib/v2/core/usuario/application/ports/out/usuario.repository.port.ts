@@ -5,7 +5,7 @@ import type {
   UsuarioFindOneOutputDto,
   UsuarioListInputDto,
   UsuarioListOutputDto,
-} from "@/v2/adapters/in/http/usuario/dto";
+} from "@/v2/server/modules/usuario/http/dto";
 import type { UsuarioEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 
 /**

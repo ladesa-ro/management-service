@@ -16,7 +16,7 @@ import type {
   UsuarioListInputDto,
   UsuarioListOutputDto,
   UsuarioUpdateInputDto,
-} from "@/v2/adapters/in/http/usuario/dto";
+} from "@/v2/server/modules/usuario/http/dto";
 import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
 import type { UsuarioEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import { ArquivoService } from "@/v2/core/arquivo/application/use-cases/arquivo.service";

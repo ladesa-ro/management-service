@@ -9,7 +9,7 @@ import type {
   CampusListInputDto,
   CampusListOutputDto,
   CampusUpdateInputDto,
-} from "@/v2/adapters/in/http/campus/dto";
+} from "@/v2/server/modules/campus/http/dto";
 import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
 import type { CampusEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import { EnderecoService } from "@/v2/core/endereco/application/use-cases/endereco.service";

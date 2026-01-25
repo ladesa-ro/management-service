@@ -6,7 +6,7 @@ import type {
   DiarioFindOneOutputDto,
   DiarioListInputDto,
   DiarioListOutputDto,
-} from "@/v2/adapters/in/http/diario/dto";
+} from "@/v2/server/modules/diario/http/dto";
 import type { IPaginationConfig } from "@/v2/application/ports/pagination";
 import type { IDiarioRepositoryPort } from "@/v2/core/diario/application/ports";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";

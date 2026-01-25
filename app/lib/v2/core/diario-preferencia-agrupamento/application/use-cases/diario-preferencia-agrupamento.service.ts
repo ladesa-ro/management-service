@@ -11,7 +11,7 @@ import type {
   DiarioPreferenciaAgrupamentoListInputDto,
   DiarioPreferenciaAgrupamentoListOutputDto,
   DiarioPreferenciaAgrupamentoUpdateInputDto,
-} from "@/v2/adapters/in/http/diario-preferencia-agrupamento/dto";
+} from "@/v2/server/modules/diario-preferencia-agrupamento/http/dto";
 import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
 import type { DiarioPreferenciaAgrupamentoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import { DiarioService } from "@/v2/core/diario/application/use-cases/diario.service";

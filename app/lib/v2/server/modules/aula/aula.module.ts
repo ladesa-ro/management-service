@@ -5,7 +5,7 @@ import { AulaService } from "@/v2/core/aula/application/use-cases/aula.service";
 import { AmbienteModule } from "@/v2/server/modules/ambiente";
 import { DiarioModule } from "@/v2/server/modules/diario";
 import { IntervaloDeTempoModule } from "@/v2/server/modules/intervalo-de-tempo";
-import { AulaController } from "./controllers";
+import { AulaController } from "./http";
 
 /**
  * Módulo Aula configurado com Arquitetura Hexagonal

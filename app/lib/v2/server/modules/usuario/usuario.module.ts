@@ -5,7 +5,7 @@ import { UsuarioTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistence/t
 import { ArquivoModule } from "@/v2/server/modules/arquivo";
 import { ImagemModule } from "@/v2/server/modules/imagem";
 import { UsuarioService } from "@/v2/core/usuario/application/use-cases/usuario.service";
-import { UsuarioController } from "./controllers";
+import { UsuarioController } from "./http";
 
 /**
  * Módulo NestJS para Usuario

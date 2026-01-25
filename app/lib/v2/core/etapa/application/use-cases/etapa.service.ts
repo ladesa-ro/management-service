@@ -8,7 +8,7 @@ import type {
   EtapaListInputDto,
   EtapaListOutputDto,
   EtapaUpdateInputDto,
-} from "@/v2/adapters/in/http/etapa/dto";
+} from "@/v2/server/modules/etapa/http/dto";
 import type { EtapaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities/etapa.entity";
 import { CalendarioLetivoService } from "@/v2/core/calendario-letivo/application/use-cases/calendario-letivo.service";
 import { BaseCrudService } from "@/v2/core/shared";

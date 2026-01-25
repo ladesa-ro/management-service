@@ -3,7 +3,7 @@ import type {
   EnderecoFindOneInputDto,
   EnderecoFindOneOutputDto,
   EnderecoInputDto,
-} from "@/v2/adapters/in/http/endereco/dto";
+} from "@/v2/server/modules/endereco/http/dto";
 
 /**
  * Port de entrada para casos de uso de Endereco

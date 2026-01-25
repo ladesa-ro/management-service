@@ -7,7 +7,7 @@ import type {
   NivelFormacaoListInputDto,
   NivelFormacaoListOutputDto,
   NivelFormacaoUpdateInputDto,
-} from "@/v2/adapters/in/http/nivel-formacao/dto";
+} from "@/v2/server/modules/nivel-formacao/http/dto";
 import type { NivelFormacaoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import { BaseCrudService } from "@/v2/core/shared";
 import type { INivelFormacaoRepositoryPort, INivelFormacaoUseCasePort } from "../ports";

@@ -7,7 +7,7 @@ import type {
   TurmaListInputDto,
   TurmaListOutputDto,
   TurmaUpdateInputDto,
-} from "@/v2/adapters/in/http/turma/dto";
+} from "@/v2/server/modules/turma/http/dto";
 
 /**
  * Port de entrada para casos de uso de Turma

@@ -8,7 +8,7 @@ import type {
   DiarioListInputDto,
   DiarioListOutputDto,
   DiarioUpdateInputDto,
-} from "@/v2/adapters/in/http/diario/dto";
+} from "@/v2/server/modules/diario/http/dto";
 import type { DiarioEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import { AmbienteService } from "@/v2/core/ambiente/application/use-cases/ambiente.service";
 import { CalendarioLetivoService } from "@/v2/core/calendario-letivo/application/use-cases/calendario-letivo.service";

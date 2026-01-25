@@ -1,2 +1,2 @@
 export * from "./disponibilidade.module";
-export * from "./controllers";
+export * from "./http";

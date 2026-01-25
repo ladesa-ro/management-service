@@ -5,7 +5,7 @@ import type {
   BlocoFindOneOutputDto,
   BlocoListInputDto,
   BlocoListOutputDto,
-} from "@/v2/adapters/in/http/bloco/dto";
+} from "@/v2/server/modules/bloco/http/dto";
 import type { BlocoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 
 /**

@@ -8,7 +8,7 @@ import type {
   HorarioGeradoListInputDto,
   HorarioGeradoListOutputDto,
   HorarioGeradoUpdateInputDto,
-} from "@/v2/adapters/in/http/horario-gerado/dto";
+} from "@/v2/server/modules/horario-gerado/http/dto";
 import type { HorarioGeradoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import { CalendarioLetivoService } from "@/v2/core/calendario-letivo/application/use-cases/calendario-letivo.service";
 import { BaseCrudService } from "@/v2/core/shared";

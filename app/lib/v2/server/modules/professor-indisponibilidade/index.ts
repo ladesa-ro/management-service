@@ -1,2 +1,2 @@
 export * from "./professor-indisponibilidade.module";
-export * from "./controllers";
+export * from "./http";

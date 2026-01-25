@@ -7,7 +7,7 @@ import type {
   AmbienteListInputDto,
   AmbienteListOutputDto,
   AmbienteUpdateInputDto,
-} from "@/v2/adapters/in/http/ambiente/dto";
+} from "@/v2/server/modules/ambiente/http/dto";
 
 /**
  * Port de entrada para casos de uso de Ambiente

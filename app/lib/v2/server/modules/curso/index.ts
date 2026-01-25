@@ -1,2 +1,2 @@
 export * from "./curso.module";
-export * from "./controllers";
+export * from "./http";

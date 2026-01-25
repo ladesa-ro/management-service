@@ -6,7 +6,7 @@ import type {
   UsuarioFindOneOutputDto,
   UsuarioListInputDto,
   UsuarioListOutputDto,
-} from "@/v2/adapters/in/http/usuario/dto";
+} from "@/v2/server/modules/usuario/http/dto";
 import type { IPaginationConfig } from "@/v2/application/ports/pagination";
 import type { IUsuarioRepositoryPort } from "@/v2/core/usuario/application/ports";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";

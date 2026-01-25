@@ -6,7 +6,7 @@ import type {
   HorarioGeradoFindOneOutputDto,
   HorarioGeradoListInputDto,
   HorarioGeradoListOutputDto,
-} from "@/v2/adapters/in/http/horario-gerado/dto";
+} from "@/v2/server/modules/horario-gerado/http/dto";
 import type { IPaginationConfig } from "@/v2/application/ports/pagination";
 import type { IHorarioGeradoRepositoryPort } from "@/v2/core/horario-gerado/application/ports";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";

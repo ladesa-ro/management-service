@@ -1,2 +1,2 @@
 export * from "./autenticacao.module";
-export * from "./controllers";
+export * from "./http";

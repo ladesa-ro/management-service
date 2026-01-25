@@ -6,7 +6,7 @@ import type {
   AulaFindOneOutputDto,
   AulaListInputDto,
   AulaListOutputDto,
-} from "@/v2/adapters/in/http/aula/dto";
+} from "@/v2/server/modules/aula/http/dto";
 import type { IPaginationConfig } from "@/v2/application/ports/pagination";
 import type { IAulaRepositoryPort } from "@/v2/core/aula/application/ports";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";

@@ -5,7 +5,7 @@ import type {
   EtapaFindOneOutputDto,
   EtapaListInputDto,
   EtapaListOutputDto,
-} from "@/v2/adapters/in/http/etapa/dto";
+} from "@/v2/server/modules/etapa/http/dto";
 import type { EtapaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities/etapa.entity";
 
 export interface IEtapaRepositoryPort {

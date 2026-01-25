@@ -7,7 +7,7 @@ import type {
   BlocoListInputDto,
   BlocoListOutputDto,
   BlocoUpdateInputDto,
-} from "@/v2/adapters/in/http/bloco/dto";
+} from "@/v2/server/modules/bloco/http/dto";
 import type { BlocoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import { ArquivoService } from "@/v2/core/arquivo/application/use-cases/arquivo.service";
 import { CampusService } from "@/v2/core/campus/application/use-cases/campus.service";

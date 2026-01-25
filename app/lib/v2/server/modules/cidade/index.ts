@@ -1,2 +1,2 @@
 export * from "./cidade.module";
-export * from "./controllers";
+export * from "./http";

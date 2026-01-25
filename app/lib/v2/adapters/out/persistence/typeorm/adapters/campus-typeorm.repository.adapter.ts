@@ -6,7 +6,7 @@ import type {
   CampusFindOneOutputDto,
   CampusListInputDto,
   CampusListOutputDto,
-} from "@/v2/adapters/in/http/campus/dto";
+} from "@/v2/server/modules/campus/http/dto";
 import type { IPaginationConfig } from "@/v2/application/ports/pagination";
 import type { ICampusRepositoryPort } from "@/v2/core/campus/application/ports";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";

@@ -4,7 +4,7 @@ import type {
   CidadeFindOneOutputDto,
   CidadeListInputDto,
   CidadeListOutputDto,
-} from "@/v2/adapters/in/http/cidade/dto";
+} from "@/v2/server/modules/cidade/http/dto";
 
 /**
  * Port de saída para operações de persistência de Cidade

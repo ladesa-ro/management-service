@@ -6,7 +6,7 @@ import type {
   CursoFindOneOutputDto,
   CursoListInputDto,
   CursoListOutputDto,
-} from "@/v2/adapters/in/http/curso/dto";
+} from "@/v2/server/modules/curso/http/dto";
 import type { IPaginationConfig } from "@/v2/application/ports/pagination";
 import type { ICursoRepositoryPort } from "@/v2/core/curso/application/ports";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";

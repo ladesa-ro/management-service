@@ -7,7 +7,7 @@ import type {
   PerfilListInputDto,
   PerfilListOutputDto,
   PerfilUpdateInputDto,
-} from "@/v2/adapters/in/http/perfil/dto";
+} from "@/v2/server/modules/perfil/http/dto";
 import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
 import type { UsuarioEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import { CampusService } from "@/v2/core/campus/application/use-cases/campus.service";

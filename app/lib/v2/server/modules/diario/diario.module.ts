@@ -6,7 +6,7 @@ import { AmbienteModule } from "@/v2/server/modules/ambiente";
 import { CalendarioLetivoModule } from "@/v2/server/modules/calendario-letivo";
 import { DisciplinaModule } from "@/v2/server/modules/disciplina";
 import { TurmaModule } from "@/v2/server/modules/turma";
-import { DiarioController } from "./controllers";
+import { DiarioController } from "./http";
 
 /**
  * Módulo NestJS para Diario

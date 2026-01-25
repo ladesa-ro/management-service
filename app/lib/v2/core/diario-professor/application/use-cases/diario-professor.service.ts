@@ -8,7 +8,7 @@ import type {
   DiarioProfessorListInputDto,
   DiarioProfessorListOutputDto,
   DiarioProfessorUpdateInputDto,
-} from "@/v2/adapters/in/http/diario-professor/dto";
+} from "@/v2/server/modules/diario-professor/http/dto";
 import type { DiarioProfessorEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import { DiarioService } from "@/v2/core/diario/application/use-cases/diario.service";
 import { PerfilService } from "@/v2/core/perfil/application/use-cases/perfil.service";

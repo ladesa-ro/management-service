@@ -6,7 +6,7 @@ import type {
   CalendarioLetivoListInputDto,
   CalendarioLetivoListOutputDto,
   CalendarioLetivoUpdateInputDto,
-} from "@/v2/adapters/in/http/calendario-letivo/dto";
+} from "@/v2/server/modules/calendario-letivo/http/dto";
 
 /**
  * Port de entrada para casos de uso de CalendarioLetivo

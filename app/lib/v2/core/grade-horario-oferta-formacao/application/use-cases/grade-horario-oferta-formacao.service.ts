@@ -11,7 +11,7 @@ import type {
   GradeHorarioOfertaFormacaoListInputDto,
   GradeHorarioOfertaFormacaoListOutputDto,
   GradeHorarioOfertaFormacaoUpdateInputDto,
-} from "@/v2/adapters/in/http/grade-horario-oferta-formacao/dto";
+} from "@/v2/server/modules/grade-horario-oferta-formacao/http/dto";
 import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
 import type { GradeHorarioOfertaFormacaoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import { CampusService } from "@/v2/core/campus/application/use-cases/campus.service";

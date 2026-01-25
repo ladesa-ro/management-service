@@ -5,7 +5,7 @@ import { BlocoService } from "@/v2/core/bloco/application/use-cases/bloco.servic
 import { ArquivoModule } from "@/v2/server/modules/arquivo";
 import { ImagemModule } from "@/v2/server/modules/imagem";
 import { CampusModule } from "@/v2/server/modules/campus";
-import { BlocoController } from "./controllers";
+import { BlocoController } from "./http";
 
 /**
  * Módulo NestJS para Bloco

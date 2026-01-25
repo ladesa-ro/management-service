@@ -11,7 +11,7 @@ import type {
   OfertaFormacaoNivelFormacaoListInputDto,
   OfertaFormacaoNivelFormacaoListOutputDto,
   OfertaFormacaoNivelFormacaoUpdateInputDto,
-} from "@/v2/adapters/in/http/oferta-formacao-nivel-formacao/dto";
+} from "@/v2/server/modules/oferta-formacao-nivel-formacao/http/dto";
 import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
 import type { OfertaFormacaoNivelFormacaoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import { NivelFormacaoService } from "@/v2/core/nivel-formacao/application/use-cases/nivel-formacao.service";

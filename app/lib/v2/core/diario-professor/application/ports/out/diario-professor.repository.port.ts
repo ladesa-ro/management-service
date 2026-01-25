@@ -5,7 +5,7 @@ import type {
   DiarioProfessorFindOneOutputDto,
   DiarioProfessorListInputDto,
   DiarioProfessorListOutputDto,
-} from "@/v2/adapters/in/http/diario-professor/dto";
+} from "@/v2/server/modules/diario-professor/http/dto";
 import type { DiarioProfessorEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 
 export interface IDiarioProfessorRepositoryPort {

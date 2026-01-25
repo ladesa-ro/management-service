@@ -4,7 +4,7 @@ import { PerfilTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistence/ty
 import { PerfilService } from "@/v2/core/perfil/application/use-cases/perfil.service";
 import { CampusModule } from "@/v2/server/modules/campus";
 import { UsuarioModule } from "@/v2/server/modules/usuario";
-import { PerfilController } from "./controllers";
+import { PerfilController } from "./http";
 
 /**
  * Módulo NestJS para Perfil

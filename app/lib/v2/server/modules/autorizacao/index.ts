@@ -1,2 +1,2 @@
 export * from "./autorizacao.module";
-export * from "./controllers";
+export * from "./http";

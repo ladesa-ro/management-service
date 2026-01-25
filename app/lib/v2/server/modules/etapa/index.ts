@@ -1,2 +1,2 @@
 export * from "./etapa.module";
-export * from "./controllers";
+export * from "./http";

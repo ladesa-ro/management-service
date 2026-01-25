@@ -10,7 +10,7 @@ import type {
   EventoListInputDto,
   EventoListOutputDto,
   EventoUpdateInputDto,
-} from "@/v2/adapters/in/http/evento/dto";
+} from "@/v2/server/modules/evento/http/dto";
 import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
 import type { EventoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities/evento.entity";
 import { CalendarioLetivoService } from "@/v2/core/calendario-letivo/application/use-cases/calendario-letivo.service";

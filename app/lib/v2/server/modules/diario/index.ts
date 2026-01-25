@@ -1,2 +1,2 @@
 export * from "./diario.module";
-export * from "./controllers";
+export * from "./http";

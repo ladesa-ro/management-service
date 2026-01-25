@@ -6,7 +6,7 @@ import type {
   BlocoFindOneOutputDto,
   BlocoListInputDto,
   BlocoListOutputDto,
-} from "@/v2/adapters/in/http/bloco/dto";
+} from "@/v2/server/modules/bloco/http/dto";
 import type { IPaginationConfig } from "@/v2/application/ports/pagination";
 import type { IBlocoRepositoryPort } from "@/v2/core/bloco/application/ports";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";

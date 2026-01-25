@@ -12,7 +12,7 @@ import jetpack, { createReadStream } from "fs-jetpack";
 import { v4 } from "uuid";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { isValidUuid } from "@/shared";
-import type { ArquivoCreateInputDto } from "@/v2/adapters/in/http/arquivo/dto";
+import type { ArquivoCreateInputDto } from "@/v2/server/modules/arquivo/http/dto";
 import {
   type ArquivoEntity,
   UsuarioEntity,

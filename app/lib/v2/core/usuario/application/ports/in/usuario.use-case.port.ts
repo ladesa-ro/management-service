@@ -7,7 +7,7 @@ import type {
   UsuarioListInputDto,
   UsuarioListOutputDto,
   UsuarioUpdateInputDto,
-} from "@/v2/adapters/in/http/usuario/dto";
+} from "@/v2/server/modules/usuario/http/dto";
 
 /**
  * Port de entrada para casos de uso de Usuario

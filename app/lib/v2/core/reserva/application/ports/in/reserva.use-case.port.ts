@@ -6,7 +6,7 @@ import type {
   ReservaListInputDto,
   ReservaListOutputDto,
   ReservaUpdateInputDto,
-} from "@/v2/adapters/in/http/reserva/dto";
+} from "@/v2/server/modules/reserva/http/dto";
 
 /**
  * Porta de entrada (use case) para operações de Reserva

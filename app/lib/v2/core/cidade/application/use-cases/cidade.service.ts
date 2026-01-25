@@ -5,7 +5,7 @@ import type {
   CidadeFindOneOutputDto,
   CidadeListInputDto,
   CidadeListOutputDto,
-} from "@/v2/adapters/in/http/cidade/dto";
+} from "@/v2/server/modules/cidade/http/dto";
 import type { ICidadeRepositoryPort, ICidadeUseCasePort } from "../ports";
 
 /**

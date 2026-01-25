@@ -1,2 +1,2 @@
 export * from "./calendario-letivo.module";
-export * from "./controllers";
+export * from "./http";

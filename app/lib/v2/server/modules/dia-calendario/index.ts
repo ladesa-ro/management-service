@@ -1,2 +1,2 @@
 export * from "./dia-calendario.module";
-export * from "./controllers";
+export * from "./http";

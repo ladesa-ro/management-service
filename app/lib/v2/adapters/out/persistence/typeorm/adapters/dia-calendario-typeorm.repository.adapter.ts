@@ -6,7 +6,7 @@ import type {
   DiaCalendarioFindOneOutputDto,
   DiaCalendarioListInputDto,
   DiaCalendarioListOutputDto,
-} from "@/v2/adapters/in/http/dia-calendario/dto";
+} from "@/v2/server/modules/dia-calendario/http/dto";
 import type { IPaginationConfig } from "@/v2/application/ports/pagination";
 import type { IDiaCalendarioRepositoryPort } from "@/v2/core/dia-calendario/application/ports";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";

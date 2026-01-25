@@ -6,7 +6,7 @@ import type {
   DisponibilidadeListInputDto,
   DisponibilidadeListOutputDto,
   DisponibilidadeUpdateInputDto,
-} from "@/v2/adapters/in/http/disponibilidade/dto";
+} from "@/v2/server/modules/disponibilidade/http/dto";
 
 /**
  * Porta de entrada (use case) para operações de Disponibilidade

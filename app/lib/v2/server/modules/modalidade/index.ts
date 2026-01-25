@@ -1,2 +1,2 @@
 export * from "./modalidade.module";
-export * from "./controllers";
+export * from "./http";

@@ -5,7 +5,7 @@ import { HorarioGeradoAulaService } from "@/v2/core/horario-gerado-aula/applicat
 import { DiarioProfessorModule } from "@/v2/server/modules/diario-professor";
 import { HorarioGeradoModule } from "@/v2/server/modules/horario-gerado";
 import { IntervaloDeTempoModule } from "@/v2/server/modules/intervalo-de-tempo";
-import { HorarioGeradoAulaController } from "./controllers";
+import { HorarioGeradoAulaController } from "./http";
 
 @Module({
   imports: [DiarioProfessorModule, HorarioGeradoModule, IntervaloDeTempoModule],

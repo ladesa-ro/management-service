@@ -4,7 +4,7 @@ import type {
   EnderecoFindOneInputDto,
   EnderecoFindOneOutputDto,
   EnderecoInputDto,
-} from "@/v2/adapters/in/http/endereco/dto";
+} from "@/v2/server/modules/endereco/http/dto";
 import type { EnderecoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 
 /**

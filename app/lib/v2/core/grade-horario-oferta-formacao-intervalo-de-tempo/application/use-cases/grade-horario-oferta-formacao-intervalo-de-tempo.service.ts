@@ -11,7 +11,7 @@ import type {
   GradeHorarioOfertaFormacaoIntervaloDeTempoListInputDto,
   GradeHorarioOfertaFormacaoIntervaloDeTempoListOutputDto,
   GradeHorarioOfertaFormacaoIntervaloDeTempoUpdateInputDto,
-} from "@/v2/adapters/in/http/grade-horario-oferta-formacao-intervalo-de-tempo/dto";
+} from "@/v2/server/modules/grade-horario-oferta-formacao-intervalo-de-tempo/http/dto";
 import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
 import type { GradeHorarioOfertaFormacaoIntervaloDeTempoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import { GradeHorarioOfertaFormacaoService } from "@/v2/core/grade-horario-oferta-formacao/application/use-cases/grade-horario-oferta-formacao.service";

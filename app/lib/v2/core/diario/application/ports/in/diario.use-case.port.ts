@@ -6,7 +6,7 @@ import type {
   DiarioListInputDto,
   DiarioListOutputDto,
   DiarioUpdateInputDto,
-} from "@/v2/adapters/in/http/diario/dto";
+} from "@/v2/server/modules/diario/http/dto";
 
 export interface IDiarioUseCasePort {
   diarioFindAll(

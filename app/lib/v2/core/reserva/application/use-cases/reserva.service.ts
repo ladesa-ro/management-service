@@ -8,7 +8,7 @@ import type {
   ReservaListInputDto,
   ReservaListOutputDto,
   ReservaUpdateInputDto,
-} from "@/v2/adapters/in/http/reserva/dto";
+} from "@/v2/server/modules/reserva/http/dto";
 import type { ReservaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import { AmbienteService } from "@/v2/core/ambiente/application/use-cases/ambiente.service";
 import { BaseCrudService } from "@/v2/core/shared";

@@ -5,7 +5,7 @@ import type {
   EstadoFindOneOutputDto,
   EstadoListInputDto,
   EstadoListOutputDto,
-} from "@/v2/adapters/in/http/estado/dto";
+} from "@/v2/server/modules/estado/http/dto";
 import type { IEstadoRepositoryPort, IEstadoUseCasePort } from "../ports";
 
 /**

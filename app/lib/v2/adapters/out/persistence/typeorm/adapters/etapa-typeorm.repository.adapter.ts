@@ -6,7 +6,7 @@ import type {
   EtapaFindOneOutputDto,
   EtapaListInputDto,
   EtapaListOutputDto,
-} from "@/v2/adapters/in/http/etapa/dto";
+} from "@/v2/server/modules/etapa/http/dto";
 import type { IPaginationConfig } from "@/v2/application/ports/pagination";
 import type { IEtapaRepositoryPort } from "@/v2/core/etapa/application/ports";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";

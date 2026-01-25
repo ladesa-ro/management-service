@@ -6,7 +6,7 @@ import { ImagemModule } from "@/v2/server/modules/imagem";
 import { TurmaService } from "@/v2/core/turma/application/use-cases/turma.service";
 import { AmbienteModule } from "@/v2/server/modules/ambiente";
 import { CursoModule } from "@/v2/server/modules/curso";
-import { TurmaController } from "./controllers";
+import { TurmaController } from "./http";
 
 /**
  * Módulo NestJS para Turma

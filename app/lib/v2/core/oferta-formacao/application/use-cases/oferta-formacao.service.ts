@@ -8,7 +8,7 @@ import type {
   OfertaFormacaoListInputDto,
   OfertaFormacaoListOutputDto,
   OfertaFormacaoUpdateInputDto,
-} from "@/v2/adapters/in/http/oferta-formacao/dto";
+} from "@/v2/server/modules/oferta-formacao/http/dto";
 import type { OfertaFormacaoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import { ModalidadeService } from "@/v2/core/modalidade/application/use-cases/modalidade.service";
 import { BaseCrudService } from "@/v2/core/shared";

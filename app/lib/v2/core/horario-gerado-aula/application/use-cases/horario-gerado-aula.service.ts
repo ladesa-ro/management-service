@@ -8,7 +8,7 @@ import type {
   HorarioGeradoAulaListInputDto,
   HorarioGeradoAulaListOutputDto,
   HorarioGeradoAulaUpdateInputDto,
-} from "@/v2/adapters/in/http/horario-gerado-aula/dto";
+} from "@/v2/server/modules/horario-gerado-aula/http/dto";
 import type { HorarioGeradoAulaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import { DiarioProfessorService } from "@/v2/core/diario-professor/application/use-cases/diario-professor.service";
 import { HorarioGeradoService } from "@/v2/core/horario-gerado/application/use-cases/horario-gerado.service";

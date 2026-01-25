@@ -5,7 +5,7 @@ import type {
   AmbienteFindOneOutputDto,
   AmbienteListInputDto,
   AmbienteListOutputDto,
-} from "@/v2/adapters/in/http/ambiente/dto";
+} from "@/v2/server/modules/ambiente/http/dto";
 import type { AmbienteEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 
 export interface IAmbienteRepositoryPort {

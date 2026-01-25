@@ -6,7 +6,7 @@ import type {
   OfertaFormacaoListInputDto,
   OfertaFormacaoListOutputDto,
   OfertaFormacaoUpdateInputDto,
-} from "@/v2/adapters/in/http/oferta-formacao/dto";
+} from "@/v2/server/modules/oferta-formacao/http/dto";
 
 /**
  * Port de entrada para casos de uso de OfertaFormacao

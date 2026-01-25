@@ -5,7 +5,7 @@ import type {
   NivelFormacaoFindOneOutputDto,
   NivelFormacaoListInputDto,
   NivelFormacaoListOutputDto,
-} from "@/v2/adapters/in/http/nivel-formacao/dto";
+} from "@/v2/server/modules/nivel-formacao/http/dto";
 import type { IPaginationConfig } from "@/v2/application/ports/pagination";
 import type { INivelFormacaoRepositoryPort } from "@/v2/core/nivel-formacao/application/ports";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";

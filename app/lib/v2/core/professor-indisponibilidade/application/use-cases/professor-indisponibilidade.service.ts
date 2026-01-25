@@ -11,7 +11,7 @@ import type {
   ProfessorIndisponibilidadeListOutputDto,
   ProfessorIndisponibilidadeRRuleOutputDto,
   ProfessorIndisponibilidadeUpdateInputDto,
-} from "@/v2/adapters/in/http/professor-indisponibilidade/dto";
+} from "@/v2/server/modules/professor-indisponibilidade/http/dto";
 import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
 import { ProfessorIndisponibilidadeEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 

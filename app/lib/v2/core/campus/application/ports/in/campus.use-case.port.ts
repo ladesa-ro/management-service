@@ -6,7 +6,7 @@ import type {
   CampusListInputDto,
   CampusListOutputDto,
   CampusUpdateInputDto,
-} from "@/v2/adapters/in/http/campus/dto";
+} from "@/v2/server/modules/campus/http/dto";
 
 /**
  * Port de entrada para casos de uso de Campus

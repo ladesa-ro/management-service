@@ -5,7 +5,7 @@ import type {
   DisponibilidadeFindOneOutputDto,
   DisponibilidadeListInputDto,
   DisponibilidadeListOutputDto,
-} from "@/v2/adapters/in/http/disponibilidade/dto";
+} from "@/v2/server/modules/disponibilidade/http/dto";
 import type { IPaginationConfig } from "@/v2/application/ports/pagination";
 import type { IDisponibilidadeRepositoryPort } from "@/v2/core/disponibilidade/application/ports";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";

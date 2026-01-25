@@ -6,7 +6,7 @@ import type {
   OfertaFormacaoFindOneOutputDto,
   OfertaFormacaoListInputDto,
   OfertaFormacaoListOutputDto,
-} from "@/v2/adapters/in/http/oferta-formacao/dto";
+} from "@/v2/server/modules/oferta-formacao/http/dto";
 import type { IPaginationConfig } from "@/v2/application/ports/pagination";
 import type { IOfertaFormacaoRepositoryPort } from "@/v2/core/oferta-formacao/application/ports";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";

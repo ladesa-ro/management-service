@@ -4,7 +4,7 @@ import { CalendarioLetivoTypeOrmRepositoryAdapter } from "@/v2/adapters/out/pers
 import { CalendarioLetivoService } from "@/v2/core/calendario-letivo/application/use-cases/calendario-letivo.service";
 import { CampusModule } from "@/v2/server/modules/campus";
 import { OfertaFormacaoModule } from "@/v2/server/modules/oferta-formacao";
-import { CalendarioLetivoController } from "./controllers";
+import { CalendarioLetivoController } from "./http";
 
 /**
  * Módulo NestJS para CalendarioLetivo

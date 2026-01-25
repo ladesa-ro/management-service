@@ -6,7 +6,7 @@ import type {
   DisciplinaFindOneOutputDto,
   DisciplinaListInputDto,
   DisciplinaListOutputDto,
-} from "@/v2/adapters/in/http/disciplina/dto";
+} from "@/v2/server/modules/disciplina/http/dto";
 import type { IPaginationConfig } from "@/v2/application/ports/pagination";
 import type { IDisciplinaRepositoryPort } from "@/v2/core/disciplina/application/ports";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";

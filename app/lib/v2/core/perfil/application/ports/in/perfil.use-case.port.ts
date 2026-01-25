@@ -5,7 +5,7 @@ import type {
   PerfilListInputDto,
   PerfilListOutputDto,
   PerfilUpdateInputDto,
-} from "@/v2/adapters/in/http/perfil/dto";
+} from "@/v2/server/modules/perfil/http/dto";
 
 /**
  * Port de entrada para casos de uso de Perfil

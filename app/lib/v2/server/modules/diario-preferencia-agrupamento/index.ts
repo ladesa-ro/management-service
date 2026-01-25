@@ -1,2 +1,2 @@
 export * from "./diario-preferencia-agrupamento.module";
-export * from "./controllers";
+export * from "./http";

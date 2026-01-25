@@ -7,7 +7,7 @@ import type {
   CursoListInputDto,
   CursoListOutputDto,
   CursoUpdateInputDto,
-} from "@/v2/adapters/in/http/curso/dto";
+} from "@/v2/server/modules/curso/http/dto";
 
 /**
  * Port de entrada para casos de uso de Curso

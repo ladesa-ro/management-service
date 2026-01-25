@@ -6,7 +6,7 @@ import {
 import { AutenticacaoService } from "@/v2/core/autenticacao/application/use-cases/autenticacao.service";
 import { PerfilModule } from "@/v2/server/modules/perfil";
 import { UsuarioModule } from "@/v2/server/modules/usuario";
-import { AutenticacaoController } from "./controllers";
+import { AutenticacaoController } from "./http";
 
 /**
  * Módulo NestJS para Autenticacao

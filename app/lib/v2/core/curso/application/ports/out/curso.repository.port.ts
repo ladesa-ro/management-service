@@ -5,7 +5,7 @@ import type {
   CursoFindOneOutputDto,
   CursoListInputDto,
   CursoListOutputDto,
-} from "@/v2/adapters/in/http/curso/dto";
+} from "@/v2/server/modules/curso/http/dto";
 import type { CursoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 
 /**

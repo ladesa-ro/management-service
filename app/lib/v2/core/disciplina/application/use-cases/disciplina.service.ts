@@ -7,7 +7,7 @@ import type {
   DisciplinaListInputDto,
   DisciplinaListOutputDto,
   DisciplinaUpdateInputDto,
-} from "@/v2/adapters/in/http/disciplina/dto";
+} from "@/v2/server/modules/disciplina/http/dto";
 import type { DisciplinaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import { ArquivoService } from "@/v2/core/arquivo/application/use-cases/arquivo.service";
 import { ImagemService } from "@/v2/core/imagem/application/use-cases/imagem.service";

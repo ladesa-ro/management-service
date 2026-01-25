@@ -5,7 +5,7 @@ import type {
   AmbienteFindOneOutputDto,
   AmbienteListInputDto,
   AmbienteListOutputDto,
-} from "@/v2/adapters/in/http/ambiente/dto";
+} from "@/v2/server/modules/ambiente/http/dto";
 import type { IPaginationConfig } from "@/v2/application/ports/pagination";
 import type { IAmbienteRepositoryPort } from "@/v2/core/ambiente/application/ports";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";

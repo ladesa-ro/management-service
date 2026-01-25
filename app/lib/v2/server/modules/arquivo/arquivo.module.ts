@@ -1,7 +1,7 @@
 import { Global, Module } from "@nestjs/common";
 import { ArquivoTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistence/typeorm/adapters";
 import { ArquivoService } from "@/v2/core/arquivo/application/use-cases/arquivo.service";
-import { ArquivoController } from "./controllers";
+import { ArquivoController } from "./http";
 
 /**
  * Módulo Arquivo configurado com Arquitetura Hexagonal

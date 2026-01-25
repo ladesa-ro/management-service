@@ -7,7 +7,7 @@ import type {
   DisciplinaListInputDto,
   DisciplinaListOutputDto,
   DisciplinaUpdateInputDto,
-} from "@/v2/adapters/in/http/disciplina/dto";
+} from "@/v2/server/modules/disciplina/http/dto";
 
 /**
  * Port de entrada para casos de uso de Disciplina

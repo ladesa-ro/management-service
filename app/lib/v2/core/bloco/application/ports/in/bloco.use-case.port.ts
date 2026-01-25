@@ -7,7 +7,7 @@ import type {
   BlocoListInputDto,
   BlocoListOutputDto,
   BlocoUpdateInputDto,
-} from "@/v2/adapters/in/http/bloco/dto";
+} from "@/v2/server/modules/bloco/http/dto";
 
 /**
  * Port de entrada para casos de uso de Bloco

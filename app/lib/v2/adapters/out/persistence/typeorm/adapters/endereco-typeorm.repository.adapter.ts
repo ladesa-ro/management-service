@@ -6,7 +6,7 @@ import type {
   EnderecoFindOneInputDto,
   EnderecoFindOneOutputDto,
   EnderecoInputDto,
-} from "@/v2/adapters/in/http/endereco/dto";
+} from "@/v2/server/modules/endereco/http/dto";
 import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
 import type { EnderecoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import type { IEnderecoRepositoryPort } from "@/v2/core/endereco/application/ports";

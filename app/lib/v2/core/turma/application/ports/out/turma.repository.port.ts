@@ -5,7 +5,7 @@ import type {
   TurmaFindOneOutputDto,
   TurmaListInputDto,
   TurmaListOutputDto,
-} from "@/v2/adapters/in/http/turma/dto";
+} from "@/v2/server/modules/turma/http/dto";
 import type { TurmaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 
 export interface ITurmaRepositoryPort {

@@ -1,2 +1,2 @@
 export * from "./turma.module";
-export * from "./controllers";
+export * from "./http";

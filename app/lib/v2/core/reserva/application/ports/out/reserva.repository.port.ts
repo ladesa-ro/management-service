@@ -5,7 +5,7 @@ import type {
   ReservaFindOneOutputDto,
   ReservaListInputDto,
   ReservaListOutputDto,
-} from "@/v2/adapters/in/http/reserva/dto";
+} from "@/v2/server/modules/reserva/http/dto";
 import type { ReservaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 
 export interface IReservaRepositoryPort {

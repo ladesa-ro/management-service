@@ -6,7 +6,7 @@ import type {
   ModalidadeListInputDto,
   ModalidadeListOutputDto,
   ModalidadeUpdateInputDto,
-} from "@/v2/adapters/in/http/modalidade/dto";
+} from "@/v2/server/modules/modalidade/http/dto";
 
 /**
  * Port de entrada para casos de uso de Modalidade

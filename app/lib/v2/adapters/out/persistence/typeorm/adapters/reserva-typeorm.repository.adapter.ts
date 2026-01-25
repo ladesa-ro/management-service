@@ -6,7 +6,7 @@ import type {
   ReservaFindOneOutputDto,
   ReservaListInputDto,
   ReservaListOutputDto,
-} from "@/v2/adapters/in/http/reserva/dto";
+} from "@/v2/server/modules/reserva/http/dto";
 import type { IPaginationConfig } from "@/v2/application/ports/pagination";
 import type { IReservaRepositoryPort } from "@/v2/core/reserva/application/ports";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";

@@ -5,7 +5,7 @@ import type {
   DisciplinaFindOneOutputDto,
   DisciplinaListInputDto,
   DisciplinaListOutputDto,
-} from "@/v2/adapters/in/http/disciplina/dto";
+} from "@/v2/server/modules/disciplina/http/dto";
 import type { DisciplinaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 
 export interface IDisciplinaRepositoryPort {

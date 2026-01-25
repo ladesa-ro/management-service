@@ -5,7 +5,7 @@ import type {
   HorarioGeradoAulaFindOneOutputDto,
   HorarioGeradoAulaListInputDto,
   HorarioGeradoAulaListOutputDto,
-} from "@/v2/adapters/in/http/horario-gerado-aula/dto";
+} from "@/v2/server/modules/horario-gerado-aula/http/dto";
 import type { HorarioGeradoAulaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 
 export interface IHorarioGeradoAulaRepositoryPort {

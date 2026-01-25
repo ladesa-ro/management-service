@@ -6,7 +6,7 @@ import type {
   TurmaFindOneOutputDto,
   TurmaListInputDto,
   TurmaListOutputDto,
-} from "@/v2/adapters/in/http/turma/dto";
+} from "@/v2/server/modules/turma/http/dto";
 import type { IPaginationConfig } from "@/v2/application/ports/pagination";
 import type { ITurmaRepositoryPort } from "@/v2/core/turma/application/ports";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
