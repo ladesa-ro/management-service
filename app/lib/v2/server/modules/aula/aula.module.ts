@@ -4,7 +4,7 @@ import { AulaTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistence/type
 import { AulaService } from "@/v2/core/aula/application/use-cases/aula.service";
 import { AmbienteModule } from "@/v2/server/modules/ambiente";
 import { DiarioModule } from "@/v2/server/modules/diario";
-import { IntervaloDeTempoModule } from "@/v2/server/modules/intervalo-de-tempo.module";
+import { IntervaloDeTempoModule } from "@/v2/server/modules/intervalo-de-tempo";
 import { AulaController } from "./controllers";
 
 /**
