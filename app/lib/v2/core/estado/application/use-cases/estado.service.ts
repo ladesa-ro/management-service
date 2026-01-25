@@ -6,13 +6,20 @@ import type {
   EstadoListInputDto,
   EstadoListOutputDto,
 } from "@/v2/adapters/in/http/estado/dto";
-import type { IEstadoRepositoryPort } from "../ports";
+import type { IEstadoRepositoryPort, IEstadoUseCasePort } from "../ports";
 
+/**
+ * Service centralizado para o módulo Estado.
+ * Implementa todos os use cases definidos em IEstadoUseCasePort.
+ *
+ * Por enquanto, toda a lógica fica aqui. Futuramente, pode ser
+ * desmembrado em use cases individuais se necessário.
+ */
 @Injectable()
-export class EstadoService {
+export class EstadoService implements IEstadoUseCasePort {
   constructor(
     @Inject("IEstadoRepositoryPort")
-    private estadoRepository: IEstadoRepositoryPort,
+    private readonly estadoRepository: IEstadoRepositoryPort,
   ) {}
 
   async findAll(

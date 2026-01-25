@@ -10,13 +10,20 @@ import type {
   NivelFormacaoUpdateInputDto,
 } from "@/v2/adapters/in/http/nivel-formacao/dto";
 import type { NivelFormacaoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
-import type { INivelFormacaoRepositoryPort } from "../ports";
+import type { INivelFormacaoRepositoryPort, INivelFormacaoUseCasePort } from "../ports";
 
+/**
+ * Service centralizado para o módulo NivelFormacao.
+ * Implementa todos os use cases definidos em INivelFormacaoUseCasePort.
+ *
+ * Por enquanto, toda a lógica fica aqui. Futuramente, pode ser
+ * desmembrado em use cases individuais se necessário.
+ */
 @Injectable()
-export class NivelFormacaoService {
+export class NivelFormacaoService implements INivelFormacaoUseCasePort {
   constructor(
     @Inject("INivelFormacaoRepositoryPort")
-    private nivelFormacaoRepository: INivelFormacaoRepositoryPort,
+    private readonly nivelFormacaoRepository: INivelFormacaoRepositoryPort,
   ) {}
 
   async nivelFormacaoFindAll(

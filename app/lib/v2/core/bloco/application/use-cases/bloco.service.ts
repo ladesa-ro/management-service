@@ -13,16 +13,23 @@ import type { BlocoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/
 import { ArquivoService } from "@/v2/core/arquivo/application/use-cases/arquivo.service";
 import { CampusService } from "@/v2/core/campus/application/use-cases/campus.service";
 import { ImagemService } from "@/v2/core/imagem/application/use-cases/imagem.service";
-import type { IBlocoRepositoryPort } from "../ports";
+import type { IBlocoRepositoryPort, IBlocoUseCasePort } from "../ports";
 
+/**
+ * Service centralizado para o módulo Bloco.
+ * Implementa todos os use cases definidos em IBlocoUseCasePort.
+ *
+ * Por enquanto, toda a lógica fica aqui. Futuramente, pode ser
+ * desmembrado em use cases individuais se necessário.
+ */
 @Injectable()
-export class BlocoService {
+export class BlocoService implements IBlocoUseCasePort {
   constructor(
     @Inject("IBlocoRepositoryPort")
-    private blocoRepository: IBlocoRepositoryPort,
-    private campusService: CampusService,
-    private imagemService: ImagemService,
-    private arquivoService: ArquivoService,
+    private readonly blocoRepository: IBlocoRepositoryPort,
+    private readonly campusService: CampusService,
+    private readonly imagemService: ImagemService,
+    private readonly arquivoService: ArquivoService,
   ) {}
 
   async blocoFindAll(

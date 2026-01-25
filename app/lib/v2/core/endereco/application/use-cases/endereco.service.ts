@@ -6,13 +6,20 @@ import type {
   EnderecoFindOneOutputDto,
   EnderecoInputDto,
 } from "@/v2/adapters/in/http/endereco/dto";
-import type { IEnderecoRepositoryPort } from "../ports";
+import type { IEnderecoRepositoryPort, IEnderecoUseCasePort } from "../ports";
 
+/**
+ * Service centralizado para o módulo Endereco.
+ * Implementa todos os use cases definidos em IEnderecoUseCasePort.
+ *
+ * Por enquanto, toda a lógica fica aqui. Futuramente, pode ser
+ * desmembrado em use cases individuais se necessário.
+ */
 @Injectable()
-export class EnderecoService {
+export class EnderecoService implements IEnderecoUseCasePort {
   constructor(
     @Inject("IEnderecoRepositoryPort")
-    private enderecoRepository: IEnderecoRepositoryPort,
+    private readonly enderecoRepository: IEnderecoRepositoryPort,
   ) {}
 
   async internalFindOneById(id: string): Promise<EnderecoFindOneOutputDto | null> {

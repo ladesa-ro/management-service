@@ -13,15 +13,22 @@ import type {
 import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
 import type { CampusEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import { EnderecoService } from "@/v2/core/endereco/application/use-cases/endereco.service";
-import type { ICampusRepositoryPort } from "../ports";
+import type { ICampusRepositoryPort, ICampusUseCasePort } from "../ports";
 
+/**
+ * Service centralizado para o módulo Campus.
+ * Implementa todos os use cases definidos em ICampusUseCasePort.
+ *
+ * Por enquanto, toda a lógica fica aqui. Futuramente, pode ser
+ * desmembrado em use cases individuais se necessário.
+ */
 @Injectable()
-export class CampusService {
+export class CampusService implements ICampusUseCasePort {
   constructor(
     @Inject("ICampusRepositoryPort")
-    private campusRepository: ICampusRepositoryPort,
-    private enderecoService: EnderecoService,
-    private databaseContext: DatabaseContextService,
+    private readonly campusRepository: ICampusRepositoryPort,
+    private readonly enderecoService: EnderecoService,
+    private readonly databaseContext: DatabaseContextService,
   ) {}
 
   async campusFindAll(

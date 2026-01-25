@@ -13,16 +13,23 @@ import type { AmbienteEntity } from "@/v2/adapters/out/persistence/typeorm/typeo
 import { ArquivoService } from "@/v2/core/arquivo/application/use-cases/arquivo.service";
 import { BlocoService } from "@/v2/core/bloco/application/use-cases/bloco.service";
 import { ImagemService } from "@/v2/core/imagem/application/use-cases/imagem.service";
-import type { IAmbienteRepositoryPort } from "../ports";
+import type { IAmbienteRepositoryPort, IAmbienteUseCasePort } from "../ports";
 
+/**
+ * Service centralizado para o módulo Ambiente.
+ * Implementa todos os use cases definidos em IAmbienteUseCasePort.
+ *
+ * Por enquanto, toda a lógica fica aqui. Futuramente, pode ser
+ * desmembrado em use cases individuais se necessário.
+ */
 @Injectable()
-export class AmbienteService {
+export class AmbienteService implements IAmbienteUseCasePort {
   constructor(
     @Inject("IAmbienteRepositoryPort")
-    private ambienteRepository: IAmbienteRepositoryPort,
-    private blocoService: BlocoService,
-    private imagemService: ImagemService,
-    private arquivoService: ArquivoService,
+    private readonly ambienteRepository: IAmbienteRepositoryPort,
+    private readonly blocoService: BlocoService,
+    private readonly imagemService: ImagemService,
+    private readonly arquivoService: ArquivoService,
   ) {}
 
   async ambienteFindAll(

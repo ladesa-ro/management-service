@@ -3,8 +3,8 @@ import { CalendarioLetivoController } from "@/v2/adapters/in/http/calendario-let
 import { NestJsPaginateAdapter } from "@/v2/adapters/out/persistence/pagination";
 import { CalendarioLetivoTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistence/typeorm/adapters";
 import { CalendarioLetivoService } from "@/v2/core/calendario-letivo/application/use-cases/calendario-letivo.service";
-import { CampusModule } from "@/v2/core/campus/campus.module";
-import { OfertaFormacaoModule } from "@/v2/core/oferta-formacao/oferta-formacao.module";
+import { CampusModule } from "@/v2/server/modules/campus.module";
+import { OfertaFormacaoModule } from "@/v2/server/modules/oferta-formacao.module";
 
 /**
  * Módulo CalendarioLetivo configurado com Arquitetura Hexagonal

@@ -1,8 +1,8 @@
 import { Module } from "@nestjs/common";
 import { GradeHorarioOfertaFormacaoController } from "@/v2/adapters/in/http/grade-horario-oferta-formacao/grade-horario-oferta-formacao.controller";
-import { CampusModule } from "@/v2/core/campus/campus.module";
 import { GradeHorarioOfertaFormacaoService } from "@/v2/core/grade-horario-oferta-formacao/application/use-cases/grade-horario-oferta-formacao.service";
-import { OfertaFormacaoModule } from "@/v2/core/oferta-formacao/oferta-formacao.module";
+import { CampusModule } from "@/v2/server/modules/campus.module";
+import { OfertaFormacaoModule } from "@/v2/server/modules/oferta-formacao.module";
 
 @Module({
   imports: [OfertaFormacaoModule, CampusModule],

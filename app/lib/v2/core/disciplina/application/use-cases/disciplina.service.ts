@@ -12,10 +12,10 @@ import type {
 import type { DisciplinaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import { ArquivoService } from "@/v2/core/arquivo/application/use-cases/arquivo.service";
 import { ImagemService } from "@/v2/core/imagem/application/use-cases/imagem.service";
-import type { IDisciplinaRepositoryPort } from "../ports";
+import type { IDisciplinaRepositoryPort, IDisciplinaUseCasePort } from "../ports";
 
 @Injectable()
-export class DisciplinaService {
+export class DisciplinaService implements IDisciplinaUseCasePort {
   constructor(
     @Inject("IDisciplinaRepositoryPort")
     private disciplinaRepository: IDisciplinaRepositoryPort,

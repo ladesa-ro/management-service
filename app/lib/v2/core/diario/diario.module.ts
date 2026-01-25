@@ -2,11 +2,11 @@ import { Module } from "@nestjs/common";
 import { DiarioController } from "@/v2/adapters/in/http/diario/diario.controller";
 import { NestJsPaginateAdapter } from "@/v2/adapters/out/persistence/pagination";
 import { DiarioTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistence/typeorm/adapters";
-import { AmbienteModule } from "@/v2/core/ambiente/ambiente.module";
 import { CalendarioLetivoModule } from "@/v2/core/calendario-letivo/calendario-letivo.module";
 import { DiarioService } from "@/v2/core/diario/application/use-cases/diario.service";
-import { DisciplinaModule } from "@/v2/core/disciplina/disciplina.module";
-import { TurmaModule } from "@/v2/core/turma/turma.module";
+import { AmbienteModule } from "@/v2/server/modules/ambiente.module";
+import { DisciplinaModule } from "@/v2/server/modules/disciplina.module";
+import { TurmaModule } from "@/v2/server/modules/turma.module";
 
 /**
  * Módulo Diario configurado com Arquitetura Hexagonal

@@ -3,7 +3,7 @@ import { DiarioProfessorController } from "@/v2/adapters/in/http/diario-professo
 import { NestJsPaginateAdapter } from "@/v2/adapters/out/persistence/pagination";
 import { DiarioProfessorTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistence/typeorm/adapters";
 import { DiarioProfessorService } from "@/v2/core/diario-professor/application/use-cases/diario-professor.service";
-import { PerfilModule } from "@/v2/core/perfil/perfil.module";
+import { PerfilModule } from "@/v2/server/modules/perfil.module";
 import { DiarioModule } from "../diario/diario.module";
 
 /**

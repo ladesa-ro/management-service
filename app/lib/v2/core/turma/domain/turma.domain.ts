@@ -1,14 +1,92 @@
-import { Ambiente } from "../../ambiente/domain/ambiente.domain";
-import { Curso } from "../../curso/domain/curso.domain";
-import { Imagem } from "../../imagem/domain/imagem.domain";
+import type { IAmbiente } from "@/v2/core/ambiente/domain/ambiente.types";
+import type { ICurso } from "@/v2/core/curso/domain/curso.types";
+import type { IImagem } from "@/v2/core/imagem/domain/imagem.types";
+import type { ITurma, ITurmaCreate } from "./turma.types";
 
-export class Turma {
+/**
+ * Entidade de Domínio: Turma
+ * Implementa a tipagem ITurma e adiciona regras de negócio
+ */
+export class Turma implements ITurma {
   id!: string;
   periodo!: string;
-  ambientePadraoAula!: Ambiente | null;
-  curso!: Curso;
-  imagemCapa!: Imagem | null;
+  ambientePadraoAula!: IAmbiente | null;
+  curso!: ICurso;
+  imagemCapa!: IImagem | null;
   dateCreated!: Date;
   dateUpdated!: Date;
   dateDeleted!: Date | null;
+
+  // ========================================
+  // Métodos de Domínio
+  // ========================================
+
+  /**
+   * Valida se a turma está ativa (não deletada)
+   */
+  isAtiva(): boolean {
+    return this.dateDeleted === null;
+  }
+
+  /**
+   * Valida se pode ser editada
+   */
+  podeSerEditada(): boolean {
+    return this.isAtiva();
+  }
+
+  /**
+   * Valida se pode ser deletada
+   */
+  podeSerDeletada(): boolean {
+    return this.isAtiva();
+  }
+
+  /**
+   * Verifica se tem ambiente padrão de aula
+   */
+  temAmbientePadraoAula(): boolean {
+    return this.ambientePadraoAula !== null;
+  }
+
+  /**
+   * Verifica se tem imagem de capa
+   */
+  temImagemCapa(): boolean {
+    return this.imagemCapa !== null;
+  }
+
+  // ========================================
+  // Factory Methods
+  // ========================================
+
+  /**
+   * Cria uma nova instância válida de Turma
+   * @throws Error se os dados forem inválidos
+   */
+  static criar(dados: ITurmaCreate): Turma {
+    const instance = new Turma();
+
+    if (!dados.periodo || dados.periodo.trim().length === 0) {
+      throw new Error("Período é obrigatório");
+    }
+
+    instance.periodo = dados.periodo.trim();
+    instance.ambientePadraoAula = null;
+    instance.imagemCapa = null;
+    instance.dateCreated = new Date();
+    instance.dateUpdated = new Date();
+    instance.dateDeleted = null;
+
+    return instance;
+  }
+
+  /**
+   * Reconstrói uma instância a partir de dados existentes (ex: do banco)
+   */
+  static fromData(dados: ITurma): Turma {
+    const instance = new Turma();
+    Object.assign(instance, dados);
+    return instance;
+  }
 }

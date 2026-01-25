@@ -11,10 +11,10 @@ import type {
 } from "@/v2/adapters/in/http/oferta-formacao/dto";
 import type { OfertaFormacaoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import { ModalidadeService } from "@/v2/core/modalidade/application/use-cases/modalidade.service";
-import type { IOfertaFormacaoRepositoryPort } from "../ports";
+import type { IOfertaFormacaoRepositoryPort, IOfertaFormacaoUseCasePort } from "../ports";
 
 @Injectable()
-export class OfertaFormacaoService {
+export class OfertaFormacaoService implements IOfertaFormacaoUseCasePort {
   constructor(
     @Inject("IOfertaFormacaoRepositoryPort")
     private ofertaFormacaoRepository: IOfertaFormacaoRepositoryPort,

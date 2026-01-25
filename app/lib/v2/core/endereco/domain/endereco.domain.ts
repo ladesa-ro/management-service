@@ -1,6 +1,11 @@
-import { Cidade } from "../../cidade/domain/cidade.domain";
+import type { ICidade } from "@/v2/core/cidade/domain/cidade.types";
+import type { IEndereco } from "./endereco.types";
 
-export class Endereco {
+/**
+ * Entidade de Domínio: Endereco
+ * Implementa a tipagem IEndereco e adiciona regras de negócio
+ */
+export class Endereco implements IEndereco {
   id!: string;
   cep!: string;
   logradouro!: string;
@@ -8,8 +13,57 @@ export class Endereco {
   bairro!: string;
   complemento!: string | null;
   pontoReferencia!: string | null;
-  cidade!: Cidade;
+  cidade!: ICidade;
   dateCreated!: Date;
   dateUpdated!: Date;
   dateDeleted!: Date | null;
+
+  // ========================================
+  // Métodos de Domínio
+  // ========================================
+
+  /**
+   * Valida se o endereço está ativo (não deletado)
+   */
+  isAtivo(): boolean {
+    return this.dateDeleted === null;
+  }
+
+  /**
+   * Retorna o endereço formatado
+   */
+  getEnderecoFormatado(): string {
+    const partes = [
+      this.logradouro,
+      this.numero.toString(),
+      this.complemento,
+      this.bairro,
+      this.cidade?.nome,
+      this.cidade?.estado?.sigla,
+      this.cep,
+    ].filter(Boolean);
+
+    return partes.join(", ");
+  }
+
+  /**
+   * Valida se o CEP tem formato válido (apenas números, 8 dígitos)
+   */
+  isCepValido(): boolean {
+    const cepLimpo = this.cep.replace(/\D/g, "");
+    return /^\d{8}$/.test(cepLimpo);
+  }
+
+  // ========================================
+  // Factory Methods
+  // ========================================
+
+  /**
+   * Reconstrói uma instância a partir de dados existentes (ex: do banco)
+   */
+  static fromData(dados: IEndereco): Endereco {
+    const instance = new Endereco();
+    Object.assign(instance, dados);
+    return instance;
+  }
 }

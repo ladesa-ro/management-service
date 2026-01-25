@@ -14,10 +14,10 @@ import { ArquivoService } from "@/v2/core/arquivo/application/use-cases/arquivo.
 import { CampusService } from "@/v2/core/campus/application/use-cases/campus.service";
 import { ImagemService } from "@/v2/core/imagem/application/use-cases/imagem.service";
 import { OfertaFormacaoService } from "@/v2/core/oferta-formacao/application/use-cases/oferta-formacao.service";
-import type { ICursoRepositoryPort } from "../ports";
+import type { ICursoRepositoryPort, ICursoUseCasePort } from "../ports";
 
 @Injectable()
-export class CursoService {
+export class CursoService implements ICursoUseCasePort {
   constructor(
     @Inject("ICursoRepositoryPort")
     private cursoRepository: ICursoRepositoryPort,

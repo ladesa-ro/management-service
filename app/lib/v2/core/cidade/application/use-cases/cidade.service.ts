@@ -6,13 +6,20 @@ import type {
   CidadeListInputDto,
   CidadeListOutputDto,
 } from "@/v2/adapters/in/http/cidade/dto";
-import type { ICidadeRepositoryPort } from "../ports";
+import type { ICidadeRepositoryPort, ICidadeUseCasePort } from "../ports";
 
+/**
+ * Service centralizado para o módulo Cidade.
+ * Implementa todos os use cases definidos em ICidadeUseCasePort.
+ *
+ * Por enquanto, toda a lógica fica aqui. Futuramente, pode ser
+ * desmembrado em use cases individuais se necessário.
+ */
 @Injectable()
-export class CidadeService {
+export class CidadeService implements ICidadeUseCasePort {
   constructor(
     @Inject("ICidadeRepositoryPort")
-    private cidadeRepository: ICidadeRepositoryPort,
+    private readonly cidadeRepository: ICidadeRepositoryPort,
   ) {}
 
   async findAll(

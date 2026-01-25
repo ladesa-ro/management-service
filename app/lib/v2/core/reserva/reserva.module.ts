@@ -3,8 +3,8 @@ import { ReservaController } from "@/v2/adapters/in/http/reserva/reserva.control
 import { NestJsPaginateAdapter } from "@/v2/adapters/out/persistence/pagination";
 import { ReservaTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistence/typeorm/adapters";
 import { ReservaService } from "@/v2/core/reserva/application/use-cases/reserva.service";
-import { UsuarioModule } from "@/v2/core/usuario/usuario.module";
-import { AmbienteModule } from "../ambiente/ambiente.module";
+import { AmbienteModule } from "@/v2/server/modules/ambiente.module";
+import { UsuarioModule } from "@/v2/server/modules/usuario.module";
 
 /**
  * Módulo Reserva configurado com Arquitetura Hexagonal

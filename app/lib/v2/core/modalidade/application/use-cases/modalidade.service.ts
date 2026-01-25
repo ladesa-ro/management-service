@@ -10,13 +10,20 @@ import type {
   ModalidadeUpdateInputDto,
 } from "@/v2/adapters/in/http/modalidade/dto";
 import type { ModalidadeEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
-import type { IModalidadeRepositoryPort } from "../ports";
+import type { IModalidadeRepositoryPort, IModalidadeUseCasePort } from "../ports";
 
+/**
+ * Service centralizado para o módulo Modalidade.
+ * Implementa todos os use cases definidos em IModalidadeUseCasePort.
+ *
+ * Por enquanto, toda a lógica fica aqui. Futuramente, pode ser
+ * desmembrado em use cases individuais se necessário.
+ */
 @Injectable()
-export class ModalidadeService {
+export class ModalidadeService implements IModalidadeUseCasePort {
   constructor(
     @Inject("IModalidadeRepositoryPort")
-    private modalidadeRepository: IModalidadeRepositoryPort,
+    private readonly modalidadeRepository: IModalidadeRepositoryPort,
   ) {}
 
   async modalidadeFindAll(

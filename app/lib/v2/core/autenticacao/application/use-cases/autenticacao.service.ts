@@ -23,9 +23,10 @@ import type {
   AuthSessionCredentials,
   AuthWhoAmIOutput,
 } from "../dtos";
+import type { IAutenticacaoUseCasePort } from "../ports";
 
 @Injectable()
-export class AutenticacaoService {
+export class AutenticacaoService implements IAutenticacaoUseCasePort {
   constructor(
     private usuarioService: UsuarioService,
     private perfilService: PerfilService,

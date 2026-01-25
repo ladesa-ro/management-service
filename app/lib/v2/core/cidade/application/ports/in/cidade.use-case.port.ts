@@ -1,0 +1,40 @@
+import type { AccessContext } from "@/infrastructure/access-context";
+import type {
+  CidadeFindOneInputDto,
+  CidadeFindOneOutputDto,
+  CidadeListInputDto,
+  CidadeListOutputDto,
+} from "@/v2/adapters/in/http/cidade/dto";
+
+/**
+ * Port de entrada para casos de uso de Cidade
+ * Define o contrato que o service deve implementar
+ */
+export interface ICidadeUseCasePort {
+  /**
+   * Lista cidades com paginação
+   */
+  findAll(
+    accessContext: AccessContext,
+    dto: CidadeListInputDto | null,
+    selection?: string[],
+  ): Promise<CidadeListOutputDto>;
+
+  /**
+   * Busca uma cidade por ID
+   */
+  findById(
+    accessContext: AccessContext,
+    dto: CidadeFindOneInputDto,
+    selection?: string[],
+  ): Promise<CidadeFindOneOutputDto | null>;
+
+  /**
+   * Busca uma cidade por ID (lança exceção se não encontrado)
+   */
+  findByIdStrict(
+    accessContext: AccessContext,
+    dto: CidadeFindOneInputDto,
+    selection?: string[],
+  ): Promise<CidadeFindOneOutputDto>;
+}

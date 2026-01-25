@@ -14,10 +14,10 @@ import { AmbienteService } from "@/v2/core/ambiente/application/use-cases/ambien
 import { ArquivoService } from "@/v2/core/arquivo/application/use-cases/arquivo.service";
 import { CursoService } from "@/v2/core/curso/application/use-cases/curso.service";
 import { ImagemService } from "@/v2/core/imagem/application/use-cases/imagem.service";
-import type { ITurmaRepositoryPort } from "../ports";
+import type { ITurmaRepositoryPort, ITurmaUseCasePort } from "../ports";
 
 @Injectable()
-export class TurmaService {
+export class TurmaService implements ITurmaUseCasePort {
   constructor(
     @Inject("ITurmaRepositoryPort")
     private turmaRepository: ITurmaRepositoryPort,

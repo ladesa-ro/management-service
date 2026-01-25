@@ -21,10 +21,10 @@ import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
 import type { UsuarioEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import { ArquivoService } from "@/v2/core/arquivo/application/use-cases/arquivo.service";
 import { ImagemService } from "@/v2/core/imagem/application/use-cases/imagem.service";
-import type { IUsuarioRepositoryPort } from "../ports";
+import type { IUsuarioRepositoryPort, IUsuarioUseCasePort } from "../ports";
 
 @Injectable()
-export class UsuarioService {
+export class UsuarioService implements IUsuarioUseCasePort {
   constructor(
     @Inject("IUsuarioRepositoryPort")
     private usuarioRepository: IUsuarioRepositoryPort,
