@@ -1,21 +1,18 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { pick } from "lodash";
 import type { AccessContext } from "@/infrastructure/access-context";
-import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
 import type { IntervaloDeTempoInput } from "../dtos";
-
-// ============================================================================
+import type { IIntervaloDeTempoRepositoryPort } from "../ports";
 
 @Injectable()
 export class IntervaloDeTempoService {
-  constructor(private databaseContext: DatabaseContextService) {}
-
-  get intervaloTempoRepository() {
-    return this.databaseContext.intervaloDeTempoRepository;
-  }
+  constructor(
+    @Inject("IIntervaloDeTempoRepositoryPort")
+    private intervaloTempoRepository: IIntervaloDeTempoRepositoryPort,
+  ) {}
 
   async intervaloCreateOrUpdate(accessContext: AccessContext | null, domain: IntervaloDeTempoInput) {
-    const intervalExisting = await this.intervaloFindOne(domain);
+    const intervalExisting = await this.intervaloTempoRepository.findOne(domain);
 
     if (intervalExisting) return intervalExisting;
 
@@ -29,15 +26,6 @@ export class IntervaloDeTempoService {
 
     await this.intervaloTempoRepository.save(newInterval);
 
-    return this.intervaloTempoRepository.findOneByOrFail({ id: newInterval.id });
-  }
-
-  private async intervaloFindOne(domain: IntervaloDeTempoInput) {
-    return this.intervaloTempoRepository.findOne({
-      where: {
-        periodoFim: domain.periodoFim,
-        periodoInicio: domain.periodoInicio,
-      },
-    });
+    return this.intervaloTempoRepository.findOneByIdOrFail(newInterval.id);
   }
 }

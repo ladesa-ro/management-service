@@ -1,12 +1,9 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
-import { has, map, pick } from "lodash";
-import { FilterOperator } from "nestjs-paginate";
+import { Inject, Injectable, NotFoundException } from "@nestjs/common";
+import { has, pick } from "lodash";
 import { AmbienteService } from "@/v2/core/ambiente/application/use-cases/ambiente.service";
 import { UsuarioService } from "@/v2/core/usuario/application/use-cases/usuario.service";
 import type { AccessContext } from "@/infrastructure/access-context";
-import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
 import type { ReservaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
-import { QbEfficientLoad, SearchService } from "@/shared";
 import type {
   ReservaCreateInputDto,
   ReservaFindOneInputDto,
@@ -15,133 +12,39 @@ import type {
   ReservaListOutputDto,
   ReservaUpdateInputDto,
 } from "@/v2/adapters/in/http/reserva/dto";
-
-// ============================================================================
-
-const aliasReserva = "reserva";
-
-// ============================================================================
+import type { IReservaRepositoryPort } from "../ports";
 
 @Injectable()
 export class ReservaService {
   constructor(
-    private databaseContext: DatabaseContextService,
+    @Inject("IReservaRepositoryPort")
+    private reservaRepository: IReservaRepositoryPort,
     private usuarioService: UsuarioService,
     private ambienteService: AmbienteService,
-    private searchService: SearchService,
   ) {}
 
-  get reservaRepository() {
-    return this.databaseContext.reservaRepository;
+  async reservaFindAll(
+    accessContext: AccessContext,
+    dto: ReservaListInputDto | null = null,
+    selection?: string[] | boolean,
+  ): Promise<ReservaListOutputDto> {
+    return this.reservaRepository.findAll(accessContext, dto, selection);
   }
 
-  async reservaFindAll(accessContext: AccessContext, dto: ReservaListInputDto | null = null, selection?: string[] | boolean): Promise<ReservaListOutputDto> {
-    // =========================================================
-
-    const qb = this.reservaRepository.createQueryBuilder(aliasReserva);
-
-    // =========================================================
-
-    await accessContext.applyFilter("reserva:find", qb, aliasReserva, null);
-
-    const _dateOperations = [FilterOperator.EQ, FilterOperator.GT, FilterOperator.GTE, FilterOperator.LT, FilterOperator.LTE] as const;
-
-    // =========================================================
-
-    const paginated = await this.searchService.search(qb, dto, {
-      select: ["id"],
-      sortableColumns: [
-        "situacao",
-        "motivo",
-        "tipo",
-        "rrule",
-
-        "ambiente.id",
-        "ambiente.nome",
-        "ambiente.capacidade",
-        "ambiente.bloco.codigo",
-        "ambiente.bloco.nome",
-      ],
-      searchableColumns: [
-        "id",
-
-        "situacao",
-        "motivo",
-        "tipo",
-        "rrule",
-
-        "ambiente.nome",
-        "ambiente.descricao",
-        "ambiente.codigo",
-        "ambiente.bloco.nome",
-        "ambiente.bloco.codigo",
-      ],
-      relations: {
-        ambiente: {
-          bloco: {
-            campus: true,
-          },
-        },
-        usuario: true,
-        // intervaloDeTempo: true,
-      },
-
-      defaultSortBy: [],
-
-      filterableColumns: {
-        situacao: [FilterOperator.EQ],
-        tipo: [FilterOperator.EQ],
-
-        "ambiente.id": [FilterOperator.EQ],
-        "ambiente.bloco.id": [FilterOperator.EQ],
-        "ambiente.bloco.campus.id": [FilterOperator.EQ],
-      },
-    });
-
-    // =========================================================
-
-    qb.select([]);
-    QbEfficientLoad("ReservaFindOneOutput", qb, aliasReserva, selection);
-
-    // =========================================================
-
-    const pageItemsView = await qb.andWhereInIds(map(paginated.data, "id")).getMany();
-    paginated.data = paginated.data.map((paginated) => pageItemsView.find((i) => i.id === paginated.id)!);
-
-    // =========================================================
-
-    return paginated as unknown as ReservaListOutputDto;
+  async reservaFindById(
+    accessContext: AccessContext,
+    dto: ReservaFindOneInputDto,
+    selection?: string[] | boolean,
+  ): Promise<ReservaFindOneOutputDto | null> {
+    return this.reservaRepository.findById(accessContext, dto, selection);
   }
 
-  async reservaFindById(accessContext: AccessContext, dto: ReservaFindOneInputDto, selection?: string[] | boolean): Promise<ReservaFindOneOutputDto | null> {
-    // =========================================================
-
-    const qb = this.reservaRepository.createQueryBuilder(aliasReserva);
-
-    // =========================================================
-
-    await accessContext.applyFilter("reserva:find", qb, aliasReserva, null);
-
-    // =========================================================
-
-    qb.andWhere(`${aliasReserva}.id = :id`, { id: dto.id });
-
-    // =========================================================
-
-    qb.select([]);
-    QbEfficientLoad("ReservaFindOneOutput", qb, aliasReserva, selection);
-
-    // =========================================================
-
-    const reserva = await qb.getOne();
-
-    // =========================================================
-
-    return reserva as ReservaFindOneOutputDto | null;
-  }
-
-  async reservaFindByIdStrict(accessContext: AccessContext, dto: ReservaFindOneInputDto, selection?: string[] | boolean): Promise<ReservaFindOneOutputDto> {
-    const reserva = await this.reservaFindById(accessContext, dto, selection);
+  async reservaFindByIdStrict(
+    accessContext: AccessContext,
+    dto: ReservaFindOneInputDto,
+    selection?: string[] | boolean,
+  ): Promise<ReservaFindOneOutputDto> {
+    const reserva = await this.reservaRepository.findById(accessContext, dto, selection);
 
     if (!reserva) {
       throw new NotFoundException();
@@ -150,35 +53,20 @@ export class ReservaService {
     return reserva;
   }
 
-  async reservaFindByIdSimple(accessContext: AccessContext, id: ReservaFindOneInputDto["id"], selection?: string[]): Promise<ReservaFindOneOutputDto | null> {
-    // =========================================================
-
-    const qb = this.reservaRepository.createQueryBuilder(aliasReserva);
-
-    // =========================================================
-
-    await accessContext.applyFilter("reserva:find", qb, aliasReserva, null);
-
-    // =========================================================
-
-    qb.andWhere(`${aliasReserva}.id = :id`, { id });
-
-    // =========================================================
-
-    qb.select([]);
-    QbEfficientLoad("ReservaFindOneOutput", qb, aliasReserva, selection);
-
-    // =========================================================
-
-    const reserva = await qb.getOne();
-
-    // =========================================================
-
-    return reserva as ReservaFindOneOutputDto | null;
+  async reservaFindByIdSimple(
+    accessContext: AccessContext,
+    id: ReservaFindOneInputDto["id"],
+    selection?: string[],
+  ): Promise<ReservaFindOneOutputDto | null> {
+    return this.reservaRepository.findByIdSimple(accessContext, id, selection);
   }
 
-  async reservaFindByIdSimpleStrict(accessContext: AccessContext, id: ReservaFindOneInputDto["id"], selection?: string[]): Promise<ReservaFindOneOutputDto> {
-    const reserva = await this.reservaFindByIdSimple(accessContext, id, selection);
+  async reservaFindByIdSimpleStrict(
+    accessContext: AccessContext,
+    id: ReservaFindOneInputDto["id"],
+    selection?: string[],
+  ): Promise<ReservaFindOneOutputDto> {
+    const reserva = await this.reservaRepository.findByIdSimple(accessContext, id, selection);
 
     if (!reserva) {
       throw new NotFoundException();
@@ -187,12 +75,11 @@ export class ReservaService {
     return reserva;
   }
 
-  async reservaCreate(accessContext: AccessContext, dto: ReservaCreateInputDto): Promise<ReservaFindOneOutputDto> {
-    // =========================================================
-
+  async reservaCreate(
+    accessContext: AccessContext,
+    dto: ReservaCreateInputDto,
+  ): Promise<ReservaFindOneOutputDto> {
     await accessContext.ensurePermission("reserva:create", { dto } as any);
-
-    // =========================================================
 
     const dtoReserva = pick(dto, ["situacao", "motivo", "tipo", "rrule"]);
 
@@ -202,8 +89,6 @@ export class ReservaService {
       ...dtoReserva,
     });
 
-    // =========================================================
-
     const ambiente = await this.ambienteService.ambienteFindByIdStrict(accessContext, { id: dto.ambiente.id });
 
     this.reservaRepository.merge(reserva, {
@@ -212,11 +97,7 @@ export class ReservaService {
       },
     });
 
-    // =========================================================
-
-    const usuario = await this.usuarioService.usuarioFindByIdStrict(accessContext, {
-      id: dto.usuario.id,
-    });
+    const usuario = await this.usuarioService.usuarioFindByIdStrict(accessContext, { id: dto.usuario.id });
 
     this.reservaRepository.merge(reserva, {
       usuario: {
@@ -224,23 +105,18 @@ export class ReservaService {
       },
     });
 
-    // =========================================================
-
     await this.reservaRepository.save(reserva);
-
-    // =========================================================
 
     return this.reservaFindByIdStrict(accessContext, { id: reserva.id });
   }
 
-  async reservaUpdate(accessContext: AccessContext, dto: ReservaFindOneInputDto & ReservaUpdateInputDto): Promise<ReservaFindOneOutputDto> {
-    // =========================================================
-
+  async reservaUpdate(
+    accessContext: AccessContext,
+    dto: ReservaFindOneInputDto & ReservaUpdateInputDto,
+  ): Promise<ReservaFindOneOutputDto> {
     const currentReserva = await this.reservaFindByIdStrict(accessContext, { id: dto.id });
 
-    // =========================================================
-
-    await accessContext.ensurePermission("reserva:update", { dto }, dto.id, this.reservaRepository.createQueryBuilder(aliasReserva as any));
+    await accessContext.ensurePermission("reserva:update", { dto }, dto.id);
 
     const dtoReserva = pick(dto, ["situacao", "motivo", "tipo", "rrule"]);
 
@@ -252,8 +128,6 @@ export class ReservaService {
       ...dtoReserva,
     });
 
-    // =========================================================
-
     if (has(dto, "ambiente") && dto.ambiente !== undefined) {
       const ambiente = await this.ambienteService.ambienteFindByIdStrict(accessContext, { id: dto.ambiente.id });
 
@@ -263,8 +137,6 @@ export class ReservaService {
         },
       });
     }
-
-    // =========================================================
 
     if (has(dto, "usuario") && dto.usuario !== undefined) {
       const usuario = await this.usuarioService.usuarioFindByIdSimpleStrict(accessContext, dto.usuario.id);
@@ -276,39 +148,22 @@ export class ReservaService {
       });
     }
 
-    // =========================================================
-
     await this.reservaRepository.save(reserva);
-
-    // =========================================================
 
     return this.reservaFindByIdStrict(accessContext, { id: reserva.id });
   }
 
-  async reservaDeleteOneById(accessContext: AccessContext, dto: ReservaFindOneInputDto): Promise<boolean> {
-    // =========================================================
-
-    await accessContext.ensurePermission("reserva:delete", { dto }, dto.id, this.reservaRepository.createQueryBuilder(aliasReserva as any));
-
-    // =========================================================
+  async reservaDeleteOneById(
+    accessContext: AccessContext,
+    dto: ReservaFindOneInputDto,
+  ): Promise<boolean> {
+    await accessContext.ensurePermission("reserva:delete", { dto }, dto.id);
 
     const reserva = await this.reservaFindByIdStrict(accessContext, dto);
 
-    // =========================================================
-
     if (reserva) {
-      await this.reservaRepository
-        .createQueryBuilder(aliasReserva)
-        .update()
-        .set({
-          dateDeleted: "NOW()",
-        })
-        .where("id = :reservaId", { reservaId: reserva.id })
-        .andWhere("dateDeleted IS NULL")
-        .execute();
+      await this.reservaRepository.softDeleteById(reserva.id);
     }
-
-    // =========================================================
 
     return true;
   }
