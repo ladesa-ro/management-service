@@ -9,6 +9,7 @@ import {
 } from "@nestjs/swagger";
 import { AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
 import { EtapaService } from "@/v2/core/etapa/application/use-cases/etapa.service";
+import { BaseCrudController } from "@/v2/core/shared";
 import {
   EtapaCreateInputDto,
   EtapaFindOneInputDto,
@@ -20,8 +21,18 @@ import {
 
 @ApiTags("etapas")
 @Controller("/etapas")
-export class EtapaController {
-  constructor(private etapaService: EtapaService) {}
+export class EtapaController extends BaseCrudController<
+  EtapaService,
+  EtapaListInputDto,
+  EtapaListOutputDto,
+  EtapaFindOneInputDto,
+  EtapaFindOneOutputDto,
+  EtapaCreateInputDto,
+  EtapaUpdateInputDto
+> {
+  constructor(etapaService: EtapaService) {
+    super(etapaService);
+  }
 
   @Get("/")
   @ApiOperation({ summary: "Lista etapas" })
@@ -31,7 +42,7 @@ export class EtapaController {
     @AccessContextHttp() accessContext: AccessContext,
     @Query() dto: EtapaListInputDto,
   ): Promise<EtapaListOutputDto> {
-    return this.etapaService.etapaFindAll(accessContext, dto);
+    return this.handleFindAll(accessContext, dto);
   }
 
   @Get("/:id")
@@ -43,7 +54,7 @@ export class EtapaController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: EtapaFindOneInputDto,
   ): Promise<EtapaFindOneOutputDto> {
-    return this.etapaService.etapaFindByIdStrict(accessContext, params);
+    return this.handleFindById(accessContext, params);
   }
 
   @Post("/")
@@ -54,7 +65,7 @@ export class EtapaController {
     @AccessContextHttp() accessContext: AccessContext,
     @Body() dto: EtapaCreateInputDto,
   ): Promise<EtapaFindOneOutputDto> {
-    return this.etapaService.etapaCreate(accessContext, dto);
+    return this.handleCreate(accessContext, dto);
   }
 
   @Patch("/:id")
@@ -67,7 +78,7 @@ export class EtapaController {
     @Param() params: EtapaFindOneInputDto,
     @Body() dto: EtapaUpdateInputDto,
   ): Promise<EtapaFindOneOutputDto> {
-    return this.etapaService.etapaUpdate(accessContext, { id: params.id, ...dto });
+    return this.handleUpdate(accessContext, params, dto);
   }
 
   @Delete("/:id")
@@ -79,6 +90,6 @@ export class EtapaController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: EtapaFindOneInputDto,
   ): Promise<boolean> {
-    return this.etapaService.etapaDeleteOneById(accessContext, params);
+    return this.handleDelete(accessContext, params);
   }
 }
