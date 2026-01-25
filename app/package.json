@@ -76,7 +76,7 @@
   },
   "scripts": {
     "dev": "bun run --watch lib/v2/server/main.ts",
-    "build": "echo 'Build completed - using NestJS runtime generation'",
+    "build": "bun run check:static",
     "debug": "bun run --watch --inspect-wait lib/v2/server/main.ts",
     "start": "bun run lib/v2/server/main.ts",
     "check:static": "tsc --noEmit",
