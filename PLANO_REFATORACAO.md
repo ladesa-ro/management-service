@@ -53,33 +53,34 @@ usuario
 ```
 app/lib/v2/
 │
-├── core/{modulo}/                          # CORE - Lógica de Negócio
+├── core/{modulo}/                          # CORE - Lógica de Negócio (puro, sem NestJS)
+│   │
 │   ├── domain/                             # Camada de Domínio
-│   │   ├── {modulo}.domain.ts              # Entidade de domínio com validações
+│   │   ├── {modulo}.types.ts               # Tipagem da entidade (interface/type)
+│   │   ├── {modulo}.domain.ts              # Classe que implementa a tipagem
 │   │   ├── value-objects/                  # Value Objects (quando aplicável)
 │   │   └── validators/                     # Validações de domínio
 │   │
-│   ├── application/                        # Camada de Aplicação
-│   │   ├── ports/                          # Interfaces (contratos)
-│   │   │   ├── in/                         # Portas de Entrada (Use Cases)
-│   │   │   │   └── {modulo}.use-case.port.ts
-│   │   │   └── out/                        # Portas de Saída (Repositórios)
-│   │   │       └── {modulo}.repository.port.ts
-│   │   │
-│   │   ├── dto/                            # DTOs com validações
-│   │   │   ├── {modulo}-create.dto.ts
-│   │   │   ├── {modulo}-update.dto.ts
-│   │   │   ├── {modulo}-find-one.dto.ts
-│   │   │   └── {modulo}-list.dto.ts
-│   │   │
-│   │   └── use-cases/                      # Implementação dos Use Cases
-│   │       └── {modulo}.service.ts         # Lógica de negócio pura
-│   │
-│   └── {modulo}.module.ts                  # Módulo NestJS
+│   └── application/                        # Camada de Aplicação
+│       ├── ports/                          # Interfaces (contratos)
+│       │   ├── in/                         # Portas de Entrada (Use Cases)
+│       │   │   └── {modulo}.use-case.port.ts
+│       │   └── out/                        # Portas de Saída (Repositórios)
+│       │       └── {modulo}.repository.port.ts
+│       │
+│       ├── dto/                            # DTOs com validações
+│       │   ├── {modulo}-create.dto.ts
+│       │   ├── {modulo}-update.dto.ts
+│       │   ├── {modulo}-find-one.dto.ts
+│       │   └── {modulo}-list.dto.ts
+│       │
+│       └── use-cases/                      # Pasta de Use Cases
+│           └── {modulo}.service.ts         # Centraliza toda lógica (por enquanto)
 │
 ├── adapters/                               # ADAPTERS - Infraestrutura
 │   ├── in/                                 # Adapters de Entrada
-│   │   └── http/{modulo}/                  # Adaptadores HTTP (atualmente)
+│   │   └── http/{modulo}/                  # Adaptadores HTTP
+│   │       ├── {modulo}.controller.ts      # Controller REST
 │   │       └── dto/                        # DTOs específicos HTTP (mantidos)
 │   │
 │   └── out/                                # Adapters de Saída
@@ -87,19 +88,23 @@ app/lib/v2/
 │           └── typeorm/
 │               ├── adapters/               # Repository Adapters
 │               │   └── {modulo}-typeorm.repository.adapter.ts
-│               └── typeorm/
-│                   └── entities/           # Entidades TypeORM
-│                       └── {modulo}.entity.ts
+│               └── entities/               # Entidades TypeORM
+│                   └── {modulo}.entity.ts
 │
-└── server/                                 # SERVIDOR - Apresentação
-    ├── controllers/                        # Controllers REST
-    │   └── {modulo}.controller.ts
-    ├── resolvers/                          # Resolvers GraphQL (futuro)
-    │   └── {modulo}.resolver.ts
-    ├── schemas/                            # Schemas Swagger/GraphQL
-    │   └── {modulo}.schema.ts
+└── server/                                 # SERVIDOR - Configuração e Bootstrap
+    ├── modules/                            # Módulos NestJS (DI e wiring)
+    │   └── {modulo}.module.ts              # Define providers e bindings
     └── main.ts                             # Bootstrap da aplicação
 ```
+
+### Separação de Responsabilidades
+
+| Camada | Localização | Responsabilidade |
+|--------|-------------|------------------|
+| **Domain** | `core/{modulo}/domain/` | Tipagens, classes de domínio, regras de negócio |
+| **Application** | `core/{modulo}/application/` | Ports, DTOs, Services (use cases) |
+| **Adapters** | `adapters/` | Controllers, Repository Adapters, Entidades TypeORM |
+| **Server** | `server/modules/` | Módulos NestJS (injeção de dependência) |
 
 ### Princípios da Arquitetura
 
@@ -214,7 +219,7 @@ import type {
   {Modulo}FindOneOutputDto,
   {Modulo}ListInputDto,
   {Modulo}ListOutputDto,
-} from "@/v2/adapters/in/http/{modulo}/dto";
+} from "../../dto";
 
 export interface I{Modulo}UseCasePort {
   {modulo}FindAll(
@@ -449,11 +454,16 @@ Fazer services implementarem os Use Case Ports e remover dependências diretas d
 
 ### 📐 Template de Service Refatorado
 
+> **Nota**: A pasta `use-cases/` é criada, mas **por enquanto** toda a lógica fica centralizada
+> em `{modulo}.service.ts`. Futuramente, pode ser desmembrado em use cases individuais
+> (ex: `create-{modulo}.use-case.ts`, `update-{modulo}.use-case.ts`).
+
 ```typescript
 // core/{modulo}/application/use-cases/{modulo}.service.ts
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import type { AccessContext } from "@/infrastructure/access-context";
-import type { I{Modulo}UseCasePort, I{Modulo}RepositoryPort } from "../ports";
+import type { I{Modulo}UseCasePort } from "../ports/in/{modulo}.use-case.port";
+import type { I{Modulo}RepositoryPort } from "../ports/out/{modulo}.repository.port";
 import type {
   {Modulo}CreateInputDto,
   {Modulo}FindOneInputDto,
@@ -463,11 +473,18 @@ import type {
   {Modulo}UpdateInputDto,
 } from "../dto";
 
+/**
+ * Service centralizado para o módulo {Modulo}.
+ * Implementa todos os use cases definidos em I{Modulo}UseCasePort.
+ *
+ * Por enquanto, toda a lógica fica aqui. Futuramente, pode ser
+ * desmembrado em use cases individuais se necessário.
+ */
 @Injectable()
 export class {Modulo}Service implements I{Modulo}UseCasePort {
   constructor(
     @Inject("I{Modulo}RepositoryPort")
-    private {modulo}Repository: I{Modulo}RepositoryPort,
+    private readonly {modulo}Repository: I{Modulo}RepositoryPort,
     // Injetar outros services necessários
   ) {}
 
@@ -508,7 +525,7 @@ export class {Modulo}Service implements I{Modulo}UseCasePort {
     return this.{modulo}FindByIdStrict(accessContext, { id: created.id });
   }
 
-  // ... outros métodos
+  // ... outros métodos (update, delete, etc.)
 }
 ```
 
@@ -609,90 +626,92 @@ interface I{Modulo}RepositoryPort {
 
 ---
 
-## FASE 5: Refatorar Controllers
+## FASE 5: Refatorar Controllers e Criar Módulos NestJS
 
 ### 🎯 Objetivo
-Mover controllers para `server/controllers/` e separar schemas Swagger para `server/schemas/`.
+Organizar controllers em `adapters/in/http/` e criar módulos NestJS em `server/modules/` para configuração de DI.
 
 ### 📝 Descrição
-- **Mover** controllers de `adapters/in/http/{modulo}/` para `server/controllers/`
-- **Extrair** schemas Swagger para classes separadas em `server/schemas/`
+- **Manter** controllers em `adapters/in/http/{modulo}/{modulo}.controller.ts`
+- **Criar** módulo NestJS em `server/modules/{modulo}.module.ts` (injeção de dependência)
 - **Manter** decorators `@ApiOperation`, `@ApiOkResponse`, etc.
 - **Simplificar** controllers (apenas delegar para services)
 - **Garantir** compatibilidade 100% com rotas atuais
+- O módulo NestJS é responsável por fazer o "wiring" entre ports e adapters
 
 ### ✅ Checklist de Módulos
 
 #### Grupo 1: Módulos Base (5 módulos)
-- [ ] `estado.controller.ts` → `server/controllers/`
-- [ ] `cidade.controller.ts` → `server/controllers/`
-- [ ] `modalidade.controller.ts` → `server/controllers/`
-- [ ] `nivel-formacao.controller.ts` → `server/controllers/`
-- [ ] `endereco.controller.ts` → `server/controllers/`
+- [ ] `estado` - Controller + Módulo NestJS
+- [ ] `cidade` - Controller + Módulo NestJS
+- [ ] `modalidade` - Controller + Módulo NestJS
+- [ ] `nivel-formacao` - Controller + Módulo NestJS
+- [ ] `endereco` - Controller + Módulo NestJS
 
 #### Grupo 2: Estrutura Física (3 módulos)
-- [ ] `campus.controller.ts` → `server/controllers/`
-- [ ] `bloco.controller.ts` → `server/controllers/`
-- [ ] `ambiente.controller.ts` → `server/controllers/`
+- [ ] `campus` - Controller + Módulo NestJS
+- [ ] `bloco` - Controller + Módulo NestJS
+- [ ] `ambiente` - Controller + Módulo NestJS
 
 #### Grupo 3: Usuários e Perfis (2 módulos)
-- [ ] `perfil.controller.ts` → `server/controllers/`
-- [ ] `usuario.controller.ts` → `server/controllers/`
+- [ ] `perfil` - Controller + Módulo NestJS
+- [ ] `usuario` - Controller + Módulo NestJS
 
 #### Grupo 4: Autenticação/Autorização (2 módulos)
-- [ ] `autenticacao.controller.ts` → `server/controllers/`
-- [ ] `autorizacao.controller.ts` → `server/controllers/`
+- [ ] `autenticacao` - Controller + Módulo NestJS
+- [ ] `autorizacao` - Controller + Módulo NestJS
 
 #### Grupo 5: Estrutura Acadêmica (6 módulos)
-- [ ] `curso.controller.ts` → `server/controllers/`
-- [ ] `disciplina.controller.ts` → `server/controllers/`
-- [ ] `oferta-formacao.controller.ts` → `server/controllers/`
-- [ ] `oferta-formacao-nivel.controller.ts` → `server/controllers/`
-- [ ] `etapa.controller.ts` → `server/controllers/`
-- [ ] `turma.controller.ts` → `server/controllers/`
+- [ ] `curso` - Controller + Módulo NestJS
+- [ ] `disciplina` - Controller + Módulo NestJS
+- [ ] `oferta-formacao` - Controller + Módulo NestJS
+- [ ] `oferta-formacao-nivel` - Controller + Módulo NestJS
+- [ ] `etapa` - Controller + Módulo NestJS
+- [ ] `turma` - Controller + Módulo NestJS
 
 #### Grupo 6: Calendário e Horários (6 módulos)
-- [ ] `calendario-letivo.controller.ts` → `server/controllers/`
-- [ ] `dia-calendario.controller.ts` → `server/controllers/`
-- [ ] `intervalo-de-tempo.controller.ts` → `server/controllers/`
-- [ ] `grade-horario-oferta.controller.ts` → `server/controllers/`
-- [ ] `grade-horario-intervalo.controller.ts` → `server/controllers/`
-- [ ] `disponibilidade.controller.ts` → `server/controllers/`
+- [ ] `calendario-letivo` - Controller + Módulo NestJS
+- [ ] `dia-calendario` - Controller + Módulo NestJS
+- [ ] `intervalo-de-tempo` - Controller + Módulo NestJS
+- [ ] `grade-horario-oferta` - Controller + Módulo NestJS
+- [ ] `grade-horario-intervalo` - Controller + Módulo NestJS
+- [ ] `disponibilidade` - Controller + Módulo NestJS
 
 #### Grupo 7: Diários e Aulas (5 módulos)
-- [ ] `diario.controller.ts` → `server/controllers/`
-- [ ] `diario-professor.controller.ts` → `server/controllers/`
-- [ ] `diario-preferencia.controller.ts` → `server/controllers/`
-- [ ] `aula.controller.ts` → `server/controllers/`
-- [ ] `professor-indisponibilidade.controller.ts` → `server/controllers/`
+- [ ] `diario` - Controller + Módulo NestJS
+- [ ] `diario-professor` - Controller + Módulo NestJS
+- [ ] `diario-preferencia` - Controller + Módulo NestJS
+- [ ] `aula` - Controller + Módulo NestJS
+- [ ] `professor-indisponibilidade` - Controller + Módulo NestJS
 
 #### Grupo 8: Horários Gerados (3 módulos)
-- [ ] `horario-gerado.controller.ts` → `server/controllers/`
-- [ ] `horario-gerado-aula.controller.ts` → `server/controllers/`
-- [ ] `gerar-horario.controller.ts` → `server/controllers/`
+- [ ] `horario-gerado` - Controller + Módulo NestJS
+- [ ] `horario-gerado-aula` - Controller + Módulo NestJS
+- [ ] `gerar-horario` - Controller + Módulo NestJS
 
 #### Grupo 9: Recursos e Mídia (4 módulos)
-- [ ] `arquivo.controller.ts` → `server/controllers/`
-- [ ] `imagem.controller.ts` → `server/controllers/`
-- [ ] `imagem-arquivo.controller.ts` → `server/controllers/`
-- [ ] `reserva.controller.ts` → `server/controllers/`
+- [ ] `arquivo` - Controller + Módulo NestJS
+- [ ] `imagem` - Controller + Módulo NestJS
+- [ ] `imagem-arquivo` - Controller + Módulo NestJS
+- [ ] `reserva` - Controller + Módulo NestJS
 
 #### Grupo 10: Utilidades (5 módulos)
-- [ ] `turma-disponibilidade.controller.ts` → `server/controllers/`
-- [ ] `evento.controller.ts` → `server/controllers/`
-- [ ] `common.controller.ts` → `server/controllers/` (se existir)
-- [ ] `health.controller.ts` → `server/controllers/`
+- [ ] `turma-disponibilidade` - Controller + Módulo NestJS
+- [ ] `evento` - Controller + Módulo NestJS
+- [ ] `common` - Controller + Módulo NestJS (se existir)
+- [ ] `health` - Controller + Módulo NestJS
 
 ### 📋 Critérios de Conclusão
-- ✅ Controller movido para `server/controllers/`
-- ✅ Schemas Swagger em `server/schemas/` (se aplicável)
-- ✅ Imports atualizados nos módulos
+- ✅ Controller em `adapters/in/http/{modulo}/{modulo}.controller.ts`
+- ✅ Módulo NestJS criado em `server/modules/{modulo}.module.ts`
+- ✅ Bindings de ports para adapters configurados no módulo
+- ✅ Imports atualizados corretamente
 - ✅ Rotas REST funcionando identicamente
 
-### 📐 Template de Controller Simplificado
+### 📐 Template de Controller
 
 ```typescript
-// server/controllers/{modulo}.controller.ts
+// adapters/in/http/{modulo}/{modulo}.controller.ts
 import { Body, Controller, Get, Param, Post, Put, Delete, Query } from "@nestjs/common";
 import {
   ApiCreatedResponse,
@@ -716,7 +735,7 @@ import {
 @ApiTags("{modulos}")
 @Controller("/{modulos}")
 export class {Modulo}Controller {
-  constructor(private {modulo}Service: {Modulo}Service) {}
+  constructor(private readonly {modulo}Service: {Modulo}Service) {}
 
   @Get("/")
   @ApiOperation({ summary: "Lista {modulos}" })
@@ -753,16 +772,64 @@ export class {Modulo}Controller {
 }
 ```
 
+### 📐 Template de Módulo NestJS
+
+```typescript
+// server/modules/{modulo}.module.ts
+import { Module } from "@nestjs/common";
+import { TypeOrmModule } from "@nestjs/typeorm";
+
+// Controller (Adapter In)
+import { {Modulo}Controller } from "@/v2/adapters/in/http/{modulo}/{modulo}.controller";
+
+// Service (Use Case)
+import { {Modulo}Service } from "@/v2/core/{modulo}/application/use-cases/{modulo}.service";
+
+// Repository Adapter (Adapter Out)
+import { {Modulo}TypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistence/typeorm/adapters/{modulo}-typeorm.repository.adapter";
+
+// Entity TypeORM
+import { {Modulo}Entity } from "@/v2/adapters/out/persistence/typeorm/entities/{modulo}.entity";
+
+/**
+ * Módulo NestJS para {Modulo}
+ *
+ * Responsável por:
+ * - Configurar injeção de dependência
+ * - Fazer o binding entre ports e adapters
+ * - Registrar controller, service e repository
+ */
+@Module({
+  imports: [
+    TypeOrmModule.forFeature([{Modulo}Entity]),
+  ],
+  controllers: [{Modulo}Controller],
+  providers: [
+    // Service (implementa Use Case Port)
+    {Modulo}Service,
+
+    // Binding: Repository Port → TypeORM Adapter
+    {
+      provide: "I{Modulo}RepositoryPort",
+      useClass: {Modulo}TypeOrmRepositoryAdapter,
+    },
+  ],
+  exports: [{Modulo}Service],
+})
+export class {Modulo}Module {}
+```
+
 ---
 
 ## FASE 6: Criar/Enriquecer Domain Models
 
 ### 🎯 Objetivo
-Criar ou enriquecer classes de domínio com validações e lógica de negócio.
+Criar tipagens e classes de domínio com validações e lógica de negócio.
 
 ### 📝 Descrição
-- **Criar** classes de domínio em `core/{modulo}/domain/{modulo}.domain.ts`
-- **Adicionar** validações de domínio (regras de negócio)
+- **Criar** tipagem (interface/type) em `core/{modulo}/domain/{modulo}.types.ts`
+- **Criar** classe que implementa a tipagem em `core/{modulo}/domain/{modulo}.domain.ts`
+- **Adicionar** validações de domínio (regras de negócio) na classe
 - **Implementar** value objects quando necessário (Email, CPF, etc.)
 - **Adicionar** métodos de domínio (cálculos, validações, transformações)
 - **Documentar** regras de negócio
@@ -830,38 +897,91 @@ Criar ou enriquecer classes de domínio com validações e lógica de negócio.
 - [ ] `health` - Criar/melhorar domain model (se aplicável)
 
 ### 📋 Critérios de Conclusão
-- ✅ Classe de domínio criada em `core/{modulo}/domain/`
-- ✅ Validações de domínio implementadas
+- ✅ Tipagem criada em `core/{modulo}/domain/{modulo}.types.ts`
+- ✅ Classe de domínio criada em `core/{modulo}/domain/{modulo}.domain.ts`
+- ✅ Classe implementa a tipagem definida
+- ✅ Validações de domínio implementadas na classe
 - ✅ Value objects criados (quando necessário)
 - ✅ Métodos de domínio documentados
 
-### 📐 Template de Domain Model
+### 📐 Template de Tipagem (Types)
+
+```typescript
+// core/{modulo}/domain/{modulo}.types.ts
+
+import type { IRelacao } from "@/v2/core/relacao/domain/relacao.types";
+
+/**
+ * Tipagem da entidade {Modulo}
+ * Define a estrutura de dados sem comportamento
+ */
+export interface I{Modulo} {
+  // Propriedades essenciais
+  id: string;
+  nome: string;
+  descricao?: string | null;
+
+  // Relações (referência a outras tipagens)
+  relacao?: IRelacao | null;
+  relacaoId?: string | null;
+
+  // Timestamps
+  dateCreated: Date;
+  dateUpdated: Date;
+  dateDeleted?: Date | null;
+}
+
+/**
+ * Tipagem para criação de {Modulo}
+ */
+export interface I{Modulo}Create {
+  nome: string;
+  descricao?: string | null;
+  relacaoId?: string | null;
+}
+
+/**
+ * Tipagem para atualização de {Modulo}
+ */
+export interface I{Modulo}Update {
+  nome?: string;
+  descricao?: string | null;
+  relacaoId?: string | null;
+}
+```
+
+### 📐 Template de Classe de Domínio
 
 ```typescript
 // core/{modulo}/domain/{modulo}.domain.ts
 
+import type { I{Modulo}, I{Modulo}Create } from "./{modulo}.types";
+
 /**
  * Entidade de Domínio: {Modulo}
- * Representa um {modulo} no sistema com suas regras de negócio
+ * Implementa a tipagem I{Modulo} e adiciona regras de negócio
  */
-export class {Modulo} {
-  // Propriedades essenciais
+export class {Modulo} implements I{Modulo} {
+  // Propriedades da tipagem
   id!: string;
   nome!: string;
-  descricao?: string;
+  descricao?: string | null;
 
-  // Relações (outras entidades de domínio)
-  relacao?: Relacao;
+  // Relações
+  relacao?: IRelacao | null;
+  relacaoId?: string | null;
 
   // Timestamps
   dateCreated!: Date;
   dateUpdated!: Date;
   dateDeleted?: Date | null;
 
-  // Métodos de domínio
+  // ========================================
+  // Métodos de Domínio (Regras de Negócio)
+  // ========================================
 
   /**
-   * Valida se o {modulo} está ativo
+   * Valida se o {modulo} está ativo (não deletado)
    */
   isAtivo(): boolean {
     return this.dateDeleted === null;
@@ -871,23 +991,54 @@ export class {Modulo} {
    * Valida se pode ser editado
    */
   podeSerEditado(): boolean {
-    // Regras de negócio aqui
     return this.isAtivo();
   }
 
   /**
-   * Método estático para criar instância válida
+   * Valida se pode ser deletado
    */
-  static criar(dados: Partial<{Modulo}>): {Modulo} {
-    const {modulo} = new {Modulo}();
+  podeSerDeletado(): boolean {
+    return this.isAtivo();
+  }
+
+  // ========================================
+  // Factory Methods
+  // ========================================
+
+  /**
+   * Cria uma nova instância válida de {Modulo}
+   * @throws Error se os dados forem inválidos
+   */
+  static criar(dados: I{Modulo}Create): {Modulo} {
+    const instance = new {Modulo}();
 
     // Validações de criação
     if (!dados.nome || dados.nome.trim().length === 0) {
       throw new Error("Nome é obrigatório");
     }
 
-    Object.assign({modulo}, dados);
-    return {modulo};
+    if (dados.nome.length > 255) {
+      throw new Error("Nome deve ter no máximo 255 caracteres");
+    }
+
+    // Atribuir propriedades
+    instance.nome = dados.nome.trim();
+    instance.descricao = dados.descricao ?? null;
+    instance.relacaoId = dados.relacaoId ?? null;
+    instance.dateCreated = new Date();
+    instance.dateUpdated = new Date();
+    instance.dateDeleted = null;
+
+    return instance;
+  }
+
+  /**
+   * Reconstrói uma instância a partir de dados existentes (ex: do banco)
+   */
+  static fromData(dados: I{Modulo}): {Modulo} {
+    const instance = new {Modulo}();
+    Object.assign(instance, dados);
+    return instance;
   }
 }
 ```
@@ -1036,12 +1187,18 @@ npm run validate:ports
 - **SearchService**: Pode ser mantido para compatibilidade em módulos legados
 - **AccessContext**: Deve ser mantido em todos os métodos
 - **Paginação**: Sempre usar `NestJsPaginateAdapter` via repository
+- **Módulos NestJS**: Ficam em `server/modules/`, são responsáveis pelo binding ports↔adapters
+- **Domain Types vs Class**: Sempre criar primeiro a tipagem, depois a classe que implementa
+- **Use Cases**: Por enquanto centralizados em `{modulo}.service.ts`, pasta já preparada para expansão
 
 ---
 
 **Documento elaborado em**: 2026-01-25
-**Versão**: 1.0
+**Versão**: 1.1
 **Autor**: Equipe de Desenvolvimento
 **Status**: 🚧 Em Execução
+
+### Changelog
+- **v1.1**: Ajustada estrutura - módulos NestJS em `server/modules/`, domain com types + class, use-cases centralizados
 
 ---
