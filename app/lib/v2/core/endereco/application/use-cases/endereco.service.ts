@@ -1,36 +1,26 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { pick } from "lodash";
 import { AccessContext } from "@/infrastructure/access-context";
-import { DatabaseContextService } from "@/infrastructure/integrations";
-import { QbEfficientLoad } from "@/shared";
-import type { EnderecoFindOneInputDto, EnderecoFindOneOutputDto, EnderecoInputDto, } from "@/v2/adapters/in/http/endereco/dto";
-
-// ============================================================================
-
-const aliasEndereco = "endereco";
-
-// ============================================================================
+import type {
+  EnderecoFindOneInputDto,
+  EnderecoFindOneOutputDto,
+  EnderecoInputDto,
+} from "@/v2/adapters/in/http/endereco/dto";
+import type { IEnderecoRepositoryPort } from "../ports";
 
 @Injectable()
 export class EnderecoService {
-  constructor(private databaseContext: DatabaseContextService) {}
-
-  get enderecoRepository() {
-    return this.databaseContext.enderecoRepository;
-  }
+  constructor(
+    @Inject("IEnderecoRepositoryPort")
+    private enderecoRepository: IEnderecoRepositoryPort,
+  ) {}
 
   async internalFindOneById(id: string): Promise<EnderecoFindOneOutputDto | null> {
-    const endereco = await this.enderecoRepository.findOne({
-      where: {
-        id: id,
-      },
-    });
-
-    return endereco as EnderecoFindOneOutputDto | null;
+    return this.enderecoRepository.findOneById(id);
   }
 
   async internalFindOneByIdStrict(id: string): Promise<EnderecoFindOneOutputDto> {
-    const endereco = await this.internalFindOneById(id);
+    const endereco = await this.enderecoRepository.findOneById(id);
 
     if (!endereco) {
       throw new NotFoundException();
@@ -43,7 +33,7 @@ export class EnderecoService {
     const endereco = this.enderecoRepository.create();
 
     if (id) {
-      const exists = await this.enderecoRepository.exists({ where: { id } });
+      const exists = await this.enderecoRepository.exists(id);
 
       if (exists) {
         endereco.id = id;
@@ -65,33 +55,19 @@ export class EnderecoService {
     return endereco;
   }
 
-  async findById(accessContext: AccessContext, dto: EnderecoFindOneInputDto, selection?: string[] | boolean): Promise<EnderecoFindOneOutputDto | null> {
-    const qb = this.enderecoRepository.createQueryBuilder(aliasEndereco);
-
-    // =========================================================
-
-    await accessContext.applyFilter("endereco:find", qb, aliasEndereco, null);
-
-    // =========================================================
-
-    qb.andWhere(`${aliasEndereco}.id = :id`, { id: dto.id });
-
-    // =========================================================
-
-    qb.select([]);
-    QbEfficientLoad("EnderecoFindOneOutput", qb, aliasEndereco, selection);
-
-    // =========================================================
-
-    const endereco = await qb.getOne();
-
-    // =========================================================
-
-    return endereco as EnderecoFindOneOutputDto | null;
+  async findById(
+    accessContext: AccessContext,
+    dto: EnderecoFindOneInputDto,
+    selection?: string[] | boolean,
+  ): Promise<EnderecoFindOneOutputDto | null> {
+    return this.enderecoRepository.findById(accessContext, dto, selection);
   }
 
-  async findByIdStrict(requestContext: AccessContext, dto: EnderecoFindOneInputDto): Promise<EnderecoFindOneOutputDto> {
-    const endereco = await this.findById(requestContext, dto);
+  async findByIdStrict(
+    requestContext: AccessContext,
+    dto: EnderecoFindOneInputDto,
+  ): Promise<EnderecoFindOneOutputDto> {
+    const endereco = await this.enderecoRepository.findById(requestContext, dto);
 
     if (!endereco) {
       throw new NotFoundException();

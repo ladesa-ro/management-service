@@ -1,13 +1,9 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
-import { map, pick } from "lodash";
-import { FilterOperator, FilterSuffix } from "nestjs-paginate";
+import { Inject, Injectable, NotFoundException } from "@nestjs/common";
+import { pick } from "lodash";
 import { ArquivoService } from "@/v2/core/arquivo/application/use-cases/arquivo.service";
 import { ImagemService } from "@/v2/core/imagem/application/use-cases/imagem.service";
 import type { AccessContext } from "@/infrastructure/access-context";
-import { paginateConfig } from "@/infrastructure/fixtures";
-import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
 import type { DisciplinaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
-import { QbEfficientLoad, SearchService } from "@/shared";
 import type {
   DisciplinaCreateInputDto,
   DisciplinaFindOneInputDto,
@@ -16,107 +12,39 @@ import type {
   DisciplinaListOutputDto,
   DisciplinaUpdateInputDto,
 } from "@/v2/adapters/in/http/disciplina/dto";
-
-// ============================================================================
-
-const aliasDisciplina = "disciplina";
-
-// ============================================================================
+import type { IDisciplinaRepositoryPort } from "../ports";
 
 @Injectable()
 export class DisciplinaService {
   constructor(
-    private databaseContext: DatabaseContextService,
+    @Inject("IDisciplinaRepositoryPort")
+    private disciplinaRepository: IDisciplinaRepositoryPort,
     private imagemService: ImagemService,
     private arquivoService: ArquivoService,
-    private searchService: SearchService,
   ) {}
 
-  get disciplinaRepository() {
-    return this.databaseContext.disciplinaRepository;
+  async disciplinaFindAll(
+    accessContext: AccessContext,
+    dto: DisciplinaListInputDto | null = null,
+    selection?: string[] | boolean,
+  ): Promise<DisciplinaListOutputDto> {
+    return this.disciplinaRepository.findAll(accessContext, dto, selection);
   }
 
-  async disciplinaFindAll(accessContext: AccessContext, dto: DisciplinaListInputDto | null = null, selection?: string[] | boolean): Promise<DisciplinaListOutputDto> {
-    // =========================================================
-
-    const qb = this.disciplinaRepository.createQueryBuilder(aliasDisciplina);
-
-    // =========================================================
-
-    await accessContext.applyFilter("disciplina:find", qb, aliasDisciplina, null);
-
-    // =========================================================
-
-    const paginated = await this.searchService.search(qb, dto, {
-      ...paginateConfig,
-      relations: { diarios: true },
-      select: [
-        "id",
-
-        "nome",
-        "nomeAbreviado",
-        "cargaHoraria",
-      ],
-      sortableColumns: ["nome", "cargaHoraria"],
-      searchableColumns: [
-        "id",
-
-        "nome",
-        "nomeAbreviado",
-        "cargaHoraria",
-      ],
-      defaultSortBy: [["nome", "ASC"]],
-      filterableColumns: {
-        "diarios.id": [FilterOperator.EQ, FilterOperator.NULL, FilterSuffix.NOT],
-      },
-    });
-
-    // =========================================================
-
-    qb.select([]);
-    QbEfficientLoad("DisciplinaFindOneOutput", qb, aliasDisciplina, selection);
-
-    // =========================================================
-
-    const pageItemsView = await qb.andWhereInIds(map(paginated.data, "id")).getMany();
-    paginated.data = paginated.data.map((paginated) => pageItemsView.find((i) => i.id === paginated.id)!);
-
-    // =========================================================
-
-    return paginated as unknown as DisciplinaListOutputDto;
+  async disciplinaFindById(
+    accessContext: AccessContext | null,
+    dto: DisciplinaFindOneInputDto,
+    selection?: string[] | boolean,
+  ): Promise<DisciplinaFindOneOutputDto | null> {
+    return this.disciplinaRepository.findById(accessContext, dto, selection);
   }
 
-  async disciplinaFindById(accessContext: AccessContext | null, dto: DisciplinaFindOneInputDto, selection?: string[] | boolean): Promise<DisciplinaFindOneOutputDto | null> {
-    // =========================================================
-
-    const qb = this.disciplinaRepository.createQueryBuilder(aliasDisciplina);
-
-    // =========================================================
-
-    if (accessContext) {
-      await accessContext.applyFilter("disciplina:find", qb, aliasDisciplina, null);
-    }
-
-    // =========================================================
-
-    qb.andWhere(`${aliasDisciplina}.id = :id`, { id: dto.id });
-
-    // =========================================================
-
-    qb.select([]);
-    QbEfficientLoad("DisciplinaFindOneOutput", qb, aliasDisciplina, selection);
-
-    // =========================================================
-
-    const disciplina = await qb.getOne();
-
-    // =========================================================
-
-    return disciplina as DisciplinaFindOneOutputDto | null;
-  }
-
-  async disciplinaFindByIdStrict(accessContext: AccessContext | null, dto: DisciplinaFindOneInputDto, selection?: string[] | boolean): Promise<DisciplinaFindOneOutputDto> {
-    const disciplina = await this.disciplinaFindById(accessContext, dto, selection);
+  async disciplinaFindByIdStrict(
+    accessContext: AccessContext | null,
+    dto: DisciplinaFindOneInputDto,
+    selection?: string[] | boolean,
+  ): Promise<DisciplinaFindOneOutputDto> {
+    const disciplina = await this.disciplinaRepository.findById(accessContext, dto, selection);
 
     if (!disciplina) {
       throw new NotFoundException();
@@ -125,35 +53,20 @@ export class DisciplinaService {
     return disciplina;
   }
 
-  async disciplinaFindByIdSimple(accessContext: AccessContext, id: DisciplinaFindOneInputDto["id"], selection?: string[] | boolean): Promise<DisciplinaFindOneOutputDto | null> {
-    // =========================================================
-
-    const qb = this.disciplinaRepository.createQueryBuilder(aliasDisciplina);
-
-    // =========================================================
-
-    await accessContext.applyFilter("disciplina:find", qb, aliasDisciplina, null);
-
-    // =========================================================
-
-    qb.andWhere(`${aliasDisciplina}.id = :id`, { id });
-
-    // =========================================================
-
-    qb.select([]);
-    QbEfficientLoad("DisciplinaFindOneOutput", qb, aliasDisciplina, selection);
-
-    // =========================================================
-
-    const disciplina = await qb.getOne();
-
-    // =========================================================
-
-    return disciplina as DisciplinaFindOneOutputDto | null;
+  async disciplinaFindByIdSimple(
+    accessContext: AccessContext,
+    id: DisciplinaFindOneInputDto["id"],
+    selection?: string[] | boolean,
+  ): Promise<DisciplinaFindOneOutputDto | null> {
+    return this.disciplinaRepository.findByIdSimple(accessContext, id, selection);
   }
 
-  async disciplinaFindByIdSimpleStrict(accessContext: AccessContext, id: DisciplinaFindOneInputDto["id"], selection?: string[]): Promise<DisciplinaFindOneOutputDto> {
-    const disciplina = await this.disciplinaFindByIdSimple(accessContext, id, selection);
+  async disciplinaFindByIdSimpleStrict(
+    accessContext: AccessContext,
+    id: DisciplinaFindOneInputDto["id"],
+    selection?: string[],
+  ): Promise<DisciplinaFindOneOutputDto> {
+    const disciplina = await this.disciplinaRepository.findByIdSimple(accessContext, id, selection);
 
     if (!disciplina) {
       throw new NotFoundException();
@@ -162,12 +75,11 @@ export class DisciplinaService {
     return disciplina;
   }
 
-  async disciplinaCreate(accessContext: AccessContext, dto: DisciplinaCreateInputDto): Promise<DisciplinaFindOneOutputDto> {
-    // =========================================================
-
+  async disciplinaCreate(
+    accessContext: AccessContext,
+    dto: DisciplinaCreateInputDto,
+  ): Promise<DisciplinaFindOneOutputDto> {
     await accessContext.ensurePermission("disciplina:create", { dto } as any);
-
-    // =========================================================
 
     const dtoDisciplina = pick(dto, ["nome", "nomeAbreviado", "cargaHoraria"]);
 
@@ -177,23 +89,18 @@ export class DisciplinaService {
       ...dtoDisciplina,
     });
 
-    // =========================================================
-
     await this.disciplinaRepository.save(disciplina);
-
-    // =========================================================
 
     return this.disciplinaFindByIdStrict(accessContext, { id: disciplina.id });
   }
 
-  async disciplinaUpdate(accessContext: AccessContext, dto: DisciplinaFindOneInputDto & DisciplinaUpdateInputDto): Promise<DisciplinaFindOneOutputDto> {
-    // =========================================================
-
+  async disciplinaUpdate(
+    accessContext: AccessContext,
+    dto: DisciplinaFindOneInputDto & DisciplinaUpdateInputDto,
+  ): Promise<DisciplinaFindOneOutputDto> {
     const currentDisciplina = await this.disciplinaFindByIdStrict(accessContext, { id: dto.id });
 
-    // =========================================================
-
-    await accessContext.ensurePermission("disciplina:update", { dto }, dto.id, this.disciplinaRepository.createQueryBuilder(aliasDisciplina as any));
+    await accessContext.ensurePermission("disciplina:update", { dto }, dto.id);
 
     const dtoDisciplina = pick(dto, ["nome", "nomeAbreviado", "cargaHoraria"]);
 
@@ -205,19 +112,13 @@ export class DisciplinaService {
       ...dtoDisciplina,
     });
 
-    // =========================================================
-
     await this.disciplinaRepository.save(disciplina);
-
-    // =========================================================
 
     return this.disciplinaFindByIdStrict(accessContext, { id: disciplina.id });
   }
 
   async disciplinaGetImagemCapa(accessContext: AccessContext | null, id: string) {
-    const disciplina = await this.disciplinaFindByIdStrict(accessContext, {
-      id: id,
-    });
+    const disciplina = await this.disciplinaFindByIdStrict(accessContext, { id: id });
 
     if (disciplina.imagemCapa) {
       const [versao] = disciplina.imagemCapa.versoes;
@@ -231,12 +132,12 @@ export class DisciplinaService {
     throw new NotFoundException();
   }
 
-  async disciplinaUpdateImagemCapa(accessContext: AccessContext, dto: DisciplinaFindOneInputDto, file: Express.Multer.File) {
-    // =========================================================
-
+  async disciplinaUpdateImagemCapa(
+    accessContext: AccessContext,
+    dto: DisciplinaFindOneInputDto,
+    file: Express.Multer.File,
+  ) {
     const currentDisciplina = await this.disciplinaFindByIdStrict(accessContext, { id: dto.id });
-
-    // =========================================================
 
     await accessContext.ensurePermission(
       "disciplina:update",
@@ -248,11 +149,10 @@ export class DisciplinaService {
       currentDisciplina.id,
     );
 
-    // =========================================================
-
     const { imagem } = await this.imagemService.saveDisciplinaCapa(file);
 
-    const disciplina = this.disciplinaRepository.merge(this.disciplinaRepository.create(), {
+    const disciplina = this.disciplinaRepository.create();
+    this.disciplinaRepository.merge(disciplina, {
       id: currentDisciplina.id,
     });
 
@@ -264,35 +164,20 @@ export class DisciplinaService {
 
     await this.disciplinaRepository.save(disciplina);
 
-    // =========================================================
-
     return true;
   }
 
-  async disciplinaDeleteOneById(accessContext: AccessContext, dto: DisciplinaFindOneInputDto): Promise<boolean> {
-    // =========================================================
-
-    await accessContext.ensurePermission("disciplina:delete", { dto }, dto.id, this.disciplinaRepository.createQueryBuilder(aliasDisciplina as any));
-
-    // =========================================================
+  async disciplinaDeleteOneById(
+    accessContext: AccessContext,
+    dto: DisciplinaFindOneInputDto,
+  ): Promise<boolean> {
+    await accessContext.ensurePermission("disciplina:delete", { dto }, dto.id);
 
     const disciplina = await this.disciplinaFindByIdStrict(accessContext, dto);
 
-    // =========================================================
-
     if (disciplina) {
-      await this.disciplinaRepository
-        .createQueryBuilder(aliasDisciplina)
-        .update()
-        .set({
-          dateDeleted: "NOW()",
-        })
-        .where("id = :disciplinaId", { disciplinaId: disciplina.id })
-        .andWhere("dateDeleted IS NULL")
-        .execute();
+      await this.disciplinaRepository.softDeleteById(disciplina.id);
     }
-
-    // =========================================================
 
     return true;
   }

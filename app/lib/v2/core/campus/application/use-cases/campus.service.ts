@@ -1,12 +1,10 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
-import { get, map, pick } from "lodash";
-import { FilterOperator } from "nestjs-paginate";
+import { Inject, Injectable, NotFoundException } from "@nestjs/common";
+import { get, pick } from "lodash";
 import { v4 } from "uuid";
 import { EnderecoService } from "@/v2/core/endereco/application/use-cases/endereco.service";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
 import type { CampusEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
-import { QbEfficientLoad, SearchService } from "@/shared";
 import type {
   CampusCreateInputDto,
   CampusFindOneInputDto,
@@ -15,145 +13,39 @@ import type {
   CampusListOutputDto,
   CampusUpdateInputDto,
 } from "@/v2/adapters/in/http/campus/dto";
-
-// ============================================================================
-
-const aliasCampus = "campus";
-
-// ============================================================================
+import type { ICampusRepositoryPort } from "../ports";
 
 @Injectable()
 export class CampusService {
   constructor(
+    @Inject("ICampusRepositoryPort")
+    private campusRepository: ICampusRepositoryPort,
     private enderecoService: EnderecoService,
     private databaseContext: DatabaseContextService,
-    private searchService: SearchService,
   ) {}
 
-  get campusRepository() {
-    return this.databaseContext.campusRepository;
+  async campusFindAll(
+    accessContext: AccessContext,
+    dto: CampusListInputDto | null = null,
+    selection?: string[] | boolean,
+  ): Promise<CampusListOutputDto> {
+    return this.campusRepository.findAll(accessContext, dto, selection);
   }
 
-  async campusFindAll(accessContext: AccessContext, dto: CampusListInputDto | null = null, selection?: string[] | boolean): Promise<CampusListOutputDto> {
-    // =========================================================
-
-    const qb = this.campusRepository.createQueryBuilder(aliasCampus);
-
-    // =========================================================
-
-    await accessContext.applyFilter("campus:find", qb, aliasCampus, null);
-
-    // =========================================================
-
-    const paginated = await this.searchService.search(qb, dto, {
-      select: [
-        "id",
-
-        "nomeFantasia",
-        "razaoSocial",
-        "apelido",
-        "cnpj",
-        "dateCreated",
-
-        "endereco.cidade.id",
-        "endereco.cidade.nome",
-        "endereco.cidade.estado.id",
-        "endereco.cidade.estado.nome",
-        "endereco.cidade.estado.sigla",
-      ],
-      relations: {
-        endereco: {
-          cidade: {
-            estado: true,
-          },
-        },
-      },
-      sortableColumns: [
-        "id",
-
-        "nomeFantasia",
-        "razaoSocial",
-        "apelido",
-        "cnpj",
-        "dateCreated",
-
-        "endereco.cidade.id",
-        "endereco.cidade.nome",
-        "endereco.cidade.estado.id",
-        "endereco.cidade.estado.nome",
-        "endereco.cidade.estado.sigla",
-      ] as any[],
-      searchableColumns: [
-        "id",
-
-        "nomeFantasia",
-        "razaoSocial",
-        "apelido",
-        "cnpj",
-        "dateCreated",
-
-        "endereco.cidade.nome",
-        "endereco.cidade.estado.nome",
-        "endereco.cidade.estado.sigla",
-      ] as any[],
-      defaultSortBy: [
-        ["nomeFantasia", "ASC"],
-        ["endereco.cidade.estado.nome", "ASC"],
-        ["dateCreated", "ASC"],
-      ] as any[],
-      filterableColumns: {
-        "endereco.cidade.id": [FilterOperator.EQ],
-        "endereco.cidade.nome": [FilterOperator.EQ],
-        "endereco.cidade.estado.id": [FilterOperator.EQ],
-        "endereco.cidade.estado.nome": [FilterOperator.EQ],
-        "endereco.cidade.estado.sigla": [FilterOperator.EQ],
-      },
-    });
-
-    // =========================================================
-
-    qb.select([]);
-    QbEfficientLoad("CampusFindOneOutput", qb, aliasCampus, selection);
-
-    // =========================================================
-
-    const pageItemsView = await qb.andWhereInIds(map(paginated.data, "id")).getMany();
-    paginated.data = paginated.data.map((paginated) => pageItemsView.find((i) => i.id === paginated.id)!);
-
-    // =========================================================
-
-    return paginated as unknown as CampusListOutputDto;
+  async campusFindById(
+    accessContext: AccessContext,
+    dto: CampusFindOneInputDto,
+    selection?: string[] | boolean,
+  ): Promise<CampusFindOneOutputDto | null> {
+    return this.campusRepository.findById(accessContext, dto, selection);
   }
 
-  async campusFindById(accessContext: AccessContext, dto: CampusFindOneInputDto, selection?: string[] | boolean): Promise<CampusFindOneOutputDto | null> {
-    // =========================================================
-
-    const qb = this.campusRepository.createQueryBuilder(aliasCampus);
-
-    // =========================================================
-
-    await accessContext.applyFilter("campus:find", qb, aliasCampus, null);
-
-    // =========================================================
-
-    qb.andWhere(`${aliasCampus}.id = :id`, { id: dto.id });
-
-    // =========================================================
-
-    qb.select([]);
-    QbEfficientLoad("CampusFindOneOutput", qb, aliasCampus, selection);
-
-    // =========================================================
-
-    const campus = await qb.getOne();
-
-    // =========================================================
-
-    return campus as CampusFindOneOutputDto | null;
-  }
-
-  async campusFindByIdStrict(accessContext: AccessContext, dto: CampusFindOneInputDto, selection?: string[] | boolean): Promise<CampusFindOneOutputDto> {
-    const campus = await this.campusFindById(accessContext, dto, selection);
+  async campusFindByIdStrict(
+    accessContext: AccessContext,
+    dto: CampusFindOneInputDto,
+    selection?: string[] | boolean,
+  ): Promise<CampusFindOneOutputDto> {
+    const campus = await this.campusRepository.findById(accessContext, dto, selection);
 
     if (!campus) {
       throw new NotFoundException();
@@ -162,35 +54,20 @@ export class CampusService {
     return campus;
   }
 
-  async campusFindByIdSimple(accessContext: AccessContext, id: string, selection?: string[] | boolean): Promise<CampusFindOneOutputDto | null> {
-    // =========================================================
-
-    const qb = this.campusRepository.createQueryBuilder(aliasCampus);
-
-    // =========================================================
-
-    await accessContext.applyFilter("campus:find", qb, aliasCampus, null);
-
-    // =========================================================
-
-    qb.andWhere(`${aliasCampus}.id = :id`, { id });
-
-    // =========================================================
-
-    qb.select([]);
-    QbEfficientLoad("CampusFindOneOutput", qb, aliasCampus, selection);
-
-    // =========================================================
-
-    const campus = await qb.getOne();
-
-    // =========================================================
-
-    return campus as CampusFindOneOutputDto | null;
+  async campusFindByIdSimple(
+    accessContext: AccessContext,
+    id: string,
+    selection?: string[] | boolean,
+  ): Promise<CampusFindOneOutputDto | null> {
+    return this.campusRepository.findByIdSimple(accessContext, id, selection);
   }
 
-  async campusFindByIdSimpleStrict(accessContext: AccessContext, id: string, selection?: string[] | boolean): Promise<CampusFindOneOutputDto> {
-    const campus = await this.campusFindByIdSimple(accessContext, id, selection);
+  async campusFindByIdSimpleStrict(
+    accessContext: AccessContext,
+    id: string,
+    selection?: string[] | boolean,
+  ): Promise<CampusFindOneOutputDto> {
+    const campus = await this.campusRepository.findByIdSimple(accessContext, id, selection);
 
     if (!campus) {
       throw new NotFoundException();
@@ -199,16 +76,13 @@ export class CampusService {
     return campus;
   }
 
-  async campusCreate(accessContext: AccessContext, dto: CampusCreateInputDto): Promise<CampusFindOneOutputDto> {
-    // =========================================================
-
+  async campusCreate(
+    accessContext: AccessContext,
+    dto: CampusCreateInputDto,
+  ): Promise<CampusFindOneOutputDto> {
     await accessContext.ensurePermission("campus:create", { dto } as any);
 
-    // =========================================================
-
     const campus = await this.databaseContext.transaction(async ({ databaseContext: { campusRepository } }) => {
-      // =========================================================
-
       const dtoCampus = pick(dto, ["nomeFantasia", "razaoSocial", "apelido", "cnpj"]);
 
       const campus = campusRepository.create();
@@ -221,8 +95,6 @@ export class CampusService {
         id: v4(),
       });
 
-      // =========================================================
-
       const endereco = await this.enderecoService.internalEnderecoCreateOrUpdate(null, dto.endereco);
 
       campusRepository.merge(campus, {
@@ -231,9 +103,7 @@ export class CampusService {
         },
       });
 
-      // =========================================================
       await campusRepository.save(campus);
-      // =========================================================
 
       return campus;
     });
@@ -241,14 +111,13 @@ export class CampusService {
     return this.campusFindByIdStrict(accessContext, { id: campus.id });
   }
 
-  async campusUpdate(accessContext: AccessContext, dto: CampusFindOneInputDto & CampusUpdateInputDto): Promise<CampusFindOneOutputDto> {
-    // =========================================================
-
+  async campusUpdate(
+    accessContext: AccessContext,
+    dto: CampusFindOneInputDto & CampusUpdateInputDto,
+  ): Promise<CampusFindOneOutputDto> {
     const currentCampus = await this.campusFindByIdStrict(accessContext, { id: dto.id });
 
-    // =========================================================
-
-    await accessContext.ensurePermission("campus:update", { dto }, dto.id, this.campusRepository.createQueryBuilder(aliasCampus as any));
+    await accessContext.ensurePermission("campus:update", { dto }, dto.id);
 
     const campus = await this.databaseContext.transaction(async ({ databaseContext: { campusRepository } }) => {
       const dtoCampus = pick(dto, ["nomeFantasia", "razaoSocial", "apelido", "cnpj"]);
@@ -263,8 +132,6 @@ export class CampusService {
 
       campusRepository.merge(campus, { id: currentCampus.id });
 
-      // =========================================================
-
       const dtoEndereco = get(dto, "endereco");
 
       if (dtoEndereco) {
@@ -277,88 +144,25 @@ export class CampusService {
         });
       }
 
-      // =========================================================
-
       await campusRepository.save(campus);
-
-      // =========================================================
-
-      // if (has(dto, 'modalidades')) {
-      //   const modalidades = get(dto, 'modalidades')!;
-
-      //   const currentCampusPossuiModalidades = await campusPossuiModalidadeRepository
-      //     //
-      //     .createQueryBuilder('c_p_m')
-      //     .select('c_p_m.id')
-      //     .innerJoin('c_p_m.campus', 'campus')
-      //     .where('campus.id = :campusId', { campusId: campus.id })
-      //     .getMany();
-
-      //   await campusPossuiModalidadeRepository
-      //     //
-      //     .createQueryBuilder()
-      //     .delete()
-      //     .whereInIds(map(currentCampusPossuiModalidades, 'id'))
-      //     .execute();
-
-      //   for (const modalidadeRef of modalidades) {
-      //     const modalidade = await this.modalidadeService.modalidadeFindByIdStrict(accessContext, {
-      //       id: modalidadeRef.id,
-      //     });
-
-      //     const campusPossuiModalidade = campusPossuiModalidadeRepository.create();
-
-      //     campusPossuiModalidadeRepository.merge(campusPossuiModalidade, {
-      //       id: v4(),
-      //     });
-
-      //     campusPossuiModalidadeRepository.merge(campusPossuiModalidade, {
-      //       modalidade: {
-      //         id: modalidade.id,
-      //       },
-      //       campus: {
-      //         id: campus.id,
-      //       },
-      //     });
-
-      //     await campusPossuiModalidadeRepository.save(campusPossuiModalidade);
-      //   }
-      // }
-
-      // =========================================================
 
       return campus;
     });
 
-    // =========================================================
-
     return this.campusFindByIdStrict(accessContext, { id: campus.id });
   }
 
-  async campusDeleteOneById(accessContext: AccessContext, dto: CampusFindOneInputDto): Promise<boolean> {
-    // =========================================================
-
-    await accessContext.ensurePermission("campus:delete", { dto }, dto.id, this.campusRepository.createQueryBuilder(aliasCampus as any));
-
-    // =========================================================
+  async campusDeleteOneById(
+    accessContext: AccessContext,
+    dto: CampusFindOneInputDto,
+  ): Promise<boolean> {
+    await accessContext.ensurePermission("campus:delete", { dto }, dto.id);
 
     const campus = await this.campusFindByIdStrict(accessContext, dto);
 
-    // =========================================================
-
     if (campus) {
-      await this.campusRepository
-        .createQueryBuilder(aliasCampus)
-        .update()
-        .set({
-          dateDeleted: "NOW()",
-        })
-        .where("id = :campusId", { campusId: campus.id })
-        .andWhere("dateDeleted IS NULL")
-        .execute();
+      await this.campusRepository.softDeleteById(campus.id);
     }
-
-    // =========================================================
 
     return true;
   }
