@@ -1,15 +1,11 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
-import { has, map, pick } from "lodash";
-import { FilterOperator } from "nestjs-paginate";
+import { Inject, Injectable, NotFoundException } from "@nestjs/common";
+import { has, pick } from "lodash";
 import { AmbienteService } from "@/v2/core/ambiente/application/use-cases/ambiente.service";
 import { CalendarioLetivoService } from "@/v2/core/calendario-letivo/application/use-cases/calendario-letivo.service";
 import { DisciplinaService } from "@/v2/core/disciplina/application/use-cases/disciplina.service";
 import { TurmaService } from "@/v2/core/turma/application/use-cases/turma.service";
 import type { AccessContext } from "@/infrastructure/access-context";
-import { paginateConfig } from "@/infrastructure/fixtures";
-import { DatabaseContextService, QbEfficientLoad } from "@/v2/adapters/out/persistence/typeorm";
 import type { DiarioEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
-import { SearchService } from "@/shared";
 import type {
   DiarioCreateInputDto,
   DiarioFindOneInputDto,
@@ -18,125 +14,41 @@ import type {
   DiarioListOutputDto,
   DiarioUpdateInputDto,
 } from "@/v2/adapters/in/http/diario/dto";
-
-// ============================================================================
-
-const aliasDiario = "diario";
-
-// ============================================================================
+import type { IDiarioRepositoryPort } from "../ports";
 
 @Injectable()
 export class DiarioService {
   constructor(
+    @Inject("IDiarioRepositoryPort")
+    private diarioRepository: IDiarioRepositoryPort,
     private calendarioLetivoService: CalendarioLetivoService,
-    private databaseContext: DatabaseContextService,
     private turmaService: TurmaService,
     private disciplinaService: DisciplinaService,
     private ambienteService: AmbienteService,
-    private searchService: SearchService,
   ) {}
 
-  get diarioRepository() {
-    return this.databaseContext.diarioRepository;
+  async diarioFindAll(
+    accessContext: AccessContext,
+    dto: DiarioListInputDto | null = null,
+    selection?: string[] | boolean,
+  ): Promise<DiarioListOutputDto> {
+    return this.diarioRepository.findAll(accessContext, dto, selection);
   }
 
-  async diarioFindAll(accessContext: AccessContext, dto: DiarioListInputDto | null = null, selection?: string[] | boolean): Promise<DiarioListOutputDto> {
-    // =========================================================
-
-    const qb = this.diarioRepository.createQueryBuilder(aliasDiario);
-
-    // =========================================================
-
-    await accessContext.applyFilter("diario:find", qb, aliasDiario, null);
-
-    // =========================================================
-
-    const paginated = await this.searchService.search(qb, dto, {
-      ...paginateConfig,
-      select: [
-        "id",
-
-        "ativo",
-
-        "turma.id",
-        "turma.periodo",
-        "disciplina.id",
-        "disciplina.nome",
-        "ambientePadrao.id",
-        "ambientePadrao.nome",
-      ],
-      sortableColumns: [
-        "ativo",
-
-        "disciplina.nome",
-        "ambientePadrao.nome",
-      ],
-      relations: {
-        turma: true,
-        disciplina: true,
-        ambientePadrao: true,
-      },
-      searchableColumns: [
-        "id",
-
-        "ativo",
-        "ano",
-        "etapa",
-        "turma.periodo",
-        "disciplina.nome",
-      ],
-      defaultSortBy: [],
-      filterableColumns: {
-        "turma.id": [FilterOperator.EQ],
-        "disciplina.id": [FilterOperator.EQ],
-        "ambientePadrao.id": [FilterOperator.EQ],
-      },
-    });
-
-    // =========================================================
-
-    qb.select([]);
-    QbEfficientLoad("DiarioFindOneOutput", qb, aliasDiario, selection);
-
-    // =========================================================
-
-    const pageItemsView = await qb.andWhereInIds(map(paginated.data, "id")).getMany();
-    paginated.data = paginated.data.map((paginated) => pageItemsView.find((i) => i.id === paginated.id)!);
-
-    // =========================================================
-
-    return paginated as unknown as DiarioListOutputDto;
+  async diarioFindById(
+    accessContext: AccessContext,
+    dto: DiarioFindOneInputDto,
+    selection?: string[] | boolean,
+  ): Promise<DiarioFindOneOutputDto | null> {
+    return this.diarioRepository.findById(accessContext, dto, selection);
   }
 
-  async diarioFindById(accessContext: AccessContext, dto: DiarioFindOneInputDto, selection?: string[] | boolean): Promise<DiarioFindOneOutputDto | null> {
-    // =========================================================
-
-    const qb = this.diarioRepository.createQueryBuilder(aliasDiario);
-
-    // =========================================================
-
-    await accessContext.applyFilter("diario:find", qb, aliasDiario, null);
-
-    // =========================================================
-
-    qb.andWhere(`${aliasDiario}.id = :id`, { id: dto.id });
-
-    // =========================================================
-
-    qb.select([]);
-    QbEfficientLoad("DiarioFindOneOutput", qb, aliasDiario, selection);
-
-    // =========================================================
-
-    const diario = await qb.getOne();
-
-    // =========================================================
-
-    return diario as DiarioFindOneOutputDto | null;
-  }
-
-  async diarioFindByIdStrict(accessContext: AccessContext, dto: DiarioFindOneInputDto, selection?: string[] | boolean): Promise<DiarioFindOneOutputDto> {
-    const diario = await this.diarioFindById(accessContext, dto, selection);
+  async diarioFindByIdStrict(
+    accessContext: AccessContext,
+    dto: DiarioFindOneInputDto,
+    selection?: string[] | boolean,
+  ): Promise<DiarioFindOneOutputDto> {
+    const diario = await this.diarioRepository.findById(accessContext, dto, selection);
 
     if (!diario) {
       throw new NotFoundException();
@@ -145,35 +57,20 @@ export class DiarioService {
     return diario;
   }
 
-  async diarioFindByIdSimple(accessContext: AccessContext, id: DiarioFindOneInputDto["id"], selection?: string[] | boolean): Promise<DiarioFindOneOutputDto | null> {
-    // =========================================================
-
-    const qb = this.diarioRepository.createQueryBuilder(aliasDiario);
-
-    // =========================================================
-
-    await accessContext.applyFilter("diario:find", qb, aliasDiario, null);
-
-    // =========================================================
-
-    qb.andWhere(`${aliasDiario}.id = :id`, { id });
-
-    // =========================================================
-
-    qb.select([]);
-    QbEfficientLoad("DiarioFindOneOutput", qb, aliasDiario, selection);
-
-    // =========================================================
-
-    const diario = await qb.getOne();
-
-    // =========================================================
-
-    return diario as DiarioFindOneOutputDto | null;
+  async diarioFindByIdSimple(
+    accessContext: AccessContext,
+    id: DiarioFindOneInputDto["id"],
+    selection?: string[] | boolean,
+  ): Promise<DiarioFindOneOutputDto | null> {
+    return this.diarioRepository.findByIdSimple(accessContext, id, selection);
   }
 
-  async diarioFindByIdSimpleStrict(accessContext: AccessContext, id: DiarioFindOneInputDto["id"], selection?: string[] | boolean): Promise<DiarioFindOneOutputDto> {
-    const diario = await this.diarioFindByIdSimple(accessContext, id, selection);
+  async diarioFindByIdSimpleStrict(
+    accessContext: AccessContext,
+    id: DiarioFindOneInputDto["id"],
+    selection?: string[] | boolean,
+  ): Promise<DiarioFindOneOutputDto> {
+    const diario = await this.diarioRepository.findByIdSimple(accessContext, id, selection);
 
     if (!diario) {
       throw new NotFoundException();
@@ -182,12 +79,11 @@ export class DiarioService {
     return diario;
   }
 
-  async diarioCreate(accessContext: AccessContext, dto: DiarioCreateInputDto): Promise<DiarioFindOneOutputDto> {
-    // =========================================================
-
+  async diarioCreate(
+    accessContext: AccessContext,
+    dto: DiarioCreateInputDto,
+  ): Promise<DiarioFindOneOutputDto> {
     await accessContext.ensurePermission("diario:create", { dto } as any);
-
-    // =========================================================
 
     const dtoDiario = pick(dto, ["ativo"]);
 
@@ -196,8 +92,6 @@ export class DiarioService {
     this.diarioRepository.merge(diario, {
       ...dtoDiario,
     });
-
-    // =========================================================
 
     if (dto.ambientePadrao != null) {
       const ambientePadrao = await this.ambienteService.ambienteFindByIdStrict(accessContext, { id: dto.ambientePadrao.id });
@@ -208,42 +102,31 @@ export class DiarioService {
       this.diarioRepository.merge(diario, { ambientePadrao: null });
     }
 
-    // =========================================================
-
     const calendarioLetivo = await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(accessContext, dto.calendarioLetivo.id);
     this.diarioRepository.merge(diario, {
       calendarioLetivo: { id: calendarioLetivo.id },
     });
 
-    // =========================================================
-
     const disciplina = await this.disciplinaService.disciplinaFindByIdSimpleStrict(accessContext, dto.disciplina.id);
 
     this.diarioRepository.merge(diario, { disciplina: { id: disciplina.id } });
-
-    // =========================================================
 
     const turma = await this.turmaService.turmaFindByIdSimpleStrict(accessContext, dto.turma.id);
 
     this.diarioRepository.merge(diario, { turma: { id: turma.id } });
 
-    // =========================================================
-
     await this.diarioRepository.save(diario);
-
-    // =========================================================
 
     return this.diarioFindByIdStrict(accessContext, { id: diario.id });
   }
 
-  async diarioUpdate(accessContext: AccessContext, dto: DiarioFindOneInputDto & DiarioUpdateInputDto): Promise<DiarioFindOneOutputDto> {
-    // =========================================================
-
+  async diarioUpdate(
+    accessContext: AccessContext,
+    dto: DiarioFindOneInputDto & DiarioUpdateInputDto,
+  ): Promise<DiarioFindOneOutputDto> {
     const currentDiario = await this.diarioFindByIdStrict(accessContext, { id: dto.id });
 
-    // =========================================================
-
-    await accessContext.ensurePermission("diario:update", { dto }, dto.id, this.diarioRepository.createQueryBuilder(aliasDiario as any));
+    await accessContext.ensurePermission("diario:update", { dto }, dto.id);
 
     const dtoDiario = pick(dto, ["ativo", "ano", "etapa", "turma", "disciplina", "ambientePadrao"]);
 
@@ -254,8 +137,6 @@ export class DiarioService {
     this.diarioRepository.merge(diario, {
       ...dtoDiario,
     });
-
-    // =========================================================
 
     if (has(dto, "ambientePadrao") && dto.ambientePadrao !== undefined) {
       if (dto.ambientePadrao !== null) {
@@ -271,8 +152,6 @@ export class DiarioService {
       }
     }
 
-    // =========================================================
-
     if (has(dto, "disciplina") && dto.disciplina !== undefined) {
       const disciplina = await this.disciplinaService.disciplinaFindByIdSimpleStrict(accessContext, dto.disciplina.id);
 
@@ -281,14 +160,10 @@ export class DiarioService {
       });
     }
 
-    // =========================================================
-
     if (has(dto, "turma") && dto.turma !== undefined) {
       const turma = await this.turmaService.turmaFindByIdSimpleStrict(accessContext, dto.turma.id);
       this.diarioRepository.merge(diario, { turma: { id: turma.id } });
     }
-
-    // =========================================================
 
     if (has(dto, "calendarioLetivo") && dto.calendarioLetivo !== undefined) {
       const calendarioLetivo = await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(accessContext, dto.calendarioLetivo.id);
@@ -297,39 +172,22 @@ export class DiarioService {
       });
     }
 
-    // =========================================================
-
     await this.diarioRepository.save(diario);
-
-    // =========================================================
 
     return this.diarioFindByIdStrict(accessContext, { id: diario.id });
   }
 
-  async diarioDeleteOneById(accessContext: AccessContext, dto: DiarioFindOneInputDto): Promise<boolean> {
-    // =========================================================
-
-    await accessContext.ensurePermission("diario:delete", { dto }, dto.id, this.diarioRepository.createQueryBuilder(aliasDiario as any));
-
-    // =========================================================
+  async diarioDeleteOneById(
+    accessContext: AccessContext,
+    dto: DiarioFindOneInputDto,
+  ): Promise<boolean> {
+    await accessContext.ensurePermission("diario:delete", { dto }, dto.id);
 
     const diario = await this.diarioFindByIdStrict(accessContext, dto);
 
-    // =========================================================
-
     if (diario) {
-      await this.diarioRepository
-        .createQueryBuilder(aliasDiario)
-        .update()
-        .set({
-          dateDeleted: "NOW()",
-        })
-        .where("id = :diarioId", { diarioId: diario.id })
-        .andWhere("dateDeleted IS NULL")
-        .execute();
+      await this.diarioRepository.softDeleteById(diario.id);
     }
-
-    // =========================================================
 
     return true;
   }

@@ -1,14 +1,10 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
-import { has, map, pick } from "lodash";
-import { FilterOperator } from "nestjs-paginate";
+import { Inject, Injectable, NotFoundException } from "@nestjs/common";
+import { has, pick } from "lodash";
 import { AmbienteService } from "@/v2/core/ambiente/application/use-cases/ambiente.service";
 import { IntervaloDeTempoService } from "@/v2/core/intervalo-de-tempo/application/use-cases/intervalo-de-tempo.service";
+import { DiarioService } from "@/v2/core/diario/application/use-cases/diario.service";
 import type { AccessContext } from "@/infrastructure/access-context";
-import { paginateConfig } from "@/infrastructure/fixtures";
-import { QbEfficientLoad } from "@/v2/adapters/out/persistence/typeorm";
-import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm/context/database-context.service";
 import type { AulaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
-import { SearchService } from "@/shared/search/search.service";
 import type {
   AulaCreateInputDto,
   AulaFindOneInputDto,
@@ -17,126 +13,40 @@ import type {
   AulaListOutputDto,
   AulaUpdateInputDto,
 } from "@/v2/adapters/in/http/aula/dto";
-import { DiarioService } from "@/v2/core/diario/application/use-cases/diario.service";
-
-// ============================================================================
-
-const aliasAula = "aula";
-
-// ============================================================================
+import type { IAulaRepositoryPort } from "../ports";
 
 @Injectable()
 export class AulaService {
   constructor(
-    private databaseContext: DatabaseContextService,
+    @Inject("IAulaRepositoryPort")
+    private aulaRepository: IAulaRepositoryPort,
     private diarioService: DiarioService,
     private intervaloService: IntervaloDeTempoService,
     private ambienteService: AmbienteService,
-    private searchService: SearchService,
   ) {}
 
-  get aulaRepository() {
-    return this.databaseContext.aulaRepository;
+  async aulaFindAll(
+    accessContext: AccessContext,
+    dto: AulaListInputDto | null = null,
+    selection?: string[] | boolean,
+  ): Promise<AulaListOutputDto> {
+    return this.aulaRepository.findAll(accessContext, dto, selection);
   }
 
-  async aulaFindAll(accessContext: AccessContext, dto: AulaListInputDto | null = null, selection?: string[] | boolean): Promise<AulaListOutputDto> {
-    // =========================================================
-
-    const qb = this.aulaRepository.createQueryBuilder(aliasAula);
-
-    // =========================================================
-
-    await accessContext.applyFilter("aula:find", qb, aliasAula, null);
-
-    // =========================================================
-
-    const paginated = await this.searchService.search(qb, dto, {
-      ...paginateConfig,
-      select: [
-        "id",
-
-        "formato",
-        "data",
-
-        "intervaloDeTempo.id",
-        "intervaloDeTempo.periodoInicio",
-        "intervaloDeTempo.periodoFim",
-        "diario.id",
-        "diario.ativo",
-        "ambiente.id",
-        "ambiente.nome",
-      ],
-      sortableColumns: [
-        "data",
-        "formato",
-
-        "diario.ativo",
-        "ambiente.nome",
-      ],
-      relations: {
-        ambiente: true,
-        diario: true,
-        intervaloDeTempo: true,
-      },
-      searchableColumns: [
-        "id",
-
-        "formato",
-        "data",
-        "ambiente.nome",
-      ],
-      defaultSortBy: [],
-      filterableColumns: {
-        "intervaloDeTempo.id": [FilterOperator.EQ],
-        "diario.id": [FilterOperator.EQ],
-        "ambiente.id": [FilterOperator.EQ],
-      },
-    });
-
-    // =========================================================
-
-    qb.select([]);
-    QbEfficientLoad("AulaFindOneOutput", qb, aliasAula, selection);
-
-    // =========================================================
-
-    const pageItemsView = await qb.andWhereInIds(map(paginated.data, "id")).getMany();
-    paginated.data = paginated.data.map((paginated) => pageItemsView.find((i) => i.id === paginated.id)!);
-
-    // =========================================================
-
-    return paginated as unknown as AulaListOutputDto;
+  async aulaFindById(
+    accessContext: AccessContext,
+    dto: AulaFindOneInputDto,
+    selection?: string[] | boolean,
+  ): Promise<AulaFindOneOutputDto | null> {
+    return this.aulaRepository.findById(accessContext, dto, selection);
   }
 
-  async aulaFindById(accessContext: AccessContext, dto: AulaFindOneInputDto, selection?: string[] | boolean): Promise<AulaFindOneOutputDto | null> {
-    // =========================================================
-
-    const qb = this.aulaRepository.createQueryBuilder(aliasAula);
-
-    // =========================================================
-
-    await accessContext.applyFilter("aula:find", qb, aliasAula, null);
-
-    // =========================================================
-
-    qb.andWhere(`${aliasAula}.id = :id`, { id: dto.id });
-
-    // =========================================================
-
-    qb.select([]);
-    QbEfficientLoad("AulaFindOneOutput", qb, aliasAula, selection);
-
-    // =========================================================
-
-    const aula = await qb.getOne();
-
-    // =========================================================
-
-    return aula as AulaFindOneOutputDto | null;
-  }
-
-  async aulaFindByIdStrict(accessContext: AccessContext, dto: AulaFindOneInputDto, selection?: string[] | boolean): Promise<AulaFindOneOutputDto> {
-    const aula = await this.aulaFindById(accessContext, dto, selection);
+  async aulaFindByIdStrict(
+    accessContext: AccessContext,
+    dto: AulaFindOneInputDto,
+    selection?: string[] | boolean,
+  ): Promise<AulaFindOneOutputDto> {
+    const aula = await this.aulaRepository.findById(accessContext, dto, selection);
 
     if (!aula) {
       throw new NotFoundException();
@@ -145,35 +55,20 @@ export class AulaService {
     return aula;
   }
 
-  async aulaFindByIdSimple(accessContext: AccessContext, id: AulaFindOneInputDto["id"], selection?: string[] | boolean): Promise<AulaFindOneOutputDto | null> {
-    // =========================================================
-
-    const qb = this.aulaRepository.createQueryBuilder(aliasAula);
-
-    // =========================================================
-
-    await accessContext.applyFilter("aula:find", qb, aliasAula, null);
-
-    // =========================================================
-
-    qb.andWhere(`${aliasAula}.id = :id`, { id });
-
-    // =========================================================
-
-    qb.select([]);
-    QbEfficientLoad("AulaFindOneOutput", qb, aliasAula, selection);
-
-    // =========================================================
-
-    const aula = await qb.getOne();
-
-    // =========================================================
-
-    return aula as AulaFindOneOutputDto | null;
+  async aulaFindByIdSimple(
+    accessContext: AccessContext,
+    id: AulaFindOneInputDto["id"],
+    selection?: string[] | boolean,
+  ): Promise<AulaFindOneOutputDto | null> {
+    return this.aulaRepository.findByIdSimple(accessContext, id, selection);
   }
 
-  async aulaFindByIdSimpleStrict(accessContext: AccessContext, id: AulaFindOneInputDto["id"], selection?: string[] | boolean): Promise<AulaFindOneOutputDto> {
-    const aula = await this.aulaFindByIdSimple(accessContext, id, selection);
+  async aulaFindByIdSimpleStrict(
+    accessContext: AccessContext,
+    id: AulaFindOneInputDto["id"],
+    selection?: string[] | boolean,
+  ): Promise<AulaFindOneOutputDto> {
+    const aula = await this.aulaRepository.findByIdSimple(accessContext, id, selection);
 
     if (!aula) {
       throw new NotFoundException();
@@ -182,12 +77,11 @@ export class AulaService {
     return aula;
   }
 
-  async aulaCreate(accessContext: AccessContext, dto: AulaCreateInputDto): Promise<AulaFindOneOutputDto> {
-    // =========================================================
-
+  async aulaCreate(
+    accessContext: AccessContext,
+    dto: AulaCreateInputDto,
+  ): Promise<AulaFindOneOutputDto> {
     await accessContext.ensurePermission("aula:create", { dto } as any);
-
-    // =========================================================
 
     const dtoAula = pick(dto, ["formato", "data"]);
 
@@ -196,8 +90,6 @@ export class AulaService {
     this.aulaRepository.merge(aula, {
       ...dtoAula,
     });
-
-    // =========================================================
 
     if (dto.ambiente && dto.ambiente !== null) {
       const ambiente = await this.ambienteService.ambienteFindByIdStrict(accessContext, {
@@ -208,12 +100,8 @@ export class AulaService {
       this.aulaRepository.merge(aula, { ambiente: null });
     }
 
-    // =========================================================
-
     const diario = await this.diarioService.diarioFindByIdSimpleStrict(accessContext, dto.diario.id);
     this.aulaRepository.merge(aula, { diario: { id: diario.id } });
-
-    // =========================================================
 
     const intervalo = await this.intervaloService.intervaloCreateOrUpdate(accessContext, dto.intervaloDeTempo);
 
@@ -221,23 +109,18 @@ export class AulaService {
       intervaloDeTempo: { id: intervalo!.id },
     });
 
-    // =========================================================
-
     await this.aulaRepository.save(aula);
-
-    // =========================================================
 
     return this.aulaFindByIdStrict(accessContext, { id: aula.id });
   }
 
-  async aulaUpdate(accessContext: AccessContext, dto: AulaFindOneInputDto & AulaUpdateInputDto): Promise<AulaFindOneOutputDto> {
-    // =========================================================
-
+  async aulaUpdate(
+    accessContext: AccessContext,
+    dto: AulaFindOneInputDto & AulaUpdateInputDto,
+  ): Promise<AulaFindOneOutputDto> {
     const currentAula = await this.aulaFindByIdStrict(accessContext, { id: dto.id });
 
-    // =========================================================
-
-    await accessContext.ensurePermission("aula:update", { dto }, dto.id, this.aulaRepository.createQueryBuilder(aliasAula as any));
+    await accessContext.ensurePermission("aula:update", { dto }, dto.id);
 
     const dtoAula = pick(dto, ["formato", "data", "intervaloDeTempo", "diario", "ambiente"]);
 
@@ -249,8 +132,6 @@ export class AulaService {
       ...dtoAula,
     });
 
-    // =========================================================
-
     if (has(dto, "ambiente") && dto.ambiente !== undefined) {
       if (dto.ambiente !== null) {
         const ambiente = await this.ambienteService.ambienteFindByIdStrict(accessContext, { id: dto.ambiente.id });
@@ -261,15 +142,11 @@ export class AulaService {
       }
     }
 
-    // =========================================================
-
     if (has(dto, "diario") && dto.diario !== undefined) {
       const diario = await this.diarioService.diarioFindByIdSimpleStrict(accessContext, dto.diario.id);
 
       this.aulaRepository.merge(aula, { diario: { id: diario.id } });
     }
-
-    // =========================================================
 
     if (has(dto, "intervaloDeTempo") && dto.intervaloDeTempo !== undefined) {
       const intervaloDeTempo = await this.intervaloService.intervaloCreateOrUpdate(accessContext, dto.intervaloDeTempo);
@@ -278,39 +155,22 @@ export class AulaService {
       });
     }
 
-    // =========================================================
-
     await this.aulaRepository.save(aula);
-
-    // =========================================================
 
     return this.aulaFindByIdStrict(accessContext, { id: aula.id });
   }
 
-  async aulaDeleteOneById(accessContext: AccessContext, dto: AulaFindOneInputDto): Promise<boolean> {
-    // =========================================================
-
-    await accessContext.ensurePermission("aula:delete", { dto }, dto.id, this.aulaRepository.createQueryBuilder(aliasAula as any));
-
-    // =========================================================
+  async aulaDeleteOneById(
+    accessContext: AccessContext,
+    dto: AulaFindOneInputDto,
+  ): Promise<boolean> {
+    await accessContext.ensurePermission("aula:delete", { dto }, dto.id);
 
     const aula = await this.aulaFindByIdStrict(accessContext, dto);
 
-    // =========================================================
-
     if (aula) {
-      await this.aulaRepository
-        .createQueryBuilder(aliasAula)
-        .update()
-        .set({
-          dateDeleted: "NOW()",
-        })
-        .where("id = :aulaId", { aulaId: aula.id })
-        .andWhere("dateDeleted IS NULL")
-        .execute();
+      await this.aulaRepository.softDeleteById(aula.id);
     }
-
-    // =========================================================
 
     return true;
   }

@@ -1,8 +1,8 @@
-import { Injectable, ServiceUnavailableException, UnprocessableEntityException } from "@nestjs/common";
+import { Inject, Injectable, ServiceUnavailableException, UnprocessableEntityException } from "@nestjs/common";
 import sharp from "sharp";
 import { v4 } from "uuid";
 import { ArquivoService } from "@/v2/core/arquivo/application/use-cases/arquivo.service";
-import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
+import type { IImagemTransactionPort } from "../ports";
 
 type ISaveImageOptions = {
   minWidth: number;
@@ -17,7 +17,8 @@ type ISaveImageOptions = {
 export class ImagemService {
   constructor(
     private arquivoService: ArquivoService,
-    private databaseContextService: DatabaseContextService,
+    @Inject("IImagemTransactionPort")
+    private imagemTransactionPort: IImagemTransactionPort,
   ) {}
 
   async saveImage(file: Express.Multer.File, options: ISaveImageOptions) {
@@ -39,8 +40,8 @@ export class ImagemService {
 
     // ===============================================
 
-    return await this.databaseContextService
-      .transaction(async ({ databaseContext: { imagemRepository, imagemArquivoRepository } }) => {
+    return await this.imagemTransactionPort
+      .transaction(async ({ imagemRepository, imagemArquivoRepository }) => {
         const imagem = imagemRepository.create();
 
         imagemRepository.merge(imagem, {

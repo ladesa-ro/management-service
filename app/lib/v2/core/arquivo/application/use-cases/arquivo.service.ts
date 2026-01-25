@@ -6,16 +6,16 @@ import {
   Injectable,
   NotFoundException,
   ServiceUnavailableException,
-  StreamableFile
+  StreamableFile,
 } from "@nestjs/common";
 import jetpack, { createReadStream } from "fs-jetpack";
 import { v4 } from "uuid";
 import type { AccessContext } from "@/infrastructure/access-context";
 import { AppConfigService } from "@/v2/infra/config";
-import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm/context/database-context.service";
-import { type ArquivoEntity, UsuarioEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
+import { UsuarioEntity, type ArquivoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import { isValidUuid } from "@/shared";
 import type { ArquivoCreateInputDto } from "@/v2/adapters/in/http/arquivo/dto";
+import type { IArquivoRepositoryPort } from "../ports";
 
 type IGetFileAcesso = null | {
   nome?: string;
@@ -25,14 +25,11 @@ type IGetFileAcesso = null | {
 @Injectable()
 export class ArquivoService {
   constructor(
-    private databaseContextService: DatabaseContextService,
+    @Inject("IArquivoRepositoryPort")
+    private arquivoRepository: IArquivoRepositoryPort,
     @Inject(AppConfigService)
     private appConfigService: AppConfigService,
   ) {}
-
-  get arquivoRepository() {
-    return this.databaseContextService.arquivoRepository;
-  }
 
   private get storagePath() {
     return this.appConfigService.getStoragePath();
@@ -53,7 +50,11 @@ export class ArquivoService {
     return null;
   }
 
-  async getFile(accessContext: AccessContext | null, id: string, acesso: IGetFileAcesso | null): Promise<{
+  async getFile(
+    accessContext: AccessContext | null,
+    id: string,
+    acesso: IGetFileAcesso | null,
+  ): Promise<{
     id: string;
     nome: string | null;
     mimeType: string | null;
@@ -156,11 +157,11 @@ export class ArquivoService {
     // TODO: mimeType
     const mimeType = dto.mimeType;
 
-    await this.arquivoRepository.save(<ArquivoEntity>{
+    await this.arquivoRepository.save({
       id,
 
-      name: dto.name,
-      mimeType: mimeType,
+      name: dto.name ?? undefined,
+      mimeType: mimeType ?? undefined,
       sizeBytes: sizeBytes,
       storageType: "filesystem",
     });
