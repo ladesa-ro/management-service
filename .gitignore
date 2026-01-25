@@ -1,5 +1,6 @@
 dist
 semicolon_delimited_script
+volumes
 
 **/node_modules
 
