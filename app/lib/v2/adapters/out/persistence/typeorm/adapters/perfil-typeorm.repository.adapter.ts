@@ -10,11 +10,6 @@ import type {
   PerfilListInputDto,
   PerfilListOutputDto,
 } from "@/v2/adapters/in/http/perfil/dto";
-import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
-import type {
-  PerfilEntity,
-  UsuarioEntity,
-} from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import type {
   IPaginationConfig,
   IPaginationCriteria,
@@ -22,63 +17,38 @@ import type {
 } from "@/v2/application/ports/pagination";
 import type { IPerfilRepositoryPort } from "@/v2/core/perfil/application/ports";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
+import { BaseTypeOrmRepositoryAdapter } from "../base";
+import { DatabaseContextService } from "../context/database-context.service";
+import type { PerfilEntity, UsuarioEntity } from "../typeorm/entities";
 
-const aliasVinculo = "vinculo";
-
-/**
- * Tipo helper para DTOs que contêm filtros dinâmicos
- * Permite campos no formato filter.* onde * pode ser qualquer string
- */
-type DtoWithFilters = Record<string, unknown>;
-
-/**
- * Adapter TypeORM que implementa o port de repositório de Perfil
- * Encapsula toda a lógica de acesso a dados usando TypeORM e nestjs-paginate
- */
 @Injectable()
-export class PerfilTypeOrmRepositoryAdapter implements IPerfilRepositoryPort {
-  constructor(
-    private databaseContext: DatabaseContextService,
-    private paginationAdapter: NestJsPaginateAdapter,
-  ) {}
+export class PerfilTypeOrmRepositoryAdapter
+  extends BaseTypeOrmRepositoryAdapter<
+    PerfilEntity,
+    PerfilListInputDto,
+    PerfilListOutputDto,
+    PerfilFindOneInputDto,
+    PerfilFindOneOutputDto
+  >
+  implements IPerfilRepositoryPort
+{
+  protected readonly alias = "vinculo";
+  protected readonly authzAction = "vinculo:find";
+  protected readonly outputDtoName = "PerfilFindOneOutput";
 
-  get vinculoRepository() {
+  constructor(
+    protected readonly databaseContext: DatabaseContextService,
+    protected readonly paginationAdapter: NestJsPaginateAdapter,
+  ) {
+    super();
+  }
+
+  protected get repository() {
     return this.databaseContext.perfilRepository;
   }
 
-  async findAllActiveByUsuarioId(
-    accessContext: AccessContext | null,
-    usuarioId: UsuarioEntity["id"],
-  ): Promise<PerfilFindOneOutputDto[]> {
-    const qb = this.vinculoRepository.createQueryBuilder("vinculo");
-
-    qb.innerJoin("vinculo.usuario", "usuario");
-    qb.where("usuario.id = :usuarioId", { usuarioId });
-    qb.andWhere("vinculo.ativo = :ativo", { ativo: true });
-
-    if (accessContext) {
-      await accessContext.applyFilter("vinculo:find", qb, aliasVinculo, null);
-    }
-
-    QbEfficientLoad("PerfilFindOneOutput", qb, "vinculo");
-
-    const vinculos = await qb.getMany();
-
-    return vinculos as PerfilFindOneOutputDto[];
-  }
-
-  async findAll(
-    accessContext: AccessContext,
-    dto: PerfilListInputDto | null = null,
-    selection?: string[] | boolean,
-  ): Promise<PerfilListOutputDto> {
-    const qb = this.vinculoRepository.createQueryBuilder(aliasVinculo);
-
-    QbEfficientLoad("PerfilFindOneOutput", qb, aliasVinculo, selection);
-
-    await accessContext.applyFilter("vinculo:find", qb, aliasVinculo, null);
-
-    const config: IPaginationConfig<PerfilFindOneOutputDto> = {
+  protected getPaginateConfig(): IPaginationConfig<PerfilEntity> {
+    return {
       ...paginateConfig,
       relations: {
         campus: true,
@@ -107,61 +77,29 @@ export class PerfilTypeOrmRepositoryAdapter implements IPerfilRepositoryPort {
         "usuario.id": [FilterOperator.EQ],
       },
     };
-
-    // Converte DTO para IPaginationCriteria
-    const criteria: IPaginationCriteria = {
-      ...dto,
-      sortBy: dto?.sortBy ? (dto.sortBy as unknown as string[]) : undefined,
-      filters: this.extractFilters(dto),
-    };
-
-    const paginated = await this.paginationAdapter.paginate(qb, criteria, config);
-
-    return paginated as PerfilListOutputDto;
   }
 
-  async findById(
-    accessContext: AccessContext,
-    dto: PerfilFindOneInputDto & { pathId?: string },
-    selection?: string[] | boolean,
-  ): Promise<PerfilFindOneOutputDto | null> {
-    const id = dto.id && dto.id !== "{id}" ? dto.id : dto.pathId;
+  // Métodos específicos do Perfil que não estão na classe base
 
-    const qb = this.vinculoRepository.createQueryBuilder(aliasVinculo);
-    await accessContext.applyFilter("vinculo:find", qb, aliasVinculo, null);
-    qb.andWhere(`${aliasVinculo}.id = :id`, { id });
+  async findAllActiveByUsuarioId(
+    accessContext: AccessContext | null,
+    usuarioId: UsuarioEntity["id"],
+  ): Promise<PerfilFindOneOutputDto[]> {
+    const qb = this.repository.createQueryBuilder(this.alias);
 
-    const config: IPaginationConfig<PerfilFindOneOutputDto> = {
-      ...paginateConfig,
-      relations: { campus: true, usuario: true },
-      select: [
-        "id",
-        "ativo",
-        "cargo",
-        "usuario.nome",
-        "usuario.id",
-        "usuario.matriculaSiape",
-        "usuario.email",
-        "campus.id",
-        "campus.nomeFantasia",
-        "campus.razaoSocial",
-        "campus.apelido",
-        "campus.cnpj",
-        "dateCreated",
-      ],
-      searchableColumns: ["cargo"],
-      filterableColumns: {
-        ativo: [FilterOperator.EQ],
-        cargo: [FilterOperator.EQ],
-        "campus.id": [FilterOperator.EQ],
-        "usuario.id": [FilterOperator.EQ],
-      },
-    };
+    qb.innerJoin(`${this.alias}.usuario`, "usuario");
+    qb.where("usuario.id = :usuarioId", { usuarioId });
+    qb.andWhere(`${this.alias}.ativo = :ativo`, { ativo: true });
 
-    const paginated = await this.paginationAdapter.paginate(qb, { page: 1, limit: 1 }, config);
+    if (accessContext) {
+      await accessContext.applyFilter(this.authzAction, qb, this.alias, null);
+    }
 
-    const item = Array.isArray(paginated) ? paginated[0] : (paginated?.data?.[0] ?? null);
-    return (item as PerfilFindOneOutputDto) ?? null;
+    QbEfficientLoad(this.outputDtoName, qb, this.alias);
+
+    const vinculos = await qb.getMany();
+
+    return vinculos as PerfilFindOneOutputDto[];
   }
 
   async findPaginated(
@@ -170,18 +108,18 @@ export class PerfilTypeOrmRepositoryAdapter implements IPerfilRepositoryPort {
     config: IPaginationConfig<PerfilFindOneOutputDto>,
     selection?: string[] | boolean,
   ): Promise<IPaginationResult<PerfilFindOneOutputDto>> {
-    const qb = this.vinculoRepository.createQueryBuilder(aliasVinculo);
+    const qb = this.repository.createQueryBuilder(this.alias);
 
-    QbEfficientLoad("PerfilFindOneOutput", qb, aliasVinculo, selection);
+    QbEfficientLoad(this.outputDtoName, qb, this.alias, selection);
 
-    await accessContext.applyFilter("vinculo:find", qb, aliasVinculo, null);
+    await accessContext.applyFilter(this.authzAction, qb, this.alias, null);
 
     return this.paginationAdapter.paginate(qb, criteria, config);
   }
 
   async saveMany(perfis: DeepPartial<PerfilEntity>[]): Promise<void> {
     for (const perfil of perfis) {
-      await this.vinculoRepository.save(perfil);
+      await this.repository.save(perfil);
     }
   }
 
@@ -189,13 +127,13 @@ export class PerfilTypeOrmRepositoryAdapter implements IPerfilRepositoryPort {
     usuarioId: string,
     campusId: string,
   ): Promise<PerfilFindOneOutputDto[]> {
-    const vinculos = await this.vinculoRepository
-      .createQueryBuilder("vinculo")
-      .innerJoin("vinculo.campus", "campus")
-      .innerJoin("vinculo.usuario", "usuario")
+    const vinculos = await this.repository
+      .createQueryBuilder(this.alias)
+      .innerJoin(`${this.alias}.campus`, "campus")
+      .innerJoin(`${this.alias}.usuario`, "usuario")
       .andWhere("campus.id = :campusId", { campusId })
       .andWhere("usuario.id = :usuarioId", { usuarioId })
-      .select(["vinculo", "campus", "usuario"])
+      .select([this.alias, "campus", "usuario"])
       .getMany();
 
     return vinculos as PerfilFindOneOutputDto[];
@@ -204,8 +142,8 @@ export class PerfilTypeOrmRepositoryAdapter implements IPerfilRepositoryPort {
   async deactivateByIds(ids: string[]): Promise<void> {
     if (ids.length === 0) return;
 
-    await this.vinculoRepository
-      .createQueryBuilder("usuario_vinculo_campus")
+    await this.repository
+      .createQueryBuilder(this.alias)
       .update()
       .set({
         ativo: false,
@@ -213,33 +151,5 @@ export class PerfilTypeOrmRepositoryAdapter implements IPerfilRepositoryPort {
       .where("ativo = :isActive", { isActive: true })
       .andWhereInIds(ids)
       .execute();
-  }
-
-  /**
-   * Extrai filtros do formato do DTO para o formato de IPaginationCriteria
-   * @param dto DTO que pode conter campos filter.* dinâmicos
-   * @returns Objeto com filtros no formato esperado pelo IPaginationCriteria
-   */
-  private extractFilters(
-    dto: DtoWithFilters | null | undefined,
-  ): Record<string, string | string[]> {
-    const filters: Record<string, string | string[]> = {};
-
-    if (!dto) return filters;
-
-    for (const [key, value] of Object.entries(dto)) {
-      if (key.startsWith("filter.")) {
-        // Valida se o valor é string ou array de strings
-        if (
-          typeof value === "string" ||
-          (Array.isArray(value) && value.every((v) => typeof v === "string"))
-        ) {
-          const filterKey = key.replace("filter.", "");
-          filters[filterKey] = value;
-        }
-      }
-    }
-
-    return filters;
   }
 }

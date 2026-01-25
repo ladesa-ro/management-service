@@ -1,5 +1,5 @@
-import { Inject, Injectable, NotFoundException } from "@nestjs/common";
-import { has, pick } from "lodash";
+import { Inject, Injectable } from "@nestjs/common";
+import { has } from "lodash";
 import type { AccessContext } from "@/infrastructure/access-context";
 import type {
   HorarioGeradoCreateInputDto,
@@ -11,22 +11,82 @@ import type {
 } from "@/v2/adapters/in/http/horario-gerado/dto";
 import type { HorarioGeradoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import { CalendarioLetivoService } from "@/v2/core/calendario-letivo/application/use-cases/calendario-letivo.service";
+import { BaseCrudService } from "@/v2/core/shared";
 import type { IHorarioGeradoRepositoryPort } from "../ports";
 
 @Injectable()
-export class HorarioGeradoService {
+export class HorarioGeradoService extends BaseCrudService<
+  HorarioGeradoEntity,
+  HorarioGeradoListInputDto,
+  HorarioGeradoListOutputDto,
+  HorarioGeradoFindOneInputDto,
+  HorarioGeradoFindOneOutputDto,
+  HorarioGeradoCreateInputDto,
+  HorarioGeradoUpdateInputDto
+> {
+  protected readonly resourceName = "HorarioGerado";
+  protected readonly createAction = "horario_gerado:create";
+  protected readonly updateAction = "horario_gerado:update";
+  protected readonly deleteAction = "horario_gerado:delete";
+  protected readonly createFields = [
+    "status",
+    "tipo",
+    "dataGeracao",
+    "vigenciaInicio",
+    "vigenciaFim",
+  ] as const;
+  protected readonly updateFields = [
+    "status",
+    "tipo",
+    "dataGeracao",
+    "vigenciaInicio",
+    "vigenciaFim",
+  ] as const;
+
   constructor(
     @Inject("IHorarioGeradoRepositoryPort")
-    private horarioGeradoRepository: IHorarioGeradoRepositoryPort,
-    private calendarioLetivoService: CalendarioLetivoService,
-  ) {}
+    protected readonly repository: IHorarioGeradoRepositoryPort,
+    private readonly calendarioLetivoService: CalendarioLetivoService,
+  ) {
+    super();
+  }
+
+  protected override async beforeCreate(
+    accessContext: AccessContext,
+    entity: HorarioGeradoEntity,
+    dto: HorarioGeradoCreateInputDto,
+  ): Promise<void> {
+    if (dto.calendario) {
+      const calendario = await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(
+        accessContext,
+        dto.calendario.id,
+      );
+      this.repository.merge(entity, { calendario: { id: calendario.id } });
+    }
+  }
+
+  protected override async beforeUpdate(
+    accessContext: AccessContext,
+    entity: HorarioGeradoEntity,
+    dto: HorarioGeradoFindOneInputDto & HorarioGeradoUpdateInputDto,
+  ): Promise<void> {
+    if (has(dto, "calendario") && dto.calendario !== undefined) {
+      const calendario = await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(
+        accessContext,
+        dto.calendario.id,
+      );
+      this.repository.merge(entity, { calendario: { id: calendario.id } });
+    }
+  }
+
+  // Métodos prefixados para compatibilidade com IHorarioGeradoUseCasePort
 
   async horarioGeradoFindAll(
     accessContext: AccessContext,
     dto: HorarioGeradoListInputDto | null = null,
     selection?: string[] | boolean,
   ): Promise<HorarioGeradoListOutputDto> {
-    return this.horarioGeradoRepository.findAll(accessContext, dto, selection);
+    return this.findAll(accessContext, dto, selection);
   }
 
   async horarioGeradoFindById(
@@ -34,7 +94,7 @@ export class HorarioGeradoService {
     dto: HorarioGeradoFindOneInputDto,
     selection?: string[] | boolean,
   ): Promise<HorarioGeradoFindOneOutputDto | null> {
-    return this.horarioGeradoRepository.findById(accessContext, dto, selection);
+    return this.findById(accessContext, dto, selection);
   }
 
   async horarioGeradoFindByIdStrict(
@@ -42,13 +102,7 @@ export class HorarioGeradoService {
     dto: HorarioGeradoFindOneInputDto,
     selection?: string[] | boolean,
   ): Promise<HorarioGeradoFindOneOutputDto> {
-    const horario = await this.horarioGeradoRepository.findById(accessContext, dto, selection);
-
-    if (!horario) {
-      throw new NotFoundException();
-    }
-
-    return horario;
+    return this.findByIdStrict(accessContext, dto, selection);
   }
 
   async horarioGeradoFindByIdSimple(
@@ -56,7 +110,7 @@ export class HorarioGeradoService {
     id: string,
     selection?: string[],
   ): Promise<HorarioGeradoFindOneOutputDto | null> {
-    return this.horarioGeradoRepository.findByIdSimple(accessContext, id, selection);
+    return this.findByIdSimple(accessContext, id, selection);
   }
 
   async horarioGeradoFindByIdSimpleStrict(
@@ -64,117 +118,27 @@ export class HorarioGeradoService {
     id: string,
     selection?: string[],
   ): Promise<HorarioGeradoFindOneOutputDto> {
-    const horarioGerado = await this.horarioGeradoRepository.findByIdSimple(
-      accessContext,
-      id,
-      selection,
-    );
-
-    if (!horarioGerado) {
-      throw new NotFoundException();
-    }
-
-    return horarioGerado;
+    return this.findByIdSimpleStrict(accessContext, id, selection);
   }
 
   async horarioGeradoCreate(
     accessContext: AccessContext,
     dto: HorarioGeradoCreateInputDto,
   ): Promise<HorarioGeradoFindOneOutputDto> {
-    await accessContext.ensurePermission("horario_gerado:create", { dto } as any);
-
-    const dtoHorarioGerado = pick(dto, [
-      "status",
-      "tipo",
-      "dataGeracao",
-      "vigenciaInicio",
-      "vigenciaFim",
-    ]);
-
-    const horarioGerado = this.horarioGeradoRepository.create();
-
-    this.horarioGeradoRepository.merge(horarioGerado, {
-      ...dtoHorarioGerado,
-    });
-
-    if (dto.calendario) {
-      const calendario = await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(
-        accessContext,
-        dto.calendario.id,
-      );
-
-      this.horarioGeradoRepository.merge(horarioGerado, {
-        calendario: {
-          id: calendario.id,
-        },
-      });
-    }
-
-    await this.horarioGeradoRepository.save(horarioGerado);
-
-    return this.horarioGeradoFindByIdStrict(accessContext, {
-      id: horarioGerado.id,
-    });
+    return this.create(accessContext, dto);
   }
 
   async horarioGeradoUpdate(
     accessContext: AccessContext,
     dto: HorarioGeradoFindOneInputDto & HorarioGeradoUpdateInputDto,
   ): Promise<HorarioGeradoFindOneOutputDto> {
-    const currentHorarioGerado = await this.horarioGeradoFindByIdStrict(accessContext, {
-      id: dto.id,
-    });
-
-    await accessContext.ensurePermission("horario_gerado:update", { dto }, dto.id);
-
-    const dtoHorarioGerado = pick(dto, [
-      "status",
-      "tipo",
-      "dataGeracao",
-      "vigenciaInicio",
-      "vigenciaFim",
-    ]);
-
-    const horarioGerado = {
-      id: currentHorarioGerado.id,
-    } as HorarioGeradoEntity;
-
-    this.horarioGeradoRepository.merge(horarioGerado, {
-      ...dtoHorarioGerado,
-    });
-
-    if (has(dto, "calendario") && dto.calendario !== undefined) {
-      const calendario = await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(
-        accessContext,
-        dto.calendario!.id,
-      );
-
-      this.horarioGeradoRepository.merge(horarioGerado, {
-        calendario: {
-          id: calendario.id,
-        },
-      });
-    }
-
-    await this.horarioGeradoRepository.save(horarioGerado);
-
-    return this.horarioGeradoFindByIdStrict(accessContext, {
-      id: horarioGerado.id,
-    });
+    return this.update(accessContext, dto);
   }
 
   async horarioGeradoDeleteOneById(
     accessContext: AccessContext,
     dto: HorarioGeradoFindOneInputDto,
   ): Promise<boolean> {
-    await accessContext.ensurePermission("horario_gerado:delete", { dto }, dto.id);
-
-    const horarioGerado = await this.horarioGeradoFindByIdStrict(accessContext, dto);
-
-    if (horarioGerado) {
-      await this.horarioGeradoRepository.softDeleteById(horarioGerado.id);
-    }
-
-    return true;
+    return this.deleteOneById(accessContext, dto);
   }
 }

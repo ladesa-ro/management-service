@@ -1,45 +1,48 @@
 import { Injectable } from "@nestjs/common";
-import { map } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
-import type { DeepPartial } from "typeorm";
-import type { AccessContext } from "@/infrastructure/access-context";
-import { QbEfficientLoad } from "@/shared";
+import { paginateConfig } from "@/infrastructure/fixtures";
 import type {
   EtapaFindOneInputDto,
   EtapaFindOneOutputDto,
   EtapaListInputDto,
   EtapaListOutputDto,
 } from "@/v2/adapters/in/http/etapa/dto";
-import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
-import type { EtapaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities/etapa.entity";
-import type { IPaginationConfig, IPaginationCriteria } from "@/v2/application/ports/pagination";
+import type { IPaginationConfig } from "@/v2/application/ports/pagination";
 import type { IEtapaRepositoryPort } from "@/v2/core/etapa/application/ports";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
-
-const aliasEtapa = "etapa";
-type DtoWithFilters = Record<string, unknown>;
+import { BaseTypeOrmRepositoryAdapter } from "../base";
+import { DatabaseContextService } from "../context/database-context.service";
+import type { EtapaEntity } from "../typeorm/entities";
 
 @Injectable()
-export class EtapaTypeOrmRepositoryAdapter implements IEtapaRepositoryPort {
-  constructor(
-    private databaseContext: DatabaseContextService,
-    private paginationAdapter: NestJsPaginateAdapter,
-  ) {}
+export class EtapaTypeOrmRepositoryAdapter
+  extends BaseTypeOrmRepositoryAdapter<
+    EtapaEntity,
+    EtapaListInputDto,
+    EtapaListOutputDto,
+    EtapaFindOneInputDto,
+    EtapaFindOneOutputDto
+  >
+  implements IEtapaRepositoryPort
+{
+  protected readonly alias = "etapa";
+  protected readonly authzAction = "etapa:find";
+  protected readonly outputDtoName = "EtapaFindOneOutput";
 
-  private get etapaRepository() {
+  constructor(
+    protected readonly databaseContext: DatabaseContextService,
+    protected readonly paginationAdapter: NestJsPaginateAdapter,
+  ) {
+    super();
+  }
+
+  protected get repository() {
     return this.databaseContext.etapaRepository;
   }
 
-  async findAll(
-    accessContext: AccessContext,
-    dto: EtapaListInputDto | null = null,
-    selection?: string[] | boolean,
-  ): Promise<EtapaListOutputDto> {
-    const qb = this.etapaRepository.createQueryBuilder(aliasEtapa);
-
-    await accessContext.applyFilter("etapa:find", qb, aliasEtapa, null);
-
-    const config = {
+  protected getPaginateConfig(): IPaginationConfig<EtapaEntity> {
+    return {
+      ...paginateConfig,
       select: [
         "id",
         "numero",
@@ -53,7 +56,7 @@ export class EtapaTypeOrmRepositoryAdapter implements IEtapaRepositoryPort {
       sortableColumns: [
         "numero",
         "dataInicio",
-        "dataInicio",
+        "dataTermino",
         "cor",
         "calendario.id",
         "calendario.nome",
@@ -69,92 +72,6 @@ export class EtapaTypeOrmRepositoryAdapter implements IEtapaRepositoryPort {
         "calendario.nome": [FilterOperator.EQ],
         "calendario.ano": [FilterOperator.EQ],
       },
-    } as IPaginationConfig<EtapaEntity>;
-
-    const criteria: IPaginationCriteria = {
-      ...dto,
-      sortBy: dto?.sortBy ? (dto.sortBy as unknown as string[]) : undefined,
-      filters: this.extractFilters(dto),
     };
-
-    const paginated = await this.paginationAdapter.paginate(qb, criteria, config);
-
-    qb.select([]);
-    QbEfficientLoad("EtapaFindOneOutput", qb, aliasEtapa, selection);
-
-    const pageItemsView = await qb.andWhereInIds(map(paginated.data, "id")).getMany();
-    paginated.data = paginated.data.map((p) => pageItemsView.find((i) => i.id === p.id)!);
-
-    return paginated as unknown as EtapaListOutputDto;
-  }
-
-  async findById(
-    accessContext: AccessContext,
-    dto: EtapaFindOneInputDto,
-    selection?: string[] | boolean,
-  ): Promise<EtapaFindOneOutputDto | null> {
-    const qb = this.etapaRepository.createQueryBuilder(aliasEtapa);
-
-    await accessContext.applyFilter("etapa:find", qb, aliasEtapa, null);
-
-    qb.andWhere(`${aliasEtapa}.id = :id`, { id: dto.id });
-    qb.select([]);
-    QbEfficientLoad("EtapaFindOneOutput", qb, aliasEtapa, selection);
-
-    return (await qb.getOne()) as EtapaFindOneOutputDto | null;
-  }
-
-  async findByIdSimple(
-    accessContext: AccessContext,
-    id: string,
-    selection?: string[],
-  ): Promise<EtapaFindOneOutputDto | null> {
-    const qb = this.etapaRepository.createQueryBuilder(aliasEtapa);
-
-    await accessContext.applyFilter("etapa:find", qb, aliasEtapa, null);
-    qb.andWhere(`${aliasEtapa}.id = :id`, { id });
-    qb.select([]);
-    QbEfficientLoad("EtapaFindOneOutput", qb, aliasEtapa, selection);
-
-    return (await qb.getOne()) as EtapaFindOneOutputDto | null;
-  }
-
-  async save(etapa: DeepPartial<EtapaEntity>): Promise<EtapaEntity> {
-    return this.etapaRepository.save(etapa);
-  }
-
-  create(): EtapaEntity {
-    return this.etapaRepository.create();
-  }
-
-  merge(etapa: EtapaEntity, data: DeepPartial<EtapaEntity>): void {
-    this.etapaRepository.merge(etapa, data);
-  }
-
-  async softDeleteById(id: string): Promise<void> {
-    await this.etapaRepository
-      .createQueryBuilder(aliasEtapa)
-      .update()
-      .set({ dateDeleted: "NOW()" })
-      .where("id = :id", { id })
-      .andWhere("dateDeleted IS NULL")
-      .execute();
-  }
-
-  private extractFilters(
-    dto: DtoWithFilters | null | undefined,
-  ): Record<string, string | string[]> {
-    const filters: Record<string, string | string[]> = {};
-    if (!dto) return filters;
-    for (const [key, value] of Object.entries(dto)) {
-      if (
-        key.startsWith("filter.") &&
-        (typeof value === "string" ||
-          (Array.isArray(value) && value.every((v) => typeof v === "string")))
-      ) {
-        filters[key.replace("filter.", "")] = value;
-      }
-    }
-    return filters;
   }
 }

@@ -1,5 +1,4 @@
-import { Inject, Injectable, NotFoundException } from "@nestjs/common";
-import { pick } from "lodash";
+import { Inject, Injectable } from "@nestjs/common";
 import type { AccessContext } from "@/infrastructure/access-context";
 import type {
   DisponibilidadeCreateInputDto,
@@ -10,21 +9,41 @@ import type {
   DisponibilidadeUpdateInputDto,
 } from "@/v2/adapters/in/http/disponibilidade/dto";
 import type { DisponibilidadeEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
-import type { IDisponibilidadeRepositoryPort, IDisponibilidadeUseCasePort } from "../ports";
+import { BaseCrudService } from "@/v2/core/shared";
+import type { IDisponibilidadeRepositoryPort } from "../ports";
 
 @Injectable()
-export class DisponibilidadeService implements IDisponibilidadeUseCasePort {
+export class DisponibilidadeService extends BaseCrudService<
+  DisponibilidadeEntity,
+  DisponibilidadeListInputDto,
+  DisponibilidadeListOutputDto,
+  DisponibilidadeFindOneInputDto,
+  DisponibilidadeFindOneOutputDto,
+  DisponibilidadeCreateInputDto,
+  DisponibilidadeUpdateInputDto
+> {
+  protected readonly resourceName = "Disponibilidade";
+  protected readonly createAction = "disponibilidade:create";
+  protected readonly updateAction = "disponibilidade:update";
+  protected readonly deleteAction = "disponibilidade:delete";
+  protected readonly createFields = ["dataInicio", "dataFim"] as const;
+  protected readonly updateFields = ["dataInicio", "dataFim"] as const;
+
   constructor(
     @Inject("IDisponibilidadeRepositoryPort")
-    private disponibilidadeRepository: IDisponibilidadeRepositoryPort,
-  ) {}
+    protected readonly repository: IDisponibilidadeRepositoryPort,
+  ) {
+    super();
+  }
+
+  // Métodos prefixados para compatibilidade
 
   async disponibilidadeFindAll(
     accessContext: AccessContext,
     dto: DisponibilidadeListInputDto | null = null,
     selection?: string[],
   ): Promise<DisponibilidadeListOutputDto> {
-    return this.disponibilidadeRepository.findAll(accessContext, dto, selection);
+    return this.findAll(accessContext, dto, selection);
   }
 
   async disponibilidadeFindById(
@@ -32,7 +51,7 @@ export class DisponibilidadeService implements IDisponibilidadeUseCasePort {
     dto: DisponibilidadeFindOneInputDto,
     selection?: string[],
   ): Promise<DisponibilidadeFindOneOutputDto | null> {
-    return this.disponibilidadeRepository.findById(accessContext, dto, selection);
+    return this.findById(accessContext, dto, selection);
   }
 
   async disponibilidadeFindByIdStrict(
@@ -40,17 +59,7 @@ export class DisponibilidadeService implements IDisponibilidadeUseCasePort {
     dto: DisponibilidadeFindOneInputDto,
     selection?: string[],
   ): Promise<DisponibilidadeFindOneOutputDto> {
-    const disponibilidade = await this.disponibilidadeRepository.findById(
-      accessContext,
-      dto,
-      selection,
-    );
-
-    if (!disponibilidade) {
-      throw new NotFoundException();
-    }
-
-    return disponibilidade;
+    return this.findByIdStrict(accessContext, dto, selection);
   }
 
   async disponibilidadeFindByIdSimple(
@@ -58,7 +67,7 @@ export class DisponibilidadeService implements IDisponibilidadeUseCasePort {
     id: string,
     selection?: string[],
   ): Promise<DisponibilidadeFindOneOutputDto | null> {
-    return this.disponibilidadeRepository.findByIdSimple(accessContext, id, selection);
+    return this.findByIdSimple(accessContext, id, selection);
   }
 
   async disponibilidadeFindByIdSimpleStrict(
@@ -66,75 +75,27 @@ export class DisponibilidadeService implements IDisponibilidadeUseCasePort {
     id: string,
     selection?: string[],
   ): Promise<DisponibilidadeFindOneOutputDto> {
-    const disponibilidade = await this.disponibilidadeRepository.findByIdSimple(
-      accessContext,
-      id,
-      selection,
-    );
-
-    if (!disponibilidade) {
-      throw new NotFoundException();
-    }
-
-    return disponibilidade;
+    return this.findByIdSimpleStrict(accessContext, id, selection);
   }
 
   async disponibilidadeCreate(
     accessContext: AccessContext,
     dto: DisponibilidadeCreateInputDto,
   ): Promise<DisponibilidadeFindOneOutputDto> {
-    await accessContext.ensurePermission("disponibilidade:create", { dto } as any);
-
-    const dtoDisponibilidade = pick(dto, ["dataInicio", "dataFim"]);
-
-    const disponibilidade = this.disponibilidadeRepository.create();
-
-    this.disponibilidadeRepository.merge(disponibilidade, {
-      ...dtoDisponibilidade,
-    });
-
-    await this.disponibilidadeRepository.save(disponibilidade);
-
-    return this.disponibilidadeFindByIdStrict(accessContext, { id: disponibilidade.id });
+    return this.create(accessContext, dto);
   }
 
   async disponibilidadeUpdate(
     accessContext: AccessContext,
     dto: DisponibilidadeFindOneInputDto & DisponibilidadeUpdateInputDto,
   ): Promise<DisponibilidadeFindOneOutputDto> {
-    const currentDisponibilidade = await this.disponibilidadeFindByIdStrict(accessContext, {
-      id: dto.id,
-    });
-
-    await accessContext.ensurePermission("disponibilidade:update", { dto }, dto.id);
-
-    const dtoDisponibilidade = pick(dto, ["dataInicio", "dataFim"]);
-
-    const disponibilidade = <DisponibilidadeEntity>{
-      id: currentDisponibilidade.id,
-    };
-
-    this.disponibilidadeRepository.merge(disponibilidade, {
-      ...dtoDisponibilidade,
-    });
-
-    await this.disponibilidadeRepository.save(disponibilidade);
-
-    return this.disponibilidadeFindByIdStrict(accessContext, { id: disponibilidade.id });
+    return this.update(accessContext, dto);
   }
 
   async disponibilidadeDeleteOneById(
     accessContext: AccessContext,
     dto: DisponibilidadeFindOneInputDto,
   ): Promise<boolean> {
-    await accessContext.ensurePermission("disponibilidade:delete", { dto }, dto.id);
-
-    const disponibilidade = await this.disponibilidadeFindByIdStrict(accessContext, dto);
-
-    if (disponibilidade) {
-      await this.disponibilidadeRepository.softDeleteById(disponibilidade.id);
-    }
-
-    return true;
+    return this.deleteOneById(accessContext, dto);
   }
 }

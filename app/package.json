@@ -77,8 +77,7 @@
   },
   "scripts": {
     "dev": "bun run --watch lib/v2/server/main.ts",
-    "build": "echo 'ok'",
-    "build:2": "bun run check:static",
+    "build": "bun run check:static",
     "debug": "bun run --watch --inspect-wait lib/v2/server/main.ts",
     "start": "bun run lib/v2/server/main.ts",
     "check:static": "tsc --noEmit",

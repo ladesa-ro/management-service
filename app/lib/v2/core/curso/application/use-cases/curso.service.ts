@@ -1,5 +1,5 @@
-import { Inject, Injectable, NotFoundException } from "@nestjs/common";
-import { has, pick } from "lodash";
+import { Inject, Injectable, NotFoundException, type StreamableFile } from "@nestjs/common";
+import { has } from "lodash";
 import type { AccessContext } from "@/infrastructure/access-context";
 import type {
   CursoCreateInputDto,
@@ -14,141 +14,63 @@ import { ArquivoService } from "@/v2/core/arquivo/application/use-cases/arquivo.
 import { CampusService } from "@/v2/core/campus/application/use-cases/campus.service";
 import { ImagemService } from "@/v2/core/imagem/application/use-cases/imagem.service";
 import { OfertaFormacaoService } from "@/v2/core/oferta-formacao/application/use-cases/oferta-formacao.service";
-import type { ICursoRepositoryPort, ICursoUseCasePort } from "../ports";
+import { BaseCrudService } from "@/v2/core/shared";
+import type { ICursoRepositoryPort } from "../ports";
 
 @Injectable()
-export class CursoService implements ICursoUseCasePort {
+export class CursoService extends BaseCrudService<
+  CursoEntity,
+  CursoListInputDto,
+  CursoListOutputDto,
+  CursoFindOneInputDto,
+  CursoFindOneOutputDto,
+  CursoCreateInputDto,
+  CursoUpdateInputDto
+> {
+  protected readonly resourceName = "Curso";
+  protected readonly createAction = "curso:create";
+  protected readonly updateAction = "curso:update";
+  protected readonly deleteAction = "curso:delete";
+  protected readonly createFields = ["nome", "nomeAbreviado"] as const;
+  protected readonly updateFields = ["nome", "nomeAbreviado"] as const;
+
   constructor(
     @Inject("ICursoRepositoryPort")
-    private cursoRepository: ICursoRepositoryPort,
-    private campusService: CampusService,
-    private ofertaFormacaoService: OfertaFormacaoService,
-    private imagemService: ImagemService,
-    private arquivoService: ArquivoService,
-  ) {}
+    protected readonly repository: ICursoRepositoryPort,
+    private readonly campusService: CampusService,
+    private readonly ofertaFormacaoService: OfertaFormacaoService,
+    private readonly imagemService: ImagemService,
+    private readonly arquivoService: ArquivoService,
+  ) {
+    super();
+  }
 
-  async cursoFindAll(
+  protected override async beforeCreate(
     accessContext: AccessContext,
-    dto: CursoListInputDto | null = null,
-    selection?: string[] | boolean,
-  ): Promise<CursoListOutputDto> {
-    return this.cursoRepository.findAll(accessContext, dto, selection);
-  }
-
-  async cursoFindById(
-    accessContext: AccessContext | null,
-    dto: CursoFindOneInputDto,
-    selection?: string[] | boolean,
-  ): Promise<CursoFindOneOutputDto | null> {
-    return this.cursoRepository.findById(accessContext, dto, selection);
-  }
-
-  async cursoFindByIdStrict(
-    accessContext: AccessContext | null,
-    dto: CursoFindOneInputDto,
-    selection?: string[] | boolean,
-  ): Promise<CursoFindOneOutputDto> {
-    const curso = await this.cursoRepository.findById(accessContext, dto, selection);
-
-    if (!curso) {
-      throw new NotFoundException();
-    }
-
-    return curso;
-  }
-
-  async cursoFindByIdSimple(
-    accessContext: AccessContext,
-    id: CursoFindOneInputDto["id"],
-    selection?: string[],
-  ): Promise<CursoFindOneOutputDto | null> {
-    return this.cursoRepository.findByIdSimple(accessContext, id, selection);
-  }
-
-  async cursoFindByIdSimpleStrict(
-    accessContext: AccessContext,
-    id: CursoFindOneInputDto["id"],
-    selection?: string[],
-  ): Promise<CursoFindOneOutputDto> {
-    const curso = await this.cursoRepository.findByIdSimple(accessContext, id, selection);
-
-    if (!curso) {
-      throw new NotFoundException();
-    }
-
-    return curso;
-  }
-
-  async cursoCreate(
-    accessContext: AccessContext,
+    entity: CursoEntity,
     dto: CursoCreateInputDto,
-  ): Promise<CursoFindOneOutputDto> {
-    await accessContext.ensurePermission("curso:create", { dto } as any);
-
-    const dtoCurso = pick(dto, ["nome", "nomeAbreviado"]);
-
-    const curso = this.cursoRepository.create();
-
-    this.cursoRepository.merge(curso, {
-      ...dtoCurso,
-    });
-
-    const campus = await this.campusService.campusFindByIdSimpleStrict(
-      accessContext,
-      dto.campus.id,
-    );
-
-    this.cursoRepository.merge(curso, {
-      campus: {
-        id: campus.id,
-      },
-    });
+  ): Promise<void> {
+    const campus = await this.campusService.campusFindByIdSimpleStrict(accessContext, dto.campus.id);
+    this.repository.merge(entity, { campus: { id: campus.id } });
 
     const ofertaFormacao = await this.ofertaFormacaoService.ofertaFormacaoFindByIdSimpleStrict(
       accessContext,
       dto.ofertaFormacao.id,
     );
-
-    this.cursoRepository.merge(curso, {
-      ofertaFormacao: {
-        id: ofertaFormacao.id,
-      },
-    });
-
-    await this.cursoRepository.save(curso);
-
-    return this.cursoFindByIdStrict(accessContext, { id: curso.id });
+    this.repository.merge(entity, { ofertaFormacao: { id: ofertaFormacao.id } });
   }
 
-  async cursoUpdate(
+  protected override async beforeUpdate(
     accessContext: AccessContext,
+    entity: CursoEntity,
     dto: CursoFindOneInputDto & CursoUpdateInputDto,
-  ): Promise<CursoFindOneOutputDto> {
-    const currentCurso = await this.cursoFindByIdStrict(accessContext, { id: dto.id });
-
-    await accessContext.ensurePermission("curso:update", { dto }, dto.id);
-
-    const dtoCurso = pick(dto, ["nome", "nomeAbreviado"]);
-
-    const curso = {
-      id: currentCurso.id,
-    } as CursoEntity;
-
-    this.cursoRepository.merge(curso, {
-      ...dtoCurso,
-    });
-
+  ): Promise<void> {
     if (has(dto, "campus") && dto.campus !== undefined) {
       const campus = await this.campusService.campusFindByIdSimpleStrict(
         accessContext,
         dto.campus.id,
       );
-
-      this.cursoRepository.merge(curso, {
-        campus: {
-          id: campus.id,
-        },
-      });
+      this.repository.merge(entity, { campus: { id: campus.id } });
     }
 
     if (has(dto, "ofertaFormacao") && dto.ofertaFormacao !== undefined) {
@@ -156,21 +78,80 @@ export class CursoService implements ICursoUseCasePort {
         accessContext,
         dto.ofertaFormacao.id,
       );
-
-      this.cursoRepository.merge(curso, {
-        ofertaFormacao: {
-          id: ofertaFormacao.id,
-        },
-      });
+      this.repository.merge(entity, { ofertaFormacao: { id: ofertaFormacao.id } });
     }
-
-    await this.cursoRepository.save(curso);
-
-    return this.cursoFindByIdStrict(accessContext, { id: curso.id });
   }
 
-  async cursoGetImagemCapa(accessContext: AccessContext | null, id: string) {
-    const curso = await this.cursoFindByIdStrict(accessContext, { id: id });
+  // Métodos prefixados para compatibilidade
+
+  async cursoFindAll(
+    accessContext: AccessContext,
+    dto: CursoListInputDto | null = null,
+    selection?: string[] | boolean,
+  ): Promise<CursoListOutputDto> {
+    return this.findAll(accessContext, dto, selection);
+  }
+
+  async cursoFindById(
+    accessContext: AccessContext | null,
+    dto: CursoFindOneInputDto,
+    selection?: string[] | boolean,
+  ): Promise<CursoFindOneOutputDto | null> {
+    return this.findById(accessContext, dto, selection);
+  }
+
+  async cursoFindByIdStrict(
+    accessContext: AccessContext | null,
+    dto: CursoFindOneInputDto,
+    selection?: string[] | boolean,
+  ): Promise<CursoFindOneOutputDto> {
+    return this.findByIdStrict(accessContext, dto, selection);
+  }
+
+  async cursoFindByIdSimple(
+    accessContext: AccessContext,
+    id: CursoFindOneInputDto["id"],
+    selection?: string[],
+  ): Promise<CursoFindOneOutputDto | null> {
+    return this.findByIdSimple(accessContext, id, selection);
+  }
+
+  async cursoFindByIdSimpleStrict(
+    accessContext: AccessContext,
+    id: CursoFindOneInputDto["id"],
+    selection?: string[],
+  ): Promise<CursoFindOneOutputDto> {
+    return this.findByIdSimpleStrict(accessContext, id, selection);
+  }
+
+  async cursoCreate(
+    accessContext: AccessContext,
+    dto: CursoCreateInputDto,
+  ): Promise<CursoFindOneOutputDto> {
+    return this.create(accessContext, dto);
+  }
+
+  async cursoUpdate(
+    accessContext: AccessContext,
+    dto: CursoFindOneInputDto & CursoUpdateInputDto,
+  ): Promise<CursoFindOneOutputDto> {
+    return this.update(accessContext, dto);
+  }
+
+  async cursoDeleteOneById(
+    accessContext: AccessContext,
+    dto: CursoFindOneInputDto,
+  ): Promise<boolean> {
+    return this.deleteOneById(accessContext, dto);
+  }
+
+  // Métodos específicos de Curso (não cobertos pela BaseCrudService)
+
+  async cursoGetImagemCapa(
+    accessContext: AccessContext | null,
+    id: string,
+  ): Promise<StreamableFile> {
+    const curso = await this.cursoFindByIdStrict(accessContext, { id });
 
     if (curso.imagemCapa) {
       const [versao] = curso.imagemCapa.versoes;
@@ -188,50 +169,22 @@ export class CursoService implements ICursoUseCasePort {
     accessContext: AccessContext,
     dto: CursoFindOneInputDto,
     file: Express.Multer.File,
-  ) {
-    const currentCurso = await this.cursoFindByIdStrict(accessContext, {
-      id: dto.id,
-    });
+  ): Promise<boolean> {
+    const currentCurso = await this.cursoFindByIdStrict(accessContext, { id: dto.id });
 
     await accessContext.ensurePermission(
       "curso:update",
-      {
-        dto: {
-          id: currentCurso.id,
-        },
-      },
+      { dto: { id: currentCurso.id } },
       currentCurso.id,
     );
 
     const { imagem } = await this.imagemService.saveCursoCapa(file);
 
-    const curso = this.cursoRepository.create();
-    this.cursoRepository.merge(curso, {
-      id: currentCurso.id,
-    });
+    const curso = this.repository.create();
+    this.repository.merge(curso, { id: currentCurso.id });
+    this.repository.merge(curso, { imagemCapa: { id: imagem.id } });
 
-    this.cursoRepository.merge(curso, {
-      imagemCapa: {
-        id: imagem.id,
-      },
-    });
-
-    await this.cursoRepository.save(curso);
-
-    return true;
-  }
-
-  async cursoDeleteOneById(
-    accessContext: AccessContext,
-    dto: CursoFindOneInputDto,
-  ): Promise<boolean> {
-    await accessContext.ensurePermission("curso:delete", { dto }, dto.id);
-
-    const curso = await this.cursoFindByIdStrict(accessContext, dto);
-
-    if (curso) {
-      await this.cursoRepository.softDeleteById(curso.id);
-    }
+    await this.repository.save(curso);
 
     return true;
   }

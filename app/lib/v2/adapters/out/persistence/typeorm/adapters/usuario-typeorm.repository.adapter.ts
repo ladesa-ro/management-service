@@ -1,7 +1,4 @@
 import { Injectable } from "@nestjs/common";
-import { map } from "lodash";
-import type { DeepPartial } from "typeorm";
-import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
 import { QbEfficientLoad } from "@/shared";
 import type {
@@ -10,44 +7,41 @@ import type {
   UsuarioListInputDto,
   UsuarioListOutputDto,
 } from "@/v2/adapters/in/http/usuario/dto";
-import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
-import type { UsuarioEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
-import type { IPaginationConfig, IPaginationCriteria } from "@/v2/application/ports/pagination";
+import type { IPaginationConfig } from "@/v2/application/ports/pagination";
 import type { IUsuarioRepositoryPort } from "@/v2/core/usuario/application/ports";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
+import { BaseTypeOrmRepositoryAdapter } from "../base";
+import { DatabaseContextService } from "../context/database-context.service";
+import type { UsuarioEntity } from "../typeorm/entities";
 
-const aliasUsuario = "usuario";
-
-/**
- * Tipo helper para DTOs que contêm filtros dinâmicos
- */
-type DtoWithFilters = Record<string, unknown>;
-
-/**
- * Adapter TypeORM que implementa o port de repositório de Usuario
- * Encapsula toda a lógica de acesso a dados usando TypeORM e nestjs-paginate
- */
 @Injectable()
-export class UsuarioTypeOrmRepositoryAdapter implements IUsuarioRepositoryPort {
-  constructor(
-    private databaseContext: DatabaseContextService,
-    private paginationAdapter: NestJsPaginateAdapter,
-  ) {}
+export class UsuarioTypeOrmRepositoryAdapter
+  extends BaseTypeOrmRepositoryAdapter<
+    UsuarioEntity,
+    UsuarioListInputDto,
+    UsuarioListOutputDto,
+    UsuarioFindOneInputDto,
+    UsuarioFindOneOutputDto
+  >
+  implements IUsuarioRepositoryPort
+{
+  protected readonly alias = "usuario";
+  protected readonly authzAction = "usuario:find";
+  protected readonly outputDtoName = "UsuarioFindOneOutput";
 
-  private get usuarioRepository() {
+  constructor(
+    protected readonly databaseContext: DatabaseContextService,
+    protected readonly paginationAdapter: NestJsPaginateAdapter,
+  ) {
+    super();
+  }
+
+  protected get repository() {
     return this.databaseContext.usuarioRepository;
   }
 
-  async findAll(
-    accessContext: AccessContext,
-    dto: UsuarioListInputDto | null = null,
-    selection?: string[] | boolean,
-  ): Promise<UsuarioListOutputDto> {
-    const qb = this.usuarioRepository.createQueryBuilder(aliasUsuario);
-
-    await accessContext.applyFilter("usuario:find", qb, aliasUsuario, null);
-
-    const config = {
+  protected getPaginateConfig(): IPaginationConfig<UsuarioEntity> {
+    return {
       ...paginateConfig,
       select: ["id", "nome", "matriculaSiape", "email", "dateCreated"],
       sortableColumns: ["nome", "matriculaSiape", "email", "dateCreated"],
@@ -58,76 +52,23 @@ export class UsuarioTypeOrmRepositoryAdapter implements IUsuarioRepositoryPort {
         ["matriculaSiape", "ASC"],
       ],
       filterableColumns: {},
-    } as IPaginationConfig<UsuarioEntity>;
-
-    const criteria: IPaginationCriteria = {
-      ...dto,
-      sortBy: dto?.sortBy ? (dto.sortBy as unknown as string[]) : undefined,
-      filters: this.extractFilters(dto),
     };
-
-    const paginated = await this.paginationAdapter.paginate(qb, criteria, config);
-
-    qb.select([]);
-    QbEfficientLoad("UsuarioFindOneOutput", qb, aliasUsuario, selection);
-
-    const pageItemsView = await qb.andWhereInIds(map(paginated.data, "id")).getMany();
-    paginated.data = paginated.data.map((p) => pageItemsView.find((i) => i.id === p.id)!);
-
-    return paginated as unknown as UsuarioListOutputDto;
   }
 
-  async findById(
-    accessContext: AccessContext | null,
-    dto: UsuarioFindOneInputDto,
-    selection?: string[] | boolean,
-  ): Promise<UsuarioFindOneOutputDto | null> {
-    const qb = this.usuarioRepository.createQueryBuilder(aliasUsuario);
-
-    if (accessContext) {
-      await accessContext.applyFilter("usuario:find", qb, aliasUsuario, null);
-    }
-
-    qb.andWhere(`${aliasUsuario}.id = :id`, { id: dto.id });
-
-    qb.select([]);
-    QbEfficientLoad("UsuarioFindOneOutput", qb, aliasUsuario, selection);
-
-    const usuario = await qb.getOne();
-
-    return usuario as UsuarioFindOneOutputDto | null;
-  }
-
-  async findByIdSimple(
-    accessContext: AccessContext,
-    id: string,
-    selection?: string[],
-  ): Promise<UsuarioFindOneOutputDto | null> {
-    const qb = this.usuarioRepository.createQueryBuilder(aliasUsuario);
-
-    await accessContext.applyFilter("usuario:find", qb, aliasUsuario, null);
-    qb.andWhere(`${aliasUsuario}.id = :id`, { id });
-
-    qb.select([]);
-    QbEfficientLoad("UsuarioFindOneOutput", qb, aliasUsuario, selection);
-
-    const usuario = await qb.getOne();
-
-    return usuario as UsuarioFindOneOutputDto | null;
-  }
+  // Métodos específicos do Usuario que não estão na classe base
 
   async findByMatriculaSiape(
     matriculaSiape: string,
     selection?: string[] | boolean,
   ): Promise<UsuarioFindOneOutputDto | null> {
-    const qb = this.usuarioRepository.createQueryBuilder(aliasUsuario);
+    const qb = this.repository.createQueryBuilder(this.alias);
 
-    qb.andWhere(`${aliasUsuario}.matriculaSiape = :matriculaSiape`, {
+    qb.andWhere(`${this.alias}.matriculaSiape = :matriculaSiape`, {
       matriculaSiape: matriculaSiape,
     });
 
     qb.select([]);
-    QbEfficientLoad("UsuarioFindOneOutput", qb, aliasUsuario, selection);
+    QbEfficientLoad(this.outputDtoName, qb, this.alias, selection);
 
     const usuario = await qb.getOne();
 
@@ -138,14 +79,14 @@ export class UsuarioTypeOrmRepositoryAdapter implements IUsuarioRepositoryPort {
     matriculaSiape: string,
     excludeUsuarioId?: string | null,
   ): Promise<boolean> {
-    const qb = this.usuarioRepository.createQueryBuilder("usuario");
+    const qb = this.repository.createQueryBuilder(this.alias);
 
-    qb.where("usuario.matriculaSiape = :matriculaSiape", {
+    qb.where(`${this.alias}.matriculaSiape = :matriculaSiape`, {
       matriculaSiape: matriculaSiape,
     });
 
     if (excludeUsuarioId) {
-      qb.andWhere("usuario.id <> :excludeUsuarioId", { excludeUsuarioId });
+      qb.andWhere(`${this.alias}.id <> :excludeUsuarioId`, { excludeUsuarioId });
       qb.limit(1);
     }
 
@@ -154,12 +95,12 @@ export class UsuarioTypeOrmRepositoryAdapter implements IUsuarioRepositoryPort {
   }
 
   async isEmailAvailable(email: string, excludeUsuarioId?: string | null): Promise<boolean> {
-    const qb = this.usuarioRepository.createQueryBuilder("usuario");
+    const qb = this.repository.createQueryBuilder(this.alias);
 
-    qb.where("usuario.email = :email", { email: email });
+    qb.where(`${this.alias}.email = :email`, { email: email });
 
     if (excludeUsuarioId) {
-      qb.andWhere("usuario.id <> :excludeUsuarioId", { excludeUsuarioId });
+      qb.andWhere(`${this.alias}.id <> :excludeUsuarioId`, { excludeUsuarioId });
       qb.limit(1);
     }
 
@@ -171,60 +112,11 @@ export class UsuarioTypeOrmRepositoryAdapter implements IUsuarioRepositoryPort {
     id: string,
     property: Property,
   ): Promise<UsuarioEntity[Property]> {
-    const qb = this.usuarioRepository.createQueryBuilder("usuario");
-    qb.select(`usuario.${property}`);
-    qb.where("usuario.id = :usuarioId", { usuarioId: id });
+    const qb = this.repository.createQueryBuilder(this.alias);
+    qb.select(`${this.alias}.${property}`);
+    qb.where(`${this.alias}.id = :usuarioId`, { usuarioId: id });
 
     const usuario = await qb.getOneOrFail();
     return usuario[property];
-  }
-
-  async save(usuario: DeepPartial<UsuarioEntity>): Promise<UsuarioEntity> {
-    return this.usuarioRepository.save(usuario);
-  }
-
-  create(): UsuarioEntity {
-    return this.usuarioRepository.create();
-  }
-
-  merge(usuario: UsuarioEntity, data: DeepPartial<UsuarioEntity>): void {
-    this.usuarioRepository.merge(usuario, data);
-  }
-
-  async softDeleteById(id: string): Promise<void> {
-    await this.usuarioRepository
-      .createQueryBuilder(aliasUsuario)
-      .update()
-      .set({
-        dateDeleted: "NOW()",
-      })
-      .where("id = :id", { id })
-      .andWhere("dateDeleted IS NULL")
-      .execute();
-  }
-
-  /**
-   * Extrai filtros do formato do DTO para o formato de IPaginationCriteria
-   */
-  private extractFilters(
-    dto: DtoWithFilters | null | undefined,
-  ): Record<string, string | string[]> {
-    const filters: Record<string, string | string[]> = {};
-
-    if (!dto) return filters;
-
-    for (const [key, value] of Object.entries(dto)) {
-      if (key.startsWith("filter.")) {
-        if (
-          typeof value === "string" ||
-          (Array.isArray(value) && value.every((v) => typeof v === "string"))
-        ) {
-          const filterKey = key.replace("filter.", "");
-          filters[filterKey] = value;
-        }
-      }
-    }
-
-    return filters;
   }
 }

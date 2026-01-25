@@ -1,54 +1,47 @@
 import { Injectable } from "@nestjs/common";
-import { map } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
-import type { DeepPartial } from "typeorm";
-import type { AccessContext } from "@/infrastructure/access-context";
 import { paginateConfig } from "@/infrastructure/fixtures";
-import { QbEfficientLoad } from "@/shared";
 import type {
   CampusFindOneInputDto,
   CampusFindOneOutputDto,
   CampusListInputDto,
   CampusListOutputDto,
 } from "@/v2/adapters/in/http/campus/dto";
-import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
-import type { CampusEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
-import type { IPaginationConfig, IPaginationCriteria } from "@/v2/application/ports/pagination";
+import type { IPaginationConfig } from "@/v2/application/ports/pagination";
 import type { ICampusRepositoryPort } from "@/v2/core/campus/application/ports";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
+import { BaseTypeOrmRepositoryAdapter } from "../base";
+import { DatabaseContextService } from "../context/database-context.service";
+import type { CampusEntity } from "../typeorm/entities";
 
-const aliasCampus = "campus";
-
-/**
- * Tipo helper para DTOs que contêm filtros dinâmicos
- */
-type DtoWithFilters = Record<string, unknown>;
-
-/**
- * Adapter TypeORM que implementa o port de repositório de Campus
- * Encapsula toda a lógica de acesso a dados usando TypeORM e nestjs-paginate
- */
 @Injectable()
-export class CampusTypeOrmRepositoryAdapter implements ICampusRepositoryPort {
-  constructor(
-    private databaseContext: DatabaseContextService,
-    private paginationAdapter: NestJsPaginateAdapter,
-  ) {}
+export class CampusTypeOrmRepositoryAdapter
+  extends BaseTypeOrmRepositoryAdapter<
+    CampusEntity,
+    CampusListInputDto,
+    CampusListOutputDto,
+    CampusFindOneInputDto,
+    CampusFindOneOutputDto
+  >
+  implements ICampusRepositoryPort
+{
+  protected readonly alias = "campus";
+  protected readonly authzAction = "campus:find";
+  protected readonly outputDtoName = "CampusFindOneOutput";
 
-  private get campusRepository() {
+  constructor(
+    protected readonly databaseContext: DatabaseContextService,
+    protected readonly paginationAdapter: NestJsPaginateAdapter,
+  ) {
+    super();
+  }
+
+  protected get repository() {
     return this.databaseContext.campusRepository;
   }
 
-  async findAll(
-    accessContext: AccessContext,
-    dto: CampusListInputDto | null = null,
-    selection?: string[] | boolean,
-  ): Promise<CampusListOutputDto> {
-    const qb = this.campusRepository.createQueryBuilder(aliasCampus);
-
-    await accessContext.applyFilter("campus:find", qb, aliasCampus, null);
-
-    const config = {
+  protected getPaginateConfig(): IPaginationConfig<CampusEntity> {
+    return {
       ...paginateConfig,
       select: [
         "id",
@@ -106,107 +99,6 @@ export class CampusTypeOrmRepositoryAdapter implements ICampusRepositoryPort {
         "endereco.cidade.estado.nome": [FilterOperator.EQ],
         "endereco.cidade.estado.sigla": [FilterOperator.EQ],
       },
-    } as IPaginationConfig<CampusEntity>;
-
-    const criteria: IPaginationCriteria = {
-      ...dto,
-      sortBy: dto?.sortBy ? (dto.sortBy as unknown as string[]) : undefined,
-      filters: this.extractFilters(dto),
     };
-
-    const paginated = await this.paginationAdapter.paginate(qb, criteria, config);
-
-    qb.select([]);
-    QbEfficientLoad("CampusFindOneOutput", qb, aliasCampus, selection);
-
-    const pageItemsView = await qb.andWhereInIds(map(paginated.data, "id")).getMany();
-    paginated.data = paginated.data.map((p) => pageItemsView.find((i) => i.id === p.id)!);
-
-    return paginated as unknown as CampusListOutputDto;
-  }
-
-  async findById(
-    accessContext: AccessContext,
-    dto: CampusFindOneInputDto,
-    selection?: string[] | boolean,
-  ): Promise<CampusFindOneOutputDto | null> {
-    const qb = this.campusRepository.createQueryBuilder(aliasCampus);
-
-    await accessContext.applyFilter("campus:find", qb, aliasCampus, null);
-    qb.andWhere(`${aliasCampus}.id = :id`, { id: dto.id });
-
-    qb.select([]);
-    QbEfficientLoad("CampusFindOneOutput", qb, aliasCampus, selection);
-
-    const campus = await qb.getOne();
-
-    return campus as CampusFindOneOutputDto | null;
-  }
-
-  async findByIdSimple(
-    accessContext: AccessContext,
-    id: string,
-    selection?: string[] | boolean,
-  ): Promise<CampusFindOneOutputDto | null> {
-    const qb = this.campusRepository.createQueryBuilder(aliasCampus);
-
-    await accessContext.applyFilter("campus:find", qb, aliasCampus, null);
-    qb.andWhere(`${aliasCampus}.id = :id`, { id });
-
-    qb.select([]);
-    QbEfficientLoad("CampusFindOneOutput", qb, aliasCampus, selection);
-
-    const campus = await qb.getOne();
-
-    return campus as CampusFindOneOutputDto | null;
-  }
-
-  async save(campus: DeepPartial<CampusEntity>): Promise<CampusEntity> {
-    return this.campusRepository.save(campus);
-  }
-
-  create(): CampusEntity {
-    return this.campusRepository.create();
-  }
-
-  merge(campus: CampusEntity, data: DeepPartial<CampusEntity>): void {
-    this.campusRepository.merge(campus, data);
-  }
-
-  async softDeleteById(id: string): Promise<void> {
-    await this.campusRepository
-      .createQueryBuilder(aliasCampus)
-      .update()
-      .set({
-        dateDeleted: "NOW()",
-      })
-      .where("id = :id", { id })
-      .andWhere("dateDeleted IS NULL")
-      .execute();
-  }
-
-  /**
-   * Extrai filtros do formato do DTO para o formato de IPaginationCriteria
-   */
-  private extractFilters(
-    dto: DtoWithFilters | null | undefined,
-  ): Record<string, string | string[]> {
-    const filters: Record<string, string | string[]> = {};
-
-    if (!dto) return filters;
-
-    for (const [key, value] of Object.entries(dto)) {
-      if (key.startsWith("filter.")) {
-        if (
-          typeof value === "string" ||
-          (Array.isArray(value) && value.every((v) => typeof v === "string"))
-        ) {
-          const filterKey = key.replace("filter.", "");
-          filters[filterKey] = value;
-        }
-      }
-    }
-
-    return filters;
   }
 }

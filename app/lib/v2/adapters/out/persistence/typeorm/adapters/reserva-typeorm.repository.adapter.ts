@@ -1,45 +1,48 @@
 import { Injectable } from "@nestjs/common";
-import { map } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
-import type { DeepPartial } from "typeorm";
-import type { AccessContext } from "@/infrastructure/access-context";
-import { QbEfficientLoad } from "@/shared";
+import { paginateConfig } from "@/infrastructure/fixtures";
 import type {
   ReservaFindOneInputDto,
   ReservaFindOneOutputDto,
   ReservaListInputDto,
   ReservaListOutputDto,
 } from "@/v2/adapters/in/http/reserva/dto";
-import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
-import type { ReservaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
-import type { IPaginationConfig, IPaginationCriteria } from "@/v2/application/ports/pagination";
+import type { IPaginationConfig } from "@/v2/application/ports/pagination";
 import type { IReservaRepositoryPort } from "@/v2/core/reserva/application/ports";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
-
-const aliasReserva = "reserva";
-type DtoWithFilters = Record<string, unknown>;
+import { BaseTypeOrmRepositoryAdapter } from "../base";
+import { DatabaseContextService } from "../context/database-context.service";
+import type { ReservaEntity } from "../typeorm/entities";
 
 @Injectable()
-export class ReservaTypeOrmRepositoryAdapter implements IReservaRepositoryPort {
-  constructor(
-    private databaseContext: DatabaseContextService,
-    private paginationAdapter: NestJsPaginateAdapter,
-  ) {}
+export class ReservaTypeOrmRepositoryAdapter
+  extends BaseTypeOrmRepositoryAdapter<
+    ReservaEntity,
+    ReservaListInputDto,
+    ReservaListOutputDto,
+    ReservaFindOneInputDto,
+    ReservaFindOneOutputDto
+  >
+  implements IReservaRepositoryPort
+{
+  protected readonly alias = "reserva";
+  protected readonly authzAction = "reserva:find";
+  protected readonly outputDtoName = "ReservaFindOneOutput";
 
-  private get reservaRepository() {
+  constructor(
+    protected readonly databaseContext: DatabaseContextService,
+    protected readonly paginationAdapter: NestJsPaginateAdapter,
+  ) {
+    super();
+  }
+
+  protected get repository() {
     return this.databaseContext.reservaRepository;
   }
 
-  async findAll(
-    accessContext: AccessContext,
-    dto: ReservaListInputDto | null = null,
-    selection?: string[] | boolean,
-  ): Promise<ReservaListOutputDto> {
-    const qb = this.reservaRepository.createQueryBuilder(aliasReserva);
-
-    await accessContext.applyFilter("reserva:find", qb, aliasReserva, null);
-
-    const config = {
+  protected getPaginateConfig(): IPaginationConfig<ReservaEntity> {
+    return {
+      ...paginateConfig,
       select: ["id"],
       sortableColumns: [
         "situacao",
@@ -80,92 +83,6 @@ export class ReservaTypeOrmRepositoryAdapter implements IReservaRepositoryPort {
         "ambiente.bloco.id": [FilterOperator.EQ],
         "ambiente.bloco.campus.id": [FilterOperator.EQ],
       },
-    } as IPaginationConfig<ReservaEntity>;
-
-    const criteria: IPaginationCriteria = {
-      ...dto,
-      sortBy: dto?.sortBy ? (dto.sortBy as unknown as string[]) : undefined,
-      filters: this.extractFilters(dto),
     };
-
-    const paginated = await this.paginationAdapter.paginate(qb, criteria, config);
-
-    qb.select([]);
-    QbEfficientLoad("ReservaFindOneOutput", qb, aliasReserva, selection);
-
-    const pageItemsView = await qb.andWhereInIds(map(paginated.data, "id")).getMany();
-    paginated.data = paginated.data.map((p) => pageItemsView.find((i) => i.id === p.id)!);
-
-    return paginated as unknown as ReservaListOutputDto;
-  }
-
-  async findById(
-    accessContext: AccessContext,
-    dto: ReservaFindOneInputDto,
-    selection?: string[] | boolean,
-  ): Promise<ReservaFindOneOutputDto | null> {
-    const qb = this.reservaRepository.createQueryBuilder(aliasReserva);
-
-    await accessContext.applyFilter("reserva:find", qb, aliasReserva, null);
-
-    qb.andWhere(`${aliasReserva}.id = :id`, { id: dto.id });
-    qb.select([]);
-    QbEfficientLoad("ReservaFindOneOutput", qb, aliasReserva, selection);
-
-    return (await qb.getOne()) as ReservaFindOneOutputDto | null;
-  }
-
-  async findByIdSimple(
-    accessContext: AccessContext,
-    id: string,
-    selection?: string[],
-  ): Promise<ReservaFindOneOutputDto | null> {
-    const qb = this.reservaRepository.createQueryBuilder(aliasReserva);
-
-    await accessContext.applyFilter("reserva:find", qb, aliasReserva, null);
-    qb.andWhere(`${aliasReserva}.id = :id`, { id });
-    qb.select([]);
-    QbEfficientLoad("ReservaFindOneOutput", qb, aliasReserva, selection);
-
-    return (await qb.getOne()) as ReservaFindOneOutputDto | null;
-  }
-
-  async save(reserva: DeepPartial<ReservaEntity>): Promise<ReservaEntity> {
-    return this.reservaRepository.save(reserva);
-  }
-
-  create(): ReservaEntity {
-    return this.reservaRepository.create();
-  }
-
-  merge(reserva: ReservaEntity, data: DeepPartial<ReservaEntity>): void {
-    this.reservaRepository.merge(reserva, data);
-  }
-
-  async softDeleteById(id: string): Promise<void> {
-    await this.reservaRepository
-      .createQueryBuilder(aliasReserva)
-      .update()
-      .set({ dateDeleted: "NOW()" })
-      .where("id = :id", { id })
-      .andWhere("dateDeleted IS NULL")
-      .execute();
-  }
-
-  private extractFilters(
-    dto: DtoWithFilters | null | undefined,
-  ): Record<string, string | string[]> {
-    const filters: Record<string, string | string[]> = {};
-    if (!dto) return filters;
-    for (const [key, value] of Object.entries(dto)) {
-      if (
-        key.startsWith("filter.") &&
-        (typeof value === "string" ||
-          (Array.isArray(value) && value.every((v) => typeof v === "string")))
-      ) {
-        filters[key.replace("filter.", "")] = value;
-      }
-    }
-    return filters;
   }
 }

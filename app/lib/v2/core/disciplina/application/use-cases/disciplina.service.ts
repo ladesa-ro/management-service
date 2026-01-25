@@ -1,5 +1,4 @@
-import { Inject, Injectable, NotFoundException } from "@nestjs/common";
-import { pick } from "lodash";
+import { Inject, Injectable, NotFoundException, type StreamableFile } from "@nestjs/common";
 import type { AccessContext } from "@/infrastructure/access-context";
 import type {
   DisciplinaCreateInputDto,
@@ -12,23 +11,43 @@ import type {
 import type { DisciplinaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import { ArquivoService } from "@/v2/core/arquivo/application/use-cases/arquivo.service";
 import { ImagemService } from "@/v2/core/imagem/application/use-cases/imagem.service";
-import type { IDisciplinaRepositoryPort, IDisciplinaUseCasePort } from "../ports";
+import { BaseCrudService } from "@/v2/core/shared";
+import type { IDisciplinaRepositoryPort } from "../ports";
 
 @Injectable()
-export class DisciplinaService implements IDisciplinaUseCasePort {
+export class DisciplinaService extends BaseCrudService<
+  DisciplinaEntity,
+  DisciplinaListInputDto,
+  DisciplinaListOutputDto,
+  DisciplinaFindOneInputDto,
+  DisciplinaFindOneOutputDto,
+  DisciplinaCreateInputDto,
+  DisciplinaUpdateInputDto
+> {
+  protected readonly resourceName = "Disciplina";
+  protected readonly createAction = "disciplina:create";
+  protected readonly updateAction = "disciplina:update";
+  protected readonly deleteAction = "disciplina:delete";
+  protected readonly createFields = ["nome", "nomeAbreviado", "cargaHoraria"] as const;
+  protected readonly updateFields = ["nome", "nomeAbreviado", "cargaHoraria"] as const;
+
   constructor(
     @Inject("IDisciplinaRepositoryPort")
-    private disciplinaRepository: IDisciplinaRepositoryPort,
-    private imagemService: ImagemService,
-    private arquivoService: ArquivoService,
-  ) {}
+    protected readonly repository: IDisciplinaRepositoryPort,
+    private readonly imagemService: ImagemService,
+    private readonly arquivoService: ArquivoService,
+  ) {
+    super();
+  }
+
+  // Métodos prefixados para compatibilidade
 
   async disciplinaFindAll(
     accessContext: AccessContext,
     dto: DisciplinaListInputDto | null = null,
     selection?: string[] | boolean,
   ): Promise<DisciplinaListOutputDto> {
-    return this.disciplinaRepository.findAll(accessContext, dto, selection);
+    return this.findAll(accessContext, dto, selection);
   }
 
   async disciplinaFindById(
@@ -36,7 +55,7 @@ export class DisciplinaService implements IDisciplinaUseCasePort {
     dto: DisciplinaFindOneInputDto,
     selection?: string[] | boolean,
   ): Promise<DisciplinaFindOneOutputDto | null> {
-    return this.disciplinaRepository.findById(accessContext, dto, selection);
+    return this.findById(accessContext, dto, selection);
   }
 
   async disciplinaFindByIdStrict(
@@ -44,13 +63,7 @@ export class DisciplinaService implements IDisciplinaUseCasePort {
     dto: DisciplinaFindOneInputDto,
     selection?: string[] | boolean,
   ): Promise<DisciplinaFindOneOutputDto> {
-    const disciplina = await this.disciplinaRepository.findById(accessContext, dto, selection);
-
-    if (!disciplina) {
-      throw new NotFoundException();
-    }
-
-    return disciplina;
+    return this.findByIdStrict(accessContext, dto, selection);
   }
 
   async disciplinaFindByIdSimple(
@@ -58,7 +71,7 @@ export class DisciplinaService implements IDisciplinaUseCasePort {
     id: DisciplinaFindOneInputDto["id"],
     selection?: string[] | boolean,
   ): Promise<DisciplinaFindOneOutputDto | null> {
-    return this.disciplinaRepository.findByIdSimple(accessContext, id, selection);
+    return this.findByIdSimple(accessContext, id, selection);
   }
 
   async disciplinaFindByIdSimpleStrict(
@@ -66,59 +79,37 @@ export class DisciplinaService implements IDisciplinaUseCasePort {
     id: DisciplinaFindOneInputDto["id"],
     selection?: string[],
   ): Promise<DisciplinaFindOneOutputDto> {
-    const disciplina = await this.disciplinaRepository.findByIdSimple(accessContext, id, selection);
-
-    if (!disciplina) {
-      throw new NotFoundException();
-    }
-
-    return disciplina;
+    return this.findByIdSimpleStrict(accessContext, id, selection);
   }
 
   async disciplinaCreate(
     accessContext: AccessContext,
     dto: DisciplinaCreateInputDto,
   ): Promise<DisciplinaFindOneOutputDto> {
-    await accessContext.ensurePermission("disciplina:create", { dto } as any);
-
-    const dtoDisciplina = pick(dto, ["nome", "nomeAbreviado", "cargaHoraria"]);
-
-    const disciplina = this.disciplinaRepository.create();
-
-    this.disciplinaRepository.merge(disciplina, {
-      ...dtoDisciplina,
-    });
-
-    await this.disciplinaRepository.save(disciplina);
-
-    return this.disciplinaFindByIdStrict(accessContext, { id: disciplina.id });
+    return this.create(accessContext, dto);
   }
 
   async disciplinaUpdate(
     accessContext: AccessContext,
     dto: DisciplinaFindOneInputDto & DisciplinaUpdateInputDto,
   ): Promise<DisciplinaFindOneOutputDto> {
-    const currentDisciplina = await this.disciplinaFindByIdStrict(accessContext, { id: dto.id });
-
-    await accessContext.ensurePermission("disciplina:update", { dto }, dto.id);
-
-    const dtoDisciplina = pick(dto, ["nome", "nomeAbreviado", "cargaHoraria"]);
-
-    const disciplina = {
-      id: currentDisciplina.id,
-    } as DisciplinaEntity;
-
-    this.disciplinaRepository.merge(disciplina, {
-      ...dtoDisciplina,
-    });
-
-    await this.disciplinaRepository.save(disciplina);
-
-    return this.disciplinaFindByIdStrict(accessContext, { id: disciplina.id });
+    return this.update(accessContext, dto);
   }
 
-  async disciplinaGetImagemCapa(accessContext: AccessContext | null, id: string) {
-    const disciplina = await this.disciplinaFindByIdStrict(accessContext, { id: id });
+  async disciplinaDeleteOneById(
+    accessContext: AccessContext,
+    dto: DisciplinaFindOneInputDto,
+  ): Promise<boolean> {
+    return this.deleteOneById(accessContext, dto);
+  }
+
+  // Métodos específicos de Disciplina (não cobertos pela BaseCrudService)
+
+  async disciplinaGetImagemCapa(
+    accessContext: AccessContext | null,
+    id: string,
+  ): Promise<StreamableFile> {
+    const disciplina = await this.disciplinaFindByIdStrict(accessContext, { id });
 
     if (disciplina.imagemCapa) {
       const [versao] = disciplina.imagemCapa.versoes;
@@ -136,48 +127,22 @@ export class DisciplinaService implements IDisciplinaUseCasePort {
     accessContext: AccessContext,
     dto: DisciplinaFindOneInputDto,
     file: Express.Multer.File,
-  ) {
+  ): Promise<boolean> {
     const currentDisciplina = await this.disciplinaFindByIdStrict(accessContext, { id: dto.id });
 
     await accessContext.ensurePermission(
       "disciplina:update",
-      {
-        dto: {
-          id: currentDisciplina.id,
-        },
-      },
+      { dto: { id: currentDisciplina.id } },
       currentDisciplina.id,
     );
 
     const { imagem } = await this.imagemService.saveDisciplinaCapa(file);
 
-    const disciplina = this.disciplinaRepository.create();
-    this.disciplinaRepository.merge(disciplina, {
-      id: currentDisciplina.id,
-    });
+    const disciplina = this.repository.create();
+    this.repository.merge(disciplina, { id: currentDisciplina.id });
+    this.repository.merge(disciplina, { imagemCapa: { id: imagem.id } });
 
-    this.disciplinaRepository.merge(disciplina, {
-      imagemCapa: {
-        id: imagem.id,
-      },
-    });
-
-    await this.disciplinaRepository.save(disciplina);
-
-    return true;
-  }
-
-  async disciplinaDeleteOneById(
-    accessContext: AccessContext,
-    dto: DisciplinaFindOneInputDto,
-  ): Promise<boolean> {
-    await accessContext.ensurePermission("disciplina:delete", { dto }, dto.id);
-
-    const disciplina = await this.disciplinaFindByIdStrict(accessContext, dto);
-
-    if (disciplina) {
-      await this.disciplinaRepository.softDeleteById(disciplina.id);
-    }
+    await this.repository.save(disciplina);
 
     return true;
   }

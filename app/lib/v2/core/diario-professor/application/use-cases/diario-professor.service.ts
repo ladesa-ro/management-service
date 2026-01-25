@@ -1,5 +1,5 @@
-import { Inject, Injectable, NotFoundException } from "@nestjs/common";
-import { has, pick } from "lodash";
+import { Inject, Injectable } from "@nestjs/common";
+import { has } from "lodash";
 import type { AccessContext } from "@/infrastructure/access-context";
 import type {
   DiarioProfessorCreateInputDto,
@@ -12,23 +12,83 @@ import type {
 import type { DiarioProfessorEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import { DiarioService } from "@/v2/core/diario/application/use-cases/diario.service";
 import { PerfilService } from "@/v2/core/perfil/application/use-cases/perfil.service";
+import { BaseCrudService } from "@/v2/core/shared";
 import type { IDiarioProfessorRepositoryPort } from "../ports";
 
 @Injectable()
-export class DiarioProfessorService {
+export class DiarioProfessorService extends BaseCrudService<
+  DiarioProfessorEntity,
+  DiarioProfessorListInputDto,
+  DiarioProfessorListOutputDto,
+  DiarioProfessorFindOneInputDto,
+  DiarioProfessorFindOneOutputDto,
+  DiarioProfessorCreateInputDto,
+  DiarioProfessorUpdateInputDto
+> {
+  protected readonly resourceName = "DiarioProfessor";
+  protected readonly createAction = "diario_professor:create";
+  protected readonly updateAction = "diario_professor:update";
+  protected readonly deleteAction = "diario_professor:delete";
+  protected readonly createFields = ["situacao"] as const;
+  protected readonly updateFields = ["situacao"] as const;
+
   constructor(
     @Inject("IDiarioProfessorRepositoryPort")
-    private diarioProfessorRepository: IDiarioProfessorRepositoryPort,
-    private diarioService: DiarioService,
-    private perfilService: PerfilService,
-  ) {}
+    protected readonly repository: IDiarioProfessorRepositoryPort,
+    private readonly diarioService: DiarioService,
+    private readonly perfilService: PerfilService,
+  ) {
+    super();
+  }
+
+  protected override async beforeCreate(
+    accessContext: AccessContext,
+    entity: DiarioProfessorEntity,
+    dto: DiarioProfessorCreateInputDto,
+  ): Promise<void> {
+    if (has(dto, "diario") && dto.diario) {
+      const diario = await this.diarioService.diarioFindByIdStrict(accessContext, {
+        id: dto.diario.id,
+      });
+      this.repository.merge(entity, { diario: { id: diario.id } });
+    }
+
+    if (has(dto, "perfil") && dto.perfil) {
+      const perfil = await this.perfilService.perfilFindByIdStrict(accessContext, {
+        id: dto.perfil.id,
+      });
+      this.repository.merge(entity, { perfil: { id: perfil.id } });
+    }
+  }
+
+  protected override async beforeUpdate(
+    accessContext: AccessContext,
+    entity: DiarioProfessorEntity,
+    dto: DiarioProfessorFindOneInputDto & DiarioProfessorUpdateInputDto,
+  ): Promise<void> {
+    if (has(dto, "diario") && dto.diario !== undefined && dto.diario !== null) {
+      const diario = await this.diarioService.diarioFindByIdStrict(accessContext, {
+        id: dto.diario.id,
+      });
+      this.repository.merge(entity, { diario: { id: diario.id } });
+    }
+
+    if (has(dto, "perfil") && dto.perfil !== undefined && dto.perfil !== null) {
+      const perfil = await this.perfilService.perfilFindByIdStrict(accessContext, {
+        id: dto.perfil.id,
+      });
+      this.repository.merge(entity, { perfil: { id: perfil.id } });
+    }
+  }
+
+  // Métodos prefixados para compatibilidade com IDiarioProfessorUseCasePort
 
   async diarioProfessorFindAll(
     accessContext: AccessContext,
     dto: DiarioProfessorListInputDto | null = null,
     selection?: string[] | boolean,
   ): Promise<DiarioProfessorListOutputDto> {
-    return this.diarioProfessorRepository.findAll(accessContext, dto, selection);
+    return this.findAll(accessContext, dto, selection);
   }
 
   async diarioProfessorFindById(
@@ -36,7 +96,7 @@ export class DiarioProfessorService {
     dto: DiarioProfessorFindOneInputDto,
     selection?: string[] | boolean,
   ): Promise<DiarioProfessorFindOneOutputDto | null> {
-    return this.diarioProfessorRepository.findById(accessContext, dto, selection);
+    return this.findById(accessContext, dto, selection);
   }
 
   async diarioProfessorFindByIdStrict(
@@ -44,17 +104,7 @@ export class DiarioProfessorService {
     dto: DiarioProfessorFindOneInputDto,
     selection?: string[] | boolean,
   ): Promise<DiarioProfessorFindOneOutputDto> {
-    const diarioProfessor = await this.diarioProfessorRepository.findById(
-      accessContext,
-      dto,
-      selection,
-    );
-
-    if (!diarioProfessor) {
-      throw new NotFoundException();
-    }
-
-    return diarioProfessor;
+    return this.findByIdStrict(accessContext, dto, selection);
   }
 
   async diarioProfessorFindByIdSimple(
@@ -62,7 +112,7 @@ export class DiarioProfessorService {
     id: DiarioProfessorFindOneInputDto["id"],
     selection?: string[] | boolean,
   ): Promise<DiarioProfessorFindOneOutputDto | null> {
-    return this.diarioProfessorRepository.findByIdSimple(accessContext, id, selection);
+    return this.findByIdSimple(accessContext, id, selection);
   }
 
   async diarioProfessorFindByIdSimpleStrict(
@@ -70,135 +120,27 @@ export class DiarioProfessorService {
     id: DiarioProfessorFindOneInputDto["id"],
     selection?: string[] | boolean,
   ): Promise<DiarioProfessorFindOneOutputDto> {
-    const diarioProfessor = await this.diarioProfessorRepository.findByIdSimple(
-      accessContext,
-      id,
-      selection,
-    );
-
-    if (!diarioProfessor) {
-      throw new NotFoundException();
-    }
-
-    return diarioProfessor;
+    return this.findByIdSimpleStrict(accessContext, id, selection);
   }
 
   async diarioProfessorCreate(
     accessContext: AccessContext,
     dto: DiarioProfessorCreateInputDto,
   ): Promise<DiarioProfessorFindOneOutputDto> {
-    await accessContext.ensurePermission("diario_professor:create", { dto } as any);
-
-    const dtoDiarioProfessor = pick(dto, ["situacao"]);
-
-    const diarioProfessor = this.diarioProfessorRepository.create();
-
-    this.diarioProfessorRepository.merge(diarioProfessor, {
-      ...dtoDiarioProfessor,
-    });
-
-    if (has(dto, "diario") && dto.diario !== undefined) {
-      if (dto.diario !== null) {
-        const diario = await this.diarioService.diarioFindByIdStrict(accessContext, {
-          id: dto.diario.id,
-        });
-
-        this.diarioProfessorRepository.merge(diarioProfessor, {
-          diario: {
-            id: diario.id,
-          },
-        });
-      }
-    }
-
-    if (has(dto, "perfil") && dto.perfil !== undefined) {
-      if (dto.perfil !== null) {
-        const perfil = await this.perfilService.perfilFindByIdStrict(accessContext, {
-          id: dto.perfil.id,
-        });
-
-        this.diarioProfessorRepository.merge(diarioProfessor, {
-          perfil: {
-            id: perfil.id,
-          },
-        });
-      }
-    }
-
-    await this.diarioProfessorRepository.save(diarioProfessor);
-
-    return this.diarioProfessorFindByIdStrict(accessContext, {
-      id: diarioProfessor.id,
-    });
+    return this.create(accessContext, dto);
   }
 
   async diarioProfessorUpdate(
     accessContext: AccessContext,
     dto: DiarioProfessorFindOneInputDto & DiarioProfessorUpdateInputDto,
   ): Promise<DiarioProfessorFindOneOutputDto> {
-    const currentDiarioProfessor = await this.diarioProfessorFindByIdStrict(accessContext, {
-      id: dto.id,
-    });
-
-    await accessContext.ensurePermission("diario_professor:update", { dto }, dto.id);
-
-    const dtoDiarioProfessor = pick(dto, ["situacao"]);
-
-    const diarioProfessor = {
-      id: currentDiarioProfessor.id,
-    } as DiarioProfessorEntity;
-
-    this.diarioProfessorRepository.merge(diarioProfessor, {
-      ...dtoDiarioProfessor,
-    });
-
-    if (has(dto, "diario") && dto.diario !== undefined) {
-      if (dto.diario !== null) {
-        const diario = await this.diarioService.diarioFindByIdStrict(accessContext, {
-          id: dto.diario.id,
-        });
-
-        this.diarioProfessorRepository.merge(diarioProfessor, {
-          diario: {
-            id: diario.id,
-          },
-        });
-      }
-    }
-
-    if (has(dto, "perfil") && dto.perfil !== undefined) {
-      if (dto.perfil !== null) {
-        const perfil = await this.perfilService.perfilFindByIdStrict(accessContext, {
-          id: dto.perfil.id,
-        });
-
-        this.diarioProfessorRepository.merge(diarioProfessor, {
-          perfil: {
-            id: perfil.id,
-          },
-        });
-      }
-    }
-
-    await this.diarioProfessorRepository.save(diarioProfessor);
-
-    return this.diarioProfessorFindByIdStrict(accessContext, {
-      id: diarioProfessor.id,
-    });
+    return this.update(accessContext, dto);
   }
 
   async diarioProfessorDeleteOneById(
     accessContext: AccessContext,
     dto: DiarioProfessorFindOneInputDto,
   ): Promise<boolean> {
-    await accessContext.ensurePermission("diario_professor:delete", { dto }, dto.id);
-
-    const diarioProfessor = await this.diarioProfessorFindByIdStrict(accessContext, dto);
-
-    if (diarioProfessor) {
-      await this.diarioProfessorRepository.softDeleteById(diarioProfessor.id);
-    }
-
-    return true;
+    return this.deleteOneById(accessContext, dto);
   }
 }
