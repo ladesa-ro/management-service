@@ -1,5 +1,3 @@
-import { Type } from "class-transformer";
-import { IsArray, IsDate, IsOptional, IsString, IsUUID, ValidateNested } from "class-validator";
 import { ObjectUuidRef, PaginationInput, PaginationMeta } from "../../../common/application/dtos";
 import {
   DisponibilidadeFindOneOutput,
@@ -12,30 +10,20 @@ import { TurmaFindOneOutput, TurmaInputRef } from "../../../turma/application/dt
 // ============================================================================
 
 export class TurmaDisponibilidadeFindOneInput {
-  @IsUUID()
   id!: string;
 }
 
 export class TurmaDisponibilidadeFindOneOutput {
-  @IsUUID()
   id!: string;
 
-  @ValidateNested()
-  @Type(() => TurmaFindOneOutput)
   turma!: TurmaFindOneOutput;
 
-  @ValidateNested()
-  @Type(() => DisponibilidadeFindOneOutput)
   disponibilidade!: DisponibilidadeFindOneOutput;
 
-  @IsDate()
   dateCreated!: Date;
 
-  @IsDate()
   dateUpdated!: Date;
 
-  @IsOptional()
-  @IsDate()
   dateDeleted!: Date | null;
 }
 
@@ -44,14 +32,8 @@ export class TurmaDisponibilidadeFindOneOutput {
 // ============================================================================
 
 export class TurmaDisponibilidadeListInput extends PaginationInput {
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
   "filter.id"?: string[];
 
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
   "filter.turma.id"?: string[];
 }
 
@@ -65,24 +47,14 @@ export class TurmaDisponibilidadeListOutput {
 // ============================================================================
 
 export class TurmaDisponibilidadeCreateInput {
-  @ValidateNested()
-  @Type(() => TurmaInputRef)
   turma!: TurmaInputRef;
 
-  @ValidateNested()
-  @Type(() => DisponibilidadeInputRef)
   disponibilidade!: DisponibilidadeInputRef;
 }
 
 export class TurmaDisponibilidadeUpdateInput {
-  @IsOptional()
-  @ValidateNested()
-  @Type(() => TurmaInputRef)
   turma?: TurmaInputRef;
 
-  @IsOptional()
-  @ValidateNested()
-  @Type(() => DisponibilidadeInputRef)
   disponibilidade?: DisponibilidadeInputRef;
 }
 

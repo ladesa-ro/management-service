@@ -1,5 +1,3 @@
-import { Type } from "class-transformer";
-import { IsArray, IsDate, IsOptional, IsString, IsUUID, ValidateNested } from "class-validator";
 import {
   CalendarioLetivoFindOneOutput,
   CalendarioLetivoInputRef,
@@ -11,46 +9,28 @@ import { ObjectUuidRef, PaginationInput, PaginationMeta } from "../../../common/
 // ============================================================================
 
 export class HorarioGeradoFindOneInput {
-  @IsUUID()
   id!: string;
 }
 
 export class HorarioGeradoFindOneOutput {
-  @IsUUID()
   id!: string;
 
-  @IsOptional()
-  @IsString()
   status!: string | null;
 
-  @IsOptional()
-  @IsString()
   tipo!: string | null;
 
-  @IsOptional()
-  @IsDate()
   dataGeracao!: Date | null;
 
-  @IsOptional()
-  @IsDate()
   vigenciaInicio!: Date | null;
 
-  @IsOptional()
-  @IsDate()
   vigenciaFim!: Date | null;
 
-  @ValidateNested()
-  @Type(() => CalendarioLetivoFindOneOutput)
   calendario!: CalendarioLetivoFindOneOutput;
 
-  @IsDate()
   dateCreated!: Date;
 
-  @IsDate()
   dateUpdated!: Date;
 
-  @IsOptional()
-  @IsDate()
   dateDeleted!: Date | null;
 }
 
@@ -59,14 +39,8 @@ export class HorarioGeradoFindOneOutput {
 // ============================================================================
 
 export class HorarioGeradoListInput extends PaginationInput {
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
   "filter.id"?: string[];
 
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
   "filter.calendario.id"?: string[];
 }
 
@@ -80,55 +54,30 @@ export class HorarioGeradoListOutput {
 // ============================================================================
 
 export class HorarioGeradoCreateInput {
-  @IsOptional()
-  @IsString()
   status?: string | null;
 
-  @IsOptional()
-  @IsString()
   tipo?: string | null;
 
-  @IsOptional()
-  @IsDate()
   dataGeracao?: Date | null;
 
-  @IsOptional()
-  @IsDate()
   vigenciaInicio?: Date | null;
 
-  @IsOptional()
-  @IsDate()
   vigenciaFim?: Date | null;
 
-  @ValidateNested()
-  @Type(() => CalendarioLetivoInputRef)
   calendario!: CalendarioLetivoInputRef;
 }
 
 export class HorarioGeradoUpdateInput {
-  @IsOptional()
-  @IsString()
   status?: string | null;
 
-  @IsOptional()
-  @IsString()
   tipo?: string | null;
 
-  @IsOptional()
-  @IsDate()
   dataGeracao?: Date | null;
 
-  @IsOptional()
-  @IsDate()
   vigenciaInicio?: Date | null;
 
-  @IsOptional()
-  @IsDate()
   vigenciaFim?: Date | null;
 
-  @IsOptional()
-  @ValidateNested()
-  @Type(() => CalendarioLetivoInputRef)
   calendario?: CalendarioLetivoInputRef;
 }
 

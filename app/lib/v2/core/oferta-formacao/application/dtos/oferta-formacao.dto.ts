@@ -1,13 +1,3 @@
-import { Type } from "class-transformer";
-import {
-  IsArray,
-  IsDate,
-  IsOptional,
-  IsString,
-  IsUUID,
-  MinLength,
-  ValidateNested,
-} from "class-validator";
 import { ObjectUuidRef, PaginationInput, PaginationMeta } from "../../../common/application/dtos";
 import { ModalidadeFindOneOutput, ModalidadeInputRef } from "../../../modalidade/application/dtos";
 
@@ -16,34 +6,22 @@ import { ModalidadeFindOneOutput, ModalidadeInputRef } from "../../../modalidade
 // ============================================================================
 
 export class OfertaFormacaoFindOneInput {
-  @IsUUID()
   id!: string;
 }
 
 export class OfertaFormacaoFindOneOutput {
-  @IsUUID()
   id!: string;
 
-  @IsString()
-  @MinLength(1)
   nome!: string;
 
-  @IsString()
-  @MinLength(1)
   slug!: string;
 
-  @ValidateNested()
-  @Type(() => ModalidadeFindOneOutput)
   modalidade!: ModalidadeFindOneOutput;
 
-  @IsDate()
   dateCreated!: Date;
 
-  @IsDate()
   dateUpdated!: Date;
 
-  @IsOptional()
-  @IsDate()
   dateDeleted!: Date | null;
 }
 
@@ -52,14 +30,8 @@ export class OfertaFormacaoFindOneOutput {
 // ============================================================================
 
 export class OfertaFormacaoListInput extends PaginationInput {
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
   "filter.id"?: string[];
 
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
   "filter.modalidade.id"?: string[];
 }
 
@@ -73,33 +45,18 @@ export class OfertaFormacaoListOutput {
 // ============================================================================
 
 export class OfertaFormacaoCreateInput {
-  @IsString()
-  @MinLength(1)
   nome!: string;
 
-  @IsString()
-  @MinLength(1)
   slug!: string;
 
-  @ValidateNested()
-  @Type(() => ModalidadeInputRef)
   modalidade!: ModalidadeInputRef;
 }
 
 export class OfertaFormacaoUpdateInput {
-  @IsOptional()
-  @IsString()
-  @MinLength(1)
   nome?: string;
 
-  @IsOptional()
-  @IsString()
-  @MinLength(1)
   slug?: string;
 
-  @IsOptional()
-  @ValidateNested()
-  @Type(() => ModalidadeInputRef)
   modalidade?: ModalidadeInputRef;
 }
 

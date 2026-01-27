@@ -1,4 +1,3 @@
-import { IsArray, IsInt, IsOptional, IsString, Length, Min, MinLength } from "class-validator";
 import { PaginationInput, PaginationMeta } from "../../../common/application/dtos";
 
 // ============================================================================
@@ -6,21 +5,14 @@ import { PaginationInput, PaginationMeta } from "../../../common/application/dto
 // ============================================================================
 
 export class EstadoFindOneInput {
-  @IsInt()
-  @Min(1)
   id!: number;
 }
 
 export class EstadoFindOneOutput {
-  @IsInt()
   id!: number;
 
-  @IsString()
-  @MinLength(1)
   nome!: string;
 
-  @IsString()
-  @Length(2, 2)
   sigla!: string;
 }
 
@@ -29,9 +21,6 @@ export class EstadoFindOneOutput {
 // ============================================================================
 
 export class EstadoListInput extends PaginationInput {
-  @IsOptional()
-  @IsArray()
-  @IsInt({ each: true })
   "filter.id"?: number[];
 }
 

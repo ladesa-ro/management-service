@@ -1,4 +1,3 @@
-import { IsArray, IsDate, IsOptional, IsString, IsUUID } from "class-validator";
 import { ObjectUuidRef, PaginationInput, PaginationMeta } from "../../../common/application/dtos";
 
 // ============================================================================
@@ -6,29 +5,20 @@ import { ObjectUuidRef, PaginationInput, PaginationMeta } from "../../../common/
 // ============================================================================
 
 export class DisponibilidadeFindOneInput {
-  @IsUUID()
   id!: string;
 }
 
 export class DisponibilidadeFindOneOutput {
-  @IsUUID()
   id!: string;
 
-  @IsDate()
   dataInicio!: Date;
 
-  @IsOptional()
-  @IsDate()
   dataFim!: Date | null;
 
-  @IsDate()
   dateCreated!: Date;
 
-  @IsDate()
   dateUpdated!: Date;
 
-  @IsOptional()
-  @IsDate()
   dateDeleted!: Date | null;
 }
 
@@ -37,9 +27,6 @@ export class DisponibilidadeFindOneOutput {
 // ============================================================================
 
 export class DisponibilidadeListInput extends PaginationInput {
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
   "filter.id"?: string[];
 }
 
@@ -53,21 +40,14 @@ export class DisponibilidadeListOutput {
 // ============================================================================
 
 export class DisponibilidadeCreateInput {
-  @IsDate()
   dataInicio!: Date;
 
-  @IsOptional()
-  @IsDate()
   dataFim?: Date | null;
 }
 
 export class DisponibilidadeUpdateInput {
-  @IsOptional()
-  @IsDate()
   dataInicio?: Date;
 
-  @IsOptional()
-  @IsDate()
   dataFim?: Date | null;
 }
 

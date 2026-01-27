@@ -1,13 +1,3 @@
-import { Type } from "class-transformer";
-import {
-  IsArray,
-  IsDate,
-  IsOptional,
-  IsString,
-  IsUUID,
-  MinLength,
-  ValidateNested,
-} from "class-validator";
 import { CampusFindOneOutput, CampusInputRef } from "../../../campus/application/dtos";
 import { ObjectUuidRef, PaginationInput, PaginationMeta } from "../../../common/application/dtos";
 import { ImagemFindOneOutput, ImagemInputRef } from "../../../imagem/application/dtos";
@@ -17,39 +7,24 @@ import { ImagemFindOneOutput, ImagemInputRef } from "../../../imagem/application
 // ============================================================================
 
 export class BlocoFindOneInput {
-  @IsUUID()
   id!: string;
 }
 
 export class BlocoFindOneOutput {
-  @IsUUID()
   id!: string;
 
-  @IsString()
-  @MinLength(1)
   nome!: string;
 
-  @IsString()
-  @MinLength(1)
   codigo!: string;
 
-  @ValidateNested()
-  @Type(() => CampusFindOneOutput)
   campus!: CampusFindOneOutput;
 
-  @IsOptional()
-  @ValidateNested()
-  @Type(() => ImagemFindOneOutput)
   imagemCapa!: ImagemFindOneOutput | null;
 
-  @IsDate()
   dateCreated!: Date;
 
-  @IsDate()
   dateUpdated!: Date;
 
-  @IsOptional()
-  @IsDate()
   dateDeleted!: Date | null;
 }
 
@@ -58,14 +33,8 @@ export class BlocoFindOneOutput {
 // ============================================================================
 
 export class BlocoListInput extends PaginationInput {
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
   "filter.id"?: string[];
 
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
   "filter.campus.id"?: string[];
 }
 
@@ -79,43 +48,22 @@ export class BlocoListOutput {
 // ============================================================================
 
 export class BlocoCreateInput {
-  @IsString()
-  @MinLength(1)
   nome!: string;
 
-  @IsString()
-  @MinLength(1)
   codigo!: string;
 
-  @ValidateNested()
-  @Type(() => CampusInputRef)
   campus!: CampusInputRef;
 
-  @IsOptional()
-  @ValidateNested()
-  @Type(() => ImagemInputRef)
   imagemCapa?: ImagemInputRef | null;
 }
 
 export class BlocoUpdateInput {
-  @IsOptional()
-  @IsString()
-  @MinLength(1)
   nome?: string;
 
-  @IsOptional()
-  @IsString()
-  @MinLength(1)
   codigo?: string;
 
-  @IsOptional()
-  @ValidateNested()
-  @Type(() => CampusInputRef)
   campus?: CampusInputRef;
 
-  @IsOptional()
-  @ValidateNested()
-  @Type(() => ImagemInputRef)
   imagemCapa?: ImagemInputRef | null;
 }
 

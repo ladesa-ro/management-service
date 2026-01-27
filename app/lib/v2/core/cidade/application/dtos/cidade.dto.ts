@@ -1,13 +1,3 @@
-import { Type } from "class-transformer";
-import {
-  IsArray,
-  IsInt,
-  IsOptional,
-  IsString,
-  Min,
-  MinLength,
-  ValidateNested,
-} from "class-validator";
 import { ObjectIntRef, PaginationInput, PaginationMeta } from "../../../common/application/dtos";
 import { EstadoFindOneOutput } from "../../../estado/application/dtos";
 
@@ -16,21 +6,14 @@ import { EstadoFindOneOutput } from "../../../estado/application/dtos";
 // ============================================================================
 
 export class CidadeFindOneInput {
-  @IsInt()
-  @Min(1)
   id!: number;
 }
 
 export class CidadeFindOneOutput {
-  @IsInt()
   id!: number;
 
-  @IsString()
-  @MinLength(1)
   nome!: string;
 
-  @ValidateNested()
-  @Type(() => EstadoFindOneOutput)
   estado!: EstadoFindOneOutput;
 }
 
@@ -39,14 +22,8 @@ export class CidadeFindOneOutput {
 // ============================================================================
 
 export class CidadeListInput extends PaginationInput {
-  @IsOptional()
-  @IsArray()
-  @IsInt({ each: true })
   "filter.id"?: number[];
 
-  @IsOptional()
-  @IsArray()
-  @IsInt({ each: true })
   "filter.estado.id"?: number[];
 }
 

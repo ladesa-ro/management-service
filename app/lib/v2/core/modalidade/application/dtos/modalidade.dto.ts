@@ -1,4 +1,3 @@
-import { IsArray, IsDate, IsOptional, IsString, IsUUID, MinLength } from "class-validator";
 import { ObjectUuidRef, PaginationInput, PaginationMeta } from "../../../common/application/dtos";
 
 // ============================================================================
@@ -6,30 +5,20 @@ import { ObjectUuidRef, PaginationInput, PaginationMeta } from "../../../common/
 // ============================================================================
 
 export class ModalidadeFindOneInput {
-  @IsUUID()
   id!: string;
 }
 
 export class ModalidadeFindOneOutput {
-  @IsUUID()
   id!: string;
 
-  @IsString()
-  @MinLength(1)
   nome!: string;
 
-  @IsString()
-  @MinLength(1)
   slug!: string;
 
-  @IsDate()
   dateCreated!: Date;
 
-  @IsDate()
   dateUpdated!: Date;
 
-  @IsOptional()
-  @IsDate()
   dateDeleted!: Date | null;
 }
 
@@ -38,9 +27,6 @@ export class ModalidadeFindOneOutput {
 // ============================================================================
 
 export class ModalidadeListInput extends PaginationInput {
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
   "filter.id"?: string[];
 }
 
@@ -54,24 +40,14 @@ export class ModalidadeListOutput {
 // ============================================================================
 
 export class ModalidadeCreateInput {
-  @IsString()
-  @MinLength(1)
   nome!: string;
 
-  @IsString()
-  @MinLength(1)
   slug!: string;
 }
 
 export class ModalidadeUpdateInput {
-  @IsOptional()
-  @IsString()
-  @MinLength(1)
   nome?: string;
 
-  @IsOptional()
-  @IsString()
-  @MinLength(1)
   slug?: string;
 }
 

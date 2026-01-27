@@ -1,5 +1,3 @@
-import { Type } from "class-transformer";
-import { IsArray, IsDate, IsOptional, IsString, IsUUID, ValidateNested } from "class-validator";
 import { CampusFindOneOutput, CampusInputRef } from "../../../campus/application/dtos";
 import { ObjectUuidRef, PaginationInput, PaginationMeta } from "../../../common/application/dtos";
 import {
@@ -12,30 +10,20 @@ import {
 // ============================================================================
 
 export class GradeHorarioOfertaFormacaoFindOneInput {
-  @IsUUID()
   id!: string;
 }
 
 export class GradeHorarioOfertaFormacaoFindOneOutput {
-  @IsUUID()
   id!: string;
 
-  @ValidateNested()
-  @Type(() => CampusFindOneOutput)
   campus!: CampusFindOneOutput;
 
-  @ValidateNested()
-  @Type(() => OfertaFormacaoFindOneOutput)
   ofertaFormacao!: OfertaFormacaoFindOneOutput;
 
-  @IsDate()
   dateCreated!: Date;
 
-  @IsDate()
   dateUpdated!: Date;
 
-  @IsOptional()
-  @IsDate()
   dateDeleted!: Date | null;
 }
 
@@ -44,19 +32,10 @@ export class GradeHorarioOfertaFormacaoFindOneOutput {
 // ============================================================================
 
 export class GradeHorarioOfertaFormacaoListInput extends PaginationInput {
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
   "filter.id"?: string[];
 
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
   "filter.campus.id"?: string[];
 
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
   "filter.ofertaFormacao.id"?: string[];
 }
 
@@ -70,24 +49,14 @@ export class GradeHorarioOfertaFormacaoListOutput {
 // ============================================================================
 
 export class GradeHorarioOfertaFormacaoCreateInput {
-  @ValidateNested()
-  @Type(() => CampusInputRef)
   campus!: CampusInputRef;
 
-  @ValidateNested()
-  @Type(() => OfertaFormacaoInputRef)
   ofertaFormacao!: OfertaFormacaoInputRef;
 }
 
 export class GradeHorarioOfertaFormacaoUpdateInput {
-  @IsOptional()
-  @ValidateNested()
-  @Type(() => CampusInputRef)
   campus?: CampusInputRef;
 
-  @IsOptional()
-  @ValidateNested()
-  @Type(() => OfertaFormacaoInputRef)
   ofertaFormacao?: OfertaFormacaoInputRef;
 }
 

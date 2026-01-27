@@ -1,4 +1,3 @@
-import { IsArray, IsDate, IsOptional, IsString, IsUUID } from "class-validator";
 import { ObjectUuidRef, PaginationInput, PaginationMeta } from "../../../common/application/dtos";
 
 // ============================================================================
@@ -6,26 +5,18 @@ import { ObjectUuidRef, PaginationInput, PaginationMeta } from "../../../common/
 // ============================================================================
 
 export class ImagemFindOneInput {
-  @IsUUID()
   id!: string;
 }
 
 export class ImagemFindOneOutput {
-  @IsUUID()
   id!: string;
 
-  @IsOptional()
-  @IsString()
   descricao!: string | null;
 
-  @IsDate()
   dateCreated!: Date;
 
-  @IsDate()
   dateUpdated!: Date;
 
-  @IsOptional()
-  @IsDate()
   dateDeleted!: Date | null;
 }
 
@@ -34,9 +25,6 @@ export class ImagemFindOneOutput {
 // ============================================================================
 
 export class ImagemListInput extends PaginationInput {
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
   "filter.id"?: string[];
 }
 
@@ -50,14 +38,10 @@ export class ImagemListOutput {
 // ============================================================================
 
 export class ImagemCreateInput {
-  @IsOptional()
-  @IsString()
   descricao?: string | null;
 }
 
 export class ImagemUpdateInput {
-  @IsOptional()
-  @IsString()
   descricao?: string | null;
 }
 

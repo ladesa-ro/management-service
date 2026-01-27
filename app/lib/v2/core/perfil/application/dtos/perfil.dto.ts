@@ -1,13 +1,3 @@
-import { Type } from "class-transformer";
-import {
-  IsArray,
-  IsBoolean,
-  IsDate,
-  IsOptional,
-  IsString,
-  IsUUID,
-  ValidateNested,
-} from "class-validator";
 import { CampusFindOneOutput, CampusInputRef } from "../../../campus/application/dtos";
 import { ObjectUuidRef, PaginationInput, PaginationMeta } from "../../../common/application/dtos";
 import { UsuarioFindOneOutput, UsuarioInputRef } from "../../../usuario/application/dtos";
@@ -17,36 +7,24 @@ import { UsuarioFindOneOutput, UsuarioInputRef } from "../../../usuario/applicat
 // ============================================================================
 
 export class PerfilFindOneInput {
-  @IsUUID()
   id!: string;
 }
 
 export class PerfilFindOneOutput {
-  @IsUUID()
   id!: string;
 
-  @IsBoolean()
   ativo!: boolean;
 
-  @IsString()
   cargo!: string;
 
-  @ValidateNested()
-  @Type(() => CampusFindOneOutput)
   campus!: CampusFindOneOutput;
 
-  @ValidateNested()
-  @Type(() => UsuarioFindOneOutput)
   usuario!: UsuarioFindOneOutput;
 
-  @IsDate()
   dateCreated!: Date;
 
-  @IsDate()
   dateUpdated!: Date;
 
-  @IsOptional()
-  @IsDate()
   dateDeleted!: Date | null;
 }
 
@@ -55,19 +33,10 @@ export class PerfilFindOneOutput {
 // ============================================================================
 
 export class PerfilListInput extends PaginationInput {
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
   "filter.id"?: string[];
 
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
   "filter.campus.id"?: string[];
 
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
   "filter.usuario.id"?: string[];
 }
 
@@ -81,16 +50,10 @@ export class PerfilListOutput {
 // ============================================================================
 
 export class PerfilSetVinculosInput {
-  @IsArray()
-  @IsString({ each: true })
   cargos!: string[];
 
-  @ValidateNested()
-  @Type(() => CampusInputRef)
   campus!: CampusInputRef;
 
-  @ValidateNested()
-  @Type(() => UsuarioInputRef)
   usuario!: UsuarioInputRef;
 }
 

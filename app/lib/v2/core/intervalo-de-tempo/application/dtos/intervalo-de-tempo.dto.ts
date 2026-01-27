@@ -1,4 +1,3 @@
-import { IsArray, IsDate, IsOptional, IsString, IsUUID, Matches } from "class-validator";
 import { ObjectUuidRef, PaginationInput, PaginationMeta } from "../../../common/application/dtos";
 
 // ============================================================================
@@ -6,30 +5,20 @@ import { ObjectUuidRef, PaginationInput, PaginationMeta } from "../../../common/
 // ============================================================================
 
 export class IntervaloDeTempoFindOneInput {
-  @IsUUID()
   id!: string;
 }
 
 export class IntervaloDeTempoFindOneOutput {
-  @IsUUID()
   id!: string;
 
-  @IsString()
-  @Matches(/^\d{2}:\d{2}(:\d{2})?$/)
   periodoInicio!: string;
 
-  @IsString()
-  @Matches(/^\d{2}:\d{2}(:\d{2})?$/)
   periodoFim!: string;
 
-  @IsDate()
   dateCreated!: Date;
 
-  @IsDate()
   dateUpdated!: Date;
 
-  @IsOptional()
-  @IsDate()
   dateDeleted!: Date | null;
 }
 
@@ -38,9 +27,6 @@ export class IntervaloDeTempoFindOneOutput {
 // ============================================================================
 
 export class IntervaloDeTempoListInput extends PaginationInput {
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
   "filter.id"?: string[];
 }
 
@@ -54,24 +40,14 @@ export class IntervaloDeTempoListOutput {
 // ============================================================================
 
 export class IntervaloDeTempoCreateInput {
-  @IsString()
-  @Matches(/^\d{2}:\d{2}(:\d{2})?$/)
   periodoInicio!: string;
 
-  @IsString()
-  @Matches(/^\d{2}:\d{2}(:\d{2})?$/)
   periodoFim!: string;
 }
 
 export class IntervaloDeTempoUpdateInput {
-  @IsOptional()
-  @IsString()
-  @Matches(/^\d{2}:\d{2}(:\d{2})?$/)
   periodoInicio?: string;
 
-  @IsOptional()
-  @IsString()
-  @Matches(/^\d{2}:\d{2}(:\d{2})?$/)
   periodoFim?: string;
 }
 
@@ -86,17 +62,9 @@ export class IntervaloDeTempoInputRef extends ObjectUuidRef {}
 // ============================================================================
 
 export class IntervaloDeTempoInput {
-  @IsOptional()
-  @IsUUID()
   id?: string;
 
-  @IsOptional()
-  @IsString()
-  @Matches(/^\d{2}:\d{2}(:\d{2})?$/)
   periodoInicio?: string;
 
-  @IsOptional()
-  @IsString()
-  @Matches(/^\d{2}:\d{2}(:\d{2})?$/)
   periodoFim?: string;
 }

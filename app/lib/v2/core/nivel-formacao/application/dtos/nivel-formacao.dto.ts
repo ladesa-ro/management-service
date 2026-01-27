@@ -1,4 +1,3 @@
-import { IsArray, IsDate, IsOptional, IsString, IsUUID, MinLength } from "class-validator";
 import { ObjectUuidRef, PaginationInput, PaginationMeta } from "../../../common/application/dtos";
 
 // ============================================================================
@@ -6,26 +5,18 @@ import { ObjectUuidRef, PaginationInput, PaginationMeta } from "../../../common/
 // ============================================================================
 
 export class NivelFormacaoFindOneInput {
-  @IsUUID()
   id!: string;
 }
 
 export class NivelFormacaoFindOneOutput {
-  @IsUUID()
   id!: string;
 
-  @IsString()
-  @MinLength(1)
   slug!: string;
 
-  @IsDate()
   dateCreated!: Date;
 
-  @IsDate()
   dateUpdated!: Date;
 
-  @IsOptional()
-  @IsDate()
   dateDeleted!: Date | null;
 }
 
@@ -34,9 +25,6 @@ export class NivelFormacaoFindOneOutput {
 // ============================================================================
 
 export class NivelFormacaoListInput extends PaginationInput {
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
   "filter.id"?: string[];
 }
 
@@ -50,15 +38,10 @@ export class NivelFormacaoListOutput {
 // ============================================================================
 
 export class NivelFormacaoCreateInput {
-  @IsString()
-  @MinLength(1)
   slug!: string;
 }
 
 export class NivelFormacaoUpdateInput {
-  @IsOptional()
-  @IsString()
-  @MinLength(1)
   slug?: string;
 }
 
