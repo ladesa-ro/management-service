@@ -10,7 +10,7 @@ import {
   MinLength,
   ValidateNested,
 } from "class-validator";
-import { PaginationInputDto, PaginationMetaDto } from "@/shared/dto";
+import { PaginationInputDto, PaginationMetaDto, TransformToArray } from "@/shared/dto";
 import {
   commonProperties,
   RegisterModel,
@@ -158,11 +158,45 @@ export class AulaListInputDto extends PaginationInputDto {
     description: "Filtro por ID",
     type: [String],
   })
+  @TransformToArray()
   @Field(() => [String], { nullable: true })
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
   "filter.id"?: string[];
+
+  @ApiPropertyOptional({
+    description: "Filtro por ID do Intervalo de Tempo",
+    type: [String],
+  })
+  @TransformToArray()
+  @Field(() => [String], { nullable: true })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  "filter.intervaloDeTempo.id"?: string[];
+
+  @ApiPropertyOptional({
+    description: "Filtro por ID do Diario",
+    type: [String],
+  })
+  @TransformToArray()
+  @Field(() => [String], { nullable: true })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  "filter.diario.id"?: string[];
+
+  @ApiPropertyOptional({
+    description: "Filtro por ID do Ambiente",
+    type: [String],
+  })
+  @TransformToArray()
+  @Field(() => [String], { nullable: true })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  "filter.ambiente.id"?: string[];
 }
 
 @ObjectType("AulaListOutput")

@@ -7,3 +7,6 @@ export * from "./pagination/pagination-output.dto";
 
 // Param DTOs
 export * from "./params/uuid-param.dto";
+
+// Transforms
+export * from "./transforms/to-array.transform";

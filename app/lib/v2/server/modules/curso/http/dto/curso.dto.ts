@@ -10,7 +10,7 @@ import {
   MinLength,
   ValidateNested,
 } from "class-validator";
-import { PaginationInputDto, PaginationMetaDto } from "@/shared/dto";
+import { PaginationInputDto, PaginationMetaDto, TransformToArray } from "@/shared/dto";
 import {
   commonProperties,
   RegisterModel,
@@ -113,11 +113,89 @@ export class CursoListInputDto extends PaginationInputDto {
     description: "Filtro por ID",
     type: [String],
   })
+  @TransformToArray()
   @Field(() => [String], { nullable: true })
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
   "filter.id"?: string[];
+
+  @ApiPropertyOptional({
+    description: "Filtro por ID do Campus",
+    type: [String],
+  })
+  @TransformToArray()
+  @Field(() => [String], { nullable: true })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  "filter.campus.id"?: string[];
+
+  @ApiPropertyOptional({
+    description: "Filtro por CNPJ do Campus",
+    type: [String],
+  })
+  @TransformToArray()
+  @Field(() => [String], { nullable: true })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  "filter.campus.cnpj"?: string[];
+
+  @ApiPropertyOptional({
+    description: "Filtro por razao social do Campus",
+    type: [String],
+  })
+  @TransformToArray()
+  @Field(() => [String], { nullable: true })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  "filter.campus.razaoSocial"?: string[];
+
+  @ApiPropertyOptional({
+    description: "Filtro por nome fantasia do Campus",
+    type: [String],
+  })
+  @TransformToArray()
+  @Field(() => [String], { nullable: true })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  "filter.campus.nomeFantasia"?: string[];
+
+  @ApiPropertyOptional({
+    description: "Filtro por ID da Oferta de Formacao",
+    type: [String],
+  })
+  @TransformToArray()
+  @Field(() => [String], { nullable: true })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  "filter.ofertaFormacao.id"?: string[];
+
+  @ApiPropertyOptional({
+    description: "Filtro por nome da Oferta de Formacao",
+    type: [String],
+  })
+  @TransformToArray()
+  @Field(() => [String], { nullable: true })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  "filter.ofertaFormacao.nome"?: string[];
+
+  @ApiPropertyOptional({
+    description: "Filtro por slug da Oferta de Formacao",
+    type: [String],
+  })
+  @TransformToArray()
+  @Field(() => [String], { nullable: true })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  "filter.ofertaFormacao.slug"?: string[];
 }
 
 @ObjectType("CursoListOutput")

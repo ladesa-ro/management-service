@@ -10,7 +10,7 @@ import {
   IsUUID,
   ValidateNested,
 } from "class-validator";
-import { PaginationInputDto, PaginationMetaDto } from "@/shared/dto";
+import { PaginationInputDto, PaginationMetaDto, TransformToArray } from "@/shared/dto";
 import {
   commonProperties,
   RegisterModel,
@@ -92,11 +92,56 @@ export class PerfilListInputDto extends PaginationInputDto {
     description: "Filtro por ID",
     type: [String],
   })
+  @TransformToArray()
   @Field(() => [String], { nullable: true })
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
   "filter.id"?: string[];
+
+  @ApiPropertyOptional({
+    description: "Filtro por ativo",
+    type: [String],
+  })
+  @TransformToArray()
+  @Field(() => [String], { nullable: true })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  "filter.ativo"?: string[];
+
+  @ApiPropertyOptional({
+    description: "Filtro por cargo",
+    type: [String],
+  })
+  @TransformToArray()
+  @Field(() => [String], { nullable: true })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  "filter.cargo"?: string[];
+
+  @ApiPropertyOptional({
+    description: "Filtro por ID do Campus",
+    type: [String],
+  })
+  @TransformToArray()
+  @Field(() => [String], { nullable: true })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  "filter.campus.id"?: string[];
+
+  @ApiPropertyOptional({
+    description: "Filtro por ID do Usuario",
+    type: [String],
+  })
+  @TransformToArray()
+  @Field(() => [String], { nullable: true })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  "filter.usuario.id"?: string[];
 }
 
 @ObjectType("PerfilListOutput")

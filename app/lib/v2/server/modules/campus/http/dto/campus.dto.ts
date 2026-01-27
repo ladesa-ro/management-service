@@ -10,7 +10,7 @@ import {
   MinLength,
   ValidateNested,
 } from "class-validator";
-import { PaginationInputDto, PaginationMetaDto } from "@/shared/dto";
+import { PaginationInputDto, PaginationMetaDto, TransformToArray } from "@/shared/dto";
 import {
   commonProperties,
   RegisterModel,
@@ -100,11 +100,67 @@ export class CampusListInputDto extends PaginationInputDto {
     description: "Filtro por ID",
     type: [String],
   })
+  @TransformToArray()
   @Field(() => [String], { nullable: true })
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
   "filter.id"?: string[];
+
+  @ApiPropertyOptional({
+    description: "Filtro por ID da Cidade do Endereco",
+    type: [String],
+  })
+  @TransformToArray()
+  @Field(() => [String], { nullable: true })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  "filter.endereco.cidade.id"?: string[];
+
+  @ApiPropertyOptional({
+    description: "Filtro por nome da Cidade do Endereco",
+    type: [String],
+  })
+  @TransformToArray()
+  @Field(() => [String], { nullable: true })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  "filter.endereco.cidade.nome"?: string[];
+
+  @ApiPropertyOptional({
+    description: "Filtro por ID do Estado da Cidade do Endereco",
+    type: [String],
+  })
+  @TransformToArray()
+  @Field(() => [String], { nullable: true })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  "filter.endereco.cidade.estado.id"?: string[];
+
+  @ApiPropertyOptional({
+    description: "Filtro por nome do Estado da Cidade do Endereco",
+    type: [String],
+  })
+  @TransformToArray()
+  @Field(() => [String], { nullable: true })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  "filter.endereco.cidade.estado.nome"?: string[];
+
+  @ApiPropertyOptional({
+    description: "Filtro por sigla do Estado da Cidade do Endereco",
+    type: [String],
+  })
+  @TransformToArray()
+  @Field(() => [String], { nullable: true })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  "filter.endereco.cidade.estado.sigla"?: string[];
 }
 
 @ObjectType("CampusListOutput")

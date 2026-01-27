@@ -10,7 +10,7 @@ import {
   MinLength,
   ValidateNested,
 } from "class-validator";
-import { PaginationInputDto, PaginationMetaDto } from "@/shared/dto";
+import { PaginationInputDto, PaginationMetaDto, TransformToArray } from "@/shared/dto";
 import {
   commonProperties,
   RegisterModel,
@@ -108,11 +108,133 @@ export class TurmaListInputDto extends PaginationInputDto {
     description: "Filtro por ID",
     type: [String],
   })
+  @TransformToArray()
   @Field(() => [String], { nullable: true })
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
   "filter.id"?: string[];
+
+  @ApiPropertyOptional({
+    description: "Filtro por nome do Ambiente Padrao de Aula",
+    type: [String],
+  })
+  @TransformToArray()
+  @Field(() => [String], { nullable: true })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  "filter.ambientePadraoAula.nome"?: string[];
+
+  @ApiPropertyOptional({
+    description: "Filtro por codigo do Ambiente Padrao de Aula",
+    type: [String],
+  })
+  @TransformToArray()
+  @Field(() => [String], { nullable: true })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  "filter.ambientePadraoAula.codigo"?: string[];
+
+  @ApiPropertyOptional({
+    description: "Filtro por capacidade do Ambiente Padrao de Aula",
+    type: [String],
+  })
+  @TransformToArray()
+  @Field(() => [String], { nullable: true })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  "filter.ambientePadraoAula.capacidade"?: string[];
+
+  @ApiPropertyOptional({
+    description: "Filtro por tipo do Ambiente Padrao de Aula",
+    type: [String],
+  })
+  @TransformToArray()
+  @Field(() => [String], { nullable: true })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  "filter.ambientePadraoAula.tipo"?: string[];
+
+  @ApiPropertyOptional({
+    description: "Filtro por ID do Curso",
+    type: [String],
+  })
+  @TransformToArray()
+  @Field(() => [String], { nullable: true })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  "filter.curso.id"?: string[];
+
+  @ApiPropertyOptional({
+    description: "Filtro por nome do Curso",
+    type: [String],
+  })
+  @TransformToArray()
+  @Field(() => [String], { nullable: true })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  "filter.curso.nome"?: string[];
+
+  @ApiPropertyOptional({
+    description: "Filtro por nome abreviado do Curso",
+    type: [String],
+  })
+  @TransformToArray()
+  @Field(() => [String], { nullable: true })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  "filter.curso.nomeAbreviado"?: string[];
+
+  @ApiPropertyOptional({
+    description: "Filtro por ID do Campus do Curso",
+    type: [String],
+  })
+  @TransformToArray()
+  @Field(() => [String], { nullable: true })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  "filter.curso.campus.id"?: string[];
+
+  @ApiPropertyOptional({
+    description: "Filtro por ID da Oferta de Formacao do Curso",
+    type: [String],
+  })
+  @TransformToArray()
+  @Field(() => [String], { nullable: true })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  "filter.curso.ofertaFormacao.id"?: string[];
+
+  @ApiPropertyOptional({
+    description: "Filtro por nome da Oferta de Formacao do Curso",
+    type: [String],
+  })
+  @TransformToArray()
+  @Field(() => [String], { nullable: true })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  "filter.curso.ofertaFormacao.nome"?: string[];
+
+  @ApiPropertyOptional({
+    description: "Filtro por slug da Oferta de Formacao do Curso",
+    type: [String],
+  })
+  @TransformToArray()
+  @Field(() => [String], { nullable: true })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  "filter.curso.ofertaFormacao.slug"?: string[];
 }
 
 @ObjectType("TurmaListOutput")

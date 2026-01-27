@@ -10,7 +10,7 @@ import {
   Min,
   MinLength,
 } from "class-validator";
-import { PaginationInputDto, PaginationMetaDto } from "@/shared/dto";
+import { PaginationInputDto, PaginationMetaDto, TransformToArray } from "@/shared/dto";
 import { commonProperties, RegisterModel, simpleProperty } from "@/shared/metadata";
 
 // ============================================================================
@@ -90,6 +90,7 @@ export class ArquivoListInputDto extends PaginationInputDto {
     description: "Filtro por ID",
     type: [String],
   })
+  @TransformToArray()
   @Field(() => [String], { nullable: true })
   @IsOptional()
   @IsArray()

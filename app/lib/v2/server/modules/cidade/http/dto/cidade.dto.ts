@@ -2,7 +2,7 @@ import { ArgsType, Field, InputType, Int, ObjectType } from "@nestjs/graphql";
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { IsArray, IsInt, IsOptional, IsString, ValidateNested } from "class-validator";
-import { PaginationInputDto, PaginationMetaDto } from "@/shared/dto";
+import { PaginationInputDto, PaginationMetaDto, TransformToArray } from "@/shared/dto";
 import { RegisterModel, referenceProperty, simpleProperty } from "@/shared/metadata";
 import { EstadoFindOneOutputDto } from "@/v2/server/modules/estado/http/dto";
 
@@ -48,11 +48,45 @@ export class CidadeListInputDto extends PaginationInputDto {
     description: "Filtro por ID",
     type: [String],
   })
+  @TransformToArray()
   @Field(() => [String], { nullable: true })
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
   "filter.id"?: string[];
+
+  @ApiPropertyOptional({
+    description: "Filtro por ID do Estado",
+    type: [String],
+  })
+  @TransformToArray()
+  @Field(() => [String], { nullable: true })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  "filter.estado.id"?: string[];
+
+  @ApiPropertyOptional({
+    description: "Filtro por nome do Estado",
+    type: [String],
+  })
+  @TransformToArray()
+  @Field(() => [String], { nullable: true })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  "filter.estado.nome"?: string[];
+
+  @ApiPropertyOptional({
+    description: "Filtro por sigla do Estado",
+    type: [String],
+  })
+  @TransformToArray()
+  @Field(() => [String], { nullable: true })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  "filter.estado.sigla"?: string[];
 }
 
 @ObjectType("CidadeListOutput")
