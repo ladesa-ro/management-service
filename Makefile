@@ -23,7 +23,7 @@ setup:
 	$(COMMAND_COMPOSE_SERVICE) build
 
 post-init:
-	$(COMMAND_COMPOSE_SERVICE) exec -u $(COMPOSE_SERVICE_USER) $(COMPOSE_SERVICE_APP) bash -c "bun install && bun x nx daemon --start";
+	$(COMMAND_COMPOSE_SERVICE) exec -u $(COMPOSE_SERVICE_USER) $(COMPOSE_SERVICE_APP) bash -c "bun install";
 
 up-no-recreate:
 	make setup;
