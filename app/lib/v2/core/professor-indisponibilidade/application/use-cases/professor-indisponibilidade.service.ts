@@ -1,8 +1,8 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { map, pick } from "lodash";
-import type { AccessContext } from "@/infrastructure/access-context";
-import { paginateConfig } from "@/infrastructure/fixtures";
-import { QbEfficientLoad, SearchService } from "@/shared";
+import type { AccessContext } from "@/old/infrastructure/access-context";
+import { paginateConfig } from "@/old/infrastructure/fixtures";
+import { QbEfficientLoad, SearchService } from "@/old/shared";
 import type {
   ProfessorIndisponibilidadeCreateInputDto,
   ProfessorIndisponibilidadeFindOneInputDto,

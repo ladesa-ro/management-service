@@ -11,13 +11,13 @@ import {
   IsUUID,
   ValidateNested,
 } from "class-validator";
-import { PaginationInputDto, PaginationMetaDto, TransformToArray } from "@/shared/dto";
+import { PaginationInputDto, PaginationMetaDto, TransformToArray } from "@/old/shared/dto";
 import {
   commonProperties,
   RegisterModel,
   referenceProperty,
   simpleProperty,
-} from "@/shared/metadata";
+} from "@/old/shared/metadata";
 import {
   CalendarioLetivoFindOneInputDto,
   CalendarioLetivoFindOneOutputDto,

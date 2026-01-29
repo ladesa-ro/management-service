@@ -1,6 +1,6 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { pick } from "lodash";
-import { AccessContext } from "@/infrastructure/access-context";
+import { AccessContext } from "@/old/infrastructure/access-context";
 import type {
   EnderecoFindOneInputDto,
   EnderecoFindOneOutputDto,

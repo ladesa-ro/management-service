@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { MessageBrokerService } from "@/infrastructure/integrations/message-broker";
+import { MessageBrokerService } from "@/old/infrastructure/integrations/message-broker";
 
 @Injectable()
 export class GerarHorarioService {

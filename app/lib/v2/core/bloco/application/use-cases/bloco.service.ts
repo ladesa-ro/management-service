@@ -1,5 +1,5 @@
 import { Inject, Injectable, NotFoundException, type StreamableFile } from "@nestjs/common";
-import type { AccessContext } from "@/infrastructure/access-context";
+import type { AccessContext } from "@/old/infrastructure/access-context";
 import type {
   BlocoCreateInputDto,
   BlocoFindOneInputDto,

@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
-import { paginateConfig } from "@/infrastructure/fixtures";
-import { QbEfficientLoad } from "@/shared";
+import { paginateConfig } from "@/old/infrastructure/fixtures";
+import { QbEfficientLoad } from "@/old/shared";
 import type {
   UsuarioFindOneInputDto,
   UsuarioFindOneOutputDto,

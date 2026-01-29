@@ -1,9 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
 import type { DeepPartial } from "typeorm";
-import type { AccessContext } from "@/infrastructure/access-context";
-import { paginateConfig } from "@/infrastructure/fixtures";
-import { QbEfficientLoad } from "@/shared";
+import type { AccessContext } from "@/old/infrastructure/access-context";
+import { paginateConfig } from "@/old/infrastructure/fixtures";
+import { QbEfficientLoad } from "@/old/shared";
 import type {
   PerfilFindOneInputDto,
   PerfilFindOneOutputDto,

@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { type PaginateConfig, paginate } from "nestjs-paginate";
 import type { PaginateQuery } from "nestjs-paginate/lib/decorator";
 import type { ObjectLiteral, SelectQueryBuilder } from "typeorm";
-import { paginateConfig } from "@/infrastructure/fixtures";
+import { paginateConfig } from "@/old/infrastructure/fixtures";
 import type {
   IPaginationConfig,
   IPaginationCriteria,

@@ -18,7 +18,7 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
-import { AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
+import { AccessContext, AccessContextHttp } from "@/old/infrastructure/access-context";
 import { CursoService } from "@/v2/core/curso/application/use-cases/curso.service";
 import {
   CursoCreateInputDto,

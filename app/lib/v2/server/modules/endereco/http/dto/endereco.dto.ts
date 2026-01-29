@@ -16,7 +16,7 @@ import {
   RegisterModel,
   referenceProperty,
   simpleProperty,
-} from "@/shared/metadata";
+} from "@/old/shared/metadata";
 import { CidadeFindOneInputDto, CidadeFindOneOutputDto } from "@/v2/server/modules/cidade/http/dto";
 
 // ============================================================================

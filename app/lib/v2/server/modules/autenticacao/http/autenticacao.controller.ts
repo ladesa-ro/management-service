@@ -7,8 +7,8 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
-import { AccessContext, AccessContextHttp } from "@/infrastructure/access-context";
-import { Public } from "@/infrastructure/authentication";
+import { AccessContext, AccessContextHttp } from "@/old/infrastructure/access-context";
+import { Public } from "@/old/infrastructure/authentication";
 import { UsuarioFindOneOutputDto } from "@/v2/server/modules/usuario/http/dto";
 import { AutenticacaoService } from "@/v2/core/autenticacao/application/use-cases/autenticacao.service";
 import { UsuarioService } from "@/v2/core/usuario/application/use-cases/usuario.service";

@@ -12,13 +12,13 @@ import {
   Min,
   ValidateNested,
 } from "class-validator";
-import { PaginationInputDto, PaginationMetaDto, TransformToArray } from "@/shared/dto";
+import { PaginationInputDto, PaginationMetaDto, TransformToArray } from "@/old/shared/dto";
 import {
   commonProperties,
   RegisterModel,
   referenceProperty,
   simpleProperty,
-} from "@/shared/metadata";
+} from "@/old/shared/metadata";
 import { DiarioFindOneInputDto, DiarioFindOneOutputDto } from "@/v2/server/modules/diario/http/dto";
 
 // ============================================================================

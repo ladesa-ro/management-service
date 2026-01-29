@@ -1,0 +1,23 @@
+import { Module } from "@nestjs/common";
+import { APP_FILTER } from "@nestjs/core";
+import { IdentityProviderModule } from "@/old/shared";
+import { IntegrationDatabaseModule } from "@/v2/adapters/out/persistence/typeorm/integration-database.module";
+import { GqlExceptionFilter } from "./graphql/exception-filters/GqlExceptionFilter";
+import { IntegrationHttpModule } from "./http";
+
+@Module({
+  imports: [
+    IntegrationDatabaseModule,
+    // IntegrationGraphQLModule,
+    IntegrationHttpModule,
+    IdentityProviderModule,
+    // MessageBrokerModule,
+  ],
+  providers: [
+    {
+      provide: APP_FILTER,
+      useClass: GqlExceptionFilter,
+    },
+  ],
+})
+export class IntegrationsModule {}

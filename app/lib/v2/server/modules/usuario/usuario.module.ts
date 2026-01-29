@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { KeycloakModule } from "@/infrastructure/integrations/identity-provider";
+import { KeycloakModule } from "@/old/infrastructure/integrations/identity-provider";
 import { NestJsPaginateAdapter } from "@/v2/adapters/out/persistence/pagination";
 import { UsuarioTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistence/typeorm/adapters";
 import { ArquivoModule } from "@/v2/server/modules/arquivo";

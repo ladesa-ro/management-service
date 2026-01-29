@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { FilterOperator, FilterSuffix } from "nestjs-paginate";
-import { paginateConfig } from "@/infrastructure/fixtures";
+import { paginateConfig } from "@/old/infrastructure/fixtures";
 import type {
   DisciplinaFindOneInputDto,
   DisciplinaFindOneOutputDto,

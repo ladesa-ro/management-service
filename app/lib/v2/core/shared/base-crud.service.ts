@@ -1,7 +1,7 @@
 import { NotFoundException } from "@nestjs/common";
 import { pick } from "lodash";
 import type { DeepPartial } from "typeorm";
-import type { AccessContext } from "@/infrastructure/access-context";
+import type { AccessContext } from "@/old/infrastructure/access-context";
 
 /**
  * Interface base para ports de repositório com operações CRUD

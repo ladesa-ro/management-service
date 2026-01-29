@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import type { DeepPartial } from "typeorm";
-import type { AccessContext } from "@/infrastructure/access-context";
-import { QbEfficientLoad } from "@/shared";
+import type { AccessContext } from "@/old/infrastructure/access-context";
+import { QbEfficientLoad } from "@/old/shared";
 import type {
   EnderecoFindOneInputDto,
   EnderecoFindOneOutputDto,
