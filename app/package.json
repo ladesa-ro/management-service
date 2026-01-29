@@ -18,7 +18,7 @@
     "@nestjs/schedule": "^6.1.0",
     "@nestjs/swagger": "^11.2.5",
     "@nestjs/throttler": "^6.5.0",
-    "@scalar/nestjs-api-reference": "^1.0.20",
+    "@scalar/nestjs-api-reference": "^1.0.21",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
     "compression": "^1.8.1",
