@@ -16,24 +16,6 @@ export class Imagem implements IImagem {
   // ========================================
 
   /**
-   * Valida se a imagem está ativa (não deletada)
-   */
-  isAtiva(): boolean {
-    return this.dateDeleted === null;
-  }
-
-  /**
-   * Verifica se tem descrição
-   */
-  temDescricao(): boolean {
-    return this.descricao !== null && this.descricao.trim().length > 0;
-  }
-
-  // ========================================
-  // Factory Methods
-  // ========================================
-
-  /**
    * Cria uma nova instância de Imagem
    */
   static criar(dados: IImagemCreate): Imagem {
@@ -52,5 +34,23 @@ export class Imagem implements IImagem {
     const instance = new Imagem();
     Object.assign(instance, dados);
     return instance;
+  }
+
+  // ========================================
+  // Factory Methods
+  // ========================================
+
+  /**
+   * Valida se a imagem está ativa (não deletada)
+   */
+  isAtiva(): boolean {
+    return this.dateDeleted === null;
+  }
+
+  /**
+   * Verifica se tem descrição
+   */
+  temDescricao(): boolean {
+    return this.descricao !== null && this.descricao.trim().length > 0;
   }
 }

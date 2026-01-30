@@ -16,31 +16,6 @@ export class NivelFormacao implements INivelFormacao {
   // ========================================
 
   /**
-   * Valida se o nível de formação está ativo (não deletado)
-   */
-  isAtivo(): boolean {
-    return this.dateDeleted === null;
-  }
-
-  /**
-   * Valida se pode ser editado
-   */
-  podeSerEditado(): boolean {
-    return this.isAtivo();
-  }
-
-  /**
-   * Valida se pode ser deletado
-   */
-  podeSerDeletado(): boolean {
-    return this.isAtivo();
-  }
-
-  // ========================================
-  // Factory Methods
-  // ========================================
-
-  /**
    * Cria uma nova instância válida de NivelFormacao
    * @throws Error se os dados forem inválidos
    */
@@ -66,5 +41,30 @@ export class NivelFormacao implements INivelFormacao {
     const instance = new NivelFormacao();
     Object.assign(instance, dados);
     return instance;
+  }
+
+  /**
+   * Valida se o nível de formação está ativo (não deletado)
+   */
+  isAtivo(): boolean {
+    return this.dateDeleted === null;
+  }
+
+  // ========================================
+  // Factory Methods
+  // ========================================
+
+  /**
+   * Valida se pode ser editado
+   */
+  podeSerEditado(): boolean {
+    return this.isAtivo();
+  }
+
+  /**
+   * Valida se pode ser deletado
+   */
+  podeSerDeletado(): boolean {
+    return this.isAtivo();
   }
 }

@@ -1,5 +1,11 @@
 import { Inject, Injectable, NotFoundException, type StreamableFile } from "@nestjs/common";
 import { has } from "lodash";
+import type { CursoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
+import { ArquivoService } from "@/v2/core/arquivo/application/use-cases/arquivo.service";
+import { CampusService } from "@/v2/core/campus/application/use-cases/campus.service";
+import { ImagemService } from "@/v2/core/imagem/application/use-cases/imagem.service";
+import { OfertaFormacaoService } from "@/v2/core/oferta-formacao/application/use-cases/oferta-formacao.service";
+import { BaseCrudService } from "@/v2/core/shared";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
   CursoCreateInputDto,
@@ -9,12 +15,6 @@ import type {
   CursoListOutputDto,
   CursoUpdateInputDto,
 } from "@/v2/server/modules/curso/http/dto";
-import type { CursoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
-import { ArquivoService } from "@/v2/core/arquivo/application/use-cases/arquivo.service";
-import { CampusService } from "@/v2/core/campus/application/use-cases/campus.service";
-import { ImagemService } from "@/v2/core/imagem/application/use-cases/imagem.service";
-import { OfertaFormacaoService } from "@/v2/core/oferta-formacao/application/use-cases/oferta-formacao.service";
-import { BaseCrudService } from "@/v2/core/shared";
 import type { ICursoRepositoryPort } from "../ports";
 
 @Injectable()
@@ -45,45 +45,6 @@ export class CursoService extends BaseCrudService<
     super();
   }
 
-  protected override async beforeCreate(
-    accessContext: AccessContext,
-    entity: CursoEntity,
-    dto: CursoCreateInputDto,
-  ): Promise<void> {
-    const campus = await this.campusService.campusFindByIdSimpleStrict(accessContext, dto.campus.id);
-    this.repository.merge(entity, { campus: { id: campus.id } });
-
-    const ofertaFormacao = await this.ofertaFormacaoService.ofertaFormacaoFindByIdSimpleStrict(
-      accessContext,
-      dto.ofertaFormacao.id,
-    );
-    this.repository.merge(entity, { ofertaFormacao: { id: ofertaFormacao.id } });
-  }
-
-  protected override async beforeUpdate(
-    accessContext: AccessContext,
-    entity: CursoEntity,
-    dto: CursoFindOneInputDto & CursoUpdateInputDto,
-  ): Promise<void> {
-    if (has(dto, "campus") && dto.campus !== undefined) {
-      const campus = await this.campusService.campusFindByIdSimpleStrict(
-        accessContext,
-        dto.campus.id,
-      );
-      this.repository.merge(entity, { campus: { id: campus.id } });
-    }
-
-    if (has(dto, "ofertaFormacao") && dto.ofertaFormacao !== undefined) {
-      const ofertaFormacao = await this.ofertaFormacaoService.ofertaFormacaoFindByIdSimpleStrict(
-        accessContext,
-        dto.ofertaFormacao.id,
-      );
-      this.repository.merge(entity, { ofertaFormacao: { id: ofertaFormacao.id } });
-    }
-  }
-
-  // Métodos prefixados para compatibilidade
-
   async cursoFindAll(
     accessContext: AccessContext,
     dto: CursoListInputDto | null = null,
@@ -99,6 +60,8 @@ export class CursoService extends BaseCrudService<
   ): Promise<CursoFindOneOutputDto | null> {
     return this.findById(accessContext, dto, selection);
   }
+
+  // Métodos prefixados para compatibilidade
 
   async cursoFindByIdStrict(
     accessContext: AccessContext | null,
@@ -145,8 +108,6 @@ export class CursoService extends BaseCrudService<
     return this.deleteOneById(accessContext, dto);
   }
 
-  // Métodos específicos de Curso (não cobertos pela BaseCrudService)
-
   async cursoGetImagemCapa(
     accessContext: AccessContext | null,
     id: string,
@@ -187,5 +148,47 @@ export class CursoService extends BaseCrudService<
     await this.repository.save(curso);
 
     return true;
+  }
+
+  // Métodos específicos de Curso (não cobertos pela BaseCrudService)
+
+  protected override async beforeCreate(
+    accessContext: AccessContext,
+    entity: CursoEntity,
+    dto: CursoCreateInputDto,
+  ): Promise<void> {
+    const campus = await this.campusService.campusFindByIdSimpleStrict(
+      accessContext,
+      dto.campus.id,
+    );
+    this.repository.merge(entity, { campus: { id: campus.id } });
+
+    const ofertaFormacao = await this.ofertaFormacaoService.ofertaFormacaoFindByIdSimpleStrict(
+      accessContext,
+      dto.ofertaFormacao.id,
+    );
+    this.repository.merge(entity, { ofertaFormacao: { id: ofertaFormacao.id } });
+  }
+
+  protected override async beforeUpdate(
+    accessContext: AccessContext,
+    entity: CursoEntity,
+    dto: CursoFindOneInputDto & CursoUpdateInputDto,
+  ): Promise<void> {
+    if (has(dto, "campus") && dto.campus !== undefined) {
+      const campus = await this.campusService.campusFindByIdSimpleStrict(
+        accessContext,
+        dto.campus.id,
+      );
+      this.repository.merge(entity, { campus: { id: campus.id } });
+    }
+
+    if (has(dto, "ofertaFormacao") && dto.ofertaFormacao !== undefined) {
+      const ofertaFormacao = await this.ofertaFormacaoService.ofertaFormacaoFindByIdSimpleStrict(
+        accessContext,
+        dto.ofertaFormacao.id,
+      );
+      this.repository.merge(entity, { ofertaFormacao: { id: ofertaFormacao.id } });
+    }
   }
 }

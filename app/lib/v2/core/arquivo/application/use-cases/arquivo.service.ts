@@ -10,11 +10,14 @@ import {
 } from "@nestjs/common";
 import jetpack, { createReadStream } from "fs-jetpack";
 import { v4 } from "uuid";
+import {
+  type ArquivoEntity,
+  UsuarioEntity,
+} from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
+import { AppConfigService } from "@/v2/infra/config";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import { isValidUuid } from "@/v2/old/shared";
 import type { ArquivoCreateInputDto } from "@/v2/server/modules/arquivo/http/dto";
-import { type ArquivoEntity, UsuarioEntity, } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
-import { AppConfigService } from "@/v2/infra/config";
 import type { IArquivoRepositoryPort, IArquivoUseCasePort } from "../ports";
 
 type IGetFileAcesso = null | {

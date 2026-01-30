@@ -23,45 +23,6 @@ export class Ambiente implements IAmbiente {
   // ========================================
 
   /**
-   * Valida se o ambiente está ativo (não deletado)
-   */
-  isAtivo(): boolean {
-    return this.dateDeleted === null;
-  }
-
-  /**
-   * Valida se pode ser editado
-   */
-  podeSerEditado(): boolean {
-    return this.isAtivo();
-  }
-
-  /**
-   * Valida se pode ser deletado
-   */
-  podeSerDeletado(): boolean {
-    return this.isAtivo();
-  }
-
-  /**
-   * Verifica se o ambiente tem imagem de capa
-   */
-  temImagemCapa(): boolean {
-    return this.imagemCapa !== null;
-  }
-
-  /**
-   * Verifica se o ambiente tem capacidade definida
-   */
-  temCapacidade(): boolean {
-    return this.capacidade !== null && this.capacidade > 0;
-  }
-
-  // ========================================
-  // Factory Methods
-  // ========================================
-
-  /**
    * Cria uma nova instância válida de Ambiente
    * @throws Error se os dados forem inválidos
    */
@@ -96,5 +57,44 @@ export class Ambiente implements IAmbiente {
     const instance = new Ambiente();
     Object.assign(instance, dados);
     return instance;
+  }
+
+  /**
+   * Valida se o ambiente está ativo (não deletado)
+   */
+  isAtivo(): boolean {
+    return this.dateDeleted === null;
+  }
+
+  /**
+   * Valida se pode ser editado
+   */
+  podeSerEditado(): boolean {
+    return this.isAtivo();
+  }
+
+  /**
+   * Valida se pode ser deletado
+   */
+  podeSerDeletado(): boolean {
+    return this.isAtivo();
+  }
+
+  // ========================================
+  // Factory Methods
+  // ========================================
+
+  /**
+   * Verifica se o ambiente tem imagem de capa
+   */
+  temImagemCapa(): boolean {
+    return this.imagemCapa !== null;
+  }
+
+  /**
+   * Verifica se o ambiente tem capacidade definida
+   */
+  temCapacidade(): boolean {
+    return this.capacidade !== null && this.capacidade > 0;
   }
 }

@@ -1,5 +1,11 @@
 import { Inject, Injectable, NotFoundException, type StreamableFile } from "@nestjs/common";
 import { has } from "lodash";
+import type { TurmaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
+import { AmbienteService } from "@/v2/core/ambiente/application/use-cases/ambiente.service";
+import { ArquivoService } from "@/v2/core/arquivo/application/use-cases/arquivo.service";
+import { CursoService } from "@/v2/core/curso/application/use-cases/curso.service";
+import { ImagemService } from "@/v2/core/imagem/application/use-cases/imagem.service";
+import { BaseCrudService } from "@/v2/core/shared";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
   TurmaCreateInputDto,
@@ -9,12 +15,6 @@ import type {
   TurmaListOutputDto,
   TurmaUpdateInputDto,
 } from "@/v2/server/modules/turma/http/dto";
-import type { TurmaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
-import { AmbienteService } from "@/v2/core/ambiente/application/use-cases/ambiente.service";
-import { ArquivoService } from "@/v2/core/arquivo/application/use-cases/arquivo.service";
-import { CursoService } from "@/v2/core/curso/application/use-cases/curso.service";
-import { ImagemService } from "@/v2/core/imagem/application/use-cases/imagem.service";
-import { BaseCrudService } from "@/v2/core/shared";
 import type { ITurmaRepositoryPort } from "../ports";
 
 @Injectable()
@@ -45,49 +45,6 @@ export class TurmaService extends BaseCrudService<
     super();
   }
 
-  protected override async beforeCreate(
-    accessContext: AccessContext,
-    entity: TurmaEntity,
-    dto: TurmaCreateInputDto,
-  ): Promise<void> {
-    if (dto.ambientePadraoAula) {
-      const ambientePadraoAula = await this.ambienteService.ambienteFindByIdStrict(accessContext, {
-        id: dto.ambientePadraoAula.id,
-      });
-      this.repository.merge(entity, { ambientePadraoAula: { id: ambientePadraoAula.id } });
-    } else {
-      this.repository.merge(entity, { ambientePadraoAula: null });
-    }
-
-    const curso = await this.cursoService.cursoFindByIdSimpleStrict(accessContext, dto.curso.id);
-    this.repository.merge(entity, { curso: { id: curso.id } });
-  }
-
-  protected override async beforeUpdate(
-    accessContext: AccessContext,
-    entity: TurmaEntity,
-    dto: TurmaFindOneInputDto & TurmaUpdateInputDto,
-  ): Promise<void> {
-    if (has(dto, "ambientePadraoAula") && dto.ambientePadraoAula !== undefined) {
-      if (dto.ambientePadraoAula !== null) {
-        const ambientePadraoAula = await this.ambienteService.ambienteFindByIdStrict(
-          accessContext,
-          { id: dto.ambientePadraoAula.id },
-        );
-        this.repository.merge(entity, { ambientePadraoAula: { id: ambientePadraoAula.id } });
-      } else {
-        this.repository.merge(entity, { ambientePadraoAula: null });
-      }
-    }
-
-    if (has(dto, "curso") && dto.curso !== undefined) {
-      const curso = await this.cursoService.cursoFindByIdSimpleStrict(accessContext, dto.curso.id);
-      this.repository.merge(entity, { curso: { id: curso.id } });
-    }
-  }
-
-  // Métodos prefixados para compatibilidade
-
   async turmaFindAll(
     accessContext: AccessContext,
     dto: TurmaListInputDto | null = null,
@@ -103,6 +60,8 @@ export class TurmaService extends BaseCrudService<
   ): Promise<TurmaFindOneOutputDto | null> {
     return this.findById(accessContext, dto, selection);
   }
+
+  // Métodos prefixados para compatibilidade
 
   async turmaFindByIdStrict(
     accessContext: AccessContext | null,
@@ -149,9 +108,10 @@ export class TurmaService extends BaseCrudService<
     return this.deleteOneById(accessContext, dto);
   }
 
-  // Métodos específicos de Turma (não cobertos pela BaseCrudService)
-
-  async turmaGetImagemCapa(accessContext: AccessContext | null, id: string): Promise<StreamableFile> {
+  async turmaGetImagemCapa(
+    accessContext: AccessContext | null,
+    id: string,
+  ): Promise<StreamableFile> {
     const turma = await this.turmaFindByIdStrict(accessContext, { id });
 
     if (turma.imagemCapa) {
@@ -188,5 +148,48 @@ export class TurmaService extends BaseCrudService<
     await this.repository.save(turma);
 
     return true;
+  }
+
+  // Métodos específicos de Turma (não cobertos pela BaseCrudService)
+
+  protected override async beforeCreate(
+    accessContext: AccessContext,
+    entity: TurmaEntity,
+    dto: TurmaCreateInputDto,
+  ): Promise<void> {
+    if (dto.ambientePadraoAula) {
+      const ambientePadraoAula = await this.ambienteService.ambienteFindByIdStrict(accessContext, {
+        id: dto.ambientePadraoAula.id,
+      });
+      this.repository.merge(entity, { ambientePadraoAula: { id: ambientePadraoAula.id } });
+    } else {
+      this.repository.merge(entity, { ambientePadraoAula: null });
+    }
+
+    const curso = await this.cursoService.cursoFindByIdSimpleStrict(accessContext, dto.curso.id);
+    this.repository.merge(entity, { curso: { id: curso.id } });
+  }
+
+  protected override async beforeUpdate(
+    accessContext: AccessContext,
+    entity: TurmaEntity,
+    dto: TurmaFindOneInputDto & TurmaUpdateInputDto,
+  ): Promise<void> {
+    if (has(dto, "ambientePadraoAula") && dto.ambientePadraoAula !== undefined) {
+      if (dto.ambientePadraoAula !== null) {
+        const ambientePadraoAula = await this.ambienteService.ambienteFindByIdStrict(
+          accessContext,
+          { id: dto.ambientePadraoAula.id },
+        );
+        this.repository.merge(entity, { ambientePadraoAula: { id: ambientePadraoAula.id } });
+      } else {
+        this.repository.merge(entity, { ambientePadraoAula: null });
+      }
+    }
+
+    if (has(dto, "curso") && dto.curso !== undefined) {
+      const curso = await this.cursoService.cursoFindByIdSimpleStrict(accessContext, dto.curso.id);
+      this.repository.merge(entity, { curso: { id: curso.id } });
+    }
   }
 }

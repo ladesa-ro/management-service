@@ -1,4 +1,5 @@
 import type { DeepPartial } from "typeorm";
+import type { NivelFormacaoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
   NivelFormacaoFindOneInputDto,
@@ -6,7 +7,6 @@ import type {
   NivelFormacaoListInputDto,
   NivelFormacaoListOutputDto,
 } from "@/v2/server/modules/nivel-formacao/http/dto";
-import type { NivelFormacaoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 
 /**
  * Port de saída para operações de persistência de NivelFormacao

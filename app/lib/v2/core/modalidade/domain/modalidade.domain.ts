@@ -17,31 +17,6 @@ export class Modalidade implements IModalidade {
   // ========================================
 
   /**
-   * Valida se a modalidade está ativa (não deletada)
-   */
-  isAtiva(): boolean {
-    return this.dateDeleted === null;
-  }
-
-  /**
-   * Valida se pode ser editada
-   */
-  podeSerEditada(): boolean {
-    return this.isAtiva();
-  }
-
-  /**
-   * Valida se pode ser deletada
-   */
-  podeSerDeletada(): boolean {
-    return this.isAtiva();
-  }
-
-  // ========================================
-  // Factory Methods
-  // ========================================
-
-  /**
    * Cria uma nova instância válida de Modalidade
    * @throws Error se os dados forem inválidos
    */
@@ -72,5 +47,30 @@ export class Modalidade implements IModalidade {
     const instance = new Modalidade();
     Object.assign(instance, dados);
     return instance;
+  }
+
+  /**
+   * Valida se a modalidade está ativa (não deletada)
+   */
+  isAtiva(): boolean {
+    return this.dateDeleted === null;
+  }
+
+  // ========================================
+  // Factory Methods
+  // ========================================
+
+  /**
+   * Valida se pode ser editada
+   */
+  podeSerEditada(): boolean {
+    return this.isAtiva();
+  }
+
+  /**
+   * Valida se pode ser deletada
+   */
+  podeSerDeletada(): boolean {
+    return this.isAtiva();
   }
 }

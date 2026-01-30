@@ -1,4 +1,5 @@
 import type { DeepPartial } from "typeorm";
+import type { EtapaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities/etapa.entity";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
   EtapaFindOneInputDto,
@@ -6,7 +7,6 @@ import type {
   EtapaListInputDto,
   EtapaListOutputDto,
 } from "@/v2/server/modules/etapa/http/dto";
-import type { EtapaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities/etapa.entity";
 
 export interface IEtapaRepositoryPort {
   findAll(

@@ -1,4 +1,5 @@
 import type { DeepPartial } from "typeorm";
+import type { HorarioGeradoAulaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
   HorarioGeradoAulaFindOneInputDto,
@@ -6,7 +7,6 @@ import type {
   HorarioGeradoAulaListInputDto,
   HorarioGeradoAulaListOutputDto,
 } from "@/v2/server/modules/horario-gerado-aula/http/dto";
-import type { HorarioGeradoAulaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 
 export interface IHorarioGeradoAulaRepositoryPort {
   findAll(

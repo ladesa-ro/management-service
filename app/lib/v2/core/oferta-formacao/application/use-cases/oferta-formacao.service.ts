@@ -1,5 +1,8 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { has } from "lodash";
+import type { OfertaFormacaoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
+import { ModalidadeService } from "@/v2/core/modalidade/application/use-cases/modalidade.service";
+import { BaseCrudService } from "@/v2/core/shared";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
   OfertaFormacaoCreateInputDto,
@@ -9,9 +12,6 @@ import type {
   OfertaFormacaoListOutputDto,
   OfertaFormacaoUpdateInputDto,
 } from "@/v2/server/modules/oferta-formacao/http/dto";
-import type { OfertaFormacaoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
-import { ModalidadeService } from "@/v2/core/modalidade/application/use-cases/modalidade.service";
-import { BaseCrudService } from "@/v2/core/shared";
 import type { IOfertaFormacaoRepositoryPort } from "../ports";
 
 @Injectable()
@@ -39,40 +39,6 @@ export class OfertaFormacaoService extends BaseCrudService<
     super();
   }
 
-  protected override async beforeCreate(
-    accessContext: AccessContext,
-    entity: OfertaFormacaoEntity,
-    dto: OfertaFormacaoCreateInputDto,
-  ): Promise<void> {
-    if (dto.modalidade) {
-      const modalidade = await this.modalidadeService.modalidadeFindByIdSimpleStrict(
-        accessContext,
-        dto.modalidade.id,
-      );
-      this.repository.merge(entity, { modalidade: { id: modalidade.id } });
-    }
-  }
-
-  protected override async beforeUpdate(
-    accessContext: AccessContext,
-    entity: OfertaFormacaoEntity,
-    dto: OfertaFormacaoFindOneInputDto & OfertaFormacaoUpdateInputDto,
-  ): Promise<void> {
-    if (has(dto, "modalidade") && dto.modalidade !== undefined) {
-      if (dto.modalidade) {
-        const modalidade = await this.modalidadeService.modalidadeFindByIdSimpleStrict(
-          accessContext,
-          dto.modalidade.id,
-        );
-        this.repository.merge(entity, { modalidade: { id: modalidade.id } });
-      } else {
-        this.repository.merge(entity, { modalidade: null as any });
-      }
-    }
-  }
-
-  // Métodos prefixados para compatibilidade
-
   async ofertaFormacaoFindAll(
     accessContext: AccessContext,
     dto: OfertaFormacaoListInputDto | null = null,
@@ -88,6 +54,8 @@ export class OfertaFormacaoService extends BaseCrudService<
   ): Promise<OfertaFormacaoFindOneOutputDto | null> {
     return this.findById(accessContext, dto, selection);
   }
+
+  // Métodos prefixados para compatibilidade
 
   async ofertaFormacaoFindByIdStrict(
     accessContext: AccessContext,
@@ -132,5 +100,37 @@ export class OfertaFormacaoService extends BaseCrudService<
     dto: OfertaFormacaoFindOneInputDto,
   ): Promise<boolean> {
     return this.deleteOneById(accessContext, dto);
+  }
+
+  protected override async beforeCreate(
+    accessContext: AccessContext,
+    entity: OfertaFormacaoEntity,
+    dto: OfertaFormacaoCreateInputDto,
+  ): Promise<void> {
+    if (dto.modalidade) {
+      const modalidade = await this.modalidadeService.modalidadeFindByIdSimpleStrict(
+        accessContext,
+        dto.modalidade.id,
+      );
+      this.repository.merge(entity, { modalidade: { id: modalidade.id } });
+    }
+  }
+
+  protected override async beforeUpdate(
+    accessContext: AccessContext,
+    entity: OfertaFormacaoEntity,
+    dto: OfertaFormacaoFindOneInputDto & OfertaFormacaoUpdateInputDto,
+  ): Promise<void> {
+    if (has(dto, "modalidade") && dto.modalidade !== undefined) {
+      if (dto.modalidade) {
+        const modalidade = await this.modalidadeService.modalidadeFindByIdSimpleStrict(
+          accessContext,
+          dto.modalidade.id,
+        );
+        this.repository.merge(entity, { modalidade: { id: modalidade.id } });
+      } else {
+        this.repository.merge(entity, { modalidade: null as any });
+      }
+    }
   }
 }

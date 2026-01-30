@@ -21,6 +21,35 @@ export class Perfil implements IPerfil {
   // ========================================
 
   /**
+   * Cria uma nova instância válida de Perfil
+   * @throws Error se os dados forem inválidos
+   */
+  static criar(dados: IPerfilCreate): Perfil {
+    const instance = new Perfil();
+
+    if (!dados.cargo || dados.cargo.trim().length === 0) {
+      throw new Error("Cargo é obrigatório");
+    }
+
+    instance.cargo = dados.cargo.trim();
+    instance.ativo = true;
+    instance.dateCreated = new Date();
+    instance.dateUpdated = new Date();
+    instance.dateDeleted = null;
+
+    return instance;
+  }
+
+  /**
+   * Reconstrói uma instância a partir de dados existentes (ex: do banco)
+   */
+  static fromData(dados: IPerfil): Perfil {
+    const instance = new Perfil();
+    Object.assign(instance, dados);
+    return instance;
+  }
+
+  /**
    * Valida se o perfil está ativo
    */
   isAtivo(): boolean {
@@ -48,6 +77,10 @@ export class Perfil implements IPerfil {
     return this.cargo !== null && this.cargo.trim().length > 0;
   }
 
+  // ========================================
+  // Factory Methods
+  // ========================================
+
   /**
    * Ativa o perfil
    */
@@ -62,38 +95,5 @@ export class Perfil implements IPerfil {
   desativar(): void {
     this.ativo = false;
     this.dateUpdated = new Date();
-  }
-
-  // ========================================
-  // Factory Methods
-  // ========================================
-
-  /**
-   * Cria uma nova instância válida de Perfil
-   * @throws Error se os dados forem inválidos
-   */
-  static criar(dados: IPerfilCreate): Perfil {
-    const instance = new Perfil();
-
-    if (!dados.cargo || dados.cargo.trim().length === 0) {
-      throw new Error("Cargo é obrigatório");
-    }
-
-    instance.cargo = dados.cargo.trim();
-    instance.ativo = true;
-    instance.dateCreated = new Date();
-    instance.dateUpdated = new Date();
-    instance.dateDeleted = null;
-
-    return instance;
-  }
-
-  /**
-   * Reconstrói uma instância a partir de dados existentes (ex: do banco)
-   */
-  static fromData(dados: IPerfil): Perfil {
-    const instance = new Perfil();
-    Object.assign(instance, dados);
-    return instance;
   }
 }

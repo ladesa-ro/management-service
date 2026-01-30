@@ -1,5 +1,8 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { has } from "lodash";
+import type { DiaCalendarioEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities/dia-calendario.entity";
+import { CalendarioLetivoService } from "@/v2/core/calendario-letivo/application/use-cases/calendario-letivo.service";
+import { BaseCrudService } from "@/v2/core/shared";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
   DiaCalendarioCreateInputDto,
@@ -9,9 +12,6 @@ import type {
   DiaCalendarioListOutputDto,
   DiaCalendarioUpdateInputDto,
 } from "@/v2/server/modules/dia-calendario/http/dto";
-import type { DiaCalendarioEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities/dia-calendario.entity";
-import { CalendarioLetivoService } from "@/v2/core/calendario-letivo/application/use-cases/calendario-letivo.service";
-import { BaseCrudService } from "@/v2/core/shared";
 import type { IDiaCalendarioRepositoryPort } from "../ports";
 
 @Injectable()
@@ -39,36 +39,6 @@ export class DiaCalendarioService extends BaseCrudService<
     super();
   }
 
-  protected override async beforeCreate(
-    accessContext: AccessContext,
-    entity: DiaCalendarioEntity,
-    dto: DiaCalendarioCreateInputDto,
-  ): Promise<void> {
-    if (dto.calendario) {
-      const calendario = await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(
-        accessContext,
-        dto.calendario.id,
-      );
-      this.repository.merge(entity, { calendario: { id: calendario.id } });
-    }
-  }
-
-  protected override async beforeUpdate(
-    accessContext: AccessContext,
-    entity: DiaCalendarioEntity,
-    dto: DiaCalendarioFindOneInputDto & DiaCalendarioUpdateInputDto,
-  ): Promise<void> {
-    if (has(dto, "calendario") && dto.calendario !== undefined) {
-      const calendario = await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(
-        accessContext,
-        dto.calendario!.id,
-      );
-      this.repository.merge(entity, { calendario: { id: calendario.id } });
-    }
-  }
-
-  // Métodos prefixados para compatibilidade
-
   async diaCalendarioFindAll(
     accessContext: AccessContext,
     dto: DiaCalendarioListInputDto | null = null,
@@ -84,6 +54,8 @@ export class DiaCalendarioService extends BaseCrudService<
   ): Promise<DiaCalendarioFindOneOutputDto | null> {
     return this.findById(accessContext, dto, selection);
   }
+
+  // Métodos prefixados para compatibilidade
 
   async diaCalendarioFindByIdStrict(
     accessContext: AccessContext,
@@ -128,5 +100,33 @@ export class DiaCalendarioService extends BaseCrudService<
     dto: DiaCalendarioFindOneInputDto,
   ): Promise<boolean> {
     return this.deleteOneById(accessContext, dto);
+  }
+
+  protected override async beforeCreate(
+    accessContext: AccessContext,
+    entity: DiaCalendarioEntity,
+    dto: DiaCalendarioCreateInputDto,
+  ): Promise<void> {
+    if (dto.calendario) {
+      const calendario = await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(
+        accessContext,
+        dto.calendario.id,
+      );
+      this.repository.merge(entity, { calendario: { id: calendario.id } });
+    }
+  }
+
+  protected override async beforeUpdate(
+    accessContext: AccessContext,
+    entity: DiaCalendarioEntity,
+    dto: DiaCalendarioFindOneInputDto & DiaCalendarioUpdateInputDto,
+  ): Promise<void> {
+    if (has(dto, "calendario") && dto.calendario !== undefined) {
+      const calendario = await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(
+        accessContext,
+        dto.calendario!.id,
+      );
+      this.repository.merge(entity, { calendario: { id: calendario.id } });
+    }
   }
 }

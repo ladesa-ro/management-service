@@ -1,4 +1,5 @@
 import type { DeepPartial } from "typeorm";
+import type { CampusEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
   CampusFindOneInputDto,
@@ -6,7 +7,6 @@ import type {
   CampusListInputDto,
   CampusListOutputDto,
 } from "@/v2/server/modules/campus/http/dto";
-import type { CampusEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 
 /**
  * Port de saída para operações de persistência de Campus

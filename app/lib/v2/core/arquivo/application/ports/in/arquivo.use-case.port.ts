@@ -1,8 +1,8 @@
 import type { Readable } from "node:stream";
 import type { StreamableFile } from "@nestjs/common";
+import type { ArquivoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type { ArquivoCreateInputDto } from "@/v2/server/modules/arquivo/http/dto";
-import type { ArquivoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 
 type IGetFileAcesso = null | {
   nome?: string;

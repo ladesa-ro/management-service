@@ -1,5 +1,9 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { has, pick } from "lodash";
+import type { AulaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
+import { AmbienteService } from "@/v2/core/ambiente/application/use-cases/ambiente.service";
+import { DiarioService } from "@/v2/core/diario/application/use-cases/diario.service";
+import { IntervaloDeTempoService } from "@/v2/core/intervalo-de-tempo/application/use-cases/intervalo-de-tempo.service";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
   AulaCreateInputDto,
@@ -9,10 +13,6 @@ import type {
   AulaListOutputDto,
   AulaUpdateInputDto,
 } from "@/v2/server/modules/aula/http/dto";
-import type { AulaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
-import { AmbienteService } from "@/v2/core/ambiente/application/use-cases/ambiente.service";
-import { DiarioService } from "@/v2/core/diario/application/use-cases/diario.service";
-import { IntervaloDeTempoService } from "@/v2/core/intervalo-de-tempo/application/use-cases/intervalo-de-tempo.service";
 import type { IAulaRepositoryPort, IAulaUseCasePort } from "../ports";
 
 @Injectable()

@@ -1,12 +1,12 @@
 import "reflect-metadata";
 import { NestFactory } from "@nestjs/core";
 import { AppModule } from "@/server/nest/app.module";
-import { usePrefix } from "@/server/plugins/use-prefix";
-import { useValidationPipe } from "@/server/plugins/use-validation-pipe";
+import { useCompression } from "@/server/plugins/use-compression";
+import { useCors } from "@/server/plugins/use-cors";
 import { useDocs } from "@/server/plugins/use-docs";
 import { useHelmet } from "@/server/plugins/use-helmet";
-import { useCors } from "@/server/plugins/use-cors";
-import { useCompression } from "@/server/plugins/use-compression";
+import { usePrefix } from "@/server/plugins/use-prefix";
+import { useValidationPipe } from "@/server/plugins/use-validation-pipe";
 import { AppConfigService } from "@/v2/infra/config";
 
 export async function setupServer() {

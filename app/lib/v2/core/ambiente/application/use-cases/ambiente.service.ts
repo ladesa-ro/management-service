@@ -1,4 +1,9 @@
 import { Inject, Injectable, NotFoundException, type StreamableFile } from "@nestjs/common";
+import type { AmbienteEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
+import { ArquivoService } from "@/v2/core/arquivo/application/use-cases/arquivo.service";
+import { BlocoService } from "@/v2/core/bloco/application/use-cases/bloco.service";
+import { ImagemService } from "@/v2/core/imagem/application/use-cases/imagem.service";
+import { BaseCrudService } from "@/v2/core/shared";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
   AmbienteCreateInputDto,
@@ -8,11 +13,6 @@ import type {
   AmbienteListOutputDto,
   AmbienteUpdateInputDto,
 } from "@/v2/server/modules/ambiente/http/dto";
-import type { AmbienteEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
-import { ArquivoService } from "@/v2/core/arquivo/application/use-cases/arquivo.service";
-import { BlocoService } from "@/v2/core/bloco/application/use-cases/bloco.service";
-import { ImagemService } from "@/v2/core/imagem/application/use-cases/imagem.service";
-import { BaseCrudService } from "@/v2/core/shared";
 import type { IAmbienteRepositoryPort, IAmbienteUseCasePort } from "../ports";
 
 /**
@@ -50,20 +50,6 @@ export class AmbienteService
     super();
   }
 
-  /**
-   * Hook para adicionar relacionamento com Bloco durante criação
-   */
-  protected override async beforeCreate(
-    accessContext: AccessContext,
-    entity: AmbienteEntity,
-    dto: AmbienteCreateInputDto,
-  ): Promise<void> {
-    const bloco = await this.blocoService.blocoFindByIdSimpleStrict(accessContext, dto.bloco.id);
-    this.repository.merge(entity, { bloco: { id: bloco.id } });
-  }
-
-  // Métodos prefixados para compatibilidade com IAmbienteUseCasePort
-
   async ambienteFindAll(
     accessContext: AccessContext,
     dto: AmbienteListInputDto | null = null,
@@ -71,6 +57,8 @@ export class AmbienteService
   ): Promise<AmbienteListOutputDto> {
     return this.findAll(accessContext, dto, selection);
   }
+
+  // Métodos prefixados para compatibilidade com IAmbienteUseCasePort
 
   async ambienteFindById(
     accessContext: AccessContext | null,
@@ -109,8 +97,6 @@ export class AmbienteService
     return this.deleteOneById(accessContext, dto);
   }
 
-  // Métodos específicos de Ambiente (não cobertos pela BaseCrudService)
-
   async ambienteGetImagemCapa(
     accessContext: AccessContext | null,
     id: string,
@@ -128,6 +114,8 @@ export class AmbienteService
 
     throw new NotFoundException();
   }
+
+  // Métodos específicos de Ambiente (não cobertos pela BaseCrudService)
 
   async ambienteUpdateImagemCapa(
     accessContext: AccessContext,
@@ -151,5 +139,17 @@ export class AmbienteService
     await this.repository.save(ambiente);
 
     return true;
+  }
+
+  /**
+   * Hook para adicionar relacionamento com Bloco durante criação
+   */
+  protected override async beforeCreate(
+    accessContext: AccessContext,
+    entity: AmbienteEntity,
+    dto: AmbienteCreateInputDto,
+  ): Promise<void> {
+    const bloco = await this.blocoService.blocoFindByIdSimpleStrict(accessContext, dto.bloco.id);
+    this.repository.merge(entity, { bloco: { id: bloco.id } });
   }
 }

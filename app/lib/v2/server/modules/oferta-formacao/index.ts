@@ -1,2 +1,2 @@
-export * from "./oferta-formacao.module";
 export * from "./http";
+export * from "./oferta-formacao.module";

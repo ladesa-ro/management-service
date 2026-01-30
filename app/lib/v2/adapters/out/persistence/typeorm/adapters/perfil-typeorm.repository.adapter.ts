@@ -1,6 +1,12 @@
 import { Injectable } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
 import type { DeepPartial } from "typeorm";
+import type {
+  IPaginationConfig,
+  IPaginationCriteria,
+  IPaginationResult,
+} from "@/v2/application/ports/pagination";
+import type { IPerfilRepositoryPort } from "@/v2/core/perfil/application/ports";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 import { QbEfficientLoad } from "@/v2/old/shared";
@@ -10,8 +16,6 @@ import type {
   PerfilListInputDto,
   PerfilListOutputDto,
 } from "@/v2/server/modules/perfil/http/dto";
-import type { IPaginationConfig, IPaginationCriteria, IPaginationResult, } from "@/v2/application/ports/pagination";
-import type { IPerfilRepositoryPort } from "@/v2/core/perfil/application/ports";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
 import { BaseTypeOrmRepositoryAdapter } from "../base";
 import { DatabaseContextService } from "../context/database-context.service";
@@ -43,40 +47,6 @@ export class PerfilTypeOrmRepositoryAdapter
     return this.databaseContext.perfilRepository;
   }
 
-  protected getPaginateConfig(): IPaginationConfig<PerfilEntity> {
-    return {
-      ...paginateConfig,
-      relations: {
-        campus: true,
-        usuario: true,
-      },
-      select: [
-        "id",
-        "ativo",
-        "cargo",
-        "usuario.nome",
-        "campus.id",
-        "campus.nomeFantasia",
-        "campus.razaoSocial",
-        "campus.apelido",
-        "campus.cnpj",
-        "usuario.id",
-        "usuario.matriculaSiape",
-        "usuario.email",
-        "dateCreated",
-      ],
-      searchableColumns: ["cargo"],
-      filterableColumns: {
-        ativo: [FilterOperator.EQ],
-        cargo: [FilterOperator.EQ],
-        "campus.id": [FilterOperator.EQ],
-        "usuario.id": [FilterOperator.EQ],
-      },
-    };
-  }
-
-  // Métodos específicos do Perfil que não estão na classe base
-
   async findAllActiveByUsuarioId(
     accessContext: AccessContext | null,
     usuarioId: UsuarioEntity["id"],
@@ -97,6 +67,8 @@ export class PerfilTypeOrmRepositoryAdapter
 
     return vinculos as PerfilFindOneOutputDto[];
   }
+
+  // Métodos específicos do Perfil que não estão na classe base
 
   async findPaginated(
     accessContext: AccessContext,
@@ -147,5 +119,37 @@ export class PerfilTypeOrmRepositoryAdapter
       .where("ativo = :isActive", { isActive: true })
       .andWhereInIds(ids)
       .execute();
+  }
+
+  protected getPaginateConfig(): IPaginationConfig<PerfilEntity> {
+    return {
+      ...paginateConfig,
+      relations: {
+        campus: true,
+        usuario: true,
+      },
+      select: [
+        "id",
+        "ativo",
+        "cargo",
+        "usuario.nome",
+        "campus.id",
+        "campus.nomeFantasia",
+        "campus.razaoSocial",
+        "campus.apelido",
+        "campus.cnpj",
+        "usuario.id",
+        "usuario.matriculaSiape",
+        "usuario.email",
+        "dateCreated",
+      ],
+      searchableColumns: ["cargo"],
+      filterableColumns: {
+        ativo: [FilterOperator.EQ],
+        cargo: [FilterOperator.EQ],
+        "campus.id": [FilterOperator.EQ],
+        "usuario.id": [FilterOperator.EQ],
+      },
+    };
   }
 }

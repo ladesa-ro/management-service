@@ -1,5 +1,9 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { has } from "lodash";
+import type { ReservaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
+import { AmbienteService } from "@/v2/core/ambiente/application/use-cases/ambiente.service";
+import { BaseCrudService } from "@/v2/core/shared";
+import { UsuarioService } from "@/v2/core/usuario/application/use-cases/usuario.service";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
   ReservaCreateInputDto,
@@ -9,10 +13,6 @@ import type {
   ReservaListOutputDto,
   ReservaUpdateInputDto,
 } from "@/v2/server/modules/reserva/http/dto";
-import type { ReservaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
-import { AmbienteService } from "@/v2/core/ambiente/application/use-cases/ambiente.service";
-import { BaseCrudService } from "@/v2/core/shared";
-import { UsuarioService } from "@/v2/core/usuario/application/use-cases/usuario.service";
 import type { IReservaRepositoryPort, IReservaUseCasePort } from "../ports";
 
 /**
@@ -49,49 +49,6 @@ export class ReservaService
     super();
   }
 
-  /**
-   * Hook para adicionar relacionamentos com Ambiente e Usuario durante criação
-   */
-  protected override async beforeCreate(
-    accessContext: AccessContext,
-    entity: ReservaEntity,
-    dto: ReservaCreateInputDto,
-  ): Promise<void> {
-    const ambiente = await this.ambienteService.ambienteFindByIdStrict(accessContext, {
-      id: dto.ambiente.id,
-    });
-    this.repository.merge(entity, { ambiente: { id: ambiente.id } });
-
-    const usuario = await this.usuarioService.usuarioFindByIdStrict(accessContext, {
-      id: dto.usuario.id,
-    });
-    this.repository.merge(entity, { usuario: { id: usuario.id } });
-  }
-
-  /**
-   * Hook para atualizar relacionamentos opcionais durante update
-   */
-  protected override async beforeUpdate(
-    accessContext: AccessContext,
-    entity: ReservaEntity,
-    dto: ReservaFindOneInputDto & ReservaUpdateInputDto,
-    _current: ReservaFindOneOutputDto,
-  ): Promise<void> {
-    if (has(dto, "ambiente") && dto.ambiente !== undefined) {
-      const ambiente = await this.ambienteService.ambienteFindByIdStrict(accessContext, {
-        id: dto.ambiente.id,
-      });
-      this.repository.merge(entity, { ambiente: { id: ambiente.id } });
-    }
-
-    if (has(dto, "usuario") && dto.usuario !== undefined) {
-      const usuario = await this.usuarioService.usuarioFindByIdSimpleStrict(accessContext, dto.usuario.id);
-      this.repository.merge(entity, { usuario: { id: usuario.id } });
-    }
-  }
-
-  // Métodos prefixados para compatibilidade com IReservaUseCasePort
-
   async reservaFindAll(
     accessContext: AccessContext,
     dto: ReservaListInputDto | null = null,
@@ -107,6 +64,8 @@ export class ReservaService
   ): Promise<ReservaFindOneOutputDto | null> {
     return this.findById(accessContext, dto, selection);
   }
+
+  // Métodos prefixados para compatibilidade com IReservaUseCasePort
 
   async reservaFindByIdStrict(
     accessContext: AccessContext,
@@ -151,5 +110,49 @@ export class ReservaService
     dto: ReservaFindOneInputDto,
   ): Promise<boolean> {
     return this.deleteOneById(accessContext, dto);
+  }
+
+  /**
+   * Hook para adicionar relacionamentos com Ambiente e Usuario durante criação
+   */
+  protected override async beforeCreate(
+    accessContext: AccessContext,
+    entity: ReservaEntity,
+    dto: ReservaCreateInputDto,
+  ): Promise<void> {
+    const ambiente = await this.ambienteService.ambienteFindByIdStrict(accessContext, {
+      id: dto.ambiente.id,
+    });
+    this.repository.merge(entity, { ambiente: { id: ambiente.id } });
+
+    const usuario = await this.usuarioService.usuarioFindByIdStrict(accessContext, {
+      id: dto.usuario.id,
+    });
+    this.repository.merge(entity, { usuario: { id: usuario.id } });
+  }
+
+  /**
+   * Hook para atualizar relacionamentos opcionais durante update
+   */
+  protected override async beforeUpdate(
+    accessContext: AccessContext,
+    entity: ReservaEntity,
+    dto: ReservaFindOneInputDto & ReservaUpdateInputDto,
+    _current: ReservaFindOneOutputDto,
+  ): Promise<void> {
+    if (has(dto, "ambiente") && dto.ambiente !== undefined) {
+      const ambiente = await this.ambienteService.ambienteFindByIdStrict(accessContext, {
+        id: dto.ambiente.id,
+      });
+      this.repository.merge(entity, { ambiente: { id: ambiente.id } });
+    }
+
+    if (has(dto, "usuario") && dto.usuario !== undefined) {
+      const usuario = await this.usuarioService.usuarioFindByIdSimpleStrict(
+        accessContext,
+        dto.usuario.id,
+      );
+      this.repository.merge(entity, { usuario: { id: usuario.id } });
+    }
   }
 }

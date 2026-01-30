@@ -7,6 +7,8 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
+import { EtapaService } from "@/v2/core/etapa/application/use-cases/etapa.service";
+import { BaseCrudController } from "@/v2/core/shared";
 import { AccessContext, AccessContextHttp } from "@/v2/old/infrastructure/access-context";
 import {
   EtapaCreateInputDto,
@@ -16,8 +18,6 @@ import {
   EtapaListOutputDto,
   EtapaUpdateInputDto,
 } from "./dto";
-import { EtapaService } from "@/v2/core/etapa/application/use-cases/etapa.service";
-import { BaseCrudController } from "@/v2/core/shared";
 
 @ApiTags("etapas")
 @Controller("/etapas")

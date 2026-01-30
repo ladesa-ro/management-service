@@ -1,8 +1,8 @@
 import type { Credentials } from "@keycloak/keycloak-admin-client/lib/utils/auth";
 import { Inject, Injectable } from "@nestjs/common";
+import { AppConfigService } from "@/v2/infra/config";
 import { KeycloakAdminClient } from "@/v2/old/infrastructure/fixtures";
 import { wait } from "@/v2/old/infrastructure/utils";
-import { AppConfigService } from "@/v2/infra/config";
 
 const INTERVAL_AUTH = 58 * 1000;
 

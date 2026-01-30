@@ -13,10 +13,6 @@ export class HorarioGerado implements IHorarioGerado {
   dateUpdated!: Date;
   dateDeleted!: Date | null;
 
-  isAtivo(): boolean {
-    return this.dateDeleted === null;
-  }
-
   static criar(dados: IHorarioGeradoCreate): HorarioGerado {
     const horarioGerado = new HorarioGerado();
     horarioGerado.status = dados.status ?? null;
@@ -31,5 +27,9 @@ export class HorarioGerado implements IHorarioGerado {
     const horarioGerado = new HorarioGerado();
     Object.assign(horarioGerado, dados);
     return horarioGerado;
+  }
+
+  isAtivo(): boolean {
+    return this.dateDeleted === null;
   }
 }

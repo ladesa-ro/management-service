@@ -7,6 +7,8 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
+import { ModalidadeService } from "@/v2/core/modalidade/application/use-cases/modalidade.service";
+import { BaseCrudController } from "@/v2/core/shared";
 import { AccessContext, AccessContextHttp } from "@/v2/old/infrastructure/access-context";
 import {
   ModalidadeCreateInputDto,
@@ -16,8 +18,6 @@ import {
   ModalidadeListOutputDto,
   ModalidadeUpdateInputDto,
 } from "./dto";
-import { ModalidadeService } from "@/v2/core/modalidade/application/use-cases/modalidade.service";
-import { BaseCrudController } from "@/v2/core/shared";
 
 @ApiTags("modalidades")
 @Controller("/modalidades")

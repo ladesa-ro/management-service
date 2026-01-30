@@ -1,4 +1,5 @@
 import { Module } from "@nestjs/common";
+import { EstadoModule } from "@/server/nest/modules/estado/estado.module";
 import { AmbienteModule } from "@/v2/server/modules/ambiente";
 import { ArquivoModule } from "@/v2/server/modules/arquivo";
 import { AulaModule } from "@/v2/server/modules/aula";
@@ -16,13 +17,10 @@ import { DiarioProfessorModule } from "@/v2/server/modules/diario-professor";
 import { DisciplinaModule } from "@/v2/server/modules/disciplina";
 import { DisponibilidadeModule } from "@/v2/server/modules/disponibilidade";
 import { EnderecoModule } from "@/v2/server/modules/endereco";
-import { EstadoModule } from "@/server/nest/modules/estado/estado.module";
 import { EtapaModule } from "@/v2/server/modules/etapa";
 import { EventoModule } from "@/v2/server/modules/evento";
 import { GradeHorarioOfertaFormacaoModule } from "@/v2/server/modules/grade-horario-oferta-formacao";
-import {
-  GradeHorarioOfertaFormacaoIntervaloDeTempoModule
-} from "@/v2/server/modules/grade-horario-oferta-formacao-intervalo-de-tempo";
+import { GradeHorarioOfertaFormacaoIntervaloDeTempoModule } from "@/v2/server/modules/grade-horario-oferta-formacao-intervalo-de-tempo";
 import { HealthModule } from "@/v2/server/modules/health";
 import { HorarioGeradoModule } from "@/v2/server/modules/horario-gerado";
 import { HorarioGeradoAulaModule } from "@/v2/server/modules/horario-gerado-aula";
@@ -83,5 +81,4 @@ import { UsuarioModule } from "@/v2/server/modules/usuario";
     DiarioProfessorModule,
   ],
 })
-export class ModulesModule {
-}
+export class ModulesModule {}

@@ -21,39 +21,6 @@ export class Campus implements ICampus {
   // ========================================
 
   /**
-   * Valida se o campus está ativo (não deletado)
-   */
-  isAtivo(): boolean {
-    return this.dateDeleted === null;
-  }
-
-  /**
-   * Valida se pode ser editado
-   */
-  podeSerEditado(): boolean {
-    return this.isAtivo();
-  }
-
-  /**
-   * Valida se pode ser deletado
-   */
-  podeSerDeletado(): boolean {
-    return this.isAtivo();
-  }
-
-  /**
-   * Valida se o CNPJ tem formato válido (apenas números, 14 dígitos)
-   */
-  isCnpjValido(): boolean {
-    const cnpjLimpo = this.cnpj.replace(/\D/g, "");
-    return /^\d{14}$/.test(cnpjLimpo);
-  }
-
-  // ========================================
-  // Factory Methods
-  // ========================================
-
-  /**
    * Cria uma nova instância válida de Campus
    * @throws Error se os dados forem inválidos
    */
@@ -86,5 +53,38 @@ export class Campus implements ICampus {
     const instance = new Campus();
     Object.assign(instance, dados);
     return instance;
+  }
+
+  /**
+   * Valida se o campus está ativo (não deletado)
+   */
+  isAtivo(): boolean {
+    return this.dateDeleted === null;
+  }
+
+  /**
+   * Valida se pode ser editado
+   */
+  podeSerEditado(): boolean {
+    return this.isAtivo();
+  }
+
+  // ========================================
+  // Factory Methods
+  // ========================================
+
+  /**
+   * Valida se pode ser deletado
+   */
+  podeSerDeletado(): boolean {
+    return this.isAtivo();
+  }
+
+  /**
+   * Valida se o CNPJ tem formato válido (apenas números, 14 dígitos)
+   */
+  isCnpjValido(): boolean {
+    const cnpjLimpo = this.cnpj.replace(/\D/g, "");
+    return /^\d{14}$/.test(cnpjLimpo);
   }
 }

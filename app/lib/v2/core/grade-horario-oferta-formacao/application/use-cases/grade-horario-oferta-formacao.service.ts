@@ -1,6 +1,10 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
+import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
+import type { GradeHorarioOfertaFormacaoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
+import { CampusService } from "@/v2/core/campus/application/use-cases/campus.service";
+import { OfertaFormacaoService } from "@/v2/core/oferta-formacao/application/use-cases/oferta-formacao.service";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 import { QbEfficientLoad, SearchService } from "@/v2/old/shared";
@@ -12,10 +16,6 @@ import type {
   GradeHorarioOfertaFormacaoListOutputDto,
   GradeHorarioOfertaFormacaoUpdateInputDto,
 } from "@/v2/server/modules/grade-horario-oferta-formacao/http/dto";
-import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
-import type { GradeHorarioOfertaFormacaoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
-import { CampusService } from "@/v2/core/campus/application/use-cases/campus.service";
-import { OfertaFormacaoService } from "@/v2/core/oferta-formacao/application/use-cases/oferta-formacao.service";
 
 // ============================================================================
 

@@ -7,8 +7,8 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
-import { AccessContext, AccessContextHttp } from "@/v2/old/infrastructure/access-context";
 import { HorarioGeradoService } from "@/v2/core/horario-gerado/application/use-cases/horario-gerado.service";
+import { AccessContext, AccessContextHttp } from "@/v2/old/infrastructure/access-context";
 import {
   HorarioGeradoCreateInputDto,
   HorarioGeradoFindOneInputDto,

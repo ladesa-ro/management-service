@@ -1,8 +1,19 @@
 import { Controller, Get, Param, Query } from "@nestjs/common";
-import { ApiForbiddenResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags, } from "@nestjs/swagger";
-import { AccessContext, AccessContextHttp } from "@/v2/old/infrastructure/access-context";
+import {
+  ApiForbiddenResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from "@nestjs/swagger";
 import { CidadeService } from "@/v2/core/cidade/application/use-cases/cidade.service";
-import { CidadeFindOneInputDto, CidadeFindOneOutputDto, CidadeListInputDto, CidadeListOutputDto, } from "./dto";
+import { AccessContext, AccessContextHttp } from "@/v2/old/infrastructure/access-context";
+import {
+  CidadeFindOneInputDto,
+  CidadeFindOneOutputDto,
+  CidadeListInputDto,
+  CidadeListOutputDto,
+} from "./dto";
 
 @ApiTags("cidades")
 @Controller("/base/cidades")

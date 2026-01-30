@@ -1,7 +1,16 @@
 import { ObjectUuidRef, PaginationInput, PaginationMeta } from "@/core/@shared/application/dtos";
-import { DiarioProfessorFindOneOutput, DiarioProfessorInputRef, } from "../../../diario-professor/application/dtos";
-import { HorarioGeradoFindOneOutput, HorarioGeradoInputRef, } from "../../../horario-gerado/application/dtos";
-import { IntervaloDeTempoFindOneOutput, IntervaloDeTempoInputRef, } from "../../../intervalo-de-tempo/application/dtos";
+import {
+  DiarioProfessorFindOneOutput,
+  DiarioProfessorInputRef,
+} from "../../../diario-professor/application/dtos";
+import {
+  HorarioGeradoFindOneOutput,
+  HorarioGeradoInputRef,
+} from "../../../horario-gerado/application/dtos";
+import {
+  IntervaloDeTempoFindOneOutput,
+  IntervaloDeTempoInputRef,
+} from "../../../intervalo-de-tempo/application/dtos";
 
 // ============================================================================
 // FindOne Input/Output

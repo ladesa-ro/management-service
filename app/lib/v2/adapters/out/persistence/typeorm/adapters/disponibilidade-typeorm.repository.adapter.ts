@@ -1,4 +1,6 @@
 import { Injectable } from "@nestjs/common";
+import type { IPaginationConfig } from "@/v2/application/ports/pagination";
+import type { IDisponibilidadeRepositoryPort } from "@/v2/core/disponibilidade/application/ports";
 import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 import type {
   DisponibilidadeFindOneInputDto,
@@ -6,8 +8,6 @@ import type {
   DisponibilidadeListInputDto,
   DisponibilidadeListOutputDto,
 } from "@/v2/server/modules/disponibilidade/http/dto";
-import type { IPaginationConfig } from "@/v2/application/ports/pagination";
-import type { IDisponibilidadeRepositoryPort } from "@/v2/core/disponibilidade/application/ports";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
 import { BaseTypeOrmRepositoryAdapter } from "../base";
 import { DatabaseContextService } from "../context/database-context.service";

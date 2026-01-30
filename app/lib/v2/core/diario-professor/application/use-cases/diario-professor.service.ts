@@ -1,5 +1,9 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { has } from "lodash";
+import type { DiarioProfessorEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
+import { DiarioService } from "@/v2/core/diario/application/use-cases/diario.service";
+import { PerfilService } from "@/v2/core/perfil/application/use-cases/perfil.service";
+import { BaseCrudService } from "@/v2/core/shared";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
   DiarioProfessorCreateInputDto,
@@ -9,10 +13,6 @@ import type {
   DiarioProfessorListOutputDto,
   DiarioProfessorUpdateInputDto,
 } from "@/v2/server/modules/diario-professor/http/dto";
-import type { DiarioProfessorEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
-import { DiarioService } from "@/v2/core/diario/application/use-cases/diario.service";
-import { PerfilService } from "@/v2/core/perfil/application/use-cases/perfil.service";
-import { BaseCrudService } from "@/v2/core/shared";
 import type { IDiarioProfessorRepositoryPort } from "../ports";
 
 @Injectable()
@@ -41,48 +41,6 @@ export class DiarioProfessorService extends BaseCrudService<
     super();
   }
 
-  protected override async beforeCreate(
-    accessContext: AccessContext,
-    entity: DiarioProfessorEntity,
-    dto: DiarioProfessorCreateInputDto,
-  ): Promise<void> {
-    if (has(dto, "diario") && dto.diario) {
-      const diario = await this.diarioService.diarioFindByIdStrict(accessContext, {
-        id: dto.diario.id,
-      });
-      this.repository.merge(entity, { diario: { id: diario.id } });
-    }
-
-    if (has(dto, "perfil") && dto.perfil) {
-      const perfil = await this.perfilService.perfilFindByIdStrict(accessContext, {
-        id: dto.perfil.id,
-      });
-      this.repository.merge(entity, { perfil: { id: perfil.id } });
-    }
-  }
-
-  protected override async beforeUpdate(
-    accessContext: AccessContext,
-    entity: DiarioProfessorEntity,
-    dto: DiarioProfessorFindOneInputDto & DiarioProfessorUpdateInputDto,
-  ): Promise<void> {
-    if (has(dto, "diario") && dto.diario !== undefined && dto.diario !== null) {
-      const diario = await this.diarioService.diarioFindByIdStrict(accessContext, {
-        id: dto.diario.id,
-      });
-      this.repository.merge(entity, { diario: { id: diario.id } });
-    }
-
-    if (has(dto, "perfil") && dto.perfil !== undefined && dto.perfil !== null) {
-      const perfil = await this.perfilService.perfilFindByIdStrict(accessContext, {
-        id: dto.perfil.id,
-      });
-      this.repository.merge(entity, { perfil: { id: perfil.id } });
-    }
-  }
-
-  // Métodos prefixados para compatibilidade com IDiarioProfessorUseCasePort
-
   async diarioProfessorFindAll(
     accessContext: AccessContext,
     dto: DiarioProfessorListInputDto | null = null,
@@ -98,6 +56,8 @@ export class DiarioProfessorService extends BaseCrudService<
   ): Promise<DiarioProfessorFindOneOutputDto | null> {
     return this.findById(accessContext, dto, selection);
   }
+
+  // Métodos prefixados para compatibilidade com IDiarioProfessorUseCasePort
 
   async diarioProfessorFindByIdStrict(
     accessContext: AccessContext,
@@ -142,5 +102,45 @@ export class DiarioProfessorService extends BaseCrudService<
     dto: DiarioProfessorFindOneInputDto,
   ): Promise<boolean> {
     return this.deleteOneById(accessContext, dto);
+  }
+
+  protected override async beforeCreate(
+    accessContext: AccessContext,
+    entity: DiarioProfessorEntity,
+    dto: DiarioProfessorCreateInputDto,
+  ): Promise<void> {
+    if (has(dto, "diario") && dto.diario) {
+      const diario = await this.diarioService.diarioFindByIdStrict(accessContext, {
+        id: dto.diario.id,
+      });
+      this.repository.merge(entity, { diario: { id: diario.id } });
+    }
+
+    if (has(dto, "perfil") && dto.perfil) {
+      const perfil = await this.perfilService.perfilFindByIdStrict(accessContext, {
+        id: dto.perfil.id,
+      });
+      this.repository.merge(entity, { perfil: { id: perfil.id } });
+    }
+  }
+
+  protected override async beforeUpdate(
+    accessContext: AccessContext,
+    entity: DiarioProfessorEntity,
+    dto: DiarioProfessorFindOneInputDto & DiarioProfessorUpdateInputDto,
+  ): Promise<void> {
+    if (has(dto, "diario") && dto.diario !== undefined && dto.diario !== null) {
+      const diario = await this.diarioService.diarioFindByIdStrict(accessContext, {
+        id: dto.diario.id,
+      });
+      this.repository.merge(entity, { diario: { id: diario.id } });
+    }
+
+    if (has(dto, "perfil") && dto.perfil !== undefined && dto.perfil !== null) {
+      const perfil = await this.perfilService.perfilFindByIdStrict(accessContext, {
+        id: dto.perfil.id,
+      });
+      this.repository.merge(entity, { perfil: { id: perfil.id } });
+    }
   }
 }

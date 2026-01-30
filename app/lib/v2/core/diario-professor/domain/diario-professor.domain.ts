@@ -11,10 +11,6 @@ export class DiarioProfessor implements IDiarioProfessor {
   dateUpdated!: Date;
   dateDeleted!: Date | null;
 
-  isAtivo(): boolean {
-    return this.dateDeleted === null;
-  }
-
   static criar(dados: IDiarioProfessorCreate): DiarioProfessor {
     const diarioProfessor = new DiarioProfessor();
     diarioProfessor.situacao = dados.situacao;
@@ -25,5 +21,9 @@ export class DiarioProfessor implements IDiarioProfessor {
     const diarioProfessor = new DiarioProfessor();
     Object.assign(diarioProfessor, dados);
     return diarioProfessor;
+  }
+
+  isAtivo(): boolean {
+    return this.dateDeleted === null;
   }
 }

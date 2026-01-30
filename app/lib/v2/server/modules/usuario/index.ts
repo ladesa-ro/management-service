@@ -1,2 +1,2 @@
-export * from "./usuario.module";
 export * from "./http";
+export * from "./usuario.module";

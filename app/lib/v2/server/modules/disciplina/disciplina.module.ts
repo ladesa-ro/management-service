@@ -1,8 +1,8 @@
 import { Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/v2/adapters/out/persistence/pagination";
 import { DisciplinaTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistence/typeorm/adapters";
-import { ArquivoModule } from "@/v2/server/modules/arquivo";
 import { DisciplinaService } from "@/v2/core/disciplina/application/use-cases/disciplina.service";
+import { ArquivoModule } from "@/v2/server/modules/arquivo";
 import { ImagemModule } from "@/v2/server/modules/imagem";
 import { DisciplinaController } from "./http";
 

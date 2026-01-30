@@ -1,4 +1,5 @@
 import type { DeepPartial } from "typeorm";
+import type { TurmaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
   TurmaFindOneInputDto,
@@ -6,7 +7,6 @@ import type {
   TurmaListInputDto,
   TurmaListOutputDto,
 } from "@/v2/server/modules/turma/http/dto";
-import type { TurmaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 
 export interface ITurmaRepositoryPort {
   findAll(

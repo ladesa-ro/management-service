@@ -1,7 +1,5 @@
 import { Injectable, Logger, NotFoundException } from "@nestjs/common";
-import {
-  MessageBrokerContainerService
-} from "@/v2/old/infrastructure/integrations/message-broker/message-broker-container.service";
+import { MessageBrokerContainerService } from "@/v2/old/infrastructure/integrations/message-broker/message-broker-container.service";
 
 @Injectable()
 export class MessageBrokerService {

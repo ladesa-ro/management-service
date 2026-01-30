@@ -1,4 +1,5 @@
 import type { DeepPartial } from "typeorm";
+import type { BlocoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
   BlocoFindOneInputDto,
@@ -6,7 +7,6 @@ import type {
   BlocoListInputDto,
   BlocoListOutputDto,
 } from "@/v2/server/modules/bloco/http/dto";
-import type { BlocoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 
 /**
  * Port de saída para operações de persistência de Bloco

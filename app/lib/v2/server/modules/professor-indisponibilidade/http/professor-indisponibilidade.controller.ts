@@ -1,4 +1,13 @@
-import { BadRequestException, Body, Controller, Delete, Get, Param, Patch, Post, } from "@nestjs/common";
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from "@nestjs/common";
 import {
   ApiCreatedResponse,
   ApiForbiddenResponse,
@@ -7,10 +16,8 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
+import { ProfessorIndisponibilidadeService } from "@/v2/core/professor-indisponibilidade/application/use-cases/professor-indisponibilidade.service";
 import { AccessContext, AccessContextHttp } from "@/v2/old/infrastructure/access-context";
-import {
-  ProfessorIndisponibilidadeService
-} from "@/v2/core/professor-indisponibilidade/application/use-cases/professor-indisponibilidade.service";
 import {
   ProfessorIndisponibilidadeCreateInputDto,
   ProfessorIndisponibilidadeCreatePerfilInputDto,

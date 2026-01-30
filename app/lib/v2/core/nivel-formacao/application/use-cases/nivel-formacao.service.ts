@@ -1,4 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
+import type { NivelFormacaoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
+import { BaseCrudService } from "@/v2/core/shared";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
   NivelFormacaoCreateInputDto,
@@ -8,8 +10,6 @@ import type {
   NivelFormacaoListOutputDto,
   NivelFormacaoUpdateInputDto,
 } from "@/v2/server/modules/nivel-formacao/http/dto";
-import type { NivelFormacaoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
-import { BaseCrudService } from "@/v2/core/shared";
 import type { INivelFormacaoRepositoryPort, INivelFormacaoUseCasePort } from "../ports";
 
 /**

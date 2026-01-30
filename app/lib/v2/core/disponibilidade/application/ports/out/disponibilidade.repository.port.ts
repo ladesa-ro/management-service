@@ -1,4 +1,5 @@
 import type { DeepPartial } from "typeorm";
+import type { DisponibilidadeEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
   DisponibilidadeFindOneInputDto,
@@ -6,7 +7,6 @@ import type {
   DisponibilidadeListInputDto,
   DisponibilidadeListOutputDto,
 } from "@/v2/server/modules/disponibilidade/http/dto";
-import type { DisponibilidadeEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 
 export interface IDisponibilidadeRepositoryPort {
   findAll(

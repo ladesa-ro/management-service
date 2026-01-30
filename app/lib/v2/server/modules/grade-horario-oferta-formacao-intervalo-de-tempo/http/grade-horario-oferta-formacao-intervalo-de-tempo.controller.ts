@@ -7,10 +7,8 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
+import { GradeHorarioOfertaFormacaoIntervaloDeTempoService } from "@/v2/core/grade-horario-oferta-formacao-intervalo-de-tempo/application/use-cases/grade-horario-oferta-formacao-intervalo-de-tempo.service";
 import { AccessContext, AccessContextHttp } from "@/v2/old/infrastructure/access-context";
-import {
-  GradeHorarioOfertaFormacaoIntervaloDeTempoService
-} from "@/v2/core/grade-horario-oferta-formacao-intervalo-de-tempo/application/use-cases/grade-horario-oferta-formacao-intervalo-de-tempo.service";
 import {
   GradeHorarioOfertaFormacaoIntervaloDeTempoCreateInputDto,
   GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInputDto,

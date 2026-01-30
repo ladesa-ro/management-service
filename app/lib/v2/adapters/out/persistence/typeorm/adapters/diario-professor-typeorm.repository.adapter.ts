@@ -1,5 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
+import type { IPaginationConfig } from "@/v2/application/ports/pagination";
+import type { IDiarioProfessorRepositoryPort } from "@/v2/core/diario-professor/application/ports";
 import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 import type {
   DiarioProfessorFindOneInputDto,
@@ -7,8 +9,6 @@ import type {
   DiarioProfessorListInputDto,
   DiarioProfessorListOutputDto,
 } from "@/v2/server/modules/diario-professor/http/dto";
-import type { IPaginationConfig } from "@/v2/application/ports/pagination";
-import type { IDiarioProfessorRepositoryPort } from "@/v2/core/diario-professor/application/ports";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
 import { BaseTypeOrmRepositoryAdapter } from "../base";
 import { DatabaseContextService } from "../context/database-context.service";
@@ -43,14 +43,7 @@ export class DiarioProfessorTypeOrmRepositoryAdapter
   protected getPaginateConfig(): IPaginationConfig<DiarioProfessorEntity> {
     return {
       ...paginateConfig,
-      select: [
-        "id",
-        "situacao",
-        "diario.id",
-        "perfil.id",
-        "perfil.campus.id",
-        "perfil.usuario.id",
-      ],
+      select: ["id", "situacao", "diario.id", "perfil.id", "perfil.campus.id", "perfil.usuario.id"],
       relations: {
         diario: true,
         perfil: {

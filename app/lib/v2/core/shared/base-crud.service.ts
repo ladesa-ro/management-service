@@ -26,8 +26,11 @@ export interface IBaseCrudRepositoryPort<Entity, ListOutputDto, FindOneOutputDto
   ): Promise<FindOneOutputDto | null>;
 
   save(entity: DeepPartial<Entity>): Promise<Entity>;
+
   create(): Entity;
+
   merge(entity: Entity, data: DeepPartial<Entity>): void;
+
   softDeleteById(id: string | number): Promise<void>;
 }
 
@@ -94,7 +97,11 @@ export abstract class BaseCrudService<
   /**
    * Repositório para operações de persistência
    */
-  protected abstract readonly repository: IBaseCrudRepositoryPort<Entity, ListOutputDto, FindOneOutputDto>;
+  protected abstract readonly repository: IBaseCrudRepositoryPort<
+    Entity,
+    ListOutputDto,
+    FindOneOutputDto
+  >;
 
   /**
    * Lista todos os registros

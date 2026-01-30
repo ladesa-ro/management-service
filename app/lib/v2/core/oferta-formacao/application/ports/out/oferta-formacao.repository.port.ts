@@ -1,4 +1,5 @@
 import type { DeepPartial } from "typeorm";
+import type { OfertaFormacaoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
   OfertaFormacaoFindOneInputDto,
@@ -6,7 +7,6 @@ import type {
   OfertaFormacaoListInputDto,
   OfertaFormacaoListOutputDto,
 } from "@/v2/server/modules/oferta-formacao/http/dto";
-import type { OfertaFormacaoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 
 export interface IOfertaFormacaoRepositoryPort {
   findAll(

@@ -1,8 +1,8 @@
 import { Injectable, type PipeTransform } from "@nestjs/common";
+import { AppConfigService } from "@/v2/infra/config";
 import type { IRequestActor } from "@/v2/old/infrastructure/authentication";
 import { DatabaseContextService } from "@/v2/old/infrastructure/integrations";
 import { AccessContext } from "../access-context";
-import { AppConfigService } from "@/v2/infra/config";
 
 @Injectable()
 export class ResolveAccessContextPipe implements PipeTransform {
@@ -13,6 +13,10 @@ export class ResolveAccessContextPipe implements PipeTransform {
 
   async transform(requestActor: IRequestActor | null /* _metadata: ArgumentMetadata */) {
     const permissionCheckEnabled = this.config.getPermissionCheckEnabled();
-    return new AccessContext(this.databaseContextService, requestActor ?? null, permissionCheckEnabled);
+    return new AccessContext(
+      this.databaseContextService,
+      requestActor ?? null,
+      permissionCheckEnabled,
+    );
   }
 }

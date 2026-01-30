@@ -1,8 +1,6 @@
 import { Module } from "@nestjs/common";
-import { APP_FILTER } from "@nestjs/core";
-import { IdentityProviderModule } from "@/v2/old/shared";
 import { IntegrationDatabaseModule } from "@/v2/adapters/out/persistence/typeorm/integration-database.module";
-import { GqlExceptionFilter } from "./graphql/exception-filters/GqlExceptionFilter";
+import { IdentityProviderModule } from "@/v2/old/shared";
 import { IntegrationHttpModule } from "./http";
 
 @Module({
@@ -12,12 +10,6 @@ import { IntegrationHttpModule } from "./http";
     IntegrationHttpModule,
     IdentityProviderModule,
     // MessageBrokerModule,
-  ],
-  providers: [
-    {
-      provide: APP_FILTER,
-      useClass: GqlExceptionFilter,
-    },
   ],
 })
 export class IntegrationsModule {}

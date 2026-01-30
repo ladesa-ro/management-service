@@ -1,4 +1,8 @@
 import { Inject, Injectable, NotFoundException, type StreamableFile } from "@nestjs/common";
+import type { DisciplinaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
+import { ArquivoService } from "@/v2/core/arquivo/application/use-cases/arquivo.service";
+import { ImagemService } from "@/v2/core/imagem/application/use-cases/imagem.service";
+import { BaseCrudService } from "@/v2/core/shared";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
   DisciplinaCreateInputDto,
@@ -8,10 +12,6 @@ import type {
   DisciplinaListOutputDto,
   DisciplinaUpdateInputDto,
 } from "@/v2/server/modules/disciplina/http/dto";
-import type { DisciplinaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
-import { ArquivoService } from "@/v2/core/arquivo/application/use-cases/arquivo.service";
-import { ImagemService } from "@/v2/core/imagem/application/use-cases/imagem.service";
-import { BaseCrudService } from "@/v2/core/shared";
 import type { IDisciplinaRepositoryPort } from "../ports";
 
 @Injectable()

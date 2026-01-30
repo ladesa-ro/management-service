@@ -1,5 +1,6 @@
 import { castArray } from "lodash";
 import type { SelectQueryBuilder } from "typeorm";
+import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm/context/database-context.service";
 import {
   AuthzPolicyPublic,
   IAuthzStatement,
@@ -9,7 +10,6 @@ import {
 } from "@/v2/old/authorization";
 import type { IRequestActor } from "@/v2/old/infrastructure/authentication";
 import { createForbiddenExceptionForAction, IAccessContext } from "@/v2/old/shared";
-import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm/context/database-context.service";
 
 export class AccessContext implements IAccessContext {
   #policy = new AuthzPolicyPublic();

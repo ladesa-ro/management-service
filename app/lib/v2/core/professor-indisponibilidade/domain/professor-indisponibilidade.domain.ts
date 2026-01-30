@@ -15,10 +15,6 @@ export class ProfessorIndisponibilidade implements IProfessorIndisponibilidade {
   dateUpdated!: Date;
   dateDeleted!: Date | null;
 
-  isAtivo(): boolean {
-    return this.dateDeleted === null;
-  }
-
   static criar(dados: IProfessorIndisponibilidadeCreate): ProfessorIndisponibilidade {
     const professorIndisponibilidade = new ProfessorIndisponibilidade();
     professorIndisponibilidade.diaDaSemana = dados.diaDaSemana;
@@ -32,5 +28,9 @@ export class ProfessorIndisponibilidade implements IProfessorIndisponibilidade {
     const professorIndisponibilidade = new ProfessorIndisponibilidade();
     Object.assign(professorIndisponibilidade, dados);
     return professorIndisponibilidade;
+  }
+
+  isAtivo(): boolean {
+    return this.dateDeleted === null;
   }
 }

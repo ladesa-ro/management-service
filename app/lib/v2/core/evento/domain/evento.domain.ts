@@ -20,13 +20,6 @@ export class Evento implements IEvento {
   dateDeleted!: Date | null;
 
   /**
-   * Verifica se o evento está ativo (não deletado)
-   */
-  isAtivo(): boolean {
-    return this.dateDeleted === null;
-  }
-
-  /**
    * Cria uma nova instância de Evento
    */
   static criar(dados: IEventoCreate): Evento {
@@ -46,5 +39,12 @@ export class Evento implements IEvento {
     const evento = new Evento();
     Object.assign(evento, dados);
     return evento;
+  }
+
+  /**
+   * Verifica se o evento está ativo (não deletado)
+   */
+  isAtivo(): boolean {
+    return this.dateDeleted === null;
   }
 }

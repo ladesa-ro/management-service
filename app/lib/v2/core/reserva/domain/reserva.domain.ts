@@ -19,13 +19,6 @@ export class Reserva implements IReserva {
   dateDeleted!: Date | null;
 
   /**
-   * Verifica se a reserva está ativa (não deletada)
-   */
-  isAtiva(): boolean {
-    return this.dateDeleted === null;
-  }
-
-  /**
    * Cria uma nova instância de Reserva
    */
   static criar(dados: IReservaCreate): Reserva {
@@ -44,5 +37,12 @@ export class Reserva implements IReserva {
     const reserva = new Reserva();
     Object.assign(reserva, dados);
     return reserva;
+  }
+
+  /**
+   * Verifica se a reserva está ativa (não deletada)
+   */
+  isAtiva(): boolean {
+    return this.dateDeleted === null;
   }
 }

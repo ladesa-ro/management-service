@@ -20,45 +20,6 @@ export class Disciplina implements IDisciplina {
   // ========================================
 
   /**
-   * Valida se a disciplina está ativa (não deletada)
-   */
-  isAtiva(): boolean {
-    return this.dateDeleted === null;
-  }
-
-  /**
-   * Valida se pode ser editada
-   */
-  podeSerEditada(): boolean {
-    return this.isAtiva();
-  }
-
-  /**
-   * Valida se pode ser deletada
-   */
-  podeSerDeletada(): boolean {
-    return this.isAtiva();
-  }
-
-  /**
-   * Verifica se tem imagem de capa
-   */
-  temImagemCapa(): boolean {
-    return this.imagemCapa !== null;
-  }
-
-  /**
-   * Verifica se a carga horária é válida
-   */
-  temCargaHorariaValida(): boolean {
-    return this.cargaHoraria > 0;
-  }
-
-  // ========================================
-  // Factory Methods
-  // ========================================
-
-  /**
    * Cria uma nova instância válida de Disciplina
    * @throws Error se os dados forem inválidos
    */
@@ -95,5 +56,44 @@ export class Disciplina implements IDisciplina {
     const instance = new Disciplina();
     Object.assign(instance, dados);
     return instance;
+  }
+
+  /**
+   * Valida se a disciplina está ativa (não deletada)
+   */
+  isAtiva(): boolean {
+    return this.dateDeleted === null;
+  }
+
+  /**
+   * Valida se pode ser editada
+   */
+  podeSerEditada(): boolean {
+    return this.isAtiva();
+  }
+
+  /**
+   * Valida se pode ser deletada
+   */
+  podeSerDeletada(): boolean {
+    return this.isAtiva();
+  }
+
+  // ========================================
+  // Factory Methods
+  // ========================================
+
+  /**
+   * Verifica se tem imagem de capa
+   */
+  temImagemCapa(): boolean {
+    return this.imagemCapa !== null;
+  }
+
+  /**
+   * Verifica se a carga horária é válida
+   */
+  temCargaHorariaValida(): boolean {
+    return this.cargaHoraria > 0;
   }
 }

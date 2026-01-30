@@ -1,5 +1,5 @@
-import { ArquivoFindOneOutput, ArquivoInputRef } from "../../../arquivo/application/dtos";
 import { ObjectUuidRef, PaginationInput, PaginationMeta } from "@/core/@shared/application/dtos";
+import { ArquivoFindOneOutput, ArquivoInputRef } from "../../../arquivo/application/dtos";
 import { ImagemFindOneOutput, ImagemInputRef } from "../../../imagem/application/dtos";
 
 // ============================================================================

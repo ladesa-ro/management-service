@@ -1,4 +1,5 @@
 import type { DeepPartial } from "typeorm";
+import type { DisciplinaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
   DisciplinaFindOneInputDto,
@@ -6,7 +7,6 @@ import type {
   DisciplinaListInputDto,
   DisciplinaListOutputDto,
 } from "@/v2/server/modules/disciplina/http/dto";
-import type { DisciplinaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 
 export interface IDisciplinaRepositoryPort {
   findAll(

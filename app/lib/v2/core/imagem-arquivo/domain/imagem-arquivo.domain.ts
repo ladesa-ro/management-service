@@ -19,13 +19,6 @@ export class ImagemArquivo implements IImagemArquivo {
   dateDeleted!: Date | null;
 
   /**
-   * Verifica se está ativo (não deletado)
-   */
-  isAtivo(): boolean {
-    return this.dateDeleted === null;
-  }
-
-  /**
    * Cria uma nova instância de ImagemArquivo
    */
   static criar(dados: IImagemArquivoCreate): ImagemArquivo {
@@ -44,5 +37,12 @@ export class ImagemArquivo implements IImagemArquivo {
     const imagemArquivo = new ImagemArquivo();
     Object.assign(imagemArquivo, dados);
     return imagemArquivo;
+  }
+
+  /**
+   * Verifica se está ativo (não deletado)
+   */
+  isAtivo(): boolean {
+    return this.dateDeleted === null;
   }
 }

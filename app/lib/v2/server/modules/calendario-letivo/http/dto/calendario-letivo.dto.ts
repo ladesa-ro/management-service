@@ -14,7 +14,12 @@ import {
   ValidateNested,
 } from "class-validator";
 import { PaginationInputDto, PaginationMetaDto, TransformToArray } from "@/v2/old/shared/dto";
-import { commonProperties, referenceProperty, RegisterModel, simpleProperty, } from "@/v2/old/shared/metadata";
+import {
+  commonProperties,
+  RegisterModel,
+  referenceProperty,
+  simpleProperty,
+} from "@/v2/old/shared/metadata";
 import { CampusFindOneInputDto, CampusFindOneOutputDto } from "@/v2/server/modules/campus/http/dto";
 import {
   OfertaFormacaoFindOneInputDto,

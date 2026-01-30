@@ -1,5 +1,5 @@
-import type { IEstado } from "./estado.types";
 import { IdNumeric } from "@/core/@shared";
+import type { IEstado } from "./estado.types";
 
 /**
  * Entidade de Domínio: Estado

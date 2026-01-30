@@ -1,4 +1,5 @@
 import type { DeepPartial } from "typeorm";
+import type { DiaCalendarioEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities/dia-calendario.entity";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
   DiaCalendarioFindOneInputDto,
@@ -6,7 +7,6 @@ import type {
   DiaCalendarioListInputDto,
   DiaCalendarioListOutputDto,
 } from "@/v2/server/modules/dia-calendario/http/dto";
-import type { DiaCalendarioEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities/dia-calendario.entity";
 
 export interface IDiaCalendarioRepositoryPort {
   findAll(

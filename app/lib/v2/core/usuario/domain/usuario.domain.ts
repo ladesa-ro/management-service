@@ -22,6 +22,32 @@ export class Usuario implements IUsuario {
   // ========================================
 
   /**
+   * Cria uma nova instância válida de Usuario
+   */
+  static criar(dados: IUsuarioCreate): Usuario {
+    const instance = new Usuario();
+    instance.nome = dados.nome ?? null;
+    instance.matriculaSiape = dados.matriculaSiape ?? null;
+    instance.email = dados.email ?? null;
+    instance.isSuperUser = false;
+    instance.imagemCapa = null;
+    instance.imagemPerfil = null;
+    instance.dateCreated = new Date();
+    instance.dateUpdated = new Date();
+    instance.dateDeleted = null;
+    return instance;
+  }
+
+  /**
+   * Reconstrói uma instância a partir de dados existentes (ex: do banco)
+   */
+  static fromData(dados: IUsuario): Usuario {
+    const instance = new Usuario();
+    Object.assign(instance, dados);
+    return instance;
+  }
+
+  /**
    * Valida se o usuário está ativo (não deletado)
    */
   isAtivo(): boolean {
@@ -63,6 +89,10 @@ export class Usuario implements IUsuario {
     return this.matriculaSiape !== null && this.matriculaSiape.trim().length > 0;
   }
 
+  // ========================================
+  // Factory Methods
+  // ========================================
+
   /**
    * Verifica se tem imagem de capa
    */
@@ -75,35 +105,5 @@ export class Usuario implements IUsuario {
    */
   temImagemPerfil(): boolean {
     return this.imagemPerfil !== null;
-  }
-
-  // ========================================
-  // Factory Methods
-  // ========================================
-
-  /**
-   * Cria uma nova instância válida de Usuario
-   */
-  static criar(dados: IUsuarioCreate): Usuario {
-    const instance = new Usuario();
-    instance.nome = dados.nome ?? null;
-    instance.matriculaSiape = dados.matriculaSiape ?? null;
-    instance.email = dados.email ?? null;
-    instance.isSuperUser = false;
-    instance.imagemCapa = null;
-    instance.imagemPerfil = null;
-    instance.dateCreated = new Date();
-    instance.dateUpdated = new Date();
-    instance.dateDeleted = null;
-    return instance;
-  }
-
-  /**
-   * Reconstrói uma instância a partir de dados existentes (ex: do banco)
-   */
-  static fromData(dados: IUsuario): Usuario {
-    const instance = new Usuario();
-    Object.assign(instance, dados);
-    return instance;
   }
 }

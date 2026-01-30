@@ -57,15 +57,14 @@ export class PaginationInputDto {
   @IsString({ each: true })
   sortBy?: string[];
 
-
   @ApiPropertyOptional({
     description: "Seleção de campos",
     isArray: true,
     type: String,
   })
-  @Field(() => [String], {nullable: true})
+  @Field(() => [String], { nullable: true })
   @IsOptional()
   @IsArray()
-  @IsString({each: true})
+  @IsString({ each: true })
   selection?: string[];
 }

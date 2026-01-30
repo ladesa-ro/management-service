@@ -12,10 +12,6 @@ export class Etapa implements IEtapa {
   dateUpdated!: Date;
   dateDeleted!: Date | null;
 
-  isAtiva(): boolean {
-    return this.dateDeleted === null;
-  }
-
   static criar(dados: IEtapaCreate): Etapa {
     const etapa = new Etapa();
     etapa.numero = dados.numero ?? null;
@@ -29,5 +25,9 @@ export class Etapa implements IEtapa {
     const etapa = new Etapa();
     Object.assign(etapa, dados);
     return etapa;
+  }
+
+  isAtiva(): boolean {
+    return this.dateDeleted === null;
   }
 }

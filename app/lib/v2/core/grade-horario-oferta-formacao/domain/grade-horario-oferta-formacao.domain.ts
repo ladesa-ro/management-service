@@ -13,10 +13,6 @@ export class GradeHorarioOfertaFormacao implements IGradeHorarioOfertaFormacao {
   dateUpdated!: Date;
   dateDeleted!: Date | null;
 
-  isAtivo(): boolean {
-    return this.dateDeleted === null;
-  }
-
   static criar(dados: IGradeHorarioOfertaFormacaoCreate): GradeHorarioOfertaFormacao {
     const gradeHorarioOfertaFormacao = new GradeHorarioOfertaFormacao();
     return gradeHorarioOfertaFormacao;
@@ -26,5 +22,9 @@ export class GradeHorarioOfertaFormacao implements IGradeHorarioOfertaFormacao {
     const gradeHorarioOfertaFormacao = new GradeHorarioOfertaFormacao();
     Object.assign(gradeHorarioOfertaFormacao, dados);
     return gradeHorarioOfertaFormacao;
+  }
+
+  isAtivo(): boolean {
+    return this.dateDeleted === null;
   }
 }

@@ -1,4 +1,5 @@
 import type { DeepPartial } from "typeorm";
+import type { ReservaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
   ReservaFindOneInputDto,
@@ -6,7 +7,6 @@ import type {
   ReservaListInputDto,
   ReservaListOutputDto,
 } from "@/v2/server/modules/reserva/http/dto";
-import type { ReservaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 
 export interface IReservaRepositoryPort {
   findAll(

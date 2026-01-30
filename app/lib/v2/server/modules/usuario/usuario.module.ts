@@ -1,10 +1,10 @@
 import { Module } from "@nestjs/common";
-import { KeycloakModule } from "@/v2/old/infrastructure/integrations/identity-provider";
 import { NestJsPaginateAdapter } from "@/v2/adapters/out/persistence/pagination";
 import { UsuarioTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistence/typeorm/adapters";
+import { UsuarioService } from "@/v2/core/usuario/application/use-cases/usuario.service";
+import { KeycloakModule } from "@/v2/old/infrastructure/integrations/identity-provider";
 import { ArquivoModule } from "@/v2/server/modules/arquivo";
 import { ImagemModule } from "@/v2/server/modules/imagem";
-import { UsuarioService } from "@/v2/core/usuario/application/use-cases/usuario.service";
 import { UsuarioController } from "./http";
 
 /**

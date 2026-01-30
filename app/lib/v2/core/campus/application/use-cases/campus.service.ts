@@ -1,6 +1,9 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { get, pick } from "lodash";
 import { v4 } from "uuid";
+import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
+import type { CampusEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
+import { EnderecoService } from "@/v2/core/endereco/application/use-cases/endereco.service";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
   CampusCreateInputDto,
@@ -10,9 +13,6 @@ import type {
   CampusListOutputDto,
   CampusUpdateInputDto,
 } from "@/v2/server/modules/campus/http/dto";
-import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
-import type { CampusEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
-import { EnderecoService } from "@/v2/core/endereco/application/use-cases/endereco.service";
 import type { ICampusRepositoryPort, ICampusUseCasePort } from "../ports";
 
 /**

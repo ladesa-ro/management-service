@@ -20,22 +20,6 @@ export class CalendarioLetivo implements ICalendarioLetivo {
   // Métodos de Domínio
   // ========================================
 
-  isAtivo(): boolean {
-    return this.dateDeleted === null;
-  }
-
-  podeSerEditado(): boolean {
-    return this.isAtivo();
-  }
-
-  podeSerDeletado(): boolean {
-    return this.isAtivo();
-  }
-
-  // ========================================
-  // Factory Methods
-  // ========================================
-
   static criar(dados: ICalendarioLetivoCreate): CalendarioLetivo {
     const instance = new CalendarioLetivo();
 
@@ -60,5 +44,21 @@ export class CalendarioLetivo implements ICalendarioLetivo {
     const instance = new CalendarioLetivo();
     Object.assign(instance, dados);
     return instance;
+  }
+
+  isAtivo(): boolean {
+    return this.dateDeleted === null;
+  }
+
+  // ========================================
+  // Factory Methods
+  // ========================================
+
+  podeSerEditado(): boolean {
+    return this.isAtivo();
+  }
+
+  podeSerDeletado(): boolean {
+    return this.isAtivo();
   }
 }

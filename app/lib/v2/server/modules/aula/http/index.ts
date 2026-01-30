@@ -1,2 +1,2 @@
-export * from "./dto";
 export * from "./aula.controller";
+export * from "./dto";

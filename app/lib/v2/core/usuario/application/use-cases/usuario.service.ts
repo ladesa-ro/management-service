@@ -6,6 +6,10 @@ import {
   ServiceUnavailableException,
 } from "@nestjs/common";
 import { has, pick } from "lodash";
+import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
+import type { UsuarioEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
+import { ArquivoService } from "@/v2/core/arquivo/application/use-cases/arquivo.service";
+import { ImagemService } from "@/v2/core/imagem/application/use-cases/imagem.service";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import { KeycloakService } from "@/v2/old/infrastructure/integrations/identity-provider";
 import { ValidationFailedException } from "@/v2/old/shared";
@@ -17,10 +21,6 @@ import type {
   UsuarioListOutputDto,
   UsuarioUpdateInputDto,
 } from "@/v2/server/modules/usuario/http/dto";
-import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
-import type { UsuarioEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
-import { ArquivoService } from "@/v2/core/arquivo/application/use-cases/arquivo.service";
-import { ImagemService } from "@/v2/core/imagem/application/use-cases/imagem.service";
 import type { IUsuarioRepositoryPort, IUsuarioUseCasePort } from "../ports";
 
 @Injectable()

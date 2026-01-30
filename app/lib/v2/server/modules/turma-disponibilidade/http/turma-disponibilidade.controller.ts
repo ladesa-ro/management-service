@@ -7,10 +7,8 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
+import { TurmaDisponibilidadeService } from "@/v2/core/turma-disponibilidade/application/use-cases/turma-disponibilidade.service";
 import { AccessContext, AccessContextHttp } from "@/v2/old/infrastructure/access-context";
-import {
-  TurmaDisponibilidadeService
-} from "@/v2/core/turma-disponibilidade/application/use-cases/turma-disponibilidade.service";
 import {
   TurmaDisponibilidadeCreateInputDto,
   TurmaDisponibilidadeFindOneInputDto,

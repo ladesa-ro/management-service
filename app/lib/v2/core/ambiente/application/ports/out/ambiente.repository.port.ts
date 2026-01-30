@@ -1,4 +1,5 @@
 import type { DeepPartial } from "typeorm";
+import type { AmbienteEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
   AmbienteFindOneInputDto,
@@ -6,7 +7,6 @@ import type {
   AmbienteListInputDto,
   AmbienteListOutputDto,
 } from "@/v2/server/modules/ambiente/http/dto";
-import type { AmbienteEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 
 export interface IAmbienteRepositoryPort {
   findAll(

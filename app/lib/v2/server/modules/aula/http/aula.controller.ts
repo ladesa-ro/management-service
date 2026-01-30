@@ -7,8 +7,8 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
-import { AccessContext, AccessContextHttp } from "@/v2/old/infrastructure/access-context";
 import { AulaService } from "@/v2/core/aula/application/use-cases/aula.service";
+import { AccessContext, AccessContextHttp } from "@/v2/old/infrastructure/access-context";
 import {
   AulaCreateInputDto,
   AulaFindOneInputDto,

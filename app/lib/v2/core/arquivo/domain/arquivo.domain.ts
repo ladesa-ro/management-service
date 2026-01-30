@@ -15,13 +15,6 @@ export class Arquivo implements IArquivo {
   dateDeleted!: Date | null;
 
   /**
-   * Verifica se o arquivo está ativo (não deletado)
-   */
-  isAtivo(): boolean {
-    return this.dateDeleted === null;
-  }
-
-  /**
    * Cria uma nova instância de Arquivo
    */
   static criar(dados: IArquivoCreate): Arquivo {
@@ -40,5 +33,12 @@ export class Arquivo implements IArquivo {
     const arquivo = new Arquivo();
     Object.assign(arquivo, dados);
     return arquivo;
+  }
+
+  /**
+   * Verifica se o arquivo está ativo (não deletado)
+   */
+  isAtivo(): boolean {
+    return this.dateDeleted === null;
   }
 }

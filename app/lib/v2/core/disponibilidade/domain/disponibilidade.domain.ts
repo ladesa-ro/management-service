@@ -13,13 +13,6 @@ export class Disponibilidade implements IDisponibilidade {
   dateDeleted!: Date | null;
 
   /**
-   * Verifica se a disponibilidade está ativa (não deletada)
-   */
-  isAtiva(): boolean {
-    return this.dateDeleted === null;
-  }
-
-  /**
    * Cria uma nova instância de Disponibilidade
    */
   static criar(dados: IDisponibilidadeCreate): Disponibilidade {
@@ -36,5 +29,12 @@ export class Disponibilidade implements IDisponibilidade {
     const disponibilidade = new Disponibilidade();
     Object.assign(disponibilidade, dados);
     return disponibilidade;
+  }
+
+  /**
+   * Verifica se a disponibilidade está ativa (não deletada)
+   */
+  isAtiva(): boolean {
+    return this.dateDeleted === null;
   }
 }

@@ -7,6 +7,8 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
+import { NivelFormacaoService } from "@/v2/core/nivel-formacao/application/use-cases/nivel-formacao.service";
+import { BaseCrudController } from "@/v2/core/shared";
 import { AccessContext, AccessContextHttp } from "@/v2/old/infrastructure/access-context";
 import {
   NivelFormacaoCreateInputDto,
@@ -16,8 +18,6 @@ import {
   NivelFormacaoListOutputDto,
   NivelFormacaoUpdateInputDto,
 } from "./dto";
-import { NivelFormacaoService } from "@/v2/core/nivel-formacao/application/use-cases/nivel-formacao.service";
-import { BaseCrudController } from "@/v2/core/shared";
 
 @ApiTags("niveis-formacoes")
 @Controller("/niveis-formacoes")

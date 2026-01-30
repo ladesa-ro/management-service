@@ -1,5 +1,9 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { v4 as uuid } from "uuid";
+import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
+import type { UsuarioEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
+import { CampusService } from "@/v2/core/campus/application/use-cases/campus.service";
+import { UsuarioService } from "@/v2/core/usuario/application/use-cases/usuario.service";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
   PerfilFindOneInputDto,
@@ -8,10 +12,6 @@ import type {
   PerfilListOutputDto,
   PerfilUpdateInputDto,
 } from "@/v2/server/modules/perfil/http/dto";
-import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
-import type { UsuarioEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
-import { CampusService } from "@/v2/core/campus/application/use-cases/campus.service";
-import { UsuarioService } from "@/v2/core/usuario/application/use-cases/usuario.service";
 import type { IPerfilRepositoryPort, IPerfilUseCasePort } from "../ports";
 
 // ============================================================================

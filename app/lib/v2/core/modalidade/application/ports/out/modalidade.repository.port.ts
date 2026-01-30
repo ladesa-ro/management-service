@@ -1,4 +1,5 @@
 import type { DeepPartial } from "typeorm";
+import type { ModalidadeEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
   ModalidadeFindOneInputDto,
@@ -6,7 +7,6 @@ import type {
   ModalidadeListInputDto,
   ModalidadeListOutputDto,
 } from "@/v2/server/modules/modalidade/http/dto";
-import type { ModalidadeEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 
 /**
  * Port de saída para operações de persistência de Modalidade

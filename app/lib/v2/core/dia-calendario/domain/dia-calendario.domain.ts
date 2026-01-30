@@ -14,10 +14,6 @@ export class DiaCalendario implements IDiaCalendario {
   dateUpdated!: Date;
   dateDeleted!: Date | null;
 
-  isAtivo(): boolean {
-    return this.dateDeleted === null;
-  }
-
   static criar(dados: IDiaCalendarioCreate): DiaCalendario {
     const diaCalendario = new DiaCalendario();
     Object.assign(diaCalendario, dados);
@@ -28,5 +24,9 @@ export class DiaCalendario implements IDiaCalendario {
     const diaCalendario = new DiaCalendario();
     Object.assign(diaCalendario, dados);
     return diaCalendario;
+  }
+
+  isAtivo(): boolean {
+    return this.dateDeleted === null;
   }
 }

@@ -15,10 +15,6 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempo
   dateUpdated!: Date;
   dateDeleted!: Date | null;
 
-  isAtivo(): boolean {
-    return this.dateDeleted === null;
-  }
-
   static criar(
     dados: IGradeHorarioOfertaFormacaoIntervaloDeTempoCreate,
   ): GradeHorarioOfertaFormacaoIntervaloDeTempo {
@@ -32,5 +28,9 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempo
     const entity = new GradeHorarioOfertaFormacaoIntervaloDeTempo();
     Object.assign(entity, dados);
     return entity;
+  }
+
+  isAtivo(): boolean {
+    return this.dateDeleted === null;
   }
 }

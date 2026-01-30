@@ -17,10 +17,6 @@ export class DiarioPreferenciaAgrupamento implements IDiarioPreferenciaAgrupamen
   dateUpdated!: Date;
   dateDeleted!: Date | null;
 
-  isAtivo(): boolean {
-    return this.dateDeleted === null;
-  }
-
   static criar(dados: IDiarioPreferenciaAgrupamentoCreate): DiarioPreferenciaAgrupamento {
     const diarioPreferenciaAgrupamento = new DiarioPreferenciaAgrupamento();
     diarioPreferenciaAgrupamento.dataInicio = dados.dataInicio;
@@ -34,5 +30,9 @@ export class DiarioPreferenciaAgrupamento implements IDiarioPreferenciaAgrupamen
     const diarioPreferenciaAgrupamento = new DiarioPreferenciaAgrupamento();
     Object.assign(diarioPreferenciaAgrupamento, dados);
     return diarioPreferenciaAgrupamento;
+  }
+
+  isAtivo(): boolean {
+    return this.dateDeleted === null;
   }
 }

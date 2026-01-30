@@ -13,10 +13,6 @@ export class OfertaFormacaoNivelFormacao implements IOfertaFormacaoNivelFormacao
   dateUpdated!: Date;
   dateDeleted!: Date | null;
 
-  isAtivo(): boolean {
-    return this.dateDeleted === null;
-  }
-
   static criar(dados: IOfertaFormacaoNivelFormacaoCreate): OfertaFormacaoNivelFormacao {
     const ofertaFormacaoNivelFormacao = new OfertaFormacaoNivelFormacao();
     return ofertaFormacaoNivelFormacao;
@@ -26,5 +22,9 @@ export class OfertaFormacaoNivelFormacao implements IOfertaFormacaoNivelFormacao
     const ofertaFormacaoNivelFormacao = new OfertaFormacaoNivelFormacao();
     Object.assign(ofertaFormacaoNivelFormacao, dados);
     return ofertaFormacaoNivelFormacao;
+  }
+
+  isAtivo(): boolean {
+    return this.dateDeleted === null;
   }
 }

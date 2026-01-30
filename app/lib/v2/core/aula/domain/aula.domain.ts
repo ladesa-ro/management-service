@@ -19,20 +19,6 @@ export class Aula implements IAula {
   dateDeleted!: Date | null;
 
   /**
-   * Verifica se a aula está ativa (não deletada)
-   */
-  isAtiva(): boolean {
-    return this.dateDeleted === null;
-  }
-
-  /**
-   * Verifica se a aula tem ambiente associado
-   */
-  temAmbiente(): boolean {
-    return this.ambiente !== null;
-  }
-
-  /**
    * Cria uma nova instância de Aula
    */
   static criar(dados: IAulaCreate): Aula {
@@ -49,5 +35,19 @@ export class Aula implements IAula {
     const aula = new Aula();
     Object.assign(aula, dados);
     return aula;
+  }
+
+  /**
+   * Verifica se a aula está ativa (não deletada)
+   */
+  isAtiva(): boolean {
+    return this.dateDeleted === null;
+  }
+
+  /**
+   * Verifica se a aula tem ambiente associado
+   */
+  temAmbiente(): boolean {
+    return this.ambiente !== null;
   }
 }

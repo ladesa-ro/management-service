@@ -1,5 +1,11 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { has } from "lodash";
+import type { DiarioEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
+import { AmbienteService } from "@/v2/core/ambiente/application/use-cases/ambiente.service";
+import { CalendarioLetivoService } from "@/v2/core/calendario-letivo/application/use-cases/calendario-letivo.service";
+import { DisciplinaService } from "@/v2/core/disciplina/application/use-cases/disciplina.service";
+import { BaseCrudService } from "@/v2/core/shared";
+import { TurmaService } from "@/v2/core/turma/application/use-cases/turma.service";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
   DiarioCreateInputDto,
@@ -9,12 +15,6 @@ import type {
   DiarioListOutputDto,
   DiarioUpdateInputDto,
 } from "@/v2/server/modules/diario/http/dto";
-import type { DiarioEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
-import { AmbienteService } from "@/v2/core/ambiente/application/use-cases/ambiente.service";
-import { CalendarioLetivoService } from "@/v2/core/calendario-letivo/application/use-cases/calendario-letivo.service";
-import { DisciplinaService } from "@/v2/core/disciplina/application/use-cases/disciplina.service";
-import { BaseCrudService } from "@/v2/core/shared";
-import { TurmaService } from "@/v2/core/turma/application/use-cases/turma.service";
 import type { IDiarioRepositoryPort } from "../ports";
 
 @Injectable()
@@ -43,6 +43,69 @@ export class DiarioService extends BaseCrudService<
     private readonly ambienteService: AmbienteService,
   ) {
     super();
+  }
+
+  async diarioFindAll(
+    accessContext: AccessContext,
+    dto: DiarioListInputDto | null = null,
+    selection?: string[] | boolean,
+  ): Promise<DiarioListOutputDto> {
+    return this.findAll(accessContext, dto, selection);
+  }
+
+  async diarioFindById(
+    accessContext: AccessContext,
+    dto: DiarioFindOneInputDto,
+    selection?: string[] | boolean,
+  ): Promise<DiarioFindOneOutputDto | null> {
+    return this.findById(accessContext, dto, selection);
+  }
+
+  // Métodos prefixados para compatibilidade
+
+  async diarioFindByIdStrict(
+    accessContext: AccessContext,
+    dto: DiarioFindOneInputDto,
+    selection?: string[] | boolean,
+  ): Promise<DiarioFindOneOutputDto> {
+    return this.findByIdStrict(accessContext, dto, selection);
+  }
+
+  async diarioFindByIdSimple(
+    accessContext: AccessContext,
+    id: DiarioFindOneInputDto["id"],
+    selection?: string[] | boolean,
+  ): Promise<DiarioFindOneOutputDto | null> {
+    return this.findByIdSimple(accessContext, id, selection);
+  }
+
+  async diarioFindByIdSimpleStrict(
+    accessContext: AccessContext,
+    id: DiarioFindOneInputDto["id"],
+    selection?: string[] | boolean,
+  ): Promise<DiarioFindOneOutputDto> {
+    return this.findByIdSimpleStrict(accessContext, id, selection);
+  }
+
+  async diarioCreate(
+    accessContext: AccessContext,
+    dto: DiarioCreateInputDto,
+  ): Promise<DiarioFindOneOutputDto> {
+    return this.create(accessContext, dto);
+  }
+
+  async diarioUpdate(
+    accessContext: AccessContext,
+    dto: DiarioFindOneInputDto & DiarioUpdateInputDto,
+  ): Promise<DiarioFindOneOutputDto> {
+    return this.update(accessContext, dto);
+  }
+
+  async diarioDeleteOneById(
+    accessContext: AccessContext,
+    dto: DiarioFindOneInputDto,
+  ): Promise<boolean> {
+    return this.deleteOneById(accessContext, dto);
   }
 
   protected override async beforeCreate(
@@ -113,68 +176,5 @@ export class DiarioService extends BaseCrudService<
         );
       this.repository.merge(entity, { calendarioLetivo: { id: calendarioLetivo.id } });
     }
-  }
-
-  // Métodos prefixados para compatibilidade
-
-  async diarioFindAll(
-    accessContext: AccessContext,
-    dto: DiarioListInputDto | null = null,
-    selection?: string[] | boolean,
-  ): Promise<DiarioListOutputDto> {
-    return this.findAll(accessContext, dto, selection);
-  }
-
-  async diarioFindById(
-    accessContext: AccessContext,
-    dto: DiarioFindOneInputDto,
-    selection?: string[] | boolean,
-  ): Promise<DiarioFindOneOutputDto | null> {
-    return this.findById(accessContext, dto, selection);
-  }
-
-  async diarioFindByIdStrict(
-    accessContext: AccessContext,
-    dto: DiarioFindOneInputDto,
-    selection?: string[] | boolean,
-  ): Promise<DiarioFindOneOutputDto> {
-    return this.findByIdStrict(accessContext, dto, selection);
-  }
-
-  async diarioFindByIdSimple(
-    accessContext: AccessContext,
-    id: DiarioFindOneInputDto["id"],
-    selection?: string[] | boolean,
-  ): Promise<DiarioFindOneOutputDto | null> {
-    return this.findByIdSimple(accessContext, id, selection);
-  }
-
-  async diarioFindByIdSimpleStrict(
-    accessContext: AccessContext,
-    id: DiarioFindOneInputDto["id"],
-    selection?: string[] | boolean,
-  ): Promise<DiarioFindOneOutputDto> {
-    return this.findByIdSimpleStrict(accessContext, id, selection);
-  }
-
-  async diarioCreate(
-    accessContext: AccessContext,
-    dto: DiarioCreateInputDto,
-  ): Promise<DiarioFindOneOutputDto> {
-    return this.create(accessContext, dto);
-  }
-
-  async diarioUpdate(
-    accessContext: AccessContext,
-    dto: DiarioFindOneInputDto & DiarioUpdateInputDto,
-  ): Promise<DiarioFindOneOutputDto> {
-    return this.update(accessContext, dto);
-  }
-
-  async diarioDeleteOneById(
-    accessContext: AccessContext,
-    dto: DiarioFindOneInputDto,
-  ): Promise<boolean> {
-    return this.deleteOneById(accessContext, dto);
   }
 }

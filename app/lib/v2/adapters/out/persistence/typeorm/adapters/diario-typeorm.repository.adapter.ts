@@ -1,5 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
+import type { IPaginationConfig } from "@/v2/application/ports/pagination";
+import type { IDiarioRepositoryPort } from "@/v2/core/diario/application/ports";
 import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 import type {
   DiarioFindOneInputDto,
@@ -7,8 +9,6 @@ import type {
   DiarioListInputDto,
   DiarioListOutputDto,
 } from "@/v2/server/modules/diario/http/dto";
-import type { IPaginationConfig } from "@/v2/application/ports/pagination";
-import type { IDiarioRepositoryPort } from "@/v2/core/diario/application/ports";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
 import { BaseTypeOrmRepositoryAdapter } from "../base";
 import { DatabaseContextService } from "../context/database-context.service";

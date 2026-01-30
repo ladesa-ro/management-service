@@ -11,7 +11,10 @@ export class IntervaloDeTempoService implements IIntervaloDeTempoUseCasePort {
     private intervaloTempoRepository: IIntervaloDeTempoRepositoryPort,
   ) {}
 
-  async intervaloCreateOrUpdate(accessContext: AccessContext | null, domain: IntervaloDeTempoInput) {
+  async intervaloCreateOrUpdate(
+    accessContext: AccessContext | null,
+    domain: IntervaloDeTempoInput,
+  ) {
     const intervalExisting = await this.intervaloTempoRepository.findOne(domain);
 
     if (intervalExisting) return intervalExisting;

@@ -23,6 +23,15 @@ export class Endereco implements IEndereco {
   // ========================================
 
   /**
+   * Reconstrói uma instância a partir de dados existentes (ex: do banco)
+   */
+  static fromData(dados: IEndereco): Endereco {
+    const instance = new Endereco();
+    Object.assign(instance, dados);
+    return instance;
+  }
+
+  /**
    * Valida se o endereço está ativo (não deletado)
    */
   isAtivo(): boolean {
@@ -46,24 +55,15 @@ export class Endereco implements IEndereco {
     return partes.join(", ");
   }
 
+  // ========================================
+  // Factory Methods
+  // ========================================
+
   /**
    * Valida se o CEP tem formato válido (apenas números, 8 dígitos)
    */
   isCepValido(): boolean {
     const cepLimpo = this.cep.replace(/\D/g, "");
     return /^\d{8}$/.test(cepLimpo);
-  }
-
-  // ========================================
-  // Factory Methods
-  // ========================================
-
-  /**
-   * Reconstrói uma instância a partir de dados existentes (ex: do banco)
-   */
-  static fromData(dados: IEndereco): Endereco {
-    const instance = new Endereco();
-    Object.assign(instance, dados);
-    return instance;
   }
 }

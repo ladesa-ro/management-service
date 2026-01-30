@@ -7,6 +7,8 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
+import { DisponibilidadeService } from "@/v2/core/disponibilidade/application/use-cases/disponibilidade.service";
+import { BaseCrudController } from "@/v2/core/shared";
 import { AccessContext, AccessContextHttp } from "@/v2/old/infrastructure/access-context";
 import {
   DisponibilidadeCreateInputDto,
@@ -16,8 +18,6 @@ import {
   DisponibilidadeListOutputDto,
   DisponibilidadeUpdateInputDto,
 } from "./dto";
-import { DisponibilidadeService } from "@/v2/core/disponibilidade/application/use-cases/disponibilidade.service";
-import { BaseCrudController } from "@/v2/core/shared";
 
 @ApiTags("disponibilidades")
 @Controller("/disponibilidades")

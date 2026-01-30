@@ -1,4 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
+import type { ModalidadeEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
+import { BaseCrudService } from "@/v2/core/shared";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
   ModalidadeCreateInputDto,
@@ -8,8 +10,6 @@ import type {
   ModalidadeListOutputDto,
   ModalidadeUpdateInputDto,
 } from "@/v2/server/modules/modalidade/http/dto";
-import type { ModalidadeEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
-import { BaseCrudService } from "@/v2/core/shared";
 import type { IModalidadeRepositoryPort, IModalidadeUseCasePort } from "../ports";
 
 /**

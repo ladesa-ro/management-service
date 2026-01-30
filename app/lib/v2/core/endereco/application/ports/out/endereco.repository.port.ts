@@ -1,11 +1,11 @@
 import type { DeepPartial } from "typeorm";
+import type { EnderecoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
   EnderecoFindOneInputDto,
   EnderecoFindOneOutputDto,
   EnderecoInputDto,
 } from "@/v2/server/modules/endereco/http/dto";
-import type { EnderecoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 
 /**
  * Port de saída para operações de persistência de Endereco

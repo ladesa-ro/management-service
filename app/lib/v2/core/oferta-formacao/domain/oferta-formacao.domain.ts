@@ -19,31 +19,6 @@ export class OfertaFormacao implements IOfertaFormacao {
   // ========================================
 
   /**
-   * Valida se a oferta de formação está ativa (não deletada)
-   */
-  isAtiva(): boolean {
-    return this.dateDeleted === null;
-  }
-
-  /**
-   * Valida se pode ser editada
-   */
-  podeSerEditada(): boolean {
-    return this.isAtiva();
-  }
-
-  /**
-   * Valida se pode ser deletada
-   */
-  podeSerDeletada(): boolean {
-    return this.isAtiva();
-  }
-
-  // ========================================
-  // Factory Methods
-  // ========================================
-
-  /**
    * Cria uma nova instância válida de OfertaFormacao
    * @throws Error se os dados forem inválidos
    */
@@ -74,5 +49,30 @@ export class OfertaFormacao implements IOfertaFormacao {
     const instance = new OfertaFormacao();
     Object.assign(instance, dados);
     return instance;
+  }
+
+  /**
+   * Valida se a oferta de formação está ativa (não deletada)
+   */
+  isAtiva(): boolean {
+    return this.dateDeleted === null;
+  }
+
+  // ========================================
+  // Factory Methods
+  // ========================================
+
+  /**
+   * Valida se pode ser editada
+   */
+  podeSerEditada(): boolean {
+    return this.isAtiva();
+  }
+
+  /**
+   * Valida se pode ser deletada
+   */
+  podeSerDeletada(): boolean {
+    return this.isAtiva();
   }
 }

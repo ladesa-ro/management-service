@@ -1,4 +1,5 @@
 import type { DeepPartial } from "typeorm";
+import type { UsuarioEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
   UsuarioFindOneInputDto,
@@ -6,7 +7,6 @@ import type {
   UsuarioListInputDto,
   UsuarioListOutputDto,
 } from "@/v2/server/modules/usuario/http/dto";
-import type { UsuarioEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 
 /**
  * Port de saída para operações de persistência de Usuario

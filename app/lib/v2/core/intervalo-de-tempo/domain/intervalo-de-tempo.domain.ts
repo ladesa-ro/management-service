@@ -1,7 +1,4 @@
-import type {
-  IIntervaloDeTempo,
-  IIntervaloDeTempoCreate,
-} from "./intervalo-de-tempo.types";
+import type { IIntervaloDeTempo, IIntervaloDeTempoCreate } from "./intervalo-de-tempo.types";
 
 /**
  * Classe de domínio que representa um Intervalo de Tempo
@@ -14,24 +11,6 @@ export class IntervaloDeTempo implements IIntervaloDeTempo {
   dateCreated!: Date;
   dateUpdated!: Date;
   dateDeleted!: Date | null;
-
-  /**
-   * Verifica se o intervalo está ativo (não deletado)
-   */
-  isAtivo(): boolean {
-    return this.dateDeleted === null;
-  }
-
-  /**
-   * Calcula a duração do intervalo em minutos
-   */
-  getDuracaoEmMinutos(): number {
-    const [inicioHora, inicioMin] = this.periodoInicio.split(":").map(Number);
-    const [fimHora, fimMin] = this.periodoFim.split(":").map(Number);
-    const inicioTotalMin = inicioHora * 60 + inicioMin;
-    const fimTotalMin = fimHora * 60 + fimMin;
-    return fimTotalMin - inicioTotalMin;
-  }
 
   /**
    * Cria uma nova instância de IntervaloDeTempo
@@ -50,5 +29,23 @@ export class IntervaloDeTempo implements IIntervaloDeTempo {
     const intervalo = new IntervaloDeTempo();
     Object.assign(intervalo, dados);
     return intervalo;
+  }
+
+  /**
+   * Verifica se o intervalo está ativo (não deletado)
+   */
+  isAtivo(): boolean {
+    return this.dateDeleted === null;
+  }
+
+  /**
+   * Calcula a duração do intervalo em minutos
+   */
+  getDuracaoEmMinutos(): number {
+    const [inicioHora, inicioMin] = this.periodoInicio.split(":").map(Number);
+    const [fimHora, fimMin] = this.periodoFim.split(":").map(Number);
+    const inicioTotalMin = inicioHora * 60 + inicioMin;
+    const fimTotalMin = fimHora * 60 + fimMin;
+    return fimTotalMin - inicioTotalMin;
   }
 }

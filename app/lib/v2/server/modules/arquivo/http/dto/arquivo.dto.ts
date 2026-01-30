@@ -1,6 +1,15 @@
 import { ArgsType, Field, ID, InputType, Int, ObjectType } from "@nestjs/graphql";
 import { ApiProperty, ApiPropertyOptional, PartialType } from "@nestjs/swagger";
-import { IsArray, IsDateString, IsInt, IsOptional, IsString, IsUUID, Min, MinLength, } from "class-validator";
+import {
+  IsArray,
+  IsDateString,
+  IsInt,
+  IsOptional,
+  IsString,
+  IsUUID,
+  Min,
+  MinLength,
+} from "class-validator";
 import { PaginationInputDto, PaginationMetaDto, TransformToArray } from "@/v2/old/shared/dto";
 import { commonProperties, RegisterModel, simpleProperty } from "@/v2/old/shared/metadata";
 

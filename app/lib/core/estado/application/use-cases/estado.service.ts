@@ -1,20 +1,14 @@
-import { Inject, Injectable, NotFoundException } from "@nestjs/common";
-import type { AccessContext } from "@/v2/old/infrastructure/access-context";
-import type { IEstadoRepositoryPort, IEstadoUseCasePort } from "@/core/estado/application/ports";
+import { Inject, Injectable } from "@nestjs/common";
+import { ResourceNotFoundError } from "@/core/@shared";
 import {
   EstadoFindOneInput,
   EstadoFindOneOutput,
   EstadoListInput,
-  EstadoListOutput
+  EstadoListOutput,
 } from "@/core/estado/application/dtos";
+import type { IEstadoRepositoryPort, IEstadoUseCasePort } from "@/core/estado/application/ports";
+import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 
-/**
- * Service centralizado para o módulo Estado.
- * Implementa todos os use cases definidos em IEstadoUseCasePort.
- *
- * Por enquanto, toda a lógica fica aqui. Futuramente, pode ser
- * desmembrado em use cases individuais se necessário.
- */
 @Injectable()
 export class EstadoService implements IEstadoUseCasePort {
   constructor(
@@ -43,7 +37,7 @@ export class EstadoService implements IEstadoUseCasePort {
     const estado = await this.estadoRepository.findById(accessContext, dto);
 
     if (!estado) {
-      throw new NotFoundException();
+      throw new ResourceNotFoundError("Estado", dto.id);
     }
 
     return estado;

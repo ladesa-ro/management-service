@@ -1,6 +1,9 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
+import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
+import type { EventoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities/evento.entity";
+import { CalendarioLetivoService } from "@/v2/core/calendario-letivo/application/use-cases/calendario-letivo.service";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import { QbEfficientLoad, SearchService } from "@/v2/old/shared";
 import type {
@@ -11,9 +14,6 @@ import type {
   EventoListOutputDto,
   EventoUpdateInputDto,
 } from "@/v2/server/modules/evento/http/dto";
-import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
-import type { EventoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities/evento.entity";
-import { CalendarioLetivoService } from "@/v2/core/calendario-letivo/application/use-cases/calendario-letivo.service";
 
 // ============================================================================
 

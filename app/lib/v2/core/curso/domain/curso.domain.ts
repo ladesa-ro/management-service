@@ -23,38 +23,6 @@ export class Curso implements ICurso {
   // ========================================
 
   /**
-   * Valida se o curso está ativo (não deletado)
-   */
-  isAtivo(): boolean {
-    return this.dateDeleted === null;
-  }
-
-  /**
-   * Valida se pode ser editado
-   */
-  podeSerEditado(): boolean {
-    return this.isAtivo();
-  }
-
-  /**
-   * Valida se pode ser deletado
-   */
-  podeSerDeletado(): boolean {
-    return this.isAtivo();
-  }
-
-  /**
-   * Verifica se tem imagem de capa
-   */
-  temImagemCapa(): boolean {
-    return this.imagemCapa !== null;
-  }
-
-  // ========================================
-  // Factory Methods
-  // ========================================
-
-  /**
    * Cria uma nova instância válida de Curso
    * @throws Error se os dados forem inválidos
    */
@@ -86,5 +54,37 @@ export class Curso implements ICurso {
     const instance = new Curso();
     Object.assign(instance, dados);
     return instance;
+  }
+
+  /**
+   * Valida se o curso está ativo (não deletado)
+   */
+  isAtivo(): boolean {
+    return this.dateDeleted === null;
+  }
+
+  /**
+   * Valida se pode ser editado
+   */
+  podeSerEditado(): boolean {
+    return this.isAtivo();
+  }
+
+  // ========================================
+  // Factory Methods
+  // ========================================
+
+  /**
+   * Valida se pode ser deletado
+   */
+  podeSerDeletado(): boolean {
+    return this.isAtivo();
+  }
+
+  /**
+   * Verifica se tem imagem de capa
+   */
+  temImagemCapa(): boolean {
+    return this.imagemCapa !== null;
   }
 }

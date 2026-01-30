@@ -20,38 +20,6 @@ export class Bloco implements IBloco {
   // ========================================
 
   /**
-   * Valida se o bloco está ativo (não deletado)
-   */
-  isAtivo(): boolean {
-    return this.dateDeleted === null;
-  }
-
-  /**
-   * Valida se pode ser editado
-   */
-  podeSerEditado(): boolean {
-    return this.isAtivo();
-  }
-
-  /**
-   * Valida se pode ser deletado
-   */
-  podeSerDeletado(): boolean {
-    return this.isAtivo();
-  }
-
-  /**
-   * Verifica se o bloco tem imagem de capa
-   */
-  temImagemCapa(): boolean {
-    return this.imagemCapa !== null;
-  }
-
-  // ========================================
-  // Factory Methods
-  // ========================================
-
-  /**
    * Cria uma nova instância válida de Bloco
    * @throws Error se os dados forem inválidos
    */
@@ -83,5 +51,37 @@ export class Bloco implements IBloco {
     const instance = new Bloco();
     Object.assign(instance, dados);
     return instance;
+  }
+
+  /**
+   * Valida se o bloco está ativo (não deletado)
+   */
+  isAtivo(): boolean {
+    return this.dateDeleted === null;
+  }
+
+  /**
+   * Valida se pode ser editado
+   */
+  podeSerEditado(): boolean {
+    return this.isAtivo();
+  }
+
+  // ========================================
+  // Factory Methods
+  // ========================================
+
+  /**
+   * Valida se pode ser deletado
+   */
+  podeSerDeletado(): boolean {
+    return this.isAtivo();
+  }
+
+  /**
+   * Verifica se o bloco tem imagem de capa
+   */
+  temImagemCapa(): boolean {
+    return this.imagemCapa !== null;
   }
 }

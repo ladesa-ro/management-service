@@ -1,4 +1,9 @@
 import { Inject, Injectable, NotFoundException, type StreamableFile } from "@nestjs/common";
+import type { BlocoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
+import { ArquivoService } from "@/v2/core/arquivo/application/use-cases/arquivo.service";
+import { CampusService } from "@/v2/core/campus/application/use-cases/campus.service";
+import { ImagemService } from "@/v2/core/imagem/application/use-cases/imagem.service";
+import { BaseCrudService } from "@/v2/core/shared";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
   BlocoCreateInputDto,
@@ -8,11 +13,6 @@ import type {
   BlocoListOutputDto,
   BlocoUpdateInputDto,
 } from "@/v2/server/modules/bloco/http/dto";
-import type { BlocoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
-import { ArquivoService } from "@/v2/core/arquivo/application/use-cases/arquivo.service";
-import { CampusService } from "@/v2/core/campus/application/use-cases/campus.service";
-import { ImagemService } from "@/v2/core/imagem/application/use-cases/imagem.service";
-import { BaseCrudService } from "@/v2/core/shared";
 import type { IBlocoRepositoryPort, IBlocoUseCasePort } from "../ports";
 
 /**
@@ -50,20 +50,6 @@ export class BlocoService
     super();
   }
 
-  /**
-   * Hook para adicionar relacionamento com Campus durante criação
-   */
-  protected override async beforeCreate(
-    accessContext: AccessContext,
-    entity: BlocoEntity,
-    dto: BlocoCreateInputDto,
-  ): Promise<void> {
-    const campus = await this.campusService.campusFindByIdSimpleStrict(accessContext, dto.campus.id);
-    this.repository.merge(entity, { campus: { id: campus.id } });
-  }
-
-  // Métodos prefixados para compatibilidade com IBlocoUseCasePort
-
   async blocoFindAll(
     accessContext: AccessContext,
     dto: BlocoListInputDto,
@@ -71,6 +57,8 @@ export class BlocoService
   ): Promise<BlocoListOutputDto> {
     return this.findAll(accessContext, dto, selection);
   }
+
+  // Métodos prefixados para compatibilidade com IBlocoUseCasePort
 
   async blocoFindById(
     accessContext: AccessContext | null,
@@ -125,8 +113,6 @@ export class BlocoService
     return this.deleteOneById(accessContext, dto);
   }
 
-  // Métodos específicos de Bloco (não cobertos pela BaseCrudService)
-
   async blocoGetImagemCapa(
     accessContext: AccessContext | null,
     id: string,
@@ -145,6 +131,8 @@ export class BlocoService
     throw new NotFoundException();
   }
 
+  // Métodos específicos de Bloco (não cobertos pela BaseCrudService)
+
   async blocoUpdateImagemCapa(
     accessContext: AccessContext,
     dto: BlocoFindOneInputDto,
@@ -152,7 +140,11 @@ export class BlocoService
   ): Promise<boolean> {
     const currentBloco = await this.blocoFindByIdStrict(accessContext, { id: dto.id });
 
-    await accessContext.ensurePermission("bloco:update", { dto: { id: currentBloco.id } }, currentBloco.id);
+    await accessContext.ensurePermission(
+      "bloco:update",
+      { dto: { id: currentBloco.id } },
+      currentBloco.id,
+    );
 
     const { imagem } = await this.imagemService.saveBlocoCapa(file);
 
@@ -162,5 +154,20 @@ export class BlocoService
     await this.repository.save(bloco);
 
     return true;
+  }
+
+  /**
+   * Hook para adicionar relacionamento com Campus durante criação
+   */
+  protected override async beforeCreate(
+    accessContext: AccessContext,
+    entity: BlocoEntity,
+    dto: BlocoCreateInputDto,
+  ): Promise<void> {
+    const campus = await this.campusService.campusFindByIdSimpleStrict(
+      accessContext,
+      dto.campus.id,
+    );
+    this.repository.merge(entity, { campus: { id: campus.id } });
   }
 }

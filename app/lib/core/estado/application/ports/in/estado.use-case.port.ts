@@ -1,5 +1,10 @@
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
-import { EstadoFindOneInput, EstadoFindOneOutput, EstadoListInput, EstadoListOutput } from "../../dtos";
+import {
+  EstadoFindOneInput,
+  EstadoFindOneOutput,
+  EstadoListInput,
+  EstadoListOutput,
+} from "../../dtos";
 
 /**
  * Port de entrada para casos de uso de Estado
@@ -12,10 +17,7 @@ export interface IEstadoUseCasePort {
    * @param dto DTO com critérios de busca e paginação
    * @returns Lista paginada de estados
    */
-  findAll(
-    accessContext: AccessContext,
-    dto: EstadoListInput | null,
-  ): Promise<EstadoListOutput>;
+  findAll(accessContext: AccessContext, dto: EstadoListInput | null): Promise<EstadoListOutput>;
 
   /**
    * Busca um estado por ID

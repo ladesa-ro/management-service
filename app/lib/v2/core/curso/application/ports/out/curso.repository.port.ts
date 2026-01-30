@@ -1,4 +1,5 @@
 import type { DeepPartial } from "typeorm";
+import type { CursoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
   CursoFindOneInputDto,
@@ -6,7 +7,6 @@ import type {
   CursoListInputDto,
   CursoListOutputDto,
 } from "@/v2/server/modules/curso/http/dto";
-import type { CursoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 
 /**
  * Port de saída para operações de persistência de Curso

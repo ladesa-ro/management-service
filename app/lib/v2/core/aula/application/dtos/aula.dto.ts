@@ -1,7 +1,10 @@
-import { AmbienteFindOneOutput, AmbienteInputRef } from "../../../ambiente/application/dtos";
 import { ObjectUuidRef, PaginationInput, PaginationMeta } from "@/core/@shared/application/dtos";
+import { AmbienteFindOneOutput, AmbienteInputRef } from "../../../ambiente/application/dtos";
 import { DiarioFindOneOutput, DiarioInputRef } from "../../../diario/application/dtos";
-import { IntervaloDeTempoFindOneOutput, IntervaloDeTempoInputRef, } from "../../../intervalo-de-tempo/application/dtos";
+import {
+  IntervaloDeTempoFindOneOutput,
+  IntervaloDeTempoInputRef,
+} from "../../../intervalo-de-tempo/application/dtos";
 
 // ============================================================================
 // FindOne Input/Output

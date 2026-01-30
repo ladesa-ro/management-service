@@ -20,10 +20,6 @@ export class Diario implements IDiario {
   dateUpdated!: Date;
   dateDeleted!: Date | null;
 
-  isAtivo(): boolean {
-    return this.ativo && this.dateDeleted === null;
-  }
-
   static criar(dados: IDiarioCreate): Diario {
     const instance = new Diario();
     instance.ativo = dados.ativo ?? true;
@@ -39,5 +35,9 @@ export class Diario implements IDiario {
     const instance = new Diario();
     Object.assign(instance, dados);
     return instance;
+  }
+
+  isAtivo(): boolean {
+    return this.ativo && this.dateDeleted === null;
   }
 }

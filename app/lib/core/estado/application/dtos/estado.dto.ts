@@ -1,4 +1,9 @@
-import { IdNumeric, IFilterAcceptableValues, PaginationInput, PaginationResult } from "@/core/@shared";
+import {
+  IdNumeric,
+  IFilterAcceptableValues,
+  PaginationInput,
+  PaginationResult,
+} from "@/core/@shared";
 
 // ============================================================================
 // FindOne Input/Output
@@ -25,5 +30,4 @@ export class EstadoListInput extends PaginationInput {
   "filter.id"?: IFilterAcceptableValues;
 }
 
-export class EstadoListOutput extends PaginationResult<EstadoFindOneOutput> {
-}
+export class EstadoListOutput extends PaginationResult<EstadoFindOneOutput> {}

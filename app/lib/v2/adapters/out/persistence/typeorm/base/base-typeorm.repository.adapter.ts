@@ -1,8 +1,8 @@
 import { map } from "lodash";
 import type { DeepPartial, Repository } from "typeorm";
+import type { IPaginationConfig, IPaginationCriteria } from "@/v2/application/ports/pagination";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import { QbEfficientLoad } from "@/v2/old/shared";
-import type { IPaginationConfig, IPaginationCriteria } from "@/v2/application/ports/pagination";
 import type { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
 import type { DatabaseContextService } from "../context/database-context.service";
 
@@ -64,17 +64,10 @@ export abstract class BaseTypeOrmRepositoryAdapter<
    * Nome do DTO de saída para QbEfficientLoad (ex: "ModalidadeFindOneOutput")
    */
   protected abstract readonly outputDtoName: string;
-
-  /**
-   * Configuração de paginação específica do recurso
-   */
-  protected abstract getPaginateConfig(): IPaginationConfig<Entity>;
-
   /**
    * Acesso ao contexto do banco de dados
    */
   protected abstract readonly databaseContext: DatabaseContextService;
-
   /**
    * Adapter de paginação (pode ser undefined para recursos sem listagem)
    */
@@ -184,16 +177,26 @@ export abstract class BaseTypeOrmRepositoryAdapter<
   }
 
   /**
+   * Configuração de paginação específica do recurso
+   */
+  protected abstract getPaginateConfig(): IPaginationConfig<Entity>;
+
+  /**
    * Extrai filtros do formato do DTO para o formato de IPaginationCriteria
    */
-  protected extractFilters(dto: DtoWithFilters | null | undefined): Record<string, string | string[]> {
+  protected extractFilters(
+    dto: DtoWithFilters | null | undefined,
+  ): Record<string, string | string[]> {
     const filters: Record<string, string | string[]> = {};
 
     if (!dto) return filters;
 
     for (const [key, value] of Object.entries(dto)) {
       if (key.startsWith("filter.")) {
-        if (typeof value === "string" || (Array.isArray(value) && value.every((v) => typeof v === "string"))) {
+        if (
+          typeof value === "string" ||
+          (Array.isArray(value) && value.every((v) => typeof v === "string"))
+        ) {
           const filterKey = key.replace("filter.", "");
           filters[filterKey] = value;
         }

@@ -1,4 +1,6 @@
 import { Injectable } from "@nestjs/common";
+import type { IPaginationConfig } from "@/v2/application/ports/pagination";
+import type { IUsuarioRepositoryPort } from "@/v2/core/usuario/application/ports";
 import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 import { QbEfficientLoad } from "@/v2/old/shared";
 import type {
@@ -7,8 +9,6 @@ import type {
   UsuarioListInputDto,
   UsuarioListOutputDto,
 } from "@/v2/server/modules/usuario/http/dto";
-import type { IPaginationConfig } from "@/v2/application/ports/pagination";
-import type { IUsuarioRepositoryPort } from "@/v2/core/usuario/application/ports";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
 import { BaseTypeOrmRepositoryAdapter } from "../base";
 import { DatabaseContextService } from "../context/database-context.service";
@@ -40,23 +40,6 @@ export class UsuarioTypeOrmRepositoryAdapter
     return this.databaseContext.usuarioRepository;
   }
 
-  protected getPaginateConfig(): IPaginationConfig<UsuarioEntity> {
-    return {
-      ...paginateConfig,
-      select: ["id", "nome", "matriculaSiape", "email", "dateCreated"],
-      sortableColumns: ["nome", "matriculaSiape", "email", "dateCreated"],
-      searchableColumns: ["id", "nome", "matriculaSiape", "email"],
-      defaultSortBy: [
-        ["nome", "ASC"],
-        ["dateCreated", "ASC"],
-        ["matriculaSiape", "ASC"],
-      ],
-      filterableColumns: {},
-    };
-  }
-
-  // Métodos específicos do Usuario que não estão na classe base
-
   async findByMatriculaSiape(
     matriculaSiape: string,
     selection?: string[] | boolean,
@@ -74,6 +57,8 @@ export class UsuarioTypeOrmRepositoryAdapter
 
     return usuario as UsuarioFindOneOutputDto | null;
   }
+
+  // Métodos específicos do Usuario que não estão na classe base
 
   async isMatriculaSiapeAvailable(
     matriculaSiape: string,
@@ -118,5 +103,20 @@ export class UsuarioTypeOrmRepositoryAdapter
 
     const usuario = await qb.getOneOrFail();
     return usuario[property];
+  }
+
+  protected getPaginateConfig(): IPaginationConfig<UsuarioEntity> {
+    return {
+      ...paginateConfig,
+      select: ["id", "nome", "matriculaSiape", "email", "dateCreated"],
+      sortableColumns: ["nome", "matriculaSiape", "email", "dateCreated"],
+      searchableColumns: ["id", "nome", "matriculaSiape", "email"],
+      defaultSortBy: [
+        ["nome", "ASC"],
+        ["dateCreated", "ASC"],
+        ["matriculaSiape", "ASC"],
+      ],
+      filterableColumns: {},
+    };
   }
 }

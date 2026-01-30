@@ -1,5 +1,5 @@
-import { CampusFindOneOutput, CampusInputRef } from "../../../campus/application/dtos";
 import { ObjectUuidRef, PaginationInput, PaginationMeta } from "@/core/@shared/application/dtos";
+import { CampusFindOneOutput, CampusInputRef } from "../../../campus/application/dtos";
 import { ImagemFindOneOutput, ImagemInputRef } from "../../../imagem/application/dtos";
 
 // ============================================================================

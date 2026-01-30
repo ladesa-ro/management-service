@@ -1,5 +1,8 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { has } from "lodash";
+import type { EtapaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities/etapa.entity";
+import { CalendarioLetivoService } from "@/v2/core/calendario-letivo/application/use-cases/calendario-letivo.service";
+import { BaseCrudService } from "@/v2/core/shared";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
   EtapaCreateInputDto,
@@ -9,9 +12,6 @@ import type {
   EtapaListOutputDto,
   EtapaUpdateInputDto,
 } from "@/v2/server/modules/etapa/http/dto";
-import type { EtapaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities/etapa.entity";
-import { CalendarioLetivoService } from "@/v2/core/calendario-letivo/application/use-cases/calendario-letivo.service";
-import { BaseCrudService } from "@/v2/core/shared";
 import type { IEtapaRepositoryPort } from "../ports";
 
 @Injectable()
@@ -39,36 +39,6 @@ export class EtapaService extends BaseCrudService<
     super();
   }
 
-  protected override async beforeCreate(
-    accessContext: AccessContext,
-    entity: EtapaEntity,
-    dto: EtapaCreateInputDto,
-  ): Promise<void> {
-    if (dto.calendario) {
-      const calendario = await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(
-        accessContext,
-        dto.calendario.id,
-      );
-      this.repository.merge(entity, { calendario: { id: calendario.id } });
-    }
-  }
-
-  protected override async beforeUpdate(
-    accessContext: AccessContext,
-    entity: EtapaEntity,
-    dto: EtapaFindOneInputDto & EtapaUpdateInputDto,
-  ): Promise<void> {
-    if (has(dto, "calendario") && dto.calendario !== undefined) {
-      const calendario = await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(
-        accessContext,
-        dto.calendario.id,
-      );
-      this.repository.merge(entity, { calendario: { id: calendario.id } });
-    }
-  }
-
-  // Métodos prefixados para compatibilidade com IEtapaUseCasePort
-
   async etapaFindAll(
     accessContext: AccessContext,
     dto: EtapaListInputDto | null = null,
@@ -84,6 +54,8 @@ export class EtapaService extends BaseCrudService<
   ): Promise<EtapaFindOneOutputDto | null> {
     return this.findById(accessContext, dto, selection);
   }
+
+  // Métodos prefixados para compatibilidade com IEtapaUseCasePort
 
   async etapaFindByIdStrict(
     accessContext: AccessContext,
@@ -128,5 +100,33 @@ export class EtapaService extends BaseCrudService<
     dto: EtapaFindOneInputDto,
   ): Promise<boolean> {
     return this.deleteOneById(accessContext, dto);
+  }
+
+  protected override async beforeCreate(
+    accessContext: AccessContext,
+    entity: EtapaEntity,
+    dto: EtapaCreateInputDto,
+  ): Promise<void> {
+    if (dto.calendario) {
+      const calendario = await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(
+        accessContext,
+        dto.calendario.id,
+      );
+      this.repository.merge(entity, { calendario: { id: calendario.id } });
+    }
+  }
+
+  protected override async beforeUpdate(
+    accessContext: AccessContext,
+    entity: EtapaEntity,
+    dto: EtapaFindOneInputDto & EtapaUpdateInputDto,
+  ): Promise<void> {
+    if (has(dto, "calendario") && dto.calendario !== undefined) {
+      const calendario = await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(
+        accessContext,
+        dto.calendario.id,
+      );
+      this.repository.merge(entity, { calendario: { id: calendario.id } });
+    }
   }
 }
