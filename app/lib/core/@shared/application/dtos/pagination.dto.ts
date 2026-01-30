@@ -23,9 +23,9 @@ export class PaginationMeta {
   totalItems!: number;
 
   sortBy!: Array<[string, string]>;
-  filter: Record<string, string | string[]>;
+  filter!: Record<string, string | string[]>;
 
-  search: string;
+  search!: string;
 }
 
 /**

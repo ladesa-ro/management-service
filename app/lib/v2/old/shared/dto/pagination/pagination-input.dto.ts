@@ -9,7 +9,7 @@ import { IsArray, IsInt, IsOptional, IsString, Min } from "class-validator";
 @ArgsType()
 export class PaginationInputDto {
   // Index signature for filter properties (compatible with SearchOptions)
-  [key: string]: string[] | null | undefined;
+  [key: string]: string | number | string[] | null | undefined;
 
   @ApiPropertyOptional({
     description: "Pagina de consulta",

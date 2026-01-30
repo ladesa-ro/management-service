@@ -1,11 +1,11 @@
 import { Injectable } from "@nestjs/common";
 import type { IEstadoRepositoryPort } from "@/core/estado/application/ports";
 import type {
-  EstadoFindOneInputDto,
-  EstadoFindOneOutputDto,
-  EstadoListInputDto,
-  EstadoListOutputDto,
-} from "@/server/nest/modules/estado/http/dto";
+  EstadoFindOneInput,
+  EstadoFindOneOutput,
+  EstadoListInput,
+  EstadoListOutput,
+} from "@/core/estado/application/dtos";
 import type { IPaginationConfig } from "@/v2/application/ports/pagination";
 import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
@@ -22,10 +22,10 @@ import type { EstadoEntity } from "../typeorm/entities";
 export class EstadoTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     EstadoEntity,
-    EstadoListInputDto,
-    EstadoListOutputDto,
-    EstadoFindOneInputDto,
-    EstadoFindOneOutputDto
+    EstadoListInput,
+    EstadoListOutput,
+    EstadoFindOneInput,
+    EstadoFindOneOutput
   >
   implements IEstadoRepositoryPort
 {
