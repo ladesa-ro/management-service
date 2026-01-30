@@ -199,7 +199,12 @@ export class UsuarioService implements IUsuarioUseCasePort {
     const usuario = await this.usuarioFindByIdStrict(accessContext, { id: id });
 
     if (usuario.imagemCapa) {
-      const [versao] = usuario.imagemCapa.versoes;
+      // Load versoes separately since it's a OneToMany relation not loaded via QbEfficientLoad
+      const versao = await this.databaseContext.imagemArquivoRepository.findOne({
+        where: { imagem: { id: usuario.imagemCapa.id } },
+        relations: { arquivo: true },
+        order: { dateCreated: "DESC" },
+      });
 
       if (versao) {
         const { arquivo } = versao;
@@ -251,7 +256,12 @@ export class UsuarioService implements IUsuarioUseCasePort {
     const usuario = await this.usuarioFindByIdStrict(accessContext, { id: id });
 
     if (usuario.imagemPerfil) {
-      const [versao] = usuario.imagemPerfil.versoes;
+      // Load versoes separately since it's a OneToMany relation not loaded via QbEfficientLoad
+      const versao = await this.databaseContext.imagemArquivoRepository.findOne({
+        where: { imagem: { id: usuario.imagemPerfil.id } },
+        relations: { arquivo: true },
+        order: { dateCreated: "DESC" },
+      });
 
       if (versao) {
         const { arquivo } = versao;

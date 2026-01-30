@@ -10,6 +10,7 @@ import {
 } from "@/core/curso/application/ports";
 import { ImagemService } from "@/core/imagem/application/use-cases/imagem.service";
 import { OfertaFormacaoService } from "@/core/oferta-formacao";
+import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
 import type { CursoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import { BaseCrudService } from "@/v2/core/shared";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
@@ -49,6 +50,7 @@ export class CursoService
     private readonly ofertaFormacaoService: OfertaFormacaoService,
     private readonly imagemService: ImagemService,
     private readonly arquivoService: ArquivoService,
+    private readonly databaseContext: DatabaseContextService,
   ) {
     super();
   }
@@ -135,7 +137,12 @@ export class CursoService
     const curso = await this.cursoFindByIdStrict(accessContext, { id });
 
     if (curso.imagemCapa) {
-      const [versao] = curso.imagemCapa.versoes;
+      // Load versoes separately since it's a OneToMany relation not loaded via QbEfficientLoad
+      const versao = await this.databaseContext.imagemArquivoRepository.findOne({
+        where: { imagem: { id: curso.imagemCapa.id } },
+        relations: { arquivo: true },
+        order: { dateCreated: "DESC" },
+      });
 
       if (versao) {
         const { arquivo } = versao;

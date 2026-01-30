@@ -4,6 +4,7 @@ import { ArquivoService } from "@/core/arquivo/application/use-cases/arquivo.ser
 import { CursoService } from "@/core/curso";
 import { ImagemService } from "@/core/imagem/application/use-cases/imagem.service";
 import type { TurmaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
+import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
 import { AmbienteService } from "@/core/ambiente/application/use-cases/ambiente.service";
 import { BaseCrudService } from "@/v2/core/shared";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
@@ -41,6 +42,7 @@ export class TurmaService extends BaseCrudService<
     private readonly cursoService: CursoService,
     private readonly imagemService: ImagemService,
     private readonly arquivoService: ArquivoService,
+    private readonly databaseContext: DatabaseContextService,
   ) {
     super();
   }
@@ -115,7 +117,12 @@ export class TurmaService extends BaseCrudService<
     const turma = await this.turmaFindByIdStrict(accessContext, { id });
 
     if (turma.imagemCapa) {
-      const [versao] = turma.imagemCapa.versoes;
+      // Load versoes separately since it's a OneToMany relation not loaded via QbEfficientLoad
+      const versao = await this.databaseContext.imagemArquivoRepository.findOne({
+        where: { imagem: { id: turma.imagemCapa.id } },
+        relations: { arquivo: true },
+        order: { dateCreated: "DESC" },
+      });
 
       if (versao) {
         const { arquivo } = versao;

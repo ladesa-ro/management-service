@@ -1,6 +1,7 @@
 import { Inject, Injectable, NotFoundException, type StreamableFile } from "@nestjs/common";
 import { ResourceNotFoundError } from "@/core/@shared";
 import type { BlocoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
+import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
 import { ArquivoService } from "@/core/arquivo/application/use-cases/arquivo.service";
 import { CampusService } from "@/core/campus";
 import { ImagemService } from "@/core/imagem/application/use-cases/imagem.service";
@@ -51,6 +52,7 @@ export class BlocoService
     private readonly campusService: CampusService,
     private readonly imagemService: ImagemService,
     private readonly arquivoService: ArquivoService,
+    private readonly databaseContext: DatabaseContextService,
   ) {
     super();
   }
@@ -61,7 +63,12 @@ export class BlocoService
     const bloco = await this.findByIdStrict(accessContext, { id });
 
     if (bloco.imagemCapa) {
-      const [versao] = bloco.imagemCapa.versoes;
+      // Load versoes separately since it's a OneToMany relation not loaded via QbEfficientLoad
+      const versao = await this.databaseContext.imagemArquivoRepository.findOne({
+        where: { imagem: { id: bloco.imagemCapa.id } },
+        relations: { arquivo: true },
+        order: { dateCreated: "DESC" },
+      });
 
       if (versao) {
         const { arquivo } = versao;

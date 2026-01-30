@@ -1,5 +1,6 @@
 import { Inject, Injectable, NotFoundException, type StreamableFile } from "@nestjs/common";
 import type { DisciplinaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
+import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
 import { ArquivoService } from "@/core/arquivo/application/use-cases/arquivo.service";
 import { ImagemService } from "@/core/imagem/application/use-cases/imagem.service";
 import { BaseCrudService } from "@/v2/core/shared";
@@ -39,6 +40,7 @@ export class DisciplinaService extends BaseCrudService<
     protected readonly repository: IDisciplinaRepositoryPort,
     private readonly imagemService: ImagemService,
     private readonly arquivoService: ArquivoService,
+    private readonly databaseContext: DatabaseContextService,
   ) {
     super();
   }
@@ -115,7 +117,12 @@ export class DisciplinaService extends BaseCrudService<
     const disciplina = await this.disciplinaFindByIdStrict(accessContext, { id });
 
     if (disciplina.imagemCapa) {
-      const [versao] = disciplina.imagemCapa.versoes;
+      // Load versoes separately since it's a OneToMany relation not loaded via QbEfficientLoad
+      const versao = await this.databaseContext.imagemArquivoRepository.findOne({
+        where: { imagem: { id: disciplina.imagemCapa.id } },
+        relations: { arquivo: true },
+        order: { dateCreated: "DESC" },
+      });
 
       if (versao) {
         const { arquivo } = versao;
