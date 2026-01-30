@@ -7,6 +7,11 @@ import {
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 
 /**
+ * Token de injeção para o repositório de Cidade
+ */
+export const CIDADE_REPOSITORY_PORT = Symbol("ICidadeRepositoryPort");
+
+/**
  * Port de saída para operações de persistência de Cidade
  * Define o contrato que os adapters de persistência devem implementar
  */

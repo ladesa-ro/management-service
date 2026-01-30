@@ -7,6 +7,11 @@ import {
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 
 /**
+ * Token de injeção para o repositório de Estado
+ */
+export const ESTADO_REPOSITORY_PORT = Symbol("IEstadoRepositoryPort");
+
+/**
  * Port de saída para operações de persistência de Estado
  * Define o contrato que os adapters de persistência devem implementar
  */

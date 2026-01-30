@@ -6,13 +6,17 @@ import {
   CidadeListInput,
   CidadeListOutput,
 } from "@/core/cidade/application/dtos";
-import type { ICidadeRepositoryPort, ICidadeUseCasePort } from "@/core/cidade/application/ports";
+import {
+  CIDADE_REPOSITORY_PORT,
+  type ICidadeRepositoryPort,
+  type ICidadeUseCasePort,
+} from "@/core/cidade/application/ports";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 
 @Injectable()
 export class CidadeService implements ICidadeUseCasePort {
   constructor(
-    @Inject("ICidadeRepositoryPort")
+    @Inject(CIDADE_REPOSITORY_PORT)
     private readonly cidadeRepository: ICidadeRepositoryPort,
   ) {}
 

@@ -6,13 +6,17 @@ import {
   EstadoListInput,
   EstadoListOutput,
 } from "@/core/estado/application/dtos";
-import type { IEstadoRepositoryPort, IEstadoUseCasePort } from "@/core/estado/application/ports";
+import {
+  ESTADO_REPOSITORY_PORT,
+  type IEstadoRepositoryPort,
+  type IEstadoUseCasePort,
+} from "@/core/estado/application/ports";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 
 @Injectable()
 export class EstadoService implements IEstadoUseCasePort {
   constructor(
-    @Inject("IEstadoRepositoryPort")
+    @Inject(ESTADO_REPOSITORY_PORT)
     private readonly estadoRepository: IEstadoRepositoryPort,
   ) {}
 
