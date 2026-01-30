@@ -1,7 +1,7 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { get, pick } from "lodash";
 import { v4 } from "uuid";
-import type { AccessContext } from "@/old/infrastructure/access-context";
+import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
   CampusCreateInputDto,
   CampusFindOneInputDto,

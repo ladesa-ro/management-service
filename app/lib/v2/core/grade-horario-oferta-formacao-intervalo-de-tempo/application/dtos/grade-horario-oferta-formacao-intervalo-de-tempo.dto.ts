@@ -1,12 +1,9 @@
-import { ObjectUuidRef, PaginationInput, PaginationMeta } from "../../../common/application/dtos";
+import { ObjectUuidRef, PaginationInput, PaginationMeta } from "@/core/@shared/application/dtos";
 import {
   GradeHorarioOfertaFormacaoFindOneOutput,
   GradeHorarioOfertaFormacaoInputRef,
 } from "../../../grade-horario-oferta-formacao/application/dtos";
-import {
-  IntervaloDeTempoFindOneOutput,
-  IntervaloDeTempoInputRef,
-} from "../../../intervalo-de-tempo/application/dtos";
+import { IntervaloDeTempoFindOneOutput, IntervaloDeTempoInputRef, } from "../../../intervalo-de-tempo/application/dtos";
 
 // ============================================================================
 // FindOne Input/Output

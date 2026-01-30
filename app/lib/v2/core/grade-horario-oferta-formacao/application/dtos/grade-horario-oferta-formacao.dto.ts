@@ -1,9 +1,6 @@
 import { CampusFindOneOutput, CampusInputRef } from "../../../campus/application/dtos";
-import { ObjectUuidRef, PaginationInput, PaginationMeta } from "../../../common/application/dtos";
-import {
-  OfertaFormacaoFindOneOutput,
-  OfertaFormacaoInputRef,
-} from "../../../oferta-formacao/application/dtos";
+import { ObjectUuidRef, PaginationInput, PaginationMeta } from "@/core/@shared/application/dtos";
+import { OfertaFormacaoFindOneOutput, OfertaFormacaoInputRef, } from "../../../oferta-formacao/application/dtos";
 
 // ============================================================================
 // FindOne Input/Output

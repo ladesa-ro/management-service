@@ -1,9 +1,9 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
-import type { AccessContext } from "@/old/infrastructure/access-context";
-import { paginateConfig } from "@/old/infrastructure/fixtures";
-import { QbEfficientLoad, SearchService } from "@/old/shared";
+import type { AccessContext } from "@/v2/old/infrastructure/access-context";
+import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
+import { QbEfficientLoad, SearchService } from "@/v2/old/shared";
 import type {
   OfertaFormacaoNivelFormacaoCreateInputDto,
   OfertaFormacaoNivelFormacaoFindOneInputDto,

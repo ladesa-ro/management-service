@@ -1,15 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Post,
-  Put,
-  Query,
-  UploadedFile,
-} from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Query, UploadedFile, } from "@nestjs/common";
 import {
   ApiCreatedResponse,
   ApiForbiddenResponse,
@@ -18,7 +7,7 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
-import { AccessContext, AccessContextHttp } from "@/old/infrastructure/access-context";
+import { AccessContext, AccessContextHttp } from "@/v2/old/infrastructure/access-context";
 import { UsuarioService } from "@/v2/core/usuario/application/use-cases/usuario.service";
 import {
   UsuarioCreateInputDto,

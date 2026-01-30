@@ -7,8 +7,10 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
-import { AccessContext, AccessContextHttp } from "@/old/infrastructure/access-context";
-import { DiarioPreferenciaAgrupamentoService } from "@/v2/core/diario-preferencia-agrupamento/application/use-cases/diario-preferencia-agrupamento.service";
+import { AccessContext, AccessContextHttp } from "@/v2/old/infrastructure/access-context";
+import {
+  DiarioPreferenciaAgrupamentoService
+} from "@/v2/core/diario-preferencia-agrupamento/application/use-cases/diario-preferencia-agrupamento.service";
 import {
   DiarioPreferenciaAgrupamentoCreateInputDto,
   DiarioPreferenciaAgrupamentoFindOneInputDto,

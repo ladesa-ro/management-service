@@ -1,4 +1,4 @@
-import type { IEstado } from "@/v2/core/estado/domain/estado.types";
+import type { IEstado } from "@/core/estado/domain/estado.types";
 import type { ICidade } from "./cidade.types";
 
 /**

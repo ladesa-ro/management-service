@@ -1,12 +1,6 @@
-import { ObjectUuidRef, PaginationInput, PaginationMeta } from "../../../common/application/dtos";
-import {
-  NivelFormacaoFindOneOutput,
-  NivelFormacaoInputRef,
-} from "../../../nivel-formacao/application/dtos";
-import {
-  OfertaFormacaoFindOneOutput,
-  OfertaFormacaoInputRef,
-} from "../../../oferta-formacao/application/dtos";
+import { ObjectUuidRef, PaginationInput, PaginationMeta } from "@/core/@shared/application/dtos";
+import { NivelFormacaoFindOneOutput, NivelFormacaoInputRef, } from "../../../nivel-formacao/application/dtos";
+import { OfertaFormacaoFindOneOutput, OfertaFormacaoInputRef, } from "../../../oferta-formacao/application/dtos";
 
 // ============================================================================
 // FindOne Input/Output

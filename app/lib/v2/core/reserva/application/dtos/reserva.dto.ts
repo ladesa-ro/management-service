@@ -1,5 +1,5 @@
 import { AmbienteFindOneOutput, AmbienteInputRef } from "../../../ambiente/application/dtos";
-import { ObjectUuidRef, PaginationInput, PaginationMeta } from "../../../common/application/dtos";
+import { ObjectUuidRef, PaginationInput, PaginationMeta } from "@/core/@shared/application/dtos";
 import { UsuarioFindOneOutput, UsuarioInputRef } from "../../../usuario/application/dtos";
 
 // ============================================================================

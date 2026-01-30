@@ -1,15 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Post,
-  Put,
-  Query,
-  UploadedFile,
-} from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Query, UploadedFile, } from "@nestjs/common";
 import {
   ApiCreatedResponse,
   ApiForbiddenResponse,
@@ -19,7 +8,7 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import type { Express } from "express";
-import { AccessContext, AccessContextHttp } from "@/old/infrastructure/access-context";
+import { AccessContext, AccessContextHttp } from "@/v2/old/infrastructure/access-context";
 import { TurmaService } from "@/v2/core/turma/application/use-cases/turma.service";
 import {
   TurmaCreateInputDto,

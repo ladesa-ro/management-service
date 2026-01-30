@@ -1,13 +1,13 @@
 import { Injectable } from "@nestjs/common";
-import { paginateConfig } from "@/old/infrastructure/fixtures";
+import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 import type {
   EstadoFindOneInputDto,
   EstadoFindOneOutputDto,
   EstadoListInputDto,
   EstadoListOutputDto,
-} from "@/v2/server/modules/estado/http/dto";
+} from "@/server/nest/modules/estado/http/dto";
 import type { IPaginationConfig } from "@/v2/application/ports/pagination";
-import type { IEstadoRepositoryPort } from "@/v2/core/estado/application/ports";
+import type { IEstadoRepositoryPort } from "@/core/estado/application/ports";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
 import { BaseTypeOrmRepositoryAdapter } from "../base";
 import { DatabaseContextService } from "../context/database-context.service";

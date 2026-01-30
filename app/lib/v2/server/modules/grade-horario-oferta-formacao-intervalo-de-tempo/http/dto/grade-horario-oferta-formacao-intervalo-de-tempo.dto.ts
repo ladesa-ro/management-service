@@ -1,21 +1,9 @@
 import { ArgsType, Field, ID, InputType, ObjectType } from "@nestjs/graphql";
 import { ApiProperty, ApiPropertyOptional, PartialType } from "@nestjs/swagger";
 import { Type } from "class-transformer";
-import {
-  IsArray,
-  IsDateString,
-  IsOptional,
-  IsString,
-  IsUUID,
-  ValidateNested,
-} from "class-validator";
-import { PaginationInputDto, PaginationMetaDto, TransformToArray } from "@/old/shared/dto";
-import {
-  commonProperties,
-  RegisterModel,
-  referenceProperty,
-  simpleProperty,
-} from "@/old/shared/metadata";
+import { IsArray, IsDateString, IsOptional, IsString, IsUUID, ValidateNested, } from "class-validator";
+import { PaginationInputDto, PaginationMetaDto, TransformToArray } from "@/v2/old/shared/dto";
+import { commonProperties, referenceProperty, RegisterModel, simpleProperty, } from "@/v2/old/shared/metadata";
 import {
   GradeHorarioOfertaFormacaoFindOneInputDto,
   GradeHorarioOfertaFormacaoFindOneOutputDto,

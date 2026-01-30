@@ -1,5 +1,5 @@
-import { ObjectIntRef, PaginationInput, PaginationMeta } from "../../../common/application/dtos";
-import { EstadoFindOneOutput } from "../../../estado/application/dtos";
+import { ObjectIntRef, PaginationInput, PaginationMeta } from "@/core/@shared/application/dtos";
+import { EstadoFindOneOutput } from "@/core/estado";
 
 // ============================================================================
 // FindOne Input/Output

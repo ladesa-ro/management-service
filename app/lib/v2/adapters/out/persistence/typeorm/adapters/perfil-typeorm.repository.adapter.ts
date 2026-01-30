@@ -1,20 +1,16 @@
 import { Injectable } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
 import type { DeepPartial } from "typeorm";
-import type { AccessContext } from "@/old/infrastructure/access-context";
-import { paginateConfig } from "@/old/infrastructure/fixtures";
-import { QbEfficientLoad } from "@/old/shared";
+import type { AccessContext } from "@/v2/old/infrastructure/access-context";
+import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
+import { QbEfficientLoad } from "@/v2/old/shared";
 import type {
   PerfilFindOneInputDto,
   PerfilFindOneOutputDto,
   PerfilListInputDto,
   PerfilListOutputDto,
 } from "@/v2/server/modules/perfil/http/dto";
-import type {
-  IPaginationConfig,
-  IPaginationCriteria,
-  IPaginationResult,
-} from "@/v2/application/ports/pagination";
+import type { IPaginationConfig, IPaginationCriteria, IPaginationResult, } from "@/v2/application/ports/pagination";
 import type { IPerfilRepositoryPort } from "@/v2/core/perfil/application/ports";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
 import { BaseTypeOrmRepositoryAdapter } from "../base";

@@ -6,9 +6,9 @@ import {
   ServiceUnavailableException,
 } from "@nestjs/common";
 import { has, pick } from "lodash";
-import type { AccessContext } from "@/old/infrastructure/access-context";
-import { KeycloakService } from "@/old/infrastructure/integrations/identity-provider";
-import { ValidationFailedException } from "@/old/shared";
+import type { AccessContext } from "@/v2/old/infrastructure/access-context";
+import { KeycloakService } from "@/v2/old/infrastructure/integrations/identity-provider";
+import { ValidationFailedException } from "@/v2/old/shared";
 import type {
   UsuarioCreateInputDto,
   UsuarioFindOneInputDto,

@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { pick } from "lodash";
-import type { AccessContext } from "@/old/infrastructure/access-context";
+import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type { IntervaloDeTempoInput } from "../dtos";
 import type { IIntervaloDeTempoRepositoryPort, IIntervaloDeTempoUseCasePort } from "../ports";
 

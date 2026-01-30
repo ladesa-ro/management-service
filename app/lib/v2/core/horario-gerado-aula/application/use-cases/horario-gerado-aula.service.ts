@@ -1,6 +1,6 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { has, pick } from "lodash";
-import type { AccessContext } from "@/old/infrastructure/access-context";
+import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
   HorarioGeradoAulaCreateInputDto,
   HorarioGeradoAulaFindOneInputDto,

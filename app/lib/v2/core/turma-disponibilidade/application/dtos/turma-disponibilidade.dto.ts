@@ -1,8 +1,5 @@
-import { ObjectUuidRef, PaginationInput, PaginationMeta } from "../../../common/application/dtos";
-import {
-  DisponibilidadeFindOneOutput,
-  DisponibilidadeInputRef,
-} from "../../../disponibilidade/application/dtos";
+import { ObjectUuidRef, PaginationInput, PaginationMeta } from "@/core/@shared/application/dtos";
+import { DisponibilidadeFindOneOutput, DisponibilidadeInputRef, } from "../../../disponibilidade/application/dtos";
 import { TurmaFindOneOutput, TurmaInputRef } from "../../../turma/application/dtos";
 
 // ============================================================================

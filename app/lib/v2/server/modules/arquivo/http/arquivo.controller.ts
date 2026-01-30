@@ -1,12 +1,6 @@
 import { Controller, Get, Param, Query, type StreamableFile } from "@nestjs/common";
-import {
-  ApiForbiddenResponse,
-  ApiNotFoundResponse,
-  ApiOkResponse,
-  ApiOperation,
-  ApiTags,
-} from "@nestjs/swagger";
-import { AccessContext, AccessContextHttp } from "@/old/infrastructure/access-context";
+import { ApiForbiddenResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags, } from "@nestjs/swagger";
+import { AccessContext, AccessContextHttp } from "@/v2/old/infrastructure/access-context";
 import { ArquivoService } from "@/v2/core/arquivo/application/use-cases/arquivo.service";
 import { ArquivoFindOneInputDto, ArquivoGetFileQueryInputDto } from "./dto";
 

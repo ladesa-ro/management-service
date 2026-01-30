@@ -76,10 +76,10 @@
     "vitest": "^4.0.18"
   },
   "scripts": {
-    "dev": "bun run --watch lib/v2/server/main.ts",
+    "dev": "bun run --watch lib/commands/start.ts",
     "build": "bun run check:static",
-    "debug": "bun run --watch --inspect-wait lib/v2/server/main.ts",
-    "start": "bun run lib/v2/server/main.ts",
+    "debug": "bun run --watch --inspect-wait lib/commands/start.ts",
+    "start": "bun run lib/commands/start.ts",
     "check:static": "tsc --noEmit",
     "test": "vitest run",
     "test:cov": "vitest run --coverage",

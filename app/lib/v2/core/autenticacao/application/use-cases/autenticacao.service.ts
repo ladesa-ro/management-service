@@ -7,11 +7,8 @@ import {
   ServiceUnavailableException,
 } from "@nestjs/common";
 import * as client from "openid-client";
-import type { AccessContext } from "@/old/infrastructure/access-context";
-import {
-  KeycloakService,
-  OpenidConnectService,
-} from "@/old/infrastructure/integrations/identity-provider";
+import type { AccessContext } from "@/v2/old/infrastructure/access-context";
+import { KeycloakService, OpenidConnectService, } from "@/v2/old/infrastructure/integrations/identity-provider";
 import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
 import { PerfilService } from "@/v2/core/perfil/application/use-cases/perfil.service";
 import { UsuarioService } from "@/v2/core/usuario/application/use-cases/usuario.service";

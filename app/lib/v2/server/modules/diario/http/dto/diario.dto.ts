@@ -1,32 +1,13 @@
 import { ArgsType, Field, ID, InputType, ObjectType } from "@nestjs/graphql";
 import { ApiProperty, ApiPropertyOptional, PartialType } from "@nestjs/swagger";
 import { Type } from "class-transformer";
-import {
-  IsArray,
-  IsBoolean,
-  IsDateString,
-  IsOptional,
-  IsString,
-  IsUUID,
-  ValidateNested,
-} from "class-validator";
-import { PaginationInputDto, PaginationMetaDto, TransformToArray } from "@/old/shared/dto";
-import {
-  commonProperties,
-  RegisterModel,
-  referenceProperty,
-  simpleProperty,
-} from "@/old/shared/metadata";
-import {
-  AmbienteFindOneInputDto,
-  AmbienteFindOneOutputDto,
-} from "@/v2/server/modules/ambiente/http/dto";
+import { IsArray, IsBoolean, IsDateString, IsOptional, IsString, IsUUID, ValidateNested, } from "class-validator";
+import { PaginationInputDto, PaginationMetaDto, TransformToArray } from "@/v2/old/shared/dto";
+import { commonProperties, referenceProperty, RegisterModel, simpleProperty, } from "@/v2/old/shared/metadata";
+import { AmbienteFindOneInputDto, AmbienteFindOneOutputDto, } from "@/v2/server/modules/ambiente/http/dto";
 import { ImagemFindOneOutputDto } from "@/v2/server/modules/bloco/http/dto";
 import { CalendarioLetivoFindOneOutputDto } from "@/v2/server/modules/calendario-letivo/http/dto";
-import {
-  DisciplinaFindOneInputDto,
-  DisciplinaFindOneOutputDto,
-} from "@/v2/server/modules/disciplina/http/dto";
+import { DisciplinaFindOneInputDto, DisciplinaFindOneOutputDto, } from "@/v2/server/modules/disciplina/http/dto";
 import { TurmaFindOneInputDto, TurmaFindOneOutputDto } from "@/v2/server/modules/turma/http/dto";
 
 @InputType("CalendarioLetivoFindOneInputFromDiario")

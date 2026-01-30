@@ -1,6 +1,6 @@
 import { uniq } from "lodash";
 import { SelectQueryBuilder } from "typeorm";
-import { initializeModelDefinitions, ModelRepresentation, modelRegistry } from "@/old/shared/metadata";
+import { initializeModelDefinitions, modelRegistry, ModelRepresentation } from "@/v2/old/shared/metadata";
 
 // Ensure model definitions are loaded
 initializeModelDefinitions();
