@@ -5,7 +5,7 @@ import { DisciplinaService } from "@/core/disciplina/application/use-cases/disci
 import type { DiarioEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import { AmbienteService } from "@/core/ambiente/application/use-cases/ambiente.service";
 import { BaseCrudService } from "@/v2/core/shared";
-import { TurmaService } from "@/v2/core/turma/application/use-cases/turma.service";
+import { TurmaService } from "@/core/turma/application/use-cases/turma.service";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
   DiarioCreateInputDto,

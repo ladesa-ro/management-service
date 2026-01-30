@@ -6,7 +6,7 @@ import {
 import { DisciplinaFindOneOutput, DisciplinaInputRef } from "@/core/disciplina/application/dtos";
 import { ImagemFindOneOutput, ImagemInputRef } from "@/core/imagem";
 import { AmbienteFindOneOutput, AmbienteInputRef } from "@/core/ambiente";
-import { TurmaFindOneOutput, TurmaInputRef } from "../../../turma/application/dtos";
+import { TurmaFindOneOutput, TurmaInputRef } from "@/core/turma";
 
 // ============================================================================
 // FindOne Input/Output

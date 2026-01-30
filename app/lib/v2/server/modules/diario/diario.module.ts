@@ -5,7 +5,7 @@ import { DiarioService } from "@/v2/core/diario/application/use-cases/diario.ser
 import { AmbienteModule } from "@/server/nest/modules/ambiente";
 import { CalendarioLetivoModule } from "@/server/nest/modules/calendario-letivo";
 import { DisciplinaModule } from "@/v2/server/modules/disciplina";
-import { TurmaModule } from "@/v2/server/modules/turma";
+import { TurmaModule } from "@/server/nest/modules/turma";
 import { DiarioController } from "./http";
 
 /**

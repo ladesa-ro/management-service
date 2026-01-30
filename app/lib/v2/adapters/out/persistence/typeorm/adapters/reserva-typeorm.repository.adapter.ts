@@ -1,14 +1,14 @@
 import { Injectable } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
 import type { IPaginationConfig } from "@/v2/application/ports/pagination";
-import type { IReservaRepositoryPort } from "@/v2/core/reserva/application/ports";
-import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
+import type { IReservaRepositoryPort } from "@/core/reserva/application/ports";
 import type {
-  ReservaFindOneInputDto,
-  ReservaFindOneOutputDto,
-  ReservaListInputDto,
-  ReservaListOutputDto,
-} from "@/v2/server/modules/reserva/http/dto";
+  ReservaFindOneInput,
+  ReservaFindOneOutput,
+  ReservaListInput,
+  ReservaListOutput,
+} from "@/core/reserva/application/dtos";
+import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
 import { BaseTypeOrmRepositoryAdapter } from "../base";
 import { DatabaseContextService } from "../context/database-context.service";
@@ -18,10 +18,10 @@ import type { ReservaEntity } from "../typeorm/entities";
 export class ReservaTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     ReservaEntity,
-    ReservaListInputDto,
-    ReservaListOutputDto,
-    ReservaFindOneInputDto,
-    ReservaFindOneOutputDto
+    ReservaListInput,
+    ReservaListOutput,
+    ReservaFindOneInput,
+    ReservaFindOneOutput
   >
   implements IReservaRepositoryPort
 {

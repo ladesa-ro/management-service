@@ -5,7 +5,7 @@ import { IsArray, IsDateString, ValidateNested } from "class-validator";
 import { HorarioGeradoAulaFindOneInputDto } from "@/v2/server/modules/horario-gerado-aula/http/dto";
 import { IntervaloDeTempoFindOneInputDto } from "@/server/nest/modules/intervalo-de-tempo/rest/intervalo-de-tempo.rest.dto";
 import { PerfilFindOneInputDto } from "@/server/nest/modules/perfil/rest";
-import { TurmaFindOneInputDto } from "@/v2/server/modules/turma/http/dto";
+import { TurmaFindOneInputDto } from "@/server/nest/modules/turma/rest";
 
 // ============================================================================
 // Gerar Horario Input

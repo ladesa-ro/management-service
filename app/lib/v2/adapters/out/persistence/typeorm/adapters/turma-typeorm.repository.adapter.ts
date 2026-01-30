@@ -1,14 +1,14 @@
 import { Injectable } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
 import type { IPaginationConfig } from "@/v2/application/ports/pagination";
-import type { ITurmaRepositoryPort } from "@/v2/core/turma/application/ports";
-import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
+import type { ITurmaRepositoryPort } from "@/core/turma/application/ports";
 import type {
-  TurmaFindOneInputDto,
-  TurmaFindOneOutputDto,
-  TurmaListInputDto,
-  TurmaListOutputDto,
-} from "@/v2/server/modules/turma/http/dto";
+  TurmaFindOneInput,
+  TurmaFindOneOutput,
+  TurmaListInput,
+  TurmaListOutput,
+} from "@/core/turma/application/dtos";
+import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
 import { BaseTypeOrmRepositoryAdapter } from "../base";
 import { DatabaseContextService } from "../context/database-context.service";
@@ -18,10 +18,10 @@ import type { TurmaEntity } from "../typeorm/entities";
 export class TurmaTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     TurmaEntity,
-    TurmaListInputDto,
-    TurmaListOutputDto,
-    TurmaFindOneInputDto,
-    TurmaFindOneOutputDto
+    TurmaListInput,
+    TurmaListOutput,
+    TurmaFindOneInput,
+    TurmaFindOneOutput
   >
   implements ITurmaRepositoryPort
 {

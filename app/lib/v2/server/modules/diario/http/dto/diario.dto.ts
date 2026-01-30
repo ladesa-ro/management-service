@@ -27,7 +27,7 @@ import {
   DisciplinaFindOneInputDto,
   DisciplinaFindOneOutputDto,
 } from "@/v2/server/modules/disciplina/http/dto";
-import { TurmaFindOneInputDto, TurmaFindOneOutputDto } from "@/v2/server/modules/turma/http/dto";
+import { TurmaFindOneInputDto, TurmaFindOneOutputDto } from "@/server/nest/modules/turma/rest";
 
 @InputType("CalendarioLetivoFindOneInputFromDiario")
 export class CalendarioLetivoFindOneInputDto {
