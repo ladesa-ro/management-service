@@ -37,8 +37,5 @@ export interface IDiaCalendarioUseCasePort {
     dto: DiaCalendarioFindOneInput & DiaCalendarioUpdateInput,
   ): Promise<DiaCalendarioFindOneOutput>;
 
-  deleteOneById(
-    accessContext: AccessContext,
-    dto: DiaCalendarioFindOneInput,
-  ): Promise<boolean>;
+  deleteOneById(accessContext: AccessContext, dto: DiaCalendarioFindOneInput): Promise<boolean>;
 }

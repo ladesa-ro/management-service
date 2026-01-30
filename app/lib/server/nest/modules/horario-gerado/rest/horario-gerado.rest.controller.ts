@@ -47,7 +47,10 @@ export class HorarioGeradoRestController {
     @Param() params: HorarioGeradoFindOneInputRestDto,
   ): Promise<HorarioGeradoFindOneOutputRestDto> {
     const coreInput = HorarioGeradoRestMapper.toCoreFindOneInput(params);
-    const result = await this.horarioGeradoService.horarioGeradoFindByIdStrict(accessContext, coreInput);
+    const result = await this.horarioGeradoService.horarioGeradoFindByIdStrict(
+      accessContext,
+      coreInput,
+    );
     return HorarioGeradoRestMapper.toRestFindOneOutput(result);
   }
 
@@ -76,7 +79,10 @@ export class HorarioGeradoRestController {
   ): Promise<HorarioGeradoFindOneOutputRestDto> {
     const coreInput = HorarioGeradoRestMapper.toCoreFindOneInput(params);
     const coreUpdateInput = HorarioGeradoRestMapper.toCoreUpdateInput(dto);
-    const result = await this.horarioGeradoService.horarioGeradoUpdate(accessContext, { ...coreInput, ...coreUpdateInput });
+    const result = await this.horarioGeradoService.horarioGeradoUpdate(accessContext, {
+      ...coreInput,
+      ...coreUpdateInput,
+    });
     return HorarioGeradoRestMapper.toRestFindOneOutput(result);
   }
 

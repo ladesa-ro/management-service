@@ -78,7 +78,9 @@ export class CalendarioLetivoRestMapper {
   // Output: Core DTO -> Server DTO
   // ============================================================================
 
-  static toFindOneOutputDto(output: CalendarioLetivoFindOneOutput): CalendarioLetivoFindOneOutputDto {
+  static toFindOneOutputDto(
+    output: CalendarioLetivoFindOneOutput,
+  ): CalendarioLetivoFindOneOutputDto {
     const dto = new CalendarioLetivoFindOneOutputDto();
     dto.id = output.id;
     dto.nome = output.nome;

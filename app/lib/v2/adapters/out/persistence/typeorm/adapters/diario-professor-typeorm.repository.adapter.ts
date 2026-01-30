@@ -1,14 +1,14 @@
 import { Injectable } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
-import type { IPaginationConfig } from "@/v2/application/ports/pagination";
-import type { IDiarioProfessorRepositoryPort } from "@/v2/core/diario-professor/application/ports";
-import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 import type {
-  DiarioProfessorFindOneInputDto,
-  DiarioProfessorFindOneOutputDto,
-  DiarioProfessorListInputDto,
-  DiarioProfessorListOutputDto,
-} from "@/v2/server/modules/diario-professor/http/dto";
+  DiarioProfessorFindOneInput,
+  DiarioProfessorFindOneOutput,
+  DiarioProfessorListInput,
+  DiarioProfessorListOutput,
+} from "@/core/diario-professor/application/dtos";
+import type { IDiarioProfessorRepositoryPort } from "@/core/diario-professor/application/ports";
+import type { IPaginationConfig } from "@/v2/application/ports/pagination";
+import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
 import { BaseTypeOrmRepositoryAdapter } from "../base";
 import { DatabaseContextService } from "../context/database-context.service";
@@ -18,10 +18,10 @@ import type { DiarioProfessorEntity } from "../typeorm/entities";
 export class DiarioProfessorTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     DiarioProfessorEntity,
-    DiarioProfessorListInputDto,
-    DiarioProfessorListOutputDto,
-    DiarioProfessorFindOneInputDto,
-    DiarioProfessorFindOneOutputDto
+    DiarioProfessorListInput,
+    DiarioProfessorListOutput,
+    DiarioProfessorFindOneInput,
+    DiarioProfessorFindOneOutput
   >
   implements IDiarioProfessorRepositoryPort
 {

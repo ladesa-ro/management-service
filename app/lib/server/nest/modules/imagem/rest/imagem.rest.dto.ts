@@ -10,9 +10,9 @@ import {
   MinLength,
   ValidateNested,
 } from "class-validator";
+import { ImagemArquivoFindOneFromImagemOutputDto } from "@/server/nest/modules/imagem-arquivo/rest";
 import { PaginationInputDto, PaginationMetaDto, TransformToArray } from "@/v2/old/shared/dto";
-import { RegisterModel, simpleProperty, commonProperties } from "@/v2/old/shared/metadata";
-import { ImagemArquivoFindOneFromImagemOutputDto } from "@/v2/server/modules/imagem-arquivo/http/dto";
+import { commonProperties, RegisterModel, simpleProperty } from "@/v2/old/shared/metadata";
 
 // ============================================================================
 // FindOne Output

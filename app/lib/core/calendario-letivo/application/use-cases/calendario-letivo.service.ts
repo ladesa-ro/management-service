@@ -2,8 +2,6 @@ import { Inject, Injectable } from "@nestjs/common";
 import { has, pick } from "lodash";
 import { v4 } from "uuid";
 import { ResourceNotFoundError } from "@/core/@shared";
-import { CampusService } from "@/core/campus";
-import { OfertaFormacaoService } from "@/core/oferta-formacao";
 import {
   CalendarioLetivoCreateInput,
   CalendarioLetivoFindOneInput,
@@ -17,6 +15,8 @@ import {
   type ICalendarioLetivoRepositoryPort,
   type ICalendarioLetivoUseCasePort,
 } from "@/core/calendario-letivo/application/ports";
+import { CampusService } from "@/core/campus";
+import { OfertaFormacaoService } from "@/core/oferta-formacao";
 import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
 import type { CalendarioLetivoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
@@ -124,10 +124,11 @@ export class CalendarioLetivoService implements ICalendarioLetivoUseCasePort {
         });
 
         if (dto.ofertaFormacao) {
-          const ofertaFormacao = await this.ofertaFormacaoService.ofertaFormacaoFindByIdSimpleStrict(
-            accessContext,
-            dto.ofertaFormacao.id,
-          );
+          const ofertaFormacao =
+            await this.ofertaFormacaoService.ofertaFormacaoFindByIdSimpleStrict(
+              accessContext,
+              dto.ofertaFormacao.id,
+            );
           calendarioLetivoRepository.merge(calendarioLetivo, {
             ofertaFormacao: { id: ofertaFormacao.id },
           });

@@ -41,7 +41,9 @@ export class IntervaloDeTempoRestMapper {
   // Output: Core DTO -> Server DTO
   // ============================================================================
 
-  static toFindOneOutputDto(output: IntervaloDeTempoFindOneOutput): IntervaloDeTempoFindOneOutputDto {
+  static toFindOneOutputDto(
+    output: IntervaloDeTempoFindOneOutput,
+  ): IntervaloDeTempoFindOneOutputDto {
     const dto = new IntervaloDeTempoFindOneOutputDto();
     dto.id = output.id;
     dto.periodoInicio = output.periodoInicio;

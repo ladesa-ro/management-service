@@ -1,9 +1,9 @@
 import {
+  OfertaFormacaoNivelFormacaoCreateInput,
   OfertaFormacaoNivelFormacaoFindOneInput,
   OfertaFormacaoNivelFormacaoFindOneOutput,
   OfertaFormacaoNivelFormacaoListInput,
   OfertaFormacaoNivelFormacaoListOutput,
-  OfertaFormacaoNivelFormacaoCreateInput,
   OfertaFormacaoNivelFormacaoUpdateInput,
 } from "@/core/oferta-formacao-nivel-formacao";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";

@@ -10,9 +10,9 @@ import {
   ModalidadeUpdateInput,
 } from "@/core/modalidade/application/dtos";
 import {
-  MODALIDADE_REPOSITORY_PORT,
   type IModalidadeRepositoryPort,
   type IModalidadeUseCasePort,
+  MODALIDADE_REPOSITORY_PORT,
 } from "@/core/modalidade/application/ports";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 
@@ -79,10 +79,7 @@ export class ModalidadeService implements IModalidadeUseCasePort {
     return this.findByIdStrict(accessContext, { id: dto.id });
   }
 
-  async deleteOneById(
-    accessContext: AccessContext,
-    dto: ModalidadeFindOneInput,
-  ): Promise<boolean> {
+  async deleteOneById(accessContext: AccessContext, dto: ModalidadeFindOneInput): Promise<boolean> {
     await this.findByIdStrict(accessContext, dto);
     await this.modalidadeRepository.softDeleteById(dto.id);
     return true;

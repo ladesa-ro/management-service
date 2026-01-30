@@ -2,7 +2,7 @@ import { ArgsType, Field, ID, InputType, ObjectType } from "@nestjs/graphql";
 import { ApiProperty, ApiPropertyOptional, PartialType } from "@nestjs/swagger";
 import { IsArray, IsDateString, IsOptional, IsString, IsUUID, MinLength } from "class-validator";
 import { PaginationInputDto, PaginationMetaDto, TransformToArray } from "@/v2/old/shared/dto";
-import { RegisterModel, commonProperties, simpleProperty } from "@/v2/old/shared/metadata";
+import { commonProperties, RegisterModel, simpleProperty } from "@/v2/old/shared/metadata";
 
 // ============================================================================
 // FindOne Output

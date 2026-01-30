@@ -1,14 +1,14 @@
 import { Injectable } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
-import type { IPaginationConfig } from "@/v2/application/ports/pagination";
-import type { IDiaCalendarioRepositoryPort } from "@/core/dia-calendario/application/ports";
-import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 import type {
   DiaCalendarioFindOneInput as DiaCalendarioFindOneInputDto,
   DiaCalendarioFindOneOutput as DiaCalendarioFindOneOutputDto,
   DiaCalendarioListInput as DiaCalendarioListInputDto,
   DiaCalendarioListOutput as DiaCalendarioListOutputDto,
 } from "@/core/dia-calendario";
+import type { IDiaCalendarioRepositoryPort } from "@/core/dia-calendario/application/ports";
+import type { IPaginationConfig } from "@/v2/application/ports/pagination";
+import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
 import { BaseTypeOrmRepositoryAdapter } from "../base";
 import { DatabaseContextService } from "../context/database-context.service";

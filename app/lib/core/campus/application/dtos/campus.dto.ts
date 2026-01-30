@@ -1,9 +1,5 @@
 import { ObjectUuidRef, PaginationInput, PaginationMeta } from "@/core/@shared/application/dtos";
-import {
-  EnderecoCreateInput,
-  EnderecoFindOneOutput,
-  EnderecoUpdateInput,
-} from "@/core/endereco";
+import { EnderecoCreateInput, EnderecoFindOneOutput, EnderecoUpdateInput } from "@/core/endereco";
 
 // ============================================================================
 // FindOne Input/Output

@@ -39,18 +39,12 @@ export interface IEtapaUseCasePort {
     selection?: string[],
   ): Promise<EtapaFindOneOutput>;
 
-  etapaCreate(
-    accessContext: AccessContext,
-    dto: EtapaCreateInput,
-  ): Promise<EtapaFindOneOutput>;
+  etapaCreate(accessContext: AccessContext, dto: EtapaCreateInput): Promise<EtapaFindOneOutput>;
 
   etapaUpdate(
     accessContext: AccessContext,
     dto: EtapaFindOneInput & EtapaUpdateInput,
   ): Promise<EtapaFindOneOutput>;
 
-  etapaDeleteOneById(
-    accessContext: AccessContext,
-    dto: EtapaFindOneInput,
-  ): Promise<boolean>;
+  etapaDeleteOneById(accessContext: AccessContext, dto: EtapaFindOneInput): Promise<boolean>;
 }

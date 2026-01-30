@@ -8,11 +8,9 @@ import type {
   EnderecoListOutput,
   IEnderecoRepositoryPort,
 } from "@/core/endereco";
-import type { IPaginationConfig } from "@/v2/application/ports/pagination";
 import type { EnderecoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
+import type { IPaginationConfig } from "@/v2/application/ports/pagination";
 import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
-import type { AccessContext } from "@/v2/old/infrastructure/access-context";
-import { QbEfficientLoad } from "@/v2/old/shared";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
 import { BaseTypeOrmRepositoryAdapter } from "../base";
 import { DatabaseContextService } from "../context/database-context.service";
@@ -78,7 +76,10 @@ export class EnderecoTypeOrmRepositoryAdapter
     return this.repository.exists({ where: { id } });
   }
 
-  override merge(endereco: EnderecoEntity, data: EnderecoInputDto | DeepPartial<EnderecoEntity>): void {
+  override merge(
+    endereco: EnderecoEntity,
+    data: EnderecoInputDto | DeepPartial<EnderecoEntity>,
+  ): void {
     this.repository.merge(endereco, data as DeepPartial<EnderecoEntity>);
   }
 }

@@ -61,10 +61,7 @@ export interface ICampusUseCasePort {
   /**
    * Cria um novo campus
    */
-  campusCreate(
-    accessContext: AccessContext,
-    dto: CampusCreateInput,
-  ): Promise<CampusFindOneOutput>;
+  campusCreate(accessContext: AccessContext, dto: CampusCreateInput): Promise<CampusFindOneOutput>;
 
   /**
    * Atualiza um campus existente

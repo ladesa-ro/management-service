@@ -1,0 +1,107 @@
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from "@nestjs/common";
+import {
+  ApiCreatedResponse,
+  ApiForbiddenResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from "@nestjs/swagger";
+import { HorarioGeradoAulaService } from "@/core/horario-gerado-aula";
+import { AccessContext, AccessContextHttp } from "@/v2/old/infrastructure/access-context";
+import {
+  HorarioGeradoAulaCreateInputRestDto,
+  HorarioGeradoAulaFindOneInputRestDto,
+  HorarioGeradoAulaFindOneOutputRestDto,
+  HorarioGeradoAulaListInputRestDto,
+  HorarioGeradoAulaListOutputRestDto,
+  HorarioGeradoAulaUpdateInputRestDto,
+} from "./horario-gerado-aula.rest.dto";
+import { HorarioGeradoAulaRestMapper } from "./horario-gerado-aula.rest.mapper";
+
+@ApiTags("horarios-gerados-aula")
+@Controller("/horarios-gerados-aula")
+export class HorarioGeradoAulaRestController {
+  constructor(private readonly horarioGeradoAulaService: HorarioGeradoAulaService) {}
+
+  @Get("/")
+  @ApiOperation({ summary: "Lista horarios gerados de aula" })
+  @ApiOkResponse({ type: HorarioGeradoAulaListOutputRestDto })
+  @ApiForbiddenResponse()
+  async horarioGeradoAulaFindAll(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Query() dto: HorarioGeradoAulaListInputRestDto,
+  ): Promise<HorarioGeradoAulaListOutputRestDto> {
+    const coreInput = HorarioGeradoAulaRestMapper.toCoreListInput(dto);
+    const result = await this.horarioGeradoAulaService.horarioGeradoAulaFindAll(
+      accessContext,
+      coreInput,
+    );
+    return HorarioGeradoAulaRestMapper.toRestListOutput(result);
+  }
+
+  @Get("/:id")
+  @ApiOperation({ summary: "Busca um horario gerado de aula por ID" })
+  @ApiOkResponse({ type: HorarioGeradoAulaFindOneOutputRestDto })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async horarioGeradoAulaFindById(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: HorarioGeradoAulaFindOneInputRestDto,
+  ): Promise<HorarioGeradoAulaFindOneOutputRestDto> {
+    const coreInput = HorarioGeradoAulaRestMapper.toCoreFindOneInput(params);
+    const result = await this.horarioGeradoAulaService.horarioGeradoAulaFindByIdStrict(
+      accessContext,
+      coreInput,
+    );
+    return HorarioGeradoAulaRestMapper.toRestFindOneOutput(result);
+  }
+
+  @Post("/")
+  @ApiOperation({ summary: "Cria um horario gerado de aula" })
+  @ApiCreatedResponse({ type: HorarioGeradoAulaFindOneOutputRestDto })
+  @ApiForbiddenResponse()
+  async horarioGeradoAulaCreate(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Body() dto: HorarioGeradoAulaCreateInputRestDto,
+  ): Promise<HorarioGeradoAulaFindOneOutputRestDto> {
+    const coreInput = HorarioGeradoAulaRestMapper.toCoreCreateInput(dto);
+    const result = await this.horarioGeradoAulaService.horarioGeradoAulaCreate(
+      accessContext,
+      coreInput,
+    );
+    return HorarioGeradoAulaRestMapper.toRestFindOneOutput(result);
+  }
+
+  @Patch("/:id")
+  @ApiOperation({ summary: "Atualiza um horario gerado de aula" })
+  @ApiOkResponse({ type: HorarioGeradoAulaFindOneOutputRestDto })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async horarioGeradoAulaUpdate(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: HorarioGeradoAulaFindOneInputRestDto,
+    @Body() dto: HorarioGeradoAulaUpdateInputRestDto,
+  ): Promise<HorarioGeradoAulaFindOneOutputRestDto> {
+    const coreInput = HorarioGeradoAulaRestMapper.toCoreFindOneInput(params);
+    const coreUpdateInput = HorarioGeradoAulaRestMapper.toCoreUpdateInput(dto);
+    const result = await this.horarioGeradoAulaService.HorarioGeradoAulaUpdate(accessContext, {
+      ...coreInput,
+      ...coreUpdateInput,
+    });
+    return HorarioGeradoAulaRestMapper.toRestFindOneOutput(result);
+  }
+
+  @Delete("/:id")
+  @ApiOperation({ summary: "Remove um horario gerado de aula" })
+  @ApiOkResponse({ type: Boolean })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async horarioGeradoAulaDeleteOneById(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: HorarioGeradoAulaFindOneInputRestDto,
+  ): Promise<boolean> {
+    const coreInput = HorarioGeradoAulaRestMapper.toCoreFindOneInput(params);
+    return this.horarioGeradoAulaService.horarioGeradoAulaDeleteOneById(accessContext, coreInput);
+  }
+}

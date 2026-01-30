@@ -1,13 +1,13 @@
 import type { StreamableFile } from "@nestjs/common";
-import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
+  CursoCreateInputDto,
   CursoFindOneInputDto,
   CursoFindOneOutputDto,
   CursoListInputDto,
   CursoListOutputDto,
-  CursoCreateInputDto,
   CursoUpdateInputDto,
 } from "@/server/nest/modules/curso/rest";
+import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 
 /**
  * Port de entrada para casos de uso de Curso

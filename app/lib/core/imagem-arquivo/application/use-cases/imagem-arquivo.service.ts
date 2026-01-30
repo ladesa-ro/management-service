@@ -7,9 +7,9 @@ import {
   ImagemArquivoListOutput,
 } from "@/core/imagem-arquivo/application/dtos";
 import {
-  IMAGEM_ARQUIVO_QUERY_REPOSITORY_PORT,
   type IImagemArquivoQueryRepositoryPort,
   type IImagemArquivoUseCasePort,
+  IMAGEM_ARQUIVO_QUERY_REPOSITORY_PORT,
 } from "@/core/imagem-arquivo/application/ports";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 

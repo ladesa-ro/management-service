@@ -1,4 +1,3 @@
-import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
   DiarioCreateInput,
   DiarioFindOneInput,
@@ -7,6 +6,7 @@ import type {
   DiarioListOutput,
   DiarioUpdateInput,
 } from "@/core/diario/application/dtos";
+import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 
 export interface IDiarioUseCasePort {
   diarioFindAll(
@@ -39,10 +39,7 @@ export interface IDiarioUseCasePort {
     selection?: string[] | boolean,
   ): Promise<DiarioFindOneOutput>;
 
-  diarioCreate(
-    accessContext: AccessContext,
-    dto: DiarioCreateInput,
-  ): Promise<DiarioFindOneOutput>;
+  diarioCreate(accessContext: AccessContext, dto: DiarioCreateInput): Promise<DiarioFindOneOutput>;
 
   diarioUpdate(
     accessContext: AccessContext,

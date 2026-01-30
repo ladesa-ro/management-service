@@ -9,6 +9,10 @@ import {
   IsUUID,
   ValidateNested,
 } from "class-validator";
+import {
+  CalendarioLetivoFindOneInputDto,
+  CalendarioLetivoFindOneOutputDto,
+} from "@/server/nest/modules/calendario-letivo/rest";
 import { PaginationInputDto, PaginationMetaDto, TransformToArray } from "@/v2/old/shared/dto";
 import {
   commonProperties,
@@ -16,10 +20,6 @@ import {
   referenceProperty,
   simpleProperty,
 } from "@/v2/old/shared/metadata";
-import {
-  CalendarioLetivoFindOneInputDto,
-  CalendarioLetivoFindOneOutputDto,
-} from "@/server/nest/modules/calendario-letivo/rest";
 
 // ============================================================================
 // FindOne Output
@@ -156,7 +156,10 @@ export class HorarioGeradoListOutputRestDto {
   @Field(() => PaginationMetaDto)
   meta: PaginationMetaDto;
 
-  @ApiProperty({ type: () => [HorarioGeradoFindOneOutputRestDto], description: "Resultados da busca" })
+  @ApiProperty({
+    type: () => [HorarioGeradoFindOneOutputRestDto],
+    description: "Resultados da busca",
+  })
   @Field(() => [HorarioGeradoFindOneOutputRestDto])
   data: HorarioGeradoFindOneOutputRestDto[];
 }

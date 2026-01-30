@@ -1,5 +1,5 @@
-import type { IntervaloDeTempo } from "@/core/intervalo-de-tempo";
 import type { GradeHorarioOfertaFormacao } from "@/core/grade-horario-oferta-formacao";
+import type { IntervaloDeTempo } from "@/core/intervalo-de-tempo";
 import type {
   IGradeHorarioOfertaFormacaoIntervaloDeTempo,
   IGradeHorarioOfertaFormacaoIntervaloDeTempoCreate,

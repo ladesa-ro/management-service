@@ -10,6 +10,12 @@ import {
   MinLength,
   ValidateNested,
 } from "class-validator";
+import {
+  AmbienteFindOneInputDto,
+  AmbienteFindOneOutputDto,
+} from "@/server/nest/modules/ambiente/rest";
+import { ImagemFindOneOutputDto } from "@/server/nest/modules/bloco/rest";
+import { CursoFindOneInputDto, CursoFindOneOutputDto } from "@/server/nest/modules/curso/rest";
 import { PaginationInputDto, PaginationMetaDto, TransformToArray } from "@/v2/old/shared/dto";
 import {
   commonProperties,
@@ -17,12 +23,6 @@ import {
   referenceProperty,
   simpleProperty,
 } from "@/v2/old/shared/metadata";
-import {
-  AmbienteFindOneInputDto,
-  AmbienteFindOneOutputDto,
-} from "@/server/nest/modules/ambiente/rest";
-import { ImagemFindOneOutputDto } from "@/server/nest/modules/bloco/rest";
-import { CursoFindOneInputDto, CursoFindOneOutputDto } from "@/server/nest/modules/curso/rest";
 
 // ============================================================================
 // FindOne Output

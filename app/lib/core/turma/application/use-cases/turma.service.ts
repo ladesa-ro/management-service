@@ -1,12 +1,12 @@
 import { Inject, Injectable, NotFoundException, type StreamableFile } from "@nestjs/common";
 import { has } from "lodash";
+import { BaseCrudService } from "@/core/@shared";
+import { AmbienteService } from "@/core/ambiente/application/use-cases/ambiente.service";
 import { ArquivoService } from "@/core/arquivo/application/use-cases/arquivo.service";
 import { CursoService } from "@/core/curso";
 import { ImagemService } from "@/core/imagem/application/use-cases/imagem.service";
-import type { TurmaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
-import { AmbienteService } from "@/core/ambiente/application/use-cases/ambiente.service";
-import { BaseCrudService } from "@/v2/core/shared";
+import type { TurmaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
   TurmaCreateInput,
@@ -16,7 +16,7 @@ import type {
   TurmaListOutput,
   TurmaUpdateInput,
 } from "../dtos";
-import { TURMA_REPOSITORY_PORT, type ITurmaRepositoryPort } from "../ports";
+import { type ITurmaRepositoryPort, TURMA_REPOSITORY_PORT } from "../ports";
 
 @Injectable()
 export class TurmaService extends BaseCrudService<
@@ -103,10 +103,7 @@ export class TurmaService extends BaseCrudService<
     return this.update(accessContext, dto);
   }
 
-  async turmaDeleteOneById(
-    accessContext: AccessContext,
-    dto: TurmaFindOneInput,
-  ): Promise<boolean> {
+  async turmaDeleteOneById(accessContext: AccessContext, dto: TurmaFindOneInput): Promise<boolean> {
     return this.deleteOneById(accessContext, dto);
   }
 

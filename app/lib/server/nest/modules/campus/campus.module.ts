@@ -1,8 +1,8 @@
 import { Module } from "@nestjs/common";
 import { CAMPUS_REPOSITORY_PORT, CampusService } from "@/core/campus";
+import { EnderecoModule } from "@/server/nest/modules/endereco";
 import { NestJsPaginateAdapter } from "@/v2/adapters/out/persistence/pagination";
 import { CampusTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistence/typeorm/adapters";
-import { EnderecoModule } from "@/v2/server/modules/endereco";
 import { CampusRestController } from "./rest/campus.rest.controller";
 
 @Module({

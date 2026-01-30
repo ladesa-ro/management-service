@@ -44,10 +44,7 @@ export interface IAmbienteUseCasePort {
   /**
    * Cria um novo ambiente
    */
-  create(
-    accessContext: AccessContext,
-    dto: AmbienteCreateInput,
-  ): Promise<AmbienteFindOneOutput>;
+  create(accessContext: AccessContext, dto: AmbienteCreateInput): Promise<AmbienteFindOneOutput>;
 
   /**
    * Atualiza um ambiente existente
@@ -74,8 +71,5 @@ export interface IAmbienteUseCasePort {
   /**
    * Remove um ambiente (soft delete)
    */
-  deleteOneById(
-    accessContext: AccessContext,
-    dto: AmbienteFindOneInput,
-  ): Promise<boolean>;
+  deleteOneById(accessContext: AccessContext, dto: AmbienteFindOneInput): Promise<boolean>;
 }

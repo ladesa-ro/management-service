@@ -1,12 +1,8 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { has } from "lodash";
-import { CalendarioLetivoService } from "@/core/calendario-letivo";
-import { DisciplinaService } from "@/core/disciplina/application/use-cases/disciplina.service";
-import type { DiarioEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
+import { BaseCrudService } from "@/core/@shared";
 import { AmbienteService } from "@/core/ambiente/application/use-cases/ambiente.service";
-import { BaseCrudService } from "@/v2/core/shared";
-import { TurmaService } from "@/core/turma/application/use-cases/turma.service";
-import type { AccessContext } from "@/v2/old/infrastructure/access-context";
+import { CalendarioLetivoService } from "@/core/calendario-letivo";
 import type {
   DiarioCreateInput,
   DiarioFindOneInput,
@@ -20,6 +16,10 @@ import {
   type IDiarioRepositoryPort,
   type IDiarioUseCasePort,
 } from "@/core/diario/application/ports";
+import { DisciplinaService } from "@/core/disciplina/application/use-cases/disciplina.service";
+import { TurmaService } from "@/core/turma/application/use-cases/turma.service";
+import type { DiarioEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
+import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 
 @Injectable()
 export class DiarioService

@@ -1,6 +1,8 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
+import { NivelFormacaoService } from "@/core/nivel-formacao/application/use-cases/nivel-formacao.service";
+import { OfertaFormacaoService } from "@/core/oferta-formacao";
 import type {
   IOfertaFormacaoNivelFormacaoRepositoryPort,
   OfertaFormacaoNivelFormacaoCreateInput,
@@ -10,8 +12,6 @@ import type {
   OfertaFormacaoNivelFormacaoListOutput,
   OfertaFormacaoNivelFormacaoUpdateInput,
 } from "@/core/oferta-formacao-nivel-formacao";
-import { NivelFormacaoService } from "@/core/nivel-formacao/application/use-cases/nivel-formacao.service";
-import { OfertaFormacaoService } from "@/core/oferta-formacao";
 import type { IPaginationConfig } from "@/v2/application/ports/pagination";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
@@ -85,10 +85,9 @@ export class OfertaFormacaoNivelFormacaoTypeOrmRepositoryAdapter
     });
 
     if (dto.ofertaFormacao) {
-      const ofertaFormacao = await this.ofertaFormacaoService.findByIdStrict(
-        accessContext,
-        { id: dto.ofertaFormacao.id },
-      );
+      const ofertaFormacao = await this.ofertaFormacaoService.findByIdStrict(accessContext, {
+        id: dto.ofertaFormacao.id,
+      });
 
       this.repository.merge(ofertaFormacaoNivelFormacao, {
         ofertaFormacao: {
@@ -98,10 +97,9 @@ export class OfertaFormacaoNivelFormacaoTypeOrmRepositoryAdapter
     }
 
     if (dto.nivelFormacao) {
-      const nivelFormacao = await this.nivelFormacaoService.findByIdStrict(
-        accessContext,
-        { id: dto.nivelFormacao.id },
-      );
+      const nivelFormacao = await this.nivelFormacaoService.findByIdStrict(accessContext, {
+        id: dto.nivelFormacao.id,
+      });
 
       this.repository.merge(ofertaFormacaoNivelFormacao, {
         nivelFormacao: {
@@ -151,10 +149,9 @@ export class OfertaFormacaoNivelFormacaoTypeOrmRepositoryAdapter
     if (has(dto, "ofertaFormacao") && dto.ofertaFormacao !== undefined) {
       const ofertaFormacao =
         dto.ofertaFormacao &&
-        (await this.ofertaFormacaoService.findByIdStrict(
-          accessContext,
-          { id: dto.ofertaFormacao.id },
-        ));
+        (await this.ofertaFormacaoService.findByIdStrict(accessContext, {
+          id: dto.ofertaFormacao.id,
+        }));
 
       this.repository.merge(ofertaFormacaoNivelFormacao, {
         ofertaFormacao: ofertaFormacao && {
@@ -166,10 +163,9 @@ export class OfertaFormacaoNivelFormacaoTypeOrmRepositoryAdapter
     if (has(dto, "nivelFormacao") && dto.nivelFormacao !== undefined) {
       const nivelFormacao =
         dto.nivelFormacao &&
-        (await this.nivelFormacaoService.findByIdStrict(
-          accessContext,
-          { id: dto.nivelFormacao.id },
-        ));
+        (await this.nivelFormacaoService.findByIdStrict(accessContext, {
+          id: dto.nivelFormacao.id,
+        }));
 
       this.repository.merge(ofertaFormacaoNivelFormacao, {
         nivelFormacao: nivelFormacao && {

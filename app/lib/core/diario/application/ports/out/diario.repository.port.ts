@@ -1,12 +1,12 @@
 import type { DeepPartial } from "typeorm";
-import type { DiarioEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
-import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
   DiarioFindOneInput,
   DiarioFindOneOutput,
   DiarioListInput,
   DiarioListOutput,
 } from "@/core/diario/application/dtos";
+import type { DiarioEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
+import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 
 /**
  * Token de injecao para o repositorio de Diario

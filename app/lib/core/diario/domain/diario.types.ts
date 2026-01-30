@@ -1,7 +1,7 @@
+import type { IAmbiente } from "@/core/ambiente/domain/ambiente.types";
 import type { ICalendarioLetivo } from "@/core/calendario-letivo";
 import type { IDisciplina } from "@/core/disciplina/domain/disciplina.types";
 import type { IImagem } from "@/core/imagem/domain/imagem.types";
-import type { IAmbiente } from "@/core/ambiente/domain/ambiente.types";
 import type { ITurma } from "@/core/turma/domain/turma.types";
 
 /**

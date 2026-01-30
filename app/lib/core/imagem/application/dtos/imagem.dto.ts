@@ -1,4 +1,3 @@
-import { ArquivoFindOneOutput } from "@/core/arquivo";
 import {
   IdUuid,
   IFilterAcceptableValues,
@@ -6,6 +5,7 @@ import {
   PaginationInput,
   PaginationResult,
 } from "@/core/@shared";
+import { ArquivoFindOneOutput } from "@/core/arquivo";
 
 // ============================================================================
 // Imagem Arquivo Output (for versoes relation)

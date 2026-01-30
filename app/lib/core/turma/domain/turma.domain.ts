@@ -1,6 +1,6 @@
+import type { IAmbiente } from "@/core/ambiente/domain/ambiente.types";
 import type { ICurso } from "@/core/curso";
 import type { IImagem } from "@/core/imagem/domain/imagem.types";
-import type { IAmbiente } from "@/core/ambiente/domain/ambiente.types";
 import type { ITurma, ITurmaCreate } from "./turma.types";
 
 /**

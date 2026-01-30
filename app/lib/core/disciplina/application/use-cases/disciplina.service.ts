@@ -1,32 +1,32 @@
 import { Inject, Injectable, NotFoundException, type StreamableFile } from "@nestjs/common";
-import type { DisciplinaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
-import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
+import { BaseCrudService } from "@/core/@shared";
 import { ArquivoService } from "@/core/arquivo/application/use-cases/arquivo.service";
-import { ImagemService } from "@/core/imagem/application/use-cases/imagem.service";
-import { BaseCrudService } from "@/v2/core/shared";
-import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
-  DisciplinaCreateInputDto,
-  DisciplinaFindOneInputDto,
-  DisciplinaFindOneOutputDto,
-  DisciplinaListInputDto,
-  DisciplinaListOutputDto,
-  DisciplinaUpdateInputDto,
-} from "@/v2/server/modules/disciplina/http/dto";
+  DisciplinaCreateInput,
+  DisciplinaFindOneInput,
+  DisciplinaFindOneOutput,
+  DisciplinaListInput,
+  DisciplinaListOutput,
+  DisciplinaUpdateInput,
+} from "@/core/disciplina/application/dtos";
 import {
   DISCIPLINA_REPOSITORY_PORT,
   type IDisciplinaRepositoryPort,
 } from "@/core/disciplina/application/ports";
+import { ImagemService } from "@/core/imagem/application/use-cases/imagem.service";
+import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
+import type { DisciplinaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
+import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 
 @Injectable()
 export class DisciplinaService extends BaseCrudService<
   DisciplinaEntity,
-  DisciplinaListInputDto,
-  DisciplinaListOutputDto,
-  DisciplinaFindOneInputDto,
-  DisciplinaFindOneOutputDto,
-  DisciplinaCreateInputDto,
-  DisciplinaUpdateInputDto
+  DisciplinaListInput,
+  DisciplinaListOutput,
+  DisciplinaFindOneInput,
+  DisciplinaFindOneOutput,
+  DisciplinaCreateInput,
+  DisciplinaUpdateInput
 > {
   protected readonly resourceName = "Disciplina";
   protected readonly createAction = "disciplina:create";
@@ -49,61 +49,61 @@ export class DisciplinaService extends BaseCrudService<
 
   async disciplinaFindAll(
     accessContext: AccessContext,
-    dto: DisciplinaListInputDto | null = null,
+    dto: DisciplinaListInput | null = null,
     selection?: string[] | boolean,
-  ): Promise<DisciplinaListOutputDto> {
+  ): Promise<DisciplinaListOutput> {
     return this.findAll(accessContext, dto, selection);
   }
 
   async disciplinaFindById(
     accessContext: AccessContext | null,
-    dto: DisciplinaFindOneInputDto,
+    dto: DisciplinaFindOneInput,
     selection?: string[] | boolean,
-  ): Promise<DisciplinaFindOneOutputDto | null> {
+  ): Promise<DisciplinaFindOneOutput | null> {
     return this.findById(accessContext, dto, selection);
   }
 
   async disciplinaFindByIdStrict(
     accessContext: AccessContext | null,
-    dto: DisciplinaFindOneInputDto,
+    dto: DisciplinaFindOneInput,
     selection?: string[] | boolean,
-  ): Promise<DisciplinaFindOneOutputDto> {
+  ): Promise<DisciplinaFindOneOutput> {
     return this.findByIdStrict(accessContext, dto, selection);
   }
 
   async disciplinaFindByIdSimple(
     accessContext: AccessContext,
-    id: DisciplinaFindOneInputDto["id"],
+    id: DisciplinaFindOneInput["id"],
     selection?: string[] | boolean,
-  ): Promise<DisciplinaFindOneOutputDto | null> {
+  ): Promise<DisciplinaFindOneOutput | null> {
     return this.findByIdSimple(accessContext, id, selection);
   }
 
   async disciplinaFindByIdSimpleStrict(
     accessContext: AccessContext,
-    id: DisciplinaFindOneInputDto["id"],
+    id: DisciplinaFindOneInput["id"],
     selection?: string[],
-  ): Promise<DisciplinaFindOneOutputDto> {
+  ): Promise<DisciplinaFindOneOutput> {
     return this.findByIdSimpleStrict(accessContext, id, selection);
   }
 
   async disciplinaCreate(
     accessContext: AccessContext,
-    dto: DisciplinaCreateInputDto,
-  ): Promise<DisciplinaFindOneOutputDto> {
+    dto: DisciplinaCreateInput,
+  ): Promise<DisciplinaFindOneOutput> {
     return this.create(accessContext, dto);
   }
 
   async disciplinaUpdate(
     accessContext: AccessContext,
-    dto: DisciplinaFindOneInputDto & DisciplinaUpdateInputDto,
-  ): Promise<DisciplinaFindOneOutputDto> {
+    dto: DisciplinaFindOneInput & DisciplinaUpdateInput,
+  ): Promise<DisciplinaFindOneOutput> {
     return this.update(accessContext, dto);
   }
 
   async disciplinaDeleteOneById(
     accessContext: AccessContext,
-    dto: DisciplinaFindOneInputDto,
+    dto: DisciplinaFindOneInput,
   ): Promise<boolean> {
     return this.deleteOneById(accessContext, dto);
   }
@@ -135,7 +135,7 @@ export class DisciplinaService extends BaseCrudService<
 
   async disciplinaUpdateImagemCapa(
     accessContext: AccessContext,
-    dto: DisciplinaFindOneInputDto,
+    dto: DisciplinaFindOneInput,
     file: Express.Multer.File,
   ): Promise<boolean> {
     const currentDisciplina = await this.disciplinaFindByIdStrict(accessContext, { id: dto.id });

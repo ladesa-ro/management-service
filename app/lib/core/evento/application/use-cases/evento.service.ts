@@ -65,14 +65,7 @@ export class EventoService {
         "calendario.nome",
         "calendario.ano",
       ],
-      searchableColumns: [
-        "id",
-        "nome",
-        "cor",
-        "ambiente",
-        "data_inicio",
-        "data_fim",
-      ],
+      searchableColumns: ["id", "nome", "cor", "ambiente", "data_inicio", "data_fim"],
       relations: {
         calendario: true,
       },

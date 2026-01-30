@@ -11,8 +11,14 @@ import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 export const NIVEL_FORMACAO_REPOSITORY_PORT = Symbol("INivelFormacaoRepositoryPort");
 
 export interface INivelFormacaoRepositoryPort {
-  findAll(accessContext: AccessContext, dto: NivelFormacaoListInput | null): Promise<NivelFormacaoListOutput>;
-  findById(accessContext: AccessContext | null, dto: NivelFormacaoFindOneInput): Promise<NivelFormacaoFindOneOutput | null>;
+  findAll(
+    accessContext: AccessContext,
+    dto: NivelFormacaoListInput | null,
+  ): Promise<NivelFormacaoListOutput>;
+  findById(
+    accessContext: AccessContext | null,
+    dto: NivelFormacaoFindOneInput,
+  ): Promise<NivelFormacaoFindOneOutput | null>;
   save(entity: DeepPartial<NivelFormacaoEntity>): Promise<NivelFormacaoEntity>;
   create(): NivelFormacaoEntity;
   merge(entity: NivelFormacaoEntity, data: DeepPartial<NivelFormacaoEntity>): void;

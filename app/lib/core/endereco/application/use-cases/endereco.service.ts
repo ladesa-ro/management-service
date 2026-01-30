@@ -35,7 +35,10 @@ export class EnderecoService implements IEnderecoUseCasePort {
     return endereco;
   }
 
-  async internalEnderecoCreateOrUpdate(id: string | null, dto: EnderecoInputDto): Promise<EnderecoEntity> {
+  async internalEnderecoCreateOrUpdate(
+    id: string | null,
+    dto: EnderecoInputDto,
+  ): Promise<EnderecoEntity> {
     const endereco = this.enderecoRepository.create();
 
     if (id) {

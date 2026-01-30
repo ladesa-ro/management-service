@@ -1,5 +1,5 @@
-import type { CalendarioLetivo } from "@/core/calendario-letivo";
 import type { Ambiente } from "@/core/ambiente/domain/ambiente.domain";
+import type { CalendarioLetivo } from "@/core/calendario-letivo";
 import type { IEvento, IEventoCreate } from "./evento.types";
 
 /**

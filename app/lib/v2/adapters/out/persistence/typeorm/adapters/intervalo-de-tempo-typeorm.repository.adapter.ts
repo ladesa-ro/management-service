@@ -1,12 +1,11 @@
 import { Injectable } from "@nestjs/common";
-import type { DeepPartial } from "typeorm";
 import type {
+  IIntervaloDeTempoRepositoryPort,
   IntervaloDeTempoFindOneInput,
   IntervaloDeTempoFindOneOutput,
   IntervaloDeTempoInput,
   IntervaloDeTempoListInput,
   IntervaloDeTempoListOutput,
-  IIntervaloDeTempoRepositoryPort,
 } from "@/core/intervalo-de-tempo";
 import type { IntervaloDeTempoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import type { IPaginationConfig } from "@/v2/application/ports/pagination";

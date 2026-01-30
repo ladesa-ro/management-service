@@ -52,28 +52,21 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService {
       null,
     );
 
-    const paginated = await this.searchService.search(
-      qb,
-      (dto ?? {}) as Record<string, any>,
-      {
-        ...paginateConfig,
-        select: [
-          "id",
-          "dateCreated",
-        ],
-        relations: {
-          gradeHorarioOfertaFormacao: true,
-          intervaloDeTempo: true,
-        },
-        sortableColumns: ["dateCreated"],
-        searchableColumns: ["id"],
-        defaultSortBy: [["dateCreated", "ASC"]],
-        filterableColumns: {
-          "gradeHorarioOfertaFormacao.id": [FilterOperator.EQ],
-          "intervaloDeTempo.id": [FilterOperator.EQ],
-        },
+    const paginated = await this.searchService.search(qb, (dto ?? {}) as Record<string, any>, {
+      ...paginateConfig,
+      select: ["id", "dateCreated"],
+      relations: {
+        gradeHorarioOfertaFormacao: true,
+        intervaloDeTempo: true,
       },
-    );
+      sortableColumns: ["dateCreated"],
+      searchableColumns: ["id"],
+      defaultSortBy: [["dateCreated", "ASC"]],
+      filterableColumns: {
+        "gradeHorarioOfertaFormacao.id": [FilterOperator.EQ],
+        "intervaloDeTempo.id": [FilterOperator.EQ],
+      },
+    });
 
     qb.select([]);
     QbEfficientLoad(
@@ -216,10 +209,9 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService {
 
     if (dto.gradeHorarioOfertaFormacao) {
       const gradeHorarioOfertaFormacao =
-        await this.gradeHorarioOfertaFormacaoService.findByIdStrict(
-          accessContext,
-          { id: dto.gradeHorarioOfertaFormacao.id },
-        );
+        await this.gradeHorarioOfertaFormacaoService.findByIdStrict(accessContext, {
+          id: dto.gradeHorarioOfertaFormacao.id,
+        });
 
       this.gradeHorarioOfertaFormacaoIntervaloDeTempoRepository.merge(
         gradeHorarioOfertaFormacaoIntervaloDeTempo,
@@ -291,10 +283,9 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService {
     if (has(dto, "gradeHorarioOfertaFormacao") && dto.gradeHorarioOfertaFormacao !== undefined) {
       const gradeHorarioOfertaFormacao =
         dto.gradeHorarioOfertaFormacao &&
-        (await this.gradeHorarioOfertaFormacaoService.findByIdStrict(
-          accessContext,
-          { id: dto.gradeHorarioOfertaFormacao.id },
-        ));
+        (await this.gradeHorarioOfertaFormacaoService.findByIdStrict(accessContext, {
+          id: dto.gradeHorarioOfertaFormacao.id,
+        }));
 
       this.gradeHorarioOfertaFormacaoIntervaloDeTempoRepository.merge(
         gradeHorarioOfertaFormacaoIntervaloDeTempo,

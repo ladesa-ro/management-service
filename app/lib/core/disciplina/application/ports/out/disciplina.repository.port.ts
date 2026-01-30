@@ -1,12 +1,12 @@
 import type { DeepPartial } from "typeorm";
+import type {
+  DisciplinaFindOneInput,
+  DisciplinaFindOneOutput,
+  DisciplinaListInput,
+  DisciplinaListOutput,
+} from "@/core/disciplina/application/dtos";
 import type { DisciplinaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
-import type {
-  DisciplinaFindOneInputDto,
-  DisciplinaFindOneOutputDto,
-  DisciplinaListInputDto,
-  DisciplinaListOutputDto,
-} from "@/v2/server/modules/disciplina/http/dto";
 
 /**
  * Token de injeção para o repositório de Disciplina
@@ -27,9 +27,9 @@ export interface IDisciplinaRepositoryPort {
    */
   findAll(
     accessContext: AccessContext,
-    dto: DisciplinaListInputDto | null,
+    dto: DisciplinaListInput | null,
     selection?: string[] | boolean,
-  ): Promise<DisciplinaListOutputDto>;
+  ): Promise<DisciplinaListOutput>;
 
   /**
    * Busca uma disciplina por ID
@@ -40,9 +40,9 @@ export interface IDisciplinaRepositoryPort {
    */
   findById(
     accessContext: AccessContext | null,
-    dto: DisciplinaFindOneInputDto,
+    dto: DisciplinaFindOneInput,
     selection?: string[] | boolean,
-  ): Promise<DisciplinaFindOneOutputDto | null>;
+  ): Promise<DisciplinaFindOneOutput | null>;
 
   /**
    * Busca uma disciplina por ID (simplificado)
@@ -55,7 +55,7 @@ export interface IDisciplinaRepositoryPort {
     accessContext: AccessContext,
     id: string,
     selection?: string[] | boolean,
-  ): Promise<DisciplinaFindOneOutputDto | null>;
+  ): Promise<DisciplinaFindOneOutput | null>;
 
   /**
    * Salva uma disciplina

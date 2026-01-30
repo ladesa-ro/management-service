@@ -10,13 +10,6 @@ import {
   IsUUID,
   ValidateNested,
 } from "class-validator";
-import { PaginationInputDto, PaginationMetaDto, TransformToArray } from "@/v2/old/shared/dto";
-import {
-  commonProperties,
-  RegisterModel,
-  referenceProperty,
-  simpleProperty,
-} from "@/v2/old/shared/metadata";
 import {
   AmbienteFindOneInputDto,
   AmbienteFindOneOutputDto,
@@ -26,8 +19,15 @@ import { CalendarioLetivoFindOneOutputDto } from "@/server/nest/modules/calendar
 import {
   DisciplinaFindOneInputDto,
   DisciplinaFindOneOutputDto,
-} from "@/v2/server/modules/disciplina/http/dto";
+} from "@/server/nest/modules/disciplina/rest";
 import { TurmaFindOneInputDto, TurmaFindOneOutputDto } from "@/server/nest/modules/turma/rest";
+import { PaginationInputDto, PaginationMetaDto, TransformToArray } from "@/v2/old/shared/dto";
+import {
+  commonProperties,
+  RegisterModel,
+  referenceProperty,
+  simpleProperty,
+} from "@/v2/old/shared/metadata";
 
 @InputType("CalendarioLetivoFindOneInputFromDiario")
 export class CalendarioLetivoFindOneInputDto {

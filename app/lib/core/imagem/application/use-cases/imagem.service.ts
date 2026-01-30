@@ -8,9 +8,9 @@ import sharp from "sharp";
 import { v4 } from "uuid";
 import { ArquivoService } from "@/core/arquivo/application/use-cases/arquivo.service";
 import {
-  IMAGEM_TRANSACTION_PORT,
   type IImagemTransactionPort,
   type IImagemUseCasePort,
+  IMAGEM_TRANSACTION_PORT,
   type ISaveImageOptions,
 } from "@/core/imagem/application/ports";
 

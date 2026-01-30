@@ -9,9 +9,9 @@ import {
   IntervaloDeTempoListOutput,
 } from "@/core/intervalo-de-tempo/application/dtos";
 import {
-  INTERVALO_DE_TEMPO_REPOSITORY_PORT,
   type IIntervaloDeTempoRepositoryPort,
   type IIntervaloDeTempoUseCasePort,
+  INTERVALO_DE_TEMPO_REPOSITORY_PORT,
 } from "@/core/intervalo-de-tempo/application/ports";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 

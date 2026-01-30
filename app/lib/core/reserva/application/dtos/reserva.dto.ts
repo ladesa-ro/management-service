@@ -1,6 +1,6 @@
 import { ObjectUuidRef, PaginationInput, PaginationMeta } from "@/core/@shared/application/dtos";
-import { UsuarioFindOneOutput, UsuarioInputRef } from "@/core/usuario/application/dtos";
 import { AmbienteFindOneOutput, AmbienteInputRef } from "@/core/ambiente";
+import { UsuarioFindOneOutput, UsuarioInputRef } from "@/core/usuario/application/dtos";
 
 // ============================================================================
 // FindOne Input/Output

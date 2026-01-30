@@ -1,8 +1,8 @@
 import { Global, Module } from "@nestjs/common";
 import { IMAGEM_TRANSACTION_PORT } from "@/core/imagem/application/ports";
 import { ImagemService } from "@/core/imagem/application/use-cases/imagem.service";
-import { ImagemTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistence/typeorm/adapters";
 import { ArquivoModule } from "@/server/nest/modules/arquivo";
+import { ImagemTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistence/typeorm/adapters";
 
 /**
  * Modulo Imagem configurado com Arquitetura Hexagonal

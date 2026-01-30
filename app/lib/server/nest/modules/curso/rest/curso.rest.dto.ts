@@ -10,6 +10,12 @@ import {
   MinLength,
   ValidateNested,
 } from "class-validator";
+import { ImagemFindOneOutputDto } from "@/server/nest/modules/bloco/rest";
+import { CampusFindOneInputDto, CampusFindOneOutputDto } from "@/server/nest/modules/campus/rest";
+import {
+  OfertaFormacaoFindOneInputDto,
+  OfertaFormacaoFindOneOutputDto,
+} from "@/server/nest/modules/oferta-formacao/rest";
 import { PaginationInputDto, PaginationMetaDto, TransformToArray } from "@/v2/old/shared/dto";
 import {
   commonProperties,
@@ -17,12 +23,6 @@ import {
   referenceProperty,
   simpleProperty,
 } from "@/v2/old/shared/metadata";
-import { ImagemFindOneOutputDto } from "@/server/nest/modules/bloco/rest";
-import { CampusFindOneInputDto, CampusFindOneOutputDto } from "@/server/nest/modules/campus/rest";
-import {
-  OfertaFormacaoFindOneInputDto,
-  OfertaFormacaoFindOneOutputDto,
-} from "@/v2/server/modules/oferta-formacao/http/dto";
 
 // ============================================================================
 // FindOne Output

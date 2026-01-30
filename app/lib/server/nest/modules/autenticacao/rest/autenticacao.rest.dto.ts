@@ -3,7 +3,7 @@ import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { IsArray, IsInt, IsOptional, IsString, ValidateNested } from "class-validator";
 import { PerfilFindOneOutputDto } from "@/server/nest/modules/perfil/rest";
-import { UsuarioFindOneOutputDto } from "@/v2/server/modules/usuario/http/dto";
+import { UsuarioFindOneOutputDto } from "@/server/nest/modules/usuario/rest";
 
 // ============================================================================
 // Auth Login Input

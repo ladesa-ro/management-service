@@ -11,8 +11,14 @@ import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 export const DISPONIBILIDADE_REPOSITORY_PORT = Symbol("IDisponibilidadeRepositoryPort");
 
 export interface IDisponibilidadeRepositoryPort {
-  findAll(accessContext: AccessContext, dto: DisponibilidadeListInput | null): Promise<DisponibilidadeListOutput>;
-  findById(accessContext: AccessContext | null, dto: DisponibilidadeFindOneInput): Promise<DisponibilidadeFindOneOutput | null>;
+  findAll(
+    accessContext: AccessContext,
+    dto: DisponibilidadeListInput | null,
+  ): Promise<DisponibilidadeListOutput>;
+  findById(
+    accessContext: AccessContext | null,
+    dto: DisponibilidadeFindOneInput,
+  ): Promise<DisponibilidadeFindOneOutput | null>;
   save(entity: DeepPartial<DisponibilidadeEntity>): Promise<DisponibilidadeEntity>;
   create(): DisponibilidadeEntity;
   merge(entity: DisponibilidadeEntity, data: DeepPartial<DisponibilidadeEntity>): void;

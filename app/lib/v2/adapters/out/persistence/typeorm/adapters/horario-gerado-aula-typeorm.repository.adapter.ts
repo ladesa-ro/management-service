@@ -1,14 +1,14 @@
 import { Injectable } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
-import type { IPaginationConfig } from "@/v2/application/ports/pagination";
-import type { IHorarioGeradoAulaRepositoryPort } from "@/v2/core/horario-gerado-aula/application/ports";
-import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 import type {
-  HorarioGeradoAulaFindOneInputDto,
-  HorarioGeradoAulaFindOneOutputDto,
-  HorarioGeradoAulaListInputDto,
-  HorarioGeradoAulaListOutputDto,
-} from "@/v2/server/modules/horario-gerado-aula/http/dto";
+  HorarioGeradoAulaFindOneInput,
+  HorarioGeradoAulaFindOneOutput,
+  HorarioGeradoAulaListInput,
+  HorarioGeradoAulaListOutput,
+  IHorarioGeradoAulaRepositoryPort,
+} from "@/core/horario-gerado-aula";
+import type { IPaginationConfig } from "@/v2/application/ports/pagination";
+import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
 import { BaseTypeOrmRepositoryAdapter } from "../base";
 import { DatabaseContextService } from "../context/database-context.service";
@@ -18,10 +18,10 @@ import type { HorarioGeradoAulaEntity } from "../typeorm/entities";
 export class HorarioGeradoAulaTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     HorarioGeradoAulaEntity,
-    HorarioGeradoAulaListInputDto,
-    HorarioGeradoAulaListOutputDto,
-    HorarioGeradoAulaFindOneInputDto,
-    HorarioGeradoAulaFindOneOutputDto
+    HorarioGeradoAulaListInput,
+    HorarioGeradoAulaListOutput,
+    HorarioGeradoAulaFindOneInput,
+    HorarioGeradoAulaFindOneOutput
   >
   implements IHorarioGeradoAulaRepositoryPort
 {

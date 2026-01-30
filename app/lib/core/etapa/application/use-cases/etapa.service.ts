@@ -1,8 +1,8 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { has } from "lodash";
+import { BaseCrudService } from "@/core/@shared";
 import { CalendarioLetivoService } from "@/core/calendario-letivo";
 import type { EtapaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities/etapa.entity";
-import { BaseCrudService } from "@/v2/core/shared";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
   EtapaCreateInput,
@@ -95,10 +95,7 @@ export class EtapaService extends BaseCrudService<
     return this.update(accessContext, dto);
   }
 
-  async etapaDeleteOneById(
-    accessContext: AccessContext,
-    dto: EtapaFindOneInput,
-  ): Promise<boolean> {
+  async etapaDeleteOneById(accessContext: AccessContext, dto: EtapaFindOneInput): Promise<boolean> {
     return this.deleteOneById(accessContext, dto);
   }
 

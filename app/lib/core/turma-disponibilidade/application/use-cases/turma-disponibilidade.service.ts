@@ -1,10 +1,10 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
-import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
-import type { TurmaDisponibilidadeEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import { DisponibilidadeService } from "@/core/disponibilidade/application/use-cases/disponibilidade.service";
 import { TurmaService } from "@/core/turma/application/use-cases/turma.service";
+import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
+import type { TurmaDisponibilidadeEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import { QbEfficientLoad, SearchService } from "@/v2/old/shared";
 import type {

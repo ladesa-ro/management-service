@@ -22,7 +22,9 @@ export class HorarioGeradoRestMapper {
     };
   }
 
-  static toRestFindOneOutput(output: HorarioGeradoFindOneOutput): HorarioGeradoFindOneOutputRestDto {
+  static toRestFindOneOutput(
+    output: HorarioGeradoFindOneOutput,
+  ): HorarioGeradoFindOneOutputRestDto {
     return output as unknown as HorarioGeradoFindOneOutputRestDto;
   }
 

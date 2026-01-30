@@ -3,10 +3,7 @@ import {
   GradeHorarioOfertaFormacaoFindOneOutput,
   GradeHorarioOfertaFormacaoInputRef,
 } from "@/core/grade-horario-oferta-formacao";
-import {
-  IntervaloDeTempoFindOneOutput,
-  IntervaloDeTempoInputRef,
-} from "@/core/intervalo-de-tempo";
+import { IntervaloDeTempoFindOneOutput, IntervaloDeTempoInputRef } from "@/core/intervalo-de-tempo";
 
 // ============================================================================
 // FindOne Input/Output

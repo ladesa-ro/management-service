@@ -5,10 +5,7 @@ import {
   PaginationMeta,
   ScalarDateTimeString,
 } from "@/core/@shared";
-import {
-  NivelFormacaoFindOneOutput,
-  NivelFormacaoInputRef,
-} from "@/core/nivel-formacao";
+import { NivelFormacaoFindOneOutput, NivelFormacaoInputRef } from "@/core/nivel-formacao";
 import { OfertaFormacaoFindOneOutput, OfertaFormacaoInputRef } from "@/core/oferta-formacao";
 
 // ============================================================================

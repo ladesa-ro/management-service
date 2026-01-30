@@ -10,6 +10,7 @@ import {
   MinLength,
   ValidateNested,
 } from "class-validator";
+import { CampusFindOneInputDto, CampusFindOneOutputDto } from "@/server/nest/modules/campus/rest";
 import { PaginationInputDto, PaginationMetaDto, TransformToArray } from "@/v2/old/shared/dto";
 import {
   commonProperties,
@@ -17,7 +18,6 @@ import {
   referenceProperty,
   simpleProperty,
 } from "@/v2/old/shared/metadata";
-import { CampusFindOneInputDto, CampusFindOneOutputDto } from "@/server/nest/modules/campus/rest";
 
 // ============================================================================
 // Imagem Stub DTOs (forward reference until imagem module has DTOs)

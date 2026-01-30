@@ -1,12 +1,12 @@
 import type { DeepPartial } from "typeorm";
-import type { CursoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
-import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
   CursoFindOneInputDto,
   CursoFindOneOutputDto,
   CursoListInputDto,
   CursoListOutputDto,
 } from "@/server/nest/modules/curso/rest";
+import type { CursoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
+import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 
 /**
  * Token de injecao para o repositorio de Curso

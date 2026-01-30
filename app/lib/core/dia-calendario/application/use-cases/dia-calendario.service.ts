@@ -1,8 +1,8 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { has } from "lodash";
+import { BaseCrudService } from "@/core/@shared";
 import { CalendarioLetivoService } from "@/core/calendario-letivo";
 import type { DiaCalendarioEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities/dia-calendario.entity";
-import { BaseCrudService } from "@/v2/core/shared";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
   DiaCalendarioCreateInput,

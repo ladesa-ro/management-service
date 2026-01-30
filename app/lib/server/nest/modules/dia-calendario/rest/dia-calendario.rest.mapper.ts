@@ -54,7 +54,8 @@ export class DiaCalendarioRestMapper {
     params: DiaCalendarioFindOneInputDto,
     dto: DiaCalendarioUpdateInputDto,
   ): DiaCalendarioFindOneInput & DiaCalendarioUpdateInput {
-    const input = new DiaCalendarioFindOneInput() as DiaCalendarioFindOneInput & DiaCalendarioUpdateInput;
+    const input = new DiaCalendarioFindOneInput() as DiaCalendarioFindOneInput &
+      DiaCalendarioUpdateInput;
     input.id = params.id;
     if (dto.data !== undefined) {
       input.data = new Date(dto.data);

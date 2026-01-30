@@ -17,7 +17,10 @@ export interface IImagemArquivoUseCasePort {
    * @param dto DTO com critérios de busca e paginação
    * @returns Lista paginada de imagens de arquivo
    */
-  findAll(accessContext: AccessContext, dto: ImagemArquivoListInput | null): Promise<ImagemArquivoListOutput>;
+  findAll(
+    accessContext: AccessContext,
+    dto: ImagemArquivoListInput | null,
+  ): Promise<ImagemArquivoListOutput>;
 
   /**
    * Busca uma imagem de arquivo por ID

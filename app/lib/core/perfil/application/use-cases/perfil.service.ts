@@ -10,9 +10,9 @@ import {
   PerfilSetVinculosInput,
 } from "@/core/perfil/application/dtos";
 import {
-  PERFIL_REPOSITORY_PORT,
   type IPerfilRepositoryPort,
   type IPerfilUseCasePort,
+  PERFIL_REPOSITORY_PORT,
 } from "@/core/perfil/application/ports";
 import { UsuarioService } from "@/core/usuario";
 import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";

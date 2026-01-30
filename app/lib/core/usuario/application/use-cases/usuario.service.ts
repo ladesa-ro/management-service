@@ -18,9 +18,9 @@ import type {
   UsuarioUpdateInput,
 } from "@/core/usuario/application/dtos";
 import {
-  USUARIO_REPOSITORY_PORT,
   type IUsuarioRepositoryPort,
   type IUsuarioUseCasePort,
+  USUARIO_REPOSITORY_PORT,
 } from "@/core/usuario/application/ports";
 import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
 import type { UsuarioEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";

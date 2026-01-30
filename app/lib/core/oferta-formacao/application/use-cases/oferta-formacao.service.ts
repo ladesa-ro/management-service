@@ -11,9 +11,9 @@ import {
   OfertaFormacaoUpdateInput,
 } from "@/core/oferta-formacao/application/dtos";
 import {
-  OFERTA_FORMACAO_REPOSITORY_PORT,
   type IOfertaFormacaoRepositoryPort,
   type IOfertaFormacaoUseCasePort,
+  OFERTA_FORMACAO_REPOSITORY_PORT,
 } from "@/core/oferta-formacao/application/ports";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 
@@ -52,14 +52,20 @@ export class OfertaFormacaoService implements IOfertaFormacaoUseCasePort {
     return ofertaFormacao;
   }
 
-  async create(accessContext: AccessContext, dto: OfertaFormacaoCreateInput): Promise<OfertaFormacaoFindOneOutput> {
+  async create(
+    accessContext: AccessContext,
+    dto: OfertaFormacaoCreateInput,
+  ): Promise<OfertaFormacaoFindOneOutput> {
     const dtoOfertaFormacao = pick(dto, ["nome", "slug"]);
 
     const ofertaFormacao = this.ofertaFormacaoRepository.create();
     this.ofertaFormacaoRepository.merge(ofertaFormacao, { ...dtoOfertaFormacao });
 
     if (dto.modalidade) {
-      const modalidade = await this.modalidadeService.modalidadeFindByIdSimpleStrict(accessContext, dto.modalidade.id);
+      const modalidade = await this.modalidadeService.modalidadeFindByIdSimpleStrict(
+        accessContext,
+        dto.modalidade.id,
+      );
       this.ofertaFormacaoRepository.merge(ofertaFormacao, { modalidade: { id: modalidade.id } });
     }
 
@@ -80,7 +86,10 @@ export class OfertaFormacaoService implements IOfertaFormacaoUseCasePort {
 
     if (has(dto, "modalidade") && dto.modalidade !== undefined) {
       if (dto.modalidade) {
-        const modalidade = await this.modalidadeService.modalidadeFindByIdSimpleStrict(accessContext, dto.modalidade.id);
+        const modalidade = await this.modalidadeService.modalidadeFindByIdSimpleStrict(
+          accessContext,
+          dto.modalidade.id,
+        );
         this.ofertaFormacaoRepository.merge(entity, { modalidade: { id: modalidade.id } });
       } else {
         this.ofertaFormacaoRepository.merge(entity, { modalidade: null as any });
@@ -92,7 +101,10 @@ export class OfertaFormacaoService implements IOfertaFormacaoUseCasePort {
     return this.findByIdStrict(accessContext, { id: dto.id });
   }
 
-  async deleteOneById(accessContext: AccessContext, dto: OfertaFormacaoFindOneInput): Promise<boolean> {
+  async deleteOneById(
+    accessContext: AccessContext,
+    dto: OfertaFormacaoFindOneInput,
+  ): Promise<boolean> {
     await this.findByIdStrict(accessContext, dto);
     await this.ofertaFormacaoRepository.softDeleteById(dto.id);
     return true;

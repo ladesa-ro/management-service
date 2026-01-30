@@ -7,9 +7,9 @@ import {
   ProfessorIndisponibilidadeListOutput,
 } from "@/core/professor-indisponibilidade/application/dtos";
 import {
-  PROFESSOR_INDISPONIBILIDADE_REPOSITORY_PORT,
   type IProfessorIndisponibilidadeRepositoryPort,
   type IProfessorIndisponibilidadeUseCasePort,
+  PROFESSOR_INDISPONIBILIDADE_REPOSITORY_PORT,
 } from "@/core/professor-indisponibilidade/application/ports";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 

@@ -9,6 +9,11 @@ import {
   IsUUID,
   ValidateNested,
 } from "class-validator";
+import {
+  DisponibilidadeFindOneInputDto,
+  DisponibilidadeFindOneOutputDto,
+} from "@/server/nest/modules/disponibilidade/rest/disponibilidade.rest.dto";
+import { TurmaFindOneInputDto, TurmaFindOneOutputDto } from "@/server/nest/modules/turma/rest";
 import { PaginationInputDto, PaginationMetaDto, TransformToArray } from "@/v2/old/shared/dto";
 import {
   commonProperties,
@@ -16,11 +21,6 @@ import {
   referenceProperty,
   simpleProperty,
 } from "@/v2/old/shared/metadata";
-import {
-  DisponibilidadeFindOneInputDto,
-  DisponibilidadeFindOneOutputDto,
-} from "@/server/nest/modules/disponibilidade/rest/disponibilidade.rest.dto";
-import { TurmaFindOneInputDto, TurmaFindOneOutputDto } from "@/server/nest/modules/turma/rest";
 
 // ============================================================================
 // FindOne Output

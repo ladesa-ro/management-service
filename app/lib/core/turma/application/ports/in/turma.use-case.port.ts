@@ -44,10 +44,7 @@ export interface ITurmaUseCasePort {
     selection?: string[],
   ): Promise<TurmaFindOneOutput>;
 
-  turmaCreate(
-    accessContext: AccessContext,
-    dto: TurmaCreateInput,
-  ): Promise<TurmaFindOneOutput>;
+  turmaCreate(accessContext: AccessContext, dto: TurmaCreateInput): Promise<TurmaFindOneOutput>;
 
   turmaUpdate(
     accessContext: AccessContext,

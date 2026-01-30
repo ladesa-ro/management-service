@@ -1,4 +1,4 @@
-import { IdUuid, ScalarDateTimeString } from "@/core/@shared";
+import { IdUuid } from "@/core/@shared";
 
 /**
  * Tipagem da entidade Imagem

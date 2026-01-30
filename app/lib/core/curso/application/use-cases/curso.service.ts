@@ -1,6 +1,6 @@
 import { Inject, Injectable, NotFoundException, type StreamableFile } from "@nestjs/common";
 import { has } from "lodash";
-import { ResourceNotFoundError } from "@/core/@shared";
+import { BaseCrudService, ResourceNotFoundError } from "@/core/@shared";
 import { ArquivoService } from "@/core/arquivo/application/use-cases/arquivo.service";
 import { CampusService } from "@/core/campus";
 import {
@@ -10,10 +10,6 @@ import {
 } from "@/core/curso/application/ports";
 import { ImagemService } from "@/core/imagem/application/use-cases/imagem.service";
 import { OfertaFormacaoService } from "@/core/oferta-formacao";
-import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
-import type { CursoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
-import { BaseCrudService } from "@/v2/core/shared";
-import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
   CursoCreateInputDto,
   CursoFindOneInputDto,
@@ -22,6 +18,9 @@ import type {
   CursoListOutputDto,
   CursoUpdateInputDto,
 } from "@/server/nest/modules/curso/rest";
+import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
+import type { CursoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
+import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 
 @Injectable()
 export class CursoService

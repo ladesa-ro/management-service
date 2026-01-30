@@ -13,7 +13,11 @@ export const ENDERECO_REPOSITORY_PORT = Symbol("IEnderecoRepositoryPort");
 
 export interface IEnderecoRepositoryPort {
   findAll(accessContext: AccessContext, dto: EnderecoListInput | null): Promise<EnderecoListOutput>;
-  findById(accessContext: AccessContext | null, dto: EnderecoFindOneInput, selection?: string[] | boolean): Promise<EnderecoFindOneOutput | null>;
+  findById(
+    accessContext: AccessContext | null,
+    dto: EnderecoFindOneInput,
+    selection?: string[] | boolean,
+  ): Promise<EnderecoFindOneOutput | null>;
   findOneById(id: string): Promise<EnderecoFindOneOutput | null>;
   exists(id: string): Promise<boolean>;
   save(entity: DeepPartial<EnderecoEntity>): Promise<EnderecoEntity>;

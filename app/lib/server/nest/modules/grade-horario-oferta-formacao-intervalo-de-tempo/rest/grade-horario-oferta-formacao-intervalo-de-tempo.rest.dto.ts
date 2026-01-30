@@ -9,13 +9,6 @@ import {
   IsUUID,
   ValidateNested,
 } from "class-validator";
-import { PaginationInputDto, PaginationMetaDto, TransformToArray } from "@/v2/old/shared/dto";
-import {
-  commonProperties,
-  RegisterModel,
-  referenceProperty,
-  simpleProperty,
-} from "@/v2/old/shared/metadata";
 import {
   GradeHorarioOfertaFormacaoFindOneInputDto,
   GradeHorarioOfertaFormacaoFindOneOutputDto,
@@ -24,6 +17,13 @@ import {
   IntervaloDeTempoFindOneInputDto,
   IntervaloDeTempoFindOneOutputDto,
 } from "@/server/nest/modules/intervalo-de-tempo/rest/intervalo-de-tempo.rest.dto";
+import { PaginationInputDto, PaginationMetaDto, TransformToArray } from "@/v2/old/shared/dto";
+import {
+  commonProperties,
+  RegisterModel,
+  referenceProperty,
+  simpleProperty,
+} from "@/v2/old/shared/metadata";
 
 // ============================================================================
 // FindOne Output

@@ -9,9 +9,9 @@ import {
 } from "@nestjs/swagger";
 import { AutenticacaoService } from "@/core/autenticacao";
 import { UsuarioService } from "@/core/usuario";
+import { UsuarioFindOneOutputDto } from "@/server/nest/modules/usuario/rest";
 import { AccessContext, AccessContextHttp } from "@/v2/old/infrastructure/access-context";
 import { Public } from "@/v2/old/infrastructure/authentication";
-import { UsuarioFindOneOutputDto } from "@/v2/server/modules/usuario/http/dto";
 import {
   AuthCredentialsSetInitialPasswordInputDto,
   AuthLoginInputDto,
@@ -49,7 +49,9 @@ export class AutenticacaoRestController {
   @ApiOkResponse({ type: AuthWhoAmIOutputDto })
   @ApiForbiddenResponse()
   async whoAmI(@AccessContextHttp() accessContext: AccessContext): Promise<AuthWhoAmIOutputDto> {
-    return this.autenticacaoService.whoAmI(accessContext) as unknown as Promise<AuthWhoAmIOutputDto>;
+    return this.autenticacaoService.whoAmI(
+      accessContext,
+    ) as unknown as Promise<AuthWhoAmIOutputDto>;
   }
 
   @Post("/login")

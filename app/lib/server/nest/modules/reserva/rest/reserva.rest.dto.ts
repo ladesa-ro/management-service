@@ -10,13 +10,6 @@ import {
   MinLength,
   ValidateNested,
 } from "class-validator";
-import { PaginationInputDto, PaginationMetaDto, TransformToArray } from "@/v2/old/shared/dto";
-import {
-  commonProperties,
-  RegisterModel,
-  referenceProperty,
-  simpleProperty,
-} from "@/v2/old/shared/metadata";
 import {
   AmbienteFindOneInputDto,
   AmbienteFindOneOutputDto,
@@ -24,7 +17,14 @@ import {
 import {
   UsuarioFindOneInputDto,
   UsuarioFindOneOutputDto,
-} from "@/v2/server/modules/usuario/http/dto";
+} from "@/server/nest/modules/usuario/rest";
+import { PaginationInputDto, PaginationMetaDto, TransformToArray } from "@/v2/old/shared/dto";
+import {
+  commonProperties,
+  RegisterModel,
+  referenceProperty,
+  simpleProperty,
+} from "@/v2/old/shared/metadata";
 
 // ============================================================================
 // FindOne Output

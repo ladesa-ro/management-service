@@ -75,10 +75,7 @@ export interface ICalendarioLetivoRepositoryPort {
    * @param calendarioLetivo CalendarioLetivo base
    * @param data Dados a serem mesclados
    */
-  merge(
-    calendarioLetivo: CalendarioLetivoEntity,
-    data: DeepPartial<CalendarioLetivoEntity>,
-  ): void;
+  merge(calendarioLetivo: CalendarioLetivoEntity, data: DeepPartial<CalendarioLetivoEntity>): void;
 
   /**
    * Soft delete de um calendario letivo por ID

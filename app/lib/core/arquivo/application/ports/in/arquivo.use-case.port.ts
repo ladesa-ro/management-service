@@ -1,7 +1,7 @@
 import type { Readable } from "node:stream";
 import type { StreamableFile } from "@nestjs/common";
-import type { ArquivoCreateInput, ArquivoGetFileInput } from "../../dtos";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
+import type { ArquivoCreateInput, ArquivoGetFileInput } from "../../dtos";
 
 /**
  * Porta de entrada (use case) para operações de Arquivo

@@ -1,6 +1,6 @@
+import { IdUuid, ScalarDateTimeString } from "@/core/@shared";
 import type { ICampus } from "@/core/campus";
 import type { IOfertaFormacao } from "@/core/oferta-formacao";
-import { IdUuid, ScalarDateTimeString } from "@/core/@shared";
 
 /**
  * Interface que define a estrutura de dados de CalendarioLetivo

@@ -1,10 +1,10 @@
 import { Inject, Injectable, NotFoundException, type StreamableFile } from "@nestjs/common";
-import type { AmbienteEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
-import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
+import { BaseCrudService } from "@/core/@shared";
 import { ArquivoService } from "@/core/arquivo/application/use-cases/arquivo.service";
 import { BlocoService } from "@/core/bloco/application/use-cases/bloco.service";
 import { ImagemService } from "@/core/imagem/application/use-cases/imagem.service";
-import { BaseCrudService } from "@/v2/core/shared";
+import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
+import type { AmbienteEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
   AmbienteCreateInput,
@@ -14,7 +14,11 @@ import type {
   AmbienteListOutput,
   AmbienteUpdateInput,
 } from "../dtos";
-import { AMBIENTE_REPOSITORY_PORT, type IAmbienteRepositoryPort, type IAmbienteUseCasePort } from "../ports";
+import {
+  AMBIENTE_REPOSITORY_PORT,
+  type IAmbienteRepositoryPort,
+  type IAmbienteUseCasePort,
+} from "../ports";
 
 /**
  * Service centralizado para o módulo Ambiente.
@@ -105,10 +109,7 @@ export class AmbienteService
   // Image methods
   // ========================================
 
-  async getImagemCapa(
-    accessContext: AccessContext | null,
-    id: string,
-  ): Promise<StreamableFile> {
+  async getImagemCapa(accessContext: AccessContext | null, id: string): Promise<StreamableFile> {
     const ambiente = await this.findByIdStrict(accessContext, { id });
 
     if (ambiente.imagemCapa) {

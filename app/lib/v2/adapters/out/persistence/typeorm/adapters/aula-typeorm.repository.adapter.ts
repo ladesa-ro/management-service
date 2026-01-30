@@ -1,14 +1,14 @@
 import { Injectable } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
-import type { IPaginationConfig } from "@/v2/application/ports/pagination";
-import type { IAulaRepositoryPort } from "@/v2/core/aula/application/ports";
-import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 import type {
-  AulaFindOneInputDto,
-  AulaFindOneOutputDto,
-  AulaListInputDto,
-  AulaListOutputDto,
-} from "@/v2/server/modules/aula/http/dto";
+  AulaFindOneInput,
+  AulaFindOneOutput,
+  AulaListInput,
+  AulaListOutput,
+} from "@/core/aula/application/dtos";
+import type { IAulaRepositoryPort } from "@/core/aula/application/ports";
+import type { IPaginationConfig } from "@/v2/application/ports/pagination";
+import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
 import { BaseTypeOrmRepositoryAdapter } from "../base";
 import { DatabaseContextService } from "../context/database-context.service";
@@ -18,10 +18,10 @@ import type { AulaEntity } from "../typeorm/entities";
 export class AulaTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     AulaEntity,
-    AulaListInputDto,
-    AulaListOutputDto,
-    AulaFindOneInputDto,
-    AulaFindOneOutputDto
+    AulaListInput,
+    AulaListOutput,
+    AulaFindOneInput,
+    AulaFindOneOutput
   >
   implements IAulaRepositoryPort
 {

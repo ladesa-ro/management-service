@@ -1,9 +1,6 @@
 import { ObjectUuidRef, PaginationInput, PaginationMeta } from "@/core/@shared/application/dtos";
-import {
-  CalendarioLetivoFindOneOutput,
-  CalendarioLetivoInputRef,
-} from "@/core/calendario-letivo";
 import { AmbienteFindOneOutput, AmbienteInputRef } from "@/core/ambiente";
+import { CalendarioLetivoFindOneOutput, CalendarioLetivoInputRef } from "@/core/calendario-letivo";
 
 // ============================================================================
 // FindOne Input/Output

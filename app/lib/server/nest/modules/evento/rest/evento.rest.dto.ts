@@ -9,13 +9,6 @@ import {
   IsUUID,
   ValidateNested,
 } from "class-validator";
-import { PaginationInputDto, PaginationMetaDto, TransformToArray } from "@/v2/old/shared/dto";
-import {
-  commonProperties,
-  RegisterModel,
-  referenceProperty,
-  simpleProperty,
-} from "@/v2/old/shared/metadata";
 import {
   AmbienteFindOneInputDto,
   AmbienteFindOneOutputDto,
@@ -24,6 +17,13 @@ import {
   CalendarioLetivoFindOneInputDto,
   CalendarioLetivoFindOneOutputDto,
 } from "@/server/nest/modules/calendario-letivo/rest";
+import { PaginationInputDto, PaginationMetaDto, TransformToArray } from "@/v2/old/shared/dto";
+import {
+  commonProperties,
+  RegisterModel,
+  referenceProperty,
+  simpleProperty,
+} from "@/v2/old/shared/metadata";
 
 // ============================================================================
 // FindOne Output

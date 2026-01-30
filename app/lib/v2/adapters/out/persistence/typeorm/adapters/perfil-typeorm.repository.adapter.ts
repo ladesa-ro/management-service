@@ -82,11 +82,9 @@ export class PerfilTypeOrmRepositoryAdapter
 
     await accessContext.applyFilter(this.authzAction, qb, this.alias, null);
 
-    return this.paginationAdapter.paginate(
-      qb,
-      criteria,
-      config,
-    ) as unknown as Promise<IPaginationResult<PerfilFindOneOutput>>;
+    return this.paginationAdapter.paginate(qb, criteria, config) as unknown as Promise<
+      IPaginationResult<PerfilFindOneOutput>
+    >;
   }
 
   async saveMany(perfis: DeepPartial<PerfilEntity>[]): Promise<void> {

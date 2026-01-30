@@ -1,13 +1,13 @@
 import type { StreamableFile } from "@nestjs/common";
-import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
-  DisciplinaCreateInputDto,
-  DisciplinaFindOneInputDto,
-  DisciplinaFindOneOutputDto,
-  DisciplinaListInputDto,
-  DisciplinaListOutputDto,
-  DisciplinaUpdateInputDto,
-} from "@/v2/server/modules/disciplina/http/dto";
+  DisciplinaCreateInput,
+  DisciplinaFindOneInput,
+  DisciplinaFindOneOutput,
+  DisciplinaListInput,
+  DisciplinaListOutput,
+  DisciplinaUpdateInput,
+} from "@/core/disciplina/application/dtos";
+import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 
 /**
  * Port de entrada para casos de uso de Disciplina
@@ -23,9 +23,9 @@ export interface IDisciplinaUseCasePort {
    */
   disciplinaFindAll(
     accessContext: AccessContext,
-    dto: DisciplinaListInputDto | null,
+    dto: DisciplinaListInput | null,
     selection?: string[] | boolean,
-  ): Promise<DisciplinaListOutputDto>;
+  ): Promise<DisciplinaListOutput>;
 
   /**
    * Busca uma disciplina por ID
@@ -36,9 +36,9 @@ export interface IDisciplinaUseCasePort {
    */
   disciplinaFindById(
     accessContext: AccessContext | null,
-    dto: DisciplinaFindOneInputDto,
+    dto: DisciplinaFindOneInput,
     selection?: string[] | boolean,
-  ): Promise<DisciplinaFindOneOutputDto | null>;
+  ): Promise<DisciplinaFindOneOutput | null>;
 
   /**
    * Busca uma disciplina por ID (lança exceção se não encontrada)
@@ -49,9 +49,9 @@ export interface IDisciplinaUseCasePort {
    */
   disciplinaFindByIdStrict(
     accessContext: AccessContext | null,
-    dto: DisciplinaFindOneInputDto,
+    dto: DisciplinaFindOneInput,
     selection?: string[] | boolean,
-  ): Promise<DisciplinaFindOneOutputDto>;
+  ): Promise<DisciplinaFindOneOutput>;
 
   /**
    * Busca uma disciplina por ID (simplificado)
@@ -62,9 +62,9 @@ export interface IDisciplinaUseCasePort {
    */
   disciplinaFindByIdSimple(
     accessContext: AccessContext,
-    id: DisciplinaFindOneInputDto["id"],
+    id: DisciplinaFindOneInput["id"],
     selection?: string[] | boolean,
-  ): Promise<DisciplinaFindOneOutputDto | null>;
+  ): Promise<DisciplinaFindOneOutput | null>;
 
   /**
    * Busca uma disciplina por ID (simplificado, lança exceção se não encontrada)
@@ -75,9 +75,9 @@ export interface IDisciplinaUseCasePort {
    */
   disciplinaFindByIdSimpleStrict(
     accessContext: AccessContext,
-    id: DisciplinaFindOneInputDto["id"],
+    id: DisciplinaFindOneInput["id"],
     selection?: string[],
-  ): Promise<DisciplinaFindOneOutputDto>;
+  ): Promise<DisciplinaFindOneOutput>;
 
   /**
    * Cria uma nova disciplina
@@ -87,8 +87,8 @@ export interface IDisciplinaUseCasePort {
    */
   disciplinaCreate(
     accessContext: AccessContext,
-    dto: DisciplinaCreateInputDto,
-  ): Promise<DisciplinaFindOneOutputDto>;
+    dto: DisciplinaCreateInput,
+  ): Promise<DisciplinaFindOneOutput>;
 
   /**
    * Atualiza uma disciplina existente
@@ -98,8 +98,8 @@ export interface IDisciplinaUseCasePort {
    */
   disciplinaUpdate(
     accessContext: AccessContext,
-    dto: DisciplinaFindOneInputDto & DisciplinaUpdateInputDto,
-  ): Promise<DisciplinaFindOneOutputDto>;
+    dto: DisciplinaFindOneInput & DisciplinaUpdateInput,
+  ): Promise<DisciplinaFindOneOutput>;
 
   /**
    * Busca a imagem de capa de uma disciplina
@@ -118,7 +118,7 @@ export interface IDisciplinaUseCasePort {
    */
   disciplinaUpdateImagemCapa(
     accessContext: AccessContext,
-    dto: DisciplinaFindOneInputDto,
+    dto: DisciplinaFindOneInput,
     file: Express.Multer.File,
   ): Promise<boolean>;
 
@@ -130,6 +130,6 @@ export interface IDisciplinaUseCasePort {
    */
   disciplinaDeleteOneById(
     accessContext: AccessContext,
-    dto: DisciplinaFindOneInputDto,
+    dto: DisciplinaFindOneInput,
   ): Promise<boolean>;
 }

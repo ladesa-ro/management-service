@@ -10,9 +10,9 @@ import {
   NivelFormacaoUpdateInput,
 } from "@/core/nivel-formacao/application/dtos";
 import {
-  NIVEL_FORMACAO_REPOSITORY_PORT,
   type INivelFormacaoRepositoryPort,
   type INivelFormacaoUseCasePort,
+  NIVEL_FORMACAO_REPOSITORY_PORT,
 } from "@/core/nivel-formacao/application/ports";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 

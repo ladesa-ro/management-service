@@ -12,6 +12,10 @@ import {
   Min,
   ValidateNested,
 } from "class-validator";
+import {
+  CalendarioLetivoFindOneInputDto,
+  CalendarioLetivoFindOneOutputDto,
+} from "@/server/nest/modules/calendario-letivo/rest";
 import { PaginationInputDto, PaginationMetaDto, TransformToArray } from "@/v2/old/shared/dto";
 import {
   commonProperties,
@@ -19,10 +23,6 @@ import {
   referenceProperty,
   simpleProperty,
 } from "@/v2/old/shared/metadata";
-import {
-  CalendarioLetivoFindOneInputDto,
-  CalendarioLetivoFindOneOutputDto,
-} from "@/server/nest/modules/calendario-letivo/rest";
 
 // ============================================================================
 // FindOne Output

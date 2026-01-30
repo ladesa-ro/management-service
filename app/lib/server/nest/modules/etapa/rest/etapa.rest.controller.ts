@@ -76,7 +76,10 @@ export class EtapaRestController {
   ): Promise<EtapaFindOneOutputRestDto> {
     const coreInput = EtapaRestMapper.toCoreFindOneInput(params);
     const coreUpdateInput = EtapaRestMapper.toCoreUpdateInput(dto);
-    const result = await this.etapaService.etapaUpdate(accessContext, { ...coreInput, ...coreUpdateInput });
+    const result = await this.etapaService.etapaUpdate(accessContext, {
+      ...coreInput,
+      ...coreUpdateInput,
+    });
     return EtapaRestMapper.toRestFindOneOutput(result);
   }
 
