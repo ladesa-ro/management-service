@@ -17,7 +17,7 @@ import {
   referenceProperty,
   simpleProperty,
 } from "@/v2/old/shared/metadata";
-import { DiarioFindOneInputDto, DiarioFindOneOutputDto } from "@/v2/server/modules/diario/http/dto";
+import { DiarioFindOneInputDto, DiarioFindOneOutputDto } from "@/server/nest/modules/diario/rest";
 import { PerfilFindOneInputDto, PerfilFindOneOutputDto } from "@/server/nest/modules/perfil/rest";
 
 // ============================================================================

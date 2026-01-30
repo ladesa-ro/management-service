@@ -1,5 +1,5 @@
 import type { IAmbiente } from "@/core/ambiente/domain/ambiente.types";
-import type { IDiario } from "@/v2/core/diario/domain/diario.types";
+import type { IDiario } from "@/core/diario/domain/diario.types";
 import type { IIntervaloDeTempo } from "@/core/intervalo-de-tempo/domain/intervalo-de-tempo.types";
 
 /**

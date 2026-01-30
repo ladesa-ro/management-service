@@ -1,24 +1,25 @@
 import { Module } from "@nestjs/common";
+import { DIARIO_REPOSITORY_PORT } from "@/core/diario/application/ports";
+import { DiarioService } from "@/core/diario/application/use-cases/diario.service";
 import { NestJsPaginateAdapter } from "@/v2/adapters/out/persistence/pagination";
 import { DiarioTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistence/typeorm/adapters";
-import { DiarioService } from "@/v2/core/diario/application/use-cases/diario.service";
 import { AmbienteModule } from "@/server/nest/modules/ambiente";
 import { CalendarioLetivoModule } from "@/server/nest/modules/calendario-letivo";
 import { DisciplinaModule } from "@/v2/server/modules/disciplina";
 import { TurmaModule } from "@/server/nest/modules/turma";
-import { DiarioController } from "./http";
+import { DiarioRestController } from "./rest/diario.rest.controller";
 
 /**
- * Módulo NestJS para Diario
+ * Modulo NestJS para Diario
  */
 @Module({
   imports: [CalendarioLetivoModule, TurmaModule, AmbienteModule, DisciplinaModule],
-  controllers: [DiarioController],
+  controllers: [DiarioRestController],
   providers: [
     NestJsPaginateAdapter,
     DiarioService,
     {
-      provide: "IDiarioRepositoryPort",
+      provide: DIARIO_REPOSITORY_PORT,
       useClass: DiarioTypeOrmRepositoryAdapter,
     },
   ],

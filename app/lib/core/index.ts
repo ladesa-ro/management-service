@@ -8,6 +8,7 @@ export * from "./campus";
 export * from "./cidade";
 export * from "./curso";
 export * from "./dia-calendario";
+export * from "./diario";
 export * from "./disciplina";
 export * from "./disponibilidade";
 export * from "./endereco";

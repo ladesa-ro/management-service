@@ -6,7 +6,7 @@ import type { ITurma } from "@/core/turma/domain/turma.types";
 import type { IDiario, IDiarioCreate } from "./diario.types";
 
 /**
- * Entidade de Domínio: Diario
+ * Entidade de Dominio: Diario
  */
 export class Diario implements IDiario {
   id!: string;

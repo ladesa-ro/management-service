@@ -11,7 +11,7 @@ import { CalendarioLetivoModule } from "@/server/nest/modules/calendario-letivo"
 import { CampusModule } from "@/server/nest/modules/campus";
 import { CursoModule } from "@/server/nest/modules/curso";
 import { DiaCalendarioModule } from "@/server/nest/modules/dia-calendario";
-import { DiarioModule } from "@/v2/server/modules/diario";
+import { DiarioModule } from "@/server/nest/modules/diario";
 import { DiarioPreferenciaAgrupamentoModule } from "@/v2/server/modules/diario-preferencia-agrupamento";
 import { DiarioProfessorModule } from "@/v2/server/modules/diario-professor";
 import { DisciplinaModule } from "@/v2/server/modules/disciplina";

@@ -1,7 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { has } from "lodash";
 import type { DiarioProfessorEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
-import { DiarioService } from "@/v2/core/diario/application/use-cases/diario.service";
+import { DiarioService } from "@/core/diario/application/use-cases/diario.service";
 import { PerfilService } from "@/core/perfil";
 import { BaseCrudService } from "@/v2/core/shared";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";

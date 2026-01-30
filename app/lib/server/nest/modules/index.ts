@@ -1,5 +1,6 @@
 export * from "./autenticacao";
 export * from "./cidade";
+export * from "./diario";
 export * from "./disponibilidade";
 export * from "./estado";
 export * from "./etapa";

@@ -21,7 +21,7 @@ import {
   AmbienteFindOneInputDto,
   AmbienteFindOneOutputDto,
 } from "@/server/nest/modules/ambiente/rest";
-import { DiarioFindOneInputDto, DiarioFindOneOutputDto } from "@/v2/server/modules/diario/http/dto";
+import { DiarioFindOneInputDto, DiarioFindOneOutputDto } from "@/server/nest/modules/diario/rest";
 
 // ============================================================================
 // IntervaloDeTempo Stub DTOs (forward reference until intervalo-de-tempo module has DTOs)

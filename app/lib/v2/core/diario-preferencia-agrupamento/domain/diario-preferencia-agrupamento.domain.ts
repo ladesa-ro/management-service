@@ -1,4 +1,4 @@
-import type { Diario } from "@/v2/core/diario/domain/diario.domain";
+import type { Diario } from "@/core/diario/domain/diario.domain";
 import type { IntervaloDeTempo } from "@/core/intervalo-de-tempo/domain/intervalo-de-tempo.domain";
 import type {
   IDiarioPreferenciaAgrupamento,
