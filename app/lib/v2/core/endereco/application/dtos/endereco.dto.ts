@@ -1,5 +1,5 @@
 import { ObjectUuidRef, PaginationInput, PaginationMeta } from "@/core/@shared/application/dtos";
-import { CidadeFindOneOutput, CidadeInputRef } from "../../../cidade/application/dtos";
+import { CidadeFindOneOutput, CidadeInputRef } from "@/core/cidade";
 
 // ============================================================================
 // FindOne Input/Output

@@ -1,4 +1,5 @@
 import { Module } from "@nestjs/common";
+import { CidadeModule } from "@/server/nest/modules/cidade";
 import { EstadoModule } from "@/server/nest/modules/estado/estado.module";
 import { AmbienteModule } from "@/v2/server/modules/ambiente";
 import { ArquivoModule } from "@/v2/server/modules/arquivo";
@@ -8,7 +9,6 @@ import { AutorizacaoModule } from "@/v2/server/modules/autorizacao";
 import { BlocoModule } from "@/v2/server/modules/bloco";
 import { CalendarioLetivoModule } from "@/v2/server/modules/calendario-letivo";
 import { CampusModule } from "@/v2/server/modules/campus";
-import { CidadeModule } from "@/v2/server/modules/cidade";
 import { CursoModule } from "@/v2/server/modules/curso";
 import { DiaCalendarioModule } from "@/v2/server/modules/dia-calendario";
 import { DiarioModule } from "@/v2/server/modules/diario";

@@ -1,4 +1,5 @@
-import type { IEstado } from "@/core/estado/domain/estado.types";
+import type { IdNumeric } from "@/core/@shared";
+import type { IEstado } from "@/core/estado";
 
 /**
  * Tipagem da entidade Cidade
@@ -6,7 +7,7 @@ import type { IEstado } from "@/core/estado/domain/estado.types";
  */
 export interface ICidade {
   /** Identificador da cidade (numérico - IBGE) */
-  id: number;
+  id: IdNumeric;
 
   /** Nome da cidade */
   nome: string;

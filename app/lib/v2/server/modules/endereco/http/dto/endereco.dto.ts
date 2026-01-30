@@ -12,12 +12,15 @@ import {
   ValidateNested,
 } from "class-validator";
 import {
+  CidadeFindOneInputDto,
+  CidadeFindOneOutputDto,
+} from "@/server/nest/modules/cidade/rest/cidade.rest.dto";
+import {
   commonProperties,
   RegisterModel,
   referenceProperty,
   simpleProperty,
 } from "@/v2/old/shared/metadata";
-import { CidadeFindOneInputDto, CidadeFindOneOutputDto } from "@/v2/server/modules/cidade/http/dto";
 
 // ============================================================================
 // FindOne Output

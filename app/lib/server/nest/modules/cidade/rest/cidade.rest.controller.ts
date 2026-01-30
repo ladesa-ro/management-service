@@ -6,18 +6,19 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
-import { CidadeService } from "@/v2/core/cidade/application/use-cases/cidade.service";
+import { CidadeService } from "@/core/cidade/application/use-cases/cidade.service";
 import { AccessContext, AccessContextHttp } from "@/v2/old/infrastructure/access-context";
 import {
   CidadeFindOneInputDto,
   CidadeFindOneOutputDto,
   CidadeListInputDto,
   CidadeListOutputDto,
-} from "./dto";
+} from "./cidade.rest.dto";
+import { CidadeRestMapper } from "./cidade.rest.mapper";
 
 @ApiTags("cidades")
 @Controller("/base/cidades")
-export class CidadeController {
+export class CidadeRestController {
   constructor(private cidadeService: CidadeService) {}
 
   @Get("/")
@@ -28,7 +29,9 @@ export class CidadeController {
     @AccessContextHttp() accessContext: AccessContext,
     @Query() dto: CidadeListInputDto,
   ): Promise<CidadeListOutputDto> {
-    return this.cidadeService.findAll(accessContext, dto);
+    const input = CidadeRestMapper.toListInput(dto);
+    const result = await this.cidadeService.findAll(accessContext, input);
+    return CidadeRestMapper.toListOutputDto(result);
   }
 
   @Get("/:id")
@@ -40,6 +43,8 @@ export class CidadeController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: CidadeFindOneInputDto,
   ): Promise<CidadeFindOneOutputDto> {
-    return this.cidadeService.findByIdStrict(accessContext, params);
+    const input = CidadeRestMapper.toFindOneInput(params);
+    const result = await this.cidadeService.findByIdStrict(accessContext, input);
+    return CidadeRestMapper.toFindOneOutputDto(result);
   }
 }

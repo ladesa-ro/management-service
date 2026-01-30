@@ -1,4 +1,4 @@
-import type { ICidade } from "@/v2/core/cidade/domain/cidade.types";
+import type { ICidade } from "@/core/cidade";
 import type { IEndereco } from "./endereco.types";
 
 /**

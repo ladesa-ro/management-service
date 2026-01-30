@@ -48,11 +48,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     response.status(status).json(errorResponse);
   }
 
-  private handleUnknownException(
-    exception: unknown,
-    request: Request,
-    response: Response,
-  ): void {
+  private handleUnknownException(exception: unknown, request: Request, response: Response): void {
     this.logger.error("Unhandled exception:", exception);
 
     const errorResponse: HttpErrorResponse = {

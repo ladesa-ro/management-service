@@ -1,14 +1,14 @@
 import { Injectable } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
-import type { IPaginationConfig } from "@/v2/application/ports/pagination";
-import type { ICidadeRepositoryPort } from "@/v2/core/cidade/application/ports";
-import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 import type {
-  CidadeFindOneInputDto,
-  CidadeFindOneOutputDto,
-  CidadeListInputDto,
-  CidadeListOutputDto,
-} from "@/v2/server/modules/cidade/http/dto";
+  CidadeFindOneInput,
+  CidadeFindOneOutput,
+  CidadeListInput,
+  CidadeListOutput,
+  ICidadeRepositoryPort,
+} from "@/core/cidade";
+import type { IPaginationConfig } from "@/v2/application/ports/pagination";
+import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
 import { BaseTypeOrmRepositoryAdapter } from "../base";
 import { DatabaseContextService } from "../context/database-context.service";
@@ -23,10 +23,10 @@ import type { CidadeEntity } from "../typeorm/entities";
 export class CidadeTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     CidadeEntity,
-    CidadeListInputDto,
-    CidadeListOutputDto,
-    CidadeFindOneInputDto,
-    CidadeFindOneOutputDto
+    CidadeListInput,
+    CidadeListOutput,
+    CidadeFindOneInput,
+    CidadeFindOneOutput
   >
   implements ICidadeRepositoryPort
 {

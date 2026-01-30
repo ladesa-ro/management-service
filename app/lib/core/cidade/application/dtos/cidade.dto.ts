@@ -1,4 +1,10 @@
-import { ObjectIntRef, PaginationInput, PaginationMeta } from "@/core/@shared/application/dtos";
+import {
+  IdNumeric,
+  IFilterAcceptableValues,
+  ObjectIntRef,
+  PaginationInput,
+  PaginationResult,
+} from "@/core/@shared";
 import { EstadoFindOneOutput } from "@/core/estado";
 
 // ============================================================================
@@ -6,11 +12,13 @@ import { EstadoFindOneOutput } from "@/core/estado";
 // ============================================================================
 
 export class CidadeFindOneInput {
-  id!: number;
+  id!: IdNumeric;
+
+  selection?: string[];
 }
 
 export class CidadeFindOneOutput {
-  id!: number;
+  id!: IdNumeric;
 
   nome!: string;
 
@@ -22,15 +30,13 @@ export class CidadeFindOneOutput {
 // ============================================================================
 
 export class CidadeListInput extends PaginationInput {
-  "filter.id"?: number[];
-
-  "filter.estado.id"?: number[];
+  "filter.id"?: IFilterAcceptableValues;
+  "filter.estado.id"?: IFilterAcceptableValues;
+  "filter.estado.nome"?: IFilterAcceptableValues;
+  "filter.estado.sigla"?: IFilterAcceptableValues;
 }
 
-export class CidadeListOutput {
-  meta!: PaginationMeta;
-  data!: CidadeFindOneOutput[];
-}
+export class CidadeListOutput extends PaginationResult<CidadeFindOneOutput> {}
 
 // ============================================================================
 // Input Ref

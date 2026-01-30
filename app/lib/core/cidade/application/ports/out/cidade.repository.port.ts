@@ -1,10 +1,10 @@
+import {
+  CidadeFindOneInput,
+  CidadeFindOneOutput,
+  CidadeListInput,
+  CidadeListOutput,
+} from "@/core/cidade";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
-import type {
-  CidadeFindOneInputDto,
-  CidadeFindOneOutputDto,
-  CidadeListInputDto,
-  CidadeListOutputDto,
-} from "@/v2/server/modules/cidade/http/dto";
 
 /**
  * Port de saída para operações de persistência de Cidade
@@ -15,25 +15,18 @@ export interface ICidadeRepositoryPort {
    * Lista cidades com paginação
    * @param accessContext Contexto de acesso para aplicar filtros de permissão
    * @param dto DTO com critérios de busca e paginação
-   * @param selection Campos a serem selecionados (GraphQL/otimização)
    * @returns Lista paginada de cidades
    */
-  findAll(
-    accessContext: AccessContext,
-    dto: CidadeListInputDto | null,
-    selection?: string[],
-  ): Promise<CidadeListOutputDto>;
+  findAll(accessContext: AccessContext, dto: CidadeListInput | null): Promise<CidadeListOutput>;
 
   /**
    * Busca uma cidade por ID
    * @param accessContext Contexto de acesso para aplicar filtros de permissão
    * @param dto DTO com ID da cidade
-   * @param selection Campos a serem selecionados
    * @returns Cidade encontrada ou null
    */
   findById(
     accessContext: AccessContext,
-    dto: CidadeFindOneInputDto,
-    selection?: string[],
-  ): Promise<CidadeFindOneOutputDto | null>;
+    dto: CidadeFindOneInput,
+  ): Promise<CidadeFindOneOutput | null>;
 }
