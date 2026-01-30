@@ -19,7 +19,7 @@ import {
 import {
   DisponibilidadeFindOneInputDto,
   DisponibilidadeFindOneOutputDto,
-} from "@/v2/server/modules/disponibilidade/http/dto";
+} from "@/server/nest/modules/disponibilidade/rest/disponibilidade.rest.dto";
 import { TurmaFindOneInputDto, TurmaFindOneOutputDto } from "@/v2/server/modules/turma/http/dto";
 
 // ============================================================================

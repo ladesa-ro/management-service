@@ -19,7 +19,7 @@ import {
 import {
   NivelFormacaoFindOneInputDto,
   NivelFormacaoFindOneOutputDto,
-} from "@/v2/server/modules/nivel-formacao/http/dto";
+} from "@/server/nest/modules/nivel-formacao/rest/nivel-formacao.rest.dto";
 import {
   OfertaFormacaoFindOneInputDto,
   OfertaFormacaoFindOneOutputDto,

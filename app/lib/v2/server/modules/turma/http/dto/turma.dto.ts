@@ -20,9 +20,9 @@ import {
 import {
   AmbienteFindOneInputDto,
   AmbienteFindOneOutputDto,
-} from "@/v2/server/modules/ambiente/http/dto";
-import { ImagemFindOneOutputDto } from "@/v2/server/modules/bloco/http/dto";
-import { CursoFindOneInputDto, CursoFindOneOutputDto } from "@/v2/server/modules/curso/http/dto";
+} from "@/server/nest/modules/ambiente/rest";
+import { ImagemFindOneOutputDto } from "@/server/nest/modules/bloco/rest";
+import { CursoFindOneInputDto, CursoFindOneOutputDto } from "@/server/nest/modules/curso/rest";
 
 // ============================================================================
 // FindOne Output

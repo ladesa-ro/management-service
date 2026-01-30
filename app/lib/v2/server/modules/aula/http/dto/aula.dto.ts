@@ -20,7 +20,7 @@ import {
 import {
   AmbienteFindOneInputDto,
   AmbienteFindOneOutputDto,
-} from "@/v2/server/modules/ambiente/http/dto";
+} from "@/server/nest/modules/ambiente/rest";
 import { DiarioFindOneInputDto, DiarioFindOneOutputDto } from "@/v2/server/modules/diario/http/dto";
 
 // ============================================================================

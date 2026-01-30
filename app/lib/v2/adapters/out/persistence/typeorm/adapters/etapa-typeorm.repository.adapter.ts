@@ -1,14 +1,14 @@
 import { Injectable } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
-import type { IPaginationConfig } from "@/v2/application/ports/pagination";
-import type { IEtapaRepositoryPort } from "@/v2/core/etapa/application/ports";
-import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 import type {
-  EtapaFindOneInputDto,
-  EtapaFindOneOutputDto,
-  EtapaListInputDto,
-  EtapaListOutputDto,
-} from "@/v2/server/modules/etapa/http/dto";
+  EtapaFindOneInput,
+  EtapaFindOneOutput,
+  EtapaListInput,
+  EtapaListOutput,
+  IEtapaRepositoryPort,
+} from "@/core/etapa";
+import type { IPaginationConfig } from "@/v2/application/ports/pagination";
+import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
 import { BaseTypeOrmRepositoryAdapter } from "../base";
 import { DatabaseContextService } from "../context/database-context.service";
@@ -18,10 +18,10 @@ import type { EtapaEntity } from "../typeorm/entities";
 export class EtapaTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     EtapaEntity,
-    EtapaListInputDto,
-    EtapaListOutputDto,
-    EtapaFindOneInputDto,
-    EtapaFindOneOutputDto
+    EtapaListInput,
+    EtapaListOutput,
+    EtapaFindOneInput,
+    EtapaFindOneOutput
   >
   implements IEtapaRepositoryPort
 {

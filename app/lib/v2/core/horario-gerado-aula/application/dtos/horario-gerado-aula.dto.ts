@@ -6,11 +6,11 @@ import {
 import {
   HorarioGeradoFindOneOutput,
   HorarioGeradoInputRef,
-} from "../../../horario-gerado/application/dtos";
+} from "@/core/horario-gerado";
 import {
   IntervaloDeTempoFindOneOutput,
   IntervaloDeTempoInputRef,
-} from "../../../intervalo-de-tempo/application/dtos";
+} from "@/core/intervalo-de-tempo";
 
 // ============================================================================
 // FindOne Input/Output

@@ -1,11 +1,11 @@
 import { ObjectUuidRef, PaginationInput, PaginationMeta } from "@/core/@shared/application/dtos";
-import { AmbienteFindOneOutput, AmbienteInputRef } from "../../../ambiente/application/dtos";
 import {
   CalendarioLetivoFindOneOutput,
   CalendarioLetivoInputRef,
-} from "../../../calendario-letivo/application/dtos";
-import { DisciplinaFindOneOutput, DisciplinaInputRef } from "../../../disciplina/application/dtos";
-import { ImagemFindOneOutput, ImagemInputRef } from "../../../imagem/application/dtos";
+} from "@/core/calendario-letivo";
+import { DisciplinaFindOneOutput, DisciplinaInputRef } from "@/core/disciplina/application/dtos";
+import { ImagemFindOneOutput, ImagemInputRef } from "@/core/imagem";
+import { AmbienteFindOneOutput, AmbienteInputRef } from "@/core/ambiente";
 import { TurmaFindOneOutput, TurmaInputRef } from "../../../turma/application/dtos";
 
 // ============================================================================

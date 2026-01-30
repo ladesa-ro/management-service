@@ -7,7 +7,7 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
-import { OfertaFormacaoService } from "@/v2/core/oferta-formacao/application/use-cases/oferta-formacao.service";
+import { OfertaFormacaoService } from "@/core/oferta-formacao";
 import { AccessContext, AccessContextHttp } from "@/v2/old/infrastructure/access-context";
 import {
   OfertaFormacaoCreateInputDto,
@@ -31,7 +31,10 @@ export class OfertaFormacaoController {
     @AccessContextHttp() accessContext: AccessContext,
     @Query() dto: OfertaFormacaoListInputDto,
   ): Promise<OfertaFormacaoListOutputDto> {
-    return this.ofertaFormacaoService.ofertaFormacaoFindAll(accessContext, dto);
+    return this.ofertaFormacaoService.ofertaFormacaoFindAll(
+      accessContext,
+      dto,
+    ) as unknown as OfertaFormacaoListOutputDto;
   }
 
   @Get("/:id")
@@ -43,7 +46,10 @@ export class OfertaFormacaoController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: OfertaFormacaoFindOneInputDto,
   ): Promise<OfertaFormacaoFindOneOutputDto> {
-    return this.ofertaFormacaoService.ofertaFormacaoFindByIdStrict(accessContext, params);
+    return this.ofertaFormacaoService.ofertaFormacaoFindByIdStrict(
+      accessContext,
+      params,
+    ) as unknown as OfertaFormacaoFindOneOutputDto;
   }
 
   @Post("/")
@@ -54,7 +60,10 @@ export class OfertaFormacaoController {
     @AccessContextHttp() accessContext: AccessContext,
     @Body() dto: OfertaFormacaoCreateInputDto,
   ): Promise<OfertaFormacaoFindOneOutputDto> {
-    return this.ofertaFormacaoService.ofertaFormacaoCreate(accessContext, dto);
+    return this.ofertaFormacaoService.ofertaFormacaoCreate(
+      accessContext,
+      dto,
+    ) as unknown as OfertaFormacaoFindOneOutputDto;
   }
 
   @Patch("/:id")
@@ -70,7 +79,7 @@ export class OfertaFormacaoController {
     return this.ofertaFormacaoService.ofertaFormacaoUpdate(accessContext, {
       id: params.id,
       ...dto,
-    });
+    }) as unknown as OfertaFormacaoFindOneOutputDto;
   }
 
   @Delete("/:id")

@@ -1,4 +1,4 @@
-import type { UsuarioFindOneOutput } from "@/v2/core/usuario/application/dtos";
+import type { UsuarioFindOneOutput } from "@/core/usuario/application/dtos";
 
 export type IRequestActor = null | Pick<
   UsuarioFindOneOutput,

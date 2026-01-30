@@ -1,14 +1,14 @@
 import { Injectable } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
-import type { IPaginationConfig } from "@/v2/application/ports/pagination";
-import type { IBlocoRepositoryPort } from "@/v2/core/bloco/application/ports";
-import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 import type {
-  BlocoFindOneInputDto,
-  BlocoFindOneOutputDto,
-  BlocoListInputDto,
-  BlocoListOutputDto,
-} from "@/v2/server/modules/bloco/http/dto";
+  BlocoFindOneInput,
+  BlocoFindOneOutput,
+  BlocoListInput,
+  BlocoListOutput,
+} from "@/core/bloco";
+import type { IBlocoRepositoryPort } from "@/core/bloco/application/ports";
+import type { IPaginationConfig } from "@/v2/application/ports/pagination";
+import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
 import { BaseTypeOrmRepositoryAdapter } from "../base";
 import { DatabaseContextService } from "../context/database-context.service";
@@ -22,10 +22,10 @@ import type { BlocoEntity } from "../typeorm/entities";
 export class BlocoTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     BlocoEntity,
-    BlocoListInputDto,
-    BlocoListOutputDto,
-    BlocoFindOneInputDto,
-    BlocoFindOneOutputDto
+    BlocoListInput,
+    BlocoListOutput,
+    BlocoFindOneInput,
+    BlocoFindOneOutput
   >
   implements IBlocoRepositoryPort
 {

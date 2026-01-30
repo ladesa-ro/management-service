@@ -1,14 +1,16 @@
 import { Module } from "@nestjs/common";
+import { NestJsPaginateAdapter } from "@/v2/adapters/out/persistence/pagination";
 import { EnderecoTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistence/typeorm/adapters";
-import { EnderecoService } from "@/v2/core/endereco/application/use-cases/endereco.service";
+import { ENDERECO_REPOSITORY_PORT, EnderecoService } from "@/core/endereco";
 
 @Module({
   imports: [],
   controllers: [],
   providers: [
+    NestJsPaginateAdapter,
     EnderecoService,
     {
-      provide: "IEnderecoRepositoryPort",
+      provide: ENDERECO_REPOSITORY_PORT,
       useClass: EnderecoTypeOrmRepositoryAdapter,
     },
   ],

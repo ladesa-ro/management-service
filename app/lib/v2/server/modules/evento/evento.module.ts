@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
 import { EventoService } from "@/v2/core/evento/application/use-cases/evento.service";
-import { CalendarioLetivoModule } from "@/v2/server/modules/calendario-letivo";
+import { CalendarioLetivoModule } from "@/server/nest/modules/calendario-letivo";
 import { EventoController } from "./http";
 
 @Module({

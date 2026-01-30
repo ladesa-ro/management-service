@@ -3,7 +3,7 @@ import { has, map, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
 import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
 import type { TurmaDisponibilidadeEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
-import { DisponibilidadeService } from "@/v2/core/disponibilidade/application/use-cases/disponibilidade.service";
+import { DisponibilidadeService } from "@/core/disponibilidade/application/use-cases/disponibilidade.service";
 import { TurmaService } from "@/v2/core/turma/application/use-cases/turma.service";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import { QbEfficientLoad, SearchService } from "@/v2/old/shared";

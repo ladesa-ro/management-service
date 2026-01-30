@@ -1,5 +1,5 @@
+import type { Perfil } from "@/core/perfil";
 import type { Diario } from "@/v2/core/diario/domain/diario.domain";
-import type { Perfil } from "@/v2/core/perfil/domain/perfil.domain";
 import type { IDiarioProfessor, IDiarioProfessorCreate } from "./diario-professor.types";
 
 export class DiarioProfessor implements IDiarioProfessor {

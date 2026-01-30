@@ -4,7 +4,7 @@ import { FilterOperator } from "nestjs-paginate";
 import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
 import type { DiarioPreferenciaAgrupamentoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import { DiarioService } from "@/v2/core/diario/application/use-cases/diario.service";
-import { IntervaloDeTempoService } from "@/v2/core/intervalo-de-tempo/application/use-cases/intervalo-de-tempo.service";
+import { IntervaloDeTempoService } from "@/core/intervalo-de-tempo/application/use-cases/intervalo-de-tempo.service";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 import { QbEfficientLoad, SearchService } from "@/v2/old/shared";

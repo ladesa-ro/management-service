@@ -19,11 +19,11 @@ import {
 import {
   AmbienteFindOneInputDto,
   AmbienteFindOneOutputDto,
-} from "@/v2/server/modules/ambiente/http/dto";
+} from "@/server/nest/modules/ambiente/rest";
 import {
   CalendarioLetivoFindOneInputDto,
   CalendarioLetivoFindOneOutputDto,
-} from "@/v2/server/modules/calendario-letivo/http/dto";
+} from "@/server/nest/modules/calendario-letivo/rest";
 
 // ============================================================================
 // FindOne Output

@@ -16,7 +16,7 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
-import { ProfessorIndisponibilidadeService } from "@/v2/core/professor-indisponibilidade/application/use-cases/professor-indisponibilidade.service";
+import { ProfessorIndisponibilidadeLegacyService } from "../professor-indisponibilidade.legacy.service";
 import { AccessContext, AccessContextHttp } from "@/v2/old/infrastructure/access-context";
 import {
   ProfessorIndisponibilidadeCreateInputDto,
@@ -33,7 +33,7 @@ import {
 @Controller("/indisponibilidades")
 export class ProfessorIndisponibilidadeController {
   constructor(
-    private readonly professorIndisponibilidadeService: ProfessorIndisponibilidadeService,
+    private readonly professorIndisponibilidadeService: ProfessorIndisponibilidadeLegacyService,
   ) {}
 
   @Get("/list/:idPerfilFk")

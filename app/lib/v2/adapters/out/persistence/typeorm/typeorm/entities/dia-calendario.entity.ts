@@ -6,7 +6,7 @@ import {
   PrimaryGeneratedColumn,
   type Relation,
 } from "typeorm";
-import { type TipoDiaCalendario } from "@/v2/server/modules/dia-calendario/http/dto";
+import { type TipoDiaCalendario } from "@/server/nest/modules/dia-calendario/rest";
 import { CalendarioLetivoEntity } from "./calendario-letivo.entity";
 
 @Entity("dia_calendario")

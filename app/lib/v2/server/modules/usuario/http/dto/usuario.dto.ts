@@ -19,7 +19,7 @@ import {
   referenceProperty,
   simpleProperty,
 } from "@/v2/old/shared/metadata";
-import { ImagemFindOneOutputDto } from "@/v2/server/modules/bloco/http/dto";
+import { ImagemFindOneOutputDto } from "@/server/nest/modules/bloco/rest";
 
 // ============================================================================
 // FindOne Output

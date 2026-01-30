@@ -1,9 +1,9 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { has } from "lodash";
+import { CalendarioLetivoService } from "@/core/calendario-letivo";
+import { DisciplinaService } from "@/core/disciplina/application/use-cases/disciplina.service";
 import type { DiarioEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
-import { AmbienteService } from "@/v2/core/ambiente/application/use-cases/ambiente.service";
-import { CalendarioLetivoService } from "@/v2/core/calendario-letivo/application/use-cases/calendario-letivo.service";
-import { DisciplinaService } from "@/v2/core/disciplina/application/use-cases/disciplina.service";
+import { AmbienteService } from "@/core/ambiente/application/use-cases/ambiente.service";
 import { BaseCrudService } from "@/v2/core/shared";
 import { TurmaService } from "@/v2/core/turma/application/use-cases/turma.service";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";

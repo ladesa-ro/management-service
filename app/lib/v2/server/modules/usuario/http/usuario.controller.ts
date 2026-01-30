@@ -18,7 +18,7 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
-import { UsuarioService } from "@/v2/core/usuario/application/use-cases/usuario.service";
+import { UsuarioService } from "@/core/usuario/application/use-cases/usuario.service";
 import { AccessContext, AccessContextHttp } from "@/v2/old/infrastructure/access-context";
 import {
   UsuarioCreateInputDto,

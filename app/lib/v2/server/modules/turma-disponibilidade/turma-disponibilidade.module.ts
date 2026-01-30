@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
 import { TurmaDisponibilidadeService } from "@/v2/core/turma-disponibilidade/application/use-cases/turma-disponibilidade.service";
-import { DisponibilidadeModule } from "@/v2/server/modules/disponibilidade";
+import { DisponibilidadeModule } from "@/server/nest/modules/disponibilidade";
 import { TurmaModule } from "@/v2/server/modules/turma";
 import { TurmaDisponibilidadeController } from "./http";
 

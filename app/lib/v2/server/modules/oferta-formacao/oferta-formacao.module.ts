@@ -1,15 +1,15 @@
 import { Module } from "@nestjs/common";
+import { OFERTA_FORMACAO_REPOSITORY_PORT, OfertaFormacaoService } from "@/core/oferta-formacao";
 import { NestJsPaginateAdapter } from "@/v2/adapters/out/persistence/pagination";
 import { OfertaFormacaoTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistence/typeorm/adapters";
-import { OfertaFormacaoService } from "@/v2/core/oferta-formacao/application/use-cases/oferta-formacao.service";
-import { ModalidadeModule } from "@/v2/server/modules/modalidade";
+import { ModalidadeModule } from "@/server/nest/modules/modalidade";
 import { OfertaFormacaoController } from "./http";
 
 /**
- * Módulo NestJS para OfertaFormacao
+ * Modulo NestJS para OfertaFormacao
  *
- * Responsável por:
- * - Configurar injeção de dependência
+ * Responsavel por:
+ * - Configurar injecao de dependencia
  * - Fazer o binding entre ports e adapters
  * - Registrar controller, service e repository
  */
@@ -17,15 +17,15 @@ import { OfertaFormacaoController } from "./http";
   imports: [ModalidadeModule],
   controllers: [OfertaFormacaoController],
   providers: [
-    // Adapter de paginação genérico
+    // Adapter de paginacao generico
     NestJsPaginateAdapter,
 
     // Service (implementa Use Case Port)
     OfertaFormacaoService,
 
-    // Binding: Repository Port → TypeORM Adapter
+    // Binding: Repository Port -> TypeORM Adapter
     {
-      provide: "IOfertaFormacaoRepositoryPort",
+      provide: OFERTA_FORMACAO_REPOSITORY_PORT,
       useClass: OfertaFormacaoTypeOrmRepositoryAdapter,
     },
   ],

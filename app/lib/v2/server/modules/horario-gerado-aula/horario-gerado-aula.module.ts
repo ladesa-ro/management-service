@@ -3,8 +3,8 @@ import { NestJsPaginateAdapter } from "@/v2/adapters/out/persistence/pagination"
 import { HorarioGeradoAulaTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistence/typeorm/adapters";
 import { HorarioGeradoAulaService } from "@/v2/core/horario-gerado-aula/application/use-cases/horario-gerado-aula.service";
 import { DiarioProfessorModule } from "@/v2/server/modules/diario-professor";
-import { HorarioGeradoModule } from "@/v2/server/modules/horario-gerado";
-import { IntervaloDeTempoModule } from "@/v2/server/modules/intervalo-de-tempo";
+import { HorarioGeradoModule } from "@/server/nest/modules/horario-gerado";
+import { IntervaloDeTempoModule } from "@/server/nest/modules/intervalo-de-tempo";
 import { HorarioGeradoAulaController } from "./http";
 
 @Module({

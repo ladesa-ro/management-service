@@ -2,10 +2,10 @@ import { Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/v2/adapters/out/persistence/pagination";
 import { TurmaTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistence/typeorm/adapters";
 import { TurmaService } from "@/v2/core/turma/application/use-cases/turma.service";
-import { AmbienteModule } from "@/v2/server/modules/ambiente";
-import { ArquivoModule } from "@/v2/server/modules/arquivo";
-import { CursoModule } from "@/v2/server/modules/curso";
-import { ImagemModule } from "@/v2/server/modules/imagem";
+import { AmbienteModule } from "@/server/nest/modules/ambiente";
+import { ArquivoModule } from "@/server/nest/modules/arquivo";
+import { CursoModule } from "@/server/nest/modules/curso";
+import { ImagemModule } from "@/server/nest/modules/imagem";
 import { TurmaController } from "./http";
 
 /**

@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import type { SelectQueryBuilder } from "typeorm";
-import type { IArquivoRepositoryPort } from "@/v2/core/arquivo/application/ports";
+import type { IArquivoRepositoryPort } from "@/core/arquivo";
 import { DatabaseContextService } from "../context/database-context.service";
 import type { ArquivoEntity } from "../typeorm/entities";
 

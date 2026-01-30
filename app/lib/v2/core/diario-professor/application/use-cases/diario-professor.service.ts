@@ -2,7 +2,7 @@ import { Inject, Injectable } from "@nestjs/common";
 import { has } from "lodash";
 import type { DiarioProfessorEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import { DiarioService } from "@/v2/core/diario/application/use-cases/diario.service";
-import { PerfilService } from "@/v2/core/perfil/application/use-cases/perfil.service";
+import { PerfilService } from "@/core/perfil";
 import { BaseCrudService } from "@/v2/core/shared";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
@@ -117,7 +117,7 @@ export class DiarioProfessorService extends BaseCrudService<
     }
 
     if (has(dto, "perfil") && dto.perfil) {
-      const perfil = await this.perfilService.perfilFindByIdStrict(accessContext, {
+      const perfil = await this.perfilService.findByIdStrict(accessContext, {
         id: dto.perfil.id,
       });
       this.repository.merge(entity, { perfil: { id: perfil.id } });
@@ -137,7 +137,7 @@ export class DiarioProfessorService extends BaseCrudService<
     }
 
     if (has(dto, "perfil") && dto.perfil !== undefined && dto.perfil !== null) {
-      const perfil = await this.perfilService.perfilFindByIdStrict(accessContext, {
+      const perfil = await this.perfilService.findByIdStrict(accessContext, {
         id: dto.perfil.id,
       });
       this.repository.merge(entity, { perfil: { id: perfil.id } });

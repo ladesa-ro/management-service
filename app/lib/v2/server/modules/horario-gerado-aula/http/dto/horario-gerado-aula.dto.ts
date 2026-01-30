@@ -21,13 +21,13 @@ import {
   DiarioProfessorFindOneOutputDto,
 } from "@/v2/server/modules/diario-professor/http/dto";
 import {
-  HorarioGeradoFindOneInputDto,
-  HorarioGeradoFindOneOutputDto,
-} from "@/v2/server/modules/horario-gerado/http/dto";
+  HorarioGeradoFindOneInputRestDto as HorarioGeradoFindOneInputDto,
+  HorarioGeradoFindOneOutputRestDto as HorarioGeradoFindOneOutputDto,
+} from "@/server/nest/modules/horario-gerado/rest";
 import {
   IntervaloDeTempoFindOneInputDto,
   IntervaloDeTempoFindOneOutputDto,
-} from "@/v2/server/modules/intervalo-de-tempo/http/dto";
+} from "@/server/nest/modules/intervalo-de-tempo/rest/intervalo-de-tempo.rest.dto";
 
 // ============================================================================
 // FindOne Output

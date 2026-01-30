@@ -2,9 +2,9 @@ import { Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/v2/adapters/out/persistence/pagination";
 import { AulaTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistence/typeorm/adapters";
 import { AulaService } from "@/v2/core/aula/application/use-cases/aula.service";
-import { AmbienteModule } from "@/v2/server/modules/ambiente";
+import { AmbienteModule } from "@/server/nest/modules/ambiente";
 import { DiarioModule } from "@/v2/server/modules/diario";
-import { IntervaloDeTempoModule } from "@/v2/server/modules/intervalo-de-tempo";
+import { IntervaloDeTempoModule } from "@/server/nest/modules/intervalo-de-tempo";
 import { AulaController } from "./http";
 
 /**

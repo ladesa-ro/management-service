@@ -1,10 +1,10 @@
 import { Inject, Injectable, NotFoundException, type StreamableFile } from "@nestjs/common";
 import { has } from "lodash";
+import { ArquivoService } from "@/core/arquivo/application/use-cases/arquivo.service";
+import { CursoService } from "@/core/curso";
+import { ImagemService } from "@/core/imagem/application/use-cases/imagem.service";
 import type { TurmaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
-import { AmbienteService } from "@/v2/core/ambiente/application/use-cases/ambiente.service";
-import { ArquivoService } from "@/v2/core/arquivo/application/use-cases/arquivo.service";
-import { CursoService } from "@/v2/core/curso/application/use-cases/curso.service";
-import { ImagemService } from "@/v2/core/imagem/application/use-cases/imagem.service";
+import { AmbienteService } from "@/core/ambiente/application/use-cases/ambiente.service";
 import { BaseCrudService } from "@/v2/core/shared";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
@@ -119,7 +119,7 @@ export class TurmaService extends BaseCrudService<
 
       if (versao) {
         const { arquivo } = versao;
-        return this.arquivoService.getStreamableFile(null, arquivo.id, null);
+        return this.arquivoService.getStreamableFile(null, { id: arquivo.id });
       }
     }
 

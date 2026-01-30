@@ -1,14 +1,14 @@
 import { Injectable } from "@nestjs/common";
+import type {
+  IUsuarioRepositoryPort,
+  UsuarioFindOneInput,
+  UsuarioFindOneOutput,
+  UsuarioListInput,
+  UsuarioListOutput,
+} from "@/core/usuario";
 import type { IPaginationConfig } from "@/v2/application/ports/pagination";
-import type { IUsuarioRepositoryPort } from "@/v2/core/usuario/application/ports";
 import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 import { QbEfficientLoad } from "@/v2/old/shared";
-import type {
-  UsuarioFindOneInputDto,
-  UsuarioFindOneOutputDto,
-  UsuarioListInputDto,
-  UsuarioListOutputDto,
-} from "@/v2/server/modules/usuario/http/dto";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
 import { BaseTypeOrmRepositoryAdapter } from "../base";
 import { DatabaseContextService } from "../context/database-context.service";
@@ -18,10 +18,10 @@ import type { UsuarioEntity } from "../typeorm/entities";
 export class UsuarioTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     UsuarioEntity,
-    UsuarioListInputDto,
-    UsuarioListOutputDto,
-    UsuarioFindOneInputDto,
-    UsuarioFindOneOutputDto
+    UsuarioListInput,
+    UsuarioListOutput,
+    UsuarioFindOneInput,
+    UsuarioFindOneOutput
   >
   implements IUsuarioRepositoryPort
 {
@@ -43,7 +43,7 @@ export class UsuarioTypeOrmRepositoryAdapter
   async findByMatriculaSiape(
     matriculaSiape: string,
     selection?: string[] | boolean,
-  ): Promise<UsuarioFindOneOutputDto | null> {
+  ): Promise<UsuarioFindOneOutput | null> {
     const qb = this.repository.createQueryBuilder(this.alias);
 
     qb.andWhere(`${this.alias}.matriculaSiape = :matriculaSiape`, {
@@ -55,7 +55,7 @@ export class UsuarioTypeOrmRepositoryAdapter
 
     const usuario = await qb.getOne();
 
-    return usuario as UsuarioFindOneOutputDto | null;
+    return usuario as UsuarioFindOneOutput | null;
   }
 
   // Métodos específicos do Usuario que não estão na classe base

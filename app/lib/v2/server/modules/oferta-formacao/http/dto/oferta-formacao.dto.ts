@@ -20,7 +20,7 @@ import {
 import {
   ModalidadeFindOneInputDto,
   ModalidadeFindOneOutputDto,
-} from "@/v2/server/modules/modalidade/http/dto";
+} from "@/server/nest/modules/modalidade/rest/modalidade.rest.dto";
 
 // ============================================================================
 // FindOne Output

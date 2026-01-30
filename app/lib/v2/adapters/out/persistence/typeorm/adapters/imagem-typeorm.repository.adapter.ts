@@ -4,7 +4,7 @@ import type {
   IImagemArquivoRepositoryPort,
   IImagemRepositoryPort,
   IImagemTransactionPort,
-} from "@/v2/core/imagem/application/ports";
+} from "@/core/imagem/application/ports";
 import { DatabaseContextService } from "../context/database-context.service";
 import type { ImagemArquivoEntity, ImagemEntity } from "../typeorm/entities";
 

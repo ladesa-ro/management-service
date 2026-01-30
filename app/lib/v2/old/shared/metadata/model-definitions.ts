@@ -93,7 +93,7 @@ defineModel("ImagemFindOneFromImagemArquivoOutput", [
 defineModel("ImagemFindOneOutput", [
   simpleProperty("id"),
   simpleProperty("descricao", { nullable: true }),
-  referenceProperty("versoes", "ImagemArquivoFindOneFromImagemOutput"),
+  // Note: 'versoes' is a OneToMany relation (loaded separately, not via QbEfficientLoad)
   ...commonProperties.dated,
 ]);
 

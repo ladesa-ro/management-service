@@ -1,6 +1,6 @@
 import type { IDiarioProfessor } from "@/v2/core/diario-professor/domain/diario-professor.types";
-import type { IHorarioGerado } from "@/v2/core/horario-gerado/domain/horario-gerado.types";
-import type { IIntervaloDeTempo } from "@/v2/core/intervalo-de-tempo/domain/intervalo-de-tempo.types";
+import type { IHorarioGerado } from "@/core/horario-gerado";
+import type { IIntervaloDeTempo } from "@/core/intervalo-de-tempo/domain/intervalo-de-tempo.types";
 
 export interface IHorarioGeradoAula {
   id: string;

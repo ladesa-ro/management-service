@@ -1,9 +1,9 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { has } from "lodash";
 import type { ReservaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
-import { AmbienteService } from "@/v2/core/ambiente/application/use-cases/ambiente.service";
+import { AmbienteService } from "@/core/ambiente/application/use-cases/ambiente.service";
 import { BaseCrudService } from "@/v2/core/shared";
-import { UsuarioService } from "@/v2/core/usuario/application/use-cases/usuario.service";
+import { UsuarioService } from "@/core/usuario/application/use-cases/usuario.service";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
   ReservaCreateInputDto,

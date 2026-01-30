@@ -1,5 +1,5 @@
-import type { IAmbiente } from "@/v2/core/ambiente/domain/ambiente.types";
-import type { ICalendarioLetivo } from "@/v2/core/calendario-letivo/domain/calendario-letivo.types";
+import type { ICalendarioLetivo } from "@/core/calendario-letivo";
+import type { IAmbiente } from "@/core/ambiente/domain/ambiente.types";
 
 /**
  * Interface que define a estrutura de um Evento

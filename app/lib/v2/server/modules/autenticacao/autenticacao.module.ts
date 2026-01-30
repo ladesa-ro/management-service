@@ -4,7 +4,7 @@ import {
   KeycloakModule,
   OpenidConnectModule,
 } from "@/v2/old/infrastructure/integrations/identity-provider";
-import { PerfilModule } from "@/v2/server/modules/perfil";
+import { PerfilModule } from "@/server/nest/modules/perfil";
 import { UsuarioModule } from "@/v2/server/modules/usuario";
 import { AutenticacaoController } from "./http";
 

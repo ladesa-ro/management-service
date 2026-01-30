@@ -1,4 +1,4 @@
-import type { IDisponibilidade } from "@/v2/core/disponibilidade/domain/disponibilidade.types";
+import type { IDisponibilidade } from "@/core/disponibilidade/domain/disponibilidade.types";
 import type { ITurma } from "@/v2/core/turma/domain/turma.types";
 
 export interface ITurmaDisponibilidade {

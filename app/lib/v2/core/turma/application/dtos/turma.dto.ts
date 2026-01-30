@@ -1,7 +1,7 @@
 import { ObjectUuidRef, PaginationInput, PaginationMeta } from "@/core/@shared/application/dtos";
-import { AmbienteFindOneOutput, AmbienteInputRef } from "../../../ambiente/application/dtos";
-import { CursoFindOneOutput, CursoInputRef } from "../../../curso/application/dtos";
-import { ImagemFindOneOutput, ImagemInputRef } from "../../../imagem/application/dtos";
+import { CursoFindOneOutput, CursoInputRef } from "@/core/curso";
+import { ImagemFindOneOutput, ImagemInputRef } from "@/core/imagem";
+import { AmbienteFindOneOutput, AmbienteInputRef } from "@/core/ambiente";
 
 // ============================================================================
 // FindOne Input/Output

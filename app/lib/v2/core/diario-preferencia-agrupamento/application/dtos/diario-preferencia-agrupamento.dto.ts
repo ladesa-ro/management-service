@@ -3,7 +3,7 @@ import { DiarioFindOneOutput, DiarioInputRef } from "../../../diario/application
 import {
   IntervaloDeTempoFindOneOutput,
   IntervaloDeTempoInputRef,
-} from "../../../intervalo-de-tempo/application/dtos";
+} from "@/core/intervalo-de-tempo";
 
 // ============================================================================
 // FindOne Input/Output

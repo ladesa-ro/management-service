@@ -1,6 +1,6 @@
 import { ObjectUuidRef, PaginationInput, PaginationMeta } from "@/core/@shared/application/dtos";
+import { PerfilFindOneOutput, PerfilInputRef } from "@/core/perfil";
 import { DiarioFindOneOutput, DiarioInputRef } from "../../../diario/application/dtos";
-import { PerfilFindOneOutput, PerfilInputRef } from "../../../perfil/application/dtos";
 
 // ============================================================================
 // FindOne Input/Output

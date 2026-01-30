@@ -1,6 +1,6 @@
 import type { DiarioProfessor } from "@/v2/core/diario-professor/domain/diario-professor.domain";
-import type { HorarioGerado } from "@/v2/core/horario-gerado/domain/horario-gerado.domain";
-import type { IntervaloDeTempo } from "@/v2/core/intervalo-de-tempo/domain/intervalo-de-tempo.domain";
+import type { HorarioGerado } from "@/core/horario-gerado";
+import type { IntervaloDeTempo } from "@/core/intervalo-de-tempo/domain/intervalo-de-tempo.domain";
 import type { IHorarioGeradoAula, IHorarioGeradoAulaCreate } from "./horario-gerado-aula.types";
 
 export class HorarioGeradoAula implements IHorarioGeradoAula {

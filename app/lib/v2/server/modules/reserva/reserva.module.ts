@@ -2,7 +2,7 @@ import { Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/v2/adapters/out/persistence/pagination";
 import { ReservaTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistence/typeorm/adapters";
 import { ReservaService } from "@/v2/core/reserva/application/use-cases/reserva.service";
-import { AmbienteModule } from "@/v2/server/modules/ambiente";
+import { AmbienteModule } from "@/server/nest/modules/ambiente";
 import { UsuarioModule } from "@/v2/server/modules/usuario";
 import { ReservaController } from "./http";
 

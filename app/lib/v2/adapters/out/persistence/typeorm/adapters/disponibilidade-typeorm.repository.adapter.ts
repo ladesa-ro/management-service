@@ -1,13 +1,13 @@
 import { Injectable } from "@nestjs/common";
-import type { IPaginationConfig } from "@/v2/application/ports/pagination";
-import type { IDisponibilidadeRepositoryPort } from "@/v2/core/disponibilidade/application/ports";
-import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 import type {
-  DisponibilidadeFindOneInputDto,
-  DisponibilidadeFindOneOutputDto,
-  DisponibilidadeListInputDto,
-  DisponibilidadeListOutputDto,
-} from "@/v2/server/modules/disponibilidade/http/dto";
+  DisponibilidadeFindOneInput,
+  DisponibilidadeFindOneOutput,
+  DisponibilidadeListInput,
+  DisponibilidadeListOutput,
+  IDisponibilidadeRepositoryPort,
+} from "@/core/disponibilidade";
+import type { IPaginationConfig } from "@/v2/application/ports/pagination";
+import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
 import { BaseTypeOrmRepositoryAdapter } from "../base";
 import { DatabaseContextService } from "../context/database-context.service";
@@ -17,10 +17,10 @@ import type { DisponibilidadeEntity } from "../typeorm/entities";
 export class DisponibilidadeTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     DisponibilidadeEntity,
-    DisponibilidadeListInputDto,
-    DisponibilidadeListOutputDto,
-    DisponibilidadeFindOneInputDto,
-    DisponibilidadeFindOneOutputDto
+    DisponibilidadeListInput,
+    DisponibilidadeListOutput,
+    DisponibilidadeFindOneInput,
+    DisponibilidadeFindOneOutput
   >
   implements IDisponibilidadeRepositoryPort
 {

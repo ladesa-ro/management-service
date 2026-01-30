@@ -20,9 +20,9 @@ import {
 import {
   AmbienteFindOneInputDto,
   AmbienteFindOneOutputDto,
-} from "@/v2/server/modules/ambiente/http/dto";
-import { ImagemFindOneOutputDto } from "@/v2/server/modules/bloco/http/dto";
-import { CalendarioLetivoFindOneOutputDto } from "@/v2/server/modules/calendario-letivo/http/dto";
+} from "@/server/nest/modules/ambiente/rest";
+import { ImagemFindOneOutputDto } from "@/server/nest/modules/bloco/rest";
+import { CalendarioLetivoFindOneOutputDto } from "@/server/nest/modules/calendario-letivo/rest";
 import {
   DisciplinaFindOneInputDto,
   DisciplinaFindOneOutputDto,

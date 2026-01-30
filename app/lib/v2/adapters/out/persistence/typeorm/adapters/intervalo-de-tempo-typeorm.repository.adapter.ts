@@ -1,20 +1,63 @@
 import { Injectable } from "@nestjs/common";
 import type { DeepPartial } from "typeorm";
-import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
+import type {
+  IntervaloDeTempoFindOneInput,
+  IntervaloDeTempoFindOneOutput,
+  IntervaloDeTempoInput,
+  IntervaloDeTempoListInput,
+  IntervaloDeTempoListOutput,
+  IIntervaloDeTempoRepositoryPort,
+} from "@/core/intervalo-de-tempo";
 import type { IntervaloDeTempoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
-import type { IntervaloDeTempoInput } from "@/v2/core/intervalo-de-tempo/application/dtos";
-import type { IIntervaloDeTempoRepositoryPort } from "@/v2/core/intervalo-de-tempo/application/ports";
+import type { IPaginationConfig } from "@/v2/application/ports/pagination";
+import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
+import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
+import { BaseTypeOrmRepositoryAdapter } from "../base";
+import { DatabaseContextService } from "../context/database-context.service";
 
 @Injectable()
-export class IntervaloDeTempoTypeOrmRepositoryAdapter implements IIntervaloDeTempoRepositoryPort {
-  constructor(private databaseContext: DatabaseContextService) {}
+export class IntervaloDeTempoTypeOrmRepositoryAdapter
+  extends BaseTypeOrmRepositoryAdapter<
+    IntervaloDeTempoEntity,
+    IntervaloDeTempoListInput,
+    IntervaloDeTempoListOutput,
+    IntervaloDeTempoFindOneInput,
+    IntervaloDeTempoFindOneOutput
+  >
+  implements IIntervaloDeTempoRepositoryPort
+{
+  protected readonly alias = "intervalo_de_tempo";
+  protected readonly authzAction = "intervalo_de_tempo:find";
+  protected readonly outputDtoName = "IntervaloDeTempoFindOneOutput";
 
-  private get intervaloTempoRepository() {
+  constructor(
+    protected readonly databaseContext: DatabaseContextService,
+    protected readonly paginationAdapter: NestJsPaginateAdapter,
+  ) {
+    super();
+  }
+
+  protected get repository() {
     return this.databaseContext.intervaloDeTempoRepository;
   }
 
+  protected getPaginateConfig(): IPaginationConfig<IntervaloDeTempoEntity> {
+    return {
+      ...paginateConfig,
+      select: ["id", "periodoInicio", "periodoFim", "dateCreated"],
+      sortableColumns: ["periodoInicio", "periodoFim", "dateCreated"],
+      searchableColumns: ["id"],
+      defaultSortBy: [
+        ["periodoInicio", "ASC"],
+        ["periodoFim", "ASC"],
+      ],
+      filterableColumns: {},
+    };
+  }
+
+  // Custom methods specific to IntervaloDeTempo
   async findOne(domain: IntervaloDeTempoInput): Promise<IntervaloDeTempoEntity | null> {
-    return this.intervaloTempoRepository.findOne({
+    return this.repository.findOne({
       where: {
         periodoFim: domain.periodoFim,
         periodoInicio: domain.periodoInicio,
@@ -23,18 +66,6 @@ export class IntervaloDeTempoTypeOrmRepositoryAdapter implements IIntervaloDeTem
   }
 
   async findOneByIdOrFail(id: string): Promise<IntervaloDeTempoEntity> {
-    return this.intervaloTempoRepository.findOneByOrFail({ id });
-  }
-
-  async save(intervalo: DeepPartial<IntervaloDeTempoEntity>): Promise<IntervaloDeTempoEntity> {
-    return this.intervaloTempoRepository.save(intervalo);
-  }
-
-  create(): IntervaloDeTempoEntity {
-    return this.intervaloTempoRepository.create();
-  }
-
-  merge(intervalo: IntervaloDeTempoEntity, data: DeepPartial<IntervaloDeTempoEntity>): void {
-    this.intervaloTempoRepository.merge(intervalo, data);
+    return this.repository.findOneByOrFail({ id });
   }
 }

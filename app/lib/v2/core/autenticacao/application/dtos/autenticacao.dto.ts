@@ -1,5 +1,5 @@
-import { PerfilFindOneOutput } from "../../../perfil/application/dtos";
-import { UsuarioFindOneOutput } from "../../../usuario/application/dtos";
+import { PerfilFindOneOutput } from "@/core/perfil";
+import { UsuarioFindOneOutput } from "@/core/usuario";
 
 // ============================================================================
 // Auth Login Input

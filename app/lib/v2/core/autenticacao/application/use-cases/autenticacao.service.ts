@@ -8,8 +8,8 @@ import {
 } from "@nestjs/common";
 import * as client from "openid-client";
 import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
-import { PerfilService } from "@/v2/core/perfil/application/use-cases/perfil.service";
-import { UsuarioService } from "@/v2/core/usuario/application/use-cases/usuario.service";
+import { PerfilService } from "@/core/perfil";
+import { UsuarioService } from "@/core/usuario";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import {
   KeycloakService,
@@ -47,7 +47,7 @@ export class AutenticacaoService implements IAutenticacaoUseCasePort {
       : null;
 
     if (usuario) {
-      const perfisAtivos = await this.perfilService.perfilGetAllActive(null, usuario.id);
+      const perfisAtivos = await this.perfilService.findAllActive(null, usuario.id);
 
       return {
         usuario,

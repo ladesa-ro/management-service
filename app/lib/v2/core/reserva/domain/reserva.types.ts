@@ -1,5 +1,5 @@
-import type { IAmbiente } from "@/v2/core/ambiente/domain/ambiente.types";
-import type { IUsuario } from "@/v2/core/usuario/domain/usuario.types";
+import type { IAmbiente } from "@/core/ambiente/domain/ambiente.types";
+import type { IUsuario } from "@/core/usuario/domain/usuario.types";
 
 /**
  * Interface que define a estrutura de uma Reserva

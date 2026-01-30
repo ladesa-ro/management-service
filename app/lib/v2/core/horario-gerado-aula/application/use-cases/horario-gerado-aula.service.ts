@@ -2,8 +2,8 @@ import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { has, pick } from "lodash";
 import type { HorarioGeradoAulaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import { DiarioProfessorService } from "@/v2/core/diario-professor/application/use-cases/diario-professor.service";
-import { HorarioGeradoService } from "@/v2/core/horario-gerado/application/use-cases/horario-gerado.service";
-import { IntervaloDeTempoService } from "@/v2/core/intervalo-de-tempo/application/use-cases/intervalo-de-tempo.service";
+import { HorarioGeradoService } from "@/core/horario-gerado";
+import { IntervaloDeTempoService } from "@/core/intervalo-de-tempo/application/use-cases/intervalo-de-tempo.service";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
   HorarioGeradoAulaCreateInputDto,

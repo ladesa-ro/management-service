@@ -1,5 +1,5 @@
-import type { Ambiente } from "@/v2/core/ambiente/domain/ambiente.domain";
-import type { Usuario } from "@/v2/core/usuario/domain/usuario.domain";
+import type { Ambiente } from "@/core/ambiente/domain/ambiente.domain";
+import type { Usuario } from "@/core/usuario/domain/usuario.domain";
 import type { IReserva, IReservaCreate } from "./reserva.types";
 
 /**

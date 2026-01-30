@@ -14,7 +14,7 @@ import {
 } from "class-validator";
 import { PaginationInputDto, PaginationMetaDto, TransformToArray } from "@/v2/old/shared/dto";
 import { commonProperties, RegisterModel, simpleProperty } from "@/v2/old/shared/metadata";
-import { ArquivoFindOneOutputDto } from "@/v2/server/modules/arquivo/http/dto";
+import { ArquivoFindOneOutputDto } from "@/server/nest/modules/arquivo/rest/arquivo.rest.dto";
 
 // ============================================================================
 // Nested DTOs

@@ -1,5 +1,5 @@
 import type { IDiario } from "@/v2/core/diario/domain/diario.types";
-import type { IIntervaloDeTempo } from "@/v2/core/intervalo-de-tempo/domain/intervalo-de-tempo.types";
+import type { IIntervaloDeTempo } from "@/core/intervalo-de-tempo/domain/intervalo-de-tempo.types";
 
 export interface IDiarioPreferenciaAgrupamento {
   id: string;

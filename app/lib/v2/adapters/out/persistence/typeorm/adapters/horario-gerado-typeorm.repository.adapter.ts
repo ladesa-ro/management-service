@@ -1,14 +1,14 @@
 import { Injectable } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
-import type { IPaginationConfig } from "@/v2/application/ports/pagination";
-import type { IHorarioGeradoRepositoryPort } from "@/v2/core/horario-gerado/application/ports";
-import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 import type {
-  HorarioGeradoFindOneInputDto,
-  HorarioGeradoFindOneOutputDto,
-  HorarioGeradoListInputDto,
-  HorarioGeradoListOutputDto,
-} from "@/v2/server/modules/horario-gerado/http/dto";
+  HorarioGeradoFindOneInput,
+  HorarioGeradoFindOneOutput,
+  HorarioGeradoListInput,
+  HorarioGeradoListOutput,
+  IHorarioGeradoRepositoryPort,
+} from "@/core/horario-gerado";
+import type { IPaginationConfig } from "@/v2/application/ports/pagination";
+import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
 import { BaseTypeOrmRepositoryAdapter } from "../base";
 import { DatabaseContextService } from "../context/database-context.service";
@@ -18,10 +18,10 @@ import type { HorarioGeradoEntity } from "../typeorm/entities";
 export class HorarioGeradoTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     HorarioGeradoEntity,
-    HorarioGeradoListInputDto,
-    HorarioGeradoListOutputDto,
-    HorarioGeradoFindOneInputDto,
-    HorarioGeradoFindOneOutputDto
+    HorarioGeradoListInput,
+    HorarioGeradoListOutput,
+    HorarioGeradoFindOneInput,
+    HorarioGeradoFindOneOutput
   >
   implements IHorarioGeradoRepositoryPort
 {

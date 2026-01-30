@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
 import { AutorizacaoService } from "@/v2/core/autorizacao/application/use-cases/autorizacao.service";
-import { PerfilModule } from "@/v2/server/modules/perfil";
+import { PerfilModule } from "@/server/nest/modules/perfil";
 import { AutorizacaoController } from "./http";
 
 /**

@@ -1,0 +1,45 @@
+import type { ICidade } from "@/core/cidade";
+import type { IEndereco } from "./endereco.types";
+
+export class Endereco implements IEndereco {
+  id!: string;
+  cep!: string;
+  logradouro!: string;
+  numero!: number;
+  bairro!: string;
+  complemento!: string | null;
+  pontoReferencia!: string | null;
+  cidade!: ICidade;
+  dateCreated!: Date;
+  dateUpdated!: Date;
+  dateDeleted!: Date | null;
+
+  static fromData(dados: IEndereco): Endereco {
+    const instance = new Endereco();
+    Object.assign(instance, dados);
+    return instance;
+  }
+
+  isAtivo(): boolean {
+    return this.dateDeleted === null;
+  }
+
+  getEnderecoFormatado(): string {
+    const partes = [
+      this.logradouro,
+      this.numero.toString(),
+      this.complemento,
+      this.bairro,
+      this.cidade?.nome,
+      this.cidade?.estado?.sigla,
+      this.cep,
+    ].filter(Boolean);
+
+    return partes.join(", ");
+  }
+
+  isCepValido(): boolean {
+    const cepLimpo = this.cep.replace(/\D/g, "");
+    return /^\d{8}$/.test(cepLimpo);
+  }
+}
