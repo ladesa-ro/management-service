@@ -1,3 +1,4 @@
+import type { IdUuid, ScalarDateTimeString } from "@/core/@shared";
 import type { IAmbiente } from "@/core/ambiente/domain/ambiente.types";
 import type { ICurso } from "@/core/curso";
 import type { IImagem } from "@/core/imagem/domain/imagem.types";
@@ -7,14 +8,14 @@ import type { IImagem } from "@/core/imagem/domain/imagem.types";
  * Tipagem pura sem implementação de regras
  */
 export interface ITurma {
-  id: string;
+  id: IdUuid;
   periodo: string;
   ambientePadraoAula: IAmbiente | null;
   curso: ICurso;
   imagemCapa: IImagem | null;
-  dateCreated: Date;
-  dateUpdated: Date;
-  dateDeleted: Date | null;
+  dateCreated: ScalarDateTimeString;
+  dateUpdated: ScalarDateTimeString;
+  dateDeleted: ScalarDateTimeString | null;
 }
 
 /**
@@ -22,8 +23,8 @@ export interface ITurma {
  */
 export interface ITurmaCreate {
   periodo: string;
-  curso: { id: string };
-  ambientePadraoAula?: { id: string } | null;
+  curso: { id: IdUuid };
+  ambientePadraoAula?: { id: IdUuid } | null;
 }
 
 /**
@@ -31,6 +32,6 @@ export interface ITurmaCreate {
  */
 export interface ITurmaUpdate {
   periodo?: string;
-  curso?: { id: string };
-  ambientePadraoAula?: { id: string } | null;
+  curso?: { id: IdUuid };
+  ambientePadraoAula?: { id: IdUuid } | null;
 }

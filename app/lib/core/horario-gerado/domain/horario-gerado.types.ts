@@ -1,23 +1,24 @@
+import type { IdUuid, ScalarDateTimeString } from "@/core/@shared";
 import type { ICalendarioLetivo } from "@/core/calendario-letivo";
 
 export interface IHorarioGerado {
-  id: string;
+  id: IdUuid;
   status: string | null;
   tipo: string | null;
-  dataGeracao: Date | null;
-  vigenciaInicio: Date | null;
-  vigenciaFim: Date | null;
+  dataGeracao: ScalarDateTimeString | null;
+  vigenciaInicio: ScalarDateTimeString | null;
+  vigenciaFim: ScalarDateTimeString | null;
   calendario: ICalendarioLetivo;
-  dateCreated: Date;
-  dateUpdated: Date;
-  dateDeleted: Date | null;
+  dateCreated: ScalarDateTimeString;
+  dateUpdated: ScalarDateTimeString;
+  dateDeleted: ScalarDateTimeString | null;
 }
 
 export interface IHorarioGeradoCreate {
   status?: string | null;
   tipo?: string | null;
-  dataGeracao?: Date | null;
-  vigenciaInicio?: Date | null;
-  vigenciaFim?: Date | null;
-  calendario: { id: string };
+  dataGeracao?: ScalarDateTimeString | null;
+  vigenciaInicio?: ScalarDateTimeString | null;
+  vigenciaFim?: ScalarDateTimeString | null;
+  calendario: { id: IdUuid };
 }

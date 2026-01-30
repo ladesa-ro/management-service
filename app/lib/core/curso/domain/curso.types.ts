@@ -1,3 +1,4 @@
+import type { IdUuid, ScalarDateTimeString } from "@/core/@shared";
 import type { ICampus } from "@/core/campus";
 import type { IImagem } from "@/core/imagem";
 import type { IOfertaFormacao } from "@/core/oferta-formacao";
@@ -7,15 +8,15 @@ import type { IOfertaFormacao } from "@/core/oferta-formacao";
  * Tipagem pura sem implementacao de regras
  */
 export interface ICurso {
-  id: string;
+  id: IdUuid;
   nome: string;
   nomeAbreviado: string;
   campus: ICampus;
   ofertaFormacao: IOfertaFormacao;
   imagemCapa: IImagem | null;
-  dateCreated: Date;
-  dateUpdated: Date;
-  dateDeleted: Date | null;
+  dateCreated: ScalarDateTimeString;
+  dateUpdated: ScalarDateTimeString;
+  dateDeleted: ScalarDateTimeString | null;
 }
 
 /**
@@ -24,8 +25,8 @@ export interface ICurso {
 export interface ICursoCreate {
   nome: string;
   nomeAbreviado: string;
-  campus: { id: string };
-  ofertaFormacao: { id: string };
+  campus: { id: IdUuid };
+  ofertaFormacao: { id: IdUuid };
 }
 
 /**
@@ -34,6 +35,6 @@ export interface ICursoCreate {
 export interface ICursoUpdate {
   nome?: string;
   nomeAbreviado?: string;
-  campus?: { id: string };
-  ofertaFormacao?: { id: string };
+  campus?: { id: IdUuid };
+  ofertaFormacao?: { id: IdUuid };
 }

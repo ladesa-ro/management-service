@@ -1,3 +1,4 @@
+import type { IdUuid, ScalarDateTimeString } from "@/core/@shared";
 import type { IAmbiente } from "@/core/ambiente/domain/ambiente.types";
 import type { ICalendarioLetivo } from "@/core/calendario-letivo";
 
@@ -5,17 +6,17 @@ import type { ICalendarioLetivo } from "@/core/calendario-letivo";
  * Interface que define a estrutura de um Evento
  */
 export interface IEvento {
-  id: string;
+  id: IdUuid;
   nome: string | null;
   rrule: string;
   cor: string | null;
-  data_inicio: Date | null;
-  data_fim: Date | null;
+  dataInicio: ScalarDateTimeString | null;
+  dataFim: ScalarDateTimeString | null;
   calendario: ICalendarioLetivo;
   ambiente: IAmbiente | null;
-  dateCreated: Date;
-  dateUpdated: Date;
-  dateDeleted: Date | null;
+  dateCreated: ScalarDateTimeString;
+  dateUpdated: ScalarDateTimeString;
+  dateDeleted: ScalarDateTimeString | null;
 }
 
 /**
@@ -25,10 +26,10 @@ export interface IEventoCreate {
   nome?: string | null;
   rrule: string;
   cor?: string | null;
-  data_inicio?: Date | null;
-  data_fim?: Date | null;
-  calendario: { id: string };
-  ambiente?: { id: string } | null;
+  dataInicio?: ScalarDateTimeString | null;
+  dataFim?: ScalarDateTimeString | null;
+  calendario: { id: IdUuid };
+  ambiente?: { id: IdUuid } | null;
 }
 
 /**
@@ -38,8 +39,8 @@ export interface IEventoUpdate {
   nome?: string | null;
   rrule?: string;
   cor?: string | null;
-  data_inicio?: Date | null;
-  data_fim?: Date | null;
-  calendario?: { id: string };
-  ambiente?: { id: string } | null;
+  dataInicio?: ScalarDateTimeString | null;
+  dataFim?: ScalarDateTimeString | null;
+  calendario?: { id: IdUuid };
+  ambiente?: { id: IdUuid } | null;
 }

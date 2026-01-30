@@ -1,3 +1,4 @@
+import type { IdUuid, ScalarDateTimeString } from "@/core/@shared";
 import type { IImagem } from "@/core/imagem/domain/imagem.types";
 
 /**
@@ -5,16 +6,16 @@ import type { IImagem } from "@/core/imagem/domain/imagem.types";
  * Tipagem pura sem implementação de regras
  */
 export interface IUsuario {
-  id: string;
+  id: IdUuid;
   nome: string | null;
   matriculaSiape: string | null;
   email: string | null;
   isSuperUser: boolean;
   imagemCapa: IImagem | null;
   imagemPerfil: IImagem | null;
-  dateCreated: Date;
-  dateUpdated: Date;
-  dateDeleted: Date | null;
+  dateCreated: ScalarDateTimeString;
+  dateUpdated: ScalarDateTimeString;
+  dateDeleted: ScalarDateTimeString | null;
 }
 
 /**

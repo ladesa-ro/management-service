@@ -1,3 +1,4 @@
+import type { IdUuid, ScalarDateTimeString } from "@/core/@shared";
 import type { IBloco } from "@/core/bloco";
 
 /**
@@ -6,7 +7,7 @@ import type { IBloco } from "@/core/bloco";
  */
 export interface IAmbiente {
   /** Identificador UUID do ambiente */
-  id: string;
+  id: IdUuid;
 
   /** Nome do ambiente */
   nome: string;
@@ -27,16 +28,16 @@ export interface IAmbiente {
   bloco: IBloco;
 
   /** Imagem de capa do ambiente (opcional) */
-  imagemCapa: { id: string } | null;
+  imagemCapa: { id: IdUuid } | null;
 
   /** Data de criação */
-  dateCreated: Date;
+  dateCreated: ScalarDateTimeString;
 
   /** Data de atualização */
-  dateUpdated: Date;
+  dateUpdated: ScalarDateTimeString;
 
   /** Data de exclusão (soft delete) */
-  dateDeleted: Date | null;
+  dateDeleted: ScalarDateTimeString | null;
 }
 
 /**
@@ -48,7 +49,7 @@ export interface IAmbienteCreate {
   codigo: string;
   capacidade?: number | null;
   tipo?: string | null;
-  bloco: { id: string };
+  bloco: { id: IdUuid };
 }
 
 /**

@@ -49,8 +49,8 @@ export class EventoService {
         "cor",
         "rrule",
         "ambiente",
-        "data_inicio",
-        "data_fim",
+        "dataInicio",
+        "dataFim",
         "calendario.id",
         "calendario.nome",
         "calendario.ano",
@@ -59,13 +59,13 @@ export class EventoService {
         "nome",
         "cor",
         "ambiente",
-        "data_inicio",
-        "data_fim",
+        "dataInicio",
+        "dataFim",
         "calendario.id",
         "calendario.nome",
         "calendario.ano",
       ],
-      searchableColumns: ["id", "nome", "cor", "ambiente", "data_inicio", "data_fim"],
+      searchableColumns: ["id", "nome", "cor", "ambiente", "dataInicio", "dataFim"],
       relations: {
         calendario: true,
       },
@@ -74,8 +74,8 @@ export class EventoService {
         "calendario.id": [FilterOperator.EQ],
         "calendario.nome": [FilterOperator.EQ],
         "calendario.ano": [FilterOperator.EQ],
-        data_inicio: [FilterOperator.GTE, FilterOperator.LTE],
-        data_fim: [FilterOperator.GTE, FilterOperator.LTE],
+        dataInicio: [FilterOperator.GTE, FilterOperator.LTE],
+        dataFim: [FilterOperator.GTE, FilterOperator.LTE],
       },
     });
 
@@ -162,7 +162,7 @@ export class EventoService {
   ): Promise<EventoFindOneOutput> {
     await accessContext.ensurePermission("evento:create", { dto } as any);
 
-    const dtoEvento = pick(dto, ["nome", "cor", "rrule", "ambiente", "data_inicio", "data_fim"]);
+    const dtoEvento = pick(dto, ["nome", "cor", "rrule", "ambiente", "dataInicio", "dataFim"]);
 
     const evento = this.eventoRepository.create();
 
@@ -201,7 +201,7 @@ export class EventoService {
       this.eventoRepository.createQueryBuilder(aliasEvento as any),
     );
 
-    const dtoEvento = pick(dto, ["nome", "cor", "rrule", "data_inicio", "data_fim"]);
+    const dtoEvento = pick(dto, ["nome", "cor", "rrule", "dataInicio", "dataFim"]);
 
     const evento = {
       id: currentEvento.id,

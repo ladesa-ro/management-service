@@ -1,16 +1,17 @@
+import type { IdUuid, ScalarDateTimeString } from "@/core/@shared";
 import type { IDisponibilidade } from "@/core/disponibilidade/domain/disponibilidade.types";
 import type { ITurma } from "@/core/turma/domain/turma.types";
 
 export interface ITurmaDisponibilidade {
-  id: string;
+  id: IdUuid;
   turma: ITurma;
   disponibilidade: IDisponibilidade;
-  dateCreated: Date;
-  dateUpdated: Date;
-  dateDeleted: Date | null;
+  dateCreated: ScalarDateTimeString;
+  dateUpdated: ScalarDateTimeString;
+  dateDeleted: ScalarDateTimeString | null;
 }
 
 export interface ITurmaDisponibilidadeCreate {
-  turma: { id: string };
-  disponibilidade: { id: string };
+  turma: { id: IdUuid };
+  disponibilidade: { id: IdUuid };
 }

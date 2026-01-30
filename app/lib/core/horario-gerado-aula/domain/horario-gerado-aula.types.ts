@@ -1,21 +1,22 @@
+import type { IdUuid, ScalarDateTimeString } from "@/core/@shared";
 import type { IDiarioProfessor } from "@/core/diario-professor/domain/diario-professor.types";
 import type { IHorarioGerado } from "@/core/horario-gerado";
 import type { IIntervaloDeTempo } from "@/core/intervalo-de-tempo/domain/intervalo-de-tempo.types";
 
 export interface IHorarioGeradoAula {
-  id: string;
-  data: Date;
+  id: IdUuid;
+  data: ScalarDateTimeString;
   diarioProfessor: IDiarioProfessor;
   horarioGerado: IHorarioGerado;
   intervaloDeTempo: IIntervaloDeTempo;
-  dateCreated: Date;
-  dateUpdated: Date;
-  dateDeleted: Date | null;
+  dateCreated: ScalarDateTimeString;
+  dateUpdated: ScalarDateTimeString;
+  dateDeleted: ScalarDateTimeString | null;
 }
 
 export interface IHorarioGeradoAulaCreate {
-  data: Date;
-  diarioProfessor: { id: string };
-  horarioGerado: { id: string };
-  intervaloDeTempo: { id: string };
+  data: ScalarDateTimeString;
+  diarioProfessor: { id: IdUuid };
+  horarioGerado: { id: IdUuid };
+  intervaloDeTempo: { id: IdUuid };
 }

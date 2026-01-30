@@ -1,3 +1,4 @@
+import type { IdUuid, ScalarDateTimeString } from "@/core/@shared";
 import type { IArquivo } from "@/core/arquivo/domain/arquivo.types";
 import type { IImagem } from "@/core/imagem/domain/imagem.types";
 
@@ -5,16 +6,16 @@ import type { IImagem } from "@/core/imagem/domain/imagem.types";
  * Interface que define a estrutura de um ImagemArquivo
  */
 export interface IImagemArquivo {
-  id: string;
+  id: IdUuid;
   largura: number;
   altura: number;
   formato: string;
   mimeType: string;
   imagem: IImagem;
   arquivo: IArquivo;
-  dateCreated: Date;
-  dateUpdated: Date;
-  dateDeleted: Date | null;
+  dateCreated: ScalarDateTimeString;
+  dateUpdated: ScalarDateTimeString;
+  dateDeleted: ScalarDateTimeString | null;
 }
 
 /**
@@ -25,6 +26,6 @@ export interface IImagemArquivoCreate {
   altura: number;
   formato: string;
   mimeType: string;
-  imagem: { id: string };
-  arquivo: { id: string };
+  imagem: { id: IdUuid };
+  arquivo: { id: IdUuid };
 }

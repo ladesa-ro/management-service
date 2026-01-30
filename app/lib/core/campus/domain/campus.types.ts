@@ -1,3 +1,4 @@
+import type { IdNumeric, IdUuid, ScalarDateTimeString } from "@/core/@shared";
 import type { IEndereco } from "@/core/endereco";
 
 /**
@@ -6,7 +7,7 @@ import type { IEndereco } from "@/core/endereco";
  */
 export interface ICampus {
   /** Identificador UUID do campus */
-  id: string;
+  id: IdUuid;
 
   /** Nome fantasia do campus */
   nomeFantasia: string;
@@ -24,13 +25,13 @@ export interface ICampus {
   endereco: IEndereco;
 
   /** Data de criação */
-  dateCreated: Date;
+  dateCreated: ScalarDateTimeString;
 
   /** Data de atualização */
-  dateUpdated: Date;
+  dateUpdated: ScalarDateTimeString;
 
   /** Data de exclusão (soft delete) */
-  dateDeleted: Date | null;
+  dateDeleted: ScalarDateTimeString | null;
 }
 
 /**
@@ -48,7 +49,7 @@ export interface ICampusCreate {
     bairro: string;
     complemento?: string | null;
     pontoReferencia?: string | null;
-    cidade: { id: number };
+    cidade: { id: IdNumeric };
   };
 }
 
@@ -67,6 +68,6 @@ export interface ICampusUpdate {
     bairro?: string;
     complemento?: string | null;
     pontoReferencia?: string | null;
-    cidade?: { id: number };
+    cidade?: { id: IdNumeric };
   };
 }

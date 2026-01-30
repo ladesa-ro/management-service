@@ -1,4 +1,4 @@
-import type { IdUuid } from "@/core/@shared";
+import type { IdUuid, ScalarDateTimeString } from "@/core/@shared";
 
 /**
  * Tipagem da entidade IntervaloDeTempo
@@ -15,13 +15,13 @@ export interface IIntervaloDeTempo {
   periodoFim: string;
 
   /** Data de criação do registro */
-  dateCreated: Date;
+  dateCreated: ScalarDateTimeString;
 
   /** Data de atualização do registro */
-  dateUpdated: Date;
+  dateUpdated: ScalarDateTimeString;
 
   /** Data de exclusão do registro (soft delete) */
-  dateDeleted: Date | null;
+  dateDeleted: ScalarDateTimeString | null;
 }
 
 /**

@@ -1,7 +1,8 @@
+import type { IdNumeric, IdUuid, ScalarDateTimeString } from "@/core/@shared";
 import type { ICidade } from "@/core/cidade";
 
 export interface IEndereco {
-  id: string;
+  id: IdUuid;
   cep: string;
   logradouro: string;
   numero: number;
@@ -9,9 +10,9 @@ export interface IEndereco {
   complemento: string | null;
   pontoReferencia: string | null;
   cidade: ICidade;
-  dateCreated: Date;
-  dateUpdated: Date;
-  dateDeleted: Date | null;
+  dateCreated: ScalarDateTimeString;
+  dateUpdated: ScalarDateTimeString;
+  dateDeleted: ScalarDateTimeString | null;
 }
 
 export interface IEnderecoInput {
@@ -21,5 +22,5 @@ export interface IEnderecoInput {
   bairro: string;
   complemento?: string | null;
   pontoReferencia?: string | null;
-  cidade: { id: number };
+  cidade: { id: IdNumeric };
 }

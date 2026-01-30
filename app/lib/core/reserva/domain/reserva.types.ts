@@ -1,3 +1,4 @@
+import type { IdUuid, ScalarDateTimeString } from "@/core/@shared";
 import type { IAmbiente } from "@/core/ambiente/domain/ambiente.types";
 import type { IUsuario } from "@/core/usuario/domain/usuario.types";
 
@@ -5,16 +6,16 @@ import type { IUsuario } from "@/core/usuario/domain/usuario.types";
  * Interface que define a estrutura de uma Reserva
  */
 export interface IReserva {
-  id: string;
+  id: IdUuid;
   situacao: string;
   motivo: string | null;
   tipo: string | null;
   rrule: string;
   ambiente: IAmbiente;
   usuario: IUsuario;
-  dateCreated: Date;
-  dateUpdated: Date;
-  dateDeleted: Date | null;
+  dateCreated: ScalarDateTimeString;
+  dateUpdated: ScalarDateTimeString;
+  dateDeleted: ScalarDateTimeString | null;
 }
 
 /**
@@ -25,8 +26,8 @@ export interface IReservaCreate {
   motivo?: string | null;
   tipo?: string | null;
   rrule: string;
-  ambiente: { id: string };
-  usuario: { id: string };
+  ambiente: { id: IdUuid };
+  usuario: { id: IdUuid };
 }
 
 /**
@@ -37,6 +38,6 @@ export interface IReservaUpdate {
   motivo?: string | null;
   tipo?: string | null;
   rrule?: string;
-  ambiente?: { id: string };
-  usuario?: { id: string };
+  ambiente?: { id: IdUuid };
+  usuario?: { id: IdUuid };
 }

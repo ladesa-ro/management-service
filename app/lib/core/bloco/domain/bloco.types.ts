@@ -1,3 +1,4 @@
+import type { IdUuid, ScalarDateTimeString } from "@/core/@shared";
 import type { ICampus } from "@/core/campus";
 
 /**
@@ -6,7 +7,7 @@ import type { ICampus } from "@/core/campus";
  */
 export interface IBloco {
   /** Identificador UUID do bloco */
-  id: string;
+  id: IdUuid;
 
   /** Nome do bloco */
   nome: string;
@@ -18,16 +19,16 @@ export interface IBloco {
   campus: ICampus;
 
   /** Imagem de capa do bloco (opcional) */
-  imagemCapa: { id: string } | null;
+  imagemCapa: { id: IdUuid } | null;
 
   /** Data de criação */
-  dateCreated: Date;
+  dateCreated: ScalarDateTimeString;
 
   /** Data de atualização */
-  dateUpdated: Date;
+  dateUpdated: ScalarDateTimeString;
 
   /** Data de exclusão (soft delete) */
-  dateDeleted: Date | null;
+  dateDeleted: ScalarDateTimeString | null;
 }
 
 /**
@@ -36,7 +37,7 @@ export interface IBloco {
 export interface IBlocoCreate {
   nome: string;
   codigo: string;
-  campus: { id: string };
+  campus: { id: IdUuid };
 }
 
 /**

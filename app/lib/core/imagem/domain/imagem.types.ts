@@ -1,4 +1,4 @@
-import { IdUuid } from "@/core/@shared";
+import type { IdUuid, ScalarDateTimeString } from "@/core/@shared";
 
 /**
  * Tipagem da entidade Imagem
@@ -12,13 +12,13 @@ export interface IImagem {
   descricao: string | null;
 
   /** Data e hora da criacao do registro */
-  dateCreated: Date;
+  dateCreated: ScalarDateTimeString;
 
   /** Data e hora da alteracao do registro */
-  dateUpdated: Date;
+  dateUpdated: ScalarDateTimeString;
 
   /** Data e hora da exclusao do registro */
-  dateDeleted: Date | null;
+  dateDeleted: ScalarDateTimeString | null;
 }
 
 /**

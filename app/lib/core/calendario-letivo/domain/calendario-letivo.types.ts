@@ -23,8 +23,8 @@ export interface ICalendarioLetivo {
 export interface ICalendarioLetivoCreate {
   nome: string;
   ano: number;
-  campus: { id: string };
-  ofertaFormacao?: { id: string };
+  campus: { id: IdUuid };
+  ofertaFormacao?: { id: IdUuid };
 }
 
 /**
@@ -33,6 +33,6 @@ export interface ICalendarioLetivoCreate {
 export interface ICalendarioLetivoUpdate {
   nome?: string;
   ano?: number;
-  campus?: { id: string };
-  ofertaFormacao?: { id: string } | null;
+  campus?: { id: IdUuid };
+  ofertaFormacao?: { id: IdUuid } | null;
 }

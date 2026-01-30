@@ -1,3 +1,4 @@
+import type { IdUuid, ScalarDateTimeString } from "@/core/@shared";
 import type { ICampus } from "@/core/campus";
 import type { IUsuario } from "@/core/usuario";
 
@@ -6,14 +7,14 @@ import type { IUsuario } from "@/core/usuario";
  * Tipagem pura sem implementação de regras
  */
 export interface IPerfil {
-  id: string;
+  id: IdUuid;
   ativo: boolean;
   cargo: string;
   campus: ICampus;
   usuario: IUsuario;
-  dateCreated: Date;
-  dateUpdated: Date;
-  dateDeleted: Date | null;
+  dateCreated: ScalarDateTimeString;
+  dateUpdated: ScalarDateTimeString;
+  dateDeleted: ScalarDateTimeString | null;
 }
 
 /**
@@ -21,8 +22,8 @@ export interface IPerfil {
  */
 export interface IPerfilCreate {
   cargo: string;
-  campus: { id: string };
-  usuario: { id: string };
+  campus: { id: IdUuid };
+  usuario: { id: IdUuid };
 }
 
 /**
@@ -31,6 +32,6 @@ export interface IPerfilCreate {
 export interface IPerfilUpdate {
   ativo?: boolean;
   cargo?: string;
-  campus?: { id: string };
-  usuario?: { id: string };
+  campus?: { id: IdUuid };
+  usuario?: { id: IdUuid };
 }

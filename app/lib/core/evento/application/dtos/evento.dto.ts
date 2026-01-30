@@ -1,3 +1,4 @@
+import type { IdUuid, ScalarDateTimeString } from "@/core/@shared";
 import { ObjectUuidRef, PaginationInput, PaginationMeta } from "@/core/@shared/application/dtos";
 import { AmbienteFindOneOutput, AmbienteInputRef } from "@/core/ambiente";
 import { CalendarioLetivoFindOneOutput, CalendarioLetivoInputRef } from "@/core/calendario-letivo";
@@ -7,11 +8,11 @@ import { CalendarioLetivoFindOneOutput, CalendarioLetivoInputRef } from "@/core/
 // ============================================================================
 
 export class EventoFindOneInput {
-  id!: string;
+  id!: IdUuid;
 }
 
 export class EventoFindOneOutput {
-  id!: string;
+  id!: IdUuid;
 
   nome!: string | null;
 
@@ -19,19 +20,19 @@ export class EventoFindOneOutput {
 
   cor!: string | null;
 
-  data_inicio!: Date | null;
+  dataInicio!: ScalarDateTimeString | null;
 
-  data_fim!: Date | null;
+  dataFim!: ScalarDateTimeString | null;
 
   calendario!: CalendarioLetivoFindOneOutput;
 
   ambiente!: AmbienteFindOneOutput | null;
 
-  dateCreated!: Date;
+  dateCreated!: ScalarDateTimeString;
 
-  dateUpdated!: Date;
+  dateUpdated!: ScalarDateTimeString;
 
-  dateDeleted!: Date | null;
+  dateDeleted!: ScalarDateTimeString | null;
 }
 
 // ============================================================================
@@ -39,9 +40,9 @@ export class EventoFindOneOutput {
 // ============================================================================
 
 export class EventoListInput extends PaginationInput {
-  "filter.id"?: string[];
+  "filter.id"?: IdUuid[];
 
-  "filter.calendario.id"?: string[];
+  "filter.calendario.id"?: IdUuid[];
 }
 
 export class EventoListOutput {
@@ -60,9 +61,9 @@ export class EventoCreateInput {
 
   cor?: string | null;
 
-  data_inicio?: Date | null;
+  dataInicio?: ScalarDateTimeString | null;
 
-  data_fim?: Date | null;
+  dataFim?: ScalarDateTimeString | null;
 
   calendario!: CalendarioLetivoInputRef;
 
@@ -76,9 +77,9 @@ export class EventoUpdateInput {
 
   cor?: string | null;
 
-  data_inicio?: Date | null;
+  dataInicio?: ScalarDateTimeString | null;
 
-  data_fim?: Date | null;
+  dataFim?: ScalarDateTimeString | null;
 
   calendario?: CalendarioLetivoInputRef;
 

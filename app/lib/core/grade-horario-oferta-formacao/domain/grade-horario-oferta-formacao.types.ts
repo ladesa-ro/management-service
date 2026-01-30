@@ -1,3 +1,4 @@
+import type { IdUuid, ScalarDateTimeString } from "@/core/@shared";
 import type { ICampus } from "@/core/campus";
 import type { IOfertaFormacao } from "@/core/oferta-formacao";
 
@@ -7,7 +8,7 @@ import type { IOfertaFormacao } from "@/core/oferta-formacao";
  */
 export interface IGradeHorarioOfertaFormacao {
   /** Identificador UUID da grade horario de oferta de formacao */
-  id: string;
+  id: IdUuid;
 
   /** Campus associado */
   campus: ICampus;
@@ -16,27 +17,27 @@ export interface IGradeHorarioOfertaFormacao {
   ofertaFormacao: IOfertaFormacao;
 
   /** Data de criacao */
-  dateCreated: Date;
+  dateCreated: ScalarDateTimeString;
 
   /** Data de atualizacao */
-  dateUpdated: Date;
+  dateUpdated: ScalarDateTimeString;
 
   /** Data de exclusao (soft delete) */
-  dateDeleted: Date | null;
+  dateDeleted: ScalarDateTimeString | null;
 }
 
 /**
  * Dados necessarios para criar uma grade horario de oferta de formacao
  */
 export interface IGradeHorarioOfertaFormacaoCreate {
-  campus: { id: string };
-  ofertaFormacao: { id: string };
+  campus: { id: IdUuid };
+  ofertaFormacao: { id: IdUuid };
 }
 
 /**
  * Dados para atualizacao de grade horario de oferta de formacao
  */
 export interface IGradeHorarioOfertaFormacaoUpdate {
-  campus?: { id: string };
-  ofertaFormacao?: { id: string };
+  campus?: { id: IdUuid };
+  ofertaFormacao?: { id: IdUuid };
 }

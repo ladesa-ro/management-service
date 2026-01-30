@@ -1,3 +1,4 @@
+import type { IdUuid, ScalarDateTimeString } from "@/core/@shared";
 import type { IAmbiente } from "@/core/ambiente/domain/ambiente.types";
 import type { IDiario } from "@/core/diario/domain/diario.types";
 import type { IIntervaloDeTempo } from "@/core/intervalo-de-tempo/domain/intervalo-de-tempo.types";
@@ -6,35 +7,35 @@ import type { IIntervaloDeTempo } from "@/core/intervalo-de-tempo/domain/interva
  * Interface que define a estrutura de uma Aula
  */
 export interface IAula {
-  id: string;
-  data: Date;
+  id: IdUuid;
+  data: ScalarDateTimeString;
   modalidade: string | null;
   intervaloDeTempo: IIntervaloDeTempo;
   diario: IDiario;
   ambiente: IAmbiente | null;
-  dateCreated: Date;
-  dateUpdated: Date;
-  dateDeleted: Date | null;
+  dateCreated: ScalarDateTimeString;
+  dateUpdated: ScalarDateTimeString;
+  dateDeleted: ScalarDateTimeString | null;
 }
 
 /**
  * Interface para criação de Aula
  */
 export interface IAulaCreate {
-  data: Date;
+  data: ScalarDateTimeString;
   modalidade?: string | null;
-  intervaloDeTempo: { id: string } | { periodoInicio: string; periodoFim: string };
-  diario: { id: string };
-  ambiente?: { id: string } | null;
+  intervaloDeTempo: { id: IdUuid } | { periodoInicio: string; periodoFim: string };
+  diario: { id: IdUuid };
+  ambiente?: { id: IdUuid } | null;
 }
 
 /**
  * Interface para atualização de Aula
  */
 export interface IAulaUpdate {
-  data?: Date;
+  data?: ScalarDateTimeString;
   modalidade?: string | null;
-  intervaloDeTempo?: { id: string } | { periodoInicio: string; periodoFim: string };
-  diario?: { id: string };
-  ambiente?: { id: string } | null;
+  intervaloDeTempo?: { id: IdUuid } | { periodoInicio: string; periodoFim: string };
+  diario?: { id: IdUuid };
+  ambiente?: { id: IdUuid } | null;
 }

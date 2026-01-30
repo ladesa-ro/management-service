@@ -1,25 +1,26 @@
+import type { IdUuid, ScalarDateTimeString } from "@/core/@shared";
 import type { ICalendarioLetivo } from "@/core/calendario-letivo";
 
 export interface IDiaCalendario {
-  id: string;
-  data: Date;
+  id: IdUuid;
+  data: ScalarDateTimeString;
   diaLetivo: boolean;
   feriado: string;
   diaPresencial: boolean;
   tipo: string;
   extraCurricular: boolean;
   calendario: ICalendarioLetivo;
-  dateCreated: Date;
-  dateUpdated: Date;
-  dateDeleted: Date | null;
+  dateCreated: ScalarDateTimeString;
+  dateUpdated: ScalarDateTimeString;
+  dateDeleted: ScalarDateTimeString | null;
 }
 
 export interface IDiaCalendarioCreate {
-  data: Date;
+  data: ScalarDateTimeString;
   diaLetivo: boolean;
   feriado: string;
   diaPresencial: boolean;
   tipo: string;
   extraCurricular: boolean;
-  calendario: { id: string };
+  calendario: { id: IdUuid };
 }

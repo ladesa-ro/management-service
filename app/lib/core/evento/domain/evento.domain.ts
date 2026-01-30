@@ -1,3 +1,4 @@
+import type { IdUuid, ScalarDateTimeString } from "@/core/@shared";
 import type { Ambiente } from "@/core/ambiente/domain/ambiente.domain";
 import type { CalendarioLetivo } from "@/core/calendario-letivo";
 import type { IEvento, IEventoCreate } from "./evento.types";
@@ -7,17 +8,17 @@ import type { IEvento, IEventoCreate } from "./evento.types";
  * Implementa a interface IEvento
  */
 export class Evento implements IEvento {
-  id!: string;
+  id!: IdUuid;
   nome!: string | null;
   rrule!: string;
   cor!: string | null;
-  data_inicio!: Date | null;
-  data_fim!: Date | null;
+  dataInicio!: ScalarDateTimeString | null;
+  dataFim!: ScalarDateTimeString | null;
   calendario!: CalendarioLetivo;
   ambiente!: Ambiente | null;
-  dateCreated!: Date;
-  dateUpdated!: Date;
-  dateDeleted!: Date | null;
+  dateCreated!: ScalarDateTimeString;
+  dateUpdated!: ScalarDateTimeString;
+  dateDeleted!: ScalarDateTimeString | null;
 
   /**
    * Cria uma nova instância de Evento
@@ -27,8 +28,8 @@ export class Evento implements IEvento {
     evento.nome = dados.nome ?? null;
     evento.rrule = dados.rrule;
     evento.cor = dados.cor ?? null;
-    evento.data_inicio = dados.data_inicio ?? null;
-    evento.data_fim = dados.data_fim ?? null;
+    evento.dataInicio = dados.dataInicio ?? null;
+    evento.dataFim = dados.dataFim ?? null;
     return evento;
   }
 
