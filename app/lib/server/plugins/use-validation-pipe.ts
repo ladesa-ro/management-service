@@ -16,7 +16,8 @@ export const useValidationPipe = (app: INestApplication) => {
     new ValidationPipe({
       transform: true,
       whitelist: true,
-      forbidNonWhitelisted: true,
+      // TODO: temporário
+      forbidNonWhitelisted: false,
       transformOptions: {
         enableImplicitConversion: true,
       },
