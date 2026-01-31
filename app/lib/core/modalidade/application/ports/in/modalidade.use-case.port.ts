@@ -30,8 +30,7 @@ export interface IModalidadeUseCasePort {
     dto: ModalidadeFindOneInput & ModalidadeUpdateInput,
   ): Promise<ModalidadeFindOneOutput>;
   deleteOneById(accessContext: AccessContext, dto: ModalidadeFindOneInput): Promise<boolean>;
-  // Legacy method alias - accepts string id
-  modalidadeFindByIdSimpleStrict(
+  findByIdSimpleStrict(
     accessContext: AccessContext,
     id: string,
   ): Promise<ModalidadeFindOneOutput>;

@@ -88,8 +88,7 @@ export class DisponibilidadeService implements IDisponibilidadeUseCasePort {
     return true;
   }
 
-  // Legacy method alias for v2 compatibility
-  async disponibilidadeFindByIdSimpleStrict(
+  async findByIdSimpleStrict(
     accessContext: AccessContext,
     id: string,
   ): Promise<DisponibilidadeFindOneOutput> {

@@ -17,7 +17,7 @@ export class ArquivoRestController {
   constructor(private arquivoService: ArquivoService) {}
 
   @Get(":id")
-  @ApiOperation({ summary: "Busca um arquivo por ID" })
+  @ApiOperation({ summary: "Busca um arquivo por ID", operationId: "arquivoFindById" })
   @ApiOkResponse({ description: "Arquivo encontrado" })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()

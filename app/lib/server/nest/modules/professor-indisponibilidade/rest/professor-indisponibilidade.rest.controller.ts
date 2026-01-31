@@ -37,10 +37,10 @@ export class ProfessorIndisponibilidadeRestController {
   ) {}
 
   @Get("/list/:idPerfilFk")
-  @ApiOperation({ summary: "Lista indisponibilidades de um professor por perfil" })
+  @ApiOperation({ summary: "Lista indisponibilidades de um professor por perfil", operationId: "professorIndisponibilidadeFindAllByPerfilId" })
   @ApiOkResponse({ type: ProfessorIndisponibilidadeListOutputDto })
   @ApiForbiddenResponse()
-  async professorIndisponibilidadeListById(
+  async listByPerfil(
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: ProfessorIndisponibilidadeListByPerfilInputDto,
   ): Promise<ProfessorIndisponibilidadeListOutputDto> {
@@ -51,11 +51,11 @@ export class ProfessorIndisponibilidadeRestController {
   }
 
   @Get("/:id")
-  @ApiOperation({ summary: "Busca uma indisponibilidade de professor por ID" })
+  @ApiOperation({ summary: "Busca uma indisponibilidade de professor por ID", operationId: "professorIndisponibilidadeFindById" })
   @ApiOkResponse({ type: ProfessorIndisponibilidadeFindOneOutputDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
-  async professorIndisponibilidadeFindOneById(
+  async findById(
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: ProfessorIndisponibilidadeFindOneInputDto,
   ): Promise<ProfessorIndisponibilidadeFindOneOutputDto> {
@@ -66,10 +66,10 @@ export class ProfessorIndisponibilidadeRestController {
   }
 
   @Post("/:id_perfil/create")
-  @ApiOperation({ summary: "Cria uma indisponibilidade de professor" })
+  @ApiOperation({ summary: "Cria uma indisponibilidade de professor", operationId: "professorIndisponibilidadeCreate" })
   @ApiCreatedResponse({ type: ProfessorIndisponibilidadeFindOneOutputDto })
   @ApiForbiddenResponse()
-  async professorIndisponibilidadeCreate(
+  async create(
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: ProfessorIndisponibilidadeCreatePerfilInputDto,
     @Body() dto: ProfessorIndisponibilidadeCreateInputDto,
@@ -81,11 +81,11 @@ export class ProfessorIndisponibilidadeRestController {
   }
 
   @Patch("/:id")
-  @ApiOperation({ summary: "Atualiza uma indisponibilidade de professor" })
+  @ApiOperation({ summary: "Atualiza uma indisponibilidade de professor", operationId: "professorIndisponibilidadeUpdate" })
   @ApiOkResponse({ type: ProfessorIndisponibilidadeFindOneOutputDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
-  async professorIndisponibilidadeUpdate(
+  async update(
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: ProfessorIndisponibilidadeFindOneInputDto,
     @Body() dto: ProfessorIndisponibilidadeUpdateInputDto,
@@ -97,11 +97,11 @@ export class ProfessorIndisponibilidadeRestController {
   }
 
   @Delete("/:id")
-  @ApiOperation({ summary: "Remove uma indisponibilidade de professor" })
+  @ApiOperation({ summary: "Remove uma indisponibilidade de professor", operationId: "professorIndisponibilidadeDeleteOneById" })
   @ApiOkResponse({ type: ProfessorIndisponibilidadeFindOneOutputDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
-  async professorIndisponibilidadeDeleteOneById(
+  async deleteOneById(
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: ProfessorIndisponibilidadeFindOneInputDto,
   ): Promise<ProfessorIndisponibilidadeFindOneOutputDto> {
@@ -110,11 +110,11 @@ export class ProfessorIndisponibilidadeRestController {
   }
 
   @Get("/rrule-indisponibilidade/:id")
-  @ApiOperation({ summary: "Busca a RRULE de uma indisponibilidade de professor por ID" })
+  @ApiOperation({ summary: "Busca a RRULE de uma indisponibilidade de professor por ID", operationId: "professorIndisponibilidadeGetRrule" })
   @ApiOkResponse({ type: ProfessorIndisponibilidadeRRuleOutputDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
-  async professorIndisponibilidadeRRuleFindOneById(
+  async findRRuleById(
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: ProfessorIndisponibilidadeFindOneInputDto,
   ): Promise<ProfessorIndisponibilidadeRRuleOutputDto> {

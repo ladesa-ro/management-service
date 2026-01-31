@@ -25,10 +25,10 @@ export class DiarioProfessorController {
   constructor(private diarioProfessorService: DiarioProfessorService) {}
 
   @Get("/")
-  @ApiOperation({ summary: "Lista diarios professores" })
+  @ApiOperation({ summary: "Lista diarios professores", operationId: "diarioProfessorFindAll" })
   @ApiOkResponse({ type: DiarioProfessorListOutputDto })
   @ApiForbiddenResponse()
-  async diarioProfessorFindAll(
+  async findAll(
     @AccessContextHttp() accessContext: AccessContext,
     @Query() dto: DiarioProfessorListInputDto,
   ): Promise<DiarioProfessorListOutputDto> {
@@ -38,11 +38,11 @@ export class DiarioProfessorController {
   }
 
   @Get("/:id")
-  @ApiOperation({ summary: "Busca um diario professor por ID" })
+  @ApiOperation({ summary: "Busca um diario professor por ID", operationId: "diarioProfessorFindById" })
   @ApiOkResponse({ type: DiarioProfessorFindOneOutputDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
-  async diarioProfessorFindById(
+  async findById(
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: DiarioProfessorFindOneInputDto,
   ): Promise<DiarioProfessorFindOneOutputDto> {
@@ -55,10 +55,10 @@ export class DiarioProfessorController {
   }
 
   @Post("/")
-  @ApiOperation({ summary: "Cria um diario professor" })
+  @ApiOperation({ summary: "Cria um diario professor", operationId: "diarioProfessorCreate" })
   @ApiCreatedResponse({ type: DiarioProfessorFindOneOutputDto })
   @ApiForbiddenResponse()
-  async diarioProfessorCreate(
+  async create(
     @AccessContextHttp() accessContext: AccessContext,
     @Body() dto: DiarioProfessorCreateInputDto,
   ): Promise<DiarioProfessorFindOneOutputDto> {
@@ -68,11 +68,11 @@ export class DiarioProfessorController {
   }
 
   @Patch("/:id")
-  @ApiOperation({ summary: "Atualiza um diario professor" })
+  @ApiOperation({ summary: "Atualiza um diario professor", operationId: "diarioProfessorUpdate" })
   @ApiOkResponse({ type: DiarioProfessorFindOneOutputDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
-  async diarioProfessorUpdate(
+  async update(
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: DiarioProfessorFindOneInputDto,
     @Body() dto: DiarioProfessorUpdateInputDto,
@@ -83,11 +83,11 @@ export class DiarioProfessorController {
   }
 
   @Delete("/:id")
-  @ApiOperation({ summary: "Remove um diario professor" })
+  @ApiOperation({ summary: "Remove um diario professor", operationId: "diarioProfessorDeleteOneById" })
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
-  async diarioProfessorDeleteOneById(
+  async deleteOneById(
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: DiarioProfessorFindOneInputDto,
   ): Promise<boolean> {

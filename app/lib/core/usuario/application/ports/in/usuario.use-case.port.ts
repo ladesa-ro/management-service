@@ -15,52 +15,52 @@ import type {
  */
 export interface IUsuarioUseCasePort {
   /**
-   * Lista usuários com paginação
+   * Lista usuarios com paginacao
    */
-  usuarioFindAll(
+  findAll(
     accessContext: AccessContext,
     dto: UsuarioListInput | null,
     selection?: string[] | boolean,
   ): Promise<UsuarioListOutput>;
 
   /**
-   * Busca um usuário por ID
+   * Busca um usuario por ID
    */
-  usuarioFindById(
+  findById(
     accessContext: AccessContext | null,
     dto: UsuarioFindOneInput,
     selection?: string[] | boolean,
   ): Promise<UsuarioFindOneOutput | null>;
 
   /**
-   * Busca um usuário por ID (lança exceção se não encontrado)
+   * Busca um usuario por ID (lanca excecao se nao encontrado)
    */
-  usuarioFindByIdStrict(
+  findByIdStrict(
     accessContext: AccessContext | null,
     dto: UsuarioFindOneInput,
     selection?: string[] | boolean,
   ): Promise<UsuarioFindOneOutput>;
 
   /**
-   * Busca um usuário por ID com seleção simplificada
+   * Busca um usuario por ID com selecao simplificada
    */
-  usuarioFindByIdSimple(
+  findByIdSimple(
     accessContext: AccessContext,
     id: UsuarioFindOneInput["id"],
     selection?: string[],
   ): Promise<UsuarioFindOneOutput | null>;
 
   /**
-   * Busca um usuário por ID com seleção simplificada (lança exceção se não encontrado)
+   * Busca um usuario por ID com selecao simplificada (lanca excecao se nao encontrado)
    */
-  usuarioFindByIdSimpleStrict(
+  findByIdSimpleStrict(
     accessContext: AccessContext,
     id: UsuarioFindOneInput["id"],
     selection?: string[],
   ): Promise<UsuarioFindOneOutput>;
 
   /**
-   * Busca informações de ensino de um usuário
+   * Busca informacoes de ensino de um usuario
    */
   usuarioEnsinoById(
     accessContext: AccessContext | null,
@@ -69,7 +69,7 @@ export interface IUsuarioUseCasePort {
   ): Promise<any>;
 
   /**
-   * Busca interno por matrícula SIAPE
+   * Busca interno por matricula SIAPE
    */
   internalFindByMatriculaSiape(
     matriculaSiape: string,
@@ -77,51 +77,51 @@ export interface IUsuarioUseCasePort {
   ): Promise<UsuarioFindOneOutput | null>;
 
   /**
-   * Cria um novo usuário
+   * Cria um novo usuario
    */
-  usuarioCreate(
+  create(
     accessContext: AccessContext,
     dto: UsuarioCreateInput,
   ): Promise<UsuarioFindOneOutput>;
 
   /**
-   * Atualiza um usuário existente
+   * Atualiza um usuario existente
    */
-  usuarioUpdate(
+  update(
     accessContext: AccessContext,
     dto: UsuarioFindOneInput & UsuarioUpdateInput,
   ): Promise<UsuarioFindOneOutput>;
 
   /**
-   * Obtém a imagem de capa do usuário
+   * Obtem a imagem de capa do usuario
    */
-  usuarioGetImagemCapa(accessContext: AccessContext | null, id: string): Promise<StreamableFile>;
+  getImagemCapa(accessContext: AccessContext | null, id: string): Promise<StreamableFile>;
 
   /**
-   * Atualiza a imagem de capa do usuário
+   * Atualiza a imagem de capa do usuario
    */
-  usuarioUpdateImagemCapa(
+  updateImagemCapa(
     accessContext: AccessContext,
     dto: UsuarioFindOneInput,
     file: Express.Multer.File,
   ): Promise<boolean>;
 
   /**
-   * Obtém a imagem de perfil do usuário
+   * Obtem a imagem de perfil do usuario
    */
-  usuarioGetImagemPerfil(accessContext: AccessContext | null, id: string): Promise<StreamableFile>;
+  getImagemPerfil(accessContext: AccessContext | null, id: string): Promise<StreamableFile>;
 
   /**
-   * Atualiza a imagem de perfil do usuário
+   * Atualiza a imagem de perfil do usuario
    */
-  usuarioUpdateImagemPerfil(
+  updateImagemPerfil(
     accessContext: AccessContext,
     dto: UsuarioFindOneInput,
     file: Express.Multer.File,
   ): Promise<boolean>;
 
   /**
-   * Remove um usuário (soft delete)
+   * Remove um usuario (soft delete)
    */
-  usuarioDeleteOneById(accessContext: AccessContext, dto: UsuarioFindOneInput): Promise<boolean>;
+  deleteOneById(accessContext: AccessContext, dto: UsuarioFindOneInput): Promise<boolean>;
 }

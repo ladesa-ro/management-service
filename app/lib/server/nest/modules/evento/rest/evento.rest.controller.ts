@@ -24,61 +24,61 @@ export class EventoRestController {
   constructor(private eventoService: EventoService) {}
 
   @Get("/")
-  @ApiOperation({ summary: "Lista eventos" })
+  @ApiOperation({ summary: "Lista eventos", operationId: "eventoFindAll" })
   @ApiOkResponse({ type: EventoListOutputDto })
   @ApiForbiddenResponse()
-  async eventoFindAll(
+  async findAll(
     @AccessContextHttp() accessContext: AccessContext,
     @Query() dto: EventoListInputDto,
   ): Promise<EventoListOutputDto> {
-    return this.eventoService.eventoFindAll(accessContext, dto) as any;
+    return this.eventoService.findAll(accessContext, dto) as any;
   }
 
   @Get("/:id")
-  @ApiOperation({ summary: "Busca um evento por ID" })
+  @ApiOperation({ summary: "Busca um evento por ID", operationId: "eventoFindById" })
   @ApiOkResponse({ type: EventoFindOneOutputDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
-  async eventoFindById(
+  async findById(
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: EventoFindOneInputDto,
   ): Promise<EventoFindOneOutputDto> {
-    return this.eventoService.eventoFindByIdStrict(accessContext, params) as any;
+    return this.eventoService.findByIdStrict(accessContext, params) as any;
   }
 
   @Post("/")
-  @ApiOperation({ summary: "Cria um evento" })
+  @ApiOperation({ summary: "Cria um evento", operationId: "eventoCreate" })
   @ApiCreatedResponse({ type: EventoFindOneOutputDto })
   @ApiForbiddenResponse()
-  async eventoCreate(
+  async create(
     @AccessContextHttp() accessContext: AccessContext,
     @Body() dto: EventoCreateInputDto,
   ): Promise<EventoFindOneOutputDto> {
-    return this.eventoService.eventoCreate(accessContext, dto) as any;
+    return this.eventoService.create(accessContext, dto) as any;
   }
 
   @Patch("/:id")
-  @ApiOperation({ summary: "Atualiza um evento" })
+  @ApiOperation({ summary: "Atualiza um evento", operationId: "eventoUpdate" })
   @ApiOkResponse({ type: EventoFindOneOutputDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
-  async eventoUpdate(
+  async update(
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: EventoFindOneInputDto,
     @Body() dto: EventoUpdateInputDto,
   ): Promise<EventoFindOneOutputDto> {
-    return this.eventoService.eventoUpdate(accessContext, { id: params.id, ...dto }) as any;
+    return this.eventoService.update(accessContext, { id: params.id, ...dto }) as any;
   }
 
   @Delete("/:id")
-  @ApiOperation({ summary: "Remove um evento" })
+  @ApiOperation({ summary: "Remove um evento", operationId: "eventoDeleteOneById" })
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
-  async eventoDeleteOneById(
+  async deleteOneById(
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: EventoFindOneInputDto,
   ): Promise<boolean> {
-    return this.eventoService.eventoDeleteOneById(accessContext, params);
+    return this.eventoService.deleteOneById(accessContext, params);
   }
 }

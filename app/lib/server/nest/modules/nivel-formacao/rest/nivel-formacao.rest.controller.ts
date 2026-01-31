@@ -25,7 +25,7 @@ export class NivelFormacaoRestController {
   constructor(private nivelFormacaoService: NivelFormacaoService) {}
 
   @Get("/")
-  @ApiOperation({ summary: "Lista niveis de formacao" })
+  @ApiOperation({ summary: "Lista niveis de formacao", operationId: "nivelFormacaoFindAll" })
   @ApiOkResponse({ type: NivelFormacaoListOutputDto })
   @ApiForbiddenResponse()
   async findAll(
@@ -38,7 +38,7 @@ export class NivelFormacaoRestController {
   }
 
   @Get("/:id")
-  @ApiOperation({ summary: "Busca um nivel de formacao por ID" })
+  @ApiOperation({ summary: "Busca um nivel de formacao por ID", operationId: "nivelFormacaoFindById" })
   @ApiOkResponse({ type: NivelFormacaoFindOneOutputDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -52,7 +52,7 @@ export class NivelFormacaoRestController {
   }
 
   @Post("/")
-  @ApiOperation({ summary: "Cria um nivel de formacao" })
+  @ApiOperation({ summary: "Cria um nivel de formacao", operationId: "nivelFormacaoCreate" })
   @ApiCreatedResponse({ type: NivelFormacaoFindOneOutputDto })
   @ApiForbiddenResponse()
   async create(
@@ -65,7 +65,7 @@ export class NivelFormacaoRestController {
   }
 
   @Patch("/:id")
-  @ApiOperation({ summary: "Atualiza um nivel de formacao" })
+  @ApiOperation({ summary: "Atualiza um nivel de formacao", operationId: "nivelFormacaoUpdate" })
   @ApiOkResponse({ type: NivelFormacaoFindOneOutputDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -84,7 +84,7 @@ export class NivelFormacaoRestController {
   }
 
   @Delete("/:id")
-  @ApiOperation({ summary: "Remove um nivel de formacao" })
+  @ApiOperation({ summary: "Remove um nivel de formacao", operationId: "nivelFormacaoDeleteOneById" })
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()

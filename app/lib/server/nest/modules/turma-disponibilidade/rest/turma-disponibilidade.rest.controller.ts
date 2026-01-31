@@ -24,10 +24,10 @@ export class TurmaDisponibilidadeRestController {
   constructor(private turmaDisponibilidadeService: TurmaDisponibilidadeService) {}
 
   @Get("/")
-  @ApiOperation({ summary: "Lista turmas-disponibilidades" })
+  @ApiOperation({ summary: "Lista turmas-disponibilidades", operationId: "turmaDisponibilidadeFindAll" })
   @ApiOkResponse({ type: TurmaDisponibilidadeListOutputDto })
   @ApiForbiddenResponse()
-  async turmaDisponibilidadeFindAll(
+  async findAll(
     @AccessContextHttp() accessContext: AccessContext,
     @Query() dto: TurmaDisponibilidadeListInputDto,
   ): Promise<TurmaDisponibilidadeListOutputDto> {
@@ -35,11 +35,11 @@ export class TurmaDisponibilidadeRestController {
   }
 
   @Get("/:id")
-  @ApiOperation({ summary: "Busca uma turma-disponibilidade por ID" })
+  @ApiOperation({ summary: "Busca uma turma-disponibilidade por ID", operationId: "turmaDisponibilidadeFindById" })
   @ApiOkResponse({ type: TurmaDisponibilidadeFindOneOutputDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
-  async turmaDisponibilidadeFindById(
+  async findById(
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: TurmaDisponibilidadeFindOneInputDto,
   ): Promise<TurmaDisponibilidadeFindOneOutputDto> {
@@ -50,10 +50,10 @@ export class TurmaDisponibilidadeRestController {
   }
 
   @Post("/")
-  @ApiOperation({ summary: "Cria uma turma-disponibilidade" })
+  @ApiOperation({ summary: "Cria uma turma-disponibilidade", operationId: "turmaDisponibilidadeCreate" })
   @ApiCreatedResponse({ type: TurmaDisponibilidadeFindOneOutputDto })
   @ApiForbiddenResponse()
-  async turmaDisponibilidadeCreate(
+  async create(
     @AccessContextHttp() accessContext: AccessContext,
     @Body() dto: TurmaDisponibilidadeCreateInputDto,
   ): Promise<TurmaDisponibilidadeFindOneOutputDto> {
@@ -61,11 +61,11 @@ export class TurmaDisponibilidadeRestController {
   }
 
   @Patch("/:id")
-  @ApiOperation({ summary: "Atualiza uma turma-disponibilidade" })
+  @ApiOperation({ summary: "Atualiza uma turma-disponibilidade", operationId: "turmaDisponibilidadeUpdate" })
   @ApiOkResponse({ type: TurmaDisponibilidadeFindOneOutputDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
-  async turmaDisponibilidadeUpdate(
+  async update(
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: TurmaDisponibilidadeFindOneInputDto,
     @Body() dto: TurmaDisponibilidadeUpdateInputDto,
@@ -77,11 +77,11 @@ export class TurmaDisponibilidadeRestController {
   }
 
   @Delete("/:id")
-  @ApiOperation({ summary: "Remove uma turma-disponibilidade" })
+  @ApiOperation({ summary: "Remove uma turma-disponibilidade", operationId: "turmaDisponibilidadeDeleteOneById" })
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
-  async turmaDisponibilidadeDeleteOneById(
+  async deleteOneById(
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: TurmaDisponibilidadeFindOneInputDto,
   ): Promise<boolean> {

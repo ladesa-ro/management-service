@@ -32,7 +32,8 @@ export class DiarioPreferenciaAgrupamentoService {
     private readonly intervaloDeTempoService: IntervaloDeTempoService,
   ) {}
 
-  async diarioPreferenciaAgrupamentoFindAll(
+  // Generic method names
+  async findAll(
     accessContext: AccessContext,
     dto: DiarioPreferenciaAgrupamentoListInput | null = null,
     selection?: string[] | boolean,
@@ -40,7 +41,7 @@ export class DiarioPreferenciaAgrupamentoService {
     return this.diarioPreferenciaAgrupamentoRepository.findAll(accessContext, dto, selection);
   }
 
-  async diarioPreferenciaAgrupamentoFindById(
+  async findById(
     accessContext: AccessContext,
     dto: DiarioPreferenciaAgrupamentoFindOneInput,
     selection?: string[] | boolean,
@@ -48,12 +49,12 @@ export class DiarioPreferenciaAgrupamentoService {
     return this.diarioPreferenciaAgrupamentoRepository.findById(accessContext, dto, selection);
   }
 
-  async diarioPreferenciaAgrupamentoFindByIdStrict(
+  async findByIdStrict(
     accessContext: AccessContext,
     dto: DiarioPreferenciaAgrupamentoFindOneInput,
     selection?: string[] | boolean,
   ): Promise<DiarioPreferenciaAgrupamentoFindOneOutput> {
-    const diarioPreferenciaAgrupamento = await this.diarioPreferenciaAgrupamentoFindById(
+    const diarioPreferenciaAgrupamento = await this.findById(
       accessContext,
       dto,
       selection,
@@ -66,7 +67,7 @@ export class DiarioPreferenciaAgrupamentoService {
     return diarioPreferenciaAgrupamento;
   }
 
-  async diarioPreferenciaAgrupamentoFindByIdSimple(
+  async findByIdSimple(
     accessContext: AccessContext,
     id: DiarioPreferenciaAgrupamentoFindOneInput["id"],
     selection?: string[],
@@ -74,12 +75,12 @@ export class DiarioPreferenciaAgrupamentoService {
     return this.diarioPreferenciaAgrupamentoRepository.findByIdSimple(accessContext, id, selection);
   }
 
-  async diarioPreferenciaAgrupamentoFindByIdSimpleStrict(
+  async findByIdSimpleStrict(
     accessContext: AccessContext,
     id: DiarioPreferenciaAgrupamentoFindOneInput["id"],
     selection?: string[],
   ): Promise<DiarioPreferenciaAgrupamentoFindOneOutput> {
-    const diarioPreferenciaAgrupamento = await this.diarioPreferenciaAgrupamentoFindByIdSimple(
+    const diarioPreferenciaAgrupamento = await this.findByIdSimple(
       accessContext,
       id,
       selection,
@@ -90,6 +91,47 @@ export class DiarioPreferenciaAgrupamentoService {
     }
 
     return diarioPreferenciaAgrupamento;
+  }
+
+  // Legacy method aliases for compatibility
+  async diarioPreferenciaAgrupamentoFindAll(
+    accessContext: AccessContext,
+    dto: DiarioPreferenciaAgrupamentoListInput | null = null,
+    selection?: string[] | boolean,
+  ): Promise<DiarioPreferenciaAgrupamentoListOutput> {
+    return this.findAll(accessContext, dto, selection);
+  }
+
+  async diarioPreferenciaAgrupamentoFindById(
+    accessContext: AccessContext,
+    dto: DiarioPreferenciaAgrupamentoFindOneInput,
+    selection?: string[] | boolean,
+  ): Promise<DiarioPreferenciaAgrupamentoFindOneOutput | null> {
+    return this.findById(accessContext, dto, selection);
+  }
+
+  async diarioPreferenciaAgrupamentoFindByIdStrict(
+    accessContext: AccessContext,
+    dto: DiarioPreferenciaAgrupamentoFindOneInput,
+    selection?: string[] | boolean,
+  ): Promise<DiarioPreferenciaAgrupamentoFindOneOutput> {
+    return this.findByIdStrict(accessContext, dto, selection);
+  }
+
+  async diarioPreferenciaAgrupamentoFindByIdSimple(
+    accessContext: AccessContext,
+    id: DiarioPreferenciaAgrupamentoFindOneInput["id"],
+    selection?: string[],
+  ): Promise<DiarioPreferenciaAgrupamentoFindOneOutput | null> {
+    return this.findByIdSimple(accessContext, id, selection);
+  }
+
+  async diarioPreferenciaAgrupamentoFindByIdSimpleStrict(
+    accessContext: AccessContext,
+    id: DiarioPreferenciaAgrupamentoFindOneInput["id"],
+    selection?: string[],
+  ): Promise<DiarioPreferenciaAgrupamentoFindOneOutput> {
+    return this.findByIdSimpleStrict(accessContext, id, selection);
   }
 
   async diarioPreferenciaAgrupamentoCreate(
@@ -112,7 +154,7 @@ export class DiarioPreferenciaAgrupamentoService {
     });
 
     if (dto.diario) {
-      const diario = await this.diarioService.diarioFindByIdStrict(accessContext, dto.diario);
+      const diario = await this.diarioService.findByIdStrict(accessContext, dto.diario);
 
       this.diarioPreferenciaAgrupamentoRepository.merge(diarioPreferenciaAgrupamento, {
         diario: {
@@ -137,7 +179,7 @@ export class DiarioPreferenciaAgrupamentoService {
     const savedDiarioPreferenciaAgrupamento =
       await this.diarioPreferenciaAgrupamentoRepository.save(diarioPreferenciaAgrupamento);
 
-    return this.diarioPreferenciaAgrupamentoFindByIdStrict(accessContext, {
+    return this.findByIdStrict(accessContext, {
       id: savedDiarioPreferenciaAgrupamento.id,
     });
   }
@@ -147,7 +189,7 @@ export class DiarioPreferenciaAgrupamentoService {
     dto: DiarioPreferenciaAgrupamentoFindOneInput & DiarioPreferenciaAgrupamentoUpdateInput,
   ): Promise<DiarioPreferenciaAgrupamentoFindOneOutput> {
     const currentDiarioPreferenciaAgrupamento =
-      await this.diarioPreferenciaAgrupamentoFindByIdStrict(accessContext, { id: dto.id });
+      await this.findByIdStrict(accessContext, { id: dto.id });
 
     await accessContext.ensurePermission(
       "diario_preferencia_agrupamento:update",
@@ -174,7 +216,7 @@ export class DiarioPreferenciaAgrupamentoService {
     });
 
     if (has(dto, "diario") && dto.diario !== undefined) {
-      const diario = await this.diarioService.diarioFindByIdStrict(accessContext, dto.diario);
+      const diario = await this.diarioService.findByIdStrict(accessContext, dto.diario);
 
       this.diarioPreferenciaAgrupamentoRepository.merge(diarioPreferenciaAgrupamento, {
         diario: {
@@ -198,7 +240,7 @@ export class DiarioPreferenciaAgrupamentoService {
 
     await this.diarioPreferenciaAgrupamentoRepository.save(diarioPreferenciaAgrupamento);
 
-    return this.diarioPreferenciaAgrupamentoFindByIdStrict(accessContext, {
+    return this.findByIdStrict(accessContext, {
       id: diarioPreferenciaAgrupamento.id,
     });
   }
@@ -216,7 +258,7 @@ export class DiarioPreferenciaAgrupamentoService {
       ),
     );
 
-    const diarioPreferenciaAgrupamento = await this.diarioPreferenciaAgrupamentoFindByIdStrict(
+    const diarioPreferenciaAgrupamento = await this.findByIdStrict(
       accessContext,
       dto,
     );

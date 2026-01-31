@@ -35,7 +35,7 @@ export class AutenticacaoService implements IAutenticacaoUseCasePort {
 
   async whoAmI(accessContext: AccessContext): Promise<AuthWhoAmIOutput> {
     const usuario = accessContext.requestActor
-      ? await this.usuarioService.usuarioFindById(accessContext, {
+      ? await this.usuarioService.findById(accessContext, {
           id: accessContext.requestActor.id,
         })
       : null;

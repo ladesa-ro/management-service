@@ -25,10 +25,10 @@ export class HorarioGeradoRestController {
   constructor(private readonly horarioGeradoService: HorarioGeradoService) {}
 
   @Get("/")
-  @ApiOperation({ summary: "Lista horarios gerados" })
+  @ApiOperation({ summary: "Lista horarios gerados", operationId: "horarioGeradoFindAll" })
   @ApiOkResponse({ type: HorarioGeradoListOutputRestDto })
   @ApiForbiddenResponse()
-  async horarioGeradoFindAll(
+  async findAll(
     @AccessContextHttp() accessContext: AccessContext,
     @Query() dto: HorarioGeradoListInputRestDto,
   ): Promise<HorarioGeradoListOutputRestDto> {
@@ -38,11 +38,11 @@ export class HorarioGeradoRestController {
   }
 
   @Get("/:id")
-  @ApiOperation({ summary: "Busca um horario gerado por ID" })
+  @ApiOperation({ summary: "Busca um horario gerado por ID", operationId: "horarioGeradoFindById" })
   @ApiOkResponse({ type: HorarioGeradoFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
-  async horarioGeradoFindById(
+  async findById(
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: HorarioGeradoFindOneInputRestDto,
   ): Promise<HorarioGeradoFindOneOutputRestDto> {
@@ -55,10 +55,10 @@ export class HorarioGeradoRestController {
   }
 
   @Post("/")
-  @ApiOperation({ summary: "Cria um horario gerado" })
+  @ApiOperation({ summary: "Cria um horario gerado", operationId: "horarioGeradoCreate" })
   @ApiCreatedResponse({ type: HorarioGeradoFindOneOutputRestDto })
   @ApiForbiddenResponse()
-  async horarioGeradoCreate(
+  async create(
     @AccessContextHttp() accessContext: AccessContext,
     @Body() dto: HorarioGeradoCreateInputRestDto,
   ): Promise<HorarioGeradoFindOneOutputRestDto> {
@@ -68,11 +68,11 @@ export class HorarioGeradoRestController {
   }
 
   @Patch("/:id")
-  @ApiOperation({ summary: "Atualiza um horario gerado" })
+  @ApiOperation({ summary: "Atualiza um horario gerado", operationId: "horarioGeradoUpdate" })
   @ApiOkResponse({ type: HorarioGeradoFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
-  async horarioGeradoUpdate(
+  async update(
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: HorarioGeradoFindOneInputRestDto,
     @Body() dto: HorarioGeradoUpdateInputRestDto,
@@ -87,11 +87,11 @@ export class HorarioGeradoRestController {
   }
 
   @Delete("/:id")
-  @ApiOperation({ summary: "Remove um horario gerado" })
+  @ApiOperation({ summary: "Remove um horario gerado", operationId: "horarioGeradoDeleteOneById" })
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
-  async horarioGeradoDeleteOneById(
+  async deleteOneById(
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: HorarioGeradoFindOneInputRestDto,
   ): Promise<boolean> {

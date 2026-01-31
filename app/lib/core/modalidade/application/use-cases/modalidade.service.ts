@@ -85,8 +85,7 @@ export class ModalidadeService implements IModalidadeUseCasePort {
     return true;
   }
 
-  // Legacy method alias for v2 compatibility - accepts string id
-  async modalidadeFindByIdSimpleStrict(
+  async findByIdSimpleStrict(
     accessContext: AccessContext,
     id: string,
   ): Promise<ModalidadeFindOneOutput> {

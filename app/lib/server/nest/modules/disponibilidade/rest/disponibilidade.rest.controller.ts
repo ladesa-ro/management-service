@@ -25,7 +25,7 @@ export class DisponibilidadeRestController {
   constructor(private disponibilidadeService: DisponibilidadeService) {}
 
   @Get("/")
-  @ApiOperation({ summary: "Lista disponibilidades" })
+  @ApiOperation({ summary: "Lista disponibilidades", operationId: "disponibilidadeFindAll" })
   @ApiOkResponse({ type: DisponibilidadeListOutputDto })
   @ApiForbiddenResponse()
   async findAll(
@@ -38,7 +38,7 @@ export class DisponibilidadeRestController {
   }
 
   @Get("/:id")
-  @ApiOperation({ summary: "Busca uma disponibilidade por ID" })
+  @ApiOperation({ summary: "Busca uma disponibilidade por ID", operationId: "disponibilidadeFindById" })
   @ApiOkResponse({ type: DisponibilidadeFindOneOutputDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -52,7 +52,7 @@ export class DisponibilidadeRestController {
   }
 
   @Post("/")
-  @ApiOperation({ summary: "Cria uma disponibilidade" })
+  @ApiOperation({ summary: "Cria uma disponibilidade", operationId: "disponibilidadeCreate" })
   @ApiCreatedResponse({ type: DisponibilidadeFindOneOutputDto })
   @ApiForbiddenResponse()
   async create(
@@ -65,7 +65,7 @@ export class DisponibilidadeRestController {
   }
 
   @Patch("/:id")
-  @ApiOperation({ summary: "Atualiza uma disponibilidade" })
+  @ApiOperation({ summary: "Atualiza uma disponibilidade", operationId: "disponibilidadeUpdate" })
   @ApiOkResponse({ type: DisponibilidadeFindOneOutputDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -84,7 +84,7 @@ export class DisponibilidadeRestController {
   }
 
   @Delete("/:id")
-  @ApiOperation({ summary: "Remove uma disponibilidade" })
+  @ApiOperation({ summary: "Remove uma disponibilidade", operationId: "disponibilidadeDeleteOneById" })
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()

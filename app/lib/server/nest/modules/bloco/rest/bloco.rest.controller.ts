@@ -36,7 +36,7 @@ export class BlocoRestController {
   constructor(private blocoService: BlocoService) {}
 
   @Get("/")
-  @ApiOperation({ summary: "Lista blocos" })
+  @ApiOperation({ summary: "Lista blocos", operationId: "blocoFindAll" })
   @ApiOkResponse({ type: BlocoListOutputDto })
   @ApiForbiddenResponse()
   async findAll(
@@ -49,7 +49,7 @@ export class BlocoRestController {
   }
 
   @Get("/:id")
-  @ApiOperation({ summary: "Busca um bloco por ID" })
+  @ApiOperation({ summary: "Busca um bloco por ID", operationId: "blocoFindById" })
   @ApiOkResponse({ type: BlocoFindOneOutputDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -63,7 +63,7 @@ export class BlocoRestController {
   }
 
   @Post("/")
-  @ApiOperation({ summary: "Cria um bloco" })
+  @ApiOperation({ summary: "Cria um bloco", operationId: "blocoCreate" })
   @ApiCreatedResponse({ type: BlocoFindOneOutputDto })
   @ApiForbiddenResponse()
   async create(
@@ -76,7 +76,7 @@ export class BlocoRestController {
   }
 
   @Patch("/:id")
-  @ApiOperation({ summary: "Atualiza um bloco" })
+  @ApiOperation({ summary: "Atualiza um bloco", operationId: "blocoUpdate" })
   @ApiOkResponse({ type: BlocoFindOneOutputDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -91,7 +91,7 @@ export class BlocoRestController {
   }
 
   @Get("/:id/imagem/capa")
-  @ApiOperation({ summary: "Obtem a imagem de capa de um bloco" })
+  @ApiOperation({ summary: "Obtem a imagem de capa de um bloco", operationId: "blocoGetImagemCapa" })
   @ApiOkResponse()
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -103,7 +103,7 @@ export class BlocoRestController {
   }
 
   @Put("/:id/imagem/capa")
-  @ApiOperation({ summary: "Define a imagem de capa de um bloco" })
+  @ApiOperation({ summary: "Define a imagem de capa de um bloco", operationId: "blocoUpdateImagemCapa" })
   @ApiOkResponse()
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -116,7 +116,7 @@ export class BlocoRestController {
   }
 
   @Delete("/:id")
-  @ApiOperation({ summary: "Remove um bloco" })
+  @ApiOperation({ summary: "Remove um bloco", operationId: "blocoDeleteOneById" })
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()

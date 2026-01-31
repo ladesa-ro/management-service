@@ -30,8 +30,7 @@ export interface IDisponibilidadeUseCasePort {
     dto: DisponibilidadeFindOneInput & DisponibilidadeUpdateInput,
   ): Promise<DisponibilidadeFindOneOutput>;
   deleteOneById(accessContext: AccessContext, dto: DisponibilidadeFindOneInput): Promise<boolean>;
-  // Legacy method alias - accepts string id
-  disponibilidadeFindByIdSimpleStrict(
+  findByIdSimpleStrict(
     accessContext: AccessContext,
     id: string,
   ): Promise<DisponibilidadeFindOneOutput>;

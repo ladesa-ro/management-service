@@ -25,7 +25,7 @@ export class ModalidadeRestController {
   constructor(private modalidadeService: ModalidadeService) {}
 
   @Get("/")
-  @ApiOperation({ summary: "Lista modalidades" })
+  @ApiOperation({ summary: "Lista modalidades", operationId: "modalidadeFindAll" })
   @ApiOkResponse({ type: ModalidadeListOutputDto })
   @ApiForbiddenResponse()
   async findAll(
@@ -38,7 +38,7 @@ export class ModalidadeRestController {
   }
 
   @Get("/:id")
-  @ApiOperation({ summary: "Busca uma modalidade por ID" })
+  @ApiOperation({ summary: "Busca uma modalidade por ID", operationId: "modalidadeFindById" })
   @ApiOkResponse({ type: ModalidadeFindOneOutputDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -52,7 +52,7 @@ export class ModalidadeRestController {
   }
 
   @Post("/")
-  @ApiOperation({ summary: "Cria uma modalidade" })
+  @ApiOperation({ summary: "Cria uma modalidade", operationId: "modalidadeCreate" })
   @ApiCreatedResponse({ type: ModalidadeFindOneOutputDto })
   @ApiForbiddenResponse()
   async create(
@@ -65,7 +65,7 @@ export class ModalidadeRestController {
   }
 
   @Patch("/:id")
-  @ApiOperation({ summary: "Atualiza uma modalidade" })
+  @ApiOperation({ summary: "Atualiza uma modalidade", operationId: "modalidadeUpdate" })
   @ApiOkResponse({ type: ModalidadeFindOneOutputDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -80,7 +80,7 @@ export class ModalidadeRestController {
   }
 
   @Delete("/:id")
-  @ApiOperation({ summary: "Remove uma modalidade" })
+  @ApiOperation({ summary: "Remove uma modalidade", operationId: "modalidadeDeleteOneById" })
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()

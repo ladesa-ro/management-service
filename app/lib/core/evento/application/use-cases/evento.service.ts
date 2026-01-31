@@ -27,7 +27,8 @@ export class EventoService {
     private readonly calendarioLetivoService: CalendarioLetivoService,
   ) {}
 
-  async eventoFindAll(
+  // Generic method names
+  async findAll(
     accessContext: AccessContext,
     dto: EventoListInput | null = null,
     selection?: string[] | boolean,
@@ -35,7 +36,7 @@ export class EventoService {
     return this.eventoRepository.findAll(accessContext, dto, selection);
   }
 
-  async eventoFindById(
+  async findById(
     accessContext: AccessContext,
     dto: EventoFindOneInput,
     selection?: string[] | boolean,
@@ -43,12 +44,12 @@ export class EventoService {
     return this.eventoRepository.findById(accessContext, dto, selection);
   }
 
-  async eventoFindByIdStrict(
+  async findByIdStrict(
     accessContext: AccessContext,
     dto: EventoFindOneInput,
     selection?: string[] | boolean,
   ): Promise<EventoFindOneOutput> {
-    const evento = await this.eventoFindById(accessContext, dto, selection);
+    const evento = await this.findById(accessContext, dto, selection);
 
     if (!evento) {
       throw new NotFoundException();
@@ -57,7 +58,7 @@ export class EventoService {
     return evento;
   }
 
-  async eventoFindByIdSimple(
+  async findByIdSimple(
     accessContext: AccessContext,
     id: string,
     selection?: string[],
@@ -65,12 +66,12 @@ export class EventoService {
     return this.eventoRepository.findByIdSimple(accessContext, id, selection);
   }
 
-  async eventoFindByIdSimpleStrict(
+  async findByIdSimpleStrict(
     accessContext: AccessContext,
     id: string,
     selection?: string[],
   ): Promise<EventoFindOneOutput> {
-    const evento = await this.eventoFindByIdSimple(accessContext, id, selection);
+    const evento = await this.findByIdSimple(accessContext, id, selection);
 
     if (!evento) {
       throw new NotFoundException();
@@ -79,7 +80,7 @@ export class EventoService {
     return evento;
   }
 
-  async eventoCreate(
+  async create(
     accessContext: AccessContext,
     dto: EventoCreateInput,
   ): Promise<EventoFindOneOutput> {
@@ -94,7 +95,7 @@ export class EventoService {
     });
 
     if (dto.calendario) {
-      const calendario = await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(
+      const calendario = await this.calendarioLetivoService.findByIdSimpleStrict(
         accessContext,
         dto.calendario.id,
       );
@@ -108,14 +109,14 @@ export class EventoService {
 
     const savedEvento = await this.eventoRepository.save(evento);
 
-    return this.eventoFindByIdStrict(accessContext, { id: savedEvento.id });
+    return this.findByIdStrict(accessContext, { id: savedEvento.id });
   }
 
-  async eventoUpdate(
+  async update(
     accessContext: AccessContext,
     dto: EventoFindOneInput & EventoUpdateInput,
   ): Promise<EventoFindOneOutput> {
-    const currentEvento = await this.eventoFindByIdStrict(accessContext, { id: dto.id });
+    const currentEvento = await this.findByIdStrict(accessContext, { id: dto.id });
 
     await accessContext.ensurePermission(
       "evento:update",
@@ -135,7 +136,7 @@ export class EventoService {
     });
 
     if (has(dto, "calendario") && dto.calendario !== undefined) {
-      const calendario = await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(
+      const calendario = await this.calendarioLetivoService.findByIdSimpleStrict(
         accessContext,
         dto.calendario!.id,
       );
@@ -149,10 +150,10 @@ export class EventoService {
 
     await this.eventoRepository.save(evento);
 
-    return this.eventoFindByIdStrict(accessContext, { id: evento.id });
+    return this.findByIdStrict(accessContext, { id: evento.id });
   }
 
-  async eventoDeleteOneById(
+  async deleteOneById(
     accessContext: AccessContext,
     dto: EventoFindOneInput,
   ): Promise<boolean> {
@@ -163,7 +164,7 @@ export class EventoService {
       this.eventoRepository.createQueryBuilder(aliasEvento),
     );
 
-    const evento = await this.eventoFindByIdStrict(accessContext, dto);
+    const evento = await this.findByIdStrict(accessContext, dto);
 
     if (evento) {
       await this.eventoRepository.softDeleteById(evento.id);

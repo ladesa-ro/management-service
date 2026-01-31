@@ -36,7 +36,7 @@ export class AmbienteRestController {
   constructor(private ambienteService: AmbienteService) {}
 
   @Get("/")
-  @ApiOperation({ summary: "Lista ambientes" })
+  @ApiOperation({ summary: "Lista ambientes", operationId: "ambienteFindAll" })
   @ApiOkResponse({ type: AmbienteListOutputDto })
   @ApiForbiddenResponse()
   async findAll(
@@ -49,7 +49,7 @@ export class AmbienteRestController {
   }
 
   @Get("/:id")
-  @ApiOperation({ summary: "Busca um ambiente por ID" })
+  @ApiOperation({ summary: "Busca um ambiente por ID", operationId: "ambienteFindById" })
   @ApiOkResponse({ type: AmbienteFindOneOutputDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -63,7 +63,7 @@ export class AmbienteRestController {
   }
 
   @Post("/")
-  @ApiOperation({ summary: "Cria um ambiente" })
+  @ApiOperation({ summary: "Cria um ambiente", operationId: "ambienteCreate" })
   @ApiCreatedResponse({ type: AmbienteFindOneOutputDto })
   @ApiForbiddenResponse()
   async create(
@@ -76,7 +76,7 @@ export class AmbienteRestController {
   }
 
   @Patch("/:id")
-  @ApiOperation({ summary: "Atualiza um ambiente" })
+  @ApiOperation({ summary: "Atualiza um ambiente", operationId: "ambienteUpdate" })
   @ApiOkResponse({ type: AmbienteFindOneOutputDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -91,7 +91,7 @@ export class AmbienteRestController {
   }
 
   @Get("/:id/imagem/capa")
-  @ApiOperation({ summary: "Obtem a imagem de capa de um ambiente" })
+  @ApiOperation({ summary: "Obtem a imagem de capa de um ambiente", operationId: "ambienteGetImagemCapa" })
   @ApiOkResponse()
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -103,7 +103,7 @@ export class AmbienteRestController {
   }
 
   @Put("/:id/imagem/capa")
-  @ApiOperation({ summary: "Define a imagem de capa de um ambiente" })
+  @ApiOperation({ summary: "Define a imagem de capa de um ambiente", operationId: "ambienteUpdateImagemCapa" })
   @ApiOkResponse()
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -116,7 +116,7 @@ export class AmbienteRestController {
   }
 
   @Delete("/:id")
-  @ApiOperation({ summary: "Remove um ambiente" })
+  @ApiOperation({ summary: "Remove um ambiente", operationId: "ambienteDeleteOneById" })
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()

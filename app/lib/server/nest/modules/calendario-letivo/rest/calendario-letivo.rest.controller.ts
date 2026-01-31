@@ -25,7 +25,7 @@ export class CalendarioLetivoRestController {
   constructor(private calendarioLetivoService: CalendarioLetivoService) {}
 
   @Get("/")
-  @ApiOperation({ summary: "Lista calendarios letivos" })
+  @ApiOperation({ summary: "Lista calendarios letivos", operationId: "calendarioLetivoFindAll" })
   @ApiOkResponse({ type: CalendarioLetivoListOutputDto })
   @ApiForbiddenResponse()
   async findAll(
@@ -38,7 +38,7 @@ export class CalendarioLetivoRestController {
   }
 
   @Get("/:id")
-  @ApiOperation({ summary: "Busca um calendario letivo por ID" })
+  @ApiOperation({ summary: "Busca um calendario letivo por ID", operationId: "calendarioLetivoFindById" })
   @ApiOkResponse({ type: CalendarioLetivoFindOneOutputDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -55,7 +55,7 @@ export class CalendarioLetivoRestController {
   }
 
   @Post("/")
-  @ApiOperation({ summary: "Cria um calendario letivo" })
+  @ApiOperation({ summary: "Cria um calendario letivo", operationId: "calendarioLetivoCreate" })
   @ApiCreatedResponse({ type: CalendarioLetivoFindOneOutputDto })
   @ApiForbiddenResponse()
   async create(
@@ -68,7 +68,7 @@ export class CalendarioLetivoRestController {
   }
 
   @Patch("/:id")
-  @ApiOperation({ summary: "Atualiza um calendario letivo" })
+  @ApiOperation({ summary: "Atualiza um calendario letivo", operationId: "calendarioLetivoUpdate" })
   @ApiOkResponse({ type: CalendarioLetivoFindOneOutputDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -83,7 +83,7 @@ export class CalendarioLetivoRestController {
   }
 
   @Delete("/:id")
-  @ApiOperation({ summary: "Remove um calendario letivo" })
+  @ApiOperation({ summary: "Remove um calendario letivo", operationId: "calendarioLetivoDeleteOneById" })
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()

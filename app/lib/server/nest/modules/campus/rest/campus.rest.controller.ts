@@ -25,7 +25,7 @@ export class CampusRestController {
   constructor(private campusService: CampusService) {}
 
   @Get("/")
-  @ApiOperation({ summary: "Lista campi" })
+  @ApiOperation({ summary: "Lista campi", operationId: "campusFindAll" })
   @ApiOkResponse({ type: CampusListOutputDto })
   @ApiForbiddenResponse()
   async findAll(
@@ -33,12 +33,12 @@ export class CampusRestController {
     @Query() dto: CampusListInputDto,
   ): Promise<CampusListOutputDto> {
     const input = CampusRestMapper.toListInput(dto);
-    const result = await this.campusService.campusFindAll(accessContext, input);
+    const result = await this.campusService.findAll(accessContext, input);
     return CampusRestMapper.toListOutputDto(result);
   }
 
   @Get("/:id")
-  @ApiOperation({ summary: "Busca um campus por ID" })
+  @ApiOperation({ summary: "Busca um campus por ID", operationId: "campusFindById" })
   @ApiOkResponse({ type: CampusFindOneOutputDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -47,12 +47,12 @@ export class CampusRestController {
     @Param() params: CampusFindOneInputDto,
   ): Promise<CampusFindOneOutputDto> {
     const input = CampusRestMapper.toFindOneInput(params);
-    const result = await this.campusService.campusFindByIdStrict(accessContext, input);
+    const result = await this.campusService.findByIdStrict(accessContext, input);
     return CampusRestMapper.toFindOneOutputDto(result);
   }
 
   @Post("/")
-  @ApiOperation({ summary: "Cria um campus" })
+  @ApiOperation({ summary: "Cria um campus", operationId: "campusCreate" })
   @ApiCreatedResponse({ type: CampusFindOneOutputDto })
   @ApiForbiddenResponse()
   async create(
@@ -60,12 +60,12 @@ export class CampusRestController {
     @Body() dto: CampusCreateInputDto,
   ): Promise<CampusFindOneOutputDto> {
     const input = CampusRestMapper.toCreateInput(dto);
-    const result = await this.campusService.campusCreate(accessContext, input);
+    const result = await this.campusService.create(accessContext, input);
     return CampusRestMapper.toFindOneOutputDto(result);
   }
 
   @Patch("/:id")
-  @ApiOperation({ summary: "Atualiza um campus" })
+  @ApiOperation({ summary: "Atualiza um campus", operationId: "campusUpdate" })
   @ApiOkResponse({ type: CampusFindOneOutputDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -75,12 +75,12 @@ export class CampusRestController {
     @Body() dto: CampusUpdateInputDto,
   ): Promise<CampusFindOneOutputDto> {
     const input = CampusRestMapper.toUpdateInput(params, dto);
-    const result = await this.campusService.campusUpdate(accessContext, input);
+    const result = await this.campusService.update(accessContext, input);
     return CampusRestMapper.toFindOneOutputDto(result);
   }
 
   @Delete("/:id")
-  @ApiOperation({ summary: "Remove um campus" })
+  @ApiOperation({ summary: "Remove um campus", operationId: "campusDeleteOneById" })
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -89,6 +89,6 @@ export class CampusRestController {
     @Param() params: CampusFindOneInputDto,
   ): Promise<boolean> {
     const input = CampusRestMapper.toFindOneInput(params);
-    return this.campusService.campusDeleteOneById(accessContext, input);
+    return this.campusService.deleteOneById(accessContext, input);
   }
 }

@@ -101,7 +101,7 @@ export class BlocoService
     entity: BlocoEntity,
     dto: BlocoCreateInput,
   ): Promise<void> {
-    const campus = await this.campusService.campusFindByIdSimpleStrict(
+    const campus = await this.campusService.findByIdSimpleStrict(
       accessContext,
       dto.campus.id,
     );

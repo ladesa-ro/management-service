@@ -32,7 +32,8 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService {
     private readonly gradeHorarioOfertaFormacaoService: GradeHorarioOfertaFormacaoService,
   ) {}
 
-  async gradeHorarioOfertaFormacaoIntervaloDeTempoFindAll(
+  // Generic method names
+  async findAll(
     accessContext: AccessContext,
     dto: GradeHorarioOfertaFormacaoIntervaloDeTempoListInput | null = null,
     selection?: string[],
@@ -44,7 +45,7 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService {
     );
   }
 
-  async gradeHorarioOfertaFormacaoIntervaloDeTempoFindById(
+  async findById(
     accessContext: AccessContext | null,
     dto: GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInput,
     selection?: string[],
@@ -56,13 +57,13 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService {
     );
   }
 
-  async gradeHorarioOfertaFormacaoIntervaloDeTempoFindByIdStrict(
+  async findByIdStrict(
     accessContext: AccessContext,
     dto: GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInput,
     selection?: string[],
   ): Promise<GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutput> {
     const gradeHorarioOfertaFormacaoIntervaloDeTempo =
-      await this.gradeHorarioOfertaFormacaoIntervaloDeTempoFindById(accessContext, dto, selection);
+      await this.findById(accessContext, dto, selection);
 
     if (!gradeHorarioOfertaFormacaoIntervaloDeTempo) {
       throw new NotFoundException();
@@ -71,7 +72,7 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService {
     return gradeHorarioOfertaFormacaoIntervaloDeTempo;
   }
 
-  async gradeHorarioOfertaFormacaoIntervaloDeTempoFindByIdSimple(
+  async findByIdSimple(
     accessContext: AccessContext,
     id: string,
     selection?: string[],
@@ -83,13 +84,13 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService {
     );
   }
 
-  async gradeHorarioOfertaFormacaoIntervaloDeTempoFindByIdSimpleStrict(
+  async findByIdSimpleStrict(
     accessContext: AccessContext,
     id: string,
     selection?: string[],
   ): Promise<GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutput> {
     const gradeHorarioOfertaFormacaoIntervaloDeTempo =
-      await this.gradeHorarioOfertaFormacaoIntervaloDeTempoFindByIdSimple(
+      await this.findByIdSimple(
         accessContext,
         id,
         selection,
@@ -100,6 +101,47 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService {
     }
 
     return gradeHorarioOfertaFormacaoIntervaloDeTempo;
+  }
+
+  // Legacy method aliases for compatibility
+  async gradeHorarioOfertaFormacaoIntervaloDeTempoFindAll(
+    accessContext: AccessContext,
+    dto: GradeHorarioOfertaFormacaoIntervaloDeTempoListInput | null = null,
+    selection?: string[],
+  ): Promise<GradeHorarioOfertaFormacaoIntervaloDeTempoListOutput> {
+    return this.findAll(accessContext, dto, selection);
+  }
+
+  async gradeHorarioOfertaFormacaoIntervaloDeTempoFindById(
+    accessContext: AccessContext | null,
+    dto: GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInput,
+    selection?: string[],
+  ): Promise<GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutput | null> {
+    return this.findById(accessContext, dto, selection);
+  }
+
+  async gradeHorarioOfertaFormacaoIntervaloDeTempoFindByIdStrict(
+    accessContext: AccessContext,
+    dto: GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInput,
+    selection?: string[],
+  ): Promise<GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutput> {
+    return this.findByIdStrict(accessContext, dto, selection);
+  }
+
+  async gradeHorarioOfertaFormacaoIntervaloDeTempoFindByIdSimple(
+    accessContext: AccessContext,
+    id: string,
+    selection?: string[],
+  ): Promise<GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutput | null> {
+    return this.findByIdSimple(accessContext, id, selection);
+  }
+
+  async gradeHorarioOfertaFormacaoIntervaloDeTempoFindByIdSimpleStrict(
+    accessContext: AccessContext,
+    id: string,
+    selection?: string[],
+  ): Promise<GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutput> {
+    return this.findByIdSimpleStrict(accessContext, id, selection);
   }
 
   async gradeHorarioOfertaFormacaoIntervaloDeTempoCreate(
@@ -159,7 +201,7 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService {
       gradeHorarioOfertaFormacaoIntervaloDeTempo,
     );
 
-    return this.gradeHorarioOfertaFormacaoIntervaloDeTempoFindByIdStrict(accessContext, {
+    return this.findByIdStrict(accessContext, {
       id: savedEntity.id,
     });
   }
@@ -170,7 +212,7 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService {
       GradeHorarioOfertaFormacaoIntervaloDeTempoUpdateInput,
   ): Promise<GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutput> {
     const currentGradeHorarioOfertaFormacaoIntervaloDeTempo =
-      await this.gradeHorarioOfertaFormacaoIntervaloDeTempoFindByIdStrict(accessContext, dto);
+      await this.findByIdStrict(accessContext, dto);
 
     await accessContext.ensurePermission(
       "grade_horario_oferta_formacao_intervalo_de_tempo:update",
@@ -235,7 +277,7 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService {
       gradeHorarioOfertaFormacaoIntervaloDeTempo,
     );
 
-    return this.gradeHorarioOfertaFormacaoIntervaloDeTempoFindByIdStrict(accessContext, {
+    return this.findByIdStrict(accessContext, {
       id: gradeHorarioOfertaFormacaoIntervaloDeTempo.id,
     });
   }
@@ -254,7 +296,7 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService {
     );
 
     const gradeHorarioOfertaFormacaoIntervaloDeTempo =
-      await this.gradeHorarioOfertaFormacaoIntervaloDeTempoFindByIdStrict(accessContext, dto);
+      await this.findByIdStrict(accessContext, dto);
 
     if (gradeHorarioOfertaFormacaoIntervaloDeTempo) {
       await this.gradeHorarioOfertaFormacaoIntervaloDeTempoRepository.softDeleteById(

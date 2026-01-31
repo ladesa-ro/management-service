@@ -26,7 +26,8 @@ export class AulaService implements IAulaUseCasePort {
     private ambienteService: AmbienteService,
   ) {}
 
-  async aulaFindAll(
+  // Generic method names
+  async findAll(
     accessContext: AccessContext,
     dto: AulaListInput | null = null,
     selection?: string[] | boolean,
@@ -34,7 +35,7 @@ export class AulaService implements IAulaUseCasePort {
     return this.aulaRepository.findAll(accessContext, dto, selection);
   }
 
-  async aulaFindById(
+  async findById(
     accessContext: AccessContext,
     dto: AulaFindOneInput,
     selection?: string[] | boolean,
@@ -42,7 +43,7 @@ export class AulaService implements IAulaUseCasePort {
     return this.aulaRepository.findById(accessContext, dto, selection);
   }
 
-  async aulaFindByIdStrict(
+  async findByIdStrict(
     accessContext: AccessContext,
     dto: AulaFindOneInput,
     selection?: string[] | boolean,
@@ -56,7 +57,7 @@ export class AulaService implements IAulaUseCasePort {
     return aula;
   }
 
-  async aulaFindByIdSimple(
+  async findByIdSimple(
     accessContext: AccessContext,
     id: AulaFindOneInput["id"],
     selection?: string[] | boolean,
@@ -64,7 +65,7 @@ export class AulaService implements IAulaUseCasePort {
     return this.aulaRepository.findByIdSimple(accessContext, id, selection);
   }
 
-  async aulaFindByIdSimpleStrict(
+  async findByIdSimpleStrict(
     accessContext: AccessContext,
     id: AulaFindOneInput["id"],
     selection?: string[] | boolean,
@@ -78,7 +79,7 @@ export class AulaService implements IAulaUseCasePort {
     return aula;
   }
 
-  async aulaCreate(accessContext: AccessContext, dto: AulaCreateInput): Promise<AulaFindOneOutput> {
+  async create(accessContext: AccessContext, dto: AulaCreateInput): Promise<AulaFindOneOutput> {
     await accessContext.ensurePermission("aula:create", { dto } as any);
 
     const dtoAula = pick(dto, ["formato", "data"]);
@@ -90,7 +91,7 @@ export class AulaService implements IAulaUseCasePort {
     });
 
     if (dto.ambiente && dto.ambiente !== null) {
-      const ambiente = await this.ambienteService.ambienteFindByIdStrict(accessContext, {
+      const ambiente = await this.ambienteService.findByIdStrict(accessContext, {
         id: dto.ambiente.id,
       });
       this.aulaRepository.merge(aula, { ambiente: { id: ambiente.id } });
@@ -98,7 +99,7 @@ export class AulaService implements IAulaUseCasePort {
       this.aulaRepository.merge(aula, { ambiente: null });
     }
 
-    const diario = await this.diarioService.diarioFindByIdSimpleStrict(
+    const diario = await this.diarioService.findByIdSimpleStrict(
       accessContext,
       dto.diario.id,
     );
@@ -115,14 +116,14 @@ export class AulaService implements IAulaUseCasePort {
 
     await this.aulaRepository.save(aula);
 
-    return this.aulaFindByIdStrict(accessContext, { id: aula.id });
+    return this.findByIdStrict(accessContext, { id: aula.id });
   }
 
-  async aulaUpdate(
+  async update(
     accessContext: AccessContext,
     dto: AulaFindOneInput & AulaUpdateInput,
   ): Promise<AulaFindOneOutput> {
-    const currentAula = await this.aulaFindByIdStrict(accessContext, { id: dto.id });
+    const currentAula = await this.findByIdStrict(accessContext, { id: dto.id });
 
     await accessContext.ensurePermission("aula:update", { dto }, dto.id);
 
@@ -138,7 +139,7 @@ export class AulaService implements IAulaUseCasePort {
 
     if (has(dto, "ambiente") && dto.ambiente !== undefined) {
       if (dto.ambiente !== null) {
-        const ambiente = await this.ambienteService.ambienteFindByIdStrict(accessContext, {
+        const ambiente = await this.ambienteService.findByIdStrict(accessContext, {
           id: dto.ambiente.id,
         });
 
@@ -149,7 +150,7 @@ export class AulaService implements IAulaUseCasePort {
     }
 
     if (has(dto, "diario") && dto.diario !== undefined) {
-      const diario = await this.diarioService.diarioFindByIdSimpleStrict(
+      const diario = await this.diarioService.findByIdSimpleStrict(
         accessContext,
         dto.diario.id,
       );
@@ -169,13 +170,13 @@ export class AulaService implements IAulaUseCasePort {
 
     await this.aulaRepository.save(aula);
 
-    return this.aulaFindByIdStrict(accessContext, { id: aula.id });
+    return this.findByIdStrict(accessContext, { id: aula.id });
   }
 
-  async aulaDeleteOneById(accessContext: AccessContext, dto: AulaFindOneInput): Promise<boolean> {
+  async deleteOneById(accessContext: AccessContext, dto: AulaFindOneInput): Promise<boolean> {
     await accessContext.ensurePermission("aula:delete", { dto }, dto.id);
 
-    const aula = await this.aulaFindByIdStrict(accessContext, dto);
+    const aula = await this.findByIdStrict(accessContext, dto);
 
     if (aula) {
       await this.aulaRepository.softDeleteById(aula.id);

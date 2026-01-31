@@ -110,7 +110,7 @@ export class DiarioProfessorService extends BaseCrudService<
     dto: DiarioProfessorCreateInput,
   ): Promise<void> {
     if (has(dto, "diario") && dto.diario) {
-      const diario = await this.diarioService.diarioFindByIdStrict(accessContext, {
+      const diario = await this.diarioService.findByIdStrict(accessContext, {
         id: dto.diario.id,
       });
       this.repository.merge(entity, { diario: { id: diario.id } });
@@ -130,7 +130,7 @@ export class DiarioProfessorService extends BaseCrudService<
     dto: DiarioProfessorFindOneInput & DiarioProfessorUpdateInput,
   ): Promise<void> {
     if (has(dto, "diario") && dto.diario !== undefined && dto.diario !== null) {
-      const diario = await this.diarioService.diarioFindByIdStrict(accessContext, {
+      const diario = await this.diarioService.findByIdStrict(accessContext, {
         id: dto.diario.id,
       });
       this.repository.merge(entity, { diario: { id: diario.id } });

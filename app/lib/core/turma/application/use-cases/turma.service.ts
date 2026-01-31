@@ -45,71 +45,11 @@ export class TurmaService extends BaseCrudService<
     super();
   }
 
-  async turmaFindAll(
-    accessContext: AccessContext,
-    dto: TurmaListInput | null = null,
-    selection?: string[] | boolean,
-  ): Promise<TurmaListOutput> {
-    return this.findAll(accessContext, dto, selection);
-  }
-
-  async turmaFindById(
-    accessContext: AccessContext | null,
-    dto: TurmaFindOneInput,
-    selection?: string[] | boolean,
-  ): Promise<TurmaFindOneOutput | null> {
-    return this.findById(accessContext, dto, selection);
-  }
-
-  // Métodos prefixados para compatibilidade
-
-  async turmaFindByIdStrict(
-    accessContext: AccessContext | null,
-    dto: TurmaFindOneInput,
-    selection?: string[] | boolean,
-  ): Promise<TurmaFindOneOutput> {
-    return this.findByIdStrict(accessContext, dto, selection);
-  }
-
-  async turmaFindByIdSimple(
-    accessContext: AccessContext,
-    id: TurmaFindOneInput["id"],
-    selection?: string[],
-  ): Promise<TurmaFindOneOutput | null> {
-    return this.findByIdSimple(accessContext, id, selection);
-  }
-
-  async turmaFindByIdSimpleStrict(
-    accessContext: AccessContext,
-    id: TurmaFindOneInput["id"],
-    selection?: string[],
-  ): Promise<TurmaFindOneOutput> {
-    return this.findByIdSimpleStrict(accessContext, id, selection);
-  }
-
-  async turmaCreate(
-    accessContext: AccessContext,
-    dto: TurmaCreateInput,
-  ): Promise<TurmaFindOneOutput> {
-    return this.create(accessContext, dto);
-  }
-
-  async turmaUpdate(
-    accessContext: AccessContext,
-    dto: TurmaFindOneInput & TurmaUpdateInput,
-  ): Promise<TurmaFindOneOutput> {
-    return this.update(accessContext, dto);
-  }
-
-  async turmaDeleteOneById(accessContext: AccessContext, dto: TurmaFindOneInput): Promise<boolean> {
-    return this.deleteOneById(accessContext, dto);
-  }
-
-  async turmaGetImagemCapa(
+  async getImagemCapa(
     accessContext: AccessContext | null,
     id: string,
   ): Promise<StreamableFile> {
-    const turma = await this.turmaFindByIdStrict(accessContext, { id });
+    const turma = await this.findByIdStrict(accessContext, { id });
 
     if (turma.imagemCapa) {
       const arquivoId = await this.imagemService.getLatestArquivoIdForImagem(turma.imagemCapa.id);
@@ -122,12 +62,12 @@ export class TurmaService extends BaseCrudService<
     throw new NotFoundException();
   }
 
-  async turmaUpdateImagemCapa(
+  async updateImagemCapa(
     accessContext: AccessContext,
     dto: TurmaFindOneInput,
     file: Express.Multer.File,
   ): Promise<boolean> {
-    const currentTurma = await this.turmaFindByIdStrict(accessContext, { id: dto.id });
+    const currentTurma = await this.findByIdStrict(accessContext, { id: dto.id });
 
     await accessContext.ensurePermission(
       "turma:update",
@@ -146,15 +86,13 @@ export class TurmaService extends BaseCrudService<
     return true;
   }
 
-  // Métodos específicos de Turma (não cobertos pela BaseCrudService)
-
   protected override async beforeCreate(
     accessContext: AccessContext,
     entity: TurmaEntity,
     dto: TurmaCreateInput,
   ): Promise<void> {
     if (dto.ambientePadraoAula) {
-      const ambientePadraoAula = await this.ambienteService.ambienteFindByIdStrict(accessContext, {
+      const ambientePadraoAula = await this.ambienteService.findByIdStrict(accessContext, {
         id: dto.ambientePadraoAula.id,
       });
       this.repository.merge(entity, { ambientePadraoAula: { id: ambientePadraoAula.id } });
@@ -162,7 +100,7 @@ export class TurmaService extends BaseCrudService<
       this.repository.merge(entity, { ambientePadraoAula: null });
     }
 
-    const curso = await this.cursoService.cursoFindByIdSimpleStrict(accessContext, dto.curso.id);
+    const curso = await this.cursoService.findByIdSimpleStrict(accessContext, dto.curso.id);
     this.repository.merge(entity, { curso: { id: curso.id } });
   }
 
@@ -173,7 +111,7 @@ export class TurmaService extends BaseCrudService<
   ): Promise<void> {
     if (has(dto, "ambientePadraoAula") && dto.ambientePadraoAula !== undefined) {
       if (dto.ambientePadraoAula !== null) {
-        const ambientePadraoAula = await this.ambienteService.ambienteFindByIdStrict(
+        const ambientePadraoAula = await this.ambienteService.findByIdStrict(
           accessContext,
           { id: dto.ambientePadraoAula.id },
         );
@@ -184,7 +122,7 @@ export class TurmaService extends BaseCrudService<
     }
 
     if (has(dto, "curso") && dto.curso !== undefined) {
-      const curso = await this.cursoService.cursoFindByIdSimpleStrict(accessContext, dto.curso.id);
+      const curso = await this.cursoService.findByIdSimpleStrict(accessContext, dto.curso.id);
       this.repository.merge(entity, { curso: { id: curso.id } });
     }
   }

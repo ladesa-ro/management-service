@@ -9,14 +9,14 @@ import type {
 } from "../../dtos";
 
 /**
- * Porta de entrada (use case) para operações de Reserva
- * Define os casos de uso disponíveis para o domínio
+ * Porta de entrada (use case) para operacoes de Reserva
+ * Define os casos de uso disponiveis para o dominio
  */
 export interface IReservaUseCasePort {
   /**
-   * Lista todas as reservas com paginação
+   * Lista todas as reservas com paginacao
    */
-  reservaFindAll(
+  findAll(
     accessContext: AccessContext,
     dto: ReservaListInput | null,
     selection?: string[] | boolean,
@@ -25,34 +25,34 @@ export interface IReservaUseCasePort {
   /**
    * Busca uma reserva por ID
    */
-  reservaFindById(
+  findById(
     accessContext: AccessContext,
     dto: ReservaFindOneInput,
     selection?: string[] | boolean,
   ): Promise<ReservaFindOneOutput | null>;
 
   /**
-   * Busca uma reserva por ID, lançando exceção se não encontrada
+   * Busca uma reserva por ID, lancando excecao se nao encontrada
    */
-  reservaFindByIdStrict(
+  findByIdStrict(
     accessContext: AccessContext,
     dto: ReservaFindOneInput,
     selection?: string[] | boolean,
   ): Promise<ReservaFindOneOutput>;
 
   /**
-   * Busca uma reserva por ID (versão simplificada)
+   * Busca uma reserva por ID (versao simplificada)
    */
-  reservaFindByIdSimple(
+  findByIdSimple(
     accessContext: AccessContext,
     id: ReservaFindOneInput["id"],
     selection?: string[],
   ): Promise<ReservaFindOneOutput | null>;
 
   /**
-   * Busca uma reserva por ID (versão simplificada), lançando exceção se não encontrada
+   * Busca uma reserva por ID (versao simplificada), lancando excecao se nao encontrada
    */
-  reservaFindByIdSimpleStrict(
+  findByIdSimpleStrict(
     accessContext: AccessContext,
     id: ReservaFindOneInput["id"],
     selection?: string[],
@@ -61,7 +61,7 @@ export interface IReservaUseCasePort {
   /**
    * Cria uma nova reserva
    */
-  reservaCreate(
+  create(
     accessContext: AccessContext,
     dto: ReservaCreateInput,
   ): Promise<ReservaFindOneOutput>;
@@ -69,7 +69,7 @@ export interface IReservaUseCasePort {
   /**
    * Atualiza uma reserva existente
    */
-  reservaUpdate(
+  update(
     accessContext: AccessContext,
     dto: ReservaFindOneInput & ReservaUpdateInput,
   ): Promise<ReservaFindOneOutput>;
@@ -77,5 +77,5 @@ export interface IReservaUseCasePort {
   /**
    * Remove uma reserva por ID (soft delete)
    */
-  reservaDeleteOneById(accessContext: AccessContext, dto: ReservaFindOneInput): Promise<boolean>;
+  deleteOneById(accessContext: AccessContext, dto: ReservaFindOneInput): Promise<boolean>;
 }

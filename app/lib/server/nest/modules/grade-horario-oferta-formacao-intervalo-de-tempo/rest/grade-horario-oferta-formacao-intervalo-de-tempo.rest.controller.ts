@@ -26,10 +26,10 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoRestController {
   ) {}
 
   @Get("/")
-  @ApiOperation({ summary: "Lista grades horarios de ofertas de formacoes intervalos de tempo" })
+  @ApiOperation({ summary: "Lista grades horarios de ofertas de formacoes intervalos de tempo", operationId: "gradeHorarioOfertaFormacaoIntervaloDeTempoFindAll" })
   @ApiOkResponse({ type: GradeHorarioOfertaFormacaoIntervaloDeTempoListOutputRestDto })
   @ApiForbiddenResponse()
-  async gradeHorarioOfertaFormacaoIntervaloDeTempoFindAll(
+  async findAll(
     @AccessContextHttp() accessContext: AccessContext,
     @Query() dto: GradeHorarioOfertaFormacaoIntervaloDeTempoListInputRestDto,
   ): Promise<GradeHorarioOfertaFormacaoIntervaloDeTempoListOutputRestDto> {
@@ -46,7 +46,7 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoRestController {
   @ApiOkResponse({ type: GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
-  async gradeHorarioOfertaFormacaoIntervaloDeTempoFindById(
+  async findById(
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInputRestDto,
   ): Promise<GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputRestDto> {
@@ -57,10 +57,10 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoRestController {
   }
 
   @Post("/")
-  @ApiOperation({ summary: "Cria uma grade horario de oferta de formacao intervalo de tempo" })
+  @ApiOperation({ summary: "Cria uma grade horario de oferta de formacao intervalo de tempo", operationId: "gradeHorarioOfertaFormacaoIntervaloDeTempoCreate" })
   @ApiCreatedResponse({ type: GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputRestDto })
   @ApiForbiddenResponse()
-  async gradeHorarioOfertaFormacaoIntervaloDeTempoCreate(
+  async create(
     @AccessContextHttp() accessContext: AccessContext,
     @Body() dto: GradeHorarioOfertaFormacaoIntervaloDeTempoCreateInputRestDto,
   ): Promise<GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputRestDto> {
@@ -71,11 +71,11 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoRestController {
   }
 
   @Patch("/:id")
-  @ApiOperation({ summary: "Atualiza uma grade horario de oferta de formacao intervalo de tempo" })
+  @ApiOperation({ summary: "Atualiza uma grade horario de oferta de formacao intervalo de tempo", operationId: "gradeHorarioOfertaFormacaoIntervaloDeTempoUpdate" })
   @ApiOkResponse({ type: GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
-  async gradeHorarioOfertaFormacaoIntervaloDeTempoUpdate(
+  async update(
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInputRestDto,
     @Body() dto: GradeHorarioOfertaFormacaoIntervaloDeTempoUpdateInputRestDto,
@@ -87,11 +87,11 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoRestController {
   }
 
   @Delete("/:id")
-  @ApiOperation({ summary: "Remove uma grade horario de oferta de formacao intervalo de tempo" })
+  @ApiOperation({ summary: "Remove uma grade horario de oferta de formacao intervalo de tempo", operationId: "gradeHorarioOfertaFormacaoIntervaloDeTempoDeleteOneById" })
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
-  async gradeHorarioOfertaFormacaoIntervaloDeTempoDeleteOneById(
+  async deleteOneById(
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInputRestDto,
   ): Promise<boolean> {

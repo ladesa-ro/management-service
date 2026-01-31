@@ -25,70 +25,70 @@ export class AulaController {
   constructor(private aulaService: AulaService) {}
 
   @Get("/")
-  @ApiOperation({ summary: "Lista aulas" })
+  @ApiOperation({ summary: "Lista aulas", operationId: "aulaFindAll" })
   @ApiOkResponse({ type: AulaListOutputDto })
   @ApiForbiddenResponse()
-  async aulaFindAll(
+  async findAll(
     @AccessContextHttp() accessContext: AccessContext,
     @Query() dto: AulaListInputDto,
   ): Promise<AulaListOutputDto> {
     const input = AulaRestMapper.toListInput(dto);
-    const result = await this.aulaService.aulaFindAll(accessContext, input);
+    const result = await this.aulaService.findAll(accessContext, input);
     return AulaRestMapper.toListOutputDto(result);
   }
 
   @Get("/:id")
-  @ApiOperation({ summary: "Busca uma aula por ID" })
+  @ApiOperation({ summary: "Busca uma aula por ID", operationId: "aulaFindById" })
   @ApiOkResponse({ type: AulaFindOneOutputDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
-  async aulaFindById(
+  async findById(
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: AulaFindOneInputDto,
   ): Promise<AulaFindOneOutputDto> {
     const input = AulaRestMapper.toFindOneInput(params);
-    const result = await this.aulaService.aulaFindByIdStrict(accessContext, input);
+    const result = await this.aulaService.findByIdStrict(accessContext, input);
     return AulaRestMapper.toFindOneOutputDto(result);
   }
 
   @Post("/")
-  @ApiOperation({ summary: "Cria uma aula" })
+  @ApiOperation({ summary: "Cria uma aula", operationId: "aulaCreate" })
   @ApiCreatedResponse({ type: AulaFindOneOutputDto })
   @ApiForbiddenResponse()
-  async aulaCreate(
+  async create(
     @AccessContextHttp() accessContext: AccessContext,
     @Body() dto: AulaCreateInputDto,
   ): Promise<AulaFindOneOutputDto> {
     const input = AulaRestMapper.toCreateInput(dto);
-    const result = await this.aulaService.aulaCreate(accessContext, input);
+    const result = await this.aulaService.create(accessContext, input);
     return AulaRestMapper.toFindOneOutputDto(result);
   }
 
   @Patch("/:id")
-  @ApiOperation({ summary: "Atualiza uma aula" })
+  @ApiOperation({ summary: "Atualiza uma aula", operationId: "aulaUpdate" })
   @ApiOkResponse({ type: AulaFindOneOutputDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
-  async aulaUpdate(
+  async update(
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: AulaFindOneInputDto,
     @Body() dto: AulaUpdateInputDto,
   ): Promise<AulaFindOneOutputDto> {
     const input = AulaRestMapper.toUpdateInput(params, dto);
-    const result = await this.aulaService.aulaUpdate(accessContext, input);
+    const result = await this.aulaService.update(accessContext, input);
     return AulaRestMapper.toFindOneOutputDto(result);
   }
 
   @Delete("/:id")
-  @ApiOperation({ summary: "Remove uma aula" })
+  @ApiOperation({ summary: "Remove uma aula", operationId: "aulaDeleteOneById" })
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
-  async aulaDeleteOneById(
+  async deleteOneById(
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: AulaFindOneInputDto,
   ): Promise<boolean> {
     const input = AulaRestMapper.toFindOneInput(params);
-    return this.aulaService.aulaDeleteOneById(accessContext, input);
+    return this.aulaService.deleteOneById(accessContext, input);
   }
 }

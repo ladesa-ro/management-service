@@ -33,7 +33,8 @@ export class CampusService implements ICampusUseCasePort {
     private readonly enderecoService: EnderecoService,
   ) {}
 
-  async campusFindAll(
+  // Generic method names
+  async findAll(
     accessContext: AccessContext,
     dto: CampusListInput | null = null,
     selection?: string[] | boolean,
@@ -41,7 +42,7 @@ export class CampusService implements ICampusUseCasePort {
     return this.campusRepository.findAll(accessContext, dto, selection);
   }
 
-  async campusFindById(
+  async findById(
     accessContext: AccessContext,
     dto: CampusFindOneInput,
     selection?: string[] | boolean,
@@ -49,7 +50,7 @@ export class CampusService implements ICampusUseCasePort {
     return this.campusRepository.findById(accessContext, dto, selection);
   }
 
-  async campusFindByIdStrict(
+  async findByIdStrict(
     accessContext: AccessContext,
     dto: CampusFindOneInput,
     selection?: string[] | boolean,
@@ -63,7 +64,7 @@ export class CampusService implements ICampusUseCasePort {
     return campus;
   }
 
-  async campusFindByIdSimple(
+  async findByIdSimple(
     accessContext: AccessContext,
     id: string,
     selection?: string[] | boolean,
@@ -71,7 +72,7 @@ export class CampusService implements ICampusUseCasePort {
     return this.campusRepository.findByIdSimple(accessContext, id, selection);
   }
 
-  async campusFindByIdSimpleStrict(
+  async findByIdSimpleStrict(
     accessContext: AccessContext,
     id: string,
     selection?: string[] | boolean,
@@ -85,7 +86,7 @@ export class CampusService implements ICampusUseCasePort {
     return campus;
   }
 
-  async campusCreate(
+  async create(
     accessContext: AccessContext,
     dto: CampusCreateInput,
   ): Promise<CampusFindOneOutput> {
@@ -113,14 +114,14 @@ export class CampusService implements ICampusUseCasePort {
 
     await this.campusRepository.save(campus);
 
-    return this.campusFindByIdStrict(accessContext, { id: campus.id });
+    return this.findByIdStrict(accessContext, { id: campus.id });
   }
 
-  async campusUpdate(
+  async update(
     accessContext: AccessContext,
     dto: CampusFindOneInput & CampusUpdateInput,
   ): Promise<CampusFindOneOutput> {
-    const currentCampus = await this.campusFindByIdStrict(accessContext, { id: dto.id });
+    const currentCampus = await this.findByIdStrict(accessContext, { id: dto.id });
 
     await accessContext.ensurePermission("campus:update", { dto }, dto.id);
 
@@ -151,16 +152,16 @@ export class CampusService implements ICampusUseCasePort {
 
     await this.campusRepository.save(campus);
 
-    return this.campusFindByIdStrict(accessContext, { id: campus.id });
+    return this.findByIdStrict(accessContext, { id: campus.id });
   }
 
-  async campusDeleteOneById(
+  async deleteOneById(
     accessContext: AccessContext,
     dto: CampusFindOneInput,
   ): Promise<boolean> {
     await accessContext.ensurePermission("campus:delete", { dto }, dto.id);
 
-    const campus = await this.campusFindByIdStrict(accessContext, dto);
+    const campus = await this.findByIdStrict(accessContext, dto);
 
     if (campus) {
       await this.campusRepository.softDeleteById(campus.id);

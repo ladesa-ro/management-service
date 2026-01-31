@@ -36,7 +36,7 @@ export class CursoRestController {
   constructor(private cursoService: CursoService) {}
 
   @Get("/")
-  @ApiOperation({ summary: "Lista cursos" })
+  @ApiOperation({ summary: "Lista cursos", operationId: "cursoFindAll" })
   @ApiOkResponse({ type: CursoListOutputDto })
   @ApiForbiddenResponse()
   async findAll(
@@ -44,12 +44,12 @@ export class CursoRestController {
     @Query() dto: CursoListInputDto,
   ): Promise<CursoListOutputDto> {
     const input = CursoRestMapper.toListInput(dto);
-    const result = await this.cursoService.cursoFindAll(accessContext, input as any);
+    const result = await this.cursoService.findAll(accessContext, input as any);
     return CursoRestMapper.toListOutputDto(result as any);
   }
 
   @Get("/:id")
-  @ApiOperation({ summary: "Busca um curso por ID" })
+  @ApiOperation({ summary: "Busca um curso por ID", operationId: "cursoFindById" })
   @ApiOkResponse({ type: CursoFindOneOutputDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -58,12 +58,12 @@ export class CursoRestController {
     @Param() params: CursoFindOneInputDto,
   ): Promise<CursoFindOneOutputDto> {
     const input = CursoRestMapper.toFindOneInput(params);
-    const result = await this.cursoService.cursoFindByIdStrict(accessContext, input as any);
+    const result = await this.cursoService.findByIdStrict(accessContext, input as any);
     return CursoRestMapper.toFindOneOutputDto(result as any);
   }
 
   @Post("/")
-  @ApiOperation({ summary: "Cria um curso" })
+  @ApiOperation({ summary: "Cria um curso", operationId: "cursoCreate" })
   @ApiCreatedResponse({ type: CursoFindOneOutputDto })
   @ApiForbiddenResponse()
   async create(
@@ -71,12 +71,12 @@ export class CursoRestController {
     @Body() dto: CursoCreateInputDto,
   ): Promise<CursoFindOneOutputDto> {
     const input = CursoRestMapper.toCreateInput(dto);
-    const result = await this.cursoService.cursoCreate(accessContext, input as any);
+    const result = await this.cursoService.create(accessContext, input as any);
     return CursoRestMapper.toFindOneOutputDto(result as any);
   }
 
   @Patch("/:id")
-  @ApiOperation({ summary: "Atualiza um curso" })
+  @ApiOperation({ summary: "Atualiza um curso", operationId: "cursoUpdate" })
   @ApiOkResponse({ type: CursoFindOneOutputDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -86,12 +86,12 @@ export class CursoRestController {
     @Body() dto: CursoUpdateInputDto,
   ): Promise<CursoFindOneOutputDto> {
     const input = CursoRestMapper.toUpdateInput(params, dto);
-    const result = await this.cursoService.cursoUpdate(accessContext, input as any);
+    const result = await this.cursoService.update(accessContext, input as any);
     return CursoRestMapper.toFindOneOutputDto(result as any);
   }
 
   @Get("/:id/imagem/capa")
-  @ApiOperation({ summary: "Busca imagem de capa de um curso" })
+  @ApiOperation({ summary: "Busca imagem de capa de um curso", operationId: "cursoGetImagemCapa" })
   @ApiOkResponse()
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -99,11 +99,11 @@ export class CursoRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: CursoFindOneInputDto,
   ) {
-    return this.cursoService.cursoGetImagemCapa(accessContext, params.id);
+    return this.cursoService.getImagemCapa(accessContext, params.id);
   }
 
   @Put("/:id/imagem/capa")
-  @ApiOperation({ summary: "Define imagem de capa de um curso" })
+  @ApiOperation({ summary: "Define imagem de capa de um curso", operationId: "cursoUpdateImagemCapa" })
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -112,11 +112,11 @@ export class CursoRestController {
     @Param() params: CursoFindOneInputDto,
     @UploadedFile() file: Express.Multer.File,
   ): Promise<boolean> {
-    return this.cursoService.cursoUpdateImagemCapa(accessContext, params, file);
+    return this.cursoService.updateImagemCapa(accessContext, params, file);
   }
 
   @Delete("/:id")
-  @ApiOperation({ summary: "Remove um curso" })
+  @ApiOperation({ summary: "Remove um curso", operationId: "cursoDeleteOneById" })
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -125,6 +125,6 @@ export class CursoRestController {
     @Param() params: CursoFindOneInputDto,
   ): Promise<boolean> {
     const input = CursoRestMapper.toFindOneInput(params);
-    return this.cursoService.cursoDeleteOneById(accessContext, input);
+    return this.cursoService.deleteOneById(accessContext, input);
   }
 }

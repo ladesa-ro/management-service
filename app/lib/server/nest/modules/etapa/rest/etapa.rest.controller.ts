@@ -25,58 +25,58 @@ export class EtapaRestController {
   constructor(private readonly etapaService: EtapaService) {}
 
   @Get("/")
-  @ApiOperation({ summary: "Lista etapas" })
+  @ApiOperation({ summary: "Lista etapas", operationId: "etapaFindAll" })
   @ApiOkResponse({ type: EtapaListOutputRestDto })
   @ApiForbiddenResponse()
-  async etapaFindAll(
+  async findAll(
     @AccessContextHttp() accessContext: AccessContext,
     @Query() dto: EtapaListInputRestDto,
   ): Promise<EtapaListOutputRestDto> {
     const coreInput = EtapaRestMapper.toCoreListInput(dto);
-    const result = await this.etapaService.etapaFindAll(accessContext, coreInput);
+    const result = await this.etapaService.findAll(accessContext, coreInput);
     return EtapaRestMapper.toRestListOutput(result);
   }
 
   @Get("/:id")
-  @ApiOperation({ summary: "Busca uma etapa por ID" })
+  @ApiOperation({ summary: "Busca uma etapa por ID", operationId: "etapaFindById" })
   @ApiOkResponse({ type: EtapaFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
-  async etapaFindById(
+  async findById(
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: EtapaFindOneInputRestDto,
   ): Promise<EtapaFindOneOutputRestDto> {
     const coreInput = EtapaRestMapper.toCoreFindOneInput(params);
-    const result = await this.etapaService.etapaFindByIdStrict(accessContext, coreInput);
+    const result = await this.etapaService.findByIdStrict(accessContext, coreInput);
     return EtapaRestMapper.toRestFindOneOutput(result);
   }
 
   @Post("/")
-  @ApiOperation({ summary: "Cria uma etapa" })
+  @ApiOperation({ summary: "Cria uma etapa", operationId: "etapaCreate" })
   @ApiCreatedResponse({ type: EtapaFindOneOutputRestDto })
   @ApiForbiddenResponse()
-  async etapaCreate(
+  async create(
     @AccessContextHttp() accessContext: AccessContext,
     @Body() dto: EtapaCreateInputRestDto,
   ): Promise<EtapaFindOneOutputRestDto> {
     const coreInput = EtapaRestMapper.toCoreCreateInput(dto);
-    const result = await this.etapaService.etapaCreate(accessContext, coreInput);
+    const result = await this.etapaService.create(accessContext, coreInput);
     return EtapaRestMapper.toRestFindOneOutput(result);
   }
 
   @Patch("/:id")
-  @ApiOperation({ summary: "Atualiza uma etapa" })
+  @ApiOperation({ summary: "Atualiza uma etapa", operationId: "etapaUpdate" })
   @ApiOkResponse({ type: EtapaFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
-  async etapaUpdate(
+  async update(
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: EtapaFindOneInputRestDto,
     @Body() dto: EtapaUpdateInputRestDto,
   ): Promise<EtapaFindOneOutputRestDto> {
     const coreInput = EtapaRestMapper.toCoreFindOneInput(params);
     const coreUpdateInput = EtapaRestMapper.toCoreUpdateInput(dto);
-    const result = await this.etapaService.etapaUpdate(accessContext, {
+    const result = await this.etapaService.update(accessContext, {
       ...coreInput,
       ...coreUpdateInput,
     });
@@ -84,15 +84,15 @@ export class EtapaRestController {
   }
 
   @Delete("/:id")
-  @ApiOperation({ summary: "Remove uma etapa" })
+  @ApiOperation({ summary: "Remove uma etapa", operationId: "etapaDeleteOneById" })
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
-  async etapaDeleteOneById(
+  async deleteOneById(
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: EtapaFindOneInputRestDto,
   ): Promise<boolean> {
     const coreInput = EtapaRestMapper.toCoreFindOneInput(params);
-    return this.etapaService.etapaDeleteOneById(accessContext, coreInput);
+    return this.etapaService.deleteOneById(accessContext, coreInput);
   }
 }

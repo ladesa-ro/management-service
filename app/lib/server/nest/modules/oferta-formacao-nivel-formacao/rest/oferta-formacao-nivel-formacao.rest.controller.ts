@@ -25,7 +25,7 @@ export class OfertaFormacaoNivelFormacaoRestController {
   constructor(private ofertaFormacaoNivelFormacaoService: OfertaFormacaoNivelFormacaoService) {}
 
   @Get("/")
-  @ApiOperation({ summary: "Lista ofertas de formacao nivel formacao" })
+  @ApiOperation({ summary: "Lista ofertas de formacao nivel formacao", operationId: "ofertaFormacaoNivelFormacaoFindAll" })
   @ApiOkResponse({ type: OfertaFormacaoNivelFormacaoListOutputDto })
   @ApiForbiddenResponse()
   async findAll(
@@ -38,7 +38,7 @@ export class OfertaFormacaoNivelFormacaoRestController {
   }
 
   @Get("/:id")
-  @ApiOperation({ summary: "Busca uma oferta de formacao nivel formacao por ID" })
+  @ApiOperation({ summary: "Busca uma oferta de formacao nivel formacao por ID", operationId: "ofertaFormacaoNivelFormacaoFindById" })
   @ApiOkResponse({ type: OfertaFormacaoNivelFormacaoFindOneOutputDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -55,7 +55,7 @@ export class OfertaFormacaoNivelFormacaoRestController {
   }
 
   @Post("/")
-  @ApiOperation({ summary: "Cria uma oferta de formacao nivel formacao" })
+  @ApiOperation({ summary: "Cria uma oferta de formacao nivel formacao", operationId: "ofertaFormacaoNivelFormacaoCreate" })
   @ApiCreatedResponse({ type: OfertaFormacaoNivelFormacaoFindOneOutputDto })
   @ApiForbiddenResponse()
   async create(
@@ -68,7 +68,7 @@ export class OfertaFormacaoNivelFormacaoRestController {
   }
 
   @Patch("/:id")
-  @ApiOperation({ summary: "Atualiza uma oferta de formacao nivel formacao" })
+  @ApiOperation({ summary: "Atualiza uma oferta de formacao nivel formacao", operationId: "ofertaFormacaoNivelFormacaoUpdate" })
   @ApiOkResponse({ type: OfertaFormacaoNivelFormacaoFindOneOutputDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -83,7 +83,7 @@ export class OfertaFormacaoNivelFormacaoRestController {
   }
 
   @Delete("/:id")
-  @ApiOperation({ summary: "Remove uma oferta de formacao nivel formacao" })
+  @ApiOperation({ summary: "Remove uma oferta de formacao nivel formacao", operationId: "ofertaFormacaoNivelFormacaoDeleteOneById" })
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()

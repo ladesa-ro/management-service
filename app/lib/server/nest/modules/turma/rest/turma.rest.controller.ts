@@ -36,86 +36,86 @@ export class TurmaRestController {
   constructor(private turmaService: TurmaService) {}
 
   @Get("/")
-  @ApiOperation({ summary: "Lista turmas" })
+  @ApiOperation({ summary: "Lista turmas", operationId: "turmaFindAll" })
   @ApiOkResponse({ type: TurmaListOutputDto })
   @ApiForbiddenResponse()
-  async turmaFindAll(
+  async findAll(
     @AccessContextHttp() accessContext: AccessContext,
     @Query() dto: TurmaListInputDto,
   ): Promise<TurmaListOutputDto> {
-    return this.turmaService.turmaFindAll(accessContext, dto as any) as any;
+    return this.turmaService.findAll(accessContext, dto as any) as any;
   }
 
   @Get("/:id")
-  @ApiOperation({ summary: "Busca uma turma por ID" })
+  @ApiOperation({ summary: "Busca uma turma por ID", operationId: "turmaFindById" })
   @ApiOkResponse({ type: TurmaFindOneOutputDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
-  async turmaFindById(
+  async findById(
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: TurmaFindOneInputDto,
   ): Promise<TurmaFindOneOutputDto> {
-    return this.turmaService.turmaFindByIdStrict(accessContext, params) as any;
+    return this.turmaService.findByIdStrict(accessContext, params) as any;
   }
 
   @Post("/")
-  @ApiOperation({ summary: "Cria uma turma" })
+  @ApiOperation({ summary: "Cria uma turma", operationId: "turmaCreate" })
   @ApiCreatedResponse({ type: TurmaFindOneOutputDto })
   @ApiForbiddenResponse()
-  async turmaCreate(
+  async create(
     @AccessContextHttp() accessContext: AccessContext,
     @Body() dto: TurmaCreateInputDto,
   ): Promise<TurmaFindOneOutputDto> {
-    return this.turmaService.turmaCreate(accessContext, dto as any) as any;
+    return this.turmaService.create(accessContext, dto as any) as any;
   }
 
   @Patch("/:id")
-  @ApiOperation({ summary: "Atualiza uma turma" })
+  @ApiOperation({ summary: "Atualiza uma turma", operationId: "turmaUpdate" })
   @ApiOkResponse({ type: TurmaFindOneOutputDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
-  async turmaUpdate(
+  async update(
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: TurmaFindOneInputDto,
     @Body() dto: TurmaUpdateInputDto,
   ): Promise<TurmaFindOneOutputDto> {
-    return this.turmaService.turmaUpdate(accessContext, { id: params.id, ...dto } as any) as any;
+    return this.turmaService.update(accessContext, { id: params.id, ...dto } as any) as any;
   }
 
   @Get("/:id/imagem/capa")
-  @ApiOperation({ summary: "Busca a imagem de capa de uma turma" })
+  @ApiOperation({ summary: "Busca a imagem de capa de uma turma", operationId: "turmaGetImagemCapa" })
   @ApiOkResponse()
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
-  async turmaGetImagemCapa(
+  async getImagemCapa(
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: TurmaFindOneInputDto,
   ) {
-    return this.turmaService.turmaGetImagemCapa(accessContext, params.id);
+    return this.turmaService.getImagemCapa(accessContext, params.id);
   }
 
   @Put("/:id/imagem/capa")
-  @ApiOperation({ summary: "Define a imagem de capa de uma turma" })
+  @ApiOperation({ summary: "Define a imagem de capa de uma turma", operationId: "turmaUpdateImagemCapa" })
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
-  async turmaImagemCapaSave(
+  async updateImagemCapa(
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: TurmaFindOneInputDto,
     @UploadedFile() file: Express.Multer.File,
   ): Promise<boolean> {
-    return this.turmaService.turmaUpdateImagemCapa(accessContext, params, file);
+    return this.turmaService.updateImagemCapa(accessContext, params, file);
   }
 
   @Delete("/:id")
-  @ApiOperation({ summary: "Remove uma turma" })
+  @ApiOperation({ summary: "Remove uma turma", operationId: "turmaDeleteOneById" })
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
-  async turmaDeleteOneById(
+  async deleteOneById(
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: TurmaFindOneInputDto,
   ): Promise<boolean> {
-    return this.turmaService.turmaDeleteOneById(accessContext, params);
+    return this.turmaService.deleteOneById(accessContext, params);
   }
 }

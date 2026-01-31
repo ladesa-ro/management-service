@@ -9,42 +9,42 @@ import type {
 } from "../../dtos";
 
 export interface IAulaUseCasePort {
-  aulaFindAll(
+  findAll(
     accessContext: AccessContext,
     dto: AulaListInput | null,
     selection?: string[] | boolean,
   ): Promise<AulaListOutput>;
 
-  aulaFindById(
+  findById(
     accessContext: AccessContext,
     dto: AulaFindOneInput,
     selection?: string[] | boolean,
   ): Promise<AulaFindOneOutput | null>;
 
-  aulaFindByIdStrict(
+  findByIdStrict(
     accessContext: AccessContext,
     dto: AulaFindOneInput,
     selection?: string[] | boolean,
   ): Promise<AulaFindOneOutput>;
 
-  aulaFindByIdSimple(
+  findByIdSimple(
     accessContext: AccessContext,
     id: AulaFindOneInput["id"],
     selection?: string[] | boolean,
   ): Promise<AulaFindOneOutput | null>;
 
-  aulaFindByIdSimpleStrict(
+  findByIdSimpleStrict(
     accessContext: AccessContext,
     id: AulaFindOneInput["id"],
     selection?: string[] | boolean,
   ): Promise<AulaFindOneOutput>;
 
-  aulaCreate(accessContext: AccessContext, dto: AulaCreateInput): Promise<AulaFindOneOutput>;
+  create(accessContext: AccessContext, dto: AulaCreateInput): Promise<AulaFindOneOutput>;
 
-  aulaUpdate(
+  update(
     accessContext: AccessContext,
     dto: AulaFindOneInput & AulaUpdateInput,
   ): Promise<AulaFindOneOutput>;
 
-  aulaDeleteOneById(accessContext: AccessContext, dto: AulaFindOneInput): Promise<boolean>;
+  deleteOneById(accessContext: AccessContext, dto: AulaFindOneInput): Promise<boolean>;
 }

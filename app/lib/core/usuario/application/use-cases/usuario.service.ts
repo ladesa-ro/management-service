@@ -41,7 +41,7 @@ export class UsuarioService implements IUsuarioUseCasePort {
     dto: UsuarioFindOneInput,
     selection?: string[] | boolean,
   ): Promise<any> {
-    const usuario = await this.usuarioFindByIdStrict(accessContext, dto, selection);
+    const usuario = await this.findByIdStrict(accessContext, dto, selection);
 
     const { disciplinas } = await this.usuarioRepository.findUsuarioEnsino(usuario.id);
 
@@ -58,7 +58,8 @@ export class UsuarioService implements IUsuarioUseCasePort {
     return this.usuarioRepository.findByMatriculaSiape(matriculaSiape, selection);
   }
 
-  async usuarioFindAll(
+  // Generic method names
+  async findAll(
     accessContext: AccessContext,
     dto: UsuarioListInput | null = null,
     selection?: string[] | boolean,
@@ -66,7 +67,7 @@ export class UsuarioService implements IUsuarioUseCasePort {
     return this.usuarioRepository.findAll(accessContext, dto, selection);
   }
 
-  async usuarioFindById(
+  async findById(
     accessContext: AccessContext | null,
     dto: UsuarioFindOneInput,
     selection?: string[] | boolean,
@@ -74,7 +75,7 @@ export class UsuarioService implements IUsuarioUseCasePort {
     return this.usuarioRepository.findById(accessContext, dto, selection);
   }
 
-  async usuarioFindByIdStrict(
+  async findByIdStrict(
     accessContext: AccessContext | null,
     dto: UsuarioFindOneInput,
     selection?: string[] | boolean,
@@ -88,7 +89,7 @@ export class UsuarioService implements IUsuarioUseCasePort {
     return usuario;
   }
 
-  async usuarioFindByIdSimple(
+  async findByIdSimple(
     accessContext: AccessContext,
     id: UsuarioFindOneInput["id"],
     selection?: string[],
@@ -96,7 +97,7 @@ export class UsuarioService implements IUsuarioUseCasePort {
     return this.usuarioRepository.findByIdSimple(accessContext, id, selection);
   }
 
-  async usuarioFindByIdSimpleStrict(
+  async findByIdSimpleStrict(
     accessContext: AccessContext,
     id: UsuarioFindOneInput["id"],
     selection?: string[],
@@ -110,8 +111,8 @@ export class UsuarioService implements IUsuarioUseCasePort {
     return usuario;
   }
 
-  async usuarioGetImagemCapa(accessContext: AccessContext | null, id: string) {
-    const usuario = await this.usuarioFindByIdStrict(accessContext, { id: id });
+  async getImagemCapa(accessContext: AccessContext | null, id: string) {
+    const usuario = await this.findByIdStrict(accessContext, { id: id });
 
     if (usuario.imagemCapa) {
       const arquivoId = await this.imagemService.getLatestArquivoIdForImagem(usuario.imagemCapa.id);
@@ -124,12 +125,12 @@ export class UsuarioService implements IUsuarioUseCasePort {
     throw new NotFoundException();
   }
 
-  async usuarioUpdateImagemCapa(
+  async updateImagemCapa(
     accessContext: AccessContext,
     dto: UsuarioFindOneInput,
     file: Express.Multer.File,
   ) {
-    const currentUsuario = await this.usuarioFindByIdStrict(accessContext, {
+    const currentUsuario = await this.findByIdStrict(accessContext, {
       id: dto.id,
     });
 
@@ -161,8 +162,8 @@ export class UsuarioService implements IUsuarioUseCasePort {
     return true;
   }
 
-  async usuarioGetImagemPerfil(accessContext: AccessContext | null, id: string) {
-    const usuario = await this.usuarioFindByIdStrict(accessContext, { id: id });
+  async getImagemPerfil(accessContext: AccessContext | null, id: string) {
+    const usuario = await this.findByIdStrict(accessContext, { id: id });
 
     if (usuario.imagemPerfil) {
       const arquivoId = await this.imagemService.getLatestArquivoIdForImagem(
@@ -177,12 +178,12 @@ export class UsuarioService implements IUsuarioUseCasePort {
     throw new NotFoundException();
   }
 
-  async usuarioUpdateImagemPerfil(
+  async updateImagemPerfil(
     accessContext: AccessContext,
     dto: UsuarioFindOneInput,
     file: Express.Multer.File,
   ) {
-    const currentUsuario = await this.usuarioFindByIdStrict(accessContext, {
+    const currentUsuario = await this.findByIdStrict(accessContext, {
       id: dto.id,
     });
 
@@ -214,7 +215,7 @@ export class UsuarioService implements IUsuarioUseCasePort {
     return true;
   }
 
-  async usuarioCreate(
+  async create(
     accessContext: AccessContext,
     dto: UsuarioCreateInput,
   ): Promise<UsuarioFindOneOutput> {
@@ -253,14 +254,14 @@ export class UsuarioService implements IUsuarioUseCasePort {
       throw new InternalServerErrorException();
     }
 
-    return this.usuarioFindByIdStrict(accessContext, { id: usuario.id });
+    return this.findByIdStrict(accessContext, { id: usuario.id });
   }
 
-  async usuarioUpdate(
+  async update(
     accessContext: AccessContext,
     dto: UsuarioFindOneInput & UsuarioUpdateInput,
   ): Promise<UsuarioFindOneOutput> {
-    const currentUsuario = await this.usuarioFindByIdStrict(accessContext, dto);
+    const currentUsuario = await this.findByIdStrict(accessContext, dto);
 
     const currentMatriculaSiape =
       currentUsuario.matriculaSiape ??
@@ -317,16 +318,16 @@ export class UsuarioService implements IUsuarioUseCasePort {
       }
     }
 
-    return this.usuarioFindByIdStrict(accessContext, { id: usuario.id });
+    return this.findByIdStrict(accessContext, { id: usuario.id });
   }
 
-  async usuarioDeleteOneById(
+  async deleteOneById(
     accessContext: AccessContext,
     dto: UsuarioFindOneInput,
   ): Promise<boolean> {
     await accessContext.ensurePermission("usuario:delete", { dto }, dto.id);
 
-    const usuario = await this.usuarioFindByIdStrict(accessContext, dto);
+    const usuario = await this.findByIdStrict(accessContext, dto);
 
     if (usuario) {
       await this.usuarioRepository.softDeleteById(usuario.id);

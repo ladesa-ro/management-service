@@ -30,8 +30,7 @@ export interface INivelFormacaoUseCasePort {
     dto: NivelFormacaoFindOneInput & NivelFormacaoUpdateInput,
   ): Promise<NivelFormacaoFindOneOutput>;
   deleteOneById(accessContext: AccessContext, dto: NivelFormacaoFindOneInput): Promise<boolean>;
-  // Legacy method alias - accepts string id
-  nivelFormacaoFindByIdSimpleStrict(
+  findByIdSimpleStrict(
     accessContext: AccessContext,
     id: string,
   ): Promise<NivelFormacaoFindOneOutput>;

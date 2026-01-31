@@ -14,9 +14,9 @@ import type {
  */
 export interface ICampusUseCasePort {
   /**
-   * Lista campus com paginação
+   * Lista campus com paginacao
    */
-  campusFindAll(
+  findAll(
     accessContext: AccessContext,
     dto: CampusListInput | null,
     selection?: string[] | boolean,
@@ -25,16 +25,16 @@ export interface ICampusUseCasePort {
   /**
    * Busca um campus por ID
    */
-  campusFindById(
+  findById(
     accessContext: AccessContext,
     dto: CampusFindOneInput,
     selection?: string[] | boolean,
   ): Promise<CampusFindOneOutput | null>;
 
   /**
-   * Busca um campus por ID (lança exceção se não encontrado)
+   * Busca um campus por ID (lanca excecao se nao encontrado)
    */
-  campusFindByIdStrict(
+  findByIdStrict(
     accessContext: AccessContext,
     dto: CampusFindOneInput,
     selection?: string[] | boolean,
@@ -43,16 +43,16 @@ export interface ICampusUseCasePort {
   /**
    * Busca um campus por ID (formato simples)
    */
-  campusFindByIdSimple(
+  findByIdSimple(
     accessContext: AccessContext,
     id: string,
     selection?: string[] | boolean,
   ): Promise<CampusFindOneOutput | null>;
 
   /**
-   * Busca um campus por ID (formato simples, lança exceção se não encontrado)
+   * Busca um campus por ID (formato simples, lanca excecao se nao encontrado)
    */
-  campusFindByIdSimpleStrict(
+  findByIdSimpleStrict(
     accessContext: AccessContext,
     id: string,
     selection?: string[] | boolean,
@@ -61,12 +61,12 @@ export interface ICampusUseCasePort {
   /**
    * Cria um novo campus
    */
-  campusCreate(accessContext: AccessContext, dto: CampusCreateInput): Promise<CampusFindOneOutput>;
+  create(accessContext: AccessContext, dto: CampusCreateInput): Promise<CampusFindOneOutput>;
 
   /**
    * Atualiza um campus existente
    */
-  campusUpdate(
+  update(
     accessContext: AccessContext,
     dto: CampusFindOneInput & CampusUpdateInput,
   ): Promise<CampusFindOneOutput>;
@@ -74,5 +74,5 @@ export interface ICampusUseCasePort {
   /**
    * Remove um campus (soft delete)
    */
-  campusDeleteOneById(accessContext: AccessContext, dto: CampusFindOneInput): Promise<boolean>;
+  deleteOneById(accessContext: AccessContext, dto: CampusFindOneInput): Promise<boolean>;
 }

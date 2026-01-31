@@ -8,9 +8,9 @@ export class GerarHorarioRestController {
   constructor(private gerarHorarioService: GerarHorarioService) {}
 
   @Get("/")
-  @ApiOperation({ summary: "Publica mensagem para geracao de horario" })
+  @ApiOperation({ summary: "Publica mensagem para geracao de horario", operationId: "gerarHorarioPublish" })
   @ApiOkResponse({ type: String })
-  async gerarHorarioPublishMessage(): Promise<string | NotFoundException> {
+  async publishMessage(): Promise<string | NotFoundException> {
     return this.gerarHorarioService.publishMessage();
   }
 }

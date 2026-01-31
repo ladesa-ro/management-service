@@ -22,7 +22,7 @@ export class CidadeRestController {
   constructor(private cidadeService: CidadeService) {}
 
   @Get("/")
-  @ApiOperation({ summary: "Lista cidades" })
+  @ApiOperation({ summary: "Lista cidades", operationId: "cidadeFindAll" })
   @ApiOkResponse({ type: CidadeListOutputDto })
   @ApiForbiddenResponse()
   async findAll(
@@ -35,7 +35,7 @@ export class CidadeRestController {
   }
 
   @Get("/:id")
-  @ApiOperation({ summary: "Busca uma cidade por ID" })
+  @ApiOperation({ summary: "Busca uma cidade por ID", operationId: "cidadeFindById" })
   @ApiOkResponse({ type: CidadeFindOneOutputDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()

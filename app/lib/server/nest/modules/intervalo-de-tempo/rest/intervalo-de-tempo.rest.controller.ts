@@ -22,7 +22,7 @@ export class IntervaloDeTempoRestController {
   constructor(private intervaloDeTempoService: IntervaloDeTempoService) {}
 
   @Get("/")
-  @ApiOperation({ summary: "Lista intervalos de tempo" })
+  @ApiOperation({ summary: "Lista intervalos de tempo", operationId: "intervaloDeTempoFindAll" })
   @ApiOkResponse({ type: IntervaloDeTempoListOutputDto })
   @ApiForbiddenResponse()
   async findAll(
@@ -35,7 +35,7 @@ export class IntervaloDeTempoRestController {
   }
 
   @Get("/:id")
-  @ApiOperation({ summary: "Busca um intervalo de tempo por ID" })
+  @ApiOperation({ summary: "Busca um intervalo de tempo por ID", operationId: "intervaloDeTempoFindById" })
   @ApiOkResponse({ type: IntervaloDeTempoFindOneOutputDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()

@@ -52,76 +52,13 @@ export class DiarioService
     super();
   }
 
-  async diarioFindAll(
-    accessContext: AccessContext,
-    dto: DiarioListInput | null = null,
-    selection?: string[] | boolean,
-  ): Promise<DiarioListOutput> {
-    return this.findAll(accessContext, dto, selection);
-  }
-
-  async diarioFindById(
-    accessContext: AccessContext,
-    dto: DiarioFindOneInput,
-    selection?: string[] | boolean,
-  ): Promise<DiarioFindOneOutput | null> {
-    return this.findById(accessContext, dto, selection);
-  }
-
-  // Metodos prefixados para compatibilidade
-
-  async diarioFindByIdStrict(
-    accessContext: AccessContext,
-    dto: DiarioFindOneInput,
-    selection?: string[] | boolean,
-  ): Promise<DiarioFindOneOutput> {
-    return this.findByIdStrict(accessContext, dto, selection);
-  }
-
-  async diarioFindByIdSimple(
-    accessContext: AccessContext,
-    id: DiarioFindOneInput["id"],
-    selection?: string[] | boolean,
-  ): Promise<DiarioFindOneOutput | null> {
-    return this.findByIdSimple(accessContext, id, selection);
-  }
-
-  async diarioFindByIdSimpleStrict(
-    accessContext: AccessContext,
-    id: DiarioFindOneInput["id"],
-    selection?: string[] | boolean,
-  ): Promise<DiarioFindOneOutput> {
-    return this.findByIdSimpleStrict(accessContext, id, selection);
-  }
-
-  async diarioCreate(
-    accessContext: AccessContext,
-    dto: DiarioCreateInput,
-  ): Promise<DiarioFindOneOutput> {
-    return this.create(accessContext, dto);
-  }
-
-  async diarioUpdate(
-    accessContext: AccessContext,
-    dto: DiarioFindOneInput & DiarioUpdateInput,
-  ): Promise<DiarioFindOneOutput> {
-    return this.update(accessContext, dto);
-  }
-
-  async diarioDeleteOneById(
-    accessContext: AccessContext,
-    dto: DiarioFindOneInput,
-  ): Promise<boolean> {
-    return this.deleteOneById(accessContext, dto);
-  }
-
   protected override async beforeCreate(
     accessContext: AccessContext,
     entity: DiarioEntity,
     dto: DiarioCreateInput,
   ): Promise<void> {
     if (dto.ambientePadrao != null) {
-      const ambientePadrao = await this.ambienteService.ambienteFindByIdStrict(accessContext, {
+      const ambientePadrao = await this.ambienteService.findByIdStrict(accessContext, {
         id: dto.ambientePadrao.id,
       });
       this.repository.merge(entity, { ambientePadrao: { id: ambientePadrao.id } });
@@ -130,19 +67,19 @@ export class DiarioService
     }
 
     const calendarioLetivo =
-      await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(
+      await this.calendarioLetivoService.findByIdSimpleStrict(
         accessContext,
         dto.calendarioLetivo.id,
       );
     this.repository.merge(entity, { calendarioLetivo: { id: calendarioLetivo.id } });
 
-    const disciplina = await this.disciplinaService.disciplinaFindByIdSimpleStrict(
+    const disciplina = await this.disciplinaService.findByIdSimpleStrict(
       accessContext,
       dto.disciplina.id,
     );
     this.repository.merge(entity, { disciplina: { id: disciplina.id } });
 
-    const turma = await this.turmaService.turmaFindByIdSimpleStrict(accessContext, dto.turma.id);
+    const turma = await this.turmaService.findByIdSimpleStrict(accessContext, dto.turma.id);
     this.repository.merge(entity, { turma: { id: turma.id } });
   }
 
@@ -153,7 +90,7 @@ export class DiarioService
   ): Promise<void> {
     if (has(dto, "ambientePadrao") && dto.ambientePadrao !== undefined) {
       if (dto.ambientePadrao !== null) {
-        const ambientePadrao = await this.ambienteService.ambienteFindByIdStrict(accessContext, {
+        const ambientePadrao = await this.ambienteService.findByIdStrict(accessContext, {
           id: dto.ambientePadrao.id,
         });
         this.repository.merge(entity, { ambientePadrao: { id: ambientePadrao.id } });
@@ -163,7 +100,7 @@ export class DiarioService
     }
 
     if (has(dto, "disciplina") && dto.disciplina !== undefined) {
-      const disciplina = await this.disciplinaService.disciplinaFindByIdSimpleStrict(
+      const disciplina = await this.disciplinaService.findByIdSimpleStrict(
         accessContext,
         dto.disciplina.id,
       );
@@ -171,13 +108,13 @@ export class DiarioService
     }
 
     if (has(dto, "turma") && dto.turma !== undefined) {
-      const turma = await this.turmaService.turmaFindByIdSimpleStrict(accessContext, dto.turma.id);
+      const turma = await this.turmaService.findByIdSimpleStrict(accessContext, dto.turma.id);
       this.repository.merge(entity, { turma: { id: turma.id } });
     }
 
     if (has(dto, "calendarioLetivo") && dto.calendarioLetivo !== undefined) {
       const calendarioLetivo =
-        await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(
+        await this.calendarioLetivoService.findByIdSimpleStrict(
           accessContext,
           dto.calendarioLetivo.id,
         );

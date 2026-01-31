@@ -23,7 +23,7 @@ export class PerfilRestController {
   constructor(private perfilService: PerfilService) {}
 
   @Get("/")
-  @ApiOperation({ summary: "Lista perfis" })
+  @ApiOperation({ summary: "Lista perfis", operationId: "perfilFindAll" })
   @ApiOkResponse({ type: PerfilListOutputDto })
   @ApiForbiddenResponse()
   async findAll(
@@ -37,7 +37,7 @@ export class PerfilRestController {
   }
 
   @Get("/:id")
-  @ApiOperation({ summary: "Busca um perfil por ID" })
+  @ApiOperation({ summary: "Busca um perfil por ID", operationId: "perfilFindById" })
   @ApiOkResponse({ type: PerfilFindOneOutputDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -52,7 +52,7 @@ export class PerfilRestController {
   }
 
   @Get("/:id/ensino")
-  @ApiOperation({ summary: "Busca dados de ensino de um perfil" })
+  @ApiOperation({ summary: "Busca dados de ensino de um perfil", operationId: "perfilEnsinoById" })
   @ApiOkResponse({ type: PerfilFindOneOutputDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -67,7 +67,7 @@ export class PerfilRestController {
   }
 
   @Post("/")
-  @ApiOperation({ summary: "Define vinculos de um perfil" })
+  @ApiOperation({ summary: "Define vinculos de um perfil", operationId: "perfilSetVinculos" })
   @ApiCreatedResponse({ type: PerfilListOutputDto })
   @ApiForbiddenResponse()
   async setVinculos(

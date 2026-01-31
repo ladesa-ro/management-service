@@ -24,7 +24,7 @@ export class GradeHorarioOfertaFormacaoRestController {
   constructor(private gradeHorarioOfertaFormacaoService: GradeHorarioOfertaFormacaoService) {}
 
   @Get("/")
-  @ApiOperation({ summary: "Lista grades horarios de ofertas de formacoes" })
+  @ApiOperation({ summary: "Lista grades horarios de ofertas de formacoes", operationId: "gradeHorarioOfertaFormacaoFindAll" })
   @ApiOkResponse({ type: GradeHorarioOfertaFormacaoListOutputDto })
   @ApiForbiddenResponse()
   async findAll(
@@ -38,7 +38,7 @@ export class GradeHorarioOfertaFormacaoRestController {
   }
 
   @Get("/:id")
-  @ApiOperation({ summary: "Busca uma grade horario de oferta de formacao por ID" })
+  @ApiOperation({ summary: "Busca uma grade horario de oferta de formacao por ID", operationId: "gradeHorarioOfertaFormacaoFindById" })
   @ApiOkResponse({ type: GradeHorarioOfertaFormacaoFindOneOutputDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -53,7 +53,7 @@ export class GradeHorarioOfertaFormacaoRestController {
   }
 
   @Post("/")
-  @ApiOperation({ summary: "Cria uma grade horario de oferta de formacao" })
+  @ApiOperation({ summary: "Cria uma grade horario de oferta de formacao", operationId: "gradeHorarioOfertaFormacaoCreate" })
   @ApiCreatedResponse({ type: GradeHorarioOfertaFormacaoFindOneOutputDto })
   @ApiForbiddenResponse()
   async create(
@@ -67,7 +67,7 @@ export class GradeHorarioOfertaFormacaoRestController {
   }
 
   @Patch("/:id")
-  @ApiOperation({ summary: "Atualiza uma grade horario de oferta de formacao" })
+  @ApiOperation({ summary: "Atualiza uma grade horario de oferta de formacao", operationId: "gradeHorarioOfertaFormacaoUpdate" })
   @ApiOkResponse({ type: GradeHorarioOfertaFormacaoFindOneOutputDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -83,7 +83,7 @@ export class GradeHorarioOfertaFormacaoRestController {
   }
 
   @Delete("/:id")
-  @ApiOperation({ summary: "Remove uma grade horario de oferta de formacao" })
+  @ApiOperation({ summary: "Remove uma grade horario de oferta de formacao", operationId: "gradeHorarioOfertaFormacaoDeleteOneById" })
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()

@@ -22,7 +22,7 @@ export class EstadoRestController {
   constructor(private estadoService: EstadoService) {}
 
   @Get("/")
-  @ApiOperation({ summary: "Lista estados" })
+  @ApiOperation({ summary: "Lista estados", operationId: "estadoFindAll" })
   @ApiOkResponse({ type: EstadoListOutputDto })
   @ApiForbiddenResponse()
   async findAll(
@@ -35,7 +35,7 @@ export class EstadoRestController {
   }
 
   @Get("/:id")
-  @ApiOperation({ summary: "Busca um estado por ID" })
+  @ApiOperation({ summary: "Busca um estado por ID", operationId: "estadoFindById" })
   @ApiOkResponse({ type: EstadoFindOneOutputDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()

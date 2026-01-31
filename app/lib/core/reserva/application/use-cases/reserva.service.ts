@@ -50,83 +50,17 @@ export class ReservaService
     super();
   }
 
-  async reservaFindAll(
-    accessContext: AccessContext,
-    dto: ReservaListInput | null = null,
-    selection?: string[] | boolean,
-  ): Promise<ReservaListOutput> {
-    return this.findAll(accessContext, dto, selection);
-  }
-
-  async reservaFindById(
-    accessContext: AccessContext,
-    dto: ReservaFindOneInput,
-    selection?: string[] | boolean,
-  ): Promise<ReservaFindOneOutput | null> {
-    return this.findById(accessContext, dto, selection);
-  }
-
-  // Métodos prefixados para compatibilidade com IReservaUseCasePort
-
-  async reservaFindByIdStrict(
-    accessContext: AccessContext,
-    dto: ReservaFindOneInput,
-    selection?: string[] | boolean,
-  ): Promise<ReservaFindOneOutput> {
-    return this.findByIdStrict(accessContext, dto, selection);
-  }
-
-  async reservaFindByIdSimple(
-    accessContext: AccessContext,
-    id: ReservaFindOneInput["id"],
-    selection?: string[],
-  ): Promise<ReservaFindOneOutput | null> {
-    return this.findByIdSimple(accessContext, id, selection);
-  }
-
-  async reservaFindByIdSimpleStrict(
-    accessContext: AccessContext,
-    id: ReservaFindOneInput["id"],
-    selection?: string[],
-  ): Promise<ReservaFindOneOutput> {
-    return this.findByIdSimpleStrict(accessContext, id, selection);
-  }
-
-  async reservaCreate(
-    accessContext: AccessContext,
-    dto: ReservaCreateInput,
-  ): Promise<ReservaFindOneOutput> {
-    return this.create(accessContext, dto);
-  }
-
-  async reservaUpdate(
-    accessContext: AccessContext,
-    dto: ReservaFindOneInput & ReservaUpdateInput,
-  ): Promise<ReservaFindOneOutput> {
-    return this.update(accessContext, dto);
-  }
-
-  async reservaDeleteOneById(
-    accessContext: AccessContext,
-    dto: ReservaFindOneInput,
-  ): Promise<boolean> {
-    return this.deleteOneById(accessContext, dto);
-  }
-
-  /**
-   * Hook para adicionar relacionamentos com Ambiente e Usuario durante criação
-   */
   protected override async beforeCreate(
     accessContext: AccessContext,
     entity: ReservaEntity,
     dto: ReservaCreateInput,
   ): Promise<void> {
-    const ambiente = await this.ambienteService.ambienteFindByIdStrict(accessContext, {
+    const ambiente = await this.ambienteService.findByIdStrict(accessContext, {
       id: dto.ambiente.id,
     });
     this.repository.merge(entity, { ambiente: { id: ambiente.id } });
 
-    const usuario = await this.usuarioService.usuarioFindByIdStrict(accessContext, {
+    const usuario = await this.usuarioService.findByIdStrict(accessContext, {
       id: dto.usuario.id,
     });
     this.repository.merge(entity, { usuario: { id: usuario.id } });
@@ -142,14 +76,14 @@ export class ReservaService
     _current: ReservaFindOneOutput,
   ): Promise<void> {
     if (has(dto, "ambiente") && dto.ambiente !== undefined) {
-      const ambiente = await this.ambienteService.ambienteFindByIdStrict(accessContext, {
+      const ambiente = await this.ambienteService.findByIdStrict(accessContext, {
         id: dto.ambiente.id,
       });
       this.repository.merge(entity, { ambiente: { id: ambiente.id } });
     }
 
     if (has(dto, "usuario") && dto.usuario !== undefined) {
-      const usuario = await this.usuarioService.usuarioFindByIdSimpleStrict(
+      const usuario = await this.usuarioService.findByIdSimpleStrict(
         accessContext,
         dto.usuario.id,
       );

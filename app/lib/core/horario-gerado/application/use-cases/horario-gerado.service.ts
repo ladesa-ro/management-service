@@ -120,7 +120,7 @@ export class HorarioGeradoService extends BaseCrudService<
     dto: HorarioGeradoCreateInput,
   ): Promise<void> {
     if (dto.calendario) {
-      const calendario = await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(
+      const calendario = await this.calendarioLetivoService.findByIdSimpleStrict(
         accessContext,
         dto.calendario.id,
       );
@@ -134,7 +134,7 @@ export class HorarioGeradoService extends BaseCrudService<
     dto: HorarioGeradoFindOneInput & HorarioGeradoUpdateInput,
   ): Promise<void> {
     if (has(dto, "calendario") && dto.calendario !== undefined) {
-      const calendario = await this.calendarioLetivoService.calendarioLetivoFindByIdSimpleStrict(
+      const calendario = await this.calendarioLetivoService.findByIdSimpleStrict(
         accessContext,
         dto.calendario.id,
       );

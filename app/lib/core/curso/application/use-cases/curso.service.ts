@@ -52,86 +52,11 @@ export class CursoService
     super();
   }
 
-  async cursoFindAll(
-    accessContext: AccessContext,
-    dto: CursoListInputDto | null = null,
-    selection?: string[] | boolean,
-  ): Promise<CursoListOutputDto> {
-    return this.findAll(accessContext, dto, selection);
-  }
-
-  async cursoFindById(
-    accessContext: AccessContext | null,
-    dto: CursoFindOneInputDto,
-    selection?: string[] | boolean,
-  ): Promise<CursoFindOneOutputDto | null> {
-    return this.findById(accessContext, dto, selection);
-  }
-
-  // Metodos prefixados para compatibilidade
-
-  async cursoFindByIdStrict(
-    accessContext: AccessContext | null,
-    dto: CursoFindOneInputDto,
-    selection?: string[] | boolean,
-  ): Promise<CursoFindOneOutputDto> {
-    const curso = await this.findById(accessContext, dto, selection);
-
-    if (!curso) {
-      throw new ResourceNotFoundError("Curso", dto.id);
-    }
-
-    return curso;
-  }
-
-  async cursoFindByIdSimple(
-    accessContext: AccessContext,
-    id: CursoFindOneInputDto["id"],
-    selection?: string[],
-  ): Promise<CursoFindOneOutputDto | null> {
-    return this.findByIdSimple(accessContext, id, selection);
-  }
-
-  async cursoFindByIdSimpleStrict(
-    accessContext: AccessContext,
-    id: CursoFindOneInputDto["id"],
-    selection?: string[],
-  ): Promise<CursoFindOneOutputDto> {
-    const curso = await this.findByIdSimple(accessContext, id, selection);
-
-    if (!curso) {
-      throw new ResourceNotFoundError("Curso", id);
-    }
-
-    return curso;
-  }
-
-  async cursoCreate(
-    accessContext: AccessContext,
-    dto: CursoCreateInputDto,
-  ): Promise<CursoFindOneOutputDto> {
-    return this.create(accessContext, dto);
-  }
-
-  async cursoUpdate(
-    accessContext: AccessContext,
-    dto: CursoFindOneInputDto & CursoUpdateInputDto,
-  ): Promise<CursoFindOneOutputDto> {
-    return this.update(accessContext, dto);
-  }
-
-  async cursoDeleteOneById(
-    accessContext: AccessContext,
-    dto: CursoFindOneInputDto,
-  ): Promise<boolean> {
-    return this.deleteOneById(accessContext, dto);
-  }
-
-  async cursoGetImagemCapa(
+  async getImagemCapa(
     accessContext: AccessContext | null,
     id: string,
   ): Promise<StreamableFile> {
-    const curso = await this.cursoFindByIdStrict(accessContext, { id });
+    const curso = await this.findByIdStrict(accessContext, { id });
 
     if (curso.imagemCapa) {
       const arquivoId = await this.imagemService.getLatestArquivoIdForImagem(curso.imagemCapa.id);
@@ -144,12 +69,12 @@ export class CursoService
     throw new NotFoundException();
   }
 
-  async cursoUpdateImagemCapa(
+  async updateImagemCapa(
     accessContext: AccessContext,
     dto: CursoFindOneInputDto,
     file: Express.Multer.File,
   ): Promise<boolean> {
-    const currentCurso = await this.cursoFindByIdStrict(accessContext, { id: dto.id });
+    const currentCurso = await this.findByIdStrict(accessContext, { id: dto.id });
 
     await accessContext.ensurePermission(
       "curso:update",
@@ -168,20 +93,18 @@ export class CursoService
     return true;
   }
 
-  // Metodos especificos de Curso (nao cobertos pela BaseCrudService)
-
   protected override async beforeCreate(
     accessContext: AccessContext,
     entity: CursoEntity,
     dto: CursoCreateInputDto,
   ): Promise<void> {
-    const campus = await this.campusService.campusFindByIdSimpleStrict(
+    const campus = await this.campusService.findByIdSimpleStrict(
       accessContext,
       dto.campus.id,
     );
     this.repository.merge(entity, { campus: { id: campus.id } });
 
-    const ofertaFormacao = await this.ofertaFormacaoService.ofertaFormacaoFindByIdSimpleStrict(
+    const ofertaFormacao = await this.ofertaFormacaoService.findByIdSimpleStrict(
       accessContext,
       dto.ofertaFormacao.id,
     );
@@ -194,7 +117,7 @@ export class CursoService
     dto: CursoFindOneInputDto & CursoUpdateInputDto,
   ): Promise<void> {
     if (has(dto, "campus") && dto.campus !== undefined) {
-      const campus = await this.campusService.campusFindByIdSimpleStrict(
+      const campus = await this.campusService.findByIdSimpleStrict(
         accessContext,
         dto.campus.id,
       );
@@ -202,7 +125,7 @@ export class CursoService
     }
 
     if (has(dto, "ofertaFormacao") && dto.ofertaFormacao !== undefined) {
-      const ofertaFormacao = await this.ofertaFormacaoService.ofertaFormacaoFindByIdSimpleStrict(
+      const ofertaFormacao = await this.ofertaFormacaoService.findByIdSimpleStrict(
         accessContext,
         dto.ofertaFormacao.id,
       );

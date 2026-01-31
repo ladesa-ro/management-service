@@ -24,61 +24,61 @@ export class ReservaRestController {
   constructor(private reservaService: ReservaService) {}
 
   @Get("/")
-  @ApiOperation({ summary: "Lista reservas" })
+  @ApiOperation({ summary: "Lista reservas", operationId: "reservaFindAll" })
   @ApiOkResponse({ type: ReservaListOutputDto })
   @ApiForbiddenResponse()
-  async reservaFindAll(
+  async findAll(
     @AccessContextHttp() accessContext: AccessContext,
     @Query() dto: ReservaListInputDto,
   ): Promise<ReservaListOutputDto> {
-    return this.reservaService.reservaFindAll(accessContext, dto) as any;
+    return this.reservaService.findAll(accessContext, dto) as any;
   }
 
   @Get("/:id")
-  @ApiOperation({ summary: "Busca uma reserva por ID" })
+  @ApiOperation({ summary: "Busca uma reserva por ID", operationId: "reservaFindById" })
   @ApiOkResponse({ type: ReservaFindOneOutputDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
-  async reservaFindById(
+  async findById(
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: ReservaFindOneInputDto,
   ): Promise<ReservaFindOneOutputDto> {
-    return this.reservaService.reservaFindByIdStrict(accessContext, params) as any;
+    return this.reservaService.findByIdStrict(accessContext, params) as any;
   }
 
   @Post("/")
-  @ApiOperation({ summary: "Cria uma reserva" })
+  @ApiOperation({ summary: "Cria uma reserva", operationId: "reservaCreate" })
   @ApiCreatedResponse({ type: ReservaFindOneOutputDto })
   @ApiForbiddenResponse()
-  async reservaCreate(
+  async create(
     @AccessContextHttp() accessContext: AccessContext,
     @Body() dto: ReservaCreateInputDto,
   ): Promise<ReservaFindOneOutputDto> {
-    return this.reservaService.reservaCreate(accessContext, dto) as any;
+    return this.reservaService.create(accessContext, dto) as any;
   }
 
   @Patch("/:id")
-  @ApiOperation({ summary: "Atualiza uma reserva" })
+  @ApiOperation({ summary: "Atualiza uma reserva", operationId: "reservaUpdate" })
   @ApiOkResponse({ type: ReservaFindOneOutputDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
-  async reservaUpdate(
+  async update(
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: ReservaFindOneInputDto,
     @Body() dto: ReservaUpdateInputDto,
   ): Promise<ReservaFindOneOutputDto> {
-    return this.reservaService.reservaUpdate(accessContext, { id: params.id, ...dto }) as any;
+    return this.reservaService.update(accessContext, { id: params.id, ...dto }) as any;
   }
 
   @Delete("/:id")
-  @ApiOperation({ summary: "Remove uma reserva" })
+  @ApiOperation({ summary: "Remove uma reserva", operationId: "reservaDeleteOneById" })
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
-  async reservaDeleteOneById(
+  async deleteOneById(
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: ReservaFindOneInputDto,
   ): Promise<boolean> {
-    return this.reservaService.reservaDeleteOneById(accessContext, params);
+    return this.reservaService.deleteOneById(accessContext, params);
   }
 }

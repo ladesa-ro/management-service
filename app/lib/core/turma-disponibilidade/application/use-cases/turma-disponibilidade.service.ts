@@ -32,7 +32,8 @@ export class TurmaDisponibilidadeService {
     private readonly disponibilidadeService: DisponibilidadeService,
   ) {}
 
-  async turmaDisponibilidadeFindAll(
+  // Generic method names
+  async findAll(
     accessContext: AccessContext,
     dto: TurmaDisponibilidadeListInput | null = null,
     selection?: string[],
@@ -40,7 +41,7 @@ export class TurmaDisponibilidadeService {
     return this.turmaDisponibilidadeRepository.findAll(accessContext, dto, selection);
   }
 
-  async turmaDisponibilidadeFindById(
+  async findById(
     accessContext: AccessContext | null,
     dto: TurmaDisponibilidadeFindOneInput,
     selection?: string[],
@@ -48,12 +49,12 @@ export class TurmaDisponibilidadeService {
     return this.turmaDisponibilidadeRepository.findById(accessContext, dto, selection);
   }
 
-  async turmaDisponibilidadeFindByIdStrict(
+  async findByIdStrict(
     accessContext: AccessContext,
     dto: TurmaDisponibilidadeFindOneInput,
     selection?: string[],
   ): Promise<TurmaDisponibilidadeFindOneOutput> {
-    const turmaDisponibilidade = await this.turmaDisponibilidadeFindById(
+    const turmaDisponibilidade = await this.findById(
       accessContext,
       dto,
       selection,
@@ -66,7 +67,7 @@ export class TurmaDisponibilidadeService {
     return turmaDisponibilidade;
   }
 
-  async turmaDisponibilidadeFindByIdSimple(
+  async findByIdSimple(
     accessContext: AccessContext,
     id: string,
     selection?: string[],
@@ -74,12 +75,12 @@ export class TurmaDisponibilidadeService {
     return this.turmaDisponibilidadeRepository.findByIdSimple(accessContext, id, selection);
   }
 
-  async turmaDisponibilidadeFindByIdSimpleStrict(
+  async findByIdSimpleStrict(
     accessContext: AccessContext,
     id: string,
     selection?: string[],
   ): Promise<TurmaDisponibilidadeFindOneOutput> {
-    const turmaDisponibilidade = await this.turmaDisponibilidadeFindByIdSimple(
+    const turmaDisponibilidade = await this.findByIdSimple(
       accessContext,
       id,
       selection,
@@ -90,6 +91,47 @@ export class TurmaDisponibilidadeService {
     }
 
     return turmaDisponibilidade;
+  }
+
+  // Legacy method aliases for compatibility
+  async turmaDisponibilidadeFindAll(
+    accessContext: AccessContext,
+    dto: TurmaDisponibilidadeListInput | null = null,
+    selection?: string[],
+  ): Promise<TurmaDisponibilidadeListOutput> {
+    return this.findAll(accessContext, dto, selection);
+  }
+
+  async turmaDisponibilidadeFindById(
+    accessContext: AccessContext | null,
+    dto: TurmaDisponibilidadeFindOneInput,
+    selection?: string[],
+  ): Promise<TurmaDisponibilidadeFindOneOutput | null> {
+    return this.findById(accessContext, dto, selection);
+  }
+
+  async turmaDisponibilidadeFindByIdStrict(
+    accessContext: AccessContext,
+    dto: TurmaDisponibilidadeFindOneInput,
+    selection?: string[],
+  ): Promise<TurmaDisponibilidadeFindOneOutput> {
+    return this.findByIdStrict(accessContext, dto, selection);
+  }
+
+  async turmaDisponibilidadeFindByIdSimple(
+    accessContext: AccessContext,
+    id: string,
+    selection?: string[],
+  ): Promise<TurmaDisponibilidadeFindOneOutput | null> {
+    return this.findByIdSimple(accessContext, id, selection);
+  }
+
+  async turmaDisponibilidadeFindByIdSimpleStrict(
+    accessContext: AccessContext,
+    id: string,
+    selection?: string[],
+  ): Promise<TurmaDisponibilidadeFindOneOutput> {
+    return this.findByIdSimpleStrict(accessContext, id, selection);
   }
 
   async turmaDisponibilidadeCreate(
@@ -109,7 +151,7 @@ export class TurmaDisponibilidadeService {
     });
 
     if (dto.turma) {
-      const turma = await this.turmaService.turmaFindByIdSimpleStrict(accessContext, dto.turma.id);
+      const turma = await this.turmaService.findByIdSimpleStrict(accessContext, dto.turma.id);
 
       this.turmaDisponibilidadeRepository.merge(turmaDisponibilidade, {
         turma: {
@@ -119,7 +161,7 @@ export class TurmaDisponibilidadeService {
     }
 
     if (dto.disponibilidade) {
-      const disponibilidade = await this.disponibilidadeService.disponibilidadeFindByIdSimpleStrict(
+      const disponibilidade = await this.disponibilidadeService.findByIdSimpleStrict(
         accessContext,
         dto.disponibilidade.id,
       );
@@ -134,7 +176,7 @@ export class TurmaDisponibilidadeService {
     const savedTurmaDisponibilidade =
       await this.turmaDisponibilidadeRepository.save(turmaDisponibilidade);
 
-    return this.turmaDisponibilidadeFindByIdStrict(accessContext, {
+    return this.findByIdStrict(accessContext, {
       id: savedTurmaDisponibilidade.id,
     });
   }
@@ -143,7 +185,7 @@ export class TurmaDisponibilidadeService {
     accessContext: AccessContext,
     dto: TurmaDisponibilidadeFindOneInput & TurmaDisponibilidadeUpdateInput,
   ): Promise<TurmaDisponibilidadeFindOneOutput> {
-    const currentTurmaDisponibilidade = await this.turmaDisponibilidadeFindByIdStrict(
+    const currentTurmaDisponibilidade = await this.findByIdStrict(
       accessContext,
       { id: dto.id },
     );
@@ -168,7 +210,7 @@ export class TurmaDisponibilidadeService {
     if (has(dto, "turma") && dto.turma !== undefined) {
       const turma =
         dto.turma &&
-        (await this.turmaService.turmaFindByIdSimpleStrict(accessContext, dto.turma.id));
+        (await this.turmaService.findByIdSimpleStrict(accessContext, dto.turma.id));
 
       this.turmaDisponibilidadeRepository.merge(turmaDisponibilidade, {
         turma: turma && {
@@ -180,7 +222,7 @@ export class TurmaDisponibilidadeService {
     if (has(dto, "disponibilidade") && dto.disponibilidade !== undefined) {
       const disponibilidade =
         dto.disponibilidade &&
-        (await this.disponibilidadeService.disponibilidadeFindByIdSimpleStrict(
+        (await this.disponibilidadeService.findByIdSimpleStrict(
           accessContext,
           dto.disponibilidade.id,
         ));
@@ -194,7 +236,7 @@ export class TurmaDisponibilidadeService {
 
     await this.turmaDisponibilidadeRepository.save(turmaDisponibilidade);
 
-    return this.turmaDisponibilidadeFindByIdStrict(accessContext, {
+    return this.findByIdStrict(accessContext, {
       id: turmaDisponibilidade.id,
     });
   }
@@ -210,7 +252,7 @@ export class TurmaDisponibilidadeService {
       this.turmaDisponibilidadeRepository.createQueryBuilder(aliasTurmaDisponibilidade),
     );
 
-    const turmaDisponibilidade = await this.turmaDisponibilidadeFindByIdStrict(accessContext, dto);
+    const turmaDisponibilidade = await this.findByIdStrict(accessContext, dto);
 
     if (turmaDisponibilidade) {
       await this.turmaDisponibilidadeRepository.softDeleteById(turmaDisponibilidade.id);

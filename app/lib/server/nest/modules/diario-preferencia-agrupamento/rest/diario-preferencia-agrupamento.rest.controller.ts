@@ -25,10 +25,10 @@ export class DiarioPreferenciaAgrupamentoController {
   constructor(private diarioPreferenciaAgrupamentoService: DiarioPreferenciaAgrupamentoService) {}
 
   @Get("/")
-  @ApiOperation({ summary: "Lista diarios preferencia agrupamento" })
+  @ApiOperation({ summary: "Lista diarios preferencia agrupamento", operationId: "diarioPreferenciaAgrupamentoFindAll" })
   @ApiOkResponse({ type: DiarioPreferenciaAgrupamentoListOutputDto })
   @ApiForbiddenResponse()
-  async diarioPreferenciaAgrupamentoFindAll(
+  async findAll(
     @AccessContextHttp() accessContext: AccessContext,
     @Query() dto: DiarioPreferenciaAgrupamentoListInputDto,
   ): Promise<DiarioPreferenciaAgrupamentoListOutputDto> {
@@ -42,11 +42,11 @@ export class DiarioPreferenciaAgrupamentoController {
   }
 
   @Get("/:id")
-  @ApiOperation({ summary: "Busca um diario preferencia agrupamento por ID" })
+  @ApiOperation({ summary: "Busca um diario preferencia agrupamento por ID", operationId: "diarioPreferenciaAgrupamentoFindById" })
   @ApiOkResponse({ type: DiarioPreferenciaAgrupamentoFindOneOutputDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
-  async diarioPreferenciaAgrupamentoFindById(
+  async findById(
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: DiarioPreferenciaAgrupamentoFindOneInputDto,
   ): Promise<DiarioPreferenciaAgrupamentoFindOneOutputDto> {
@@ -60,10 +60,10 @@ export class DiarioPreferenciaAgrupamentoController {
   }
 
   @Post("/")
-  @ApiOperation({ summary: "Cria um diario preferencia agrupamento" })
+  @ApiOperation({ summary: "Cria um diario preferencia agrupamento", operationId: "diarioPreferenciaAgrupamentoCreate" })
   @ApiCreatedResponse({ type: DiarioPreferenciaAgrupamentoFindOneOutputDto })
   @ApiForbiddenResponse()
-  async diarioPreferenciaAgrupamentoCreate(
+  async create(
     @AccessContextHttp() accessContext: AccessContext,
     @Body() dto: DiarioPreferenciaAgrupamentoCreateInputDto,
   ): Promise<DiarioPreferenciaAgrupamentoFindOneOutputDto> {
@@ -77,11 +77,11 @@ export class DiarioPreferenciaAgrupamentoController {
   }
 
   @Patch("/:id")
-  @ApiOperation({ summary: "Atualiza um diario preferencia agrupamento" })
+  @ApiOperation({ summary: "Atualiza um diario preferencia agrupamento", operationId: "diarioPreferenciaAgrupamentoUpdate" })
   @ApiOkResponse({ type: DiarioPreferenciaAgrupamentoFindOneOutputDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
-  async diarioPreferenciaAgrupamentoUpdate(
+  async update(
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: DiarioPreferenciaAgrupamentoFindOneInputDto,
     @Body() dto: DiarioPreferenciaAgrupamentoUpdateInputDto,
@@ -96,11 +96,11 @@ export class DiarioPreferenciaAgrupamentoController {
   }
 
   @Delete("/:id")
-  @ApiOperation({ summary: "Remove um diario preferencia agrupamento" })
+  @ApiOperation({ summary: "Remove um diario preferencia agrupamento", operationId: "diarioPreferenciaAgrupamentoDeleteOneById" })
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
-  async diarioPreferenciaAgrupamentoDeleteOneById(
+  async deleteOneById(
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: DiarioPreferenciaAgrupamentoFindOneInputDto,
   ): Promise<boolean> {

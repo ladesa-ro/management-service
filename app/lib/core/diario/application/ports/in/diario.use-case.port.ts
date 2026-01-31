@@ -9,42 +9,42 @@ import type {
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 
 export interface IDiarioUseCasePort {
-  diarioFindAll(
+  findAll(
     accessContext: AccessContext,
     dto: DiarioListInput | null,
     selection?: string[] | boolean,
   ): Promise<DiarioListOutput>;
 
-  diarioFindById(
+  findById(
     accessContext: AccessContext,
     dto: DiarioFindOneInput,
     selection?: string[] | boolean,
   ): Promise<DiarioFindOneOutput | null>;
 
-  diarioFindByIdStrict(
+  findByIdStrict(
     accessContext: AccessContext,
     dto: DiarioFindOneInput,
     selection?: string[] | boolean,
   ): Promise<DiarioFindOneOutput>;
 
-  diarioFindByIdSimple(
+  findByIdSimple(
     accessContext: AccessContext,
     id: DiarioFindOneInput["id"],
     selection?: string[] | boolean,
   ): Promise<DiarioFindOneOutput | null>;
 
-  diarioFindByIdSimpleStrict(
+  findByIdSimpleStrict(
     accessContext: AccessContext,
     id: DiarioFindOneInput["id"],
     selection?: string[] | boolean,
   ): Promise<DiarioFindOneOutput>;
 
-  diarioCreate(accessContext: AccessContext, dto: DiarioCreateInput): Promise<DiarioFindOneOutput>;
+  create(accessContext: AccessContext, dto: DiarioCreateInput): Promise<DiarioFindOneOutput>;
 
-  diarioUpdate(
+  update(
     accessContext: AccessContext,
     dto: DiarioFindOneInput & DiarioUpdateInput,
   ): Promise<DiarioFindOneOutput>;
 
-  diarioDeleteOneById(accessContext: AccessContext, dto: DiarioFindOneInput): Promise<boolean>;
+  deleteOneById(accessContext: AccessContext, dto: DiarioFindOneInput): Promise<boolean>;
 }

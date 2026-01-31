@@ -52,6 +52,13 @@ export class OfertaFormacaoService implements IOfertaFormacaoUseCasePort {
     return ofertaFormacao;
   }
 
+  async findByIdSimpleStrict(
+    accessContext: AccessContext,
+    id: string,
+  ): Promise<OfertaFormacaoFindOneOutput> {
+    return this.findByIdStrict(accessContext, { id });
+  }
+
   async create(
     accessContext: AccessContext,
     dto: OfertaFormacaoCreateInput,
@@ -62,7 +69,7 @@ export class OfertaFormacaoService implements IOfertaFormacaoUseCasePort {
     this.ofertaFormacaoRepository.merge(ofertaFormacao, { ...dtoOfertaFormacao });
 
     if (dto.modalidade) {
-      const modalidade = await this.modalidadeService.modalidadeFindByIdSimpleStrict(
+      const modalidade = await this.modalidadeService.findByIdSimpleStrict(
         accessContext,
         dto.modalidade.id,
       );
@@ -86,7 +93,7 @@ export class OfertaFormacaoService implements IOfertaFormacaoUseCasePort {
 
     if (has(dto, "modalidade") && dto.modalidade !== undefined) {
       if (dto.modalidade) {
-        const modalidade = await this.modalidadeService.modalidadeFindByIdSimpleStrict(
+        const modalidade = await this.modalidadeService.findByIdSimpleStrict(
           accessContext,
           dto.modalidade.id,
         );
@@ -108,51 +115,5 @@ export class OfertaFormacaoService implements IOfertaFormacaoUseCasePort {
     await this.findByIdStrict(accessContext, dto);
     await this.ofertaFormacaoRepository.softDeleteById(dto.id);
     return true;
-  }
-
-  // ========================================
-  // Legacy method aliases for v2 compatibility
-  // ========================================
-
-  async ofertaFormacaoFindAll(
-    accessContext: AccessContext,
-    dto: OfertaFormacaoListInput | null = null,
-  ): Promise<OfertaFormacaoListOutput> {
-    return this.findAll(accessContext, dto);
-  }
-
-  async ofertaFormacaoFindByIdStrict(
-    accessContext: AccessContext,
-    dto: OfertaFormacaoFindOneInput,
-  ): Promise<OfertaFormacaoFindOneOutput> {
-    return this.findByIdStrict(accessContext, dto);
-  }
-
-  async ofertaFormacaoFindByIdSimpleStrict(
-    accessContext: AccessContext,
-    id: string,
-  ): Promise<OfertaFormacaoFindOneOutput> {
-    return this.findByIdStrict(accessContext, { id });
-  }
-
-  async ofertaFormacaoCreate(
-    accessContext: AccessContext,
-    dto: OfertaFormacaoCreateInput,
-  ): Promise<OfertaFormacaoFindOneOutput> {
-    return this.create(accessContext, dto);
-  }
-
-  async ofertaFormacaoUpdate(
-    accessContext: AccessContext,
-    dto: OfertaFormacaoFindOneInput & OfertaFormacaoUpdateInput,
-  ): Promise<OfertaFormacaoFindOneOutput> {
-    return this.update(accessContext, dto);
-  }
-
-  async ofertaFormacaoDeleteOneById(
-    accessContext: AccessContext,
-    dto: OfertaFormacaoFindOneInput,
-  ): Promise<boolean> {
-    return this.deleteOneById(accessContext, dto);
   }
 }

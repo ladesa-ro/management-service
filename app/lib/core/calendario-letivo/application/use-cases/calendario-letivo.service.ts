@@ -32,7 +32,8 @@ export class CalendarioLetivoService implements ICalendarioLetivoUseCasePort {
     private readonly ofertaFormacaoService: OfertaFormacaoService,
   ) {}
 
-  async calendarioLetivoFindAll(
+  // Generic method names
+  async findAll(
     accessContext: AccessContext,
     dto: CalendarioLetivoListInput | null = null,
     selection?: string[] | boolean,
@@ -40,7 +41,7 @@ export class CalendarioLetivoService implements ICalendarioLetivoUseCasePort {
     return this.calendarioLetivoRepository.findAll(accessContext, dto, selection);
   }
 
-  async calendarioLetivoFindById(
+  async findById(
     accessContext: AccessContext,
     dto: CalendarioLetivoFindOneInput,
     selection?: string[] | boolean,
@@ -48,7 +49,7 @@ export class CalendarioLetivoService implements ICalendarioLetivoUseCasePort {
     return this.calendarioLetivoRepository.findById(accessContext, dto, selection);
   }
 
-  async calendarioLetivoFindByIdStrict(
+  async findByIdStrict(
     accessContext: AccessContext,
     dto: CalendarioLetivoFindOneInput,
     selection?: string[] | boolean,
@@ -66,7 +67,7 @@ export class CalendarioLetivoService implements ICalendarioLetivoUseCasePort {
     return calendarioLetivo;
   }
 
-  async calendarioLetivoFindByIdSimple(
+  async findByIdSimple(
     accessContext: AccessContext,
     id: string,
     selection?: string[] | boolean,
@@ -74,7 +75,7 @@ export class CalendarioLetivoService implements ICalendarioLetivoUseCasePort {
     return this.calendarioLetivoRepository.findByIdSimple(accessContext, id, selection);
   }
 
-  async calendarioLetivoFindByIdSimpleStrict(
+  async findByIdSimpleStrict(
     accessContext: AccessContext,
     id: string,
     selection?: string[] | boolean,
@@ -90,6 +91,47 @@ export class CalendarioLetivoService implements ICalendarioLetivoUseCasePort {
     }
 
     return calendarioLetivo;
+  }
+
+  // Legacy method aliases for compatibility
+  async calendarioLetivoFindAll(
+    accessContext: AccessContext,
+    dto: CalendarioLetivoListInput | null = null,
+    selection?: string[] | boolean,
+  ): Promise<CalendarioLetivoListOutput> {
+    return this.findAll(accessContext, dto, selection);
+  }
+
+  async calendarioLetivoFindById(
+    accessContext: AccessContext,
+    dto: CalendarioLetivoFindOneInput,
+    selection?: string[] | boolean,
+  ): Promise<CalendarioLetivoFindOneOutput | null> {
+    return this.findById(accessContext, dto, selection);
+  }
+
+  async calendarioLetivoFindByIdStrict(
+    accessContext: AccessContext,
+    dto: CalendarioLetivoFindOneInput,
+    selection?: string[] | boolean,
+  ): Promise<CalendarioLetivoFindOneOutput> {
+    return this.findByIdStrict(accessContext, dto, selection);
+  }
+
+  async calendarioLetivoFindByIdSimple(
+    accessContext: AccessContext,
+    id: string,
+    selection?: string[] | boolean,
+  ): Promise<CalendarioLetivoFindOneOutput | null> {
+    return this.findByIdSimple(accessContext, id, selection);
+  }
+
+  async calendarioLetivoFindByIdSimpleStrict(
+    accessContext: AccessContext,
+    id: string,
+    selection?: string[] | boolean,
+  ): Promise<CalendarioLetivoFindOneOutput> {
+    return this.findByIdSimpleStrict(accessContext, id, selection);
   }
 
   async calendarioLetivoCreate(
@@ -110,7 +152,7 @@ export class CalendarioLetivoService implements ICalendarioLetivoUseCasePort {
       id: v4(),
     });
 
-    const campus = await this.campusService.campusFindByIdSimpleStrict(
+    const campus = await this.campusService.findByIdSimpleStrict(
       accessContext,
       dto.campus.id,
     );
@@ -119,7 +161,7 @@ export class CalendarioLetivoService implements ICalendarioLetivoUseCasePort {
     });
 
     if (dto.ofertaFormacao) {
-      const ofertaFormacao = await this.ofertaFormacaoService.ofertaFormacaoFindByIdSimpleStrict(
+      const ofertaFormacao = await this.ofertaFormacaoService.findByIdSimpleStrict(
         accessContext,
         dto.ofertaFormacao.id,
       );
@@ -130,14 +172,14 @@ export class CalendarioLetivoService implements ICalendarioLetivoUseCasePort {
 
     await this.calendarioLetivoRepository.save(calendarioLetivo);
 
-    return this.calendarioLetivoFindByIdStrict(accessContext, { id: calendarioLetivo.id });
+    return this.findByIdStrict(accessContext, { id: calendarioLetivo.id });
   }
 
   async calendarioLetivoUpdate(
     accessContext: AccessContext,
     dto: CalendarioLetivoFindOneInput & CalendarioLetivoUpdateInput,
   ): Promise<CalendarioLetivoFindOneOutput> {
-    const currentCalendarioLetivo = await this.calendarioLetivoFindByIdStrict(accessContext, {
+    const currentCalendarioLetivo = await this.findByIdStrict(accessContext, {
       id: dto.id,
     });
 
@@ -154,7 +196,7 @@ export class CalendarioLetivoService implements ICalendarioLetivoUseCasePort {
     this.calendarioLetivoRepository.merge(calendarioLetivo, { id: currentCalendarioLetivo.id });
 
     if (has(dto, "campus") && dto.campus !== undefined) {
-      const campus = await this.campusService.campusFindByIdSimpleStrict(
+      const campus = await this.campusService.findByIdSimpleStrict(
         accessContext,
         dto.campus.id,
       );
@@ -165,7 +207,7 @@ export class CalendarioLetivoService implements ICalendarioLetivoUseCasePort {
 
     if (has(dto, "ofertaFormacao") && dto.ofertaFormacao !== undefined) {
       if (dto.ofertaFormacao) {
-        const ofertaFormacao = await this.ofertaFormacaoService.ofertaFormacaoFindByIdSimpleStrict(
+        const ofertaFormacao = await this.ofertaFormacaoService.findByIdSimpleStrict(
           accessContext,
           dto.ofertaFormacao.id,
         );
@@ -181,7 +223,7 @@ export class CalendarioLetivoService implements ICalendarioLetivoUseCasePort {
 
     await this.calendarioLetivoRepository.save(calendarioLetivo);
 
-    return this.calendarioLetivoFindByIdStrict(accessContext, { id: calendarioLetivo.id });
+    return this.findByIdStrict(accessContext, { id: calendarioLetivo.id });
   }
 
   async calendarioLetivoDeleteOneById(
@@ -190,7 +232,7 @@ export class CalendarioLetivoService implements ICalendarioLetivoUseCasePort {
   ): Promise<boolean> {
     await accessContext.ensurePermission("calendario_letivo:delete", { dto }, dto.id);
 
-    const calendarioLetivo = await this.calendarioLetivoFindByIdStrict(accessContext, dto);
+    const calendarioLetivo = await this.findByIdStrict(accessContext, dto);
 
     if (calendarioLetivo) {
       await this.calendarioLetivoRepository.softDeleteById(calendarioLetivo.id);

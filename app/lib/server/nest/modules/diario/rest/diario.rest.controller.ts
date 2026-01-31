@@ -25,7 +25,7 @@ export class DiarioRestController {
   constructor(private diarioService: DiarioService) {}
 
   @Get("/")
-  @ApiOperation({ summary: "Lista diarios" })
+  @ApiOperation({ summary: "Lista diarios", operationId: "diarioFindAll" })
   @ApiOkResponse({ type: DiarioListOutputDto })
   @ApiForbiddenResponse()
   async findAll(
@@ -33,12 +33,12 @@ export class DiarioRestController {
     @Query() dto: DiarioListInputDto,
   ): Promise<DiarioListOutputDto> {
     const input = DiarioRestMapper.toListInput(dto);
-    const result = await this.diarioService.diarioFindAll(accessContext, input);
+    const result = await this.diarioService.findAll(accessContext, input);
     return DiarioRestMapper.toListOutputDto(result);
   }
 
   @Get("/:id")
-  @ApiOperation({ summary: "Busca um diario por ID" })
+  @ApiOperation({ summary: "Busca um diario por ID", operationId: "diarioFindById" })
   @ApiOkResponse({ type: DiarioFindOneOutputDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -47,12 +47,12 @@ export class DiarioRestController {
     @Param() params: DiarioFindOneInputDto,
   ): Promise<DiarioFindOneOutputDto> {
     const input = DiarioRestMapper.toFindOneInput(params);
-    const result = await this.diarioService.diarioFindByIdStrict(accessContext, input);
+    const result = await this.diarioService.findByIdStrict(accessContext, input);
     return DiarioRestMapper.toFindOneOutputDto(result);
   }
 
   @Post("/")
-  @ApiOperation({ summary: "Cria um diario" })
+  @ApiOperation({ summary: "Cria um diario", operationId: "diarioCreate" })
   @ApiCreatedResponse({ type: DiarioFindOneOutputDto })
   @ApiForbiddenResponse()
   async create(
@@ -60,12 +60,12 @@ export class DiarioRestController {
     @Body() dto: DiarioCreateInputDto,
   ): Promise<DiarioFindOneOutputDto> {
     const input = DiarioRestMapper.toCreateInput(dto);
-    const result = await this.diarioService.diarioCreate(accessContext, input);
+    const result = await this.diarioService.create(accessContext, input);
     return DiarioRestMapper.toFindOneOutputDto(result);
   }
 
   @Patch("/:id")
-  @ApiOperation({ summary: "Atualiza um diario" })
+  @ApiOperation({ summary: "Atualiza um diario", operationId: "diarioUpdate" })
   @ApiOkResponse({ type: DiarioFindOneOutputDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -75,12 +75,12 @@ export class DiarioRestController {
     @Body() dto: DiarioUpdateInputDto,
   ): Promise<DiarioFindOneOutputDto> {
     const input = DiarioRestMapper.toUpdateInput(params, dto);
-    const result = await this.diarioService.diarioUpdate(accessContext, input);
+    const result = await this.diarioService.update(accessContext, input);
     return DiarioRestMapper.toFindOneOutputDto(result);
   }
 
   @Delete("/:id")
-  @ApiOperation({ summary: "Remove um diario" })
+  @ApiOperation({ summary: "Remove um diario", operationId: "diarioDeleteOneById" })
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -89,6 +89,6 @@ export class DiarioRestController {
     @Param() params: DiarioFindOneInputDto,
   ): Promise<boolean> {
     const input = DiarioRestMapper.toFindOneInput(params);
-    return this.diarioService.diarioDeleteOneById(accessContext, input);
+    return this.diarioService.deleteOneById(accessContext, input);
   }
 }

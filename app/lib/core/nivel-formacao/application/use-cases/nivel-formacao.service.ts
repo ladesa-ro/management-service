@@ -88,8 +88,7 @@ export class NivelFormacaoService implements INivelFormacaoUseCasePort {
     return true;
   }
 
-  // Legacy method alias for v2 compatibility - accepts string id
-  async nivelFormacaoFindByIdSimpleStrict(
+  async findByIdSimpleStrict(
     accessContext: AccessContext,
     id: string,
   ): Promise<NivelFormacaoFindOneOutput> {

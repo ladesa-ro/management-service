@@ -25,7 +25,7 @@ export class OfertaFormacaoRestController {
   constructor(private ofertaFormacaoService: OfertaFormacaoService) {}
 
   @Get("/")
-  @ApiOperation({ summary: "Lista ofertas de formacao" })
+  @ApiOperation({ summary: "Lista ofertas de formacao", operationId: "ofertaFormacaoFindAll" })
   @ApiOkResponse({ type: OfertaFormacaoListOutputDto })
   @ApiForbiddenResponse()
   async findAll(
@@ -33,12 +33,12 @@ export class OfertaFormacaoRestController {
     @Query() dto: OfertaFormacaoListInputDto,
   ): Promise<OfertaFormacaoListOutputDto> {
     const input = OfertaFormacaoRestMapper.toListInput(dto);
-    const result = await this.ofertaFormacaoService.ofertaFormacaoFindAll(accessContext, input);
+    const result = await this.ofertaFormacaoService.findAll(accessContext, input);
     return OfertaFormacaoRestMapper.toListOutputDto(result);
   }
 
   @Get("/:id")
-  @ApiOperation({ summary: "Busca uma oferta de formacao por ID" })
+  @ApiOperation({ summary: "Busca uma oferta de formacao por ID", operationId: "ofertaFormacaoFindById" })
   @ApiOkResponse({ type: OfertaFormacaoFindOneOutputDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -47,7 +47,7 @@ export class OfertaFormacaoRestController {
     @Param() params: OfertaFormacaoFindOneInputDto,
   ): Promise<OfertaFormacaoFindOneOutputDto> {
     const input = OfertaFormacaoRestMapper.toFindOneInput(params);
-    const result = await this.ofertaFormacaoService.ofertaFormacaoFindByIdStrict(
+    const result = await this.ofertaFormacaoService.findByIdStrict(
       accessContext,
       input,
     );
@@ -55,7 +55,7 @@ export class OfertaFormacaoRestController {
   }
 
   @Post("/")
-  @ApiOperation({ summary: "Cria uma oferta de formacao" })
+  @ApiOperation({ summary: "Cria uma oferta de formacao", operationId: "ofertaFormacaoCreate" })
   @ApiCreatedResponse({ type: OfertaFormacaoFindOneOutputDto })
   @ApiForbiddenResponse()
   async create(
@@ -63,12 +63,12 @@ export class OfertaFormacaoRestController {
     @Body() dto: OfertaFormacaoCreateInputDto,
   ): Promise<OfertaFormacaoFindOneOutputDto> {
     const input = OfertaFormacaoRestMapper.toCreateInput(dto);
-    const result = await this.ofertaFormacaoService.ofertaFormacaoCreate(accessContext, input);
+    const result = await this.ofertaFormacaoService.create(accessContext, input);
     return OfertaFormacaoRestMapper.toFindOneOutputDto(result);
   }
 
   @Patch("/:id")
-  @ApiOperation({ summary: "Atualiza uma oferta de formacao" })
+  @ApiOperation({ summary: "Atualiza uma oferta de formacao", operationId: "ofertaFormacaoUpdate" })
   @ApiOkResponse({ type: OfertaFormacaoFindOneOutputDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -78,12 +78,12 @@ export class OfertaFormacaoRestController {
     @Body() dto: OfertaFormacaoUpdateInputDto,
   ): Promise<OfertaFormacaoFindOneOutputDto> {
     const input = OfertaFormacaoRestMapper.toUpdateInput(params, dto);
-    const result = await this.ofertaFormacaoService.ofertaFormacaoUpdate(accessContext, input);
+    const result = await this.ofertaFormacaoService.update(accessContext, input);
     return OfertaFormacaoRestMapper.toFindOneOutputDto(result);
   }
 
   @Delete("/:id")
-  @ApiOperation({ summary: "Remove uma oferta de formacao" })
+  @ApiOperation({ summary: "Remove uma oferta de formacao", operationId: "ofertaFormacaoDeleteOneById" })
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -92,6 +92,6 @@ export class OfertaFormacaoRestController {
     @Param() params: OfertaFormacaoFindOneInputDto,
   ): Promise<boolean> {
     const input = OfertaFormacaoRestMapper.toFindOneInput(params);
-    return this.ofertaFormacaoService.ofertaFormacaoDeleteOneById(accessContext, input);
+    return this.ofertaFormacaoService.deleteOneById(accessContext, input);
   }
 }

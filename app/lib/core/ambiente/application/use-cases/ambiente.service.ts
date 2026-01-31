@@ -54,59 +54,6 @@ export class AmbienteService
     super();
   }
 
-  // ========================================
-  // Backwards-compatible prefixed methods
-  // ========================================
-
-  async ambienteFindAll(
-    accessContext: AccessContext,
-    dto: AmbienteListInput | null = null,
-    selection?: string[] | boolean,
-  ): Promise<AmbienteListOutput> {
-    return this.findAll(accessContext, dto, selection);
-  }
-
-  async ambienteFindById(
-    accessContext: AccessContext | null,
-    dto: AmbienteFindOneInput,
-    selection?: string[] | boolean,
-  ): Promise<AmbienteFindOneOutput | null> {
-    return this.findById(accessContext, dto, selection);
-  }
-
-  async ambienteFindByIdStrict(
-    accessContext: AccessContext | null,
-    dto: AmbienteFindOneInput,
-    selection?: string[] | boolean,
-  ): Promise<AmbienteFindOneOutput> {
-    return this.findByIdStrict(accessContext, dto, selection);
-  }
-
-  async ambienteCreate(
-    accessContext: AccessContext,
-    dto: AmbienteCreateInput,
-  ): Promise<AmbienteFindOneOutput> {
-    return this.create(accessContext, dto);
-  }
-
-  async ambienteUpdate(
-    accessContext: AccessContext,
-    dto: AmbienteFindOneInput & AmbienteUpdateInput,
-  ): Promise<AmbienteFindOneOutput> {
-    return this.update(accessContext, dto);
-  }
-
-  async ambienteDeleteOneById(
-    accessContext: AccessContext,
-    dto: AmbienteFindOneInput,
-  ): Promise<boolean> {
-    return this.deleteOneById(accessContext, dto);
-  }
-
-  // ========================================
-  // Image methods
-  // ========================================
-
   async getImagemCapa(accessContext: AccessContext | null, id: string): Promise<StreamableFile> {
     const ambiente = await this.findByIdStrict(accessContext, { id });
 

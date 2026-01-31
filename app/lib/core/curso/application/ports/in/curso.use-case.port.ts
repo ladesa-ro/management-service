@@ -17,7 +17,7 @@ export interface ICursoUseCasePort {
   /**
    * Lista cursos com paginacao
    */
-  cursoFindAll(
+  findAll(
     accessContext: AccessContext,
     dto: CursoListInputDto | null,
     selection?: string[] | boolean,
@@ -26,7 +26,7 @@ export interface ICursoUseCasePort {
   /**
    * Busca um curso por ID
    */
-  cursoFindById(
+  findById(
     accessContext: AccessContext | null,
     dto: CursoFindOneInputDto,
     selection?: string[] | boolean,
@@ -35,7 +35,7 @@ export interface ICursoUseCasePort {
   /**
    * Busca um curso por ID (lanca excecao se nao encontrado)
    */
-  cursoFindByIdStrict(
+  findByIdStrict(
     accessContext: AccessContext | null,
     dto: CursoFindOneInputDto,
     selection?: string[] | boolean,
@@ -44,7 +44,7 @@ export interface ICursoUseCasePort {
   /**
    * Busca um curso por ID com selecao simplificada
    */
-  cursoFindByIdSimple(
+  findByIdSimple(
     accessContext: AccessContext,
     id: CursoFindOneInputDto["id"],
     selection?: string[],
@@ -53,7 +53,7 @@ export interface ICursoUseCasePort {
   /**
    * Busca um curso por ID com selecao simplificada (lanca excecao se nao encontrado)
    */
-  cursoFindByIdSimpleStrict(
+  findByIdSimpleStrict(
     accessContext: AccessContext,
     id: CursoFindOneInputDto["id"],
     selection?: string[],
@@ -62,15 +62,12 @@ export interface ICursoUseCasePort {
   /**
    * Cria um novo curso
    */
-  cursoCreate(
-    accessContext: AccessContext,
-    dto: CursoCreateInputDto,
-  ): Promise<CursoFindOneOutputDto>;
+  create(accessContext: AccessContext, dto: CursoCreateInputDto): Promise<CursoFindOneOutputDto>;
 
   /**
    * Atualiza um curso existente
    */
-  cursoUpdate(
+  update(
     accessContext: AccessContext,
     dto: CursoFindOneInputDto & CursoUpdateInputDto,
   ): Promise<CursoFindOneOutputDto>;
@@ -78,12 +75,12 @@ export interface ICursoUseCasePort {
   /**
    * Obtem a imagem de capa do curso
    */
-  cursoGetImagemCapa(accessContext: AccessContext | null, id: string): Promise<StreamableFile>;
+  getImagemCapa(accessContext: AccessContext | null, id: string): Promise<StreamableFile>;
 
   /**
    * Atualiza a imagem de capa do curso
    */
-  cursoUpdateImagemCapa(
+  updateImagemCapa(
     accessContext: AccessContext,
     dto: CursoFindOneInputDto,
     file: Express.Multer.File,
@@ -92,5 +89,5 @@ export interface ICursoUseCasePort {
   /**
    * Remove um curso (soft delete)
    */
-  cursoDeleteOneById(accessContext: AccessContext, dto: CursoFindOneInputDto): Promise<boolean>;
+  deleteOneById(accessContext: AccessContext, dto: CursoFindOneInputDto): Promise<boolean>;
 }

@@ -43,76 +43,11 @@ export class DisciplinaService extends BaseCrudService<
     super();
   }
 
-  // Métodos prefixados para compatibilidade
-
-  async disciplinaFindAll(
-    accessContext: AccessContext,
-    dto: DisciplinaListInput | null = null,
-    selection?: string[] | boolean,
-  ): Promise<DisciplinaListOutput> {
-    return this.findAll(accessContext, dto, selection);
-  }
-
-  async disciplinaFindById(
-    accessContext: AccessContext | null,
-    dto: DisciplinaFindOneInput,
-    selection?: string[] | boolean,
-  ): Promise<DisciplinaFindOneOutput | null> {
-    return this.findById(accessContext, dto, selection);
-  }
-
-  async disciplinaFindByIdStrict(
-    accessContext: AccessContext | null,
-    dto: DisciplinaFindOneInput,
-    selection?: string[] | boolean,
-  ): Promise<DisciplinaFindOneOutput> {
-    return this.findByIdStrict(accessContext, dto, selection);
-  }
-
-  async disciplinaFindByIdSimple(
-    accessContext: AccessContext,
-    id: DisciplinaFindOneInput["id"],
-    selection?: string[] | boolean,
-  ): Promise<DisciplinaFindOneOutput | null> {
-    return this.findByIdSimple(accessContext, id, selection);
-  }
-
-  async disciplinaFindByIdSimpleStrict(
-    accessContext: AccessContext,
-    id: DisciplinaFindOneInput["id"],
-    selection?: string[],
-  ): Promise<DisciplinaFindOneOutput> {
-    return this.findByIdSimpleStrict(accessContext, id, selection);
-  }
-
-  async disciplinaCreate(
-    accessContext: AccessContext,
-    dto: DisciplinaCreateInput,
-  ): Promise<DisciplinaFindOneOutput> {
-    return this.create(accessContext, dto);
-  }
-
-  async disciplinaUpdate(
-    accessContext: AccessContext,
-    dto: DisciplinaFindOneInput & DisciplinaUpdateInput,
-  ): Promise<DisciplinaFindOneOutput> {
-    return this.update(accessContext, dto);
-  }
-
-  async disciplinaDeleteOneById(
-    accessContext: AccessContext,
-    dto: DisciplinaFindOneInput,
-  ): Promise<boolean> {
-    return this.deleteOneById(accessContext, dto);
-  }
-
-  // Métodos específicos de Disciplina (não cobertos pela BaseCrudService)
-
-  async disciplinaGetImagemCapa(
+  async getImagemCapa(
     accessContext: AccessContext | null,
     id: string,
   ): Promise<StreamableFile> {
-    const disciplina = await this.disciplinaFindByIdStrict(accessContext, { id });
+    const disciplina = await this.findByIdStrict(accessContext, { id });
 
     if (disciplina.imagemCapa) {
       const arquivoId = await this.imagemService.getLatestArquivoIdForImagem(
@@ -127,12 +62,12 @@ export class DisciplinaService extends BaseCrudService<
     throw new NotFoundException();
   }
 
-  async disciplinaUpdateImagemCapa(
+  async updateImagemCapa(
     accessContext: AccessContext,
     dto: DisciplinaFindOneInput,
     file: Express.Multer.File,
   ): Promise<boolean> {
-    const currentDisciplina = await this.disciplinaFindByIdStrict(accessContext, { id: dto.id });
+    const currentDisciplina = await this.findByIdStrict(accessContext, { id: dto.id });
 
     await accessContext.ensurePermission(
       "disciplina:update",
