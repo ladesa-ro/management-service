@@ -7,7 +7,7 @@ import type {
   DiarioListOutput,
 } from "@/core/diario/application/dtos";
 import type { IDiarioRepositoryPort } from "@/core/diario/application/ports";
-import type { IPaginationConfig } from "@/v2/application/ports/pagination";
+import type { ITypeOrmPaginationConfig } from "../types";
 import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
 import { BaseTypeOrmRepositoryAdapter } from "../base";
@@ -40,7 +40,7 @@ export class DiarioTypeOrmRepositoryAdapter
     return this.databaseContext.diarioRepository;
   }
 
-  protected getPaginateConfig(): IPaginationConfig<DiarioEntity> {
+  protected getPaginateConfig(): ITypeOrmPaginationConfig<DiarioEntity> {
     return {
       ...paginateConfig,
       select: [

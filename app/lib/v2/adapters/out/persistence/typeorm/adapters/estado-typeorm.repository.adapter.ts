@@ -6,7 +6,7 @@ import type {
   EstadoListOutput,
 } from "@/core/estado/application/dtos";
 import type { IEstadoRepositoryPort } from "@/core/estado/application/ports";
-import type { IPaginationConfig } from "@/v2/application/ports/pagination";
+import type { ITypeOrmPaginationConfig } from "../types";
 import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
 import { BaseTypeOrmRepositoryAdapter } from "../base";
@@ -44,7 +44,7 @@ export class EstadoTypeOrmRepositoryAdapter
     return this.databaseContext.estadoRepository;
   }
 
-  protected getPaginateConfig(): IPaginationConfig<EstadoEntity> {
+  protected getPaginateConfig(): ITypeOrmPaginationConfig<EstadoEntity> {
     return {
       ...paginateConfig,
       select: ["id"],

@@ -8,11 +8,8 @@ import type {
   PerfilListOutput,
 } from "@/core/perfil/application/dtos";
 import type { IPerfilRepositoryPort } from "@/core/perfil/application/ports";
-import type {
-  IPaginationConfig,
-  IPaginationCriteria,
-  IPaginationResult,
-} from "@/v2/application/ports/pagination";
+import type { IPaginationCriteria, IPaginationResult } from "@/core/@shared";
+import type { ITypeOrmPaginationConfig } from "../types";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 import { QbEfficientLoad } from "@/v2/old/shared";
@@ -73,7 +70,7 @@ export class PerfilTypeOrmRepositoryAdapter
   async findPaginated(
     accessContext: AccessContext,
     criteria: IPaginationCriteria | null,
-    config: IPaginationConfig<PerfilFindOneOutput>,
+    config: ITypeOrmPaginationConfig<PerfilFindOneOutput>,
     selection?: string[] | boolean,
   ): Promise<IPaginationResult<PerfilFindOneOutput>> {
     const qb = this.repository.createQueryBuilder(this.alias);
@@ -123,7 +120,7 @@ export class PerfilTypeOrmRepositoryAdapter
       .execute();
   }
 
-  protected getPaginateConfig(): IPaginationConfig<PerfilEntity> {
+  protected getPaginateConfig(): ITypeOrmPaginationConfig<PerfilEntity> {
     return {
       ...paginateConfig,
       relations: {

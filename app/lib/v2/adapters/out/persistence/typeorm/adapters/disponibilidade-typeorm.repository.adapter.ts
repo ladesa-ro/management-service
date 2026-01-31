@@ -6,7 +6,7 @@ import type {
   DisponibilidadeListOutput,
   IDisponibilidadeRepositoryPort,
 } from "@/core/disponibilidade";
-import type { IPaginationConfig } from "@/v2/application/ports/pagination";
+import type { ITypeOrmPaginationConfig } from "../types";
 import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
 import { BaseTypeOrmRepositoryAdapter } from "../base";
@@ -39,7 +39,7 @@ export class DisponibilidadeTypeOrmRepositoryAdapter
     return this.databaseContext.disponibilidadeRepository;
   }
 
-  protected getPaginateConfig(): IPaginationConfig<DisponibilidadeEntity> {
+  protected getPaginateConfig(): ITypeOrmPaginationConfig<DisponibilidadeEntity> {
     return {
       ...paginateConfig,
       select: ["id", "dataInicio", "dataFim", "dateCreated"],

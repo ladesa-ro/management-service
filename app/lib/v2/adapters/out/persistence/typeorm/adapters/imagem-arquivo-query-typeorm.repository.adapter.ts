@@ -7,7 +7,7 @@ import type {
   ImagemArquivoListOutput,
 } from "@/core/imagem-arquivo/application/dtos";
 import type { IImagemArquivoQueryRepositoryPort } from "@/core/imagem-arquivo/application/ports";
-import type { IPaginationConfig } from "@/v2/application/ports/pagination";
+import type { ITypeOrmPaginationConfig } from "../types";
 import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
 import { BaseTypeOrmRepositoryAdapter } from "../base";
@@ -44,7 +44,7 @@ export class ImagemArquivoQueryTypeOrmRepositoryAdapter
     return this.databaseContext.imagemArquivoRepository;
   }
 
-  protected getPaginateConfig(): IPaginationConfig<ImagemArquivoEntity> {
+  protected getPaginateConfig(): ITypeOrmPaginationConfig<ImagemArquivoEntity> {
     return {
       ...paginateConfig,
       select: [

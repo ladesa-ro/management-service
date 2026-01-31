@@ -2,24 +2,20 @@ import { Injectable } from "@nestjs/common";
 import { type PaginateConfig, paginate } from "nestjs-paginate";
 import type { PaginateQuery } from "nestjs-paginate/lib/decorator";
 import type { ObjectLiteral, SelectQueryBuilder } from "typeorm";
-import type {
-  IPaginationConfig,
-  IPaginationCriteria,
-  IPaginationPort,
-  IPaginationResult,
-} from "@/v2/application/ports/pagination";
+import type { IPaginationCriteria, IPaginationResult } from "@/core/@shared";
+import type { ITypeOrmPaginationConfig } from "@/v2/adapters/out/persistence/typeorm/types";
 import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 
 /**
- * Adapter que implementa IPaginationPort usando nestjs-paginate
+ * Adapter que implementa paginação usando nestjs-paginate
  * Encapsula toda a lógica do nestjs-paginate, mantendo o domínio limpo
  */
 @Injectable()
-export class NestJsPaginateAdapter implements IPaginationPort {
+export class NestJsPaginateAdapter {
   async paginate<T extends ObjectLiteral>(
     queryBuilder: SelectQueryBuilder<T>,
     criteria: IPaginationCriteria | null,
-    config: IPaginationConfig<T>,
+    config: ITypeOrmPaginationConfig<T>,
   ): Promise<IPaginationResult<T>> {
     // Converte IPaginationCriteria para PaginateQuery do nestjs-paginate
     const paginateQuery: PaginateQuery = this.buildPaginateQuery(criteria);

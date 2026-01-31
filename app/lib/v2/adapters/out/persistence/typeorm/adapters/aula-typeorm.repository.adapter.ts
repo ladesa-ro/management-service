@@ -7,7 +7,7 @@ import type {
   AulaListOutput,
 } from "@/core/aula/application/dtos";
 import type { IAulaRepositoryPort } from "@/core/aula/application/ports";
-import type { IPaginationConfig } from "@/v2/application/ports/pagination";
+import type { ITypeOrmPaginationConfig } from "../types";
 import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
 import { BaseTypeOrmRepositoryAdapter } from "../base";
@@ -40,7 +40,7 @@ export class AulaTypeOrmRepositoryAdapter
     return this.databaseContext.aulaRepository;
   }
 
-  protected getPaginateConfig(): IPaginationConfig<AulaEntity> {
+  protected getPaginateConfig(): ITypeOrmPaginationConfig<AulaEntity> {
     return {
       ...paginateConfig,
       select: [

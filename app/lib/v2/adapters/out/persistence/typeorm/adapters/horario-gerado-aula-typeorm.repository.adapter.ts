@@ -7,7 +7,7 @@ import type {
   HorarioGeradoAulaListOutput,
   IHorarioGeradoAulaRepositoryPort,
 } from "@/core/horario-gerado-aula";
-import type { IPaginationConfig } from "@/v2/application/ports/pagination";
+import type { ITypeOrmPaginationConfig } from "../types";
 import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
 import { BaseTypeOrmRepositoryAdapter } from "../base";
@@ -40,7 +40,7 @@ export class HorarioGeradoAulaTypeOrmRepositoryAdapter
     return this.databaseContext.horarioGeradoAulaRepository;
   }
 
-  protected getPaginateConfig(): IPaginationConfig<HorarioGeradoAulaEntity> {
+  protected getPaginateConfig(): ITypeOrmPaginationConfig<HorarioGeradoAulaEntity> {
     return {
       ...paginateConfig,
       select: [

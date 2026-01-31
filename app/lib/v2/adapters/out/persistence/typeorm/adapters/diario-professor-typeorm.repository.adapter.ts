@@ -7,7 +7,7 @@ import type {
   DiarioProfessorListOutput,
 } from "@/core/diario-professor/application/dtos";
 import type { IDiarioProfessorRepositoryPort } from "@/core/diario-professor/application/ports";
-import type { IPaginationConfig } from "@/v2/application/ports/pagination";
+import type { ITypeOrmPaginationConfig } from "../types";
 import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
 import { BaseTypeOrmRepositoryAdapter } from "../base";
@@ -40,7 +40,7 @@ export class DiarioProfessorTypeOrmRepositoryAdapter
     return this.databaseContext.diarioProfessorRepository;
   }
 
-  protected getPaginateConfig(): IPaginationConfig<DiarioProfessorEntity> {
+  protected getPaginateConfig(): ITypeOrmPaginationConfig<DiarioProfessorEntity> {
     return {
       ...paginateConfig,
       select: ["id", "situacao", "diario.id", "perfil.id", "perfil.campus.id", "perfil.usuario.id"],

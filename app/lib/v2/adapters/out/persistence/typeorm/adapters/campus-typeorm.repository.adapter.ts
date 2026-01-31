@@ -7,7 +7,7 @@ import type {
   CampusListOutput,
   ICampusRepositoryPort,
 } from "@/core/campus";
-import type { IPaginationConfig } from "@/v2/application/ports/pagination";
+import type { ITypeOrmPaginationConfig } from "../types";
 import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
 import { BaseTypeOrmRepositoryAdapter } from "../base";
@@ -40,7 +40,7 @@ export class CampusTypeOrmRepositoryAdapter
     return this.databaseContext.campusRepository;
   }
 
-  protected getPaginateConfig(): IPaginationConfig<CampusEntity> {
+  protected getPaginateConfig(): ITypeOrmPaginationConfig<CampusEntity> {
     return {
       ...paginateConfig,
       select: [

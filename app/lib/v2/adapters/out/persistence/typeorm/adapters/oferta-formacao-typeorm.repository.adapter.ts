@@ -7,7 +7,7 @@ import type {
   OfertaFormacaoListOutput,
 } from "@/core/oferta-formacao";
 import type { IOfertaFormacaoRepositoryPort } from "@/core/oferta-formacao/application/ports";
-import type { IPaginationConfig } from "@/v2/application/ports/pagination";
+import type { ITypeOrmPaginationConfig } from "../types";
 import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
 import { BaseTypeOrmRepositoryAdapter } from "../base";
@@ -40,7 +40,7 @@ export class OfertaFormacaoTypeOrmRepositoryAdapter
     return this.databaseContext.ofertaFormacaoRepository;
   }
 
-  protected getPaginateConfig(): IPaginationConfig<OfertaFormacaoEntity> {
+  protected getPaginateConfig(): ITypeOrmPaginationConfig<OfertaFormacaoEntity> {
     return {
       ...paginateConfig,
       select: ["id", "nome", "slug", "dateCreated"],

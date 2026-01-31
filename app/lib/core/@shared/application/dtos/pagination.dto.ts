@@ -1,3 +1,5 @@
+import type { IPaginationMeta, IPaginationResult } from "../pagination";
+
 /**
  * DTO genérico para entrada de paginação
  * Não depende de tipagens externas (framework-agnostic)
@@ -14,24 +16,23 @@ export type IFilterAcceptableValues = string | string[] | number | number[] | nu
 
 /**
  * DTO genérico para metadados de paginação
+ * Implementa IPaginationMeta do core
  */
-export class PaginationMeta {
+export class PaginationMeta implements IPaginationMeta {
   currentPage!: number;
   totalPages!: number;
-
   itemsPerPage!: number;
   totalItems!: number;
-
-  sortBy!: Array<[string, string]>;
+  sortBy!: [string, string][];
   filter!: Record<string, string | string[]>;
-
   search!: string;
 }
 
 /**
  * DTO genérico para resultado paginado
+ * Implementa IPaginationResult do core
  */
-export class PaginationResult<T> {
+export class PaginationResult<T> implements IPaginationResult<T> {
   meta!: PaginationMeta;
   data!: T[];
 }

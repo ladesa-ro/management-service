@@ -8,7 +8,7 @@ import type {
   TurmaDisponibilidadeListOutput,
 } from "@/core/turma-disponibilidade";
 import type { ITurmaDisponibilidadeRepositoryPort } from "@/core/turma-disponibilidade/application/ports/out";
-import type { IPaginationConfig } from "@/v2/application/ports/pagination";
+import type { ITypeOrmPaginationConfig } from "../types";
 import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
 import { BaseTypeOrmRepositoryAdapter } from "../base";
@@ -45,7 +45,7 @@ export class TurmaDisponibilidadeTypeOrmRepositoryAdapter
     return this.databaseContext.turmaDisponibilidadeRepository;
   }
 
-  protected getPaginateConfig(): IPaginationConfig<TurmaDisponibilidadeEntity> {
+  protected getPaginateConfig(): ITypeOrmPaginationConfig<TurmaDisponibilidadeEntity> {
     return {
       ...paginateConfig,
       relations: {

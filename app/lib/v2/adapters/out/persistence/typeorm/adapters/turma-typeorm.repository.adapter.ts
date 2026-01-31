@@ -7,7 +7,7 @@ import type {
   TurmaListOutput,
 } from "@/core/turma/application/dtos";
 import type { ITurmaRepositoryPort } from "@/core/turma/application/ports";
-import type { IPaginationConfig } from "@/v2/application/ports/pagination";
+import type { ITypeOrmPaginationConfig } from "../types";
 import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
 import { BaseTypeOrmRepositoryAdapter } from "../base";
@@ -40,7 +40,7 @@ export class TurmaTypeOrmRepositoryAdapter
     return this.databaseContext.turmaRepository;
   }
 
-  protected getPaginateConfig(): IPaginationConfig<TurmaEntity> {
+  protected getPaginateConfig(): ITypeOrmPaginationConfig<TurmaEntity> {
     return {
       ...paginateConfig,
       select: ["id", "periodo"],

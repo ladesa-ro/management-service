@@ -7,7 +7,7 @@ import type {
   CalendarioLetivoListOutput,
   ICalendarioLetivoRepositoryPort,
 } from "@/core/calendario-letivo";
-import type { IPaginationConfig } from "@/v2/application/ports/pagination";
+import type { ITypeOrmPaginationConfig } from "../types";
 import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
 import { BaseTypeOrmRepositoryAdapter } from "../base";
@@ -40,7 +40,7 @@ export class CalendarioLetivoTypeOrmRepositoryAdapter
     return this.databaseContext.calendarioLetivoRepository;
   }
 
-  protected getPaginateConfig(): IPaginationConfig<CalendarioLetivoEntity> {
+  protected getPaginateConfig(): ITypeOrmPaginationConfig<CalendarioLetivoEntity> {
     return {
       ...paginateConfig,
       select: [

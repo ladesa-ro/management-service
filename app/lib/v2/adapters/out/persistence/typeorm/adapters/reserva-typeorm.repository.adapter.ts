@@ -7,7 +7,7 @@ import type {
   ReservaListOutput,
 } from "@/core/reserva/application/dtos";
 import type { IReservaRepositoryPort } from "@/core/reserva/application/ports";
-import type { IPaginationConfig } from "@/v2/application/ports/pagination";
+import type { ITypeOrmPaginationConfig } from "../types";
 import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
 import { BaseTypeOrmRepositoryAdapter } from "../base";
@@ -40,7 +40,7 @@ export class ReservaTypeOrmRepositoryAdapter
     return this.databaseContext.reservaRepository;
   }
 
-  protected getPaginateConfig(): IPaginationConfig<ReservaEntity> {
+  protected getPaginateConfig(): ITypeOrmPaginationConfig<ReservaEntity> {
     return {
       ...paginateConfig,
       select: ["id"],

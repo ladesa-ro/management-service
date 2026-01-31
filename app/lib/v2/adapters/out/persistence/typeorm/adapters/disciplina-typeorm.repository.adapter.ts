@@ -7,7 +7,7 @@ import type {
   DisciplinaListOutput,
 } from "@/core/disciplina/application/dtos";
 import type { IDisciplinaRepositoryPort } from "@/core/disciplina/application/ports";
-import type { IPaginationConfig } from "@/v2/application/ports/pagination";
+import type { ITypeOrmPaginationConfig } from "../types";
 import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
 import { BaseTypeOrmRepositoryAdapter } from "../base";
@@ -40,7 +40,7 @@ export class DisciplinaTypeOrmRepositoryAdapter
     return this.databaseContext.disciplinaRepository;
   }
 
-  protected getPaginateConfig(): IPaginationConfig<DisciplinaEntity> {
+  protected getPaginateConfig(): ITypeOrmPaginationConfig<DisciplinaEntity> {
     return {
       ...paginateConfig,
       relations: { diarios: true },

@@ -1,10 +1,11 @@
 import { map } from "lodash";
 import type { DeepPartial, Repository } from "typeorm";
-import type { IPaginationConfig, IPaginationCriteria } from "@/v2/application/ports/pagination";
+import type { IPaginationCriteria } from "@/core/@shared";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import { QbEfficientLoad } from "@/v2/old/shared";
 import type { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
 import type { DatabaseContextService } from "../context/database-context.service";
+import type { ITypeOrmPaginationConfig } from "../types";
 
 /**
  * Interface base para entidades com ID (string ou number)
@@ -179,7 +180,7 @@ export abstract class BaseTypeOrmRepositoryAdapter<
   /**
    * Configuração de paginação específica do recurso
    */
-  protected abstract getPaginateConfig(): IPaginationConfig<Entity>;
+  protected abstract getPaginateConfig(): ITypeOrmPaginationConfig<Entity>;
 
   /**
    * Extrai filtros do formato do DTO para o formato de IPaginationCriteria

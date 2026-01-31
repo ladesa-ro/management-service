@@ -9,7 +9,7 @@ import type {
   IEnderecoRepositoryPort,
 } from "@/core/endereco";
 import type { EnderecoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
-import type { IPaginationConfig } from "@/v2/application/ports/pagination";
+import type { ITypeOrmPaginationConfig } from "../types";
 import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
 import { BaseTypeOrmRepositoryAdapter } from "../base";
@@ -41,7 +41,7 @@ export class EnderecoTypeOrmRepositoryAdapter
     return this.databaseContext.enderecoRepository;
   }
 
-  protected getPaginateConfig(): IPaginationConfig<EnderecoEntity> {
+  protected getPaginateConfig(): ITypeOrmPaginationConfig<EnderecoEntity> {
     return {
       ...paginateConfig,
       select: ["id", "cep", "logradouro", "numero", "bairro", "dateCreated"],

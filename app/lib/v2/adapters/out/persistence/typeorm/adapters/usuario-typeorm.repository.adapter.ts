@@ -6,7 +6,7 @@ import type {
   UsuarioListInput,
   UsuarioListOutput,
 } from "@/core/usuario";
-import type { IPaginationConfig } from "@/v2/application/ports/pagination";
+import type { ITypeOrmPaginationConfig } from "../types";
 import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 import { QbEfficientLoad } from "@/v2/old/shared";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
@@ -224,7 +224,7 @@ export class UsuarioTypeOrmRepositoryAdapter
     return { disciplinas: result };
   }
 
-  protected getPaginateConfig(): IPaginationConfig<UsuarioEntity> {
+  protected getPaginateConfig(): ITypeOrmPaginationConfig<UsuarioEntity> {
     return {
       ...paginateConfig,
       select: ["id", "nome", "matriculaSiape", "email", "dateCreated"],

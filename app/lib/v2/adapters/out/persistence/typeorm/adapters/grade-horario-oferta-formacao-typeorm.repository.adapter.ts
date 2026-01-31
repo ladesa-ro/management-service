@@ -9,7 +9,7 @@ import type {
   GradeHorarioOfertaFormacaoUpdateInput,
 } from "@/core/grade-horario-oferta-formacao";
 import type { IGradeHorarioOfertaFormacaoRepositoryPort } from "@/core/grade-horario-oferta-formacao/application/ports";
-import type { IPaginationConfig } from "@/v2/application/ports/pagination";
+import type { ITypeOrmPaginationConfig } from "../types";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
@@ -43,7 +43,7 @@ export class GradeHorarioOfertaFormacaoTypeOrmRepositoryAdapter
     return this.databaseContext.gradeHorarioOfertaFormacaoRepository;
   }
 
-  protected getPaginateConfig(): IPaginationConfig<GradeHorarioOfertaFormacaoEntity> {
+  protected getPaginateConfig(): ITypeOrmPaginationConfig<GradeHorarioOfertaFormacaoEntity> {
     return {
       ...paginateConfig,
       select: ["id", "dateCreated"],

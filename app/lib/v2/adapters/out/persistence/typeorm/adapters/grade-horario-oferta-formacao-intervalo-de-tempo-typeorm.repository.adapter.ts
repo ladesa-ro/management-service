@@ -8,7 +8,7 @@ import type {
   GradeHorarioOfertaFormacaoIntervaloDeTempoListOutput,
 } from "@/core/grade-horario-oferta-formacao-intervalo-de-tempo";
 import type { IGradeHorarioOfertaFormacaoIntervaloDeTempoRepositoryPort } from "@/core/grade-horario-oferta-formacao-intervalo-de-tempo/application/ports/out";
-import type { IPaginationConfig } from "@/v2/application/ports/pagination";
+import type { ITypeOrmPaginationConfig } from "../types";
 import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
 import { BaseTypeOrmRepositoryAdapter } from "../base";
@@ -45,7 +45,7 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoTypeOrmRepositoryAdapter
     return this.databaseContext.gradeHorarioOfertaFormacaoIntervaloDeTempoRepository;
   }
 
-  protected getPaginateConfig(): IPaginationConfig<GradeHorarioOfertaFormacaoIntervaloDeTempoEntity> {
+  protected getPaginateConfig(): ITypeOrmPaginationConfig<GradeHorarioOfertaFormacaoIntervaloDeTempoEntity> {
     return {
       ...paginateConfig,
       relations: {

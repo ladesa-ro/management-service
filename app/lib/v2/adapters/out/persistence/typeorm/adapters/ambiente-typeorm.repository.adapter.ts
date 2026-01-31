@@ -7,7 +7,7 @@ import type {
   AmbienteListOutput as AmbienteListOutputDto,
 } from "@/core/ambiente";
 import type { IAmbienteRepositoryPort } from "@/core/ambiente/application/ports";
-import type { IPaginationConfig } from "@/v2/application/ports/pagination";
+import type { ITypeOrmPaginationConfig } from "../types";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
 import { BaseTypeOrmRepositoryAdapter } from "../base";
 import { DatabaseContextService } from "../context/database-context.service";
@@ -43,7 +43,7 @@ export class AmbienteTypeOrmRepositoryAdapter
     return this.databaseContext.ambienteRepository;
   }
 
-  protected getPaginateConfig(): IPaginationConfig<AmbienteEntity> {
+  protected getPaginateConfig(): ITypeOrmPaginationConfig<AmbienteEntity> {
     return {
       select: [
         "id",
