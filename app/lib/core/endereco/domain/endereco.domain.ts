@@ -1,8 +1,8 @@
-import type { ScalarDateTimeString } from "@/core/@shared";
+import { BaseEntity, type ScalarDateTimeString } from "@/core/@shared";
 import type { ICidade } from "@/core/cidade";
 import type { IEndereco } from "./endereco.types";
 
-export class Endereco implements IEndereco {
+export class Endereco extends BaseEntity implements IEndereco {
   id!: string;
   cep!: string;
   logradouro!: string;
@@ -21,9 +21,9 @@ export class Endereco implements IEndereco {
     return instance;
   }
 
-  isAtivo(): boolean {
-    return this.dateDeleted === null;
-  }
+  // ========================================
+  // Métodos específicos do domínio Endereco
+  // ========================================
 
   getEnderecoFormatado(): string {
     const partes = [

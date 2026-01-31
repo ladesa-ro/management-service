@@ -1,4 +1,4 @@
-import type { ScalarDateTimeString } from "@/core/@shared";
+import { BaseEntity, type ScalarDateTimeString } from "@/core/@shared";
 import type { Arquivo } from "@/core/arquivo/domain/arquivo.domain";
 import type { Imagem } from "@/core/imagem/domain/imagem.domain";
 import type { IImagemArquivo, IImagemArquivoCreate } from "./imagem-arquivo.types";
@@ -7,7 +7,7 @@ import type { IImagemArquivo, IImagemArquivoCreate } from "./imagem-arquivo.type
  * Classe de domínio que representa um ImagemArquivo
  * Implementa a interface IImagemArquivo
  */
-export class ImagemArquivo implements IImagemArquivo {
+export class ImagemArquivo extends BaseEntity implements IImagemArquivo {
   id!: string;
   largura!: number;
   altura!: number;
@@ -40,10 +40,4 @@ export class ImagemArquivo implements IImagemArquivo {
     return imagemArquivo;
   }
 
-  /**
-   * Verifica se está ativo (não deletado)
-   */
-  isAtivo(): boolean {
-    return this.dateDeleted === null;
-  }
 }

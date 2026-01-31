@@ -1,4 +1,4 @@
-import type { ScalarDateTimeString } from "@/core/@shared";
+import { BaseEntity, type ScalarDateTimeString } from "@/core/@shared";
 import type { ICampus } from "@/core/campus";
 import type { IImagem } from "@/core/imagem";
 import type { IOfertaFormacao } from "@/core/oferta-formacao";
@@ -8,7 +8,7 @@ import type { ICurso, ICursoCreate } from "./curso.types";
  * Entidade de Dominio: Curso
  * Implementa a tipagem ICurso e adiciona regras de negocio
  */
-export class Curso implements ICurso {
+export class Curso extends BaseEntity implements ICurso {
   id!: string;
   nome!: string;
   nomeAbreviado!: string;
@@ -57,30 +57,9 @@ export class Curso implements ICurso {
     return instance;
   }
 
-  /**
-   * Valida se o curso esta ativo (nao deletado)
-   */
-  isAtivo(): boolean {
-    return this.dateDeleted === null;
-  }
-
-  /**
-   * Valida se pode ser editado
-   */
-  podeSerEditado(): boolean {
-    return this.isAtivo();
-  }
-
   // ========================================
-  // Factory Methods
+  // Metodos especificos do dominio Curso
   // ========================================
-
-  /**
-   * Valida se pode ser deletado
-   */
-  podeSerDeletado(): boolean {
-    return this.isAtivo();
-  }
 
   /**
    * Verifica se tem imagem de capa

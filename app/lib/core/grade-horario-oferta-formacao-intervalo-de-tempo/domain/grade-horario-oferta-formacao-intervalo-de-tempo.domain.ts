@@ -1,4 +1,4 @@
-import type { ScalarDateTimeString } from "@/core/@shared";
+import { BaseEntity, type ScalarDateTimeString } from "@/core/@shared";
 import type { GradeHorarioOfertaFormacao } from "@/core/grade-horario-oferta-formacao";
 import type { IntervaloDeTempo } from "@/core/intervalo-de-tempo";
 import type {
@@ -7,6 +7,7 @@ import type {
 } from "./grade-horario-oferta-formacao-intervalo-de-tempo.types";
 
 export class GradeHorarioOfertaFormacaoIntervaloDeTempo
+  extends BaseEntity
   implements IGradeHorarioOfertaFormacaoIntervaloDeTempo
 {
   id!: string;
@@ -31,7 +32,4 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempo
     return entity;
   }
 
-  isAtivo(): boolean {
-    return this.dateDeleted === null;
-  }
 }

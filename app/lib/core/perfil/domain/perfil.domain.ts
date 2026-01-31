@@ -1,4 +1,4 @@
-import type { ScalarDateTimeString } from "@/core/@shared";
+import { BaseEntity, type ScalarDateTimeString } from "@/core/@shared";
 import type { ICampus } from "@/core/campus";
 import type { IUsuario } from "@/core/usuario";
 import type { IPerfil, IPerfilCreate } from "./perfil.types";
@@ -7,7 +7,7 @@ import type { IPerfil, IPerfilCreate } from "./perfil.types";
  * Entidade de Domínio: Perfil
  * Implementa a tipagem IPerfil e adiciona regras de negócio
  */
-export class Perfil implements IPerfil {
+export class Perfil extends BaseEntity implements IPerfil {
   id!: string;
   ativo!: boolean;
   cargo!: string;
@@ -51,23 +51,23 @@ export class Perfil implements IPerfil {
   }
 
   /**
-   * Valida se o perfil está ativo
+   * Valida se o perfil está ativo (override: considera campo 'ativo' além de dateDeleted)
    */
-  isAtivo(): boolean {
+  override isAtivo(): boolean {
     return this.ativo && this.dateDeleted === null;
   }
 
   /**
-   * Valida se pode ser editado
+   * Valida se pode ser editado (override: não depende de isAtivo)
    */
-  podeSerEditado(): boolean {
+  override podeSerEditado(): boolean {
     return this.dateDeleted === null;
   }
 
   /**
-   * Valida se pode ser deletado
+   * Valida se pode ser deletado (override: não depende de isAtivo)
    */
-  podeSerDeletado(): boolean {
+  override podeSerDeletado(): boolean {
     return this.dateDeleted === null;
   }
 

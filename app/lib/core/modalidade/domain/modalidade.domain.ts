@@ -1,11 +1,11 @@
-import type { IdUuid, ScalarDateTimeString } from "@/core/@shared";
+import { BaseEntity, type IdUuid, type ScalarDateTimeString } from "@/core/@shared";
 import type { IModalidade, IModalidadeCreate } from "./modalidade.types";
 
 /**
  * Entidade de Dominio: Modalidade
  * Implementa a tipagem IModalidade e adiciona regras de negocio
  */
-export class Modalidade implements IModalidade {
+export class Modalidade extends BaseEntity implements IModalidade {
   id!: IdUuid;
   nome!: string;
   slug!: string;
@@ -50,28 +50,4 @@ export class Modalidade implements IModalidade {
     return instance;
   }
 
-  /**
-   * Valida se a modalidade esta ativa (nao deletada)
-   */
-  isAtiva(): boolean {
-    return this.dateDeleted === null;
-  }
-
-  // ========================================
-  // Factory Methods
-  // ========================================
-
-  /**
-   * Valida se pode ser editada
-   */
-  podeSerEditada(): boolean {
-    return this.isAtiva();
-  }
-
-  /**
-   * Valida se pode ser deletada
-   */
-  podeSerDeletada(): boolean {
-    return this.isAtiva();
-  }
 }

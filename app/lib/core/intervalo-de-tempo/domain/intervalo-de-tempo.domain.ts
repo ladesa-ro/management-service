@@ -1,11 +1,11 @@
-import type { IdUuid, ScalarDateTimeString } from "@/core/@shared";
+import { BaseEntity, type IdUuid, type ScalarDateTimeString } from "@/core/@shared";
 import type { IIntervaloDeTempo, IIntervaloDeTempoCreate } from "./intervalo-de-tempo.types";
 
 /**
  * Entidade de Domínio: IntervaloDeTempo
  * Implementa a tipagem IIntervaloDeTempo e adiciona regras de negócio
  */
-export class IntervaloDeTempo implements IIntervaloDeTempo {
+export class IntervaloDeTempo extends BaseEntity implements IIntervaloDeTempo {
   id!: IdUuid;
 
   periodoInicio!: string;
@@ -39,15 +39,8 @@ export class IntervaloDeTempo implements IIntervaloDeTempo {
   }
 
   // ========================================
-  // Métodos de Domínio
+  // Métodos específicos do domínio IntervaloDeTempo
   // ========================================
-
-  /**
-   * Verifica se o intervalo está ativo (não deletado)
-   */
-  isAtivo(): boolean {
-    return this.dateDeleted === null;
-  }
 
   /**
    * Calcula a duração do intervalo em minutos

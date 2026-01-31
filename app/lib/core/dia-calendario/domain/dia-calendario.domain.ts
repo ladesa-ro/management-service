@@ -1,8 +1,8 @@
-import type { ScalarDate, ScalarDateTimeString } from "@/core/@shared";
+import { BaseEntity, type ScalarDate, type ScalarDateTimeString } from "@/core/@shared";
 import type { CalendarioLetivo } from "@/core/calendario-letivo";
 import type { IDiaCalendario, IDiaCalendarioCreate } from "./dia-calendario.types";
 
-export class DiaCalendario implements IDiaCalendario {
+export class DiaCalendario extends BaseEntity implements IDiaCalendario {
   id!: string;
   data!: ScalarDate;
   diaLetivo!: boolean;
@@ -27,7 +27,4 @@ export class DiaCalendario implements IDiaCalendario {
     return diaCalendario;
   }
 
-  isAtivo(): boolean {
-    return this.dateDeleted === null;
-  }
 }

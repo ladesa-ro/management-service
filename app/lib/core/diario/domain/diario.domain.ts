@@ -1,4 +1,4 @@
-import type { ScalarDateTimeString } from "@/core/@shared";
+import { BaseEntity, type ScalarDateTimeString } from "@/core/@shared";
 import type { IAmbiente } from "@/core/ambiente/domain/ambiente.types";
 import type { ICalendarioLetivo } from "@/core/calendario-letivo";
 import type { IDisciplina } from "@/core/disciplina/domain/disciplina.types";
@@ -9,7 +9,7 @@ import type { IDiario, IDiarioCreate } from "./diario.types";
 /**
  * Entidade de Dominio: Diario
  */
-export class Diario implements IDiario {
+export class Diario extends BaseEntity implements IDiario {
   id!: string;
   ativo!: boolean;
   calendarioLetivo!: ICalendarioLetivo;
@@ -38,7 +38,10 @@ export class Diario implements IDiario {
     return instance;
   }
 
-  isAtivo(): boolean {
+  /**
+   * Verifica se o diário está ativo (override: considera campo 'ativo' além de dateDeleted)
+   */
+  override isAtivo(): boolean {
     return this.ativo && this.dateDeleted === null;
   }
 }

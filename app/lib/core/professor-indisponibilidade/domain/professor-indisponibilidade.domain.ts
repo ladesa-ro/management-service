@@ -1,11 +1,11 @@
-import type { ScalarDateTimeString } from "@/core/@shared";
+import { BaseEntity, type ScalarDateTimeString } from "@/core/@shared";
 import type { Usuario } from "@/core/usuario/domain/usuario.domain";
 import type {
   IProfessorIndisponibilidade,
   IProfessorIndisponibilidadeCreate,
 } from "./professor-indisponibilidade.types";
 
-export class ProfessorIndisponibilidade implements IProfessorIndisponibilidade {
+export class ProfessorIndisponibilidade extends BaseEntity implements IProfessorIndisponibilidade {
   id!: string;
   perfil!: Usuario;
   diaDaSemana!: number;
@@ -31,7 +31,4 @@ export class ProfessorIndisponibilidade implements IProfessorIndisponibilidade {
     return professorIndisponibilidade;
   }
 
-  isAtivo(): boolean {
-    return this.dateDeleted === null;
-  }
 }

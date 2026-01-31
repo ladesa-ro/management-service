@@ -1,8 +1,8 @@
-import type { ScalarDate, ScalarDateTimeString } from "@/core/@shared";
+import { BaseEntity, type ScalarDate, type ScalarDateTimeString } from "@/core/@shared";
 import type { CalendarioLetivo } from "@/core/calendario-letivo";
 import type { IEtapa, IEtapaCreate } from "./etapa.types";
 
-export class Etapa implements IEtapa {
+export class Etapa extends BaseEntity implements IEtapa {
   id!: string;
   numero!: number | null;
   dataInicio!: ScalarDate;
@@ -26,9 +26,5 @@ export class Etapa implements IEtapa {
     const etapa = new Etapa();
     Object.assign(etapa, dados);
     return etapa;
-  }
-
-  isAtiva(): boolean {
-    return this.dateDeleted === null;
   }
 }

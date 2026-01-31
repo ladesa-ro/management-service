@@ -1,4 +1,4 @@
-import type { ScalarDateTimeString } from "@/core/@shared";
+import { BaseEntity, type ScalarDateTimeString } from "@/core/@shared";
 import type { Disponibilidade } from "@/core/disponibilidade/domain/disponibilidade.domain";
 import type { Turma } from "@/core/turma/domain/turma.domain";
 import type {
@@ -6,7 +6,7 @@ import type {
   ITurmaDisponibilidadeCreate,
 } from "./turma-disponibilidade.types";
 
-export class TurmaDisponibilidade implements ITurmaDisponibilidade {
+export class TurmaDisponibilidade extends BaseEntity implements ITurmaDisponibilidade {
   id!: string;
   turma!: Turma;
   disponibilidade!: Disponibilidade;
@@ -25,7 +25,4 @@ export class TurmaDisponibilidade implements ITurmaDisponibilidade {
     return turmaDisponibilidade;
   }
 
-  isAtivo(): boolean {
-    return this.dateDeleted === null;
-  }
 }

@@ -1,9 +1,9 @@
-import type { ScalarDateTimeString } from "@/core/@shared";
+import { BaseEntity, type ScalarDateTimeString } from "@/core/@shared";
 import type { Diario } from "@/core/diario/domain/diario.domain";
 import type { Perfil } from "@/core/perfil";
 import type { IDiarioProfessor, IDiarioProfessorCreate } from "./diario-professor.types";
 
-export class DiarioProfessor implements IDiarioProfessor {
+export class DiarioProfessor extends BaseEntity implements IDiarioProfessor {
   id!: string;
   situacao!: boolean;
   diario!: Diario;
@@ -24,7 +24,4 @@ export class DiarioProfessor implements IDiarioProfessor {
     return diarioProfessor;
   }
 
-  isAtivo(): boolean {
-    return this.dateDeleted === null;
-  }
 }

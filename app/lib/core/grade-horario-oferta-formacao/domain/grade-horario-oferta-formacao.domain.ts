@@ -1,4 +1,4 @@
-import type { ScalarDateTimeString } from "@/core/@shared";
+import { BaseEntity, type ScalarDateTimeString } from "@/core/@shared";
 import type { Campus } from "@/core/campus";
 import type { OfertaFormacao } from "@/core/oferta-formacao";
 import type {
@@ -10,7 +10,7 @@ import type {
  * Entidade de dominio GradeHorarioOfertaFormacao
  * Representa uma grade horaria associada a uma oferta de formacao e um campus
  */
-export class GradeHorarioOfertaFormacao implements IGradeHorarioOfertaFormacao {
+export class GradeHorarioOfertaFormacao extends BaseEntity implements IGradeHorarioOfertaFormacao {
   id!: string;
   campus!: Campus;
   ofertaFormacao!: OfertaFormacao;
@@ -35,10 +35,4 @@ export class GradeHorarioOfertaFormacao implements IGradeHorarioOfertaFormacao {
     return gradeHorarioOfertaFormacao;
   }
 
-  /**
-   * Verifica se a grade horario de oferta de formacao esta ativa
-   */
-  isAtivo(): boolean {
-    return this.dateDeleted === null;
-  }
 }

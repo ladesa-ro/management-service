@@ -1,4 +1,4 @@
-import type { ScalarDateTimeString } from "@/core/@shared";
+import { BaseEntity, type ScalarDateTimeString } from "@/core/@shared";
 import type { IAmbiente } from "@/core/ambiente/domain/ambiente.types";
 import type { ICurso } from "@/core/curso";
 import type { IImagem } from "@/core/imagem/domain/imagem.types";
@@ -8,7 +8,7 @@ import type { ITurma, ITurmaCreate } from "./turma.types";
  * Entidade de Domínio: Turma
  * Implementa a tipagem ITurma e adiciona regras de negócio
  */
-export class Turma implements ITurma {
+export class Turma extends BaseEntity implements ITurma {
   id!: string;
   periodo!: string;
   ambientePadraoAula!: IAmbiente | null;
@@ -52,29 +52,8 @@ export class Turma implements ITurma {
     return instance;
   }
 
-  /**
-   * Valida se a turma está ativa (não deletada)
-   */
-  isAtiva(): boolean {
-    return this.dateDeleted === null;
-  }
-
-  /**
-   * Valida se pode ser editada
-   */
-  podeSerEditada(): boolean {
-    return this.isAtiva();
-  }
-
-  /**
-   * Valida se pode ser deletada
-   */
-  podeSerDeletada(): boolean {
-    return this.isAtiva();
-  }
-
   // ========================================
-  // Factory Methods
+  // Métodos específicos do domínio Turma
   // ========================================
 
   /**

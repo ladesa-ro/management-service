@@ -1,4 +1,4 @@
-import type { ScalarDateTimeString } from "@/core/@shared";
+import { BaseEntity, type ScalarDateTimeString } from "@/core/@shared";
 import type { Ambiente } from "@/core/ambiente/domain/ambiente.domain";
 import type { Usuario } from "@/core/usuario/domain/usuario.domain";
 import type { IReserva, IReservaCreate } from "./reserva.types";
@@ -7,7 +7,7 @@ import type { IReserva, IReservaCreate } from "./reserva.types";
  * Classe de domínio que representa uma Reserva
  * Implementa a interface IReserva
  */
-export class Reserva implements IReserva {
+export class Reserva extends BaseEntity implements IReserva {
   id!: string;
   situacao!: string;
   motivo!: string | null;
@@ -40,10 +40,4 @@ export class Reserva implements IReserva {
     return reserva;
   }
 
-  /**
-   * Verifica se a reserva está ativa (não deletada)
-   */
-  isAtiva(): boolean {
-    return this.dateDeleted === null;
-  }
 }

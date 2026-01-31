@@ -1,4 +1,4 @@
-import type { ScalarDateTimeString } from "@/core/@shared";
+import { BaseEntity, type ScalarDateTimeString } from "@/core/@shared";
 import type { ICampus } from "@/core/campus";
 import type { IBloco, IBlocoCreate } from "./bloco.types";
 
@@ -6,7 +6,7 @@ import type { IBloco, IBlocoCreate } from "./bloco.types";
  * Entidade de Domínio: Bloco
  * Implementa a tipagem IBloco e adiciona regras de negócio
  */
-export class Bloco implements IBloco {
+export class Bloco extends BaseEntity implements IBloco {
   id!: string;
   nome!: string;
   codigo!: string;
@@ -54,30 +54,9 @@ export class Bloco implements IBloco {
     return instance;
   }
 
-  /**
-   * Valida se o bloco está ativo (não deletado)
-   */
-  isAtivo(): boolean {
-    return this.dateDeleted === null;
-  }
-
-  /**
-   * Valida se pode ser editado
-   */
-  podeSerEditado(): boolean {
-    return this.isAtivo();
-  }
-
   // ========================================
-  // Factory Methods
+  // Métodos específicos do domínio Bloco
   // ========================================
-
-  /**
-   * Valida se pode ser deletado
-   */
-  podeSerDeletado(): boolean {
-    return this.isAtivo();
-  }
 
   /**
    * Verifica se o bloco tem imagem de capa

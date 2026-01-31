@@ -1,4 +1,4 @@
-import type { ScalarDateTimeString } from "@/core/@shared";
+import { BaseEntity, type ScalarDateTimeString } from "@/core/@shared";
 import type { IImagem } from "@/core/imagem/domain/imagem.types";
 import type { IUsuario, IUsuarioCreate } from "./usuario.types";
 
@@ -6,7 +6,7 @@ import type { IUsuario, IUsuarioCreate } from "./usuario.types";
  * Entidade de Domínio: Usuario
  * Implementa a tipagem IUsuario e adiciona regras de negócio
  */
-export class Usuario implements IUsuario {
+export class Usuario extends BaseEntity implements IUsuario {
   id!: string;
   nome!: string | null;
   matriculaSiape!: string | null;
@@ -49,25 +49,15 @@ export class Usuario implements IUsuario {
   }
 
   /**
-   * Valida se o usuário está ativo (não deletado)
+   * Valida se pode ser deletado (override: super users não podem ser deletados)
    */
-  isAtivo(): boolean {
-    return this.dateDeleted === null;
-  }
-
-  /**
-   * Valida se pode ser editado
-   */
-  podeSerEditado(): boolean {
-    return this.isAtivo();
-  }
-
-  /**
-   * Valida se pode ser deletado
-   */
-  podeSerDeletado(): boolean {
+  override podeSerDeletado(): boolean {
     return this.isAtivo() && !this.isSuperUser;
   }
+
+  // ========================================
+  // Métodos específicos do domínio Usuario
+  // ========================================
 
   /**
    * Verifica se tem nome

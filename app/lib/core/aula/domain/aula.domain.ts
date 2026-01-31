@@ -1,4 +1,4 @@
-import type { ScalarDate, ScalarDateTimeString } from "@/core/@shared";
+import { BaseEntity, type ScalarDate, type ScalarDateTimeString } from "@/core/@shared";
 import type { Ambiente } from "@/core/ambiente/domain/ambiente.domain";
 import type { Diario } from "@/core/diario/domain/diario.domain";
 import type { IntervaloDeTempo } from "@/core/intervalo-de-tempo/domain/intervalo-de-tempo.domain";
@@ -8,7 +8,7 @@ import type { IAula, IAulaCreate } from "./aula.types";
  * Classe de domínio que representa uma Aula
  * Implementa a interface IAula
  */
-export class Aula implements IAula {
+export class Aula extends BaseEntity implements IAula {
   id!: string;
   data!: ScalarDate;
   modalidade!: string | null;
@@ -38,12 +38,9 @@ export class Aula implements IAula {
     return aula;
   }
 
-  /**
-   * Verifica se a aula está ativa (não deletada)
-   */
-  isAtiva(): boolean {
-    return this.dateDeleted === null;
-  }
+  // ========================================
+  // Métodos específicos do domínio Aula
+  // ========================================
 
   /**
    * Verifica se a aula tem ambiente associado

@@ -1,10 +1,10 @@
-import type { ScalarDate, ScalarDateTimeString } from "@/core/@shared";
+import { BaseEntity, type ScalarDate, type ScalarDateTimeString } from "@/core/@shared";
 import type { DiarioProfessor } from "@/core/diario-professor/domain/diario-professor.domain";
 import type { HorarioGerado } from "@/core/horario-gerado";
 import type { IntervaloDeTempo } from "@/core/intervalo-de-tempo/domain/intervalo-de-tempo.domain";
 import type { IHorarioGeradoAula, IHorarioGeradoAulaCreate } from "./horario-gerado-aula.types";
 
-export class HorarioGeradoAula implements IHorarioGeradoAula {
+export class HorarioGeradoAula extends BaseEntity implements IHorarioGeradoAula {
   id!: string;
   data!: ScalarDate;
   diarioProfessor!: DiarioProfessor;
@@ -26,7 +26,4 @@ export class HorarioGeradoAula implements IHorarioGeradoAula {
     return horarioGeradoAula;
   }
 
-  isAtivo(): boolean {
-    return this.dateDeleted === null;
-  }
 }

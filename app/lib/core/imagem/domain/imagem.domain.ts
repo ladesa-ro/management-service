@@ -1,11 +1,11 @@
-import type { ScalarDateTimeString } from "@/core/@shared";
+import { BaseEntity, type ScalarDateTimeString } from "@/core/@shared";
 import type { IImagem, IImagemCreate } from "./imagem.types";
 
 /**
  * Entidade de Dominio: Imagem
  * Implementa a tipagem IImagem e adiciona regras de negocio
  */
-export class Imagem implements IImagem {
+export class Imagem extends BaseEntity implements IImagem {
   id!: string;
   descricao!: string | null;
   dateCreated!: ScalarDateTimeString;
@@ -38,15 +38,8 @@ export class Imagem implements IImagem {
   }
 
   // ========================================
-  // Metodos de Dominio
+  // Metodos especificos do dominio Imagem
   // ========================================
-
-  /**
-   * Valida se a imagem esta ativa (nao deletada)
-   */
-  isAtiva(): boolean {
-    return this.dateDeleted === null;
-  }
 
   /**
    * Verifica se tem descricao

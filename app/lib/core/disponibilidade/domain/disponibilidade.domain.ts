@@ -1,11 +1,11 @@
-import type { IdUuid, ScalarDateTimeString } from "@/core/@shared";
+import { BaseEntity, type IdUuid, type ScalarDateTimeString } from "@/core/@shared";
 import type { IDisponibilidade, IDisponibilidadeCreate } from "./disponibilidade.types";
 
 /**
  * Entidade de Dominio: Disponibilidade
  * Implementa a tipagem IDisponibilidade e adiciona regras de negocio
  */
-export class Disponibilidade implements IDisponibilidade {
+export class Disponibilidade extends BaseEntity implements IDisponibilidade {
   id!: IdUuid;
   dataInicio!: ScalarDateTimeString;
   dataFim!: ScalarDateTimeString | null;
@@ -36,14 +36,4 @@ export class Disponibilidade implements IDisponibilidade {
     return disponibilidade;
   }
 
-  // ========================================
-  // Metodos de Dominio
-  // ========================================
-
-  /**
-   * Verifica se a disponibilidade esta ativa (nao deletada)
-   */
-  isAtiva(): boolean {
-    return this.dateDeleted === null;
-  }
 }

@@ -1,4 +1,4 @@
-import { IdUuid, ScalarDateTimeString } from "@/core/@shared";
+import { BaseEntity, type IdUuid, type ScalarDateTimeString } from "@/core/@shared";
 import type { ICampus } from "@/core/campus";
 import type { IOfertaFormacao } from "@/core/oferta-formacao";
 import type { ICalendarioLetivo, ICalendarioLetivoCreate } from "./calendario-letivo.types";
@@ -7,7 +7,7 @@ import type { ICalendarioLetivo, ICalendarioLetivoCreate } from "./calendario-le
  * Entidade de Dominio: CalendarioLetivo
  * Implementa a tipagem ICalendarioLetivo e adiciona regras de negocio
  */
-export class CalendarioLetivo implements ICalendarioLetivo {
+export class CalendarioLetivo extends BaseEntity implements ICalendarioLetivo {
   id!: IdUuid;
   nome!: string;
   ano!: number;
@@ -47,19 +47,4 @@ export class CalendarioLetivo implements ICalendarioLetivo {
     return instance;
   }
 
-  isAtivo(): boolean {
-    return this.dateDeleted === null;
-  }
-
-  // ========================================
-  // Factory Methods
-  // ========================================
-
-  podeSerEditado(): boolean {
-    return this.isAtivo();
-  }
-
-  podeSerDeletado(): boolean {
-    return this.isAtivo();
-  }
 }

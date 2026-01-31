@@ -1,4 +1,4 @@
-import type { ScalarDate, ScalarDateTimeString } from "@/core/@shared";
+import { BaseEntity, type ScalarDate, type ScalarDateTimeString } from "@/core/@shared";
 import type { Diario } from "@/core/diario/domain/diario.domain";
 import type { IntervaloDeTempo } from "@/core/intervalo-de-tempo/domain/intervalo-de-tempo.domain";
 import type {
@@ -6,7 +6,7 @@ import type {
   IDiarioPreferenciaAgrupamentoCreate,
 } from "./diario-preferencia-agrupamento.types";
 
-export class DiarioPreferenciaAgrupamento implements IDiarioPreferenciaAgrupamento {
+export class DiarioPreferenciaAgrupamento extends BaseEntity implements IDiarioPreferenciaAgrupamento {
   id!: string;
   dataInicio!: ScalarDate;
   dataFim!: ScalarDate | null;
@@ -33,7 +33,4 @@ export class DiarioPreferenciaAgrupamento implements IDiarioPreferenciaAgrupamen
     return diarioPreferenciaAgrupamento;
   }
 
-  isAtivo(): boolean {
-    return this.dateDeleted === null;
-  }
 }

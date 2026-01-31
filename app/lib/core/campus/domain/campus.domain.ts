@@ -1,4 +1,4 @@
-import type { ScalarDateTimeString } from "@/core/@shared";
+import { BaseEntity, type ScalarDateTimeString } from "@/core/@shared";
 import type { IEndereco } from "@/core/endereco";
 import type { ICampus, ICampusCreate } from "./campus.types";
 
@@ -6,7 +6,7 @@ import type { ICampus, ICampusCreate } from "./campus.types";
  * Entidade de Domínio: Campus
  * Implementa a tipagem ICampus e adiciona regras de negócio
  */
-export class Campus implements ICampus {
+export class Campus extends BaseEntity implements ICampus {
   id!: string;
   nomeFantasia!: string;
   razaoSocial!: string;
@@ -56,30 +56,9 @@ export class Campus implements ICampus {
     return instance;
   }
 
-  /**
-   * Valida se o campus está ativo (não deletado)
-   */
-  isAtivo(): boolean {
-    return this.dateDeleted === null;
-  }
-
-  /**
-   * Valida se pode ser editado
-   */
-  podeSerEditado(): boolean {
-    return this.isAtivo();
-  }
-
   // ========================================
-  // Factory Methods
+  // Métodos específicos do domínio Campus
   // ========================================
-
-  /**
-   * Valida se pode ser deletado
-   */
-  podeSerDeletado(): boolean {
-    return this.isAtivo();
-  }
 
   /**
    * Valida se o CNPJ tem formato válido (apenas números, 14 dígitos)

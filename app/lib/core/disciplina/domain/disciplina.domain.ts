@@ -1,4 +1,4 @@
-import type { ScalarDateTimeString } from "@/core/@shared";
+import { BaseEntity, type ScalarDateTimeString } from "@/core/@shared";
 import type { IImagem } from "@/core/imagem/domain/imagem.types";
 import type { IDisciplina, IDisciplinaCreate } from "./disciplina.types";
 
@@ -6,7 +6,7 @@ import type { IDisciplina, IDisciplinaCreate } from "./disciplina.types";
  * Entidade de Domínio: Disciplina
  * Implementa a tipagem IDisciplina e adiciona regras de negócio
  */
-export class Disciplina implements IDisciplina {
+export class Disciplina extends BaseEntity implements IDisciplina {
   id!: string;
   nome!: string;
   nomeAbreviado!: string;
@@ -59,29 +59,8 @@ export class Disciplina implements IDisciplina {
     return instance;
   }
 
-  /**
-   * Valida se a disciplina está ativa (não deletada)
-   */
-  isAtiva(): boolean {
-    return this.dateDeleted === null;
-  }
-
-  /**
-   * Valida se pode ser editada
-   */
-  podeSerEditada(): boolean {
-    return this.isAtiva();
-  }
-
-  /**
-   * Valida se pode ser deletada
-   */
-  podeSerDeletada(): boolean {
-    return this.isAtiva();
-  }
-
   // ========================================
-  // Factory Methods
+  // Métodos específicos do domínio Disciplina
   // ========================================
 
   /**

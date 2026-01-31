@@ -1,4 +1,4 @@
-import type { ScalarDateTimeString } from "@/core/@shared";
+import { BaseEntity, type ScalarDateTimeString } from "@/core/@shared";
 import type { IBloco } from "@/core/bloco";
 import type { IAmbiente, IAmbienteCreate } from "./ambiente.types";
 
@@ -6,7 +6,7 @@ import type { IAmbiente, IAmbienteCreate } from "./ambiente.types";
  * Entidade de Domínio: Ambiente
  * Implementa a tipagem IAmbiente e adiciona regras de negócio
  */
-export class Ambiente implements IAmbiente {
+export class Ambiente extends BaseEntity implements IAmbiente {
   id!: string;
   nome!: string;
   descricao!: string | null;
@@ -60,29 +60,8 @@ export class Ambiente implements IAmbiente {
     return instance;
   }
 
-  /**
-   * Valida se o ambiente está ativo (não deletado)
-   */
-  isAtivo(): boolean {
-    return this.dateDeleted === null;
-  }
-
-  /**
-   * Valida se pode ser editado
-   */
-  podeSerEditado(): boolean {
-    return this.isAtivo();
-  }
-
-  /**
-   * Valida se pode ser deletado
-   */
-  podeSerDeletado(): boolean {
-    return this.isAtivo();
-  }
-
   // ========================================
-  // Factory Methods
+  // Métodos específicos do domínio Ambiente
   // ========================================
 
   /**

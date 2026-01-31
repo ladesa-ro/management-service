@@ -1,4 +1,4 @@
-import type { IdUuid, ScalarDateTimeString } from "@/core/@shared";
+import { BaseEntity, type IdUuid, type ScalarDateTimeString } from "@/core/@shared";
 import type { Ambiente } from "@/core/ambiente/domain/ambiente.domain";
 import type { CalendarioLetivo } from "@/core/calendario-letivo";
 import type { IEvento, IEventoCreate } from "./evento.types";
@@ -7,7 +7,7 @@ import type { IEvento, IEventoCreate } from "./evento.types";
  * Classe de domínio que representa um Evento
  * Implementa a interface IEvento
  */
-export class Evento implements IEvento {
+export class Evento extends BaseEntity implements IEvento {
   id!: IdUuid;
   nome!: string | null;
   rrule!: string;
@@ -42,10 +42,4 @@ export class Evento implements IEvento {
     return evento;
   }
 
-  /**
-   * Verifica se o evento está ativo (não deletado)
-   */
-  isAtivo(): boolean {
-    return this.dateDeleted === null;
-  }
 }

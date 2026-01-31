@@ -1,4 +1,4 @@
-import type { IdUuid, ScalarDateTimeString } from "@/core/@shared";
+import { BaseEntity, type IdUuid, type ScalarDateTimeString } from "@/core/@shared";
 import type { IModalidade } from "@/core/modalidade";
 import type { IOfertaFormacao, IOfertaFormacaoCreate } from "./oferta-formacao.types";
 
@@ -6,7 +6,7 @@ import type { IOfertaFormacao, IOfertaFormacaoCreate } from "./oferta-formacao.t
  * Entidade de Dominio: OfertaFormacao
  * Implementa a tipagem IOfertaFormacao e adiciona regras de negocio
  */
-export class OfertaFormacao implements IOfertaFormacao {
+export class OfertaFormacao extends BaseEntity implements IOfertaFormacao {
   id!: IdUuid;
   nome!: string;
   slug!: string;
@@ -52,28 +52,4 @@ export class OfertaFormacao implements IOfertaFormacao {
     return instance;
   }
 
-  /**
-   * Valida se a oferta de formacao esta ativa (nao deletada)
-   */
-  isAtiva(): boolean {
-    return this.dateDeleted === null;
-  }
-
-  // ========================================
-  // Factory Methods
-  // ========================================
-
-  /**
-   * Valida se pode ser editada
-   */
-  podeSerEditada(): boolean {
-    return this.isAtiva();
-  }
-
-  /**
-   * Valida se pode ser deletada
-   */
-  podeSerDeletada(): boolean {
-    return this.isAtiva();
-  }
 }

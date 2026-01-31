@@ -1,8 +1,8 @@
-import type { ScalarDateTimeString } from "@/core/@shared";
+import { BaseEntity, type ScalarDateTimeString } from "@/core/@shared";
 import type { CalendarioLetivo } from "@/core/calendario-letivo";
 import type { IHorarioGerado, IHorarioGeradoCreate } from "./horario-gerado.types";
 
-export class HorarioGerado implements IHorarioGerado {
+export class HorarioGerado extends BaseEntity implements IHorarioGerado {
   id!: string;
   status!: string | null;
   tipo!: string | null;
@@ -30,7 +30,4 @@ export class HorarioGerado implements IHorarioGerado {
     return horarioGerado;
   }
 
-  isAtivo(): boolean {
-    return this.dateDeleted === null;
-  }
 }

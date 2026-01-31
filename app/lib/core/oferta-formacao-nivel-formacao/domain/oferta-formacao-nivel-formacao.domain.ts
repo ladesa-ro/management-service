@@ -1,4 +1,4 @@
-import type { ScalarDateTimeString } from "@/core/@shared";
+import { BaseEntity, type ScalarDateTimeString } from "@/core/@shared";
 import type { NivelFormacao } from "@/core/nivel-formacao/domain/nivel-formacao.domain";
 import type { OfertaFormacao } from "@/core/oferta-formacao/domain/oferta-formacao.domain";
 import type {
@@ -6,7 +6,7 @@ import type {
   IOfertaFormacaoNivelFormacaoCreate,
 } from "./oferta-formacao-nivel-formacao.types";
 
-export class OfertaFormacaoNivelFormacao implements IOfertaFormacaoNivelFormacao {
+export class OfertaFormacaoNivelFormacao extends BaseEntity implements IOfertaFormacaoNivelFormacao {
   id!: string;
   nivelFormacao!: NivelFormacao;
   ofertaFormacao!: OfertaFormacao;
@@ -25,7 +25,4 @@ export class OfertaFormacaoNivelFormacao implements IOfertaFormacaoNivelFormacao
     return ofertaFormacaoNivelFormacao;
   }
 
-  isAtivo(): boolean {
-    return this.dateDeleted === null;
-  }
 }

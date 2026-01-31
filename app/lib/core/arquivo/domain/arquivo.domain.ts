@@ -1,10 +1,10 @@
-import type { ScalarDateTimeString } from "@/core/@shared";
+import { BaseEntity, type ScalarDateTimeString } from "@/core/@shared";
 import type { IArquivo, IArquivoCreate } from "./arquivo.types";
 
 /**
  * Classe de domínio que representa um Arquivo
  */
-export class Arquivo implements IArquivo {
+export class Arquivo extends BaseEntity implements IArquivo {
   id!: string;
   name!: string;
   mimeType!: string;
@@ -29,7 +29,4 @@ export class Arquivo implements IArquivo {
     return arquivo;
   }
 
-  isAtivo(): boolean {
-    return this.dateDeleted === null;
-  }
 }

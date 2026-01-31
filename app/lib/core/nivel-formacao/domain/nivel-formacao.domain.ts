@@ -1,11 +1,11 @@
-import { IdUuid, ScalarDateTimeString } from "@/core/@shared";
+import { BaseEntity, type IdUuid, type ScalarDateTimeString } from "@/core/@shared";
 import type { INivelFormacao, INivelFormacaoCreate } from "./nivel-formacao.types";
 
 /**
  * Entidade de Dominio: NivelFormacao
  * Implementa a tipagem INivelFormacao e adiciona regras de negocio
  */
-export class NivelFormacao implements INivelFormacao {
+export class NivelFormacao extends BaseEntity implements INivelFormacao {
   id!: IdUuid;
   slug!: string;
   dateCreated!: ScalarDateTimeString;
@@ -44,28 +44,4 @@ export class NivelFormacao implements INivelFormacao {
     return instance;
   }
 
-  // ========================================
-  // Metodos de Dominio
-  // ========================================
-
-  /**
-   * Valida se o nivel de formacao esta ativo (nao deletado)
-   */
-  isAtivo(): boolean {
-    return this.dateDeleted === null;
-  }
-
-  /**
-   * Valida se pode ser editado
-   */
-  podeSerEditado(): boolean {
-    return this.isAtivo();
-  }
-
-  /**
-   * Valida se pode ser deletado
-   */
-  podeSerDeletado(): boolean {
-    return this.isAtivo();
-  }
 }
