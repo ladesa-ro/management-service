@@ -1,5 +1,6 @@
 import "reflect-metadata";
 import { NestFactory } from "@nestjs/core";
+import { CONFIG_PORT, type IConfigPort } from "@/core/@shared/application/ports/out/config";
 import { AppModule } from "@/server/nest/app.module";
 import { useCompression } from "@/server/plugins/use-compression";
 import { useCors } from "@/server/plugins/use-cors";
@@ -8,7 +9,6 @@ import { useExceptionFilters } from "@/server/plugins/use-exception-filters";
 import { useHelmet } from "@/server/plugins/use-helmet";
 import { usePrefix } from "@/server/plugins/use-prefix";
 import { useValidationPipe } from "@/server/plugins/use-validation-pipe";
-import { AppConfigService } from "@/v2/infra/config";
 
 export async function setupServer() {
   const app = await NestFactory.create(AppModule);
@@ -21,7 +21,7 @@ export async function setupServer() {
   useCors(app);
   useCompression(app);
 
-  const config = app.get(AppConfigService);
+  const config = app.get<IConfigPort>(CONFIG_PORT);
   const port = config.getRuntimePort();
 
   await app.listen(port);

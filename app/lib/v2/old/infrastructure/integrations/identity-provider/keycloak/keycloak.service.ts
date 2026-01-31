@@ -1,6 +1,6 @@
 import type { Credentials } from "@keycloak/keycloak-admin-client/lib/utils/auth";
 import { Inject, Injectable } from "@nestjs/common";
-import { AppConfigService } from "@/v2/infra/config";
+import { CONFIG_PORT, type IConfigPort } from "@/core/@shared/application/ports/out/config";
 import { KeycloakAdminClient } from "@/v2/old/infrastructure/fixtures";
 import { wait } from "@/v2/old/infrastructure/utils";
 
@@ -13,8 +13,8 @@ export class KeycloakService {
   #authInterval: NodeJS.Timeout | null = null;
 
   constructor(
-    @Inject(AppConfigService)
-    readonly appConfigService: AppConfigService,
+    @Inject(CONFIG_PORT)
+    readonly appConfigService: IConfigPort,
   ) {}
 
   get keycloakConfigCredentials() {

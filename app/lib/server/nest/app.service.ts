@@ -1,5 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { AppConfigService } from "@/v2/infra/config";
+import { CONFIG_PORT, type IConfigPort } from "@/core/@shared/application/ports/out/config";
 
 export interface ServiceInfo {
   status: string;
@@ -13,8 +13,8 @@ export interface ServiceInfo {
 @Injectable()
 export class AppService {
   constructor(
-    @Inject(AppConfigService)
-    private readonly configService: AppConfigService,
+    @Inject(CONFIG_PORT)
+    private readonly configService: IConfigPort,
   ) {}
 
   getServiceInfo(): ServiceInfo {

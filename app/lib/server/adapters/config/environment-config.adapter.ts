@@ -2,26 +2,33 @@ import { Inject, Injectable } from "@nestjs/common";
 import { ConfigService as NestConfigService } from "@nestjs/config";
 import { join } from "path";
 import type { DataSourceOptions } from "typeorm";
+import type {
+  IConfigPort,
+  IKeycloakCredentials,
+  IOidcClientCredentials,
+} from "@/core/@shared/application/ports/out/config";
 import * as entities from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
-import { IConfig } from "@/v2/infra/config";
-import {
-  IConfigIntegrateAuthKeycloakCredentials,
-  IConfigIntegrateAuthOidcClientCredentials,
-} from "@/v2/infra/config/types/IConfigIntegrateAuth";
-import pkg from "../../../../../../package.json";
+import pkg from "../../../../package.json";
 
 const now = new Date();
 
+/**
+ * Adapter de configuração baseado em variáveis de ambiente
+ * Implementa IConfigPort lendo configurações de process.env
+ */
 @Injectable()
-export class EnvironmentConfigService implements IConfig {
+export class EnvironmentConfigAdapter implements IConfigPort {
   constructor(
-    // ...
     @Inject(NestConfigService)
     private nestConfigService: NestConfigService,
   ) {}
 
+  // ========================================
+  // Runtime
+  // ========================================
+
   getRootSrc(): string {
-    return join(__dirname, "../../../..");
+    return join(__dirname, "../../..");
   }
 
   getRuntimeVersion(): string {
@@ -50,7 +57,7 @@ export class EnvironmentConfigService implements IConfig {
     return runtimeNodeEnv;
   }
 
-  getRuntimeBuildTime() {
+  getRuntimeBuildTime(): Date {
     const buildTime = this.nestConfigService.get<string>("BUILD_TIME");
 
     if (buildTime) {
@@ -60,7 +67,7 @@ export class EnvironmentConfigService implements IConfig {
     return now;
   }
 
-  getRuntimeGitCommitHash() {
+  getRuntimeGitCommitHash(): string | null {
     const gitCommitHash = this.nestConfigService.get<string>("GIT_COMMIT_HASH");
 
     if (gitCommitHash) {
@@ -90,7 +97,7 @@ export class EnvironmentConfigService implements IConfig {
     return "/";
   }
 
-  withRuntimePrefix(path: string) {
+  withRuntimePrefix(path: string): string {
     const prefix = this.getRuntimePrefix();
     const normalizedPath = path.startsWith("/") ? path.slice(1) : path;
     return `${prefix}${normalizedPath}`;
@@ -107,12 +114,10 @@ export class EnvironmentConfigService implements IConfig {
   getPermissionCheckEnabled(): boolean {
     const envValue = this.nestConfigService.get<string>("ENABLE_PERMISSION_CHECK");
 
-    // Em producao, sempre habilitado (a menos que explicitamente desabilitado)
     if (this.getRuntimeIsProduction()) {
       return envValue !== "false";
     }
 
-    // Em desenvolvimento, desabilitado por padrao (a menos que explicitamente habilitado)
     return envValue === "true";
   }
 
@@ -131,23 +136,9 @@ export class EnvironmentConfigService implements IConfig {
     return null;
   }
 
-  getTypeOrmBasePath(): string {
-    return join(this.getRootSrc(), "./infrastructure/integrations/database/typeorm");
-  }
-
-  getTypeOrmPathEntities(): string {
-    return join(this.getTypeOrmBasePath(), "entities");
-  }
-
-  getTypeOrmPathMigrations(): string {
-    return join(this.getTypeOrmBasePath(), "migrations");
-  }
-
-  getTypeOrmPathSubscribers(): string {
-    return join(this.getTypeOrmBasePath(), "subscribers");
-  }
-
-  // ...
+  // ========================================
+  // Database
+  // ========================================
 
   getDbDatabase(): string | undefined {
     return this.nestConfigService.get<string>("DB_DATABASE");
@@ -185,12 +176,32 @@ export class EnvironmentConfigService implements IConfig {
     return this.nestConfigService.get<string>("DATABASE_USE_SSL");
   }
 
+  // ========================================
+  // TypeORM
+  // ========================================
+
+  getTypeOrmBasePath(): string {
+    return join(this.getRootSrc(), "./infrastructure/integrations/database/typeorm");
+  }
+
+  getTypeOrmPathEntities(): string {
+    return join(this.getTypeOrmBasePath(), "entities");
+  }
+
+  getTypeOrmPathMigrations(): string {
+    return join(this.getTypeOrmBasePath(), "migrations");
+  }
+
+  getTypeOrmPathSubscribers(): string {
+    return join(this.getTypeOrmBasePath(), "subscribers");
+  }
+
   getTypeOrmLogging(): string | undefined {
     return this.nestConfigService.get<string>("TYPEORM_LOGGING");
   }
 
   getTypeOrmSharedDataSourceOptions(): Partial<DataSourceOptions> {
-    const sharedEnvConfig = {};
+    const sharedEnvConfig: Partial<DataSourceOptions> = {};
 
     const DB_CONNECTION = this.getDbConnection();
 
@@ -245,17 +256,13 @@ export class EnvironmentConfigService implements IConfig {
       }
     }
 
-    return {
-      ...sharedEnvConfig,
-    };
+    return sharedEnvConfig;
   }
 
   getTypeOrmAppDataSourceOptions(): DataSourceOptions {
     const options = {
       ...this.getTypeOrmSharedDataSourceOptions(),
       entities: [...Object.values(entities)],
-      // entities: [`${this.getTypeOrmPathEntities()}/**/*{.ts,.js}`],
-      // subscribers: [`${this.getTypeOrmPathSubscribers()}/**/*{.ts,.js}`],
     };
 
     return options as DataSourceOptions;
@@ -271,7 +278,11 @@ export class EnvironmentConfigService implements IConfig {
     return options as DataSourceOptions;
   }
 
-  getOidcClientCredentials(): IConfigIntegrateAuthOidcClientCredentials {
+  // ========================================
+  // Auth
+  // ========================================
+
+  getOidcClientCredentials(): IOidcClientCredentials {
     const issuer = this.nestConfigService.get<string>("OAUTH2_CLIENT_PROVIDER_OIDC_ISSUER");
     const clientId = this.nestConfigService.get<string>(
       "OAUTH2_CLIENT_REGISTRATION_LOGIN_CLIENT_ID",
@@ -291,7 +302,7 @@ export class EnvironmentConfigService implements IConfig {
     };
   }
 
-  getKeycloakConfigCredentials(): IConfigIntegrateAuthKeycloakCredentials {
+  getKeycloakConfigCredentials(): IKeycloakCredentials {
     const baseUrl = this.nestConfigService.get<string>("KC_BASE_URL");
     const realm = this.nestConfigService.get<string>("KC_REALM");
     const clientId = this.nestConfigService.get<string>("KC_CLIENT_ID");

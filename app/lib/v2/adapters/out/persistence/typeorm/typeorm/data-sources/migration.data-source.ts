@@ -1,18 +1,16 @@
-import { type AppConfigService } from "@/v2/infra/config";
+import type { IConfigPort } from "@/core/@shared/application/ports/out/config";
 import "reflect-metadata";
-import { DataSource, type DataSourceOptions } from "typeorm";
+import { DataSource } from "typeorm";
 import { getDataSourceAppConfigService } from "./utils/getDataSourceEnvironmentConfigService";
 
-export const getMigrationDataSource = async (
-  appConfigServiceBase: AppConfigService | null = null,
-) => {
+export const getMigrationDataSource = async (appConfigServiceBase: IConfigPort | null = null) => {
   const appConfigService = await getDataSourceAppConfigService(appConfigServiceBase);
 
   const options = appConfigService.getTypeOrmMigrationDataSourceOptions();
 
   console.log({ options });
 
-  const dataSource = new DataSource(options as DataSourceOptions);
+  const dataSource = new DataSource(options);
 
   return dataSource;
 };

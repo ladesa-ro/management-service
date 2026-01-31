@@ -10,6 +10,7 @@ import {
 import jetpack, { createReadStream } from "fs-jetpack";
 import { v4 } from "uuid";
 import { ResourceNotFoundError } from "@/core/@shared";
+import { CONFIG_PORT, type IConfigPort } from "@/core/@shared/application/ports/out/config";
 import type { ArquivoCreateInput, ArquivoGetFileInput } from "@/core/arquivo/application/dtos";
 import {
   ARQUIVO_REPOSITORY_PORT,
@@ -17,7 +18,6 @@ import {
   type IArquivoUseCasePort,
 } from "@/core/arquivo/application/ports";
 import { UsuarioEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
-import { AppConfigService } from "@/v2/infra/config";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import { isValidUuid } from "@/v2/old/shared";
 
@@ -26,8 +26,8 @@ export class ArquivoService implements IArquivoUseCasePort {
   constructor(
     @Inject(ARQUIVO_REPOSITORY_PORT)
     private arquivoRepository: IArquivoRepositoryPort,
-    @Inject(AppConfigService)
-    private appConfigService: AppConfigService,
+    @Inject(CONFIG_PORT)
+    private appConfigService: IConfigPort,
   ) {}
 
   private get storagePath() {

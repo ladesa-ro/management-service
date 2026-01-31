@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import * as client from "openid-client";
-import { AppConfigService } from "@/v2/infra/config";
+import { CONFIG_PORT, type IConfigPort } from "@/core/@shared/application/ports/out/config";
 
 @Injectable()
 export class OpenidConnectService {
@@ -9,8 +9,8 @@ export class OpenidConnectService {
   #initialized = false;
 
   constructor(
-    @Inject(AppConfigService)
-    readonly appConfigService: AppConfigService,
+    @Inject(CONFIG_PORT)
+    readonly appConfigService: IConfigPort,
   ) {}
 
   private get oidcClientCredentials() {

@@ -1,12 +1,12 @@
 import { NestFactory } from "@nestjs/core";
-import { AppConfigService } from "@/v2/infra/config";
+import { CONFIG_PORT, type IConfigPort } from "@/core/@shared/application/ports/out/config";
 import { DataSourceSetupModule } from "./DataSourceSetupModule";
 
-export const getDataSourceAppConfigService = async (appConfigService: AppConfigService | null) => {
+export const getDataSourceAppConfigService = async (appConfigService: IConfigPort | null) => {
   if (appConfigService === null) {
     const app = await NestFactory.create(DataSourceSetupModule);
 
-    const appConfigService = app.get(AppConfigService);
+    const appConfigService = app.get<IConfigPort>(CONFIG_PORT);
 
     return appConfigService;
   }
