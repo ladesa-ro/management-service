@@ -1,4 +1,4 @@
-import type { DeepPartial } from "typeorm";
+import type { PartialEntity } from "@/core/@shared";
 import type { UsuarioEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
@@ -103,7 +103,7 @@ export interface IUsuarioRepositoryPort {
    * @param usuario Dados parciais do usuário a ser salvo
    * @returns Usuário salvo
    */
-  save(usuario: DeepPartial<UsuarioEntity>): Promise<UsuarioEntity>;
+  save(usuario: PartialEntity<UsuarioEntity>): Promise<UsuarioEntity>;
 
   /**
    * Cria uma nova entidade usuário
@@ -116,7 +116,7 @@ export interface IUsuarioRepositoryPort {
    * @param usuario Usuário base
    * @param data Dados a serem mesclados
    */
-  merge(usuario: UsuarioEntity, data: DeepPartial<UsuarioEntity>): void;
+  merge(usuario: UsuarioEntity, data: PartialEntity<UsuarioEntity>): void;
 
   /**
    * Soft delete de um usuário por ID

@@ -1,4 +1,4 @@
-import type { DeepPartial } from "typeorm";
+import type { PartialEntity } from "@/core/@shared";
 import type { PerfilEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
@@ -26,12 +26,12 @@ export interface IPerfilRepositoryPort {
   /**
    * Mescla dados em uma entidade existente
    */
-  merge(entity: PerfilEntity, data: DeepPartial<PerfilEntity>): void;
+  merge(entity: PerfilEntity, data: PartialEntity<PerfilEntity>): void;
 
   /**
    * Salva (cria ou atualiza) uma entidade
    */
-  save(entity: DeepPartial<PerfilEntity>): Promise<PerfilEntity>;
+  save(entity: PartialEntity<PerfilEntity>): Promise<PerfilEntity>;
   /**
    * Lista perfis com paginação
    * @param accessContext Contexto de acesso para aplicar filtros de permissão
@@ -66,7 +66,7 @@ export interface IPerfilRepositoryPort {
    * Cria ou atualiza perfis em lote
    * @param perfis Array com dados parciais dos perfis a serem salvos
    */
-  saveMany(perfis: DeepPartial<PerfilEntity>[]): Promise<void>;
+  saveMany(perfis: PartialEntity<PerfilEntity>[]): Promise<void>;
 
   /**
    * Busca perfis existentes por usuário e campus

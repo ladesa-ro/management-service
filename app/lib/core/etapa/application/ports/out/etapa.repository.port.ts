@@ -1,4 +1,4 @@
-import type { DeepPartial } from "typeorm";
+import type { PartialEntity } from "@/core/@shared";
 import type { EtapaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities/etapa.entity";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
@@ -62,7 +62,7 @@ export interface IEtapaRepositoryPort {
    * @param etapa Dados parciais da etapa a ser salva
    * @returns Etapa salva
    */
-  save(etapa: DeepPartial<EtapaEntity>): Promise<EtapaEntity>;
+  save(etapa: PartialEntity<EtapaEntity>): Promise<EtapaEntity>;
 
   /**
    * Cria uma nova entidade etapa
@@ -75,7 +75,7 @@ export interface IEtapaRepositoryPort {
    * @param etapa Etapa base
    * @param data Dados a serem mesclados
    */
-  merge(etapa: EtapaEntity, data: DeepPartial<EtapaEntity>): void;
+  merge(etapa: EtapaEntity, data: PartialEntity<EtapaEntity>): void;
 
   /**
    * Soft delete de uma etapa por ID

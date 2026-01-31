@@ -1,4 +1,4 @@
-import type { DeepPartial } from "typeorm";
+import type { PartialEntity } from "@/core/@shared";
 import type {
   DisciplinaFindOneInput,
   DisciplinaFindOneOutput,
@@ -62,7 +62,7 @@ export interface IDisciplinaRepositoryPort {
    * @param disciplina Dados da disciplina a salvar
    * @returns Entidade salva
    */
-  save(disciplina: DeepPartial<DisciplinaEntity>): Promise<DisciplinaEntity>;
+  save(disciplina: PartialEntity<DisciplinaEntity>): Promise<DisciplinaEntity>;
 
   /**
    * Cria uma nova entidade de disciplina
@@ -75,7 +75,7 @@ export interface IDisciplinaRepositoryPort {
    * @param disciplina Entidade existente
    * @param data Dados a mesclar
    */
-  merge(disciplina: DisciplinaEntity, data: DeepPartial<DisciplinaEntity>): void;
+  merge(disciplina: DisciplinaEntity, data: PartialEntity<DisciplinaEntity>): void;
 
   /**
    * Remove uma disciplina por ID (soft delete)

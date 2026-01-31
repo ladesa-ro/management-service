@@ -1,7 +1,7 @@
-import { NotFoundException } from "@nestjs/common";
 import { pick } from "lodash";
-import type { DeepPartial } from "typeorm";
+import type { PartialEntity } from "@/core/@shared";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
+import { ResourceNotFoundError } from "../errors";
 import type { IBaseCrudRepositoryPort } from "../ports/out";
 
 /**
@@ -106,7 +106,7 @@ export abstract class BaseCrudService<
     const entity = await this.findById(accessContext, dto, selection);
 
     if (!entity) {
-      throw new NotFoundException(`${this.resourceName} não encontrado`);
+      throw new ResourceNotFoundError(this.resourceName, dto.id);
     }
 
     return entity;
@@ -138,7 +138,7 @@ export abstract class BaseCrudService<
     const entity = await this.findByIdSimple(accessContext, id, selection);
 
     if (!entity) {
-      throw new NotFoundException(`${this.resourceName} não encontrado`);
+      throw new ResourceNotFoundError(this.resourceName, id);
     }
 
     return entity;
@@ -152,7 +152,7 @@ export abstract class BaseCrudService<
 
     const entity = this.repository.create();
     const data = pick(dto, [...this.createFields] as string[]);
-    this.repository.merge(entity, data as DeepPartial<Entity>);
+    this.repository.merge(entity, data as PartialEntity<Entity>);
 
     // Hook para customização (ex: relacionamentos)
     await this.beforeCreate(accessContext, entity, dto);
@@ -175,7 +175,7 @@ export abstract class BaseCrudService<
 
     const entity = { id: current.id } as Entity;
     const data = pick(dto, [...this.updateFields] as string[]);
-    this.repository.merge(entity, data as DeepPartial<Entity>);
+    this.repository.merge(entity, data as PartialEntity<Entity>);
 
     // Hook para customização (ex: relacionamentos)
     await this.beforeUpdate(accessContext, entity, dto, current);

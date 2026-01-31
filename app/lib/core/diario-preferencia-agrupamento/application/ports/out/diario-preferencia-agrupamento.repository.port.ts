@@ -1,4 +1,5 @@
-import type { DeepPartial, SelectQueryBuilder } from "typeorm";
+import type { SelectQueryBuilder } from "typeorm";
+import type { PartialEntity } from "@/core/@shared";
 import type { DiarioPreferenciaAgrupamentoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
@@ -57,14 +58,14 @@ export interface IDiarioPreferenciaAgrupamentoRepositoryPort {
    */
   merge(
     entity: DiarioPreferenciaAgrupamentoEntity,
-    data: DeepPartial<DiarioPreferenciaAgrupamentoEntity>,
+    data: PartialEntity<DiarioPreferenciaAgrupamentoEntity>,
   ): void;
 
   /**
    * Salva (cria ou atualiza) uma entidade
    */
   save(
-    entity: DeepPartial<DiarioPreferenciaAgrupamentoEntity>,
+    entity: PartialEntity<DiarioPreferenciaAgrupamentoEntity>,
   ): Promise<DiarioPreferenciaAgrupamentoEntity>;
 
   /**

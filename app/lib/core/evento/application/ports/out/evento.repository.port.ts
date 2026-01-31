@@ -1,4 +1,5 @@
-import type { DeepPartial, SelectQueryBuilder } from "typeorm";
+import type { SelectQueryBuilder } from "typeorm";
+import type { PartialEntity } from "@/core/@shared";
 import type { EventoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities/evento.entity";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
@@ -53,12 +54,12 @@ export interface IEventoRepositoryPort {
   /**
    * Mescla dados em uma entidade existente
    */
-  merge(entity: EventoEntity, data: DeepPartial<EventoEntity>): void;
+  merge(entity: EventoEntity, data: PartialEntity<EventoEntity>): void;
 
   /**
    * Salva (cria ou atualiza) uma entidade
    */
-  save(entity: DeepPartial<EventoEntity>): Promise<EventoEntity>;
+  save(entity: PartialEntity<EventoEntity>): Promise<EventoEntity>;
 
   /**
    * Executa soft delete por ID

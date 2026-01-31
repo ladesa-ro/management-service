@@ -1,4 +1,4 @@
-import type { DeepPartial } from "typeorm";
+import type { PartialEntity } from "@/core/@shared";
 import {
   ModalidadeFindOneInput,
   ModalidadeFindOneOutput,
@@ -19,8 +19,8 @@ export interface IModalidadeRepositoryPort {
     accessContext: AccessContext,
     dto: ModalidadeFindOneInput,
   ): Promise<ModalidadeFindOneOutput | null>;
-  save(entity: DeepPartial<ModalidadeEntity>): Promise<ModalidadeEntity>;
+  save(entity: PartialEntity<ModalidadeEntity>): Promise<ModalidadeEntity>;
   create(): ModalidadeEntity;
-  merge(entity: ModalidadeEntity, data: DeepPartial<ModalidadeEntity>): void;
+  merge(entity: ModalidadeEntity, data: PartialEntity<ModalidadeEntity>): void;
   softDeleteById(id: string): Promise<void>;
 }

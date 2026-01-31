@@ -1,4 +1,4 @@
-import type { DeepPartial } from "typeorm";
+import type { PartialEntity } from "@/core/@shared";
 import type {
   ImagemArquivoEntity,
   ImagemEntity,
@@ -16,7 +16,7 @@ export const IMAGEM_REPOSITORY_PORT = Symbol("IImagemRepositoryPort");
 export interface IImagemRepositoryPort {
   create(): ImagemEntity;
 
-  merge(imagem: ImagemEntity, data: DeepPartial<ImagemEntity>): void;
+  merge(imagem: ImagemEntity, data: PartialEntity<ImagemEntity>): void;
 
   save(imagem: ImagemEntity): Promise<ImagemEntity>;
 }
@@ -32,7 +32,7 @@ export const IMAGEM_ARQUIVO_REPOSITORY_PORT = Symbol("IImagemArquivoRepositoryPo
 export interface IImagemArquivoRepositoryPort {
   create(): ImagemArquivoEntity;
 
-  merge(imagemArquivo: ImagemArquivoEntity, data: DeepPartial<ImagemArquivoEntity>): void;
+  merge(imagemArquivo: ImagemArquivoEntity, data: PartialEntity<ImagemArquivoEntity>): void;
 
   /**
    * Busca o ID do arquivo mais recente para uma imagem

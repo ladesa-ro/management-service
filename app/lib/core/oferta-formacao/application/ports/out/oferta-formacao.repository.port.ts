@@ -1,4 +1,4 @@
-import type { DeepPartial } from "typeorm";
+import type { PartialEntity } from "@/core/@shared";
 import {
   OfertaFormacaoFindOneInput,
   OfertaFormacaoFindOneOutput,
@@ -19,8 +19,8 @@ export interface IOfertaFormacaoRepositoryPort {
     accessContext: AccessContext,
     dto: OfertaFormacaoFindOneInput,
   ): Promise<OfertaFormacaoFindOneOutput | null>;
-  save(entity: DeepPartial<OfertaFormacaoEntity>): Promise<OfertaFormacaoEntity>;
+  save(entity: PartialEntity<OfertaFormacaoEntity>): Promise<OfertaFormacaoEntity>;
   create(): OfertaFormacaoEntity;
-  merge(entity: OfertaFormacaoEntity, data: DeepPartial<OfertaFormacaoEntity>): void;
+  merge(entity: OfertaFormacaoEntity, data: PartialEntity<OfertaFormacaoEntity>): void;
   softDeleteById(id: string): Promise<void>;
 }

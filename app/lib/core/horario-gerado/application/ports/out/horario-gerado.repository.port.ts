@@ -1,4 +1,4 @@
-import type { DeepPartial } from "typeorm";
+import type { PartialEntity } from "@/core/@shared";
 import type { HorarioGeradoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
@@ -62,7 +62,7 @@ export interface IHorarioGeradoRepositoryPort {
    * @param horarioGerado Dados parciais do horario gerado a ser salvo
    * @returns HorarioGerado salvo
    */
-  save(horarioGerado: DeepPartial<HorarioGeradoEntity>): Promise<HorarioGeradoEntity>;
+  save(horarioGerado: PartialEntity<HorarioGeradoEntity>): Promise<HorarioGeradoEntity>;
 
   /**
    * Cria uma nova entidade horario gerado
@@ -75,7 +75,7 @@ export interface IHorarioGeradoRepositoryPort {
    * @param horarioGerado HorarioGerado base
    * @param data Dados a serem mesclados
    */
-  merge(horarioGerado: HorarioGeradoEntity, data: DeepPartial<HorarioGeradoEntity>): void;
+  merge(horarioGerado: HorarioGeradoEntity, data: PartialEntity<HorarioGeradoEntity>): void;
 
   /**
    * Soft delete de um horario gerado por ID

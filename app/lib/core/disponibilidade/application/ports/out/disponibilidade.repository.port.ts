@@ -1,4 +1,4 @@
-import type { DeepPartial } from "typeorm";
+import type { PartialEntity } from "@/core/@shared";
 import {
   DisponibilidadeFindOneInput,
   DisponibilidadeFindOneOutput,
@@ -19,8 +19,8 @@ export interface IDisponibilidadeRepositoryPort {
     accessContext: AccessContext | null,
     dto: DisponibilidadeFindOneInput,
   ): Promise<DisponibilidadeFindOneOutput | null>;
-  save(entity: DeepPartial<DisponibilidadeEntity>): Promise<DisponibilidadeEntity>;
+  save(entity: PartialEntity<DisponibilidadeEntity>): Promise<DisponibilidadeEntity>;
   create(): DisponibilidadeEntity;
-  merge(entity: DisponibilidadeEntity, data: DeepPartial<DisponibilidadeEntity>): void;
+  merge(entity: DisponibilidadeEntity, data: PartialEntity<DisponibilidadeEntity>): void;
   softDeleteById(id: string): Promise<void>;
 }

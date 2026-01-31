@@ -1,4 +1,4 @@
-import type { DeepPartial } from "typeorm";
+import type { PartialEntity } from "@/core/@shared";
 import type { CampusEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
@@ -62,7 +62,7 @@ export interface ICampusRepositoryPort {
    * @param campus Dados parciais do campus a ser salvo
    * @returns Campus salvo
    */
-  save(campus: DeepPartial<CampusEntity>): Promise<CampusEntity>;
+  save(campus: PartialEntity<CampusEntity>): Promise<CampusEntity>;
 
   /**
    * Cria uma nova entidade campus
@@ -75,7 +75,7 @@ export interface ICampusRepositoryPort {
    * @param campus Campus base
    * @param data Dados a serem mesclados
    */
-  merge(campus: CampusEntity, data: DeepPartial<CampusEntity>): void;
+  merge(campus: CampusEntity, data: PartialEntity<CampusEntity>): void;
 
   /**
    * Soft delete de um campus por ID

@@ -1,4 +1,4 @@
-import type { DeepPartial } from "typeorm";
+import type { PartialEntity } from "@/core/@shared";
 import type { TurmaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
@@ -62,7 +62,7 @@ export interface ITurmaRepositoryPort {
    * @param turma Dados parciais da turma a ser salva
    * @returns Turma salva
    */
-  save(turma: DeepPartial<TurmaEntity>): Promise<TurmaEntity>;
+  save(turma: PartialEntity<TurmaEntity>): Promise<TurmaEntity>;
 
   /**
    * Cria uma nova entidade turma
@@ -75,7 +75,7 @@ export interface ITurmaRepositoryPort {
    * @param turma Turma base
    * @param data Dados a serem mesclados
    */
-  merge(turma: TurmaEntity, data: DeepPartial<TurmaEntity>): void;
+  merge(turma: TurmaEntity, data: PartialEntity<TurmaEntity>): void;
 
   /**
    * Soft delete de uma turma por ID

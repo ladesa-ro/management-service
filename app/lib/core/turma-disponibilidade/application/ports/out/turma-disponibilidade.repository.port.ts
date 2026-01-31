@@ -1,4 +1,5 @@
-import type { DeepPartial, SelectQueryBuilder } from "typeorm";
+import type { SelectQueryBuilder } from "typeorm";
+import type { PartialEntity } from "@/core/@shared";
 import type { TurmaDisponibilidadeEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
@@ -53,12 +54,12 @@ export interface ITurmaDisponibilidadeRepositoryPort {
   /**
    * Mescla dados em uma entidade existente
    */
-  merge(entity: TurmaDisponibilidadeEntity, data: DeepPartial<TurmaDisponibilidadeEntity>): void;
+  merge(entity: TurmaDisponibilidadeEntity, data: PartialEntity<TurmaDisponibilidadeEntity>): void;
 
   /**
    * Salva (cria ou atualiza) uma entidade
    */
-  save(entity: DeepPartial<TurmaDisponibilidadeEntity>): Promise<TurmaDisponibilidadeEntity>;
+  save(entity: PartialEntity<TurmaDisponibilidadeEntity>): Promise<TurmaDisponibilidadeEntity>;
 
   /**
    * Executa soft delete por ID

@@ -1,4 +1,4 @@
-import type { DeepPartial } from "typeorm";
+import type { PartialEntity } from "@/core/@shared";
 import {
   NivelFormacaoFindOneInput,
   NivelFormacaoFindOneOutput,
@@ -19,8 +19,8 @@ export interface INivelFormacaoRepositoryPort {
     accessContext: AccessContext | null,
     dto: NivelFormacaoFindOneInput,
   ): Promise<NivelFormacaoFindOneOutput | null>;
-  save(entity: DeepPartial<NivelFormacaoEntity>): Promise<NivelFormacaoEntity>;
+  save(entity: PartialEntity<NivelFormacaoEntity>): Promise<NivelFormacaoEntity>;
   create(): NivelFormacaoEntity;
-  merge(entity: NivelFormacaoEntity, data: DeepPartial<NivelFormacaoEntity>): void;
+  merge(entity: NivelFormacaoEntity, data: PartialEntity<NivelFormacaoEntity>): void;
   softDeleteById(id: string): Promise<void>;
 }

@@ -1,4 +1,4 @@
-import type { DeepPartial } from "typeorm";
+import type { PartialEntity } from "@/core/@shared";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 
 /**
@@ -41,7 +41,7 @@ export interface IBaseCrudRepositoryPort<Entity, ListOutputDto, FindOneOutputDto
   /**
    * Salva (cria ou atualiza) uma entidade
    */
-  save(entity: DeepPartial<Entity>): Promise<Entity>;
+  save(entity: PartialEntity<Entity>): Promise<Entity>;
 
   /**
    * Cria uma nova instância da entidade (não persiste)
@@ -51,7 +51,7 @@ export interface IBaseCrudRepositoryPort<Entity, ListOutputDto, FindOneOutputDto
   /**
    * Mescla dados em uma entidade existente
    */
-  merge(entity: Entity, data: DeepPartial<Entity>): void;
+  merge(entity: Entity, data: PartialEntity<Entity>): void;
 
   /**
    * Realiza soft delete de uma entidade por ID

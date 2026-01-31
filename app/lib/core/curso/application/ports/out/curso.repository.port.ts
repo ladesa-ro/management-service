@@ -1,4 +1,4 @@
-import type { DeepPartial } from "typeorm";
+import type { PartialEntity } from "@/core/@shared";
 import type {
   CursoFindOneInputDto,
   CursoFindOneOutputDto,
@@ -62,7 +62,7 @@ export interface ICursoRepositoryPort {
    * @param curso Dados parciais do curso a ser salvo
    * @returns Curso salvo
    */
-  save(curso: DeepPartial<CursoEntity>): Promise<CursoEntity>;
+  save(curso: PartialEntity<CursoEntity>): Promise<CursoEntity>;
 
   /**
    * Cria uma nova entidade curso
@@ -75,7 +75,7 @@ export interface ICursoRepositoryPort {
    * @param curso Curso base
    * @param data Dados a serem mesclados
    */
-  merge(curso: CursoEntity, data: DeepPartial<CursoEntity>): void;
+  merge(curso: CursoEntity, data: PartialEntity<CursoEntity>): void;
 
   /**
    * Soft delete de um curso por ID

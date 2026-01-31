@@ -1,4 +1,4 @@
-import type { DeepPartial } from "typeorm";
+import type { PartialEntity } from "@/core/@shared";
 import type {
   IntervaloDeTempoFindOneInput,
   IntervaloDeTempoFindOneOutput,
@@ -22,7 +22,7 @@ export interface IIntervaloDeTempoRepositoryPort {
   ): Promise<IntervaloDeTempoFindOneOutput | null>;
   findOne(dto: IntervaloDeTempoInput): Promise<IntervaloDeTempoEntity | null>;
   findOneByIdOrFail(id: string): Promise<IntervaloDeTempoEntity>;
-  save(intervalo: DeepPartial<IntervaloDeTempoEntity>): Promise<IntervaloDeTempoEntity>;
+  save(intervalo: PartialEntity<IntervaloDeTempoEntity>): Promise<IntervaloDeTempoEntity>;
   create(): IntervaloDeTempoEntity;
-  merge(intervalo: IntervaloDeTempoEntity, data: DeepPartial<IntervaloDeTempoEntity>): void;
+  merge(intervalo: IntervaloDeTempoEntity, data: PartialEntity<IntervaloDeTempoEntity>): void;
 }

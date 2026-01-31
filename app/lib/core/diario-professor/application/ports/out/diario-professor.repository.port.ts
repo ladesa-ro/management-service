@@ -1,4 +1,4 @@
-import type { DeepPartial } from "typeorm";
+import type { PartialEntity } from "@/core/@shared";
 import type { DiarioProfessorEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
@@ -29,11 +29,11 @@ export interface IDiarioProfessorRepositoryPort {
     selection?: string[] | boolean,
   ): Promise<DiarioProfessorFindOneOutput | null>;
 
-  save(diarioProfessor: DeepPartial<DiarioProfessorEntity>): Promise<DiarioProfessorEntity>;
+  save(diarioProfessor: PartialEntity<DiarioProfessorEntity>): Promise<DiarioProfessorEntity>;
 
   create(): DiarioProfessorEntity;
 
-  merge(diarioProfessor: DiarioProfessorEntity, data: DeepPartial<DiarioProfessorEntity>): void;
+  merge(diarioProfessor: DiarioProfessorEntity, data: PartialEntity<DiarioProfessorEntity>): void;
 
   softDeleteById(id: string): Promise<void>;
 }

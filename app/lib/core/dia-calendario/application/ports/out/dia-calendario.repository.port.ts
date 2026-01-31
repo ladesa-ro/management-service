@@ -1,4 +1,4 @@
-import type { DeepPartial } from "typeorm";
+import type { PartialEntity } from "@/core/@shared";
 import type { DiaCalendarioEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities/dia-calendario.entity";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
@@ -29,11 +29,11 @@ export interface IDiaCalendarioRepositoryPort {
     selection?: string[],
   ): Promise<DiaCalendarioFindOneOutput | null>;
 
-  save(diaCalendario: DeepPartial<DiaCalendarioEntity>): Promise<DiaCalendarioEntity>;
+  save(diaCalendario: PartialEntity<DiaCalendarioEntity>): Promise<DiaCalendarioEntity>;
 
   create(): DiaCalendarioEntity;
 
-  merge(diaCalendario: DiaCalendarioEntity, data: DeepPartial<DiaCalendarioEntity>): void;
+  merge(diaCalendario: DiaCalendarioEntity, data: PartialEntity<DiaCalendarioEntity>): void;
 
   softDeleteById(id: string): Promise<void>;
 }

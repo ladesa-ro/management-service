@@ -1,4 +1,4 @@
-import type { DeepPartial } from "typeorm";
+import type { PartialEntity } from "@/core/@shared";
 import type { AmbienteEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
@@ -49,7 +49,7 @@ export interface IAmbienteRepositoryPort {
    * @param ambiente Dados parciais do ambiente a ser salvo
    * @returns Ambiente salvo
    */
-  save(ambiente: DeepPartial<AmbienteEntity>): Promise<AmbienteEntity>;
+  save(ambiente: PartialEntity<AmbienteEntity>): Promise<AmbienteEntity>;
 
   /**
    * Cria uma nova entidade ambiente
@@ -62,7 +62,7 @@ export interface IAmbienteRepositoryPort {
    * @param ambiente Ambiente base
    * @param data Dados a serem mesclados
    */
-  merge(ambiente: AmbienteEntity, data: DeepPartial<AmbienteEntity>): void;
+  merge(ambiente: AmbienteEntity, data: PartialEntity<AmbienteEntity>): void;
 
   /**
    * Soft delete de um ambiente por ID

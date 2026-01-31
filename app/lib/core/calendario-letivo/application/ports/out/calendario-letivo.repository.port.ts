@@ -1,4 +1,4 @@
-import type { DeepPartial } from "typeorm";
+import type { PartialEntity } from "@/core/@shared";
 import type { CalendarioLetivoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
@@ -62,7 +62,7 @@ export interface ICalendarioLetivoRepositoryPort {
    * @param calendarioLetivo Dados parciais do calendario letivo a ser salvo
    * @returns CalendarioLetivo salvo
    */
-  save(calendarioLetivo: DeepPartial<CalendarioLetivoEntity>): Promise<CalendarioLetivoEntity>;
+  save(calendarioLetivo: PartialEntity<CalendarioLetivoEntity>): Promise<CalendarioLetivoEntity>;
 
   /**
    * Cria uma nova entidade calendario letivo
@@ -75,7 +75,10 @@ export interface ICalendarioLetivoRepositoryPort {
    * @param calendarioLetivo CalendarioLetivo base
    * @param data Dados a serem mesclados
    */
-  merge(calendarioLetivo: CalendarioLetivoEntity, data: DeepPartial<CalendarioLetivoEntity>): void;
+  merge(
+    calendarioLetivo: CalendarioLetivoEntity,
+    data: PartialEntity<CalendarioLetivoEntity>,
+  ): void;
 
   /**
    * Soft delete de um calendario letivo por ID

@@ -1,4 +1,4 @@
-import type { DeepPartial } from "typeorm";
+import type { PartialEntity } from "@/core/@shared";
 import type {
   BlocoFindOneInput,
   BlocoFindOneOutput,
@@ -62,7 +62,7 @@ export interface IBlocoRepositoryPort {
    * @param bloco Dados parciais do bloco a ser salvo
    * @returns Bloco salvo
    */
-  save(bloco: DeepPartial<BlocoEntity>): Promise<BlocoEntity>;
+  save(bloco: PartialEntity<BlocoEntity>): Promise<BlocoEntity>;
 
   /**
    * Cria uma nova entidade bloco
@@ -75,7 +75,7 @@ export interface IBlocoRepositoryPort {
    * @param bloco Bloco base
    * @param data Dados a serem mesclados
    */
-  merge(bloco: BlocoEntity, data: DeepPartial<BlocoEntity>): void;
+  merge(bloco: BlocoEntity, data: PartialEntity<BlocoEntity>): void;
 
   /**
    * Soft delete de um bloco por ID

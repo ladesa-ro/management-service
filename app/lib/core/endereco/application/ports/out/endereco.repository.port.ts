@@ -1,4 +1,4 @@
-import type { DeepPartial } from "typeorm";
+import type { PartialEntity } from "@/core/@shared";
 import type {
   EnderecoFindOneInput,
   EnderecoFindOneOutput,
@@ -20,8 +20,8 @@ export interface IEnderecoRepositoryPort {
   ): Promise<EnderecoFindOneOutput | null>;
   findOneById(id: string): Promise<EnderecoFindOneOutput | null>;
   exists(id: string): Promise<boolean>;
-  save(entity: DeepPartial<EnderecoEntity>): Promise<EnderecoEntity>;
+  save(entity: PartialEntity<EnderecoEntity>): Promise<EnderecoEntity>;
   create(): EnderecoEntity;
-  merge(entity: EnderecoEntity, data: EnderecoInputDto | DeepPartial<EnderecoEntity>): void;
+  merge(entity: EnderecoEntity, data: EnderecoInputDto | PartialEntity<EnderecoEntity>): void;
   softDeleteById(id: string): Promise<void>;
 }

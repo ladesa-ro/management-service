@@ -1,4 +1,4 @@
-import type { DeepPartial } from "typeorm";
+import type { PartialEntity } from "@/core/@shared";
 import type { ReservaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
@@ -29,11 +29,11 @@ export interface IReservaRepositoryPort {
     selection?: string[],
   ): Promise<ReservaFindOneOutput | null>;
 
-  save(reserva: DeepPartial<ReservaEntity>): Promise<ReservaEntity>;
+  save(reserva: PartialEntity<ReservaEntity>): Promise<ReservaEntity>;
 
   create(): ReservaEntity;
 
-  merge(reserva: ReservaEntity, data: DeepPartial<ReservaEntity>): void;
+  merge(reserva: ReservaEntity, data: PartialEntity<ReservaEntity>): void;
 
   softDeleteById(id: string): Promise<void>;
 }

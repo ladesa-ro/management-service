@@ -1,4 +1,4 @@
-import type { DeepPartial } from "typeorm";
+import type { PartialEntity } from "@/core/@shared";
 import type {
   DiarioFindOneInput,
   DiarioFindOneOutput,
@@ -62,7 +62,7 @@ export interface IDiarioRepositoryPort {
    * @param diario Dados parciais do diario a ser salvo
    * @returns Diario salvo
    */
-  save(diario: DeepPartial<DiarioEntity>): Promise<DiarioEntity>;
+  save(diario: PartialEntity<DiarioEntity>): Promise<DiarioEntity>;
 
   /**
    * Cria uma nova entidade diario
@@ -75,7 +75,7 @@ export interface IDiarioRepositoryPort {
    * @param diario Diario base
    * @param data Dados a serem mesclados
    */
-  merge(diario: DiarioEntity, data: DeepPartial<DiarioEntity>): void;
+  merge(diario: DiarioEntity, data: PartialEntity<DiarioEntity>): void;
 
   /**
    * Soft delete de um diario por ID
