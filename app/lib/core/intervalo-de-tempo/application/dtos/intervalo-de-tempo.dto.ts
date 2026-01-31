@@ -1,4 +1,6 @@
 import {
+  EntityOutput,
+  FindOneInput,
   IdUuid,
   IFilterAcceptableValues,
   ObjectUuidRef,
@@ -10,24 +12,11 @@ import {
 // FindOne Input/Output
 // ============================================================================
 
-export class IntervaloDeTempoFindOneInput {
-  id!: IdUuid;
+export class IntervaloDeTempoFindOneInput extends FindOneInput {}
 
-  selection?: string[];
-}
-
-export class IntervaloDeTempoFindOneOutput {
-  id!: IdUuid;
-
+export class IntervaloDeTempoFindOneOutput extends EntityOutput {
   periodoInicio!: string;
-
   periodoFim!: string;
-
-  dateCreated!: Date;
-
-  dateUpdated!: Date;
-
-  dateDeleted!: Date | null;
 }
 
 // ============================================================================
@@ -60,7 +49,7 @@ export class IntervaloDeTempoUpdateInput {
 // Input Ref
 // ============================================================================
 
-export class IntervaloDeTempoInputRef extends ObjectUuidRef {}
+export type IntervaloDeTempoInputRef = ObjectUuidRef;
 
 // ============================================================================
 // Input for create-or-update pattern

@@ -1,4 +1,6 @@
 import {
+  EntityOutput,
+  FindOneInput,
   IFilterAcceptableValues,
   ObjectUuidRef,
   PaginationInput,
@@ -11,26 +13,13 @@ import { UsuarioFindOneOutput, UsuarioInputRef } from "@/core/usuario";
 // FindOne Input/Output
 // ============================================================================
 
-export class PerfilFindOneInput {
-  id!: string;
-}
+export class PerfilFindOneInput extends FindOneInput {}
 
-export class PerfilFindOneOutput {
-  id!: string;
-
+export class PerfilFindOneOutput extends EntityOutput {
   ativo!: boolean;
-
   cargo!: string;
-
   campus!: CampusFindOneOutput;
-
   usuario!: UsuarioFindOneOutput;
-
-  dateCreated!: Date;
-
-  dateUpdated!: Date;
-
-  dateDeleted!: Date | null;
 }
 
 // ============================================================================
@@ -39,13 +28,9 @@ export class PerfilFindOneOutput {
 
 export class PerfilListInput extends PaginationInput {
   "filter.id"?: IFilterAcceptableValues;
-
   "filter.ativo"?: IFilterAcceptableValues;
-
   "filter.cargo"?: IFilterAcceptableValues;
-
   "filter.campus.id"?: IFilterAcceptableValues;
-
   "filter.usuario.id"?: IFilterAcceptableValues;
 }
 
@@ -57,9 +42,7 @@ export class PerfilListOutput extends PaginationResult<PerfilFindOneOutput> {}
 
 export class PerfilSetVinculosInput {
   cargos!: string[];
-
   campus!: CampusInputRef;
-
   usuario!: UsuarioInputRef;
 }
 
@@ -67,4 +50,4 @@ export class PerfilSetVinculosInput {
 // Input Ref
 // ============================================================================
 
-export class PerfilInputRef extends ObjectUuidRef {}
+export type PerfilInputRef = ObjectUuidRef;

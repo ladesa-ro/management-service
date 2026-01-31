@@ -55,16 +55,24 @@ export class IntervaloDeTempoTypeOrmRepositoryAdapter
   }
 
   // Custom methods specific to IntervaloDeTempo
-  async findOne(domain: IntervaloDeTempoInput): Promise<IntervaloDeTempoEntity | null> {
-    return this.repository.findOne({
+  async findOne(domain: IntervaloDeTempoInput): Promise<IntervaloDeTempoFindOneOutput | null> {
+    const entity = await this.repository.findOne({
       where: {
         periodoFim: domain.periodoFim,
         periodoInicio: domain.periodoInicio,
       },
     });
+
+    if (!entity) return null;
+
+    return this.findById(null, { id: entity.id });
   }
 
-  async findOneByIdOrFail(id: string): Promise<IntervaloDeTempoEntity> {
-    return this.repository.findOneByOrFail({ id });
+  async findOneByIdOrFail(id: string): Promise<IntervaloDeTempoFindOneOutput> {
+    const result = await this.findById(null, { id });
+    if (!result) {
+      throw new Error(`IntervaloDeTempo with id ${id} not found`);
+    }
+    return result;
   }
 }

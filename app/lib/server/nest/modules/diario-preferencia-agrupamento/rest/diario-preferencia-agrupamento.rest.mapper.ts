@@ -50,8 +50,8 @@ export class DiarioPreferenciaAgrupamentoRestMapper {
     dto: DiarioPreferenciaAgrupamentoCreateInputDto,
   ): DiarioPreferenciaAgrupamentoCreateInput {
     const input = new DiarioPreferenciaAgrupamentoCreateInput();
-    input.dataInicio = new Date(dto.dataInicio);
-    input.dataFim = dto.dataFim ? new Date(dto.dataFim) : null;
+    input.dataInicio = dto.dataInicio;
+    input.dataFim = dto.dataFim ?? null;
     input.diaSemanaIso = dto.diaSemanaIso;
     input.aulasSeguidas = dto.aulasSeguidas;
     input.intervaloDeTempo = { id: dto.intervaloDeTempo.id };
@@ -68,10 +68,10 @@ export class DiarioPreferenciaAgrupamentoRestMapper {
         DiarioPreferenciaAgrupamentoUpdateInput;
     input.id = params.id;
     if (dto.dataInicio !== undefined) {
-      input.dataInicio = new Date(dto.dataInicio);
+      input.dataInicio = dto.dataInicio;
     }
     if (dto.dataFim !== undefined) {
-      input.dataFim = dto.dataFim ? new Date(dto.dataFim) : null;
+      input.dataFim = dto.dataFim ?? null;
     }
     if (dto.diaSemanaIso !== undefined) {
       input.diaSemanaIso = dto.diaSemanaIso;
@@ -97,15 +97,8 @@ export class DiarioPreferenciaAgrupamentoRestMapper {
   ): DiarioPreferenciaAgrupamentoFindOneOutputDto {
     const dto = new DiarioPreferenciaAgrupamentoFindOneOutputDto();
     dto.id = output.id;
-    dto.dataInicio =
-      output.dataInicio instanceof Date
-        ? output.dataInicio.toISOString().split("T")[0]
-        : String(output.dataInicio);
-    dto.dataFim = output.dataFim
-      ? output.dataFim instanceof Date
-        ? output.dataFim.toISOString().split("T")[0]
-        : String(output.dataFim)
-      : null;
+    dto.dataInicio = output.dataInicio;
+    dto.dataFim = output.dataFim;
     dto.diaSemanaIso = output.diaSemanaIso;
     dto.aulasSeguidas = output.aulasSeguidas;
     dto.intervaloDeTempo = output.intervaloDeTempo as any;

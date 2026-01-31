@@ -1,4 +1,11 @@
-import { ObjectUuidRef, PaginationInput, PaginationMeta } from "@/core/@shared/application/dtos";
+import {
+  EntityOutput,
+  FindOneInput,
+  IFilterAcceptableValues,
+  ObjectUuidRef,
+  PaginationInput,
+  PaginationResult,
+} from "@/core/@shared/application/dtos";
 import { AmbienteFindOneOutput, AmbienteInputRef } from "@/core/ambiente";
 import { UsuarioFindOneOutput, UsuarioInputRef } from "@/core/usuario/application/dtos";
 
@@ -6,30 +13,15 @@ import { UsuarioFindOneOutput, UsuarioInputRef } from "@/core/usuario/applicatio
 // FindOne Input/Output
 // ============================================================================
 
-export class ReservaFindOneInput {
-  id!: string;
-}
+export class ReservaFindOneInput extends FindOneInput {}
 
-export class ReservaFindOneOutput {
-  id!: string;
-
+export class ReservaFindOneOutput extends EntityOutput {
   situacao!: string;
-
   motivo!: string | null;
-
   tipo!: string | null;
-
   rrule!: string;
-
   ambiente!: AmbienteFindOneOutput;
-
   usuario!: UsuarioFindOneOutput;
-
-  dateCreated!: Date;
-
-  dateUpdated!: Date;
-
-  dateDeleted!: Date | null;
 }
 
 // ============================================================================
@@ -37,17 +29,12 @@ export class ReservaFindOneOutput {
 // ============================================================================
 
 export class ReservaListInput extends PaginationInput {
-  "filter.id"?: string[];
-
-  "filter.ambiente.id"?: string[];
-
-  "filter.usuario.id"?: string[];
+  "filter.id"?: IFilterAcceptableValues;
+  "filter.ambiente.id"?: IFilterAcceptableValues;
+  "filter.usuario.id"?: IFilterAcceptableValues;
 }
 
-export class ReservaListOutput {
-  meta!: PaginationMeta;
-  data!: ReservaFindOneOutput[];
-}
+export class ReservaListOutput extends PaginationResult<ReservaFindOneOutput> {}
 
 // ============================================================================
 // Create/Update Input
@@ -55,29 +42,19 @@ export class ReservaListOutput {
 
 export class ReservaCreateInput {
   situacao!: string;
-
   motivo?: string | null;
-
   tipo?: string | null;
-
   rrule!: string;
-
   ambiente!: AmbienteInputRef;
-
   usuario!: UsuarioInputRef;
 }
 
 export class ReservaUpdateInput {
   situacao?: string;
-
   motivo?: string | null;
-
   tipo?: string | null;
-
   rrule?: string;
-
   ambiente?: AmbienteInputRef;
-
   usuario?: UsuarioInputRef;
 }
 
@@ -85,4 +62,4 @@ export class ReservaUpdateInput {
 // Input Ref
 // ============================================================================
 
-export class ReservaInputRef extends ObjectUuidRef {}
+export type ReservaInputRef = ObjectUuidRef;

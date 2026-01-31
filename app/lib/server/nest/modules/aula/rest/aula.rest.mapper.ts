@@ -45,7 +45,7 @@ export class AulaRestMapper {
 
   static toCreateInput(dto: AulaCreateInputDto): AulaCreateInput {
     const input = new AulaCreateInput();
-    input.data = new Date(dto.data);
+    input.data = dto.data;
     input.modalidade = dto.modalidade ?? null;
     input.intervaloDeTempo = { id: dto.intervaloDeTempo.id };
     input.diario = { id: dto.diario.id };
@@ -62,7 +62,7 @@ export class AulaRestMapper {
     const input = new AulaFindOneInput() as AulaFindOneInput & AulaUpdateInput;
     input.id = params.id;
     if (dto.data !== undefined) {
-      input.data = new Date(dto.data);
+      input.data = dto.data;
     }
     if (dto.modalidade !== undefined) {
       input.modalidade = dto.modalidade ?? null;
@@ -86,8 +86,7 @@ export class AulaRestMapper {
   static toFindOneOutputDto(output: AulaFindOneOutput): AulaFindOneOutputDto {
     const dto = new AulaFindOneOutputDto();
     dto.id = output.id;
-    dto.data =
-      output.data instanceof Date ? output.data.toISOString().split("T")[0] : String(output.data);
+    dto.data = output.data;
     dto.modalidade = output.modalidade;
     dto.intervaloDeTempo = output.intervaloDeTempo as any;
     dto.diario = output.diario as any;

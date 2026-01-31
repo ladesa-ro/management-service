@@ -1,34 +1,26 @@
-import { ObjectUuidRef, PaginationInput, PaginationMeta } from "@/core/@shared/application/dtos";
+import {
+  EntityOutput,
+  FindOneInput,
+  IFilterAcceptableValues,
+  ObjectUuidRef,
+  PaginationInput,
+  PaginationResult,
+} from "@/core/@shared/application/dtos";
 import { ImagemFindOneOutput, ImagemInputRef } from "@/core/imagem";
 
 // ============================================================================
 // FindOne Input/Output
 // ============================================================================
 
-export class UsuarioFindOneInput {
-  id!: string;
-}
+export class UsuarioFindOneInput extends FindOneInput {}
 
-export class UsuarioFindOneOutput {
-  id!: string;
-
+export class UsuarioFindOneOutput extends EntityOutput {
   nome!: string | null;
-
   matriculaSiape!: string | null;
-
   email!: string | null;
-
   isSuperUser!: boolean;
-
   imagemCapa!: ImagemFindOneOutput | null;
-
   imagemPerfil!: ImagemFindOneOutput | null;
-
-  dateCreated!: Date;
-
-  dateUpdated!: Date;
-
-  dateDeleted!: Date | null;
 }
 
 // ============================================================================
@@ -36,13 +28,10 @@ export class UsuarioFindOneOutput {
 // ============================================================================
 
 export class UsuarioListInput extends PaginationInput {
-  "filter.id"?: string[];
+  "filter.id"?: IFilterAcceptableValues;
 }
 
-export class UsuarioListOutput {
-  meta!: PaginationMeta;
-  data!: UsuarioFindOneOutput[];
-}
+export class UsuarioListOutput extends PaginationResult<UsuarioFindOneOutput> {}
 
 // ============================================================================
 // Create/Update Input
@@ -50,25 +39,17 @@ export class UsuarioListOutput {
 
 export class UsuarioCreateInput {
   nome?: string | null;
-
   matriculaSiape?: string | null;
-
   email?: string | null;
-
   imagemCapa?: ImagemInputRef | null;
-
   imagemPerfil?: ImagemInputRef | null;
 }
 
 export class UsuarioUpdateInput {
   nome?: string | null;
-
   matriculaSiape?: string | null;
-
   email?: string | null;
-
   imagemCapa?: ImagemInputRef | null;
-
   imagemPerfil?: ImagemInputRef | null;
 }
 
@@ -76,4 +57,4 @@ export class UsuarioUpdateInput {
 // Input Ref
 // ============================================================================
 
-export class UsuarioInputRef extends ObjectUuidRef {}
+export type UsuarioInputRef = ObjectUuidRef;

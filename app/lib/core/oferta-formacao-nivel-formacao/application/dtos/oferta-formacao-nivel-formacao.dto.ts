@@ -1,9 +1,10 @@
 import {
-  IdUuid,
+  EntityOutput,
+  FindOneInput,
+  IFilterAcceptableValues,
   ObjectUuidRef,
   PaginationInput,
-  PaginationMeta,
-  ScalarDateTimeString,
+  PaginationResult,
 } from "@/core/@shared";
 import { NivelFormacaoFindOneOutput, NivelFormacaoInputRef } from "@/core/nivel-formacao";
 import { OfertaFormacaoFindOneOutput, OfertaFormacaoInputRef } from "@/core/oferta-formacao";
@@ -12,22 +13,11 @@ import { OfertaFormacaoFindOneOutput, OfertaFormacaoInputRef } from "@/core/ofer
 // FindOne Input/Output
 // ============================================================================
 
-export class OfertaFormacaoNivelFormacaoFindOneInput {
-  id!: IdUuid;
-}
+export class OfertaFormacaoNivelFormacaoFindOneInput extends FindOneInput {}
 
-export class OfertaFormacaoNivelFormacaoFindOneOutput {
-  id!: IdUuid;
-
+export class OfertaFormacaoNivelFormacaoFindOneOutput extends EntityOutput {
   nivelFormacao!: NivelFormacaoFindOneOutput;
-
   ofertaFormacao!: OfertaFormacaoFindOneOutput;
-
-  dateCreated!: ScalarDateTimeString;
-
-  dateUpdated!: ScalarDateTimeString;
-
-  dateDeleted!: ScalarDateTimeString | null;
 }
 
 // ============================================================================
@@ -35,17 +25,12 @@ export class OfertaFormacaoNivelFormacaoFindOneOutput {
 // ============================================================================
 
 export class OfertaFormacaoNivelFormacaoListInput extends PaginationInput {
-  "filter.id"?: string[];
-
-  "filter.nivelFormacao.id"?: string[];
-
-  "filter.ofertaFormacao.id"?: string[];
+  "filter.id"?: IFilterAcceptableValues;
+  "filter.nivelFormacao.id"?: IFilterAcceptableValues;
+  "filter.ofertaFormacao.id"?: IFilterAcceptableValues;
 }
 
-export class OfertaFormacaoNivelFormacaoListOutput {
-  meta!: PaginationMeta;
-  data!: OfertaFormacaoNivelFormacaoFindOneOutput[];
-}
+export class OfertaFormacaoNivelFormacaoListOutput extends PaginationResult<OfertaFormacaoNivelFormacaoFindOneOutput> {}
 
 // ============================================================================
 // Create/Update Input
@@ -53,13 +38,11 @@ export class OfertaFormacaoNivelFormacaoListOutput {
 
 export class OfertaFormacaoNivelFormacaoCreateInput {
   nivelFormacao!: NivelFormacaoInputRef;
-
   ofertaFormacao!: OfertaFormacaoInputRef;
 }
 
 export class OfertaFormacaoNivelFormacaoUpdateInput {
   nivelFormacao?: NivelFormacaoInputRef;
-
   ofertaFormacao?: OfertaFormacaoInputRef;
 }
 
@@ -67,4 +50,4 @@ export class OfertaFormacaoNivelFormacaoUpdateInput {
 // Input Ref
 // ============================================================================
 
-export class OfertaFormacaoNivelFormacaoInputRef extends ObjectUuidRef {}
+export type OfertaFormacaoNivelFormacaoInputRef = ObjectUuidRef;

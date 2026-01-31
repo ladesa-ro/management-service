@@ -1,32 +1,25 @@
-import { ObjectUuidRef, PaginationInput, PaginationMeta } from "@/core/@shared/application/dtos";
+import {
+  EntityOutput,
+  FindOneInput,
+  IFilterAcceptableValues,
+  ObjectUuidRef,
+  PaginationInput,
+  PaginationResult,
+} from "@/core/@shared/application/dtos";
 import { EnderecoCreateInput, EnderecoFindOneOutput, EnderecoUpdateInput } from "@/core/endereco";
 
 // ============================================================================
 // FindOne Input/Output
 // ============================================================================
 
-export class CampusFindOneInput {
-  id!: string;
-}
+export class CampusFindOneInput extends FindOneInput {}
 
-export class CampusFindOneOutput {
-  id!: string;
-
+export class CampusFindOneOutput extends EntityOutput {
   nomeFantasia!: string;
-
   razaoSocial!: string;
-
   apelido!: string;
-
   cnpj!: string;
-
   endereco!: EnderecoFindOneOutput;
-
-  dateCreated!: Date;
-
-  dateUpdated!: Date;
-
-  dateDeleted!: Date | null;
 }
 
 // ============================================================================
@@ -34,13 +27,10 @@ export class CampusFindOneOutput {
 // ============================================================================
 
 export class CampusListInput extends PaginationInput {
-  "filter.id"?: string[];
+  "filter.id"?: IFilterAcceptableValues;
 }
 
-export class CampusListOutput {
-  meta!: PaginationMeta;
-  data!: CampusFindOneOutput[];
-}
+export class CampusListOutput extends PaginationResult<CampusFindOneOutput> {}
 
 // ============================================================================
 // Create/Update Input
@@ -48,25 +38,17 @@ export class CampusListOutput {
 
 export class CampusCreateInput {
   nomeFantasia!: string;
-
   razaoSocial!: string;
-
   apelido!: string;
-
   cnpj!: string;
-
   endereco!: EnderecoCreateInput;
 }
 
 export class CampusUpdateInput {
   nomeFantasia?: string;
-
   razaoSocial?: string;
-
   apelido?: string;
-
   cnpj?: string;
-
   endereco?: EnderecoUpdateInput;
 }
 
@@ -74,4 +56,4 @@ export class CampusUpdateInput {
 // Input Ref
 // ============================================================================
 
-export class CampusInputRef extends ObjectUuidRef {}
+export type CampusInputRef = ObjectUuidRef;

@@ -1,10 +1,10 @@
 import {
-  IdUuid,
+  EntityOutput,
+  FindOneInput,
   IFilterAcceptableValues,
   ObjectUuidRef,
   PaginationInput,
   PaginationResult,
-  ScalarDateTimeString,
 } from "@/core/@shared";
 import { CampusFindOneOutput, CampusInputRef } from "@/core/campus";
 import { OfertaFormacaoFindOneOutput, OfertaFormacaoInputRef } from "@/core/oferta-formacao";
@@ -13,28 +13,13 @@ import { OfertaFormacaoFindOneOutput, OfertaFormacaoInputRef } from "@/core/ofer
 // FindOne Input/Output
 // ============================================================================
 
-export class CalendarioLetivoFindOneInput {
-  id!: IdUuid;
+export class CalendarioLetivoFindOneInput extends FindOneInput {}
 
-  selection?: string[];
-}
-
-export class CalendarioLetivoFindOneOutput {
-  id!: IdUuid;
-
+export class CalendarioLetivoFindOneOutput extends EntityOutput {
   nome!: string;
-
   ano!: number;
-
   campus!: CampusFindOneOutput;
-
   ofertaFormacao!: OfertaFormacaoFindOneOutput;
-
-  dateCreated!: ScalarDateTimeString;
-
-  dateUpdated!: ScalarDateTimeString;
-
-  dateDeleted!: ScalarDateTimeString | null;
 }
 
 // ============================================================================
@@ -43,9 +28,7 @@ export class CalendarioLetivoFindOneOutput {
 
 export class CalendarioLetivoListInput extends PaginationInput {
   "filter.id"?: IFilterAcceptableValues;
-
   "filter.campus.id"?: IFilterAcceptableValues;
-
   "filter.ofertaFormacao.id"?: IFilterAcceptableValues;
 }
 
@@ -57,21 +40,15 @@ export class CalendarioLetivoListOutput extends PaginationResult<CalendarioLetiv
 
 export class CalendarioLetivoCreateInput {
   nome!: string;
-
   ano!: number;
-
   campus!: CampusInputRef;
-
   ofertaFormacao!: OfertaFormacaoInputRef;
 }
 
 export class CalendarioLetivoUpdateInput {
   nome?: string;
-
   ano?: number;
-
   campus?: CampusInputRef;
-
   ofertaFormacao?: OfertaFormacaoInputRef;
 }
 
@@ -79,4 +56,4 @@ export class CalendarioLetivoUpdateInput {
 // Input Ref
 // ============================================================================
 
-export class CalendarioLetivoInputRef extends ObjectUuidRef {}
+export type CalendarioLetivoInputRef = ObjectUuidRef;

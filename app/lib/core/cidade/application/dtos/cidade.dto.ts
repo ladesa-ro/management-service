@@ -42,4 +42,4 @@ export class CidadeListOutput extends PaginationResult<CidadeFindOneOutput> {}
 // Input Ref
 // ============================================================================
 
-export class CidadeInputRef extends ObjectIntRef {}
+export type CidadeInputRef = ObjectIntRef;

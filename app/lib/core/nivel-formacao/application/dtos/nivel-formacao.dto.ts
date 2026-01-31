@@ -1,7 +1,6 @@
 import {
-  DatedOutput,
+  EntityOutput,
   FindOneInput,
-  IdUuid,
   IFilterAcceptableValues,
   ObjectUuidRef,
   PaginationInput,
@@ -14,9 +13,7 @@ import {
 
 export class NivelFormacaoFindOneInput extends FindOneInput {}
 
-export class NivelFormacaoFindOneOutput extends DatedOutput {
-  id!: IdUuid;
-
+export class NivelFormacaoFindOneOutput extends EntityOutput {
   slug!: string;
 }
 
@@ -46,4 +43,4 @@ export class NivelFormacaoUpdateInput {
 // Input Ref
 // ============================================================================
 
-export class NivelFormacaoInputRef extends ObjectUuidRef {}
+export type NivelFormacaoInputRef = ObjectUuidRef;

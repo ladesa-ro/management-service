@@ -40,7 +40,7 @@ export class DiaCalendarioRestMapper {
 
   static toCreateInput(dto: DiaCalendarioCreateInputDto): DiaCalendarioCreateInput {
     const input = new DiaCalendarioCreateInput();
-    input.data = new Date(dto.data);
+    input.data = dto.data;
     input.diaLetivo = dto.diaLetivo;
     input.feriado = dto.feriado ?? "";
     input.diaPresencial = dto.diaPresencial;
@@ -58,7 +58,7 @@ export class DiaCalendarioRestMapper {
       DiaCalendarioUpdateInput;
     input.id = params.id;
     if (dto.data !== undefined) {
-      input.data = new Date(dto.data);
+      input.data = dto.data;
     }
     if (dto.diaLetivo !== undefined) {
       input.diaLetivo = dto.diaLetivo;
@@ -84,7 +84,7 @@ export class DiaCalendarioRestMapper {
   static toFindOneOutputDto(output: DiaCalendarioFindOneOutput): DiaCalendarioFindOneOutputDto {
     const dto = new DiaCalendarioFindOneOutputDto();
     dto.id = output.id;
-    dto.data = output.data instanceof Date ? output.data.toISOString() : String(output.data);
+    dto.data = output.data;
     dto.diaLetivo = output.diaLetivo;
     dto.feriado = output.feriado;
     dto.diaPresencial = output.diaPresencial;

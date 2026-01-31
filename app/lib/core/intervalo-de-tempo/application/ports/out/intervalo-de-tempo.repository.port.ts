@@ -24,12 +24,12 @@ export interface IIntervaloDeTempoRepositoryPort
   /**
    * Busca um intervalo de tempo por parâmetros específicos
    */
-  findOne(dto: IntervaloDeTempoInput): Promise<IntervaloDeTempoEntity | null>;
+  findOne(dto: IntervaloDeTempoInput): Promise<IntervaloDeTempoFindOneOutput | null>;
 
   /**
    * Busca um intervalo de tempo por ID ou lança erro
    */
-  findOneByIdOrFail(id: string): Promise<IntervaloDeTempoEntity>;
+  findOneByIdOrFail(id: string): Promise<IntervaloDeTempoFindOneOutput>;
 
   /**
    * Sobrescreve merge com assinatura específica

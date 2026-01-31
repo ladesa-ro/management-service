@@ -1,32 +1,25 @@
-import { ObjectUuidRef, PaginationInput, PaginationMeta } from "@/core/@shared/application/dtos";
+import {
+  EntityOutput,
+  FindOneInput,
+  IFilterAcceptableValues,
+  ObjectUuidRef,
+  PaginationInput,
+  PaginationResult,
+} from "@/core/@shared";
 import { UsuarioFindOneOutput, UsuarioInputRef } from "@/core/usuario/application/dtos";
 
 // ============================================================================
 // FindOne Input/Output
 // ============================================================================
 
-export class ProfessorIndisponibilidadeFindOneInput {
-  id!: string;
-}
+export class ProfessorIndisponibilidadeFindOneInput extends FindOneInput {}
 
-export class ProfessorIndisponibilidadeFindOneOutput {
-  id!: string;
-
+export class ProfessorIndisponibilidadeFindOneOutput extends EntityOutput {
   perfil!: UsuarioFindOneOutput;
-
   diaDaSemana!: number;
-
   horaInicio!: string;
-
   horaFim!: string;
-
   motivo!: string;
-
-  dateCreated!: Date;
-
-  dateUpdated!: Date;
-
-  dateDeleted!: Date | null;
 }
 
 // ============================================================================
@@ -34,15 +27,11 @@ export class ProfessorIndisponibilidadeFindOneOutput {
 // ============================================================================
 
 export class ProfessorIndisponibilidadeListInput extends PaginationInput {
-  "filter.id"?: string[];
-
-  "filter.perfil.id"?: string[];
+  "filter.id"?: IFilterAcceptableValues;
+  "filter.perfil.id"?: IFilterAcceptableValues;
 }
 
-export class ProfessorIndisponibilidadeListOutput {
-  meta!: PaginationMeta;
-  data!: ProfessorIndisponibilidadeFindOneOutput[];
-}
+export class ProfessorIndisponibilidadeListOutput extends PaginationResult<ProfessorIndisponibilidadeFindOneOutput> {}
 
 // ============================================================================
 // Create/Update Input
@@ -50,25 +39,17 @@ export class ProfessorIndisponibilidadeListOutput {
 
 export class ProfessorIndisponibilidadeCreateInput {
   perfil!: UsuarioInputRef;
-
   diaDaSemana!: number;
-
   horaInicio!: string;
-
   horaFim!: string;
-
   motivo!: string;
 }
 
 export class ProfessorIndisponibilidadeUpdateInput {
   perfil?: UsuarioInputRef;
-
   diaDaSemana?: number;
-
   horaInicio?: string;
-
   horaFim?: string;
-
   motivo?: string;
 }
 
@@ -76,4 +57,4 @@ export class ProfessorIndisponibilidadeUpdateInput {
 // Input Ref
 // ============================================================================
 
-export class ProfessorIndisponibilidadeInputRef extends ObjectUuidRef {}
+export type ProfessorIndisponibilidadeInputRef = ObjectUuidRef;

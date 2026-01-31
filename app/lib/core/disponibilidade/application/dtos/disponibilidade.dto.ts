@@ -1,12 +1,11 @@
+import type { ScalarDateTimeString } from "@/core/@shared";
 import {
-  DatedOutput,
+  EntityOutput,
   FindOneInput,
-  IdUuid,
   IFilterAcceptableValues,
   ObjectUuidRef,
   PaginationInput,
   PaginationResult,
-  ScalarDateTimeString,
 } from "@/core/@shared";
 
 // ============================================================================
@@ -15,11 +14,8 @@ import {
 
 export class DisponibilidadeFindOneInput extends FindOneInput {}
 
-export class DisponibilidadeFindOneOutput extends DatedOutput {
-  id!: IdUuid;
-
+export class DisponibilidadeFindOneOutput extends EntityOutput {
   dataInicio!: ScalarDateTimeString;
-
   dataFim!: ScalarDateTimeString | null;
 }
 
@@ -39,13 +35,11 @@ export class DisponibilidadeListOutput extends PaginationResult<DisponibilidadeF
 
 export class DisponibilidadeCreateInput {
   dataInicio!: ScalarDateTimeString;
-
   dataFim?: ScalarDateTimeString | null;
 }
 
 export class DisponibilidadeUpdateInput {
   dataInicio?: ScalarDateTimeString;
-
   dataFim?: ScalarDateTimeString | null;
 }
 
@@ -53,4 +47,4 @@ export class DisponibilidadeUpdateInput {
 // Input Ref
 // ============================================================================
 
-export class DisponibilidadeInputRef extends ObjectUuidRef {}
+export type DisponibilidadeInputRef = ObjectUuidRef;

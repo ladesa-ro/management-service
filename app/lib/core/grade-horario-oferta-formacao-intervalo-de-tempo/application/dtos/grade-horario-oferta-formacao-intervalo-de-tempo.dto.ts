@@ -1,4 +1,11 @@
-import { ObjectUuidRef, PaginationInput, PaginationMeta } from "@/core/@shared/application/dtos";
+import {
+  EntityOutput,
+  FindOneInput,
+  IFilterAcceptableValues,
+  ObjectUuidRef,
+  PaginationInput,
+  PaginationResult,
+} from "@/core/@shared";
 import {
   GradeHorarioOfertaFormacaoFindOneOutput,
   GradeHorarioOfertaFormacaoInputRef,
@@ -9,22 +16,11 @@ import { IntervaloDeTempoFindOneOutput, IntervaloDeTempoInputRef } from "@/core/
 // FindOne Input/Output
 // ============================================================================
 
-export class GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInput {
-  id!: string;
-}
+export class GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInput extends FindOneInput {}
 
-export class GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutput {
-  id!: string;
-
+export class GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutput extends EntityOutput {
   intervaloDeTempo!: IntervaloDeTempoFindOneOutput;
-
   gradeHorarioOfertaFormacao!: GradeHorarioOfertaFormacaoFindOneOutput;
-
-  dateCreated!: Date;
-
-  dateUpdated!: Date;
-
-  dateDeleted!: Date | null;
 }
 
 // ============================================================================
@@ -32,15 +28,11 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutput {
 // ============================================================================
 
 export class GradeHorarioOfertaFormacaoIntervaloDeTempoListInput extends PaginationInput {
-  "filter.id"?: string[];
-
-  "filter.gradeHorarioOfertaFormacao.id"?: string[];
+  "filter.id"?: IFilterAcceptableValues;
+  "filter.gradeHorarioOfertaFormacao.id"?: IFilterAcceptableValues;
 }
 
-export class GradeHorarioOfertaFormacaoIntervaloDeTempoListOutput {
-  meta!: PaginationMeta;
-  data!: GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutput[];
-}
+export class GradeHorarioOfertaFormacaoIntervaloDeTempoListOutput extends PaginationResult<GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutput> {}
 
 // ============================================================================
 // Create/Update Input
@@ -48,13 +40,11 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoListOutput {
 
 export class GradeHorarioOfertaFormacaoIntervaloDeTempoCreateInput {
   intervaloDeTempo!: IntervaloDeTempoInputRef;
-
   gradeHorarioOfertaFormacao!: GradeHorarioOfertaFormacaoInputRef;
 }
 
 export class GradeHorarioOfertaFormacaoIntervaloDeTempoUpdateInput {
   intervaloDeTempo?: IntervaloDeTempoInputRef;
-
   gradeHorarioOfertaFormacao?: GradeHorarioOfertaFormacaoInputRef;
 }
 
@@ -62,4 +52,4 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoUpdateInput {
 // Input Ref
 // ============================================================================
 
-export class GradeHorarioOfertaFormacaoIntervaloDeTempoInputRef extends ObjectUuidRef {}
+export type GradeHorarioOfertaFormacaoIntervaloDeTempoInputRef = ObjectUuidRef;

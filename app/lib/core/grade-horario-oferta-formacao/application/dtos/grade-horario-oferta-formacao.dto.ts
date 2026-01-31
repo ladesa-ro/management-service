@@ -1,9 +1,11 @@
 import {
+  EntityOutput,
+  FindOneInput,
   IFilterAcceptableValues,
   ObjectUuidRef,
   PaginationInput,
   PaginationResult,
-} from "@/core/@shared/application/dtos";
+} from "@/core/@shared";
 import { CampusFindOneOutput, CampusInputRef } from "@/core/campus";
 import { OfertaFormacaoFindOneOutput, OfertaFormacaoInputRef } from "@/core/oferta-formacao";
 
@@ -11,22 +13,11 @@ import { OfertaFormacaoFindOneOutput, OfertaFormacaoInputRef } from "@/core/ofer
 // FindOne Input/Output
 // ============================================================================
 
-export class GradeHorarioOfertaFormacaoFindOneInput {
-  id!: string;
-}
+export class GradeHorarioOfertaFormacaoFindOneInput extends FindOneInput {}
 
-export class GradeHorarioOfertaFormacaoFindOneOutput {
-  id!: string;
-
+export class GradeHorarioOfertaFormacaoFindOneOutput extends EntityOutput {
   campus!: CampusFindOneOutput;
-
   ofertaFormacao!: OfertaFormacaoFindOneOutput;
-
-  dateCreated!: Date;
-
-  dateUpdated!: Date;
-
-  dateDeleted!: Date | null;
 }
 
 // ============================================================================
@@ -35,9 +26,7 @@ export class GradeHorarioOfertaFormacaoFindOneOutput {
 
 export class GradeHorarioOfertaFormacaoListInput extends PaginationInput {
   "filter.id"?: IFilterAcceptableValues;
-
   "filter.campus.id"?: IFilterAcceptableValues;
-
   "filter.ofertaFormacao.id"?: IFilterAcceptableValues;
 }
 
@@ -49,13 +38,11 @@ export class GradeHorarioOfertaFormacaoListOutput extends PaginationResult<Grade
 
 export class GradeHorarioOfertaFormacaoCreateInput {
   campus!: CampusInputRef;
-
   ofertaFormacao!: OfertaFormacaoInputRef;
 }
 
 export class GradeHorarioOfertaFormacaoUpdateInput {
   campus?: CampusInputRef;
-
   ofertaFormacao?: OfertaFormacaoInputRef;
 }
 
@@ -63,4 +50,4 @@ export class GradeHorarioOfertaFormacaoUpdateInput {
 // Input Ref
 // ============================================================================
 
-export class GradeHorarioOfertaFormacaoInputRef extends ObjectUuidRef {}
+export type GradeHorarioOfertaFormacaoInputRef = ObjectUuidRef;

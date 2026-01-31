@@ -1,7 +1,6 @@
 import {
-  DatedOutput,
+  EntityOutput,
   FindOneInput,
-  IdUuid,
   IFilterAcceptableValues,
   ObjectUuidRef,
   PaginationInput,
@@ -14,11 +13,8 @@ import {
 
 export class ModalidadeFindOneInput extends FindOneInput {}
 
-export class ModalidadeFindOneOutput extends DatedOutput {
-  id!: IdUuid;
-
+export class ModalidadeFindOneOutput extends EntityOutput {
   nome!: string;
-
   slug!: string;
 }
 
@@ -38,13 +34,11 @@ export class ModalidadeListOutput extends PaginationResult<ModalidadeFindOneOutp
 
 export class ModalidadeCreateInput {
   nome!: string;
-
   slug!: string;
 }
 
 export class ModalidadeUpdateInput {
   nome?: string;
-
   slug?: string;
 }
 
@@ -52,4 +46,4 @@ export class ModalidadeUpdateInput {
 // Input Ref
 // ============================================================================
 
-export class ModalidadeInputRef extends ObjectUuidRef {}
+export type ModalidadeInputRef = ObjectUuidRef;

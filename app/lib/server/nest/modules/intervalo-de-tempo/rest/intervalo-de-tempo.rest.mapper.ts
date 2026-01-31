@@ -48,9 +48,9 @@ export class IntervaloDeTempoRestMapper {
     dto.id = output.id;
     dto.periodoInicio = output.periodoInicio;
     dto.periodoFim = output.periodoFim;
-    dto.dateCreated = output.dateCreated;
-    dto.dateUpdated = output.dateUpdated;
-    dto.dateDeleted = output.dateDeleted;
+    dto.dateCreated = new Date(output.dateCreated);
+    dto.dateUpdated = new Date(output.dateUpdated);
+    dto.dateDeleted = output.dateDeleted ? new Date(output.dateDeleted) : null;
     return dto;
   }
 

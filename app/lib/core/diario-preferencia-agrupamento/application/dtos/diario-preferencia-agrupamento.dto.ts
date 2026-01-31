@@ -1,4 +1,12 @@
-import { ObjectUuidRef, PaginationInput, PaginationMeta } from "@/core/@shared/application/dtos";
+import {
+  EntityOutput,
+  FindOneInput,
+  IFilterAcceptableValues,
+  ObjectUuidRef,
+  PaginationInput,
+  PaginationResult,
+  ScalarDate,
+} from "@/core/@shared";
 import { DiarioFindOneOutput, DiarioInputRef } from "@/core/diario/application/dtos";
 import { IntervaloDeTempoFindOneOutput, IntervaloDeTempoInputRef } from "@/core/intervalo-de-tempo";
 
@@ -6,30 +14,15 @@ import { IntervaloDeTempoFindOneOutput, IntervaloDeTempoInputRef } from "@/core/
 // FindOne Input/Output
 // ============================================================================
 
-export class DiarioPreferenciaAgrupamentoFindOneInput {
-  id!: string;
-}
+export class DiarioPreferenciaAgrupamentoFindOneInput extends FindOneInput {}
 
-export class DiarioPreferenciaAgrupamentoFindOneOutput {
-  id!: string;
-
-  dataInicio!: Date;
-
-  dataFim!: Date | null;
-
+export class DiarioPreferenciaAgrupamentoFindOneOutput extends EntityOutput {
+  dataInicio!: ScalarDate;
+  dataFim!: ScalarDate | null;
   diaSemanaIso!: number;
-
   aulasSeguidas!: number;
-
   intervaloDeTempo!: IntervaloDeTempoFindOneOutput;
-
   diario!: DiarioFindOneOutput;
-
-  dateCreated!: Date;
-
-  dateUpdated!: Date;
-
-  dateDeleted!: Date | null;
 }
 
 // ============================================================================
@@ -37,45 +30,31 @@ export class DiarioPreferenciaAgrupamentoFindOneOutput {
 // ============================================================================
 
 export class DiarioPreferenciaAgrupamentoListInput extends PaginationInput {
-  "filter.id"?: string[];
-
-  "filter.diario.id"?: string[];
+  "filter.id"?: IFilterAcceptableValues;
+  "filter.diario.id"?: IFilterAcceptableValues;
 }
 
-export class DiarioPreferenciaAgrupamentoListOutput {
-  meta!: PaginationMeta;
-  data!: DiarioPreferenciaAgrupamentoFindOneOutput[];
-}
+export class DiarioPreferenciaAgrupamentoListOutput extends PaginationResult<DiarioPreferenciaAgrupamentoFindOneOutput> {}
 
 // ============================================================================
 // Create/Update Input
 // ============================================================================
 
 export class DiarioPreferenciaAgrupamentoCreateInput {
-  dataInicio!: Date;
-
-  dataFim?: Date | null;
-
+  dataInicio!: ScalarDate;
+  dataFim?: ScalarDate | null;
   diaSemanaIso!: number;
-
   aulasSeguidas!: number;
-
   intervaloDeTempo!: IntervaloDeTempoInputRef;
-
   diario!: DiarioInputRef;
 }
 
 export class DiarioPreferenciaAgrupamentoUpdateInput {
-  dataInicio?: Date;
-
-  dataFim?: Date | null;
-
+  dataInicio?: ScalarDate;
+  dataFim?: ScalarDate | null;
   diaSemanaIso?: number;
-
   aulasSeguidas?: number;
-
   intervaloDeTempo?: IntervaloDeTempoInputRef;
-
   diario?: DiarioInputRef;
 }
 
@@ -83,4 +62,4 @@ export class DiarioPreferenciaAgrupamentoUpdateInput {
 // Input Ref
 // ============================================================================
 
-export class DiarioPreferenciaAgrupamentoInputRef extends ObjectUuidRef {}
+export type DiarioPreferenciaAgrupamentoInputRef = ObjectUuidRef;

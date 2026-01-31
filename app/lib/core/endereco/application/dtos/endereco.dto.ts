@@ -1,10 +1,10 @@
 import {
-  IdUuid,
+  EntityOutput,
+  FindOneInput,
   IFilterAcceptableValues,
   ObjectUuidRef,
   PaginationInput,
   PaginationResult,
-  ScalarDateTimeString,
 } from "@/core/@shared";
 import { CidadeFindOneOutput, CidadeInputRef } from "@/core/cidade";
 
@@ -12,34 +12,16 @@ import { CidadeFindOneOutput, CidadeInputRef } from "@/core/cidade";
 // FindOne Input/Output
 // ============================================================================
 
-export class EnderecoFindOneInput {
-  id!: IdUuid;
+export class EnderecoFindOneInput extends FindOneInput {}
 
-  selection?: string[];
-}
-
-export class EnderecoFindOneOutput {
-  id!: IdUuid;
-
+export class EnderecoFindOneOutput extends EntityOutput {
   cep!: string;
-
   logradouro!: string;
-
   numero!: number;
-
   bairro!: string;
-
   complemento!: string | null;
-
   pontoReferencia!: string | null;
-
   cidade!: CidadeFindOneOutput;
-
-  dateCreated!: ScalarDateTimeString;
-
-  dateUpdated!: ScalarDateTimeString;
-
-  dateDeleted!: ScalarDateTimeString | null;
 }
 
 // ============================================================================
@@ -113,4 +95,4 @@ export class EnderecoInputDto {
 // Input Ref
 // ============================================================================
 
-export class EnderecoInputRef extends ObjectUuidRef {}
+export type EnderecoInputRef = ObjectUuidRef;

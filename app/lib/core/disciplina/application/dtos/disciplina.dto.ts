@@ -1,30 +1,24 @@
-import { ObjectUuidRef, PaginationInput, PaginationMeta } from "@/core/@shared/application/dtos";
+import {
+  EntityOutput,
+  FindOneInput,
+  IFilterAcceptableValues,
+  ObjectUuidRef,
+  PaginationInput,
+  PaginationResult,
+} from "@/core/@shared/application/dtos";
 import { ImagemFindOneOutput, ImagemInputRef } from "@/core/imagem";
 
 // ============================================================================
 // FindOne Input/Output
 // ============================================================================
 
-export class DisciplinaFindOneInput {
-  id!: string;
-}
+export class DisciplinaFindOneInput extends FindOneInput {}
 
-export class DisciplinaFindOneOutput {
-  id!: string;
-
+export class DisciplinaFindOneOutput extends EntityOutput {
   nome!: string;
-
   nomeAbreviado!: string;
-
   cargaHoraria!: number;
-
   imagemCapa!: ImagemFindOneOutput | null;
-
-  dateCreated!: Date;
-
-  dateUpdated!: Date;
-
-  dateDeleted!: Date | null;
 }
 
 // ============================================================================
@@ -32,13 +26,10 @@ export class DisciplinaFindOneOutput {
 // ============================================================================
 
 export class DisciplinaListInput extends PaginationInput {
-  "filter.id"?: string[];
+  "filter.id"?: IFilterAcceptableValues;
 }
 
-export class DisciplinaListOutput {
-  meta!: PaginationMeta;
-  data!: DisciplinaFindOneOutput[];
-}
+export class DisciplinaListOutput extends PaginationResult<DisciplinaFindOneOutput> {}
 
 // ============================================================================
 // Create/Update Input
@@ -46,21 +37,15 @@ export class DisciplinaListOutput {
 
 export class DisciplinaCreateInput {
   nome!: string;
-
   nomeAbreviado!: string;
-
   cargaHoraria!: number;
-
   imagemCapa?: ImagemInputRef | null;
 }
 
 export class DisciplinaUpdateInput {
   nome?: string;
-
   nomeAbreviado?: string;
-
   cargaHoraria?: number;
-
   imagemCapa?: ImagemInputRef | null;
 }
 
@@ -68,4 +53,4 @@ export class DisciplinaUpdateInput {
 // Input Ref
 // ============================================================================
 
-export class DisciplinaInputRef extends ObjectUuidRef {}
+export type DisciplinaInputRef = ObjectUuidRef;

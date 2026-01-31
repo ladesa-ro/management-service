@@ -20,6 +20,7 @@ export * from "./grade-horario-oferta-formacao-intervalo-de-tempo-typeorm.reposi
 export * from "./grade-horario-oferta-formacao-typeorm.repository.adapter";
 export * from "./horario-gerado-aula-typeorm.repository.adapter";
 export * from "./horario-gerado-typeorm.repository.adapter";
+export * from "./imagem-arquivo-query-typeorm.repository.adapter";
 export * from "./imagem-arquivo-typeorm.repository.adapter";
 export * from "./imagem-typeorm.repository.adapter";
 export * from "./intervalo-de-tempo-typeorm.repository.adapter";

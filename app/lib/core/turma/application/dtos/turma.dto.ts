@@ -1,4 +1,11 @@
-import { ObjectUuidRef, PaginationInput, PaginationMeta } from "@/core/@shared/application/dtos";
+import {
+  EntityOutput,
+  FindOneInput,
+  IFilterAcceptableValues,
+  ObjectUuidRef,
+  PaginationInput,
+  PaginationResult,
+} from "@/core/@shared/application/dtos";
 import { AmbienteFindOneOutput, AmbienteInputRef } from "@/core/ambiente";
 import { CursoFindOneOutput, CursoInputRef } from "@/core/curso";
 import { ImagemFindOneOutput, ImagemInputRef } from "@/core/imagem";
@@ -7,26 +14,13 @@ import { ImagemFindOneOutput, ImagemInputRef } from "@/core/imagem";
 // FindOne Input/Output
 // ============================================================================
 
-export class TurmaFindOneInput {
-  id!: string;
-}
+export class TurmaFindOneInput extends FindOneInput {}
 
-export class TurmaFindOneOutput {
-  id!: string;
-
+export class TurmaFindOneOutput extends EntityOutput {
   periodo!: string;
-
   ambientePadraoAula!: AmbienteFindOneOutput | null;
-
   curso!: CursoFindOneOutput;
-
   imagemCapa!: ImagemFindOneOutput | null;
-
-  dateCreated!: Date;
-
-  dateUpdated!: Date;
-
-  dateDeleted!: Date | null;
 }
 
 // ============================================================================
@@ -34,17 +28,12 @@ export class TurmaFindOneOutput {
 // ============================================================================
 
 export class TurmaListInput extends PaginationInput {
-  "filter.id"?: string[];
-
-  "filter.curso.id"?: string[];
-
-  "filter.curso.campus.id"?: string[];
+  "filter.id"?: IFilterAcceptableValues;
+  "filter.curso.id"?: IFilterAcceptableValues;
+  "filter.curso.campus.id"?: IFilterAcceptableValues;
 }
 
-export class TurmaListOutput {
-  meta!: PaginationMeta;
-  data!: TurmaFindOneOutput[];
-}
+export class TurmaListOutput extends PaginationResult<TurmaFindOneOutput> {}
 
 // ============================================================================
 // Create/Update Input
@@ -52,21 +41,15 @@ export class TurmaListOutput {
 
 export class TurmaCreateInput {
   periodo!: string;
-
   curso!: CursoInputRef;
-
   ambientePadraoAula?: AmbienteInputRef | null;
-
   imagemCapa?: ImagemInputRef | null;
 }
 
 export class TurmaUpdateInput {
   periodo?: string;
-
   curso?: CursoInputRef;
-
   ambientePadraoAula?: AmbienteInputRef | null;
-
   imagemCapa?: ImagemInputRef | null;
 }
 
@@ -74,4 +57,4 @@ export class TurmaUpdateInput {
 // Input Ref
 // ============================================================================
 
-export class TurmaInputRef extends ObjectUuidRef {}
+export type TurmaInputRef = ObjectUuidRef;

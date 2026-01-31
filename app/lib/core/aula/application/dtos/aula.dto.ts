@@ -1,4 +1,12 @@
-import { ObjectUuidRef, PaginationInput, PaginationMeta } from "@/core/@shared/application/dtos";
+import {
+  EntityOutput,
+  FindOneInput,
+  IFilterAcceptableValues,
+  ObjectUuidRef,
+  PaginationInput,
+  PaginationResult,
+} from "@/core/@shared/application/dtos";
+import type { ScalarDate } from "@/core/@shared/domain/scalars.types";
 import { AmbienteFindOneOutput, AmbienteInputRef } from "@/core/ambiente";
 import { DiarioFindOneOutput, DiarioInputRef } from "@/core/diario/application/dtos";
 import { IntervaloDeTempoFindOneOutput, IntervaloDeTempoInputRef } from "@/core/intervalo-de-tempo";
@@ -7,28 +15,14 @@ import { IntervaloDeTempoFindOneOutput, IntervaloDeTempoInputRef } from "@/core/
 // FindOne Input/Output
 // ============================================================================
 
-export class AulaFindOneInput {
-  id!: string;
-}
+export class AulaFindOneInput extends FindOneInput {}
 
-export class AulaFindOneOutput {
-  id!: string;
-
-  data!: Date;
-
+export class AulaFindOneOutput extends EntityOutput {
+  data!: ScalarDate;
   modalidade!: string | null;
-
   intervaloDeTempo!: IntervaloDeTempoFindOneOutput;
-
   diario!: DiarioFindOneOutput;
-
   ambiente!: AmbienteFindOneOutput | null;
-
-  dateCreated!: Date;
-
-  dateUpdated!: Date;
-
-  dateDeleted!: Date | null;
 }
 
 // ============================================================================
@@ -36,43 +30,30 @@ export class AulaFindOneOutput {
 // ============================================================================
 
 export class AulaListInput extends PaginationInput {
-  "filter.id"?: string[];
-
-  "filter.diario.id"?: string[];
-
-  "filter.intervaloDeTempo.id"?: string[];
+  "filter.id"?: IFilterAcceptableValues;
+  "filter.diario.id"?: IFilterAcceptableValues;
+  "filter.intervaloDeTempo.id"?: IFilterAcceptableValues;
 }
 
-export class AulaListOutput {
-  meta!: PaginationMeta;
-  data!: AulaFindOneOutput[];
-}
+export class AulaListOutput extends PaginationResult<AulaFindOneOutput> {}
 
 // ============================================================================
 // Create/Update Input
 // ============================================================================
 
 export class AulaCreateInput {
-  data!: Date;
-
+  data!: ScalarDate;
   modalidade?: string | null;
-
   intervaloDeTempo!: IntervaloDeTempoInputRef;
-
   diario!: DiarioInputRef;
-
   ambiente?: AmbienteInputRef | null;
 }
 
 export class AulaUpdateInput {
-  data?: Date;
-
+  data?: ScalarDate;
   modalidade?: string | null;
-
   intervaloDeTempo?: IntervaloDeTempoInputRef;
-
   diario?: DiarioInputRef;
-
   ambiente?: AmbienteInputRef | null;
 }
 
@@ -80,4 +61,4 @@ export class AulaUpdateInput {
 // Input Ref
 // ============================================================================
 
-export class AulaInputRef extends ObjectUuidRef {}
+export type AulaInputRef = ObjectUuidRef;

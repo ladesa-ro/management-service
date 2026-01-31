@@ -1,10 +1,10 @@
 import {
-  IdUuid,
+  EntityOutput,
+  FindOneInput,
   IFilterAcceptableValues,
   ObjectUuidRef,
   PaginationInput,
   PaginationResult,
-  ScalarDateTimeString,
 } from "@/core/@shared";
 import { ModalidadeFindOneOutput, ModalidadeInputRef } from "@/core/modalidade";
 
@@ -12,26 +12,12 @@ import { ModalidadeFindOneOutput, ModalidadeInputRef } from "@/core/modalidade";
 // FindOne Input/Output
 // ============================================================================
 
-export class OfertaFormacaoFindOneInput {
-  id!: IdUuid;
+export class OfertaFormacaoFindOneInput extends FindOneInput {}
 
-  selection?: string[];
-}
-
-export class OfertaFormacaoFindOneOutput {
-  id!: IdUuid;
-
+export class OfertaFormacaoFindOneOutput extends EntityOutput {
   nome!: string;
-
   slug!: string;
-
   modalidade!: ModalidadeFindOneOutput;
-
-  dateCreated!: ScalarDateTimeString;
-
-  dateUpdated!: ScalarDateTimeString;
-
-  dateDeleted!: ScalarDateTimeString | null;
 }
 
 // ============================================================================
@@ -70,4 +56,4 @@ export class OfertaFormacaoUpdateInput {
 // Input Ref
 // ============================================================================
 
-export class OfertaFormacaoInputRef extends ObjectUuidRef {}
+export type OfertaFormacaoInputRef = ObjectUuidRef;

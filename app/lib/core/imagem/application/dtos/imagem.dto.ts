@@ -1,5 +1,6 @@
 import {
-  IdUuid,
+  EntityOutput,
+  FindOneInput,
   IFilterAcceptableValues,
   ObjectUuidRef,
   PaginationInput,
@@ -13,15 +14,10 @@ import { ArquivoFindOneOutput } from "@/core/arquivo";
 
 export class ImagemArquivoFindOneFromImagemOutput {
   id!: string;
-
   largura!: number | null;
-
   altura!: number | null;
-
   formato!: string | null;
-
   mimeType!: string | null;
-
   arquivo!: ArquivoFindOneOutput;
 }
 
@@ -29,24 +25,11 @@ export class ImagemArquivoFindOneFromImagemOutput {
 // FindOne Input/Output
 // ============================================================================
 
-export class ImagemFindOneInput {
-  id!: IdUuid;
+export class ImagemFindOneInput extends FindOneInput {}
 
-  selection?: string[];
-}
-
-export class ImagemFindOneOutput {
-  id!: IdUuid;
-
+export class ImagemFindOneOutput extends EntityOutput {
   descricao!: string | null;
-
   versoes!: ImagemArquivoFindOneFromImagemOutput[];
-
-  dateCreated!: Date;
-
-  dateUpdated!: Date;
-
-  dateDeleted!: Date | null;
 }
 
 // ============================================================================
@@ -75,4 +58,4 @@ export class ImagemUpdateInput {
 // Input Ref
 // ============================================================================
 
-export class ImagemInputRef extends ObjectUuidRef {}
+export type ImagemInputRef = ObjectUuidRef;

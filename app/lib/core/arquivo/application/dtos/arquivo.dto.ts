@@ -1,38 +1,24 @@
 import {
-  IdUuid,
+  EntityOutput,
+  FindOneInput,
   IFilterAcceptableValues,
   ObjectUuidRef,
   PaginationInput,
   PaginationResult,
-  ScalarDateTimeString,
 } from "@/core/@shared";
+import type { IdUuid } from "@/core/@shared/domain/scalars.types";
 
 // ============================================================================
 // FindOne Input/Output
 // ============================================================================
 
-export class ArquivoFindOneInput {
-  id!: IdUuid;
+export class ArquivoFindOneInput extends FindOneInput {}
 
-  selection?: string[];
-}
-
-export class ArquivoFindOneOutput {
-  id!: IdUuid;
-
+export class ArquivoFindOneOutput extends EntityOutput {
   name!: string | null;
-
   mimeType!: string | null;
-
   sizeBytes!: number | null;
-
   storageType!: string;
-
-  dateCreated!: ScalarDateTimeString;
-
-  dateUpdated!: ScalarDateTimeString;
-
-  dateDeleted!: ScalarDateTimeString | null;
 }
 
 // ============================================================================
@@ -51,21 +37,15 @@ export class ArquivoListOutput extends PaginationResult<ArquivoFindOneOutput> {}
 
 export class ArquivoCreateInput {
   name?: string | null;
-
   mimeType?: string | null;
-
   sizeBytes?: number | null;
-
   storageType!: string;
 }
 
 export class ArquivoUpdateInput {
   name?: string | null;
-
   mimeType?: string | null;
-
   sizeBytes?: number | null;
-
   storageType?: string;
 }
 
@@ -73,7 +53,7 @@ export class ArquivoUpdateInput {
 // Input Ref
 // ============================================================================
 
-export class ArquivoInputRef extends ObjectUuidRef {}
+export type ArquivoInputRef = ObjectUuidRef;
 
 // ============================================================================
 // GetFile Input
@@ -81,9 +61,5 @@ export class ArquivoInputRef extends ObjectUuidRef {}
 
 export class ArquivoGetFileInput {
   id!: IdUuid;
-
-  acesso?: {
-    id?: string;
-    nome?: string;
-  } | null;
+  acesso?: { id?: string; nome?: string } | null;
 }

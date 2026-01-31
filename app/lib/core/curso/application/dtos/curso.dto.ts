@@ -1,8 +1,10 @@
 import {
+  EntityOutput,
+  FindOneInput,
   IFilterAcceptableValues,
   ObjectUuidRef,
   PaginationInput,
-  PaginationMeta,
+  PaginationResult,
 } from "@/core/@shared/application/dtos";
 import { CampusFindOneOutput, CampusInputRef } from "@/core/campus";
 import { ImagemFindOneOutput, ImagemInputRef } from "@/core/imagem";
@@ -12,28 +14,14 @@ import { OfertaFormacaoFindOneOutput, OfertaFormacaoInputRef } from "@/core/ofer
 // FindOne Input/Output
 // ============================================================================
 
-export class CursoFindOneInput {
-  id!: string;
-}
+export class CursoFindOneInput extends FindOneInput {}
 
-export class CursoFindOneOutput {
-  id!: string;
-
+export class CursoFindOneOutput extends EntityOutput {
   nome!: string;
-
   nomeAbreviado!: string;
-
   campus!: CampusFindOneOutput;
-
   ofertaFormacao!: OfertaFormacaoFindOneOutput;
-
   imagemCapa!: ImagemFindOneOutput | null;
-
-  dateCreated!: Date;
-
-  dateUpdated!: Date;
-
-  dateDeleted!: Date | null;
 }
 
 // ============================================================================
@@ -42,16 +30,11 @@ export class CursoFindOneOutput {
 
 export class CursoListInput extends PaginationInput {
   "filter.id"?: IFilterAcceptableValues;
-
   "filter.campus.id"?: IFilterAcceptableValues;
-
   "filter.ofertaFormacao.id"?: IFilterAcceptableValues;
 }
 
-export class CursoListOutput {
-  meta!: PaginationMeta;
-  data!: CursoFindOneOutput[];
-}
+export class CursoListOutput extends PaginationResult<CursoFindOneOutput> {}
 
 // ============================================================================
 // Create/Update Input
@@ -59,25 +42,17 @@ export class CursoListOutput {
 
 export class CursoCreateInput {
   nome!: string;
-
   nomeAbreviado!: string;
-
   campus!: CampusInputRef;
-
   ofertaFormacao!: OfertaFormacaoInputRef;
-
   imagemCapa?: ImagemInputRef | null;
 }
 
 export class CursoUpdateInput {
   nome?: string;
-
   nomeAbreviado?: string;
-
   campus?: CampusInputRef;
-
   ofertaFormacao?: OfertaFormacaoInputRef;
-
   imagemCapa?: ImagemInputRef | null;
 }
 
@@ -85,4 +60,4 @@ export class CursoUpdateInput {
 // Input Ref
 // ============================================================================
 
-export class CursoInputRef extends ObjectUuidRef {}
+export type CursoInputRef = ObjectUuidRef;

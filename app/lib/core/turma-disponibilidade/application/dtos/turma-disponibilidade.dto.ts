@@ -1,4 +1,11 @@
-import { ObjectUuidRef, PaginationInput, PaginationMeta } from "@/core/@shared/application/dtos";
+import {
+  EntityOutput,
+  FindOneInput,
+  IFilterAcceptableValues,
+  ObjectUuidRef,
+  PaginationInput,
+  PaginationResult,
+} from "@/core/@shared";
 import { DisponibilidadeFindOneOutput, DisponibilidadeInputRef } from "@/core/disponibilidade";
 import { TurmaFindOneOutput, TurmaInputRef } from "@/core/turma";
 
@@ -6,22 +13,11 @@ import { TurmaFindOneOutput, TurmaInputRef } from "@/core/turma";
 // FindOne Input/Output
 // ============================================================================
 
-export class TurmaDisponibilidadeFindOneInput {
-  id!: string;
-}
+export class TurmaDisponibilidadeFindOneInput extends FindOneInput {}
 
-export class TurmaDisponibilidadeFindOneOutput {
-  id!: string;
-
+export class TurmaDisponibilidadeFindOneOutput extends EntityOutput {
   turma!: TurmaFindOneOutput;
-
   disponibilidade!: DisponibilidadeFindOneOutput;
-
-  dateCreated!: Date;
-
-  dateUpdated!: Date;
-
-  dateDeleted!: Date | null;
 }
 
 // ============================================================================
@@ -29,15 +25,11 @@ export class TurmaDisponibilidadeFindOneOutput {
 // ============================================================================
 
 export class TurmaDisponibilidadeListInput extends PaginationInput {
-  "filter.id"?: string[];
-
-  "filter.turma.id"?: string[];
+  "filter.id"?: IFilterAcceptableValues;
+  "filter.turma.id"?: IFilterAcceptableValues;
 }
 
-export class TurmaDisponibilidadeListOutput {
-  meta!: PaginationMeta;
-  data!: TurmaDisponibilidadeFindOneOutput[];
-}
+export class TurmaDisponibilidadeListOutput extends PaginationResult<TurmaDisponibilidadeFindOneOutput> {}
 
 // ============================================================================
 // Create/Update Input
@@ -45,13 +37,11 @@ export class TurmaDisponibilidadeListOutput {
 
 export class TurmaDisponibilidadeCreateInput {
   turma!: TurmaInputRef;
-
   disponibilidade!: DisponibilidadeInputRef;
 }
 
 export class TurmaDisponibilidadeUpdateInput {
   turma?: TurmaInputRef;
-
   disponibilidade?: DisponibilidadeInputRef;
 }
 
@@ -59,4 +49,4 @@ export class TurmaDisponibilidadeUpdateInput {
 // Input Ref
 // ============================================================================
 
-export class TurmaDisponibilidadeInputRef extends ObjectUuidRef {}
+export type TurmaDisponibilidadeInputRef = ObjectUuidRef;

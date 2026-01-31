@@ -1,4 +1,5 @@
 import {
+  EntityOutput,
   FindOneInput,
   IFilterAcceptableValues,
   ObjectUuidRef,
@@ -14,23 +15,11 @@ import { ImagemFindOneOutput, ImagemInputRef } from "@/core/imagem";
 
 export class BlocoFindOneInput extends FindOneInput {}
 
-export class BlocoFindOneOutput {
-  id!: string;
-
+export class BlocoFindOneOutput extends EntityOutput {
   nome!: string;
-
   codigo!: string;
-
   campus!: CampusFindOneOutput;
-
   imagemCapa!: ImagemFindOneOutput | null;
-
-  // TODO: Migrate to ScalarDateTimeString and extend DatedOutput
-  dateCreated!: Date;
-
-  dateUpdated!: Date;
-
-  dateDeleted!: Date | null;
 }
 
 // ============================================================================
@@ -39,7 +28,6 @@ export class BlocoFindOneOutput {
 
 export class BlocoListInput extends PaginationInput {
   "filter.id"?: IFilterAcceptableValues;
-
   "filter.campus.id"?: IFilterAcceptableValues;
 }
 
@@ -51,21 +39,15 @@ export class BlocoListOutput extends PaginationResult<BlocoFindOneOutput> {}
 
 export class BlocoCreateInput {
   nome!: string;
-
   codigo!: string;
-
   campus!: CampusInputRef;
-
   imagemCapa?: ImagemInputRef | null;
 }
 
 export class BlocoUpdateInput {
   nome?: string;
-
   codigo?: string;
-
   campus?: CampusInputRef;
-
   imagemCapa?: ImagemInputRef | null;
 }
 
@@ -73,4 +55,4 @@ export class BlocoUpdateInput {
 // Input Ref
 // ============================================================================
 
-export class BlocoInputRef extends ObjectUuidRef {}
+export type BlocoInputRef = ObjectUuidRef;

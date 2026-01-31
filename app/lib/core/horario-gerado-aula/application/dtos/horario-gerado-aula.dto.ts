@@ -1,4 +1,12 @@
-import { ObjectUuidRef, PaginationInput, PaginationMeta } from "@/core/@shared/application/dtos";
+import {
+  EntityOutput,
+  FindOneInput,
+  IFilterAcceptableValues,
+  ObjectUuidRef,
+  PaginationInput,
+  PaginationResult,
+  ScalarDate,
+} from "@/core/@shared";
 import {
   DiarioProfessorFindOneOutput,
   DiarioProfessorInputRef,
@@ -10,26 +18,13 @@ import { IntervaloDeTempoFindOneOutput, IntervaloDeTempoInputRef } from "@/core/
 // FindOne Input/Output
 // ============================================================================
 
-export class HorarioGeradoAulaFindOneInput {
-  id!: string;
-}
+export class HorarioGeradoAulaFindOneInput extends FindOneInput {}
 
-export class HorarioGeradoAulaFindOneOutput {
-  id!: string;
-
-  data!: Date;
-
+export class HorarioGeradoAulaFindOneOutput extends EntityOutput {
+  data!: ScalarDate;
   diarioProfessor!: DiarioProfessorFindOneOutput;
-
   horarioGerado!: HorarioGeradoFindOneOutput;
-
   intervaloDeTempo!: IntervaloDeTempoFindOneOutput;
-
-  dateCreated!: Date;
-
-  dateUpdated!: Date;
-
-  dateDeleted!: Date | null;
 }
 
 // ============================================================================
@@ -37,37 +32,27 @@ export class HorarioGeradoAulaFindOneOutput {
 // ============================================================================
 
 export class HorarioGeradoAulaListInput extends PaginationInput {
-  "filter.id"?: string[];
-
-  "filter.horarioGerado.id"?: string[];
+  "filter.id"?: IFilterAcceptableValues;
+  "filter.horarioGerado.id"?: IFilterAcceptableValues;
 }
 
-export class HorarioGeradoAulaListOutput {
-  meta!: PaginationMeta;
-  data!: HorarioGeradoAulaFindOneOutput[];
-}
+export class HorarioGeradoAulaListOutput extends PaginationResult<HorarioGeradoAulaFindOneOutput> {}
 
 // ============================================================================
 // Create/Update Input
 // ============================================================================
 
 export class HorarioGeradoAulaCreateInput {
-  data!: Date;
-
+  data!: ScalarDate;
   diarioProfessor!: DiarioProfessorInputRef;
-
   horarioGerado!: HorarioGeradoInputRef;
-
   intervaloDeTempo!: IntervaloDeTempoInputRef;
 }
 
 export class HorarioGeradoAulaUpdateInput {
-  data?: Date;
-
+  data?: ScalarDate;
   diarioProfessor?: DiarioProfessorInputRef;
-
   horarioGerado?: HorarioGeradoInputRef;
-
   intervaloDeTempo?: IntervaloDeTempoInputRef;
 }
 
@@ -75,4 +60,4 @@ export class HorarioGeradoAulaUpdateInput {
 // Input Ref
 // ============================================================================
 
-export class HorarioGeradoAulaInputRef extends ObjectUuidRef {}
+export type HorarioGeradoAulaInputRef = ObjectUuidRef;

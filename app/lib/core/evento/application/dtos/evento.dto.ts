@@ -1,5 +1,12 @@
-import type { IdUuid, ScalarDateTimeString } from "@/core/@shared";
-import { ObjectUuidRef, PaginationInput, PaginationMeta } from "@/core/@shared/application/dtos";
+import type { ScalarDateTimeString } from "@/core/@shared";
+import {
+  EntityOutput,
+  FindOneInput,
+  IFilterAcceptableValues,
+  ObjectUuidRef,
+  PaginationInput,
+  PaginationResult,
+} from "@/core/@shared/application/dtos";
 import { AmbienteFindOneOutput, AmbienteInputRef } from "@/core/ambiente";
 import { CalendarioLetivoFindOneOutput, CalendarioLetivoInputRef } from "@/core/calendario-letivo";
 
@@ -7,32 +14,16 @@ import { CalendarioLetivoFindOneOutput, CalendarioLetivoInputRef } from "@/core/
 // FindOne Input/Output
 // ============================================================================
 
-export class EventoFindOneInput {
-  id!: IdUuid;
-}
+export class EventoFindOneInput extends FindOneInput {}
 
-export class EventoFindOneOutput {
-  id!: IdUuid;
-
+export class EventoFindOneOutput extends EntityOutput {
   nome!: string | null;
-
   rrule!: string;
-
   cor!: string | null;
-
   dataInicio!: ScalarDateTimeString | null;
-
   dataFim!: ScalarDateTimeString | null;
-
   calendario!: CalendarioLetivoFindOneOutput;
-
   ambiente!: AmbienteFindOneOutput | null;
-
-  dateCreated!: ScalarDateTimeString;
-
-  dateUpdated!: ScalarDateTimeString;
-
-  dateDeleted!: ScalarDateTimeString | null;
 }
 
 // ============================================================================
@@ -40,15 +31,11 @@ export class EventoFindOneOutput {
 // ============================================================================
 
 export class EventoListInput extends PaginationInput {
-  "filter.id"?: IdUuid[];
-
-  "filter.calendario.id"?: IdUuid[];
+  "filter.id"?: IFilterAcceptableValues;
+  "filter.calendario.id"?: IFilterAcceptableValues;
 }
 
-export class EventoListOutput {
-  meta!: PaginationMeta;
-  data!: EventoFindOneOutput[];
-}
+export class EventoListOutput extends PaginationResult<EventoFindOneOutput> {}
 
 // ============================================================================
 // Create/Update Input
@@ -56,33 +43,21 @@ export class EventoListOutput {
 
 export class EventoCreateInput {
   nome?: string | null;
-
   rrule!: string;
-
   cor?: string | null;
-
   dataInicio?: ScalarDateTimeString | null;
-
   dataFim?: ScalarDateTimeString | null;
-
   calendario!: CalendarioLetivoInputRef;
-
   ambiente?: AmbienteInputRef | null;
 }
 
 export class EventoUpdateInput {
   nome?: string | null;
-
   rrule?: string;
-
   cor?: string | null;
-
   dataInicio?: ScalarDateTimeString | null;
-
   dataFim?: ScalarDateTimeString | null;
-
   calendario?: CalendarioLetivoInputRef;
-
   ambiente?: AmbienteInputRef | null;
 }
 
@@ -90,4 +65,4 @@ export class EventoUpdateInput {
 // Input Ref
 // ============================================================================
 
-export class EventoInputRef extends ObjectUuidRef {}
+export type EventoInputRef = ObjectUuidRef;

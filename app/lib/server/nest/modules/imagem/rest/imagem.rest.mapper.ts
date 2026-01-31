@@ -45,9 +45,9 @@ export class ImagemRestMapper {
     const dto = new ImagemFindOneOutputDto();
     dto.id = output.id;
     dto.descricao = output.descricao;
-    dto.dateCreated = output.dateCreated;
-    dto.dateUpdated = output.dateUpdated;
-    dto.dateDeleted = output.dateDeleted;
+    dto.dateCreated = new Date(output.dateCreated);
+    dto.dateUpdated = new Date(output.dateUpdated);
+    dto.dateDeleted = output.dateDeleted ? new Date(output.dateDeleted) : null;
     // Note: versoes mapping would need to be done by the consumer
     return dto;
   }
