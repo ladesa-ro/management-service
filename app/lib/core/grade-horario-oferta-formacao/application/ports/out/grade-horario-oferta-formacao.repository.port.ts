@@ -48,7 +48,7 @@ export interface IGradeHorarioOfertaFormacaoRepositoryPort {
    * @param dto DTO com dados para criacao
    * @returns Grade horario de oferta de formacao criada
    */
-  createEntity(
+  createOne(
     accessContext: AccessContext,
     dto: GradeHorarioOfertaFormacaoCreateInput,
   ): Promise<GradeHorarioOfertaFormacaoFindOneOutput>;
@@ -72,7 +72,7 @@ export interface IGradeHorarioOfertaFormacaoRepositoryPort {
    * @param dto DTO com ID da grade horario de oferta de formacao
    * @returns true se removida com sucesso
    */
-  deleteOneById(
+  deleteById(
     accessContext: AccessContext,
     dto: GradeHorarioOfertaFormacaoFindOneInput,
   ): Promise<boolean>;

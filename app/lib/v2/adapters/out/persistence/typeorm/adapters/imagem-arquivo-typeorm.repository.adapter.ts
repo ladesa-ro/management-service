@@ -1,19 +1,19 @@
 import { Injectable } from "@nestjs/common";
-import type { DeepPartial } from "typeorm";
+import type { PartialEntity } from "@/core/@shared";
 import type { IImagemArquivoRepositoryPort } from "@/core/imagem/application/ports";
+import type { ImagemArquivo } from "@/core/imagem-arquivo/domain/imagem-arquivo.domain";
 import { DatabaseContextService } from "../context/database-context.service";
-import type { ImagemArquivoEntity } from "../typeorm/entities";
 
 @Injectable()
 export class ImagemArquivoTypeOrmRepositoryAdapter implements IImagemArquivoRepositoryPort {
   constructor(private readonly databaseContext: DatabaseContextService) {}
 
-  create(): ImagemArquivoEntity {
-    return this.databaseContext.imagemArquivoRepository.create();
+  create(): ImagemArquivo {
+    return this.databaseContext.imagemArquivoRepository.create() as unknown as ImagemArquivo;
   }
 
-  merge(imagemArquivo: ImagemArquivoEntity, data: DeepPartial<ImagemArquivoEntity>): void {
-    this.databaseContext.imagemArquivoRepository.merge(imagemArquivo, data as ImagemArquivoEntity);
+  merge(imagemArquivo: ImagemArquivo, data: PartialEntity<ImagemArquivo>): void {
+    this.databaseContext.imagemArquivoRepository.merge(imagemArquivo as any, data as any);
   }
 
   async findLatestArquivoIdForImagem(imagemId: string): Promise<string | null> {

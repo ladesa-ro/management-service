@@ -7,9 +7,9 @@ import {
   ServiceUnavailableException,
   StreamableFile,
 } from "@nestjs/common";
-import { ResourceNotFoundError } from "@/core/@shared";
 import jetpack, { createReadStream } from "fs-jetpack";
 import { v4 } from "uuid";
+import { ResourceNotFoundError } from "@/core/@shared";
 import type { ArquivoCreateInput, ArquivoGetFileInput } from "@/core/arquivo/application/dtos";
 import {
   ARQUIVO_REPOSITORY_PORT,

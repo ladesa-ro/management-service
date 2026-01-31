@@ -1,7 +1,6 @@
 import { Inject, Injectable, type StreamableFile } from "@nestjs/common";
-import { ResourceNotFoundError } from "@/core/@shared";
 import { has } from "lodash";
-import { BaseCrudService } from "@/core/@shared";
+import { BaseCrudService, ResourceNotFoundError } from "@/core/@shared";
 import { AmbienteService } from "@/core/ambiente/application/use-cases/ambiente.service";
 import { ArquivoService } from "@/core/arquivo/application/use-cases/arquivo.service";
 import { CursoService } from "@/core/curso";

@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { ResourceNotFoundError } from "@/core/@shared";
 import { has, pick } from "lodash";
+import { ResourceNotFoundError } from "@/core/@shared";
 import { GradeHorarioOfertaFormacaoService } from "@/core/grade-horario-oferta-formacao";
 import { IntervaloDeTempoService } from "@/core/intervalo-de-tempo";
 import type { GradeHorarioOfertaFormacaoIntervaloDeTempoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";

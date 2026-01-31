@@ -10,7 +10,11 @@ export const DIARIO_PROFESSOR_REPOSITORY_PORT = Symbol("IDiarioProfessorReposito
  * Estende a interface base de CRUD com operações padrão
  */
 export interface IDiarioProfessorRepositoryPort
-  extends IBaseCrudRepositoryPort<DiarioProfessorEntity, DiarioProfessorListOutput, DiarioProfessorFindOneOutput> {
+  extends IBaseCrudRepositoryPort<
+    DiarioProfessorEntity,
+    DiarioProfessorListOutput,
+    DiarioProfessorFindOneOutput
+  > {
   /**
    * Busca um diário de professor por ID (formato simples) - método obrigatório
    */

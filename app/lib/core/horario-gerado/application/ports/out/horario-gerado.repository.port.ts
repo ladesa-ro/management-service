@@ -13,7 +13,11 @@ export const HORARIO_GERADO_REPOSITORY_PORT = Symbol("IHorarioGeradoRepositoryPo
  * Estende a interface base de CRUD com operações padrão
  */
 export interface IHorarioGeradoRepositoryPort
-  extends IBaseCrudRepositoryPort<HorarioGeradoEntity, HorarioGeradoListOutput, HorarioGeradoFindOneOutput> {
+  extends IBaseCrudRepositoryPort<
+    HorarioGeradoEntity,
+    HorarioGeradoListOutput,
+    HorarioGeradoFindOneOutput
+  > {
   /**
    * Busca um horário gerado por ID (formato simples) - método obrigatório
    */

@@ -1,4 +1,5 @@
 import type { IdUuid, ScalarDateTimeString } from "@/core/@shared";
+import type { IImagemArquivo } from "@/core/imagem-arquivo/domain/imagem-arquivo.types";
 
 /**
  * Tipagem da entidade Imagem
@@ -10,6 +11,9 @@ export interface IImagem {
 
   /** Descricao da imagem */
   descricao: string | null;
+
+  /** Versoes da imagem (diferentes formatos/tamanhos) */
+  versoes?: IImagemArquivo[];
 
   /** Data e hora da criacao do registro */
   dateCreated: ScalarDateTimeString;

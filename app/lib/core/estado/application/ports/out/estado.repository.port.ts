@@ -1,10 +1,10 @@
+import type { IReadOnlyRepositoryPort } from "@/core/@shared";
 import {
   EstadoFindOneInput,
   EstadoFindOneOutput,
   EstadoListInput,
   EstadoListOutput,
 } from "@/core/estado";
-import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 
 /**
  * Token de injeção para o repositório de Estado
@@ -12,26 +12,13 @@ import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 export const ESTADO_REPOSITORY_PORT = Symbol("IEstadoRepositoryPort");
 
 /**
- * Port de saída para operações de persistência de Estado
+ * Port de saída para operações de persistência de Estado (read-only)
  * Define o contrato que os adapters de persistência devem implementar
  */
-export interface IEstadoRepositoryPort {
-  /**
-   * Lista estados com paginação
-   * @param accessContext Contexto de acesso para aplicar filtros de permissão
-   * @param dto DTO com critérios de busca e paginação
-   * @returns Lista paginada de estados
-   */
-  findAll(accessContext: AccessContext, dto: EstadoListInput | null): Promise<EstadoListOutput>;
-
-  /**
-   * Busca um estado por ID
-   * @param accessContext Contexto de acesso para aplicar filtros de permissão
-   * @param dto DTO com ID do estado
-   * @returns Estado encontrado ou null
-   */
-  findById(
-    accessContext: AccessContext,
-    dto: EstadoFindOneInput,
-  ): Promise<EstadoFindOneOutput | null>;
-}
+export interface IEstadoRepositoryPort
+  extends IReadOnlyRepositoryPort<
+    EstadoListInput,
+    EstadoListOutput,
+    EstadoFindOneInput,
+    EstadoFindOneOutput
+  > {}

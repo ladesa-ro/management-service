@@ -1,5 +1,8 @@
 import type { IBaseCrudRepositoryPort } from "@/core/@shared";
-import type { DisciplinaFindOneOutput, DisciplinaListOutput } from "@/core/disciplina/application/dtos";
+import type {
+  DisciplinaFindOneOutput,
+  DisciplinaListOutput,
+} from "@/core/disciplina/application/dtos";
 import type { DisciplinaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 
 /**
@@ -12,4 +15,8 @@ export const DISCIPLINA_REPOSITORY_PORT = Symbol("IDisciplinaRepositoryPort");
  * Estende a interface base de CRUD com operações padrão
  */
 export interface IDisciplinaRepositoryPort
-  extends IBaseCrudRepositoryPort<DisciplinaEntity, DisciplinaListOutput, DisciplinaFindOneOutput> {}
+  extends IBaseCrudRepositoryPort<
+    DisciplinaEntity,
+    DisciplinaListOutput,
+    DisciplinaFindOneOutput
+  > {}

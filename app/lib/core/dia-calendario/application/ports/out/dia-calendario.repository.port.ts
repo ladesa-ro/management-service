@@ -10,7 +10,11 @@ export const DIA_CALENDARIO_REPOSITORY_PORT = Symbol("IDiaCalendarioRepositoryPo
  * Estende a interface base de CRUD com operações padrão
  */
 export interface IDiaCalendarioRepositoryPort
-  extends IBaseCrudRepositoryPort<DiaCalendarioEntity, DiaCalendarioListOutput, DiaCalendarioFindOneOutput> {
+  extends IBaseCrudRepositoryPort<
+    DiaCalendarioEntity,
+    DiaCalendarioListOutput,
+    DiaCalendarioFindOneOutput
+  > {
   /**
    * Busca um dia do calendário por ID (formato simples) - método obrigatório
    */

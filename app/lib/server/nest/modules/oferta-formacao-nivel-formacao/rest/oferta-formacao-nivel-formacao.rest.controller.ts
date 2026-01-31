@@ -72,7 +72,7 @@ export class OfertaFormacaoNivelFormacaoRestController {
     @Body() dto: OfertaFormacaoNivelFormacaoCreateInputDto,
   ): Promise<OfertaFormacaoNivelFormacaoFindOneOutputDto> {
     const input = OfertaFormacaoNivelFormacaoRestMapper.toCreateInput(dto);
-    const result = await this.ofertaFormacaoNivelFormacaoService.createOne(accessContext, input);
+    const result = await this.ofertaFormacaoNivelFormacaoService.create(accessContext, input);
     return OfertaFormacaoNivelFormacaoRestMapper.toFindOneOutputDto(result);
   }
 
@@ -107,6 +107,6 @@ export class OfertaFormacaoNivelFormacaoRestController {
     @Param() params: OfertaFormacaoNivelFormacaoFindOneInputDto,
   ): Promise<boolean> {
     const input = OfertaFormacaoNivelFormacaoRestMapper.toFindOneInput(params);
-    return this.ofertaFormacaoNivelFormacaoService.deleteById(accessContext, input);
+    return this.ofertaFormacaoNivelFormacaoService.deleteOneById(accessContext, input);
   }
 }

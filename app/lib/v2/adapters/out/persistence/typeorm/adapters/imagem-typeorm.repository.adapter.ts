@@ -1,12 +1,13 @@
 import { Injectable } from "@nestjs/common";
-import type { DeepPartial } from "typeorm";
+import type { PartialEntity } from "@/core/@shared";
 import type {
   IImagemArquivoRepositoryPort,
   IImagemRepositoryPort,
   IImagemTransactionPort,
 } from "@/core/imagem/application/ports";
+import type { Imagem } from "@/core/imagem/domain/imagem.domain";
+import type { ImagemArquivo } from "@/core/imagem-arquivo/domain/imagem-arquivo.domain";
 import { DatabaseContextService } from "../context/database-context.service";
-import type { ImagemArquivoEntity, ImagemEntity } from "../typeorm/entities";
 
 @Injectable()
 export class ImagemTypeOrmRepositoryAdapter implements IImagemTransactionPort {
@@ -21,17 +22,18 @@ export class ImagemTypeOrmRepositoryAdapter implements IImagemTransactionPort {
     return this.databaseContext.transaction(
       async ({ databaseContext: { imagemRepository, imagemArquivoRepository } }) => {
         const imagemRepoAdapter: IImagemRepositoryPort = {
-          create: () => imagemRepository.create(),
-          merge: (imagem: ImagemEntity, data: DeepPartial<ImagemEntity>) => {
-            imagemRepository.merge(imagem, data as ImagemEntity);
+          create: () => imagemRepository.create() as unknown as Imagem,
+          merge: (imagem: Imagem, data: PartialEntity<Imagem>) => {
+            imagemRepository.merge(imagem as any, data as any);
           },
-          save: (imagem: ImagemEntity) => imagemRepository.save(imagem),
+          save: (imagem: PartialEntity<Imagem>) =>
+            imagemRepository.save(imagem as any) as Promise<Imagem>,
         };
 
         const imagemArquivoRepoAdapter: IImagemArquivoRepositoryPort = {
-          create: () => imagemArquivoRepository.create(),
-          merge: (imagemArquivo: ImagemArquivoEntity, data: DeepPartial<ImagemArquivoEntity>) => {
-            imagemArquivoRepository.merge(imagemArquivo, data as ImagemArquivoEntity);
+          create: () => imagemArquivoRepository.create() as unknown as ImagemArquivo,
+          merge: (imagemArquivo: ImagemArquivo, data: PartialEntity<ImagemArquivo>) => {
+            imagemArquivoRepository.merge(imagemArquivo as any, data as any);
           },
           findLatestArquivoIdForImagem: async (imagemId: string) => {
             const versao = await imagemArquivoRepository.findOne({

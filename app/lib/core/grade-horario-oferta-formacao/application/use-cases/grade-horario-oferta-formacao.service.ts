@@ -56,7 +56,7 @@ export class GradeHorarioOfertaFormacaoService implements IGradeHorarioOfertaFor
     accessContext: AccessContext,
     dto: GradeHorarioOfertaFormacaoCreateInput,
   ): Promise<GradeHorarioOfertaFormacaoFindOneOutput> {
-    return this.gradeHorarioOfertaFormacaoRepository.createEntity(accessContext, dto);
+    return this.gradeHorarioOfertaFormacaoRepository.createOne(accessContext, dto);
   }
 
   async update(
@@ -77,6 +77,6 @@ export class GradeHorarioOfertaFormacaoService implements IGradeHorarioOfertaFor
     // Verify entity exists
     await this.findByIdStrict(accessContext, dto);
 
-    return this.gradeHorarioOfertaFormacaoRepository.deleteOneById(accessContext, dto);
+    return this.gradeHorarioOfertaFormacaoRepository.deleteById(accessContext, dto);
   }
 }

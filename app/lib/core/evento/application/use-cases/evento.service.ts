@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { ResourceNotFoundError } from "@/core/@shared";
 import { has, pick } from "lodash";
+import { ResourceNotFoundError } from "@/core/@shared";
 import { CalendarioLetivoService } from "@/core/calendario-letivo";
 import type { EventoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities/evento.entity";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";

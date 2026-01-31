@@ -52,7 +52,7 @@ export interface IOfertaFormacaoNivelFormacaoUseCasePort {
    * @param dto DTO com dados para criacao
    * @returns Oferta formacao nivel formacao criada
    */
-  createOne(
+  create(
     accessContext: AccessContext,
     dto: OfertaFormacaoNivelFormacaoCreateInput,
   ): Promise<OfertaFormacaoNivelFormacaoFindOneOutput>;
@@ -74,7 +74,7 @@ export interface IOfertaFormacaoNivelFormacaoUseCasePort {
    * @param dto DTO com ID da oferta formacao nivel formacao
    * @returns True se removido com sucesso
    */
-  deleteById(
+  deleteOneById(
     accessContext: AccessContext,
     dto: OfertaFormacaoNivelFormacaoFindOneInput,
   ): Promise<boolean>;

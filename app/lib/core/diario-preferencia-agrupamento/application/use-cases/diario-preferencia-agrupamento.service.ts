@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { ResourceNotFoundError } from "@/core/@shared";
 import { has, pick } from "lodash";
+import { ResourceNotFoundError } from "@/core/@shared";
 import { DiarioService } from "@/core/diario/application/use-cases/diario.service";
 import { IntervaloDeTempoService } from "@/core/intervalo-de-tempo/application/use-cases/intervalo-de-tempo.service";
 import type { DiarioPreferenciaAgrupamentoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";

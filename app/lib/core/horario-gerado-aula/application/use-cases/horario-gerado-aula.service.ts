@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { ResourceNotFoundError } from "@/core/@shared";
 import { has, pick } from "lodash";
+import { ResourceNotFoundError } from "@/core/@shared";
 import { DiarioProfessorService } from "@/core/diario-professor/application/use-cases/diario-professor.service";
 import { HorarioGeradoService } from "@/core/horario-gerado";
 import { IntervaloDeTempoService } from "@/core/intervalo-de-tempo/application/use-cases/intervalo-de-tempo.service";

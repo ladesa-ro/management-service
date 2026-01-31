@@ -9,7 +9,8 @@ import {
   IBaseAuthzStatementContext,
 } from "@/v2/old/authorization";
 import type { IRequestActor } from "@/v2/old/infrastructure/authentication";
-import { createForbiddenExceptionForAction, IAccessContext } from "@/v2/old/shared";
+import { createForbiddenExceptionForAction } from "@/v2/old/shared/standards";
+import type { IAccessContext } from "./access-context.types";
 
 export class AccessContext implements IAccessContext {
   #policy = new AuthzPolicyPublic();

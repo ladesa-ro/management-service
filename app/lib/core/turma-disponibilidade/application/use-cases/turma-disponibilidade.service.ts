@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { ResourceNotFoundError } from "@/core/@shared";
 import { has, pick } from "lodash";
+import { ResourceNotFoundError } from "@/core/@shared";
 import { DisponibilidadeService } from "@/core/disponibilidade/application/use-cases/disponibilidade.service";
 import { TurmaService } from "@/core/turma/application/use-cases/turma.service";
 import type { TurmaDisponibilidadeEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";

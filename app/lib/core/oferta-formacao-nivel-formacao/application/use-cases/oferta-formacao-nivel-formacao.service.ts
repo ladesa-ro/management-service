@@ -52,7 +52,7 @@ export class OfertaFormacaoNivelFormacaoService implements IOfertaFormacaoNivelF
     return ofertaFormacaoNivelFormacao;
   }
 
-  async createOne(
+  async create(
     accessContext: AccessContext,
     dto: OfertaFormacaoNivelFormacaoCreateInput,
   ): Promise<OfertaFormacaoNivelFormacaoFindOneOutput> {
@@ -66,7 +66,7 @@ export class OfertaFormacaoNivelFormacaoService implements IOfertaFormacaoNivelF
     return this.ofertaFormacaoNivelFormacaoRepository.update(accessContext, dto);
   }
 
-  async deleteById(
+  async deleteOneById(
     accessContext: AccessContext,
     dto: OfertaFormacaoNivelFormacaoFindOneInput,
   ): Promise<boolean> {

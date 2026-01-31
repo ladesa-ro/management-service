@@ -1,8 +1,6 @@
-import type { PartialEntity } from "@/core/@shared";
-import type {
-  ImagemArquivoEntity,
-  ImagemEntity,
-} from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
+import type { ICreateRepositoryPort, PartialEntity } from "@/core/@shared";
+import type { Imagem } from "@/core/imagem/domain/imagem.domain";
+import type { ImagemArquivo } from "@/core/imagem-arquivo/domain/imagem-arquivo.domain";
 
 /**
  * Token de injecao para o repositorio de Imagem
@@ -13,13 +11,7 @@ export const IMAGEM_REPOSITORY_PORT = Symbol("IImagemRepositoryPort");
  * Port de saida para operacoes de persistencia de Imagem
  * Define o contrato que os adapters de persistencia devem implementar
  */
-export interface IImagemRepositoryPort {
-  create(): ImagemEntity;
-
-  merge(imagem: ImagemEntity, data: PartialEntity<ImagemEntity>): void;
-
-  save(imagem: ImagemEntity): Promise<ImagemEntity>;
-}
+export interface IImagemRepositoryPort extends ICreateRepositoryPort<Imagem> {}
 
 /**
  * Token de injecao para o repositorio de ImagemArquivo
@@ -30,9 +22,9 @@ export const IMAGEM_ARQUIVO_REPOSITORY_PORT = Symbol("IImagemArquivoRepositoryPo
  * Port de saida para operacoes de persistencia de ImagemArquivo
  */
 export interface IImagemArquivoRepositoryPort {
-  create(): ImagemArquivoEntity;
+  create(): ImagemArquivo;
 
-  merge(imagemArquivo: ImagemArquivoEntity, data: PartialEntity<ImagemArquivoEntity>): void;
+  merge(imagemArquivo: ImagemArquivo, data: PartialEntity<ImagemArquivo>): void;
 
   /**
    * Busca o ID do arquivo mais recente para uma imagem

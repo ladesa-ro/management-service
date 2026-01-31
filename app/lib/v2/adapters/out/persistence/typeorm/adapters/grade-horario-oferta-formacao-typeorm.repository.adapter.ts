@@ -64,7 +64,7 @@ export class GradeHorarioOfertaFormacaoTypeOrmRepositoryAdapter
     };
   }
 
-  async createEntity(
+  async createOne(
     accessContext: AccessContext,
     dto: GradeHorarioOfertaFormacaoCreateInput,
   ): Promise<GradeHorarioOfertaFormacaoFindOneOutput> {
@@ -115,7 +115,7 @@ export class GradeHorarioOfertaFormacaoTypeOrmRepositoryAdapter
     return result!;
   }
 
-  async deleteOneById(
+  async deleteById(
     accessContext: AccessContext,
     dto: GradeHorarioOfertaFormacaoFindOneInput,
   ): Promise<boolean> {
@@ -126,7 +126,7 @@ export class GradeHorarioOfertaFormacaoTypeOrmRepositoryAdapter
       this.repository.createQueryBuilder(this.alias),
     );
 
-    await this.softDeleteById(dto.id);
+    await super.softDeleteById(dto.id);
     return true;
   }
 }

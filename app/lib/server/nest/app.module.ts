@@ -13,7 +13,13 @@ import { TransactionModule } from "@/v2/adapters/out/transaction";
 import { InfrastructureModule, SearchModule } from "@/v2/old/shared";
 
 @Module({
-  imports: [SearchModule, ModulesModule, InfrastructureModule, AuthorizationModule, TransactionModule],
+  imports: [
+    SearchModule,
+    ModulesModule,
+    InfrastructureModule,
+    AuthorizationModule,
+    TransactionModule,
+  ],
   controllers: [AppController],
   providers: [
     AppService,

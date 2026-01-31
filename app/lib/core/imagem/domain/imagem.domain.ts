@@ -1,4 +1,5 @@
 import { BaseEntity, type ScalarDateTimeString } from "@/core/@shared";
+import type { ImagemArquivo } from "@/core/imagem-arquivo/domain/imagem-arquivo.domain";
 import type { IImagem, IImagemCreate } from "./imagem.types";
 
 /**
@@ -8,6 +9,7 @@ import type { IImagem, IImagemCreate } from "./imagem.types";
 export class Imagem extends BaseEntity implements IImagem {
   id!: string;
   descricao!: string | null;
+  versoes!: ImagemArquivo[];
   dateCreated!: ScalarDateTimeString;
   dateUpdated!: ScalarDateTimeString;
   dateDeleted!: ScalarDateTimeString | null;

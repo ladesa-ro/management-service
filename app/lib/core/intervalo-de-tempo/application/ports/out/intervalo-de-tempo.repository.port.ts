@@ -14,7 +14,11 @@ export const INTERVALO_DE_TEMPO_REPOSITORY_PORT = Symbol("IIntervaloDeTempoRepos
  */
 export interface IIntervaloDeTempoRepositoryPort
   extends Omit<
-    IBaseCrudRepositoryPort<IntervaloDeTempoEntity, IntervaloDeTempoListOutput, IntervaloDeTempoFindOneOutput>,
+    IBaseCrudRepositoryPort<
+      IntervaloDeTempoEntity,
+      IntervaloDeTempoListOutput,
+      IntervaloDeTempoFindOneOutput
+    >,
     "softDeleteById"
   > {
   /**
