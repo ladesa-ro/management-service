@@ -1,4 +1,5 @@
 import {
+  FindOneInput,
   IFilterAcceptableValues,
   ObjectUuidRef,
   PaginationInput,
@@ -11,11 +12,7 @@ import { ImagemFindOneOutput, ImagemInputRef } from "@/core/imagem";
 // FindOne Input/Output
 // ============================================================================
 
-export class BlocoFindOneInput {
-  id!: string;
-
-  selection?: string[];
-}
+export class BlocoFindOneInput extends FindOneInput {}
 
 export class BlocoFindOneOutput {
   id!: string;
@@ -28,6 +25,7 @@ export class BlocoFindOneOutput {
 
   imagemCapa!: ImagemFindOneOutput | null;
 
+  // TODO: Migrate to ScalarDateTimeString and extend DatedOutput
   dateCreated!: Date;
 
   dateUpdated!: Date;

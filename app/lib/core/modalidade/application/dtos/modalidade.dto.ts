@@ -1,34 +1,25 @@
 import {
+  DatedOutput,
+  FindOneInput,
   IdUuid,
   IFilterAcceptableValues,
   ObjectUuidRef,
   PaginationInput,
   PaginationResult,
-  ScalarDateTimeString,
 } from "@/core/@shared";
 
 // ============================================================================
 // FindOne Input/Output
 // ============================================================================
 
-export class ModalidadeFindOneInput {
-  id!: IdUuid;
+export class ModalidadeFindOneInput extends FindOneInput {}
 
-  selection?: string[];
-}
-
-export class ModalidadeFindOneOutput {
+export class ModalidadeFindOneOutput extends DatedOutput {
   id!: IdUuid;
 
   nome!: string;
 
   slug!: string;
-
-  dateCreated!: ScalarDateTimeString;
-
-  dateUpdated!: ScalarDateTimeString;
-
-  dateDeleted!: ScalarDateTimeString | null;
 }
 
 // ============================================================================

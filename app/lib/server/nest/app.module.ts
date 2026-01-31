@@ -9,10 +9,11 @@ import {
 } from "@/server/nest/filters";
 import { ModulesModule } from "@/server/nest/modules/modules.module";
 import { AuthorizationModule } from "@/v2/adapters/out/authorization";
+import { TransactionModule } from "@/v2/adapters/out/transaction";
 import { InfrastructureModule, SearchModule } from "@/v2/old/shared";
 
 @Module({
-  imports: [SearchModule, ModulesModule, InfrastructureModule, AuthorizationModule],
+  imports: [SearchModule, ModulesModule, InfrastructureModule, AuthorizationModule, TransactionModule],
   controllers: [AppController],
   providers: [
     AppService,

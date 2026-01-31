@@ -1,4 +1,6 @@
 import {
+  DatedOutput,
+  FindOneInput,
   IdUuid,
   IFilterAcceptableValues,
   ObjectUuidRef,
@@ -11,24 +13,14 @@ import {
 // FindOne Input/Output
 // ============================================================================
 
-export class DisponibilidadeFindOneInput {
-  id!: IdUuid;
+export class DisponibilidadeFindOneInput extends FindOneInput {}
 
-  selection?: string[];
-}
-
-export class DisponibilidadeFindOneOutput {
+export class DisponibilidadeFindOneOutput extends DatedOutput {
   id!: IdUuid;
 
   dataInicio!: ScalarDateTimeString;
 
   dataFim!: ScalarDateTimeString | null;
-
-  dateCreated!: ScalarDateTimeString;
-
-  dateUpdated!: ScalarDateTimeString;
-
-  dateDeleted!: ScalarDateTimeString | null;
 }
 
 // ============================================================================
