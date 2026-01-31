@@ -10,6 +10,7 @@ import { ArquivoService } from "@/modules/arquivo/application/use-cases/arquivo.
 import { ImagemService } from "@/modules/imagem/application/use-cases/imagem.service";
 import type {
   UsuarioCreateInput,
+  UsuarioEnsinoOutput,
   UsuarioFindOneInput,
   UsuarioFindOneOutput,
   UsuarioListInput,
@@ -39,7 +40,7 @@ export class UsuarioService implements IUsuarioUseCasePort {
     accessContext: AccessContext | null,
     dto: UsuarioFindOneInput,
     selection?: string[] | boolean,
-  ): Promise<any> {
+  ): Promise<UsuarioEnsinoOutput> {
     const usuario = await this.findByIdStrict(accessContext, dto, selection);
 
     const { disciplinas } = await this.usuarioRepository.findUsuarioEnsino(usuario.id);

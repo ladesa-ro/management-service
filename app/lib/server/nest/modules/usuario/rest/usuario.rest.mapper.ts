@@ -1,3 +1,4 @@
+import type { UsuarioEnsinoOutput } from "@/modules/usuario";
 import {
   UsuarioCreateInput,
   UsuarioFindOneInput,
@@ -12,6 +13,10 @@ import {
 } from "@/server/nest/modules/bloco/rest";
 import {
   UsuarioCreateInputDto,
+  UsuarioEnsinoCursoRefDto,
+  UsuarioEnsinoDisciplinaRefDto,
+  UsuarioEnsinoOutputDto,
+  UsuarioEnsinoTurmaRefDto,
   UsuarioFindOneInputDto,
   UsuarioFindOneOutputDto,
   UsuarioListInputDto,
@@ -124,6 +129,30 @@ export class UsuarioRestMapper {
       search: output.meta.search,
     };
     dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
+    return dto;
+  }
+
+  static toEnsinoOutputDto(output: UsuarioEnsinoOutput): UsuarioEnsinoOutputDto {
+    const dto = new UsuarioEnsinoOutputDto();
+    dto.usuario = this.toFindOneOutputDto(output.usuario);
+    dto.disciplinas = output.disciplinas.map((vinculoDisciplina) => {
+      const disciplinaRef = new UsuarioEnsinoDisciplinaRefDto();
+      disciplinaRef.id = vinculoDisciplina.disciplina.id;
+      disciplinaRef.nome = vinculoDisciplina.disciplina.nome;
+      disciplinaRef.cursos = vinculoDisciplina.cursos.map((vinculoCurso) => {
+        const cursoRef = new UsuarioEnsinoCursoRefDto();
+        cursoRef.id = vinculoCurso.curso.id;
+        cursoRef.nome = vinculoCurso.curso.nome;
+        cursoRef.turmas = vinculoCurso.turmas.map((vinculoTurma) => {
+          const turmaRef = new UsuarioEnsinoTurmaRefDto();
+          turmaRef.id = vinculoTurma.turma.id;
+          turmaRef.periodo = vinculoTurma.turma.periodo;
+          return turmaRef;
+        });
+        return cursoRef;
+      });
+      return disciplinaRef;
+    });
     return dto;
   }
 }

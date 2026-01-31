@@ -22,6 +22,7 @@ import { UsuarioService } from "@/modules/usuario/application/use-cases/usuario.
 import { AccessContext, AccessContextHttp } from "@/v2/old/infrastructure/access-context";
 import {
   UsuarioCreateInputDto,
+  UsuarioEnsinoOutputDto,
   UsuarioFindOneInputDto,
   UsuarioFindOneOutputDto,
   UsuarioListInputDto,
@@ -64,19 +65,19 @@ export class UsuarioRestController {
 
   @Get("/:id/ensino")
   @ApiOperation({
-    summary: "Busca dados de ensino de um usuario",
+    summary: "Busca dados de ensino de um usuario (disciplinas, cursos e turmas onde leciona)",
     operationId: "usuarioEnsinoById",
   })
-  @ApiOkResponse({ type: UsuarioFindOneOutputDto })
+  @ApiOkResponse({ type: UsuarioEnsinoOutputDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async ensinoById(
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: UsuarioFindOneInputDto,
-  ): Promise<UsuarioFindOneOutputDto> {
+  ): Promise<UsuarioEnsinoOutputDto> {
     const input = UsuarioRestMapper.toFindOneInput(params);
     const result = await this.usuarioService.usuarioEnsinoById(accessContext, input);
-    return UsuarioRestMapper.toFindOneOutputDto(result);
+    return UsuarioRestMapper.toEnsinoOutputDto(result);
   }
 
   @Post("/")

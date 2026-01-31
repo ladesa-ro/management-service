@@ -2,6 +2,7 @@ import type { StreamableFile } from "@nestjs/common";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
   UsuarioCreateInput,
+  UsuarioEnsinoOutput,
   UsuarioFindOneInput,
   UsuarioFindOneOutput,
   UsuarioListInput,
@@ -60,13 +61,13 @@ export interface IUsuarioUseCasePort {
   ): Promise<UsuarioFindOneOutput>;
 
   /**
-   * Busca informacoes de ensino de um usuario
+   * Busca informacoes de ensino de um usuario (disciplinas, cursos e turmas onde leciona)
    */
   usuarioEnsinoById(
     accessContext: AccessContext | null,
     dto: UsuarioFindOneInput,
     selection?: string[] | boolean,
-  ): Promise<any>;
+  ): Promise<UsuarioEnsinoOutput>;
 
   /**
    * Busca interno por matricula SIAPE

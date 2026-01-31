@@ -58,3 +58,35 @@ export class UsuarioUpdateInput {
 // ============================================================================
 
 export type UsuarioInputRef = ObjectUuidRef;
+
+// ============================================================================
+// Ensino Output (dados de ensino do usuario)
+// ============================================================================
+
+export interface UsuarioEnsinoTurmaRef {
+  id: string;
+  periodo: string;
+}
+
+export interface UsuarioEnsinoCursoRef {
+  id: string;
+  nome: string;
+}
+
+export interface UsuarioEnsinoDisciplinaRef {
+  id: string;
+  nome: string;
+}
+
+export interface UsuarioEnsinoOutput {
+  usuario: UsuarioFindOneOutput;
+  disciplinas: Array<{
+    disciplina: UsuarioEnsinoDisciplinaRef;
+    cursos: Array<{
+      curso: UsuarioEnsinoCursoRef;
+      turmas: Array<{
+        turma: UsuarioEnsinoTurmaRef;
+      }>;
+    }>;
+  }>;
+}

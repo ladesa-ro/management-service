@@ -114,6 +114,85 @@ export class UsuarioFindOneOutputDto {
 }
 
 // ============================================================================
+// Ensino Output (dados de ensino do usuario)
+// ============================================================================
+
+@ObjectType("UsuarioEnsinoTurmaRef")
+export class UsuarioEnsinoTurmaRefDto {
+  @ApiProperty({ description: "ID da turma", format: "uuid" })
+  @Field(() => ID)
+  @IsUUID()
+  id: string;
+
+  @ApiProperty({ description: "Periodo da turma" })
+  @Field()
+  @IsString()
+  periodo: string;
+}
+
+@ObjectType("UsuarioEnsinoCursoRef")
+export class UsuarioEnsinoCursoRefDto {
+  @ApiProperty({ description: "ID do curso", format: "uuid" })
+  @Field(() => ID)
+  @IsUUID()
+  id: string;
+
+  @ApiProperty({ description: "Nome do curso" })
+  @Field()
+  @IsString()
+  nome: string;
+
+  @ApiProperty({
+    description: "Turmas do curso onde o usuario leciona",
+    type: () => [UsuarioEnsinoTurmaRefDto],
+  })
+  @Field(() => [UsuarioEnsinoTurmaRefDto])
+  @ValidateNested({ each: true })
+  @Type(() => UsuarioEnsinoTurmaRefDto)
+  turmas: UsuarioEnsinoTurmaRefDto[];
+}
+
+@ObjectType("UsuarioEnsinoDisciplinaRef")
+export class UsuarioEnsinoDisciplinaRefDto {
+  @ApiProperty({ description: "ID da disciplina", format: "uuid" })
+  @Field(() => ID)
+  @IsUUID()
+  id: string;
+
+  @ApiProperty({ description: "Nome da disciplina" })
+  @Field()
+  @IsString()
+  nome: string;
+
+  @ApiProperty({
+    description: "Cursos onde o usuario leciona esta disciplina",
+    type: () => [UsuarioEnsinoCursoRefDto],
+  })
+  @Field(() => [UsuarioEnsinoCursoRefDto])
+  @ValidateNested({ each: true })
+  @Type(() => UsuarioEnsinoCursoRefDto)
+  cursos: UsuarioEnsinoCursoRefDto[];
+}
+
+@ObjectType("UsuarioEnsinoOutput")
+export class UsuarioEnsinoOutputDto {
+  @ApiProperty({ description: "Dados do usuario", type: () => UsuarioFindOneOutputDto })
+  @Field(() => UsuarioFindOneOutputDto)
+  @ValidateNested()
+  @Type(() => UsuarioFindOneOutputDto)
+  usuario: UsuarioFindOneOutputDto;
+
+  @ApiProperty({
+    description: "Disciplinas onde o usuario leciona (com cursos e turmas)",
+    type: () => [UsuarioEnsinoDisciplinaRefDto],
+  })
+  @Field(() => [UsuarioEnsinoDisciplinaRefDto])
+  @ValidateNested({ each: true })
+  @Type(() => UsuarioEnsinoDisciplinaRefDto)
+  disciplinas: UsuarioEnsinoDisciplinaRefDto[];
+}
+
+// ============================================================================
 // List Input/Output
 // ============================================================================
 
