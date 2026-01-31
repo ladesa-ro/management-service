@@ -1,6 +1,24 @@
 import { Type } from "@nestjs/common";
 import { Field, Int, ObjectType } from "@nestjs/graphql";
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+
+/**
+ * Representa uma entrada de ordenação [campo, direcao]
+ */
+@ObjectType()
+export class SortByEntryDto {
+  @ApiProperty({ description: "Nome do campo", example: "nome" })
+  @Field()
+  0: string;
+
+  @ApiProperty({
+    description: "Direcao da ordenacao (ASC ou DESC)",
+    example: "ASC",
+    enum: ["ASC", "DESC"],
+  })
+  @Field()
+  1: string;
+}
 
 /**
  * Pagination metadata DTO.
@@ -27,11 +45,29 @@ export class PaginationMetaDto {
   @Field()
   search: string;
 
-  @ApiProperty({ description: "Ordenacao", isArray: true })
+  @ApiProperty({
+    description: "Ordenacao aplicada",
+    type: "array",
+    items: {
+      type: "array",
+      items: { type: "string" },
+      minItems: 2,
+      maxItems: 2,
+      example: ["nome", "ASC"],
+    },
+    example: [
+      ["nome", "ASC"],
+      ["dateCreated", "DESC"],
+    ],
+  })
   @Field(() => [[String]])
   sortBy: [string, string][];
 
-  @ApiProperty({ description: "Filtros" })
+  @ApiPropertyOptional({
+    description: "Filtros aplicados",
+    type: "object",
+    additionalProperties: true,
+  })
   filter?: Record<string, string | string[]>;
 }
 
