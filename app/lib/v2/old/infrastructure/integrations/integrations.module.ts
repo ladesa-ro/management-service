@@ -1,15 +1,10 @@
 import { Module } from "@nestjs/common";
-import { IntegrationDatabaseModule } from "@/v2/adapters/out/persistence/typeorm/integration-database.module";
+import { DatabaseContextModule } from "@/modules/@database-context";
+import { TypeormModule } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import { IntegrationHttpModule } from "./http";
 import { IdentityProviderModule } from "./identity-provider";
 
 @Module({
-  imports: [
-    IntegrationDatabaseModule,
-    // IntegrationGraphQLModule,
-    IntegrationHttpModule,
-    IdentityProviderModule,
-    // MessageBrokerModule,
-  ],
+  imports: [TypeormModule, DatabaseContextModule, IntegrationHttpModule, IdentityProviderModule],
 })
 export class IntegrationsModule {}
