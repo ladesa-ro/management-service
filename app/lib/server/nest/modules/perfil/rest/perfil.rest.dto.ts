@@ -163,24 +163,34 @@ export class PerfilListOutputDto {
 }
 
 // ============================================================================
-// Create/Update Input
+// SetVinculos Input
 // ============================================================================
 
-@InputType("PerfilUpdateInput")
-export class PerfilUpdateInputDto {
-  @ApiProperty({ description: "Cargos do usuario no vinculo", type: [String] })
+@InputType("PerfilSetVinculosInput")
+export class PerfilSetVinculosInputDto {
+  @ApiProperty({
+    description: "Lista de cargos que o usuario tera no campus",
+    type: [String],
+    example: ["professor", "coordenador"],
+  })
   @Field(() => [String])
   @IsArray()
   @IsString({ each: true })
   cargos: string[];
 
-  @ApiProperty({ type: () => CampusFindOneInputDto, description: "Campus associado ao vinculo" })
+  @ApiProperty({
+    type: () => CampusFindOneInputDto,
+    description: "Campus onde os vinculos serao definidos",
+  })
   @Field(() => CampusFindOneInputDto)
   @ValidateNested()
   @Type(() => CampusFindOneInputDto)
   campus: CampusFindOneInputDto;
 
-  @ApiProperty({ type: () => UsuarioFindOneInputDto, description: "Usuario associado ao vinculo" })
+  @ApiProperty({
+    type: () => UsuarioFindOneInputDto,
+    description: "Usuario que recebera os vinculos",
+  })
   @Field(() => UsuarioFindOneInputDto)
   @ValidateNested()
   @Type(() => UsuarioFindOneInputDto)

@@ -54,13 +54,10 @@ export interface IPerfilUseCasePort {
   ): Promise<PerfilFindOneOutput>;
 
   /**
-   * Define os vínculos de um perfil
+   * Define os vínculos (cargos) de um usuário em um campus
    * @param accessContext Contexto de acesso para aplicar filtros de permissão
-   * @param dto DTO com dados do perfil e vínculos
-   * @returns Lista atualizada de perfis
+   * @param dto DTO com usuário, campus e lista de cargos
+   * @returns Lista atualizada de perfis do usuário no campus
    */
-  setVinculos(
-    accessContext: AccessContext,
-    dto: PerfilFindOneInput & PerfilSetVinculosInput,
-  ): Promise<PerfilListOutput>;
+  setVinculos(accessContext: AccessContext, dto: PerfilSetVinculosInput): Promise<PerfilListOutput>;
 }

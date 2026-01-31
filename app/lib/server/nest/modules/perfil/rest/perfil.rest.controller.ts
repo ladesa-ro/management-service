@@ -14,7 +14,7 @@ import {
   PerfilFindOneOutputDto,
   PerfilListInputDto,
   PerfilListOutputDto,
-  PerfilUpdateInputDto,
+  PerfilSetVinculosInputDto,
 } from "./perfil.rest.dto";
 
 @ApiTags("perfis")
@@ -67,12 +67,22 @@ export class PerfilRestController {
   }
 
   @Post("/")
-  @ApiOperation({ summary: "Define vinculos de um perfil", operationId: "perfilSetVinculos" })
-  @ApiCreatedResponse({ type: PerfilListOutputDto })
+  @ApiOperation({
+    summary: "Define vinculos (cargos) de um usuario em um campus",
+    description:
+      "Define os cargos que um usuario possui em um campus. " +
+      "Cargos existentes que nao estiverem na lista serao desativados. " +
+      "Cargos novos serao criados ou reativados.",
+    operationId: "perfilSetVinculos",
+  })
+  @ApiCreatedResponse({
+    type: PerfilListOutputDto,
+    description: "Lista de perfis ativos do usuario no campus apos a operacao",
+  })
   @ApiForbiddenResponse()
   async setVinculos(
     @AccessContextHttp() accessContext: AccessContext,
-    @Body() dto: PerfilFindOneInputDto & PerfilUpdateInputDto,
+    @Body() dto: PerfilSetVinculosInputDto,
   ): Promise<PerfilListOutputDto> {
     return this.perfilService.setVinculos(
       accessContext,

@@ -139,6 +139,17 @@ export class EventoListInputDto extends PaginationInputDto {
   @IsArray()
   @IsString({ each: true })
   "filter.id"?: string[];
+
+  @ApiPropertyOptional({
+    description: "Filtro por ID do Calendario Letivo",
+    type: [String],
+  })
+  @TransformToArray()
+  @Field(() => [String], { nullable: true })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  "filter.calendario.id"?: string[];
 }
 
 @ObjectType("EventoListOutput")

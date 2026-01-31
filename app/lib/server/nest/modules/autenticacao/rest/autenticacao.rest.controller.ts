@@ -9,7 +9,7 @@ import {
 } from "@nestjs/swagger";
 import { AutenticacaoService } from "@/modules/autenticacao";
 import { UsuarioService } from "@/modules/usuario";
-import { UsuarioFindOneOutputDto } from "@/server/nest/modules/usuario/rest";
+import { UsuarioEnsinoOutputDto } from "@/server/nest/modules/usuario/rest";
 import { AccessContext, AccessContextHttp } from "@/v2/old/infrastructure/access-context";
 import { Public } from "@/v2/old/infrastructure/authentication";
 import {
@@ -32,14 +32,14 @@ export class AutenticacaoRestController {
   @Get("/quem-sou-eu/ensino")
   @ApiOperation({
     summary: "Retorna informacoes de ensino do usuario logado",
-    operationId: "autenticacaoEnsinoById",
+    operationId: "autenticacaoWhoAmIEnsino",
   })
-  @ApiOkResponse({ type: UsuarioFindOneOutputDto })
+  @ApiOkResponse({ type: UsuarioEnsinoOutputDto })
   @ApiForbiddenResponse()
   @ApiBadRequestResponse()
   async whoAmIEnsino(
     @AccessContextHttp() accessContext: AccessContext,
-  ): Promise<UsuarioFindOneOutputDto> {
+  ): Promise<UsuarioEnsinoOutputDto> {
     const idUsuario = accessContext.requestActor?.id;
     if (!idUsuario) {
       throw new BadRequestException();

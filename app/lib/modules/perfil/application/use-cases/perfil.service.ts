@@ -68,7 +68,7 @@ export class PerfilService implements IPerfilUseCasePort {
 
   async setVinculos(
     accessContext: AccessContext,
-    dto: PerfilFindOneInput & PerfilSetVinculosInput,
+    dto: PerfilSetVinculosInput,
   ): Promise<PerfilListOutput> {
     // Valida campus e usuário
     const campus = await this.campusService.findByIdSimpleStrict(accessContext, dto.campus.id);
