@@ -1,6 +1,9 @@
 import { Module } from "@nestjs/common";
 import { APP_FILTER } from "@nestjs/core";
-import { SearchModule } from "@/modules/@shared/infrastructure/persistence/typeorm";
+import {
+  SearchModule,
+  TransactionModule,
+} from "@/modules/@shared/infrastructure/persistence/typeorm";
 import { AppController } from "@/server/nest/app.controller";
 import { AppService } from "@/server/nest/app.service";
 import {
@@ -10,7 +13,6 @@ import {
 } from "@/server/nest/filters";
 import { ModulesModule } from "@/server/nest/modules/modules.module";
 import { AuthorizationModule } from "@/v2/adapters/out/authorization";
-import { TransactionModule } from "@/v2/adapters/out/transaction";
 import { InfrastructureModule } from "@/v2/old/infrastructure";
 
 @Module({
