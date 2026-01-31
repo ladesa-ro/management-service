@@ -23,7 +23,9 @@ export const useDocs = (app: INestApplication) => {
     .addBearerAuth()
     .build();
 
-  const document = SwaggerModule.createDocument(app, config);
+  const document = SwaggerModule.createDocument(app, config, {
+    ignoreGlobalPrefix: true,
+  });
 
   const server = app.getHttpAdapter().getInstance();
 
