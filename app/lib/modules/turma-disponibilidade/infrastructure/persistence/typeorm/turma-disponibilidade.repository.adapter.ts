@@ -2,10 +2,11 @@ import { Injectable } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
 import type { SelectQueryBuilder } from "typeorm";
 import { DatabaseContextService } from "@/modules/@database-context";
-import type { ITypeOrmPaginationConfig } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import {
   BaseTypeOrmRepositoryAdapter,
+  type ITypeOrmPaginationConfig,
   NestJsPaginateAdapter,
+  paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
   TurmaDisponibilidadeFindOneInput,
@@ -14,7 +15,6 @@ import type {
   TurmaDisponibilidadeListOutput,
 } from "@/modules/turma-disponibilidade";
 import type { ITurmaDisponibilidadeRepositoryPort } from "@/modules/turma-disponibilidade/application/ports/out";
-import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 import type { TurmaDisponibilidadeEntity } from "./turma-disponibilidade.entity";
 
 /**

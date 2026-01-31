@@ -1,10 +1,11 @@
 import { Injectable } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
 import { DatabaseContextService } from "@/modules/@database-context";
-import type { ITypeOrmPaginationConfig } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import {
   BaseTypeOrmRepositoryAdapter,
+  type ITypeOrmPaginationConfig,
   NestJsPaginateAdapter,
+  paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
   EtapaFindOneInput,
@@ -13,7 +14,6 @@ import type {
   EtapaListOutput,
   IEtapaRepositoryPort,
 } from "@/modules/etapa";
-import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 import type { EtapaEntity } from "./etapa.entity";
 
 @Injectable()

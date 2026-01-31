@@ -2,8 +2,9 @@ import { Injectable } from "@nestjs/common";
 import { DatabaseContextService } from "@/modules/@database-context";
 import {
   BaseTypeOrmRepositoryAdapter,
-  ITypeOrmPaginationConfig,
+  type ITypeOrmPaginationConfig,
   NestJsPaginateAdapter,
+  paginateConfig,
   QbEfficientLoad,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
@@ -13,7 +14,6 @@ import type {
   UsuarioListInput,
   UsuarioListOutput,
 } from "@/modules/usuario";
-import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 import type { UsuarioEntity } from "./usuario.entity";
 
 @Injectable()

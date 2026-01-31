@@ -1,21 +1,18 @@
+/**
+ * Default pagination configuration for TypeORM repositories.
+ * Used by nestjs-paginate adapter.
+ */
 export const paginateConfig: any = {
   /**
    * Required: true (must have a minimum of one column)
-   * Type: (keyof CatEntity)[]
+   * Type: (keyof Entity)[]
    * Description: These are the columns that are valid to be sorted by.
    */
   sortableColumns: ["id"],
 
   /**
    * Required: false
-   * Type: 'first' | 'last's
-   * Description: Define whether to put null values at the beginning
-   * or end of the result set.
-   */
-  // nullSort: 'last',
-  /**
-   * Required: false
-   * Type: [keyof CatEntity, 'ASC' | 'DESC'][]
+   * Type: [keyof Entity, 'ASC' | 'DESC'][]
    * Default: [[sortableColumns[0], 'ASC]]
    * Description: The order to display the sorted entities.
    */

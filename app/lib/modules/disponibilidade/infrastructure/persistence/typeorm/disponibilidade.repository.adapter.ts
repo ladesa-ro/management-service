@@ -1,9 +1,10 @@
 import { Injectable } from "@nestjs/common";
 import { DatabaseContextService } from "@/modules/@database-context";
-import type { ITypeOrmPaginationConfig } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import {
   BaseTypeOrmRepositoryAdapter,
+  type ITypeOrmPaginationConfig,
   NestJsPaginateAdapter,
+  paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
   DisponibilidadeFindOneInput,
@@ -12,7 +13,6 @@ import type {
   DisponibilidadeListOutput,
   IDisponibilidadeRepositoryPort,
 } from "@/modules/disponibilidade";
-import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 import type { DisponibilidadeEntity } from "./disponibilidade.entity";
 
 @Injectable()

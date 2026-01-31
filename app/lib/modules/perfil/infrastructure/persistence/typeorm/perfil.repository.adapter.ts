@@ -5,8 +5,9 @@ import { DatabaseContextService } from "@/modules/@database-context";
 import type { IPaginationCriteria, IPaginationResult } from "@/modules/@shared";
 import {
   BaseTypeOrmRepositoryAdapter,
-  ITypeOrmPaginationConfig,
+  type ITypeOrmPaginationConfig,
   NestJsPaginateAdapter,
+  paginateConfig,
   QbEfficientLoad,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
@@ -18,7 +19,6 @@ import type {
 import type { IPerfilRepositoryPort } from "@/modules/perfil/application/ports";
 import type { UsuarioEntity } from "@/modules/usuario/infrastructure/persistence/typeorm";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
-import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 import type { PerfilEntity } from "./perfil.entity";
 
 @Injectable()

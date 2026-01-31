@@ -2,10 +2,11 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
 import { DatabaseContextService } from "@/modules/@database-context";
-import type { ITypeOrmPaginationConfig } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import {
   BaseTypeOrmRepositoryAdapter,
+  type ITypeOrmPaginationConfig,
   NestJsPaginateAdapter,
+  paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import { NivelFormacaoService } from "@/modules/nivel-formacao/application/use-cases/nivel-formacao.service";
 import { OfertaFormacaoService } from "@/modules/oferta-formacao";
@@ -19,7 +20,6 @@ import type {
   OfertaFormacaoNivelFormacaoUpdateInput,
 } from "@/modules/oferta-formacao-nivel-formacao";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
-import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 import type { OfertaFormacaoNivelFormacaoEntity } from "./oferta-formacao-nivel-formacao.entity";
 
 const aliasOfertaFormacaoNivelFormacao = "oferta_formacao_nivel_formacao";

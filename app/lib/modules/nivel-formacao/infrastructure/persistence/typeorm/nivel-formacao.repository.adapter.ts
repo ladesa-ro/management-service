@@ -1,9 +1,10 @@
 import { Injectable } from "@nestjs/common";
 import { DatabaseContextService } from "@/modules/@database-context";
-import type { ITypeOrmPaginationConfig } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import {
   BaseTypeOrmRepositoryAdapter,
+  type ITypeOrmPaginationConfig,
   NestJsPaginateAdapter,
+  paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
   INivelFormacaoRepositoryPort,
@@ -12,7 +13,6 @@ import type {
   NivelFormacaoListInput,
   NivelFormacaoListOutput,
 } from "@/modules/nivel-formacao";
-import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 import type { NivelFormacaoEntity } from "./nivel-formacao.entity";
 
 @Injectable()

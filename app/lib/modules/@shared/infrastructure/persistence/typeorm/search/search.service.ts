@@ -3,7 +3,7 @@ import { type PaginateConfig, paginate } from "nestjs-paginate";
 import type { PaginateQuery } from "nestjs-paginate/lib/decorator";
 import type { SelectQueryBuilder } from "typeorm";
 import type { ObjectLiteral } from "typeorm/common/ObjectLiteral";
-import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
+import { paginateConfig } from "../pagination";
 
 /**
  * @deprecated Use NestJsPaginateAdapter instead

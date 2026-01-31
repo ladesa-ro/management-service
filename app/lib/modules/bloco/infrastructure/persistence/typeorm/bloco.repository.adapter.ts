@@ -1,10 +1,11 @@
 import { Injectable } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
 import { DatabaseContextService } from "@/modules/@database-context";
-import type { ITypeOrmPaginationConfig } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import {
   BaseTypeOrmRepositoryAdapter,
+  type ITypeOrmPaginationConfig,
   NestJsPaginateAdapter,
+  paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
   BlocoFindOneInput,
@@ -13,7 +14,6 @@ import type {
   BlocoListOutput,
 } from "@/modules/bloco";
 import type { IBlocoRepositoryPort } from "@/modules/bloco/application/ports";
-import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 import type { BlocoEntity } from "./bloco.entity";
 
 /**

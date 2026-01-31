@@ -1,10 +1,11 @@
 import { Injectable } from "@nestjs/common";
 import type { DeepPartial } from "typeorm";
 import { DatabaseContextService } from "@/modules/@database-context";
-import type { ITypeOrmPaginationConfig } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import {
   BaseTypeOrmRepositoryAdapter,
+  type ITypeOrmPaginationConfig,
   NestJsPaginateAdapter,
+  paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
   EnderecoFindOneInput,
@@ -15,7 +16,6 @@ import type {
   IEnderecoRepositoryPort,
 } from "@/modules/endereco";
 import type { EnderecoEntity } from "@/modules/endereco/infrastructure/persistence/typeorm";
-import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 
 @Injectable()
 export class EnderecoTypeOrmRepositoryAdapter

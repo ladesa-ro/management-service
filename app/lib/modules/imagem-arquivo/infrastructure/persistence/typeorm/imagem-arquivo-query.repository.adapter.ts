@@ -3,8 +3,9 @@ import { FilterOperator } from "nestjs-paginate";
 import { DatabaseContextService } from "@/modules/@database-context";
 import {
   BaseTypeOrmRepositoryAdapter,
-  ITypeOrmPaginationConfig,
+  type ITypeOrmPaginationConfig,
   NestJsPaginateAdapter,
+  paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
   ImagemArquivoFindOneInput,
@@ -13,7 +14,6 @@ import type {
   ImagemArquivoListOutput,
 } from "@/modules/imagem-arquivo/application/dtos";
 import type { IImagemArquivoQueryRepositoryPort } from "@/modules/imagem-arquivo/application/ports";
-import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 import type { ImagemArquivoEntity } from "./imagem-arquivo.entity";
 
 /**

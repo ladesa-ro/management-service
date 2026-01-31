@@ -10,8 +10,8 @@ export * from "./create-repository-factory";
 // Metadata registry for QbEfficientLoad
 export * from "./metadata";
 
-// Pagination adapter
-export * from "./pagination/nestjs-paginate.adapter";
+// Pagination adapter and config
+export * from "./pagination";
 // Pagination types
 export * from "./pagination-config.types";
 // Query builder utilities

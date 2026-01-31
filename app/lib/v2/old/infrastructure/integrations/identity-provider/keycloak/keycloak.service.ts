@@ -1,8 +1,8 @@
+import KeycloakAdminClient from "@keycloak/keycloak-admin-client";
 import type { Credentials } from "@keycloak/keycloak-admin-client/lib/utils/auth";
 import { Inject, Injectable } from "@nestjs/common";
+import { wait } from "@/modules/@shared";
 import { CONFIG_PORT, type IConfigPort } from "@/modules/@shared/application/ports/out/config";
-import { KeycloakAdminClient } from "@/v2/old/infrastructure/fixtures";
-import { wait } from "@/v2/old/infrastructure/utils";
 
 const INTERVAL_AUTH = 58 * 1000;
 

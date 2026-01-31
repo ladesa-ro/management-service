@@ -1,10 +1,11 @@
 import { Injectable } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
 import { DatabaseContextService } from "@/modules/@database-context";
-import type { ITypeOrmPaginationConfig } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import {
   BaseTypeOrmRepositoryAdapter,
+  type ITypeOrmPaginationConfig,
   NestJsPaginateAdapter,
+  paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
   GradeHorarioOfertaFormacaoCreateInput,
@@ -16,7 +17,6 @@ import type {
 } from "@/modules/grade-horario-oferta-formacao";
 import type { IGradeHorarioOfertaFormacaoRepositoryPort } from "@/modules/grade-horario-oferta-formacao/application/ports";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
-import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 import type { GradeHorarioOfertaFormacaoEntity } from "./grade-horario-oferta-formacao.entity";
 
 @Injectable()

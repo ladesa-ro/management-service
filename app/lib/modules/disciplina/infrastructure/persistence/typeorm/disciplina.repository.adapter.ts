@@ -1,10 +1,11 @@
 import { Injectable } from "@nestjs/common";
 import { FilterOperator, FilterSuffix } from "nestjs-paginate";
 import { DatabaseContextService } from "@/modules/@database-context";
-import type { ITypeOrmPaginationConfig } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import {
   BaseTypeOrmRepositoryAdapter,
+  type ITypeOrmPaginationConfig,
   NestJsPaginateAdapter,
+  paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
   DisciplinaFindOneInput,
@@ -13,7 +14,6 @@ import type {
   DisciplinaListOutput,
 } from "@/modules/disciplina/application/dtos";
 import type { IDisciplinaRepositoryPort } from "@/modules/disciplina/application/ports";
-import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 import type { DisciplinaEntity } from "./disciplina.entity";
 
 @Injectable()
