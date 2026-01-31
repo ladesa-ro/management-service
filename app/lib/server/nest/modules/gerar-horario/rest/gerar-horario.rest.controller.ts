@@ -1,6 +1,6 @@
 import { Controller, Get, NotFoundException } from "@nestjs/common";
 import { ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
-import { GerarHorarioService } from "@/core/gerar-horario";
+import { GerarHorarioService } from "@/modules/gerar-horario";
 
 @ApiTags("gerar-horario")
 @Controller("/gerar-horario")

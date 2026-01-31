@@ -2,8 +2,8 @@ import { Injectable } from "@nestjs/common";
 import { type PaginateConfig, paginate } from "nestjs-paginate";
 import type { PaginateQuery } from "nestjs-paginate/lib/decorator";
 import type { ObjectLiteral, SelectQueryBuilder } from "typeorm";
-import type { IPaginationCriteria, IPaginationResult } from "@/core/@shared";
-import type { ITypeOrmPaginationConfig } from "@/v2/adapters/out/persistence/typeorm/types";
+import type { ITypeOrmPaginationConfig } from "@/@shared/infrastructure/persistence/typeorm";
+import type { IPaginationCriteria, IPaginationResult } from "@/modules/@shared";
 import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 
 /**

@@ -3,7 +3,7 @@ import {
   CidadeFindOneOutput,
   CidadeListInput,
   CidadeListOutput,
-} from "@/core/cidade";
+} from "@/modules/cidade";
 import { EstadoRestMapper } from "@/server/nest/modules/estado/rest/estado.rest.mapper";
 import {
   CidadeFindOneInputDto,

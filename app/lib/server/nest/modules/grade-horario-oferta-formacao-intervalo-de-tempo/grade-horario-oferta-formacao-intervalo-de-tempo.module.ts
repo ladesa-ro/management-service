@@ -1,12 +1,12 @@
 import { Module } from "@nestjs/common";
+import { NestJsPaginateAdapter } from "@/@shared/infrastructure/persistence/typeorm";
 import {
   GRADE_HORARIO_OFERTA_FORMACAO_INTERVALO_DE_TEMPO_REPOSITORY_PORT,
   GradeHorarioOfertaFormacaoIntervaloDeTempoService,
-} from "@/core/grade-horario-oferta-formacao-intervalo-de-tempo";
+} from "@/modules/grade-horario-oferta-formacao-intervalo-de-tempo";
+import { GradeHorarioOfertaFormacaoIntervaloDeTempoTypeOrmRepositoryAdapter } from "@/modules/grade-horario-oferta-formacao-intervalo-de-tempo/infrastructure/persistence/typeorm";
 import { GradeHorarioOfertaFormacaoModule } from "@/server/nest/modules/grade-horario-oferta-formacao";
 import { IntervaloDeTempoModule } from "@/server/nest/modules/intervalo-de-tempo";
-import { NestJsPaginateAdapter } from "@/v2/adapters/out/persistence/pagination";
-import { GradeHorarioOfertaFormacaoIntervaloDeTempoTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistence/typeorm/adapters";
 import { GradeHorarioOfertaFormacaoIntervaloDeTempoRestController } from "./rest/grade-horario-oferta-formacao-intervalo-de-tempo.rest.controller";
 
 @Module({

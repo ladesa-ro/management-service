@@ -7,7 +7,7 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
-import { ReservaService } from "@/core/reserva";
+import { ReservaService } from "@/modules/reserva";
 import { AccessContext, AccessContextHttp } from "@/v2/old/infrastructure/access-context";
 import {
   ReservaCreateInputDto,

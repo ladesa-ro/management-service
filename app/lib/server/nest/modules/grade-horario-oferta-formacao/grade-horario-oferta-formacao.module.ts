@@ -1,10 +1,10 @@
 import { Module } from "@nestjs/common";
+import { NestJsPaginateAdapter } from "@/@shared/infrastructure/persistence/typeorm";
 import {
   GRADE_HORARIO_OFERTA_FORMACAO_REPOSITORY_PORT,
   GradeHorarioOfertaFormacaoService,
-} from "@/core/grade-horario-oferta-formacao";
-import { NestJsPaginateAdapter } from "@/v2/adapters/out/persistence/pagination";
-import { GradeHorarioOfertaFormacaoTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistence/typeorm/adapters";
+} from "@/modules/grade-horario-oferta-formacao";
+import { GradeHorarioOfertaFormacaoTypeOrmRepositoryAdapter } from "@/modules/grade-horario-oferta-formacao/infrastructure/persistence/typeorm";
 import { GradeHorarioOfertaFormacaoRestController } from "./rest/grade-horario-oferta-formacao.rest.controller";
 
 @Module({

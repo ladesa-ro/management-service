@@ -7,7 +7,7 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
-import { PerfilService } from "@/core/perfil";
+import { PerfilService } from "@/modules/perfil";
 import { AccessContext, AccessContextHttp } from "@/v2/old/infrastructure/access-context";
 import {
   PerfilFindOneInputDto,

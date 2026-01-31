@@ -5,7 +5,7 @@ import {
   DiarioListInput,
   DiarioListOutput,
   DiarioUpdateInput,
-} from "@/core/diario";
+} from "@/modules/diario";
 import {
   DiarioCreateInputDto,
   DiarioFindOneInputDto,

@@ -1,10 +1,10 @@
 import { Module } from "@nestjs/common";
-import { DIARIO_PROFESSOR_REPOSITORY_PORT } from "@/core/diario-professor/application/ports";
-import { DiarioProfessorService } from "@/core/diario-professor/application/use-cases/diario-professor.service";
+import { NestJsPaginateAdapter } from "@/@shared/infrastructure/persistence/typeorm";
+import { DIARIO_PROFESSOR_REPOSITORY_PORT } from "@/modules/diario-professor/application/ports";
+import { DiarioProfessorService } from "@/modules/diario-professor/application/use-cases/diario-professor.service";
+import { DiarioProfessorTypeOrmRepositoryAdapter } from "@/modules/diario-professor/infrastructure/persistence/typeorm";
 import { DiarioModule } from "@/server/nest/modules/diario";
 import { PerfilModule } from "@/server/nest/modules/perfil";
-import { NestJsPaginateAdapter } from "@/v2/adapters/out/persistence/pagination";
-import { DiarioProfessorTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistence/typeorm/adapters";
 import { DiarioProfessorController } from "./rest";
 
 @Module({

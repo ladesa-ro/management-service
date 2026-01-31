@@ -5,7 +5,7 @@ import {
   BlocoListInput,
   BlocoListOutput,
   BlocoUpdateInput,
-} from "@/core/bloco";
+} from "@/modules/bloco";
 import {
   BlocoCreateInputDto,
   BlocoFindOneInputDto,

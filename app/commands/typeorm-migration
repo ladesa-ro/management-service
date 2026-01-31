@@ -2,4 +2,4 @@
 set -euo pipefail
 
 # TypeORM CLI with migration data source
-exec ./commands/typeorm -d lib/v2/adapters/out/persistence/typeorm/typeorm/data-sources/migration.data-source.ts "$@"
+exec ./commands/typeorm -d lib/@shared/infrastructure/persistence/typeorm/data-sources/migration.data-source.ts "$@"

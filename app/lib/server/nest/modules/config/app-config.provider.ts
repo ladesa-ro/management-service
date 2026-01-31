@@ -1,5 +1,5 @@
 import type { Provider } from "@nestjs/common";
-import { CONFIG_PORT } from "@/core/@shared/application/ports/out/config";
+import { CONFIG_PORT } from "@/modules/@shared/application/ports/out/config";
 import { EnvironmentConfigAdapter } from "@/server/adapters/config";
 
 /**

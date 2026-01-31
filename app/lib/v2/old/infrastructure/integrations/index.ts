@@ -1,4 +1,5 @@
-export * from "@/v2/adapters/out/persistence/typeorm";
+export * from "@/@shared/infrastructure/persistence/typeorm";
+export * from "@/database-context";
 export * from "./graphql";
 export * from "./http";
 export * from "./identity-provider";

@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { AutenticacaoService } from "@/core/autenticacao";
+import { AutenticacaoService } from "@/modules/autenticacao";
 import { PerfilModule } from "@/server/nest/modules/perfil";
 import { UsuarioModule } from "@/server/nest/modules/usuario";
 import {

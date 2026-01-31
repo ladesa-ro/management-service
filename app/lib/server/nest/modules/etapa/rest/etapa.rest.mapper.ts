@@ -5,7 +5,7 @@ import type {
   EtapaListInput,
   EtapaListOutput,
   EtapaUpdateInput,
-} from "@/core/etapa";
+} from "@/modules/etapa";
 import type {
   EtapaCreateInputRestDto,
   EtapaFindOneInputRestDto,

@@ -5,7 +5,7 @@ import type {
   HorarioGeradoListInput,
   HorarioGeradoListOutput,
   HorarioGeradoUpdateInput,
-} from "@/core/horario-gerado";
+} from "@/modules/horario-gerado";
 import type {
   HorarioGeradoCreateInputRestDto,
   HorarioGeradoFindOneInputRestDto,

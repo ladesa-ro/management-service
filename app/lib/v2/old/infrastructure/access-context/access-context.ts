@@ -1,6 +1,6 @@
 import { castArray } from "lodash";
 import type { SelectQueryBuilder } from "typeorm";
-import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm/context/database-context.service";
+import { DatabaseContextService } from "@/database-context";
 import {
   AuthzPolicyPublic,
   IAuthzStatement,

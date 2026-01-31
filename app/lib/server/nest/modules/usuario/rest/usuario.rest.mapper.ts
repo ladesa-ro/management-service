@@ -5,7 +5,7 @@ import {
   UsuarioListInput,
   UsuarioListOutput,
   UsuarioUpdateInput,
-} from "@/core/usuario";
+} from "@/modules/usuario";
 import {
   ImagemArquivoFindOneFromImagemOutputDto,
   ImagemFindOneOutputDto,

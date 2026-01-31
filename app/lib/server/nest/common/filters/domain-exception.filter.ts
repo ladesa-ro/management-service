@@ -7,7 +7,7 @@ import {
   EntityValidationError,
   InvalidStateError,
   InvariantViolationError,
-} from "@/core/@shared/domain";
+} from "@/modules/@shared/domain";
 
 /**
  * Estrutura padrão de resposta de erro

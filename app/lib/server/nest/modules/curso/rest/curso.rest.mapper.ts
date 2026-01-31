@@ -5,7 +5,7 @@ import {
   CursoListInput,
   CursoListOutput,
   CursoUpdateInput,
-} from "@/core/curso";
+} from "@/modules/curso";
 import { BlocoRestMapper } from "@/server/nest/modules/bloco/rest";
 import {
   CursoCreateInputDto,

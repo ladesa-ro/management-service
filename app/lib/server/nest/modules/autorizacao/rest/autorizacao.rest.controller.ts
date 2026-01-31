@@ -1,6 +1,6 @@
 import { Controller } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import { AutorizacaoService } from "@/core/autorizacao";
+import { AutorizacaoService } from "@/modules/autorizacao";
 
 @ApiTags("autorizacao")
 @Controller("/autorizacao")

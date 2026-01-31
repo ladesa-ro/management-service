@@ -1,12 +1,12 @@
 import { Module } from "@nestjs/common";
+import { NestJsPaginateAdapter } from "@/@shared/infrastructure/persistence/typeorm";
 import {
   TURMA_DISPONIBILIDADE_REPOSITORY_PORT,
   TurmaDisponibilidadeService,
-} from "@/core/turma-disponibilidade";
+} from "@/modules/turma-disponibilidade";
+import { TurmaDisponibilidadeTypeOrmRepositoryAdapter } from "@/modules/turma-disponibilidade/infrastructure/persistence/typeorm";
 import { DisponibilidadeModule } from "@/server/nest/modules/disponibilidade";
 import { TurmaModule } from "@/server/nest/modules/turma";
-import { NestJsPaginateAdapter } from "@/v2/adapters/out/persistence/pagination";
-import { TurmaDisponibilidadeTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistence/typeorm/adapters";
 import { TurmaDisponibilidadeRestController } from "./rest";
 
 @Module({

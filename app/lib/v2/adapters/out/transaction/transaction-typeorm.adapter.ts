@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
-import type { ITransactionContext, ITransactionPort, TransactionCallback } from "@/core/@shared";
-import { DatabaseContextService } from "../persistence/typeorm/context/database-context.service";
+import { DatabaseContextService } from "@/database-context";
+import type { ITransactionContext, ITransactionPort, TransactionCallback } from "@/modules/@shared";
 
 /**
  * Adapter TypeORM que implementa o port de transações.

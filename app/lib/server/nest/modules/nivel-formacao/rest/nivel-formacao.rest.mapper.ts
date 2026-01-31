@@ -5,7 +5,7 @@ import {
   NivelFormacaoListInput,
   NivelFormacaoListOutput,
   NivelFormacaoUpdateInput,
-} from "@/core/nivel-formacao";
+} from "@/modules/nivel-formacao";
 import {
   NivelFormacaoCreateInputDto,
   NivelFormacaoFindOneInputDto,

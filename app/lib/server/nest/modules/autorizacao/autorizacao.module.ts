@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { AutorizacaoService } from "@/core/autorizacao";
+import { AutorizacaoService } from "@/modules/autorizacao";
 import { PerfilModule } from "@/server/nest/modules/perfil";
 import { AutorizacaoRestController } from "./rest";
 

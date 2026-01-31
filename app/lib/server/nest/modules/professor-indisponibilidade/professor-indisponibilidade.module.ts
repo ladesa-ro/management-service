@@ -1,9 +1,9 @@
 import { Module } from "@nestjs/common";
-import { PROFESSOR_INDISPONIBILIDADE_REPOSITORY_PORT } from "@/core/professor-indisponibilidade/application/ports";
-import { ProfessorIndisponibilidadeService } from "@/core/professor-indisponibilidade/application/use-cases/professor-indisponibilidade.service";
+import { NestJsPaginateAdapter } from "@/@shared/infrastructure/persistence/typeorm";
+import { PROFESSOR_INDISPONIBILIDADE_REPOSITORY_PORT } from "@/modules/professor-indisponibilidade/application/ports";
+import { ProfessorIndisponibilidadeService } from "@/modules/professor-indisponibilidade/application/use-cases/professor-indisponibilidade.service";
+import { ProfessorIndisponibilidadeTypeOrmRepositoryAdapter } from "@/modules/professor-indisponibilidade/infrastructure/persistence/typeorm";
 import { PerfilModule } from "@/server/nest/modules/perfil";
-import { NestJsPaginateAdapter } from "@/v2/adapters/out/persistence/pagination";
-import { ProfessorIndisponibilidadeTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistence/typeorm/adapters";
 import { TypeormModule } from "@/v2/old/infrastructure";
 import { ProfessorIndisponibilidadeLegacyService } from "./professor-indisponibilidade.legacy.service";
 import { ProfessorIndisponibilidadeRestController } from "./rest/professor-indisponibilidade.rest.controller";

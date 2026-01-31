@@ -5,7 +5,7 @@ import {
   DisciplinaListInput,
   DisciplinaListOutput,
   DisciplinaUpdateInput,
-} from "@/core/disciplina";
+} from "@/modules/disciplina";
 import {
   ImagemArquivoFindOneFromImagemOutputDto,
   ImagemFindOneOutputDto,

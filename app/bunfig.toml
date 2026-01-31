@@ -1,0 +1,2 @@
+[run.watch]
+ignore = ["node_modules", ".git", "dist"]

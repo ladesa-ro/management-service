@@ -5,7 +5,7 @@ import {
   DisponibilidadeListInput,
   DisponibilidadeListOutput,
   DisponibilidadeUpdateInput,
-} from "@/core/disponibilidade";
+} from "@/modules/disponibilidade";
 import {
   DisponibilidadeCreateInputDto,
   DisponibilidadeFindOneInputDto,

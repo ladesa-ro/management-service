@@ -18,7 +18,7 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
-import { BlocoService } from "@/core/bloco/application/use-cases/bloco.service";
+import { BlocoService } from "@/modules/bloco/application/use-cases/bloco.service";
 import { AccessContext, AccessContextHttp } from "@/v2/old/infrastructure/access-context";
 import {
   BlocoCreateInputDto,

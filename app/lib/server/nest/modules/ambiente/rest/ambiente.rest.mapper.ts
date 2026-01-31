@@ -5,7 +5,7 @@ import {
   AmbienteListInput,
   AmbienteListOutput,
   AmbienteUpdateInput,
-} from "@/core/ambiente";
+} from "@/modules/ambiente";
 import {
   AmbienteCreateInputDto,
   AmbienteFindOneInputDto,

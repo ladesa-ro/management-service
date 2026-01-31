@@ -1,0 +1,63 @@
+import { Injectable } from "@nestjs/common";
+import { FilterOperator } from "nestjs-paginate";
+import type { ITypeOrmPaginationConfig } from "@/@shared/infrastructure/persistence/typeorm";
+import {
+  BaseTypeOrmRepositoryAdapter,
+  NestJsPaginateAdapter,
+} from "@/@shared/infrastructure/persistence/typeorm";
+import { DatabaseContextService } from "@/database-context";
+import type {
+  OfertaFormacaoFindOneInput,
+  OfertaFormacaoFindOneOutput,
+  OfertaFormacaoListInput,
+  OfertaFormacaoListOutput,
+} from "@/modules/oferta-formacao";
+import type { IOfertaFormacaoRepositoryPort } from "@/modules/oferta-formacao/application/ports";
+import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
+import type { OfertaFormacaoEntity } from "./oferta-formacao.entity";
+
+@Injectable()
+export class OfertaFormacaoTypeOrmRepositoryAdapter
+  extends BaseTypeOrmRepositoryAdapter<
+    OfertaFormacaoEntity,
+    OfertaFormacaoListInput,
+    OfertaFormacaoListOutput,
+    OfertaFormacaoFindOneInput,
+    OfertaFormacaoFindOneOutput
+  >
+  implements IOfertaFormacaoRepositoryPort
+{
+  protected readonly alias = "oferta_formacao";
+  protected readonly authzAction = "oferta_formacao:find";
+  protected readonly outputDtoName = "OfertaFormacaoFindOneOutput";
+
+  constructor(
+    protected readonly databaseContext: DatabaseContextService,
+    protected readonly paginationAdapter: NestJsPaginateAdapter,
+  ) {
+    super();
+  }
+
+  protected get repository() {
+    return this.databaseContext.ofertaFormacaoRepository;
+  }
+
+  protected getPaginateConfig(): ITypeOrmPaginationConfig<OfertaFormacaoEntity> {
+    return {
+      ...paginateConfig,
+      select: ["id", "nome", "slug", "dateCreated"],
+      relations: {
+        modalidade: true,
+      },
+      sortableColumns: ["nome", "slug", "dateCreated"],
+      searchableColumns: ["id", "nome", "slug"],
+      defaultSortBy: [
+        ["nome", "ASC"],
+        ["dateCreated", "ASC"],
+      ],
+      filterableColumns: {
+        "modalidade.id": [FilterOperator.EQ],
+      },
+    };
+  }
+}

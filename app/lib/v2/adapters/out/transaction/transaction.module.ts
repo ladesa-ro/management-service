@@ -1,5 +1,5 @@
 import { Global, Module } from "@nestjs/common";
-import { TRANSACTION_PORT } from "@/core/@shared";
+import { TRANSACTION_PORT } from "@/modules/@shared";
 import { TransactionTypeOrmAdapter } from "./transaction-typeorm.adapter";
 
 /**

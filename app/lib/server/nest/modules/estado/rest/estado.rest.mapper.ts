@@ -3,7 +3,7 @@ import {
   EstadoFindOneOutput,
   EstadoListInput,
   EstadoListOutput,
-} from "@/core/estado";
+} from "@/modules/estado";
 import {
   EstadoFindOneInputDto,
   EstadoFindOneOutputDto,

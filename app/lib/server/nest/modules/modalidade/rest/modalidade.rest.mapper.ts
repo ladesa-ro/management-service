@@ -5,7 +5,7 @@ import {
   ModalidadeListInput,
   ModalidadeListOutput,
   ModalidadeUpdateInput,
-} from "@/core/modalidade";
+} from "@/modules/modalidade";
 import {
   ModalidadeCreateInputDto,
   ModalidadeFindOneInputDto,

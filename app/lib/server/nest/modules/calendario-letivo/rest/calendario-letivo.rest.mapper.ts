@@ -5,7 +5,7 @@ import {
   CalendarioLetivoListInput,
   CalendarioLetivoListOutput,
   CalendarioLetivoUpdateInput,
-} from "@/core/calendario-letivo";
+} from "@/modules/calendario-letivo";
 import {
   CalendarioLetivoCreateInputDto,
   CalendarioLetivoFindOneInputDto,

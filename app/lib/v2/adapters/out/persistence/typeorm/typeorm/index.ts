@@ -1,2 +1,2 @@
-export * from "./qb-efficient-load";
-export * from "./typeorm.module";
+// Re-export only the items not exported from @shared
+// Note: TypeormModule and QbEfficientLoad are now in @shared

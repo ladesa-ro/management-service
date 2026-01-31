@@ -2,7 +2,7 @@ import { INestApplication } from "@nestjs/common";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { apiReference } from "@scalar/nestjs-api-reference";
 import swaggerUi from "swagger-ui-express";
-import { CONFIG_PORT, type IConfigPort } from "@/core/@shared/application/ports/out/config";
+import { CONFIG_PORT, type IConfigPort } from "@/modules/@shared/application/ports/out/config";
 import { withPrefix } from "@/v2/old/infrastructure/utils/withPrefix";
 
 export const useDocs = (app: INestApplication) => {

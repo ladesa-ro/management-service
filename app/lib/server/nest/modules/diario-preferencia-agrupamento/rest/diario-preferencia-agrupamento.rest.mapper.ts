@@ -5,7 +5,7 @@ import {
   DiarioPreferenciaAgrupamentoListInput,
   DiarioPreferenciaAgrupamentoListOutput,
   DiarioPreferenciaAgrupamentoUpdateInput,
-} from "@/core/diario-preferencia-agrupamento";
+} from "@/modules/diario-preferencia-agrupamento";
 import {
   DiarioPreferenciaAgrupamentoCreateInputDto,
   DiarioPreferenciaAgrupamentoFindOneInputDto,

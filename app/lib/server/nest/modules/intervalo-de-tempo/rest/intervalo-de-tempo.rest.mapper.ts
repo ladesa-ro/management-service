@@ -3,7 +3,7 @@ import {
   IntervaloDeTempoFindOneOutput,
   IntervaloDeTempoListInput,
   IntervaloDeTempoListOutput,
-} from "@/core/intervalo-de-tempo";
+} from "@/modules/intervalo-de-tempo";
 import {
   IntervaloDeTempoFindOneInputDto,
   IntervaloDeTempoFindOneOutputDto,

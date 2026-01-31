@@ -7,7 +7,7 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
-import { CampusService } from "@/core/campus";
+import { CampusService } from "@/modules/campus";
 import { AccessContext, AccessContextHttp } from "@/v2/old/infrastructure/access-context";
 import {
   CampusCreateInputDto,

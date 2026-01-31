@@ -1,5 +1,5 @@
 import { INestApplication } from "@nestjs/common";
-import { CONFIG_PORT, type IConfigPort } from "@/core/@shared/application/ports/out/config";
+import { CONFIG_PORT, type IConfigPort } from "@/modules/@shared/application/ports/out/config";
 
 export const usePrefix = (app: INestApplication) => {
   const configService = app.get<IConfigPort>(CONFIG_PORT);

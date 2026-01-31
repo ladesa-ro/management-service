@@ -5,7 +5,7 @@ import {
   OfertaFormacaoListInput,
   OfertaFormacaoListOutput,
   OfertaFormacaoUpdateInput,
-} from "@/core/oferta-formacao";
+} from "@/modules/oferta-formacao";
 import {
   OfertaFormacaoCreateInputDto,
   OfertaFormacaoFindOneInputDto,

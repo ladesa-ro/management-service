@@ -1,0 +1,51 @@
+import { BaseEntity, type IdUuid, type ScalarDateTimeString } from "@/modules/@shared";
+import type { NivelFormacao } from "@/modules/nivel-formacao/domain/nivel-formacao.domain";
+import type { OfertaFormacao } from "@/modules/oferta-formacao/domain/oferta-formacao.domain";
+import type {
+  IOfertaFormacaoNivelFormacao,
+  IOfertaFormacaoNivelFormacaoCreate,
+} from "./oferta-formacao-nivel-formacao.types";
+
+/**
+ * Entidade de Domínio: OfertaFormacaoNivelFormacao
+ * Entidade de relacionamento N:N entre OfertaFormacao e NivelFormacao
+ */
+export class OfertaFormacaoNivelFormacao
+  extends BaseEntity
+  implements IOfertaFormacaoNivelFormacao
+{
+  id!: IdUuid;
+  nivelFormacao!: NivelFormacao;
+  ofertaFormacao!: OfertaFormacao;
+  dateCreated!: ScalarDateTimeString;
+  dateUpdated!: ScalarDateTimeString;
+  dateDeleted!: ScalarDateTimeString | null;
+
+  protected static get entityName(): string {
+    return "OfertaFormacaoNivelFormacao";
+  }
+
+  // ========================================
+  // Factory Methods
+  // ========================================
+
+  /**
+   * Cria uma nova instância válida de OfertaFormacaoNivelFormacao
+   */
+  static criar(_dados: IOfertaFormacaoNivelFormacaoCreate): OfertaFormacaoNivelFormacao {
+    const instance = new OfertaFormacaoNivelFormacao();
+    instance.dateCreated = new Date().toISOString();
+    instance.dateUpdated = new Date().toISOString();
+    instance.dateDeleted = null;
+    return instance;
+  }
+
+  /**
+   * Reconstrói uma instância a partir de dados existentes (ex: do banco)
+   */
+  static fromData(dados: IOfertaFormacaoNivelFormacao): OfertaFormacaoNivelFormacao {
+    const instance = new OfertaFormacaoNivelFormacao();
+    Object.assign(instance, dados);
+    return instance;
+  }
+}

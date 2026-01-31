@@ -3,7 +3,7 @@ import {
   ImagemFindOneOutput,
   ImagemListInput,
   ImagemListOutput,
-} from "@/core/imagem";
+} from "@/modules/imagem";
 import {
   ImagemFindOneInputDto,
   ImagemFindOneOutputDto,

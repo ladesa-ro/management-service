@@ -1,5 +1,5 @@
 import { DocumentBuilder } from "@nestjs/swagger";
-import type { IConfigPort } from "@/core/@shared/application/ports/out/config";
+import type { IConfigPort } from "@/modules/@shared/application/ports/out/config";
 
 export function SetupSwaggerDocument(configService: IConfigPort | null = null) {
   const config = new DocumentBuilder();

@@ -5,7 +5,7 @@ import {
   CampusListInput,
   CampusListOutput,
   CampusUpdateInput,
-} from "@/core/campus";
+} from "@/modules/campus";
 import {
   CampusCreateInputDto,
   CampusFindOneInputDto,

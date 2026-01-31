@@ -5,7 +5,7 @@ import {
   OfertaFormacaoNivelFormacaoListInput,
   OfertaFormacaoNivelFormacaoListOutput,
   OfertaFormacaoNivelFormacaoUpdateInput,
-} from "@/core/oferta-formacao-nivel-formacao";
+} from "@/modules/oferta-formacao-nivel-formacao";
 import {
   OfertaFormacaoNivelFormacaoCreateInputDto,
   OfertaFormacaoNivelFormacaoFindOneInputDto,

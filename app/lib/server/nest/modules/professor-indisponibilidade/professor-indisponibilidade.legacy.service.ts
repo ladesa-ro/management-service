@@ -1,10 +1,11 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { map, pick } from "lodash";
-import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
-import { ProfessorIndisponibilidadeEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
+import { QbEfficientLoad } from "@/@shared/infrastructure/persistence/typeorm";
+import { DatabaseContextService } from "@/database-context";
+import { ProfessorIndisponibilidadeEntity } from "@/modules/professor-indisponibilidade/infrastructure/persistence/typeorm";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
-import { QbEfficientLoad, SearchService } from "@/v2/old/shared";
+import { SearchService } from "@/v2/old/shared";
 import type {
   ProfessorIndisponibilidadeCreateInputDto,
   ProfessorIndisponibilidadeFindOneInputDto,

@@ -5,7 +5,7 @@ import {
   AulaListInput,
   AulaListOutput,
   AulaUpdateInput,
-} from "@/core/aula";
+} from "@/modules/aula";
 import {
   AulaCreateInputDto,
   AulaFindOneInputDto,

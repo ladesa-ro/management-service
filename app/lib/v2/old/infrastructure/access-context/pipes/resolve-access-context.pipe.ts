@@ -1,5 +1,5 @@
 import { Inject, Injectable, type PipeTransform } from "@nestjs/common";
-import { CONFIG_PORT, type IConfigPort } from "@/core/@shared/application/ports/out/config";
+import { CONFIG_PORT, type IConfigPort } from "@/modules/@shared/application/ports/out/config";
 import type { IRequestActor } from "@/v2/old/infrastructure/authentication";
 import { DatabaseContextService } from "@/v2/old/infrastructure/integrations";
 import { AccessContext } from "../access-context";

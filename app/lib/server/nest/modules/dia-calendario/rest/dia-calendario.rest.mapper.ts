@@ -5,7 +5,7 @@ import {
   DiaCalendarioListInput,
   DiaCalendarioListOutput,
   DiaCalendarioUpdateInput,
-} from "@/core/dia-calendario";
+} from "@/modules/dia-calendario";
 import {
   DiaCalendarioCreateInputDto,
   DiaCalendarioFindOneInputDto,

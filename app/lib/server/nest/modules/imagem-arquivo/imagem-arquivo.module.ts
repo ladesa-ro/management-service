@@ -1,8 +1,8 @@
 import { Global, Module } from "@nestjs/common";
-import { IMAGEM_ARQUIVO_QUERY_REPOSITORY_PORT } from "@/core/imagem-arquivo/application/ports";
-import { ImagemArquivoService } from "@/core/imagem-arquivo/application/use-cases/imagem-arquivo.service";
-import { NestJsPaginateAdapter } from "@/v2/adapters/out/persistence/pagination";
-import { ImagemArquivoQueryTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistence/typeorm/adapters";
+import { NestJsPaginateAdapter } from "@/@shared/infrastructure/persistence/typeorm";
+import { IMAGEM_ARQUIVO_QUERY_REPOSITORY_PORT } from "@/modules/imagem-arquivo/application/ports";
+import { ImagemArquivoService } from "@/modules/imagem-arquivo/application/use-cases/imagem-arquivo.service";
+import { ImagemArquivoQueryTypeOrmRepositoryAdapter } from "@/modules/imagem-arquivo/infrastructure/persistence/typeorm";
 
 @Global()
 @Module({

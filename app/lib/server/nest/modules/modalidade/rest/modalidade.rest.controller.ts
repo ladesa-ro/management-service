@@ -7,7 +7,7 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
-import { ModalidadeService } from "@/core/modalidade/application/use-cases/modalidade.service";
+import { ModalidadeService } from "@/modules/modalidade/application/use-cases/modalidade.service";
 import { AccessContext, AccessContextHttp } from "@/v2/old/infrastructure/access-context";
 import {
   ModalidadeCreateInputDto,

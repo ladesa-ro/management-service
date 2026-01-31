@@ -1,12 +1,12 @@
 import { Module } from "@nestjs/common";
+import { NestJsPaginateAdapter } from "@/@shared/infrastructure/persistence/typeorm";
 import {
   OFERTA_FORMACAO_NIVEL_FORMACAO_REPOSITORY_PORT,
   OfertaFormacaoNivelFormacaoService,
-} from "@/core/oferta-formacao-nivel-formacao";
+} from "@/modules/oferta-formacao-nivel-formacao";
+import { OfertaFormacaoNivelFormacaoTypeOrmRepositoryAdapter } from "@/modules/oferta-formacao-nivel-formacao/infrastructure/persistence/typeorm";
 import { NivelFormacaoModule } from "@/server/nest/modules/nivel-formacao";
 import { OfertaFormacaoModule } from "@/server/nest/modules/oferta-formacao";
-import { NestJsPaginateAdapter } from "@/v2/adapters/out/persistence/pagination";
-import { OfertaFormacaoNivelFormacaoTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistence/typeorm/adapters/oferta-formacao-nivel-formacao-typeorm.repository.adapter";
 import { OfertaFormacaoNivelFormacaoRestController } from "./rest/oferta-formacao-nivel-formacao.rest.controller";
 
 @Module({

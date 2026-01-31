@@ -8,7 +8,7 @@ import {
   InternalError,
   ResourceNotFoundError,
   ValidationError,
-} from "@/core/@shared/application";
+} from "@/modules/@shared/application";
 
 /**
  * Estrutura padrão de resposta de erro

@@ -5,7 +5,7 @@ import {
   type ExceptionFilter,
 } from "@nestjs/common";
 import type { Request, Response } from "express";
-import type { ValidationErrorDetail } from "@/core/@shared";
+import type { ValidationErrorDetail } from "@/modules/@shared";
 import type { HttpErrorResponse } from "./error-http.mapper";
 import {
   buildValidationMessage,

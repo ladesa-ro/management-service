@@ -1,8 +1,8 @@
 import { Module } from "@nestjs/common";
-import { MODALIDADE_REPOSITORY_PORT } from "@/core/modalidade/application/ports";
-import { ModalidadeService } from "@/core/modalidade/application/use-cases/modalidade.service";
-import { NestJsPaginateAdapter } from "@/v2/adapters/out/persistence/pagination";
-import { ModalidadeTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistence/typeorm/adapters";
+import { NestJsPaginateAdapter } from "@/@shared/infrastructure/persistence/typeorm";
+import { MODALIDADE_REPOSITORY_PORT } from "@/modules/modalidade/application/ports";
+import { ModalidadeService } from "@/modules/modalidade/application/use-cases/modalidade.service";
+import { ModalidadeTypeOrmRepositoryAdapter } from "@/modules/modalidade/infrastructure/persistence/typeorm";
 import { ModalidadeRestController } from "./rest/modalidade.rest.controller";
 
 @Module({

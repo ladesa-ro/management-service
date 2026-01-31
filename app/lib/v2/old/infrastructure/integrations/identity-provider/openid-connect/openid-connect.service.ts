@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import * as client from "openid-client";
-import { CONFIG_PORT, type IConfigPort } from "@/core/@shared/application/ports/out/config";
+import { CONFIG_PORT, type IConfigPort } from "@/modules/@shared/application/ports/out/config";
 
 @Injectable()
 export class OpenidConnectService {

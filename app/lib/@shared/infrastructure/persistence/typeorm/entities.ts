@@ -1,0 +1,37 @@
+// Re-export all entities from their respective modules for backwards compatibility
+// Import directly from entity files to avoid circular dependencies with adapters
+export { AmbienteEntity } from "@/modules/ambiente/infrastructure/persistence/typeorm/ambiente.entity";
+export { ArquivoEntity } from "@/modules/arquivo/infrastructure/persistence/typeorm/arquivo.entity";
+export { AulaEntity } from "@/modules/aula/infrastructure/persistence/typeorm/aula.entity";
+export { BlocoEntity } from "@/modules/bloco/infrastructure/persistence/typeorm/bloco.entity";
+export { CalendarioLetivoEntity } from "@/modules/calendario-letivo/infrastructure/persistence/typeorm/calendario-letivo.entity";
+export { CampusEntity } from "@/modules/campus/infrastructure/persistence/typeorm/campus.entity";
+export { CidadeEntity } from "@/modules/cidade/infrastructure/persistence/typeorm/cidade.entity";
+export { CursoEntity } from "@/modules/curso/infrastructure/persistence/typeorm/curso.entity";
+export { DiaCalendarioEntity } from "@/modules/dia-calendario/infrastructure/persistence/typeorm/dia-calendario.entity";
+export { DiarioEntity } from "@/modules/diario/infrastructure/persistence/typeorm/diario.entity";
+export { DiarioPreferenciaAgrupamentoEntity } from "@/modules/diario-preferencia-agrupamento/infrastructure/persistence/typeorm/diario-preferencia-agrupamento.entity";
+export { DiarioProfessorEntity } from "@/modules/diario-professor/infrastructure/persistence/typeorm/diario-professor.entity";
+export { DisciplinaEntity } from "@/modules/disciplina/infrastructure/persistence/typeorm/disciplina.entity";
+export { DisponibilidadeEntity } from "@/modules/disponibilidade/infrastructure/persistence/typeorm/disponibilidade.entity";
+export { EnderecoEntity } from "@/modules/endereco/infrastructure/persistence/typeorm/endereco.entity";
+export { EstadoEntity } from "@/modules/estado/infrastructure/persistence/typeorm/estado.entity";
+export { EtapaEntity } from "@/modules/etapa/infrastructure/persistence/typeorm/etapa.entity";
+export { EventoEntity } from "@/modules/evento/infrastructure/persistence/typeorm/evento.entity";
+export { GradeHorarioOfertaFormacaoEntity } from "@/modules/grade-horario-oferta-formacao/infrastructure/persistence/typeorm/grade-horario-oferta-formacao.entity";
+export { GradeHorarioOfertaFormacaoIntervaloDeTempoEntity } from "@/modules/grade-horario-oferta-formacao-intervalo-de-tempo/infrastructure/persistence/typeorm/grade-horario-oferta-formacao-intervalo-de-tempo.entity";
+export { HorarioGeradoEntity } from "@/modules/horario-gerado/infrastructure/persistence/typeorm/horario-gerado.entity";
+export { HorarioGeradoAulaEntity } from "@/modules/horario-gerado-aula/infrastructure/persistence/typeorm/horario-gerado-aula.entity";
+export { ImagemEntity } from "@/modules/imagem/infrastructure/persistence/typeorm/imagem.entity";
+export { ImagemArquivoEntity } from "@/modules/imagem-arquivo/infrastructure/persistence/typeorm/imagem-arquivo.entity";
+export { IntervaloDeTempoEntity } from "@/modules/intervalo-de-tempo/infrastructure/persistence/typeorm/intervalo-de-tempo.entity";
+export { ModalidadeEntity } from "@/modules/modalidade/infrastructure/persistence/typeorm/modalidade.entity";
+export { NivelFormacaoEntity } from "@/modules/nivel-formacao/infrastructure/persistence/typeorm/nivel-formacao.entity";
+export { OfertaFormacaoEntity } from "@/modules/oferta-formacao/infrastructure/persistence/typeorm/oferta-formacao.entity";
+export { OfertaFormacaoNivelFormacaoEntity } from "@/modules/oferta-formacao-nivel-formacao/infrastructure/persistence/typeorm/oferta-formacao-nivel-formacao.entity";
+export { PerfilEntity } from "@/modules/perfil/infrastructure/persistence/typeorm/perfil.entity";
+export { ProfessorIndisponibilidadeEntity } from "@/modules/professor-indisponibilidade/infrastructure/persistence/typeorm/professor-indisponibilidade.entity";
+export { ReservaEntity } from "@/modules/reserva/infrastructure/persistence/typeorm/reserva.entity";
+export { TurmaEntity } from "@/modules/turma/infrastructure/persistence/typeorm/turma.entity";
+export { TurmaDisponibilidadeEntity } from "@/modules/turma-disponibilidade/infrastructure/persistence/typeorm/turma-disponibilidade.entity";
+export { UsuarioEntity } from "@/modules/usuario/infrastructure/persistence/typeorm/usuario.entity";

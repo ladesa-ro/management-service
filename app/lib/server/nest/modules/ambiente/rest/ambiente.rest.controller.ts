@@ -18,7 +18,7 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
-import { AmbienteService } from "@/core/ambiente/application/use-cases/ambiente.service";
+import { AmbienteService } from "@/modules/ambiente/application/use-cases/ambiente.service";
 import { AccessContext, AccessContextHttp } from "@/v2/old/infrastructure/access-context";
 import {
   AmbienteCreateInputDto,

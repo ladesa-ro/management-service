@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
-import { DatabaseContextModule } from "./context";
-import { TypeormModule } from "./typeorm";
+import { TypeormModule } from "@/@shared/infrastructure/persistence/typeorm";
+import { DatabaseContextModule } from "@/database-context";
 
 @Module({
   imports: [TypeormModule, DatabaseContextModule],

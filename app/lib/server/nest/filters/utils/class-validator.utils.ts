@@ -1,5 +1,5 @@
 import type { ValidationError as ClassValidatorError } from "class-validator";
-import type { ValidationErrorDetail } from "@/core/@shared";
+import type { ValidationErrorDetail } from "@/modules/@shared";
 
 /**
  * Verifica se é um array de erros do class-validator.

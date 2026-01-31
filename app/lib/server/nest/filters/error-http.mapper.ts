@@ -5,7 +5,7 @@ import {
   DomainErrorCode,
   ValidationError,
   type ValidationErrorDetail,
-} from "@/core/@shared";
+} from "@/modules/@shared";
 
 /**
  * Resposta HTTP padronizada para erros.

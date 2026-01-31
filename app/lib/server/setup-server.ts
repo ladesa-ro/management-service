@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import { NestFactory } from "@nestjs/core";
-import { CONFIG_PORT, type IConfigPort } from "@/core/@shared/application/ports/out/config";
+import { CONFIG_PORT, type IConfigPort } from "@/modules/@shared/application/ports/out/config";
 import { AppModule } from "@/server/nest/app.module";
 import { useCompression } from "@/server/plugins/use-compression";
 import { useCors } from "@/server/plugins/use-cors";
