@@ -1,13 +1,13 @@
-import { BaseEntity, type ScalarDateTimeString } from "@/core/@shared";
+import { BaseEntity, type IdUuid, type ScalarDateTimeString } from "@/core/@shared";
 import type { IImagem } from "@/core/imagem/domain/imagem.types";
-import type { IUsuario, IUsuarioCreate } from "./usuario.types";
+import type { IUsuario, IUsuarioCreate, IUsuarioUpdate } from "./usuario.types";
 
 /**
  * Entidade de Domínio: Usuario
  * Implementa a tipagem IUsuario e adiciona regras de negócio
  */
 export class Usuario extends BaseEntity implements IUsuario {
-  id!: string;
+  id!: IdUuid;
   nome!: string | null;
   matriculaSiape!: string | null;
   email!: string | null;
@@ -18,24 +18,32 @@ export class Usuario extends BaseEntity implements IUsuario {
   dateUpdated!: ScalarDateTimeString;
   dateDeleted!: ScalarDateTimeString | null;
 
+  protected static get entityName(): string {
+    return "Usuario";
+  }
+
   // ========================================
-  // Métodos de Domínio
+  // Factory Methods
   // ========================================
 
   /**
    * Cria uma nova instância válida de Usuario
+   * @throws EntityValidationError se os dados forem inválidos
    */
   static criar(dados: IUsuarioCreate): Usuario {
+    const { rules } = this.createValidation();
+
     const instance = new Usuario();
-    instance.nome = dados.nome ?? null;
-    instance.matriculaSiape = dados.matriculaSiape ?? null;
-    instance.email = dados.email ?? null;
+    instance.nome = rules.optional(dados.nome);
+    instance.matriculaSiape = rules.optional(dados.matriculaSiape);
+    instance.email = rules.optional(dados.email);
     instance.isSuperUser = false;
     instance.imagemCapa = null;
     instance.imagemPerfil = null;
     instance.dateCreated = new Date().toISOString();
     instance.dateUpdated = new Date().toISOString();
     instance.dateDeleted = null;
+
     return instance;
   }
 
@@ -48,6 +56,32 @@ export class Usuario extends BaseEntity implements IUsuario {
     return instance;
   }
 
+  // ========================================
+  // Métodos de Domínio
+  // ========================================
+
+  /**
+   * Atualiza os dados do usuário
+   * @throws EntityValidationError se os dados forem inválidos
+   */
+  atualizar(dados: IUsuarioUpdate): void {
+    const { rules } = Usuario.createValidation();
+
+    if (dados.nome !== undefined) {
+      this.nome = rules.optional(dados.nome);
+    }
+
+    if (dados.matriculaSiape !== undefined) {
+      this.matriculaSiape = rules.optional(dados.matriculaSiape);
+    }
+
+    if (dados.email !== undefined) {
+      this.email = rules.optional(dados.email);
+    }
+
+    this.dateUpdated = new Date().toISOString();
+  }
+
   /**
    * Valida se pode ser deletado (override: super users não podem ser deletados)
    */
@@ -56,44 +90,25 @@ export class Usuario extends BaseEntity implements IUsuario {
   }
 
   // ========================================
-  // Métodos específicos do domínio Usuario
+  // Métodos específicos do domínio
   // ========================================
 
-  /**
-   * Verifica se tem nome
-   */
   temNome(): boolean {
     return this.nome !== null && this.nome.trim().length > 0;
   }
 
-  /**
-   * Verifica se tem email
-   */
   temEmail(): boolean {
     return this.email !== null && this.email.trim().length > 0;
   }
 
-  /**
-   * Verifica se tem matrícula SIAPE
-   */
   temMatriculaSiape(): boolean {
     return this.matriculaSiape !== null && this.matriculaSiape.trim().length > 0;
   }
 
-  // ========================================
-  // Factory Methods
-  // ========================================
-
-  /**
-   * Verifica se tem imagem de capa
-   */
   temImagemCapa(): boolean {
     return this.imagemCapa !== null;
   }
 
-  /**
-   * Verifica se tem imagem de perfil
-   */
   temImagemPerfil(): boolean {
     return this.imagemPerfil !== null;
   }

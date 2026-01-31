@@ -1,16 +1,17 @@
-import { BaseEntity, type ScalarDateTimeString } from "@/core/@shared";
+import { BaseEntity, type IdUuid, type ScalarDateTimeString } from "@/core/@shared";
 import type { IAmbiente } from "@/core/ambiente/domain/ambiente.types";
 import type { ICalendarioLetivo } from "@/core/calendario-letivo";
 import type { IDisciplina } from "@/core/disciplina/domain/disciplina.types";
 import type { IImagem } from "@/core/imagem/domain/imagem.types";
 import type { ITurma } from "@/core/turma/domain/turma.types";
-import type { IDiario, IDiarioCreate } from "./diario.types";
+import type { IDiario, IDiarioCreate, IDiarioUpdate } from "./diario.types";
 
 /**
- * Entidade de Dominio: Diario
+ * Entidade de Domínio: Diario
+ * Implementa a tipagem IDiario e adiciona regras de negócio
  */
 export class Diario extends BaseEntity implements IDiario {
-  id!: string;
+  id!: IdUuid;
   ativo!: boolean;
   calendarioLetivo!: ICalendarioLetivo;
   turma!: ITurma;
@@ -21,6 +22,17 @@ export class Diario extends BaseEntity implements IDiario {
   dateUpdated!: ScalarDateTimeString;
   dateDeleted!: ScalarDateTimeString | null;
 
+  protected static get entityName(): string {
+    return "Diario";
+  }
+
+  // ========================================
+  // Factory Methods
+  // ========================================
+
+  /**
+   * Cria uma nova instância válida de Diario
+   */
   static criar(dados: IDiarioCreate): Diario {
     const instance = new Diario();
     instance.ativo = dados.ativo ?? true;
@@ -32,10 +44,28 @@ export class Diario extends BaseEntity implements IDiario {
     return instance;
   }
 
+  /**
+   * Reconstrói uma instância a partir de dados existentes (ex: do banco)
+   */
   static fromData(dados: IDiario): Diario {
     const instance = new Diario();
     Object.assign(instance, dados);
     return instance;
+  }
+
+  // ========================================
+  // Métodos de Domínio
+  // ========================================
+
+  /**
+   * Atualiza os dados do diário
+   */
+  atualizar(dados: IDiarioUpdate): void {
+    if (dados.ativo !== undefined) {
+      this.ativo = dados.ativo;
+    }
+
+    this.dateUpdated = new Date().toISOString();
   }
 
   /**
@@ -43,5 +73,21 @@ export class Diario extends BaseEntity implements IDiario {
    */
   override isAtivo(): boolean {
     return this.ativo && this.dateDeleted === null;
+  }
+
+  /**
+   * Ativa o diário
+   */
+  ativar(): void {
+    this.ativo = true;
+    this.dateUpdated = new Date().toISOString();
+  }
+
+  /**
+   * Desativa o diário
+   */
+  desativar(): void {
+    this.ativo = false;
+    this.dateUpdated = new Date().toISOString();
   }
 }

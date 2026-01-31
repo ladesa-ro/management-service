@@ -7,12 +7,12 @@ import type {
   AulaListOutput,
 } from "@/core/aula/application/dtos";
 import type { IAulaRepositoryPort } from "@/core/aula/application/ports";
-import type { ITypeOrmPaginationConfig } from "../types";
 import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
 import { BaseTypeOrmRepositoryAdapter } from "../base";
 import { DatabaseContextService } from "../context/database-context.service";
 import type { AulaEntity } from "../typeorm/entities";
+import type { ITypeOrmPaginationConfig } from "../types";
 
 @Injectable()
 export class AulaTypeOrmRepositoryAdapter

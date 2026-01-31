@@ -1,13 +1,13 @@
-import { BaseEntity, type ScalarDateTimeString } from "@/core/@shared";
+import { BaseEntity, type IdUuid, type ScalarDateTimeString } from "@/core/@shared";
 import type { IEndereco } from "@/core/endereco";
-import type { ICampus, ICampusCreate } from "./campus.types";
+import type { ICampus, ICampusCreate, ICampusUpdate } from "./campus.types";
 
 /**
  * Entidade de Domínio: Campus
  * Implementa a tipagem ICampus e adiciona regras de negócio
  */
 export class Campus extends BaseEntity implements ICampus {
-  id!: string;
+  id!: IdUuid;
   nomeFantasia!: string;
   razaoSocial!: string;
   apelido!: string;
@@ -17,28 +17,31 @@ export class Campus extends BaseEntity implements ICampus {
   dateUpdated!: ScalarDateTimeString;
   dateDeleted!: ScalarDateTimeString | null;
 
+  protected static get entityName(): string {
+    return "Campus";
+  }
+
   // ========================================
-  // Métodos de Domínio
+  // Factory Methods
   // ========================================
 
   /**
    * Cria uma nova instância válida de Campus
-   * @throws Error se os dados forem inválidos
+   * @throws EntityValidationError se os dados forem inválidos
    */
   static criar(dados: ICampusCreate): Campus {
+    const { result, rules } = this.createValidation();
+
     const instance = new Campus();
+    instance.nomeFantasia = rules.required(dados.nomeFantasia, "nomeFantasia");
+    instance.nomeFantasia = rules.minLength(instance.nomeFantasia, "nomeFantasia", 1);
 
-    if (!dados.nomeFantasia || dados.nomeFantasia.trim().length === 0) {
-      throw new Error("Nome fantasia é obrigatório");
-    }
+    instance.razaoSocial = rules.required(dados.razaoSocial, "razaoSocial");
+    instance.razaoSocial = rules.minLength(instance.razaoSocial, "razaoSocial", 1);
 
-    if (!dados.razaoSocial || dados.razaoSocial.trim().length === 0) {
-      throw new Error("Razão social é obrigatória");
-    }
+    this.throwIfInvalid(result);
 
-    instance.nomeFantasia = dados.nomeFantasia.trim();
-    instance.razaoSocial = dados.razaoSocial.trim();
-    instance.apelido = dados.apelido?.trim() || "";
+    instance.apelido = rules.optional(dados.apelido) ?? "";
     instance.cnpj = dados.cnpj;
     instance.dateCreated = new Date().toISOString();
     instance.dateUpdated = new Date().toISOString();
@@ -54,6 +57,40 @@ export class Campus extends BaseEntity implements ICampus {
     const instance = new Campus();
     Object.assign(instance, dados);
     return instance;
+  }
+
+  // ========================================
+  // Métodos de Domínio
+  // ========================================
+
+  /**
+   * Atualiza os dados do campus
+   * @throws EntityValidationError se os dados forem inválidos
+   */
+  atualizar(dados: ICampusUpdate): void {
+    const { result, rules } = Campus.createValidation();
+
+    if (dados.nomeFantasia !== undefined) {
+      this.nomeFantasia = rules.required(dados.nomeFantasia, "nomeFantasia");
+      this.nomeFantasia = rules.minLength(this.nomeFantasia, "nomeFantasia", 1);
+    }
+
+    if (dados.razaoSocial !== undefined) {
+      this.razaoSocial = rules.required(dados.razaoSocial, "razaoSocial");
+      this.razaoSocial = rules.minLength(this.razaoSocial, "razaoSocial", 1);
+    }
+
+    if (dados.apelido !== undefined) {
+      this.apelido = rules.optional(dados.apelido) ?? "";
+    }
+
+    if (dados.cnpj !== undefined) {
+      this.cnpj = dados.cnpj;
+    }
+
+    Campus.throwIfInvalid(result);
+
+    this.dateUpdated = new Date().toISOString();
   }
 
   // ========================================

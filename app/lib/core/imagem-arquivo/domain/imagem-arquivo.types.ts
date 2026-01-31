@@ -29,3 +29,13 @@ export interface IImagemArquivoCreate {
   imagem: { id: IdUuid };
   arquivo: { id: IdUuid };
 }
+
+/**
+ * Interface para atualização de ImagemArquivo
+ */
+export interface IImagemArquivoUpdate {
+  largura?: number;
+  altura?: number;
+  formato?: string;
+  mimeType?: string;
+}

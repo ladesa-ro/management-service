@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
 import type { DeepPartial } from "typeorm";
+import type { IPaginationCriteria, IPaginationResult } from "@/core/@shared";
 import type {
   PerfilFindOneInput,
   PerfilFindOneOutput,
@@ -8,8 +9,6 @@ import type {
   PerfilListOutput,
 } from "@/core/perfil/application/dtos";
 import type { IPerfilRepositoryPort } from "@/core/perfil/application/ports";
-import type { IPaginationCriteria, IPaginationResult } from "@/core/@shared";
-import type { ITypeOrmPaginationConfig } from "../types";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 import { QbEfficientLoad } from "@/v2/old/shared";
@@ -17,6 +16,7 @@ import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter"
 import { BaseTypeOrmRepositoryAdapter } from "../base";
 import { DatabaseContextService } from "../context/database-context.service";
 import type { PerfilEntity, UsuarioEntity } from "../typeorm/entities";
+import type { ITypeOrmPaginationConfig } from "../types";
 
 @Injectable()
 export class PerfilTypeOrmRepositoryAdapter

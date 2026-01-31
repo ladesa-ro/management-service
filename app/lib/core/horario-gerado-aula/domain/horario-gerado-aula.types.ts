@@ -20,3 +20,10 @@ export interface IHorarioGeradoAulaCreate {
   horarioGerado: { id: IdUuid };
   intervaloDeTempo: { id: IdUuid };
 }
+
+export interface IHorarioGeradoAulaUpdate {
+  data?: ScalarDateTimeString;
+  diarioProfessor?: { id: IdUuid };
+  horarioGerado?: { id: IdUuid };
+  intervaloDeTempo?: { id: IdUuid };
+}

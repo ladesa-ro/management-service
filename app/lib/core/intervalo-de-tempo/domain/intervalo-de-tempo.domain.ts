@@ -1,5 +1,9 @@
 import { BaseEntity, type IdUuid, type ScalarDateTimeString } from "@/core/@shared";
-import type { IIntervaloDeTempo, IIntervaloDeTempoCreate } from "./intervalo-de-tempo.types";
+import type {
+  IIntervaloDeTempo,
+  IIntervaloDeTempoCreate,
+  IIntervaloDeTempoUpdate,
+} from "./intervalo-de-tempo.types";
 
 /**
  * Entidade de Domínio: IntervaloDeTempo
@@ -7,25 +11,40 @@ import type { IIntervaloDeTempo, IIntervaloDeTempoCreate } from "./intervalo-de-
  */
 export class IntervaloDeTempo extends BaseEntity implements IIntervaloDeTempo {
   id!: IdUuid;
-
   periodoInicio!: string;
   periodoFim!: string;
-
   dateCreated!: ScalarDateTimeString;
   dateUpdated!: ScalarDateTimeString;
   dateDeleted!: ScalarDateTimeString | null;
+
+  protected static get entityName(): string {
+    return "IntervaloDeTempo";
+  }
 
   // ========================================
   // Factory Methods
   // ========================================
 
   /**
-   * Cria uma nova instância de IntervaloDeTempo
+   * Cria uma nova instância válida de IntervaloDeTempo
+   * @throws EntityValidationError se os dados forem inválidos
    */
   static criar(dados: IIntervaloDeTempoCreate): IntervaloDeTempo {
+    const { result, rules } = this.createValidation();
+
     const instance = new IntervaloDeTempo();
-    instance.periodoInicio = dados.periodoInicio;
-    instance.periodoFim = dados.periodoFim;
+    instance.periodoInicio = rules.required(dados.periodoInicio, "periodoInicio");
+    instance.periodoInicio = rules.timeFormat(instance.periodoInicio, "periodoInicio");
+
+    instance.periodoFim = rules.required(dados.periodoFim, "periodoFim");
+    instance.periodoFim = rules.timeFormat(instance.periodoFim, "periodoFim");
+
+    this.throwIfInvalid(result);
+
+    instance.dateCreated = new Date().toISOString();
+    instance.dateUpdated = new Date().toISOString();
+    instance.dateDeleted = null;
+
     return instance;
   }
 
@@ -39,7 +58,33 @@ export class IntervaloDeTempo extends BaseEntity implements IIntervaloDeTempo {
   }
 
   // ========================================
-  // Métodos específicos do domínio IntervaloDeTempo
+  // Métodos de Domínio
+  // ========================================
+
+  /**
+   * Atualiza os dados do intervalo de tempo
+   * @throws EntityValidationError se os dados forem inválidos
+   */
+  atualizar(dados: IIntervaloDeTempoUpdate): void {
+    const { result, rules } = IntervaloDeTempo.createValidation();
+
+    if (dados.periodoInicio !== undefined) {
+      this.periodoInicio = rules.required(dados.periodoInicio, "periodoInicio");
+      this.periodoInicio = rules.timeFormat(this.periodoInicio, "periodoInicio");
+    }
+
+    if (dados.periodoFim !== undefined) {
+      this.periodoFim = rules.required(dados.periodoFim, "periodoFim");
+      this.periodoFim = rules.timeFormat(this.periodoFim, "periodoFim");
+    }
+
+    IntervaloDeTempo.throwIfInvalid(result);
+
+    this.dateUpdated = new Date().toISOString();
+  }
+
+  // ========================================
+  // Métodos específicos do domínio
   // ========================================
 
   /**

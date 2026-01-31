@@ -23,3 +23,12 @@ export interface IDiarioPreferenciaAgrupamentoCreate {
   intervaloDeTempo: { id: IdUuid };
   diario: { id: IdUuid };
 }
+
+export interface IDiarioPreferenciaAgrupamentoUpdate {
+  dataInicio?: ScalarDateTimeString;
+  dataFim?: ScalarDateTimeString | null;
+  diaSemanaIso?: number;
+  aulasSeguidas?: number;
+  intervaloDeTempo?: { id: IdUuid };
+  diario?: { id: IdUuid };
+}

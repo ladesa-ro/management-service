@@ -1,13 +1,13 @@
-import { BaseEntity, type ScalarDateTimeString } from "@/core/@shared";
+import { BaseEntity, type IdUuid, type ScalarDateTimeString } from "@/core/@shared";
 import type { IBloco } from "@/core/bloco";
-import type { IAmbiente, IAmbienteCreate } from "./ambiente.types";
+import type { IAmbiente, IAmbienteCreate, IAmbienteUpdate } from "./ambiente.types";
 
 /**
  * Entidade de Domínio: Ambiente
  * Implementa a tipagem IAmbiente e adiciona regras de negócio
  */
 export class Ambiente extends BaseEntity implements IAmbiente {
-  id!: string;
+  id!: IdUuid;
   nome!: string;
   descricao!: string | null;
   codigo!: string;
@@ -19,30 +19,33 @@ export class Ambiente extends BaseEntity implements IAmbiente {
   dateUpdated!: ScalarDateTimeString;
   dateDeleted!: ScalarDateTimeString | null;
 
+  protected static get entityName(): string {
+    return "Ambiente";
+  }
+
   // ========================================
-  // Métodos de Domínio
+  // Factory Methods
   // ========================================
 
   /**
    * Cria uma nova instância válida de Ambiente
-   * @throws Error se os dados forem inválidos
+   * @throws EntityValidationError se os dados forem inválidos
    */
   static criar(dados: IAmbienteCreate): Ambiente {
+    const { result, rules } = this.createValidation();
+
     const instance = new Ambiente();
+    instance.nome = rules.required(dados.nome, "nome");
+    instance.nome = rules.minLength(instance.nome, "nome", 1);
 
-    if (!dados.nome || dados.nome.trim().length === 0) {
-      throw new Error("Nome é obrigatório");
-    }
+    instance.codigo = rules.required(dados.codigo, "codigo");
+    instance.codigo = rules.minLength(instance.codigo, "codigo", 1);
 
-    if (!dados.codigo || dados.codigo.trim().length === 0) {
-      throw new Error("Código é obrigatório");
-    }
+    this.throwIfInvalid(result);
 
-    instance.nome = dados.nome.trim();
-    instance.descricao = dados.descricao ?? null;
-    instance.codigo = dados.codigo.trim();
+    instance.descricao = rules.optional(dados.descricao);
     instance.capacidade = dados.capacidade ?? null;
-    instance.tipo = dados.tipo ?? null;
+    instance.tipo = rules.optional(dados.tipo);
     instance.imagemCapa = null;
     instance.dateCreated = new Date().toISOString();
     instance.dateUpdated = new Date().toISOString();
@@ -58,6 +61,44 @@ export class Ambiente extends BaseEntity implements IAmbiente {
     const instance = new Ambiente();
     Object.assign(instance, dados);
     return instance;
+  }
+
+  // ========================================
+  // Métodos de Domínio
+  // ========================================
+
+  /**
+   * Atualiza os dados do ambiente
+   * @throws EntityValidationError se os dados forem inválidos
+   */
+  atualizar(dados: IAmbienteUpdate): void {
+    const { result, rules } = Ambiente.createValidation();
+
+    if (dados.nome !== undefined) {
+      this.nome = rules.required(dados.nome, "nome");
+      this.nome = rules.minLength(this.nome, "nome", 1);
+    }
+
+    if (dados.codigo !== undefined) {
+      this.codigo = rules.required(dados.codigo, "codigo");
+      this.codigo = rules.minLength(this.codigo, "codigo", 1);
+    }
+
+    if (dados.descricao !== undefined) {
+      this.descricao = rules.optional(dados.descricao);
+    }
+
+    if (dados.capacidade !== undefined) {
+      this.capacidade = dados.capacidade;
+    }
+
+    if (dados.tipo !== undefined) {
+      this.tipo = rules.optional(dados.tipo);
+    }
+
+    Ambiente.throwIfInvalid(result);
+
+    this.dateUpdated = new Date().toISOString();
   }
 
   // ========================================

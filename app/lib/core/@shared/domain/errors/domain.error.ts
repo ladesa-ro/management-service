@@ -1,3 +1,5 @@
+import type { IValidationErrorDetail, ValidationResult } from "../validation";
+
 /**
  * Códigos de erro de domínio.
  */
@@ -24,16 +26,75 @@ export abstract class DomainError extends Error {
 
 /**
  * Erro de validação de entidade de domínio.
+ * Pode conter múltiplos erros de validação.
  */
 export class EntityValidationError extends DomainError {
   readonly code = DomainErrorCode.ENTITY_VALIDATION;
+  readonly details: readonly IValidationErrorDetail[];
 
   constructor(
     readonly entity: string,
-    readonly field: string,
-    readonly reason: string,
+    details: IValidationErrorDetail | readonly IValidationErrorDetail[],
   ) {
-    super(`[${entity}] Campo "${field}": ${reason}`);
+    const detailsArray = Array.isArray(details) ? details : [details];
+    const message = EntityValidationError.buildMessage(entity, detailsArray);
+    super(message);
+    this.details = detailsArray;
+  }
+
+  /**
+   * Cria um erro de validação a partir de um ValidationResult
+   */
+  static fromValidationResult(entity: string, result: ValidationResult): EntityValidationError {
+    return new EntityValidationError(entity, result.errors);
+  }
+
+  /**
+   * Cria um erro de validação para um único campo
+   */
+  static fromField(
+    entity: string,
+    field: string,
+    message: string,
+    rule?: string,
+    value?: unknown,
+  ): EntityValidationError {
+    return new EntityValidationError(entity, { field, message, rule, value });
+  }
+
+  private static buildMessage(entity: string, details: readonly IValidationErrorDetail[]): string {
+    if (details.length === 0) {
+      return `[${entity}] Erro de validação`;
+    }
+
+    if (details.length === 1) {
+      const d = details[0];
+      return `[${entity}] Campo "${d.field}": ${d.message}`;
+    }
+
+    const fieldNames = details.map((d) => d.field).join(", ");
+    return `[${entity}] Erros de validação nos campos: ${fieldNames}`;
+  }
+
+  /**
+   * Retorna o primeiro detalhe de erro
+   */
+  get firstDetail(): IValidationErrorDetail | undefined {
+    return this.details[0];
+  }
+
+  /**
+   * Retorna o campo do primeiro erro (compatibilidade com versão anterior)
+   */
+  get field(): string {
+    return this.details[0]?.field ?? "";
+  }
+
+  /**
+   * Retorna a razão do primeiro erro (compatibilidade com versão anterior)
+   */
+  get reason(): string {
+    return this.details[0]?.message ?? "";
   }
 }
 

@@ -1,4 +1,4 @@
-import { BaseEntity, type ScalarDateTimeString } from "@/core/@shared";
+import { BaseEntity, type IdUuid, type ScalarDateTimeString } from "@/core/@shared";
 import type { Disponibilidade } from "@/core/disponibilidade/domain/disponibilidade.domain";
 import type { Turma } from "@/core/turma/domain/turma.domain";
 import type {
@@ -6,22 +6,43 @@ import type {
   ITurmaDisponibilidadeCreate,
 } from "./turma-disponibilidade.types";
 
+/**
+ * Entidade de Domínio: TurmaDisponibilidade
+ * Entidade de relacionamento N:N entre Turma e Disponibilidade
+ */
 export class TurmaDisponibilidade extends BaseEntity implements ITurmaDisponibilidade {
-  id!: string;
+  id!: IdUuid;
   turma!: Turma;
   disponibilidade!: Disponibilidade;
   dateCreated!: ScalarDateTimeString;
   dateUpdated!: ScalarDateTimeString;
   dateDeleted!: ScalarDateTimeString | null;
 
-  static criar(dados: ITurmaDisponibilidadeCreate): TurmaDisponibilidade {
-    const turmaDisponibilidade = new TurmaDisponibilidade();
-    return turmaDisponibilidade;
+  protected static get entityName(): string {
+    return "TurmaDisponibilidade";
   }
 
+  // ========================================
+  // Factory Methods
+  // ========================================
+
+  /**
+   * Cria uma nova instância válida de TurmaDisponibilidade
+   */
+  static criar(_dados: ITurmaDisponibilidadeCreate): TurmaDisponibilidade {
+    const instance = new TurmaDisponibilidade();
+    instance.dateCreated = new Date().toISOString();
+    instance.dateUpdated = new Date().toISOString();
+    instance.dateDeleted = null;
+    return instance;
+  }
+
+  /**
+   * Reconstrói uma instância a partir de dados existentes (ex: do banco)
+   */
   static fromData(dados: ITurmaDisponibilidade): TurmaDisponibilidade {
-    const turmaDisponibilidade = new TurmaDisponibilidade();
-    Object.assign(turmaDisponibilidade, dados);
-    return turmaDisponibilidade;
+    const instance = new TurmaDisponibilidade();
+    Object.assign(instance, dados);
+    return instance;
   }
 }

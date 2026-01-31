@@ -1,10 +1,18 @@
-import { BaseEntity, type ScalarDateTimeString } from "@/core/@shared";
+import { BaseEntity, type IdUuid, type ScalarDateTimeString } from "@/core/@shared";
 import type { Diario } from "@/core/diario/domain/diario.domain";
 import type { Perfil } from "@/core/perfil";
-import type { IDiarioProfessor, IDiarioProfessorCreate } from "./diario-professor.types";
+import type {
+  IDiarioProfessor,
+  IDiarioProfessorCreate,
+  IDiarioProfessorUpdate,
+} from "./diario-professor.types";
 
+/**
+ * Entidade de Domínio: DiarioProfessor
+ * Implementa a tipagem IDiarioProfessor e adiciona regras de negócio
+ */
 export class DiarioProfessor extends BaseEntity implements IDiarioProfessor {
-  id!: string;
+  id!: IdUuid;
   situacao!: boolean;
   diario!: Diario;
   perfil!: Perfil;
@@ -12,15 +20,47 @@ export class DiarioProfessor extends BaseEntity implements IDiarioProfessor {
   dateUpdated!: ScalarDateTimeString;
   dateDeleted!: ScalarDateTimeString | null;
 
-  static criar(dados: IDiarioProfessorCreate): DiarioProfessor {
-    const diarioProfessor = new DiarioProfessor();
-    diarioProfessor.situacao = dados.situacao;
-    return diarioProfessor;
+  protected static get entityName(): string {
+    return "DiarioProfessor";
   }
 
+  // ========================================
+  // Factory Methods
+  // ========================================
+
+  /**
+   * Cria uma nova instância válida de DiarioProfessor
+   */
+  static criar(dados: IDiarioProfessorCreate): DiarioProfessor {
+    const instance = new DiarioProfessor();
+    instance.situacao = dados.situacao;
+    instance.dateCreated = new Date().toISOString();
+    instance.dateUpdated = new Date().toISOString();
+    instance.dateDeleted = null;
+    return instance;
+  }
+
+  /**
+   * Reconstrói uma instância a partir de dados existentes (ex: do banco)
+   */
   static fromData(dados: IDiarioProfessor): DiarioProfessor {
-    const diarioProfessor = new DiarioProfessor();
-    Object.assign(diarioProfessor, dados);
-    return diarioProfessor;
+    const instance = new DiarioProfessor();
+    Object.assign(instance, dados);
+    return instance;
+  }
+
+  // ========================================
+  // Métodos de Domínio
+  // ========================================
+
+  /**
+   * Atualiza os dados do diário professor
+   */
+  atualizar(dados: IDiarioProfessorUpdate): void {
+    if (dados.situacao !== undefined) {
+      this.situacao = dados.situacao;
+    }
+
+    this.dateUpdated = new Date().toISOString();
   }
 }

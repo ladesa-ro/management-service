@@ -1,4 +1,4 @@
-import { BaseEntity, type ScalarDateTimeString } from "@/core/@shared";
+import { BaseEntity, type IdUuid, type ScalarDateTimeString } from "@/core/@shared";
 import type { GradeHorarioOfertaFormacao } from "@/core/grade-horario-oferta-formacao";
 import type { IntervaloDeTempo } from "@/core/intervalo-de-tempo";
 import type {
@@ -6,29 +6,50 @@ import type {
   IGradeHorarioOfertaFormacaoIntervaloDeTempoCreate,
 } from "./grade-horario-oferta-formacao-intervalo-de-tempo.types";
 
+/**
+ * Entidade de Domínio: GradeHorarioOfertaFormacaoIntervaloDeTempo
+ * Entidade de relacionamento N:N entre GradeHorarioOfertaFormacao e IntervaloDeTempo
+ */
 export class GradeHorarioOfertaFormacaoIntervaloDeTempo
   extends BaseEntity
   implements IGradeHorarioOfertaFormacaoIntervaloDeTempo
 {
-  id!: string;
+  id!: IdUuid;
   intervaloDeTempo!: IntervaloDeTempo;
   gradeHorarioOfertaFormacao!: GradeHorarioOfertaFormacao;
   dateCreated!: ScalarDateTimeString;
   dateUpdated!: ScalarDateTimeString;
   dateDeleted!: ScalarDateTimeString | null;
 
-  static criar(
-    dados: IGradeHorarioOfertaFormacaoIntervaloDeTempoCreate,
-  ): GradeHorarioOfertaFormacaoIntervaloDeTempo {
-    const entity = new GradeHorarioOfertaFormacaoIntervaloDeTempo();
-    return entity;
+  protected static get entityName(): string {
+    return "GradeHorarioOfertaFormacaoIntervaloDeTempo";
   }
 
+  // ========================================
+  // Factory Methods
+  // ========================================
+
+  /**
+   * Cria uma nova instância válida de GradeHorarioOfertaFormacaoIntervaloDeTempo
+   */
+  static criar(
+    _dados: IGradeHorarioOfertaFormacaoIntervaloDeTempoCreate,
+  ): GradeHorarioOfertaFormacaoIntervaloDeTempo {
+    const instance = new GradeHorarioOfertaFormacaoIntervaloDeTempo();
+    instance.dateCreated = new Date().toISOString();
+    instance.dateUpdated = new Date().toISOString();
+    instance.dateDeleted = null;
+    return instance;
+  }
+
+  /**
+   * Reconstrói uma instância a partir de dados existentes (ex: do banco)
+   */
   static fromData(
     dados: IGradeHorarioOfertaFormacaoIntervaloDeTempo,
   ): GradeHorarioOfertaFormacaoIntervaloDeTempo {
-    const entity = new GradeHorarioOfertaFormacaoIntervaloDeTempo();
-    Object.assign(entity, dados);
-    return entity;
+    const instance = new GradeHorarioOfertaFormacaoIntervaloDeTempo();
+    Object.assign(instance, dados);
+    return instance;
   }
 }

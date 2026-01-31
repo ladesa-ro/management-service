@@ -1,6 +1,10 @@
 import { BaseEntity, type IdUuid, type ScalarDateTimeString } from "@/core/@shared";
 import type { IModalidade } from "@/core/modalidade";
-import type { IOfertaFormacao, IOfertaFormacaoCreate } from "./oferta-formacao.types";
+import type {
+  IOfertaFormacao,
+  IOfertaFormacaoCreate,
+  IOfertaFormacaoUpdate,
+} from "./oferta-formacao.types";
 
 /**
  * Entidade de Dominio: OfertaFormacao
@@ -15,27 +19,30 @@ export class OfertaFormacao extends BaseEntity implements IOfertaFormacao {
   dateUpdated!: ScalarDateTimeString;
   dateDeleted!: ScalarDateTimeString | null;
 
+  protected static get entityName(): string {
+    return "OfertaFormacao";
+  }
+
   // ========================================
-  // Metodos de Dominio
+  // Factory Methods
   // ========================================
 
   /**
    * Cria uma nova instancia valida de OfertaFormacao
-   * @throws Error se os dados forem invalidos
+   * @throws EntityValidationError se os dados forem invalidos
    */
   static criar(dados: IOfertaFormacaoCreate): OfertaFormacao {
+    const { result, rules } = this.createValidation();
+
     const instance = new OfertaFormacao();
+    instance.nome = rules.required(dados.nome, "nome");
+    instance.nome = rules.minLength(instance.nome, "nome", 1);
 
-    if (!dados.nome || dados.nome.trim().length === 0) {
-      throw new Error("Nome e obrigatorio");
-    }
+    instance.slug = rules.required(dados.slug, "slug");
+    instance.slug = rules.slug(instance.slug, "slug");
 
-    if (!dados.slug || dados.slug.trim().length === 0) {
-      throw new Error("Slug e obrigatorio");
-    }
+    this.throwIfInvalid(result);
 
-    instance.nome = dados.nome.trim();
-    instance.slug = dados.slug.trim();
     instance.dateCreated = new Date().toISOString();
     instance.dateUpdated = new Date().toISOString();
     instance.dateDeleted = null;
@@ -50,5 +57,31 @@ export class OfertaFormacao extends BaseEntity implements IOfertaFormacao {
     const instance = new OfertaFormacao();
     Object.assign(instance, dados);
     return instance;
+  }
+
+  // ========================================
+  // Metodos de Dominio
+  // ========================================
+
+  /**
+   * Atualiza os dados da oferta de formacao
+   * @throws EntityValidationError se os dados forem invalidos
+   */
+  atualizar(dados: IOfertaFormacaoUpdate): void {
+    const { result, rules } = OfertaFormacao.createValidation();
+
+    if (dados.nome !== undefined) {
+      this.nome = rules.required(dados.nome, "nome");
+      this.nome = rules.minLength(this.nome, "nome", 1);
+    }
+
+    if (dados.slug !== undefined) {
+      this.slug = rules.required(dados.slug, "slug");
+      this.slug = rules.slug(this.slug, "slug");
+    }
+
+    OfertaFormacao.throwIfInvalid(result);
+
+    this.dateUpdated = new Date().toISOString();
   }
 }

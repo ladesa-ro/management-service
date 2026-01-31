@@ -1,9 +1,13 @@
-import { BaseEntity, type ScalarDateTimeString } from "@/core/@shared";
+import { BaseEntity, type IdUuid, type ScalarDateTimeString } from "@/core/@shared";
 import type { ICidade } from "@/core/cidade";
-import type { IEndereco } from "./endereco.types";
+import type { IEndereco, IEnderecoCreate, IEnderecoUpdate } from "./endereco.types";
 
+/**
+ * Entidade de Domínio: Endereco
+ * Implementa a tipagem IEndereco e adiciona regras de negócio
+ */
 export class Endereco extends BaseEntity implements IEndereco {
-  id!: string;
+  id!: IdUuid;
   cep!: string;
   logradouro!: string;
   numero!: number;
@@ -15,6 +19,41 @@ export class Endereco extends BaseEntity implements IEndereco {
   dateUpdated!: ScalarDateTimeString;
   dateDeleted!: ScalarDateTimeString | null;
 
+  protected static get entityName(): string {
+    return "Endereco";
+  }
+
+  // ========================================
+  // Factory Methods
+  // ========================================
+
+  /**
+   * Cria uma nova instância válida de Endereco
+   * @throws EntityValidationError se os dados forem inválidos
+   */
+  static criar(dados: IEnderecoCreate): Endereco {
+    const { result, rules } = this.createValidation();
+
+    const instance = new Endereco();
+    instance.cep = rules.required(dados.cep, "cep");
+    instance.logradouro = rules.required(dados.logradouro, "logradouro");
+    instance.numero = rules.requiredNumber(dados.numero, "numero");
+    instance.bairro = rules.required(dados.bairro, "bairro");
+
+    this.throwIfInvalid(result);
+
+    instance.complemento = rules.optional(dados.complemento);
+    instance.pontoReferencia = rules.optional(dados.pontoReferencia);
+    instance.dateCreated = new Date().toISOString();
+    instance.dateUpdated = new Date().toISOString();
+    instance.dateDeleted = null;
+
+    return instance;
+  }
+
+  /**
+   * Reconstrói uma instância a partir de dados existentes (ex: do banco)
+   */
   static fromData(dados: IEndereco): Endereco {
     const instance = new Endereco();
     Object.assign(instance, dados);
@@ -22,7 +61,47 @@ export class Endereco extends BaseEntity implements IEndereco {
   }
 
   // ========================================
-  // Métodos específicos do domínio Endereco
+  // Métodos de Domínio
+  // ========================================
+
+  /**
+   * Atualiza os dados do endereço
+   * @throws EntityValidationError se os dados forem inválidos
+   */
+  atualizar(dados: IEnderecoUpdate): void {
+    const { result, rules } = Endereco.createValidation();
+
+    if (dados.cep !== undefined) {
+      this.cep = rules.required(dados.cep, "cep");
+    }
+
+    if (dados.logradouro !== undefined) {
+      this.logradouro = rules.required(dados.logradouro, "logradouro");
+    }
+
+    if (dados.numero !== undefined) {
+      this.numero = rules.requiredNumber(dados.numero, "numero");
+    }
+
+    if (dados.bairro !== undefined) {
+      this.bairro = rules.required(dados.bairro, "bairro");
+    }
+
+    if (dados.complemento !== undefined) {
+      this.complemento = rules.optional(dados.complemento);
+    }
+
+    if (dados.pontoReferencia !== undefined) {
+      this.pontoReferencia = rules.optional(dados.pontoReferencia);
+    }
+
+    Endereco.throwIfInvalid(result);
+
+    this.dateUpdated = new Date().toISOString();
+  }
+
+  // ========================================
+  // Métodos específicos do domínio
   // ========================================
 
   getEnderecoFormatado(): string {

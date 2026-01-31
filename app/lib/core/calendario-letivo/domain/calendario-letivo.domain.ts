@@ -1,7 +1,11 @@
 import { BaseEntity, type IdUuid, type ScalarDateTimeString } from "@/core/@shared";
 import type { ICampus } from "@/core/campus";
 import type { IOfertaFormacao } from "@/core/oferta-formacao";
-import type { ICalendarioLetivo, ICalendarioLetivoCreate } from "./calendario-letivo.types";
+import type {
+  ICalendarioLetivo,
+  ICalendarioLetivoCreate,
+  ICalendarioLetivoUpdate,
+} from "./calendario-letivo.types";
 
 /**
  * Entidade de Dominio: CalendarioLetivo
@@ -17,23 +21,30 @@ export class CalendarioLetivo extends BaseEntity implements ICalendarioLetivo {
   dateUpdated!: ScalarDateTimeString;
   dateDeleted!: ScalarDateTimeString | null;
 
+  protected static get entityName(): string {
+    return "CalendarioLetivo";
+  }
+
   // ========================================
-  // Metodos de Dominio
+  // Factory Methods
   // ========================================
 
+  /**
+   * Cria uma nova instancia valida de CalendarioLetivo
+   * @throws EntityValidationError se os dados forem invalidos
+   */
   static criar(dados: ICalendarioLetivoCreate): CalendarioLetivo {
+    const { result, rules } = this.createValidation();
+
     const instance = new CalendarioLetivo();
+    instance.nome = rules.required(dados.nome, "nome");
+    instance.nome = rules.minLength(instance.nome, "nome", 1);
 
-    if (!dados.nome || dados.nome.trim().length === 0) {
-      throw new Error("Nome e obrigatorio");
-    }
+    instance.ano = rules.requiredNumber(dados.ano, "ano");
+    instance.ano = rules.min(instance.ano, "ano", 1, "Ano deve ser positivo");
 
-    if (!dados.ano || dados.ano <= 0) {
-      throw new Error("Ano e obrigatorio e deve ser positivo");
-    }
+    this.throwIfInvalid(result);
 
-    instance.nome = dados.nome.trim();
-    instance.ano = dados.ano;
     instance.dateCreated = new Date().toISOString();
     instance.dateUpdated = new Date().toISOString();
     instance.dateDeleted = null;
@@ -41,9 +52,38 @@ export class CalendarioLetivo extends BaseEntity implements ICalendarioLetivo {
     return instance;
   }
 
+  /**
+   * Reconstroi uma instancia a partir de dados existentes (ex: do banco)
+   */
   static fromData(dados: ICalendarioLetivo): CalendarioLetivo {
     const instance = new CalendarioLetivo();
     Object.assign(instance, dados);
     return instance;
+  }
+
+  // ========================================
+  // Metodos de Dominio
+  // ========================================
+
+  /**
+   * Atualiza os dados do calendario letivo
+   * @throws EntityValidationError se os dados forem invalidos
+   */
+  atualizar(dados: ICalendarioLetivoUpdate): void {
+    const { result, rules } = CalendarioLetivo.createValidation();
+
+    if (dados.nome !== undefined) {
+      this.nome = rules.required(dados.nome, "nome");
+      this.nome = rules.minLength(this.nome, "nome", 1);
+    }
+
+    if (dados.ano !== undefined) {
+      this.ano = rules.requiredNumber(dados.ano, "ano");
+      this.ano = rules.min(this.ano, "ano", 1, "Ano deve ser positivo");
+    }
+
+    CalendarioLetivo.throwIfInvalid(result);
+
+    this.dateUpdated = new Date().toISOString();
   }
 }

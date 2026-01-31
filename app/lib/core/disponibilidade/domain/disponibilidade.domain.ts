@@ -1,9 +1,13 @@
 import { BaseEntity, type IdUuid, type ScalarDateTimeString } from "@/core/@shared";
-import type { IDisponibilidade, IDisponibilidadeCreate } from "./disponibilidade.types";
+import type {
+  IDisponibilidade,
+  IDisponibilidadeCreate,
+  IDisponibilidadeUpdate,
+} from "./disponibilidade.types";
 
 /**
- * Entidade de Dominio: Disponibilidade
- * Implementa a tipagem IDisponibilidade e adiciona regras de negocio
+ * Entidade de Domínio: Disponibilidade
+ * Implementa a tipagem IDisponibilidade e adiciona regras de negócio
  */
 export class Disponibilidade extends BaseEntity implements IDisponibilidade {
   id!: IdUuid;
@@ -13,26 +17,64 @@ export class Disponibilidade extends BaseEntity implements IDisponibilidade {
   dateUpdated!: ScalarDateTimeString;
   dateDeleted!: ScalarDateTimeString | null;
 
+  protected static get entityName(): string {
+    return "Disponibilidade";
+  }
+
   // ========================================
   // Factory Methods
   // ========================================
 
   /**
-   * Cria uma nova instancia de Disponibilidade
+   * Cria uma nova instância válida de Disponibilidade
+   * @throws EntityValidationError se os dados forem inválidos
    */
   static criar(dados: IDisponibilidadeCreate): Disponibilidade {
-    const disponibilidade = new Disponibilidade();
-    disponibilidade.dataInicio = dados.dataInicio;
-    disponibilidade.dataFim = dados.dataFim ?? null;
-    return disponibilidade;
+    const { result, rules } = this.createValidation();
+
+    const instance = new Disponibilidade();
+    instance.dataInicio = rules.required(dados.dataInicio, "dataInicio");
+
+    this.throwIfInvalid(result);
+
+    instance.dataFim = dados.dataFim ?? null;
+    instance.dateCreated = new Date().toISOString();
+    instance.dateUpdated = new Date().toISOString();
+    instance.dateDeleted = null;
+
+    return instance;
   }
 
   /**
-   * Reconstroi uma instancia a partir de dados existentes (ex: do banco)
+   * Reconstrói uma instância a partir de dados existentes (ex: do banco)
    */
   static fromData(dados: IDisponibilidade): Disponibilidade {
-    const disponibilidade = new Disponibilidade();
-    Object.assign(disponibilidade, dados);
-    return disponibilidade;
+    const instance = new Disponibilidade();
+    Object.assign(instance, dados);
+    return instance;
+  }
+
+  // ========================================
+  // Métodos de Domínio
+  // ========================================
+
+  /**
+   * Atualiza os dados da disponibilidade
+   * @throws EntityValidationError se os dados forem inválidos
+   */
+  atualizar(dados: IDisponibilidadeUpdate): void {
+    const { result, rules } = Disponibilidade.createValidation();
+
+    if (dados.dataInicio !== undefined) {
+      this.dataInicio = rules.required(dados.dataInicio, "dataInicio");
+    }
+
+    if (dados.dataFim !== undefined) {
+      this.dataFim = dados.dataFim;
+    }
+
+    Disponibilidade.throwIfInvalid(result);
+
+    this.dateUpdated = new Date().toISOString();
   }
 }

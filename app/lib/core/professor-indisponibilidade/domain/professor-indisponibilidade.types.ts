@@ -20,3 +20,11 @@ export interface IProfessorIndisponibilidadeCreate {
   horaFim: string;
   motivo: string;
 }
+
+export interface IProfessorIndisponibilidadeUpdate {
+  perfil?: { id: IdUuid };
+  diaDaSemana?: number;
+  horaInicio?: string;
+  horaFim?: string;
+  motivo?: string;
+}

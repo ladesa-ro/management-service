@@ -1,14 +1,14 @@
-import { BaseEntity, type ScalarDateTimeString } from "@/core/@shared";
+import { BaseEntity, type IdUuid, type ScalarDateTimeString } from "@/core/@shared";
 import type { ICampus } from "@/core/campus";
 import type { IUsuario } from "@/core/usuario";
-import type { IPerfil, IPerfilCreate } from "./perfil.types";
+import type { IPerfil, IPerfilCreate, IPerfilUpdate } from "./perfil.types";
 
 /**
  * Entidade de Domínio: Perfil
  * Implementa a tipagem IPerfil e adiciona regras de negócio
  */
 export class Perfil extends BaseEntity implements IPerfil {
-  id!: string;
+  id!: IdUuid;
   ativo!: boolean;
   cargo!: string;
   campus!: ICampus;
@@ -17,22 +17,27 @@ export class Perfil extends BaseEntity implements IPerfil {
   dateUpdated!: ScalarDateTimeString;
   dateDeleted!: ScalarDateTimeString | null;
 
+  protected static get entityName(): string {
+    return "Perfil";
+  }
+
   // ========================================
-  // Métodos de Domínio
+  // Factory Methods
   // ========================================
 
   /**
    * Cria uma nova instância válida de Perfil
-   * @throws Error se os dados forem inválidos
+   * @throws EntityValidationError se os dados forem inválidos
    */
   static criar(dados: IPerfilCreate): Perfil {
+    const { result, rules } = this.createValidation();
+
     const instance = new Perfil();
+    instance.cargo = rules.required(dados.cargo, "cargo");
+    instance.cargo = rules.minLength(instance.cargo, "cargo", 1);
 
-    if (!dados.cargo || dados.cargo.trim().length === 0) {
-      throw new Error("Cargo é obrigatório");
-    }
+    this.throwIfInvalid(result);
 
-    instance.cargo = dados.cargo.trim();
     instance.ativo = true;
     instance.dateCreated = new Date().toISOString();
     instance.dateUpdated = new Date().toISOString();
@@ -95,6 +100,27 @@ export class Perfil extends BaseEntity implements IPerfil {
    */
   desativar(): void {
     this.ativo = false;
+    this.dateUpdated = new Date().toISOString();
+  }
+
+  // ========================================
+  // Métodos de Domínio
+  // ========================================
+
+  /**
+   * Atualiza os dados do perfil
+   * @throws EntityValidationError se os dados forem inválidos
+   */
+  atualizar(dados: IPerfilUpdate): void {
+    const { result, rules } = Perfil.createValidation();
+
+    if (dados.cargo !== undefined) {
+      this.cargo = rules.required(dados.cargo, "cargo");
+      this.cargo = rules.minLength(this.cargo, "cargo", 1);
+    }
+
+    Perfil.throwIfInvalid(result);
+
     this.dateUpdated = new Date().toISOString();
   }
 }

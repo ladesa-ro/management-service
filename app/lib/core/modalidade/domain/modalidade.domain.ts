@@ -1,5 +1,5 @@
 import { BaseEntity, type IdUuid, type ScalarDateTimeString } from "@/core/@shared";
-import type { IModalidade, IModalidadeCreate } from "./modalidade.types";
+import type { IModalidade, IModalidadeCreate, IModalidadeUpdate } from "./modalidade.types";
 
 /**
  * Entidade de Dominio: Modalidade
@@ -13,27 +13,30 @@ export class Modalidade extends BaseEntity implements IModalidade {
   dateUpdated!: ScalarDateTimeString;
   dateDeleted!: ScalarDateTimeString | null;
 
+  protected static get entityName(): string {
+    return "Modalidade";
+  }
+
   // ========================================
-  // Metodos de Dominio
+  // Factory Methods
   // ========================================
 
   /**
    * Cria uma nova instancia valida de Modalidade
-   * @throws Error se os dados forem invalidos
+   * @throws EntityValidationError se os dados forem invalidos
    */
   static criar(dados: IModalidadeCreate): Modalidade {
+    const { result, rules } = this.createValidation();
+
     const instance = new Modalidade();
+    instance.nome = rules.required(dados.nome, "nome");
+    instance.nome = rules.minLength(instance.nome, "nome", 1);
 
-    if (!dados.nome || dados.nome.trim().length === 0) {
-      throw new Error("Nome e obrigatorio");
-    }
+    instance.slug = rules.required(dados.slug, "slug");
+    instance.slug = rules.slug(instance.slug, "slug");
 
-    if (!dados.slug || dados.slug.trim().length === 0) {
-      throw new Error("Slug e obrigatorio");
-    }
+    this.throwIfInvalid(result);
 
-    instance.nome = dados.nome.trim();
-    instance.slug = dados.slug.trim();
     instance.dateCreated = new Date().toISOString();
     instance.dateUpdated = new Date().toISOString();
     instance.dateDeleted = null;
@@ -48,5 +51,31 @@ export class Modalidade extends BaseEntity implements IModalidade {
     const instance = new Modalidade();
     Object.assign(instance, dados);
     return instance;
+  }
+
+  // ========================================
+  // Metodos de Dominio
+  // ========================================
+
+  /**
+   * Atualiza os dados da modalidade
+   * @throws EntityValidationError se os dados forem invalidos
+   */
+  atualizar(dados: IModalidadeUpdate): void {
+    const { result, rules } = Modalidade.createValidation();
+
+    if (dados.nome !== undefined) {
+      this.nome = rules.required(dados.nome, "nome");
+      this.nome = rules.minLength(this.nome, "nome", 1);
+    }
+
+    if (dados.slug !== undefined) {
+      this.slug = rules.required(dados.slug, "slug");
+      this.slug = rules.slug(this.slug, "slug");
+    }
+
+    Modalidade.throwIfInvalid(result);
+
+    this.dateUpdated = new Date().toISOString();
   }
 }

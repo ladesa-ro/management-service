@@ -1,15 +1,20 @@
-import { BaseEntity, type ScalarDate, type ScalarDateTimeString } from "@/core/@shared";
+import {
+  BaseEntity,
+  type IdUuid,
+  type ScalarDate,
+  type ScalarDateTimeString,
+} from "@/core/@shared";
 import type { Ambiente } from "@/core/ambiente/domain/ambiente.domain";
 import type { Diario } from "@/core/diario/domain/diario.domain";
 import type { IntervaloDeTempo } from "@/core/intervalo-de-tempo/domain/intervalo-de-tempo.domain";
-import type { IAula, IAulaCreate } from "./aula.types";
+import type { IAula, IAulaCreate, IAulaUpdate } from "./aula.types";
 
 /**
- * Classe de domínio que representa uma Aula
- * Implementa a interface IAula
+ * Entidade de Domínio: Aula
+ * Implementa a tipagem IAula e adiciona regras de negócio
  */
 export class Aula extends BaseEntity implements IAula {
-  id!: string;
+  id!: IdUuid;
   data!: ScalarDate;
   modalidade!: string | null;
   intervaloDeTempo!: IntervaloDeTempo;
@@ -19,27 +24,72 @@ export class Aula extends BaseEntity implements IAula {
   dateUpdated!: ScalarDateTimeString;
   dateDeleted!: ScalarDateTimeString | null;
 
-  /**
-   * Cria uma nova instância de Aula
-   */
-  static criar(dados: IAulaCreate): Aula {
-    const aula = new Aula();
-    aula.data = dados.data;
-    aula.modalidade = dados.modalidade ?? null;
-    return aula;
-  }
-
-  /**
-   * Cria uma instância a partir de dados existentes
-   */
-  static fromData(dados: IAula): Aula {
-    const aula = new Aula();
-    Object.assign(aula, dados);
-    return aula;
+  protected static get entityName(): string {
+    return "Aula";
   }
 
   // ========================================
-  // Métodos específicos do domínio Aula
+  // Factory Methods
+  // ========================================
+
+  /**
+   * Cria uma nova instância válida de Aula
+   * @throws EntityValidationError se os dados forem inválidos
+   */
+  static criar(dados: IAulaCreate): Aula {
+    const { result, rules } = this.createValidation();
+
+    const instance = new Aula();
+    instance.data = rules.required(dados.data, "data");
+    instance.data = rules.dateFormat(instance.data, "data");
+
+    this.throwIfInvalid(result);
+
+    instance.modalidade = rules.optional(dados.modalidade);
+    instance.ambiente = null;
+    instance.dateCreated = new Date().toISOString();
+    instance.dateUpdated = new Date().toISOString();
+    instance.dateDeleted = null;
+
+    return instance;
+  }
+
+  /**
+   * Reconstrói uma instância a partir de dados existentes (ex: do banco)
+   */
+  static fromData(dados: IAula): Aula {
+    const instance = new Aula();
+    Object.assign(instance, dados);
+    return instance;
+  }
+
+  // ========================================
+  // Métodos de Domínio
+  // ========================================
+
+  /**
+   * Atualiza os dados da aula
+   * @throws EntityValidationError se os dados forem inválidos
+   */
+  atualizar(dados: IAulaUpdate): void {
+    const { result, rules } = Aula.createValidation();
+
+    if (dados.data !== undefined) {
+      this.data = rules.required(dados.data, "data");
+      this.data = rules.dateFormat(this.data, "data");
+    }
+
+    if (dados.modalidade !== undefined) {
+      this.modalidade = rules.optional(dados.modalidade);
+    }
+
+    Aula.throwIfInvalid(result);
+
+    this.dateUpdated = new Date().toISOString();
+  }
+
+  // ========================================
+  // Métodos específicos do domínio
   // ========================================
 
   /**

@@ -7,12 +7,12 @@ import type {
   HorarioGeradoListOutput,
   IHorarioGeradoRepositoryPort,
 } from "@/core/horario-gerado";
-import type { ITypeOrmPaginationConfig } from "../types";
 import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
 import { BaseTypeOrmRepositoryAdapter } from "../base";
 import { DatabaseContextService } from "../context/database-context.service";
 import type { HorarioGeradoEntity } from "../typeorm/entities";
+import type { ITypeOrmPaginationConfig } from "../types";
 
 @Injectable()
 export class HorarioGeradoTypeOrmRepositoryAdapter

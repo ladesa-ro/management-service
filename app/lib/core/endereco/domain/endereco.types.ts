@@ -24,3 +24,23 @@ export interface IEnderecoInput {
   pontoReferencia?: string | null;
   cidade: { id: IdNumeric };
 }
+
+export interface IEnderecoCreate {
+  cep: string;
+  logradouro: string;
+  numero: number;
+  bairro: string;
+  complemento?: string | null;
+  pontoReferencia?: string | null;
+  cidade: { id: IdNumeric };
+}
+
+export interface IEnderecoUpdate {
+  cep?: string;
+  logradouro?: string;
+  numero?: number;
+  bairro?: string;
+  complemento?: string | null;
+  pontoReferencia?: string | null;
+  cidade?: { id: IdNumeric };
+}

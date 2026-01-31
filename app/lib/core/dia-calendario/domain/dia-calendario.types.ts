@@ -24,3 +24,13 @@ export interface IDiaCalendarioCreate {
   extraCurricular: boolean;
   calendario: { id: IdUuid };
 }
+
+export interface IDiaCalendarioUpdate {
+  data?: ScalarDateTimeString;
+  diaLetivo?: boolean;
+  feriado?: string;
+  diaPresencial?: boolean;
+  tipo?: string;
+  extraCurricular?: boolean;
+  calendario?: { id: IdUuid };
+}

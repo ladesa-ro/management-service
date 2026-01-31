@@ -17,3 +17,9 @@ export interface IDiarioProfessorCreate {
   diario: { id: IdUuid };
   perfil: { id: IdUuid };
 }
+
+export interface IDiarioProfessorUpdate {
+  situacao?: boolean;
+  diario?: { id: IdUuid };
+  perfil?: { id: IdUuid };
+}

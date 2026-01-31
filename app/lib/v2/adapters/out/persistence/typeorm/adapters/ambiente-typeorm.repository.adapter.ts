@@ -7,11 +7,11 @@ import type {
   AmbienteListOutput as AmbienteListOutputDto,
 } from "@/core/ambiente";
 import type { IAmbienteRepositoryPort } from "@/core/ambiente/application/ports";
-import type { ITypeOrmPaginationConfig } from "../types";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
 import { BaseTypeOrmRepositoryAdapter } from "../base";
 import { DatabaseContextService } from "../context/database-context.service";
 import type { AmbienteEntity } from "../typeorm/entities";
+import type { ITypeOrmPaginationConfig } from "../types";
 
 /**
  * Adapter TypeORM que implementa o port de repositório de Ambiente.

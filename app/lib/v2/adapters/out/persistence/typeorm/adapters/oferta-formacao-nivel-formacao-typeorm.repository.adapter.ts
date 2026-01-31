@@ -12,13 +12,13 @@ import type {
   OfertaFormacaoNivelFormacaoListOutput,
   OfertaFormacaoNivelFormacaoUpdateInput,
 } from "@/core/oferta-formacao-nivel-formacao";
-import type { ITypeOrmPaginationConfig } from "../types";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
 import { BaseTypeOrmRepositoryAdapter } from "../base";
 import { DatabaseContextService } from "../context/database-context.service";
 import type { OfertaFormacaoNivelFormacaoEntity } from "../typeorm/entities";
+import type { ITypeOrmPaginationConfig } from "../types";
 
 const aliasOfertaFormacaoNivelFormacao = "oferta_formacao_nivel_formacao";
 

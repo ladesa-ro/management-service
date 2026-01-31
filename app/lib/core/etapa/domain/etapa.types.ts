@@ -20,3 +20,11 @@ export interface IEtapaCreate {
   cor?: string | null;
   calendario: { id: IdUuid };
 }
+
+export interface IEtapaUpdate {
+  numero?: number | null;
+  dataInicio?: ScalarDateTimeString;
+  dataTermino?: ScalarDateTimeString;
+  cor?: string | null;
+  calendario?: { id: IdUuid };
+}

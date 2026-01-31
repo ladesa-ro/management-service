@@ -1,13 +1,12 @@
-import { IdNumeric } from "@/core/@shared";
+import type { IdNumeric } from "@/core/@shared";
 import type { IEstado } from "./estado.types";
 
 /**
  * Entidade de Domínio: Estado
- * Implementa a tipagem IEstado e adiciona regras de negócio
+ * Entidade de referência (somente leitura do IBGE)
  */
 export class Estado implements IEstado {
   id!: IdNumeric;
-
   nome!: string;
   sigla!: string;
 
@@ -20,17 +19,14 @@ export class Estado implements IEstado {
    */
   static fromData(dados: IEstado): Estado {
     const instance = new Estado();
-
     instance.id = dados.id;
-
     instance.nome = dados.nome;
     instance.sigla = dados.sigla;
-
     return instance;
   }
 
   // ========================================
-  // Métodos de Domínio
+  // Métodos específicos do domínio
   // ========================================
 
   /**

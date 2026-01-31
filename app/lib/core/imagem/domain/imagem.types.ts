@@ -31,3 +31,10 @@ export interface IImagem {
 export interface IImagemCreate {
   descricao?: string | null;
 }
+
+/**
+ * Dados para atualização de imagem
+ */
+export interface IImagemUpdate {
+  descricao?: string | null;
+}

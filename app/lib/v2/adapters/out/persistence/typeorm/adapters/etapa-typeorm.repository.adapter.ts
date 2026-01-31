@@ -7,12 +7,12 @@ import type {
   EtapaListOutput,
   IEtapaRepositoryPort,
 } from "@/core/etapa";
-import type { ITypeOrmPaginationConfig } from "../types";
 import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
 import { BaseTypeOrmRepositoryAdapter } from "../base";
 import { DatabaseContextService } from "../context/database-context.service";
 import type { EtapaEntity } from "../typeorm/entities";
+import type { ITypeOrmPaginationConfig } from "../types";
 
 @Injectable()
 export class EtapaTypeOrmRepositoryAdapter

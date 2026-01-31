@@ -1,4 +1,4 @@
-import { BaseEntity, type ScalarDateTimeString } from "@/core/@shared";
+import { BaseEntity, type IdUuid, type ScalarDateTimeString } from "@/core/@shared";
 import type { Campus } from "@/core/campus";
 import type { OfertaFormacao } from "@/core/oferta-formacao";
 import type {
@@ -7,31 +7,42 @@ import type {
 } from "./grade-horario-oferta-formacao.types";
 
 /**
- * Entidade de dominio GradeHorarioOfertaFormacao
- * Representa uma grade horaria associada a uma oferta de formacao e um campus
+ * Entidade de Domínio: GradeHorarioOfertaFormacao
+ * Representa uma grade horária associada a uma oferta de formação e um campus
  */
 export class GradeHorarioOfertaFormacao extends BaseEntity implements IGradeHorarioOfertaFormacao {
-  id!: string;
+  id!: IdUuid;
   campus!: Campus;
   ofertaFormacao!: OfertaFormacao;
   dateCreated!: ScalarDateTimeString;
   dateUpdated!: ScalarDateTimeString;
   dateDeleted!: ScalarDateTimeString | null;
 
+  protected static get entityName(): string {
+    return "GradeHorarioOfertaFormacao";
+  }
+
+  // ========================================
+  // Factory Methods
+  // ========================================
+
   /**
-   * Cria uma nova instancia de GradeHorarioOfertaFormacao
+   * Cria uma nova instância válida de GradeHorarioOfertaFormacao
    */
-  static criar(dados: IGradeHorarioOfertaFormacaoCreate): GradeHorarioOfertaFormacao {
-    const gradeHorarioOfertaFormacao = new GradeHorarioOfertaFormacao();
-    return gradeHorarioOfertaFormacao;
+  static criar(_dados: IGradeHorarioOfertaFormacaoCreate): GradeHorarioOfertaFormacao {
+    const instance = new GradeHorarioOfertaFormacao();
+    instance.dateCreated = new Date().toISOString();
+    instance.dateUpdated = new Date().toISOString();
+    instance.dateDeleted = null;
+    return instance;
   }
 
   /**
-   * Reconstroi uma entidade a partir de dados existentes
+   * Reconstrói uma instância a partir de dados existentes (ex: do banco)
    */
   static fromData(dados: IGradeHorarioOfertaFormacao): GradeHorarioOfertaFormacao {
-    const gradeHorarioOfertaFormacao = new GradeHorarioOfertaFormacao();
-    Object.assign(gradeHorarioOfertaFormacao, dados);
-    return gradeHorarioOfertaFormacao;
+    const instance = new GradeHorarioOfertaFormacao();
+    Object.assign(instance, dados);
+    return instance;
   }
 }
