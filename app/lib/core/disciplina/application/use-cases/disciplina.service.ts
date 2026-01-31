@@ -1,5 +1,5 @@
-import { Inject, Injectable, NotFoundException, type StreamableFile } from "@nestjs/common";
-import { BaseCrudService } from "@/core/@shared";
+import { Inject, Injectable, type StreamableFile } from "@nestjs/common";
+import { BaseCrudService, ResourceNotFoundError } from "@/core/@shared";
 import { ArquivoService } from "@/core/arquivo/application/use-cases/arquivo.service";
 import type {
   DisciplinaCreateInput,
@@ -56,7 +56,7 @@ export class DisciplinaService extends BaseCrudService<
       }
     }
 
-    throw new NotFoundException();
+    throw new ResourceNotFoundError("Imagem de capa da Disciplina", id);
   }
 
   async updateImagemCapa(

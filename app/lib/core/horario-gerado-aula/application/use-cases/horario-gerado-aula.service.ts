@@ -1,4 +1,5 @@
-import { Inject, Injectable, NotFoundException } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
+import { ResourceNotFoundError } from "@/core/@shared";
 import { has, pick } from "lodash";
 import { DiarioProfessorService } from "@/core/diario-professor/application/use-cases/diario-professor.service";
 import { HorarioGeradoService } from "@/core/horario-gerado";
@@ -57,7 +58,7 @@ export class HorarioGeradoAulaService {
     );
 
     if (!horarioGeradoAula) {
-      throw new NotFoundException();
+      throw new ResourceNotFoundError("HorarioGeradoAula", dto.id);
     }
 
     return horarioGeradoAula;
@@ -83,7 +84,7 @@ export class HorarioGeradoAulaService {
     );
 
     if (!horarioGeradoAula) {
-      throw new NotFoundException();
+      throw new ResourceNotFoundError("HorarioGeradoAula", id);
     }
 
     return horarioGeradoAula;

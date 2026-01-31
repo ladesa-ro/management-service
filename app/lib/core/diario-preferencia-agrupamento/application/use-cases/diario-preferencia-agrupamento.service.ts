@@ -1,4 +1,5 @@
-import { Inject, Injectable, NotFoundException } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
+import { ResourceNotFoundError } from "@/core/@shared";
 import { has, pick } from "lodash";
 import { DiarioService } from "@/core/diario/application/use-cases/diario.service";
 import { IntervaloDeTempoService } from "@/core/intervalo-de-tempo/application/use-cases/intervalo-de-tempo.service";
@@ -57,7 +58,7 @@ export class DiarioPreferenciaAgrupamentoService {
     const diarioPreferenciaAgrupamento = await this.findById(accessContext, dto, selection);
 
     if (!diarioPreferenciaAgrupamento) {
-      throw new NotFoundException();
+      throw new ResourceNotFoundError("DiarioPreferenciaAgrupamento", dto.id);
     }
 
     return diarioPreferenciaAgrupamento;
@@ -79,7 +80,7 @@ export class DiarioPreferenciaAgrupamentoService {
     const diarioPreferenciaAgrupamento = await this.findByIdSimple(accessContext, id, selection);
 
     if (!diarioPreferenciaAgrupamento) {
-      throw new NotFoundException();
+      throw new ResourceNotFoundError("DiarioPreferenciaAgrupamento", id);
     }
 
     return diarioPreferenciaAgrupamento;

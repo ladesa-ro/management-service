@@ -1,4 +1,5 @@
-import { Inject, Injectable, NotFoundException } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
+import { ResourceNotFoundError } from "@/core/@shared";
 import { has, pick } from "lodash";
 import { CalendarioLetivoService } from "@/core/calendario-letivo";
 import type { EventoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities/evento.entity";
@@ -52,7 +53,7 @@ export class EventoService {
     const evento = await this.findById(accessContext, dto, selection);
 
     if (!evento) {
-      throw new NotFoundException();
+      throw new ResourceNotFoundError("Evento", dto.id);
     }
 
     return evento;
@@ -74,7 +75,7 @@ export class EventoService {
     const evento = await this.findByIdSimple(accessContext, id, selection);
 
     if (!evento) {
-      throw new NotFoundException();
+      throw new ResourceNotFoundError("Evento", id);
     }
 
     return evento;

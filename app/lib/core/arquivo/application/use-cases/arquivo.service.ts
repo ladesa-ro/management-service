@@ -4,10 +4,10 @@ import {
   ForbiddenException,
   Inject,
   Injectable,
-  NotFoundException,
   ServiceUnavailableException,
   StreamableFile,
 } from "@nestjs/common";
+import { ResourceNotFoundError } from "@/core/@shared";
 import jetpack, { createReadStream } from "fs-jetpack";
 import { v4 } from "uuid";
 import type { ArquivoCreateInput, ArquivoGetFileInput } from "@/core/arquivo/application/dtos";
@@ -66,7 +66,7 @@ export class ArquivoService implements IArquivoUseCasePort {
     const exists = await qb.getExists();
 
     if (!exists) {
-      throw new NotFoundException();
+      throw new ResourceNotFoundError("Arquivo", id);
     }
 
     if (acesso) {

@@ -1,5 +1,5 @@
-import { Inject, Injectable, NotFoundException, type StreamableFile } from "@nestjs/common";
-import { BaseCrudService } from "@/core/@shared";
+import { Inject, Injectable, type StreamableFile } from "@nestjs/common";
+import { BaseCrudService, ResourceNotFoundError } from "@/core/@shared";
 import { ArquivoService } from "@/core/arquivo/application/use-cases/arquivo.service";
 import { BlocoService } from "@/core/bloco/application/use-cases/bloco.service";
 import { ImagemService } from "@/core/imagem/application/use-cases/imagem.service";
@@ -67,7 +67,7 @@ export class AmbienteService
       }
     }
 
-    throw new NotFoundException();
+    throw new ResourceNotFoundError("Imagem de capa do Ambiente", id);
   }
 
   async updateImagemCapa(

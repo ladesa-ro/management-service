@@ -1,4 +1,4 @@
-import { Inject, Injectable, NotFoundException, type StreamableFile } from "@nestjs/common";
+import { Inject, Injectable, type StreamableFile } from "@nestjs/common";
 import { BaseCrudService, ResourceNotFoundError } from "@/core/@shared";
 import { ArquivoService } from "@/core/arquivo/application/use-cases/arquivo.service";
 import type {
@@ -67,7 +67,7 @@ export class BlocoService
       }
     }
 
-    throw new NotFoundException();
+    throw new ResourceNotFoundError("Imagem de capa do Bloco", id);
   }
 
   async updateImagemCapa(

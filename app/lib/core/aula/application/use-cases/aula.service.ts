@@ -1,4 +1,5 @@
-import { Inject, Injectable, NotFoundException } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
+import { ResourceNotFoundError } from "@/core/@shared";
 import { has, pick } from "lodash";
 import { AmbienteService } from "@/core/ambiente/application/use-cases/ambiente.service";
 import { DiarioService } from "@/core/diario/application/use-cases/diario.service";
@@ -51,7 +52,7 @@ export class AulaService implements IAulaUseCasePort {
     const aula = await this.aulaRepository.findById(accessContext, dto, selection);
 
     if (!aula) {
-      throw new NotFoundException();
+      throw new ResourceNotFoundError("Aula", dto.id);
     }
 
     return aula;
@@ -73,7 +74,7 @@ export class AulaService implements IAulaUseCasePort {
     const aula = await this.aulaRepository.findByIdSimple(accessContext, id, selection);
 
     if (!aula) {
-      throw new NotFoundException();
+      throw new ResourceNotFoundError("Aula", id);
     }
 
     return aula;

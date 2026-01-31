@@ -2,7 +2,6 @@ import {
   Inject,
   Injectable,
   InternalServerErrorException,
-  NotFoundException,
   ServiceUnavailableException,
 } from "@nestjs/common";
 import { has, pick } from "lodash";
@@ -122,7 +121,7 @@ export class UsuarioService implements IUsuarioUseCasePort {
       }
     }
 
-    throw new NotFoundException();
+    throw new ResourceNotFoundError("Imagem de capa do Usuario", id);
   }
 
   async updateImagemCapa(
@@ -175,7 +174,7 @@ export class UsuarioService implements IUsuarioUseCasePort {
       }
     }
 
-    throw new NotFoundException();
+    throw new ResourceNotFoundError("Imagem de perfil do Usuario", id);
   }
 
   async updateImagemPerfil(

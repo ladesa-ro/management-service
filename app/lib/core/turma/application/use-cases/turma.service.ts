@@ -1,4 +1,5 @@
-import { Inject, Injectable, NotFoundException, type StreamableFile } from "@nestjs/common";
+import { Inject, Injectable, type StreamableFile } from "@nestjs/common";
+import { ResourceNotFoundError } from "@/core/@shared";
 import { has } from "lodash";
 import { BaseCrudService } from "@/core/@shared";
 import { AmbienteService } from "@/core/ambiente/application/use-cases/ambiente.service";
@@ -56,7 +57,7 @@ export class TurmaService extends BaseCrudService<
       }
     }
 
-    throw new NotFoundException();
+    throw new ResourceNotFoundError("Imagem de capa da Turma", id);
   }
 
   async updateImagemCapa(

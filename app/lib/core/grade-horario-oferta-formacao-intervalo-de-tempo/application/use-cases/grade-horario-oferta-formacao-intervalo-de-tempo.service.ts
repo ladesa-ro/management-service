@@ -1,4 +1,5 @@
-import { Inject, Injectable, NotFoundException } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
+import { ResourceNotFoundError } from "@/core/@shared";
 import { has, pick } from "lodash";
 import { GradeHorarioOfertaFormacaoService } from "@/core/grade-horario-oferta-formacao";
 import { IntervaloDeTempoService } from "@/core/intervalo-de-tempo";
@@ -69,7 +70,7 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService {
     );
 
     if (!gradeHorarioOfertaFormacaoIntervaloDeTempo) {
-      throw new NotFoundException();
+      throw new ResourceNotFoundError("GradeHorarioOfertaFormacaoIntervaloDeTempo", dto.id);
     }
 
     return gradeHorarioOfertaFormacaoIntervaloDeTempo;
@@ -99,7 +100,7 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService {
     );
 
     if (!gradeHorarioOfertaFormacaoIntervaloDeTempo) {
-      throw new NotFoundException();
+      throw new ResourceNotFoundError("GradeHorarioOfertaFormacaoIntervaloDeTempo", id);
     }
 
     return gradeHorarioOfertaFormacaoIntervaloDeTempo;

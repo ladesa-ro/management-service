@@ -1,4 +1,5 @@
-import { Inject, Injectable, NotFoundException } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
+import { ResourceNotFoundError } from "@/core/@shared";
 import { has, pick } from "lodash";
 import { DisponibilidadeService } from "@/core/disponibilidade/application/use-cases/disponibilidade.service";
 import { TurmaService } from "@/core/turma/application/use-cases/turma.service";
@@ -57,7 +58,7 @@ export class TurmaDisponibilidadeService {
     const turmaDisponibilidade = await this.findById(accessContext, dto, selection);
 
     if (!turmaDisponibilidade) {
-      throw new NotFoundException();
+      throw new ResourceNotFoundError("TurmaDisponibilidade", dto.id);
     }
 
     return turmaDisponibilidade;
@@ -79,7 +80,7 @@ export class TurmaDisponibilidadeService {
     const turmaDisponibilidade = await this.findByIdSimple(accessContext, id, selection);
 
     if (!turmaDisponibilidade) {
-      throw new NotFoundException();
+      throw new ResourceNotFoundError("TurmaDisponibilidade", id);
     }
 
     return turmaDisponibilidade;
