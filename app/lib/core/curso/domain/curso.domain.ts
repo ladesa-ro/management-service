@@ -1,3 +1,4 @@
+import type { ScalarDateTimeString } from "@/core/@shared";
 import type { ICampus } from "@/core/campus";
 import type { IImagem } from "@/core/imagem";
 import type { IOfertaFormacao } from "@/core/oferta-formacao";
@@ -14,9 +15,9 @@ export class Curso implements ICurso {
   campus!: ICampus;
   ofertaFormacao!: IOfertaFormacao;
   imagemCapa!: IImagem | null;
-  dateCreated!: Date;
-  dateUpdated!: Date;
-  dateDeleted!: Date | null;
+  dateCreated!: ScalarDateTimeString;
+  dateUpdated!: ScalarDateTimeString;
+  dateDeleted!: ScalarDateTimeString | null;
 
   // ========================================
   // Metodos de Dominio
@@ -40,8 +41,8 @@ export class Curso implements ICurso {
     instance.nome = dados.nome.trim();
     instance.nomeAbreviado = dados.nomeAbreviado.trim();
     instance.imagemCapa = null;
-    instance.dateCreated = new Date();
-    instance.dateUpdated = new Date();
+    instance.dateCreated = new Date().toISOString();
+    instance.dateUpdated = new Date().toISOString();
     instance.dateDeleted = null;
 
     return instance;

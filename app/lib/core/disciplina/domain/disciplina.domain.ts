@@ -1,3 +1,4 @@
+import type { ScalarDateTimeString } from "@/core/@shared";
 import type { IImagem } from "@/core/imagem/domain/imagem.types";
 import type { IDisciplina, IDisciplinaCreate } from "./disciplina.types";
 
@@ -11,9 +12,9 @@ export class Disciplina implements IDisciplina {
   nomeAbreviado!: string;
   cargaHoraria!: number;
   imagemCapa!: IImagem | null;
-  dateCreated!: Date;
-  dateUpdated!: Date;
-  dateDeleted!: Date | null;
+  dateCreated!: ScalarDateTimeString;
+  dateUpdated!: ScalarDateTimeString;
+  dateDeleted!: ScalarDateTimeString | null;
 
   // ========================================
   // Métodos de Domínio
@@ -42,8 +43,8 @@ export class Disciplina implements IDisciplina {
     instance.nomeAbreviado = dados.nomeAbreviado.trim();
     instance.cargaHoraria = dados.cargaHoraria;
     instance.imagemCapa = null;
-    instance.dateCreated = new Date();
-    instance.dateUpdated = new Date();
+    instance.dateCreated = new Date().toISOString();
+    instance.dateUpdated = new Date().toISOString();
     instance.dateDeleted = null;
 
     return instance;

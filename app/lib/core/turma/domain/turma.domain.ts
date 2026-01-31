@@ -1,3 +1,4 @@
+import type { ScalarDateTimeString } from "@/core/@shared";
 import type { IAmbiente } from "@/core/ambiente/domain/ambiente.types";
 import type { ICurso } from "@/core/curso";
 import type { IImagem } from "@/core/imagem/domain/imagem.types";
@@ -13,9 +14,9 @@ export class Turma implements ITurma {
   ambientePadraoAula!: IAmbiente | null;
   curso!: ICurso;
   imagemCapa!: IImagem | null;
-  dateCreated!: Date;
-  dateUpdated!: Date;
-  dateDeleted!: Date | null;
+  dateCreated!: ScalarDateTimeString;
+  dateUpdated!: ScalarDateTimeString;
+  dateDeleted!: ScalarDateTimeString | null;
 
   // ========================================
   // Métodos de Domínio
@@ -35,8 +36,8 @@ export class Turma implements ITurma {
     instance.periodo = dados.periodo.trim();
     instance.ambientePadraoAula = null;
     instance.imagemCapa = null;
-    instance.dateCreated = new Date();
-    instance.dateUpdated = new Date();
+    instance.dateCreated = new Date().toISOString();
+    instance.dateUpdated = new Date().toISOString();
     instance.dateDeleted = null;
 
     return instance;

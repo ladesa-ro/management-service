@@ -1,3 +1,4 @@
+import type { ScalarDateTimeString } from "@/core/@shared";
 import type { IEndereco } from "@/core/endereco";
 import type { ICampus, ICampusCreate } from "./campus.types";
 
@@ -12,9 +13,9 @@ export class Campus implements ICampus {
   apelido!: string;
   cnpj!: string;
   endereco!: IEndereco;
-  dateCreated!: Date;
-  dateUpdated!: Date;
-  dateDeleted!: Date | null;
+  dateCreated!: ScalarDateTimeString;
+  dateUpdated!: ScalarDateTimeString;
+  dateDeleted!: ScalarDateTimeString | null;
 
   // ========================================
   // Métodos de Domínio
@@ -39,8 +40,8 @@ export class Campus implements ICampus {
     instance.razaoSocial = dados.razaoSocial.trim();
     instance.apelido = dados.apelido?.trim() || "";
     instance.cnpj = dados.cnpj;
-    instance.dateCreated = new Date();
-    instance.dateUpdated = new Date();
+    instance.dateCreated = new Date().toISOString();
+    instance.dateUpdated = new Date().toISOString();
     instance.dateDeleted = null;
 
     return instance;

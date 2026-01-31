@@ -1,3 +1,4 @@
+import type { ScalarDate, ScalarDateTimeString } from "@/core/@shared";
 import type { DiarioProfessor } from "@/core/diario-professor/domain/diario-professor.domain";
 import type { HorarioGerado } from "@/core/horario-gerado";
 import type { IntervaloDeTempo } from "@/core/intervalo-de-tempo/domain/intervalo-de-tempo.domain";
@@ -5,13 +6,13 @@ import type { IHorarioGeradoAula, IHorarioGeradoAulaCreate } from "./horario-ger
 
 export class HorarioGeradoAula implements IHorarioGeradoAula {
   id!: string;
-  data!: Date;
+  data!: ScalarDate;
   diarioProfessor!: DiarioProfessor;
   horarioGerado!: HorarioGerado;
   intervaloDeTempo!: IntervaloDeTempo;
-  dateCreated!: Date;
-  dateUpdated!: Date;
-  dateDeleted!: Date | null;
+  dateCreated!: ScalarDateTimeString;
+  dateUpdated!: ScalarDateTimeString;
+  dateDeleted!: ScalarDateTimeString | null;
 
   static criar(dados: IHorarioGeradoAulaCreate): HorarioGeradoAula {
     const horarioGeradoAula = new HorarioGeradoAula();

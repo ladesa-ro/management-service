@@ -1,3 +1,4 @@
+import type { ScalarDateTimeString } from "@/core/@shared";
 import type { IBloco } from "@/core/bloco";
 import type { IAmbiente, IAmbienteCreate } from "./ambiente.types";
 
@@ -14,9 +15,9 @@ export class Ambiente implements IAmbiente {
   tipo!: string | null;
   bloco!: IBloco;
   imagemCapa!: { id: string } | null;
-  dateCreated!: Date;
-  dateUpdated!: Date;
-  dateDeleted!: Date | null;
+  dateCreated!: ScalarDateTimeString;
+  dateUpdated!: ScalarDateTimeString;
+  dateDeleted!: ScalarDateTimeString | null;
 
   // ========================================
   // Métodos de Domínio
@@ -43,8 +44,8 @@ export class Ambiente implements IAmbiente {
     instance.capacidade = dados.capacidade ?? null;
     instance.tipo = dados.tipo ?? null;
     instance.imagemCapa = null;
-    instance.dateCreated = new Date();
-    instance.dateUpdated = new Date();
+    instance.dateCreated = new Date().toISOString();
+    instance.dateUpdated = new Date().toISOString();
     instance.dateDeleted = null;
 
     return instance;

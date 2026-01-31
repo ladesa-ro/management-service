@@ -1,3 +1,4 @@
+import type { ScalarDateTimeString } from "@/core/@shared";
 import type { ICampus } from "@/core/campus";
 import type { IUsuario } from "@/core/usuario";
 import type { IPerfil, IPerfilCreate } from "./perfil.types";
@@ -12,9 +13,9 @@ export class Perfil implements IPerfil {
   cargo!: string;
   campus!: ICampus;
   usuario!: IUsuario;
-  dateCreated!: Date;
-  dateUpdated!: Date;
-  dateDeleted!: Date | null;
+  dateCreated!: ScalarDateTimeString;
+  dateUpdated!: ScalarDateTimeString;
+  dateDeleted!: ScalarDateTimeString | null;
 
   // ========================================
   // Métodos de Domínio
@@ -33,8 +34,8 @@ export class Perfil implements IPerfil {
 
     instance.cargo = dados.cargo.trim();
     instance.ativo = true;
-    instance.dateCreated = new Date();
-    instance.dateUpdated = new Date();
+    instance.dateCreated = new Date().toISOString();
+    instance.dateUpdated = new Date().toISOString();
     instance.dateDeleted = null;
 
     return instance;
@@ -86,7 +87,7 @@ export class Perfil implements IPerfil {
    */
   ativar(): void {
     this.ativo = true;
-    this.dateUpdated = new Date();
+    this.dateUpdated = new Date().toISOString();
   }
 
   /**
@@ -94,6 +95,6 @@ export class Perfil implements IPerfil {
    */
   desativar(): void {
     this.ativo = false;
-    this.dateUpdated = new Date();
+    this.dateUpdated = new Date().toISOString();
   }
 }

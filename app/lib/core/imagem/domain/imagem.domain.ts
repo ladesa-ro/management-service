@@ -1,3 +1,4 @@
+import type { ScalarDateTimeString } from "@/core/@shared";
 import type { IImagem, IImagemCreate } from "./imagem.types";
 
 /**
@@ -7,9 +8,9 @@ import type { IImagem, IImagemCreate } from "./imagem.types";
 export class Imagem implements IImagem {
   id!: string;
   descricao!: string | null;
-  dateCreated!: Date;
-  dateUpdated!: Date;
-  dateDeleted!: Date | null;
+  dateCreated!: ScalarDateTimeString;
+  dateUpdated!: ScalarDateTimeString;
+  dateDeleted!: ScalarDateTimeString | null;
 
   // ========================================
   // Factory Methods
@@ -21,8 +22,8 @@ export class Imagem implements IImagem {
   static criar(dados: IImagemCreate): Imagem {
     const instance = new Imagem();
     instance.descricao = dados.descricao ?? null;
-    instance.dateCreated = new Date();
-    instance.dateUpdated = new Date();
+    instance.dateCreated = new Date().toISOString();
+    instance.dateUpdated = new Date().toISOString();
     instance.dateDeleted = null;
     return instance;
   }

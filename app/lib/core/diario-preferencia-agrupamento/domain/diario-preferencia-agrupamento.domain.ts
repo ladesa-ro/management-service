@@ -1,3 +1,4 @@
+import type { ScalarDate, ScalarDateTimeString } from "@/core/@shared";
 import type { Diario } from "@/core/diario/domain/diario.domain";
 import type { IntervaloDeTempo } from "@/core/intervalo-de-tempo/domain/intervalo-de-tempo.domain";
 import type {
@@ -7,15 +8,15 @@ import type {
 
 export class DiarioPreferenciaAgrupamento implements IDiarioPreferenciaAgrupamento {
   id!: string;
-  dataInicio!: Date;
-  dataFim!: Date | null;
+  dataInicio!: ScalarDate;
+  dataFim!: ScalarDate | null;
   diaSemanaIso!: number;
   aulasSeguidas!: number;
   intervaloDeTempo!: IntervaloDeTempo;
   diario!: Diario;
-  dateCreated!: Date;
-  dateUpdated!: Date;
-  dateDeleted!: Date | null;
+  dateCreated!: ScalarDateTimeString;
+  dateUpdated!: ScalarDateTimeString;
+  dateDeleted!: ScalarDateTimeString | null;
 
   static criar(dados: IDiarioPreferenciaAgrupamentoCreate): DiarioPreferenciaAgrupamento {
     const diarioPreferenciaAgrupamento = new DiarioPreferenciaAgrupamento();

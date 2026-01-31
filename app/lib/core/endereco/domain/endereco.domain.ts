@@ -1,3 +1,4 @@
+import type { ScalarDateTimeString } from "@/core/@shared";
 import type { ICidade } from "@/core/cidade";
 import type { IEndereco } from "./endereco.types";
 
@@ -10,9 +11,9 @@ export class Endereco implements IEndereco {
   complemento!: string | null;
   pontoReferencia!: string | null;
   cidade!: ICidade;
-  dateCreated!: Date;
-  dateUpdated!: Date;
-  dateDeleted!: Date | null;
+  dateCreated!: ScalarDateTimeString;
+  dateUpdated!: ScalarDateTimeString;
+  dateDeleted!: ScalarDateTimeString | null;
 
   static fromData(dados: IEndereco): Endereco {
     const instance = new Endereco();

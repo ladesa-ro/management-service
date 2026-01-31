@@ -1,3 +1,4 @@
+import type { ScalarDateTimeString } from "@/core/@shared";
 import type { Ambiente } from "@/core/ambiente/domain/ambiente.domain";
 import type { Usuario } from "@/core/usuario/domain/usuario.domain";
 import type { IReserva, IReservaCreate } from "./reserva.types";
@@ -14,9 +15,9 @@ export class Reserva implements IReserva {
   rrule!: string;
   ambiente!: Ambiente;
   usuario!: Usuario;
-  dateCreated!: Date;
-  dateUpdated!: Date;
-  dateDeleted!: Date | null;
+  dateCreated!: ScalarDateTimeString;
+  dateUpdated!: ScalarDateTimeString;
+  dateDeleted!: ScalarDateTimeString | null;
 
   /**
    * Cria uma nova instância de Reserva

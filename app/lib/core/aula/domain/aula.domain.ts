@@ -1,3 +1,4 @@
+import type { ScalarDate, ScalarDateTimeString } from "@/core/@shared";
 import type { Ambiente } from "@/core/ambiente/domain/ambiente.domain";
 import type { Diario } from "@/core/diario/domain/diario.domain";
 import type { IntervaloDeTempo } from "@/core/intervalo-de-tempo/domain/intervalo-de-tempo.domain";
@@ -9,14 +10,14 @@ import type { IAula, IAulaCreate } from "./aula.types";
  */
 export class Aula implements IAula {
   id!: string;
-  data!: Date;
+  data!: ScalarDate;
   modalidade!: string | null;
   intervaloDeTempo!: IntervaloDeTempo;
   diario!: Diario;
   ambiente!: Ambiente | null;
-  dateCreated!: Date;
-  dateUpdated!: Date;
-  dateDeleted!: Date | null;
+  dateCreated!: ScalarDateTimeString;
+  dateUpdated!: ScalarDateTimeString;
+  dateDeleted!: ScalarDateTimeString | null;
 
   /**
    * Cria uma nova instância de Aula

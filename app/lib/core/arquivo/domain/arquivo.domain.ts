@@ -1,3 +1,4 @@
+import type { ScalarDateTimeString } from "@/core/@shared";
 import type { IArquivo, IArquivoCreate } from "./arquivo.types";
 
 /**
@@ -9,9 +10,9 @@ export class Arquivo implements IArquivo {
   mimeType!: string;
   sizeBytes!: number;
   storageType!: string;
-  dateCreated!: string;
-  dateUpdated!: string;
-  dateDeleted!: string | null;
+  dateCreated!: ScalarDateTimeString;
+  dateUpdated!: ScalarDateTimeString;
+  dateDeleted!: ScalarDateTimeString | null;
 
   static criar(dados: IArquivoCreate): Arquivo {
     const arquivo = new Arquivo();

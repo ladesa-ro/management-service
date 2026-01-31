@@ -1,3 +1,4 @@
+import type { ScalarDateTimeString } from "@/core/@shared";
 import type { IAmbiente } from "@/core/ambiente/domain/ambiente.types";
 import type { ICalendarioLetivo } from "@/core/calendario-letivo";
 import type { IDisciplina } from "@/core/disciplina/domain/disciplina.types";
@@ -16,17 +17,17 @@ export class Diario implements IDiario {
   disciplina!: IDisciplina;
   ambientePadrao!: IAmbiente | null;
   imagemCapa!: IImagem | null;
-  dateCreated!: Date;
-  dateUpdated!: Date;
-  dateDeleted!: Date | null;
+  dateCreated!: ScalarDateTimeString;
+  dateUpdated!: ScalarDateTimeString;
+  dateDeleted!: ScalarDateTimeString | null;
 
   static criar(dados: IDiarioCreate): Diario {
     const instance = new Diario();
     instance.ativo = dados.ativo ?? true;
     instance.ambientePadrao = null;
     instance.imagemCapa = null;
-    instance.dateCreated = new Date();
-    instance.dateUpdated = new Date();
+    instance.dateCreated = new Date().toISOString();
+    instance.dateUpdated = new Date().toISOString();
     instance.dateDeleted = null;
     return instance;
   }

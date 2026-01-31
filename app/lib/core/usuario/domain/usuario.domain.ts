@@ -1,3 +1,4 @@
+import type { ScalarDateTimeString } from "@/core/@shared";
 import type { IImagem } from "@/core/imagem/domain/imagem.types";
 import type { IUsuario, IUsuarioCreate } from "./usuario.types";
 
@@ -13,9 +14,9 @@ export class Usuario implements IUsuario {
   isSuperUser!: boolean;
   imagemCapa!: IImagem | null;
   imagemPerfil!: IImagem | null;
-  dateCreated!: Date;
-  dateUpdated!: Date;
-  dateDeleted!: Date | null;
+  dateCreated!: ScalarDateTimeString;
+  dateUpdated!: ScalarDateTimeString;
+  dateDeleted!: ScalarDateTimeString | null;
 
   // ========================================
   // Métodos de Domínio
@@ -32,8 +33,8 @@ export class Usuario implements IUsuario {
     instance.isSuperUser = false;
     instance.imagemCapa = null;
     instance.imagemPerfil = null;
-    instance.dateCreated = new Date();
-    instance.dateUpdated = new Date();
+    instance.dateCreated = new Date().toISOString();
+    instance.dateUpdated = new Date().toISOString();
     instance.dateDeleted = null;
     return instance;
   }

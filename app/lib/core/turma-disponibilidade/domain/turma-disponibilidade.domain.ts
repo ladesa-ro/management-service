@@ -1,3 +1,4 @@
+import type { ScalarDateTimeString } from "@/core/@shared";
 import type { Disponibilidade } from "@/core/disponibilidade/domain/disponibilidade.domain";
 import type { Turma } from "@/core/turma/domain/turma.domain";
 import type {
@@ -9,9 +10,9 @@ export class TurmaDisponibilidade implements ITurmaDisponibilidade {
   id!: string;
   turma!: Turma;
   disponibilidade!: Disponibilidade;
-  dateCreated!: Date;
-  dateUpdated!: Date;
-  dateDeleted!: Date | null;
+  dateCreated!: ScalarDateTimeString;
+  dateUpdated!: ScalarDateTimeString;
+  dateDeleted!: ScalarDateTimeString | null;
 
   static criar(dados: ITurmaDisponibilidadeCreate): TurmaDisponibilidade {
     const turmaDisponibilidade = new TurmaDisponibilidade();

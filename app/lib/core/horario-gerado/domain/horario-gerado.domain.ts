@@ -1,3 +1,4 @@
+import type { ScalarDateTimeString } from "@/core/@shared";
 import type { CalendarioLetivo } from "@/core/calendario-letivo";
 import type { IHorarioGerado, IHorarioGeradoCreate } from "./horario-gerado.types";
 
@@ -5,13 +6,13 @@ export class HorarioGerado implements IHorarioGerado {
   id!: string;
   status!: string | null;
   tipo!: string | null;
-  dataGeracao!: Date | null;
-  vigenciaInicio!: Date | null;
-  vigenciaFim!: Date | null;
+  dataGeracao!: ScalarDateTimeString | null;
+  vigenciaInicio!: ScalarDateTimeString | null;
+  vigenciaFim!: ScalarDateTimeString | null;
   calendario!: CalendarioLetivo;
-  dateCreated!: Date;
-  dateUpdated!: Date;
-  dateDeleted!: Date | null;
+  dateCreated!: ScalarDateTimeString;
+  dateUpdated!: ScalarDateTimeString;
+  dateDeleted!: ScalarDateTimeString | null;
 
   static criar(dados: IHorarioGeradoCreate): HorarioGerado {
     const horarioGerado = new HorarioGerado();

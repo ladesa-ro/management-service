@@ -1,3 +1,4 @@
+import type { ScalarDateTimeString } from "@/core/@shared";
 import type { ICampus } from "@/core/campus";
 import type { IBloco, IBlocoCreate } from "./bloco.types";
 
@@ -11,9 +12,9 @@ export class Bloco implements IBloco {
   codigo!: string;
   campus!: ICampus;
   imagemCapa!: { id: string } | null;
-  dateCreated!: Date;
-  dateUpdated!: Date;
-  dateDeleted!: Date | null;
+  dateCreated!: ScalarDateTimeString;
+  dateUpdated!: ScalarDateTimeString;
+  dateDeleted!: ScalarDateTimeString | null;
 
   // ========================================
   // Métodos de Domínio
@@ -37,8 +38,8 @@ export class Bloco implements IBloco {
     instance.nome = dados.nome.trim();
     instance.codigo = dados.codigo.trim();
     instance.imagemCapa = null;
-    instance.dateCreated = new Date();
-    instance.dateUpdated = new Date();
+    instance.dateCreated = new Date().toISOString();
+    instance.dateUpdated = new Date().toISOString();
     instance.dateDeleted = null;
 
     return instance;

@@ -1,16 +1,17 @@
+import type { ScalarDate, ScalarDateTimeString } from "@/core/@shared";
 import type { CalendarioLetivo } from "@/core/calendario-letivo";
 import type { IEtapa, IEtapaCreate } from "./etapa.types";
 
 export class Etapa implements IEtapa {
   id!: string;
   numero!: number | null;
-  dataInicio!: Date;
-  dataTermino!: Date;
+  dataInicio!: ScalarDate;
+  dataTermino!: ScalarDate;
   cor!: string | null;
   calendario!: CalendarioLetivo;
-  dateCreated!: Date;
-  dateUpdated!: Date;
-  dateDeleted!: Date | null;
+  dateCreated!: ScalarDateTimeString;
+  dateUpdated!: ScalarDateTimeString;
+  dateDeleted!: ScalarDateTimeString | null;
 
   static criar(dados: IEtapaCreate): Etapa {
     const etapa = new Etapa();

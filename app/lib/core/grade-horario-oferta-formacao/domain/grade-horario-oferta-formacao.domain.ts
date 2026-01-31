@@ -1,3 +1,4 @@
+import type { ScalarDateTimeString } from "@/core/@shared";
 import type { Campus } from "@/core/campus";
 import type { OfertaFormacao } from "@/core/oferta-formacao";
 import type {
@@ -13,9 +14,9 @@ export class GradeHorarioOfertaFormacao implements IGradeHorarioOfertaFormacao {
   id!: string;
   campus!: Campus;
   ofertaFormacao!: OfertaFormacao;
-  dateCreated!: Date;
-  dateUpdated!: Date;
-  dateDeleted!: Date | null;
+  dateCreated!: ScalarDateTimeString;
+  dateUpdated!: ScalarDateTimeString;
+  dateDeleted!: ScalarDateTimeString | null;
 
   /**
    * Cria uma nova instancia de GradeHorarioOfertaFormacao

@@ -1,3 +1,4 @@
+import type { ScalarDateTimeString } from "@/core/@shared";
 import type { Arquivo } from "@/core/arquivo/domain/arquivo.domain";
 import type { Imagem } from "@/core/imagem/domain/imagem.domain";
 import type { IImagemArquivo, IImagemArquivoCreate } from "./imagem-arquivo.types";
@@ -14,9 +15,9 @@ export class ImagemArquivo implements IImagemArquivo {
   mimeType!: string;
   imagem!: Imagem;
   arquivo!: Arquivo;
-  dateCreated!: Date;
-  dateUpdated!: Date;
-  dateDeleted!: Date | null;
+  dateCreated!: ScalarDateTimeString;
+  dateUpdated!: ScalarDateTimeString;
+  dateDeleted!: ScalarDateTimeString | null;
 
   /**
    * Cria uma nova instância de ImagemArquivo

@@ -1,18 +1,19 @@
+import type { ScalarDate, ScalarDateTimeString } from "@/core/@shared";
 import type { CalendarioLetivo } from "@/core/calendario-letivo";
 import type { IDiaCalendario, IDiaCalendarioCreate } from "./dia-calendario.types";
 
 export class DiaCalendario implements IDiaCalendario {
   id!: string;
-  data!: Date;
+  data!: ScalarDate;
   diaLetivo!: boolean;
   feriado!: string;
   diaPresencial!: boolean;
   tipo!: string;
   extraCurricular!: boolean;
   calendario!: CalendarioLetivo;
-  dateCreated!: Date;
-  dateUpdated!: Date;
-  dateDeleted!: Date | null;
+  dateCreated!: ScalarDateTimeString;
+  dateUpdated!: ScalarDateTimeString;
+  dateDeleted!: ScalarDateTimeString | null;
 
   static criar(dados: IDiaCalendarioCreate): DiaCalendario {
     const diaCalendario = new DiaCalendario();

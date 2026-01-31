@@ -1,4 +1,4 @@
-import type { IdUuid } from "@/core/@shared";
+import type { IdUuid, ScalarDateTimeString } from "@/core/@shared";
 import type { IIntervaloDeTempo, IIntervaloDeTempoCreate } from "./intervalo-de-tempo.types";
 
 /**
@@ -11,9 +11,9 @@ export class IntervaloDeTempo implements IIntervaloDeTempo {
   periodoInicio!: string;
   periodoFim!: string;
 
-  dateCreated!: Date;
-  dateUpdated!: Date;
-  dateDeleted!: Date | null;
+  dateCreated!: ScalarDateTimeString;
+  dateUpdated!: ScalarDateTimeString;
+  dateDeleted!: ScalarDateTimeString | null;
 
   // ========================================
   // Factory Methods

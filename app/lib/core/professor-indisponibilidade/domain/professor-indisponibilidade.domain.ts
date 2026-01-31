@@ -1,3 +1,4 @@
+import type { ScalarDateTimeString } from "@/core/@shared";
 import type { Usuario } from "@/core/usuario/domain/usuario.domain";
 import type {
   IProfessorIndisponibilidade,
@@ -11,9 +12,9 @@ export class ProfessorIndisponibilidade implements IProfessorIndisponibilidade {
   horaInicio!: string;
   horaFim!: string;
   motivo!: string;
-  dateCreated!: Date;
-  dateUpdated!: Date;
-  dateDeleted!: Date | null;
+  dateCreated!: ScalarDateTimeString;
+  dateUpdated!: ScalarDateTimeString;
+  dateDeleted!: ScalarDateTimeString | null;
 
   static criar(dados: IProfessorIndisponibilidadeCreate): ProfessorIndisponibilidade {
     const professorIndisponibilidade = new ProfessorIndisponibilidade();

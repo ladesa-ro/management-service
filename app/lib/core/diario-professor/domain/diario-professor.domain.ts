@@ -1,3 +1,4 @@
+import type { ScalarDateTimeString } from "@/core/@shared";
 import type { Diario } from "@/core/diario/domain/diario.domain";
 import type { Perfil } from "@/core/perfil";
 import type { IDiarioProfessor, IDiarioProfessorCreate } from "./diario-professor.types";
@@ -7,9 +8,9 @@ export class DiarioProfessor implements IDiarioProfessor {
   situacao!: boolean;
   diario!: Diario;
   perfil!: Perfil;
-  dateCreated!: Date;
-  dateUpdated!: Date;
-  dateDeleted!: Date | null;
+  dateCreated!: ScalarDateTimeString;
+  dateUpdated!: ScalarDateTimeString;
+  dateDeleted!: ScalarDateTimeString | null;
 
   static criar(dados: IDiarioProfessorCreate): DiarioProfessor {
     const diarioProfessor = new DiarioProfessor();

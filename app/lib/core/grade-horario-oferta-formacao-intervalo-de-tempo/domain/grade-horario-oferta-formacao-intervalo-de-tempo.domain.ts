@@ -1,3 +1,4 @@
+import type { ScalarDateTimeString } from "@/core/@shared";
 import type { GradeHorarioOfertaFormacao } from "@/core/grade-horario-oferta-formacao";
 import type { IntervaloDeTempo } from "@/core/intervalo-de-tempo";
 import type {
@@ -11,9 +12,9 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempo
   id!: string;
   intervaloDeTempo!: IntervaloDeTempo;
   gradeHorarioOfertaFormacao!: GradeHorarioOfertaFormacao;
-  dateCreated!: Date;
-  dateUpdated!: Date;
-  dateDeleted!: Date | null;
+  dateCreated!: ScalarDateTimeString;
+  dateUpdated!: ScalarDateTimeString;
+  dateDeleted!: ScalarDateTimeString | null;
 
   static criar(
     dados: IGradeHorarioOfertaFormacaoIntervaloDeTempoCreate,
