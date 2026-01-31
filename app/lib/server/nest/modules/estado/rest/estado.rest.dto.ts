@@ -1,4 +1,4 @@
-import { ArgsType, Field, InputType, Int, ObjectType } from "@nestjs/graphql";
+import { ArgsType, Field, Int, ObjectType } from "@nestjs/graphql";
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { IsArray, IsInt, IsOptional, IsString } from "class-validator";
@@ -42,15 +42,12 @@ export class EstadoFindOneOutputDto {
 // List Input/Output
 // ============================================================================
 
-@ArgsType()
-@InputType("EstadoListInput")
 export class EstadoListInputDto extends PaginationInputDto {
   @ApiPropertyOptional({
     description: "Filtro por ID",
     type: [String],
   })
   @TransformToArray()
-  @Field(() => [String], { nullable: true })
   @IsOptional()
   @IsArray()
   @IsString({ each: true })

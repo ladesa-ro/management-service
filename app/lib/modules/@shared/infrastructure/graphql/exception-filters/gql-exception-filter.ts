@@ -6,8 +6,6 @@ import { ValidationFailedException } from "@/modules/@shared";
 @Catch(HttpException)
 export class GqlExceptionFilter implements NestGqlExceptionFilter {
   catch(exception: HttpException, host: ArgumentsHost) {
-    // const gqlHost = GqlArgumentsHost.create(host);
-
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
@@ -31,9 +29,4 @@ export class GqlExceptionFilter implements NestGqlExceptionFilter {
       }
     }
   }
-
-  // catch(exception: HttpException /*, host: ArgumentsHost */) {
-  //   // const _gqlHost = GqlArgumentsHost.create(host);
-  //   return exception;
-  // }
 }
