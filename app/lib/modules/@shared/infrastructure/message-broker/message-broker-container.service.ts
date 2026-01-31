@@ -26,7 +26,6 @@ export class MessageBrokerContainerService {
 
   getConfig(): BrokerConfig {
     const config: BrokerConfig = {
-      // $schema: './node_modules/rascal/lib/config/schema.json',
       vhosts: {
         "/": {
           connection: {
@@ -49,10 +48,10 @@ export class MessageBrokerContainerService {
           subscriptions: {
             horario_gerado: {
               queue: "horario_gerado",
-              prefetch: 1, // Limita o número de mensagens não confirmadas que o consumidor pode receber
-              contentType: "text/plain", // Tipo de conteúdo esperado
+              prefetch: 1,
+              contentType: "text/plain",
               options: {
-                noAck: false, // Requer confirmação explícita das mensagens processadas
+                noAck: false,
               },
             },
           },
