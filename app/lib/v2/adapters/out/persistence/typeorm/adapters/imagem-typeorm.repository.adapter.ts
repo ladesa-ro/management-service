@@ -33,6 +33,14 @@ export class ImagemTypeOrmRepositoryAdapter implements IImagemTransactionPort {
           merge: (imagemArquivo: ImagemArquivoEntity, data: DeepPartial<ImagemArquivoEntity>) => {
             imagemArquivoRepository.merge(imagemArquivo, data as ImagemArquivoEntity);
           },
+          findLatestArquivoIdForImagem: async (imagemId: string) => {
+            const versao = await imagemArquivoRepository.findOne({
+              where: { imagem: { id: imagemId } },
+              relations: { arquivo: true },
+              order: { dateCreated: "DESC" },
+            });
+            return versao?.arquivo?.id ?? null;
+          },
         };
 
         return callback({

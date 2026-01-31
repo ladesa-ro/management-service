@@ -1,0 +1,74 @@
+import { Injectable } from "@nestjs/common";
+import { FilterOperator } from "nestjs-paginate";
+import type { SelectQueryBuilder } from "typeorm";
+import type {
+  GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInput,
+  GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutput,
+  GradeHorarioOfertaFormacaoIntervaloDeTempoListInput,
+  GradeHorarioOfertaFormacaoIntervaloDeTempoListOutput,
+} from "@/core/grade-horario-oferta-formacao-intervalo-de-tempo";
+import type { IGradeHorarioOfertaFormacaoIntervaloDeTempoRepositoryPort } from "@/core/grade-horario-oferta-formacao-intervalo-de-tempo/application/ports/out";
+import type { IPaginationConfig } from "@/v2/application/ports/pagination";
+import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
+import { NestJsPaginateAdapter } from "../../pagination/nestjs-paginate.adapter";
+import { BaseTypeOrmRepositoryAdapter } from "../base";
+import { DatabaseContextService } from "../context/database-context.service";
+import type { GradeHorarioOfertaFormacaoIntervaloDeTempoEntity } from "../typeorm/entities";
+
+/**
+ * Adapter TypeORM que implementa o port de repositório de GradeHorarioOfertaFormacaoIntervaloDeTempo.
+ * Estende BaseTypeOrmRepositoryAdapter para reutilizar operações CRUD comuns.
+ */
+@Injectable()
+export class GradeHorarioOfertaFormacaoIntervaloDeTempoTypeOrmRepositoryAdapter
+  extends BaseTypeOrmRepositoryAdapter<
+    GradeHorarioOfertaFormacaoIntervaloDeTempoEntity,
+    GradeHorarioOfertaFormacaoIntervaloDeTempoListInput,
+    GradeHorarioOfertaFormacaoIntervaloDeTempoListOutput,
+    GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInput,
+    GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutput
+  >
+  implements IGradeHorarioOfertaFormacaoIntervaloDeTempoRepositoryPort
+{
+  protected readonly alias = "gh_of_it";
+  protected readonly authzAction = "grade_horario_oferta_formacao_intervalo_de_tempo:find";
+  protected readonly outputDtoName = "GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutput";
+
+  constructor(
+    protected readonly databaseContext: DatabaseContextService,
+    protected readonly paginationAdapter: NestJsPaginateAdapter,
+  ) {
+    super();
+  }
+
+  protected get repository() {
+    return this.databaseContext.gradeHorarioOfertaFormacaoIntervaloDeTempoRepository;
+  }
+
+  protected getPaginateConfig(): IPaginationConfig<GradeHorarioOfertaFormacaoIntervaloDeTempoEntity> {
+    return {
+      ...paginateConfig,
+      relations: {
+        gradeHorarioOfertaFormacao: true,
+        intervaloDeTempo: true,
+      },
+      select: ["id", "dateCreated"],
+      sortableColumns: ["dateCreated"],
+      searchableColumns: ["id"],
+      defaultSortBy: [["dateCreated", "ASC"]],
+      filterableColumns: {
+        "gradeHorarioOfertaFormacao.id": [FilterOperator.EQ],
+        "intervaloDeTempo.id": [FilterOperator.EQ],
+      },
+    };
+  }
+
+  /**
+   * @deprecated Usado para verificações de permissão. Será removido em fases futuras.
+   */
+  createQueryBuilder(
+    alias: string,
+  ): SelectQueryBuilder<GradeHorarioOfertaFormacaoIntervaloDeTempoEntity> {
+    return this.repository.createQueryBuilder(alias);
+  }
+}

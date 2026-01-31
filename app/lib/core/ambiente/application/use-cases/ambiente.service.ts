@@ -3,7 +3,6 @@ import { BaseCrudService } from "@/core/@shared";
 import { ArquivoService } from "@/core/arquivo/application/use-cases/arquivo.service";
 import { BlocoService } from "@/core/bloco/application/use-cases/bloco.service";
 import { ImagemService } from "@/core/imagem/application/use-cases/imagem.service";
-import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
 import type { AmbienteEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
@@ -51,7 +50,6 @@ export class AmbienteService
     private readonly blocoService: BlocoService,
     private readonly imagemService: ImagemService,
     private readonly arquivoService: ArquivoService,
-    private readonly databaseContext: DatabaseContextService,
   ) {
     super();
   }
@@ -113,16 +111,12 @@ export class AmbienteService
     const ambiente = await this.findByIdStrict(accessContext, { id });
 
     if (ambiente.imagemCapa) {
-      // Load versoes separately since it's a OneToMany relation not loaded via QbEfficientLoad
-      const versao = await this.databaseContext.imagemArquivoRepository.findOne({
-        where: { imagem: { id: ambiente.imagemCapa.id } },
-        relations: { arquivo: true },
-        order: { dateCreated: "DESC" },
-      });
+      const arquivoId = await this.imagemService.getLatestArquivoIdForImagem(
+        ambiente.imagemCapa.id,
+      );
 
-      if (versao) {
-        const { arquivo } = versao;
-        return this.arquivoService.getStreamableFile(null, { id: arquivo.id });
+      if (arquivoId) {
+        return this.arquivoService.getStreamableFile(null, { id: arquivoId });
       }
     }
 

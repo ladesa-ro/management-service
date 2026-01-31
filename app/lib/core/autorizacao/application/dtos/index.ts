@@ -1,0 +1,2 @@
+// DTOs - autorizacao
+export {};

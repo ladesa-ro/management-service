@@ -1,0 +1,2 @@
+// DTOs - gerar-horario
+export {};

@@ -1,13 +1,9 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
-import { has, map, pick } from "lodash";
-import { FilterOperator } from "nestjs-paginate";
+import { Inject, Injectable, NotFoundException } from "@nestjs/common";
+import { has, pick } from "lodash";
 import { DiarioService } from "@/core/diario/application/use-cases/diario.service";
 import { IntervaloDeTempoService } from "@/core/intervalo-de-tempo/application/use-cases/intervalo-de-tempo.service";
-import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
 import type { DiarioPreferenciaAgrupamentoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
-import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
-import { QbEfficientLoad, SearchService } from "@/v2/old/shared";
 import type {
   DiarioPreferenciaAgrupamentoCreateInput,
   DiarioPreferenciaAgrupamentoFindOneInput,
@@ -16,6 +12,10 @@ import type {
   DiarioPreferenciaAgrupamentoListOutput,
   DiarioPreferenciaAgrupamentoUpdateInput,
 } from "../dtos";
+import {
+  DIARIO_PREFERENCIA_AGRUPAMENTO_REPOSITORY_PORT,
+  type IDiarioPreferenciaAgrupamentoRepositoryPort,
+} from "../ports/out";
 
 // ============================================================================
 
@@ -26,107 +26,18 @@ const aliasDiarioPreferenciaAgrupamento = "diario_preferencia_agrupamento";
 @Injectable()
 export class DiarioPreferenciaAgrupamentoService {
   constructor(
-    private databaseContext: DatabaseContextService,
-    private DiarioService: DiarioService,
-    private intervaloDeTempoService: IntervaloDeTempoService,
-    private searchService: SearchService,
+    @Inject(DIARIO_PREFERENCIA_AGRUPAMENTO_REPOSITORY_PORT)
+    private readonly diarioPreferenciaAgrupamentoRepository: IDiarioPreferenciaAgrupamentoRepositoryPort,
+    private readonly diarioService: DiarioService,
+    private readonly intervaloDeTempoService: IntervaloDeTempoService,
   ) {}
-
-  get diarioPreferenciaAgrupamentoRepository() {
-    return this.databaseContext.diarioPreferenciaAgrupamentoRepository;
-  }
 
   async diarioPreferenciaAgrupamentoFindAll(
     accessContext: AccessContext,
     dto: DiarioPreferenciaAgrupamentoListInput | null = null,
     selection?: string[] | boolean,
   ): Promise<DiarioPreferenciaAgrupamentoListOutput> {
-    // =========================================================
-
-    const qb = this.diarioPreferenciaAgrupamentoRepository.createQueryBuilder(
-      aliasDiarioPreferenciaAgrupamento,
-    );
-
-    // =========================================================
-
-    await accessContext.applyFilter(
-      "diario_preferencia_agrupamento:find",
-      qb,
-      aliasDiarioPreferenciaAgrupamento,
-      null,
-    );
-
-    // =========================================================
-
-    const paginated = await this.searchService.search(qb, dto as any, {
-      ...paginateConfig,
-      select: [
-        "id",
-
-        "diaSemanaIso",
-        "aulasSeguidas",
-        "dataInicio",
-        "dataFim",
-        "diario",
-        "intervaloDeTempo",
-
-        "diario.id",
-        "diario.ativo",
-
-        "intervaloDeTempo.id",
-        "intervaloDeTempo.periodoInicio",
-        "intervaloDeTempo.periodoFim",
-      ],
-      sortableColumns: [
-        "diaSemanaIso",
-        "aulasSeguidas",
-        "dataInicio",
-        "dataFim",
-        "diario",
-
-        "diario.id",
-        "intervaloDeTempo.id",
-      ],
-      searchableColumns: [
-        "id",
-
-        "diaSemanaIso",
-        "aulasSeguidas",
-        "dataInicio",
-        "dataFim",
-        "diario",
-        "intervaloDeTempo",
-      ],
-      relations: {
-        diario: true,
-        intervaloDeTempo: true,
-      },
-      defaultSortBy: [],
-      filterableColumns: {
-        "diario.id": [FilterOperator.EQ],
-      },
-    });
-
-    // =========================================================
-
-    qb.select([]);
-    QbEfficientLoad(
-      "DiarioPreferenciaAgrupamentoFindOneOutput",
-      qb,
-      aliasDiarioPreferenciaAgrupamento,
-      selection,
-    );
-
-    // =========================================================
-
-    const pageItemsView = await qb.andWhereInIds(map(paginated.data, "id")).getMany();
-    paginated.data = paginated.data.map(
-      (paginated) => pageItemsView.find((i) => i.id === paginated.id)!,
-    );
-
-    // =========================================================
-
-    return paginated as unknown as DiarioPreferenciaAgrupamentoListOutput;
+    return this.diarioPreferenciaAgrupamentoRepository.findAll(accessContext, dto, selection);
   }
 
   async diarioPreferenciaAgrupamentoFindById(
@@ -134,43 +45,7 @@ export class DiarioPreferenciaAgrupamentoService {
     dto: DiarioPreferenciaAgrupamentoFindOneInput,
     selection?: string[] | boolean,
   ): Promise<DiarioPreferenciaAgrupamentoFindOneOutput | null> {
-    // =========================================================
-
-    const qb = this.diarioPreferenciaAgrupamentoRepository.createQueryBuilder(
-      aliasDiarioPreferenciaAgrupamento,
-    );
-
-    // =========================================================
-
-    await accessContext.applyFilter(
-      "diario_preferencia_agrupamento:find",
-      qb,
-      aliasDiarioPreferenciaAgrupamento,
-      null,
-    );
-
-    // =========================================================
-
-    qb.andWhere(`${aliasDiarioPreferenciaAgrupamento}.id = :id`, {
-      id: dto.id,
-    });
-
-    // =========================================================
-
-    qb.select([]);
-    QbEfficientLoad(
-      "DiarioPreferenciaAgrupamentoFindOneOutput",
-      qb,
-      aliasDiarioPreferenciaAgrupamento,
-      selection,
-    );
-    // =========================================================
-
-    const diarioPreferenciaAgrupamento = await qb.getOne();
-
-    // =========================================================
-
-    return diarioPreferenciaAgrupamento as DiarioPreferenciaAgrupamentoFindOneOutput | null;
+    return this.diarioPreferenciaAgrupamentoRepository.findById(accessContext, dto, selection);
   }
 
   async diarioPreferenciaAgrupamentoFindByIdStrict(
@@ -196,42 +71,7 @@ export class DiarioPreferenciaAgrupamentoService {
     id: DiarioPreferenciaAgrupamentoFindOneInput["id"],
     selection?: string[],
   ): Promise<DiarioPreferenciaAgrupamentoFindOneOutput | null> {
-    // =========================================================
-
-    const qb = this.diarioPreferenciaAgrupamentoRepository.createQueryBuilder(
-      aliasDiarioPreferenciaAgrupamento,
-    );
-
-    // =========================================================
-
-    await accessContext.applyFilter(
-      "diario_preferencia_agrupamento:find",
-      qb,
-      aliasDiarioPreferenciaAgrupamento,
-      null,
-    );
-
-    // =========================================================
-
-    qb.andWhere(`${aliasDiarioPreferenciaAgrupamento}.id = :id`, { id });
-
-    // =========================================================
-
-    qb.select([]);
-    QbEfficientLoad(
-      "DiarioPreferenciaAgrupamentoFindOneOutput",
-      qb,
-      aliasDiarioPreferenciaAgrupamento,
-      selection,
-    );
-
-    // =========================================================
-
-    const diarioPreferenciaAgrupamento = await qb.getOne();
-
-    // =========================================================
-
-    return diarioPreferenciaAgrupamento as DiarioPreferenciaAgrupamentoFindOneOutput | null;
+    return this.diarioPreferenciaAgrupamentoRepository.findByIdSimple(accessContext, id, selection);
   }
 
   async diarioPreferenciaAgrupamentoFindByIdSimpleStrict(
@@ -256,11 +96,7 @@ export class DiarioPreferenciaAgrupamentoService {
     accessContext: AccessContext,
     dto: DiarioPreferenciaAgrupamentoCreateInput,
   ): Promise<DiarioPreferenciaAgrupamentoFindOneOutput> {
-    // =========================================================
-
     await accessContext.ensurePermission("diario_preferencia_agrupamento:create", { dto } as any);
-
-    // =========================================================
 
     const dtoDiarioPreferenciaAgrupamento = pick(dto, [
       "diaSemanaIso",
@@ -275,10 +111,8 @@ export class DiarioPreferenciaAgrupamentoService {
       ...dtoDiarioPreferenciaAgrupamento,
     });
 
-    // =========================================================
-
     if (dto.diario) {
-      const diario = await this.DiarioService.diarioFindByIdStrict(accessContext, dto.diario);
+      const diario = await this.diarioService.diarioFindByIdStrict(accessContext, dto.diario);
 
       this.diarioPreferenciaAgrupamentoRepository.merge(diarioPreferenciaAgrupamento, {
         diario: {
@@ -300,14 +134,11 @@ export class DiarioPreferenciaAgrupamentoService {
       });
     }
 
-    // =========================================================
-
-    await this.diarioPreferenciaAgrupamentoRepository.save(diarioPreferenciaAgrupamento);
-
-    // =========================================================
+    const savedDiarioPreferenciaAgrupamento =
+      await this.diarioPreferenciaAgrupamentoRepository.save(diarioPreferenciaAgrupamento);
 
     return this.diarioPreferenciaAgrupamentoFindByIdStrict(accessContext, {
-      id: diarioPreferenciaAgrupamento.id,
+      id: savedDiarioPreferenciaAgrupamento.id,
     });
   }
 
@@ -315,12 +146,8 @@ export class DiarioPreferenciaAgrupamentoService {
     accessContext: AccessContext,
     dto: DiarioPreferenciaAgrupamentoFindOneInput & DiarioPreferenciaAgrupamentoUpdateInput,
   ): Promise<DiarioPreferenciaAgrupamentoFindOneOutput> {
-    // =========================================================
-
     const currentDiarioPreferenciaAgrupamento =
       await this.diarioPreferenciaAgrupamentoFindByIdStrict(accessContext, { id: dto.id });
-
-    // =========================================================
 
     await accessContext.ensurePermission(
       "diario_preferencia_agrupamento:update",
@@ -346,10 +173,8 @@ export class DiarioPreferenciaAgrupamentoService {
       ...dtoDiarioPreferenciaAgrupamento,
     });
 
-    // =========================================================
-
     if (has(dto, "diario") && dto.diario !== undefined) {
-      const diario = await this.DiarioService.diarioFindByIdStrict(accessContext, dto.diario);
+      const diario = await this.diarioService.diarioFindByIdStrict(accessContext, dto.diario);
 
       this.diarioPreferenciaAgrupamentoRepository.merge(diarioPreferenciaAgrupamento, {
         diario: {
@@ -371,11 +196,7 @@ export class DiarioPreferenciaAgrupamentoService {
       });
     }
 
-    // =========================================================
-
     await this.diarioPreferenciaAgrupamentoRepository.save(diarioPreferenciaAgrupamento);
-
-    // =========================================================
 
     return this.diarioPreferenciaAgrupamentoFindByIdStrict(accessContext, {
       id: diarioPreferenciaAgrupamento.id,
@@ -386,8 +207,6 @@ export class DiarioPreferenciaAgrupamentoService {
     accessContext: AccessContext,
     dto: DiarioPreferenciaAgrupamentoFindOneInput,
   ): Promise<boolean> {
-    // =========================================================
-
     await accessContext.ensurePermission(
       "diario_preferencia_agrupamento:delete",
       { dto },
@@ -397,30 +216,16 @@ export class DiarioPreferenciaAgrupamentoService {
       ),
     );
 
-    // =========================================================
-
     const diarioPreferenciaAgrupamento = await this.diarioPreferenciaAgrupamentoFindByIdStrict(
       accessContext,
       dto,
     );
 
-    // =========================================================
-
     if (diarioPreferenciaAgrupamento) {
-      await this.diarioPreferenciaAgrupamentoRepository
-        .createQueryBuilder(aliasDiarioPreferenciaAgrupamento)
-        .update()
-        .set({
-          dateDeleted: "NOW()",
-        })
-        .where("id = :diarioPreferenciaAgrupamentoId", {
-          diarioPreferenciaAgrupamentoId: diarioPreferenciaAgrupamento.id,
-        })
-        .andWhere("dateDeleted IS NULL")
-        .execute();
+      await this.diarioPreferenciaAgrupamentoRepository.softDeleteById(
+        diarioPreferenciaAgrupamento.id,
+      );
     }
-
-    // =========================================================
 
     return true;
   }

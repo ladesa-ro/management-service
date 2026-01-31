@@ -22,8 +22,6 @@ import {
   type IUsuarioUseCasePort,
   USUARIO_REPOSITORY_PORT,
 } from "@/core/usuario/application/ports";
-import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
-import type { UsuarioEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import { KeycloakService } from "@/v2/old/infrastructure/integrations/identity-provider";
 import { ValidationFailedException } from "@/v2/old/shared";
@@ -34,7 +32,6 @@ export class UsuarioService implements IUsuarioUseCasePort {
     @Inject(USUARIO_REPOSITORY_PORT)
     private usuarioRepository: IUsuarioRepositoryPort,
     private keycloakService: KeycloakService,
-    private databaseContext: DatabaseContextService,
     private imagemService: ImagemService,
     private arquivoService: ArquivoService,
   ) {}
@@ -46,94 +43,12 @@ export class UsuarioService implements IUsuarioUseCasePort {
   ): Promise<any> {
     const usuario = await this.usuarioFindByIdStrict(accessContext, dto, selection);
 
-    const disciplinas = await this.databaseContext.disciplinaRepository.find({
-      where: {
-        diarios: {
-          ativo: true,
-          diariosProfessores: {
-            situacao: true,
-            perfil: {
-              usuario: {
-                id: usuario.id,
-              },
-            },
-          },
-        },
-      },
-    });
+    const { disciplinas } = await this.usuarioRepository.findUsuarioEnsino(usuario.id);
 
-    const ensino: any = {
+    return {
       usuario: usuario,
-      disciplinas: [],
+      disciplinas: disciplinas,
     };
-
-    for (const disciplina of disciplinas) {
-      const vinculoDisciplina: any = {
-        disciplina: disciplina,
-        cursos: [],
-      };
-
-      const cursos = await this.databaseContext.cursoRepository.find({
-        where: {
-          turmas: {
-            diarios: {
-              disciplina: {
-                id: disciplina.id,
-              },
-              ativo: true,
-              diariosProfessores: {
-                situacao: true,
-                perfil: {
-                  usuario: {
-                    id: usuario.id,
-                  },
-                },
-              },
-            },
-          },
-        },
-      });
-
-      for (const curso of cursos) {
-        const vinculoCurso: any = {
-          curso: curso,
-          turmas: [],
-        };
-
-        const turmas = await this.databaseContext.turmaRepository.find({
-          where: [
-            {
-              curso: {
-                id: curso.id,
-              },
-              diarios: {
-                ativo: true,
-                disciplina: {
-                  id: disciplina.id,
-                },
-                diariosProfessores: {
-                  situacao: true,
-                  perfil: {
-                    usuario: {
-                      id: usuario.id,
-                    },
-                  },
-                },
-              },
-            },
-          ],
-        });
-
-        for (const turma of turmas) {
-          vinculoCurso.turmas.push({ turma: turma });
-        }
-
-        vinculoDisciplina.cursos.push(vinculoCurso);
-      }
-      ensino.disciplinas.push(vinculoDisciplina);
-    }
-
-    return ensino;
   }
 
   async internalFindByMatriculaSiape(
@@ -199,16 +114,10 @@ export class UsuarioService implements IUsuarioUseCasePort {
     const usuario = await this.usuarioFindByIdStrict(accessContext, { id: id });
 
     if (usuario.imagemCapa) {
-      // Load versoes separately since it's a OneToMany relation not loaded via QbEfficientLoad
-      const versao = await this.databaseContext.imagemArquivoRepository.findOne({
-        where: { imagem: { id: usuario.imagemCapa.id } },
-        relations: { arquivo: true },
-        order: { dateCreated: "DESC" },
-      });
+      const arquivoId = await this.imagemService.getLatestArquivoIdForImagem(usuario.imagemCapa.id);
 
-      if (versao) {
-        const { arquivo } = versao;
-        return this.arquivoService.getStreamableFile(null, { id: arquivo.id });
+      if (arquivoId) {
+        return this.arquivoService.getStreamableFile(null, { id: arquivoId });
       }
     }
 
@@ -256,16 +165,12 @@ export class UsuarioService implements IUsuarioUseCasePort {
     const usuario = await this.usuarioFindByIdStrict(accessContext, { id: id });
 
     if (usuario.imagemPerfil) {
-      // Load versoes separately since it's a OneToMany relation not loaded via QbEfficientLoad
-      const versao = await this.databaseContext.imagemArquivoRepository.findOne({
-        where: { imagem: { id: usuario.imagemPerfil.id } },
-        relations: { arquivo: true },
-        order: { dateCreated: "DESC" },
-      });
+      const arquivoId = await this.imagemService.getLatestArquivoIdForImagem(
+        usuario.imagemPerfil.id,
+      );
 
-      if (versao) {
-        const { arquivo } = versao;
-        return this.arquivoService.getStreamableFile(null, { id: arquivo.id });
+      if (arquivoId) {
+        return this.arquivoService.getStreamableFile(null, { id: arquivoId });
       }
     }
 
@@ -326,29 +231,27 @@ export class UsuarioService implements IUsuarioUseCasePort {
       isSuperUser: false,
     });
 
-    await this.databaseContext
-      .transaction(async ({ databaseContext: { usuarioRepository } }) => {
-        await usuarioRepository.save(usuario);
+    try {
+      await this.usuarioRepository.save(usuario);
 
-        const kcAdminClient = await this.keycloakService.getAdminClient();
+      const kcAdminClient = await this.keycloakService.getAdminClient();
 
-        await kcAdminClient.users.create({
-          enabled: true,
+      await kcAdminClient.users.create({
+        enabled: true,
 
-          username: input.matriculaSiape ?? undefined,
-          email: input.email ?? undefined,
+        username: input.matriculaSiape ?? undefined,
+        email: input.email ?? undefined,
 
-          requiredActions: ["UPDATE_PASSWORD"],
+        requiredActions: ["UPDATE_PASSWORD"],
 
-          attributes: {
-            "usuario.matriculaSiape": input.matriculaSiape,
-          },
-        });
-      })
-      .catch((err) => {
-        console.debug("Erro ao cadastrar usuário:", err);
-        throw new InternalServerErrorException();
+        attributes: {
+          "usuario.matriculaSiape": input.matriculaSiape,
+        },
       });
+    } catch (err) {
+      console.debug("Erro ao cadastrar usuário:", err);
+      throw new InternalServerErrorException();
+    }
 
     return this.usuarioFindByIdStrict(accessContext, { id: usuario.id });
   }
@@ -377,45 +280,42 @@ export class UsuarioService implements IUsuarioUseCasePort {
 
     await this.ensureDtoAvailability(input, dto.id);
 
-    const usuario = {
-      id: currentUsuario.id,
-    } as UsuarioEntity;
+    const usuario = this.usuarioRepository.create();
 
     this.usuarioRepository.merge(usuario, {
+      id: currentUsuario.id,
       ...input,
     });
 
-    await this.databaseContext.transaction(async ({ databaseContext: { usuarioRepository } }) => {
-      await usuarioRepository.save(usuario);
+    await this.usuarioRepository.save(usuario);
 
-      const changedEmail = has(dto, "email");
-      const changedMatriculaSiape = has(dto, "matriculaSiape");
+    const changedEmail = has(dto, "email");
+    const changedMatriculaSiape = has(dto, "matriculaSiape");
 
-      if (changedEmail || changedMatriculaSiape) {
-        const kcAdminClient = await this.keycloakService.getAdminClient();
+    if (changedEmail || changedMatriculaSiape) {
+      const kcAdminClient = await this.keycloakService.getAdminClient();
 
-        if (changedMatriculaSiape) {
-          await kcAdminClient.users.update(
-            { id: kcUser.id! },
-            {
-              username: input.matriculaSiape ?? undefined,
-              attributes: {
-                "usuario.matriculaSiape": input.matriculaSiape,
-              },
+      if (changedMatriculaSiape) {
+        await kcAdminClient.users.update(
+          { id: kcUser.id! },
+          {
+            username: input.matriculaSiape ?? undefined,
+            attributes: {
+              "usuario.matriculaSiape": input.matriculaSiape,
             },
-          );
-        }
-
-        if (changedEmail) {
-          await kcAdminClient.users.update(
-            { id: kcUser.id! },
-            {
-              email: dto.email ?? undefined,
-            },
-          );
-        }
+          },
+        );
       }
-    });
+
+      if (changedEmail) {
+        await kcAdminClient.users.update(
+          { id: kcUser.id! },
+          {
+            email: dto.email ?? undefined,
+          },
+        );
+      }
+    }
 
     return this.usuarioFindByIdStrict(accessContext, { id: usuario.id });
   }

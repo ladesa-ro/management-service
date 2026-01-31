@@ -56,4 +56,9 @@ export interface IImagemUseCasePort {
    * Salva imagem de capa de turma
    */
   saveTurmaCapa(file: Express.Multer.File): Promise<{ imagem: { id: string } }>;
+
+  /**
+   * Busca o ID do arquivo mais recente para uma imagem
+   */
+  getLatestArquivoIdForImagem(imagemId: string): Promise<string | null>;
 }

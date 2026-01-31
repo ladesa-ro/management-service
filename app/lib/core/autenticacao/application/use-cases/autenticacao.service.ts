@@ -9,7 +9,6 @@ import {
 import * as client from "openid-client";
 import { PerfilService } from "@/core/perfil";
 import { UsuarioService } from "@/core/usuario";
-import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import {
   KeycloakService,
@@ -28,16 +27,11 @@ import type { IAutenticacaoUseCasePort } from "../ports";
 @Injectable()
 export class AutenticacaoService implements IAutenticacaoUseCasePort {
   constructor(
-    private usuarioService: UsuarioService,
-    private perfilService: PerfilService,
-    private keycloakService: KeycloakService,
-    private databaseContext: DatabaseContextService,
-    private openidConnectService: OpenidConnectService,
+    private readonly usuarioService: UsuarioService,
+    private readonly perfilService: PerfilService,
+    private readonly keycloakService: KeycloakService,
+    private readonly openidConnectService: OpenidConnectService,
   ) {}
-
-  get usuarioRepository() {
-    return this.databaseContext.usuarioRepository;
-  }
 
   async whoAmI(accessContext: AccessContext): Promise<AuthWhoAmIOutput> {
     const usuario = accessContext.requestActor
@@ -209,16 +203,7 @@ export class AutenticacaoService implements IAutenticacaoUseCasePort {
   }
 
   private async findByMatriculaSiape(matriculaSiape: string) {
-    const qb = this.usuarioRepository.createQueryBuilder("usuario");
-
-    qb.where("usuario.matriculaSiape = :matriculaSiape", {
-      matriculaSiape: matriculaSiape,
-    });
-    qb.andWhere("usuario.dateDeleted IS NULL");
-    qb.select(["usuario"]);
-
-    const usuario = await qb.getOne();
-
+    const usuario = await this.usuarioService.internalFindByMatriculaSiape(matriculaSiape);
     const userRepresentation = await this.keycloakService.findUserByMatriculaSiape(matriculaSiape);
 
     return {

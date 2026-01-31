@@ -8,8 +8,10 @@ import sharp from "sharp";
 import { v4 } from "uuid";
 import { ArquivoService } from "@/core/arquivo/application/use-cases/arquivo.service";
 import {
+  type IImagemArquivoRepositoryPort,
   type IImagemTransactionPort,
   type IImagemUseCasePort,
+  IMAGEM_ARQUIVO_REPOSITORY_PORT,
   IMAGEM_TRANSACTION_PORT,
   type ISaveImageOptions,
 } from "@/core/imagem/application/ports";
@@ -17,9 +19,11 @@ import {
 @Injectable()
 export class ImagemService implements IImagemUseCasePort {
   constructor(
-    private arquivoService: ArquivoService,
+    private readonly arquivoService: ArquivoService,
     @Inject(IMAGEM_TRANSACTION_PORT)
-    private imagemTransactionPort: IImagemTransactionPort,
+    private readonly imagemTransactionPort: IImagemTransactionPort,
+    @Inject(IMAGEM_ARQUIVO_REPOSITORY_PORT)
+    private readonly imagemArquivoRepository: IImagemArquivoRepositoryPort,
   ) {}
 
   async saveImage(file: Express.Multer.File, options: ISaveImageOptions) {
@@ -191,5 +195,9 @@ export class ImagemService implements IImagemUseCasePort {
         },
       ],
     });
+  }
+
+  async getLatestArquivoIdForImagem(imagemId: string): Promise<string | null> {
+    return this.imagemArquivoRepository.findLatestArquivoIdForImagem(imagemId);
   }
 }

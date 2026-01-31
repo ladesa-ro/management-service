@@ -15,7 +15,6 @@ import {
   PERFIL_REPOSITORY_PORT,
 } from "@/core/perfil/application/ports";
 import { UsuarioService } from "@/core/usuario";
-import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
 import type { UsuarioEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 
@@ -29,14 +28,9 @@ export class PerfilService implements IPerfilUseCasePort {
   constructor(
     @Inject(PERFIL_REPOSITORY_PORT)
     private readonly perfilRepository: IPerfilRepositoryPort,
-    private readonly databaseContext: DatabaseContextService,
     private readonly campusService: CampusService,
     private readonly usuarioService: UsuarioService,
   ) {}
-
-  private get vinculoRepository() {
-    return this.databaseContext.perfilRepository;
-  }
 
   async findAllActive(
     accessContext: AccessContext | null,
@@ -113,10 +107,10 @@ export class PerfilService implements IPerfilUseCasePort {
         continue;
       }
 
-      // Cria ou reativa vínculo (ainda usa repositório TypeORM direto temporariamente)
-      const vinculo = this.vinculoRepository.create();
+      // Cria ou reativa vínculo usando o port de repositório
+      const vinculo = this.perfilRepository.create();
 
-      this.vinculoRepository.merge(vinculo, {
+      this.perfilRepository.merge(vinculo, {
         id: uuid(),
         ...vinculoExistente,
         ativo: true,
@@ -126,7 +120,7 @@ export class PerfilService implements IPerfilUseCasePort {
         campus: { id: campus.id },
       });
 
-      await this.vinculoRepository.save(vinculo);
+      await this.perfilRepository.save(vinculo);
     }
 
     // Desativa vínculos que não devem ser mantidos

@@ -2,37 +2,7 @@ import { NotFoundException } from "@nestjs/common";
 import { pick } from "lodash";
 import type { DeepPartial } from "typeorm";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
-
-/**
- * Interface base para ports de repositório com operações CRUD
- */
-export interface IBaseCrudRepositoryPort<Entity, ListOutputDto, FindOneOutputDto> {
-  findAll(
-    accessContext: AccessContext,
-    dto: unknown,
-    selection?: string[] | boolean,
-  ): Promise<ListOutputDto>;
-
-  findById(
-    accessContext: AccessContext | null,
-    dto: { id: string | number },
-    selection?: string[] | boolean,
-  ): Promise<FindOneOutputDto | null>;
-
-  findByIdSimple?(
-    accessContext: AccessContext,
-    id: string | number,
-    selection?: string[] | boolean,
-  ): Promise<FindOneOutputDto | null>;
-
-  save(entity: DeepPartial<Entity>): Promise<Entity>;
-
-  create(): Entity;
-
-  merge(entity: Entity, data: DeepPartial<Entity>): void;
-
-  softDeleteById(id: string | number): Promise<void>;
-}
+import type { IBaseCrudRepositoryPort } from "../ports/out";
 
 /**
  * Classe base abstrata para services CRUD.

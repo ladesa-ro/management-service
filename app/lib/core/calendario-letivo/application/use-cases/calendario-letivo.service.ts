@@ -17,8 +17,6 @@ import {
 } from "@/core/calendario-letivo/application/ports";
 import { CampusService } from "@/core/campus";
 import { OfertaFormacaoService } from "@/core/oferta-formacao";
-import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
-import type { CalendarioLetivoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 
 /**
@@ -32,7 +30,6 @@ export class CalendarioLetivoService implements ICalendarioLetivoUseCasePort {
     private readonly calendarioLetivoRepository: ICalendarioLetivoRepositoryPort,
     private readonly campusService: CampusService,
     private readonly ofertaFormacaoService: OfertaFormacaoService,
-    private readonly databaseContext: DatabaseContextService,
   ) {}
 
   async calendarioLetivoFindAll(
@@ -101,44 +98,37 @@ export class CalendarioLetivoService implements ICalendarioLetivoUseCasePort {
   ): Promise<CalendarioLetivoFindOneOutput> {
     await accessContext.ensurePermission("calendario_letivo:create", { dto } as any);
 
-    const calendarioLetivo = await this.databaseContext.transaction(
-      async ({ databaseContext: { calendarioLetivoRepository } }) => {
-        const dtoCalendarioLetivo = pick(dto, ["nome", "ano"]);
+    const dtoCalendarioLetivo = pick(dto, ["nome", "ano"]);
 
-        const calendarioLetivo = calendarioLetivoRepository.create();
+    const calendarioLetivo = this.calendarioLetivoRepository.create();
 
-        calendarioLetivoRepository.merge(calendarioLetivo, {
-          ...dtoCalendarioLetivo,
-        });
+    this.calendarioLetivoRepository.merge(calendarioLetivo, {
+      ...dtoCalendarioLetivo,
+    });
 
-        calendarioLetivoRepository.merge(calendarioLetivo, {
-          id: v4(),
-        });
+    this.calendarioLetivoRepository.merge(calendarioLetivo, {
+      id: v4(),
+    });
 
-        const campus = await this.campusService.campusFindByIdSimpleStrict(
-          accessContext,
-          dto.campus.id,
-        );
-        calendarioLetivoRepository.merge(calendarioLetivo, {
-          campus: { id: campus.id },
-        });
-
-        if (dto.ofertaFormacao) {
-          const ofertaFormacao =
-            await this.ofertaFormacaoService.ofertaFormacaoFindByIdSimpleStrict(
-              accessContext,
-              dto.ofertaFormacao.id,
-            );
-          calendarioLetivoRepository.merge(calendarioLetivo, {
-            ofertaFormacao: { id: ofertaFormacao.id },
-          });
-        }
-
-        await calendarioLetivoRepository.save(calendarioLetivo);
-
-        return calendarioLetivo;
-      },
+    const campus = await this.campusService.campusFindByIdSimpleStrict(
+      accessContext,
+      dto.campus.id,
     );
+    this.calendarioLetivoRepository.merge(calendarioLetivo, {
+      campus: { id: campus.id },
+    });
+
+    if (dto.ofertaFormacao) {
+      const ofertaFormacao = await this.ofertaFormacaoService.ofertaFormacaoFindByIdSimpleStrict(
+        accessContext,
+        dto.ofertaFormacao.id,
+      );
+      this.calendarioLetivoRepository.merge(calendarioLetivo, {
+        ofertaFormacao: { id: ofertaFormacao.id },
+      });
+    }
+
+    await this.calendarioLetivoRepository.save(calendarioLetivo);
 
     return this.calendarioLetivoFindByIdStrict(accessContext, { id: calendarioLetivo.id });
   }
@@ -153,52 +143,43 @@ export class CalendarioLetivoService implements ICalendarioLetivoUseCasePort {
 
     await accessContext.ensurePermission("calendario_letivo:update", { dto }, dto.id);
 
-    const calendarioLetivo = await this.databaseContext.transaction(
-      async ({ databaseContext: { calendarioLetivoRepository } }) => {
-        const dtoCalendarioLetivo = pick(dto, ["nome", "ano"]);
+    const dtoCalendarioLetivo = pick(dto, ["nome", "ano"]);
 
-        const calendarioLetivo = {
-          id: currentCalendarioLetivo.id,
-        } as CalendarioLetivoEntity;
+    const calendarioLetivo = this.calendarioLetivoRepository.create();
 
-        calendarioLetivoRepository.merge(calendarioLetivo, {
-          ...dtoCalendarioLetivo,
+    this.calendarioLetivoRepository.merge(calendarioLetivo, {
+      ...dtoCalendarioLetivo,
+    });
+
+    this.calendarioLetivoRepository.merge(calendarioLetivo, { id: currentCalendarioLetivo.id });
+
+    if (has(dto, "campus") && dto.campus !== undefined) {
+      const campus = await this.campusService.campusFindByIdSimpleStrict(
+        accessContext,
+        dto.campus.id,
+      );
+      this.calendarioLetivoRepository.merge(calendarioLetivo, {
+        campus: { id: campus.id },
+      });
+    }
+
+    if (has(dto, "ofertaFormacao") && dto.ofertaFormacao !== undefined) {
+      if (dto.ofertaFormacao) {
+        const ofertaFormacao = await this.ofertaFormacaoService.ofertaFormacaoFindByIdSimpleStrict(
+          accessContext,
+          dto.ofertaFormacao.id,
+        );
+        this.calendarioLetivoRepository.merge(calendarioLetivo, {
+          ofertaFormacao: { id: ofertaFormacao.id },
         });
+      } else {
+        this.calendarioLetivoRepository.merge(calendarioLetivo, {
+          ofertaFormacao: null as any,
+        });
+      }
+    }
 
-        calendarioLetivoRepository.merge(calendarioLetivo, { id: currentCalendarioLetivo.id });
-
-        if (has(dto, "campus") && dto.campus !== undefined) {
-          const campus = await this.campusService.campusFindByIdSimpleStrict(
-            accessContext,
-            dto.campus.id,
-          );
-          calendarioLetivoRepository.merge(calendarioLetivo, {
-            campus: { id: campus.id },
-          });
-        }
-
-        if (has(dto, "ofertaFormacao") && dto.ofertaFormacao !== undefined) {
-          if (dto.ofertaFormacao) {
-            const ofertaFormacao =
-              await this.ofertaFormacaoService.ofertaFormacaoFindByIdSimpleStrict(
-                accessContext,
-                dto.ofertaFormacao.id,
-              );
-            calendarioLetivoRepository.merge(calendarioLetivo, {
-              ofertaFormacao: { id: ofertaFormacao.id },
-            });
-          } else {
-            calendarioLetivoRepository.merge(calendarioLetivo, {
-              ofertaFormacao: null as any,
-            });
-          }
-        }
-
-        await calendarioLetivoRepository.save(calendarioLetivo);
-
-        return calendarioLetivo;
-      },
-    );
+    await this.calendarioLetivoRepository.save(calendarioLetivo);
 
     return this.calendarioLetivoFindByIdStrict(accessContext, { id: calendarioLetivo.id });
   }

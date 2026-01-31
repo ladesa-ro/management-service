@@ -33,6 +33,11 @@ export interface IImagemArquivoRepositoryPort {
   create(): ImagemArquivoEntity;
 
   merge(imagemArquivo: ImagemArquivoEntity, data: DeepPartial<ImagemArquivoEntity>): void;
+
+  /**
+   * Busca o ID do arquivo mais recente para uma imagem
+   */
+  findLatestArquivoIdForImagem(imagemId: string): Promise<string | null>;
 }
 
 /**

@@ -19,6 +19,20 @@ export const PERFIL_REPOSITORY_PORT = Symbol("IPerfilRepositoryPort");
  */
 export interface IPerfilRepositoryPort {
   /**
+   * Cria uma nova instância de entidade (não persiste)
+   */
+  create(): PerfilEntity;
+
+  /**
+   * Mescla dados em uma entidade existente
+   */
+  merge(entity: PerfilEntity, data: DeepPartial<PerfilEntity>): void;
+
+  /**
+   * Salva (cria ou atualiza) uma entidade
+   */
+  save(entity: DeepPartial<PerfilEntity>): Promise<PerfilEntity>;
+  /**
    * Lista perfis com paginação
    * @param accessContext Contexto de acesso para aplicar filtros de permissão
    * @param dto DTO com critérios de busca e paginação

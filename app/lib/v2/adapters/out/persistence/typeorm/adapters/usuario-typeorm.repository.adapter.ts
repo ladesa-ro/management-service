@@ -105,6 +105,125 @@ export class UsuarioTypeOrmRepositoryAdapter
     return usuario[property];
   }
 
+  async findUsuarioEnsino(usuarioId: string): Promise<{
+    disciplinas: Array<{
+      disciplina: any;
+      cursos: Array<{
+        curso: any;
+        turmas: Array<{
+          turma: any;
+        }>;
+      }>;
+    }>;
+  }> {
+    const disciplinas = await this.databaseContext.disciplinaRepository.find({
+      where: {
+        diarios: {
+          ativo: true,
+          diariosProfessores: {
+            situacao: true,
+            perfil: {
+              usuario: {
+                id: usuarioId,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    const result: Array<{
+      disciplina: any;
+      cursos: Array<{
+        curso: any;
+        turmas: Array<{
+          turma: any;
+        }>;
+      }>;
+    }> = [];
+
+    for (const disciplina of disciplinas) {
+      const vinculoDisciplina: {
+        disciplina: any;
+        cursos: Array<{
+          curso: any;
+          turmas: Array<{
+            turma: any;
+          }>;
+        }>;
+      } = {
+        disciplina: disciplina,
+        cursos: [],
+      };
+
+      const cursos = await this.databaseContext.cursoRepository.find({
+        where: {
+          turmas: {
+            diarios: {
+              disciplina: {
+                id: disciplina.id,
+              },
+              ativo: true,
+              diariosProfessores: {
+                situacao: true,
+                perfil: {
+                  usuario: {
+                    id: usuarioId,
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+
+      for (const curso of cursos) {
+        const vinculoCurso: {
+          curso: any;
+          turmas: Array<{
+            turma: any;
+          }>;
+        } = {
+          curso: curso,
+          turmas: [],
+        };
+
+        const turmas = await this.databaseContext.turmaRepository.find({
+          where: [
+            {
+              curso: {
+                id: curso.id,
+              },
+              diarios: {
+                ativo: true,
+                disciplina: {
+                  id: disciplina.id,
+                },
+                diariosProfessores: {
+                  situacao: true,
+                  perfil: {
+                    usuario: {
+                      id: usuarioId,
+                    },
+                  },
+                },
+              },
+            },
+          ],
+        });
+
+        for (const turma of turmas) {
+          vinculoCurso.turmas.push({ turma: turma });
+        }
+
+        vinculoDisciplina.cursos.push(vinculoCurso);
+      }
+      result.push(vinculoDisciplina);
+    }
+
+    return { disciplinas: result };
+  }
+
   protected getPaginateConfig(): IPaginationConfig<UsuarioEntity> {
     return {
       ...paginateConfig,

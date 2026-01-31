@@ -1,11 +1,8 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
-import { has, map, pick } from "lodash";
-import { FilterOperator } from "nestjs-paginate";
+import { Inject, Injectable, NotFoundException } from "@nestjs/common";
+import { has, pick } from "lodash";
 import { CalendarioLetivoService } from "@/core/calendario-letivo";
-import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
 import type { EventoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities/evento.entity";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
-import { QbEfficientLoad, SearchService } from "@/v2/old/shared";
 import type {
   EventoCreateInput,
   EventoFindOneInput,
@@ -14,6 +11,7 @@ import type {
   EventoListOutput,
   EventoUpdateInput,
 } from "../dtos";
+import { EVENTO_REPOSITORY_PORT, type IEventoRepositoryPort } from "../ports/out";
 
 // ============================================================================
 
@@ -24,70 +22,17 @@ const aliasEvento = "evento";
 @Injectable()
 export class EventoService {
   constructor(
-    private databaseContext: DatabaseContextService,
-    private calendarioLetivoService: CalendarioLetivoService,
-    private searchService: SearchService,
+    @Inject(EVENTO_REPOSITORY_PORT)
+    private readonly eventoRepository: IEventoRepositoryPort,
+    private readonly calendarioLetivoService: CalendarioLetivoService,
   ) {}
-
-  get eventoRepository() {
-    return this.databaseContext.eventoRepository;
-  }
 
   async eventoFindAll(
     accessContext: AccessContext,
     dto: EventoListInput | null = null,
     selection?: string[] | boolean,
   ): Promise<EventoListOutput> {
-    const qb = this.eventoRepository.createQueryBuilder(aliasEvento);
-
-    await accessContext.applyFilter("evento:find", qb, aliasEvento, null);
-
-    const paginated = await this.searchService.search(qb, dto as Record<string, any>, {
-      select: [
-        "id",
-        "nome",
-        "cor",
-        "rrule",
-        "ambiente",
-        "dataInicio",
-        "dataFim",
-        "calendario.id",
-        "calendario.nome",
-        "calendario.ano",
-      ],
-      sortableColumns: [
-        "nome",
-        "cor",
-        "ambiente",
-        "dataInicio",
-        "dataFim",
-        "calendario.id",
-        "calendario.nome",
-        "calendario.ano",
-      ],
-      searchableColumns: ["id", "nome", "cor", "ambiente", "dataInicio", "dataFim"],
-      relations: {
-        calendario: true,
-      },
-      defaultSortBy: [],
-      filterableColumns: {
-        "calendario.id": [FilterOperator.EQ],
-        "calendario.nome": [FilterOperator.EQ],
-        "calendario.ano": [FilterOperator.EQ],
-        dataInicio: [FilterOperator.GTE, FilterOperator.LTE],
-        dataFim: [FilterOperator.GTE, FilterOperator.LTE],
-      },
-    });
-
-    qb.select([]);
-    QbEfficientLoad("EventoFindOneOutput", qb, aliasEvento, selection);
-
-    const pageItemsView = await qb.andWhereInIds(map(paginated.data, "id")).getMany();
-    paginated.data = paginated.data.map(
-      (paginated) => pageItemsView.find((i) => i.id === paginated.id)!,
-    );
-
-    return paginated as unknown as EventoListOutput;
+    return this.eventoRepository.findAll(accessContext, dto, selection);
   }
 
   async eventoFindById(
@@ -95,18 +40,7 @@ export class EventoService {
     dto: EventoFindOneInput,
     selection?: string[] | boolean,
   ): Promise<EventoFindOneOutput | null> {
-    const qb = this.eventoRepository.createQueryBuilder(aliasEvento);
-
-    await accessContext.applyFilter("evento:find", qb, aliasEvento, null);
-
-    qb.andWhere(`${aliasEvento}.id = :id`, { id: dto.id });
-
-    qb.select([]);
-    QbEfficientLoad("EventoFindOneOutput", qb, aliasEvento, selection);
-
-    const evento = await qb.getOne();
-
-    return evento as EventoFindOneOutput | null;
+    return this.eventoRepository.findById(accessContext, dto, selection);
   }
 
   async eventoFindByIdStrict(
@@ -128,18 +62,7 @@ export class EventoService {
     id: string,
     selection?: string[],
   ): Promise<EventoFindOneOutput | null> {
-    const qb = this.eventoRepository.createQueryBuilder(aliasEvento);
-
-    await accessContext.applyFilter("evento:find", qb, aliasEvento, null);
-
-    qb.andWhere(`${aliasEvento}.id = :id`, { id });
-
-    qb.select([]);
-    QbEfficientLoad("EventoFindOneOutput", qb, aliasEvento, selection);
-
-    const evento = await qb.getOne();
-
-    return evento as EventoFindOneOutput | null;
+    return this.eventoRepository.findByIdSimple(accessContext, id, selection);
   }
 
   async eventoFindByIdSimpleStrict(
@@ -183,9 +106,9 @@ export class EventoService {
       });
     }
 
-    await this.eventoRepository.save(evento);
+    const savedEvento = await this.eventoRepository.save(evento);
 
-    return this.eventoFindByIdStrict(accessContext, { id: evento.id });
+    return this.eventoFindByIdStrict(accessContext, { id: savedEvento.id });
   }
 
   async eventoUpdate(
@@ -198,7 +121,7 @@ export class EventoService {
       "evento:update",
       { dto },
       dto.id,
-      this.eventoRepository.createQueryBuilder(aliasEvento as any),
+      this.eventoRepository.createQueryBuilder(aliasEvento),
     );
 
     const dtoEvento = pick(dto, ["nome", "cor", "rrule", "dataInicio", "dataFim"]);
@@ -237,21 +160,13 @@ export class EventoService {
       "evento:delete",
       { dto },
       dto.id,
-      this.eventoRepository.createQueryBuilder(aliasEvento as any),
+      this.eventoRepository.createQueryBuilder(aliasEvento),
     );
 
     const evento = await this.eventoFindByIdStrict(accessContext, dto);
 
     if (evento) {
-      await this.eventoRepository
-        .createQueryBuilder(aliasEvento)
-        .update()
-        .set({
-          dateDeleted: "NOW()",
-        })
-        .where("id = :eventoId", { eventoId: evento.id })
-        .andWhere("dateDeleted IS NULL")
-        .execute();
+      await this.eventoRepository.softDeleteById(evento.id);
     }
 
     return true;

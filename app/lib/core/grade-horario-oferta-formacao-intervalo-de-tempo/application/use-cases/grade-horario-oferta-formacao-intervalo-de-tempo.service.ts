@@ -1,13 +1,9 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
-import { has, map, pick } from "lodash";
-import { FilterOperator } from "nestjs-paginate";
+import { Inject, Injectable, NotFoundException } from "@nestjs/common";
+import { has, pick } from "lodash";
 import { GradeHorarioOfertaFormacaoService } from "@/core/grade-horario-oferta-formacao";
 import { IntervaloDeTempoService } from "@/core/intervalo-de-tempo";
-import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
 import type { GradeHorarioOfertaFormacaoIntervaloDeTempoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
-import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
-import { QbEfficientLoad, SearchService } from "@/v2/old/shared";
 import type {
   GradeHorarioOfertaFormacaoIntervaloDeTempoCreateInput,
   GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInput,
@@ -16,6 +12,10 @@ import type {
   GradeHorarioOfertaFormacaoIntervaloDeTempoListOutput,
   GradeHorarioOfertaFormacaoIntervaloDeTempoUpdateInput,
 } from "../dtos";
+import {
+  GRADE_HORARIO_OFERTA_FORMACAO_INTERVALO_DE_TEMPO_REPOSITORY_PORT,
+  type IGradeHorarioOfertaFormacaoIntervaloDeTempoRepositoryPort,
+} from "../ports/out";
 
 // ============================================================================
 
@@ -26,62 +26,22 @@ const aliasGradeHorarioOfertaFormacaoIntervaloDeTempo = "gh_of_it";
 @Injectable()
 export class GradeHorarioOfertaFormacaoIntervaloDeTempoService {
   constructor(
-    private databaseContext: DatabaseContextService,
-    private intervaloDeTempoService: IntervaloDeTempoService,
-    private gradeHorarioOfertaFormacaoService: GradeHorarioOfertaFormacaoService,
-    private searchService: SearchService,
+    @Inject(GRADE_HORARIO_OFERTA_FORMACAO_INTERVALO_DE_TEMPO_REPOSITORY_PORT)
+    private readonly gradeHorarioOfertaFormacaoIntervaloDeTempoRepository: IGradeHorarioOfertaFormacaoIntervaloDeTempoRepositoryPort,
+    private readonly intervaloDeTempoService: IntervaloDeTempoService,
+    private readonly gradeHorarioOfertaFormacaoService: GradeHorarioOfertaFormacaoService,
   ) {}
-
-  get gradeHorarioOfertaFormacaoIntervaloDeTempoRepository() {
-    return this.databaseContext.gradeHorarioOfertaFormacaoIntervaloDeTempoRepository;
-  }
 
   async gradeHorarioOfertaFormacaoIntervaloDeTempoFindAll(
     accessContext: AccessContext,
     dto: GradeHorarioOfertaFormacaoIntervaloDeTempoListInput | null = null,
     selection?: string[],
   ): Promise<GradeHorarioOfertaFormacaoIntervaloDeTempoListOutput> {
-    const qb = this.gradeHorarioOfertaFormacaoIntervaloDeTempoRepository.createQueryBuilder(
-      aliasGradeHorarioOfertaFormacaoIntervaloDeTempo,
-    );
-
-    await accessContext.applyFilter(
-      "grade_horario_oferta_formacao_intervalo_de_tempo:find",
-      qb,
-      aliasGradeHorarioOfertaFormacaoIntervaloDeTempo,
-      null,
-    );
-
-    const paginated = await this.searchService.search(qb, (dto ?? {}) as Record<string, any>, {
-      ...paginateConfig,
-      select: ["id", "dateCreated"],
-      relations: {
-        gradeHorarioOfertaFormacao: true,
-        intervaloDeTempo: true,
-      },
-      sortableColumns: ["dateCreated"],
-      searchableColumns: ["id"],
-      defaultSortBy: [["dateCreated", "ASC"]],
-      filterableColumns: {
-        "gradeHorarioOfertaFormacao.id": [FilterOperator.EQ],
-        "intervaloDeTempo.id": [FilterOperator.EQ],
-      },
-    });
-
-    qb.select([]);
-    QbEfficientLoad(
-      "GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutput",
-      qb,
-      aliasGradeHorarioOfertaFormacaoIntervaloDeTempo,
+    return this.gradeHorarioOfertaFormacaoIntervaloDeTempoRepository.findAll(
+      accessContext,
+      dto,
       selection,
     );
-
-    const pageItemsView = await qb.andWhereInIds(map(paginated.data, "id")).getMany();
-    paginated.data = paginated.data.map(
-      (paginated) => pageItemsView.find((i) => i.id === paginated.id)!,
-    );
-
-    return paginated as unknown as GradeHorarioOfertaFormacaoIntervaloDeTempoListOutput;
   }
 
   async gradeHorarioOfertaFormacaoIntervaloDeTempoFindById(
@@ -89,34 +49,11 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService {
     dto: GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInput,
     selection?: string[],
   ): Promise<GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutput | null> {
-    const qb = this.gradeHorarioOfertaFormacaoIntervaloDeTempoRepository.createQueryBuilder(
-      aliasGradeHorarioOfertaFormacaoIntervaloDeTempo,
-    );
-
-    if (accessContext) {
-      await accessContext.applyFilter(
-        "grade_horario_oferta_formacao_intervalo_de_tempo:find",
-        qb,
-        aliasGradeHorarioOfertaFormacaoIntervaloDeTempo,
-        null,
-      );
-    }
-
-    qb.andWhere(`${aliasGradeHorarioOfertaFormacaoIntervaloDeTempo}.id = :id`, {
-      id: dto.id,
-    });
-
-    qb.select([]);
-    QbEfficientLoad(
-      "GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutput",
-      qb,
-      aliasGradeHorarioOfertaFormacaoIntervaloDeTempo,
+    return this.gradeHorarioOfertaFormacaoIntervaloDeTempoRepository.findById(
+      accessContext,
+      dto,
       selection,
     );
-
-    const gradeHorarioOfertaFormacaoIntervaloDeTempo = await qb.getOne();
-
-    return gradeHorarioOfertaFormacaoIntervaloDeTempo as GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutput | null;
   }
 
   async gradeHorarioOfertaFormacaoIntervaloDeTempoFindByIdStrict(
@@ -139,32 +76,11 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService {
     id: string,
     selection?: string[],
   ): Promise<GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutput | null> {
-    const qb = this.gradeHorarioOfertaFormacaoIntervaloDeTempoRepository.createQueryBuilder(
-      aliasGradeHorarioOfertaFormacaoIntervaloDeTempo,
-    );
-
-    await accessContext.applyFilter(
-      "grade_horario_oferta_formacao_intervalo_de_tempo:find",
-      qb,
-      aliasGradeHorarioOfertaFormacaoIntervaloDeTempo,
-      null,
-    );
-
-    qb.andWhere(`${aliasGradeHorarioOfertaFormacaoIntervaloDeTempo}.id = :id`, {
+    return this.gradeHorarioOfertaFormacaoIntervaloDeTempoRepository.findByIdSimple(
+      accessContext,
       id,
-    });
-
-    qb.select([]);
-    QbEfficientLoad(
-      "GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutput",
-      qb,
-      aliasGradeHorarioOfertaFormacaoIntervaloDeTempo,
       selection,
     );
-
-    const gradeHorarioOfertaFormacaoIntervaloDeTempo = await qb.getOne();
-
-    return gradeHorarioOfertaFormacaoIntervaloDeTempo as GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutput | null;
   }
 
   async gradeHorarioOfertaFormacaoIntervaloDeTempoFindByIdSimpleStrict(
@@ -239,12 +155,12 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService {
       );
     }
 
-    await this.gradeHorarioOfertaFormacaoIntervaloDeTempoRepository.save(
+    const savedEntity = await this.gradeHorarioOfertaFormacaoIntervaloDeTempoRepository.save(
       gradeHorarioOfertaFormacaoIntervaloDeTempo,
     );
 
     return this.gradeHorarioOfertaFormacaoIntervaloDeTempoFindByIdStrict(accessContext, {
-      id: gradeHorarioOfertaFormacaoIntervaloDeTempo.id,
+      id: savedEntity.id,
     });
   }
 
@@ -341,18 +257,9 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService {
       await this.gradeHorarioOfertaFormacaoIntervaloDeTempoFindByIdStrict(accessContext, dto);
 
     if (gradeHorarioOfertaFormacaoIntervaloDeTempo) {
-      await this.gradeHorarioOfertaFormacaoIntervaloDeTempoRepository
-        .createQueryBuilder(aliasGradeHorarioOfertaFormacaoIntervaloDeTempo)
-        .update()
-        .set({
-          dateDeleted: "NOW()",
-        })
-        .where("id = :gradeHorarioOfertaFormacaoIntervaloDeTempoId", {
-          gradeHorarioOfertaFormacaoIntervaloDeTempoId:
-            gradeHorarioOfertaFormacaoIntervaloDeTempo.id,
-        })
-        .andWhere("dateDeleted IS NULL")
-        .execute();
+      await this.gradeHorarioOfertaFormacaoIntervaloDeTempoRepository.softDeleteById(
+        gradeHorarioOfertaFormacaoIntervaloDeTempo.id,
+      );
     }
 
     return true;

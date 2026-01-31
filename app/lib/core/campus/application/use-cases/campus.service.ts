@@ -16,8 +16,6 @@ import {
   type ICampusUseCasePort,
 } from "@/core/campus/application/ports";
 import { type EnderecoInputDto, EnderecoService } from "@/core/endereco";
-import { DatabaseContextService } from "@/v2/adapters/out/persistence/typeorm";
-import type { CampusEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 
 /**
@@ -33,7 +31,6 @@ export class CampusService implements ICampusUseCasePort {
     @Inject(CAMPUS_REPOSITORY_PORT)
     private readonly campusRepository: ICampusRepositoryPort,
     private readonly enderecoService: EnderecoService,
-    private readonly databaseContext: DatabaseContextService,
   ) {}
 
   async campusFindAll(
@@ -94,36 +91,27 @@ export class CampusService implements ICampusUseCasePort {
   ): Promise<CampusFindOneOutput> {
     await accessContext.ensurePermission("campus:create", { dto } as any);
 
-    const campus = await this.databaseContext.transaction(
-      async ({ databaseContext: { campusRepository } }) => {
-        const dtoCampus = pick(dto, ["nomeFantasia", "razaoSocial", "apelido", "cnpj"]);
+    const dtoCampus = pick(dto, ["nomeFantasia", "razaoSocial", "apelido", "cnpj"]);
 
-        const campus = campusRepository.create();
+    const campus = this.campusRepository.create();
 
-        campusRepository.merge(campus, {
-          ...dtoCampus,
-        });
+    this.campusRepository.merge(campus, {
+      ...dtoCampus,
+    });
 
-        campusRepository.merge(campus, {
-          id: v4(),
-        });
+    this.campusRepository.merge(campus, {
+      id: v4(),
+    });
 
-        const endereco = await this.enderecoService.internalEnderecoCreateOrUpdate(
-          null,
-          dto.endereco,
-        );
+    const endereco = await this.enderecoService.internalEnderecoCreateOrUpdate(null, dto.endereco);
 
-        campusRepository.merge(campus, {
-          endereco: {
-            id: endereco.id,
-          },
-        });
-
-        await campusRepository.save(campus);
-
-        return campus;
+    this.campusRepository.merge(campus, {
+      endereco: {
+        id: endereco.id,
       },
-    );
+    });
+
+    await this.campusRepository.save(campus);
 
     return this.campusFindByIdStrict(accessContext, { id: campus.id });
   }
@@ -136,40 +124,32 @@ export class CampusService implements ICampusUseCasePort {
 
     await accessContext.ensurePermission("campus:update", { dto }, dto.id);
 
-    const campus = await this.databaseContext.transaction(
-      async ({ databaseContext: { campusRepository } }) => {
-        const dtoCampus = pick(dto, ["nomeFantasia", "razaoSocial", "apelido", "cnpj"]);
+    const dtoCampus = pick(dto, ["nomeFantasia", "razaoSocial", "apelido", "cnpj"]);
 
-        const campus = {
-          id: currentCampus.id,
-        } as CampusEntity;
+    const campus = this.campusRepository.create();
 
-        campusRepository.merge(campus, {
-          ...dtoCampus,
-        });
+    this.campusRepository.merge(campus, {
+      ...dtoCampus,
+    });
 
-        campusRepository.merge(campus, { id: currentCampus.id });
+    this.campusRepository.merge(campus, { id: currentCampus.id });
 
-        const dtoEndereco = get(dto, "endereco");
+    const dtoEndereco = get(dto, "endereco");
 
-        if (dtoEndereco) {
-          const endereco = await this.enderecoService.internalEnderecoCreateOrUpdate(
-            currentCampus.endereco.id,
-            dtoEndereco as EnderecoInputDto,
-          );
+    if (dtoEndereco) {
+      const endereco = await this.enderecoService.internalEnderecoCreateOrUpdate(
+        currentCampus.endereco.id,
+        dtoEndereco as EnderecoInputDto,
+      );
 
-          campusRepository.merge(campus, {
-            endereco: {
-              id: endereco.id,
-            },
-          });
-        }
+      this.campusRepository.merge(campus, {
+        endereco: {
+          id: endereco.id,
+        },
+      });
+    }
 
-        await campusRepository.save(campus);
-
-        return campus;
-      },
-    );
+    await this.campusRepository.save(campus);
 
     return this.campusFindByIdStrict(accessContext, { id: campus.id });
   }

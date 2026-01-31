@@ -123,4 +123,21 @@ export interface IUsuarioRepositoryPort {
    * @param id ID do usuário
    */
   softDeleteById(id: string): Promise<void>;
+
+  /**
+   * Busca os dados de ensino do usuário (disciplinas, cursos e turmas onde é professor ativo)
+   * @param usuarioId ID do usuário
+   * @returns Estrutura hierárquica com disciplinas, cursos e turmas
+   */
+  findUsuarioEnsino(usuarioId: string): Promise<{
+    disciplinas: Array<{
+      disciplina: any;
+      cursos: Array<{
+        curso: any;
+        turmas: Array<{
+          turma: any;
+        }>;
+      }>;
+    }>;
+  }>;
 }

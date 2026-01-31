@@ -1,13 +1,20 @@
 import { Global, Module } from "@nestjs/common";
-import { IMAGEM_TRANSACTION_PORT } from "@/core/imagem/application/ports";
+import {
+  IMAGEM_ARQUIVO_REPOSITORY_PORT,
+  IMAGEM_TRANSACTION_PORT,
+} from "@/core/imagem/application/ports";
 import { ImagemService } from "@/core/imagem/application/use-cases/imagem.service";
 import { ArquivoModule } from "@/server/nest/modules/arquivo";
-import { ImagemTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistence/typeorm/adapters";
+import {
+  ImagemArquivoTypeOrmRepositoryAdapter,
+  ImagemTypeOrmRepositoryAdapter,
+} from "@/v2/adapters/out/persistence/typeorm/adapters";
 
 /**
  * Modulo Imagem configurado com Arquitetura Hexagonal
  * - ImagemService: Implementa casos de uso (porta de entrada)
  * - ImagemTypeOrmRepositoryAdapter: Implementa IImagemTransactionPort (porta de saida)
+ * - ImagemArquivoTypeOrmRepositoryAdapter: Implementa IImagemArquivoRepositoryPort (porta de saida)
  */
 @Global()
 @Module({
@@ -17,6 +24,10 @@ import { ImagemTypeOrmRepositoryAdapter } from "@/v2/adapters/out/persistence/ty
     {
       provide: IMAGEM_TRANSACTION_PORT,
       useClass: ImagemTypeOrmRepositoryAdapter,
+    },
+    {
+      provide: IMAGEM_ARQUIVO_REPOSITORY_PORT,
+      useClass: ImagemArquivoTypeOrmRepositoryAdapter,
     },
     ImagemService,
   ],
