@@ -1,26 +1,16 @@
-import type { PartialEntity } from "@/core/@shared";
-import {
-  OfertaFormacaoFindOneInput,
-  OfertaFormacaoFindOneOutput,
-  OfertaFormacaoListInput,
-  OfertaFormacaoListOutput,
-} from "@/core/oferta-formacao";
+import type { IBaseCrudRepositoryPort } from "@/core/@shared";
+import { OfertaFormacaoFindOneOutput, OfertaFormacaoListOutput } from "@/core/oferta-formacao";
 import type { OfertaFormacaoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
-import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 
 export const OFERTA_FORMACAO_REPOSITORY_PORT = Symbol("IOfertaFormacaoRepositoryPort");
 
-export interface IOfertaFormacaoRepositoryPort {
-  findAll(
-    accessContext: AccessContext,
-    dto: OfertaFormacaoListInput | null,
-  ): Promise<OfertaFormacaoListOutput>;
-  findById(
-    accessContext: AccessContext,
-    dto: OfertaFormacaoFindOneInput,
-  ): Promise<OfertaFormacaoFindOneOutput | null>;
-  save(entity: PartialEntity<OfertaFormacaoEntity>): Promise<OfertaFormacaoEntity>;
-  create(): OfertaFormacaoEntity;
-  merge(entity: OfertaFormacaoEntity, data: PartialEntity<OfertaFormacaoEntity>): void;
-  softDeleteById(id: string): Promise<void>;
-}
+/**
+ * Port de saída para operações de persistência de OfertaFormacao
+ * Estende a interface base de CRUD com operações padrão
+ */
+export interface IOfertaFormacaoRepositoryPort
+  extends IBaseCrudRepositoryPort<
+    OfertaFormacaoEntity,
+    OfertaFormacaoListOutput,
+    OfertaFormacaoFindOneOutput
+  > {}

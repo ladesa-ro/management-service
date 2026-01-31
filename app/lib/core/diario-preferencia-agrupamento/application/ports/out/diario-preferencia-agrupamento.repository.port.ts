@@ -1,11 +1,9 @@
 import type { SelectQueryBuilder } from "typeorm";
-import type { PartialEntity } from "@/core/@shared";
+import type { IBaseCrudRepositoryPort } from "@/core/@shared";
 import type { DiarioPreferenciaAgrupamentoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
-  DiarioPreferenciaAgrupamentoFindOneInput,
   DiarioPreferenciaAgrupamentoFindOneOutput,
-  DiarioPreferenciaAgrupamentoListInput,
   DiarioPreferenciaAgrupamentoListOutput,
 } from "../../dtos";
 
@@ -18,60 +16,22 @@ export const DIARIO_PREFERENCIA_AGRUPAMENTO_REPOSITORY_PORT = Symbol(
 
 /**
  * Port de saída para operações de persistência de DiarioPreferenciaAgrupamento
- * Define o contrato que os adapters de persistência devem implementar
+ * Estende a interface base de CRUD com operações padrão
  */
-export interface IDiarioPreferenciaAgrupamentoRepositoryPort {
+export interface IDiarioPreferenciaAgrupamentoRepositoryPort
+  extends IBaseCrudRepositoryPort<
+    DiarioPreferenciaAgrupamentoEntity,
+    DiarioPreferenciaAgrupamentoListOutput,
+    DiarioPreferenciaAgrupamentoFindOneOutput
+  > {
   /**
-   * Lista diario-preferencia-agrupamentos com paginação
-   */
-  findAll(
-    accessContext: AccessContext,
-    dto: DiarioPreferenciaAgrupamentoListInput | null,
-    selection?: string[] | boolean,
-  ): Promise<DiarioPreferenciaAgrupamentoListOutput>;
-
-  /**
-   * Busca um diario-preferencia-agrupamento por ID
-   */
-  findById(
-    accessContext: AccessContext,
-    dto: DiarioPreferenciaAgrupamentoFindOneInput,
-    selection?: string[] | boolean,
-  ): Promise<DiarioPreferenciaAgrupamentoFindOneOutput | null>;
-
-  /**
-   * Busca simplificada por ID
+   * Busca simplificada por ID - método obrigatório
    */
   findByIdSimple(
     accessContext: AccessContext,
-    id: DiarioPreferenciaAgrupamentoFindOneInput["id"],
+    id: string,
     selection?: string[],
   ): Promise<DiarioPreferenciaAgrupamentoFindOneOutput | null>;
-
-  /**
-   * Cria uma nova instância de entidade (não persiste)
-   */
-  create(): DiarioPreferenciaAgrupamentoEntity;
-
-  /**
-   * Mescla dados em uma entidade existente
-   */
-  merge(
-    entity: DiarioPreferenciaAgrupamentoEntity,
-    data: PartialEntity<DiarioPreferenciaAgrupamentoEntity>,
-  ): void;
-
-  /**
-   * Salva (cria ou atualiza) uma entidade
-   */
-  save(
-    entity: PartialEntity<DiarioPreferenciaAgrupamentoEntity>,
-  ): Promise<DiarioPreferenciaAgrupamentoEntity>;
-
-  /**
-   * Executa soft delete por ID
-   */
-  softDeleteById(id: string): Promise<void>;
 
   /**
    * Cria um QueryBuilder para a entidade.

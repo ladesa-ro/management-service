@@ -2,6 +2,7 @@ import { pick } from "lodash";
 import type { PartialEntity } from "@/core/@shared";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import { ResourceNotFoundError } from "../errors";
+import type { IAuthorizationServicePort } from "../ports/in";
 import type { IBaseCrudRepositoryPort } from "../ports/out";
 
 /**
@@ -72,6 +73,29 @@ export abstract class BaseCrudService<
     ListOutputDto,
     FindOneOutputDto
   >;
+
+  /**
+   * Serviço de autorização (opcional).
+   * Quando fornecido, é usado para verificações de permissão.
+   * Quando não fornecido, usa accessContext.ensurePermission diretamente.
+   */
+  protected readonly authorizationService?: IAuthorizationServicePort;
+
+  /**
+   * Verifica permissão usando o serviço de autorização ou accessContext
+   */
+  protected async ensurePermission(
+    accessContext: AccessContext,
+    action: string,
+    payload: { dto: unknown },
+    id?: string | number | null,
+  ): Promise<void> {
+    if (this.authorizationService) {
+      await this.authorizationService.ensurePermission(action, payload, id);
+    } else {
+      await accessContext.ensurePermission(action as any, payload as any, id ?? null);
+    }
+  }
 
   /**
    * Lista todos os registros
@@ -148,7 +172,7 @@ export abstract class BaseCrudService<
    * Cria um novo registro
    */
   async create(accessContext: AccessContext, dto: CreateInputDto): Promise<FindOneOutputDto> {
-    await accessContext.ensurePermission(this.createAction as any, { dto } as any);
+    await this.ensurePermission(accessContext, this.createAction, { dto });
 
     const entity = this.repository.create();
     const data = pick(dto, [...this.createFields] as string[]);
@@ -171,7 +195,7 @@ export abstract class BaseCrudService<
   ): Promise<FindOneOutputDto> {
     const current = await this.findByIdStrict(accessContext, { id: dto.id } as FindOneInputDto);
 
-    await accessContext.ensurePermission(this.updateAction as any, { dto } as any, dto.id);
+    await this.ensurePermission(accessContext, this.updateAction, { dto }, dto.id);
 
     const entity = { id: current.id } as Entity;
     const data = pick(dto, [...this.updateFields] as string[]);
@@ -189,7 +213,7 @@ export abstract class BaseCrudService<
    * Remove um registro (soft delete)
    */
   async deleteOneById(accessContext: AccessContext, dto: FindOneInputDto): Promise<boolean> {
-    await accessContext.ensurePermission(this.deleteAction as any, { dto } as any, dto.id);
+    await this.ensurePermission(accessContext, this.deleteAction, { dto }, dto.id);
 
     const entity = await this.findByIdStrict(accessContext, dto);
 

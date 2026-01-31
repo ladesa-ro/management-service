@@ -1,39 +1,22 @@
-import type { PartialEntity } from "@/core/@shared";
+import type { IBaseCrudRepositoryPort } from "@/core/@shared";
 import type { ReservaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
-import type {
-  ReservaFindOneInput,
-  ReservaFindOneOutput,
-  ReservaListInput,
-  ReservaListOutput,
-} from "../../dtos";
+import type { ReservaFindOneOutput, ReservaListOutput } from "../../dtos";
 
 export const RESERVA_REPOSITORY_PORT = Symbol("RESERVA_REPOSITORY_PORT");
 
-export interface IReservaRepositoryPort {
-  findAll(
-    accessContext: AccessContext,
-    dto: ReservaListInput | null,
-    selection?: string[] | boolean,
-  ): Promise<ReservaListOutput>;
-
-  findById(
-    accessContext: AccessContext,
-    dto: ReservaFindOneInput,
-    selection?: string[] | boolean,
-  ): Promise<ReservaFindOneOutput | null>;
-
+/**
+ * Port de saída para operações de persistência de Reserva
+ * Estende a interface base de CRUD com operações padrão
+ */
+export interface IReservaRepositoryPort
+  extends IBaseCrudRepositoryPort<ReservaEntity, ReservaListOutput, ReservaFindOneOutput> {
+  /**
+   * Busca uma reserva por ID (formato simples) - método obrigatório
+   */
   findByIdSimple(
     accessContext: AccessContext,
     id: string,
     selection?: string[],
   ): Promise<ReservaFindOneOutput | null>;
-
-  save(reserva: PartialEntity<ReservaEntity>): Promise<ReservaEntity>;
-
-  create(): ReservaEntity;
-
-  merge(reserva: ReservaEntity, data: PartialEntity<ReservaEntity>): void;
-
-  softDeleteById(id: string): Promise<void>;
 }

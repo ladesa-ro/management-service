@@ -1,39 +1,22 @@
-import type { PartialEntity } from "@/core/@shared";
+import type { IBaseCrudRepositoryPort } from "@/core/@shared";
 import type { DiaCalendarioEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities/dia-calendario.entity";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
-import type {
-  DiaCalendarioFindOneInput,
-  DiaCalendarioFindOneOutput,
-  DiaCalendarioListInput,
-  DiaCalendarioListOutput,
-} from "../../dtos";
+import type { DiaCalendarioFindOneOutput, DiaCalendarioListOutput } from "../../dtos";
 
 export const DIA_CALENDARIO_REPOSITORY_PORT = Symbol("IDiaCalendarioRepositoryPort");
 
-export interface IDiaCalendarioRepositoryPort {
-  findAll(
-    accessContext: AccessContext,
-    dto: DiaCalendarioListInput | null,
-    selection?: string[] | boolean,
-  ): Promise<DiaCalendarioListOutput>;
-
-  findById(
-    accessContext: AccessContext,
-    dto: DiaCalendarioFindOneInput,
-    selection?: string[] | boolean,
-  ): Promise<DiaCalendarioFindOneOutput | null>;
-
+/**
+ * Port de saída para operações de persistência de DiaCalendario
+ * Estende a interface base de CRUD com operações padrão
+ */
+export interface IDiaCalendarioRepositoryPort
+  extends IBaseCrudRepositoryPort<DiaCalendarioEntity, DiaCalendarioListOutput, DiaCalendarioFindOneOutput> {
+  /**
+   * Busca um dia do calendário por ID (formato simples) - método obrigatório
+   */
   findByIdSimple(
     accessContext: AccessContext,
     id: string,
     selection?: string[],
   ): Promise<DiaCalendarioFindOneOutput | null>;
-
-  save(diaCalendario: PartialEntity<DiaCalendarioEntity>): Promise<DiaCalendarioEntity>;
-
-  create(): DiaCalendarioEntity;
-
-  merge(diaCalendario: DiaCalendarioEntity, data: PartialEntity<DiaCalendarioEntity>): void;
-
-  softDeleteById(id: string): Promise<void>;
 }

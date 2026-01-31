@@ -1,5 +1,10 @@
 import { Inject, Injectable, type StreamableFile } from "@nestjs/common";
-import { BaseCrudService, ResourceNotFoundError } from "@/core/@shared";
+import {
+  AUTHORIZATION_SERVICE_PORT,
+  BaseCrudService,
+  type IAuthorizationServicePort,
+  ResourceNotFoundError,
+} from "@/core/@shared";
 import { ArquivoService } from "@/core/arquivo/application/use-cases/arquivo.service";
 import { BlocoService } from "@/core/bloco/application/use-cases/bloco.service";
 import { ImagemService } from "@/core/imagem/application/use-cases/imagem.service";
@@ -47,6 +52,8 @@ export class AmbienteService
   constructor(
     @Inject(AMBIENTE_REPOSITORY_PORT)
     protected readonly repository: IAmbienteRepositoryPort,
+    @Inject(AUTHORIZATION_SERVICE_PORT)
+    protected readonly authorizationService: IAuthorizationServicePort,
     private readonly blocoService: BlocoService,
     private readonly imagemService: ImagemService,
     private readonly arquivoService: ArquivoService,
@@ -77,7 +84,8 @@ export class AmbienteService
   ): Promise<boolean> {
     const currentAmbiente = await this.findByIdStrict(accessContext, { id: dto.id });
 
-    await accessContext.ensurePermission(
+    await this.ensurePermission(
+      accessContext,
       "ambiente:update",
       { dto: { id: currentAmbiente.id } },
       currentAmbiente.id,

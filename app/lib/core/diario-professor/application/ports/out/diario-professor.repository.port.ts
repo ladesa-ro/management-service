@@ -1,39 +1,22 @@
-import type { PartialEntity } from "@/core/@shared";
+import type { IBaseCrudRepositoryPort } from "@/core/@shared";
 import type { DiarioProfessorEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
-import type {
-  DiarioProfessorFindOneInput,
-  DiarioProfessorFindOneOutput,
-  DiarioProfessorListInput,
-  DiarioProfessorListOutput,
-} from "../../dtos";
+import type { DiarioProfessorFindOneOutput, DiarioProfessorListOutput } from "../../dtos";
 
 export const DIARIO_PROFESSOR_REPOSITORY_PORT = Symbol("IDiarioProfessorRepositoryPort");
 
-export interface IDiarioProfessorRepositoryPort {
-  findAll(
-    accessContext: AccessContext,
-    dto: DiarioProfessorListInput | null,
-    selection?: string[] | boolean,
-  ): Promise<DiarioProfessorListOutput>;
-
-  findById(
-    accessContext: AccessContext,
-    dto: DiarioProfessorFindOneInput,
-    selection?: string[] | boolean,
-  ): Promise<DiarioProfessorFindOneOutput | null>;
-
+/**
+ * Port de saída para operações de persistência de DiarioProfessor
+ * Estende a interface base de CRUD com operações padrão
+ */
+export interface IDiarioProfessorRepositoryPort
+  extends IBaseCrudRepositoryPort<DiarioProfessorEntity, DiarioProfessorListOutput, DiarioProfessorFindOneOutput> {
+  /**
+   * Busca um diário de professor por ID (formato simples) - método obrigatório
+   */
   findByIdSimple(
     accessContext: AccessContext,
-    id: DiarioProfessorFindOneInput["id"],
+    id: string,
     selection?: string[] | boolean,
   ): Promise<DiarioProfessorFindOneOutput | null>;
-
-  save(diarioProfessor: PartialEntity<DiarioProfessorEntity>): Promise<DiarioProfessorEntity>;
-
-  create(): DiarioProfessorEntity;
-
-  merge(diarioProfessor: DiarioProfessorEntity, data: PartialEntity<DiarioProfessorEntity>): void;
-
-  softDeleteById(id: string): Promise<void>;
 }

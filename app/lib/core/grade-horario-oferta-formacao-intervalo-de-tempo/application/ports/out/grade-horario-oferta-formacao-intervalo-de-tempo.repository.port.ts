@@ -1,11 +1,9 @@
 import type { SelectQueryBuilder } from "typeorm";
-import type { PartialEntity } from "@/core/@shared";
+import type { IBaseCrudRepositoryPort } from "@/core/@shared";
 import type { GradeHorarioOfertaFormacaoIntervaloDeTempoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
-  GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInput,
   GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutput,
-  GradeHorarioOfertaFormacaoIntervaloDeTempoListInput,
   GradeHorarioOfertaFormacaoIntervaloDeTempoListOutput,
 } from "../../dtos";
 
@@ -18,60 +16,22 @@ export const GRADE_HORARIO_OFERTA_FORMACAO_INTERVALO_DE_TEMPO_REPOSITORY_PORT = 
 
 /**
  * Port de saída para operações de persistência de GradeHorarioOfertaFormacaoIntervaloDeTempo
- * Define o contrato que os adapters de persistência devem implementar
+ * Estende a interface base de CRUD com operações padrão
  */
-export interface IGradeHorarioOfertaFormacaoIntervaloDeTempoRepositoryPort {
+export interface IGradeHorarioOfertaFormacaoIntervaloDeTempoRepositoryPort
+  extends IBaseCrudRepositoryPort<
+    GradeHorarioOfertaFormacaoIntervaloDeTempoEntity,
+    GradeHorarioOfertaFormacaoIntervaloDeTempoListOutput,
+    GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutput
+  > {
   /**
-   * Lista grade-horario-oferta-formacao-intervalo-de-tempos com paginação
-   */
-  findAll(
-    accessContext: AccessContext,
-    dto: GradeHorarioOfertaFormacaoIntervaloDeTempoListInput | null,
-    selection?: string[] | boolean,
-  ): Promise<GradeHorarioOfertaFormacaoIntervaloDeTempoListOutput>;
-
-  /**
-   * Busca um grade-horario-oferta-formacao-intervalo-de-tempo por ID
-   */
-  findById(
-    accessContext: AccessContext | null,
-    dto: GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInput,
-    selection?: string[] | boolean,
-  ): Promise<GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutput | null>;
-
-  /**
-   * Busca simplificada por ID
+   * Busca simplificada por ID - método obrigatório
    */
   findByIdSimple(
     accessContext: AccessContext,
     id: string,
     selection?: string[],
   ): Promise<GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutput | null>;
-
-  /**
-   * Cria uma nova instância de entidade (não persiste)
-   */
-  create(): GradeHorarioOfertaFormacaoIntervaloDeTempoEntity;
-
-  /**
-   * Mescla dados em uma entidade existente
-   */
-  merge(
-    entity: GradeHorarioOfertaFormacaoIntervaloDeTempoEntity,
-    data: PartialEntity<GradeHorarioOfertaFormacaoIntervaloDeTempoEntity>,
-  ): void;
-
-  /**
-   * Salva (cria ou atualiza) uma entidade
-   */
-  save(
-    entity: PartialEntity<GradeHorarioOfertaFormacaoIntervaloDeTempoEntity>,
-  ): Promise<GradeHorarioOfertaFormacaoIntervaloDeTempoEntity>;
-
-  /**
-   * Executa soft delete por ID
-   */
-  softDeleteById(id: string): Promise<void>;
 
   /**
    * Cria um QueryBuilder para a entidade.

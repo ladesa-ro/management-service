@@ -1,7 +1,11 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { get, pick } from "lodash";
 import { v4 } from "uuid";
-import { ResourceNotFoundError } from "@/core/@shared";
+import {
+  AUTHORIZATION_SERVICE_PORT,
+  type IAuthorizationServicePort,
+  ResourceNotFoundError,
+} from "@/core/@shared";
 import {
   CampusCreateInput,
   CampusFindOneInput,
@@ -30,6 +34,8 @@ export class CampusService implements ICampusUseCasePort {
   constructor(
     @Inject(CAMPUS_REPOSITORY_PORT)
     private readonly campusRepository: ICampusRepositoryPort,
+    @Inject(AUTHORIZATION_SERVICE_PORT)
+    private readonly authorizationService: IAuthorizationServicePort,
     private readonly enderecoService: EnderecoService,
   ) {}
 
@@ -87,7 +93,7 @@ export class CampusService implements ICampusUseCasePort {
   }
 
   async create(accessContext: AccessContext, dto: CampusCreateInput): Promise<CampusFindOneOutput> {
-    await accessContext.ensurePermission("campus:create", { dto } as any);
+    await this.authorizationService.ensurePermission("campus:create", { dto });
 
     const dtoCampus = pick(dto, ["nomeFantasia", "razaoSocial", "apelido", "cnpj"]);
 
@@ -120,7 +126,7 @@ export class CampusService implements ICampusUseCasePort {
   ): Promise<CampusFindOneOutput> {
     const currentCampus = await this.findByIdStrict(accessContext, { id: dto.id });
 
-    await accessContext.ensurePermission("campus:update", { dto }, dto.id);
+    await this.authorizationService.ensurePermission("campus:update", { dto }, dto.id);
 
     const dtoCampus = pick(dto, ["nomeFantasia", "razaoSocial", "apelido", "cnpj"]);
 
@@ -153,7 +159,7 @@ export class CampusService implements ICampusUseCasePort {
   }
 
   async deleteOneById(accessContext: AccessContext, dto: CampusFindOneInput): Promise<boolean> {
-    await accessContext.ensurePermission("campus:delete", { dto }, dto.id);
+    await this.authorizationService.ensurePermission("campus:delete", { dto }, dto.id);
 
     const campus = await this.findByIdStrict(accessContext, dto);
 

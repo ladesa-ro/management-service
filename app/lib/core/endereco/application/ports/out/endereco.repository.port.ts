@@ -1,27 +1,27 @@
-import type { PartialEntity } from "@/core/@shared";
-import type {
-  EnderecoFindOneInput,
-  EnderecoFindOneOutput,
-  EnderecoInputDto,
-  EnderecoListInput,
-  EnderecoListOutput,
-} from "@/core/endereco";
+import type { IBaseCrudRepositoryPort, PartialEntity } from "@/core/@shared";
+import type { EnderecoFindOneOutput, EnderecoInputDto, EnderecoListOutput } from "@/core/endereco";
 import type { EnderecoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
-import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 
 export const ENDERECO_REPOSITORY_PORT = Symbol("IEnderecoRepositoryPort");
 
-export interface IEnderecoRepositoryPort {
-  findAll(accessContext: AccessContext, dto: EnderecoListInput | null): Promise<EnderecoListOutput>;
-  findById(
-    accessContext: AccessContext | null,
-    dto: EnderecoFindOneInput,
-    selection?: string[] | boolean,
-  ): Promise<EnderecoFindOneOutput | null>;
+/**
+ * Port de saída para operações de persistência de Endereco
+ * Estende a interface base de CRUD com operações padrão
+ */
+export interface IEnderecoRepositoryPort
+  extends IBaseCrudRepositoryPort<EnderecoEntity, EnderecoListOutput, EnderecoFindOneOutput> {
+  /**
+   * Busca um endereço por ID (versão simplificada sem contexto de acesso)
+   */
   findOneById(id: string): Promise<EnderecoFindOneOutput | null>;
+
+  /**
+   * Verifica se um endereço existe
+   */
   exists(id: string): Promise<boolean>;
-  save(entity: PartialEntity<EnderecoEntity>): Promise<EnderecoEntity>;
-  create(): EnderecoEntity;
+
+  /**
+   * Mescla dados em uma entidade existente (sobrescreve para aceitar EnderecoInputDto)
+   */
   merge(entity: EnderecoEntity, data: EnderecoInputDto | PartialEntity<EnderecoEntity>): void;
-  softDeleteById(id: string): Promise<void>;
 }

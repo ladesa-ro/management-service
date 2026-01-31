@@ -8,10 +8,11 @@ import {
   ValidationExceptionFilter,
 } from "@/server/nest/filters";
 import { ModulesModule } from "@/server/nest/modules/modules.module";
+import { AuthorizationModule } from "@/v2/adapters/out/authorization";
 import { InfrastructureModule, SearchModule } from "@/v2/old/shared";
 
 @Module({
-  imports: [SearchModule, ModulesModule, InfrastructureModule],
+  imports: [SearchModule, ModulesModule, InfrastructureModule, AuthorizationModule],
   controllers: [AppController],
   providers: [
     AppService,

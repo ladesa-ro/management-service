@@ -1,12 +1,6 @@
-import type { PartialEntity } from "@/core/@shared";
-import type {
-  DisciplinaFindOneInput,
-  DisciplinaFindOneOutput,
-  DisciplinaListInput,
-  DisciplinaListOutput,
-} from "@/core/disciplina/application/dtos";
+import type { IBaseCrudRepositoryPort } from "@/core/@shared";
+import type { DisciplinaFindOneOutput, DisciplinaListOutput } from "@/core/disciplina/application/dtos";
 import type { DisciplinaEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
-import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 
 /**
  * Token de injeção para o repositório de Disciplina
@@ -15,71 +9,7 @@ export const DISCIPLINA_REPOSITORY_PORT = Symbol("IDisciplinaRepositoryPort");
 
 /**
  * Port de saída para operações de persistência de Disciplina
- * Define o contrato que os adapters de persistência devem implementar
+ * Estende a interface base de CRUD com operações padrão
  */
-export interface IDisciplinaRepositoryPort {
-  /**
-   * Lista disciplinas com paginação
-   * @param accessContext Contexto de acesso para aplicar filtros de permissão
-   * @param dto DTO com critérios de busca e paginação
-   * @param selection Campos a serem selecionados
-   * @returns Lista paginada de disciplinas
-   */
-  findAll(
-    accessContext: AccessContext,
-    dto: DisciplinaListInput | null,
-    selection?: string[] | boolean,
-  ): Promise<DisciplinaListOutput>;
-
-  /**
-   * Busca uma disciplina por ID
-   * @param accessContext Contexto de acesso para aplicar filtros de permissão
-   * @param dto DTO com ID da disciplina
-   * @param selection Campos a serem selecionados
-   * @returns Disciplina encontrada ou null
-   */
-  findById(
-    accessContext: AccessContext | null,
-    dto: DisciplinaFindOneInput,
-    selection?: string[] | boolean,
-  ): Promise<DisciplinaFindOneOutput | null>;
-
-  /**
-   * Busca uma disciplina por ID (simplificado)
-   * @param accessContext Contexto de acesso
-   * @param id ID da disciplina
-   * @param selection Campos a serem selecionados
-   * @returns Disciplina encontrada ou null
-   */
-  findByIdSimple(
-    accessContext: AccessContext,
-    id: string,
-    selection?: string[] | boolean,
-  ): Promise<DisciplinaFindOneOutput | null>;
-
-  /**
-   * Salva uma disciplina
-   * @param disciplina Dados da disciplina a salvar
-   * @returns Entidade salva
-   */
-  save(disciplina: PartialEntity<DisciplinaEntity>): Promise<DisciplinaEntity>;
-
-  /**
-   * Cria uma nova entidade de disciplina
-   * @returns Nova entidade
-   */
-  create(): DisciplinaEntity;
-
-  /**
-   * Mescla dados em uma entidade existente
-   * @param disciplina Entidade existente
-   * @param data Dados a mesclar
-   */
-  merge(disciplina: DisciplinaEntity, data: PartialEntity<DisciplinaEntity>): void;
-
-  /**
-   * Remove uma disciplina por ID (soft delete)
-   * @param id ID da disciplina
-   */
-  softDeleteById(id: string): Promise<void>;
-}
+export interface IDisciplinaRepositoryPort
+  extends IBaseCrudRepositoryPort<DisciplinaEntity, DisciplinaListOutput, DisciplinaFindOneOutput> {}

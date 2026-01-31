@@ -1,5 +1,10 @@
 import { Inject, Injectable, type StreamableFile } from "@nestjs/common";
-import { BaseCrudService, ResourceNotFoundError } from "@/core/@shared";
+import {
+  AUTHORIZATION_SERVICE_PORT,
+  BaseCrudService,
+  type IAuthorizationServicePort,
+  ResourceNotFoundError,
+} from "@/core/@shared";
 import { ArquivoService } from "@/core/arquivo/application/use-cases/arquivo.service";
 import type {
   BlocoCreateInput,
@@ -47,6 +52,8 @@ export class BlocoService
   constructor(
     @Inject(BLOCO_REPOSITORY_PORT)
     protected readonly repository: IBlocoRepositoryPort,
+    @Inject(AUTHORIZATION_SERVICE_PORT)
+    protected readonly authorizationService: IAuthorizationServicePort,
     private readonly campusService: CampusService,
     private readonly imagemService: ImagemService,
     private readonly arquivoService: ArquivoService,
@@ -77,7 +84,8 @@ export class BlocoService
   ): Promise<boolean> {
     const currentBloco = await this.findByIdStrict(accessContext, { id: dto.id });
 
-    await accessContext.ensurePermission(
+    await this.ensurePermission(
+      accessContext,
       "bloco:update",
       { dto: { id: currentBloco.id } },
       currentBloco.id,

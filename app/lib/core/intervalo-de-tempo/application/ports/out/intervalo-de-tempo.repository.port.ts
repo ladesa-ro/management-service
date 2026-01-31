@@ -1,28 +1,34 @@
-import type { PartialEntity } from "@/core/@shared";
+import type { IBaseCrudRepositoryPort, PartialEntity } from "@/core/@shared";
 import type {
-  IntervaloDeTempoFindOneInput,
   IntervaloDeTempoFindOneOutput,
   IntervaloDeTempoInput,
-  IntervaloDeTempoListInput,
   IntervaloDeTempoListOutput,
 } from "@/core/intervalo-de-tempo";
 import type { IntervaloDeTempoEntity } from "@/v2/adapters/out/persistence/typeorm/typeorm/entities";
-import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 
 export const INTERVALO_DE_TEMPO_REPOSITORY_PORT = Symbol("IIntervaloDeTempoRepositoryPort");
 
-export interface IIntervaloDeTempoRepositoryPort {
-  findAll(
-    accessContext: AccessContext,
-    dto: IntervaloDeTempoListInput | null,
-  ): Promise<IntervaloDeTempoListOutput>;
-  findById(
-    accessContext: AccessContext | null,
-    dto: IntervaloDeTempoFindOneInput,
-  ): Promise<IntervaloDeTempoFindOneOutput | null>;
+/**
+ * Port de saída para operações de persistência de IntervaloDeTempo
+ * Estende a interface base de CRUD com métodos específicos do módulo
+ */
+export interface IIntervaloDeTempoRepositoryPort
+  extends Omit<
+    IBaseCrudRepositoryPort<IntervaloDeTempoEntity, IntervaloDeTempoListOutput, IntervaloDeTempoFindOneOutput>,
+    "softDeleteById"
+  > {
+  /**
+   * Busca um intervalo de tempo por parâmetros específicos
+   */
   findOne(dto: IntervaloDeTempoInput): Promise<IntervaloDeTempoEntity | null>;
+
+  /**
+   * Busca um intervalo de tempo por ID ou lança erro
+   */
   findOneByIdOrFail(id: string): Promise<IntervaloDeTempoEntity>;
-  save(intervalo: PartialEntity<IntervaloDeTempoEntity>): Promise<IntervaloDeTempoEntity>;
-  create(): IntervaloDeTempoEntity;
+
+  /**
+   * Sobrescreve merge com assinatura específica
+   */
   merge(intervalo: IntervaloDeTempoEntity, data: PartialEntity<IntervaloDeTempoEntity>): void;
 }
