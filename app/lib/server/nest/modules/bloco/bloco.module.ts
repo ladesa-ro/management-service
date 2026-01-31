@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { NestJsPaginateAdapter } from "@/@shared/infrastructure/persistence/typeorm";
+import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import { BLOCO_REPOSITORY_PORT } from "@/modules/bloco/application/ports";
 import { BlocoService } from "@/modules/bloco/application/use-cases/bloco.service";
 import { BlocoTypeOrmRepositoryAdapter } from "@/modules/bloco/infrastructure/persistence/typeorm";

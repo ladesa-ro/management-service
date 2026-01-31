@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { NestJsPaginateAdapter } from "@/@shared/infrastructure/persistence/typeorm";
+import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import { PERFIL_REPOSITORY_PORT, PerfilService } from "@/modules/perfil";
 import { PerfilTypeOrmRepositoryAdapter } from "@/modules/perfil/infrastructure/persistence/typeorm";
 import { CampusModule } from "@/server/nest/modules/campus";

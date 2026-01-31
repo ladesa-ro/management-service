@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { NestJsPaginateAdapter } from "@/@shared/infrastructure/persistence/typeorm";
+import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import {
   GRADE_HORARIO_OFERTA_FORMACAO_REPOSITORY_PORT,
   GradeHorarioOfertaFormacaoService,

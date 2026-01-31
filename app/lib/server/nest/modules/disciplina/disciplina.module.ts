@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { NestJsPaginateAdapter } from "@/@shared/infrastructure/persistence/typeorm";
+import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import { DISCIPLINA_REPOSITORY_PORT } from "@/modules/disciplina/application/ports";
 import { DisciplinaService } from "@/modules/disciplina/application/use-cases/disciplina.service";
 import { DisciplinaTypeOrmRepositoryAdapter } from "@/modules/disciplina/infrastructure/persistence/typeorm";

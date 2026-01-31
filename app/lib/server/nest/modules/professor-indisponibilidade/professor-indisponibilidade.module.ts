@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { NestJsPaginateAdapter } from "@/@shared/infrastructure/persistence/typeorm";
+import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import { PROFESSOR_INDISPONIBILIDADE_REPOSITORY_PORT } from "@/modules/professor-indisponibilidade/application/ports";
 import { ProfessorIndisponibilidadeService } from "@/modules/professor-indisponibilidade/application/use-cases/professor-indisponibilidade.service";
 import { ProfessorIndisponibilidadeTypeOrmRepositoryAdapter } from "@/modules/professor-indisponibilidade/infrastructure/persistence/typeorm";

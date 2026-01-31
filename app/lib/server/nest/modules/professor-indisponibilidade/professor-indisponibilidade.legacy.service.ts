@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { map, pick } from "lodash";
-import { QbEfficientLoad } from "@/@shared/infrastructure/persistence/typeorm";
-import { DatabaseContextService } from "@/database-context";
+import { DatabaseContextService } from "@/modules/@database-context";
+import { QbEfficientLoad } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import { ProfessorIndisponibilidadeEntity } from "@/modules/professor-indisponibilidade/infrastructure/persistence/typeorm";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import { paginateConfig } from "@/v2/old/infrastructure/fixtures";

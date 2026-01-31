@@ -1,7 +1,7 @@
 import {
   createRepositoryFactory,
   IRepositoryFactoryOutput,
-} from "@/@shared/infrastructure/persistence/typeorm/create-repository-factory";
+} from "@/modules/@shared/infrastructure/persistence/typeorm/create-repository-factory";
 import { NivelFormacaoEntity } from "./nivel-formacao.entity";
 
 export const createNivelFormacaoRepository = createRepositoryFactory((ds) => {

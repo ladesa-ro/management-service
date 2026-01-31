@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { NestJsPaginateAdapter } from "@/@shared/infrastructure/persistence/typeorm";
+import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import { HORARIO_GERADO_REPOSITORY_PORT, HorarioGeradoService } from "@/modules/horario-gerado";
 import { HorarioGeradoTypeOrmRepositoryAdapter } from "@/modules/horario-gerado/infrastructure/persistence/typeorm";
 import { CalendarioLetivoModule } from "@/server/nest/modules/calendario-letivo";

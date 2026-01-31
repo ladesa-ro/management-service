@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { DatabaseContextService } from "@/database-context";
+import { DatabaseContextService } from "@/modules/@database-context";
 import type { PartialEntity } from "@/modules/@shared";
 import type {
   IImagemArquivoRepositoryPort,

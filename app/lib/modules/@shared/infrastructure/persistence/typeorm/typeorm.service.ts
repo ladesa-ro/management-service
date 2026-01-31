@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { DataSource } from "typeorm";
-import { DatabaseContextService } from "@/database-context";
+import { DatabaseContextService } from "@/modules/@database-context";
 import { APP_DATA_SOURCE_TOKEN } from "./providers/app-data-source.provider";
 
 @Injectable()

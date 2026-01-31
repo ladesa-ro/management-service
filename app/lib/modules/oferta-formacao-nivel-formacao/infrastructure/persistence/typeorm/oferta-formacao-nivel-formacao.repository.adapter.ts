@@ -1,12 +1,12 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
-import type { ITypeOrmPaginationConfig } from "@/@shared/infrastructure/persistence/typeorm";
+import { DatabaseContextService } from "@/modules/@database-context";
+import type { ITypeOrmPaginationConfig } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import {
   BaseTypeOrmRepositoryAdapter,
   NestJsPaginateAdapter,
-} from "@/@shared/infrastructure/persistence/typeorm";
-import { DatabaseContextService } from "@/database-context";
+} from "@/modules/@shared/infrastructure/persistence/typeorm";
 import { NivelFormacaoService } from "@/modules/nivel-formacao/application/use-cases/nivel-formacao.service";
 import { OfertaFormacaoService } from "@/modules/oferta-formacao";
 import type {

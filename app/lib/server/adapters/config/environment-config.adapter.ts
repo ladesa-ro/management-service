@@ -2,12 +2,12 @@ import { Inject, Injectable } from "@nestjs/common";
 import { ConfigService as NestConfigService } from "@nestjs/config";
 import { join } from "path";
 import type { DataSourceOptions } from "typeorm";
-import * as entities from "@/@shared/infrastructure/persistence/typeorm/entities";
 import type {
   IConfigPort,
   IKeycloakCredentials,
   IOidcClientCredentials,
 } from "@/modules/@shared/application/ports/out/config";
+import * as entities from "@/modules/@shared/infrastructure/persistence/typeorm/entities";
 import pkg from "../../../../package.json";
 
 const now = new Date();

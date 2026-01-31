@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { NestJsPaginateAdapter } from "@/@shared/infrastructure/persistence/typeorm";
+import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import { TURMA_REPOSITORY_PORT } from "@/modules/turma/application/ports";
 import { TurmaService } from "@/modules/turma/application/use-cases/turma.service";
 import { TurmaTypeOrmRepositoryAdapter } from "@/modules/turma/infrastructure/persistence/typeorm";

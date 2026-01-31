@@ -1,14 +1,14 @@
 import { Injectable } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
 import type { DeepPartial } from "typeorm";
+import { DatabaseContextService } from "@/modules/@database-context";
+import type { IPaginationCriteria, IPaginationResult } from "@/modules/@shared";
 import {
   BaseTypeOrmRepositoryAdapter,
   ITypeOrmPaginationConfig,
   NestJsPaginateAdapter,
   QbEfficientLoad,
-} from "@/@shared/infrastructure/persistence/typeorm";
-import { DatabaseContextService } from "@/database-context";
-import type { IPaginationCriteria, IPaginationResult } from "@/modules/@shared";
+} from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
   PerfilFindOneInput,
   PerfilFindOneOutput,

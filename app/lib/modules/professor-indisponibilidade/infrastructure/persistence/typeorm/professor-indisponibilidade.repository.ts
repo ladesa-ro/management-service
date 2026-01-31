@@ -1,4 +1,4 @@
-import { createRepositoryFactory } from "@/@shared/infrastructure/persistence/typeorm/create-repository-factory";
+import { createRepositoryFactory } from "@/modules/@shared/infrastructure/persistence/typeorm/create-repository-factory";
 import { ProfessorIndisponibilidadeEntity } from "./professor-indisponibilidade.entity";
 
 export const createProfessorIndisponibilidadeRepository = createRepositoryFactory((ds) => {

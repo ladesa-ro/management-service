@@ -1,10 +1,10 @@
 import { Injectable } from "@nestjs/common";
-import type { ITypeOrmPaginationConfig } from "@/@shared/infrastructure/persistence/typeorm";
+import { DatabaseContextService } from "@/modules/@database-context";
+import type { ITypeOrmPaginationConfig } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import {
   BaseTypeOrmRepositoryAdapter,
   NestJsPaginateAdapter,
-} from "@/@shared/infrastructure/persistence/typeorm";
-import { DatabaseContextService } from "@/database-context";
+} from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
   DisponibilidadeFindOneInput,
   DisponibilidadeFindOneOutput,

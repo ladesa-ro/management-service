@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { NestJsPaginateAdapter } from "@/@shared/infrastructure/persistence/typeorm";
+import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import { CIDADE_REPOSITORY_PORT } from "@/modules/cidade/application/ports";
 import { CidadeService } from "@/modules/cidade/application/use-cases/cidade.service";
 import { CidadeTypeOrmRepositoryAdapter } from "@/modules/cidade/infrastructure/persistence/typeorm";

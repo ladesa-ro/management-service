@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { NestJsPaginateAdapter } from "@/@shared/infrastructure/persistence/typeorm";
+import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import { AMBIENTE_REPOSITORY_PORT } from "@/modules/ambiente/application/ports";
 import { AmbienteService } from "@/modules/ambiente/application/use-cases/ambiente.service";
 import { AmbienteTypeOrmRepositoryAdapter } from "@/modules/ambiente/infrastructure/persistence/typeorm";

@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { NestJsPaginateAdapter } from "@/@shared/infrastructure/persistence/typeorm";
+import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import { OFERTA_FORMACAO_REPOSITORY_PORT, OfertaFormacaoService } from "@/modules/oferta-formacao";
 import { OfertaFormacaoTypeOrmRepositoryAdapter } from "@/modules/oferta-formacao/infrastructure/persistence/typeorm";
 import { ModalidadeModule } from "@/server/nest/modules/modalidade";

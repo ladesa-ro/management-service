@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { NestJsPaginateAdapter } from "@/@shared/infrastructure/persistence/typeorm";
+import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import { USUARIO_REPOSITORY_PORT } from "@/modules/usuario/application/ports";
 import { UsuarioService } from "@/modules/usuario/application/use-cases/usuario.service";
 import { UsuarioTypeOrmRepositoryAdapter } from "@/modules/usuario/infrastructure/persistence/typeorm";

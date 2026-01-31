@@ -1,11 +1,11 @@
 import { Injectable } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
+import { DatabaseContextService } from "@/modules/@database-context";
 import {
   BaseTypeOrmRepositoryAdapter,
   ITypeOrmPaginationConfig,
   NestJsPaginateAdapter,
-} from "@/@shared/infrastructure/persistence/typeorm";
-import { DatabaseContextService } from "@/database-context";
+} from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
   ImagemArquivoFindOneInput,
   ImagemArquivoFindOneOutput,
