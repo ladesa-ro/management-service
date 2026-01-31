@@ -11,6 +11,11 @@ import {
   ValidateNested,
 } from "class-validator";
 import {
+  PaginationInputDto,
+  PaginationMetaDto,
+  TransformToArray,
+} from "@/modules/@shared/infrastructure/presentation/rest/dtos";
+import {
   AmbienteFindOneInputDto,
   AmbienteFindOneOutputDto,
 } from "@/server/nest/modules/ambiente/rest";
@@ -21,7 +26,6 @@ import {
   DisciplinaFindOneOutputDto,
 } from "@/server/nest/modules/disciplina/rest";
 import { TurmaFindOneInputDto, TurmaFindOneOutputDto } from "@/server/nest/modules/turma/rest";
-import { PaginationInputDto, PaginationMetaDto, TransformToArray } from "@/v2/old/shared/dto";
 import {
   commonProperties,
   RegisterModel,

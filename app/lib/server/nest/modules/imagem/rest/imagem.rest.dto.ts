@@ -10,8 +10,12 @@ import {
   MinLength,
   ValidateNested,
 } from "class-validator";
+import {
+  PaginationInputDto,
+  PaginationMetaDto,
+  TransformToArray,
+} from "@/modules/@shared/infrastructure/presentation/rest/dtos";
 import { ImagemArquivoFindOneFromImagemOutputDto } from "@/server/nest/modules/imagem-arquivo/rest";
-import { PaginationInputDto, PaginationMetaDto, TransformToArray } from "@/v2/old/shared/dto";
 import { commonProperties, RegisterModel, simpleProperty } from "@/v2/old/shared/metadata";
 
 // ============================================================================

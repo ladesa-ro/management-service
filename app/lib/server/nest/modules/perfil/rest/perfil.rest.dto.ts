@@ -10,12 +10,16 @@ import {
   IsUUID,
   ValidateNested,
 } from "class-validator";
+import {
+  PaginationInputDto,
+  PaginationMetaDto,
+  TransformToArray,
+} from "@/modules/@shared/infrastructure/presentation/rest/dtos";
 import { CampusFindOneInputDto, CampusFindOneOutputDto } from "@/server/nest/modules/campus/rest";
 import {
   UsuarioFindOneInputDto,
   UsuarioFindOneOutputDto,
 } from "@/server/nest/modules/usuario/rest";
-import { PaginationInputDto, PaginationMetaDto, TransformToArray } from "@/v2/old/shared/dto";
 import {
   commonProperties,
   RegisterModel,

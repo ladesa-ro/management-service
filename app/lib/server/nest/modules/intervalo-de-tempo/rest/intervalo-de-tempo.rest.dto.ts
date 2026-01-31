@@ -1,7 +1,11 @@
 import { ArgsType, Field, ID, InputType, ObjectType } from "@nestjs/graphql";
 import { ApiProperty, ApiPropertyOptional, PartialType } from "@nestjs/swagger";
 import { IsArray, IsDateString, IsOptional, IsString, IsUUID, Matches } from "class-validator";
-import { PaginationInputDto, PaginationMetaDto, TransformToArray } from "@/v2/old/shared/dto";
+import {
+  PaginationInputDto,
+  PaginationMetaDto,
+  TransformToArray,
+} from "@/modules/@shared/infrastructure/presentation/rest/dtos";
 import { commonProperties, RegisterModel, simpleProperty } from "@/v2/old/shared/metadata";
 
 // ============================================================================

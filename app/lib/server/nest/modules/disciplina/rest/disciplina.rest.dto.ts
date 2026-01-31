@@ -12,8 +12,12 @@ import {
   MinLength,
   ValidateNested,
 } from "class-validator";
+import {
+  PaginationInputDto,
+  PaginationMetaDto,
+  TransformToArray,
+} from "@/modules/@shared/infrastructure/presentation/rest/dtos";
 import { ImagemFindOneOutputDto } from "@/server/nest/modules/bloco/rest";
-import { PaginationInputDto, PaginationMetaDto, TransformToArray } from "@/v2/old/shared/dto";
 import {
   commonProperties,
   RegisterModel,

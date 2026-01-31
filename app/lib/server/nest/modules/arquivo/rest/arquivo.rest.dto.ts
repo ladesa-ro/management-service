@@ -10,7 +10,11 @@ import {
   Min,
   MinLength,
 } from "class-validator";
-import { PaginationInputDto, PaginationMetaDto, TransformToArray } from "@/v2/old/shared/dto";
+import {
+  PaginationInputDto,
+  PaginationMetaDto,
+  TransformToArray,
+} from "@/modules/@shared/infrastructure/presentation/rest/dtos";
 import { commonProperties, RegisterModel, simpleProperty } from "@/v2/old/shared/metadata";
 
 // ============================================================================

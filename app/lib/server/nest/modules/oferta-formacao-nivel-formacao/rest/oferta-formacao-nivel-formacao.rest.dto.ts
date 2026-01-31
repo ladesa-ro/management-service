@@ -10,6 +10,11 @@ import {
   ValidateNested,
 } from "class-validator";
 import {
+  PaginationInputDto,
+  PaginationMetaDto,
+  TransformToArray,
+} from "@/modules/@shared/infrastructure/presentation/rest/dtos";
+import {
   NivelFormacaoFindOneInputDto,
   NivelFormacaoFindOneOutputDto,
 } from "@/server/nest/modules/nivel-formacao/rest/nivel-formacao.rest.dto";
@@ -17,7 +22,6 @@ import {
   OfertaFormacaoFindOneInputDto,
   OfertaFormacaoFindOneOutputDto,
 } from "@/server/nest/modules/oferta-formacao/rest/oferta-formacao.rest.dto";
-import { PaginationInputDto, PaginationMetaDto, TransformToArray } from "@/v2/old/shared/dto";
 import {
   commonProperties,
   RegisterModel,

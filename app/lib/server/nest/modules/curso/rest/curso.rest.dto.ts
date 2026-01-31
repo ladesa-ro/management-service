@@ -10,13 +10,17 @@ import {
   MinLength,
   ValidateNested,
 } from "class-validator";
+import {
+  PaginationInputDto,
+  PaginationMetaDto,
+  TransformToArray,
+} from "@/modules/@shared/infrastructure/presentation/rest/dtos";
 import { ImagemFindOneOutputDto } from "@/server/nest/modules/bloco/rest";
 import { CampusFindOneInputDto, CampusFindOneOutputDto } from "@/server/nest/modules/campus/rest";
 import {
   OfertaFormacaoFindOneInputDto,
   OfertaFormacaoFindOneOutputDto,
 } from "@/server/nest/modules/oferta-formacao/rest";
-import { PaginationInputDto, PaginationMetaDto, TransformToArray } from "@/v2/old/shared/dto";
 import {
   commonProperties,
   RegisterModel,
