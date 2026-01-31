@@ -9,8 +9,12 @@ import {
   Put,
   Query,
   UploadedFile,
+  UseInterceptors,
 } from "@nestjs/common";
+import { FileInterceptor } from "@nestjs/platform-express";
 import {
+  ApiBody,
+  ApiConsumes,
   ApiCreatedResponse,
   ApiForbiddenResponse,
   ApiNotFoundResponse,
@@ -110,14 +114,25 @@ export class BlocoRestController {
     summary: "Define a imagem de capa de um bloco",
     operationId: "blocoUpdateImagemCapa",
   })
-  @ApiOkResponse()
+  @ApiConsumes("multipart/form-data")
+  @ApiBody({
+    schema: {
+      type: "object",
+      properties: {
+        file: { type: "string", format: "binary" },
+      },
+      required: ["file"],
+    },
+  })
+  @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
+  @UseInterceptors(FileInterceptor("file"))
   async updateImagemCapa(
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: BlocoFindOneInputDto,
     @UploadedFile() file: Express.Multer.File,
-  ) {
+  ): Promise<boolean> {
     return this.blocoService.updateImagemCapa(accessContext, params, file);
   }
 

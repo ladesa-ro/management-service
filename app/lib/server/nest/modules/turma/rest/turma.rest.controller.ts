@@ -9,8 +9,12 @@ import {
   Put,
   Query,
   UploadedFile,
+  UseInterceptors,
 } from "@nestjs/common";
+import { FileInterceptor } from "@nestjs/platform-express";
 import {
+  ApiBody,
+  ApiConsumes,
   ApiCreatedResponse,
   ApiForbiddenResponse,
   ApiNotFoundResponse,
@@ -102,9 +106,20 @@ export class TurmaRestController {
     summary: "Define a imagem de capa de uma turma",
     operationId: "turmaUpdateImagemCapa",
   })
+  @ApiConsumes("multipart/form-data")
+  @ApiBody({
+    schema: {
+      type: "object",
+      properties: {
+        file: { type: "string", format: "binary" },
+      },
+      required: ["file"],
+    },
+  })
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
+  @UseInterceptors(FileInterceptor("file"))
   async updateImagemCapa(
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: TurmaFindOneInputDto,
