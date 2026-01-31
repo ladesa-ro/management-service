@@ -34,5 +34,4 @@ export class GradeHorarioOfertaFormacao extends BaseEntity implements IGradeHora
     Object.assign(gradeHorarioOfertaFormacao, dados);
     return gradeHorarioOfertaFormacao;
   }
-
 }

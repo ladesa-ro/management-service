@@ -1,6 +1,6 @@
 import { Inject, Injectable, NotFoundException, type StreamableFile } from "@nestjs/common";
 import { has } from "lodash";
-import { BaseCrudService, ResourceNotFoundError } from "@/core/@shared";
+import { BaseCrudService } from "@/core/@shared";
 import { ArquivoService } from "@/core/arquivo/application/use-cases/arquivo.service";
 import { CampusService } from "@/core/campus";
 import {
@@ -52,10 +52,7 @@ export class CursoService
     super();
   }
 
-  async getImagemCapa(
-    accessContext: AccessContext | null,
-    id: string,
-  ): Promise<StreamableFile> {
+  async getImagemCapa(accessContext: AccessContext | null, id: string): Promise<StreamableFile> {
     const curso = await this.findByIdStrict(accessContext, { id });
 
     if (curso.imagemCapa) {
@@ -98,10 +95,7 @@ export class CursoService
     entity: CursoEntity,
     dto: CursoCreateInputDto,
   ): Promise<void> {
-    const campus = await this.campusService.findByIdSimpleStrict(
-      accessContext,
-      dto.campus.id,
-    );
+    const campus = await this.campusService.findByIdSimpleStrict(accessContext, dto.campus.id);
     this.repository.merge(entity, { campus: { id: campus.id } });
 
     const ofertaFormacao = await this.ofertaFormacaoService.findByIdSimpleStrict(
@@ -117,10 +111,7 @@ export class CursoService
     dto: CursoFindOneInputDto & CursoUpdateInputDto,
   ): Promise<void> {
     if (has(dto, "campus") && dto.campus !== undefined) {
-      const campus = await this.campusService.findByIdSimpleStrict(
-        accessContext,
-        dto.campus.id,
-      );
+      const campus = await this.campusService.findByIdSimpleStrict(accessContext, dto.campus.id);
       this.repository.merge(entity, { campus: { id: campus.id } });
     }
 

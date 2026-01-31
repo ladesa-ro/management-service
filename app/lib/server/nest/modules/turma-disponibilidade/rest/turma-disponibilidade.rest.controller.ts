@@ -24,7 +24,10 @@ export class TurmaDisponibilidadeRestController {
   constructor(private turmaDisponibilidadeService: TurmaDisponibilidadeService) {}
 
   @Get("/")
-  @ApiOperation({ summary: "Lista turmas-disponibilidades", operationId: "turmaDisponibilidadeFindAll" })
+  @ApiOperation({
+    summary: "Lista turmas-disponibilidades",
+    operationId: "turmaDisponibilidadeFindAll",
+  })
   @ApiOkResponse({ type: TurmaDisponibilidadeListOutputDto })
   @ApiForbiddenResponse()
   async findAll(
@@ -35,7 +38,10 @@ export class TurmaDisponibilidadeRestController {
   }
 
   @Get("/:id")
-  @ApiOperation({ summary: "Busca uma turma-disponibilidade por ID", operationId: "turmaDisponibilidadeFindById" })
+  @ApiOperation({
+    summary: "Busca uma turma-disponibilidade por ID",
+    operationId: "turmaDisponibilidadeFindById",
+  })
   @ApiOkResponse({ type: TurmaDisponibilidadeFindOneOutputDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -50,7 +56,10 @@ export class TurmaDisponibilidadeRestController {
   }
 
   @Post("/")
-  @ApiOperation({ summary: "Cria uma turma-disponibilidade", operationId: "turmaDisponibilidadeCreate" })
+  @ApiOperation({
+    summary: "Cria uma turma-disponibilidade",
+    operationId: "turmaDisponibilidadeCreate",
+  })
   @ApiCreatedResponse({ type: TurmaDisponibilidadeFindOneOutputDto })
   @ApiForbiddenResponse()
   async create(
@@ -61,7 +70,10 @@ export class TurmaDisponibilidadeRestController {
   }
 
   @Patch("/:id")
-  @ApiOperation({ summary: "Atualiza uma turma-disponibilidade", operationId: "turmaDisponibilidadeUpdate" })
+  @ApiOperation({
+    summary: "Atualiza uma turma-disponibilidade",
+    operationId: "turmaDisponibilidadeUpdate",
+  })
   @ApiOkResponse({ type: TurmaDisponibilidadeFindOneOutputDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -77,7 +89,10 @@ export class TurmaDisponibilidadeRestController {
   }
 
   @Delete("/:id")
-  @ApiOperation({ summary: "Remove uma turma-disponibilidade", operationId: "turmaDisponibilidadeDeleteOneById" })
+  @ApiOperation({
+    summary: "Remove uma turma-disponibilidade",
+    operationId: "turmaDisponibilidadeDeleteOneById",
+  })
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()

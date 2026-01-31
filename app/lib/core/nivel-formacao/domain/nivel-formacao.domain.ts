@@ -43,5 +43,4 @@ export class NivelFormacao extends BaseEntity implements INivelFormacao {
     Object.assign(instance, dados);
     return instance;
   }
-
 }

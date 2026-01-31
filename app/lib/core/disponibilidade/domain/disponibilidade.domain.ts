@@ -35,5 +35,4 @@ export class Disponibilidade extends BaseEntity implements IDisponibilidade {
     Object.assign(disponibilidade, dados);
     return disponibilidade;
   }
-
 }

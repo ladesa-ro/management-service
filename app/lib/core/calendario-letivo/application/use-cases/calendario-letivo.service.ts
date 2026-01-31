@@ -152,10 +152,7 @@ export class CalendarioLetivoService implements ICalendarioLetivoUseCasePort {
       id: v4(),
     });
 
-    const campus = await this.campusService.findByIdSimpleStrict(
-      accessContext,
-      dto.campus.id,
-    );
+    const campus = await this.campusService.findByIdSimpleStrict(accessContext, dto.campus.id);
     this.calendarioLetivoRepository.merge(calendarioLetivo, {
       campus: { id: campus.id },
     });
@@ -196,10 +193,7 @@ export class CalendarioLetivoService implements ICalendarioLetivoUseCasePort {
     this.calendarioLetivoRepository.merge(calendarioLetivo, { id: currentCalendarioLetivo.id });
 
     if (has(dto, "campus") && dto.campus !== undefined) {
-      const campus = await this.campusService.findByIdSimpleStrict(
-        accessContext,
-        dto.campus.id,
-      );
+      const campus = await this.campusService.findByIdSimpleStrict(accessContext, dto.campus.id);
       this.calendarioLetivoRepository.merge(calendarioLetivo, {
         campus: { id: campus.id },
       });

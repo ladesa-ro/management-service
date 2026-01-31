@@ -61,10 +61,7 @@ export interface IReservaUseCasePort {
   /**
    * Cria uma nova reserva
    */
-  create(
-    accessContext: AccessContext,
-    dto: ReservaCreateInput,
-  ): Promise<ReservaFindOneOutput>;
+  create(accessContext: AccessContext, dto: ReservaCreateInput): Promise<ReservaFindOneOutput>;
 
   /**
    * Atualiza uma reserva existente

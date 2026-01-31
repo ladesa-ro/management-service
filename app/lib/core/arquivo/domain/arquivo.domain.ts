@@ -28,5 +28,4 @@ export class Arquivo extends BaseEntity implements IArquivo {
     Object.assign(arquivo, dados);
     return arquivo;
   }
-
 }

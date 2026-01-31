@@ -38,7 +38,10 @@ export class DiarioProfessorController {
   }
 
   @Get("/:id")
-  @ApiOperation({ summary: "Busca um diario professor por ID", operationId: "diarioProfessorFindById" })
+  @ApiOperation({
+    summary: "Busca um diario professor por ID",
+    operationId: "diarioProfessorFindById",
+  })
   @ApiOkResponse({ type: DiarioProfessorFindOneOutputDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -83,7 +86,10 @@ export class DiarioProfessorController {
   }
 
   @Delete("/:id")
-  @ApiOperation({ summary: "Remove um diario professor", operationId: "diarioProfessorDeleteOneById" })
+  @ApiOperation({
+    summary: "Remove um diario professor",
+    operationId: "diarioProfessorDeleteOneById",
+  })
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()

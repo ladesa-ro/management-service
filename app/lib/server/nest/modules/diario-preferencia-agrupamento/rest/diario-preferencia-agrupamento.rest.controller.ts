@@ -25,7 +25,10 @@ export class DiarioPreferenciaAgrupamentoController {
   constructor(private diarioPreferenciaAgrupamentoService: DiarioPreferenciaAgrupamentoService) {}
 
   @Get("/")
-  @ApiOperation({ summary: "Lista diarios preferencia agrupamento", operationId: "diarioPreferenciaAgrupamentoFindAll" })
+  @ApiOperation({
+    summary: "Lista diarios preferencia agrupamento",
+    operationId: "diarioPreferenciaAgrupamentoFindAll",
+  })
   @ApiOkResponse({ type: DiarioPreferenciaAgrupamentoListOutputDto })
   @ApiForbiddenResponse()
   async findAll(
@@ -42,7 +45,10 @@ export class DiarioPreferenciaAgrupamentoController {
   }
 
   @Get("/:id")
-  @ApiOperation({ summary: "Busca um diario preferencia agrupamento por ID", operationId: "diarioPreferenciaAgrupamentoFindById" })
+  @ApiOperation({
+    summary: "Busca um diario preferencia agrupamento por ID",
+    operationId: "diarioPreferenciaAgrupamentoFindById",
+  })
   @ApiOkResponse({ type: DiarioPreferenciaAgrupamentoFindOneOutputDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -60,7 +66,10 @@ export class DiarioPreferenciaAgrupamentoController {
   }
 
   @Post("/")
-  @ApiOperation({ summary: "Cria um diario preferencia agrupamento", operationId: "diarioPreferenciaAgrupamentoCreate" })
+  @ApiOperation({
+    summary: "Cria um diario preferencia agrupamento",
+    operationId: "diarioPreferenciaAgrupamentoCreate",
+  })
   @ApiCreatedResponse({ type: DiarioPreferenciaAgrupamentoFindOneOutputDto })
   @ApiForbiddenResponse()
   async create(
@@ -77,7 +86,10 @@ export class DiarioPreferenciaAgrupamentoController {
   }
 
   @Patch("/:id")
-  @ApiOperation({ summary: "Atualiza um diario preferencia agrupamento", operationId: "diarioPreferenciaAgrupamentoUpdate" })
+  @ApiOperation({
+    summary: "Atualiza um diario preferencia agrupamento",
+    operationId: "diarioPreferenciaAgrupamentoUpdate",
+  })
   @ApiOkResponse({ type: DiarioPreferenciaAgrupamentoFindOneOutputDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -96,7 +108,10 @@ export class DiarioPreferenciaAgrupamentoController {
   }
 
   @Delete("/:id")
-  @ApiOperation({ summary: "Remove um diario preferencia agrupamento", operationId: "diarioPreferenciaAgrupamentoDeleteOneById" })
+  @ApiOperation({
+    summary: "Remove um diario preferencia agrupamento",
+    operationId: "diarioPreferenciaAgrupamentoDeleteOneById",
+  })
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()

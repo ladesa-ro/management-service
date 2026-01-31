@@ -39,5 +39,4 @@ export class Reserva extends BaseEntity implements IReserva {
     Object.assign(reserva, dados);
     return reserva;
   }
-
 }

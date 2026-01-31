@@ -103,7 +103,10 @@ export class CursoRestController {
   }
 
   @Put("/:id/imagem/capa")
-  @ApiOperation({ summary: "Define imagem de capa de um curso", operationId: "cursoUpdateImagemCapa" })
+  @ApiOperation({
+    summary: "Define imagem de capa de um curso",
+    operationId: "cursoUpdateImagemCapa",
+  })
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()

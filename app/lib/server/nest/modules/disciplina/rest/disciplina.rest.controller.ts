@@ -91,7 +91,10 @@ export class DisciplinaRestController {
   }
 
   @Get("/:id/imagem/capa")
-  @ApiOperation({ summary: "Busca imagem de capa de uma disciplina", operationId: "disciplinaGetImagemCapa" })
+  @ApiOperation({
+    summary: "Busca imagem de capa de uma disciplina",
+    operationId: "disciplinaGetImagemCapa",
+  })
   @ApiOkResponse()
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -103,7 +106,10 @@ export class DisciplinaRestController {
   }
 
   @Put("/:id/imagem/capa")
-  @ApiOperation({ summary: "Define imagem de capa de uma disciplina", operationId: "disciplinaUpdateImagemCapa" })
+  @ApiOperation({
+    summary: "Define imagem de capa de uma disciplina",
+    operationId: "disciplinaUpdateImagemCapa",
+  })
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()

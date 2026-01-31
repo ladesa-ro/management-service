@@ -80,10 +80,7 @@ export class EventoService {
     return evento;
   }
 
-  async create(
-    accessContext: AccessContext,
-    dto: EventoCreateInput,
-  ): Promise<EventoFindOneOutput> {
+  async create(accessContext: AccessContext, dto: EventoCreateInput): Promise<EventoFindOneOutput> {
     await accessContext.ensurePermission("evento:create", { dto } as any);
 
     const dtoEvento = pick(dto, ["nome", "cor", "rrule", "ambiente", "dataInicio", "dataFim"]);
@@ -153,10 +150,7 @@ export class EventoService {
     return this.findByIdStrict(accessContext, { id: evento.id });
   }
 
-  async deleteOneById(
-    accessContext: AccessContext,
-    dto: EventoFindOneInput,
-  ): Promise<boolean> {
+  async deleteOneById(accessContext: AccessContext, dto: EventoFindOneInput): Promise<boolean> {
     await accessContext.ensurePermission(
       "evento:delete",
       { dto },

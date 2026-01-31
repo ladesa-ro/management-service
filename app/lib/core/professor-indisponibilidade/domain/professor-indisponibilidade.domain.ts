@@ -30,5 +30,4 @@ export class ProfessorIndisponibilidade extends BaseEntity implements IProfessor
     Object.assign(professorIndisponibilidade, dados);
     return professorIndisponibilidade;
   }
-
 }

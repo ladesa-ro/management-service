@@ -321,10 +321,7 @@ export class UsuarioService implements IUsuarioUseCasePort {
     return this.findByIdStrict(accessContext, { id: usuario.id });
   }
 
-  async deleteOneById(
-    accessContext: AccessContext,
-    dto: UsuarioFindOneInput,
-  ): Promise<boolean> {
+  async deleteOneById(accessContext: AccessContext, dto: UsuarioFindOneInput): Promise<boolean> {
     await accessContext.ensurePermission("usuario:delete", { dto }, dto.id);
 
     const usuario = await this.findByIdStrict(accessContext, dto);

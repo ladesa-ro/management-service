@@ -30,7 +30,10 @@ export class AutenticacaoRestController {
   ) {}
 
   @Get("/quem-sou-eu/ensino")
-  @ApiOperation({ summary: "Retorna informacoes de ensino do usuario logado", operationId: "autenticacaoEnsinoById" })
+  @ApiOperation({
+    summary: "Retorna informacoes de ensino do usuario logado",
+    operationId: "autenticacaoEnsinoById",
+  })
   @ApiOkResponse({ type: UsuarioFindOneOutputDto })
   @ApiForbiddenResponse()
   @ApiBadRequestResponse()
@@ -45,7 +48,10 @@ export class AutenticacaoRestController {
   }
 
   @Get("/quem-sou-eu")
-  @ApiOperation({ summary: "Retorna informacoes do usuario logado", operationId: "autenticacaoWhoAmI" })
+  @ApiOperation({
+    summary: "Retorna informacoes do usuario logado",
+    operationId: "autenticacaoWhoAmI",
+  })
   @ApiOkResponse({ type: AuthWhoAmIOutputDto })
   @ApiForbiddenResponse()
   async whoAmI(@AccessContextHttp() accessContext: AccessContext): Promise<AuthWhoAmIOutputDto> {
@@ -56,7 +62,10 @@ export class AutenticacaoRestController {
 
   @Post("/login")
   @Public()
-  @ApiOperation({ summary: "Realiza login com matricula e senha", operationId: "autenticacaoLogin" })
+  @ApiOperation({
+    summary: "Realiza login com matricula e senha",
+    operationId: "autenticacaoLogin",
+  })
   @ApiCreatedResponse({ type: AuthSessionCredentialsDto })
   @ApiForbiddenResponse()
   async login(
@@ -68,7 +77,10 @@ export class AutenticacaoRestController {
 
   @Post("/login/refresh")
   @Public()
-  @ApiOperation({ summary: "Atualiza token de acesso usando refresh token", operationId: "autenticacaoRefresh" })
+  @ApiOperation({
+    summary: "Atualiza token de acesso usando refresh token",
+    operationId: "autenticacaoRefresh",
+  })
   @ApiCreatedResponse({ type: AuthSessionCredentialsDto })
   @ApiForbiddenResponse()
   async refresh(
@@ -79,7 +91,10 @@ export class AutenticacaoRestController {
   }
 
   @Post("/definir-senha")
-  @ApiOperation({ summary: "Define senha inicial do usuario", operationId: "autenticacaoSetInitialPassword" })
+  @ApiOperation({
+    summary: "Define senha inicial do usuario",
+    operationId: "autenticacaoSetInitialPassword",
+  })
   @ApiCreatedResponse({ type: Boolean })
   @ApiForbiddenResponse()
   async definirSenha(
@@ -90,7 +105,10 @@ export class AutenticacaoRestController {
   }
 
   @Post("/redefinir-senha")
-  @ApiOperation({ summary: "Envia email para redefinir senha", operationId: "autenticacaoRequestPasswordReset" })
+  @ApiOperation({
+    summary: "Envia email para redefinir senha",
+    operationId: "autenticacaoRequestPasswordReset",
+  })
   @ApiCreatedResponse({ type: Boolean })
   @ApiForbiddenResponse()
   async redefinirSenha(

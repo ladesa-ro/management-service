@@ -41,5 +41,4 @@ export class Evento extends BaseEntity implements IEvento {
     Object.assign(evento, dados);
     return evento;
   }
-
 }

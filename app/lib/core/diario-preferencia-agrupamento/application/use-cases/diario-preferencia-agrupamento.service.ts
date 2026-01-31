@@ -54,11 +54,7 @@ export class DiarioPreferenciaAgrupamentoService {
     dto: DiarioPreferenciaAgrupamentoFindOneInput,
     selection?: string[] | boolean,
   ): Promise<DiarioPreferenciaAgrupamentoFindOneOutput> {
-    const diarioPreferenciaAgrupamento = await this.findById(
-      accessContext,
-      dto,
-      selection,
-    );
+    const diarioPreferenciaAgrupamento = await this.findById(accessContext, dto, selection);
 
     if (!diarioPreferenciaAgrupamento) {
       throw new NotFoundException();
@@ -80,11 +76,7 @@ export class DiarioPreferenciaAgrupamentoService {
     id: DiarioPreferenciaAgrupamentoFindOneInput["id"],
     selection?: string[],
   ): Promise<DiarioPreferenciaAgrupamentoFindOneOutput> {
-    const diarioPreferenciaAgrupamento = await this.findByIdSimple(
-      accessContext,
-      id,
-      selection,
-    );
+    const diarioPreferenciaAgrupamento = await this.findByIdSimple(accessContext, id, selection);
 
     if (!diarioPreferenciaAgrupamento) {
       throw new NotFoundException();
@@ -188,8 +180,9 @@ export class DiarioPreferenciaAgrupamentoService {
     accessContext: AccessContext,
     dto: DiarioPreferenciaAgrupamentoFindOneInput & DiarioPreferenciaAgrupamentoUpdateInput,
   ): Promise<DiarioPreferenciaAgrupamentoFindOneOutput> {
-    const currentDiarioPreferenciaAgrupamento =
-      await this.findByIdStrict(accessContext, { id: dto.id });
+    const currentDiarioPreferenciaAgrupamento = await this.findByIdStrict(accessContext, {
+      id: dto.id,
+    });
 
     await accessContext.ensurePermission(
       "diario_preferencia_agrupamento:update",
@@ -258,10 +251,7 @@ export class DiarioPreferenciaAgrupamentoService {
       ),
     );
 
-    const diarioPreferenciaAgrupamento = await this.findByIdStrict(
-      accessContext,
-      dto,
-    );
+    const diarioPreferenciaAgrupamento = await this.findByIdStrict(accessContext, dto);
 
     if (diarioPreferenciaAgrupamento) {
       await this.diarioPreferenciaAgrupamentoRepository.softDeleteById(

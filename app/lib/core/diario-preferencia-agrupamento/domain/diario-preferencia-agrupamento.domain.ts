@@ -6,7 +6,10 @@ import type {
   IDiarioPreferenciaAgrupamentoCreate,
 } from "./diario-preferencia-agrupamento.types";
 
-export class DiarioPreferenciaAgrupamento extends BaseEntity implements IDiarioPreferenciaAgrupamento {
+export class DiarioPreferenciaAgrupamento
+  extends BaseEntity
+  implements IDiarioPreferenciaAgrupamento
+{
   id!: string;
   dataInicio!: ScalarDate;
   dataFim!: ScalarDate | null;
@@ -32,5 +35,4 @@ export class DiarioPreferenciaAgrupamento extends BaseEntity implements IDiarioP
     Object.assign(diarioPreferenciaAgrupamento, dados);
     return diarioPreferenciaAgrupamento;
   }
-
 }

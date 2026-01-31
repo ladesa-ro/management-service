@@ -25,7 +25,10 @@ export class HorarioGeradoAulaRestController {
   constructor(private readonly horarioGeradoAulaService: HorarioGeradoAulaService) {}
 
   @Get("/")
-  @ApiOperation({ summary: "Lista horarios gerados de aula", operationId: "horarioGeradoAulaFindAll" })
+  @ApiOperation({
+    summary: "Lista horarios gerados de aula",
+    operationId: "horarioGeradoAulaFindAll",
+  })
   @ApiOkResponse({ type: HorarioGeradoAulaListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
@@ -41,7 +44,10 @@ export class HorarioGeradoAulaRestController {
   }
 
   @Get("/:id")
-  @ApiOperation({ summary: "Busca um horario gerado de aula por ID", operationId: "horarioGeradoAulaFindById" })
+  @ApiOperation({
+    summary: "Busca um horario gerado de aula por ID",
+    operationId: "horarioGeradoAulaFindById",
+  })
   @ApiOkResponse({ type: HorarioGeradoAulaFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -58,7 +64,10 @@ export class HorarioGeradoAulaRestController {
   }
 
   @Post("/")
-  @ApiOperation({ summary: "Cria um horario gerado de aula", operationId: "horarioGeradoAulaCreate" })
+  @ApiOperation({
+    summary: "Cria um horario gerado de aula",
+    operationId: "horarioGeradoAulaCreate",
+  })
   @ApiCreatedResponse({ type: HorarioGeradoAulaFindOneOutputRestDto })
   @ApiForbiddenResponse()
   async create(
@@ -74,7 +83,10 @@ export class HorarioGeradoAulaRestController {
   }
 
   @Patch("/:id")
-  @ApiOperation({ summary: "Atualiza um horario gerado de aula", operationId: "horarioGeradoAulaUpdate" })
+  @ApiOperation({
+    summary: "Atualiza um horario gerado de aula",
+    operationId: "horarioGeradoAulaUpdate",
+  })
   @ApiOkResponse({ type: HorarioGeradoAulaFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -93,7 +105,10 @@ export class HorarioGeradoAulaRestController {
   }
 
   @Delete("/:id")
-  @ApiOperation({ summary: "Remove um horario gerado de aula", operationId: "horarioGeradoAulaDeleteOneById" })
+  @ApiOperation({
+    summary: "Remove um horario gerado de aula",
+    operationId: "horarioGeradoAulaDeleteOneById",
+  })
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()

@@ -38,7 +38,10 @@ export class CalendarioLetivoRestController {
   }
 
   @Get("/:id")
-  @ApiOperation({ summary: "Busca um calendario letivo por ID", operationId: "calendarioLetivoFindById" })
+  @ApiOperation({
+    summary: "Busca um calendario letivo por ID",
+    operationId: "calendarioLetivoFindById",
+  })
   @ApiOkResponse({ type: CalendarioLetivoFindOneOutputDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -83,7 +86,10 @@ export class CalendarioLetivoRestController {
   }
 
   @Delete("/:id")
-  @ApiOperation({ summary: "Remove um calendario letivo", operationId: "calendarioLetivoDeleteOneById" })
+  @ApiOperation({
+    summary: "Remove um calendario letivo",
+    operationId: "calendarioLetivoDeleteOneById",
+  })
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()

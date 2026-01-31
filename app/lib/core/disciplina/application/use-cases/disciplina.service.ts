@@ -43,10 +43,7 @@ export class DisciplinaService extends BaseCrudService<
     super();
   }
 
-  async getImagemCapa(
-    accessContext: AccessContext | null,
-    id: string,
-  ): Promise<StreamableFile> {
+  async getImagemCapa(accessContext: AccessContext | null, id: string): Promise<StreamableFile> {
     const disciplina = await this.findByIdStrict(accessContext, { id });
 
     if (disciplina.imagemCapa) {

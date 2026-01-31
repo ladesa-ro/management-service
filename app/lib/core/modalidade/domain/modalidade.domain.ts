@@ -49,5 +49,4 @@ export class Modalidade extends BaseEntity implements IModalidade {
     Object.assign(instance, dados);
     return instance;
   }
-
 }

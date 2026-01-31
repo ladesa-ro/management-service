@@ -29,5 +29,4 @@ export class HorarioGerado extends BaseEntity implements IHorarioGerado {
     Object.assign(horarioGerado, dados);
     return horarioGerado;
   }
-
 }

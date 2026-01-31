@@ -63,7 +63,10 @@ export class UsuarioRestController {
   }
 
   @Get("/:id/ensino")
-  @ApiOperation({ summary: "Busca dados de ensino de um usuario", operationId: "usuarioEnsinoById" })
+  @ApiOperation({
+    summary: "Busca dados de ensino de um usuario",
+    operationId: "usuarioEnsinoById",
+  })
   @ApiOkResponse({ type: UsuarioFindOneOutputDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -105,7 +108,10 @@ export class UsuarioRestController {
   }
 
   @Get("/:id/imagem/capa")
-  @ApiOperation({ summary: "Busca imagem de capa de um usuario", operationId: "usuarioGetImagemCapa" })
+  @ApiOperation({
+    summary: "Busca imagem de capa de um usuario",
+    operationId: "usuarioGetImagemCapa",
+  })
   @ApiOkResponse()
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -117,7 +123,10 @@ export class UsuarioRestController {
   }
 
   @Put("/:id/imagem/capa")
-  @ApiOperation({ summary: "Define imagem de capa de um usuario", operationId: "usuarioUpdateImagemCapa" })
+  @ApiOperation({
+    summary: "Define imagem de capa de um usuario",
+    operationId: "usuarioUpdateImagemCapa",
+  })
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -130,7 +139,10 @@ export class UsuarioRestController {
   }
 
   @Get("/:id/imagem/perfil")
-  @ApiOperation({ summary: "Busca imagem de perfil de um usuario", operationId: "usuarioGetImagemPerfil" })
+  @ApiOperation({
+    summary: "Busca imagem de perfil de um usuario",
+    operationId: "usuarioGetImagemPerfil",
+  })
   @ApiOkResponse()
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -142,7 +154,10 @@ export class UsuarioRestController {
   }
 
   @Put("/:id/imagem/perfil")
-  @ApiOperation({ summary: "Define imagem de perfil de um usuario", operationId: "usuarioUpdateImagemPerfil" })
+  @ApiOperation({
+    summary: "Define imagem de perfil de um usuario",
+    operationId: "usuarioUpdateImagemPerfil",
+  })
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()

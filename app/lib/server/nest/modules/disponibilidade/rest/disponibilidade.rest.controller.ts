@@ -38,7 +38,10 @@ export class DisponibilidadeRestController {
   }
 
   @Get("/:id")
-  @ApiOperation({ summary: "Busca uma disponibilidade por ID", operationId: "disponibilidadeFindById" })
+  @ApiOperation({
+    summary: "Busca uma disponibilidade por ID",
+    operationId: "disponibilidadeFindById",
+  })
   @ApiOkResponse({ type: DisponibilidadeFindOneOutputDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -84,7 +87,10 @@ export class DisponibilidadeRestController {
   }
 
   @Delete("/:id")
-  @ApiOperation({ summary: "Remove uma disponibilidade", operationId: "disponibilidadeDeleteOneById" })
+  @ApiOperation({
+    summary: "Remove uma disponibilidade",
+    operationId: "disponibilidadeDeleteOneById",
+  })
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()

@@ -35,7 +35,10 @@ export class IntervaloDeTempoRestController {
   }
 
   @Get("/:id")
-  @ApiOperation({ summary: "Busca um intervalo de tempo por ID", operationId: "intervaloDeTempoFindById" })
+  @ApiOperation({
+    summary: "Busca um intervalo de tempo por ID",
+    operationId: "intervaloDeTempoFindById",
+  })
   @ApiOkResponse({ type: IntervaloDeTempoFindOneOutputDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()

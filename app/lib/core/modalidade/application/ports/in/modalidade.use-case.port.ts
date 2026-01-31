@@ -30,8 +30,5 @@ export interface IModalidadeUseCasePort {
     dto: ModalidadeFindOneInput & ModalidadeUpdateInput,
   ): Promise<ModalidadeFindOneOutput>;
   deleteOneById(accessContext: AccessContext, dto: ModalidadeFindOneInput): Promise<boolean>;
-  findByIdSimpleStrict(
-    accessContext: AccessContext,
-    id: string,
-  ): Promise<ModalidadeFindOneOutput>;
+  findByIdSimpleStrict(accessContext: AccessContext, id: string): Promise<ModalidadeFindOneOutput>;
 }

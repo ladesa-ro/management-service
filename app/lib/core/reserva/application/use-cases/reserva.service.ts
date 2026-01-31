@@ -83,10 +83,7 @@ export class ReservaService
     }
 
     if (has(dto, "usuario") && dto.usuario !== undefined) {
-      const usuario = await this.usuarioService.findByIdSimpleStrict(
-        accessContext,
-        dto.usuario.id,
-      );
+      const usuario = await this.usuarioService.findByIdSimpleStrict(accessContext, dto.usuario.id);
       this.repository.merge(entity, { usuario: { id: usuario.id } });
     }
   }

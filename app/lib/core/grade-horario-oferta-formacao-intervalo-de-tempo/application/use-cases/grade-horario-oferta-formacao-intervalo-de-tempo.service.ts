@@ -62,8 +62,11 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService {
     dto: GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInput,
     selection?: string[],
   ): Promise<GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutput> {
-    const gradeHorarioOfertaFormacaoIntervaloDeTempo =
-      await this.findById(accessContext, dto, selection);
+    const gradeHorarioOfertaFormacaoIntervaloDeTempo = await this.findById(
+      accessContext,
+      dto,
+      selection,
+    );
 
     if (!gradeHorarioOfertaFormacaoIntervaloDeTempo) {
       throw new NotFoundException();
@@ -89,12 +92,11 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService {
     id: string,
     selection?: string[],
   ): Promise<GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutput> {
-    const gradeHorarioOfertaFormacaoIntervaloDeTempo =
-      await this.findByIdSimple(
-        accessContext,
-        id,
-        selection,
-      );
+    const gradeHorarioOfertaFormacaoIntervaloDeTempo = await this.findByIdSimple(
+      accessContext,
+      id,
+      selection,
+    );
 
     if (!gradeHorarioOfertaFormacaoIntervaloDeTempo) {
       throw new NotFoundException();
@@ -211,8 +213,10 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService {
     dto: GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInput &
       GradeHorarioOfertaFormacaoIntervaloDeTempoUpdateInput,
   ): Promise<GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutput> {
-    const currentGradeHorarioOfertaFormacaoIntervaloDeTempo =
-      await this.findByIdStrict(accessContext, dto);
+    const currentGradeHorarioOfertaFormacaoIntervaloDeTempo = await this.findByIdStrict(
+      accessContext,
+      dto,
+    );
 
     await accessContext.ensurePermission(
       "grade_horario_oferta_formacao_intervalo_de_tempo:update",
@@ -295,8 +299,10 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService {
       ),
     );
 
-    const gradeHorarioOfertaFormacaoIntervaloDeTempo =
-      await this.findByIdStrict(accessContext, dto);
+    const gradeHorarioOfertaFormacaoIntervaloDeTempo = await this.findByIdStrict(
+      accessContext,
+      dto,
+    );
 
     if (gradeHorarioOfertaFormacaoIntervaloDeTempo) {
       await this.gradeHorarioOfertaFormacaoIntervaloDeTempoRepository.softDeleteById(

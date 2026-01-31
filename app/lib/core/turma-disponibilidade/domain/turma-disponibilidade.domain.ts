@@ -24,5 +24,4 @@ export class TurmaDisponibilidade extends BaseEntity implements ITurmaDisponibil
     Object.assign(turmaDisponibilidade, dados);
     return turmaDisponibilidade;
   }
-
 }

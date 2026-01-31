@@ -45,10 +45,7 @@ export class TurmaService extends BaseCrudService<
     super();
   }
 
-  async getImagemCapa(
-    accessContext: AccessContext | null,
-    id: string,
-  ): Promise<StreamableFile> {
+  async getImagemCapa(accessContext: AccessContext | null, id: string): Promise<StreamableFile> {
     const turma = await this.findByIdStrict(accessContext, { id });
 
     if (turma.imagemCapa) {
@@ -111,10 +108,9 @@ export class TurmaService extends BaseCrudService<
   ): Promise<void> {
     if (has(dto, "ambientePadraoAula") && dto.ambientePadraoAula !== undefined) {
       if (dto.ambientePadraoAula !== null) {
-        const ambientePadraoAula = await this.ambienteService.findByIdStrict(
-          accessContext,
-          { id: dto.ambientePadraoAula.id },
-        );
+        const ambientePadraoAula = await this.ambienteService.findByIdStrict(accessContext, {
+          id: dto.ambientePadraoAula.id,
+        });
         this.repository.merge(entity, { ambientePadraoAula: { id: ambientePadraoAula.id } });
       } else {
         this.repository.merge(entity, { ambientePadraoAula: null });

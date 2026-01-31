@@ -38,7 +38,10 @@ export class NivelFormacaoRestController {
   }
 
   @Get("/:id")
-  @ApiOperation({ summary: "Busca um nivel de formacao por ID", operationId: "nivelFormacaoFindById" })
+  @ApiOperation({
+    summary: "Busca um nivel de formacao por ID",
+    operationId: "nivelFormacaoFindById",
+  })
   @ApiOkResponse({ type: NivelFormacaoFindOneOutputDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -84,7 +87,10 @@ export class NivelFormacaoRestController {
   }
 
   @Delete("/:id")
-  @ApiOperation({ summary: "Remove um nivel de formacao", operationId: "nivelFormacaoDeleteOneById" })
+  @ApiOperation({
+    summary: "Remove um nivel de formacao",
+    operationId: "nivelFormacaoDeleteOneById",
+  })
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()

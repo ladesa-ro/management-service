@@ -23,5 +23,4 @@ export class DiarioProfessor extends BaseEntity implements IDiarioProfessor {
     Object.assign(diarioProfessor, dados);
     return diarioProfessor;
   }
-
 }

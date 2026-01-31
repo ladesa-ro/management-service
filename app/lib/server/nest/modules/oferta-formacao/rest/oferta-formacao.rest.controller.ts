@@ -38,7 +38,10 @@ export class OfertaFormacaoRestController {
   }
 
   @Get("/:id")
-  @ApiOperation({ summary: "Busca uma oferta de formacao por ID", operationId: "ofertaFormacaoFindById" })
+  @ApiOperation({
+    summary: "Busca uma oferta de formacao por ID",
+    operationId: "ofertaFormacaoFindById",
+  })
   @ApiOkResponse({ type: OfertaFormacaoFindOneOutputDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -47,10 +50,7 @@ export class OfertaFormacaoRestController {
     @Param() params: OfertaFormacaoFindOneInputDto,
   ): Promise<OfertaFormacaoFindOneOutputDto> {
     const input = OfertaFormacaoRestMapper.toFindOneInput(params);
-    const result = await this.ofertaFormacaoService.findByIdStrict(
-      accessContext,
-      input,
-    );
+    const result = await this.ofertaFormacaoService.findByIdStrict(accessContext, input);
     return OfertaFormacaoRestMapper.toFindOneOutputDto(result);
   }
 
@@ -83,7 +83,10 @@ export class OfertaFormacaoRestController {
   }
 
   @Delete("/:id")
-  @ApiOperation({ summary: "Remove uma oferta de formacao", operationId: "ofertaFormacaoDeleteOneById" })
+  @ApiOperation({
+    summary: "Remove uma oferta de formacao",
+    operationId: "ofertaFormacaoDeleteOneById",
+  })
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()

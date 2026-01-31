@@ -86,10 +86,7 @@ export class CampusService implements ICampusUseCasePort {
     return campus;
   }
 
-  async create(
-    accessContext: AccessContext,
-    dto: CampusCreateInput,
-  ): Promise<CampusFindOneOutput> {
+  async create(accessContext: AccessContext, dto: CampusCreateInput): Promise<CampusFindOneOutput> {
     await accessContext.ensurePermission("campus:create", { dto } as any);
 
     const dtoCampus = pick(dto, ["nomeFantasia", "razaoSocial", "apelido", "cnpj"]);
@@ -155,10 +152,7 @@ export class CampusService implements ICampusUseCasePort {
     return this.findByIdStrict(accessContext, { id: campus.id });
   }
 
-  async deleteOneById(
-    accessContext: AccessContext,
-    dto: CampusFindOneInput,
-  ): Promise<boolean> {
+  async deleteOneById(accessContext: AccessContext, dto: CampusFindOneInput): Promise<boolean> {
     await accessContext.ensurePermission("campus:delete", { dto }, dto.id);
 
     const campus = await this.findByIdStrict(accessContext, dto);

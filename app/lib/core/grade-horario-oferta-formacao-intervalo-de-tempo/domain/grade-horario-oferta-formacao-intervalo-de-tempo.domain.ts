@@ -31,5 +31,4 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempo
     Object.assign(entity, dados);
     return entity;
   }
-
 }

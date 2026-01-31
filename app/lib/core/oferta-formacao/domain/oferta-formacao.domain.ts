@@ -51,5 +51,4 @@ export class OfertaFormacao extends BaseEntity implements IOfertaFormacao {
     Object.assign(instance, dados);
     return instance;
   }
-
 }

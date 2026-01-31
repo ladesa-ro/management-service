@@ -79,10 +79,7 @@ export interface IUsuarioUseCasePort {
   /**
    * Cria um novo usuario
    */
-  create(
-    accessContext: AccessContext,
-    dto: UsuarioCreateInput,
-  ): Promise<UsuarioFindOneOutput>;
+  create(accessContext: AccessContext, dto: UsuarioCreateInput): Promise<UsuarioFindOneOutput>;
 
   /**
    * Atualiza um usuario existente

@@ -91,7 +91,10 @@ export class BlocoRestController {
   }
 
   @Get("/:id/imagem/capa")
-  @ApiOperation({ summary: "Obtem a imagem de capa de um bloco", operationId: "blocoGetImagemCapa" })
+  @ApiOperation({
+    summary: "Obtem a imagem de capa de um bloco",
+    operationId: "blocoGetImagemCapa",
+  })
   @ApiOkResponse()
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -103,7 +106,10 @@ export class BlocoRestController {
   }
 
   @Put("/:id/imagem/capa")
-  @ApiOperation({ summary: "Define a imagem de capa de um bloco", operationId: "blocoUpdateImagemCapa" })
+  @ApiOperation({
+    summary: "Define a imagem de capa de um bloco",
+    operationId: "blocoUpdateImagemCapa",
+  })
   @ApiOkResponse()
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()

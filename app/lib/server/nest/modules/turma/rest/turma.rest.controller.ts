@@ -83,7 +83,10 @@ export class TurmaRestController {
   }
 
   @Get("/:id/imagem/capa")
-  @ApiOperation({ summary: "Busca a imagem de capa de uma turma", operationId: "turmaGetImagemCapa" })
+  @ApiOperation({
+    summary: "Busca a imagem de capa de uma turma",
+    operationId: "turmaGetImagemCapa",
+  })
   @ApiOkResponse()
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -95,7 +98,10 @@ export class TurmaRestController {
   }
 
   @Put("/:id/imagem/capa")
-  @ApiOperation({ summary: "Define a imagem de capa de uma turma", operationId: "turmaUpdateImagemCapa" })
+  @ApiOperation({
+    summary: "Define a imagem de capa de uma turma",
+    operationId: "turmaUpdateImagemCapa",
+  })
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()

@@ -46,5 +46,4 @@ export class CalendarioLetivo extends BaseEntity implements ICalendarioLetivo {
     Object.assign(instance, dados);
     return instance;
   }
-
 }

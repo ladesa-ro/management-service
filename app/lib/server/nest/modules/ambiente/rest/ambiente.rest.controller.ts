@@ -91,7 +91,10 @@ export class AmbienteRestController {
   }
 
   @Get("/:id/imagem/capa")
-  @ApiOperation({ summary: "Obtem a imagem de capa de um ambiente", operationId: "ambienteGetImagemCapa" })
+  @ApiOperation({
+    summary: "Obtem a imagem de capa de um ambiente",
+    operationId: "ambienteGetImagemCapa",
+  })
   @ApiOkResponse()
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -103,7 +106,10 @@ export class AmbienteRestController {
   }
 
   @Put("/:id/imagem/capa")
-  @ApiOperation({ summary: "Define a imagem de capa de um ambiente", operationId: "ambienteUpdateImagemCapa" })
+  @ApiOperation({
+    summary: "Define a imagem de capa de um ambiente",
+    operationId: "ambienteUpdateImagemCapa",
+  })
   @ApiOkResponse()
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()

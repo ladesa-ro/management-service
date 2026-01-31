@@ -26,5 +26,4 @@ export class DiaCalendario extends BaseEntity implements IDiaCalendario {
     Object.assign(diaCalendario, dados);
     return diaCalendario;
   }
-
 }

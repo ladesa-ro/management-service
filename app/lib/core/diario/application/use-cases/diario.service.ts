@@ -66,11 +66,10 @@ export class DiarioService
       this.repository.merge(entity, { ambientePadrao: null });
     }
 
-    const calendarioLetivo =
-      await this.calendarioLetivoService.findByIdSimpleStrict(
-        accessContext,
-        dto.calendarioLetivo.id,
-      );
+    const calendarioLetivo = await this.calendarioLetivoService.findByIdSimpleStrict(
+      accessContext,
+      dto.calendarioLetivo.id,
+    );
     this.repository.merge(entity, { calendarioLetivo: { id: calendarioLetivo.id } });
 
     const disciplina = await this.disciplinaService.findByIdSimpleStrict(
@@ -113,11 +112,10 @@ export class DiarioService
     }
 
     if (has(dto, "calendarioLetivo") && dto.calendarioLetivo !== undefined) {
-      const calendarioLetivo =
-        await this.calendarioLetivoService.findByIdSimpleStrict(
-          accessContext,
-          dto.calendarioLetivo.id,
-        );
+      const calendarioLetivo = await this.calendarioLetivoService.findByIdSimpleStrict(
+        accessContext,
+        dto.calendarioLetivo.id,
+      );
       this.repository.merge(entity, { calendarioLetivo: { id: calendarioLetivo.id } });
     }
   }

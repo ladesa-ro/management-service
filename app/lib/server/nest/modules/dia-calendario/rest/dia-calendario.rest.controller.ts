@@ -38,7 +38,10 @@ export class DiaCalendarioRestController {
   }
 
   @Get("/:id")
-  @ApiOperation({ summary: "Busca um dia de calendario por ID", operationId: "diaCalendarioFindById" })
+  @ApiOperation({
+    summary: "Busca um dia de calendario por ID",
+    operationId: "diaCalendarioFindById",
+  })
   @ApiOkResponse({ type: DiaCalendarioFindOneOutputDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -80,7 +83,10 @@ export class DiaCalendarioRestController {
   }
 
   @Delete("/:id")
-  @ApiOperation({ summary: "Remove um dia de calendario", operationId: "diaCalendarioDeleteOneById" })
+  @ApiOperation({
+    summary: "Remove um dia de calendario",
+    operationId: "diaCalendarioDeleteOneById",
+  })
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()

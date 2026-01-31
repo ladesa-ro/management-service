@@ -39,5 +39,4 @@ export class ImagemArquivo extends BaseEntity implements IImagemArquivo {
     Object.assign(imagemArquivo, dados);
     return imagemArquivo;
   }
-
 }

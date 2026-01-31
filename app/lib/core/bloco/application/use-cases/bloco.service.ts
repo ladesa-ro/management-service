@@ -101,10 +101,7 @@ export class BlocoService
     entity: BlocoEntity,
     dto: BlocoCreateInput,
   ): Promise<void> {
-    const campus = await this.campusService.findByIdSimpleStrict(
-      accessContext,
-      dto.campus.id,
-    );
+    const campus = await this.campusService.findByIdSimpleStrict(accessContext, dto.campus.id);
     this.repository.merge(entity, { campus: { id: campus.id } });
   }
 

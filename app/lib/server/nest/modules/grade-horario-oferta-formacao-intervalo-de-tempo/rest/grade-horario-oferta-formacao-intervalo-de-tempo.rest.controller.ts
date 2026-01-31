@@ -26,7 +26,10 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoRestController {
   ) {}
 
   @Get("/")
-  @ApiOperation({ summary: "Lista grades horarios de ofertas de formacoes intervalos de tempo", operationId: "gradeHorarioOfertaFormacaoIntervaloDeTempoFindAll" })
+  @ApiOperation({
+    summary: "Lista grades horarios de ofertas de formacoes intervalos de tempo",
+    operationId: "gradeHorarioOfertaFormacaoIntervaloDeTempoFindAll",
+  })
   @ApiOkResponse({ type: GradeHorarioOfertaFormacaoIntervaloDeTempoListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
@@ -57,7 +60,10 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoRestController {
   }
 
   @Post("/")
-  @ApiOperation({ summary: "Cria uma grade horario de oferta de formacao intervalo de tempo", operationId: "gradeHorarioOfertaFormacaoIntervaloDeTempoCreate" })
+  @ApiOperation({
+    summary: "Cria uma grade horario de oferta de formacao intervalo de tempo",
+    operationId: "gradeHorarioOfertaFormacaoIntervaloDeTempoCreate",
+  })
   @ApiCreatedResponse({ type: GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputRestDto })
   @ApiForbiddenResponse()
   async create(
@@ -71,7 +77,10 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoRestController {
   }
 
   @Patch("/:id")
-  @ApiOperation({ summary: "Atualiza uma grade horario de oferta de formacao intervalo de tempo", operationId: "gradeHorarioOfertaFormacaoIntervaloDeTempoUpdate" })
+  @ApiOperation({
+    summary: "Atualiza uma grade horario de oferta de formacao intervalo de tempo",
+    operationId: "gradeHorarioOfertaFormacaoIntervaloDeTempoUpdate",
+  })
   @ApiOkResponse({ type: GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
@@ -87,7 +96,10 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoRestController {
   }
 
   @Delete("/:id")
-  @ApiOperation({ summary: "Remove uma grade horario de oferta de formacao intervalo de tempo", operationId: "gradeHorarioOfertaFormacaoIntervaloDeTempoDeleteOneById" })
+  @ApiOperation({
+    summary: "Remove uma grade horario de oferta de formacao intervalo de tempo",
+    operationId: "gradeHorarioOfertaFormacaoIntervaloDeTempoDeleteOneById",
+  })
   @ApiOkResponse({ type: Boolean })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()

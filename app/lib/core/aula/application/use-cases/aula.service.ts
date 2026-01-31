@@ -99,10 +99,7 @@ export class AulaService implements IAulaUseCasePort {
       this.aulaRepository.merge(aula, { ambiente: null });
     }
 
-    const diario = await this.diarioService.findByIdSimpleStrict(
-      accessContext,
-      dto.diario.id,
-    );
+    const diario = await this.diarioService.findByIdSimpleStrict(accessContext, dto.diario.id);
     this.aulaRepository.merge(aula, { diario: { id: diario.id } });
 
     const intervalo = await this.intervaloService.intervaloCreateOrUpdate(
@@ -150,10 +147,7 @@ export class AulaService implements IAulaUseCasePort {
     }
 
     if (has(dto, "diario") && dto.diario !== undefined) {
-      const diario = await this.diarioService.findByIdSimpleStrict(
-        accessContext,
-        dto.diario.id,
-      );
+      const diario = await this.diarioService.findByIdSimpleStrict(accessContext, dto.diario.id);
 
       this.aulaRepository.merge(aula, { diario: { id: diario.id } });
     }

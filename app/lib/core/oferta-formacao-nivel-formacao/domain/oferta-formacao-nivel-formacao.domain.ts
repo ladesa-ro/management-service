@@ -6,7 +6,10 @@ import type {
   IOfertaFormacaoNivelFormacaoCreate,
 } from "./oferta-formacao-nivel-formacao.types";
 
-export class OfertaFormacaoNivelFormacao extends BaseEntity implements IOfertaFormacaoNivelFormacao {
+export class OfertaFormacaoNivelFormacao
+  extends BaseEntity
+  implements IOfertaFormacaoNivelFormacao
+{
   id!: string;
   nivelFormacao!: NivelFormacao;
   ofertaFormacao!: OfertaFormacao;
@@ -24,5 +27,4 @@ export class OfertaFormacaoNivelFormacao extends BaseEntity implements IOfertaFo
     Object.assign(ofertaFormacaoNivelFormacao, dados);
     return ofertaFormacaoNivelFormacao;
   }
-
 }
