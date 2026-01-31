@@ -3,11 +3,14 @@ import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { IsArray, IsInt, IsOptional, IsString } from "class-validator";
 import {
+  RegisterModel,
+  simpleProperty,
+} from "@/modules/@shared/infrastructure/persistence/typeorm/metadata";
+import {
   PaginationInputDto,
   PaginationMetaDto,
   TransformToArray,
 } from "@/modules/@shared/infrastructure/presentation/rest/dtos";
-import { RegisterModel, simpleProperty } from "@/v2/old/shared/metadata";
 
 // ============================================================================
 // FindOne Output

@@ -1,20 +1,24 @@
 import { Injectable } from "@nestjs/common";
-import { PaginateConfig, paginate } from "nestjs-paginate";
-import { PaginateQuery } from "nestjs-paginate/lib/decorator";
-import { type SelectQueryBuilder } from "typeorm";
-import { ObjectLiteral } from "typeorm/common/ObjectLiteral";
+import { type PaginateConfig, paginate } from "nestjs-paginate";
+import type { PaginateQuery } from "nestjs-paginate/lib/decorator";
+import type { SelectQueryBuilder } from "typeorm";
+import type { ObjectLiteral } from "typeorm/common/ObjectLiteral";
 import { paginateConfig } from "@/v2/old/infrastructure/fixtures";
 
+/**
+ * @deprecated Use NestJsPaginateAdapter instead
+ */
 export type SearchOptions = {
   limit?: number | null;
   page?: number | null;
   search?: null | string;
-
   sortBy?: string[];
-
   [key: string]: string | string[] | number | number[] | null | undefined;
 };
 
+/**
+ * @deprecated Use NestJsPaginateAdapter instead. This service is kept for legacy compatibility.
+ */
 @Injectable()
 export class SearchService {
   public search<T extends ObjectLiteral>(
@@ -39,7 +43,6 @@ export class SearchService {
           continue;
         }
 
-        // Convert number arrays to string arrays for nestjs-paginate compatibility
         const filterValue = Array.isArray(value) ? value.map((v) => String(v)) : value;
 
         paginateQuery.filter = {

@@ -11,12 +11,16 @@ import {
   ValidateNested,
 } from "class-validator";
 import {
+  commonProperties,
+  RegisterModel,
+  simpleProperty,
+} from "@/modules/@shared/infrastructure/persistence/typeorm/metadata";
+import {
   PaginationInputDto,
   PaginationMetaDto,
   TransformToArray,
 } from "@/modules/@shared/infrastructure/presentation/rest/dtos";
 import { ImagemArquivoFindOneFromImagemOutputDto } from "@/server/nest/modules/imagem-arquivo/rest";
-import { commonProperties, RegisterModel, simpleProperty } from "@/v2/old/shared/metadata";
 
 // ============================================================================
 // FindOne Output

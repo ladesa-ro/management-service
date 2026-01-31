@@ -1,9 +1,11 @@
 import { Global, Module } from "@nestjs/common";
-import { SearchService } from "@/v2/old/shared/search/search.service";
+import { SearchService } from "./search.service";
 
+/**
+ * @deprecated Use NestJsPaginateAdapter instead. This module is kept for legacy compatibility.
+ */
 @Global()
 @Module({
-  imports: [],
   exports: [SearchService],
   providers: [SearchService],
 })

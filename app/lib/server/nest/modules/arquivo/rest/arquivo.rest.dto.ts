@@ -11,11 +11,15 @@ import {
   MinLength,
 } from "class-validator";
 import {
+  commonProperties,
+  RegisterModel,
+  simpleProperty,
+} from "@/modules/@shared/infrastructure/persistence/typeorm/metadata";
+import {
   PaginationInputDto,
   PaginationMetaDto,
   TransformToArray,
 } from "@/modules/@shared/infrastructure/presentation/rest/dtos";
-import { commonProperties, RegisterModel, simpleProperty } from "@/v2/old/shared/metadata";
 
 // ============================================================================
 // FindOne Output

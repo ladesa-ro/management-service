@@ -11,6 +11,12 @@ import {
   ValidateNested,
 } from "class-validator";
 import {
+  commonProperties,
+  RegisterModel,
+  referenceProperty,
+  simpleProperty,
+} from "@/modules/@shared/infrastructure/persistence/typeorm/metadata";
+import {
   PaginationInputDto,
   PaginationMetaDto,
   TransformToArray,
@@ -21,12 +27,6 @@ import {
   OfertaFormacaoFindOneInputDto,
   OfertaFormacaoFindOneOutputDto,
 } from "@/server/nest/modules/oferta-formacao/rest";
-import {
-  commonProperties,
-  RegisterModel,
-  referenceProperty,
-  simpleProperty,
-} from "@/v2/old/shared/metadata";
 
 // ============================================================================
 // FindOne Output

@@ -13,12 +13,16 @@ import {
   ValidateNested,
 } from "class-validator";
 import {
+  commonProperties,
+  RegisterModel,
+  simpleProperty,
+} from "@/modules/@shared/infrastructure/persistence/typeorm/metadata";
+import {
   PaginationInputDto,
   PaginationMetaDto,
   TransformToArray,
 } from "@/modules/@shared/infrastructure/presentation/rest/dtos";
 import { ArquivoFindOneOutputDto } from "@/server/nest/modules/arquivo/rest/arquivo.rest.dto";
-import { commonProperties, RegisterModel, simpleProperty } from "@/v2/old/shared/metadata";
 
 // ============================================================================
 // Nested DTOs

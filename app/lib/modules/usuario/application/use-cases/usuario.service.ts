@@ -5,7 +5,7 @@ import {
   ServiceUnavailableException,
 } from "@nestjs/common";
 import { has, pick } from "lodash";
-import { ResourceNotFoundError } from "@/modules/@shared";
+import { ResourceNotFoundError, ValidationFailedException } from "@/modules/@shared";
 import { ArquivoService } from "@/modules/arquivo/application/use-cases/arquivo.service";
 import { ImagemService } from "@/modules/imagem/application/use-cases/imagem.service";
 import type {
@@ -24,7 +24,6 @@ import {
 } from "@/modules/usuario/application/ports";
 import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import { KeycloakService } from "@/v2/old/infrastructure/integrations/identity-provider";
-import { ValidationFailedException } from "@/v2/old/shared";
 
 @Injectable()
 export class UsuarioService implements IUsuarioUseCasePort {

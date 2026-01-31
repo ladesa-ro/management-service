@@ -1,6 +1,7 @@
 import { castArray } from "lodash";
 import type { SelectQueryBuilder } from "typeorm";
 import { DatabaseContextService } from "@/modules/@database-context";
+import { createForbiddenExceptionForAction } from "@/modules/@shared/application/errors";
 import {
   AuthzPolicyPublic,
   IAuthzStatement,
@@ -9,7 +10,6 @@ import {
   IBaseAuthzStatementContext,
 } from "@/v2/old/authorization";
 import type { IRequestActor } from "@/v2/old/infrastructure/authentication";
-import { createForbiddenExceptionForAction } from "@/v2/old/shared/standards";
 import type { IAccessContext } from "./access-context.types";
 
 export class AccessContext implements IAccessContext {
@@ -118,7 +118,7 @@ export class AccessContext implements IAccessContext {
     const can = await this.verifyPermission<Statement, Action, Payload>(action, payload, id, qb);
 
     if (!can) {
-      throw createForbiddenExceptionForAction<Statement, Action>(action);
+      throw createForbiddenExceptionForAction(action);
     }
   }
 

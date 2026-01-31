@@ -10,6 +10,12 @@ import {
   ValidateNested,
 } from "class-validator";
 import {
+  commonProperties,
+  RegisterModel,
+  referenceProperty,
+  simpleProperty,
+} from "@/modules/@shared/infrastructure/persistence/typeorm/metadata";
+import {
   PaginationInputDto,
   PaginationMetaDto,
   TransformToArray,
@@ -19,12 +25,6 @@ import {
   DisponibilidadeFindOneOutputDto,
 } from "@/server/nest/modules/disponibilidade/rest/disponibilidade.rest.dto";
 import { TurmaFindOneInputDto, TurmaFindOneOutputDto } from "@/server/nest/modules/turma/rest";
-import {
-  commonProperties,
-  RegisterModel,
-  referenceProperty,
-  simpleProperty,
-} from "@/v2/old/shared/metadata";
 
 // ============================================================================
 // FindOne Output

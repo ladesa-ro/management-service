@@ -1,15 +1,15 @@
 import { UnprocessableEntityException } from "@nestjs/common";
 
-export type IValidationFailedExceptionResponse = {
+export interface IValidationFailedExceptionResponse {
   statusCode: number;
   code: string;
   message: string;
-  errors: any[];
+  errors: unknown[];
   timestamp: string;
-};
+}
 
 export class ValidationFailedException extends UnprocessableEntityException {
-  constructor(errors: any) {
+  constructor(errors: unknown[]) {
     const response: IValidationFailedExceptionResponse = {
       statusCode: 422,
       errors: errors,
