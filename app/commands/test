@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Run tests
+exec ./node_modules/.bin/vitest run "$@"

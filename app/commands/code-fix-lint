@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Fix code linting with biome
+exec ./node_modules/.bin/biome lint --write --unsafe . "$@"

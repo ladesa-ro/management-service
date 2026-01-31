@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Create a new TypeORM entity
+exec ./commands/typeorm-migration entity:create "$@"

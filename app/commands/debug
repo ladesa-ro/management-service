@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Start development server with debugger
+exec bun run --watch --inspect-wait lib/commands/start.ts

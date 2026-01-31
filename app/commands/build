@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Run static type checking
+exec ./node_modules/.bin/tsc --noEmit "$@"

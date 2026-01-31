@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Run tests with coverage
+exec ./node_modules/.bin/vitest run --coverage "$@"

@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Check code with biome (lint + format)
+exec ./node_modules/.bin/biome check . "$@"

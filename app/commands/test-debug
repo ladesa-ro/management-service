@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Run tests with debugger
+exec ./node_modules/.bin/vitest --inspect-brk --inspect --logHeapUsage --threads=false "$@"
