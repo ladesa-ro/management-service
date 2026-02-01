@@ -1,6 +1,6 @@
 import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
-import { AccessContext, AccessContextGraphQl } from "@/modules/@core/access-context";
+import { AccessContext, AccessContextGraphQL } from "@/modules/@core/access-context";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
 import { DisciplinaService } from "@/modules/disciplina/application/use-cases/disciplina.service";
 import {
@@ -18,7 +18,7 @@ export class DisciplinaGraphqlResolver {
 
   @Query(() => DisciplinaListOutputGqlDto, { name: "disciplinaFindAll" })
   async findAll(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args() dto: DisciplinaListInputGqlDto,
     @Info() info: GraphQLResolveInfo,
   ): Promise<DisciplinaListOutputGqlDto> {
@@ -34,7 +34,7 @@ export class DisciplinaGraphqlResolver {
 
   @Query(() => DisciplinaFindOneOutputDto, { name: "disciplinaFindById" })
   async findById(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Info() info: GraphQLResolveInfo,
   ): Promise<DisciplinaFindOneOutputDto> {
@@ -45,7 +45,7 @@ export class DisciplinaGraphqlResolver {
 
   @Mutation(() => DisciplinaFindOneOutputDto, { name: "disciplinaCreate" })
   async create(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("input") dto: DisciplinaCreateInputDto,
     @Info() info: GraphQLResolveInfo,
   ): Promise<DisciplinaFindOneOutputDto> {
@@ -56,7 +56,7 @@ export class DisciplinaGraphqlResolver {
 
   @Mutation(() => DisciplinaFindOneOutputDto, { name: "disciplinaUpdate" })
   async update(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Args("input") dto: DisciplinaUpdateInputDto,
     @Info() info: GraphQLResolveInfo,
@@ -68,7 +68,7 @@ export class DisciplinaGraphqlResolver {
 
   @Mutation(() => Boolean, { name: "disciplinaDeleteOneById" })
   async deleteOneById(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
   ): Promise<boolean> {
     return this.disciplinaService.deleteOneById(accessContext, { id });

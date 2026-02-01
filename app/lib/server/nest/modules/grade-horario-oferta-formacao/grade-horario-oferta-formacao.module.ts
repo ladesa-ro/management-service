@@ -4,6 +4,7 @@ import {
   GRADE_HORARIO_OFERTA_FORMACAO_REPOSITORY_PORT,
   GradeHorarioOfertaFormacaoService,
 } from "@/modules/grade-horario-oferta-formacao";
+import { GradeHorarioOfertaFormacaoAuthzRegistrySetup } from "@/modules/grade-horario-oferta-formacao/infrastructure";
 import { GradeHorarioOfertaFormacaoTypeOrmRepositoryAdapter } from "@/modules/grade-horario-oferta-formacao/infrastructure/persistence/typeorm";
 import { GradeHorarioOfertaFormacaoGraphqlResolver } from "./graphql/grade-horario-oferta-formacao.graphql.resolver";
 import { GradeHorarioOfertaFormacaoRestController } from "./rest/grade-horario-oferta-formacao.rest.controller";
@@ -15,6 +16,7 @@ import { GradeHorarioOfertaFormacaoRestController } from "./rest/grade-horario-o
     NestJsPaginateAdapter,
     GradeHorarioOfertaFormacaoService,
     GradeHorarioOfertaFormacaoGraphqlResolver,
+    GradeHorarioOfertaFormacaoAuthzRegistrySetup,
     {
       provide: GRADE_HORARIO_OFERTA_FORMACAO_REPOSITORY_PORT,
       useClass: GradeHorarioOfertaFormacaoTypeOrmRepositoryAdapter,

@@ -1,6 +1,6 @@
 import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
-import { AccessContext, AccessContextGraphQl } from "@/modules/@core/access-context";
+import { AccessContext, AccessContextGraphQL } from "@/modules/@core/access-context";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
 import { BlocoService } from "@/modules/bloco/application/use-cases/bloco.service";
 import {
@@ -18,7 +18,7 @@ export class BlocoGraphqlResolver {
 
   @Query(() => BlocoListOutputGqlDto, { name: "blocoFindAll" })
   async findAll(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args() dto: BlocoListInputGqlDto,
     @Info() info: GraphQLResolveInfo,
   ): Promise<BlocoListOutputGqlDto> {
@@ -34,7 +34,7 @@ export class BlocoGraphqlResolver {
 
   @Query(() => BlocoFindOneOutputDto, { name: "blocoFindById" })
   async findById(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Info() info: GraphQLResolveInfo,
   ): Promise<BlocoFindOneOutputDto> {
@@ -45,7 +45,7 @@ export class BlocoGraphqlResolver {
 
   @Mutation(() => BlocoFindOneOutputDto, { name: "blocoCreate" })
   async create(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("input") dto: BlocoCreateInputDto,
     @Info() info: GraphQLResolveInfo,
   ): Promise<BlocoFindOneOutputDto> {
@@ -56,7 +56,7 @@ export class BlocoGraphqlResolver {
 
   @Mutation(() => BlocoFindOneOutputDto, { name: "blocoUpdate" })
   async update(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Args("input") dto: BlocoUpdateInputDto,
     @Info() info: GraphQLResolveInfo,
@@ -68,7 +68,7 @@ export class BlocoGraphqlResolver {
 
   @Mutation(() => Boolean, { name: "blocoDeleteOneById" })
   async deleteOneById(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
   ): Promise<boolean> {
     return this.blocoService.deleteOneById(accessContext, { id });

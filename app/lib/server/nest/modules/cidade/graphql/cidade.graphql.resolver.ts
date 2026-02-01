@@ -1,6 +1,6 @@
 import { Args, Info, Int, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
-import { AccessContext, AccessContextGraphQl } from "@/modules/@core/access-context";
+import { AccessContext, AccessContextGraphQL } from "@/modules/@core/access-context";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
 import { CidadeService } from "@/modules/cidade/application/use-cases/cidade.service";
 import { CidadeFindOneOutputDto } from "../rest/cidade.rest.dto";
@@ -13,7 +13,7 @@ export class CidadeGraphqlResolver {
 
   @Query(() => CidadeListOutputGqlDto, { name: "cidadeFindAll" })
   async findAll(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args() dto: CidadeListInputGqlDto,
     @Info() info: GraphQLResolveInfo,
   ): Promise<CidadeListOutputGqlDto> {
@@ -29,7 +29,7 @@ export class CidadeGraphqlResolver {
 
   @Query(() => CidadeFindOneOutputDto, { name: "cidadeFindById" })
   async findById(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => Int }) id: number,
     @Info() info: GraphQLResolveInfo,
   ): Promise<CidadeFindOneOutputDto> {

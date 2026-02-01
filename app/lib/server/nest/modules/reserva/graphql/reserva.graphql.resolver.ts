@@ -1,6 +1,6 @@
 import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
-import { AccessContext, AccessContextGraphQl } from "@/modules/@core/access-context";
+import { AccessContext, AccessContextGraphQL } from "@/modules/@core/access-context";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
 import { ReservaService } from "@/modules/reserva";
 import {
@@ -17,7 +17,7 @@ export class ReservaGraphqlResolver {
 
   @Query(() => ReservaListOutputGqlDto, { name: "reservaFindAll" })
   async findAll(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args() dto: ReservaListInputGqlDto,
     @Info() info: GraphQLResolveInfo,
   ): Promise<ReservaListOutputGqlDto> {
@@ -33,7 +33,7 @@ export class ReservaGraphqlResolver {
 
   @Query(() => ReservaFindOneOutputDto, { name: "reservaFindById" })
   async findById(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Info() info: GraphQLResolveInfo,
   ): Promise<ReservaFindOneOutputDto> {
@@ -44,7 +44,7 @@ export class ReservaGraphqlResolver {
 
   @Mutation(() => ReservaFindOneOutputDto, { name: "reservaCreate" })
   async create(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("input") dto: ReservaCreateInputDto,
     @Info() info: GraphQLResolveInfo,
   ): Promise<ReservaFindOneOutputDto> {
@@ -55,7 +55,7 @@ export class ReservaGraphqlResolver {
 
   @Mutation(() => ReservaFindOneOutputDto, { name: "reservaUpdate" })
   async update(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Args("input") dto: ReservaUpdateInputDto,
     @Info() info: GraphQLResolveInfo,
@@ -67,7 +67,7 @@ export class ReservaGraphqlResolver {
 
   @Mutation(() => Boolean, { name: "reservaDeleteOneById" })
   async deleteOneById(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
   ): Promise<boolean> {
     return this.reservaService.deleteOneById(accessContext, { id });

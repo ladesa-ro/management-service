@@ -7,7 +7,7 @@ import { RESOURCE_AUTHZ_REGISTRY, ResourceAuthzRegistry } from "../resource-auth
 
 /**
  * Pipe que transforma IRequestActor em AccessContext.
- * Usado pelos decorators AccessContextHttp e AccessContextGraphQl.
+ * Usado pelos decorators AccessContextHttp e AccessContextGraphQL.
  */
 @Injectable()
 export class ResolveAccessContextPipe implements PipeTransform {

@@ -4,6 +4,7 @@ import {
   TURMA_DISPONIBILIDADE_REPOSITORY_PORT,
   TurmaDisponibilidadeService,
 } from "@/modules/turma-disponibilidade";
+import { TurmaDisponibilidadeAuthzRegistrySetup } from "@/modules/turma-disponibilidade/infrastructure";
 import { TurmaDisponibilidadeTypeOrmRepositoryAdapter } from "@/modules/turma-disponibilidade/infrastructure/persistence/typeorm";
 import { DisponibilidadeModule } from "@/server/nest/modules/disponibilidade";
 import { TurmaModule } from "@/server/nest/modules/turma";
@@ -16,6 +17,7 @@ import { TurmaDisponibilidadeRestController } from "./rest";
   providers: [
     NestJsPaginateAdapter,
     TurmaDisponibilidadeService,
+    TurmaDisponibilidadeAuthzRegistrySetup,
     TurmaDisponibilidadeGraphqlResolver,
     {
       provide: TURMA_DISPONIBILIDADE_REPOSITORY_PORT,

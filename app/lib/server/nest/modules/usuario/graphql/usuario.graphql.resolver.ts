@@ -1,6 +1,6 @@
 import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
-import { AccessContext, AccessContextGraphQl } from "@/modules/@core/access-context";
+import { AccessContext, AccessContextGraphQL } from "@/modules/@core/access-context";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
 import { UsuarioService } from "@/modules/usuario/application/use-cases/usuario.service";
 import {
@@ -17,7 +17,7 @@ export class UsuarioGraphqlResolver {
 
   @Query(() => UsuarioListOutputGqlDto, { name: "usuarioFindAll" })
   async findAll(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args() dto: UsuarioListInputGqlDto,
     @Info() info: GraphQLResolveInfo,
   ): Promise<UsuarioListOutputGqlDto> {
@@ -33,7 +33,7 @@ export class UsuarioGraphqlResolver {
 
   @Query(() => UsuarioFindOneOutputDto, { name: "usuarioFindById" })
   async findById(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Info() info: GraphQLResolveInfo,
   ): Promise<UsuarioFindOneOutputDto> {
@@ -44,7 +44,7 @@ export class UsuarioGraphqlResolver {
 
   @Mutation(() => UsuarioFindOneOutputDto, { name: "usuarioCreate" })
   async create(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("data") dto: UsuarioCreateInputDto,
     @Info() info: GraphQLResolveInfo,
   ): Promise<UsuarioFindOneOutputDto> {
@@ -55,7 +55,7 @@ export class UsuarioGraphqlResolver {
 
   @Mutation(() => UsuarioFindOneOutputDto, { name: "usuarioUpdate" })
   async update(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Args("data") dto: UsuarioUpdateInputDto,
     @Info() info: GraphQLResolveInfo,
@@ -67,7 +67,7 @@ export class UsuarioGraphqlResolver {
 
   @Mutation(() => Boolean, { name: "usuarioDeleteOneById" })
   async deleteOneById(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
   ): Promise<boolean> {
     return this.usuarioService.deleteOneById(accessContext, { id });

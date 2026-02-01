@@ -1,6 +1,7 @@
 import { Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import { RESERVA_REPOSITORY_PORT, ReservaService } from "@/modules/reserva";
+import { ReservaAuthzRegistrySetup } from "@/modules/reserva/infrastructure";
 import { ReservaTypeOrmRepositoryAdapter } from "@/modules/reserva/infrastructure/persistence/typeorm";
 import { AmbienteModule } from "@/server/nest/modules/ambiente";
 import { UsuarioModule } from "@/server/nest/modules/usuario";
@@ -24,6 +25,7 @@ import { ReservaRestController } from "./rest";
     },
     ReservaService,
     ReservaGraphqlResolver,
+    ReservaAuthzRegistrySetup,
   ],
   exports: [ReservaService],
 })

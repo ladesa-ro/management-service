@@ -2,7 +2,10 @@ import { Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import { TURMA_REPOSITORY_PORT } from "@/modules/turma/application/ports";
 import { TurmaService } from "@/modules/turma/application/use-cases/turma.service";
-import { TurmaTypeOrmRepositoryAdapter } from "@/modules/turma/infrastructure/persistence/typeorm";
+import {
+  TurmaAuthzRegistrySetup,
+  TurmaTypeOrmRepositoryAdapter,
+} from "@/modules/turma/infrastructure";
 import { AmbienteModule } from "@/server/nest/modules/ambiente";
 import { ArquivoModule } from "@/server/nest/modules/arquivo";
 import { CursoModule } from "@/server/nest/modules/curso";
@@ -17,6 +20,7 @@ import { TurmaRestController } from "./rest/turma.rest.controller";
     NestJsPaginateAdapter,
     TurmaService,
     TurmaGraphqlResolver,
+    TurmaAuthzRegistrySetup,
     {
       provide: TURMA_REPOSITORY_PORT,
       useClass: TurmaTypeOrmRepositoryAdapter,

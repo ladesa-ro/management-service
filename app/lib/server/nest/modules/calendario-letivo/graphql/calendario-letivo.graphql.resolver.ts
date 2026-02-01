@@ -1,6 +1,6 @@
 import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
-import { AccessContext, AccessContextGraphQl } from "@/modules/@core/access-context";
+import { AccessContext, AccessContextGraphQL } from "@/modules/@core/access-context";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
 import { CalendarioLetivoService } from "@/modules/calendario-letivo";
 import {
@@ -21,7 +21,7 @@ export class CalendarioLetivoGraphqlResolver {
 
   @Query(() => CalendarioLetivoListOutputGqlDto, { name: "calendarioLetivoFindAll" })
   async findAll(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args() dto: CalendarioLetivoListInputGqlDto,
     @Info() info: GraphQLResolveInfo,
   ): Promise<CalendarioLetivoListOutputGqlDto> {
@@ -37,7 +37,7 @@ export class CalendarioLetivoGraphqlResolver {
 
   @Query(() => CalendarioLetivoFindOneOutputDto, { name: "calendarioLetivoFindById" })
   async findById(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Info() info: GraphQLResolveInfo,
   ): Promise<CalendarioLetivoFindOneOutputDto> {
@@ -51,7 +51,7 @@ export class CalendarioLetivoGraphqlResolver {
 
   @Mutation(() => CalendarioLetivoFindOneOutputDto, { name: "calendarioLetivoCreate" })
   async create(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("input") dto: CalendarioLetivoCreateInputDto,
     @Info() info: GraphQLResolveInfo,
   ): Promise<CalendarioLetivoFindOneOutputDto> {
@@ -62,7 +62,7 @@ export class CalendarioLetivoGraphqlResolver {
 
   @Mutation(() => CalendarioLetivoFindOneOutputDto, { name: "calendarioLetivoUpdate" })
   async update(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Args("input") dto: CalendarioLetivoUpdateInputDto,
     @Info() info: GraphQLResolveInfo,
@@ -74,7 +74,7 @@ export class CalendarioLetivoGraphqlResolver {
 
   @Mutation(() => Boolean, { name: "calendarioLetivoDeleteOneById" })
   async deleteOneById(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
   ): Promise<boolean> {
     return this.calendarioLetivoService.calendarioLetivoDeleteOneById(accessContext, { id });

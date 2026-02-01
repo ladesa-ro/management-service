@@ -1,6 +1,6 @@
 import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
-import { AccessContext, AccessContextGraphQl } from "@/modules/@core/access-context";
+import { AccessContext, AccessContextGraphQL } from "@/modules/@core/access-context";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
 import { OfertaFormacaoService } from "@/modules/oferta-formacao";
 import {
@@ -20,7 +20,7 @@ export class OfertaFormacaoGraphqlResolver {
 
   @Query(() => OfertaFormacaoListOutputGqlDto, { name: "ofertaFormacaoFindAll" })
   async findAll(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args() dto: OfertaFormacaoListInputGqlDto,
     @Info() info: GraphQLResolveInfo,
   ): Promise<OfertaFormacaoListOutputGqlDto> {
@@ -36,7 +36,7 @@ export class OfertaFormacaoGraphqlResolver {
 
   @Query(() => OfertaFormacaoFindOneOutputDto, { name: "ofertaFormacaoFindById" })
   async findById(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Info() info: GraphQLResolveInfo,
   ): Promise<OfertaFormacaoFindOneOutputDto> {
@@ -50,7 +50,7 @@ export class OfertaFormacaoGraphqlResolver {
 
   @Mutation(() => OfertaFormacaoFindOneOutputDto, { name: "ofertaFormacaoCreate" })
   async create(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("input") dto: OfertaFormacaoCreateInputDto,
     @Info() info: GraphQLResolveInfo,
   ): Promise<OfertaFormacaoFindOneOutputDto> {
@@ -61,7 +61,7 @@ export class OfertaFormacaoGraphqlResolver {
 
   @Mutation(() => OfertaFormacaoFindOneOutputDto, { name: "ofertaFormacaoUpdate" })
   async update(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Args("input") dto: OfertaFormacaoUpdateInputDto,
     @Info() info: GraphQLResolveInfo,
@@ -73,7 +73,7 @@ export class OfertaFormacaoGraphqlResolver {
 
   @Mutation(() => Boolean, { name: "ofertaFormacaoDeleteOneById" })
   async deleteOneById(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
   ): Promise<boolean> {
     return this.ofertaFormacaoService.deleteOneById(accessContext, { id });

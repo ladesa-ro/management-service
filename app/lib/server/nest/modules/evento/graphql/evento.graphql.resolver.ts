@@ -1,6 +1,6 @@
 import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
-import { AccessContext, AccessContextGraphQl } from "@/modules/@core/access-context";
+import { AccessContext, AccessContextGraphQL } from "@/modules/@core/access-context";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
 import { EventoService } from "@/modules/evento/application/use-cases/evento.service";
 import {
@@ -17,7 +17,7 @@ export class EventoGraphqlResolver {
 
   @Query(() => EventoListOutputGqlDto, { name: "eventoFindAll" })
   async findAll(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args() dto: EventoListInputGqlDto,
     @Info() info: GraphQLResolveInfo,
   ): Promise<EventoListOutputGqlDto> {
@@ -33,7 +33,7 @@ export class EventoGraphqlResolver {
 
   @Query(() => EventoFindOneOutputDto, { name: "eventoFindById" })
   async findById(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Info() info: GraphQLResolveInfo,
   ): Promise<EventoFindOneOutputDto> {
@@ -44,7 +44,7 @@ export class EventoGraphqlResolver {
 
   @Mutation(() => EventoFindOneOutputDto, { name: "eventoCreate" })
   async create(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("data") dto: EventoCreateInputDto,
     @Info() info: GraphQLResolveInfo,
   ): Promise<EventoFindOneOutputDto> {
@@ -55,7 +55,7 @@ export class EventoGraphqlResolver {
 
   @Mutation(() => EventoFindOneOutputDto, { name: "eventoUpdate" })
   async update(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Args("data") dto: EventoUpdateInputDto,
     @Info() info: GraphQLResolveInfo,
@@ -71,7 +71,7 @@ export class EventoGraphqlResolver {
 
   @Mutation(() => Boolean, { name: "eventoDeleteOneById" })
   async deleteOneById(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
   ): Promise<boolean> {
     const input = EventoGraphqlMapper.toFindOneInput(id);

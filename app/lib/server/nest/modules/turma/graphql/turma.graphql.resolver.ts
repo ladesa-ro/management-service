@@ -1,6 +1,6 @@
 import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
-import { AccessContext, AccessContextGraphQl } from "@/modules/@core/access-context";
+import { AccessContext, AccessContextGraphQL } from "@/modules/@core/access-context";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
 import { TurmaService } from "@/modules/turma/application/use-cases/turma.service";
 import {
@@ -17,7 +17,7 @@ export class TurmaGraphqlResolver {
 
   @Query(() => TurmaListOutputGqlDto, { name: "turmaFindAll" })
   async findAll(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args() dto: TurmaListInputGqlDto,
     @Info() info: GraphQLResolveInfo,
   ): Promise<TurmaListOutputGqlDto> {
@@ -33,7 +33,7 @@ export class TurmaGraphqlResolver {
 
   @Query(() => TurmaFindOneOutputDto, { name: "turmaFindById" })
   async findById(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Info() info: GraphQLResolveInfo,
   ): Promise<TurmaFindOneOutputDto> {
@@ -44,7 +44,7 @@ export class TurmaGraphqlResolver {
 
   @Mutation(() => TurmaFindOneOutputDto, { name: "turmaCreate" })
   async create(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("data") dto: TurmaCreateInputDto,
     @Info() info: GraphQLResolveInfo,
   ): Promise<TurmaFindOneOutputDto> {
@@ -55,7 +55,7 @@ export class TurmaGraphqlResolver {
 
   @Mutation(() => TurmaFindOneOutputDto, { name: "turmaUpdate" })
   async update(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Args("data") dto: TurmaUpdateInputDto,
     @Info() info: GraphQLResolveInfo,
@@ -67,7 +67,7 @@ export class TurmaGraphqlResolver {
 
   @Mutation(() => Boolean, { name: "turmaDeleteOneById" })
   async deleteOneById(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
   ): Promise<boolean> {
     return this.turmaService.deleteOneById(accessContext, { id });

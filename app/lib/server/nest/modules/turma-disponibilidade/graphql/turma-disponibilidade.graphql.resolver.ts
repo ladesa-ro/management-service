@@ -1,6 +1,6 @@
 import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
-import { AccessContext, AccessContextGraphQl } from "@/modules/@core/access-context";
+import { AccessContext, AccessContextGraphQL } from "@/modules/@core/access-context";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
 import { TurmaDisponibilidadeService } from "@/modules/turma-disponibilidade";
 import {
@@ -20,7 +20,7 @@ export class TurmaDisponibilidadeGraphqlResolver {
 
   @Query(() => TurmaDisponibilidadeListOutputGqlDto, { name: "turmaDisponibilidadeFindAll" })
   async findAll(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args() dto: TurmaDisponibilidadeListInputGqlDto,
     @Info() info: GraphQLResolveInfo,
   ): Promise<TurmaDisponibilidadeListOutputGqlDto> {
@@ -39,7 +39,7 @@ export class TurmaDisponibilidadeGraphqlResolver {
 
   @Query(() => TurmaDisponibilidadeFindOneOutputDto, { name: "turmaDisponibilidadeFindById" })
   async findById(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Info() info: GraphQLResolveInfo,
   ): Promise<TurmaDisponibilidadeFindOneOutputDto> {
@@ -53,7 +53,7 @@ export class TurmaDisponibilidadeGraphqlResolver {
 
   @Mutation(() => TurmaDisponibilidadeFindOneOutputDto, { name: "turmaDisponibilidadeCreate" })
   async create(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("data") dto: TurmaDisponibilidadeCreateInputDto,
     @Info() info: GraphQLResolveInfo,
   ): Promise<TurmaDisponibilidadeFindOneOutputDto> {
@@ -67,7 +67,7 @@ export class TurmaDisponibilidadeGraphqlResolver {
 
   @Mutation(() => TurmaDisponibilidadeFindOneOutputDto, { name: "turmaDisponibilidadeUpdate" })
   async update(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Args("data") dto: TurmaDisponibilidadeUpdateInputDto,
     @Info() info: GraphQLResolveInfo,
@@ -82,7 +82,7 @@ export class TurmaDisponibilidadeGraphqlResolver {
 
   @Mutation(() => Boolean, { name: "turmaDisponibilidadeDeleteOneById" })
   async deleteOneById(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
   ): Promise<boolean> {
     return this.turmaDisponibilidadeService.turmaDisponibilidadeDeleteOneById(accessContext, {

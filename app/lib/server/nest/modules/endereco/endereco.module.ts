@@ -1,7 +1,10 @@
 import { Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import { ENDERECO_REPOSITORY_PORT, EnderecoService } from "@/modules/endereco";
-import { EnderecoTypeOrmRepositoryAdapter } from "@/modules/endereco/infrastructure/persistence/typeorm";
+import {
+  EnderecoAuthzRegistrySetup,
+  EnderecoTypeOrmRepositoryAdapter,
+} from "@/modules/endereco/infrastructure";
 import { EnderecoGraphqlResolver } from "./graphql/endereco.graphql.resolver";
 
 @Module({
@@ -11,6 +14,7 @@ import { EnderecoGraphqlResolver } from "./graphql/endereco.graphql.resolver";
     NestJsPaginateAdapter,
     EnderecoService,
     EnderecoGraphqlResolver,
+    EnderecoAuthzRegistrySetup,
     {
       provide: ENDERECO_REPOSITORY_PORT,
       useClass: EnderecoTypeOrmRepositoryAdapter,

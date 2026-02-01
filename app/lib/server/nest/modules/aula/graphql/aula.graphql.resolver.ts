@@ -1,6 +1,6 @@
 import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
-import { AccessContext, AccessContextGraphQl } from "@/modules/@core/access-context";
+import { AccessContext, AccessContextGraphQL } from "@/modules/@core/access-context";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
 import { AulaService } from "@/modules/aula/application/use-cases/aula.service";
 import {
@@ -18,7 +18,7 @@ export class AulaGraphqlResolver {
 
   @Query(() => AulaListOutputGqlDto, { name: "aulaFindAll" })
   async findAll(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args() dto: AulaListInputGqlDto,
     @Info() info: GraphQLResolveInfo,
   ): Promise<AulaListOutputGqlDto> {
@@ -34,7 +34,7 @@ export class AulaGraphqlResolver {
 
   @Query(() => AulaFindOneOutputDto, { name: "aulaFindById" })
   async findById(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Info() info: GraphQLResolveInfo,
   ): Promise<AulaFindOneOutputDto> {
@@ -45,7 +45,7 @@ export class AulaGraphqlResolver {
 
   @Mutation(() => AulaFindOneOutputDto, { name: "aulaCreate" })
   async create(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("input") dto: AulaCreateInputDto,
     @Info() info: GraphQLResolveInfo,
   ): Promise<AulaFindOneOutputDto> {
@@ -56,7 +56,7 @@ export class AulaGraphqlResolver {
 
   @Mutation(() => AulaFindOneOutputDto, { name: "aulaUpdate" })
   async update(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Args("input") dto: AulaUpdateInputDto,
     @Info() info: GraphQLResolveInfo,
@@ -68,7 +68,7 @@ export class AulaGraphqlResolver {
 
   @Mutation(() => Boolean, { name: "aulaDeleteOneById" })
   async deleteOneById(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
   ): Promise<boolean> {
     return this.aulaService.deleteOneById(accessContext, { id });

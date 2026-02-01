@@ -1,6 +1,6 @@
 import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
-import { AccessContext, AccessContextGraphQl } from "@/modules/@core/access-context";
+import { AccessContext, AccessContextGraphQL } from "@/modules/@core/access-context";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
 import { NivelFormacaoService } from "@/modules/nivel-formacao/application/use-cases/nivel-formacao.service";
 import {
@@ -20,7 +20,7 @@ export class NivelFormacaoGraphqlResolver {
 
   @Query(() => NivelFormacaoListOutputGqlDto, { name: "nivelFormacaoFindAll" })
   async findAll(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args() dto: NivelFormacaoListInputGqlDto,
     @Info() info: GraphQLResolveInfo,
   ): Promise<NivelFormacaoListOutputGqlDto> {
@@ -36,7 +36,7 @@ export class NivelFormacaoGraphqlResolver {
 
   @Query(() => NivelFormacaoFindOneOutputDto, { name: "nivelFormacaoFindById" })
   async findById(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Info() info: GraphQLResolveInfo,
   ): Promise<NivelFormacaoFindOneOutputDto> {
@@ -47,7 +47,7 @@ export class NivelFormacaoGraphqlResolver {
 
   @Mutation(() => NivelFormacaoFindOneOutputDto, { name: "nivelFormacaoCreate" })
   async create(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("input") dto: NivelFormacaoCreateInputDto,
     @Info() info: GraphQLResolveInfo,
   ): Promise<NivelFormacaoFindOneOutputDto> {
@@ -58,7 +58,7 @@ export class NivelFormacaoGraphqlResolver {
 
   @Mutation(() => NivelFormacaoFindOneOutputDto, { name: "nivelFormacaoUpdate" })
   async update(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Args("input") dto: NivelFormacaoUpdateInputDto,
     @Info() info: GraphQLResolveInfo,
@@ -70,7 +70,7 @@ export class NivelFormacaoGraphqlResolver {
 
   @Mutation(() => Boolean, { name: "nivelFormacaoDeleteOneById" })
   async deleteOneById(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
   ): Promise<boolean> {
     return this.nivelFormacaoService.deleteOneById(accessContext, { id });

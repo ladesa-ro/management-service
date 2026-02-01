@@ -1,6 +1,6 @@
 import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
-import { AccessContext, AccessContextGraphQl } from "@/modules/@core/access-context";
+import { AccessContext, AccessContextGraphQL } from "@/modules/@core/access-context";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
 import { AmbienteService } from "@/modules/ambiente/application/use-cases/ambiente.service";
 import {
@@ -18,7 +18,7 @@ export class AmbienteGraphqlResolver {
 
   @Query(() => AmbienteListOutputGqlDto, { name: "ambienteFindAll" })
   async findAll(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args() dto: AmbienteListInputGqlDto,
     @Info() info: GraphQLResolveInfo,
   ): Promise<AmbienteListOutputGqlDto> {
@@ -34,7 +34,7 @@ export class AmbienteGraphqlResolver {
 
   @Query(() => AmbienteFindOneOutputDto, { name: "ambienteFindById" })
   async findById(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Info() info: GraphQLResolveInfo,
   ): Promise<AmbienteFindOneOutputDto> {
@@ -45,7 +45,7 @@ export class AmbienteGraphqlResolver {
 
   @Mutation(() => AmbienteFindOneOutputDto, { name: "ambienteCreate" })
   async create(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("input") dto: AmbienteCreateInputDto,
     @Info() info: GraphQLResolveInfo,
   ): Promise<AmbienteFindOneOutputDto> {
@@ -56,7 +56,7 @@ export class AmbienteGraphqlResolver {
 
   @Mutation(() => AmbienteFindOneOutputDto, { name: "ambienteUpdate" })
   async update(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Args("input") dto: AmbienteUpdateInputDto,
     @Info() info: GraphQLResolveInfo,
@@ -68,7 +68,7 @@ export class AmbienteGraphqlResolver {
 
   @Mutation(() => Boolean, { name: "ambienteDeleteOneById" })
   async deleteOneById(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
   ): Promise<boolean> {
     return this.ambienteService.deleteOneById(accessContext, { id } as any);

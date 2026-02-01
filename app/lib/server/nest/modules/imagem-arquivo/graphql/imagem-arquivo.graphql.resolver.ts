@@ -1,6 +1,6 @@
 import { Args, ID, Info, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
-import { AccessContext, AccessContextGraphQl } from "@/modules/@core/access-context";
+import { AccessContext, AccessContextGraphQL } from "@/modules/@core/access-context";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
 import { ImagemArquivoService } from "@/modules/imagem-arquivo/application/use-cases/imagem-arquivo.service";
 import { ImagemArquivoFindOneOutputDto } from "../rest/imagem-arquivo.rest.dto";
@@ -16,7 +16,7 @@ export class ImagemArquivoGraphqlResolver {
 
   @Query(() => ImagemArquivoListOutputGqlDto, { name: "imagemArquivoFindAll" })
   async findAll(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args() dto: ImagemArquivoListInputGqlDto,
     @Info() info: GraphQLResolveInfo,
   ): Promise<ImagemArquivoListOutputGqlDto> {
@@ -32,7 +32,7 @@ export class ImagemArquivoGraphqlResolver {
 
   @Query(() => ImagemArquivoFindOneOutputDto, { name: "imagemArquivoFindById" })
   async findById(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Info() info: GraphQLResolveInfo,
   ): Promise<ImagemArquivoFindOneOutputDto> {

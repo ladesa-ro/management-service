@@ -1,6 +1,6 @@
 import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
-import { AccessContext, AccessContextGraphQl } from "@/modules/@core/access-context";
+import { AccessContext, AccessContextGraphQL } from "@/modules/@core/access-context";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
 import { EtapaService } from "@/modules/etapa/application/use-cases/etapa.service";
 import {
@@ -17,7 +17,7 @@ export class EtapaGraphqlResolver {
 
   @Query(() => EtapaListOutputGqlDto, { name: "etapaFindAll" })
   async findAll(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args() dto: EtapaListInputGqlDto,
     @Info() info: GraphQLResolveInfo,
   ): Promise<EtapaListOutputGqlDto> {
@@ -33,7 +33,7 @@ export class EtapaGraphqlResolver {
 
   @Query(() => EtapaFindOneOutputRestDto, { name: "etapaFindById" })
   async findById(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Info() info: GraphQLResolveInfo,
   ): Promise<EtapaFindOneOutputRestDto> {
@@ -44,7 +44,7 @@ export class EtapaGraphqlResolver {
 
   @Mutation(() => EtapaFindOneOutputRestDto, { name: "etapaCreate" })
   async create(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("data") dto: EtapaCreateInputRestDto,
     @Info() info: GraphQLResolveInfo,
   ): Promise<EtapaFindOneOutputRestDto> {
@@ -55,7 +55,7 @@ export class EtapaGraphqlResolver {
 
   @Mutation(() => EtapaFindOneOutputRestDto, { name: "etapaUpdate" })
   async update(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Args("data") dto: EtapaUpdateInputRestDto,
     @Info() info: GraphQLResolveInfo,
@@ -71,7 +71,7 @@ export class EtapaGraphqlResolver {
 
   @Mutation(() => Boolean, { name: "etapaDeleteOneById" })
   async deleteOneById(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
   ): Promise<boolean> {
     const input = EtapaGraphqlMapper.toFindOneInput(id);

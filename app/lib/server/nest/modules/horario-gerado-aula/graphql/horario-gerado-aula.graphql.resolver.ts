@@ -1,6 +1,6 @@
 import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
-import { AccessContext, AccessContextGraphQl } from "@/modules/@core/access-context";
+import { AccessContext, AccessContextGraphQL } from "@/modules/@core/access-context";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
 import { HorarioGeradoAulaService } from "@/modules/horario-gerado-aula";
 import {
@@ -20,7 +20,7 @@ export class HorarioGeradoAulaGraphqlResolver {
 
   @Query(() => HorarioGeradoAulaListOutputGqlDto, { name: "horarioGeradoAulaFindAll" })
   async findAll(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args() dto: HorarioGeradoAulaListInputGqlDto,
     @Info() info: GraphQLResolveInfo,
   ): Promise<HorarioGeradoAulaListOutputGqlDto> {
@@ -39,7 +39,7 @@ export class HorarioGeradoAulaGraphqlResolver {
 
   @Query(() => HorarioGeradoAulaFindOneOutputRestDto, { name: "horarioGeradoAulaFindById" })
   async findById(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Info() info: GraphQLResolveInfo,
   ): Promise<HorarioGeradoAulaFindOneOutputRestDto> {
@@ -56,7 +56,7 @@ export class HorarioGeradoAulaGraphqlResolver {
 
   @Mutation(() => HorarioGeradoAulaFindOneOutputRestDto, { name: "horarioGeradoAulaCreate" })
   async create(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("data") dto: HorarioGeradoAulaCreateInputRestDto,
     @Info() info: GraphQLResolveInfo,
   ): Promise<HorarioGeradoAulaFindOneOutputRestDto> {
@@ -70,7 +70,7 @@ export class HorarioGeradoAulaGraphqlResolver {
 
   @Mutation(() => HorarioGeradoAulaFindOneOutputRestDto, { name: "horarioGeradoAulaUpdate" })
   async update(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Args("data") dto: HorarioGeradoAulaUpdateInputRestDto,
     @Info() info: GraphQLResolveInfo,
@@ -85,7 +85,7 @@ export class HorarioGeradoAulaGraphqlResolver {
 
   @Mutation(() => Boolean, { name: "horarioGeradoAulaDeleteOneById" })
   async deleteOneById(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
   ): Promise<boolean> {
     return this.horarioGeradoAulaService.horarioGeradoAulaDeleteOneById(accessContext, { id });

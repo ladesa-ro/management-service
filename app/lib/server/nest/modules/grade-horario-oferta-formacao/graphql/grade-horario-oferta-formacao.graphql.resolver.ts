@@ -1,6 +1,6 @@
 import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
-import { AccessContext, AccessContextGraphQl } from "@/modules/@core/access-context";
+import { AccessContext, AccessContextGraphQL } from "@/modules/@core/access-context";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
 import { GradeHorarioOfertaFormacaoService } from "@/modules/grade-horario-oferta-formacao/application/use-cases/grade-horario-oferta-formacao.service";
 import {
@@ -24,7 +24,7 @@ export class GradeHorarioOfertaFormacaoGraphqlResolver {
     name: "gradeHorarioOfertaFormacaoFindAll",
   })
   async findAll(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args() dto: GradeHorarioOfertaFormacaoListInputGqlDto,
     @Info() info: GraphQLResolveInfo,
   ): Promise<GradeHorarioOfertaFormacaoListOutputGqlDto> {
@@ -42,7 +42,7 @@ export class GradeHorarioOfertaFormacaoGraphqlResolver {
     name: "gradeHorarioOfertaFormacaoFindById",
   })
   async findById(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Info() info: GraphQLResolveInfo,
   ): Promise<GradeHorarioOfertaFormacaoFindOneOutputDto> {
@@ -58,7 +58,7 @@ export class GradeHorarioOfertaFormacaoGraphqlResolver {
     name: "gradeHorarioOfertaFormacaoCreate",
   })
   async create(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("data") dto: GradeHorarioOfertaFormacaoCreateInputDto,
     @Info() info: GraphQLResolveInfo,
   ): Promise<GradeHorarioOfertaFormacaoFindOneOutputDto> {
@@ -71,7 +71,7 @@ export class GradeHorarioOfertaFormacaoGraphqlResolver {
     name: "gradeHorarioOfertaFormacaoUpdate",
   })
   async update(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Args("data") dto: GradeHorarioOfertaFormacaoUpdateInputDto,
     @Info() info: GraphQLResolveInfo,
@@ -87,7 +87,7 @@ export class GradeHorarioOfertaFormacaoGraphqlResolver {
 
   @Mutation(() => Boolean, { name: "gradeHorarioOfertaFormacaoDeleteOneById" })
   async deleteOneById(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
   ): Promise<boolean> {
     const input = GradeHorarioOfertaFormacaoGraphqlMapper.toFindOneInput(id);

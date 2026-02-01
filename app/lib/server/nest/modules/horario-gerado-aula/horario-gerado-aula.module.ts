@@ -4,6 +4,7 @@ import {
   HORARIO_GERADO_AULA_REPOSITORY_PORT,
   HorarioGeradoAulaService,
 } from "@/modules/horario-gerado-aula";
+import { HorarioGeradoAulaAuthzRegistrySetup } from "@/modules/horario-gerado-aula/infrastructure";
 import { HorarioGeradoAulaTypeOrmRepositoryAdapter } from "@/modules/horario-gerado-aula/infrastructure/persistence/typeorm";
 import { DiarioProfessorModule } from "@/server/nest/modules/diario-professor";
 import { HorarioGeradoModule } from "@/server/nest/modules/horario-gerado";
@@ -17,6 +18,7 @@ import { HorarioGeradoAulaRestController } from "./rest/horario-gerado-aula.rest
   providers: [
     NestJsPaginateAdapter,
     HorarioGeradoAulaService,
+    HorarioGeradoAulaAuthzRegistrySetup,
     HorarioGeradoAulaGraphqlResolver,
     {
       provide: HORARIO_GERADO_AULA_REPOSITORY_PORT,

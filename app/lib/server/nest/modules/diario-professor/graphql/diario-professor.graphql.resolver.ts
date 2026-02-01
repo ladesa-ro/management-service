@@ -1,6 +1,6 @@
 import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
-import { AccessContext, AccessContextGraphQl } from "@/modules/@core/access-context";
+import { AccessContext, AccessContextGraphQL } from "@/modules/@core/access-context";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
 import { DiarioProfessorService } from "@/modules/diario-professor/application/use-cases/diario-professor.service";
 import {
@@ -21,7 +21,7 @@ export class DiarioProfessorGraphqlResolver {
 
   @Query(() => DiarioProfessorListOutputGqlDto, { name: "diarioProfessorFindAll" })
   async findAll(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args() dto: DiarioProfessorListInputGqlDto,
     @Info() info: GraphQLResolveInfo,
   ): Promise<DiarioProfessorListOutputGqlDto> {
@@ -37,7 +37,7 @@ export class DiarioProfessorGraphqlResolver {
 
   @Query(() => DiarioProfessorFindOneOutputDto, { name: "diarioProfessorFindById" })
   async findById(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Info() info: GraphQLResolveInfo,
   ): Promise<DiarioProfessorFindOneOutputDto> {
@@ -51,7 +51,7 @@ export class DiarioProfessorGraphqlResolver {
 
   @Mutation(() => DiarioProfessorFindOneOutputDto, { name: "diarioProfessorCreate" })
   async create(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("input") dto: DiarioProfessorCreateInputDto,
     @Info() info: GraphQLResolveInfo,
   ): Promise<DiarioProfessorFindOneOutputDto> {
@@ -62,7 +62,7 @@ export class DiarioProfessorGraphqlResolver {
 
   @Mutation(() => DiarioProfessorFindOneOutputDto, { name: "diarioProfessorUpdate" })
   async update(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Args("input") dto: DiarioProfessorUpdateInputDto,
     @Info() info: GraphQLResolveInfo,
@@ -74,7 +74,7 @@ export class DiarioProfessorGraphqlResolver {
 
   @Mutation(() => Boolean, { name: "diarioProfessorDeleteOneById" })
   async deleteOneById(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
   ): Promise<boolean> {
     return this.diarioProfessorService.diarioProfessorDeleteOneById(accessContext, { id });

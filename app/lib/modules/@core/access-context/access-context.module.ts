@@ -12,11 +12,12 @@ import { ResolveAccessContextPipe } from "./infrastructure/pipes";
   imports: [RequestActorCoreModule],
   providers: [
     ResolveAccessContextPipe,
+    ResourceAuthzRegistry,
     {
       provide: RESOURCE_AUTHZ_REGISTRY,
-      useClass: ResourceAuthzRegistry,
+      useExisting: ResourceAuthzRegistry,
     },
   ],
-  exports: [ResolveAccessContextPipe, RESOURCE_AUTHZ_REGISTRY],
+  exports: [ResolveAccessContextPipe, ResourceAuthzRegistry, RESOURCE_AUTHZ_REGISTRY],
 })
 export class AccessContextCoreModule {}

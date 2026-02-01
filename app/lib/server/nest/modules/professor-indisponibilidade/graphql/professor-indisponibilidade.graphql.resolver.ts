@@ -1,6 +1,6 @@
 import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
-import { AccessContext, AccessContextGraphQl } from "@/modules/@core/access-context";
+import { AccessContext, AccessContextGraphQL } from "@/modules/@core/access-context";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
 import { ProfessorIndisponibilidadeLegacyService } from "../professor-indisponibilidade.legacy.service";
 import {
@@ -24,7 +24,7 @@ export class ProfessorIndisponibilidadeGraphqlResolver {
     name: "professorIndisponibilidadeFindAll",
   })
   async findAll(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args() dto: ProfessorIndisponibilidadeListInputGqlDto,
     @Info() info: GraphQLResolveInfo,
   ): Promise<ProfessorIndisponibilidadeListOutputGqlDto> {
@@ -43,7 +43,7 @@ export class ProfessorIndisponibilidadeGraphqlResolver {
     name: "professorIndisponibilidadeFindAllByPerfilId",
   })
   async findAllByPerfilId(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("idPerfilFk", { type: () => ID }) idPerfilFk: string,
     @Info() info: GraphQLResolveInfo,
   ): Promise<ProfessorIndisponibilidadeListOutputGqlDto> {
@@ -59,7 +59,7 @@ export class ProfessorIndisponibilidadeGraphqlResolver {
     name: "professorIndisponibilidadeFindById",
   })
   async findById(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Info() info: GraphQLResolveInfo,
   ): Promise<ProfessorIndisponibilidadeFindOneOutputDto> {
@@ -76,7 +76,7 @@ export class ProfessorIndisponibilidadeGraphqlResolver {
     name: "professorIndisponibilidadeCreate",
   })
   async create(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("idPerfilFk", { type: () => ID }) idPerfilFk: string,
     @Args("input") dto: ProfessorIndisponibilidadeCreateInputDto,
     @Info() info: GraphQLResolveInfo,
@@ -92,7 +92,7 @@ export class ProfessorIndisponibilidadeGraphqlResolver {
     name: "professorIndisponibilidadeUpdate",
   })
   async update(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Args("input") dto: ProfessorIndisponibilidadeUpdateInputDto,
     @Info() info: GraphQLResolveInfo,
@@ -108,7 +108,7 @@ export class ProfessorIndisponibilidadeGraphqlResolver {
     name: "professorIndisponibilidadeDeleteOneById",
   })
   async deleteOneById(
-    @AccessContextGraphQl() accessContext: AccessContext,
+    @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
   ): Promise<ProfessorIndisponibilidadeFindOneOutputDto> {
     const result = await this.professorIndisponibilidadeService.indisponibilidadeDelete(

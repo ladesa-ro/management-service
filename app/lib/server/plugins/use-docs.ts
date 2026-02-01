@@ -1,9 +1,9 @@
 import { INestApplication } from "@nestjs/common";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { apiReference } from "@scalar/nestjs-api-reference";
+import type express from "express";
 import swaggerUi from "swagger-ui-express";
 import { CONFIG_PORT, type IConfigPort } from "@/modules/@shared/application/ports/out/config";
-import type express from "express";
 import { detectHostAndProtocolFromRequest } from "@/server";
 
 export const useDocs = (app: INestApplication) => {
@@ -43,12 +43,12 @@ export const useDocs = (app: INestApplication) => {
       servers: [
         {
           url: baseUrl,
-          description: 'Servidor atual',
+          description: "Servidor atual",
         },
       ],
     };
 
-    res.type('application/json').send(dynamicDocument);
+    res.type("application/json").send(dynamicDocument);
   });
 
   /**

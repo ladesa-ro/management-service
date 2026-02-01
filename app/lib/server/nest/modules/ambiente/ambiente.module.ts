@@ -2,7 +2,10 @@ import { Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import { AMBIENTE_REPOSITORY_PORT } from "@/modules/ambiente/application/ports";
 import { AmbienteService } from "@/modules/ambiente/application/use-cases/ambiente.service";
-import { AmbienteTypeOrmRepositoryAdapter } from "@/modules/ambiente/infrastructure/persistence/typeorm";
+import {
+  AmbienteAuthzRegistrySetup,
+  AmbienteTypeOrmRepositoryAdapter,
+} from "@/modules/ambiente/infrastructure";
 import { ArquivoModule } from "@/server/nest/modules/arquivo";
 import { BlocoModule } from "@/server/nest/modules/bloco";
 import { ImagemModule } from "@/server/nest/modules/imagem";
@@ -16,6 +19,7 @@ import { AmbienteRestController } from "./rest/ambiente.rest.controller";
     NestJsPaginateAdapter,
     AmbienteService,
     AmbienteGraphqlResolver,
+    AmbienteAuthzRegistrySetup,
     {
       provide: AMBIENTE_REPOSITORY_PORT,
       useClass: AmbienteTypeOrmRepositoryAdapter,
