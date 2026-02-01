@@ -1,6 +1,6 @@
+import type { AccessContext } from "@/modules/@core/access-context";
 import type { PartialEntity } from "@/modules/@shared";
 import type { PerfilEntity } from "@/modules/perfil/infrastructure/persistence/typeorm";
-import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
   PerfilFindOneInput,
   PerfilFindOneOutput,

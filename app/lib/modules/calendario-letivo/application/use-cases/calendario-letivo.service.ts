@@ -1,6 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { has, pick } from "lodash";
 import { v4 } from "uuid";
+import type { AccessContext } from "@/modules/@core/access-context";
 import { ResourceNotFoundError } from "@/modules/@shared";
 import {
   CalendarioLetivoCreateInput,
@@ -17,7 +18,6 @@ import {
 } from "@/modules/calendario-letivo/application/ports";
 import { CampusService } from "@/modules/campus";
 import { OfertaFormacaoService } from "@/modules/oferta-formacao";
-import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 
 /**
  * Service centralizado para o modulo CalendarioLetivo.

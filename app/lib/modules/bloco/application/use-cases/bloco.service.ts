@@ -1,4 +1,5 @@
 import { Inject, Injectable, type StreamableFile } from "@nestjs/common";
+import type { AccessContext } from "@/modules/@core/access-context";
 import {
   AUTHORIZATION_SERVICE_PORT,
   BaseCrudService,
@@ -22,7 +23,6 @@ import {
 import type { BlocoEntity } from "@/modules/bloco/infrastructure/persistence/typeorm";
 import { CampusService } from "@/modules/campus";
 import { ImagemService } from "@/modules/imagem/application/use-cases/imagem.service";
-import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 
 /**
  * Service centralizado para o modulo Bloco.

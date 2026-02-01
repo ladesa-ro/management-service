@@ -1,9 +1,19 @@
 import { Module } from "@nestjs/common";
+import { AuthenticationCoreModule } from "@/modules/@core/authentication";
+import { IdentityProviderCoreModule } from "@/modules/@core/identity-provider";
+import { DatabaseContextModule } from "@/modules/@database-context";
 import { AppConfigModule } from "@/server/nest/modules/config";
-import { AuthenticationModule } from "@/v2/old/infrastructure/authentication";
-import { IntegrationsModule } from "@/v2/old/infrastructure/integrations";
+import { GraphqlModule } from "./graphql";
+import { TypeormModule } from "./persistence/typeorm";
 
 @Module({
-  imports: [AppConfigModule, IntegrationsModule, AuthenticationModule],
+  imports: [
+    AppConfigModule,
+    TypeormModule,
+    DatabaseContextModule,
+    GraphqlModule,
+    IdentityProviderCoreModule,
+    AuthenticationCoreModule,
+  ],
 })
 export class InfrastructureModule {}

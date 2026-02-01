@@ -1,8 +1,8 @@
 import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
+import { AccessContext, AccessContextGraphQl } from "@/modules/@core/access-context";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
 import { ReservaService } from "@/modules/reserva";
-import { AccessContext, AccessContextGraphQl } from "@/v2/old/infrastructure/access-context";
 import {
   ReservaCreateInputDto,
   ReservaFindOneOutputDto,

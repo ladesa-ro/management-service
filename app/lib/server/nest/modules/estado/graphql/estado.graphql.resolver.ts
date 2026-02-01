@@ -1,8 +1,8 @@
 import { Args, Info, Int, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
+import { AccessContext, AccessContextGraphQl } from "@/modules/@core/access-context";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
 import { EstadoService } from "@/modules/estado/application/use-cases/estado.service";
-import { AccessContext, AccessContextGraphQl } from "@/v2/old/infrastructure/access-context";
 import { EstadoFindOneOutputDto } from "../rest/estado.rest.dto";
 import { EstadoListInputGqlDto, EstadoListOutputGqlDto } from "./estado.graphql.dto";
 import { EstadoGraphqlMapper } from "./estado.graphql.mapper";

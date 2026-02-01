@@ -7,11 +7,11 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
+import { AccessContext, AccessContextHttp } from "@/modules/@core/access-context";
+import { Public } from "@/modules/@core/authentication";
 import { AutenticacaoService } from "@/modules/autenticacao";
 import { UsuarioService } from "@/modules/usuario";
 import { UsuarioEnsinoOutputDto } from "@/server/nest/modules/usuario/rest";
-import { AccessContext, AccessContextHttp } from "@/v2/old/infrastructure/access-context";
-import { Public } from "@/v2/old/infrastructure/authentication";
 import {
   AuthCredentialsSetInitialPasswordInputDto,
   AuthLoginInputDto,

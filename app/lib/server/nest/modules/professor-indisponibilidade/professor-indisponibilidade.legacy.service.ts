@@ -1,5 +1,6 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { map, pick } from "lodash";
+import type { AccessContext } from "@/modules/@core/access-context";
 import { DatabaseContextService } from "@/modules/@database-context";
 import {
   paginateConfig,
@@ -7,7 +8,6 @@ import {
   SearchService,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import { ProfessorIndisponibilidadeEntity } from "@/modules/professor-indisponibilidade/infrastructure/persistence/typeorm";
-import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
   ProfessorIndisponibilidadeCreateInputDto,
   ProfessorIndisponibilidadeFindOneInputDto,

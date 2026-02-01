@@ -1,6 +1,6 @@
 import { pick } from "lodash";
+import type { AccessContext } from "@/modules/@core/access-context";
 import type { PartialEntity } from "@/modules/@shared";
-import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import { ResourceNotFoundError } from "../errors";
 import type { IAuthorizationServicePort } from "../ports/in";
 import type { IBaseCrudRepositoryPort } from "../ports/out";

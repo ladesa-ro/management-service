@@ -1,4 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
+import type { AccessContext } from "@/modules/@core/access-context";
 import { ResourceNotFoundError } from "@/modules/@shared";
 import type {
   GradeHorarioOfertaFormacaoCreateInput,
@@ -13,7 +14,6 @@ import {
   type IGradeHorarioOfertaFormacaoRepositoryPort,
   type IGradeHorarioOfertaFormacaoUseCasePort,
 } from "@/modules/grade-horario-oferta-formacao/application/ports";
-import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 
 @Injectable()
 export class GradeHorarioOfertaFormacaoService implements IGradeHorarioOfertaFormacaoUseCasePort {

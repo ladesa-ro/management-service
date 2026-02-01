@@ -1,11 +1,11 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { has, pick } from "lodash";
+import type { AccessContext } from "@/modules/@core/access-context";
 import { ResourceNotFoundError } from "@/modules/@shared";
 import { AmbienteService } from "@/modules/ambiente/application/use-cases/ambiente.service";
 import type { AulaEntity } from "@/modules/aula/infrastructure/persistence/typeorm";
 import { DiarioService } from "@/modules/diario/application/use-cases/diario.service";
 import { IntervaloDeTempoService } from "@/modules/intervalo-de-tempo/application/use-cases/intervalo-de-tempo.service";
-import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
   AulaCreateInput,
   AulaFindOneInput,

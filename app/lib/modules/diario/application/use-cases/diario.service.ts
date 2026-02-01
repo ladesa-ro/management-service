@@ -1,5 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { has } from "lodash";
+import type { AccessContext } from "@/modules/@core/access-context";
 import { BaseCrudService } from "@/modules/@shared";
 import { AmbienteService } from "@/modules/ambiente/application/use-cases/ambiente.service";
 import { CalendarioLetivoService } from "@/modules/calendario-letivo";
@@ -19,7 +20,6 @@ import {
 import type { DiarioEntity } from "@/modules/diario/infrastructure/persistence/typeorm";
 import { DisciplinaService } from "@/modules/disciplina/application/use-cases/disciplina.service";
 import { TurmaService } from "@/modules/turma/application/use-cases/turma.service";
-import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 
 @Injectable()
 export class DiarioService

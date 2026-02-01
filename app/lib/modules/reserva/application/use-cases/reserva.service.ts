@@ -1,10 +1,10 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { has } from "lodash";
+import type { AccessContext } from "@/modules/@core/access-context";
 import { BaseCrudService } from "@/modules/@shared";
 import { AmbienteService } from "@/modules/ambiente/application/use-cases/ambiente.service";
 import type { ReservaEntity } from "@/modules/reserva/infrastructure/persistence/typeorm";
 import { UsuarioService } from "@/modules/usuario/application/use-cases/usuario.service";
-import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
   ReservaCreateInput,
   ReservaFindOneInput,

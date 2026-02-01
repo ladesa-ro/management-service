@@ -7,8 +7,8 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
+import { AccessContext, AccessContextHttp } from "@/modules/@core/access-context";
 import { DiaCalendarioService } from "@/modules/dia-calendario/application/use-cases/dia-calendario.service";
-import { AccessContext, AccessContextHttp } from "@/v2/old/infrastructure/access-context";
 import {
   DiaCalendarioCreateInputDto,
   DiaCalendarioFindOneInputDto,

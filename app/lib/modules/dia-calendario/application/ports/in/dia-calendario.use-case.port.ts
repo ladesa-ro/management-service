@@ -1,4 +1,4 @@
-import type { AccessContext } from "@/v2/old/infrastructure/access-context";
+import type { AccessContext } from "@/modules/@core/access-context";
 import type {
   DiaCalendarioCreateInput,
   DiaCalendarioFindOneInput,

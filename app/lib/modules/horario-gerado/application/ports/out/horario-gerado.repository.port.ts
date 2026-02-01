@@ -1,6 +1,6 @@
+import type { AccessContext } from "@/modules/@core/access-context";
 import type { IBaseCrudRepositoryPort } from "@/modules/@shared";
 import type { HorarioGeradoEntity } from "@/modules/horario-gerado/infrastructure/persistence/typeorm";
-import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type { HorarioGeradoFindOneOutput, HorarioGeradoListOutput } from "../../dtos";
 
 /**

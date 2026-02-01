@@ -1,5 +1,6 @@
 import { Inject, Injectable, type StreamableFile } from "@nestjs/common";
 import { has } from "lodash";
+import type { AccessContext } from "@/modules/@core/access-context";
 import { BaseCrudService, ResourceNotFoundError } from "@/modules/@shared";
 import { ArquivoService } from "@/modules/arquivo/application/use-cases/arquivo.service";
 import { CampusService } from "@/modules/campus";
@@ -19,7 +20,6 @@ import type {
   CursoListOutputDto,
   CursoUpdateInputDto,
 } from "@/server/nest/modules/curso/rest";
-import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 
 @Injectable()
 export class CursoService

@@ -1,7 +1,7 @@
 import type { SelectQueryBuilder } from "typeorm";
+import type { AccessContext } from "@/modules/@core/access-context";
 import type { IBaseCrudRepositoryPort } from "@/modules/@shared";
 import type { TurmaDisponibilidadeEntity } from "@/modules/turma-disponibilidade/infrastructure/persistence/typeorm";
-import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type { TurmaDisponibilidadeFindOneOutput, TurmaDisponibilidadeListOutput } from "../../dtos";
 
 /**

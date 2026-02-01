@@ -1,5 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { pick } from "lodash";
+import type { AccessContext } from "@/modules/@core/access-context";
 import { ResourceNotFoundError } from "@/modules/@shared";
 import {
   NivelFormacaoCreateInput,
@@ -14,7 +15,6 @@ import {
   type INivelFormacaoUseCasePort,
   NIVEL_FORMACAO_REPOSITORY_PORT,
 } from "@/modules/nivel-formacao/application/ports";
-import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 
 @Injectable()
 export class NivelFormacaoService implements INivelFormacaoUseCasePort {

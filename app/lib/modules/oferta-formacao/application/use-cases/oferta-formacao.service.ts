@@ -1,5 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { has, pick } from "lodash";
+import type { AccessContext } from "@/modules/@core/access-context";
 import { ResourceNotFoundError } from "@/modules/@shared";
 import { ModalidadeService } from "@/modules/modalidade";
 import {
@@ -15,7 +16,6 @@ import {
   type IOfertaFormacaoUseCasePort,
   OFERTA_FORMACAO_REPOSITORY_PORT,
 } from "@/modules/oferta-formacao/application/ports";
-import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 
 @Injectable()
 export class OfertaFormacaoService implements IOfertaFormacaoUseCasePort {

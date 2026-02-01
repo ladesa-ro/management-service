@@ -1,10 +1,10 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { has, pick } from "lodash";
+import type { AccessContext } from "@/modules/@core/access-context";
 import { ResourceNotFoundError } from "@/modules/@shared";
 import { DisponibilidadeService } from "@/modules/disponibilidade/application/use-cases/disponibilidade.service";
 import { TurmaService } from "@/modules/turma/application/use-cases/turma.service";
 import type { TurmaDisponibilidadeEntity } from "@/modules/turma-disponibilidade/infrastructure/persistence/typeorm";
-import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
   TurmaDisponibilidadeCreateInput,
   TurmaDisponibilidadeFindOneInput,

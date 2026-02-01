@@ -1,6 +1,6 @@
+import type { AccessContext } from "@/modules/@core/access-context";
 import type { IBaseCrudRepositoryPort } from "@/modules/@shared";
 import type { ReservaEntity } from "@/modules/reserva/infrastructure/persistence/typeorm";
-import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type { ReservaFindOneOutput, ReservaListOutput } from "../../dtos";
 
 export const RESERVA_REPOSITORY_PORT = Symbol("RESERVA_REPOSITORY_PORT");

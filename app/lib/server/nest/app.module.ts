@@ -1,5 +1,6 @@
 import { Module } from "@nestjs/common";
 import { APP_FILTER } from "@nestjs/core";
+import { AuthorizationCoreModule } from "@/modules/@core/authorization";
 import { InfrastructureModule } from "@/modules/@shared/infrastructure";
 import {
   SearchModule,
@@ -13,14 +14,13 @@ import {
   ValidationExceptionFilter,
 } from "@/server/nest/filters";
 import { ModulesModule } from "@/server/nest/modules/modules.module";
-import { AuthorizationModule } from "@/v2/adapters/out/authorization";
 
 @Module({
   imports: [
     SearchModule,
     ModulesModule,
     InfrastructureModule,
-    AuthorizationModule,
+    AuthorizationCoreModule,
     TransactionModule,
   ],
   controllers: [AppController],

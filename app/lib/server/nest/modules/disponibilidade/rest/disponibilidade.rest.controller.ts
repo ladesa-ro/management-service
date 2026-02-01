@@ -7,8 +7,8 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
+import { AccessContext, AccessContextHttp } from "@/modules/@core/access-context";
 import { DisponibilidadeService } from "@/modules/disponibilidade/application/use-cases/disponibilidade.service";
-import { AccessContext, AccessContextHttp } from "@/v2/old/infrastructure/access-context";
 import {
   DisponibilidadeCreateInputDto,
   DisponibilidadeFindOneInputDto,

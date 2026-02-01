@@ -1,5 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { pick } from "lodash";
+import type { AccessContext } from "@/modules/@core/access-context";
 import { ResourceNotFoundError } from "@/modules/@shared";
 import {
   IntervaloDeTempoFindOneInput,
@@ -13,7 +14,6 @@ import {
   type IIntervaloDeTempoUseCasePort,
   INTERVALO_DE_TEMPO_REPOSITORY_PORT,
 } from "@/modules/intervalo-de-tempo/application/ports";
-import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 
 @Injectable()
 export class IntervaloDeTempoService implements IIntervaloDeTempoUseCasePort {

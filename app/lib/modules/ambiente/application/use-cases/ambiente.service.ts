@@ -1,4 +1,5 @@
 import { Inject, Injectable, type StreamableFile } from "@nestjs/common";
+import type { AccessContext } from "@/modules/@core/access-context";
 import {
   AUTHORIZATION_SERVICE_PORT,
   BaseCrudService,
@@ -9,7 +10,6 @@ import type { AmbienteEntity } from "@/modules/ambiente/infrastructure/persisten
 import { ArquivoService } from "@/modules/arquivo/application/use-cases/arquivo.service";
 import { BlocoService } from "@/modules/bloco/application/use-cases/bloco.service";
 import { ImagemService } from "@/modules/imagem/application/use-cases/imagem.service";
-import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
   AmbienteCreateInput,
   AmbienteFindOneInput,

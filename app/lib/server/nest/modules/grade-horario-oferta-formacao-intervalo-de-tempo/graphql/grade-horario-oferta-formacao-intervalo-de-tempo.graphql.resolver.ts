@@ -1,8 +1,8 @@
 import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
+import { AccessContext, AccessContextGraphQl } from "@/modules/@core/access-context";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
 import { GradeHorarioOfertaFormacaoIntervaloDeTempoService } from "@/modules/grade-horario-oferta-formacao-intervalo-de-tempo/application/use-cases/grade-horario-oferta-formacao-intervalo-de-tempo.service";
-import { AccessContext, AccessContextGraphQl } from "@/v2/old/infrastructure/access-context";
 import {
   GradeHorarioOfertaFormacaoIntervaloDeTempoCreateInputRestDto,
   GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputRestDto,

@@ -1,5 +1,5 @@
+import type { AccessContext } from "@/modules/@core/access-context";
 import type { EnderecoEntity } from "@/modules/endereco/infrastructure/persistence/typeorm";
-import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type { EnderecoFindOneInput, EnderecoFindOneOutput, EnderecoInputDto } from "../../dtos";
 
 export interface IEnderecoUseCasePort {

@@ -1,4 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
+import type { AccessContext } from "@/modules/@core/access-context";
 import { ResourceNotFoundError } from "@/modules/@shared";
 import {
   ImagemArquivoFindOneInput,
@@ -11,7 +12,6 @@ import {
   type IImagemArquivoUseCasePort,
   IMAGEM_ARQUIVO_QUERY_REPOSITORY_PORT,
 } from "@/modules/imagem-arquivo/application/ports";
-import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 
 @Injectable()
 export class ImagemArquivoService implements IImagemArquivoUseCasePort {

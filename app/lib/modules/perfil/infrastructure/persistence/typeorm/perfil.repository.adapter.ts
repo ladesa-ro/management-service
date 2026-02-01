@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
 import type { DeepPartial } from "typeorm";
+import type { AccessContext } from "@/modules/@core/access-context";
 import { DatabaseContextService } from "@/modules/@database-context";
 import type { IPaginationCriteria, IPaginationResult } from "@/modules/@shared";
 import {
@@ -18,7 +19,6 @@ import type {
 } from "@/modules/perfil/application/dtos";
 import type { IPerfilRepositoryPort } from "@/modules/perfil/application/ports";
 import type { UsuarioEntity } from "@/modules/usuario/infrastructure/persistence/typeorm";
-import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type { PerfilEntity } from "./perfil.entity";
 
 @Injectable()

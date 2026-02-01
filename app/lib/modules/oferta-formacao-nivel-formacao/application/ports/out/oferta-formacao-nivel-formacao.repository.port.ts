@@ -1,3 +1,4 @@
+import type { AccessContext } from "@/modules/@core/access-context";
 import {
   OfertaFormacaoNivelFormacaoCreateInput,
   OfertaFormacaoNivelFormacaoFindOneInput,
@@ -6,7 +7,6 @@ import {
   OfertaFormacaoNivelFormacaoListOutput,
   OfertaFormacaoNivelFormacaoUpdateInput,
 } from "@/modules/oferta-formacao-nivel-formacao";
-import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 
 /**
  * Token de injecao para o repositorio de OfertaFormacaoNivelFormacao

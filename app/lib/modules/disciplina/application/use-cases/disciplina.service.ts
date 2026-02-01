@@ -1,4 +1,5 @@
 import { Inject, Injectable, type StreamableFile } from "@nestjs/common";
+import type { AccessContext } from "@/modules/@core/access-context";
 import { BaseCrudService, ResourceNotFoundError } from "@/modules/@shared";
 import { ArquivoService } from "@/modules/arquivo/application/use-cases/arquivo.service";
 import type {
@@ -15,7 +16,6 @@ import {
 } from "@/modules/disciplina/application/ports";
 import type { DisciplinaEntity } from "@/modules/disciplina/infrastructure/persistence/typeorm";
 import { ImagemService } from "@/modules/imagem/application/use-cases/imagem.service";
-import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 
 @Injectable()
 export class DisciplinaService extends BaseCrudService<

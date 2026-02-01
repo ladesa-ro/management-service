@@ -1,8 +1,8 @@
 import { Args, ID, Info, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
+import { AccessContext, AccessContextGraphQl } from "@/modules/@core/access-context";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
 import { IntervaloDeTempoService } from "@/modules/intervalo-de-tempo/application/use-cases/intervalo-de-tempo.service";
-import { AccessContext, AccessContextGraphQl } from "@/v2/old/infrastructure/access-context";
 import { IntervaloDeTempoFindOneOutputDto } from "../rest/intervalo-de-tempo.rest.dto";
 import {
   IntervaloDeTempoListInputGqlDto,

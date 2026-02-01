@@ -122,14 +122,14 @@ export class ArquivoListOutputDto {
 @InputType("ArquivoCreateInput")
 export class ArquivoCreateInputDto {
   @ApiPropertyOptional({ description: "Nome do arquivo", nullable: true, minLength: 1 })
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   @MinLength(1)
   name?: string | null;
 
   @ApiPropertyOptional({ description: "Formato do arquivo", nullable: true, minLength: 1 })
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   @MinLength(1)

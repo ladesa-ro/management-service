@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { has, pick } from "lodash";
 import { FilterOperator } from "nestjs-paginate";
+import type { AccessContext } from "@/modules/@core/access-context";
 import { DatabaseContextService } from "@/modules/@database-context";
 import {
   BaseTypeOrmRepositoryAdapter,
@@ -19,7 +20,6 @@ import type {
   OfertaFormacaoNivelFormacaoListOutput,
   OfertaFormacaoNivelFormacaoUpdateInput,
 } from "@/modules/oferta-formacao-nivel-formacao";
-import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type { OfertaFormacaoNivelFormacaoEntity } from "./oferta-formacao-nivel-formacao.entity";
 
 const aliasOfertaFormacaoNivelFormacao = "oferta_formacao_nivel_formacao";

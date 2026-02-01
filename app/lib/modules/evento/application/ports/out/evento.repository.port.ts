@@ -1,7 +1,7 @@
 import type { SelectQueryBuilder } from "typeorm";
+import type { AccessContext } from "@/modules/@core/access-context";
 import type { PartialEntity } from "@/modules/@shared";
 import type { EventoEntity } from "@/modules/evento/infrastructure/persistence/typeorm";
-import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
   EventoFindOneInput,
   EventoFindOneOutput,

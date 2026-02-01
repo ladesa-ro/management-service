@@ -22,8 +22,8 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
+import { AccessContext, AccessContextHttp } from "@/modules/@core/access-context";
 import { DisciplinaService } from "@/modules/disciplina/application/use-cases/disciplina.service";
-import { AccessContext, AccessContextHttp } from "@/v2/old/infrastructure/access-context";
 import {
   DisciplinaCreateInputDto,
   DisciplinaFindOneInputDto,

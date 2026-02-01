@@ -1,6 +1,6 @@
+import type { AccessContext } from "@/modules/@core/access-context";
 import type { IBaseCrudRepositoryPort } from "@/modules/@shared";
 import type { EtapaEntity } from "@/modules/etapa/infrastructure/persistence/typeorm";
-import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type { EtapaFindOneOutput, EtapaListOutput } from "../../dtos";
 
 /**

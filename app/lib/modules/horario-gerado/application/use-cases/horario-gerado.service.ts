@@ -1,9 +1,9 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { has } from "lodash";
+import type { AccessContext } from "@/modules/@core/access-context";
 import { BaseCrudService } from "@/modules/@shared";
 import { CalendarioLetivoService } from "@/modules/calendario-letivo";
 import type { HorarioGeradoEntity } from "@/modules/horario-gerado/infrastructure/persistence/typeorm";
-import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
   HorarioGeradoCreateInput,
   HorarioGeradoFindOneInput,

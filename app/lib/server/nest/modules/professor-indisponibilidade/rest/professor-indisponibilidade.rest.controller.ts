@@ -16,7 +16,7 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
-import { AccessContext, AccessContextHttp } from "@/v2/old/infrastructure/access-context";
+import { AccessContext, AccessContextHttp } from "@/modules/@core/access-context";
 import { ProfessorIndisponibilidadeLegacyService } from "../professor-indisponibilidade.legacy.service";
 import {
   ProfessorIndisponibilidadeCreateInputDto,

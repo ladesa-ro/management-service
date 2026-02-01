@@ -1,4 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
+import type { AccessContext } from "@/modules/@core/access-context";
 import { ResourceNotFoundError } from "@/modules/@shared";
 import {
   EstadoFindOneInput,
@@ -11,7 +12,6 @@ import {
   type IEstadoRepositoryPort,
   type IEstadoUseCasePort,
 } from "@/modules/estado/application/ports";
-import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 
 @Injectable()
 export class EstadoService implements IEstadoUseCasePort {

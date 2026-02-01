@@ -1,4 +1,5 @@
 import type { StreamableFile } from "@nestjs/common";
+import type { AccessContext } from "@/modules/@core/access-context";
 import type {
   DisciplinaCreateInput,
   DisciplinaFindOneInput,
@@ -7,7 +8,6 @@ import type {
   DisciplinaListOutput,
   DisciplinaUpdateInput,
 } from "@/modules/disciplina/application/dtos";
-import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 
 /**
  * Port de entrada para casos de uso de Disciplina

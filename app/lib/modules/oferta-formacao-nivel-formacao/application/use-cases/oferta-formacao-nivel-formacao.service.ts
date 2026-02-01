@@ -1,4 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
+import type { AccessContext } from "@/modules/@core/access-context";
 import { ResourceNotFoundError } from "@/modules/@shared";
 import {
   OfertaFormacaoNivelFormacaoCreateInput,
@@ -13,7 +14,6 @@ import {
   type IOfertaFormacaoNivelFormacaoUseCasePort,
   OFERTA_FORMACAO_NIVEL_FORMACAO_REPOSITORY_PORT,
 } from "@/modules/oferta-formacao-nivel-formacao/application/ports";
-import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 
 @Injectable()
 export class OfertaFormacaoNivelFormacaoService implements IOfertaFormacaoNivelFormacaoUseCasePort {

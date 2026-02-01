@@ -1,6 +1,6 @@
+import type { AccessContext } from "@/modules/@core/access-context";
 import type { PartialEntity } from "@/modules/@shared";
 import type { UsuarioEntity } from "@/modules/usuario/infrastructure/persistence/typeorm";
-import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
   UsuarioFindOneInput,
   UsuarioFindOneOutput,

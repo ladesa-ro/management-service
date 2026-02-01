@@ -1,8 +1,8 @@
 import { map } from "lodash";
 import type { DeepPartial, Repository } from "typeorm";
+import type { AccessContext } from "@/modules/@core/access-context";
 import type { DatabaseContextService } from "@/modules/@database-context";
 import type { IPaginationCriteria } from "@/modules/@shared";
-import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type { NestJsPaginateAdapter } from "./pagination/nestjs-paginate.adapter";
 import type { ITypeOrmPaginationConfig } from "./pagination-config.types";
 import { QbEfficientLoad } from "./qb-efficient-load";

@@ -1,10 +1,10 @@
 import { Inject, Injectable, Scope } from "@nestjs/common";
 import { REQUEST } from "@nestjs/core";
 import type { Request } from "express";
+import { AccessContext } from "@/modules/@core/access-context";
+import type { IRequestActor } from "@/modules/@core/request-actor";
 import { DatabaseContextService } from "@/modules/@database-context";
 import type { IAuthorizationPayload, IAuthorizationServicePort } from "@/modules/@shared";
-import { AccessContext } from "@/v2/old/infrastructure/access-context";
-import type { IRequestActor } from "@/v2/old/infrastructure/authentication";
 
 /**
  * Adapter que implementa o port de autorização usando AccessContext.

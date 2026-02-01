@@ -1,10 +1,10 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { has, pick } from "lodash";
+import type { AccessContext } from "@/modules/@core/access-context";
 import { ResourceNotFoundError } from "@/modules/@shared";
 import { DiarioService } from "@/modules/diario/application/use-cases/diario.service";
 import type { DiarioPreferenciaAgrupamentoEntity } from "@/modules/diario-preferencia-agrupamento/infrastructure/persistence/typeorm";
 import { IntervaloDeTempoService } from "@/modules/intervalo-de-tempo/application/use-cases/intervalo-de-tempo.service";
-import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
   DiarioPreferenciaAgrupamentoCreateInput,
   DiarioPreferenciaAgrupamentoFindOneInput,

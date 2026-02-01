@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
+import type { AccessContext } from "@/modules/@core/access-context";
 import { DatabaseContextService } from "@/modules/@database-context";
 import {
   BaseTypeOrmRepositoryAdapter,
@@ -16,7 +17,6 @@ import type {
   GradeHorarioOfertaFormacaoUpdateInput,
 } from "@/modules/grade-horario-oferta-formacao";
 import type { IGradeHorarioOfertaFormacaoRepositoryPort } from "@/modules/grade-horario-oferta-formacao/application/ports";
-import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type { GradeHorarioOfertaFormacaoEntity } from "./grade-horario-oferta-formacao.entity";
 
 @Injectable()

@@ -1,5 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { v4 as uuid } from "uuid";
+import type { AccessContext } from "@/modules/@core/access-context";
 import { ResourceNotFoundError } from "@/modules/@shared";
 import { CampusService } from "@/modules/campus";
 import {
@@ -16,7 +17,6 @@ import {
 } from "@/modules/perfil/application/ports";
 import { UsuarioService } from "@/modules/usuario";
 import type { UsuarioEntity } from "@/modules/usuario/infrastructure/persistence/typeorm";
-import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 
 /**
  * Implementação dos casos de uso de Perfil (Hexagonal Architecture)

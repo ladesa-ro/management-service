@@ -1,4 +1,4 @@
-import type { AccessContext } from "@/v2/old/infrastructure/access-context";
+import type { AccessContext } from "@/modules/@core/access-context";
 
 /**
  * Interface para operações de busca por ID em repositórios

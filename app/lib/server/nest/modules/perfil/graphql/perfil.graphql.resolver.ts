@@ -1,8 +1,8 @@
 import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
+import { AccessContext, AccessContextGraphQl } from "@/modules/@core/access-context";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
 import { PerfilService } from "@/modules/perfil";
-import { AccessContext, AccessContextGraphQl } from "@/v2/old/infrastructure/access-context";
 import { PerfilFindOneOutputDto, PerfilSetVinculosInputDto } from "../rest/perfil.rest.dto";
 import { PerfilListInputGqlDto, PerfilListOutputGqlDto } from "./perfil.graphql.dto";
 import { PerfilGraphqlMapper } from "./perfil.graphql.mapper";

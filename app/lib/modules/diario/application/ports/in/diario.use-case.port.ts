@@ -1,3 +1,4 @@
+import type { AccessContext } from "@/modules/@core/access-context";
 import type {
   DiarioCreateInput,
   DiarioFindOneInput,
@@ -6,7 +7,6 @@ import type {
   DiarioListOutput,
   DiarioUpdateInput,
 } from "@/modules/diario/application/dtos";
-import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 
 export interface IDiarioUseCasePort {
   findAll(

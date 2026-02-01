@@ -1,6 +1,6 @@
+import type { AccessContext } from "@/modules/@core/access-context";
 import type { IBaseCrudRepositoryPort } from "@/modules/@shared";
 import type { CalendarioLetivoEntity } from "@/modules/calendario-letivo/infrastructure/persistence/typeorm";
-import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type { CalendarioLetivoFindOneOutput, CalendarioLetivoListOutput } from "../../dtos";
 
 /**

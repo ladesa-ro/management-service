@@ -7,8 +7,8 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
+import { AccessContext, AccessContextHttp } from "@/modules/@core/access-context";
 import { OfertaFormacaoNivelFormacaoService } from "@/modules/oferta-formacao-nivel-formacao";
-import { AccessContext, AccessContextHttp } from "@/v2/old/infrastructure/access-context";
 import {
   OfertaFormacaoNivelFormacaoCreateInputDto,
   OfertaFormacaoNivelFormacaoFindOneInputDto,

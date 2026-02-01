@@ -1,6 +1,6 @@
+import type { AccessContext } from "@/modules/@core/access-context";
 import type { IBaseCrudRepositoryPort } from "@/modules/@shared";
 import type { AulaEntity } from "@/modules/aula/infrastructure/persistence/typeorm";
-import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type { AulaFindOneOutput, AulaListOutput } from "../../dtos";
 
 export const AULA_REPOSITORY_PORT = Symbol("IAulaRepositoryPort");

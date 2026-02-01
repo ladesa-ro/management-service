@@ -1,6 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { get, pick } from "lodash";
 import { v4 } from "uuid";
+import type { AccessContext } from "@/modules/@core/access-context";
 import {
   AUTHORIZATION_SERVICE_PORT,
   type IAuthorizationServicePort,
@@ -20,7 +21,6 @@ import {
   type ICampusUseCasePort,
 } from "@/modules/campus/application/ports";
 import { type EnderecoInputDto, EnderecoService } from "@/modules/endereco";
-import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 
 /**
  * Service centralizado para o módulo Campus.

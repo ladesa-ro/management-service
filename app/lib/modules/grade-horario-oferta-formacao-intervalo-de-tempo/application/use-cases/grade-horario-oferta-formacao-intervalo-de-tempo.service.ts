@@ -1,10 +1,10 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { has, pick } from "lodash";
+import type { AccessContext } from "@/modules/@core/access-context";
 import { ResourceNotFoundError } from "@/modules/@shared";
 import { GradeHorarioOfertaFormacaoService } from "@/modules/grade-horario-oferta-formacao";
 import type { GradeHorarioOfertaFormacaoIntervaloDeTempoEntity } from "@/modules/grade-horario-oferta-formacao-intervalo-de-tempo/infrastructure/persistence/typeorm";
 import { IntervaloDeTempoService } from "@/modules/intervalo-de-tempo";
-import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
   GradeHorarioOfertaFormacaoIntervaloDeTempoCreateInput,
   GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInput,

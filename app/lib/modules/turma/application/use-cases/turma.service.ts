@@ -1,12 +1,12 @@
 import { Inject, Injectable, type StreamableFile } from "@nestjs/common";
 import { has } from "lodash";
+import type { AccessContext } from "@/modules/@core/access-context";
 import { BaseCrudService, ResourceNotFoundError } from "@/modules/@shared";
 import { AmbienteService } from "@/modules/ambiente/application/use-cases/ambiente.service";
 import { ArquivoService } from "@/modules/arquivo/application/use-cases/arquivo.service";
 import { CursoService } from "@/modules/curso";
 import { ImagemService } from "@/modules/imagem/application/use-cases/imagem.service";
 import type { TurmaEntity } from "@/modules/turma/infrastructure/persistence/typeorm";
-import type { AccessContext } from "@/v2/old/infrastructure/access-context";
 import type {
   TurmaCreateInput,
   TurmaFindOneInput,

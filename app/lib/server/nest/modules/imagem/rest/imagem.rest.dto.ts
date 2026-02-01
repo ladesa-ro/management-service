@@ -111,7 +111,7 @@ export class ImagemListOutputDto {
 @InputType("ImagemCreateInput")
 export class ImagemCreateInputDto {
   @ApiPropertyOptional({ description: "Descrição da imagem", nullable: true, minLength: 1 })
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   @MinLength(1)
