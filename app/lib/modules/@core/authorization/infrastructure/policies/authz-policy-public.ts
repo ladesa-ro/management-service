@@ -23,13 +23,24 @@ const createPublicEntityPermissions = () => ({
 });
 
 /**
- * Cria configuração para entidades somente leitura.
+ * Cria configuração para entidades somente leitura COM soft delete.
  * - create: não permitido
  * - find: filtrado por soft delete
  * - update/delete: não permitido
  */
-const createReadOnlyEntityPermissions = () => ({
+const _createReadOnlyEntityPermissions = () => ({
   find: filterAllowNotDeleted,
+});
+
+/**
+ * Cria configuração para entidades somente leitura SEM soft delete.
+ * Usada para entidades de referência (ex: estado, cidade do IBGE).
+ * - create: não permitido
+ * - find: permitido (sem filtro)
+ * - update/delete: não permitido
+ */
+const createReadOnlyNoSoftDeletePermissions = () => ({
+  find: true,
 });
 
 /**
@@ -40,12 +51,12 @@ export class AuthzPolicyPublic extends BaseAuthzPolicy {
   constructor() {
     const setup: IAuthzPolicySetup = {};
 
-    // Entidades somente leitura
-    const readOnlyEntities = ["estado", "cidade"];
+    // Entidades de referência sem soft delete (dados IBGE, etc)
+    const noSoftDeleteEntities = ["estado", "cidade"];
 
     for (const entity of AUTHZ_ENTITIES) {
-      if (readOnlyEntities.includes(entity)) {
-        setup[entity] = createReadOnlyEntityPermissions();
+      if (noSoftDeleteEntities.includes(entity)) {
+        setup[entity] = createReadOnlyNoSoftDeletePermissions();
       } else {
         setup[entity] = createPublicEntityPermissions();
       }

@@ -1,4 +1,4 @@
-import type { IIdentityResponse } from "../../../domain";
+import type { IIdentityResponse } from "../domain";
 
 /**
  * Port para integração com provedores de identidade (Keycloak, OIDC, etc).

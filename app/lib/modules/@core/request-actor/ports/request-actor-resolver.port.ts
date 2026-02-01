@@ -1,4 +1,4 @@
-import type { IRequestActor } from "../../../domain";
+import type { IRequestActor } from "../domain";
 
 /**
  * Port para resolver o ator da requisição a partir de um access token.

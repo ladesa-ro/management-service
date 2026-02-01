@@ -4,12 +4,14 @@ import {
   AuthzPolicyPublic,
   type IAuthzPolicy,
   type IAuthzStatement,
+  type IAuthzStatementCheck,
+  type IAuthzStatementFilter,
   type IBaseAuthzStatementContext,
 } from "@/modules/@core/authorization";
 import type { IRequestActor } from "@/modules/@core/request-actor";
 import { DatabaseContextService } from "@/modules/@database-context";
 import { createForbiddenExceptionForAction } from "@/modules/@shared/application/errors";
-import type { IAccessContext } from "../domain";
+import type { IAccessContext, IAuthzPayload } from "../domain";
 import type { ResourceAuthzRegistry } from "./resource-authz-registry";
 
 // Re-export para compatibilidade
@@ -48,13 +50,14 @@ export class AccessContext implements IAccessContext {
     action: string,
     qb: SelectQueryBuilder<any>,
     alias?: string,
-    payload: any = null,
+    payload: IAuthzPayload | null = null,
   ): Promise<void> {
     const statement = this.getStatementForAction(action);
 
     if (statement && statement.statementKind === "filter") {
       const context = this.createAuthzStatementContext(action, payload);
-      const filter = (statement as any).filter;
+      const filterStatement = statement as IAuthzStatementFilter;
+      const filter = filterStatement.filter;
 
       if (typeof filter === "boolean") {
         qb.andWhere(filter ? "TRUE" : "FALSE");
@@ -71,8 +74,8 @@ export class AccessContext implements IAccessContext {
 
   async verifyPermission(
     action: string,
-    payload: any,
-    id: any = null,
+    payload: IAuthzPayload | null,
+    id: string | number | null = null,
     qbInput: SelectQueryBuilder<any> | null = null,
   ): Promise<boolean> {
     const statement = this.getStatementForAction(action);
@@ -80,7 +83,8 @@ export class AccessContext implements IAccessContext {
 
     if (statement) {
       if (statement.statementKind === "check") {
-        const withCheck = (statement as any).withCheck;
+        const checkStatement = statement as IAuthzStatementCheck;
+        const withCheck = checkStatement.withCheck;
 
         if (typeof withCheck === "boolean") {
           return withCheck;
@@ -109,8 +113,8 @@ export class AccessContext implements IAccessContext {
 
   async ensurePermission(
     action: string,
-    payload: any,
-    id: (number | string) | null = null,
+    payload: IAuthzPayload | null,
+    id: string | number | null = null,
     qb: SelectQueryBuilder<any> | null = null,
   ): Promise<void> {
     const can = await this.verifyPermission(action, payload, id, qb);
@@ -126,12 +130,12 @@ export class AccessContext implements IAccessContext {
 
   private createAuthzStatementContext(
     action: string,
-    payload: any,
-  ): IBaseAuthzStatementContext<string, any> {
+    payload: IAuthzPayload | null,
+  ): IBaseAuthzStatementContext<string, IAuthzPayload | null> {
     return {
       action,
       payload,
-      accessContext: this as any,
+      accessContext: this as IAccessContext,
     };
   }
 

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { IIdentityProviderPort, IIdentityResponse } from "../../..";
+import type { IIdentityProviderPort, IIdentityResponse } from "..";
 import { IDENTITY_PROVIDER_PORT } from "./identity-provider.port";
 
 describe("IIdentityProviderPort", () => {

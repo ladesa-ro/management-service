@@ -1,5 +1,5 @@
 import type { Promisable } from "type-fest";
-import type { SelectQueryBuilder } from "typeorm";
+import type { WhereExpressionBuilder } from "typeorm";
 import type { IAccessContext } from "@/modules/@core/access-context/domain";
 
 /**
@@ -53,7 +53,7 @@ export type IBaseAuthzCheck<Action extends string, Payload = null> = IBaseAuthzS
 export type IBaseAuthzFilterFn<Action extends string, Payload = null> = (
   context: IBaseAuthzStatementContext<Action, Payload>,
   alias?: string,
-) => Promisable<(qb: SelectQueryBuilder<any>) => void>;
+) => Promisable<(qb: WhereExpressionBuilder) => void>;
 
 /**
  * Statement de filtro (para find/update/delete).
