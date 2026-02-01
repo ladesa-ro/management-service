@@ -62,19 +62,19 @@ export class ProfessorIndisponibilidadeFindOneOutputDto {
   motivo: string;
 
   @ApiPropertyOptional({ description: "Data e hora da criacao do registro" })
-  @Field({ nullable: true })
+  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateString()
   dateCreated?: Date;
 
   @ApiPropertyOptional({ description: "Data e hora da alteracao do registro" })
-  @Field({ nullable: true })
+  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateString()
   dateUpdated?: Date;
 
   @ApiPropertyOptional({ description: "Data e hora da exclusao do registro", nullable: true })
-  @Field({ nullable: true })
+  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateString()
   dateDeleted?: Date | null;
@@ -91,7 +91,7 @@ export class ProfessorIndisponibilidadeListInputDto extends PaginationInputDto {
     description: "Filtro por ID do perfil",
     type: String,
   })
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsUUID()
   idPerfilFk?: string;
@@ -118,7 +118,7 @@ export class ProfessorIndisponibilidadeListOutputDto {
 @InputType("ProfessorIndisponibilidadeCreateInput")
 export class ProfessorIndisponibilidadeCreateInputDto {
   @ApiPropertyOptional({ description: "Identificador do perfil (uuid)", format: "uuid" })
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsUUID()
   idPerfilFk?: string;
@@ -220,7 +220,7 @@ export class ProfessorIndisponibilidadeRRuleViewDto {
   hora_inicio: string;
 
   @ApiPropertyOptional({ description: "Horario de fim", nullable: true })
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   hora_fim?: string | null;
@@ -238,7 +238,7 @@ export class ProfessorIndisponibilidadeRRuleInputDto {
 @ObjectType("ProfessorIndisponibilidadeRRuleOutput")
 export class ProfessorIndisponibilidadeRRuleOutputDto {
   @ApiPropertyOptional({ description: "Identificador do perfil (uuid)", format: "uuid" })
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsUUID()
   idPerfilFk?: string;

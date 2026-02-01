@@ -63,7 +63,7 @@ export class AmbienteFindOneOutputDto {
   nome: string;
 
   @ApiPropertyOptional({ description: "Descricao do ambiente/sala", nullable: true })
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   descricao: string | null;
@@ -85,7 +85,7 @@ export class AmbienteFindOneOutputDto {
     description: "Tipo do ambiente/sala. Ex.: sala aula, auditorio, laboratorio de quimica",
     nullable: true,
   })
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   tipo: string | null;
@@ -121,7 +121,7 @@ export class AmbienteFindOneOutputDto {
   dateUpdated: Date;
 
   @ApiPropertyOptional({ description: "Data e hora da exclusao do registro", nullable: true })
-  @Field({ nullable: true })
+  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateString()
   dateDeleted: Date | null;
@@ -188,7 +188,7 @@ export class AmbienteCreateInputDto {
   nome: string;
 
   @ApiPropertyOptional({ description: "Descricao do ambiente/sala", nullable: true })
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   descricao?: string | null;
@@ -210,7 +210,7 @@ export class AmbienteCreateInputDto {
     description: "Tipo do ambiente/sala. Ex.: sala aula, auditorio, laboratorio de quimica",
     nullable: true,
   })
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   tipo?: string | null;

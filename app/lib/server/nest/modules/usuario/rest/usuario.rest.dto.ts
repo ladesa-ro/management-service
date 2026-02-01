@@ -50,21 +50,21 @@ export class UsuarioFindOneOutputDto {
   id: string;
 
   @ApiPropertyOptional({ description: "Nome do usuario", nullable: true, minLength: 1 })
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   @MinLength(1)
   nome: string | null;
 
   @ApiPropertyOptional({ description: "Matricula SIAPE do usuario", nullable: true, minLength: 1 })
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   @MinLength(1)
   matriculaSiape: string | null;
 
   @ApiPropertyOptional({ description: "E-mail do usuario", nullable: true, format: "email" })
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsEmail()
   email: string | null;
@@ -107,7 +107,7 @@ export class UsuarioFindOneOutputDto {
   dateUpdated: Date;
 
   @ApiPropertyOptional({ description: "Data e hora da exclusao do registro", nullable: true })
-  @Field({ nullable: true })
+  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateString()
   dateDeleted: Date | null;
@@ -227,21 +227,21 @@ export class UsuarioListOutputDto {
 @InputType("UsuarioCreateInput")
 export class UsuarioCreateInputDto {
   @ApiPropertyOptional({ description: "Nome do usuario", nullable: true, minLength: 1 })
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   @MinLength(1)
   nome?: string | null;
 
   @ApiPropertyOptional({ description: "Matricula SIAPE do usuario", nullable: true, minLength: 1 })
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   @MinLength(1)
   matriculaSiape?: string | null;
 
   @ApiPropertyOptional({ description: "E-mail do usuario", nullable: true, format: "email" })
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsEmail()
   email?: string | null;

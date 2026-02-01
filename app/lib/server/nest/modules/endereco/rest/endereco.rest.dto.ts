@@ -70,13 +70,13 @@ export class EnderecoFindOneOutputDto {
   bairro: string;
 
   @ApiPropertyOptional({ description: "Complemento", nullable: true })
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   complemento: string | null;
 
   @ApiPropertyOptional({ description: "Ponto de referencia", nullable: true })
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   pontoReferencia: string | null;
@@ -98,7 +98,7 @@ export class EnderecoFindOneOutputDto {
   dateUpdated: Date;
 
   @ApiPropertyOptional({ description: "Data e hora da exclusao do registro", nullable: true })
-  @Field({ nullable: true })
+  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateString()
   dateDeleted: Date | null;
@@ -133,13 +133,13 @@ export class EnderecoInputDto {
   bairro: string;
 
   @ApiPropertyOptional({ description: "Complemento", nullable: true })
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   complemento?: string | null;
 
   @ApiPropertyOptional({ description: "Ponto de referencia", nullable: true })
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   pontoReferencia?: string | null;

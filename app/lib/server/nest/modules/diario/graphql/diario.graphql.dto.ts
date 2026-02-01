@@ -21,7 +21,7 @@ export class DiarioListInputGqlDto {
   @Min(1)
   limit?: number;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   search?: string;

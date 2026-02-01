@@ -60,7 +60,7 @@ export class AulaFindOneOutputDto {
   data: string;
 
   @ApiPropertyOptional({ description: "Modalidade da aula", nullable: true })
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   @MinLength(1)
@@ -103,7 +103,7 @@ export class AulaFindOneOutputDto {
   dateUpdated: Date;
 
   @ApiPropertyOptional({ description: "Data e hora da exclusao do registro", nullable: true })
-  @Field({ nullable: true })
+  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateString()
   dateDeleted: Date | null;
@@ -179,7 +179,7 @@ export class AulaCreateInputDto {
   data: string;
 
   @ApiPropertyOptional({ description: "Modalidade da aula", nullable: true })
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   @MinLength(1)

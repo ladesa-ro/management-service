@@ -44,14 +44,14 @@ export class ArquivoFindOneOutputDto {
   id: string;
 
   @ApiPropertyOptional({ description: "Nome do arquivo", nullable: true, minLength: 1 })
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   @MinLength(1)
   name: string | null;
 
   @ApiPropertyOptional({ description: "Formato do arquivo", nullable: true, minLength: 1 })
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   @MinLength(1)
@@ -81,7 +81,7 @@ export class ArquivoFindOneOutputDto {
   dateUpdated: Date;
 
   @ApiPropertyOptional({ description: "Data e hora da exclusao do registro", nullable: true })
-  @Field({ nullable: true })
+  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateString()
   dateDeleted: Date | null;
@@ -171,13 +171,13 @@ export class ArquivoFindOneInputDto {
 @ArgsType()
 export class ArquivoGetFileQueryInputDto {
   @ApiPropertyOptional({ description: "ID do recurso de acesso (uuid)", format: "uuid" })
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsUUID()
   "acesso.recurso.id"?: string;
 
   @ApiPropertyOptional({ description: "Nome do recurso de acesso" })
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   "acesso.recurso.nome"?: string;

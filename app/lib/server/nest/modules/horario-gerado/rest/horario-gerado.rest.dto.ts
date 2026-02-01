@@ -50,31 +50,31 @@ export class HorarioGeradoFindOneOutputRestDto {
   id: string;
 
   @ApiPropertyOptional({ description: "Status do horario gerado", nullable: true })
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   status: string | null;
 
   @ApiPropertyOptional({ description: "Tipo do horario gerado", nullable: true })
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   tipo: string | null;
 
   @ApiPropertyOptional({ description: "Data em que o horario foi gerado", nullable: true })
-  @Field({ nullable: true })
+  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateString()
   dataGeracao: Date | null;
 
   @ApiPropertyOptional({ description: "Inicio da vigencia do horario gerado", nullable: true })
-  @Field({ nullable: true })
+  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateString()
   vigenciaInicio: Date | null;
 
   @ApiPropertyOptional({ description: "Fim da vigencia do horario gerado", nullable: true })
-  @Field({ nullable: true })
+  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateString()
   vigenciaFim: Date | null;
@@ -96,7 +96,7 @@ export class HorarioGeradoFindOneOutputRestDto {
   dateUpdated: Date;
 
   @ApiPropertyOptional({ description: "Data e hora da exclusao do registro", nullable: true })
-  @Field({ nullable: true })
+  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateString()
   dateDeleted: Date | null;
@@ -170,31 +170,31 @@ export class HorarioGeradoListOutputRestDto {
 @InputType("HorarioGeradoCreateInput")
 export class HorarioGeradoCreateInputRestDto {
   @ApiPropertyOptional({ description: "Status do horario gerado", nullable: true })
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   status?: string | null;
 
   @ApiPropertyOptional({ description: "Tipo do horario gerado", nullable: true })
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   tipo?: string | null;
 
   @ApiPropertyOptional({ description: "Data em que o horario foi gerado", nullable: true })
-  @Field({ nullable: true })
+  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateString()
   dataGeracao?: Date | null;
 
   @ApiPropertyOptional({ description: "Inicio da vigencia do horario gerado", nullable: true })
-  @Field({ nullable: true })
+  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateString()
   vigenciaInicio?: Date | null;
 
   @ApiPropertyOptional({ description: "Fim da vigencia do horario gerado", nullable: true })
-  @Field({ nullable: true })
+  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateString()
   vigenciaFim?: Date | null;

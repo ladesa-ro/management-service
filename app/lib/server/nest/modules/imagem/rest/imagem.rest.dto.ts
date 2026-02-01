@@ -43,7 +43,7 @@ export class ImagemFindOneOutputDto {
   id: string;
 
   @ApiPropertyOptional({ description: "Descrição da imagem", nullable: true, minLength: 1 })
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   @MinLength(1)
@@ -70,7 +70,7 @@ export class ImagemFindOneOutputDto {
   dateUpdated: Date;
 
   @ApiPropertyOptional({ description: "Data e hora da exclusao do registro", nullable: true })
-  @Field({ nullable: true })
+  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateString()
   dateDeleted: Date | null;

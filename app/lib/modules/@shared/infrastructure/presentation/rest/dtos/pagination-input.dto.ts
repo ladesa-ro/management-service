@@ -40,7 +40,7 @@ export class PaginationInputDto {
     description: "Busca textual",
     example: "termo de busca",
   })
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   search?: string;

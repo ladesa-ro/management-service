@@ -62,7 +62,7 @@ export class DiarioPreferenciaAgrupamentoFindOneOutputDto {
     description: "Fim da vigencia da preferencia de agrupamento",
     nullable: true,
   })
-  @Field({ nullable: true })
+  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateString()
   dataFim: string | null;
@@ -107,7 +107,7 @@ export class DiarioPreferenciaAgrupamentoFindOneOutputDto {
   dateUpdated: Date;
 
   @ApiPropertyOptional({ description: "Data e hora da exclusao do registro", nullable: true })
-  @Field({ nullable: true })
+  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateString()
   dateDeleted: Date | null;
@@ -169,7 +169,7 @@ export class DiarioPreferenciaAgrupamentoCreateInputDto {
     description: "Fim da vigencia da preferencia de agrupamento",
     nullable: true,
   })
-  @Field({ nullable: true })
+  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateString()
   dataFim?: string | null;

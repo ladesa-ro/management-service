@@ -43,7 +43,7 @@ export class EntityDatedDto {
     format: "date-time",
     nullable: true,
   })
-  @Field({ nullable: true })
+  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateString()
   dateDeleted: Date | null;
@@ -75,7 +75,7 @@ export class EntityBaseDto extends EntityIdUuidDto {
     format: "date-time",
     nullable: true,
   })
-  @Field({ nullable: true })
+  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateString()
   dateDeleted: Date | null;

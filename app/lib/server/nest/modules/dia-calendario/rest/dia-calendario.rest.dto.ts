@@ -92,7 +92,7 @@ export class DiaCalendarioFindOneOutputDto {
   tipo!: TipoDiaCalendario;
 
   @ApiPropertyOptional({ description: "Nome do feriado (ou null se nao for)", nullable: true })
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   feriado: string | null;
@@ -122,7 +122,7 @@ export class DiaCalendarioFindOneOutputDto {
   dateUpdated: Date;
 
   @ApiPropertyOptional({ description: "Data e hora da exclusao do registro", nullable: true })
-  @Field({ nullable: true })
+  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateString()
   dateDeleted: Date | null;
@@ -217,7 +217,7 @@ export class DiaCalendarioCreateInputDto {
   tipo: TipoDiaCalendario;
 
   @ApiPropertyOptional({ description: "Nome do feriado (ou null se nao for)", nullable: true })
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   feriado?: string | null;

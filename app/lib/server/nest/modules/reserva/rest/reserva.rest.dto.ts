@@ -61,14 +61,14 @@ export class ReservaFindOneOutputDto {
   situacao: string;
 
   @ApiPropertyOptional({ description: "Motivo da reserva", nullable: true })
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   @MinLength(1)
   motivo: string | null;
 
   @ApiPropertyOptional({ description: "Tipo da reserva", nullable: true })
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   @MinLength(1)
@@ -104,7 +104,7 @@ export class ReservaFindOneOutputDto {
   dateUpdated: Date;
 
   @ApiPropertyOptional({ description: "Data e hora da exclusao do registro", nullable: true })
-  @Field({ nullable: true })
+  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateString()
   dateDeleted: Date | null;
@@ -201,14 +201,14 @@ export class ReservaCreateInputDto {
   situacao: string;
 
   @ApiPropertyOptional({ description: "Motivo da reserva", nullable: true })
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   @MinLength(1)
   motivo?: string | null;
 
   @ApiPropertyOptional({ description: "Tipo da reserva", nullable: true })
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   @MinLength(1)

@@ -66,25 +66,25 @@ export class AuthWhoAmIOutputDto {
 @ObjectType("AuthSessionCredentials")
 export class AuthSessionCredentialsDto {
   @ApiPropertyOptional({ description: "Token de acesso", nullable: true })
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   access_token: string | null;
 
   @ApiPropertyOptional({ description: "Tipo do token", nullable: true })
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   token_type: string | null;
 
   @ApiPropertyOptional({ description: "Token de identificacao", nullable: true })
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   id_token: string | null;
 
   @ApiPropertyOptional({ description: "Token de refresh", nullable: true })
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   refresh_token: string | null;
@@ -102,13 +102,13 @@ export class AuthSessionCredentialsDto {
   expires_at: number | null;
 
   @ApiPropertyOptional({ description: "Estado da sessao", nullable: true })
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   session_state: string | null;
 
   @ApiPropertyOptional({ description: "Escopo da autenticacao", nullable: true })
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   scope: string | null;

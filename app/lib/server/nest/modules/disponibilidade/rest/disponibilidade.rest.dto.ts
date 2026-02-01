@@ -38,7 +38,7 @@ export class DisponibilidadeFindOneOutputDto {
   dataInicio: Date;
 
   @ApiPropertyOptional({ description: "Data de termino", nullable: true })
-  @Field({ nullable: true })
+  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateString()
   dataFim: Date | null;
@@ -54,7 +54,7 @@ export class DisponibilidadeFindOneOutputDto {
   dateUpdated: Date;
 
   @ApiPropertyOptional({ description: "Data e hora da exclusao do registro", nullable: true })
-  @Field({ nullable: true })
+  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateString()
   dateDeleted: Date | null;
@@ -103,7 +103,7 @@ export class DisponibilidadeCreateInputDto {
   dataInicio: Date;
 
   @ApiPropertyOptional({ description: "Data de termino", nullable: true })
-  @Field({ nullable: true })
+  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateString()
   dataFim?: Date | null;

@@ -70,7 +70,7 @@ export class EtapaFindOneOutputRestDto {
   dataTermino: string;
 
   @ApiPropertyOptional({ description: "Cor da etapa", nullable: true })
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   cor: string | null;
@@ -95,7 +95,7 @@ export class EtapaFindOneOutputRestDto {
   dateUpdated: Date;
 
   @ApiPropertyOptional({ description: "Data e hora da exclusao do registro", nullable: true })
-  @Field({ nullable: true })
+  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateString()
   dateDeleted: Date | null;
@@ -184,7 +184,7 @@ export class EtapaCreateInputRestDto {
   dataTermino: string;
 
   @ApiPropertyOptional({ description: "Cor da etapa", nullable: true })
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   cor?: string | null;

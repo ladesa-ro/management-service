@@ -55,7 +55,7 @@ export class EventoFindOneOutputDto {
   id: string;
 
   @ApiPropertyOptional({ description: "Nome do evento", nullable: true })
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   nome: string | null;
@@ -68,19 +68,19 @@ export class EventoFindOneOutputDto {
   rrule: string;
 
   @ApiPropertyOptional({ description: "Cor do evento", nullable: true })
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   cor: string | null;
 
   @ApiPropertyOptional({ description: "Data de inicio do evento", format: "date", nullable: true })
-  @Field({ nullable: true })
+  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateString()
   dataInicio: string | null;
 
   @ApiPropertyOptional({ description: "Data de termino do evento", format: "date", nullable: true })
-  @Field({ nullable: true })
+  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateString()
   dataFim: string | null;
@@ -116,7 +116,7 @@ export class EventoFindOneOutputDto {
   dateUpdated: Date;
 
   @ApiPropertyOptional({ description: "Data e hora da exclusao do registro", nullable: true })
-  @Field({ nullable: true })
+  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateString()
   dateDeleted: Date | null;
@@ -167,7 +167,7 @@ export class EventoListOutputDto {
 @InputType("EventoCreateInput")
 export class EventoCreateInputDto {
   @ApiPropertyOptional({ description: "Nome do evento", nullable: true })
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   nome?: string | null;
@@ -180,19 +180,19 @@ export class EventoCreateInputDto {
   rrule: string;
 
   @ApiPropertyOptional({ description: "Cor do evento", nullable: true })
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   cor?: string | null;
 
   @ApiPropertyOptional({ description: "Data de inicio do evento", format: "date", nullable: true })
-  @Field({ nullable: true })
+  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateString()
   dataInicio?: string | null;
 
   @ApiPropertyOptional({ description: "Data de termino do evento", format: "date", nullable: true })
-  @Field({ nullable: true })
+  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateString()
   dataFim?: string | null;
