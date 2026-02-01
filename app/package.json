@@ -63,6 +63,7 @@
     "@types/passport-http-bearer": "^1.0.42",
     "@types/rascal": "^10.2.1",
     "@types/supertest": "^6.0.3",
+    "@types/swagger-ui-express": "^4.1.8",
     "@types/uuid": "^10.0.0",
     "@vitest/coverage-v8": "^4.0.18",
     "module-alias": "^2.2.3",

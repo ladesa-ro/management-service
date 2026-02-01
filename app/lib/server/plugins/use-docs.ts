@@ -4,6 +4,7 @@ import { apiReference } from "@scalar/nestjs-api-reference";
 import swaggerUi from "swagger-ui-express";
 import { CONFIG_PORT, type IConfigPort } from "@/modules/@shared/application/ports/out/config";
 import type express from "express";
+import { detectHostAndProtocolFromRequest } from "@/server";
 
 export const useDocs = (app: INestApplication) => {
   const configService = app.get<IConfigPort>(CONFIG_PORT);
@@ -34,9 +35,7 @@ export const useDocs = (app: INestApplication) => {
    * OPENAPI JSON
    */
   server.get(paths.openapi, (req: express.Request, res: express.Response) => {
-    const protocol = req.get('x-forwarded-proto') || req.protocol || 'http';
-    const host = req.get('x-forwarded-host') || req.get('host');
-
+    const { host, protocol } = detectHostAndProtocolFromRequest(req);
     const baseUrl = `${protocol}://${host}${prefix}`;
 
     const dynamicDocument = {
@@ -44,7 +43,7 @@ export const useDocs = (app: INestApplication) => {
       servers: [
         {
           url: baseUrl,
-          description: 'Servidor atual (gerado dinamicamente)',
+          description: 'Servidor atual',
         },
       ],
     };
