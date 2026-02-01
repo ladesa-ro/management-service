@@ -4,6 +4,7 @@ import { DIA_CALENDARIO_REPOSITORY_PORT } from "@/modules/dia-calendario/applica
 import { DiaCalendarioService } from "@/modules/dia-calendario/application/use-cases/dia-calendario.service";
 import { DiaCalendarioTypeOrmRepositoryAdapter } from "@/modules/dia-calendario/infrastructure/persistence/typeorm";
 import { CalendarioLetivoModule } from "@/server/nest/modules/calendario-letivo";
+import { DiaCalendarioGraphqlResolver } from "./graphql/dia-calendario.graphql.resolver";
 import { DiaCalendarioRestController } from "./rest/dia-calendario.rest.controller";
 
 @Module({
@@ -15,6 +16,7 @@ import { DiaCalendarioRestController } from "./rest/dia-calendario.rest.controll
       useClass: DiaCalendarioTypeOrmRepositoryAdapter,
     },
     DiaCalendarioService,
+    DiaCalendarioGraphqlResolver,
   ],
   controllers: [DiaCalendarioRestController],
   exports: [DiaCalendarioService],

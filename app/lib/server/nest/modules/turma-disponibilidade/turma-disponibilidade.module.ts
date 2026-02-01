@@ -7,6 +7,7 @@ import {
 import { TurmaDisponibilidadeTypeOrmRepositoryAdapter } from "@/modules/turma-disponibilidade/infrastructure/persistence/typeorm";
 import { DisponibilidadeModule } from "@/server/nest/modules/disponibilidade";
 import { TurmaModule } from "@/server/nest/modules/turma";
+import { TurmaDisponibilidadeGraphqlResolver } from "./graphql/turma-disponibilidade.graphql.resolver";
 import { TurmaDisponibilidadeRestController } from "./rest";
 
 @Module({
@@ -15,6 +16,7 @@ import { TurmaDisponibilidadeRestController } from "./rest";
   providers: [
     NestJsPaginateAdapter,
     TurmaDisponibilidadeService,
+    TurmaDisponibilidadeGraphqlResolver,
     {
       provide: TURMA_DISPONIBILIDADE_REPOSITORY_PORT,
       useClass: TurmaDisponibilidadeTypeOrmRepositoryAdapter,

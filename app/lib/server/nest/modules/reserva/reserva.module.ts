@@ -4,6 +4,7 @@ import { RESERVA_REPOSITORY_PORT, ReservaService } from "@/modules/reserva";
 import { ReservaTypeOrmRepositoryAdapter } from "@/modules/reserva/infrastructure/persistence/typeorm";
 import { AmbienteModule } from "@/server/nest/modules/ambiente";
 import { UsuarioModule } from "@/server/nest/modules/usuario";
+import { ReservaGraphqlResolver } from "./graphql/reserva.graphql.resolver";
 import { ReservaRestController } from "./rest";
 
 /**
@@ -22,6 +23,7 @@ import { ReservaRestController } from "./rest";
       useClass: ReservaTypeOrmRepositoryAdapter,
     },
     ReservaService,
+    ReservaGraphqlResolver,
   ],
   exports: [ReservaService],
 })

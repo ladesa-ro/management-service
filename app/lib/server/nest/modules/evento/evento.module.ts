@@ -3,6 +3,7 @@ import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persiste
 import { EVENTO_REPOSITORY_PORT, EventoService } from "@/modules/evento";
 import { EventoTypeOrmRepositoryAdapter } from "@/modules/evento/infrastructure/persistence/typeorm";
 import { CalendarioLetivoModule } from "@/server/nest/modules/calendario-letivo";
+import { EventoGraphqlResolver } from "./graphql/evento.graphql.resolver";
 import { EventoRestController } from "./rest";
 
 @Module({
@@ -10,6 +11,7 @@ import { EventoRestController } from "./rest";
   providers: [
     NestJsPaginateAdapter,
     EventoService,
+    EventoGraphqlResolver,
     {
       provide: EVENTO_REPOSITORY_PORT,
       useClass: EventoTypeOrmRepositoryAdapter,

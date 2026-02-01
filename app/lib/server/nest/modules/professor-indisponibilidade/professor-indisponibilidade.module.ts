@@ -5,6 +5,7 @@ import { ProfessorIndisponibilidadeService } from "@/modules/professor-indisponi
 import { ProfessorIndisponibilidadeTypeOrmRepositoryAdapter } from "@/modules/professor-indisponibilidade/infrastructure/persistence/typeorm";
 import { PerfilModule } from "@/server/nest/modules/perfil";
 import { TypeormModule } from "@/v2/old/infrastructure";
+import { ProfessorIndisponibilidadeGraphqlResolver } from "./graphql/professor-indisponibilidade.graphql.resolver";
 import { ProfessorIndisponibilidadeLegacyService } from "./professor-indisponibilidade.legacy.service";
 import { ProfessorIndisponibilidadeRestController } from "./rest/professor-indisponibilidade.rest.controller";
 
@@ -15,6 +16,7 @@ import { ProfessorIndisponibilidadeRestController } from "./rest/professor-indis
     NestJsPaginateAdapter,
     ProfessorIndisponibilidadeService,
     ProfessorIndisponibilidadeLegacyService,
+    ProfessorIndisponibilidadeGraphqlResolver,
     {
       provide: PROFESSOR_INDISPONIBILIDADE_REPOSITORY_PORT,
       useClass: ProfessorIndisponibilidadeTypeOrmRepositoryAdapter,

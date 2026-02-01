@@ -50,14 +50,12 @@ export class CidadeFindOneOutputDto {
 // ============================================================================
 
 @ArgsType()
-@InputType("CidadeListInput")
 export class CidadeListInputDto extends PaginationInputDto {
   @ApiPropertyOptional({
     description: "Filtro por ID",
     type: [String],
   })
   @TransformToArray()
-  @Field(() => [String], { nullable: true })
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
@@ -68,7 +66,6 @@ export class CidadeListInputDto extends PaginationInputDto {
     type: [String],
   })
   @TransformToArray()
-  @Field(() => [String], { nullable: true })
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
@@ -79,7 +76,6 @@ export class CidadeListInputDto extends PaginationInputDto {
     type: [String],
   })
   @TransformToArray()
-  @Field(() => [String], { nullable: true })
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
@@ -90,7 +86,6 @@ export class CidadeListInputDto extends PaginationInputDto {
     type: [String],
   })
   @TransformToArray()
-  @Field(() => [String], { nullable: true })
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
@@ -113,6 +108,7 @@ export class CidadeListOutputDto {
 // ============================================================================
 
 @ArgsType()
+@InputType("CidadeFindOneInput")
 export class CidadeFindOneInputDto {
   @ApiProperty({ description: "Identificador do registro (numerico)" })
   @Field(() => Int)

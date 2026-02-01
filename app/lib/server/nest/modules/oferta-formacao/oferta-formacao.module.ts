@@ -3,6 +3,7 @@ import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persiste
 import { OFERTA_FORMACAO_REPOSITORY_PORT, OfertaFormacaoService } from "@/modules/oferta-formacao";
 import { OfertaFormacaoTypeOrmRepositoryAdapter } from "@/modules/oferta-formacao/infrastructure/persistence/typeorm";
 import { ModalidadeModule } from "@/server/nest/modules/modalidade";
+import { OfertaFormacaoGraphqlResolver } from "./graphql/oferta-formacao.graphql.resolver";
 import { OfertaFormacaoRestController } from "./rest/oferta-formacao.rest.controller";
 
 @Module({
@@ -11,6 +12,7 @@ import { OfertaFormacaoRestController } from "./rest/oferta-formacao.rest.contro
   providers: [
     NestJsPaginateAdapter,
     OfertaFormacaoService,
+    OfertaFormacaoGraphqlResolver,
     {
       provide: OFERTA_FORMACAO_REPOSITORY_PORT,
       useClass: OfertaFormacaoTypeOrmRepositoryAdapter,

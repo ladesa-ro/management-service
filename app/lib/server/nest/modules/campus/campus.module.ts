@@ -3,6 +3,7 @@ import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persiste
 import { CAMPUS_REPOSITORY_PORT, CampusService } from "@/modules/campus";
 import { CampusTypeOrmRepositoryAdapter } from "@/modules/campus/infrastructure/persistence/typeorm";
 import { EnderecoModule } from "@/server/nest/modules/endereco";
+import { CampusGraphqlResolver } from "./graphql/campus.graphql.resolver";
 import { CampusRestController } from "./rest/campus.rest.controller";
 
 @Module({
@@ -11,6 +12,7 @@ import { CampusRestController } from "./rest/campus.rest.controller";
   providers: [
     NestJsPaginateAdapter,
     CampusService,
+    CampusGraphqlResolver,
     {
       provide: CAMPUS_REPOSITORY_PORT,
       useClass: CampusTypeOrmRepositoryAdapter,

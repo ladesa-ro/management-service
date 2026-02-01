@@ -5,6 +5,7 @@ import { DisciplinaService } from "@/modules/disciplina/application/use-cases/di
 import { DisciplinaTypeOrmRepositoryAdapter } from "@/modules/disciplina/infrastructure/persistence/typeorm";
 import { ArquivoModule } from "@/server/nest/modules/arquivo";
 import { ImagemModule } from "@/server/nest/modules/imagem";
+import { DisciplinaGraphqlResolver } from "./graphql/disciplina.graphql.resolver";
 import { DisciplinaRestController } from "./rest/disciplina.rest.controller";
 
 @Module({
@@ -13,6 +14,7 @@ import { DisciplinaRestController } from "./rest/disciplina.rest.controller";
   providers: [
     NestJsPaginateAdapter,
     DisciplinaService,
+    DisciplinaGraphqlResolver,
     {
       provide: DISCIPLINA_REPOSITORY_PORT,
       useClass: DisciplinaTypeOrmRepositoryAdapter,

@@ -5,6 +5,7 @@ import { DiarioProfessorService } from "@/modules/diario-professor/application/u
 import { DiarioProfessorTypeOrmRepositoryAdapter } from "@/modules/diario-professor/infrastructure/persistence/typeorm";
 import { DiarioModule } from "@/server/nest/modules/diario";
 import { PerfilModule } from "@/server/nest/modules/perfil";
+import { DiarioProfessorGraphqlResolver } from "./graphql/diario-professor.graphql.resolver";
 import { DiarioProfessorController } from "./rest";
 
 @Module({
@@ -17,6 +18,7 @@ import { DiarioProfessorController } from "./rest";
       useClass: DiarioProfessorTypeOrmRepositoryAdapter,
     },
     DiarioProfessorService,
+    DiarioProfessorGraphqlResolver,
   ],
   exports: [DiarioProfessorService],
 })

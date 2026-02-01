@@ -93,14 +93,12 @@ export class PerfilFindOneOutputDto {
 // ============================================================================
 
 @ArgsType()
-@InputType("PerfilListInput")
 export class PerfilListInputDto extends PaginationInputDto {
   @ApiPropertyOptional({
     description: "Filtro por ID",
     type: [String],
   })
   @TransformToArray()
-  @Field(() => [String], { nullable: true })
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
@@ -111,7 +109,6 @@ export class PerfilListInputDto extends PaginationInputDto {
     type: [String],
   })
   @TransformToArray()
-  @Field(() => [String], { nullable: true })
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
@@ -122,7 +119,6 @@ export class PerfilListInputDto extends PaginationInputDto {
     type: [String],
   })
   @TransformToArray()
-  @Field(() => [String], { nullable: true })
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
@@ -133,7 +129,6 @@ export class PerfilListInputDto extends PaginationInputDto {
     type: [String],
   })
   @TransformToArray()
-  @Field(() => [String], { nullable: true })
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
@@ -144,7 +139,6 @@ export class PerfilListInputDto extends PaginationInputDto {
     type: [String],
   })
   @TransformToArray()
-  @Field(() => [String], { nullable: true })
   @IsOptional()
   @IsArray()
   @IsString({ each: true })

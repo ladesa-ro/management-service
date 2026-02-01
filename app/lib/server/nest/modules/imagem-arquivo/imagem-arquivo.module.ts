@@ -3,6 +3,7 @@ import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persiste
 import { IMAGEM_ARQUIVO_QUERY_REPOSITORY_PORT } from "@/modules/imagem-arquivo/application/ports";
 import { ImagemArquivoService } from "@/modules/imagem-arquivo/application/use-cases/imagem-arquivo.service";
 import { ImagemArquivoQueryTypeOrmRepositoryAdapter } from "@/modules/imagem-arquivo/infrastructure/persistence/typeorm";
+import { ImagemArquivoGraphqlResolver } from "./graphql/imagem-arquivo.graphql.resolver";
 
 @Global()
 @Module({
@@ -11,6 +12,7 @@ import { ImagemArquivoQueryTypeOrmRepositoryAdapter } from "@/modules/imagem-arq
   providers: [
     NestJsPaginateAdapter,
     ImagemArquivoService,
+    ImagemArquivoGraphqlResolver,
     {
       provide: IMAGEM_ARQUIVO_QUERY_REPOSITORY_PORT,
       useClass: ImagemArquivoQueryTypeOrmRepositoryAdapter,

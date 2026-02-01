@@ -3,6 +3,7 @@ import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persiste
 import { ETAPA_REPOSITORY_PORT, EtapaService } from "@/modules/etapa";
 import { EtapaTypeOrmRepositoryAdapter } from "@/modules/etapa/infrastructure/persistence/typeorm";
 import { CalendarioLetivoModule } from "@/server/nest/modules/calendario-letivo";
+import { EtapaGraphqlResolver } from "./graphql/etapa.graphql.resolver";
 import { EtapaRestController } from "./rest/etapa.rest.controller";
 
 @Module({
@@ -11,6 +12,7 @@ import { EtapaRestController } from "./rest/etapa.rest.controller";
   providers: [
     NestJsPaginateAdapter,
     EtapaService,
+    EtapaGraphqlResolver,
     {
       provide: ETAPA_REPOSITORY_PORT,
       useClass: EtapaTypeOrmRepositoryAdapter,

@@ -1,5 +1,5 @@
-import { ArgsType, Field, ID, InputType, ObjectType } from "@nestjs/graphql";
-import { ApiProperty, ApiPropertyOptional, PartialType } from "@nestjs/swagger";
+import { ArgsType, Field, ID, InputType, ObjectType, PartialType } from "@nestjs/graphql";
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { IsArray, IsDateString, IsOptional, IsString, IsUUID } from "class-validator";
 import {
   commonProperties,
@@ -65,14 +65,12 @@ export class DisponibilidadeFindOneOutputDto {
 // ============================================================================
 
 @ArgsType()
-@InputType("DisponibilidadeListInput")
 export class DisponibilidadeListInputDto extends PaginationInputDto {
   @ApiPropertyOptional({
     description: "Filtro por ID",
     type: [String],
   })
   @TransformToArray()
-  @Field(() => [String], { nullable: true })
   @IsOptional()
   @IsArray()
   @IsString({ each: true })

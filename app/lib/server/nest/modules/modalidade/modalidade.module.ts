@@ -3,6 +3,7 @@ import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persiste
 import { MODALIDADE_REPOSITORY_PORT } from "@/modules/modalidade/application/ports";
 import { ModalidadeService } from "@/modules/modalidade/application/use-cases/modalidade.service";
 import { ModalidadeTypeOrmRepositoryAdapter } from "@/modules/modalidade/infrastructure/persistence/typeorm";
+import { ModalidadeGraphqlResolver } from "./graphql/modalidade.graphql.resolver";
 import { ModalidadeRestController } from "./rest/modalidade.rest.controller";
 
 @Module({
@@ -11,6 +12,7 @@ import { ModalidadeRestController } from "./rest/modalidade.rest.controller";
   providers: [
     NestJsPaginateAdapter,
     ModalidadeService,
+    ModalidadeGraphqlResolver,
     {
       provide: MODALIDADE_REPOSITORY_PORT,
       useClass: ModalidadeTypeOrmRepositoryAdapter,

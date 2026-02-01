@@ -1,5 +1,7 @@
-import { ArgsType, Field, ID, InputType, Int, ObjectType } from "@nestjs/graphql";
-import { ApiProperty, ApiPropertyOptional, PartialType } from "@nestjs/swagger";
+import { ArgsType, Field, ID, InputType, Int, ObjectType, PartialType } from "@nestjs/graphql";
+// Note: AmbienteListInputDto does not use @InputType or @Field for filter fields
+// because GraphQL field names cannot contain dots. Use AmbienteListInputGqlDto for GraphQL.
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import {
   IsArray,
@@ -130,14 +132,12 @@ export class AmbienteFindOneOutputDto {
 // ============================================================================
 
 @ArgsType()
-@InputType("AmbienteListInput")
 export class AmbienteListInputDto extends PaginationInputDto {
   @ApiPropertyOptional({
     description: "Filtro por ID",
     type: [String],
   })
   @TransformToArray()
-  @Field(() => [String], { nullable: true })
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
@@ -148,7 +148,6 @@ export class AmbienteListInputDto extends PaginationInputDto {
     type: [String],
   })
   @TransformToArray()
-  @Field(() => [String], { nullable: true })
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
@@ -159,7 +158,6 @@ export class AmbienteListInputDto extends PaginationInputDto {
     type: [String],
   })
   @TransformToArray()
-  @Field(() => [String], { nullable: true })
   @IsOptional()
   @IsArray()
   @IsString({ each: true })

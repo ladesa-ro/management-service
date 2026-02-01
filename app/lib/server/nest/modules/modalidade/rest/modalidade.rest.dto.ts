@@ -1,5 +1,5 @@
-import { ArgsType, Field, ID, InputType, ObjectType } from "@nestjs/graphql";
-import { ApiProperty, ApiPropertyOptional, PartialType } from "@nestjs/swagger";
+import { ArgsType, Field, ID, InputType, ObjectType, PartialType } from "@nestjs/graphql";
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { IsArray, IsDateString, IsOptional, IsString, IsUUID, MinLength } from "class-validator";
 import {
   commonProperties,
@@ -66,14 +66,12 @@ export class ModalidadeFindOneOutputDto {
 // ============================================================================
 
 @ArgsType()
-@InputType("ModalidadeListInput")
 export class ModalidadeListInputDto extends PaginationInputDto {
   @ApiPropertyOptional({
     description: "Filtro por ID",
     type: [String],
   })
   @TransformToArray()
-  @Field(() => [String], { nullable: true })
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
@@ -118,6 +116,7 @@ export class ModalidadeUpdateInputDto extends PartialType(ModalidadeCreateInputD
 // ============================================================================
 
 @ArgsType()
+@InputType("ModalidadeFindOneInput")
 export class ModalidadeFindOneInputDto {
   @ApiProperty({ description: "Identificador do registro (uuid)", format: "uuid" })
   @Field(() => ID)

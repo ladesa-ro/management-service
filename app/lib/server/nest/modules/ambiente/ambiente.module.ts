@@ -6,6 +6,7 @@ import { AmbienteTypeOrmRepositoryAdapter } from "@/modules/ambiente/infrastruct
 import { ArquivoModule } from "@/server/nest/modules/arquivo";
 import { BlocoModule } from "@/server/nest/modules/bloco";
 import { ImagemModule } from "@/server/nest/modules/imagem";
+import { AmbienteGraphqlResolver } from "./graphql/ambiente.graphql.resolver";
 import { AmbienteRestController } from "./rest/ambiente.rest.controller";
 
 @Module({
@@ -14,6 +15,7 @@ import { AmbienteRestController } from "./rest/ambiente.rest.controller";
   providers: [
     NestJsPaginateAdapter,
     AmbienteService,
+    AmbienteGraphqlResolver,
     {
       provide: AMBIENTE_REPOSITORY_PORT,
       useClass: AmbienteTypeOrmRepositoryAdapter,

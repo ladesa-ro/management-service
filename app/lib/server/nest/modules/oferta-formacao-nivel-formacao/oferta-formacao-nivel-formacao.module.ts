@@ -7,6 +7,7 @@ import {
 import { OfertaFormacaoNivelFormacaoTypeOrmRepositoryAdapter } from "@/modules/oferta-formacao-nivel-formacao/infrastructure/persistence/typeorm";
 import { NivelFormacaoModule } from "@/server/nest/modules/nivel-formacao";
 import { OfertaFormacaoModule } from "@/server/nest/modules/oferta-formacao";
+import { OfertaFormacaoNivelFormacaoGraphqlResolver } from "./graphql/oferta-formacao-nivel-formacao.graphql.resolver";
 import { OfertaFormacaoNivelFormacaoRestController } from "./rest/oferta-formacao-nivel-formacao.rest.controller";
 
 @Module({
@@ -15,6 +16,7 @@ import { OfertaFormacaoNivelFormacaoRestController } from "./rest/oferta-formaca
   providers: [
     NestJsPaginateAdapter,
     OfertaFormacaoNivelFormacaoService,
+    OfertaFormacaoNivelFormacaoGraphqlResolver,
     {
       provide: OFERTA_FORMACAO_NIVEL_FORMACAO_REPOSITORY_PORT,
       useClass: OfertaFormacaoNivelFormacaoTypeOrmRepositoryAdapter,

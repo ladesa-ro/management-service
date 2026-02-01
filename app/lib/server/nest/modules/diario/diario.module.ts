@@ -7,6 +7,7 @@ import { AmbienteModule } from "@/server/nest/modules/ambiente";
 import { CalendarioLetivoModule } from "@/server/nest/modules/calendario-letivo";
 import { DisciplinaModule } from "@/server/nest/modules/disciplina";
 import { TurmaModule } from "@/server/nest/modules/turma";
+import { DiarioGraphqlResolver } from "./graphql/diario.graphql.resolver";
 import { DiarioRestController } from "./rest/diario.rest.controller";
 
 /**
@@ -18,6 +19,7 @@ import { DiarioRestController } from "./rest/diario.rest.controller";
   providers: [
     NestJsPaginateAdapter,
     DiarioService,
+    DiarioGraphqlResolver,
     {
       provide: DIARIO_REPOSITORY_PORT,
       useClass: DiarioTypeOrmRepositoryAdapter,

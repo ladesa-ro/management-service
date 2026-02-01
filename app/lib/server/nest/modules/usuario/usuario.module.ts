@@ -6,6 +6,7 @@ import { UsuarioTypeOrmRepositoryAdapter } from "@/modules/usuario/infrastructur
 import { ArquivoModule } from "@/server/nest/modules/arquivo";
 import { ImagemModule } from "@/server/nest/modules/imagem";
 import { KeycloakModule } from "@/v2/old/infrastructure/integrations/identity-provider";
+import { UsuarioGraphqlResolver } from "./graphql/usuario.graphql.resolver";
 import { UsuarioRestController } from "./rest/usuario.rest.controller";
 
 @Module({
@@ -14,6 +15,7 @@ import { UsuarioRestController } from "./rest/usuario.rest.controller";
   providers: [
     NestJsPaginateAdapter,
     UsuarioService,
+    UsuarioGraphqlResolver,
     {
       provide: USUARIO_REPOSITORY_PORT,
       useClass: UsuarioTypeOrmRepositoryAdapter,

@@ -6,6 +6,7 @@ import { AulaTypeOrmRepositoryAdapter } from "@/modules/aula/infrastructure/pers
 import { AmbienteModule } from "@/server/nest/modules/ambiente";
 import { DiarioModule } from "@/server/nest/modules/diario";
 import { IntervaloDeTempoModule } from "@/server/nest/modules/intervalo-de-tempo";
+import { AulaGraphqlResolver } from "./graphql/aula.graphql.resolver";
 import { AulaController } from "./rest";
 
 /**
@@ -24,6 +25,7 @@ import { AulaController } from "./rest";
       useClass: AulaTypeOrmRepositoryAdapter,
     },
     AulaService,
+    AulaGraphqlResolver,
   ],
   exports: [AulaService],
 })

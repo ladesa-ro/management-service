@@ -1,5 +1,5 @@
-import { ArgsType, Field, ID, InputType, ObjectType } from "@nestjs/graphql";
-import { ApiProperty, ApiPropertyOptional, PartialType } from "@nestjs/swagger";
+import { ArgsType, Field, ID, InputType, ObjectType, PartialType } from "@nestjs/graphql";
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { IsArray, IsDateString, IsOptional, IsString, IsUUID, MinLength } from "class-validator";
 import {
   commonProperties,
@@ -55,14 +55,12 @@ export class NivelFormacaoFindOneOutputDto {
 // ============================================================================
 
 @ArgsType()
-@InputType("NivelFormacaoListInput")
 export class NivelFormacaoListInputDto extends PaginationInputDto {
   @ApiPropertyOptional({
     description: "Filtro por ID",
     type: [String],
   })
   @TransformToArray()
-  @Field(() => [String], { nullable: true })
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
@@ -101,6 +99,7 @@ export class NivelFormacaoUpdateInputDto extends PartialType(NivelFormacaoCreate
 // ============================================================================
 
 @ArgsType()
+@InputType("NivelFormacaoFindOneInput")
 export class NivelFormacaoFindOneInputDto {
   @ApiProperty({ description: "Identificador do registro (uuid)", format: "uuid" })
   @Field(() => ID)

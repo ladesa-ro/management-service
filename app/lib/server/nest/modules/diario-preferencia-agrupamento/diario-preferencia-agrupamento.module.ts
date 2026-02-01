@@ -7,6 +7,7 @@ import {
 import { DiarioPreferenciaAgrupamentoTypeOrmRepositoryAdapter } from "@/modules/diario-preferencia-agrupamento/infrastructure/persistence/typeorm";
 import { DiarioModule } from "@/server/nest/modules/diario";
 import { IntervaloDeTempoModule } from "@/server/nest/modules/intervalo-de-tempo";
+import { DiarioPreferenciaAgrupamentoGraphqlResolver } from "./graphql/diario-preferencia-agrupamento.graphql.resolver";
 import { DiarioPreferenciaAgrupamentoController } from "./rest";
 
 @Module({
@@ -14,6 +15,7 @@ import { DiarioPreferenciaAgrupamentoController } from "./rest";
   providers: [
     NestJsPaginateAdapter,
     DiarioPreferenciaAgrupamentoService,
+    DiarioPreferenciaAgrupamentoGraphqlResolver,
     {
       provide: DIARIO_PREFERENCIA_AGRUPAMENTO_REPOSITORY_PORT,
       useClass: DiarioPreferenciaAgrupamentoTypeOrmRepositoryAdapter,

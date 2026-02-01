@@ -4,6 +4,7 @@ import { PERFIL_REPOSITORY_PORT, PerfilService } from "@/modules/perfil";
 import { PerfilTypeOrmRepositoryAdapter } from "@/modules/perfil/infrastructure/persistence/typeorm";
 import { CampusModule } from "@/server/nest/modules/campus";
 import { UsuarioModule } from "@/server/nest/modules/usuario";
+import { PerfilGraphqlResolver } from "./graphql/perfil.graphql.resolver";
 import { PerfilRestController } from "./rest/perfil.rest.controller";
 
 @Module({
@@ -12,6 +13,7 @@ import { PerfilRestController } from "./rest/perfil.rest.controller";
   providers: [
     NestJsPaginateAdapter,
     PerfilService,
+    PerfilGraphqlResolver,
     {
       provide: PERFIL_REPOSITORY_PORT,
       useClass: PerfilTypeOrmRepositoryAdapter,

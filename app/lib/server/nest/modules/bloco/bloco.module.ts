@@ -6,6 +6,7 @@ import { BlocoTypeOrmRepositoryAdapter } from "@/modules/bloco/infrastructure/pe
 import { ArquivoModule } from "@/server/nest/modules/arquivo";
 import { CampusModule } from "@/server/nest/modules/campus";
 import { ImagemModule } from "@/server/nest/modules/imagem";
+import { BlocoGraphqlResolver } from "./graphql/bloco.graphql.resolver";
 import { BlocoRestController } from "./rest/bloco.rest.controller";
 
 @Module({
@@ -14,6 +15,7 @@ import { BlocoRestController } from "./rest/bloco.rest.controller";
   providers: [
     NestJsPaginateAdapter,
     BlocoService,
+    BlocoGraphqlResolver,
     {
       provide: BLOCO_REPOSITORY_PORT,
       useClass: BlocoTypeOrmRepositoryAdapter,

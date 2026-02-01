@@ -1,5 +1,5 @@
-import { ArgsType, Field, ID, InputType, Int, ObjectType } from "@nestjs/graphql";
-import { ApiProperty, ApiPropertyOptional, PartialType } from "@nestjs/swagger";
+import { ArgsType, Field, ID, InputType, Int, ObjectType, PartialType } from "@nestjs/graphql";
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { IsDateString, IsInt, IsOptional, IsString, IsUUID, Max, Min } from "class-validator";
 import {
   commonProperties,
