@@ -1,23 +1,7 @@
-import { Injectable, UnauthorizedException } from "@nestjs/common";
-import { PassportStrategy } from "@nestjs/passport";
-import { Strategy } from "passport-http-bearer";
-import { RequestActorService } from "../request-actor";
-import { AuthStrategy } from "./AuthStrategy";
+/**
+ * @deprecated Use `import { AccessTokenStrategyAdapter } from "@/modules/@core/authentication"` instead.
+ * Este arquivo será removido na próxima versão major.
+ */
+import { AccessTokenStrategyAdapter } from "@/modules/@core/authentication";
 
-@Injectable()
-export class AuthStrategyAccessToken extends PassportStrategy(Strategy, AuthStrategy.ACCESS_TOKEN) {
-  constructor(private requestActorService: RequestActorService) {
-    super();
-  }
-
-  async validate(accessToken?: string) {
-    const currentUsuario =
-      await this.requestActorService.getCurrentFuncionarioByAccessToken(accessToken);
-
-    if (!currentUsuario) {
-      throw new UnauthorizedException("Not authenticated.");
-    }
-
-    return currentUsuario;
-  }
-}
+export { AccessTokenStrategyAdapter as AuthStrategyAccessToken };

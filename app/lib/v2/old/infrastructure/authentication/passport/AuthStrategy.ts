@@ -1,3 +1,5 @@
-export enum AuthStrategy {
-  ACCESS_TOKEN = "access_token",
-}
+/**
+ * @deprecated Use `import { AuthStrategy } from "@/modules/@core/authentication"` instead.
+ * Este arquivo será removido na próxima versão major.
+ */
+export { AuthStrategy } from "@/modules/@core/authentication";

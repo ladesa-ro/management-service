@@ -1,45 +1,15 @@
-import type { SelectQueryBuilder } from "typeorm";
-import { IAuthzStatement, IAuthzStatementFilter } from "@/v2/old/authorization";
-import type { IRequestActor } from "@/v2/old/infrastructure/authentication";
-
-export interface IAccessContext {
-  readonly requestActor: IRequestActor | null;
-
-  applyFilter: <
-    Statement extends IAuthzStatementFilter,
-    Action extends Statement["action"],
-    Payload extends Statement["payload"],
-  >(
-    action: Action,
-    qb: SelectQueryBuilder<any>,
-    alias?: string,
-    payload?: Payload | null,
-  ) => Promise<void>;
-
-  ensurePermission: <
-    Statement extends IAuthzStatement,
-    Action extends Statement["action"],
-    Payload extends Statement["payload"],
-  >(
-    action: Action,
-    payload: Payload,
-    id?: any,
-    qb?: SelectQueryBuilder<any> | null,
-  ) => Promise<void>;
-
-  verifyPermission<
-    Statement extends IAuthzStatement,
-    Action extends Statement["action"],
-    Payload extends Statement["payload"],
-  >(
-    action: Action,
-    payload: Payload,
-    id?: any,
-    qb?: SelectQueryBuilder<any> | null,
-  ): Promise<boolean>;
-}
-
 /**
- * @deprecated use IAccessContext
+ * @deprecated Use `import { ... } from "@/modules/@core/access-context"` or `@/modules/@core/authorization` instead.
+ * Este arquivo será removido na próxima versão major.
  */
-export interface IContextoDeAcesso extends IAccessContext {}
+export type { IAccessContext, IContextoDeAcesso } from "@/modules/@core/access-context";
+
+export type {
+  IAuthzStatement,
+  IAuthzStatementCheck,
+  IAuthzStatementFilter,
+  IBaseAuthzCheckFn as AuthzCheckFn,
+  IBaseAuthzFilterFn as AuthzFilterFn,
+  IBaseAuthzStatementContext as IAuthzStatementContext,
+  IBaseAuthzStatementKind as AuthzStatementKind,
+} from "@/modules/@core/authorization";

@@ -1,5 +1,5 @@
-import { RequestActorHttp } from "@/v2/old/infrastructure/authentication";
-import { ResolveAccessContextPipe } from "./pipes/resolve-access-context.pipe";
-
-export const AccessContextHttp = (options?: any) =>
-  RequestActorHttp(options, ResolveAccessContextPipe);
+/**
+ * @deprecated Use `import { AccessContextHttp } from "@/modules/@core/access-context"` instead.
+ * Este arquivo será removido na próxima versão major.
+ */
+export { AccessContextHttp } from "@/modules/@core/access-context";

@@ -1,12 +1,5 @@
-import { applyDecorators, SetMetadata } from "@nestjs/common";
-import { ApiBearerAuth } from "@nestjs/swagger";
-
-export const NEEDS_AUTH_KEY = "needs_auth";
-
-export const NeedsAuth = () => {
-  return applyDecorators(SetMetadata(NEEDS_AUTH_KEY, true), ApiBearerAuth());
-};
-
-export const Public = () => {
-  return applyDecorators(SetMetadata(NEEDS_AUTH_KEY, false));
-};
+/**
+ * @deprecated Use `import { NeedsAuth, Public, NEEDS_AUTH_KEY } from "@/modules/@core/authentication"` instead.
+ * Este arquivo será removido na próxima versão major.
+ */
+export { NEEDS_AUTH_KEY, NeedsAuth, Public } from "@/modules/@core/authentication";

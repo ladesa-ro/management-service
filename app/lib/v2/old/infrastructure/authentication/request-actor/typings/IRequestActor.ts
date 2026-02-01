@@ -1,6 +1,5 @@
-import type { UsuarioFindOneOutput } from "@/modules/usuario/application/dtos";
-
-export type IRequestActor = null | Pick<
-  UsuarioFindOneOutput,
-  "id" | "nome" | "matriculaSiape" | "email" | "isSuperUser"
->;
+/**
+ * @deprecated Use `import { IRequestActor } from "@/modules/@core/request-actor"` instead.
+ * Este arquivo será removido na próxima versão major.
+ */
+export type { IRequestActor } from "@/modules/@core/request-actor";

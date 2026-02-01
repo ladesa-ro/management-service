@@ -1,10 +1,14 @@
 import { Module } from "@nestjs/common";
-import { IdentityProviderModule } from "../../integrations/identity-provider/identity-provider.module";
+import { RequestActorCoreModule } from "@/modules/@core/request-actor";
 import { RequestActorService } from "./request-actor.service";
 
+/**
+ * @deprecated Use `RequestActorCoreModule` from `@/modules/@core/request-actor` instead.
+ * Este módulo será removido na próxima versão major.
+ */
 @Module({
-  imports: [IdentityProviderModule],
+  imports: [RequestActorCoreModule],
   providers: [RequestActorService],
-  exports: [RequestActorService],
+  exports: [RequestActorService, RequestActorCoreModule],
 })
 export class RequestActorModule {}

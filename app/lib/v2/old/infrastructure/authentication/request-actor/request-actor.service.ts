@@ -1,64 +1,25 @@
-import { ForbiddenException, Injectable } from "@nestjs/common";
-import { pick } from "lodash";
-import { DatabaseContextService } from "@/v2/old/infrastructure/integrations";
-import { IdentityProviderService } from "@/v2/old/infrastructure/integrations/identity-provider";
-import type { IRequestActor } from "./typings/IRequestActor";
+import { Inject, Injectable } from "@nestjs/common";
+import {
+  type IRequestActor,
+  type IRequestActorResolverPort,
+  REQUEST_ACTOR_RESOLVER_PORT,
+} from "@/modules/@core/request-actor";
 
+/**
+ * @deprecated Use `REQUEST_ACTOR_RESOLVER_PORT` from `@/modules/@core/request-actor` instead.
+ * Este service será removido na próxima versão major.
+ */
 @Injectable()
 export class RequestActorService {
   constructor(
-    private integracaoIdentidadeEAcessoServicec: IdentityProviderService,
-    private dabaseContextService: DatabaseContextService,
+    @Inject(REQUEST_ACTOR_RESOLVER_PORT)
+    private readonly requestActorResolver: IRequestActorResolverPort,
   ) {}
 
-  get usuarioRepository() {
-    return this.dabaseContextService.usuarioRepository;
-  }
-
+  /**
+   * @deprecated Use `IRequestActorResolverPort.resolveFromAccessToken()` instead.
+   */
   async getCurrentFuncionarioByAccessToken(accessToken?: string): Promise<IRequestActor> {
-    if (typeof accessToken === "string") {
-      if (process.env.ENABLE_MOCK_ACCESS_TOKEN === "true") {
-        const matriculaSiapeMockMatch = accessToken.match(/^mock\.siape\.(\d{1,})$/);
-
-        if (matriculaSiapeMockMatch) {
-          const matriculaSiape = matriculaSiapeMockMatch[1];
-          return this.getCurrentUsuarioByMatriculaSiape(matriculaSiape);
-        }
-      }
-
-      const tokenSet =
-        await this.integracaoIdentidadeEAcessoServicec.getIdentityResponseFromAccessToken(
-          accessToken,
-        );
-
-      return this.getCurrentUsuarioByMatriculaSiape(tokenSet.usuario?.matriculaSiape);
-    }
-
-    return null;
-  }
-
-  private async getCurrentUsuarioByMatriculaSiape(matriculaSiape: string): Promise<IRequestActor> {
-    const usuario = await this.usuarioRepository
-      .createQueryBuilder("usuario")
-      .select([
-        "usuario.id",
-        "usuario.nome",
-        "usuario.matriculaSiape",
-        "usuario.email",
-        "usuario.isSuperUser",
-      ])
-      .where("usuario.matriculaSiape = :matriculaSiape", {
-        matriculaSiape: matriculaSiape,
-      })
-      .andWhere("usuario.dateDeleted IS NULL")
-      .getOne();
-
-    if (usuario) {
-      return {
-        ...pick(usuario, ["id", "nome", "matriculaSiape", "email", "isSuperUser"]),
-      };
-    }
-
-    throw new ForbiddenException("O usuário não possui perfil no sistema.");
+    return this.requestActorResolver.resolveFromAccessToken(accessToken);
   }
 }

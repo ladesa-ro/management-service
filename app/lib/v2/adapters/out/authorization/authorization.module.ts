@@ -1,3 +1,6 @@
+/**
+ * @deprecated Este módulo será movido para `@/modules/@core/authorization` na próxima versão major.
+ */
 import { Global, Module } from "@nestjs/common";
 import { AUTHORIZATION_SERVICE_PORT } from "@/modules/@shared";
 import { AuthorizationServiceAdapter } from "./authorization-service.adapter";

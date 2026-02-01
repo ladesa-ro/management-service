@@ -7,16 +7,16 @@ const here = __dirname;
 
 export default defineConfig({
   test: {
-    include: ["**/*.e2e-spec.ts"],
+    include: ["**/*.spec.ts", "**/*.e2e-spec.ts"],
     globals: true,
     root: "./",
     alias: {
-      "@/*": path.resolve(here, "./src"),
+      "@/*": path.resolve(here, "./lib"),
     },
   },
   resolve: {
     alias: {
-      "@/*": path.resolve(here, "./src"),
+      "@/*": path.resolve(here, "./lib"),
     },
   },
   plugins: [

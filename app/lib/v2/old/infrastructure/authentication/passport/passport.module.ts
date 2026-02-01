@@ -1,29 +1,7 @@
-import { Module } from "@nestjs/common";
-import { APP_GUARD } from "@nestjs/core";
-import { PassportModule } from "@nestjs/passport";
-import { RequestActorModule } from "../request-actor";
-import { AuthGuardJwt } from "./AuthGuardJwt";
-import { AuthSerializer } from "./AuthSerializer";
-import { AuthStrategy } from "./AuthStrategy";
-import { AuthStrategyAccessToken } from "./AuthStrategyAccessToken";
+/**
+ * @deprecated Use `import { AuthenticationCoreModule } from "@/modules/@core/authentication"` instead.
+ * Este arquivo será removido na próxima versão major.
+ */
+import { AuthenticationCoreModule } from "@/modules/@core/authentication";
 
-@Module({
-  imports: [
-    RequestActorModule,
-    PassportModule.register({
-      defaultStrategy: AuthStrategy.ACCESS_TOKEN,
-    }),
-  ],
-
-  providers: [
-    AuthStrategyAccessToken,
-    AuthSerializer,
-    {
-      provide: APP_GUARD,
-      useClass: AuthGuardJwt,
-    },
-  ],
-
-  exports: [AuthSerializer],
-})
-export class AuthenticationPassportModule {}
+export { AuthenticationCoreModule as AuthenticationPassportModule };

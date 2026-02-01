@@ -1,13 +1,7 @@
-import { Injectable } from "@nestjs/common";
-import { PassportSerializer } from "@nestjs/passport";
+/**
+ * @deprecated Use `import { AuthSerializerAdapter } from "@/modules/@core/authentication"` instead.
+ * Este arquivo será removido na próxima versão major.
+ */
+import { AuthSerializerAdapter } from "@/modules/@core/authentication";
 
-@Injectable()
-export class AuthSerializer extends PassportSerializer {
-  serializeUser(user: any, done: (err: Error | null, user: any) => void): any {
-    done(null, user);
-  }
-
-  deserializeUser(payload: any, done: (err: Error | null, payload: string) => void): any {
-    done(null, payload);
-  }
-}
+export { AuthSerializerAdapter as AuthSerializer };

@@ -1,8 +1,7 @@
-import { Module } from "@nestjs/common";
-import { AuthenticationPassportModule } from "./passport";
-import { RequestActorModule } from "./request-actor";
+/**
+ * @deprecated Use `import { AuthenticationCoreModule } from "@/modules/@core/authentication"` instead.
+ * Este arquivo será removido na próxima versão major.
+ */
+import { AuthenticationCoreModule } from "@/modules/@core/authentication";
 
-@Module({
-  imports: [AuthenticationPassportModule, RequestActorModule],
-})
-export class AuthenticationModule {}
+export { AuthenticationCoreModule as AuthenticationModule };

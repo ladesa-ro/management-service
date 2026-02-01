@@ -1,757 +1,415 @@
-import { IBaseAuthzCheck, IBaseAuthzFilter } from "./IBaseAuthz";
+/**
+ * @deprecated Use `import { IAuthzStatement, IAuthzStatementCheck, IAuthzStatementFilter, createStatement } from "@/modules/@core/authorization"` instead.
+ * Este arquivo será removido na próxima versão major.
+ */
+export type {
+  IAuthzStatement,
+  IAuthzStatementCheck,
+  IAuthzStatementFilter,
+} from "@/modules/@core/authorization";
 
-// Generic DTO input type for authorization - accepts any object shape
-// Using 'object' instead of Record to avoid index signature requirement
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-type DtoInput = {};
+export { createStatement } from "@/modules/@core/authorization";
 
-// ===================================================================================
-
-export type IAuthzStatementEnderecoFind = IBaseAuthzFilter<"endereco:find">;
-
-// =====================
-
-export type IAuthzStatementEstadoFind = IBaseAuthzFilter<"estado:find">;
-export type IAuthzStatementCidadeFind = IBaseAuthzFilter<"cidade:find">;
-
-// =====================
-
-export type IAuthzStatementCampusCreate = IBaseAuthzCheck<
+export type IAuthzStatementEnderecoFind =
+  import("@/modules/@core/authorization").IBaseAuthzFilter<"endereco:find">;
+export type IAuthzStatementEstadoFind =
+  import("@/modules/@core/authorization").IBaseAuthzFilter<"estado:find">;
+export type IAuthzStatementCidadeFind =
+  import("@/modules/@core/authorization").IBaseAuthzFilter<"cidade:find">;
+export type IAuthzStatementCampusCreate = import("@/modules/@core/authorization").IBaseAuthzCheck<
   "campus:create",
-  {
-    dto: DtoInput;
-  }
+  { dto: object }
 >;
-export type IAuthzStatementCampusFind = IBaseAuthzFilter<"campus:find">;
-export type IAuthzStatementCampusUpdate = IBaseAuthzFilter<
+export type IAuthzStatementCampusFind =
+  import("@/modules/@core/authorization").IBaseAuthzFilter<"campus:find">;
+export type IAuthzStatementCampusUpdate = import("@/modules/@core/authorization").IBaseAuthzFilter<
   "campus:update",
-  {
-    dto: DtoInput;
-  }
+  { dto: object }
 >;
-export type IAuthzStatementCampusDelete = IBaseAuthzFilter<
+export type IAuthzStatementCampusDelete = import("@/modules/@core/authorization").IBaseAuthzFilter<
   "campus:delete",
-  {
-    dto: DtoInput;
-  }
+  { dto: object }
 >;
-
-// =====================
-
-export type IAuthzStatementBlocoCreate = IBaseAuthzCheck<
+export type IAuthzStatementBlocoCreate = import("@/modules/@core/authorization").IBaseAuthzCheck<
   "bloco:create",
-  {
-    dto: DtoInput;
-  }
+  { dto: object }
 >;
-export type IAuthzStatementBlocoFind = IBaseAuthzFilter<"bloco:find">;
-export type IAuthzStatementBlocoUpdate = IBaseAuthzFilter<
+export type IAuthzStatementBlocoFind =
+  import("@/modules/@core/authorization").IBaseAuthzFilter<"bloco:find">;
+export type IAuthzStatementBlocoUpdate = import("@/modules/@core/authorization").IBaseAuthzFilter<
   "bloco:update",
-  {
-    dto: DtoInput;
-  }
+  { dto: object }
 >;
-export type IAuthzStatementBlocoDelete = IBaseAuthzFilter<
+export type IAuthzStatementBlocoDelete = import("@/modules/@core/authorization").IBaseAuthzFilter<
   "bloco:delete",
-  {
-    dto: DtoInput;
-  }
+  { dto: object }
 >;
-
-// =====================
-
-export type IAuthzStatementAmbienteCreate = IBaseAuthzCheck<
+export type IAuthzStatementAmbienteCreate = import("@/modules/@core/authorization").IBaseAuthzCheck<
   "ambiente:create",
-  {
-    dto: DtoInput;
-  }
+  { dto: object }
 >;
-export type IAuthzStatementAmbienteFind = IBaseAuthzFilter<"ambiente:find">;
-export type IAuthzStatementAmbienteUpdate = IBaseAuthzFilter<
-  "ambiente:update",
-  {
-    dto: DtoInput;
-  }
->;
-export type IAuthzStatementAmbienteDelete = IBaseAuthzFilter<
-  "ambiente:delete",
-  {
-    dto: DtoInput;
-  }
->;
-
-// =====================
-
-export type IAuthzStatementUsuarioCreate = IBaseAuthzCheck<
+export type IAuthzStatementAmbienteFind =
+  import("@/modules/@core/authorization").IBaseAuthzFilter<"ambiente:find">;
+export type IAuthzStatementAmbienteUpdate =
+  import("@/modules/@core/authorization").IBaseAuthzFilter<"ambiente:update", { dto: object }>;
+export type IAuthzStatementAmbienteDelete =
+  import("@/modules/@core/authorization").IBaseAuthzFilter<"ambiente:delete", { dto: object }>;
+export type IAuthzStatementUsuarioCreate = import("@/modules/@core/authorization").IBaseAuthzCheck<
   "usuario:create",
-  {
-    dto: DtoInput;
-  }
+  { dto: object }
 >;
-export type IAuthzStatementUsuarioFind = IBaseAuthzFilter<"usuario:find">;
-export type IAuthzStatementUsuarioUpdate = IBaseAuthzFilter<
+export type IAuthzStatementUsuarioFind =
+  import("@/modules/@core/authorization").IBaseAuthzFilter<"usuario:find">;
+export type IAuthzStatementUsuarioUpdate = import("@/modules/@core/authorization").IBaseAuthzFilter<
   "usuario:update",
-  {
-    dto: DtoInput;
-  }
+  { dto: object }
 >;
-export type IAuthzStatementUsuarioDelete = IBaseAuthzFilter<
+export type IAuthzStatementUsuarioDelete = import("@/modules/@core/authorization").IBaseAuthzFilter<
   "usuario:delete",
-  {
-    dto: DtoInput;
-  }
+  { dto: object }
 >;
-
-// =====================
-
-export type IAuthzStatementNivelFormacaoCreate = IBaseAuthzCheck<
-  "nivel_formacao:create",
-  {
-    dto: DtoInput;
-  }
->;
-export type IAuthzStatementNivelFormacaoFind = IBaseAuthzFilter<"nivel_formacao:find">;
-export type IAuthzStatementNivelFormacaoUpdate = IBaseAuthzFilter<
-  "nivel_formacao:update",
-  {
-    dto: DtoInput;
-  }
->;
-export type IAuthzStatementNivelFormacaoDelete = IBaseAuthzFilter<
-  "nivel_formacao:delete",
-  {
-    dto: DtoInput;
-  }
->;
-
-// =====================
-
-export type IAuthzStatementModalidadeCreate = IBaseAuthzCheck<
-  "modalidade:create",
-  {
-    dto: DtoInput;
-  }
->;
-export type IAuthzStatementModalidadeFind = IBaseAuthzFilter<"modalidade:find">;
-export type IAuthzStatementModalidadeUpdate = IBaseAuthzFilter<
-  "modalidade:update",
-  {
-    dto: DtoInput;
-  }
->;
-export type IAuthzStatementModalidadeDelete = IBaseAuthzFilter<
-  "modalidade:delete",
-  {
-    dto: DtoInput;
-  }
->;
-
-// =====================
-
-export type IAuthzStatementOfertaFormacaoNivelFormacaoCreate = IBaseAuthzCheck<
-  "oferta_formacao_nivel_formacao:create",
-  {
-    dto: DtoInput;
-  }
->;
-export type IAuthzStatementOfertaFormacaoNivelFormacaoFind =
-  IBaseAuthzFilter<"oferta_formacao_nivel_formacao:find">;
-
-export type IAuthzStatementOfertaFormacaoNivelFormacaoUpdate = IBaseAuthzFilter<
-  "oferta_formacao_nivel_formacao:update",
-  {
-    dto: DtoInput;
-  }
->;
-export type IAuthzStatementOfertaFormacaoNivelFormacaoDelete = IBaseAuthzFilter<
-  "oferta_formacao_nivel_formacao:delete",
-  {
-    dto: DtoInput;
-  }
->;
-
-// =====================
-
-export type IAuthzStatementOfertaFormacaoCreate = IBaseAuthzCheck<
-  "oferta_formacao:create",
-  {
-    dto: DtoInput;
-  }
->;
-export type IAuthzStatementOfertaFormacaoFind = IBaseAuthzFilter<"oferta_formacao:find">;
-export type IAuthzStatementOfertaFormacaoUpdate = IBaseAuthzFilter<
-  "oferta_formacao:update",
-  {
-    dto: DtoInput;
-  }
->;
-export type IAuthzStatementOfertaFormacaoDelete = IBaseAuthzFilter<
-  "oferta_formacao:delete",
-  {
-    dto: DtoInput;
-  }
->;
-
-// =====================
-
-export type IAuthzStatementVinculoFind = IBaseAuthzFilter<"vinculo:find">;
-
-// =====================
-
-export type IAuthzStatementCursoCreate = IBaseAuthzCheck<
+export type IAuthzStatementModalidadeCreate =
+  import("@/modules/@core/authorization").IBaseAuthzCheck<"modalidade:create", { dto: object }>;
+export type IAuthzStatementModalidadeFind =
+  import("@/modules/@core/authorization").IBaseAuthzFilter<"modalidade:find">;
+export type IAuthzStatementModalidadeUpdate =
+  import("@/modules/@core/authorization").IBaseAuthzFilter<"modalidade:update", { dto: object }>;
+export type IAuthzStatementModalidadeDelete =
+  import("@/modules/@core/authorization").IBaseAuthzFilter<"modalidade:delete", { dto: object }>;
+export type IAuthzStatementVinculoFind =
+  import("@/modules/@core/authorization").IBaseAuthzFilter<"vinculo:find">;
+export type IAuthzStatementCursoCreate = import("@/modules/@core/authorization").IBaseAuthzCheck<
   "curso:create",
-  {
-    dto: DtoInput;
-  }
+  { dto: object }
 >;
-export type IAuthzStatementCursoUpdate = IBaseAuthzFilter<
+export type IAuthzStatementCursoFind =
+  import("@/modules/@core/authorization").IBaseAuthzFilter<"curso:find">;
+export type IAuthzStatementCursoUpdate = import("@/modules/@core/authorization").IBaseAuthzFilter<
   "curso:update",
-  {
-    dto: DtoInput;
-  }
+  { dto: object }
 >;
-export type IAuthzStatementCursoDelete = IBaseAuthzFilter<
+export type IAuthzStatementCursoDelete = import("@/modules/@core/authorization").IBaseAuthzFilter<
   "curso:delete",
-  {
-    dto: DtoInput;
-  }
+  { dto: object }
 >;
-export type IAuthzStatementCursoFind = IBaseAuthzFilter<"curso:find">;
-
-// =====================
-
-export type IAuthzStatementDisciplinaCreate = IBaseAuthzCheck<
-  "disciplina:create",
-  {
-    dto: DtoInput;
-  }
->;
-export type IAuthzStatementDisciplinaUpdate = IBaseAuthzFilter<
-  "disciplina:update",
-  {
-    dto: DtoInput;
-  }
->;
-export type IAuthzStatementDisciplinaDelete = IBaseAuthzFilter<
-  "disciplina:delete",
-  {
-    dto: DtoInput;
-  }
->;
-export type IAuthzStatementDisciplinaFind = IBaseAuthzFilter<"disciplina:find">;
-
-// =====================
-
-export type IAuthzStatementTurmaCreate = IBaseAuthzCheck<
+export type IAuthzStatementDisciplinaCreate =
+  import("@/modules/@core/authorization").IBaseAuthzCheck<"disciplina:create", { dto: object }>;
+export type IAuthzStatementDisciplinaFind =
+  import("@/modules/@core/authorization").IBaseAuthzFilter<"disciplina:find">;
+export type IAuthzStatementDisciplinaUpdate =
+  import("@/modules/@core/authorization").IBaseAuthzFilter<"disciplina:update", { dto: object }>;
+export type IAuthzStatementDisciplinaDelete =
+  import("@/modules/@core/authorization").IBaseAuthzFilter<"disciplina:delete", { dto: object }>;
+export type IAuthzStatementTurmaCreate = import("@/modules/@core/authorization").IBaseAuthzCheck<
   "turma:create",
-  {
-    dto: DtoInput;
-  }
+  { dto: object }
 >;
-export type IAuthzStatementTurmaUpdate = IBaseAuthzFilter<
+export type IAuthzStatementTurmaFind =
+  import("@/modules/@core/authorization").IBaseAuthzFilter<"turma:find">;
+export type IAuthzStatementTurmaUpdate = import("@/modules/@core/authorization").IBaseAuthzFilter<
   "turma:update",
-  {
-    dto: DtoInput;
-  }
+  { dto: object }
 >;
-export type IAuthzStatementTurmaDelete = IBaseAuthzFilter<
+export type IAuthzStatementTurmaDelete = import("@/modules/@core/authorization").IBaseAuthzFilter<
   "turma:delete",
-  {
-    dto: DtoInput;
-  }
+  { dto: object }
 >;
-export type IAuthzStatementTurmaFind = IBaseAuthzFilter<"turma:find">;
-
-// =====================
-
-export type IAuthzStatementDiarioCreate = IBaseAuthzCheck<
+export type IAuthzStatementDiarioCreate = import("@/modules/@core/authorization").IBaseAuthzCheck<
   "diario:create",
-  {
-    dto: DtoInput;
-  }
+  { dto: object }
 >;
-export type IAuthzStatementDiarioUpdate = IBaseAuthzFilter<
+export type IAuthzStatementDiarioFind =
+  import("@/modules/@core/authorization").IBaseAuthzFilter<"diario:find">;
+export type IAuthzStatementDiarioUpdate = import("@/modules/@core/authorization").IBaseAuthzFilter<
   "diario:update",
-  {
-    dto: DtoInput;
-  }
+  { dto: object }
 >;
-export type IAuthzStatementDiarioDelete = IBaseAuthzFilter<
+export type IAuthzStatementDiarioDelete = import("@/modules/@core/authorization").IBaseAuthzFilter<
   "diario:delete",
-  {
-    dto: DtoInput;
-  }
+  { dto: object }
 >;
-export type IAuthzStatementDiarioFind = IBaseAuthzFilter<"diario:find">;
-
-// =====================
-
-export type IAuthzStatementReservaCreate = IBaseAuthzCheck<
+export type IAuthzStatementReservaCreate = import("@/modules/@core/authorization").IBaseAuthzCheck<
   "reserva:create",
-  {
-    dto: DtoInput;
-  }
+  { dto: object }
 >;
-export type IAuthzStatementReservaUpdate = IBaseAuthzFilter<
+export type IAuthzStatementReservaFind =
+  import("@/modules/@core/authorization").IBaseAuthzFilter<"reserva:find">;
+export type IAuthzStatementReservaUpdate = import("@/modules/@core/authorization").IBaseAuthzFilter<
   "reserva:update",
-  {
-    dto: DtoInput;
-  }
+  { dto: object }
 >;
-export type IAuthzStatementReservaDelete = IBaseAuthzFilter<
+export type IAuthzStatementReservaDelete = import("@/modules/@core/authorization").IBaseAuthzFilter<
   "reserva:delete",
-  {
-    dto: DtoInput;
-  }
+  { dto: object }
 >;
-export type IAuthzStatementReservaFind = IBaseAuthzFilter<"reserva:find">;
-
-// =====================
-
-export type IAuthzStatementCalendarioLetivoCreate = IBaseAuthzCheck<
-  "calendario_letivo:create",
-  {
-    dto: DtoInput;
-  }
->;
-export type IAuthzStatementCalendarioLetivoUpdate = IBaseAuthzFilter<
-  "calendario_letivo:update",
-  {
-    dto: DtoInput;
-  }
->;
-export type IAuthzStatementCalendarioLetivoDelete = IBaseAuthzFilter<
-  "calendario_letivo:delete",
-  {
-    dto: DtoInput;
-  }
->;
-export type IAuthzStatementCalendarioLetivoFind = IBaseAuthzFilter<"calendario_letivo:find">;
-
-// =====================
-
-export type IAuthzStatementGradeHorarioOfertaFormacaoCreate = IBaseAuthzCheck<
-  "grade_horario_oferta_formacao:create",
-  {
-    dto: DtoInput;
-  }
->;
-export type IAuthzStatementGradeHorarioOfertaFormacaoFind =
-  IBaseAuthzFilter<"grade_horario_oferta_formacao:find">;
-
-export type IAuthzStatementGradeHorarioOfertaFormacaoUpdate = IBaseAuthzFilter<
-  "grade_horario_oferta_formacao:update",
-  {
-    dto: DtoInput;
-  }
->;
-export type IAuthzStatementGradeHorarioOfertaFormacaoDelete = IBaseAuthzFilter<
-  "grade_horario_oferta_formacao:delete",
-  {
-    dto: DtoInput;
-  }
->;
-
-// =====================
-
-export type IAuthzStatementGradeHorarioOfertaFormacaoIntervaloDeTempoCreate = IBaseAuthzCheck<
-  "grade_horario_oferta_formacao_intervalo_de_tempo:create",
-  {
-    dto: DtoInput;
-  }
->;
-export type IAuthzStatementGradeHorarioOfertaFormacaoIntervaloDeTempoFind =
-  IBaseAuthzFilter<"grade_horario_oferta_formacao_intervalo_de_tempo:find">;
-
-export type IAuthzStatementGradeHorarioOfertaFormacaoIntervaloDeTempoUpdate = IBaseAuthzFilter<
-  "grade_horario_oferta_formacao_intervalo_de_tempo:update",
-  {
-    dto: DtoInput;
-  }
->;
-export type IAuthzStatementGradeHorarioOfertaFormacaoIntervaloDeTempoDelete = IBaseAuthzFilter<
-  "grade_horario_oferta_formacao_intervalo_de_tempo:delete",
-  {
-    dto: DtoInput;
-  }
->;
-
-// =====================
-
-export type IAuthzStatementDiarioProfessorCreate = IBaseAuthzCheck<
-  "diario_professor:create",
-  {
-    dto: DtoInput;
-  }
->;
-
-export type IAuthzStatementDiarioProfessorUpdate = IBaseAuthzFilter<
-  "diario_professor:update",
-  {
-    dto: DtoInput;
-  }
->;
-
-export type IAuthzStatementDiarioProfessorDelete = IBaseAuthzFilter<
-  "diario_professor:delete",
-  {
-    dto: DtoInput;
-  }
->;
-
-export type IAuthzStatementDiarioProfessorFilter = IBaseAuthzFilter<"diario_professor:find">;
-
-// =====================
-
-export type IAuthzStatementEventoCreate = IBaseAuthzCheck<
-  "evento:create",
-  {
-    dto: DtoInput;
-  }
->;
-export type IAuthzStatementEventoUpdate = IBaseAuthzFilter<
-  "evento:update",
-  {
-    dto: DtoInput;
-  }
->;
-export type IAuthzStatementEventoDelete = IBaseAuthzFilter<
-  "evento:delete",
-  {
-    dto: DtoInput;
-  }
->;
-export type IAuthzStatementEventoFind = IBaseAuthzFilter<"evento:find">;
-
-// =====================
-
-export type IAuthzStatementDiaCalendarioCreate = IBaseAuthzCheck<
-  "dia_calendario:create",
-  {
-    dto: DtoInput;
-  }
->;
-export type IAuthzStatementDiaCalendarioUpdate = IBaseAuthzFilter<
-  "dia_calendario:update",
-  {
-    dto: DtoInput;
-  }
->;
-export type IAuthzStatementDiaCalendarioDelete = IBaseAuthzFilter<
-  "dia_calendario:delete",
-  {
-    dto: DtoInput;
-  }
->;
-export type IAuthzStatementDiaCalendarioFind = IBaseAuthzFilter<"dia_calendario:find">;
-
-// =====================
-
-export type IAuthzStatementEtapaCreate = IBaseAuthzCheck<
+export type IAuthzStatementCalendarioLetivoCreate =
+  import("@/modules/@core/authorization").IBaseAuthzCheck<
+    "calendario_letivo:create",
+    { dto: object }
+  >;
+export type IAuthzStatementCalendarioLetivoFind =
+  import("@/modules/@core/authorization").IBaseAuthzFilter<"calendario_letivo:find">;
+export type IAuthzStatementCalendarioLetivoUpdate =
+  import("@/modules/@core/authorization").IBaseAuthzFilter<
+    "calendario_letivo:update",
+    { dto: object }
+  >;
+export type IAuthzStatementCalendarioLetivoDelete =
+  import("@/modules/@core/authorization").IBaseAuthzFilter<
+    "calendario_letivo:delete",
+    { dto: object }
+  >;
+export type IAuthzStatementEtapaCreate = import("@/modules/@core/authorization").IBaseAuthzCheck<
   "etapa:create",
-  {
-    dto: DtoInput;
-  }
+  { dto: object }
 >;
-export type IAuthzStatementEtapaUpdate = IBaseAuthzFilter<
+export type IAuthzStatementEtapaFind =
+  import("@/modules/@core/authorization").IBaseAuthzFilter<"etapa:find">;
+export type IAuthzStatementEtapaUpdate = import("@/modules/@core/authorization").IBaseAuthzFilter<
   "etapa:update",
-  {
-    dto: DtoInput;
-  }
+  { dto: object }
 >;
-export type IAuthzStatementEtapaDelete = IBaseAuthzFilter<
+export type IAuthzStatementEtapaDelete = import("@/modules/@core/authorization").IBaseAuthzFilter<
   "etapa:delete",
-  {
-    dto: DtoInput;
-  }
+  { dto: object }
 >;
-export type IAuthzStatementEtapaFind = IBaseAuthzFilter<"etapa:find">;
-
-// =====================
-
-export type IAuthzStatementAulaCreate = IBaseAuthzCheck<
+export type IAuthzStatementAulaCreate = import("@/modules/@core/authorization").IBaseAuthzCheck<
   "aula:create",
-  {
-    dto: DtoInput;
-  }
+  { dto: object }
 >;
-export type IAuthzStatementAulaUpdate = IBaseAuthzFilter<
+export type IAuthzStatementAulaFind =
+  import("@/modules/@core/authorization").IBaseAuthzFilter<"aula:find">;
+export type IAuthzStatementAulaUpdate = import("@/modules/@core/authorization").IBaseAuthzFilter<
   "aula:update",
-  {
-    dto: DtoInput;
-  }
+  { dto: object }
 >;
-export type IAuthzStatementAulaDelete = IBaseAuthzFilter<
+export type IAuthzStatementAulaDelete = import("@/modules/@core/authorization").IBaseAuthzFilter<
   "aula:delete",
-  {
-    dto: DtoInput;
-  }
+  { dto: object }
 >;
-export type IAuthzStatementAulaFind = IBaseAuthzFilter<"aula:find">;
-
-// =====================
-
-export type IAuthzStatementDisponibilidadeCreate = IBaseAuthzCheck<
-  "disponibilidade:create",
-  {
-    dto: DtoInput;
-  }
+export type IAuthzStatementDiaCalendarioCreate =
+  import("@/modules/@core/authorization").IBaseAuthzCheck<"dia_calendario:create", { dto: object }>;
+export type IAuthzStatementDiaCalendarioFind =
+  import("@/modules/@core/authorization").IBaseAuthzFilter<"dia_calendario:find">;
+export type IAuthzStatementDiaCalendarioUpdate =
+  import("@/modules/@core/authorization").IBaseAuthzFilter<
+    "dia_calendario:update",
+    { dto: object }
+  >;
+export type IAuthzStatementDiaCalendarioDelete =
+  import("@/modules/@core/authorization").IBaseAuthzFilter<
+    "dia_calendario:delete",
+    { dto: object }
+  >;
+export type IAuthzStatementEventoCreate = import("@/modules/@core/authorization").IBaseAuthzCheck<
+  "evento:create",
+  { dto: object }
 >;
-export type IAuthzStatementDisponibilidadeUpdate = IBaseAuthzFilter<
-  "disponibilidade:update",
-  {
-    dto: DtoInput;
-  }
+export type IAuthzStatementEventoFind =
+  import("@/modules/@core/authorization").IBaseAuthzFilter<"evento:find">;
+export type IAuthzStatementEventoUpdate = import("@/modules/@core/authorization").IBaseAuthzFilter<
+  "evento:update",
+  { dto: object }
 >;
-export type IAuthzStatementDisponibilidadeDelete = IBaseAuthzFilter<
-  "disponibilidade:delete",
-  {
-    dto: DtoInput;
-  }
+export type IAuthzStatementEventoDelete = import("@/modules/@core/authorization").IBaseAuthzFilter<
+  "evento:delete",
+  { dto: object }
 >;
-export type IAuthzStatementDisponibilidadeFind = IBaseAuthzFilter<"disponibilidade:find">;
-
-// =====================
-
-export type IAuthzStatementTurmaDisponibilidadeCreate = IBaseAuthzCheck<
-  "turma_disponibilidade:create",
-  {
-    dto: DtoInput;
-  }
->;
-export type IAuthzStatementTurmaDisponibilidadeUpdate = IBaseAuthzFilter<
-  "turma_disponibilidade:update",
-  {
-    dto: DtoInput;
-  }
->;
-export type IAuthzStatementTurmaDisponibilidadeDelete = IBaseAuthzFilter<
-  "turma_disponibilidade:delete",
-  {
-    dto: DtoInput;
-  }
->;
-export type IAuthzStatementTurmaDisponibilidadeFind =
-  IBaseAuthzFilter<"turma_disponibilidade:find">;
-
-// =====================
-
-export type IAuthzStatementProfessorDisponibilidadeCreate = IBaseAuthzCheck<
-  "professor_disponibilidade:create",
-  {
-    dto: DtoInput;
-  }
->;
-export type IAuthzStatementProfessorDisponibilidadeUpdate = IBaseAuthzFilter<
-  "professor_disponibilidade:update",
-  {
-    dto: DtoInput;
-  }
->;
-export type IAuthzStatementProfessorDisponibilidadeDelete = IBaseAuthzFilter<
-  "professor_disponibilidade:delete",
-  {
-    dto: DtoInput;
-  }
->;
-export type IAuthzStatementProfessorDisponibilidadeFind =
-  IBaseAuthzFilter<"professor_disponibilidade:find">;
-
-// =====================
-
-export type IAuthzStatementDiarioPreferenciaAgrupamentoCreate = IBaseAuthzCheck<
-  "diario_preferencia_agrupamento:create",
-  {
-    dto: DtoInput;
-  }
->;
-export type IAuthzStatementDiarioPreferenciaAgrupamentoUpdate = IBaseAuthzFilter<
-  "diario_preferencia_agrupamento:update",
-  {
-    dto: DtoInput;
-  }
->;
-export type IAuthzStatementDiarioPreferenciaAgrupamentoDelete = IBaseAuthzFilter<
-  "diario_preferencia_agrupamento:delete",
-  {
-    dto: DtoInput;
-  }
->;
+export type IAuthzStatementDiarioProfessorCreate =
+  import("@/modules/@core/authorization").IBaseAuthzCheck<
+    "diario_professor:create",
+    { dto: object }
+  >;
+export type IAuthzStatementDiarioProfessorFilter =
+  import("@/modules/@core/authorization").IBaseAuthzFilter<"diario_professor:find">;
+export type IAuthzStatementDiarioProfessorUpdate =
+  import("@/modules/@core/authorization").IBaseAuthzFilter<
+    "diario_professor:update",
+    { dto: object }
+  >;
+export type IAuthzStatementDiarioProfessorDelete =
+  import("@/modules/@core/authorization").IBaseAuthzFilter<
+    "diario_professor:delete",
+    { dto: object }
+  >;
+export type IAuthzStatementDiarioPreferenciaAgrupamentoCreate =
+  import("@/modules/@core/authorization").IBaseAuthzCheck<
+    "diario_preferencia_agrupamento:create",
+    { dto: object }
+  >;
 export type IAuthzStatementDiarioPreferenciaAgrupamentoFind =
-  IBaseAuthzFilter<"diario_preferencia_agrupamento:find">;
-
-// =====================
-
-export type IAuthzStatementHorarioGeradoCreate = IBaseAuthzCheck<
-  "horario_gerado:create",
-  {
-    dto: DtoInput;
-  }
->;
-export type IAuthzStatementHorarioGeradoUpdate = IBaseAuthzFilter<
-  "horario_gerado:update",
-  {
-    dto: DtoInput;
-  }
->;
-export type IAuthzStatementHorarioGeradoDelete = IBaseAuthzFilter<
-  "horario_gerado:delete",
-  {
-    dto: DtoInput;
-  }
->;
-export type IAuthzStatementHorarioGeradoFind = IBaseAuthzFilter<"horario_gerado:find">;
-
-// =====================
-
-export type IAuthzStatementHorarioGeradoAulaCreate = IBaseAuthzCheck<
-  "horario_gerado_aula:create",
-  {
-    dto: DtoInput;
-  }
->;
-export type IAuthzStatementHorarioGeradoAulaUpdate = IBaseAuthzFilter<
-  "horario_gerado_aula:update",
-  {
-    dto: DtoInput;
-  }
->;
-export type IAuthzStatementHorarioGeradoAulaDelete = IBaseAuthzFilter<
-  "horario_gerado_aula:delete",
-  {
-    dto: DtoInput;
-  }
->;
-export type IAuthzStatementHorarioGeradoAulaFind = IBaseAuthzFilter<"horario_gerado_aula:find">;
-
-// ===================================================================================
-
-export type IAuthzStatementCheck =
-  | IAuthzStatementCampusCreate
-  | IAuthzStatementBlocoCreate
-  | IAuthzStatementAmbienteCreate
-  | IAuthzStatementUsuarioCreate
-  | IAuthzStatementNivelFormacaoCreate
-  | IAuthzStatementModalidadeCreate
-  | IAuthzStatementOfertaFormacaoCreate
-  | IAuthzStatementOfertaFormacaoNivelFormacaoCreate
-  | IAuthzStatementCursoCreate
-  | IAuthzStatementDisciplinaCreate
-  | IAuthzStatementTurmaCreate
-  | IAuthzStatementCalendarioLetivoCreate
-  | IAuthzStatementGradeHorarioOfertaFormacaoCreate
-  | IAuthzStatementGradeHorarioOfertaFormacaoIntervaloDeTempoCreate
-  | IAuthzStatementDiarioCreate
-  | IAuthzStatementReservaCreate
-  | IAuthzStatementDiarioProfessorCreate
-  | IAuthzStatementEventoCreate
-  | IAuthzStatementDiaCalendarioCreate
-  | IAuthzStatementEtapaCreate
-  | IAuthzStatementAulaCreate
-  | IAuthzStatementDisponibilidadeCreate
-  | IAuthzStatementTurmaDisponibilidadeCreate
-  | IAuthzStatementProfessorDisponibilidadeCreate
-  | IAuthzStatementDiarioPreferenciaAgrupamentoCreate
-  | IAuthzStatementHorarioGeradoCreate
-  | IAuthzStatementHorarioGeradoAulaCreate;
-
-// =====================
-
-export type IAuthzStatementFilter =
-  | IAuthzStatementEnderecoFind
-  | IAuthzStatementEstadoFind
-  | IAuthzStatementCidadeFind
-  | IAuthzStatementCampusFind
-  | IAuthzStatementCampusUpdate
-  | IAuthzStatementCampusDelete
-  | IAuthzStatementBlocoFind
-  | IAuthzStatementBlocoUpdate
-  | IAuthzStatementBlocoDelete
-  | IAuthzStatementNivelFormacaoFind
-  | IAuthzStatementNivelFormacaoUpdate
-  | IAuthzStatementNivelFormacaoDelete
-  | IAuthzStatementModalidadeFind
-  | IAuthzStatementModalidadeUpdate
-  | IAuthzStatementModalidadeDelete
-  | IAuthzStatementOfertaFormacaoFind
-  | IAuthzStatementOfertaFormacaoUpdate
-  | IAuthzStatementOfertaFormacaoDelete
-  | IAuthzStatementOfertaFormacaoNivelFormacaoFind
-  | IAuthzStatementOfertaFormacaoNivelFormacaoUpdate
-  | IAuthzStatementOfertaFormacaoNivelFormacaoDelete
-  | IAuthzStatementAmbienteFind
-  | IAuthzStatementAmbienteUpdate
-  | IAuthzStatementAmbienteDelete
-  | IAuthzStatementUsuarioFind
-  | IAuthzStatementUsuarioUpdate
-  | IAuthzStatementUsuarioDelete
-  | IAuthzStatementVinculoFind
-  | IAuthzStatementCursoDelete
-  | IAuthzStatementCursoFind
-  | IAuthzStatementCursoUpdate
-  | IAuthzStatementDisciplinaUpdate
-  | IAuthzStatementDisciplinaDelete
-  | IAuthzStatementDisciplinaFind
-  | IAuthzStatementTurmaUpdate
-  | IAuthzStatementTurmaDelete
-  | IAuthzStatementTurmaFind
-  | IAuthzStatementDiarioUpdate
-  | IAuthzStatementDiarioDelete
-  | IAuthzStatementDiarioFind
-  | IAuthzStatementReservaUpdate
-  | IAuthzStatementReservaDelete
-  | IAuthzStatementReservaFind
-  | IAuthzStatementCalendarioLetivoDelete
-  | IAuthzStatementCalendarioLetivoFind
-  | IAuthzStatementCalendarioLetivoUpdate
-  | IAuthzStatementGradeHorarioOfertaFormacaoDelete
-  | IAuthzStatementGradeHorarioOfertaFormacaoFind
-  | IAuthzStatementGradeHorarioOfertaFormacaoUpdate
-  | IAuthzStatementGradeHorarioOfertaFormacaoIntervaloDeTempoDelete
-  | IAuthzStatementGradeHorarioOfertaFormacaoIntervaloDeTempoFind
-  | IAuthzStatementGradeHorarioOfertaFormacaoIntervaloDeTempoUpdate
-  | IAuthzStatementDiarioProfessorUpdate
-  | IAuthzStatementDiarioProfessorDelete
-  | IAuthzStatementDiarioProfessorFilter
-  | IAuthzStatementEventoFind
-  | IAuthzStatementEventoUpdate
-  | IAuthzStatementEventoDelete
-  | IAuthzStatementDiaCalendarioFind
-  | IAuthzStatementDiaCalendarioUpdate
-  | IAuthzStatementDiaCalendarioDelete
-  | IAuthzStatementEtapaUpdate
-  | IAuthzStatementEtapaFind
-  | IAuthzStatementEtapaDelete
-  | IAuthzStatementAulaUpdate
-  | IAuthzStatementAulaDelete
-  | IAuthzStatementAulaFind
-  | IAuthzStatementDisponibilidadeUpdate
-  | IAuthzStatementDisponibilidadeFind
-  | IAuthzStatementDisponibilidadeDelete
-  | IAuthzStatementTurmaDisponibilidadeUpdate
-  | IAuthzStatementTurmaDisponibilidadeFind
-  | IAuthzStatementTurmaDisponibilidadeDelete
-  | IAuthzStatementProfessorDisponibilidadeUpdate
-  | IAuthzStatementProfessorDisponibilidadeFind
-  | IAuthzStatementProfessorDisponibilidadeDelete
-  | IAuthzStatementDiarioPreferenciaAgrupamentoUpdate
-  | IAuthzStatementDiarioPreferenciaAgrupamentoFind
-  | IAuthzStatementDiarioPreferenciaAgrupamentoDelete
-  | IAuthzStatementHorarioGeradoUpdate
-  | IAuthzStatementHorarioGeradoFind
-  | IAuthzStatementHorarioGeradoDelete
-  | IAuthzStatementHorarioGeradoAulaUpdate
-  | IAuthzStatementHorarioGeradoAulaDelete
-  | IAuthzStatementHorarioGeradoAulaFind;
-
-// =====================
-
-export type IAuthzStatement = IAuthzStatementFilter | IAuthzStatementCheck;
-
-// ===================================================================================
-
-export const createStatement = <Statement extends IAuthzStatement>(
-  statement: Omit<Statement, "payload">,
-) => statement as Statement;
-
-// ===================================================================================
+  import("@/modules/@core/authorization").IBaseAuthzFilter<"diario_preferencia_agrupamento:find">;
+export type IAuthzStatementDiarioPreferenciaAgrupamentoUpdate =
+  import("@/modules/@core/authorization").IBaseAuthzFilter<
+    "diario_preferencia_agrupamento:update",
+    { dto: object }
+  >;
+export type IAuthzStatementDiarioPreferenciaAgrupamentoDelete =
+  import("@/modules/@core/authorization").IBaseAuthzFilter<
+    "diario_preferencia_agrupamento:delete",
+    { dto: object }
+  >;
+export type IAuthzStatementHorarioGeradoCreate =
+  import("@/modules/@core/authorization").IBaseAuthzCheck<"horario_gerado:create", { dto: object }>;
+export type IAuthzStatementHorarioGeradoFind =
+  import("@/modules/@core/authorization").IBaseAuthzFilter<"horario_gerado:find">;
+export type IAuthzStatementHorarioGeradoUpdate =
+  import("@/modules/@core/authorization").IBaseAuthzFilter<
+    "horario_gerado:update",
+    { dto: object }
+  >;
+export type IAuthzStatementHorarioGeradoDelete =
+  import("@/modules/@core/authorization").IBaseAuthzFilter<
+    "horario_gerado:delete",
+    { dto: object }
+  >;
+export type IAuthzStatementHorarioGeradoAulaCreate =
+  import("@/modules/@core/authorization").IBaseAuthzCheck<
+    "horario_gerado_aula:create",
+    { dto: object }
+  >;
+export type IAuthzStatementHorarioGeradoAulaFind =
+  import("@/modules/@core/authorization").IBaseAuthzFilter<"horario_gerado_aula:find">;
+export type IAuthzStatementHorarioGeradoAulaUpdate =
+  import("@/modules/@core/authorization").IBaseAuthzFilter<
+    "horario_gerado_aula:update",
+    { dto: object }
+  >;
+export type IAuthzStatementHorarioGeradoAulaDelete =
+  import("@/modules/@core/authorization").IBaseAuthzFilter<
+    "horario_gerado_aula:delete",
+    { dto: object }
+  >;
+export type IAuthzStatementNivelFormacaoCreate =
+  import("@/modules/@core/authorization").IBaseAuthzCheck<"nivel_formacao:create", { dto: object }>;
+export type IAuthzStatementNivelFormacaoFind =
+  import("@/modules/@core/authorization").IBaseAuthzFilter<"nivel_formacao:find">;
+export type IAuthzStatementNivelFormacaoUpdate =
+  import("@/modules/@core/authorization").IBaseAuthzFilter<
+    "nivel_formacao:update",
+    { dto: object }
+  >;
+export type IAuthzStatementNivelFormacaoDelete =
+  import("@/modules/@core/authorization").IBaseAuthzFilter<
+    "nivel_formacao:delete",
+    { dto: object }
+  >;
+export type IAuthzStatementOfertaFormacaoCreate =
+  import("@/modules/@core/authorization").IBaseAuthzCheck<
+    "oferta_formacao:create",
+    { dto: object }
+  >;
+export type IAuthzStatementOfertaFormacaoFind =
+  import("@/modules/@core/authorization").IBaseAuthzFilter<"oferta_formacao:find">;
+export type IAuthzStatementOfertaFormacaoUpdate =
+  import("@/modules/@core/authorization").IBaseAuthzFilter<
+    "oferta_formacao:update",
+    { dto: object }
+  >;
+export type IAuthzStatementOfertaFormacaoDelete =
+  import("@/modules/@core/authorization").IBaseAuthzFilter<
+    "oferta_formacao:delete",
+    { dto: object }
+  >;
+export type IAuthzStatementOfertaFormacaoNivelFormacaoCreate =
+  import("@/modules/@core/authorization").IBaseAuthzCheck<
+    "oferta_formacao_nivel_formacao:create",
+    { dto: object }
+  >;
+export type IAuthzStatementOfertaFormacaoNivelFormacaoFind =
+  import("@/modules/@core/authorization").IBaseAuthzFilter<"oferta_formacao_nivel_formacao:find">;
+export type IAuthzStatementOfertaFormacaoNivelFormacaoUpdate =
+  import("@/modules/@core/authorization").IBaseAuthzFilter<
+    "oferta_formacao_nivel_formacao:update",
+    { dto: object }
+  >;
+export type IAuthzStatementOfertaFormacaoNivelFormacaoDelete =
+  import("@/modules/@core/authorization").IBaseAuthzFilter<
+    "oferta_formacao_nivel_formacao:delete",
+    { dto: object }
+  >;
+export type IAuthzStatementGradeHorarioOfertaFormacaoCreate =
+  import("@/modules/@core/authorization").IBaseAuthzCheck<
+    "grade_horario_oferta_formacao:create",
+    { dto: object }
+  >;
+export type IAuthzStatementGradeHorarioOfertaFormacaoFind =
+  import("@/modules/@core/authorization").IBaseAuthzFilter<"grade_horario_oferta_formacao:find">;
+export type IAuthzStatementGradeHorarioOfertaFormacaoUpdate =
+  import("@/modules/@core/authorization").IBaseAuthzFilter<
+    "grade_horario_oferta_formacao:update",
+    { dto: object }
+  >;
+export type IAuthzStatementGradeHorarioOfertaFormacaoDelete =
+  import("@/modules/@core/authorization").IBaseAuthzFilter<
+    "grade_horario_oferta_formacao:delete",
+    { dto: object }
+  >;
+export type IAuthzStatementGradeHorarioOfertaFormacaoIntervaloDeTempoCreate =
+  import("@/modules/@core/authorization").IBaseAuthzCheck<
+    "grade_horario_oferta_formacao_intervalo_de_tempo:create",
+    { dto: object }
+  >;
+export type IAuthzStatementGradeHorarioOfertaFormacaoIntervaloDeTempoFind =
+  import("@/modules/@core/authorization").IBaseAuthzFilter<"grade_horario_oferta_formacao_intervalo_de_tempo:find">;
+export type IAuthzStatementGradeHorarioOfertaFormacaoIntervaloDeTempoUpdate =
+  import("@/modules/@core/authorization").IBaseAuthzFilter<
+    "grade_horario_oferta_formacao_intervalo_de_tempo:update",
+    { dto: object }
+  >;
+export type IAuthzStatementGradeHorarioOfertaFormacaoIntervaloDeTempoDelete =
+  import("@/modules/@core/authorization").IBaseAuthzFilter<
+    "grade_horario_oferta_formacao_intervalo_de_tempo:delete",
+    { dto: object }
+  >;
+export type IAuthzStatementDisponibilidadeCreate =
+  import("@/modules/@core/authorization").IBaseAuthzCheck<
+    "disponibilidade:create",
+    { dto: object }
+  >;
+export type IAuthzStatementDisponibilidadeFind =
+  import("@/modules/@core/authorization").IBaseAuthzFilter<"disponibilidade:find">;
+export type IAuthzStatementDisponibilidadeUpdate =
+  import("@/modules/@core/authorization").IBaseAuthzFilter<
+    "disponibilidade:update",
+    { dto: object }
+  >;
+export type IAuthzStatementDisponibilidadeDelete =
+  import("@/modules/@core/authorization").IBaseAuthzFilter<
+    "disponibilidade:delete",
+    { dto: object }
+  >;
+export type IAuthzStatementTurmaDisponibilidadeCreate =
+  import("@/modules/@core/authorization").IBaseAuthzCheck<
+    "turma_disponibilidade:create",
+    { dto: object }
+  >;
+export type IAuthzStatementTurmaDisponibilidadeFind =
+  import("@/modules/@core/authorization").IBaseAuthzFilter<"turma_disponibilidade:find">;
+export type IAuthzStatementTurmaDisponibilidadeUpdate =
+  import("@/modules/@core/authorization").IBaseAuthzFilter<
+    "turma_disponibilidade:update",
+    { dto: object }
+  >;
+export type IAuthzStatementTurmaDisponibilidadeDelete =
+  import("@/modules/@core/authorization").IBaseAuthzFilter<
+    "turma_disponibilidade:delete",
+    { dto: object }
+  >;
+export type IAuthzStatementProfessorDisponibilidadeCreate =
+  import("@/modules/@core/authorization").IBaseAuthzCheck<
+    "professor_disponibilidade:create",
+    { dto: object }
+  >;
+export type IAuthzStatementProfessorDisponibilidadeFind =
+  import("@/modules/@core/authorization").IBaseAuthzFilter<"professor_disponibilidade:find">;
+export type IAuthzStatementProfessorDisponibilidadeUpdate =
+  import("@/modules/@core/authorization").IBaseAuthzFilter<
+    "professor_disponibilidade:update",
+    { dto: object }
+  >;
+export type IAuthzStatementProfessorDisponibilidadeDelete =
+  import("@/modules/@core/authorization").IBaseAuthzFilter<
+    "professor_disponibilidade:delete",
+    { dto: object }
+  >;

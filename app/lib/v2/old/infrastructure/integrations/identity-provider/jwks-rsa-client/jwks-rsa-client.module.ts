@@ -1,10 +1,5 @@
-import { Module } from "@nestjs/common";
-import { OpenidConnectModule } from "../openid-connect";
-import { JwksRsaClientService } from "./jwks-rsa-client.service";
-
-@Module({
-  imports: [OpenidConnectModule],
-  providers: [JwksRsaClientService],
-  exports: [JwksRsaClientService],
-})
-export class JwksRsaClientModule {}
+/**
+ * @deprecated Use `import { JwksRsaClientModule } from "@/modules/@core/identity-provider"` instead.
+ * Este arquivo será removido na próxima versão major.
+ */
+export { JwksRsaClientModule } from "@/modules/@core/identity-provider";

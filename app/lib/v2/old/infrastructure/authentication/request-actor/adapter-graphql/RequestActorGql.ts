@@ -1,8 +1,5 @@
-import { createParamDecorator, ExecutionContext } from "@nestjs/common";
-import { GqlExecutionContext } from "@nestjs/graphql";
-
-export const RequestActorGql = createParamDecorator((_data: unknown, context: ExecutionContext) => {
-  const ctx = GqlExecutionContext.create(context);
-  const request = ctx.getContext().req;
-  return request.user ?? null;
-});
+/**
+ * @deprecated Use `import { RequestActorGql } from "@/modules/@core/request-actor"` instead.
+ * Este arquivo será removido na próxima versão major.
+ */
+export { RequestActorGql } from "@/modules/@core/request-actor";
