@@ -1,5 +1,5 @@
 import { castArray } from "lodash";
-import type { SelectQueryBuilder } from "typeorm";
+import { Brackets, type SelectQueryBuilder } from "typeorm";
 import {
   AuthzPolicyPublic,
   type IAuthzPolicy,
@@ -60,7 +60,7 @@ export class AccessContext implements IAccessContext {
         qb.andWhere(filter ? "TRUE" : "FALSE");
       } else if (typeof filter === "function") {
         const qbFactory = await filter(context, alias ?? qb.alias);
-        qb.andWhere(qbFactory);
+        qb.andWhere(new Brackets(qbFactory));
       }
     } else if (!this.#permissionCheckEnabled) {
       qb.andWhere("TRUE");
