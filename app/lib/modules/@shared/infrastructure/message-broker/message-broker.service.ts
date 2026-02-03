@@ -31,7 +31,8 @@ export class MessageBrokerService {
         subscription.cancel();
 
         try {
-          const response = JSON.parse(content.toString()) as TResponse;
+          // content is already parsed as JSON by rascal when contentType is "application/json"
+          const response = (typeof content === "string" ? JSON.parse(content) : content) as TResponse;
           this.logger.log(`Resposta recebida da queue ${queueResponse}`);
           resolve(response);
         } catch (e) {
