@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { BrokerAsPromised as Broker, BrokerConfig } from "rascal";
-import { CONFIG_PORT, IConfigPort } from "@/modules/@shared/application/ports/out/config";
+import { CONFIG_PORT, type IConfigPort } from "@/modules/@shared/application/ports/out/config";
 
 @Injectable()
 export class MessageBrokerContainerService {

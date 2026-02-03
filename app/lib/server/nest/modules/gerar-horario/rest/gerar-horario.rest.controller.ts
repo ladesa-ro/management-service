@@ -1,5 +1,5 @@
-import { Controller, Get, NotFoundException, Post } from "@nestjs/common";
-import { ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
+import { Controller, Get } from "@nestjs/common";
+import { ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { GerarHorarioService } from "@/modules/gerar-horario";
 import { GenerateRequest, ServiceGenerateResponse } from "@ladesa-ro/messages.timetable-generator.v1";
 
@@ -7,16 +7,6 @@ import { GenerateRequest, ServiceGenerateResponse } from "@ladesa-ro/messages.ti
 @Controller("/gerar-horario")
 export class GerarHorarioRestController {
   constructor(private gerarHorarioService: GerarHorarioService) {}
-
-  @Post("/")
-  @ApiOperation({
-    summary: "Publica mensagem para geracao de horario",
-    operationId: "gerarHorarioPublish",
-  })
-  @ApiCreatedResponse({ type: String })
-  async publishMessage(): Promise<string | NotFoundException> {
-    return this.gerarHorarioService.publishMessage();
-  }
 
   @Get("/poc")
   @ApiOperation({
