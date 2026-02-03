@@ -43,21 +43,12 @@ export class MessageBrokerContainerService {
           },
           queues: [
             {
-              name: "horario_gerado",
-              options: {
-                durable: true,
-              },
-            },
-            {
-              name: "gerar_horario",
-              options: {
-                durable: true,
-              },
-            },
-            {
               name: queueTimetableRequest,
               options: {
                 durable: true,
+                arguments: {
+                  "x-dead-letter-exchange": `dlx.${queueTimetableRequest}`,
+                },
               },
             },
             {
@@ -68,14 +59,6 @@ export class MessageBrokerContainerService {
             },
           ],
           subscriptions: {
-            horario_gerado: {
-              queue: "horario_gerado",
-              prefetch: 1,
-              contentType: "text/plain",
-              options: {
-                noAck: false,
-              },
-            },
             [queueTimetableResponse]: {
               queue: queueTimetableResponse,
               prefetch: 1,
@@ -86,9 +69,6 @@ export class MessageBrokerContainerService {
             },
           },
           publications: {
-            gerar_horario: {
-              queue: "gerar_horario",
-            },
             [queueTimetableRequest]: {
               queue: queueTimetableRequest,
             },
