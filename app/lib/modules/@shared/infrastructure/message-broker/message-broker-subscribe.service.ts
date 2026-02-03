@@ -16,17 +16,17 @@ export class MessageBrokerSubscribeService implements OnModuleInit {
 
   async setup() {
     if (!this.#subscription) {
-      const broker = await this.messageBrokerContainerService.getBroker();
-
-      const subscribe = await broker.subscribe("horario_gerado");
-
-      subscribe.on("message", (message, content, ackOrNoAck) => {
-        this.logger.log("Horario Recebido:\n\n\n\n " + content.toString());
-        ackOrNoAck();
-      });
-
-      subscribe.on("error", console.error);
-      this.#subscription = subscribe;
+      // const broker = await this.messageBrokerContainerService.getBroker();
+      //
+      // const subscribe = await broker.subscribe("horario_gerado");
+      //
+      // subscribe.on("message", (message, content, ackOrNoAck) => {
+      //   this.logger.log("Horario Recebido:\n\n\n\n " + content.toString());
+      //   ackOrNoAck();
+      // });
+      //
+      // subscribe.on("error", console.error);
+      // this.#subscription = subscribe;
     }
   }
 }
