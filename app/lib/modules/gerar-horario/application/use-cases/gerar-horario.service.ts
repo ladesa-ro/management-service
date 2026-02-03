@@ -8,4 +8,8 @@ export class GerarHorarioService {
   publishMessage() {
     return this.messageBrokerService.publishDbEvent();
   }
+
+  async publishTimetableRequest<TRequest, TResponse>(request: TRequest, timeoutMs?: number): Promise<TResponse> {
+    return this.messageBrokerService.publishTimetableRequest<TRequest, TResponse>(request, timeoutMs);
+  }
 }

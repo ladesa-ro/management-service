@@ -1,9 +1,16 @@
-import { Injectable, Logger, NotFoundException } from "@nestjs/common";
+import { Inject, Injectable, Logger, NotFoundException } from "@nestjs/common";
+import { CONFIG_PORT, IConfigPort } from "@/modules/@shared/application/ports/out/config";
 import { MessageBrokerContainerService } from "./message-broker-container.service";
 
 @Injectable()
 export class MessageBrokerService {
-  constructor(private messageBrokerContainerService: MessageBrokerContainerService) {}
+  private readonly logger = new Logger(MessageBrokerService.name);
+
+  constructor(
+    private messageBrokerContainerService: MessageBrokerContainerService,
+    @Inject(CONFIG_PORT)
+    private readonly configPort: IConfigPort,
+  ) {}
 
   async publishDbEvent() {
     try {
@@ -90,5 +97,43 @@ export class MessageBrokerService {
       ],
       logDebug: false,
     };
+  }
+
+  async publishTimetableRequest<TRequest, TResponse>(request: TRequest, timeoutMs = 60000): Promise<TResponse> {
+    const broker = await this.messageBrokerContainerService.getBroker();
+    const queueRequest = this.configPort.getMessageBrokerQueueTimetableRequest();
+    const queueResponse = this.configPort.getMessageBrokerQueueTimetableResponse();
+
+    return new Promise<TResponse>(async (resolve, reject) => {
+      const timeout = setTimeout(() => {
+        subscription?.cancel();
+        reject(new Error(`Timeout aguardando resposta da queue ${queueResponse}`));
+      }, timeoutMs);
+
+      const subscription = await broker.subscribe(queueResponse);
+
+      subscription.on("message", (_message, content, ackOrNoAck) => {
+        clearTimeout(timeout);
+        ackOrNoAck();
+        subscription.cancel();
+
+        try {
+          const response = JSON.parse(content.toString()) as TResponse;
+          this.logger.log(`Resposta recebida da queue ${queueResponse}`);
+          resolve(response);
+        } catch (e) {
+          reject(new Error("Erro ao parsear resposta JSON: " + e));
+        }
+      });
+
+      subscription.on("error", (err) => {
+        clearTimeout(timeout);
+        subscription.cancel();
+        reject(err);
+      });
+
+      this.logger.log(`Publicando mensagem na queue ${queueRequest}`);
+      await broker.publish(queueRequest, JSON.stringify(request));
+    });
   }
 }

@@ -1,9 +1,15 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { BrokerAsPromised as Broker, BrokerConfig } from "rascal";
+import { CONFIG_PORT, IConfigPort } from "@/modules/@shared/application/ports/out/config";
 
 @Injectable()
 export class MessageBrokerContainerService {
   #broker: Broker | null = null;
+
+  constructor(
+    @Inject(CONFIG_PORT)
+    private readonly configPort: IConfigPort,
+  ) {}
 
   async setup() {
     if (this.#broker === null) {
@@ -25,11 +31,15 @@ export class MessageBrokerContainerService {
   }
 
   getConfig(): BrokerConfig {
+    const messageBrokerUrl = this.configPort.getMessageBrokerUrl();
+    const queueTimetableRequest = this.configPort.getMessageBrokerQueueTimetableRequest();
+    const queueTimetableResponse = this.configPort.getMessageBrokerQueueTimetableResponse();
+
     const config: BrokerConfig = {
       vhosts: {
         "/": {
           connection: {
-            url: "amqp://admin:admin@sisgea-message-broker",
+            url: messageBrokerUrl,
           },
           queues: [
             {
@@ -44,6 +54,18 @@ export class MessageBrokerContainerService {
                 durable: true,
               },
             },
+            {
+              name: queueTimetableRequest,
+              options: {
+                durable: true,
+              },
+            },
+            {
+              name: queueTimetableResponse,
+              options: {
+                durable: true,
+              },
+            },
           ],
           subscriptions: {
             horario_gerado: {
@@ -54,10 +76,21 @@ export class MessageBrokerContainerService {
                 noAck: false,
               },
             },
+            [queueTimetableResponse]: {
+              queue: queueTimetableResponse,
+              prefetch: 1,
+              contentType: "application/json",
+              options: {
+                noAck: false,
+              },
+            },
           },
           publications: {
             gerar_horario: {
               queue: "gerar_horario",
+            },
+            [queueTimetableRequest]: {
+              queue: queueTimetableRequest,
             },
           },
         },

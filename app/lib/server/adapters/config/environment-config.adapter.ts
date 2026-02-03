@@ -331,4 +331,32 @@ export class EnvironmentConfigAdapter implements IConfigPort {
       clientSecret,
     };
   }
+
+  // ========================================
+  // Message Broker
+  // ========================================
+
+  getMessageBrokerUrl(): string {
+    const url = this.nestConfigService.get<string>("MESSAGE_BROKER_URL");
+
+    if (!url) {
+      throw new Error("Please provide env.MESSAGE_BROKER_URL (e.g. amqp://admin:admin@localhost)");
+    }
+
+    return url;
+  }
+
+  getMessageBrokerQueueTimetableRequest(): string {
+    return (
+      this.nestConfigService.get<string>("MESSAGE_BROKER_QUEUE_TIMETABLE_REQUEST") ??
+      "dev.timetable_generate.request"
+    );
+  }
+
+  getMessageBrokerQueueTimetableResponse(): string {
+    return (
+      this.nestConfigService.get<string>("MESSAGE_BROKER_QUEUE_TIMETABLE_RESPONSE") ??
+      "dev.timetable_generate.response"
+    );
+  }
 }

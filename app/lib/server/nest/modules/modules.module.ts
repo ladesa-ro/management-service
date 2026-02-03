@@ -20,7 +20,7 @@ import { EnderecoModule } from "@/server/nest/modules/endereco";
 import { EstadoModule } from "@/server/nest/modules/estado/estado.module";
 import { EtapaModule } from "@/server/nest/modules/etapa";
 import { EventoModule } from "@/server/nest/modules/evento";
-// import { GerarHorarioModule } from "@/server/nest/modules/gerar-horario";
+import { GerarHorarioModule } from "@/server/nest/modules/gerar-horario";
 import { GradeHorarioOfertaFormacaoModule } from "@/server/nest/modules/grade-horario-oferta-formacao";
 import { GradeHorarioOfertaFormacaoIntervaloDeTempoModule } from "@/server/nest/modules/grade-horario-oferta-formacao-intervalo-de-tempo";
 import { HealthModule } from "@/server/nest/modules/health";
@@ -74,7 +74,7 @@ import { UsuarioModule } from "@/server/nest/modules/usuario";
     AutenticacaoModule,
     DiarioModule,
     TurmaModule,
-    // GerarHorarioModule,
+    GerarHorarioModule,
     DiaCalendarioModule,
     EnderecoModule,
     EstadoModule,
