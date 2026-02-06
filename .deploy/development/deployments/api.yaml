@@ -1,15 +1,17 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: api
+  name: ladesa-ro-api
   labels:
-    app: api
-  namespace: ladesa
+    app: ladesa-ro-api
+  namespace: ladesa-ro-development
+  annotations:
+    secrets.infisical.com/auto-reload: "true"
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: api
+      app: ladesa-ro-api
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -18,7 +20,7 @@ spec:
   template:
     metadata:
       labels:
-        app: api
+        app: ladesa-ro-api
     spec:
       containers:
         - name: management-service
@@ -36,10 +38,10 @@ spec:
               memory: "250Mi"
           envFrom:
             - secretRef:
-                name: api-config
+                name: ladesa-ro-api-config
           volumeMounts:
             - name: uploaded-data
-              mountPath: /var/lib/api/uploaded
+              mountPath: /var/lib/ladesa-ro-api/uploaded
           securityContext:
             runAsNonRoot: false
             readOnlyRootFilesystem: false
@@ -64,4 +66,4 @@ spec:
       volumes:
         - name: uploaded-data
           persistentVolumeClaim:
-            claimName: api-uploaded-pvc
+            claimName: ladesa-ro-api-uploaded-pvc

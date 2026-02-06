@@ -8,11 +8,12 @@ kubectl apply -f ./services/api.yaml
 
 # Restart deployment
 kubectl rollout restart \
-  deployment.apps/api \
-  --namespace ladesa
+  deployment.apps/ladesa-ro-api \
+  --namespace ladesa-ro-development \
+;
 
 # Wait for rollout to complete
 kubectl rollout status \
-  deployment.apps/api \
-  --namespace ladesa \
+  deployment.apps/ladesa-ro-api \
+  --namespace ladesa-ro-development \
   --timeout=300s
