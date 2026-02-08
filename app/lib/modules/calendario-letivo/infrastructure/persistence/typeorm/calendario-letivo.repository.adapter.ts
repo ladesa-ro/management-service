@@ -27,7 +27,7 @@ export class CalendarioLetivoTypeOrmRepositoryAdapter
   >
   implements ICalendarioLetivoRepositoryPort
 {
-  protected readonly alias = "calendarioLetivo";
+  protected readonly alias = "calendario_letivo";
   protected readonly authzAction = "calendario_letivo:find";
   protected readonly outputDtoName = "CalendarioLetivoFindOneOutput";
 

@@ -1,7 +1,10 @@
 import { Inject, Injectable } from "@nestjs/common";
+import { has } from "lodash";
 import type { AccessContext } from "@/modules/@core/access-context";
-import { ResourceNotFoundError } from "@/modules/@shared";
-import {
+import { BaseCrudService } from "@/modules/@shared";
+import { NivelFormacaoService } from "@/modules/nivel-formacao/application/use-cases/nivel-formacao.service";
+import { OfertaFormacaoService } from "@/modules/oferta-formacao";
+import type {
   OfertaFormacaoNivelFormacaoCreateInput,
   OfertaFormacaoNivelFormacaoFindOneInput,
   OfertaFormacaoNivelFormacaoFindOneOutput,
@@ -14,62 +17,82 @@ import {
   type IOfertaFormacaoNivelFormacaoUseCasePort,
   OFERTA_FORMACAO_NIVEL_FORMACAO_REPOSITORY_PORT,
 } from "@/modules/oferta-formacao-nivel-formacao/application/ports";
+import type { OfertaFormacaoNivelFormacaoEntity } from "@/modules/oferta-formacao-nivel-formacao/infrastructure/persistence/typeorm";
 
 @Injectable()
-export class OfertaFormacaoNivelFormacaoService implements IOfertaFormacaoNivelFormacaoUseCasePort {
+export class OfertaFormacaoNivelFormacaoService
+  extends BaseCrudService<
+    OfertaFormacaoNivelFormacaoEntity,
+    OfertaFormacaoNivelFormacaoListInput,
+    OfertaFormacaoNivelFormacaoListOutput,
+    OfertaFormacaoNivelFormacaoFindOneInput,
+    OfertaFormacaoNivelFormacaoFindOneOutput,
+    OfertaFormacaoNivelFormacaoCreateInput,
+    OfertaFormacaoNivelFormacaoUpdateInput
+  >
+  implements IOfertaFormacaoNivelFormacaoUseCasePort
+{
+  protected readonly resourceName = "OfertaFormacaoNivelFormacao";
+  protected readonly createAction = "oferta_formacao_nivel_formacao:create";
+  protected readonly updateAction = "oferta_formacao_nivel_formacao:update";
+  protected readonly deleteAction = "oferta_formacao_nivel_formacao:delete";
+  protected readonly createFields = [] as const;
+  protected readonly updateFields = [] as const;
+
   constructor(
     @Inject(OFERTA_FORMACAO_NIVEL_FORMACAO_REPOSITORY_PORT)
-    private readonly ofertaFormacaoNivelFormacaoRepository: IOfertaFormacaoNivelFormacaoRepositoryPort,
-  ) {}
-
-  async findAll(
-    accessContext: AccessContext,
-    dto: OfertaFormacaoNivelFormacaoListInput | null = null,
-  ): Promise<OfertaFormacaoNivelFormacaoListOutput> {
-    return this.ofertaFormacaoNivelFormacaoRepository.findAll(accessContext, dto);
+    protected readonly repository: IOfertaFormacaoNivelFormacaoRepositoryPort,
+    private readonly ofertaFormacaoService: OfertaFormacaoService,
+    private readonly nivelFormacaoService: NivelFormacaoService,
+  ) {
+    super();
   }
 
-  async findById(
+  protected override async beforeCreate(
     accessContext: AccessContext,
-    dto: OfertaFormacaoNivelFormacaoFindOneInput,
-  ): Promise<OfertaFormacaoNivelFormacaoFindOneOutput | null> {
-    return this.ofertaFormacaoNivelFormacaoRepository.findById(accessContext, dto);
-  }
-
-  async findByIdStrict(
-    accessContext: AccessContext,
-    dto: OfertaFormacaoNivelFormacaoFindOneInput,
-  ): Promise<OfertaFormacaoNivelFormacaoFindOneOutput> {
-    const ofertaFormacaoNivelFormacao = await this.ofertaFormacaoNivelFormacaoRepository.findById(
-      accessContext,
-      dto,
-    );
-
-    if (!ofertaFormacaoNivelFormacao) {
-      throw new ResourceNotFoundError("OfertaFormacaoNivelFormacao", dto.id);
+    entity: OfertaFormacaoNivelFormacaoEntity,
+    dto: OfertaFormacaoNivelFormacaoCreateInput,
+  ): Promise<void> {
+    if (dto.ofertaFormacao) {
+      const ofertaFormacao = await this.ofertaFormacaoService.findByIdStrict(accessContext, {
+        id: dto.ofertaFormacao.id,
+      });
+      this.repository.merge(entity, { ofertaFormacao: { id: ofertaFormacao.id } } as any);
     }
 
-    return ofertaFormacaoNivelFormacao;
+    if (dto.nivelFormacao) {
+      const nivelFormacao = await this.nivelFormacaoService.findByIdStrict(accessContext, {
+        id: dto.nivelFormacao.id,
+      });
+      this.repository.merge(entity, { nivelFormacao: { id: nivelFormacao.id } } as any);
+    }
   }
 
-  async create(
+  protected override async beforeUpdate(
     accessContext: AccessContext,
-    dto: OfertaFormacaoNivelFormacaoCreateInput,
-  ): Promise<OfertaFormacaoNivelFormacaoFindOneOutput> {
-    return this.ofertaFormacaoNivelFormacaoRepository.createOne(accessContext, dto);
-  }
-
-  async update(
-    accessContext: AccessContext,
+    entity: OfertaFormacaoNivelFormacaoEntity,
     dto: OfertaFormacaoNivelFormacaoFindOneInput & OfertaFormacaoNivelFormacaoUpdateInput,
-  ): Promise<OfertaFormacaoNivelFormacaoFindOneOutput> {
-    return this.ofertaFormacaoNivelFormacaoRepository.update(accessContext, dto);
-  }
+  ): Promise<void> {
+    if (has(dto, "ofertaFormacao") && dto.ofertaFormacao !== undefined) {
+      const ofertaFormacao =
+        dto.ofertaFormacao &&
+        (await this.ofertaFormacaoService.findByIdStrict(accessContext, {
+          id: dto.ofertaFormacao.id,
+        }));
+      this.repository.merge(entity, {
+        ofertaFormacao: ofertaFormacao && { id: ofertaFormacao.id },
+      } as any);
+    }
 
-  async deleteOneById(
-    accessContext: AccessContext,
-    dto: OfertaFormacaoNivelFormacaoFindOneInput,
-  ): Promise<boolean> {
-    return this.ofertaFormacaoNivelFormacaoRepository.deleteById(accessContext, dto);
+    if (has(dto, "nivelFormacao") && dto.nivelFormacao !== undefined) {
+      const nivelFormacao =
+        dto.nivelFormacao &&
+        (await this.nivelFormacaoService.findByIdStrict(accessContext, {
+          id: dto.nivelFormacao.id,
+        }));
+      this.repository.merge(entity, {
+        nivelFormacao: nivelFormacao && { id: nivelFormacao.id },
+      } as any);
+    }
   }
 }

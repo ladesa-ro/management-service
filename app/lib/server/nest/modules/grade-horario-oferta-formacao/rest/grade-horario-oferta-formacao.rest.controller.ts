@@ -17,6 +17,7 @@ import {
   GradeHorarioOfertaFormacaoListOutputDto,
   GradeHorarioOfertaFormacaoUpdateInputDto,
 } from "./grade-horario-oferta-formacao.rest.dto";
+import { GradeHorarioOfertaFormacaoRestMapper } from "./grade-horario-oferta-formacao.rest.mapper";
 
 @ApiTags("grades-horarios-ofertas-formacoes")
 @Controller("/grades-horarios-ofertas-formacoes")
@@ -34,10 +35,9 @@ export class GradeHorarioOfertaFormacaoRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Query() dto: GradeHorarioOfertaFormacaoListInputDto,
   ): Promise<GradeHorarioOfertaFormacaoListOutputDto> {
-    return this.gradeHorarioOfertaFormacaoService.findAll(
-      accessContext,
-      dto as any,
-    ) as unknown as Promise<GradeHorarioOfertaFormacaoListOutputDto>;
+    const input = GradeHorarioOfertaFormacaoRestMapper.toListInput(dto);
+    const result = await this.gradeHorarioOfertaFormacaoService.findAll(accessContext, input);
+    return GradeHorarioOfertaFormacaoRestMapper.toListOutputDto(result);
   }
 
   @Get("/:id")
@@ -52,10 +52,12 @@ export class GradeHorarioOfertaFormacaoRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: GradeHorarioOfertaFormacaoFindOneInputDto,
   ): Promise<GradeHorarioOfertaFormacaoFindOneOutputDto> {
-    return this.gradeHorarioOfertaFormacaoService.findByIdStrict(
+    const input = GradeHorarioOfertaFormacaoRestMapper.toFindOneInput(params);
+    const result = await this.gradeHorarioOfertaFormacaoService.findByIdStrict(
       accessContext,
-      params as any,
-    ) as unknown as Promise<GradeHorarioOfertaFormacaoFindOneOutputDto>;
+      input,
+    );
+    return GradeHorarioOfertaFormacaoRestMapper.toFindOneOutputDto(result);
   }
 
   @Post("/")
@@ -69,10 +71,9 @@ export class GradeHorarioOfertaFormacaoRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Body() dto: GradeHorarioOfertaFormacaoCreateInputDto,
   ): Promise<GradeHorarioOfertaFormacaoFindOneOutputDto> {
-    return this.gradeHorarioOfertaFormacaoService.create(
-      accessContext,
-      dto as any,
-    ) as unknown as Promise<GradeHorarioOfertaFormacaoFindOneOutputDto>;
+    const input = GradeHorarioOfertaFormacaoRestMapper.toCreateInput(dto);
+    const result = await this.gradeHorarioOfertaFormacaoService.create(accessContext, input);
+    return GradeHorarioOfertaFormacaoRestMapper.toFindOneOutputDto(result);
   }
 
   @Patch("/:id")
@@ -88,10 +89,9 @@ export class GradeHorarioOfertaFormacaoRestController {
     @Param() params: GradeHorarioOfertaFormacaoFindOneInputDto,
     @Body() dto: GradeHorarioOfertaFormacaoUpdateInputDto,
   ): Promise<GradeHorarioOfertaFormacaoFindOneOutputDto> {
-    return this.gradeHorarioOfertaFormacaoService.update(accessContext, {
-      id: params.id,
-      ...dto,
-    } as any) as unknown as Promise<GradeHorarioOfertaFormacaoFindOneOutputDto>;
+    const input = GradeHorarioOfertaFormacaoRestMapper.toUpdateInput(params, dto);
+    const result = await this.gradeHorarioOfertaFormacaoService.update(accessContext, input);
+    return GradeHorarioOfertaFormacaoRestMapper.toFindOneOutputDto(result);
   }
 
   @Delete("/:id")
@@ -106,6 +106,7 @@ export class GradeHorarioOfertaFormacaoRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: GradeHorarioOfertaFormacaoFindOneInputDto,
   ): Promise<boolean> {
-    return this.gradeHorarioOfertaFormacaoService.deleteOneById(accessContext, params as any);
+    const input = GradeHorarioOfertaFormacaoRestMapper.toFindOneInput(params);
+    return this.gradeHorarioOfertaFormacaoService.deleteOneById(accessContext, input);
   }
 }

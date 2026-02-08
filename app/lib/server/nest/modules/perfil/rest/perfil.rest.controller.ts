@@ -16,6 +16,7 @@ import {
   PerfilListOutputDto,
   PerfilSetVinculosInputDto,
 } from "./perfil.rest.dto";
+import { PerfilRestMapper } from "./perfil.rest.mapper";
 
 @ApiTags("perfis")
 @Controller("/perfis")
@@ -30,10 +31,9 @@ export class PerfilRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Query() dto: PerfilListInputDto,
   ): Promise<PerfilListOutputDto> {
-    return this.perfilService.findAll(
-      accessContext,
-      dto as any,
-    ) as unknown as Promise<PerfilListOutputDto>;
+    const input = PerfilRestMapper.toListInput(dto);
+    const result = await this.perfilService.findAll(accessContext, input);
+    return PerfilRestMapper.toListOutputDto(result);
   }
 
   @Get("/:id")
@@ -45,10 +45,9 @@ export class PerfilRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: PerfilFindOneInputDto,
   ): Promise<PerfilFindOneOutputDto | null> {
-    return this.perfilService.findById(
-      accessContext,
-      params as any,
-    ) as unknown as Promise<PerfilFindOneOutputDto | null>;
+    const input = PerfilRestMapper.toFindOneInput(params);
+    const result = await this.perfilService.findById(accessContext, input);
+    return result ? PerfilRestMapper.toFindOneOutputDto(result) : null;
   }
 
   @Get("/:id/ensino")
@@ -60,10 +59,9 @@ export class PerfilRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: PerfilFindOneInputDto,
   ): Promise<PerfilFindOneOutputDto | null> {
-    return this.perfilService.findById(
-      accessContext,
-      params as any,
-    ) as unknown as Promise<PerfilFindOneOutputDto | null>;
+    const input = PerfilRestMapper.toFindOneInput(params);
+    const result = await this.perfilService.findById(accessContext, input);
+    return result ? PerfilRestMapper.toFindOneOutputDto(result) : null;
   }
 
   @Post("/")
@@ -84,9 +82,8 @@ export class PerfilRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Body() dto: PerfilSetVinculosInputDto,
   ): Promise<PerfilListOutputDto> {
-    return this.perfilService.setVinculos(
-      accessContext,
-      dto as any,
-    ) as unknown as Promise<PerfilListOutputDto>;
+    const input = PerfilRestMapper.toSetVinculosInput(dto);
+    const result = await this.perfilService.setVinculos(accessContext, input);
+    return PerfilRestMapper.toListOutputDto(result);
   }
 }

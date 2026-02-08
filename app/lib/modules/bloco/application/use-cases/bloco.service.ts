@@ -4,7 +4,6 @@ import {
   AUTHORIZATION_SERVICE_PORT,
   BaseCrudService,
   type IAuthorizationServicePort,
-  ResourceNotFoundError,
 } from "@/modules/@shared";
 import { ArquivoService } from "@/modules/arquivo/application/use-cases/arquivo.service";
 import type {
@@ -64,17 +63,14 @@ export class BlocoService
   // Metodos que delegam para BaseCrudService com nomes de interface
 
   async getImagemCapa(accessContext: AccessContext | null, id: string): Promise<StreamableFile> {
-    const bloco = await this.findByIdStrict(accessContext, { id });
-
-    if (bloco.imagemCapa) {
-      const arquivoId = await this.imagemService.getLatestArquivoIdForImagem(bloco.imagemCapa.id);
-
-      if (arquivoId) {
-        return this.arquivoService.getStreamableFile(null, { id: arquivoId });
-      }
-    }
-
-    throw new ResourceNotFoundError("Imagem de capa do Bloco", id);
+    return this.getImagemField(
+      accessContext,
+      id,
+      "imagemCapa",
+      "Imagem de capa do Bloco",
+      this.imagemService,
+      this.arquivoService,
+    );
   }
 
   async updateImagemCapa(
@@ -82,23 +78,7 @@ export class BlocoService
     dto: BlocoFindOneInput,
     file: Express.Multer.File,
   ): Promise<boolean> {
-    const currentBloco = await this.findByIdStrict(accessContext, { id: dto.id });
-
-    await this.ensurePermission(
-      accessContext,
-      "bloco:update",
-      { dto: { id: currentBloco.id } },
-      currentBloco.id,
-    );
-
-    const { imagem } = await this.imagemService.saveImagemCapa(file);
-
-    const bloco = { id: currentBloco.id } as BlocoEntity;
-    this.repository.merge(bloco, { imagemCapa: { id: imagem.id } });
-
-    await this.repository.save(bloco);
-
-    return true;
+    return this.updateImagemField(accessContext, dto.id, file, "imagemCapa", this.imagemService);
   }
 
   /**

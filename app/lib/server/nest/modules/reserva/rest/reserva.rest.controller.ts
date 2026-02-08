@@ -17,6 +17,7 @@ import {
   ReservaListOutputDto,
   ReservaUpdateInputDto,
 } from "./reserva.rest.dto";
+import { ReservaRestMapper } from "./reserva.rest.mapper";
 
 @ApiTags("reservas")
 @Controller("/reservas")
@@ -31,7 +32,9 @@ export class ReservaRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Query() dto: ReservaListInputDto,
   ): Promise<ReservaListOutputDto> {
-    return this.reservaService.findAll(accessContext, dto) as any;
+    const input = ReservaRestMapper.toListInput(dto);
+    const result = await this.reservaService.findAll(accessContext, input);
+    return ReservaRestMapper.toListOutputDto(result);
   }
 
   @Get("/:id")
@@ -43,7 +46,9 @@ export class ReservaRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: ReservaFindOneInputDto,
   ): Promise<ReservaFindOneOutputDto> {
-    return this.reservaService.findByIdStrict(accessContext, params) as any;
+    const input = ReservaRestMapper.toFindOneInput(params);
+    const result = await this.reservaService.findByIdStrict(accessContext, input);
+    return ReservaRestMapper.toFindOneOutputDto(result);
   }
 
   @Post("/")
@@ -54,7 +59,9 @@ export class ReservaRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Body() dto: ReservaCreateInputDto,
   ): Promise<ReservaFindOneOutputDto> {
-    return this.reservaService.create(accessContext, dto) as any;
+    const input = ReservaRestMapper.toCreateInput(dto);
+    const result = await this.reservaService.create(accessContext, input);
+    return ReservaRestMapper.toFindOneOutputDto(result);
   }
 
   @Patch("/:id")
@@ -67,7 +74,9 @@ export class ReservaRestController {
     @Param() params: ReservaFindOneInputDto,
     @Body() dto: ReservaUpdateInputDto,
   ): Promise<ReservaFindOneOutputDto> {
-    return this.reservaService.update(accessContext, { id: params.id, ...dto }) as any;
+    const input = ReservaRestMapper.toUpdateInput(params, dto);
+    const result = await this.reservaService.update(accessContext, input);
+    return ReservaRestMapper.toFindOneOutputDto(result);
   }
 
   @Delete("/:id")
@@ -79,6 +88,7 @@ export class ReservaRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: ReservaFindOneInputDto,
   ): Promise<boolean> {
-    return this.reservaService.deleteOneById(accessContext, params);
+    const input = ReservaRestMapper.toFindOneInput(params);
+    return this.reservaService.deleteOneById(accessContext, input);
   }
 }

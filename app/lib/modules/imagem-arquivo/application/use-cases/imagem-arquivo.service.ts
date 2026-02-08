@@ -1,7 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
-import type { AccessContext } from "@/modules/@core/access-context";
-import { ResourceNotFoundError } from "@/modules/@shared";
-import {
+import { BaseReadOnlyService } from "@/modules/@shared";
+import type {
   ImagemArquivoFindOneInput,
   ImagemArquivoFindOneOutput,
   ImagemArquivoListInput,
@@ -14,36 +13,21 @@ import {
 } from "@/modules/imagem-arquivo/application/ports";
 
 @Injectable()
-export class ImagemArquivoService implements IImagemArquivoUseCasePort {
+export class ImagemArquivoService
+  extends BaseReadOnlyService<
+    ImagemArquivoListInput,
+    ImagemArquivoListOutput,
+    ImagemArquivoFindOneInput,
+    ImagemArquivoFindOneOutput
+  >
+  implements IImagemArquivoUseCasePort
+{
+  protected readonly resourceName = "ImagemArquivo";
+
   constructor(
     @Inject(IMAGEM_ARQUIVO_QUERY_REPOSITORY_PORT)
-    private readonly imagemArquivoRepository: IImagemArquivoQueryRepositoryPort,
-  ) {}
-
-  async findAll(
-    accessContext: AccessContext,
-    dto: ImagemArquivoListInput | null = null,
-  ): Promise<ImagemArquivoListOutput> {
-    return this.imagemArquivoRepository.findAll(accessContext, dto);
-  }
-
-  async findById(
-    accessContext: AccessContext,
-    dto: ImagemArquivoFindOneInput,
-  ): Promise<ImagemArquivoFindOneOutput | null> {
-    return this.imagemArquivoRepository.findById(accessContext, dto);
-  }
-
-  async findByIdStrict(
-    accessContext: AccessContext,
-    dto: ImagemArquivoFindOneInput,
-  ): Promise<ImagemArquivoFindOneOutput> {
-    const imagemArquivo = await this.imagemArquivoRepository.findById(accessContext, dto);
-
-    if (!imagemArquivo) {
-      throw new ResourceNotFoundError("ImagemArquivo", dto.id);
-    }
-
-    return imagemArquivo;
+    protected readonly repository: IImagemArquivoQueryRepositoryPort,
+  ) {
+    super();
   }
 }

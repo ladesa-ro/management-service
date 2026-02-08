@@ -6,6 +6,7 @@ import {
   AmbienteListOutput,
   AmbienteUpdateInput,
 } from "@/modules/ambiente";
+import { BlocoRestMapper } from "@/server/nest/modules/bloco/rest";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import {
   AmbienteCreateInputDto,
@@ -94,8 +95,10 @@ export class AmbienteRestMapper {
     dto.codigo = output.codigo;
     dto.capacidade = output.capacidade;
     dto.tipo = output.tipo;
-    dto.bloco = output.bloco as any;
-    dto.imagemCapa = output.imagemCapa as any;
+    dto.bloco = BlocoRestMapper.toFindOneOutputDto(output.bloco);
+    dto.imagemCapa = output.imagemCapa
+      ? BlocoRestMapper.toImagemOutputDto(output.imagemCapa)
+      : null;
     dto.dateCreated = output.dateCreated ? new Date(output.dateCreated) : new Date();
     dto.dateUpdated = output.dateUpdated ? new Date(output.dateUpdated) : new Date();
     dto.dateDeleted = output.dateDeleted ? new Date(output.dateDeleted) : null;

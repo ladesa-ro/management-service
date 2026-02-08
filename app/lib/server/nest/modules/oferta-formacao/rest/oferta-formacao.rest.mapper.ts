@@ -6,6 +6,7 @@ import {
   OfertaFormacaoListOutput,
   OfertaFormacaoUpdateInput,
 } from "@/modules/oferta-formacao";
+import { ModalidadeRestMapper } from "@/server/nest/modules/modalidade/rest";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import {
   OfertaFormacaoCreateInputDto,
@@ -79,7 +80,7 @@ export class OfertaFormacaoRestMapper {
     dto.id = output.id;
     dto.nome = output.nome;
     dto.slug = output.slug;
-    dto.modalidade = output.modalidade as any;
+    dto.modalidade = ModalidadeRestMapper.toFindOneOutputDto(output.modalidade);
     dto.dateCreated = new Date(output.dateCreated);
     dto.dateUpdated = new Date(output.dateUpdated);
     dto.dateDeleted = output.dateDeleted ? new Date(output.dateDeleted) : null;

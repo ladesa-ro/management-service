@@ -7,7 +7,12 @@ import {
 import { has, pick } from "lodash";
 import type { AccessContext } from "@/modules/@core/access-context";
 import { KeycloakService } from "@/modules/@core/identity-provider";
-import { ResourceNotFoundError, ValidationFailedException } from "@/modules/@shared";
+import {
+  getEntityImagemStreamableFile,
+  ResourceNotFoundError,
+  saveEntityImagemField,
+  ValidationFailedException,
+} from "@/modules/@shared";
 import { ArquivoService } from "@/modules/arquivo/application/use-cases/arquivo.service";
 import { ImagemService } from "@/modules/imagem/application/use-cases/imagem.service";
 import type {
@@ -111,17 +116,15 @@ export class UsuarioService implements IUsuarioUseCasePort {
   }
 
   async getImagemCapa(accessContext: AccessContext | null, id: string) {
-    const usuario = await this.findByIdStrict(accessContext, { id: id });
-
-    if (usuario.imagemCapa) {
-      const arquivoId = await this.imagemService.getLatestArquivoIdForImagem(usuario.imagemCapa.id);
-
-      if (arquivoId) {
-        return this.arquivoService.getStreamableFile(null, { id: arquivoId });
-      }
-    }
-
-    throw new ResourceNotFoundError("Imagem de capa do Usuario", id);
+    const usuario = await this.findByIdStrict(accessContext, { id });
+    return getEntityImagemStreamableFile(
+      usuario,
+      "imagemCapa",
+      "Imagem de capa do Usuario",
+      id,
+      this.imagemService,
+      this.arquivoService,
+    );
   }
 
   async updateImagemCapa(
@@ -129,52 +132,31 @@ export class UsuarioService implements IUsuarioUseCasePort {
     dto: UsuarioFindOneInput,
     file: Express.Multer.File,
   ) {
-    const currentUsuario = await this.findByIdStrict(accessContext, {
-      id: dto.id,
-    });
-
+    const currentUsuario = await this.findByIdStrict(accessContext, { id: dto.id });
     await accessContext.ensurePermission(
       "usuario:update",
-      {
-        dto: {
-          id: currentUsuario.id,
-        },
-      },
+      { dto: { id: currentUsuario.id } },
       currentUsuario.id,
     );
-
-    const { imagem } = await this.imagemService.saveImagemCapa(file);
-
-    const usuario = this.usuarioRepository.create();
-    this.usuarioRepository.merge(usuario, {
-      id: currentUsuario.id,
-    });
-
-    this.usuarioRepository.merge(usuario, {
-      imagemCapa: {
-        id: imagem.id,
-      },
-    });
-
-    await this.usuarioRepository.save(usuario);
-
-    return true;
+    return saveEntityImagemField(
+      currentUsuario.id,
+      file,
+      "imagemCapa",
+      this.imagemService,
+      this.usuarioRepository,
+    );
   }
 
   async getImagemPerfil(accessContext: AccessContext | null, id: string) {
-    const usuario = await this.findByIdStrict(accessContext, { id: id });
-
-    if (usuario.imagemPerfil) {
-      const arquivoId = await this.imagemService.getLatestArquivoIdForImagem(
-        usuario.imagemPerfil.id,
-      );
-
-      if (arquivoId) {
-        return this.arquivoService.getStreamableFile(null, { id: arquivoId });
-      }
-    }
-
-    throw new ResourceNotFoundError("Imagem de perfil do Usuario", id);
+    const usuario = await this.findByIdStrict(accessContext, { id });
+    return getEntityImagemStreamableFile(
+      usuario,
+      "imagemPerfil",
+      "Imagem de perfil do Usuario",
+      id,
+      this.imagemService,
+      this.arquivoService,
+    );
   }
 
   async updateImagemPerfil(
@@ -182,36 +164,19 @@ export class UsuarioService implements IUsuarioUseCasePort {
     dto: UsuarioFindOneInput,
     file: Express.Multer.File,
   ) {
-    const currentUsuario = await this.findByIdStrict(accessContext, {
-      id: dto.id,
-    });
-
+    const currentUsuario = await this.findByIdStrict(accessContext, { id: dto.id });
     await accessContext.ensurePermission(
       "usuario:update",
-      {
-        dto: {
-          id: currentUsuario.id,
-        },
-      },
+      { dto: { id: currentUsuario.id } },
       currentUsuario.id,
     );
-
-    const { imagem } = await this.imagemService.saveImagemCapa(file);
-
-    const usuario = this.usuarioRepository.create();
-    this.usuarioRepository.merge(usuario, {
-      id: currentUsuario.id,
-    });
-
-    this.usuarioRepository.merge(usuario, {
-      imagemPerfil: {
-        id: imagem.id,
-      },
-    });
-
-    await this.usuarioRepository.save(usuario);
-
-    return true;
+    return saveEntityImagemField(
+      currentUsuario.id,
+      file,
+      "imagemPerfil",
+      this.imagemService,
+      this.usuarioRepository,
+    );
   }
 
   async create(

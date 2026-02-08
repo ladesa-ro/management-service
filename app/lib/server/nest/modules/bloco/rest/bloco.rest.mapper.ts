@@ -6,6 +6,8 @@ import {
   BlocoListOutput,
   BlocoUpdateInput,
 } from "@/modules/bloco";
+import type { ImagemFindOneOutput } from "@/modules/imagem";
+import { CampusRestMapper } from "@/server/nest/modules/campus/rest";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import {
   BlocoCreateInputDto,
@@ -80,19 +82,19 @@ export class BlocoRestMapper {
     dto.id = output.id;
     dto.nome = output.nome;
     dto.codigo = output.codigo;
-    dto.campus = output.campus as any;
-    dto.imagemCapa = output.imagemCapa ? this.toImagemOutputDto(output.imagemCapa as any) : null;
+    dto.campus = CampusRestMapper.toFindOneOutputDto(output.campus);
+    dto.imagemCapa = output.imagemCapa ? this.toImagemOutputDto(output.imagemCapa) : null;
     dto.dateCreated = new Date(output.dateCreated);
     dto.dateUpdated = new Date(output.dateUpdated);
     dto.dateDeleted = output.dateDeleted ? new Date(output.dateDeleted) : null;
     return dto;
   }
 
-  static toImagemOutputDto(output: any): ImagemFindOneOutputDto {
+  static toImagemOutputDto(output: ImagemFindOneOutput): ImagemFindOneOutputDto {
     const dto = new ImagemFindOneOutputDto();
     dto.id = output.id;
     dto.descricao = output.descricao;
-    dto.versoes = (output.versoes || []).map((v: any) => {
+    dto.versoes = (output.versoes || []).map((v) => {
       const versaoDto = new ImagemArquivoFindOneFromImagemOutputDto();
       versaoDto.id = v.id;
       versaoDto.largura = v.largura;

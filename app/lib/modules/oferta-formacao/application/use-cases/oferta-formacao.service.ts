@@ -46,13 +46,6 @@ export class OfertaFormacaoService
     super();
   }
 
-  async findByIdSimpleStrict(
-    accessContext: AccessContext,
-    id: string,
-  ): Promise<OfertaFormacaoFindOneOutput> {
-    return this.findByIdStrict(accessContext, { id });
-  }
-
   protected override async beforeCreate(
     accessContext: AccessContext,
     entity: OfertaFormacaoEntity,

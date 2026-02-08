@@ -1,7 +1,7 @@
 import { Inject, Injectable, type StreamableFile } from "@nestjs/common";
 import { has } from "lodash";
 import type { AccessContext } from "@/modules/@core/access-context";
-import { BaseCrudService, ResourceNotFoundError } from "@/modules/@shared";
+import { BaseCrudService } from "@/modules/@shared";
 import { ArquivoService } from "@/modules/arquivo/application/use-cases/arquivo.service";
 import { CampusService } from "@/modules/campus";
 import {
@@ -53,17 +53,14 @@ export class CursoService
   }
 
   async getImagemCapa(accessContext: AccessContext | null, id: string): Promise<StreamableFile> {
-    const curso = await this.findByIdStrict(accessContext, { id });
-
-    if (curso.imagemCapa) {
-      const arquivoId = await this.imagemService.getLatestArquivoIdForImagem(curso.imagemCapa.id);
-
-      if (arquivoId) {
-        return this.arquivoService.getStreamableFile(null, { id: arquivoId });
-      }
-    }
-
-    throw new ResourceNotFoundError("Imagem de capa do Curso", id);
+    return this.getImagemField(
+      accessContext,
+      id,
+      "imagemCapa",
+      "Imagem de capa do Curso",
+      this.imagemService,
+      this.arquivoService,
+    );
   }
 
   async updateImagemCapa(
@@ -71,23 +68,7 @@ export class CursoService
     dto: CursoFindOneInputDto,
     file: Express.Multer.File,
   ): Promise<boolean> {
-    const currentCurso = await this.findByIdStrict(accessContext, { id: dto.id });
-
-    await accessContext.ensurePermission(
-      "curso:update",
-      { dto: { id: currentCurso.id } },
-      currentCurso.id,
-    );
-
-    const { imagem } = await this.imagemService.saveImagemCapa(file);
-
-    const curso = this.repository.create();
-    this.repository.merge(curso, { id: currentCurso.id });
-    this.repository.merge(curso, { imagemCapa: { id: imagem.id } });
-
-    await this.repository.save(curso);
-
-    return true;
+    return this.updateImagemField(accessContext, dto.id, file, "imagemCapa", this.imagemService);
   }
 
   protected override async beforeCreate(

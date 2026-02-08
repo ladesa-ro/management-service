@@ -1,6 +1,6 @@
 import { Inject, Injectable, type StreamableFile } from "@nestjs/common";
 import type { AccessContext } from "@/modules/@core/access-context";
-import { BaseCrudService, ResourceNotFoundError } from "@/modules/@shared";
+import { BaseCrudService } from "@/modules/@shared";
 import { ArquivoService } from "@/modules/arquivo/application/use-cases/arquivo.service";
 import type {
   DisciplinaCreateInput,
@@ -44,19 +44,14 @@ export class DisciplinaService extends BaseCrudService<
   }
 
   async getImagemCapa(accessContext: AccessContext | null, id: string): Promise<StreamableFile> {
-    const disciplina = await this.findByIdStrict(accessContext, { id });
-
-    if (disciplina.imagemCapa) {
-      const arquivoId = await this.imagemService.getLatestArquivoIdForImagem(
-        disciplina.imagemCapa.id,
-      );
-
-      if (arquivoId) {
-        return this.arquivoService.getStreamableFile(null, { id: arquivoId });
-      }
-    }
-
-    throw new ResourceNotFoundError("Imagem de capa da Disciplina", id);
+    return this.getImagemField(
+      accessContext,
+      id,
+      "imagemCapa",
+      "Imagem de capa da Disciplina",
+      this.imagemService,
+      this.arquivoService,
+    );
   }
 
   async updateImagemCapa(
@@ -64,22 +59,6 @@ export class DisciplinaService extends BaseCrudService<
     dto: DisciplinaFindOneInput,
     file: Express.Multer.File,
   ): Promise<boolean> {
-    const currentDisciplina = await this.findByIdStrict(accessContext, { id: dto.id });
-
-    await accessContext.ensurePermission(
-      "disciplina:update",
-      { dto: { id: currentDisciplina.id } },
-      currentDisciplina.id,
-    );
-
-    const { imagem } = await this.imagemService.saveImagemCapa(file);
-
-    const disciplina = this.repository.create();
-    this.repository.merge(disciplina, { id: currentDisciplina.id });
-    this.repository.merge(disciplina, { imagemCapa: { id: imagem.id } });
-
-    await this.repository.save(disciplina);
-
-    return true;
+    return this.updateImagemField(accessContext, dto.id, file, "imagemCapa", this.imagemService);
   }
 }

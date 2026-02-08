@@ -1,5 +1,4 @@
 import { Inject, Injectable } from "@nestjs/common";
-import type { AccessContext } from "@/modules/@core/access-context";
 import { BaseCrudService } from "@/modules/@shared";
 import type {
   NivelFormacaoCreateInput,
@@ -41,12 +40,5 @@ export class NivelFormacaoService
     protected readonly repository: INivelFormacaoRepositoryPort,
   ) {
     super();
-  }
-
-  async findByIdSimpleStrict(
-    accessContext: AccessContext,
-    id: string,
-  ): Promise<NivelFormacaoFindOneOutput> {
-    return this.findByIdStrict(accessContext, { id });
   }
 }

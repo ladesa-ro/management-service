@@ -17,6 +17,7 @@ import {
   TurmaDisponibilidadeListOutputDto,
   TurmaDisponibilidadeUpdateInputDto,
 } from "./turma-disponibilidade.rest.dto";
+import { TurmaDisponibilidadeRestMapper } from "./turma-disponibilidade.rest.mapper";
 
 @ApiTags("turmas-disponibilidades")
 @Controller("/turmas-disponibilidades")
@@ -34,7 +35,9 @@ export class TurmaDisponibilidadeRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Query() dto: TurmaDisponibilidadeListInputDto,
   ): Promise<TurmaDisponibilidadeListOutputDto> {
-    return this.turmaDisponibilidadeService.findAll(accessContext, dto) as any;
+    const input = TurmaDisponibilidadeRestMapper.toListInput(dto);
+    const result = await this.turmaDisponibilidadeService.findAll(accessContext, input);
+    return TurmaDisponibilidadeRestMapper.toListOutputDto(result);
   }
 
   @Get("/:id")
@@ -49,7 +52,9 @@ export class TurmaDisponibilidadeRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: TurmaDisponibilidadeFindOneInputDto,
   ): Promise<TurmaDisponibilidadeFindOneOutputDto> {
-    return this.turmaDisponibilidadeService.findByIdStrict(accessContext, params) as any;
+    const input = TurmaDisponibilidadeRestMapper.toFindOneInput(params);
+    const result = await this.turmaDisponibilidadeService.findByIdStrict(accessContext, input);
+    return TurmaDisponibilidadeRestMapper.toFindOneOutputDto(result);
   }
 
   @Post("/")
@@ -63,7 +68,9 @@ export class TurmaDisponibilidadeRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Body() dto: TurmaDisponibilidadeCreateInputDto,
   ): Promise<TurmaDisponibilidadeFindOneOutputDto> {
-    return this.turmaDisponibilidadeService.create(accessContext, dto) as any;
+    const input = TurmaDisponibilidadeRestMapper.toCreateInput(dto);
+    const result = await this.turmaDisponibilidadeService.create(accessContext, input);
+    return TurmaDisponibilidadeRestMapper.toFindOneOutputDto(result);
   }
 
   @Patch("/:id")
@@ -79,10 +86,9 @@ export class TurmaDisponibilidadeRestController {
     @Param() params: TurmaDisponibilidadeFindOneInputDto,
     @Body() dto: TurmaDisponibilidadeUpdateInputDto,
   ): Promise<TurmaDisponibilidadeFindOneOutputDto> {
-    return this.turmaDisponibilidadeService.update(accessContext, {
-      id: params.id,
-      ...dto,
-    }) as any;
+    const input = TurmaDisponibilidadeRestMapper.toUpdateInput(params, dto);
+    const result = await this.turmaDisponibilidadeService.update(accessContext, input);
+    return TurmaDisponibilidadeRestMapper.toFindOneOutputDto(result);
   }
 
   @Delete("/:id")
@@ -97,6 +103,7 @@ export class TurmaDisponibilidadeRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: TurmaDisponibilidadeFindOneInputDto,
   ): Promise<boolean> {
-    return this.turmaDisponibilidadeService.deleteOneById(accessContext, params);
+    const input = TurmaDisponibilidadeRestMapper.toFindOneInput(params);
+    return this.turmaDisponibilidadeService.deleteOneById(accessContext, input);
   }
 }

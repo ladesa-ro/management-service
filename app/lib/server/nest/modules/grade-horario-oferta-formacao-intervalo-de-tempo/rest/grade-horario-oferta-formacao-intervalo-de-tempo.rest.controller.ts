@@ -17,6 +17,7 @@ import {
   GradeHorarioOfertaFormacaoIntervaloDeTempoListOutputRestDto,
   GradeHorarioOfertaFormacaoIntervaloDeTempoUpdateInputRestDto,
 } from "./grade-horario-oferta-formacao-intervalo-de-tempo.rest.dto";
+import { GradeHorarioOfertaFormacaoIntervaloDeTempoRestMapper } from "./grade-horario-oferta-formacao-intervalo-de-tempo.rest.mapper";
 
 @ApiTags("grades-horarios-ofertas-formacoes-intervalos-de-tempo")
 @Controller("/grades-horarios-ofertas-formacoes-intervalos-de-tempo")
@@ -36,10 +37,12 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Query() dto: GradeHorarioOfertaFormacaoIntervaloDeTempoListInputRestDto,
   ): Promise<GradeHorarioOfertaFormacaoIntervaloDeTempoListOutputRestDto> {
-    return this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.findAll(
+    const input = GradeHorarioOfertaFormacaoIntervaloDeTempoRestMapper.toListInput(dto);
+    const result = await this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.findAll(
       accessContext,
-      dto,
-    ) as unknown as Promise<GradeHorarioOfertaFormacaoIntervaloDeTempoListOutputRestDto>;
+      input,
+    );
+    return GradeHorarioOfertaFormacaoIntervaloDeTempoRestMapper.toListOutputDto(result);
   }
 
   @Get("/:id")
@@ -53,10 +56,12 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInputRestDto,
   ): Promise<GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputRestDto> {
-    return this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.findByIdStrict(
+    const input = GradeHorarioOfertaFormacaoIntervaloDeTempoRestMapper.toFindOneInput(params);
+    const result = await this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.findByIdStrict(
       accessContext,
-      params,
-    ) as unknown as Promise<GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputRestDto>;
+      input,
+    );
+    return GradeHorarioOfertaFormacaoIntervaloDeTempoRestMapper.toFindOneOutputDto(result);
   }
 
   @Post("/")
@@ -70,10 +75,12 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Body() dto: GradeHorarioOfertaFormacaoIntervaloDeTempoCreateInputRestDto,
   ): Promise<GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputRestDto> {
-    return this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.create(
+    const input = GradeHorarioOfertaFormacaoIntervaloDeTempoRestMapper.toCreateInput(dto);
+    const result = await this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.create(
       accessContext,
-      dto as any,
-    ) as unknown as Promise<GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputRestDto>;
+      input,
+    );
+    return GradeHorarioOfertaFormacaoIntervaloDeTempoRestMapper.toFindOneOutputDto(result);
   }
 
   @Patch("/:id")
@@ -89,10 +96,12 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoRestController {
     @Param() params: GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInputRestDto,
     @Body() dto: GradeHorarioOfertaFormacaoIntervaloDeTempoUpdateInputRestDto,
   ): Promise<GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputRestDto> {
-    return this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.update(accessContext, {
-      id: params.id,
-      ...dto,
-    } as any) as unknown as Promise<GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputRestDto>;
+    const input = GradeHorarioOfertaFormacaoIntervaloDeTempoRestMapper.toUpdateInput(params, dto);
+    const result = await this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.update(
+      accessContext,
+      input,
+    );
+    return GradeHorarioOfertaFormacaoIntervaloDeTempoRestMapper.toFindOneOutputDto(result);
   }
 
   @Delete("/:id")
@@ -107,9 +116,10 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInputRestDto,
   ): Promise<boolean> {
+    const input = GradeHorarioOfertaFormacaoIntervaloDeTempoRestMapper.toFindOneInput(params);
     return this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.deleteOneById(
       accessContext,
-      params,
+      input,
     );
   }
 }

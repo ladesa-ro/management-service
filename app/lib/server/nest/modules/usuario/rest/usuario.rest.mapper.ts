@@ -7,10 +7,7 @@ import {
   UsuarioListOutput,
   UsuarioUpdateInput,
 } from "@/modules/usuario";
-import {
-  ImagemArquivoFindOneFromImagemOutputDto,
-  ImagemFindOneOutputDto,
-} from "@/server/nest/modules/bloco/rest";
+import { BlocoRestMapper } from "@/server/nest/modules/bloco/rest";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import {
   UsuarioCreateInputDto,
@@ -88,32 +85,14 @@ export class UsuarioRestMapper {
     dto.matriculaSiape = output.matriculaSiape;
     dto.email = output.email;
     dto.isSuperUser = output.isSuperUser;
-    dto.imagemCapa = output.imagemCapa ? this.toImagemOutputDto(output.imagemCapa as any) : null;
+    dto.imagemCapa = output.imagemCapa
+      ? BlocoRestMapper.toImagemOutputDto(output.imagemCapa)
+      : null;
     dto.imagemPerfil = output.imagemPerfil
-      ? this.toImagemOutputDto(output.imagemPerfil as any)
+      ? BlocoRestMapper.toImagemOutputDto(output.imagemPerfil)
       : null;
     dto.dateCreated = new Date(output.dateCreated);
     dto.dateUpdated = new Date(output.dateUpdated);
-    dto.dateDeleted = output.dateDeleted ? new Date(output.dateDeleted) : null;
-    return dto;
-  }
-
-  static toImagemOutputDto(output: any): ImagemFindOneOutputDto {
-    const dto = new ImagemFindOneOutputDto();
-    dto.id = output.id;
-    dto.descricao = output.descricao;
-    dto.versoes = (output.versoes || []).map((v: any) => {
-      const versaoDto = new ImagemArquivoFindOneFromImagemOutputDto();
-      versaoDto.id = v.id;
-      versaoDto.largura = v.largura;
-      versaoDto.altura = v.altura;
-      versaoDto.formato = v.formato;
-      versaoDto.mimeType = v.mimeType;
-      versaoDto.arquivo = { id: v.arquivo?.id };
-      return versaoDto;
-    });
-    dto.dateCreated = output.dateCreated ? new Date(output.dateCreated) : new Date();
-    dto.dateUpdated = output.dateUpdated ? new Date(output.dateUpdated) : new Date();
     dto.dateDeleted = output.dateDeleted ? new Date(output.dateDeleted) : null;
     return dto;
   }

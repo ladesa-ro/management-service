@@ -1,7 +1,9 @@
+import type { StreamableFile } from "@nestjs/common";
 import { pick } from "lodash";
-import type { AccessContext } from "@/modules/@core/access-context";
+import type { AccessContext, IAuthzPayload } from "@/modules/@core/access-context";
 import type { PartialEntity } from "@/modules/@shared";
 import { ResourceNotFoundError } from "../errors";
+import { getEntityImagemStreamableFile, saveEntityImagemField } from "../helpers";
 import type { IAuthorizationServicePort } from "../ports/in";
 import type { IBaseCrudRepositoryPort } from "../ports/out";
 
@@ -214,14 +216,60 @@ export abstract class BaseCrudService<
   protected async ensurePermission(
     accessContext: AccessContext,
     action: string,
-    payload: { dto: unknown },
+    payload: IAuthzPayload,
     id?: string | number | null,
   ): Promise<void> {
     if (this.authorizationService) {
       await this.authorizationService.ensurePermission(action, payload, id);
     } else {
-      await accessContext.ensurePermission(action as any, payload as any, id ?? null);
+      await accessContext.ensurePermission(action, payload, id ?? null);
     }
+  }
+
+  /**
+   * Obtém o StreamableFile de um campo de imagem da entidade.
+   */
+  protected async getImagemField(
+    accessContext: AccessContext | null,
+    id: string,
+    fieldName: string,
+    resourceLabel: string,
+    imagemService: { getLatestArquivoIdForImagem(imagemId: string): Promise<string | null> },
+    arquivoService: {
+      getStreamableFile(accessContext: null, dto: { id: string }): Promise<StreamableFile>;
+    },
+  ): Promise<StreamableFile> {
+    const entity = await this.findByIdStrict(accessContext, { id } as FindOneInputDto);
+    return getEntityImagemStreamableFile(
+      entity as Record<string, any>,
+      fieldName,
+      resourceLabel,
+      id,
+      imagemService,
+      arquivoService,
+    );
+  }
+
+  /**
+   * Atualiza um campo de imagem da entidade.
+   */
+  protected async updateImagemField(
+    accessContext: AccessContext,
+    id: string | number,
+    file: Express.Multer.File,
+    fieldName: string,
+    imagemService: {
+      saveImagemCapa(file: Express.Multer.File): Promise<{ imagem: { id: string } }>;
+    },
+  ): Promise<boolean> {
+    const current = await this.findByIdStrict(accessContext, { id } as FindOneInputDto);
+    await this.ensurePermission(
+      accessContext,
+      this.updateAction,
+      { dto: { id: current.id } },
+      current.id,
+    );
+    return saveEntityImagemField(current.id, file, fieldName, imagemService, this.repository);
   }
 
   /**

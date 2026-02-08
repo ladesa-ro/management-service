@@ -17,6 +17,7 @@ import {
   EventoListOutputDto,
   EventoUpdateInputDto,
 } from "./evento.rest.dto";
+import { EventoRestMapper } from "./evento.rest.mapper";
 
 @ApiTags("eventos")
 @Controller("/eventos")
@@ -31,7 +32,9 @@ export class EventoRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Query() dto: EventoListInputDto,
   ): Promise<EventoListOutputDto> {
-    return this.eventoService.findAll(accessContext, dto) as any;
+    const input = EventoRestMapper.toListInput(dto);
+    const result = await this.eventoService.findAll(accessContext, input);
+    return EventoRestMapper.toListOutputDto(result);
   }
 
   @Get("/:id")
@@ -43,7 +46,9 @@ export class EventoRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: EventoFindOneInputDto,
   ): Promise<EventoFindOneOutputDto> {
-    return this.eventoService.findByIdStrict(accessContext, params) as any;
+    const input = EventoRestMapper.toFindOneInput(params);
+    const result = await this.eventoService.findByIdStrict(accessContext, input);
+    return EventoRestMapper.toFindOneOutputDto(result);
   }
 
   @Post("/")
@@ -54,7 +59,9 @@ export class EventoRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Body() dto: EventoCreateInputDto,
   ): Promise<EventoFindOneOutputDto> {
-    return this.eventoService.create(accessContext, dto) as any;
+    const input = EventoRestMapper.toCreateInput(dto);
+    const result = await this.eventoService.create(accessContext, input);
+    return EventoRestMapper.toFindOneOutputDto(result);
   }
 
   @Patch("/:id")
@@ -67,7 +74,9 @@ export class EventoRestController {
     @Param() params: EventoFindOneInputDto,
     @Body() dto: EventoUpdateInputDto,
   ): Promise<EventoFindOneOutputDto> {
-    return this.eventoService.update(accessContext, { id: params.id, ...dto }) as any;
+    const input = EventoRestMapper.toUpdateInput(params, dto);
+    const result = await this.eventoService.update(accessContext, input);
+    return EventoRestMapper.toFindOneOutputDto(result);
   }
 
   @Delete("/:id")
@@ -79,6 +88,7 @@ export class EventoRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: EventoFindOneInputDto,
   ): Promise<boolean> {
-    return this.eventoService.deleteOneById(accessContext, params);
+    const input = EventoRestMapper.toFindOneInput(params);
+    return this.eventoService.deleteOneById(accessContext, input);
   }
 }

@@ -27,7 +27,7 @@ export class DiaCalendarioTypeOrmRepositoryAdapter
   >
   implements IDiaCalendarioRepositoryPort
 {
-  protected readonly alias = "diaCalendario";
+  protected readonly alias = "dia_calendario";
   protected readonly authzAction = "dia_calendario:find";
   protected readonly outputDtoName = "DiaCalendarioFindOneOutput";
 

@@ -48,13 +48,6 @@ export class CalendarioLetivoService
     super();
   }
 
-  async findByIdSimpleStrict(
-    accessContext: AccessContext,
-    id: string,
-  ): Promise<CalendarioLetivoFindOneOutput> {
-    return this.findByIdStrict(accessContext, { id });
-  }
-
   protected override async beforeCreate(
     accessContext: AccessContext,
     entity: CalendarioLetivoEntity,

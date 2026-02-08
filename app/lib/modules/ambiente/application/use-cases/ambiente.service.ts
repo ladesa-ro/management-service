@@ -4,7 +4,6 @@ import {
   AUTHORIZATION_SERVICE_PORT,
   BaseCrudService,
   type IAuthorizationServicePort,
-  ResourceNotFoundError,
 } from "@/modules/@shared";
 import type { AmbienteEntity } from "@/modules/ambiente/infrastructure/persistence/typeorm";
 import { ArquivoService } from "@/modules/arquivo/application/use-cases/arquivo.service";
@@ -62,19 +61,14 @@ export class AmbienteService
   }
 
   async getImagemCapa(accessContext: AccessContext | null, id: string): Promise<StreamableFile> {
-    const ambiente = await this.findByIdStrict(accessContext, { id });
-
-    if (ambiente.imagemCapa) {
-      const arquivoId = await this.imagemService.getLatestArquivoIdForImagem(
-        ambiente.imagemCapa.id,
-      );
-
-      if (arquivoId) {
-        return this.arquivoService.getStreamableFile(null, { id: arquivoId });
-      }
-    }
-
-    throw new ResourceNotFoundError("Imagem de capa do Ambiente", id);
+    return this.getImagemField(
+      accessContext,
+      id,
+      "imagemCapa",
+      "Imagem de capa do Ambiente",
+      this.imagemService,
+      this.arquivoService,
+    );
   }
 
   async updateImagemCapa(
@@ -82,24 +76,7 @@ export class AmbienteService
     dto: AmbienteFindOneInput,
     file: Express.Multer.File,
   ): Promise<boolean> {
-    const currentAmbiente = await this.findByIdStrict(accessContext, { id: dto.id });
-
-    await this.ensurePermission(
-      accessContext,
-      "ambiente:update",
-      { dto: { id: currentAmbiente.id } },
-      currentAmbiente.id,
-    );
-
-    const { imagem } = await this.imagemService.saveImagemCapa(file);
-
-    const ambiente = this.repository.create();
-    this.repository.merge(ambiente, { id: currentAmbiente.id });
-    this.repository.merge(ambiente, { imagemCapa: { id: imagem.id } });
-
-    await this.repository.save(ambiente);
-
-    return true;
+    return this.updateImagemField(accessContext, dto.id, file, "imagemCapa", this.imagemService);
   }
 
   /**

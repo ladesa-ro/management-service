@@ -33,6 +33,7 @@ import {
   TurmaListOutputDto,
   TurmaUpdateInputDto,
 } from "./turma.rest.dto";
+import { TurmaRestMapper } from "./turma.rest.mapper";
 
 @ApiTags("turmas")
 @Controller("/turmas")
@@ -47,7 +48,9 @@ export class TurmaRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Query() dto: TurmaListInputDto,
   ): Promise<TurmaListOutputDto> {
-    return this.turmaService.findAll(accessContext, dto as any) as any;
+    const input = TurmaRestMapper.toListInput(dto);
+    const result = await this.turmaService.findAll(accessContext, input);
+    return TurmaRestMapper.toListOutputDto(result);
   }
 
   @Get("/:id")
@@ -59,7 +62,9 @@ export class TurmaRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: TurmaFindOneInputDto,
   ): Promise<TurmaFindOneOutputDto> {
-    return this.turmaService.findByIdStrict(accessContext, params) as any;
+    const input = TurmaRestMapper.toFindOneInput(params);
+    const result = await this.turmaService.findByIdStrict(accessContext, input);
+    return TurmaRestMapper.toFindOneOutputDto(result);
   }
 
   @Post("/")
@@ -70,7 +75,9 @@ export class TurmaRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Body() dto: TurmaCreateInputDto,
   ): Promise<TurmaFindOneOutputDto> {
-    return this.turmaService.create(accessContext, dto as any) as any;
+    const input = TurmaRestMapper.toCreateInput(dto);
+    const result = await this.turmaService.create(accessContext, input);
+    return TurmaRestMapper.toFindOneOutputDto(result);
   }
 
   @Patch("/:id")
@@ -83,7 +90,9 @@ export class TurmaRestController {
     @Param() params: TurmaFindOneInputDto,
     @Body() dto: TurmaUpdateInputDto,
   ): Promise<TurmaFindOneOutputDto> {
-    return this.turmaService.update(accessContext, { id: params.id, ...dto } as any) as any;
+    const input = TurmaRestMapper.toUpdateInput(params, dto);
+    const result = await this.turmaService.update(accessContext, input);
+    return TurmaRestMapper.toFindOneOutputDto(result);
   }
 
   @Get("/:id/imagem/capa")
@@ -137,6 +146,7 @@ export class TurmaRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: TurmaFindOneInputDto,
   ): Promise<boolean> {
-    return this.turmaService.deleteOneById(accessContext, params);
+    const input = TurmaRestMapper.toFindOneInput(params);
+    return this.turmaService.deleteOneById(accessContext, input);
   }
 }

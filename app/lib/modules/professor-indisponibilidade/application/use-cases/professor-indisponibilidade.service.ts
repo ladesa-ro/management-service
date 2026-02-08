@@ -1,7 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
-import type { AccessContext } from "@/modules/@core/access-context";
-import { ResourceNotFoundError } from "@/modules/@shared";
-import {
+import { BaseReadOnlyService } from "@/modules/@shared";
+import type {
   ProfessorIndisponibilidadeFindOneInput,
   ProfessorIndisponibilidadeFindOneOutput,
   ProfessorIndisponibilidadeListInput,
@@ -14,39 +13,21 @@ import {
 } from "@/modules/professor-indisponibilidade/application/ports";
 
 @Injectable()
-export class ProfessorIndisponibilidadeService implements IProfessorIndisponibilidadeUseCasePort {
+export class ProfessorIndisponibilidadeService
+  extends BaseReadOnlyService<
+    ProfessorIndisponibilidadeListInput,
+    ProfessorIndisponibilidadeListOutput,
+    ProfessorIndisponibilidadeFindOneInput,
+    ProfessorIndisponibilidadeFindOneOutput
+  >
+  implements IProfessorIndisponibilidadeUseCasePort
+{
+  protected readonly resourceName = "ProfessorIndisponibilidade";
+
   constructor(
     @Inject(PROFESSOR_INDISPONIBILIDADE_REPOSITORY_PORT)
-    private readonly professorIndisponibilidadeRepository: IProfessorIndisponibilidadeRepositoryPort,
-  ) {}
-
-  async findAll(
-    accessContext: AccessContext,
-    dto: ProfessorIndisponibilidadeListInput | null = null,
-  ): Promise<ProfessorIndisponibilidadeListOutput> {
-    return this.professorIndisponibilidadeRepository.findAll(accessContext, dto);
-  }
-
-  async findById(
-    accessContext: AccessContext,
-    dto: ProfessorIndisponibilidadeFindOneInput,
-  ): Promise<ProfessorIndisponibilidadeFindOneOutput | null> {
-    return this.professorIndisponibilidadeRepository.findById(accessContext, dto);
-  }
-
-  async findByIdStrict(
-    accessContext: AccessContext,
-    dto: ProfessorIndisponibilidadeFindOneInput,
-  ): Promise<ProfessorIndisponibilidadeFindOneOutput> {
-    const professorIndisponibilidade = await this.professorIndisponibilidadeRepository.findById(
-      accessContext,
-      dto,
-    );
-
-    if (!professorIndisponibilidade) {
-      throw new ResourceNotFoundError("ProfessorIndisponibilidade", dto.id);
-    }
-
-    return professorIndisponibilidade;
+    protected readonly repository: IProfessorIndisponibilidadeRepositoryPort,
+  ) {
+    super();
   }
 }

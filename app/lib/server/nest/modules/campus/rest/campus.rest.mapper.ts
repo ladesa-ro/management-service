@@ -6,6 +6,7 @@ import {
   CampusListOutput,
   CampusUpdateInput,
 } from "@/modules/campus";
+import { EnderecoRestMapper } from "@/server/nest/modules/endereco/rest";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import {
   CampusCreateInputDto,
@@ -48,7 +49,7 @@ export class CampusRestMapper {
     input.razaoSocial = dto.razaoSocial;
     input.apelido = dto.apelido;
     input.cnpj = dto.cnpj;
-    input.endereco = dto.endereco as any;
+    input.endereco = EnderecoRestMapper.toCreateInput(dto.endereco);
     return input;
   }
 
@@ -71,7 +72,7 @@ export class CampusRestMapper {
       input.cnpj = dto.cnpj;
     }
     if (dto.endereco !== undefined) {
-      input.endereco = dto.endereco as any;
+      input.endereco = EnderecoRestMapper.toCreateInput(dto.endereco);
     }
     return input;
   }
@@ -87,7 +88,7 @@ export class CampusRestMapper {
     dto.razaoSocial = output.razaoSocial;
     dto.apelido = output.apelido;
     dto.cnpj = output.cnpj;
-    dto.endereco = output.endereco as any;
+    dto.endereco = EnderecoRestMapper.toFindOneOutputDto(output.endereco);
     dto.dateCreated = new Date(output.dateCreated);
     dto.dateUpdated = new Date(output.dateUpdated);
     dto.dateDeleted = output.dateDeleted ? new Date(output.dateDeleted) : null;

@@ -6,6 +6,8 @@ import {
   DiarioPreferenciaAgrupamentoListOutput,
   DiarioPreferenciaAgrupamentoUpdateInput,
 } from "@/modules/diario-preferencia-agrupamento";
+import { DiarioRestMapper } from "@/server/nest/modules/diario/rest";
+import { IntervaloDeTempoRestMapper } from "@/server/nest/modules/intervalo-de-tempo/rest";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import {
   DiarioPreferenciaAgrupamentoCreateInputDto,
@@ -102,8 +104,8 @@ export class DiarioPreferenciaAgrupamentoRestMapper {
     dto.dataFim = output.dataFim;
     dto.diaSemanaIso = output.diaSemanaIso;
     dto.aulasSeguidas = output.aulasSeguidas;
-    dto.intervaloDeTempo = output.intervaloDeTempo as any;
-    dto.diario = output.diario as any;
+    dto.intervaloDeTempo = IntervaloDeTempoRestMapper.toFindOneOutputDto(output.intervaloDeTempo);
+    dto.diario = DiarioRestMapper.toFindOneOutputDto(output.diario);
     dto.dateCreated = new Date(output.dateCreated);
     dto.dateUpdated = new Date(output.dateUpdated);
     dto.dateDeleted = output.dateDeleted ? new Date(output.dateDeleted) : null;

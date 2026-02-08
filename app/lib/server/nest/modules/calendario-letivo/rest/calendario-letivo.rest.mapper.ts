@@ -6,6 +6,8 @@ import {
   CalendarioLetivoListOutput,
   CalendarioLetivoUpdateInput,
 } from "@/modules/calendario-letivo";
+import { CampusRestMapper } from "@/server/nest/modules/campus/rest";
+import { OfertaFormacaoRestMapper } from "@/server/nest/modules/oferta-formacao/rest";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import {
   CalendarioLetivoCreateInputDto,
@@ -86,8 +88,8 @@ export class CalendarioLetivoRestMapper {
     dto.id = output.id;
     dto.nome = output.nome;
     dto.ano = output.ano;
-    dto.campus = output.campus as any;
-    dto.ofertaFormacao = output.ofertaFormacao as any;
+    dto.campus = CampusRestMapper.toFindOneOutputDto(output.campus);
+    dto.ofertaFormacao = OfertaFormacaoRestMapper.toFindOneOutputDto(output.ofertaFormacao);
     dto.dateCreated = new Date(output.dateCreated);
     dto.dateUpdated = new Date(output.dateUpdated);
     dto.dateDeleted = output.dateDeleted ? new Date(output.dateDeleted) : null;

@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import type { AccessContext } from "@/modules/@core/access-context";
-import { ResourceNotFoundError } from "@/modules/@shared";
+import { BaseCrudService } from "@/modules/@shared";
 import type {
   GradeHorarioOfertaFormacaoCreateInput,
   GradeHorarioOfertaFormacaoFindOneInput,
@@ -14,69 +14,61 @@ import {
   type IGradeHorarioOfertaFormacaoRepositoryPort,
   type IGradeHorarioOfertaFormacaoUseCasePort,
 } from "@/modules/grade-horario-oferta-formacao/application/ports";
+import type { GradeHorarioOfertaFormacaoEntity } from "@/modules/grade-horario-oferta-formacao/infrastructure/persistence/typeorm";
 
 @Injectable()
-export class GradeHorarioOfertaFormacaoService implements IGradeHorarioOfertaFormacaoUseCasePort {
+export class GradeHorarioOfertaFormacaoService
+  extends BaseCrudService<
+    GradeHorarioOfertaFormacaoEntity,
+    GradeHorarioOfertaFormacaoListInput,
+    GradeHorarioOfertaFormacaoListOutput,
+    GradeHorarioOfertaFormacaoFindOneInput,
+    GradeHorarioOfertaFormacaoFindOneOutput,
+    GradeHorarioOfertaFormacaoCreateInput,
+    GradeHorarioOfertaFormacaoUpdateInput
+  >
+  implements IGradeHorarioOfertaFormacaoUseCasePort
+{
+  protected readonly resourceName = "GradeHorarioOfertaFormacao";
+  protected readonly createAction = "grade_horario_oferta_formacao:create";
+  protected readonly updateAction = "grade_horario_oferta_formacao:update";
+  protected readonly deleteAction = "grade_horario_oferta_formacao:delete";
+  protected readonly createFields = [] as const;
+  protected readonly updateFields = [] as const;
+
   constructor(
     @Inject(GRADE_HORARIO_OFERTA_FORMACAO_REPOSITORY_PORT)
-    private readonly gradeHorarioOfertaFormacaoRepository: IGradeHorarioOfertaFormacaoRepositoryPort,
-  ) {}
-
-  async findAll(
-    accessContext: AccessContext,
-    dto: GradeHorarioOfertaFormacaoListInput | null = null,
-  ): Promise<GradeHorarioOfertaFormacaoListOutput> {
-    return this.gradeHorarioOfertaFormacaoRepository.findAll(accessContext, dto);
+    protected readonly repository: IGradeHorarioOfertaFormacaoRepositoryPort,
+  ) {
+    super();
   }
 
-  async findById(
-    accessContext: AccessContext | null,
-    dto: GradeHorarioOfertaFormacaoFindOneInput,
-  ): Promise<GradeHorarioOfertaFormacaoFindOneOutput | null> {
-    return this.gradeHorarioOfertaFormacaoRepository.findById(accessContext, dto);
+  protected override async beforeCreate(
+    _accessContext: AccessContext,
+    entity: GradeHorarioOfertaFormacaoEntity,
+    dto: GradeHorarioOfertaFormacaoCreateInput,
+  ): Promise<void> {
+    this.repository.merge(entity, {
+      campus: { id: dto.campus.id },
+      ofertaFormacao: { id: dto.ofertaFormacao.id },
+    } as any);
   }
 
-  async findByIdStrict(
-    accessContext: AccessContext,
-    dto: GradeHorarioOfertaFormacaoFindOneInput,
-  ): Promise<GradeHorarioOfertaFormacaoFindOneOutput> {
-    const gradeHorarioOfertaFormacao = await this.gradeHorarioOfertaFormacaoRepository.findById(
-      accessContext,
-      dto,
-    );
-
-    if (!gradeHorarioOfertaFormacao) {
-      throw new ResourceNotFoundError("GradeHorarioOfertaFormacao", dto.id);
+  protected override async beforeUpdate(
+    _accessContext: AccessContext,
+    entity: GradeHorarioOfertaFormacaoEntity,
+    dto: GradeHorarioOfertaFormacaoFindOneInput & GradeHorarioOfertaFormacaoUpdateInput,
+  ): Promise<void> {
+    if (dto.campus !== undefined) {
+      this.repository.merge(entity, {
+        campus: dto.campus ? { id: dto.campus.id } : null,
+      } as any);
     }
 
-    return gradeHorarioOfertaFormacao;
-  }
-
-  async create(
-    accessContext: AccessContext,
-    dto: GradeHorarioOfertaFormacaoCreateInput,
-  ): Promise<GradeHorarioOfertaFormacaoFindOneOutput> {
-    return this.gradeHorarioOfertaFormacaoRepository.createOne(accessContext, dto);
-  }
-
-  async update(
-    accessContext: AccessContext,
-    dto: GradeHorarioOfertaFormacaoFindOneInput & GradeHorarioOfertaFormacaoUpdateInput,
-  ): Promise<GradeHorarioOfertaFormacaoFindOneOutput> {
-    // Verify entity exists
-    await this.findByIdStrict(accessContext, { id: dto.id });
-
-    const { id, ...updateData } = dto;
-    return this.gradeHorarioOfertaFormacaoRepository.update(accessContext, id, updateData);
-  }
-
-  async deleteOneById(
-    accessContext: AccessContext,
-    dto: GradeHorarioOfertaFormacaoFindOneInput,
-  ): Promise<boolean> {
-    // Verify entity exists
-    await this.findByIdStrict(accessContext, dto);
-
-    return this.gradeHorarioOfertaFormacaoRepository.deleteById(accessContext, dto);
+    if (dto.ofertaFormacao !== undefined) {
+      this.repository.merge(entity, {
+        ofertaFormacao: dto.ofertaFormacao ? { id: dto.ofertaFormacao.id } : null,
+      } as any);
+    }
   }
 }

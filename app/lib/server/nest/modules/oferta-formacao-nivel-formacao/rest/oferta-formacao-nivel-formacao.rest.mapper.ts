@@ -6,6 +6,8 @@ import {
   OfertaFormacaoNivelFormacaoListOutput,
   OfertaFormacaoNivelFormacaoUpdateInput,
 } from "@/modules/oferta-formacao-nivel-formacao";
+import { NivelFormacaoRestMapper } from "@/server/nest/modules/nivel-formacao/rest";
+import { OfertaFormacaoRestMapper } from "@/server/nest/modules/oferta-formacao/rest";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import {
   OfertaFormacaoNivelFormacaoCreateInputDto,
@@ -81,8 +83,8 @@ export class OfertaFormacaoNivelFormacaoRestMapper {
   ): OfertaFormacaoNivelFormacaoFindOneOutputDto {
     const dto = new OfertaFormacaoNivelFormacaoFindOneOutputDto();
     dto.id = output.id;
-    dto.ofertaFormacao = output.ofertaFormacao as any;
-    dto.nivelFormacao = output.nivelFormacao as any;
+    dto.ofertaFormacao = OfertaFormacaoRestMapper.toFindOneOutputDto(output.ofertaFormacao);
+    dto.nivelFormacao = NivelFormacaoRestMapper.toFindOneOutputDto(output.nivelFormacao);
     dto.dateCreated = new Date(output.dateCreated);
     dto.dateUpdated = new Date(output.dateUpdated);
     dto.dateDeleted = output.dateDeleted ? new Date(output.dateDeleted) : null;

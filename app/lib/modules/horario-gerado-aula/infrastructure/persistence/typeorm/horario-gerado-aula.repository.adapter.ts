@@ -27,7 +27,7 @@ export class HorarioGeradoAulaTypeOrmRepositoryAdapter
   >
   implements IHorarioGeradoAulaRepositoryPort
 {
-  protected readonly alias = "horario_gerado_dia";
+  protected readonly alias = "horario_gerado_aula";
   protected readonly authzAction = "horario_gerado_aula:find";
   protected readonly outputDtoName = "HorarioGeradoAulaFindOneOutput";
 

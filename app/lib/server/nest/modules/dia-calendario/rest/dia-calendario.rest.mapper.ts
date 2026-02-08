@@ -6,6 +6,7 @@ import {
   DiaCalendarioListOutput,
   DiaCalendarioUpdateInput,
 } from "@/modules/dia-calendario";
+import { CalendarioLetivoRestMapper } from "@/server/nest/modules/calendario-letivo/rest";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import {
   DiaCalendarioCreateInputDto,
@@ -14,6 +15,7 @@ import {
   DiaCalendarioListInputDto,
   DiaCalendarioListOutputDto,
   DiaCalendarioUpdateInputDto,
+  type TipoDiaCalendario,
 } from "./dia-calendario.rest.dto";
 
 export class DiaCalendarioRestMapper {
@@ -89,9 +91,9 @@ export class DiaCalendarioRestMapper {
     dto.diaLetivo = output.diaLetivo;
     dto.feriado = output.feriado;
     dto.diaPresencial = output.diaPresencial;
-    dto.tipo = output.tipo as any;
+    dto.tipo = output.tipo as TipoDiaCalendario;
     dto.extraCurricular = output.extraCurricular;
-    dto.calendario = output.calendario as any;
+    dto.calendario = CalendarioLetivoRestMapper.toFindOneOutputDto(output.calendario);
     dto.dateCreated = output.dateCreated ? new Date(output.dateCreated) : new Date();
     dto.dateUpdated = output.dateUpdated ? new Date(output.dateUpdated) : new Date();
     dto.dateDeleted = output.dateDeleted ? new Date(output.dateDeleted) : null;

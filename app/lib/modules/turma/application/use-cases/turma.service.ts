@@ -1,7 +1,7 @@
 import { Inject, Injectable, type StreamableFile } from "@nestjs/common";
 import { has } from "lodash";
 import type { AccessContext } from "@/modules/@core/access-context";
-import { BaseCrudService, ResourceNotFoundError } from "@/modules/@shared";
+import { BaseCrudService } from "@/modules/@shared";
 import { AmbienteService } from "@/modules/ambiente/application/use-cases/ambiente.service";
 import { ArquivoService } from "@/modules/arquivo/application/use-cases/arquivo.service";
 import { CursoService } from "@/modules/curso";
@@ -46,17 +46,14 @@ export class TurmaService extends BaseCrudService<
   }
 
   async getImagemCapa(accessContext: AccessContext | null, id: string): Promise<StreamableFile> {
-    const turma = await this.findByIdStrict(accessContext, { id });
-
-    if (turma.imagemCapa) {
-      const arquivoId = await this.imagemService.getLatestArquivoIdForImagem(turma.imagemCapa.id);
-
-      if (arquivoId) {
-        return this.arquivoService.getStreamableFile(null, { id: arquivoId });
-      }
-    }
-
-    throw new ResourceNotFoundError("Imagem de capa da Turma", id);
+    return this.getImagemField(
+      accessContext,
+      id,
+      "imagemCapa",
+      "Imagem de capa da Turma",
+      this.imagemService,
+      this.arquivoService,
+    );
   }
 
   async updateImagemCapa(
@@ -64,23 +61,7 @@ export class TurmaService extends BaseCrudService<
     dto: TurmaFindOneInput,
     file: Express.Multer.File,
   ): Promise<boolean> {
-    const currentTurma = await this.findByIdStrict(accessContext, { id: dto.id });
-
-    await accessContext.ensurePermission(
-      "turma:update",
-      { dto: { id: currentTurma.id } },
-      currentTurma.id,
-    );
-
-    const { imagem } = await this.imagemService.saveImagemCapa(file);
-
-    const turma = this.repository.create();
-    this.repository.merge(turma, { id: currentTurma.id });
-    this.repository.merge(turma, { imagemCapa: { id: imagem.id } });
-
-    await this.repository.save(turma);
-
-    return true;
+    return this.updateImagemField(accessContext, dto.id, file, "imagemCapa", this.imagemService);
   }
 
   protected override async beforeCreate(

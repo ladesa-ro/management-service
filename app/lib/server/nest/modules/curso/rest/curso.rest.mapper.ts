@@ -7,6 +7,8 @@ import {
   CursoUpdateInput,
 } from "@/modules/curso";
 import { BlocoRestMapper } from "@/server/nest/modules/bloco/rest";
+import { CampusRestMapper } from "@/server/nest/modules/campus/rest";
+import { OfertaFormacaoRestMapper } from "@/server/nest/modules/oferta-formacao/rest";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import {
   CursoCreateInputDto,
@@ -84,10 +86,10 @@ export class CursoRestMapper {
     dto.id = output.id;
     dto.nome = output.nome;
     dto.nomeAbreviado = output.nomeAbreviado;
-    dto.campus = output.campus as any;
-    dto.ofertaFormacao = output.ofertaFormacao as any;
+    dto.campus = CampusRestMapper.toFindOneOutputDto(output.campus);
+    dto.ofertaFormacao = OfertaFormacaoRestMapper.toFindOneOutputDto(output.ofertaFormacao);
     dto.imagemCapa = output.imagemCapa
-      ? BlocoRestMapper.toImagemOutputDto(output.imagemCapa as any)
+      ? BlocoRestMapper.toImagemOutputDto(output.imagemCapa)
       : null;
     dto.dateCreated = new Date(output.dateCreated);
     dto.dateUpdated = new Date(output.dateUpdated);

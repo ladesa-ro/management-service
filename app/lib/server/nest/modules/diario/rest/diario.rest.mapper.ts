@@ -6,6 +6,11 @@ import {
   DiarioListOutput,
   DiarioUpdateInput,
 } from "@/modules/diario";
+import { AmbienteRestMapper } from "@/server/nest/modules/ambiente/rest";
+import { BlocoRestMapper } from "@/server/nest/modules/bloco/rest";
+import { CalendarioLetivoRestMapper } from "@/server/nest/modules/calendario-letivo/rest";
+import { DisciplinaRestMapper } from "@/server/nest/modules/disciplina/rest";
+import { TurmaRestMapper } from "@/server/nest/modules/turma/rest";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import {
   DiarioCreateInputDto,
@@ -41,7 +46,7 @@ export class DiarioRestMapper {
     input["filter.id"] = dto["filter.id"];
     input["filter.turma.id"] = dto["filter.turma.id"];
     input["filter.disciplina.id"] = dto["filter.disciplina.id"];
-    input["filter.calendarioLetivo.id"] = dto["filter.calendarioLetivo.id"] as any;
+    input["filter.calendarioLetivo.id"] = dto["filter.calendarioLetivo.id"];
     return input;
   }
 
@@ -89,11 +94,15 @@ export class DiarioRestMapper {
     const dto = new DiarioFindOneOutputDto();
     dto.id = output.id;
     dto.ativo = output.ativo;
-    dto.calendarioLetivo = output.calendarioLetivo as any;
-    dto.turma = output.turma as any;
-    dto.disciplina = output.disciplina as any;
-    dto.ambientePadrao = output.ambientePadrao as any;
-    dto.imagemCapa = output.imagemCapa as any;
+    dto.calendarioLetivo = CalendarioLetivoRestMapper.toFindOneOutputDto(output.calendarioLetivo);
+    dto.turma = TurmaRestMapper.toFindOneOutputDto(output.turma);
+    dto.disciplina = DisciplinaRestMapper.toFindOneOutputDto(output.disciplina);
+    dto.ambientePadrao = output.ambientePadrao
+      ? AmbienteRestMapper.toFindOneOutputDto(output.ambientePadrao)
+      : null;
+    dto.imagemCapa = output.imagemCapa
+      ? BlocoRestMapper.toImagemOutputDto(output.imagemCapa)
+      : null;
     dto.dateCreated = new Date(output.dateCreated);
     dto.dateUpdated = new Date(output.dateUpdated);
     dto.dateDeleted = output.dateDeleted ? new Date(output.dateDeleted) : null;

@@ -6,6 +6,9 @@ import {
   AulaListOutput,
   AulaUpdateInput,
 } from "@/modules/aula";
+import { AmbienteRestMapper } from "@/server/nest/modules/ambiente/rest";
+import { DiarioRestMapper } from "@/server/nest/modules/diario/rest";
+import { IntervaloDeTempoRestMapper } from "@/server/nest/modules/intervalo-de-tempo/rest";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import {
   AulaCreateInputDto,
@@ -89,9 +92,9 @@ export class AulaRestMapper {
     dto.id = output.id;
     dto.data = output.data;
     dto.modalidade = output.modalidade;
-    dto.intervaloDeTempo = output.intervaloDeTempo as any;
-    dto.diario = output.diario as any;
-    dto.ambiente = output.ambiente as any;
+    dto.intervaloDeTempo = IntervaloDeTempoRestMapper.toFindOneOutputDto(output.intervaloDeTempo);
+    dto.diario = DiarioRestMapper.toFindOneOutputDto(output.diario);
+    dto.ambiente = output.ambiente ? AmbienteRestMapper.toFindOneOutputDto(output.ambiente) : null;
     dto.dateCreated = new Date(output.dateCreated);
     dto.dateUpdated = new Date(output.dateUpdated);
     dto.dateDeleted = output.dateDeleted ? new Date(output.dateDeleted) : null;

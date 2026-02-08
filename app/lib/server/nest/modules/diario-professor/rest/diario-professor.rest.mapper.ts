@@ -6,6 +6,8 @@ import {
   DiarioProfessorListOutput,
   DiarioProfessorUpdateInput,
 } from "@/modules/diario-professor";
+import { DiarioRestMapper } from "@/server/nest/modules/diario/rest";
+import { PerfilRestMapper } from "@/server/nest/modules/perfil/rest";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import {
   DiarioProfessorCreateInputDto,
@@ -80,8 +82,8 @@ export class DiarioProfessorRestMapper {
     const dto = new DiarioProfessorFindOneOutputDto();
     dto.id = output.id;
     dto.situacao = output.situacao;
-    dto.diario = output.diario as any;
-    dto.perfil = output.perfil as any;
+    dto.diario = DiarioRestMapper.toFindOneOutputDto(output.diario);
+    dto.perfil = PerfilRestMapper.toFindOneOutputDto(output.perfil);
     dto.dateCreated = new Date(output.dateCreated);
     dto.dateUpdated = new Date(output.dateUpdated);
     dto.dateDeleted = output.dateDeleted ? new Date(output.dateDeleted) : null;

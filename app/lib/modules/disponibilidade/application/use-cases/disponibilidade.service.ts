@@ -1,5 +1,4 @@
 import { Inject, Injectable } from "@nestjs/common";
-import type { AccessContext } from "@/modules/@core/access-context";
 import { BaseCrudService } from "@/modules/@shared";
 import type {
   DisponibilidadeCreateInput,
@@ -41,12 +40,5 @@ export class DisponibilidadeService
     protected readonly repository: IDisponibilidadeRepositoryPort,
   ) {
     super();
-  }
-
-  async findByIdSimpleStrict(
-    accessContext: AccessContext,
-    id: string,
-  ): Promise<DisponibilidadeFindOneOutput> {
-    return this.findByIdStrict(accessContext, { id });
   }
 }

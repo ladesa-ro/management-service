@@ -1,5 +1,4 @@
 import { Inject, Injectable } from "@nestjs/common";
-import type { AccessContext } from "@/modules/@core/access-context";
 import { BaseCrudService } from "@/modules/@shared";
 import type {
   ModalidadeCreateInput,
@@ -41,12 +40,5 @@ export class ModalidadeService
     protected readonly repository: IModalidadeRepositoryPort,
   ) {
     super();
-  }
-
-  async findByIdSimpleStrict(
-    accessContext: AccessContext,
-    id: string,
-  ): Promise<ModalidadeFindOneOutput> {
-    return this.findByIdStrict(accessContext, { id });
   }
 }

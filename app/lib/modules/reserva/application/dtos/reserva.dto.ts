@@ -30,7 +30,11 @@ export class ReservaFindOneOutput extends EntityOutput {
 
 export class ReservaListInput extends PaginationInput {
   "filter.id"?: IFilterAcceptableValues;
+  "filter.situacao"?: IFilterAcceptableValues;
+  "filter.tipo"?: IFilterAcceptableValues;
   "filter.ambiente.id"?: IFilterAcceptableValues;
+  "filter.ambiente.bloco.id"?: IFilterAcceptableValues;
+  "filter.ambiente.bloco.campus.id"?: IFilterAcceptableValues;
   "filter.usuario.id"?: IFilterAcceptableValues;
 }
 
