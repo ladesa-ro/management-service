@@ -51,69 +51,6 @@ export class HorarioGeradoService extends BaseCrudService<
     super();
   }
 
-  // Metodos prefixados para compatibilidade com IHorarioGeradoUseCasePort
-
-  async horarioGeradoFindAll(
-    accessContext: AccessContext,
-    dto: HorarioGeradoListInput | null = null,
-    selection?: string[] | boolean,
-  ): Promise<HorarioGeradoListOutput> {
-    return this.findAll(accessContext, dto, selection);
-  }
-
-  async horarioGeradoFindById(
-    accessContext: AccessContext,
-    dto: HorarioGeradoFindOneInput,
-    selection?: string[] | boolean,
-  ): Promise<HorarioGeradoFindOneOutput | null> {
-    return this.findById(accessContext, dto, selection);
-  }
-
-  async horarioGeradoFindByIdStrict(
-    accessContext: AccessContext,
-    dto: HorarioGeradoFindOneInput,
-    selection?: string[] | boolean,
-  ): Promise<HorarioGeradoFindOneOutput> {
-    return this.findByIdStrict(accessContext, dto, selection);
-  }
-
-  async horarioGeradoFindByIdSimple(
-    accessContext: AccessContext,
-    id: string,
-    selection?: string[],
-  ): Promise<HorarioGeradoFindOneOutput | null> {
-    return this.findByIdSimple(accessContext, id, selection);
-  }
-
-  async horarioGeradoFindByIdSimpleStrict(
-    accessContext: AccessContext,
-    id: string,
-    selection?: string[],
-  ): Promise<HorarioGeradoFindOneOutput> {
-    return this.findByIdSimpleStrict(accessContext, id, selection);
-  }
-
-  async horarioGeradoCreate(
-    accessContext: AccessContext,
-    dto: HorarioGeradoCreateInput,
-  ): Promise<HorarioGeradoFindOneOutput> {
-    return this.create(accessContext, dto);
-  }
-
-  async horarioGeradoUpdate(
-    accessContext: AccessContext,
-    dto: HorarioGeradoFindOneInput & HorarioGeradoUpdateInput,
-  ): Promise<HorarioGeradoFindOneOutput> {
-    return this.update(accessContext, dto);
-  }
-
-  async horarioGeradoDeleteOneById(
-    accessContext: AccessContext,
-    dto: HorarioGeradoFindOneInput,
-  ): Promise<boolean> {
-    return this.deleteOneById(accessContext, dto);
-  }
-
   protected override async beforeCreate(
     accessContext: AccessContext,
     entity: HorarioGeradoEntity,

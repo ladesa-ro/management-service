@@ -4,6 +4,7 @@ import {
   IntervaloDeTempoListInput,
   IntervaloDeTempoListOutput,
 } from "@/modules/intervalo-de-tempo";
+import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import { IntervaloDeTempoFindOneOutputDto } from "../rest/intervalo-de-tempo.rest.dto";
 import {
   IntervaloDeTempoListInputGqlDto,
@@ -37,20 +38,12 @@ export class IntervaloDeTempoGraphqlMapper {
   static toFindOneOutputDto(
     output: IntervaloDeTempoFindOneOutput,
   ): IntervaloDeTempoFindOneOutputDto {
-    return output as any;
+    return output as unknown as IntervaloDeTempoFindOneOutputDto;
   }
 
   static toListOutputDto(output: IntervaloDeTempoListOutput): IntervaloDeTempoListOutputGqlDto {
     const dto = new IntervaloDeTempoListOutputGqlDto();
-    dto.meta = {
-      currentPage: output.meta.currentPage,
-      totalPages: output.meta.totalPages,
-      itemsPerPage: output.meta.itemsPerPage,
-      totalItems: output.meta.totalItems,
-      sortBy: output.meta.sortBy,
-      filter: output.meta.filter,
-      search: output.meta.search,
-    };
+    dto.meta = mapPaginationMeta(output.meta);
     dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
     return dto;
   }

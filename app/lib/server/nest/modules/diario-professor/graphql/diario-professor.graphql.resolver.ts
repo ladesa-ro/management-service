@@ -31,7 +31,7 @@ export class DiarioProfessorGraphqlResolver {
       input.selection = graphqlExtractSelection(info, "paginated");
     }
 
-    const result = await this.diarioProfessorService.diarioProfessorFindAll(accessContext, input);
+    const result = await this.diarioProfessorService.findAll(accessContext, input);
     return DiarioProfessorGraphqlMapper.toListOutputDto(result);
   }
 
@@ -42,7 +42,7 @@ export class DiarioProfessorGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<DiarioProfessorFindOneOutputDto> {
     const selection = graphqlExtractSelection(info);
-    const result = await this.diarioProfessorService.diarioProfessorFindByIdStrict(accessContext, {
+    const result = await this.diarioProfessorService.findByIdStrict(accessContext, {
       id,
       selection,
     });
@@ -56,7 +56,7 @@ export class DiarioProfessorGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<DiarioProfessorFindOneOutputDto> {
     const input = DiarioProfessorRestMapper.toCreateInput(dto);
-    const result = await this.diarioProfessorService.diarioProfessorCreate(accessContext, input);
+    const result = await this.diarioProfessorService.create(accessContext, input);
     return DiarioProfessorGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -68,7 +68,7 @@ export class DiarioProfessorGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<DiarioProfessorFindOneOutputDto> {
     const input = DiarioProfessorRestMapper.toUpdateInput({ id }, dto);
-    const result = await this.diarioProfessorService.diarioProfessorUpdate(accessContext, input);
+    const result = await this.diarioProfessorService.update(accessContext, input);
     return DiarioProfessorGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -77,6 +77,6 @@ export class DiarioProfessorGraphqlResolver {
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
   ): Promise<boolean> {
-    return this.diarioProfessorService.diarioProfessorDeleteOneById(accessContext, { id });
+    return this.diarioProfessorService.deleteOneById(accessContext, { id });
   }
 }

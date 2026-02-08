@@ -41,69 +41,6 @@ export class DiarioProfessorService extends BaseCrudService<
     super();
   }
 
-  async diarioProfessorFindAll(
-    accessContext: AccessContext,
-    dto: DiarioProfessorListInput | null = null,
-    selection?: string[] | boolean,
-  ): Promise<DiarioProfessorListOutput> {
-    return this.findAll(accessContext, dto, selection);
-  }
-
-  async diarioProfessorFindById(
-    accessContext: AccessContext,
-    dto: DiarioProfessorFindOneInput,
-    selection?: string[] | boolean,
-  ): Promise<DiarioProfessorFindOneOutput | null> {
-    return this.findById(accessContext, dto, selection);
-  }
-
-  // Métodos prefixados para compatibilidade com IDiarioProfessorUseCasePort
-
-  async diarioProfessorFindByIdStrict(
-    accessContext: AccessContext,
-    dto: DiarioProfessorFindOneInput,
-    selection?: string[] | boolean,
-  ): Promise<DiarioProfessorFindOneOutput> {
-    return this.findByIdStrict(accessContext, dto, selection);
-  }
-
-  async diarioProfessorFindByIdSimple(
-    accessContext: AccessContext,
-    id: DiarioProfessorFindOneInput["id"],
-    selection?: string[] | boolean,
-  ): Promise<DiarioProfessorFindOneOutput | null> {
-    return this.findByIdSimple(accessContext, id, selection);
-  }
-
-  async diarioProfessorFindByIdSimpleStrict(
-    accessContext: AccessContext,
-    id: DiarioProfessorFindOneInput["id"],
-    selection?: string[] | boolean,
-  ): Promise<DiarioProfessorFindOneOutput> {
-    return this.findByIdSimpleStrict(accessContext, id, selection);
-  }
-
-  async diarioProfessorCreate(
-    accessContext: AccessContext,
-    dto: DiarioProfessorCreateInput,
-  ): Promise<DiarioProfessorFindOneOutput> {
-    return this.create(accessContext, dto);
-  }
-
-  async diarioProfessorUpdate(
-    accessContext: AccessContext,
-    dto: DiarioProfessorFindOneInput & DiarioProfessorUpdateInput,
-  ): Promise<DiarioProfessorFindOneOutput> {
-    return this.update(accessContext, dto);
-  }
-
-  async diarioProfessorDeleteOneById(
-    accessContext: AccessContext,
-    dto: DiarioProfessorFindOneInput,
-  ): Promise<boolean> {
-    return this.deleteOneById(accessContext, dto);
-  }
-
   protected override async beforeCreate(
     accessContext: AccessContext,
     entity: DiarioProfessorEntity,

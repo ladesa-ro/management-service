@@ -6,6 +6,7 @@ import {
   GradeHorarioOfertaFormacaoIntervaloDeTempoListOutput,
   GradeHorarioOfertaFormacaoIntervaloDeTempoUpdateInput,
 } from "@/modules/grade-horario-oferta-formacao-intervalo-de-tempo";
+import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import {
   GradeHorarioOfertaFormacaoIntervaloDeTempoCreateInputRestDto,
   GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputRestDto,
@@ -65,15 +66,7 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoGraphqlMapper {
     output: GradeHorarioOfertaFormacaoIntervaloDeTempoListOutput,
   ): GradeHorarioOfertaFormacaoIntervaloDeTempoListOutputGqlDto {
     const dto = new GradeHorarioOfertaFormacaoIntervaloDeTempoListOutputGqlDto();
-    dto.meta = {
-      currentPage: output.meta.currentPage,
-      totalPages: output.meta.totalPages,
-      itemsPerPage: output.meta.itemsPerPage,
-      totalItems: output.meta.totalItems,
-      sortBy: output.meta.sortBy,
-      filter: output.meta.filter,
-      search: output.meta.search,
-    };
+    dto.meta = mapPaginationMeta(output.meta);
     dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
     return dto;
   }

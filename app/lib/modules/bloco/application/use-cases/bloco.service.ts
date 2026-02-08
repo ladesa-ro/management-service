@@ -91,7 +91,7 @@ export class BlocoService
       currentBloco.id,
     );
 
-    const { imagem } = await this.imagemService.saveBlocoCapa(file);
+    const { imagem } = await this.imagemService.saveImagemCapa(file);
 
     const bloco = { id: currentBloco.id } as BlocoEntity;
     this.repository.merge(bloco, { imagemCapa: { id: imagem.id } });
@@ -99,40 +99,6 @@ export class BlocoService
     await this.repository.save(bloco);
 
     return true;
-  }
-
-  /**
-   * Override findByIdStrict to use ResourceNotFoundError
-   */
-  override async findByIdStrict(
-    accessContext: AccessContext | null,
-    dto: BlocoFindOneInput,
-    selection?: string[] | boolean,
-  ): Promise<BlocoFindOneOutput> {
-    const result = await this.findById(accessContext, dto, selection);
-
-    if (!result) {
-      throw new ResourceNotFoundError("Bloco", dto.id);
-    }
-
-    return result;
-  }
-
-  /**
-   * Override findByIdSimpleStrict to use ResourceNotFoundError
-   */
-  override async findByIdSimpleStrict(
-    accessContext: AccessContext,
-    id: string,
-    selection?: string[],
-  ): Promise<BlocoFindOneOutput> {
-    const result = await this.findByIdSimple(accessContext, id, selection);
-
-    if (!result) {
-      throw new ResourceNotFoundError("Bloco", id);
-    }
-
-    return result;
   }
 
   /**

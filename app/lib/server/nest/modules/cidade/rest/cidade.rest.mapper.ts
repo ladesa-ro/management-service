@@ -5,6 +5,7 @@ import {
   CidadeListOutput,
 } from "@/modules/cidade";
 import { EstadoRestMapper } from "@/server/nest/modules/estado/rest/estado.rest.mapper";
+import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import {
   CidadeFindOneInputDto,
   CidadeFindOneOutputDto,
@@ -55,15 +56,7 @@ export class CidadeRestMapper {
 
   static toListOutputDto(output: CidadeListOutput): CidadeListOutputDto {
     const dto = new CidadeListOutputDto();
-    dto.meta = {
-      currentPage: output.meta.currentPage,
-      totalPages: output.meta.totalPages,
-      itemsPerPage: output.meta.itemsPerPage,
-      totalItems: output.meta.totalItems,
-      sortBy: output.meta.sortBy,
-      filter: output.meta.filter,
-      search: output.meta.search,
-    };
+    dto.meta = mapPaginationMeta(output.meta);
     dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
     return dto;
   }

@@ -4,6 +4,7 @@ import {
   DiarioProfessorListInput,
   DiarioProfessorListOutput,
 } from "@/modules/diario-professor";
+import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import { DiarioProfessorFindOneOutputDto } from "../rest/diario-professor.rest.dto";
 import { DiarioProfessorRestMapper } from "../rest/diario-professor.rest.mapper";
 import {
@@ -42,15 +43,7 @@ export class DiarioProfessorGraphqlMapper {
 
   static toListOutputDto(output: DiarioProfessorListOutput): DiarioProfessorListOutputGqlDto {
     const dto = new DiarioProfessorListOutputGqlDto();
-    dto.meta = {
-      currentPage: output.meta.currentPage,
-      totalPages: output.meta.totalPages,
-      itemsPerPage: output.meta.itemsPerPage,
-      totalItems: output.meta.totalItems,
-      sortBy: output.meta.sortBy,
-      filter: output.meta.filter,
-      search: output.meta.search,
-    };
+    dto.meta = mapPaginationMeta(output.meta);
     dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
     return dto;
   }

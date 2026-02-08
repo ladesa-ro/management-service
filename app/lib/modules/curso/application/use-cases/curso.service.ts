@@ -79,7 +79,7 @@ export class CursoService
       currentCurso.id,
     );
 
-    const { imagem } = await this.imagemService.saveCursoCapa(file);
+    const { imagem } = await this.imagemService.saveImagemCapa(file);
 
     const curso = this.repository.create();
     this.repository.merge(curso, { id: currentCurso.id });

@@ -34,7 +34,7 @@ export class TurmaDisponibilidadeRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Query() dto: TurmaDisponibilidadeListInputDto,
   ): Promise<TurmaDisponibilidadeListOutputDto> {
-    return this.turmaDisponibilidadeService.turmaDisponibilidadeFindAll(accessContext, dto) as any;
+    return this.turmaDisponibilidadeService.findAll(accessContext, dto) as any;
   }
 
   @Get("/:id")
@@ -49,10 +49,7 @@ export class TurmaDisponibilidadeRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: TurmaDisponibilidadeFindOneInputDto,
   ): Promise<TurmaDisponibilidadeFindOneOutputDto> {
-    return this.turmaDisponibilidadeService.turmaDisponibilidadeFindByIdStrict(
-      accessContext,
-      params,
-    ) as any;
+    return this.turmaDisponibilidadeService.findByIdStrict(accessContext, params) as any;
   }
 
   @Post("/")
@@ -66,7 +63,7 @@ export class TurmaDisponibilidadeRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Body() dto: TurmaDisponibilidadeCreateInputDto,
   ): Promise<TurmaDisponibilidadeFindOneOutputDto> {
-    return this.turmaDisponibilidadeService.turmaDisponibilidadeCreate(accessContext, dto) as any;
+    return this.turmaDisponibilidadeService.create(accessContext, dto) as any;
   }
 
   @Patch("/:id")
@@ -82,7 +79,7 @@ export class TurmaDisponibilidadeRestController {
     @Param() params: TurmaDisponibilidadeFindOneInputDto,
     @Body() dto: TurmaDisponibilidadeUpdateInputDto,
   ): Promise<TurmaDisponibilidadeFindOneOutputDto> {
-    return this.turmaDisponibilidadeService.turmaDisponibilidadeUpdate(accessContext, {
+    return this.turmaDisponibilidadeService.update(accessContext, {
       id: params.id,
       ...dto,
     }) as any;
@@ -100,9 +97,6 @@ export class TurmaDisponibilidadeRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: TurmaDisponibilidadeFindOneInputDto,
   ): Promise<boolean> {
-    return this.turmaDisponibilidadeService.turmaDisponibilidadeDeleteOneById(
-      accessContext,
-      params,
-    );
+    return this.turmaDisponibilidadeService.deleteOneById(accessContext, params);
   }
 }

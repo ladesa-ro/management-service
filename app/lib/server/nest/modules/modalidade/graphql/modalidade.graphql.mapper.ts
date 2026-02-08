@@ -6,6 +6,7 @@ import {
   ModalidadeListOutput,
   ModalidadeUpdateInput,
 } from "@/modules/modalidade";
+import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import {
   ModalidadeCreateInputDto,
   ModalidadeFindOneOutputDto,
@@ -58,20 +59,12 @@ export class ModalidadeGraphqlMapper {
   }
 
   static toFindOneOutputDto(output: ModalidadeFindOneOutput): ModalidadeFindOneOutputDto {
-    return output as any;
+    return output as unknown as ModalidadeFindOneOutputDto;
   }
 
   static toListOutputDto(output: ModalidadeListOutput): ModalidadeListOutputGqlDto {
     const dto = new ModalidadeListOutputGqlDto();
-    dto.meta = {
-      currentPage: output.meta.currentPage,
-      totalPages: output.meta.totalPages,
-      itemsPerPage: output.meta.itemsPerPage,
-      totalItems: output.meta.totalItems,
-      sortBy: output.meta.sortBy,
-      filter: output.meta.filter,
-      search: output.meta.search,
-    };
+    dto.meta = mapPaginationMeta(output.meta);
     dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
     return dto;
   }

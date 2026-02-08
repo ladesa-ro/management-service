@@ -30,10 +30,7 @@ export class TurmaDisponibilidadeGraphqlResolver {
       input.selection = graphqlExtractSelection(info, "paginated");
     }
 
-    const result = await this.turmaDisponibilidadeService.turmaDisponibilidadeFindAll(
-      accessContext,
-      input,
-    );
+    const result = await this.turmaDisponibilidadeService.findAll(accessContext, input);
     return TurmaDisponibilidadeGraphqlMapper.toListOutputDto(result);
   }
 
@@ -44,10 +41,10 @@ export class TurmaDisponibilidadeGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<TurmaDisponibilidadeFindOneOutputDto> {
     const selection = graphqlExtractSelection(info);
-    const result = await this.turmaDisponibilidadeService.turmaDisponibilidadeFindByIdStrict(
-      accessContext,
-      { id, selection },
-    );
+    const result = await this.turmaDisponibilidadeService.findByIdStrict(accessContext, {
+      id,
+      selection,
+    });
     return TurmaDisponibilidadeGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -58,10 +55,7 @@ export class TurmaDisponibilidadeGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<TurmaDisponibilidadeFindOneOutputDto> {
     const input = TurmaDisponibilidadeGraphqlMapper.toCreateInput(dto);
-    const result = await this.turmaDisponibilidadeService.turmaDisponibilidadeCreate(
-      accessContext,
-      input as any,
-    );
+    const result = await this.turmaDisponibilidadeService.create(accessContext, input as any);
     return TurmaDisponibilidadeGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -73,10 +67,7 @@ export class TurmaDisponibilidadeGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<TurmaDisponibilidadeFindOneOutputDto> {
     const input = TurmaDisponibilidadeGraphqlMapper.toUpdateInput(id, dto);
-    const result = await this.turmaDisponibilidadeService.turmaDisponibilidadeUpdate(
-      accessContext,
-      input as any,
-    );
+    const result = await this.turmaDisponibilidadeService.update(accessContext, input as any);
     return TurmaDisponibilidadeGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -85,8 +76,6 @@ export class TurmaDisponibilidadeGraphqlResolver {
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
   ): Promise<boolean> {
-    return this.turmaDisponibilidadeService.turmaDisponibilidadeDeleteOneById(accessContext, {
-      id,
-    });
+    return this.turmaDisponibilidadeService.deleteOneById(accessContext, { id });
   }
 }

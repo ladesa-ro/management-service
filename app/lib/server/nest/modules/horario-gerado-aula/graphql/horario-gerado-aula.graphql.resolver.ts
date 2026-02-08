@@ -30,10 +30,7 @@ export class HorarioGeradoAulaGraphqlResolver {
       input.selection = graphqlExtractSelection(info, "paginated");
     }
 
-    const result = await this.horarioGeradoAulaService.horarioGeradoAulaFindAll(
-      accessContext,
-      input,
-    );
+    const result = await this.horarioGeradoAulaService.findAll(accessContext, input);
     return HorarioGeradoAulaGraphqlMapper.toListOutputDto(result);
   }
 
@@ -44,13 +41,10 @@ export class HorarioGeradoAulaGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<HorarioGeradoAulaFindOneOutputRestDto> {
     const selection = graphqlExtractSelection(info);
-    const result = await this.horarioGeradoAulaService.horarioGeradoAulaFindByIdStrict(
-      accessContext,
-      {
-        id,
-        selection,
-      },
-    );
+    const result = await this.horarioGeradoAulaService.findByIdStrict(accessContext, {
+      id,
+      selection,
+    });
     return HorarioGeradoAulaGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -61,10 +55,7 @@ export class HorarioGeradoAulaGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<HorarioGeradoAulaFindOneOutputRestDto> {
     const input = HorarioGeradoAulaGraphqlMapper.toCreateInput(dto);
-    const result = await this.horarioGeradoAulaService.horarioGeradoAulaCreate(
-      accessContext,
-      input,
-    );
+    const result = await this.horarioGeradoAulaService.create(accessContext, input);
     return HorarioGeradoAulaGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -76,10 +67,7 @@ export class HorarioGeradoAulaGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<HorarioGeradoAulaFindOneOutputRestDto> {
     const input = HorarioGeradoAulaGraphqlMapper.toUpdateInput(id, dto);
-    const result = await this.horarioGeradoAulaService.HorarioGeradoAulaUpdate(
-      accessContext,
-      input,
-    );
+    const result = await this.horarioGeradoAulaService.update(accessContext, input);
     return HorarioGeradoAulaGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -88,6 +76,6 @@ export class HorarioGeradoAulaGraphqlResolver {
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
   ): Promise<boolean> {
-    return this.horarioGeradoAulaService.horarioGeradoAulaDeleteOneById(accessContext, { id });
+    return this.horarioGeradoAulaService.deleteOneById(accessContext, { id });
   }
 }

@@ -6,6 +6,7 @@ import {
   TurmaListOutput,
   TurmaUpdateInput,
 } from "@/modules/turma";
+import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import {
   TurmaCreateInputDto,
   TurmaFindOneOutputDto,
@@ -59,20 +60,12 @@ export class TurmaGraphqlMapper {
   }
 
   static toFindOneOutputDto(output: TurmaFindOneOutput): TurmaFindOneOutputDto {
-    return output as any;
+    return output as unknown as TurmaFindOneOutputDto;
   }
 
   static toListOutputDto(output: TurmaListOutput): TurmaListOutputGqlDto {
     const dto = new TurmaListOutputGqlDto();
-    dto.meta = {
-      currentPage: output.meta.currentPage,
-      totalPages: output.meta.totalPages,
-      itemsPerPage: output.meta.itemsPerPage,
-      totalItems: output.meta.totalItems,
-      sortBy: output.meta.sortBy,
-      filter: output.meta.filter,
-      search: output.meta.search,
-    };
+    dto.meta = mapPaginationMeta(output.meta);
     dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
     return dto;
   }

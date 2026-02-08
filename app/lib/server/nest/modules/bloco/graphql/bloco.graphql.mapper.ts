@@ -4,6 +4,7 @@ import {
   BlocoListInput,
   BlocoListOutput,
 } from "@/modules/bloco";
+import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import { BlocoFindOneOutputDto } from "../rest/bloco.rest.dto";
 import { BlocoRestMapper } from "../rest/bloco.rest.mapper";
 import { BlocoListInputGqlDto, BlocoListOutputGqlDto } from "./bloco.graphql.dto";
@@ -37,15 +38,7 @@ export class BlocoGraphqlMapper {
 
   static toListOutputDto(output: BlocoListOutput): BlocoListOutputGqlDto {
     const dto = new BlocoListOutputGqlDto();
-    dto.meta = {
-      currentPage: output.meta.currentPage,
-      totalPages: output.meta.totalPages,
-      itemsPerPage: output.meta.itemsPerPage,
-      totalItems: output.meta.totalItems,
-      sortBy: output.meta.sortBy,
-      filter: output.meta.filter,
-      search: output.meta.search,
-    };
+    dto.meta = mapPaginationMeta(output.meta);
     dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
     return dto;
   }

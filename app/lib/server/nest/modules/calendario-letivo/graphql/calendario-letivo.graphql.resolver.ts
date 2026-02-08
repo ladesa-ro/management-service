@@ -31,7 +31,7 @@ export class CalendarioLetivoGraphqlResolver {
       input.selection = graphqlExtractSelection(info, "paginated");
     }
 
-    const result = await this.calendarioLetivoService.calendarioLetivoFindAll(accessContext, input);
+    const result = await this.calendarioLetivoService.findAll(accessContext, input);
     return CalendarioLetivoGraphqlMapper.toListOutputDto(result);
   }
 
@@ -42,10 +42,10 @@ export class CalendarioLetivoGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<CalendarioLetivoFindOneOutputDto> {
     const selection = graphqlExtractSelection(info);
-    const result = await this.calendarioLetivoService.calendarioLetivoFindByIdStrict(
-      accessContext,
-      { id, selection },
-    );
+    const result = await this.calendarioLetivoService.findByIdStrict(accessContext, {
+      id,
+      selection,
+    });
     return CalendarioLetivoGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -56,7 +56,7 @@ export class CalendarioLetivoGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<CalendarioLetivoFindOneOutputDto> {
     const input = CalendarioLetivoRestMapper.toCreateInput(dto);
-    const result = await this.calendarioLetivoService.calendarioLetivoCreate(accessContext, input);
+    const result = await this.calendarioLetivoService.create(accessContext, input);
     return CalendarioLetivoGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -68,7 +68,7 @@ export class CalendarioLetivoGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<CalendarioLetivoFindOneOutputDto> {
     const input = CalendarioLetivoRestMapper.toUpdateInput({ id }, dto);
-    const result = await this.calendarioLetivoService.calendarioLetivoUpdate(accessContext, input);
+    const result = await this.calendarioLetivoService.update(accessContext, input);
     return CalendarioLetivoGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -77,6 +77,6 @@ export class CalendarioLetivoGraphqlResolver {
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
   ): Promise<boolean> {
-    return this.calendarioLetivoService.calendarioLetivoDeleteOneById(accessContext, { id });
+    return this.calendarioLetivoService.deleteOneById(accessContext, { id });
   }
 }

@@ -4,6 +4,7 @@ import {
   CidadeListInput,
   CidadeListOutput,
 } from "@/modules/cidade";
+import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import { CidadeFindOneOutputDto } from "../rest/cidade.rest.dto";
 import { CidadeRestMapper } from "../rest/cidade.rest.mapper";
 import { CidadeListInputGqlDto, CidadeListOutputGqlDto } from "./cidade.graphql.dto";
@@ -39,15 +40,7 @@ export class CidadeGraphqlMapper {
 
   static toListOutputDto(output: CidadeListOutput): CidadeListOutputGqlDto {
     const dto = new CidadeListOutputGqlDto();
-    dto.meta = {
-      currentPage: output.meta.currentPage,
-      totalPages: output.meta.totalPages,
-      itemsPerPage: output.meta.itemsPerPage,
-      totalItems: output.meta.totalItems,
-      sortBy: output.meta.sortBy,
-      filter: output.meta.filter,
-      search: output.meta.search,
-    };
+    dto.meta = mapPaginationMeta(output.meta);
     dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
     return dto;
   }

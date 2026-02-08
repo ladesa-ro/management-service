@@ -33,7 +33,7 @@ export class CalendarioLetivoRestController {
     @Query() dto: CalendarioLetivoListInputDto,
   ): Promise<CalendarioLetivoListOutputDto> {
     const input = CalendarioLetivoRestMapper.toListInput(dto);
-    const result = await this.calendarioLetivoService.calendarioLetivoFindAll(accessContext, input);
+    const result = await this.calendarioLetivoService.findAll(accessContext, input);
     return CalendarioLetivoRestMapper.toListOutputDto(result);
   }
 
@@ -50,10 +50,7 @@ export class CalendarioLetivoRestController {
     @Param() params: CalendarioLetivoFindOneInputDto,
   ): Promise<CalendarioLetivoFindOneOutputDto> {
     const input = CalendarioLetivoRestMapper.toFindOneInput(params);
-    const result = await this.calendarioLetivoService.calendarioLetivoFindByIdStrict(
-      accessContext,
-      input,
-    );
+    const result = await this.calendarioLetivoService.findByIdStrict(accessContext, input);
     return CalendarioLetivoRestMapper.toFindOneOutputDto(result);
   }
 
@@ -66,7 +63,7 @@ export class CalendarioLetivoRestController {
     @Body() dto: CalendarioLetivoCreateInputDto,
   ): Promise<CalendarioLetivoFindOneOutputDto> {
     const input = CalendarioLetivoRestMapper.toCreateInput(dto);
-    const result = await this.calendarioLetivoService.calendarioLetivoCreate(accessContext, input);
+    const result = await this.calendarioLetivoService.create(accessContext, input);
     return CalendarioLetivoRestMapper.toFindOneOutputDto(result);
   }
 
@@ -81,7 +78,7 @@ export class CalendarioLetivoRestController {
     @Body() dto: CalendarioLetivoUpdateInputDto,
   ): Promise<CalendarioLetivoFindOneOutputDto> {
     const input = CalendarioLetivoRestMapper.toUpdateInput(params, dto);
-    const result = await this.calendarioLetivoService.calendarioLetivoUpdate(accessContext, input);
+    const result = await this.calendarioLetivoService.update(accessContext, input);
     return CalendarioLetivoRestMapper.toFindOneOutputDto(result);
   }
 
@@ -98,6 +95,6 @@ export class CalendarioLetivoRestController {
     @Param() params: CalendarioLetivoFindOneInputDto,
   ): Promise<boolean> {
     const input = CalendarioLetivoRestMapper.toFindOneInput(params);
-    return this.calendarioLetivoService.calendarioLetivoDeleteOneById(accessContext, input);
+    return this.calendarioLetivoService.deleteOneById(accessContext, input);
   }
 }

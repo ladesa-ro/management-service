@@ -16,7 +16,7 @@ export interface ICalendarioLetivoUseCasePort {
   /**
    * Lista calendarios letivos com paginacao
    */
-  calendarioLetivoFindAll(
+  findAll(
     accessContext: AccessContext,
     dto: CalendarioLetivoListInput | null,
     selection?: string[] | boolean,
@@ -25,7 +25,7 @@ export interface ICalendarioLetivoUseCasePort {
   /**
    * Busca um calendario letivo por ID
    */
-  calendarioLetivoFindById(
+  findById(
     accessContext: AccessContext,
     dto: CalendarioLetivoFindOneInput,
     selection?: string[] | boolean,
@@ -34,25 +34,16 @@ export interface ICalendarioLetivoUseCasePort {
   /**
    * Busca um calendario letivo por ID (lanca excecao se nao encontrado)
    */
-  calendarioLetivoFindByIdStrict(
+  findByIdStrict(
     accessContext: AccessContext,
     dto: CalendarioLetivoFindOneInput,
     selection?: string[] | boolean,
   ): Promise<CalendarioLetivoFindOneOutput>;
 
   /**
-   * Busca um calendario letivo por ID (formato simples)
-   */
-  calendarioLetivoFindByIdSimple(
-    accessContext: AccessContext,
-    id: string,
-    selection?: string[] | boolean,
-  ): Promise<CalendarioLetivoFindOneOutput | null>;
-
-  /**
    * Busca um calendario letivo por ID (formato simples, lanca excecao se nao encontrado)
    */
-  calendarioLetivoFindByIdSimpleStrict(
+  findByIdSimpleStrict(
     accessContext: AccessContext,
     id: string,
     selection?: string[] | boolean,
@@ -61,7 +52,7 @@ export interface ICalendarioLetivoUseCasePort {
   /**
    * Cria um novo calendario letivo
    */
-  calendarioLetivoCreate(
+  create(
     accessContext: AccessContext,
     dto: CalendarioLetivoCreateInput,
   ): Promise<CalendarioLetivoFindOneOutput>;
@@ -69,7 +60,7 @@ export interface ICalendarioLetivoUseCasePort {
   /**
    * Atualiza um calendario letivo existente
    */
-  calendarioLetivoUpdate(
+  update(
     accessContext: AccessContext,
     dto: CalendarioLetivoFindOneInput & CalendarioLetivoUpdateInput,
   ): Promise<CalendarioLetivoFindOneOutput>;
@@ -77,8 +68,5 @@ export interface ICalendarioLetivoUseCasePort {
   /**
    * Remove um calendario letivo (soft delete)
    */
-  calendarioLetivoDeleteOneById(
-    accessContext: AccessContext,
-    dto: CalendarioLetivoFindOneInput,
-  ): Promise<boolean>;
+  deleteOneById(accessContext: AccessContext, dto: CalendarioLetivoFindOneInput): Promise<boolean>;
 }

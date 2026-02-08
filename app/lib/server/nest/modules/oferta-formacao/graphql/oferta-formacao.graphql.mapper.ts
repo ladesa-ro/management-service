@@ -6,6 +6,8 @@ import {
   OfertaFormacaoListOutput,
   OfertaFormacaoUpdateInput,
 } from "@/modules/oferta-formacao";
+import { ModalidadeFindOneOutputDto } from "@/server/nest/modules/modalidade/rest/modalidade.rest.dto";
+import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import {
   OfertaFormacaoCreateInputDto,
   OfertaFormacaoFindOneOutputDto,
@@ -71,7 +73,7 @@ export class OfertaFormacaoGraphqlMapper {
     dto.id = output.id;
     dto.nome = output.nome;
     dto.slug = output.slug;
-    dto.modalidade = output.modalidade as any;
+    dto.modalidade = output.modalidade as unknown as ModalidadeFindOneOutputDto;
     dto.dateCreated = new Date(output.dateCreated);
     dto.dateUpdated = new Date(output.dateUpdated);
     dto.dateDeleted = output.dateDeleted ? new Date(output.dateDeleted) : null;
@@ -80,15 +82,7 @@ export class OfertaFormacaoGraphqlMapper {
 
   static toListOutputDto(output: OfertaFormacaoListOutput): OfertaFormacaoListOutputGqlDto {
     const dto = new OfertaFormacaoListOutputGqlDto();
-    dto.meta = {
-      currentPage: output.meta.currentPage,
-      totalPages: output.meta.totalPages,
-      itemsPerPage: output.meta.itemsPerPage,
-      totalItems: output.meta.totalItems,
-      sortBy: output.meta.sortBy,
-      filter: output.meta.filter,
-      search: output.meta.search,
-    };
+    dto.meta = mapPaginationMeta(output.meta);
     dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
     return dto;
   }

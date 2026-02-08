@@ -12,42 +12,58 @@ export class MessageBrokerService {
     private readonly configPort: IConfigPort,
   ) {}
 
-  async publishTimetableRequest<TRequest, TResponse>(request: TRequest, timeoutMs = 60000): Promise<TResponse> {
+  async publishTimetableRequest<TRequest, TResponse>(
+    request: TRequest,
+    timeoutMs = 60000,
+  ): Promise<TResponse> {
     const broker = await this.messageBrokerContainerService.getBroker();
     const queueRequest = this.configPort.getMessageBrokerQueueTimetableRequest();
     const queueResponse = this.configPort.getMessageBrokerQueueTimetableResponse();
 
-    return new Promise<TResponse>(async (resolve, reject) => {
+    return new Promise<TResponse>((resolve, reject) => {
+      let subscription: any;
+
       const timeout = setTimeout(() => {
         subscription?.cancel();
         reject(new Error(`Timeout aguardando resposta da queue ${queueResponse}`));
       }, timeoutMs);
 
-      const subscription = await broker.subscribe(queueResponse);
+      broker
+        .subscribe(queueResponse)
+        .then((sub) => {
+          subscription = sub;
 
-      subscription.on("message", (_message, content, ackOrNoAck) => {
-        clearTimeout(timeout);
-        ackOrNoAck();
-        subscription.cancel();
+          subscription.on("message", (_message, content, ackOrNoAck) => {
+            clearTimeout(timeout);
+            ackOrNoAck();
+            subscription.cancel();
 
-        try {
-          // content is already parsed as JSON by rascal when contentType is "application/json"
-          const response = (typeof content === "string" ? JSON.parse(content) : content) as TResponse;
-          this.logger.log(`Resposta recebida da queue ${queueResponse}`);
-          resolve(response);
-        } catch (e) {
-          reject(new Error("Erro ao parsear resposta JSON: " + e));
-        }
-      });
+            try {
+              const response = (
+                typeof content === "string" ? JSON.parse(content) : content
+              ) as TResponse;
 
-      subscription.on("error", (err) => {
-        clearTimeout(timeout);
-        subscription.cancel();
-        reject(err);
-      });
+              this.logger.log(`Resposta recebida da queue ${queueResponse}`);
+              resolve(response);
+            } catch (e) {
+              reject(new Error("Erro ao parsear resposta JSON: " + e));
+            }
+          });
 
-      this.logger.log(`Publicando mensagem na queue ${queueRequest}`);
-      await broker.publish(queueRequest, JSON.stringify(request));
+          subscription.on("error", (err) => {
+            clearTimeout(timeout);
+            subscription.cancel();
+            reject(err);
+          });
+
+          this.logger.log(`Publicando mensagem na queue ${queueRequest}`);
+          return broker.publish(queueRequest, JSON.stringify(request));
+        })
+        .catch((err) => {
+          clearTimeout(timeout);
+          subscription?.cancel();
+          reject(err);
+        });
     });
   }
 }

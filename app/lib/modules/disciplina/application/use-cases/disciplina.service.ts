@@ -72,7 +72,7 @@ export class DisciplinaService extends BaseCrudService<
       currentDisciplina.id,
     );
 
-    const { imagem } = await this.imagemService.saveDisciplinaCapa(file);
+    const { imagem } = await this.imagemService.saveImagemCapa(file);
 
     const disciplina = this.repository.create();
     this.repository.merge(disciplina, { id: currentDisciplina.id });

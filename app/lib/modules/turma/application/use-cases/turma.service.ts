@@ -72,7 +72,7 @@ export class TurmaService extends BaseCrudService<
       currentTurma.id,
     );
 
-    const { imagem } = await this.imagemService.saveTurmaCapa(file);
+    const { imagem } = await this.imagemService.saveImagemCapa(file);
 
     const turma = this.repository.create();
     this.repository.merge(turma, { id: currentTurma.id });

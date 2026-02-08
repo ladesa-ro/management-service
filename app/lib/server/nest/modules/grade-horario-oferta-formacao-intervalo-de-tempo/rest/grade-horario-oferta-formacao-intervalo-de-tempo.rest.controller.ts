@@ -36,7 +36,7 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Query() dto: GradeHorarioOfertaFormacaoIntervaloDeTempoListInputRestDto,
   ): Promise<GradeHorarioOfertaFormacaoIntervaloDeTempoListOutputRestDto> {
-    return this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.gradeHorarioOfertaFormacaoIntervaloDeTempoFindAll(
+    return this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.findAll(
       accessContext,
       dto,
     ) as unknown as Promise<GradeHorarioOfertaFormacaoIntervaloDeTempoListOutputRestDto>;
@@ -53,7 +53,7 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInputRestDto,
   ): Promise<GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputRestDto> {
-    return this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.gradeHorarioOfertaFormacaoIntervaloDeTempoFindByIdStrict(
+    return this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.findByIdStrict(
       accessContext,
       params,
     ) as unknown as Promise<GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputRestDto>;
@@ -70,7 +70,7 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Body() dto: GradeHorarioOfertaFormacaoIntervaloDeTempoCreateInputRestDto,
   ): Promise<GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputRestDto> {
-    return this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.gradeHorarioOfertaFormacaoIntervaloDeTempoCreate(
+    return this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.create(
       accessContext,
       dto as any,
     ) as unknown as Promise<GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputRestDto>;
@@ -89,10 +89,10 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoRestController {
     @Param() params: GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInputRestDto,
     @Body() dto: GradeHorarioOfertaFormacaoIntervaloDeTempoUpdateInputRestDto,
   ): Promise<GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputRestDto> {
-    return this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.gradeHorarioOfertaFormacaoIntervaloDeTempoUpdate(
-      accessContext,
-      { id: params.id, ...dto } as any,
-    ) as unknown as Promise<GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputRestDto>;
+    return this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.update(accessContext, {
+      id: params.id,
+      ...dto,
+    } as any) as unknown as Promise<GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputRestDto>;
   }
 
   @Delete("/:id")
@@ -107,7 +107,7 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInputRestDto,
   ): Promise<boolean> {
-    return this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.gradeHorarioOfertaFormacaoIntervaloDeTempoDeleteOneById(
+    return this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.deleteOneById(
       accessContext,
       params,
     );

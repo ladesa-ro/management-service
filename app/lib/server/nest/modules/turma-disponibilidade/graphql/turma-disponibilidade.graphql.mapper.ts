@@ -6,6 +6,7 @@ import {
   TurmaDisponibilidadeListOutput,
   TurmaDisponibilidadeUpdateInput,
 } from "@/modules/turma-disponibilidade";
+import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import {
   TurmaDisponibilidadeCreateInputDto,
   TurmaDisponibilidadeFindOneOutputDto,
@@ -66,22 +67,14 @@ export class TurmaDisponibilidadeGraphqlMapper {
   static toFindOneOutputDto(
     output: TurmaDisponibilidadeFindOneOutput,
   ): TurmaDisponibilidadeFindOneOutputDto {
-    return output as any;
+    return output as unknown as TurmaDisponibilidadeFindOneOutputDto;
   }
 
   static toListOutputDto(
     output: TurmaDisponibilidadeListOutput,
   ): TurmaDisponibilidadeListOutputGqlDto {
     const dto = new TurmaDisponibilidadeListOutputGqlDto();
-    dto.meta = {
-      currentPage: output.meta.currentPage,
-      totalPages: output.meta.totalPages,
-      itemsPerPage: output.meta.itemsPerPage,
-      totalItems: output.meta.totalItems,
-      sortBy: output.meta.sortBy,
-      filter: output.meta.filter,
-      search: output.meta.search,
-    };
+    dto.meta = mapPaginationMeta(output.meta);
     dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
     return dto;
   }

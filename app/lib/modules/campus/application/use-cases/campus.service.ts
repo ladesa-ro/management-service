@@ -1,13 +1,12 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { get, pick } from "lodash";
-import { v4 } from "uuid";
+import { get } from "lodash";
 import type { AccessContext } from "@/modules/@core/access-context";
 import {
   AUTHORIZATION_SERVICE_PORT,
+  BaseCrudService,
   type IAuthorizationServicePort,
-  ResourceNotFoundError,
 } from "@/modules/@shared";
-import {
+import type {
   CampusCreateInput,
   CampusFindOneInput,
   CampusFindOneOutput,
@@ -20,153 +19,62 @@ import {
   type ICampusRepositoryPort,
   type ICampusUseCasePort,
 } from "@/modules/campus/application/ports";
+import type { CampusEntity } from "@/modules/campus/infrastructure/persistence/typeorm";
 import { type EnderecoInputDto, EnderecoService } from "@/modules/endereco";
 
-/**
- * Service centralizado para o módulo Campus.
- * Implementa todos os use cases definidos em ICampusUseCasePort.
- *
- * Por enquanto, toda a lógica fica aqui. Futuramente, pode ser
- * desmembrado em use cases individuais se necessário.
- */
 @Injectable()
-export class CampusService implements ICampusUseCasePort {
+export class CampusService
+  extends BaseCrudService<
+    CampusEntity,
+    CampusListInput,
+    CampusListOutput,
+    CampusFindOneInput,
+    CampusFindOneOutput,
+    CampusCreateInput,
+    CampusUpdateInput
+  >
+  implements ICampusUseCasePort
+{
+  protected readonly resourceName = "Campus";
+  protected readonly createAction = "campus:create";
+  protected readonly updateAction = "campus:update";
+  protected readonly deleteAction = "campus:delete";
+  protected readonly createFields = ["nomeFantasia", "razaoSocial", "apelido", "cnpj"] as const;
+  protected readonly updateFields = ["nomeFantasia", "razaoSocial", "apelido", "cnpj"] as const;
+
   constructor(
     @Inject(CAMPUS_REPOSITORY_PORT)
-    private readonly campusRepository: ICampusRepositoryPort,
+    protected readonly repository: ICampusRepositoryPort,
     @Inject(AUTHORIZATION_SERVICE_PORT)
-    private readonly authorizationService: IAuthorizationServicePort,
+    protected readonly authorizationService: IAuthorizationServicePort,
     private readonly enderecoService: EnderecoService,
-  ) {}
-
-  // Generic method names
-  async findAll(
-    accessContext: AccessContext,
-    dto: CampusListInput | null = null,
-    selection?: string[] | boolean,
-  ): Promise<CampusListOutput> {
-    return this.campusRepository.findAll(accessContext, dto, selection);
+  ) {
+    super();
   }
 
-  async findById(
-    accessContext: AccessContext,
-    dto: CampusFindOneInput,
-    selection?: string[] | boolean,
-  ): Promise<CampusFindOneOutput | null> {
-    return this.campusRepository.findById(accessContext, dto, selection);
-  }
-
-  async findByIdStrict(
-    accessContext: AccessContext,
-    dto: CampusFindOneInput,
-    selection?: string[] | boolean,
-  ): Promise<CampusFindOneOutput> {
-    const campus = await this.campusRepository.findById(accessContext, dto, selection);
-
-    if (!campus) {
-      throw new ResourceNotFoundError("Campus", dto.id);
-    }
-
-    return campus;
-  }
-
-  async findByIdSimple(
-    accessContext: AccessContext,
-    id: string,
-    selection?: string[] | boolean,
-  ): Promise<CampusFindOneOutput | null> {
-    return this.campusRepository.findByIdSimple(accessContext, id, selection);
-  }
-
-  async findByIdSimpleStrict(
-    accessContext: AccessContext,
-    id: string,
-    selection?: string[] | boolean,
-  ): Promise<CampusFindOneOutput> {
-    const campus = await this.campusRepository.findByIdSimple(accessContext, id, selection);
-
-    if (!campus) {
-      throw new ResourceNotFoundError("Campus", id);
-    }
-
-    return campus;
-  }
-
-  async create(accessContext: AccessContext, dto: CampusCreateInput): Promise<CampusFindOneOutput> {
-    await this.authorizationService.ensurePermission("campus:create", { dto });
-
-    const dtoCampus = pick(dto, ["nomeFantasia", "razaoSocial", "apelido", "cnpj"]);
-
-    const campus = this.campusRepository.create();
-
-    this.campusRepository.merge(campus, {
-      ...dtoCampus,
-    });
-
-    this.campusRepository.merge(campus, {
-      id: v4(),
-    });
-
+  protected override async beforeCreate(
+    _accessContext: AccessContext,
+    entity: CampusEntity,
+    dto: CampusCreateInput,
+  ): Promise<void> {
     const endereco = await this.enderecoService.internalEnderecoCreateOrUpdate(null, dto.endereco);
-
-    this.campusRepository.merge(campus, {
-      endereco: {
-        id: endereco.id,
-      },
-    });
-
-    await this.campusRepository.save(campus);
-
-    return this.findByIdStrict(accessContext, { id: campus.id });
+    this.repository.merge(entity, { endereco: { id: endereco.id } });
   }
 
-  async update(
-    accessContext: AccessContext,
+  protected override async beforeUpdate(
+    _accessContext: AccessContext,
+    entity: CampusEntity,
     dto: CampusFindOneInput & CampusUpdateInput,
-  ): Promise<CampusFindOneOutput> {
-    const currentCampus = await this.findByIdStrict(accessContext, { id: dto.id });
-
-    await this.authorizationService.ensurePermission("campus:update", { dto }, dto.id);
-
-    const dtoCampus = pick(dto, ["nomeFantasia", "razaoSocial", "apelido", "cnpj"]);
-
-    const campus = this.campusRepository.create();
-
-    this.campusRepository.merge(campus, {
-      ...dtoCampus,
-    });
-
-    this.campusRepository.merge(campus, { id: currentCampus.id });
-
+    current: CampusFindOneOutput,
+  ): Promise<void> {
     const dtoEndereco = get(dto, "endereco");
 
     if (dtoEndereco) {
       const endereco = await this.enderecoService.internalEnderecoCreateOrUpdate(
-        currentCampus.endereco.id,
+        current.endereco.id,
         dtoEndereco as EnderecoInputDto,
       );
-
-      this.campusRepository.merge(campus, {
-        endereco: {
-          id: endereco.id,
-        },
-      });
+      this.repository.merge(entity, { endereco: { id: endereco.id } });
     }
-
-    await this.campusRepository.save(campus);
-
-    return this.findByIdStrict(accessContext, { id: campus.id });
-  }
-
-  async deleteOneById(accessContext: AccessContext, dto: CampusFindOneInput): Promise<boolean> {
-    await this.authorizationService.ensurePermission("campus:delete", { dto }, dto.id);
-
-    const campus = await this.findByIdStrict(accessContext, dto);
-
-    if (campus) {
-      await this.campusRepository.softDeleteById(campus.id);
-    }
-
-    return true;
   }
 }

@@ -36,11 +36,7 @@ export class DiarioPreferenciaAgrupamentoController {
     @Query() dto: DiarioPreferenciaAgrupamentoListInputDto,
   ): Promise<DiarioPreferenciaAgrupamentoListOutputDto> {
     const input = DiarioPreferenciaAgrupamentoRestMapper.toListInput(dto);
-    const result =
-      await this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoFindAll(
-        accessContext,
-        input,
-      );
+    const result = await this.diarioPreferenciaAgrupamentoService.findAll(accessContext, input);
     return DiarioPreferenciaAgrupamentoRestMapper.toListOutputDto(result);
   }
 
@@ -57,11 +53,10 @@ export class DiarioPreferenciaAgrupamentoController {
     @Param() params: DiarioPreferenciaAgrupamentoFindOneInputDto,
   ): Promise<DiarioPreferenciaAgrupamentoFindOneOutputDto> {
     const input = DiarioPreferenciaAgrupamentoRestMapper.toFindOneInput(params);
-    const result =
-      await this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoFindByIdStrict(
-        accessContext,
-        input,
-      );
+    const result = await this.diarioPreferenciaAgrupamentoService.findByIdStrict(
+      accessContext,
+      input,
+    );
     return DiarioPreferenciaAgrupamentoRestMapper.toFindOneOutputDto(result);
   }
 
@@ -77,11 +72,7 @@ export class DiarioPreferenciaAgrupamentoController {
     @Body() dto: DiarioPreferenciaAgrupamentoCreateInputDto,
   ): Promise<DiarioPreferenciaAgrupamentoFindOneOutputDto> {
     const input = DiarioPreferenciaAgrupamentoRestMapper.toCreateInput(dto);
-    const result =
-      await this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoCreate(
-        accessContext,
-        input,
-      );
+    const result = await this.diarioPreferenciaAgrupamentoService.create(accessContext, input);
     return DiarioPreferenciaAgrupamentoRestMapper.toFindOneOutputDto(result);
   }
 
@@ -99,11 +90,7 @@ export class DiarioPreferenciaAgrupamentoController {
     @Body() dto: DiarioPreferenciaAgrupamentoUpdateInputDto,
   ): Promise<DiarioPreferenciaAgrupamentoFindOneOutputDto> {
     const input = DiarioPreferenciaAgrupamentoRestMapper.toUpdateInput(params, dto);
-    const result =
-      await this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoUpdate(
-        accessContext,
-        input,
-      );
+    const result = await this.diarioPreferenciaAgrupamentoService.update(accessContext, input);
     return DiarioPreferenciaAgrupamentoRestMapper.toFindOneOutputDto(result);
   }
 
@@ -120,9 +107,6 @@ export class DiarioPreferenciaAgrupamentoController {
     @Param() params: DiarioPreferenciaAgrupamentoFindOneInputDto,
   ): Promise<boolean> {
     const input = DiarioPreferenciaAgrupamentoRestMapper.toFindOneInput(params);
-    return this.diarioPreferenciaAgrupamentoService.diarioPreferenciaAgrupamentoDeleteOneById(
-      accessContext,
-      input,
-    );
+    return this.diarioPreferenciaAgrupamentoService.deleteOneById(accessContext, input);
   }
 }

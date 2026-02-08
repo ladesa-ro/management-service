@@ -1,8 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { pick } from "lodash";
 import type { AccessContext } from "@/modules/@core/access-context";
-import { ResourceNotFoundError } from "@/modules/@shared";
-import {
+import { BaseCrudService } from "@/modules/@shared";
+import type {
   NivelFormacaoCreateInput,
   NivelFormacaoFindOneInput,
   NivelFormacaoFindOneOutput,
@@ -15,77 +14,33 @@ import {
   type INivelFormacaoUseCasePort,
   NIVEL_FORMACAO_REPOSITORY_PORT,
 } from "@/modules/nivel-formacao/application/ports";
+import type { NivelFormacaoEntity } from "@/modules/nivel-formacao/infrastructure/persistence/typeorm";
 
 @Injectable()
-export class NivelFormacaoService implements INivelFormacaoUseCasePort {
+export class NivelFormacaoService
+  extends BaseCrudService<
+    NivelFormacaoEntity,
+    NivelFormacaoListInput,
+    NivelFormacaoListOutput,
+    NivelFormacaoFindOneInput,
+    NivelFormacaoFindOneOutput,
+    NivelFormacaoCreateInput,
+    NivelFormacaoUpdateInput
+  >
+  implements INivelFormacaoUseCasePort
+{
+  protected readonly resourceName = "NivelFormacao";
+  protected readonly createAction = "nivel_formacao:create";
+  protected readonly updateAction = "nivel_formacao:update";
+  protected readonly deleteAction = "nivel_formacao:delete";
+  protected readonly createFields = ["slug"] as const;
+  protected readonly updateFields = ["slug"] as const;
+
   constructor(
     @Inject(NIVEL_FORMACAO_REPOSITORY_PORT)
-    private readonly nivelFormacaoRepository: INivelFormacaoRepositoryPort,
-  ) {}
-
-  async findAll(
-    accessContext: AccessContext,
-    dto: NivelFormacaoListInput | null = null,
-  ): Promise<NivelFormacaoListOutput> {
-    return this.nivelFormacaoRepository.findAll(accessContext, dto);
-  }
-
-  async findById(
-    accessContext: AccessContext,
-    dto: NivelFormacaoFindOneInput,
-  ): Promise<NivelFormacaoFindOneOutput | null> {
-    return this.nivelFormacaoRepository.findById(accessContext, dto);
-  }
-
-  async findByIdStrict(
-    accessContext: AccessContext,
-    dto: NivelFormacaoFindOneInput,
-  ): Promise<NivelFormacaoFindOneOutput> {
-    const nivelFormacao = await this.nivelFormacaoRepository.findById(accessContext, dto);
-
-    if (!nivelFormacao) {
-      throw new ResourceNotFoundError("NivelFormacao", dto.id);
-    }
-
-    return nivelFormacao;
-  }
-
-  async create(
-    accessContext: AccessContext,
-    dto: NivelFormacaoCreateInput,
-  ): Promise<NivelFormacaoFindOneOutput> {
-    const dtoNivelFormacao = pick(dto, ["slug"]);
-
-    const nivelFormacao = this.nivelFormacaoRepository.create();
-    this.nivelFormacaoRepository.merge(nivelFormacao, { ...dtoNivelFormacao });
-
-    await this.nivelFormacaoRepository.save(nivelFormacao);
-
-    return this.findByIdStrict(accessContext, { id: nivelFormacao.id });
-  }
-
-  async update(
-    accessContext: AccessContext,
-    dto: NivelFormacaoFindOneInput & NivelFormacaoUpdateInput,
-  ): Promise<NivelFormacaoFindOneOutput> {
-    const nivelFormacao = await this.findByIdStrict(accessContext, { id: dto.id });
-
-    const dtoNivelFormacao = pick(dto, ["slug"]);
-    const entity = this.nivelFormacaoRepository.create();
-    this.nivelFormacaoRepository.merge(entity, { id: nivelFormacao.id, ...dtoNivelFormacao });
-
-    await this.nivelFormacaoRepository.save(entity);
-
-    return this.findByIdStrict(accessContext, { id: dto.id });
-  }
-
-  async deleteOneById(
-    accessContext: AccessContext,
-    dto: NivelFormacaoFindOneInput,
-  ): Promise<boolean> {
-    await this.findByIdStrict(accessContext, dto);
-    await this.nivelFormacaoRepository.softDeleteById(dto.id);
-    return true;
+    protected readonly repository: INivelFormacaoRepositoryPort,
+  ) {
+    super();
   }
 
   async findByIdSimpleStrict(

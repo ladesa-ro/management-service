@@ -6,6 +6,7 @@ import {
   DiaCalendarioListOutput,
   DiaCalendarioUpdateInput,
 } from "@/modules/dia-calendario";
+import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import {
   DiaCalendarioCreateInputDto,
   DiaCalendarioFindOneInputDto,
@@ -99,15 +100,7 @@ export class DiaCalendarioRestMapper {
 
   static toListOutputDto(output: DiaCalendarioListOutput): DiaCalendarioListOutputDto {
     const dto = new DiaCalendarioListOutputDto();
-    dto.meta = {
-      currentPage: output.meta.currentPage,
-      totalPages: output.meta.totalPages,
-      itemsPerPage: output.meta.itemsPerPage,
-      totalItems: output.meta.totalItems,
-      sortBy: output.meta.sortBy,
-      filter: output.meta.filter,
-      search: output.meta.search,
-    };
+    dto.meta = mapPaginationMeta(output.meta);
     dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
     return dto;
   }

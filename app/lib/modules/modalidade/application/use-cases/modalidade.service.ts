@@ -1,8 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { pick } from "lodash";
 import type { AccessContext } from "@/modules/@core/access-context";
-import { ResourceNotFoundError } from "@/modules/@shared";
-import {
+import { BaseCrudService } from "@/modules/@shared";
+import type {
   ModalidadeCreateInput,
   ModalidadeFindOneInput,
   ModalidadeFindOneOutput,
@@ -15,74 +14,33 @@ import {
   type IModalidadeUseCasePort,
   MODALIDADE_REPOSITORY_PORT,
 } from "@/modules/modalidade/application/ports";
+import type { ModalidadeEntity } from "@/modules/modalidade/infrastructure/persistence/typeorm";
 
 @Injectable()
-export class ModalidadeService implements IModalidadeUseCasePort {
+export class ModalidadeService
+  extends BaseCrudService<
+    ModalidadeEntity,
+    ModalidadeListInput,
+    ModalidadeListOutput,
+    ModalidadeFindOneInput,
+    ModalidadeFindOneOutput,
+    ModalidadeCreateInput,
+    ModalidadeUpdateInput
+  >
+  implements IModalidadeUseCasePort
+{
+  protected readonly resourceName = "Modalidade";
+  protected readonly createAction = "modalidade:create";
+  protected readonly updateAction = "modalidade:update";
+  protected readonly deleteAction = "modalidade:delete";
+  protected readonly createFields = ["nome", "slug"] as const;
+  protected readonly updateFields = ["nome", "slug"] as const;
+
   constructor(
     @Inject(MODALIDADE_REPOSITORY_PORT)
-    private readonly modalidadeRepository: IModalidadeRepositoryPort,
-  ) {}
-
-  async findAll(
-    accessContext: AccessContext,
-    dto: ModalidadeListInput | null = null,
-  ): Promise<ModalidadeListOutput> {
-    return this.modalidadeRepository.findAll(accessContext, dto);
-  }
-
-  async findById(
-    accessContext: AccessContext,
-    dto: ModalidadeFindOneInput,
-  ): Promise<ModalidadeFindOneOutput | null> {
-    return this.modalidadeRepository.findById(accessContext, dto);
-  }
-
-  async findByIdStrict(
-    accessContext: AccessContext,
-    dto: ModalidadeFindOneInput,
-  ): Promise<ModalidadeFindOneOutput> {
-    const modalidade = await this.modalidadeRepository.findById(accessContext, dto);
-
-    if (!modalidade) {
-      throw new ResourceNotFoundError("Modalidade", dto.id);
-    }
-
-    return modalidade;
-  }
-
-  async create(
-    accessContext: AccessContext,
-    dto: ModalidadeCreateInput,
-  ): Promise<ModalidadeFindOneOutput> {
-    const dtoModalidade = pick(dto, ["nome", "slug"]);
-
-    const modalidade = this.modalidadeRepository.create();
-    this.modalidadeRepository.merge(modalidade, { ...dtoModalidade });
-
-    await this.modalidadeRepository.save(modalidade);
-
-    return this.findByIdStrict(accessContext, { id: modalidade.id });
-  }
-
-  async update(
-    accessContext: AccessContext,
-    dto: ModalidadeFindOneInput & ModalidadeUpdateInput,
-  ): Promise<ModalidadeFindOneOutput> {
-    const modalidade = await this.findByIdStrict(accessContext, { id: dto.id });
-
-    const dtoModalidade = pick(dto, ["nome", "slug"]);
-    const entity = this.modalidadeRepository.create();
-    this.modalidadeRepository.merge(entity, { id: modalidade.id, ...dtoModalidade });
-
-    await this.modalidadeRepository.save(entity);
-
-    return this.findByIdStrict(accessContext, { id: dto.id });
-  }
-
-  async deleteOneById(accessContext: AccessContext, dto: ModalidadeFindOneInput): Promise<boolean> {
-    await this.findByIdStrict(accessContext, dto);
-    await this.modalidadeRepository.softDeleteById(dto.id);
-    return true;
+    protected readonly repository: IModalidadeRepositoryPort,
+  ) {
+    super();
   }
 
   async findByIdSimpleStrict(

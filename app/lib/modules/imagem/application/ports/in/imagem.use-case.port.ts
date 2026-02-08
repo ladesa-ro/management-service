@@ -23,39 +23,9 @@ export interface IImagemUseCasePort {
   ): Promise<{ imagem: { id: string } }>;
 
   /**
-   * Salva imagem de capa de bloco
+   * Salva imagem de capa (genérico para qualquer entidade)
    */
-  saveBlocoCapa(file: Express.Multer.File): Promise<{ imagem: { id: string } }>;
-
-  /**
-   * Salva imagem de capa de ambiente
-   */
-  saveAmbienteCapa(file: Express.Multer.File): Promise<{ imagem: { id: string } }>;
-
-  /**
-   * Salva imagem de capa de usuario
-   */
-  saveUsuarioCapa(file: Express.Multer.File): Promise<{ imagem: { id: string } }>;
-
-  /**
-   * Salva imagem de perfil de usuario
-   */
-  saveUsuarioPerfil(file: Express.Multer.File): Promise<{ imagem: { id: string } }>;
-
-  /**
-   * Salva imagem de capa de curso
-   */
-  saveCursoCapa(file: Express.Multer.File): Promise<{ imagem: { id: string } }>;
-
-  /**
-   * Salva imagem de capa de disciplina
-   */
-  saveDisciplinaCapa(file: Express.Multer.File): Promise<{ imagem: { id: string } }>;
-
-  /**
-   * Salva imagem de capa de turma
-   */
-  saveTurmaCapa(file: Express.Multer.File): Promise<{ imagem: { id: string } }>;
+  saveImagemCapa(file: Express.Multer.File): Promise<{ imagem: { id: string } }>;
 
   /**
    * Busca o ID do arquivo mais recente para uma imagem

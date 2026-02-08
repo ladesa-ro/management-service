@@ -1,6 +1,6 @@
 import { BaseEntity, type IdUuid, type ScalarDateTimeString } from "@/modules/@shared";
 import type { GradeHorarioOfertaFormacao } from "@/modules/grade-horario-oferta-formacao";
-import type { IntervaloDeTempo } from "@/modules/intervalo-de-tempo";
+import { IntervaloDeTempo } from "@/modules/intervalo-de-tempo";
 import type {
   IGradeHorarioOfertaFormacaoIntervaloDeTempo,
   IGradeHorarioOfertaFormacaoIntervaloDeTempoCreate,
@@ -51,5 +51,46 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempo
     const instance = new GradeHorarioOfertaFormacaoIntervaloDeTempo();
     Object.assign(instance, dados);
     return instance;
+  }
+
+  // ========================================
+  // Métodos de Domínio
+  // ========================================
+
+  /**
+   * Verifica se este item de grade conflita com outro (mesmo dia/horário sobreposto).
+   * Usado pelo service para validar conflitos antes de inserir novos intervalos.
+   *
+   * @param outro - Outro item de grade para comparação
+   * @returns true se houver conflito de horário
+   */
+  conflitaCom(outro: GradeHorarioOfertaFormacaoIntervaloDeTempo): boolean {
+    // Se são da mesma grade e os intervalos de tempo se sobrepõem, há conflito
+    if (this.gradeHorarioOfertaFormacao?.id !== outro.gradeHorarioOfertaFormacao?.id) {
+      return false;
+    }
+
+    // Usa o método sobrepoe do IntervaloDeTempo para verificar conflito
+    const intervaloA =
+      this.intervaloDeTempo instanceof IntervaloDeTempo
+        ? this.intervaloDeTempo
+        : IntervaloDeTempo.fromData(this.intervaloDeTempo);
+
+    return intervaloA.sobrepoe(outro.intervaloDeTempo);
+  }
+
+  /**
+   * Verifica se há conflito deste item com uma lista de itens existentes.
+   * Útil para validação antes de criar/atualizar.
+   *
+   * @param existentes - Lista de itens de grade existentes
+   * @returns Lista de itens que conflitam com este
+   */
+  encontrarConflitos(
+    existentes: GradeHorarioOfertaFormacaoIntervaloDeTempo[],
+  ): GradeHorarioOfertaFormacaoIntervaloDeTempo[] {
+    return existentes.filter(
+      (existente) => existente.id !== this.id && this.conflitaCom(existente),
+    );
   }
 }

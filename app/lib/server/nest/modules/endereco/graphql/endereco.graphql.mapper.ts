@@ -1,4 +1,5 @@
 import { EnderecoFindOneInput, EnderecoFindOneOutput } from "@/modules/endereco";
+import { CidadeFindOneOutputDto } from "@/server/nest/modules/cidade/rest/cidade.rest.dto";
 import { EnderecoFindOneOutputDto } from "../rest/endereco.rest.dto";
 
 export class EnderecoGraphqlMapper {
@@ -18,7 +19,7 @@ export class EnderecoGraphqlMapper {
     dto.bairro = output.bairro;
     dto.complemento = output.complemento;
     dto.pontoReferencia = output.pontoReferencia;
-    dto.cidade = output.cidade as any;
+    dto.cidade = output.cidade as CidadeFindOneOutputDto;
     dto.dateCreated = output.dateCreated as unknown as Date;
     dto.dateUpdated = output.dateUpdated as unknown as Date;
     dto.dateDeleted = output.dateDeleted as unknown as Date | null;

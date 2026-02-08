@@ -1,14 +1,12 @@
-import { Injectable, Logger, OnModuleInit } from "@nestjs/common";
+import { Injectable, OnModuleInit } from "@nestjs/common";
 import { SubscriberSessionAsPromised } from "rascal";
 import { MessageBrokerContainerService } from "./message-broker-container.service";
 
 @Injectable()
 export class MessageBrokerSubscribeService implements OnModuleInit {
-  private readonly logger = new Logger(MessageBrokerSubscribeService.name);
-
   #subscription: SubscriberSessionAsPromised | null = null;
 
-  constructor(private messageBrokerContainerService: MessageBrokerContainerService) {}
+  constructor(_messageBrokerContainerService: MessageBrokerContainerService) {}
 
   onModuleInit() {
     this.setup();

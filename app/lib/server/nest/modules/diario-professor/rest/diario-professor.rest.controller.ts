@@ -33,7 +33,7 @@ export class DiarioProfessorController {
     @Query() dto: DiarioProfessorListInputDto,
   ): Promise<DiarioProfessorListOutputDto> {
     const input = DiarioProfessorRestMapper.toListInput(dto);
-    const result = await this.diarioProfessorService.diarioProfessorFindAll(accessContext, input);
+    const result = await this.diarioProfessorService.findAll(accessContext, input);
     return DiarioProfessorRestMapper.toListOutputDto(result);
   }
 
@@ -50,10 +50,7 @@ export class DiarioProfessorController {
     @Param() params: DiarioProfessorFindOneInputDto,
   ): Promise<DiarioProfessorFindOneOutputDto> {
     const input = DiarioProfessorRestMapper.toFindOneInput(params);
-    const result = await this.diarioProfessorService.diarioProfessorFindByIdStrict(
-      accessContext,
-      input,
-    );
+    const result = await this.diarioProfessorService.findByIdStrict(accessContext, input);
     return DiarioProfessorRestMapper.toFindOneOutputDto(result);
   }
 
@@ -66,7 +63,7 @@ export class DiarioProfessorController {
     @Body() dto: DiarioProfessorCreateInputDto,
   ): Promise<DiarioProfessorFindOneOutputDto> {
     const input = DiarioProfessorRestMapper.toCreateInput(dto);
-    const result = await this.diarioProfessorService.diarioProfessorCreate(accessContext, input);
+    const result = await this.diarioProfessorService.create(accessContext, input);
     return DiarioProfessorRestMapper.toFindOneOutputDto(result);
   }
 
@@ -81,7 +78,7 @@ export class DiarioProfessorController {
     @Body() dto: DiarioProfessorUpdateInputDto,
   ): Promise<DiarioProfessorFindOneOutputDto> {
     const input = DiarioProfessorRestMapper.toUpdateInput(params, dto);
-    const result = await this.diarioProfessorService.diarioProfessorUpdate(accessContext, input);
+    const result = await this.diarioProfessorService.update(accessContext, input);
     return DiarioProfessorRestMapper.toFindOneOutputDto(result);
   }
 
@@ -98,6 +95,6 @@ export class DiarioProfessorController {
     @Param() params: DiarioProfessorFindOneInputDto,
   ): Promise<boolean> {
     const input = DiarioProfessorRestMapper.toFindOneInput(params);
-    return this.diarioProfessorService.diarioProfessorDeleteOneById(accessContext, input);
+    return this.diarioProfessorService.deleteOneById(accessContext, input);
   }
 }

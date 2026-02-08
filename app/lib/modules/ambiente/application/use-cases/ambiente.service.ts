@@ -91,7 +91,7 @@ export class AmbienteService
       currentAmbiente.id,
     );
 
-    const { imagem } = await this.imagemService.saveAmbienteCapa(file);
+    const { imagem } = await this.imagemService.saveImagemCapa(file);
 
     const ambiente = this.repository.create();
     this.repository.merge(ambiente, { id: currentAmbiente.id });

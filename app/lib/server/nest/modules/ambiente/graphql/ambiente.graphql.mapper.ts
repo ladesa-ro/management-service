@@ -4,6 +4,8 @@ import {
   AmbienteListInput,
   AmbienteListOutput,
 } from "@/modules/ambiente";
+import { BlocoFindOneOutputDto, ImagemFindOneOutputDto } from "@/server/nest/modules/bloco/rest";
+import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import { AmbienteFindOneOutputDto } from "../rest/ambiente.rest.dto";
 import { AmbienteListInputGqlDto, AmbienteListOutputGqlDto } from "./ambiente.graphql.dto";
 
@@ -39,8 +41,8 @@ export class AmbienteGraphqlMapper {
     dto.codigo = output.codigo;
     dto.capacidade = output.capacidade;
     dto.tipo = output.tipo;
-    dto.bloco = output.bloco as any;
-    dto.imagemCapa = output.imagemCapa as any;
+    dto.bloco = output.bloco as unknown as BlocoFindOneOutputDto;
+    dto.imagemCapa = output.imagemCapa as unknown as ImagemFindOneOutputDto | null;
     dto.dateCreated = output.dateCreated ? new Date(output.dateCreated) : new Date();
     dto.dateUpdated = output.dateUpdated ? new Date(output.dateUpdated) : new Date();
     dto.dateDeleted = output.dateDeleted ? new Date(output.dateDeleted) : null;
@@ -49,15 +51,7 @@ export class AmbienteGraphqlMapper {
 
   static toListOutputDto(output: AmbienteListOutput): AmbienteListOutputGqlDto {
     const dto = new AmbienteListOutputGqlDto();
-    dto.meta = {
-      currentPage: output.meta.currentPage,
-      totalPages: output.meta.totalPages,
-      itemsPerPage: output.meta.itemsPerPage,
-      totalItems: output.meta.totalItems,
-      sortBy: output.meta.sortBy,
-      filter: output.meta.filter,
-      search: output.meta.search,
-    };
+    dto.meta = mapPaginationMeta(output.meta);
     dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
     return dto;
   }

@@ -6,6 +6,7 @@ import {
   CampusListOutput,
   CampusUpdateInput,
 } from "@/modules/campus";
+import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import {
   CampusCreateInputDto,
   CampusFindOneInputDto,
@@ -95,15 +96,7 @@ export class CampusRestMapper {
 
   static toListOutputDto(output: CampusListOutput): CampusListOutputDto {
     const dto = new CampusListOutputDto();
-    dto.meta = {
-      currentPage: output.meta.currentPage,
-      totalPages: output.meta.totalPages,
-      itemsPerPage: output.meta.itemsPerPage,
-      totalItems: output.meta.totalItems,
-      sortBy: output.meta.sortBy,
-      filter: output.meta.filter,
-      search: output.meta.search,
-    };
+    dto.meta = mapPaginationMeta(output.meta);
     dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
     return dto;
   }

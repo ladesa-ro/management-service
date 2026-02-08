@@ -36,10 +36,7 @@ export class HorarioGeradoAulaRestController {
     @Query() dto: HorarioGeradoAulaListInputRestDto,
   ): Promise<HorarioGeradoAulaListOutputRestDto> {
     const coreInput = HorarioGeradoAulaRestMapper.toCoreListInput(dto);
-    const result = await this.horarioGeradoAulaService.horarioGeradoAulaFindAll(
-      accessContext,
-      coreInput,
-    );
+    const result = await this.horarioGeradoAulaService.findAll(accessContext, coreInput);
     return HorarioGeradoAulaRestMapper.toRestListOutput(result);
   }
 
@@ -56,10 +53,7 @@ export class HorarioGeradoAulaRestController {
     @Param() params: HorarioGeradoAulaFindOneInputRestDto,
   ): Promise<HorarioGeradoAulaFindOneOutputRestDto> {
     const coreInput = HorarioGeradoAulaRestMapper.toCoreFindOneInput(params);
-    const result = await this.horarioGeradoAulaService.horarioGeradoAulaFindByIdStrict(
-      accessContext,
-      coreInput,
-    );
+    const result = await this.horarioGeradoAulaService.findByIdStrict(accessContext, coreInput);
     return HorarioGeradoAulaRestMapper.toRestFindOneOutput(result);
   }
 
@@ -75,10 +69,7 @@ export class HorarioGeradoAulaRestController {
     @Body() dto: HorarioGeradoAulaCreateInputRestDto,
   ): Promise<HorarioGeradoAulaFindOneOutputRestDto> {
     const coreInput = HorarioGeradoAulaRestMapper.toCoreCreateInput(dto);
-    const result = await this.horarioGeradoAulaService.horarioGeradoAulaCreate(
-      accessContext,
-      coreInput,
-    );
+    const result = await this.horarioGeradoAulaService.create(accessContext, coreInput);
     return HorarioGeradoAulaRestMapper.toRestFindOneOutput(result);
   }
 
@@ -97,7 +88,7 @@ export class HorarioGeradoAulaRestController {
   ): Promise<HorarioGeradoAulaFindOneOutputRestDto> {
     const coreInput = HorarioGeradoAulaRestMapper.toCoreFindOneInput(params);
     const coreUpdateInput = HorarioGeradoAulaRestMapper.toCoreUpdateInput(dto);
-    const result = await this.horarioGeradoAulaService.HorarioGeradoAulaUpdate(accessContext, {
+    const result = await this.horarioGeradoAulaService.update(accessContext, {
       ...coreInput,
       ...coreUpdateInput,
     });
@@ -117,6 +108,6 @@ export class HorarioGeradoAulaRestController {
     @Param() params: HorarioGeradoAulaFindOneInputRestDto,
   ): Promise<boolean> {
     const coreInput = HorarioGeradoAulaRestMapper.toCoreFindOneInput(params);
-    return this.horarioGeradoAulaService.horarioGeradoAulaDeleteOneById(accessContext, coreInput);
+    return this.horarioGeradoAulaService.deleteOneById(accessContext, coreInput);
   }
 }

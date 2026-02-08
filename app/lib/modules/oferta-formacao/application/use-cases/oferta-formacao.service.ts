@@ -1,9 +1,9 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { has, pick } from "lodash";
+import { has } from "lodash";
 import type { AccessContext } from "@/modules/@core/access-context";
-import { ResourceNotFoundError } from "@/modules/@shared";
+import { BaseCrudService } from "@/modules/@shared";
 import { ModalidadeService } from "@/modules/modalidade";
-import {
+import type {
   OfertaFormacaoCreateInput,
   OfertaFormacaoFindOneInput,
   OfertaFormacaoFindOneOutput,
@@ -16,40 +16,34 @@ import {
   type IOfertaFormacaoUseCasePort,
   OFERTA_FORMACAO_REPOSITORY_PORT,
 } from "@/modules/oferta-formacao/application/ports";
+import type { OfertaFormacaoEntity } from "@/modules/oferta-formacao/infrastructure/persistence/typeorm";
 
 @Injectable()
-export class OfertaFormacaoService implements IOfertaFormacaoUseCasePort {
+export class OfertaFormacaoService
+  extends BaseCrudService<
+    OfertaFormacaoEntity,
+    OfertaFormacaoListInput,
+    OfertaFormacaoListOutput,
+    OfertaFormacaoFindOneInput,
+    OfertaFormacaoFindOneOutput,
+    OfertaFormacaoCreateInput,
+    OfertaFormacaoUpdateInput
+  >
+  implements IOfertaFormacaoUseCasePort
+{
+  protected readonly resourceName = "OfertaFormacao";
+  protected readonly createAction = "oferta_formacao:create";
+  protected readonly updateAction = "oferta_formacao:update";
+  protected readonly deleteAction = "oferta_formacao:delete";
+  protected readonly createFields = ["nome", "slug"] as const;
+  protected readonly updateFields = ["nome", "slug"] as const;
+
   constructor(
     @Inject(OFERTA_FORMACAO_REPOSITORY_PORT)
-    private readonly ofertaFormacaoRepository: IOfertaFormacaoRepositoryPort,
+    protected readonly repository: IOfertaFormacaoRepositoryPort,
     private readonly modalidadeService: ModalidadeService,
-  ) {}
-
-  async findAll(
-    accessContext: AccessContext,
-    dto: OfertaFormacaoListInput | null = null,
-  ): Promise<OfertaFormacaoListOutput> {
-    return this.ofertaFormacaoRepository.findAll(accessContext, dto);
-  }
-
-  async findById(
-    accessContext: AccessContext,
-    dto: OfertaFormacaoFindOneInput,
-  ): Promise<OfertaFormacaoFindOneOutput | null> {
-    return this.ofertaFormacaoRepository.findById(accessContext, dto);
-  }
-
-  async findByIdStrict(
-    accessContext: AccessContext,
-    dto: OfertaFormacaoFindOneInput,
-  ): Promise<OfertaFormacaoFindOneOutput> {
-    const ofertaFormacao = await this.ofertaFormacaoRepository.findById(accessContext, dto);
-
-    if (!ofertaFormacao) {
-      throw new ResourceNotFoundError("OfertaFormacao", dto.id);
-    }
-
-    return ofertaFormacao;
+  ) {
+    super();
   }
 
   async findByIdSimpleStrict(
@@ -59,61 +53,35 @@ export class OfertaFormacaoService implements IOfertaFormacaoUseCasePort {
     return this.findByIdStrict(accessContext, { id });
   }
 
-  async create(
+  protected override async beforeCreate(
     accessContext: AccessContext,
+    entity: OfertaFormacaoEntity,
     dto: OfertaFormacaoCreateInput,
-  ): Promise<OfertaFormacaoFindOneOutput> {
-    const dtoOfertaFormacao = pick(dto, ["nome", "slug"]);
-
-    const ofertaFormacao = this.ofertaFormacaoRepository.create();
-    this.ofertaFormacaoRepository.merge(ofertaFormacao, { ...dtoOfertaFormacao });
-
+  ): Promise<void> {
     if (dto.modalidade) {
       const modalidade = await this.modalidadeService.findByIdSimpleStrict(
         accessContext,
         dto.modalidade.id,
       );
-      this.ofertaFormacaoRepository.merge(ofertaFormacao, { modalidade: { id: modalidade.id } });
+      this.repository.merge(entity, { modalidade: { id: modalidade.id } });
     }
-
-    await this.ofertaFormacaoRepository.save(ofertaFormacao);
-
-    return this.findByIdStrict(accessContext, { id: ofertaFormacao.id });
   }
 
-  async update(
+  protected override async beforeUpdate(
     accessContext: AccessContext,
+    entity: OfertaFormacaoEntity,
     dto: OfertaFormacaoFindOneInput & OfertaFormacaoUpdateInput,
-  ): Promise<OfertaFormacaoFindOneOutput> {
-    const ofertaFormacao = await this.findByIdStrict(accessContext, { id: dto.id });
-
-    const dtoOfertaFormacao = pick(dto, ["nome", "slug"]);
-    const entity = this.ofertaFormacaoRepository.create();
-    this.ofertaFormacaoRepository.merge(entity, { id: ofertaFormacao.id, ...dtoOfertaFormacao });
-
+  ): Promise<void> {
     if (has(dto, "modalidade") && dto.modalidade !== undefined) {
       if (dto.modalidade) {
         const modalidade = await this.modalidadeService.findByIdSimpleStrict(
           accessContext,
           dto.modalidade.id,
         );
-        this.ofertaFormacaoRepository.merge(entity, { modalidade: { id: modalidade.id } });
+        this.repository.merge(entity, { modalidade: { id: modalidade.id } });
       } else {
-        this.ofertaFormacaoRepository.merge(entity, { modalidade: null as any });
+        this.repository.merge(entity, { modalidade: null as any });
       }
     }
-
-    await this.ofertaFormacaoRepository.save(entity);
-
-    return this.findByIdStrict(accessContext, { id: dto.id });
-  }
-
-  async deleteOneById(
-    accessContext: AccessContext,
-    dto: OfertaFormacaoFindOneInput,
-  ): Promise<boolean> {
-    await this.findByIdStrict(accessContext, dto);
-    await this.ofertaFormacaoRepository.softDeleteById(dto.id);
-    return true;
   }
 }

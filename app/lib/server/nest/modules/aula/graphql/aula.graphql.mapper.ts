@@ -1,4 +1,8 @@
 import { AulaFindOneInput, AulaFindOneOutput, AulaListInput, AulaListOutput } from "@/modules/aula";
+import { AmbienteFindOneOutputDto } from "@/server/nest/modules/ambiente/rest";
+import { DiarioFindOneOutputDto } from "@/server/nest/modules/diario/rest";
+import { IntervaloDeTempoFindOneOutputDto } from "@/server/nest/modules/intervalo-de-tempo/rest";
+import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import { AulaFindOneOutputDto } from "../rest/aula.rest.dto";
 import { AulaListInputGqlDto, AulaListOutputGqlDto } from "./aula.graphql.dto";
 
@@ -31,9 +35,9 @@ export class AulaGraphqlMapper {
     dto.id = output.id;
     dto.data = output.data;
     dto.modalidade = output.modalidade;
-    dto.intervaloDeTempo = output.intervaloDeTempo as any;
-    dto.diario = output.diario as any;
-    dto.ambiente = output.ambiente as any;
+    dto.intervaloDeTempo = output.intervaloDeTempo as unknown as IntervaloDeTempoFindOneOutputDto;
+    dto.diario = output.diario as unknown as DiarioFindOneOutputDto;
+    dto.ambiente = output.ambiente as unknown as AmbienteFindOneOutputDto | null;
     dto.dateCreated = new Date(output.dateCreated);
     dto.dateUpdated = new Date(output.dateUpdated);
     dto.dateDeleted = output.dateDeleted ? new Date(output.dateDeleted) : null;
@@ -42,15 +46,7 @@ export class AulaGraphqlMapper {
 
   static toListOutputDto(output: AulaListOutput): AulaListOutputGqlDto {
     const dto = new AulaListOutputGqlDto();
-    dto.meta = {
-      currentPage: output.meta.currentPage,
-      totalPages: output.meta.totalPages,
-      itemsPerPage: output.meta.itemsPerPage,
-      totalItems: output.meta.totalItems,
-      sortBy: output.meta.sortBy,
-      filter: output.meta.filter,
-      search: output.meta.search,
-    };
+    dto.meta = mapPaginationMeta(output.meta);
     dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
     return dto;
   }

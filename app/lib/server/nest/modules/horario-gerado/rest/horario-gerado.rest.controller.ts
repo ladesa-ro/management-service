@@ -33,7 +33,7 @@ export class HorarioGeradoRestController {
     @Query() dto: HorarioGeradoListInputRestDto,
   ): Promise<HorarioGeradoListOutputRestDto> {
     const coreInput = HorarioGeradoRestMapper.toCoreListInput(dto);
-    const result = await this.horarioGeradoService.horarioGeradoFindAll(accessContext, coreInput);
+    const result = await this.horarioGeradoService.findAll(accessContext, coreInput);
     return HorarioGeradoRestMapper.toRestListOutput(result);
   }
 
@@ -47,10 +47,7 @@ export class HorarioGeradoRestController {
     @Param() params: HorarioGeradoFindOneInputRestDto,
   ): Promise<HorarioGeradoFindOneOutputRestDto> {
     const coreInput = HorarioGeradoRestMapper.toCoreFindOneInput(params);
-    const result = await this.horarioGeradoService.horarioGeradoFindByIdStrict(
-      accessContext,
-      coreInput,
-    );
+    const result = await this.horarioGeradoService.findByIdStrict(accessContext, coreInput);
     return HorarioGeradoRestMapper.toRestFindOneOutput(result);
   }
 
@@ -63,7 +60,7 @@ export class HorarioGeradoRestController {
     @Body() dto: HorarioGeradoCreateInputRestDto,
   ): Promise<HorarioGeradoFindOneOutputRestDto> {
     const coreInput = HorarioGeradoRestMapper.toCoreCreateInput(dto);
-    const result = await this.horarioGeradoService.horarioGeradoCreate(accessContext, coreInput);
+    const result = await this.horarioGeradoService.create(accessContext, coreInput);
     return HorarioGeradoRestMapper.toRestFindOneOutput(result);
   }
 
@@ -79,7 +76,7 @@ export class HorarioGeradoRestController {
   ): Promise<HorarioGeradoFindOneOutputRestDto> {
     const coreInput = HorarioGeradoRestMapper.toCoreFindOneInput(params);
     const coreUpdateInput = HorarioGeradoRestMapper.toCoreUpdateInput(dto);
-    const result = await this.horarioGeradoService.horarioGeradoUpdate(accessContext, {
+    const result = await this.horarioGeradoService.update(accessContext, {
       ...coreInput,
       ...coreUpdateInput,
     });
@@ -96,6 +93,6 @@ export class HorarioGeradoRestController {
     @Param() params: HorarioGeradoFindOneInputRestDto,
   ): Promise<boolean> {
     const coreInput = HorarioGeradoRestMapper.toCoreFindOneInput(params);
-    return this.horarioGeradoService.horarioGeradoDeleteOneById(accessContext, coreInput);
+    return this.horarioGeradoService.deleteOneById(accessContext, coreInput);
   }
 }

@@ -143,7 +143,7 @@ export class UsuarioService implements IUsuarioUseCasePort {
       currentUsuario.id,
     );
 
-    const { imagem } = await this.imagemService.saveUsuarioCapa(file);
+    const { imagem } = await this.imagemService.saveImagemCapa(file);
 
     const usuario = this.usuarioRepository.create();
     this.usuarioRepository.merge(usuario, {
@@ -196,7 +196,7 @@ export class UsuarioService implements IUsuarioUseCasePort {
       currentUsuario.id,
     );
 
-    const { imagem } = await this.imagemService.saveUsuarioPerfil(file);
+    const { imagem } = await this.imagemService.saveImagemCapa(file);
 
     const usuario = this.usuarioRepository.create();
     this.usuarioRepository.merge(usuario, {

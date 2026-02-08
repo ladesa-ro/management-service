@@ -5,6 +5,9 @@ import {
   PerfilListOutput,
   PerfilSetVinculosInput,
 } from "@/modules/perfil";
+import { CampusFindOneOutputDto } from "@/server/nest/modules/campus/rest";
+import { UsuarioFindOneOutputDto } from "@/server/nest/modules/usuario/rest";
+import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import { PerfilFindOneOutputDto, PerfilSetVinculosInputDto } from "../rest/perfil.rest.dto";
 import { PerfilListInputGqlDto, PerfilListOutputGqlDto } from "./perfil.graphql.dto";
 
@@ -47,8 +50,8 @@ export class PerfilGraphqlMapper {
     dto.id = output.id;
     dto.ativo = output.ativo;
     dto.cargo = output.cargo;
-    dto.campus = output.campus as any;
-    dto.usuario = output.usuario as any;
+    dto.campus = output.campus as unknown as CampusFindOneOutputDto;
+    dto.usuario = output.usuario as unknown as UsuarioFindOneOutputDto;
     dto.dateCreated = new Date(output.dateCreated);
     dto.dateUpdated = new Date(output.dateUpdated);
     dto.dateDeleted = output.dateDeleted ? new Date(output.dateDeleted) : null;
@@ -57,15 +60,7 @@ export class PerfilGraphqlMapper {
 
   static toListOutputDto(output: PerfilListOutput): PerfilListOutputGqlDto {
     const dto = new PerfilListOutputGqlDto();
-    dto.meta = {
-      currentPage: output.meta.currentPage,
-      totalPages: output.meta.totalPages,
-      itemsPerPage: output.meta.itemsPerPage,
-      totalItems: output.meta.totalItems,
-      sortBy: output.meta.sortBy,
-      filter: output.meta.filter,
-      search: output.meta.search,
-    };
+    dto.meta = mapPaginationMeta(output.meta);
     dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
     return dto;
   }

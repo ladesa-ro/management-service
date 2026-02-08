@@ -6,6 +6,7 @@ import {
   AulaListOutput,
   AulaUpdateInput,
 } from "@/modules/aula";
+import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import {
   AulaCreateInputDto,
   AulaFindOneInputDto,
@@ -99,15 +100,7 @@ export class AulaRestMapper {
 
   static toListOutputDto(output: AulaListOutput): AulaListOutputDto {
     const dto = new AulaListOutputDto();
-    dto.meta = {
-      currentPage: output.meta.currentPage,
-      totalPages: output.meta.totalPages,
-      itemsPerPage: output.meta.itemsPerPage,
-      totalItems: output.meta.totalItems,
-      sortBy: output.meta.sortBy,
-      filter: output.meta.filter,
-      search: output.meta.search,
-    };
+    dto.meta = mapPaginationMeta(output.meta);
     dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
     return dto;
   }

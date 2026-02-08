@@ -6,6 +6,9 @@ import {
   OfertaFormacaoNivelFormacaoListOutput,
   OfertaFormacaoNivelFormacaoUpdateInput,
 } from "@/modules/oferta-formacao-nivel-formacao";
+import { NivelFormacaoFindOneOutputDto } from "@/server/nest/modules/nivel-formacao/rest/nivel-formacao.rest.dto";
+import { OfertaFormacaoFindOneOutputDto } from "@/server/nest/modules/oferta-formacao/rest/oferta-formacao.rest.dto";
+import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import {
   OfertaFormacaoNivelFormacaoCreateInputDto,
   OfertaFormacaoNivelFormacaoFindOneOutputDto,
@@ -73,8 +76,8 @@ export class OfertaFormacaoNivelFormacaoGraphqlMapper {
   ): OfertaFormacaoNivelFormacaoFindOneOutputDto {
     const dto = new OfertaFormacaoNivelFormacaoFindOneOutputDto();
     dto.id = output.id;
-    dto.ofertaFormacao = output.ofertaFormacao as any;
-    dto.nivelFormacao = output.nivelFormacao as any;
+    dto.ofertaFormacao = output.ofertaFormacao as unknown as OfertaFormacaoFindOneOutputDto;
+    dto.nivelFormacao = output.nivelFormacao as unknown as NivelFormacaoFindOneOutputDto;
     dto.dateCreated = new Date(output.dateCreated);
     dto.dateUpdated = new Date(output.dateUpdated);
     dto.dateDeleted = output.dateDeleted ? new Date(output.dateDeleted) : null;
@@ -85,15 +88,7 @@ export class OfertaFormacaoNivelFormacaoGraphqlMapper {
     output: OfertaFormacaoNivelFormacaoListOutput,
   ): OfertaFormacaoNivelFormacaoListOutputGqlDto {
     const dto = new OfertaFormacaoNivelFormacaoListOutputGqlDto();
-    dto.meta = {
-      currentPage: output.meta.currentPage,
-      totalPages: output.meta.totalPages,
-      itemsPerPage: output.meta.itemsPerPage,
-      totalItems: output.meta.totalItems,
-      sortBy: output.meta.sortBy,
-      filter: output.meta.filter,
-      search: output.meta.search,
-    };
+    dto.meta = mapPaginationMeta(output.meta);
     dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
     return dto;
   }

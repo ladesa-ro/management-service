@@ -4,6 +4,7 @@ import {
   CursoListInput,
   CursoListOutput,
 } from "@/modules/curso";
+import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import { CursoFindOneOutputDto } from "../rest/curso.rest.dto";
 import { CursoRestMapper } from "../rest/curso.rest.mapper";
 import { CursoListInputGqlDto, CursoListOutputGqlDto } from "./curso.graphql.dto";
@@ -38,15 +39,7 @@ export class CursoGraphqlMapper {
 
   static toListOutputDto(output: CursoListOutput): CursoListOutputGqlDto {
     const dto = new CursoListOutputGqlDto();
-    dto.meta = {
-      currentPage: output.meta.currentPage,
-      totalPages: output.meta.totalPages,
-      itemsPerPage: output.meta.itemsPerPage,
-      totalItems: output.meta.totalItems,
-      sortBy: output.meta.sortBy,
-      filter: output.meta.filter,
-      search: output.meta.search,
-    };
+    dto.meta = mapPaginationMeta(output.meta);
     dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
     return dto;
   }

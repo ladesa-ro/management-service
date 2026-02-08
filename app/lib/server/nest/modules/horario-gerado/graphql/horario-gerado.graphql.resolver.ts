@@ -30,7 +30,7 @@ export class HorarioGeradoGraphqlResolver {
       input.selection = graphqlExtractSelection(info, "paginated");
     }
 
-    const result = await this.horarioGeradoService.horarioGeradoFindAll(accessContext, input);
+    const result = await this.horarioGeradoService.findAll(accessContext, input);
     return HorarioGeradoGraphqlMapper.toListOutputDto(result);
   }
 
@@ -41,7 +41,7 @@ export class HorarioGeradoGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<HorarioGeradoFindOneOutputRestDto> {
     const selection = graphqlExtractSelection(info);
-    const result = await this.horarioGeradoService.horarioGeradoFindByIdStrict(accessContext, {
+    const result = await this.horarioGeradoService.findByIdStrict(accessContext, {
       id,
       selection,
     });
@@ -55,7 +55,7 @@ export class HorarioGeradoGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<HorarioGeradoFindOneOutputRestDto> {
     const input = HorarioGeradoGraphqlMapper.toCreateInput(dto);
-    const result = await this.horarioGeradoService.horarioGeradoCreate(accessContext, input);
+    const result = await this.horarioGeradoService.create(accessContext, input);
     return HorarioGeradoGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -67,7 +67,7 @@ export class HorarioGeradoGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<HorarioGeradoFindOneOutputRestDto> {
     const input = HorarioGeradoGraphqlMapper.toUpdateInput(id, dto);
-    const result = await this.horarioGeradoService.horarioGeradoUpdate(accessContext, input);
+    const result = await this.horarioGeradoService.update(accessContext, input);
     return HorarioGeradoGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -76,6 +76,6 @@ export class HorarioGeradoGraphqlResolver {
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
   ): Promise<boolean> {
-    return this.horarioGeradoService.horarioGeradoDeleteOneById(accessContext, { id });
+    return this.horarioGeradoService.deleteOneById(accessContext, { id });
   }
 }
