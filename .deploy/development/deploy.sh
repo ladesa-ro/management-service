@@ -16,4 +16,4 @@ kubectl rollout restart \
 kubectl rollout status \
   deployment.apps/ladesa-ro-api \
   --namespace ladesa-ro-development \
-  --timeout=300s
+  --timeout=720s
