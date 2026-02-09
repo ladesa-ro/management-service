@@ -1,11 +1,11 @@
 import type { AccessContext } from "@/modules/@core/access-context";
 import type {
-  AuthCredentialsSetInitialPasswordInput,
-  AuthLoginInput,
-  AuthRecoverPasswordInput,
-  AuthRefreshInput,
-  AuthSessionCredentials,
-  AuthWhoAmIOutput,
+  AuthCredentialsSetInitialPasswordInputDto,
+  AuthLoginInputDto,
+  AuthRecoverPasswordInputDto,
+  AuthRefreshInputDto,
+  AuthSessionCredentialsDto,
+  AuthWhoAmIOutputDto,
 } from "../../dtos";
 
 /**
@@ -16,24 +16,30 @@ export interface IAutenticacaoUseCasePort {
   /**
    * Retorna informações do usuário autenticado
    */
-  whoAmI(accessContext: AccessContext): Promise<AuthWhoAmIOutput>;
+  whoAmI(accessContext: AccessContext): Promise<AuthWhoAmIOutputDto>;
 
   /**
    * Realiza login com matrícula SIAPE e senha
    */
-  login(accessContext: AccessContext, domain: AuthLoginInput): Promise<AuthSessionCredentials>;
+  login(
+    accessContext: AccessContext,
+    domain: AuthLoginInputDto,
+  ): Promise<AuthSessionCredentialsDto>;
 
   /**
    * Atualiza tokens usando refresh token
    */
-  refresh(accessContext: AccessContext, domain: AuthRefreshInput): Promise<AuthSessionCredentials>;
+  refresh(
+    accessContext: AccessContext,
+    domain: AuthRefreshInputDto,
+  ): Promise<AuthSessionCredentialsDto>;
 
   /**
    * Define senha inicial do usuário
    */
   definirSenha(
     accessContext: AccessContext,
-    domain: AuthCredentialsSetInitialPasswordInput,
+    domain: AuthCredentialsSetInitialPasswordInputDto,
   ): Promise<boolean>;
 
   /**
@@ -41,6 +47,6 @@ export interface IAutenticacaoUseCasePort {
    */
   recoverPassword(
     accessContext: AccessContext | null,
-    domain: AuthRecoverPasswordInput,
+    domain: AuthRecoverPasswordInputDto,
   ): Promise<boolean>;
 }

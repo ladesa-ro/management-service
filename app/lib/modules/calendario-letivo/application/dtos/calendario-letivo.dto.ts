@@ -1,59 +1,62 @@
 import {
-  EntityOutput,
-  FindOneInput,
+  EntityOutputDto,
+  FindOneInputDto,
   IFilterAcceptableValues,
-  ObjectUuidRef,
-  PaginationInput,
-  PaginationResult,
+  ObjectUuidRefDto,
+  PaginationInputDto,
+  PaginationResultDto,
 } from "@/modules/@shared";
-import { CampusFindOneOutput, CampusInputRef } from "@/modules/campus";
-import { OfertaFormacaoFindOneOutput, OfertaFormacaoInputRef } from "@/modules/oferta-formacao";
+import { CampusFindOneOutputDto, CampusInputRefDto } from "@/modules/campus";
+import {
+  OfertaFormacaoFindOneOutputDto,
+  OfertaFormacaoInputRefDto,
+} from "@/modules/oferta-formacao";
 
 // ============================================================================
 // FindOne Input/Output
 // ============================================================================
 
-export class CalendarioLetivoFindOneInput extends FindOneInput {}
+export class CalendarioLetivoFindOneInputDto extends FindOneInputDto {}
 
-export class CalendarioLetivoFindOneOutput extends EntityOutput {
+export class CalendarioLetivoFindOneOutputDto extends EntityOutputDto {
   nome!: string;
   ano!: number;
-  campus!: CampusFindOneOutput;
-  ofertaFormacao!: OfertaFormacaoFindOneOutput;
+  campus!: CampusFindOneOutputDto;
+  ofertaFormacao!: OfertaFormacaoFindOneOutputDto;
 }
 
 // ============================================================================
 // List Input/Output
 // ============================================================================
 
-export class CalendarioLetivoListInput extends PaginationInput {
+export class CalendarioLetivoListInputDto extends PaginationInputDto {
   "filter.id"?: IFilterAcceptableValues;
   "filter.campus.id"?: IFilterAcceptableValues;
   "filter.ofertaFormacao.id"?: IFilterAcceptableValues;
 }
 
-export class CalendarioLetivoListOutput extends PaginationResult<CalendarioLetivoFindOneOutput> {}
+export class CalendarioLetivoListOutputDto extends PaginationResultDto<CalendarioLetivoFindOneOutputDto> {}
 
 // ============================================================================
 // Create/Update Input
 // ============================================================================
 
-export class CalendarioLetivoCreateInput {
+export class CalendarioLetivoCreateInputDto {
   nome!: string;
   ano!: number;
-  campus!: CampusInputRef;
-  ofertaFormacao!: OfertaFormacaoInputRef;
+  campus!: CampusInputRefDto;
+  ofertaFormacao!: OfertaFormacaoInputRefDto;
 }
 
-export class CalendarioLetivoUpdateInput {
+export class CalendarioLetivoUpdateInputDto {
   nome?: string;
   ano?: number;
-  campus?: CampusInputRef;
-  ofertaFormacao?: OfertaFormacaoInputRef;
+  campus?: CampusInputRefDto;
+  ofertaFormacao?: OfertaFormacaoInputRefDto;
 }
 
 // ============================================================================
 // Input Ref
 // ============================================================================
 
-export type CalendarioLetivoInputRef = ObjectUuidRef;
+export type CalendarioLetivoInputRefDto = ObjectUuidRefDto;

@@ -1,10 +1,10 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { BaseReadOnlyService } from "@/modules/@shared";
 import type {
-  EstadoFindOneInput,
-  EstadoFindOneOutput,
-  EstadoListInput,
-  EstadoListOutput,
+  EstadoFindOneInputDto,
+  EstadoFindOneOutputDto,
+  EstadoListInputDto,
+  EstadoListOutputDto,
 } from "@/modules/estado/application/dtos";
 import {
   ESTADO_REPOSITORY_PORT,
@@ -15,10 +15,10 @@ import {
 @Injectable()
 export class EstadoService
   extends BaseReadOnlyService<
-    EstadoListInput,
-    EstadoListOutput,
-    EstadoFindOneInput,
-    EstadoFindOneOutput
+    EstadoListInputDto,
+    EstadoListOutputDto,
+    EstadoFindOneInputDto,
+    EstadoFindOneOutputDto
   >
   implements IEstadoUseCasePort
 {

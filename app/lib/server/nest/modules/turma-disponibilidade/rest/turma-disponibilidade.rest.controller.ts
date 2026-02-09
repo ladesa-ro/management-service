@@ -10,12 +10,12 @@ import {
 import { AccessContext, AccessContextHttp } from "@/modules/@core/access-context";
 import { TurmaDisponibilidadeService } from "@/modules/turma-disponibilidade";
 import {
-  TurmaDisponibilidadeCreateInputDto,
-  TurmaDisponibilidadeFindOneInputDto,
-  TurmaDisponibilidadeFindOneOutputDto,
-  TurmaDisponibilidadeListInputDto,
-  TurmaDisponibilidadeListOutputDto,
-  TurmaDisponibilidadeUpdateInputDto,
+  TurmaDisponibilidadeCreateInputRestDto,
+  TurmaDisponibilidadeFindOneInputRestDto,
+  TurmaDisponibilidadeFindOneOutputRestDto,
+  TurmaDisponibilidadeListInputRestDto,
+  TurmaDisponibilidadeListOutputRestDto,
+  TurmaDisponibilidadeUpdateInputRestDto,
 } from "./turma-disponibilidade.rest.dto";
 import { TurmaDisponibilidadeRestMapper } from "./turma-disponibilidade.rest.mapper";
 
@@ -29,12 +29,12 @@ export class TurmaDisponibilidadeRestController {
     summary: "Lista turmas-disponibilidades",
     operationId: "turmaDisponibilidadeFindAll",
   })
-  @ApiOkResponse({ type: TurmaDisponibilidadeListOutputDto })
+  @ApiOkResponse({ type: TurmaDisponibilidadeListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
     @AccessContextHttp() accessContext: AccessContext,
-    @Query() dto: TurmaDisponibilidadeListInputDto,
-  ): Promise<TurmaDisponibilidadeListOutputDto> {
+    @Query() dto: TurmaDisponibilidadeListInputRestDto,
+  ): Promise<TurmaDisponibilidadeListOutputRestDto> {
     const input = TurmaDisponibilidadeRestMapper.toListInput(dto);
     const result = await this.turmaDisponibilidadeService.findAll(accessContext, input);
     return TurmaDisponibilidadeRestMapper.toListOutputDto(result);
@@ -45,13 +45,13 @@ export class TurmaDisponibilidadeRestController {
     summary: "Busca uma turma-disponibilidade por ID",
     operationId: "turmaDisponibilidadeFindById",
   })
-  @ApiOkResponse({ type: TurmaDisponibilidadeFindOneOutputDto })
+  @ApiOkResponse({ type: TurmaDisponibilidadeFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async findById(
     @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: TurmaDisponibilidadeFindOneInputDto,
-  ): Promise<TurmaDisponibilidadeFindOneOutputDto> {
+    @Param() params: TurmaDisponibilidadeFindOneInputRestDto,
+  ): Promise<TurmaDisponibilidadeFindOneOutputRestDto> {
     const input = TurmaDisponibilidadeRestMapper.toFindOneInput(params);
     const result = await this.turmaDisponibilidadeService.findByIdStrict(accessContext, input);
     return TurmaDisponibilidadeRestMapper.toFindOneOutputDto(result);
@@ -62,12 +62,12 @@ export class TurmaDisponibilidadeRestController {
     summary: "Cria uma turma-disponibilidade",
     operationId: "turmaDisponibilidadeCreate",
   })
-  @ApiCreatedResponse({ type: TurmaDisponibilidadeFindOneOutputDto })
+  @ApiCreatedResponse({ type: TurmaDisponibilidadeFindOneOutputRestDto })
   @ApiForbiddenResponse()
   async create(
     @AccessContextHttp() accessContext: AccessContext,
-    @Body() dto: TurmaDisponibilidadeCreateInputDto,
-  ): Promise<TurmaDisponibilidadeFindOneOutputDto> {
+    @Body() dto: TurmaDisponibilidadeCreateInputRestDto,
+  ): Promise<TurmaDisponibilidadeFindOneOutputRestDto> {
     const input = TurmaDisponibilidadeRestMapper.toCreateInput(dto);
     const result = await this.turmaDisponibilidadeService.create(accessContext, input);
     return TurmaDisponibilidadeRestMapper.toFindOneOutputDto(result);
@@ -78,14 +78,14 @@ export class TurmaDisponibilidadeRestController {
     summary: "Atualiza uma turma-disponibilidade",
     operationId: "turmaDisponibilidadeUpdate",
   })
-  @ApiOkResponse({ type: TurmaDisponibilidadeFindOneOutputDto })
+  @ApiOkResponse({ type: TurmaDisponibilidadeFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async update(
     @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: TurmaDisponibilidadeFindOneInputDto,
-    @Body() dto: TurmaDisponibilidadeUpdateInputDto,
-  ): Promise<TurmaDisponibilidadeFindOneOutputDto> {
+    @Param() params: TurmaDisponibilidadeFindOneInputRestDto,
+    @Body() dto: TurmaDisponibilidadeUpdateInputRestDto,
+  ): Promise<TurmaDisponibilidadeFindOneOutputRestDto> {
     const input = TurmaDisponibilidadeRestMapper.toUpdateInput(params, dto);
     const result = await this.turmaDisponibilidadeService.update(accessContext, input);
     return TurmaDisponibilidadeRestMapper.toFindOneOutputDto(result);
@@ -101,7 +101,7 @@ export class TurmaDisponibilidadeRestController {
   @ApiNotFoundResponse()
   async deleteOneById(
     @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: TurmaDisponibilidadeFindOneInputDto,
+    @Param() params: TurmaDisponibilidadeFindOneInputRestDto,
   ): Promise<boolean> {
     const input = TurmaDisponibilidadeRestMapper.toFindOneInput(params);
     return this.turmaDisponibilidadeService.deleteOneById(accessContext, input);

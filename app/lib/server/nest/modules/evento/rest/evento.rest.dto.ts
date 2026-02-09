@@ -1,5 +1,4 @@
-import { ArgsType, Field, ID, InputType, ObjectType, PartialType } from "@nestjs/graphql";
-import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { ApiProperty, ApiPropertyOptional, ApiSchema, PartialType } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import {
   IsArray,
@@ -16,26 +15,26 @@ import {
   simpleProperty,
 } from "@/modules/@shared/infrastructure/persistence/typeorm/metadata";
 import {
-  PaginationInputDto,
-  PaginationMetaDto,
+  PaginationInputRestDto,
+  PaginationMetaRestDto,
   TransformToArray,
 } from "@/modules/@shared/infrastructure/presentation/rest/dtos";
 import {
-  AmbienteFindOneInputDto,
-  AmbienteFindOneOutputDto,
+  AmbienteFindOneInputRestDto,
+  AmbienteFindOneOutputRestDto,
 } from "@/server/nest/modules/ambiente/rest";
 import {
-  CalendarioLetivoFindOneInputDto,
-  CalendarioLetivoFindOneOutputDto,
+  CalendarioLetivoFindOneInputRestDto,
+  CalendarioLetivoFindOneOutputRestDto,
 } from "@/server/nest/modules/calendario-letivo/rest";
 
 // ============================================================================
 // FindOne Output
 // ============================================================================
 
-@ObjectType("Evento")
+@ApiSchema({ name: "EventoFindOneOutputDto" })
 @RegisterModel({
-  name: "EventoFindOneOutput",
+  name: "EventoFindOneOutputDto",
   properties: [
     simpleProperty("id"),
     simpleProperty("nome", { nullable: true }),
@@ -43,19 +42,17 @@ import {
     simpleProperty("cor", { nullable: true }),
     simpleProperty("dataInicio", { nullable: true }),
     simpleProperty("dataFim", { nullable: true }),
-    referenceProperty("calendario", "CalendarioLetivoFindOneOutput"),
-    referenceProperty("ambiente", "AmbienteFindOneOutput", { nullable: true }),
+    referenceProperty("calendario", "CalendarioLetivoFindOneOutputDto"),
+    referenceProperty("ambiente", "AmbienteFindOneOutputDto", { nullable: true }),
     ...commonProperties.dated,
   ],
 })
-export class EventoFindOneOutputDto {
+export class EventoFindOneOutputRestDto {
   @ApiProperty({ description: "Identificador do registro (uuid)", format: "uuid" })
-  @Field(() => ID)
   @IsUUID()
   id: string;
 
   @ApiPropertyOptional({ description: "Nome do evento", nullable: true })
-  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   nome: string | null;
@@ -63,60 +60,51 @@ export class EventoFindOneOutputDto {
   @ApiProperty({
     description: "Regra RRule para a recorrencia do evento. Segue a RFC 5545 do iCalendar",
   })
-  @Field()
   @IsString()
   rrule: string;
 
   @ApiPropertyOptional({ description: "Cor do evento", nullable: true })
-  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   cor: string | null;
 
   @ApiPropertyOptional({ description: "Data de inicio do evento", format: "date", nullable: true })
-  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateString()
   dataInicio: string | null;
 
   @ApiPropertyOptional({ description: "Data de termino do evento", format: "date", nullable: true })
-  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateString()
   dataFim: string | null;
 
   @ApiProperty({
-    type: () => CalendarioLetivoFindOneOutputDto,
+    type: () => CalendarioLetivoFindOneOutputRestDto,
     description: "Calendario letivo ao qual o evento pertence",
   })
-  @Field(() => CalendarioLetivoFindOneOutputDto)
   @ValidateNested()
-  @Type(() => CalendarioLetivoFindOneOutputDto)
-  calendario: CalendarioLetivoFindOneOutputDto;
+  @Type(() => CalendarioLetivoFindOneOutputRestDto)
+  calendario: CalendarioLetivoFindOneOutputRestDto;
 
   @ApiPropertyOptional({
-    type: () => AmbienteFindOneOutputDto,
+    type: () => AmbienteFindOneOutputRestDto,
     description: "Ambiente de ocorrencia do evento",
     nullable: true,
   })
-  @Field(() => AmbienteFindOneOutputDto, { nullable: true })
   @IsOptional()
   @ValidateNested()
-  @Type(() => AmbienteFindOneOutputDto)
-  ambiente: AmbienteFindOneOutputDto | null;
+  @Type(() => AmbienteFindOneOutputRestDto)
+  ambiente: AmbienteFindOneOutputRestDto | null;
 
   @ApiProperty({ description: "Data e hora da criacao do registro" })
-  @Field()
   @IsDateString()
   dateCreated: Date;
 
   @ApiProperty({ description: "Data e hora da alteracao do registro" })
-  @Field()
   @IsDateString()
   dateUpdated: Date;
 
   @ApiPropertyOptional({ description: "Data e hora da exclusao do registro", nullable: true })
-  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateString()
   dateDeleted: Date | null;
@@ -126,8 +114,8 @@ export class EventoFindOneOutputDto {
 // List Input/Output
 // ============================================================================
 
-@ArgsType()
-export class EventoListInputDto extends PaginationInputDto {
+@ApiSchema({ name: "EventoListInputDto" })
+export class EventoListInputRestDto extends PaginationInputRestDto {
   @ApiPropertyOptional({
     description: "Filtro por ID",
     type: [String],
@@ -135,7 +123,7 @@ export class EventoListInputDto extends PaginationInputDto {
   @TransformToArray()
   @IsOptional()
   @IsArray()
-  @IsString({ each: true })
+  @IsUUID(undefined, { each: true })
   "filter.id"?: string[];
 
   @ApiPropertyOptional({
@@ -145,29 +133,26 @@ export class EventoListInputDto extends PaginationInputDto {
   @TransformToArray()
   @IsOptional()
   @IsArray()
-  @IsString({ each: true })
+  @IsUUID(undefined, { each: true })
   "filter.calendario.id"?: string[];
 }
 
-@ObjectType("EventoListOutput")
-export class EventoListOutputDto {
-  @ApiProperty({ type: () => PaginationMetaDto, description: "Metadados da busca" })
-  @Field(() => PaginationMetaDto)
-  meta: PaginationMetaDto;
+@ApiSchema({ name: "EventoListOutputDto" })
+export class EventoListOutputRestDto {
+  @ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" })
+  meta: PaginationMetaRestDto;
 
-  @ApiProperty({ type: () => [EventoFindOneOutputDto], description: "Resultados da busca" })
-  @Field(() => [EventoFindOneOutputDto])
-  data: EventoFindOneOutputDto[];
+  @ApiProperty({ type: () => [EventoFindOneOutputRestDto], description: "Resultados da busca" })
+  data: EventoFindOneOutputRestDto[];
 }
 
 // ============================================================================
 // Create/Update Input
 // ============================================================================
 
-@InputType("EventoCreateInput")
-export class EventoCreateInputDto {
+@ApiSchema({ name: "EventoCreateInputDto" })
+export class EventoCreateInputRestDto {
   @ApiPropertyOptional({ description: "Nome do evento", nullable: true })
-  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   nome?: string | null;
@@ -175,61 +160,53 @@ export class EventoCreateInputDto {
   @ApiProperty({
     description: "Regra RRule para a recorrencia do evento. Segue a RFC 5545 do iCalendar",
   })
-  @Field()
   @IsString()
   rrule: string;
 
   @ApiPropertyOptional({ description: "Cor do evento", nullable: true })
-  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   cor?: string | null;
 
   @ApiPropertyOptional({ description: "Data de inicio do evento", format: "date", nullable: true })
-  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateString()
   dataInicio?: string | null;
 
   @ApiPropertyOptional({ description: "Data de termino do evento", format: "date", nullable: true })
-  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateString()
   dataFim?: string | null;
 
   @ApiProperty({
-    type: () => CalendarioLetivoFindOneInputDto,
+    type: () => CalendarioLetivoFindOneInputRestDto,
     description: "Calendario letivo ao qual o evento pertence",
   })
-  @Field(() => CalendarioLetivoFindOneInputDto)
   @ValidateNested()
-  @Type(() => CalendarioLetivoFindOneInputDto)
-  calendario: CalendarioLetivoFindOneInputDto;
+  @Type(() => CalendarioLetivoFindOneInputRestDto)
+  calendario: CalendarioLetivoFindOneInputRestDto;
 
   @ApiPropertyOptional({
-    type: () => AmbienteFindOneInputDto,
+    type: () => AmbienteFindOneInputRestDto,
     description: "Ambiente de ocorrencia do evento",
     nullable: true,
   })
-  @Field(() => AmbienteFindOneInputDto, { nullable: true })
   @IsOptional()
   @ValidateNested()
-  @Type(() => AmbienteFindOneInputDto)
-  ambiente?: AmbienteFindOneInputDto | null;
+  @Type(() => AmbienteFindOneInputRestDto)
+  ambiente?: AmbienteFindOneInputRestDto | null;
 }
 
-@InputType("EventoUpdateInput")
-export class EventoUpdateInputDto extends PartialType(EventoCreateInputDto) {}
+@ApiSchema({ name: "EventoUpdateInputDto" })
+export class EventoUpdateInputRestDto extends PartialType(EventoCreateInputRestDto) {}
 
 // ============================================================================
 // FindOne Input (for path params)
 // ============================================================================
 
-@ArgsType()
-@InputType("EventoFindOneInput")
-export class EventoFindOneInputDto {
+@ApiSchema({ name: "EventoFindOneInputDto" })
+export class EventoFindOneInputRestDto {
   @ApiProperty({ description: "Identificador do registro (uuid)", format: "uuid" })
-  @Field(() => ID)
   @IsUUID()
   id: string;
 }

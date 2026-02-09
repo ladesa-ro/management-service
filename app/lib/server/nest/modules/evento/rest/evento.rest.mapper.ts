@@ -1,21 +1,21 @@
 import {
-  EventoCreateInput,
-  EventoFindOneInput,
-  EventoFindOneOutput,
-  EventoListInput,
-  EventoListOutput,
-  EventoUpdateInput,
-} from "@/modules/evento";
-import { AmbienteRestMapper } from "@/server/nest/modules/ambiente/rest";
-import { CalendarioLetivoRestMapper } from "@/server/nest/modules/calendario-letivo/rest";
-import { mapPaginationMeta } from "@/server/nest/shared/mappers";
-import {
   EventoCreateInputDto,
   EventoFindOneInputDto,
   EventoFindOneOutputDto,
   EventoListInputDto,
   EventoListOutputDto,
   EventoUpdateInputDto,
+} from "@/modules/evento";
+import { AmbienteRestMapper } from "@/server/nest/modules/ambiente/rest";
+import { CalendarioLetivoRestMapper } from "@/server/nest/modules/calendario-letivo/rest";
+import { mapPaginationMeta } from "@/server/nest/shared/mappers";
+import {
+  EventoCreateInputRestDto,
+  EventoFindOneInputRestDto,
+  EventoFindOneOutputRestDto,
+  EventoListInputRestDto,
+  EventoListOutputRestDto,
+  EventoUpdateInputRestDto,
 } from "./evento.rest.dto";
 
 export class EventoRestMapper {
@@ -23,18 +23,18 @@ export class EventoRestMapper {
   // Input: Server DTO -> Core DTO
   // ============================================================================
 
-  static toFindOneInput(dto: EventoFindOneInputDto): EventoFindOneInput {
-    const input = new EventoFindOneInput();
+  static toFindOneInput(dto: EventoFindOneInputRestDto): EventoFindOneInputDto {
+    const input = new EventoFindOneInputDto();
     input.id = dto.id;
     return input;
   }
 
-  static toListInput(dto: EventoListInputDto | null): EventoListInput | null {
+  static toListInput(dto: EventoListInputRestDto | null): EventoListInputDto | null {
     if (!dto) {
       return null;
     }
 
-    const input = new EventoListInput();
+    const input = new EventoListInputDto();
     input.page = dto.page;
     input.limit = dto.limit;
     input.search = dto.search;
@@ -45,8 +45,8 @@ export class EventoRestMapper {
     return input;
   }
 
-  static toCreateInput(dto: EventoCreateInputDto): EventoCreateInput {
-    const input = new EventoCreateInput();
+  static toCreateInput(dto: EventoCreateInputRestDto): EventoCreateInputDto {
+    const input = new EventoCreateInputDto();
     input.nome = dto.nome;
     input.rrule = dto.rrule;
     input.cor = dto.cor;
@@ -58,10 +58,10 @@ export class EventoRestMapper {
   }
 
   static toUpdateInput(
-    params: EventoFindOneInputDto,
-    dto: EventoUpdateInputDto,
-  ): EventoFindOneInput & EventoUpdateInput {
-    const input = new EventoFindOneInput() as EventoFindOneInput & EventoUpdateInput;
+    params: EventoFindOneInputRestDto,
+    dto: EventoUpdateInputRestDto,
+  ): EventoFindOneInputDto & EventoUpdateInputDto {
+    const input = new EventoFindOneInputDto() as EventoFindOneInputDto & EventoUpdateInputDto;
     input.id = params.id;
     if (dto.nome !== undefined) {
       input.nome = dto.nome;
@@ -91,8 +91,8 @@ export class EventoRestMapper {
   // Output: Core DTO -> Server DTO
   // ============================================================================
 
-  static toFindOneOutputDto(output: EventoFindOneOutput): EventoFindOneOutputDto {
-    const dto = new EventoFindOneOutputDto();
+  static toFindOneOutputDto(output: EventoFindOneOutputDto): EventoFindOneOutputRestDto {
+    const dto = new EventoFindOneOutputRestDto();
     dto.id = output.id;
     dto.nome = output.nome;
     dto.rrule = output.rrule;
@@ -107,8 +107,8 @@ export class EventoRestMapper {
     return dto;
   }
 
-  static toListOutputDto(output: EventoListOutput): EventoListOutputDto {
-    const dto = new EventoListOutputDto();
+  static toListOutputDto(output: EventoListOutputDto): EventoListOutputRestDto {
+    const dto = new EventoListOutputRestDto();
     dto.meta = mapPaginationMeta(output.meta);
     dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
     return dto;

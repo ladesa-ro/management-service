@@ -1,25 +1,25 @@
 import {
-  IntervaloDeTempoFindOneInput,
-  IntervaloDeTempoFindOneOutput,
-  IntervaloDeTempoListInput,
-  IntervaloDeTempoListOutput,
+  IntervaloDeTempoFindOneInputDto,
+  IntervaloDeTempoFindOneOutputDto,
+  IntervaloDeTempoListInputDto,
+  IntervaloDeTempoListOutputDto,
 } from "@/modules/intervalo-de-tempo";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";
-import { IntervaloDeTempoFindOneOutputDto } from "../rest/intervalo-de-tempo.rest.dto";
 import {
-  IntervaloDeTempoListInputGqlDto,
-  IntervaloDeTempoListOutputGqlDto,
+  IntervaloDeTempoFindOneOutputGraphQlDto,
+  IntervaloDeTempoListInputGraphQlDto,
+  IntervaloDeTempoListOutputGraphQlDto,
 } from "./intervalo-de-tempo.graphql.dto";
 
 export class IntervaloDeTempoGraphqlMapper {
   static toListInput(
-    dto: IntervaloDeTempoListInputGqlDto | null,
-  ): IntervaloDeTempoListInput | null {
+    dto: IntervaloDeTempoListInputGraphQlDto | null,
+  ): IntervaloDeTempoListInputDto | null {
     if (!dto) {
       return null;
     }
 
-    const input = new IntervaloDeTempoListInput();
+    const input = new IntervaloDeTempoListInputDto();
     input.page = dto.page;
     input.limit = dto.limit;
     input.search = dto.search;
@@ -28,21 +28,30 @@ export class IntervaloDeTempoGraphqlMapper {
     return input;
   }
 
-  static toFindOneInput(id: string, selection?: string[]): IntervaloDeTempoFindOneInput {
-    const input = new IntervaloDeTempoFindOneInput();
+  static toFindOneInput(id: string, selection?: string[]): IntervaloDeTempoFindOneInputDto {
+    const input = new IntervaloDeTempoFindOneInputDto();
     input.id = id;
     input.selection = selection;
     return input;
   }
 
   static toFindOneOutputDto(
-    output: IntervaloDeTempoFindOneOutput,
-  ): IntervaloDeTempoFindOneOutputDto {
-    return output as unknown as IntervaloDeTempoFindOneOutputDto;
+    output: IntervaloDeTempoFindOneOutputDto,
+  ): IntervaloDeTempoFindOneOutputGraphQlDto {
+    const dto = new IntervaloDeTempoFindOneOutputGraphQlDto();
+    dto.id = output.id;
+    dto.periodoInicio = output.periodoInicio;
+    dto.periodoFim = output.periodoFim;
+    dto.dateCreated = output.dateCreated as unknown as Date;
+    dto.dateUpdated = output.dateUpdated as unknown as Date;
+    dto.dateDeleted = output.dateDeleted as unknown as Date | null;
+    return dto;
   }
 
-  static toListOutputDto(output: IntervaloDeTempoListOutput): IntervaloDeTempoListOutputGqlDto {
-    const dto = new IntervaloDeTempoListOutputGqlDto();
+  static toListOutputDto(
+    output: IntervaloDeTempoListOutputDto,
+  ): IntervaloDeTempoListOutputGraphQlDto {
+    const dto = new IntervaloDeTempoListOutputGraphQlDto();
     dto.meta = mapPaginationMeta(output.meta);
     dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
     return dto;

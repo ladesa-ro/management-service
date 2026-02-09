@@ -3,20 +3,23 @@ import { type GraphQLResolveInfo } from "graphql";
 import { AccessContext, AccessContextGraphQL } from "@/modules/@core/access-context";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
 import { CidadeService } from "@/modules/cidade/application/use-cases/cidade.service";
-import { CidadeFindOneOutputDto } from "../rest/cidade.rest.dto";
-import { CidadeListInputGqlDto, CidadeListOutputGqlDto } from "./cidade.graphql.dto";
+import {
+  CidadeFindOneOutputGraphQlDto,
+  CidadeListInputGraphQlDto,
+  CidadeListOutputGraphQlDto,
+} from "./cidade.graphql.dto";
 import { CidadeGraphqlMapper } from "./cidade.graphql.mapper";
 
-@Resolver(() => CidadeFindOneOutputDto)
+@Resolver(() => CidadeFindOneOutputGraphQlDto)
 export class CidadeGraphqlResolver {
   constructor(private readonly cidadeService: CidadeService) {}
 
-  @Query(() => CidadeListOutputGqlDto, { name: "cidadeFindAll" })
+  @Query(() => CidadeListOutputGraphQlDto, { name: "cidadeFindAll" })
   async findAll(
     @AccessContextGraphQL() accessContext: AccessContext,
-    @Args() dto: CidadeListInputGqlDto,
+    @Args() dto: CidadeListInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<CidadeListOutputGqlDto> {
+  ): Promise<CidadeListOutputGraphQlDto> {
     const input = CidadeGraphqlMapper.toListInput(dto);
 
     if (input) {
@@ -27,12 +30,12 @@ export class CidadeGraphqlResolver {
     return CidadeGraphqlMapper.toListOutputDto(result);
   }
 
-  @Query(() => CidadeFindOneOutputDto, { name: "cidadeFindById" })
+  @Query(() => CidadeFindOneOutputGraphQlDto, { name: "cidadeFindById" })
   async findById(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => Int }) id: number,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<CidadeFindOneOutputDto> {
+  ): Promise<CidadeFindOneOutputGraphQlDto> {
     const selection = graphqlExtractSelection(info);
     const result = await this.cidadeService.findByIdStrict(accessContext, { id, selection });
     return CidadeGraphqlMapper.toFindOneOutputDto(result);

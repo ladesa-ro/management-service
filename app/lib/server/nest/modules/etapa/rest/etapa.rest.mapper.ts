@@ -1,10 +1,10 @@
 import type {
-  EtapaCreateInput,
-  EtapaFindOneInput,
-  EtapaFindOneOutput,
-  EtapaListInput,
-  EtapaListOutput,
-  EtapaUpdateInput,
+  EtapaCreateInputDto,
+  EtapaFindOneInputDto,
+  EtapaFindOneOutputDto,
+  EtapaListInputDto,
+  EtapaListOutputDto,
+  EtapaUpdateInputDto,
 } from "@/modules/etapa";
 import type {
   EtapaCreateInputRestDto,
@@ -16,29 +16,29 @@ import type {
 } from "./etapa.rest.dto";
 
 export class EtapaRestMapper {
-  static toCoreFindOneInput(dto: EtapaFindOneInputRestDto): EtapaFindOneInput {
+  static toCoreFindOneInput(dto: EtapaFindOneInputRestDto): EtapaFindOneInputDto {
     return {
       id: dto.id,
     };
   }
 
-  static toRestFindOneOutput(output: EtapaFindOneOutput): EtapaFindOneOutputRestDto {
+  static toRestFindOneOutput(output: EtapaFindOneOutputDto): EtapaFindOneOutputRestDto {
     return output as unknown as EtapaFindOneOutputRestDto;
   }
 
-  static toCoreListInput(dto: EtapaListInputRestDto): EtapaListInput {
-    return dto as EtapaListInput;
+  static toCoreListInput(dto: EtapaListInputRestDto): EtapaListInputDto {
+    return dto as EtapaListInputDto;
   }
 
-  static toRestListOutput(output: EtapaListOutput): EtapaListOutputRestDto {
+  static toRestListOutput(output: EtapaListOutputDto): EtapaListOutputRestDto {
     return output as unknown as EtapaListOutputRestDto;
   }
 
-  static toCoreCreateInput(dto: EtapaCreateInputRestDto): EtapaCreateInput {
-    return dto as unknown as EtapaCreateInput;
+  static toCoreCreateInput(dto: EtapaCreateInputRestDto): EtapaCreateInputDto {
+    return dto as unknown as EtapaCreateInputDto;
   }
 
-  static toCoreUpdateInput(dto: EtapaUpdateInputRestDto): EtapaUpdateInput {
-    return dto as unknown as EtapaUpdateInput;
+  static toCoreUpdateInput(dto: EtapaUpdateInputRestDto): EtapaUpdateInputDto {
+    return dto as unknown as EtapaUpdateInputDto;
   }
 }

@@ -1,43 +1,46 @@
 import type { AccessContext } from "@/modules/@core/access-context";
 import {
-  DisponibilidadeCreateInput,
-  DisponibilidadeFindOneInput,
-  DisponibilidadeFindOneOutput,
-  DisponibilidadeListInput,
-  DisponibilidadeListOutput,
-  DisponibilidadeUpdateInput,
+  DisponibilidadeCreateInputDto,
+  DisponibilidadeFindOneInputDto,
+  DisponibilidadeFindOneOutputDto,
+  DisponibilidadeListInputDto,
+  DisponibilidadeListOutputDto,
+  DisponibilidadeUpdateInputDto,
 } from "../../dtos";
 
 export interface IDisponibilidadeUseCasePort {
   findAll(
     accessContext: AccessContext,
-    dto: DisponibilidadeListInput | null,
-  ): Promise<DisponibilidadeListOutput>;
+    dto: DisponibilidadeListInputDto | null,
+  ): Promise<DisponibilidadeListOutputDto>;
 
   findById(
     accessContext: AccessContext | null,
-    dto: DisponibilidadeFindOneInput,
-  ): Promise<DisponibilidadeFindOneOutput | null>;
+    dto: DisponibilidadeFindOneInputDto,
+  ): Promise<DisponibilidadeFindOneOutputDto | null>;
 
   findByIdStrict(
     accessContext: AccessContext,
-    dto: DisponibilidadeFindOneInput,
-  ): Promise<DisponibilidadeFindOneOutput>;
+    dto: DisponibilidadeFindOneInputDto,
+  ): Promise<DisponibilidadeFindOneOutputDto>;
 
   create(
     accessContext: AccessContext,
-    dto: DisponibilidadeCreateInput,
-  ): Promise<DisponibilidadeFindOneOutput>;
+    dto: DisponibilidadeCreateInputDto,
+  ): Promise<DisponibilidadeFindOneOutputDto>;
 
   update(
     accessContext: AccessContext,
-    dto: DisponibilidadeFindOneInput & DisponibilidadeUpdateInput,
-  ): Promise<DisponibilidadeFindOneOutput>;
+    dto: DisponibilidadeFindOneInputDto & DisponibilidadeUpdateInputDto,
+  ): Promise<DisponibilidadeFindOneOutputDto>;
 
-  deleteOneById(accessContext: AccessContext, dto: DisponibilidadeFindOneInput): Promise<boolean>;
+  deleteOneById(
+    accessContext: AccessContext,
+    dto: DisponibilidadeFindOneInputDto,
+  ): Promise<boolean>;
 
   findByIdSimpleStrict(
     accessContext: AccessContext,
     id: string,
-  ): Promise<DisponibilidadeFindOneOutput>;
+  ): Promise<DisponibilidadeFindOneOutputDto>;
 }

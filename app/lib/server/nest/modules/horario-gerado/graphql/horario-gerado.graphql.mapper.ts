@@ -1,29 +1,30 @@
 import {
-  HorarioGeradoCreateInput,
-  HorarioGeradoFindOneInput,
-  HorarioGeradoFindOneOutput,
-  HorarioGeradoListInput,
-  HorarioGeradoListOutput,
-  HorarioGeradoUpdateInput,
+  HorarioGeradoCreateInputDto,
+  HorarioGeradoFindOneInputDto,
+  HorarioGeradoFindOneOutputDto,
+  HorarioGeradoListInputDto,
+  HorarioGeradoListOutputDto,
+  HorarioGeradoUpdateInputDto,
 } from "@/modules/horario-gerado";
+import { CalendarioLetivoGraphqlMapper } from "@/server/nest/modules/calendario-letivo/graphql/calendario-letivo.graphql.mapper";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import {
-  HorarioGeradoCreateInputRestDto,
-  HorarioGeradoFindOneOutputRestDto,
-  HorarioGeradoUpdateInputRestDto,
-} from "../rest/horario-gerado.rest.dto";
-import {
-  HorarioGeradoListInputGqlDto,
-  HorarioGeradoListOutputGqlDto,
+  HorarioGeradoCreateInputGraphQlDto,
+  HorarioGeradoFindOneOutputGraphQlDto,
+  HorarioGeradoListInputGraphQlDto,
+  HorarioGeradoListOutputGraphQlDto,
+  HorarioGeradoUpdateInputGraphQlDto,
 } from "./horario-gerado.graphql.dto";
 
 export class HorarioGeradoGraphqlMapper {
-  static toListInput(dto: HorarioGeradoListInputGqlDto | null): HorarioGeradoListInput | null {
+  static toListInput(
+    dto: HorarioGeradoListInputGraphQlDto | null,
+  ): HorarioGeradoListInputDto | null {
     if (!dto) {
       return null;
     }
 
-    const input = new HorarioGeradoListInput();
+    const input = new HorarioGeradoListInputDto();
     input.page = dto.page;
     input.limit = dto.limit;
     input.search = dto.search;
@@ -33,36 +34,30 @@ export class HorarioGeradoGraphqlMapper {
     return input;
   }
 
-  static toFindOneInput(id: string, selection?: string[]): HorarioGeradoFindOneInput {
-    const input = new HorarioGeradoFindOneInput();
+  static toFindOneInput(id: string, selection?: string[]): HorarioGeradoFindOneInputDto {
+    const input = new HorarioGeradoFindOneInputDto();
     input.id = id;
     input.selection = selection;
     return input;
   }
 
-  private static dateToString(date: Date | null | undefined): string | null | undefined {
-    if (date === undefined) return undefined;
-    if (date === null) return null;
-    return date instanceof Date ? date.toISOString() : date;
-  }
-
-  static toCreateInput(dto: HorarioGeradoCreateInputRestDto): HorarioGeradoCreateInput {
-    const input = new HorarioGeradoCreateInput();
-    input.status = dto.status;
-    input.tipo = dto.tipo;
-    input.dataGeracao = this.dateToString(dto.dataGeracao);
-    input.vigenciaInicio = this.dateToString(dto.vigenciaInicio);
-    input.vigenciaFim = this.dateToString(dto.vigenciaFim);
-    input.calendario = dto.calendario;
+  static toCreateInput(dto: HorarioGeradoCreateInputGraphQlDto): HorarioGeradoCreateInputDto {
+    const input = new HorarioGeradoCreateInputDto();
+    input.status = dto.status ?? null;
+    input.tipo = dto.tipo ?? null;
+    input.dataGeracao = dto.dataGeracao ?? null;
+    input.vigenciaInicio = dto.vigenciaInicio ?? null;
+    input.vigenciaFim = dto.vigenciaFim ?? null;
+    input.calendario = { id: dto.calendario.id };
     return input;
   }
 
   static toUpdateInput(
     id: string,
-    dto: HorarioGeradoUpdateInputRestDto,
-  ): HorarioGeradoFindOneInput & HorarioGeradoUpdateInput {
-    const input = new HorarioGeradoFindOneInput() as HorarioGeradoFindOneInput &
-      HorarioGeradoUpdateInput;
+    dto: HorarioGeradoUpdateInputGraphQlDto,
+  ): HorarioGeradoFindOneInputDto & HorarioGeradoUpdateInputDto {
+    const input = new HorarioGeradoFindOneInputDto() as HorarioGeradoFindOneInputDto &
+      HorarioGeradoUpdateInputDto;
     input.id = id;
     if (dto.status !== undefined) {
       input.status = dto.status;
@@ -71,26 +66,39 @@ export class HorarioGeradoGraphqlMapper {
       input.tipo = dto.tipo;
     }
     if (dto.dataGeracao !== undefined) {
-      input.dataGeracao = this.dateToString(dto.dataGeracao);
+      input.dataGeracao = dto.dataGeracao;
     }
     if (dto.vigenciaInicio !== undefined) {
-      input.vigenciaInicio = this.dateToString(dto.vigenciaInicio);
+      input.vigenciaInicio = dto.vigenciaInicio;
     }
     if (dto.vigenciaFim !== undefined) {
-      input.vigenciaFim = this.dateToString(dto.vigenciaFim);
+      input.vigenciaFim = dto.vigenciaFim;
     }
     if (dto.calendario !== undefined) {
-      input.calendario = dto.calendario;
+      input.calendario = { id: dto.calendario.id };
     }
     return input;
   }
 
-  static toFindOneOutputDto(output: HorarioGeradoFindOneOutput): HorarioGeradoFindOneOutputRestDto {
-    return output as unknown as HorarioGeradoFindOneOutputRestDto;
+  static toFindOneOutputDto(
+    output: HorarioGeradoFindOneOutputDto,
+  ): HorarioGeradoFindOneOutputGraphQlDto {
+    const dto = new HorarioGeradoFindOneOutputGraphQlDto();
+    dto.id = output.id;
+    dto.status = output.status;
+    dto.tipo = output.tipo;
+    dto.dataGeracao = output.dataGeracao as string | null;
+    dto.vigenciaInicio = output.vigenciaInicio as string | null;
+    dto.vigenciaFim = output.vigenciaFim as string | null;
+    dto.calendario = CalendarioLetivoGraphqlMapper.toFindOneOutputDto(output.calendario);
+    dto.dateCreated = output.dateCreated as unknown as Date;
+    dto.dateUpdated = output.dateUpdated as unknown as Date;
+    dto.dateDeleted = output.dateDeleted as unknown as Date | null;
+    return dto;
   }
 
-  static toListOutputDto(output: HorarioGeradoListOutput): HorarioGeradoListOutputGqlDto {
-    const dto = new HorarioGeradoListOutputGqlDto();
+  static toListOutputDto(output: HorarioGeradoListOutputDto): HorarioGeradoListOutputGraphQlDto {
+    const dto = new HorarioGeradoListOutputGraphQlDto();
     dto.meta = mapPaginationMeta(output.meta);
     dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
     return dto;

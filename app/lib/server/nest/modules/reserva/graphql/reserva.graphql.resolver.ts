@@ -4,23 +4,24 @@ import { AccessContext, AccessContextGraphQL } from "@/modules/@core/access-cont
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
 import { ReservaService } from "@/modules/reserva";
 import {
-  ReservaCreateInputDto,
-  ReservaFindOneOutputDto,
-  ReservaUpdateInputDto,
-} from "../rest/reserva.rest.dto";
-import { ReservaListInputGqlDto, ReservaListOutputGqlDto } from "./reserva.graphql.dto";
+  ReservaCreateInputGraphQlDto,
+  ReservaFindOneOutputGraphQlDto,
+  ReservaListInputGraphQlDto,
+  ReservaListOutputGraphQlDto,
+  ReservaUpdateInputGraphQlDto,
+} from "./reserva.graphql.dto";
 import { ReservaGraphqlMapper } from "./reserva.graphql.mapper";
 
-@Resolver(() => ReservaFindOneOutputDto)
+@Resolver(() => ReservaFindOneOutputGraphQlDto)
 export class ReservaGraphqlResolver {
   constructor(private readonly reservaService: ReservaService) {}
 
-  @Query(() => ReservaListOutputGqlDto, { name: "reservaFindAll" })
+  @Query(() => ReservaListOutputGraphQlDto, { name: "reservaFindAll" })
   async findAll(
     @AccessContextGraphQL() accessContext: AccessContext,
-    @Args() dto: ReservaListInputGqlDto,
+    @Args() dto: ReservaListInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<ReservaListOutputGqlDto> {
+  ): Promise<ReservaListOutputGraphQlDto> {
     const input = ReservaGraphqlMapper.toListInput(dto);
 
     if (input) {
@@ -31,36 +32,36 @@ export class ReservaGraphqlResolver {
     return ReservaGraphqlMapper.toListOutputDto(result);
   }
 
-  @Query(() => ReservaFindOneOutputDto, { name: "reservaFindById" })
+  @Query(() => ReservaFindOneOutputGraphQlDto, { name: "reservaFindById" })
   async findById(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<ReservaFindOneOutputDto> {
+  ): Promise<ReservaFindOneOutputGraphQlDto> {
     const selection = graphqlExtractSelection(info);
     const result = await this.reservaService.findByIdStrict(accessContext, { id, selection });
     return ReservaGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => ReservaFindOneOutputDto, { name: "reservaCreate" })
+  @Mutation(() => ReservaFindOneOutputGraphQlDto, { name: "reservaCreate" })
   async create(
     @AccessContextGraphQL() accessContext: AccessContext,
-    @Args("input") dto: ReservaCreateInputDto,
+    @Args("input") dto: ReservaCreateInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<ReservaFindOneOutputDto> {
+  ): Promise<ReservaFindOneOutputGraphQlDto> {
     const input = ReservaGraphqlMapper.toCreateInput(dto);
     const result = await this.reservaService.create(accessContext, input);
     return ReservaGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => ReservaFindOneOutputDto, { name: "reservaUpdate" })
+  @Mutation(() => ReservaFindOneOutputGraphQlDto, { name: "reservaUpdate" })
   async update(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
-    @Args("input") dto: ReservaUpdateInputDto,
+    @Args("input") dto: ReservaUpdateInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<ReservaFindOneOutputDto> {
-    const input = ReservaGraphqlMapper.toUpdateInput(id, dto);
+  ): Promise<ReservaFindOneOutputGraphQlDto> {
+    const input = ReservaGraphqlMapper.toUpdateInput({ id }, dto);
     const result = await this.reservaService.update(accessContext, input);
     return ReservaGraphqlMapper.toFindOneOutputDto(result);
   }

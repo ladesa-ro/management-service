@@ -33,6 +33,18 @@ export class DiaCalendario extends BaseEntity implements IDiaCalendario {
   }
 
   // ========================================
+  // Validação
+  // ========================================
+
+  validar(): void {
+    const { result, rules } = DiaCalendario.createValidation();
+    rules.required(this.data, "data");
+    rules.dateFormat(this.data, "data");
+    rules.required(this.tipo, "tipo");
+    DiaCalendario.throwIfInvalid(result);
+  }
+
+  // ========================================
   // Factory Methods
   // ========================================
 
@@ -41,23 +53,15 @@ export class DiaCalendario extends BaseEntity implements IDiaCalendario {
    * @throws EntityValidationError se os dados forem inválidos
    */
   static criar(dados: IDiaCalendarioCreate): DiaCalendario {
-    const { result, rules } = this.createValidation();
-
     const instance = new DiaCalendario();
-    instance.data = rules.required(dados.data, "data");
-    instance.data = rules.dateFormat(instance.data, "data");
-
-    instance.tipo = rules.required(dados.tipo, "tipo");
-
-    this.throwIfInvalid(result);
-
+    instance.data = dados.data;
+    instance.tipo = dados.tipo;
     instance.diaLetivo = dados.diaLetivo;
     instance.feriado = dados.feriado;
     instance.diaPresencial = dados.diaPresencial;
     instance.extraCurricular = dados.extraCurricular;
-    instance.dateCreated = new Date().toISOString();
-    instance.dateUpdated = new Date().toISOString();
-    instance.dateDeleted = null;
+    instance.initDates();
+    instance.validar();
 
     return instance;
   }
@@ -80,15 +84,12 @@ export class DiaCalendario extends BaseEntity implements IDiaCalendario {
    * @throws EntityValidationError se os dados forem inválidos
    */
   atualizar(dados: IDiaCalendarioUpdate): void {
-    const { result, rules } = DiaCalendario.createValidation();
-
     if (dados.data !== undefined) {
-      this.data = rules.required(dados.data, "data");
-      this.data = rules.dateFormat(this.data, "data");
+      this.data = dados.data;
     }
 
     if (dados.tipo !== undefined) {
-      this.tipo = rules.required(dados.tipo, "tipo");
+      this.tipo = dados.tipo;
     }
 
     if (dados.diaLetivo !== undefined) {
@@ -107,8 +108,7 @@ export class DiaCalendario extends BaseEntity implements IDiaCalendario {
       this.extraCurricular = dados.extraCurricular;
     }
 
-    DiaCalendario.throwIfInvalid(result);
-
-    this.dateUpdated = new Date().toISOString();
+    this.touchUpdated();
+    this.validar();
   }
 }

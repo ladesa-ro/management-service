@@ -1,22 +1,22 @@
 import {
-  TurmaCreateInput,
-  TurmaFindOneInput,
-  TurmaFindOneOutput,
-  TurmaListInput,
-  TurmaListOutput,
-  TurmaUpdateInput,
-} from "@/modules/turma";
-import { AmbienteRestMapper } from "@/server/nest/modules/ambiente/rest";
-import { BlocoRestMapper } from "@/server/nest/modules/bloco/rest";
-import { CursoRestMapper } from "@/server/nest/modules/curso/rest";
-import { mapPaginationMeta } from "@/server/nest/shared/mappers";
-import {
   TurmaCreateInputDto,
   TurmaFindOneInputDto,
   TurmaFindOneOutputDto,
   TurmaListInputDto,
   TurmaListOutputDto,
   TurmaUpdateInputDto,
+} from "@/modules/turma";
+import { AmbienteRestMapper } from "@/server/nest/modules/ambiente/rest";
+import { BlocoRestMapper } from "@/server/nest/modules/bloco/rest";
+import { CursoRestMapper } from "@/server/nest/modules/curso/rest";
+import { mapPaginationMeta } from "@/server/nest/shared/mappers";
+import {
+  TurmaCreateInputRestDto,
+  TurmaFindOneInputRestDto,
+  TurmaFindOneOutputRestDto,
+  TurmaListInputRestDto,
+  TurmaListOutputRestDto,
+  TurmaUpdateInputRestDto,
 } from "./turma.rest.dto";
 
 export class TurmaRestMapper {
@@ -24,18 +24,18 @@ export class TurmaRestMapper {
   // Input: Server DTO -> Core DTO
   // ============================================================================
 
-  static toFindOneInput(dto: TurmaFindOneInputDto): TurmaFindOneInput {
-    const input = new TurmaFindOneInput();
+  static toFindOneInput(dto: TurmaFindOneInputRestDto): TurmaFindOneInputDto {
+    const input = new TurmaFindOneInputDto();
     input.id = dto.id;
     return input;
   }
 
-  static toListInput(dto: TurmaListInputDto | null): TurmaListInput | null {
+  static toListInput(dto: TurmaListInputRestDto | null): TurmaListInputDto | null {
     if (!dto) {
       return null;
     }
 
-    const input = new TurmaListInput();
+    const input = new TurmaListInputDto();
     input.page = dto.page;
     input.limit = dto.limit;
     input.search = dto.search;
@@ -56,8 +56,8 @@ export class TurmaRestMapper {
     return input;
   }
 
-  static toCreateInput(dto: TurmaCreateInputDto): TurmaCreateInput {
-    const input = new TurmaCreateInput();
+  static toCreateInput(dto: TurmaCreateInputRestDto): TurmaCreateInputDto {
+    const input = new TurmaCreateInputDto();
     input.periodo = dto.periodo;
     input.curso = { id: dto.curso.id };
     input.ambientePadraoAula = dto.ambientePadraoAula ? { id: dto.ambientePadraoAula.id } : null;
@@ -65,10 +65,10 @@ export class TurmaRestMapper {
   }
 
   static toUpdateInput(
-    params: TurmaFindOneInputDto,
-    dto: TurmaUpdateInputDto,
-  ): TurmaFindOneInput & TurmaUpdateInput {
-    const input = new TurmaFindOneInput() as TurmaFindOneInput & TurmaUpdateInput;
+    params: TurmaFindOneInputRestDto,
+    dto: TurmaUpdateInputRestDto,
+  ): TurmaFindOneInputDto & TurmaUpdateInputDto {
+    const input = new TurmaFindOneInputDto() as TurmaFindOneInputDto & TurmaUpdateInputDto;
     input.id = params.id;
     if (dto.periodo !== undefined) {
       input.periodo = dto.periodo;
@@ -86,8 +86,8 @@ export class TurmaRestMapper {
   // Output: Core DTO -> Server DTO
   // ============================================================================
 
-  static toFindOneOutputDto(output: TurmaFindOneOutput): TurmaFindOneOutputDto {
-    const dto = new TurmaFindOneOutputDto();
+  static toFindOneOutputDto(output: TurmaFindOneOutputDto): TurmaFindOneOutputRestDto {
+    const dto = new TurmaFindOneOutputRestDto();
     dto.id = output.id;
     dto.periodo = output.periodo;
     dto.curso = CursoRestMapper.toFindOneOutputDto(output.curso);
@@ -103,8 +103,8 @@ export class TurmaRestMapper {
     return dto;
   }
 
-  static toListOutputDto(output: TurmaListOutput): TurmaListOutputDto {
-    const dto = new TurmaListOutputDto();
+  static toListOutputDto(output: TurmaListOutputDto): TurmaListOutputRestDto {
+    const dto = new TurmaListOutputRestDto();
     dto.meta = mapPaginationMeta(output.meta);
     dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
     return dto;

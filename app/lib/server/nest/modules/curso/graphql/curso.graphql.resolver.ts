@@ -4,66 +4,66 @@ import { AccessContext, AccessContextGraphQL } from "@/modules/@core/access-cont
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
 import { CursoService } from "@/modules/curso/application/use-cases/curso.service";
 import {
-  CursoCreateInputDto,
-  CursoFindOneOutputDto,
-  CursoUpdateInputDto,
-} from "../rest/curso.rest.dto";
-import { CursoRestMapper } from "../rest/curso.rest.mapper";
-import { CursoListInputGqlDto, CursoListOutputGqlDto } from "./curso.graphql.dto";
+  CursoCreateInputGraphQlDto,
+  CursoFindOneOutputGraphQlDto,
+  CursoListInputGraphQlDto,
+  CursoListOutputGraphQlDto,
+  CursoUpdateInputGraphQlDto,
+} from "./curso.graphql.dto";
 import { CursoGraphqlMapper } from "./curso.graphql.mapper";
 
-@Resolver(() => CursoFindOneOutputDto)
+@Resolver(() => CursoFindOneOutputGraphQlDto)
 export class CursoGraphqlResolver {
   constructor(private readonly cursoService: CursoService) {}
 
-  @Query(() => CursoListOutputGqlDto, { name: "cursoFindAll" })
+  @Query(() => CursoListOutputGraphQlDto, { name: "cursoFindAll" })
   async findAll(
     @AccessContextGraphQL() accessContext: AccessContext,
-    @Args() dto: CursoListInputGqlDto,
+    @Args() dto: CursoListInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<CursoListOutputGqlDto> {
+  ): Promise<CursoListOutputGraphQlDto> {
     const input = CursoGraphqlMapper.toListInput(dto);
 
     if (input) {
       input.selection = graphqlExtractSelection(info, "paginated");
     }
 
-    const result = await this.cursoService.findAll(accessContext, input as any);
-    return CursoGraphqlMapper.toListOutputDto(result as any);
+    const result = await this.cursoService.findAll(accessContext, input);
+    return CursoGraphqlMapper.toListOutputDto(result);
   }
 
-  @Query(() => CursoFindOneOutputDto, { name: "cursoFindById" })
+  @Query(() => CursoFindOneOutputGraphQlDto, { name: "cursoFindById" })
   async findById(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<CursoFindOneOutputDto> {
+  ): Promise<CursoFindOneOutputGraphQlDto> {
     const selection = graphqlExtractSelection(info);
-    const result = await this.cursoService.findByIdStrict(accessContext, { id, selection } as any);
-    return CursoGraphqlMapper.toFindOneOutputDto(result as any);
+    const result = await this.cursoService.findByIdStrict(accessContext, { id, selection });
+    return CursoGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => CursoFindOneOutputDto, { name: "cursoCreate" })
+  @Mutation(() => CursoFindOneOutputGraphQlDto, { name: "cursoCreate" })
   async create(
     @AccessContextGraphQL() accessContext: AccessContext,
-    @Args("input") dto: CursoCreateInputDto,
+    @Args("input") dto: CursoCreateInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<CursoFindOneOutputDto> {
-    const input = CursoRestMapper.toCreateInput(dto);
-    const result = await this.cursoService.create(accessContext, input as any);
-    return CursoGraphqlMapper.toFindOneOutputDto(result as any);
+  ): Promise<CursoFindOneOutputGraphQlDto> {
+    const input = CursoGraphqlMapper.toCreateInput(dto);
+    const result = await this.cursoService.create(accessContext, input);
+    return CursoGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => CursoFindOneOutputDto, { name: "cursoUpdate" })
+  @Mutation(() => CursoFindOneOutputGraphQlDto, { name: "cursoUpdate" })
   async update(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
-    @Args("input") dto: CursoUpdateInputDto,
+    @Args("input") dto: CursoUpdateInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<CursoFindOneOutputDto> {
-    const input = CursoRestMapper.toUpdateInput({ id }, dto);
-    const result = await this.cursoService.update(accessContext, input as any);
-    return CursoGraphqlMapper.toFindOneOutputDto(result as any);
+  ): Promise<CursoFindOneOutputGraphQlDto> {
+    const input = CursoGraphqlMapper.toUpdateInput({ id }, dto);
+    const result = await this.cursoService.update(accessContext, input);
+    return CursoGraphqlMapper.toFindOneOutputDto(result);
   }
 
   @Mutation(() => Boolean, { name: "cursoDeleteOneById" })

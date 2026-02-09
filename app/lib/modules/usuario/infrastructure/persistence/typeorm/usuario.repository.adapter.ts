@@ -9,10 +9,10 @@ import {
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
   IUsuarioRepositoryPort,
-  UsuarioFindOneInput,
-  UsuarioFindOneOutput,
-  UsuarioListInput,
-  UsuarioListOutput,
+  UsuarioFindOneInputDto,
+  UsuarioFindOneOutputDto,
+  UsuarioListInputDto,
+  UsuarioListOutputDto,
 } from "@/modules/usuario";
 import type { UsuarioEntity } from "./usuario.entity";
 
@@ -20,16 +20,16 @@ import type { UsuarioEntity } from "./usuario.entity";
 export class UsuarioTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     UsuarioEntity,
-    UsuarioListInput,
-    UsuarioListOutput,
-    UsuarioFindOneInput,
-    UsuarioFindOneOutput
+    UsuarioListInputDto,
+    UsuarioListOutputDto,
+    UsuarioFindOneInputDto,
+    UsuarioFindOneOutputDto
   >
   implements IUsuarioRepositoryPort
 {
   protected readonly alias = "usuario";
   protected readonly authzAction = "usuario:find";
-  protected readonly outputDtoName = "UsuarioFindOneOutput";
+  protected readonly outputDtoName = "UsuarioFindOneOutputDto";
 
   constructor(
     protected readonly databaseContext: DatabaseContextService,
@@ -45,7 +45,7 @@ export class UsuarioTypeOrmRepositoryAdapter
   async findByMatriculaSiape(
     matriculaSiape: string,
     selection?: string[] | boolean,
-  ): Promise<UsuarioFindOneOutput | null> {
+  ): Promise<UsuarioFindOneOutputDto | null> {
     const qb = this.repository.createQueryBuilder(this.alias);
 
     qb.andWhere(`${this.alias}.matriculaSiape = :matriculaSiape`, {
@@ -57,7 +57,7 @@ export class UsuarioTypeOrmRepositoryAdapter
 
     const usuario = await qb.getOne();
 
-    return usuario as UsuarioFindOneOutput | null;
+    return usuario as UsuarioFindOneOutputDto | null;
   }
 
   // Métodos específicos do Usuario que não estão na classe base

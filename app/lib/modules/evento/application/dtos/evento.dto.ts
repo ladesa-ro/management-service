@@ -1,71 +1,71 @@
 import type { ScalarDateTimeString } from "@/modules/@shared";
 import {
-  EntityOutput,
-  FindOneInput,
+  EntityOutputDto,
+  FindOneInputDto,
   IFilterAcceptableValues,
-  ObjectUuidRef,
-  PaginationInput,
-  PaginationResult,
+  ObjectUuidRefDto,
+  PaginationInputDto,
+  PaginationResultDto,
 } from "@/modules/@shared/application/dtos";
-import { AmbienteFindOneOutput, AmbienteInputRef } from "@/modules/ambiente";
+import { AmbienteFindOneOutputDto, AmbienteInputRefDto } from "@/modules/ambiente";
 import {
-  CalendarioLetivoFindOneOutput,
-  CalendarioLetivoInputRef,
+  CalendarioLetivoFindOneOutputDto,
+  CalendarioLetivoInputRefDto,
 } from "@/modules/calendario-letivo";
 
 // ============================================================================
 // FindOne Input/Output
 // ============================================================================
 
-export class EventoFindOneInput extends FindOneInput {}
+export class EventoFindOneInputDto extends FindOneInputDto {}
 
-export class EventoFindOneOutput extends EntityOutput {
+export class EventoFindOneOutputDto extends EntityOutputDto {
   nome!: string | null;
   rrule!: string;
   cor!: string | null;
   dataInicio!: ScalarDateTimeString | null;
   dataFim!: ScalarDateTimeString | null;
-  calendario!: CalendarioLetivoFindOneOutput;
-  ambiente!: AmbienteFindOneOutput | null;
+  calendario!: CalendarioLetivoFindOneOutputDto;
+  ambiente!: AmbienteFindOneOutputDto | null;
 }
 
 // ============================================================================
 // List Input/Output
 // ============================================================================
 
-export class EventoListInput extends PaginationInput {
+export class EventoListInputDto extends PaginationInputDto {
   "filter.id"?: IFilterAcceptableValues;
   "filter.calendario.id"?: IFilterAcceptableValues;
 }
 
-export class EventoListOutput extends PaginationResult<EventoFindOneOutput> {}
+export class EventoListOutputDto extends PaginationResultDto<EventoFindOneOutputDto> {}
 
 // ============================================================================
 // Create/Update Input
 // ============================================================================
 
-export class EventoCreateInput {
+export class EventoCreateInputDto {
   nome?: string | null;
   rrule!: string;
   cor?: string | null;
   dataInicio?: ScalarDateTimeString | null;
   dataFim?: ScalarDateTimeString | null;
-  calendario!: CalendarioLetivoInputRef;
-  ambiente?: AmbienteInputRef | null;
+  calendario!: CalendarioLetivoInputRefDto;
+  ambiente?: AmbienteInputRefDto | null;
 }
 
-export class EventoUpdateInput {
+export class EventoUpdateInputDto {
   nome?: string | null;
   rrule?: string;
   cor?: string | null;
   dataInicio?: ScalarDateTimeString | null;
   dataFim?: ScalarDateTimeString | null;
-  calendario?: CalendarioLetivoInputRef;
-  ambiente?: AmbienteInputRef | null;
+  calendario?: CalendarioLetivoInputRefDto;
+  ambiente?: AmbienteInputRefDto | null;
 }
 
 // ============================================================================
 // Input Ref
 // ============================================================================
 
-export type EventoInputRef = ObjectUuidRef;
+export type EventoInputRefDto = ObjectUuidRefDto;

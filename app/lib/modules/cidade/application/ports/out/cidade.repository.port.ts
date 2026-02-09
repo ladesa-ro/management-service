@@ -1,9 +1,9 @@
 import type { IReadOnlyRepositoryPort } from "@/modules/@shared";
 import {
-  CidadeFindOneInput,
-  CidadeFindOneOutput,
-  CidadeListInput,
-  CidadeListOutput,
+  CidadeFindOneInputDto,
+  CidadeFindOneOutputDto,
+  CidadeListInputDto,
+  CidadeListOutputDto,
 } from "@/modules/cidade";
 
 /**
@@ -17,8 +17,8 @@ export const CIDADE_REPOSITORY_PORT = Symbol("ICidadeRepositoryPort");
  */
 export interface ICidadeRepositoryPort
   extends IReadOnlyRepositoryPort<
-    CidadeListInput,
-    CidadeListOutput,
-    CidadeFindOneInput,
-    CidadeFindOneOutput
+    CidadeListInputDto,
+    CidadeListOutputDto,
+    CidadeFindOneInputDto,
+    CidadeFindOneOutputDto
   > {}

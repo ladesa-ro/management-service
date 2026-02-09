@@ -4,23 +4,24 @@ import { AccessContext, AccessContextGraphQL } from "@/modules/@core/access-cont
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
 import { ModalidadeService } from "@/modules/modalidade/application/use-cases/modalidade.service";
 import {
-  ModalidadeCreateInputDto,
-  ModalidadeFindOneOutputDto,
-  ModalidadeUpdateInputDto,
-} from "../rest/modalidade.rest.dto";
-import { ModalidadeListInputGqlDto, ModalidadeListOutputGqlDto } from "./modalidade.graphql.dto";
+  ModalidadeCreateInputGraphQlDto,
+  ModalidadeFindOneOutputGraphQlDto,
+  ModalidadeListInputGraphQlDto,
+  ModalidadeListOutputGraphQlDto,
+  ModalidadeUpdateInputGraphQlDto,
+} from "./modalidade.graphql.dto";
 import { ModalidadeGraphqlMapper } from "./modalidade.graphql.mapper";
 
-@Resolver(() => ModalidadeFindOneOutputDto)
+@Resolver(() => ModalidadeFindOneOutputGraphQlDto)
 export class ModalidadeGraphqlResolver {
   constructor(private readonly modalidadeService: ModalidadeService) {}
 
-  @Query(() => ModalidadeListOutputGqlDto, { name: "modalidadeFindAll" })
+  @Query(() => ModalidadeListOutputGraphQlDto, { name: "modalidadeFindAll" })
   async findAll(
     @AccessContextGraphQL() accessContext: AccessContext,
-    @Args() dto: ModalidadeListInputGqlDto,
+    @Args() dto: ModalidadeListInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<ModalidadeListOutputGqlDto> {
+  ): Promise<ModalidadeListOutputGraphQlDto> {
     const input = ModalidadeGraphqlMapper.toListInput(dto);
 
     if (input) {
@@ -31,36 +32,36 @@ export class ModalidadeGraphqlResolver {
     return ModalidadeGraphqlMapper.toListOutputDto(result);
   }
 
-  @Query(() => ModalidadeFindOneOutputDto, { name: "modalidadeFindById" })
+  @Query(() => ModalidadeFindOneOutputGraphQlDto, { name: "modalidadeFindById" })
   async findById(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<ModalidadeFindOneOutputDto> {
+  ): Promise<ModalidadeFindOneOutputGraphQlDto> {
     const selection = graphqlExtractSelection(info);
     const result = await this.modalidadeService.findByIdStrict(accessContext, { id, selection });
     return ModalidadeGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => ModalidadeFindOneOutputDto, { name: "modalidadeCreate" })
+  @Mutation(() => ModalidadeFindOneOutputGraphQlDto, { name: "modalidadeCreate" })
   async create(
     @AccessContextGraphQL() accessContext: AccessContext,
-    @Args("data") dto: ModalidadeCreateInputDto,
+    @Args("input") dto: ModalidadeCreateInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<ModalidadeFindOneOutputDto> {
+  ): Promise<ModalidadeFindOneOutputGraphQlDto> {
     const input = ModalidadeGraphqlMapper.toCreateInput(dto);
     const result = await this.modalidadeService.create(accessContext, input);
     return ModalidadeGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => ModalidadeFindOneOutputDto, { name: "modalidadeUpdate" })
+  @Mutation(() => ModalidadeFindOneOutputGraphQlDto, { name: "modalidadeUpdate" })
   async update(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
-    @Args("data") dto: ModalidadeUpdateInputDto,
+    @Args("input") dto: ModalidadeUpdateInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<ModalidadeFindOneOutputDto> {
-    const input = ModalidadeGraphqlMapper.toUpdateInput(id, dto);
+  ): Promise<ModalidadeFindOneOutputGraphQlDto> {
+    const input = ModalidadeGraphqlMapper.toUpdateInput({ id }, dto);
     const result = await this.modalidadeService.update(accessContext, input);
     return ModalidadeGraphqlMapper.toFindOneOutputDto(result);
   }

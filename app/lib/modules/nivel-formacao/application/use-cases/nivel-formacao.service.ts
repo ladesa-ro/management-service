@@ -1,12 +1,12 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { BaseCrudService } from "@/modules/@shared";
 import type {
-  NivelFormacaoCreateInput,
-  NivelFormacaoFindOneInput,
-  NivelFormacaoFindOneOutput,
-  NivelFormacaoListInput,
-  NivelFormacaoListOutput,
-  NivelFormacaoUpdateInput,
+  NivelFormacaoCreateInputDto,
+  NivelFormacaoFindOneInputDto,
+  NivelFormacaoFindOneOutputDto,
+  NivelFormacaoListInputDto,
+  NivelFormacaoListOutputDto,
+  NivelFormacaoUpdateInputDto,
 } from "@/modules/nivel-formacao/application/dtos";
 import {
   type INivelFormacaoRepositoryPort,
@@ -19,12 +19,12 @@ import type { NivelFormacaoEntity } from "@/modules/nivel-formacao/infrastructur
 export class NivelFormacaoService
   extends BaseCrudService<
     NivelFormacaoEntity,
-    NivelFormacaoListInput,
-    NivelFormacaoListOutput,
-    NivelFormacaoFindOneInput,
-    NivelFormacaoFindOneOutput,
-    NivelFormacaoCreateInput,
-    NivelFormacaoUpdateInput
+    NivelFormacaoListInputDto,
+    NivelFormacaoListOutputDto,
+    NivelFormacaoFindOneInputDto,
+    NivelFormacaoFindOneOutputDto,
+    NivelFormacaoCreateInputDto,
+    NivelFormacaoUpdateInputDto
   >
   implements INivelFormacaoUseCasePort
 {

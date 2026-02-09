@@ -11,14 +11,14 @@ import { AccessContext, AccessContextHttp } from "@/modules/@core/access-context
 import { Public } from "@/modules/@core/authentication";
 import { AutenticacaoService } from "@/modules/autenticacao";
 import { UsuarioService } from "@/modules/usuario";
-import { UsuarioEnsinoOutputDto } from "@/server/nest/modules/usuario/rest";
+import { UsuarioEnsinoOutputRestDto } from "@/server/nest/modules/usuario/rest";
 import {
-  AuthCredentialsSetInitialPasswordInputDto,
-  AuthLoginInputDto,
-  AuthRecoverPasswordInputDto,
-  AuthRefreshInputDto,
-  AuthSessionCredentialsDto,
-  AuthWhoAmIOutputDto,
+  AuthCredentialsSetInitialPasswordInputRestDto,
+  AuthLoginInputRestDto,
+  AuthRecoverPasswordInputRestDto,
+  AuthRefreshInputRestDto,
+  AuthSessionCredentialsRestDto,
+  AuthWhoAmIOutputRestDto,
 } from "./autenticacao.rest.dto";
 
 @ApiTags("autenticacao")
@@ -34,12 +34,12 @@ export class AutenticacaoRestController {
     summary: "Retorna informacoes de ensino do usuario logado",
     operationId: "autenticacaoWhoAmIEnsino",
   })
-  @ApiOkResponse({ type: UsuarioEnsinoOutputDto })
+  @ApiOkResponse({ type: UsuarioEnsinoOutputRestDto })
   @ApiForbiddenResponse()
   @ApiBadRequestResponse()
   async whoAmIEnsino(
     @AccessContextHttp() accessContext: AccessContext,
-  ): Promise<UsuarioEnsinoOutputDto> {
+  ): Promise<UsuarioEnsinoOutputRestDto> {
     const idUsuario = accessContext.requestActor?.id;
     if (!idUsuario) {
       throw new BadRequestException();
@@ -52,12 +52,14 @@ export class AutenticacaoRestController {
     summary: "Retorna informacoes do usuario logado",
     operationId: "autenticacaoWhoAmI",
   })
-  @ApiOkResponse({ type: AuthWhoAmIOutputDto })
+  @ApiOkResponse({ type: AuthWhoAmIOutputRestDto })
   @ApiForbiddenResponse()
-  async whoAmI(@AccessContextHttp() accessContext: AccessContext): Promise<AuthWhoAmIOutputDto> {
+  async whoAmI(
+    @AccessContextHttp() accessContext: AccessContext,
+  ): Promise<AuthWhoAmIOutputRestDto> {
     return this.autenticacaoService.whoAmI(
       accessContext,
-    ) as unknown as Promise<AuthWhoAmIOutputDto>;
+    ) as unknown as Promise<AuthWhoAmIOutputRestDto>;
   }
 
   @Post("/login")
@@ -66,12 +68,12 @@ export class AutenticacaoRestController {
     summary: "Realiza login com matricula e senha",
     operationId: "autenticacaoLogin",
   })
-  @ApiCreatedResponse({ type: AuthSessionCredentialsDto })
+  @ApiCreatedResponse({ type: AuthSessionCredentialsRestDto })
   @ApiForbiddenResponse()
   async login(
     @AccessContextHttp() accessContext: AccessContext,
-    @Body() dto: AuthLoginInputDto,
-  ): Promise<AuthSessionCredentialsDto> {
+    @Body() dto: AuthLoginInputRestDto,
+  ): Promise<AuthSessionCredentialsRestDto> {
     return this.autenticacaoService.login(accessContext, dto);
   }
 
@@ -81,12 +83,12 @@ export class AutenticacaoRestController {
     summary: "Atualiza token de acesso usando refresh token",
     operationId: "autenticacaoRefresh",
   })
-  @ApiCreatedResponse({ type: AuthSessionCredentialsDto })
+  @ApiCreatedResponse({ type: AuthSessionCredentialsRestDto })
   @ApiForbiddenResponse()
   async refresh(
     @AccessContextHttp() accessContext: AccessContext,
-    @Body() dto: AuthRefreshInputDto,
-  ): Promise<AuthSessionCredentialsDto> {
+    @Body() dto: AuthRefreshInputRestDto,
+  ): Promise<AuthSessionCredentialsRestDto> {
     return this.autenticacaoService.refresh(accessContext, dto);
   }
 
@@ -99,7 +101,7 @@ export class AutenticacaoRestController {
   @ApiForbiddenResponse()
   async definirSenha(
     @AccessContextHttp() accessContext: AccessContext,
-    @Body() dto: AuthCredentialsSetInitialPasswordInputDto,
+    @Body() dto: AuthCredentialsSetInitialPasswordInputRestDto,
   ): Promise<boolean> {
     return this.autenticacaoService.definirSenha(accessContext, dto);
   }
@@ -113,7 +115,7 @@ export class AutenticacaoRestController {
   @ApiForbiddenResponse()
   async redefinirSenha(
     @AccessContextHttp() accessContext: AccessContext,
-    @Body() dto: AuthRecoverPasswordInputDto,
+    @Body() dto: AuthRecoverPasswordInputRestDto,
   ): Promise<boolean> {
     return this.autenticacaoService.recoverPassword(accessContext, dto);
   }

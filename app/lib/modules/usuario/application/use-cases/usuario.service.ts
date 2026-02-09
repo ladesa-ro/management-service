@@ -16,13 +16,13 @@ import {
 import { ArquivoService } from "@/modules/arquivo/application/use-cases/arquivo.service";
 import { ImagemService } from "@/modules/imagem/application/use-cases/imagem.service";
 import type {
-  UsuarioCreateInput,
+  UsuarioCreateInputDto,
   UsuarioEnsinoOutput,
-  UsuarioFindOneInput,
-  UsuarioFindOneOutput,
-  UsuarioListInput,
-  UsuarioListOutput,
-  UsuarioUpdateInput,
+  UsuarioFindOneInputDto,
+  UsuarioFindOneOutputDto,
+  UsuarioListInputDto,
+  UsuarioListOutputDto,
+  UsuarioUpdateInputDto,
 } from "@/modules/usuario/application/dtos";
 import {
   type IUsuarioRepositoryPort,
@@ -42,7 +42,7 @@ export class UsuarioService implements IUsuarioUseCasePort {
 
   async usuarioEnsinoById(
     accessContext: AccessContext | null,
-    dto: UsuarioFindOneInput,
+    dto: UsuarioFindOneInputDto,
     selection?: string[] | boolean,
   ): Promise<UsuarioEnsinoOutput> {
     const usuario = await this.findByIdStrict(accessContext, dto, selection);
@@ -58,32 +58,32 @@ export class UsuarioService implements IUsuarioUseCasePort {
   async internalFindByMatriculaSiape(
     matriculaSiape: string,
     selection?: string[] | boolean,
-  ): Promise<UsuarioFindOneOutput | null> {
+  ): Promise<UsuarioFindOneOutputDto | null> {
     return this.usuarioRepository.findByMatriculaSiape(matriculaSiape, selection);
   }
 
   // Generic method names
   async findAll(
     accessContext: AccessContext,
-    dto: UsuarioListInput | null = null,
+    dto: UsuarioListInputDto | null = null,
     selection?: string[] | boolean,
-  ): Promise<UsuarioListOutput> {
+  ): Promise<UsuarioListOutputDto> {
     return this.usuarioRepository.findAll(accessContext, dto, selection);
   }
 
   async findById(
     accessContext: AccessContext | null,
-    dto: UsuarioFindOneInput,
+    dto: UsuarioFindOneInputDto,
     selection?: string[] | boolean,
-  ): Promise<UsuarioFindOneOutput | null> {
+  ): Promise<UsuarioFindOneOutputDto | null> {
     return this.usuarioRepository.findById(accessContext, dto, selection);
   }
 
   async findByIdStrict(
     accessContext: AccessContext | null,
-    dto: UsuarioFindOneInput,
+    dto: UsuarioFindOneInputDto,
     selection?: string[] | boolean,
-  ): Promise<UsuarioFindOneOutput> {
+  ): Promise<UsuarioFindOneOutputDto> {
     const usuario = await this.usuarioRepository.findById(accessContext, dto, selection);
 
     if (!usuario) {
@@ -95,17 +95,17 @@ export class UsuarioService implements IUsuarioUseCasePort {
 
   async findByIdSimple(
     accessContext: AccessContext,
-    id: UsuarioFindOneInput["id"],
+    id: UsuarioFindOneInputDto["id"],
     selection?: string[],
-  ): Promise<UsuarioFindOneOutput | null> {
+  ): Promise<UsuarioFindOneOutputDto | null> {
     return this.usuarioRepository.findByIdSimple(accessContext, id, selection);
   }
 
   async findByIdSimpleStrict(
     accessContext: AccessContext,
-    id: UsuarioFindOneInput["id"],
+    id: UsuarioFindOneInputDto["id"],
     selection?: string[],
-  ): Promise<UsuarioFindOneOutput> {
+  ): Promise<UsuarioFindOneOutputDto> {
     const usuario = await this.usuarioRepository.findByIdSimple(accessContext, id, selection);
 
     if (!usuario) {
@@ -129,7 +129,7 @@ export class UsuarioService implements IUsuarioUseCasePort {
 
   async updateImagemCapa(
     accessContext: AccessContext,
-    dto: UsuarioFindOneInput,
+    dto: UsuarioFindOneInputDto,
     file: Express.Multer.File,
   ) {
     const currentUsuario = await this.findByIdStrict(accessContext, { id: dto.id });
@@ -161,7 +161,7 @@ export class UsuarioService implements IUsuarioUseCasePort {
 
   async updateImagemPerfil(
     accessContext: AccessContext,
-    dto: UsuarioFindOneInput,
+    dto: UsuarioFindOneInputDto,
     file: Express.Multer.File,
   ) {
     const currentUsuario = await this.findByIdStrict(accessContext, { id: dto.id });
@@ -181,8 +181,8 @@ export class UsuarioService implements IUsuarioUseCasePort {
 
   async create(
     accessContext: AccessContext,
-    dto: UsuarioCreateInput,
-  ): Promise<UsuarioFindOneOutput> {
+    dto: UsuarioCreateInputDto,
+  ): Promise<UsuarioFindOneOutputDto> {
     await accessContext.ensurePermission("usuario:create", { dto } as any);
 
     const input = pick(dto, ["nome", "matriculaSiape", "email"]);
@@ -223,8 +223,8 @@ export class UsuarioService implements IUsuarioUseCasePort {
 
   async update(
     accessContext: AccessContext,
-    dto: UsuarioFindOneInput & UsuarioUpdateInput,
-  ): Promise<UsuarioFindOneOutput> {
+    dto: UsuarioFindOneInputDto & UsuarioUpdateInputDto,
+  ): Promise<UsuarioFindOneOutputDto> {
     const currentUsuario = await this.findByIdStrict(accessContext, dto);
 
     const currentMatriculaSiape =
@@ -285,7 +285,7 @@ export class UsuarioService implements IUsuarioUseCasePort {
     return this.findByIdStrict(accessContext, { id: usuario.id });
   }
 
-  async deleteOneById(accessContext: AccessContext, dto: UsuarioFindOneInput): Promise<boolean> {
+  async deleteOneById(accessContext: AccessContext, dto: UsuarioFindOneInputDto): Promise<boolean> {
     await accessContext.ensurePermission("usuario:delete", { dto }, dto.id);
 
     const usuario = await this.findByIdStrict(accessContext, dto);
@@ -298,7 +298,7 @@ export class UsuarioService implements IUsuarioUseCasePort {
   }
 
   private async ensureDtoAvailability(
-    dto: Partial<Pick<UsuarioFindOneOutput, "email" | "matriculaSiape">>,
+    dto: Partial<Pick<UsuarioFindOneOutputDto, "email" | "matriculaSiape">>,
     currentUsuarioId: string | null = null,
   ) {
     let isEmailAvailable = true;

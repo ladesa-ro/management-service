@@ -1,34 +1,34 @@
 import {
-  EntityOutput,
-  FindOneInput,
+  EntityOutputDto,
+  FindOneInputDto,
   IFilterAcceptableValues,
-  ObjectUuidRef,
-  PaginationInput,
-  PaginationResult,
+  ObjectUuidRefDto,
+  PaginationInputDto,
+  PaginationResultDto,
 } from "@/modules/@shared/application/dtos";
-import { AmbienteFindOneOutput, AmbienteInputRef } from "@/modules/ambiente";
-import { UsuarioFindOneOutput, UsuarioInputRef } from "@/modules/usuario/application/dtos";
+import { AmbienteFindOneOutputDto, AmbienteInputRefDto } from "@/modules/ambiente";
+import { UsuarioFindOneOutputDto, UsuarioInputRefDto } from "@/modules/usuario/application/dtos";
 
 // ============================================================================
 // FindOne Input/Output
 // ============================================================================
 
-export class ReservaFindOneInput extends FindOneInput {}
+export class ReservaFindOneInputDto extends FindOneInputDto {}
 
-export class ReservaFindOneOutput extends EntityOutput {
+export class ReservaFindOneOutputDto extends EntityOutputDto {
   situacao!: string;
   motivo!: string | null;
   tipo!: string | null;
   rrule!: string;
-  ambiente!: AmbienteFindOneOutput;
-  usuario!: UsuarioFindOneOutput;
+  ambiente!: AmbienteFindOneOutputDto;
+  usuario!: UsuarioFindOneOutputDto;
 }
 
 // ============================================================================
 // List Input/Output
 // ============================================================================
 
-export class ReservaListInput extends PaginationInput {
+export class ReservaListInputDto extends PaginationInputDto {
   "filter.id"?: IFilterAcceptableValues;
   "filter.situacao"?: IFilterAcceptableValues;
   "filter.tipo"?: IFilterAcceptableValues;
@@ -38,32 +38,32 @@ export class ReservaListInput extends PaginationInput {
   "filter.usuario.id"?: IFilterAcceptableValues;
 }
 
-export class ReservaListOutput extends PaginationResult<ReservaFindOneOutput> {}
+export class ReservaListOutputDto extends PaginationResultDto<ReservaFindOneOutputDto> {}
 
 // ============================================================================
 // Create/Update Input
 // ============================================================================
 
-export class ReservaCreateInput {
+export class ReservaCreateInputDto {
   situacao!: string;
   motivo?: string | null;
   tipo?: string | null;
   rrule!: string;
-  ambiente!: AmbienteInputRef;
-  usuario!: UsuarioInputRef;
+  ambiente!: AmbienteInputRefDto;
+  usuario!: UsuarioInputRefDto;
 }
 
-export class ReservaUpdateInput {
+export class ReservaUpdateInputDto {
   situacao?: string;
   motivo?: string | null;
   tipo?: string | null;
   rrule?: string;
-  ambiente?: AmbienteInputRef;
-  usuario?: UsuarioInputRef;
+  ambiente?: AmbienteInputRefDto;
+  usuario?: UsuarioInputRefDto;
 }
 
 // ============================================================================
 // Input Ref
 // ============================================================================
 
-export type ReservaInputRef = ObjectUuidRef;
+export type ReservaInputRefDto = ObjectUuidRefDto;

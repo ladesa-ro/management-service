@@ -1,66 +1,66 @@
 import {
-  EntityOutput,
-  FindOneInput,
+  EntityOutputDto,
+  FindOneInputDto,
   IFilterAcceptableValues,
-  ObjectUuidRef,
-  PaginationInput,
-  PaginationResult,
+  ObjectUuidRefDto,
+  PaginationInputDto,
+  PaginationResultDto,
   ScalarDate,
 } from "@/modules/@shared";
 import {
-  DiarioProfessorFindOneOutput,
-  DiarioProfessorInputRef,
+  DiarioProfessorFindOneOutputDto,
+  DiarioProfessorInputRefDto,
 } from "@/modules/diario-professor/application/dtos";
-import { HorarioGeradoFindOneOutput, HorarioGeradoInputRef } from "@/modules/horario-gerado";
+import { HorarioGeradoFindOneOutputDto, HorarioGeradoInputRefDto } from "@/modules/horario-gerado";
 import {
-  IntervaloDeTempoFindOneOutput,
-  IntervaloDeTempoInputRef,
+  IntervaloDeTempoFindOneOutputDto,
+  IntervaloDeTempoInputRefDto,
 } from "@/modules/intervalo-de-tempo";
 
 // ============================================================================
 // FindOne Input/Output
 // ============================================================================
 
-export class HorarioGeradoAulaFindOneInput extends FindOneInput {}
+export class HorarioGeradoAulaFindOneInputDto extends FindOneInputDto {}
 
-export class HorarioGeradoAulaFindOneOutput extends EntityOutput {
+export class HorarioGeradoAulaFindOneOutputDto extends EntityOutputDto {
   data!: ScalarDate;
-  diarioProfessor!: DiarioProfessorFindOneOutput;
-  horarioGerado!: HorarioGeradoFindOneOutput;
-  intervaloDeTempo!: IntervaloDeTempoFindOneOutput;
+  diarioProfessor!: DiarioProfessorFindOneOutputDto;
+  horarioGerado!: HorarioGeradoFindOneOutputDto;
+  intervaloDeTempo!: IntervaloDeTempoFindOneOutputDto;
 }
 
 // ============================================================================
 // List Input/Output
 // ============================================================================
 
-export class HorarioGeradoAulaListInput extends PaginationInput {
+export class HorarioGeradoAulaListInputDto extends PaginationInputDto {
   "filter.id"?: IFilterAcceptableValues;
   "filter.horarioGerado.id"?: IFilterAcceptableValues;
 }
 
-export class HorarioGeradoAulaListOutput extends PaginationResult<HorarioGeradoAulaFindOneOutput> {}
+export class HorarioGeradoAulaListOutputDto extends PaginationResultDto<HorarioGeradoAulaFindOneOutputDto> {}
 
 // ============================================================================
 // Create/Update Input
 // ============================================================================
 
-export class HorarioGeradoAulaCreateInput {
+export class HorarioGeradoAulaCreateInputDto {
   data!: ScalarDate;
-  diarioProfessor!: DiarioProfessorInputRef;
-  horarioGerado!: HorarioGeradoInputRef;
-  intervaloDeTempo!: IntervaloDeTempoInputRef;
+  diarioProfessor!: DiarioProfessorInputRefDto;
+  horarioGerado!: HorarioGeradoInputRefDto;
+  intervaloDeTempo!: IntervaloDeTempoInputRefDto;
 }
 
-export class HorarioGeradoAulaUpdateInput {
+export class HorarioGeradoAulaUpdateInputDto {
   data?: ScalarDate;
-  diarioProfessor?: DiarioProfessorInputRef;
-  horarioGerado?: HorarioGeradoInputRef;
-  intervaloDeTempo?: IntervaloDeTempoInputRef;
+  diarioProfessor?: DiarioProfessorInputRefDto;
+  horarioGerado?: HorarioGeradoInputRefDto;
+  intervaloDeTempo?: IntervaloDeTempoInputRefDto;
 }
 
 // ============================================================================
 // Input Ref
 // ============================================================================
 
-export type HorarioGeradoAulaInputRef = ObjectUuidRef;
+export type HorarioGeradoAulaInputRefDto = ObjectUuidRefDto;

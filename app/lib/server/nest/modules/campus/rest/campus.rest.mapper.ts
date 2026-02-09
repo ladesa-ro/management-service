@@ -1,20 +1,20 @@
 import {
-  CampusCreateInput,
-  CampusFindOneInput,
-  CampusFindOneOutput,
-  CampusListInput,
-  CampusListOutput,
-  CampusUpdateInput,
-} from "@/modules/campus";
-import { EnderecoRestMapper } from "@/server/nest/modules/endereco/rest";
-import { mapPaginationMeta } from "@/server/nest/shared/mappers";
-import {
   CampusCreateInputDto,
   CampusFindOneInputDto,
   CampusFindOneOutputDto,
   CampusListInputDto,
   CampusListOutputDto,
   CampusUpdateInputDto,
+} from "@/modules/campus";
+import { EnderecoRestMapper } from "@/server/nest/modules/endereco/rest";
+import { mapPaginationMeta } from "@/server/nest/shared/mappers";
+import {
+  CampusCreateInputRestDto,
+  CampusFindOneInputRestDto,
+  CampusFindOneOutputRestDto,
+  CampusListInputRestDto,
+  CampusListOutputRestDto,
+  CampusUpdateInputRestDto,
 } from "./campus.rest.dto";
 
 export class CampusRestMapper {
@@ -22,18 +22,18 @@ export class CampusRestMapper {
   // Input: Server DTO -> Core DTO
   // ============================================================================
 
-  static toFindOneInput(dto: CampusFindOneInputDto): CampusFindOneInput {
-    const input = new CampusFindOneInput();
+  static toFindOneInput(dto: CampusFindOneInputRestDto): CampusFindOneInputDto {
+    const input = new CampusFindOneInputDto();
     input.id = dto.id;
     return input;
   }
 
-  static toListInput(dto: CampusListInputDto | null): CampusListInput | null {
+  static toListInput(dto: CampusListInputRestDto | null): CampusListInputDto | null {
     if (!dto) {
       return null;
     }
 
-    const input = new CampusListInput();
+    const input = new CampusListInputDto();
     input.page = dto.page;
     input.limit = dto.limit;
     input.search = dto.search;
@@ -43,8 +43,8 @@ export class CampusRestMapper {
     return input;
   }
 
-  static toCreateInput(dto: CampusCreateInputDto): CampusCreateInput {
-    const input = new CampusCreateInput();
+  static toCreateInput(dto: CampusCreateInputRestDto): CampusCreateInputDto {
+    const input = new CampusCreateInputDto();
     input.nomeFantasia = dto.nomeFantasia;
     input.razaoSocial = dto.razaoSocial;
     input.apelido = dto.apelido;
@@ -54,10 +54,10 @@ export class CampusRestMapper {
   }
 
   static toUpdateInput(
-    params: CampusFindOneInputDto,
-    dto: CampusUpdateInputDto,
-  ): CampusFindOneInput & CampusUpdateInput {
-    const input = new CampusFindOneInput() as CampusFindOneInput & CampusUpdateInput;
+    params: CampusFindOneInputRestDto,
+    dto: CampusUpdateInputRestDto,
+  ): CampusFindOneInputDto & CampusUpdateInputDto {
+    const input = new CampusFindOneInputDto() as CampusFindOneInputDto & CampusUpdateInputDto;
     input.id = params.id;
     if (dto.nomeFantasia !== undefined) {
       input.nomeFantasia = dto.nomeFantasia;
@@ -81,8 +81,8 @@ export class CampusRestMapper {
   // Output: Core DTO -> Server DTO
   // ============================================================================
 
-  static toFindOneOutputDto(output: CampusFindOneOutput): CampusFindOneOutputDto {
-    const dto = new CampusFindOneOutputDto();
+  static toFindOneOutputDto(output: CampusFindOneOutputDto): CampusFindOneOutputRestDto {
+    const dto = new CampusFindOneOutputRestDto();
     dto.id = output.id;
     dto.nomeFantasia = output.nomeFantasia;
     dto.razaoSocial = output.razaoSocial;
@@ -95,8 +95,8 @@ export class CampusRestMapper {
     return dto;
   }
 
-  static toListOutputDto(output: CampusListOutput): CampusListOutputDto {
-    const dto = new CampusListOutputDto();
+  static toListOutputDto(output: CampusListOutputDto): CampusListOutputRestDto {
+    const dto = new CampusListOutputRestDto();
     dto.meta = mapPaginationMeta(output.meta);
     dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
     return dto;

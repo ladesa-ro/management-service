@@ -1,5 +1,4 @@
-import { ArgsType, Field, InputType, Int, ObjectType } from "@nestjs/graphql";
-import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { IsArray, IsInt, IsOptional, IsString, ValidateNested } from "class-validator";
 import {
@@ -8,49 +7,46 @@ import {
   simpleProperty,
 } from "@/modules/@shared/infrastructure/persistence/typeorm/metadata";
 import {
-  PaginationInputDto,
-  PaginationMetaDto,
+  PaginationInputRestDto,
+  PaginationMetaRestDto,
   TransformToArray,
 } from "@/modules/@shared/infrastructure/presentation/rest/dtos";
-import { EstadoFindOneOutputDto } from "@/server/nest/modules/estado/rest/estado.rest.dto";
+import { EstadoFindOneOutputRestDto } from "@/server/nest/modules/estado/rest/estado.rest.dto";
 
 // ============================================================================
 // FindOne Output
 // ============================================================================
 
-@ObjectType("Cidade")
+@ApiSchema({ name: "CidadeFindOneOutputDto" })
 @RegisterModel({
-  name: "CidadeFindOneOutput",
+  name: "CidadeFindOneOutputDto",
   properties: [
     simpleProperty("id"),
     simpleProperty("nome"),
-    referenceProperty("estado", "EstadoFindOneOutput"),
+    referenceProperty("estado", "EstadoFindOneOutputDto"),
   ],
 })
-export class CidadeFindOneOutputDto {
+export class CidadeFindOneOutputRestDto {
   @ApiProperty({ description: "Identificador do registro (numerico)" })
-  @Field(() => Int)
   @IsInt()
   id: number;
 
   @ApiProperty({ description: "Nome oficial da cidade" })
-  @Field()
   @IsString()
   nome: string;
 
-  @ApiProperty({ type: () => EstadoFindOneOutputDto, description: "Estado da cidade" })
-  @Field(() => EstadoFindOneOutputDto)
+  @ApiProperty({ type: () => EstadoFindOneOutputRestDto, description: "Estado da cidade" })
   @ValidateNested()
-  @Type(() => EstadoFindOneOutputDto)
-  estado: EstadoFindOneOutputDto;
+  @Type(() => EstadoFindOneOutputRestDto)
+  estado: EstadoFindOneOutputRestDto;
 }
 
 // ============================================================================
 // List Input/Output
 // ============================================================================
 
-@ArgsType()
-export class CidadeListInputDto extends PaginationInputDto {
+@ApiSchema({ name: "CidadeListInputDto" })
+export class CidadeListInputRestDto extends PaginationInputRestDto {
   @ApiPropertyOptional({
     description: "Filtro por ID",
     type: [String],
@@ -92,26 +88,22 @@ export class CidadeListInputDto extends PaginationInputDto {
   "filter.estado.sigla"?: string[];
 }
 
-@ObjectType("CidadeListOutput")
-export class CidadeListOutputDto {
-  @ApiProperty({ type: () => PaginationMetaDto, description: "Metadados da busca" })
-  @Field(() => PaginationMetaDto)
-  meta: PaginationMetaDto;
+@ApiSchema({ name: "CidadeListOutputDto" })
+export class CidadeListOutputRestDto {
+  @ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" })
+  meta: PaginationMetaRestDto;
 
-  @ApiProperty({ type: () => [CidadeFindOneOutputDto], description: "Resultados da busca" })
-  @Field(() => [CidadeFindOneOutputDto])
-  data: CidadeFindOneOutputDto[];
+  @ApiProperty({ type: () => [CidadeFindOneOutputRestDto], description: "Resultados da busca" })
+  data: CidadeFindOneOutputRestDto[];
 }
 
 // ============================================================================
 // FindOne Input (for path params)
 // ============================================================================
 
-@ArgsType()
-@InputType("CidadeFindOneInput")
-export class CidadeFindOneInputDto {
+@ApiSchema({ name: "CidadeFindOneInputDto" })
+export class CidadeFindOneInputRestDto {
   @ApiProperty({ description: "Identificador do registro (numerico)" })
-  @Field(() => Int)
   @Type(() => Number)
   @IsInt()
   id: number;

@@ -1,26 +1,61 @@
 import {
-  TurmaCreateInput,
-  TurmaFindOneInput,
-  TurmaFindOneOutput,
-  TurmaListInput,
-  TurmaListOutput,
-  TurmaUpdateInput,
+  TurmaCreateInputDto,
+  TurmaFindOneInputDto,
+  TurmaFindOneOutputDto,
+  TurmaListInputDto,
+  TurmaListOutputDto,
+  TurmaUpdateInputDto,
 } from "@/modules/turma";
+import { AmbienteGraphqlMapper } from "@/server/nest/modules/ambiente/graphql/ambiente.graphql.mapper";
+import { CursoGraphqlMapper } from "@/server/nest/modules/curso/graphql/curso.graphql.mapper";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import {
-  TurmaCreateInputDto,
-  TurmaFindOneOutputDto,
-  TurmaUpdateInputDto,
-} from "../rest/turma.rest.dto";
-import { TurmaListInputGqlDto, TurmaListOutputGqlDto } from "./turma.graphql.dto";
+  TurmaCreateInputGraphQlDto,
+  TurmaFindOneOutputGraphQlDto,
+  TurmaListInputGraphQlDto,
+  TurmaListOutputGraphQlDto,
+  TurmaUpdateInputGraphQlDto,
+} from "./turma.graphql.dto";
+
+// Helper to map imagem output
+function mapImagemOutput(imagem: any): any {
+  if (!imagem) return null;
+  return {
+    id: imagem.id,
+    descricao: imagem.descricao,
+    versoes: (imagem.versoes || []).map((v: any) => ({
+      id: v.id,
+      largura: v.largura,
+      altura: v.altura,
+      formato: v.formato,
+      mimeType: v.mimeType,
+      arquivo: {
+        id: v.arquivo.id,
+        name: v.arquivo.name,
+        mimeType: v.arquivo.mimeType,
+        sizeBytes: v.arquivo.sizeBytes,
+        storageType: v.arquivo.storageType,
+        dateCreated: v.arquivo.dateCreated,
+        dateUpdated: v.arquivo.dateUpdated,
+        dateDeleted: v.arquivo.dateDeleted,
+      },
+      dateCreated: v.dateCreated,
+      dateUpdated: v.dateUpdated,
+      dateDeleted: v.dateDeleted,
+    })),
+    dateCreated: imagem.dateCreated,
+    dateUpdated: imagem.dateUpdated,
+    dateDeleted: imagem.dateDeleted,
+  };
+}
 
 export class TurmaGraphqlMapper {
-  static toListInput(dto: TurmaListInputGqlDto | null): TurmaListInput | null {
+  static toListInput(dto: TurmaListInputGraphQlDto | null): TurmaListInputDto | null {
     if (!dto) {
       return null;
     }
 
-    const input = new TurmaListInput();
+    const input = new TurmaListInputDto();
     input.page = dto.page;
     input.limit = dto.limit;
     input.search = dto.search;
@@ -29,42 +64,56 @@ export class TurmaGraphqlMapper {
     return input;
   }
 
-  static toFindOneInput(id: string, selection?: string[]): TurmaFindOneInput {
-    const input = new TurmaFindOneInput();
+  static toFindOneInput(id: string, selection?: string[]): TurmaFindOneInputDto {
+    const input = new TurmaFindOneInputDto();
     input.id = id;
     input.selection = selection;
     return input;
   }
 
-  static toCreateInput(dto: TurmaCreateInputDto): TurmaCreateInput {
-    const input = new TurmaCreateInput();
+  static toCreateInput(dto: TurmaCreateInputGraphQlDto): TurmaCreateInputDto {
+    const input = new TurmaCreateInputDto();
     input.periodo = dto.periodo;
-    input.curso = dto.curso;
-    input.ambientePadraoAula = dto.ambientePadraoAula;
+    input.curso = { id: dto.curso.id };
+    input.ambientePadraoAula = dto.ambientePadraoAula ? { id: dto.ambientePadraoAula.id } : null;
+    input.imagemCapa = dto.imagemCapa ? { id: dto.imagemCapa.id } : null;
     return input;
   }
 
-  static toUpdateInput(id: string, dto: TurmaUpdateInputDto): TurmaFindOneInput & TurmaUpdateInput {
-    const input = new TurmaFindOneInput() as TurmaFindOneInput & TurmaUpdateInput;
-    input.id = id;
-    if (dto.periodo !== undefined) {
-      input.periodo = dto.periodo;
-    }
-    if (dto.curso !== undefined) {
-      input.curso = dto.curso;
-    }
+  static toUpdateInput(
+    params: { id: string },
+    dto: TurmaUpdateInputGraphQlDto,
+  ): TurmaFindOneInputDto & TurmaUpdateInputDto {
+    const input = new TurmaFindOneInputDto() as TurmaFindOneInputDto & TurmaUpdateInputDto;
+    input.id = params.id;
+    if (dto.periodo !== undefined) input.periodo = dto.periodo;
+    if (dto.curso !== undefined) input.curso = { id: dto.curso.id };
     if (dto.ambientePadraoAula !== undefined) {
-      input.ambientePadraoAula = dto.ambientePadraoAula;
+      input.ambientePadraoAula = dto.ambientePadraoAula ? { id: dto.ambientePadraoAula.id } : null;
+    }
+    if (dto.imagemCapa !== undefined) {
+      input.imagemCapa = dto.imagemCapa ? { id: dto.imagemCapa.id } : null;
     }
     return input;
   }
 
-  static toFindOneOutputDto(output: TurmaFindOneOutput): TurmaFindOneOutputDto {
-    return output as unknown as TurmaFindOneOutputDto;
+  static toFindOneOutputDto(output: TurmaFindOneOutputDto): TurmaFindOneOutputGraphQlDto {
+    const dto = new TurmaFindOneOutputGraphQlDto();
+    dto.id = output.id;
+    dto.periodo = output.periodo;
+    dto.curso = CursoGraphqlMapper.toFindOneOutputDto(output.curso);
+    dto.ambientePadraoAula = output.ambientePadraoAula
+      ? AmbienteGraphqlMapper.toFindOneOutputDto(output.ambientePadraoAula)
+      : null;
+    dto.imagemCapa = mapImagemOutput(output.imagemCapa);
+    dto.dateCreated = output.dateCreated as unknown as Date;
+    dto.dateUpdated = output.dateUpdated as unknown as Date;
+    dto.dateDeleted = output.dateDeleted as unknown as Date | null;
+    return dto;
   }
 
-  static toListOutputDto(output: TurmaListOutput): TurmaListOutputGqlDto {
-    const dto = new TurmaListOutputGqlDto();
+  static toListOutputDto(output: TurmaListOutputDto): TurmaListOutputGraphQlDto {
+    const dto = new TurmaListOutputGraphQlDto();
     dto.meta = mapPaginationMeta(output.meta);
     dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
     return dto;

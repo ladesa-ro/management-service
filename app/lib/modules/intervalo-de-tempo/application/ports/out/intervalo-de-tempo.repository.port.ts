@@ -1,8 +1,8 @@
 import type { IBaseCrudRepositoryPort, PartialEntity } from "@/modules/@shared";
 import type {
-  IntervaloDeTempoFindOneOutput,
-  IntervaloDeTempoInput,
-  IntervaloDeTempoListOutput,
+  IntervaloDeTempoFindOneOutputDto,
+  IntervaloDeTempoInputDto,
+  IntervaloDeTempoListOutputDto,
 } from "@/modules/intervalo-de-tempo";
 import type { IntervaloDeTempoEntity } from "@/modules/intervalo-de-tempo/infrastructure/persistence/typeorm";
 
@@ -16,20 +16,20 @@ export interface IIntervaloDeTempoRepositoryPort
   extends Omit<
     IBaseCrudRepositoryPort<
       IntervaloDeTempoEntity,
-      IntervaloDeTempoListOutput,
-      IntervaloDeTempoFindOneOutput
+      IntervaloDeTempoListOutputDto,
+      IntervaloDeTempoFindOneOutputDto
     >,
     "softDeleteById"
   > {
   /**
    * Busca um intervalo de tempo por parâmetros específicos
    */
-  findOne(dto: IntervaloDeTempoInput): Promise<IntervaloDeTempoFindOneOutput | null>;
+  findOne(dto: IntervaloDeTempoInputDto): Promise<IntervaloDeTempoFindOneOutputDto | null>;
 
   /**
    * Busca um intervalo de tempo por ID ou lança erro
    */
-  findOneByIdOrFail(id: string): Promise<IntervaloDeTempoFindOneOutput>;
+  findOneByIdOrFail(id: string): Promise<IntervaloDeTempoFindOneOutputDto>;
 
   /**
    * Sobrescreve merge com assinatura específica

@@ -7,12 +7,12 @@ import { HorarioGeradoService } from "@/modules/horario-gerado";
 import type { HorarioGeradoAulaEntity } from "@/modules/horario-gerado-aula/infrastructure/persistence/typeorm";
 import { IntervaloDeTempoService } from "@/modules/intervalo-de-tempo/application/use-cases/intervalo-de-tempo.service";
 import type {
-  HorarioGeradoAulaCreateInput,
-  HorarioGeradoAulaFindOneInput,
-  HorarioGeradoAulaFindOneOutput,
-  HorarioGeradoAulaListInput,
-  HorarioGeradoAulaListOutput,
-  HorarioGeradoAulaUpdateInput,
+  HorarioGeradoAulaCreateInputDto,
+  HorarioGeradoAulaFindOneInputDto,
+  HorarioGeradoAulaFindOneOutputDto,
+  HorarioGeradoAulaListInputDto,
+  HorarioGeradoAulaListOutputDto,
+  HorarioGeradoAulaUpdateInputDto,
 } from "../dtos";
 import {
   HORARIO_GERADO_AULA_REPOSITORY_PORT,
@@ -22,12 +22,12 @@ import {
 @Injectable()
 export class HorarioGeradoAulaService extends BaseCrudService<
   HorarioGeradoAulaEntity,
-  HorarioGeradoAulaListInput,
-  HorarioGeradoAulaListOutput,
-  HorarioGeradoAulaFindOneInput,
-  HorarioGeradoAulaFindOneOutput,
-  HorarioGeradoAulaCreateInput,
-  HorarioGeradoAulaUpdateInput
+  HorarioGeradoAulaListInputDto,
+  HorarioGeradoAulaListOutputDto,
+  HorarioGeradoAulaFindOneInputDto,
+  HorarioGeradoAulaFindOneOutputDto,
+  HorarioGeradoAulaCreateInputDto,
+  HorarioGeradoAulaUpdateInputDto
 > {
   protected readonly resourceName = "HorarioGeradoAula";
   protected readonly createAction = "horario_gerado_aula:create";
@@ -49,7 +49,7 @@ export class HorarioGeradoAulaService extends BaseCrudService<
   protected override async beforeCreate(
     accessContext: AccessContext,
     entity: HorarioGeradoAulaEntity,
-    dto: HorarioGeradoAulaCreateInput,
+    dto: HorarioGeradoAulaCreateInputDto,
   ): Promise<void> {
     if (dto.diarioProfessor) {
       const diarioProfessor = await this.diarioProfessorService.findByIdStrict(
@@ -79,7 +79,7 @@ export class HorarioGeradoAulaService extends BaseCrudService<
   protected override async beforeUpdate(
     accessContext: AccessContext,
     entity: HorarioGeradoAulaEntity,
-    dto: HorarioGeradoAulaFindOneInput & HorarioGeradoAulaUpdateInput,
+    dto: HorarioGeradoAulaFindOneInputDto & HorarioGeradoAulaUpdateInputDto,
   ): Promise<void> {
     if (has(dto, "diarioProfessor") && dto.diarioProfessor !== undefined) {
       const diarioProfessor = await this.diarioProfessorService.findByIdStrict(

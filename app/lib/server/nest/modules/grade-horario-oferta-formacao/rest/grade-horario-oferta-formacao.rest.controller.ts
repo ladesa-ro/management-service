@@ -10,12 +10,12 @@ import {
 import { AccessContext, AccessContextHttp } from "@/modules/@core/access-context";
 import { GradeHorarioOfertaFormacaoService } from "@/modules/grade-horario-oferta-formacao";
 import {
-  GradeHorarioOfertaFormacaoCreateInputDto,
-  GradeHorarioOfertaFormacaoFindOneInputDto,
-  GradeHorarioOfertaFormacaoFindOneOutputDto,
-  GradeHorarioOfertaFormacaoListInputDto,
-  GradeHorarioOfertaFormacaoListOutputDto,
-  GradeHorarioOfertaFormacaoUpdateInputDto,
+  GradeHorarioOfertaFormacaoCreateInputRestDto,
+  GradeHorarioOfertaFormacaoFindOneInputRestDto,
+  GradeHorarioOfertaFormacaoFindOneOutputRestDto,
+  GradeHorarioOfertaFormacaoListInputRestDto,
+  GradeHorarioOfertaFormacaoListOutputRestDto,
+  GradeHorarioOfertaFormacaoUpdateInputRestDto,
 } from "./grade-horario-oferta-formacao.rest.dto";
 import { GradeHorarioOfertaFormacaoRestMapper } from "./grade-horario-oferta-formacao.rest.mapper";
 
@@ -29,12 +29,12 @@ export class GradeHorarioOfertaFormacaoRestController {
     summary: "Lista grades horarios de ofertas de formacoes",
     operationId: "gradeHorarioOfertaFormacaoFindAll",
   })
-  @ApiOkResponse({ type: GradeHorarioOfertaFormacaoListOutputDto })
+  @ApiOkResponse({ type: GradeHorarioOfertaFormacaoListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
     @AccessContextHttp() accessContext: AccessContext,
-    @Query() dto: GradeHorarioOfertaFormacaoListInputDto,
-  ): Promise<GradeHorarioOfertaFormacaoListOutputDto> {
+    @Query() dto: GradeHorarioOfertaFormacaoListInputRestDto,
+  ): Promise<GradeHorarioOfertaFormacaoListOutputRestDto> {
     const input = GradeHorarioOfertaFormacaoRestMapper.toListInput(dto);
     const result = await this.gradeHorarioOfertaFormacaoService.findAll(accessContext, input);
     return GradeHorarioOfertaFormacaoRestMapper.toListOutputDto(result);
@@ -45,13 +45,13 @@ export class GradeHorarioOfertaFormacaoRestController {
     summary: "Busca uma grade horario de oferta de formacao por ID",
     operationId: "gradeHorarioOfertaFormacaoFindById",
   })
-  @ApiOkResponse({ type: GradeHorarioOfertaFormacaoFindOneOutputDto })
+  @ApiOkResponse({ type: GradeHorarioOfertaFormacaoFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async findById(
     @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: GradeHorarioOfertaFormacaoFindOneInputDto,
-  ): Promise<GradeHorarioOfertaFormacaoFindOneOutputDto> {
+    @Param() params: GradeHorarioOfertaFormacaoFindOneInputRestDto,
+  ): Promise<GradeHorarioOfertaFormacaoFindOneOutputRestDto> {
     const input = GradeHorarioOfertaFormacaoRestMapper.toFindOneInput(params);
     const result = await this.gradeHorarioOfertaFormacaoService.findByIdStrict(
       accessContext,
@@ -65,12 +65,12 @@ export class GradeHorarioOfertaFormacaoRestController {
     summary: "Cria uma grade horario de oferta de formacao",
     operationId: "gradeHorarioOfertaFormacaoCreate",
   })
-  @ApiCreatedResponse({ type: GradeHorarioOfertaFormacaoFindOneOutputDto })
+  @ApiCreatedResponse({ type: GradeHorarioOfertaFormacaoFindOneOutputRestDto })
   @ApiForbiddenResponse()
   async create(
     @AccessContextHttp() accessContext: AccessContext,
-    @Body() dto: GradeHorarioOfertaFormacaoCreateInputDto,
-  ): Promise<GradeHorarioOfertaFormacaoFindOneOutputDto> {
+    @Body() dto: GradeHorarioOfertaFormacaoCreateInputRestDto,
+  ): Promise<GradeHorarioOfertaFormacaoFindOneOutputRestDto> {
     const input = GradeHorarioOfertaFormacaoRestMapper.toCreateInput(dto);
     const result = await this.gradeHorarioOfertaFormacaoService.create(accessContext, input);
     return GradeHorarioOfertaFormacaoRestMapper.toFindOneOutputDto(result);
@@ -81,14 +81,14 @@ export class GradeHorarioOfertaFormacaoRestController {
     summary: "Atualiza uma grade horario de oferta de formacao",
     operationId: "gradeHorarioOfertaFormacaoUpdate",
   })
-  @ApiOkResponse({ type: GradeHorarioOfertaFormacaoFindOneOutputDto })
+  @ApiOkResponse({ type: GradeHorarioOfertaFormacaoFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async update(
     @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: GradeHorarioOfertaFormacaoFindOneInputDto,
-    @Body() dto: GradeHorarioOfertaFormacaoUpdateInputDto,
-  ): Promise<GradeHorarioOfertaFormacaoFindOneOutputDto> {
+    @Param() params: GradeHorarioOfertaFormacaoFindOneInputRestDto,
+    @Body() dto: GradeHorarioOfertaFormacaoUpdateInputRestDto,
+  ): Promise<GradeHorarioOfertaFormacaoFindOneOutputRestDto> {
     const input = GradeHorarioOfertaFormacaoRestMapper.toUpdateInput(params, dto);
     const result = await this.gradeHorarioOfertaFormacaoService.update(accessContext, input);
     return GradeHorarioOfertaFormacaoRestMapper.toFindOneOutputDto(result);
@@ -104,7 +104,7 @@ export class GradeHorarioOfertaFormacaoRestController {
   @ApiNotFoundResponse()
   async deleteOneById(
     @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: GradeHorarioOfertaFormacaoFindOneInputDto,
+    @Param() params: GradeHorarioOfertaFormacaoFindOneInputRestDto,
   ): Promise<boolean> {
     const input = GradeHorarioOfertaFormacaoRestMapper.toFindOneInput(params);
     return this.gradeHorarioOfertaFormacaoService.deleteOneById(accessContext, input);

@@ -1,33 +1,31 @@
 import {
-  OfertaFormacaoNivelFormacaoCreateInput,
-  OfertaFormacaoNivelFormacaoFindOneInput,
-  OfertaFormacaoNivelFormacaoFindOneOutput,
-  OfertaFormacaoNivelFormacaoListInput,
-  OfertaFormacaoNivelFormacaoListOutput,
-  OfertaFormacaoNivelFormacaoUpdateInput,
+  OfertaFormacaoNivelFormacaoCreateInputDto,
+  OfertaFormacaoNivelFormacaoFindOneInputDto,
+  OfertaFormacaoNivelFormacaoFindOneOutputDto,
+  OfertaFormacaoNivelFormacaoListInputDto,
+  OfertaFormacaoNivelFormacaoListOutputDto,
+  OfertaFormacaoNivelFormacaoUpdateInputDto,
 } from "@/modules/oferta-formacao-nivel-formacao";
-import { NivelFormacaoFindOneOutputDto } from "@/server/nest/modules/nivel-formacao/rest/nivel-formacao.rest.dto";
-import { OfertaFormacaoFindOneOutputDto } from "@/server/nest/modules/oferta-formacao/rest/oferta-formacao.rest.dto";
+import { NivelFormacaoGraphqlMapper } from "@/server/nest/modules/nivel-formacao/graphql/nivel-formacao.graphql.mapper";
+import { OfertaFormacaoGraphqlMapper } from "@/server/nest/modules/oferta-formacao/graphql/oferta-formacao.graphql.mapper";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import {
-  OfertaFormacaoNivelFormacaoCreateInputDto,
-  OfertaFormacaoNivelFormacaoFindOneOutputDto,
-  OfertaFormacaoNivelFormacaoUpdateInputDto,
-} from "../rest/oferta-formacao-nivel-formacao.rest.dto";
-import {
-  OfertaFormacaoNivelFormacaoListInputGqlDto,
-  OfertaFormacaoNivelFormacaoListOutputGqlDto,
+  OfertaFormacaoNivelFormacaoCreateInputGraphQlDto,
+  OfertaFormacaoNivelFormacaoFindOneOutputGraphQlDto,
+  OfertaFormacaoNivelFormacaoListInputGraphQlDto,
+  OfertaFormacaoNivelFormacaoListOutputGraphQlDto,
+  OfertaFormacaoNivelFormacaoUpdateInputGraphQlDto,
 } from "./oferta-formacao-nivel-formacao.graphql.dto";
 
 export class OfertaFormacaoNivelFormacaoGraphqlMapper {
   static toListInput(
-    dto: OfertaFormacaoNivelFormacaoListInputGqlDto | null,
-  ): OfertaFormacaoNivelFormacaoListInput | null {
+    dto: OfertaFormacaoNivelFormacaoListInputGraphQlDto | null,
+  ): OfertaFormacaoNivelFormacaoListInputDto | null {
     if (!dto) {
       return null;
     }
 
-    const input = new OfertaFormacaoNivelFormacaoListInput();
+    const input = new OfertaFormacaoNivelFormacaoListInputDto();
     input.page = dto.page;
     input.limit = dto.limit;
     input.search = dto.search;
@@ -38,30 +36,33 @@ export class OfertaFormacaoNivelFormacaoGraphqlMapper {
     return input;
   }
 
-  static toFindOneInput(id: string, selection?: string[]): OfertaFormacaoNivelFormacaoFindOneInput {
-    const input = new OfertaFormacaoNivelFormacaoFindOneInput();
+  static toFindOneInput(
+    id: string,
+    selection?: string[],
+  ): OfertaFormacaoNivelFormacaoFindOneInputDto {
+    const input = new OfertaFormacaoNivelFormacaoFindOneInputDto();
     input.id = id;
     input.selection = selection;
     return input;
   }
 
   static toCreateInput(
-    dto: OfertaFormacaoNivelFormacaoCreateInputDto,
-  ): OfertaFormacaoNivelFormacaoCreateInput {
-    const input = new OfertaFormacaoNivelFormacaoCreateInput();
+    dto: OfertaFormacaoNivelFormacaoCreateInputGraphQlDto,
+  ): OfertaFormacaoNivelFormacaoCreateInputDto {
+    const input = new OfertaFormacaoNivelFormacaoCreateInputDto();
     input.ofertaFormacao = { id: dto.ofertaFormacao.id };
     input.nivelFormacao = { id: dto.nivelFormacao.id };
     return input;
   }
 
   static toUpdateInput(
-    id: string,
-    dto: OfertaFormacaoNivelFormacaoUpdateInputDto,
-  ): OfertaFormacaoNivelFormacaoFindOneInput & OfertaFormacaoNivelFormacaoUpdateInput {
+    params: { id: string },
+    dto: OfertaFormacaoNivelFormacaoUpdateInputGraphQlDto,
+  ): OfertaFormacaoNivelFormacaoFindOneInputDto & OfertaFormacaoNivelFormacaoUpdateInputDto {
     const input =
-      new OfertaFormacaoNivelFormacaoFindOneInput() as OfertaFormacaoNivelFormacaoFindOneInput &
-        OfertaFormacaoNivelFormacaoUpdateInput;
-    input.id = id;
+      new OfertaFormacaoNivelFormacaoFindOneInputDto() as OfertaFormacaoNivelFormacaoFindOneInputDto &
+        OfertaFormacaoNivelFormacaoUpdateInputDto;
+    input.id = params.id;
     if (dto.ofertaFormacao !== undefined) {
       input.ofertaFormacao = { id: dto.ofertaFormacao.id };
     }
@@ -72,22 +73,22 @@ export class OfertaFormacaoNivelFormacaoGraphqlMapper {
   }
 
   static toFindOneOutputDto(
-    output: OfertaFormacaoNivelFormacaoFindOneOutput,
-  ): OfertaFormacaoNivelFormacaoFindOneOutputDto {
-    const dto = new OfertaFormacaoNivelFormacaoFindOneOutputDto();
+    output: OfertaFormacaoNivelFormacaoFindOneOutputDto,
+  ): OfertaFormacaoNivelFormacaoFindOneOutputGraphQlDto {
+    const dto = new OfertaFormacaoNivelFormacaoFindOneOutputGraphQlDto();
     dto.id = output.id;
-    dto.ofertaFormacao = output.ofertaFormacao as unknown as OfertaFormacaoFindOneOutputDto;
-    dto.nivelFormacao = output.nivelFormacao as unknown as NivelFormacaoFindOneOutputDto;
-    dto.dateCreated = new Date(output.dateCreated);
-    dto.dateUpdated = new Date(output.dateUpdated);
-    dto.dateDeleted = output.dateDeleted ? new Date(output.dateDeleted) : null;
+    dto.ofertaFormacao = OfertaFormacaoGraphqlMapper.toFindOneOutputDto(output.ofertaFormacao);
+    dto.nivelFormacao = NivelFormacaoGraphqlMapper.toFindOneOutputDto(output.nivelFormacao);
+    dto.dateCreated = output.dateCreated as unknown as Date;
+    dto.dateUpdated = output.dateUpdated as unknown as Date;
+    dto.dateDeleted = output.dateDeleted as unknown as Date | null;
     return dto;
   }
 
   static toListOutputDto(
-    output: OfertaFormacaoNivelFormacaoListOutput,
-  ): OfertaFormacaoNivelFormacaoListOutputGqlDto {
-    const dto = new OfertaFormacaoNivelFormacaoListOutputGqlDto();
+    output: OfertaFormacaoNivelFormacaoListOutputDto,
+  ): OfertaFormacaoNivelFormacaoListOutputGraphQlDto {
+    const dto = new OfertaFormacaoNivelFormacaoListOutputGraphQlDto();
     dto.meta = mapPaginationMeta(output.meta);
     dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
     return dto;

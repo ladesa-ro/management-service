@@ -4,11 +4,11 @@ import type { AccessContext } from "@/modules/@core/access-context";
 import { ResourceNotFoundError } from "@/modules/@shared";
 import { CampusService } from "@/modules/campus";
 import {
-  PerfilFindOneInput,
-  PerfilFindOneOutput,
-  PerfilListInput,
-  PerfilListOutput,
-  PerfilSetVinculosInput,
+  PerfilFindOneInputDto,
+  PerfilFindOneOutputDto,
+  PerfilListInputDto,
+  PerfilListOutputDto,
+  PerfilSetVinculosInputDto,
 } from "@/modules/perfil/application/dtos";
 import {
   type IPerfilRepositoryPort,
@@ -35,28 +35,28 @@ export class PerfilService implements IPerfilUseCasePort {
   async findAllActive(
     accessContext: AccessContext | null,
     usuarioId: UsuarioEntity["id"],
-  ): Promise<PerfilFindOneOutput[]> {
+  ): Promise<PerfilFindOneOutputDto[]> {
     return this.perfilRepository.findAllActiveByUsuarioId(accessContext, usuarioId);
   }
 
   async findAll(
     accessContext: AccessContext,
-    dto: PerfilListInput | null = null,
-  ): Promise<PerfilListOutput> {
+    dto: PerfilListInputDto | null = null,
+  ): Promise<PerfilListOutputDto> {
     return this.perfilRepository.findAll(accessContext, dto);
   }
 
   async findById(
     accessContext: AccessContext,
-    dto: PerfilFindOneInput,
-  ): Promise<PerfilFindOneOutput | null> {
+    dto: PerfilFindOneInputDto,
+  ): Promise<PerfilFindOneOutputDto | null> {
     return this.perfilRepository.findById(accessContext, dto);
   }
 
   async findByIdStrict(
     accessContext: AccessContext,
-    dto: PerfilFindOneInput,
-  ): Promise<PerfilFindOneOutput> {
+    dto: PerfilFindOneInputDto,
+  ): Promise<PerfilFindOneOutputDto> {
     const perfil = await this.perfilRepository.findById(accessContext, dto);
 
     if (!perfil) {
@@ -68,8 +68,8 @@ export class PerfilService implements IPerfilUseCasePort {
 
   async setVinculos(
     accessContext: AccessContext,
-    dto: PerfilSetVinculosInput,
-  ): Promise<PerfilListOutput> {
+    dto: PerfilSetVinculosInputDto,
+  ): Promise<PerfilListOutputDto> {
     // Valida campus e usuário
     const campus = await this.campusService.findByIdSimpleStrict(accessContext, dto.campus.id);
     const usuario = await this.usuarioService.findByIdSimpleStrict(accessContext, dto.usuario.id);
@@ -129,7 +129,7 @@ export class PerfilService implements IPerfilUseCasePort {
     }
 
     // Retorna lista filtrada com os perfis do usuário no campus
-    const filterCriteria: PerfilListInput = {
+    const filterCriteria: PerfilListInputDto = {
       "filter.ativo": ["true"],
       "filter.usuario.id": [`${usuario.id}`],
       "filter.campus.id": [`${campus.id}`],

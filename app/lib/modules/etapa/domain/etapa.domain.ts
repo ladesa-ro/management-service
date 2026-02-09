@@ -27,6 +27,19 @@ export class Etapa extends BaseEntity implements IEtapa {
   }
 
   // ========================================
+  // Validação
+  // ========================================
+
+  validar(): void {
+    const { result, rules } = Etapa.createValidation();
+    rules.required(this.dataInicio, "dataInicio");
+    rules.dateFormat(this.dataInicio, "dataInicio");
+    rules.required(this.dataTermino, "dataTermino");
+    rules.dateFormat(this.dataTermino, "dataTermino");
+    Etapa.throwIfInvalid(result);
+  }
+
+  // ========================================
   // Factory Methods
   // ========================================
 
@@ -35,22 +48,13 @@ export class Etapa extends BaseEntity implements IEtapa {
    * @throws EntityValidationError se os dados forem inválidos
    */
   static criar(dados: IEtapaCreate): Etapa {
-    const { result, rules } = this.createValidation();
-
     const instance = new Etapa();
-    instance.dataInicio = rules.required(dados.dataInicio, "dataInicio");
-    instance.dataInicio = rules.dateFormat(instance.dataInicio, "dataInicio");
-
-    instance.dataTermino = rules.required(dados.dataTermino, "dataTermino");
-    instance.dataTermino = rules.dateFormat(instance.dataTermino, "dataTermino");
-
-    this.throwIfInvalid(result);
-
+    instance.dataInicio = dados.dataInicio;
+    instance.dataTermino = dados.dataTermino;
     instance.numero = dados.numero ?? null;
-    instance.cor = rules.optional(dados.cor);
-    instance.dateCreated = new Date().toISOString();
-    instance.dateUpdated = new Date().toISOString();
-    instance.dateDeleted = null;
+    instance.cor = dados.cor?.trim() || null;
+    instance.initDates();
+    instance.validar();
 
     return instance;
   }
@@ -73,16 +77,12 @@ export class Etapa extends BaseEntity implements IEtapa {
    * @throws EntityValidationError se os dados forem inválidos
    */
   atualizar(dados: IEtapaUpdate): void {
-    const { result, rules } = Etapa.createValidation();
-
     if (dados.dataInicio !== undefined) {
-      this.dataInicio = rules.required(dados.dataInicio, "dataInicio");
-      this.dataInicio = rules.dateFormat(this.dataInicio, "dataInicio");
+      this.dataInicio = dados.dataInicio;
     }
 
     if (dados.dataTermino !== undefined) {
-      this.dataTermino = rules.required(dados.dataTermino, "dataTermino");
-      this.dataTermino = rules.dateFormat(this.dataTermino, "dataTermino");
+      this.dataTermino = dados.dataTermino;
     }
 
     if (dados.numero !== undefined) {
@@ -90,11 +90,10 @@ export class Etapa extends BaseEntity implements IEtapa {
     }
 
     if (dados.cor !== undefined) {
-      this.cor = rules.optional(dados.cor);
+      this.cor = dados.cor?.trim() || null;
     }
 
-    Etapa.throwIfInvalid(result);
-
-    this.dateUpdated = new Date().toISOString();
+    this.touchUpdated();
+    this.validar();
   }
 }

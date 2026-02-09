@@ -1,5 +1,4 @@
-import { ArgsType, Field, ID, InputType, ObjectType, PartialType } from "@nestjs/graphql";
-import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { ApiProperty, ApiPropertyOptional, ApiSchema, PartialType } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import {
   IsArray,
@@ -17,58 +16,54 @@ import {
   simpleProperty,
 } from "@/modules/@shared/infrastructure/persistence/typeorm/metadata";
 import {
-  PaginationInputDto,
-  PaginationMetaDto,
+  PaginationInputRestDto,
+  PaginationMetaRestDto,
   TransformToArray,
 } from "@/modules/@shared/infrastructure/presentation/rest/dtos";
 import {
-  AmbienteFindOneInputDto,
-  AmbienteFindOneOutputDto,
+  AmbienteFindOneInputRestDto,
+  AmbienteFindOneOutputRestDto,
 } from "@/server/nest/modules/ambiente/rest";
 import {
-  UsuarioFindOneInputDto,
-  UsuarioFindOneOutputDto,
+  UsuarioFindOneInputRestDto,
+  UsuarioFindOneOutputRestDto,
 } from "@/server/nest/modules/usuario/rest";
 
 // ============================================================================
 // FindOne Output
 // ============================================================================
 
-@ObjectType("Reserva")
+@ApiSchema({ name: "ReservaFindOneOutputDto" })
 @RegisterModel({
-  name: "ReservaFindOneOutput",
+  name: "ReservaFindOneOutputDto",
   properties: [
     simpleProperty("id"),
     simpleProperty("situacao"),
     simpleProperty("motivo", { nullable: true }),
     simpleProperty("tipo", { nullable: true }),
     simpleProperty("rrule"),
-    referenceProperty("usuario", "UsuarioFindOneOutput"),
-    referenceProperty("ambiente", "AmbienteFindOneOutput"),
+    referenceProperty("usuario", "UsuarioFindOneOutputDto"),
+    referenceProperty("ambiente", "AmbienteFindOneOutputDto"),
     ...commonProperties.dated,
   ],
 })
-export class ReservaFindOneOutputDto {
+export class ReservaFindOneOutputRestDto {
   @ApiProperty({ description: "Identificador do registro (uuid)", format: "uuid" })
-  @Field(() => ID)
   @IsUUID()
   id: string;
 
   @ApiProperty({ description: "Situacao da reserva", minLength: 1 })
-  @Field()
   @IsString()
   @MinLength(1)
   situacao: string;
 
   @ApiPropertyOptional({ description: "Motivo da reserva", nullable: true })
-  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   @MinLength(1)
   motivo: string | null;
 
   @ApiPropertyOptional({ description: "Tipo da reserva", nullable: true })
-  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   @MinLength(1)
@@ -77,34 +72,31 @@ export class ReservaFindOneOutputDto {
   @ApiProperty({
     description: "Regra RRule para a recorrencia da reserva. Segue a RFC 5545 do iCalendar",
   })
-  @Field()
   @IsString()
   rrule: string;
 
-  @ApiProperty({ type: () => UsuarioFindOneOutputDto, description: "Usuario que fez a reserva" })
-  @Field(() => UsuarioFindOneOutputDto)
+  @ApiProperty({
+    type: () => UsuarioFindOneOutputRestDto,
+    description: "Usuario que fez a reserva",
+  })
   @ValidateNested()
-  @Type(() => UsuarioFindOneOutputDto)
-  usuario: UsuarioFindOneOutputDto;
+  @Type(() => UsuarioFindOneOutputRestDto)
+  usuario: UsuarioFindOneOutputRestDto;
 
-  @ApiProperty({ type: () => AmbienteFindOneOutputDto, description: "Ambiente reservado" })
-  @Field(() => AmbienteFindOneOutputDto)
+  @ApiProperty({ type: () => AmbienteFindOneOutputRestDto, description: "Ambiente reservado" })
   @ValidateNested()
-  @Type(() => AmbienteFindOneOutputDto)
-  ambiente: AmbienteFindOneOutputDto;
+  @Type(() => AmbienteFindOneOutputRestDto)
+  ambiente: AmbienteFindOneOutputRestDto;
 
   @ApiProperty({ description: "Data e hora da criacao do registro" })
-  @Field()
   @IsDateString()
   dateCreated: Date;
 
   @ApiProperty({ description: "Data e hora da alteracao do registro" })
-  @Field()
   @IsDateString()
   dateUpdated: Date;
 
   @ApiPropertyOptional({ description: "Data e hora da exclusao do registro", nullable: true })
-  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateString()
   dateDeleted: Date | null;
@@ -114,8 +106,8 @@ export class ReservaFindOneOutputDto {
 // List Input/Output
 // ============================================================================
 
-@ArgsType()
-export class ReservaListInputDto extends PaginationInputDto {
+@ApiSchema({ name: "ReservaListInputDto" })
+export class ReservaListInputRestDto extends PaginationInputRestDto {
   @ApiPropertyOptional({
     description: "Filtro por ID",
     type: [String],
@@ -123,7 +115,7 @@ export class ReservaListInputDto extends PaginationInputDto {
   @TransformToArray()
   @IsOptional()
   @IsArray()
-  @IsString({ each: true })
+  @IsUUID(undefined, { each: true })
   "filter.id"?: string[];
 
   @ApiPropertyOptional({
@@ -153,7 +145,7 @@ export class ReservaListInputDto extends PaginationInputDto {
   @TransformToArray()
   @IsOptional()
   @IsArray()
-  @IsString({ each: true })
+  @IsUUID(undefined, { each: true })
   "filter.ambiente.id"?: string[];
 
   @ApiPropertyOptional({
@@ -163,7 +155,7 @@ export class ReservaListInputDto extends PaginationInputDto {
   @TransformToArray()
   @IsOptional()
   @IsArray()
-  @IsString({ each: true })
+  @IsUUID(undefined, { each: true })
   "filter.ambiente.bloco.id"?: string[];
 
   @ApiPropertyOptional({
@@ -173,42 +165,37 @@ export class ReservaListInputDto extends PaginationInputDto {
   @TransformToArray()
   @IsOptional()
   @IsArray()
-  @IsString({ each: true })
+  @IsUUID(undefined, { each: true })
   "filter.ambiente.bloco.campus.id"?: string[];
 }
 
-@ObjectType("ReservaListOutput")
-export class ReservaListOutputDto {
-  @ApiProperty({ type: () => PaginationMetaDto, description: "Metadados da busca" })
-  @Field(() => PaginationMetaDto)
-  meta: PaginationMetaDto;
+@ApiSchema({ name: "ReservaListOutputDto" })
+export class ReservaListOutputRestDto {
+  @ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" })
+  meta: PaginationMetaRestDto;
 
-  @ApiProperty({ type: () => [ReservaFindOneOutputDto], description: "Resultados da busca" })
-  @Field(() => [ReservaFindOneOutputDto])
-  data: ReservaFindOneOutputDto[];
+  @ApiProperty({ type: () => [ReservaFindOneOutputRestDto], description: "Resultados da busca" })
+  data: ReservaFindOneOutputRestDto[];
 }
 
 // ============================================================================
 // Create/Update Input
 // ============================================================================
 
-@InputType("ReservaCreateInput")
-export class ReservaCreateInputDto {
+@ApiSchema({ name: "ReservaCreateInputDto" })
+export class ReservaCreateInputRestDto {
   @ApiProperty({ description: "Situacao da reserva", minLength: 1 })
-  @Field()
   @IsString()
   @MinLength(1)
   situacao: string;
 
   @ApiPropertyOptional({ description: "Motivo da reserva", nullable: true })
-  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   @MinLength(1)
   motivo?: string | null;
 
   @ApiPropertyOptional({ description: "Tipo da reserva", nullable: true })
-  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   @MinLength(1)
@@ -217,35 +204,30 @@ export class ReservaCreateInputDto {
   @ApiProperty({
     description: "Regra RRule para a recorrencia da reserva. Segue a RFC 5545 do iCalendar",
   })
-  @Field()
   @IsString()
   rrule: string;
 
-  @ApiProperty({ type: () => UsuarioFindOneInputDto, description: "Usuario que fez a reserva" })
-  @Field(() => UsuarioFindOneInputDto)
+  @ApiProperty({ type: () => UsuarioFindOneInputRestDto, description: "Usuario que fez a reserva" })
   @ValidateNested()
-  @Type(() => UsuarioFindOneInputDto)
-  usuario: UsuarioFindOneInputDto;
+  @Type(() => UsuarioFindOneInputRestDto)
+  usuario: UsuarioFindOneInputRestDto;
 
-  @ApiProperty({ type: () => AmbienteFindOneInputDto, description: "Ambiente reservado" })
-  @Field(() => AmbienteFindOneInputDto)
+  @ApiProperty({ type: () => AmbienteFindOneInputRestDto, description: "Ambiente reservado" })
   @ValidateNested()
-  @Type(() => AmbienteFindOneInputDto)
-  ambiente: AmbienteFindOneInputDto;
+  @Type(() => AmbienteFindOneInputRestDto)
+  ambiente: AmbienteFindOneInputRestDto;
 }
 
-@InputType("ReservaUpdateInput")
-export class ReservaUpdateInputDto extends PartialType(ReservaCreateInputDto) {}
+@ApiSchema({ name: "ReservaUpdateInputDto" })
+export class ReservaUpdateInputRestDto extends PartialType(ReservaCreateInputRestDto) {}
 
 // ============================================================================
 // FindOne Input (for path params)
 // ============================================================================
 
-@ArgsType()
-@InputType("ReservaFindOneInput")
-export class ReservaFindOneInputDto {
+@ApiSchema({ name: "ReservaFindOneInputDto" })
+export class ReservaFindOneInputRestDto {
   @ApiProperty({ description: "Identificador do registro (uuid)", format: "uuid" })
-  @Field(() => ID)
   @IsUUID()
   id: string;
 }

@@ -1,14 +1,6 @@
-import { ArgsType, Field, ID, InputType, ObjectType, PartialType } from "@nestjs/graphql";
-import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { ApiProperty, ApiPropertyOptional, ApiSchema, PartialType } from "@nestjs/swagger";
 import { Type } from "class-transformer";
-import {
-  IsArray,
-  IsDateString,
-  IsOptional,
-  IsString,
-  IsUUID,
-  ValidateNested,
-} from "class-validator";
+import { IsArray, IsDateString, IsOptional, IsUUID, ValidateNested } from "class-validator";
 import {
   commonProperties,
   RegisterModel,
@@ -16,86 +8,81 @@ import {
   simpleProperty,
 } from "@/modules/@shared/infrastructure/persistence/typeorm/metadata";
 import {
-  PaginationInputDto,
-  PaginationMetaDto,
+  PaginationInputRestDto,
+  PaginationMetaRestDto,
   TransformToArray,
 } from "@/modules/@shared/infrastructure/presentation/rest/dtos";
 import {
-  DiarioProfessorFindOneInputDto,
-  DiarioProfessorFindOneOutputDto,
+  DiarioProfessorFindOneInputRestDto,
+  DiarioProfessorFindOneOutputRestDto,
 } from "@/server/nest/modules/diario-professor/rest";
 import {
   HorarioGeradoFindOneInputRestDto,
   HorarioGeradoFindOneOutputRestDto,
 } from "@/server/nest/modules/horario-gerado/rest";
 import {
-  IntervaloDeTempoFindOneInputDto,
-  IntervaloDeTempoFindOneOutputDto,
+  IntervaloDeTempoFindOneInputRestDto,
+  IntervaloDeTempoFindOneOutputRestDto,
 } from "@/server/nest/modules/intervalo-de-tempo/rest/intervalo-de-tempo.rest.dto";
 
 // ============================================================================
 // FindOne Output
 // ============================================================================
 
-@ObjectType("HorarioGeradoAula")
+@ApiSchema({ name: "HorarioGeradoAulaFindOneOutputDto" })
 @RegisterModel({
-  name: "HorarioGeradoAulaFindOneOutput",
+  name: "HorarioGeradoAulaFindOneOutputDto",
   properties: [
     simpleProperty("id"),
     simpleProperty("data"),
-    referenceProperty("intervaloDeTempo", "IntervaloDeTempoFindOneOutput"),
-    referenceProperty("diarioProfessor", "DiarioProfessorFindOneOutput"),
-    referenceProperty("horarioGerado", "HorarioGeradoFindOneOutput"),
+    referenceProperty("intervaloDeTempo", "IntervaloDeTempoFindOneOutputDto"),
+    referenceProperty("diarioProfessor", "DiarioProfessorFindOneOutputDto"),
+    referenceProperty("horarioGerado", "HorarioGeradoFindOneOutputDto"),
     ...commonProperties.dated,
   ],
 })
 export class HorarioGeradoAulaFindOneOutputRestDto {
   @ApiProperty({ description: "Identificador do registro (uuid)", format: "uuid" })
-  @Field(() => ID)
   @IsUUID()
   id: string;
 
   @ApiProperty({ description: "Data da aula gerada" })
-  @Field()
   @IsDateString()
   data: Date;
 
-  @ApiProperty({ type: () => IntervaloDeTempoFindOneOutputDto, description: "Intervalo de tempo" })
-  @Field(() => IntervaloDeTempoFindOneOutputDto)
+  @ApiProperty({
+    type: () => IntervaloDeTempoFindOneOutputRestDto,
+    description: "Intervalo de tempo",
+  })
   @ValidateNested()
-  @Type(() => IntervaloDeTempoFindOneOutputDto)
-  intervaloDeTempo: IntervaloDeTempoFindOneOutputDto;
+  @Type(() => IntervaloDeTempoFindOneOutputRestDto)
+  intervaloDeTempo: IntervaloDeTempoFindOneOutputRestDto;
 
   @ApiProperty({
-    type: () => DiarioProfessorFindOneOutputDto,
+    type: () => DiarioProfessorFindOneOutputRestDto,
     description: "Vinculo de diario e professor",
   })
-  @Field(() => DiarioProfessorFindOneOutputDto)
   @ValidateNested()
-  @Type(() => DiarioProfessorFindOneOutputDto)
-  diarioProfessor: DiarioProfessorFindOneOutputDto;
+  @Type(() => DiarioProfessorFindOneOutputRestDto)
+  diarioProfessor: DiarioProfessorFindOneOutputRestDto;
 
   @ApiProperty({
     type: () => HorarioGeradoFindOneOutputRestDto,
     description: "Horario ao qual a aula pertence",
   })
-  @Field(() => HorarioGeradoFindOneOutputRestDto)
   @ValidateNested()
   @Type(() => HorarioGeradoFindOneOutputRestDto)
   horarioGerado: HorarioGeradoFindOneOutputRestDto;
 
   @ApiProperty({ description: "Data e hora da criacao do registro" })
-  @Field()
   @IsDateString()
   dateCreated: Date;
 
   @ApiProperty({ description: "Data e hora da alteracao do registro" })
-  @Field()
   @IsDateString()
   dateUpdated: Date;
 
   @ApiPropertyOptional({ description: "Data e hora da exclusao do registro", nullable: true })
-  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateString()
   dateDeleted: Date | null;
@@ -105,8 +92,8 @@ export class HorarioGeradoAulaFindOneOutputRestDto {
 // List Input/Output
 // ============================================================================
 
-@ArgsType()
-export class HorarioGeradoAulaListInputRestDto extends PaginationInputDto {
+@ApiSchema({ name: "HorarioGeradoAulaListInputDto" })
+export class HorarioGeradoAulaListInputRestDto extends PaginationInputRestDto {
   @ApiPropertyOptional({
     description: "Filtro por ID",
     type: [String],
@@ -114,7 +101,7 @@ export class HorarioGeradoAulaListInputRestDto extends PaginationInputDto {
   @TransformToArray()
   @IsOptional()
   @IsArray()
-  @IsString({ each: true })
+  @IsUUID(undefined, { each: true })
   "filter.id"?: string[];
 
   @ApiPropertyOptional({
@@ -124,21 +111,19 @@ export class HorarioGeradoAulaListInputRestDto extends PaginationInputDto {
   @TransformToArray()
   @IsOptional()
   @IsArray()
-  @IsString({ each: true })
+  @IsUUID(undefined, { each: true })
   "filter.horarioGerado.id"?: string[];
 }
 
-@ObjectType("HorarioGeradoAulaListOutput")
+@ApiSchema({ name: "HorarioGeradoAulaListOutputDto" })
 export class HorarioGeradoAulaListOutputRestDto {
-  @ApiProperty({ type: () => PaginationMetaDto, description: "Metadados da busca" })
-  @Field(() => PaginationMetaDto)
-  meta: PaginationMetaDto;
+  @ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" })
+  meta: PaginationMetaRestDto;
 
   @ApiProperty({
     type: () => [HorarioGeradoAulaFindOneOutputRestDto],
     description: "Resultados da busca",
   })
-  @Field(() => [HorarioGeradoAulaFindOneOutputRestDto])
   data: HorarioGeradoAulaFindOneOutputRestDto[];
 }
 
@@ -146,39 +131,38 @@ export class HorarioGeradoAulaListOutputRestDto {
 // Create/Update Input
 // ============================================================================
 
-@InputType("HorarioGeradoAulaCreateInput")
+@ApiSchema({ name: "HorarioGeradoAulaCreateInputDto" })
 export class HorarioGeradoAulaCreateInputRestDto {
   @ApiProperty({ description: "Data da aula gerada" })
-  @Field()
   @IsDateString()
   data: Date;
 
-  @ApiProperty({ type: () => IntervaloDeTempoFindOneInputDto, description: "Intervalo de tempo" })
-  @Field(() => IntervaloDeTempoFindOneInputDto)
+  @ApiProperty({
+    type: () => IntervaloDeTempoFindOneInputRestDto,
+    description: "Intervalo de tempo",
+  })
   @ValidateNested()
-  @Type(() => IntervaloDeTempoFindOneInputDto)
-  intervaloDeTempo: IntervaloDeTempoFindOneInputDto;
+  @Type(() => IntervaloDeTempoFindOneInputRestDto)
+  intervaloDeTempo: IntervaloDeTempoFindOneInputRestDto;
 
   @ApiProperty({
-    type: () => DiarioProfessorFindOneInputDto,
+    type: () => DiarioProfessorFindOneInputRestDto,
     description: "Vinculo de diario e professor",
   })
-  @Field(() => DiarioProfessorFindOneInputDto)
   @ValidateNested()
-  @Type(() => DiarioProfessorFindOneInputDto)
-  diarioProfessor: DiarioProfessorFindOneInputDto;
+  @Type(() => DiarioProfessorFindOneInputRestDto)
+  diarioProfessor: DiarioProfessorFindOneInputRestDto;
 
   @ApiProperty({
     type: () => HorarioGeradoFindOneInputRestDto,
     description: "Horario ao qual a aula pertence",
   })
-  @Field(() => HorarioGeradoFindOneInputRestDto)
   @ValidateNested()
   @Type(() => HorarioGeradoFindOneInputRestDto)
   horarioGerado: HorarioGeradoFindOneInputRestDto;
 }
 
-@InputType("HorarioGeradoAulaUpdateInput")
+@ApiSchema({ name: "HorarioGeradoAulaUpdateInputDto" })
 export class HorarioGeradoAulaUpdateInputRestDto extends PartialType(
   HorarioGeradoAulaCreateInputRestDto,
 ) {}
@@ -187,11 +171,9 @@ export class HorarioGeradoAulaUpdateInputRestDto extends PartialType(
 // FindOne Input (for path params)
 // ============================================================================
 
-@ArgsType()
-@InputType("HorarioGeradoAulaFindOneInput")
+@ApiSchema({ name: "HorarioGeradoAulaFindOneInputDto" })
 export class HorarioGeradoAulaFindOneInputRestDto {
   @ApiProperty({ description: "Identificador do registro (uuid)", format: "uuid" })
-  @Field(() => ID)
   @IsUUID()
   id: string;
 }

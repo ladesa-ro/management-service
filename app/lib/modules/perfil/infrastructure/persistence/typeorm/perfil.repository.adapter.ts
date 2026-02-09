@@ -12,10 +12,10 @@ import {
   QbEfficientLoad,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
-  PerfilFindOneInput,
-  PerfilFindOneOutput,
-  PerfilListInput,
-  PerfilListOutput,
+  PerfilFindOneInputDto,
+  PerfilFindOneOutputDto,
+  PerfilListInputDto,
+  PerfilListOutputDto,
 } from "@/modules/perfil/application/dtos";
 import type { IPerfilRepositoryPort } from "@/modules/perfil/application/ports";
 import type { UsuarioEntity } from "@/modules/usuario/infrastructure/persistence/typeorm";
@@ -25,16 +25,16 @@ import type { PerfilEntity } from "./perfil.entity";
 export class PerfilTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     PerfilEntity,
-    PerfilListInput,
-    PerfilListOutput,
-    PerfilFindOneInput,
-    PerfilFindOneOutput
+    PerfilListInputDto,
+    PerfilListOutputDto,
+    PerfilFindOneInputDto,
+    PerfilFindOneOutputDto
   >
   implements IPerfilRepositoryPort
 {
   protected readonly alias = "vinculo";
   protected readonly authzAction = "vinculo:find";
-  protected readonly outputDtoName = "PerfilFindOneOutput";
+  protected readonly outputDtoName = "PerfilFindOneOutputDto";
 
   constructor(
     protected readonly databaseContext: DatabaseContextService,
@@ -50,7 +50,7 @@ export class PerfilTypeOrmRepositoryAdapter
   async findAllActiveByUsuarioId(
     accessContext: AccessContext | null,
     usuarioId: UsuarioEntity["id"],
-  ): Promise<PerfilFindOneOutput[]> {
+  ): Promise<PerfilFindOneOutputDto[]> {
     const qb = this.repository.createQueryBuilder(this.alias);
 
     qb.innerJoin(`${this.alias}.usuario`, "usuario");
@@ -65,7 +65,7 @@ export class PerfilTypeOrmRepositoryAdapter
 
     const vinculos = await qb.getMany();
 
-    return vinculos as unknown as PerfilFindOneOutput[];
+    return vinculos as unknown as PerfilFindOneOutputDto[];
   }
 
   // Métodos específicos do Perfil que não estão na classe base
@@ -73,9 +73,9 @@ export class PerfilTypeOrmRepositoryAdapter
   async findPaginated(
     accessContext: AccessContext,
     criteria: IPaginationCriteria | null,
-    config: ITypeOrmPaginationConfig<PerfilFindOneOutput>,
+    config: ITypeOrmPaginationConfig<PerfilFindOneOutputDto>,
     selection?: string[] | boolean,
-  ): Promise<IPaginationResult<PerfilFindOneOutput>> {
+  ): Promise<IPaginationResult<PerfilFindOneOutputDto>> {
     const qb = this.repository.createQueryBuilder(this.alias);
 
     QbEfficientLoad(this.outputDtoName, qb, this.alias, selection);
@@ -83,7 +83,7 @@ export class PerfilTypeOrmRepositoryAdapter
     await accessContext.applyFilter(this.authzAction, qb, this.alias, null);
 
     return this.paginationAdapter.paginate(qb, criteria, config) as unknown as Promise<
-      IPaginationResult<PerfilFindOneOutput>
+      IPaginationResult<PerfilFindOneOutputDto>
     >;
   }
 
@@ -96,7 +96,7 @@ export class PerfilTypeOrmRepositoryAdapter
   async findByUsuarioAndCampus(
     usuarioId: string,
     campusId: string,
-  ): Promise<PerfilFindOneOutput[]> {
+  ): Promise<PerfilFindOneOutputDto[]> {
     const vinculos = await this.repository
       .createQueryBuilder(this.alias)
       .innerJoin(`${this.alias}.campus`, "campus")
@@ -106,7 +106,7 @@ export class PerfilTypeOrmRepositoryAdapter
       .select([this.alias, "campus", "usuario"])
       .getMany();
 
-    return vinculos as unknown as PerfilFindOneOutput[];
+    return vinculos as unknown as PerfilFindOneOutputDto[];
   }
 
   async deactivateByIds(ids: string[]): Promise<void> {

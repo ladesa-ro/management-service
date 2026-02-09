@@ -1,23 +1,20 @@
-import { Field, InputType, Int, ObjectType } from "@nestjs/graphql";
-import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { IsArray, IsInt, IsOptional, IsString, ValidateNested } from "class-validator";
-import { PerfilFindOneOutputDto } from "@/server/nest/modules/perfil/rest";
-import { UsuarioFindOneOutputDto } from "@/server/nest/modules/usuario/rest";
+import { PerfilFindOneOutputRestDto } from "@/server/nest/modules/perfil/rest";
+import { UsuarioFindOneOutputRestDto } from "@/server/nest/modules/usuario/rest";
 
 // ============================================================================
 // Auth Login Input
 // ============================================================================
 
-@InputType("AuthLoginInput")
-export class AuthLoginInputDto {
+@ApiSchema({ name: "AuthLoginInputDto" })
+export class AuthLoginInputRestDto {
   @ApiProperty({ description: "Matricula SIAPE" })
-  @Field()
   @IsString()
   matriculaSiape: string;
 
   @ApiProperty({ description: "Senha" })
-  @Field()
   @IsString()
   senha: string;
 }
@@ -26,10 +23,9 @@ export class AuthLoginInputDto {
 // Auth Refresh Input
 // ============================================================================
 
-@InputType("AuthRefreshInput")
-export class AuthRefreshInputDto {
+@ApiSchema({ name: "AuthRefreshInputDto" })
+export class AuthRefreshInputRestDto {
   @ApiProperty({ description: "Token de refresh" })
-  @Field()
   @IsString()
   refreshToken: string;
 }
@@ -38,77 +34,70 @@ export class AuthRefreshInputDto {
 // Auth WhoAmI Output
 // ============================================================================
 
-@ObjectType("AuthWhoAmI")
-export class AuthWhoAmIOutputDto {
+@ApiSchema({ name: "AuthWhoAmIOutputDto" })
+export class AuthWhoAmIOutputRestDto {
   @ApiPropertyOptional({
-    type: () => UsuarioFindOneOutputDto,
+    type: () => UsuarioFindOneOutputRestDto,
     description: "Usuario autenticado",
     nullable: true,
   })
-  @Field(() => UsuarioFindOneOutputDto, { nullable: true })
   @IsOptional()
   @ValidateNested()
-  @Type(() => UsuarioFindOneOutputDto)
-  usuario: UsuarioFindOneOutputDto | null;
+  @Type(() => UsuarioFindOneOutputRestDto)
+  usuario: UsuarioFindOneOutputRestDto | null;
 
-  @ApiProperty({ type: () => [PerfilFindOneOutputDto], description: "Vinculos do usuario logado" })
-  @Field(() => [PerfilFindOneOutputDto])
+  @ApiProperty({
+    type: () => [PerfilFindOneOutputRestDto],
+    description: "Vinculos do usuario logado",
+  })
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => PerfilFindOneOutputDto)
-  perfisAtivos: PerfilFindOneOutputDto[];
+  @Type(() => PerfilFindOneOutputRestDto)
+  perfisAtivos: PerfilFindOneOutputRestDto[];
 }
 
 // ============================================================================
 // Auth Session Credentials
 // ============================================================================
 
-@ObjectType("AuthSessionCredentials")
-export class AuthSessionCredentialsDto {
+@ApiSchema({ name: "AuthSessionCredentialsDto" })
+export class AuthSessionCredentialsRestDto {
   @ApiPropertyOptional({ description: "Token de acesso", nullable: true })
-  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   access_token: string | null;
 
   @ApiPropertyOptional({ description: "Tipo do token", nullable: true })
-  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   token_type: string | null;
 
   @ApiPropertyOptional({ description: "Token de identificacao", nullable: true })
-  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   id_token: string | null;
 
   @ApiPropertyOptional({ description: "Token de refresh", nullable: true })
-  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   refresh_token: string | null;
 
   @ApiPropertyOptional({ description: "Tempo de expiracao do token", nullable: true })
-  @Field(() => Int, { nullable: true })
   @IsOptional()
   @IsInt()
   expires_in: number | null;
 
   @ApiPropertyOptional({ description: "Tempo de expiracao do token", nullable: true })
-  @Field(() => Int, { nullable: true })
   @IsOptional()
   @IsInt()
   expires_at: number | null;
 
   @ApiPropertyOptional({ description: "Estado da sessao", nullable: true })
-  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   session_state: string | null;
 
   @ApiPropertyOptional({ description: "Escopo da autenticacao", nullable: true })
-  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   scope: string | null;
@@ -118,15 +107,13 @@ export class AuthSessionCredentialsDto {
 // Auth Set Initial Password
 // ============================================================================
 
-@InputType("AuthCredentialsSetInitialPasswordInput")
-export class AuthCredentialsSetInitialPasswordInputDto {
+@ApiSchema({ name: "AuthCredentialsSetInitialPasswordInputDto" })
+export class AuthCredentialsSetInitialPasswordInputRestDto {
   @ApiProperty({ description: "Matricula SIAPE" })
-  @Field()
   @IsString()
   matriculaSiape: string;
 
   @ApiProperty({ description: "Nova senha" })
-  @Field()
   @IsString()
   senha: string;
 }
@@ -135,10 +122,9 @@ export class AuthCredentialsSetInitialPasswordInputDto {
 // Auth Recover Password
 // ============================================================================
 
-@InputType("AuthRecoverPasswordInput")
-export class AuthRecoverPasswordInputDto {
+@ApiSchema({ name: "AuthRecoverPasswordInputDto" })
+export class AuthRecoverPasswordInputRestDto {
   @ApiProperty({ description: "E-mail" })
-  @Field()
   @IsString()
   email: string;
 }

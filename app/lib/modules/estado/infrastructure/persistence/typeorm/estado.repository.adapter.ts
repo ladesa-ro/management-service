@@ -7,10 +7,10 @@ import {
   paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
-  EstadoFindOneInput,
-  EstadoFindOneOutput,
-  EstadoListInput,
-  EstadoListOutput,
+  EstadoFindOneInputDto,
+  EstadoFindOneOutputDto,
+  EstadoListInputDto,
+  EstadoListOutputDto,
 } from "@/modules/estado/application/dtos";
 import type { IEstadoRepositoryPort } from "@/modules/estado/application/ports";
 import type { EstadoEntity } from "./estado.entity";
@@ -24,16 +24,16 @@ import type { EstadoEntity } from "./estado.entity";
 export class EstadoTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     EstadoEntity,
-    EstadoListInput,
-    EstadoListOutput,
-    EstadoFindOneInput,
-    EstadoFindOneOutput
+    EstadoListInputDto,
+    EstadoListOutputDto,
+    EstadoFindOneInputDto,
+    EstadoFindOneOutputDto
   >
   implements IEstadoRepositoryPort
 {
   protected readonly alias = "estado";
   protected readonly authzAction = "estado:find";
-  protected readonly outputDtoName = "EstadoFindOneOutput";
+  protected readonly outputDtoName = "EstadoFindOneOutputDto";
 
   constructor(
     protected readonly databaseContext: DatabaseContextService,

@@ -4,23 +4,24 @@ import { AccessContext, AccessContextGraphQL } from "@/modules/@core/access-cont
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
 import { UsuarioService } from "@/modules/usuario/application/use-cases/usuario.service";
 import {
-  UsuarioCreateInputDto,
-  UsuarioFindOneOutputDto,
-  UsuarioUpdateInputDto,
-} from "../rest/usuario.rest.dto";
-import { UsuarioListInputGqlDto, UsuarioListOutputGqlDto } from "./usuario.graphql.dto";
+  UsuarioCreateInputGraphQlDto,
+  UsuarioFindOneOutputGraphQlDto,
+  UsuarioListInputGraphQlDto,
+  UsuarioListOutputGraphQlDto,
+  UsuarioUpdateInputGraphQlDto,
+} from "./usuario.graphql.dto";
 import { UsuarioGraphqlMapper } from "./usuario.graphql.mapper";
 
-@Resolver(() => UsuarioFindOneOutputDto)
+@Resolver(() => UsuarioFindOneOutputGraphQlDto)
 export class UsuarioGraphqlResolver {
   constructor(private readonly usuarioService: UsuarioService) {}
 
-  @Query(() => UsuarioListOutputGqlDto, { name: "usuarioFindAll" })
+  @Query(() => UsuarioListOutputGraphQlDto, { name: "usuarioFindAll" })
   async findAll(
     @AccessContextGraphQL() accessContext: AccessContext,
-    @Args() dto: UsuarioListInputGqlDto,
+    @Args() dto: UsuarioListInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<UsuarioListOutputGqlDto> {
+  ): Promise<UsuarioListOutputGraphQlDto> {
     const input = UsuarioGraphqlMapper.toListInput(dto);
 
     if (input) {
@@ -31,36 +32,36 @@ export class UsuarioGraphqlResolver {
     return UsuarioGraphqlMapper.toListOutputDto(result);
   }
 
-  @Query(() => UsuarioFindOneOutputDto, { name: "usuarioFindById" })
+  @Query(() => UsuarioFindOneOutputGraphQlDto, { name: "usuarioFindById" })
   async findById(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<UsuarioFindOneOutputDto> {
+  ): Promise<UsuarioFindOneOutputGraphQlDto> {
     const selection = graphqlExtractSelection(info);
     const result = await this.usuarioService.findByIdStrict(accessContext, { id, selection });
     return UsuarioGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => UsuarioFindOneOutputDto, { name: "usuarioCreate" })
+  @Mutation(() => UsuarioFindOneOutputGraphQlDto, { name: "usuarioCreate" })
   async create(
     @AccessContextGraphQL() accessContext: AccessContext,
-    @Args("data") dto: UsuarioCreateInputDto,
+    @Args("input") dto: UsuarioCreateInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<UsuarioFindOneOutputDto> {
+  ): Promise<UsuarioFindOneOutputGraphQlDto> {
     const input = UsuarioGraphqlMapper.toCreateInput(dto);
     const result = await this.usuarioService.create(accessContext, input as any);
     return UsuarioGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => UsuarioFindOneOutputDto, { name: "usuarioUpdate" })
+  @Mutation(() => UsuarioFindOneOutputGraphQlDto, { name: "usuarioUpdate" })
   async update(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
-    @Args("data") dto: UsuarioUpdateInputDto,
+    @Args("input") dto: UsuarioUpdateInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<UsuarioFindOneOutputDto> {
-    const input = UsuarioGraphqlMapper.toUpdateInput(id, dto);
+  ): Promise<UsuarioFindOneOutputGraphQlDto> {
+    const input = UsuarioGraphqlMapper.toUpdateInput({ id }, dto);
     const result = await this.usuarioService.update(accessContext, input as any);
     return UsuarioGraphqlMapper.toFindOneOutputDto(result);
   }

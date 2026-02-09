@@ -1,14 +1,11 @@
-import type { IdUuid, ScalarDateTimeString } from "@/modules/@shared";
+import type { IEntityBase } from "@/modules/@shared";
 import type { IModalidade } from "@/modules/modalidade";
 
 /**
  * Interface que define a estrutura de dados de OfertaFormacao
  * Tipagem pura sem implementacao de regras
  */
-export interface IOfertaFormacao {
-  /** Identificador UUID da oferta de formacao */
-  id: IdUuid;
-
+export interface IOfertaFormacao extends IEntityBase {
   /** Nome da oferta de formacao */
   nome: string;
 
@@ -17,15 +14,6 @@ export interface IOfertaFormacao {
 
   /** Modalidade associada */
   modalidade: IModalidade;
-
-  /** Data de criacao */
-  dateCreated: ScalarDateTimeString;
-
-  /** Data de atualizacao */
-  dateUpdated: ScalarDateTimeString;
-
-  /** Data de exclusao (soft delete) */
-  dateDeleted: ScalarDateTimeString | null;
 }
 
 /**

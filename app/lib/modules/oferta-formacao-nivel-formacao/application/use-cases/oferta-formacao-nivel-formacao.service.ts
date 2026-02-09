@@ -5,12 +5,12 @@ import { BaseCrudService } from "@/modules/@shared";
 import { NivelFormacaoService } from "@/modules/nivel-formacao/application/use-cases/nivel-formacao.service";
 import { OfertaFormacaoService } from "@/modules/oferta-formacao";
 import type {
-  OfertaFormacaoNivelFormacaoCreateInput,
-  OfertaFormacaoNivelFormacaoFindOneInput,
-  OfertaFormacaoNivelFormacaoFindOneOutput,
-  OfertaFormacaoNivelFormacaoListInput,
-  OfertaFormacaoNivelFormacaoListOutput,
-  OfertaFormacaoNivelFormacaoUpdateInput,
+  OfertaFormacaoNivelFormacaoCreateInputDto,
+  OfertaFormacaoNivelFormacaoFindOneInputDto,
+  OfertaFormacaoNivelFormacaoFindOneOutputDto,
+  OfertaFormacaoNivelFormacaoListInputDto,
+  OfertaFormacaoNivelFormacaoListOutputDto,
+  OfertaFormacaoNivelFormacaoUpdateInputDto,
 } from "@/modules/oferta-formacao-nivel-formacao/application/dtos";
 import {
   type IOfertaFormacaoNivelFormacaoRepositoryPort,
@@ -23,12 +23,12 @@ import type { OfertaFormacaoNivelFormacaoEntity } from "@/modules/oferta-formaca
 export class OfertaFormacaoNivelFormacaoService
   extends BaseCrudService<
     OfertaFormacaoNivelFormacaoEntity,
-    OfertaFormacaoNivelFormacaoListInput,
-    OfertaFormacaoNivelFormacaoListOutput,
-    OfertaFormacaoNivelFormacaoFindOneInput,
-    OfertaFormacaoNivelFormacaoFindOneOutput,
-    OfertaFormacaoNivelFormacaoCreateInput,
-    OfertaFormacaoNivelFormacaoUpdateInput
+    OfertaFormacaoNivelFormacaoListInputDto,
+    OfertaFormacaoNivelFormacaoListOutputDto,
+    OfertaFormacaoNivelFormacaoFindOneInputDto,
+    OfertaFormacaoNivelFormacaoFindOneOutputDto,
+    OfertaFormacaoNivelFormacaoCreateInputDto,
+    OfertaFormacaoNivelFormacaoUpdateInputDto
   >
   implements IOfertaFormacaoNivelFormacaoUseCasePort
 {
@@ -51,7 +51,7 @@ export class OfertaFormacaoNivelFormacaoService
   protected override async beforeCreate(
     accessContext: AccessContext,
     entity: OfertaFormacaoNivelFormacaoEntity,
-    dto: OfertaFormacaoNivelFormacaoCreateInput,
+    dto: OfertaFormacaoNivelFormacaoCreateInputDto,
   ): Promise<void> {
     if (dto.ofertaFormacao) {
       const ofertaFormacao = await this.ofertaFormacaoService.findByIdStrict(accessContext, {
@@ -71,7 +71,7 @@ export class OfertaFormacaoNivelFormacaoService
   protected override async beforeUpdate(
     accessContext: AccessContext,
     entity: OfertaFormacaoNivelFormacaoEntity,
-    dto: OfertaFormacaoNivelFormacaoFindOneInput & OfertaFormacaoNivelFormacaoUpdateInput,
+    dto: OfertaFormacaoNivelFormacaoFindOneInputDto & OfertaFormacaoNivelFormacaoUpdateInputDto,
   ): Promise<void> {
     if (has(dto, "ofertaFormacao") && dto.ofertaFormacao !== undefined) {
       const ofertaFormacao =

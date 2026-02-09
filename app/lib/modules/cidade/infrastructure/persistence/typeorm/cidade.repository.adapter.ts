@@ -8,10 +8,10 @@ import {
   paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
-  CidadeFindOneInput,
-  CidadeFindOneOutput,
-  CidadeListInput,
-  CidadeListOutput,
+  CidadeFindOneInputDto,
+  CidadeFindOneOutputDto,
+  CidadeListInputDto,
+  CidadeListOutputDto,
   ICidadeRepositoryPort,
 } from "@/modules/cidade";
 import type { CidadeEntity } from "./cidade.entity";
@@ -25,16 +25,16 @@ import type { CidadeEntity } from "./cidade.entity";
 export class CidadeTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     CidadeEntity,
-    CidadeListInput,
-    CidadeListOutput,
-    CidadeFindOneInput,
-    CidadeFindOneOutput
+    CidadeListInputDto,
+    CidadeListOutputDto,
+    CidadeFindOneInputDto,
+    CidadeFindOneOutputDto
   >
   implements ICidadeRepositoryPort
 {
   protected readonly alias = "cidade";
   protected readonly authzAction = "cidade:find";
-  protected readonly outputDtoName = "CidadeFindOneOutput";
+  protected readonly outputDtoName = "CidadeFindOneOutputDto";
 
   constructor(
     protected readonly databaseContext: DatabaseContextService,

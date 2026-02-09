@@ -4,23 +4,24 @@ import { AccessContext, AccessContextGraphQL } from "@/modules/@core/access-cont
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
 import { TurmaService } from "@/modules/turma/application/use-cases/turma.service";
 import {
-  TurmaCreateInputDto,
-  TurmaFindOneOutputDto,
-  TurmaUpdateInputDto,
-} from "../rest/turma.rest.dto";
-import { TurmaListInputGqlDto, TurmaListOutputGqlDto } from "./turma.graphql.dto";
+  TurmaCreateInputGraphQlDto,
+  TurmaFindOneOutputGraphQlDto,
+  TurmaListInputGraphQlDto,
+  TurmaListOutputGraphQlDto,
+  TurmaUpdateInputGraphQlDto,
+} from "./turma.graphql.dto";
 import { TurmaGraphqlMapper } from "./turma.graphql.mapper";
 
-@Resolver(() => TurmaFindOneOutputDto)
+@Resolver(() => TurmaFindOneOutputGraphQlDto)
 export class TurmaGraphqlResolver {
   constructor(private readonly turmaService: TurmaService) {}
 
-  @Query(() => TurmaListOutputGqlDto, { name: "turmaFindAll" })
+  @Query(() => TurmaListOutputGraphQlDto, { name: "turmaFindAll" })
   async findAll(
     @AccessContextGraphQL() accessContext: AccessContext,
-    @Args() dto: TurmaListInputGqlDto,
+    @Args() dto: TurmaListInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<TurmaListOutputGqlDto> {
+  ): Promise<TurmaListOutputGraphQlDto> {
     const input = TurmaGraphqlMapper.toListInput(dto);
 
     if (input) {
@@ -31,37 +32,37 @@ export class TurmaGraphqlResolver {
     return TurmaGraphqlMapper.toListOutputDto(result);
   }
 
-  @Query(() => TurmaFindOneOutputDto, { name: "turmaFindById" })
+  @Query(() => TurmaFindOneOutputGraphQlDto, { name: "turmaFindById" })
   async findById(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<TurmaFindOneOutputDto> {
+  ): Promise<TurmaFindOneOutputGraphQlDto> {
     const selection = graphqlExtractSelection(info);
     const result = await this.turmaService.findByIdStrict(accessContext, { id, selection });
     return TurmaGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => TurmaFindOneOutputDto, { name: "turmaCreate" })
+  @Mutation(() => TurmaFindOneOutputGraphQlDto, { name: "turmaCreate" })
   async create(
     @AccessContextGraphQL() accessContext: AccessContext,
-    @Args("data") dto: TurmaCreateInputDto,
+    @Args("input") dto: TurmaCreateInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<TurmaFindOneOutputDto> {
+  ): Promise<TurmaFindOneOutputGraphQlDto> {
     const input = TurmaGraphqlMapper.toCreateInput(dto);
-    const result = await this.turmaService.create(accessContext, input as any);
+    const result = await this.turmaService.create(accessContext, input);
     return TurmaGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => TurmaFindOneOutputDto, { name: "turmaUpdate" })
+  @Mutation(() => TurmaFindOneOutputGraphQlDto, { name: "turmaUpdate" })
   async update(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
-    @Args("data") dto: TurmaUpdateInputDto,
+    @Args("input") dto: TurmaUpdateInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<TurmaFindOneOutputDto> {
-    const input = TurmaGraphqlMapper.toUpdateInput(id, dto);
-    const result = await this.turmaService.update(accessContext, input as any);
+  ): Promise<TurmaFindOneOutputGraphQlDto> {
+    const input = TurmaGraphqlMapper.toUpdateInput({ id }, dto);
+    const result = await this.turmaService.update(accessContext, input);
     return TurmaGraphqlMapper.toFindOneOutputDto(result);
   }
 

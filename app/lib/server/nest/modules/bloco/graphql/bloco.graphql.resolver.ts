@@ -4,24 +4,24 @@ import { AccessContext, AccessContextGraphQL } from "@/modules/@core/access-cont
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
 import { BlocoService } from "@/modules/bloco/application/use-cases/bloco.service";
 import {
-  BlocoCreateInputDto,
-  BlocoFindOneOutputDto,
-  BlocoUpdateInputDto,
-} from "../rest/bloco.rest.dto";
-import { BlocoRestMapper } from "../rest/bloco.rest.mapper";
-import { BlocoListInputGqlDto, BlocoListOutputGqlDto } from "./bloco.graphql.dto";
+  BlocoCreateInputGraphQlDto,
+  BlocoFindOneOutputGraphQlDto,
+  BlocoListInputGraphQlDto,
+  BlocoListOutputGraphQlDto,
+  BlocoUpdateInputGraphQlDto,
+} from "./bloco.graphql.dto";
 import { BlocoGraphqlMapper } from "./bloco.graphql.mapper";
 
-@Resolver(() => BlocoFindOneOutputDto)
+@Resolver(() => BlocoFindOneOutputGraphQlDto)
 export class BlocoGraphqlResolver {
   constructor(private readonly blocoService: BlocoService) {}
 
-  @Query(() => BlocoListOutputGqlDto, { name: "blocoFindAll" })
+  @Query(() => BlocoListOutputGraphQlDto, { name: "blocoFindAll" })
   async findAll(
     @AccessContextGraphQL() accessContext: AccessContext,
-    @Args() dto: BlocoListInputGqlDto,
+    @Args() dto: BlocoListInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<BlocoListOutputGqlDto> {
+  ): Promise<BlocoListOutputGraphQlDto> {
     const input = BlocoGraphqlMapper.toListInput(dto);
 
     if (input) {
@@ -32,36 +32,36 @@ export class BlocoGraphqlResolver {
     return BlocoGraphqlMapper.toListOutputDto(result);
   }
 
-  @Query(() => BlocoFindOneOutputDto, { name: "blocoFindById" })
+  @Query(() => BlocoFindOneOutputGraphQlDto, { name: "blocoFindById" })
   async findById(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<BlocoFindOneOutputDto> {
+  ): Promise<BlocoFindOneOutputGraphQlDto> {
     const selection = graphqlExtractSelection(info);
     const result = await this.blocoService.findByIdStrict(accessContext, { id, selection });
     return BlocoGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => BlocoFindOneOutputDto, { name: "blocoCreate" })
+  @Mutation(() => BlocoFindOneOutputGraphQlDto, { name: "blocoCreate" })
   async create(
     @AccessContextGraphQL() accessContext: AccessContext,
-    @Args("input") dto: BlocoCreateInputDto,
+    @Args("input") dto: BlocoCreateInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<BlocoFindOneOutputDto> {
-    const input = BlocoRestMapper.toCreateInput(dto);
+  ): Promise<BlocoFindOneOutputGraphQlDto> {
+    const input = BlocoGraphqlMapper.toCreateInput(dto);
     const result = await this.blocoService.create(accessContext, input);
     return BlocoGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => BlocoFindOneOutputDto, { name: "blocoUpdate" })
+  @Mutation(() => BlocoFindOneOutputGraphQlDto, { name: "blocoUpdate" })
   async update(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
-    @Args("input") dto: BlocoUpdateInputDto,
+    @Args("input") dto: BlocoUpdateInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<BlocoFindOneOutputDto> {
-    const input = BlocoRestMapper.toUpdateInput({ id }, dto);
+  ): Promise<BlocoFindOneOutputGraphQlDto> {
+    const input = BlocoGraphqlMapper.toUpdateInput({ id }, dto);
     const result = await this.blocoService.update(accessContext, input);
     return BlocoGraphqlMapper.toFindOneOutputDto(result);
   }

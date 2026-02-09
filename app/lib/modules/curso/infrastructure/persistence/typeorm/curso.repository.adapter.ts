@@ -7,13 +7,13 @@ import {
   NestJsPaginateAdapter,
   paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
-import type { ICursoRepositoryPort } from "@/modules/curso/application/ports";
 import type {
   CursoFindOneInputDto,
   CursoFindOneOutputDto,
   CursoListInputDto,
   CursoListOutputDto,
-} from "@/server/nest/modules/curso/rest";
+} from "@/modules/curso/application/dtos";
+import type { ICursoRepositoryPort } from "@/modules/curso/application/ports";
 import type { CursoEntity } from "./curso.entity";
 
 @Injectable()
@@ -29,7 +29,7 @@ export class CursoTypeOrmRepositoryAdapter
 {
   protected readonly alias = "curso";
   protected readonly authzAction = "curso:find";
-  protected readonly outputDtoName = "CursoFindOneOutput";
+  protected readonly outputDtoName = "CursoFindOneOutputDto";
 
   constructor(
     protected readonly databaseContext: DatabaseContextService,

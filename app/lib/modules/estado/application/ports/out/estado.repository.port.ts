@@ -1,9 +1,9 @@
 import type { IReadOnlyRepositoryPort } from "@/modules/@shared";
 import {
-  EstadoFindOneInput,
-  EstadoFindOneOutput,
-  EstadoListInput,
-  EstadoListOutput,
+  EstadoFindOneInputDto,
+  EstadoFindOneOutputDto,
+  EstadoListInputDto,
+  EstadoListOutputDto,
 } from "@/modules/estado";
 
 /**
@@ -17,8 +17,8 @@ export const ESTADO_REPOSITORY_PORT = Symbol("IEstadoRepositoryPort");
  */
 export interface IEstadoRepositoryPort
   extends IReadOnlyRepositoryPort<
-    EstadoListInput,
-    EstadoListOutput,
-    EstadoFindOneInput,
-    EstadoFindOneOutput
+    EstadoListInputDto,
+    EstadoListOutputDto,
+    EstadoFindOneInputDto,
+    EstadoFindOneOutputDto
   > {}

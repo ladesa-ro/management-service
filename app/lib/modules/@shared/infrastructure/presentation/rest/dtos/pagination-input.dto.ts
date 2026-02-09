@@ -1,13 +1,11 @@
-import { ArgsType, Field, Int } from "@nestjs/graphql";
 import { ApiPropertyOptional } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { IsArray, IsInt, IsOptional, IsString, Min } from "class-validator";
 
 /**
- * Base pagination input DTO for list queries.
+ * Base pagination input DTO for REST list queries.
  */
-@ArgsType()
-export class PaginationInputDto {
+export class PaginationInputRestDto {
   // Index signature for filter properties (compatible with SearchOptions)
   [key: string]: string | number | string[] | null | undefined;
 
@@ -17,7 +15,6 @@ export class PaginationInputDto {
     default: 1,
     example: 1,
   })
-  @Field(() => Int, { nullable: true, defaultValue: 1 })
   @IsOptional()
   @Type(() => Number)
   @IsInt()
@@ -29,7 +26,6 @@ export class PaginationInputDto {
     minimum: 1,
     example: 10,
   })
-  @Field(() => Int, { nullable: true })
   @IsOptional()
   @Type(() => Number)
   @IsInt()
@@ -40,7 +36,6 @@ export class PaginationInputDto {
     description: "Busca textual",
     example: "termo de busca",
   })
-  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   search?: string;
@@ -51,7 +46,6 @@ export class PaginationInputDto {
     type: String,
     example: ["dateCreated:ASC"],
   })
-  @Field(() => [String], { nullable: true })
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
@@ -62,7 +56,6 @@ export class PaginationInputDto {
     isArray: true,
     type: String,
   })
-  @Field(() => [String], { nullable: true })
   @IsOptional()
   @IsArray()
   @IsString({ each: true })

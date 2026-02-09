@@ -1,8 +1,7 @@
-import type { IdNumeric, IdUuid, ScalarDateTimeString } from "@/modules/@shared";
+import type { IdNumeric, IEntityBase } from "@/modules/@shared";
 import type { ICidade } from "@/modules/cidade";
 
-export interface IEndereco {
-  id: IdUuid;
+export interface IEndereco extends IEntityBase {
   cep: string;
   logradouro: string;
   numero: number;
@@ -10,9 +9,6 @@ export interface IEndereco {
   complemento: string | null;
   pontoReferencia: string | null;
   cidade: ICidade;
-  dateCreated: ScalarDateTimeString;
-  dateUpdated: ScalarDateTimeString;
-  dateDeleted: ScalarDateTimeString | null;
 }
 
 export interface IEnderecoInput {

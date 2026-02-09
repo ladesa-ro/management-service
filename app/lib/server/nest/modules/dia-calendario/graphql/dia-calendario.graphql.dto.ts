@@ -1,71 +1,106 @@
-import { ArgsType, Field, Int, ObjectType } from "@nestjs/graphql";
-import { IsArray, IsInt, IsOptional, IsString, Min } from "class-validator";
-import { PaginationMetaDto } from "@/modules/@shared/infrastructure/presentation/rest/dtos";
-import { DiaCalendarioFindOneOutputDto } from "../rest/dia-calendario.rest.dto";
+import { ArgsType, Field, InputType, ObjectType } from "@nestjs/graphql";
+import {
+  IsArray,
+  IsBoolean,
+  IsDateString,
+  IsOptional,
+  IsString,
+  IsUUID,
+  ValidateNested,
+} from "class-validator";
+import {
+  EntityBaseGraphQlDto,
+  PaginationMetaGraphQlDto,
+} from "@/modules/@shared/infrastructure/graphql/dtos";
+import { PaginationArgsGraphQlDto } from "@/modules/@shared/infrastructure/graphql/dtos/pagination-graphql.dto";
+import { CalendarioLetivoFindOneOutputGraphQlDto } from "@/server/nest/modules/calendario-letivo/graphql/calendario-letivo.graphql.dto";
 
 // ============================================================================
-// List Input (GraphQL-compatible - no dots in field names)
+// FindOne Output
+// ============================================================================
+
+@ObjectType("DiaCalendarioFindOneOutputDto")
+export class DiaCalendarioFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
+  @Field() data: string;
+  @Field() diaLetivo: boolean;
+  @Field() feriado: string;
+  @Field() diaPresencial: boolean;
+  @Field() tipo: string;
+  @Field() extraCurricular: boolean;
+  @Field(() => CalendarioLetivoFindOneOutputGraphQlDto)
+  calendario: CalendarioLetivoFindOneOutputGraphQlDto;
+}
+
+// ============================================================================
+// Create Input
+// ============================================================================
+
+@InputType("CalendarioLetivoRefInputForDiaCalendarioDto")
+export class CalendarioLetivoRefInputForDiaCalendarioGraphQlDto {
+  @Field() @IsString() id: string;
+}
+
+@InputType("DiaCalendarioCreateInputDto")
+export class DiaCalendarioCreateInputGraphQlDto {
+  @Field() @IsDateString() data: string;
+  @Field() @IsBoolean() diaLetivo: boolean;
+  @Field() @IsString() feriado: string;
+  @Field() @IsBoolean() diaPresencial: boolean;
+  @Field() @IsString() tipo: string;
+  @Field() @IsBoolean() extraCurricular: boolean;
+
+  @Field(() => CalendarioLetivoRefInputForDiaCalendarioGraphQlDto)
+  @ValidateNested()
+  calendario: CalendarioLetivoRefInputForDiaCalendarioGraphQlDto;
+}
+
+// ============================================================================
+// Update Input
+// ============================================================================
+
+@InputType("DiaCalendarioUpdateInputDto")
+export class DiaCalendarioUpdateInputGraphQlDto {
+  @Field({ nullable: true }) @IsOptional() @IsDateString() data?: string;
+  @Field({ nullable: true }) @IsOptional() @IsBoolean() diaLetivo?: boolean;
+  @Field({ nullable: true }) @IsOptional() @IsString() feriado?: string;
+  @Field({ nullable: true }) @IsOptional() @IsBoolean() diaPresencial?: boolean;
+  @Field({ nullable: true }) @IsOptional() @IsString() tipo?: string;
+  @Field({ nullable: true }) @IsOptional() @IsBoolean() extraCurricular?: boolean;
+
+  @Field(() => CalendarioLetivoRefInputForDiaCalendarioGraphQlDto, { nullable: true })
+  @IsOptional()
+  @ValidateNested()
+  calendario?: CalendarioLetivoRefInputForDiaCalendarioGraphQlDto;
+}
+
+// ============================================================================
+// List Input
 // ============================================================================
 
 @ArgsType()
-export class DiaCalendarioListInputGqlDto {
-  @Field(() => Int, { nullable: true, defaultValue: 1 })
-  @IsOptional()
-  @IsInt()
-  @Min(1)
-  page?: number = 1;
-
-  @Field(() => Int, { nullable: true })
-  @IsOptional()
-  @IsInt()
-  @Min(1)
-  limit?: number;
-
-  @Field(() => String, { nullable: true })
-  @IsOptional()
-  @IsString()
-  search?: string;
-
-  @Field(() => [String], { nullable: true })
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
-  sortBy?: string[];
-
+export class DiaCalendarioListInputGraphQlDto extends PaginationArgsGraphQlDto {
   @Field(() => [String], { nullable: true, description: "Filtro por ID" })
   @IsOptional()
   @IsArray()
-  @IsString({ each: true })
+  @IsUUID(undefined, { each: true })
   filterId?: string[];
 
   @Field(() => [String], { nullable: true, description: "Filtro por ID do Calendario" })
   @IsOptional()
   @IsArray()
-  @IsString({ each: true })
+  @IsUUID(undefined, { each: true })
   filterCalendarioId?: string[];
-
-  @Field(() => [String], { nullable: true, description: "Filtro por nome do Calendario" })
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
-  filterCalendarioNome?: string[];
-
-  @Field(() => [String], { nullable: true, description: "Filtro por ano do Calendario" })
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
-  filterCalendarioAno?: string[];
 }
 
 // ============================================================================
-// List Output (reuses the same output DTOs - they're already GraphQL-compatible)
+// List Output
 // ============================================================================
 
 @ObjectType("DiaCalendarioListResult")
-export class DiaCalendarioListOutputGqlDto {
-  @Field(() => PaginationMetaDto)
-  meta: PaginationMetaDto;
+export class DiaCalendarioListOutputGraphQlDto {
+  @Field(() => PaginationMetaGraphQlDto)
+  meta: PaginationMetaGraphQlDto;
 
-  @Field(() => [DiaCalendarioFindOneOutputDto])
-  data: DiaCalendarioFindOneOutputDto[];
+  @Field(() => [DiaCalendarioFindOneOutputGraphQlDto])
+  data: DiaCalendarioFindOneOutputGraphQlDto[];
 }

@@ -1,7 +1,7 @@
 import type { AccessContext } from "@/modules/@core/access-context";
 import type { IBaseCrudRepositoryPort } from "@/modules/@shared";
 import type { DiaCalendarioEntity } from "@/modules/dia-calendario/infrastructure/persistence/typeorm";
-import type { DiaCalendarioFindOneOutput, DiaCalendarioListOutput } from "../../dtos";
+import type { DiaCalendarioFindOneOutputDto, DiaCalendarioListOutputDto } from "../../dtos";
 
 export const DIA_CALENDARIO_REPOSITORY_PORT = Symbol("IDiaCalendarioRepositoryPort");
 
@@ -12,8 +12,8 @@ export const DIA_CALENDARIO_REPOSITORY_PORT = Symbol("IDiaCalendarioRepositoryPo
 export interface IDiaCalendarioRepositoryPort
   extends IBaseCrudRepositoryPort<
     DiaCalendarioEntity,
-    DiaCalendarioListOutput,
-    DiaCalendarioFindOneOutput
+    DiaCalendarioListOutputDto,
+    DiaCalendarioFindOneOutputDto
   > {
   /**
    * Busca um dia do calendário por ID (formato simples) - método obrigatório
@@ -22,5 +22,5 @@ export interface IDiaCalendarioRepositoryPort
     accessContext: AccessContext,
     id: string,
     selection?: string[],
-  ): Promise<DiaCalendarioFindOneOutput | null>;
+  ): Promise<DiaCalendarioFindOneOutputDto | null>;
 }

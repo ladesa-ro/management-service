@@ -8,10 +8,10 @@ import {
   paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
-  OfertaFormacaoFindOneInput,
-  OfertaFormacaoFindOneOutput,
-  OfertaFormacaoListInput,
-  OfertaFormacaoListOutput,
+  OfertaFormacaoFindOneInputDto,
+  OfertaFormacaoFindOneOutputDto,
+  OfertaFormacaoListInputDto,
+  OfertaFormacaoListOutputDto,
 } from "@/modules/oferta-formacao";
 import type { IOfertaFormacaoRepositoryPort } from "@/modules/oferta-formacao/application/ports";
 import type { OfertaFormacaoEntity } from "./oferta-formacao.entity";
@@ -20,16 +20,16 @@ import type { OfertaFormacaoEntity } from "./oferta-formacao.entity";
 export class OfertaFormacaoTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     OfertaFormacaoEntity,
-    OfertaFormacaoListInput,
-    OfertaFormacaoListOutput,
-    OfertaFormacaoFindOneInput,
-    OfertaFormacaoFindOneOutput
+    OfertaFormacaoListInputDto,
+    OfertaFormacaoListOutputDto,
+    OfertaFormacaoFindOneInputDto,
+    OfertaFormacaoFindOneOutputDto
   >
   implements IOfertaFormacaoRepositoryPort
 {
   protected readonly alias = "oferta_formacao";
   protected readonly authzAction = "oferta_formacao:find";
-  protected readonly outputDtoName = "OfertaFormacaoFindOneOutput";
+  protected readonly outputDtoName = "OfertaFormacaoFindOneOutputDto";
 
   constructor(
     protected readonly databaseContext: DatabaseContextService,

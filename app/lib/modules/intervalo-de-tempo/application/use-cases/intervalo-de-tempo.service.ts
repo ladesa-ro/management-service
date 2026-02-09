@@ -3,11 +3,11 @@ import { pick } from "lodash";
 import type { AccessContext } from "@/modules/@core/access-context";
 import { ResourceNotFoundError } from "@/modules/@shared";
 import {
-  IntervaloDeTempoFindOneInput,
-  IntervaloDeTempoFindOneOutput,
-  IntervaloDeTempoInput,
-  IntervaloDeTempoListInput,
-  IntervaloDeTempoListOutput,
+  IntervaloDeTempoFindOneInputDto,
+  IntervaloDeTempoFindOneOutputDto,
+  IntervaloDeTempoInputDto,
+  IntervaloDeTempoListInputDto,
+  IntervaloDeTempoListOutputDto,
 } from "@/modules/intervalo-de-tempo/application/dtos";
 import {
   type IIntervaloDeTempoRepositoryPort,
@@ -24,22 +24,22 @@ export class IntervaloDeTempoService implements IIntervaloDeTempoUseCasePort {
 
   async findAll(
     accessContext: AccessContext,
-    dto: IntervaloDeTempoListInput | null = null,
-  ): Promise<IntervaloDeTempoListOutput> {
+    dto: IntervaloDeTempoListInputDto | null = null,
+  ): Promise<IntervaloDeTempoListOutputDto> {
     return this.intervaloDeTempoRepository.findAll(accessContext, dto);
   }
 
   async findById(
     accessContext: AccessContext | null,
-    dto: IntervaloDeTempoFindOneInput,
-  ): Promise<IntervaloDeTempoFindOneOutput | null> {
+    dto: IntervaloDeTempoFindOneInputDto,
+  ): Promise<IntervaloDeTempoFindOneOutputDto | null> {
     return this.intervaloDeTempoRepository.findById(accessContext, dto);
   }
 
   async findByIdStrict(
     accessContext: AccessContext | null,
-    dto: IntervaloDeTempoFindOneInput,
-  ): Promise<IntervaloDeTempoFindOneOutput> {
+    dto: IntervaloDeTempoFindOneInputDto,
+  ): Promise<IntervaloDeTempoFindOneOutputDto> {
     const intervaloDeTempo = await this.intervaloDeTempoRepository.findById(accessContext, dto);
 
     if (!intervaloDeTempo) {
@@ -51,8 +51,8 @@ export class IntervaloDeTempoService implements IIntervaloDeTempoUseCasePort {
 
   async intervaloCreateOrUpdate(
     accessContext: AccessContext | null,
-    dto: IntervaloDeTempoInput,
-  ): Promise<IntervaloDeTempoFindOneOutput> {
+    dto: IntervaloDeTempoInputDto,
+  ): Promise<IntervaloDeTempoFindOneOutputDto> {
     const intervalExisting = await this.intervaloDeTempoRepository.findOne(dto);
 
     if (intervalExisting) return intervalExisting;

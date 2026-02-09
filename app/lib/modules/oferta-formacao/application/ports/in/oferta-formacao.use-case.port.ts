@@ -1,43 +1,43 @@
 import type { AccessContext } from "@/modules/@core/access-context";
 import {
-  OfertaFormacaoCreateInput,
-  OfertaFormacaoFindOneInput,
-  OfertaFormacaoFindOneOutput,
-  OfertaFormacaoListInput,
-  OfertaFormacaoListOutput,
-  OfertaFormacaoUpdateInput,
+  OfertaFormacaoCreateInputDto,
+  OfertaFormacaoFindOneInputDto,
+  OfertaFormacaoFindOneOutputDto,
+  OfertaFormacaoListInputDto,
+  OfertaFormacaoListOutputDto,
+  OfertaFormacaoUpdateInputDto,
 } from "../../dtos";
 
 export interface IOfertaFormacaoUseCasePort {
   findAll(
     accessContext: AccessContext,
-    dto: OfertaFormacaoListInput | null,
-  ): Promise<OfertaFormacaoListOutput>;
+    dto: OfertaFormacaoListInputDto | null,
+  ): Promise<OfertaFormacaoListOutputDto>;
 
   findById(
     accessContext: AccessContext,
-    dto: OfertaFormacaoFindOneInput,
-  ): Promise<OfertaFormacaoFindOneOutput | null>;
+    dto: OfertaFormacaoFindOneInputDto,
+  ): Promise<OfertaFormacaoFindOneOutputDto | null>;
 
   findByIdStrict(
     accessContext: AccessContext,
-    dto: OfertaFormacaoFindOneInput,
-  ): Promise<OfertaFormacaoFindOneOutput>;
+    dto: OfertaFormacaoFindOneInputDto,
+  ): Promise<OfertaFormacaoFindOneOutputDto>;
 
   findByIdSimpleStrict(
     accessContext: AccessContext,
     id: string,
-  ): Promise<OfertaFormacaoFindOneOutput>;
+  ): Promise<OfertaFormacaoFindOneOutputDto>;
 
   create(
     accessContext: AccessContext,
-    dto: OfertaFormacaoCreateInput,
-  ): Promise<OfertaFormacaoFindOneOutput>;
+    dto: OfertaFormacaoCreateInputDto,
+  ): Promise<OfertaFormacaoFindOneOutputDto>;
 
   update(
     accessContext: AccessContext,
-    dto: OfertaFormacaoFindOneInput & OfertaFormacaoUpdateInput,
-  ): Promise<OfertaFormacaoFindOneOutput>;
+    dto: OfertaFormacaoFindOneInputDto & OfertaFormacaoUpdateInputDto,
+  ): Promise<OfertaFormacaoFindOneOutputDto>;
 
-  deleteOneById(accessContext: AccessContext, dto: OfertaFormacaoFindOneInput): Promise<boolean>;
+  deleteOneById(accessContext: AccessContext, dto: OfertaFormacaoFindOneInputDto): Promise<boolean>;
 }

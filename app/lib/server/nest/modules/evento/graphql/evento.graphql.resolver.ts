@@ -4,23 +4,24 @@ import { AccessContext, AccessContextGraphQL } from "@/modules/@core/access-cont
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
 import { EventoService } from "@/modules/evento/application/use-cases/evento.service";
 import {
-  EventoCreateInputDto,
-  EventoFindOneOutputDto,
-  EventoUpdateInputDto,
-} from "../rest/evento.rest.dto";
-import { EventoListInputGqlDto, EventoListOutputGqlDto } from "./evento.graphql.dto";
+  EventoCreateInputGraphQlDto,
+  EventoFindOneOutputGraphQlDto,
+  EventoListInputGraphQlDto,
+  EventoListOutputGraphQlDto,
+  EventoUpdateInputGraphQlDto,
+} from "./evento.graphql.dto";
 import { EventoGraphqlMapper } from "./evento.graphql.mapper";
 
-@Resolver(() => EventoFindOneOutputDto)
+@Resolver(() => EventoFindOneOutputGraphQlDto)
 export class EventoGraphqlResolver {
   constructor(private readonly eventoService: EventoService) {}
 
-  @Query(() => EventoListOutputGqlDto, { name: "eventoFindAll" })
+  @Query(() => EventoListOutputGraphQlDto, { name: "eventoFindAll" })
   async findAll(
     @AccessContextGraphQL() accessContext: AccessContext,
-    @Args() dto: EventoListInputGqlDto,
+    @Args() dto: EventoListInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<EventoListOutputGqlDto> {
+  ): Promise<EventoListOutputGraphQlDto> {
     const input = EventoGraphqlMapper.toListInput(dto);
 
     if (input) {
@@ -31,35 +32,35 @@ export class EventoGraphqlResolver {
     return EventoGraphqlMapper.toListOutputDto(result);
   }
 
-  @Query(() => EventoFindOneOutputDto, { name: "eventoFindById" })
+  @Query(() => EventoFindOneOutputGraphQlDto, { name: "eventoFindById" })
   async findById(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<EventoFindOneOutputDto> {
+  ): Promise<EventoFindOneOutputGraphQlDto> {
     const selection = graphqlExtractSelection(info);
     const result = await this.eventoService.findByIdStrict(accessContext, { id, selection });
     return EventoGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => EventoFindOneOutputDto, { name: "eventoCreate" })
+  @Mutation(() => EventoFindOneOutputGraphQlDto, { name: "eventoCreate" })
   async create(
     @AccessContextGraphQL() accessContext: AccessContext,
-    @Args("data") dto: EventoCreateInputDto,
+    @Args("data") dto: EventoCreateInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<EventoFindOneOutputDto> {
+  ): Promise<EventoFindOneOutputGraphQlDto> {
     const input = EventoGraphqlMapper.toCreateInput(dto);
     const result = await this.eventoService.create(accessContext, input);
     return EventoGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => EventoFindOneOutputDto, { name: "eventoUpdate" })
+  @Mutation(() => EventoFindOneOutputGraphQlDto, { name: "eventoUpdate" })
   async update(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
-    @Args("data") dto: EventoUpdateInputDto,
+    @Args("data") dto: EventoUpdateInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<EventoFindOneOutputDto> {
+  ): Promise<EventoFindOneOutputGraphQlDto> {
     const findOneInput = EventoGraphqlMapper.toFindOneInput(id);
     const updateInput = EventoGraphqlMapper.toUpdateInput(dto);
     const result = await this.eventoService.update(accessContext, {

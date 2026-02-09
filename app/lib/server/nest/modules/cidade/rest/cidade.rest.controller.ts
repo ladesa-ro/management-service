@@ -9,10 +9,10 @@ import {
 import { AccessContext, AccessContextHttp } from "@/modules/@core/access-context";
 import { CidadeService } from "@/modules/cidade/application/use-cases/cidade.service";
 import {
-  CidadeFindOneInputDto,
-  CidadeFindOneOutputDto,
-  CidadeListInputDto,
-  CidadeListOutputDto,
+  CidadeFindOneInputRestDto,
+  CidadeFindOneOutputRestDto,
+  CidadeListInputRestDto,
+  CidadeListOutputRestDto,
 } from "./cidade.rest.dto";
 import { CidadeRestMapper } from "./cidade.rest.mapper";
 
@@ -23,12 +23,12 @@ export class CidadeRestController {
 
   @Get("/")
   @ApiOperation({ summary: "Lista cidades", operationId: "cidadeFindAll" })
-  @ApiOkResponse({ type: CidadeListOutputDto })
+  @ApiOkResponse({ type: CidadeListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
     @AccessContextHttp() accessContext: AccessContext,
-    @Query() dto: CidadeListInputDto,
-  ): Promise<CidadeListOutputDto> {
+    @Query() dto: CidadeListInputRestDto,
+  ): Promise<CidadeListOutputRestDto> {
     const input = CidadeRestMapper.toListInput(dto);
     const result = await this.cidadeService.findAll(accessContext, input);
     return CidadeRestMapper.toListOutputDto(result);
@@ -36,13 +36,13 @@ export class CidadeRestController {
 
   @Get("/:id")
   @ApiOperation({ summary: "Busca uma cidade por ID", operationId: "cidadeFindById" })
-  @ApiOkResponse({ type: CidadeFindOneOutputDto })
+  @ApiOkResponse({ type: CidadeFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async findById(
     @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: CidadeFindOneInputDto,
-  ): Promise<CidadeFindOneOutputDto> {
+    @Param() params: CidadeFindOneInputRestDto,
+  ): Promise<CidadeFindOneOutputRestDto> {
     const input = CidadeRestMapper.toFindOneInput(params);
     const result = await this.cidadeService.findByIdStrict(accessContext, input);
     return CidadeRestMapper.toFindOneOutputDto(result);

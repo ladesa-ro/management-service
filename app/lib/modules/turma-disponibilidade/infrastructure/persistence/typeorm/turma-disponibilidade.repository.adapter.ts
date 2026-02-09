@@ -9,10 +9,10 @@ import {
   paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
-  TurmaDisponibilidadeFindOneInput,
-  TurmaDisponibilidadeFindOneOutput,
-  TurmaDisponibilidadeListInput,
-  TurmaDisponibilidadeListOutput,
+  TurmaDisponibilidadeFindOneInputDto,
+  TurmaDisponibilidadeFindOneOutputDto,
+  TurmaDisponibilidadeListInputDto,
+  TurmaDisponibilidadeListOutputDto,
 } from "@/modules/turma-disponibilidade";
 import type { ITurmaDisponibilidadeRepositoryPort } from "@/modules/turma-disponibilidade/application/ports/out";
 import type { TurmaDisponibilidadeEntity } from "./turma-disponibilidade.entity";
@@ -25,16 +25,16 @@ import type { TurmaDisponibilidadeEntity } from "./turma-disponibilidade.entity"
 export class TurmaDisponibilidadeTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     TurmaDisponibilidadeEntity,
-    TurmaDisponibilidadeListInput,
-    TurmaDisponibilidadeListOutput,
-    TurmaDisponibilidadeFindOneInput,
-    TurmaDisponibilidadeFindOneOutput
+    TurmaDisponibilidadeListInputDto,
+    TurmaDisponibilidadeListOutputDto,
+    TurmaDisponibilidadeFindOneInputDto,
+    TurmaDisponibilidadeFindOneOutputDto
   >
   implements ITurmaDisponibilidadeRepositoryPort
 {
   protected readonly alias = "turma_disponibilidade";
   protected readonly authzAction = "turma_disponibilidade:find";
-  protected readonly outputDtoName = "TurmaDisponibilidadeFindOneOutput";
+  protected readonly outputDtoName = "TurmaDisponibilidadeFindOneOutputDto";
 
   constructor(
     protected readonly databaseContext: DatabaseContextService,

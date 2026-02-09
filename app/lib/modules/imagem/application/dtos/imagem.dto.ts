@@ -1,56 +1,56 @@
 import {
-  EntityOutput,
-  FindOneInput,
+  EntityOutputDto,
+  FindOneInputDto,
   IFilterAcceptableValues,
-  ObjectUuidRef,
-  PaginationInput,
-  PaginationResult,
+  ObjectUuidRefDto,
+  PaginationInputDto,
+  PaginationResultDto,
 } from "@/modules/@shared";
-import { ArquivoFindOneOutput } from "@/modules/arquivo";
+import { ArquivoFindOneOutputDto } from "@/modules/arquivo";
 
 // ============================================================================
 // Imagem Arquivo Output (for versoes relation)
 // ============================================================================
 
-export class ImagemArquivoFindOneFromImagemOutput {
+export class ImagemArquivoFindOneFromImagemOutputDto {
   id!: string;
   largura!: number | null;
   altura!: number | null;
   formato!: string | null;
   mimeType!: string | null;
-  arquivo!: ArquivoFindOneOutput;
+  arquivo!: ArquivoFindOneOutputDto;
 }
 
 // ============================================================================
 // FindOne Input/Output
 // ============================================================================
 
-export class ImagemFindOneInput extends FindOneInput {}
+export class ImagemFindOneInputDto extends FindOneInputDto {}
 
-export class ImagemFindOneOutput extends EntityOutput {
+export class ImagemFindOneOutputDto extends EntityOutputDto {
   descricao!: string | null;
-  versoes!: ImagemArquivoFindOneFromImagemOutput[];
+  versoes!: ImagemArquivoFindOneFromImagemOutputDto[];
 }
 
 // ============================================================================
 // List Input/Output
 // ============================================================================
 
-export class ImagemListInput extends PaginationInput {
+export class ImagemListInputDto extends PaginationInputDto {
   "filter.id"?: IFilterAcceptableValues;
 }
 
-export class ImagemListOutput extends PaginationResult<ImagemFindOneOutput> {}
+export class ImagemListOutputDto extends PaginationResultDto<ImagemFindOneOutputDto> {}
 
 // ============================================================================
 // Create/Update Input
 // ============================================================================
 
-export class ImagemCreateInput {
+export class ImagemCreateInputDto {
   descricao?: string | null;
 }
 
-export class ImagemUpdateInput {
+export class ImagemUpdateInputDto {
   descricao?: string | null;
 }
 
@@ -58,4 +58,4 @@ export class ImagemUpdateInput {
 // Input Ref
 // ============================================================================
 
-export type ImagemInputRef = ObjectUuidRef;
+export type ImagemInputRefDto = ObjectUuidRefDto;

@@ -1,68 +1,68 @@
 import {
-  EntityOutput,
-  FindOneInput,
+  EntityOutputDto,
+  FindOneInputDto,
   IFilterAcceptableValues,
-  ObjectUuidRef,
-  PaginationInput,
-  PaginationResult,
+  ObjectUuidRefDto,
+  PaginationInputDto,
+  PaginationResultDto,
 } from "@/modules/@shared/application/dtos";
-import { BlocoFindOneOutput, BlocoInputRef } from "@/modules/bloco";
-import { ImagemFindOneOutput, ImagemInputRef } from "@/modules/imagem";
+import { BlocoFindOneOutputDto, BlocoInputRefDto } from "@/modules/bloco";
+import { ImagemFindOneOutputDto, ImagemInputRefDto } from "@/modules/imagem";
 
 // ============================================================================
 // FindOne Input/Output
 // ============================================================================
 
-export class AmbienteFindOneInput extends FindOneInput {}
+export class AmbienteFindOneInputDto extends FindOneInputDto {}
 
-export class AmbienteFindOneOutput extends EntityOutput {
+export class AmbienteFindOneOutputDto extends EntityOutputDto {
   nome!: string;
   descricao!: string | null;
   codigo!: string;
   capacidade!: number | null;
   tipo!: string | null;
-  bloco!: BlocoFindOneOutput;
-  imagemCapa!: ImagemFindOneOutput | null;
+  bloco!: BlocoFindOneOutputDto;
+  imagemCapa!: ImagemFindOneOutputDto | null;
 }
 
 // ============================================================================
 // List Input/Output
 // ============================================================================
 
-export class AmbienteListInput extends PaginationInput {
+export class AmbienteListInputDto extends PaginationInputDto {
   "filter.id"?: IFilterAcceptableValues;
   "filter.bloco.id"?: IFilterAcceptableValues;
   "filter.bloco.campus.id"?: IFilterAcceptableValues;
 }
 
-export class AmbienteListOutput extends PaginationResult<AmbienteFindOneOutput> {}
+export class AmbienteListOutputDto extends PaginationResultDto<AmbienteFindOneOutputDto> {}
 
 // ============================================================================
 // Create/Update Input
 // ============================================================================
 
-export class AmbienteCreateInput {
+export class AmbienteCreateInputDto {
   nome!: string;
   descricao?: string | null;
   codigo!: string;
   capacidade?: number | null;
   tipo?: string | null;
-  bloco!: BlocoInputRef;
-  imagemCapa?: ImagemInputRef | null;
+  bloco!: BlocoInputRefDto;
+  imagemCapa?: ImagemInputRefDto | null;
 }
 
-export class AmbienteUpdateInput {
+export class AmbienteUpdateInputDto {
   nome?: string;
   descricao?: string | null;
   codigo?: string;
   capacidade?: number | null;
   tipo?: string | null;
-  bloco?: BlocoInputRef;
-  imagemCapa?: ImagemInputRef | null;
+  bloco?: BlocoInputRefDto;
+  imagemCapa?: ImagemInputRefDto | null;
 }
 
 // ============================================================================
 // Input Ref
 // ============================================================================
 
-export type AmbienteInputRef = ObjectUuidRef;
+export type AmbienteInputRefDto = ObjectUuidRefDto;

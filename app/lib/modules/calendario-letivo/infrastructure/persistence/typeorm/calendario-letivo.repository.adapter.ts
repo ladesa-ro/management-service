@@ -8,10 +8,10 @@ import {
   paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
-  CalendarioLetivoFindOneInput,
-  CalendarioLetivoFindOneOutput,
-  CalendarioLetivoListInput,
-  CalendarioLetivoListOutput,
+  CalendarioLetivoFindOneInputDto,
+  CalendarioLetivoFindOneOutputDto,
+  CalendarioLetivoListInputDto,
+  CalendarioLetivoListOutputDto,
   ICalendarioLetivoRepositoryPort,
 } from "@/modules/calendario-letivo";
 import type { CalendarioLetivoEntity } from "./calendario-letivo.entity";
@@ -20,16 +20,16 @@ import type { CalendarioLetivoEntity } from "./calendario-letivo.entity";
 export class CalendarioLetivoTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     CalendarioLetivoEntity,
-    CalendarioLetivoListInput,
-    CalendarioLetivoListOutput,
-    CalendarioLetivoFindOneInput,
-    CalendarioLetivoFindOneOutput
+    CalendarioLetivoListInputDto,
+    CalendarioLetivoListOutputDto,
+    CalendarioLetivoFindOneInputDto,
+    CalendarioLetivoFindOneOutputDto
   >
   implements ICalendarioLetivoRepositoryPort
 {
   protected readonly alias = "calendario_letivo";
   protected readonly authzAction = "calendario_letivo:find";
-  protected readonly outputDtoName = "CalendarioLetivoFindOneOutput";
+  protected readonly outputDtoName = "CalendarioLetivoFindOneOutputDto";
 
   constructor(
     protected readonly databaseContext: DatabaseContextService,

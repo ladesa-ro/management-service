@@ -25,13 +25,13 @@ import {
 import { AccessContext, AccessContextHttp } from "@/modules/@core/access-context";
 import { UsuarioService } from "@/modules/usuario/application/use-cases/usuario.service";
 import {
-  UsuarioCreateInputDto,
-  UsuarioEnsinoOutputDto,
-  UsuarioFindOneInputDto,
-  UsuarioFindOneOutputDto,
-  UsuarioListInputDto,
-  UsuarioListOutputDto,
-  UsuarioUpdateInputDto,
+  UsuarioCreateInputRestDto,
+  UsuarioEnsinoOutputRestDto,
+  UsuarioFindOneInputRestDto,
+  UsuarioFindOneOutputRestDto,
+  UsuarioListInputRestDto,
+  UsuarioListOutputRestDto,
+  UsuarioUpdateInputRestDto,
 } from "./usuario.rest.dto";
 import { UsuarioRestMapper } from "./usuario.rest.mapper";
 
@@ -42,12 +42,12 @@ export class UsuarioRestController {
 
   @Get("/")
   @ApiOperation({ summary: "Lista usuarios", operationId: "usuarioFindAll" })
-  @ApiOkResponse({ type: UsuarioListOutputDto })
+  @ApiOkResponse({ type: UsuarioListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
     @AccessContextHttp() accessContext: AccessContext,
-    @Query() dto: UsuarioListInputDto,
-  ): Promise<UsuarioListOutputDto> {
+    @Query() dto: UsuarioListInputRestDto,
+  ): Promise<UsuarioListOutputRestDto> {
     const input = UsuarioRestMapper.toListInput(dto);
     const result = await this.usuarioService.findAll(accessContext, input);
     return UsuarioRestMapper.toListOutputDto(result);
@@ -55,13 +55,13 @@ export class UsuarioRestController {
 
   @Get("/:id")
   @ApiOperation({ summary: "Busca um usuario por ID", operationId: "usuarioFindById" })
-  @ApiOkResponse({ type: UsuarioFindOneOutputDto })
+  @ApiOkResponse({ type: UsuarioFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async findById(
     @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: UsuarioFindOneInputDto,
-  ): Promise<UsuarioFindOneOutputDto> {
+    @Param() params: UsuarioFindOneInputRestDto,
+  ): Promise<UsuarioFindOneOutputRestDto> {
     const input = UsuarioRestMapper.toFindOneInput(params);
     const result = await this.usuarioService.findByIdStrict(accessContext, input);
     return UsuarioRestMapper.toFindOneOutputDto(result);
@@ -72,13 +72,13 @@ export class UsuarioRestController {
     summary: "Busca dados de ensino de um usuario (disciplinas, cursos e turmas onde leciona)",
     operationId: "usuarioEnsinoById",
   })
-  @ApiOkResponse({ type: UsuarioEnsinoOutputDto })
+  @ApiOkResponse({ type: UsuarioEnsinoOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async ensinoById(
     @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: UsuarioFindOneInputDto,
-  ): Promise<UsuarioEnsinoOutputDto> {
+    @Param() params: UsuarioFindOneInputRestDto,
+  ): Promise<UsuarioEnsinoOutputRestDto> {
     const input = UsuarioRestMapper.toFindOneInput(params);
     const result = await this.usuarioService.usuarioEnsinoById(accessContext, input);
     return UsuarioRestMapper.toEnsinoOutputDto(result);
@@ -86,12 +86,12 @@ export class UsuarioRestController {
 
   @Post("/")
   @ApiOperation({ summary: "Cria um usuario", operationId: "usuarioCreate" })
-  @ApiCreatedResponse({ type: UsuarioFindOneOutputDto })
+  @ApiCreatedResponse({ type: UsuarioFindOneOutputRestDto })
   @ApiForbiddenResponse()
   async create(
     @AccessContextHttp() accessContext: AccessContext,
-    @Body() dto: UsuarioCreateInputDto,
-  ): Promise<UsuarioFindOneOutputDto> {
+    @Body() dto: UsuarioCreateInputRestDto,
+  ): Promise<UsuarioFindOneOutputRestDto> {
     const input = UsuarioRestMapper.toCreateInput(dto);
     const result = await this.usuarioService.create(accessContext, input);
     return UsuarioRestMapper.toFindOneOutputDto(result);
@@ -99,14 +99,14 @@ export class UsuarioRestController {
 
   @Patch("/:id")
   @ApiOperation({ summary: "Atualiza um usuario", operationId: "usuarioUpdate" })
-  @ApiOkResponse({ type: UsuarioFindOneOutputDto })
+  @ApiOkResponse({ type: UsuarioFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async update(
     @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: UsuarioFindOneInputDto,
-    @Body() dto: UsuarioUpdateInputDto,
-  ): Promise<UsuarioFindOneOutputDto> {
+    @Param() params: UsuarioFindOneInputRestDto,
+    @Body() dto: UsuarioUpdateInputRestDto,
+  ): Promise<UsuarioFindOneOutputRestDto> {
     const input = UsuarioRestMapper.toUpdateInput(params, dto);
     const result = await this.usuarioService.update(accessContext, input);
     return UsuarioRestMapper.toFindOneOutputDto(result);
@@ -122,7 +122,7 @@ export class UsuarioRestController {
   @ApiNotFoundResponse()
   async getImagemCapa(
     @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: UsuarioFindOneInputDto,
+    @Param() params: UsuarioFindOneInputRestDto,
   ) {
     return this.usuarioService.getImagemCapa(accessContext, params.id);
   }
@@ -148,7 +148,7 @@ export class UsuarioRestController {
   @UseInterceptors(FileInterceptor("file"))
   async updateImagemCapa(
     @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: UsuarioFindOneInputDto,
+    @Param() params: UsuarioFindOneInputRestDto,
     @UploadedFile() file: Express.Multer.File,
   ): Promise<boolean> {
     return this.usuarioService.updateImagemCapa(accessContext, params, file);
@@ -164,7 +164,7 @@ export class UsuarioRestController {
   @ApiNotFoundResponse()
   async getImagemPerfil(
     @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: UsuarioFindOneInputDto,
+    @Param() params: UsuarioFindOneInputRestDto,
   ) {
     return this.usuarioService.getImagemPerfil(accessContext, params.id);
   }
@@ -190,7 +190,7 @@ export class UsuarioRestController {
   @UseInterceptors(FileInterceptor("file"))
   async updateImagemPerfil(
     @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: UsuarioFindOneInputDto,
+    @Param() params: UsuarioFindOneInputRestDto,
     @UploadedFile() file: Express.Multer.File,
   ): Promise<boolean> {
     return this.usuarioService.updateImagemPerfil(accessContext, params, file);
@@ -203,7 +203,7 @@ export class UsuarioRestController {
   @ApiNotFoundResponse()
   async deleteOneById(
     @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: UsuarioFindOneInputDto,
+    @Param() params: UsuarioFindOneInputRestDto,
   ): Promise<boolean> {
     const input = UsuarioRestMapper.toFindOneInput(params);
     return this.usuarioService.deleteOneById(accessContext, input);

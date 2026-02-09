@@ -10,12 +10,12 @@ import {
 import { AccessContext, AccessContextHttp } from "@/modules/@core/access-context";
 import { NivelFormacaoService } from "@/modules/nivel-formacao/application/use-cases/nivel-formacao.service";
 import {
-  NivelFormacaoCreateInputDto,
-  NivelFormacaoFindOneInputDto,
-  NivelFormacaoFindOneOutputDto,
-  NivelFormacaoListInputDto,
-  NivelFormacaoListOutputDto,
-  NivelFormacaoUpdateInputDto,
+  NivelFormacaoCreateInputRestDto,
+  NivelFormacaoFindOneInputRestDto,
+  NivelFormacaoFindOneOutputRestDto,
+  NivelFormacaoListInputRestDto,
+  NivelFormacaoListOutputRestDto,
+  NivelFormacaoUpdateInputRestDto,
 } from "./nivel-formacao.rest.dto";
 import { NivelFormacaoRestMapper } from "./nivel-formacao.rest.mapper";
 
@@ -26,12 +26,12 @@ export class NivelFormacaoRestController {
 
   @Get("/")
   @ApiOperation({ summary: "Lista niveis de formacao", operationId: "nivelFormacaoFindAll" })
-  @ApiOkResponse({ type: NivelFormacaoListOutputDto })
+  @ApiOkResponse({ type: NivelFormacaoListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
     @AccessContextHttp() accessContext: AccessContext,
-    @Query() dto: NivelFormacaoListInputDto,
-  ): Promise<NivelFormacaoListOutputDto> {
+    @Query() dto: NivelFormacaoListInputRestDto,
+  ): Promise<NivelFormacaoListOutputRestDto> {
     const input = NivelFormacaoRestMapper.toListInput(dto);
     const result = await this.nivelFormacaoService.findAll(accessContext, input);
     return NivelFormacaoRestMapper.toListOutputDto(result);
@@ -42,13 +42,13 @@ export class NivelFormacaoRestController {
     summary: "Busca um nivel de formacao por ID",
     operationId: "nivelFormacaoFindById",
   })
-  @ApiOkResponse({ type: NivelFormacaoFindOneOutputDto })
+  @ApiOkResponse({ type: NivelFormacaoFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async findById(
     @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: NivelFormacaoFindOneInputDto,
-  ): Promise<NivelFormacaoFindOneOutputDto> {
+    @Param() params: NivelFormacaoFindOneInputRestDto,
+  ): Promise<NivelFormacaoFindOneOutputRestDto> {
     const input = NivelFormacaoRestMapper.toFindOneInput(params);
     const result = await this.nivelFormacaoService.findByIdStrict(accessContext, input);
     return NivelFormacaoRestMapper.toFindOneOutputDto(result);
@@ -56,12 +56,12 @@ export class NivelFormacaoRestController {
 
   @Post("/")
   @ApiOperation({ summary: "Cria um nivel de formacao", operationId: "nivelFormacaoCreate" })
-  @ApiCreatedResponse({ type: NivelFormacaoFindOneOutputDto })
+  @ApiCreatedResponse({ type: NivelFormacaoFindOneOutputRestDto })
   @ApiForbiddenResponse()
   async create(
     @AccessContextHttp() accessContext: AccessContext,
-    @Body() dto: NivelFormacaoCreateInputDto,
-  ): Promise<NivelFormacaoFindOneOutputDto> {
+    @Body() dto: NivelFormacaoCreateInputRestDto,
+  ): Promise<NivelFormacaoFindOneOutputRestDto> {
     const input = NivelFormacaoRestMapper.toCreateInput(dto);
     const result = await this.nivelFormacaoService.create(accessContext, input);
     return NivelFormacaoRestMapper.toFindOneOutputDto(result);
@@ -69,14 +69,14 @@ export class NivelFormacaoRestController {
 
   @Patch("/:id")
   @ApiOperation({ summary: "Atualiza um nivel de formacao", operationId: "nivelFormacaoUpdate" })
-  @ApiOkResponse({ type: NivelFormacaoFindOneOutputDto })
+  @ApiOkResponse({ type: NivelFormacaoFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async update(
     @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: NivelFormacaoFindOneInputDto,
-    @Body() dto: NivelFormacaoUpdateInputDto,
-  ): Promise<NivelFormacaoFindOneOutputDto> {
+    @Param() params: NivelFormacaoFindOneInputRestDto,
+    @Body() dto: NivelFormacaoUpdateInputRestDto,
+  ): Promise<NivelFormacaoFindOneOutputRestDto> {
     const findOneInput = NivelFormacaoRestMapper.toFindOneInput(params);
     const updateInput = NivelFormacaoRestMapper.toUpdateInput(dto);
     const result = await this.nivelFormacaoService.update(accessContext, {
@@ -96,7 +96,7 @@ export class NivelFormacaoRestController {
   @ApiNotFoundResponse()
   async deleteOneById(
     @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: NivelFormacaoFindOneInputDto,
+    @Param() params: NivelFormacaoFindOneInputRestDto,
   ): Promise<boolean> {
     const input = NivelFormacaoRestMapper.toFindOneInput(params);
     return this.nivelFormacaoService.deleteOneById(accessContext, input);

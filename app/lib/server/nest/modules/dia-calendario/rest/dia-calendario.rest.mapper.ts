@@ -1,36 +1,36 @@
 import {
-  DiaCalendarioCreateInput,
-  DiaCalendarioFindOneInput,
-  DiaCalendarioFindOneOutput,
-  DiaCalendarioListInput,
-  DiaCalendarioListOutput,
-  DiaCalendarioUpdateInput,
-} from "@/modules/dia-calendario";
-import { CalendarioLetivoRestMapper } from "@/server/nest/modules/calendario-letivo/rest";
-import { mapPaginationMeta } from "@/server/nest/shared/mappers";
-import {
   DiaCalendarioCreateInputDto,
   DiaCalendarioFindOneInputDto,
   DiaCalendarioFindOneOutputDto,
   DiaCalendarioListInputDto,
   DiaCalendarioListOutputDto,
   DiaCalendarioUpdateInputDto,
+} from "@/modules/dia-calendario";
+import { CalendarioLetivoRestMapper } from "@/server/nest/modules/calendario-letivo/rest";
+import { mapPaginationMeta } from "@/server/nest/shared/mappers";
+import {
+  DiaCalendarioCreateInputRestDto,
+  DiaCalendarioFindOneInputRestDto,
+  DiaCalendarioFindOneOutputRestDto,
+  DiaCalendarioListInputRestDto,
+  DiaCalendarioListOutputRestDto,
+  DiaCalendarioUpdateInputRestDto,
   type TipoDiaCalendario,
 } from "./dia-calendario.rest.dto";
 
 export class DiaCalendarioRestMapper {
-  static toFindOneInput(dto: DiaCalendarioFindOneInputDto): DiaCalendarioFindOneInput {
-    const input = new DiaCalendarioFindOneInput();
+  static toFindOneInput(dto: DiaCalendarioFindOneInputRestDto): DiaCalendarioFindOneInputDto {
+    const input = new DiaCalendarioFindOneInputDto();
     input.id = dto.id;
     return input;
   }
 
-  static toListInput(dto: DiaCalendarioListInputDto | null): DiaCalendarioListInput | null {
+  static toListInput(dto: DiaCalendarioListInputRestDto | null): DiaCalendarioListInputDto | null {
     if (!dto) {
       return null;
     }
 
-    const input = new DiaCalendarioListInput();
+    const input = new DiaCalendarioListInputDto();
     input.page = dto.page;
     input.limit = dto.limit;
     input.search = dto.search;
@@ -41,8 +41,8 @@ export class DiaCalendarioRestMapper {
     return input;
   }
 
-  static toCreateInput(dto: DiaCalendarioCreateInputDto): DiaCalendarioCreateInput {
-    const input = new DiaCalendarioCreateInput();
+  static toCreateInput(dto: DiaCalendarioCreateInputRestDto): DiaCalendarioCreateInputDto {
+    const input = new DiaCalendarioCreateInputDto();
     input.data = dto.data;
     input.diaLetivo = dto.diaLetivo;
     input.feriado = dto.feriado ?? "";
@@ -54,11 +54,11 @@ export class DiaCalendarioRestMapper {
   }
 
   static toUpdateInput(
-    params: DiaCalendarioFindOneInputDto,
-    dto: DiaCalendarioUpdateInputDto,
-  ): DiaCalendarioFindOneInput & DiaCalendarioUpdateInput {
-    const input = new DiaCalendarioFindOneInput() as DiaCalendarioFindOneInput &
-      DiaCalendarioUpdateInput;
+    params: DiaCalendarioFindOneInputRestDto,
+    dto: DiaCalendarioUpdateInputRestDto,
+  ): DiaCalendarioFindOneInputDto & DiaCalendarioUpdateInputDto {
+    const input = new DiaCalendarioFindOneInputDto() as DiaCalendarioFindOneInputDto &
+      DiaCalendarioUpdateInputDto;
     input.id = params.id;
     if (dto.data !== undefined) {
       input.data = dto.data;
@@ -84,8 +84,10 @@ export class DiaCalendarioRestMapper {
     return input;
   }
 
-  static toFindOneOutputDto(output: DiaCalendarioFindOneOutput): DiaCalendarioFindOneOutputDto {
-    const dto = new DiaCalendarioFindOneOutputDto();
+  static toFindOneOutputDto(
+    output: DiaCalendarioFindOneOutputDto,
+  ): DiaCalendarioFindOneOutputRestDto {
+    const dto = new DiaCalendarioFindOneOutputRestDto();
     dto.id = output.id;
     dto.data = output.data;
     dto.diaLetivo = output.diaLetivo;
@@ -100,8 +102,8 @@ export class DiaCalendarioRestMapper {
     return dto;
   }
 
-  static toListOutputDto(output: DiaCalendarioListOutput): DiaCalendarioListOutputDto {
-    const dto = new DiaCalendarioListOutputDto();
+  static toListOutputDto(output: DiaCalendarioListOutputDto): DiaCalendarioListOutputRestDto {
+    const dto = new DiaCalendarioListOutputRestDto();
     dto.meta = mapPaginationMeta(output.meta);
     dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
     return dto;

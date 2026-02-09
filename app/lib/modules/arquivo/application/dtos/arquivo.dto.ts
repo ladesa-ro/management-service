@@ -1,10 +1,10 @@
 import {
-  EntityOutput,
-  FindOneInput,
+  EntityOutputDto,
+  FindOneInputDto,
   IFilterAcceptableValues,
-  ObjectUuidRef,
-  PaginationInput,
-  PaginationResult,
+  ObjectUuidRefDto,
+  PaginationInputDto,
+  PaginationResultDto,
 } from "@/modules/@shared";
 import type { IdUuid } from "@/modules/@shared/domain/scalars.types";
 
@@ -12,9 +12,9 @@ import type { IdUuid } from "@/modules/@shared/domain/scalars.types";
 // FindOne Input/Output
 // ============================================================================
 
-export class ArquivoFindOneInput extends FindOneInput {}
+export class ArquivoFindOneInputDto extends FindOneInputDto {}
 
-export class ArquivoFindOneOutput extends EntityOutput {
+export class ArquivoFindOneOutputDto extends EntityOutputDto {
   name!: string | null;
   mimeType!: string | null;
   sizeBytes!: number | null;
@@ -25,24 +25,24 @@ export class ArquivoFindOneOutput extends EntityOutput {
 // List Input/Output
 // ============================================================================
 
-export class ArquivoListInput extends PaginationInput {
+export class ArquivoListInputDto extends PaginationInputDto {
   "filter.id"?: IFilterAcceptableValues;
 }
 
-export class ArquivoListOutput extends PaginationResult<ArquivoFindOneOutput> {}
+export class ArquivoListOutputDto extends PaginationResultDto<ArquivoFindOneOutputDto> {}
 
 // ============================================================================
 // Create/Update Input
 // ============================================================================
 
-export class ArquivoCreateInput {
+export class ArquivoCreateInputDto {
   name?: string | null;
   mimeType?: string | null;
   sizeBytes?: number | null;
   storageType!: string;
 }
 
-export class ArquivoUpdateInput {
+export class ArquivoUpdateInputDto {
   name?: string | null;
   mimeType?: string | null;
   sizeBytes?: number | null;
@@ -53,13 +53,13 @@ export class ArquivoUpdateInput {
 // Input Ref
 // ============================================================================
 
-export type ArquivoInputRef = ObjectUuidRef;
+export type ArquivoInputRefDto = ObjectUuidRefDto;
 
 // ============================================================================
 // GetFile Input
 // ============================================================================
 
-export class ArquivoGetFileInput {
+export class ArquivoGetFileInputDto {
   id!: IdUuid;
   acesso?: { id?: string; nome?: string } | null;
 }

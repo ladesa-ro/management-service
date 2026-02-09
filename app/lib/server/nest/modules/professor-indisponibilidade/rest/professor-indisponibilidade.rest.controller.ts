@@ -19,14 +19,14 @@ import {
 import { AccessContext, AccessContextHttp } from "@/modules/@core/access-context";
 import { ProfessorIndisponibilidadeLegacyService } from "../professor-indisponibilidade.legacy.service";
 import {
-  ProfessorIndisponibilidadeCreateInputDto,
-  ProfessorIndisponibilidadeCreatePerfilInputDto,
-  ProfessorIndisponibilidadeFindOneInputDto,
-  ProfessorIndisponibilidadeFindOneOutputDto,
-  ProfessorIndisponibilidadeListByPerfilInputDto,
-  ProfessorIndisponibilidadeListOutputDto,
-  ProfessorIndisponibilidadeRRuleOutputDto,
-  ProfessorIndisponibilidadeUpdateInputDto,
+  ProfessorIndisponibilidadeCreateInputRestDto,
+  ProfessorIndisponibilidadeCreatePerfilInputRestDto,
+  ProfessorIndisponibilidadeFindOneInputRestDto,
+  ProfessorIndisponibilidadeFindOneOutputRestDto,
+  ProfessorIndisponibilidadeListByPerfilInputRestDto,
+  ProfessorIndisponibilidadeListOutputRestDto,
+  ProfessorIndisponibilidadeRRuleOutputRestDto,
+  ProfessorIndisponibilidadeUpdateInputRestDto,
 } from "./professor-indisponibilidade.rest.dto";
 
 @ApiTags("indisponibilidades-professores")
@@ -41,12 +41,12 @@ export class ProfessorIndisponibilidadeRestController {
     summary: "Lista indisponibilidades de um professor por perfil",
     operationId: "professorIndisponibilidadeFindAllByPerfilId",
   })
-  @ApiOkResponse({ type: ProfessorIndisponibilidadeListOutputDto })
+  @ApiOkResponse({ type: ProfessorIndisponibilidadeListOutputRestDto })
   @ApiForbiddenResponse()
   async listByPerfil(
     @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: ProfessorIndisponibilidadeListByPerfilInputDto,
-  ): Promise<ProfessorIndisponibilidadeListOutputDto> {
+    @Param() params: ProfessorIndisponibilidadeListByPerfilInputRestDto,
+  ): Promise<ProfessorIndisponibilidadeListOutputRestDto> {
     return this.professorIndisponibilidadeService.ProfessorIndisponibilidadeListByPerfil(
       accessContext,
       params.idPerfilFk,
@@ -58,13 +58,13 @@ export class ProfessorIndisponibilidadeRestController {
     summary: "Busca uma indisponibilidade de professor por ID",
     operationId: "professorIndisponibilidadeFindById",
   })
-  @ApiOkResponse({ type: ProfessorIndisponibilidadeFindOneOutputDto })
+  @ApiOkResponse({ type: ProfessorIndisponibilidadeFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async findById(
     @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: ProfessorIndisponibilidadeFindOneInputDto,
-  ): Promise<ProfessorIndisponibilidadeFindOneOutputDto> {
+    @Param() params: ProfessorIndisponibilidadeFindOneInputRestDto,
+  ): Promise<ProfessorIndisponibilidadeFindOneOutputRestDto> {
     return this.professorIndisponibilidadeService.indisponibilidadeFindByIdSimple(
       accessContext,
       params.id,
@@ -76,13 +76,13 @@ export class ProfessorIndisponibilidadeRestController {
     summary: "Cria uma indisponibilidade de professor",
     operationId: "professorIndisponibilidadeCreate",
   })
-  @ApiCreatedResponse({ type: ProfessorIndisponibilidadeFindOneOutputDto })
+  @ApiCreatedResponse({ type: ProfessorIndisponibilidadeFindOneOutputRestDto })
   @ApiForbiddenResponse()
   async create(
     @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: ProfessorIndisponibilidadeCreatePerfilInputDto,
-    @Body() dto: ProfessorIndisponibilidadeCreateInputDto,
-  ): Promise<ProfessorIndisponibilidadeFindOneOutputDto> {
+    @Param() params: ProfessorIndisponibilidadeCreatePerfilInputRestDto,
+    @Body() dto: ProfessorIndisponibilidadeCreateInputRestDto,
+  ): Promise<ProfessorIndisponibilidadeFindOneOutputRestDto> {
     return this.professorIndisponibilidadeService.createIndisponibilidade(accessContext, {
       ...dto,
       idPerfilFk: params.id_perfil,
@@ -94,14 +94,14 @@ export class ProfessorIndisponibilidadeRestController {
     summary: "Atualiza uma indisponibilidade de professor",
     operationId: "professorIndisponibilidadeUpdate",
   })
-  @ApiOkResponse({ type: ProfessorIndisponibilidadeFindOneOutputDto })
+  @ApiOkResponse({ type: ProfessorIndisponibilidadeFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async update(
     @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: ProfessorIndisponibilidadeFindOneInputDto,
-    @Body() dto: ProfessorIndisponibilidadeUpdateInputDto,
-  ): Promise<ProfessorIndisponibilidadeFindOneOutputDto> {
+    @Param() params: ProfessorIndisponibilidadeFindOneInputRestDto,
+    @Body() dto: ProfessorIndisponibilidadeUpdateInputRestDto,
+  ): Promise<ProfessorIndisponibilidadeFindOneOutputRestDto> {
     return this.professorIndisponibilidadeService.indisponibilidadeUpdate(accessContext, {
       id: params.id,
       ...dto,
@@ -113,13 +113,13 @@ export class ProfessorIndisponibilidadeRestController {
     summary: "Remove uma indisponibilidade de professor",
     operationId: "professorIndisponibilidadeDeleteOneById",
   })
-  @ApiOkResponse({ type: ProfessorIndisponibilidadeFindOneOutputDto })
+  @ApiOkResponse({ type: ProfessorIndisponibilidadeFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async deleteOneById(
     @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: ProfessorIndisponibilidadeFindOneInputDto,
-  ): Promise<ProfessorIndisponibilidadeFindOneOutputDto> {
+    @Param() params: ProfessorIndisponibilidadeFindOneInputRestDto,
+  ): Promise<ProfessorIndisponibilidadeFindOneOutputRestDto> {
     if (!params.id) throw new BadRequestException();
     return this.professorIndisponibilidadeService.indisponibilidadeDelete(accessContext, params.id);
   }
@@ -129,13 +129,13 @@ export class ProfessorIndisponibilidadeRestController {
     summary: "Busca a RRULE de uma indisponibilidade de professor por ID",
     operationId: "professorIndisponibilidadeGetRrule",
   })
-  @ApiOkResponse({ type: ProfessorIndisponibilidadeRRuleOutputDto })
+  @ApiOkResponse({ type: ProfessorIndisponibilidadeRRuleOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async findRRuleById(
     @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: ProfessorIndisponibilidadeFindOneInputDto,
-  ): Promise<ProfessorIndisponibilidadeRRuleOutputDto> {
+    @Param() params: ProfessorIndisponibilidadeFindOneInputRestDto,
+  ): Promise<ProfessorIndisponibilidadeRRuleOutputRestDto> {
     return this.professorIndisponibilidadeService.ProfessorIndisponibilidadeRRuleFindOneById(
       accessContext,
       params.id,

@@ -1,12 +1,12 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { BaseCrudService } from "@/modules/@shared";
 import type {
-  ModalidadeCreateInput,
-  ModalidadeFindOneInput,
-  ModalidadeFindOneOutput,
-  ModalidadeListInput,
-  ModalidadeListOutput,
-  ModalidadeUpdateInput,
+  ModalidadeCreateInputDto,
+  ModalidadeFindOneInputDto,
+  ModalidadeFindOneOutputDto,
+  ModalidadeListInputDto,
+  ModalidadeListOutputDto,
+  ModalidadeUpdateInputDto,
 } from "@/modules/modalidade/application/dtos";
 import {
   type IModalidadeRepositoryPort,
@@ -19,12 +19,12 @@ import type { ModalidadeEntity } from "@/modules/modalidade/infrastructure/persi
 export class ModalidadeService
   extends BaseCrudService<
     ModalidadeEntity,
-    ModalidadeListInput,
-    ModalidadeListOutput,
-    ModalidadeFindOneInput,
-    ModalidadeFindOneOutput,
-    ModalidadeCreateInput,
-    ModalidadeUpdateInput
+    ModalidadeListInputDto,
+    ModalidadeListOutputDto,
+    ModalidadeFindOneInputDto,
+    ModalidadeFindOneOutputDto,
+    ModalidadeCreateInputDto,
+    ModalidadeUpdateInputDto
   >
   implements IModalidadeUseCasePort
 {

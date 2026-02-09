@@ -1,20 +1,20 @@
 import {
-  AmbienteCreateInput,
-  AmbienteFindOneInput,
-  AmbienteFindOneOutput,
-  AmbienteListInput,
-  AmbienteListOutput,
-  AmbienteUpdateInput,
-} from "@/modules/ambiente";
-import { BlocoRestMapper } from "@/server/nest/modules/bloco/rest";
-import { mapPaginationMeta } from "@/server/nest/shared/mappers";
-import {
   AmbienteCreateInputDto,
   AmbienteFindOneInputDto,
   AmbienteFindOneOutputDto,
   AmbienteListInputDto,
   AmbienteListOutputDto,
   AmbienteUpdateInputDto,
+} from "@/modules/ambiente";
+import { BlocoRestMapper } from "@/server/nest/modules/bloco/rest";
+import { mapPaginationMeta } from "@/server/nest/shared/mappers";
+import {
+  AmbienteCreateInputRestDto,
+  AmbienteFindOneInputRestDto,
+  AmbienteFindOneOutputRestDto,
+  AmbienteListInputRestDto,
+  AmbienteListOutputRestDto,
+  AmbienteUpdateInputRestDto,
 } from "./ambiente.rest.dto";
 
 export class AmbienteRestMapper {
@@ -22,18 +22,18 @@ export class AmbienteRestMapper {
   // Input: Server DTO -> Core DTO
   // ============================================================================
 
-  static toFindOneInput(dto: AmbienteFindOneInputDto): AmbienteFindOneInput {
-    const input = new AmbienteFindOneInput();
+  static toFindOneInput(dto: AmbienteFindOneInputRestDto): AmbienteFindOneInputDto {
+    const input = new AmbienteFindOneInputDto();
     input.id = dto.id;
     return input;
   }
 
-  static toListInput(dto: AmbienteListInputDto | null): AmbienteListInput | null {
+  static toListInput(dto: AmbienteListInputRestDto | null): AmbienteListInputDto | null {
     if (!dto) {
       return null;
     }
 
-    const input = new AmbienteListInput();
+    const input = new AmbienteListInputDto();
     input.page = dto.page;
     input.limit = dto.limit;
     input.search = dto.search;
@@ -45,8 +45,8 @@ export class AmbienteRestMapper {
     return input;
   }
 
-  static toCreateInput(dto: AmbienteCreateInputDto): AmbienteCreateInput {
-    const input = new AmbienteCreateInput();
+  static toCreateInput(dto: AmbienteCreateInputRestDto): AmbienteCreateInputDto {
+    const input = new AmbienteCreateInputDto();
     input.nome = dto.nome;
     input.codigo = dto.codigo;
     input.descricao = dto.descricao;
@@ -57,10 +57,10 @@ export class AmbienteRestMapper {
   }
 
   static toUpdateInput(
-    params: AmbienteFindOneInputDto,
-    dto: AmbienteUpdateInputDto,
-  ): AmbienteFindOneInput & AmbienteUpdateInput {
-    const input = new AmbienteFindOneInput() as AmbienteFindOneInput & AmbienteUpdateInput;
+    params: AmbienteFindOneInputRestDto,
+    dto: AmbienteUpdateInputRestDto,
+  ): AmbienteFindOneInputDto & AmbienteUpdateInputDto {
+    const input = new AmbienteFindOneInputDto() as AmbienteFindOneInputDto & AmbienteUpdateInputDto;
     input.id = params.id;
     if (dto.nome !== undefined) {
       input.nome = dto.nome;
@@ -87,8 +87,8 @@ export class AmbienteRestMapper {
   // Output: Core DTO -> Server DTO
   // ============================================================================
 
-  static toFindOneOutputDto(output: AmbienteFindOneOutput): AmbienteFindOneOutputDto {
-    const dto = new AmbienteFindOneOutputDto();
+  static toFindOneOutputDto(output: AmbienteFindOneOutputDto): AmbienteFindOneOutputRestDto {
+    const dto = new AmbienteFindOneOutputRestDto();
     dto.id = output.id;
     dto.nome = output.nome;
     dto.descricao = output.descricao;
@@ -105,8 +105,8 @@ export class AmbienteRestMapper {
     return dto;
   }
 
-  static toListOutputDto(output: AmbienteListOutput): AmbienteListOutputDto {
-    const dto = new AmbienteListOutputDto();
+  static toListOutputDto(output: AmbienteListOutputDto): AmbienteListOutputRestDto {
+    const dto = new AmbienteListOutputRestDto();
     dto.meta = mapPaginationMeta(output.meta);
     dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
     return dto;

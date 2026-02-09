@@ -5,12 +5,12 @@ import { BaseCrudService } from "@/modules/@shared";
 import { AmbienteService } from "@/modules/ambiente/application/use-cases/ambiente.service";
 import { CalendarioLetivoService } from "@/modules/calendario-letivo";
 import type {
-  DiarioCreateInput,
-  DiarioFindOneInput,
-  DiarioFindOneOutput,
-  DiarioListInput,
-  DiarioListOutput,
-  DiarioUpdateInput,
+  DiarioCreateInputDto,
+  DiarioFindOneInputDto,
+  DiarioFindOneOutputDto,
+  DiarioListInputDto,
+  DiarioListOutputDto,
+  DiarioUpdateInputDto,
 } from "@/modules/diario/application/dtos";
 import {
   DIARIO_REPOSITORY_PORT,
@@ -25,12 +25,12 @@ import { TurmaService } from "@/modules/turma/application/use-cases/turma.servic
 export class DiarioService
   extends BaseCrudService<
     DiarioEntity,
-    DiarioListInput,
-    DiarioListOutput,
-    DiarioFindOneInput,
-    DiarioFindOneOutput,
-    DiarioCreateInput,
-    DiarioUpdateInput
+    DiarioListInputDto,
+    DiarioListOutputDto,
+    DiarioFindOneInputDto,
+    DiarioFindOneOutputDto,
+    DiarioCreateInputDto,
+    DiarioUpdateInputDto
   >
   implements IDiarioUseCasePort
 {
@@ -55,7 +55,7 @@ export class DiarioService
   protected override async beforeCreate(
     accessContext: AccessContext,
     entity: DiarioEntity,
-    dto: DiarioCreateInput,
+    dto: DiarioCreateInputDto,
   ): Promise<void> {
     if (dto.ambientePadrao != null) {
       const ambientePadrao = await this.ambienteService.findByIdStrict(accessContext, {
@@ -85,7 +85,7 @@ export class DiarioService
   protected override async beforeUpdate(
     accessContext: AccessContext,
     entity: DiarioEntity,
-    dto: DiarioFindOneInput & DiarioUpdateInput,
+    dto: DiarioFindOneInputDto & DiarioUpdateInputDto,
   ): Promise<void> {
     if (has(dto, "ambientePadrao") && dto.ambientePadrao !== undefined) {
       if (dto.ambientePadrao !== null) {

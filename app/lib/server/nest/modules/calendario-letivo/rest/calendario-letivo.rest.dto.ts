@@ -1,5 +1,4 @@
-import { ArgsType, Field, ID, InputType, Int, ObjectType, PartialType } from "@nestjs/graphql";
-import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { ApiProperty, ApiPropertyOptional, ApiSchema, PartialType } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import {
   IsArray,
@@ -20,81 +19,76 @@ import {
   simpleProperty,
 } from "@/modules/@shared/infrastructure/persistence/typeorm/metadata";
 import {
-  PaginationInputDto,
-  PaginationMetaDto,
+  PaginationInputRestDto,
+  PaginationMetaRestDto,
   TransformToArray,
 } from "@/modules/@shared/infrastructure/presentation/rest/dtos";
-import { CampusFindOneInputDto, CampusFindOneOutputDto } from "@/server/nest/modules/campus/rest";
 import {
-  OfertaFormacaoFindOneInputDto,
-  OfertaFormacaoFindOneOutputDto,
+  CampusFindOneInputRestDto,
+  CampusFindOneOutputRestDto,
+} from "@/server/nest/modules/campus/rest";
+import {
+  OfertaFormacaoFindOneInputRestDto,
+  OfertaFormacaoFindOneOutputRestDto,
 } from "@/server/nest/modules/oferta-formacao/rest";
 
 // ============================================================================
 // FindOne Output
 // ============================================================================
 
-@ObjectType("CalendarioLetivo")
+@ApiSchema({ name: "CalendarioLetivoFindOneOutputDto" })
 @RegisterModel({
-  name: "CalendarioLetivoFindOneOutput",
+  name: "CalendarioLetivoFindOneOutputDto",
   properties: [
     simpleProperty("id"),
     simpleProperty("nome"),
     simpleProperty("ano"),
-    referenceProperty("campus", "CampusFindOneOutput"),
-    referenceProperty("ofertaFormacao", "OfertaFormacaoFindOneOutput"),
+    referenceProperty("campus", "CampusFindOneOutputDto"),
+    referenceProperty("ofertaFormacao", "OfertaFormacaoFindOneOutputDto"),
     ...commonProperties.dated,
   ],
 })
-export class CalendarioLetivoFindOneOutputDto {
+export class CalendarioLetivoFindOneOutputRestDto {
   @ApiProperty({ description: "Identificador do registro (uuid)", format: "uuid" })
-  @Field(() => ID)
   @IsUUID()
   id: string;
 
   @ApiProperty({ description: "Nome do calendario letivo", minLength: 1 })
-  @Field()
   @IsString()
   @MinLength(1)
   nome: string;
 
   @ApiProperty({ description: "Ano do calendario letivo", minimum: 0, maximum: 65535 })
-  @Field(() => Int)
   @IsInt()
   @Min(0)
   @Max(65535)
   ano: number;
 
   @ApiProperty({
-    type: () => CampusFindOneOutputDto,
+    type: () => CampusFindOneOutputRestDto,
     description: "Campus ao qual o calendario letivo pertence",
   })
-  @Field(() => CampusFindOneOutputDto)
   @ValidateNested()
-  @Type(() => CampusFindOneOutputDto)
-  campus: CampusFindOneOutputDto;
+  @Type(() => CampusFindOneOutputRestDto)
+  campus: CampusFindOneOutputRestDto;
 
   @ApiProperty({
-    type: () => OfertaFormacaoFindOneOutputDto,
+    type: () => OfertaFormacaoFindOneOutputRestDto,
     description: "Oferta de formacao do calendario letivo",
   })
-  @Field(() => OfertaFormacaoFindOneOutputDto)
   @ValidateNested()
-  @Type(() => OfertaFormacaoFindOneOutputDto)
-  ofertaFormacao: OfertaFormacaoFindOneOutputDto;
+  @Type(() => OfertaFormacaoFindOneOutputRestDto)
+  ofertaFormacao: OfertaFormacaoFindOneOutputRestDto;
 
   @ApiProperty({ description: "Data e hora da criacao do registro" })
-  @Field()
   @IsDateString()
   dateCreated: Date;
 
   @ApiProperty({ description: "Data e hora da alteracao do registro" })
-  @Field()
   @IsDateString()
   dateUpdated: Date;
 
   @ApiPropertyOptional({ description: "Data e hora da exclusao do registro", nullable: true })
-  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateString()
   dateDeleted: Date | null;
@@ -104,8 +98,8 @@ export class CalendarioLetivoFindOneOutputDto {
 // List Input/Output
 // ============================================================================
 
-@ArgsType()
-export class CalendarioLetivoListInputDto extends PaginationInputDto {
+@ApiSchema({ name: "CalendarioLetivoListInputDto" })
+export class CalendarioLetivoListInputRestDto extends PaginationInputRestDto {
   @ApiPropertyOptional({
     description: "Filtro por ID",
     type: [String],
@@ -113,7 +107,7 @@ export class CalendarioLetivoListInputDto extends PaginationInputDto {
   @TransformToArray()
   @IsOptional()
   @IsArray()
-  @IsString({ each: true })
+  @IsUUID(undefined, { each: true })
   "filter.id"?: string[];
 
   @ApiPropertyOptional({
@@ -123,7 +117,7 @@ export class CalendarioLetivoListInputDto extends PaginationInputDto {
   @TransformToArray()
   @IsOptional()
   @IsArray()
-  @IsString({ each: true })
+  @IsUUID(undefined, { each: true })
   "filter.campus.id"?: string[];
 
   @ApiPropertyOptional({
@@ -133,74 +127,68 @@ export class CalendarioLetivoListInputDto extends PaginationInputDto {
   @TransformToArray()
   @IsOptional()
   @IsArray()
-  @IsString({ each: true })
+  @IsUUID(undefined, { each: true })
   "filter.ofertaFormacao.id"?: string[];
 }
 
-@ObjectType("CalendarioLetivoListOutput")
-export class CalendarioLetivoListOutputDto {
-  @ApiProperty({ type: () => PaginationMetaDto, description: "Metadados da busca" })
-  @Field(() => PaginationMetaDto)
-  meta: PaginationMetaDto;
+@ApiSchema({ name: "CalendarioLetivoListOutputDto" })
+export class CalendarioLetivoListOutputRestDto {
+  @ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" })
+  meta: PaginationMetaRestDto;
 
   @ApiProperty({
-    type: () => [CalendarioLetivoFindOneOutputDto],
+    type: () => [CalendarioLetivoFindOneOutputRestDto],
     description: "Resultados da busca",
   })
-  @Field(() => [CalendarioLetivoFindOneOutputDto])
-  data: CalendarioLetivoFindOneOutputDto[];
+  data: CalendarioLetivoFindOneOutputRestDto[];
 }
 
 // ============================================================================
 // Create/Update Input
 // ============================================================================
 
-@InputType("CalendarioLetivoCreateInput")
-export class CalendarioLetivoCreateInputDto {
+@ApiSchema({ name: "CalendarioLetivoCreateInputDto" })
+export class CalendarioLetivoCreateInputRestDto {
   @ApiProperty({ description: "Nome do calendario letivo", minLength: 1 })
-  @Field()
   @IsString()
   @MinLength(1)
   nome: string;
 
   @ApiProperty({ description: "Ano do calendario letivo", minimum: 0, maximum: 65535 })
-  @Field(() => Int)
   @IsInt()
   @Min(0)
   @Max(65535)
   ano: number;
 
   @ApiProperty({
-    type: () => CampusFindOneInputDto,
+    type: () => CampusFindOneInputRestDto,
     description: "Campus ao qual o calendario letivo pertence",
   })
-  @Field(() => CampusFindOneInputDto)
   @ValidateNested()
-  @Type(() => CampusFindOneInputDto)
-  campus: CampusFindOneInputDto;
+  @Type(() => CampusFindOneInputRestDto)
+  campus: CampusFindOneInputRestDto;
 
   @ApiProperty({
-    type: () => OfertaFormacaoFindOneInputDto,
+    type: () => OfertaFormacaoFindOneInputRestDto,
     description: "Oferta de formacao do calendario letivo",
   })
-  @Field(() => OfertaFormacaoFindOneInputDto)
   @ValidateNested()
-  @Type(() => OfertaFormacaoFindOneInputDto)
-  ofertaFormacao: OfertaFormacaoFindOneInputDto;
+  @Type(() => OfertaFormacaoFindOneInputRestDto)
+  ofertaFormacao: OfertaFormacaoFindOneInputRestDto;
 }
 
-@InputType("CalendarioLetivoUpdateInput")
-export class CalendarioLetivoUpdateInputDto extends PartialType(CalendarioLetivoCreateInputDto) {}
+@ApiSchema({ name: "CalendarioLetivoUpdateInputDto" })
+export class CalendarioLetivoUpdateInputRestDto extends PartialType(
+  CalendarioLetivoCreateInputRestDto,
+) {}
 
 // ============================================================================
 // FindOne Input (for path params)
 // ============================================================================
 
-@ArgsType()
-@InputType("CalendarioLetivoFindOneInput")
-export class CalendarioLetivoFindOneInputDto {
+@ApiSchema({ name: "CalendarioLetivoFindOneInputDto" })
+export class CalendarioLetivoFindOneInputRestDto {
   @ApiProperty({ description: "Identificador do registro (uuid)", format: "uuid" })
-  @Field(() => ID)
   @IsUUID()
   id: string;
 }

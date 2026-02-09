@@ -4,12 +4,12 @@ import type { AccessContext } from "@/modules/@core/access-context";
 import { BaseCrudService } from "@/modules/@shared";
 import { ModalidadeService } from "@/modules/modalidade";
 import type {
-  OfertaFormacaoCreateInput,
-  OfertaFormacaoFindOneInput,
-  OfertaFormacaoFindOneOutput,
-  OfertaFormacaoListInput,
-  OfertaFormacaoListOutput,
-  OfertaFormacaoUpdateInput,
+  OfertaFormacaoCreateInputDto,
+  OfertaFormacaoFindOneInputDto,
+  OfertaFormacaoFindOneOutputDto,
+  OfertaFormacaoListInputDto,
+  OfertaFormacaoListOutputDto,
+  OfertaFormacaoUpdateInputDto,
 } from "@/modules/oferta-formacao/application/dtos";
 import {
   type IOfertaFormacaoRepositoryPort,
@@ -22,12 +22,12 @@ import type { OfertaFormacaoEntity } from "@/modules/oferta-formacao/infrastruct
 export class OfertaFormacaoService
   extends BaseCrudService<
     OfertaFormacaoEntity,
-    OfertaFormacaoListInput,
-    OfertaFormacaoListOutput,
-    OfertaFormacaoFindOneInput,
-    OfertaFormacaoFindOneOutput,
-    OfertaFormacaoCreateInput,
-    OfertaFormacaoUpdateInput
+    OfertaFormacaoListInputDto,
+    OfertaFormacaoListOutputDto,
+    OfertaFormacaoFindOneInputDto,
+    OfertaFormacaoFindOneOutputDto,
+    OfertaFormacaoCreateInputDto,
+    OfertaFormacaoUpdateInputDto
   >
   implements IOfertaFormacaoUseCasePort
 {
@@ -49,7 +49,7 @@ export class OfertaFormacaoService
   protected override async beforeCreate(
     accessContext: AccessContext,
     entity: OfertaFormacaoEntity,
-    dto: OfertaFormacaoCreateInput,
+    dto: OfertaFormacaoCreateInputDto,
   ): Promise<void> {
     if (dto.modalidade) {
       const modalidade = await this.modalidadeService.findByIdSimpleStrict(
@@ -63,7 +63,7 @@ export class OfertaFormacaoService
   protected override async beforeUpdate(
     accessContext: AccessContext,
     entity: OfertaFormacaoEntity,
-    dto: OfertaFormacaoFindOneInput & OfertaFormacaoUpdateInput,
+    dto: OfertaFormacaoFindOneInputDto & OfertaFormacaoUpdateInputDto,
   ): Promise<void> {
     if (has(dto, "modalidade") && dto.modalidade !== undefined) {
       if (dto.modalidade) {

@@ -1,21 +1,21 @@
 import {
-  EntityOutput,
-  FindOneInput,
+  EntityOutputDto,
+  FindOneInputDto,
   IFilterAcceptableValues,
-  ObjectUuidRef,
-  PaginationInput,
-  PaginationResult,
+  ObjectUuidRefDto,
+  PaginationInputDto,
+  PaginationResultDto,
 } from "@/modules/@shared";
-import { UsuarioFindOneOutput, UsuarioInputRef } from "@/modules/usuario/application/dtos";
+import { UsuarioFindOneOutputDto, UsuarioInputRefDto } from "@/modules/usuario/application/dtos";
 
 // ============================================================================
 // FindOne Input/Output
 // ============================================================================
 
-export class ProfessorIndisponibilidadeFindOneInput extends FindOneInput {}
+export class ProfessorIndisponibilidadeFindOneInputDto extends FindOneInputDto {}
 
-export class ProfessorIndisponibilidadeFindOneOutput extends EntityOutput {
-  perfil!: UsuarioFindOneOutput;
+export class ProfessorIndisponibilidadeFindOneOutputDto extends EntityOutputDto {
+  perfil!: UsuarioFindOneOutputDto;
   diaDaSemana!: number;
   horaInicio!: string;
   horaFim!: string;
@@ -26,27 +26,27 @@ export class ProfessorIndisponibilidadeFindOneOutput extends EntityOutput {
 // List Input/Output
 // ============================================================================
 
-export class ProfessorIndisponibilidadeListInput extends PaginationInput {
+export class ProfessorIndisponibilidadeListInputDto extends PaginationInputDto {
   "filter.id"?: IFilterAcceptableValues;
   "filter.perfil.id"?: IFilterAcceptableValues;
 }
 
-export class ProfessorIndisponibilidadeListOutput extends PaginationResult<ProfessorIndisponibilidadeFindOneOutput> {}
+export class ProfessorIndisponibilidadeListOutputDto extends PaginationResultDto<ProfessorIndisponibilidadeFindOneOutputDto> {}
 
 // ============================================================================
 // Create/Update Input
 // ============================================================================
 
-export class ProfessorIndisponibilidadeCreateInput {
-  perfil!: UsuarioInputRef;
+export class ProfessorIndisponibilidadeCreateInputDto {
+  perfil!: UsuarioInputRefDto;
   diaDaSemana!: number;
   horaInicio!: string;
   horaFim!: string;
   motivo!: string;
 }
 
-export class ProfessorIndisponibilidadeUpdateInput {
-  perfil?: UsuarioInputRef;
+export class ProfessorIndisponibilidadeUpdateInputDto {
+  perfil?: UsuarioInputRefDto;
   diaDaSemana?: number;
   horaInicio?: string;
   horaFim?: string;
@@ -57,4 +57,4 @@ export class ProfessorIndisponibilidadeUpdateInput {
 // Input Ref
 // ============================================================================
 
-export type ProfessorIndisponibilidadeInputRef = ObjectUuidRef;
+export type ProfessorIndisponibilidadeInputRefDto = ObjectUuidRefDto;

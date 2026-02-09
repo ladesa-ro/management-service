@@ -20,6 +20,21 @@ export class Arquivo extends BaseEntity implements IArquivo {
   }
 
   // ========================================
+  // Validação
+  // ========================================
+
+  validar(): void {
+    const { result, rules } = Arquivo.createValidation();
+    rules.required(this.name, "name");
+    rules.minLength(this.name, "name", 1);
+    rules.required(this.mimeType, "mimeType");
+    rules.requiredNumber(this.sizeBytes, "sizeBytes");
+    rules.min(this.sizeBytes, "sizeBytes", 0);
+    rules.required(this.storageType, "storageType");
+    Arquivo.throwIfInvalid(result);
+  }
+
+  // ========================================
   // Factory Methods
   // ========================================
 
@@ -28,20 +43,13 @@ export class Arquivo extends BaseEntity implements IArquivo {
    * @throws EntityValidationError se os dados forem inválidos
    */
   static criar(dados: IArquivoCreate): Arquivo {
-    const { result, rules } = this.createValidation();
-
     const instance = new Arquivo();
-    instance.name = rules.required(dados.name, "name");
-    instance.mimeType = rules.required(dados.mimeType, "mimeType");
-    instance.sizeBytes = rules.requiredNumber(dados.sizeBytes, "sizeBytes");
-    instance.sizeBytes = rules.min(instance.sizeBytes, "sizeBytes", 0);
-    instance.storageType = rules.required(dados.storageType, "storageType");
-
-    this.throwIfInvalid(result);
-
-    instance.dateCreated = new Date().toISOString();
-    instance.dateUpdated = new Date().toISOString();
-    instance.dateDeleted = null;
+    instance.name = dados.name?.trim() ?? "";
+    instance.mimeType = dados.mimeType?.trim() ?? "";
+    instance.sizeBytes = dados.sizeBytes;
+    instance.storageType = dados.storageType;
+    instance.initDates();
+    instance.validar();
 
     return instance;
   }
@@ -64,27 +72,23 @@ export class Arquivo extends BaseEntity implements IArquivo {
    * @throws EntityValidationError se os dados forem inválidos
    */
   atualizar(dados: IArquivoUpdate): void {
-    const { result, rules } = Arquivo.createValidation();
-
     if (dados.name !== undefined) {
-      this.name = rules.required(dados.name, "name");
+      this.name = dados.name?.trim() ?? "";
     }
 
     if (dados.mimeType !== undefined) {
-      this.mimeType = rules.required(dados.mimeType, "mimeType");
+      this.mimeType = dados.mimeType?.trim() ?? "";
     }
 
     if (dados.sizeBytes !== undefined) {
-      this.sizeBytes = rules.requiredNumber(dados.sizeBytes, "sizeBytes");
-      this.sizeBytes = rules.min(this.sizeBytes, "sizeBytes", 0);
+      this.sizeBytes = dados.sizeBytes;
     }
 
     if (dados.storageType !== undefined) {
-      this.storageType = rules.required(dados.storageType, "storageType");
+      this.storageType = dados.storageType;
     }
 
-    Arquivo.throwIfInvalid(result);
-
-    this.dateUpdated = new Date().toISOString();
+    this.touchUpdated();
+    this.validar();
   }
 }

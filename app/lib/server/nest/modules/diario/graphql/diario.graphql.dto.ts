@@ -1,71 +1,191 @@
-import { ArgsType, Field, Int, ObjectType } from "@nestjs/graphql";
-import { IsArray, IsInt, IsOptional, IsString, Min } from "class-validator";
-import { PaginationMetaDto } from "@/modules/@shared/infrastructure/presentation/rest/dtos";
-import { DiarioFindOneOutputDto } from "../rest/diario.rest.dto";
+import { ArgsType, Field, InputType, Int, ObjectType } from "@nestjs/graphql";
+import { IsArray, IsBoolean, IsOptional, IsString, IsUUID, ValidateNested } from "class-validator";
+import {
+  EntityBaseGraphQlDto,
+  PaginationMetaGraphQlDto,
+} from "@/modules/@shared/infrastructure/graphql/dtos";
+import { PaginationArgsGraphQlDto } from "@/modules/@shared/infrastructure/graphql/dtos/pagination-graphql.dto";
+import { CalendarioLetivoFindOneOutputGraphQlDto } from "@/server/nest/modules/calendario-letivo/graphql/calendario-letivo.graphql.dto";
+import { ImagemFindOneOutputGraphQlDto } from "@/server/nest/modules/imagem-arquivo/graphql/imagem-arquivo.graphql.dto";
 
 // ============================================================================
-// List Input (GraphQL-compatible - no dots in field names)
+// Nested ref output DTOs
+// ============================================================================
+
+@ObjectType("TurmaFindOneOutputForDiarioDto")
+export class TurmaFindOneOutputForDiarioGraphQlDto extends EntityBaseGraphQlDto {
+  @Field() periodo: string;
+}
+
+@ObjectType("DisciplinaFindOneOutputForDiarioDto")
+export class DisciplinaFindOneOutputForDiarioGraphQlDto extends EntityBaseGraphQlDto {
+  @Field() nome: string;
+  @Field() nomeAbreviado: string;
+  @Field(() => Int) cargaHoraria: number;
+}
+
+@ObjectType("AmbienteFindOneOutputForDiarioDto")
+export class AmbienteFindOneOutputForDiarioGraphQlDto extends EntityBaseGraphQlDto {
+  @Field() nome: string;
+  @Field(() => String, { nullable: true }) descricao: string | null;
+  @Field() codigo: string;
+  @Field(() => Int, { nullable: true }) capacidade: number | null;
+  @Field(() => String, { nullable: true }) tipo: string | null;
+}
+
+// ============================================================================
+// FindOne Output
+// ============================================================================
+
+@ObjectType("DiarioFindOneOutputDto")
+export class DiarioFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
+  @Field() ativo: boolean;
+  @Field(() => CalendarioLetivoFindOneOutputGraphQlDto)
+  calendarioLetivo: CalendarioLetivoFindOneOutputGraphQlDto;
+  @Field(() => TurmaFindOneOutputForDiarioGraphQlDto)
+  turma: TurmaFindOneOutputForDiarioGraphQlDto;
+  @Field(() => DisciplinaFindOneOutputForDiarioGraphQlDto)
+  disciplina: DisciplinaFindOneOutputForDiarioGraphQlDto;
+  @Field(() => AmbienteFindOneOutputForDiarioGraphQlDto, { nullable: true })
+  ambientePadrao: AmbienteFindOneOutputForDiarioGraphQlDto | null;
+  @Field(() => ImagemFindOneOutputGraphQlDto, { nullable: true })
+  imagemCapa: ImagemFindOneOutputGraphQlDto | null;
+}
+
+// ============================================================================
+// Ref Input DTOs
+// ============================================================================
+
+@InputType("CalendarioLetivoRefInputForDiarioDto")
+export class CalendarioLetivoRefInputForDiarioGraphQlDto {
+  @Field() @IsString() id: string;
+}
+
+@InputType("TurmaRefInputForDiarioDto")
+export class TurmaRefInputForDiarioGraphQlDto {
+  @Field() @IsString() id: string;
+}
+
+@InputType("DisciplinaRefInputForDiarioDto")
+export class DisciplinaRefInputForDiarioGraphQlDto {
+  @Field() @IsString() id: string;
+}
+
+@InputType("AmbienteRefInputForDiarioDto")
+export class AmbienteRefInputForDiarioGraphQlDto {
+  @Field() @IsString() id: string;
+}
+
+@InputType("ImagemRefInputForDiarioDto")
+export class ImagemRefInputForDiarioGraphQlDto {
+  @Field() @IsString() id: string;
+}
+
+// ============================================================================
+// Create Input
+// ============================================================================
+
+@InputType("DiarioCreateInputDto")
+export class DiarioCreateInputGraphQlDto {
+  @Field() @IsBoolean() ativo: boolean;
+
+  @Field(() => CalendarioLetivoRefInputForDiarioGraphQlDto)
+  @ValidateNested()
+  calendarioLetivo: CalendarioLetivoRefInputForDiarioGraphQlDto;
+
+  @Field(() => TurmaRefInputForDiarioGraphQlDto)
+  @ValidateNested()
+  turma: TurmaRefInputForDiarioGraphQlDto;
+
+  @Field(() => DisciplinaRefInputForDiarioGraphQlDto)
+  @ValidateNested()
+  disciplina: DisciplinaRefInputForDiarioGraphQlDto;
+
+  @Field(() => AmbienteRefInputForDiarioGraphQlDto, { nullable: true })
+  @IsOptional()
+  @ValidateNested()
+  ambientePadrao?: AmbienteRefInputForDiarioGraphQlDto | null;
+
+  @Field(() => ImagemRefInputForDiarioGraphQlDto, { nullable: true })
+  @IsOptional()
+  @ValidateNested()
+  imagemCapa?: ImagemRefInputForDiarioGraphQlDto | null;
+}
+
+// ============================================================================
+// Update Input
+// ============================================================================
+
+@InputType("DiarioUpdateInputDto")
+export class DiarioUpdateInputGraphQlDto {
+  @Field({ nullable: true }) @IsOptional() @IsBoolean() ativo?: boolean;
+
+  @Field(() => CalendarioLetivoRefInputForDiarioGraphQlDto, { nullable: true })
+  @IsOptional()
+  @ValidateNested()
+  calendarioLetivo?: CalendarioLetivoRefInputForDiarioGraphQlDto;
+
+  @Field(() => TurmaRefInputForDiarioGraphQlDto, { nullable: true })
+  @IsOptional()
+  @ValidateNested()
+  turma?: TurmaRefInputForDiarioGraphQlDto;
+
+  @Field(() => DisciplinaRefInputForDiarioGraphQlDto, { nullable: true })
+  @IsOptional()
+  @ValidateNested()
+  disciplina?: DisciplinaRefInputForDiarioGraphQlDto;
+
+  @Field(() => AmbienteRefInputForDiarioGraphQlDto, { nullable: true })
+  @IsOptional()
+  @ValidateNested()
+  ambientePadrao?: AmbienteRefInputForDiarioGraphQlDto | null;
+
+  @Field(() => ImagemRefInputForDiarioGraphQlDto, { nullable: true })
+  @IsOptional()
+  @ValidateNested()
+  imagemCapa?: ImagemRefInputForDiarioGraphQlDto | null;
+}
+
+// ============================================================================
+// List Input
 // ============================================================================
 
 @ArgsType()
-export class DiarioListInputGqlDto {
-  @Field(() => Int, { nullable: true, defaultValue: 1 })
-  @IsOptional()
-  @IsInt()
-  @Min(1)
-  page?: number = 1;
-
-  @Field(() => Int, { nullable: true })
-  @IsOptional()
-  @IsInt()
-  @Min(1)
-  limit?: number;
-
-  @Field(() => String, { nullable: true })
-  @IsOptional()
-  @IsString()
-  search?: string;
-
-  @Field(() => [String], { nullable: true })
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
-  sortBy?: string[];
-
+export class DiarioListInputGraphQlDto extends PaginationArgsGraphQlDto {
   @Field(() => [String], { nullable: true, description: "Filtro por ID" })
   @IsOptional()
   @IsArray()
-  @IsString({ each: true })
+  @IsUUID(undefined, { each: true })
   filterId?: string[];
 
   @Field(() => [String], { nullable: true, description: "Filtro por ID da Turma" })
   @IsOptional()
   @IsArray()
-  @IsString({ each: true })
+  @IsUUID(undefined, { each: true })
   filterTurmaId?: string[];
 
   @Field(() => [String], { nullable: true, description: "Filtro por ID da Disciplina" })
   @IsOptional()
   @IsArray()
-  @IsString({ each: true })
+  @IsUUID(undefined, { each: true })
   filterDisciplinaId?: string[];
 
-  @Field(() => [String], { nullable: true, description: "Filtro por ID do Ambiente Padrao" })
+  @Field(() => [String], { nullable: true, description: "Filtro por ID do Calendario Letivo" })
   @IsOptional()
   @IsArray()
-  @IsString({ each: true })
-  filterAmbientePadraoId?: string[];
+  @IsUUID(undefined, { each: true })
+  filterCalendarioLetivoId?: string[];
 }
 
 // ============================================================================
-// List Output (reuses the same output DTOs - they're already GraphQL-compatible)
+// List Output
 // ============================================================================
 
 @ObjectType("DiarioListResult")
-export class DiarioListOutputGqlDto {
-  @Field(() => PaginationMetaDto)
-  meta: PaginationMetaDto;
+export class DiarioListOutputGraphQlDto {
+  @Field(() => PaginationMetaGraphQlDto)
+  meta: PaginationMetaGraphQlDto;
 
-  @Field(() => [DiarioFindOneOutputDto])
-  data: DiarioFindOneOutputDto[];
+  @Field(() => [DiarioFindOneOutputGraphQlDto])
+  data: DiarioFindOneOutputGraphQlDto[];
 }

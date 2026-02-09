@@ -1,14 +1,13 @@
-import { ArgsType, Field, ID, InputType, ObjectType, PartialType } from "@nestjs/graphql";
-import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { IsArray, IsDateString, IsOptional, IsString, IsUUID } from "class-validator";
+import { ApiProperty, ApiPropertyOptional, ApiSchema, PartialType } from "@nestjs/swagger";
+import { IsArray, IsDateString, IsOptional, IsUUID } from "class-validator";
 import {
   commonProperties,
   RegisterModel,
   simpleProperty,
 } from "@/modules/@shared/infrastructure/persistence/typeorm/metadata";
 import {
-  PaginationInputDto,
-  PaginationMetaDto,
+  PaginationInputRestDto,
+  PaginationMetaRestDto,
   TransformToArray,
 } from "@/modules/@shared/infrastructure/presentation/rest/dtos";
 
@@ -16,9 +15,9 @@ import {
 // FindOne Output
 // ============================================================================
 
-@ObjectType("Disponibilidade")
+@ApiSchema({ name: "DisponibilidadeFindOneOutputDto" })
 @RegisterModel({
-  name: "DisponibilidadeFindOneOutput",
+  name: "DisponibilidadeFindOneOutputDto",
   properties: [
     simpleProperty("id"),
     simpleProperty("dataInicio"),
@@ -26,35 +25,29 @@ import {
     ...commonProperties.dated,
   ],
 })
-export class DisponibilidadeFindOneOutputDto {
+export class DisponibilidadeFindOneOutputRestDto {
   @ApiProperty({ description: "Identificador do registro (uuid)", format: "uuid" })
-  @Field(() => ID)
   @IsUUID()
   id: string;
 
   @ApiProperty({ description: "Data de inicio" })
-  @Field()
   @IsDateString()
   dataInicio: Date;
 
   @ApiPropertyOptional({ description: "Data de termino", nullable: true })
-  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateString()
   dataFim: Date | null;
 
   @ApiProperty({ description: "Data e hora da criacao do registro" })
-  @Field()
   @IsDateString()
   dateCreated: Date;
 
   @ApiProperty({ description: "Data e hora da alteracao do registro" })
-  @Field()
   @IsDateString()
   dateUpdated: Date;
 
   @ApiPropertyOptional({ description: "Data e hora da exclusao do registro", nullable: true })
-  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateString()
   dateDeleted: Date | null;
@@ -64,8 +57,8 @@ export class DisponibilidadeFindOneOutputDto {
 // List Input/Output
 // ============================================================================
 
-@ArgsType()
-export class DisponibilidadeListInputDto extends PaginationInputDto {
+@ApiSchema({ name: "DisponibilidadeListInputDto" })
+export class DisponibilidadeListInputRestDto extends PaginationInputRestDto {
   @ApiPropertyOptional({
     description: "Filtro por ID",
     type: [String],
@@ -73,54 +66,50 @@ export class DisponibilidadeListInputDto extends PaginationInputDto {
   @TransformToArray()
   @IsOptional()
   @IsArray()
-  @IsString({ each: true })
+  @IsUUID(undefined, { each: true })
   "filter.id"?: string[];
 }
 
-@ObjectType("DisponibilidadeListOutput")
-export class DisponibilidadeListOutputDto {
-  @ApiProperty({ type: () => PaginationMetaDto, description: "Metadados da busca" })
-  @Field(() => PaginationMetaDto)
-  meta: PaginationMetaDto;
+@ApiSchema({ name: "DisponibilidadeListOutputDto" })
+export class DisponibilidadeListOutputRestDto {
+  @ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" })
+  meta: PaginationMetaRestDto;
 
   @ApiProperty({
-    type: () => [DisponibilidadeFindOneOutputDto],
+    type: () => [DisponibilidadeFindOneOutputRestDto],
     description: "Resultados da busca",
   })
-  @Field(() => [DisponibilidadeFindOneOutputDto])
-  data: DisponibilidadeFindOneOutputDto[];
+  data: DisponibilidadeFindOneOutputRestDto[];
 }
 
 // ============================================================================
 // Create/Update Input
 // ============================================================================
 
-@InputType("DisponibilidadeCreateInput")
-export class DisponibilidadeCreateInputDto {
+@ApiSchema({ name: "DisponibilidadeCreateInputDto" })
+export class DisponibilidadeCreateInputRestDto {
   @ApiProperty({ description: "Data de inicio" })
-  @Field()
   @IsDateString()
   dataInicio: Date;
 
   @ApiPropertyOptional({ description: "Data de termino", nullable: true })
-  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateString()
   dataFim?: Date | null;
 }
 
-@InputType("DisponibilidadeUpdateInput")
-export class DisponibilidadeUpdateInputDto extends PartialType(DisponibilidadeCreateInputDto) {}
+@ApiSchema({ name: "DisponibilidadeUpdateInputDto" })
+export class DisponibilidadeUpdateInputRestDto extends PartialType(
+  DisponibilidadeCreateInputRestDto,
+) {}
 
 // ============================================================================
 // FindOne Input (for path params)
 // ============================================================================
 
-@ArgsType()
-@InputType("DisponibilidadeFindOneInput")
-export class DisponibilidadeFindOneInputDto {
+@ApiSchema({ name: "DisponibilidadeFindOneInputDto" })
+export class DisponibilidadeFindOneInputRestDto {
   @ApiProperty({ description: "Identificador do registro (uuid)", format: "uuid" })
-  @Field(() => ID)
   @IsUUID()
   id: string;
 }

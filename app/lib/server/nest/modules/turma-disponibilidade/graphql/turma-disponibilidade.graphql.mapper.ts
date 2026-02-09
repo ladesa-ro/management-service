@@ -1,31 +1,31 @@
 import {
-  TurmaDisponibilidadeCreateInput,
-  TurmaDisponibilidadeFindOneInput,
-  TurmaDisponibilidadeFindOneOutput,
-  TurmaDisponibilidadeListInput,
-  TurmaDisponibilidadeListOutput,
-  TurmaDisponibilidadeUpdateInput,
+  TurmaDisponibilidadeCreateInputDto,
+  TurmaDisponibilidadeFindOneInputDto,
+  TurmaDisponibilidadeFindOneOutputDto,
+  TurmaDisponibilidadeListInputDto,
+  TurmaDisponibilidadeListOutputDto,
+  TurmaDisponibilidadeUpdateInputDto,
 } from "@/modules/turma-disponibilidade";
+import { DisponibilidadeGraphqlMapper } from "@/server/nest/modules/disponibilidade/graphql/disponibilidade.graphql.mapper";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import {
-  TurmaDisponibilidadeCreateInputDto,
-  TurmaDisponibilidadeFindOneOutputDto,
-  TurmaDisponibilidadeUpdateInputDto,
-} from "../rest/turma-disponibilidade.rest.dto";
-import {
-  TurmaDisponibilidadeListInputGqlDto,
-  TurmaDisponibilidadeListOutputGqlDto,
+  TurmaDisponibilidadeCreateInputGraphQlDto,
+  TurmaDisponibilidadeFindOneOutputGraphQlDto,
+  TurmaDisponibilidadeListInputGraphQlDto,
+  TurmaDisponibilidadeListOutputGraphQlDto,
+  TurmaDisponibilidadeTurmaOutputGraphQlDto,
+  TurmaDisponibilidadeUpdateInputGraphQlDto,
 } from "./turma-disponibilidade.graphql.dto";
 
 export class TurmaDisponibilidadeGraphqlMapper {
   static toListInput(
-    dto: TurmaDisponibilidadeListInputGqlDto | null,
-  ): TurmaDisponibilidadeListInput | null {
+    dto: TurmaDisponibilidadeListInputGraphQlDto | null,
+  ): TurmaDisponibilidadeListInputDto | null {
     if (!dto) {
       return null;
     }
 
-    const input = new TurmaDisponibilidadeListInput();
+    const input = new TurmaDisponibilidadeListInputDto();
     input.page = dto.page;
     input.limit = dto.limit;
     input.search = dto.search;
@@ -34,46 +34,55 @@ export class TurmaDisponibilidadeGraphqlMapper {
     return input;
   }
 
-  static toFindOneInput(id: string, selection?: string[]): TurmaDisponibilidadeFindOneInput {
-    const input = new TurmaDisponibilidadeFindOneInput();
+  static toFindOneInput(id: string, selection?: string[]): TurmaDisponibilidadeFindOneInputDto {
+    const input = new TurmaDisponibilidadeFindOneInputDto();
     input.id = id;
     input.selection = selection;
     return input;
   }
 
-  static toCreateInput(dto: TurmaDisponibilidadeCreateInputDto): TurmaDisponibilidadeCreateInput {
-    const input = new TurmaDisponibilidadeCreateInput();
-    input.turma = dto.turma;
-    input.disponibilidade = dto.disponibilidade;
+  static toCreateInput(
+    dto: TurmaDisponibilidadeCreateInputGraphQlDto,
+  ): TurmaDisponibilidadeCreateInputDto {
+    const input = new TurmaDisponibilidadeCreateInputDto();
+    input.turma = { id: dto.turma.id };
+    input.disponibilidade = { id: dto.disponibilidade.id };
     return input;
   }
 
   static toUpdateInput(
     id: string,
-    dto: TurmaDisponibilidadeUpdateInputDto,
-  ): TurmaDisponibilidadeFindOneInput & TurmaDisponibilidadeUpdateInput {
-    const input = new TurmaDisponibilidadeFindOneInput() as TurmaDisponibilidadeFindOneInput &
-      TurmaDisponibilidadeUpdateInput;
+    dto: TurmaDisponibilidadeUpdateInputGraphQlDto,
+  ): TurmaDisponibilidadeFindOneInputDto & TurmaDisponibilidadeUpdateInputDto {
+    const input = new TurmaDisponibilidadeFindOneInputDto() as TurmaDisponibilidadeFindOneInputDto &
+      TurmaDisponibilidadeUpdateInputDto;
     input.id = id;
     if (dto.turma !== undefined) {
-      input.turma = dto.turma;
+      input.turma = { id: dto.turma.id };
     }
     if (dto.disponibilidade !== undefined) {
-      input.disponibilidade = dto.disponibilidade;
+      input.disponibilidade = { id: dto.disponibilidade.id };
     }
     return input;
   }
 
   static toFindOneOutputDto(
-    output: TurmaDisponibilidadeFindOneOutput,
-  ): TurmaDisponibilidadeFindOneOutputDto {
-    return output as unknown as TurmaDisponibilidadeFindOneOutputDto;
+    output: TurmaDisponibilidadeFindOneOutputDto,
+  ): TurmaDisponibilidadeFindOneOutputGraphQlDto {
+    const dto = new TurmaDisponibilidadeFindOneOutputGraphQlDto();
+    dto.id = output.id;
+    dto.turma = output.turma as unknown as TurmaDisponibilidadeTurmaOutputGraphQlDto;
+    dto.disponibilidade = DisponibilidadeGraphqlMapper.toFindOneOutputDto(output.disponibilidade);
+    dto.dateCreated = output.dateCreated as unknown as Date;
+    dto.dateUpdated = output.dateUpdated as unknown as Date;
+    dto.dateDeleted = output.dateDeleted as unknown as Date | null;
+    return dto;
   }
 
   static toListOutputDto(
-    output: TurmaDisponibilidadeListOutput,
-  ): TurmaDisponibilidadeListOutputGqlDto {
-    const dto = new TurmaDisponibilidadeListOutputGqlDto();
+    output: TurmaDisponibilidadeListOutputDto,
+  ): TurmaDisponibilidadeListOutputGraphQlDto {
+    const dto = new TurmaDisponibilidadeListOutputGraphQlDto();
     dto.meta = mapPaginationMeta(output.meta);
     dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
     return dto;

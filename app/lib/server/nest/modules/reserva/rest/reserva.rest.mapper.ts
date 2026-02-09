@@ -1,21 +1,21 @@
 import {
-  ReservaCreateInput,
-  ReservaFindOneInput,
-  ReservaFindOneOutput,
-  ReservaListInput,
-  ReservaListOutput,
-  ReservaUpdateInput,
-} from "@/modules/reserva";
-import { AmbienteRestMapper } from "@/server/nest/modules/ambiente/rest";
-import { UsuarioRestMapper } from "@/server/nest/modules/usuario/rest";
-import { mapPaginationMeta } from "@/server/nest/shared/mappers";
-import {
   ReservaCreateInputDto,
   ReservaFindOneInputDto,
   ReservaFindOneOutputDto,
   ReservaListInputDto,
   ReservaListOutputDto,
   ReservaUpdateInputDto,
+} from "@/modules/reserva";
+import { AmbienteRestMapper } from "@/server/nest/modules/ambiente/rest";
+import { UsuarioRestMapper } from "@/server/nest/modules/usuario/rest";
+import { mapPaginationMeta } from "@/server/nest/shared/mappers";
+import {
+  ReservaCreateInputRestDto,
+  ReservaFindOneInputRestDto,
+  ReservaFindOneOutputRestDto,
+  ReservaListInputRestDto,
+  ReservaListOutputRestDto,
+  ReservaUpdateInputRestDto,
 } from "./reserva.rest.dto";
 
 export class ReservaRestMapper {
@@ -23,18 +23,18 @@ export class ReservaRestMapper {
   // Input: Server DTO -> Core DTO
   // ============================================================================
 
-  static toFindOneInput(dto: ReservaFindOneInputDto): ReservaFindOneInput {
-    const input = new ReservaFindOneInput();
+  static toFindOneInput(dto: ReservaFindOneInputRestDto): ReservaFindOneInputDto {
+    const input = new ReservaFindOneInputDto();
     input.id = dto.id;
     return input;
   }
 
-  static toListInput(dto: ReservaListInputDto | null): ReservaListInput | null {
+  static toListInput(dto: ReservaListInputRestDto | null): ReservaListInputDto | null {
     if (!dto) {
       return null;
     }
 
-    const input = new ReservaListInput();
+    const input = new ReservaListInputDto();
     input.page = dto.page;
     input.limit = dto.limit;
     input.search = dto.search;
@@ -50,8 +50,8 @@ export class ReservaRestMapper {
     return input;
   }
 
-  static toCreateInput(dto: ReservaCreateInputDto): ReservaCreateInput {
-    const input = new ReservaCreateInput();
+  static toCreateInput(dto: ReservaCreateInputRestDto): ReservaCreateInputDto {
+    const input = new ReservaCreateInputDto();
     input.situacao = dto.situacao;
     input.motivo = dto.motivo;
     input.tipo = dto.tipo;
@@ -62,10 +62,10 @@ export class ReservaRestMapper {
   }
 
   static toUpdateInput(
-    params: ReservaFindOneInputDto,
-    dto: ReservaUpdateInputDto,
-  ): ReservaFindOneInput & ReservaUpdateInput {
-    const input = new ReservaFindOneInput() as ReservaFindOneInput & ReservaUpdateInput;
+    params: ReservaFindOneInputRestDto,
+    dto: ReservaUpdateInputRestDto,
+  ): ReservaFindOneInputDto & ReservaUpdateInputDto {
+    const input = new ReservaFindOneInputDto() as ReservaFindOneInputDto & ReservaUpdateInputDto;
     input.id = params.id;
     if (dto.situacao !== undefined) {
       input.situacao = dto.situacao;
@@ -92,8 +92,8 @@ export class ReservaRestMapper {
   // Output: Core DTO -> Server DTO
   // ============================================================================
 
-  static toFindOneOutputDto(output: ReservaFindOneOutput): ReservaFindOneOutputDto {
-    const dto = new ReservaFindOneOutputDto();
+  static toFindOneOutputDto(output: ReservaFindOneOutputDto): ReservaFindOneOutputRestDto {
+    const dto = new ReservaFindOneOutputRestDto();
     dto.id = output.id;
     dto.situacao = output.situacao;
     dto.motivo = output.motivo;
@@ -107,8 +107,8 @@ export class ReservaRestMapper {
     return dto;
   }
 
-  static toListOutputDto(output: ReservaListOutput): ReservaListOutputDto {
-    const dto = new ReservaListOutputDto();
+  static toListOutputDto(output: ReservaListOutputDto): ReservaListOutputRestDto {
+    const dto = new ReservaListOutputRestDto();
     dto.meta = mapPaginationMeta(output.meta);
     dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
     return dto;

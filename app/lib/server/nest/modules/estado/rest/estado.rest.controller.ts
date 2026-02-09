@@ -9,10 +9,10 @@ import {
 import { AccessContext, AccessContextHttp } from "@/modules/@core/access-context";
 import { EstadoService } from "@/modules/estado/application/use-cases/estado.service";
 import {
-  EstadoFindOneInputDto,
-  EstadoFindOneOutputDto,
-  EstadoListInputDto,
-  EstadoListOutputDto,
+  EstadoFindOneInputRestDto,
+  EstadoFindOneOutputRestDto,
+  EstadoListInputRestDto,
+  EstadoListOutputRestDto,
 } from "./estado.rest.dto";
 import { EstadoRestMapper } from "./estado.rest.mapper";
 
@@ -23,12 +23,12 @@ export class EstadoRestController {
 
   @Get("/")
   @ApiOperation({ summary: "Lista estados", operationId: "estadoFindAll" })
-  @ApiOkResponse({ type: EstadoListOutputDto })
+  @ApiOkResponse({ type: EstadoListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
     @AccessContextHttp() accessContext: AccessContext,
-    @Query() dto: EstadoListInputDto,
-  ): Promise<EstadoListOutputDto> {
+    @Query() dto: EstadoListInputRestDto,
+  ): Promise<EstadoListOutputRestDto> {
     const input = EstadoRestMapper.toListInput(dto);
     const result = await this.estadoService.findAll(accessContext, input);
     return EstadoRestMapper.toListOutputDto(result);
@@ -36,13 +36,13 @@ export class EstadoRestController {
 
   @Get("/:id")
   @ApiOperation({ summary: "Busca um estado por ID", operationId: "estadoFindById" })
-  @ApiOkResponse({ type: EstadoFindOneOutputDto })
+  @ApiOkResponse({ type: EstadoFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async findById(
     @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: EstadoFindOneInputDto,
-  ): Promise<EstadoFindOneOutputDto> {
+    @Param() params: EstadoFindOneInputRestDto,
+  ): Promise<EstadoFindOneOutputRestDto> {
     const input = EstadoRestMapper.toFindOneInput(params);
     const result = await this.estadoService.findByIdStrict(accessContext, input);
     return EstadoRestMapper.toFindOneOutputDto(result);

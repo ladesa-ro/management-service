@@ -1,21 +1,21 @@
 import {
-  TurmaDisponibilidadeCreateInput,
-  TurmaDisponibilidadeFindOneInput,
-  TurmaDisponibilidadeFindOneOutput,
-  TurmaDisponibilidadeListInput,
-  TurmaDisponibilidadeListOutput,
-  TurmaDisponibilidadeUpdateInput,
-} from "@/modules/turma-disponibilidade";
-import { DisponibilidadeRestMapper } from "@/server/nest/modules/disponibilidade/rest";
-import { TurmaRestMapper } from "@/server/nest/modules/turma/rest";
-import { mapPaginationMeta } from "@/server/nest/shared/mappers";
-import {
   TurmaDisponibilidadeCreateInputDto,
   TurmaDisponibilidadeFindOneInputDto,
   TurmaDisponibilidadeFindOneOutputDto,
   TurmaDisponibilidadeListInputDto,
   TurmaDisponibilidadeListOutputDto,
   TurmaDisponibilidadeUpdateInputDto,
+} from "@/modules/turma-disponibilidade";
+import { DisponibilidadeRestMapper } from "@/server/nest/modules/disponibilidade/rest";
+import { TurmaRestMapper } from "@/server/nest/modules/turma/rest";
+import { mapPaginationMeta } from "@/server/nest/shared/mappers";
+import {
+  TurmaDisponibilidadeCreateInputRestDto,
+  TurmaDisponibilidadeFindOneInputRestDto,
+  TurmaDisponibilidadeFindOneOutputRestDto,
+  TurmaDisponibilidadeListInputRestDto,
+  TurmaDisponibilidadeListOutputRestDto,
+  TurmaDisponibilidadeUpdateInputRestDto,
 } from "./turma-disponibilidade.rest.dto";
 
 export class TurmaDisponibilidadeRestMapper {
@@ -24,21 +24,21 @@ export class TurmaDisponibilidadeRestMapper {
   // ============================================================================
 
   static toFindOneInput(
-    dto: TurmaDisponibilidadeFindOneInputDto,
-  ): TurmaDisponibilidadeFindOneInput {
-    const input = new TurmaDisponibilidadeFindOneInput();
+    dto: TurmaDisponibilidadeFindOneInputRestDto,
+  ): TurmaDisponibilidadeFindOneInputDto {
+    const input = new TurmaDisponibilidadeFindOneInputDto();
     input.id = dto.id;
     return input;
   }
 
   static toListInput(
-    dto: TurmaDisponibilidadeListInputDto | null,
-  ): TurmaDisponibilidadeListInput | null {
+    dto: TurmaDisponibilidadeListInputRestDto | null,
+  ): TurmaDisponibilidadeListInputDto | null {
     if (!dto) {
       return null;
     }
 
-    const input = new TurmaDisponibilidadeListInput();
+    const input = new TurmaDisponibilidadeListInputDto();
     input.page = dto.page;
     input.limit = dto.limit;
     input.search = dto.search;
@@ -48,19 +48,21 @@ export class TurmaDisponibilidadeRestMapper {
     return input;
   }
 
-  static toCreateInput(dto: TurmaDisponibilidadeCreateInputDto): TurmaDisponibilidadeCreateInput {
-    const input = new TurmaDisponibilidadeCreateInput();
+  static toCreateInput(
+    dto: TurmaDisponibilidadeCreateInputRestDto,
+  ): TurmaDisponibilidadeCreateInputDto {
+    const input = new TurmaDisponibilidadeCreateInputDto();
     input.disponibilidade = { id: dto.disponibilidade.id };
     input.turma = { id: dto.turma.id };
     return input;
   }
 
   static toUpdateInput(
-    params: TurmaDisponibilidadeFindOneInputDto,
-    dto: TurmaDisponibilidadeUpdateInputDto,
-  ): TurmaDisponibilidadeFindOneInput & TurmaDisponibilidadeUpdateInput {
-    const input = new TurmaDisponibilidadeFindOneInput() as TurmaDisponibilidadeFindOneInput &
-      TurmaDisponibilidadeUpdateInput;
+    params: TurmaDisponibilidadeFindOneInputRestDto,
+    dto: TurmaDisponibilidadeUpdateInputRestDto,
+  ): TurmaDisponibilidadeFindOneInputDto & TurmaDisponibilidadeUpdateInputDto {
+    const input = new TurmaDisponibilidadeFindOneInputDto() as TurmaDisponibilidadeFindOneInputDto &
+      TurmaDisponibilidadeUpdateInputDto;
     input.id = params.id;
     if (dto.disponibilidade !== undefined) {
       input.disponibilidade = { id: dto.disponibilidade.id };
@@ -76,9 +78,9 @@ export class TurmaDisponibilidadeRestMapper {
   // ============================================================================
 
   static toFindOneOutputDto(
-    output: TurmaDisponibilidadeFindOneOutput,
-  ): TurmaDisponibilidadeFindOneOutputDto {
-    const dto = new TurmaDisponibilidadeFindOneOutputDto();
+    output: TurmaDisponibilidadeFindOneOutputDto,
+  ): TurmaDisponibilidadeFindOneOutputRestDto {
+    const dto = new TurmaDisponibilidadeFindOneOutputRestDto();
     dto.id = output.id;
     dto.disponibilidade = DisponibilidadeRestMapper.toFindOneOutputDto(output.disponibilidade);
     dto.turma = TurmaRestMapper.toFindOneOutputDto(output.turma);
@@ -89,9 +91,9 @@ export class TurmaDisponibilidadeRestMapper {
   }
 
   static toListOutputDto(
-    output: TurmaDisponibilidadeListOutput,
-  ): TurmaDisponibilidadeListOutputDto {
-    const dto = new TurmaDisponibilidadeListOutputDto();
+    output: TurmaDisponibilidadeListOutputDto,
+  ): TurmaDisponibilidadeListOutputRestDto {
+    const dto = new TurmaDisponibilidadeListOutputRestDto();
     dto.meta = mapPaginationMeta(output.meta);
     dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
     return dto;

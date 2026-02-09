@@ -1,59 +1,59 @@
 import {
-  EntityOutput,
-  FindOneInput,
+  EntityOutputDto,
+  FindOneInputDto,
   IFilterAcceptableValues,
-  ObjectUuidRef,
-  PaginationInput,
-  PaginationResult,
+  ObjectUuidRefDto,
+  PaginationInputDto,
+  PaginationResultDto,
 } from "@/modules/@shared";
-import { ModalidadeFindOneOutput, ModalidadeInputRef } from "@/modules/modalidade";
+import { ModalidadeFindOneOutputDto, ModalidadeInputRefDto } from "@/modules/modalidade";
 
 // ============================================================================
 // FindOne Input/Output
 // ============================================================================
 
-export class OfertaFormacaoFindOneInput extends FindOneInput {}
+export class OfertaFormacaoFindOneInputDto extends FindOneInputDto {}
 
-export class OfertaFormacaoFindOneOutput extends EntityOutput {
+export class OfertaFormacaoFindOneOutputDto extends EntityOutputDto {
   nome!: string;
   slug!: string;
-  modalidade!: ModalidadeFindOneOutput;
+  modalidade!: ModalidadeFindOneOutputDto;
 }
 
 // ============================================================================
 // List Input/Output
 // ============================================================================
 
-export class OfertaFormacaoListInput extends PaginationInput {
+export class OfertaFormacaoListInputDto extends PaginationInputDto {
   "filter.id"?: IFilterAcceptableValues;
 
   "filter.modalidade.id"?: IFilterAcceptableValues;
 }
 
-export class OfertaFormacaoListOutput extends PaginationResult<OfertaFormacaoFindOneOutput> {}
+export class OfertaFormacaoListOutputDto extends PaginationResultDto<OfertaFormacaoFindOneOutputDto> {}
 
 // ============================================================================
 // Create/Update Input
 // ============================================================================
 
-export class OfertaFormacaoCreateInput {
+export class OfertaFormacaoCreateInputDto {
   nome!: string;
 
   slug!: string;
 
-  modalidade!: ModalidadeInputRef;
+  modalidade!: ModalidadeInputRefDto;
 }
 
-export class OfertaFormacaoUpdateInput {
+export class OfertaFormacaoUpdateInputDto {
   nome?: string;
 
   slug?: string;
 
-  modalidade?: ModalidadeInputRef;
+  modalidade?: ModalidadeInputRefDto;
 }
 
 // ============================================================================
 // Input Ref
 // ============================================================================
 
-export type OfertaFormacaoInputRef = ObjectUuidRef;
+export type OfertaFormacaoInputRefDto = ObjectUuidRefDto;

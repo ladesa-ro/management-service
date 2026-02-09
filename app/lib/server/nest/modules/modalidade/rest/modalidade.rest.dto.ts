@@ -1,5 +1,4 @@
-import { ArgsType, Field, ID, InputType, ObjectType, PartialType } from "@nestjs/graphql";
-import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { ApiProperty, ApiPropertyOptional, ApiSchema, PartialType } from "@nestjs/swagger";
 import { IsArray, IsDateString, IsOptional, IsString, IsUUID, MinLength } from "class-validator";
 import {
   commonProperties,
@@ -7,8 +6,8 @@ import {
   simpleProperty,
 } from "@/modules/@shared/infrastructure/persistence/typeorm/metadata";
 import {
-  PaginationInputDto,
-  PaginationMetaDto,
+  PaginationInputRestDto,
+  PaginationMetaRestDto,
   TransformToArray,
 } from "@/modules/@shared/infrastructure/presentation/rest/dtos";
 
@@ -16,9 +15,9 @@ import {
 // FindOne Output
 // ============================================================================
 
-@ObjectType("Modalidade")
+@ApiSchema({ name: "ModalidadeFindOneOutputDto" })
 @RegisterModel({
-  name: "ModalidadeFindOneOutput",
+  name: "ModalidadeFindOneOutputDto",
   properties: [
     simpleProperty("id"),
     simpleProperty("nome"),
@@ -26,36 +25,30 @@ import {
     ...commonProperties.dated,
   ],
 })
-export class ModalidadeFindOneOutputDto {
+export class ModalidadeFindOneOutputRestDto {
   @ApiProperty({ description: "Identificador do registro (uuid)", format: "uuid" })
-  @Field(() => ID)
   @IsUUID()
   id: string;
 
   @ApiProperty({ description: "Nome da modalidade", minLength: 1 })
-  @Field()
   @IsString()
   @MinLength(1)
   nome: string;
 
   @ApiProperty({ description: "Apelido da modalidade", minLength: 1 })
-  @Field()
   @IsString()
   @MinLength(1)
   slug: string;
 
   @ApiProperty({ description: "Data e hora da criacao do registro" })
-  @Field()
   @IsDateString()
   dateCreated: Date;
 
   @ApiProperty({ description: "Data e hora da alteracao do registro" })
-  @Field()
   @IsDateString()
   dateUpdated: Date;
 
   @ApiPropertyOptional({ description: "Data e hora da exclusao do registro", nullable: true })
-  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateString()
   dateDeleted: Date | null;
@@ -65,8 +58,8 @@ export class ModalidadeFindOneOutputDto {
 // List Input/Output
 // ============================================================================
 
-@ArgsType()
-export class ModalidadeListInputDto extends PaginationInputDto {
+@ApiSchema({ name: "ModalidadeListInputDto" })
+export class ModalidadeListInputRestDto extends PaginationInputRestDto {
   @ApiPropertyOptional({
     description: "Filtro por ID",
     type: [String],
@@ -74,52 +67,46 @@ export class ModalidadeListInputDto extends PaginationInputDto {
   @TransformToArray()
   @IsOptional()
   @IsArray()
-  @IsString({ each: true })
+  @IsUUID(undefined, { each: true })
   "filter.id"?: string[];
 }
 
-@ObjectType("ModalidadeListOutput")
-export class ModalidadeListOutputDto {
-  @ApiProperty({ type: () => PaginationMetaDto, description: "Metadados da busca" })
-  @Field(() => PaginationMetaDto)
-  meta: PaginationMetaDto;
+@ApiSchema({ name: "ModalidadeListOutputDto" })
+export class ModalidadeListOutputRestDto {
+  @ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" })
+  meta: PaginationMetaRestDto;
 
-  @ApiProperty({ type: () => [ModalidadeFindOneOutputDto], description: "Resultados da busca" })
-  @Field(() => [ModalidadeFindOneOutputDto])
-  data: ModalidadeFindOneOutputDto[];
+  @ApiProperty({ type: () => [ModalidadeFindOneOutputRestDto], description: "Resultados da busca" })
+  data: ModalidadeFindOneOutputRestDto[];
 }
 
 // ============================================================================
 // Create/Update Input
 // ============================================================================
 
-@InputType("ModalidadeCreateInput")
-export class ModalidadeCreateInputDto {
+@ApiSchema({ name: "ModalidadeCreateInputDto" })
+export class ModalidadeCreateInputRestDto {
   @ApiProperty({ description: "Nome da modalidade", minLength: 1 })
-  @Field()
   @IsString()
   @MinLength(1)
   nome: string;
 
   @ApiProperty({ description: "Apelido da modalidade", minLength: 1 })
-  @Field()
   @IsString()
   @MinLength(1)
   slug: string;
 }
 
-@InputType("ModalidadeUpdateInput")
-export class ModalidadeUpdateInputDto extends PartialType(ModalidadeCreateInputDto) {}
+@ApiSchema({ name: "ModalidadeUpdateInputDto" })
+export class ModalidadeUpdateInputRestDto extends PartialType(ModalidadeCreateInputRestDto) {}
 
 // ============================================================================
 // FindOne Input (for path params)
 // ============================================================================
 
-@ArgsType()
-@InputType("ModalidadeFindOneInput")
-export class ModalidadeFindOneInputDto {
+@ApiSchema({ name: "ModalidadeFindOneInputDto" })
+export class ModalidadeFindOneInputRestDto {
   @ApiProperty({ description: "Identificador do registro (uuid)", format: "uuid" })
-  @Field(() => ID)
   @IsUUID()
   id: string;
 }

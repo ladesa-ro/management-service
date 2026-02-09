@@ -1,4 +1,4 @@
-import type { IdUuid, ScalarDateTimeString } from "@/modules/@shared";
+import type { IdUuid, IEntityBase } from "@/modules/@shared";
 import type { ICampus } from "@/modules/campus";
 import type { IOfertaFormacao } from "@/modules/oferta-formacao";
 
@@ -6,24 +6,12 @@ import type { IOfertaFormacao } from "@/modules/oferta-formacao";
  * Interface que define a estrutura de dados de GradeHorarioOfertaFormacao
  * Tipagem pura sem implementacao de regras
  */
-export interface IGradeHorarioOfertaFormacao {
-  /** Identificador UUID da grade horario de oferta de formacao */
-  id: IdUuid;
-
+export interface IGradeHorarioOfertaFormacao extends IEntityBase {
   /** Campus associado */
   campus: ICampus;
 
   /** Oferta de formacao associada */
   ofertaFormacao: IOfertaFormacao;
-
-  /** Data de criacao */
-  dateCreated: ScalarDateTimeString;
-
-  /** Data de atualizacao */
-  dateUpdated: ScalarDateTimeString;
-
-  /** Data de exclusao (soft delete) */
-  dateDeleted: ScalarDateTimeString | null;
 }
 
 /**

@@ -1,22 +1,22 @@
 import {
-  AulaCreateInput,
-  AulaFindOneInput,
-  AulaFindOneOutput,
-  AulaListInput,
-  AulaListOutput,
-  AulaUpdateInput,
-} from "@/modules/aula";
-import { AmbienteRestMapper } from "@/server/nest/modules/ambiente/rest";
-import { DiarioRestMapper } from "@/server/nest/modules/diario/rest";
-import { IntervaloDeTempoRestMapper } from "@/server/nest/modules/intervalo-de-tempo/rest";
-import { mapPaginationMeta } from "@/server/nest/shared/mappers";
-import {
   AulaCreateInputDto,
   AulaFindOneInputDto,
   AulaFindOneOutputDto,
   AulaListInputDto,
   AulaListOutputDto,
   AulaUpdateInputDto,
+} from "@/modules/aula";
+import { AmbienteRestMapper } from "@/server/nest/modules/ambiente/rest";
+import { DiarioRestMapper } from "@/server/nest/modules/diario/rest";
+import { IntervaloDeTempoRestMapper } from "@/server/nest/modules/intervalo-de-tempo/rest";
+import { mapPaginationMeta } from "@/server/nest/shared/mappers";
+import {
+  AulaCreateInputRestDto,
+  AulaFindOneInputRestDto,
+  AulaFindOneOutputRestDto,
+  AulaListInputRestDto,
+  AulaListOutputRestDto,
+  AulaUpdateInputRestDto,
 } from "./aula.rest.dto";
 
 export class AulaRestMapper {
@@ -24,18 +24,18 @@ export class AulaRestMapper {
   // Input: Server DTO -> Core DTO
   // ============================================================================
 
-  static toFindOneInput(dto: AulaFindOneInputDto): AulaFindOneInput {
-    const input = new AulaFindOneInput();
+  static toFindOneInput(dto: AulaFindOneInputRestDto): AulaFindOneInputDto {
+    const input = new AulaFindOneInputDto();
     input.id = dto.id;
     return input;
   }
 
-  static toListInput(dto: AulaListInputDto | null): AulaListInput | null {
+  static toListInput(dto: AulaListInputRestDto | null): AulaListInputDto | null {
     if (!dto) {
       return null;
     }
 
-    const input = new AulaListInput();
+    const input = new AulaListInputDto();
     input.page = dto.page;
     input.limit = dto.limit;
     input.search = dto.search;
@@ -47,8 +47,8 @@ export class AulaRestMapper {
     return input;
   }
 
-  static toCreateInput(dto: AulaCreateInputDto): AulaCreateInput {
-    const input = new AulaCreateInput();
+  static toCreateInput(dto: AulaCreateInputRestDto): AulaCreateInputDto {
+    const input = new AulaCreateInputDto();
     input.data = dto.data;
     input.modalidade = dto.modalidade ?? null;
     input.intervaloDeTempo = { id: dto.intervaloDeTempo.id };
@@ -60,10 +60,10 @@ export class AulaRestMapper {
   }
 
   static toUpdateInput(
-    params: AulaFindOneInputDto,
-    dto: AulaUpdateInputDto,
-  ): AulaFindOneInput & AulaUpdateInput {
-    const input = new AulaFindOneInput() as AulaFindOneInput & AulaUpdateInput;
+    params: AulaFindOneInputRestDto,
+    dto: AulaUpdateInputRestDto,
+  ): AulaFindOneInputDto & AulaUpdateInputDto {
+    const input = new AulaFindOneInputDto() as AulaFindOneInputDto & AulaUpdateInputDto;
     input.id = params.id;
     if (dto.data !== undefined) {
       input.data = dto.data;
@@ -87,8 +87,8 @@ export class AulaRestMapper {
   // Output: Core DTO -> Server DTO
   // ============================================================================
 
-  static toFindOneOutputDto(output: AulaFindOneOutput): AulaFindOneOutputDto {
-    const dto = new AulaFindOneOutputDto();
+  static toFindOneOutputDto(output: AulaFindOneOutputDto): AulaFindOneOutputRestDto {
+    const dto = new AulaFindOneOutputRestDto();
     dto.id = output.id;
     dto.data = output.data;
     dto.modalidade = output.modalidade;
@@ -101,8 +101,8 @@ export class AulaRestMapper {
     return dto;
   }
 
-  static toListOutputDto(output: AulaListOutput): AulaListOutputDto {
-    const dto = new AulaListOutputDto();
+  static toListOutputDto(output: AulaListOutputDto): AulaListOutputRestDto {
+    const dto = new AulaListOutputRestDto();
     dto.meta = mapPaginationMeta(output.meta);
     dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
     return dto;

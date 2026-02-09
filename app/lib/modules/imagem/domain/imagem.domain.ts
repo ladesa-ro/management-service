@@ -19,6 +19,14 @@ export class Imagem extends BaseEntity implements IImagem {
   }
 
   // ========================================
+  // Validação
+  // ========================================
+
+  validar(): void {
+    // Descrição é opcional, sem validações obrigatórias
+  }
+
+  // ========================================
   // Factory Methods
   // ========================================
 
@@ -27,14 +35,11 @@ export class Imagem extends BaseEntity implements IImagem {
    * @throws EntityValidationError se os dados forem inválidos
    */
   static criar(dados: IImagemCreate): Imagem {
-    const { rules } = this.createValidation();
-
     const instance = new Imagem();
-    instance.descricao = rules.optional(dados.descricao);
+    instance.descricao = dados.descricao?.trim() || null;
     instance.versoes = [];
-    instance.dateCreated = new Date().toISOString();
-    instance.dateUpdated = new Date().toISOString();
-    instance.dateDeleted = null;
+    instance.initDates();
+    instance.validar();
 
     return instance;
   }
@@ -57,13 +62,12 @@ export class Imagem extends BaseEntity implements IImagem {
    * @throws EntityValidationError se os dados forem inválidos
    */
   atualizar(dados: IImagemUpdate): void {
-    const { rules } = Imagem.createValidation();
-
     if (dados.descricao !== undefined) {
-      this.descricao = rules.optional(dados.descricao);
+      this.descricao = dados.descricao?.trim() || null;
     }
 
-    this.dateUpdated = new Date().toISOString();
+    this.touchUpdated();
+    this.validar();
   }
 
   // ========================================

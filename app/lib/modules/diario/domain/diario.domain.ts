@@ -27,6 +27,14 @@ export class Diario extends BaseEntity implements IDiario {
   }
 
   // ========================================
+  // Validação
+  // ========================================
+
+  validar(): void {
+    // Sem validações de campos escalares
+  }
+
+  // ========================================
   // Factory Methods
   // ========================================
 
@@ -38,9 +46,8 @@ export class Diario extends BaseEntity implements IDiario {
     instance.ativo = dados.ativo ?? true;
     instance.ambientePadrao = null;
     instance.imagemCapa = null;
-    instance.dateCreated = new Date().toISOString();
-    instance.dateUpdated = new Date().toISOString();
-    instance.dateDeleted = null;
+    instance.initDates();
+    instance.validar();
     return instance;
   }
 
@@ -65,7 +72,8 @@ export class Diario extends BaseEntity implements IDiario {
       this.ativo = dados.ativo;
     }
 
-    this.dateUpdated = new Date().toISOString();
+    this.touchUpdated();
+    this.validar();
   }
 
   /**
@@ -80,7 +88,7 @@ export class Diario extends BaseEntity implements IDiario {
    */
   ativar(): void {
     this.ativo = true;
-    this.dateUpdated = new Date().toISOString();
+    this.touchUpdated();
   }
 
   /**
@@ -88,6 +96,6 @@ export class Diario extends BaseEntity implements IDiario {
    */
   desativar(): void {
     this.ativo = false;
-    this.dateUpdated = new Date().toISOString();
+    this.touchUpdated();
   }
 }

@@ -8,24 +8,24 @@ import { CursoService } from "@/modules/curso";
 import { ImagemService } from "@/modules/imagem/application/use-cases/imagem.service";
 import type { TurmaEntity } from "@/modules/turma/infrastructure/persistence/typeorm";
 import type {
-  TurmaCreateInput,
-  TurmaFindOneInput,
-  TurmaFindOneOutput,
-  TurmaListInput,
-  TurmaListOutput,
-  TurmaUpdateInput,
+  TurmaCreateInputDto,
+  TurmaFindOneInputDto,
+  TurmaFindOneOutputDto,
+  TurmaListInputDto,
+  TurmaListOutputDto,
+  TurmaUpdateInputDto,
 } from "../dtos";
 import { type ITurmaRepositoryPort, TURMA_REPOSITORY_PORT } from "../ports";
 
 @Injectable()
 export class TurmaService extends BaseCrudService<
   TurmaEntity,
-  TurmaListInput,
-  TurmaListOutput,
-  TurmaFindOneInput,
-  TurmaFindOneOutput,
-  TurmaCreateInput,
-  TurmaUpdateInput
+  TurmaListInputDto,
+  TurmaListOutputDto,
+  TurmaFindOneInputDto,
+  TurmaFindOneOutputDto,
+  TurmaCreateInputDto,
+  TurmaUpdateInputDto
 > {
   protected readonly resourceName = "Turma";
   protected readonly createAction = "turma:create";
@@ -58,7 +58,7 @@ export class TurmaService extends BaseCrudService<
 
   async updateImagemCapa(
     accessContext: AccessContext,
-    dto: TurmaFindOneInput,
+    dto: TurmaFindOneInputDto,
     file: Express.Multer.File,
   ): Promise<boolean> {
     return this.updateImagemField(accessContext, dto.id, file, "imagemCapa", this.imagemService);
@@ -67,7 +67,7 @@ export class TurmaService extends BaseCrudService<
   protected override async beforeCreate(
     accessContext: AccessContext,
     entity: TurmaEntity,
-    dto: TurmaCreateInput,
+    dto: TurmaCreateInputDto,
   ): Promise<void> {
     if (dto.ambientePadraoAula) {
       const ambientePadraoAula = await this.ambienteService.findByIdStrict(accessContext, {
@@ -85,7 +85,7 @@ export class TurmaService extends BaseCrudService<
   protected override async beforeUpdate(
     accessContext: AccessContext,
     entity: TurmaEntity,
-    dto: TurmaFindOneInput & TurmaUpdateInput,
+    dto: TurmaFindOneInputDto & TurmaUpdateInputDto,
   ): Promise<void> {
     if (has(dto, "ambientePadraoAula") && dto.ambientePadraoAula !== undefined) {
       if (dto.ambientePadraoAula !== null) {

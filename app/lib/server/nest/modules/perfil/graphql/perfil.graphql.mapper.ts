@@ -1,23 +1,27 @@
 import {
-  PerfilFindOneInput,
-  PerfilFindOneOutput,
-  PerfilListInput,
-  PerfilListOutput,
-  PerfilSetVinculosInput,
+  PerfilFindOneInputDto,
+  PerfilFindOneOutputDto,
+  PerfilListInputDto,
+  PerfilListOutputDto,
+  PerfilSetVinculosInputDto,
 } from "@/modules/perfil";
-import { CampusFindOneOutputDto } from "@/server/nest/modules/campus/rest";
-import { UsuarioFindOneOutputDto } from "@/server/nest/modules/usuario/rest";
+import { CampusGraphqlMapper } from "@/server/nest/modules/campus/graphql/campus.graphql.mapper";
+import { UsuarioGraphqlMapper } from "@/server/nest/modules/usuario/graphql/usuario.graphql.mapper";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";
-import { PerfilFindOneOutputDto, PerfilSetVinculosInputDto } from "../rest/perfil.rest.dto";
-import { PerfilListInputGqlDto, PerfilListOutputGqlDto } from "./perfil.graphql.dto";
+import {
+  PerfilFindOneOutputGraphQlDto,
+  PerfilListInputGraphQlDto,
+  PerfilListOutputGraphQlDto,
+  PerfilSetVinculosInputGraphQlDto,
+} from "./perfil.graphql.dto";
 
 export class PerfilGraphqlMapper {
-  static toListInput(dto: PerfilListInputGqlDto | null): PerfilListInput | null {
+  static toListInput(dto: PerfilListInputGraphQlDto | null): PerfilListInputDto | null {
     if (!dto) {
       return null;
     }
 
-    const input = new PerfilListInput();
+    const input = new PerfilListInputDto();
     input.page = dto.page;
     input.limit = dto.limit;
     input.search = dto.search;
@@ -30,36 +34,36 @@ export class PerfilGraphqlMapper {
     return input;
   }
 
-  static toFindOneInput(id: string, selection?: string[]): PerfilFindOneInput {
-    const input = new PerfilFindOneInput();
+  static toFindOneInput(id: string, selection?: string[]): PerfilFindOneInputDto {
+    const input = new PerfilFindOneInputDto();
     input.id = id;
     input.selection = selection;
     return input;
   }
 
-  static toSetVinculosInput(dto: PerfilSetVinculosInputDto): PerfilSetVinculosInput {
-    const input = new PerfilSetVinculosInput();
+  static toSetVinculosInput(dto: PerfilSetVinculosInputGraphQlDto): PerfilSetVinculosInputDto {
+    const input = new PerfilSetVinculosInputDto();
     input.cargos = dto.cargos;
     input.campus = { id: dto.campus.id };
     input.usuario = { id: dto.usuario.id };
     return input;
   }
 
-  static toFindOneOutputDto(output: PerfilFindOneOutput): PerfilFindOneOutputDto {
-    const dto = new PerfilFindOneOutputDto();
+  static toFindOneOutputDto(output: PerfilFindOneOutputDto): PerfilFindOneOutputGraphQlDto {
+    const dto = new PerfilFindOneOutputGraphQlDto();
     dto.id = output.id;
     dto.ativo = output.ativo;
     dto.cargo = output.cargo;
-    dto.campus = output.campus as unknown as CampusFindOneOutputDto;
-    dto.usuario = output.usuario as unknown as UsuarioFindOneOutputDto;
-    dto.dateCreated = new Date(output.dateCreated);
-    dto.dateUpdated = new Date(output.dateUpdated);
-    dto.dateDeleted = output.dateDeleted ? new Date(output.dateDeleted) : null;
+    dto.campus = CampusGraphqlMapper.toFindOneOutputDto(output.campus);
+    dto.usuario = UsuarioGraphqlMapper.toFindOneOutputDto(output.usuario);
+    dto.dateCreated = output.dateCreated as unknown as Date;
+    dto.dateUpdated = output.dateUpdated as unknown as Date;
+    dto.dateDeleted = output.dateDeleted as unknown as Date | null;
     return dto;
   }
 
-  static toListOutputDto(output: PerfilListOutput): PerfilListOutputGqlDto {
-    const dto = new PerfilListOutputGqlDto();
+  static toListOutputDto(output: PerfilListOutputDto): PerfilListOutputGraphQlDto {
+    const dto = new PerfilListOutputGraphQlDto();
     dto.meta = mapPaginationMeta(output.meta);
     dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
     return dto;

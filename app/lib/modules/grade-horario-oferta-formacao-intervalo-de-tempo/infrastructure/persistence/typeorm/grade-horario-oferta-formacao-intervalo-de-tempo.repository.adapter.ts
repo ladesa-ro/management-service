@@ -9,10 +9,10 @@ import {
   paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
-  GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInput,
-  GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutput,
-  GradeHorarioOfertaFormacaoIntervaloDeTempoListInput,
-  GradeHorarioOfertaFormacaoIntervaloDeTempoListOutput,
+  GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInputDto,
+  GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputDto,
+  GradeHorarioOfertaFormacaoIntervaloDeTempoListInputDto,
+  GradeHorarioOfertaFormacaoIntervaloDeTempoListOutputDto,
 } from "@/modules/grade-horario-oferta-formacao-intervalo-de-tempo";
 import type { IGradeHorarioOfertaFormacaoIntervaloDeTempoRepositoryPort } from "@/modules/grade-horario-oferta-formacao-intervalo-de-tempo/application/ports/out";
 import type { GradeHorarioOfertaFormacaoIntervaloDeTempoEntity } from "./grade-horario-oferta-formacao-intervalo-de-tempo.entity";
@@ -25,16 +25,16 @@ import type { GradeHorarioOfertaFormacaoIntervaloDeTempoEntity } from "./grade-h
 export class GradeHorarioOfertaFormacaoIntervaloDeTempoTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     GradeHorarioOfertaFormacaoIntervaloDeTempoEntity,
-    GradeHorarioOfertaFormacaoIntervaloDeTempoListInput,
-    GradeHorarioOfertaFormacaoIntervaloDeTempoListOutput,
-    GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInput,
-    GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutput
+    GradeHorarioOfertaFormacaoIntervaloDeTempoListInputDto,
+    GradeHorarioOfertaFormacaoIntervaloDeTempoListOutputDto,
+    GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInputDto,
+    GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputDto
   >
   implements IGradeHorarioOfertaFormacaoIntervaloDeTempoRepositoryPort
 {
   protected readonly alias = "gh_of_it";
   protected readonly authzAction = "grade_horario_oferta_formacao_intervalo_de_tempo:find";
-  protected readonly outputDtoName = "GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutput";
+  protected readonly outputDtoName = "GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputDto";
 
   constructor(
     protected readonly databaseContext: DatabaseContextService,

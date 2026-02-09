@@ -1,4 +1,4 @@
-import type { IdUuid, ScalarDateTimeString } from "@/modules/@shared";
+import type { IdUuid, IEntityBase } from "@/modules/@shared";
 import type { ICampus } from "@/modules/campus";
 import type { IUsuario } from "@/modules/usuario";
 
@@ -6,15 +6,11 @@ import type { IUsuario } from "@/modules/usuario";
  * Interface que define a estrutura de dados de Perfil
  * Tipagem pura sem implementação de regras
  */
-export interface IPerfil {
-  id: IdUuid;
+export interface IPerfil extends IEntityBase {
   ativo: boolean;
   cargo: string;
   campus: ICampus;
   usuario: IUsuario;
-  dateCreated: ScalarDateTimeString;
-  dateUpdated: ScalarDateTimeString;
-  dateDeleted: ScalarDateTimeString | null;
 }
 
 /**

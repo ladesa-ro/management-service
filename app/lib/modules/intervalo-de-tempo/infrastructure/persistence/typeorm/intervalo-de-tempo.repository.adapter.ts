@@ -8,11 +8,11 @@ import {
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
   IIntervaloDeTempoRepositoryPort,
-  IntervaloDeTempoFindOneInput,
-  IntervaloDeTempoFindOneOutput,
-  IntervaloDeTempoInput,
-  IntervaloDeTempoListInput,
-  IntervaloDeTempoListOutput,
+  IntervaloDeTempoFindOneInputDto,
+  IntervaloDeTempoFindOneOutputDto,
+  IntervaloDeTempoInputDto,
+  IntervaloDeTempoListInputDto,
+  IntervaloDeTempoListOutputDto,
 } from "@/modules/intervalo-de-tempo";
 import type { IntervaloDeTempoEntity } from "@/modules/intervalo-de-tempo/infrastructure/persistence/typeorm";
 
@@ -20,16 +20,16 @@ import type { IntervaloDeTempoEntity } from "@/modules/intervalo-de-tempo/infras
 export class IntervaloDeTempoTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     IntervaloDeTempoEntity,
-    IntervaloDeTempoListInput,
-    IntervaloDeTempoListOutput,
-    IntervaloDeTempoFindOneInput,
-    IntervaloDeTempoFindOneOutput
+    IntervaloDeTempoListInputDto,
+    IntervaloDeTempoListOutputDto,
+    IntervaloDeTempoFindOneInputDto,
+    IntervaloDeTempoFindOneOutputDto
   >
   implements IIntervaloDeTempoRepositoryPort
 {
   protected readonly alias = "intervalo_de_tempo";
   protected readonly authzAction = "intervalo_de_tempo:find";
-  protected readonly outputDtoName = "IntervaloDeTempoFindOneOutput";
+  protected readonly outputDtoName = "IntervaloDeTempoFindOneOutputDto";
 
   constructor(
     protected readonly databaseContext: DatabaseContextService,
@@ -43,7 +43,9 @@ export class IntervaloDeTempoTypeOrmRepositoryAdapter
   }
 
   // Custom methods specific to IntervaloDeTempo
-  async findOne(domain: IntervaloDeTempoInput): Promise<IntervaloDeTempoFindOneOutput | null> {
+  async findOne(
+    domain: IntervaloDeTempoInputDto,
+  ): Promise<IntervaloDeTempoFindOneOutputDto | null> {
     const entity = await this.repository.findOne({
       where: {
         periodoFim: domain.periodoFim,
@@ -56,7 +58,7 @@ export class IntervaloDeTempoTypeOrmRepositoryAdapter
     return this.findById(null, { id: entity.id });
   }
 
-  async findOneByIdOrFail(id: string): Promise<IntervaloDeTempoFindOneOutput> {
+  async findOneByIdOrFail(id: string): Promise<IntervaloDeTempoFindOneOutputDto> {
     const result = await this.findById(null, { id });
     if (!result) {
       throw new Error(`IntervaloDeTempo with id ${id} not found`);

@@ -1,27 +1,15 @@
-import type { IdUuid, ScalarDateTimeString } from "@/modules/@shared";
+import type { IEntityBase } from "@/modules/@shared";
 
 /**
  * Tipagem da entidade IntervaloDeTempo
  * Define a estrutura de dados sem comportamento
  */
-export interface IIntervaloDeTempo {
-  /** Identificador do intervalo de tempo (UUID) */
-  id: IdUuid;
-
+export interface IIntervaloDeTempo extends IEntityBase {
   /** Horário de início do intervalo (formato HH:MM ou HH:MM:SS) */
   periodoInicio: string;
 
   /** Horário de fim do intervalo (formato HH:MM ou HH:MM:SS) */
   periodoFim: string;
-
-  /** Data de criação do registro */
-  dateCreated: ScalarDateTimeString;
-
-  /** Data de atualização do registro */
-  dateUpdated: ScalarDateTimeString;
-
-  /** Data de exclusão do registro (soft delete) */
-  dateDeleted: ScalarDateTimeString | null;
 }
 
 /**

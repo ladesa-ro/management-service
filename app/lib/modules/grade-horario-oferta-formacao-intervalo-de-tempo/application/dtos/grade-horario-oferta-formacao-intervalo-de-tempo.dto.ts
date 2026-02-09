@@ -1,58 +1,58 @@
 import {
-  EntityOutput,
-  FindOneInput,
+  EntityOutputDto,
+  FindOneInputDto,
   IFilterAcceptableValues,
-  ObjectUuidRef,
-  PaginationInput,
-  PaginationResult,
+  ObjectUuidRefDto,
+  PaginationInputDto,
+  PaginationResultDto,
 } from "@/modules/@shared";
 import {
-  GradeHorarioOfertaFormacaoFindOneOutput,
-  GradeHorarioOfertaFormacaoInputRef,
+  GradeHorarioOfertaFormacaoFindOneOutputDto,
+  GradeHorarioOfertaFormacaoInputRefDto,
 } from "@/modules/grade-horario-oferta-formacao";
 import {
-  IntervaloDeTempoFindOneOutput,
-  IntervaloDeTempoInputRef,
+  IntervaloDeTempoFindOneOutputDto,
+  IntervaloDeTempoInputRefDto,
 } from "@/modules/intervalo-de-tempo";
 
 // ============================================================================
 // FindOne Input/Output
 // ============================================================================
 
-export class GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInput extends FindOneInput {}
+export class GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInputDto extends FindOneInputDto {}
 
-export class GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutput extends EntityOutput {
-  intervaloDeTempo!: IntervaloDeTempoFindOneOutput;
-  gradeHorarioOfertaFormacao!: GradeHorarioOfertaFormacaoFindOneOutput;
+export class GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputDto extends EntityOutputDto {
+  intervaloDeTempo!: IntervaloDeTempoFindOneOutputDto;
+  gradeHorarioOfertaFormacao!: GradeHorarioOfertaFormacaoFindOneOutputDto;
 }
 
 // ============================================================================
 // List Input/Output
 // ============================================================================
 
-export class GradeHorarioOfertaFormacaoIntervaloDeTempoListInput extends PaginationInput {
+export class GradeHorarioOfertaFormacaoIntervaloDeTempoListInputDto extends PaginationInputDto {
   "filter.id"?: IFilterAcceptableValues;
   "filter.gradeHorarioOfertaFormacao.id"?: IFilterAcceptableValues;
 }
 
-export class GradeHorarioOfertaFormacaoIntervaloDeTempoListOutput extends PaginationResult<GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutput> {}
+export class GradeHorarioOfertaFormacaoIntervaloDeTempoListOutputDto extends PaginationResultDto<GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputDto> {}
 
 // ============================================================================
 // Create/Update Input
 // ============================================================================
 
-export class GradeHorarioOfertaFormacaoIntervaloDeTempoCreateInput {
-  intervaloDeTempo!: IntervaloDeTempoInputRef;
-  gradeHorarioOfertaFormacao!: GradeHorarioOfertaFormacaoInputRef;
+export class GradeHorarioOfertaFormacaoIntervaloDeTempoCreateInputDto {
+  intervaloDeTempo!: IntervaloDeTempoInputRefDto;
+  gradeHorarioOfertaFormacao!: GradeHorarioOfertaFormacaoInputRefDto;
 }
 
-export class GradeHorarioOfertaFormacaoIntervaloDeTempoUpdateInput {
-  intervaloDeTempo?: IntervaloDeTempoInputRef;
-  gradeHorarioOfertaFormacao?: GradeHorarioOfertaFormacaoInputRef;
+export class GradeHorarioOfertaFormacaoIntervaloDeTempoUpdateInputDto {
+  intervaloDeTempo?: IntervaloDeTempoInputRefDto;
+  gradeHorarioOfertaFormacao?: GradeHorarioOfertaFormacaoInputRefDto;
 }
 
 // ============================================================================
 // Input Ref
 // ============================================================================
 
-export type GradeHorarioOfertaFormacaoIntervaloDeTempoInputRef = ObjectUuidRef;
+export type GradeHorarioOfertaFormacaoIntervaloDeTempoInputRefDto = ObjectUuidRefDto;

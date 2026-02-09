@@ -1,9 +1,9 @@
 import type { AccessContext } from "@/modules/@core/access-context";
 import {
-  ProfessorIndisponibilidadeFindOneInput,
-  ProfessorIndisponibilidadeFindOneOutput,
-  ProfessorIndisponibilidadeListInput,
-  ProfessorIndisponibilidadeListOutput,
+  ProfessorIndisponibilidadeFindOneInputDto,
+  ProfessorIndisponibilidadeFindOneOutputDto,
+  ProfessorIndisponibilidadeListInputDto,
+  ProfessorIndisponibilidadeListOutputDto,
 } from "../../dtos";
 
 /**
@@ -19,8 +19,8 @@ export interface IProfessorIndisponibilidadeUseCasePort {
    */
   findAll(
     accessContext: AccessContext,
-    dto: ProfessorIndisponibilidadeListInput | null,
-  ): Promise<ProfessorIndisponibilidadeListOutput>;
+    dto: ProfessorIndisponibilidadeListInputDto | null,
+  ): Promise<ProfessorIndisponibilidadeListOutputDto>;
 
   /**
    * Busca uma indisponibilidade de professor por ID
@@ -30,8 +30,8 @@ export interface IProfessorIndisponibilidadeUseCasePort {
    */
   findById(
     accessContext: AccessContext,
-    dto: ProfessorIndisponibilidadeFindOneInput,
-  ): Promise<ProfessorIndisponibilidadeFindOneOutput | null>;
+    dto: ProfessorIndisponibilidadeFindOneInputDto,
+  ): Promise<ProfessorIndisponibilidadeFindOneOutputDto | null>;
 
   /**
    * Busca uma indisponibilidade de professor por ID (lança exceção se não encontrada)
@@ -41,6 +41,6 @@ export interface IProfessorIndisponibilidadeUseCasePort {
    */
   findByIdStrict(
     accessContext: AccessContext,
-    dto: ProfessorIndisponibilidadeFindOneInput,
-  ): Promise<ProfessorIndisponibilidadeFindOneOutput>;
+    dto: ProfessorIndisponibilidadeFindOneInputDto,
+  ): Promise<ProfessorIndisponibilidadeFindOneOutputDto>;
 }

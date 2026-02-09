@@ -1,14 +1,11 @@
-import type { IdNumeric, IdUuid, ScalarDateTimeString } from "@/modules/@shared";
+import type { IdNumeric, IEntityBase } from "@/modules/@shared";
 import type { IEndereco } from "@/modules/endereco";
 
 /**
  * Tipagem da entidade Campus
  * Define a estrutura de dados sem comportamento
  */
-export interface ICampus {
-  /** Identificador UUID do campus */
-  id: IdUuid;
-
+export interface ICampus extends IEntityBase {
   /** Nome fantasia do campus */
   nomeFantasia: string;
 
@@ -23,15 +20,6 @@ export interface ICampus {
 
   /** Endereço do campus */
   endereco: IEndereco;
-
-  /** Data de criação */
-  dateCreated: ScalarDateTimeString;
-
-  /** Data de atualização */
-  dateUpdated: ScalarDateTimeString;
-
-  /** Data de exclusão (soft delete) */
-  dateDeleted: ScalarDateTimeString | null;
 }
 
 /**

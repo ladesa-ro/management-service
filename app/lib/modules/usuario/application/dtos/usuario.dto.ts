@@ -1,63 +1,63 @@
 import {
-  EntityOutput,
-  FindOneInput,
+  EntityOutputDto,
+  FindOneInputDto,
   IFilterAcceptableValues,
-  ObjectUuidRef,
-  PaginationInput,
-  PaginationResult,
+  ObjectUuidRefDto,
+  PaginationInputDto,
+  PaginationResultDto,
 } from "@/modules/@shared/application/dtos";
-import { ImagemFindOneOutput, ImagemInputRef } from "@/modules/imagem";
+import { ImagemFindOneOutputDto, ImagemInputRefDto } from "@/modules/imagem";
 
 // ============================================================================
 // FindOne Input/Output
 // ============================================================================
 
-export class UsuarioFindOneInput extends FindOneInput {}
+export class UsuarioFindOneInputDto extends FindOneInputDto {}
 
-export class UsuarioFindOneOutput extends EntityOutput {
+export class UsuarioFindOneOutputDto extends EntityOutputDto {
   nome!: string | null;
   matriculaSiape!: string | null;
   email!: string | null;
   isSuperUser!: boolean;
-  imagemCapa!: ImagemFindOneOutput | null;
-  imagemPerfil!: ImagemFindOneOutput | null;
+  imagemCapa!: ImagemFindOneOutputDto | null;
+  imagemPerfil!: ImagemFindOneOutputDto | null;
 }
 
 // ============================================================================
 // List Input/Output
 // ============================================================================
 
-export class UsuarioListInput extends PaginationInput {
+export class UsuarioListInputDto extends PaginationInputDto {
   "filter.id"?: IFilterAcceptableValues;
 }
 
-export class UsuarioListOutput extends PaginationResult<UsuarioFindOneOutput> {}
+export class UsuarioListOutputDto extends PaginationResultDto<UsuarioFindOneOutputDto> {}
 
 // ============================================================================
 // Create/Update Input
 // ============================================================================
 
-export class UsuarioCreateInput {
+export class UsuarioCreateInputDto {
   nome?: string | null;
   matriculaSiape?: string | null;
   email?: string | null;
-  imagemCapa?: ImagemInputRef | null;
-  imagemPerfil?: ImagemInputRef | null;
+  imagemCapa?: ImagemInputRefDto | null;
+  imagemPerfil?: ImagemInputRefDto | null;
 }
 
-export class UsuarioUpdateInput {
+export class UsuarioUpdateInputDto {
   nome?: string | null;
   matriculaSiape?: string | null;
   email?: string | null;
-  imagemCapa?: ImagemInputRef | null;
-  imagemPerfil?: ImagemInputRef | null;
+  imagemCapa?: ImagemInputRefDto | null;
+  imagemPerfil?: ImagemInputRefDto | null;
 }
 
 // ============================================================================
 // Input Ref
 // ============================================================================
 
-export type UsuarioInputRef = ObjectUuidRef;
+export type UsuarioInputRefDto = ObjectUuidRefDto;
 
 // ============================================================================
 // Ensino Output (dados de ensino do usuario)
@@ -79,7 +79,7 @@ export interface UsuarioEnsinoDisciplinaRef {
 }
 
 export interface UsuarioEnsinoOutput {
-  usuario: UsuarioFindOneOutput;
+  usuario: UsuarioFindOneOutputDto;
   disciplinas: Array<{
     disciplina: UsuarioEnsinoDisciplinaRef;
     cursos: Array<{

@@ -12,7 +12,10 @@ import { v4 } from "uuid";
 import type { AccessContext } from "@/modules/@core/access-context";
 import { isValidUuid, ResourceNotFoundError } from "@/modules/@shared";
 import { CONFIG_PORT, type IConfigPort } from "@/modules/@shared/application/ports/out/config";
-import type { ArquivoCreateInput, ArquivoGetFileInput } from "@/modules/arquivo/application/dtos";
+import type {
+  ArquivoCreateInputDto,
+  ArquivoGetFileInputDto,
+} from "@/modules/arquivo/application/dtos";
 import {
   ARQUIVO_REPOSITORY_PORT,
   type IArquivoRepositoryPort,
@@ -50,7 +53,7 @@ export class ArquivoService implements IArquivoUseCasePort {
 
   async getFile(
     accessContext: AccessContext | null,
-    input: ArquivoGetFileInput,
+    input: ArquivoGetFileInputDto,
   ): Promise<{
     id: string;
     nome: string | null;
@@ -132,7 +135,7 @@ export class ArquivoService implements IArquivoUseCasePort {
 
   async getStreamableFile(
     accessContext: AccessContext | null,
-    input: ArquivoGetFileInput,
+    input: ArquivoGetFileInputDto,
   ): Promise<StreamableFile> {
     const file = await this.getFile(accessContext, input);
 
@@ -153,7 +156,7 @@ export class ArquivoService implements IArquivoUseCasePort {
   }
 
   async arquivoCreate(
-    dto: Pick<ArquivoCreateInput, "name" | "mimeType">,
+    dto: Pick<ArquivoCreateInputDto, "name" | "mimeType">,
     data: NodeJS.ArrayBufferView | Readable,
   ): Promise<{ id: string }> {
     let id: string;

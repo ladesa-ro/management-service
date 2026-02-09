@@ -6,12 +6,12 @@ import { GradeHorarioOfertaFormacaoService } from "@/modules/grade-horario-ofert
 import type { GradeHorarioOfertaFormacaoIntervaloDeTempoEntity } from "@/modules/grade-horario-oferta-formacao-intervalo-de-tempo/infrastructure/persistence/typeorm";
 import { IntervaloDeTempoService } from "@/modules/intervalo-de-tempo";
 import type {
-  GradeHorarioOfertaFormacaoIntervaloDeTempoCreateInput,
-  GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInput,
-  GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutput,
-  GradeHorarioOfertaFormacaoIntervaloDeTempoListInput,
-  GradeHorarioOfertaFormacaoIntervaloDeTempoListOutput,
-  GradeHorarioOfertaFormacaoIntervaloDeTempoUpdateInput,
+  GradeHorarioOfertaFormacaoIntervaloDeTempoCreateInputDto,
+  GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInputDto,
+  GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputDto,
+  GradeHorarioOfertaFormacaoIntervaloDeTempoListInputDto,
+  GradeHorarioOfertaFormacaoIntervaloDeTempoListOutputDto,
+  GradeHorarioOfertaFormacaoIntervaloDeTempoUpdateInputDto,
 } from "../dtos";
 import {
   GRADE_HORARIO_OFERTA_FORMACAO_INTERVALO_DE_TEMPO_REPOSITORY_PORT,
@@ -21,12 +21,12 @@ import {
 @Injectable()
 export class GradeHorarioOfertaFormacaoIntervaloDeTempoService extends BaseCrudService<
   GradeHorarioOfertaFormacaoIntervaloDeTempoEntity,
-  GradeHorarioOfertaFormacaoIntervaloDeTempoListInput,
-  GradeHorarioOfertaFormacaoIntervaloDeTempoListOutput,
-  GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInput,
-  GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutput,
-  GradeHorarioOfertaFormacaoIntervaloDeTempoCreateInput,
-  GradeHorarioOfertaFormacaoIntervaloDeTempoUpdateInput
+  GradeHorarioOfertaFormacaoIntervaloDeTempoListInputDto,
+  GradeHorarioOfertaFormacaoIntervaloDeTempoListOutputDto,
+  GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInputDto,
+  GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputDto,
+  GradeHorarioOfertaFormacaoIntervaloDeTempoCreateInputDto,
+  GradeHorarioOfertaFormacaoIntervaloDeTempoUpdateInputDto
 > {
   protected readonly resourceName = "GradeHorarioOfertaFormacaoIntervaloDeTempo";
   protected readonly createAction = "grade_horario_oferta_formacao_intervalo_de_tempo:create";
@@ -47,7 +47,7 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService extends BaseCrudS
   protected override async beforeCreate(
     accessContext: AccessContext,
     entity: GradeHorarioOfertaFormacaoIntervaloDeTempoEntity,
-    dto: GradeHorarioOfertaFormacaoIntervaloDeTempoCreateInput,
+    dto: GradeHorarioOfertaFormacaoIntervaloDeTempoCreateInputDto,
   ): Promise<void> {
     if (dto.gradeHorarioOfertaFormacao) {
       const gradeHorarioOfertaFormacao =
@@ -71,8 +71,8 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService extends BaseCrudS
   protected override async beforeUpdate(
     accessContext: AccessContext,
     entity: GradeHorarioOfertaFormacaoIntervaloDeTempoEntity,
-    dto: GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInput &
-      GradeHorarioOfertaFormacaoIntervaloDeTempoUpdateInput,
+    dto: GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInputDto &
+      GradeHorarioOfertaFormacaoIntervaloDeTempoUpdateInputDto,
   ): Promise<void> {
     if (has(dto, "gradeHorarioOfertaFormacao") && dto.gradeHorarioOfertaFormacao !== undefined) {
       if (dto.gradeHorarioOfertaFormacao) {

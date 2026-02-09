@@ -1,26 +1,31 @@
 import {
-  CalendarioLetivoFindOneInput,
-  CalendarioLetivoFindOneOutput,
-  CalendarioLetivoListInput,
-  CalendarioLetivoListOutput,
+  CalendarioLetivoCreateInputDto,
+  CalendarioLetivoFindOneInputDto,
+  CalendarioLetivoFindOneOutputDto,
+  CalendarioLetivoListInputDto,
+  CalendarioLetivoListOutputDto,
+  CalendarioLetivoUpdateInputDto,
 } from "@/modules/calendario-letivo";
+import { CampusGraphqlMapper } from "@/server/nest/modules/campus/graphql/campus.graphql.mapper";
+import { OfertaFormacaoGraphqlMapper } from "@/server/nest/modules/oferta-formacao/graphql/oferta-formacao.graphql.mapper";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";
-import { CalendarioLetivoFindOneOutputDto } from "../rest/calendario-letivo.rest.dto";
-import { CalendarioLetivoRestMapper } from "../rest/calendario-letivo.rest.mapper";
 import {
-  CalendarioLetivoListInputGqlDto,
-  CalendarioLetivoListOutputGqlDto,
+  CalendarioLetivoCreateInputGraphQlDto,
+  CalendarioLetivoFindOneOutputGraphQlDto,
+  CalendarioLetivoListInputGraphQlDto,
+  CalendarioLetivoListOutputGraphQlDto,
+  CalendarioLetivoUpdateInputGraphQlDto,
 } from "./calendario-letivo.graphql.dto";
 
 export class CalendarioLetivoGraphqlMapper {
   static toListInput(
-    dto: CalendarioLetivoListInputGqlDto | null,
-  ): CalendarioLetivoListInput | null {
+    dto: CalendarioLetivoListInputGraphQlDto | null,
+  ): CalendarioLetivoListInputDto | null {
     if (!dto) {
       return null;
     }
 
-    const input = new CalendarioLetivoListInput();
+    const input = new CalendarioLetivoListInputDto();
     input.page = dto.page;
     input.limit = dto.limit;
     input.search = dto.search;
@@ -31,21 +36,55 @@ export class CalendarioLetivoGraphqlMapper {
     return input;
   }
 
-  static toFindOneInput(id: string, selection?: string[]): CalendarioLetivoFindOneInput {
-    const input = new CalendarioLetivoFindOneInput();
+  static toFindOneInput(id: string, selection?: string[]): CalendarioLetivoFindOneInputDto {
+    const input = new CalendarioLetivoFindOneInputDto();
     input.id = id;
     input.selection = selection;
     return input;
   }
 
-  static toFindOneOutputDto(
-    output: CalendarioLetivoFindOneOutput,
-  ): CalendarioLetivoFindOneOutputDto {
-    return CalendarioLetivoRestMapper.toFindOneOutputDto(output);
+  static toCreateInput(dto: CalendarioLetivoCreateInputGraphQlDto): CalendarioLetivoCreateInputDto {
+    const input = new CalendarioLetivoCreateInputDto();
+    input.nome = dto.nome;
+    input.ano = dto.ano;
+    input.campus = { id: dto.campus.id };
+    input.ofertaFormacao = { id: dto.ofertaFormacao.id };
+    return input;
   }
 
-  static toListOutputDto(output: CalendarioLetivoListOutput): CalendarioLetivoListOutputGqlDto {
-    const dto = new CalendarioLetivoListOutputGqlDto();
+  static toUpdateInput(
+    params: { id: string },
+    dto: CalendarioLetivoUpdateInputGraphQlDto,
+  ): CalendarioLetivoFindOneInputDto & CalendarioLetivoUpdateInputDto {
+    const input = new CalendarioLetivoFindOneInputDto() as CalendarioLetivoFindOneInputDto &
+      CalendarioLetivoUpdateInputDto;
+    input.id = params.id;
+    if (dto.nome !== undefined) input.nome = dto.nome;
+    if (dto.ano !== undefined) input.ano = dto.ano;
+    if (dto.campus !== undefined) input.campus = { id: dto.campus.id };
+    if (dto.ofertaFormacao !== undefined) input.ofertaFormacao = { id: dto.ofertaFormacao.id };
+    return input;
+  }
+
+  static toFindOneOutputDto(
+    output: CalendarioLetivoFindOneOutputDto,
+  ): CalendarioLetivoFindOneOutputGraphQlDto {
+    const dto = new CalendarioLetivoFindOneOutputGraphQlDto();
+    dto.id = output.id;
+    dto.nome = output.nome;
+    dto.ano = output.ano;
+    dto.campus = CampusGraphqlMapper.toFindOneOutputDto(output.campus);
+    dto.ofertaFormacao = OfertaFormacaoGraphqlMapper.toFindOneOutputDto(output.ofertaFormacao);
+    dto.dateCreated = output.dateCreated as unknown as Date;
+    dto.dateUpdated = output.dateUpdated as unknown as Date;
+    dto.dateDeleted = output.dateDeleted as unknown as Date | null;
+    return dto;
+  }
+
+  static toListOutputDto(
+    output: CalendarioLetivoListOutputDto,
+  ): CalendarioLetivoListOutputGraphQlDto {
+    const dto = new CalendarioLetivoListOutputGraphQlDto();
     dto.meta = mapPaginationMeta(output.meta);
     dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
     return dto;

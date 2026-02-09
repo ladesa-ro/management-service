@@ -1,58 +1,58 @@
 import {
-  EntityOutput,
-  FindOneInput,
+  EntityOutputDto,
+  FindOneInputDto,
   IFilterAcceptableValues,
-  ObjectUuidRef,
-  PaginationInput,
-  PaginationResult,
+  ObjectUuidRefDto,
+  PaginationInputDto,
+  PaginationResultDto,
 } from "@/modules/@shared";
-import { CampusFindOneOutput, CampusInputRef } from "@/modules/campus";
-import { ImagemFindOneOutput, ImagemInputRef } from "@/modules/imagem";
+import { CampusFindOneOutputDto, CampusInputRefDto } from "@/modules/campus";
+import { ImagemFindOneOutputDto, ImagemInputRefDto } from "@/modules/imagem";
 
 // ============================================================================
 // FindOne Input/Output
 // ============================================================================
 
-export class BlocoFindOneInput extends FindOneInput {}
+export class BlocoFindOneInputDto extends FindOneInputDto {}
 
-export class BlocoFindOneOutput extends EntityOutput {
+export class BlocoFindOneOutputDto extends EntityOutputDto {
   nome!: string;
   codigo!: string;
-  campus!: CampusFindOneOutput;
-  imagemCapa!: ImagemFindOneOutput | null;
+  campus!: CampusFindOneOutputDto;
+  imagemCapa!: ImagemFindOneOutputDto | null;
 }
 
 // ============================================================================
 // List Input/Output
 // ============================================================================
 
-export class BlocoListInput extends PaginationInput {
+export class BlocoListInputDto extends PaginationInputDto {
   "filter.id"?: IFilterAcceptableValues;
   "filter.campus.id"?: IFilterAcceptableValues;
 }
 
-export class BlocoListOutput extends PaginationResult<BlocoFindOneOutput> {}
+export class BlocoListOutputDto extends PaginationResultDto<BlocoFindOneOutputDto> {}
 
 // ============================================================================
 // Create/Update Input
 // ============================================================================
 
-export class BlocoCreateInput {
+export class BlocoCreateInputDto {
   nome!: string;
   codigo!: string;
-  campus!: CampusInputRef;
-  imagemCapa?: ImagemInputRef | null;
+  campus!: CampusInputRefDto;
+  imagemCapa?: ImagemInputRefDto | null;
 }
 
-export class BlocoUpdateInput {
+export class BlocoUpdateInputDto {
   nome?: string;
   codigo?: string;
-  campus?: CampusInputRef;
-  imagemCapa?: ImagemInputRef | null;
+  campus?: CampusInputRefDto;
+  imagemCapa?: ImagemInputRefDto | null;
 }
 
 // ============================================================================
 // Input Ref
 // ============================================================================
 
-export type BlocoInputRef = ObjectUuidRef;
+export type BlocoInputRefDto = ObjectUuidRefDto;

@@ -24,6 +24,21 @@ export class Endereco extends BaseEntity implements IEndereco {
   }
 
   // ========================================
+  // Validação
+  // ========================================
+
+  validar(): void {
+    const { result, rules } = Endereco.createValidation();
+    rules.required(this.cep, "cep");
+    rules.required(this.logradouro, "logradouro");
+    rules.minLength(this.logradouro, "logradouro", 1);
+    rules.requiredNumber(this.numero, "numero");
+    rules.required(this.bairro, "bairro");
+    rules.minLength(this.bairro, "bairro", 1);
+    Endereco.throwIfInvalid(result);
+  }
+
+  // ========================================
   // Factory Methods
   // ========================================
 
@@ -32,21 +47,15 @@ export class Endereco extends BaseEntity implements IEndereco {
    * @throws EntityValidationError se os dados forem inválidos
    */
   static criar(dados: IEnderecoCreate): Endereco {
-    const { result, rules } = this.createValidation();
-
     const instance = new Endereco();
-    instance.cep = rules.required(dados.cep, "cep");
-    instance.logradouro = rules.required(dados.logradouro, "logradouro");
-    instance.numero = rules.requiredNumber(dados.numero, "numero");
-    instance.bairro = rules.required(dados.bairro, "bairro");
-
-    this.throwIfInvalid(result);
-
-    instance.complemento = rules.optional(dados.complemento);
-    instance.pontoReferencia = rules.optional(dados.pontoReferencia);
-    instance.dateCreated = new Date().toISOString();
-    instance.dateUpdated = new Date().toISOString();
-    instance.dateDeleted = null;
+    instance.cep = dados.cep?.trim() ?? "";
+    instance.logradouro = dados.logradouro?.trim() ?? "";
+    instance.numero = dados.numero ?? 0;
+    instance.bairro = dados.bairro?.trim() ?? "";
+    instance.complemento = dados.complemento?.trim() || null;
+    instance.pontoReferencia = dados.pontoReferencia?.trim() || null;
+    instance.initDates();
+    instance.validar();
 
     return instance;
   }
@@ -69,35 +78,32 @@ export class Endereco extends BaseEntity implements IEndereco {
    * @throws EntityValidationError se os dados forem inválidos
    */
   atualizar(dados: IEnderecoUpdate): void {
-    const { result, rules } = Endereco.createValidation();
-
     if (dados.cep !== undefined) {
-      this.cep = rules.required(dados.cep, "cep");
+      this.cep = dados.cep?.trim() ?? "";
     }
 
     if (dados.logradouro !== undefined) {
-      this.logradouro = rules.required(dados.logradouro, "logradouro");
+      this.logradouro = dados.logradouro?.trim() ?? "";
     }
 
     if (dados.numero !== undefined) {
-      this.numero = rules.requiredNumber(dados.numero, "numero");
+      this.numero = dados.numero ?? 0;
     }
 
     if (dados.bairro !== undefined) {
-      this.bairro = rules.required(dados.bairro, "bairro");
+      this.bairro = dados.bairro?.trim() ?? "";
     }
 
     if (dados.complemento !== undefined) {
-      this.complemento = rules.optional(dados.complemento);
+      this.complemento = dados.complemento?.trim() || null;
     }
 
     if (dados.pontoReferencia !== undefined) {
-      this.pontoReferencia = rules.optional(dados.pontoReferencia);
+      this.pontoReferencia = dados.pontoReferencia?.trim() || null;
     }
 
-    Endereco.throwIfInvalid(result);
-
-    this.dateUpdated = new Date().toISOString();
+    this.touchUpdated();
+    this.validar();
   }
 
   // ========================================

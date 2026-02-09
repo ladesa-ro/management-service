@@ -1,5 +1,4 @@
-import { ArgsType, Field, ID, InputType, ObjectType, PartialType } from "@nestjs/graphql";
-import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { ApiProperty, ApiPropertyOptional, ApiSchema, PartialType } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import {
   IsArray,
@@ -16,19 +15,19 @@ import {
   simpleProperty,
 } from "@/modules/@shared/infrastructure/persistence/typeorm/metadata";
 import {
-  PaginationInputDto,
-  PaginationMetaDto,
+  PaginationInputRestDto,
+  PaginationMetaRestDto,
   TransformToArray,
 } from "@/modules/@shared/infrastructure/presentation/rest/dtos";
-import { ImagemArquivoFindOneFromImagemOutputDto } from "@/server/nest/modules/imagem-arquivo/rest";
+import { ImagemArquivoFindOneFromImagemOutputRestDto } from "@/server/nest/modules/imagem-arquivo/rest";
 
 // ============================================================================
 // FindOne Output
 // ============================================================================
 
-@ObjectType("Imagem")
+@ApiSchema({ name: "ImagemFindOneOutputDto" })
 @RegisterModel({
-  name: "ImagemFindOneOutput",
+  name: "ImagemFindOneOutputDto",
   properties: [
     simpleProperty("id"),
     simpleProperty("descricao"),
@@ -36,14 +35,12 @@ import { ImagemArquivoFindOneFromImagemOutputDto } from "@/server/nest/modules/i
     ...commonProperties.dated,
   ],
 })
-export class ImagemFindOneOutputDto {
+export class ImagemFindOneOutputRestDto {
   @ApiProperty({ description: "Identificador do registro (uuid)", format: "uuid" })
-  @Field(() => ID)
   @IsUUID()
   id: string;
 
   @ApiPropertyOptional({ description: "Descrição da imagem", nullable: true, minLength: 1 })
-  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   @MinLength(1)
@@ -51,26 +48,22 @@ export class ImagemFindOneOutputDto {
 
   @ApiProperty({
     description: "Versões da imagem",
-    type: () => [ImagemArquivoFindOneFromImagemOutputDto],
+    type: () => [ImagemArquivoFindOneFromImagemOutputRestDto],
   })
-  @Field(() => [ImagemArquivoFindOneFromImagemOutputDto])
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => ImagemArquivoFindOneFromImagemOutputDto)
-  versoes: ImagemArquivoFindOneFromImagemOutputDto[];
+  @Type(() => ImagemArquivoFindOneFromImagemOutputRestDto)
+  versoes: ImagemArquivoFindOneFromImagemOutputRestDto[];
 
   @ApiProperty({ description: "Data e hora da criacao do registro" })
-  @Field()
   @IsDateString()
   dateCreated: Date;
 
   @ApiProperty({ description: "Data e hora da alteracao do registro" })
-  @Field()
   @IsDateString()
   dateUpdated: Date;
 
   @ApiPropertyOptional({ description: "Data e hora da exclusao do registro", nullable: true })
-  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateString()
   dateDeleted: Date | null;
@@ -80,8 +73,8 @@ export class ImagemFindOneOutputDto {
 // List Input/Output
 // ============================================================================
 
-@ArgsType()
-export class ImagemListInputDto extends PaginationInputDto {
+@ApiSchema({ name: "ImagemListInputDto" })
+export class ImagemListInputRestDto extends PaginationInputRestDto {
   @ApiPropertyOptional({
     description: "Filtro por ID",
     type: [String],
@@ -89,46 +82,42 @@ export class ImagemListInputDto extends PaginationInputDto {
   @TransformToArray()
   @IsOptional()
   @IsArray()
-  @IsString({ each: true })
+  @IsUUID(undefined, { each: true })
   "filter.id"?: string[];
 }
 
-@ObjectType("ImagemListOutput")
-export class ImagemListOutputDto {
-  @ApiProperty({ type: () => PaginationMetaDto, description: "Metadados da busca" })
-  @Field(() => PaginationMetaDto)
-  meta: PaginationMetaDto;
+@ApiSchema({ name: "ImagemListOutputDto" })
+export class ImagemListOutputRestDto {
+  @ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" })
+  meta: PaginationMetaRestDto;
 
-  @ApiProperty({ type: () => [ImagemFindOneOutputDto], description: "Resultados da busca" })
-  @Field(() => [ImagemFindOneOutputDto])
-  data: ImagemFindOneOutputDto[];
+  @ApiProperty({ type: () => [ImagemFindOneOutputRestDto], description: "Resultados da busca" })
+  data: ImagemFindOneOutputRestDto[];
 }
 
 // ============================================================================
 // Create/Update Input
 // ============================================================================
 
-@InputType("ImagemCreateInput")
-export class ImagemCreateInputDto {
+@ApiSchema({ name: "ImagemCreateInputDto" })
+export class ImagemCreateInputRestDto {
   @ApiPropertyOptional({ description: "Descrição da imagem", nullable: true, minLength: 1 })
-  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   @MinLength(1)
   descricao?: string | null;
 }
 
-@InputType("ImagemUpdateInput")
-export class ImagemUpdateInputDto extends PartialType(ImagemCreateInputDto) {}
+@ApiSchema({ name: "ImagemUpdateInputDto" })
+export class ImagemUpdateInputRestDto extends PartialType(ImagemCreateInputRestDto) {}
 
 // ============================================================================
 // FindOne Input (for path params)
 // ============================================================================
 
-@ArgsType()
-export class ImagemFindOneInputDto {
+@ApiSchema({ name: "ImagemFindOneInputDto" })
+export class ImagemFindOneInputRestDto {
   @ApiProperty({ description: "Identificador do registro (uuid)", format: "uuid" })
-  @Field(() => ID)
   @IsUUID()
   id: string;
 }

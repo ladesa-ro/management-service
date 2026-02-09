@@ -1,5 +1,4 @@
-import { ArgsType, Field, ID, InputType, ObjectType, PartialType } from "@nestjs/graphql";
-import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { ApiProperty, ApiPropertyOptional, ApiSchema, PartialType } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import {
   IsArray,
@@ -17,77 +16,71 @@ import {
   simpleProperty,
 } from "@/modules/@shared/infrastructure/persistence/typeorm/metadata";
 import {
-  PaginationInputDto,
-  PaginationMetaDto,
+  PaginationInputRestDto,
+  PaginationMetaRestDto,
   TransformToArray,
 } from "@/modules/@shared/infrastructure/presentation/rest/dtos";
-import { EnderecoFindOneOutputDto, EnderecoInputDto } from "@/server/nest/modules/endereco/rest";
+import {
+  EnderecoFindOneOutputRestDto,
+  EnderecoInputRestDto,
+} from "@/server/nest/modules/endereco/rest";
 
 // ============================================================================
 // FindOne Output
 // ============================================================================
 
-@ObjectType("Campus")
+@ApiSchema({ name: "CampusFindOneOutputDto" })
 @RegisterModel({
-  name: "CampusFindOneOutput",
+  name: "CampusFindOneOutputDto",
   properties: [
     simpleProperty("id"),
     simpleProperty("nomeFantasia"),
     simpleProperty("razaoSocial"),
     simpleProperty("apelido"),
     simpleProperty("cnpj"),
-    referenceProperty("endereco", "EnderecoFindOneOutput"),
+    referenceProperty("endereco", "EnderecoFindOneOutputDto"),
     ...commonProperties.dated,
   ],
 })
-export class CampusFindOneOutputDto {
+export class CampusFindOneOutputRestDto {
   @ApiProperty({ description: "Identificador do registro (uuid)", format: "uuid" })
-  @Field(() => ID)
   @IsUUID()
   id: string;
 
   @ApiProperty({ description: "Nome fantasia do campus", minLength: 1 })
-  @Field()
   @IsString()
   @MinLength(1)
   nomeFantasia: string;
 
   @ApiProperty({ description: "Razao social do campus", minLength: 1 })
-  @Field()
   @IsString()
   @MinLength(1)
   razaoSocial: string;
 
   @ApiProperty({ description: "Apelido do campus", minLength: 1 })
-  @Field()
   @IsString()
   @MinLength(1)
   apelido: string;
 
   @ApiProperty({ description: "CNPJ do campus", minLength: 1 })
-  @Field()
   @IsString()
   @MinLength(1)
   cnpj: string;
 
-  @ApiProperty({ type: () => EnderecoFindOneOutputDto, description: "Endereco do campus" })
-  @Field(() => EnderecoFindOneOutputDto)
+  @ApiProperty({ type: () => EnderecoFindOneOutputRestDto, description: "Endereco do campus" })
   @ValidateNested()
-  @Type(() => EnderecoFindOneOutputDto)
-  endereco: EnderecoFindOneOutputDto;
+  @Type(() => EnderecoFindOneOutputRestDto)
+  endereco: EnderecoFindOneOutputRestDto;
 
   @ApiProperty({ description: "Data e hora da criacao do registro" })
-  @Field()
   @IsDateString()
   dateCreated: Date;
 
   @ApiProperty({ description: "Data e hora da alteracao do registro" })
-  @Field()
   @IsDateString()
   dateUpdated: Date;
 
   @ApiPropertyOptional({ description: "Data e hora da exclusao do registro", nullable: true })
-  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateString()
   dateDeleted: Date | null;
@@ -97,8 +90,8 @@ export class CampusFindOneOutputDto {
 // List Input/Output
 // ============================================================================
 
-@ArgsType()
-export class CampusListInputDto extends PaginationInputDto {
+@ApiSchema({ name: "CampusListInputDto" })
+export class CampusListInputRestDto extends PaginationInputRestDto {
   @ApiPropertyOptional({
     description: "Filtro por ID",
     type: [String],
@@ -106,70 +99,61 @@ export class CampusListInputDto extends PaginationInputDto {
   @TransformToArray()
   @IsOptional()
   @IsArray()
-  @IsString({ each: true })
+  @IsUUID(undefined, { each: true })
   "filter.id"?: string[];
 }
 
-@ObjectType("CampusListOutput")
-export class CampusListOutputDto {
-  @ApiProperty({ type: () => PaginationMetaDto, description: "Metadados da busca" })
-  @Field(() => PaginationMetaDto)
-  meta: PaginationMetaDto;
+@ApiSchema({ name: "CampusListOutputDto" })
+export class CampusListOutputRestDto {
+  @ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" })
+  meta: PaginationMetaRestDto;
 
-  @ApiProperty({ type: () => [CampusFindOneOutputDto], description: "Resultados da busca" })
-  @Field(() => [CampusFindOneOutputDto])
-  data: CampusFindOneOutputDto[];
+  @ApiProperty({ type: () => [CampusFindOneOutputRestDto], description: "Resultados da busca" })
+  data: CampusFindOneOutputRestDto[];
 }
 
 // ============================================================================
 // Create/Update Input
 // ============================================================================
 
-@InputType("CampusCreateInput")
-export class CampusCreateInputDto {
+@ApiSchema({ name: "CampusCreateInputDto" })
+export class CampusCreateInputRestDto {
   @ApiProperty({ description: "Nome fantasia do campus", minLength: 1 })
-  @Field()
   @IsString()
   @MinLength(1)
   nomeFantasia: string;
 
   @ApiProperty({ description: "Razao social do campus", minLength: 1 })
-  @Field()
   @IsString()
   @MinLength(1)
   razaoSocial: string;
 
   @ApiProperty({ description: "Apelido do campus", minLength: 1 })
-  @Field()
   @IsString()
   @MinLength(1)
   apelido: string;
 
   @ApiProperty({ description: "CNPJ do campus", minLength: 1 })
-  @Field()
   @IsString()
   @MinLength(1)
   cnpj: string;
 
-  @ApiProperty({ type: () => EnderecoInputDto, description: "Endereco do campus" })
-  @Field(() => EnderecoInputDto)
+  @ApiProperty({ type: () => EnderecoInputRestDto, description: "Endereco do campus" })
   @ValidateNested()
-  @Type(() => EnderecoInputDto)
-  endereco: EnderecoInputDto;
+  @Type(() => EnderecoInputRestDto)
+  endereco: EnderecoInputRestDto;
 }
 
-@InputType("CampusUpdateInput")
-export class CampusUpdateInputDto extends PartialType(CampusCreateInputDto) {}
+@ApiSchema({ name: "CampusUpdateInputDto" })
+export class CampusUpdateInputRestDto extends PartialType(CampusCreateInputRestDto) {}
 
 // ============================================================================
 // FindOne Input (for path params)
 // ============================================================================
 
-@ArgsType()
-@InputType("CampusFindOneInput")
-export class CampusFindOneInputDto {
+@ApiSchema({ name: "CampusFindOneInputDto" })
+export class CampusFindOneInputRestDto {
   @ApiProperty({ description: "Identificador do registro (uuid)", format: "uuid" })
-  @Field(() => ID)
   @IsUUID()
   id: string;
 }

@@ -8,10 +8,10 @@ import {
   paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
-  CampusFindOneInput,
-  CampusFindOneOutput,
-  CampusListInput,
-  CampusListOutput,
+  CampusFindOneInputDto,
+  CampusFindOneOutputDto,
+  CampusListInputDto,
+  CampusListOutputDto,
   ICampusRepositoryPort,
 } from "@/modules/campus";
 import type { CampusEntity } from "./campus.entity";
@@ -20,16 +20,16 @@ import type { CampusEntity } from "./campus.entity";
 export class CampusTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     CampusEntity,
-    CampusListInput,
-    CampusListOutput,
-    CampusFindOneInput,
-    CampusFindOneOutput
+    CampusListInputDto,
+    CampusListOutputDto,
+    CampusFindOneInputDto,
+    CampusFindOneOutputDto
   >
   implements ICampusRepositoryPort
 {
   protected readonly alias = "campus";
   protected readonly authzAction = "campus:find";
-  protected readonly outputDtoName = "CampusFindOneOutput";
+  protected readonly outputDtoName = "CampusFindOneOutputDto";
 
   constructor(
     protected readonly databaseContext: DatabaseContextService,

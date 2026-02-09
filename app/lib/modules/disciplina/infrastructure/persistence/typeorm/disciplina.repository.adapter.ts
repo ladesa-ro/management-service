@@ -8,10 +8,10 @@ import {
   paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
-  DisciplinaFindOneInput,
-  DisciplinaFindOneOutput,
-  DisciplinaListInput,
-  DisciplinaListOutput,
+  DisciplinaFindOneInputDto,
+  DisciplinaFindOneOutputDto,
+  DisciplinaListInputDto,
+  DisciplinaListOutputDto,
 } from "@/modules/disciplina/application/dtos";
 import type { IDisciplinaRepositoryPort } from "@/modules/disciplina/application/ports";
 import type { DisciplinaEntity } from "./disciplina.entity";
@@ -20,16 +20,16 @@ import type { DisciplinaEntity } from "./disciplina.entity";
 export class DisciplinaTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     DisciplinaEntity,
-    DisciplinaListInput,
-    DisciplinaListOutput,
-    DisciplinaFindOneInput,
-    DisciplinaFindOneOutput
+    DisciplinaListInputDto,
+    DisciplinaListOutputDto,
+    DisciplinaFindOneInputDto,
+    DisciplinaFindOneOutputDto
   >
   implements IDisciplinaRepositoryPort
 {
   protected readonly alias = "disciplina";
   protected readonly authzAction = "disciplina:find";
-  protected readonly outputDtoName = "DisciplinaFindOneOutput";
+  protected readonly outputDtoName = "DisciplinaFindOneOutputDto";
 
   constructor(
     protected readonly databaseContext: DatabaseContextService,

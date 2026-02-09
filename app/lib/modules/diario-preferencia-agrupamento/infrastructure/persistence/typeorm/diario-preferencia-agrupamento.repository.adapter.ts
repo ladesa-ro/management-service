@@ -9,10 +9,10 @@ import {
   paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
-  DiarioPreferenciaAgrupamentoFindOneInput,
-  DiarioPreferenciaAgrupamentoFindOneOutput,
-  DiarioPreferenciaAgrupamentoListInput,
-  DiarioPreferenciaAgrupamentoListOutput,
+  DiarioPreferenciaAgrupamentoFindOneInputDto,
+  DiarioPreferenciaAgrupamentoFindOneOutputDto,
+  DiarioPreferenciaAgrupamentoListInputDto,
+  DiarioPreferenciaAgrupamentoListOutputDto,
 } from "@/modules/diario-preferencia-agrupamento";
 import type { IDiarioPreferenciaAgrupamentoRepositoryPort } from "@/modules/diario-preferencia-agrupamento/application/ports/out";
 import type { DiarioPreferenciaAgrupamentoEntity } from "./diario-preferencia-agrupamento.entity";
@@ -25,16 +25,16 @@ import type { DiarioPreferenciaAgrupamentoEntity } from "./diario-preferencia-ag
 export class DiarioPreferenciaAgrupamentoTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     DiarioPreferenciaAgrupamentoEntity,
-    DiarioPreferenciaAgrupamentoListInput,
-    DiarioPreferenciaAgrupamentoListOutput,
-    DiarioPreferenciaAgrupamentoFindOneInput,
-    DiarioPreferenciaAgrupamentoFindOneOutput
+    DiarioPreferenciaAgrupamentoListInputDto,
+    DiarioPreferenciaAgrupamentoListOutputDto,
+    DiarioPreferenciaAgrupamentoFindOneInputDto,
+    DiarioPreferenciaAgrupamentoFindOneOutputDto
   >
   implements IDiarioPreferenciaAgrupamentoRepositoryPort
 {
   protected readonly alias = "diario_preferencia_agrupamento";
   protected readonly authzAction = "diario_preferencia_agrupamento:find";
-  protected readonly outputDtoName = "DiarioPreferenciaAgrupamentoFindOneOutput";
+  protected readonly outputDtoName = "DiarioPreferenciaAgrupamentoFindOneOutputDto";
 
   constructor(
     protected readonly databaseContext: DatabaseContextService,

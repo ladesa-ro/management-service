@@ -1,30 +1,30 @@
 import {
-  OfertaFormacaoCreateInput,
-  OfertaFormacaoFindOneInput,
-  OfertaFormacaoFindOneOutput,
-  OfertaFormacaoListInput,
-  OfertaFormacaoListOutput,
-  OfertaFormacaoUpdateInput,
+  OfertaFormacaoCreateInputDto,
+  OfertaFormacaoFindOneInputDto,
+  OfertaFormacaoFindOneOutputDto,
+  OfertaFormacaoListInputDto,
+  OfertaFormacaoListOutputDto,
+  OfertaFormacaoUpdateInputDto,
 } from "@/modules/oferta-formacao";
-import { ModalidadeFindOneOutputDto } from "@/server/nest/modules/modalidade/rest/modalidade.rest.dto";
+import { ModalidadeGraphqlMapper } from "@/server/nest/modules/modalidade/graphql/modalidade.graphql.mapper";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import {
-  OfertaFormacaoCreateInputDto,
-  OfertaFormacaoFindOneOutputDto,
-  OfertaFormacaoUpdateInputDto,
-} from "../rest/oferta-formacao.rest.dto";
-import {
-  OfertaFormacaoListInputGqlDto,
-  OfertaFormacaoListOutputGqlDto,
+  OfertaFormacaoCreateInputGraphQlDto,
+  OfertaFormacaoFindOneOutputGraphQlDto,
+  OfertaFormacaoListInputGraphQlDto,
+  OfertaFormacaoListOutputGraphQlDto,
+  OfertaFormacaoUpdateInputGraphQlDto,
 } from "./oferta-formacao.graphql.dto";
 
 export class OfertaFormacaoGraphqlMapper {
-  static toListInput(dto: OfertaFormacaoListInputGqlDto | null): OfertaFormacaoListInput | null {
+  static toListInput(
+    dto: OfertaFormacaoListInputGraphQlDto | null,
+  ): OfertaFormacaoListInputDto | null {
     if (!dto) {
       return null;
     }
 
-    const input = new OfertaFormacaoListInput();
+    const input = new OfertaFormacaoListInputDto();
     input.page = dto.page;
     input.limit = dto.limit;
     input.search = dto.search;
@@ -34,15 +34,15 @@ export class OfertaFormacaoGraphqlMapper {
     return input;
   }
 
-  static toFindOneInput(id: string, selection?: string[]): OfertaFormacaoFindOneInput {
-    const input = new OfertaFormacaoFindOneInput();
+  static toFindOneInput(id: string, selection?: string[]): OfertaFormacaoFindOneInputDto {
+    const input = new OfertaFormacaoFindOneInputDto();
     input.id = id;
     input.selection = selection;
     return input;
   }
 
-  static toCreateInput(dto: OfertaFormacaoCreateInputDto): OfertaFormacaoCreateInput {
-    const input = new OfertaFormacaoCreateInput();
+  static toCreateInput(dto: OfertaFormacaoCreateInputGraphQlDto): OfertaFormacaoCreateInputDto {
+    const input = new OfertaFormacaoCreateInputDto();
     input.nome = dto.nome;
     input.slug = dto.slug;
     input.modalidade = { id: dto.modalidade.id };
@@ -50,12 +50,12 @@ export class OfertaFormacaoGraphqlMapper {
   }
 
   static toUpdateInput(
-    id: string,
-    dto: OfertaFormacaoUpdateInputDto,
-  ): OfertaFormacaoFindOneInput & OfertaFormacaoUpdateInput {
-    const input = new OfertaFormacaoFindOneInput() as OfertaFormacaoFindOneInput &
-      OfertaFormacaoUpdateInput;
-    input.id = id;
+    params: { id: string },
+    dto: OfertaFormacaoUpdateInputGraphQlDto,
+  ): OfertaFormacaoFindOneInputDto & OfertaFormacaoUpdateInputDto {
+    const input = new OfertaFormacaoFindOneInputDto() as OfertaFormacaoFindOneInputDto &
+      OfertaFormacaoUpdateInputDto;
+    input.id = params.id;
     if (dto.nome !== undefined) {
       input.nome = dto.nome;
     }
@@ -68,20 +68,22 @@ export class OfertaFormacaoGraphqlMapper {
     return input;
   }
 
-  static toFindOneOutputDto(output: OfertaFormacaoFindOneOutput): OfertaFormacaoFindOneOutputDto {
-    const dto = new OfertaFormacaoFindOneOutputDto();
+  static toFindOneOutputDto(
+    output: OfertaFormacaoFindOneOutputDto,
+  ): OfertaFormacaoFindOneOutputGraphQlDto {
+    const dto = new OfertaFormacaoFindOneOutputGraphQlDto();
     dto.id = output.id;
     dto.nome = output.nome;
     dto.slug = output.slug;
-    dto.modalidade = output.modalidade as unknown as ModalidadeFindOneOutputDto;
-    dto.dateCreated = new Date(output.dateCreated);
-    dto.dateUpdated = new Date(output.dateUpdated);
-    dto.dateDeleted = output.dateDeleted ? new Date(output.dateDeleted) : null;
+    dto.modalidade = ModalidadeGraphqlMapper.toFindOneOutputDto(output.modalidade);
+    dto.dateCreated = output.dateCreated as unknown as Date;
+    dto.dateUpdated = output.dateUpdated as unknown as Date;
+    dto.dateDeleted = output.dateDeleted as unknown as Date | null;
     return dto;
   }
 
-  static toListOutputDto(output: OfertaFormacaoListOutput): OfertaFormacaoListOutputGqlDto {
-    const dto = new OfertaFormacaoListOutputGqlDto();
+  static toListOutputDto(output: OfertaFormacaoListOutputDto): OfertaFormacaoListOutputGraphQlDto {
+    const dto = new OfertaFormacaoListOutputGraphQlDto();
     dto.meta = mapPaginationMeta(output.meta);
     dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
     return dto;

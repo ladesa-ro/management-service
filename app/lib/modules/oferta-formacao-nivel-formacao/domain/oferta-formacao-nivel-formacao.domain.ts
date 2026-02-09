@@ -26,6 +26,14 @@ export class OfertaFormacaoNivelFormacao
   }
 
   // ========================================
+  // Validação
+  // ========================================
+
+  validar(): void {
+    // Entidade de relacionamento: sem validações de campos escalares
+  }
+
+  // ========================================
   // Factory Methods
   // ========================================
 
@@ -34,9 +42,8 @@ export class OfertaFormacaoNivelFormacao
    */
   static criar(_dados: IOfertaFormacaoNivelFormacaoCreate): OfertaFormacaoNivelFormacao {
     const instance = new OfertaFormacaoNivelFormacao();
-    instance.dateCreated = new Date().toISOString();
-    instance.dateUpdated = new Date().toISOString();
-    instance.dateDeleted = null;
+    instance.initDates();
+    instance.validar();
     return instance;
   }
 

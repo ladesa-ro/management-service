@@ -1,14 +1,6 @@
-import { ArgsType, Field, ID, InputType, ObjectType, PartialType } from "@nestjs/graphql";
-import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { ApiProperty, ApiPropertyOptional, ApiSchema, PartialType } from "@nestjs/swagger";
 import { Type } from "class-transformer";
-import {
-  IsArray,
-  IsDateString,
-  IsOptional,
-  IsString,
-  IsUUID,
-  ValidateNested,
-} from "class-validator";
+import { IsArray, IsDateString, IsOptional, IsUUID, ValidateNested } from "class-validator";
 import {
   commonProperties,
   RegisterModel,
@@ -16,60 +8,57 @@ import {
   simpleProperty,
 } from "@/modules/@shared/infrastructure/persistence/typeorm/metadata";
 import {
-  PaginationInputDto,
-  PaginationMetaDto,
+  PaginationInputRestDto,
+  PaginationMetaRestDto,
   TransformToArray,
 } from "@/modules/@shared/infrastructure/presentation/rest/dtos";
 import {
-  DisponibilidadeFindOneInputDto,
-  DisponibilidadeFindOneOutputDto,
+  DisponibilidadeFindOneInputRestDto,
+  DisponibilidadeFindOneOutputRestDto,
 } from "@/server/nest/modules/disponibilidade/rest/disponibilidade.rest.dto";
-import { TurmaFindOneInputDto, TurmaFindOneOutputDto } from "@/server/nest/modules/turma/rest";
+import {
+  TurmaFindOneInputRestDto,
+  TurmaFindOneOutputRestDto,
+} from "@/server/nest/modules/turma/rest";
 
 // ============================================================================
 // FindOne Output
 // ============================================================================
 
-@ObjectType("TurmaDisponibilidade")
+@ApiSchema({ name: "TurmaDisponibilidadeFindOneOutputDto" })
 @RegisterModel({
-  name: "TurmaDisponibilidadeFindOneOutput",
+  name: "TurmaDisponibilidadeFindOneOutputDto",
   properties: [
     simpleProperty("id"),
-    referenceProperty("disponibilidade", "DisponibilidadeFindOneOutput"),
-    referenceProperty("turma", "TurmaFindOneOutput"),
+    referenceProperty("disponibilidade", "DisponibilidadeFindOneOutputDto"),
+    referenceProperty("turma", "TurmaFindOneOutputDto"),
     ...commonProperties.dated,
   ],
 })
-export class TurmaDisponibilidadeFindOneOutputDto {
+export class TurmaDisponibilidadeFindOneOutputRestDto {
   @ApiProperty({ description: "Identificador do registro (uuid)", format: "uuid" })
-  @Field(() => ID)
   @IsUUID()
   id: string;
 
-  @ApiProperty({ type: () => DisponibilidadeFindOneOutputDto, description: "Disponibilidade" })
-  @Field(() => DisponibilidadeFindOneOutputDto)
+  @ApiProperty({ type: () => DisponibilidadeFindOneOutputRestDto, description: "Disponibilidade" })
   @ValidateNested()
-  @Type(() => DisponibilidadeFindOneOutputDto)
-  disponibilidade: DisponibilidadeFindOneOutputDto;
+  @Type(() => DisponibilidadeFindOneOutputRestDto)
+  disponibilidade: DisponibilidadeFindOneOutputRestDto;
 
-  @ApiProperty({ type: () => TurmaFindOneOutputDto, description: "Turma" })
-  @Field(() => TurmaFindOneOutputDto)
+  @ApiProperty({ type: () => TurmaFindOneOutputRestDto, description: "Turma" })
   @ValidateNested()
-  @Type(() => TurmaFindOneOutputDto)
-  turma: TurmaFindOneOutputDto;
+  @Type(() => TurmaFindOneOutputRestDto)
+  turma: TurmaFindOneOutputRestDto;
 
   @ApiProperty({ description: "Data e hora da criacao do registro" })
-  @Field()
   @IsDateString()
   dateCreated: Date;
 
   @ApiProperty({ description: "Data e hora da alteracao do registro" })
-  @Field()
   @IsDateString()
   dateUpdated: Date;
 
   @ApiPropertyOptional({ description: "Data e hora da exclusao do registro", nullable: true })
-  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateString()
   dateDeleted: Date | null;
@@ -79,8 +68,8 @@ export class TurmaDisponibilidadeFindOneOutputDto {
 // List Input/Output
 // ============================================================================
 
-@ArgsType()
-export class TurmaDisponibilidadeListInputDto extends PaginationInputDto {
+@ApiSchema({ name: "TurmaDisponibilidadeListInputDto" })
+export class TurmaDisponibilidadeListInputRestDto extends PaginationInputRestDto {
   @ApiPropertyOptional({
     description: "Filtro por ID",
     type: [String],
@@ -88,57 +77,51 @@ export class TurmaDisponibilidadeListInputDto extends PaginationInputDto {
   @TransformToArray()
   @IsOptional()
   @IsArray()
-  @IsString({ each: true })
+  @IsUUID(undefined, { each: true })
   "filter.id"?: string[];
 }
 
-@ObjectType("TurmaDisponibilidadeListOutput")
-export class TurmaDisponibilidadeListOutputDto {
-  @ApiProperty({ type: () => PaginationMetaDto, description: "Metadados da busca" })
-  @Field(() => PaginationMetaDto)
-  meta: PaginationMetaDto;
+@ApiSchema({ name: "TurmaDisponibilidadeListOutputDto" })
+export class TurmaDisponibilidadeListOutputRestDto {
+  @ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" })
+  meta: PaginationMetaRestDto;
 
   @ApiProperty({
-    type: () => [TurmaDisponibilidadeFindOneOutputDto],
+    type: () => [TurmaDisponibilidadeFindOneOutputRestDto],
     description: "Resultados da busca",
   })
-  @Field(() => [TurmaDisponibilidadeFindOneOutputDto])
-  data: TurmaDisponibilidadeFindOneOutputDto[];
+  data: TurmaDisponibilidadeFindOneOutputRestDto[];
 }
 
 // ============================================================================
 // Create/Update Input
 // ============================================================================
 
-@InputType("TurmaDisponibilidadeCreateInput")
-export class TurmaDisponibilidadeCreateInputDto {
-  @ApiProperty({ type: () => DisponibilidadeFindOneInputDto, description: "Disponibilidade" })
-  @Field(() => DisponibilidadeFindOneInputDto)
+@ApiSchema({ name: "TurmaDisponibilidadeCreateInputDto" })
+export class TurmaDisponibilidadeCreateInputRestDto {
+  @ApiProperty({ type: () => DisponibilidadeFindOneInputRestDto, description: "Disponibilidade" })
   @ValidateNested()
-  @Type(() => DisponibilidadeFindOneInputDto)
-  disponibilidade: DisponibilidadeFindOneInputDto;
+  @Type(() => DisponibilidadeFindOneInputRestDto)
+  disponibilidade: DisponibilidadeFindOneInputRestDto;
 
-  @ApiProperty({ type: () => TurmaFindOneInputDto, description: "Turma" })
-  @Field(() => TurmaFindOneInputDto)
+  @ApiProperty({ type: () => TurmaFindOneInputRestDto, description: "Turma" })
   @ValidateNested()
-  @Type(() => TurmaFindOneInputDto)
-  turma: TurmaFindOneInputDto;
+  @Type(() => TurmaFindOneInputRestDto)
+  turma: TurmaFindOneInputRestDto;
 }
 
-@InputType("TurmaDisponibilidadeUpdateInput")
-export class TurmaDisponibilidadeUpdateInputDto extends PartialType(
-  TurmaDisponibilidadeCreateInputDto,
+@ApiSchema({ name: "TurmaDisponibilidadeUpdateInputDto" })
+export class TurmaDisponibilidadeUpdateInputRestDto extends PartialType(
+  TurmaDisponibilidadeCreateInputRestDto,
 ) {}
 
 // ============================================================================
 // FindOne Input (for path params)
 // ============================================================================
 
-@ArgsType()
-@InputType("TurmaDisponibilidadeFindOneInput")
-export class TurmaDisponibilidadeFindOneInputDto {
+@ApiSchema({ name: "TurmaDisponibilidadeFindOneInputDto" })
+export class TurmaDisponibilidadeFindOneInputRestDto {
   @ApiProperty({ description: "Identificador do registro (uuid)", format: "uuid" })
-  @Field(() => ID)
   @IsUUID()
   id: string;
 }

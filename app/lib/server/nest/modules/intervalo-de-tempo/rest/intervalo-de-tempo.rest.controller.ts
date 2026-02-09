@@ -9,10 +9,10 @@ import {
 import { AccessContext, AccessContextHttp } from "@/modules/@core/access-context";
 import { IntervaloDeTempoService } from "@/modules/intervalo-de-tempo/application/use-cases/intervalo-de-tempo.service";
 import {
-  IntervaloDeTempoFindOneInputDto,
-  IntervaloDeTempoFindOneOutputDto,
-  IntervaloDeTempoListInputDto,
-  IntervaloDeTempoListOutputDto,
+  IntervaloDeTempoFindOneInputRestDto,
+  IntervaloDeTempoFindOneOutputRestDto,
+  IntervaloDeTempoListInputRestDto,
+  IntervaloDeTempoListOutputRestDto,
 } from "./intervalo-de-tempo.rest.dto";
 import { IntervaloDeTempoRestMapper } from "./intervalo-de-tempo.rest.mapper";
 
@@ -23,12 +23,12 @@ export class IntervaloDeTempoRestController {
 
   @Get("/")
   @ApiOperation({ summary: "Lista intervalos de tempo", operationId: "intervaloDeTempoFindAll" })
-  @ApiOkResponse({ type: IntervaloDeTempoListOutputDto })
+  @ApiOkResponse({ type: IntervaloDeTempoListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
     @AccessContextHttp() accessContext: AccessContext,
-    @Query() dto: IntervaloDeTempoListInputDto,
-  ): Promise<IntervaloDeTempoListOutputDto> {
+    @Query() dto: IntervaloDeTempoListInputRestDto,
+  ): Promise<IntervaloDeTempoListOutputRestDto> {
     const input = IntervaloDeTempoRestMapper.toListInput(dto);
     const result = await this.intervaloDeTempoService.findAll(accessContext, input);
     return IntervaloDeTempoRestMapper.toListOutputDto(result);
@@ -39,13 +39,13 @@ export class IntervaloDeTempoRestController {
     summary: "Busca um intervalo de tempo por ID",
     operationId: "intervaloDeTempoFindById",
   })
-  @ApiOkResponse({ type: IntervaloDeTempoFindOneOutputDto })
+  @ApiOkResponse({ type: IntervaloDeTempoFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async findById(
     @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: IntervaloDeTempoFindOneInputDto,
-  ): Promise<IntervaloDeTempoFindOneOutputDto> {
+    @Param() params: IntervaloDeTempoFindOneInputRestDto,
+  ): Promise<IntervaloDeTempoFindOneOutputRestDto> {
     const input = IntervaloDeTempoRestMapper.toFindOneInput(params);
     const result = await this.intervaloDeTempoService.findByIdStrict(accessContext, input);
     return IntervaloDeTempoRestMapper.toFindOneOutputDto(result);

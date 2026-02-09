@@ -1,50 +1,50 @@
 import type { AccessContext } from "@/modules/@core/access-context";
 import type {
-  AulaCreateInput,
-  AulaFindOneInput,
-  AulaFindOneOutput,
-  AulaListInput,
-  AulaListOutput,
-  AulaUpdateInput,
+  AulaCreateInputDto,
+  AulaFindOneInputDto,
+  AulaFindOneOutputDto,
+  AulaListInputDto,
+  AulaListOutputDto,
+  AulaUpdateInputDto,
 } from "../../dtos";
 
 export interface IAulaUseCasePort {
   findAll(
     accessContext: AccessContext,
-    dto: AulaListInput | null,
+    dto: AulaListInputDto | null,
     selection?: string[] | boolean,
-  ): Promise<AulaListOutput>;
+  ): Promise<AulaListOutputDto>;
 
   findById(
     accessContext: AccessContext,
-    dto: AulaFindOneInput,
+    dto: AulaFindOneInputDto,
     selection?: string[] | boolean,
-  ): Promise<AulaFindOneOutput | null>;
+  ): Promise<AulaFindOneOutputDto | null>;
 
   findByIdStrict(
     accessContext: AccessContext,
-    dto: AulaFindOneInput,
+    dto: AulaFindOneInputDto,
     selection?: string[] | boolean,
-  ): Promise<AulaFindOneOutput>;
+  ): Promise<AulaFindOneOutputDto>;
 
   findByIdSimple(
     accessContext: AccessContext,
-    id: AulaFindOneInput["id"],
+    id: AulaFindOneInputDto["id"],
     selection?: string[] | boolean,
-  ): Promise<AulaFindOneOutput | null>;
+  ): Promise<AulaFindOneOutputDto | null>;
 
   findByIdSimpleStrict(
     accessContext: AccessContext,
-    id: AulaFindOneInput["id"],
+    id: AulaFindOneInputDto["id"],
     selection?: string[] | boolean,
-  ): Promise<AulaFindOneOutput>;
+  ): Promise<AulaFindOneOutputDto>;
 
-  create(accessContext: AccessContext, dto: AulaCreateInput): Promise<AulaFindOneOutput>;
+  create(accessContext: AccessContext, dto: AulaCreateInputDto): Promise<AulaFindOneOutputDto>;
 
   update(
     accessContext: AccessContext,
-    dto: AulaFindOneInput & AulaUpdateInput,
-  ): Promise<AulaFindOneOutput>;
+    dto: AulaFindOneInputDto & AulaUpdateInputDto,
+  ): Promise<AulaFindOneOutputDto>;
 
-  deleteOneById(accessContext: AccessContext, dto: AulaFindOneInput): Promise<boolean>;
+  deleteOneById(accessContext: AccessContext, dto: AulaFindOneInputDto): Promise<boolean>;
 }

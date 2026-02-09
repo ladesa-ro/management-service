@@ -1,5 +1,5 @@
 import { EntityValidationError } from "./errors";
-import type { ScalarDateTimeString } from "./scalars.types";
+import type { IdUuid, ScalarDateTimeString } from "./scalars.types";
 import { createValidator, ValidationResult, ValidationRules } from "./validation";
 
 /**
@@ -7,6 +7,9 @@ import { createValidator, ValidationResult, ValidationRules } from "./validation
  * Fornece validação padronizada e métodos comuns para todas as entidades.
  */
 export abstract class BaseEntity {
+  abstract id: IdUuid;
+  abstract dateCreated: ScalarDateTimeString;
+  abstract dateUpdated: ScalarDateTimeString;
   abstract dateDeleted: ScalarDateTimeString | null;
 
   /**
@@ -17,7 +20,37 @@ export abstract class BaseEntity {
   }
 
   // ========================================
-  // Métodos de Estado
+  // Métodos Abstratos
+  // ========================================
+
+  /**
+   * Valida o estado atual da entidade.
+   * Deve ser implementado por cada subclasse.
+   */
+  abstract validar(): void;
+
+  // ========================================
+  // Helpers de Datas
+  // ========================================
+
+  /**
+   * Inicializa as datas para uma nova entidade
+   */
+  protected initDates(): void {
+    this.dateCreated = new Date().toISOString();
+    this.dateUpdated = new Date().toISOString();
+    this.dateDeleted = null;
+  }
+
+  /**
+   * Atualiza dateUpdated para o momento atual
+   */
+  protected touchUpdated(): void {
+    this.dateUpdated = new Date().toISOString();
+  }
+
+  // ========================================
+  // Métodos de Validação
   // ========================================
 
   /**
@@ -56,30 +89,8 @@ export abstract class BaseEntity {
   }
 
   // ========================================
-  // Métodos de Validação (para subclasses)
+  // Métodos de Estado
   // ========================================
-
-  /**
-   * Valida que um campo obrigatório está preenchido
-   * @deprecated Use createValidation() e rules.required() em vez disso
-   */
-  protected static validateRequired(value: string | null | undefined, field: string): string {
-    if (!value || value.trim().length === 0) {
-      throw EntityValidationError.fromField(this.entityName, field, `${field} é obrigatório`);
-    }
-    return value.trim();
-  }
-
-  /**
-   * Valida um campo opcional, retornando null se vazio
-   * @deprecated Use createValidation() e rules.optional() em vez disso
-   */
-  protected static validateOptional(value: string | null | undefined): string | null {
-    if (!value || value.trim().length === 0) {
-      return null;
-    }
-    return value.trim();
-  }
 
   /**
    * Verifica se a entidade está ativa (não deletada)
@@ -87,10 +98,6 @@ export abstract class BaseEntity {
   isAtivo(): boolean {
     return this.dateDeleted === null;
   }
-
-  // ========================================
-  // Helpers de Validação (legado - compatibilidade)
-  // ========================================
 
   /**
    * Verifica se a entidade pode ser editada

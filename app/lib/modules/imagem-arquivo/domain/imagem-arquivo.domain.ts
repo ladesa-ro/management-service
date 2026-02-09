@@ -28,6 +28,21 @@ export class ImagemArquivo extends BaseEntity implements IImagemArquivo {
   }
 
   // ========================================
+  // Validação
+  // ========================================
+
+  validar(): void {
+    const { result, rules } = ImagemArquivo.createValidation();
+    rules.requiredNumber(this.largura, "largura");
+    rules.min(this.largura, "largura", 1);
+    rules.requiredNumber(this.altura, "altura");
+    rules.min(this.altura, "altura", 1);
+    rules.required(this.formato, "formato");
+    rules.required(this.mimeType, "mimeType");
+    ImagemArquivo.throwIfInvalid(result);
+  }
+
+  // ========================================
   // Factory Methods
   // ========================================
 
@@ -36,23 +51,13 @@ export class ImagemArquivo extends BaseEntity implements IImagemArquivo {
    * @throws EntityValidationError se os dados forem inválidos
    */
   static criar(dados: IImagemArquivoCreate): ImagemArquivo {
-    const { result, rules } = this.createValidation();
-
     const instance = new ImagemArquivo();
-    instance.largura = rules.requiredNumber(dados.largura, "largura");
-    instance.largura = rules.min(instance.largura, "largura", 1);
-
-    instance.altura = rules.requiredNumber(dados.altura, "altura");
-    instance.altura = rules.min(instance.altura, "altura", 1);
-
-    instance.formato = rules.required(dados.formato, "formato");
-    instance.mimeType = rules.required(dados.mimeType, "mimeType");
-
-    this.throwIfInvalid(result);
-
-    instance.dateCreated = new Date().toISOString();
-    instance.dateUpdated = new Date().toISOString();
-    instance.dateDeleted = null;
+    instance.largura = dados.largura ?? 0;
+    instance.altura = dados.altura ?? 0;
+    instance.formato = dados.formato?.trim() ?? "";
+    instance.mimeType = dados.mimeType?.trim() ?? "";
+    instance.initDates();
+    instance.validar();
 
     return instance;
   }
@@ -75,28 +80,23 @@ export class ImagemArquivo extends BaseEntity implements IImagemArquivo {
    * @throws EntityValidationError se os dados forem inválidos
    */
   atualizar(dados: IImagemArquivoUpdate): void {
-    const { result, rules } = ImagemArquivo.createValidation();
-
     if (dados.largura !== undefined) {
-      this.largura = rules.requiredNumber(dados.largura, "largura");
-      this.largura = rules.min(this.largura, "largura", 1);
+      this.largura = dados.largura ?? 0;
     }
 
     if (dados.altura !== undefined) {
-      this.altura = rules.requiredNumber(dados.altura, "altura");
-      this.altura = rules.min(this.altura, "altura", 1);
+      this.altura = dados.altura ?? 0;
     }
 
     if (dados.formato !== undefined) {
-      this.formato = rules.required(dados.formato, "formato");
+      this.formato = dados.formato?.trim() ?? "";
     }
 
     if (dados.mimeType !== undefined) {
-      this.mimeType = rules.required(dados.mimeType, "mimeType");
+      this.mimeType = dados.mimeType?.trim() ?? "";
     }
 
-    ImagemArquivo.throwIfInvalid(result);
-
-    this.dateUpdated = new Date().toISOString();
+    this.touchUpdated();
+    this.validar();
   }
 }

@@ -1,11 +1,11 @@
 import type { AccessContext } from "@/modules/@core/access-context";
 import {
-  OfertaFormacaoNivelFormacaoCreateInput,
-  OfertaFormacaoNivelFormacaoFindOneInput,
-  OfertaFormacaoNivelFormacaoFindOneOutput,
-  OfertaFormacaoNivelFormacaoListInput,
-  OfertaFormacaoNivelFormacaoListOutput,
-  OfertaFormacaoNivelFormacaoUpdateInput,
+  OfertaFormacaoNivelFormacaoCreateInputDto,
+  OfertaFormacaoNivelFormacaoFindOneInputDto,
+  OfertaFormacaoNivelFormacaoFindOneOutputDto,
+  OfertaFormacaoNivelFormacaoListInputDto,
+  OfertaFormacaoNivelFormacaoListOutputDto,
+  OfertaFormacaoNivelFormacaoUpdateInputDto,
 } from "../../dtos";
 
 /**
@@ -21,8 +21,8 @@ export interface IOfertaFormacaoNivelFormacaoUseCasePort {
    */
   findAll(
     accessContext: AccessContext,
-    dto: OfertaFormacaoNivelFormacaoListInput | null,
-  ): Promise<OfertaFormacaoNivelFormacaoListOutput>;
+    dto: OfertaFormacaoNivelFormacaoListInputDto | null,
+  ): Promise<OfertaFormacaoNivelFormacaoListOutputDto>;
 
   /**
    * Busca uma oferta formacao nivel formacao por ID
@@ -32,8 +32,8 @@ export interface IOfertaFormacaoNivelFormacaoUseCasePort {
    */
   findById(
     accessContext: AccessContext,
-    dto: OfertaFormacaoNivelFormacaoFindOneInput,
-  ): Promise<OfertaFormacaoNivelFormacaoFindOneOutput | null>;
+    dto: OfertaFormacaoNivelFormacaoFindOneInputDto,
+  ): Promise<OfertaFormacaoNivelFormacaoFindOneOutputDto | null>;
 
   /**
    * Busca uma oferta formacao nivel formacao por ID (lanca excecao se nao encontrado)
@@ -43,8 +43,8 @@ export interface IOfertaFormacaoNivelFormacaoUseCasePort {
    */
   findByIdStrict(
     accessContext: AccessContext,
-    dto: OfertaFormacaoNivelFormacaoFindOneInput,
-  ): Promise<OfertaFormacaoNivelFormacaoFindOneOutput>;
+    dto: OfertaFormacaoNivelFormacaoFindOneInputDto,
+  ): Promise<OfertaFormacaoNivelFormacaoFindOneOutputDto>;
 
   /**
    * Cria uma nova oferta formacao nivel formacao
@@ -54,8 +54,8 @@ export interface IOfertaFormacaoNivelFormacaoUseCasePort {
    */
   create(
     accessContext: AccessContext,
-    dto: OfertaFormacaoNivelFormacaoCreateInput,
-  ): Promise<OfertaFormacaoNivelFormacaoFindOneOutput>;
+    dto: OfertaFormacaoNivelFormacaoCreateInputDto,
+  ): Promise<OfertaFormacaoNivelFormacaoFindOneOutputDto>;
 
   /**
    * Atualiza uma oferta formacao nivel formacao existente
@@ -65,8 +65,8 @@ export interface IOfertaFormacaoNivelFormacaoUseCasePort {
    */
   update(
     accessContext: AccessContext,
-    dto: OfertaFormacaoNivelFormacaoFindOneInput & OfertaFormacaoNivelFormacaoUpdateInput,
-  ): Promise<OfertaFormacaoNivelFormacaoFindOneOutput>;
+    dto: OfertaFormacaoNivelFormacaoFindOneInputDto & OfertaFormacaoNivelFormacaoUpdateInputDto,
+  ): Promise<OfertaFormacaoNivelFormacaoFindOneOutputDto>;
 
   /**
    * Remove uma oferta formacao nivel formacao por ID
@@ -76,6 +76,6 @@ export interface IOfertaFormacaoNivelFormacaoUseCasePort {
    */
   deleteOneById(
     accessContext: AccessContext,
-    dto: OfertaFormacaoNivelFormacaoFindOneInput,
+    dto: OfertaFormacaoNivelFormacaoFindOneInputDto,
   ): Promise<boolean>;
 }

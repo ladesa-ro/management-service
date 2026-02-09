@@ -12,12 +12,12 @@ import { KeycloakService, OpenidConnectService } from "@/modules/@core/identity-
 import { PerfilService } from "@/modules/perfil";
 import { UsuarioService } from "@/modules/usuario";
 import type {
-  AuthCredentialsSetInitialPasswordInput,
-  AuthLoginInput,
-  AuthRecoverPasswordInput,
-  AuthRefreshInput,
-  AuthSessionCredentials,
-  AuthWhoAmIOutput,
+  AuthCredentialsSetInitialPasswordInputDto,
+  AuthLoginInputDto,
+  AuthRecoverPasswordInputDto,
+  AuthRefreshInputDto,
+  AuthSessionCredentialsDto,
+  AuthWhoAmIOutputDto,
 } from "../dtos";
 import type { IAutenticacaoUseCasePort } from "../ports";
 
@@ -30,7 +30,7 @@ export class AutenticacaoService implements IAutenticacaoUseCasePort {
     private readonly openidConnectService: OpenidConnectService,
   ) {}
 
-  async whoAmI(accessContext: AccessContext): Promise<AuthWhoAmIOutput> {
+  async whoAmI(accessContext: AccessContext): Promise<AuthWhoAmIOutputDto> {
     const usuario = accessContext.requestActor
       ? await this.usuarioService.findById(accessContext, {
           id: accessContext.requestActor.id,
@@ -43,7 +43,7 @@ export class AutenticacaoService implements IAutenticacaoUseCasePort {
       return {
         usuario,
         perfisAtivos: perfisAtivos,
-      } as unknown as AuthWhoAmIOutput;
+      } as unknown as AuthWhoAmIOutputDto;
     }
 
     return {
@@ -54,8 +54,8 @@ export class AutenticacaoService implements IAutenticacaoUseCasePort {
 
   async login(
     accessContext: AccessContext,
-    domain: AuthLoginInput,
-  ): Promise<AuthSessionCredentials> {
+    domain: AuthLoginInputDto,
+  ): Promise<AuthSessionCredentialsDto> {
     if (accessContext.requestActor !== null) {
       throw new BadRequestException("Você não pode usar a rota de login caso já esteja logado.");
     }
@@ -87,7 +87,7 @@ export class AutenticacaoService implements IAutenticacaoUseCasePort {
     throw new ForbiddenException("Credenciais inválidas.");
   }
 
-  async refresh(_: AccessContext, domain: AuthRefreshInput): Promise<AuthSessionCredentials> {
+  async refresh(_: AccessContext, domain: AuthRefreshInputDto): Promise<AuthSessionCredentialsDto> {
     let config: client.Configuration;
 
     try {
@@ -111,7 +111,7 @@ export class AutenticacaoService implements IAutenticacaoUseCasePort {
 
   async definirSenha(
     _accessContext: AccessContext,
-    domain: AuthCredentialsSetInitialPasswordInput,
+    domain: AuthCredentialsSetInitialPasswordInputDto,
   ) {
     try {
       const kcAdminClient = await this.keycloakService.getAdminClient();
@@ -164,7 +164,7 @@ export class AutenticacaoService implements IAutenticacaoUseCasePort {
     }
   }
 
-  async recoverPassword(_accessContext: AccessContext | null, domain: AuthRecoverPasswordInput) {
+  async recoverPassword(_accessContext: AccessContext | null, domain: AuthRecoverPasswordInputDto) {
     const kcAdminClient = await this.keycloakService.getAdminClient();
 
     const [user] = await kcAdminClient.users.find({ email: domain.email }, { catchNotFound: true });
@@ -187,7 +187,7 @@ export class AutenticacaoService implements IAutenticacaoUseCasePort {
   private formatTokenSet(
     tokenset: client.TokenEndpointResponse & client.TokenEndpointResponseHelpers,
   ) {
-    return <AuthSessionCredentials>{
+    return <AuthSessionCredentialsDto>{
       access_token: tokenset.access_token ?? null,
       token_type: tokenset.token_type ?? null,
       id_token: tokenset.id_token ?? null,

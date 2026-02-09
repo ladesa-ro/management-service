@@ -8,10 +8,10 @@ import {
   paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
-  TurmaFindOneInput,
-  TurmaFindOneOutput,
-  TurmaListInput,
-  TurmaListOutput,
+  TurmaFindOneInputDto,
+  TurmaFindOneOutputDto,
+  TurmaListInputDto,
+  TurmaListOutputDto,
 } from "@/modules/turma/application/dtos";
 import type { ITurmaRepositoryPort } from "@/modules/turma/application/ports";
 import type { TurmaEntity } from "./turma.entity";
@@ -20,16 +20,16 @@ import type { TurmaEntity } from "./turma.entity";
 export class TurmaTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     TurmaEntity,
-    TurmaListInput,
-    TurmaListOutput,
-    TurmaFindOneInput,
-    TurmaFindOneOutput
+    TurmaListInputDto,
+    TurmaListOutputDto,
+    TurmaFindOneInputDto,
+    TurmaFindOneOutputDto
   >
   implements ITurmaRepositoryPort
 {
   protected readonly alias = "turma";
   protected readonly authzAction = "turma:find";
-  protected readonly outputDtoName = "TurmaFindOneOutput";
+  protected readonly outputDtoName = "TurmaFindOneOutputDto";
 
   constructor(
     protected readonly databaseContext: DatabaseContextService,

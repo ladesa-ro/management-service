@@ -1,7 +1,7 @@
 import type { Readable } from "node:stream";
 import type { StreamableFile } from "@nestjs/common";
 import type { AccessContext } from "@/modules/@core/access-context";
-import type { ArquivoCreateInput, ArquivoGetFileInput } from "../../dtos";
+import type { ArquivoCreateInputDto, ArquivoGetFileInputDto } from "../../dtos";
 
 /**
  * Porta de entrada (use case) para operações de Arquivo
@@ -22,7 +22,7 @@ export interface IArquivoUseCasePort {
    */
   getFile(
     accessContext: AccessContext | null,
-    input: ArquivoGetFileInput,
+    input: ArquivoGetFileInputDto,
   ): Promise<{
     id: string;
     nome: string | null;
@@ -35,7 +35,7 @@ export interface IArquivoUseCasePort {
    */
   getStreamableFile(
     accessContext: AccessContext | null,
-    input: ArquivoGetFileInput,
+    input: ArquivoGetFileInputDto,
   ): Promise<StreamableFile>;
 
   /**
@@ -47,7 +47,7 @@ export interface IArquivoUseCasePort {
    * Cria um novo arquivo
    */
   arquivoCreate(
-    dto: Pick<ArquivoCreateInput, "name" | "mimeType">,
+    dto: Pick<ArquivoCreateInputDto, "name" | "mimeType">,
     data: NodeJS.ArrayBufferView | Readable,
   ): Promise<{ id: string }>;
 }

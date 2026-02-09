@@ -1,41 +1,41 @@
 import type { AccessContext } from "@/modules/@core/access-context";
 import type {
-  DiaCalendarioCreateInput,
-  DiaCalendarioFindOneInput,
-  DiaCalendarioFindOneOutput,
-  DiaCalendarioListInput,
-  DiaCalendarioListOutput,
-  DiaCalendarioUpdateInput,
+  DiaCalendarioCreateInputDto,
+  DiaCalendarioFindOneInputDto,
+  DiaCalendarioFindOneOutputDto,
+  DiaCalendarioListInputDto,
+  DiaCalendarioListOutputDto,
+  DiaCalendarioUpdateInputDto,
 } from "../../dtos";
 
 export interface IDiaCalendarioUseCasePort {
   findAll(
     accessContext: AccessContext,
-    dto: DiaCalendarioListInput | null,
+    dto: DiaCalendarioListInputDto | null,
     selection?: string[] | boolean,
-  ): Promise<DiaCalendarioListOutput>;
+  ): Promise<DiaCalendarioListOutputDto>;
 
   findById(
     accessContext: AccessContext,
-    dto: DiaCalendarioFindOneInput,
+    dto: DiaCalendarioFindOneInputDto,
     selection?: string[] | boolean,
-  ): Promise<DiaCalendarioFindOneOutput | null>;
+  ): Promise<DiaCalendarioFindOneOutputDto | null>;
 
   findByIdStrict(
     accessContext: AccessContext,
-    dto: DiaCalendarioFindOneInput,
+    dto: DiaCalendarioFindOneInputDto,
     selection?: string[] | boolean,
-  ): Promise<DiaCalendarioFindOneOutput>;
+  ): Promise<DiaCalendarioFindOneOutputDto>;
 
   create(
     accessContext: AccessContext,
-    dto: DiaCalendarioCreateInput,
-  ): Promise<DiaCalendarioFindOneOutput>;
+    dto: DiaCalendarioCreateInputDto,
+  ): Promise<DiaCalendarioFindOneOutputDto>;
 
   update(
     accessContext: AccessContext,
-    dto: DiaCalendarioFindOneInput & DiaCalendarioUpdateInput,
-  ): Promise<DiaCalendarioFindOneOutput>;
+    dto: DiaCalendarioFindOneInputDto & DiaCalendarioUpdateInputDto,
+  ): Promise<DiaCalendarioFindOneOutputDto>;
 
-  deleteOneById(accessContext: AccessContext, dto: DiaCalendarioFindOneInput): Promise<boolean>;
+  deleteOneById(accessContext: AccessContext, dto: DiaCalendarioFindOneInputDto): Promise<boolean>;
 }

@@ -1,32 +1,32 @@
 import {
-  EntityOutput,
-  FindOneInput,
+  EntityOutputDto,
+  FindOneInputDto,
   IFilterAcceptableValues,
-  ObjectUuidRef,
-  PaginationInput,
-  PaginationResult,
+  ObjectUuidRefDto,
+  PaginationInputDto,
+  PaginationResultDto,
 } from "@/modules/@shared";
-import { CampusFindOneOutput, CampusInputRef } from "@/modules/campus";
-import { UsuarioFindOneOutput, UsuarioInputRef } from "@/modules/usuario";
+import { CampusFindOneOutputDto, CampusInputRefDto } from "@/modules/campus";
+import { UsuarioFindOneOutputDto, UsuarioInputRefDto } from "@/modules/usuario";
 
 // ============================================================================
 // FindOne Input/Output
 // ============================================================================
 
-export class PerfilFindOneInput extends FindOneInput {}
+export class PerfilFindOneInputDto extends FindOneInputDto {}
 
-export class PerfilFindOneOutput extends EntityOutput {
+export class PerfilFindOneOutputDto extends EntityOutputDto {
   ativo!: boolean;
   cargo!: string;
-  campus!: CampusFindOneOutput;
-  usuario!: UsuarioFindOneOutput;
+  campus!: CampusFindOneOutputDto;
+  usuario!: UsuarioFindOneOutputDto;
 }
 
 // ============================================================================
 // List Input/Output
 // ============================================================================
 
-export class PerfilListInput extends PaginationInput {
+export class PerfilListInputDto extends PaginationInputDto {
   "filter.id"?: IFilterAcceptableValues;
   "filter.ativo"?: IFilterAcceptableValues;
   "filter.cargo"?: IFilterAcceptableValues;
@@ -34,20 +34,20 @@ export class PerfilListInput extends PaginationInput {
   "filter.usuario.id"?: IFilterAcceptableValues;
 }
 
-export class PerfilListOutput extends PaginationResult<PerfilFindOneOutput> {}
+export class PerfilListOutputDto extends PaginationResultDto<PerfilFindOneOutputDto> {}
 
 // ============================================================================
 // Create/Update Input
 // ============================================================================
 
-export class PerfilSetVinculosInput {
+export class PerfilSetVinculosInputDto {
   cargos!: string[];
-  campus!: CampusInputRef;
-  usuario!: UsuarioInputRef;
+  campus!: CampusInputRefDto;
+  usuario!: UsuarioInputRefDto;
 }
 
 // ============================================================================
 // Input Ref
 // ============================================================================
 
-export type PerfilInputRef = ObjectUuidRef;
+export type PerfilInputRefDto = ObjectUuidRefDto;

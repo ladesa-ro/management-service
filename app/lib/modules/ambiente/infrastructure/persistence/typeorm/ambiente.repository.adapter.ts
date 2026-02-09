@@ -7,10 +7,10 @@ import {
   NestJsPaginateAdapter,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
-  AmbienteFindOneInput as AmbienteFindOneInputDto,
-  AmbienteFindOneOutput as AmbienteFindOneOutputDto,
-  AmbienteListInput as AmbienteListInputDto,
-  AmbienteListOutput as AmbienteListOutputDto,
+  AmbienteFindOneInputDto as AmbienteFindOneInputDto,
+  AmbienteFindOneOutputDto as AmbienteFindOneOutputDto,
+  AmbienteListInputDto as AmbienteListInputDto,
+  AmbienteListOutputDto as AmbienteListOutputDto,
 } from "@/modules/ambiente";
 import type { IAmbienteRepositoryPort } from "@/modules/ambiente/application/ports";
 import type { AmbienteEntity } from "./ambiente.entity";
@@ -32,7 +32,7 @@ export class AmbienteTypeOrmRepositoryAdapter
 {
   protected readonly alias = "ambiente";
   protected readonly authzAction = "ambiente:find";
-  protected readonly outputDtoName = "AmbienteFindOneOutput";
+  protected readonly outputDtoName = "AmbienteFindOneOutputDto";
 
   constructor(
     protected readonly databaseContext: DatabaseContextService,

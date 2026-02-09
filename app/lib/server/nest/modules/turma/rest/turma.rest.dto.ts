@@ -1,5 +1,4 @@
-import { ArgsType, Field, ID, InputType, ObjectType, PartialType } from "@nestjs/graphql";
-import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { ApiProperty, ApiPropertyOptional, ApiSchema, PartialType } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import {
   IsArray,
@@ -17,85 +16,80 @@ import {
   simpleProperty,
 } from "@/modules/@shared/infrastructure/persistence/typeorm/metadata";
 import {
-  PaginationInputDto,
-  PaginationMetaDto,
+  PaginationInputRestDto,
+  PaginationMetaRestDto,
   TransformToArray,
 } from "@/modules/@shared/infrastructure/presentation/rest/dtos";
 import {
-  AmbienteFindOneInputDto,
-  AmbienteFindOneOutputDto,
+  AmbienteFindOneInputRestDto,
+  AmbienteFindOneOutputRestDto,
 } from "@/server/nest/modules/ambiente/rest";
-import { ImagemFindOneOutputDto } from "@/server/nest/modules/bloco/rest";
-import { CursoFindOneInputDto, CursoFindOneOutputDto } from "@/server/nest/modules/curso/rest";
+import { ImagemFindOneOutputRestDto } from "@/server/nest/modules/bloco/rest";
+import {
+  CursoFindOneInputRestDto,
+  CursoFindOneOutputRestDto,
+} from "@/server/nest/modules/curso/rest";
 
 // ============================================================================
 // FindOne Output
 // ============================================================================
 
-@ObjectType("Turma")
+@ApiSchema({ name: "TurmaFindOneOutputDto" })
 @RegisterModel({
-  name: "TurmaFindOneOutput",
+  name: "TurmaFindOneOutputDto",
   properties: [
     simpleProperty("id"),
     simpleProperty("periodo"),
-    referenceProperty("curso", "CursoFindOneOutput"),
-    referenceProperty("ambientePadraoAula", "AmbienteFindOneOutput", { nullable: true }),
-    referenceProperty("imagemCapa", "ImagemFindOneOutput", { nullable: true }),
+    referenceProperty("curso", "CursoFindOneOutputDto"),
+    referenceProperty("ambientePadraoAula", "AmbienteFindOneOutputDto", { nullable: true }),
+    referenceProperty("imagemCapa", "ImagemFindOneOutputDto", { nullable: true }),
     ...commonProperties.dated,
   ],
 })
-export class TurmaFindOneOutputDto {
+export class TurmaFindOneOutputRestDto {
   @ApiProperty({ description: "Identificador do registro (uuid)", format: "uuid" })
-  @Field(() => ID)
   @IsUUID()
   id: string;
 
   @ApiProperty({ description: "Periodo da turma", minLength: 1 })
-  @Field()
   @IsString()
   @MinLength(1)
   periodo: string;
 
-  @ApiProperty({ type: () => CursoFindOneOutputDto, description: "Curso da turma" })
-  @Field(() => CursoFindOneOutputDto)
+  @ApiProperty({ type: () => CursoFindOneOutputRestDto, description: "Curso da turma" })
   @ValidateNested()
-  @Type(() => CursoFindOneOutputDto)
-  curso: CursoFindOneOutputDto;
+  @Type(() => CursoFindOneOutputRestDto)
+  curso: CursoFindOneOutputRestDto;
 
   @ApiPropertyOptional({
-    type: () => AmbienteFindOneOutputDto,
+    type: () => AmbienteFindOneOutputRestDto,
     description: "Ambiente padrao da sala de aula",
     nullable: true,
   })
-  @Field(() => AmbienteFindOneOutputDto, { nullable: true })
   @IsOptional()
   @ValidateNested()
-  @Type(() => AmbienteFindOneOutputDto)
-  ambientePadraoAula: AmbienteFindOneOutputDto | null;
+  @Type(() => AmbienteFindOneOutputRestDto)
+  ambientePadraoAula: AmbienteFindOneOutputRestDto | null;
 
   @ApiPropertyOptional({
-    type: () => ImagemFindOneOutputDto,
+    type: () => ImagemFindOneOutputRestDto,
     description: "Imagem de capa da turma",
     nullable: true,
   })
-  @Field(() => ImagemFindOneOutputDto, { nullable: true })
   @IsOptional()
   @ValidateNested()
-  @Type(() => ImagemFindOneOutputDto)
-  imagemCapa: ImagemFindOneOutputDto | null;
+  @Type(() => ImagemFindOneOutputRestDto)
+  imagemCapa: ImagemFindOneOutputRestDto | null;
 
   @ApiProperty({ description: "Data e hora da criacao do registro" })
-  @Field()
   @IsDateString()
   dateCreated: Date;
 
   @ApiProperty({ description: "Data e hora da alteracao do registro" })
-  @Field()
   @IsDateString()
   dateUpdated: Date;
 
   @ApiPropertyOptional({ description: "Data e hora da exclusao do registro", nullable: true })
-  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateString()
   dateDeleted: Date | null;
@@ -105,8 +99,8 @@ export class TurmaFindOneOutputDto {
 // List Input/Output
 // ============================================================================
 
-@ArgsType()
-export class TurmaListInputDto extends PaginationInputDto {
+@ApiSchema({ name: "TurmaListInputDto" })
+export class TurmaListInputRestDto extends PaginationInputRestDto {
   @ApiPropertyOptional({
     description: "Filtro por ID",
     type: [String],
@@ -114,7 +108,7 @@ export class TurmaListInputDto extends PaginationInputDto {
   @TransformToArray()
   @IsOptional()
   @IsArray()
-  @IsString({ each: true })
+  @IsUUID(undefined, { each: true })
   "filter.id"?: string[];
 
   @ApiPropertyOptional({
@@ -164,7 +158,7 @@ export class TurmaListInputDto extends PaginationInputDto {
   @TransformToArray()
   @IsOptional()
   @IsArray()
-  @IsString({ each: true })
+  @IsUUID(undefined, { each: true })
   "filter.curso.id"?: string[];
 
   @ApiPropertyOptional({
@@ -194,7 +188,7 @@ export class TurmaListInputDto extends PaginationInputDto {
   @TransformToArray()
   @IsOptional()
   @IsArray()
-  @IsString({ each: true })
+  @IsUUID(undefined, { each: true })
   "filter.curso.campus.id"?: string[];
 
   @ApiPropertyOptional({
@@ -204,7 +198,7 @@ export class TurmaListInputDto extends PaginationInputDto {
   @TransformToArray()
   @IsOptional()
   @IsArray()
-  @IsString({ each: true })
+  @IsUUID(undefined, { each: true })
   "filter.curso.ofertaFormacao.id"?: string[];
 
   @ApiPropertyOptional({
@@ -228,59 +222,52 @@ export class TurmaListInputDto extends PaginationInputDto {
   "filter.curso.ofertaFormacao.slug"?: string[];
 }
 
-@ObjectType("TurmaListOutput")
-export class TurmaListOutputDto {
-  @ApiProperty({ type: () => PaginationMetaDto, description: "Metadados da busca" })
-  @Field(() => PaginationMetaDto)
-  meta: PaginationMetaDto;
+@ApiSchema({ name: "TurmaListOutputDto" })
+export class TurmaListOutputRestDto {
+  @ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" })
+  meta: PaginationMetaRestDto;
 
-  @ApiProperty({ type: () => [TurmaFindOneOutputDto], description: "Resultados da busca" })
-  @Field(() => [TurmaFindOneOutputDto])
-  data: TurmaFindOneOutputDto[];
+  @ApiProperty({ type: () => [TurmaFindOneOutputRestDto], description: "Resultados da busca" })
+  data: TurmaFindOneOutputRestDto[];
 }
 
 // ============================================================================
 // Create/Update Input
 // ============================================================================
 
-@InputType("TurmaCreateInput")
-export class TurmaCreateInputDto {
+@ApiSchema({ name: "TurmaCreateInputDto" })
+export class TurmaCreateInputRestDto {
   @ApiProperty({ description: "Periodo da turma", minLength: 1 })
-  @Field()
   @IsString()
   @MinLength(1)
   periodo: string;
 
-  @ApiProperty({ type: () => CursoFindOneInputDto, description: "Curso da turma" })
-  @Field(() => CursoFindOneInputDto)
+  @ApiProperty({ type: () => CursoFindOneInputRestDto, description: "Curso da turma" })
   @ValidateNested()
-  @Type(() => CursoFindOneInputDto)
-  curso: CursoFindOneInputDto;
+  @Type(() => CursoFindOneInputRestDto)
+  curso: CursoFindOneInputRestDto;
 
   @ApiPropertyOptional({
-    type: () => AmbienteFindOneInputDto,
+    type: () => AmbienteFindOneInputRestDto,
     description: "Ambiente padrao da sala de aula",
     nullable: true,
   })
-  @Field(() => AmbienteFindOneInputDto, { nullable: true })
   @IsOptional()
   @ValidateNested()
-  @Type(() => AmbienteFindOneInputDto)
-  ambientePadraoAula?: AmbienteFindOneInputDto | null;
+  @Type(() => AmbienteFindOneInputRestDto)
+  ambientePadraoAula?: AmbienteFindOneInputRestDto | null;
 }
 
-@InputType("TurmaUpdateInput")
-export class TurmaUpdateInputDto extends PartialType(TurmaCreateInputDto) {}
+@ApiSchema({ name: "TurmaUpdateInputDto" })
+export class TurmaUpdateInputRestDto extends PartialType(TurmaCreateInputRestDto) {}
 
 // ============================================================================
 // FindOne Input (for path params)
 // ============================================================================
 
-@ArgsType()
-@InputType("TurmaFindOneInput")
-export class TurmaFindOneInputDto {
+@ApiSchema({ name: "TurmaFindOneInputDto" })
+export class TurmaFindOneInputRestDto {
   @ApiProperty({ description: "Identificador do registro (uuid)", format: "uuid" })
-  @Field(() => ID)
   @IsUUID()
   id: string;
 }

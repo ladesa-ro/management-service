@@ -1,50 +1,50 @@
 import type { AccessContext } from "@/modules/@core/access-context";
 import type {
-  DiarioCreateInput,
-  DiarioFindOneInput,
-  DiarioFindOneOutput,
-  DiarioListInput,
-  DiarioListOutput,
-  DiarioUpdateInput,
+  DiarioCreateInputDto,
+  DiarioFindOneInputDto,
+  DiarioFindOneOutputDto,
+  DiarioListInputDto,
+  DiarioListOutputDto,
+  DiarioUpdateInputDto,
 } from "@/modules/diario/application/dtos";
 
 export interface IDiarioUseCasePort {
   findAll(
     accessContext: AccessContext,
-    dto: DiarioListInput | null,
+    dto: DiarioListInputDto | null,
     selection?: string[] | boolean,
-  ): Promise<DiarioListOutput>;
+  ): Promise<DiarioListOutputDto>;
 
   findById(
     accessContext: AccessContext,
-    dto: DiarioFindOneInput,
+    dto: DiarioFindOneInputDto,
     selection?: string[] | boolean,
-  ): Promise<DiarioFindOneOutput | null>;
+  ): Promise<DiarioFindOneOutputDto | null>;
 
   findByIdStrict(
     accessContext: AccessContext,
-    dto: DiarioFindOneInput,
+    dto: DiarioFindOneInputDto,
     selection?: string[] | boolean,
-  ): Promise<DiarioFindOneOutput>;
+  ): Promise<DiarioFindOneOutputDto>;
 
   findByIdSimple(
     accessContext: AccessContext,
-    id: DiarioFindOneInput["id"],
+    id: DiarioFindOneInputDto["id"],
     selection?: string[] | boolean,
-  ): Promise<DiarioFindOneOutput | null>;
+  ): Promise<DiarioFindOneOutputDto | null>;
 
   findByIdSimpleStrict(
     accessContext: AccessContext,
-    id: DiarioFindOneInput["id"],
+    id: DiarioFindOneInputDto["id"],
     selection?: string[] | boolean,
-  ): Promise<DiarioFindOneOutput>;
+  ): Promise<DiarioFindOneOutputDto>;
 
-  create(accessContext: AccessContext, dto: DiarioCreateInput): Promise<DiarioFindOneOutput>;
+  create(accessContext: AccessContext, dto: DiarioCreateInputDto): Promise<DiarioFindOneOutputDto>;
 
   update(
     accessContext: AccessContext,
-    dto: DiarioFindOneInput & DiarioUpdateInput,
-  ): Promise<DiarioFindOneOutput>;
+    dto: DiarioFindOneInputDto & DiarioUpdateInputDto,
+  ): Promise<DiarioFindOneOutputDto>;
 
-  deleteOneById(accessContext: AccessContext, dto: DiarioFindOneInput): Promise<boolean>;
+  deleteOneById(accessContext: AccessContext, dto: DiarioFindOneInputDto): Promise<boolean>;
 }

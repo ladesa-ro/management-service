@@ -1,6 +1,6 @@
 import type { IBaseCrudRepositoryPort } from "@/modules/@shared";
 import type { AmbienteEntity } from "@/modules/ambiente/infrastructure/persistence/typeorm";
-import type { AmbienteFindOneOutput, AmbienteListOutput } from "../../dtos";
+import type { AmbienteFindOneOutputDto, AmbienteListOutputDto } from "../../dtos";
 
 /**
  * Token de injeção para o repositório de Ambiente
@@ -12,4 +12,8 @@ export const AMBIENTE_REPOSITORY_PORT = Symbol("IAmbienteRepositoryPort");
  * Estende a interface base de CRUD com operações padrão
  */
 export interface IAmbienteRepositoryPort
-  extends IBaseCrudRepositoryPort<AmbienteEntity, AmbienteListOutput, AmbienteFindOneOutput> {}
+  extends IBaseCrudRepositoryPort<
+    AmbienteEntity,
+    AmbienteListOutputDto,
+    AmbienteFindOneOutputDto
+  > {}

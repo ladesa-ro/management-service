@@ -4,26 +4,24 @@ import { AccessContext, AccessContextGraphQL } from "@/modules/@core/access-cont
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
 import { HorarioGeradoAulaService } from "@/modules/horario-gerado-aula";
 import {
-  HorarioGeradoAulaCreateInputRestDto,
-  HorarioGeradoAulaFindOneOutputRestDto,
-  HorarioGeradoAulaUpdateInputRestDto,
-} from "../rest/horario-gerado-aula.rest.dto";
-import {
-  HorarioGeradoAulaListInputGqlDto,
-  HorarioGeradoAulaListOutputGqlDto,
+  HorarioGeradoAulaCreateInputGraphQlDto,
+  HorarioGeradoAulaFindOneOutputGraphQlDto,
+  HorarioGeradoAulaListInputGraphQlDto,
+  HorarioGeradoAulaListOutputGraphQlDto,
+  HorarioGeradoAulaUpdateInputGraphQlDto,
 } from "./horario-gerado-aula.graphql.dto";
 import { HorarioGeradoAulaGraphqlMapper } from "./horario-gerado-aula.graphql.mapper";
 
-@Resolver(() => HorarioGeradoAulaFindOneOutputRestDto)
+@Resolver(() => HorarioGeradoAulaFindOneOutputGraphQlDto)
 export class HorarioGeradoAulaGraphqlResolver {
   constructor(private readonly horarioGeradoAulaService: HorarioGeradoAulaService) {}
 
-  @Query(() => HorarioGeradoAulaListOutputGqlDto, { name: "horarioGeradoAulaFindAll" })
+  @Query(() => HorarioGeradoAulaListOutputGraphQlDto, { name: "horarioGeradoAulaFindAll" })
   async findAll(
     @AccessContextGraphQL() accessContext: AccessContext,
-    @Args() dto: HorarioGeradoAulaListInputGqlDto,
+    @Args() dto: HorarioGeradoAulaListInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<HorarioGeradoAulaListOutputGqlDto> {
+  ): Promise<HorarioGeradoAulaListOutputGraphQlDto> {
     const input = HorarioGeradoAulaGraphqlMapper.toListInput(dto);
 
     if (input) {
@@ -34,12 +32,12 @@ export class HorarioGeradoAulaGraphqlResolver {
     return HorarioGeradoAulaGraphqlMapper.toListOutputDto(result);
   }
 
-  @Query(() => HorarioGeradoAulaFindOneOutputRestDto, { name: "horarioGeradoAulaFindById" })
+  @Query(() => HorarioGeradoAulaFindOneOutputGraphQlDto, { name: "horarioGeradoAulaFindById" })
   async findById(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<HorarioGeradoAulaFindOneOutputRestDto> {
+  ): Promise<HorarioGeradoAulaFindOneOutputGraphQlDto> {
     const selection = graphqlExtractSelection(info);
     const result = await this.horarioGeradoAulaService.findByIdStrict(accessContext, {
       id,
@@ -48,24 +46,24 @@ export class HorarioGeradoAulaGraphqlResolver {
     return HorarioGeradoAulaGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => HorarioGeradoAulaFindOneOutputRestDto, { name: "horarioGeradoAulaCreate" })
+  @Mutation(() => HorarioGeradoAulaFindOneOutputGraphQlDto, { name: "horarioGeradoAulaCreate" })
   async create(
     @AccessContextGraphQL() accessContext: AccessContext,
-    @Args("data") dto: HorarioGeradoAulaCreateInputRestDto,
+    @Args("data") dto: HorarioGeradoAulaCreateInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<HorarioGeradoAulaFindOneOutputRestDto> {
+  ): Promise<HorarioGeradoAulaFindOneOutputGraphQlDto> {
     const input = HorarioGeradoAulaGraphqlMapper.toCreateInput(dto);
     const result = await this.horarioGeradoAulaService.create(accessContext, input);
     return HorarioGeradoAulaGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => HorarioGeradoAulaFindOneOutputRestDto, { name: "horarioGeradoAulaUpdate" })
+  @Mutation(() => HorarioGeradoAulaFindOneOutputGraphQlDto, { name: "horarioGeradoAulaUpdate" })
   async update(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
-    @Args("data") dto: HorarioGeradoAulaUpdateInputRestDto,
+    @Args("data") dto: HorarioGeradoAulaUpdateInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<HorarioGeradoAulaFindOneOutputRestDto> {
+  ): Promise<HorarioGeradoAulaFindOneOutputGraphQlDto> {
     const input = HorarioGeradoAulaGraphqlMapper.toUpdateInput(id, dto);
     const result = await this.horarioGeradoAulaService.update(accessContext, input);
     return HorarioGeradoAulaGraphqlMapper.toFindOneOutputDto(result);

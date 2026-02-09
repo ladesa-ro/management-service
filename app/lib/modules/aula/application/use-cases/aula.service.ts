@@ -7,12 +7,12 @@ import type { AulaEntity } from "@/modules/aula/infrastructure/persistence/typeo
 import { DiarioService } from "@/modules/diario/application/use-cases/diario.service";
 import { IntervaloDeTempoService } from "@/modules/intervalo-de-tempo/application/use-cases/intervalo-de-tempo.service";
 import type {
-  AulaCreateInput,
-  AulaFindOneInput,
-  AulaFindOneOutput,
-  AulaListInput,
-  AulaListOutput,
-  AulaUpdateInput,
+  AulaCreateInputDto,
+  AulaFindOneInputDto,
+  AulaFindOneOutputDto,
+  AulaListInputDto,
+  AulaListOutputDto,
+  AulaUpdateInputDto,
 } from "../dtos";
 import { AULA_REPOSITORY_PORT, type IAulaRepositoryPort } from "../ports";
 import type { IAulaUseCasePort } from "../ports/in/aula.use-case.port";
@@ -21,12 +21,12 @@ import type { IAulaUseCasePort } from "../ports/in/aula.use-case.port";
 export class AulaService
   extends BaseCrudService<
     AulaEntity,
-    AulaListInput,
-    AulaListOutput,
-    AulaFindOneInput,
-    AulaFindOneOutput,
-    AulaCreateInput,
-    AulaUpdateInput
+    AulaListInputDto,
+    AulaListOutputDto,
+    AulaFindOneInputDto,
+    AulaFindOneOutputDto,
+    AulaCreateInputDto,
+    AulaUpdateInputDto
   >
   implements IAulaUseCasePort
 {
@@ -50,7 +50,7 @@ export class AulaService
   protected override async beforeCreate(
     accessContext: AccessContext,
     entity: AulaEntity,
-    dto: AulaCreateInput,
+    dto: AulaCreateInputDto,
   ): Promise<void> {
     if (dto.ambiente && dto.ambiente !== null) {
       const ambiente = await this.ambienteService.findByIdStrict(accessContext, {
@@ -74,7 +74,7 @@ export class AulaService
   protected override async beforeUpdate(
     accessContext: AccessContext,
     entity: AulaEntity,
-    dto: AulaFindOneInput & AulaUpdateInput,
+    dto: AulaFindOneInputDto & AulaUpdateInputDto,
   ): Promise<void> {
     if (has(dto, "ambiente") && dto.ambiente !== undefined) {
       if (dto.ambiente !== null) {

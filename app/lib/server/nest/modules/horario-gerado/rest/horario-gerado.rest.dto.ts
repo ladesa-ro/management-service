@@ -1,5 +1,4 @@
-import { ArgsType, Field, ID, InputType, ObjectType, PartialType } from "@nestjs/graphql";
-import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { ApiProperty, ApiPropertyOptional, ApiSchema, PartialType } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import {
   IsArray,
@@ -16,22 +15,22 @@ import {
   simpleProperty,
 } from "@/modules/@shared/infrastructure/persistence/typeorm/metadata";
 import {
-  PaginationInputDto,
-  PaginationMetaDto,
+  PaginationInputRestDto,
+  PaginationMetaRestDto,
   TransformToArray,
 } from "@/modules/@shared/infrastructure/presentation/rest/dtos";
 import {
-  CalendarioLetivoFindOneInputDto,
-  CalendarioLetivoFindOneOutputDto,
+  CalendarioLetivoFindOneInputRestDto,
+  CalendarioLetivoFindOneOutputRestDto,
 } from "@/server/nest/modules/calendario-letivo/rest";
 
 // ============================================================================
 // FindOne Output
 // ============================================================================
 
-@ObjectType("HorarioGerado")
+@ApiSchema({ name: "HorarioGeradoFindOneOutputDto" })
 @RegisterModel({
-  name: "HorarioGeradoFindOneOutput",
+  name: "HorarioGeradoFindOneOutputDto",
   properties: [
     simpleProperty("id"),
     simpleProperty("status", { nullable: true }),
@@ -39,64 +38,57 @@ import {
     simpleProperty("dataGeracao", { nullable: true }),
     simpleProperty("vigenciaInicio", { nullable: true }),
     simpleProperty("vigenciaFim", { nullable: true }),
-    referenceProperty("calendario", "CalendarioLetivoFindOneOutput"),
+    referenceProperty("calendario", "CalendarioLetivoFindOneOutputDto"),
     ...commonProperties.dated,
   ],
 })
 export class HorarioGeradoFindOneOutputRestDto {
   @ApiProperty({ description: "Identificador do registro (uuid)", format: "uuid" })
-  @Field(() => ID)
   @IsUUID()
   id: string;
 
   @ApiPropertyOptional({ description: "Status do horario gerado", nullable: true })
-  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   status: string | null;
 
   @ApiPropertyOptional({ description: "Tipo do horario gerado", nullable: true })
-  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   tipo: string | null;
 
   @ApiPropertyOptional({ description: "Data em que o horario foi gerado", nullable: true })
-  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateString()
   dataGeracao: Date | null;
 
   @ApiPropertyOptional({ description: "Inicio da vigencia do horario gerado", nullable: true })
-  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateString()
   vigenciaInicio: Date | null;
 
   @ApiPropertyOptional({ description: "Fim da vigencia do horario gerado", nullable: true })
-  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateString()
   vigenciaFim: Date | null;
 
-  @ApiProperty({ type: () => CalendarioLetivoFindOneOutputDto, description: "Calendario letivo" })
-  @Field(() => CalendarioLetivoFindOneOutputDto)
+  @ApiProperty({
+    type: () => CalendarioLetivoFindOneOutputRestDto,
+    description: "Calendario letivo",
+  })
   @ValidateNested()
-  @Type(() => CalendarioLetivoFindOneOutputDto)
-  calendario: CalendarioLetivoFindOneOutputDto;
+  @Type(() => CalendarioLetivoFindOneOutputRestDto)
+  calendario: CalendarioLetivoFindOneOutputRestDto;
 
   @ApiProperty({ description: "Data e hora da criacao do registro" })
-  @Field()
   @IsDateString()
   dateCreated: Date;
 
   @ApiProperty({ description: "Data e hora da alteracao do registro" })
-  @Field()
   @IsDateString()
   dateUpdated: Date;
 
   @ApiPropertyOptional({ description: "Data e hora da exclusao do registro", nullable: true })
-  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateString()
   dateDeleted: Date | null;
@@ -106,8 +98,8 @@ export class HorarioGeradoFindOneOutputRestDto {
 // List Input/Output
 // ============================================================================
 
-@ArgsType()
-export class HorarioGeradoListInputRestDto extends PaginationInputDto {
+@ApiSchema({ name: "HorarioGeradoListInputDto" })
+export class HorarioGeradoListInputRestDto extends PaginationInputRestDto {
   @ApiPropertyOptional({
     description: "Filtro por ID",
     type: [String],
@@ -115,7 +107,7 @@ export class HorarioGeradoListInputRestDto extends PaginationInputDto {
   @TransformToArray()
   @IsOptional()
   @IsArray()
-  @IsString({ each: true })
+  @IsUUID(undefined, { each: true })
   "filter.id"?: string[];
 
   @ApiPropertyOptional({
@@ -125,7 +117,7 @@ export class HorarioGeradoListInputRestDto extends PaginationInputDto {
   @TransformToArray()
   @IsOptional()
   @IsArray()
-  @IsString({ each: true })
+  @IsUUID(undefined, { each: true })
   "filter.calendario.id"?: string[];
 
   @ApiPropertyOptional({
@@ -149,17 +141,15 @@ export class HorarioGeradoListInputRestDto extends PaginationInputDto {
   "filter.calendario.ano"?: string[];
 }
 
-@ObjectType("HorarioGeradoListOutput")
+@ApiSchema({ name: "HorarioGeradoListOutputDto" })
 export class HorarioGeradoListOutputRestDto {
-  @ApiProperty({ type: () => PaginationMetaDto, description: "Metadados da busca" })
-  @Field(() => PaginationMetaDto)
-  meta: PaginationMetaDto;
+  @ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" })
+  meta: PaginationMetaRestDto;
 
   @ApiProperty({
     type: () => [HorarioGeradoFindOneOutputRestDto],
     description: "Resultados da busca",
   })
-  @Field(() => [HorarioGeradoFindOneOutputRestDto])
   data: HorarioGeradoFindOneOutputRestDto[];
 }
 
@@ -167,57 +157,52 @@ export class HorarioGeradoListOutputRestDto {
 // Create/Update Input
 // ============================================================================
 
-@InputType("HorarioGeradoCreateInput")
+@ApiSchema({ name: "HorarioGeradoCreateInputDto" })
 export class HorarioGeradoCreateInputRestDto {
   @ApiPropertyOptional({ description: "Status do horario gerado", nullable: true })
-  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   status?: string | null;
 
   @ApiPropertyOptional({ description: "Tipo do horario gerado", nullable: true })
-  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   tipo?: string | null;
 
   @ApiPropertyOptional({ description: "Data em que o horario foi gerado", nullable: true })
-  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateString()
   dataGeracao?: Date | null;
 
   @ApiPropertyOptional({ description: "Inicio da vigencia do horario gerado", nullable: true })
-  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateString()
   vigenciaInicio?: Date | null;
 
   @ApiPropertyOptional({ description: "Fim da vigencia do horario gerado", nullable: true })
-  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateString()
   vigenciaFim?: Date | null;
 
-  @ApiProperty({ type: () => CalendarioLetivoFindOneInputDto, description: "Calendario letivo" })
-  @Field(() => CalendarioLetivoFindOneInputDto)
+  @ApiProperty({
+    type: () => CalendarioLetivoFindOneInputRestDto,
+    description: "Calendario letivo",
+  })
   @ValidateNested()
-  @Type(() => CalendarioLetivoFindOneInputDto)
-  calendario: CalendarioLetivoFindOneInputDto;
+  @Type(() => CalendarioLetivoFindOneInputRestDto)
+  calendario: CalendarioLetivoFindOneInputRestDto;
 }
 
-@InputType("HorarioGeradoUpdateInput")
+@ApiSchema({ name: "HorarioGeradoUpdateInputDto" })
 export class HorarioGeradoUpdateInputRestDto extends PartialType(HorarioGeradoCreateInputRestDto) {}
 
 // ============================================================================
 // FindOne Input (for path params)
 // ============================================================================
 
-@ArgsType()
-@InputType("HorarioGeradoFindOneInput")
+@ApiSchema({ name: "HorarioGeradoFindOneInputDto" })
 export class HorarioGeradoFindOneInputRestDto {
   @ApiProperty({ description: "Identificador do registro (uuid)", format: "uuid" })
-  @Field(() => ID)
   @IsUUID()
   id: string;
 }

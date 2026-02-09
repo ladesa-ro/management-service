@@ -25,12 +25,12 @@ import {
 import { AccessContext, AccessContextHttp } from "@/modules/@core/access-context";
 import { DisciplinaService } from "@/modules/disciplina/application/use-cases/disciplina.service";
 import {
-  DisciplinaCreateInputDto,
-  DisciplinaFindOneInputDto,
-  DisciplinaFindOneOutputDto,
-  DisciplinaListInputDto,
-  DisciplinaListOutputDto,
-  DisciplinaUpdateInputDto,
+  DisciplinaCreateInputRestDto,
+  DisciplinaFindOneInputRestDto,
+  DisciplinaFindOneOutputRestDto,
+  DisciplinaListInputRestDto,
+  DisciplinaListOutputRestDto,
+  DisciplinaUpdateInputRestDto,
 } from "./disciplina.rest.dto";
 import { DisciplinaRestMapper } from "./disciplina.rest.mapper";
 
@@ -41,12 +41,12 @@ export class DisciplinaRestController {
 
   @Get("/")
   @ApiOperation({ summary: "Lista disciplinas", operationId: "disciplinaFindAll" })
-  @ApiOkResponse({ type: DisciplinaListOutputDto })
+  @ApiOkResponse({ type: DisciplinaListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
     @AccessContextHttp() accessContext: AccessContext,
-    @Query() dto: DisciplinaListInputDto,
-  ): Promise<DisciplinaListOutputDto> {
+    @Query() dto: DisciplinaListInputRestDto,
+  ): Promise<DisciplinaListOutputRestDto> {
     const input = DisciplinaRestMapper.toListInput(dto);
     const result = await this.disciplinaService.findAll(accessContext, input);
     return DisciplinaRestMapper.toListOutputDto(result);
@@ -54,13 +54,13 @@ export class DisciplinaRestController {
 
   @Get("/:id")
   @ApiOperation({ summary: "Busca uma disciplina por ID", operationId: "disciplinaFindById" })
-  @ApiOkResponse({ type: DisciplinaFindOneOutputDto })
+  @ApiOkResponse({ type: DisciplinaFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async findById(
     @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: DisciplinaFindOneInputDto,
-  ): Promise<DisciplinaFindOneOutputDto> {
+    @Param() params: DisciplinaFindOneInputRestDto,
+  ): Promise<DisciplinaFindOneOutputRestDto> {
     const input = DisciplinaRestMapper.toFindOneInput(params);
     const result = await this.disciplinaService.findByIdStrict(accessContext, input);
     return DisciplinaRestMapper.toFindOneOutputDto(result);
@@ -68,12 +68,12 @@ export class DisciplinaRestController {
 
   @Post("/")
   @ApiOperation({ summary: "Cria uma disciplina", operationId: "disciplinaCreate" })
-  @ApiCreatedResponse({ type: DisciplinaFindOneOutputDto })
+  @ApiCreatedResponse({ type: DisciplinaFindOneOutputRestDto })
   @ApiForbiddenResponse()
   async create(
     @AccessContextHttp() accessContext: AccessContext,
-    @Body() dto: DisciplinaCreateInputDto,
-  ): Promise<DisciplinaFindOneOutputDto> {
+    @Body() dto: DisciplinaCreateInputRestDto,
+  ): Promise<DisciplinaFindOneOutputRestDto> {
     const input = DisciplinaRestMapper.toCreateInput(dto);
     const result = await this.disciplinaService.create(accessContext, input);
     return DisciplinaRestMapper.toFindOneOutputDto(result);
@@ -81,14 +81,14 @@ export class DisciplinaRestController {
 
   @Patch("/:id")
   @ApiOperation({ summary: "Atualiza uma disciplina", operationId: "disciplinaUpdate" })
-  @ApiOkResponse({ type: DisciplinaFindOneOutputDto })
+  @ApiOkResponse({ type: DisciplinaFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async update(
     @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: DisciplinaFindOneInputDto,
-    @Body() dto: DisciplinaUpdateInputDto,
-  ): Promise<DisciplinaFindOneOutputDto> {
+    @Param() params: DisciplinaFindOneInputRestDto,
+    @Body() dto: DisciplinaUpdateInputRestDto,
+  ): Promise<DisciplinaFindOneOutputRestDto> {
     const input = DisciplinaRestMapper.toUpdateInput(params, dto);
     const result = await this.disciplinaService.update(accessContext, input);
     return DisciplinaRestMapper.toFindOneOutputDto(result);
@@ -104,7 +104,7 @@ export class DisciplinaRestController {
   @ApiNotFoundResponse()
   async getImagemCapa(
     @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: DisciplinaFindOneInputDto,
+    @Param() params: DisciplinaFindOneInputRestDto,
   ) {
     return this.disciplinaService.getImagemCapa(accessContext, params.id);
   }
@@ -130,7 +130,7 @@ export class DisciplinaRestController {
   @UseInterceptors(FileInterceptor("file"))
   async updateImagemCapa(
     @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: DisciplinaFindOneInputDto,
+    @Param() params: DisciplinaFindOneInputRestDto,
     @UploadedFile() file: Express.Multer.File,
   ): Promise<boolean> {
     return this.disciplinaService.updateImagemCapa(accessContext, params, file);
@@ -143,7 +143,7 @@ export class DisciplinaRestController {
   @ApiNotFoundResponse()
   async deleteOneById(
     @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: DisciplinaFindOneInputDto,
+    @Param() params: DisciplinaFindOneInputRestDto,
   ): Promise<boolean> {
     const input = DisciplinaRestMapper.toFindOneInput(params);
     return this.disciplinaService.deleteOneById(accessContext, input);

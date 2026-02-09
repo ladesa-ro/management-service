@@ -1,11 +1,11 @@
 import type { AccessContext } from "@/modules/@core/access-context";
 import type {
-  GradeHorarioOfertaFormacaoCreateInput,
-  GradeHorarioOfertaFormacaoFindOneInput,
-  GradeHorarioOfertaFormacaoFindOneOutput,
-  GradeHorarioOfertaFormacaoListInput,
-  GradeHorarioOfertaFormacaoListOutput,
-  GradeHorarioOfertaFormacaoUpdateInput,
+  GradeHorarioOfertaFormacaoCreateInputDto,
+  GradeHorarioOfertaFormacaoFindOneInputDto,
+  GradeHorarioOfertaFormacaoFindOneOutputDto,
+  GradeHorarioOfertaFormacaoListInputDto,
+  GradeHorarioOfertaFormacaoListOutputDto,
+  GradeHorarioOfertaFormacaoUpdateInputDto,
 } from "../../dtos";
 
 /**
@@ -21,8 +21,8 @@ export interface IGradeHorarioOfertaFormacaoUseCasePort {
    */
   findAll(
     accessContext: AccessContext,
-    dto: GradeHorarioOfertaFormacaoListInput | null,
-  ): Promise<GradeHorarioOfertaFormacaoListOutput>;
+    dto: GradeHorarioOfertaFormacaoListInputDto | null,
+  ): Promise<GradeHorarioOfertaFormacaoListOutputDto>;
 
   /**
    * Busca uma grade horario de oferta de formacao por ID
@@ -32,8 +32,8 @@ export interface IGradeHorarioOfertaFormacaoUseCasePort {
    */
   findById(
     accessContext: AccessContext | null,
-    dto: GradeHorarioOfertaFormacaoFindOneInput,
-  ): Promise<GradeHorarioOfertaFormacaoFindOneOutput | null>;
+    dto: GradeHorarioOfertaFormacaoFindOneInputDto,
+  ): Promise<GradeHorarioOfertaFormacaoFindOneOutputDto | null>;
 
   /**
    * Busca uma grade horario de oferta de formacao por ID (lanca excecao se nao encontrada)
@@ -43,8 +43,8 @@ export interface IGradeHorarioOfertaFormacaoUseCasePort {
    */
   findByIdStrict(
     accessContext: AccessContext,
-    dto: GradeHorarioOfertaFormacaoFindOneInput,
-  ): Promise<GradeHorarioOfertaFormacaoFindOneOutput>;
+    dto: GradeHorarioOfertaFormacaoFindOneInputDto,
+  ): Promise<GradeHorarioOfertaFormacaoFindOneOutputDto>;
 
   /**
    * Cria uma nova grade horario de oferta de formacao
@@ -54,8 +54,8 @@ export interface IGradeHorarioOfertaFormacaoUseCasePort {
    */
   create(
     accessContext: AccessContext,
-    dto: GradeHorarioOfertaFormacaoCreateInput,
-  ): Promise<GradeHorarioOfertaFormacaoFindOneOutput>;
+    dto: GradeHorarioOfertaFormacaoCreateInputDto,
+  ): Promise<GradeHorarioOfertaFormacaoFindOneOutputDto>;
 
   /**
    * Atualiza uma grade horario de oferta de formacao existente
@@ -65,8 +65,8 @@ export interface IGradeHorarioOfertaFormacaoUseCasePort {
    */
   update(
     accessContext: AccessContext,
-    dto: GradeHorarioOfertaFormacaoFindOneInput & GradeHorarioOfertaFormacaoUpdateInput,
-  ): Promise<GradeHorarioOfertaFormacaoFindOneOutput>;
+    dto: GradeHorarioOfertaFormacaoFindOneInputDto & GradeHorarioOfertaFormacaoUpdateInputDto,
+  ): Promise<GradeHorarioOfertaFormacaoFindOneOutputDto>;
 
   /**
    * Remove uma grade horario de oferta de formacao (soft delete)
@@ -76,6 +76,6 @@ export interface IGradeHorarioOfertaFormacaoUseCasePort {
    */
   deleteOneById(
     accessContext: AccessContext,
-    dto: GradeHorarioOfertaFormacaoFindOneInput,
+    dto: GradeHorarioOfertaFormacaoFindOneInputDto,
   ): Promise<boolean>;
 }

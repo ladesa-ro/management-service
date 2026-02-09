@@ -4,26 +4,24 @@ import { AccessContext, AccessContextGraphQL } from "@/modules/@core/access-cont
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
 import { DisponibilidadeService } from "@/modules/disponibilidade/application/use-cases/disponibilidade.service";
 import {
-  DisponibilidadeCreateInputDto,
-  DisponibilidadeFindOneOutputDto,
-  DisponibilidadeUpdateInputDto,
-} from "../rest/disponibilidade.rest.dto";
-import {
-  DisponibilidadeListInputGqlDto,
-  DisponibilidadeListOutputGqlDto,
+  DisponibilidadeCreateInputGraphQlDto,
+  DisponibilidadeFindOneOutputGraphQlDto,
+  DisponibilidadeListInputGraphQlDto,
+  DisponibilidadeListOutputGraphQlDto,
+  DisponibilidadeUpdateInputGraphQlDto,
 } from "./disponibilidade.graphql.dto";
 import { DisponibilidadeGraphqlMapper } from "./disponibilidade.graphql.mapper";
 
-@Resolver(() => DisponibilidadeFindOneOutputDto)
+@Resolver(() => DisponibilidadeFindOneOutputGraphQlDto)
 export class DisponibilidadeGraphqlResolver {
   constructor(private readonly disponibilidadeService: DisponibilidadeService) {}
 
-  @Query(() => DisponibilidadeListOutputGqlDto, { name: "disponibilidadeFindAll" })
+  @Query(() => DisponibilidadeListOutputGraphQlDto, { name: "disponibilidadeFindAll" })
   async findAll(
     @AccessContextGraphQL() accessContext: AccessContext,
-    @Args() dto: DisponibilidadeListInputGqlDto,
+    @Args() dto: DisponibilidadeListInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<DisponibilidadeListOutputGqlDto> {
+  ): Promise<DisponibilidadeListOutputGraphQlDto> {
     const input = DisponibilidadeGraphqlMapper.toListInput(dto);
 
     if (input) {
@@ -34,12 +32,12 @@ export class DisponibilidadeGraphqlResolver {
     return DisponibilidadeGraphqlMapper.toListOutputDto(result);
   }
 
-  @Query(() => DisponibilidadeFindOneOutputDto, { name: "disponibilidadeFindById" })
+  @Query(() => DisponibilidadeFindOneOutputGraphQlDto, { name: "disponibilidadeFindById" })
   async findById(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<DisponibilidadeFindOneOutputDto> {
+  ): Promise<DisponibilidadeFindOneOutputGraphQlDto> {
     const selection = graphqlExtractSelection(info);
     const result = await this.disponibilidadeService.findByIdStrict(accessContext, {
       id,
@@ -48,30 +46,26 @@ export class DisponibilidadeGraphqlResolver {
     return DisponibilidadeGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => DisponibilidadeFindOneOutputDto, { name: "disponibilidadeCreate" })
+  @Mutation(() => DisponibilidadeFindOneOutputGraphQlDto, { name: "disponibilidadeCreate" })
   async create(
     @AccessContextGraphQL() accessContext: AccessContext,
-    @Args("data") dto: DisponibilidadeCreateInputDto,
+    @Args("input") dto: DisponibilidadeCreateInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<DisponibilidadeFindOneOutputDto> {
+  ): Promise<DisponibilidadeFindOneOutputGraphQlDto> {
     const input = DisponibilidadeGraphqlMapper.toCreateInput(dto);
     const result = await this.disponibilidadeService.create(accessContext, input);
     return DisponibilidadeGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => DisponibilidadeFindOneOutputDto, { name: "disponibilidadeUpdate" })
+  @Mutation(() => DisponibilidadeFindOneOutputGraphQlDto, { name: "disponibilidadeUpdate" })
   async update(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
-    @Args("data") dto: DisponibilidadeUpdateInputDto,
+    @Args("input") dto: DisponibilidadeUpdateInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<DisponibilidadeFindOneOutputDto> {
-    const findOneInput = DisponibilidadeGraphqlMapper.toFindOneInput(id);
-    const updateInput = DisponibilidadeGraphqlMapper.toUpdateInput(dto);
-    const result = await this.disponibilidadeService.update(accessContext, {
-      ...findOneInput,
-      ...updateInput,
-    });
+  ): Promise<DisponibilidadeFindOneOutputGraphQlDto> {
+    const input = DisponibilidadeGraphqlMapper.toUpdateInput({ id }, dto);
+    const result = await this.disponibilidadeService.update(accessContext, input);
     return DisponibilidadeGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -80,7 +74,6 @@ export class DisponibilidadeGraphqlResolver {
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
   ): Promise<boolean> {
-    const input = DisponibilidadeGraphqlMapper.toFindOneInput(id);
-    return this.disponibilidadeService.deleteOneById(accessContext, input);
+    return this.disponibilidadeService.deleteOneById(accessContext, { id });
   }
 }

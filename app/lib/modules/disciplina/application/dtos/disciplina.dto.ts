@@ -1,56 +1,56 @@
 import {
-  EntityOutput,
-  FindOneInput,
+  EntityOutputDto,
+  FindOneInputDto,
   IFilterAcceptableValues,
-  ObjectUuidRef,
-  PaginationInput,
-  PaginationResult,
+  ObjectUuidRefDto,
+  PaginationInputDto,
+  PaginationResultDto,
 } from "@/modules/@shared/application/dtos";
-import { ImagemFindOneOutput, ImagemInputRef } from "@/modules/imagem";
+import { ImagemFindOneOutputDto, ImagemInputRefDto } from "@/modules/imagem";
 
 // ============================================================================
 // FindOne Input/Output
 // ============================================================================
 
-export class DisciplinaFindOneInput extends FindOneInput {}
+export class DisciplinaFindOneInputDto extends FindOneInputDto {}
 
-export class DisciplinaFindOneOutput extends EntityOutput {
+export class DisciplinaFindOneOutputDto extends EntityOutputDto {
   nome!: string;
   nomeAbreviado!: string;
   cargaHoraria!: number;
-  imagemCapa!: ImagemFindOneOutput | null;
+  imagemCapa!: ImagemFindOneOutputDto | null;
 }
 
 // ============================================================================
 // List Input/Output
 // ============================================================================
 
-export class DisciplinaListInput extends PaginationInput {
+export class DisciplinaListInputDto extends PaginationInputDto {
   "filter.id"?: IFilterAcceptableValues;
 }
 
-export class DisciplinaListOutput extends PaginationResult<DisciplinaFindOneOutput> {}
+export class DisciplinaListOutputDto extends PaginationResultDto<DisciplinaFindOneOutputDto> {}
 
 // ============================================================================
 // Create/Update Input
 // ============================================================================
 
-export class DisciplinaCreateInput {
+export class DisciplinaCreateInputDto {
   nome!: string;
   nomeAbreviado!: string;
   cargaHoraria!: number;
-  imagemCapa?: ImagemInputRef | null;
+  imagemCapa?: ImagemInputRefDto | null;
 }
 
-export class DisciplinaUpdateInput {
+export class DisciplinaUpdateInputDto {
   nome?: string;
   nomeAbreviado?: string;
   cargaHoraria?: number;
-  imagemCapa?: ImagemInputRef | null;
+  imagemCapa?: ImagemInputRefDto | null;
 }
 
 // ============================================================================
 // Input Ref
 // ============================================================================
 
-export type DisciplinaInputRef = ObjectUuidRef;
+export type DisciplinaInputRefDto = ObjectUuidRefDto;

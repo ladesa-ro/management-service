@@ -1,4 +1,4 @@
-import type { IdNumeric } from "@/modules/@shared";
+import { BaseReadOnlyEntity, type IdNumeric } from "@/modules/@shared";
 import type { IEstado } from "@/modules/estado";
 import type { ICidade } from "./cidade.types";
 
@@ -6,7 +6,7 @@ import type { ICidade } from "./cidade.types";
  * Entidade de Domínio: Cidade
  * Entidade de referência (somente leitura do IBGE)
  */
-export class Cidade implements ICidade {
+export class Cidade extends BaseReadOnlyEntity implements ICidade {
   id!: IdNumeric;
   nome!: string;
   estado!: IEstado;

@@ -1,8 +1,8 @@
 import type { IBaseCrudRepositoryPort } from "@/modules/@shared";
 import type { OfertaFormacaoNivelFormacaoEntity } from "@/modules/oferta-formacao-nivel-formacao/infrastructure/persistence/typeorm";
 import type {
-  OfertaFormacaoNivelFormacaoFindOneOutput,
-  OfertaFormacaoNivelFormacaoListOutput,
+  OfertaFormacaoNivelFormacaoFindOneOutputDto,
+  OfertaFormacaoNivelFormacaoListOutputDto,
 } from "../../dtos";
 
 /**
@@ -19,6 +19,6 @@ export const OFERTA_FORMACAO_NIVEL_FORMACAO_REPOSITORY_PORT = Symbol(
 export interface IOfertaFormacaoNivelFormacaoRepositoryPort
   extends IBaseCrudRepositoryPort<
     OfertaFormacaoNivelFormacaoEntity,
-    OfertaFormacaoNivelFormacaoListOutput,
-    OfertaFormacaoNivelFormacaoFindOneOutput
+    OfertaFormacaoNivelFormacaoListOutputDto,
+    OfertaFormacaoNivelFormacaoFindOneOutputDto
   > {}

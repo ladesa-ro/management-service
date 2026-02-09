@@ -1,72 +1,75 @@
 import {
-  EntityOutput,
-  FindOneInput,
+  EntityOutputDto,
+  FindOneInputDto,
   IFilterAcceptableValues,
-  ObjectUuidRef,
-  PaginationInput,
-  PaginationResult,
+  ObjectUuidRefDto,
+  PaginationInputDto,
+  PaginationResultDto,
 } from "@/modules/@shared/application/dtos";
-import { AmbienteFindOneOutput, AmbienteInputRef } from "@/modules/ambiente";
+import { AmbienteFindOneOutputDto, AmbienteInputRefDto } from "@/modules/ambiente";
 import {
-  CalendarioLetivoFindOneOutput,
-  CalendarioLetivoInputRef,
+  CalendarioLetivoFindOneOutputDto,
+  CalendarioLetivoInputRefDto,
 } from "@/modules/calendario-letivo";
-import { DisciplinaFindOneOutput, DisciplinaInputRef } from "@/modules/disciplina/application/dtos";
-import { ImagemFindOneOutput, ImagemInputRef } from "@/modules/imagem";
-import { TurmaFindOneOutput, TurmaInputRef } from "@/modules/turma";
+import {
+  DisciplinaFindOneOutputDto,
+  DisciplinaInputRefDto,
+} from "@/modules/disciplina/application/dtos";
+import { ImagemFindOneOutputDto, ImagemInputRefDto } from "@/modules/imagem";
+import { TurmaFindOneOutputDto, TurmaInputRefDto } from "@/modules/turma";
 
 // ============================================================================
 // FindOne Input/Output
 // ============================================================================
 
-export class DiarioFindOneInput extends FindOneInput {}
+export class DiarioFindOneInputDto extends FindOneInputDto {}
 
-export class DiarioFindOneOutput extends EntityOutput {
+export class DiarioFindOneOutputDto extends EntityOutputDto {
   ativo!: boolean;
-  calendarioLetivo!: CalendarioLetivoFindOneOutput;
-  turma!: TurmaFindOneOutput;
-  disciplina!: DisciplinaFindOneOutput;
-  ambientePadrao!: AmbienteFindOneOutput | null;
-  imagemCapa!: ImagemFindOneOutput | null;
+  calendarioLetivo!: CalendarioLetivoFindOneOutputDto;
+  turma!: TurmaFindOneOutputDto;
+  disciplina!: DisciplinaFindOneOutputDto;
+  ambientePadrao!: AmbienteFindOneOutputDto | null;
+  imagemCapa!: ImagemFindOneOutputDto | null;
 }
 
 // ============================================================================
 // List Input/Output
 // ============================================================================
 
-export class DiarioListInput extends PaginationInput {
+export class DiarioListInputDto extends PaginationInputDto {
   "filter.id"?: IFilterAcceptableValues;
   "filter.turma.id"?: IFilterAcceptableValues;
   "filter.disciplina.id"?: IFilterAcceptableValues;
   "filter.calendarioLetivo.id"?: IFilterAcceptableValues;
 }
 
-export class DiarioListOutput extends PaginationResult<DiarioFindOneOutput> {}
+export class DiarioListOutputDto extends PaginationResultDto<DiarioFindOneOutputDto> {}
 
 // ============================================================================
 // Create/Update Input
 // ============================================================================
 
-export class DiarioCreateInput {
+export class DiarioCreateInputDto {
   ativo!: boolean;
-  calendarioLetivo!: CalendarioLetivoInputRef;
-  turma!: TurmaInputRef;
-  disciplina!: DisciplinaInputRef;
-  ambientePadrao?: AmbienteInputRef | null;
-  imagemCapa?: ImagemInputRef | null;
+  calendarioLetivo!: CalendarioLetivoInputRefDto;
+  turma!: TurmaInputRefDto;
+  disciplina!: DisciplinaInputRefDto;
+  ambientePadrao?: AmbienteInputRefDto | null;
+  imagemCapa?: ImagemInputRefDto | null;
 }
 
-export class DiarioUpdateInput {
+export class DiarioUpdateInputDto {
   ativo?: boolean;
-  calendarioLetivo?: CalendarioLetivoInputRef;
-  turma?: TurmaInputRef;
-  disciplina?: DisciplinaInputRef;
-  ambientePadrao?: AmbienteInputRef | null;
-  imagemCapa?: ImagemInputRef | null;
+  calendarioLetivo?: CalendarioLetivoInputRefDto;
+  turma?: TurmaInputRefDto;
+  disciplina?: DisciplinaInputRefDto;
+  ambientePadrao?: AmbienteInputRefDto | null;
+  imagemCapa?: ImagemInputRefDto | null;
 }
 
 // ============================================================================
 // Input Ref
 // ============================================================================
 
-export type DiarioInputRef = ObjectUuidRef;
+export type DiarioInputRefDto = ObjectUuidRefDto;

@@ -8,10 +8,10 @@ import {
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
   IModalidadeRepositoryPort,
-  ModalidadeFindOneInput,
-  ModalidadeFindOneOutput,
-  ModalidadeListInput,
-  ModalidadeListOutput,
+  ModalidadeFindOneInputDto,
+  ModalidadeFindOneOutputDto,
+  ModalidadeListInputDto,
+  ModalidadeListOutputDto,
 } from "@/modules/modalidade";
 import type { ModalidadeEntity } from "./modalidade.entity";
 
@@ -23,16 +23,16 @@ import type { ModalidadeEntity } from "./modalidade.entity";
 export class ModalidadeTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     ModalidadeEntity,
-    ModalidadeListInput,
-    ModalidadeListOutput,
-    ModalidadeFindOneInput,
-    ModalidadeFindOneOutput
+    ModalidadeListInputDto,
+    ModalidadeListOutputDto,
+    ModalidadeFindOneInputDto,
+    ModalidadeFindOneOutputDto
   >
   implements IModalidadeRepositoryPort
 {
   protected readonly alias = "modalidade";
   protected readonly authzAction = "modalidade:find";
-  protected readonly outputDtoName = "ModalidadeFindOneOutput";
+  protected readonly outputDtoName = "ModalidadeFindOneOutputDto";
 
   constructor(
     protected readonly databaseContext: DatabaseContextService,

@@ -3,8 +3,8 @@ import type { AccessContext } from "@/modules/@core/access-context";
 import type { IBaseCrudRepositoryPort } from "@/modules/@shared";
 import type { DiarioPreferenciaAgrupamentoEntity } from "@/modules/diario-preferencia-agrupamento/infrastructure/persistence/typeorm";
 import type {
-  DiarioPreferenciaAgrupamentoFindOneOutput,
-  DiarioPreferenciaAgrupamentoListOutput,
+  DiarioPreferenciaAgrupamentoFindOneOutputDto,
+  DiarioPreferenciaAgrupamentoListOutputDto,
 } from "../../dtos";
 
 /**
@@ -21,8 +21,8 @@ export const DIARIO_PREFERENCIA_AGRUPAMENTO_REPOSITORY_PORT = Symbol(
 export interface IDiarioPreferenciaAgrupamentoRepositoryPort
   extends IBaseCrudRepositoryPort<
     DiarioPreferenciaAgrupamentoEntity,
-    DiarioPreferenciaAgrupamentoListOutput,
-    DiarioPreferenciaAgrupamentoFindOneOutput
+    DiarioPreferenciaAgrupamentoListOutputDto,
+    DiarioPreferenciaAgrupamentoFindOneOutputDto
   > {
   /**
    * Busca simplificada por ID - método obrigatório
@@ -31,7 +31,7 @@ export interface IDiarioPreferenciaAgrupamentoRepositoryPort
     accessContext: AccessContext,
     id: string,
     selection?: string[],
-  ): Promise<DiarioPreferenciaAgrupamentoFindOneOutput | null>;
+  ): Promise<DiarioPreferenciaAgrupamentoFindOneOutputDto | null>;
 
   /**
    * Cria um QueryBuilder para a entidade.

@@ -1,8 +1,8 @@
 import type { IBaseCrudRepositoryPort, PartialEntity } from "@/modules/@shared";
 import type {
-  EnderecoFindOneOutput,
+  EnderecoFindOneOutputDto,
   EnderecoInputDto,
-  EnderecoListOutput,
+  EnderecoListOutputDto,
 } from "@/modules/endereco";
 import type { EnderecoEntity } from "@/modules/endereco/infrastructure/persistence/typeorm";
 
@@ -13,11 +13,11 @@ export const ENDERECO_REPOSITORY_PORT = Symbol("IEnderecoRepositoryPort");
  * Estende a interface base de CRUD com operações padrão
  */
 export interface IEnderecoRepositoryPort
-  extends IBaseCrudRepositoryPort<EnderecoEntity, EnderecoListOutput, EnderecoFindOneOutput> {
+  extends IBaseCrudRepositoryPort<EnderecoEntity, EnderecoListOutputDto, EnderecoFindOneOutputDto> {
   /**
    * Busca um endereço por ID (versão simplificada sem contexto de acesso)
    */
-  findOneById(id: string): Promise<EnderecoFindOneOutput | null>;
+  findOneById(id: string): Promise<EnderecoFindOneOutputDto | null>;
 
   /**
    * Verifica se um endereço existe

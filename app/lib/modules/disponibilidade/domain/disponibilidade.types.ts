@@ -1,27 +1,15 @@
-import type { IdUuid, ScalarDateTimeString } from "@/modules/@shared";
+import type { IEntityBase, ScalarDateTimeString } from "@/modules/@shared";
 
 /**
  * Tipagem da entidade Disponibilidade
  * Define a estrutura de dados sem comportamento
  */
-export interface IDisponibilidade {
-  /** Identificador da disponibilidade (UUID) */
-  id: IdUuid;
-
+export interface IDisponibilidade extends IEntityBase {
   /** Data de inicio */
   dataInicio: ScalarDateTimeString;
 
   /** Data de termino */
   dataFim: ScalarDateTimeString | null;
-
-  /** Data de criacao do registro */
-  dateCreated: ScalarDateTimeString;
-
-  /** Data de atualizacao do registro */
-  dateUpdated: ScalarDateTimeString;
-
-  /** Data de exclusao do registro (soft delete) */
-  dateDeleted: ScalarDateTimeString | null;
 }
 
 /**

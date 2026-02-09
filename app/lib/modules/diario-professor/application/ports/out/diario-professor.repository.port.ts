@@ -1,7 +1,7 @@
 import type { AccessContext } from "@/modules/@core/access-context";
 import type { IBaseCrudRepositoryPort } from "@/modules/@shared";
 import type { DiarioProfessorEntity } from "@/modules/diario-professor/infrastructure/persistence/typeorm";
-import type { DiarioProfessorFindOneOutput, DiarioProfessorListOutput } from "../../dtos";
+import type { DiarioProfessorFindOneOutputDto, DiarioProfessorListOutputDto } from "../../dtos";
 
 export const DIARIO_PROFESSOR_REPOSITORY_PORT = Symbol("IDiarioProfessorRepositoryPort");
 
@@ -12,8 +12,8 @@ export const DIARIO_PROFESSOR_REPOSITORY_PORT = Symbol("IDiarioProfessorReposito
 export interface IDiarioProfessorRepositoryPort
   extends IBaseCrudRepositoryPort<
     DiarioProfessorEntity,
-    DiarioProfessorListOutput,
-    DiarioProfessorFindOneOutput
+    DiarioProfessorListOutputDto,
+    DiarioProfessorFindOneOutputDto
   > {
   /**
    * Busca um diário de professor por ID (formato simples) - método obrigatório
@@ -22,5 +22,5 @@ export interface IDiarioProfessorRepositoryPort
     accessContext: AccessContext,
     id: string,
     selection?: string[] | boolean,
-  ): Promise<DiarioProfessorFindOneOutput | null>;
+  ): Promise<DiarioProfessorFindOneOutputDto | null>;
 }

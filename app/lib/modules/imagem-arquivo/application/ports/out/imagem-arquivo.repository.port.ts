@@ -1,9 +1,9 @@
 import type { IReadOnlyRepositoryPort } from "@/modules/@shared";
 import {
-  ImagemArquivoFindOneInput,
-  ImagemArquivoFindOneOutput,
-  ImagemArquivoListInput,
-  ImagemArquivoListOutput,
+  ImagemArquivoFindOneInputDto,
+  ImagemArquivoFindOneOutputDto,
+  ImagemArquivoListInputDto,
+  ImagemArquivoListOutputDto,
 } from "@/modules/imagem-arquivo";
 
 /**
@@ -17,8 +17,8 @@ export const IMAGEM_ARQUIVO_QUERY_REPOSITORY_PORT = Symbol("IImagemArquivoQueryR
  */
 export interface IImagemArquivoQueryRepositoryPort
   extends IReadOnlyRepositoryPort<
-    ImagemArquivoListInput,
-    ImagemArquivoListOutput,
-    ImagemArquivoFindOneInput,
-    ImagemArquivoFindOneOutput
+    ImagemArquivoListInputDto,
+    ImagemArquivoListOutputDto,
+    ImagemArquivoFindOneInputDto,
+    ImagemArquivoFindOneOutputDto
   > {}

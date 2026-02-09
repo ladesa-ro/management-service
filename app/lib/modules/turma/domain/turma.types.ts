@@ -1,4 +1,4 @@
-import type { IdUuid, ScalarDateTimeString } from "@/modules/@shared";
+import type { IdUuid, IEntityBase } from "@/modules/@shared";
 import type { IAmbiente } from "@/modules/ambiente/domain/ambiente.types";
 import type { ICurso } from "@/modules/curso";
 import type { IImagem } from "@/modules/imagem/domain/imagem.types";
@@ -7,15 +7,11 @@ import type { IImagem } from "@/modules/imagem/domain/imagem.types";
  * Interface que define a estrutura de dados de Turma
  * Tipagem pura sem implementação de regras
  */
-export interface ITurma {
-  id: IdUuid;
+export interface ITurma extends IEntityBase {
   periodo: string;
   ambientePadraoAula: IAmbiente | null;
   curso: ICurso;
   imagemCapa: IImagem | null;
-  dateCreated: ScalarDateTimeString;
-  dateUpdated: ScalarDateTimeString;
-  dateDeleted: ScalarDateTimeString | null;
 }
 
 /**

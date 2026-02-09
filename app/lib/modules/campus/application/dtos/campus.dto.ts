@@ -1,63 +1,63 @@
 import {
-  EntityOutput,
-  FindOneInput,
+  EntityOutputDto,
+  FindOneInputDto,
   IFilterAcceptableValues,
-  ObjectUuidRef,
-  PaginationInput,
-  PaginationResult,
+  ObjectUuidRefDto,
+  PaginationInputDto,
+  PaginationResultDto,
 } from "@/modules/@shared/application/dtos";
 import {
-  EnderecoCreateInput,
-  EnderecoFindOneOutput,
-  EnderecoUpdateInput,
+  EnderecoCreateInputDto,
+  EnderecoFindOneOutputDto,
+  EnderecoUpdateInputDto,
 } from "@/modules/endereco";
 
 // ============================================================================
 // FindOne Input/Output
 // ============================================================================
 
-export class CampusFindOneInput extends FindOneInput {}
+export class CampusFindOneInputDto extends FindOneInputDto {}
 
-export class CampusFindOneOutput extends EntityOutput {
+export class CampusFindOneOutputDto extends EntityOutputDto {
   nomeFantasia!: string;
   razaoSocial!: string;
   apelido!: string;
   cnpj!: string;
-  endereco!: EnderecoFindOneOutput;
+  endereco!: EnderecoFindOneOutputDto;
 }
 
 // ============================================================================
 // List Input/Output
 // ============================================================================
 
-export class CampusListInput extends PaginationInput {
+export class CampusListInputDto extends PaginationInputDto {
   "filter.id"?: IFilterAcceptableValues;
 }
 
-export class CampusListOutput extends PaginationResult<CampusFindOneOutput> {}
+export class CampusListOutputDto extends PaginationResultDto<CampusFindOneOutputDto> {}
 
 // ============================================================================
 // Create/Update Input
 // ============================================================================
 
-export class CampusCreateInput {
+export class CampusCreateInputDto {
   nomeFantasia!: string;
   razaoSocial!: string;
   apelido!: string;
   cnpj!: string;
-  endereco!: EnderecoCreateInput;
+  endereco!: EnderecoCreateInputDto;
 }
 
-export class CampusUpdateInput {
+export class CampusUpdateInputDto {
   nomeFantasia?: string;
   razaoSocial?: string;
   apelido?: string;
   cnpj?: string;
-  endereco?: EnderecoUpdateInput;
+  endereco?: EnderecoUpdateInputDto;
 }
 
 // ============================================================================
 // Input Ref
 // ============================================================================
 
-export type CampusInputRef = ObjectUuidRef;
+export type CampusInputRefDto = ObjectUuidRefDto;

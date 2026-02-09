@@ -25,6 +25,14 @@ export class DiarioProfessor extends BaseEntity implements IDiarioProfessor {
   }
 
   // ========================================
+  // Validação
+  // ========================================
+
+  validar(): void {
+    // Sem validações de campos escalares
+  }
+
+  // ========================================
   // Factory Methods
   // ========================================
 
@@ -34,9 +42,8 @@ export class DiarioProfessor extends BaseEntity implements IDiarioProfessor {
   static criar(dados: IDiarioProfessorCreate): DiarioProfessor {
     const instance = new DiarioProfessor();
     instance.situacao = dados.situacao;
-    instance.dateCreated = new Date().toISOString();
-    instance.dateUpdated = new Date().toISOString();
-    instance.dateDeleted = null;
+    instance.initDates();
+    instance.validar();
     return instance;
   }
 
@@ -61,6 +68,7 @@ export class DiarioProfessor extends BaseEntity implements IDiarioProfessor {
       this.situacao = dados.situacao;
     }
 
-    this.dateUpdated = new Date().toISOString();
+    this.touchUpdated();
+    this.validar();
   }
 }

@@ -1,26 +1,27 @@
 import {
-  ModalidadeCreateInput,
-  ModalidadeFindOneInput,
-  ModalidadeFindOneOutput,
-  ModalidadeListInput,
-  ModalidadeListOutput,
-  ModalidadeUpdateInput,
+  ModalidadeCreateInputDto,
+  ModalidadeFindOneInputDto,
+  ModalidadeFindOneOutputDto,
+  ModalidadeListInputDto,
+  ModalidadeListOutputDto,
+  ModalidadeUpdateInputDto,
 } from "@/modules/modalidade";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import {
-  ModalidadeCreateInputDto,
-  ModalidadeFindOneOutputDto,
-  ModalidadeUpdateInputDto,
-} from "../rest/modalidade.rest.dto";
-import { ModalidadeListInputGqlDto, ModalidadeListOutputGqlDto } from "./modalidade.graphql.dto";
+  ModalidadeCreateInputGraphQlDto,
+  ModalidadeFindOneOutputGraphQlDto,
+  ModalidadeListInputGraphQlDto,
+  ModalidadeListOutputGraphQlDto,
+  ModalidadeUpdateInputGraphQlDto,
+} from "./modalidade.graphql.dto";
 
 export class ModalidadeGraphqlMapper {
-  static toListInput(dto: ModalidadeListInputGqlDto | null): ModalidadeListInput | null {
+  static toListInput(dto: ModalidadeListInputGraphQlDto | null): ModalidadeListInputDto | null {
     if (!dto) {
       return null;
     }
 
-    const input = new ModalidadeListInput();
+    const input = new ModalidadeListInputDto();
     input.page = dto.page;
     input.limit = dto.limit;
     input.search = dto.search;
@@ -29,26 +30,27 @@ export class ModalidadeGraphqlMapper {
     return input;
   }
 
-  static toFindOneInput(id: string, selection?: string[]): ModalidadeFindOneInput {
-    const input = new ModalidadeFindOneInput();
+  static toFindOneInput(id: string, selection?: string[]): ModalidadeFindOneInputDto {
+    const input = new ModalidadeFindOneInputDto();
     input.id = id;
     input.selection = selection;
     return input;
   }
 
-  static toCreateInput(dto: ModalidadeCreateInputDto): ModalidadeCreateInput {
-    const input = new ModalidadeCreateInput();
+  static toCreateInput(dto: ModalidadeCreateInputGraphQlDto): ModalidadeCreateInputDto {
+    const input = new ModalidadeCreateInputDto();
     input.nome = dto.nome;
     input.slug = dto.slug;
     return input;
   }
 
   static toUpdateInput(
-    id: string,
-    dto: ModalidadeUpdateInputDto,
-  ): ModalidadeFindOneInput & ModalidadeUpdateInput {
-    const input = new ModalidadeFindOneInput() as ModalidadeFindOneInput & ModalidadeUpdateInput;
-    input.id = id;
+    params: { id: string },
+    dto: ModalidadeUpdateInputGraphQlDto,
+  ): ModalidadeFindOneInputDto & ModalidadeUpdateInputDto {
+    const input = new ModalidadeFindOneInputDto() as ModalidadeFindOneInputDto &
+      ModalidadeUpdateInputDto;
+    input.id = params.id;
     if (dto.nome !== undefined) {
       input.nome = dto.nome;
     }
@@ -58,12 +60,19 @@ export class ModalidadeGraphqlMapper {
     return input;
   }
 
-  static toFindOneOutputDto(output: ModalidadeFindOneOutput): ModalidadeFindOneOutputDto {
-    return output as unknown as ModalidadeFindOneOutputDto;
+  static toFindOneOutputDto(output: ModalidadeFindOneOutputDto): ModalidadeFindOneOutputGraphQlDto {
+    const dto = new ModalidadeFindOneOutputGraphQlDto();
+    dto.id = output.id;
+    dto.nome = output.nome;
+    dto.slug = output.slug;
+    dto.dateCreated = output.dateCreated as unknown as Date;
+    dto.dateUpdated = output.dateUpdated as unknown as Date;
+    dto.dateDeleted = output.dateDeleted as unknown as Date | null;
+    return dto;
   }
 
-  static toListOutputDto(output: ModalidadeListOutput): ModalidadeListOutputGqlDto {
-    const dto = new ModalidadeListOutputGqlDto();
+  static toListOutputDto(output: ModalidadeListOutputDto): ModalidadeListOutputGraphQlDto {
+    const dto = new ModalidadeListOutputGraphQlDto();
     dto.meta = mapPaginationMeta(output.meta);
     dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
     return dto;

@@ -26,6 +26,19 @@ export class CalendarioLetivo extends BaseEntity implements ICalendarioLetivo {
   }
 
   // ========================================
+  // Validação
+  // ========================================
+
+  validar(): void {
+    const { result, rules } = CalendarioLetivo.createValidation();
+    rules.required(this.nome, "nome");
+    rules.minLength(this.nome, "nome", 1);
+    rules.requiredNumber(this.ano, "ano");
+    rules.min(this.ano, "ano", 1);
+    CalendarioLetivo.throwIfInvalid(result);
+  }
+
+  // ========================================
   // Factory Methods
   // ========================================
 
@@ -34,20 +47,11 @@ export class CalendarioLetivo extends BaseEntity implements ICalendarioLetivo {
    * @throws EntityValidationError se os dados forem invalidos
    */
   static criar(dados: ICalendarioLetivoCreate): CalendarioLetivo {
-    const { result, rules } = this.createValidation();
-
     const instance = new CalendarioLetivo();
-    instance.nome = rules.required(dados.nome, "nome");
-    instance.nome = rules.minLength(instance.nome, "nome", 1);
-
-    instance.ano = rules.requiredNumber(dados.ano, "ano");
-    instance.ano = rules.min(instance.ano, "ano", 1, "Ano deve ser positivo");
-
-    this.throwIfInvalid(result);
-
-    instance.dateCreated = new Date().toISOString();
-    instance.dateUpdated = new Date().toISOString();
-    instance.dateDeleted = null;
+    instance.nome = dados.nome?.trim() ?? "";
+    instance.ano = dados.ano;
+    instance.initDates();
+    instance.validar();
 
     return instance;
   }
@@ -70,20 +74,15 @@ export class CalendarioLetivo extends BaseEntity implements ICalendarioLetivo {
    * @throws EntityValidationError se os dados forem invalidos
    */
   atualizar(dados: ICalendarioLetivoUpdate): void {
-    const { result, rules } = CalendarioLetivo.createValidation();
-
     if (dados.nome !== undefined) {
-      this.nome = rules.required(dados.nome, "nome");
-      this.nome = rules.minLength(this.nome, "nome", 1);
+      this.nome = dados.nome?.trim() ?? "";
     }
 
     if (dados.ano !== undefined) {
-      this.ano = rules.requiredNumber(dados.ano, "ano");
-      this.ano = rules.min(this.ano, "ano", 1, "Ano deve ser positivo");
+      this.ano = dados.ano;
     }
 
-    CalendarioLetivo.throwIfInvalid(result);
-
-    this.dateUpdated = new Date().toISOString();
+    this.touchUpdated();
+    this.validar();
   }
 }

@@ -8,10 +8,10 @@ import {
   paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
-  GradeHorarioOfertaFormacaoFindOneInput,
-  GradeHorarioOfertaFormacaoFindOneOutput,
-  GradeHorarioOfertaFormacaoListInput,
-  GradeHorarioOfertaFormacaoListOutput,
+  GradeHorarioOfertaFormacaoFindOneInputDto,
+  GradeHorarioOfertaFormacaoFindOneOutputDto,
+  GradeHorarioOfertaFormacaoListInputDto,
+  GradeHorarioOfertaFormacaoListOutputDto,
 } from "@/modules/grade-horario-oferta-formacao";
 import type { IGradeHorarioOfertaFormacaoRepositoryPort } from "@/modules/grade-horario-oferta-formacao/application/ports";
 import type { GradeHorarioOfertaFormacaoEntity } from "./grade-horario-oferta-formacao.entity";
@@ -20,16 +20,16 @@ import type { GradeHorarioOfertaFormacaoEntity } from "./grade-horario-oferta-fo
 export class GradeHorarioOfertaFormacaoTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     GradeHorarioOfertaFormacaoEntity,
-    GradeHorarioOfertaFormacaoListInput,
-    GradeHorarioOfertaFormacaoListOutput,
-    GradeHorarioOfertaFormacaoFindOneInput,
-    GradeHorarioOfertaFormacaoFindOneOutput
+    GradeHorarioOfertaFormacaoListInputDto,
+    GradeHorarioOfertaFormacaoListOutputDto,
+    GradeHorarioOfertaFormacaoFindOneInputDto,
+    GradeHorarioOfertaFormacaoFindOneOutputDto
   >
   implements IGradeHorarioOfertaFormacaoRepositoryPort
 {
   protected readonly alias = "grade_horario_oferta_formacao";
   protected readonly authzAction = "grade_horario_oferta_formacao:find";
-  protected readonly outputDtoName = "GradeHorarioOfertaFormacaoFindOneOutput";
+  protected readonly outputDtoName = "GradeHorarioOfertaFormacaoFindOneOutputDto";
 
   constructor(
     protected readonly databaseContext: DatabaseContextService,

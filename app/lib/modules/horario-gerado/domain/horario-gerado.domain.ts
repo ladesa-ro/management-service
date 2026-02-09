@@ -27,6 +27,14 @@ export class HorarioGerado extends BaseEntity implements IHorarioGerado {
   }
 
   // ========================================
+  // Validação
+  // ========================================
+
+  validar(): void {
+    // Campos são opcionais, sem validações obrigatórias
+  }
+
+  // ========================================
   // Factory Methods
   // ========================================
 
@@ -35,17 +43,14 @@ export class HorarioGerado extends BaseEntity implements IHorarioGerado {
    * @throws EntityValidationError se os dados forem inválidos
    */
   static criar(dados: IHorarioGeradoCreate): HorarioGerado {
-    const { rules } = this.createValidation();
-
     const instance = new HorarioGerado();
-    instance.status = rules.optional(dados.status);
-    instance.tipo = rules.optional(dados.tipo);
+    instance.status = dados.status?.trim() || null;
+    instance.tipo = dados.tipo?.trim() || null;
     instance.dataGeracao = dados.dataGeracao ?? null;
     instance.vigenciaInicio = dados.vigenciaInicio ?? null;
     instance.vigenciaFim = dados.vigenciaFim ?? null;
-    instance.dateCreated = new Date().toISOString();
-    instance.dateUpdated = new Date().toISOString();
-    instance.dateDeleted = null;
+    instance.initDates();
+    instance.validar();
 
     return instance;
   }
@@ -68,14 +73,12 @@ export class HorarioGerado extends BaseEntity implements IHorarioGerado {
    * @throws EntityValidationError se os dados forem inválidos
    */
   atualizar(dados: IHorarioGeradoUpdate): void {
-    const { rules } = HorarioGerado.createValidation();
-
     if (dados.status !== undefined) {
-      this.status = rules.optional(dados.status);
+      this.status = dados.status?.trim() || null;
     }
 
     if (dados.tipo !== undefined) {
-      this.tipo = rules.optional(dados.tipo);
+      this.tipo = dados.tipo?.trim() || null;
     }
 
     if (dados.dataGeracao !== undefined) {
@@ -90,6 +93,7 @@ export class HorarioGerado extends BaseEntity implements IHorarioGerado {
       this.vigenciaFim = dados.vigenciaFim;
     }
 
-    this.dateUpdated = new Date().toISOString();
+    this.touchUpdated();
+    this.validar();
   }
 }

@@ -1,7 +1,7 @@
 import type { AccessContext } from "@/modules/@core/access-context";
 import type { IBaseCrudRepositoryPort } from "@/modules/@shared";
 import type { CampusEntity } from "@/modules/campus/infrastructure/persistence/typeorm";
-import type { CampusFindOneOutput, CampusListOutput } from "../../dtos";
+import type { CampusFindOneOutputDto, CampusListOutputDto } from "../../dtos";
 
 /**
  * Token de injeção para o repositório de Campus
@@ -13,7 +13,7 @@ export const CAMPUS_REPOSITORY_PORT = Symbol("ICampusRepositoryPort");
  * Estende a interface base de CRUD com operações padrão
  */
 export interface ICampusRepositoryPort
-  extends IBaseCrudRepositoryPort<CampusEntity, CampusListOutput, CampusFindOneOutput> {
+  extends IBaseCrudRepositoryPort<CampusEntity, CampusListOutputDto, CampusFindOneOutputDto> {
   /**
    * Busca um campus por ID (formato simples) - método obrigatório
    */
@@ -21,5 +21,5 @@ export interface ICampusRepositoryPort
     accessContext: AccessContext,
     id: string,
     selection?: string[] | boolean,
-  ): Promise<CampusFindOneOutput | null>;
+  ): Promise<CampusFindOneOutputDto | null>;
 }

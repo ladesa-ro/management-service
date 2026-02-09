@@ -1,7 +1,7 @@
 import type { AccessContext } from "@/modules/@core/access-context";
 import type { IBaseCrudRepositoryPort } from "@/modules/@shared";
 import type { HorarioGeradoEntity } from "@/modules/horario-gerado/infrastructure/persistence/typeorm";
-import type { HorarioGeradoFindOneOutput, HorarioGeradoListOutput } from "../../dtos";
+import type { HorarioGeradoFindOneOutputDto, HorarioGeradoListOutputDto } from "../../dtos";
 
 /**
  * Token de injeção para o repositório de HorarioGerado
@@ -15,8 +15,8 @@ export const HORARIO_GERADO_REPOSITORY_PORT = Symbol("IHorarioGeradoRepositoryPo
 export interface IHorarioGeradoRepositoryPort
   extends IBaseCrudRepositoryPort<
     HorarioGeradoEntity,
-    HorarioGeradoListOutput,
-    HorarioGeradoFindOneOutput
+    HorarioGeradoListOutputDto,
+    HorarioGeradoFindOneOutputDto
   > {
   /**
    * Busca um horário gerado por ID (formato simples) - método obrigatório
@@ -25,5 +25,5 @@ export interface IHorarioGeradoRepositoryPort
     accessContext: AccessContext,
     id: string,
     selection?: string[],
-  ): Promise<HorarioGeradoFindOneOutput | null>;
+  ): Promise<HorarioGeradoFindOneOutputDto | null>;
 }

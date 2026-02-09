@@ -1,31 +1,43 @@
 import { ArgsType, Field, ObjectType } from "@nestjs/graphql";
-import { IsArray, IsOptional, IsString } from "class-validator";
-import { PaginationGraphqlArgsDto } from "@/modules/@shared/infrastructure/graphql";
-import { PaginationMetaDto } from "@/modules/@shared/infrastructure/presentation/rest/dtos";
-import { IntervaloDeTempoFindOneOutputDto } from "../rest/intervalo-de-tempo.rest.dto";
+import { IsArray, IsOptional, IsUUID } from "class-validator";
+import {
+  EntityBaseGraphQlDto,
+  PaginationMetaGraphQlDto,
+} from "@/modules/@shared/infrastructure/graphql/dtos";
+import { PaginationArgsGraphQlDto } from "@/modules/@shared/infrastructure/graphql/dtos/pagination-graphql.dto";
 
 // ============================================================================
-// List Input (GraphQL-compatible - no dots in field names)
+// FindOne Output
+// ============================================================================
+
+@ObjectType("IntervaloDeTempoFindOneOutputDto")
+export class IntervaloDeTempoFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
+  @Field() periodoInicio: string;
+  @Field() periodoFim: string;
+}
+
+// ============================================================================
+// List Input
 // ============================================================================
 
 @ArgsType()
-export class IntervaloDeTempoListInputGqlDto extends PaginationGraphqlArgsDto {
+export class IntervaloDeTempoListInputGraphQlDto extends PaginationArgsGraphQlDto {
   @Field(() => [String], { nullable: true, description: "Filtro por ID" })
   @IsOptional()
   @IsArray()
-  @IsString({ each: true })
+  @IsUUID(undefined, { each: true })
   filterId?: string[];
 }
 
 // ============================================================================
-// List Output (reuses the same output DTOs - they're already GraphQL-compatible)
+// List Output
 // ============================================================================
 
 @ObjectType("IntervaloDeTempoListResult")
-export class IntervaloDeTempoListOutputGqlDto {
-  @Field(() => PaginationMetaDto)
-  meta: PaginationMetaDto;
+export class IntervaloDeTempoListOutputGraphQlDto {
+  @Field(() => PaginationMetaGraphQlDto)
+  meta: PaginationMetaGraphQlDto;
 
-  @Field(() => [IntervaloDeTempoFindOneOutputDto])
-  data: IntervaloDeTempoFindOneOutputDto[];
+  @Field(() => [IntervaloDeTempoFindOneOutputGraphQlDto])
+  data: IntervaloDeTempoFindOneOutputGraphQlDto[];
 }

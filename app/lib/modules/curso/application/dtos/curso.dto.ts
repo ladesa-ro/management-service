@@ -1,63 +1,66 @@
 import {
-  EntityOutput,
-  FindOneInput,
+  EntityOutputDto,
+  FindOneInputDto,
   IFilterAcceptableValues,
-  ObjectUuidRef,
-  PaginationInput,
-  PaginationResult,
+  ObjectUuidRefDto,
+  PaginationInputDto,
+  PaginationResultDto,
 } from "@/modules/@shared/application/dtos";
-import { CampusFindOneOutput, CampusInputRef } from "@/modules/campus";
-import { ImagemFindOneOutput, ImagemInputRef } from "@/modules/imagem";
-import { OfertaFormacaoFindOneOutput, OfertaFormacaoInputRef } from "@/modules/oferta-formacao";
+import { CampusFindOneOutputDto, CampusInputRefDto } from "@/modules/campus";
+import { ImagemFindOneOutputDto, ImagemInputRefDto } from "@/modules/imagem";
+import {
+  OfertaFormacaoFindOneOutputDto,
+  OfertaFormacaoInputRefDto,
+} from "@/modules/oferta-formacao";
 
 // ============================================================================
 // FindOne Input/Output
 // ============================================================================
 
-export class CursoFindOneInput extends FindOneInput {}
+export class CursoFindOneInputDto extends FindOneInputDto {}
 
-export class CursoFindOneOutput extends EntityOutput {
+export class CursoFindOneOutputDto extends EntityOutputDto {
   nome!: string;
   nomeAbreviado!: string;
-  campus!: CampusFindOneOutput;
-  ofertaFormacao!: OfertaFormacaoFindOneOutput;
-  imagemCapa!: ImagemFindOneOutput | null;
+  campus!: CampusFindOneOutputDto;
+  ofertaFormacao!: OfertaFormacaoFindOneOutputDto;
+  imagemCapa!: ImagemFindOneOutputDto | null;
 }
 
 // ============================================================================
 // List Input/Output
 // ============================================================================
 
-export class CursoListInput extends PaginationInput {
+export class CursoListInputDto extends PaginationInputDto {
   "filter.id"?: IFilterAcceptableValues;
   "filter.campus.id"?: IFilterAcceptableValues;
   "filter.ofertaFormacao.id"?: IFilterAcceptableValues;
 }
 
-export class CursoListOutput extends PaginationResult<CursoFindOneOutput> {}
+export class CursoListOutputDto extends PaginationResultDto<CursoFindOneOutputDto> {}
 
 // ============================================================================
 // Create/Update Input
 // ============================================================================
 
-export class CursoCreateInput {
+export class CursoCreateInputDto {
   nome!: string;
   nomeAbreviado!: string;
-  campus!: CampusInputRef;
-  ofertaFormacao!: OfertaFormacaoInputRef;
-  imagemCapa?: ImagemInputRef | null;
+  campus!: CampusInputRefDto;
+  ofertaFormacao!: OfertaFormacaoInputRefDto;
+  imagemCapa?: ImagemInputRefDto | null;
 }
 
-export class CursoUpdateInput {
+export class CursoUpdateInputDto {
   nome?: string;
   nomeAbreviado?: string;
-  campus?: CampusInputRef;
-  ofertaFormacao?: OfertaFormacaoInputRef;
-  imagemCapa?: ImagemInputRef | null;
+  campus?: CampusInputRefDto;
+  ofertaFormacao?: OfertaFormacaoInputRefDto;
+  imagemCapa?: ImagemInputRefDto | null;
 }
 
 // ============================================================================
 // Input Ref
 // ============================================================================
 
-export type CursoInputRef = ObjectUuidRef;
+export type CursoInputRefDto = ObjectUuidRefDto;

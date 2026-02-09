@@ -29,6 +29,17 @@ export class Aula extends BaseEntity implements IAula {
   }
 
   // ========================================
+  // Validação
+  // ========================================
+
+  validar(): void {
+    const { result, rules } = Aula.createValidation();
+    rules.required(this.data, "data");
+    rules.dateFormat(this.data, "data");
+    Aula.throwIfInvalid(result);
+  }
+
+  // ========================================
   // Factory Methods
   // ========================================
 
@@ -37,19 +48,12 @@ export class Aula extends BaseEntity implements IAula {
    * @throws EntityValidationError se os dados forem inválidos
    */
   static criar(dados: IAulaCreate): Aula {
-    const { result, rules } = this.createValidation();
-
     const instance = new Aula();
-    instance.data = rules.required(dados.data, "data");
-    instance.data = rules.dateFormat(instance.data, "data");
-
-    this.throwIfInvalid(result);
-
-    instance.modalidade = rules.optional(dados.modalidade);
+    instance.data = dados.data;
+    instance.modalidade = dados.modalidade ?? null;
     instance.ambiente = null;
-    instance.dateCreated = new Date().toISOString();
-    instance.dateUpdated = new Date().toISOString();
-    instance.dateDeleted = null;
+    instance.initDates();
+    instance.validar();
 
     return instance;
   }
@@ -72,20 +76,16 @@ export class Aula extends BaseEntity implements IAula {
    * @throws EntityValidationError se os dados forem inválidos
    */
   atualizar(dados: IAulaUpdate): void {
-    const { result, rules } = Aula.createValidation();
-
     if (dados.data !== undefined) {
-      this.data = rules.required(dados.data, "data");
-      this.data = rules.dateFormat(this.data, "data");
+      this.data = dados.data;
     }
 
     if (dados.modalidade !== undefined) {
-      this.modalidade = rules.optional(dados.modalidade);
+      this.modalidade = dados.modalidade ?? null;
     }
 
-    Aula.throwIfInvalid(result);
-
-    this.dateUpdated = new Date().toISOString();
+    this.touchUpdated();
+    this.validar();
   }
 
   // ========================================

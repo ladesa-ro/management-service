@@ -2,12 +2,12 @@ import { Inject, Injectable } from "@nestjs/common";
 import type { AccessContext } from "@/modules/@core/access-context";
 import { BaseCrudService } from "@/modules/@shared";
 import type {
-  GradeHorarioOfertaFormacaoCreateInput,
-  GradeHorarioOfertaFormacaoFindOneInput,
-  GradeHorarioOfertaFormacaoFindOneOutput,
-  GradeHorarioOfertaFormacaoListInput,
-  GradeHorarioOfertaFormacaoListOutput,
-  GradeHorarioOfertaFormacaoUpdateInput,
+  GradeHorarioOfertaFormacaoCreateInputDto,
+  GradeHorarioOfertaFormacaoFindOneInputDto,
+  GradeHorarioOfertaFormacaoFindOneOutputDto,
+  GradeHorarioOfertaFormacaoListInputDto,
+  GradeHorarioOfertaFormacaoListOutputDto,
+  GradeHorarioOfertaFormacaoUpdateInputDto,
 } from "@/modules/grade-horario-oferta-formacao/application/dtos";
 import {
   GRADE_HORARIO_OFERTA_FORMACAO_REPOSITORY_PORT,
@@ -20,12 +20,12 @@ import type { GradeHorarioOfertaFormacaoEntity } from "@/modules/grade-horario-o
 export class GradeHorarioOfertaFormacaoService
   extends BaseCrudService<
     GradeHorarioOfertaFormacaoEntity,
-    GradeHorarioOfertaFormacaoListInput,
-    GradeHorarioOfertaFormacaoListOutput,
-    GradeHorarioOfertaFormacaoFindOneInput,
-    GradeHorarioOfertaFormacaoFindOneOutput,
-    GradeHorarioOfertaFormacaoCreateInput,
-    GradeHorarioOfertaFormacaoUpdateInput
+    GradeHorarioOfertaFormacaoListInputDto,
+    GradeHorarioOfertaFormacaoListOutputDto,
+    GradeHorarioOfertaFormacaoFindOneInputDto,
+    GradeHorarioOfertaFormacaoFindOneOutputDto,
+    GradeHorarioOfertaFormacaoCreateInputDto,
+    GradeHorarioOfertaFormacaoUpdateInputDto
   >
   implements IGradeHorarioOfertaFormacaoUseCasePort
 {
@@ -46,7 +46,7 @@ export class GradeHorarioOfertaFormacaoService
   protected override async beforeCreate(
     _accessContext: AccessContext,
     entity: GradeHorarioOfertaFormacaoEntity,
-    dto: GradeHorarioOfertaFormacaoCreateInput,
+    dto: GradeHorarioOfertaFormacaoCreateInputDto,
   ): Promise<void> {
     this.repository.merge(entity, {
       campus: { id: dto.campus.id },
@@ -57,7 +57,7 @@ export class GradeHorarioOfertaFormacaoService
   protected override async beforeUpdate(
     _accessContext: AccessContext,
     entity: GradeHorarioOfertaFormacaoEntity,
-    dto: GradeHorarioOfertaFormacaoFindOneInput & GradeHorarioOfertaFormacaoUpdateInput,
+    dto: GradeHorarioOfertaFormacaoFindOneInputDto & GradeHorarioOfertaFormacaoUpdateInputDto,
   ): Promise<void> {
     if (dto.campus !== undefined) {
       this.repository.merge(entity, {

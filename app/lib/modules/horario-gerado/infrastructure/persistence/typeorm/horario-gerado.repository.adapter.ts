@@ -8,10 +8,10 @@ import {
   paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
-  HorarioGeradoFindOneInput,
-  HorarioGeradoFindOneOutput,
-  HorarioGeradoListInput,
-  HorarioGeradoListOutput,
+  HorarioGeradoFindOneInputDto,
+  HorarioGeradoFindOneOutputDto,
+  HorarioGeradoListInputDto,
+  HorarioGeradoListOutputDto,
   IHorarioGeradoRepositoryPort,
 } from "@/modules/horario-gerado";
 import type { HorarioGeradoEntity } from "./horario-gerado.entity";
@@ -20,16 +20,16 @@ import type { HorarioGeradoEntity } from "./horario-gerado.entity";
 export class HorarioGeradoTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     HorarioGeradoEntity,
-    HorarioGeradoListInput,
-    HorarioGeradoListOutput,
-    HorarioGeradoFindOneInput,
-    HorarioGeradoFindOneOutput
+    HorarioGeradoListInputDto,
+    HorarioGeradoListOutputDto,
+    HorarioGeradoFindOneInputDto,
+    HorarioGeradoFindOneOutputDto
   >
   implements IHorarioGeradoRepositoryPort
 {
   protected readonly alias = "horario_gerado";
   protected readonly authzAction = "horario_gerado:find";
-  protected readonly outputDtoName = "HorarioGeradoFindOneOutput";
+  protected readonly outputDtoName = "HorarioGeradoFindOneOutputDto";
 
   constructor(
     protected readonly databaseContext: DatabaseContextService,

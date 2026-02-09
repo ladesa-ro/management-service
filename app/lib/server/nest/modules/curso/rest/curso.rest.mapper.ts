@@ -1,22 +1,22 @@
 import {
-  CursoCreateInput,
-  CursoFindOneInput,
-  CursoFindOneOutput,
-  CursoListInput,
-  CursoListOutput,
-  CursoUpdateInput,
-} from "@/modules/curso";
-import { BlocoRestMapper } from "@/server/nest/modules/bloco/rest";
-import { CampusRestMapper } from "@/server/nest/modules/campus/rest";
-import { OfertaFormacaoRestMapper } from "@/server/nest/modules/oferta-formacao/rest";
-import { mapPaginationMeta } from "@/server/nest/shared/mappers";
-import {
   CursoCreateInputDto,
   CursoFindOneInputDto,
   CursoFindOneOutputDto,
   CursoListInputDto,
   CursoListOutputDto,
   CursoUpdateInputDto,
+} from "@/modules/curso";
+import { BlocoRestMapper } from "@/server/nest/modules/bloco/rest";
+import { CampusRestMapper } from "@/server/nest/modules/campus/rest";
+import { OfertaFormacaoRestMapper } from "@/server/nest/modules/oferta-formacao/rest";
+import { mapPaginationMeta } from "@/server/nest/shared/mappers";
+import {
+  CursoCreateInputRestDto,
+  CursoFindOneInputRestDto,
+  CursoFindOneOutputRestDto,
+  CursoListInputRestDto,
+  CursoListOutputRestDto,
+  CursoUpdateInputRestDto,
 } from "./curso.rest.dto";
 
 export class CursoRestMapper {
@@ -24,18 +24,18 @@ export class CursoRestMapper {
   // Input: Server DTO -> Core DTO
   // ============================================================================
 
-  static toFindOneInput(dto: CursoFindOneInputDto): CursoFindOneInput {
-    const input = new CursoFindOneInput();
+  static toFindOneInput(dto: CursoFindOneInputRestDto): CursoFindOneInputDto {
+    const input = new CursoFindOneInputDto();
     input.id = dto.id;
     return input;
   }
 
-  static toListInput(dto: CursoListInputDto | null): CursoListInput | null {
+  static toListInput(dto: CursoListInputRestDto | null): CursoListInputDto | null {
     if (!dto) {
       return null;
     }
 
-    const input = new CursoListInput();
+    const input = new CursoListInputDto();
     input.page = dto.page;
     input.limit = dto.limit;
     input.search = dto.search;
@@ -47,8 +47,8 @@ export class CursoRestMapper {
     return input;
   }
 
-  static toCreateInput(dto: CursoCreateInputDto): CursoCreateInput {
-    const input = new CursoCreateInput();
+  static toCreateInput(dto: CursoCreateInputRestDto): CursoCreateInputDto {
+    const input = new CursoCreateInputDto();
     input.nome = dto.nome;
     input.nomeAbreviado = dto.nomeAbreviado;
     input.campus = { id: dto.campus.id };
@@ -57,10 +57,10 @@ export class CursoRestMapper {
   }
 
   static toUpdateInput(
-    params: CursoFindOneInputDto,
-    dto: CursoUpdateInputDto,
-  ): CursoFindOneInput & CursoUpdateInput {
-    const input = new CursoFindOneInput() as CursoFindOneInput & CursoUpdateInput;
+    params: CursoFindOneInputRestDto,
+    dto: CursoUpdateInputRestDto,
+  ): CursoFindOneInputDto & CursoUpdateInputDto {
+    const input = new CursoFindOneInputDto() as CursoFindOneInputDto & CursoUpdateInputDto;
     input.id = params.id;
     if (dto.nome !== undefined) {
       input.nome = dto.nome;
@@ -81,8 +81,8 @@ export class CursoRestMapper {
   // Output: Core DTO -> Server DTO
   // ============================================================================
 
-  static toFindOneOutputDto(output: CursoFindOneOutput): CursoFindOneOutputDto {
-    const dto = new CursoFindOneOutputDto();
+  static toFindOneOutputDto(output: CursoFindOneOutputDto): CursoFindOneOutputRestDto {
+    const dto = new CursoFindOneOutputRestDto();
     dto.id = output.id;
     dto.nome = output.nome;
     dto.nomeAbreviado = output.nomeAbreviado;
@@ -97,8 +97,8 @@ export class CursoRestMapper {
     return dto;
   }
 
-  static toListOutputDto(output: CursoListOutput): CursoListOutputDto {
-    const dto = new CursoListOutputDto();
+  static toListOutputDto(output: CursoListOutputDto): CursoListOutputRestDto {
+    const dto = new CursoListOutputRestDto();
     dto.meta = mapPaginationMeta(output.meta);
     dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
     return dto;

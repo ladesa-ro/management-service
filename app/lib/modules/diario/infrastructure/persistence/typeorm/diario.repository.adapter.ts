@@ -8,10 +8,10 @@ import {
   paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
-  DiarioFindOneInput,
-  DiarioFindOneOutput,
-  DiarioListInput,
-  DiarioListOutput,
+  DiarioFindOneInputDto,
+  DiarioFindOneOutputDto,
+  DiarioListInputDto,
+  DiarioListOutputDto,
 } from "@/modules/diario/application/dtos";
 import type { IDiarioRepositoryPort } from "@/modules/diario/application/ports";
 import type { DiarioEntity } from "./diario.entity";
@@ -20,16 +20,16 @@ import type { DiarioEntity } from "./diario.entity";
 export class DiarioTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     DiarioEntity,
-    DiarioListInput,
-    DiarioListOutput,
-    DiarioFindOneInput,
-    DiarioFindOneOutput
+    DiarioListInputDto,
+    DiarioListOutputDto,
+    DiarioFindOneInputDto,
+    DiarioFindOneOutputDto
   >
   implements IDiarioRepositoryPort
 {
   protected readonly alias = "diario";
   protected readonly authzAction = "diario:find";
-  protected readonly outputDtoName = "DiarioFindOneOutput";
+  protected readonly outputDtoName = "DiarioFindOneOutputDto";
 
   constructor(
     protected readonly databaseContext: DatabaseContextService,

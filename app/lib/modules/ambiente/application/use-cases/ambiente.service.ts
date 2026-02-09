@@ -10,12 +10,12 @@ import { ArquivoService } from "@/modules/arquivo/application/use-cases/arquivo.
 import { BlocoService } from "@/modules/bloco/application/use-cases/bloco.service";
 import { ImagemService } from "@/modules/imagem/application/use-cases/imagem.service";
 import type {
-  AmbienteCreateInput,
-  AmbienteFindOneInput,
-  AmbienteFindOneOutput,
-  AmbienteListInput,
-  AmbienteListOutput,
-  AmbienteUpdateInput,
+  AmbienteCreateInputDto,
+  AmbienteFindOneInputDto,
+  AmbienteFindOneOutputDto,
+  AmbienteListInputDto,
+  AmbienteListOutputDto,
+  AmbienteUpdateInputDto,
 } from "../dtos";
 import {
   AMBIENTE_REPOSITORY_PORT,
@@ -32,12 +32,12 @@ import {
 export class AmbienteService
   extends BaseCrudService<
     AmbienteEntity,
-    AmbienteListInput,
-    AmbienteListOutput,
-    AmbienteFindOneInput,
-    AmbienteFindOneOutput,
-    AmbienteCreateInput,
-    AmbienteUpdateInput
+    AmbienteListInputDto,
+    AmbienteListOutputDto,
+    AmbienteFindOneInputDto,
+    AmbienteFindOneOutputDto,
+    AmbienteCreateInputDto,
+    AmbienteUpdateInputDto
   >
   implements IAmbienteUseCasePort
 {
@@ -73,7 +73,7 @@ export class AmbienteService
 
   async updateImagemCapa(
     accessContext: AccessContext,
-    dto: AmbienteFindOneInput,
+    dto: AmbienteFindOneInputDto,
     file: Express.Multer.File,
   ): Promise<boolean> {
     return this.updateImagemField(accessContext, dto.id, file, "imagemCapa", this.imagemService);
@@ -85,7 +85,7 @@ export class AmbienteService
   protected override async beforeCreate(
     accessContext: AccessContext,
     entity: AmbienteEntity,
-    dto: AmbienteCreateInput,
+    dto: AmbienteCreateInputDto,
   ): Promise<void> {
     const bloco = await this.blocoService.findByIdSimpleStrict(accessContext, dto.bloco.id);
     this.repository.merge(entity, { bloco: { id: bloco.id } });

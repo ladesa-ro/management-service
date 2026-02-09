@@ -4,30 +4,28 @@ import { AccessContext, AccessContextGraphQL } from "@/modules/@core/access-cont
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
 import { ProfessorIndisponibilidadeLegacyService } from "../professor-indisponibilidade.legacy.service";
 import {
-  ProfessorIndisponibilidadeCreateInputDto,
-  ProfessorIndisponibilidadeFindOneOutputDto,
-  ProfessorIndisponibilidadeUpdateInputDto,
-} from "../rest/professor-indisponibilidade.rest.dto";
-import {
-  ProfessorIndisponibilidadeListInputGqlDto,
-  ProfessorIndisponibilidadeListOutputGqlDto,
+  ProfessorIndisponibilidadeCreateInputGraphQlDto,
+  ProfessorIndisponibilidadeFindOneOutputGraphQlDto,
+  ProfessorIndisponibilidadeListInputGraphQlDto,
+  ProfessorIndisponibilidadeListOutputGraphQlDto,
+  ProfessorIndisponibilidadeUpdateInputGraphQlDto,
 } from "./professor-indisponibilidade.graphql.dto";
 import { ProfessorIndisponibilidadeGraphqlMapper } from "./professor-indisponibilidade.graphql.mapper";
 
-@Resolver(() => ProfessorIndisponibilidadeFindOneOutputDto)
+@Resolver(() => ProfessorIndisponibilidadeFindOneOutputGraphQlDto)
 export class ProfessorIndisponibilidadeGraphqlResolver {
   constructor(
     private readonly professorIndisponibilidadeService: ProfessorIndisponibilidadeLegacyService,
   ) {}
 
-  @Query(() => ProfessorIndisponibilidadeListOutputGqlDto, {
+  @Query(() => ProfessorIndisponibilidadeListOutputGraphQlDto, {
     name: "professorIndisponibilidadeFindAll",
   })
   async findAll(
     @AccessContextGraphQL() accessContext: AccessContext,
-    @Args() dto: ProfessorIndisponibilidadeListInputGqlDto,
+    @Args() dto: ProfessorIndisponibilidadeListInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<ProfessorIndisponibilidadeListOutputGqlDto> {
+  ): Promise<ProfessorIndisponibilidadeListOutputGraphQlDto> {
     const input = ProfessorIndisponibilidadeGraphqlMapper.toListInput(dto);
     const selection = graphqlExtractSelection(info, "paginated");
 
@@ -39,14 +37,14 @@ export class ProfessorIndisponibilidadeGraphqlResolver {
     return ProfessorIndisponibilidadeGraphqlMapper.toListOutputDto(result);
   }
 
-  @Query(() => ProfessorIndisponibilidadeListOutputGqlDto, {
+  @Query(() => ProfessorIndisponibilidadeListOutputGraphQlDto, {
     name: "professorIndisponibilidadeFindAllByPerfilId",
   })
   async findAllByPerfilId(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("idPerfilFk", { type: () => ID }) idPerfilFk: string,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<ProfessorIndisponibilidadeListOutputGqlDto> {
+  ): Promise<ProfessorIndisponibilidadeListOutputGraphQlDto> {
     const result =
       await this.professorIndisponibilidadeService.ProfessorIndisponibilidadeListByPerfil(
         accessContext,
@@ -55,14 +53,14 @@ export class ProfessorIndisponibilidadeGraphqlResolver {
     return ProfessorIndisponibilidadeGraphqlMapper.toListOutputDto(result);
   }
 
-  @Query(() => ProfessorIndisponibilidadeFindOneOutputDto, {
+  @Query(() => ProfessorIndisponibilidadeFindOneOutputGraphQlDto, {
     name: "professorIndisponibilidadeFindById",
   })
   async findById(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<ProfessorIndisponibilidadeFindOneOutputDto> {
+  ): Promise<ProfessorIndisponibilidadeFindOneOutputGraphQlDto> {
     const selection = graphqlExtractSelection(info);
     const result = await this.professorIndisponibilidadeService.indisponibilidadeFindByIdSimple(
       accessContext,
@@ -72,15 +70,15 @@ export class ProfessorIndisponibilidadeGraphqlResolver {
     return ProfessorIndisponibilidadeGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => ProfessorIndisponibilidadeFindOneOutputDto, {
+  @Mutation(() => ProfessorIndisponibilidadeFindOneOutputGraphQlDto, {
     name: "professorIndisponibilidadeCreate",
   })
   async create(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("idPerfilFk", { type: () => ID }) idPerfilFk: string,
-    @Args("input") dto: ProfessorIndisponibilidadeCreateInputDto,
+    @Args("input") dto: ProfessorIndisponibilidadeCreateInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<ProfessorIndisponibilidadeFindOneOutputDto> {
+  ): Promise<ProfessorIndisponibilidadeFindOneOutputGraphQlDto> {
     const result = await this.professorIndisponibilidadeService.createIndisponibilidade(
       accessContext,
       { ...dto, idPerfilFk },
@@ -88,15 +86,15 @@ export class ProfessorIndisponibilidadeGraphqlResolver {
     return ProfessorIndisponibilidadeGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => ProfessorIndisponibilidadeFindOneOutputDto, {
+  @Mutation(() => ProfessorIndisponibilidadeFindOneOutputGraphQlDto, {
     name: "professorIndisponibilidadeUpdate",
   })
   async update(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
-    @Args("input") dto: ProfessorIndisponibilidadeUpdateInputDto,
+    @Args("input") dto: ProfessorIndisponibilidadeUpdateInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<ProfessorIndisponibilidadeFindOneOutputDto> {
+  ): Promise<ProfessorIndisponibilidadeFindOneOutputGraphQlDto> {
     const result = await this.professorIndisponibilidadeService.indisponibilidadeUpdate(
       accessContext,
       { id, ...dto },
@@ -104,13 +102,13 @@ export class ProfessorIndisponibilidadeGraphqlResolver {
     return ProfessorIndisponibilidadeGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => ProfessorIndisponibilidadeFindOneOutputDto, {
+  @Mutation(() => ProfessorIndisponibilidadeFindOneOutputGraphQlDto, {
     name: "professorIndisponibilidadeDeleteOneById",
   })
   async deleteOneById(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
-  ): Promise<ProfessorIndisponibilidadeFindOneOutputDto> {
+  ): Promise<ProfessorIndisponibilidadeFindOneOutputGraphQlDto> {
     const result = await this.professorIndisponibilidadeService.indisponibilidadeDelete(
       accessContext,
       id,

@@ -3,20 +3,23 @@ import { type GraphQLResolveInfo } from "graphql";
 import { AccessContext, AccessContextGraphQL } from "@/modules/@core/access-context";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
 import { EstadoService } from "@/modules/estado/application/use-cases/estado.service";
-import { EstadoFindOneOutputDto } from "../rest/estado.rest.dto";
-import { EstadoListInputGqlDto, EstadoListOutputGqlDto } from "./estado.graphql.dto";
+import {
+  EstadoFindOneOutputGraphQlDto,
+  EstadoListInputGraphQlDto,
+  EstadoListOutputGraphQlDto,
+} from "./estado.graphql.dto";
 import { EstadoGraphqlMapper } from "./estado.graphql.mapper";
 
-@Resolver(() => EstadoFindOneOutputDto)
+@Resolver(() => EstadoFindOneOutputGraphQlDto)
 export class EstadoGraphqlResolver {
   constructor(private readonly estadoService: EstadoService) {}
 
-  @Query(() => EstadoListOutputGqlDto, { name: "estadoFindAll" })
+  @Query(() => EstadoListOutputGraphQlDto, { name: "estadoFindAll" })
   async findAll(
     @AccessContextGraphQL() accessContext: AccessContext,
-    @Args() dto: EstadoListInputGqlDto,
+    @Args() dto: EstadoListInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<EstadoListOutputGqlDto> {
+  ): Promise<EstadoListOutputGraphQlDto> {
     const input = EstadoGraphqlMapper.toListInput(dto);
 
     if (input) {
@@ -27,12 +30,12 @@ export class EstadoGraphqlResolver {
     return EstadoGraphqlMapper.toListOutputDto(result);
   }
 
-  @Query(() => EstadoFindOneOutputDto, { name: "estadoFindById" })
+  @Query(() => EstadoFindOneOutputGraphQlDto, { name: "estadoFindById" })
   async findById(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => Int }) id: number,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<EstadoFindOneOutputDto> {
+  ): Promise<EstadoFindOneOutputGraphQlDto> {
     const selection = graphqlExtractSelection(info);
     const result = await this.estadoService.findByIdStrict(accessContext, { id, selection });
     return EstadoGraphqlMapper.toFindOneOutputDto(result);

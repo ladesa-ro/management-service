@@ -21,6 +21,21 @@ export class Disciplina extends BaseEntity implements IDisciplina {
   }
 
   // ========================================
+  // Validação
+  // ========================================
+
+  validar(): void {
+    const { result, rules } = Disciplina.createValidation();
+    rules.required(this.nome, "nome");
+    rules.minLength(this.nome, "nome", 1);
+    rules.required(this.nomeAbreviado, "nomeAbreviado");
+    rules.minLength(this.nomeAbreviado, "nomeAbreviado", 1);
+    rules.requiredNumber(this.cargaHoraria, "cargaHoraria");
+    rules.min(this.cargaHoraria, "cargaHoraria", 1);
+    Disciplina.throwIfInvalid(result);
+  }
+
+  // ========================================
   // Factory Methods
   // ========================================
 
@@ -29,29 +44,13 @@ export class Disciplina extends BaseEntity implements IDisciplina {
    * @throws EntityValidationError se os dados forem inválidos
    */
   static criar(dados: IDisciplinaCreate): Disciplina {
-    const { result, rules } = this.createValidation();
-
     const instance = new Disciplina();
-    instance.nome = rules.required(dados.nome, "nome");
-    instance.nome = rules.minLength(instance.nome, "nome", 1);
-
-    instance.nomeAbreviado = rules.required(dados.nomeAbreviado, "nomeAbreviado");
-    instance.nomeAbreviado = rules.minLength(instance.nomeAbreviado, "nomeAbreviado", 1);
-
-    instance.cargaHoraria = rules.requiredNumber(dados.cargaHoraria, "cargaHoraria");
-    instance.cargaHoraria = rules.min(
-      instance.cargaHoraria,
-      "cargaHoraria",
-      1,
-      "Carga horária deve ser maior que zero",
-    );
-
-    this.throwIfInvalid(result);
-
+    instance.nome = dados.nome?.trim() ?? "";
+    instance.nomeAbreviado = dados.nomeAbreviado?.trim() ?? "";
+    instance.cargaHoraria = dados.cargaHoraria ?? 0;
     instance.imagemCapa = null;
-    instance.dateCreated = new Date().toISOString();
-    instance.dateUpdated = new Date().toISOString();
-    instance.dateDeleted = null;
+    instance.initDates();
+    instance.validar();
 
     return instance;
   }
@@ -74,31 +73,20 @@ export class Disciplina extends BaseEntity implements IDisciplina {
    * @throws EntityValidationError se os dados forem inválidos
    */
   atualizar(dados: IDisciplinaUpdate): void {
-    const { result, rules } = Disciplina.createValidation();
-
     if (dados.nome !== undefined) {
-      this.nome = rules.required(dados.nome, "nome");
-      this.nome = rules.minLength(this.nome, "nome", 1);
+      this.nome = dados.nome?.trim() ?? "";
     }
 
     if (dados.nomeAbreviado !== undefined) {
-      this.nomeAbreviado = rules.required(dados.nomeAbreviado, "nomeAbreviado");
-      this.nomeAbreviado = rules.minLength(this.nomeAbreviado, "nomeAbreviado", 1);
+      this.nomeAbreviado = dados.nomeAbreviado?.trim() ?? "";
     }
 
     if (dados.cargaHoraria !== undefined) {
-      this.cargaHoraria = rules.requiredNumber(dados.cargaHoraria, "cargaHoraria");
-      this.cargaHoraria = rules.min(
-        this.cargaHoraria,
-        "cargaHoraria",
-        1,
-        "Carga horária deve ser maior que zero",
-      );
+      this.cargaHoraria = dados.cargaHoraria ?? 0;
     }
 
-    Disciplina.throwIfInvalid(result);
-
-    this.dateUpdated = new Date().toISOString();
+    this.touchUpdated();
+    this.validar();
   }
 
   // ========================================

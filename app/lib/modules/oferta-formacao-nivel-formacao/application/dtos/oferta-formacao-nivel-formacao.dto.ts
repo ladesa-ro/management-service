@@ -1,53 +1,56 @@
 import {
-  EntityOutput,
-  FindOneInput,
+  EntityOutputDto,
+  FindOneInputDto,
   IFilterAcceptableValues,
-  ObjectUuidRef,
-  PaginationInput,
-  PaginationResult,
+  ObjectUuidRefDto,
+  PaginationInputDto,
+  PaginationResultDto,
 } from "@/modules/@shared";
-import { NivelFormacaoFindOneOutput, NivelFormacaoInputRef } from "@/modules/nivel-formacao";
-import { OfertaFormacaoFindOneOutput, OfertaFormacaoInputRef } from "@/modules/oferta-formacao";
+import { NivelFormacaoFindOneOutputDto, NivelFormacaoInputRefDto } from "@/modules/nivel-formacao";
+import {
+  OfertaFormacaoFindOneOutputDto,
+  OfertaFormacaoInputRefDto,
+} from "@/modules/oferta-formacao";
 
 // ============================================================================
 // FindOne Input/Output
 // ============================================================================
 
-export class OfertaFormacaoNivelFormacaoFindOneInput extends FindOneInput {}
+export class OfertaFormacaoNivelFormacaoFindOneInputDto extends FindOneInputDto {}
 
-export class OfertaFormacaoNivelFormacaoFindOneOutput extends EntityOutput {
-  nivelFormacao!: NivelFormacaoFindOneOutput;
-  ofertaFormacao!: OfertaFormacaoFindOneOutput;
+export class OfertaFormacaoNivelFormacaoFindOneOutputDto extends EntityOutputDto {
+  nivelFormacao!: NivelFormacaoFindOneOutputDto;
+  ofertaFormacao!: OfertaFormacaoFindOneOutputDto;
 }
 
 // ============================================================================
 // List Input/Output
 // ============================================================================
 
-export class OfertaFormacaoNivelFormacaoListInput extends PaginationInput {
+export class OfertaFormacaoNivelFormacaoListInputDto extends PaginationInputDto {
   "filter.id"?: IFilterAcceptableValues;
   "filter.nivelFormacao.id"?: IFilterAcceptableValues;
   "filter.ofertaFormacao.id"?: IFilterAcceptableValues;
 }
 
-export class OfertaFormacaoNivelFormacaoListOutput extends PaginationResult<OfertaFormacaoNivelFormacaoFindOneOutput> {}
+export class OfertaFormacaoNivelFormacaoListOutputDto extends PaginationResultDto<OfertaFormacaoNivelFormacaoFindOneOutputDto> {}
 
 // ============================================================================
 // Create/Update Input
 // ============================================================================
 
-export class OfertaFormacaoNivelFormacaoCreateInput {
-  nivelFormacao!: NivelFormacaoInputRef;
-  ofertaFormacao!: OfertaFormacaoInputRef;
+export class OfertaFormacaoNivelFormacaoCreateInputDto {
+  nivelFormacao!: NivelFormacaoInputRefDto;
+  ofertaFormacao!: OfertaFormacaoInputRefDto;
 }
 
-export class OfertaFormacaoNivelFormacaoUpdateInput {
-  nivelFormacao?: NivelFormacaoInputRef;
-  ofertaFormacao?: OfertaFormacaoInputRef;
+export class OfertaFormacaoNivelFormacaoUpdateInputDto {
+  nivelFormacao?: NivelFormacaoInputRefDto;
+  ofertaFormacao?: OfertaFormacaoInputRefDto;
 }
 
 // ============================================================================
 // Input Ref
 // ============================================================================
 
-export type OfertaFormacaoNivelFormacaoInputRef = ObjectUuidRef;
+export type OfertaFormacaoNivelFormacaoInputRefDto = ObjectUuidRefDto;

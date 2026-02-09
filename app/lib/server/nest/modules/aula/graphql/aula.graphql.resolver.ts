@@ -4,24 +4,24 @@ import { AccessContext, AccessContextGraphQL } from "@/modules/@core/access-cont
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
 import { AulaService } from "@/modules/aula/application/use-cases/aula.service";
 import {
-  AulaCreateInputDto,
-  AulaFindOneOutputDto,
-  AulaUpdateInputDto,
-} from "../rest/aula.rest.dto";
-import { AulaRestMapper } from "../rest/aula.rest.mapper";
-import { AulaListInputGqlDto, AulaListOutputGqlDto } from "./aula.graphql.dto";
+  AulaCreateInputGraphQlDto,
+  AulaFindOneOutputGraphQlDto,
+  AulaListInputGraphQlDto,
+  AulaListOutputGraphQlDto,
+  AulaUpdateInputGraphQlDto,
+} from "./aula.graphql.dto";
 import { AulaGraphqlMapper } from "./aula.graphql.mapper";
 
-@Resolver(() => AulaFindOneOutputDto)
+@Resolver(() => AulaFindOneOutputGraphQlDto)
 export class AulaGraphqlResolver {
   constructor(private readonly aulaService: AulaService) {}
 
-  @Query(() => AulaListOutputGqlDto, { name: "aulaFindAll" })
+  @Query(() => AulaListOutputGraphQlDto, { name: "aulaFindAll" })
   async findAll(
     @AccessContextGraphQL() accessContext: AccessContext,
-    @Args() dto: AulaListInputGqlDto,
+    @Args() dto: AulaListInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<AulaListOutputGqlDto> {
+  ): Promise<AulaListOutputGraphQlDto> {
     const input = AulaGraphqlMapper.toListInput(dto);
 
     if (input) {
@@ -32,36 +32,36 @@ export class AulaGraphqlResolver {
     return AulaGraphqlMapper.toListOutputDto(result);
   }
 
-  @Query(() => AulaFindOneOutputDto, { name: "aulaFindById" })
+  @Query(() => AulaFindOneOutputGraphQlDto, { name: "aulaFindById" })
   async findById(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<AulaFindOneOutputDto> {
+  ): Promise<AulaFindOneOutputGraphQlDto> {
     const selection = graphqlExtractSelection(info);
     const result = await this.aulaService.findByIdStrict(accessContext, { id, selection });
     return AulaGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => AulaFindOneOutputDto, { name: "aulaCreate" })
+  @Mutation(() => AulaFindOneOutputGraphQlDto, { name: "aulaCreate" })
   async create(
     @AccessContextGraphQL() accessContext: AccessContext,
-    @Args("input") dto: AulaCreateInputDto,
+    @Args("data") dto: AulaCreateInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<AulaFindOneOutputDto> {
-    const input = AulaRestMapper.toCreateInput(dto);
+  ): Promise<AulaFindOneOutputGraphQlDto> {
+    const input = AulaGraphqlMapper.toCreateInput(dto);
     const result = await this.aulaService.create(accessContext, input);
     return AulaGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => AulaFindOneOutputDto, { name: "aulaUpdate" })
+  @Mutation(() => AulaFindOneOutputGraphQlDto, { name: "aulaUpdate" })
   async update(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
-    @Args("input") dto: AulaUpdateInputDto,
+    @Args("data") dto: AulaUpdateInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<AulaFindOneOutputDto> {
-    const input = AulaRestMapper.toUpdateInput({ id }, dto);
+  ): Promise<AulaFindOneOutputGraphQlDto> {
+    const input = AulaGraphqlMapper.toUpdateInput(id, dto);
     const result = await this.aulaService.update(accessContext, input);
     return AulaGraphqlMapper.toFindOneOutputDto(result);
   }

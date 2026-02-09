@@ -1,12 +1,12 @@
 import type { StreamableFile } from "@nestjs/common";
 import type { AccessContext } from "@/modules/@core/access-context";
 import type {
-  TurmaCreateInput,
-  TurmaFindOneInput,
-  TurmaFindOneOutput,
-  TurmaListInput,
-  TurmaListOutput,
-  TurmaUpdateInput,
+  TurmaCreateInputDto,
+  TurmaFindOneInputDto,
+  TurmaFindOneOutputDto,
+  TurmaListInputDto,
+  TurmaListOutputDto,
+  TurmaUpdateInputDto,
 } from "../../dtos";
 
 /**
@@ -16,48 +16,51 @@ import type {
 export interface ITurmaUseCasePort {
   turmaFindAll(
     accessContext: AccessContext,
-    dto: TurmaListInput | null,
+    dto: TurmaListInputDto | null,
     selection?: string[] | boolean,
-  ): Promise<TurmaListOutput>;
+  ): Promise<TurmaListOutputDto>;
 
   turmaFindById(
     accessContext: AccessContext | null,
-    dto: TurmaFindOneInput,
+    dto: TurmaFindOneInputDto,
     selection?: string[] | boolean,
-  ): Promise<TurmaFindOneOutput | null>;
+  ): Promise<TurmaFindOneOutputDto | null>;
 
   turmaFindByIdStrict(
     accessContext: AccessContext | null,
-    dto: TurmaFindOneInput,
+    dto: TurmaFindOneInputDto,
     selection?: string[] | boolean,
-  ): Promise<TurmaFindOneOutput>;
+  ): Promise<TurmaFindOneOutputDto>;
 
   turmaFindByIdSimple(
     accessContext: AccessContext,
-    id: TurmaFindOneInput["id"],
+    id: TurmaFindOneInputDto["id"],
     selection?: string[],
-  ): Promise<TurmaFindOneOutput | null>;
+  ): Promise<TurmaFindOneOutputDto | null>;
 
   turmaFindByIdSimpleStrict(
     accessContext: AccessContext,
-    id: TurmaFindOneInput["id"],
+    id: TurmaFindOneInputDto["id"],
     selection?: string[],
-  ): Promise<TurmaFindOneOutput>;
+  ): Promise<TurmaFindOneOutputDto>;
 
-  turmaCreate(accessContext: AccessContext, dto: TurmaCreateInput): Promise<TurmaFindOneOutput>;
+  turmaCreate(
+    accessContext: AccessContext,
+    dto: TurmaCreateInputDto,
+  ): Promise<TurmaFindOneOutputDto>;
 
   turmaUpdate(
     accessContext: AccessContext,
-    dto: TurmaFindOneInput & TurmaUpdateInput,
-  ): Promise<TurmaFindOneOutput>;
+    dto: TurmaFindOneInputDto & TurmaUpdateInputDto,
+  ): Promise<TurmaFindOneOutputDto>;
 
   turmaGetImagemCapa(accessContext: AccessContext | null, id: string): Promise<StreamableFile>;
 
   turmaUpdateImagemCapa(
     accessContext: AccessContext,
-    dto: TurmaFindOneInput,
+    dto: TurmaFindOneInputDto,
     file: Express.Multer.File,
   ): Promise<boolean>;
 
-  turmaDeleteOneById(accessContext: AccessContext, dto: TurmaFindOneInput): Promise<boolean>;
+  turmaDeleteOneById(accessContext: AccessContext, dto: TurmaFindOneInputDto): Promise<boolean>;
 }

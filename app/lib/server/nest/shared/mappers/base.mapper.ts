@@ -3,8 +3,6 @@
  * Seguindo DRY: funções comuns extraídas para reutilização.
  */
 
-import type { PaginationMetaDto } from "@/modules/@shared/infrastructure/presentation/rest/dtos";
-
 /**
  * Interface para saída de paginação padrão do core
  */
@@ -19,10 +17,24 @@ export interface PaginatedOutputMeta {
 }
 
 /**
+ * Interface para metadados de paginação da apresentação.
+ * Ambas PaginationMetaRestDto e PaginationMetaGraphQlDto satisfazem esta interface.
+ */
+export interface IPaginationMetaPresentation {
+  currentPage: number;
+  totalPages: number;
+  itemsPerPage: number;
+  totalItems: number;
+  sortBy: [string, string][];
+  search: string;
+  filter?: Record<string, string | string[]>;
+}
+
+/**
  * Mapeia metadados de paginação do output do core para o DTO de apresentação.
  * Usado por todos os mappers que retornam listas paginadas.
  */
-export function mapPaginationMeta(meta: PaginatedOutputMeta): PaginationMetaDto {
+export function mapPaginationMeta(meta: PaginatedOutputMeta): IPaginationMetaPresentation {
   return {
     currentPage: meta.currentPage,
     totalPages: meta.totalPages,
@@ -31,7 +43,7 @@ export function mapPaginationMeta(meta: PaginatedOutputMeta): PaginationMetaDto 
     sortBy: meta.sortBy,
     filter: meta.filter,
     search: meta.search,
-  } as PaginationMetaDto;
+  } as IPaginationMetaPresentation;
 }
 
 /**
@@ -40,14 +52,14 @@ export function mapPaginationMeta(meta: PaginatedOutputMeta): PaginationMetaDto 
  *
  * @example
  * static toListOutputDto = createListOutputMapper(
- *   ModalidadeListOutputGqlDto,
+ *   ModalidadeListOutputGraphQlDto,
  *   ModalidadeGraphqlMapper.toFindOneOutputDto
  * );
  */
 export function createListOutputMapper<
   TOutput,
   TDto,
-  TListDto extends { meta: PaginationMetaDto; data: TDto[] },
+  TListDto extends { meta: IPaginationMetaPresentation; data: TDto[] },
 >(ListDtoClass: new () => TListDto, toFindOneOutputDto: (output: TOutput) => TDto) {
   return (output: { meta: PaginatedOutputMeta; data: TOutput[] }): TListDto => {
     const dto = new ListDtoClass();

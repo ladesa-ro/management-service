@@ -1,10 +1,10 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { BaseReadOnlyService } from "@/modules/@shared";
 import type {
-  CidadeFindOneInput,
-  CidadeFindOneOutput,
-  CidadeListInput,
-  CidadeListOutput,
+  CidadeFindOneInputDto,
+  CidadeFindOneOutputDto,
+  CidadeListInputDto,
+  CidadeListOutputDto,
 } from "@/modules/cidade/application/dtos";
 import {
   CIDADE_REPOSITORY_PORT,
@@ -15,10 +15,10 @@ import {
 @Injectable()
 export class CidadeService
   extends BaseReadOnlyService<
-    CidadeListInput,
-    CidadeListOutput,
-    CidadeFindOneInput,
-    CidadeFindOneOutput
+    CidadeListInputDto,
+    CidadeListOutputDto,
+    CidadeFindOneInputDto,
+    CidadeFindOneOutputDto
   >
   implements ICidadeUseCasePort
 {

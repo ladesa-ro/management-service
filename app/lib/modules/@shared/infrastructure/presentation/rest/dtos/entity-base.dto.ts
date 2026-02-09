@@ -1,32 +1,27 @@
-import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { IsDateString, IsOptional, IsUUID } from "class-validator";
 
 /**
- * Base DTO for entities identified by UUID.
+ * Base DTO for REST entities identified by UUID.
  */
-@ObjectType({ isAbstract: true })
-export class EntityIdUuidDto {
+export class EntityIdUuidRestDto {
   @ApiProperty({
     description: "Identificador do registro (uuid)",
     format: "uuid",
     example: "123e4567-e89b-12d3-a456-426614174000",
   })
-  @Field(() => ID)
   @IsUUID()
   id: string;
 }
 
 /**
- * Base DTO for entities with timestamps.
+ * Base DTO for REST entities with timestamps.
  */
-@ObjectType({ isAbstract: true })
-export class EntityDatedDto {
+export class EntityDatedRestDto {
   @ApiProperty({
     description: "Data e hora da criacao do registro",
     format: "date-time",
   })
-  @Field()
   @IsDateString()
   dateCreated: Date;
 
@@ -34,7 +29,6 @@ export class EntityDatedDto {
     description: "Data e hora da alteracao do registro",
     format: "date-time",
   })
-  @Field()
   @IsDateString()
   dateUpdated: Date;
 
@@ -43,22 +37,19 @@ export class EntityDatedDto {
     format: "date-time",
     nullable: true,
   })
-  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateString()
   dateDeleted: Date | null;
 }
 
 /**
- * Combined base DTO with UUID and timestamps.
+ * Combined base DTO for REST with UUID and timestamps.
  */
-@ObjectType({ isAbstract: true })
-export class EntityBaseDto extends EntityIdUuidDto {
+export class EntityBaseRestDto extends EntityIdUuidRestDto {
   @ApiProperty({
     description: "Data e hora da criacao do registro",
     format: "date-time",
   })
-  @Field()
   @IsDateString()
   dateCreated: Date;
 
@@ -66,7 +57,6 @@ export class EntityBaseDto extends EntityIdUuidDto {
     description: "Data e hora da alteracao do registro",
     format: "date-time",
   })
-  @Field()
   @IsDateString()
   dateUpdated: Date;
 
@@ -75,7 +65,6 @@ export class EntityBaseDto extends EntityIdUuidDto {
     format: "date-time",
     nullable: true,
   })
-  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateString()
   dateDeleted: Date | null;

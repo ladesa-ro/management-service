@@ -1,15 +1,56 @@
-import { ArgsType, Field, ID, ObjectType } from "@nestjs/graphql";
-import { IsOptional, IsUUID } from "class-validator";
-import { PaginationGraphqlArgsDto } from "@/modules/@shared/infrastructure/graphql";
-import { PaginationMetaDto } from "@/modules/@shared/infrastructure/presentation/rest/dtos";
-import { ProfessorIndisponibilidadeFindOneOutputDto } from "../rest/professor-indisponibilidade.rest.dto";
+import { ArgsType, Field, ID, InputType, Int, ObjectType } from "@nestjs/graphql";
+import { IsInt, IsOptional, IsString, IsUUID, Max, Min } from "class-validator";
+import { PaginationArgsGraphQlDto } from "@/modules/@shared/infrastructure/graphql";
+import {
+  EntityBaseGraphQlDto,
+  PaginationMetaGraphQlDto,
+} from "@/modules/@shared/infrastructure/graphql/dtos";
+
+// ============================================================================
+// FindOne Output
+// ============================================================================
+
+@ObjectType("ProfessorIndisponibilidadeFindOneOutputDto")
+export class ProfessorIndisponibilidadeFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
+  @Field() idPerfilFk: string;
+  @Field(() => Int) diaDaSemana: number;
+  @Field() horaInicio: string;
+  @Field() horaFim: string;
+  @Field() motivo: string;
+}
+
+// ============================================================================
+// Create Input
+// ============================================================================
+
+@InputType("ProfessorIndisponibilidadeCreateInputDto")
+export class ProfessorIndisponibilidadeCreateInputGraphQlDto {
+  @Field({ nullable: true }) @IsOptional() @IsUUID() idPerfilFk?: string;
+  @Field(() => Int) @IsInt() @Min(0) @Max(6) diaDaSemana: number;
+  @Field() @IsString() horaInicio: string;
+  @Field() @IsString() horaFim: string;
+  @Field() @IsString() motivo: string;
+}
+
+// ============================================================================
+// Update Input
+// ============================================================================
+
+@InputType("ProfessorIndisponibilidadeUpdateInputDto")
+export class ProfessorIndisponibilidadeUpdateInputGraphQlDto {
+  @Field({ nullable: true }) @IsOptional() @IsUUID() idPerfilFk?: string;
+  @Field(() => Int, { nullable: true }) @IsOptional() @IsInt() @Min(0) @Max(6) diaDaSemana?: number;
+  @Field({ nullable: true }) @IsOptional() @IsString() horaInicio?: string;
+  @Field({ nullable: true }) @IsOptional() @IsString() horaFim?: string;
+  @Field({ nullable: true }) @IsOptional() @IsString() motivo?: string;
+}
 
 // ============================================================================
 // List Input (GraphQL-compatible - no dots in field names)
 // ============================================================================
 
 @ArgsType()
-export class ProfessorIndisponibilidadeListInputGqlDto extends PaginationGraphqlArgsDto {
+export class ProfessorIndisponibilidadeListInputGraphQlDto extends PaginationArgsGraphQlDto {
   @Field(() => ID, { nullable: true, description: "Filtro por ID do perfil" })
   @IsOptional()
   @IsUUID()
@@ -17,14 +58,14 @@ export class ProfessorIndisponibilidadeListInputGqlDto extends PaginationGraphql
 }
 
 // ============================================================================
-// List Output (reuses the same output DTOs - they're already GraphQL-compatible)
+// List Output
 // ============================================================================
 
 @ObjectType("ProfessorIndisponibilidadeListResult")
-export class ProfessorIndisponibilidadeListOutputGqlDto {
-  @Field(() => PaginationMetaDto)
-  meta: PaginationMetaDto;
+export class ProfessorIndisponibilidadeListOutputGraphQlDto {
+  @Field(() => PaginationMetaGraphQlDto)
+  meta: PaginationMetaGraphQlDto;
 
-  @Field(() => [ProfessorIndisponibilidadeFindOneOutputDto])
-  data: ProfessorIndisponibilidadeFindOneOutputDto[];
+  @Field(() => [ProfessorIndisponibilidadeFindOneOutputGraphQlDto])
+  data: ProfessorIndisponibilidadeFindOneOutputGraphQlDto[];
 }

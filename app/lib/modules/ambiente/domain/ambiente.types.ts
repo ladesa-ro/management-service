@@ -1,14 +1,11 @@
-import type { IdUuid, ScalarDateTimeString } from "@/modules/@shared";
+import type { IdUuid, IEntityBase } from "@/modules/@shared";
 import type { IBloco } from "@/modules/bloco";
 
 /**
  * Tipagem da entidade Ambiente
  * Define a estrutura de dados sem comportamento
  */
-export interface IAmbiente {
-  /** Identificador UUID do ambiente */
-  id: IdUuid;
-
+export interface IAmbiente extends IEntityBase {
   /** Nome do ambiente */
   nome: string;
 
@@ -29,15 +26,6 @@ export interface IAmbiente {
 
   /** Imagem de capa do ambiente (opcional) */
   imagemCapa: { id: IdUuid } | null;
-
-  /** Data de criação */
-  dateCreated: ScalarDateTimeString;
-
-  /** Data de atualização */
-  dateUpdated: ScalarDateTimeString;
-
-  /** Data de exclusão (soft delete) */
-  dateDeleted: ScalarDateTimeString | null;
 }
 
 /**

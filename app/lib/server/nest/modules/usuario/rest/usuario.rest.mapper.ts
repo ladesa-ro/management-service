@@ -1,25 +1,25 @@
 import type { UsuarioEnsinoOutput } from "@/modules/usuario";
 import {
-  UsuarioCreateInput,
-  UsuarioFindOneInput,
-  UsuarioFindOneOutput,
-  UsuarioListInput,
-  UsuarioListOutput,
-  UsuarioUpdateInput,
-} from "@/modules/usuario";
-import { BlocoRestMapper } from "@/server/nest/modules/bloco/rest";
-import { mapPaginationMeta } from "@/server/nest/shared/mappers";
-import {
   UsuarioCreateInputDto,
-  UsuarioEnsinoCursoRefDto,
-  UsuarioEnsinoDisciplinaRefDto,
-  UsuarioEnsinoOutputDto,
-  UsuarioEnsinoTurmaRefDto,
   UsuarioFindOneInputDto,
   UsuarioFindOneOutputDto,
   UsuarioListInputDto,
   UsuarioListOutputDto,
   UsuarioUpdateInputDto,
+} from "@/modules/usuario";
+import { BlocoRestMapper } from "@/server/nest/modules/bloco/rest";
+import { mapPaginationMeta } from "@/server/nest/shared/mappers";
+import {
+  UsuarioCreateInputRestDto,
+  UsuarioEnsinoCursoRefRestDto,
+  UsuarioEnsinoDisciplinaRefRestDto,
+  UsuarioEnsinoOutputRestDto,
+  UsuarioEnsinoTurmaRefRestDto,
+  UsuarioFindOneInputRestDto,
+  UsuarioFindOneOutputRestDto,
+  UsuarioListInputRestDto,
+  UsuarioListOutputRestDto,
+  UsuarioUpdateInputRestDto,
 } from "./usuario.rest.dto";
 
 export class UsuarioRestMapper {
@@ -27,18 +27,18 @@ export class UsuarioRestMapper {
   // Input: Server DTO -> Core DTO
   // ============================================================================
 
-  static toFindOneInput(dto: UsuarioFindOneInputDto): UsuarioFindOneInput {
-    const input = new UsuarioFindOneInput();
+  static toFindOneInput(dto: UsuarioFindOneInputRestDto): UsuarioFindOneInputDto {
+    const input = new UsuarioFindOneInputDto();
     input.id = dto.id;
     return input;
   }
 
-  static toListInput(dto: UsuarioListInputDto | null): UsuarioListInput | null {
+  static toListInput(dto: UsuarioListInputRestDto | null): UsuarioListInputDto | null {
     if (!dto) {
       return null;
     }
 
-    const input = new UsuarioListInput();
+    const input = new UsuarioListInputDto();
     input.page = dto.page;
     input.limit = dto.limit;
     input.search = dto.search;
@@ -48,8 +48,8 @@ export class UsuarioRestMapper {
     return input;
   }
 
-  static toCreateInput(dto: UsuarioCreateInputDto): UsuarioCreateInput {
-    const input = new UsuarioCreateInput();
+  static toCreateInput(dto: UsuarioCreateInputRestDto): UsuarioCreateInputDto {
+    const input = new UsuarioCreateInputDto();
     input.nome = dto.nome;
     input.matriculaSiape = dto.matriculaSiape;
     input.email = dto.email;
@@ -57,10 +57,10 @@ export class UsuarioRestMapper {
   }
 
   static toUpdateInput(
-    params: UsuarioFindOneInputDto,
-    dto: UsuarioUpdateInputDto,
-  ): UsuarioFindOneInput & UsuarioUpdateInput {
-    const input = new UsuarioFindOneInput() as UsuarioFindOneInput & UsuarioUpdateInput;
+    params: UsuarioFindOneInputRestDto,
+    dto: UsuarioUpdateInputRestDto,
+  ): UsuarioFindOneInputDto & UsuarioUpdateInputDto {
+    const input = new UsuarioFindOneInputDto() as UsuarioFindOneInputDto & UsuarioUpdateInputDto;
     input.id = params.id;
     if (dto.nome !== undefined) {
       input.nome = dto.nome;
@@ -78,8 +78,8 @@ export class UsuarioRestMapper {
   // Output: Core DTO -> Server DTO
   // ============================================================================
 
-  static toFindOneOutputDto(output: UsuarioFindOneOutput): UsuarioFindOneOutputDto {
-    const dto = new UsuarioFindOneOutputDto();
+  static toFindOneOutputDto(output: UsuarioFindOneOutputDto): UsuarioFindOneOutputRestDto {
+    const dto = new UsuarioFindOneOutputRestDto();
     dto.id = output.id;
     dto.nome = output.nome;
     dto.matriculaSiape = output.matriculaSiape;
@@ -97,26 +97,26 @@ export class UsuarioRestMapper {
     return dto;
   }
 
-  static toListOutputDto(output: UsuarioListOutput): UsuarioListOutputDto {
-    const dto = new UsuarioListOutputDto();
+  static toListOutputDto(output: UsuarioListOutputDto): UsuarioListOutputRestDto {
+    const dto = new UsuarioListOutputRestDto();
     dto.meta = mapPaginationMeta(output.meta);
     dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
     return dto;
   }
 
-  static toEnsinoOutputDto(output: UsuarioEnsinoOutput): UsuarioEnsinoOutputDto {
-    const dto = new UsuarioEnsinoOutputDto();
+  static toEnsinoOutputDto(output: UsuarioEnsinoOutput): UsuarioEnsinoOutputRestDto {
+    const dto = new UsuarioEnsinoOutputRestDto();
     dto.usuario = this.toFindOneOutputDto(output.usuario);
     dto.disciplinas = output.disciplinas.map((vinculoDisciplina) => {
-      const disciplinaRef = new UsuarioEnsinoDisciplinaRefDto();
+      const disciplinaRef = new UsuarioEnsinoDisciplinaRefRestDto();
       disciplinaRef.id = vinculoDisciplina.disciplina.id;
       disciplinaRef.nome = vinculoDisciplina.disciplina.nome;
       disciplinaRef.cursos = vinculoDisciplina.cursos.map((vinculoCurso) => {
-        const cursoRef = new UsuarioEnsinoCursoRefDto();
+        const cursoRef = new UsuarioEnsinoCursoRefRestDto();
         cursoRef.id = vinculoCurso.curso.id;
         cursoRef.nome = vinculoCurso.curso.nome;
         cursoRef.turmas = vinculoCurso.turmas.map((vinculoTurma) => {
-          const turmaRef = new UsuarioEnsinoTurmaRefDto();
+          const turmaRef = new UsuarioEnsinoTurmaRefRestDto();
           turmaRef.id = vinculoTurma.turma.id;
           turmaRef.periodo = vinculoTurma.turma.periodo;
           return turmaRef;

@@ -1,20 +1,20 @@
 import {
-  OfertaFormacaoCreateInput,
-  OfertaFormacaoFindOneInput,
-  OfertaFormacaoFindOneOutput,
-  OfertaFormacaoListInput,
-  OfertaFormacaoListOutput,
-  OfertaFormacaoUpdateInput,
-} from "@/modules/oferta-formacao";
-import { ModalidadeRestMapper } from "@/server/nest/modules/modalidade/rest";
-import { mapPaginationMeta } from "@/server/nest/shared/mappers";
-import {
   OfertaFormacaoCreateInputDto,
   OfertaFormacaoFindOneInputDto,
   OfertaFormacaoFindOneOutputDto,
   OfertaFormacaoListInputDto,
   OfertaFormacaoListOutputDto,
   OfertaFormacaoUpdateInputDto,
+} from "@/modules/oferta-formacao";
+import { ModalidadeRestMapper } from "@/server/nest/modules/modalidade/rest";
+import { mapPaginationMeta } from "@/server/nest/shared/mappers";
+import {
+  OfertaFormacaoCreateInputRestDto,
+  OfertaFormacaoFindOneInputRestDto,
+  OfertaFormacaoFindOneOutputRestDto,
+  OfertaFormacaoListInputRestDto,
+  OfertaFormacaoListOutputRestDto,
+  OfertaFormacaoUpdateInputRestDto,
 } from "./oferta-formacao.rest.dto";
 
 export class OfertaFormacaoRestMapper {
@@ -22,18 +22,20 @@ export class OfertaFormacaoRestMapper {
   // Input: Server DTO -> Core DTO
   // ============================================================================
 
-  static toFindOneInput(dto: OfertaFormacaoFindOneInputDto): OfertaFormacaoFindOneInput {
-    const input = new OfertaFormacaoFindOneInput();
+  static toFindOneInput(dto: OfertaFormacaoFindOneInputRestDto): OfertaFormacaoFindOneInputDto {
+    const input = new OfertaFormacaoFindOneInputDto();
     input.id = dto.id;
     return input;
   }
 
-  static toListInput(dto: OfertaFormacaoListInputDto | null): OfertaFormacaoListInput | null {
+  static toListInput(
+    dto: OfertaFormacaoListInputRestDto | null,
+  ): OfertaFormacaoListInputDto | null {
     if (!dto) {
       return null;
     }
 
-    const input = new OfertaFormacaoListInput();
+    const input = new OfertaFormacaoListInputDto();
     input.page = dto.page;
     input.limit = dto.limit;
     input.search = dto.search;
@@ -44,8 +46,8 @@ export class OfertaFormacaoRestMapper {
     return input;
   }
 
-  static toCreateInput(dto: OfertaFormacaoCreateInputDto): OfertaFormacaoCreateInput {
-    const input = new OfertaFormacaoCreateInput();
+  static toCreateInput(dto: OfertaFormacaoCreateInputRestDto): OfertaFormacaoCreateInputDto {
+    const input = new OfertaFormacaoCreateInputDto();
     input.nome = dto.nome;
     input.slug = dto.slug;
     input.modalidade = { id: dto.modalidade.id };
@@ -53,11 +55,11 @@ export class OfertaFormacaoRestMapper {
   }
 
   static toUpdateInput(
-    params: OfertaFormacaoFindOneInputDto,
-    dto: OfertaFormacaoUpdateInputDto,
-  ): OfertaFormacaoFindOneInput & OfertaFormacaoUpdateInput {
-    const input = new OfertaFormacaoFindOneInput() as OfertaFormacaoFindOneInput &
-      OfertaFormacaoUpdateInput;
+    params: OfertaFormacaoFindOneInputRestDto,
+    dto: OfertaFormacaoUpdateInputRestDto,
+  ): OfertaFormacaoFindOneInputDto & OfertaFormacaoUpdateInputDto {
+    const input = new OfertaFormacaoFindOneInputDto() as OfertaFormacaoFindOneInputDto &
+      OfertaFormacaoUpdateInputDto;
     input.id = params.id;
     if (dto.nome !== undefined) {
       input.nome = dto.nome;
@@ -75,8 +77,10 @@ export class OfertaFormacaoRestMapper {
   // Output: Core DTO -> Server DTO
   // ============================================================================
 
-  static toFindOneOutputDto(output: OfertaFormacaoFindOneOutput): OfertaFormacaoFindOneOutputDto {
-    const dto = new OfertaFormacaoFindOneOutputDto();
+  static toFindOneOutputDto(
+    output: OfertaFormacaoFindOneOutputDto,
+  ): OfertaFormacaoFindOneOutputRestDto {
+    const dto = new OfertaFormacaoFindOneOutputRestDto();
     dto.id = output.id;
     dto.nome = output.nome;
     dto.slug = output.slug;
@@ -87,8 +91,8 @@ export class OfertaFormacaoRestMapper {
     return dto;
   }
 
-  static toListOutputDto(output: OfertaFormacaoListOutput): OfertaFormacaoListOutputDto {
-    const dto = new OfertaFormacaoListOutputDto();
+  static toListOutputDto(output: OfertaFormacaoListOutputDto): OfertaFormacaoListOutputRestDto {
+    const dto = new OfertaFormacaoListOutputRestDto();
     dto.meta = mapPaginationMeta(output.meta);
     dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
     return dto;

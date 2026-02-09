@@ -1,14 +1,36 @@
-import { ArgsType, Field, Int, ObjectType } from "@nestjs/graphql";
-import { IsArray, IsInt, IsOptional, IsString, Min } from "class-validator";
-import { PaginationMetaDto } from "@/modules/@shared/infrastructure/presentation/rest/dtos";
-import { CidadeFindOneOutputDto } from "../rest/cidade.rest.dto";
+import { ArgsType, Field, InputType, Int, ObjectType } from "@nestjs/graphql";
+import { IsArray, IsInt, IsOptional, IsString, IsUUID, Min } from "class-validator";
+import {
+  EntityIdIntGraphQlDto,
+  PaginationMetaGraphQlDto,
+} from "@/modules/@shared/infrastructure/graphql/dtos";
+import { EstadoFindOneOutputGraphQlDto } from "@/server/nest/modules/estado/graphql/estado.graphql.dto";
+
+// ============================================================================
+// FindOne Output
+// ============================================================================
+
+@ObjectType("CidadeFindOneOutputDto")
+export class CidadeFindOneOutputGraphQlDto extends EntityIdIntGraphQlDto {
+  @Field() nome: string;
+  @Field(() => EstadoFindOneOutputGraphQlDto) estado: EstadoFindOneOutputGraphQlDto;
+}
+
+// ============================================================================
+// FindOne Input (for nested references)
+// ============================================================================
+
+@InputType("CidadeFindOneInputDto")
+export class CidadeFindOneInputGraphQlDto {
+  @Field(() => Int) @IsInt() id: number;
+}
 
 // ============================================================================
 // List Input (GraphQL-compatible - no dots in field names)
 // ============================================================================
 
 @ArgsType()
-export class CidadeListInputGqlDto {
+export class CidadeListInputGraphQlDto {
   @Field(() => Int, { nullable: true, defaultValue: 1 })
   @IsOptional()
   @IsInt()
@@ -35,13 +57,13 @@ export class CidadeListInputGqlDto {
   @Field(() => [String], { nullable: true, description: "Filtro por ID" })
   @IsOptional()
   @IsArray()
-  @IsString({ each: true })
+  @IsUUID(undefined, { each: true })
   filterId?: string[];
 
   @Field(() => [String], { nullable: true, description: "Filtro por ID do Estado" })
   @IsOptional()
   @IsArray()
-  @IsString({ each: true })
+  @IsUUID(undefined, { each: true })
   filterEstadoId?: string[];
 
   @Field(() => [String], { nullable: true, description: "Filtro por nome do Estado" })
@@ -58,14 +80,14 @@ export class CidadeListInputGqlDto {
 }
 
 // ============================================================================
-// List Output (reuses the same output DTOs - they're already GraphQL-compatible)
+// List Output
 // ============================================================================
 
 @ObjectType("CidadeListResult")
-export class CidadeListOutputGqlDto {
-  @Field(() => PaginationMetaDto)
-  meta: PaginationMetaDto;
+export class CidadeListOutputGraphQlDto {
+  @Field(() => PaginationMetaGraphQlDto)
+  meta: PaginationMetaGraphQlDto;
 
-  @Field(() => [CidadeFindOneOutputDto])
-  data: CidadeFindOneOutputDto[];
+  @Field(() => [CidadeFindOneOutputGraphQlDto])
+  data: CidadeFindOneOutputGraphQlDto[];
 }

@@ -6,24 +6,24 @@ import { DiarioService } from "@/modules/diario/application/use-cases/diario.ser
 import type { DiarioProfessorEntity } from "@/modules/diario-professor/infrastructure/persistence/typeorm";
 import { PerfilService } from "@/modules/perfil";
 import type {
-  DiarioProfessorCreateInput,
-  DiarioProfessorFindOneInput,
-  DiarioProfessorFindOneOutput,
-  DiarioProfessorListInput,
-  DiarioProfessorListOutput,
-  DiarioProfessorUpdateInput,
+  DiarioProfessorCreateInputDto,
+  DiarioProfessorFindOneInputDto,
+  DiarioProfessorFindOneOutputDto,
+  DiarioProfessorListInputDto,
+  DiarioProfessorListOutputDto,
+  DiarioProfessorUpdateInputDto,
 } from "../dtos";
 import { DIARIO_PROFESSOR_REPOSITORY_PORT, type IDiarioProfessorRepositoryPort } from "../ports";
 
 @Injectable()
 export class DiarioProfessorService extends BaseCrudService<
   DiarioProfessorEntity,
-  DiarioProfessorListInput,
-  DiarioProfessorListOutput,
-  DiarioProfessorFindOneInput,
-  DiarioProfessorFindOneOutput,
-  DiarioProfessorCreateInput,
-  DiarioProfessorUpdateInput
+  DiarioProfessorListInputDto,
+  DiarioProfessorListOutputDto,
+  DiarioProfessorFindOneInputDto,
+  DiarioProfessorFindOneOutputDto,
+  DiarioProfessorCreateInputDto,
+  DiarioProfessorUpdateInputDto
 > {
   protected readonly resourceName = "DiarioProfessor";
   protected readonly createAction = "diario_professor:create";
@@ -44,7 +44,7 @@ export class DiarioProfessorService extends BaseCrudService<
   protected override async beforeCreate(
     accessContext: AccessContext,
     entity: DiarioProfessorEntity,
-    dto: DiarioProfessorCreateInput,
+    dto: DiarioProfessorCreateInputDto,
   ): Promise<void> {
     if (has(dto, "diario") && dto.diario) {
       const diario = await this.diarioService.findByIdStrict(accessContext, {
@@ -64,7 +64,7 @@ export class DiarioProfessorService extends BaseCrudService<
   protected override async beforeUpdate(
     accessContext: AccessContext,
     entity: DiarioProfessorEntity,
-    dto: DiarioProfessorFindOneInput & DiarioProfessorUpdateInput,
+    dto: DiarioProfessorFindOneInputDto & DiarioProfessorUpdateInputDto,
   ): Promise<void> {
     if (has(dto, "diario") && dto.diario !== undefined && dto.diario !== null) {
       const diario = await this.diarioService.findByIdStrict(accessContext, {

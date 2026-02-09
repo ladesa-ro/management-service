@@ -1,21 +1,24 @@
 import {
-  CidadeFindOneInput,
-  CidadeFindOneOutput,
-  CidadeListInput,
-  CidadeListOutput,
+  CidadeFindOneInputDto,
+  CidadeFindOneOutputDto,
+  CidadeListInputDto,
+  CidadeListOutputDto,
 } from "@/modules/cidade";
+import { EstadoGraphqlMapper } from "@/server/nest/modules/estado/graphql/estado.graphql.mapper";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";
-import { CidadeFindOneOutputDto } from "../rest/cidade.rest.dto";
-import { CidadeRestMapper } from "../rest/cidade.rest.mapper";
-import { CidadeListInputGqlDto, CidadeListOutputGqlDto } from "./cidade.graphql.dto";
+import {
+  CidadeFindOneOutputGraphQlDto,
+  CidadeListInputGraphQlDto,
+  CidadeListOutputGraphQlDto,
+} from "./cidade.graphql.dto";
 
 export class CidadeGraphqlMapper {
-  static toListInput(dto: CidadeListInputGqlDto | null): CidadeListInput | null {
+  static toListInput(dto: CidadeListInputGraphQlDto | null): CidadeListInputDto | null {
     if (!dto) {
       return null;
     }
 
-    const input = new CidadeListInput();
+    const input = new CidadeListInputDto();
     input.page = dto.page;
     input.limit = dto.limit;
     input.search = dto.search;
@@ -27,19 +30,23 @@ export class CidadeGraphqlMapper {
     return input;
   }
 
-  static toFindOneInput(id: number, selection?: string[]): CidadeFindOneInput {
-    const input = new CidadeFindOneInput();
+  static toFindOneInput(id: number, selection?: string[]): CidadeFindOneInputDto {
+    const input = new CidadeFindOneInputDto();
     input.id = id;
     input.selection = selection;
     return input;
   }
 
-  static toFindOneOutputDto(output: CidadeFindOneOutput): CidadeFindOneOutputDto {
-    return CidadeRestMapper.toFindOneOutputDto(output);
+  static toFindOneOutputDto(output: CidadeFindOneOutputDto): CidadeFindOneOutputGraphQlDto {
+    const dto = new CidadeFindOneOutputGraphQlDto();
+    dto.id = output.id;
+    dto.nome = output.nome;
+    dto.estado = EstadoGraphqlMapper.toFindOneOutputDto(output.estado);
+    return dto;
   }
 
-  static toListOutputDto(output: CidadeListOutput): CidadeListOutputGqlDto {
-    const dto = new CidadeListOutputGqlDto();
+  static toListOutputDto(output: CidadeListOutputDto): CidadeListOutputGraphQlDto {
+    const dto = new CidadeListOutputGraphQlDto();
     dto.meta = mapPaginationMeta(output.meta);
     dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
     return dto;

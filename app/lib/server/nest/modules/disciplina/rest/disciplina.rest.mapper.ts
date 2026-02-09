@@ -1,20 +1,20 @@
 import {
-  DisciplinaCreateInput,
-  DisciplinaFindOneInput,
-  DisciplinaFindOneOutput,
-  DisciplinaListInput,
-  DisciplinaListOutput,
-  DisciplinaUpdateInput,
-} from "@/modules/disciplina";
-import { BlocoRestMapper } from "@/server/nest/modules/bloco/rest";
-import { mapPaginationMeta } from "@/server/nest/shared/mappers";
-import {
   DisciplinaCreateInputDto,
   DisciplinaFindOneInputDto,
   DisciplinaFindOneOutputDto,
   DisciplinaListInputDto,
   DisciplinaListOutputDto,
   DisciplinaUpdateInputDto,
+} from "@/modules/disciplina";
+import { BlocoRestMapper } from "@/server/nest/modules/bloco/rest";
+import { mapPaginationMeta } from "@/server/nest/shared/mappers";
+import {
+  DisciplinaCreateInputRestDto,
+  DisciplinaFindOneInputRestDto,
+  DisciplinaFindOneOutputRestDto,
+  DisciplinaListInputRestDto,
+  DisciplinaListOutputRestDto,
+  DisciplinaUpdateInputRestDto,
 } from "./disciplina.rest.dto";
 
 export class DisciplinaRestMapper {
@@ -22,18 +22,18 @@ export class DisciplinaRestMapper {
   // Input: Server DTO -> Core DTO
   // ============================================================================
 
-  static toFindOneInput(dto: DisciplinaFindOneInputDto): DisciplinaFindOneInput {
-    const input = new DisciplinaFindOneInput();
+  static toFindOneInput(dto: DisciplinaFindOneInputRestDto): DisciplinaFindOneInputDto {
+    const input = new DisciplinaFindOneInputDto();
     input.id = dto.id;
     return input;
   }
 
-  static toListInput(dto: DisciplinaListInputDto | null): DisciplinaListInput | null {
+  static toListInput(dto: DisciplinaListInputRestDto | null): DisciplinaListInputDto | null {
     if (!dto) {
       return null;
     }
 
-    const input = new DisciplinaListInput();
+    const input = new DisciplinaListInputDto();
     input.page = dto.page;
     input.limit = dto.limit;
     input.search = dto.search;
@@ -43,8 +43,8 @@ export class DisciplinaRestMapper {
     return input;
   }
 
-  static toCreateInput(dto: DisciplinaCreateInputDto): DisciplinaCreateInput {
-    const input = new DisciplinaCreateInput();
+  static toCreateInput(dto: DisciplinaCreateInputRestDto): DisciplinaCreateInputDto {
+    const input = new DisciplinaCreateInputDto();
     input.nome = dto.nome;
     input.nomeAbreviado = dto.nomeAbreviado;
     input.cargaHoraria = dto.cargaHoraria;
@@ -52,10 +52,11 @@ export class DisciplinaRestMapper {
   }
 
   static toUpdateInput(
-    params: DisciplinaFindOneInputDto,
-    dto: DisciplinaUpdateInputDto,
-  ): DisciplinaFindOneInput & DisciplinaUpdateInput {
-    const input = new DisciplinaFindOneInput() as DisciplinaFindOneInput & DisciplinaUpdateInput;
+    params: DisciplinaFindOneInputRestDto,
+    dto: DisciplinaUpdateInputRestDto,
+  ): DisciplinaFindOneInputDto & DisciplinaUpdateInputDto {
+    const input = new DisciplinaFindOneInputDto() as DisciplinaFindOneInputDto &
+      DisciplinaUpdateInputDto;
     input.id = params.id;
     if (dto.nome !== undefined) {
       input.nome = dto.nome;
@@ -73,8 +74,8 @@ export class DisciplinaRestMapper {
   // Output: Core DTO -> Server DTO
   // ============================================================================
 
-  static toFindOneOutputDto(output: DisciplinaFindOneOutput): DisciplinaFindOneOutputDto {
-    const dto = new DisciplinaFindOneOutputDto();
+  static toFindOneOutputDto(output: DisciplinaFindOneOutputDto): DisciplinaFindOneOutputRestDto {
+    const dto = new DisciplinaFindOneOutputRestDto();
     dto.id = output.id;
     dto.nome = output.nome;
     dto.nomeAbreviado = output.nomeAbreviado;
@@ -88,8 +89,8 @@ export class DisciplinaRestMapper {
     return dto;
   }
 
-  static toListOutputDto(output: DisciplinaListOutput): DisciplinaListOutputDto {
-    const dto = new DisciplinaListOutputDto();
+  static toListOutputDto(output: DisciplinaListOutputDto): DisciplinaListOutputRestDto {
+    const dto = new DisciplinaListOutputRestDto();
     dto.meta = mapPaginationMeta(output.meta);
     dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
     return dto;

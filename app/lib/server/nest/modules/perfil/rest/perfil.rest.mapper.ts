@@ -1,19 +1,19 @@
 import {
-  PerfilFindOneInput,
-  PerfilFindOneOutput,
-  PerfilListInput,
-  PerfilListOutput,
-  PerfilSetVinculosInput,
-} from "@/modules/perfil";
-import { CampusRestMapper } from "@/server/nest/modules/campus/rest";
-import { UsuarioRestMapper } from "@/server/nest/modules/usuario/rest";
-import { mapPaginationMeta } from "@/server/nest/shared/mappers";
-import {
   PerfilFindOneInputDto,
   PerfilFindOneOutputDto,
   PerfilListInputDto,
   PerfilListOutputDto,
   PerfilSetVinculosInputDto,
+} from "@/modules/perfil";
+import { CampusRestMapper } from "@/server/nest/modules/campus/rest";
+import { UsuarioRestMapper } from "@/server/nest/modules/usuario/rest";
+import { mapPaginationMeta } from "@/server/nest/shared/mappers";
+import {
+  PerfilFindOneInputRestDto,
+  PerfilFindOneOutputRestDto,
+  PerfilListInputRestDto,
+  PerfilListOutputRestDto,
+  PerfilSetVinculosInputRestDto,
 } from "./perfil.rest.dto";
 
 export class PerfilRestMapper {
@@ -21,18 +21,18 @@ export class PerfilRestMapper {
   // Input: Server DTO -> Core DTO
   // ============================================================================
 
-  static toFindOneInput(dto: PerfilFindOneInputDto): PerfilFindOneInput {
-    const input = new PerfilFindOneInput();
+  static toFindOneInput(dto: PerfilFindOneInputRestDto): PerfilFindOneInputDto {
+    const input = new PerfilFindOneInputDto();
     input.id = dto.id;
     return input;
   }
 
-  static toListInput(dto: PerfilListInputDto | null): PerfilListInput | null {
+  static toListInput(dto: PerfilListInputRestDto | null): PerfilListInputDto | null {
     if (!dto) {
       return null;
     }
 
-    const input = new PerfilListInput();
+    const input = new PerfilListInputDto();
     input.page = dto.page;
     input.limit = dto.limit;
     input.search = dto.search;
@@ -46,8 +46,8 @@ export class PerfilRestMapper {
     return input;
   }
 
-  static toSetVinculosInput(dto: PerfilSetVinculosInputDto): PerfilSetVinculosInput {
-    const input = new PerfilSetVinculosInput();
+  static toSetVinculosInput(dto: PerfilSetVinculosInputRestDto): PerfilSetVinculosInputDto {
+    const input = new PerfilSetVinculosInputDto();
     input.cargos = dto.cargos;
     input.campus = { id: dto.campus.id };
     input.usuario = { id: dto.usuario.id };
@@ -58,8 +58,8 @@ export class PerfilRestMapper {
   // Output: Core DTO -> Server DTO
   // ============================================================================
 
-  static toFindOneOutputDto(output: PerfilFindOneOutput): PerfilFindOneOutputDto {
-    const dto = new PerfilFindOneOutputDto();
+  static toFindOneOutputDto(output: PerfilFindOneOutputDto): PerfilFindOneOutputRestDto {
+    const dto = new PerfilFindOneOutputRestDto();
     dto.id = output.id;
     dto.ativo = output.ativo;
     dto.cargo = output.cargo;
@@ -71,8 +71,8 @@ export class PerfilRestMapper {
     return dto;
   }
 
-  static toListOutputDto(output: PerfilListOutput): PerfilListOutputDto {
-    const dto = new PerfilListOutputDto();
+  static toListOutputDto(output: PerfilListOutputDto): PerfilListOutputRestDto {
+    const dto = new PerfilListOutputRestDto();
     dto.meta = mapPaginationMeta(output.meta);
     dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
     return dto;

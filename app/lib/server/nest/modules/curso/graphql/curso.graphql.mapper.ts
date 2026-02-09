@@ -1,21 +1,60 @@
 import {
-  CursoFindOneInput,
-  CursoFindOneOutput,
-  CursoListInput,
-  CursoListOutput,
+  CursoCreateInputDto,
+  CursoFindOneInputDto,
+  CursoFindOneOutputDto,
+  CursoListInputDto,
+  CursoListOutputDto,
+  CursoUpdateInputDto,
 } from "@/modules/curso";
+import { CampusGraphqlMapper } from "@/server/nest/modules/campus/graphql/campus.graphql.mapper";
+import { OfertaFormacaoGraphqlMapper } from "@/server/nest/modules/oferta-formacao/graphql/oferta-formacao.graphql.mapper";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";
-import { CursoFindOneOutputDto } from "../rest/curso.rest.dto";
-import { CursoRestMapper } from "../rest/curso.rest.mapper";
-import { CursoListInputGqlDto, CursoListOutputGqlDto } from "./curso.graphql.dto";
+import {
+  CursoCreateInputGraphQlDto,
+  CursoFindOneOutputGraphQlDto,
+  CursoListInputGraphQlDto,
+  CursoListOutputGraphQlDto,
+  CursoUpdateInputGraphQlDto,
+} from "./curso.graphql.dto";
+
+function mapImagemOutput(imagem: any): any {
+  if (!imagem) return null;
+  return {
+    id: imagem.id,
+    descricao: imagem.descricao,
+    versoes: (imagem.versoes || []).map((v: any) => ({
+      id: v.id,
+      largura: v.largura,
+      altura: v.altura,
+      formato: v.formato,
+      mimeType: v.mimeType,
+      arquivo: {
+        id: v.arquivo.id,
+        name: v.arquivo.name,
+        mimeType: v.arquivo.mimeType,
+        sizeBytes: v.arquivo.sizeBytes,
+        storageType: v.arquivo.storageType,
+        dateCreated: v.arquivo.dateCreated,
+        dateUpdated: v.arquivo.dateUpdated,
+        dateDeleted: v.arquivo.dateDeleted,
+      },
+      dateCreated: v.dateCreated,
+      dateUpdated: v.dateUpdated,
+      dateDeleted: v.dateDeleted,
+    })),
+    dateCreated: imagem.dateCreated,
+    dateUpdated: imagem.dateUpdated,
+    dateDeleted: imagem.dateDeleted,
+  };
+}
 
 export class CursoGraphqlMapper {
-  static toListInput(dto: CursoListInputGqlDto | null): CursoListInput | null {
+  static toListInput(dto: CursoListInputGraphQlDto | null): CursoListInputDto | null {
     if (!dto) {
       return null;
     }
 
-    const input = new CursoListInput();
+    const input = new CursoListInputDto();
     input.page = dto.page;
     input.limit = dto.limit;
     input.search = dto.search;
@@ -26,19 +65,63 @@ export class CursoGraphqlMapper {
     return input;
   }
 
-  static toFindOneInput(id: string, selection?: string[]): CursoFindOneInput {
-    const input = new CursoFindOneInput();
+  static toFindOneInput(id: string, selection?: string[]): CursoFindOneInputDto {
+    const input = new CursoFindOneInputDto();
     input.id = id;
     input.selection = selection;
     return input;
   }
 
-  static toFindOneOutputDto(output: CursoFindOneOutput): CursoFindOneOutputDto {
-    return CursoRestMapper.toFindOneOutputDto(output);
+  static toCreateInput(dto: CursoCreateInputGraphQlDto): CursoCreateInputDto {
+    const input = new CursoCreateInputDto();
+    input.nome = dto.nome;
+    input.nomeAbreviado = dto.nomeAbreviado;
+    input.campus = { id: dto.campus.id };
+    input.ofertaFormacao = { id: dto.ofertaFormacao.id };
+    input.imagemCapa = dto.imagemCapa ? { id: dto.imagemCapa.id } : null;
+    return input;
   }
 
-  static toListOutputDto(output: CursoListOutput): CursoListOutputGqlDto {
-    const dto = new CursoListOutputGqlDto();
+  static toUpdateInput(
+    params: { id: string },
+    dto: CursoUpdateInputGraphQlDto,
+  ): CursoFindOneInputDto & CursoUpdateInputDto {
+    const input = new CursoFindOneInputDto() as CursoFindOneInputDto & CursoUpdateInputDto;
+    input.id = params.id;
+    if (dto.nome !== undefined) {
+      input.nome = dto.nome;
+    }
+    if (dto.nomeAbreviado !== undefined) {
+      input.nomeAbreviado = dto.nomeAbreviado;
+    }
+    if (dto.campus !== undefined) {
+      input.campus = { id: dto.campus.id };
+    }
+    if (dto.ofertaFormacao !== undefined) {
+      input.ofertaFormacao = { id: dto.ofertaFormacao.id };
+    }
+    if (dto.imagemCapa !== undefined) {
+      input.imagemCapa = dto.imagemCapa ? { id: dto.imagemCapa.id } : null;
+    }
+    return input;
+  }
+
+  static toFindOneOutputDto(output: CursoFindOneOutputDto): CursoFindOneOutputGraphQlDto {
+    const dto = new CursoFindOneOutputGraphQlDto();
+    dto.id = output.id;
+    dto.nome = output.nome;
+    dto.nomeAbreviado = output.nomeAbreviado;
+    dto.campus = CampusGraphqlMapper.toFindOneOutputDto(output.campus);
+    dto.ofertaFormacao = OfertaFormacaoGraphqlMapper.toFindOneOutputDto(output.ofertaFormacao);
+    dto.imagemCapa = mapImagemOutput(output.imagemCapa);
+    dto.dateCreated = output.dateCreated as unknown as Date;
+    dto.dateUpdated = output.dateUpdated as unknown as Date;
+    dto.dateDeleted = output.dateDeleted as unknown as Date | null;
+    return dto;
+  }
+
+  static toListOutputDto(output: CursoListOutputDto): CursoListOutputGraphQlDto {
+    const dto = new CursoListOutputGraphQlDto();
     dto.meta = mapPaginationMeta(output.meta);
     dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
     return dto;

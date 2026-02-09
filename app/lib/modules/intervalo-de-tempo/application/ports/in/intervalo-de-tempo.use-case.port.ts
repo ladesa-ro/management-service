@@ -1,30 +1,30 @@
 import type { AccessContext } from "@/modules/@core/access-context";
 import type {
-  IntervaloDeTempoFindOneInput,
-  IntervaloDeTempoFindOneOutput,
-  IntervaloDeTempoInput,
-  IntervaloDeTempoListInput,
-  IntervaloDeTempoListOutput,
+  IntervaloDeTempoFindOneInputDto,
+  IntervaloDeTempoFindOneOutputDto,
+  IntervaloDeTempoInputDto,
+  IntervaloDeTempoListInputDto,
+  IntervaloDeTempoListOutputDto,
 } from "../../dtos";
 
 export interface IIntervaloDeTempoUseCasePort {
   findAll(
     accessContext: AccessContext,
-    dto: IntervaloDeTempoListInput | null,
-  ): Promise<IntervaloDeTempoListOutput>;
+    dto: IntervaloDeTempoListInputDto | null,
+  ): Promise<IntervaloDeTempoListOutputDto>;
 
   findById(
     accessContext: AccessContext | null,
-    dto: IntervaloDeTempoFindOneInput,
-  ): Promise<IntervaloDeTempoFindOneOutput | null>;
+    dto: IntervaloDeTempoFindOneInputDto,
+  ): Promise<IntervaloDeTempoFindOneOutputDto | null>;
 
   findByIdStrict(
     accessContext: AccessContext | null,
-    dto: IntervaloDeTempoFindOneInput,
-  ): Promise<IntervaloDeTempoFindOneOutput>;
+    dto: IntervaloDeTempoFindOneInputDto,
+  ): Promise<IntervaloDeTempoFindOneOutputDto>;
 
   intervaloCreateOrUpdate(
     accessContext: AccessContext | null,
-    dto: IntervaloDeTempoInput,
-  ): Promise<IntervaloDeTempoFindOneOutput>;
+    dto: IntervaloDeTempoInputDto,
+  ): Promise<IntervaloDeTempoFindOneOutputDto>;
 }

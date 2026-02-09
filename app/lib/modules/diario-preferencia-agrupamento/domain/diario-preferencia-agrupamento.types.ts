@@ -1,18 +1,14 @@
-import type { IdUuid, ScalarDateTimeString } from "@/modules/@shared";
+import type { IdUuid, IEntityBase, ScalarDateTimeString } from "@/modules/@shared";
 import type { IDiario } from "@/modules/diario/domain/diario.types";
 import type { IIntervaloDeTempo } from "@/modules/intervalo-de-tempo/domain/intervalo-de-tempo.types";
 
-export interface IDiarioPreferenciaAgrupamento {
-  id: IdUuid;
+export interface IDiarioPreferenciaAgrupamento extends IEntityBase {
   dataInicio: ScalarDateTimeString;
   dataFim: ScalarDateTimeString | null;
   diaSemanaIso: number;
   aulasSeguidas: number;
   intervaloDeTempo: IIntervaloDeTempo;
   diario: IDiario;
-  dateCreated: ScalarDateTimeString;
-  dateUpdated: ScalarDateTimeString;
-  dateDeleted: ScalarDateTimeString | null;
 }
 
 export interface IDiarioPreferenciaAgrupamentoCreate {

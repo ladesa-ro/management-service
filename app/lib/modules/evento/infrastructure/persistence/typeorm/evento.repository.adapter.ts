@@ -9,10 +9,10 @@ import {
   paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
-  EventoFindOneInput,
-  EventoFindOneOutput,
-  EventoListInput,
-  EventoListOutput,
+  EventoFindOneInputDto,
+  EventoFindOneOutputDto,
+  EventoListInputDto,
+  EventoListOutputDto,
 } from "@/modules/evento";
 import type { IEventoRepositoryPort } from "@/modules/evento/application/ports/out";
 import type { EventoEntity } from "./evento.entity";
@@ -25,16 +25,16 @@ import type { EventoEntity } from "./evento.entity";
 export class EventoTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     EventoEntity,
-    EventoListInput,
-    EventoListOutput,
-    EventoFindOneInput,
-    EventoFindOneOutput
+    EventoListInputDto,
+    EventoListOutputDto,
+    EventoFindOneInputDto,
+    EventoFindOneOutputDto
   >
   implements IEventoRepositoryPort
 {
   protected readonly alias = "evento";
   protected readonly authzAction = "evento:find";
-  protected readonly outputDtoName = "EventoFindOneOutput";
+  protected readonly outputDtoName = "EventoFindOneOutputDto";
 
   constructor(
     protected readonly databaseContext: DatabaseContextService,

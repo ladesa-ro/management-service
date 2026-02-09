@@ -1,15 +1,15 @@
 import {
-  EstadoFindOneInput,
-  EstadoFindOneOutput,
-  EstadoListInput,
-  EstadoListOutput,
-} from "@/modules/estado";
-import { mapPaginationMeta } from "@/server/nest/shared/mappers";
-import {
   EstadoFindOneInputDto,
   EstadoFindOneOutputDto,
   EstadoListInputDto,
   EstadoListOutputDto,
+} from "@/modules/estado";
+import { mapPaginationMeta } from "@/server/nest/shared/mappers";
+import {
+  EstadoFindOneInputRestDto,
+  EstadoFindOneOutputRestDto,
+  EstadoListInputRestDto,
+  EstadoListOutputRestDto,
 } from "./estado.rest.dto";
 
 export class EstadoRestMapper {
@@ -17,18 +17,18 @@ export class EstadoRestMapper {
   // Input: Server DTO -> Core DTO
   // ============================================================================
 
-  static toFindOneInput(dto: EstadoFindOneInputDto): EstadoFindOneInput {
-    const input = new EstadoFindOneInput();
+  static toFindOneInput(dto: EstadoFindOneInputRestDto): EstadoFindOneInputDto {
+    const input = new EstadoFindOneInputDto();
     input.id = dto.id;
     return input;
   }
 
-  static toListInput(dto: EstadoListInputDto | null): EstadoListInput | null {
+  static toListInput(dto: EstadoListInputRestDto | null): EstadoListInputDto | null {
     if (!dto) {
       return null;
     }
 
-    const input = new EstadoListInput();
+    const input = new EstadoListInputDto();
     input.page = dto.page;
     input.limit = dto.limit;
     input.search = dto.search;
@@ -42,16 +42,16 @@ export class EstadoRestMapper {
   // Output: Core DTO -> Server DTO
   // ============================================================================
 
-  static toFindOneOutputDto(output: EstadoFindOneOutput): EstadoFindOneOutputDto {
-    const dto = new EstadoFindOneOutputDto();
+  static toFindOneOutputDto(output: EstadoFindOneOutputDto): EstadoFindOneOutputRestDto {
+    const dto = new EstadoFindOneOutputRestDto();
     dto.id = output.id;
     dto.nome = output.nome;
     dto.sigla = output.sigla;
     return dto;
   }
 
-  static toListOutputDto(output: EstadoListOutput): EstadoListOutputDto {
-    const dto = new EstadoListOutputDto();
+  static toListOutputDto(output: EstadoListOutputDto): EstadoListOutputRestDto {
+    const dto = new EstadoListOutputRestDto();
     dto.meta = mapPaginationMeta(output.meta);
     dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
     return dto;

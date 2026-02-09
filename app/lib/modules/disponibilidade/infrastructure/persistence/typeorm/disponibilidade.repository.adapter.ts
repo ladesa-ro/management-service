@@ -7,10 +7,10 @@ import {
   paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
-  DisponibilidadeFindOneInput,
-  DisponibilidadeFindOneOutput,
-  DisponibilidadeListInput,
-  DisponibilidadeListOutput,
+  DisponibilidadeFindOneInputDto,
+  DisponibilidadeFindOneOutputDto,
+  DisponibilidadeListInputDto,
+  DisponibilidadeListOutputDto,
   IDisponibilidadeRepositoryPort,
 } from "@/modules/disponibilidade";
 import type { DisponibilidadeEntity } from "./disponibilidade.entity";
@@ -19,16 +19,16 @@ import type { DisponibilidadeEntity } from "./disponibilidade.entity";
 export class DisponibilidadeTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     DisponibilidadeEntity,
-    DisponibilidadeListInput,
-    DisponibilidadeListOutput,
-    DisponibilidadeFindOneInput,
-    DisponibilidadeFindOneOutput
+    DisponibilidadeListInputDto,
+    DisponibilidadeListOutputDto,
+    DisponibilidadeFindOneInputDto,
+    DisponibilidadeFindOneOutputDto
   >
   implements IDisponibilidadeRepositoryPort
 {
   protected readonly alias = "disponibilidade";
   protected readonly authzAction = "disponibilidade:find";
-  protected readonly outputDtoName = "DisponibilidadeFindOneOutput";
+  protected readonly outputDtoName = "DisponibilidadeFindOneOutputDto";
 
   constructor(
     protected readonly databaseContext: DatabaseContextService,

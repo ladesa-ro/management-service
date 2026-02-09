@@ -1,19 +1,19 @@
 import {
-  ModalidadeCreateInput,
-  ModalidadeFindOneInput,
-  ModalidadeFindOneOutput,
-  ModalidadeListInput,
-  ModalidadeListOutput,
-  ModalidadeUpdateInput,
-} from "@/modules/modalidade";
-import { mapPaginationMeta } from "@/server/nest/shared/mappers";
-import {
   ModalidadeCreateInputDto,
   ModalidadeFindOneInputDto,
   ModalidadeFindOneOutputDto,
   ModalidadeListInputDto,
   ModalidadeListOutputDto,
   ModalidadeUpdateInputDto,
+} from "@/modules/modalidade";
+import { mapPaginationMeta } from "@/server/nest/shared/mappers";
+import {
+  ModalidadeCreateInputRestDto,
+  ModalidadeFindOneInputRestDto,
+  ModalidadeFindOneOutputRestDto,
+  ModalidadeListInputRestDto,
+  ModalidadeListOutputRestDto,
+  ModalidadeUpdateInputRestDto,
 } from "./modalidade.rest.dto";
 
 export class ModalidadeRestMapper {
@@ -21,18 +21,18 @@ export class ModalidadeRestMapper {
   // Input: Server DTO -> Core DTO
   // ============================================================================
 
-  static toFindOneInput(dto: ModalidadeFindOneInputDto): ModalidadeFindOneInput {
-    const input = new ModalidadeFindOneInput();
+  static toFindOneInput(dto: ModalidadeFindOneInputRestDto): ModalidadeFindOneInputDto {
+    const input = new ModalidadeFindOneInputDto();
     input.id = dto.id;
     return input;
   }
 
-  static toListInput(dto: ModalidadeListInputDto | null): ModalidadeListInput | null {
+  static toListInput(dto: ModalidadeListInputRestDto | null): ModalidadeListInputDto | null {
     if (!dto) {
       return null;
     }
 
-    const input = new ModalidadeListInput();
+    const input = new ModalidadeListInputDto();
     input.page = dto.page;
     input.limit = dto.limit;
     input.search = dto.search;
@@ -42,18 +42,19 @@ export class ModalidadeRestMapper {
     return input;
   }
 
-  static toCreateInput(dto: ModalidadeCreateInputDto): ModalidadeCreateInput {
-    const input = new ModalidadeCreateInput();
+  static toCreateInput(dto: ModalidadeCreateInputRestDto): ModalidadeCreateInputDto {
+    const input = new ModalidadeCreateInputDto();
     input.nome = dto.nome;
     input.slug = dto.slug;
     return input;
   }
 
   static toUpdateInput(
-    params: ModalidadeFindOneInputDto,
-    dto: ModalidadeUpdateInputDto,
-  ): ModalidadeFindOneInput & ModalidadeUpdateInput {
-    const input = new ModalidadeFindOneInput() as ModalidadeFindOneInput & ModalidadeUpdateInput;
+    params: ModalidadeFindOneInputRestDto,
+    dto: ModalidadeUpdateInputRestDto,
+  ): ModalidadeFindOneInputDto & ModalidadeUpdateInputDto {
+    const input = new ModalidadeFindOneInputDto() as ModalidadeFindOneInputDto &
+      ModalidadeUpdateInputDto;
     input.id = params.id;
     if (dto.nome !== undefined) {
       input.nome = dto.nome;
@@ -68,8 +69,8 @@ export class ModalidadeRestMapper {
   // Output: Core DTO -> Server DTO
   // ============================================================================
 
-  static toFindOneOutputDto(output: ModalidadeFindOneOutput): ModalidadeFindOneOutputDto {
-    const dto = new ModalidadeFindOneOutputDto();
+  static toFindOneOutputDto(output: ModalidadeFindOneOutputDto): ModalidadeFindOneOutputRestDto {
+    const dto = new ModalidadeFindOneOutputRestDto();
     dto.id = output.id;
     dto.nome = output.nome;
     dto.slug = output.slug;
@@ -79,8 +80,8 @@ export class ModalidadeRestMapper {
     return dto;
   }
 
-  static toListOutputDto(output: ModalidadeListOutput): ModalidadeListOutputDto {
-    const dto = new ModalidadeListOutputDto();
+  static toListOutputDto(output: ModalidadeListOutputDto): ModalidadeListOutputRestDto {
+    const dto = new ModalidadeListOutputRestDto();
     dto.meta = mapPaginationMeta(output.meta);
     dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
     return dto;

@@ -6,12 +6,12 @@ import { DiarioService } from "@/modules/diario/application/use-cases/diario.ser
 import type { DiarioPreferenciaAgrupamentoEntity } from "@/modules/diario-preferencia-agrupamento/infrastructure/persistence/typeorm";
 import { IntervaloDeTempoService } from "@/modules/intervalo-de-tempo/application/use-cases/intervalo-de-tempo.service";
 import type {
-  DiarioPreferenciaAgrupamentoCreateInput,
-  DiarioPreferenciaAgrupamentoFindOneInput,
-  DiarioPreferenciaAgrupamentoFindOneOutput,
-  DiarioPreferenciaAgrupamentoListInput,
-  DiarioPreferenciaAgrupamentoListOutput,
-  DiarioPreferenciaAgrupamentoUpdateInput,
+  DiarioPreferenciaAgrupamentoCreateInputDto,
+  DiarioPreferenciaAgrupamentoFindOneInputDto,
+  DiarioPreferenciaAgrupamentoFindOneOutputDto,
+  DiarioPreferenciaAgrupamentoListInputDto,
+  DiarioPreferenciaAgrupamentoListOutputDto,
+  DiarioPreferenciaAgrupamentoUpdateInputDto,
 } from "../dtos";
 import {
   DIARIO_PREFERENCIA_AGRUPAMENTO_REPOSITORY_PORT,
@@ -21,12 +21,12 @@ import {
 @Injectable()
 export class DiarioPreferenciaAgrupamentoService extends BaseCrudService<
   DiarioPreferenciaAgrupamentoEntity,
-  DiarioPreferenciaAgrupamentoListInput,
-  DiarioPreferenciaAgrupamentoListOutput,
-  DiarioPreferenciaAgrupamentoFindOneInput,
-  DiarioPreferenciaAgrupamentoFindOneOutput,
-  DiarioPreferenciaAgrupamentoCreateInput,
-  DiarioPreferenciaAgrupamentoUpdateInput
+  DiarioPreferenciaAgrupamentoListInputDto,
+  DiarioPreferenciaAgrupamentoListOutputDto,
+  DiarioPreferenciaAgrupamentoFindOneInputDto,
+  DiarioPreferenciaAgrupamentoFindOneOutputDto,
+  DiarioPreferenciaAgrupamentoCreateInputDto,
+  DiarioPreferenciaAgrupamentoUpdateInputDto
 > {
   protected readonly resourceName = "DiarioPreferenciaAgrupamento";
   protected readonly createAction = "diario_preferencia_agrupamento:create";
@@ -57,7 +57,7 @@ export class DiarioPreferenciaAgrupamentoService extends BaseCrudService<
   protected override async beforeCreate(
     accessContext: AccessContext,
     entity: DiarioPreferenciaAgrupamentoEntity,
-    dto: DiarioPreferenciaAgrupamentoCreateInput,
+    dto: DiarioPreferenciaAgrupamentoCreateInputDto,
   ): Promise<void> {
     if (dto.diario) {
       const diario = await this.diarioService.findByIdStrict(accessContext, dto.diario);
@@ -76,7 +76,7 @@ export class DiarioPreferenciaAgrupamentoService extends BaseCrudService<
   protected override async beforeUpdate(
     accessContext: AccessContext,
     entity: DiarioPreferenciaAgrupamentoEntity,
-    dto: DiarioPreferenciaAgrupamentoFindOneInput & DiarioPreferenciaAgrupamentoUpdateInput,
+    dto: DiarioPreferenciaAgrupamentoFindOneInputDto & DiarioPreferenciaAgrupamentoUpdateInputDto,
   ): Promise<void> {
     if (has(dto, "diario") && dto.diario !== undefined) {
       const diario = await this.diarioService.findByIdStrict(accessContext, dto.diario);

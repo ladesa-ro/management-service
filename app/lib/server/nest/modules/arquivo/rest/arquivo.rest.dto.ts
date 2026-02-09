@@ -1,5 +1,4 @@
-import { ArgsType, Field, ID, InputType, Int, ObjectType, PartialType } from "@nestjs/graphql";
-import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { ApiProperty, ApiPropertyOptional, ApiSchema, PartialType } from "@nestjs/swagger";
 import {
   IsArray,
   IsDateString,
@@ -16,8 +15,8 @@ import {
   simpleProperty,
 } from "@/modules/@shared/infrastructure/persistence/typeorm/metadata";
 import {
-  PaginationInputDto,
-  PaginationMetaDto,
+  PaginationInputRestDto,
+  PaginationMetaRestDto,
   TransformToArray,
 } from "@/modules/@shared/infrastructure/presentation/rest/dtos";
 
@@ -25,9 +24,9 @@ import {
 // FindOne Output
 // ============================================================================
 
-@ObjectType("Arquivo")
+@ApiSchema({ name: "ArquivoFindOneOutputDto" })
 @RegisterModel({
-  name: "ArquivoFindOneOutput",
+  name: "ArquivoFindOneOutputDto",
   properties: [
     simpleProperty("id"),
     simpleProperty("name"),
@@ -37,51 +36,43 @@ import {
     ...commonProperties.dated,
   ],
 })
-export class ArquivoFindOneOutputDto {
+export class ArquivoFindOneOutputRestDto {
   @ApiProperty({ description: "Identificador do registro (uuid)", format: "uuid" })
-  @Field(() => ID)
   @IsUUID()
   id: string;
 
   @ApiPropertyOptional({ description: "Nome do arquivo", nullable: true, minLength: 1 })
-  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   @MinLength(1)
   name: string | null;
 
   @ApiPropertyOptional({ description: "Formato do arquivo", nullable: true, minLength: 1 })
-  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   @MinLength(1)
   mimeType: string | null;
 
   @ApiPropertyOptional({ description: "Tamanho do arquivo (em bytes)", nullable: true })
-  @Field(() => Int, { nullable: true })
   @IsOptional()
   @IsInt()
   @Min(0)
   sizeBytes: number | null;
 
   @ApiProperty({ description: "Estratégia de armazenamento do conteúdo", minLength: 1 })
-  @Field()
   @IsString()
   @MinLength(1)
   storageType: string;
 
   @ApiProperty({ description: "Data e hora da criacao do registro" })
-  @Field()
   @IsDateString()
   dateCreated: Date;
 
   @ApiProperty({ description: "Data e hora da alteracao do registro" })
-  @Field()
   @IsDateString()
   dateUpdated: Date;
 
   @ApiPropertyOptional({ description: "Data e hora da exclusao do registro", nullable: true })
-  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateString()
   dateDeleted: Date | null;
@@ -91,8 +82,8 @@ export class ArquivoFindOneOutputDto {
 // List Input/Output
 // ============================================================================
 
-@ArgsType()
-export class ArquivoListInputDto extends PaginationInputDto {
+@ApiSchema({ name: "ArquivoListInputDto" })
+export class ArquivoListInputRestDto extends PaginationInputRestDto {
   @ApiPropertyOptional({
     description: "Filtro por ID",
     type: [String],
@@ -100,66 +91,59 @@ export class ArquivoListInputDto extends PaginationInputDto {
   @TransformToArray()
   @IsOptional()
   @IsArray()
-  @IsString({ each: true })
+  @IsUUID(undefined, { each: true })
   "filter.id"?: string[];
 }
 
-@ObjectType("ArquivoListOutput")
-export class ArquivoListOutputDto {
-  @ApiProperty({ type: () => PaginationMetaDto, description: "Metadados da busca" })
-  @Field(() => PaginationMetaDto)
-  meta: PaginationMetaDto;
+@ApiSchema({ name: "ArquivoListOutputDto" })
+export class ArquivoListOutputRestDto {
+  @ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" })
+  meta: PaginationMetaRestDto;
 
-  @ApiProperty({ type: () => [ArquivoFindOneOutputDto], description: "Resultados da busca" })
-  @Field(() => [ArquivoFindOneOutputDto])
-  data: ArquivoFindOneOutputDto[];
+  @ApiProperty({ type: () => [ArquivoFindOneOutputRestDto], description: "Resultados da busca" })
+  data: ArquivoFindOneOutputRestDto[];
 }
 
 // ============================================================================
 // Create/Update Input
 // ============================================================================
 
-@InputType("ArquivoCreateInput")
-export class ArquivoCreateInputDto {
+@ApiSchema({ name: "ArquivoCreateInputDto" })
+export class ArquivoCreateInputRestDto {
   @ApiPropertyOptional({ description: "Nome do arquivo", nullable: true, minLength: 1 })
-  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   @MinLength(1)
   name?: string | null;
 
   @ApiPropertyOptional({ description: "Formato do arquivo", nullable: true, minLength: 1 })
-  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   @MinLength(1)
   mimeType?: string | null;
 
   @ApiPropertyOptional({ description: "Tamanho do arquivo (em bytes)", nullable: true })
-  @Field(() => Int, { nullable: true })
   @IsOptional()
   @IsInt()
   @Min(0)
   sizeBytes?: number | null;
 
   @ApiProperty({ description: "Estratégia de armazenamento do conteúdo", minLength: 1 })
-  @Field()
   @IsString()
   @MinLength(1)
   storageType: string;
 }
 
-@InputType("ArquivoUpdateInput")
-export class ArquivoUpdateInputDto extends PartialType(ArquivoCreateInputDto) {}
+@ApiSchema({ name: "ArquivoUpdateInputDto" })
+export class ArquivoUpdateInputRestDto extends PartialType(ArquivoCreateInputRestDto) {}
 
 // ============================================================================
 // FindOne Input (for path params)
 // ============================================================================
 
-@ArgsType()
-export class ArquivoFindOneInputDto {
+@ApiSchema({ name: "ArquivoFindOneInputDto" })
+export class ArquivoFindOneInputRestDto {
   @ApiProperty({ description: "Identificador do registro (uuid)", format: "uuid" })
-  @Field(() => ID)
   @IsUUID()
   id: string;
 }
@@ -168,16 +152,14 @@ export class ArquivoFindOneInputDto {
 // GetFile Query Input
 // ============================================================================
 
-@ArgsType()
-export class ArquivoGetFileQueryInputDto {
+@ApiSchema({ name: "ArquivoGetFileQueryInputDto" })
+export class ArquivoGetFileQueryInputRestDto {
   @ApiPropertyOptional({ description: "ID do recurso de acesso (uuid)", format: "uuid" })
-  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsUUID()
   "acesso.recurso.id"?: string;
 
   @ApiPropertyOptional({ description: "Nome do recurso de acesso" })
-  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   "acesso.recurso.nome"?: string;

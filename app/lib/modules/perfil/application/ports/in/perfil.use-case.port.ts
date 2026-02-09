@@ -1,10 +1,10 @@
 import type { AccessContext } from "@/modules/@core/access-context";
 import type {
-  PerfilFindOneInput,
-  PerfilFindOneOutput,
-  PerfilListInput,
-  PerfilListOutput,
-  PerfilSetVinculosInput,
+  PerfilFindOneInputDto,
+  PerfilFindOneOutputDto,
+  PerfilListInputDto,
+  PerfilListOutputDto,
+  PerfilSetVinculosInputDto,
 } from "../../dtos";
 
 /**
@@ -21,7 +21,7 @@ export interface IPerfilUseCasePort {
   findAllActive(
     accessContext: AccessContext | null,
     usuarioId: string,
-  ): Promise<PerfilFindOneOutput[]>;
+  ): Promise<PerfilFindOneOutputDto[]>;
 
   /**
    * Lista perfis com paginação
@@ -29,7 +29,10 @@ export interface IPerfilUseCasePort {
    * @param dto DTO com critérios de busca e paginação
    * @returns Lista paginada de perfis
    */
-  findAll(accessContext: AccessContext, dto: PerfilListInput | null): Promise<PerfilListOutput>;
+  findAll(
+    accessContext: AccessContext,
+    dto: PerfilListInputDto | null,
+  ): Promise<PerfilListOutputDto>;
 
   /**
    * Busca um perfil por ID
@@ -39,8 +42,8 @@ export interface IPerfilUseCasePort {
    */
   findById(
     accessContext: AccessContext,
-    dto: PerfilFindOneInput,
-  ): Promise<PerfilFindOneOutput | null>;
+    dto: PerfilFindOneInputDto,
+  ): Promise<PerfilFindOneOutputDto | null>;
 
   /**
    * Busca um perfil por ID (lança erro se não encontrado)
@@ -50,8 +53,8 @@ export interface IPerfilUseCasePort {
    */
   findByIdStrict(
     accessContext: AccessContext,
-    dto: PerfilFindOneInput,
-  ): Promise<PerfilFindOneOutput>;
+    dto: PerfilFindOneInputDto,
+  ): Promise<PerfilFindOneOutputDto>;
 
   /**
    * Define os vínculos (cargos) de um usuário em um campus
@@ -59,5 +62,8 @@ export interface IPerfilUseCasePort {
    * @param dto DTO com usuário, campus e lista de cargos
    * @returns Lista atualizada de perfis do usuário no campus
    */
-  setVinculos(accessContext: AccessContext, dto: PerfilSetVinculosInput): Promise<PerfilListOutput>;
+  setVinculos(
+    accessContext: AccessContext,
+    dto: PerfilSetVinculosInputDto,
+  ): Promise<PerfilListOutputDto>;
 }

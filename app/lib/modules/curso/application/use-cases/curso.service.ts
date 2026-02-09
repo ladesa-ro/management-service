@@ -4,6 +4,14 @@ import type { AccessContext } from "@/modules/@core/access-context";
 import { BaseCrudService } from "@/modules/@shared";
 import { ArquivoService } from "@/modules/arquivo/application/use-cases/arquivo.service";
 import { CampusService } from "@/modules/campus";
+import type {
+  CursoCreateInputDto,
+  CursoFindOneInputDto,
+  CursoFindOneOutputDto,
+  CursoListInputDto,
+  CursoListOutputDto,
+  CursoUpdateInputDto,
+} from "@/modules/curso/application/dtos";
 import {
   CURSO_REPOSITORY_PORT,
   type ICursoRepositoryPort,
@@ -12,14 +20,6 @@ import {
 import type { CursoEntity } from "@/modules/curso/infrastructure/persistence/typeorm";
 import { ImagemService } from "@/modules/imagem/application/use-cases/imagem.service";
 import { OfertaFormacaoService } from "@/modules/oferta-formacao";
-import type {
-  CursoCreateInputDto,
-  CursoFindOneInputDto,
-  CursoFindOneOutputDto,
-  CursoListInputDto,
-  CursoListOutputDto,
-  CursoUpdateInputDto,
-} from "@/server/nest/modules/curso/rest";
 
 @Injectable()
 export class CursoService

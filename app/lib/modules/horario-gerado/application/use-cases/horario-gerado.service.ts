@@ -5,24 +5,24 @@ import { BaseCrudService } from "@/modules/@shared";
 import { CalendarioLetivoService } from "@/modules/calendario-letivo";
 import type { HorarioGeradoEntity } from "@/modules/horario-gerado/infrastructure/persistence/typeorm";
 import type {
-  HorarioGeradoCreateInput,
-  HorarioGeradoFindOneInput,
-  HorarioGeradoFindOneOutput,
-  HorarioGeradoListInput,
-  HorarioGeradoListOutput,
-  HorarioGeradoUpdateInput,
+  HorarioGeradoCreateInputDto,
+  HorarioGeradoFindOneInputDto,
+  HorarioGeradoFindOneOutputDto,
+  HorarioGeradoListInputDto,
+  HorarioGeradoListOutputDto,
+  HorarioGeradoUpdateInputDto,
 } from "../dtos";
 import { HORARIO_GERADO_REPOSITORY_PORT, type IHorarioGeradoRepositoryPort } from "../ports";
 
 @Injectable()
 export class HorarioGeradoService extends BaseCrudService<
   HorarioGeradoEntity,
-  HorarioGeradoListInput,
-  HorarioGeradoListOutput,
-  HorarioGeradoFindOneInput,
-  HorarioGeradoFindOneOutput,
-  HorarioGeradoCreateInput,
-  HorarioGeradoUpdateInput
+  HorarioGeradoListInputDto,
+  HorarioGeradoListOutputDto,
+  HorarioGeradoFindOneInputDto,
+  HorarioGeradoFindOneOutputDto,
+  HorarioGeradoCreateInputDto,
+  HorarioGeradoUpdateInputDto
 > {
   protected readonly resourceName = "HorarioGerado";
   protected readonly createAction = "horario_gerado:create";
@@ -54,7 +54,7 @@ export class HorarioGeradoService extends BaseCrudService<
   protected override async beforeCreate(
     accessContext: AccessContext,
     entity: HorarioGeradoEntity,
-    dto: HorarioGeradoCreateInput,
+    dto: HorarioGeradoCreateInputDto,
   ): Promise<void> {
     if (dto.calendario) {
       const calendario = await this.calendarioLetivoService.findByIdSimpleStrict(
@@ -68,7 +68,7 @@ export class HorarioGeradoService extends BaseCrudService<
   protected override async beforeUpdate(
     accessContext: AccessContext,
     entity: HorarioGeradoEntity,
-    dto: HorarioGeradoFindOneInput & HorarioGeradoUpdateInput,
+    dto: HorarioGeradoFindOneInputDto & HorarioGeradoUpdateInputDto,
   ): Promise<void> {
     if (has(dto, "calendario") && dto.calendario !== undefined) {
       const calendario = await this.calendarioLetivoService.findByIdSimpleStrict(

@@ -10,12 +10,12 @@ import {
 import { AccessContext, AccessContextHttp } from "@/modules/@core/access-context";
 import { EventoService } from "@/modules/evento";
 import {
-  EventoCreateInputDto,
-  EventoFindOneInputDto,
-  EventoFindOneOutputDto,
-  EventoListInputDto,
-  EventoListOutputDto,
-  EventoUpdateInputDto,
+  EventoCreateInputRestDto,
+  EventoFindOneInputRestDto,
+  EventoFindOneOutputRestDto,
+  EventoListInputRestDto,
+  EventoListOutputRestDto,
+  EventoUpdateInputRestDto,
 } from "./evento.rest.dto";
 import { EventoRestMapper } from "./evento.rest.mapper";
 
@@ -26,12 +26,12 @@ export class EventoRestController {
 
   @Get("/")
   @ApiOperation({ summary: "Lista eventos", operationId: "eventoFindAll" })
-  @ApiOkResponse({ type: EventoListOutputDto })
+  @ApiOkResponse({ type: EventoListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
     @AccessContextHttp() accessContext: AccessContext,
-    @Query() dto: EventoListInputDto,
-  ): Promise<EventoListOutputDto> {
+    @Query() dto: EventoListInputRestDto,
+  ): Promise<EventoListOutputRestDto> {
     const input = EventoRestMapper.toListInput(dto);
     const result = await this.eventoService.findAll(accessContext, input);
     return EventoRestMapper.toListOutputDto(result);
@@ -39,13 +39,13 @@ export class EventoRestController {
 
   @Get("/:id")
   @ApiOperation({ summary: "Busca um evento por ID", operationId: "eventoFindById" })
-  @ApiOkResponse({ type: EventoFindOneOutputDto })
+  @ApiOkResponse({ type: EventoFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async findById(
     @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: EventoFindOneInputDto,
-  ): Promise<EventoFindOneOutputDto> {
+    @Param() params: EventoFindOneInputRestDto,
+  ): Promise<EventoFindOneOutputRestDto> {
     const input = EventoRestMapper.toFindOneInput(params);
     const result = await this.eventoService.findByIdStrict(accessContext, input);
     return EventoRestMapper.toFindOneOutputDto(result);
@@ -53,12 +53,12 @@ export class EventoRestController {
 
   @Post("/")
   @ApiOperation({ summary: "Cria um evento", operationId: "eventoCreate" })
-  @ApiCreatedResponse({ type: EventoFindOneOutputDto })
+  @ApiCreatedResponse({ type: EventoFindOneOutputRestDto })
   @ApiForbiddenResponse()
   async create(
     @AccessContextHttp() accessContext: AccessContext,
-    @Body() dto: EventoCreateInputDto,
-  ): Promise<EventoFindOneOutputDto> {
+    @Body() dto: EventoCreateInputRestDto,
+  ): Promise<EventoFindOneOutputRestDto> {
     const input = EventoRestMapper.toCreateInput(dto);
     const result = await this.eventoService.create(accessContext, input);
     return EventoRestMapper.toFindOneOutputDto(result);
@@ -66,14 +66,14 @@ export class EventoRestController {
 
   @Patch("/:id")
   @ApiOperation({ summary: "Atualiza um evento", operationId: "eventoUpdate" })
-  @ApiOkResponse({ type: EventoFindOneOutputDto })
+  @ApiOkResponse({ type: EventoFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async update(
     @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: EventoFindOneInputDto,
-    @Body() dto: EventoUpdateInputDto,
-  ): Promise<EventoFindOneOutputDto> {
+    @Param() params: EventoFindOneInputRestDto,
+    @Body() dto: EventoUpdateInputRestDto,
+  ): Promise<EventoFindOneOutputRestDto> {
     const input = EventoRestMapper.toUpdateInput(params, dto);
     const result = await this.eventoService.update(accessContext, input);
     return EventoRestMapper.toFindOneOutputDto(result);
@@ -86,7 +86,7 @@ export class EventoRestController {
   @ApiNotFoundResponse()
   async deleteOneById(
     @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: EventoFindOneInputDto,
+    @Param() params: EventoFindOneInputRestDto,
   ): Promise<boolean> {
     const input = EventoRestMapper.toFindOneInput(params);
     return this.eventoService.deleteOneById(accessContext, input);

@@ -1,14 +1,10 @@
-import type { IdUuid, ScalarDateTimeString } from "@/modules/@shared";
+import type { IdUuid, IEntityBase } from "@/modules/@shared";
 import type { INivelFormacao } from "@/modules/nivel-formacao/domain/nivel-formacao.types";
 import type { IOfertaFormacao } from "@/modules/oferta-formacao/domain/oferta-formacao.types";
 
-export interface IOfertaFormacaoNivelFormacao {
-  id: IdUuid;
+export interface IOfertaFormacaoNivelFormacao extends IEntityBase {
   nivelFormacao: INivelFormacao;
   ofertaFormacao: IOfertaFormacao;
-  dateCreated: ScalarDateTimeString;
-  dateUpdated: ScalarDateTimeString;
-  dateDeleted: ScalarDateTimeString | null;
 }
 
 export interface IOfertaFormacaoNivelFormacaoCreate {

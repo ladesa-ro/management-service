@@ -7,12 +7,12 @@ import {
   type IAuthorizationServicePort,
 } from "@/modules/@shared";
 import type {
-  CampusCreateInput,
-  CampusFindOneInput,
-  CampusFindOneOutput,
-  CampusListInput,
-  CampusListOutput,
-  CampusUpdateInput,
+  CampusCreateInputDto,
+  CampusFindOneInputDto,
+  CampusFindOneOutputDto,
+  CampusListInputDto,
+  CampusListOutputDto,
+  CampusUpdateInputDto,
 } from "@/modules/campus/application/dtos";
 import {
   CAMPUS_REPOSITORY_PORT,
@@ -26,12 +26,12 @@ import { type EnderecoInputDto, EnderecoService } from "@/modules/endereco";
 export class CampusService
   extends BaseCrudService<
     CampusEntity,
-    CampusListInput,
-    CampusListOutput,
-    CampusFindOneInput,
-    CampusFindOneOutput,
-    CampusCreateInput,
-    CampusUpdateInput
+    CampusListInputDto,
+    CampusListOutputDto,
+    CampusFindOneInputDto,
+    CampusFindOneOutputDto,
+    CampusCreateInputDto,
+    CampusUpdateInputDto
   >
   implements ICampusUseCasePort
 {
@@ -55,7 +55,7 @@ export class CampusService
   protected override async beforeCreate(
     _accessContext: AccessContext,
     entity: CampusEntity,
-    dto: CampusCreateInput,
+    dto: CampusCreateInputDto,
   ): Promise<void> {
     const endereco = await this.enderecoService.internalEnderecoCreateOrUpdate(null, dto.endereco);
     this.repository.merge(entity, { endereco: { id: endereco.id } });
@@ -64,8 +64,8 @@ export class CampusService
   protected override async beforeUpdate(
     _accessContext: AccessContext,
     entity: CampusEntity,
-    dto: CampusFindOneInput & CampusUpdateInput,
-    current: CampusFindOneOutput,
+    dto: CampusFindOneInputDto & CampusUpdateInputDto,
+    current: CampusFindOneOutputDto,
   ): Promise<void> {
     const dtoEndereco = get(dto, "endereco");
 

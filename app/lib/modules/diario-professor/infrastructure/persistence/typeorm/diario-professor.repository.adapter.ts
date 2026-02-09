@@ -8,10 +8,10 @@ import {
   paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
-  DiarioProfessorFindOneInput,
-  DiarioProfessorFindOneOutput,
-  DiarioProfessorListInput,
-  DiarioProfessorListOutput,
+  DiarioProfessorFindOneInputDto,
+  DiarioProfessorFindOneOutputDto,
+  DiarioProfessorListInputDto,
+  DiarioProfessorListOutputDto,
 } from "@/modules/diario-professor/application/dtos";
 import type { IDiarioProfessorRepositoryPort } from "@/modules/diario-professor/application/ports";
 import type { DiarioProfessorEntity } from "./diario-professor.entity";
@@ -20,16 +20,16 @@ import type { DiarioProfessorEntity } from "./diario-professor.entity";
 export class DiarioProfessorTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     DiarioProfessorEntity,
-    DiarioProfessorListInput,
-    DiarioProfessorListOutput,
-    DiarioProfessorFindOneInput,
-    DiarioProfessorFindOneOutput
+    DiarioProfessorListInputDto,
+    DiarioProfessorListOutputDto,
+    DiarioProfessorFindOneInputDto,
+    DiarioProfessorFindOneOutputDto
   >
   implements IDiarioProfessorRepositoryPort
 {
   protected readonly alias = "diario_professor";
   protected readonly authzAction = "diario_professor:find";
-  protected readonly outputDtoName = "DiarioProfessorFindOneOutput";
+  protected readonly outputDtoName = "DiarioProfessorFindOneOutputDto";
 
   constructor(
     protected readonly databaseContext: DatabaseContextService,

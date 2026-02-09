@@ -1,4 +1,4 @@
-import { IdUuid, ScalarDateTimeString } from "@/modules/@shared";
+import type { IdUuid, IEntityBase } from "@/modules/@shared";
 import type { ICampus } from "@/modules/campus";
 import type { IOfertaFormacao } from "@/modules/oferta-formacao";
 
@@ -6,15 +6,11 @@ import type { IOfertaFormacao } from "@/modules/oferta-formacao";
  * Interface que define a estrutura de dados de CalendarioLetivo
  * Tipagem pura sem implementacao de regras
  */
-export interface ICalendarioLetivo {
-  id: IdUuid;
+export interface ICalendarioLetivo extends IEntityBase {
   nome: string;
   ano: number;
   campus: ICampus;
   ofertaFormacao: IOfertaFormacao;
-  dateCreated: ScalarDateTimeString;
-  dateUpdated: ScalarDateTimeString;
-  dateDeleted: ScalarDateTimeString | null;
 }
 
 /**

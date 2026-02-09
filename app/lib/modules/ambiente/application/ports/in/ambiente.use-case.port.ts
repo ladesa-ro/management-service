@@ -1,12 +1,12 @@
 import type { StreamableFile } from "@nestjs/common";
 import type { AccessContext } from "@/modules/@core/access-context";
 import type {
-  AmbienteCreateInput,
-  AmbienteFindOneInput,
-  AmbienteFindOneOutput,
-  AmbienteListInput,
-  AmbienteListOutput,
-  AmbienteUpdateInput,
+  AmbienteCreateInputDto,
+  AmbienteFindOneInputDto,
+  AmbienteFindOneOutputDto,
+  AmbienteListInputDto,
+  AmbienteListOutputDto,
+  AmbienteUpdateInputDto,
 } from "../../dtos";
 
 /**
@@ -19,40 +19,43 @@ export interface IAmbienteUseCasePort {
    */
   findAll(
     accessContext: AccessContext,
-    dto: AmbienteListInput | null,
+    dto: AmbienteListInputDto | null,
     selection?: string[] | boolean,
-  ): Promise<AmbienteListOutput>;
+  ): Promise<AmbienteListOutputDto>;
 
   /**
    * Busca um ambiente por ID
    */
   findById(
     accessContext: AccessContext | null,
-    dto: AmbienteFindOneInput,
+    dto: AmbienteFindOneInputDto,
     selection?: string[] | boolean,
-  ): Promise<AmbienteFindOneOutput | null>;
+  ): Promise<AmbienteFindOneOutputDto | null>;
 
   /**
    * Busca um ambiente por ID (lança exceção se não encontrado)
    */
   findByIdStrict(
     accessContext: AccessContext | null,
-    dto: AmbienteFindOneInput,
+    dto: AmbienteFindOneInputDto,
     selection?: string[] | boolean,
-  ): Promise<AmbienteFindOneOutput>;
+  ): Promise<AmbienteFindOneOutputDto>;
 
   /**
    * Cria um novo ambiente
    */
-  create(accessContext: AccessContext, dto: AmbienteCreateInput): Promise<AmbienteFindOneOutput>;
+  create(
+    accessContext: AccessContext,
+    dto: AmbienteCreateInputDto,
+  ): Promise<AmbienteFindOneOutputDto>;
 
   /**
    * Atualiza um ambiente existente
    */
   update(
     accessContext: AccessContext,
-    dto: AmbienteFindOneInput & AmbienteUpdateInput,
-  ): Promise<AmbienteFindOneOutput>;
+    dto: AmbienteFindOneInputDto & AmbienteUpdateInputDto,
+  ): Promise<AmbienteFindOneOutputDto>;
 
   /**
    * Obtém a imagem de capa do ambiente
@@ -64,12 +67,12 @@ export interface IAmbienteUseCasePort {
    */
   updateImagemCapa(
     accessContext: AccessContext,
-    dto: AmbienteFindOneInput,
+    dto: AmbienteFindOneInputDto,
     file: Express.Multer.File,
   ): Promise<boolean>;
 
   /**
    * Remove um ambiente (soft delete)
    */
-  deleteOneById(accessContext: AccessContext, dto: AmbienteFindOneInput): Promise<boolean>;
+  deleteOneById(accessContext: AccessContext, dto: AmbienteFindOneInputDto): Promise<boolean>;
 }

@@ -1,64 +1,64 @@
 import {
-  EntityOutput,
-  FindOneInput,
+  EntityOutputDto,
+  FindOneInputDto,
   IFilterAcceptableValues,
-  ObjectUuidRef,
-  PaginationInput,
-  PaginationResult,
+  ObjectUuidRefDto,
+  PaginationInputDto,
+  PaginationResultDto,
 } from "@/modules/@shared/application/dtos";
-import { ArquivoFindOneOutput, ArquivoInputRef } from "@/modules/arquivo";
-import { ImagemFindOneOutput, ImagemInputRef } from "@/modules/imagem";
+import { ArquivoFindOneOutputDto, ArquivoInputRefDto } from "@/modules/arquivo";
+import { ImagemFindOneOutputDto, ImagemInputRefDto } from "@/modules/imagem";
 
 // ============================================================================
 // FindOne Input/Output
 // ============================================================================
 
-export class ImagemArquivoFindOneInput extends FindOneInput {}
+export class ImagemArquivoFindOneInputDto extends FindOneInputDto {}
 
-export class ImagemArquivoFindOneOutput extends EntityOutput {
+export class ImagemArquivoFindOneOutputDto extends EntityOutputDto {
   largura!: number;
   altura!: number;
   formato!: string;
   mimeType!: string;
-  imagem!: ImagemFindOneOutput;
-  arquivo!: ArquivoFindOneOutput;
+  imagem!: ImagemFindOneOutputDto;
+  arquivo!: ArquivoFindOneOutputDto;
 }
 
 // ============================================================================
 // List Input/Output
 // ============================================================================
 
-export class ImagemArquivoListInput extends PaginationInput {
+export class ImagemArquivoListInputDto extends PaginationInputDto {
   "filter.id"?: IFilterAcceptableValues;
   "filter.imagem.id"?: IFilterAcceptableValues;
 }
 
-export class ImagemArquivoListOutput extends PaginationResult<ImagemArquivoFindOneOutput> {}
+export class ImagemArquivoListOutputDto extends PaginationResultDto<ImagemArquivoFindOneOutputDto> {}
 
 // ============================================================================
 // Create/Update Input
 // ============================================================================
 
-export class ImagemArquivoCreateInput {
+export class ImagemArquivoCreateInputDto {
   largura!: number;
   altura!: number;
   formato!: string;
   mimeType!: string;
-  imagem!: ImagemInputRef;
-  arquivo!: ArquivoInputRef;
+  imagem!: ImagemInputRefDto;
+  arquivo!: ArquivoInputRefDto;
 }
 
-export class ImagemArquivoUpdateInput {
+export class ImagemArquivoUpdateInputDto {
   largura?: number;
   altura?: number;
   formato?: string;
   mimeType?: string;
-  imagem?: ImagemInputRef;
-  arquivo?: ArquivoInputRef;
+  imagem?: ImagemInputRefDto;
+  arquivo?: ArquivoInputRefDto;
 }
 
 // ============================================================================
 // Input Ref
 // ============================================================================
 
-export type ImagemArquivoInputRef = ObjectUuidRef;
+export type ImagemArquivoInputRefDto = ObjectUuidRefDto;

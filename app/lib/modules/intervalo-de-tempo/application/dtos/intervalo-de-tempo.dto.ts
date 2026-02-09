@@ -1,20 +1,20 @@
 import {
-  EntityOutput,
-  FindOneInput,
+  EntityOutputDto,
+  FindOneInputDto,
   IdUuid,
   IFilterAcceptableValues,
-  ObjectUuidRef,
-  PaginationInput,
-  PaginationResult,
+  ObjectUuidRefDto,
+  PaginationInputDto,
+  PaginationResultDto,
 } from "@/modules/@shared";
 
 // ============================================================================
 // FindOne Input/Output
 // ============================================================================
 
-export class IntervaloDeTempoFindOneInput extends FindOneInput {}
+export class IntervaloDeTempoFindOneInputDto extends FindOneInputDto {}
 
-export class IntervaloDeTempoFindOneOutput extends EntityOutput {
+export class IntervaloDeTempoFindOneOutputDto extends EntityOutputDto {
   periodoInicio!: string;
   periodoFim!: string;
 }
@@ -23,23 +23,23 @@ export class IntervaloDeTempoFindOneOutput extends EntityOutput {
 // List Input/Output
 // ============================================================================
 
-export class IntervaloDeTempoListInput extends PaginationInput {
+export class IntervaloDeTempoListInputDto extends PaginationInputDto {
   "filter.id"?: IFilterAcceptableValues;
 }
 
-export class IntervaloDeTempoListOutput extends PaginationResult<IntervaloDeTempoFindOneOutput> {}
+export class IntervaloDeTempoListOutputDto extends PaginationResultDto<IntervaloDeTempoFindOneOutputDto> {}
 
 // ============================================================================
 // Create/Update Input
 // ============================================================================
 
-export class IntervaloDeTempoCreateInput {
+export class IntervaloDeTempoCreateInputDto {
   periodoInicio!: string;
 
   periodoFim!: string;
 }
 
-export class IntervaloDeTempoUpdateInput {
+export class IntervaloDeTempoUpdateInputDto {
   periodoInicio?: string;
 
   periodoFim?: string;
@@ -49,13 +49,13 @@ export class IntervaloDeTempoUpdateInput {
 // Input Ref
 // ============================================================================
 
-export type IntervaloDeTempoInputRef = ObjectUuidRef;
+export type IntervaloDeTempoInputRefDto = ObjectUuidRefDto;
 
 // ============================================================================
 // Input for create-or-update pattern
 // ============================================================================
 
-export class IntervaloDeTempoInput {
+export class IntervaloDeTempoInputDto {
   id?: IdUuid;
 
   periodoInicio?: string;

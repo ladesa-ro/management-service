@@ -8,10 +8,10 @@ import {
   paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
-  AulaFindOneInput,
-  AulaFindOneOutput,
-  AulaListInput,
-  AulaListOutput,
+  AulaFindOneInputDto,
+  AulaFindOneOutputDto,
+  AulaListInputDto,
+  AulaListOutputDto,
 } from "@/modules/aula/application/dtos";
 import type { IAulaRepositoryPort } from "@/modules/aula/application/ports";
 import type { AulaEntity } from "./aula.entity";
@@ -20,16 +20,16 @@ import type { AulaEntity } from "./aula.entity";
 export class AulaTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     AulaEntity,
-    AulaListInput,
-    AulaListOutput,
-    AulaFindOneInput,
-    AulaFindOneOutput
+    AulaListInputDto,
+    AulaListOutputDto,
+    AulaFindOneInputDto,
+    AulaFindOneOutputDto
   >
   implements IAulaRepositoryPort
 {
   protected readonly alias = "aula";
   protected readonly authzAction = "aula:find";
-  protected readonly outputDtoName = "AulaFindOneOutput";
+  protected readonly outputDtoName = "AulaFindOneOutputDto";
 
   constructor(
     protected readonly databaseContext: DatabaseContextService,

@@ -21,6 +21,19 @@ export class Bloco extends BaseEntity implements IBloco {
   }
 
   // ========================================
+  // Validação
+  // ========================================
+
+  validar(): void {
+    const { result, rules } = Bloco.createValidation();
+    rules.required(this.nome, "nome");
+    rules.minLength(this.nome, "nome", 1);
+    rules.required(this.codigo, "codigo");
+    rules.minLength(this.codigo, "codigo", 1);
+    Bloco.throwIfInvalid(result);
+  }
+
+  // ========================================
   // Factory Methods
   // ========================================
 
@@ -29,21 +42,12 @@ export class Bloco extends BaseEntity implements IBloco {
    * @throws EntityValidationError se os dados forem inválidos
    */
   static criar(dados: IBlocoCreate): Bloco {
-    const { result, rules } = this.createValidation();
-
     const instance = new Bloco();
-    instance.nome = rules.required(dados.nome, "nome");
-    instance.nome = rules.minLength(instance.nome, "nome", 1);
-
-    instance.codigo = rules.required(dados.codigo, "codigo");
-    instance.codigo = rules.minLength(instance.codigo, "codigo", 1);
-
-    this.throwIfInvalid(result);
-
+    instance.nome = dados.nome?.trim() ?? "";
+    instance.codigo = dados.codigo?.trim() ?? "";
     instance.imagemCapa = null;
-    instance.dateCreated = new Date().toISOString();
-    instance.dateUpdated = new Date().toISOString();
-    instance.dateDeleted = null;
+    instance.initDates();
+    instance.validar();
 
     return instance;
   }
@@ -66,21 +70,16 @@ export class Bloco extends BaseEntity implements IBloco {
    * @throws EntityValidationError se os dados forem inválidos
    */
   atualizar(dados: IBlocoUpdate): void {
-    const { result, rules } = Bloco.createValidation();
-
     if (dados.nome !== undefined) {
-      this.nome = rules.required(dados.nome, "nome");
-      this.nome = rules.minLength(this.nome, "nome", 1);
+      this.nome = dados.nome?.trim() ?? "";
     }
 
     if (dados.codigo !== undefined) {
-      this.codigo = rules.required(dados.codigo, "codigo");
-      this.codigo = rules.minLength(this.codigo, "codigo", 1);
+      this.codigo = dados.codigo?.trim() ?? "";
     }
 
-    Bloco.throwIfInvalid(result);
-
-    this.dateUpdated = new Date().toISOString();
+    this.touchUpdated();
+    this.validar();
   }
 
   // ========================================

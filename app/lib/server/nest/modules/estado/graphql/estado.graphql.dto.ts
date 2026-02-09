@@ -1,14 +1,26 @@
 import { ArgsType, Field, Int, ObjectType } from "@nestjs/graphql";
-import { IsArray, IsInt, IsOptional, IsString, Min } from "class-validator";
-import { PaginationMetaDto } from "@/modules/@shared/infrastructure/presentation/rest/dtos";
-import { EstadoFindOneOutputDto } from "../rest/estado.rest.dto";
+import { IsArray, IsInt, IsOptional, IsString, IsUUID, Min } from "class-validator";
+import {
+  EntityIdIntGraphQlDto,
+  PaginationMetaGraphQlDto,
+} from "@/modules/@shared/infrastructure/graphql/dtos";
+
+// ============================================================================
+// FindOne Output
+// ============================================================================
+
+@ObjectType("EstadoFindOneOutputDto")
+export class EstadoFindOneOutputGraphQlDto extends EntityIdIntGraphQlDto {
+  @Field() nome: string;
+  @Field() sigla: string;
+}
 
 // ============================================================================
 // List Input (GraphQL-compatible - no dots in field names)
 // ============================================================================
 
 @ArgsType()
-export class EstadoListInputGqlDto {
+export class EstadoListInputGraphQlDto {
   @Field(() => Int, { nullable: true, defaultValue: 1 })
   @IsOptional()
   @IsInt()
@@ -35,19 +47,19 @@ export class EstadoListInputGqlDto {
   @Field(() => [String], { nullable: true, description: "Filtro por ID" })
   @IsOptional()
   @IsArray()
-  @IsString({ each: true })
+  @IsUUID(undefined, { each: true })
   filterId?: string[];
 }
 
 // ============================================================================
-// List Output (reuses the same output DTOs - they're already GraphQL-compatible)
+// List Output
 // ============================================================================
 
 @ObjectType("EstadoListResult")
-export class EstadoListOutputGqlDto {
-  @Field(() => PaginationMetaDto)
-  meta: PaginationMetaDto;
+export class EstadoListOutputGraphQlDto {
+  @Field(() => PaginationMetaGraphQlDto)
+  meta: PaginationMetaGraphQlDto;
 
-  @Field(() => [EstadoFindOneOutputDto])
-  data: EstadoFindOneOutputDto[];
+  @Field(() => [EstadoFindOneOutputGraphQlDto])
+  data: EstadoFindOneOutputGraphQlDto[];
 }

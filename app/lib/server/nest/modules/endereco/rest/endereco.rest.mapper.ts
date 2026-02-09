@@ -1,10 +1,10 @@
-import { EnderecoCreateInput, EnderecoFindOneOutput } from "@/modules/endereco";
+import { EnderecoCreateInputDto, EnderecoFindOneOutputDto } from "@/modules/endereco";
 import { CidadeRestMapper } from "@/server/nest/modules/cidade/rest/cidade.rest.mapper";
-import { EnderecoFindOneOutputDto, EnderecoInputDto } from "./endereco.rest.dto";
+import { EnderecoFindOneOutputRestDto, EnderecoInputRestDto } from "./endereco.rest.dto";
 
 export class EnderecoRestMapper {
-  static toCreateInput(dto: EnderecoInputDto): EnderecoCreateInput {
-    const input = new EnderecoCreateInput();
+  static toCreateInput(dto: EnderecoInputRestDto): EnderecoCreateInputDto {
+    const input = new EnderecoCreateInputDto();
     input.cep = dto.cep;
     input.logradouro = dto.logradouro;
     input.numero = dto.numero;
@@ -15,8 +15,8 @@ export class EnderecoRestMapper {
     return input;
   }
 
-  static toFindOneOutputDto(output: EnderecoFindOneOutput): EnderecoFindOneOutputDto {
-    const dto = new EnderecoFindOneOutputDto();
+  static toFindOneOutputDto(output: EnderecoFindOneOutputDto): EnderecoFindOneOutputRestDto {
+    const dto = new EnderecoFindOneOutputRestDto();
     dto.id = output.id;
     dto.cep = output.cep;
     dto.logradouro = output.logradouro;

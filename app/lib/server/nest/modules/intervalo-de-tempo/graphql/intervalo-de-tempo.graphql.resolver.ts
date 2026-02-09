@@ -3,23 +3,23 @@ import { type GraphQLResolveInfo } from "graphql";
 import { AccessContext, AccessContextGraphQL } from "@/modules/@core/access-context";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
 import { IntervaloDeTempoService } from "@/modules/intervalo-de-tempo/application/use-cases/intervalo-de-tempo.service";
-import { IntervaloDeTempoFindOneOutputDto } from "../rest/intervalo-de-tempo.rest.dto";
 import {
-  IntervaloDeTempoListInputGqlDto,
-  IntervaloDeTempoListOutputGqlDto,
+  IntervaloDeTempoFindOneOutputGraphQlDto,
+  IntervaloDeTempoListInputGraphQlDto,
+  IntervaloDeTempoListOutputGraphQlDto,
 } from "./intervalo-de-tempo.graphql.dto";
 import { IntervaloDeTempoGraphqlMapper } from "./intervalo-de-tempo.graphql.mapper";
 
-@Resolver(() => IntervaloDeTempoFindOneOutputDto)
+@Resolver(() => IntervaloDeTempoFindOneOutputGraphQlDto)
 export class IntervaloDeTempoGraphqlResolver {
   constructor(private readonly intervaloDeTempoService: IntervaloDeTempoService) {}
 
-  @Query(() => IntervaloDeTempoListOutputGqlDto, { name: "intervaloDeTempoFindAll" })
+  @Query(() => IntervaloDeTempoListOutputGraphQlDto, { name: "intervaloDeTempoFindAll" })
   async findAll(
     @AccessContextGraphQL() accessContext: AccessContext,
-    @Args() dto: IntervaloDeTempoListInputGqlDto,
+    @Args() dto: IntervaloDeTempoListInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<IntervaloDeTempoListOutputGqlDto> {
+  ): Promise<IntervaloDeTempoListOutputGraphQlDto> {
     const input = IntervaloDeTempoGraphqlMapper.toListInput(dto);
 
     if (input) {
@@ -30,12 +30,12 @@ export class IntervaloDeTempoGraphqlResolver {
     return IntervaloDeTempoGraphqlMapper.toListOutputDto(result);
   }
 
-  @Query(() => IntervaloDeTempoFindOneOutputDto, { name: "intervaloDeTempoFindById" })
+  @Query(() => IntervaloDeTempoFindOneOutputGraphQlDto, { name: "intervaloDeTempoFindById" })
   async findById(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<IntervaloDeTempoFindOneOutputDto> {
+  ): Promise<IntervaloDeTempoFindOneOutputGraphQlDto> {
     const selection = graphqlExtractSelection(info);
     const result = await this.intervaloDeTempoService.findByIdStrict(accessContext, {
       id,

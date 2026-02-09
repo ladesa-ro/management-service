@@ -4,31 +4,28 @@ import { AccessContext, AccessContextGraphQL } from "@/modules/@core/access-cont
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
 import { DiarioPreferenciaAgrupamentoService } from "@/modules/diario-preferencia-agrupamento/application/use-cases/diario-preferencia-agrupamento.service";
 import {
-  DiarioPreferenciaAgrupamentoCreateInputDto,
-  DiarioPreferenciaAgrupamentoFindOneOutputDto,
-  DiarioPreferenciaAgrupamentoUpdateInputDto,
-} from "../rest/diario-preferencia-agrupamento.rest.dto";
-import { DiarioPreferenciaAgrupamentoRestMapper } from "../rest/diario-preferencia-agrupamento.rest.mapper";
-import {
-  DiarioPreferenciaAgrupamentoListInputGqlDto,
-  DiarioPreferenciaAgrupamentoListOutputGqlDto,
+  DiarioPreferenciaAgrupamentoCreateInputGraphQlDto,
+  DiarioPreferenciaAgrupamentoFindOneOutputGraphQlDto,
+  DiarioPreferenciaAgrupamentoListInputGraphQlDto,
+  DiarioPreferenciaAgrupamentoListOutputGraphQlDto,
+  DiarioPreferenciaAgrupamentoUpdateInputGraphQlDto,
 } from "./diario-preferencia-agrupamento.graphql.dto";
 import { DiarioPreferenciaAgrupamentoGraphqlMapper } from "./diario-preferencia-agrupamento.graphql.mapper";
 
-@Resolver(() => DiarioPreferenciaAgrupamentoFindOneOutputDto)
+@Resolver(() => DiarioPreferenciaAgrupamentoFindOneOutputGraphQlDto)
 export class DiarioPreferenciaAgrupamentoGraphqlResolver {
   constructor(
     private readonly diarioPreferenciaAgrupamentoService: DiarioPreferenciaAgrupamentoService,
   ) {}
 
-  @Query(() => DiarioPreferenciaAgrupamentoListOutputGqlDto, {
+  @Query(() => DiarioPreferenciaAgrupamentoListOutputGraphQlDto, {
     name: "diarioPreferenciaAgrupamentoFindAll",
   })
   async findAll(
     @AccessContextGraphQL() accessContext: AccessContext,
-    @Args() dto: DiarioPreferenciaAgrupamentoListInputGqlDto,
+    @Args() dto: DiarioPreferenciaAgrupamentoListInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<DiarioPreferenciaAgrupamentoListOutputGqlDto> {
+  ): Promise<DiarioPreferenciaAgrupamentoListOutputGraphQlDto> {
     const input = DiarioPreferenciaAgrupamentoGraphqlMapper.toListInput(dto);
 
     if (input) {
@@ -39,14 +36,14 @@ export class DiarioPreferenciaAgrupamentoGraphqlResolver {
     return DiarioPreferenciaAgrupamentoGraphqlMapper.toListOutputDto(result);
   }
 
-  @Query(() => DiarioPreferenciaAgrupamentoFindOneOutputDto, {
+  @Query(() => DiarioPreferenciaAgrupamentoFindOneOutputGraphQlDto, {
     name: "diarioPreferenciaAgrupamentoFindById",
   })
   async findById(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<DiarioPreferenciaAgrupamentoFindOneOutputDto> {
+  ): Promise<DiarioPreferenciaAgrupamentoFindOneOutputGraphQlDto> {
     const selection = graphqlExtractSelection(info);
     const result = await this.diarioPreferenciaAgrupamentoService.findByIdStrict(accessContext, {
       id,
@@ -55,29 +52,29 @@ export class DiarioPreferenciaAgrupamentoGraphqlResolver {
     return DiarioPreferenciaAgrupamentoGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => DiarioPreferenciaAgrupamentoFindOneOutputDto, {
+  @Mutation(() => DiarioPreferenciaAgrupamentoFindOneOutputGraphQlDto, {
     name: "diarioPreferenciaAgrupamentoCreate",
   })
   async create(
     @AccessContextGraphQL() accessContext: AccessContext,
-    @Args("input") dto: DiarioPreferenciaAgrupamentoCreateInputDto,
+    @Args("input") dto: DiarioPreferenciaAgrupamentoCreateInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<DiarioPreferenciaAgrupamentoFindOneOutputDto> {
-    const input = DiarioPreferenciaAgrupamentoRestMapper.toCreateInput(dto);
+  ): Promise<DiarioPreferenciaAgrupamentoFindOneOutputGraphQlDto> {
+    const input = DiarioPreferenciaAgrupamentoGraphqlMapper.toCreateInput(dto);
     const result = await this.diarioPreferenciaAgrupamentoService.create(accessContext, input);
     return DiarioPreferenciaAgrupamentoGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => DiarioPreferenciaAgrupamentoFindOneOutputDto, {
+  @Mutation(() => DiarioPreferenciaAgrupamentoFindOneOutputGraphQlDto, {
     name: "diarioPreferenciaAgrupamentoUpdate",
   })
   async update(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
-    @Args("input") dto: DiarioPreferenciaAgrupamentoUpdateInputDto,
+    @Args("input") dto: DiarioPreferenciaAgrupamentoUpdateInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<DiarioPreferenciaAgrupamentoFindOneOutputDto> {
-    const input = DiarioPreferenciaAgrupamentoRestMapper.toUpdateInput({ id }, dto);
+  ): Promise<DiarioPreferenciaAgrupamentoFindOneOutputGraphQlDto> {
+    const input = DiarioPreferenciaAgrupamentoGraphqlMapper.toUpdateInput({ id }, dto);
     const result = await this.diarioPreferenciaAgrupamentoService.update(accessContext, input);
     return DiarioPreferenciaAgrupamentoGraphqlMapper.toFindOneOutputDto(result);
   }

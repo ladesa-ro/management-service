@@ -1,19 +1,19 @@
 import {
-  EntityOutput,
-  FindOneInput,
+  EntityOutputDto,
+  FindOneInputDto,
   IFilterAcceptableValues,
-  ObjectUuidRef,
-  PaginationInput,
-  PaginationResult,
+  ObjectUuidRefDto,
+  PaginationInputDto,
+  PaginationResultDto,
 } from "@/modules/@shared";
 
 // ============================================================================
 // FindOne Input/Output
 // ============================================================================
 
-export class ModalidadeFindOneInput extends FindOneInput {}
+export class ModalidadeFindOneInputDto extends FindOneInputDto {}
 
-export class ModalidadeFindOneOutput extends EntityOutput {
+export class ModalidadeFindOneOutputDto extends EntityOutputDto {
   nome!: string;
   slug!: string;
 }
@@ -22,22 +22,22 @@ export class ModalidadeFindOneOutput extends EntityOutput {
 // List Input/Output
 // ============================================================================
 
-export class ModalidadeListInput extends PaginationInput {
+export class ModalidadeListInputDto extends PaginationInputDto {
   "filter.id"?: IFilterAcceptableValues;
 }
 
-export class ModalidadeListOutput extends PaginationResult<ModalidadeFindOneOutput> {}
+export class ModalidadeListOutputDto extends PaginationResultDto<ModalidadeFindOneOutputDto> {}
 
 // ============================================================================
 // Create/Update Input
 // ============================================================================
 
-export class ModalidadeCreateInput {
+export class ModalidadeCreateInputDto {
   nome!: string;
   slug!: string;
 }
 
-export class ModalidadeUpdateInput {
+export class ModalidadeUpdateInputDto {
   nome?: string;
   slug?: string;
 }
@@ -46,4 +46,4 @@ export class ModalidadeUpdateInput {
 // Input Ref
 // ============================================================================
 
-export type ModalidadeInputRef = ObjectUuidRef;
+export type ModalidadeInputRefDto = ObjectUuidRefDto;

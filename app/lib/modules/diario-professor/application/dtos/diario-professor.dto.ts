@@ -1,57 +1,57 @@
 import {
-  EntityOutput,
-  FindOneInput,
+  EntityOutputDto,
+  FindOneInputDto,
   IFilterAcceptableValues,
-  ObjectUuidRef,
-  PaginationInput,
-  PaginationResult,
+  ObjectUuidRefDto,
+  PaginationInputDto,
+  PaginationResultDto,
 } from "@/modules/@shared";
-import { DiarioFindOneOutput, DiarioInputRef } from "@/modules/diario/application/dtos";
-import { PerfilFindOneOutput, PerfilInputRef } from "@/modules/perfil";
+import { DiarioFindOneOutputDto, DiarioInputRefDto } from "@/modules/diario/application/dtos";
+import { PerfilFindOneOutputDto, PerfilInputRefDto } from "@/modules/perfil";
 
 // ============================================================================
 // FindOne Input/Output
 // ============================================================================
 
-export class DiarioProfessorFindOneInput extends FindOneInput {}
+export class DiarioProfessorFindOneInputDto extends FindOneInputDto {}
 
-export class DiarioProfessorFindOneOutput extends EntityOutput {
+export class DiarioProfessorFindOneOutputDto extends EntityOutputDto {
   situacao!: boolean;
-  diario!: DiarioFindOneOutput;
-  perfil!: PerfilFindOneOutput;
+  diario!: DiarioFindOneOutputDto;
+  perfil!: PerfilFindOneOutputDto;
 }
 
 // ============================================================================
 // List Input/Output
 // ============================================================================
 
-export class DiarioProfessorListInput extends PaginationInput {
+export class DiarioProfessorListInputDto extends PaginationInputDto {
   "filter.id"?: IFilterAcceptableValues;
   "filter.diario.id"?: IFilterAcceptableValues;
   "filter.perfil.id"?: IFilterAcceptableValues;
   "filter.perfil.usuario.id"?: IFilterAcceptableValues;
 }
 
-export class DiarioProfessorListOutput extends PaginationResult<DiarioProfessorFindOneOutput> {}
+export class DiarioProfessorListOutputDto extends PaginationResultDto<DiarioProfessorFindOneOutputDto> {}
 
 // ============================================================================
 // Create/Update Input
 // ============================================================================
 
-export class DiarioProfessorCreateInput {
+export class DiarioProfessorCreateInputDto {
   situacao!: boolean;
-  diario!: DiarioInputRef;
-  perfil!: PerfilInputRef;
+  diario!: DiarioInputRefDto;
+  perfil!: PerfilInputRefDto;
 }
 
-export class DiarioProfessorUpdateInput {
+export class DiarioProfessorUpdateInputDto {
   situacao?: boolean;
-  diario?: DiarioInputRef;
-  perfil?: PerfilInputRef;
+  diario?: DiarioInputRefDto;
+  perfil?: PerfilInputRefDto;
 }
 
 // ============================================================================
 // Input Ref
 // ============================================================================
 
-export type DiarioProfessorInputRef = ObjectUuidRef;
+export type DiarioProfessorInputRefDto = ObjectUuidRefDto;

@@ -7,12 +7,12 @@ import {
 } from "@/modules/@shared";
 import { ArquivoService } from "@/modules/arquivo/application/use-cases/arquivo.service";
 import type {
-  BlocoCreateInput,
-  BlocoFindOneInput,
-  BlocoFindOneOutput,
-  BlocoListInput,
-  BlocoListOutput,
-  BlocoUpdateInput,
+  BlocoCreateInputDto,
+  BlocoFindOneInputDto,
+  BlocoFindOneOutputDto,
+  BlocoListInputDto,
+  BlocoListOutputDto,
+  BlocoUpdateInputDto,
 } from "@/modules/bloco/application/dtos";
 import {
   BLOCO_REPOSITORY_PORT,
@@ -32,12 +32,12 @@ import { ImagemService } from "@/modules/imagem/application/use-cases/imagem.ser
 export class BlocoService
   extends BaseCrudService<
     BlocoEntity,
-    BlocoListInput,
-    BlocoListOutput,
-    BlocoFindOneInput,
-    BlocoFindOneOutput,
-    BlocoCreateInput,
-    BlocoUpdateInput
+    BlocoListInputDto,
+    BlocoListOutputDto,
+    BlocoFindOneInputDto,
+    BlocoFindOneOutputDto,
+    BlocoCreateInputDto,
+    BlocoUpdateInputDto
   >
   implements IBlocoUseCasePort
 {
@@ -75,7 +75,7 @@ export class BlocoService
 
   async updateImagemCapa(
     accessContext: AccessContext,
-    dto: BlocoFindOneInput,
+    dto: BlocoFindOneInputDto,
     file: Express.Multer.File,
   ): Promise<boolean> {
     return this.updateImagemField(accessContext, dto.id, file, "imagemCapa", this.imagemService);
@@ -87,7 +87,7 @@ export class BlocoService
   protected override async beforeCreate(
     accessContext: AccessContext,
     entity: BlocoEntity,
-    dto: BlocoCreateInput,
+    dto: BlocoCreateInputDto,
   ): Promise<void> {
     const campus = await this.campusService.findByIdSimpleStrict(accessContext, dto.campus.id);
     this.repository.merge(entity, { campus: { id: campus.id } });

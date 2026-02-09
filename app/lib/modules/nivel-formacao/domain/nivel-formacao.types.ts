@@ -1,24 +1,12 @@
-import { IdUuid, ScalarDateTimeString } from "@/modules/@shared";
+import type { IEntityBase } from "@/modules/@shared";
 
 /**
  * Tipagem da entidade NivelFormacao
  * Define a estrutura de dados sem comportamento
  */
-export interface INivelFormacao {
-  /** Identificador UUID do nivel de formacao */
-  id: IdUuid;
-
+export interface INivelFormacao extends IEntityBase {
   /** Slug para identificacao (ex: tecnico, graduacao, pos-graduacao) */
   slug: string;
-
-  /** Data de criacao */
-  dateCreated: ScalarDateTimeString;
-
-  /** Data de atualizacao */
-  dateUpdated: ScalarDateTimeString;
-
-  /** Data de exclusao (soft delete) */
-  dateDeleted: ScalarDateTimeString | null;
 }
 
 /**

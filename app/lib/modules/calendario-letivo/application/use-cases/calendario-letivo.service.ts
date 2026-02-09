@@ -3,12 +3,12 @@ import { has } from "lodash";
 import type { AccessContext } from "@/modules/@core/access-context";
 import { BaseCrudService } from "@/modules/@shared";
 import type {
-  CalendarioLetivoCreateInput,
-  CalendarioLetivoFindOneInput,
-  CalendarioLetivoFindOneOutput,
-  CalendarioLetivoListInput,
-  CalendarioLetivoListOutput,
-  CalendarioLetivoUpdateInput,
+  CalendarioLetivoCreateInputDto,
+  CalendarioLetivoFindOneInputDto,
+  CalendarioLetivoFindOneOutputDto,
+  CalendarioLetivoListInputDto,
+  CalendarioLetivoListOutputDto,
+  CalendarioLetivoUpdateInputDto,
 } from "@/modules/calendario-letivo/application/dtos";
 import {
   CALENDARIO_LETIVO_REPOSITORY_PORT,
@@ -23,12 +23,12 @@ import { OfertaFormacaoService } from "@/modules/oferta-formacao";
 export class CalendarioLetivoService
   extends BaseCrudService<
     CalendarioLetivoEntity,
-    CalendarioLetivoListInput,
-    CalendarioLetivoListOutput,
-    CalendarioLetivoFindOneInput,
-    CalendarioLetivoFindOneOutput,
-    CalendarioLetivoCreateInput,
-    CalendarioLetivoUpdateInput
+    CalendarioLetivoListInputDto,
+    CalendarioLetivoListOutputDto,
+    CalendarioLetivoFindOneInputDto,
+    CalendarioLetivoFindOneOutputDto,
+    CalendarioLetivoCreateInputDto,
+    CalendarioLetivoUpdateInputDto
   >
   implements ICalendarioLetivoUseCasePort
 {
@@ -51,7 +51,7 @@ export class CalendarioLetivoService
   protected override async beforeCreate(
     accessContext: AccessContext,
     entity: CalendarioLetivoEntity,
-    dto: CalendarioLetivoCreateInput,
+    dto: CalendarioLetivoCreateInputDto,
   ): Promise<void> {
     const campus = await this.campusService.findByIdSimpleStrict(accessContext, dto.campus.id);
     this.repository.merge(entity, { campus: { id: campus.id } });
@@ -68,7 +68,7 @@ export class CalendarioLetivoService
   protected override async beforeUpdate(
     accessContext: AccessContext,
     entity: CalendarioLetivoEntity,
-    dto: CalendarioLetivoFindOneInput & CalendarioLetivoUpdateInput,
+    dto: CalendarioLetivoFindOneInputDto & CalendarioLetivoUpdateInputDto,
   ): Promise<void> {
     if (has(dto, "campus") && dto.campus !== undefined) {
       const campus = await this.campusService.findByIdSimpleStrict(accessContext, dto.campus.id);

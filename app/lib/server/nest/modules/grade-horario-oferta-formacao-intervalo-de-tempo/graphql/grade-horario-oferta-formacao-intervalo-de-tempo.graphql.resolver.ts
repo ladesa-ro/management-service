@@ -4,30 +4,28 @@ import { AccessContext, AccessContextGraphQL } from "@/modules/@core/access-cont
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
 import { GradeHorarioOfertaFormacaoIntervaloDeTempoService } from "@/modules/grade-horario-oferta-formacao-intervalo-de-tempo/application/use-cases/grade-horario-oferta-formacao-intervalo-de-tempo.service";
 import {
-  GradeHorarioOfertaFormacaoIntervaloDeTempoCreateInputRestDto,
-  GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputRestDto,
-  GradeHorarioOfertaFormacaoIntervaloDeTempoUpdateInputRestDto,
-} from "../rest/grade-horario-oferta-formacao-intervalo-de-tempo.rest.dto";
-import {
-  GradeHorarioOfertaFormacaoIntervaloDeTempoListInputGqlDto,
-  GradeHorarioOfertaFormacaoIntervaloDeTempoListOutputGqlDto,
+  GradeHorarioOfertaFormacaoIntervaloDeTempoCreateInputGraphQlDto,
+  GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputGraphQlDto,
+  GradeHorarioOfertaFormacaoIntervaloDeTempoListInputGraphQlDto,
+  GradeHorarioOfertaFormacaoIntervaloDeTempoListOutputGraphQlDto,
+  GradeHorarioOfertaFormacaoIntervaloDeTempoUpdateInputGraphQlDto,
 } from "./grade-horario-oferta-formacao-intervalo-de-tempo.graphql.dto";
 import { GradeHorarioOfertaFormacaoIntervaloDeTempoGraphqlMapper } from "./grade-horario-oferta-formacao-intervalo-de-tempo.graphql.mapper";
 
-@Resolver(() => GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputRestDto)
+@Resolver(() => GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputGraphQlDto)
 export class GradeHorarioOfertaFormacaoIntervaloDeTempoGraphqlResolver {
   constructor(
     private readonly gradeHorarioOfertaFormacaoIntervaloDeTempoService: GradeHorarioOfertaFormacaoIntervaloDeTempoService,
   ) {}
 
-  @Query(() => GradeHorarioOfertaFormacaoIntervaloDeTempoListOutputGqlDto, {
+  @Query(() => GradeHorarioOfertaFormacaoIntervaloDeTempoListOutputGraphQlDto, {
     name: "gradeHorarioOfertaFormacaoIntervaloDeTempoFindAll",
   })
   async findAll(
     @AccessContextGraphQL() accessContext: AccessContext,
-    @Args() dto: GradeHorarioOfertaFormacaoIntervaloDeTempoListInputGqlDto,
+    @Args() dto: GradeHorarioOfertaFormacaoIntervaloDeTempoListInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<GradeHorarioOfertaFormacaoIntervaloDeTempoListOutputGqlDto> {
+  ): Promise<GradeHorarioOfertaFormacaoIntervaloDeTempoListOutputGraphQlDto> {
     const input = GradeHorarioOfertaFormacaoIntervaloDeTempoGraphqlMapper.toListInput(dto);
 
     if (input) {
@@ -41,14 +39,14 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoGraphqlResolver {
     return GradeHorarioOfertaFormacaoIntervaloDeTempoGraphqlMapper.toListOutputDto(result);
   }
 
-  @Query(() => GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputRestDto, {
+  @Query(() => GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputGraphQlDto, {
     name: "gradeHorarioOfertaFormacaoIntervaloDeTempoFindById",
   })
   async findById(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputRestDto> {
+  ): Promise<GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputGraphQlDto> {
     const selection = graphqlExtractSelection(info);
     const result = await this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.findByIdStrict(
       accessContext,
@@ -60,14 +58,14 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoGraphqlResolver {
     return GradeHorarioOfertaFormacaoIntervaloDeTempoGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputRestDto, {
+  @Mutation(() => GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputGraphQlDto, {
     name: "gradeHorarioOfertaFormacaoIntervaloDeTempoCreate",
   })
   async create(
     @AccessContextGraphQL() accessContext: AccessContext,
-    @Args("data") dto: GradeHorarioOfertaFormacaoIntervaloDeTempoCreateInputRestDto,
+    @Args("data") dto: GradeHorarioOfertaFormacaoIntervaloDeTempoCreateInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputRestDto> {
+  ): Promise<GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputGraphQlDto> {
     const input = GradeHorarioOfertaFormacaoIntervaloDeTempoGraphqlMapper.toCreateInput(dto);
     const result = await this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.create(
       accessContext,
@@ -76,15 +74,15 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoGraphqlResolver {
     return GradeHorarioOfertaFormacaoIntervaloDeTempoGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputRestDto, {
+  @Mutation(() => GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputGraphQlDto, {
     name: "gradeHorarioOfertaFormacaoIntervaloDeTempoUpdate",
   })
   async update(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
-    @Args("data") dto: GradeHorarioOfertaFormacaoIntervaloDeTempoUpdateInputRestDto,
+    @Args("data") dto: GradeHorarioOfertaFormacaoIntervaloDeTempoUpdateInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputRestDto> {
+  ): Promise<GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputGraphQlDto> {
     const findOneInput = GradeHorarioOfertaFormacaoIntervaloDeTempoGraphqlMapper.toFindOneInput(id);
     const updateInput = GradeHorarioOfertaFormacaoIntervaloDeTempoGraphqlMapper.toUpdateInput(dto);
     const result = await this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.update(

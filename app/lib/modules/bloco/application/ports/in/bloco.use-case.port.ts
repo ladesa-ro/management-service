@@ -1,12 +1,12 @@
 import type { StreamableFile } from "@nestjs/common";
 import type { AccessContext } from "@/modules/@core/access-context";
 import type {
-  BlocoCreateInput,
-  BlocoFindOneInput,
-  BlocoFindOneOutput,
-  BlocoListInput,
-  BlocoListOutput,
-  BlocoUpdateInput,
+  BlocoCreateInputDto,
+  BlocoFindOneInputDto,
+  BlocoFindOneOutputDto,
+  BlocoListInputDto,
+  BlocoListOutputDto,
+  BlocoUpdateInputDto,
 } from "../../dtos";
 
 /**
@@ -19,27 +19,27 @@ export interface IBlocoUseCasePort {
    */
   findAll(
     accessContext: AccessContext,
-    dto: BlocoListInput,
+    dto: BlocoListInputDto,
     selection?: string[] | boolean,
-  ): Promise<BlocoListOutput>;
+  ): Promise<BlocoListOutputDto>;
 
   /**
    * Busca um bloco por ID
    */
   findById(
     accessContext: AccessContext | null,
-    dto: BlocoFindOneInput,
+    dto: BlocoFindOneInputDto,
     selection?: string[] | boolean,
-  ): Promise<BlocoFindOneOutput | null>;
+  ): Promise<BlocoFindOneOutputDto | null>;
 
   /**
    * Busca um bloco por ID (lanca excecao se nao encontrado)
    */
   findByIdStrict(
     accessContext: AccessContext | null,
-    dto: BlocoFindOneInput,
+    dto: BlocoFindOneInputDto,
     selection?: string[] | boolean,
-  ): Promise<BlocoFindOneOutput>;
+  ): Promise<BlocoFindOneOutputDto>;
 
   /**
    * Busca um bloco por ID (formato simples)
@@ -48,7 +48,7 @@ export interface IBlocoUseCasePort {
     accessContext: AccessContext,
     id: string,
     selection?: string[],
-  ): Promise<BlocoFindOneOutput | null>;
+  ): Promise<BlocoFindOneOutputDto | null>;
 
   /**
    * Busca um bloco por ID (formato simples, lanca excecao se nao encontrado)
@@ -57,7 +57,7 @@ export interface IBlocoUseCasePort {
     accessContext: AccessContext,
     id: string,
     selection?: string[],
-  ): Promise<BlocoFindOneOutput>;
+  ): Promise<BlocoFindOneOutputDto>;
 
   /**
    * Obtem a imagem de capa do bloco
@@ -69,25 +69,25 @@ export interface IBlocoUseCasePort {
    */
   updateImagemCapa(
     accessContext: AccessContext,
-    dto: BlocoFindOneInput,
+    dto: BlocoFindOneInputDto,
     file: Express.Multer.File,
   ): Promise<boolean>;
 
   /**
    * Cria um novo bloco
    */
-  create(accessContext: AccessContext, dto: BlocoCreateInput): Promise<BlocoFindOneOutput>;
+  create(accessContext: AccessContext, dto: BlocoCreateInputDto): Promise<BlocoFindOneOutputDto>;
 
   /**
    * Atualiza um bloco existente
    */
   update(
     accessContext: AccessContext,
-    dto: BlocoFindOneInput & BlocoUpdateInput,
-  ): Promise<BlocoFindOneOutput>;
+    dto: BlocoFindOneInputDto & BlocoUpdateInputDto,
+  ): Promise<BlocoFindOneOutputDto>;
 
   /**
    * Remove um bloco (soft delete)
    */
-  deleteOneById(accessContext: AccessContext, dto: BlocoFindOneInput): Promise<boolean>;
+  deleteOneById(accessContext: AccessContext, dto: BlocoFindOneInputDto): Promise<boolean>;
 }

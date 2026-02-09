@@ -1,49 +1,99 @@
-import { ArgsType, Field, ObjectType } from "@nestjs/graphql";
-import { IsArray, IsOptional, IsString } from "class-validator";
-import { PaginationGraphqlArgsDto } from "@/modules/@shared/infrastructure/graphql";
-import { PaginationMetaDto } from "@/modules/@shared/infrastructure/presentation/rest/dtos";
-import { HorarioGeradoFindOneOutputRestDto } from "../rest/horario-gerado.rest.dto";
+import { ArgsType, Field, InputType, ObjectType } from "@nestjs/graphql";
+import { IsArray, IsOptional, IsString, IsUUID, ValidateNested } from "class-validator";
+import {
+  EntityBaseGraphQlDto,
+  PaginationMetaGraphQlDto,
+} from "@/modules/@shared/infrastructure/graphql/dtos";
+import { PaginationArgsGraphQlDto } from "@/modules/@shared/infrastructure/graphql/dtos/pagination-graphql.dto";
+import { CalendarioLetivoFindOneOutputGraphQlDto } from "@/server/nest/modules/calendario-letivo/graphql/calendario-letivo.graphql.dto";
 
 // ============================================================================
-// List Input (GraphQL-compatible - no dots in field names)
+// FindOne Output
+// ============================================================================
+
+@ObjectType("HorarioGeradoFindOneOutputDto")
+export class HorarioGeradoFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
+  @Field(() => String, { nullable: true }) status: string | null;
+  @Field(() => String, { nullable: true }) tipo: string | null;
+  @Field(() => String, { nullable: true }) dataGeracao: string | null;
+  @Field(() => String, { nullable: true }) vigenciaInicio: string | null;
+  @Field(() => String, { nullable: true }) vigenciaFim: string | null;
+  @Field(() => CalendarioLetivoFindOneOutputGraphQlDto)
+  calendario: CalendarioLetivoFindOneOutputGraphQlDto;
+}
+
+// ============================================================================
+// Ref Input DTOs
+// ============================================================================
+
+@InputType("CalendarioLetivoRefInputForHorarioGeradoDto")
+export class CalendarioLetivoRefInputForHorarioGeradoGraphQlDto {
+  @Field() @IsString() id: string;
+}
+
+// ============================================================================
+// Create Input
+// ============================================================================
+
+@InputType("HorarioGeradoCreateInputDto")
+export class HorarioGeradoCreateInputGraphQlDto {
+  @Field({ nullable: true }) @IsOptional() @IsString() status?: string | null;
+  @Field({ nullable: true }) @IsOptional() @IsString() tipo?: string | null;
+  @Field({ nullable: true }) @IsOptional() @IsString() dataGeracao?: string | null;
+  @Field({ nullable: true }) @IsOptional() @IsString() vigenciaInicio?: string | null;
+  @Field({ nullable: true }) @IsOptional() @IsString() vigenciaFim?: string | null;
+
+  @Field(() => CalendarioLetivoRefInputForHorarioGeradoGraphQlDto)
+  @ValidateNested()
+  calendario: CalendarioLetivoRefInputForHorarioGeradoGraphQlDto;
+}
+
+// ============================================================================
+// Update Input
+// ============================================================================
+
+@InputType("HorarioGeradoUpdateInputDto")
+export class HorarioGeradoUpdateInputGraphQlDto {
+  @Field({ nullable: true }) @IsOptional() @IsString() status?: string | null;
+  @Field({ nullable: true }) @IsOptional() @IsString() tipo?: string | null;
+  @Field({ nullable: true }) @IsOptional() @IsString() dataGeracao?: string | null;
+  @Field({ nullable: true }) @IsOptional() @IsString() vigenciaInicio?: string | null;
+  @Field({ nullable: true }) @IsOptional() @IsString() vigenciaFim?: string | null;
+
+  @Field(() => CalendarioLetivoRefInputForHorarioGeradoGraphQlDto, { nullable: true })
+  @IsOptional()
+  @ValidateNested()
+  calendario?: CalendarioLetivoRefInputForHorarioGeradoGraphQlDto;
+}
+
+// ============================================================================
+// List Input
 // ============================================================================
 
 @ArgsType()
-export class HorarioGeradoListInputGqlDto extends PaginationGraphqlArgsDto {
+export class HorarioGeradoListInputGraphQlDto extends PaginationArgsGraphQlDto {
   @Field(() => [String], { nullable: true, description: "Filtro por ID" })
   @IsOptional()
   @IsArray()
-  @IsString({ each: true })
+  @IsUUID(undefined, { each: true })
   filterId?: string[];
 
   @Field(() => [String], { nullable: true, description: "Filtro por ID do Calendario" })
   @IsOptional()
   @IsArray()
-  @IsString({ each: true })
+  @IsUUID(undefined, { each: true })
   filterCalendarioId?: string[];
-
-  @Field(() => [String], { nullable: true, description: "Filtro por nome do Calendario" })
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
-  filterCalendarioNome?: string[];
-
-  @Field(() => [String], { nullable: true, description: "Filtro por ano do Calendario" })
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
-  filterCalendarioAno?: string[];
 }
 
 // ============================================================================
-// List Output (reuses the same output DTOs - they're already GraphQL-compatible)
+// List Output
 // ============================================================================
 
 @ObjectType("HorarioGeradoListResult")
-export class HorarioGeradoListOutputGqlDto {
-  @Field(() => PaginationMetaDto)
-  meta: PaginationMetaDto;
+export class HorarioGeradoListOutputGraphQlDto {
+  @Field(() => PaginationMetaGraphQlDto)
+  meta: PaginationMetaGraphQlDto;
 
-  @Field(() => [HorarioGeradoFindOneOutputRestDto])
-  data: HorarioGeradoFindOneOutputRestDto[];
+  @Field(() => [HorarioGeradoFindOneOutputGraphQlDto])
+  data: HorarioGeradoFindOneOutputGraphQlDto[];
 }

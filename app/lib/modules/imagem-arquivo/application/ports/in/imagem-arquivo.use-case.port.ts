@@ -1,9 +1,9 @@
 import type { AccessContext } from "@/modules/@core/access-context";
 import {
-  ImagemArquivoFindOneInput,
-  ImagemArquivoFindOneOutput,
-  ImagemArquivoListInput,
-  ImagemArquivoListOutput,
+  ImagemArquivoFindOneInputDto,
+  ImagemArquivoFindOneOutputDto,
+  ImagemArquivoListInputDto,
+  ImagemArquivoListOutputDto,
 } from "../../dtos";
 
 /**
@@ -19,8 +19,8 @@ export interface IImagemArquivoUseCasePort {
    */
   findAll(
     accessContext: AccessContext,
-    dto: ImagemArquivoListInput | null,
-  ): Promise<ImagemArquivoListOutput>;
+    dto: ImagemArquivoListInputDto | null,
+  ): Promise<ImagemArquivoListOutputDto>;
 
   /**
    * Busca uma imagem de arquivo por ID
@@ -30,8 +30,8 @@ export interface IImagemArquivoUseCasePort {
    */
   findById(
     accessContext: AccessContext,
-    dto: ImagemArquivoFindOneInput,
-  ): Promise<ImagemArquivoFindOneOutput | null>;
+    dto: ImagemArquivoFindOneInputDto,
+  ): Promise<ImagemArquivoFindOneOutputDto | null>;
 
   /**
    * Busca uma imagem de arquivo por ID (lança exceção se não encontrada)
@@ -41,6 +41,6 @@ export interface IImagemArquivoUseCasePort {
    */
   findByIdStrict(
     accessContext: AccessContext,
-    dto: ImagemArquivoFindOneInput,
-  ): Promise<ImagemArquivoFindOneOutput>;
+    dto: ImagemArquivoFindOneInputDto,
+  ): Promise<ImagemArquivoFindOneOutputDto>;
 }

@@ -23,6 +23,14 @@ export class TurmaDisponibilidade extends BaseEntity implements ITurmaDisponibil
   }
 
   // ========================================
+  // Validação
+  // ========================================
+
+  validar(): void {
+    // Entidade de relacionamento: sem validações de campos escalares
+  }
+
+  // ========================================
   // Factory Methods
   // ========================================
 
@@ -31,9 +39,8 @@ export class TurmaDisponibilidade extends BaseEntity implements ITurmaDisponibil
    */
   static criar(_dados: ITurmaDisponibilidadeCreate): TurmaDisponibilidade {
     const instance = new TurmaDisponibilidade();
-    instance.dateCreated = new Date().toISOString();
-    instance.dateUpdated = new Date().toISOString();
-    instance.dateDeleted = null;
+    instance.initDates();
+    instance.validar();
     return instance;
   }
 

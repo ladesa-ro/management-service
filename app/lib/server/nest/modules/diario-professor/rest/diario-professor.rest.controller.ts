@@ -10,12 +10,12 @@ import {
 import { AccessContext, AccessContextHttp } from "@/modules/@core/access-context";
 import { DiarioProfessorService } from "@/modules/diario-professor/application/use-cases/diario-professor.service";
 import {
-  DiarioProfessorCreateInputDto,
-  DiarioProfessorFindOneInputDto,
-  DiarioProfessorFindOneOutputDto,
-  DiarioProfessorListInputDto,
-  DiarioProfessorListOutputDto,
-  DiarioProfessorUpdateInputDto,
+  DiarioProfessorCreateInputRestDto,
+  DiarioProfessorFindOneInputRestDto,
+  DiarioProfessorFindOneOutputRestDto,
+  DiarioProfessorListInputRestDto,
+  DiarioProfessorListOutputRestDto,
+  DiarioProfessorUpdateInputRestDto,
 } from "./diario-professor.rest.dto";
 import { DiarioProfessorRestMapper } from "./diario-professor.rest.mapper";
 
@@ -26,12 +26,12 @@ export class DiarioProfessorController {
 
   @Get("/")
   @ApiOperation({ summary: "Lista diarios professores", operationId: "diarioProfessorFindAll" })
-  @ApiOkResponse({ type: DiarioProfessorListOutputDto })
+  @ApiOkResponse({ type: DiarioProfessorListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
     @AccessContextHttp() accessContext: AccessContext,
-    @Query() dto: DiarioProfessorListInputDto,
-  ): Promise<DiarioProfessorListOutputDto> {
+    @Query() dto: DiarioProfessorListInputRestDto,
+  ): Promise<DiarioProfessorListOutputRestDto> {
     const input = DiarioProfessorRestMapper.toListInput(dto);
     const result = await this.diarioProfessorService.findAll(accessContext, input);
     return DiarioProfessorRestMapper.toListOutputDto(result);
@@ -42,13 +42,13 @@ export class DiarioProfessorController {
     summary: "Busca um diario professor por ID",
     operationId: "diarioProfessorFindById",
   })
-  @ApiOkResponse({ type: DiarioProfessorFindOneOutputDto })
+  @ApiOkResponse({ type: DiarioProfessorFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async findById(
     @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: DiarioProfessorFindOneInputDto,
-  ): Promise<DiarioProfessorFindOneOutputDto> {
+    @Param() params: DiarioProfessorFindOneInputRestDto,
+  ): Promise<DiarioProfessorFindOneOutputRestDto> {
     const input = DiarioProfessorRestMapper.toFindOneInput(params);
     const result = await this.diarioProfessorService.findByIdStrict(accessContext, input);
     return DiarioProfessorRestMapper.toFindOneOutputDto(result);
@@ -56,12 +56,12 @@ export class DiarioProfessorController {
 
   @Post("/")
   @ApiOperation({ summary: "Cria um diario professor", operationId: "diarioProfessorCreate" })
-  @ApiCreatedResponse({ type: DiarioProfessorFindOneOutputDto })
+  @ApiCreatedResponse({ type: DiarioProfessorFindOneOutputRestDto })
   @ApiForbiddenResponse()
   async create(
     @AccessContextHttp() accessContext: AccessContext,
-    @Body() dto: DiarioProfessorCreateInputDto,
-  ): Promise<DiarioProfessorFindOneOutputDto> {
+    @Body() dto: DiarioProfessorCreateInputRestDto,
+  ): Promise<DiarioProfessorFindOneOutputRestDto> {
     const input = DiarioProfessorRestMapper.toCreateInput(dto);
     const result = await this.diarioProfessorService.create(accessContext, input);
     return DiarioProfessorRestMapper.toFindOneOutputDto(result);
@@ -69,14 +69,14 @@ export class DiarioProfessorController {
 
   @Patch("/:id")
   @ApiOperation({ summary: "Atualiza um diario professor", operationId: "diarioProfessorUpdate" })
-  @ApiOkResponse({ type: DiarioProfessorFindOneOutputDto })
+  @ApiOkResponse({ type: DiarioProfessorFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async update(
     @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: DiarioProfessorFindOneInputDto,
-    @Body() dto: DiarioProfessorUpdateInputDto,
-  ): Promise<DiarioProfessorFindOneOutputDto> {
+    @Param() params: DiarioProfessorFindOneInputRestDto,
+    @Body() dto: DiarioProfessorUpdateInputRestDto,
+  ): Promise<DiarioProfessorFindOneOutputRestDto> {
     const input = DiarioProfessorRestMapper.toUpdateInput(params, dto);
     const result = await this.diarioProfessorService.update(accessContext, input);
     return DiarioProfessorRestMapper.toFindOneOutputDto(result);
@@ -92,7 +92,7 @@ export class DiarioProfessorController {
   @ApiNotFoundResponse()
   async deleteOneById(
     @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: DiarioProfessorFindOneInputDto,
+    @Param() params: DiarioProfessorFindOneInputRestDto,
   ): Promise<boolean> {
     const input = DiarioProfessorRestMapper.toFindOneInput(params);
     return this.diarioProfessorService.deleteOneById(accessContext, input);

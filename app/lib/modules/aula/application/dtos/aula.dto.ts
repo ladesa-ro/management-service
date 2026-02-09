@@ -1,67 +1,67 @@
 import {
-  EntityOutput,
-  FindOneInput,
+  EntityOutputDto,
+  FindOneInputDto,
   IFilterAcceptableValues,
-  ObjectUuidRef,
-  PaginationInput,
-  PaginationResult,
+  ObjectUuidRefDto,
+  PaginationInputDto,
+  PaginationResultDto,
 } from "@/modules/@shared/application/dtos";
 import type { ScalarDate } from "@/modules/@shared/domain/scalars.types";
-import { AmbienteFindOneOutput, AmbienteInputRef } from "@/modules/ambiente";
-import { DiarioFindOneOutput, DiarioInputRef } from "@/modules/diario/application/dtos";
+import { AmbienteFindOneOutputDto, AmbienteInputRefDto } from "@/modules/ambiente";
+import { DiarioFindOneOutputDto, DiarioInputRefDto } from "@/modules/diario/application/dtos";
 import {
-  IntervaloDeTempoFindOneOutput,
-  IntervaloDeTempoInputRef,
+  IntervaloDeTempoFindOneOutputDto,
+  IntervaloDeTempoInputRefDto,
 } from "@/modules/intervalo-de-tempo";
 
 // ============================================================================
 // FindOne Input/Output
 // ============================================================================
 
-export class AulaFindOneInput extends FindOneInput {}
+export class AulaFindOneInputDto extends FindOneInputDto {}
 
-export class AulaFindOneOutput extends EntityOutput {
+export class AulaFindOneOutputDto extends EntityOutputDto {
   data!: ScalarDate;
   modalidade!: string | null;
-  intervaloDeTempo!: IntervaloDeTempoFindOneOutput;
-  diario!: DiarioFindOneOutput;
-  ambiente!: AmbienteFindOneOutput | null;
+  intervaloDeTempo!: IntervaloDeTempoFindOneOutputDto;
+  diario!: DiarioFindOneOutputDto;
+  ambiente!: AmbienteFindOneOutputDto | null;
 }
 
 // ============================================================================
 // List Input/Output
 // ============================================================================
 
-export class AulaListInput extends PaginationInput {
+export class AulaListInputDto extends PaginationInputDto {
   "filter.id"?: IFilterAcceptableValues;
   "filter.diario.id"?: IFilterAcceptableValues;
   "filter.intervaloDeTempo.id"?: IFilterAcceptableValues;
 }
 
-export class AulaListOutput extends PaginationResult<AulaFindOneOutput> {}
+export class AulaListOutputDto extends PaginationResultDto<AulaFindOneOutputDto> {}
 
 // ============================================================================
 // Create/Update Input
 // ============================================================================
 
-export class AulaCreateInput {
+export class AulaCreateInputDto {
   data!: ScalarDate;
   modalidade?: string | null;
-  intervaloDeTempo!: IntervaloDeTempoInputRef;
-  diario!: DiarioInputRef;
-  ambiente?: AmbienteInputRef | null;
+  intervaloDeTempo!: IntervaloDeTempoInputRefDto;
+  diario!: DiarioInputRefDto;
+  ambiente?: AmbienteInputRefDto | null;
 }
 
-export class AulaUpdateInput {
+export class AulaUpdateInputDto {
   data?: ScalarDate;
   modalidade?: string | null;
-  intervaloDeTempo?: IntervaloDeTempoInputRef;
-  diario?: DiarioInputRef;
-  ambiente?: AmbienteInputRef | null;
+  intervaloDeTempo?: IntervaloDeTempoInputRefDto;
+  diario?: DiarioInputRefDto;
+  ambiente?: AmbienteInputRefDto | null;
 }
 
 // ============================================================================
 // Input Ref
 // ============================================================================
 
-export type AulaInputRef = ObjectUuidRef;
+export type AulaInputRefDto = ObjectUuidRefDto;

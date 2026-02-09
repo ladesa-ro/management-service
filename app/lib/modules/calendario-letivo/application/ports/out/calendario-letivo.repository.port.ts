@@ -1,7 +1,7 @@
 import type { AccessContext } from "@/modules/@core/access-context";
 import type { IBaseCrudRepositoryPort } from "@/modules/@shared";
 import type { CalendarioLetivoEntity } from "@/modules/calendario-letivo/infrastructure/persistence/typeorm";
-import type { CalendarioLetivoFindOneOutput, CalendarioLetivoListOutput } from "../../dtos";
+import type { CalendarioLetivoFindOneOutputDto, CalendarioLetivoListOutputDto } from "../../dtos";
 
 /**
  * Token de injeção para o repositório de CalendarioLetivo
@@ -15,8 +15,8 @@ export const CALENDARIO_LETIVO_REPOSITORY_PORT = Symbol("ICalendarioLetivoReposi
 export interface ICalendarioLetivoRepositoryPort
   extends IBaseCrudRepositoryPort<
     CalendarioLetivoEntity,
-    CalendarioLetivoListOutput,
-    CalendarioLetivoFindOneOutput
+    CalendarioLetivoListOutputDto,
+    CalendarioLetivoFindOneOutputDto
   > {
   /**
    * Busca um calendário letivo por ID (formato simples) - método obrigatório
@@ -25,5 +25,5 @@ export interface ICalendarioLetivoRepositoryPort
     accessContext: AccessContext,
     id: string,
     selection?: string[] | boolean,
-  ): Promise<CalendarioLetivoFindOneOutput | null>;
+  ): Promise<CalendarioLetivoFindOneOutputDto | null>;
 }

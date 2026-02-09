@@ -1,10 +1,10 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { BaseReadOnlyService } from "@/modules/@shared";
 import type {
-  ProfessorIndisponibilidadeFindOneInput,
-  ProfessorIndisponibilidadeFindOneOutput,
-  ProfessorIndisponibilidadeListInput,
-  ProfessorIndisponibilidadeListOutput,
+  ProfessorIndisponibilidadeFindOneInputDto,
+  ProfessorIndisponibilidadeFindOneOutputDto,
+  ProfessorIndisponibilidadeListInputDto,
+  ProfessorIndisponibilidadeListOutputDto,
 } from "@/modules/professor-indisponibilidade/application/dtos";
 import {
   type IProfessorIndisponibilidadeRepositoryPort,
@@ -15,10 +15,10 @@ import {
 @Injectable()
 export class ProfessorIndisponibilidadeService
   extends BaseReadOnlyService<
-    ProfessorIndisponibilidadeListInput,
-    ProfessorIndisponibilidadeListOutput,
-    ProfessorIndisponibilidadeFindOneInput,
-    ProfessorIndisponibilidadeFindOneOutput
+    ProfessorIndisponibilidadeListInputDto,
+    ProfessorIndisponibilidadeListOutputDto,
+    ProfessorIndisponibilidadeFindOneInputDto,
+    ProfessorIndisponibilidadeFindOneOutputDto
   >
   implements IProfessorIndisponibilidadeUseCasePort
 {

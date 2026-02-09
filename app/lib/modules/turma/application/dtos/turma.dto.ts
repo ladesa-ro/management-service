@@ -1,33 +1,33 @@
 import {
-  EntityOutput,
-  FindOneInput,
+  EntityOutputDto,
+  FindOneInputDto,
   IFilterAcceptableValues,
-  ObjectUuidRef,
-  PaginationInput,
-  PaginationResult,
+  ObjectUuidRefDto,
+  PaginationInputDto,
+  PaginationResultDto,
 } from "@/modules/@shared/application/dtos";
-import { AmbienteFindOneOutput, AmbienteInputRef } from "@/modules/ambiente";
-import { CursoFindOneOutput, CursoInputRef } from "@/modules/curso";
-import { ImagemFindOneOutput, ImagemInputRef } from "@/modules/imagem";
+import { AmbienteFindOneOutputDto, AmbienteInputRefDto } from "@/modules/ambiente";
+import { CursoFindOneOutputDto, CursoInputRefDto } from "@/modules/curso";
+import { ImagemFindOneOutputDto, ImagemInputRefDto } from "@/modules/imagem";
 
 // ============================================================================
 // FindOne Input/Output
 // ============================================================================
 
-export class TurmaFindOneInput extends FindOneInput {}
+export class TurmaFindOneInputDto extends FindOneInputDto {}
 
-export class TurmaFindOneOutput extends EntityOutput {
+export class TurmaFindOneOutputDto extends EntityOutputDto {
   periodo!: string;
-  ambientePadraoAula!: AmbienteFindOneOutput | null;
-  curso!: CursoFindOneOutput;
-  imagemCapa!: ImagemFindOneOutput | null;
+  ambientePadraoAula!: AmbienteFindOneOutputDto | null;
+  curso!: CursoFindOneOutputDto;
+  imagemCapa!: ImagemFindOneOutputDto | null;
 }
 
 // ============================================================================
 // List Input/Output
 // ============================================================================
 
-export class TurmaListInput extends PaginationInput {
+export class TurmaListInputDto extends PaginationInputDto {
   "filter.id"?: IFilterAcceptableValues;
   "filter.ambientePadraoAula.nome"?: IFilterAcceptableValues;
   "filter.ambientePadraoAula.codigo"?: IFilterAcceptableValues;
@@ -42,28 +42,28 @@ export class TurmaListInput extends PaginationInput {
   "filter.curso.ofertaFormacao.slug"?: IFilterAcceptableValues;
 }
 
-export class TurmaListOutput extends PaginationResult<TurmaFindOneOutput> {}
+export class TurmaListOutputDto extends PaginationResultDto<TurmaFindOneOutputDto> {}
 
 // ============================================================================
 // Create/Update Input
 // ============================================================================
 
-export class TurmaCreateInput {
+export class TurmaCreateInputDto {
   periodo!: string;
-  curso!: CursoInputRef;
-  ambientePadraoAula?: AmbienteInputRef | null;
-  imagemCapa?: ImagemInputRef | null;
+  curso!: CursoInputRefDto;
+  ambientePadraoAula?: AmbienteInputRefDto | null;
+  imagemCapa?: ImagemInputRefDto | null;
 }
 
-export class TurmaUpdateInput {
+export class TurmaUpdateInputDto {
   periodo?: string;
-  curso?: CursoInputRef;
-  ambientePadraoAula?: AmbienteInputRef | null;
-  imagemCapa?: ImagemInputRef | null;
+  curso?: CursoInputRefDto;
+  ambientePadraoAula?: AmbienteInputRefDto | null;
+  imagemCapa?: ImagemInputRefDto | null;
 }
 
 // ============================================================================
 // Input Ref
 // ============================================================================
 
-export type TurmaInputRef = ObjectUuidRef;
+export type TurmaInputRefDto = ObjectUuidRefDto;

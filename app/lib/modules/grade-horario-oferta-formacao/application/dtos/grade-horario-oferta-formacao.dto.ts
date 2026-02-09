@@ -1,53 +1,56 @@
 import {
-  EntityOutput,
-  FindOneInput,
+  EntityOutputDto,
+  FindOneInputDto,
   IFilterAcceptableValues,
-  ObjectUuidRef,
-  PaginationInput,
-  PaginationResult,
+  ObjectUuidRefDto,
+  PaginationInputDto,
+  PaginationResultDto,
 } from "@/modules/@shared";
-import { CampusFindOneOutput, CampusInputRef } from "@/modules/campus";
-import { OfertaFormacaoFindOneOutput, OfertaFormacaoInputRef } from "@/modules/oferta-formacao";
+import { CampusFindOneOutputDto, CampusInputRefDto } from "@/modules/campus";
+import {
+  OfertaFormacaoFindOneOutputDto,
+  OfertaFormacaoInputRefDto,
+} from "@/modules/oferta-formacao";
 
 // ============================================================================
 // FindOne Input/Output
 // ============================================================================
 
-export class GradeHorarioOfertaFormacaoFindOneInput extends FindOneInput {}
+export class GradeHorarioOfertaFormacaoFindOneInputDto extends FindOneInputDto {}
 
-export class GradeHorarioOfertaFormacaoFindOneOutput extends EntityOutput {
-  campus!: CampusFindOneOutput;
-  ofertaFormacao!: OfertaFormacaoFindOneOutput;
+export class GradeHorarioOfertaFormacaoFindOneOutputDto extends EntityOutputDto {
+  campus!: CampusFindOneOutputDto;
+  ofertaFormacao!: OfertaFormacaoFindOneOutputDto;
 }
 
 // ============================================================================
 // List Input/Output
 // ============================================================================
 
-export class GradeHorarioOfertaFormacaoListInput extends PaginationInput {
+export class GradeHorarioOfertaFormacaoListInputDto extends PaginationInputDto {
   "filter.id"?: IFilterAcceptableValues;
   "filter.campus.id"?: IFilterAcceptableValues;
   "filter.ofertaFormacao.id"?: IFilterAcceptableValues;
 }
 
-export class GradeHorarioOfertaFormacaoListOutput extends PaginationResult<GradeHorarioOfertaFormacaoFindOneOutput> {}
+export class GradeHorarioOfertaFormacaoListOutputDto extends PaginationResultDto<GradeHorarioOfertaFormacaoFindOneOutputDto> {}
 
 // ============================================================================
 // Create/Update Input
 // ============================================================================
 
-export class GradeHorarioOfertaFormacaoCreateInput {
-  campus!: CampusInputRef;
-  ofertaFormacao!: OfertaFormacaoInputRef;
+export class GradeHorarioOfertaFormacaoCreateInputDto {
+  campus!: CampusInputRefDto;
+  ofertaFormacao!: OfertaFormacaoInputRefDto;
 }
 
-export class GradeHorarioOfertaFormacaoUpdateInput {
-  campus?: CampusInputRef;
-  ofertaFormacao?: OfertaFormacaoInputRef;
+export class GradeHorarioOfertaFormacaoUpdateInputDto {
+  campus?: CampusInputRefDto;
+  ofertaFormacao?: OfertaFormacaoInputRefDto;
 }
 
 // ============================================================================
 // Input Ref
 // ============================================================================
 
-export type GradeHorarioOfertaFormacaoInputRef = ObjectUuidRef;
+export type GradeHorarioOfertaFormacaoInputRefDto = ObjectUuidRefDto;

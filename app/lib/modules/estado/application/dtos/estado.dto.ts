@@ -1,21 +1,21 @@
 import {
   IdNumeric,
   IFilterAcceptableValues,
-  PaginationInput,
-  PaginationResult,
+  PaginationInputDto,
+  PaginationResultDto,
 } from "@/modules/@shared";
 
 // ============================================================================
 // FindOne Input/Output
 // ============================================================================
 
-export class EstadoFindOneInput {
+export class EstadoFindOneInputDto {
   id!: IdNumeric;
 
   selection?: string[];
 }
 
-export class EstadoFindOneOutput {
+export class EstadoFindOneOutputDto {
   id!: IdNumeric;
 
   nome!: string;
@@ -26,8 +26,8 @@ export class EstadoFindOneOutput {
 // List Input/Output
 // ============================================================================
 
-export class EstadoListInput extends PaginationInput {
+export class EstadoListInputDto extends PaginationInputDto {
   "filter.id"?: IFilterAcceptableValues;
 }
 
-export class EstadoListOutput extends PaginationResult<EstadoFindOneOutput> {}
+export class EstadoListOutputDto extends PaginationResultDto<EstadoFindOneOutputDto> {}

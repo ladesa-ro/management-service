@@ -1,14 +1,11 @@
-import type { IdUuid, ScalarDateTimeString } from "@/modules/@shared";
+import type { IdUuid, IEntityBase } from "@/modules/@shared";
 import type { ICampus } from "@/modules/campus";
 
 /**
  * Tipagem da entidade Bloco
  * Define a estrutura de dados sem comportamento
  */
-export interface IBloco {
-  /** Identificador UUID do bloco */
-  id: IdUuid;
-
+export interface IBloco extends IEntityBase {
   /** Nome do bloco */
   nome: string;
 
@@ -20,15 +17,6 @@ export interface IBloco {
 
   /** Imagem de capa do bloco (opcional) */
   imagemCapa: { id: IdUuid } | null;
-
-  /** Data de criação */
-  dateCreated: ScalarDateTimeString;
-
-  /** Data de atualização */
-  dateUpdated: ScalarDateTimeString;
-
-  /** Data de exclusão (soft delete) */
-  dateDeleted: ScalarDateTimeString | null;
 }
 
 /**

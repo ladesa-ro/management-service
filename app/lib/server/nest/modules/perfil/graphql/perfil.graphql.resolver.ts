@@ -3,20 +3,24 @@ import { type GraphQLResolveInfo } from "graphql";
 import { AccessContext, AccessContextGraphQL } from "@/modules/@core/access-context";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
 import { PerfilService } from "@/modules/perfil";
-import { PerfilFindOneOutputDto, PerfilSetVinculosInputDto } from "../rest/perfil.rest.dto";
-import { PerfilListInputGqlDto, PerfilListOutputGqlDto } from "./perfil.graphql.dto";
+import {
+  PerfilFindOneOutputGraphQlDto,
+  PerfilListInputGraphQlDto,
+  PerfilListOutputGraphQlDto,
+  PerfilSetVinculosInputGraphQlDto,
+} from "./perfil.graphql.dto";
 import { PerfilGraphqlMapper } from "./perfil.graphql.mapper";
 
-@Resolver(() => PerfilFindOneOutputDto)
+@Resolver(() => PerfilFindOneOutputGraphQlDto)
 export class PerfilGraphqlResolver {
   constructor(private readonly perfilService: PerfilService) {}
 
-  @Query(() => PerfilListOutputGqlDto, { name: "perfilFindAll" })
+  @Query(() => PerfilListOutputGraphQlDto, { name: "perfilFindAll" })
   async findAll(
     @AccessContextGraphQL() accessContext: AccessContext,
-    @Args() dto: PerfilListInputGqlDto,
+    @Args() dto: PerfilListInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<PerfilListOutputGqlDto> {
+  ): Promise<PerfilListOutputGraphQlDto> {
     const input = PerfilGraphqlMapper.toListInput(dto);
 
     if (input) {
@@ -27,12 +31,12 @@ export class PerfilGraphqlResolver {
     return PerfilGraphqlMapper.toListOutputDto(result);
   }
 
-  @Query(() => PerfilFindOneOutputDto, { name: "perfilFindById", nullable: true })
+  @Query(() => PerfilFindOneOutputGraphQlDto, { name: "perfilFindById", nullable: true })
   async findById(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<PerfilFindOneOutputDto | null> {
+  ): Promise<PerfilFindOneOutputGraphQlDto | null> {
     const selection = graphqlExtractSelection(info);
     const result = await this.perfilService.findById(accessContext, { id, selection });
     if (!result) {
@@ -41,12 +45,12 @@ export class PerfilGraphqlResolver {
     return PerfilGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => PerfilListOutputGqlDto, { name: "perfilSetVinculos" })
+  @Mutation(() => PerfilListOutputGraphQlDto, { name: "perfilSetVinculos" })
   async setVinculos(
     @AccessContextGraphQL() accessContext: AccessContext,
-    @Args("input") dto: PerfilSetVinculosInputDto,
+    @Args("input") dto: PerfilSetVinculosInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<PerfilListOutputGqlDto> {
+  ): Promise<PerfilListOutputGraphQlDto> {
     const input = PerfilGraphqlMapper.toSetVinculosInput(dto);
     const result = await this.perfilService.setVinculos(accessContext, input);
     return PerfilGraphqlMapper.toListOutputDto(result);

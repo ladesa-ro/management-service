@@ -25,12 +25,12 @@ import {
 import { AccessContext, AccessContextHttp } from "@/modules/@core/access-context";
 import { CursoService } from "@/modules/curso";
 import {
-  CursoCreateInputDto,
-  CursoFindOneInputDto,
-  CursoFindOneOutputDto,
-  CursoListInputDto,
-  CursoListOutputDto,
-  CursoUpdateInputDto,
+  CursoCreateInputRestDto,
+  CursoFindOneInputRestDto,
+  CursoFindOneOutputRestDto,
+  CursoListInputRestDto,
+  CursoListOutputRestDto,
+  CursoUpdateInputRestDto,
 } from "./curso.rest.dto";
 import { CursoRestMapper } from "./curso.rest.mapper";
 
@@ -41,12 +41,12 @@ export class CursoRestController {
 
   @Get("/")
   @ApiOperation({ summary: "Lista cursos", operationId: "cursoFindAll" })
-  @ApiOkResponse({ type: CursoListOutputDto })
+  @ApiOkResponse({ type: CursoListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
     @AccessContextHttp() accessContext: AccessContext,
-    @Query() dto: CursoListInputDto,
-  ): Promise<CursoListOutputDto> {
+    @Query() dto: CursoListInputRestDto,
+  ): Promise<CursoListOutputRestDto> {
     const input = CursoRestMapper.toListInput(dto);
     const result = await this.cursoService.findAll(accessContext, input as any);
     return CursoRestMapper.toListOutputDto(result as any);
@@ -54,13 +54,13 @@ export class CursoRestController {
 
   @Get("/:id")
   @ApiOperation({ summary: "Busca um curso por ID", operationId: "cursoFindById" })
-  @ApiOkResponse({ type: CursoFindOneOutputDto })
+  @ApiOkResponse({ type: CursoFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async findById(
     @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: CursoFindOneInputDto,
-  ): Promise<CursoFindOneOutputDto> {
+    @Param() params: CursoFindOneInputRestDto,
+  ): Promise<CursoFindOneOutputRestDto> {
     const input = CursoRestMapper.toFindOneInput(params);
     const result = await this.cursoService.findByIdStrict(accessContext, input as any);
     return CursoRestMapper.toFindOneOutputDto(result as any);
@@ -68,12 +68,12 @@ export class CursoRestController {
 
   @Post("/")
   @ApiOperation({ summary: "Cria um curso", operationId: "cursoCreate" })
-  @ApiCreatedResponse({ type: CursoFindOneOutputDto })
+  @ApiCreatedResponse({ type: CursoFindOneOutputRestDto })
   @ApiForbiddenResponse()
   async create(
     @AccessContextHttp() accessContext: AccessContext,
-    @Body() dto: CursoCreateInputDto,
-  ): Promise<CursoFindOneOutputDto> {
+    @Body() dto: CursoCreateInputRestDto,
+  ): Promise<CursoFindOneOutputRestDto> {
     const input = CursoRestMapper.toCreateInput(dto);
     const result = await this.cursoService.create(accessContext, input as any);
     return CursoRestMapper.toFindOneOutputDto(result as any);
@@ -81,14 +81,14 @@ export class CursoRestController {
 
   @Patch("/:id")
   @ApiOperation({ summary: "Atualiza um curso", operationId: "cursoUpdate" })
-  @ApiOkResponse({ type: CursoFindOneOutputDto })
+  @ApiOkResponse({ type: CursoFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async update(
     @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: CursoFindOneInputDto,
-    @Body() dto: CursoUpdateInputDto,
-  ): Promise<CursoFindOneOutputDto> {
+    @Param() params: CursoFindOneInputRestDto,
+    @Body() dto: CursoUpdateInputRestDto,
+  ): Promise<CursoFindOneOutputRestDto> {
     const input = CursoRestMapper.toUpdateInput(params, dto);
     const result = await this.cursoService.update(accessContext, input as any);
     return CursoRestMapper.toFindOneOutputDto(result as any);
@@ -101,7 +101,7 @@ export class CursoRestController {
   @ApiNotFoundResponse()
   async getImagemCapa(
     @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: CursoFindOneInputDto,
+    @Param() params: CursoFindOneInputRestDto,
   ) {
     return this.cursoService.getImagemCapa(accessContext, params.id);
   }
@@ -127,7 +127,7 @@ export class CursoRestController {
   @UseInterceptors(FileInterceptor("file"))
   async updateImagemCapa(
     @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: CursoFindOneInputDto,
+    @Param() params: CursoFindOneInputRestDto,
     @UploadedFile() file: Express.Multer.File,
   ): Promise<boolean> {
     return this.cursoService.updateImagemCapa(accessContext, params, file);
@@ -140,7 +140,7 @@ export class CursoRestController {
   @ApiNotFoundResponse()
   async deleteOneById(
     @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: CursoFindOneInputDto,
+    @Param() params: CursoFindOneInputRestDto,
   ): Promise<boolean> {
     const input = CursoRestMapper.toFindOneInput(params);
     return this.cursoService.deleteOneById(accessContext, input);

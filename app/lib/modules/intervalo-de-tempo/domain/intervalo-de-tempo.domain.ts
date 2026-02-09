@@ -22,6 +22,19 @@ export class IntervaloDeTempo extends BaseEntity implements IIntervaloDeTempo {
   }
 
   // ========================================
+  // Validação
+  // ========================================
+
+  validar(): void {
+    const { result, rules } = IntervaloDeTempo.createValidation();
+    rules.required(this.periodoInicio, "periodoInicio");
+    rules.timeFormat(this.periodoInicio, "periodoInicio");
+    rules.required(this.periodoFim, "periodoFim");
+    rules.timeFormat(this.periodoFim, "periodoFim");
+    IntervaloDeTempo.throwIfInvalid(result);
+  }
+
+  // ========================================
   // Factory Methods
   // ========================================
 
@@ -30,20 +43,12 @@ export class IntervaloDeTempo extends BaseEntity implements IIntervaloDeTempo {
    * @throws EntityValidationError se os dados forem inválidos
    */
   static criar(dados: IIntervaloDeTempoCreate): IntervaloDeTempo {
-    const { result, rules } = this.createValidation();
-
     const instance = new IntervaloDeTempo();
-    instance.periodoInicio = rules.required(dados.periodoInicio, "periodoInicio");
-    instance.periodoInicio = rules.timeFormat(instance.periodoInicio, "periodoInicio");
+    instance.periodoInicio = dados.periodoInicio;
+    instance.periodoFim = dados.periodoFim;
 
-    instance.periodoFim = rules.required(dados.periodoFim, "periodoFim");
-    instance.periodoFim = rules.timeFormat(instance.periodoFim, "periodoFim");
-
-    this.throwIfInvalid(result);
-
-    instance.dateCreated = new Date().toISOString();
-    instance.dateUpdated = new Date().toISOString();
-    instance.dateDeleted = null;
+    instance.initDates();
+    instance.validar();
 
     return instance;
   }
@@ -66,21 +71,16 @@ export class IntervaloDeTempo extends BaseEntity implements IIntervaloDeTempo {
    * @throws EntityValidationError se os dados forem inválidos
    */
   atualizar(dados: IIntervaloDeTempoUpdate): void {
-    const { result, rules } = IntervaloDeTempo.createValidation();
-
     if (dados.periodoInicio !== undefined) {
-      this.periodoInicio = rules.required(dados.periodoInicio, "periodoInicio");
-      this.periodoInicio = rules.timeFormat(this.periodoInicio, "periodoInicio");
+      this.periodoInicio = dados.periodoInicio;
     }
 
     if (dados.periodoFim !== undefined) {
-      this.periodoFim = rules.required(dados.periodoFim, "periodoFim");
-      this.periodoFim = rules.timeFormat(this.periodoFim, "periodoFim");
+      this.periodoFim = dados.periodoFim;
     }
 
-    IntervaloDeTempo.throwIfInvalid(result);
-
-    this.dateUpdated = new Date().toISOString();
+    this.touchUpdated();
+    this.validar();
   }
 
   // ========================================

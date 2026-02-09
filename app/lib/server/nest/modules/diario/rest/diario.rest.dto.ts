@@ -1,12 +1,10 @@
-import { ArgsType, Field, ID, InputType, ObjectType, PartialType } from "@nestjs/graphql";
-import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { ApiProperty, ApiPropertyOptional, ApiSchema, PartialType } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import {
   IsArray,
   IsBoolean,
   IsDateString,
   IsOptional,
-  IsString,
   IsUUID,
   ValidateNested,
 } from "class-validator";
@@ -17,26 +15,28 @@ import {
   simpleProperty,
 } from "@/modules/@shared/infrastructure/persistence/typeorm/metadata";
 import {
-  PaginationInputDto,
-  PaginationMetaDto,
+  PaginationInputRestDto,
+  PaginationMetaRestDto,
   TransformToArray,
 } from "@/modules/@shared/infrastructure/presentation/rest/dtos";
 import {
-  AmbienteFindOneInputDto,
-  AmbienteFindOneOutputDto,
+  AmbienteFindOneInputRestDto,
+  AmbienteFindOneOutputRestDto,
 } from "@/server/nest/modules/ambiente/rest";
-import { ImagemFindOneOutputDto } from "@/server/nest/modules/bloco/rest";
-import { CalendarioLetivoFindOneOutputDto } from "@/server/nest/modules/calendario-letivo/rest";
+import { ImagemFindOneOutputRestDto } from "@/server/nest/modules/bloco/rest";
+import { CalendarioLetivoFindOneOutputRestDto } from "@/server/nest/modules/calendario-letivo/rest";
 import {
-  DisciplinaFindOneInputDto,
-  DisciplinaFindOneOutputDto,
+  DisciplinaFindOneInputRestDto,
+  DisciplinaFindOneOutputRestDto,
 } from "@/server/nest/modules/disciplina/rest";
-import { TurmaFindOneInputDto, TurmaFindOneOutputDto } from "@/server/nest/modules/turma/rest";
+import {
+  TurmaFindOneInputRestDto,
+  TurmaFindOneOutputRestDto,
+} from "@/server/nest/modules/turma/rest";
 
-@InputType("CalendarioLetivoFindOneInputFromDiario")
-export class CalendarioLetivoFindOneInputDto {
+@ApiSchema({ name: "CalendarioLetivoFindOneInputDto" })
+export class CalendarioLetivoFindOneInputRestDto {
   @ApiProperty({ description: "Identificador do registro (uuid)", format: "uuid" })
-  @Field(() => ID)
   @IsUUID()
   id: string;
 }
@@ -45,89 +45,79 @@ export class CalendarioLetivoFindOneInputDto {
 // FindOne Output
 // ============================================================================
 
-@ObjectType("Diario")
+@ApiSchema({ name: "DiarioFindOneOutputDto" })
 @RegisterModel({
-  name: "DiarioFindOneOutput",
+  name: "DiarioFindOneOutputDto",
   properties: [
     simpleProperty("id"),
     simpleProperty("ativo"),
-    referenceProperty("calendarioLetivo", "CalendarioLetivoFindOneOutput"),
-    referenceProperty("turma", "TurmaFindOneOutput"),
-    referenceProperty("disciplina", "DisciplinaFindOneOutput"),
-    referenceProperty("ambientePadrao", "AmbienteFindOneOutput", { nullable: true }),
-    referenceProperty("imagemCapa", "ImagemFindOneOutput", { nullable: true }),
+    referenceProperty("calendarioLetivo", "CalendarioLetivoFindOneOutputDto"),
+    referenceProperty("turma", "TurmaFindOneOutputDto"),
+    referenceProperty("disciplina", "DisciplinaFindOneOutputDto"),
+    referenceProperty("ambientePadrao", "AmbienteFindOneOutputDto", { nullable: true }),
+    referenceProperty("imagemCapa", "ImagemFindOneOutputDto", { nullable: true }),
     ...commonProperties.dated,
   ],
 })
-export class DiarioFindOneOutputDto {
+export class DiarioFindOneOutputRestDto {
   @ApiProperty({ description: "Identificador do registro (uuid)", format: "uuid" })
-  @Field(() => ID)
   @IsUUID()
   id: string;
 
   @ApiProperty({ description: "Situacao do diario" })
-  @Field()
   @IsBoolean()
   ativo: boolean;
 
   @ApiProperty({
-    type: () => CalendarioLetivoFindOneOutputDto,
+    type: () => CalendarioLetivoFindOneOutputRestDto,
     description: "Calendario letivo vinculado ao diario",
   })
-  @Field(() => CalendarioLetivoFindOneOutputDto)
   @ValidateNested()
-  @Type(() => CalendarioLetivoFindOneOutputDto)
-  calendarioLetivo: CalendarioLetivoFindOneOutputDto;
+  @Type(() => CalendarioLetivoFindOneOutputRestDto)
+  calendarioLetivo: CalendarioLetivoFindOneOutputRestDto;
 
-  @ApiProperty({ type: () => TurmaFindOneOutputDto, description: "Turma vinculada ao diario" })
-  @Field(() => TurmaFindOneOutputDto)
+  @ApiProperty({ type: () => TurmaFindOneOutputRestDto, description: "Turma vinculada ao diario" })
   @ValidateNested()
-  @Type(() => TurmaFindOneOutputDto)
-  turma: TurmaFindOneOutputDto;
+  @Type(() => TurmaFindOneOutputRestDto)
+  turma: TurmaFindOneOutputRestDto;
 
   @ApiProperty({
-    type: () => DisciplinaFindOneOutputDto,
+    type: () => DisciplinaFindOneOutputRestDto,
     description: "Disciplina vinculada ao diario",
   })
-  @Field(() => DisciplinaFindOneOutputDto)
   @ValidateNested()
-  @Type(() => DisciplinaFindOneOutputDto)
-  disciplina: DisciplinaFindOneOutputDto;
+  @Type(() => DisciplinaFindOneOutputRestDto)
+  disciplina: DisciplinaFindOneOutputRestDto;
 
   @ApiPropertyOptional({
-    type: () => AmbienteFindOneOutputDto,
+    type: () => AmbienteFindOneOutputRestDto,
     description: "Ambiente padrao",
     nullable: true,
   })
-  @Field(() => AmbienteFindOneOutputDto, { nullable: true })
   @IsOptional()
   @ValidateNested()
-  @Type(() => AmbienteFindOneOutputDto)
-  ambientePadrao: AmbienteFindOneOutputDto | null;
+  @Type(() => AmbienteFindOneOutputRestDto)
+  ambientePadrao: AmbienteFindOneOutputRestDto | null;
 
   @ApiPropertyOptional({
-    type: () => ImagemFindOneOutputDto,
+    type: () => ImagemFindOneOutputRestDto,
     description: "Imagem de capa do diario",
     nullable: true,
   })
-  @Field(() => ImagemFindOneOutputDto, { nullable: true })
   @IsOptional()
   @ValidateNested()
-  @Type(() => ImagemFindOneOutputDto)
-  imagemCapa: ImagemFindOneOutputDto | null;
+  @Type(() => ImagemFindOneOutputRestDto)
+  imagemCapa: ImagemFindOneOutputRestDto | null;
 
   @ApiProperty({ description: "Data e hora da criacao do registro" })
-  @Field()
   @IsDateString()
   dateCreated: Date;
 
   @ApiProperty({ description: "Data e hora da alteracao do registro" })
-  @Field()
   @IsDateString()
   dateUpdated: Date;
 
   @ApiPropertyOptional({ description: "Data e hora da exclusao do registro", nullable: true })
-  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateString()
   dateDeleted: Date | null;
@@ -137,8 +127,8 @@ export class DiarioFindOneOutputDto {
 // List Input/Output
 // ============================================================================
 
-@ArgsType()
-export class DiarioListInputDto extends PaginationInputDto {
+@ApiSchema({ name: "DiarioListInputDto" })
+export class DiarioListInputRestDto extends PaginationInputRestDto {
   @ApiPropertyOptional({
     description: "Filtro por ID",
     type: [String],
@@ -146,7 +136,7 @@ export class DiarioListInputDto extends PaginationInputDto {
   @TransformToArray()
   @IsOptional()
   @IsArray()
-  @IsString({ each: true })
+  @IsUUID(undefined, { each: true })
   "filter.id"?: string[];
 
   @ApiPropertyOptional({
@@ -156,7 +146,7 @@ export class DiarioListInputDto extends PaginationInputDto {
   @TransformToArray()
   @IsOptional()
   @IsArray()
-  @IsString({ each: true })
+  @IsUUID(undefined, { each: true })
   "filter.turma.id"?: string[];
 
   @ApiPropertyOptional({
@@ -166,7 +156,7 @@ export class DiarioListInputDto extends PaginationInputDto {
   @TransformToArray()
   @IsOptional()
   @IsArray()
-  @IsString({ each: true })
+  @IsUUID(undefined, { each: true })
   "filter.disciplina.id"?: string[];
 
   @ApiPropertyOptional({
@@ -176,80 +166,71 @@ export class DiarioListInputDto extends PaginationInputDto {
   @TransformToArray()
   @IsOptional()
   @IsArray()
-  @IsString({ each: true })
+  @IsUUID(undefined, { each: true })
   "filter.ambientePadrao.id"?: string[];
 }
 
-@ObjectType("DiarioListOutput")
-export class DiarioListOutputDto {
-  @ApiProperty({ type: () => PaginationMetaDto, description: "Metadados da busca" })
-  @Field(() => PaginationMetaDto)
-  meta: PaginationMetaDto;
+@ApiSchema({ name: "DiarioListOutputDto" })
+export class DiarioListOutputRestDto {
+  @ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" })
+  meta: PaginationMetaRestDto;
 
-  @ApiProperty({ type: () => [DiarioFindOneOutputDto], description: "Resultados da busca" })
-  @Field(() => [DiarioFindOneOutputDto])
-  data: DiarioFindOneOutputDto[];
+  @ApiProperty({ type: () => [DiarioFindOneOutputRestDto], description: "Resultados da busca" })
+  data: DiarioFindOneOutputRestDto[];
 }
 
 // ============================================================================
 // Create/Update Input
 // ============================================================================
 
-@InputType("DiarioCreateInput")
-export class DiarioCreateInputDto {
+@ApiSchema({ name: "DiarioCreateInputDto" })
+export class DiarioCreateInputRestDto {
   @ApiProperty({ description: "Situacao do diario" })
-  @Field()
   @IsBoolean()
   ativo: boolean;
 
   @ApiProperty({
-    type: () => CalendarioLetivoFindOneInputDto,
+    type: () => CalendarioLetivoFindOneInputRestDto,
     description: "Calendario letivo vinculado ao diario",
   })
-  @Field(() => CalendarioLetivoFindOneInputDto)
   @ValidateNested()
-  @Type(() => CalendarioLetivoFindOneInputDto)
-  calendarioLetivo: CalendarioLetivoFindOneInputDto;
+  @Type(() => CalendarioLetivoFindOneInputRestDto)
+  calendarioLetivo: CalendarioLetivoFindOneInputRestDto;
 
-  @ApiProperty({ type: () => TurmaFindOneInputDto, description: "Turma vinculada ao diario" })
-  @Field(() => TurmaFindOneInputDto)
+  @ApiProperty({ type: () => TurmaFindOneInputRestDto, description: "Turma vinculada ao diario" })
   @ValidateNested()
-  @Type(() => TurmaFindOneInputDto)
-  turma: TurmaFindOneInputDto;
+  @Type(() => TurmaFindOneInputRestDto)
+  turma: TurmaFindOneInputRestDto;
 
   @ApiProperty({
-    type: () => DisciplinaFindOneInputDto,
+    type: () => DisciplinaFindOneInputRestDto,
     description: "Disciplina vinculada ao diario",
   })
-  @Field(() => DisciplinaFindOneInputDto)
   @ValidateNested()
-  @Type(() => DisciplinaFindOneInputDto)
-  disciplina: DisciplinaFindOneInputDto;
+  @Type(() => DisciplinaFindOneInputRestDto)
+  disciplina: DisciplinaFindOneInputRestDto;
 
   @ApiPropertyOptional({
-    type: () => AmbienteFindOneInputDto,
+    type: () => AmbienteFindOneInputRestDto,
     description: "Ambiente padrao",
     nullable: true,
   })
-  @Field(() => AmbienteFindOneInputDto, { nullable: true })
   @IsOptional()
   @ValidateNested()
-  @Type(() => AmbienteFindOneInputDto)
-  ambientePadrao?: AmbienteFindOneInputDto | null;
+  @Type(() => AmbienteFindOneInputRestDto)
+  ambientePadrao?: AmbienteFindOneInputRestDto | null;
 }
 
-@InputType("DiarioUpdateInput")
-export class DiarioUpdateInputDto extends PartialType(DiarioCreateInputDto) {}
+@ApiSchema({ name: "DiarioUpdateInputDto" })
+export class DiarioUpdateInputRestDto extends PartialType(DiarioCreateInputRestDto) {}
 
 // ============================================================================
 // FindOne Input (for path params)
 // ============================================================================
 
-@ArgsType()
-@InputType("DiarioFindOneInput")
-export class DiarioFindOneInputDto {
+@ApiSchema({ name: "DiarioFindOneInputDto" })
+export class DiarioFindOneInputRestDto {
   @ApiProperty({ description: "Identificador do registro (uuid)", format: "uuid" })
-  @Field(() => ID)
   @IsUUID()
   id: string;
 }

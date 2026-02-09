@@ -7,10 +7,10 @@ import {
   paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
-  ProfessorIndisponibilidadeFindOneInput,
-  ProfessorIndisponibilidadeFindOneOutput,
-  ProfessorIndisponibilidadeListInput,
-  ProfessorIndisponibilidadeListOutput,
+  ProfessorIndisponibilidadeFindOneInputDto,
+  ProfessorIndisponibilidadeFindOneOutputDto,
+  ProfessorIndisponibilidadeListInputDto,
+  ProfessorIndisponibilidadeListOutputDto,
 } from "@/modules/professor-indisponibilidade/application/dtos";
 import type { IProfessorIndisponibilidadeRepositoryPort } from "@/modules/professor-indisponibilidade/application/ports";
 import type { ProfessorIndisponibilidadeEntity } from "./professor-indisponibilidade.entity";
@@ -23,16 +23,16 @@ import type { ProfessorIndisponibilidadeEntity } from "./professor-indisponibili
 export class ProfessorIndisponibilidadeTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     ProfessorIndisponibilidadeEntity,
-    ProfessorIndisponibilidadeListInput,
-    ProfessorIndisponibilidadeListOutput,
-    ProfessorIndisponibilidadeFindOneInput,
-    ProfessorIndisponibilidadeFindOneOutput
+    ProfessorIndisponibilidadeListInputDto,
+    ProfessorIndisponibilidadeListOutputDto,
+    ProfessorIndisponibilidadeFindOneInputDto,
+    ProfessorIndisponibilidadeFindOneOutputDto
   >
   implements IProfessorIndisponibilidadeRepositoryPort
 {
   protected readonly alias = "professor_indisponibilidade";
   protected readonly authzAction = "vinculo:find";
-  protected readonly outputDtoName = "ProfessorIndisponibilidadeFindOneOutput";
+  protected readonly outputDtoName = "ProfessorIndisponibilidadeFindOneOutputDto";
 
   constructor(
     protected readonly databaseContext: DatabaseContextService,

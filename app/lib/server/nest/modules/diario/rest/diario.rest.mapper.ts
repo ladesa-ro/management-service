@@ -1,10 +1,10 @@
 import {
-  DiarioCreateInput,
-  DiarioFindOneInput,
-  DiarioFindOneOutput,
-  DiarioListInput,
-  DiarioListOutput,
-  DiarioUpdateInput,
+  DiarioCreateInputDto,
+  DiarioFindOneInputDto,
+  DiarioFindOneOutputDto,
+  DiarioListInputDto,
+  DiarioListOutputDto,
+  DiarioUpdateInputDto,
 } from "@/modules/diario";
 import { AmbienteRestMapper } from "@/server/nest/modules/ambiente/rest";
 import { BlocoRestMapper } from "@/server/nest/modules/bloco/rest";
@@ -13,12 +13,12 @@ import { DisciplinaRestMapper } from "@/server/nest/modules/disciplina/rest";
 import { TurmaRestMapper } from "@/server/nest/modules/turma/rest";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import {
-  DiarioCreateInputDto,
-  DiarioFindOneInputDto,
-  DiarioFindOneOutputDto,
-  DiarioListInputDto,
-  DiarioListOutputDto,
-  DiarioUpdateInputDto,
+  DiarioCreateInputRestDto,
+  DiarioFindOneInputRestDto,
+  DiarioFindOneOutputRestDto,
+  DiarioListInputRestDto,
+  DiarioListOutputRestDto,
+  DiarioUpdateInputRestDto,
 } from "./diario.rest.dto";
 
 export class DiarioRestMapper {
@@ -26,18 +26,18 @@ export class DiarioRestMapper {
   // Input: Server DTO -> Core DTO
   // ============================================================================
 
-  static toFindOneInput(dto: DiarioFindOneInputDto): DiarioFindOneInput {
-    const input = new DiarioFindOneInput();
+  static toFindOneInput(dto: DiarioFindOneInputRestDto): DiarioFindOneInputDto {
+    const input = new DiarioFindOneInputDto();
     input.id = dto.id;
     return input;
   }
 
-  static toListInput(dto: DiarioListInputDto | null): DiarioListInput | null {
+  static toListInput(dto: DiarioListInputRestDto | null): DiarioListInputDto | null {
     if (!dto) {
       return null;
     }
 
-    const input = new DiarioListInput();
+    const input = new DiarioListInputDto();
     input.page = dto.page;
     input.limit = dto.limit;
     input.search = dto.search;
@@ -50,8 +50,8 @@ export class DiarioRestMapper {
     return input;
   }
 
-  static toCreateInput(dto: DiarioCreateInputDto): DiarioCreateInput {
-    const input = new DiarioCreateInput();
+  static toCreateInput(dto: DiarioCreateInputRestDto): DiarioCreateInputDto {
+    const input = new DiarioCreateInputDto();
     input.ativo = dto.ativo;
     input.calendarioLetivo = { id: dto.calendarioLetivo.id };
     input.turma = { id: dto.turma.id };
@@ -63,10 +63,10 @@ export class DiarioRestMapper {
   }
 
   static toUpdateInput(
-    params: DiarioFindOneInputDto,
-    dto: DiarioUpdateInputDto,
-  ): DiarioFindOneInput & DiarioUpdateInput {
-    const input = new DiarioFindOneInput() as DiarioFindOneInput & DiarioUpdateInput;
+    params: DiarioFindOneInputRestDto,
+    dto: DiarioUpdateInputRestDto,
+  ): DiarioFindOneInputDto & DiarioUpdateInputDto {
+    const input = new DiarioFindOneInputDto() as DiarioFindOneInputDto & DiarioUpdateInputDto;
     input.id = params.id;
     if (dto.ativo !== undefined) {
       input.ativo = dto.ativo;
@@ -90,8 +90,8 @@ export class DiarioRestMapper {
   // Output: Core DTO -> Server DTO
   // ============================================================================
 
-  static toFindOneOutputDto(output: DiarioFindOneOutput): DiarioFindOneOutputDto {
-    const dto = new DiarioFindOneOutputDto();
+  static toFindOneOutputDto(output: DiarioFindOneOutputDto): DiarioFindOneOutputRestDto {
+    const dto = new DiarioFindOneOutputRestDto();
     dto.id = output.id;
     dto.ativo = output.ativo;
     dto.calendarioLetivo = CalendarioLetivoRestMapper.toFindOneOutputDto(output.calendarioLetivo);
@@ -109,8 +109,8 @@ export class DiarioRestMapper {
     return dto;
   }
 
-  static toListOutputDto(output: DiarioListOutput): DiarioListOutputDto {
-    const dto = new DiarioListOutputDto();
+  static toListOutputDto(output: DiarioListOutputDto): DiarioListOutputRestDto {
+    const dto = new DiarioListOutputRestDto();
     dto.meta = mapPaginationMeta(output.meta);
     dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
     return dto;

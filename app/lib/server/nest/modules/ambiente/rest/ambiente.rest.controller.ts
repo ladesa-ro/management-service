@@ -25,12 +25,12 @@ import {
 import { AccessContext, AccessContextHttp } from "@/modules/@core/access-context";
 import { AmbienteService } from "@/modules/ambiente/application/use-cases/ambiente.service";
 import {
-  AmbienteCreateInputDto,
-  AmbienteFindOneInputDto,
-  AmbienteFindOneOutputDto,
-  AmbienteListInputDto,
-  AmbienteListOutputDto,
-  AmbienteUpdateInputDto,
+  AmbienteCreateInputRestDto,
+  AmbienteFindOneInputRestDto,
+  AmbienteFindOneOutputRestDto,
+  AmbienteListInputRestDto,
+  AmbienteListOutputRestDto,
+  AmbienteUpdateInputRestDto,
 } from "./ambiente.rest.dto";
 import { AmbienteRestMapper } from "./ambiente.rest.mapper";
 
@@ -41,12 +41,12 @@ export class AmbienteRestController {
 
   @Get("/")
   @ApiOperation({ summary: "Lista ambientes", operationId: "ambienteFindAll" })
-  @ApiOkResponse({ type: AmbienteListOutputDto })
+  @ApiOkResponse({ type: AmbienteListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
     @AccessContextHttp() accessContext: AccessContext,
-    @Query() dto: AmbienteListInputDto,
-  ): Promise<AmbienteListOutputDto> {
+    @Query() dto: AmbienteListInputRestDto,
+  ): Promise<AmbienteListOutputRestDto> {
     const input = AmbienteRestMapper.toListInput(dto);
     const result = await this.ambienteService.findAll(accessContext, input as any);
     return AmbienteRestMapper.toListOutputDto(result as any);
@@ -54,13 +54,13 @@ export class AmbienteRestController {
 
   @Get("/:id")
   @ApiOperation({ summary: "Busca um ambiente por ID", operationId: "ambienteFindById" })
-  @ApiOkResponse({ type: AmbienteFindOneOutputDto })
+  @ApiOkResponse({ type: AmbienteFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async findById(
     @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: AmbienteFindOneInputDto,
-  ): Promise<AmbienteFindOneOutputDto> {
+    @Param() params: AmbienteFindOneInputRestDto,
+  ): Promise<AmbienteFindOneOutputRestDto> {
     const input = AmbienteRestMapper.toFindOneInput(params);
     const result = await this.ambienteService.findByIdStrict(accessContext, input as any);
     return AmbienteRestMapper.toFindOneOutputDto(result as any);
@@ -68,12 +68,12 @@ export class AmbienteRestController {
 
   @Post("/")
   @ApiOperation({ summary: "Cria um ambiente", operationId: "ambienteCreate" })
-  @ApiCreatedResponse({ type: AmbienteFindOneOutputDto })
+  @ApiCreatedResponse({ type: AmbienteFindOneOutputRestDto })
   @ApiForbiddenResponse()
   async create(
     @AccessContextHttp() accessContext: AccessContext,
-    @Body() dto: AmbienteCreateInputDto,
-  ): Promise<AmbienteFindOneOutputDto> {
+    @Body() dto: AmbienteCreateInputRestDto,
+  ): Promise<AmbienteFindOneOutputRestDto> {
     const input = AmbienteRestMapper.toCreateInput(dto);
     const result = await this.ambienteService.create(accessContext, input as any);
     return AmbienteRestMapper.toFindOneOutputDto(result as any);
@@ -81,14 +81,14 @@ export class AmbienteRestController {
 
   @Patch("/:id")
   @ApiOperation({ summary: "Atualiza um ambiente", operationId: "ambienteUpdate" })
-  @ApiOkResponse({ type: AmbienteFindOneOutputDto })
+  @ApiOkResponse({ type: AmbienteFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async update(
     @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: AmbienteFindOneInputDto,
-    @Body() dto: AmbienteUpdateInputDto,
-  ): Promise<AmbienteFindOneOutputDto> {
+    @Param() params: AmbienteFindOneInputRestDto,
+    @Body() dto: AmbienteUpdateInputRestDto,
+  ): Promise<AmbienteFindOneOutputRestDto> {
     const input = AmbienteRestMapper.toUpdateInput(params, dto);
     const result = await this.ambienteService.update(accessContext, input as any);
     return AmbienteRestMapper.toFindOneOutputDto(result as any);
@@ -104,7 +104,7 @@ export class AmbienteRestController {
   @ApiNotFoundResponse()
   async getImagemCapa(
     @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: AmbienteFindOneInputDto,
+    @Param() params: AmbienteFindOneInputRestDto,
   ) {
     return this.ambienteService.getImagemCapa(accessContext, params.id);
   }
@@ -130,7 +130,7 @@ export class AmbienteRestController {
   @UseInterceptors(FileInterceptor("file"))
   async updateImagemCapa(
     @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: AmbienteFindOneInputDto,
+    @Param() params: AmbienteFindOneInputRestDto,
     @UploadedFile() file: Express.Multer.File,
   ): Promise<boolean> {
     return this.ambienteService.updateImagemCapa(accessContext, params, file);
@@ -143,7 +143,7 @@ export class AmbienteRestController {
   @ApiNotFoundResponse()
   async deleteOneById(
     @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: AmbienteFindOneInputDto,
+    @Param() params: AmbienteFindOneInputRestDto,
   ): Promise<boolean> {
     const input = AmbienteRestMapper.toFindOneInput(params);
     return this.ambienteService.deleteOneById(accessContext, input as any);

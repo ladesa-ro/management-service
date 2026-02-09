@@ -21,6 +21,17 @@ export class NivelFormacao extends BaseEntity implements INivelFormacao {
   }
 
   // ========================================
+  // Validação
+  // ========================================
+
+  validar(): void {
+    const { result, rules } = NivelFormacao.createValidation();
+    rules.required(this.slug, "slug");
+    rules.slug(this.slug, "slug");
+    NivelFormacao.throwIfInvalid(result);
+  }
+
+  // ========================================
   // Factory Methods
   // ========================================
 
@@ -29,17 +40,11 @@ export class NivelFormacao extends BaseEntity implements INivelFormacao {
    * @throws EntityValidationError se os dados forem invalidos
    */
   static criar(dados: INivelFormacaoCreate): NivelFormacao {
-    const { result, rules } = this.createValidation();
-
     const instance = new NivelFormacao();
-    instance.slug = rules.required(dados.slug, "slug");
-    instance.slug = rules.slug(instance.slug, "slug");
+    instance.slug = dados.slug;
 
-    this.throwIfInvalid(result);
-
-    instance.dateCreated = new Date().toISOString();
-    instance.dateUpdated = new Date().toISOString();
-    instance.dateDeleted = null;
+    instance.initDates();
+    instance.validar();
 
     return instance;
   }
@@ -62,15 +67,11 @@ export class NivelFormacao extends BaseEntity implements INivelFormacao {
    * @throws EntityValidationError se os dados forem invalidos
    */
   atualizar(dados: INivelFormacaoUpdate): void {
-    const { result, rules } = NivelFormacao.createValidation();
-
     if (dados.slug !== undefined) {
-      this.slug = rules.required(dados.slug, "slug");
-      this.slug = rules.slug(this.slug, "slug");
+      this.slug = dados.slug;
     }
 
-    NivelFormacao.throwIfInvalid(result);
-
-    this.dateUpdated = new Date().toISOString();
+    this.touchUpdated();
+    this.validar();
   }
 }

@@ -1,5 +1,8 @@
 import type { IBaseCrudRepositoryPort } from "@/modules/@shared";
-import { OfertaFormacaoFindOneOutput, OfertaFormacaoListOutput } from "@/modules/oferta-formacao";
+import {
+  OfertaFormacaoFindOneOutputDto,
+  OfertaFormacaoListOutputDto,
+} from "@/modules/oferta-formacao";
 import type { OfertaFormacaoEntity } from "@/modules/oferta-formacao/infrastructure/persistence/typeorm";
 
 export const OFERTA_FORMACAO_REPOSITORY_PORT = Symbol("IOfertaFormacaoRepositoryPort");
@@ -11,6 +14,6 @@ export const OFERTA_FORMACAO_REPOSITORY_PORT = Symbol("IOfertaFormacaoRepository
 export interface IOfertaFormacaoRepositoryPort
   extends IBaseCrudRepositoryPort<
     OfertaFormacaoEntity,
-    OfertaFormacaoListOutput,
-    OfertaFormacaoFindOneOutput
+    OfertaFormacaoListOutputDto,
+    OfertaFormacaoFindOneOutputDto
   > {}

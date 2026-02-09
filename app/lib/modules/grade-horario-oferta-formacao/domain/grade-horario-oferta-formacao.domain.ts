@@ -23,6 +23,14 @@ export class GradeHorarioOfertaFormacao extends BaseEntity implements IGradeHora
   }
 
   // ========================================
+  // Validação
+  // ========================================
+
+  validar(): void {
+    // Entidade de relacionamento: sem validações de campos escalares
+  }
+
+  // ========================================
   // Factory Methods
   // ========================================
 
@@ -31,9 +39,8 @@ export class GradeHorarioOfertaFormacao extends BaseEntity implements IGradeHora
    */
   static criar(_dados: IGradeHorarioOfertaFormacaoCreate): GradeHorarioOfertaFormacao {
     const instance = new GradeHorarioOfertaFormacao();
-    instance.dateCreated = new Date().toISOString();
-    instance.dateUpdated = new Date().toISOString();
-    instance.dateDeleted = null;
+    instance.initDates();
+    instance.validar();
     return instance;
   }
 

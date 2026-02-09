@@ -1,11 +1,11 @@
 import type { AccessContext } from "@/modules/@core/access-context";
 import type {
-  ReservaCreateInput,
-  ReservaFindOneInput,
-  ReservaFindOneOutput,
-  ReservaListInput,
-  ReservaListOutput,
-  ReservaUpdateInput,
+  ReservaCreateInputDto,
+  ReservaFindOneInputDto,
+  ReservaFindOneOutputDto,
+  ReservaListInputDto,
+  ReservaListOutputDto,
+  ReservaUpdateInputDto,
 } from "../../dtos";
 
 /**
@@ -18,61 +18,64 @@ export interface IReservaUseCasePort {
    */
   findAll(
     accessContext: AccessContext,
-    dto: ReservaListInput | null,
+    dto: ReservaListInputDto | null,
     selection?: string[] | boolean,
-  ): Promise<ReservaListOutput>;
+  ): Promise<ReservaListOutputDto>;
 
   /**
    * Busca uma reserva por ID
    */
   findById(
     accessContext: AccessContext,
-    dto: ReservaFindOneInput,
+    dto: ReservaFindOneInputDto,
     selection?: string[] | boolean,
-  ): Promise<ReservaFindOneOutput | null>;
+  ): Promise<ReservaFindOneOutputDto | null>;
 
   /**
    * Busca uma reserva por ID, lancando excecao se nao encontrada
    */
   findByIdStrict(
     accessContext: AccessContext,
-    dto: ReservaFindOneInput,
+    dto: ReservaFindOneInputDto,
     selection?: string[] | boolean,
-  ): Promise<ReservaFindOneOutput>;
+  ): Promise<ReservaFindOneOutputDto>;
 
   /**
    * Busca uma reserva por ID (versao simplificada)
    */
   findByIdSimple(
     accessContext: AccessContext,
-    id: ReservaFindOneInput["id"],
+    id: ReservaFindOneInputDto["id"],
     selection?: string[],
-  ): Promise<ReservaFindOneOutput | null>;
+  ): Promise<ReservaFindOneOutputDto | null>;
 
   /**
    * Busca uma reserva por ID (versao simplificada), lancando excecao se nao encontrada
    */
   findByIdSimpleStrict(
     accessContext: AccessContext,
-    id: ReservaFindOneInput["id"],
+    id: ReservaFindOneInputDto["id"],
     selection?: string[],
-  ): Promise<ReservaFindOneOutput>;
+  ): Promise<ReservaFindOneOutputDto>;
 
   /**
    * Cria uma nova reserva
    */
-  create(accessContext: AccessContext, dto: ReservaCreateInput): Promise<ReservaFindOneOutput>;
+  create(
+    accessContext: AccessContext,
+    dto: ReservaCreateInputDto,
+  ): Promise<ReservaFindOneOutputDto>;
 
   /**
    * Atualiza uma reserva existente
    */
   update(
     accessContext: AccessContext,
-    dto: ReservaFindOneInput & ReservaUpdateInput,
-  ): Promise<ReservaFindOneOutput>;
+    dto: ReservaFindOneInputDto & ReservaUpdateInputDto,
+  ): Promise<ReservaFindOneOutputDto>;
 
   /**
    * Remove uma reserva por ID (soft delete)
    */
-  deleteOneById(accessContext: AccessContext, dto: ReservaFindOneInput): Promise<boolean>;
+  deleteOneById(accessContext: AccessContext, dto: ReservaFindOneInputDto): Promise<boolean>;
 }

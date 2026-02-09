@@ -1,64 +1,64 @@
 import type { ScalarDate } from "@/modules/@shared";
 import {
-  EntityOutput,
-  FindOneInput,
+  EntityOutputDto,
+  FindOneInputDto,
   IFilterAcceptableValues,
-  ObjectUuidRef,
-  PaginationInput,
-  PaginationResult,
+  ObjectUuidRefDto,
+  PaginationInputDto,
+  PaginationResultDto,
 } from "@/modules/@shared/application/dtos";
 import {
-  CalendarioLetivoFindOneOutput,
-  CalendarioLetivoInputRef,
+  CalendarioLetivoFindOneOutputDto,
+  CalendarioLetivoInputRefDto,
 } from "@/modules/calendario-letivo";
 
 // ============================================================================
 // FindOne Input/Output
 // ============================================================================
 
-export class EtapaFindOneInput extends FindOneInput {}
+export class EtapaFindOneInputDto extends FindOneInputDto {}
 
-export class EtapaFindOneOutput extends EntityOutput {
+export class EtapaFindOneOutputDto extends EntityOutputDto {
   numero!: number | null;
   dataInicio!: ScalarDate;
   dataTermino!: ScalarDate;
   cor!: string | null;
-  calendario!: CalendarioLetivoFindOneOutput;
+  calendario!: CalendarioLetivoFindOneOutputDto;
 }
 
 // ============================================================================
 // List Input/Output
 // ============================================================================
 
-export class EtapaListInput extends PaginationInput {
+export class EtapaListInputDto extends PaginationInputDto {
   "filter.id"?: IFilterAcceptableValues;
   "filter.calendario.id"?: IFilterAcceptableValues;
 }
 
-export class EtapaListOutput extends PaginationResult<EtapaFindOneOutput> {}
+export class EtapaListOutputDto extends PaginationResultDto<EtapaFindOneOutputDto> {}
 
 // ============================================================================
 // Create/Update Input
 // ============================================================================
 
-export class EtapaCreateInput {
+export class EtapaCreateInputDto {
   numero?: number | null;
   dataInicio!: ScalarDate;
   dataTermino!: ScalarDate;
   cor?: string | null;
-  calendario!: CalendarioLetivoInputRef;
+  calendario!: CalendarioLetivoInputRefDto;
 }
 
-export class EtapaUpdateInput {
+export class EtapaUpdateInputDto {
   numero?: number | null;
   dataInicio?: ScalarDate;
   dataTermino?: ScalarDate;
   cor?: string | null;
-  calendario?: CalendarioLetivoInputRef;
+  calendario?: CalendarioLetivoInputRefDto;
 }
 
 // ============================================================================
 // Input Ref
 // ============================================================================
 
-export type EtapaInputRef = ObjectUuidRef;
+export type EtapaInputRefDto = ObjectUuidRefDto;

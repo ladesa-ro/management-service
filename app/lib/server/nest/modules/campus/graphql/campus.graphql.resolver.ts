@@ -4,24 +4,24 @@ import { AccessContext, AccessContextGraphQL } from "@/modules/@core/access-cont
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
 import { CampusService } from "@/modules/campus";
 import {
-  CampusCreateInputDto,
-  CampusFindOneOutputDto,
-  CampusUpdateInputDto,
-} from "../rest/campus.rest.dto";
-import { CampusRestMapper } from "../rest/campus.rest.mapper";
-import { CampusListInputGqlDto, CampusListOutputGqlDto } from "./campus.graphql.dto";
+  CampusCreateInputGraphQlDto,
+  CampusFindOneOutputGraphQlDto,
+  CampusListInputGraphQlDto,
+  CampusListOutputGraphQlDto,
+  CampusUpdateInputGraphQlDto,
+} from "./campus.graphql.dto";
 import { CampusGraphqlMapper } from "./campus.graphql.mapper";
 
-@Resolver(() => CampusFindOneOutputDto)
+@Resolver(() => CampusFindOneOutputGraphQlDto)
 export class CampusGraphqlResolver {
   constructor(private readonly campusService: CampusService) {}
 
-  @Query(() => CampusListOutputGqlDto, { name: "campusFindAll" })
+  @Query(() => CampusListOutputGraphQlDto, { name: "campusFindAll" })
   async findAll(
     @AccessContextGraphQL() accessContext: AccessContext,
-    @Args() dto: CampusListInputGqlDto,
+    @Args() dto: CampusListInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<CampusListOutputGqlDto> {
+  ): Promise<CampusListOutputGraphQlDto> {
     const input = CampusGraphqlMapper.toListInput(dto);
 
     if (input) {
@@ -32,36 +32,36 @@ export class CampusGraphqlResolver {
     return CampusGraphqlMapper.toListOutputDto(result);
   }
 
-  @Query(() => CampusFindOneOutputDto, { name: "campusFindById" })
+  @Query(() => CampusFindOneOutputGraphQlDto, { name: "campusFindById" })
   async findById(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<CampusFindOneOutputDto> {
+  ): Promise<CampusFindOneOutputGraphQlDto> {
     const selection = graphqlExtractSelection(info);
     const result = await this.campusService.findByIdStrict(accessContext, { id, selection });
     return CampusGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => CampusFindOneOutputDto, { name: "campusCreate" })
+  @Mutation(() => CampusFindOneOutputGraphQlDto, { name: "campusCreate" })
   async create(
     @AccessContextGraphQL() accessContext: AccessContext,
-    @Args("input") dto: CampusCreateInputDto,
+    @Args("input") dto: CampusCreateInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<CampusFindOneOutputDto> {
-    const input = CampusRestMapper.toCreateInput(dto);
+  ): Promise<CampusFindOneOutputGraphQlDto> {
+    const input = CampusGraphqlMapper.toCreateInput(dto);
     const result = await this.campusService.create(accessContext, input);
     return CampusGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => CampusFindOneOutputDto, { name: "campusUpdate" })
+  @Mutation(() => CampusFindOneOutputGraphQlDto, { name: "campusUpdate" })
   async update(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
-    @Args("input") dto: CampusUpdateInputDto,
+    @Args("input") dto: CampusUpdateInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<CampusFindOneOutputDto> {
-    const input = CampusRestMapper.toUpdateInput({ id }, dto);
+  ): Promise<CampusFindOneOutputGraphQlDto> {
+    const input = CampusGraphqlMapper.toUpdateInput({ id }, dto);
     const result = await this.campusService.update(accessContext, input);
     return CampusGraphqlMapper.toFindOneOutputDto(result);
   }

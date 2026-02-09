@@ -22,6 +22,19 @@ export class Campus extends BaseEntity implements ICampus {
   }
 
   // ========================================
+  // Validação
+  // ========================================
+
+  validar(): void {
+    const { result, rules } = Campus.createValidation();
+    rules.required(this.nomeFantasia, "nomeFantasia");
+    rules.minLength(this.nomeFantasia, "nomeFantasia", 1);
+    rules.required(this.razaoSocial, "razaoSocial");
+    rules.minLength(this.razaoSocial, "razaoSocial", 1);
+    Campus.throwIfInvalid(result);
+  }
+
+  // ========================================
   // Factory Methods
   // ========================================
 
@@ -30,22 +43,13 @@ export class Campus extends BaseEntity implements ICampus {
    * @throws EntityValidationError se os dados forem inválidos
    */
   static criar(dados: ICampusCreate): Campus {
-    const { result, rules } = this.createValidation();
-
     const instance = new Campus();
-    instance.nomeFantasia = rules.required(dados.nomeFantasia, "nomeFantasia");
-    instance.nomeFantasia = rules.minLength(instance.nomeFantasia, "nomeFantasia", 1);
-
-    instance.razaoSocial = rules.required(dados.razaoSocial, "razaoSocial");
-    instance.razaoSocial = rules.minLength(instance.razaoSocial, "razaoSocial", 1);
-
-    this.throwIfInvalid(result);
-
-    instance.apelido = rules.optional(dados.apelido) ?? "";
+    instance.nomeFantasia = dados.nomeFantasia?.trim() ?? "";
+    instance.razaoSocial = dados.razaoSocial?.trim() ?? "";
+    instance.apelido = dados.apelido?.trim() || "";
     instance.cnpj = dados.cnpj;
-    instance.dateCreated = new Date().toISOString();
-    instance.dateUpdated = new Date().toISOString();
-    instance.dateDeleted = null;
+    instance.initDates();
+    instance.validar();
 
     return instance;
   }
@@ -68,29 +72,24 @@ export class Campus extends BaseEntity implements ICampus {
    * @throws EntityValidationError se os dados forem inválidos
    */
   atualizar(dados: ICampusUpdate): void {
-    const { result, rules } = Campus.createValidation();
-
     if (dados.nomeFantasia !== undefined) {
-      this.nomeFantasia = rules.required(dados.nomeFantasia, "nomeFantasia");
-      this.nomeFantasia = rules.minLength(this.nomeFantasia, "nomeFantasia", 1);
+      this.nomeFantasia = dados.nomeFantasia?.trim() ?? "";
     }
 
     if (dados.razaoSocial !== undefined) {
-      this.razaoSocial = rules.required(dados.razaoSocial, "razaoSocial");
-      this.razaoSocial = rules.minLength(this.razaoSocial, "razaoSocial", 1);
+      this.razaoSocial = dados.razaoSocial?.trim() ?? "";
     }
 
     if (dados.apelido !== undefined) {
-      this.apelido = rules.optional(dados.apelido) ?? "";
+      this.apelido = dados.apelido?.trim() || "";
     }
 
     if (dados.cnpj !== undefined) {
       this.cnpj = dados.cnpj;
     }
 
-    Campus.throwIfInvalid(result);
-
-    this.dateUpdated = new Date().toISOString();
+    this.touchUpdated();
+    this.validar();
   }
 
   // ========================================

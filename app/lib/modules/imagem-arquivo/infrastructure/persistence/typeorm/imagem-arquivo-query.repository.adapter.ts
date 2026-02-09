@@ -8,10 +8,10 @@ import {
   paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
-  ImagemArquivoFindOneInput,
-  ImagemArquivoFindOneOutput,
-  ImagemArquivoListInput,
-  ImagemArquivoListOutput,
+  ImagemArquivoFindOneInputDto,
+  ImagemArquivoFindOneOutputDto,
+  ImagemArquivoListInputDto,
+  ImagemArquivoListOutputDto,
 } from "@/modules/imagem-arquivo/application/dtos";
 import type { IImagemArquivoQueryRepositoryPort } from "@/modules/imagem-arquivo/application/ports";
 import type { ImagemArquivoEntity } from "./imagem-arquivo.entity";
@@ -24,16 +24,16 @@ import type { ImagemArquivoEntity } from "./imagem-arquivo.entity";
 export class ImagemArquivoQueryTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     ImagemArquivoEntity,
-    ImagemArquivoListInput,
-    ImagemArquivoListOutput,
-    ImagemArquivoFindOneInput,
-    ImagemArquivoFindOneOutput
+    ImagemArquivoListInputDto,
+    ImagemArquivoListOutputDto,
+    ImagemArquivoFindOneInputDto,
+    ImagemArquivoFindOneOutputDto
   >
   implements IImagemArquivoQueryRepositoryPort
 {
   protected readonly alias = "imagem_arquivo";
   protected readonly authzAction = "imagem_arquivo:find";
-  protected readonly outputDtoName = "ImagemArquivoFindOneOutput";
+  protected readonly outputDtoName = "ImagemArquivoFindOneOutputDto";
 
   constructor(
     protected readonly databaseContext: DatabaseContextService,

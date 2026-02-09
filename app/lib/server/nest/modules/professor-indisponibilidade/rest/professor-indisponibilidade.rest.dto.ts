@@ -1,5 +1,4 @@
-import { ArgsType, Field, ID, InputType, Int, ObjectType, PartialType } from "@nestjs/graphql";
-import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { ApiProperty, ApiPropertyOptional, ApiSchema, PartialType } from "@nestjs/swagger";
 import { IsDateString, IsInt, IsOptional, IsString, IsUUID, Max, Min } from "class-validator";
 import {
   commonProperties,
@@ -7,17 +6,17 @@ import {
   simpleProperty,
 } from "@/modules/@shared/infrastructure/persistence/typeorm/metadata";
 import {
-  PaginationInputDto,
-  PaginationMetaDto,
+  PaginationInputRestDto,
+  PaginationMetaRestDto,
 } from "@/modules/@shared/infrastructure/presentation/rest/dtos";
 
 // ============================================================================
 // FindOne Output
 // ============================================================================
 
-@ObjectType("ProfessorIndisponibilidade")
+@ApiSchema({ name: "ProfessorIndisponibilidadeFindOneOutputDto" })
 @RegisterModel({
-  name: "ProfessorIndisponibilidadeFindOneOutput",
+  name: "ProfessorIndisponibilidadeFindOneOutputDto",
   properties: [
     simpleProperty("id"),
     simpleProperty("idPerfilFk"),
@@ -28,53 +27,44 @@ import {
     ...commonProperties.dated,
   ],
 })
-export class ProfessorIndisponibilidadeFindOneOutputDto {
+export class ProfessorIndisponibilidadeFindOneOutputRestDto {
   @ApiProperty({ description: "Identificador do registro (uuid)", format: "uuid" })
-  @Field(() => ID)
   @IsUUID()
   id: string;
 
   @ApiProperty({ description: "Identificador do perfil (uuid)", format: "uuid" })
-  @Field()
   @IsUUID()
   idPerfilFk: string;
 
   @ApiProperty({ description: "Dia da semana (0=domingo, 1=segunda, ..., 6=sabado)" })
-  @Field(() => Int)
   @IsInt()
   @Min(0)
   @Max(6)
   diaDaSemana: number;
 
   @ApiProperty({ description: "Hora de inicio da indisponibilidade" })
-  @Field()
   @IsString()
   horaInicio: string;
 
   @ApiProperty({ description: "Hora de termino da indisponibilidade" })
-  @Field()
   @IsString()
   horaFim: string;
 
   @ApiProperty({ description: "Motivo da indisponibilidade" })
-  @Field()
   @IsString()
   motivo: string;
 
   @ApiPropertyOptional({ description: "Data e hora da criacao do registro" })
-  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateString()
   dateCreated?: Date;
 
   @ApiPropertyOptional({ description: "Data e hora da alteracao do registro" })
-  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateString()
   dateUpdated?: Date;
 
   @ApiPropertyOptional({ description: "Data e hora da exclusao do registro", nullable: true })
-  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateString()
   dateDeleted?: Date | null;
@@ -84,82 +74,71 @@ export class ProfessorIndisponibilidadeFindOneOutputDto {
 // List Input/Output
 // ============================================================================
 
-@ArgsType()
-@InputType("ProfessorIndisponibilidadeListInput")
-export class ProfessorIndisponibilidadeListInputDto extends PaginationInputDto {
+@ApiSchema({ name: "ProfessorIndisponibilidadeListInputDto" })
+export class ProfessorIndisponibilidadeListInputRestDto extends PaginationInputRestDto {
   @ApiPropertyOptional({
     description: "Filtro por ID do perfil",
     type: String,
   })
-  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsUUID()
   idPerfilFk?: string;
 }
 
-@ObjectType("ProfessorIndisponibilidadeListOutput")
-export class ProfessorIndisponibilidadeListOutputDto {
-  @ApiProperty({ type: () => PaginationMetaDto, description: "Metadados da busca" })
-  @Field(() => PaginationMetaDto)
-  meta: PaginationMetaDto;
+@ApiSchema({ name: "ProfessorIndisponibilidadeListOutputDto" })
+export class ProfessorIndisponibilidadeListOutputRestDto {
+  @ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" })
+  meta: PaginationMetaRestDto;
 
   @ApiProperty({
-    type: () => [ProfessorIndisponibilidadeFindOneOutputDto],
+    type: () => [ProfessorIndisponibilidadeFindOneOutputRestDto],
     description: "Resultados da busca",
   })
-  @Field(() => [ProfessorIndisponibilidadeFindOneOutputDto])
-  data: ProfessorIndisponibilidadeFindOneOutputDto[];
+  data: ProfessorIndisponibilidadeFindOneOutputRestDto[];
 }
 
 // ============================================================================
 // Create/Update Input
 // ============================================================================
 
-@InputType("ProfessorIndisponibilidadeCreateInput")
-export class ProfessorIndisponibilidadeCreateInputDto {
+@ApiSchema({ name: "ProfessorIndisponibilidadeCreateInputDto" })
+export class ProfessorIndisponibilidadeCreateInputRestDto {
   @ApiPropertyOptional({ description: "Identificador do perfil (uuid)", format: "uuid" })
-  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsUUID()
   idPerfilFk?: string;
 
   @ApiProperty({ description: "Dia da semana (0=domingo, 1=segunda, ..., 6=sabado)" })
-  @Field(() => Int)
   @IsInt()
   @Min(0)
   @Max(6)
   diaDaSemana: number;
 
   @ApiProperty({ description: "Hora de inicio da indisponibilidade" })
-  @Field()
   @IsString()
   horaInicio: string;
 
   @ApiProperty({ description: "Hora de termino da indisponibilidade" })
-  @Field()
   @IsString()
   horaFim: string;
 
   @ApiProperty({ description: "Motivo da indisponibilidade" })
-  @Field()
   @IsString()
   motivo: string;
 }
 
-@InputType("ProfessorIndisponibilidadeUpdateInput")
-export class ProfessorIndisponibilidadeUpdateInputDto extends PartialType(
-  ProfessorIndisponibilidadeCreateInputDto,
+@ApiSchema({ name: "ProfessorIndisponibilidadeUpdateInputDto" })
+export class ProfessorIndisponibilidadeUpdateInputRestDto extends PartialType(
+  ProfessorIndisponibilidadeCreateInputRestDto,
 ) {}
 
 // ============================================================================
 // FindOne Input (for path params)
 // ============================================================================
 
-@ArgsType()
-@InputType("ProfessorIndisponibilidadeFindOneInput")
-export class ProfessorIndisponibilidadeFindOneInputDto {
+@ApiSchema({ name: "ProfessorIndisponibilidadeFindOneInputDto" })
+export class ProfessorIndisponibilidadeFindOneInputRestDto {
   @ApiProperty({ description: "Identificador do registro (uuid)", format: "uuid" })
-  @Field(() => ID)
   @IsUUID()
   id: string;
 }
@@ -168,11 +147,9 @@ export class ProfessorIndisponibilidadeFindOneInputDto {
 // ListByPerfil Input (for path params)
 // ============================================================================
 
-@ArgsType()
-@InputType("ProfessorIndisponibilidadeListByPerfilInput")
-export class ProfessorIndisponibilidadeListByPerfilInputDto {
+@ApiSchema({ name: "ProfessorIndisponibilidadeListByPerfilInputDto" })
+export class ProfessorIndisponibilidadeListByPerfilInputRestDto {
   @ApiProperty({ description: "Identificador do perfil (uuid)", format: "uuid" })
-  @Field(() => ID)
   @IsUUID()
   idPerfilFk: string;
 }
@@ -181,11 +158,9 @@ export class ProfessorIndisponibilidadeListByPerfilInputDto {
 // Create with Perfil Input (for path params)
 // ============================================================================
 
-@ArgsType()
-@InputType("ProfessorIndisponibilidadeCreatePerfilInput")
-export class ProfessorIndisponibilidadeCreatePerfilInputDto {
+@ApiSchema({ name: "ProfessorIndisponibilidadeCreatePerfilInputDto" })
+export class ProfessorIndisponibilidadeCreatePerfilInputRestDto {
   @ApiProperty({ description: "Identificador do perfil (uuid)", format: "uuid" })
-  @Field(() => ID)
   @IsUUID()
   id_perfil: string;
 }
@@ -194,15 +169,13 @@ export class ProfessorIndisponibilidadeCreatePerfilInputDto {
 // RRule View/Input/Output
 // ============================================================================
 
-@ObjectType("ProfessorIndisponibilidadeRRuleView")
-export class ProfessorIndisponibilidadeRRuleViewDto {
+@ApiSchema({ name: "ProfessorIndisponibilidadeRRuleViewDto" })
+export class ProfessorIndisponibilidadeRRuleViewRestDto {
   @ApiProperty({ description: "Identificador da indisponibilidade (uuid)", format: "uuid" })
-  @Field(() => ID)
   @IsUUID()
   id: string;
 
   @ApiProperty({ description: "Identificador do perfil (uuid)", format: "uuid" })
-  @Field()
   @IsUUID()
   id_perfil_fk: string;
 
@@ -210,58 +183,48 @@ export class ProfessorIndisponibilidadeRRuleViewDto {
     description:
       "String RRULE + possivel DTSTART (ex: 'DTSTART:20251025T080000\\nRRULE:FREQ=WEEKLY;BYDAY=MO')",
   })
-  @Field()
   @IsString()
   rrule: string;
 
   @ApiProperty({ description: "Horario de inicio" })
-  @Field()
   @IsString()
   hora_inicio: string;
 
   @ApiPropertyOptional({ description: "Horario de fim", nullable: true })
-  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   hora_fim?: string | null;
 }
 
-@ArgsType()
-@InputType("ProfessorIndisponibilidadeRRuleInput")
-export class ProfessorIndisponibilidadeRRuleInputDto {
+@ApiSchema({ name: "ProfessorIndisponibilidadeRRuleInputDto" })
+export class ProfessorIndisponibilidadeRRuleInputRestDto {
   @ApiProperty({ description: "Identificador do registro (uuid)", format: "uuid" })
-  @Field(() => ID)
   @IsUUID()
   id: string;
 }
 
-@ObjectType("ProfessorIndisponibilidadeRRuleOutput")
-export class ProfessorIndisponibilidadeRRuleOutputDto {
+@ApiSchema({ name: "ProfessorIndisponibilidadeRRuleOutputDto" })
+export class ProfessorIndisponibilidadeRRuleOutputRestDto {
   @ApiPropertyOptional({ description: "Identificador do perfil (uuid)", format: "uuid" })
-  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsUUID()
   idPerfilFk?: string;
 
   @ApiProperty({ description: "String RRULE" })
-  @Field()
   @IsString()
   rrule: string;
 
   @ApiProperty({ description: "Dia da semana (0=domingo, 1=segunda, ..., 6=sabado)" })
-  @Field(() => Int)
   @IsInt()
   @Min(0)
   @Max(6)
   diaDaSemana: number;
 
   @ApiProperty({ description: "Hora de inicio da indisponibilidade" })
-  @Field()
   @IsString()
   horaInicio: string;
 
   @ApiProperty({ description: "Hora de termino da indisponibilidade" })
-  @Field()
   @IsString()
   horaFim: string;
 }

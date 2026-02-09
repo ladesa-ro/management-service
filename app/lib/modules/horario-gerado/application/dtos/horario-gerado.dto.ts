@@ -1,67 +1,67 @@
 import {
-  EntityOutput,
-  FindOneInput,
+  EntityOutputDto,
+  FindOneInputDto,
   IFilterAcceptableValues,
-  ObjectUuidRef,
-  PaginationInput,
-  PaginationResult,
+  ObjectUuidRefDto,
+  PaginationInputDto,
+  PaginationResultDto,
   ScalarDate,
 } from "@/modules/@shared";
 import {
-  CalendarioLetivoFindOneOutput,
-  CalendarioLetivoInputRef,
+  CalendarioLetivoFindOneOutputDto,
+  CalendarioLetivoInputRefDto,
 } from "@/modules/calendario-letivo";
 
 // ============================================================================
 // FindOne Input/Output
 // ============================================================================
 
-export class HorarioGeradoFindOneInput extends FindOneInput {}
+export class HorarioGeradoFindOneInputDto extends FindOneInputDto {}
 
-export class HorarioGeradoFindOneOutput extends EntityOutput {
+export class HorarioGeradoFindOneOutputDto extends EntityOutputDto {
   status!: string | null;
   tipo!: string | null;
   dataGeracao!: ScalarDate | null;
   vigenciaInicio!: ScalarDate | null;
   vigenciaFim!: ScalarDate | null;
-  calendario!: CalendarioLetivoFindOneOutput;
+  calendario!: CalendarioLetivoFindOneOutputDto;
 }
 
 // ============================================================================
 // List Input/Output
 // ============================================================================
 
-export class HorarioGeradoListInput extends PaginationInput {
+export class HorarioGeradoListInputDto extends PaginationInputDto {
   "filter.id"?: IFilterAcceptableValues;
   "filter.calendario.id"?: IFilterAcceptableValues;
 }
 
-export class HorarioGeradoListOutput extends PaginationResult<HorarioGeradoFindOneOutput> {}
+export class HorarioGeradoListOutputDto extends PaginationResultDto<HorarioGeradoFindOneOutputDto> {}
 
 // ============================================================================
 // Create/Update Input
 // ============================================================================
 
-export class HorarioGeradoCreateInput {
+export class HorarioGeradoCreateInputDto {
   status?: string | null;
   tipo?: string | null;
   dataGeracao?: ScalarDate | null;
   vigenciaInicio?: ScalarDate | null;
   vigenciaFim?: ScalarDate | null;
-  calendario!: CalendarioLetivoInputRef;
+  calendario!: CalendarioLetivoInputRefDto;
 }
 
-export class HorarioGeradoUpdateInput {
+export class HorarioGeradoUpdateInputDto {
   status?: string | null;
   tipo?: string | null;
   dataGeracao?: ScalarDate | null;
   vigenciaInicio?: ScalarDate | null;
   vigenciaFim?: ScalarDate | null;
-  calendario?: CalendarioLetivoInputRef;
+  calendario?: CalendarioLetivoInputRefDto;
 }
 
 // ============================================================================
 // Input Ref
 // ============================================================================
 
-export type HorarioGeradoInputRef = ObjectUuidRef;
+export type HorarioGeradoInputRefDto = ObjectUuidRefDto;

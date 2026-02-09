@@ -8,10 +8,10 @@ import {
   paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
-  DiaCalendarioFindOneInput as DiaCalendarioFindOneInputDto,
-  DiaCalendarioFindOneOutput as DiaCalendarioFindOneOutputDto,
-  DiaCalendarioListInput as DiaCalendarioListInputDto,
-  DiaCalendarioListOutput as DiaCalendarioListOutputDto,
+  DiaCalendarioFindOneInputDto as DiaCalendarioFindOneInputDto,
+  DiaCalendarioFindOneOutputDto as DiaCalendarioFindOneOutputDto,
+  DiaCalendarioListInputDto as DiaCalendarioListInputDto,
+  DiaCalendarioListOutputDto as DiaCalendarioListOutputDto,
 } from "@/modules/dia-calendario";
 import type { IDiaCalendarioRepositoryPort } from "@/modules/dia-calendario/application/ports";
 import type { DiaCalendarioEntity } from "./dia-calendario.entity";
@@ -29,7 +29,7 @@ export class DiaCalendarioTypeOrmRepositoryAdapter
 {
   protected readonly alias = "dia_calendario";
   protected readonly authzAction = "dia_calendario:find";
-  protected readonly outputDtoName = "DiaCalendarioFindOneOutput";
+  protected readonly outputDtoName = "DiaCalendarioFindOneOutputDto";
 
   constructor(
     protected readonly databaseContext: DatabaseContextService,

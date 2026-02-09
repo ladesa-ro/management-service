@@ -1,43 +1,43 @@
 import type { AccessContext } from "@/modules/@core/access-context";
 import {
-  NivelFormacaoCreateInput,
-  NivelFormacaoFindOneInput,
-  NivelFormacaoFindOneOutput,
-  NivelFormacaoListInput,
-  NivelFormacaoListOutput,
-  NivelFormacaoUpdateInput,
+  NivelFormacaoCreateInputDto,
+  NivelFormacaoFindOneInputDto,
+  NivelFormacaoFindOneOutputDto,
+  NivelFormacaoListInputDto,
+  NivelFormacaoListOutputDto,
+  NivelFormacaoUpdateInputDto,
 } from "../../dtos";
 
 export interface INivelFormacaoUseCasePort {
   findAll(
     accessContext: AccessContext,
-    dto: NivelFormacaoListInput | null,
-  ): Promise<NivelFormacaoListOutput>;
+    dto: NivelFormacaoListInputDto | null,
+  ): Promise<NivelFormacaoListOutputDto>;
 
   findById(
     accessContext: AccessContext,
-    dto: NivelFormacaoFindOneInput,
-  ): Promise<NivelFormacaoFindOneOutput | null>;
+    dto: NivelFormacaoFindOneInputDto,
+  ): Promise<NivelFormacaoFindOneOutputDto | null>;
 
   findByIdStrict(
     accessContext: AccessContext,
-    dto: NivelFormacaoFindOneInput,
-  ): Promise<NivelFormacaoFindOneOutput>;
+    dto: NivelFormacaoFindOneInputDto,
+  ): Promise<NivelFormacaoFindOneOutputDto>;
 
   create(
     accessContext: AccessContext,
-    dto: NivelFormacaoCreateInput,
-  ): Promise<NivelFormacaoFindOneOutput>;
+    dto: NivelFormacaoCreateInputDto,
+  ): Promise<NivelFormacaoFindOneOutputDto>;
 
   update(
     accessContext: AccessContext,
-    dto: NivelFormacaoFindOneInput & NivelFormacaoUpdateInput,
-  ): Promise<NivelFormacaoFindOneOutput>;
+    dto: NivelFormacaoFindOneInputDto & NivelFormacaoUpdateInputDto,
+  ): Promise<NivelFormacaoFindOneOutputDto>;
 
-  deleteOneById(accessContext: AccessContext, dto: NivelFormacaoFindOneInput): Promise<boolean>;
+  deleteOneById(accessContext: AccessContext, dto: NivelFormacaoFindOneInputDto): Promise<boolean>;
 
   findByIdSimpleStrict(
     accessContext: AccessContext,
     id: string,
-  ): Promise<NivelFormacaoFindOneOutput>;
+  ): Promise<NivelFormacaoFindOneOutputDto>;
 }

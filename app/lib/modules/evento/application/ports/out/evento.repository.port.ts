@@ -3,10 +3,10 @@ import type { AccessContext } from "@/modules/@core/access-context";
 import type { PartialEntity } from "@/modules/@shared";
 import type { EventoEntity } from "@/modules/evento/infrastructure/persistence/typeorm";
 import type {
-  EventoFindOneInput,
-  EventoFindOneOutput,
-  EventoListInput,
-  EventoListOutput,
+  EventoFindOneInputDto,
+  EventoFindOneOutputDto,
+  EventoListInputDto,
+  EventoListOutputDto,
 } from "../../dtos";
 
 /**
@@ -24,18 +24,18 @@ export interface IEventoRepositoryPort {
    */
   findAll(
     accessContext: AccessContext,
-    dto: EventoListInput | null,
+    dto: EventoListInputDto | null,
     selection?: string[] | boolean,
-  ): Promise<EventoListOutput>;
+  ): Promise<EventoListOutputDto>;
 
   /**
    * Busca um evento por ID
    */
   findById(
     accessContext: AccessContext,
-    dto: EventoFindOneInput,
+    dto: EventoFindOneInputDto,
     selection?: string[] | boolean,
-  ): Promise<EventoFindOneOutput | null>;
+  ): Promise<EventoFindOneOutputDto | null>;
 
   /**
    * Busca simplificada por ID
@@ -44,7 +44,7 @@ export interface IEventoRepositoryPort {
     accessContext: AccessContext,
     id: string,
     selection?: string[],
-  ): Promise<EventoFindOneOutput | null>;
+  ): Promise<EventoFindOneOutputDto | null>;
 
   /**
    * Cria uma nova instância de entidade (não persiste)

@@ -10,12 +10,12 @@ import {
 import { AccessContext, AccessContextHttp } from "@/modules/@core/access-context";
 import { AulaService } from "@/modules/aula/application/use-cases/aula.service";
 import {
-  AulaCreateInputDto,
-  AulaFindOneInputDto,
-  AulaFindOneOutputDto,
-  AulaListInputDto,
-  AulaListOutputDto,
-  AulaUpdateInputDto,
+  AulaCreateInputRestDto,
+  AulaFindOneInputRestDto,
+  AulaFindOneOutputRestDto,
+  AulaListInputRestDto,
+  AulaListOutputRestDto,
+  AulaUpdateInputRestDto,
 } from "./aula.rest.dto";
 import { AulaRestMapper } from "./aula.rest.mapper";
 
@@ -26,12 +26,12 @@ export class AulaController {
 
   @Get("/")
   @ApiOperation({ summary: "Lista aulas", operationId: "aulaFindAll" })
-  @ApiOkResponse({ type: AulaListOutputDto })
+  @ApiOkResponse({ type: AulaListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
     @AccessContextHttp() accessContext: AccessContext,
-    @Query() dto: AulaListInputDto,
-  ): Promise<AulaListOutputDto> {
+    @Query() dto: AulaListInputRestDto,
+  ): Promise<AulaListOutputRestDto> {
     const input = AulaRestMapper.toListInput(dto);
     const result = await this.aulaService.findAll(accessContext, input);
     return AulaRestMapper.toListOutputDto(result);
@@ -39,13 +39,13 @@ export class AulaController {
 
   @Get("/:id")
   @ApiOperation({ summary: "Busca uma aula por ID", operationId: "aulaFindById" })
-  @ApiOkResponse({ type: AulaFindOneOutputDto })
+  @ApiOkResponse({ type: AulaFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async findById(
     @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: AulaFindOneInputDto,
-  ): Promise<AulaFindOneOutputDto> {
+    @Param() params: AulaFindOneInputRestDto,
+  ): Promise<AulaFindOneOutputRestDto> {
     const input = AulaRestMapper.toFindOneInput(params);
     const result = await this.aulaService.findByIdStrict(accessContext, input);
     return AulaRestMapper.toFindOneOutputDto(result);
@@ -53,12 +53,12 @@ export class AulaController {
 
   @Post("/")
   @ApiOperation({ summary: "Cria uma aula", operationId: "aulaCreate" })
-  @ApiCreatedResponse({ type: AulaFindOneOutputDto })
+  @ApiCreatedResponse({ type: AulaFindOneOutputRestDto })
   @ApiForbiddenResponse()
   async create(
     @AccessContextHttp() accessContext: AccessContext,
-    @Body() dto: AulaCreateInputDto,
-  ): Promise<AulaFindOneOutputDto> {
+    @Body() dto: AulaCreateInputRestDto,
+  ): Promise<AulaFindOneOutputRestDto> {
     const input = AulaRestMapper.toCreateInput(dto);
     const result = await this.aulaService.create(accessContext, input);
     return AulaRestMapper.toFindOneOutputDto(result);
@@ -66,14 +66,14 @@ export class AulaController {
 
   @Patch("/:id")
   @ApiOperation({ summary: "Atualiza uma aula", operationId: "aulaUpdate" })
-  @ApiOkResponse({ type: AulaFindOneOutputDto })
+  @ApiOkResponse({ type: AulaFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async update(
     @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: AulaFindOneInputDto,
-    @Body() dto: AulaUpdateInputDto,
-  ): Promise<AulaFindOneOutputDto> {
+    @Param() params: AulaFindOneInputRestDto,
+    @Body() dto: AulaUpdateInputRestDto,
+  ): Promise<AulaFindOneOutputRestDto> {
     const input = AulaRestMapper.toUpdateInput(params, dto);
     const result = await this.aulaService.update(accessContext, input);
     return AulaRestMapper.toFindOneOutputDto(result);
@@ -86,7 +86,7 @@ export class AulaController {
   @ApiNotFoundResponse()
   async deleteOneById(
     @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: AulaFindOneInputDto,
+    @Param() params: AulaFindOneInputRestDto,
   ): Promise<boolean> {
     const input = AulaRestMapper.toFindOneInput(params);
     return this.aulaService.deleteOneById(accessContext, input);

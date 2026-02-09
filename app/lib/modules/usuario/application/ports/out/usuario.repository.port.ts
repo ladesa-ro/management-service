@@ -2,10 +2,10 @@ import type { AccessContext } from "@/modules/@core/access-context";
 import type { PartialEntity } from "@/modules/@shared";
 import type { UsuarioEntity } from "@/modules/usuario/infrastructure/persistence/typeorm";
 import type {
-  UsuarioFindOneInput,
-  UsuarioFindOneOutput,
-  UsuarioListInput,
-  UsuarioListOutput,
+  UsuarioFindOneInputDto,
+  UsuarioFindOneOutputDto,
+  UsuarioListInputDto,
+  UsuarioListOutputDto,
 } from "../../dtos";
 
 /**
@@ -27,9 +27,9 @@ export interface IUsuarioRepositoryPort {
    */
   findAll(
     accessContext: AccessContext,
-    dto: UsuarioListInput | null,
+    dto: UsuarioListInputDto | null,
     selection?: string[] | boolean,
-  ): Promise<UsuarioListOutput>;
+  ): Promise<UsuarioListOutputDto>;
 
   /**
    * Busca um usuário por ID
@@ -40,9 +40,9 @@ export interface IUsuarioRepositoryPort {
    */
   findById(
     accessContext: AccessContext | null,
-    dto: UsuarioFindOneInput,
+    dto: UsuarioFindOneInputDto,
     selection?: string[] | boolean,
-  ): Promise<UsuarioFindOneOutput | null>;
+  ): Promise<UsuarioFindOneOutputDto | null>;
 
   /**
    * Busca um usuário por ID (formato simples)
@@ -55,7 +55,7 @@ export interface IUsuarioRepositoryPort {
     accessContext: AccessContext,
     id: string,
     selection?: string[],
-  ): Promise<UsuarioFindOneOutput | null>;
+  ): Promise<UsuarioFindOneOutputDto | null>;
 
   /**
    * Busca um usuário pela matrícula SIAPE (sem filtro de acesso)
@@ -66,7 +66,7 @@ export interface IUsuarioRepositoryPort {
   findByMatriculaSiape(
     matriculaSiape: string,
     selection?: string[] | boolean,
-  ): Promise<UsuarioFindOneOutput | null>;
+  ): Promise<UsuarioFindOneOutputDto | null>;
 
   /**
    * Verifica se uma matrícula SIAPE está disponível

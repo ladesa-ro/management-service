@@ -1,50 +1,53 @@
 import type { AccessContext } from "@/modules/@core/access-context";
 import type {
-  EtapaCreateInput,
-  EtapaFindOneInput,
-  EtapaFindOneOutput,
-  EtapaListInput,
-  EtapaListOutput,
-  EtapaUpdateInput,
+  EtapaCreateInputDto,
+  EtapaFindOneInputDto,
+  EtapaFindOneOutputDto,
+  EtapaListInputDto,
+  EtapaListOutputDto,
+  EtapaUpdateInputDto,
 } from "../../dtos";
 
 export interface IEtapaUseCasePort {
   etapaFindAll(
     accessContext: AccessContext,
-    dto: EtapaListInput | null,
+    dto: EtapaListInputDto | null,
     selection?: string[] | boolean,
-  ): Promise<EtapaListOutput>;
+  ): Promise<EtapaListOutputDto>;
 
   etapaFindById(
     accessContext: AccessContext,
-    dto: EtapaFindOneInput,
+    dto: EtapaFindOneInputDto,
     selection?: string[] | boolean,
-  ): Promise<EtapaFindOneOutput | null>;
+  ): Promise<EtapaFindOneOutputDto | null>;
 
   etapaFindByIdStrict(
     accessContext: AccessContext,
-    dto: EtapaFindOneInput,
+    dto: EtapaFindOneInputDto,
     selection?: string[] | boolean,
-  ): Promise<EtapaFindOneOutput>;
+  ): Promise<EtapaFindOneOutputDto>;
 
   etapaFindByIdSimple(
     accessContext: AccessContext,
     id: string,
     selection?: string[],
-  ): Promise<EtapaFindOneOutput | null>;
+  ): Promise<EtapaFindOneOutputDto | null>;
 
   etapaFindByIdSimpleStrict(
     accessContext: AccessContext,
     id: string,
     selection?: string[],
-  ): Promise<EtapaFindOneOutput>;
+  ): Promise<EtapaFindOneOutputDto>;
 
-  etapaCreate(accessContext: AccessContext, dto: EtapaCreateInput): Promise<EtapaFindOneOutput>;
+  etapaCreate(
+    accessContext: AccessContext,
+    dto: EtapaCreateInputDto,
+  ): Promise<EtapaFindOneOutputDto>;
 
   etapaUpdate(
     accessContext: AccessContext,
-    dto: EtapaFindOneInput & EtapaUpdateInput,
-  ): Promise<EtapaFindOneOutput>;
+    dto: EtapaFindOneInputDto & EtapaUpdateInputDto,
+  ): Promise<EtapaFindOneOutputDto>;
 
-  etapaDeleteOneById(accessContext: AccessContext, dto: EtapaFindOneInput): Promise<boolean>;
+  etapaDeleteOneById(accessContext: AccessContext, dto: EtapaFindOneInputDto): Promise<boolean>;
 }

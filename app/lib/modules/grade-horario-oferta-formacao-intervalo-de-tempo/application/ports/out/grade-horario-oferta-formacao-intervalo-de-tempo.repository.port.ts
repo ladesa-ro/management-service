@@ -3,8 +3,8 @@ import type { AccessContext } from "@/modules/@core/access-context";
 import type { IBaseCrudRepositoryPort } from "@/modules/@shared";
 import type { GradeHorarioOfertaFormacaoIntervaloDeTempoEntity } from "@/modules/grade-horario-oferta-formacao-intervalo-de-tempo/infrastructure/persistence/typeorm";
 import type {
-  GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutput,
-  GradeHorarioOfertaFormacaoIntervaloDeTempoListOutput,
+  GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputDto,
+  GradeHorarioOfertaFormacaoIntervaloDeTempoListOutputDto,
 } from "../../dtos";
 
 /**
@@ -21,8 +21,8 @@ export const GRADE_HORARIO_OFERTA_FORMACAO_INTERVALO_DE_TEMPO_REPOSITORY_PORT = 
 export interface IGradeHorarioOfertaFormacaoIntervaloDeTempoRepositoryPort
   extends IBaseCrudRepositoryPort<
     GradeHorarioOfertaFormacaoIntervaloDeTempoEntity,
-    GradeHorarioOfertaFormacaoIntervaloDeTempoListOutput,
-    GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutput
+    GradeHorarioOfertaFormacaoIntervaloDeTempoListOutputDto,
+    GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputDto
   > {
   /**
    * Busca simplificada por ID - método obrigatório
@@ -31,7 +31,7 @@ export interface IGradeHorarioOfertaFormacaoIntervaloDeTempoRepositoryPort
     accessContext: AccessContext,
     id: string,
     selection?: string[],
-  ): Promise<GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutput | null>;
+  ): Promise<GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputDto | null>;
 
   /**
    * Cria um QueryBuilder para a entidade.

@@ -23,6 +23,17 @@ export class Turma extends BaseEntity implements ITurma {
   }
 
   // ========================================
+  // Validação
+  // ========================================
+
+  validar(): void {
+    const { result, rules } = Turma.createValidation();
+    rules.required(this.periodo, "periodo");
+    rules.minLength(this.periodo, "periodo", 1);
+    Turma.throwIfInvalid(result);
+  }
+
+  // ========================================
   // Factory Methods
   // ========================================
 
@@ -31,19 +42,13 @@ export class Turma extends BaseEntity implements ITurma {
    * @throws EntityValidationError se os dados forem inválidos
    */
   static criar(dados: ITurmaCreate): Turma {
-    const { result, rules } = this.createValidation();
-
     const instance = new Turma();
-    instance.periodo = rules.required(dados.periodo, "periodo");
-    instance.periodo = rules.minLength(instance.periodo, "periodo", 1);
-
-    this.throwIfInvalid(result);
-
+    instance.periodo = dados.periodo;
     instance.ambientePadraoAula = null;
     instance.imagemCapa = null;
-    instance.dateCreated = new Date().toISOString();
-    instance.dateUpdated = new Date().toISOString();
-    instance.dateDeleted = null;
+
+    instance.initDates();
+    instance.validar();
 
     return instance;
   }
@@ -66,16 +71,12 @@ export class Turma extends BaseEntity implements ITurma {
    * @throws EntityValidationError se os dados forem inválidos
    */
   atualizar(dados: ITurmaUpdate): void {
-    const { result, rules } = Turma.createValidation();
-
     if (dados.periodo !== undefined) {
-      this.periodo = rules.required(dados.periodo, "periodo");
-      this.periodo = rules.minLength(this.periodo, "periodo", 1);
+      this.periodo = dados.periodo;
     }
 
-    Turma.throwIfInvalid(result);
-
-    this.dateUpdated = new Date().toISOString();
+    this.touchUpdated();
+    this.validar();
   }
 
   // ========================================

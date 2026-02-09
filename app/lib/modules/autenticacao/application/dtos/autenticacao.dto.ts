@@ -1,11 +1,11 @@
-import { PerfilFindOneOutput } from "@/modules/perfil";
-import { UsuarioFindOneOutput } from "@/modules/usuario";
+import { PerfilFindOneOutputDto } from "@/modules/perfil";
+import { UsuarioFindOneOutputDto } from "@/modules/usuario";
 
 // ============================================================================
 // Auth Login Input
 // ============================================================================
 
-export class AuthLoginInput {
+export class AuthLoginInputDto {
   matriculaSiape!: string;
 
   senha!: string;
@@ -15,7 +15,7 @@ export class AuthLoginInput {
 // Auth Refresh Input
 // ============================================================================
 
-export class AuthRefreshInput {
+export class AuthRefreshInputDto {
   refreshToken!: string;
 }
 
@@ -23,17 +23,17 @@ export class AuthRefreshInput {
 // Auth WhoAmI Output
 // ============================================================================
 
-export class AuthWhoAmIOutput {
-  usuario!: UsuarioFindOneOutput | null;
+export class AuthWhoAmIOutputDto {
+  usuario!: UsuarioFindOneOutputDto | null;
 
-  perfisAtivos!: PerfilFindOneOutput[];
+  perfisAtivos!: PerfilFindOneOutputDto[];
 }
 
 // ============================================================================
 // Auth Session Credentials
 // ============================================================================
 
-export class AuthSessionCredentials {
+export class AuthSessionCredentialsDto {
   access_token!: string | null;
 
   token_type!: string | null;
@@ -55,7 +55,7 @@ export class AuthSessionCredentials {
 // Auth Set Initial Password
 // ============================================================================
 
-export class AuthCredentialsSetInitialPasswordInput {
+export class AuthCredentialsSetInitialPasswordInputDto {
   matriculaSiape!: string;
 
   senha!: string;
@@ -65,6 +65,6 @@ export class AuthCredentialsSetInitialPasswordInput {
 // Auth Recover Password
 // ============================================================================
 
-export class AuthRecoverPasswordInput {
+export class AuthRecoverPasswordInputDto {
   email!: string;
 }

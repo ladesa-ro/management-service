@@ -62,7 +62,7 @@ export abstract class BaseTypeOrmRepositoryAdapter<
   protected abstract readonly authzAction: string;
 
   /**
-   * Nome do DTO de saída para QbEfficientLoad (ex: "ModalidadeFindOneOutput")
+   * Nome do DTO de saída para QbEfficientLoad (ex: "ModalidadeFindOneOutputDto")
    */
   protected abstract readonly outputDtoName: string;
   /**

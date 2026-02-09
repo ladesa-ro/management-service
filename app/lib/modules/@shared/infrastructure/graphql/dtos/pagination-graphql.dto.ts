@@ -1,4 +1,4 @@
-import { ArgsType, Field, Int } from "@nestjs/graphql";
+import { ArgsType, Field, Int, ObjectType } from "@nestjs/graphql";
 import { IsArray, IsInt, IsOptional, IsString, Min } from "class-validator";
 
 /**
@@ -6,7 +6,7 @@ import { IsArray, IsInt, IsOptional, IsString, Min } from "class-validator";
  * GraphQL-compatible (no dots in field names).
  */
 @ArgsType()
-export class PaginationGraphqlArgsDto {
+export class PaginationArgsGraphQlDto {
   @Field(() => Int, { nullable: true, defaultValue: 1 })
   @IsOptional()
   @IsInt()
@@ -29,4 +29,28 @@ export class PaginationGraphqlArgsDto {
   @IsArray()
   @IsString({ each: true })
   sortBy?: string[];
+}
+
+/**
+ * Pagination metadata DTO for GraphQL.
+ */
+@ObjectType()
+export class PaginationMetaGraphQlDto {
+  @Field(() => Int)
+  itemsPerPage: number;
+
+  @Field(() => Int)
+  totalItems: number;
+
+  @Field(() => Int)
+  currentPage: number;
+
+  @Field(() => Int)
+  totalPages: number;
+
+  @Field()
+  search: string;
+
+  @Field(() => [[String]])
+  sortBy: [string, string][];
 }

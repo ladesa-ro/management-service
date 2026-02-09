@@ -1,37 +1,83 @@
-import { ArgsType, Field, ObjectType } from "@nestjs/graphql";
-import { IsArray, IsOptional, IsString } from "class-validator";
-import { PaginationGraphqlArgsDto } from "@/modules/@shared/infrastructure/graphql";
-import { PaginationMetaDto } from "@/modules/@shared/infrastructure/presentation/rest/dtos";
-import { OfertaFormacaoFindOneOutputDto } from "../rest/oferta-formacao.rest.dto";
+import { ArgsType, Field, InputType, ObjectType } from "@nestjs/graphql";
+import { IsArray, IsOptional, IsString, IsUUID, MinLength, ValidateNested } from "class-validator";
+import {
+  EntityBaseGraphQlDto,
+  PaginationMetaGraphQlDto,
+} from "@/modules/@shared/infrastructure/graphql/dtos";
+import { PaginationArgsGraphQlDto } from "@/modules/@shared/infrastructure/graphql/dtos/pagination-graphql.dto";
+import { ModalidadeFindOneOutputGraphQlDto } from "@/server/nest/modules/modalidade/graphql/modalidade.graphql.dto";
 
 // ============================================================================
-// List Input (GraphQL-compatible - no dots in field names)
+// FindOne Output
+// ============================================================================
+
+@ObjectType("OfertaFormacaoFindOneOutputDto")
+export class OfertaFormacaoFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
+  @Field() nome: string;
+  @Field() slug: string;
+  @Field(() => ModalidadeFindOneOutputGraphQlDto) modalidade: ModalidadeFindOneOutputGraphQlDto;
+}
+
+// ============================================================================
+// Create Input
+// ============================================================================
+
+@InputType("OfertaFormacaoModalidadeRefInputDto")
+export class OfertaFormacaoModalidadeRefInputGraphQlDto {
+  @Field() @IsString() id: string;
+}
+
+@InputType("OfertaFormacaoCreateInputDto")
+export class OfertaFormacaoCreateInputGraphQlDto {
+  @Field() @IsString() @MinLength(1) nome: string;
+  @Field() @IsString() @MinLength(1) slug: string;
+  @Field(() => OfertaFormacaoModalidadeRefInputGraphQlDto)
+  @ValidateNested()
+  modalidade: OfertaFormacaoModalidadeRefInputGraphQlDto;
+}
+
+// ============================================================================
+// Update Input
+// ============================================================================
+
+@InputType("OfertaFormacaoUpdateInputDto")
+export class OfertaFormacaoUpdateInputGraphQlDto {
+  @Field({ nullable: true }) @IsOptional() @IsString() @MinLength(1) nome?: string;
+  @Field({ nullable: true }) @IsOptional() @IsString() @MinLength(1) slug?: string;
+  @Field(() => OfertaFormacaoModalidadeRefInputGraphQlDto, { nullable: true })
+  @IsOptional()
+  @ValidateNested()
+  modalidade?: OfertaFormacaoModalidadeRefInputGraphQlDto;
+}
+
+// ============================================================================
+// List Input
 // ============================================================================
 
 @ArgsType()
-export class OfertaFormacaoListInputGqlDto extends PaginationGraphqlArgsDto {
+export class OfertaFormacaoListInputGraphQlDto extends PaginationArgsGraphQlDto {
   @Field(() => [String], { nullable: true, description: "Filtro por ID" })
   @IsOptional()
   @IsArray()
-  @IsString({ each: true })
+  @IsUUID(undefined, { each: true })
   filterId?: string[];
 
   @Field(() => [String], { nullable: true, description: "Filtro por ID da Modalidade" })
   @IsOptional()
   @IsArray()
-  @IsString({ each: true })
+  @IsUUID(undefined, { each: true })
   filterModalidadeId?: string[];
 }
 
 // ============================================================================
-// List Output (reuses the same output DTOs - they're already GraphQL-compatible)
+// List Output
 // ============================================================================
 
 @ObjectType("OfertaFormacaoListResult")
-export class OfertaFormacaoListOutputGqlDto {
-  @Field(() => PaginationMetaDto)
-  meta: PaginationMetaDto;
+export class OfertaFormacaoListOutputGraphQlDto {
+  @Field(() => PaginationMetaGraphQlDto)
+  meta: PaginationMetaGraphQlDto;
 
-  @Field(() => [OfertaFormacaoFindOneOutputDto])
-  data: OfertaFormacaoFindOneOutputDto[];
+  @Field(() => [OfertaFormacaoFindOneOutputGraphQlDto])
+  data: OfertaFormacaoFindOneOutputGraphQlDto[];
 }

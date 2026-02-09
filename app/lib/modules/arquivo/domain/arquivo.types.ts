@@ -1,17 +1,13 @@
-import type { IdUuid, ScalarDateTimeString } from "@/modules/@shared";
+import type { IEntityBase } from "@/modules/@shared";
 
 /**
  * Interface que define a estrutura de um Arquivo
  */
-export interface IArquivo {
-  id: IdUuid;
+export interface IArquivo extends IEntityBase {
   name: string;
   mimeType: string;
   sizeBytes: number;
   storageType: string;
-  dateCreated: ScalarDateTimeString;
-  dateUpdated: ScalarDateTimeString;
-  dateDeleted: ScalarDateTimeString | null;
 }
 
 /**

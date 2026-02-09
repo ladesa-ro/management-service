@@ -24,6 +24,19 @@ export class OfertaFormacao extends BaseEntity implements IOfertaFormacao {
   }
 
   // ========================================
+  // Validação
+  // ========================================
+
+  validar(): void {
+    const { result, rules } = OfertaFormacao.createValidation();
+    rules.required(this.nome, "nome");
+    rules.minLength(this.nome, "nome", 1);
+    rules.required(this.slug, "slug");
+    rules.slug(this.slug, "slug");
+    OfertaFormacao.throwIfInvalid(result);
+  }
+
+  // ========================================
   // Factory Methods
   // ========================================
 
@@ -32,20 +45,12 @@ export class OfertaFormacao extends BaseEntity implements IOfertaFormacao {
    * @throws EntityValidationError se os dados forem invalidos
    */
   static criar(dados: IOfertaFormacaoCreate): OfertaFormacao {
-    const { result, rules } = this.createValidation();
-
     const instance = new OfertaFormacao();
-    instance.nome = rules.required(dados.nome, "nome");
-    instance.nome = rules.minLength(instance.nome, "nome", 1);
+    instance.nome = dados.nome;
+    instance.slug = dados.slug;
 
-    instance.slug = rules.required(dados.slug, "slug");
-    instance.slug = rules.slug(instance.slug, "slug");
-
-    this.throwIfInvalid(result);
-
-    instance.dateCreated = new Date().toISOString();
-    instance.dateUpdated = new Date().toISOString();
-    instance.dateDeleted = null;
+    instance.initDates();
+    instance.validar();
 
     return instance;
   }
@@ -68,20 +73,15 @@ export class OfertaFormacao extends BaseEntity implements IOfertaFormacao {
    * @throws EntityValidationError se os dados forem invalidos
    */
   atualizar(dados: IOfertaFormacaoUpdate): void {
-    const { result, rules } = OfertaFormacao.createValidation();
-
     if (dados.nome !== undefined) {
-      this.nome = rules.required(dados.nome, "nome");
-      this.nome = rules.minLength(this.nome, "nome", 1);
+      this.nome = dados.nome;
     }
 
     if (dados.slug !== undefined) {
-      this.slug = rules.required(dados.slug, "slug");
-      this.slug = rules.slug(this.slug, "slug");
+      this.slug = dados.slug;
     }
 
-    OfertaFormacao.throwIfInvalid(result);
-
-    this.dateUpdated = new Date().toISOString();
+    this.touchUpdated();
+    this.validar();
   }
 }

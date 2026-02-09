@@ -1,56 +1,56 @@
 import type { AccessContext } from "@/modules/@core/access-context";
 import type {
-  HorarioGeradoCreateInput,
-  HorarioGeradoFindOneInput,
-  HorarioGeradoFindOneOutput,
-  HorarioGeradoListInput,
-  HorarioGeradoListOutput,
-  HorarioGeradoUpdateInput,
+  HorarioGeradoCreateInputDto,
+  HorarioGeradoFindOneInputDto,
+  HorarioGeradoFindOneOutputDto,
+  HorarioGeradoListInputDto,
+  HorarioGeradoListOutputDto,
+  HorarioGeradoUpdateInputDto,
 } from "../../dtos";
 
 export interface IHorarioGeradoUseCasePort {
   horarioGeradoFindAll(
     accessContext: AccessContext,
-    dto: HorarioGeradoListInput | null,
+    dto: HorarioGeradoListInputDto | null,
     selection?: string[] | boolean,
-  ): Promise<HorarioGeradoListOutput>;
+  ): Promise<HorarioGeradoListOutputDto>;
 
   horarioGeradoFindById(
     accessContext: AccessContext,
-    dto: HorarioGeradoFindOneInput,
+    dto: HorarioGeradoFindOneInputDto,
     selection?: string[] | boolean,
-  ): Promise<HorarioGeradoFindOneOutput | null>;
+  ): Promise<HorarioGeradoFindOneOutputDto | null>;
 
   horarioGeradoFindByIdStrict(
     accessContext: AccessContext,
-    dto: HorarioGeradoFindOneInput,
+    dto: HorarioGeradoFindOneInputDto,
     selection?: string[] | boolean,
-  ): Promise<HorarioGeradoFindOneOutput>;
+  ): Promise<HorarioGeradoFindOneOutputDto>;
 
   horarioGeradoFindByIdSimple(
     accessContext: AccessContext,
     id: string,
     selection?: string[],
-  ): Promise<HorarioGeradoFindOneOutput | null>;
+  ): Promise<HorarioGeradoFindOneOutputDto | null>;
 
   horarioGeradoFindByIdSimpleStrict(
     accessContext: AccessContext,
     id: string,
     selection?: string[],
-  ): Promise<HorarioGeradoFindOneOutput>;
+  ): Promise<HorarioGeradoFindOneOutputDto>;
 
   horarioGeradoCreate(
     accessContext: AccessContext,
-    dto: HorarioGeradoCreateInput,
-  ): Promise<HorarioGeradoFindOneOutput>;
+    dto: HorarioGeradoCreateInputDto,
+  ): Promise<HorarioGeradoFindOneOutputDto>;
 
   horarioGeradoUpdate(
     accessContext: AccessContext,
-    dto: HorarioGeradoFindOneInput & HorarioGeradoUpdateInput,
-  ): Promise<HorarioGeradoFindOneOutput>;
+    dto: HorarioGeradoFindOneInputDto & HorarioGeradoUpdateInputDto,
+  ): Promise<HorarioGeradoFindOneOutputDto>;
 
   horarioGeradoDeleteOneById(
     accessContext: AccessContext,
-    dto: HorarioGeradoFindOneInput,
+    dto: HorarioGeradoFindOneInputDto,
   ): Promise<boolean>;
 }

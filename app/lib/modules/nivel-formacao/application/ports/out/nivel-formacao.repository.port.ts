@@ -1,5 +1,8 @@
 import type { IBaseCrudRepositoryPort } from "@/modules/@shared";
-import { NivelFormacaoFindOneOutput, NivelFormacaoListOutput } from "@/modules/nivel-formacao";
+import {
+  NivelFormacaoFindOneOutputDto,
+  NivelFormacaoListOutputDto,
+} from "@/modules/nivel-formacao";
 import type { NivelFormacaoEntity } from "@/modules/nivel-formacao/infrastructure/persistence/typeorm";
 
 export const NIVEL_FORMACAO_REPOSITORY_PORT = Symbol("INivelFormacaoRepositoryPort");
@@ -11,6 +14,6 @@ export const NIVEL_FORMACAO_REPOSITORY_PORT = Symbol("INivelFormacaoRepositoryPo
 export interface INivelFormacaoRepositoryPort
   extends IBaseCrudRepositoryPort<
     NivelFormacaoEntity,
-    NivelFormacaoListOutput,
-    NivelFormacaoFindOneOutput
+    NivelFormacaoListOutputDto,
+    NivelFormacaoFindOneOutputDto
   > {}

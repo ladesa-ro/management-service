@@ -1,19 +1,19 @@
 import {
-  EntityOutput,
-  FindOneInput,
+  EntityOutputDto,
+  FindOneInputDto,
   IFilterAcceptableValues,
-  ObjectUuidRef,
-  PaginationInput,
-  PaginationResult,
+  ObjectUuidRefDto,
+  PaginationInputDto,
+  PaginationResultDto,
 } from "@/modules/@shared";
 
 // ============================================================================
 // FindOne Input/Output
 // ============================================================================
 
-export class NivelFormacaoFindOneInput extends FindOneInput {}
+export class NivelFormacaoFindOneInputDto extends FindOneInputDto {}
 
-export class NivelFormacaoFindOneOutput extends EntityOutput {
+export class NivelFormacaoFindOneOutputDto extends EntityOutputDto {
   slug!: string;
 }
 
@@ -21,21 +21,21 @@ export class NivelFormacaoFindOneOutput extends EntityOutput {
 // List Input/Output
 // ============================================================================
 
-export class NivelFormacaoListInput extends PaginationInput {
+export class NivelFormacaoListInputDto extends PaginationInputDto {
   "filter.id"?: IFilterAcceptableValues;
 }
 
-export class NivelFormacaoListOutput extends PaginationResult<NivelFormacaoFindOneOutput> {}
+export class NivelFormacaoListOutputDto extends PaginationResultDto<NivelFormacaoFindOneOutputDto> {}
 
 // ============================================================================
 // Create/Update Input
 // ============================================================================
 
-export class NivelFormacaoCreateInput {
+export class NivelFormacaoCreateInputDto {
   slug!: string;
 }
 
-export class NivelFormacaoUpdateInput {
+export class NivelFormacaoUpdateInputDto {
   slug?: string;
 }
 
@@ -43,4 +43,4 @@ export class NivelFormacaoUpdateInput {
 // Input Ref
 // ============================================================================
 
-export type NivelFormacaoInputRef = ObjectUuidRef;
+export type NivelFormacaoInputRefDto = ObjectUuidRefDto;

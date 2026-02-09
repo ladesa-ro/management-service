@@ -24,6 +24,19 @@ export class Curso extends BaseEntity implements ICurso {
   }
 
   // ========================================
+  // Validação
+  // ========================================
+
+  validar(): void {
+    const { result, rules } = Curso.createValidation();
+    rules.required(this.nome, "nome");
+    rules.minLength(this.nome, "nome", 1);
+    rules.required(this.nomeAbreviado, "nomeAbreviado");
+    rules.minLength(this.nomeAbreviado, "nomeAbreviado", 1);
+    Curso.throwIfInvalid(result);
+  }
+
+  // ========================================
   // Factory Methods
   // ========================================
 
@@ -32,21 +45,12 @@ export class Curso extends BaseEntity implements ICurso {
    * @throws EntityValidationError se os dados forem invalidos
    */
   static criar(dados: ICursoCreate): Curso {
-    const { result, rules } = this.createValidation();
-
     const instance = new Curso();
-    instance.nome = rules.required(dados.nome, "nome");
-    instance.nome = rules.minLength(instance.nome, "nome", 1);
-
-    instance.nomeAbreviado = rules.required(dados.nomeAbreviado, "nomeAbreviado");
-    instance.nomeAbreviado = rules.minLength(instance.nomeAbreviado, "nomeAbreviado", 1);
-
-    this.throwIfInvalid(result);
-
+    instance.nome = dados.nome?.trim() ?? "";
+    instance.nomeAbreviado = dados.nomeAbreviado?.trim() ?? "";
     instance.imagemCapa = null;
-    instance.dateCreated = new Date().toISOString();
-    instance.dateUpdated = new Date().toISOString();
-    instance.dateDeleted = null;
+    instance.initDates();
+    instance.validar();
 
     return instance;
   }
@@ -69,21 +73,16 @@ export class Curso extends BaseEntity implements ICurso {
    * @throws EntityValidationError se os dados forem invalidos
    */
   atualizar(dados: ICursoUpdate): void {
-    const { result, rules } = Curso.createValidation();
-
     if (dados.nome !== undefined) {
-      this.nome = rules.required(dados.nome, "nome");
-      this.nome = rules.minLength(this.nome, "nome", 1);
+      this.nome = dados.nome?.trim() ?? "";
     }
 
     if (dados.nomeAbreviado !== undefined) {
-      this.nomeAbreviado = rules.required(dados.nomeAbreviado, "nomeAbreviado");
-      this.nomeAbreviado = rules.minLength(this.nomeAbreviado, "nomeAbreviado", 1);
+      this.nomeAbreviado = dados.nomeAbreviado?.trim() ?? "";
     }
 
-    Curso.throwIfInvalid(result);
-
-    this.dateUpdated = new Date().toISOString();
+    this.touchUpdated();
+    this.validar();
   }
 
   // ========================================

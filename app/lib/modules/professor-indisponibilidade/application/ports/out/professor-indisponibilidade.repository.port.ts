@@ -1,9 +1,9 @@
 import type { IReadOnlyRepositoryPort } from "@/modules/@shared";
 import {
-  ProfessorIndisponibilidadeFindOneInput,
-  ProfessorIndisponibilidadeFindOneOutput,
-  ProfessorIndisponibilidadeListInput,
-  ProfessorIndisponibilidadeListOutput,
+  ProfessorIndisponibilidadeFindOneInputDto,
+  ProfessorIndisponibilidadeFindOneOutputDto,
+  ProfessorIndisponibilidadeListInputDto,
+  ProfessorIndisponibilidadeListOutputDto,
 } from "@/modules/professor-indisponibilidade";
 
 /**
@@ -19,8 +19,8 @@ export const PROFESSOR_INDISPONIBILIDADE_REPOSITORY_PORT = Symbol(
  */
 export interface IProfessorIndisponibilidadeRepositoryPort
   extends IReadOnlyRepositoryPort<
-    ProfessorIndisponibilidadeListInput,
-    ProfessorIndisponibilidadeListOutput,
-    ProfessorIndisponibilidadeFindOneInput,
-    ProfessorIndisponibilidadeFindOneOutput
+    ProfessorIndisponibilidadeListInputDto,
+    ProfessorIndisponibilidadeListOutputDto,
+    ProfessorIndisponibilidadeFindOneInputDto,
+    ProfessorIndisponibilidadeFindOneOutputDto
   > {}

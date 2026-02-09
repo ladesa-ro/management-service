@@ -8,10 +8,10 @@ import {
   paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
-  BlocoFindOneInput,
-  BlocoFindOneOutput,
-  BlocoListInput,
-  BlocoListOutput,
+  BlocoFindOneInputDto,
+  BlocoFindOneOutputDto,
+  BlocoListInputDto,
+  BlocoListOutputDto,
 } from "@/modules/bloco";
 import type { IBlocoRepositoryPort } from "@/modules/bloco/application/ports";
 import type { BlocoEntity } from "./bloco.entity";
@@ -24,16 +24,16 @@ import type { BlocoEntity } from "./bloco.entity";
 export class BlocoTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     BlocoEntity,
-    BlocoListInput,
-    BlocoListOutput,
-    BlocoFindOneInput,
-    BlocoFindOneOutput
+    BlocoListInputDto,
+    BlocoListOutputDto,
+    BlocoFindOneInputDto,
+    BlocoFindOneOutputDto
   >
   implements IBlocoRepositoryPort
 {
   protected readonly alias = "bloco";
   protected readonly authzAction = "bloco:find";
-  protected readonly outputDtoName = "BlocoFindOneOutput";
+  protected readonly outputDtoName = "BlocoFindOneOutputDto";
 
   constructor(
     protected readonly databaseContext: DatabaseContextService,

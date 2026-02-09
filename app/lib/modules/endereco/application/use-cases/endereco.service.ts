@@ -3,8 +3,8 @@ import { pick } from "lodash";
 import type { AccessContext } from "@/modules/@core/access-context";
 import { ResourceNotFoundError } from "@/modules/@shared";
 import type {
-  EnderecoFindOneInput,
-  EnderecoFindOneOutput,
+  EnderecoFindOneInputDto,
+  EnderecoFindOneOutputDto,
   EnderecoInputDto,
 } from "@/modules/endereco/application/dtos";
 import {
@@ -21,11 +21,11 @@ export class EnderecoService implements IEnderecoUseCasePort {
     private readonly enderecoRepository: IEnderecoRepositoryPort,
   ) {}
 
-  async internalFindOneById(id: string): Promise<EnderecoFindOneOutput | null> {
+  async internalFindOneById(id: string): Promise<EnderecoFindOneOutputDto | null> {
     return this.enderecoRepository.findOneById(id);
   }
 
-  async internalFindOneByIdStrict(id: string): Promise<EnderecoFindOneOutput> {
+  async internalFindOneByIdStrict(id: string): Promise<EnderecoFindOneOutputDto> {
     const endereco = await this.enderecoRepository.findOneById(id);
 
     if (!endereco) {
@@ -65,16 +65,16 @@ export class EnderecoService implements IEnderecoUseCasePort {
 
   async findById(
     accessContext: AccessContext | null,
-    dto: EnderecoFindOneInput,
+    dto: EnderecoFindOneInputDto,
     selection?: string[] | boolean,
-  ): Promise<EnderecoFindOneOutput | null> {
+  ): Promise<EnderecoFindOneOutputDto | null> {
     return this.enderecoRepository.findById(accessContext, dto, selection);
   }
 
   async findByIdStrict(
     accessContext: AccessContext,
-    dto: EnderecoFindOneInput,
-  ): Promise<EnderecoFindOneOutput> {
+    dto: EnderecoFindOneInputDto,
+  ): Promise<EnderecoFindOneOutputDto> {
     const endereco = await this.enderecoRepository.findById(accessContext, dto);
 
     if (!endereco) {

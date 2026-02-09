@@ -6,12 +6,12 @@ import { AmbienteService } from "@/modules/ambiente/application/use-cases/ambien
 import type { ReservaEntity } from "@/modules/reserva/infrastructure/persistence/typeorm";
 import { UsuarioService } from "@/modules/usuario/application/use-cases/usuario.service";
 import type {
-  ReservaCreateInput,
-  ReservaFindOneInput,
-  ReservaFindOneOutput,
-  ReservaListInput,
-  ReservaListOutput,
-  ReservaUpdateInput,
+  ReservaCreateInputDto,
+  ReservaFindOneInputDto,
+  ReservaFindOneOutputDto,
+  ReservaListInputDto,
+  ReservaListOutputDto,
+  ReservaUpdateInputDto,
 } from "../dtos";
 import type { IReservaRepositoryPort, IReservaUseCasePort } from "../ports";
 import { RESERVA_REPOSITORY_PORT } from "../ports";
@@ -25,12 +25,12 @@ import { RESERVA_REPOSITORY_PORT } from "../ports";
 export class ReservaService
   extends BaseCrudService<
     ReservaEntity,
-    ReservaListInput,
-    ReservaListOutput,
-    ReservaFindOneInput,
-    ReservaFindOneOutput,
-    ReservaCreateInput,
-    ReservaUpdateInput
+    ReservaListInputDto,
+    ReservaListOutputDto,
+    ReservaFindOneInputDto,
+    ReservaFindOneOutputDto,
+    ReservaCreateInputDto,
+    ReservaUpdateInputDto
   >
   implements IReservaUseCasePort
 {
@@ -53,7 +53,7 @@ export class ReservaService
   protected override async beforeCreate(
     accessContext: AccessContext,
     entity: ReservaEntity,
-    dto: ReservaCreateInput,
+    dto: ReservaCreateInputDto,
   ): Promise<void> {
     const ambiente = await this.ambienteService.findByIdStrict(accessContext, {
       id: dto.ambiente.id,
@@ -72,8 +72,8 @@ export class ReservaService
   protected override async beforeUpdate(
     accessContext: AccessContext,
     entity: ReservaEntity,
-    dto: ReservaFindOneInput & ReservaUpdateInput,
-    _current: ReservaFindOneOutput,
+    dto: ReservaFindOneInputDto & ReservaUpdateInputDto,
+    _current: ReservaFindOneOutputDto,
   ): Promise<void> {
     if (has(dto, "ambiente") && dto.ambiente !== undefined) {
       const ambiente = await this.ambienteService.findByIdStrict(accessContext, {

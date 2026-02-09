@@ -24,6 +24,17 @@ export class Reserva extends BaseEntity implements IReserva {
   }
 
   // ========================================
+  // Validação
+  // ========================================
+
+  validar(): void {
+    const { result, rules } = Reserva.createValidation();
+    rules.required(this.situacao, "situacao");
+    rules.required(this.rrule, "rrule");
+    Reserva.throwIfInvalid(result);
+  }
+
+  // ========================================
   // Factory Methods
   // ========================================
 
@@ -32,19 +43,14 @@ export class Reserva extends BaseEntity implements IReserva {
    * @throws EntityValidationError se os dados forem inválidos
    */
   static criar(dados: IReservaCreate): Reserva {
-    const { result, rules } = this.createValidation();
-
     const instance = new Reserva();
-    instance.situacao = rules.required(dados.situacao, "situacao");
-    instance.rrule = rules.required(dados.rrule, "rrule");
+    instance.situacao = dados.situacao;
+    instance.rrule = dados.rrule;
+    instance.motivo = dados.motivo?.trim() || null;
+    instance.tipo = dados.tipo?.trim() || null;
 
-    this.throwIfInvalid(result);
-
-    instance.motivo = rules.optional(dados.motivo);
-    instance.tipo = rules.optional(dados.tipo);
-    instance.dateCreated = new Date().toISOString();
-    instance.dateUpdated = new Date().toISOString();
-    instance.dateDeleted = null;
+    instance.initDates();
+    instance.validar();
 
     return instance;
   }
@@ -67,26 +73,23 @@ export class Reserva extends BaseEntity implements IReserva {
    * @throws EntityValidationError se os dados forem inválidos
    */
   atualizar(dados: IReservaUpdate): void {
-    const { result, rules } = Reserva.createValidation();
-
     if (dados.situacao !== undefined) {
-      this.situacao = rules.required(dados.situacao, "situacao");
+      this.situacao = dados.situacao;
     }
 
     if (dados.rrule !== undefined) {
-      this.rrule = rules.required(dados.rrule, "rrule");
+      this.rrule = dados.rrule;
     }
 
     if (dados.motivo !== undefined) {
-      this.motivo = rules.optional(dados.motivo);
+      this.motivo = dados.motivo ?? null;
     }
 
     if (dados.tipo !== undefined) {
-      this.tipo = rules.optional(dados.tipo);
+      this.tipo = dados.tipo ?? null;
     }
 
-    Reserva.throwIfInvalid(result);
-
-    this.dateUpdated = new Date().toISOString();
+    this.touchUpdated();
+    this.validar();
   }
 }

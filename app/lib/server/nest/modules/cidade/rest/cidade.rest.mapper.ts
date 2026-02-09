@@ -1,16 +1,16 @@
 import {
-  CidadeFindOneInput,
-  CidadeFindOneOutput,
-  CidadeListInput,
-  CidadeListOutput,
-} from "@/modules/cidade";
-import { EstadoRestMapper } from "@/server/nest/modules/estado/rest/estado.rest.mapper";
-import { mapPaginationMeta } from "@/server/nest/shared/mappers";
-import {
   CidadeFindOneInputDto,
   CidadeFindOneOutputDto,
   CidadeListInputDto,
   CidadeListOutputDto,
+} from "@/modules/cidade";
+import { EstadoRestMapper } from "@/server/nest/modules/estado/rest/estado.rest.mapper";
+import { mapPaginationMeta } from "@/server/nest/shared/mappers";
+import {
+  CidadeFindOneInputRestDto,
+  CidadeFindOneOutputRestDto,
+  CidadeListInputRestDto,
+  CidadeListOutputRestDto,
 } from "./cidade.rest.dto";
 
 export class CidadeRestMapper {
@@ -18,18 +18,18 @@ export class CidadeRestMapper {
   // Input: Server DTO -> Core DTO
   // ============================================================================
 
-  static toFindOneInput(dto: CidadeFindOneInputDto): CidadeFindOneInput {
-    const input = new CidadeFindOneInput();
+  static toFindOneInput(dto: CidadeFindOneInputRestDto): CidadeFindOneInputDto {
+    const input = new CidadeFindOneInputDto();
     input.id = dto.id;
     return input;
   }
 
-  static toListInput(dto: CidadeListInputDto | null): CidadeListInput | null {
+  static toListInput(dto: CidadeListInputRestDto | null): CidadeListInputDto | null {
     if (!dto) {
       return null;
     }
 
-    const input = new CidadeListInput();
+    const input = new CidadeListInputDto();
     input.page = dto.page;
     input.limit = dto.limit;
     input.search = dto.search;
@@ -46,16 +46,16 @@ export class CidadeRestMapper {
   // Output: Core DTO -> Server DTO
   // ============================================================================
 
-  static toFindOneOutputDto(output: CidadeFindOneOutput): CidadeFindOneOutputDto {
-    const dto = new CidadeFindOneOutputDto();
+  static toFindOneOutputDto(output: CidadeFindOneOutputDto): CidadeFindOneOutputRestDto {
+    const dto = new CidadeFindOneOutputRestDto();
     dto.id = output.id;
     dto.nome = output.nome;
     dto.estado = EstadoRestMapper.toFindOneOutputDto(output.estado);
     return dto;
   }
 
-  static toListOutputDto(output: CidadeListOutput): CidadeListOutputDto {
-    const dto = new CidadeListOutputDto();
+  static toListOutputDto(output: CidadeListOutputDto): CidadeListOutputRestDto {
+    const dto = new CidadeListOutputRestDto();
     dto.meta = mapPaginationMeta(output.meta);
     dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
     return dto;

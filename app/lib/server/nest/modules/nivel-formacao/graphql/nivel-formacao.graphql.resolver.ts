@@ -4,26 +4,24 @@ import { AccessContext, AccessContextGraphQL } from "@/modules/@core/access-cont
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
 import { NivelFormacaoService } from "@/modules/nivel-formacao/application/use-cases/nivel-formacao.service";
 import {
-  NivelFormacaoCreateInputDto,
-  NivelFormacaoFindOneOutputDto,
-  NivelFormacaoUpdateInputDto,
-} from "../rest/nivel-formacao.rest.dto";
-import {
-  NivelFormacaoListInputGqlDto,
-  NivelFormacaoListOutputGqlDto,
+  NivelFormacaoCreateInputGraphQlDto,
+  NivelFormacaoFindOneOutputGraphQlDto,
+  NivelFormacaoListInputGraphQlDto,
+  NivelFormacaoListOutputGraphQlDto,
+  NivelFormacaoUpdateInputGraphQlDto,
 } from "./nivel-formacao.graphql.dto";
 import { NivelFormacaoGraphqlMapper } from "./nivel-formacao.graphql.mapper";
 
-@Resolver(() => NivelFormacaoFindOneOutputDto)
+@Resolver(() => NivelFormacaoFindOneOutputGraphQlDto)
 export class NivelFormacaoGraphqlResolver {
   constructor(private readonly nivelFormacaoService: NivelFormacaoService) {}
 
-  @Query(() => NivelFormacaoListOutputGqlDto, { name: "nivelFormacaoFindAll" })
+  @Query(() => NivelFormacaoListOutputGraphQlDto, { name: "nivelFormacaoFindAll" })
   async findAll(
     @AccessContextGraphQL() accessContext: AccessContext,
-    @Args() dto: NivelFormacaoListInputGqlDto,
+    @Args() dto: NivelFormacaoListInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<NivelFormacaoListOutputGqlDto> {
+  ): Promise<NivelFormacaoListOutputGraphQlDto> {
     const input = NivelFormacaoGraphqlMapper.toListInput(dto);
 
     if (input) {
@@ -34,36 +32,36 @@ export class NivelFormacaoGraphqlResolver {
     return NivelFormacaoGraphqlMapper.toListOutputDto(result);
   }
 
-  @Query(() => NivelFormacaoFindOneOutputDto, { name: "nivelFormacaoFindById" })
+  @Query(() => NivelFormacaoFindOneOutputGraphQlDto, { name: "nivelFormacaoFindById" })
   async findById(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<NivelFormacaoFindOneOutputDto> {
+  ): Promise<NivelFormacaoFindOneOutputGraphQlDto> {
     const selection = graphqlExtractSelection(info);
     const result = await this.nivelFormacaoService.findByIdStrict(accessContext, { id, selection });
     return NivelFormacaoGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => NivelFormacaoFindOneOutputDto, { name: "nivelFormacaoCreate" })
+  @Mutation(() => NivelFormacaoFindOneOutputGraphQlDto, { name: "nivelFormacaoCreate" })
   async create(
     @AccessContextGraphQL() accessContext: AccessContext,
-    @Args("input") dto: NivelFormacaoCreateInputDto,
+    @Args("input") dto: NivelFormacaoCreateInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<NivelFormacaoFindOneOutputDto> {
+  ): Promise<NivelFormacaoFindOneOutputGraphQlDto> {
     const input = NivelFormacaoGraphqlMapper.toCreateInput(dto);
     const result = await this.nivelFormacaoService.create(accessContext, input);
     return NivelFormacaoGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => NivelFormacaoFindOneOutputDto, { name: "nivelFormacaoUpdate" })
+  @Mutation(() => NivelFormacaoFindOneOutputGraphQlDto, { name: "nivelFormacaoUpdate" })
   async update(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
-    @Args("input") dto: NivelFormacaoUpdateInputDto,
+    @Args("input") dto: NivelFormacaoUpdateInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<NivelFormacaoFindOneOutputDto> {
-    const input = NivelFormacaoGraphqlMapper.toUpdateInput(id, dto);
+  ): Promise<NivelFormacaoFindOneOutputGraphQlDto> {
+    const input = NivelFormacaoGraphqlMapper.toUpdateInput({ id }, dto);
     const result = await this.nivelFormacaoService.update(accessContext, input);
     return NivelFormacaoGraphqlMapper.toFindOneOutputDto(result);
   }

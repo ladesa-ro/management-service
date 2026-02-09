@@ -4,26 +4,24 @@ import { AccessContext, AccessContextGraphQL } from "@/modules/@core/access-cont
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
 import { OfertaFormacaoService } from "@/modules/oferta-formacao";
 import {
-  OfertaFormacaoCreateInputDto,
-  OfertaFormacaoFindOneOutputDto,
-  OfertaFormacaoUpdateInputDto,
-} from "../rest/oferta-formacao.rest.dto";
-import {
-  OfertaFormacaoListInputGqlDto,
-  OfertaFormacaoListOutputGqlDto,
+  OfertaFormacaoCreateInputGraphQlDto,
+  OfertaFormacaoFindOneOutputGraphQlDto,
+  OfertaFormacaoListInputGraphQlDto,
+  OfertaFormacaoListOutputGraphQlDto,
+  OfertaFormacaoUpdateInputGraphQlDto,
 } from "./oferta-formacao.graphql.dto";
 import { OfertaFormacaoGraphqlMapper } from "./oferta-formacao.graphql.mapper";
 
-@Resolver(() => OfertaFormacaoFindOneOutputDto)
+@Resolver(() => OfertaFormacaoFindOneOutputGraphQlDto)
 export class OfertaFormacaoGraphqlResolver {
   constructor(private readonly ofertaFormacaoService: OfertaFormacaoService) {}
 
-  @Query(() => OfertaFormacaoListOutputGqlDto, { name: "ofertaFormacaoFindAll" })
+  @Query(() => OfertaFormacaoListOutputGraphQlDto, { name: "ofertaFormacaoFindAll" })
   async findAll(
     @AccessContextGraphQL() accessContext: AccessContext,
-    @Args() dto: OfertaFormacaoListInputGqlDto,
+    @Args() dto: OfertaFormacaoListInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<OfertaFormacaoListOutputGqlDto> {
+  ): Promise<OfertaFormacaoListOutputGraphQlDto> {
     const input = OfertaFormacaoGraphqlMapper.toListInput(dto);
 
     if (input) {
@@ -34,12 +32,12 @@ export class OfertaFormacaoGraphqlResolver {
     return OfertaFormacaoGraphqlMapper.toListOutputDto(result);
   }
 
-  @Query(() => OfertaFormacaoFindOneOutputDto, { name: "ofertaFormacaoFindById" })
+  @Query(() => OfertaFormacaoFindOneOutputGraphQlDto, { name: "ofertaFormacaoFindById" })
   async findById(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<OfertaFormacaoFindOneOutputDto> {
+  ): Promise<OfertaFormacaoFindOneOutputGraphQlDto> {
     const selection = graphqlExtractSelection(info);
     const result = await this.ofertaFormacaoService.findByIdStrict(accessContext, {
       id,
@@ -48,25 +46,25 @@ export class OfertaFormacaoGraphqlResolver {
     return OfertaFormacaoGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => OfertaFormacaoFindOneOutputDto, { name: "ofertaFormacaoCreate" })
+  @Mutation(() => OfertaFormacaoFindOneOutputGraphQlDto, { name: "ofertaFormacaoCreate" })
   async create(
     @AccessContextGraphQL() accessContext: AccessContext,
-    @Args("input") dto: OfertaFormacaoCreateInputDto,
+    @Args("input") dto: OfertaFormacaoCreateInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<OfertaFormacaoFindOneOutputDto> {
+  ): Promise<OfertaFormacaoFindOneOutputGraphQlDto> {
     const input = OfertaFormacaoGraphqlMapper.toCreateInput(dto);
     const result = await this.ofertaFormacaoService.create(accessContext, input);
     return OfertaFormacaoGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => OfertaFormacaoFindOneOutputDto, { name: "ofertaFormacaoUpdate" })
+  @Mutation(() => OfertaFormacaoFindOneOutputGraphQlDto, { name: "ofertaFormacaoUpdate" })
   async update(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
-    @Args("input") dto: OfertaFormacaoUpdateInputDto,
+    @Args("input") dto: OfertaFormacaoUpdateInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<OfertaFormacaoFindOneOutputDto> {
-    const input = OfertaFormacaoGraphqlMapper.toUpdateInput(id, dto);
+  ): Promise<OfertaFormacaoFindOneOutputGraphQlDto> {
+    const input = OfertaFormacaoGraphqlMapper.toUpdateInput({ id }, dto);
     const result = await this.ofertaFormacaoService.update(accessContext, input);
     return OfertaFormacaoGraphqlMapper.toFindOneOutputDto(result);
   }

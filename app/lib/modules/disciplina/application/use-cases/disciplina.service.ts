@@ -3,12 +3,12 @@ import type { AccessContext } from "@/modules/@core/access-context";
 import { BaseCrudService } from "@/modules/@shared";
 import { ArquivoService } from "@/modules/arquivo/application/use-cases/arquivo.service";
 import type {
-  DisciplinaCreateInput,
-  DisciplinaFindOneInput,
-  DisciplinaFindOneOutput,
-  DisciplinaListInput,
-  DisciplinaListOutput,
-  DisciplinaUpdateInput,
+  DisciplinaCreateInputDto,
+  DisciplinaFindOneInputDto,
+  DisciplinaFindOneOutputDto,
+  DisciplinaListInputDto,
+  DisciplinaListOutputDto,
+  DisciplinaUpdateInputDto,
 } from "@/modules/disciplina/application/dtos";
 import {
   DISCIPLINA_REPOSITORY_PORT,
@@ -20,12 +20,12 @@ import { ImagemService } from "@/modules/imagem/application/use-cases/imagem.ser
 @Injectable()
 export class DisciplinaService extends BaseCrudService<
   DisciplinaEntity,
-  DisciplinaListInput,
-  DisciplinaListOutput,
-  DisciplinaFindOneInput,
-  DisciplinaFindOneOutput,
-  DisciplinaCreateInput,
-  DisciplinaUpdateInput
+  DisciplinaListInputDto,
+  DisciplinaListOutputDto,
+  DisciplinaFindOneInputDto,
+  DisciplinaFindOneOutputDto,
+  DisciplinaCreateInputDto,
+  DisciplinaUpdateInputDto
 > {
   protected readonly resourceName = "Disciplina";
   protected readonly createAction = "disciplina:create";
@@ -56,7 +56,7 @@ export class DisciplinaService extends BaseCrudService<
 
   async updateImagemCapa(
     accessContext: AccessContext,
-    dto: DisciplinaFindOneInput,
+    dto: DisciplinaFindOneInputDto,
     file: Express.Multer.File,
   ): Promise<boolean> {
     return this.updateImagemField(accessContext, dto.id, file, "imagemCapa", this.imagemService);

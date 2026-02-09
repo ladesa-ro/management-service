@@ -1,12 +1,12 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { BaseCrudService } from "@/modules/@shared";
 import type {
-  DisponibilidadeCreateInput,
-  DisponibilidadeFindOneInput,
-  DisponibilidadeFindOneOutput,
-  DisponibilidadeListInput,
-  DisponibilidadeListOutput,
-  DisponibilidadeUpdateInput,
+  DisponibilidadeCreateInputDto,
+  DisponibilidadeFindOneInputDto,
+  DisponibilidadeFindOneOutputDto,
+  DisponibilidadeListInputDto,
+  DisponibilidadeListOutputDto,
+  DisponibilidadeUpdateInputDto,
 } from "@/modules/disponibilidade/application/dtos";
 import {
   DISPONIBILIDADE_REPOSITORY_PORT,
@@ -19,12 +19,12 @@ import type { DisponibilidadeEntity } from "@/modules/disponibilidade/infrastruc
 export class DisponibilidadeService
   extends BaseCrudService<
     DisponibilidadeEntity,
-    DisponibilidadeListInput,
-    DisponibilidadeListOutput,
-    DisponibilidadeFindOneInput,
-    DisponibilidadeFindOneOutput,
-    DisponibilidadeCreateInput,
-    DisponibilidadeUpdateInput
+    DisponibilidadeListInputDto,
+    DisponibilidadeListOutputDto,
+    DisponibilidadeFindOneInputDto,
+    DisponibilidadeFindOneOutputDto,
+    DisponibilidadeCreateInputDto,
+    DisponibilidadeUpdateInputDto
   >
   implements IDisponibilidadeUseCasePort
 {

@@ -1,5 +1,4 @@
-import { ArgsType, Field, ID, InputType, ObjectType, PartialType } from "@nestjs/graphql";
-import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { ApiProperty, ApiPropertyOptional, ApiSchema, PartialType } from "@nestjs/swagger";
 import { IsArray, IsDateString, IsOptional, IsString, IsUUID, MinLength } from "class-validator";
 import {
   commonProperties,
@@ -7,8 +6,8 @@ import {
   simpleProperty,
 } from "@/modules/@shared/infrastructure/persistence/typeorm/metadata";
 import {
-  PaginationInputDto,
-  PaginationMetaDto,
+  PaginationInputRestDto,
+  PaginationMetaRestDto,
   TransformToArray,
 } from "@/modules/@shared/infrastructure/presentation/rest/dtos";
 
@@ -16,35 +15,30 @@ import {
 // FindOne Output
 // ============================================================================
 
-@ObjectType("NivelFormacao")
+@ApiSchema({ name: "NivelFormacaoFindOneOutputDto" })
 @RegisterModel({
-  name: "NivelFormacaoFindOneOutput",
+  name: "NivelFormacaoFindOneOutputDto",
   properties: [simpleProperty("id"), simpleProperty("slug"), ...commonProperties.dated],
 })
-export class NivelFormacaoFindOneOutputDto {
+export class NivelFormacaoFindOneOutputRestDto {
   @ApiProperty({ description: "Identificador do registro (uuid)", format: "uuid" })
-  @Field(() => ID)
   @IsUUID()
   id: string;
 
   @ApiProperty({ description: "Apelido do nivel de formacao", minLength: 1 })
-  @Field()
   @IsString()
   @MinLength(1)
   slug: string;
 
   @ApiProperty({ description: "Data e hora da criacao do registro" })
-  @Field()
   @IsDateString()
   dateCreated: Date;
 
   @ApiProperty({ description: "Data e hora da alteracao do registro" })
-  @Field()
   @IsDateString()
   dateUpdated: Date;
 
   @ApiPropertyOptional({ description: "Data e hora da exclusao do registro", nullable: true })
-  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateString()
   dateDeleted: Date | null;
@@ -54,8 +48,8 @@ export class NivelFormacaoFindOneOutputDto {
 // List Input/Output
 // ============================================================================
 
-@ArgsType()
-export class NivelFormacaoListInputDto extends PaginationInputDto {
+@ApiSchema({ name: "NivelFormacaoListInputDto" })
+export class NivelFormacaoListInputRestDto extends PaginationInputRestDto {
   @ApiPropertyOptional({
     description: "Filtro por ID",
     type: [String],
@@ -63,46 +57,44 @@ export class NivelFormacaoListInputDto extends PaginationInputDto {
   @TransformToArray()
   @IsOptional()
   @IsArray()
-  @IsString({ each: true })
+  @IsUUID(undefined, { each: true })
   "filter.id"?: string[];
 }
 
-@ObjectType("NivelFormacaoListOutput")
-export class NivelFormacaoListOutputDto {
-  @ApiProperty({ type: () => PaginationMetaDto, description: "Metadados da busca" })
-  @Field(() => PaginationMetaDto)
-  meta: PaginationMetaDto;
+@ApiSchema({ name: "NivelFormacaoListOutputDto" })
+export class NivelFormacaoListOutputRestDto {
+  @ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" })
+  meta: PaginationMetaRestDto;
 
-  @ApiProperty({ type: () => [NivelFormacaoFindOneOutputDto], description: "Resultados da busca" })
-  @Field(() => [NivelFormacaoFindOneOutputDto])
-  data: NivelFormacaoFindOneOutputDto[];
+  @ApiProperty({
+    type: () => [NivelFormacaoFindOneOutputRestDto],
+    description: "Resultados da busca",
+  })
+  data: NivelFormacaoFindOneOutputRestDto[];
 }
 
 // ============================================================================
 // Create/Update Input
 // ============================================================================
 
-@InputType("NivelFormacaoCreateInput")
-export class NivelFormacaoCreateInputDto {
+@ApiSchema({ name: "NivelFormacaoCreateInputDto" })
+export class NivelFormacaoCreateInputRestDto {
   @ApiProperty({ description: "Apelido do nivel de formacao", minLength: 1 })
-  @Field()
   @IsString()
   @MinLength(1)
   slug: string;
 }
 
-@InputType("NivelFormacaoUpdateInput")
-export class NivelFormacaoUpdateInputDto extends PartialType(NivelFormacaoCreateInputDto) {}
+@ApiSchema({ name: "NivelFormacaoUpdateInputDto" })
+export class NivelFormacaoUpdateInputRestDto extends PartialType(NivelFormacaoCreateInputRestDto) {}
 
 // ============================================================================
 // FindOne Input (for path params)
 // ============================================================================
 
-@ArgsType()
-@InputType("NivelFormacaoFindOneInput")
-export class NivelFormacaoFindOneInputDto {
+@ApiSchema({ name: "NivelFormacaoFindOneInputDto" })
+export class NivelFormacaoFindOneInputRestDto {
   @ApiProperty({ description: "Identificador do registro (uuid)", format: "uuid" })
-  @Field(() => ID)
   @IsUUID()
   id: string;
 }

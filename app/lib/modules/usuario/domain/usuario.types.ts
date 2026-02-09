@@ -1,21 +1,17 @@
-import type { IdUuid, ScalarDateTimeString } from "@/modules/@shared";
+import type { IEntityBase } from "@/modules/@shared";
 import type { IImagem } from "@/modules/imagem/domain/imagem.types";
 
 /**
  * Interface que define a estrutura de dados de Usuario
  * Tipagem pura sem implementação de regras
  */
-export interface IUsuario {
-  id: IdUuid;
+export interface IUsuario extends IEntityBase {
   nome: string | null;
   matriculaSiape: string | null;
   email: string | null;
   isSuperUser: boolean;
   imagemCapa: IImagem | null;
   imagemPerfil: IImagem | null;
-  dateCreated: ScalarDateTimeString;
-  dateUpdated: ScalarDateTimeString;
-  dateDeleted: ScalarDateTimeString | null;
 }
 
 /**

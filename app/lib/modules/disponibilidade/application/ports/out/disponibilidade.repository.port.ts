@@ -1,5 +1,8 @@
 import type { IBaseCrudRepositoryPort } from "@/modules/@shared";
-import { DisponibilidadeFindOneOutput, DisponibilidadeListOutput } from "@/modules/disponibilidade";
+import {
+  DisponibilidadeFindOneOutputDto,
+  DisponibilidadeListOutputDto,
+} from "@/modules/disponibilidade";
 import type { DisponibilidadeEntity } from "@/modules/disponibilidade/infrastructure/persistence/typeorm";
 
 export const DISPONIBILIDADE_REPOSITORY_PORT = Symbol("IDisponibilidadeRepositoryPort");
@@ -11,6 +14,6 @@ export const DISPONIBILIDADE_REPOSITORY_PORT = Symbol("IDisponibilidadeRepositor
 export interface IDisponibilidadeRepositoryPort
   extends IBaseCrudRepositoryPort<
     DisponibilidadeEntity,
-    DisponibilidadeListOutput,
-    DisponibilidadeFindOneOutput
+    DisponibilidadeListOutputDto,
+    DisponibilidadeFindOneOutputDto
   > {}

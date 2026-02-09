@@ -1,21 +1,21 @@
 import {
-  DiarioPreferenciaAgrupamentoCreateInput,
-  DiarioPreferenciaAgrupamentoFindOneInput,
-  DiarioPreferenciaAgrupamentoFindOneOutput,
-  DiarioPreferenciaAgrupamentoListInput,
-  DiarioPreferenciaAgrupamentoListOutput,
-  DiarioPreferenciaAgrupamentoUpdateInput,
-} from "@/modules/diario-preferencia-agrupamento";
-import { DiarioRestMapper } from "@/server/nest/modules/diario/rest";
-import { IntervaloDeTempoRestMapper } from "@/server/nest/modules/intervalo-de-tempo/rest";
-import { mapPaginationMeta } from "@/server/nest/shared/mappers";
-import {
   DiarioPreferenciaAgrupamentoCreateInputDto,
   DiarioPreferenciaAgrupamentoFindOneInputDto,
   DiarioPreferenciaAgrupamentoFindOneOutputDto,
   DiarioPreferenciaAgrupamentoListInputDto,
   DiarioPreferenciaAgrupamentoListOutputDto,
   DiarioPreferenciaAgrupamentoUpdateInputDto,
+} from "@/modules/diario-preferencia-agrupamento";
+import { DiarioRestMapper } from "@/server/nest/modules/diario/rest";
+import { IntervaloDeTempoRestMapper } from "@/server/nest/modules/intervalo-de-tempo/rest";
+import { mapPaginationMeta } from "@/server/nest/shared/mappers";
+import {
+  DiarioPreferenciaAgrupamentoCreateInputRestDto,
+  DiarioPreferenciaAgrupamentoFindOneInputRestDto,
+  DiarioPreferenciaAgrupamentoFindOneOutputRestDto,
+  DiarioPreferenciaAgrupamentoListInputRestDto,
+  DiarioPreferenciaAgrupamentoListOutputRestDto,
+  DiarioPreferenciaAgrupamentoUpdateInputRestDto,
 } from "./diario-preferencia-agrupamento.rest.dto";
 
 export class DiarioPreferenciaAgrupamentoRestMapper {
@@ -24,21 +24,21 @@ export class DiarioPreferenciaAgrupamentoRestMapper {
   // ============================================================================
 
   static toFindOneInput(
-    dto: DiarioPreferenciaAgrupamentoFindOneInputDto,
-  ): DiarioPreferenciaAgrupamentoFindOneInput {
-    const input = new DiarioPreferenciaAgrupamentoFindOneInput();
+    dto: DiarioPreferenciaAgrupamentoFindOneInputRestDto,
+  ): DiarioPreferenciaAgrupamentoFindOneInputDto {
+    const input = new DiarioPreferenciaAgrupamentoFindOneInputDto();
     input.id = dto.id;
     return input;
   }
 
   static toListInput(
-    dto: DiarioPreferenciaAgrupamentoListInputDto | null,
-  ): DiarioPreferenciaAgrupamentoListInput | null {
+    dto: DiarioPreferenciaAgrupamentoListInputRestDto | null,
+  ): DiarioPreferenciaAgrupamentoListInputDto | null {
     if (!dto) {
       return null;
     }
 
-    const input = new DiarioPreferenciaAgrupamentoListInput();
+    const input = new DiarioPreferenciaAgrupamentoListInputDto();
     input.page = dto.page;
     input.limit = dto.limit;
     input.search = dto.search;
@@ -50,9 +50,9 @@ export class DiarioPreferenciaAgrupamentoRestMapper {
   }
 
   static toCreateInput(
-    dto: DiarioPreferenciaAgrupamentoCreateInputDto,
-  ): DiarioPreferenciaAgrupamentoCreateInput {
-    const input = new DiarioPreferenciaAgrupamentoCreateInput();
+    dto: DiarioPreferenciaAgrupamentoCreateInputRestDto,
+  ): DiarioPreferenciaAgrupamentoCreateInputDto {
+    const input = new DiarioPreferenciaAgrupamentoCreateInputDto();
     input.dataInicio = dto.dataInicio;
     input.dataFim = dto.dataFim ?? null;
     input.diaSemanaIso = dto.diaSemanaIso;
@@ -63,12 +63,12 @@ export class DiarioPreferenciaAgrupamentoRestMapper {
   }
 
   static toUpdateInput(
-    params: DiarioPreferenciaAgrupamentoFindOneInputDto,
-    dto: DiarioPreferenciaAgrupamentoUpdateInputDto,
-  ): DiarioPreferenciaAgrupamentoFindOneInput & DiarioPreferenciaAgrupamentoUpdateInput {
+    params: DiarioPreferenciaAgrupamentoFindOneInputRestDto,
+    dto: DiarioPreferenciaAgrupamentoUpdateInputRestDto,
+  ): DiarioPreferenciaAgrupamentoFindOneInputDto & DiarioPreferenciaAgrupamentoUpdateInputDto {
     const input =
-      new DiarioPreferenciaAgrupamentoFindOneInput() as DiarioPreferenciaAgrupamentoFindOneInput &
-        DiarioPreferenciaAgrupamentoUpdateInput;
+      new DiarioPreferenciaAgrupamentoFindOneInputDto() as DiarioPreferenciaAgrupamentoFindOneInputDto &
+        DiarioPreferenciaAgrupamentoUpdateInputDto;
     input.id = params.id;
     if (dto.dataInicio !== undefined) {
       input.dataInicio = dto.dataInicio;
@@ -96,9 +96,9 @@ export class DiarioPreferenciaAgrupamentoRestMapper {
   // ============================================================================
 
   static toFindOneOutputDto(
-    output: DiarioPreferenciaAgrupamentoFindOneOutput,
-  ): DiarioPreferenciaAgrupamentoFindOneOutputDto {
-    const dto = new DiarioPreferenciaAgrupamentoFindOneOutputDto();
+    output: DiarioPreferenciaAgrupamentoFindOneOutputDto,
+  ): DiarioPreferenciaAgrupamentoFindOneOutputRestDto {
+    const dto = new DiarioPreferenciaAgrupamentoFindOneOutputRestDto();
     dto.id = output.id;
     dto.dataInicio = output.dataInicio;
     dto.dataFim = output.dataFim;
@@ -113,9 +113,9 @@ export class DiarioPreferenciaAgrupamentoRestMapper {
   }
 
   static toListOutputDto(
-    output: DiarioPreferenciaAgrupamentoListOutput,
-  ): DiarioPreferenciaAgrupamentoListOutputDto {
-    const dto = new DiarioPreferenciaAgrupamentoListOutputDto();
+    output: DiarioPreferenciaAgrupamentoListOutputDto,
+  ): DiarioPreferenciaAgrupamentoListOutputRestDto {
+    const dto = new DiarioPreferenciaAgrupamentoListOutputRestDto();
     dto.meta = mapPaginationMeta(output.meta);
     dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
     return dto;

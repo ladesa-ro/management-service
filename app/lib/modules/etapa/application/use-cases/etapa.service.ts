@@ -5,24 +5,24 @@ import { BaseCrudService } from "@/modules/@shared";
 import { CalendarioLetivoService } from "@/modules/calendario-letivo";
 import type { EtapaEntity } from "@/modules/etapa/infrastructure/persistence/typeorm";
 import type {
-  EtapaCreateInput,
-  EtapaFindOneInput,
-  EtapaFindOneOutput,
-  EtapaListInput,
-  EtapaListOutput,
-  EtapaUpdateInput,
+  EtapaCreateInputDto,
+  EtapaFindOneInputDto,
+  EtapaFindOneOutputDto,
+  EtapaListInputDto,
+  EtapaListOutputDto,
+  EtapaUpdateInputDto,
 } from "../dtos";
 import { ETAPA_REPOSITORY_PORT, type IEtapaRepositoryPort } from "../ports";
 
 @Injectable()
 export class EtapaService extends BaseCrudService<
   EtapaEntity,
-  EtapaListInput,
-  EtapaListOutput,
-  EtapaFindOneInput,
-  EtapaFindOneOutput,
-  EtapaCreateInput,
-  EtapaUpdateInput
+  EtapaListInputDto,
+  EtapaListOutputDto,
+  EtapaFindOneInputDto,
+  EtapaFindOneOutputDto,
+  EtapaCreateInputDto,
+  EtapaUpdateInputDto
 > {
   protected readonly resourceName = "Etapa";
   protected readonly createAction = "etapa:create";
@@ -42,7 +42,7 @@ export class EtapaService extends BaseCrudService<
   protected override async beforeCreate(
     accessContext: AccessContext,
     entity: EtapaEntity,
-    dto: EtapaCreateInput,
+    dto: EtapaCreateInputDto,
   ): Promise<void> {
     if (dto.calendario) {
       const calendario = await this.calendarioLetivoService.findByIdSimpleStrict(
@@ -56,7 +56,7 @@ export class EtapaService extends BaseCrudService<
   protected override async beforeUpdate(
     accessContext: AccessContext,
     entity: EtapaEntity,
-    dto: EtapaFindOneInput & EtapaUpdateInput,
+    dto: EtapaFindOneInputDto & EtapaUpdateInputDto,
   ): Promise<void> {
     if (has(dto, "calendario") && dto.calendario !== undefined) {
       const calendario = await this.calendarioLetivoService.findByIdSimpleStrict(

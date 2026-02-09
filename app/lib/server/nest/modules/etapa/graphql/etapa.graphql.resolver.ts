@@ -4,23 +4,24 @@ import { AccessContext, AccessContextGraphQL } from "@/modules/@core/access-cont
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
 import { EtapaService } from "@/modules/etapa/application/use-cases/etapa.service";
 import {
-  EtapaCreateInputRestDto,
-  EtapaFindOneOutputRestDto,
-  EtapaUpdateInputRestDto,
-} from "../rest/etapa.rest.dto";
-import { EtapaListInputGqlDto, EtapaListOutputGqlDto } from "./etapa.graphql.dto";
+  EtapaCreateInputGraphQlDto,
+  EtapaFindOneOutputGraphQlDto,
+  EtapaListInputGraphQlDto,
+  EtapaListOutputGraphQlDto,
+  EtapaUpdateInputGraphQlDto,
+} from "./etapa.graphql.dto";
 import { EtapaGraphqlMapper } from "./etapa.graphql.mapper";
 
-@Resolver(() => EtapaFindOneOutputRestDto)
+@Resolver(() => EtapaFindOneOutputGraphQlDto)
 export class EtapaGraphqlResolver {
   constructor(private readonly etapaService: EtapaService) {}
 
-  @Query(() => EtapaListOutputGqlDto, { name: "etapaFindAll" })
+  @Query(() => EtapaListOutputGraphQlDto, { name: "etapaFindAll" })
   async findAll(
     @AccessContextGraphQL() accessContext: AccessContext,
-    @Args() dto: EtapaListInputGqlDto,
+    @Args() dto: EtapaListInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<EtapaListOutputGqlDto> {
+  ): Promise<EtapaListOutputGraphQlDto> {
     const input = EtapaGraphqlMapper.toListInput(dto);
 
     if (input) {
@@ -31,35 +32,35 @@ export class EtapaGraphqlResolver {
     return EtapaGraphqlMapper.toListOutputDto(result);
   }
 
-  @Query(() => EtapaFindOneOutputRestDto, { name: "etapaFindById" })
+  @Query(() => EtapaFindOneOutputGraphQlDto, { name: "etapaFindById" })
   async findById(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<EtapaFindOneOutputRestDto> {
+  ): Promise<EtapaFindOneOutputGraphQlDto> {
     const selection = graphqlExtractSelection(info);
     const result = await this.etapaService.findByIdStrict(accessContext, { id, selection });
     return EtapaGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => EtapaFindOneOutputRestDto, { name: "etapaCreate" })
+  @Mutation(() => EtapaFindOneOutputGraphQlDto, { name: "etapaCreate" })
   async create(
     @AccessContextGraphQL() accessContext: AccessContext,
-    @Args("data") dto: EtapaCreateInputRestDto,
+    @Args("data") dto: EtapaCreateInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<EtapaFindOneOutputRestDto> {
+  ): Promise<EtapaFindOneOutputGraphQlDto> {
     const input = EtapaGraphqlMapper.toCreateInput(dto);
     const result = await this.etapaService.create(accessContext, input);
     return EtapaGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => EtapaFindOneOutputRestDto, { name: "etapaUpdate" })
+  @Mutation(() => EtapaFindOneOutputGraphQlDto, { name: "etapaUpdate" })
   async update(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
-    @Args("data") dto: EtapaUpdateInputRestDto,
+    @Args("data") dto: EtapaUpdateInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<EtapaFindOneOutputRestDto> {
+  ): Promise<EtapaFindOneOutputGraphQlDto> {
     const findOneInput = EtapaGraphqlMapper.toFindOneInput(id);
     const updateInput = EtapaGraphqlMapper.toUpdateInput(dto);
     const result = await this.etapaService.update(accessContext, {

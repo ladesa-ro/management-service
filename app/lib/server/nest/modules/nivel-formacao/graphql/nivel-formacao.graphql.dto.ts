@@ -1,31 +1,60 @@
-import { ArgsType, Field, ObjectType } from "@nestjs/graphql";
-import { IsArray, IsOptional, IsString } from "class-validator";
-import { PaginationGraphqlArgsDto } from "@/modules/@shared/infrastructure/graphql";
-import { PaginationMetaDto } from "@/modules/@shared/infrastructure/presentation/rest/dtos";
-import { NivelFormacaoFindOneOutputDto } from "../rest/nivel-formacao.rest.dto";
+import { ArgsType, Field, InputType, ObjectType } from "@nestjs/graphql";
+import { IsArray, IsOptional, IsString, IsUUID, MinLength } from "class-validator";
+import {
+  EntityBaseGraphQlDto,
+  PaginationMetaGraphQlDto,
+} from "@/modules/@shared/infrastructure/graphql/dtos";
+import { PaginationArgsGraphQlDto } from "@/modules/@shared/infrastructure/graphql/dtos/pagination-graphql.dto";
 
 // ============================================================================
-// List Input (GraphQL-compatible - no dots in field names)
+// FindOne Output
+// ============================================================================
+
+@ObjectType("NivelFormacaoFindOneOutputDto")
+export class NivelFormacaoFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
+  @Field() slug: string;
+}
+
+// ============================================================================
+// Create Input
+// ============================================================================
+
+@InputType("NivelFormacaoCreateInputDto")
+export class NivelFormacaoCreateInputGraphQlDto {
+  @Field() @IsString() @MinLength(1) slug: string;
+}
+
+// ============================================================================
+// Update Input
+// ============================================================================
+
+@InputType("NivelFormacaoUpdateInputDto")
+export class NivelFormacaoUpdateInputGraphQlDto {
+  @Field({ nullable: true }) @IsOptional() @IsString() @MinLength(1) slug?: string;
+}
+
+// ============================================================================
+// List Input
 // ============================================================================
 
 @ArgsType()
-export class NivelFormacaoListInputGqlDto extends PaginationGraphqlArgsDto {
+export class NivelFormacaoListInputGraphQlDto extends PaginationArgsGraphQlDto {
   @Field(() => [String], { nullable: true, description: "Filtro por ID" })
   @IsOptional()
   @IsArray()
-  @IsString({ each: true })
+  @IsUUID(undefined, { each: true })
   filterId?: string[];
 }
 
 // ============================================================================
-// List Output (reuses the same output DTOs - they're already GraphQL-compatible)
+// List Output
 // ============================================================================
 
 @ObjectType("NivelFormacaoListResult")
-export class NivelFormacaoListOutputGqlDto {
-  @Field(() => PaginationMetaDto)
-  meta: PaginationMetaDto;
+export class NivelFormacaoListOutputGraphQlDto {
+  @Field(() => PaginationMetaGraphQlDto)
+  meta: PaginationMetaGraphQlDto;
 
-  @Field(() => [NivelFormacaoFindOneOutputDto])
-  data: NivelFormacaoFindOneOutputDto[];
+  @Field(() => [NivelFormacaoFindOneOutputGraphQlDto])
+  data: NivelFormacaoFindOneOutputGraphQlDto[];
 }

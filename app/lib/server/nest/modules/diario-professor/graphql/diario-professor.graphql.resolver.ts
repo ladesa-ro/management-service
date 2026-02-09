@@ -4,27 +4,24 @@ import { AccessContext, AccessContextGraphQL } from "@/modules/@core/access-cont
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
 import { DiarioProfessorService } from "@/modules/diario-professor/application/use-cases/diario-professor.service";
 import {
-  DiarioProfessorCreateInputDto,
-  DiarioProfessorFindOneOutputDto,
-  DiarioProfessorUpdateInputDto,
-} from "../rest/diario-professor.rest.dto";
-import { DiarioProfessorRestMapper } from "../rest/diario-professor.rest.mapper";
-import {
-  DiarioProfessorListInputGqlDto,
-  DiarioProfessorListOutputGqlDto,
+  DiarioProfessorCreateInputGraphQlDto,
+  DiarioProfessorFindOneOutputGraphQlDto,
+  DiarioProfessorListInputGraphQlDto,
+  DiarioProfessorListOutputGraphQlDto,
+  DiarioProfessorUpdateInputGraphQlDto,
 } from "./diario-professor.graphql.dto";
 import { DiarioProfessorGraphqlMapper } from "./diario-professor.graphql.mapper";
 
-@Resolver(() => DiarioProfessorFindOneOutputDto)
+@Resolver(() => DiarioProfessorFindOneOutputGraphQlDto)
 export class DiarioProfessorGraphqlResolver {
   constructor(private readonly diarioProfessorService: DiarioProfessorService) {}
 
-  @Query(() => DiarioProfessorListOutputGqlDto, { name: "diarioProfessorFindAll" })
+  @Query(() => DiarioProfessorListOutputGraphQlDto, { name: "diarioProfessorFindAll" })
   async findAll(
     @AccessContextGraphQL() accessContext: AccessContext,
-    @Args() dto: DiarioProfessorListInputGqlDto,
+    @Args() dto: DiarioProfessorListInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<DiarioProfessorListOutputGqlDto> {
+  ): Promise<DiarioProfessorListOutputGraphQlDto> {
     const input = DiarioProfessorGraphqlMapper.toListInput(dto);
 
     if (input) {
@@ -35,12 +32,12 @@ export class DiarioProfessorGraphqlResolver {
     return DiarioProfessorGraphqlMapper.toListOutputDto(result);
   }
 
-  @Query(() => DiarioProfessorFindOneOutputDto, { name: "diarioProfessorFindById" })
+  @Query(() => DiarioProfessorFindOneOutputGraphQlDto, { name: "diarioProfessorFindById" })
   async findById(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<DiarioProfessorFindOneOutputDto> {
+  ): Promise<DiarioProfessorFindOneOutputGraphQlDto> {
     const selection = graphqlExtractSelection(info);
     const result = await this.diarioProfessorService.findByIdStrict(accessContext, {
       id,
@@ -49,25 +46,25 @@ export class DiarioProfessorGraphqlResolver {
     return DiarioProfessorGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => DiarioProfessorFindOneOutputDto, { name: "diarioProfessorCreate" })
+  @Mutation(() => DiarioProfessorFindOneOutputGraphQlDto, { name: "diarioProfessorCreate" })
   async create(
     @AccessContextGraphQL() accessContext: AccessContext,
-    @Args("input") dto: DiarioProfessorCreateInputDto,
+    @Args("input") dto: DiarioProfessorCreateInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<DiarioProfessorFindOneOutputDto> {
-    const input = DiarioProfessorRestMapper.toCreateInput(dto);
+  ): Promise<DiarioProfessorFindOneOutputGraphQlDto> {
+    const input = DiarioProfessorGraphqlMapper.toCreateInput(dto);
     const result = await this.diarioProfessorService.create(accessContext, input);
     return DiarioProfessorGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => DiarioProfessorFindOneOutputDto, { name: "diarioProfessorUpdate" })
+  @Mutation(() => DiarioProfessorFindOneOutputGraphQlDto, { name: "diarioProfessorUpdate" })
   async update(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
-    @Args("input") dto: DiarioProfessorUpdateInputDto,
+    @Args("input") dto: DiarioProfessorUpdateInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<DiarioProfessorFindOneOutputDto> {
-    const input = DiarioProfessorRestMapper.toUpdateInput({ id }, dto);
+  ): Promise<DiarioProfessorFindOneOutputGraphQlDto> {
+    const input = DiarioProfessorGraphqlMapper.toUpdateInput({ id }, dto);
     const result = await this.diarioProfessorService.update(accessContext, input);
     return DiarioProfessorGraphqlMapper.toFindOneOutputDto(result);
   }

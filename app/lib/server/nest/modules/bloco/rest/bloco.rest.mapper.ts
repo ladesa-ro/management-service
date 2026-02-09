@@ -1,23 +1,23 @@
 import {
-  BlocoCreateInput,
-  BlocoFindOneInput,
-  BlocoFindOneOutput,
-  BlocoListInput,
-  BlocoListOutput,
-  BlocoUpdateInput,
-} from "@/modules/bloco";
-import type { ImagemFindOneOutput } from "@/modules/imagem";
-import { CampusRestMapper } from "@/server/nest/modules/campus/rest";
-import { mapPaginationMeta } from "@/server/nest/shared/mappers";
-import {
   BlocoCreateInputDto,
   BlocoFindOneInputDto,
   BlocoFindOneOutputDto,
   BlocoListInputDto,
   BlocoListOutputDto,
   BlocoUpdateInputDto,
-  ImagemArquivoFindOneFromImagemOutputDto,
-  ImagemFindOneOutputDto,
+} from "@/modules/bloco";
+import type { ImagemFindOneOutputDto } from "@/modules/imagem";
+import { CampusRestMapper } from "@/server/nest/modules/campus/rest";
+import { mapPaginationMeta } from "@/server/nest/shared/mappers";
+import {
+  BlocoCreateInputRestDto,
+  BlocoFindOneInputRestDto,
+  BlocoFindOneOutputRestDto,
+  BlocoListInputRestDto,
+  BlocoListOutputRestDto,
+  BlocoUpdateInputRestDto,
+  ImagemArquivoFindOneFromImagemOutputRestDto,
+  ImagemFindOneOutputRestDto,
 } from "./bloco.rest.dto";
 
 export class BlocoRestMapper {
@@ -25,18 +25,18 @@ export class BlocoRestMapper {
   // Input: Server DTO -> Core DTO
   // ============================================================================
 
-  static toFindOneInput(dto: BlocoFindOneInputDto): BlocoFindOneInput {
-    const input = new BlocoFindOneInput();
+  static toFindOneInput(dto: BlocoFindOneInputRestDto): BlocoFindOneInputDto {
+    const input = new BlocoFindOneInputDto();
     input.id = dto.id;
     return input;
   }
 
-  static toListInput(dto: BlocoListInputDto | null): BlocoListInput | null {
+  static toListInput(dto: BlocoListInputRestDto | null): BlocoListInputDto | null {
     if (!dto) {
       return null;
     }
 
-    const input = new BlocoListInput();
+    const input = new BlocoListInputDto();
     input.page = dto.page;
     input.limit = dto.limit;
     input.search = dto.search;
@@ -47,8 +47,8 @@ export class BlocoRestMapper {
     return input;
   }
 
-  static toCreateInput(dto: BlocoCreateInputDto): BlocoCreateInput {
-    const input = new BlocoCreateInput();
+  static toCreateInput(dto: BlocoCreateInputRestDto): BlocoCreateInputDto {
+    const input = new BlocoCreateInputDto();
     input.nome = dto.nome;
     input.codigo = dto.codigo;
     input.campus = { id: dto.campus.id };
@@ -56,10 +56,10 @@ export class BlocoRestMapper {
   }
 
   static toUpdateInput(
-    params: BlocoFindOneInputDto,
-    dto: BlocoUpdateInputDto,
-  ): BlocoFindOneInput & BlocoUpdateInput {
-    const input = new BlocoFindOneInput() as BlocoFindOneInput & BlocoUpdateInput;
+    params: BlocoFindOneInputRestDto,
+    dto: BlocoUpdateInputRestDto,
+  ): BlocoFindOneInputDto & BlocoUpdateInputDto {
+    const input = new BlocoFindOneInputDto() as BlocoFindOneInputDto & BlocoUpdateInputDto;
     input.id = params.id;
     if (dto.nome !== undefined) {
       input.nome = dto.nome;
@@ -77,8 +77,8 @@ export class BlocoRestMapper {
   // Output: Core DTO -> Server DTO
   // ============================================================================
 
-  static toFindOneOutputDto(output: BlocoFindOneOutput): BlocoFindOneOutputDto {
-    const dto = new BlocoFindOneOutputDto();
+  static toFindOneOutputDto(output: BlocoFindOneOutputDto): BlocoFindOneOutputRestDto {
+    const dto = new BlocoFindOneOutputRestDto();
     dto.id = output.id;
     dto.nome = output.nome;
     dto.codigo = output.codigo;
@@ -90,12 +90,12 @@ export class BlocoRestMapper {
     return dto;
   }
 
-  static toImagemOutputDto(output: ImagemFindOneOutput): ImagemFindOneOutputDto {
-    const dto = new ImagemFindOneOutputDto();
+  static toImagemOutputDto(output: ImagemFindOneOutputDto): ImagemFindOneOutputRestDto {
+    const dto = new ImagemFindOneOutputRestDto();
     dto.id = output.id;
     dto.descricao = output.descricao;
     dto.versoes = (output.versoes || []).map((v) => {
-      const versaoDto = new ImagemArquivoFindOneFromImagemOutputDto();
+      const versaoDto = new ImagemArquivoFindOneFromImagemOutputRestDto();
       versaoDto.id = v.id;
       versaoDto.largura = v.largura;
       versaoDto.altura = v.altura;
@@ -110,8 +110,8 @@ export class BlocoRestMapper {
     return dto;
   }
 
-  static toListOutputDto(output: BlocoListOutput): BlocoListOutputDto {
-    const dto = new BlocoListOutputDto();
+  static toListOutputDto(output: BlocoListOutputDto): BlocoListOutputRestDto {
+    const dto = new BlocoListOutputRestDto();
     dto.meta = mapPaginationMeta(output.meta);
     dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
     return dto;

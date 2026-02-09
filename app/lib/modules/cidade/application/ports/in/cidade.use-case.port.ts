@@ -1,9 +1,9 @@
 import type { AccessContext } from "@/modules/@core/access-context";
 import {
-  CidadeFindOneInput,
-  CidadeFindOneOutput,
-  CidadeListInput,
-  CidadeListOutput,
+  CidadeFindOneInputDto,
+  CidadeFindOneOutputDto,
+  CidadeListInputDto,
+  CidadeListOutputDto,
 } from "../../dtos";
 
 /**
@@ -17,7 +17,10 @@ export interface ICidadeUseCasePort {
    * @param dto DTO com critérios de busca e paginação
    * @returns Lista paginada de cidades
    */
-  findAll(accessContext: AccessContext, dto: CidadeListInput | null): Promise<CidadeListOutput>;
+  findAll(
+    accessContext: AccessContext,
+    dto: CidadeListInputDto | null,
+  ): Promise<CidadeListOutputDto>;
 
   /**
    * Busca uma cidade por ID
@@ -27,8 +30,8 @@ export interface ICidadeUseCasePort {
    */
   findById(
     accessContext: AccessContext,
-    dto: CidadeFindOneInput,
-  ): Promise<CidadeFindOneOutput | null>;
+    dto: CidadeFindOneInputDto,
+  ): Promise<CidadeFindOneOutputDto | null>;
 
   /**
    * Busca uma cidade por ID (lança exceção se não encontrado)
@@ -38,6 +41,6 @@ export interface ICidadeUseCasePort {
    */
   findByIdStrict(
     accessContext: AccessContext,
-    dto: CidadeFindOneInput,
-  ): Promise<CidadeFindOneOutput>;
+    dto: CidadeFindOneInputDto,
+  ): Promise<CidadeFindOneOutputDto>;
 }

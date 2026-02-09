@@ -1,27 +1,15 @@
-import type { IdUuid, ScalarDateTimeString } from "@/modules/@shared";
+import type { IEntityBase } from "@/modules/@shared";
 
 /**
  * Tipagem da entidade Modalidade
  * Define a estrutura de dados sem comportamento
  */
-export interface IModalidade {
-  /** Identificador UUID da modalidade */
-  id: IdUuid;
-
+export interface IModalidade extends IEntityBase {
   /** Nome da modalidade */
   nome: string;
 
   /** Slug para URL amigavel */
   slug: string;
-
-  /** Data de criacao */
-  dateCreated: ScalarDateTimeString;
-
-  /** Data de atualizacao */
-  dateUpdated: ScalarDateTimeString;
-
-  /** Data de exclusao (soft delete) */
-  dateDeleted: ScalarDateTimeString | null;
 }
 
 /**

@@ -1,70 +1,70 @@
 import {
-  EntityOutput,
-  FindOneInput,
+  EntityOutputDto,
+  FindOneInputDto,
   IFilterAcceptableValues,
-  ObjectUuidRef,
-  PaginationInput,
-  PaginationResult,
+  ObjectUuidRefDto,
+  PaginationInputDto,
+  PaginationResultDto,
   ScalarDate,
 } from "@/modules/@shared";
 import {
-  CalendarioLetivoFindOneOutput,
-  CalendarioLetivoInputRef,
+  CalendarioLetivoFindOneOutputDto,
+  CalendarioLetivoInputRefDto,
 } from "@/modules/calendario-letivo";
 
 // ============================================================================
 // FindOne Input/Output
 // ============================================================================
 
-export class DiaCalendarioFindOneInput extends FindOneInput {}
+export class DiaCalendarioFindOneInputDto extends FindOneInputDto {}
 
-export class DiaCalendarioFindOneOutput extends EntityOutput {
+export class DiaCalendarioFindOneOutputDto extends EntityOutputDto {
   data!: ScalarDate;
   diaLetivo!: boolean;
   feriado!: string;
   diaPresencial!: boolean;
   tipo!: string;
   extraCurricular!: boolean;
-  calendario!: CalendarioLetivoFindOneOutput;
+  calendario!: CalendarioLetivoFindOneOutputDto;
 }
 
 // ============================================================================
 // List Input/Output
 // ============================================================================
 
-export class DiaCalendarioListInput extends PaginationInput {
+export class DiaCalendarioListInputDto extends PaginationInputDto {
   "filter.id"?: IFilterAcceptableValues;
   "filter.calendario.id"?: IFilterAcceptableValues;
 }
 
-export class DiaCalendarioListOutput extends PaginationResult<DiaCalendarioFindOneOutput> {}
+export class DiaCalendarioListOutputDto extends PaginationResultDto<DiaCalendarioFindOneOutputDto> {}
 
 // ============================================================================
 // Create/Update Input
 // ============================================================================
 
-export class DiaCalendarioCreateInput {
+export class DiaCalendarioCreateInputDto {
   data!: ScalarDate;
   diaLetivo!: boolean;
   feriado!: string;
   diaPresencial!: boolean;
   tipo!: string;
   extraCurricular!: boolean;
-  calendario!: CalendarioLetivoInputRef;
+  calendario!: CalendarioLetivoInputRefDto;
 }
 
-export class DiaCalendarioUpdateInput {
+export class DiaCalendarioUpdateInputDto {
   data?: ScalarDate;
   diaLetivo?: boolean;
   feriado?: string;
   diaPresencial?: boolean;
   tipo?: string;
   extraCurricular?: boolean;
-  calendario?: CalendarioLetivoInputRef;
+  calendario?: CalendarioLetivoInputRefDto;
 }
 
 // ============================================================================
 // Input Ref
 // ============================================================================
 
-export type DiaCalendarioInputRef = ObjectUuidRef;
+export type DiaCalendarioInputRefDto = ObjectUuidRefDto;

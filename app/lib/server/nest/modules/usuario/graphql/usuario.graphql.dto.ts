@@ -1,42 +1,72 @@
-import { ArgsType, Field, ID, ObjectType } from "@nestjs/graphql";
-import { IsArray, IsOptional, IsString } from "class-validator";
-import { PaginationGraphqlArgsDto } from "@/modules/@shared/infrastructure/graphql";
-import { PaginationMetaDto } from "@/modules/@shared/infrastructure/presentation/rest/dtos";
-import { UsuarioFindOneOutputDto } from "../rest/usuario.rest.dto";
+import { ArgsType, Field, InputType, ObjectType } from "@nestjs/graphql";
+import { IsArray, IsOptional, IsString, IsUUID, MinLength } from "class-validator";
+import {
+  EntityBaseGraphQlDto,
+  PaginationMetaGraphQlDto,
+} from "@/modules/@shared/infrastructure/graphql/dtos";
+import { PaginationArgsGraphQlDto } from "@/modules/@shared/infrastructure/graphql/dtos/pagination-graphql.dto";
+import { ImagemFindOneOutputGraphQlDto } from "@/server/nest/modules/imagem-arquivo/graphql/imagem-arquivo.graphql.dto";
 
 // ============================================================================
-// List Input (GraphQL-compatible - no dots in field names)
+// FindOne Output
+// ============================================================================
+
+@ObjectType("UsuarioFindOneOutputDto")
+export class UsuarioFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
+  @Field(() => String, { nullable: true }) nome: string | null;
+  @Field(() => String, { nullable: true }) matriculaSiape: string | null;
+  @Field(() => String, { nullable: true }) email: string | null;
+  @Field() isSuperUser: boolean;
+  @Field(() => ImagemFindOneOutputGraphQlDto, { nullable: true })
+  imagemCapa: ImagemFindOneOutputGraphQlDto | null;
+  @Field(() => ImagemFindOneOutputGraphQlDto, { nullable: true })
+  imagemPerfil: ImagemFindOneOutputGraphQlDto | null;
+}
+
+// ============================================================================
+// Create Input
+// ============================================================================
+
+@InputType("UsuarioCreateInputDto")
+export class UsuarioCreateInputGraphQlDto {
+  @Field({ nullable: true }) @IsOptional() @IsString() @MinLength(1) nome?: string | null;
+  @Field({ nullable: true }) @IsOptional() @IsString() matriculaSiape?: string | null;
+  @Field({ nullable: true }) @IsOptional() @IsString() email?: string | null;
+}
+
+// ============================================================================
+// Update Input
+// ============================================================================
+
+@InputType("UsuarioUpdateInputDto")
+export class UsuarioUpdateInputGraphQlDto {
+  @Field({ nullable: true }) @IsOptional() @IsString() @MinLength(1) nome?: string | null;
+  @Field({ nullable: true }) @IsOptional() @IsString() matriculaSiape?: string | null;
+  @Field({ nullable: true }) @IsOptional() @IsString() email?: string | null;
+}
+
+// ============================================================================
+// List Input
 // ============================================================================
 
 @ArgsType()
-export class UsuarioListInputGqlDto extends PaginationGraphqlArgsDto {
+export class UsuarioListInputGraphQlDto extends PaginationArgsGraphQlDto {
   @Field(() => [String], { nullable: true, description: "Filtro por ID" })
   @IsOptional()
   @IsArray()
-  @IsString({ each: true })
+  @IsUUID(undefined, { each: true })
   filterId?: string[];
 }
 
 // ============================================================================
-// List Output (reuses the same output DTOs - they're already GraphQL-compatible)
+// List Output
 // ============================================================================
 
 @ObjectType("UsuarioListResult")
-export class UsuarioListOutputGqlDto {
-  @Field(() => PaginationMetaDto)
-  meta: PaginationMetaDto;
+export class UsuarioListOutputGraphQlDto {
+  @Field(() => PaginationMetaGraphQlDto)
+  meta: PaginationMetaGraphQlDto;
 
-  @Field(() => [UsuarioFindOneOutputDto])
-  data: UsuarioFindOneOutputDto[];
-}
-
-// ============================================================================
-// Input DTOs for mutations
-// ============================================================================
-
-@ArgsType()
-export class UsuarioFindOneInputGqlDto {
-  @Field(() => ID, { description: "Identificador do registro (uuid)" })
-  @IsString()
-  id: string;
+  @Field(() => [UsuarioFindOneOutputGraphQlDto])
+  data: UsuarioFindOneOutputGraphQlDto[];
 }

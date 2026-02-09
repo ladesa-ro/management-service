@@ -4,26 +4,24 @@ import { AccessContext, AccessContextGraphQL } from "@/modules/@core/access-cont
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
 import { TurmaDisponibilidadeService } from "@/modules/turma-disponibilidade";
 import {
-  TurmaDisponibilidadeCreateInputDto,
-  TurmaDisponibilidadeFindOneOutputDto,
-  TurmaDisponibilidadeUpdateInputDto,
-} from "../rest/turma-disponibilidade.rest.dto";
-import {
-  TurmaDisponibilidadeListInputGqlDto,
-  TurmaDisponibilidadeListOutputGqlDto,
+  TurmaDisponibilidadeCreateInputGraphQlDto,
+  TurmaDisponibilidadeFindOneOutputGraphQlDto,
+  TurmaDisponibilidadeListInputGraphQlDto,
+  TurmaDisponibilidadeListOutputGraphQlDto,
+  TurmaDisponibilidadeUpdateInputGraphQlDto,
 } from "./turma-disponibilidade.graphql.dto";
 import { TurmaDisponibilidadeGraphqlMapper } from "./turma-disponibilidade.graphql.mapper";
 
-@Resolver(() => TurmaDisponibilidadeFindOneOutputDto)
+@Resolver(() => TurmaDisponibilidadeFindOneOutputGraphQlDto)
 export class TurmaDisponibilidadeGraphqlResolver {
   constructor(private readonly turmaDisponibilidadeService: TurmaDisponibilidadeService) {}
 
-  @Query(() => TurmaDisponibilidadeListOutputGqlDto, { name: "turmaDisponibilidadeFindAll" })
+  @Query(() => TurmaDisponibilidadeListOutputGraphQlDto, { name: "turmaDisponibilidadeFindAll" })
   async findAll(
     @AccessContextGraphQL() accessContext: AccessContext,
-    @Args() dto: TurmaDisponibilidadeListInputGqlDto,
+    @Args() dto: TurmaDisponibilidadeListInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<TurmaDisponibilidadeListOutputGqlDto> {
+  ): Promise<TurmaDisponibilidadeListOutputGraphQlDto> {
     const input = TurmaDisponibilidadeGraphqlMapper.toListInput(dto);
 
     if (input) {
@@ -34,12 +32,14 @@ export class TurmaDisponibilidadeGraphqlResolver {
     return TurmaDisponibilidadeGraphqlMapper.toListOutputDto(result);
   }
 
-  @Query(() => TurmaDisponibilidadeFindOneOutputDto, { name: "turmaDisponibilidadeFindById" })
+  @Query(() => TurmaDisponibilidadeFindOneOutputGraphQlDto, {
+    name: "turmaDisponibilidadeFindById",
+  })
   async findById(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<TurmaDisponibilidadeFindOneOutputDto> {
+  ): Promise<TurmaDisponibilidadeFindOneOutputGraphQlDto> {
     const selection = graphqlExtractSelection(info);
     const result = await this.turmaDisponibilidadeService.findByIdStrict(accessContext, {
       id,
@@ -48,24 +48,28 @@ export class TurmaDisponibilidadeGraphqlResolver {
     return TurmaDisponibilidadeGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => TurmaDisponibilidadeFindOneOutputDto, { name: "turmaDisponibilidadeCreate" })
+  @Mutation(() => TurmaDisponibilidadeFindOneOutputGraphQlDto, {
+    name: "turmaDisponibilidadeCreate",
+  })
   async create(
     @AccessContextGraphQL() accessContext: AccessContext,
-    @Args("data") dto: TurmaDisponibilidadeCreateInputDto,
+    @Args("data") dto: TurmaDisponibilidadeCreateInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<TurmaDisponibilidadeFindOneOutputDto> {
+  ): Promise<TurmaDisponibilidadeFindOneOutputGraphQlDto> {
     const input = TurmaDisponibilidadeGraphqlMapper.toCreateInput(dto);
     const result = await this.turmaDisponibilidadeService.create(accessContext, input as any);
     return TurmaDisponibilidadeGraphqlMapper.toFindOneOutputDto(result);
   }
 
-  @Mutation(() => TurmaDisponibilidadeFindOneOutputDto, { name: "turmaDisponibilidadeUpdate" })
+  @Mutation(() => TurmaDisponibilidadeFindOneOutputGraphQlDto, {
+    name: "turmaDisponibilidadeUpdate",
+  })
   async update(
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
-    @Args("data") dto: TurmaDisponibilidadeUpdateInputDto,
+    @Args("data") dto: TurmaDisponibilidadeUpdateInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
-  ): Promise<TurmaDisponibilidadeFindOneOutputDto> {
+  ): Promise<TurmaDisponibilidadeFindOneOutputGraphQlDto> {
     const input = TurmaDisponibilidadeGraphqlMapper.toUpdateInput(id, dto);
     const result = await this.turmaDisponibilidadeService.update(accessContext, input as any);
     return TurmaDisponibilidadeGraphqlMapper.toFindOneOutputDto(result);

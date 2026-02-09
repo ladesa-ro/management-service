@@ -8,11 +8,11 @@ import {
   paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
-  EnderecoFindOneInput,
-  EnderecoFindOneOutput,
+  EnderecoFindOneInputDto,
+  EnderecoFindOneOutputDto,
   EnderecoInputDto,
-  EnderecoListInput,
-  EnderecoListOutput,
+  EnderecoListInputDto,
+  EnderecoListOutputDto,
   IEnderecoRepositoryPort,
 } from "@/modules/endereco";
 import type { EnderecoEntity } from "@/modules/endereco/infrastructure/persistence/typeorm";
@@ -21,16 +21,16 @@ import type { EnderecoEntity } from "@/modules/endereco/infrastructure/persisten
 export class EnderecoTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     EnderecoEntity,
-    EnderecoListInput,
-    EnderecoListOutput,
-    EnderecoFindOneInput,
-    EnderecoFindOneOutput
+    EnderecoListInputDto,
+    EnderecoListOutputDto,
+    EnderecoFindOneInputDto,
+    EnderecoFindOneOutputDto
   >
   implements IEnderecoRepositoryPort
 {
   protected readonly alias = "endereco";
   protected readonly authzAction = "endereco:find";
-  protected readonly outputDtoName = "EnderecoFindOneOutput";
+  protected readonly outputDtoName = "EnderecoFindOneOutputDto";
 
   constructor(
     protected readonly databaseContext: DatabaseContextService,
@@ -44,13 +44,13 @@ export class EnderecoTypeOrmRepositoryAdapter
   }
 
   // Custom method for internal lookup
-  async findOneById(id: string): Promise<EnderecoFindOneOutput | null> {
+  async findOneById(id: string): Promise<EnderecoFindOneOutputDto | null> {
     const endereco = await this.repository.findOne({
       where: { id },
       relations: ["cidade", "cidade.estado"],
     });
 
-    return endereco as EnderecoFindOneOutput | null;
+    return endereco as EnderecoFindOneOutputDto | null;
   }
 
   async exists(id: string): Promise<boolean> {

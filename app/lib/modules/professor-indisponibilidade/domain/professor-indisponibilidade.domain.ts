@@ -26,6 +26,22 @@ export class ProfessorIndisponibilidade extends BaseEntity implements IProfessor
   }
 
   // ========================================
+  // Validação
+  // ========================================
+
+  validar(): void {
+    const { result, rules } = ProfessorIndisponibilidade.createValidation();
+    rules.requiredNumber(this.diaDaSemana, "diaDaSemana");
+    rules.range(this.diaDaSemana, "diaDaSemana", 0, 6);
+    rules.required(this.horaInicio, "horaInicio");
+    rules.timeFormat(this.horaInicio, "horaInicio");
+    rules.required(this.horaFim, "horaFim");
+    rules.timeFormat(this.horaFim, "horaFim");
+    rules.required(this.motivo, "motivo");
+    ProfessorIndisponibilidade.throwIfInvalid(result);
+  }
+
+  // ========================================
   // Factory Methods
   // ========================================
 
@@ -34,25 +50,14 @@ export class ProfessorIndisponibilidade extends BaseEntity implements IProfessor
    * @throws EntityValidationError se os dados forem inválidos
    */
   static criar(dados: IProfessorIndisponibilidadeCreate): ProfessorIndisponibilidade {
-    const { result, rules } = this.createValidation();
-
     const instance = new ProfessorIndisponibilidade();
-    instance.diaDaSemana = rules.requiredNumber(dados.diaDaSemana, "diaDaSemana");
-    instance.diaDaSemana = rules.range(instance.diaDaSemana, "diaDaSemana", 0, 6);
+    instance.diaDaSemana = dados.diaDaSemana;
+    instance.horaInicio = dados.horaInicio;
+    instance.horaFim = dados.horaFim;
+    instance.motivo = dados.motivo;
 
-    instance.horaInicio = rules.required(dados.horaInicio, "horaInicio");
-    instance.horaInicio = rules.timeFormat(instance.horaInicio, "horaInicio");
-
-    instance.horaFim = rules.required(dados.horaFim, "horaFim");
-    instance.horaFim = rules.timeFormat(instance.horaFim, "horaFim");
-
-    instance.motivo = rules.required(dados.motivo, "motivo");
-
-    this.throwIfInvalid(result);
-
-    instance.dateCreated = new Date().toISOString();
-    instance.dateUpdated = new Date().toISOString();
-    instance.dateDeleted = null;
+    instance.initDates();
+    instance.validar();
 
     return instance;
   }
@@ -75,29 +80,23 @@ export class ProfessorIndisponibilidade extends BaseEntity implements IProfessor
    * @throws EntityValidationError se os dados forem inválidos
    */
   atualizar(dados: IProfessorIndisponibilidadeUpdate): void {
-    const { result, rules } = ProfessorIndisponibilidade.createValidation();
-
     if (dados.diaDaSemana !== undefined) {
-      this.diaDaSemana = rules.requiredNumber(dados.diaDaSemana, "diaDaSemana");
-      this.diaDaSemana = rules.range(this.diaDaSemana, "diaDaSemana", 0, 6);
+      this.diaDaSemana = dados.diaDaSemana;
     }
 
     if (dados.horaInicio !== undefined) {
-      this.horaInicio = rules.required(dados.horaInicio, "horaInicio");
-      this.horaInicio = rules.timeFormat(this.horaInicio, "horaInicio");
+      this.horaInicio = dados.horaInicio;
     }
 
     if (dados.horaFim !== undefined) {
-      this.horaFim = rules.required(dados.horaFim, "horaFim");
-      this.horaFim = rules.timeFormat(this.horaFim, "horaFim");
+      this.horaFim = dados.horaFim;
     }
 
     if (dados.motivo !== undefined) {
-      this.motivo = rules.required(dados.motivo, "motivo");
+      this.motivo = dados.motivo;
     }
 
-    ProfessorIndisponibilidade.throwIfInvalid(result);
-
-    this.dateUpdated = new Date().toISOString();
+    this.touchUpdated();
+    this.validar();
   }
 }

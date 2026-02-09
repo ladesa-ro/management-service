@@ -1,56 +1,56 @@
 import type { AccessContext } from "@/modules/@core/access-context";
 import type {
-  HorarioGeradoAulaCreateInput,
-  HorarioGeradoAulaFindOneInput,
-  HorarioGeradoAulaFindOneOutput,
-  HorarioGeradoAulaListInput,
-  HorarioGeradoAulaListOutput,
-  HorarioGeradoAulaUpdateInput,
+  HorarioGeradoAulaCreateInputDto,
+  HorarioGeradoAulaFindOneInputDto,
+  HorarioGeradoAulaFindOneOutputDto,
+  HorarioGeradoAulaListInputDto,
+  HorarioGeradoAulaListOutputDto,
+  HorarioGeradoAulaUpdateInputDto,
 } from "../../dtos";
 
 export interface IHorarioGeradoAulaUseCasePort {
   horarioGeradoAulaFindAll(
     accessContext: AccessContext,
-    dto: HorarioGeradoAulaListInput | null,
+    dto: HorarioGeradoAulaListInputDto | null,
     selection?: string[] | boolean,
-  ): Promise<HorarioGeradoAulaListOutput>;
+  ): Promise<HorarioGeradoAulaListOutputDto>;
 
   horarioGeradoAulaFindById(
     accessContext: AccessContext,
-    dto: HorarioGeradoAulaFindOneInput,
+    dto: HorarioGeradoAulaFindOneInputDto,
     selection?: string[] | boolean,
-  ): Promise<HorarioGeradoAulaFindOneOutput | null>;
+  ): Promise<HorarioGeradoAulaFindOneOutputDto | null>;
 
   horarioGeradoAulaFindByIdStrict(
     accessContext: AccessContext,
-    dto: HorarioGeradoAulaFindOneInput,
+    dto: HorarioGeradoAulaFindOneInputDto,
     selection?: string[] | boolean,
-  ): Promise<HorarioGeradoAulaFindOneOutput>;
+  ): Promise<HorarioGeradoAulaFindOneOutputDto>;
 
   horarioGeradoAulaFindByIdSimple(
     accessContext: AccessContext,
     id: string,
     selection?: string[],
-  ): Promise<HorarioGeradoAulaFindOneOutput | null>;
+  ): Promise<HorarioGeradoAulaFindOneOutputDto | null>;
 
   horarioGeradoAulaFindByIdSimpleStrict(
     accessContext: AccessContext,
     id: string,
     selection?: string[],
-  ): Promise<HorarioGeradoAulaFindOneOutput>;
+  ): Promise<HorarioGeradoAulaFindOneOutputDto>;
 
   horarioGeradoAulaCreate(
     accessContext: AccessContext,
-    dto: HorarioGeradoAulaCreateInput,
-  ): Promise<HorarioGeradoAulaFindOneOutput>;
+    dto: HorarioGeradoAulaCreateInputDto,
+  ): Promise<HorarioGeradoAulaFindOneOutputDto>;
 
   HorarioGeradoAulaUpdate(
     accessContext: AccessContext,
-    dto: HorarioGeradoAulaFindOneInput & HorarioGeradoAulaUpdateInput,
-  ): Promise<HorarioGeradoAulaFindOneOutput>;
+    dto: HorarioGeradoAulaFindOneInputDto & HorarioGeradoAulaUpdateInputDto,
+  ): Promise<HorarioGeradoAulaFindOneOutputDto>;
 
   horarioGeradoAulaDeleteOneById(
     accessContext: AccessContext,
-    dto: HorarioGeradoAulaFindOneInput,
+    dto: HorarioGeradoAulaFindOneInputDto,
   ): Promise<boolean>;
 }

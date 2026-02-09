@@ -10,12 +10,12 @@ import {
 import { AccessContext, AccessContextHttp } from "@/modules/@core/access-context";
 import { CalendarioLetivoService } from "@/modules/calendario-letivo";
 import {
-  CalendarioLetivoCreateInputDto,
-  CalendarioLetivoFindOneInputDto,
-  CalendarioLetivoFindOneOutputDto,
-  CalendarioLetivoListInputDto,
-  CalendarioLetivoListOutputDto,
-  CalendarioLetivoUpdateInputDto,
+  CalendarioLetivoCreateInputRestDto,
+  CalendarioLetivoFindOneInputRestDto,
+  CalendarioLetivoFindOneOutputRestDto,
+  CalendarioLetivoListInputRestDto,
+  CalendarioLetivoListOutputRestDto,
+  CalendarioLetivoUpdateInputRestDto,
 } from "./calendario-letivo.rest.dto";
 import { CalendarioLetivoRestMapper } from "./calendario-letivo.rest.mapper";
 
@@ -26,12 +26,12 @@ export class CalendarioLetivoRestController {
 
   @Get("/")
   @ApiOperation({ summary: "Lista calendarios letivos", operationId: "calendarioLetivoFindAll" })
-  @ApiOkResponse({ type: CalendarioLetivoListOutputDto })
+  @ApiOkResponse({ type: CalendarioLetivoListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
     @AccessContextHttp() accessContext: AccessContext,
-    @Query() dto: CalendarioLetivoListInputDto,
-  ): Promise<CalendarioLetivoListOutputDto> {
+    @Query() dto: CalendarioLetivoListInputRestDto,
+  ): Promise<CalendarioLetivoListOutputRestDto> {
     const input = CalendarioLetivoRestMapper.toListInput(dto);
     const result = await this.calendarioLetivoService.findAll(accessContext, input);
     return CalendarioLetivoRestMapper.toListOutputDto(result);
@@ -42,13 +42,13 @@ export class CalendarioLetivoRestController {
     summary: "Busca um calendario letivo por ID",
     operationId: "calendarioLetivoFindById",
   })
-  @ApiOkResponse({ type: CalendarioLetivoFindOneOutputDto })
+  @ApiOkResponse({ type: CalendarioLetivoFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async findById(
     @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: CalendarioLetivoFindOneInputDto,
-  ): Promise<CalendarioLetivoFindOneOutputDto> {
+    @Param() params: CalendarioLetivoFindOneInputRestDto,
+  ): Promise<CalendarioLetivoFindOneOutputRestDto> {
     const input = CalendarioLetivoRestMapper.toFindOneInput(params);
     const result = await this.calendarioLetivoService.findByIdStrict(accessContext, input);
     return CalendarioLetivoRestMapper.toFindOneOutputDto(result);
@@ -56,12 +56,12 @@ export class CalendarioLetivoRestController {
 
   @Post("/")
   @ApiOperation({ summary: "Cria um calendario letivo", operationId: "calendarioLetivoCreate" })
-  @ApiCreatedResponse({ type: CalendarioLetivoFindOneOutputDto })
+  @ApiCreatedResponse({ type: CalendarioLetivoFindOneOutputRestDto })
   @ApiForbiddenResponse()
   async create(
     @AccessContextHttp() accessContext: AccessContext,
-    @Body() dto: CalendarioLetivoCreateInputDto,
-  ): Promise<CalendarioLetivoFindOneOutputDto> {
+    @Body() dto: CalendarioLetivoCreateInputRestDto,
+  ): Promise<CalendarioLetivoFindOneOutputRestDto> {
     const input = CalendarioLetivoRestMapper.toCreateInput(dto);
     const result = await this.calendarioLetivoService.create(accessContext, input);
     return CalendarioLetivoRestMapper.toFindOneOutputDto(result);
@@ -69,14 +69,14 @@ export class CalendarioLetivoRestController {
 
   @Patch("/:id")
   @ApiOperation({ summary: "Atualiza um calendario letivo", operationId: "calendarioLetivoUpdate" })
-  @ApiOkResponse({ type: CalendarioLetivoFindOneOutputDto })
+  @ApiOkResponse({ type: CalendarioLetivoFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async update(
     @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: CalendarioLetivoFindOneInputDto,
-    @Body() dto: CalendarioLetivoUpdateInputDto,
-  ): Promise<CalendarioLetivoFindOneOutputDto> {
+    @Param() params: CalendarioLetivoFindOneInputRestDto,
+    @Body() dto: CalendarioLetivoUpdateInputRestDto,
+  ): Promise<CalendarioLetivoFindOneOutputRestDto> {
     const input = CalendarioLetivoRestMapper.toUpdateInput(params, dto);
     const result = await this.calendarioLetivoService.update(accessContext, input);
     return CalendarioLetivoRestMapper.toFindOneOutputDto(result);
@@ -92,7 +92,7 @@ export class CalendarioLetivoRestController {
   @ApiNotFoundResponse()
   async deleteOneById(
     @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: CalendarioLetivoFindOneInputDto,
+    @Param() params: CalendarioLetivoFindOneInputRestDto,
   ): Promise<boolean> {
     const input = CalendarioLetivoRestMapper.toFindOneInput(params);
     return this.calendarioLetivoService.deleteOneById(accessContext, input);

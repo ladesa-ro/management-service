@@ -1,10 +1,10 @@
 import type {
-  HorarioGeradoAulaCreateInput,
-  HorarioGeradoAulaFindOneInput,
-  HorarioGeradoAulaFindOneOutput,
-  HorarioGeradoAulaListInput,
-  HorarioGeradoAulaListOutput,
-  HorarioGeradoAulaUpdateInput,
+  HorarioGeradoAulaCreateInputDto,
+  HorarioGeradoAulaFindOneInputDto,
+  HorarioGeradoAulaFindOneOutputDto,
+  HorarioGeradoAulaListInputDto,
+  HorarioGeradoAulaListOutputDto,
+  HorarioGeradoAulaUpdateInputDto,
 } from "@/modules/horario-gerado-aula";
 import type {
   HorarioGeradoAulaCreateInputRestDto,
@@ -18,31 +18,37 @@ import type {
 export class HorarioGeradoAulaRestMapper {
   static toCoreFindOneInput(
     dto: HorarioGeradoAulaFindOneInputRestDto,
-  ): HorarioGeradoAulaFindOneInput {
+  ): HorarioGeradoAulaFindOneInputDto {
     return {
       id: dto.id,
     };
   }
 
   static toRestFindOneOutput(
-    output: HorarioGeradoAulaFindOneOutput,
+    output: HorarioGeradoAulaFindOneOutputDto,
   ): HorarioGeradoAulaFindOneOutputRestDto {
     return output as unknown as HorarioGeradoAulaFindOneOutputRestDto;
   }
 
-  static toCoreListInput(dto: HorarioGeradoAulaListInputRestDto): HorarioGeradoAulaListInput {
-    return dto as HorarioGeradoAulaListInput;
+  static toCoreListInput(dto: HorarioGeradoAulaListInputRestDto): HorarioGeradoAulaListInputDto {
+    return dto as HorarioGeradoAulaListInputDto;
   }
 
-  static toRestListOutput(output: HorarioGeradoAulaListOutput): HorarioGeradoAulaListOutputRestDto {
+  static toRestListOutput(
+    output: HorarioGeradoAulaListOutputDto,
+  ): HorarioGeradoAulaListOutputRestDto {
     return output as unknown as HorarioGeradoAulaListOutputRestDto;
   }
 
-  static toCoreCreateInput(dto: HorarioGeradoAulaCreateInputRestDto): HorarioGeradoAulaCreateInput {
-    return dto as unknown as HorarioGeradoAulaCreateInput;
+  static toCoreCreateInput(
+    dto: HorarioGeradoAulaCreateInputRestDto,
+  ): HorarioGeradoAulaCreateInputDto {
+    return dto as unknown as HorarioGeradoAulaCreateInputDto;
   }
 
-  static toCoreUpdateInput(dto: HorarioGeradoAulaUpdateInputRestDto): HorarioGeradoAulaUpdateInput {
-    return dto as unknown as HorarioGeradoAulaUpdateInput;
+  static toCoreUpdateInput(
+    dto: HorarioGeradoAulaUpdateInputRestDto,
+  ): HorarioGeradoAulaUpdateInputDto {
+    return dto as unknown as HorarioGeradoAulaUpdateInputDto;
   }
 }

@@ -7,7 +7,7 @@ import type {
   CursoListInputDto,
   CursoListOutputDto,
   CursoUpdateInputDto,
-} from "@/server/nest/modules/curso/rest";
+} from "../../dtos";
 
 /**
  * Port de entrada para casos de uso de Curso

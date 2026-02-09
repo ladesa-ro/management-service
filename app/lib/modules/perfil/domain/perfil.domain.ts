@@ -22,6 +22,17 @@ export class Perfil extends BaseEntity implements IPerfil {
   }
 
   // ========================================
+  // Validação
+  // ========================================
+
+  validar(): void {
+    const { result, rules } = Perfil.createValidation();
+    rules.required(this.cargo, "cargo");
+    rules.minLength(this.cargo, "cargo", 1);
+    Perfil.throwIfInvalid(result);
+  }
+
+  // ========================================
   // Factory Methods
   // ========================================
 
@@ -30,18 +41,12 @@ export class Perfil extends BaseEntity implements IPerfil {
    * @throws EntityValidationError se os dados forem inválidos
    */
   static criar(dados: IPerfilCreate): Perfil {
-    const { result, rules } = this.createValidation();
-
     const instance = new Perfil();
-    instance.cargo = rules.required(dados.cargo, "cargo");
-    instance.cargo = rules.minLength(instance.cargo, "cargo", 1);
-
-    this.throwIfInvalid(result);
-
+    instance.cargo = dados.cargo;
     instance.ativo = true;
-    instance.dateCreated = new Date().toISOString();
-    instance.dateUpdated = new Date().toISOString();
-    instance.dateDeleted = null;
+
+    instance.initDates();
+    instance.validar();
 
     return instance;
   }
@@ -92,7 +97,7 @@ export class Perfil extends BaseEntity implements IPerfil {
    */
   ativar(): void {
     this.ativo = true;
-    this.dateUpdated = new Date().toISOString();
+    this.touchUpdated();
   }
 
   /**
@@ -100,7 +105,7 @@ export class Perfil extends BaseEntity implements IPerfil {
    */
   desativar(): void {
     this.ativo = false;
-    this.dateUpdated = new Date().toISOString();
+    this.touchUpdated();
   }
 
   // ========================================
@@ -112,15 +117,11 @@ export class Perfil extends BaseEntity implements IPerfil {
    * @throws EntityValidationError se os dados forem inválidos
    */
   atualizar(dados: IPerfilUpdate): void {
-    const { result, rules } = Perfil.createValidation();
-
     if (dados.cargo !== undefined) {
-      this.cargo = rules.required(dados.cargo, "cargo");
-      this.cargo = rules.minLength(this.cargo, "cargo", 1);
+      this.cargo = dados.cargo;
     }
 
-    Perfil.throwIfInvalid(result);
-
-    this.dateUpdated = new Date().toISOString();
+    this.touchUpdated();
+    this.validar();
   }
 }

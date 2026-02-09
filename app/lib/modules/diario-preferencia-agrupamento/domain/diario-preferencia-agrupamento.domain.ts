@@ -36,6 +36,21 @@ export class DiarioPreferenciaAgrupamento
   }
 
   // ========================================
+  // Validação
+  // ========================================
+
+  validar(): void {
+    const { result, rules } = DiarioPreferenciaAgrupamento.createValidation();
+    rules.required(this.dataInicio, "dataInicio");
+    rules.dateFormat(this.dataInicio, "dataInicio");
+    rules.requiredNumber(this.diaSemanaIso, "diaSemanaIso");
+    rules.range(this.diaSemanaIso, "diaSemanaIso", 1, 7);
+    rules.requiredNumber(this.aulasSeguidas, "aulasSeguidas");
+    rules.min(this.aulasSeguidas, "aulasSeguidas", 1);
+    DiarioPreferenciaAgrupamento.throwIfInvalid(result);
+  }
+
+  // ========================================
   // Factory Methods
   // ========================================
 
@@ -44,24 +59,13 @@ export class DiarioPreferenciaAgrupamento
    * @throws EntityValidationError se os dados forem inválidos
    */
   static criar(dados: IDiarioPreferenciaAgrupamentoCreate): DiarioPreferenciaAgrupamento {
-    const { result, rules } = this.createValidation();
-
     const instance = new DiarioPreferenciaAgrupamento();
-    instance.dataInicio = rules.required(dados.dataInicio, "dataInicio");
-    instance.dataInicio = rules.dateFormat(instance.dataInicio, "dataInicio");
-
-    instance.diaSemanaIso = rules.requiredNumber(dados.diaSemanaIso, "diaSemanaIso");
-    instance.diaSemanaIso = rules.range(instance.diaSemanaIso, "diaSemanaIso", 1, 7);
-
-    instance.aulasSeguidas = rules.requiredNumber(dados.aulasSeguidas, "aulasSeguidas");
-    instance.aulasSeguidas = rules.min(instance.aulasSeguidas, "aulasSeguidas", 1);
-
-    this.throwIfInvalid(result);
-
+    instance.dataInicio = dados.dataInicio;
+    instance.diaSemanaIso = dados.diaSemanaIso;
+    instance.aulasSeguidas = dados.aulasSeguidas;
     instance.dataFim = dados.dataFim ?? null;
-    instance.dateCreated = new Date().toISOString();
-    instance.dateUpdated = new Date().toISOString();
-    instance.dateDeleted = null;
+    instance.initDates();
+    instance.validar();
 
     return instance;
   }
@@ -84,11 +88,8 @@ export class DiarioPreferenciaAgrupamento
    * @throws EntityValidationError se os dados forem inválidos
    */
   atualizar(dados: IDiarioPreferenciaAgrupamentoUpdate): void {
-    const { result, rules } = DiarioPreferenciaAgrupamento.createValidation();
-
     if (dados.dataInicio !== undefined) {
-      this.dataInicio = rules.required(dados.dataInicio, "dataInicio");
-      this.dataInicio = rules.dateFormat(this.dataInicio, "dataInicio");
+      this.dataInicio = dados.dataInicio;
     }
 
     if (dados.dataFim !== undefined) {
@@ -96,17 +97,14 @@ export class DiarioPreferenciaAgrupamento
     }
 
     if (dados.diaSemanaIso !== undefined) {
-      this.diaSemanaIso = rules.requiredNumber(dados.diaSemanaIso, "diaSemanaIso");
-      this.diaSemanaIso = rules.range(this.diaSemanaIso, "diaSemanaIso", 1, 7);
+      this.diaSemanaIso = dados.diaSemanaIso;
     }
 
     if (dados.aulasSeguidas !== undefined) {
-      this.aulasSeguidas = rules.requiredNumber(dados.aulasSeguidas, "aulasSeguidas");
-      this.aulasSeguidas = rules.min(this.aulasSeguidas, "aulasSeguidas", 1);
+      this.aulasSeguidas = dados.aulasSeguidas;
     }
 
-    DiarioPreferenciaAgrupamento.throwIfInvalid(result);
-
-    this.dateUpdated = new Date().toISOString();
+    this.touchUpdated();
+    this.validar();
   }
 }

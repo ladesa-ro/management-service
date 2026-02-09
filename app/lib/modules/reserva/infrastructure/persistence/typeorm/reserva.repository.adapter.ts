@@ -8,10 +8,10 @@ import {
   paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
-  ReservaFindOneInput,
-  ReservaFindOneOutput,
-  ReservaListInput,
-  ReservaListOutput,
+  ReservaFindOneInputDto,
+  ReservaFindOneOutputDto,
+  ReservaListInputDto,
+  ReservaListOutputDto,
 } from "@/modules/reserva/application/dtos";
 import type { IReservaRepositoryPort } from "@/modules/reserva/application/ports";
 import type { ReservaEntity } from "./reserva.entity";
@@ -20,16 +20,16 @@ import type { ReservaEntity } from "./reserva.entity";
 export class ReservaTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     ReservaEntity,
-    ReservaListInput,
-    ReservaListOutput,
-    ReservaFindOneInput,
-    ReservaFindOneOutput
+    ReservaListInputDto,
+    ReservaListOutputDto,
+    ReservaFindOneInputDto,
+    ReservaFindOneOutputDto
   >
   implements IReservaRepositoryPort
 {
   protected readonly alias = "reserva";
   protected readonly authzAction = "reserva:find";
-  protected readonly outputDtoName = "ReservaFindOneOutput";
+  protected readonly outputDtoName = "ReservaFindOneOutputDto";
 
   constructor(
     protected readonly databaseContext: DatabaseContextService,

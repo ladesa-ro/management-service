@@ -9,13 +9,13 @@ import {
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import { ProfessorIndisponibilidadeEntity } from "@/modules/professor-indisponibilidade/infrastructure/persistence/typeorm";
 import type {
-  ProfessorIndisponibilidadeCreateInputDto,
-  ProfessorIndisponibilidadeFindOneInputDto,
-  ProfessorIndisponibilidadeFindOneOutputDto,
-  ProfessorIndisponibilidadeListInputDto,
-  ProfessorIndisponibilidadeListOutputDto,
-  ProfessorIndisponibilidadeRRuleOutputDto,
-  ProfessorIndisponibilidadeUpdateInputDto,
+  ProfessorIndisponibilidadeCreateInputRestDto,
+  ProfessorIndisponibilidadeFindOneInputRestDto,
+  ProfessorIndisponibilidadeFindOneOutputRestDto,
+  ProfessorIndisponibilidadeListInputRestDto,
+  ProfessorIndisponibilidadeListOutputRestDto,
+  ProfessorIndisponibilidadeRRuleOutputRestDto,
+  ProfessorIndisponibilidadeUpdateInputRestDto,
 } from "./rest/professor-indisponibilidade.rest.dto";
 
 // ============================================================================
@@ -39,9 +39,9 @@ export class ProfessorIndisponibilidadeLegacyService {
 
   async indisponibilidadeFindAll(
     accessContext: AccessContext,
-    dto: ProfessorIndisponibilidadeListInputDto | null = null,
+    dto: ProfessorIndisponibilidadeListInputRestDto | null = null,
     selection?: string[] | boolean,
-  ): Promise<ProfessorIndisponibilidadeListOutputDto> {
+  ): Promise<ProfessorIndisponibilidadeListOutputRestDto> {
     // =========================================================
 
     const qb = this.indisponibilidadeRepository
@@ -94,7 +94,7 @@ export class ProfessorIndisponibilidadeLegacyService {
 
     qb.select([]);
     QbEfficientLoad(
-      "ProfessorIndisponibilidadeFindOneOutput",
+      "ProfessorIndisponibilidadeFindOneOutputDto",
       qb,
       aliasIndisponibilidade,
       selection,
@@ -109,14 +109,14 @@ export class ProfessorIndisponibilidadeLegacyService {
 
     // =========================================================
 
-    return paginated as unknown as ProfessorIndisponibilidadeListOutputDto;
+    return paginated as unknown as ProfessorIndisponibilidadeListOutputRestDto;
   }
 
   async indisponibilidadeFindByIdSimple(
     accessContext: AccessContext,
     id: string,
     selection?: string[],
-  ): Promise<ProfessorIndisponibilidadeFindOneOutputDto> {
+  ): Promise<ProfessorIndisponibilidadeFindOneOutputRestDto> {
     // =========================================================
 
     const qb = this.indisponibilidadeRepository
@@ -138,7 +138,7 @@ export class ProfessorIndisponibilidadeLegacyService {
     // =========================================================
 
     QbEfficientLoad(
-      "ProfessorIndisponibilidadeFindOneOutput",
+      "ProfessorIndisponibilidadeFindOneOutputDto",
       qb,
       aliasIndisponibilidade,
       selection,
@@ -150,14 +150,14 @@ export class ProfessorIndisponibilidadeLegacyService {
 
     // =========================================================
 
-    return indisponibilidade as ProfessorIndisponibilidadeFindOneOutputDto;
+    return indisponibilidade as ProfessorIndisponibilidadeFindOneOutputRestDto;
   }
 
   async indisponibilidadeFindByIdSimpleStrict(
     accesContext: AccessContext,
     id: string,
     selection?: string[],
-  ): Promise<ProfessorIndisponibilidadeFindOneOutputDto> {
+  ): Promise<ProfessorIndisponibilidadeFindOneOutputRestDto> {
     const indisponibilidade = await this.indisponibilidadeFindByIdSimple(
       accesContext,
       id,
@@ -175,7 +175,7 @@ export class ProfessorIndisponibilidadeLegacyService {
   async ProfessorIndisponibilidadeListByPerfil(
     accessContext: AccessContext,
     idPerfil: string,
-  ): Promise<ProfessorIndisponibilidadeListOutputDto> {
+  ): Promise<ProfessorIndisponibilidadeListOutputRestDto> {
     const qb = this.indisponibilidadeRepository
       .createQueryBuilder(aliasIndisponibilidade)
       .leftJoinAndSelect(`${aliasIndisponibilidade}.perfil`, "perfil");
@@ -203,13 +203,13 @@ export class ProfessorIndisponibilidadeLegacyService {
         totalPages: 1,
         currentPage: 1,
       },
-    } as unknown as ProfessorIndisponibilidadeListOutputDto;
+    } as unknown as ProfessorIndisponibilidadeListOutputRestDto;
   }
 
   async createIndisponibilidade(
     accessContext: AccessContext,
-    dto: ProfessorIndisponibilidadeCreateInputDto,
-  ): Promise<ProfessorIndisponibilidadeFindOneOutputDto> {
+    dto: ProfessorIndisponibilidadeCreateInputRestDto,
+  ): Promise<ProfessorIndisponibilidadeFindOneOutputRestDto> {
     if (!dto.idPerfilFk) throw new BadRequestException("id_perfil is required");
 
     const indisponibilidade = this.indisponibilidadeRepository.create({
@@ -222,13 +222,13 @@ export class ProfessorIndisponibilidadeLegacyService {
 
     return this.indisponibilidadeRepository.save(
       indisponibilidade,
-    ) as Promise<ProfessorIndisponibilidadeFindOneOutputDto>;
+    ) as Promise<ProfessorIndisponibilidadeFindOneOutputRestDto>;
   }
 
   async indisponibilidadeDelete(
     accessContext: AccessContext,
     id: string,
-  ): Promise<ProfessorIndisponibilidadeFindOneOutputDto> {
+  ): Promise<ProfessorIndisponibilidadeFindOneOutputRestDto> {
     // =========================================================
 
     const indisponibilidade = await this.indisponibilidadeFindByIdSimpleStrict(accessContext, id);
@@ -246,13 +246,14 @@ export class ProfessorIndisponibilidadeLegacyService {
 
     return this.indisponibilidadeRepository.remove(
       indisponibilidade as any,
-    ) as unknown as Promise<ProfessorIndisponibilidadeFindOneOutputDto>;
+    ) as unknown as Promise<ProfessorIndisponibilidadeFindOneOutputRestDto>;
   }
 
   async indisponibilidadeUpdate(
     accessContext: AccessContext,
-    dto: ProfessorIndisponibilidadeFindOneInputDto & ProfessorIndisponibilidadeUpdateInputDto,
-  ): Promise<ProfessorIndisponibilidadeFindOneOutputDto> {
+    dto: ProfessorIndisponibilidadeFindOneInputRestDto &
+      ProfessorIndisponibilidadeUpdateInputRestDto,
+  ): Promise<ProfessorIndisponibilidadeFindOneOutputRestDto> {
     // =========================================================
 
     const currentIndisponibilidade = await this.indisponibilidadeFindByIdSimpleStrict(
@@ -284,14 +285,14 @@ export class ProfessorIndisponibilidadeLegacyService {
 
     return this.indisponibilidadeRepository.save(
       indisponibilidade,
-    ) as Promise<ProfessorIndisponibilidadeFindOneOutputDto>;
+    ) as Promise<ProfessorIndisponibilidadeFindOneOutputRestDto>;
     // =========================================================
   }
 
   async ProfessorIndisponibilidadeRRuleFindOneById(
     accessContext: AccessContext,
     id: string,
-  ): Promise<ProfessorIndisponibilidadeRRuleOutputDto> {
+  ): Promise<ProfessorIndisponibilidadeRRuleOutputRestDto> {
     // =========================================================
 
     const qb = this.indisponibilidadeRepository.createQueryBuilder(aliasIndisponibilidade);
@@ -319,6 +320,6 @@ export class ProfessorIndisponibilidadeLegacyService {
       rrule: `FREQ=WEEKLY;BYDAY=${["SU", "MO", "TU", "WE", "TH", "FR", "SA"][indisponibilidade.diaDaSemana]}`,
       data_hora_inicio: indisponibilidade.horaInicio ?? null,
       data_hora_fim: indisponibilidade.horaFim ?? null,
-    } as unknown as ProfessorIndisponibilidadeRRuleOutputDto;
+    } as unknown as ProfessorIndisponibilidadeRRuleOutputRestDto;
   }
 }

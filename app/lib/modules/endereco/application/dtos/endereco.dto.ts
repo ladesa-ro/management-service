@@ -1,45 +1,45 @@
 import {
-  EntityOutput,
-  FindOneInput,
+  EntityOutputDto,
+  FindOneInputDto,
   IFilterAcceptableValues,
-  ObjectUuidRef,
-  PaginationInput,
-  PaginationResult,
+  ObjectUuidRefDto,
+  PaginationInputDto,
+  PaginationResultDto,
 } from "@/modules/@shared";
-import { CidadeFindOneOutput, CidadeInputRef } from "@/modules/cidade";
+import { CidadeFindOneOutputDto, CidadeInputRefDto } from "@/modules/cidade";
 
 // ============================================================================
 // FindOne Input/Output
 // ============================================================================
 
-export class EnderecoFindOneInput extends FindOneInput {}
+export class EnderecoFindOneInputDto extends FindOneInputDto {}
 
-export class EnderecoFindOneOutput extends EntityOutput {
+export class EnderecoFindOneOutputDto extends EntityOutputDto {
   cep!: string;
   logradouro!: string;
   numero!: number;
   bairro!: string;
   complemento!: string | null;
   pontoReferencia!: string | null;
-  cidade!: CidadeFindOneOutput;
+  cidade!: CidadeFindOneOutputDto;
 }
 
 // ============================================================================
 // List Input/Output
 // ============================================================================
 
-export class EnderecoListInput extends PaginationInput {
+export class EnderecoListInputDto extends PaginationInputDto {
   "filter.id"?: IFilterAcceptableValues;
   "filter.cidade.id"?: IFilterAcceptableValues;
 }
 
-export class EnderecoListOutput extends PaginationResult<EnderecoFindOneOutput> {}
+export class EnderecoListOutputDto extends PaginationResultDto<EnderecoFindOneOutputDto> {}
 
 // ============================================================================
 // Create/Update Input
 // ============================================================================
 
-export class EnderecoCreateInput {
+export class EnderecoCreateInputDto {
   cep!: string;
 
   logradouro!: string;
@@ -52,10 +52,10 @@ export class EnderecoCreateInput {
 
   pontoReferencia?: string | null;
 
-  cidade!: CidadeInputRef;
+  cidade!: CidadeInputRefDto;
 }
 
-export class EnderecoUpdateInput {
+export class EnderecoUpdateInputDto {
   cep?: string;
 
   logradouro?: string;
@@ -68,7 +68,7 @@ export class EnderecoUpdateInput {
 
   pontoReferencia?: string | null;
 
-  cidade?: CidadeInputRef;
+  cidade?: CidadeInputRefDto;
 }
 
 // ============================================================================
@@ -88,11 +88,11 @@ export class EnderecoInputDto {
 
   pontoReferencia?: string | null;
 
-  cidade!: CidadeInputRef;
+  cidade!: CidadeInputRefDto;
 }
 
 // ============================================================================
 // Input Ref
 // ============================================================================
 
-export type EnderecoInputRef = ObjectUuidRef;
+export type EnderecoInputRefDto = ObjectUuidRefDto;

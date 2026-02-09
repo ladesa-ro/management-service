@@ -1,59 +1,91 @@
-import { ArgsType, Field, Int, ObjectType } from "@nestjs/graphql";
-import { IsArray, IsInt, IsOptional, IsString, Min } from "class-validator";
-import { PaginationMetaDto } from "@/modules/@shared/infrastructure/presentation/rest/dtos";
-import { DisciplinaFindOneOutputDto } from "../rest/disciplina.rest.dto";
+import { ArgsType, Field, InputType, Int, ObjectType } from "@nestjs/graphql";
+import {
+  IsArray,
+  IsInt,
+  IsOptional,
+  IsString,
+  IsUUID,
+  Min,
+  MinLength,
+  ValidateNested,
+} from "class-validator";
+import {
+  EntityBaseGraphQlDto,
+  PaginationMetaGraphQlDto,
+} from "@/modules/@shared/infrastructure/graphql/dtos";
+import { PaginationArgsGraphQlDto } from "@/modules/@shared/infrastructure/graphql/dtos/pagination-graphql.dto";
+import { ImagemFindOneOutputGraphQlDto } from "@/server/nest/modules/imagem-arquivo/graphql/imagem-arquivo.graphql.dto";
 
 // ============================================================================
-// List Input (GraphQL-compatible - no dots in field names)
+// FindOne Output
 // ============================================================================
 
-@ArgsType()
-export class DisciplinaListInputGqlDto {
-  @Field(() => Int, { nullable: true, defaultValue: 1 })
-  @IsOptional()
-  @IsInt()
-  @Min(1)
-  page?: number = 1;
-
-  @Field(() => Int, { nullable: true })
-  @IsOptional()
-  @IsInt()
-  @Min(1)
-  limit?: number;
-
-  @Field(() => String, { nullable: true })
-  @IsOptional()
-  @IsString()
-  search?: string;
-
-  @Field(() => [String], { nullable: true })
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
-  sortBy?: string[];
-
-  @Field(() => [String], { nullable: true, description: "Filtro por ID" })
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
-  filterId?: string[];
-
-  @Field(() => [String], { nullable: true, description: "Filtro por ID dos Diarios" })
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
-  filterDiariosId?: string[];
+@ObjectType("DisciplinaFindOneOutputDto")
+export class DisciplinaFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
+  @Field() nome: string;
+  @Field() nomeAbreviado: string;
+  @Field(() => Int) cargaHoraria: number;
+  @Field(() => ImagemFindOneOutputGraphQlDto, { nullable: true })
+  imagemCapa: ImagemFindOneOutputGraphQlDto | null;
 }
 
 // ============================================================================
-// List Output (reuses the same output DTOs - they're already GraphQL-compatible)
+// Create Input
+// ============================================================================
+
+@InputType("DisciplinaImagemCapaRefInputDto")
+export class DisciplinaImagemCapaRefInputGraphQlDto {
+  @Field() @IsString() id: string;
+}
+
+@InputType("DisciplinaCreateInputDto")
+export class DisciplinaCreateInputGraphQlDto {
+  @Field() @IsString() @MinLength(1) nome: string;
+  @Field() @IsString() @MinLength(1) nomeAbreviado: string;
+  @Field(() => Int) @IsInt() @Min(1) cargaHoraria: number;
+  @Field(() => DisciplinaImagemCapaRefInputGraphQlDto, { nullable: true })
+  @IsOptional()
+  @ValidateNested()
+  imagemCapa?: DisciplinaImagemCapaRefInputGraphQlDto | null;
+}
+
+// ============================================================================
+// Update Input
+// ============================================================================
+
+@InputType("DisciplinaUpdateInputDto")
+export class DisciplinaUpdateInputGraphQlDto {
+  @Field({ nullable: true }) @IsOptional() @IsString() @MinLength(1) nome?: string;
+  @Field({ nullable: true }) @IsOptional() @IsString() @MinLength(1) nomeAbreviado?: string;
+  @Field(() => Int, { nullable: true }) @IsOptional() @IsInt() @Min(1) cargaHoraria?: number;
+  @Field(() => DisciplinaImagemCapaRefInputGraphQlDto, { nullable: true })
+  @IsOptional()
+  @ValidateNested()
+  imagemCapa?: DisciplinaImagemCapaRefInputGraphQlDto | null;
+}
+
+// ============================================================================
+// List Input
+// ============================================================================
+
+@ArgsType()
+export class DisciplinaListInputGraphQlDto extends PaginationArgsGraphQlDto {
+  @Field(() => [String], { nullable: true, description: "Filtro por ID" })
+  @IsOptional()
+  @IsArray()
+  @IsUUID(undefined, { each: true })
+  filterId?: string[];
+}
+
+// ============================================================================
+// List Output
 // ============================================================================
 
 @ObjectType("DisciplinaListResult")
-export class DisciplinaListOutputGqlDto {
-  @Field(() => PaginationMetaDto)
-  meta: PaginationMetaDto;
+export class DisciplinaListOutputGraphQlDto {
+  @Field(() => PaginationMetaGraphQlDto)
+  meta: PaginationMetaGraphQlDto;
 
-  @Field(() => [DisciplinaFindOneOutputDto])
-  data: DisciplinaFindOneOutputDto[];
+  @Field(() => [DisciplinaFindOneOutputGraphQlDto])
+  data: DisciplinaFindOneOutputGraphQlDto[];
 }

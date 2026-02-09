@@ -7,7 +7,7 @@ import {
   type Relation,
 } from "typeorm";
 import { CalendarioLetivoEntity } from "@/modules/calendario-letivo/infrastructure/persistence/typeorm/calendario-letivo.entity";
-import { type TipoDiaCalendario } from "@/server/nest/modules/dia-calendario/rest";
+import { type TipoDiaCalendario } from "@/modules/dia-calendario/domain/dia-calendario.types";
 
 @Entity("dia_calendario")
 export class DiaCalendarioEntity {

@@ -1,68 +1,68 @@
 import {
-  EntityOutput,
-  FindOneInput,
+  EntityOutputDto,
+  FindOneInputDto,
   IFilterAcceptableValues,
-  ObjectUuidRef,
-  PaginationInput,
-  PaginationResult,
+  ObjectUuidRefDto,
+  PaginationInputDto,
+  PaginationResultDto,
   ScalarDate,
 } from "@/modules/@shared";
-import { DiarioFindOneOutput, DiarioInputRef } from "@/modules/diario/application/dtos";
+import { DiarioFindOneOutputDto, DiarioInputRefDto } from "@/modules/diario/application/dtos";
 import {
-  IntervaloDeTempoFindOneOutput,
-  IntervaloDeTempoInputRef,
+  IntervaloDeTempoFindOneOutputDto,
+  IntervaloDeTempoInputRefDto,
 } from "@/modules/intervalo-de-tempo";
 
 // ============================================================================
 // FindOne Input/Output
 // ============================================================================
 
-export class DiarioPreferenciaAgrupamentoFindOneInput extends FindOneInput {}
+export class DiarioPreferenciaAgrupamentoFindOneInputDto extends FindOneInputDto {}
 
-export class DiarioPreferenciaAgrupamentoFindOneOutput extends EntityOutput {
+export class DiarioPreferenciaAgrupamentoFindOneOutputDto extends EntityOutputDto {
   dataInicio!: ScalarDate;
   dataFim!: ScalarDate | null;
   diaSemanaIso!: number;
   aulasSeguidas!: number;
-  intervaloDeTempo!: IntervaloDeTempoFindOneOutput;
-  diario!: DiarioFindOneOutput;
+  intervaloDeTempo!: IntervaloDeTempoFindOneOutputDto;
+  diario!: DiarioFindOneOutputDto;
 }
 
 // ============================================================================
 // List Input/Output
 // ============================================================================
 
-export class DiarioPreferenciaAgrupamentoListInput extends PaginationInput {
+export class DiarioPreferenciaAgrupamentoListInputDto extends PaginationInputDto {
   "filter.id"?: IFilterAcceptableValues;
   "filter.diario.id"?: IFilterAcceptableValues;
 }
 
-export class DiarioPreferenciaAgrupamentoListOutput extends PaginationResult<DiarioPreferenciaAgrupamentoFindOneOutput> {}
+export class DiarioPreferenciaAgrupamentoListOutputDto extends PaginationResultDto<DiarioPreferenciaAgrupamentoFindOneOutputDto> {}
 
 // ============================================================================
 // Create/Update Input
 // ============================================================================
 
-export class DiarioPreferenciaAgrupamentoCreateInput {
+export class DiarioPreferenciaAgrupamentoCreateInputDto {
   dataInicio!: ScalarDate;
   dataFim?: ScalarDate | null;
   diaSemanaIso!: number;
   aulasSeguidas!: number;
-  intervaloDeTempo!: IntervaloDeTempoInputRef;
-  diario!: DiarioInputRef;
+  intervaloDeTempo!: IntervaloDeTempoInputRefDto;
+  diario!: DiarioInputRefDto;
 }
 
-export class DiarioPreferenciaAgrupamentoUpdateInput {
+export class DiarioPreferenciaAgrupamentoUpdateInputDto {
   dataInicio?: ScalarDate;
   dataFim?: ScalarDate | null;
   diaSemanaIso?: number;
   aulasSeguidas?: number;
-  intervaloDeTempo?: IntervaloDeTempoInputRef;
-  diario?: DiarioInputRef;
+  intervaloDeTempo?: IntervaloDeTempoInputRefDto;
+  diario?: DiarioInputRefDto;
 }
 
 // ============================================================================
 // Input Ref
 // ============================================================================
 
-export type DiarioPreferenciaAgrupamentoInputRef = ObjectUuidRef;
+export type DiarioPreferenciaAgrupamentoInputRefDto = ObjectUuidRefDto;

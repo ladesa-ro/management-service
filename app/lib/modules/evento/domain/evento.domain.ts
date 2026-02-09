@@ -25,6 +25,16 @@ export class Evento extends BaseEntity implements IEvento {
   }
 
   // ========================================
+  // Validação
+  // ========================================
+
+  validar(): void {
+    const { result, rules } = Evento.createValidation();
+    rules.required(this.rrule, "rrule");
+    Evento.throwIfInvalid(result);
+  }
+
+  // ========================================
   // Factory Methods
   // ========================================
 
@@ -33,21 +43,15 @@ export class Evento extends BaseEntity implements IEvento {
    * @throws EntityValidationError se os dados forem inválidos
    */
   static criar(dados: IEventoCreate): Evento {
-    const { result, rules } = this.createValidation();
-
     const instance = new Evento();
-    instance.rrule = rules.required(dados.rrule, "rrule");
-
-    this.throwIfInvalid(result);
-
-    instance.nome = rules.optional(dados.nome);
-    instance.cor = rules.optional(dados.cor);
+    instance.rrule = dados.rrule?.trim() ?? "";
+    instance.nome = dados.nome?.trim() || null;
+    instance.cor = dados.cor?.trim() || null;
     instance.dataInicio = dados.dataInicio ?? null;
     instance.dataFim = dados.dataFim ?? null;
     instance.ambiente = null;
-    instance.dateCreated = new Date().toISOString();
-    instance.dateUpdated = new Date().toISOString();
-    instance.dateDeleted = null;
+    instance.initDates();
+    instance.validar();
 
     return instance;
   }
@@ -70,18 +74,16 @@ export class Evento extends BaseEntity implements IEvento {
    * @throws EntityValidationError se os dados forem inválidos
    */
   atualizar(dados: IEventoUpdate): void {
-    const { result, rules } = Evento.createValidation();
-
     if (dados.rrule !== undefined) {
-      this.rrule = rules.required(dados.rrule, "rrule");
+      this.rrule = dados.rrule?.trim() ?? "";
     }
 
     if (dados.nome !== undefined) {
-      this.nome = rules.optional(dados.nome);
+      this.nome = dados.nome?.trim() || null;
     }
 
     if (dados.cor !== undefined) {
-      this.cor = rules.optional(dados.cor);
+      this.cor = dados.cor?.trim() || null;
     }
 
     if (dados.dataInicio !== undefined) {
@@ -92,8 +94,7 @@ export class Evento extends BaseEntity implements IEvento {
       this.dataFim = dados.dataFim;
     }
 
-    Evento.throwIfInvalid(result);
-
-    this.dateUpdated = new Date().toISOString();
+    this.touchUpdated();
+    this.validar();
   }
 }

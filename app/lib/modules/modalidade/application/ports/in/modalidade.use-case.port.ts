@@ -1,40 +1,43 @@
 import type { AccessContext } from "@/modules/@core/access-context";
 import {
-  ModalidadeCreateInput,
-  ModalidadeFindOneInput,
-  ModalidadeFindOneOutput,
-  ModalidadeListInput,
-  ModalidadeListOutput,
-  ModalidadeUpdateInput,
+  ModalidadeCreateInputDto,
+  ModalidadeFindOneInputDto,
+  ModalidadeFindOneOutputDto,
+  ModalidadeListInputDto,
+  ModalidadeListOutputDto,
+  ModalidadeUpdateInputDto,
 } from "../../dtos";
 
 export interface IModalidadeUseCasePort {
   findAll(
     accessContext: AccessContext,
-    dto: ModalidadeListInput | null,
-  ): Promise<ModalidadeListOutput>;
+    dto: ModalidadeListInputDto | null,
+  ): Promise<ModalidadeListOutputDto>;
 
   findById(
     accessContext: AccessContext,
-    dto: ModalidadeFindOneInput,
-  ): Promise<ModalidadeFindOneOutput | null>;
+    dto: ModalidadeFindOneInputDto,
+  ): Promise<ModalidadeFindOneOutputDto | null>;
 
   findByIdStrict(
     accessContext: AccessContext,
-    dto: ModalidadeFindOneInput,
-  ): Promise<ModalidadeFindOneOutput>;
+    dto: ModalidadeFindOneInputDto,
+  ): Promise<ModalidadeFindOneOutputDto>;
 
   create(
     accessContext: AccessContext,
-    dto: ModalidadeCreateInput,
-  ): Promise<ModalidadeFindOneOutput>;
+    dto: ModalidadeCreateInputDto,
+  ): Promise<ModalidadeFindOneOutputDto>;
 
   update(
     accessContext: AccessContext,
-    dto: ModalidadeFindOneInput & ModalidadeUpdateInput,
-  ): Promise<ModalidadeFindOneOutput>;
+    dto: ModalidadeFindOneInputDto & ModalidadeUpdateInputDto,
+  ): Promise<ModalidadeFindOneOutputDto>;
 
-  deleteOneById(accessContext: AccessContext, dto: ModalidadeFindOneInput): Promise<boolean>;
+  deleteOneById(accessContext: AccessContext, dto: ModalidadeFindOneInputDto): Promise<boolean>;
 
-  findByIdSimpleStrict(accessContext: AccessContext, id: string): Promise<ModalidadeFindOneOutput>;
+  findByIdSimpleStrict(
+    accessContext: AccessContext,
+    id: string,
+  ): Promise<ModalidadeFindOneOutputDto>;
 }

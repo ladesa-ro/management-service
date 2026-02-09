@@ -1,45 +1,45 @@
 import {
   IdNumeric,
   IFilterAcceptableValues,
-  ObjectIntRef,
-  PaginationInput,
-  PaginationResult,
+  ObjectIntRefDto,
+  PaginationInputDto,
+  PaginationResultDto,
 } from "@/modules/@shared";
-import { EstadoFindOneOutput } from "@/modules/estado";
+import { EstadoFindOneOutputDto } from "@/modules/estado";
 
 // ============================================================================
 // FindOne Input/Output
 // ============================================================================
 
-export class CidadeFindOneInput {
+export class CidadeFindOneInputDto {
   id!: IdNumeric;
 
   selection?: string[];
 }
 
-export class CidadeFindOneOutput {
+export class CidadeFindOneOutputDto {
   id!: IdNumeric;
 
   nome!: string;
 
-  estado!: EstadoFindOneOutput;
+  estado!: EstadoFindOneOutputDto;
 }
 
 // ============================================================================
 // List Input/Output
 // ============================================================================
 
-export class CidadeListInput extends PaginationInput {
+export class CidadeListInputDto extends PaginationInputDto {
   "filter.id"?: IFilterAcceptableValues;
   "filter.estado.id"?: IFilterAcceptableValues;
   "filter.estado.nome"?: IFilterAcceptableValues;
   "filter.estado.sigla"?: IFilterAcceptableValues;
 }
 
-export class CidadeListOutput extends PaginationResult<CidadeFindOneOutput> {}
+export class CidadeListOutputDto extends PaginationResultDto<CidadeFindOneOutputDto> {}
 
 // ============================================================================
 // Input Ref
 // ============================================================================
 
-export type CidadeInputRef = ObjectIntRef;
+export type CidadeInputRefDto = ObjectIntRefDto;

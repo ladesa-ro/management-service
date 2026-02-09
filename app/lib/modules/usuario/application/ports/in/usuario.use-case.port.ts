@@ -1,13 +1,13 @@
 import type { StreamableFile } from "@nestjs/common";
 import type { AccessContext } from "@/modules/@core/access-context";
 import type {
-  UsuarioCreateInput,
+  UsuarioCreateInputDto,
   UsuarioEnsinoOutput,
-  UsuarioFindOneInput,
-  UsuarioFindOneOutput,
-  UsuarioListInput,
-  UsuarioListOutput,
-  UsuarioUpdateInput,
+  UsuarioFindOneInputDto,
+  UsuarioFindOneOutputDto,
+  UsuarioListInputDto,
+  UsuarioListOutputDto,
+  UsuarioUpdateInputDto,
 } from "../../dtos";
 
 /**
@@ -20,52 +20,52 @@ export interface IUsuarioUseCasePort {
    */
   findAll(
     accessContext: AccessContext,
-    dto: UsuarioListInput | null,
+    dto: UsuarioListInputDto | null,
     selection?: string[] | boolean,
-  ): Promise<UsuarioListOutput>;
+  ): Promise<UsuarioListOutputDto>;
 
   /**
    * Busca um usuario por ID
    */
   findById(
     accessContext: AccessContext | null,
-    dto: UsuarioFindOneInput,
+    dto: UsuarioFindOneInputDto,
     selection?: string[] | boolean,
-  ): Promise<UsuarioFindOneOutput | null>;
+  ): Promise<UsuarioFindOneOutputDto | null>;
 
   /**
    * Busca um usuario por ID (lanca excecao se nao encontrado)
    */
   findByIdStrict(
     accessContext: AccessContext | null,
-    dto: UsuarioFindOneInput,
+    dto: UsuarioFindOneInputDto,
     selection?: string[] | boolean,
-  ): Promise<UsuarioFindOneOutput>;
+  ): Promise<UsuarioFindOneOutputDto>;
 
   /**
    * Busca um usuario por ID com selecao simplificada
    */
   findByIdSimple(
     accessContext: AccessContext,
-    id: UsuarioFindOneInput["id"],
+    id: UsuarioFindOneInputDto["id"],
     selection?: string[],
-  ): Promise<UsuarioFindOneOutput | null>;
+  ): Promise<UsuarioFindOneOutputDto | null>;
 
   /**
    * Busca um usuario por ID com selecao simplificada (lanca excecao se nao encontrado)
    */
   findByIdSimpleStrict(
     accessContext: AccessContext,
-    id: UsuarioFindOneInput["id"],
+    id: UsuarioFindOneInputDto["id"],
     selection?: string[],
-  ): Promise<UsuarioFindOneOutput>;
+  ): Promise<UsuarioFindOneOutputDto>;
 
   /**
    * Busca informacoes de ensino de um usuario (disciplinas, cursos e turmas onde leciona)
    */
   usuarioEnsinoById(
     accessContext: AccessContext | null,
-    dto: UsuarioFindOneInput,
+    dto: UsuarioFindOneInputDto,
     selection?: string[] | boolean,
   ): Promise<UsuarioEnsinoOutput>;
 
@@ -75,20 +75,23 @@ export interface IUsuarioUseCasePort {
   internalFindByMatriculaSiape(
     matriculaSiape: string,
     selection?: string[] | boolean,
-  ): Promise<UsuarioFindOneOutput | null>;
+  ): Promise<UsuarioFindOneOutputDto | null>;
 
   /**
    * Cria um novo usuario
    */
-  create(accessContext: AccessContext, dto: UsuarioCreateInput): Promise<UsuarioFindOneOutput>;
+  create(
+    accessContext: AccessContext,
+    dto: UsuarioCreateInputDto,
+  ): Promise<UsuarioFindOneOutputDto>;
 
   /**
    * Atualiza um usuario existente
    */
   update(
     accessContext: AccessContext,
-    dto: UsuarioFindOneInput & UsuarioUpdateInput,
-  ): Promise<UsuarioFindOneOutput>;
+    dto: UsuarioFindOneInputDto & UsuarioUpdateInputDto,
+  ): Promise<UsuarioFindOneOutputDto>;
 
   /**
    * Obtem a imagem de capa do usuario
@@ -100,7 +103,7 @@ export interface IUsuarioUseCasePort {
    */
   updateImagemCapa(
     accessContext: AccessContext,
-    dto: UsuarioFindOneInput,
+    dto: UsuarioFindOneInputDto,
     file: Express.Multer.File,
   ): Promise<boolean>;
 
@@ -114,12 +117,12 @@ export interface IUsuarioUseCasePort {
    */
   updateImagemPerfil(
     accessContext: AccessContext,
-    dto: UsuarioFindOneInput,
+    dto: UsuarioFindOneInputDto,
     file: Express.Multer.File,
   ): Promise<boolean>;
 
   /**
    * Remove um usuario (soft delete)
    */
-  deleteOneById(accessContext: AccessContext, dto: UsuarioFindOneInput): Promise<boolean>;
+  deleteOneById(accessContext: AccessContext, dto: UsuarioFindOneInputDto): Promise<boolean>;
 }

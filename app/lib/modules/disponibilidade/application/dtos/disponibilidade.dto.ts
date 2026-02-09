@@ -1,20 +1,20 @@
 import type { ScalarDateTimeString } from "@/modules/@shared";
 import {
-  EntityOutput,
-  FindOneInput,
+  EntityOutputDto,
+  FindOneInputDto,
   IFilterAcceptableValues,
-  ObjectUuidRef,
-  PaginationInput,
-  PaginationResult,
+  ObjectUuidRefDto,
+  PaginationInputDto,
+  PaginationResultDto,
 } from "@/modules/@shared";
 
 // ============================================================================
 // FindOne Input/Output
 // ============================================================================
 
-export class DisponibilidadeFindOneInput extends FindOneInput {}
+export class DisponibilidadeFindOneInputDto extends FindOneInputDto {}
 
-export class DisponibilidadeFindOneOutput extends EntityOutput {
+export class DisponibilidadeFindOneOutputDto extends EntityOutputDto {
   dataInicio!: ScalarDateTimeString;
   dataFim!: ScalarDateTimeString | null;
 }
@@ -23,22 +23,22 @@ export class DisponibilidadeFindOneOutput extends EntityOutput {
 // List Input/Output
 // ============================================================================
 
-export class DisponibilidadeListInput extends PaginationInput {
+export class DisponibilidadeListInputDto extends PaginationInputDto {
   "filter.id"?: IFilterAcceptableValues;
 }
 
-export class DisponibilidadeListOutput extends PaginationResult<DisponibilidadeFindOneOutput> {}
+export class DisponibilidadeListOutputDto extends PaginationResultDto<DisponibilidadeFindOneOutputDto> {}
 
 // ============================================================================
 // Create/Update Input
 // ============================================================================
 
-export class DisponibilidadeCreateInput {
+export class DisponibilidadeCreateInputDto {
   dataInicio!: ScalarDateTimeString;
   dataFim?: ScalarDateTimeString | null;
 }
 
-export class DisponibilidadeUpdateInput {
+export class DisponibilidadeUpdateInputDto {
   dataInicio?: ScalarDateTimeString;
   dataFim?: ScalarDateTimeString | null;
 }
@@ -47,4 +47,4 @@ export class DisponibilidadeUpdateInput {
 // Input Ref
 // ============================================================================
 
-export type DisponibilidadeInputRef = ObjectUuidRef;
+export type DisponibilidadeInputRefDto = ObjectUuidRefDto;

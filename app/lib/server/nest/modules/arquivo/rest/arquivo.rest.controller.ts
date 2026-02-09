@@ -8,7 +8,7 @@ import {
 } from "@nestjs/swagger";
 import { AccessContext, AccessContextHttp } from "@/modules/@core/access-context";
 import { ArquivoService } from "@/modules/arquivo/application/use-cases/arquivo.service";
-import { ArquivoFindOneInputDto, ArquivoGetFileQueryInputDto } from "./arquivo.rest.dto";
+import { ArquivoFindOneInputRestDto, ArquivoGetFileQueryInputRestDto } from "./arquivo.rest.dto";
 import { ArquivoRestMapper } from "./arquivo.rest.mapper";
 
 @ApiTags("arquivos")
@@ -23,8 +23,8 @@ export class ArquivoRestController {
   @ApiNotFoundResponse()
   async getFile(
     @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: ArquivoFindOneInputDto,
-    @Query() query: ArquivoGetFileQueryInputDto,
+    @Param() params: ArquivoFindOneInputRestDto,
+    @Query() query: ArquivoGetFileQueryInputRestDto,
   ): Promise<StreamableFile> {
     const input = ArquivoRestMapper.toGetFileInput(params, query);
     return this.arquivoService.getStreamableFile(accessContext, input);

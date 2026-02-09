@@ -1,11 +1,11 @@
 import type { AccessContext } from "@/modules/@core/access-context";
 import type {
-  CampusCreateInput,
-  CampusFindOneInput,
-  CampusFindOneOutput,
-  CampusListInput,
-  CampusListOutput,
-  CampusUpdateInput,
+  CampusCreateInputDto,
+  CampusFindOneInputDto,
+  CampusFindOneOutputDto,
+  CampusListInputDto,
+  CampusListOutputDto,
+  CampusUpdateInputDto,
 } from "../../dtos";
 
 /**
@@ -18,27 +18,27 @@ export interface ICampusUseCasePort {
    */
   findAll(
     accessContext: AccessContext,
-    dto: CampusListInput | null,
+    dto: CampusListInputDto | null,
     selection?: string[] | boolean,
-  ): Promise<CampusListOutput>;
+  ): Promise<CampusListOutputDto>;
 
   /**
    * Busca um campus por ID
    */
   findById(
     accessContext: AccessContext,
-    dto: CampusFindOneInput,
+    dto: CampusFindOneInputDto,
     selection?: string[] | boolean,
-  ): Promise<CampusFindOneOutput | null>;
+  ): Promise<CampusFindOneOutputDto | null>;
 
   /**
    * Busca um campus por ID (lanca excecao se nao encontrado)
    */
   findByIdStrict(
     accessContext: AccessContext,
-    dto: CampusFindOneInput,
+    dto: CampusFindOneInputDto,
     selection?: string[] | boolean,
-  ): Promise<CampusFindOneOutput>;
+  ): Promise<CampusFindOneOutputDto>;
 
   /**
    * Busca um campus por ID (formato simples)
@@ -47,7 +47,7 @@ export interface ICampusUseCasePort {
     accessContext: AccessContext,
     id: string,
     selection?: string[] | boolean,
-  ): Promise<CampusFindOneOutput | null>;
+  ): Promise<CampusFindOneOutputDto | null>;
 
   /**
    * Busca um campus por ID (formato simples, lanca excecao se nao encontrado)
@@ -56,23 +56,23 @@ export interface ICampusUseCasePort {
     accessContext: AccessContext,
     id: string,
     selection?: string[] | boolean,
-  ): Promise<CampusFindOneOutput>;
+  ): Promise<CampusFindOneOutputDto>;
 
   /**
    * Cria um novo campus
    */
-  create(accessContext: AccessContext, dto: CampusCreateInput): Promise<CampusFindOneOutput>;
+  create(accessContext: AccessContext, dto: CampusCreateInputDto): Promise<CampusFindOneOutputDto>;
 
   /**
    * Atualiza um campus existente
    */
   update(
     accessContext: AccessContext,
-    dto: CampusFindOneInput & CampusUpdateInput,
-  ): Promise<CampusFindOneOutput>;
+    dto: CampusFindOneInputDto & CampusUpdateInputDto,
+  ): Promise<CampusFindOneOutputDto>;
 
   /**
    * Remove um campus (soft delete)
    */
-  deleteOneById(accessContext: AccessContext, dto: CampusFindOneInput): Promise<boolean>;
+  deleteOneById(accessContext: AccessContext, dto: CampusFindOneInputDto): Promise<boolean>;
 }

@@ -1,65 +1,111 @@
-import { ArgsType, Field, Int, ObjectType } from "@nestjs/graphql";
-import { IsArray, IsInt, IsOptional, IsString, Min } from "class-validator";
-import { PaginationMetaDto } from "@/modules/@shared/infrastructure/presentation/rest/dtos";
-import { AmbienteFindOneOutputDto } from "../rest/ambiente.rest.dto";
+import { ArgsType, Field, InputType, Int, ObjectType } from "@nestjs/graphql";
+import {
+  IsArray,
+  IsInt,
+  IsOptional,
+  IsString,
+  IsUUID,
+  MinLength,
+  ValidateNested,
+} from "class-validator";
+import {
+  EntityBaseGraphQlDto,
+  PaginationMetaGraphQlDto,
+} from "@/modules/@shared/infrastructure/graphql/dtos";
+import { PaginationArgsGraphQlDto } from "@/modules/@shared/infrastructure/graphql/dtos/pagination-graphql.dto";
+import { BlocoFindOneOutputGraphQlDto } from "@/server/nest/modules/bloco/graphql/bloco.graphql.dto";
+import { ImagemFindOneOutputGraphQlDto } from "@/server/nest/modules/imagem-arquivo/graphql/imagem-arquivo.graphql.dto";
+
+// ============================================================================
+// FindOne Output
+// ============================================================================
+
+@ObjectType("AmbienteFindOneOutputDto")
+export class AmbienteFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
+  @Field() nome: string;
+  @Field(() => String, { nullable: true }) descricao: string | null;
+  @Field() codigo: string;
+  @Field(() => Int, { nullable: true }) capacidade: number | null;
+  @Field(() => String, { nullable: true }) tipo: string | null;
+  @Field(() => BlocoFindOneOutputGraphQlDto) bloco: BlocoFindOneOutputGraphQlDto;
+  @Field(() => ImagemFindOneOutputGraphQlDto, { nullable: true })
+  imagemCapa: ImagemFindOneOutputGraphQlDto | null;
+}
+
+// ============================================================================
+// Ref Input
+// ============================================================================
+
+@InputType("AmbienteRefInputDto")
+export class AmbienteRefInputGraphQlDto {
+  @Field() @IsString() id: string;
+}
+
+// ============================================================================
+// Create Input
+// ============================================================================
+
+@InputType("AmbienteCreateInputDto")
+export class AmbienteCreateInputGraphQlDto {
+  @Field() @IsString() @MinLength(1) nome: string;
+  @Field({ nullable: true }) @IsOptional() @IsString() descricao?: string | null;
+  @Field() @IsString() @MinLength(1) codigo: string;
+  @Field(() => Int, { nullable: true }) @IsOptional() @IsInt() capacidade?: number | null;
+  @Field({ nullable: true }) @IsOptional() @IsString() tipo?: string | null;
+  @Field(() => AmbienteRefInputGraphQlDto) @ValidateNested() bloco: AmbienteRefInputGraphQlDto;
+}
+
+// ============================================================================
+// Update Input
+// ============================================================================
+
+@InputType("AmbienteUpdateInputDto")
+export class AmbienteUpdateInputGraphQlDto {
+  @Field({ nullable: true }) @IsOptional() @IsString() @MinLength(1) nome?: string;
+  @Field({ nullable: true }) @IsOptional() @IsString() descricao?: string | null;
+  @Field({ nullable: true }) @IsOptional() @IsString() @MinLength(1) codigo?: string;
+  @Field(() => Int, { nullable: true }) @IsOptional() @IsInt() capacidade?: number | null;
+  @Field({ nullable: true }) @IsOptional() @IsString() tipo?: string | null;
+  @Field(() => AmbienteRefInputGraphQlDto, { nullable: true })
+  @IsOptional()
+  @ValidateNested()
+  bloco?: AmbienteRefInputGraphQlDto;
+}
 
 // ============================================================================
 // List Input (GraphQL-compatible - no dots in field names)
 // ============================================================================
 
 @ArgsType()
-export class AmbienteListInputGqlDto {
-  @Field(() => Int, { nullable: true, defaultValue: 1 })
-  @IsOptional()
-  @IsInt()
-  @Min(1)
-  page?: number = 1;
-
-  @Field(() => Int, { nullable: true })
-  @IsOptional()
-  @IsInt()
-  @Min(1)
-  limit?: number;
-
-  @Field(() => String, { nullable: true })
-  @IsOptional()
-  @IsString()
-  search?: string;
-
-  @Field(() => [String], { nullable: true })
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
-  sortBy?: string[];
-
+export class AmbienteListInputGraphQlDto extends PaginationArgsGraphQlDto {
   @Field(() => [String], { nullable: true, description: "Filtro por ID" })
   @IsOptional()
   @IsArray()
-  @IsString({ each: true })
+  @IsUUID(undefined, { each: true })
   filterId?: string[];
 
   @Field(() => [String], { nullable: true, description: "Filtro por ID do Bloco" })
   @IsOptional()
   @IsArray()
-  @IsString({ each: true })
+  @IsUUID(undefined, { each: true })
   filterBlocoId?: string[];
 
   @Field(() => [String], { nullable: true, description: "Filtro por ID do Campus do Bloco" })
   @IsOptional()
   @IsArray()
-  @IsString({ each: true })
+  @IsUUID(undefined, { each: true })
   filterBlocoCampusId?: string[];
 }
 
 // ============================================================================
-// List Output (reuses the same output DTOs - they're already GraphQL-compatible)
+// List Output
 // ============================================================================
 
 @ObjectType("AmbienteListResult")
-export class AmbienteListOutputGqlDto {
-  @Field(() => PaginationMetaDto)
-  meta: PaginationMetaDto;
+export class AmbienteListOutputGraphQlDto {
+  @Field(() => PaginationMetaGraphQlDto)
+  meta: PaginationMetaGraphQlDto;
 
-  @Field(() => [AmbienteFindOneOutputDto])
-  data: AmbienteFindOneOutputDto[];
+  @Field(() => [AmbienteFindOneOutputGraphQlDto])
+  data: AmbienteFindOneOutputGraphQlDto[];
 }

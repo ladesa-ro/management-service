@@ -2,10 +2,10 @@ import type { AccessContext } from "@/modules/@core/access-context";
 import type { PartialEntity } from "@/modules/@shared";
 import type { PerfilEntity } from "@/modules/perfil/infrastructure/persistence/typeorm";
 import type {
-  PerfilFindOneInput,
-  PerfilFindOneOutput,
-  PerfilListInput,
-  PerfilListOutput,
+  PerfilFindOneInputDto,
+  PerfilFindOneOutputDto,
+  PerfilListInputDto,
+  PerfilListOutputDto,
 } from "../../dtos";
 
 /**
@@ -39,7 +39,10 @@ export interface IPerfilRepositoryPort {
    * @param dto DTO com critérios de busca e paginação
    * @returns Lista paginada de perfis
    */
-  findAll(accessContext: AccessContext, dto: PerfilListInput | null): Promise<PerfilListOutput>;
+  findAll(
+    accessContext: AccessContext,
+    dto: PerfilListInputDto | null,
+  ): Promise<PerfilListOutputDto>;
 
   /**
    * Busca um perfil por ID
@@ -49,8 +52,8 @@ export interface IPerfilRepositoryPort {
    */
   findById(
     accessContext: AccessContext,
-    dto: PerfilFindOneInput,
-  ): Promise<PerfilFindOneOutput | null>;
+    dto: PerfilFindOneInputDto,
+  ): Promise<PerfilFindOneOutputDto | null>;
 
   /**
    * Busca perfis ativos de um usuário
@@ -61,7 +64,7 @@ export interface IPerfilRepositoryPort {
   findAllActiveByUsuarioId(
     accessContext: AccessContext | null,
     usuarioId: string,
-  ): Promise<PerfilFindOneOutput[]>;
+  ): Promise<PerfilFindOneOutputDto[]>;
 
   /**
    * Cria ou atualiza perfis em lote
@@ -75,7 +78,7 @@ export interface IPerfilRepositoryPort {
    * @param campusId ID do campus
    * @returns Lista de perfis do usuário no campus
    */
-  findByUsuarioAndCampus(usuarioId: string, campusId: string): Promise<PerfilFindOneOutput[]>;
+  findByUsuarioAndCampus(usuarioId: string, campusId: string): Promise<PerfilFindOneOutputDto[]>;
 
   /**
    * Desativa perfis por IDs

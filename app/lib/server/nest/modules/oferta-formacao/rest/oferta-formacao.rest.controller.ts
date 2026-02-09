@@ -10,12 +10,12 @@ import {
 import { AccessContext, AccessContextHttp } from "@/modules/@core/access-context";
 import { OfertaFormacaoService } from "@/modules/oferta-formacao";
 import {
-  OfertaFormacaoCreateInputDto,
-  OfertaFormacaoFindOneInputDto,
-  OfertaFormacaoFindOneOutputDto,
-  OfertaFormacaoListInputDto,
-  OfertaFormacaoListOutputDto,
-  OfertaFormacaoUpdateInputDto,
+  OfertaFormacaoCreateInputRestDto,
+  OfertaFormacaoFindOneInputRestDto,
+  OfertaFormacaoFindOneOutputRestDto,
+  OfertaFormacaoListInputRestDto,
+  OfertaFormacaoListOutputRestDto,
+  OfertaFormacaoUpdateInputRestDto,
 } from "./oferta-formacao.rest.dto";
 import { OfertaFormacaoRestMapper } from "./oferta-formacao.rest.mapper";
 
@@ -26,12 +26,12 @@ export class OfertaFormacaoRestController {
 
   @Get("/")
   @ApiOperation({ summary: "Lista ofertas de formacao", operationId: "ofertaFormacaoFindAll" })
-  @ApiOkResponse({ type: OfertaFormacaoListOutputDto })
+  @ApiOkResponse({ type: OfertaFormacaoListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
     @AccessContextHttp() accessContext: AccessContext,
-    @Query() dto: OfertaFormacaoListInputDto,
-  ): Promise<OfertaFormacaoListOutputDto> {
+    @Query() dto: OfertaFormacaoListInputRestDto,
+  ): Promise<OfertaFormacaoListOutputRestDto> {
     const input = OfertaFormacaoRestMapper.toListInput(dto);
     const result = await this.ofertaFormacaoService.findAll(accessContext, input);
     return OfertaFormacaoRestMapper.toListOutputDto(result);
@@ -42,13 +42,13 @@ export class OfertaFormacaoRestController {
     summary: "Busca uma oferta de formacao por ID",
     operationId: "ofertaFormacaoFindById",
   })
-  @ApiOkResponse({ type: OfertaFormacaoFindOneOutputDto })
+  @ApiOkResponse({ type: OfertaFormacaoFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async findById(
     @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: OfertaFormacaoFindOneInputDto,
-  ): Promise<OfertaFormacaoFindOneOutputDto> {
+    @Param() params: OfertaFormacaoFindOneInputRestDto,
+  ): Promise<OfertaFormacaoFindOneOutputRestDto> {
     const input = OfertaFormacaoRestMapper.toFindOneInput(params);
     const result = await this.ofertaFormacaoService.findByIdStrict(accessContext, input);
     return OfertaFormacaoRestMapper.toFindOneOutputDto(result);
@@ -56,12 +56,12 @@ export class OfertaFormacaoRestController {
 
   @Post("/")
   @ApiOperation({ summary: "Cria uma oferta de formacao", operationId: "ofertaFormacaoCreate" })
-  @ApiCreatedResponse({ type: OfertaFormacaoFindOneOutputDto })
+  @ApiCreatedResponse({ type: OfertaFormacaoFindOneOutputRestDto })
   @ApiForbiddenResponse()
   async create(
     @AccessContextHttp() accessContext: AccessContext,
-    @Body() dto: OfertaFormacaoCreateInputDto,
-  ): Promise<OfertaFormacaoFindOneOutputDto> {
+    @Body() dto: OfertaFormacaoCreateInputRestDto,
+  ): Promise<OfertaFormacaoFindOneOutputRestDto> {
     const input = OfertaFormacaoRestMapper.toCreateInput(dto);
     const result = await this.ofertaFormacaoService.create(accessContext, input);
     return OfertaFormacaoRestMapper.toFindOneOutputDto(result);
@@ -69,14 +69,14 @@ export class OfertaFormacaoRestController {
 
   @Patch("/:id")
   @ApiOperation({ summary: "Atualiza uma oferta de formacao", operationId: "ofertaFormacaoUpdate" })
-  @ApiOkResponse({ type: OfertaFormacaoFindOneOutputDto })
+  @ApiOkResponse({ type: OfertaFormacaoFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async update(
     @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: OfertaFormacaoFindOneInputDto,
-    @Body() dto: OfertaFormacaoUpdateInputDto,
-  ): Promise<OfertaFormacaoFindOneOutputDto> {
+    @Param() params: OfertaFormacaoFindOneInputRestDto,
+    @Body() dto: OfertaFormacaoUpdateInputRestDto,
+  ): Promise<OfertaFormacaoFindOneOutputRestDto> {
     const input = OfertaFormacaoRestMapper.toUpdateInput(params, dto);
     const result = await this.ofertaFormacaoService.update(accessContext, input);
     return OfertaFormacaoRestMapper.toFindOneOutputDto(result);
@@ -92,7 +92,7 @@ export class OfertaFormacaoRestController {
   @ApiNotFoundResponse()
   async deleteOneById(
     @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: OfertaFormacaoFindOneInputDto,
+    @Param() params: OfertaFormacaoFindOneInputRestDto,
   ): Promise<boolean> {
     const input = OfertaFormacaoRestMapper.toFindOneInput(params);
     return this.ofertaFormacaoService.deleteOneById(accessContext, input);

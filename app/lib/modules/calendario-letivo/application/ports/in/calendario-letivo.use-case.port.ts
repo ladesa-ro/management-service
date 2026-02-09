@@ -1,11 +1,11 @@
 import type { AccessContext } from "@/modules/@core/access-context";
 import type {
-  CalendarioLetivoCreateInput,
-  CalendarioLetivoFindOneInput,
-  CalendarioLetivoFindOneOutput,
-  CalendarioLetivoListInput,
-  CalendarioLetivoListOutput,
-  CalendarioLetivoUpdateInput,
+  CalendarioLetivoCreateInputDto,
+  CalendarioLetivoFindOneInputDto,
+  CalendarioLetivoFindOneOutputDto,
+  CalendarioLetivoListInputDto,
+  CalendarioLetivoListOutputDto,
+  CalendarioLetivoUpdateInputDto,
 } from "../../dtos";
 
 /**
@@ -18,27 +18,27 @@ export interface ICalendarioLetivoUseCasePort {
    */
   findAll(
     accessContext: AccessContext,
-    dto: CalendarioLetivoListInput | null,
+    dto: CalendarioLetivoListInputDto | null,
     selection?: string[] | boolean,
-  ): Promise<CalendarioLetivoListOutput>;
+  ): Promise<CalendarioLetivoListOutputDto>;
 
   /**
    * Busca um calendario letivo por ID
    */
   findById(
     accessContext: AccessContext,
-    dto: CalendarioLetivoFindOneInput,
+    dto: CalendarioLetivoFindOneInputDto,
     selection?: string[] | boolean,
-  ): Promise<CalendarioLetivoFindOneOutput | null>;
+  ): Promise<CalendarioLetivoFindOneOutputDto | null>;
 
   /**
    * Busca um calendario letivo por ID (lanca excecao se nao encontrado)
    */
   findByIdStrict(
     accessContext: AccessContext,
-    dto: CalendarioLetivoFindOneInput,
+    dto: CalendarioLetivoFindOneInputDto,
     selection?: string[] | boolean,
-  ): Promise<CalendarioLetivoFindOneOutput>;
+  ): Promise<CalendarioLetivoFindOneOutputDto>;
 
   /**
    * Busca um calendario letivo por ID (formato simples, lanca excecao se nao encontrado)
@@ -47,26 +47,29 @@ export interface ICalendarioLetivoUseCasePort {
     accessContext: AccessContext,
     id: string,
     selection?: string[] | boolean,
-  ): Promise<CalendarioLetivoFindOneOutput>;
+  ): Promise<CalendarioLetivoFindOneOutputDto>;
 
   /**
    * Cria um novo calendario letivo
    */
   create(
     accessContext: AccessContext,
-    dto: CalendarioLetivoCreateInput,
-  ): Promise<CalendarioLetivoFindOneOutput>;
+    dto: CalendarioLetivoCreateInputDto,
+  ): Promise<CalendarioLetivoFindOneOutputDto>;
 
   /**
    * Atualiza um calendario letivo existente
    */
   update(
     accessContext: AccessContext,
-    dto: CalendarioLetivoFindOneInput & CalendarioLetivoUpdateInput,
-  ): Promise<CalendarioLetivoFindOneOutput>;
+    dto: CalendarioLetivoFindOneInputDto & CalendarioLetivoUpdateInputDto,
+  ): Promise<CalendarioLetivoFindOneOutputDto>;
 
   /**
    * Remove um calendario letivo (soft delete)
    */
-  deleteOneById(accessContext: AccessContext, dto: CalendarioLetivoFindOneInput): Promise<boolean>;
+  deleteOneById(
+    accessContext: AccessContext,
+    dto: CalendarioLetivoFindOneInputDto,
+  ): Promise<boolean>;
 }

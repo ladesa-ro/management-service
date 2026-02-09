@@ -1,68 +1,59 @@
-import { Field, InputType, ObjectType } from "@nestjs/graphql";
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty, ApiSchema } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { IsArray, IsDateString, ValidateNested } from "class-validator";
 import { HorarioGeradoAulaFindOneInputRestDto } from "@/server/nest/modules/horario-gerado-aula/rest";
-import { IntervaloDeTempoFindOneInputDto } from "@/server/nest/modules/intervalo-de-tempo/rest/intervalo-de-tempo.rest.dto";
-import { PerfilFindOneInputDto } from "@/server/nest/modules/perfil/rest";
-import { TurmaFindOneInputDto } from "@/server/nest/modules/turma/rest";
+import { IntervaloDeTempoFindOneInputRestDto } from "@/server/nest/modules/intervalo-de-tempo/rest/intervalo-de-tempo.rest.dto";
+import { PerfilFindOneInputRestDto } from "@/server/nest/modules/perfil/rest";
+import { TurmaFindOneInputRestDto } from "@/server/nest/modules/turma/rest";
 
 // ============================================================================
 // Gerar Horario Input
 // ============================================================================
 
-@InputType("GerarHorarioInput")
-export class GerarHorarioInputDto {
+@ApiSchema({ name: "GerarHorarioInputDto" })
+export class GerarHorarioInputRestDto {
   @ApiProperty({ description: "Data inicial" })
-  @Field()
   @IsDateString()
   dataInicial: string;
 
   @ApiProperty({ description: "Data final" })
-  @Field()
   @IsDateString()
   dataFinal: string;
 
-  @ApiProperty({ type: () => [PerfilFindOneInputDto], description: "Professores" })
-  @Field(() => [PerfilFindOneInputDto])
+  @ApiProperty({ type: () => [PerfilFindOneInputRestDto], description: "Professores" })
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => PerfilFindOneInputDto)
-  professores: PerfilFindOneInputDto[];
+  @Type(() => PerfilFindOneInputRestDto)
+  professores: PerfilFindOneInputRestDto[];
 
-  @ApiProperty({ type: () => [TurmaFindOneInputDto], description: "Turmas" })
-  @Field(() => [TurmaFindOneInputDto])
+  @ApiProperty({ type: () => [TurmaFindOneInputRestDto], description: "Turmas" })
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => TurmaFindOneInputDto)
-  turmas: TurmaFindOneInputDto[];
+  @Type(() => TurmaFindOneInputRestDto)
+  turmas: TurmaFindOneInputRestDto[];
 
-  @ApiProperty({ type: () => [IntervaloDeTempoFindOneInputDto], description: "Intervalos" })
-  @Field(() => [IntervaloDeTempoFindOneInputDto])
+  @ApiProperty({ type: () => [IntervaloDeTempoFindOneInputRestDto], description: "Intervalos" })
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => IntervaloDeTempoFindOneInputDto)
-  intervalos: IntervaloDeTempoFindOneInputDto[];
+  @Type(() => IntervaloDeTempoFindOneInputRestDto)
+  intervalos: IntervaloDeTempoFindOneInputRestDto[];
 }
 
 // ============================================================================
 // Gerar Horario Output
 // ============================================================================
 
-@ObjectType("GerarHorarioOutput")
-export class GerarHorarioOutputDto {
+@ApiSchema({ name: "GerarHorarioOutputDto" })
+export class GerarHorarioOutputRestDto {
   @ApiProperty({ description: "Data inicial" })
-  @Field()
   @IsDateString()
   dataInicial: string;
 
   @ApiProperty({ description: "Data final" })
-  @Field()
   @IsDateString()
   dataFinal: string;
 
   @ApiProperty({ type: () => [HorarioGeradoAulaFindOneInputRestDto], description: "Aulas geradas" })
-  @Field(() => [HorarioGeradoAulaFindOneInputRestDto])
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => HorarioGeradoAulaFindOneInputRestDto)

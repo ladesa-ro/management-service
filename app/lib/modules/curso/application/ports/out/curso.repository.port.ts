@@ -1,6 +1,6 @@
 import type { IBaseCrudRepositoryPort } from "@/modules/@shared";
 import type { CursoEntity } from "@/modules/curso/infrastructure/persistence/typeorm";
-import type { CursoFindOneOutputDto, CursoListOutputDto } from "@/server/nest/modules/curso/rest";
+import type { CursoFindOneOutputDto, CursoListOutputDto } from "../../dtos";
 
 /**
  * Token de injeção para o repositório de Curso

@@ -1,5 +1,4 @@
-import { ArgsType, Field, ID, InputType, ObjectType, PartialType } from "@nestjs/graphql";
-import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { ApiProperty, ApiPropertyOptional, ApiSchema, PartialType } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import {
   IsArray,
@@ -17,91 +16,81 @@ import {
   simpleProperty,
 } from "@/modules/@shared/infrastructure/persistence/typeorm/metadata";
 import {
-  PaginationInputDto,
-  PaginationMetaDto,
+  PaginationInputRestDto,
+  PaginationMetaRestDto,
   TransformToArray,
 } from "@/modules/@shared/infrastructure/presentation/rest/dtos";
-import { CampusFindOneInputDto, CampusFindOneOutputDto } from "@/server/nest/modules/campus/rest";
+import {
+  CampusFindOneInputRestDto,
+  CampusFindOneOutputRestDto,
+} from "@/server/nest/modules/campus/rest";
 
 // ============================================================================
 // Imagem Stub DTOs (forward reference until imagem module has DTOs)
 // ============================================================================
 
-@ObjectType("ArquivoFindOneOutputFromBloco")
-export class ArquivoFindOneOutputFromBlocoDto {
+@ApiSchema({ name: "ArquivoFindOneOutputFromBlocoDto" })
+export class ArquivoFindOneOutputFromBlocoRestDto {
   @ApiProperty({ description: "Identificador do registro (uuid)", format: "uuid" })
-  @Field(() => ID)
   @IsUUID()
   id: string;
 }
 
-@ObjectType("ImagemArquivoFindOneFromImagem")
-export class ImagemArquivoFindOneFromImagemOutputDto {
+@ApiSchema({ name: "ImagemArquivoFindOneFromImagemOutputFromBlocoDto" })
+export class ImagemArquivoFindOneFromImagemOutputRestDto {
   @ApiProperty({ description: "Identificador do registro (uuid)", format: "uuid" })
-  @Field(() => ID)
   @IsUUID()
   id: string;
 
   @ApiProperty({ description: "Largura da imagem" })
-  @Field()
   largura: number | null;
 
   @ApiProperty({ description: "Altura da imagem" })
-  @Field()
   altura: number | null;
 
   @ApiProperty({ description: "Formato da imagem" })
-  @Field()
   @IsString()
   formato: string | null;
 
   @ApiProperty({ description: "Mime-type da imagem" })
-  @Field()
   @IsString()
   mimeType: string | null;
 
-  @ApiProperty({ description: "Arquivo", type: () => ArquivoFindOneOutputFromBlocoDto })
-  @Field(() => ArquivoFindOneOutputFromBlocoDto)
+  @ApiProperty({ description: "Arquivo", type: () => ArquivoFindOneOutputFromBlocoRestDto })
   @ValidateNested()
-  @Type(() => ArquivoFindOneOutputFromBlocoDto)
-  arquivo: ArquivoFindOneOutputFromBlocoDto;
+  @Type(() => ArquivoFindOneOutputFromBlocoRestDto)
+  arquivo: ArquivoFindOneOutputFromBlocoRestDto;
 }
 
-@ObjectType("ImagemFindOneOutputFromBloco")
-export class ImagemFindOneOutputDto {
+@ApiSchema({ name: "ImagemFindOneOutputFromBlocoDto" })
+export class ImagemFindOneOutputRestDto {
   @ApiProperty({ description: "Identificador do registro (uuid)", format: "uuid" })
-  @Field(() => ID)
   @IsUUID()
   id: string;
 
   @ApiPropertyOptional({ description: "Descricao da imagem", nullable: true })
-  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   descricao: string | null;
 
   @ApiProperty({
     description: "Versoes da imagem",
-    type: () => [ImagemArquivoFindOneFromImagemOutputDto],
+    type: () => [ImagemArquivoFindOneFromImagemOutputRestDto],
   })
-  @Field(() => [ImagemArquivoFindOneFromImagemOutputDto])
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => ImagemArquivoFindOneFromImagemOutputDto)
-  versoes: ImagemArquivoFindOneFromImagemOutputDto[];
+  @Type(() => ImagemArquivoFindOneFromImagemOutputRestDto)
+  versoes: ImagemArquivoFindOneFromImagemOutputRestDto[];
 
   @ApiProperty({ description: "Data e hora da criacao do registro" })
-  @Field()
   @IsDateString()
   dateCreated: Date;
 
   @ApiProperty({ description: "Data e hora da alteracao do registro" })
-  @Field()
   @IsDateString()
   dateUpdated: Date;
 
   @ApiPropertyOptional({ description: "Data e hora da exclusao do registro", nullable: true })
-  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateString()
   dateDeleted: Date | null;
@@ -111,65 +100,57 @@ export class ImagemFindOneOutputDto {
 // FindOne Output
 // ============================================================================
 
-@ObjectType("Bloco")
+@ApiSchema({ name: "BlocoFindOneOutputDto" })
 @RegisterModel({
-  name: "BlocoFindOneOutput",
+  name: "BlocoFindOneOutputDto",
   properties: [
     simpleProperty("id"),
     simpleProperty("nome"),
     simpleProperty("codigo"),
-    referenceProperty("campus", "CampusFindOneOutput"),
-    referenceProperty("imagemCapa", "ImagemFindOneOutput", { nullable: true }),
+    referenceProperty("campus", "CampusFindOneOutputDto"),
+    referenceProperty("imagemCapa", "ImagemFindOneOutputDto", { nullable: true }),
     ...commonProperties.dated,
   ],
 })
-export class BlocoFindOneOutputDto {
+export class BlocoFindOneOutputRestDto {
   @ApiProperty({ description: "Identificador do registro (uuid)", format: "uuid" })
-  @Field(() => ID)
   @IsUUID()
   id: string;
 
   @ApiProperty({ description: "Nome do bloco", minLength: 1 })
-  @Field()
   @IsString()
   @MinLength(1)
   nome: string;
 
   @ApiProperty({ description: "Codigo do bloco", minLength: 1 })
-  @Field()
   @IsString()
   @MinLength(1)
   codigo: string;
 
-  @ApiProperty({ type: () => CampusFindOneOutputDto, description: "Campus do bloco" })
-  @Field(() => CampusFindOneOutputDto)
+  @ApiProperty({ type: () => CampusFindOneOutputRestDto, description: "Campus do bloco" })
   @ValidateNested()
-  @Type(() => CampusFindOneOutputDto)
-  campus: CampusFindOneOutputDto;
+  @Type(() => CampusFindOneOutputRestDto)
+  campus: CampusFindOneOutputRestDto;
 
   @ApiPropertyOptional({
-    type: () => ImagemFindOneOutputDto,
+    type: () => ImagemFindOneOutputRestDto,
     description: "Imagem de capa do bloco",
     nullable: true,
   })
-  @Field(() => ImagemFindOneOutputDto, { nullable: true })
   @IsOptional()
   @ValidateNested()
-  @Type(() => ImagemFindOneOutputDto)
-  imagemCapa: ImagemFindOneOutputDto | null;
+  @Type(() => ImagemFindOneOutputRestDto)
+  imagemCapa: ImagemFindOneOutputRestDto | null;
 
   @ApiProperty({ description: "Data e hora da criacao do registro" })
-  @Field()
   @IsDateString()
   dateCreated: Date;
 
   @ApiProperty({ description: "Data e hora da alteracao do registro" })
-  @Field()
   @IsDateString()
   dateUpdated: Date;
 
   @ApiPropertyOptional({ description: "Data e hora da exclusao do registro", nullable: true })
-  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateString()
   dateDeleted: Date | null;
@@ -179,8 +160,8 @@ export class BlocoFindOneOutputDto {
 // List Input/Output
 // ============================================================================
 
-@ArgsType()
-export class BlocoListInputDto extends PaginationInputDto {
+@ApiSchema({ name: "BlocoListInputDto" })
+export class BlocoListInputRestDto extends PaginationInputRestDto {
   @ApiPropertyOptional({
     description: "Filtro por ID",
     type: [String],
@@ -188,7 +169,7 @@ export class BlocoListInputDto extends PaginationInputDto {
   @TransformToArray()
   @IsOptional()
   @IsArray()
-  @IsString({ each: true })
+  @IsUUID(undefined, { each: true })
   "filter.id"?: string[];
 
   @ApiPropertyOptional({
@@ -198,58 +179,51 @@ export class BlocoListInputDto extends PaginationInputDto {
   @TransformToArray()
   @IsOptional()
   @IsArray()
-  @IsString({ each: true })
+  @IsUUID(undefined, { each: true })
   "filter.campus.id"?: string[];
 }
 
-@ObjectType("BlocoListOutput")
-export class BlocoListOutputDto {
-  @ApiProperty({ type: () => PaginationMetaDto, description: "Metadados da busca" })
-  @Field(() => PaginationMetaDto)
-  meta: PaginationMetaDto;
+@ApiSchema({ name: "BlocoListOutputDto" })
+export class BlocoListOutputRestDto {
+  @ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" })
+  meta: PaginationMetaRestDto;
 
-  @ApiProperty({ type: () => [BlocoFindOneOutputDto], description: "Resultados da busca" })
-  @Field(() => [BlocoFindOneOutputDto])
-  data: BlocoFindOneOutputDto[];
+  @ApiProperty({ type: () => [BlocoFindOneOutputRestDto], description: "Resultados da busca" })
+  data: BlocoFindOneOutputRestDto[];
 }
 
 // ============================================================================
 // Create/Update Input
 // ============================================================================
 
-@InputType("BlocoCreateInput")
-export class BlocoCreateInputDto {
+@ApiSchema({ name: "BlocoCreateInputDto" })
+export class BlocoCreateInputRestDto {
   @ApiProperty({ description: "Nome do bloco", minLength: 1 })
-  @Field()
   @IsString()
   @MinLength(1)
   nome: string;
 
   @ApiProperty({ description: "Codigo do bloco", minLength: 1 })
-  @Field()
   @IsString()
   @MinLength(1)
   codigo: string;
 
-  @ApiProperty({ type: () => CampusFindOneInputDto, description: "Campus do bloco" })
-  @Field(() => CampusFindOneInputDto)
+  @ApiProperty({ type: () => CampusFindOneInputRestDto, description: "Campus do bloco" })
   @ValidateNested()
-  @Type(() => CampusFindOneInputDto)
-  campus: CampusFindOneInputDto;
+  @Type(() => CampusFindOneInputRestDto)
+  campus: CampusFindOneInputRestDto;
 }
 
-@InputType("BlocoUpdateInput")
-export class BlocoUpdateInputDto extends PartialType(BlocoCreateInputDto) {}
+@ApiSchema({ name: "BlocoUpdateInputDto" })
+export class BlocoUpdateInputRestDto extends PartialType(BlocoCreateInputRestDto) {}
 
 // ============================================================================
 // FindOne Input (for path params)
 // ============================================================================
 
-@ArgsType()
-@InputType("BlocoFindOneInput")
-export class BlocoFindOneInputDto {
+@ApiSchema({ name: "BlocoFindOneInputDto" })
+export class BlocoFindOneInputRestDto {
   @ApiProperty({ description: "Identificador do registro (uuid)", format: "uuid" })
-  @Field(() => ID)
   @IsUUID()
   id: string;
 }

@@ -22,6 +22,16 @@ export class Disponibilidade extends BaseEntity implements IDisponibilidade {
   }
 
   // ========================================
+  // Validação
+  // ========================================
+
+  validar(): void {
+    const { result, rules } = Disponibilidade.createValidation();
+    rules.required(this.dataInicio, "dataInicio");
+    Disponibilidade.throwIfInvalid(result);
+  }
+
+  // ========================================
   // Factory Methods
   // ========================================
 
@@ -30,17 +40,11 @@ export class Disponibilidade extends BaseEntity implements IDisponibilidade {
    * @throws EntityValidationError se os dados forem inválidos
    */
   static criar(dados: IDisponibilidadeCreate): Disponibilidade {
-    const { result, rules } = this.createValidation();
-
     const instance = new Disponibilidade();
-    instance.dataInicio = rules.required(dados.dataInicio, "dataInicio");
-
-    this.throwIfInvalid(result);
-
+    instance.dataInicio = dados.dataInicio;
     instance.dataFim = dados.dataFim ?? null;
-    instance.dateCreated = new Date().toISOString();
-    instance.dateUpdated = new Date().toISOString();
-    instance.dateDeleted = null;
+    instance.initDates();
+    instance.validar();
 
     return instance;
   }
@@ -63,18 +67,15 @@ export class Disponibilidade extends BaseEntity implements IDisponibilidade {
    * @throws EntityValidationError se os dados forem inválidos
    */
   atualizar(dados: IDisponibilidadeUpdate): void {
-    const { result, rules } = Disponibilidade.createValidation();
-
     if (dados.dataInicio !== undefined) {
-      this.dataInicio = rules.required(dados.dataInicio, "dataInicio");
+      this.dataInicio = dados.dataInicio;
     }
 
     if (dados.dataFim !== undefined) {
       this.dataFim = dados.dataFim;
     }
 
-    Disponibilidade.throwIfInvalid(result);
-
-    this.dateUpdated = new Date().toISOString();
+    this.touchUpdated();
+    this.validar();
   }
 }

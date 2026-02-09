@@ -1,7 +1,7 @@
 import type { AccessContext } from "@/modules/@core/access-context";
 import type { IBaseCrudRepositoryPort } from "@/modules/@shared";
 import type { AulaEntity } from "@/modules/aula/infrastructure/persistence/typeorm";
-import type { AulaFindOneOutput, AulaListOutput } from "../../dtos";
+import type { AulaFindOneOutputDto, AulaListOutputDto } from "../../dtos";
 
 export const AULA_REPOSITORY_PORT = Symbol("IAulaRepositoryPort");
 
@@ -10,7 +10,7 @@ export const AULA_REPOSITORY_PORT = Symbol("IAulaRepositoryPort");
  * Estende a interface base de CRUD com operações padrão
  */
 export interface IAulaRepositoryPort
-  extends IBaseCrudRepositoryPort<AulaEntity, AulaListOutput, AulaFindOneOutput> {
+  extends IBaseCrudRepositoryPort<AulaEntity, AulaListOutputDto, AulaFindOneOutputDto> {
   /**
    * Busca uma aula por ID (formato simples) - método obrigatório
    */
@@ -18,5 +18,5 @@ export interface IAulaRepositoryPort
     accessContext: AccessContext,
     id: string,
     selection?: string[] | boolean,
-  ): Promise<AulaFindOneOutput | null>;
+  ): Promise<AulaFindOneOutputDto | null>;
 }

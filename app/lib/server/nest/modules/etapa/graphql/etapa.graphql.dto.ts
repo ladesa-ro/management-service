@@ -1,37 +1,115 @@
-import { ArgsType, Field, ObjectType } from "@nestjs/graphql";
-import { IsArray, IsOptional, IsString } from "class-validator";
-import { PaginationGraphqlArgsDto } from "@/modules/@shared/infrastructure/graphql/dtos/pagination-graphql.dto";
-import { PaginationMetaDto } from "@/modules/@shared/infrastructure/presentation/rest/dtos";
-import { EtapaFindOneOutputRestDto } from "../rest/etapa.rest.dto";
+import { ArgsType, Field, InputType, Int, ObjectType } from "@nestjs/graphql";
+import {
+  IsArray,
+  IsDateString,
+  IsInt,
+  IsOptional,
+  IsString,
+  IsUUID,
+  Max,
+  Min,
+  ValidateNested,
+} from "class-validator";
+import {
+  EntityBaseGraphQlDto,
+  PaginationMetaGraphQlDto,
+} from "@/modules/@shared/infrastructure/graphql/dtos";
+import { PaginationArgsGraphQlDto } from "@/modules/@shared/infrastructure/graphql/dtos/pagination-graphql.dto";
+import { CalendarioLetivoFindOneOutputGraphQlDto } from "@/server/nest/modules/calendario-letivo/graphql/calendario-letivo.graphql.dto";
 
 // ============================================================================
-// List Input (GraphQL-compatible - no dots in field names)
+// FindOne Output
+// ============================================================================
+
+@ObjectType("EtapaFindOneOutputDto")
+export class EtapaFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
+  @Field(() => Int, { nullable: true }) numero: number | null;
+  @Field() dataInicio: string;
+  @Field() dataTermino: string;
+  @Field({ nullable: true }) cor: string | null;
+  @Field(() => CalendarioLetivoFindOneOutputGraphQlDto)
+  calendario: CalendarioLetivoFindOneOutputGraphQlDto;
+}
+
+// ============================================================================
+// Create Input
+// ============================================================================
+
+@InputType("CalendarioLetivoRefInputForEtapaDto")
+export class CalendarioLetivoRefInputForEtapaGraphQlDto {
+  @Field() @IsString() id: string;
+}
+
+@InputType("EtapaCreateInputDto")
+export class EtapaCreateInputGraphQlDto {
+  @Field(() => Int, { nullable: true })
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  @Max(255)
+  numero?: number | null;
+
+  @Field() @IsDateString() dataInicio: string;
+  @Field() @IsDateString() dataTermino: string;
+
+  @Field({ nullable: true }) @IsOptional() @IsString() cor?: string | null;
+
+  @Field(() => CalendarioLetivoRefInputForEtapaGraphQlDto)
+  @ValidateNested()
+  calendario: CalendarioLetivoRefInputForEtapaGraphQlDto;
+}
+
+// ============================================================================
+// Update Input
+// ============================================================================
+
+@InputType("EtapaUpdateInputDto")
+export class EtapaUpdateInputGraphQlDto {
+  @Field(() => Int, { nullable: true })
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  @Max(255)
+  numero?: number | null;
+
+  @Field({ nullable: true }) @IsOptional() @IsDateString() dataInicio?: string;
+  @Field({ nullable: true }) @IsOptional() @IsDateString() dataTermino?: string;
+  @Field({ nullable: true }) @IsOptional() @IsString() cor?: string | null;
+
+  @Field(() => CalendarioLetivoRefInputForEtapaGraphQlDto, { nullable: true })
+  @IsOptional()
+  @ValidateNested()
+  calendario?: CalendarioLetivoRefInputForEtapaGraphQlDto;
+}
+
+// ============================================================================
+// List Input
 // ============================================================================
 
 @ArgsType()
-export class EtapaListInputGqlDto extends PaginationGraphqlArgsDto {
+export class EtapaListInputGraphQlDto extends PaginationArgsGraphQlDto {
   @Field(() => [String], { nullable: true, description: "Filtro por ID" })
   @IsOptional()
   @IsArray()
-  @IsString({ each: true })
+  @IsUUID(undefined, { each: true })
   filterId?: string[];
 
   @Field(() => [String], { nullable: true, description: "Filtro por ID do Calendario" })
   @IsOptional()
   @IsArray()
-  @IsString({ each: true })
+  @IsUUID(undefined, { each: true })
   filterCalendarioId?: string[];
 }
 
 // ============================================================================
-// List Output (reuses the same output DTOs - they're already GraphQL-compatible)
+// List Output
 // ============================================================================
 
 @ObjectType("EtapaListResult")
-export class EtapaListOutputGqlDto {
-  @Field(() => PaginationMetaDto)
-  meta: PaginationMetaDto;
+export class EtapaListOutputGraphQlDto {
+  @Field(() => PaginationMetaGraphQlDto)
+  meta: PaginationMetaGraphQlDto;
 
-  @Field(() => [EtapaFindOneOutputRestDto])
-  data: EtapaFindOneOutputRestDto[];
+  @Field(() => [EtapaFindOneOutputGraphQlDto])
+  data: EtapaFindOneOutputGraphQlDto[];
 }

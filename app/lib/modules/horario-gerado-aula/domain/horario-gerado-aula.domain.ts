@@ -32,6 +32,17 @@ export class HorarioGeradoAula extends BaseEntity implements IHorarioGeradoAula 
   }
 
   // ========================================
+  // Validação
+  // ========================================
+
+  validar(): void {
+    const { result, rules } = HorarioGeradoAula.createValidation();
+    rules.required(this.data, "data");
+    rules.dateFormat(this.data, "data");
+    HorarioGeradoAula.throwIfInvalid(result);
+  }
+
+  // ========================================
   // Factory Methods
   // ========================================
 
@@ -40,17 +51,10 @@ export class HorarioGeradoAula extends BaseEntity implements IHorarioGeradoAula 
    * @throws EntityValidationError se os dados forem inválidos
    */
   static criar(dados: IHorarioGeradoAulaCreate): HorarioGeradoAula {
-    const { result, rules } = this.createValidation();
-
     const instance = new HorarioGeradoAula();
-    instance.data = rules.required(dados.data, "data");
-    instance.data = rules.dateFormat(instance.data, "data");
-
-    this.throwIfInvalid(result);
-
-    instance.dateCreated = new Date().toISOString();
-    instance.dateUpdated = new Date().toISOString();
-    instance.dateDeleted = null;
+    instance.data = dados.data;
+    instance.initDates();
+    instance.validar();
 
     return instance;
   }
@@ -73,15 +77,11 @@ export class HorarioGeradoAula extends BaseEntity implements IHorarioGeradoAula 
    * @throws EntityValidationError se os dados forem inválidos
    */
   atualizar(dados: IHorarioGeradoAulaUpdate): void {
-    const { result, rules } = HorarioGeradoAula.createValidation();
-
     if (dados.data !== undefined) {
-      this.data = rules.required(dados.data, "data");
-      this.data = rules.dateFormat(this.data, "data");
+      this.data = dados.data;
     }
 
-    HorarioGeradoAula.throwIfInvalid(result);
-
-    this.dateUpdated = new Date().toISOString();
+    this.touchUpdated();
+    this.validar();
   }
 }

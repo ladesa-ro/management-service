@@ -5,24 +5,24 @@ import { BaseCrudService } from "@/modules/@shared";
 import { CalendarioLetivoService } from "@/modules/calendario-letivo";
 import type { EventoEntity } from "@/modules/evento/infrastructure/persistence/typeorm";
 import type {
-  EventoCreateInput,
-  EventoFindOneInput,
-  EventoFindOneOutput,
-  EventoListInput,
-  EventoListOutput,
-  EventoUpdateInput,
+  EventoCreateInputDto,
+  EventoFindOneInputDto,
+  EventoFindOneOutputDto,
+  EventoListInputDto,
+  EventoListOutputDto,
+  EventoUpdateInputDto,
 } from "../dtos";
 import { EVENTO_REPOSITORY_PORT, type IEventoRepositoryPort } from "../ports/out";
 
 @Injectable()
 export class EventoService extends BaseCrudService<
   EventoEntity,
-  EventoListInput,
-  EventoListOutput,
-  EventoFindOneInput,
-  EventoFindOneOutput,
-  EventoCreateInput,
-  EventoUpdateInput
+  EventoListInputDto,
+  EventoListOutputDto,
+  EventoFindOneInputDto,
+  EventoFindOneOutputDto,
+  EventoCreateInputDto,
+  EventoUpdateInputDto
 > {
   protected readonly resourceName = "Evento";
   protected readonly createAction = "evento:create";
@@ -49,7 +49,7 @@ export class EventoService extends BaseCrudService<
   protected override async beforeCreate(
     accessContext: AccessContext,
     entity: EventoEntity,
-    dto: EventoCreateInput,
+    dto: EventoCreateInputDto,
   ): Promise<void> {
     if (dto.calendario) {
       const calendario = await this.calendarioLetivoService.findByIdSimpleStrict(
@@ -63,7 +63,7 @@ export class EventoService extends BaseCrudService<
   protected override async beforeUpdate(
     accessContext: AccessContext,
     entity: EventoEntity,
-    dto: EventoFindOneInput & EventoUpdateInput,
+    dto: EventoFindOneInputDto & EventoUpdateInputDto,
   ): Promise<void> {
     if (has(dto, "calendario") && dto.calendario !== undefined) {
       const calendario = await this.calendarioLetivoService.findByIdSimpleStrict(

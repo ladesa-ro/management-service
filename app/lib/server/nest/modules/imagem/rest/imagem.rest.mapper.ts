@@ -1,15 +1,15 @@
 import {
-  ImagemFindOneInput,
-  ImagemFindOneOutput,
-  ImagemListInput,
-  ImagemListOutput,
-} from "@/modules/imagem";
-import { mapPaginationMeta } from "@/server/nest/shared/mappers";
-import {
   ImagemFindOneInputDto,
   ImagemFindOneOutputDto,
   ImagemListInputDto,
   ImagemListOutputDto,
+} from "@/modules/imagem";
+import { mapPaginationMeta } from "@/server/nest/shared/mappers";
+import {
+  ImagemFindOneInputRestDto,
+  ImagemFindOneOutputRestDto,
+  ImagemListInputRestDto,
+  ImagemListOutputRestDto,
 } from "./imagem.rest.dto";
 
 export class ImagemRestMapper {
@@ -17,18 +17,18 @@ export class ImagemRestMapper {
   // Input: Server DTO -> Core DTO
   // ============================================================================
 
-  static toFindOneInput(dto: ImagemFindOneInputDto): ImagemFindOneInput {
-    const input = new ImagemFindOneInput();
+  static toFindOneInput(dto: ImagemFindOneInputRestDto): ImagemFindOneInputDto {
+    const input = new ImagemFindOneInputDto();
     input.id = dto.id;
     return input;
   }
 
-  static toListInput(dto: ImagemListInputDto | null): ImagemListInput | null {
+  static toListInput(dto: ImagemListInputRestDto | null): ImagemListInputDto | null {
     if (!dto) {
       return null;
     }
 
-    const input = new ImagemListInput();
+    const input = new ImagemListInputDto();
     input.page = dto.page;
     input.limit = dto.limit;
     input.search = dto.search;
@@ -42,8 +42,8 @@ export class ImagemRestMapper {
   // Output: Core DTO -> Server DTO
   // ============================================================================
 
-  static toFindOneOutputDto(output: ImagemFindOneOutput): ImagemFindOneOutputDto {
-    const dto = new ImagemFindOneOutputDto();
+  static toFindOneOutputDto(output: ImagemFindOneOutputDto): ImagemFindOneOutputRestDto {
+    const dto = new ImagemFindOneOutputRestDto();
     dto.id = output.id;
     dto.descricao = output.descricao;
     dto.dateCreated = new Date(output.dateCreated);
@@ -53,8 +53,8 @@ export class ImagemRestMapper {
     return dto;
   }
 
-  static toListOutputDto(output: ImagemListOutput): ImagemListOutputDto {
-    const dto = new ImagemListOutputDto();
+  static toListOutputDto(output: ImagemListOutputDto): ImagemListOutputRestDto {
+    const dto = new ImagemListOutputRestDto();
     dto.meta = mapPaginationMeta(output.meta);
     dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
     return dto;

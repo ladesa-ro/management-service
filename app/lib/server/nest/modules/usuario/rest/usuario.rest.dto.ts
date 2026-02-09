@@ -1,5 +1,4 @@
-import { ArgsType, Field, ID, InputType, ObjectType, PartialType } from "@nestjs/graphql";
-import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { ApiProperty, ApiPropertyOptional, ApiSchema, PartialType } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import {
   IsArray,
@@ -19,95 +18,85 @@ import {
   simpleProperty,
 } from "@/modules/@shared/infrastructure/persistence/typeorm/metadata";
 import {
-  PaginationInputDto,
-  PaginationMetaDto,
+  PaginationInputRestDto,
+  PaginationMetaRestDto,
   TransformToArray,
 } from "@/modules/@shared/infrastructure/presentation/rest/dtos";
-import { ImagemFindOneOutputDto } from "@/server/nest/modules/bloco/rest";
+import { ImagemFindOneOutputRestDto } from "@/server/nest/modules/bloco/rest";
 
 // ============================================================================
 // FindOne Output
 // ============================================================================
 
-@ObjectType("Usuario")
+@ApiSchema({ name: "UsuarioFindOneOutputDto" })
 @RegisterModel({
-  name: "UsuarioFindOneOutput",
+  name: "UsuarioFindOneOutputDto",
   properties: [
     simpleProperty("id"),
     simpleProperty("nome", { nullable: true }),
     simpleProperty("matriculaSiape", { nullable: true }),
     simpleProperty("email", { nullable: true }),
     simpleProperty("isSuperUser"),
-    referenceProperty("imagemCapa", "ImagemFindOneOutput", { nullable: true }),
-    referenceProperty("imagemPerfil", "ImagemFindOneOutput", { nullable: true }),
+    referenceProperty("imagemCapa", "ImagemFindOneOutputDto", { nullable: true }),
+    referenceProperty("imagemPerfil", "ImagemFindOneOutputDto", { nullable: true }),
     ...commonProperties.dated,
   ],
 })
-export class UsuarioFindOneOutputDto {
+export class UsuarioFindOneOutputRestDto {
   @ApiProperty({ description: "Identificador do registro (uuid)", format: "uuid" })
-  @Field(() => ID)
   @IsUUID()
   id: string;
 
   @ApiPropertyOptional({ description: "Nome do usuario", nullable: true, minLength: 1 })
-  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   @MinLength(1)
   nome: string | null;
 
   @ApiPropertyOptional({ description: "Matricula SIAPE do usuario", nullable: true, minLength: 1 })
-  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   @MinLength(1)
   matriculaSiape: string | null;
 
   @ApiPropertyOptional({ description: "E-mail do usuario", nullable: true, format: "email" })
-  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsEmail()
   email: string | null;
 
   @ApiProperty({ description: "Diz que o usuario tem poderes de administrador" })
-  @Field()
   @IsBoolean()
   isSuperUser: boolean;
 
   @ApiPropertyOptional({
-    type: () => ImagemFindOneOutputDto,
+    type: () => ImagemFindOneOutputRestDto,
     description: "Imagem de capa do usuario",
     nullable: true,
   })
-  @Field(() => ImagemFindOneOutputDto, { nullable: true })
   @IsOptional()
   @ValidateNested()
-  @Type(() => ImagemFindOneOutputDto)
-  imagemCapa: ImagemFindOneOutputDto | null;
+  @Type(() => ImagemFindOneOutputRestDto)
+  imagemCapa: ImagemFindOneOutputRestDto | null;
 
   @ApiPropertyOptional({
-    type: () => ImagemFindOneOutputDto,
+    type: () => ImagemFindOneOutputRestDto,
     description: "Imagem de perfil do usuario",
     nullable: true,
   })
-  @Field(() => ImagemFindOneOutputDto, { nullable: true })
   @IsOptional()
   @ValidateNested()
-  @Type(() => ImagemFindOneOutputDto)
-  imagemPerfil: ImagemFindOneOutputDto | null;
+  @Type(() => ImagemFindOneOutputRestDto)
+  imagemPerfil: ImagemFindOneOutputRestDto | null;
 
   @ApiProperty({ description: "Data e hora da criacao do registro" })
-  @Field()
   @IsDateString()
   dateCreated: Date;
 
   @ApiProperty({ description: "Data e hora da alteracao do registro" })
-  @Field()
   @IsDateString()
   dateUpdated: Date;
 
   @ApiPropertyOptional({ description: "Data e hora da exclusao do registro", nullable: true })
-  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateString()
   dateDeleted: Date | null;
@@ -117,87 +106,77 @@ export class UsuarioFindOneOutputDto {
 // Ensino Output (dados de ensino do usuario)
 // ============================================================================
 
-@ObjectType("UsuarioEnsinoTurmaRef")
-export class UsuarioEnsinoTurmaRefDto {
+@ApiSchema({ name: "UsuarioEnsinoTurmaRefDto" })
+export class UsuarioEnsinoTurmaRefRestDto {
   @ApiProperty({ description: "ID da turma", format: "uuid" })
-  @Field(() => ID)
   @IsUUID()
   id: string;
 
   @ApiProperty({ description: "Periodo da turma" })
-  @Field()
   @IsString()
   periodo: string;
 }
 
-@ObjectType("UsuarioEnsinoCursoRef")
-export class UsuarioEnsinoCursoRefDto {
+@ApiSchema({ name: "UsuarioEnsinoCursoRefDto" })
+export class UsuarioEnsinoCursoRefRestDto {
   @ApiProperty({ description: "ID do curso", format: "uuid" })
-  @Field(() => ID)
   @IsUUID()
   id: string;
 
   @ApiProperty({ description: "Nome do curso" })
-  @Field()
   @IsString()
   nome: string;
 
   @ApiProperty({
     description: "Turmas do curso onde o usuario leciona",
-    type: () => [UsuarioEnsinoTurmaRefDto],
+    type: () => [UsuarioEnsinoTurmaRefRestDto],
   })
-  @Field(() => [UsuarioEnsinoTurmaRefDto])
   @ValidateNested({ each: true })
-  @Type(() => UsuarioEnsinoTurmaRefDto)
-  turmas: UsuarioEnsinoTurmaRefDto[];
+  @Type(() => UsuarioEnsinoTurmaRefRestDto)
+  turmas: UsuarioEnsinoTurmaRefRestDto[];
 }
 
-@ObjectType("UsuarioEnsinoDisciplinaRef")
-export class UsuarioEnsinoDisciplinaRefDto {
+@ApiSchema({ name: "UsuarioEnsinoDisciplinaRefDto" })
+export class UsuarioEnsinoDisciplinaRefRestDto {
   @ApiProperty({ description: "ID da disciplina", format: "uuid" })
-  @Field(() => ID)
   @IsUUID()
   id: string;
 
   @ApiProperty({ description: "Nome da disciplina" })
-  @Field()
   @IsString()
   nome: string;
 
   @ApiProperty({
     description: "Cursos onde o usuario leciona esta disciplina",
-    type: () => [UsuarioEnsinoCursoRefDto],
+    type: () => [UsuarioEnsinoCursoRefRestDto],
   })
-  @Field(() => [UsuarioEnsinoCursoRefDto])
   @ValidateNested({ each: true })
-  @Type(() => UsuarioEnsinoCursoRefDto)
-  cursos: UsuarioEnsinoCursoRefDto[];
+  @Type(() => UsuarioEnsinoCursoRefRestDto)
+  cursos: UsuarioEnsinoCursoRefRestDto[];
 }
 
-@ObjectType("UsuarioEnsinoOutput")
-export class UsuarioEnsinoOutputDto {
-  @ApiProperty({ description: "Dados do usuario", type: () => UsuarioFindOneOutputDto })
-  @Field(() => UsuarioFindOneOutputDto)
+@ApiSchema({ name: "UsuarioEnsinoOutputDto" })
+export class UsuarioEnsinoOutputRestDto {
+  @ApiProperty({ description: "Dados do usuario", type: () => UsuarioFindOneOutputRestDto })
   @ValidateNested()
-  @Type(() => UsuarioFindOneOutputDto)
-  usuario: UsuarioFindOneOutputDto;
+  @Type(() => UsuarioFindOneOutputRestDto)
+  usuario: UsuarioFindOneOutputRestDto;
 
   @ApiProperty({
     description: "Disciplinas onde o usuario leciona (com cursos e turmas)",
-    type: () => [UsuarioEnsinoDisciplinaRefDto],
+    type: () => [UsuarioEnsinoDisciplinaRefRestDto],
   })
-  @Field(() => [UsuarioEnsinoDisciplinaRefDto])
   @ValidateNested({ each: true })
-  @Type(() => UsuarioEnsinoDisciplinaRefDto)
-  disciplinas: UsuarioEnsinoDisciplinaRefDto[];
+  @Type(() => UsuarioEnsinoDisciplinaRefRestDto)
+  disciplinas: UsuarioEnsinoDisciplinaRefRestDto[];
 }
 
 // ============================================================================
 // List Input/Output
 // ============================================================================
 
-@ArgsType()
-export class UsuarioListInputDto extends PaginationInputDto {
+@ApiSchema({ name: "UsuarioListInputDto" })
+export class UsuarioListInputRestDto extends PaginationInputRestDto {
   @ApiPropertyOptional({
     description: "Filtro por ID",
     type: [String],
@@ -205,60 +184,53 @@ export class UsuarioListInputDto extends PaginationInputDto {
   @TransformToArray()
   @IsOptional()
   @IsArray()
-  @IsString({ each: true })
+  @IsUUID(undefined, { each: true })
   "filter.id"?: string[];
 }
 
-@ObjectType("UsuarioListOutput")
-export class UsuarioListOutputDto {
-  @ApiProperty({ type: () => PaginationMetaDto, description: "Metadados da busca" })
-  @Field(() => PaginationMetaDto)
-  meta: PaginationMetaDto;
+@ApiSchema({ name: "UsuarioListOutputDto" })
+export class UsuarioListOutputRestDto {
+  @ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" })
+  meta: PaginationMetaRestDto;
 
-  @ApiProperty({ type: () => [UsuarioFindOneOutputDto], description: "Resultados da busca" })
-  @Field(() => [UsuarioFindOneOutputDto])
-  data: UsuarioFindOneOutputDto[];
+  @ApiProperty({ type: () => [UsuarioFindOneOutputRestDto], description: "Resultados da busca" })
+  data: UsuarioFindOneOutputRestDto[];
 }
 
 // ============================================================================
 // Create/Update Input
 // ============================================================================
 
-@InputType("UsuarioCreateInput")
-export class UsuarioCreateInputDto {
+@ApiSchema({ name: "UsuarioCreateInputDto" })
+export class UsuarioCreateInputRestDto {
   @ApiPropertyOptional({ description: "Nome do usuario", nullable: true, minLength: 1 })
-  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   @MinLength(1)
   nome?: string | null;
 
   @ApiPropertyOptional({ description: "Matricula SIAPE do usuario", nullable: true, minLength: 1 })
-  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   @MinLength(1)
   matriculaSiape?: string | null;
 
   @ApiPropertyOptional({ description: "E-mail do usuario", nullable: true, format: "email" })
-  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsEmail()
   email?: string | null;
 }
 
-@InputType("UsuarioUpdateInput")
-export class UsuarioUpdateInputDto extends PartialType(UsuarioCreateInputDto) {}
+@ApiSchema({ name: "UsuarioUpdateInputDto" })
+export class UsuarioUpdateInputRestDto extends PartialType(UsuarioCreateInputRestDto) {}
 
 // ============================================================================
 // FindOne Input (for path params)
 // ============================================================================
 
-@ArgsType()
-@InputType("UsuarioFindOneInput")
-export class UsuarioFindOneInputDto {
+@ApiSchema({ name: "UsuarioFindOneInputDto" })
+export class UsuarioFindOneInputRestDto {
   @ApiProperty({ description: "Identificador do registro (uuid)", format: "uuid" })
-  @Field(() => ID)
   @IsUUID()
   id: string;
 }

@@ -1,12 +1,11 @@
-import type { IdUuid, ScalarDateTimeString } from "@/modules/@shared";
+import type { IdUuid, IEntityBase, ScalarDateTimeString } from "@/modules/@shared";
 import type { IAmbiente } from "@/modules/ambiente/domain/ambiente.types";
 import type { ICalendarioLetivo } from "@/modules/calendario-letivo";
 
 /**
  * Interface que define a estrutura de um Evento
  */
-export interface IEvento {
-  id: IdUuid;
+export interface IEvento extends IEntityBase {
   nome: string | null;
   rrule: string;
   cor: string | null;
@@ -14,9 +13,6 @@ export interface IEvento {
   dataFim: ScalarDateTimeString | null;
   calendario: ICalendarioLetivo;
   ambiente: IAmbiente | null;
-  dateCreated: ScalarDateTimeString;
-  dateUpdated: ScalarDateTimeString;
-  dateDeleted: ScalarDateTimeString | null;
 }
 
 /**

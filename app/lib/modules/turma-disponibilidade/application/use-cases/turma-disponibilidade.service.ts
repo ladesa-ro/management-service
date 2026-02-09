@@ -6,12 +6,12 @@ import { DisponibilidadeService } from "@/modules/disponibilidade/application/us
 import { TurmaService } from "@/modules/turma/application/use-cases/turma.service";
 import type { TurmaDisponibilidadeEntity } from "@/modules/turma-disponibilidade/infrastructure/persistence/typeorm";
 import type {
-  TurmaDisponibilidadeCreateInput,
-  TurmaDisponibilidadeFindOneInput,
-  TurmaDisponibilidadeFindOneOutput,
-  TurmaDisponibilidadeListInput,
-  TurmaDisponibilidadeListOutput,
-  TurmaDisponibilidadeUpdateInput,
+  TurmaDisponibilidadeCreateInputDto,
+  TurmaDisponibilidadeFindOneInputDto,
+  TurmaDisponibilidadeFindOneOutputDto,
+  TurmaDisponibilidadeListInputDto,
+  TurmaDisponibilidadeListOutputDto,
+  TurmaDisponibilidadeUpdateInputDto,
 } from "../dtos";
 import {
   type ITurmaDisponibilidadeRepositoryPort,
@@ -21,12 +21,12 @@ import {
 @Injectable()
 export class TurmaDisponibilidadeService extends BaseCrudService<
   TurmaDisponibilidadeEntity,
-  TurmaDisponibilidadeListInput,
-  TurmaDisponibilidadeListOutput,
-  TurmaDisponibilidadeFindOneInput,
-  TurmaDisponibilidadeFindOneOutput,
-  TurmaDisponibilidadeCreateInput,
-  TurmaDisponibilidadeUpdateInput
+  TurmaDisponibilidadeListInputDto,
+  TurmaDisponibilidadeListOutputDto,
+  TurmaDisponibilidadeFindOneInputDto,
+  TurmaDisponibilidadeFindOneOutputDto,
+  TurmaDisponibilidadeCreateInputDto,
+  TurmaDisponibilidadeUpdateInputDto
 > {
   protected readonly resourceName = "TurmaDisponibilidade";
   protected readonly createAction = "turma_disponibilidade:create";
@@ -47,7 +47,7 @@ export class TurmaDisponibilidadeService extends BaseCrudService<
   protected override async beforeCreate(
     accessContext: AccessContext,
     entity: TurmaDisponibilidadeEntity,
-    dto: TurmaDisponibilidadeCreateInput,
+    dto: TurmaDisponibilidadeCreateInputDto,
   ): Promise<void> {
     if (dto.turma) {
       const turma = await this.turmaService.findByIdSimpleStrict(accessContext, dto.turma.id);
@@ -66,7 +66,7 @@ export class TurmaDisponibilidadeService extends BaseCrudService<
   protected override async beforeUpdate(
     accessContext: AccessContext,
     entity: TurmaDisponibilidadeEntity,
-    dto: TurmaDisponibilidadeFindOneInput & TurmaDisponibilidadeUpdateInput,
+    dto: TurmaDisponibilidadeFindOneInputDto & TurmaDisponibilidadeUpdateInputDto,
   ): Promise<void> {
     if (has(dto, "turma") && dto.turma !== undefined) {
       if (dto.turma) {

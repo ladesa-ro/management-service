@@ -1,5 +1,4 @@
-import { ArgsType, Field, ID, InputType, ObjectType, PartialType } from "@nestjs/graphql";
-import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { ApiProperty, ApiPropertyOptional, ApiSchema, PartialType } from "@nestjs/swagger";
 import { IsArray, IsDateString, IsOptional, IsString, IsUUID, Matches } from "class-validator";
 import {
   commonProperties,
@@ -7,8 +6,8 @@ import {
   simpleProperty,
 } from "@/modules/@shared/infrastructure/persistence/typeorm/metadata";
 import {
-  PaginationInputDto,
-  PaginationMetaDto,
+  PaginationInputRestDto,
+  PaginationMetaRestDto,
   TransformToArray,
 } from "@/modules/@shared/infrastructure/presentation/rest/dtos";
 
@@ -23,9 +22,9 @@ export const TIME_PATTERN = /^([01]\d|2[0-3]):([0-5]\d)(:([0-5]\d))?$/;
 // FindOne Output
 // ============================================================================
 
-@ObjectType("IntervaloDeTempo")
+@ApiSchema({ name: "IntervaloDeTempoFindOneOutputDto" })
 @RegisterModel({
-  name: "IntervaloDeTempoFindOneOutput",
+  name: "IntervaloDeTempoFindOneOutputDto",
   properties: [
     simpleProperty("id"),
     simpleProperty("periodoInicio"),
@@ -33,9 +32,8 @@ export const TIME_PATTERN = /^([01]\d|2[0-3]):([0-5]\d)(:([0-5]\d))?$/;
     ...commonProperties.dated,
   ],
 })
-export class IntervaloDeTempoFindOneOutputDto {
+export class IntervaloDeTempoFindOneOutputRestDto {
   @ApiProperty({ description: "Identificador do registro (uuid)", format: "uuid" })
-  @Field(() => ID)
   @IsUUID()
   id: string;
 
@@ -44,7 +42,6 @@ export class IntervaloDeTempoFindOneOutputDto {
     format: "time",
     example: "08:00:00",
   })
-  @Field()
   @IsString()
   @Matches(TIME_PATTERN, { message: "periodoInicio deve estar no formato HH:MM ou HH:MM:SS" })
   periodoInicio: string;
@@ -54,23 +51,19 @@ export class IntervaloDeTempoFindOneOutputDto {
     format: "time",
     example: "09:00:00",
   })
-  @Field()
   @IsString()
   @Matches(TIME_PATTERN, { message: "periodoFim deve estar no formato HH:MM ou HH:MM:SS" })
   periodoFim: string;
 
   @ApiProperty({ description: "Data e hora da criacao do registro" })
-  @Field()
   @IsDateString()
   dateCreated: Date;
 
   @ApiProperty({ description: "Data e hora da alteracao do registro" })
-  @Field()
   @IsDateString()
   dateUpdated: Date;
 
   @ApiPropertyOptional({ description: "Data e hora da exclusao do registro", nullable: true })
-  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateString()
   dateDeleted: Date | null;
@@ -80,8 +73,8 @@ export class IntervaloDeTempoFindOneOutputDto {
 // List Input/Output
 // ============================================================================
 
-@ArgsType()
-export class IntervaloDeTempoListInputDto extends PaginationInputDto {
+@ApiSchema({ name: "IntervaloDeTempoListInputDto" })
+export class IntervaloDeTempoListInputRestDto extends PaginationInputRestDto {
   @ApiPropertyOptional({
     description: "Filtro por ID",
     type: [String],
@@ -89,36 +82,33 @@ export class IntervaloDeTempoListInputDto extends PaginationInputDto {
   @TransformToArray()
   @IsOptional()
   @IsArray()
-  @IsString({ each: true })
+  @IsUUID(undefined, { each: true })
   "filter.id"?: string[];
 }
 
-@ObjectType("IntervaloDeTempoListOutput")
-export class IntervaloDeTempoListOutputDto {
-  @ApiProperty({ type: () => PaginationMetaDto, description: "Metadados da busca" })
-  @Field(() => PaginationMetaDto)
-  meta: PaginationMetaDto;
+@ApiSchema({ name: "IntervaloDeTempoListOutputDto" })
+export class IntervaloDeTempoListOutputRestDto {
+  @ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" })
+  meta: PaginationMetaRestDto;
 
   @ApiProperty({
-    type: () => [IntervaloDeTempoFindOneOutputDto],
+    type: () => [IntervaloDeTempoFindOneOutputRestDto],
     description: "Resultados da busca",
   })
-  @Field(() => [IntervaloDeTempoFindOneOutputDto])
-  data: IntervaloDeTempoFindOneOutputDto[];
+  data: IntervaloDeTempoFindOneOutputRestDto[];
 }
 
 // ============================================================================
 // Create/Update Input
 // ============================================================================
 
-@InputType("IntervaloDeTempoCreateInput")
-export class IntervaloDeTempoCreateInputDto {
+@ApiSchema({ name: "IntervaloDeTempoCreateInputDto" })
+export class IntervaloDeTempoCreateInputRestDto {
   @ApiProperty({
     description: "Horario que o intervalo de tempo inicia",
     format: "time",
     example: "08:00:00",
   })
-  @Field()
   @IsString()
   @Matches(TIME_PATTERN, { message: "periodoInicio deve estar no formato HH:MM ou HH:MM:SS" })
   periodoInicio: string;
@@ -128,24 +118,23 @@ export class IntervaloDeTempoCreateInputDto {
     format: "time",
     example: "09:00:00",
   })
-  @Field()
   @IsString()
   @Matches(TIME_PATTERN, { message: "periodoFim deve estar no formato HH:MM ou HH:MM:SS" })
   periodoFim: string;
 }
 
-@InputType("IntervaloDeTempoUpdateInput")
-export class IntervaloDeTempoUpdateInputDto extends PartialType(IntervaloDeTempoCreateInputDto) {}
+@ApiSchema({ name: "IntervaloDeTempoUpdateInputDto" })
+export class IntervaloDeTempoUpdateInputRestDto extends PartialType(
+  IntervaloDeTempoCreateInputRestDto,
+) {}
 
 // ============================================================================
 // FindOne Input (for path params)
 // ============================================================================
 
-@ArgsType()
-@InputType("IntervaloDeTempoFindOneInput")
-export class IntervaloDeTempoFindOneInputDto {
+@ApiSchema({ name: "IntervaloDeTempoFindOneInputDto" })
+export class IntervaloDeTempoFindOneInputRestDto {
   @ApiProperty({ description: "Identificador do registro (uuid)", format: "uuid" })
-  @Field(() => ID)
   @IsUUID()
   id: string;
 }

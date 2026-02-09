@@ -8,10 +8,10 @@ import {
   paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
-  EtapaFindOneInput,
-  EtapaFindOneOutput,
-  EtapaListInput,
-  EtapaListOutput,
+  EtapaFindOneInputDto,
+  EtapaFindOneOutputDto,
+  EtapaListInputDto,
+  EtapaListOutputDto,
   IEtapaRepositoryPort,
 } from "@/modules/etapa";
 import type { EtapaEntity } from "./etapa.entity";
@@ -20,16 +20,16 @@ import type { EtapaEntity } from "./etapa.entity";
 export class EtapaTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     EtapaEntity,
-    EtapaListInput,
-    EtapaListOutput,
-    EtapaFindOneInput,
-    EtapaFindOneOutput
+    EtapaListInputDto,
+    EtapaListOutputDto,
+    EtapaFindOneInputDto,
+    EtapaFindOneOutputDto
   >
   implements IEtapaRepositoryPort
 {
   protected readonly alias = "etapa";
   protected readonly authzAction = "etapa:find";
-  protected readonly outputDtoName = "EtapaFindOneOutput";
+  protected readonly outputDtoName = "EtapaFindOneOutputDto";
 
   constructor(
     protected readonly databaseContext: DatabaseContextService,

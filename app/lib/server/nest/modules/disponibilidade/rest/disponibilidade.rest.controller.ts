@@ -10,12 +10,12 @@ import {
 import { AccessContext, AccessContextHttp } from "@/modules/@core/access-context";
 import { DisponibilidadeService } from "@/modules/disponibilidade/application/use-cases/disponibilidade.service";
 import {
-  DisponibilidadeCreateInputDto,
-  DisponibilidadeFindOneInputDto,
-  DisponibilidadeFindOneOutputDto,
-  DisponibilidadeListInputDto,
-  DisponibilidadeListOutputDto,
-  DisponibilidadeUpdateInputDto,
+  DisponibilidadeCreateInputRestDto,
+  DisponibilidadeFindOneInputRestDto,
+  DisponibilidadeFindOneOutputRestDto,
+  DisponibilidadeListInputRestDto,
+  DisponibilidadeListOutputRestDto,
+  DisponibilidadeUpdateInputRestDto,
 } from "./disponibilidade.rest.dto";
 import { DisponibilidadeRestMapper } from "./disponibilidade.rest.mapper";
 
@@ -26,12 +26,12 @@ export class DisponibilidadeRestController {
 
   @Get("/")
   @ApiOperation({ summary: "Lista disponibilidades", operationId: "disponibilidadeFindAll" })
-  @ApiOkResponse({ type: DisponibilidadeListOutputDto })
+  @ApiOkResponse({ type: DisponibilidadeListOutputRestDto })
   @ApiForbiddenResponse()
   async findAll(
     @AccessContextHttp() accessContext: AccessContext,
-    @Query() dto: DisponibilidadeListInputDto,
-  ): Promise<DisponibilidadeListOutputDto> {
+    @Query() dto: DisponibilidadeListInputRestDto,
+  ): Promise<DisponibilidadeListOutputRestDto> {
     const input = DisponibilidadeRestMapper.toListInput(dto);
     const result = await this.disponibilidadeService.findAll(accessContext, input);
     return DisponibilidadeRestMapper.toListOutputDto(result);
@@ -42,13 +42,13 @@ export class DisponibilidadeRestController {
     summary: "Busca uma disponibilidade por ID",
     operationId: "disponibilidadeFindById",
   })
-  @ApiOkResponse({ type: DisponibilidadeFindOneOutputDto })
+  @ApiOkResponse({ type: DisponibilidadeFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async findById(
     @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: DisponibilidadeFindOneInputDto,
-  ): Promise<DisponibilidadeFindOneOutputDto> {
+    @Param() params: DisponibilidadeFindOneInputRestDto,
+  ): Promise<DisponibilidadeFindOneOutputRestDto> {
     const input = DisponibilidadeRestMapper.toFindOneInput(params);
     const result = await this.disponibilidadeService.findByIdStrict(accessContext, input);
     return DisponibilidadeRestMapper.toFindOneOutputDto(result);
@@ -56,12 +56,12 @@ export class DisponibilidadeRestController {
 
   @Post("/")
   @ApiOperation({ summary: "Cria uma disponibilidade", operationId: "disponibilidadeCreate" })
-  @ApiCreatedResponse({ type: DisponibilidadeFindOneOutputDto })
+  @ApiCreatedResponse({ type: DisponibilidadeFindOneOutputRestDto })
   @ApiForbiddenResponse()
   async create(
     @AccessContextHttp() accessContext: AccessContext,
-    @Body() dto: DisponibilidadeCreateInputDto,
-  ): Promise<DisponibilidadeFindOneOutputDto> {
+    @Body() dto: DisponibilidadeCreateInputRestDto,
+  ): Promise<DisponibilidadeFindOneOutputRestDto> {
     const input = DisponibilidadeRestMapper.toCreateInput(dto);
     const result = await this.disponibilidadeService.create(accessContext, input);
     return DisponibilidadeRestMapper.toFindOneOutputDto(result);
@@ -69,14 +69,14 @@ export class DisponibilidadeRestController {
 
   @Patch("/:id")
   @ApiOperation({ summary: "Atualiza uma disponibilidade", operationId: "disponibilidadeUpdate" })
-  @ApiOkResponse({ type: DisponibilidadeFindOneOutputDto })
+  @ApiOkResponse({ type: DisponibilidadeFindOneOutputRestDto })
   @ApiForbiddenResponse()
   @ApiNotFoundResponse()
   async update(
     @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: DisponibilidadeFindOneInputDto,
-    @Body() dto: DisponibilidadeUpdateInputDto,
-  ): Promise<DisponibilidadeFindOneOutputDto> {
+    @Param() params: DisponibilidadeFindOneInputRestDto,
+    @Body() dto: DisponibilidadeUpdateInputRestDto,
+  ): Promise<DisponibilidadeFindOneOutputRestDto> {
     const findOneInput = DisponibilidadeRestMapper.toFindOneInput(params);
     const updateInput = DisponibilidadeRestMapper.toUpdateInput(dto);
     const result = await this.disponibilidadeService.update(accessContext, {
@@ -96,7 +96,7 @@ export class DisponibilidadeRestController {
   @ApiNotFoundResponse()
   async deleteOneById(
     @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: DisponibilidadeFindOneInputDto,
+    @Param() params: DisponibilidadeFindOneInputRestDto,
   ): Promise<boolean> {
     const input = DisponibilidadeRestMapper.toFindOneInput(params);
     return this.disponibilidadeService.deleteOneById(accessContext, input);

@@ -8,10 +8,10 @@ import {
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
   INivelFormacaoRepositoryPort,
-  NivelFormacaoFindOneInput,
-  NivelFormacaoFindOneOutput,
-  NivelFormacaoListInput,
-  NivelFormacaoListOutput,
+  NivelFormacaoFindOneInputDto,
+  NivelFormacaoFindOneOutputDto,
+  NivelFormacaoListInputDto,
+  NivelFormacaoListOutputDto,
 } from "@/modules/nivel-formacao";
 import type { NivelFormacaoEntity } from "./nivel-formacao.entity";
 
@@ -19,16 +19,16 @@ import type { NivelFormacaoEntity } from "./nivel-formacao.entity";
 export class NivelFormacaoTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     NivelFormacaoEntity,
-    NivelFormacaoListInput,
-    NivelFormacaoListOutput,
-    NivelFormacaoFindOneInput,
-    NivelFormacaoFindOneOutput
+    NivelFormacaoListInputDto,
+    NivelFormacaoListOutputDto,
+    NivelFormacaoFindOneInputDto,
+    NivelFormacaoFindOneOutputDto
   >
   implements INivelFormacaoRepositoryPort
 {
   protected readonly alias = "nivel_formacao";
   protected readonly authzAction = "nivel_formacao:find";
-  protected readonly outputDtoName = "NivelFormacaoFindOneOutput";
+  protected readonly outputDtoName = "NivelFormacaoFindOneOutputDto";
 
   constructor(
     protected readonly databaseContext: DatabaseContextService,

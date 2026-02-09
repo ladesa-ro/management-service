@@ -1,21 +1,21 @@
 import {
-  DiarioProfessorCreateInput,
-  DiarioProfessorFindOneInput,
-  DiarioProfessorFindOneOutput,
-  DiarioProfessorListInput,
-  DiarioProfessorListOutput,
-  DiarioProfessorUpdateInput,
-} from "@/modules/diario-professor";
-import { DiarioRestMapper } from "@/server/nest/modules/diario/rest";
-import { PerfilRestMapper } from "@/server/nest/modules/perfil/rest";
-import { mapPaginationMeta } from "@/server/nest/shared/mappers";
-import {
   DiarioProfessorCreateInputDto,
   DiarioProfessorFindOneInputDto,
   DiarioProfessorFindOneOutputDto,
   DiarioProfessorListInputDto,
   DiarioProfessorListOutputDto,
   DiarioProfessorUpdateInputDto,
+} from "@/modules/diario-professor";
+import { DiarioRestMapper } from "@/server/nest/modules/diario/rest";
+import { PerfilRestMapper } from "@/server/nest/modules/perfil/rest";
+import { mapPaginationMeta } from "@/server/nest/shared/mappers";
+import {
+  DiarioProfessorCreateInputRestDto,
+  DiarioProfessorFindOneInputRestDto,
+  DiarioProfessorFindOneOutputRestDto,
+  DiarioProfessorListInputRestDto,
+  DiarioProfessorListOutputRestDto,
+  DiarioProfessorUpdateInputRestDto,
 } from "./diario-professor.rest.dto";
 
 export class DiarioProfessorRestMapper {
@@ -23,18 +23,20 @@ export class DiarioProfessorRestMapper {
   // Input: Server DTO -> Core DTO
   // ============================================================================
 
-  static toFindOneInput(dto: DiarioProfessorFindOneInputDto): DiarioProfessorFindOneInput {
-    const input = new DiarioProfessorFindOneInput();
+  static toFindOneInput(dto: DiarioProfessorFindOneInputRestDto): DiarioProfessorFindOneInputDto {
+    const input = new DiarioProfessorFindOneInputDto();
     input.id = dto.id;
     return input;
   }
 
-  static toListInput(dto: DiarioProfessorListInputDto | null): DiarioProfessorListInput | null {
+  static toListInput(
+    dto: DiarioProfessorListInputRestDto | null,
+  ): DiarioProfessorListInputDto | null {
     if (!dto) {
       return null;
     }
 
-    const input = new DiarioProfessorListInput();
+    const input = new DiarioProfessorListInputDto();
     input.page = dto.page;
     input.limit = dto.limit;
     input.search = dto.search;
@@ -47,8 +49,8 @@ export class DiarioProfessorRestMapper {
     return input;
   }
 
-  static toCreateInput(dto: DiarioProfessorCreateInputDto): DiarioProfessorCreateInput {
-    const input = new DiarioProfessorCreateInput();
+  static toCreateInput(dto: DiarioProfessorCreateInputRestDto): DiarioProfessorCreateInputDto {
+    const input = new DiarioProfessorCreateInputDto();
     input.situacao = dto.situacao;
     input.diario = { id: dto.diario.id };
     input.perfil = { id: dto.perfil.id };
@@ -56,11 +58,11 @@ export class DiarioProfessorRestMapper {
   }
 
   static toUpdateInput(
-    params: DiarioProfessorFindOneInputDto,
-    dto: DiarioProfessorUpdateInputDto,
-  ): DiarioProfessorFindOneInput & DiarioProfessorUpdateInput {
-    const input = new DiarioProfessorFindOneInput() as DiarioProfessorFindOneInput &
-      DiarioProfessorUpdateInput;
+    params: DiarioProfessorFindOneInputRestDto,
+    dto: DiarioProfessorUpdateInputRestDto,
+  ): DiarioProfessorFindOneInputDto & DiarioProfessorUpdateInputDto {
+    const input = new DiarioProfessorFindOneInputDto() as DiarioProfessorFindOneInputDto &
+      DiarioProfessorUpdateInputDto;
     input.id = params.id;
     if (dto.situacao !== undefined) {
       input.situacao = dto.situacao;
@@ -78,8 +80,10 @@ export class DiarioProfessorRestMapper {
   // Output: Core DTO -> Server DTO
   // ============================================================================
 
-  static toFindOneOutputDto(output: DiarioProfessorFindOneOutput): DiarioProfessorFindOneOutputDto {
-    const dto = new DiarioProfessorFindOneOutputDto();
+  static toFindOneOutputDto(
+    output: DiarioProfessorFindOneOutputDto,
+  ): DiarioProfessorFindOneOutputRestDto {
+    const dto = new DiarioProfessorFindOneOutputRestDto();
     dto.id = output.id;
     dto.situacao = output.situacao;
     dto.diario = DiarioRestMapper.toFindOneOutputDto(output.diario);
@@ -90,8 +94,8 @@ export class DiarioProfessorRestMapper {
     return dto;
   }
 
-  static toListOutputDto(output: DiarioProfessorListOutput): DiarioProfessorListOutputDto {
-    const dto = new DiarioProfessorListOutputDto();
+  static toListOutputDto(output: DiarioProfessorListOutputDto): DiarioProfessorListOutputRestDto {
+    const dto = new DiarioProfessorListOutputRestDto();
     dto.meta = mapPaginationMeta(output.meta);
     dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
     return dto;

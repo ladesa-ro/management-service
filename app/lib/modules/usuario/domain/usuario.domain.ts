@@ -23,27 +23,30 @@ export class Usuario extends BaseEntity implements IUsuario {
   }
 
   // ========================================
+  // Validação
+  // ========================================
+
+  validar(): void {
+    // Campos são opcionais, sem validações obrigatórias
+  }
+
+  // ========================================
   // Factory Methods
   // ========================================
 
   /**
    * Cria uma nova instância válida de Usuario
-   * @throws EntityValidationError se os dados forem inválidos
    */
   static criar(dados: IUsuarioCreate): Usuario {
-    const { rules } = this.createValidation();
-
     const instance = new Usuario();
-    instance.nome = rules.optional(dados.nome);
-    instance.matriculaSiape = rules.optional(dados.matriculaSiape);
-    instance.email = rules.optional(dados.email);
+    instance.nome = dados.nome?.trim() || null;
+    instance.matriculaSiape = dados.matriculaSiape?.trim() || null;
+    instance.email = dados.email?.trim() || null;
     instance.isSuperUser = false;
     instance.imagemCapa = null;
     instance.imagemPerfil = null;
-    instance.dateCreated = new Date().toISOString();
-    instance.dateUpdated = new Date().toISOString();
-    instance.dateDeleted = null;
-
+    instance.initDates();
+    instance.validar();
     return instance;
   }
 
@@ -62,24 +65,22 @@ export class Usuario extends BaseEntity implements IUsuario {
 
   /**
    * Atualiza os dados do usuário
-   * @throws EntityValidationError se os dados forem inválidos
    */
   atualizar(dados: IUsuarioUpdate): void {
-    const { rules } = Usuario.createValidation();
-
     if (dados.nome !== undefined) {
-      this.nome = rules.optional(dados.nome);
+      this.nome = dados.nome?.trim() || null;
     }
 
     if (dados.matriculaSiape !== undefined) {
-      this.matriculaSiape = rules.optional(dados.matriculaSiape);
+      this.matriculaSiape = dados.matriculaSiape?.trim() || null;
     }
 
     if (dados.email !== undefined) {
-      this.email = rules.optional(dados.email);
+      this.email = dados.email?.trim() || null;
     }
 
-    this.dateUpdated = new Date().toISOString();
+    this.touchUpdated();
+    this.validar();
   }
 
   /**

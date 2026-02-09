@@ -1,9 +1,9 @@
 import type { AccessContext } from "@/modules/@core/access-context";
 import {
-  EstadoFindOneInput,
-  EstadoFindOneOutput,
-  EstadoListInput,
-  EstadoListOutput,
+  EstadoFindOneInputDto,
+  EstadoFindOneOutputDto,
+  EstadoListInputDto,
+  EstadoListOutputDto,
 } from "../../dtos";
 
 /**
@@ -17,7 +17,10 @@ export interface IEstadoUseCasePort {
    * @param dto DTO com critérios de busca e paginação
    * @returns Lista paginada de estados
    */
-  findAll(accessContext: AccessContext, dto: EstadoListInput | null): Promise<EstadoListOutput>;
+  findAll(
+    accessContext: AccessContext,
+    dto: EstadoListInputDto | null,
+  ): Promise<EstadoListOutputDto>;
 
   /**
    * Busca um estado por ID
@@ -27,8 +30,8 @@ export interface IEstadoUseCasePort {
    */
   findById(
     accessContext: AccessContext,
-    dto: EstadoFindOneInput,
-  ): Promise<EstadoFindOneOutput | null>;
+    dto: EstadoFindOneInputDto,
+  ): Promise<EstadoFindOneOutputDto | null>;
 
   /**
    * Busca um estado por ID (lança exceção se não encontrado)
@@ -38,6 +41,6 @@ export interface IEstadoUseCasePort {
    */
   findByIdStrict(
     accessContext: AccessContext,
-    dto: EstadoFindOneInput,
-  ): Promise<EstadoFindOneOutput>;
+    dto: EstadoFindOneInputDto,
+  ): Promise<EstadoFindOneOutputDto>;
 }
