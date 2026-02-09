@@ -33,7 +33,7 @@
     "lodash": "^4.17.23",
     "lru-cache": "^11.2.5",
     "nestjs-paginate": "^12.8.3",
-    "openid-client": "^6.8.1",
+    "openid-client": "^6.8.2",
     "passport": "^0.7.0",
     "passport-http-bearer": "^1.0.1",
     "pg": "^8.18.0",
