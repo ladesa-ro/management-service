@@ -1,4 +1,4 @@
-import { BaseEntity, type IdUuid, type ScalarDateTimeString } from "@/modules/@shared";
+import { BaseDatedEntity } from "@/modules/@shared";
 import type { ICampus } from "@/modules/campus";
 import type { IImagem } from "@/modules/imagem";
 import type { IOfertaFormacao } from "@/modules/oferta-formacao";
@@ -8,16 +8,12 @@ import type { ICurso, ICursoCreate, ICursoUpdate } from "./curso.types";
  * Entidade de Dominio: Curso
  * Implementa a tipagem ICurso e adiciona regras de negocio
  */
-export class Curso extends BaseEntity implements ICurso {
-  id!: IdUuid;
+export class Curso extends BaseDatedEntity implements ICurso {
   nome!: string;
   nomeAbreviado!: string;
   campus!: ICampus;
   ofertaFormacao!: IOfertaFormacao;
   imagemCapa!: IImagem | null;
-  dateCreated!: ScalarDateTimeString;
-  dateUpdated!: ScalarDateTimeString;
-  dateDeleted!: ScalarDateTimeString | null;
 
   protected static get entityName(): string {
     return "Curso";

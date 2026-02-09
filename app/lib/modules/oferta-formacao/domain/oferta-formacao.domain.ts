@@ -1,4 +1,4 @@
-import { BaseEntity, type IdUuid, type ScalarDateTimeString } from "@/modules/@shared";
+import { BaseDatedEntity } from "@/modules/@shared";
 import type { IModalidade } from "@/modules/modalidade";
 import type {
   IOfertaFormacao,
@@ -10,14 +10,10 @@ import type {
  * Entidade de Dominio: OfertaFormacao
  * Implementa a tipagem IOfertaFormacao e adiciona regras de negocio
  */
-export class OfertaFormacao extends BaseEntity implements IOfertaFormacao {
-  id!: IdUuid;
+export class OfertaFormacao extends BaseDatedEntity implements IOfertaFormacao {
   nome!: string;
   slug!: string;
   modalidade!: IModalidade;
-  dateCreated!: ScalarDateTimeString;
-  dateUpdated!: ScalarDateTimeString;
-  dateDeleted!: ScalarDateTimeString | null;
 
   protected static get entityName(): string {
     return "OfertaFormacao";

@@ -1,9 +1,4 @@
-import {
-  BaseEntity,
-  type IdUuid,
-  type ScalarDate,
-  type ScalarDateTimeString,
-} from "@/modules/@shared";
+import { BaseDatedEntity, type ScalarDate } from "@/modules/@shared";
 import type { Ambiente } from "@/modules/ambiente/domain/ambiente.domain";
 import type { Diario } from "@/modules/diario/domain/diario.domain";
 import type { IntervaloDeTempo } from "@/modules/intervalo-de-tempo/domain/intervalo-de-tempo.domain";
@@ -13,16 +8,12 @@ import type { IAula, IAulaCreate, IAulaUpdate } from "./aula.types";
  * Entidade de Domínio: Aula
  * Implementa a tipagem IAula e adiciona regras de negócio
  */
-export class Aula extends BaseEntity implements IAula {
-  id!: IdUuid;
+export class Aula extends BaseDatedEntity implements IAula {
   data!: ScalarDate;
   modalidade!: string | null;
   intervaloDeTempo!: IntervaloDeTempo;
   diario!: Diario;
   ambiente!: Ambiente | null;
-  dateCreated!: ScalarDateTimeString;
-  dateUpdated!: ScalarDateTimeString;
-  dateDeleted!: ScalarDateTimeString | null;
 
   protected static get entityName(): string {
     return "Aula";

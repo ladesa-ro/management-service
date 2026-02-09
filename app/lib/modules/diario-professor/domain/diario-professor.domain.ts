@@ -1,4 +1,4 @@
-import { BaseEntity, type IdUuid, type ScalarDateTimeString } from "@/modules/@shared";
+import { BaseDatedEntity } from "@/modules/@shared";
 import type { Diario } from "@/modules/diario/domain/diario.domain";
 import type { Perfil } from "@/modules/perfil";
 import type {
@@ -11,14 +11,10 @@ import type {
  * Entidade de Domínio: DiarioProfessor
  * Implementa a tipagem IDiarioProfessor e adiciona regras de negócio
  */
-export class DiarioProfessor extends BaseEntity implements IDiarioProfessor {
-  id!: IdUuid;
+export class DiarioProfessor extends BaseDatedEntity implements IDiarioProfessor {
   situacao!: boolean;
   diario!: Diario;
   perfil!: Perfil;
-  dateCreated!: ScalarDateTimeString;
-  dateUpdated!: ScalarDateTimeString;
-  dateDeleted!: ScalarDateTimeString | null;
 
   protected static get entityName(): string {
     return "DiarioProfessor";

@@ -1,9 +1,4 @@
-import {
-  BaseEntity,
-  type IdUuid,
-  type ScalarDate,
-  type ScalarDateTimeString,
-} from "@/modules/@shared";
+import { BaseDatedEntity, type ScalarDate } from "@/modules/@shared";
 import type { DiarioProfessor } from "@/modules/diario-professor/domain/diario-professor.domain";
 import type { HorarioGerado } from "@/modules/horario-gerado";
 import type { IntervaloDeTempo } from "@/modules/intervalo-de-tempo/domain/intervalo-de-tempo.domain";
@@ -17,15 +12,11 @@ import type {
  * Entidade de Domínio: HorarioGeradoAula
  * Implementa a tipagem IHorarioGeradoAula e adiciona regras de negócio
  */
-export class HorarioGeradoAula extends BaseEntity implements IHorarioGeradoAula {
-  id!: IdUuid;
+export class HorarioGeradoAula extends BaseDatedEntity implements IHorarioGeradoAula {
   data!: ScalarDate;
   diarioProfessor!: DiarioProfessor;
   horarioGerado!: HorarioGerado;
   intervaloDeTempo!: IntervaloDeTempo;
-  dateCreated!: ScalarDateTimeString;
-  dateUpdated!: ScalarDateTimeString;
-  dateDeleted!: ScalarDateTimeString | null;
 
   protected static get entityName(): string {
     return "HorarioGeradoAula";

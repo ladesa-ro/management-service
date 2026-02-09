@@ -1,4 +1,4 @@
-import { BaseEntity, type IdUuid, type ScalarDateTimeString } from "@/modules/@shared";
+import { BaseDatedEntity } from "@/modules/@shared";
 import type { Usuario } from "@/modules/usuario/domain/usuario.domain";
 import type {
   IProfessorIndisponibilidade,
@@ -10,16 +10,15 @@ import type {
  * Entidade de Domínio: ProfessorIndisponibilidade
  * Implementa a tipagem IProfessorIndisponibilidade e adiciona regras de negócio
  */
-export class ProfessorIndisponibilidade extends BaseEntity implements IProfessorIndisponibilidade {
-  id!: IdUuid;
+export class ProfessorIndisponibilidade
+  extends BaseDatedEntity
+  implements IProfessorIndisponibilidade
+{
   perfil!: Usuario;
   diaDaSemana!: number;
   horaInicio!: string;
   horaFim!: string;
   motivo!: string;
-  dateCreated!: ScalarDateTimeString;
-  dateUpdated!: ScalarDateTimeString;
-  dateDeleted!: ScalarDateTimeString | null;
 
   protected static get entityName(): string {
     return "ProfessorIndisponibilidade";

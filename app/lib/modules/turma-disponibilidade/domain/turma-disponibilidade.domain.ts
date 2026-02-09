@@ -1,4 +1,4 @@
-import { BaseEntity, type IdUuid, type ScalarDateTimeString } from "@/modules/@shared";
+import { BaseDatedEntity } from "@/modules/@shared";
 import type { Disponibilidade } from "@/modules/disponibilidade/domain/disponibilidade.domain";
 import type { Turma } from "@/modules/turma/domain/turma.domain";
 import type {
@@ -10,13 +10,9 @@ import type {
  * Entidade de Domínio: TurmaDisponibilidade
  * Entidade de relacionamento N:N entre Turma e Disponibilidade
  */
-export class TurmaDisponibilidade extends BaseEntity implements ITurmaDisponibilidade {
-  id!: IdUuid;
+export class TurmaDisponibilidade extends BaseDatedEntity implements ITurmaDisponibilidade {
   turma!: Turma;
   disponibilidade!: Disponibilidade;
-  dateCreated!: ScalarDateTimeString;
-  dateUpdated!: ScalarDateTimeString;
-  dateDeleted!: ScalarDateTimeString | null;
 
   protected static get entityName(): string {
     return "TurmaDisponibilidade";

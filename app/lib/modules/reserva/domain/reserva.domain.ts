@@ -1,4 +1,4 @@
-import { BaseEntity, type IdUuid, type ScalarDateTimeString } from "@/modules/@shared";
+import { BaseDatedEntity } from "@/modules/@shared";
 import type { Ambiente } from "@/modules/ambiente/domain/ambiente.domain";
 import type { Usuario } from "@/modules/usuario/domain/usuario.domain";
 import type { IReserva, IReservaCreate, IReservaUpdate } from "./reserva.types";
@@ -7,17 +7,13 @@ import type { IReserva, IReservaCreate, IReservaUpdate } from "./reserva.types";
  * Entidade de Domínio: Reserva
  * Implementa a tipagem IReserva e adiciona regras de negócio
  */
-export class Reserva extends BaseEntity implements IReserva {
-  id!: IdUuid;
+export class Reserva extends BaseDatedEntity implements IReserva {
   situacao!: string;
   motivo!: string | null;
   tipo!: string | null;
   rrule!: string;
   ambiente!: Ambiente;
   usuario!: Usuario;
-  dateCreated!: ScalarDateTimeString;
-  dateUpdated!: ScalarDateTimeString;
-  dateDeleted!: ScalarDateTimeString | null;
 
   protected static get entityName(): string {
     return "Reserva";

@@ -1,4 +1,4 @@
-import { BaseEntity, type IdUuid, type ScalarDateTimeString } from "@/modules/@shared";
+import { BaseDatedEntity } from "@/modules/@shared";
 import type { ImagemArquivo } from "@/modules/imagem-arquivo/domain/imagem-arquivo.domain";
 import type { IImagem, IImagemCreate, IImagemUpdate } from "./imagem.types";
 
@@ -6,13 +6,9 @@ import type { IImagem, IImagemCreate, IImagemUpdate } from "./imagem.types";
  * Entidade de Domínio: Imagem
  * Implementa a tipagem IImagem e adiciona regras de negócio
  */
-export class Imagem extends BaseEntity implements IImagem {
-  id!: IdUuid;
+export class Imagem extends BaseDatedEntity implements IImagem {
   descricao!: string | null;
   versoes!: ImagemArquivo[];
-  dateCreated!: ScalarDateTimeString;
-  dateUpdated!: ScalarDateTimeString;
-  dateDeleted!: ScalarDateTimeString | null;
 
   protected static get entityName(): string {
     return "Imagem";

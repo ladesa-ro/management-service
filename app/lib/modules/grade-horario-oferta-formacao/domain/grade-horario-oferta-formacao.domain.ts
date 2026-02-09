@@ -1,4 +1,4 @@
-import { BaseEntity, type IdUuid, type ScalarDateTimeString } from "@/modules/@shared";
+import { BaseDatedEntity } from "@/modules/@shared";
 import type { Campus } from "@/modules/campus";
 import type { OfertaFormacao } from "@/modules/oferta-formacao";
 import type {
@@ -10,13 +10,12 @@ import type {
  * Entidade de Domínio: GradeHorarioOfertaFormacao
  * Representa uma grade horária associada a uma oferta de formação e um campus
  */
-export class GradeHorarioOfertaFormacao extends BaseEntity implements IGradeHorarioOfertaFormacao {
-  id!: IdUuid;
+export class GradeHorarioOfertaFormacao
+  extends BaseDatedEntity
+  implements IGradeHorarioOfertaFormacao
+{
   campus!: Campus;
   ofertaFormacao!: OfertaFormacao;
-  dateCreated!: ScalarDateTimeString;
-  dateUpdated!: ScalarDateTimeString;
-  dateDeleted!: ScalarDateTimeString | null;
 
   protected static get entityName(): string {
     return "GradeHorarioOfertaFormacao";

@@ -1,4 +1,4 @@
-import { BaseEntity, type IdUuid, type ScalarDateTimeString } from "@/modules/@shared";
+import { BaseDatedEntity } from "@/modules/@shared";
 import type { ICampus } from "@/modules/campus";
 import type { IBloco, IBlocoCreate, IBlocoUpdate } from "./bloco.types";
 
@@ -6,15 +6,11 @@ import type { IBloco, IBlocoCreate, IBlocoUpdate } from "./bloco.types";
  * Entidade de Domínio: Bloco
  * Implementa a tipagem IBloco e adiciona regras de negócio
  */
-export class Bloco extends BaseEntity implements IBloco {
-  id!: IdUuid;
+export class Bloco extends BaseDatedEntity implements IBloco {
   nome!: string;
   codigo!: string;
   campus!: ICampus;
   imagemCapa!: { id: string } | null;
-  dateCreated!: ScalarDateTimeString;
-  dateUpdated!: ScalarDateTimeString;
-  dateDeleted!: ScalarDateTimeString | null;
 
   protected static get entityName(): string {
     return "Bloco";

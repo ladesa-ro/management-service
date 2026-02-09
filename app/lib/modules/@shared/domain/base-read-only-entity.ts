@@ -1,9 +1,7 @@
+import { BaseEntity } from "./base-entity";
+
 /**
  * Classe base para entidades somente leitura (ex: Cidade, Estado).
- * Não possui campos de data nem validação de escrita.
+ * Não possui campos de data nem ID UUID.
  */
-export abstract class BaseReadOnlyEntity {
-  protected static get entityName(): string {
-    return this.name;
-  }
-}
+export abstract class BaseReadOnlyEntity extends BaseEntity {}

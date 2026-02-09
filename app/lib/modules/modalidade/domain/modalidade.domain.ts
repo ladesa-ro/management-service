@@ -1,17 +1,13 @@
-import { BaseEntity, type IdUuid, type ScalarDateTimeString } from "@/modules/@shared";
+import { BaseDatedEntity } from "@/modules/@shared";
 import type { IModalidade, IModalidadeCreate, IModalidadeUpdate } from "./modalidade.types";
 
 /**
  * Entidade de Dominio: Modalidade
  * Implementa a tipagem IModalidade e adiciona regras de negocio
  */
-export class Modalidade extends BaseEntity implements IModalidade {
-  id!: IdUuid;
+export class Modalidade extends BaseDatedEntity implements IModalidade {
   nome!: string;
   slug!: string;
-  dateCreated!: ScalarDateTimeString;
-  dateUpdated!: ScalarDateTimeString;
-  dateDeleted!: ScalarDateTimeString | null;
 
   protected static get entityName(): string {
     return "Modalidade";

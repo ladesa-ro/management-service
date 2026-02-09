@@ -1,4 +1,4 @@
-import { BaseEntity, type IdUuid, type ScalarDateTimeString } from "@/modules/@shared";
+import { BaseDatedEntity, type ScalarDateTimeString } from "@/modules/@shared";
 import type { Ambiente } from "@/modules/ambiente/domain/ambiente.domain";
 import type { CalendarioLetivo } from "@/modules/calendario-letivo";
 import type { IEvento, IEventoCreate, IEventoUpdate } from "./evento.types";
@@ -7,8 +7,7 @@ import type { IEvento, IEventoCreate, IEventoUpdate } from "./evento.types";
  * Entidade de Domínio: Evento
  * Implementa a tipagem IEvento e adiciona regras de negócio
  */
-export class Evento extends BaseEntity implements IEvento {
-  id!: IdUuid;
+export class Evento extends BaseDatedEntity implements IEvento {
   nome!: string | null;
   rrule!: string;
   cor!: string | null;
@@ -16,9 +15,6 @@ export class Evento extends BaseEntity implements IEvento {
   dataFim!: ScalarDateTimeString | null;
   calendario!: CalendarioLetivo;
   ambiente!: Ambiente | null;
-  dateCreated!: ScalarDateTimeString;
-  dateUpdated!: ScalarDateTimeString;
-  dateDeleted!: ScalarDateTimeString | null;
 
   protected static get entityName(): string {
     return "Evento";

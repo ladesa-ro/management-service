@@ -1,4 +1,4 @@
-import { BaseEntity, type IdUuid, type ScalarDateTimeString } from "@/modules/@shared";
+import { BaseDatedEntity, type ScalarDateTimeString } from "@/modules/@shared";
 import type { CalendarioLetivo } from "@/modules/calendario-letivo";
 import type {
   IHorarioGerado,
@@ -10,17 +10,13 @@ import type {
  * Entidade de Domínio: HorarioGerado
  * Implementa a tipagem IHorarioGerado e adiciona regras de negócio
  */
-export class HorarioGerado extends BaseEntity implements IHorarioGerado {
-  id!: IdUuid;
+export class HorarioGerado extends BaseDatedEntity implements IHorarioGerado {
   status!: string | null;
   tipo!: string | null;
   dataGeracao!: ScalarDateTimeString | null;
   vigenciaInicio!: ScalarDateTimeString | null;
   vigenciaFim!: ScalarDateTimeString | null;
   calendario!: CalendarioLetivo;
-  dateCreated!: ScalarDateTimeString;
-  dateUpdated!: ScalarDateTimeString;
-  dateDeleted!: ScalarDateTimeString | null;
 
   protected static get entityName(): string {
     return "HorarioGerado";

@@ -1,4 +1,4 @@
-import { BaseEntity, type IdUuid, type ScalarDateTimeString } from "@/modules/@shared";
+import { BaseDatedEntity } from "@/modules/@shared";
 import type { IImagem } from "@/modules/imagem/domain/imagem.types";
 import type { IDisciplina, IDisciplinaCreate, IDisciplinaUpdate } from "./disciplina.types";
 
@@ -6,15 +6,11 @@ import type { IDisciplina, IDisciplinaCreate, IDisciplinaUpdate } from "./discip
  * Entidade de Domínio: Disciplina
  * Implementa a tipagem IDisciplina e adiciona regras de negócio
  */
-export class Disciplina extends BaseEntity implements IDisciplina {
-  id!: IdUuid;
+export class Disciplina extends BaseDatedEntity implements IDisciplina {
   nome!: string;
   nomeAbreviado!: string;
   cargaHoraria!: number;
   imagemCapa!: IImagem | null;
-  dateCreated!: ScalarDateTimeString;
-  dateUpdated!: ScalarDateTimeString;
-  dateDeleted!: ScalarDateTimeString | null;
 
   protected static get entityName(): string {
     return "Disciplina";

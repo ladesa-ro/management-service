@@ -1,4 +1,4 @@
-import { BaseEntity, type IdUuid, type ScalarDateTimeString } from "@/modules/@shared";
+import { BaseDatedEntity } from "@/modules/@shared";
 import type { ICampus } from "@/modules/campus";
 import type { IOfertaFormacao } from "@/modules/oferta-formacao";
 import type {
@@ -11,15 +11,11 @@ import type {
  * Entidade de Dominio: CalendarioLetivo
  * Implementa a tipagem ICalendarioLetivo e adiciona regras de negocio
  */
-export class CalendarioLetivo extends BaseEntity implements ICalendarioLetivo {
-  id!: IdUuid;
+export class CalendarioLetivo extends BaseDatedEntity implements ICalendarioLetivo {
   nome!: string;
   ano!: number;
   campus!: ICampus;
   ofertaFormacao!: IOfertaFormacao;
-  dateCreated!: ScalarDateTimeString;
-  dateUpdated!: ScalarDateTimeString;
-  dateDeleted!: ScalarDateTimeString | null;
 
   protected static get entityName(): string {
     return "CalendarioLetivo";

@@ -1,4 +1,4 @@
-import { BaseEntity, type IdUuid, type ScalarDateTimeString } from "@/modules/@shared";
+import { BaseDatedEntity } from "@/modules/@shared";
 import type { IAmbiente } from "@/modules/ambiente/domain/ambiente.types";
 import type { ICalendarioLetivo } from "@/modules/calendario-letivo";
 import type { IDisciplina } from "@/modules/disciplina/domain/disciplina.types";
@@ -10,17 +10,13 @@ import type { IDiario, IDiarioCreate, IDiarioUpdate } from "./diario.types";
  * Entidade de Domínio: Diario
  * Implementa a tipagem IDiario e adiciona regras de negócio
  */
-export class Diario extends BaseEntity implements IDiario {
-  id!: IdUuid;
+export class Diario extends BaseDatedEntity implements IDiario {
   ativo!: boolean;
   calendarioLetivo!: ICalendarioLetivo;
   turma!: ITurma;
   disciplina!: IDisciplina;
   ambientePadrao!: IAmbiente | null;
   imagemCapa!: IImagem | null;
-  dateCreated!: ScalarDateTimeString;
-  dateUpdated!: ScalarDateTimeString;
-  dateDeleted!: ScalarDateTimeString | null;
 
   protected static get entityName(): string {
     return "Diario";

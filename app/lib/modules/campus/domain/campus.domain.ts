@@ -1,4 +1,4 @@
-import { BaseEntity, type IdUuid, type ScalarDateTimeString } from "@/modules/@shared";
+import { BaseDatedEntity } from "@/modules/@shared";
 import type { IEndereco } from "@/modules/endereco";
 import type { ICampus, ICampusCreate, ICampusUpdate } from "./campus.types";
 
@@ -6,16 +6,12 @@ import type { ICampus, ICampusCreate, ICampusUpdate } from "./campus.types";
  * Entidade de Domínio: Campus
  * Implementa a tipagem ICampus e adiciona regras de negócio
  */
-export class Campus extends BaseEntity implements ICampus {
-  id!: IdUuid;
+export class Campus extends BaseDatedEntity implements ICampus {
   nomeFantasia!: string;
   razaoSocial!: string;
   apelido!: string;
   cnpj!: string;
   endereco!: IEndereco;
-  dateCreated!: ScalarDateTimeString;
-  dateUpdated!: ScalarDateTimeString;
-  dateDeleted!: ScalarDateTimeString | null;
 
   protected static get entityName(): string {
     return "Campus";

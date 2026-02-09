@@ -1,4 +1,4 @@
-import { BaseEntity, type IdUuid, type ScalarDateTimeString } from "@/modules/@shared";
+import { BaseDatedEntity } from "@/modules/@shared";
 import type { IAmbiente } from "@/modules/ambiente/domain/ambiente.types";
 import type { ICurso } from "@/modules/curso";
 import type { IImagem } from "@/modules/imagem/domain/imagem.types";
@@ -8,15 +8,11 @@ import type { ITurma, ITurmaCreate, ITurmaUpdate } from "./turma.types";
  * Entidade de Domínio: Turma
  * Implementa a tipagem ITurma e adiciona regras de negócio
  */
-export class Turma extends BaseEntity implements ITurma {
-  id!: IdUuid;
+export class Turma extends BaseDatedEntity implements ITurma {
   periodo!: string;
   ambientePadraoAula!: IAmbiente | null;
   curso!: ICurso;
   imagemCapa!: IImagem | null;
-  dateCreated!: ScalarDateTimeString;
-  dateUpdated!: ScalarDateTimeString;
-  dateDeleted!: ScalarDateTimeString | null;
 
   protected static get entityName(): string {
     return "Turma";

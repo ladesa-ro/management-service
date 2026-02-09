@@ -1,4 +1,4 @@
-import { BaseEntity, type IdUuid, type ScalarDateTimeString } from "@/modules/@shared";
+import { BaseDatedEntity } from "@/modules/@shared";
 import type { IImagem } from "@/modules/imagem/domain/imagem.types";
 import type { IUsuario, IUsuarioCreate, IUsuarioUpdate } from "./usuario.types";
 
@@ -6,17 +6,13 @@ import type { IUsuario, IUsuarioCreate, IUsuarioUpdate } from "./usuario.types";
  * Entidade de Domínio: Usuario
  * Implementa a tipagem IUsuario e adiciona regras de negócio
  */
-export class Usuario extends BaseEntity implements IUsuario {
-  id!: IdUuid;
+export class Usuario extends BaseDatedEntity implements IUsuario {
   nome!: string | null;
   matriculaSiape!: string | null;
   email!: string | null;
   isSuperUser!: boolean;
   imagemCapa!: IImagem | null;
   imagemPerfil!: IImagem | null;
-  dateCreated!: ScalarDateTimeString;
-  dateUpdated!: ScalarDateTimeString;
-  dateDeleted!: ScalarDateTimeString | null;
 
   protected static get entityName(): string {
     return "Usuario";

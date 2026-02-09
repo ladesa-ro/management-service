@@ -15,3 +15,22 @@ export interface ICidade {
   /** Estado ao qual a cidade pertence */
   estado: IEstado;
 }
+
+export interface ICidadeCreate {
+  /** Código IBGE da cidade */
+  id: IdNumeric;
+
+  /** Nome da cidade */
+  nome: string;
+
+  /** Estado ao qual a cidade pertence */
+  estado: { id: IdNumeric };
+}
+
+export interface ICidadeUpdate {
+  /** Nome da cidade */
+  nome?: string;
+
+  /** Estado ao qual a cidade pertence */
+  estado?: { id: IdNumeric };
+}

@@ -1,4 +1,4 @@
-import { BaseEntity, type IdUuid, type ScalarDateTimeString } from "@/modules/@shared";
+import { BaseDatedEntity } from "@/modules/@shared";
 import type {
   IIntervaloDeTempo,
   IIntervaloDeTempoCreate,
@@ -9,13 +9,9 @@ import type {
  * Entidade de Domínio: IntervaloDeTempo
  * Implementa a tipagem IIntervaloDeTempo e adiciona regras de negócio
  */
-export class IntervaloDeTempo extends BaseEntity implements IIntervaloDeTempo {
-  id!: IdUuid;
+export class IntervaloDeTempo extends BaseDatedEntity implements IIntervaloDeTempo {
   periodoInicio!: string;
   periodoFim!: string;
-  dateCreated!: ScalarDateTimeString;
-  dateUpdated!: ScalarDateTimeString;
-  dateDeleted!: ScalarDateTimeString | null;
 
   protected static get entityName(): string {
     return "IntervaloDeTempo";

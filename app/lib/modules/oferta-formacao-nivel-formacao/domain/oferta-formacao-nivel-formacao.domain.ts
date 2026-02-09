@@ -1,4 +1,4 @@
-import { BaseEntity, type IdUuid, type ScalarDateTimeString } from "@/modules/@shared";
+import { BaseDatedEntity } from "@/modules/@shared";
 import type { NivelFormacao } from "@/modules/nivel-formacao/domain/nivel-formacao.domain";
 import type { OfertaFormacao } from "@/modules/oferta-formacao/domain/oferta-formacao.domain";
 import type {
@@ -11,15 +11,11 @@ import type {
  * Entidade de relacionamento N:N entre OfertaFormacao e NivelFormacao
  */
 export class OfertaFormacaoNivelFormacao
-  extends BaseEntity
+  extends BaseDatedEntity
   implements IOfertaFormacaoNivelFormacao
 {
-  id!: IdUuid;
   nivelFormacao!: NivelFormacao;
   ofertaFormacao!: OfertaFormacao;
-  dateCreated!: ScalarDateTimeString;
-  dateUpdated!: ScalarDateTimeString;
-  dateDeleted!: ScalarDateTimeString | null;
 
   protected static get entityName(): string {
     return "OfertaFormacaoNivelFormacao";

@@ -1,4 +1,4 @@
-import { BaseEntity, type IdUuid, type ScalarDateTimeString } from "@/modules/@shared";
+import { BaseDatedEntity } from "@/modules/@shared";
 import type { ICampus } from "@/modules/campus";
 import type { IUsuario } from "@/modules/usuario";
 import type { IPerfil, IPerfilCreate, IPerfilUpdate } from "./perfil.types";
@@ -7,15 +7,11 @@ import type { IPerfil, IPerfilCreate, IPerfilUpdate } from "./perfil.types";
  * Entidade de Domínio: Perfil
  * Implementa a tipagem IPerfil e adiciona regras de negócio
  */
-export class Perfil extends BaseEntity implements IPerfil {
-  id!: IdUuid;
+export class Perfil extends BaseDatedEntity implements IPerfil {
   ativo!: boolean;
   cargo!: string;
   campus!: ICampus;
   usuario!: IUsuario;
-  dateCreated!: ScalarDateTimeString;
-  dateUpdated!: ScalarDateTimeString;
-  dateDeleted!: ScalarDateTimeString | null;
 
   protected static get entityName(): string {
     return "Perfil";

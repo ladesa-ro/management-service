@@ -1,4 +1,4 @@
-import { BaseEntity, type IdUuid, type ScalarDateTimeString } from "@/modules/@shared";
+import { BaseDatedEntity, type ScalarDateTimeString } from "@/modules/@shared";
 import type {
   IDisponibilidade,
   IDisponibilidadeCreate,
@@ -9,13 +9,9 @@ import type {
  * Entidade de Domínio: Disponibilidade
  * Implementa a tipagem IDisponibilidade e adiciona regras de negócio
  */
-export class Disponibilidade extends BaseEntity implements IDisponibilidade {
-  id!: IdUuid;
+export class Disponibilidade extends BaseDatedEntity implements IDisponibilidade {
   dataInicio!: ScalarDateTimeString;
   dataFim!: ScalarDateTimeString | null;
-  dateCreated!: ScalarDateTimeString;
-  dateUpdated!: ScalarDateTimeString;
-  dateDeleted!: ScalarDateTimeString | null;
 
   protected static get entityName(): string {
     return "Disponibilidade";

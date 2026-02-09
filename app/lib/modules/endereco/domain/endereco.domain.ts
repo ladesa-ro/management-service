@@ -1,4 +1,4 @@
-import { BaseEntity, type IdUuid, type ScalarDateTimeString } from "@/modules/@shared";
+import { BaseDatedEntity } from "@/modules/@shared";
 import type { ICidade } from "@/modules/cidade";
 import type { IEndereco, IEnderecoCreate, IEnderecoUpdate } from "./endereco.types";
 
@@ -6,8 +6,7 @@ import type { IEndereco, IEnderecoCreate, IEnderecoUpdate } from "./endereco.typ
  * Entidade de Domínio: Endereco
  * Implementa a tipagem IEndereco e adiciona regras de negócio
  */
-export class Endereco extends BaseEntity implements IEndereco {
-  id!: IdUuid;
+export class Endereco extends BaseDatedEntity implements IEndereco {
   cep!: string;
   logradouro!: string;
   numero!: number;
@@ -15,9 +14,6 @@ export class Endereco extends BaseEntity implements IEndereco {
   complemento!: string | null;
   pontoReferencia!: string | null;
   cidade!: ICidade;
-  dateCreated!: ScalarDateTimeString;
-  dateUpdated!: ScalarDateTimeString;
-  dateDeleted!: ScalarDateTimeString | null;
 
   protected static get entityName(): string {
     return "Endereco";

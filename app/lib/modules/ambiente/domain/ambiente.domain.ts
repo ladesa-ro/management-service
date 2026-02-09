@@ -1,4 +1,4 @@
-import { BaseEntity, type IdUuid, type ScalarDateTimeString } from "@/modules/@shared";
+import { BaseDatedEntity } from "@/modules/@shared";
 import type { IBloco } from "@/modules/bloco";
 import type { IAmbiente, IAmbienteCreate, IAmbienteUpdate } from "./ambiente.types";
 
@@ -6,8 +6,7 @@ import type { IAmbiente, IAmbienteCreate, IAmbienteUpdate } from "./ambiente.typ
  * Entidade de Domínio: Ambiente
  * Implementa a tipagem IAmbiente e adiciona regras de negócio
  */
-export class Ambiente extends BaseEntity implements IAmbiente {
-  id!: IdUuid;
+export class Ambiente extends BaseDatedEntity implements IAmbiente {
   nome!: string;
   descricao!: string | null;
   codigo!: string;
@@ -15,9 +14,6 @@ export class Ambiente extends BaseEntity implements IAmbiente {
   tipo!: string | null;
   bloco!: IBloco;
   imagemCapa!: { id: string } | null;
-  dateCreated!: ScalarDateTimeString;
-  dateUpdated!: ScalarDateTimeString;
-  dateDeleted!: ScalarDateTimeString | null;
 
   protected static get entityName(): string {
     return "Ambiente";

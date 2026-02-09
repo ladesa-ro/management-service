@@ -1,19 +1,15 @@
-import { BaseEntity, type IdUuid, type ScalarDateTimeString } from "@/modules/@shared";
+import { BaseDatedEntity } from "@/modules/@shared";
 import type { IArquivo, IArquivoCreate, IArquivoUpdate } from "./arquivo.types";
 
 /**
  * Entidade de Domínio: Arquivo
  * Implementa a tipagem IArquivo e adiciona regras de negócio
  */
-export class Arquivo extends BaseEntity implements IArquivo {
-  id!: IdUuid;
+export class Arquivo extends BaseDatedEntity implements IArquivo {
   name!: string;
   mimeType!: string;
   sizeBytes!: number;
   storageType!: string;
-  dateCreated!: ScalarDateTimeString;
-  dateUpdated!: ScalarDateTimeString;
-  dateDeleted!: ScalarDateTimeString | null;
 
   protected static get entityName(): string {
     return "Arquivo";

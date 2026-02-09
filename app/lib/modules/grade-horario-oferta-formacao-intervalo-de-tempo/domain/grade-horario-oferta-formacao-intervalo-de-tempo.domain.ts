@@ -1,4 +1,4 @@
-import { BaseEntity, type IdUuid, type ScalarDateTimeString } from "@/modules/@shared";
+import { BaseDatedEntity } from "@/modules/@shared";
 import type { GradeHorarioOfertaFormacao } from "@/modules/grade-horario-oferta-formacao";
 import { IntervaloDeTempo } from "@/modules/intervalo-de-tempo";
 import type {
@@ -11,15 +11,11 @@ import type {
  * Entidade de relacionamento N:N entre GradeHorarioOfertaFormacao e IntervaloDeTempo
  */
 export class GradeHorarioOfertaFormacaoIntervaloDeTempo
-  extends BaseEntity
+  extends BaseDatedEntity
   implements IGradeHorarioOfertaFormacaoIntervaloDeTempo
 {
-  id!: IdUuid;
   intervaloDeTempo!: IntervaloDeTempo;
   gradeHorarioOfertaFormacao!: GradeHorarioOfertaFormacao;
-  dateCreated!: ScalarDateTimeString;
-  dateUpdated!: ScalarDateTimeString;
-  dateDeleted!: ScalarDateTimeString | null;
 
   protected static get entityName(): string {
     return "GradeHorarioOfertaFormacaoIntervaloDeTempo";

@@ -1,9 +1,4 @@
-import {
-  BaseEntity,
-  type IdUuid,
-  type ScalarDate,
-  type ScalarDateTimeString,
-} from "@/modules/@shared";
+import { BaseDatedEntity, type ScalarDate } from "@/modules/@shared";
 import type { CalendarioLetivo } from "@/modules/calendario-letivo";
 import type {
   IDiaCalendario,
@@ -15,8 +10,7 @@ import type {
  * Entidade de Domínio: DiaCalendario
  * Implementa a tipagem IDiaCalendario e adiciona regras de negócio
  */
-export class DiaCalendario extends BaseEntity implements IDiaCalendario {
-  id!: IdUuid;
+export class DiaCalendario extends BaseDatedEntity implements IDiaCalendario {
   data!: ScalarDate;
   diaLetivo!: boolean;
   feriado!: string;
@@ -24,9 +18,6 @@ export class DiaCalendario extends BaseEntity implements IDiaCalendario {
   tipo!: string;
   extraCurricular!: boolean;
   calendario!: CalendarioLetivo;
-  dateCreated!: ScalarDateTimeString;
-  dateUpdated!: ScalarDateTimeString;
-  dateDeleted!: ScalarDateTimeString | null;
 
   protected static get entityName(): string {
     return "DiaCalendario";

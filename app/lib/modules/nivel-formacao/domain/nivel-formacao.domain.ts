@@ -1,4 +1,4 @@
-import { BaseEntity, type IdUuid, type ScalarDateTimeString } from "@/modules/@shared";
+import { BaseDatedEntity } from "@/modules/@shared";
 import type {
   INivelFormacao,
   INivelFormacaoCreate,
@@ -9,12 +9,8 @@ import type {
  * Entidade de Dominio: NivelFormacao
  * Implementa a tipagem INivelFormacao e adiciona regras de negocio
  */
-export class NivelFormacao extends BaseEntity implements INivelFormacao {
-  id!: IdUuid;
+export class NivelFormacao extends BaseDatedEntity implements INivelFormacao {
   slug!: string;
-  dateCreated!: ScalarDateTimeString;
-  dateUpdated!: ScalarDateTimeString;
-  dateDeleted!: ScalarDateTimeString | null;
 
   protected static get entityName(): string {
     return "NivelFormacao";
