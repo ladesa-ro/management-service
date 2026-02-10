@@ -37,7 +37,7 @@
     "passport": "^0.7.0",
     "passport-http-bearer": "^1.0.1",
     "pg": "^8.18.0",
-    "rascal": "^20.1.1",
+    "rascal": "^21.0.1",
     "reflect-metadata": "^0.2.2",
     "rimraf": "^6.1.2",
     "rrule": "^2.8.1",
