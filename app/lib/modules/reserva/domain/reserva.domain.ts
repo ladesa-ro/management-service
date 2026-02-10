@@ -54,7 +54,7 @@ export class Reserva extends BaseDatedEntity implements IReserva {
   /**
    * Reconstrói uma instância a partir de dados existentes (ex: do banco)
    */
-  static fromData(dados: IReserva): Reserva {
+  static fromData(dados: Record<string, any>): Reserva {
     const instance = new Reserva();
     Object.assign(instance, dados);
     return instance;

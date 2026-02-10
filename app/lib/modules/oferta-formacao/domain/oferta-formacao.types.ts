@@ -1,4 +1,4 @@
-import type { IEntityBase } from "@/modules/@shared";
+import type { IdUuid, IEntityBase } from "@/modules/@shared";
 import type { IModalidade } from "@/modules/modalidade";
 
 /**
@@ -13,7 +13,7 @@ export interface IOfertaFormacao extends IEntityBase {
   slug: string;
 
   /** Modalidade associada */
-  modalidade: IModalidade;
+  modalidade: IModalidade | null;
 }
 
 /**
@@ -22,7 +22,7 @@ export interface IOfertaFormacao extends IEntityBase {
 export interface IOfertaFormacaoCreate {
   nome: string;
   slug: string;
-  modalidade?: { id: number };
+  modalidade?: { id: IdUuid };
 }
 
 /**
@@ -31,5 +31,5 @@ export interface IOfertaFormacaoCreate {
 export interface IOfertaFormacaoUpdate {
   nome?: string;
   slug?: string;
-  modalidade?: { id: number } | null;
+  modalidade?: { id: IdUuid } | null;
 }

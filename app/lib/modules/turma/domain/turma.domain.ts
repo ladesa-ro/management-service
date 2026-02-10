@@ -52,7 +52,7 @@ export class Turma extends BaseDatedEntity implements ITurma {
   /**
    * Reconstrói uma instância a partir de dados existentes (ex: do banco)
    */
-  static fromData(dados: ITurma): Turma {
+  static fromData(dados: Record<string, any>): Turma {
     const instance = new Turma();
     Object.assign(instance, dados);
     return instance;

@@ -1,5 +1,5 @@
 import type { IBaseCrudRepositoryPort } from "@/modules/@shared";
-import type { CursoEntity } from "@/modules/curso/infrastructure/persistence/typeorm";
+import type { ICurso } from "@/modules/curso";
 import type { CursoFindOneOutputDto, CursoListOutputDto } from "../../dtos";
 
 /**
@@ -12,4 +12,4 @@ export const CURSO_REPOSITORY_PORT = Symbol("ICursoRepositoryPort");
  * Estende a interface base de CRUD com operações padrão
  */
 export interface ICursoRepositoryPort
-  extends IBaseCrudRepositoryPort<CursoEntity, CursoListOutputDto, CursoFindOneOutputDto> {}
+  extends IBaseCrudRepositoryPort<ICurso, CursoListOutputDto, CursoFindOneOutputDto> {}

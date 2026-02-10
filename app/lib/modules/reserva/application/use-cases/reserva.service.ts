@@ -1,9 +1,9 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { has } from "lodash";
 import type { AccessContext } from "@/modules/@core/access-context";
-import { BaseCrudService } from "@/modules/@shared";
+import { BaseCrudService, type PersistInput } from "@/modules/@shared";
 import { AmbienteService } from "@/modules/ambiente/application/use-cases/ambiente.service";
-import type { ReservaEntity } from "@/modules/reserva/infrastructure/persistence/typeorm";
+import { type IReserva, Reserva } from "@/modules/reserva";
 import { UsuarioService } from "@/modules/usuario/application/use-cases/usuario.service";
 import type {
   ReservaCreateInputDto,
@@ -16,15 +16,10 @@ import type {
 import type { IReservaRepositoryPort, IReservaUseCasePort } from "../ports";
 import { RESERVA_REPOSITORY_PORT } from "../ports";
 
-/**
- * Service centralizado para o módulo Reserva.
- * Estende BaseCrudService para operações CRUD comuns.
- * Implementa IReservaUseCasePort para compatibilidade com a interface existente.
- */
 @Injectable()
 export class ReservaService
   extends BaseCrudService<
-    ReservaEntity,
+    IReserva,
     ReservaListInputDto,
     ReservaListOutputDto,
     ReservaFindOneInputDto,
@@ -38,8 +33,6 @@ export class ReservaService
   protected readonly createAction = "reserva:create";
   protected readonly updateAction = "reserva:update";
   protected readonly deleteAction = "reserva:delete";
-  protected readonly createFields = ["situacao", "motivo", "tipo", "rrule"] as const;
-  protected readonly updateFields = ["situacao", "motivo", "tipo", "rrule"] as const;
 
   constructor(
     @Inject(RESERVA_REPOSITORY_PORT)
@@ -50,41 +43,56 @@ export class ReservaService
     super();
   }
 
-  protected override async beforeCreate(
+  protected async buildCreateData(
     accessContext: AccessContext,
-    entity: ReservaEntity,
     dto: ReservaCreateInputDto,
-  ): Promise<void> {
+  ): Promise<Partial<PersistInput<IReserva>>> {
     const ambiente = await this.ambienteService.findByIdStrict(accessContext, {
       id: dto.ambiente.id,
     });
-    this.repository.merge(entity, { ambiente: { id: ambiente.id } });
-
-    const usuario = await this.usuarioService.findByIdStrict(accessContext, {
-      id: dto.usuario.id,
+    const usuario = await this.usuarioService.findByIdStrict(accessContext, { id: dto.usuario.id });
+    const domain = Reserva.criar({
+      situacao: dto.situacao,
+      rrule: dto.rrule,
+      motivo: dto.motivo,
+      tipo: dto.tipo,
+      ambiente: { id: ambiente.id },
+      usuario: { id: usuario.id },
     });
-    this.repository.merge(entity, { usuario: { id: usuario.id } });
+    return { ...domain, ambiente: { id: ambiente.id }, usuario: { id: usuario.id } };
   }
 
-  /**
-   * Hook para atualizar relacionamentos opcionais durante update
-   */
-  protected override async beforeUpdate(
+  protected async buildUpdateData(
     accessContext: AccessContext,
-    entity: ReservaEntity,
     dto: ReservaFindOneInputDto & ReservaUpdateInputDto,
-    _current: ReservaFindOneOutputDto,
-  ): Promise<void> {
+    current: ReservaFindOneOutputDto,
+  ): Promise<Partial<PersistInput<IReserva>>> {
+    const domain = Reserva.fromData(current);
+    domain.atualizar({
+      situacao: dto.situacao,
+      rrule: dto.rrule,
+      motivo: dto.motivo,
+      tipo: dto.tipo,
+    });
+    const result: Partial<PersistInput<IReserva>> = {
+      situacao: domain.situacao,
+      rrule: domain.rrule,
+      motivo: domain.motivo,
+      tipo: domain.tipo,
+    };
+
     if (has(dto, "ambiente") && dto.ambiente !== undefined) {
       const ambiente = await this.ambienteService.findByIdStrict(accessContext, {
         id: dto.ambiente.id,
       });
-      this.repository.merge(entity, { ambiente: { id: ambiente.id } });
+      result.ambiente = { id: ambiente.id };
     }
 
     if (has(dto, "usuario") && dto.usuario !== undefined) {
       const usuario = await this.usuarioService.findByIdSimpleStrict(accessContext, dto.usuario.id);
-      this.repository.merge(entity, { usuario: { id: usuario.id } });
+      result.usuario = { id: usuario.id };
     }
+
+    return result;
   }
 }

@@ -46,7 +46,7 @@ export class GradeHorarioOfertaFormacao
   /**
    * Reconstrói uma instância a partir de dados existentes (ex: do banco)
    */
-  static fromData(dados: IGradeHorarioOfertaFormacao): GradeHorarioOfertaFormacao {
+  static fromData(dados: Record<string, any>): GradeHorarioOfertaFormacao {
     const instance = new GradeHorarioOfertaFormacao();
     Object.assign(instance, dados);
     return instance;

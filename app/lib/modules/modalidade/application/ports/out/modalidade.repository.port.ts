@@ -1,6 +1,9 @@
 import type { IBaseCrudRepositoryPort } from "@/modules/@shared";
-import { ModalidadeFindOneOutputDto, ModalidadeListOutputDto } from "@/modules/modalidade";
-import type { ModalidadeEntity } from "@/modules/modalidade/infrastructure/persistence/typeorm";
+import {
+  type IModalidade,
+  ModalidadeFindOneOutputDto,
+  ModalidadeListOutputDto,
+} from "@/modules/modalidade";
 
 export const MODALIDADE_REPOSITORY_PORT = Symbol("IModalidadeRepositoryPort");
 
@@ -10,7 +13,7 @@ export const MODALIDADE_REPOSITORY_PORT = Symbol("IModalidadeRepositoryPort");
  */
 export interface IModalidadeRepositoryPort
   extends IBaseCrudRepositoryPort<
-    ModalidadeEntity,
+    IModalidade,
     ModalidadeListOutputDto,
     ModalidadeFindOneOutputDto
   > {}

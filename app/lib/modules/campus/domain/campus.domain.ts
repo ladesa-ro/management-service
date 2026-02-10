@@ -53,7 +53,7 @@ export class Campus extends BaseDatedEntity implements ICampus {
   /**
    * Reconstrói uma instância a partir de dados existentes (ex: do banco)
    */
-  static fromData(dados: ICampus): Campus {
+  static fromData(dados: Record<string, any>): Campus {
     const instance = new Campus();
     Object.assign(instance, dados);
     return instance;

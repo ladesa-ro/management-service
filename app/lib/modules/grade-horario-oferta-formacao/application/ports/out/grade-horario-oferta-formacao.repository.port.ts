@@ -1,5 +1,5 @@
 import type { IBaseCrudRepositoryPort } from "@/modules/@shared";
-import type { GradeHorarioOfertaFormacaoEntity } from "@/modules/grade-horario-oferta-formacao/infrastructure/persistence/typeorm";
+import type { IGradeHorarioOfertaFormacao } from "@/modules/grade-horario-oferta-formacao";
 import type {
   GradeHorarioOfertaFormacaoFindOneOutputDto,
   GradeHorarioOfertaFormacaoListOutputDto,
@@ -18,7 +18,7 @@ export const GRADE_HORARIO_OFERTA_FORMACAO_REPOSITORY_PORT = Symbol(
  */
 export interface IGradeHorarioOfertaFormacaoRepositoryPort
   extends IBaseCrudRepositoryPort<
-    GradeHorarioOfertaFormacaoEntity,
+    IGradeHorarioOfertaFormacao,
     GradeHorarioOfertaFormacaoListOutputDto,
     GradeHorarioOfertaFormacaoFindOneOutputDto
   > {}

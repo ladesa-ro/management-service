@@ -1,7 +1,8 @@
 import { Inject, Injectable, type StreamableFile } from "@nestjs/common";
 import type { AccessContext } from "@/modules/@core/access-context";
-import { BaseCrudService } from "@/modules/@shared";
+import { BaseCrudService, type PersistInput } from "@/modules/@shared";
 import { ArquivoService } from "@/modules/arquivo/application/use-cases/arquivo.service";
+import { Disciplina, type IDisciplina } from "@/modules/disciplina";
 import type {
   DisciplinaCreateInputDto,
   DisciplinaFindOneInputDto,
@@ -14,12 +15,11 @@ import {
   DISCIPLINA_REPOSITORY_PORT,
   type IDisciplinaRepositoryPort,
 } from "@/modules/disciplina/application/ports";
-import type { DisciplinaEntity } from "@/modules/disciplina/infrastructure/persistence/typeorm";
 import { ImagemService } from "@/modules/imagem/application/use-cases/imagem.service";
 
 @Injectable()
 export class DisciplinaService extends BaseCrudService<
-  DisciplinaEntity,
+  IDisciplina,
   DisciplinaListInputDto,
   DisciplinaListOutputDto,
   DisciplinaFindOneInputDto,
@@ -31,8 +31,6 @@ export class DisciplinaService extends BaseCrudService<
   protected readonly createAction = "disciplina:create";
   protected readonly updateAction = "disciplina:update";
   protected readonly deleteAction = "disciplina:delete";
-  protected readonly createFields = ["nome", "nomeAbreviado", "cargaHoraria"] as const;
-  protected readonly updateFields = ["nome", "nomeAbreviado", "cargaHoraria"] as const;
 
   constructor(
     @Inject(DISCIPLINA_REPOSITORY_PORT)
@@ -60,5 +58,35 @@ export class DisciplinaService extends BaseCrudService<
     file: Express.Multer.File,
   ): Promise<boolean> {
     return this.updateImagemField(accessContext, dto.id, file, "imagemCapa", this.imagemService);
+  }
+
+  protected async buildCreateData(
+    _ac: AccessContext,
+    dto: DisciplinaCreateInputDto,
+  ): Promise<Partial<PersistInput<IDisciplina>>> {
+    const domain = Disciplina.criar({
+      nome: dto.nome,
+      nomeAbreviado: dto.nomeAbreviado,
+      cargaHoraria: dto.cargaHoraria,
+    });
+    return { ...domain };
+  }
+
+  protected async buildUpdateData(
+    _ac: AccessContext,
+    dto: DisciplinaFindOneInputDto & DisciplinaUpdateInputDto,
+    current: DisciplinaFindOneOutputDto,
+  ): Promise<Partial<PersistInput<IDisciplina>>> {
+    const domain = Disciplina.fromData(current);
+    domain.atualizar({
+      nome: dto.nome,
+      nomeAbreviado: dto.nomeAbreviado,
+      cargaHoraria: dto.cargaHoraria,
+    });
+    return {
+      nome: domain.nome,
+      nomeAbreviado: domain.nomeAbreviado,
+      cargaHoraria: domain.cargaHoraria,
+    };
   }
 }

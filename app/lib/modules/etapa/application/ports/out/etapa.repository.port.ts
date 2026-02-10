@@ -1,6 +1,6 @@
 import type { AccessContext } from "@/modules/@core/access-context";
 import type { IBaseCrudRepositoryPort } from "@/modules/@shared";
-import type { EtapaEntity } from "@/modules/etapa/infrastructure/persistence/typeorm";
+import type { IEtapa } from "@/modules/etapa";
 import type { EtapaFindOneOutputDto, EtapaListOutputDto } from "../../dtos";
 
 /**
@@ -13,7 +13,7 @@ export const ETAPA_REPOSITORY_PORT = Symbol("IEtapaRepositoryPort");
  * Estende a interface base de CRUD com operações padrão
  */
 export interface IEtapaRepositoryPort
-  extends IBaseCrudRepositoryPort<EtapaEntity, EtapaListOutputDto, EtapaFindOneOutputDto> {
+  extends IBaseCrudRepositoryPort<IEtapa, EtapaListOutputDto, EtapaFindOneOutputDto> {
   /**
    * Busca uma etapa por ID (formato simples) - método obrigatório
    */

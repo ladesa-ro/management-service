@@ -1,6 +1,6 @@
 import type { AccessContext } from "@/modules/@core/access-context";
 import type { IBaseCrudRepositoryPort } from "@/modules/@shared";
-import type { ReservaEntity } from "@/modules/reserva/infrastructure/persistence/typeorm";
+import type { IReserva } from "@/modules/reserva";
 import type { ReservaFindOneOutputDto, ReservaListOutputDto } from "../../dtos";
 
 export const RESERVA_REPOSITORY_PORT = Symbol("RESERVA_REPOSITORY_PORT");
@@ -10,7 +10,7 @@ export const RESERVA_REPOSITORY_PORT = Symbol("RESERVA_REPOSITORY_PORT");
  * Estende a interface base de CRUD com operações padrão
  */
 export interface IReservaRepositoryPort
-  extends IBaseCrudRepositoryPort<ReservaEntity, ReservaListOutputDto, ReservaFindOneOutputDto> {
+  extends IBaseCrudRepositoryPort<IReserva, ReservaListOutputDto, ReservaFindOneOutputDto> {
   /**
    * Busca uma reserva por ID (formato simples) - método obrigatório
    */

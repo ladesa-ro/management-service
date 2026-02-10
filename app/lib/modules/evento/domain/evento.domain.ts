@@ -55,7 +55,7 @@ export class Evento extends BaseDatedEntity implements IEvento {
   /**
    * Reconstrói uma instância a partir de dados existentes (ex: do banco)
    */
-  static fromData(dados: IEvento): Evento {
+  static fromData(dados: Record<string, any>): Evento {
     const instance = new Evento();
     Object.assign(instance, dados);
     return instance;

@@ -1,6 +1,7 @@
 import type { SelectQueryBuilder } from "typeorm";
 import type { AccessContext } from "@/modules/@core/access-context";
 import type { IBaseCrudRepositoryPort } from "@/modules/@shared";
+import type { ITurmaDisponibilidade } from "@/modules/turma-disponibilidade";
 import type { TurmaDisponibilidadeEntity } from "@/modules/turma-disponibilidade/infrastructure/persistence/typeorm";
 import type {
   TurmaDisponibilidadeFindOneOutputDto,
@@ -18,7 +19,7 @@ export const TURMA_DISPONIBILIDADE_REPOSITORY_PORT = Symbol("ITurmaDisponibilida
  */
 export interface ITurmaDisponibilidadeRepositoryPort
   extends IBaseCrudRepositoryPort<
-    TurmaDisponibilidadeEntity,
+    ITurmaDisponibilidade,
     TurmaDisponibilidadeListOutputDto,
     TurmaDisponibilidadeFindOneOutputDto
   > {

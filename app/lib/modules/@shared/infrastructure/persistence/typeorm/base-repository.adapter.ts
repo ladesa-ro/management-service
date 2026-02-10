@@ -33,9 +33,8 @@ type DtoWithFilters = Record<string, unknown>;
  * - findAll: listagem paginada com filtros de autorização
  * - findById: busca por ID com filtros de autorização
  * - findByIdSimple: busca simplificada por ID
- * - save: salvar entidade
- * - create: criar nova instância
- * - merge: mesclar dados em entidade existente
+ * - createFromDomain: criar entidade a partir de dados de domínio
+ * - updateFromDomain: atualizar entidade a partir de dados de domínio
  * - softDeleteById: exclusão lógica
  *
  * @template Entity - Tipo da entidade TypeORM
@@ -144,24 +143,20 @@ export abstract class BaseTypeOrmRepositoryAdapter<
   }
 
   /**
-   * Salva uma entidade (cria ou atualiza)
+   * Cria uma nova entidade a partir de dados de domínio
    */
-  async save(entity: DeepPartial<Entity>): Promise<Entity> {
-    return this.repository.save(entity as Entity);
+  async createFromDomain(data: Record<string, any>): Promise<{ id: string | number }> {
+    const entity = this.repository.create(data as DeepPartial<Entity>);
+    const saved = await this.repository.save(entity);
+    return { id: saved.id };
   }
 
   /**
-   * Cria uma nova instância da entidade
+   * Atualiza uma entidade existente a partir de dados parciais de domínio
    */
-  create(): Entity {
-    return this.repository.create();
-  }
-
-  /**
-   * Mescla dados em uma entidade existente
-   */
-  merge(entity: Entity, data: DeepPartial<Entity>): void {
-    this.repository.merge(entity, data as Entity);
+  async updateFromDomain(id: string | number, data: Record<string, any>): Promise<void> {
+    const entity = this.repository.create({ id, ...data } as DeepPartial<Entity>);
+    await this.repository.save(entity);
   }
 
   /**

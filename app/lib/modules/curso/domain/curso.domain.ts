@@ -54,7 +54,7 @@ export class Curso extends BaseDatedEntity implements ICurso {
   /**
    * Reconstroi uma instancia a partir de dados existentes (ex: do banco)
    */
-  static fromData(dados: ICurso): Curso {
+  static fromData(dados: Record<string, any>): Curso {
     const instance = new Curso();
     Object.assign(instance, dados);
     return instance;

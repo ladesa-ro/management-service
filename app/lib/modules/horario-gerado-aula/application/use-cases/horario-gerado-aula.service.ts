@@ -1,10 +1,10 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { has } from "lodash";
 import type { AccessContext } from "@/modules/@core/access-context";
-import { BaseCrudService } from "@/modules/@shared";
+import { BaseCrudService, type PersistInput } from "@/modules/@shared";
 import { DiarioProfessorService } from "@/modules/diario-professor/application/use-cases/diario-professor.service";
 import { HorarioGeradoService } from "@/modules/horario-gerado";
-import type { HorarioGeradoAulaEntity } from "@/modules/horario-gerado-aula/infrastructure/persistence/typeorm";
+import { HorarioGeradoAula, type IHorarioGeradoAula } from "@/modules/horario-gerado-aula";
 import { IntervaloDeTempoService } from "@/modules/intervalo-de-tempo/application/use-cases/intervalo-de-tempo.service";
 import type {
   HorarioGeradoAulaCreateInputDto,
@@ -21,7 +21,7 @@ import {
 
 @Injectable()
 export class HorarioGeradoAulaService extends BaseCrudService<
-  HorarioGeradoAulaEntity,
+  IHorarioGeradoAula,
   HorarioGeradoAulaListInputDto,
   HorarioGeradoAulaListOutputDto,
   HorarioGeradoAulaFindOneInputDto,
@@ -33,8 +33,6 @@ export class HorarioGeradoAulaService extends BaseCrudService<
   protected readonly createAction = "horario_gerado_aula:create";
   protected readonly updateAction = "horario_gerado_aula:update";
   protected readonly deleteAction = "horario_gerado_aula:delete";
-  protected readonly createFields = ["data"] as const;
-  protected readonly updateFields = ["data"] as const;
 
   constructor(
     @Inject(HORARIO_GERADO_AULA_REPOSITORY_PORT)
@@ -46,17 +44,18 @@ export class HorarioGeradoAulaService extends BaseCrudService<
     super();
   }
 
-  protected override async beforeCreate(
+  protected async buildCreateData(
     accessContext: AccessContext,
-    entity: HorarioGeradoAulaEntity,
     dto: HorarioGeradoAulaCreateInputDto,
-  ): Promise<void> {
+  ): Promise<Partial<PersistInput<IHorarioGeradoAula>>> {
+    const result: Record<string, any> = { data: dto.data };
+
     if (dto.diarioProfessor) {
       const diarioProfessor = await this.diarioProfessorService.findByIdStrict(
         accessContext,
         dto.diarioProfessor,
       );
-      this.repository.merge(entity, { diarioProfessor: { id: diarioProfessor.id } });
+      result.diarioProfessor = { id: diarioProfessor.id };
     }
 
     if (dto.horarioGerado) {
@@ -64,7 +63,7 @@ export class HorarioGeradoAulaService extends BaseCrudService<
         accessContext,
         dto.horarioGerado,
       );
-      this.repository.merge(entity, { horarioGerado: { id: horarioGerado.id } });
+      result.horarioGerado = { id: horarioGerado.id };
     }
 
     if (dto.intervaloDeTempo) {
@@ -72,21 +71,27 @@ export class HorarioGeradoAulaService extends BaseCrudService<
         accessContext,
         dto.intervaloDeTempo,
       );
-      this.repository.merge(entity, { intervaloDeTempo: { id: intervalo!.id } });
+      result.intervaloDeTempo = { id: intervalo!.id };
     }
+
+    return result as IHorarioGeradoAula;
   }
 
-  protected override async beforeUpdate(
+  protected async buildUpdateData(
     accessContext: AccessContext,
-    entity: HorarioGeradoAulaEntity,
     dto: HorarioGeradoAulaFindOneInputDto & HorarioGeradoAulaUpdateInputDto,
-  ): Promise<void> {
+    current: HorarioGeradoAulaFindOneOutputDto,
+  ): Promise<Partial<PersistInput<IHorarioGeradoAula>>> {
+    const domain = HorarioGeradoAula.fromData(current);
+    domain.atualizar({ data: dto.data });
+    const result: Partial<PersistInput<IHorarioGeradoAula>> = { data: domain.data };
+
     if (has(dto, "diarioProfessor") && dto.diarioProfessor !== undefined) {
       const diarioProfessor = await this.diarioProfessorService.findByIdStrict(
         accessContext,
         dto.diarioProfessor!,
       );
-      this.repository.merge(entity, { diarioProfessor: { id: diarioProfessor.id } });
+      result.diarioProfessor = { id: diarioProfessor.id };
     }
 
     if (has(dto, "horarioGerado") && dto.horarioGerado !== undefined) {
@@ -94,7 +99,7 @@ export class HorarioGeradoAulaService extends BaseCrudService<
         accessContext,
         dto.horarioGerado,
       );
-      this.repository.merge(entity, { horarioGerado: { id: horarioGerado.id } });
+      result.horarioGerado = { id: horarioGerado.id };
     }
 
     if (has(dto, "intervaloDeTempo") && dto.intervaloDeTempo !== undefined) {
@@ -102,7 +107,9 @@ export class HorarioGeradoAulaService extends BaseCrudService<
         accessContext,
         dto.intervaloDeTempo!,
       );
-      this.repository.merge(entity, { intervaloDeTempo: { id: intervaloDeTempo!.id } });
+      result.intervaloDeTempo = { id: intervaloDeTempo!.id };
     }
+
+    return result;
   }
 }

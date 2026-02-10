@@ -34,20 +34,16 @@ export async function getEntityImagemStreamableFile(
  *
  * Reutilizável por qualquer service que possua campos de imagem.
  */
-export async function saveEntityImagemField<E>(
+export async function saveEntityImagemField(
   currentId: string | number,
   file: Express.Multer.File,
   fieldName: string,
   imagemService: { saveImagemCapa(file: Express.Multer.File): Promise<{ imagem: { id: string } }> },
-  repository: { create(): E; merge(entity: E, partial: any): void; save(entity: E): Promise<any> },
+  repository: { updateFromDomain(id: string | number, data: Record<string, any>): Promise<void> },
 ): Promise<boolean> {
   const { imagem } = await imagemService.saveImagemCapa(file);
 
-  const entity = repository.create();
-  repository.merge(entity, { id: currentId });
-  repository.merge(entity, { [fieldName]: { id: imagem.id } });
-
-  await repository.save(entity);
+  await repository.updateFromDomain(currentId, { [fieldName]: { id: imagem.id } });
 
   return true;
 }

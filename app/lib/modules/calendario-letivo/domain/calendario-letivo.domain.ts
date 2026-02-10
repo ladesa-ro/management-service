@@ -55,7 +55,7 @@ export class CalendarioLetivo extends BaseDatedEntity implements ICalendarioLeti
   /**
    * Reconstroi uma instancia a partir de dados existentes (ex: do banco)
    */
-  static fromData(dados: ICalendarioLetivo): CalendarioLetivo {
+  static fromData(dados: Record<string, any>): CalendarioLetivo {
     const instance = new CalendarioLetivo();
     Object.assign(instance, dados);
     return instance;

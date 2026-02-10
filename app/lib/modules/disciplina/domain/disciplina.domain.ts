@@ -54,7 +54,7 @@ export class Disciplina extends BaseDatedEntity implements IDisciplina {
   /**
    * Reconstrói uma instância a partir de dados existentes (ex: do banco)
    */
-  static fromData(dados: IDisciplina): Disciplina {
+  static fromData(dados: Record<string, any>): Disciplina {
     const instance = new Disciplina();
     Object.assign(instance, dados);
     return instance;

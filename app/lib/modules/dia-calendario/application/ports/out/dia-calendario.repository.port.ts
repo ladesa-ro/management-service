@@ -1,6 +1,6 @@
 import type { AccessContext } from "@/modules/@core/access-context";
 import type { IBaseCrudRepositoryPort } from "@/modules/@shared";
-import type { DiaCalendarioEntity } from "@/modules/dia-calendario/infrastructure/persistence/typeorm";
+import type { IDiaCalendario } from "@/modules/dia-calendario";
 import type { DiaCalendarioFindOneOutputDto, DiaCalendarioListOutputDto } from "../../dtos";
 
 export const DIA_CALENDARIO_REPOSITORY_PORT = Symbol("IDiaCalendarioRepositoryPort");
@@ -11,7 +11,7 @@ export const DIA_CALENDARIO_REPOSITORY_PORT = Symbol("IDiaCalendarioRepositoryPo
  */
 export interface IDiaCalendarioRepositoryPort
   extends IBaseCrudRepositoryPort<
-    DiaCalendarioEntity,
+    IDiaCalendario,
     DiaCalendarioListOutputDto,
     DiaCalendarioFindOneOutputDto
   > {

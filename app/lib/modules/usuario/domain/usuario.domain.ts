@@ -49,7 +49,7 @@ export class Usuario extends BaseDatedEntity implements IUsuario {
   /**
    * Reconstrói uma instância a partir de dados existentes (ex: do banco)
    */
-  static fromData(dados: IUsuario): Usuario {
+  static fromData(dados: Record<string, any>): Usuario {
     const instance = new Usuario();
     Object.assign(instance, dados);
     return instance;

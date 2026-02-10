@@ -48,7 +48,7 @@ export class Disponibilidade extends BaseDatedEntity implements IDisponibilidade
   /**
    * Reconstrói uma instância a partir de dados existentes (ex: do banco)
    */
-  static fromData(dados: IDisponibilidade): Disponibilidade {
+  static fromData(dados: Record<string, any>): Disponibilidade {
     const instance = new Disponibilidade();
     Object.assign(instance, dados);
     return instance;

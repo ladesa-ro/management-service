@@ -1,9 +1,9 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { has } from "lodash";
 import type { AccessContext } from "@/modules/@core/access-context";
-import { BaseCrudService } from "@/modules/@shared";
+import { BaseCrudService, type PersistInput } from "@/modules/@shared";
 import { GradeHorarioOfertaFormacaoService } from "@/modules/grade-horario-oferta-formacao";
-import type { GradeHorarioOfertaFormacaoIntervaloDeTempoEntity } from "@/modules/grade-horario-oferta-formacao-intervalo-de-tempo/infrastructure/persistence/typeorm";
+import type { IGradeHorarioOfertaFormacaoIntervaloDeTempo } from "@/modules/grade-horario-oferta-formacao-intervalo-de-tempo";
 import { IntervaloDeTempoService } from "@/modules/intervalo-de-tempo";
 import type {
   GradeHorarioOfertaFormacaoIntervaloDeTempoCreateInputDto,
@@ -20,7 +20,7 @@ import {
 
 @Injectable()
 export class GradeHorarioOfertaFormacaoIntervaloDeTempoService extends BaseCrudService<
-  GradeHorarioOfertaFormacaoIntervaloDeTempoEntity,
+  IGradeHorarioOfertaFormacaoIntervaloDeTempo,
   GradeHorarioOfertaFormacaoIntervaloDeTempoListInputDto,
   GradeHorarioOfertaFormacaoIntervaloDeTempoListOutputDto,
   GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInputDto,
@@ -32,8 +32,6 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService extends BaseCrudS
   protected readonly createAction = "grade_horario_oferta_formacao_intervalo_de_tempo:create";
   protected readonly updateAction = "grade_horario_oferta_formacao_intervalo_de_tempo:update";
   protected readonly deleteAction = "grade_horario_oferta_formacao_intervalo_de_tempo:delete";
-  protected readonly createFields = [] as const;
-  protected readonly updateFields = [] as const;
 
   constructor(
     @Inject(GRADE_HORARIO_OFERTA_FORMACAO_INTERVALO_DE_TEMPO_REPOSITORY_PORT)
@@ -44,19 +42,18 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService extends BaseCrudS
     super();
   }
 
-  protected override async beforeCreate(
+  protected async buildCreateData(
     accessContext: AccessContext,
-    entity: GradeHorarioOfertaFormacaoIntervaloDeTempoEntity,
     dto: GradeHorarioOfertaFormacaoIntervaloDeTempoCreateInputDto,
-  ): Promise<void> {
+  ): Promise<Partial<PersistInput<IGradeHorarioOfertaFormacaoIntervaloDeTempo>>> {
+    const result: Record<string, any> = {};
+
     if (dto.gradeHorarioOfertaFormacao) {
       const gradeHorarioOfertaFormacao =
         await this.gradeHorarioOfertaFormacaoService.findByIdStrict(accessContext, {
           id: dto.gradeHorarioOfertaFormacao.id,
         });
-      this.repository.merge(entity, {
-        gradeHorarioOfertaFormacao: { id: gradeHorarioOfertaFormacao.id },
-      });
+      result.gradeHorarioOfertaFormacao = { id: gradeHorarioOfertaFormacao.id };
     }
 
     if (dto.intervaloDeTempo) {
@@ -64,27 +61,29 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService extends BaseCrudS
         accessContext,
         dto.intervaloDeTempo,
       );
-      this.repository.merge(entity, { intervaloDeTempo: { id: intervaloDeTempo.id } });
+      result.intervaloDeTempo = { id: intervaloDeTempo.id };
     }
+
+    return result as IGradeHorarioOfertaFormacaoIntervaloDeTempo;
   }
 
-  protected override async beforeUpdate(
+  protected async buildUpdateData(
     accessContext: AccessContext,
-    entity: GradeHorarioOfertaFormacaoIntervaloDeTempoEntity,
     dto: GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInputDto &
       GradeHorarioOfertaFormacaoIntervaloDeTempoUpdateInputDto,
-  ): Promise<void> {
+    _current: GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputDto,
+  ): Promise<Partial<PersistInput<IGradeHorarioOfertaFormacaoIntervaloDeTempo>>> {
+    const result: Partial<PersistInput<IGradeHorarioOfertaFormacaoIntervaloDeTempo>> = {};
+
     if (has(dto, "gradeHorarioOfertaFormacao") && dto.gradeHorarioOfertaFormacao !== undefined) {
       if (dto.gradeHorarioOfertaFormacao) {
         const gradeHorarioOfertaFormacao =
           await this.gradeHorarioOfertaFormacaoService.findByIdStrict(accessContext, {
             id: dto.gradeHorarioOfertaFormacao.id,
           });
-        this.repository.merge(entity, {
-          gradeHorarioOfertaFormacao: { id: gradeHorarioOfertaFormacao.id },
-        });
+        result.gradeHorarioOfertaFormacao = { id: gradeHorarioOfertaFormacao.id };
       } else {
-        this.repository.merge(entity, { gradeHorarioOfertaFormacao: null as any });
+        result.gradeHorarioOfertaFormacao = null;
       }
     }
 
@@ -94,10 +93,12 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService extends BaseCrudS
           accessContext,
           dto.intervaloDeTempo,
         );
-        this.repository.merge(entity, { intervaloDeTempo: { id: intervaloDeTempo.id } });
+        result.intervaloDeTempo = { id: intervaloDeTempo.id };
       } else {
-        this.repository.merge(entity, { intervaloDeTempo: null as any });
+        result.intervaloDeTempo = null;
       }
     }
+
+    return result;
   }
 }

@@ -1,9 +1,9 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { has } from "lodash";
 import type { AccessContext } from "@/modules/@core/access-context";
-import { BaseCrudService } from "@/modules/@shared";
+import { BaseCrudService, type PersistInput } from "@/modules/@shared";
 import { AmbienteService } from "@/modules/ambiente/application/use-cases/ambiente.service";
-import type { AulaEntity } from "@/modules/aula/infrastructure/persistence/typeorm";
+import { Aula, type IAula } from "@/modules/aula";
 import { DiarioService } from "@/modules/diario/application/use-cases/diario.service";
 import { IntervaloDeTempoService } from "@/modules/intervalo-de-tempo/application/use-cases/intervalo-de-tempo.service";
 import type {
@@ -20,7 +20,7 @@ import type { IAulaUseCasePort } from "../ports/in/aula.use-case.port";
 @Injectable()
 export class AulaService
   extends BaseCrudService<
-    AulaEntity,
+    IAula,
     AulaListInputDto,
     AulaListOutputDto,
     AulaFindOneInputDto,
@@ -34,8 +34,6 @@ export class AulaService
   protected readonly createAction = "aula:create";
   protected readonly updateAction = "aula:update";
   protected readonly deleteAction = "aula:delete";
-  protected readonly createFields = ["data", "modalidade"] as const;
-  protected readonly updateFields = ["data", "modalidade"] as const;
 
   constructor(
     @Inject(AULA_REPOSITORY_PORT)
@@ -47,49 +45,65 @@ export class AulaService
     super();
   }
 
-  protected override async beforeCreate(
+  protected async buildCreateData(
     accessContext: AccessContext,
-    entity: AulaEntity,
     dto: AulaCreateInputDto,
-  ): Promise<void> {
+  ): Promise<Partial<PersistInput<IAula>>> {
+    let ambienteRef: { id: string } | null = null;
     if (dto.ambiente && dto.ambiente !== null) {
       const ambiente = await this.ambienteService.findByIdStrict(accessContext, {
         id: dto.ambiente.id,
       });
-      this.repository.merge(entity, { ambiente: { id: ambiente.id } });
-    } else {
-      this.repository.merge(entity, { ambiente: null });
+      ambienteRef = { id: ambiente.id };
     }
 
     const diario = await this.diarioService.findByIdSimpleStrict(accessContext, dto.diario.id);
-    this.repository.merge(entity, { diario: { id: diario.id } });
-
     const intervalo = await this.intervaloService.intervaloCreateOrUpdate(
       accessContext,
       dto.intervaloDeTempo,
     );
-    this.repository.merge(entity, { intervaloDeTempo: { id: intervalo!.id } });
+
+    const domain = Aula.criar({
+      data: dto.data,
+      modalidade: dto.modalidade,
+      intervaloDeTempo: { id: intervalo!.id },
+      diario: { id: diario.id },
+      ambiente: ambienteRef,
+    });
+    return {
+      ...domain,
+      diario: { id: diario.id },
+      intervaloDeTempo: { id: intervalo!.id },
+      ambiente: ambienteRef,
+    };
   }
 
-  protected override async beforeUpdate(
+  protected async buildUpdateData(
     accessContext: AccessContext,
-    entity: AulaEntity,
     dto: AulaFindOneInputDto & AulaUpdateInputDto,
-  ): Promise<void> {
+    current: AulaFindOneOutputDto,
+  ): Promise<Partial<PersistInput<IAula>>> {
+    const domain = Aula.fromData(current);
+    domain.atualizar({ data: dto.data, modalidade: dto.modalidade });
+    const result: Partial<PersistInput<IAula>> = {
+      data: domain.data,
+      modalidade: domain.modalidade,
+    };
+
     if (has(dto, "ambiente") && dto.ambiente !== undefined) {
       if (dto.ambiente !== null) {
         const ambiente = await this.ambienteService.findByIdStrict(accessContext, {
           id: dto.ambiente.id,
         });
-        this.repository.merge(entity, { ambiente: { id: ambiente.id } });
+        result.ambiente = { id: ambiente.id };
       } else {
-        this.repository.merge(entity, { ambiente: null });
+        result.ambiente = null;
       }
     }
 
     if (has(dto, "diario") && dto.diario !== undefined) {
       const diario = await this.diarioService.findByIdSimpleStrict(accessContext, dto.diario.id);
-      this.repository.merge(entity, { diario: { id: diario.id } });
+      result.diario = { id: diario.id };
     }
 
     if (has(dto, "intervaloDeTempo") && dto.intervaloDeTempo !== undefined) {
@@ -97,7 +111,9 @@ export class AulaService
         accessContext,
         dto.intervaloDeTempo,
       );
-      this.repository.merge(entity, { intervaloDeTempo: { id: intervaloDeTempo!.id } });
+      result.intervaloDeTempo = { id: intervaloDeTempo!.id };
     }
+
+    return result;
   }
 }

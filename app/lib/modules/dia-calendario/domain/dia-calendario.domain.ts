@@ -60,7 +60,7 @@ export class DiaCalendario extends BaseDatedEntity implements IDiaCalendario {
   /**
    * Reconstrói uma instância a partir de dados existentes (ex: do banco)
    */
-  static fromData(dados: IDiaCalendario): DiaCalendario {
+  static fromData(dados: Record<string, any>): DiaCalendario {
     const instance = new DiaCalendario();
     Object.assign(instance, dados);
     return instance;

@@ -53,7 +53,7 @@ export class Arquivo extends BaseDatedEntity implements IArquivo {
   /**
    * Reconstrói uma instância a partir de dados existentes (ex: do banco)
    */
-  static fromData(dados: IArquivo): Arquivo {
+  static fromData(dados: Record<string, any>): Arquivo {
     const instance = new Arquivo();
     Object.assign(instance, dados);
     return instance;

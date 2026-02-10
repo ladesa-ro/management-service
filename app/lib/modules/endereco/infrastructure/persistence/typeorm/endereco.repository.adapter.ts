@@ -1,5 +1,4 @@
 import { Injectable } from "@nestjs/common";
-import type { DeepPartial } from "typeorm";
 import { DatabaseContextService } from "@/modules/@database-context";
 import {
   BaseTypeOrmRepositoryAdapter,
@@ -10,7 +9,6 @@ import {
 import type {
   EnderecoFindOneInputDto,
   EnderecoFindOneOutputDto,
-  EnderecoInputDto,
   EnderecoListInputDto,
   EnderecoListOutputDto,
   IEnderecoRepositoryPort,
@@ -55,13 +53,6 @@ export class EnderecoTypeOrmRepositoryAdapter
 
   async exists(id: string): Promise<boolean> {
     return this.repository.exists({ where: { id } });
-  }
-
-  override merge(
-    endereco: EnderecoEntity,
-    data: EnderecoInputDto | DeepPartial<EnderecoEntity>,
-  ): void {
-    this.repository.merge(endereco, data as DeepPartial<EnderecoEntity>);
   }
 
   protected getPaginateConfig(): ITypeOrmPaginationConfig<EnderecoEntity> {

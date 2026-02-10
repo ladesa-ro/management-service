@@ -4,8 +4,10 @@ import {
   AUTHORIZATION_SERVICE_PORT,
   BaseCrudService,
   type IAuthorizationServicePort,
+  type PersistInput,
 } from "@/modules/@shared";
 import { ArquivoService } from "@/modules/arquivo/application/use-cases/arquivo.service";
+import { Bloco, type IBloco } from "@/modules/bloco";
 import type {
   BlocoCreateInputDto,
   BlocoFindOneInputDto,
@@ -19,19 +21,13 @@ import {
   type IBlocoRepositoryPort,
   type IBlocoUseCasePort,
 } from "@/modules/bloco/application/ports";
-import type { BlocoEntity } from "@/modules/bloco/infrastructure/persistence/typeorm";
 import { CampusService } from "@/modules/campus";
 import { ImagemService } from "@/modules/imagem/application/use-cases/imagem.service";
 
-/**
- * Service centralizado para o modulo Bloco.
- * Estende BaseCrudService para operacoes CRUD comuns.
- * Implementa IBlocoUseCasePort para compatibilidade com a interface existente.
- */
 @Injectable()
 export class BlocoService
   extends BaseCrudService<
-    BlocoEntity,
+    IBloco,
     BlocoListInputDto,
     BlocoListOutputDto,
     BlocoFindOneInputDto,
@@ -45,8 +41,6 @@ export class BlocoService
   protected readonly createAction = "bloco:create";
   protected readonly updateAction = "bloco:update";
   protected readonly deleteAction = "bloco:delete";
-  protected readonly createFields = ["nome", "codigo"] as const;
-  protected readonly updateFields = ["nome", "codigo"] as const;
 
   constructor(
     @Inject(BLOCO_REPOSITORY_PORT)
@@ -59,8 +53,6 @@ export class BlocoService
   ) {
     super();
   }
-
-  // Metodos que delegam para BaseCrudService com nomes de interface
 
   async getImagemCapa(accessContext: AccessContext | null, id: string): Promise<StreamableFile> {
     return this.getImagemField(
@@ -81,15 +73,26 @@ export class BlocoService
     return this.updateImagemField(accessContext, dto.id, file, "imagemCapa", this.imagemService);
   }
 
-  /**
-   * Hook para adicionar relacionamento com Campus durante criacao
-   */
-  protected override async beforeCreate(
+  protected async buildCreateData(
     accessContext: AccessContext,
-    entity: BlocoEntity,
     dto: BlocoCreateInputDto,
-  ): Promise<void> {
+  ): Promise<Partial<PersistInput<IBloco>>> {
     const campus = await this.campusService.findByIdSimpleStrict(accessContext, dto.campus.id);
-    this.repository.merge(entity, { campus: { id: campus.id } });
+    const domain = Bloco.criar({
+      nome: dto.nome,
+      codigo: dto.codigo,
+      campus: { id: campus.id },
+    });
+    return { ...domain, campus: { id: campus.id } };
+  }
+
+  protected async buildUpdateData(
+    _ac: AccessContext,
+    dto: BlocoFindOneInputDto & BlocoUpdateInputDto,
+    current: BlocoFindOneOutputDto,
+  ): Promise<Partial<PersistInput<IBloco>>> {
+    const domain = Bloco.fromData(current);
+    domain.atualizar({ nome: dto.nome, codigo: dto.codigo });
+    return { nome: domain.nome, codigo: domain.codigo };
   }
 }

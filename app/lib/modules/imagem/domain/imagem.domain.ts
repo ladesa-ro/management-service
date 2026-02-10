@@ -43,7 +43,7 @@ export class Imagem extends BaseDatedEntity implements IImagem {
   /**
    * Reconstrói uma instância a partir de dados existentes (ex: do banco)
    */
-  static fromData(dados: IImagem): Imagem {
+  static fromData(dados: Record<string, any>): Imagem {
     const instance = new Imagem();
     Object.assign(instance, dados);
     return instance;

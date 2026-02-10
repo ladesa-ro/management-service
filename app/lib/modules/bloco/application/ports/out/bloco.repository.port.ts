@@ -1,6 +1,5 @@
 import type { IBaseCrudRepositoryPort } from "@/modules/@shared";
-import type { BlocoFindOneOutputDto, BlocoListOutputDto } from "@/modules/bloco";
-import type { BlocoEntity } from "@/modules/bloco/infrastructure/persistence/typeorm";
+import type { BlocoFindOneOutputDto, BlocoListOutputDto, IBloco } from "@/modules/bloco";
 
 /**
  * Token de injeção para o repositório de Bloco
@@ -12,4 +11,4 @@ export const BLOCO_REPOSITORY_PORT = Symbol("IBlocoRepositoryPort");
  * Estende a interface base de CRUD com operações padrão
  */
 export interface IBlocoRepositoryPort
-  extends IBaseCrudRepositoryPort<BlocoEntity, BlocoListOutputDto, BlocoFindOneOutputDto> {}
+  extends IBaseCrudRepositoryPort<IBloco, BlocoListOutputDto, BlocoFindOneOutputDto> {}

@@ -46,7 +46,7 @@ export class OfertaFormacaoNivelFormacao
   /**
    * Reconstrói uma instância a partir de dados existentes (ex: do banco)
    */
-  static fromData(dados: IOfertaFormacaoNivelFormacao): OfertaFormacaoNivelFormacao {
+  static fromData(dados: Record<string, any>): OfertaFormacaoNivelFormacao {
     const instance = new OfertaFormacaoNivelFormacao();
     Object.assign(instance, dados);
     return instance;

@@ -5,7 +5,9 @@ import {
   AUTHORIZATION_SERVICE_PORT,
   BaseCrudService,
   type IAuthorizationServicePort,
+  type PersistInput,
 } from "@/modules/@shared";
+import { Campus, type ICampus } from "@/modules/campus";
 import type {
   CampusCreateInputDto,
   CampusFindOneInputDto,
@@ -19,13 +21,12 @@ import {
   type ICampusRepositoryPort,
   type ICampusUseCasePort,
 } from "@/modules/campus/application/ports";
-import type { CampusEntity } from "@/modules/campus/infrastructure/persistence/typeorm";
 import { type EnderecoInputDto, EnderecoService } from "@/modules/endereco";
 
 @Injectable()
 export class CampusService
   extends BaseCrudService<
-    CampusEntity,
+    ICampus,
     CampusListInputDto,
     CampusListOutputDto,
     CampusFindOneInputDto,
@@ -39,8 +40,6 @@ export class CampusService
   protected readonly createAction = "campus:create";
   protected readonly updateAction = "campus:update";
   protected readonly deleteAction = "campus:delete";
-  protected readonly createFields = ["nomeFantasia", "razaoSocial", "apelido", "cnpj"] as const;
-  protected readonly updateFields = ["nomeFantasia", "razaoSocial", "apelido", "cnpj"] as const;
 
   constructor(
     @Inject(CAMPUS_REPOSITORY_PORT)
@@ -52,29 +51,50 @@ export class CampusService
     super();
   }
 
-  protected override async beforeCreate(
-    _accessContext: AccessContext,
-    entity: CampusEntity,
+  protected async buildCreateData(
+    _ac: AccessContext,
     dto: CampusCreateInputDto,
-  ): Promise<void> {
+  ): Promise<Partial<PersistInput<ICampus>>> {
     const endereco = await this.enderecoService.internalEnderecoCreateOrUpdate(null, dto.endereco);
-    this.repository.merge(entity, { endereco: { id: endereco.id } });
+    const domain = Campus.criar({
+      nomeFantasia: dto.nomeFantasia,
+      razaoSocial: dto.razaoSocial,
+      apelido: dto.apelido,
+      cnpj: dto.cnpj,
+      endereco: dto.endereco,
+    });
+    return { ...domain, endereco: { id: endereco.id as string } };
   }
 
-  protected override async beforeUpdate(
-    _accessContext: AccessContext,
-    entity: CampusEntity,
+  protected async buildUpdateData(
+    _ac: AccessContext,
     dto: CampusFindOneInputDto & CampusUpdateInputDto,
     current: CampusFindOneOutputDto,
-  ): Promise<void> {
-    const dtoEndereco = get(dto, "endereco");
+  ): Promise<Partial<PersistInput<ICampus>>> {
+    const domain = Campus.fromData(current);
+    domain.atualizar({
+      nomeFantasia: dto.nomeFantasia,
+      razaoSocial: dto.razaoSocial,
+      apelido: dto.apelido,
+      cnpj: dto.cnpj,
+    });
 
+    const result: Partial<PersistInput<ICampus>> = {
+      nomeFantasia: domain.nomeFantasia,
+      razaoSocial: domain.razaoSocial,
+      apelido: domain.apelido,
+      cnpj: domain.cnpj,
+    };
+
+    const dtoEndereco = get(dto, "endereco");
     if (dtoEndereco) {
       const endereco = await this.enderecoService.internalEnderecoCreateOrUpdate(
         current.endereco.id,
         dtoEndereco as EnderecoInputDto,
       );
-      this.repository.merge(entity, { endereco: { id: endereco.id } });
+      result.endereco = { id: endereco.id as string };
     }
+
+    return result;
   }
 }

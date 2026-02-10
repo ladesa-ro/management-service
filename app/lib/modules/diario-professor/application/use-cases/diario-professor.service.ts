@@ -1,9 +1,9 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { has } from "lodash";
 import type { AccessContext } from "@/modules/@core/access-context";
-import { BaseCrudService } from "@/modules/@shared";
+import { BaseCrudService, type PersistInput } from "@/modules/@shared";
 import { DiarioService } from "@/modules/diario/application/use-cases/diario.service";
-import type { DiarioProfessorEntity } from "@/modules/diario-professor/infrastructure/persistence/typeorm";
+import { DiarioProfessor, type IDiarioProfessor } from "@/modules/diario-professor";
 import { PerfilService } from "@/modules/perfil";
 import type {
   DiarioProfessorCreateInputDto,
@@ -17,7 +17,7 @@ import { DIARIO_PROFESSOR_REPOSITORY_PORT, type IDiarioProfessorRepositoryPort }
 
 @Injectable()
 export class DiarioProfessorService extends BaseCrudService<
-  DiarioProfessorEntity,
+  IDiarioProfessor,
   DiarioProfessorListInputDto,
   DiarioProfessorListOutputDto,
   DiarioProfessorFindOneInputDto,
@@ -29,8 +29,6 @@ export class DiarioProfessorService extends BaseCrudService<
   protected readonly createAction = "diario_professor:create";
   protected readonly updateAction = "diario_professor:update";
   protected readonly deleteAction = "diario_professor:delete";
-  protected readonly createFields = ["situacao"] as const;
-  protected readonly updateFields = ["situacao"] as const;
 
   constructor(
     @Inject(DIARIO_PROFESSOR_REPOSITORY_PORT)
@@ -41,43 +39,53 @@ export class DiarioProfessorService extends BaseCrudService<
     super();
   }
 
-  protected override async beforeCreate(
+  protected async buildCreateData(
     accessContext: AccessContext,
-    entity: DiarioProfessorEntity,
     dto: DiarioProfessorCreateInputDto,
-  ): Promise<void> {
+  ): Promise<Partial<PersistInput<IDiarioProfessor>>> {
+    let diarioRef: { id: string } | undefined;
     if (has(dto, "diario") && dto.diario) {
-      const diario = await this.diarioService.findByIdStrict(accessContext, {
-        id: dto.diario.id,
-      });
-      this.repository.merge(entity, { diario: { id: diario.id } });
+      const diario = await this.diarioService.findByIdStrict(accessContext, { id: dto.diario.id });
+      diarioRef = { id: diario.id };
     }
 
+    let perfilRef: { id: string } | undefined;
     if (has(dto, "perfil") && dto.perfil) {
-      const perfil = await this.perfilService.findByIdStrict(accessContext, {
-        id: dto.perfil.id,
-      });
-      this.repository.merge(entity, { perfil: { id: perfil.id } });
+      const perfil = await this.perfilService.findByIdStrict(accessContext, { id: dto.perfil.id });
+      perfilRef = { id: perfil.id };
     }
+
+    const domain = DiarioProfessor.criar({
+      situacao: dto.situacao,
+      diario: diarioRef!,
+      perfil: perfilRef!,
+    });
+    return {
+      ...domain,
+      ...(diarioRef ? { diario: diarioRef } : {}),
+      ...(perfilRef ? { perfil: perfilRef } : {}),
+    };
   }
 
-  protected override async beforeUpdate(
+  protected async buildUpdateData(
     accessContext: AccessContext,
-    entity: DiarioProfessorEntity,
     dto: DiarioProfessorFindOneInputDto & DiarioProfessorUpdateInputDto,
-  ): Promise<void> {
+    current: DiarioProfessorFindOneOutputDto,
+  ): Promise<Partial<PersistInput<IDiarioProfessor>>> {
+    const domain = DiarioProfessor.fromData(current);
+    domain.atualizar({ situacao: dto.situacao });
+    const result: Partial<PersistInput<IDiarioProfessor>> = { situacao: domain.situacao };
+
     if (has(dto, "diario") && dto.diario !== undefined && dto.diario !== null) {
-      const diario = await this.diarioService.findByIdStrict(accessContext, {
-        id: dto.diario.id,
-      });
-      this.repository.merge(entity, { diario: { id: diario.id } });
+      const diario = await this.diarioService.findByIdStrict(accessContext, { id: dto.diario.id });
+      result.diario = { id: diario.id };
     }
 
     if (has(dto, "perfil") && dto.perfil !== undefined && dto.perfil !== null) {
-      const perfil = await this.perfilService.findByIdStrict(accessContext, {
-        id: dto.perfil.id,
-      });
-      this.repository.merge(entity, { perfil: { id: perfil.id } });
+      const perfil = await this.perfilService.findByIdStrict(accessContext, { id: dto.perfil.id });
+      result.perfil = { id: perfil.id };
     }
+
+    return result;
   }
 }

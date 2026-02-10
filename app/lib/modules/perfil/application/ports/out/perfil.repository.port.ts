@@ -1,6 +1,5 @@
 import type { AccessContext } from "@/modules/@core/access-context";
-import type { PartialEntity } from "@/modules/@shared";
-import type { PerfilEntity } from "@/modules/perfil/infrastructure/persistence/typeorm";
+import type { IPersistRepositoryPort } from "@/modules/@shared";
 import type {
   PerfilFindOneInputDto,
   PerfilFindOneOutputDto,
@@ -17,27 +16,9 @@ export const PERFIL_REPOSITORY_PORT = Symbol("IPerfilRepositoryPort");
  * Port de saída para operações de persistência de Perfil
  * Define o contrato que os adapters de persistência devem implementar
  */
-export interface IPerfilRepositoryPort {
-  /**
-   * Cria uma nova instância de entidade (não persiste)
-   */
-  create(): PerfilEntity;
-
-  /**
-   * Mescla dados em uma entidade existente
-   */
-  merge(entity: PerfilEntity, data: PartialEntity<PerfilEntity>): void;
-
-  /**
-   * Salva (cria ou atualiza) uma entidade
-   */
-  save(entity: PartialEntity<PerfilEntity>): Promise<PerfilEntity>;
-
+export interface IPerfilRepositoryPort extends IPersistRepositoryPort<Record<string, any>> {
   /**
    * Lista perfis com paginação
-   * @param accessContext Contexto de acesso para aplicar filtros de permissão
-   * @param dto DTO com critérios de busca e paginação
-   * @returns Lista paginada de perfis
    */
   findAll(
     accessContext: AccessContext,
@@ -46,9 +27,6 @@ export interface IPerfilRepositoryPort {
 
   /**
    * Busca um perfil por ID
-   * @param accessContext Contexto de acesso para aplicar filtros de permissão
-   * @param dto DTO com ID do perfil
-   * @returns Perfil encontrado ou null
    */
   findById(
     accessContext: AccessContext,
@@ -57,9 +35,6 @@ export interface IPerfilRepositoryPort {
 
   /**
    * Busca perfis ativos de um usuário
-   * @param accessContext Contexto de acesso para aplicar filtros de permissão
-   * @param usuarioId ID do usuário
-   * @returns Lista de perfis ativos
    */
   findAllActiveByUsuarioId(
     accessContext: AccessContext | null,
@@ -67,22 +42,12 @@ export interface IPerfilRepositoryPort {
   ): Promise<PerfilFindOneOutputDto[]>;
 
   /**
-   * Cria ou atualiza perfis em lote
-   * @param perfis Array com dados parciais dos perfis a serem salvos
-   */
-  saveMany(perfis: PartialEntity<PerfilEntity>[]): Promise<void>;
-
-  /**
    * Busca perfis existentes por usuário e campus
-   * @param usuarioId ID do usuário
-   * @param campusId ID do campus
-   * @returns Lista de perfis do usuário no campus
    */
   findByUsuarioAndCampus(usuarioId: string, campusId: string): Promise<PerfilFindOneOutputDto[]>;
 
   /**
    * Desativa perfis por IDs
-   * @param ids Array de IDs dos perfis a serem desativados
    */
   deactivateByIds(ids: string[]): Promise<void>;
 }

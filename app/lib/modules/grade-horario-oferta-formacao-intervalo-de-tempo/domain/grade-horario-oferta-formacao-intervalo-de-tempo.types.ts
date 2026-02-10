@@ -3,8 +3,8 @@ import type { IGradeHorarioOfertaFormacao } from "@/modules/grade-horario-oferta
 import type { IIntervaloDeTempo } from "@/modules/intervalo-de-tempo";
 
 export interface IGradeHorarioOfertaFormacaoIntervaloDeTempo extends IEntityBase {
-  intervaloDeTempo: IIntervaloDeTempo;
-  gradeHorarioOfertaFormacao: IGradeHorarioOfertaFormacao;
+  intervaloDeTempo: IIntervaloDeTempo | null;
+  gradeHorarioOfertaFormacao: IGradeHorarioOfertaFormacao | null;
 }
 
 export interface IGradeHorarioOfertaFormacaoIntervaloDeTempoCreate {

@@ -52,7 +52,7 @@ export class IntervaloDeTempo extends BaseDatedEntity implements IIntervaloDeTem
   /**
    * Reconstrói uma instância a partir de dados existentes (ex: do banco)
    */
-  static fromData(dados: IIntervaloDeTempo): IntervaloDeTempo {
+  static fromData(dados: Record<string, any>): IntervaloDeTempo {
     const instance = new IntervaloDeTempo();
     Object.assign(instance, dados);
     return instance;

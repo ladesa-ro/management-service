@@ -1,10 +1,10 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { has } from "lodash";
 import type { AccessContext } from "@/modules/@core/access-context";
-import { BaseCrudService } from "@/modules/@shared";
+import { BaseCrudService, type PersistInput } from "@/modules/@shared";
 import { DisponibilidadeService } from "@/modules/disponibilidade/application/use-cases/disponibilidade.service";
 import { TurmaService } from "@/modules/turma/application/use-cases/turma.service";
-import type { TurmaDisponibilidadeEntity } from "@/modules/turma-disponibilidade/infrastructure/persistence/typeorm";
+import type { ITurmaDisponibilidade } from "@/modules/turma-disponibilidade";
 import type {
   TurmaDisponibilidadeCreateInputDto,
   TurmaDisponibilidadeFindOneInputDto,
@@ -20,7 +20,7 @@ import {
 
 @Injectable()
 export class TurmaDisponibilidadeService extends BaseCrudService<
-  TurmaDisponibilidadeEntity,
+  ITurmaDisponibilidade,
   TurmaDisponibilidadeListInputDto,
   TurmaDisponibilidadeListOutputDto,
   TurmaDisponibilidadeFindOneInputDto,
@@ -32,8 +32,6 @@ export class TurmaDisponibilidadeService extends BaseCrudService<
   protected readonly createAction = "turma_disponibilidade:create";
   protected readonly updateAction = "turma_disponibilidade:update";
   protected readonly deleteAction = "turma_disponibilidade:delete";
-  protected readonly createFields = [] as const;
-  protected readonly updateFields = [] as const;
 
   constructor(
     @Inject(TURMA_DISPONIBILIDADE_REPOSITORY_PORT)
@@ -44,14 +42,15 @@ export class TurmaDisponibilidadeService extends BaseCrudService<
     super();
   }
 
-  protected override async beforeCreate(
+  protected async buildCreateData(
     accessContext: AccessContext,
-    entity: TurmaDisponibilidadeEntity,
     dto: TurmaDisponibilidadeCreateInputDto,
-  ): Promise<void> {
+  ): Promise<Partial<PersistInput<ITurmaDisponibilidade>>> {
+    const result: Record<string, any> = {};
+
     if (dto.turma) {
       const turma = await this.turmaService.findByIdSimpleStrict(accessContext, dto.turma.id);
-      this.repository.merge(entity, { turma: { id: turma.id } });
+      result.turma = { id: turma.id };
     }
 
     if (dto.disponibilidade) {
@@ -59,21 +58,25 @@ export class TurmaDisponibilidadeService extends BaseCrudService<
         accessContext,
         dto.disponibilidade.id,
       );
-      this.repository.merge(entity, { disponibilidade: { id: disponibilidade.id } });
+      result.disponibilidade = { id: disponibilidade.id };
     }
+
+    return result as ITurmaDisponibilidade;
   }
 
-  protected override async beforeUpdate(
+  protected async buildUpdateData(
     accessContext: AccessContext,
-    entity: TurmaDisponibilidadeEntity,
     dto: TurmaDisponibilidadeFindOneInputDto & TurmaDisponibilidadeUpdateInputDto,
-  ): Promise<void> {
+    _current: TurmaDisponibilidadeFindOneOutputDto,
+  ): Promise<Partial<PersistInput<ITurmaDisponibilidade>>> {
+    const result: Partial<PersistInput<ITurmaDisponibilidade>> = {};
+
     if (has(dto, "turma") && dto.turma !== undefined) {
       if (dto.turma) {
         const turma = await this.turmaService.findByIdSimpleStrict(accessContext, dto.turma.id);
-        this.repository.merge(entity, { turma: { id: turma.id } });
+        result.turma = { id: turma.id };
       } else {
-        this.repository.merge(entity, { turma: null as any });
+        result.turma = null;
       }
     }
 
@@ -83,10 +86,12 @@ export class TurmaDisponibilidadeService extends BaseCrudService<
           accessContext,
           dto.disponibilidade.id,
         );
-        this.repository.merge(entity, { disponibilidade: { id: disponibilidade.id } });
+        result.disponibilidade = { id: disponibilidade.id };
       } else {
-        this.repository.merge(entity, { disponibilidade: null as any });
+        result.disponibilidade = null;
       }
     }
+
+    return result;
   }
 }

@@ -1,7 +1,8 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { has } from "lodash";
 import type { AccessContext } from "@/modules/@core/access-context";
-import { BaseCrudService } from "@/modules/@shared";
+import { BaseCrudService, type PersistInput } from "@/modules/@shared";
+import { CalendarioLetivo, type ICalendarioLetivo } from "@/modules/calendario-letivo";
 import type {
   CalendarioLetivoCreateInputDto,
   CalendarioLetivoFindOneInputDto,
@@ -15,14 +16,13 @@ import {
   type ICalendarioLetivoRepositoryPort,
   type ICalendarioLetivoUseCasePort,
 } from "@/modules/calendario-letivo/application/ports";
-import type { CalendarioLetivoEntity } from "@/modules/calendario-letivo/infrastructure/persistence/typeorm";
 import { CampusService } from "@/modules/campus";
 import { OfertaFormacaoService } from "@/modules/oferta-formacao";
 
 @Injectable()
 export class CalendarioLetivoService
   extends BaseCrudService<
-    CalendarioLetivoEntity,
+    ICalendarioLetivo,
     CalendarioLetivoListInputDto,
     CalendarioLetivoListOutputDto,
     CalendarioLetivoFindOneInputDto,
@@ -36,8 +36,6 @@ export class CalendarioLetivoService
   protected readonly createAction = "calendario_letivo:create";
   protected readonly updateAction = "calendario_letivo:update";
   protected readonly deleteAction = "calendario_letivo:delete";
-  protected readonly createFields = ["nome", "ano"] as const;
-  protected readonly updateFields = ["nome", "ano"] as const;
 
   constructor(
     @Inject(CALENDARIO_LETIVO_REPOSITORY_PORT)
@@ -48,31 +46,46 @@ export class CalendarioLetivoService
     super();
   }
 
-  protected override async beforeCreate(
+  protected async buildCreateData(
     accessContext: AccessContext,
-    entity: CalendarioLetivoEntity,
     dto: CalendarioLetivoCreateInputDto,
-  ): Promise<void> {
+  ): Promise<Partial<PersistInput<ICalendarioLetivo>>> {
     const campus = await this.campusService.findByIdSimpleStrict(accessContext, dto.campus.id);
-    this.repository.merge(entity, { campus: { id: campus.id } });
 
+    let ofertaFormacaoRef: { id: string } | undefined;
     if (dto.ofertaFormacao) {
       const ofertaFormacao = await this.ofertaFormacaoService.findByIdSimpleStrict(
         accessContext,
         dto.ofertaFormacao.id,
       );
-      this.repository.merge(entity, { ofertaFormacao: { id: ofertaFormacao.id } });
+      ofertaFormacaoRef = { id: ofertaFormacao.id };
     }
+
+    const domain = CalendarioLetivo.criar({
+      nome: dto.nome,
+      ano: dto.ano,
+      campus: { id: campus.id },
+      ofertaFormacao: ofertaFormacaoRef,
+    });
+    return {
+      ...domain,
+      campus: { id: campus.id },
+      ...(ofertaFormacaoRef ? { ofertaFormacao: ofertaFormacaoRef } : {}),
+    };
   }
 
-  protected override async beforeUpdate(
+  protected async buildUpdateData(
     accessContext: AccessContext,
-    entity: CalendarioLetivoEntity,
     dto: CalendarioLetivoFindOneInputDto & CalendarioLetivoUpdateInputDto,
-  ): Promise<void> {
+    current: CalendarioLetivoFindOneOutputDto,
+  ): Promise<Partial<PersistInput<ICalendarioLetivo>>> {
+    const domain = CalendarioLetivo.fromData(current);
+    domain.atualizar({ nome: dto.nome, ano: dto.ano });
+    const result: Partial<PersistInput<ICalendarioLetivo>> = { nome: domain.nome, ano: domain.ano };
+
     if (has(dto, "campus") && dto.campus !== undefined) {
       const campus = await this.campusService.findByIdSimpleStrict(accessContext, dto.campus.id);
-      this.repository.merge(entity, { campus: { id: campus.id } });
+      result.campus = { id: campus.id };
     }
 
     if (has(dto, "ofertaFormacao") && dto.ofertaFormacao !== undefined) {
@@ -81,10 +94,12 @@ export class CalendarioLetivoService
           accessContext,
           dto.ofertaFormacao.id,
         );
-        this.repository.merge(entity, { ofertaFormacao: { id: ofertaFormacao.id } });
+        result.ofertaFormacao = { id: ofertaFormacao.id };
       } else {
-        this.repository.merge(entity, { ofertaFormacao: null as any });
+        result.ofertaFormacao = null;
       }
     }
+
+    return result;
   }
 }

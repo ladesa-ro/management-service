@@ -16,7 +16,6 @@ import {
   PERFIL_REPOSITORY_PORT,
 } from "@/modules/perfil/application/ports";
 import { UsuarioService } from "@/modules/usuario";
-import type { UsuarioEntity } from "@/modules/usuario/infrastructure/persistence/typeorm";
 
 /**
  * Implementação dos casos de uso de Perfil (Hexagonal Architecture)
@@ -34,7 +33,7 @@ export class PerfilService implements IPerfilUseCasePort {
 
   async findAllActive(
     accessContext: AccessContext | null,
-    usuarioId: UsuarioEntity["id"],
+    usuarioId: string,
   ): Promise<PerfilFindOneOutputDto[]> {
     return this.perfilRepository.findAllActiveByUsuarioId(accessContext, usuarioId);
   }
@@ -102,19 +101,20 @@ export class PerfilService implements IPerfilUseCasePort {
       }
 
       // Cria ou reativa vínculo usando o port de repositório
-      const vinculo = this.perfilRepository.create();
-
-      this.perfilRepository.merge(vinculo, {
-        id: uuid(),
-        ...vinculoExistente,
+      const data = {
+        id: vinculoExistente?.id ?? uuid(),
         ativo: true,
         cargo,
         dateDeleted: null,
         usuario: { id: usuario.id },
         campus: { id: campus.id },
-      });
+      };
 
-      await this.perfilRepository.save(vinculo);
+      if (vinculoExistente) {
+        await this.perfilRepository.updateFromDomain(vinculoExistente.id, data);
+      } else {
+        await this.perfilRepository.createFromDomain(data);
+      }
     }
 
     // Desativa vínculos que não devem ser mantidos

@@ -4,8 +4,9 @@ import {
   AUTHORIZATION_SERVICE_PORT,
   BaseCrudService,
   type IAuthorizationServicePort,
+  type PersistInput,
 } from "@/modules/@shared";
-import type { AmbienteEntity } from "@/modules/ambiente/infrastructure/persistence/typeorm";
+import { Ambiente, type IAmbiente } from "@/modules/ambiente";
 import { ArquivoService } from "@/modules/arquivo/application/use-cases/arquivo.service";
 import { BlocoService } from "@/modules/bloco/application/use-cases/bloco.service";
 import { ImagemService } from "@/modules/imagem/application/use-cases/imagem.service";
@@ -23,15 +24,10 @@ import {
   type IAmbienteUseCasePort,
 } from "../ports";
 
-/**
- * Service centralizado para o módulo Ambiente.
- * Estende BaseCrudService para operações CRUD comuns.
- * Implementa IAmbienteUseCasePort para compatibilidade com a interface existente.
- */
 @Injectable()
 export class AmbienteService
   extends BaseCrudService<
-    AmbienteEntity,
+    IAmbiente,
     AmbienteListInputDto,
     AmbienteListOutputDto,
     AmbienteFindOneInputDto,
@@ -45,8 +41,6 @@ export class AmbienteService
   protected readonly createAction = "ambiente:create";
   protected readonly updateAction = "ambiente:update";
   protected readonly deleteAction = "ambiente:delete";
-  protected readonly createFields = ["nome", "descricao", "codigo", "capacidade", "tipo"] as const;
-  protected readonly updateFields = ["nome", "descricao", "codigo", "capacidade", "tipo"] as const;
 
   constructor(
     @Inject(AMBIENTE_REPOSITORY_PORT)
@@ -79,15 +73,41 @@ export class AmbienteService
     return this.updateImagemField(accessContext, dto.id, file, "imagemCapa", this.imagemService);
   }
 
-  /**
-   * Hook para adicionar relacionamento com Bloco durante criação
-   */
-  protected override async beforeCreate(
+  protected async buildCreateData(
     accessContext: AccessContext,
-    entity: AmbienteEntity,
     dto: AmbienteCreateInputDto,
-  ): Promise<void> {
+  ): Promise<Partial<PersistInput<IAmbiente>>> {
     const bloco = await this.blocoService.findByIdSimpleStrict(accessContext, dto.bloco.id);
-    this.repository.merge(entity, { bloco: { id: bloco.id } });
+    const domain = Ambiente.criar({
+      nome: dto.nome,
+      descricao: dto.descricao,
+      codigo: dto.codigo,
+      capacidade: dto.capacidade,
+      tipo: dto.tipo,
+      bloco: { id: bloco.id },
+    });
+    return { ...domain, bloco: { id: bloco.id } };
+  }
+
+  protected async buildUpdateData(
+    _ac: AccessContext,
+    dto: AmbienteFindOneInputDto & AmbienteUpdateInputDto,
+    current: AmbienteFindOneOutputDto,
+  ): Promise<Partial<PersistInput<IAmbiente>>> {
+    const domain = Ambiente.fromData(current);
+    domain.atualizar({
+      nome: dto.nome,
+      descricao: dto.descricao,
+      codigo: dto.codigo,
+      capacidade: dto.capacidade,
+      tipo: dto.tipo,
+    });
+    return {
+      nome: domain.nome,
+      descricao: domain.descricao,
+      codigo: domain.codigo,
+      capacidade: domain.capacidade,
+      tipo: domain.tipo,
+    };
   }
 }

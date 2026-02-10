@@ -1,9 +1,10 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { has } from "lodash";
 import type { AccessContext } from "@/modules/@core/access-context";
-import { BaseCrudService } from "@/modules/@shared";
+import { BaseCrudService, type PersistInput } from "@/modules/@shared";
 import { NivelFormacaoService } from "@/modules/nivel-formacao/application/use-cases/nivel-formacao.service";
 import { OfertaFormacaoService } from "@/modules/oferta-formacao";
+import type { IOfertaFormacaoNivelFormacao } from "@/modules/oferta-formacao-nivel-formacao";
 import type {
   OfertaFormacaoNivelFormacaoCreateInputDto,
   OfertaFormacaoNivelFormacaoFindOneInputDto,
@@ -17,12 +18,11 @@ import {
   type IOfertaFormacaoNivelFormacaoUseCasePort,
   OFERTA_FORMACAO_NIVEL_FORMACAO_REPOSITORY_PORT,
 } from "@/modules/oferta-formacao-nivel-formacao/application/ports";
-import type { OfertaFormacaoNivelFormacaoEntity } from "@/modules/oferta-formacao-nivel-formacao/infrastructure/persistence/typeorm";
 
 @Injectable()
 export class OfertaFormacaoNivelFormacaoService
   extends BaseCrudService<
-    OfertaFormacaoNivelFormacaoEntity,
+    IOfertaFormacaoNivelFormacao,
     OfertaFormacaoNivelFormacaoListInputDto,
     OfertaFormacaoNivelFormacaoListOutputDto,
     OfertaFormacaoNivelFormacaoFindOneInputDto,
@@ -36,8 +36,6 @@ export class OfertaFormacaoNivelFormacaoService
   protected readonly createAction = "oferta_formacao_nivel_formacao:create";
   protected readonly updateAction = "oferta_formacao_nivel_formacao:update";
   protected readonly deleteAction = "oferta_formacao_nivel_formacao:delete";
-  protected readonly createFields = [] as const;
-  protected readonly updateFields = [] as const;
 
   constructor(
     @Inject(OFERTA_FORMACAO_NIVEL_FORMACAO_REPOSITORY_PORT)
@@ -48,40 +46,43 @@ export class OfertaFormacaoNivelFormacaoService
     super();
   }
 
-  protected override async beforeCreate(
+  protected async buildCreateData(
     accessContext: AccessContext,
-    entity: OfertaFormacaoNivelFormacaoEntity,
     dto: OfertaFormacaoNivelFormacaoCreateInputDto,
-  ): Promise<void> {
+  ): Promise<Partial<PersistInput<IOfertaFormacaoNivelFormacao>>> {
+    const result: Record<string, any> = {};
+
     if (dto.ofertaFormacao) {
       const ofertaFormacao = await this.ofertaFormacaoService.findByIdStrict(accessContext, {
         id: dto.ofertaFormacao.id,
       });
-      this.repository.merge(entity, { ofertaFormacao: { id: ofertaFormacao.id } } as any);
+      result.ofertaFormacao = { id: ofertaFormacao.id };
     }
 
     if (dto.nivelFormacao) {
       const nivelFormacao = await this.nivelFormacaoService.findByIdStrict(accessContext, {
         id: dto.nivelFormacao.id,
       });
-      this.repository.merge(entity, { nivelFormacao: { id: nivelFormacao.id } } as any);
+      result.nivelFormacao = { id: nivelFormacao.id };
     }
+
+    return result as IOfertaFormacaoNivelFormacao;
   }
 
-  protected override async beforeUpdate(
+  protected async buildUpdateData(
     accessContext: AccessContext,
-    entity: OfertaFormacaoNivelFormacaoEntity,
     dto: OfertaFormacaoNivelFormacaoFindOneInputDto & OfertaFormacaoNivelFormacaoUpdateInputDto,
-  ): Promise<void> {
+    _current: OfertaFormacaoNivelFormacaoFindOneOutputDto,
+  ): Promise<Partial<PersistInput<IOfertaFormacaoNivelFormacao>>> {
+    const result: Partial<PersistInput<IOfertaFormacaoNivelFormacao>> = {};
+
     if (has(dto, "ofertaFormacao") && dto.ofertaFormacao !== undefined) {
       const ofertaFormacao =
         dto.ofertaFormacao &&
         (await this.ofertaFormacaoService.findByIdStrict(accessContext, {
           id: dto.ofertaFormacao.id,
         }));
-      this.repository.merge(entity, {
-        ofertaFormacao: ofertaFormacao && { id: ofertaFormacao.id },
-      } as any);
+      result.ofertaFormacao = ofertaFormacao && { id: ofertaFormacao.id };
     }
 
     if (has(dto, "nivelFormacao") && dto.nivelFormacao !== undefined) {
@@ -90,9 +91,9 @@ export class OfertaFormacaoNivelFormacaoService
         (await this.nivelFormacaoService.findByIdStrict(accessContext, {
           id: dto.nivelFormacao.id,
         }));
-      this.repository.merge(entity, {
-        nivelFormacao: nivelFormacao && { id: nivelFormacao.id },
-      } as any);
+      result.nivelFormacao = nivelFormacao && { id: nivelFormacao.id };
     }
+
+    return result;
   }
 }

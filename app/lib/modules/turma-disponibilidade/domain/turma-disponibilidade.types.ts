@@ -3,8 +3,8 @@ import type { IDisponibilidade } from "@/modules/disponibilidade/domain/disponib
 import type { ITurma } from "@/modules/turma/domain/turma.types";
 
 export interface ITurmaDisponibilidade extends IEntityBase {
-  turma: ITurma;
-  disponibilidade: IDisponibilidade;
+  turma: ITurma | null;
+  disponibilidade: IDisponibilidade | null;
 }
 
 export interface ITurmaDisponibilidadeCreate {

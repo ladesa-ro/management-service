@@ -45,7 +45,7 @@ export class Cidade extends BaseEntity implements ICidade {
   /**
    * Reconstrói uma instância a partir de dados existentes (ex: do banco)
    */
-  static fromData(dados: ICidade): Cidade {
+  static fromData(dados: Record<string, any>): Cidade {
     const instance = new Cidade();
     Object.assign(instance, dados);
     return instance;

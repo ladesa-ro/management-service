@@ -1,5 +1,5 @@
 import type { IBaseCrudRepositoryPort } from "@/modules/@shared";
-import type { TurmaEntity } from "@/modules/turma/infrastructure/persistence/typeorm";
+import type { ITurma } from "@/modules/turma";
 import type { TurmaFindOneOutputDto, TurmaListOutputDto } from "../../dtos";
 
 /**
@@ -12,4 +12,4 @@ export const TURMA_REPOSITORY_PORT = Symbol("ITurmaRepositoryPort");
  * Estende a interface base de CRUD com operações padrão
  */
 export interface ITurmaRepositoryPort
-  extends IBaseCrudRepositoryPort<TurmaEntity, TurmaListOutputDto, TurmaFindOneOutputDto> {}
+  extends IBaseCrudRepositoryPort<ITurma, TurmaListOutputDto, TurmaFindOneOutputDto> {}

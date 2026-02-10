@@ -4,7 +4,7 @@ import {
   InternalServerErrorException,
   ServiceUnavailableException,
 } from "@nestjs/common";
-import { has, pick } from "lodash";
+import { has } from "lodash";
 import type { AccessContext } from "@/modules/@core/access-context";
 import { KeycloakService } from "@/modules/@core/identity-provider";
 import {
@@ -183,21 +183,21 @@ export class UsuarioService implements IUsuarioUseCasePort {
     accessContext: AccessContext,
     dto: UsuarioCreateInputDto,
   ): Promise<UsuarioFindOneOutputDto> {
-    await accessContext.ensurePermission("usuario:create", { dto } as any);
+    await accessContext.ensurePermission("usuario:create", { dto });
 
-    const input = pick(dto, ["nome", "matriculaSiape", "email"]);
+    const input = {
+      nome: dto.nome,
+      matriculaSiape: dto.matriculaSiape,
+      email: dto.email,
+    };
 
     await this.ensureDtoAvailability(input, null);
 
-    const usuario = this.usuarioRepository.create();
-
-    this.usuarioRepository.merge(usuario, {
-      ...input,
-      isSuperUser: false,
-    });
-
     try {
-      await this.usuarioRepository.save(usuario);
+      const { id } = await this.usuarioRepository.createFromDomain({
+        ...input,
+        isSuperUser: false,
+      });
 
       const kcAdminClient = await this.keycloakService.getAdminClient();
 
@@ -213,12 +213,12 @@ export class UsuarioService implements IUsuarioUseCasePort {
           "usuario.matriculaSiape": input.matriculaSiape,
         },
       });
+
+      return this.findByIdStrict(accessContext, { id: id as string });
     } catch (err) {
       console.debug("Erro ao cadastrar usuário:", err);
       throw new InternalServerErrorException();
     }
-
-    return this.findByIdStrict(accessContext, { id: usuario.id });
   }
 
   async update(
@@ -241,18 +241,15 @@ export class UsuarioService implements IUsuarioUseCasePort {
 
     await accessContext.ensurePermission("usuario:update", { dto }, dto.id);
 
-    const input = pick(dto, ["nome", "matriculaSiape", "email"]);
+    const input = {
+      nome: dto.nome,
+      matriculaSiape: dto.matriculaSiape,
+      email: dto.email,
+    };
 
     await this.ensureDtoAvailability(input, dto.id);
 
-    const usuario = this.usuarioRepository.create();
-
-    this.usuarioRepository.merge(usuario, {
-      id: currentUsuario.id,
-      ...input,
-    });
-
-    await this.usuarioRepository.save(usuario);
+    await this.usuarioRepository.updateFromDomain(currentUsuario.id, input);
 
     const changedEmail = has(dto, "email");
     const changedMatriculaSiape = has(dto, "matriculaSiape");
@@ -282,7 +279,7 @@ export class UsuarioService implements IUsuarioUseCasePort {
       }
     }
 
-    return this.findByIdStrict(accessContext, { id: usuario.id });
+    return this.findByIdStrict(accessContext, { id: currentUsuario.id });
   }
 
   async deleteOneById(accessContext: AccessContext, dto: UsuarioFindOneInputDto): Promise<boolean> {

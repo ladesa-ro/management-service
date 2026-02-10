@@ -1,5 +1,4 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { pick } from "lodash";
 import type { AccessContext } from "@/modules/@core/access-context";
 import { ResourceNotFoundError } from "@/modules/@shared";
 import type {
@@ -12,7 +11,6 @@ import {
   type IEnderecoRepositoryPort,
   type IEnderecoUseCasePort,
 } from "@/modules/endereco/application/ports";
-import type { EnderecoEntity } from "@/modules/endereco/infrastructure/persistence/typeorm";
 
 @Injectable()
 export class EnderecoService implements IEnderecoUseCasePort {
@@ -38,29 +36,27 @@ export class EnderecoService implements IEnderecoUseCasePort {
   async internalEnderecoCreateOrUpdate(
     id: string | null,
     dto: EnderecoInputDto,
-  ): Promise<EnderecoEntity> {
-    const endereco = this.enderecoRepository.create();
+  ): Promise<{ id: string | number }> {
+    const data = {
+      cep: dto.cep,
+      logradouro: dto.logradouro,
+      numero: dto.numero,
+      bairro: dto.bairro,
+      complemento: dto.complemento,
+      pontoReferencia: dto.pontoReferencia,
+      cidade: { id: dto.cidade.id },
+    };
 
     if (id) {
       const exists = await this.enderecoRepository.exists(id);
 
       if (exists) {
-        endereco.id = id;
+        await this.enderecoRepository.updateFromDomain(id, data);
+        return { id };
       }
     }
 
-    const enderecoInputDto: EnderecoInputDto = {
-      ...pick(dto, ["cep", "logradouro", "numero", "bairro", "complemento", "pontoReferencia"]),
-      cidade: {
-        id: dto.cidade.id,
-      },
-    };
-
-    this.enderecoRepository.merge(endereco, enderecoInputDto);
-
-    await this.enderecoRepository.save(endereco);
-
-    return endereco;
+    return this.enderecoRepository.createFromDomain(data);
   }
 
   async findById(

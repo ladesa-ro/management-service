@@ -10,7 +10,7 @@ export interface ICalendarioLetivo extends IEntityBase {
   nome: string;
   ano: number;
   campus: ICampus;
-  ofertaFormacao: IOfertaFormacao;
+  ofertaFormacao: IOfertaFormacao | null;
 }
 
 /**

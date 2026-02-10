@@ -48,7 +48,7 @@ export class Modalidade extends BaseDatedEntity implements IModalidade {
   /**
    * Reconstroi uma instancia a partir de dados existentes (ex: do banco)
    */
-  static fromData(dados: IModalidade): Modalidade {
+  static fromData(dados: Record<string, any>): Modalidade {
     const instance = new Modalidade();
     Object.assign(instance, dados);
     return instance;

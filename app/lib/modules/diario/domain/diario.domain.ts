@@ -50,7 +50,7 @@ export class Diario extends BaseDatedEntity implements IDiario {
   /**
    * Reconstrói uma instância a partir de dados existentes (ex: do banco)
    */
-  static fromData(dados: IDiario): Diario {
+  static fromData(dados: Record<string, any>): Diario {
     const instance = new Diario();
     Object.assign(instance, dados);
     return instance;

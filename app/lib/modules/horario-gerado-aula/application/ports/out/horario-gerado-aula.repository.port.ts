@@ -1,6 +1,6 @@
 import type { AccessContext } from "@/modules/@core/access-context";
 import type { IBaseCrudRepositoryPort } from "@/modules/@shared";
-import type { HorarioGeradoAulaEntity } from "@/modules/horario-gerado-aula/infrastructure/persistence/typeorm";
+import type { IHorarioGeradoAula } from "@/modules/horario-gerado-aula";
 import type { HorarioGeradoAulaFindOneOutputDto, HorarioGeradoAulaListOutputDto } from "../../dtos";
 
 /**
@@ -14,7 +14,7 @@ export const HORARIO_GERADO_AULA_REPOSITORY_PORT = Symbol("IHorarioGeradoAulaRep
  */
 export interface IHorarioGeradoAulaRepositoryPort
   extends IBaseCrudRepositoryPort<
-    HorarioGeradoAulaEntity,
+    IHorarioGeradoAula,
     HorarioGeradoAulaListOutputDto,
     HorarioGeradoAulaFindOneOutputDto
   > {

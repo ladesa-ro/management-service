@@ -95,16 +95,13 @@ export class UsuarioTypeOrmRepositoryAdapter
     return !exists;
   }
 
-  async resolveProperty<Property extends keyof UsuarioEntity>(
-    id: string,
-    property: Property,
-  ): Promise<UsuarioEntity[Property]> {
+  async resolveProperty<Property extends string>(id: string, property: Property): Promise<unknown> {
     const qb = this.repository.createQueryBuilder(this.alias);
     qb.select(`${this.alias}.${property}`);
     qb.where(`${this.alias}.id = :usuarioId`, { usuarioId: id });
 
     const usuario = await qb.getOneOrFail();
-    return usuario[property];
+    return usuario[property as keyof UsuarioEntity];
   }
 
   async findUsuarioEnsino(usuarioId: string): Promise<{

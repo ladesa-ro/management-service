@@ -50,7 +50,7 @@ export class Perfil extends BaseDatedEntity implements IPerfil {
   /**
    * Reconstrói uma instância a partir de dados existentes (ex: do banco)
    */
-  static fromData(dados: IPerfil): Perfil {
+  static fromData(dados: Record<string, any>): Perfil {
     const instance = new Perfil();
     Object.assign(instance, dados);
     return instance;

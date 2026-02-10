@@ -64,7 +64,7 @@ export class DiarioPreferenciaAgrupamento
   /**
    * Reconstrói uma instância a partir de dados existentes (ex: do banco)
    */
-  static fromData(dados: IDiarioPreferenciaAgrupamento): DiarioPreferenciaAgrupamento {
+  static fromData(dados: Record<string, any>): DiarioPreferenciaAgrupamento {
     const instance = new DiarioPreferenciaAgrupamento();
     Object.assign(instance, dados);
     return instance;

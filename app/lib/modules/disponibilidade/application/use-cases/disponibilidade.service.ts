@@ -1,5 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { BaseCrudService } from "@/modules/@shared";
+import type { AccessContext } from "@/modules/@core/access-context";
+import { BaseCrudService, type PersistInput } from "@/modules/@shared";
+import { Disponibilidade, type IDisponibilidade } from "@/modules/disponibilidade";
 import type {
   DisponibilidadeCreateInputDto,
   DisponibilidadeFindOneInputDto,
@@ -13,12 +15,11 @@ import {
   type IDisponibilidadeRepositoryPort,
   type IDisponibilidadeUseCasePort,
 } from "@/modules/disponibilidade/application/ports";
-import type { DisponibilidadeEntity } from "@/modules/disponibilidade/infrastructure/persistence/typeorm";
 
 @Injectable()
 export class DisponibilidadeService
   extends BaseCrudService<
-    DisponibilidadeEntity,
+    IDisponibilidade,
     DisponibilidadeListInputDto,
     DisponibilidadeListOutputDto,
     DisponibilidadeFindOneInputDto,
@@ -32,13 +33,29 @@ export class DisponibilidadeService
   protected readonly createAction = "disponibilidade:create";
   protected readonly updateAction = "disponibilidade:update";
   protected readonly deleteAction = "disponibilidade:delete";
-  protected readonly createFields = ["dataInicio", "dataFim"] as const;
-  protected readonly updateFields = ["dataInicio", "dataFim"] as const;
 
   constructor(
     @Inject(DISPONIBILIDADE_REPOSITORY_PORT)
     protected readonly repository: IDisponibilidadeRepositoryPort,
   ) {
     super();
+  }
+
+  protected async buildCreateData(
+    _ac: AccessContext,
+    dto: DisponibilidadeCreateInputDto,
+  ): Promise<Partial<PersistInput<IDisponibilidade>>> {
+    const domain = Disponibilidade.criar({ dataInicio: dto.dataInicio, dataFim: dto.dataFim });
+    return { ...domain };
+  }
+
+  protected async buildUpdateData(
+    _ac: AccessContext,
+    dto: DisponibilidadeFindOneInputDto & DisponibilidadeUpdateInputDto,
+    current: DisponibilidadeFindOneOutputDto,
+  ): Promise<Partial<PersistInput<IDisponibilidade>>> {
+    const domain = Disponibilidade.fromData(current);
+    domain.atualizar({ dataInicio: dto.dataInicio, dataFim: dto.dataFim });
+    return { dataInicio: domain.dataInicio, dataFim: domain.dataFim };
   }
 }

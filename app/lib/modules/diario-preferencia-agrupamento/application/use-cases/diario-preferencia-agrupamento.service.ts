@@ -1,9 +1,12 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { has } from "lodash";
 import type { AccessContext } from "@/modules/@core/access-context";
-import { BaseCrudService } from "@/modules/@shared";
+import { BaseCrudService, type PersistInput } from "@/modules/@shared";
 import { DiarioService } from "@/modules/diario/application/use-cases/diario.service";
-import type { DiarioPreferenciaAgrupamentoEntity } from "@/modules/diario-preferencia-agrupamento/infrastructure/persistence/typeorm";
+import {
+  DiarioPreferenciaAgrupamento,
+  type IDiarioPreferenciaAgrupamento,
+} from "@/modules/diario-preferencia-agrupamento";
 import { IntervaloDeTempoService } from "@/modules/intervalo-de-tempo/application/use-cases/intervalo-de-tempo.service";
 import type {
   DiarioPreferenciaAgrupamentoCreateInputDto,
@@ -20,7 +23,7 @@ import {
 
 @Injectable()
 export class DiarioPreferenciaAgrupamentoService extends BaseCrudService<
-  DiarioPreferenciaAgrupamentoEntity,
+  IDiarioPreferenciaAgrupamento,
   DiarioPreferenciaAgrupamentoListInputDto,
   DiarioPreferenciaAgrupamentoListOutputDto,
   DiarioPreferenciaAgrupamentoFindOneInputDto,
@@ -32,18 +35,6 @@ export class DiarioPreferenciaAgrupamentoService extends BaseCrudService<
   protected readonly createAction = "diario_preferencia_agrupamento:create";
   protected readonly updateAction = "diario_preferencia_agrupamento:update";
   protected readonly deleteAction = "diario_preferencia_agrupamento:delete";
-  protected readonly createFields = [
-    "diaSemanaIso",
-    "aulasSeguidas",
-    "dataInicio",
-    "dataFim",
-  ] as const;
-  protected readonly updateFields = [
-    "diaSemanaIso",
-    "aulasSeguidas",
-    "dataInicio",
-    "dataFim",
-  ] as const;
 
   constructor(
     @Inject(DIARIO_PREFERENCIA_AGRUPAMENTO_REPOSITORY_PORT)
@@ -54,33 +45,62 @@ export class DiarioPreferenciaAgrupamentoService extends BaseCrudService<
     super();
   }
 
-  protected override async beforeCreate(
+  protected async buildCreateData(
     accessContext: AccessContext,
-    entity: DiarioPreferenciaAgrupamentoEntity,
     dto: DiarioPreferenciaAgrupamentoCreateInputDto,
-  ): Promise<void> {
+  ): Promise<Partial<PersistInput<IDiarioPreferenciaAgrupamento>>> {
+    let diarioRef: { id: string } | undefined;
     if (dto.diario) {
       const diario = await this.diarioService.findByIdStrict(accessContext, dto.diario);
-      this.repository.merge(entity, { diario: { id: diario.id } });
+      diarioRef = { id: diario.id };
     }
 
+    let intervaloRef: { id: string } | undefined;
     if (dto.intervaloDeTempo) {
       const intervalo = await this.intervaloDeTempoService.intervaloCreateOrUpdate(
         accessContext,
         dto.intervaloDeTempo,
       );
-      this.repository.merge(entity, { intervaloDeTempo: { id: intervalo!.id } });
+      intervaloRef = { id: intervalo!.id };
     }
+
+    const domain = DiarioPreferenciaAgrupamento.criar({
+      diaSemanaIso: dto.diaSemanaIso,
+      aulasSeguidas: dto.aulasSeguidas,
+      dataInicio: dto.dataInicio,
+      dataFim: dto.dataFim,
+      diario: diarioRef!,
+      intervaloDeTempo: intervaloRef!,
+    });
+    return {
+      ...domain,
+      ...(diarioRef ? { diario: diarioRef } : {}),
+      ...(intervaloRef ? { intervaloDeTempo: intervaloRef } : {}),
+    };
   }
 
-  protected override async beforeUpdate(
+  protected async buildUpdateData(
     accessContext: AccessContext,
-    entity: DiarioPreferenciaAgrupamentoEntity,
     dto: DiarioPreferenciaAgrupamentoFindOneInputDto & DiarioPreferenciaAgrupamentoUpdateInputDto,
-  ): Promise<void> {
+    current: DiarioPreferenciaAgrupamentoFindOneOutputDto,
+  ): Promise<Partial<PersistInput<IDiarioPreferenciaAgrupamento>>> {
+    const domain = DiarioPreferenciaAgrupamento.fromData(current);
+    domain.atualizar({
+      diaSemanaIso: dto.diaSemanaIso,
+      aulasSeguidas: dto.aulasSeguidas,
+      dataInicio: dto.dataInicio,
+      dataFim: dto.dataFim,
+    });
+    const result: Partial<PersistInput<IDiarioPreferenciaAgrupamento>> = {
+      diaSemanaIso: domain.diaSemanaIso,
+      aulasSeguidas: domain.aulasSeguidas,
+      dataInicio: domain.dataInicio,
+      dataFim: domain.dataFim,
+    };
+
     if (has(dto, "diario") && dto.diario !== undefined) {
       const diario = await this.diarioService.findByIdStrict(accessContext, dto.diario);
-      this.repository.merge(entity, { diario: { id: diario.id } });
+      result.diario = { id: diario.id };
     }
 
     if (has(dto, "intervaloDeTempo") && dto.intervaloDeTempo !== undefined) {
@@ -88,7 +108,9 @@ export class DiarioPreferenciaAgrupamentoService extends BaseCrudService<
         accessContext,
         dto.intervaloDeTempo!,
       );
-      this.repository.merge(entity, { intervaloDeTempo: { id: intervaloDeTempo!.id } });
+      result.intervaloDeTempo = { id: intervaloDeTempo!.id };
     }
+
+    return result;
   }
 }

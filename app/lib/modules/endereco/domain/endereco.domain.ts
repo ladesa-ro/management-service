@@ -59,7 +59,7 @@ export class Endereco extends BaseDatedEntity implements IEndereco {
   /**
    * Reconstrói uma instância a partir de dados existentes (ex: do banco)
    */
-  static fromData(dados: IEndereco): Endereco {
+  static fromData(dados: Record<string, any>): Endereco {
     const instance = new Endereco();
     Object.assign(instance, dados);
     return instance;

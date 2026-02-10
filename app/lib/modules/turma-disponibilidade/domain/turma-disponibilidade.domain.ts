@@ -43,7 +43,7 @@ export class TurmaDisponibilidade extends BaseDatedEntity implements ITurmaDispo
   /**
    * Reconstrói uma instância a partir de dados existentes (ex: do banco)
    */
-  static fromData(dados: ITurmaDisponibilidade): TurmaDisponibilidade {
+  static fromData(dados: Record<string, any>): TurmaDisponibilidade {
     const instance = new TurmaDisponibilidade();
     Object.assign(instance, dados);
     return instance;

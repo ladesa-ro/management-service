@@ -1,6 +1,7 @@
 import type { SelectQueryBuilder } from "typeorm";
 import type { AccessContext } from "@/modules/@core/access-context";
 import type { IBaseCrudRepositoryPort } from "@/modules/@shared";
+import type { IGradeHorarioOfertaFormacaoIntervaloDeTempo } from "@/modules/grade-horario-oferta-formacao-intervalo-de-tempo";
 import type { GradeHorarioOfertaFormacaoIntervaloDeTempoEntity } from "@/modules/grade-horario-oferta-formacao-intervalo-de-tempo/infrastructure/persistence/typeorm";
 import type {
   GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputDto,
@@ -20,7 +21,7 @@ export const GRADE_HORARIO_OFERTA_FORMACAO_INTERVALO_DE_TEMPO_REPOSITORY_PORT = 
  */
 export interface IGradeHorarioOfertaFormacaoIntervaloDeTempoRepositoryPort
   extends IBaseCrudRepositoryPort<
-    GradeHorarioOfertaFormacaoIntervaloDeTempoEntity,
+    IGradeHorarioOfertaFormacaoIntervaloDeTempo,
     GradeHorarioOfertaFormacaoIntervaloDeTempoListOutputDto,
     GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputDto
   > {

@@ -53,7 +53,7 @@ export class Estado extends BaseEntity implements IEstado {
   /**
    * Reconstrói uma instância a partir de dados existentes (ex: do banco)
    */
-  static fromData(dados: IEstado): Estado {
+  static fromData(dados: Record<string, any>): Estado {
     const instance = new Estado();
     Object.assign(instance, dados);
     return instance;

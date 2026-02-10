@@ -1,6 +1,6 @@
 import type { SelectQueryBuilder } from "typeorm";
 import type { AccessContext } from "@/modules/@core/access-context";
-import type { PartialEntity } from "@/modules/@shared";
+import type { IEvento } from "@/modules/evento";
 import type { EventoEntity } from "@/modules/evento/infrastructure/persistence/typeorm";
 import type {
   EventoFindOneInputDto,
@@ -47,19 +47,14 @@ export interface IEventoRepositoryPort {
   ): Promise<EventoFindOneOutputDto | null>;
 
   /**
-   * Cria uma nova instância de entidade (não persiste)
+   * Cria uma entidade a partir de dados de domínio
    */
-  create(): EventoEntity;
+  createFromDomain(data: IEvento): Promise<{ id: string | number }>;
 
   /**
-   * Mescla dados em uma entidade existente
+   * Atualiza uma entidade a partir de dados de domínio parciais
    */
-  merge(entity: EventoEntity, data: PartialEntity<EventoEntity>): void;
-
-  /**
-   * Salva (cria ou atualiza) uma entidade
-   */
-  save(entity: PartialEntity<EventoEntity>): Promise<EventoEntity>;
+  updateFromDomain(id: string | number, data: Partial<IEvento>): Promise<void>;
 
   /**
    * Executa soft delete por ID

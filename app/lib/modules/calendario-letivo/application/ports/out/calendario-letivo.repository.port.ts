@@ -1,6 +1,6 @@
 import type { AccessContext } from "@/modules/@core/access-context";
 import type { IBaseCrudRepositoryPort } from "@/modules/@shared";
-import type { CalendarioLetivoEntity } from "@/modules/calendario-letivo/infrastructure/persistence/typeorm";
+import type { ICalendarioLetivo } from "@/modules/calendario-letivo";
 import type { CalendarioLetivoFindOneOutputDto, CalendarioLetivoListOutputDto } from "../../dtos";
 
 /**
@@ -14,7 +14,7 @@ export const CALENDARIO_LETIVO_REPOSITORY_PORT = Symbol("ICalendarioLetivoReposi
  */
 export interface ICalendarioLetivoRepositoryPort
   extends IBaseCrudRepositoryPort<
-    CalendarioLetivoEntity,
+    ICalendarioLetivo,
     CalendarioLetivoListOutputDto,
     CalendarioLetivoFindOneOutputDto
   > {

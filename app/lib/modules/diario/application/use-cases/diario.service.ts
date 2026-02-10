@@ -1,9 +1,10 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { has } from "lodash";
 import type { AccessContext } from "@/modules/@core/access-context";
-import { BaseCrudService } from "@/modules/@shared";
+import { BaseCrudService, type PersistInput } from "@/modules/@shared";
 import { AmbienteService } from "@/modules/ambiente/application/use-cases/ambiente.service";
 import { CalendarioLetivoService } from "@/modules/calendario-letivo";
+import { Diario, type IDiario } from "@/modules/diario";
 import type {
   DiarioCreateInputDto,
   DiarioFindOneInputDto,
@@ -17,14 +18,13 @@ import {
   type IDiarioRepositoryPort,
   type IDiarioUseCasePort,
 } from "@/modules/diario/application/ports";
-import type { DiarioEntity } from "@/modules/diario/infrastructure/persistence/typeorm";
 import { DisciplinaService } from "@/modules/disciplina/application/use-cases/disciplina.service";
 import { TurmaService } from "@/modules/turma/application/use-cases/turma.service";
 
 @Injectable()
 export class DiarioService
   extends BaseCrudService<
-    DiarioEntity,
+    IDiario,
     DiarioListInputDto,
     DiarioListOutputDto,
     DiarioFindOneInputDto,
@@ -38,8 +38,6 @@ export class DiarioService
   protected readonly createAction = "diario:create";
   protected readonly updateAction = "diario:update";
   protected readonly deleteAction = "diario:delete";
-  protected readonly createFields = ["ativo"] as const;
-  protected readonly updateFields = ["ativo"] as const;
 
   constructor(
     @Inject(DIARIO_REPOSITORY_PORT)
@@ -52,49 +50,61 @@ export class DiarioService
     super();
   }
 
-  protected override async beforeCreate(
+  protected async buildCreateData(
     accessContext: AccessContext,
-    entity: DiarioEntity,
     dto: DiarioCreateInputDto,
-  ): Promise<void> {
+  ): Promise<Partial<PersistInput<IDiario>>> {
+    let ambientePadraoRef: { id: string } | null = null;
     if (dto.ambientePadrao != null) {
       const ambientePadrao = await this.ambienteService.findByIdStrict(accessContext, {
         id: dto.ambientePadrao.id,
       });
-      this.repository.merge(entity, { ambientePadrao: { id: ambientePadrao.id } });
-    } else {
-      this.repository.merge(entity, { ambientePadrao: null });
+      ambientePadraoRef = { id: ambientePadrao.id };
     }
 
     const calendarioLetivo = await this.calendarioLetivoService.findByIdSimpleStrict(
       accessContext,
       dto.calendarioLetivo.id,
     );
-    this.repository.merge(entity, { calendarioLetivo: { id: calendarioLetivo.id } });
-
     const disciplina = await this.disciplinaService.findByIdSimpleStrict(
       accessContext,
       dto.disciplina.id,
     );
-    this.repository.merge(entity, { disciplina: { id: disciplina.id } });
-
     const turma = await this.turmaService.findByIdSimpleStrict(accessContext, dto.turma.id);
-    this.repository.merge(entity, { turma: { id: turma.id } });
+
+    const domain = Diario.criar({
+      ativo: dto.ativo,
+      calendarioLetivo: { id: calendarioLetivo.id },
+      turma: { id: turma.id },
+      disciplina: { id: disciplina.id },
+      ambientePadrao: ambientePadraoRef,
+    });
+    return {
+      ...domain,
+      calendarioLetivo: { id: calendarioLetivo.id },
+      turma: { id: turma.id },
+      disciplina: { id: disciplina.id },
+      ambientePadrao: ambientePadraoRef,
+    };
   }
 
-  protected override async beforeUpdate(
+  protected async buildUpdateData(
     accessContext: AccessContext,
-    entity: DiarioEntity,
     dto: DiarioFindOneInputDto & DiarioUpdateInputDto,
-  ): Promise<void> {
+    current: DiarioFindOneOutputDto,
+  ): Promise<Partial<PersistInput<IDiario>>> {
+    const domain = Diario.fromData(current);
+    domain.atualizar({ ativo: dto.ativo });
+    const result: Partial<PersistInput<IDiario>> = { ativo: domain.ativo };
+
     if (has(dto, "ambientePadrao") && dto.ambientePadrao !== undefined) {
       if (dto.ambientePadrao !== null) {
         const ambientePadrao = await this.ambienteService.findByIdStrict(accessContext, {
           id: dto.ambientePadrao.id,
         });
-        this.repository.merge(entity, { ambientePadrao: { id: ambientePadrao.id } });
+        result.ambientePadrao = { id: ambientePadrao.id };
       } else {
-        this.repository.merge(entity, { ambientePadrao: null });
+        result.ambientePadrao = null;
       }
     }
 
@@ -103,12 +113,12 @@ export class DiarioService
         accessContext,
         dto.disciplina.id,
       );
-      this.repository.merge(entity, { disciplina: { id: disciplina.id } });
+      result.disciplina = { id: disciplina.id };
     }
 
     if (has(dto, "turma") && dto.turma !== undefined) {
       const turma = await this.turmaService.findByIdSimpleStrict(accessContext, dto.turma.id);
-      this.repository.merge(entity, { turma: { id: turma.id } });
+      result.turma = { id: turma.id };
     }
 
     if (has(dto, "calendarioLetivo") && dto.calendarioLetivo !== undefined) {
@@ -116,7 +126,9 @@ export class DiarioService
         accessContext,
         dto.calendarioLetivo.id,
       );
-      this.repository.merge(entity, { calendarioLetivo: { id: calendarioLetivo.id } });
+      result.calendarioLetivo = { id: calendarioLetivo.id };
     }
+
+    return result;
   }
 }

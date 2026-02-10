@@ -1,12 +1,12 @@
 import { Inject, Injectable, type StreamableFile } from "@nestjs/common";
 import { has } from "lodash";
 import type { AccessContext } from "@/modules/@core/access-context";
-import { BaseCrudService } from "@/modules/@shared";
+import { BaseCrudService, type PersistInput } from "@/modules/@shared";
 import { AmbienteService } from "@/modules/ambiente/application/use-cases/ambiente.service";
 import { ArquivoService } from "@/modules/arquivo/application/use-cases/arquivo.service";
 import { CursoService } from "@/modules/curso";
 import { ImagemService } from "@/modules/imagem/application/use-cases/imagem.service";
-import type { TurmaEntity } from "@/modules/turma/infrastructure/persistence/typeorm";
+import { type ITurma, Turma } from "@/modules/turma";
 import type {
   TurmaCreateInputDto,
   TurmaFindOneInputDto,
@@ -19,7 +19,7 @@ import { type ITurmaRepositoryPort, TURMA_REPOSITORY_PORT } from "../ports";
 
 @Injectable()
 export class TurmaService extends BaseCrudService<
-  TurmaEntity,
+  ITurma,
   TurmaListInputDto,
   TurmaListOutputDto,
   TurmaFindOneInputDto,
@@ -31,8 +31,6 @@ export class TurmaService extends BaseCrudService<
   protected readonly createAction = "turma:create";
   protected readonly updateAction = "turma:update";
   protected readonly deleteAction = "turma:delete";
-  protected readonly createFields = ["periodo"] as const;
-  protected readonly updateFields = ["periodo"] as const;
 
   constructor(
     @Inject(TURMA_REPOSITORY_PORT)
@@ -64,43 +62,57 @@ export class TurmaService extends BaseCrudService<
     return this.updateImagemField(accessContext, dto.id, file, "imagemCapa", this.imagemService);
   }
 
-  protected override async beforeCreate(
+  protected async buildCreateData(
     accessContext: AccessContext,
-    entity: TurmaEntity,
     dto: TurmaCreateInputDto,
-  ): Promise<void> {
+  ): Promise<Partial<PersistInput<ITurma>>> {
+    const curso = await this.cursoService.findByIdSimpleStrict(accessContext, dto.curso.id);
+
+    let ambientePadraoAulaRef: { id: string } | null = null;
     if (dto.ambientePadraoAula) {
       const ambientePadraoAula = await this.ambienteService.findByIdStrict(accessContext, {
         id: dto.ambientePadraoAula.id,
       });
-      this.repository.merge(entity, { ambientePadraoAula: { id: ambientePadraoAula.id } });
-    } else {
-      this.repository.merge(entity, { ambientePadraoAula: null });
+      ambientePadraoAulaRef = { id: ambientePadraoAula.id };
     }
 
-    const curso = await this.cursoService.findByIdSimpleStrict(accessContext, dto.curso.id);
-    this.repository.merge(entity, { curso: { id: curso.id } });
+    const domain = Turma.criar({
+      periodo: dto.periodo,
+      curso: { id: curso.id },
+      ambientePadraoAula: ambientePadraoAulaRef,
+    });
+    return {
+      ...domain,
+      curso: { id: curso.id },
+      ambientePadraoAula: ambientePadraoAulaRef,
+    };
   }
 
-  protected override async beforeUpdate(
+  protected async buildUpdateData(
     accessContext: AccessContext,
-    entity: TurmaEntity,
     dto: TurmaFindOneInputDto & TurmaUpdateInputDto,
-  ): Promise<void> {
+    current: TurmaFindOneOutputDto,
+  ): Promise<Partial<PersistInput<ITurma>>> {
+    const domain = Turma.fromData(current);
+    domain.atualizar({ periodo: dto.periodo });
+    const result: Partial<PersistInput<ITurma>> = { periodo: domain.periodo };
+
     if (has(dto, "ambientePadraoAula") && dto.ambientePadraoAula !== undefined) {
       if (dto.ambientePadraoAula !== null) {
         const ambientePadraoAula = await this.ambienteService.findByIdStrict(accessContext, {
           id: dto.ambientePadraoAula.id,
         });
-        this.repository.merge(entity, { ambientePadraoAula: { id: ambientePadraoAula.id } });
+        result.ambientePadraoAula = { id: ambientePadraoAula.id };
       } else {
-        this.repository.merge(entity, { ambientePadraoAula: null });
+        result.ambientePadraoAula = null;
       }
     }
 
     if (has(dto, "curso") && dto.curso !== undefined) {
       const curso = await this.cursoService.findByIdSimpleStrict(accessContext, dto.curso.id);
-      this.repository.merge(entity, { curso: { id: curso.id } });
+      result.curso = { id: curso.id };
     }
+
+    return result;
   }
 }

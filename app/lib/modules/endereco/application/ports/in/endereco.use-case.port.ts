@@ -1,5 +1,4 @@
 import type { AccessContext } from "@/modules/@core/access-context";
-import type { EnderecoEntity } from "@/modules/endereco/infrastructure/persistence/typeorm";
 import type {
   EnderecoFindOneInputDto,
   EnderecoFindOneOutputDto,
@@ -22,5 +21,8 @@ export interface IEnderecoUseCasePort {
 
   internalFindOneByIdStrict(id: string): Promise<EnderecoFindOneOutputDto>;
 
-  internalEnderecoCreateOrUpdate(id: string | null, dto: EnderecoInputDto): Promise<EnderecoEntity>;
+  internalEnderecoCreateOrUpdate(
+    id: string | null,
+    dto: EnderecoInputDto,
+  ): Promise<{ id: string | number }>;
 }

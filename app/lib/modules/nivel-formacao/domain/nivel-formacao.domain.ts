@@ -48,7 +48,7 @@ export class NivelFormacao extends BaseDatedEntity implements INivelFormacao {
   /**
    * Reconstroi uma instancia a partir de dados existentes (ex: do banco)
    */
-  static fromData(dados: INivelFormacao): NivelFormacao {
+  static fromData(dados: Record<string, any>): NivelFormacao {
     const instance = new NivelFormacao();
     Object.assign(instance, dados);
     return instance;

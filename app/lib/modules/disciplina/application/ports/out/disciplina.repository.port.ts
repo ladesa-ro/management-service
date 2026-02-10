@@ -1,9 +1,9 @@
 import type { IBaseCrudRepositoryPort } from "@/modules/@shared";
+import type { IDisciplina } from "@/modules/disciplina";
 import type {
   DisciplinaFindOneOutputDto,
   DisciplinaListOutputDto,
 } from "@/modules/disciplina/application/dtos";
-import type { DisciplinaEntity } from "@/modules/disciplina/infrastructure/persistence/typeorm";
 
 /**
  * Token de injeção para o repositório de Disciplina
@@ -16,7 +16,7 @@ export const DISCIPLINA_REPOSITORY_PORT = Symbol("IDisciplinaRepositoryPort");
  */
 export interface IDisciplinaRepositoryPort
   extends IBaseCrudRepositoryPort<
-    DisciplinaEntity,
+    IDisciplina,
     DisciplinaListOutputDto,
     DisciplinaFindOneOutputDto
   > {}

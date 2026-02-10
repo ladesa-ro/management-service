@@ -53,7 +53,7 @@ export class Etapa extends BaseDatedEntity implements IEtapa {
   /**
    * Reconstrói uma instância a partir de dados existentes (ex: do banco)
    */
-  static fromData(dados: IEtapa): Etapa {
+  static fromData(dados: Record<string, any>): Etapa {
     const instance = new Etapa();
     Object.assign(instance, dados);
     return instance;

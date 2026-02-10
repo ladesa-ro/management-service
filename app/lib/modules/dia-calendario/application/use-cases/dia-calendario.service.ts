@@ -1,9 +1,9 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { has } from "lodash";
 import type { AccessContext } from "@/modules/@core/access-context";
-import { BaseCrudService } from "@/modules/@shared";
+import { BaseCrudService, type PersistInput } from "@/modules/@shared";
 import { CalendarioLetivoService } from "@/modules/calendario-letivo";
-import type { DiaCalendarioEntity } from "@/modules/dia-calendario/infrastructure/persistence/typeorm";
+import { DiaCalendario, type IDiaCalendario } from "@/modules/dia-calendario";
 import type {
   DiaCalendarioCreateInputDto,
   DiaCalendarioFindOneInputDto,
@@ -16,7 +16,7 @@ import { DIA_CALENDARIO_REPOSITORY_PORT, type IDiaCalendarioRepositoryPort } fro
 
 @Injectable()
 export class DiaCalendarioService extends BaseCrudService<
-  DiaCalendarioEntity,
+  IDiaCalendario,
   DiaCalendarioListInputDto,
   DiaCalendarioListOutputDto,
   DiaCalendarioFindOneInputDto,
@@ -28,8 +28,6 @@ export class DiaCalendarioService extends BaseCrudService<
   protected readonly createAction = "dia_calendario:create";
   protected readonly updateAction = "dia_calendario:update";
   protected readonly deleteAction = "dia_calendario:delete";
-  protected readonly createFields = ["data", "diaLetivo", "feriado"] as const;
-  protected readonly updateFields = ["data", "diaLetivo", "feriado"] as const;
 
   constructor(
     @Inject(DIA_CALENDARIO_REPOSITORY_PORT)
@@ -39,31 +37,55 @@ export class DiaCalendarioService extends BaseCrudService<
     super();
   }
 
-  protected override async beforeCreate(
+  protected async buildCreateData(
     accessContext: AccessContext,
-    entity: DiaCalendarioEntity,
     dto: DiaCalendarioCreateInputDto,
-  ): Promise<void> {
+  ): Promise<Partial<PersistInput<IDiaCalendario>>> {
+    let calendarioRef: { id: string } | undefined;
     if (dto.calendario) {
       const calendario = await this.calendarioLetivoService.findByIdSimpleStrict(
         accessContext,
         dto.calendario.id,
       );
-      this.repository.merge(entity, { calendario: { id: calendario.id } });
+      calendarioRef = { id: calendario.id };
     }
+
+    const domain = DiaCalendario.criar({
+      data: dto.data,
+      diaLetivo: dto.diaLetivo,
+      feriado: dto.feriado,
+      tipo: dto.tipo,
+      diaPresencial: dto.diaPresencial,
+      extraCurricular: dto.extraCurricular,
+      calendario: calendarioRef!,
+    });
+    return {
+      ...domain,
+      ...(calendarioRef ? { calendario: calendarioRef } : {}),
+    };
   }
 
-  protected override async beforeUpdate(
+  protected async buildUpdateData(
     accessContext: AccessContext,
-    entity: DiaCalendarioEntity,
     dto: DiaCalendarioFindOneInputDto & DiaCalendarioUpdateInputDto,
-  ): Promise<void> {
+    current: DiaCalendarioFindOneOutputDto,
+  ): Promise<Partial<PersistInput<IDiaCalendario>>> {
+    const domain = DiaCalendario.fromData(current);
+    domain.atualizar({ data: dto.data, diaLetivo: dto.diaLetivo, feriado: dto.feriado });
+    const result: Partial<PersistInput<IDiaCalendario>> = {
+      data: domain.data,
+      diaLetivo: domain.diaLetivo,
+      feriado: domain.feriado,
+    };
+
     if (has(dto, "calendario") && dto.calendario !== undefined) {
       const calendario = await this.calendarioLetivoService.findByIdSimpleStrict(
         accessContext,
         dto.calendario!.id,
       );
-      this.repository.merge(entity, { calendario: { id: calendario.id } });
+      result.calendario = { id: calendario.id };
     }
+
+    return result;
   }
 }

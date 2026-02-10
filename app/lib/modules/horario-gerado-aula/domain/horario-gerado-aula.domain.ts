@@ -53,7 +53,7 @@ export class HorarioGeradoAula extends BaseDatedEntity implements IHorarioGerado
   /**
    * Reconstrói uma instância a partir de dados existentes (ex: do banco)
    */
-  static fromData(dados: IHorarioGeradoAula): HorarioGeradoAula {
+  static fromData(dados: Record<string, any>): HorarioGeradoAula {
     const instance = new HorarioGeradoAula();
     Object.assign(instance, dados);
     return instance;

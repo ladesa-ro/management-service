@@ -1,5 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { BaseCrudService } from "@/modules/@shared";
+import type { AccessContext } from "@/modules/@core/access-context";
+import { BaseCrudService, type PersistInput } from "@/modules/@shared";
+import { type IModalidade, Modalidade } from "@/modules/modalidade";
 import type {
   ModalidadeCreateInputDto,
   ModalidadeFindOneInputDto,
@@ -13,12 +15,11 @@ import {
   type IModalidadeUseCasePort,
   MODALIDADE_REPOSITORY_PORT,
 } from "@/modules/modalidade/application/ports";
-import type { ModalidadeEntity } from "@/modules/modalidade/infrastructure/persistence/typeorm";
 
 @Injectable()
 export class ModalidadeService
   extends BaseCrudService<
-    ModalidadeEntity,
+    IModalidade,
     ModalidadeListInputDto,
     ModalidadeListOutputDto,
     ModalidadeFindOneInputDto,
@@ -32,13 +33,29 @@ export class ModalidadeService
   protected readonly createAction = "modalidade:create";
   protected readonly updateAction = "modalidade:update";
   protected readonly deleteAction = "modalidade:delete";
-  protected readonly createFields = ["nome", "slug"] as const;
-  protected readonly updateFields = ["nome", "slug"] as const;
 
   constructor(
     @Inject(MODALIDADE_REPOSITORY_PORT)
     protected readonly repository: IModalidadeRepositoryPort,
   ) {
     super();
+  }
+
+  protected async buildCreateData(
+    _ac: AccessContext,
+    dto: ModalidadeCreateInputDto,
+  ): Promise<Partial<PersistInput<IModalidade>>> {
+    const domain = Modalidade.criar({ nome: dto.nome, slug: dto.slug });
+    return { ...domain };
+  }
+
+  protected async buildUpdateData(
+    _ac: AccessContext,
+    dto: ModalidadeFindOneInputDto & ModalidadeUpdateInputDto,
+    current: ModalidadeFindOneOutputDto,
+  ): Promise<Partial<PersistInput<IModalidade>>> {
+    const domain = Modalidade.fromData(current);
+    domain.atualizar({ nome: dto.nome, slug: dto.slug });
+    return { nome: domain.nome, slug: domain.slug };
   }
 }

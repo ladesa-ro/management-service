@@ -54,7 +54,7 @@ export class OfertaFormacao extends BaseDatedEntity implements IOfertaFormacao {
   /**
    * Reconstroi uma instancia a partir de dados existentes (ex: do banco)
    */
-  static fromData(dados: IOfertaFormacao): OfertaFormacao {
+  static fromData(dados: Record<string, any>): OfertaFormacao {
     const instance = new OfertaFormacao();
     Object.assign(instance, dados);
     return instance;

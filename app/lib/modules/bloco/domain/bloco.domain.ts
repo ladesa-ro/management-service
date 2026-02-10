@@ -51,7 +51,7 @@ export class Bloco extends BaseDatedEntity implements IBloco {
   /**
    * Reconstrói uma instância a partir de dados existentes (ex: do banco)
    */
-  static fromData(dados: IBloco): Bloco {
+  static fromData(dados: Record<string, any>): Bloco {
     const instance = new Bloco();
     Object.assign(instance, dados);
     return instance;

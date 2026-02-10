@@ -64,7 +64,7 @@ export class ProfessorIndisponibilidade
   /**
    * Reconstrói uma instância a partir de dados existentes (ex: do banco)
    */
-  static fromData(dados: IProfessorIndisponibilidade): ProfessorIndisponibilidade {
+  static fromData(dados: Record<string, any>): ProfessorIndisponibilidade {
     const instance = new ProfessorIndisponibilidade();
     Object.assign(instance, dados);
     return instance;

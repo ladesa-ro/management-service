@@ -52,7 +52,7 @@ export class Aula extends BaseDatedEntity implements IAula {
   /**
    * Reconstrói uma instância a partir de dados existentes (ex: do banco)
    */
-  static fromData(dados: IAula): Aula {
+  static fromData(dados: Record<string, any>): Aula {
     const instance = new Aula();
     Object.assign(instance, dados);
     return instance;

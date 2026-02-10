@@ -57,7 +57,7 @@ export class Ambiente extends BaseDatedEntity implements IAmbiente {
   /**
    * Reconstrói uma instância a partir de dados existentes (ex: do banco)
    */
-  static fromData(dados: IAmbiente): Ambiente {
+  static fromData(dados: Record<string, any>): Ambiente {
     const instance = new Ambiente();
     Object.assign(instance, dados);
     return instance;

@@ -1,6 +1,6 @@
 import type { AccessContext } from "@/modules/@core/access-context";
 import type { IBaseCrudRepositoryPort } from "@/modules/@shared";
-import type { DiarioProfessorEntity } from "@/modules/diario-professor/infrastructure/persistence/typeorm";
+import type { IDiarioProfessor } from "@/modules/diario-professor";
 import type { DiarioProfessorFindOneOutputDto, DiarioProfessorListOutputDto } from "../../dtos";
 
 export const DIARIO_PROFESSOR_REPOSITORY_PORT = Symbol("IDiarioProfessorRepositoryPort");
@@ -11,7 +11,7 @@ export const DIARIO_PROFESSOR_REPOSITORY_PORT = Symbol("IDiarioProfessorReposito
  */
 export interface IDiarioProfessorRepositoryPort
   extends IBaseCrudRepositoryPort<
-    DiarioProfessorEntity,
+    IDiarioProfessor,
     DiarioProfessorListOutputDto,
     DiarioProfessorFindOneOutputDto
   > {

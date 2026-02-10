@@ -1,6 +1,5 @@
 import type { AccessContext } from "@/modules/@core/access-context";
-import type { PartialEntity } from "@/modules/@shared";
-import type { UsuarioEntity } from "@/modules/usuario/infrastructure/persistence/typeorm";
+import type { IPersistRepositoryPort } from "@/modules/@shared";
 import type {
   UsuarioFindOneInputDto,
   UsuarioFindOneOutputDto,
@@ -17,13 +16,9 @@ export const USUARIO_REPOSITORY_PORT = Symbol("IUsuarioRepositoryPort");
  * Port de saída para operações de persistência de Usuario
  * Define o contrato que os adapters de persistência devem implementar
  */
-export interface IUsuarioRepositoryPort {
+export interface IUsuarioRepositoryPort extends IPersistRepositoryPort<Record<string, any>> {
   /**
    * Lista usuários com paginação
-   * @param accessContext Contexto de acesso para aplicar filtros de permissão
-   * @param dto DTO com critérios de busca e paginação
-   * @param selection Campos a serem selecionados (GraphQL/otimização)
-   * @returns Lista paginada de usuários
    */
   findAll(
     accessContext: AccessContext,
@@ -33,10 +28,6 @@ export interface IUsuarioRepositoryPort {
 
   /**
    * Busca um usuário por ID
-   * @param accessContext Contexto de acesso para aplicar filtros de permissão (pode ser null)
-   * @param dto DTO com ID do usuário
-   * @param selection Campos a serem selecionados
-   * @returns Usuário encontrado ou null
    */
   findById(
     accessContext: AccessContext | null,
@@ -46,10 +37,6 @@ export interface IUsuarioRepositoryPort {
 
   /**
    * Busca um usuário por ID (formato simples)
-   * @param accessContext Contexto de acesso para aplicar filtros de permissão
-   * @param id ID do usuário
-   * @param selection Campos a serem selecionados
-   * @returns Usuário encontrado ou null
    */
   findByIdSimple(
     accessContext: AccessContext,
@@ -59,9 +46,6 @@ export interface IUsuarioRepositoryPort {
 
   /**
    * Busca um usuário pela matrícula SIAPE (sem filtro de acesso)
-   * @param matriculaSiape Matrícula SIAPE do usuário
-   * @param selection Campos a serem selecionados
-   * @returns Usuário encontrado ou null
    */
   findByMatriculaSiape(
     matriculaSiape: string,
@@ -70,9 +54,6 @@ export interface IUsuarioRepositoryPort {
 
   /**
    * Verifica se uma matrícula SIAPE está disponível
-   * @param matriculaSiape Matrícula SIAPE a verificar
-   * @param excludeUsuarioId ID do usuário a excluir da verificação (para update)
-   * @returns true se disponível, false se já existe
    */
   isMatriculaSiapeAvailable(
     matriculaSiape: string,
@@ -81,53 +62,21 @@ export interface IUsuarioRepositoryPort {
 
   /**
    * Verifica se um e-mail está disponível
-   * @param email E-mail a verificar
-   * @param excludeUsuarioId ID do usuário a excluir da verificação (para update)
-   * @returns true se disponível, false se já existe
    */
   isEmailAvailable(email: string, excludeUsuarioId?: string | null): Promise<boolean>;
 
   /**
    * Resolve uma propriedade simples de um usuário por ID
-   * @param id ID do usuário
-   * @param property Nome da propriedade a resolver
-   * @returns Valor da propriedade
    */
-  resolveProperty<Property extends keyof UsuarioEntity>(
-    id: string,
-    property: Property,
-  ): Promise<UsuarioEntity[Property]>;
-
-  /**
-   * Salva (cria ou atualiza) um usuário
-   * @param usuario Dados parciais do usuário a ser salvo
-   * @returns Usuário salvo
-   */
-  save(usuario: PartialEntity<UsuarioEntity>): Promise<UsuarioEntity>;
-
-  /**
-   * Cria uma nova entidade usuário
-   * @returns Nova instância de UsuarioEntity
-   */
-  create(): UsuarioEntity;
-
-  /**
-   * Mescla dados parciais em um usuário existente
-   * @param usuario Usuário base
-   * @param data Dados a serem mesclados
-   */
-  merge(usuario: UsuarioEntity, data: PartialEntity<UsuarioEntity>): void;
+  resolveProperty<Property extends string>(id: string, property: Property): Promise<any>;
 
   /**
    * Soft delete de um usuário por ID
-   * @param id ID do usuário
    */
   softDeleteById(id: string): Promise<void>;
 
   /**
    * Busca os dados de ensino do usuário (disciplinas, cursos e turmas onde é professor ativo)
-   * @param usuarioId ID do usuário
-   * @returns Estrutura hierárquica com disciplinas, cursos e turmas
    */
   findUsuarioEnsino(usuarioId: string): Promise<{
     disciplinas: Array<{

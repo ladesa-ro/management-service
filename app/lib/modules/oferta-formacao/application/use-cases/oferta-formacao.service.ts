@@ -1,8 +1,9 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { has } from "lodash";
 import type { AccessContext } from "@/modules/@core/access-context";
-import { BaseCrudService } from "@/modules/@shared";
+import { BaseCrudService, type PersistInput } from "@/modules/@shared";
 import { ModalidadeService } from "@/modules/modalidade";
+import { type IOfertaFormacao, OfertaFormacao } from "@/modules/oferta-formacao";
 import type {
   OfertaFormacaoCreateInputDto,
   OfertaFormacaoFindOneInputDto,
@@ -16,12 +17,11 @@ import {
   type IOfertaFormacaoUseCasePort,
   OFERTA_FORMACAO_REPOSITORY_PORT,
 } from "@/modules/oferta-formacao/application/ports";
-import type { OfertaFormacaoEntity } from "@/modules/oferta-formacao/infrastructure/persistence/typeorm";
 
 @Injectable()
 export class OfertaFormacaoService
   extends BaseCrudService<
-    OfertaFormacaoEntity,
+    IOfertaFormacao,
     OfertaFormacaoListInputDto,
     OfertaFormacaoListOutputDto,
     OfertaFormacaoFindOneInputDto,
@@ -35,8 +35,6 @@ export class OfertaFormacaoService
   protected readonly createAction = "oferta_formacao:create";
   protected readonly updateAction = "oferta_formacao:update";
   protected readonly deleteAction = "oferta_formacao:delete";
-  protected readonly createFields = ["nome", "slug"] as const;
-  protected readonly updateFields = ["nome", "slug"] as const;
 
   constructor(
     @Inject(OFERTA_FORMACAO_REPOSITORY_PORT)
@@ -46,35 +44,51 @@ export class OfertaFormacaoService
     super();
   }
 
-  protected override async beforeCreate(
+  protected async buildCreateData(
     accessContext: AccessContext,
-    entity: OfertaFormacaoEntity,
     dto: OfertaFormacaoCreateInputDto,
-  ): Promise<void> {
+  ): Promise<Partial<PersistInput<IOfertaFormacao>>> {
+    let modalidadeRef: { id: string } | undefined;
     if (dto.modalidade) {
       const modalidade = await this.modalidadeService.findByIdSimpleStrict(
         accessContext,
         dto.modalidade.id,
       );
-      this.repository.merge(entity, { modalidade: { id: modalidade.id } });
+      modalidadeRef = { id: modalidade.id };
     }
+
+    const domain = OfertaFormacao.criar({
+      nome: dto.nome,
+      slug: dto.slug,
+      modalidade: modalidadeRef,
+    });
+    return {
+      ...domain,
+      ...(modalidadeRef ? { modalidade: modalidadeRef } : {}),
+    };
   }
 
-  protected override async beforeUpdate(
+  protected async buildUpdateData(
     accessContext: AccessContext,
-    entity: OfertaFormacaoEntity,
     dto: OfertaFormacaoFindOneInputDto & OfertaFormacaoUpdateInputDto,
-  ): Promise<void> {
+    current: OfertaFormacaoFindOneOutputDto,
+  ): Promise<Partial<PersistInput<IOfertaFormacao>>> {
+    const domain = OfertaFormacao.fromData(current);
+    domain.atualizar({ nome: dto.nome, slug: dto.slug });
+    const result: Partial<PersistInput<IOfertaFormacao>> = { nome: domain.nome, slug: domain.slug };
+
     if (has(dto, "modalidade") && dto.modalidade !== undefined) {
       if (dto.modalidade) {
         const modalidade = await this.modalidadeService.findByIdSimpleStrict(
           accessContext,
           dto.modalidade.id,
         );
-        this.repository.merge(entity, { modalidade: { id: modalidade.id } });
+        result.modalidade = { id: modalidade.id };
       } else {
-        this.repository.merge(entity, { modalidade: null as any });
+        result.modalidade = null;
       }
     }
+
+    return result;
   }
 }

@@ -8,10 +8,10 @@ import type { IOfertaFormacao } from "@/modules/oferta-formacao";
  */
 export interface IGradeHorarioOfertaFormacao extends IEntityBase {
   /** Campus associado */
-  campus: ICampus;
+  campus: ICampus | null;
 
   /** Oferta de formacao associada */
-  ofertaFormacao: IOfertaFormacao;
+  ofertaFormacao: IOfertaFormacao | null;
 }
 
 /**

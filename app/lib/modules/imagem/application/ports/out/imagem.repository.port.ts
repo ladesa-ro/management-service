@@ -1,4 +1,4 @@
-import type { ICreateRepositoryPort, PartialEntity } from "@/modules/@shared";
+import type { PartialEntity } from "@/modules/@shared";
 import type { Imagem } from "@/modules/imagem/domain/imagem.domain";
 import type { ImagemArquivo } from "@/modules/imagem-arquivo/domain/imagem-arquivo.domain";
 
@@ -11,7 +11,11 @@ export const IMAGEM_REPOSITORY_PORT = Symbol("IImagemRepositoryPort");
  * Port de saida para operacoes de persistencia de Imagem
  * Define o contrato que os adapters de persistencia devem implementar
  */
-export interface IImagemRepositoryPort extends ICreateRepositoryPort<Imagem> {}
+export interface IImagemRepositoryPort {
+  create(): Imagem;
+  merge(entity: Imagem, data: PartialEntity<Imagem>): void;
+  save(entity: PartialEntity<Imagem>): Promise<Imagem>;
+}
 
 /**
  * Token de injecao para o repositorio de ImagemArquivo

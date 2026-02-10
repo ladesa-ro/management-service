@@ -61,7 +61,7 @@ export class ImagemArquivo extends BaseDatedEntity implements IImagemArquivo {
   /**
    * Reconstrói uma instância a partir de dados existentes (ex: do banco)
    */
-  static fromData(dados: IImagemArquivo): ImagemArquivo {
+  static fromData(dados: Record<string, any>): ImagemArquivo {
     const instance = new ImagemArquivo();
     Object.assign(instance, dados);
     return instance;

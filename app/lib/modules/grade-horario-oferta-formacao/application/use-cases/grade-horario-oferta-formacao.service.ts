@@ -1,6 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
 import type { AccessContext } from "@/modules/@core/access-context";
-import { BaseCrudService } from "@/modules/@shared";
+import { BaseCrudService, type PersistInput } from "@/modules/@shared";
+import type { IGradeHorarioOfertaFormacao } from "@/modules/grade-horario-oferta-formacao";
 import type {
   GradeHorarioOfertaFormacaoCreateInputDto,
   GradeHorarioOfertaFormacaoFindOneInputDto,
@@ -14,12 +15,11 @@ import {
   type IGradeHorarioOfertaFormacaoRepositoryPort,
   type IGradeHorarioOfertaFormacaoUseCasePort,
 } from "@/modules/grade-horario-oferta-formacao/application/ports";
-import type { GradeHorarioOfertaFormacaoEntity } from "@/modules/grade-horario-oferta-formacao/infrastructure/persistence/typeorm";
 
 @Injectable()
 export class GradeHorarioOfertaFormacaoService
   extends BaseCrudService<
-    GradeHorarioOfertaFormacaoEntity,
+    IGradeHorarioOfertaFormacao,
     GradeHorarioOfertaFormacaoListInputDto,
     GradeHorarioOfertaFormacaoListOutputDto,
     GradeHorarioOfertaFormacaoFindOneInputDto,
@@ -33,8 +33,6 @@ export class GradeHorarioOfertaFormacaoService
   protected readonly createAction = "grade_horario_oferta_formacao:create";
   protected readonly updateAction = "grade_horario_oferta_formacao:update";
   protected readonly deleteAction = "grade_horario_oferta_formacao:delete";
-  protected readonly createFields = [] as const;
-  protected readonly updateFields = [] as const;
 
   constructor(
     @Inject(GRADE_HORARIO_OFERTA_FORMACAO_REPOSITORY_PORT)
@@ -43,32 +41,31 @@ export class GradeHorarioOfertaFormacaoService
     super();
   }
 
-  protected override async beforeCreate(
-    _accessContext: AccessContext,
-    entity: GradeHorarioOfertaFormacaoEntity,
+  protected async buildCreateData(
+    _ac: AccessContext,
     dto: GradeHorarioOfertaFormacaoCreateInputDto,
-  ): Promise<void> {
-    this.repository.merge(entity, {
+  ): Promise<Partial<PersistInput<IGradeHorarioOfertaFormacao>>> {
+    return {
       campus: { id: dto.campus.id },
       ofertaFormacao: { id: dto.ofertaFormacao.id },
-    } as any);
+    };
   }
 
-  protected override async beforeUpdate(
-    _accessContext: AccessContext,
-    entity: GradeHorarioOfertaFormacaoEntity,
+  protected async buildUpdateData(
+    _ac: AccessContext,
     dto: GradeHorarioOfertaFormacaoFindOneInputDto & GradeHorarioOfertaFormacaoUpdateInputDto,
-  ): Promise<void> {
+    _current: GradeHorarioOfertaFormacaoFindOneOutputDto,
+  ): Promise<Partial<PersistInput<IGradeHorarioOfertaFormacao>>> {
+    const result: Partial<PersistInput<IGradeHorarioOfertaFormacao>> = {};
+
     if (dto.campus !== undefined) {
-      this.repository.merge(entity, {
-        campus: dto.campus ? { id: dto.campus.id } : null,
-      } as any);
+      result.campus = dto.campus ? { id: dto.campus.id } : null;
     }
 
     if (dto.ofertaFormacao !== undefined) {
-      this.repository.merge(entity, {
-        ofertaFormacao: dto.ofertaFormacao ? { id: dto.ofertaFormacao.id } : null,
-      } as any);
+      result.ofertaFormacao = dto.ofertaFormacao ? { id: dto.ofertaFormacao.id } : null;
     }
+
+    return result;
   }
 }

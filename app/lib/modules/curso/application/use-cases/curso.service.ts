@@ -1,9 +1,10 @@
 import { Inject, Injectable, type StreamableFile } from "@nestjs/common";
 import { has } from "lodash";
 import type { AccessContext } from "@/modules/@core/access-context";
-import { BaseCrudService } from "@/modules/@shared";
+import { BaseCrudService, type PersistInput } from "@/modules/@shared";
 import { ArquivoService } from "@/modules/arquivo/application/use-cases/arquivo.service";
 import { CampusService } from "@/modules/campus";
+import { Curso, type ICurso } from "@/modules/curso";
 import type {
   CursoCreateInputDto,
   CursoFindOneInputDto,
@@ -17,14 +18,13 @@ import {
   type ICursoRepositoryPort,
   type ICursoUseCasePort,
 } from "@/modules/curso/application/ports";
-import type { CursoEntity } from "@/modules/curso/infrastructure/persistence/typeorm";
 import { ImagemService } from "@/modules/imagem/application/use-cases/imagem.service";
 import { OfertaFormacaoService } from "@/modules/oferta-formacao";
 
 @Injectable()
 export class CursoService
   extends BaseCrudService<
-    CursoEntity,
+    ICurso,
     CursoListInputDto,
     CursoListOutputDto,
     CursoFindOneInputDto,
@@ -38,8 +38,6 @@ export class CursoService
   protected readonly createAction = "curso:create";
   protected readonly updateAction = "curso:update";
   protected readonly deleteAction = "curso:delete";
-  protected readonly createFields = ["nome", "nomeAbreviado"] as const;
-  protected readonly updateFields = ["nome", "nomeAbreviado"] as const;
 
   constructor(
     @Inject(CURSO_REPOSITORY_PORT)
@@ -71,29 +69,43 @@ export class CursoService
     return this.updateImagemField(accessContext, dto.id, file, "imagemCapa", this.imagemService);
   }
 
-  protected override async beforeCreate(
+  protected async buildCreateData(
     accessContext: AccessContext,
-    entity: CursoEntity,
     dto: CursoCreateInputDto,
-  ): Promise<void> {
+  ): Promise<Partial<PersistInput<ICurso>>> {
     const campus = await this.campusService.findByIdSimpleStrict(accessContext, dto.campus.id);
-    this.repository.merge(entity, { campus: { id: campus.id } });
-
     const ofertaFormacao = await this.ofertaFormacaoService.findByIdSimpleStrict(
       accessContext,
       dto.ofertaFormacao.id,
     );
-    this.repository.merge(entity, { ofertaFormacao: { id: ofertaFormacao.id } });
+    const domain = Curso.criar({
+      nome: dto.nome,
+      nomeAbreviado: dto.nomeAbreviado,
+      campus: { id: campus.id },
+      ofertaFormacao: { id: ofertaFormacao.id },
+    });
+    return {
+      ...domain,
+      campus: { id: campus.id },
+      ofertaFormacao: { id: ofertaFormacao.id },
+    };
   }
 
-  protected override async beforeUpdate(
+  protected async buildUpdateData(
     accessContext: AccessContext,
-    entity: CursoEntity,
     dto: CursoFindOneInputDto & CursoUpdateInputDto,
-  ): Promise<void> {
+    current: CursoFindOneOutputDto,
+  ): Promise<Partial<PersistInput<ICurso>>> {
+    const domain = Curso.fromData(current);
+    domain.atualizar({ nome: dto.nome, nomeAbreviado: dto.nomeAbreviado });
+    const result: Partial<PersistInput<ICurso>> = {
+      nome: domain.nome,
+      nomeAbreviado: domain.nomeAbreviado,
+    };
+
     if (has(dto, "campus") && dto.campus !== undefined) {
       const campus = await this.campusService.findByIdSimpleStrict(accessContext, dto.campus.id);
-      this.repository.merge(entity, { campus: { id: campus.id } });
+      result.campus = { id: campus.id };
     }
 
     if (has(dto, "ofertaFormacao") && dto.ofertaFormacao !== undefined) {
@@ -101,7 +113,9 @@ export class CursoService
         accessContext,
         dto.ofertaFormacao.id,
       );
-      this.repository.merge(entity, { ofertaFormacao: { id: ofertaFormacao.id } });
+      result.ofertaFormacao = { id: ofertaFormacao.id };
     }
+
+    return result;
   }
 }

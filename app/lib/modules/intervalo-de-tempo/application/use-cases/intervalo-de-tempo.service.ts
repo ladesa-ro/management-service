@@ -1,7 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { pick } from "lodash";
 import type { AccessContext } from "@/modules/@core/access-context";
 import { ResourceNotFoundError } from "@/modules/@shared";
+import type { IIntervaloDeTempo } from "@/modules/intervalo-de-tempo";
 import {
   IntervaloDeTempoFindOneInputDto,
   IntervaloDeTempoFindOneOutputDto,
@@ -57,16 +57,11 @@ export class IntervaloDeTempoService implements IIntervaloDeTempoUseCasePort {
 
     if (intervalExisting) return intervalExisting;
 
-    const dtoInterval = pick(dto, ["periodoInicio", "periodoFim"]);
+    const { id } = await this.intervaloDeTempoRepository.createFromDomain({
+      periodoInicio: dto.periodoInicio,
+      periodoFim: dto.periodoFim,
+    } as IIntervaloDeTempo);
 
-    const newInterval = this.intervaloDeTempoRepository.create();
-
-    this.intervaloDeTempoRepository.merge(newInterval, {
-      ...dtoInterval,
-    });
-
-    await this.intervaloDeTempoRepository.save(newInterval);
-
-    return this.intervaloDeTempoRepository.findOneByIdOrFail(newInterval.id);
+    return this.intervaloDeTempoRepository.findOneByIdOrFail(id as string);
   }
 }

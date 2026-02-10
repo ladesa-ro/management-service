@@ -1,9 +1,9 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { has } from "lodash";
 import type { AccessContext } from "@/modules/@core/access-context";
-import { BaseCrudService } from "@/modules/@shared";
+import { BaseCrudService, type PersistInput } from "@/modules/@shared";
 import { CalendarioLetivoService } from "@/modules/calendario-letivo";
-import type { EventoEntity } from "@/modules/evento/infrastructure/persistence/typeorm";
+import { Evento, type IEvento } from "@/modules/evento";
 import type {
   EventoCreateInputDto,
   EventoFindOneInputDto,
@@ -16,7 +16,7 @@ import { EVENTO_REPOSITORY_PORT, type IEventoRepositoryPort } from "../ports/out
 
 @Injectable()
 export class EventoService extends BaseCrudService<
-  EventoEntity,
+  IEvento,
   EventoListInputDto,
   EventoListOutputDto,
   EventoFindOneInputDto,
@@ -28,15 +28,6 @@ export class EventoService extends BaseCrudService<
   protected readonly createAction = "evento:create";
   protected readonly updateAction = "evento:update";
   protected readonly deleteAction = "evento:delete";
-  protected readonly createFields = [
-    "nome",
-    "cor",
-    "rrule",
-    "ambiente",
-    "dataInicio",
-    "dataFim",
-  ] as const;
-  protected readonly updateFields = ["nome", "cor", "rrule", "dataInicio", "dataFim"] as const;
 
   constructor(
     @Inject(EVENTO_REPOSITORY_PORT)
@@ -46,31 +37,64 @@ export class EventoService extends BaseCrudService<
     super();
   }
 
-  protected override async beforeCreate(
+  protected async buildCreateData(
     accessContext: AccessContext,
-    entity: EventoEntity,
     dto: EventoCreateInputDto,
-  ): Promise<void> {
+  ): Promise<Partial<PersistInput<IEvento>>> {
+    let calendarioRef: { id: string } | undefined;
     if (dto.calendario) {
       const calendario = await this.calendarioLetivoService.findByIdSimpleStrict(
         accessContext,
         dto.calendario.id,
       );
-      this.repository.merge(entity, { calendario: { id: calendario.id } });
+      calendarioRef = { id: calendario.id };
     }
+
+    const domain = Evento.criar({
+      nome: dto.nome,
+      cor: dto.cor,
+      rrule: dto.rrule,
+      dataInicio: dto.dataInicio,
+      dataFim: dto.dataFim,
+      calendario: calendarioRef!,
+      ambiente: dto.ambiente,
+    });
+    return {
+      ...domain,
+      ...(calendarioRef ? { calendario: calendarioRef } : {}),
+      ambiente: dto.ambiente ?? null,
+    };
   }
 
-  protected override async beforeUpdate(
+  protected async buildUpdateData(
     accessContext: AccessContext,
-    entity: EventoEntity,
     dto: EventoFindOneInputDto & EventoUpdateInputDto,
-  ): Promise<void> {
+    current: EventoFindOneOutputDto,
+  ): Promise<Partial<PersistInput<IEvento>>> {
+    const domain = Evento.fromData(current);
+    domain.atualizar({
+      nome: dto.nome,
+      cor: dto.cor,
+      rrule: dto.rrule,
+      dataInicio: dto.dataInicio,
+      dataFim: dto.dataFim,
+    });
+    const result: Partial<PersistInput<IEvento>> = {
+      nome: domain.nome,
+      cor: domain.cor,
+      rrule: domain.rrule,
+      dataInicio: domain.dataInicio,
+      dataFim: domain.dataFim,
+    };
+
     if (has(dto, "calendario") && dto.calendario !== undefined) {
       const calendario = await this.calendarioLetivoService.findByIdSimpleStrict(
         accessContext,
         dto.calendario!.id,
       );
-      this.repository.merge(entity, { calendario: { id: calendario.id } });
+      result.calendario = { id: calendario.id };
     }
+
+    return result;
   }
 }

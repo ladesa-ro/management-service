@@ -1,10 +1,10 @@
-import type { IBaseCrudRepositoryPort, PartialEntity } from "@/modules/@shared";
+import type { IBaseCrudRepositoryPort } from "@/modules/@shared";
 import type {
+  IIntervaloDeTempo,
   IntervaloDeTempoFindOneOutputDto,
   IntervaloDeTempoInputDto,
   IntervaloDeTempoListOutputDto,
 } from "@/modules/intervalo-de-tempo";
-import type { IntervaloDeTempoEntity } from "@/modules/intervalo-de-tempo/infrastructure/persistence/typeorm";
 
 export const INTERVALO_DE_TEMPO_REPOSITORY_PORT = Symbol("IIntervaloDeTempoRepositoryPort");
 
@@ -15,7 +15,7 @@ export const INTERVALO_DE_TEMPO_REPOSITORY_PORT = Symbol("IIntervaloDeTempoRepos
 export interface IIntervaloDeTempoRepositoryPort
   extends Omit<
     IBaseCrudRepositoryPort<
-      IntervaloDeTempoEntity,
+      IIntervaloDeTempo,
       IntervaloDeTempoListOutputDto,
       IntervaloDeTempoFindOneOutputDto
     >,
@@ -30,9 +30,4 @@ export interface IIntervaloDeTempoRepositoryPort
    * Busca um intervalo de tempo por ID ou lança erro
    */
   findOneByIdOrFail(id: string): Promise<IntervaloDeTempoFindOneOutputDto>;
-
-  /**
-   * Sobrescreve merge com assinatura específica
-   */
-  merge(intervalo: IntervaloDeTempoEntity, data: PartialEntity<IntervaloDeTempoEntity>): void;
 }

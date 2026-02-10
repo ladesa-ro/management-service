@@ -1,11 +1,10 @@
 import type { StreamableFile } from "@nestjs/common";
-import { pick } from "lodash";
 import type { AccessContext, IAuthzPayload } from "@/modules/@core/access-context";
-import type { PartialEntity } from "@/modules/@shared";
 import { ResourceNotFoundError } from "../errors";
 import { getEntityImagemStreamableFile, saveEntityImagemField } from "../helpers";
 import type { IAuthorizationServicePort } from "../ports/in";
 import type { IBaseCrudRepositoryPort } from "../ports/out";
+import type { PersistInput } from "../ports/out/persist-repository.port";
 
 /**
  * Classe base abstrata para services CRUD.
@@ -20,7 +19,7 @@ import type { IBaseCrudRepositoryPort } from "../ports/out";
  * - update: atualização de registro existente
  * - deleteOneById: exclusão lógica
  *
- * @template Entity - Tipo da entidade
+ * @template DomainData - Tipo da interface de domínio (ex: IAmbiente, ICampus)
  * @template ListInputDto - Tipo do DTO de entrada para listagem
  * @template ListOutputDto - Tipo do DTO de saída para listagem
  * @template FindOneInputDto - Tipo do DTO de entrada para busca única
@@ -29,7 +28,7 @@ import type { IBaseCrudRepositoryPort } from "../ports/out";
  * @template UpdateInputDto - Tipo do DTO de entrada para atualização
  */
 export abstract class BaseCrudService<
-  Entity extends { id: string | number },
+  DomainData,
   ListInputDto,
   ListOutputDto,
   FindOneInputDto extends { id: string | number },
@@ -58,20 +57,10 @@ export abstract class BaseCrudService<
   protected abstract readonly deleteAction: string;
 
   /**
-   * Campos do DTO que devem ser extraídos para criação
-   */
-  protected abstract readonly createFields: readonly (keyof CreateInputDto)[];
-
-  /**
-   * Campos do DTO que devem ser extraídos para atualização
-   */
-  protected abstract readonly updateFields: readonly (keyof UpdateInputDto)[];
-
-  /**
    * Repositório para operações de persistência
    */
   protected abstract readonly repository: IBaseCrudRepositoryPort<
-    Entity,
+    DomainData,
     ListOutputDto,
     FindOneOutputDto
   >;
@@ -82,6 +71,23 @@ export abstract class BaseCrudService<
    * Quando não fornecido, usa accessContext.ensurePermission diretamente.
    */
   protected readonly authorizationService?: IAuthorizationServicePort;
+
+  /**
+   * Constrói os dados de domínio para criação de uma nova entidade.
+   */
+  protected abstract buildCreateData(
+    accessContext: AccessContext,
+    dto: CreateInputDto,
+  ): Promise<Partial<PersistInput<DomainData>>>;
+
+  /**
+   * Constrói os dados de domínio parciais para atualização de uma entidade existente.
+   */
+  protected abstract buildUpdateData(
+    accessContext: AccessContext,
+    dto: FindOneInputDto & UpdateInputDto,
+    current: FindOneOutputDto,
+  ): Promise<Partial<PersistInput<DomainData>>>;
 
   /**
    * Lista todos os registros
@@ -160,16 +166,10 @@ export abstract class BaseCrudService<
   async create(accessContext: AccessContext, dto: CreateInputDto): Promise<FindOneOutputDto> {
     await this.ensurePermission(accessContext, this.createAction, { dto });
 
-    const entity = this.repository.create();
-    const data = pick(dto, [...this.createFields] as string[]);
-    this.repository.merge(entity, data as PartialEntity<Entity>);
+    const domainData = await this.buildCreateData(accessContext, dto);
+    const { id } = await this.repository.createFromDomain(domainData);
 
-    // Hook para customização (ex: relacionamentos)
-    await this.beforeCreate(accessContext, entity, dto);
-
-    await this.repository.save(entity);
-
-    return this.findByIdStrict(accessContext, { id: entity.id } as FindOneInputDto);
+    return this.findByIdStrict(accessContext, { id } as FindOneInputDto);
   }
 
   /**
@@ -183,16 +183,10 @@ export abstract class BaseCrudService<
 
     await this.ensurePermission(accessContext, this.updateAction, { dto }, dto.id);
 
-    const entity = { id: current.id } as Entity;
-    const data = pick(dto, [...this.updateFields] as string[]);
-    this.repository.merge(entity, data as PartialEntity<Entity>);
+    const domainData = await this.buildUpdateData(accessContext, dto, current);
+    await this.repository.updateFromDomain(current.id, domainData);
 
-    // Hook para customização (ex: relacionamentos)
-    await this.beforeUpdate(accessContext, entity, dto, current);
-
-    await this.repository.save(entity);
-
-    return this.findByIdStrict(accessContext, { id: entity.id } as FindOneInputDto);
+    return this.findByIdStrict(accessContext, { id: dto.id } as FindOneInputDto);
   }
 
   /**
@@ -270,30 +264,5 @@ export abstract class BaseCrudService<
       current.id,
     );
     return saveEntityImagemField(current.id, file, fieldName, imagemService, this.repository);
-  }
-
-  /**
-   * Hook chamado antes de salvar uma nova entidade.
-   * Override para adicionar lógica customizada (ex: relacionamentos).
-   */
-  protected async beforeCreate(
-    _accessContext: AccessContext,
-    _entity: Entity,
-    _dto: CreateInputDto,
-  ): Promise<void> {
-    // Override em subclasses para adicionar lógica customizada
-  }
-
-  /**
-   * Hook chamado antes de atualizar uma entidade.
-   * Override para adicionar lógica customizada (ex: relacionamentos).
-   */
-  protected async beforeUpdate(
-    _accessContext: AccessContext,
-    _entity: Entity,
-    _dto: FindOneInputDto & UpdateInputDto,
-    _current: FindOneOutputDto,
-  ): Promise<void> {
-    // Override em subclasses para adicionar lógica customizada
   }
 }
