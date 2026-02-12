@@ -75,7 +75,7 @@
     "type-fest": "^5.4.4",
     "typescript": "^5.9.3",
     "unplugin-swc": "^1.5.9",
-    "vite-tsconfig-paths": "^6.1.0",
+    "vite-tsconfig-paths": "^6.1.1",
     "vitest": "^4.0.18"
   },
   "scripts": {
