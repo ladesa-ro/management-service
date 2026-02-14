@@ -5,7 +5,7 @@ import {
   DiarioListInputDto,
   DiarioListOutputDto,
   DiarioUpdateInputDto,
-} from "@/modules/diario";
+} from "@/modules/ensino/diario";
 import { CalendarioLetivoGraphqlMapper } from "@/server/nest/modules/calendario-letivo/graphql/calendario-letivo.graphql.mapper";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import {

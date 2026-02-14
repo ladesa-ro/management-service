@@ -7,7 +7,7 @@ import {
   QbEfficientLoad,
   SearchService,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
-import { ProfessorIndisponibilidadeEntity } from "@/modules/professor-indisponibilidade/infrastructure/persistence/typeorm";
+import { ProfessorIndisponibilidadeEntity } from "@/modules/ensino/professor-indisponibilidade/infrastructure/persistence/typeorm";
 import type {
   ProfessorIndisponibilidadeCreateInputRestDto,
   ProfessorIndisponibilidadeFindOneInputRestDto,

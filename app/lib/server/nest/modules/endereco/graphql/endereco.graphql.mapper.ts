@@ -1,4 +1,7 @@
-import { EnderecoFindOneInputDto, EnderecoFindOneOutputDto } from "@/modules/endereco";
+import {
+  EnderecoFindOneInputDto,
+  EnderecoFindOneOutputDto,
+} from "@/modules/base/localidades/endereco";
 import { CidadeGraphqlMapper } from "@/server/nest/modules/cidade/graphql/cidade.graphql.mapper";
 import { EnderecoFindOneOutputGraphQlDto } from "./endereco.graphql.dto";
 

@@ -8,7 +8,7 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { AccessContext, AccessContextHttp } from "@/modules/@core/access-context";
-import { EventoService } from "@/modules/evento";
+import { EventoService } from "@/modules/sisgha/evento";
 import {
   EventoCreateInputRestDto,
   EventoFindOneInputRestDto,

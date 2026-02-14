@@ -5,7 +5,7 @@ import {
   GradeHorarioOfertaFormacaoListInputDto,
   GradeHorarioOfertaFormacaoListOutputDto,
   GradeHorarioOfertaFormacaoUpdateInputDto,
-} from "@/modules/grade-horario-oferta-formacao";
+} from "@/modules/sisgha/grade-horario-oferta-formacao";
 import { CampusGraphqlMapper } from "@/server/nest/modules/campus/graphql/campus.graphql.mapper";
 import { OfertaFormacaoGraphqlMapper } from "@/server/nest/modules/oferta-formacao/graphql/oferta-formacao.graphql.mapper";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";

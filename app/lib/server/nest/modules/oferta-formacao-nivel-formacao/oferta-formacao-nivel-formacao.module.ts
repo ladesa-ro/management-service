@@ -3,9 +3,9 @@ import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persiste
 import {
   OFERTA_FORMACAO_NIVEL_FORMACAO_REPOSITORY_PORT,
   OfertaFormacaoNivelFormacaoService,
-} from "@/modules/oferta-formacao-nivel-formacao";
-import { OfertaFormacaoNivelFormacaoAuthzRegistrySetup } from "@/modules/oferta-formacao-nivel-formacao/infrastructure";
-import { OfertaFormacaoNivelFormacaoTypeOrmRepositoryAdapter } from "@/modules/oferta-formacao-nivel-formacao/infrastructure/persistence/typeorm";
+} from "@/modules/ensino/oferta-formacao-nivel-formacao";
+import { OfertaFormacaoNivelFormacaoAuthzRegistrySetup } from "@/modules/ensino/oferta-formacao-nivel-formacao/infrastructure";
+import { OfertaFormacaoNivelFormacaoTypeOrmRepositoryAdapter } from "@/modules/ensino/oferta-formacao-nivel-formacao/infrastructure/persistence/typeorm";
 import { NivelFormacaoModule } from "@/server/nest/modules/nivel-formacao";
 import { OfertaFormacaoModule } from "@/server/nest/modules/oferta-formacao";
 import { OfertaFormacaoNivelFormacaoGraphqlResolver } from "./graphql/oferta-formacao-nivel-formacao.graphql.resolver";

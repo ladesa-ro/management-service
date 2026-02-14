@@ -1,11 +1,11 @@
 import { Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
-import { AMBIENTE_REPOSITORY_PORT } from "@/modules/ambiente/application/ports";
-import { AmbienteService } from "@/modules/ambiente/application/use-cases/ambiente.service";
+import { AMBIENTE_REPOSITORY_PORT } from "@/modules/sisgea/ambiente/application/ports";
+import { AmbienteService } from "@/modules/sisgea/ambiente/application/use-cases/ambiente.service";
 import {
   AmbienteAuthzRegistrySetup,
   AmbienteTypeOrmRepositoryAdapter,
-} from "@/modules/ambiente/infrastructure";
+} from "@/modules/sisgea/ambiente/infrastructure";
 import { ArquivoModule } from "@/server/nest/modules/arquivo";
 import { BlocoModule } from "@/server/nest/modules/bloco";
 import { ImagemModule } from "@/server/nest/modules/imagem";

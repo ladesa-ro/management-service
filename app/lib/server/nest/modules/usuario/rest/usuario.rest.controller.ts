@@ -23,7 +23,7 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { AccessContext, AccessContextHttp } from "@/modules/@core/access-context";
-import { UsuarioService } from "@/modules/usuario/application/use-cases/usuario.service";
+import { UsuarioService } from "@/modules/acesso/usuario/application/use-cases/usuario.service";
 import {
   UsuarioCreateInputRestDto,
   UsuarioEnsinoOutputRestDto,

@@ -1,9 +1,9 @@
 import { Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
-import { DIARIO_REPOSITORY_PORT } from "@/modules/diario/application/ports";
-import { DiarioService } from "@/modules/diario/application/use-cases/diario.service";
-import { DiarioAuthzRegistrySetup } from "@/modules/diario/infrastructure";
-import { DiarioTypeOrmRepositoryAdapter } from "@/modules/diario/infrastructure/persistence/typeorm";
+import { DIARIO_REPOSITORY_PORT } from "@/modules/ensino/diario/application/ports";
+import { DiarioService } from "@/modules/ensino/diario/application/use-cases/diario.service";
+import { DiarioAuthzRegistrySetup } from "@/modules/ensino/diario/infrastructure";
+import { DiarioTypeOrmRepositoryAdapter } from "@/modules/ensino/diario/infrastructure/persistence/typeorm";
 import { AmbienteModule } from "@/server/nest/modules/ambiente";
 import { CalendarioLetivoModule } from "@/server/nest/modules/calendario-letivo";
 import { DisciplinaModule } from "@/server/nest/modules/disciplina";

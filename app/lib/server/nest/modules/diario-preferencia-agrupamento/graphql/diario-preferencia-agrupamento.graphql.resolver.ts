@@ -2,7 +2,7 @@ import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
 import { AccessContext, AccessContextGraphQL } from "@/modules/@core/access-context";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
-import { DiarioPreferenciaAgrupamentoService } from "@/modules/diario-preferencia-agrupamento/application/use-cases/diario-preferencia-agrupamento.service";
+import { DiarioPreferenciaAgrupamentoService } from "@/modules/ensino/diario-preferencia-agrupamento/application/use-cases/diario-preferencia-agrupamento.service";
 import {
   DiarioPreferenciaAgrupamentoCreateInputGraphQlDto,
   DiarioPreferenciaAgrupamentoFindOneOutputGraphQlDto,

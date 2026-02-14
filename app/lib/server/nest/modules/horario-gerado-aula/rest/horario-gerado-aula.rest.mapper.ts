@@ -5,7 +5,7 @@ import type {
   HorarioGeradoAulaListInputDto,
   HorarioGeradoAulaListOutputDto,
   HorarioGeradoAulaUpdateInputDto,
-} from "@/modules/horario-gerado-aula";
+} from "@/modules/sisgha/horario-gerado-aula";
 import type {
   HorarioGeradoAulaCreateInputRestDto,
   HorarioGeradoAulaFindOneInputRestDto,

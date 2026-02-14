@@ -5,7 +5,7 @@ import {
   DiarioListInputDto,
   DiarioListOutputDto,
   DiarioUpdateInputDto,
-} from "@/modules/diario";
+} from "@/modules/ensino/diario";
 import { AmbienteRestMapper } from "@/server/nest/modules/ambiente/rest";
 import { BlocoRestMapper } from "@/server/nest/modules/bloco/rest";
 import { CalendarioLetivoRestMapper } from "@/server/nest/modules/calendario-letivo/rest";

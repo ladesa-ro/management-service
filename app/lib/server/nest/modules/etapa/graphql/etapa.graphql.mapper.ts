@@ -5,7 +5,7 @@ import {
   EtapaListInputDto,
   EtapaListOutputDto,
   EtapaUpdateInputDto,
-} from "@/modules/etapa";
+} from "@/modules/ensino/etapa";
 import { CalendarioLetivoGraphqlMapper } from "@/server/nest/modules/calendario-letivo/graphql/calendario-letivo.graphql.mapper";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import {

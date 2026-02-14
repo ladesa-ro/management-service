@@ -5,7 +5,7 @@ import {
   TurmaDisponibilidadeListInputDto,
   TurmaDisponibilidadeListOutputDto,
   TurmaDisponibilidadeUpdateInputDto,
-} from "@/modules/turma-disponibilidade";
+} from "@/modules/ensino/turma-disponibilidade";
 import { DisponibilidadeRestMapper } from "@/server/nest/modules/disponibilidade/rest";
 import { TurmaRestMapper } from "@/server/nest/modules/turma/rest";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";

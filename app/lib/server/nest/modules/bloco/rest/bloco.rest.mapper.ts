@@ -1,3 +1,4 @@
+import type { ImagemFindOneOutputDto } from "@/modules/base/armazenamento/imagem";
 import {
   BlocoCreateInputDto,
   BlocoFindOneInputDto,
@@ -5,8 +6,7 @@ import {
   BlocoListInputDto,
   BlocoListOutputDto,
   BlocoUpdateInputDto,
-} from "@/modules/bloco";
-import type { ImagemFindOneOutputDto } from "@/modules/imagem";
+} from "@/modules/sisgea/bloco";
 import { CampusRestMapper } from "@/server/nest/modules/campus/rest";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import {

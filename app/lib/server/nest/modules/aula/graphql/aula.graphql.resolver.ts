@@ -2,7 +2,7 @@ import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
 import { AccessContext, AccessContextGraphQL } from "@/modules/@core/access-context";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
-import { AulaService } from "@/modules/aula/application/use-cases/aula.service";
+import { AulaService } from "@/modules/sisgha/aula/application/use-cases/aula.service";
 import {
   AulaCreateInputGraphQlDto,
   AulaFindOneOutputGraphQlDto,

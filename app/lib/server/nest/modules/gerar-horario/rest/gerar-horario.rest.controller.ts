@@ -4,7 +4,7 @@ import {
 } from "@ladesa-ro/messages.timetable-generator.v1";
 import { Controller, Get } from "@nestjs/common";
 import { ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
-import { GerarHorarioService } from "@/modules/gerar-horario";
+import { GerarHorarioService } from "@/modules/sisgha/gerar-horario";
 
 @ApiTags("gerar-horario")
 @Controller("/gerar-horario")

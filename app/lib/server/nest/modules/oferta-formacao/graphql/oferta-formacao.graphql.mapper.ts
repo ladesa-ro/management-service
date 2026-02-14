@@ -5,7 +5,7 @@ import {
   OfertaFormacaoListInputDto,
   OfertaFormacaoListOutputDto,
   OfertaFormacaoUpdateInputDto,
-} from "@/modules/oferta-formacao";
+} from "@/modules/ensino/oferta-formacao";
 import { ModalidadeGraphqlMapper } from "@/server/nest/modules/modalidade/graphql/modalidade.graphql.mapper";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import {

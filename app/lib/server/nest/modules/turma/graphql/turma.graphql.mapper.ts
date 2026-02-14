@@ -5,7 +5,7 @@ import {
   TurmaListInputDto,
   TurmaListOutputDto,
   TurmaUpdateInputDto,
-} from "@/modules/turma";
+} from "@/modules/ensino/turma";
 import { AmbienteGraphqlMapper } from "@/server/nest/modules/ambiente/graphql/ambiente.graphql.mapper";
 import { CursoGraphqlMapper } from "@/server/nest/modules/curso/graphql/curso.graphql.mapper";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";

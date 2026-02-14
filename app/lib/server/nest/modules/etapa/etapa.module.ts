@@ -1,8 +1,8 @@
 import { Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
-import { ETAPA_REPOSITORY_PORT, EtapaService } from "@/modules/etapa";
-import { EtapaAuthzRegistrySetup } from "@/modules/etapa/infrastructure";
-import { EtapaTypeOrmRepositoryAdapter } from "@/modules/etapa/infrastructure/persistence/typeorm";
+import { ETAPA_REPOSITORY_PORT, EtapaService } from "@/modules/ensino/etapa";
+import { EtapaAuthzRegistrySetup } from "@/modules/ensino/etapa/infrastructure";
+import { EtapaTypeOrmRepositoryAdapter } from "@/modules/ensino/etapa/infrastructure/persistence/typeorm";
 import { CalendarioLetivoModule } from "@/server/nest/modules/calendario-letivo";
 import { EtapaGraphqlResolver } from "./graphql/etapa.graphql.resolver";
 import { EtapaRestController } from "./rest/etapa.rest.controller";

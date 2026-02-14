@@ -5,7 +5,7 @@ import {
   AmbienteListInputDto,
   AmbienteListOutputDto,
   AmbienteUpdateInputDto,
-} from "@/modules/ambiente";
+} from "@/modules/sisgea/ambiente";
 import { BlocoRestMapper } from "@/server/nest/modules/bloco/rest";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import {

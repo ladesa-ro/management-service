@@ -5,7 +5,7 @@ import {
   ReservaListInputDto,
   ReservaListOutputDto,
   ReservaUpdateInputDto,
-} from "@/modules/reserva";
+} from "@/modules/sisgea/reserva";
 import { AmbienteRestMapper } from "@/server/nest/modules/ambiente/rest";
 import { UsuarioRestMapper } from "@/server/nest/modules/usuario/rest";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";

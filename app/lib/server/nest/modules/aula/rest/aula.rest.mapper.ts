@@ -5,7 +5,7 @@ import {
   AulaListInputDto,
   AulaListOutputDto,
   AulaUpdateInputDto,
-} from "@/modules/aula";
+} from "@/modules/sisgha/aula";
 import { AmbienteRestMapper } from "@/server/nest/modules/ambiente/rest";
 import { DiarioRestMapper } from "@/server/nest/modules/diario/rest";
 import { IntervaloDeTempoRestMapper } from "@/server/nest/modules/intervalo-de-tempo/rest";

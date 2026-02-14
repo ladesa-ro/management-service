@@ -23,7 +23,7 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { AccessContext, AccessContextHttp } from "@/modules/@core/access-context";
-import { DisciplinaService } from "@/modules/disciplina/application/use-cases/disciplina.service";
+import { DisciplinaService } from "@/modules/ensino/disciplina/application/use-cases/disciplina.service";
 import {
   DisciplinaCreateInputRestDto,
   DisciplinaFindOneInputRestDto,

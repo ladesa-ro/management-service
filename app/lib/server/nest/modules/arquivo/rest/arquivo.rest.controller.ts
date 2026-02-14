@@ -7,7 +7,7 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { AccessContext, AccessContextHttp } from "@/modules/@core/access-context";
-import { ArquivoService } from "@/modules/arquivo/application/use-cases/arquivo.service";
+import { ArquivoService } from "@/modules/base/armazenamento/arquivo/application/use-cases/arquivo.service";
 import { ArquivoFindOneInputRestDto, ArquivoGetFileQueryInputRestDto } from "./arquivo.rest.dto";
 import { ArquivoRestMapper } from "./arquivo.rest.mapper";
 

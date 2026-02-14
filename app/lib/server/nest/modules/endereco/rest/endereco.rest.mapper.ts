@@ -1,4 +1,7 @@
-import { EnderecoCreateInputDto, EnderecoFindOneOutputDto } from "@/modules/endereco";
+import {
+  EnderecoCreateInputDto,
+  EnderecoFindOneOutputDto,
+} from "@/modules/base/localidades/endereco";
 import { CidadeRestMapper } from "@/server/nest/modules/cidade/rest/cidade.rest.mapper";
 import { EnderecoFindOneOutputRestDto, EnderecoInputRestDto } from "./endereco.rest.dto";
 

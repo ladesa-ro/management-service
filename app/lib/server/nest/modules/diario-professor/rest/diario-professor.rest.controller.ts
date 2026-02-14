@@ -8,7 +8,7 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { AccessContext, AccessContextHttp } from "@/modules/@core/access-context";
-import { DiarioProfessorService } from "@/modules/diario-professor/application/use-cases/diario-professor.service";
+import { DiarioProfessorService } from "@/modules/ensino/diario-professor/application/use-cases/diario-professor.service";
 import {
   DiarioProfessorCreateInputRestDto,
   DiarioProfessorFindOneInputRestDto,

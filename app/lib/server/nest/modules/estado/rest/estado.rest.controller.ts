@@ -7,7 +7,7 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { AccessContext, AccessContextHttp } from "@/modules/@core/access-context";
-import { EstadoService } from "@/modules/estado/application/use-cases/estado.service";
+import { EstadoService } from "@/modules/base/localidades/estado/application/use-cases/estado.service";
 import {
   EstadoFindOneInputRestDto,
   EstadoFindOneOutputRestDto,

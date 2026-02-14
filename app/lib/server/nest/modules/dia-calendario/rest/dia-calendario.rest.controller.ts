@@ -8,7 +8,7 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { AccessContext, AccessContextHttp } from "@/modules/@core/access-context";
-import { DiaCalendarioService } from "@/modules/dia-calendario/application/use-cases/dia-calendario.service";
+import { DiaCalendarioService } from "@/modules/sisgha/dia-calendario/application/use-cases/dia-calendario.service";
 import {
   DiaCalendarioCreateInputRestDto,
   DiaCalendarioFindOneInputRestDto,

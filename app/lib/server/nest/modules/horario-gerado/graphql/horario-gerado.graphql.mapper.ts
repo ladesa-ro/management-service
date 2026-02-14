@@ -5,7 +5,7 @@ import {
   HorarioGeradoListInputDto,
   HorarioGeradoListOutputDto,
   HorarioGeradoUpdateInputDto,
-} from "@/modules/horario-gerado";
+} from "@/modules/sisgha/horario-gerado";
 import { CalendarioLetivoGraphqlMapper } from "@/server/nest/modules/calendario-letivo/graphql/calendario-letivo.graphql.mapper";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import {

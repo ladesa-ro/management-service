@@ -3,9 +3,9 @@ import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persiste
 import {
   TURMA_DISPONIBILIDADE_REPOSITORY_PORT,
   TurmaDisponibilidadeService,
-} from "@/modules/turma-disponibilidade";
-import { TurmaDisponibilidadeAuthzRegistrySetup } from "@/modules/turma-disponibilidade/infrastructure";
-import { TurmaDisponibilidadeTypeOrmRepositoryAdapter } from "@/modules/turma-disponibilidade/infrastructure/persistence/typeorm";
+} from "@/modules/ensino/turma-disponibilidade";
+import { TurmaDisponibilidadeAuthzRegistrySetup } from "@/modules/ensino/turma-disponibilidade/infrastructure";
+import { TurmaDisponibilidadeTypeOrmRepositoryAdapter } from "@/modules/ensino/turma-disponibilidade/infrastructure/persistence/typeorm";
 import { DisponibilidadeModule } from "@/server/nest/modules/disponibilidade";
 import { TurmaModule } from "@/server/nest/modules/turma";
 import { TurmaDisponibilidadeGraphqlResolver } from "./graphql/turma-disponibilidade.graphql.resolver";

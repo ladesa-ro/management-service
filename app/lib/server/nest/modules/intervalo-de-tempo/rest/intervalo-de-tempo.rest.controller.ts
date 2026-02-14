@@ -7,7 +7,7 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { AccessContext, AccessContextHttp } from "@/modules/@core/access-context";
-import { IntervaloDeTempoService } from "@/modules/intervalo-de-tempo/application/use-cases/intervalo-de-tempo.service";
+import { IntervaloDeTempoService } from "@/modules/sisgha/intervalo-de-tempo/application/use-cases/intervalo-de-tempo.service";
 import {
   IntervaloDeTempoFindOneInputRestDto,
   IntervaloDeTempoFindOneOutputRestDto,

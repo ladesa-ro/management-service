@@ -1,9 +1,9 @@
 import { Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
-import { AULA_REPOSITORY_PORT } from "@/modules/aula/application/ports";
-import { AulaService } from "@/modules/aula/application/use-cases/aula.service";
-import { AulaAuthzRegistrySetup } from "@/modules/aula/infrastructure";
-import { AulaTypeOrmRepositoryAdapter } from "@/modules/aula/infrastructure/persistence/typeorm";
+import { AULA_REPOSITORY_PORT } from "@/modules/sisgha/aula/application/ports";
+import { AulaService } from "@/modules/sisgha/aula/application/use-cases/aula.service";
+import { AulaAuthzRegistrySetup } from "@/modules/sisgha/aula/infrastructure";
+import { AulaTypeOrmRepositoryAdapter } from "@/modules/sisgha/aula/infrastructure/persistence/typeorm";
 import { AmbienteModule } from "@/server/nest/modules/ambiente";
 import { DiarioModule } from "@/server/nest/modules/diario";
 import { IntervaloDeTempoModule } from "@/server/nest/modules/intervalo-de-tempo";

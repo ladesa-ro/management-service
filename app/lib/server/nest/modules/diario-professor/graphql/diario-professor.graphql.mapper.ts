@@ -5,7 +5,7 @@ import {
   DiarioProfessorListInputDto,
   DiarioProfessorListOutputDto,
   DiarioProfessorUpdateInputDto,
-} from "@/modules/diario-professor";
+} from "@/modules/ensino/diario-professor";
 import { PerfilGraphqlMapper } from "@/server/nest/modules/perfil/graphql/perfil.graphql.mapper";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import {

@@ -4,7 +4,7 @@ import {
   EntityBaseGraphQlDto,
   PaginationMetaGraphQlDto,
 } from "@/modules/@shared/infrastructure/graphql/dtos";
-import { PaginationArgsGraphQlDto } from "@/modules/@shared/infrastructure/graphql/dtos/pagination-graphql.dto";
+import { PaginationInputGraphQlDto } from "@/modules/@shared/infrastructure/graphql/dtos/pagination-graphql.dto";
 
 // ============================================================================
 // Arquivo nested output for GraphQL
@@ -75,7 +75,7 @@ export class ImagemArquivoFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
 // ============================================================================
 
 @ArgsType()
-export class ImagemArquivoListInputGraphQlDto extends PaginationArgsGraphQlDto {
+export class ImagemArquivoListInputGraphQlDto extends PaginationInputGraphQlDto {
   @Field(() => [String], { nullable: true, description: "Filtro por ID" })
   @IsOptional()
   @IsArray()

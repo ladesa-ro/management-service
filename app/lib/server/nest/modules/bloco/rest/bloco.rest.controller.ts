@@ -23,7 +23,7 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { AccessContext, AccessContextHttp } from "@/modules/@core/access-context";
-import { BlocoService } from "@/modules/bloco/application/use-cases/bloco.service";
+import { BlocoService } from "@/modules/sisgea/bloco/application/use-cases/bloco.service";
 import {
   BlocoCreateInputRestDto,
   BlocoFindOneInputRestDto,

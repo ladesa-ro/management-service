@@ -5,7 +5,7 @@ import {
   DiarioProfessorListInputDto,
   DiarioProfessorListOutputDto,
   DiarioProfessorUpdateInputDto,
-} from "@/modules/diario-professor";
+} from "@/modules/ensino/diario-professor";
 import { DiarioRestMapper } from "@/server/nest/modules/diario/rest";
 import { PerfilRestMapper } from "@/server/nest/modules/perfil/rest";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";

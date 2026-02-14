@@ -3,7 +3,7 @@ import {
   CidadeFindOneOutputDto,
   CidadeListInputDto,
   CidadeListOutputDto,
-} from "@/modules/cidade";
+} from "@/modules/base/localidades/cidade";
 import { EstadoRestMapper } from "@/server/nest/modules/estado/rest/estado.rest.mapper";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import {

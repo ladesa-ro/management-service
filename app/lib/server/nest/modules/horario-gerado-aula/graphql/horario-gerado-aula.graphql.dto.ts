@@ -7,7 +7,7 @@ import {
   IsUUID,
   ValidateNested,
 } from "class-validator";
-import { PaginationArgsGraphQlDto } from "@/modules/@shared/infrastructure/graphql";
+import { PaginationInputGraphQlDto } from "@/modules/@shared/infrastructure/graphql";
 import {
   EntityBaseGraphQlDto,
   PaginationMetaGraphQlDto,
@@ -114,7 +114,7 @@ export class HorarioGeradoAulaUpdateInputGraphQlDto {
 // ============================================================================
 
 @ArgsType()
-export class HorarioGeradoAulaListInputGraphQlDto extends PaginationArgsGraphQlDto {
+export class HorarioGeradoAulaListInputGraphQlDto extends PaginationInputGraphQlDto {
   @Field(() => [String], { nullable: true, description: "Filtro por ID" })
   @IsOptional()
   @IsArray()

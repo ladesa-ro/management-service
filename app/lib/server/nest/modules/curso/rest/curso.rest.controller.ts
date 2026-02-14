@@ -23,7 +23,7 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { AccessContext, AccessContextHttp } from "@/modules/@core/access-context";
-import { CursoService } from "@/modules/curso";
+import { CursoService } from "@/modules/ensino/curso";
 import {
   CursoCreateInputRestDto,
   CursoFindOneInputRestDto,

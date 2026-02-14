@@ -1,4 +1,4 @@
-import { ArquivoGetFileInputDto } from "@/modules/arquivo";
+import { ArquivoGetFileInputDto } from "@/modules/base/armazenamento/arquivo";
 import { ArquivoFindOneInputRestDto, ArquivoGetFileQueryInputRestDto } from "./arquivo.rest.dto";
 
 export class ArquivoRestMapper {

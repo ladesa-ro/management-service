@@ -11,7 +11,7 @@ import {
   EntityBaseGraphQlDto,
   PaginationMetaGraphQlDto,
 } from "@/modules/@shared/infrastructure/graphql/dtos";
-import { PaginationArgsGraphQlDto } from "@/modules/@shared/infrastructure/graphql/dtos/pagination-graphql.dto";
+import { PaginationInputGraphQlDto } from "@/modules/@shared/infrastructure/graphql/dtos/pagination-graphql.dto";
 import { DiarioFindOneOutputGraphQlDto } from "@/server/nest/modules/diario/graphql/diario.graphql.dto";
 import { IntervaloDeTempoFindOneOutputGraphQlDto } from "@/server/nest/modules/intervalo-de-tempo/graphql/intervalo-de-tempo.graphql.dto";
 
@@ -116,7 +116,7 @@ export class AulaUpdateInputGraphQlDto {
 // ============================================================================
 
 @ArgsType()
-export class AulaListInputGraphQlDto extends PaginationArgsGraphQlDto {
+export class AulaListInputGraphQlDto extends PaginationInputGraphQlDto {
   @Field(() => [String], { nullable: true, description: "Filtro por ID" })
   @IsOptional()
   @IsArray()

@@ -5,7 +5,7 @@ import {
   ReservaListInputDto,
   ReservaListOutputDto,
   ReservaUpdateInputDto,
-} from "@/modules/reserva";
+} from "@/modules/sisgea/reserva";
 import { AmbienteGraphqlMapper } from "@/server/nest/modules/ambiente/graphql/ambiente.graphql.mapper";
 import { UsuarioGraphqlMapper } from "@/server/nest/modules/usuario/graphql/usuario.graphql.mapper";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";

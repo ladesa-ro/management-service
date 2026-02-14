@@ -1,11 +1,11 @@
 import { Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
-import { CIDADE_REPOSITORY_PORT } from "@/modules/cidade/application/ports";
-import { CidadeService } from "@/modules/cidade/application/use-cases/cidade.service";
+import { CIDADE_REPOSITORY_PORT } from "@/modules/base/localidades/cidade/application/ports";
+import { CidadeService } from "@/modules/base/localidades/cidade/application/use-cases/cidade.service";
 import {
   CidadeAuthzRegistrySetup,
   CidadeTypeOrmRepositoryAdapter,
-} from "@/modules/cidade/infrastructure";
+} from "@/modules/base/localidades/cidade/infrastructure";
 import { CidadeGraphqlResolver } from "./graphql/cidade.graphql.resolver";
 import { CidadeRestController } from "./rest/cidade.rest.controller";
 

@@ -5,7 +5,7 @@ import type {
   HorarioGeradoListInputDto,
   HorarioGeradoListOutputDto,
   HorarioGeradoUpdateInputDto,
-} from "@/modules/horario-gerado";
+} from "@/modules/sisgha/horario-gerado";
 import type {
   HorarioGeradoCreateInputRestDto,
   HorarioGeradoFindOneInputRestDto,

@@ -1,4 +1,4 @@
-import type { UsuarioEnsinoOutput } from "@/modules/usuario";
+import type { UsuarioEnsinoOutput } from "@/modules/acesso/usuario";
 import {
   UsuarioCreateInputDto,
   UsuarioFindOneInputDto,
@@ -6,7 +6,7 @@ import {
   UsuarioListInputDto,
   UsuarioListOutputDto,
   UsuarioUpdateInputDto,
-} from "@/modules/usuario";
+} from "@/modules/acesso/usuario";
 import { BlocoRestMapper } from "@/server/nest/modules/bloco/rest";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import {

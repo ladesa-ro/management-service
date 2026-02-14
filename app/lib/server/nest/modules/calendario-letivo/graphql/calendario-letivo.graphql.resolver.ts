@@ -2,7 +2,7 @@ import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
 import { AccessContext, AccessContextGraphQL } from "@/modules/@core/access-context";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
-import { CalendarioLetivoService } from "@/modules/calendario-letivo";
+import { CalendarioLetivoService } from "@/modules/sisgha/calendario-letivo";
 import {
   CalendarioLetivoCreateInputGraphQlDto,
   CalendarioLetivoFindOneOutputGraphQlDto,

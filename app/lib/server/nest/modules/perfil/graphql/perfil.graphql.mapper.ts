@@ -4,7 +4,7 @@ import {
   PerfilListInputDto,
   PerfilListOutputDto,
   PerfilSetVinculosInputDto,
-} from "@/modules/perfil";
+} from "@/modules/acesso/perfil";
 import { CampusGraphqlMapper } from "@/server/nest/modules/campus/graphql/campus.graphql.mapper";
 import { UsuarioGraphqlMapper } from "@/server/nest/modules/usuario/graphql/usuario.graphql.mapper";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";

@@ -5,7 +5,7 @@ import {
   HorarioGeradoAulaListInputDto,
   HorarioGeradoAulaListOutputDto,
   HorarioGeradoAulaUpdateInputDto,
-} from "@/modules/horario-gerado-aula";
+} from "@/modules/sisgha/horario-gerado-aula";
 import { IntervaloDeTempoGraphqlMapper } from "@/server/nest/modules/intervalo-de-tempo/graphql/intervalo-de-tempo.graphql.mapper";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import {

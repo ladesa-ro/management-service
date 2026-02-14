@@ -5,7 +5,7 @@ import {
   CampusListInputDto,
   CampusListOutputDto,
   CampusUpdateInputDto,
-} from "@/modules/campus";
+} from "@/modules/sisgea/campus";
 import { EnderecoGraphqlMapper } from "@/server/nest/modules/endereco/graphql/endereco.graphql.mapper";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import {

@@ -5,7 +5,7 @@ import {
   TurmaDisponibilidadeListInputDto,
   TurmaDisponibilidadeListOutputDto,
   TurmaDisponibilidadeUpdateInputDto,
-} from "@/modules/turma-disponibilidade";
+} from "@/modules/ensino/turma-disponibilidade";
 import { DisponibilidadeGraphqlMapper } from "@/server/nest/modules/disponibilidade/graphql/disponibilidade.graphql.mapper";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import {

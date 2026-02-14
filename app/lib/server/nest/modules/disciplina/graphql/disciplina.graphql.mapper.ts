@@ -5,7 +5,7 @@ import {
   DisciplinaListInputDto,
   DisciplinaListOutputDto,
   DisciplinaUpdateInputDto,
-} from "@/modules/disciplina";
+} from "@/modules/ensino/disciplina";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import {
   DisciplinaCreateInputGraphQlDto,

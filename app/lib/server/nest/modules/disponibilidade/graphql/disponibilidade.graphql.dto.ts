@@ -4,7 +4,7 @@ import {
   EntityBaseGraphQlDto,
   PaginationMetaGraphQlDto,
 } from "@/modules/@shared/infrastructure/graphql/dtos";
-import { PaginationArgsGraphQlDto } from "@/modules/@shared/infrastructure/graphql/dtos/pagination-graphql.dto";
+import { PaginationInputGraphQlDto } from "@/modules/@shared/infrastructure/graphql/dtos/pagination-graphql.dto";
 
 // ============================================================================
 // FindOne Output
@@ -41,7 +41,7 @@ export class DisponibilidadeUpdateInputGraphQlDto {
 // ============================================================================
 
 @ArgsType()
-export class DisponibilidadeListInputGraphQlDto extends PaginationArgsGraphQlDto {
+export class DisponibilidadeListInputGraphQlDto extends PaginationInputGraphQlDto {
   @Field(() => [String], { nullable: true, description: "Filtro por ID" })
   @IsOptional()
   @IsArray()

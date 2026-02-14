@@ -5,7 +5,7 @@ import {
   CursoListInputDto,
   CursoListOutputDto,
   CursoUpdateInputDto,
-} from "@/modules/curso";
+} from "@/modules/ensino/curso";
 import { CampusGraphqlMapper } from "@/server/nest/modules/campus/graphql/campus.graphql.mapper";
 import { OfertaFormacaoGraphqlMapper } from "@/server/nest/modules/oferta-formacao/graphql/oferta-formacao.graphql.mapper";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";

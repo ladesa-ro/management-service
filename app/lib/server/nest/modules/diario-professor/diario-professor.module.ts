@@ -1,9 +1,9 @@
 import { Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
-import { DIARIO_PROFESSOR_REPOSITORY_PORT } from "@/modules/diario-professor/application/ports";
-import { DiarioProfessorService } from "@/modules/diario-professor/application/use-cases/diario-professor.service";
-import { DiarioProfessorAuthzRegistrySetup } from "@/modules/diario-professor/infrastructure";
-import { DiarioProfessorTypeOrmRepositoryAdapter } from "@/modules/diario-professor/infrastructure/persistence/typeorm";
+import { DIARIO_PROFESSOR_REPOSITORY_PORT } from "@/modules/ensino/diario-professor/application/ports";
+import { DiarioProfessorService } from "@/modules/ensino/diario-professor/application/use-cases/diario-professor.service";
+import { DiarioProfessorAuthzRegistrySetup } from "@/modules/ensino/diario-professor/infrastructure";
+import { DiarioProfessorTypeOrmRepositoryAdapter } from "@/modules/ensino/diario-professor/infrastructure/persistence/typeorm";
 import { DiarioModule } from "@/server/nest/modules/diario";
 import { PerfilModule } from "@/server/nest/modules/perfil";
 import { DiarioProfessorGraphqlResolver } from "./graphql/diario-professor.graphql.resolver";

@@ -1,10 +1,10 @@
 import { Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
-import { CURSO_REPOSITORY_PORT, CursoService } from "@/modules/curso";
+import { CURSO_REPOSITORY_PORT, CursoService } from "@/modules/ensino/curso";
 import {
   CursoAuthzRegistrySetup,
   CursoTypeOrmRepositoryAdapter,
-} from "@/modules/curso/infrastructure";
+} from "@/modules/ensino/curso/infrastructure";
 import { ArquivoModule } from "@/server/nest/modules/arquivo";
 import { CampusModule } from "@/server/nest/modules/campus";
 import { ImagemModule } from "@/server/nest/modules/imagem";

@@ -5,7 +5,7 @@ import {
   DisciplinaListInputDto,
   DisciplinaListOutputDto,
   DisciplinaUpdateInputDto,
-} from "@/modules/disciplina";
+} from "@/modules/ensino/disciplina";
 import { BlocoRestMapper } from "@/server/nest/modules/bloco/rest";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import {
