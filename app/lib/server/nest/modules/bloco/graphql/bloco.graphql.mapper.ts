@@ -5,7 +5,7 @@ import {
   BlocoListInputDto,
   BlocoListOutputDto,
   BlocoUpdateInputDto,
-} from "@/modules/bloco";
+} from "@/modules/sisgea/bloco";
 import { CampusGraphqlMapper } from "@/server/nest/modules/campus/graphql/campus.graphql.mapper";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import {

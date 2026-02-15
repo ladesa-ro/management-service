@@ -3,9 +3,9 @@ import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persiste
 import {
   DIARIO_PREFERENCIA_AGRUPAMENTO_REPOSITORY_PORT,
   DiarioPreferenciaAgrupamentoService,
-} from "@/modules/diario-preferencia-agrupamento";
-import { DiarioPreferenciaAgrupamentoAuthzRegistrySetup } from "@/modules/diario-preferencia-agrupamento/infrastructure";
-import { DiarioPreferenciaAgrupamentoTypeOrmRepositoryAdapter } from "@/modules/diario-preferencia-agrupamento/infrastructure/persistence/typeorm";
+} from "@/modules/ensino/diario-preferencia-agrupamento";
+import { DiarioPreferenciaAgrupamentoAuthzRegistrySetup } from "@/modules/ensino/diario-preferencia-agrupamento/infrastructure";
+import { DiarioPreferenciaAgrupamentoTypeOrmRepositoryAdapter } from "@/modules/ensino/diario-preferencia-agrupamento/infrastructure/persistence/typeorm";
 import { DiarioModule } from "@/server/nest/modules/diario";
 import { IntervaloDeTempoModule } from "@/server/nest/modules/intervalo-de-tempo";
 import { DiarioPreferenciaAgrupamentoGraphqlResolver } from "./graphql/diario-preferencia-agrupamento.graphql.resolver";

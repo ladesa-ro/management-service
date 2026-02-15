@@ -5,7 +5,7 @@ import {
   CalendarioLetivoListInputDto,
   CalendarioLetivoListOutputDto,
   CalendarioLetivoUpdateInputDto,
-} from "@/modules/calendario-letivo";
+} from "@/modules/sisgha/calendario-letivo";
 import { CampusRestMapper } from "@/server/nest/modules/campus/rest";
 import { OfertaFormacaoRestMapper } from "@/server/nest/modules/oferta-formacao/rest";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";

@@ -5,7 +5,7 @@ import {
   AmbienteListInputDto,
   AmbienteListOutputDto,
   AmbienteUpdateInputDto,
-} from "@/modules/ambiente";
+} from "@/modules/sisgea/ambiente";
 import { BlocoGraphqlMapper } from "@/server/nest/modules/bloco/graphql/bloco.graphql.mapper";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import {

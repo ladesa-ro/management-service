@@ -5,7 +5,7 @@ import {
   OfertaFormacaoListInputDto,
   OfertaFormacaoListOutputDto,
   OfertaFormacaoUpdateInputDto,
-} from "@/modules/oferta-formacao";
+} from "@/modules/ensino/oferta-formacao";
 import { ModalidadeRestMapper } from "@/server/nest/modules/modalidade/rest";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import {

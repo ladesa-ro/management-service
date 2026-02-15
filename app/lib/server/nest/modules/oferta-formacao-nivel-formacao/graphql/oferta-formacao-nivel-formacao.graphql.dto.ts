@@ -1,6 +1,6 @@
 import { ArgsType, Field, InputType, ObjectType } from "@nestjs/graphql";
 import { IsArray, IsOptional, IsString, IsUUID, ValidateNested } from "class-validator";
-import { PaginationArgsGraphQlDto } from "@/modules/@shared/infrastructure/graphql";
+import { PaginationInputGraphQlDto } from "@/modules/@shared/infrastructure/graphql";
 import {
   EntityBaseGraphQlDto,
   PaginationMetaGraphQlDto,
@@ -69,7 +69,7 @@ export class OfertaFormacaoNivelFormacaoUpdateInputGraphQlDto {
 // ============================================================================
 
 @ArgsType()
-export class OfertaFormacaoNivelFormacaoListInputGraphQlDto extends PaginationArgsGraphQlDto {
+export class OfertaFormacaoNivelFormacaoListInputGraphQlDto extends PaginationInputGraphQlDto {
   @Field(() => [String], { nullable: true, description: "Filtro por ID" })
   @IsOptional()
   @IsArray()

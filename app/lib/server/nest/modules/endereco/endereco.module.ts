@@ -1,10 +1,10 @@
 import { Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
-import { ENDERECO_REPOSITORY_PORT, EnderecoService } from "@/modules/endereco";
+import { ENDERECO_REPOSITORY_PORT, EnderecoService } from "@/modules/base/localidades/endereco";
 import {
   EnderecoAuthzRegistrySetup,
   EnderecoTypeOrmRepositoryAdapter,
-} from "@/modules/endereco/infrastructure";
+} from "@/modules/base/localidades/endereco/infrastructure";
 import { EnderecoGraphqlResolver } from "./graphql/endereco.graphql.resolver";
 
 @Module({

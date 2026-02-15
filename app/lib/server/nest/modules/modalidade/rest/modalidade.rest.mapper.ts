@@ -5,7 +5,7 @@ import {
   ModalidadeListInputDto,
   ModalidadeListOutputDto,
   ModalidadeUpdateInputDto,
-} from "@/modules/modalidade";
+} from "@/modules/ensino/modalidade";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import {
   ModalidadeCreateInputRestDto,

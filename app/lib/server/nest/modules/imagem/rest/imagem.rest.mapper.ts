@@ -3,7 +3,7 @@ import {
   ImagemFindOneOutputDto,
   ImagemListInputDto,
   ImagemListOutputDto,
-} from "@/modules/imagem";
+} from "@/modules/base/armazenamento/imagem";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import {
   ImagemFindOneInputRestDto,

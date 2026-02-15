@@ -8,7 +8,7 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { AccessContext, AccessContextHttp } from "@/modules/@core/access-context";
-import { PerfilService } from "@/modules/perfil";
+import { PerfilService } from "@/modules/acesso/perfil";
 import {
   PerfilFindOneInputRestDto,
   PerfilFindOneOutputRestDto,

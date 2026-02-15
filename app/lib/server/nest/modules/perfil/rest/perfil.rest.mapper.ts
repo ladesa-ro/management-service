@@ -4,7 +4,7 @@ import {
   PerfilListInputDto,
   PerfilListOutputDto,
   PerfilSetVinculosInputDto,
-} from "@/modules/perfil";
+} from "@/modules/acesso/perfil";
 import { CampusRestMapper } from "@/server/nest/modules/campus/rest";
 import { UsuarioRestMapper } from "@/server/nest/modules/usuario/rest";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";

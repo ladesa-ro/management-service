@@ -5,7 +5,7 @@ import {
   OfertaFormacaoNivelFormacaoListInputDto,
   OfertaFormacaoNivelFormacaoListOutputDto,
   OfertaFormacaoNivelFormacaoUpdateInputDto,
-} from "@/modules/oferta-formacao-nivel-formacao";
+} from "@/modules/ensino/oferta-formacao-nivel-formacao";
 import { NivelFormacaoGraphqlMapper } from "@/server/nest/modules/nivel-formacao/graphql/nivel-formacao.graphql.mapper";
 import { OfertaFormacaoGraphqlMapper } from "@/server/nest/modules/oferta-formacao/graphql/oferta-formacao.graphql.mapper";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";

@@ -4,7 +4,7 @@ import {
   EntityBaseGraphQlDto,
   PaginationMetaGraphQlDto,
 } from "@/modules/@shared/infrastructure/graphql/dtos";
-import { PaginationArgsGraphQlDto } from "@/modules/@shared/infrastructure/graphql/dtos/pagination-graphql.dto";
+import { PaginationInputGraphQlDto } from "@/modules/@shared/infrastructure/graphql/dtos/pagination-graphql.dto";
 import { CampusFindOneOutputGraphQlDto } from "@/server/nest/modules/campus/graphql/campus.graphql.dto";
 import { OfertaFormacaoFindOneOutputGraphQlDto } from "@/server/nest/modules/oferta-formacao/graphql/oferta-formacao.graphql.dto";
 
@@ -71,7 +71,7 @@ export class GradeHorarioOfertaFormacaoUpdateInputGraphQlDto {
 // ============================================================================
 
 @ArgsType()
-export class GradeHorarioOfertaFormacaoListInputGraphQlDto extends PaginationArgsGraphQlDto {
+export class GradeHorarioOfertaFormacaoListInputGraphQlDto extends PaginationInputGraphQlDto {
   @Field(() => [String], { nullable: true, description: "Filtro por ID" })
   @IsOptional()
   @IsArray()

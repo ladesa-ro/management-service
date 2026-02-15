@@ -3,7 +3,7 @@ import {
   EstadoFindOneOutputDto,
   EstadoListInputDto,
   EstadoListOutputDto,
-} from "@/modules/estado";
+} from "@/modules/base/localidades/estado";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import {
   EstadoFindOneInputRestDto,

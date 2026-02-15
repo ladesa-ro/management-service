@@ -5,7 +5,7 @@ import {
   CalendarioLetivoListInputDto,
   CalendarioLetivoListOutputDto,
   CalendarioLetivoUpdateInputDto,
-} from "@/modules/calendario-letivo";
+} from "@/modules/sisgha/calendario-letivo";
 import { CampusGraphqlMapper } from "@/server/nest/modules/campus/graphql/campus.graphql.mapper";
 import { OfertaFormacaoGraphqlMapper } from "@/server/nest/modules/oferta-formacao/graphql/oferta-formacao.graphql.mapper";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";

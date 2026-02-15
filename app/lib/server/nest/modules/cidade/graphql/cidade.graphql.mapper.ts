@@ -3,7 +3,7 @@ import {
   CidadeFindOneOutputDto,
   CidadeListInputDto,
   CidadeListOutputDto,
-} from "@/modules/cidade";
+} from "@/modules/base/localidades/cidade";
 import { EstadoGraphqlMapper } from "@/server/nest/modules/estado/graphql/estado.graphql.mapper";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import {

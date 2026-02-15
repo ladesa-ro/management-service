@@ -2,7 +2,7 @@ import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
 import { AccessContext, AccessContextGraphQL } from "@/modules/@core/access-context";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
-import { TurmaDisponibilidadeService } from "@/modules/turma-disponibilidade";
+import { TurmaDisponibilidadeService } from "@/modules/ensino/turma-disponibilidade";
 import {
   TurmaDisponibilidadeCreateInputGraphQlDto,
   TurmaDisponibilidadeFindOneOutputGraphQlDto,

@@ -5,7 +5,7 @@ import {
   DiaCalendarioListInputDto,
   DiaCalendarioListOutputDto,
   DiaCalendarioUpdateInputDto,
-} from "@/modules/dia-calendario";
+} from "@/modules/sisgha/dia-calendario";
 import { CalendarioLetivoRestMapper } from "@/server/nest/modules/calendario-letivo/rest";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import {

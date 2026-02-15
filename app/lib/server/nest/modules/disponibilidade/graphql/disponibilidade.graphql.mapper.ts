@@ -5,7 +5,7 @@ import {
   DisponibilidadeListInputDto,
   DisponibilidadeListOutputDto,
   DisponibilidadeUpdateInputDto,
-} from "@/modules/disponibilidade";
+} from "@/modules/ensino/disponibilidade";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import {
   DisponibilidadeCreateInputGraphQlDto,

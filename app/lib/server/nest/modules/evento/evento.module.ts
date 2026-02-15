@@ -1,8 +1,8 @@
 import { Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
-import { EVENTO_REPOSITORY_PORT, EventoService } from "@/modules/evento";
-import { EventoAuthzRegistrySetup } from "@/modules/evento/infrastructure";
-import { EventoTypeOrmRepositoryAdapter } from "@/modules/evento/infrastructure/persistence/typeorm";
+import { EVENTO_REPOSITORY_PORT, EventoService } from "@/modules/sisgha/evento";
+import { EventoAuthzRegistrySetup } from "@/modules/sisgha/evento/infrastructure";
+import { EventoTypeOrmRepositoryAdapter } from "@/modules/sisgha/evento/infrastructure/persistence/typeorm";
 import { CalendarioLetivoModule } from "@/server/nest/modules/calendario-letivo";
 import { EventoGraphqlResolver } from "./graphql/evento.graphql.resolver";
 import { EventoRestController } from "./rest";

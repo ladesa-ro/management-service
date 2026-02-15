@@ -12,7 +12,7 @@ import {
   EntityBaseGraphQlDto,
   PaginationMetaGraphQlDto,
 } from "@/modules/@shared/infrastructure/graphql/dtos";
-import { PaginationArgsGraphQlDto } from "@/modules/@shared/infrastructure/graphql/dtos/pagination-graphql.dto";
+import { PaginationInputGraphQlDto } from "@/modules/@shared/infrastructure/graphql/dtos/pagination-graphql.dto";
 import { BlocoFindOneOutputGraphQlDto } from "@/server/nest/modules/bloco/graphql/bloco.graphql.dto";
 import { ImagemFindOneOutputGraphQlDto } from "@/server/nest/modules/imagem-arquivo/graphql/imagem-arquivo.graphql.dto";
 
@@ -77,7 +77,7 @@ export class AmbienteUpdateInputGraphQlDto {
 // ============================================================================
 
 @ArgsType()
-export class AmbienteListInputGraphQlDto extends PaginationArgsGraphQlDto {
+export class AmbienteListInputGraphQlDto extends PaginationInputGraphQlDto {
   @Field(() => [String], { nullable: true, description: "Filtro por ID" })
   @IsOptional()
   @IsArray()

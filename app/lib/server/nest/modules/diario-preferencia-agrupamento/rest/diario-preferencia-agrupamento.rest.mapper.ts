@@ -5,7 +5,7 @@ import {
   DiarioPreferenciaAgrupamentoListInputDto,
   DiarioPreferenciaAgrupamentoListOutputDto,
   DiarioPreferenciaAgrupamentoUpdateInputDto,
-} from "@/modules/diario-preferencia-agrupamento";
+} from "@/modules/ensino/diario-preferencia-agrupamento";
 import { DiarioRestMapper } from "@/server/nest/modules/diario/rest";
 import { IntervaloDeTempoRestMapper } from "@/server/nest/modules/intervalo-de-tempo/rest";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";

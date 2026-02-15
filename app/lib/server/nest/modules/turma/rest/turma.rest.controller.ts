@@ -24,7 +24,7 @@ import {
 } from "@nestjs/swagger";
 import type { Express } from "express";
 import { AccessContext, AccessContextHttp } from "@/modules/@core/access-context";
-import { TurmaService } from "@/modules/turma/application/use-cases/turma.service";
+import { TurmaService } from "@/modules/ensino/turma/application/use-cases/turma.service";
 import {
   TurmaCreateInputRestDto,
   TurmaFindOneInputRestDto,

@@ -3,10 +3,10 @@ import {
   NestJsPaginateAdapter,
   TypeormModule,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
-import { PROFESSOR_INDISPONIBILIDADE_REPOSITORY_PORT } from "@/modules/professor-indisponibilidade/application/ports";
-import { ProfessorIndisponibilidadeService } from "@/modules/professor-indisponibilidade/application/use-cases/professor-indisponibilidade.service";
-import { ProfessorIndisponibilidadeAuthzRegistrySetup } from "@/modules/professor-indisponibilidade/infrastructure";
-import { ProfessorIndisponibilidadeTypeOrmRepositoryAdapter } from "@/modules/professor-indisponibilidade/infrastructure/persistence/typeorm";
+import { PROFESSOR_INDISPONIBILIDADE_REPOSITORY_PORT } from "@/modules/ensino/professor-indisponibilidade/application/ports";
+import { ProfessorIndisponibilidadeService } from "@/modules/ensino/professor-indisponibilidade/application/use-cases/professor-indisponibilidade.service";
+import { ProfessorIndisponibilidadeAuthzRegistrySetup } from "@/modules/ensino/professor-indisponibilidade/infrastructure";
+import { ProfessorIndisponibilidadeTypeOrmRepositoryAdapter } from "@/modules/ensino/professor-indisponibilidade/infrastructure/persistence/typeorm";
 import { PerfilModule } from "@/server/nest/modules/perfil";
 import { ProfessorIndisponibilidadeGraphqlResolver } from "./graphql/professor-indisponibilidade.graphql.resolver";
 import { ProfessorIndisponibilidadeLegacyService } from "./professor-indisponibilidade.legacy.service";

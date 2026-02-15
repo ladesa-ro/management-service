@@ -5,7 +5,7 @@ import {
   CursoListInputDto,
   CursoListOutputDto,
   CursoUpdateInputDto,
-} from "@/modules/curso";
+} from "@/modules/ensino/curso";
 import { BlocoRestMapper } from "@/server/nest/modules/bloco/rest";
 import { CampusRestMapper } from "@/server/nest/modules/campus/rest";
 import { OfertaFormacaoRestMapper } from "@/server/nest/modules/oferta-formacao/rest";

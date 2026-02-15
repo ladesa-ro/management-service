@@ -3,7 +3,7 @@ import {
   IntervaloDeTempoFindOneOutputDto,
   IntervaloDeTempoListInputDto,
   IntervaloDeTempoListOutputDto,
-} from "@/modules/intervalo-de-tempo";
+} from "@/modules/sisgha/intervalo-de-tempo";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import {
   IntervaloDeTempoFindOneInputRestDto,

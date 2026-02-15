@@ -5,7 +5,7 @@ import {
   NivelFormacaoListInputDto,
   NivelFormacaoListOutputDto,
   NivelFormacaoUpdateInputDto,
-} from "@/modules/nivel-formacao";
+} from "@/modules/ensino/nivel-formacao";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import {
   NivelFormacaoCreateInputGraphQlDto,

@@ -2,7 +2,7 @@ import { Args, Info, Int, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
 import { AccessContext, AccessContextGraphQL } from "@/modules/@core/access-context";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
-import { EstadoService } from "@/modules/estado/application/use-cases/estado.service";
+import { EstadoService } from "@/modules/base/localidades/estado/application/use-cases/estado.service";
 import {
   EstadoFindOneOutputGraphQlDto,
   EstadoListInputGraphQlDto,

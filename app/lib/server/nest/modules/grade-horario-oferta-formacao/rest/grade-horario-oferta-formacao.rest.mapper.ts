@@ -5,7 +5,7 @@ import {
   GradeHorarioOfertaFormacaoListInputDto,
   GradeHorarioOfertaFormacaoListOutputDto,
   GradeHorarioOfertaFormacaoUpdateInputDto,
-} from "@/modules/grade-horario-oferta-formacao";
+} from "@/modules/sisgha/grade-horario-oferta-formacao";
 import { CampusRestMapper } from "@/server/nest/modules/campus/rest";
 import { OfertaFormacaoRestMapper } from "@/server/nest/modules/oferta-formacao/rest";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";

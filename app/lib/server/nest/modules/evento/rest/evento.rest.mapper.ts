@@ -5,7 +5,7 @@ import {
   EventoListInputDto,
   EventoListOutputDto,
   EventoUpdateInputDto,
-} from "@/modules/evento";
+} from "@/modules/sisgha/evento";
 import { AmbienteRestMapper } from "@/server/nest/modules/ambiente/rest";
 import { CalendarioLetivoRestMapper } from "@/server/nest/modules/calendario-letivo/rest";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";

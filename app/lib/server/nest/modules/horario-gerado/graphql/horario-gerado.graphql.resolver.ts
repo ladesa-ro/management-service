@@ -2,7 +2,7 @@ import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
 import { AccessContext, AccessContextGraphQL } from "@/modules/@core/access-context";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
-import { HorarioGeradoService } from "@/modules/horario-gerado";
+import { HorarioGeradoService } from "@/modules/sisgha/horario-gerado";
 import {
   HorarioGeradoCreateInputGraphQlDto,
   HorarioGeradoFindOneOutputGraphQlDto,

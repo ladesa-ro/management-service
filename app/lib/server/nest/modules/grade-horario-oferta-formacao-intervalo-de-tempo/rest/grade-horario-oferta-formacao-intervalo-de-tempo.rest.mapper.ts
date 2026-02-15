@@ -5,7 +5,7 @@ import {
   GradeHorarioOfertaFormacaoIntervaloDeTempoListInputDto,
   GradeHorarioOfertaFormacaoIntervaloDeTempoListOutputDto,
   GradeHorarioOfertaFormacaoIntervaloDeTempoUpdateInputDto,
-} from "@/modules/grade-horario-oferta-formacao-intervalo-de-tempo";
+} from "@/modules/sisgha/grade-horario-oferta-formacao-intervalo-de-tempo";
 import { GradeHorarioOfertaFormacaoRestMapper } from "@/server/nest/modules/grade-horario-oferta-formacao/rest";
 import { IntervaloDeTempoRestMapper } from "@/server/nest/modules/intervalo-de-tempo/rest";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";

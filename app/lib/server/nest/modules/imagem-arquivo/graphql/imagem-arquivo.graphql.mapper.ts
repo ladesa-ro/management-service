@@ -3,7 +3,7 @@ import {
   ImagemArquivoFindOneOutputDto,
   ImagemArquivoListInputDto,
   ImagemArquivoListOutputDto,
-} from "@/modules/imagem-arquivo";
+} from "@/modules/base/armazenamento/imagem-arquivo";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import {
   ArquivoFindOneOutputGraphQlDto,

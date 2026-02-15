@@ -5,7 +5,7 @@ import {
   TurmaListInputDto,
   TurmaListOutputDto,
   TurmaUpdateInputDto,
-} from "@/modules/turma";
+} from "@/modules/ensino/turma";
 import { AmbienteRestMapper } from "@/server/nest/modules/ambiente/rest";
 import { BlocoRestMapper } from "@/server/nest/modules/bloco/rest";
 import { CursoRestMapper } from "@/server/nest/modules/curso/rest";

@@ -5,7 +5,7 @@ import {
   AulaListInputDto,
   AulaListOutputDto,
   AulaUpdateInputDto,
-} from "@/modules/aula";
+} from "@/modules/sisgha/aula";
 import { DiarioGraphqlMapper } from "@/server/nest/modules/diario/graphql/diario.graphql.mapper";
 import { IntervaloDeTempoGraphqlMapper } from "@/server/nest/modules/intervalo-de-tempo/graphql/intervalo-de-tempo.graphql.mapper";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";

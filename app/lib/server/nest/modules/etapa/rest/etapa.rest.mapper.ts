@@ -5,7 +5,7 @@ import type {
   EtapaListInputDto,
   EtapaListOutputDto,
   EtapaUpdateInputDto,
-} from "@/modules/etapa";
+} from "@/modules/ensino/etapa";
 import type {
   EtapaCreateInputRestDto,
   EtapaFindOneInputRestDto,

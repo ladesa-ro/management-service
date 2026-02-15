@@ -8,7 +8,7 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { AccessContext, AccessContextHttp } from "@/modules/@core/access-context";
-import { HorarioGeradoAulaService } from "@/modules/horario-gerado-aula";
+import { HorarioGeradoAulaService } from "@/modules/sisgha/horario-gerado-aula";
 import {
   HorarioGeradoAulaCreateInputRestDto,
   HorarioGeradoAulaFindOneInputRestDto,

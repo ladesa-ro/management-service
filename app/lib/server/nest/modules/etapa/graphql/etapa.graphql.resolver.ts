@@ -2,7 +2,7 @@ import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
 import { AccessContext, AccessContextGraphQL } from "@/modules/@core/access-context";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
-import { EtapaService } from "@/modules/etapa/application/use-cases/etapa.service";
+import { EtapaService } from "@/modules/ensino/etapa/application/use-cases/etapa.service";
 import {
   EtapaCreateInputGraphQlDto,
   EtapaFindOneOutputGraphQlDto,

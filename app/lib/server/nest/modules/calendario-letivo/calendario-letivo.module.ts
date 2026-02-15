@@ -3,9 +3,9 @@ import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persiste
 import {
   CALENDARIO_LETIVO_REPOSITORY_PORT,
   CalendarioLetivoService,
-} from "@/modules/calendario-letivo";
-import { CalendarioLetivoAuthzRegistrySetup } from "@/modules/calendario-letivo/infrastructure";
-import { CalendarioLetivoTypeOrmRepositoryAdapter } from "@/modules/calendario-letivo/infrastructure/persistence/typeorm";
+} from "@/modules/sisgha/calendario-letivo";
+import { CalendarioLetivoAuthzRegistrySetup } from "@/modules/sisgha/calendario-letivo/infrastructure";
+import { CalendarioLetivoTypeOrmRepositoryAdapter } from "@/modules/sisgha/calendario-letivo/infrastructure/persistence/typeorm";
 import { CampusModule } from "@/server/nest/modules/campus";
 import { OfertaFormacaoModule } from "@/server/nest/modules/oferta-formacao";
 import { CalendarioLetivoGraphqlResolver } from "./graphql/calendario-letivo.graphql.resolver";

@@ -2,7 +2,7 @@ import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
 import { AccessContext, AccessContextGraphQL } from "@/modules/@core/access-context";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
-import { EventoService } from "@/modules/evento/application/use-cases/evento.service";
+import { EventoService } from "@/modules/sisgha/evento/application/use-cases/evento.service";
 import {
   EventoCreateInputGraphQlDto,
   EventoFindOneOutputGraphQlDto,

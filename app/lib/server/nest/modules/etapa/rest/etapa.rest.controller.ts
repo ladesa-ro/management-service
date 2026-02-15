@@ -8,7 +8,7 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { AccessContext, AccessContextHttp } from "@/modules/@core/access-context";
-import { EtapaService } from "@/modules/etapa";
+import { EtapaService } from "@/modules/ensino/etapa";
 import {
   EtapaCreateInputRestDto,
   EtapaFindOneInputRestDto,

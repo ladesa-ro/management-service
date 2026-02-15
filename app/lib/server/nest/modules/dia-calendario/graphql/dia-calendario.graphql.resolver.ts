@@ -2,7 +2,7 @@ import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
 import { AccessContext, AccessContextGraphQL } from "@/modules/@core/access-context";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
-import { DiaCalendarioService } from "@/modules/dia-calendario/application/use-cases/dia-calendario.service";
+import { DiaCalendarioService } from "@/modules/sisgha/dia-calendario/application/use-cases/dia-calendario.service";
 import {
   DiaCalendarioCreateInputGraphQlDto,
   DiaCalendarioFindOneOutputGraphQlDto,

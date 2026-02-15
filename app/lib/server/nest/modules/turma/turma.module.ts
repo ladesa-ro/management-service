@@ -1,11 +1,11 @@
 import { Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
-import { TURMA_REPOSITORY_PORT } from "@/modules/turma/application/ports";
-import { TurmaService } from "@/modules/turma/application/use-cases/turma.service";
+import { TURMA_REPOSITORY_PORT } from "@/modules/ensino/turma/application/ports";
+import { TurmaService } from "@/modules/ensino/turma/application/use-cases/turma.service";
 import {
   TurmaAuthzRegistrySetup,
   TurmaTypeOrmRepositoryAdapter,
-} from "@/modules/turma/infrastructure";
+} from "@/modules/ensino/turma/infrastructure";
 import { AmbienteModule } from "@/server/nest/modules/ambiente";
 import { ArquivoModule } from "@/server/nest/modules/arquivo";
 import { CursoModule } from "@/server/nest/modules/curso";

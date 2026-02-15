@@ -5,7 +5,7 @@ import {
   EventoListInputDto,
   EventoListOutputDto,
   EventoUpdateInputDto,
-} from "@/modules/evento";
+} from "@/modules/sisgha/evento";
 import { CalendarioLetivoGraphqlMapper } from "@/server/nest/modules/calendario-letivo/graphql/calendario-letivo.graphql.mapper";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import {

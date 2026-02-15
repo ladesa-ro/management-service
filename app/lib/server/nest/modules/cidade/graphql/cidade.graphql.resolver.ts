@@ -2,7 +2,7 @@ import { Args, Info, Int, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
 import { AccessContext, AccessContextGraphQL } from "@/modules/@core/access-context";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
-import { CidadeService } from "@/modules/cidade/application/use-cases/cidade.service";
+import { CidadeService } from "@/modules/base/localidades/cidade/application/use-cases/cidade.service";
 import {
   CidadeFindOneOutputGraphQlDto,
   CidadeListInputGraphQlDto,

@@ -2,7 +2,7 @@ import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
 import { AccessContext, AccessContextGraphQL } from "@/modules/@core/access-context";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
-import { GradeHorarioOfertaFormacaoService } from "@/modules/grade-horario-oferta-formacao/application/use-cases/grade-horario-oferta-formacao.service";
+import { GradeHorarioOfertaFormacaoService } from "@/modules/sisgha/grade-horario-oferta-formacao/application/use-cases/grade-horario-oferta-formacao.service";
 import {
   GradeHorarioOfertaFormacaoCreateInputGraphQlDto,
   GradeHorarioOfertaFormacaoFindOneOutputGraphQlDto,

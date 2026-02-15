@@ -5,7 +5,7 @@ import {
   DiarioPreferenciaAgrupamentoListInputDto,
   DiarioPreferenciaAgrupamentoListOutputDto,
   DiarioPreferenciaAgrupamentoUpdateInputDto,
-} from "@/modules/diario-preferencia-agrupamento";
+} from "@/modules/ensino/diario-preferencia-agrupamento";
 import { IntervaloDeTempoGraphqlMapper } from "@/server/nest/modules/intervalo-de-tempo/graphql/intervalo-de-tempo.graphql.mapper";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import {

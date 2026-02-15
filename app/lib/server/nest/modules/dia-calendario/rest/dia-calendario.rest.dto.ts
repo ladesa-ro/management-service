@@ -24,7 +24,7 @@ import {
 import {
   TIPO_DIA_CALENDARIO_VALUES,
   type TipoDiaCalendario,
-} from "@/modules/dia-calendario/domain/dia-calendario.types";
+} from "@/modules/sisgha/dia-calendario/domain/dia-calendario.types";
 import {
   CalendarioLetivoFindOneInputRestDto,
   CalendarioLetivoFindOneOutputRestDto,

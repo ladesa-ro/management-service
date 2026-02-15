@@ -5,7 +5,7 @@ import {
   UsuarioListInputDto,
   UsuarioListOutputDto,
   UsuarioUpdateInputDto,
-} from "@/modules/usuario";
+} from "@/modules/acesso/usuario";
 import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import {
   UsuarioCreateInputGraphQlDto,

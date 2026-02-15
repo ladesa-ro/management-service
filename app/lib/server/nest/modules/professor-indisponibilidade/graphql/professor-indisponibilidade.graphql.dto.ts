@@ -1,6 +1,6 @@
 import { ArgsType, Field, ID, InputType, Int, ObjectType } from "@nestjs/graphql";
 import { IsInt, IsOptional, IsString, IsUUID, Max, Min } from "class-validator";
-import { PaginationArgsGraphQlDto } from "@/modules/@shared/infrastructure/graphql";
+import { PaginationInputGraphQlDto } from "@/modules/@shared/infrastructure/graphql";
 import {
   EntityBaseGraphQlDto,
   PaginationMetaGraphQlDto,
@@ -50,7 +50,7 @@ export class ProfessorIndisponibilidadeUpdateInputGraphQlDto {
 // ============================================================================
 
 @ArgsType()
-export class ProfessorIndisponibilidadeListInputGraphQlDto extends PaginationArgsGraphQlDto {
+export class ProfessorIndisponibilidadeListInputGraphQlDto extends PaginationInputGraphQlDto {
   @Field(() => ID, { nullable: true, description: "Filtro por ID do perfil" })
   @IsOptional()
   @IsUUID()
