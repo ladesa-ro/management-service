@@ -5,12 +5,12 @@ import {
   CursoAuthzRegistrySetup,
   CursoTypeOrmRepositoryAdapter,
 } from "@/modules/ensino/curso/infrastructure";
+import { CursoGraphqlResolver } from "@/modules/ensino/curso/presentation/graphql/curso.graphql.resolver";
+import { CursoRestController } from "@/modules/ensino/curso/presentation/rest/curso.rest.controller";
 import { ArquivoModule } from "@/server/nest/modules/arquivo";
 import { CampusModule } from "@/server/nest/modules/campus";
 import { ImagemModule } from "@/server/nest/modules/imagem";
 import { OfertaFormacaoModule } from "@/server/nest/modules/oferta-formacao";
-import { CursoGraphqlResolver } from "./graphql/curso.graphql.resolver";
-import { CursoRestController } from "./rest/curso.rest.controller";
 
 @Module({
   imports: [CampusModule, ImagemModule, ArquivoModule, OfertaFormacaoModule],

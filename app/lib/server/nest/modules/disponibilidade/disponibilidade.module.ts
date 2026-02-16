@@ -4,8 +4,8 @@ import { DISPONIBILIDADE_REPOSITORY_PORT } from "@/modules/ensino/disponibilidad
 import { DisponibilidadeService } from "@/modules/ensino/disponibilidade/application/use-cases/disponibilidade.service";
 import { DisponibilidadeAuthzRegistrySetup } from "@/modules/ensino/disponibilidade/infrastructure";
 import { DisponibilidadeTypeOrmRepositoryAdapter } from "@/modules/ensino/disponibilidade/infrastructure/persistence/typeorm";
-import { DisponibilidadeGraphqlResolver } from "./graphql/disponibilidade.graphql.resolver";
-import { DisponibilidadeRestController } from "./rest/disponibilidade.rest.controller";
+import { DisponibilidadeGraphqlResolver } from "@/modules/ensino/disponibilidade/presentation/graphql/disponibilidade.graphql.resolver";
+import { DisponibilidadeRestController } from "@/modules/ensino/disponibilidade/presentation/rest/disponibilidade.rest.controller";
 
 @Module({
   imports: [],

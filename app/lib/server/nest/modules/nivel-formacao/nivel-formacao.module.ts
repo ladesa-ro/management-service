@@ -4,8 +4,8 @@ import { NIVEL_FORMACAO_REPOSITORY_PORT } from "@/modules/ensino/nivel-formacao/
 import { NivelFormacaoService } from "@/modules/ensino/nivel-formacao/application/use-cases/nivel-formacao.service";
 import { NivelFormacaoAuthzRegistrySetup } from "@/modules/ensino/nivel-formacao/infrastructure";
 import { NivelFormacaoTypeOrmRepositoryAdapter } from "@/modules/ensino/nivel-formacao/infrastructure/persistence/typeorm";
-import { NivelFormacaoGraphqlResolver } from "./graphql/nivel-formacao.graphql.resolver";
-import { NivelFormacaoRestController } from "./rest/nivel-formacao.rest.controller";
+import { NivelFormacaoGraphqlResolver } from "@/modules/ensino/nivel-formacao/presentation/graphql/nivel-formacao.graphql.resolver";
+import { NivelFormacaoRestController } from "@/modules/ensino/nivel-formacao/presentation/rest/nivel-formacao.rest.controller";
 
 @Module({
   imports: [],

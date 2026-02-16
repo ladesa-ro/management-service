@@ -6,10 +6,10 @@ import {
 } from "@/modules/sisgha/grade-horario-oferta-formacao-intervalo-de-tempo";
 import { GradeHorarioOfertaFormacaoIntervaloDeTempoAuthzRegistrySetup } from "@/modules/sisgha/grade-horario-oferta-formacao-intervalo-de-tempo/infrastructure";
 import { GradeHorarioOfertaFormacaoIntervaloDeTempoTypeOrmRepositoryAdapter } from "@/modules/sisgha/grade-horario-oferta-formacao-intervalo-de-tempo/infrastructure/persistence/typeorm";
+import { GradeHorarioOfertaFormacaoIntervaloDeTempoGraphqlResolver } from "@/modules/sisgha/grade-horario-oferta-formacao-intervalo-de-tempo/presentation/graphql/grade-horario-oferta-formacao-intervalo-de-tempo.graphql.resolver";
+import { GradeHorarioOfertaFormacaoIntervaloDeTempoRestController } from "@/modules/sisgha/grade-horario-oferta-formacao-intervalo-de-tempo/presentation/rest/grade-horario-oferta-formacao-intervalo-de-tempo.rest.controller";
 import { GradeHorarioOfertaFormacaoModule } from "@/server/nest/modules/grade-horario-oferta-formacao";
 import { IntervaloDeTempoModule } from "@/server/nest/modules/intervalo-de-tempo";
-import { GradeHorarioOfertaFormacaoIntervaloDeTempoGraphqlResolver } from "./graphql/grade-horario-oferta-formacao-intervalo-de-tempo.graphql.resolver";
-import { GradeHorarioOfertaFormacaoIntervaloDeTempoRestController } from "./rest/grade-horario-oferta-formacao-intervalo-de-tempo.rest.controller";
 
 @Module({
   imports: [GradeHorarioOfertaFormacaoModule, IntervaloDeTempoModule],

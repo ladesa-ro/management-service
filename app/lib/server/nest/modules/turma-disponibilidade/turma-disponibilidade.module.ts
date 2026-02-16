@@ -6,10 +6,10 @@ import {
 } from "@/modules/ensino/turma-disponibilidade";
 import { TurmaDisponibilidadeAuthzRegistrySetup } from "@/modules/ensino/turma-disponibilidade/infrastructure";
 import { TurmaDisponibilidadeTypeOrmRepositoryAdapter } from "@/modules/ensino/turma-disponibilidade/infrastructure/persistence/typeorm";
+import { TurmaDisponibilidadeGraphqlResolver } from "@/modules/ensino/turma-disponibilidade/presentation/graphql/turma-disponibilidade.graphql.resolver";
+import { TurmaDisponibilidadeRestController } from "@/modules/ensino/turma-disponibilidade/presentation/rest";
 import { DisponibilidadeModule } from "@/server/nest/modules/disponibilidade";
 import { TurmaModule } from "@/server/nest/modules/turma";
-import { TurmaDisponibilidadeGraphqlResolver } from "./graphql/turma-disponibilidade.graphql.resolver";
-import { TurmaDisponibilidadeRestController } from "./rest";
 
 @Module({
   imports: [TurmaModule, DisponibilidadeModule],

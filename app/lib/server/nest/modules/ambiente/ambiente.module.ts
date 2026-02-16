@@ -6,11 +6,11 @@ import {
   AmbienteAuthzRegistrySetup,
   AmbienteTypeOrmRepositoryAdapter,
 } from "@/modules/sisgea/ambiente/infrastructure";
+import { AmbienteGraphqlResolver } from "@/modules/sisgea/ambiente/presentation/graphql/ambiente.graphql.resolver";
+import { AmbienteRestController } from "@/modules/sisgea/ambiente/presentation/rest/ambiente.rest.controller";
 import { ArquivoModule } from "@/server/nest/modules/arquivo";
 import { BlocoModule } from "@/server/nest/modules/bloco";
 import { ImagemModule } from "@/server/nest/modules/imagem";
-import { AmbienteGraphqlResolver } from "./graphql/ambiente.graphql.resolver";
-import { AmbienteRestController } from "./rest/ambiente.rest.controller";
 
 @Module({
   imports: [BlocoModule, ImagemModule, ArquivoModule],

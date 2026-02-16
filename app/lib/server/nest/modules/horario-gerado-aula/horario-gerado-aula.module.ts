@@ -6,11 +6,11 @@ import {
 } from "@/modules/sisgha/horario-gerado-aula";
 import { HorarioGeradoAulaAuthzRegistrySetup } from "@/modules/sisgha/horario-gerado-aula/infrastructure";
 import { HorarioGeradoAulaTypeOrmRepositoryAdapter } from "@/modules/sisgha/horario-gerado-aula/infrastructure/persistence/typeorm";
+import { HorarioGeradoAulaGraphqlResolver } from "@/modules/sisgha/horario-gerado-aula/presentation/graphql/horario-gerado-aula.graphql.resolver";
+import { HorarioGeradoAulaRestController } from "@/modules/sisgha/horario-gerado-aula/presentation/rest/horario-gerado-aula.rest.controller";
 import { DiarioProfessorModule } from "@/server/nest/modules/diario-professor";
 import { HorarioGeradoModule } from "@/server/nest/modules/horario-gerado";
 import { IntervaloDeTempoModule } from "@/server/nest/modules/intervalo-de-tempo";
-import { HorarioGeradoAulaGraphqlResolver } from "./graphql/horario-gerado-aula.graphql.resolver";
-import { HorarioGeradoAulaRestController } from "./rest/horario-gerado-aula.rest.controller";
 
 @Module({
   imports: [DiarioProfessorModule, HorarioGeradoModule, IntervaloDeTempoModule],

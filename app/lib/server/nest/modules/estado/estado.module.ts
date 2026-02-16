@@ -6,8 +6,8 @@ import {
   EstadoAuthzRegistrySetup,
   EstadoTypeOrmRepositoryAdapter,
 } from "@/modules/base/localidades/estado/infrastructure";
-import { EstadoGraphqlResolver } from "./graphql/estado.graphql.resolver";
-import { EstadoRestController } from "./rest/estado.rest.controller";
+import { EstadoGraphqlResolver } from "@/modules/base/localidades/estado/presentation/graphql/estado.graphql.resolver";
+import { EstadoRestController } from "@/modules/base/localidades/estado/presentation/rest/estado.rest.controller";
 
 @Module({
   imports: [],

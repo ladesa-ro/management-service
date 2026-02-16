@@ -7,10 +7,10 @@ import { PROFESSOR_INDISPONIBILIDADE_REPOSITORY_PORT } from "@/modules/ensino/pr
 import { ProfessorIndisponibilidadeService } from "@/modules/ensino/professor-indisponibilidade/application/use-cases/professor-indisponibilidade.service";
 import { ProfessorIndisponibilidadeAuthzRegistrySetup } from "@/modules/ensino/professor-indisponibilidade/infrastructure";
 import { ProfessorIndisponibilidadeTypeOrmRepositoryAdapter } from "@/modules/ensino/professor-indisponibilidade/infrastructure/persistence/typeorm";
+import { ProfessorIndisponibilidadeGraphqlResolver } from "@/modules/ensino/professor-indisponibilidade/presentation/graphql/professor-indisponibilidade.graphql.resolver";
+import { ProfessorIndisponibilidadeLegacyService } from "@/modules/ensino/professor-indisponibilidade/presentation/professor-indisponibilidade.legacy.service";
+import { ProfessorIndisponibilidadeRestController } from "@/modules/ensino/professor-indisponibilidade/presentation/rest/professor-indisponibilidade.rest.controller";
 import { PerfilModule } from "@/server/nest/modules/perfil";
-import { ProfessorIndisponibilidadeGraphqlResolver } from "./graphql/professor-indisponibilidade.graphql.resolver";
-import { ProfessorIndisponibilidadeLegacyService } from "./professor-indisponibilidade.legacy.service";
-import { ProfessorIndisponibilidadeRestController } from "./rest/professor-indisponibilidade.rest.controller";
 
 @Module({
   imports: [PerfilModule, TypeormModule],

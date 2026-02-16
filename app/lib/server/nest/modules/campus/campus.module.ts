@@ -5,9 +5,9 @@ import {
   CampusAuthzRegistrySetup,
   CampusTypeOrmRepositoryAdapter,
 } from "@/modules/sisgea/campus/infrastructure";
+import { CampusGraphqlResolver } from "@/modules/sisgea/campus/presentation/graphql/campus.graphql.resolver";
+import { CampusRestController } from "@/modules/sisgea/campus/presentation/rest/campus.rest.controller";
 import { EnderecoModule } from "@/server/nest/modules/endereco";
-import { CampusGraphqlResolver } from "./graphql/campus.graphql.resolver";
-import { CampusRestController } from "./rest/campus.rest.controller";
 
 @Module({
   imports: [EnderecoModule],

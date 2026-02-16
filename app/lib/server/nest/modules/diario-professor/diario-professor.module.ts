@@ -4,10 +4,10 @@ import { DIARIO_PROFESSOR_REPOSITORY_PORT } from "@/modules/ensino/diario-profes
 import { DiarioProfessorService } from "@/modules/ensino/diario-professor/application/use-cases/diario-professor.service";
 import { DiarioProfessorAuthzRegistrySetup } from "@/modules/ensino/diario-professor/infrastructure";
 import { DiarioProfessorTypeOrmRepositoryAdapter } from "@/modules/ensino/diario-professor/infrastructure/persistence/typeorm";
+import { DiarioProfessorGraphqlResolver } from "@/modules/ensino/diario-professor/presentation/graphql/diario-professor.graphql.resolver";
+import { DiarioProfessorController } from "@/modules/ensino/diario-professor/presentation/rest";
 import { DiarioModule } from "@/server/nest/modules/diario";
 import { PerfilModule } from "@/server/nest/modules/perfil";
-import { DiarioProfessorGraphqlResolver } from "./graphql/diario-professor.graphql.resolver";
-import { DiarioProfessorController } from "./rest";
 
 @Module({
   imports: [DiarioModule, PerfilModule],
