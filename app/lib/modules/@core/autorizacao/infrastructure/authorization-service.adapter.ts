@@ -1,10 +1,11 @@
 import { Inject, Injectable, Scope } from "@nestjs/common";
 import { REQUEST } from "@nestjs/core";
 import type { Request } from "express";
-import { AccessContext } from "@/modules/@core/contexto-acesso";
+import { DataSource } from "typeorm";
 import type { IRequestActor } from "@/modules/@core/ator-requisicao";
-import { DatabaseContextService } from "@/modules/@database-context";
+import { AccessContext } from "@/modules/@core/contexto-acesso";
 import type { IAuthorizationPayload, IAuthorizationServicePort } from "@/modules/@shared";
+import { APP_DATA_SOURCE_TOKEN } from "@/modules/@shared/infrastructure/persistence/typeorm";
 
 /**
  * Adapter que implementa o port de autorização usando AccessContext.
@@ -18,10 +19,13 @@ import type { IAuthorizationPayload, IAuthorizationServicePort } from "@/modules
 export class AuthorizationServiceAdapter implements IAuthorizationServicePort {
   private readonly accessContext: AccessContext;
 
-  constructor(@Inject(REQUEST) request: Request, databaseContext: DatabaseContextService) {
+  constructor(
+    @Inject(REQUEST) request: Request,
+    @Inject(APP_DATA_SOURCE_TOKEN) dataSource: DataSource,
+  ) {
     // O request.user é populado pelo middleware de autenticação
     const requestActor = ((request as any).user as IRequestActor) ?? null;
-    this.accessContext = new AccessContext(databaseContext, requestActor);
+    this.accessContext = new AccessContext(dataSource, requestActor);
   }
 
   /**

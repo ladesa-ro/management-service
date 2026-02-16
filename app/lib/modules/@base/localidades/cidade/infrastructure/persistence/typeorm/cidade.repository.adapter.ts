@@ -1,5 +1,6 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
+import { DataSource } from "typeorm";
 import type {
   CidadeFindOneInputDto,
   CidadeFindOneOutputDto,
@@ -7,14 +8,15 @@ import type {
   CidadeListOutputDto,
   ICidadeRepositoryPort,
 } from "@/modules/@base/localidades/cidade";
-import { DatabaseContextService } from "@/modules/@database-context";
 import {
+  APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
   type ITypeOrmPaginationConfig,
   NestJsPaginateAdapter,
   paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type { CidadeEntity } from "./cidade.entity";
+import { createCidadeRepository } from "./cidade.repository";
 
 /**
  * Adapter TypeORM que implementa o port de repositório de Cidade.
@@ -37,14 +39,14 @@ export class CidadeTypeOrmRepositoryAdapter
   protected readonly outputDtoName = "CidadeFindOneOutputDto";
 
   constructor(
-    protected readonly databaseContext: DatabaseContextService,
+    @Inject(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
     protected readonly paginationAdapter: NestJsPaginateAdapter,
   ) {
     super();
   }
 
   protected get repository() {
-    return this.databaseContext.cidadeRepository;
+    return createCidadeRepository(this.dataSource);
   }
 
   protected getPaginateConfig(): ITypeOrmPaginationConfig<CidadeEntity> {

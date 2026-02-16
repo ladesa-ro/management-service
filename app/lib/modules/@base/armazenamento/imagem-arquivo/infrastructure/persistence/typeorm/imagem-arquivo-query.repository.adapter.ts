@@ -1,5 +1,6 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
+import { DataSource } from "typeorm";
 import type {
   ImagemArquivoFindOneInputDto,
   ImagemArquivoFindOneOutputDto,
@@ -7,14 +8,15 @@ import type {
   ImagemArquivoListOutputDto,
 } from "@/modules/@base/armazenamento/imagem-arquivo/application/dtos";
 import type { IImagemArquivoQueryRepositoryPort } from "@/modules/@base/armazenamento/imagem-arquivo/application/ports";
-import { DatabaseContextService } from "@/modules/@database-context";
 import {
+  APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
   type ITypeOrmPaginationConfig,
   NestJsPaginateAdapter,
   paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type { ImagemArquivoEntity } from "./imagem-arquivo.entity";
+import { createImagemArquivoRepository } from "./imagem-arquivo.repository";
 
 /**
  * Adapter TypeORM que implementa o port de repositório de consulta de ImagemArquivo.
@@ -36,14 +38,14 @@ export class ImagemArquivoQueryTypeOrmRepositoryAdapter
   protected readonly outputDtoName = "ImagemArquivoFindOneOutputDto";
 
   constructor(
-    protected readonly databaseContext: DatabaseContextService,
+    @Inject(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
     protected readonly paginationAdapter: NestJsPaginateAdapter,
   ) {
     super();
   }
 
   protected get repository() {
-    return this.databaseContext.imagemArquivoRepository;
+    return createImagemArquivoRepository(this.dataSource);
   }
 
   protected getPaginateConfig(): ITypeOrmPaginationConfig<ImagemArquivoEntity> {

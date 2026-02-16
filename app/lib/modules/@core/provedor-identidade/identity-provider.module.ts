@@ -1,11 +1,11 @@
 import { Module } from "@nestjs/common";
-import { IDENTITY_PROVIDER_PORT } from "./ports";
 import {
   IdentityProviderService,
   JwksRsaClientModule,
   KeycloakModule,
   OpenidConnectModule,
 } from "./infrastructure";
+import { IDENTITY_PROVIDER_PORT } from "./ports";
 
 /**
  * Módulo de Identity Provider.

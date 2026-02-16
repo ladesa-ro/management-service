@@ -1,7 +1,6 @@
 import { map } from "lodash";
-import type { DeepPartial, Repository } from "typeorm";
+import type { DataSource, DeepPartial, Repository } from "typeorm";
 import type { AccessContext } from "@/modules/@core/contexto-acesso";
-import type { DatabaseContextService } from "@/modules/@database-context";
 import type { IPaginationCriteria } from "@/modules/@shared";
 import type { NestJsPaginateAdapter } from "./pagination/nestjs-paginate.adapter";
 import type { ITypeOrmPaginationConfig } from "./pagination-config.types";
@@ -65,9 +64,9 @@ export abstract class BaseTypeOrmRepositoryAdapter<
    */
   protected abstract readonly outputDtoName: string;
   /**
-   * Acesso ao contexto do banco de dados
+   * Acesso ao DataSource
    */
-  protected abstract readonly databaseContext: DatabaseContextService;
+  protected abstract readonly dataSource: DataSource;
   /**
    * Adapter de paginação (pode ser undefined para recursos sem listagem)
    */

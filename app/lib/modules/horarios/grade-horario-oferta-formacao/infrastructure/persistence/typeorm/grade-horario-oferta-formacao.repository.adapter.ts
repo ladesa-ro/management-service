@@ -1,7 +1,8 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
-import { DatabaseContextService } from "@/modules/@database-context";
+import { DataSource } from "typeorm";
 import {
+  APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
   type ITypeOrmPaginationConfig,
   NestJsPaginateAdapter,
@@ -15,6 +16,7 @@ import type {
 } from "@/modules/horarios/grade-horario-oferta-formacao";
 import type { IGradeHorarioOfertaFormacaoRepositoryPort } from "@/modules/horarios/grade-horario-oferta-formacao/application/ports";
 import type { GradeHorarioOfertaFormacaoEntity } from "./grade-horario-oferta-formacao.entity";
+import { createGradeHorarioOfertaFormacaoRepository } from "./grade-horario-oferta-formacao.repository";
 
 @Injectable()
 export class GradeHorarioOfertaFormacaoTypeOrmRepositoryAdapter
@@ -32,14 +34,14 @@ export class GradeHorarioOfertaFormacaoTypeOrmRepositoryAdapter
   protected readonly outputDtoName = "GradeHorarioOfertaFormacaoFindOneOutputDto";
 
   constructor(
-    protected readonly databaseContext: DatabaseContextService,
+    @Inject(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
     protected readonly paginationAdapter: NestJsPaginateAdapter,
   ) {
     super();
   }
 
   protected get repository() {
-    return this.databaseContext.gradeHorarioOfertaFormacaoRepository;
+    return createGradeHorarioOfertaFormacaoRepository(this.dataSource);
   }
 
   protected getPaginateConfig(): ITypeOrmPaginationConfig<GradeHorarioOfertaFormacaoEntity> {

@@ -1,4 +1,5 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
+import { DataSource } from "typeorm";
 import type {
   EnderecoFindOneInputDto,
   EnderecoFindOneOutputDto,
@@ -7,13 +8,14 @@ import type {
   IEnderecoRepositoryPort,
 } from "@/modules/@base/localidades/endereco";
 import type { EnderecoEntity } from "@/modules/@base/localidades/endereco/infrastructure/persistence/typeorm/index";
-import { DatabaseContextService } from "@/modules/@database-context";
 import {
+  APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
   type ITypeOrmPaginationConfig,
   NestJsPaginateAdapter,
   paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
+import { createEnderecoRepository } from "./endereco.repository";
 
 @Injectable()
 export class EnderecoTypeOrmRepositoryAdapter
@@ -31,14 +33,14 @@ export class EnderecoTypeOrmRepositoryAdapter
   protected readonly outputDtoName = "EnderecoFindOneOutputDto";
 
   constructor(
-    protected readonly databaseContext: DatabaseContextService,
+    @Inject(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
     protected readonly paginationAdapter: NestJsPaginateAdapter,
   ) {
     super();
   }
 
   protected get repository() {
-    return this.databaseContext.enderecoRepository;
+    return createEnderecoRepository(this.dataSource);
   }
 
   // Custom method for internal lookup

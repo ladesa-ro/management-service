@@ -1,7 +1,8 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
-import { DatabaseContextService } from "@/modules/@database-context";
+import { DataSource } from "typeorm";
 import {
+  APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
   type ITypeOrmPaginationConfig,
   NestJsPaginateAdapter,
@@ -15,6 +16,7 @@ import type {
 } from "@/modules/horarios/aula/application/dtos";
 import type { IAulaRepositoryPort } from "@/modules/horarios/aula/application/ports";
 import type { AulaEntity } from "./aula.entity";
+import { createAulaRepository } from "./aula.repository";
 
 @Injectable()
 export class AulaTypeOrmRepositoryAdapter
@@ -32,14 +34,14 @@ export class AulaTypeOrmRepositoryAdapter
   protected readonly outputDtoName = "AulaFindOneOutputDto";
 
   constructor(
-    protected readonly databaseContext: DatabaseContextService,
+    @Inject(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
     protected readonly paginationAdapter: NestJsPaginateAdapter,
   ) {
     super();
   }
 
   protected get repository() {
-    return this.databaseContext.aulaRepository;
+    return createAulaRepository(this.dataSource);
   }
 
   protected getPaginateConfig(): ITypeOrmPaginationConfig<AulaEntity> {

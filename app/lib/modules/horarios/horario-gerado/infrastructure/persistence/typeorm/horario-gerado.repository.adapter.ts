@@ -1,7 +1,8 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
-import { DatabaseContextService } from "@/modules/@database-context";
+import { DataSource } from "typeorm";
 import {
+  APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
   type ITypeOrmPaginationConfig,
   NestJsPaginateAdapter,
@@ -15,6 +16,7 @@ import type {
   IHorarioGeradoRepositoryPort,
 } from "@/modules/horarios/horario-gerado";
 import type { HorarioGeradoEntity } from "./horario-gerado.entity";
+import { createHorarioGeradoRepository } from "./horario-gerado.repository";
 
 @Injectable()
 export class HorarioGeradoTypeOrmRepositoryAdapter
@@ -32,14 +34,14 @@ export class HorarioGeradoTypeOrmRepositoryAdapter
   protected readonly outputDtoName = "HorarioGeradoFindOneOutputDto";
 
   constructor(
-    protected readonly databaseContext: DatabaseContextService,
+    @Inject(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
     protected readonly paginationAdapter: NestJsPaginateAdapter,
   ) {
     super();
   }
 
   protected get repository() {
-    return this.databaseContext.horarioGeradoRepository;
+    return createHorarioGeradoRepository(this.dataSource);
   }
 
   protected getPaginateConfig(): ITypeOrmPaginationConfig<HorarioGeradoEntity> {

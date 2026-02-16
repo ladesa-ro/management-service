@@ -1,5 +1,6 @@
 import { castArray } from "lodash";
-import { Brackets, type SelectQueryBuilder } from "typeorm";
+import { Brackets, type DataSource, type SelectQueryBuilder } from "typeorm";
+import type { IRequestActor } from "@/modules/@core/ator-requisicao";
 import {
   AuthzPolicyPublic,
   type IAuthzPolicy,
@@ -8,8 +9,6 @@ import {
   type IAuthzStatementFilter,
   type IBaseAuthzStatementContext,
 } from "@/modules/@core/autorizacao";
-import type { IRequestActor } from "@/modules/@core/ator-requisicao";
-import { DatabaseContextService } from "@/modules/@database-context";
 import { createForbiddenExceptionForAction } from "@/modules/@shared/application/errors";
 import type { IAccessContext, IAuthzPayload } from "../domain";
 import type { ResourceAuthzRegistry } from "./resource-authz-registry";
@@ -27,7 +26,7 @@ export class AccessContext implements IAccessContext {
   readonly #permissionCheckEnabled: boolean;
 
   constructor(
-    readonly databaseContext: DatabaseContextService,
+    readonly dataSource: DataSource,
     readonly requestActor: IRequestActor | null,
     permissionCheckEnabled = false,
     private readonly resourceRegistry?: ResourceAuthzRegistry,
@@ -147,7 +146,7 @@ export class AccessContext implements IAccessContext {
       );
     }
 
-    const qb = this.resourceRegistry.getQueryBuilderForAction(action, this.databaseContext);
+    const qb = this.resourceRegistry.getQueryBuilderForAction(action, this.dataSource);
 
     if (!qb) {
       throw new TypeError(

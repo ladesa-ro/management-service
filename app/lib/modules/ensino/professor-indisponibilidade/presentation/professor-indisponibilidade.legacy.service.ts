@@ -1,12 +1,14 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import { BadRequestException, Inject, Injectable } from "@nestjs/common";
 import { map, pick } from "lodash";
+import { DataSource } from "typeorm";
 import type { AccessContext } from "@/modules/@core/contexto-acesso";
-import { DatabaseContextService } from "@/modules/@database-context";
 import {
+  APP_DATA_SOURCE_TOKEN,
   paginateConfig,
   QbEfficientLoad,
   SearchService,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
+import { createProfessorIndisponibilidadeRepository } from "@/modules/ensino/professor-indisponibilidade/infrastructure/persistence/typeorm/professor-indisponibilidade.repository";
 import { ProfessorIndisponibilidadeEntity } from "@/modules/ensino/professor-indisponibilidade/infrastructure/persistence/typeorm";
 import type {
   ProfessorIndisponibilidadeCreateInputRestDto,
@@ -27,12 +29,12 @@ const aliasIndisponibilidade = "indisponibilidade";
 @Injectable()
 export class ProfessorIndisponibilidadeLegacyService {
   constructor(
-    private databaseContext: DatabaseContextService,
+    @Inject(APP_DATA_SOURCE_TOKEN) private readonly dataSource: DataSource,
     private searchService: SearchService,
   ) {}
 
   get indisponibilidadeRepository() {
-    return this.databaseContext.professorIndisponibilidadeRepository;
+    return createProfessorIndisponibilidadeRepository(this.dataSource);
   }
 
   // =========================================================

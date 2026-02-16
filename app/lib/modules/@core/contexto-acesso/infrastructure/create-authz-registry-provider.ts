@@ -1,6 +1,6 @@
-import { Injectable, type OnModuleInit, type Type } from "@nestjs/common";
-import type { ObjectLiteral, Repository } from "typeorm";
-import { DatabaseContextService } from "@/modules/@database-context";
+import { Inject, Injectable, type OnModuleInit, type Type } from "@nestjs/common";
+import type { DataSource, ObjectLiteral, Repository } from "typeorm";
+import { APP_DATA_SOURCE_TOKEN } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import { type ResourceActions, ResourceAuthzRegistry } from "./resource-authz-registry";
 
 /**
@@ -9,32 +9,27 @@ import { type ResourceActions, ResourceAuthzRegistry } from "./resource-authz-re
  * Elimina a necessidade de criar uma classe boilerplate por módulo.
  *
  * @param resourceName - Nome do recurso (ex: "campus", "vinculo")
- * @param getRepository - Função que obtém o repositório a partir do DatabaseContextService
+ * @param getRepository - Função que obtém o repositório a partir do DataSource
  * @param options - Opções opcionais: alias (default: resourceName), actions (default: find+update+delete)
  *
  * @example
  * ```typescript
  * // No módulo NestJS:
  * providers: [
- *   createAuthzRegistryProvider("campus", (db) => db.campusRepository),
+ *   createAuthzRegistryProvider("campus", (ds) => createCampusRepository(ds)),
  * ]
  *
  * // Read-only:
  * providers: [
- *   createAuthzRegistryProvider("estado", (db) => db.estadoRepository, {
+ *   createAuthzRegistryProvider("estado", (ds) => createEstadoRepository(ds), {
  *     actions: { find: true },
  *   }),
- * ]
- *
- * // Alias diferente do resource name:
- * providers: [
- *   createAuthzRegistryProvider("vinculo", (db) => db.perfilRepository),
  * ]
  * ```
  */
 export function createAuthzRegistryProvider(
   resourceName: string,
-  getRepository: (db: DatabaseContextService) => Repository<ObjectLiteral>,
+  getRepository: (dataSource: DataSource) => Repository<ObjectLiteral>,
   options?: {
     alias?: string;
     actions?: ResourceActions;
@@ -47,7 +42,8 @@ export function createAuthzRegistryProvider(
   class AuthzRegistrySetup implements OnModuleInit {
     constructor(
       private readonly registry: ResourceAuthzRegistry,
-      private readonly databaseContext: DatabaseContextService,
+      @Inject(APP_DATA_SOURCE_TOKEN)
+      private readonly dataSource: DataSource,
     ) {}
 
     onModuleInit() {
@@ -55,7 +51,7 @@ export function createAuthzRegistryProvider(
         resourceName,
         {
           alias,
-          getQueryBuilder: () => getRepository(this.databaseContext).createQueryBuilder(alias),
+          getQueryBuilder: () => getRepository(this.dataSource).createQueryBuilder(alias),
         },
         actions,
       );

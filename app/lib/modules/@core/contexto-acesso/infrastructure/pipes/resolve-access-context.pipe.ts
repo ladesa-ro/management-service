@@ -1,7 +1,8 @@
 import { Inject, Injectable, Optional, type PipeTransform } from "@nestjs/common";
+import { DataSource } from "typeorm";
 import type { IRequestActor } from "@/modules/@core/ator-requisicao";
-import { DatabaseContextService } from "@/modules/@database-context";
 import { CONFIG_PORT, type IConfigPort } from "@/modules/@shared/application/ports/out/config";
+import { APP_DATA_SOURCE_TOKEN } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import { AccessContext } from "../access-context";
 import { RESOURCE_AUTHZ_REGISTRY, ResourceAuthzRegistry } from "../resource-authz-registry";
 
@@ -12,7 +13,8 @@ import { RESOURCE_AUTHZ_REGISTRY, ResourceAuthzRegistry } from "../resource-auth
 @Injectable()
 export class ResolveAccessContextPipe implements PipeTransform {
   constructor(
-    private readonly databaseContext: DatabaseContextService,
+    @Inject(APP_DATA_SOURCE_TOKEN)
+    private readonly dataSource: DataSource,
     @Inject(CONFIG_PORT)
     private readonly config: IConfigPort,
     @Optional()
@@ -24,7 +26,7 @@ export class ResolveAccessContextPipe implements PipeTransform {
     const permissionCheckEnabled = this.config.getPermissionCheckEnabled();
 
     return new AccessContext(
-      this.databaseContext,
+      this.dataSource,
       requestActor ?? null,
       permissionCheckEnabled,
       this.resourceRegistry,

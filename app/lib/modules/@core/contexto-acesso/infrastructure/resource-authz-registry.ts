@@ -1,6 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import type { SelectQueryBuilder } from "typeorm";
-import { DatabaseContextService } from "@/modules/@database-context";
+import type { DataSource, SelectQueryBuilder } from "typeorm";
 
 /**
  * Configuração de um recurso de autorização.
@@ -14,7 +13,7 @@ export interface IResourceAuthzConfig {
   /**
    * Função que retorna o query builder para o recurso.
    */
-  getQueryBuilder: (databaseContext: DatabaseContextService) => SelectQueryBuilder<any>;
+  getQueryBuilder: (dataSource: DataSource) => SelectQueryBuilder<any>;
 }
 
 /**
@@ -40,7 +39,7 @@ export interface IResourceRegistration {
  * // No módulo do recurso
  * resourceRegistry.register("estado", {
  *   alias: "estado",
- *   getQueryBuilder: (db) => db.estadoRepository.createQueryBuilder("estado"),
+ *   getQueryBuilder: (ds) => createEstadoRepository(ds).createQueryBuilder("estado"),
  * }, { find: true });
  * ```
  */
@@ -74,10 +73,7 @@ export class ResourceAuthzRegistry {
    * Obtém o query builder para uma ação.
    * Formato da action: "recurso:acao" (ex: "estado:find")
    */
-  getQueryBuilderForAction(
-    action: string,
-    databaseContext: DatabaseContextService,
-  ): SelectQueryBuilder<any> | null {
+  getQueryBuilderForAction(action: string, dataSource: DataSource): SelectQueryBuilder<any> | null {
     const [resourceName, actionName] = action.split(":");
 
     if (!resourceName || !actionName) {
@@ -90,7 +86,7 @@ export class ResourceAuthzRegistry {
       return null;
     }
 
-    return registration.config.getQueryBuilder(databaseContext);
+    return registration.config.getQueryBuilder(dataSource);
   }
 
   /**

@@ -1,7 +1,8 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
-import { DatabaseContextService } from "@/modules/@database-context";
+import { DataSource } from "typeorm";
 import {
+  APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
   type ITypeOrmPaginationConfig,
   NestJsPaginateAdapter,
@@ -15,6 +16,7 @@ import type {
 } from "@/modules/ambientes/bloco";
 import type { IBlocoRepositoryPort } from "@/modules/ambientes/bloco/application/ports";
 import type { BlocoEntity } from "./bloco.entity";
+import { createBlocoRepository } from "./bloco.repository";
 
 /**
  * Adapter TypeORM que implementa o port de repositório de Bloco.
@@ -36,14 +38,14 @@ export class BlocoTypeOrmRepositoryAdapter
   protected readonly outputDtoName = "BlocoFindOneOutputDto";
 
   constructor(
-    protected readonly databaseContext: DatabaseContextService,
+    @Inject(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
     protected readonly paginationAdapter: NestJsPaginateAdapter,
   ) {
     super();
   }
 
   protected get repository() {
-    return this.databaseContext.blocoRepository;
+    return createBlocoRepository(this.dataSource);
   }
 
   protected getPaginateConfig(): ITypeOrmPaginationConfig<BlocoEntity> {

@@ -1,7 +1,8 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
-import { DatabaseContextService } from "@/modules/@database-context";
+import { DataSource } from "typeorm";
 import {
+  APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
   type ITypeOrmPaginationConfig,
   NestJsPaginateAdapter,
@@ -15,6 +16,7 @@ import type {
 } from "@/modules/horarios/dia-calendario";
 import type { IDiaCalendarioRepositoryPort } from "@/modules/horarios/dia-calendario/application/ports";
 import type { DiaCalendarioEntity } from "./dia-calendario.entity";
+import { createDiaCalendarioRepository } from "./dia-calendario.repository";
 
 @Injectable()
 export class DiaCalendarioTypeOrmRepositoryAdapter
@@ -32,14 +34,14 @@ export class DiaCalendarioTypeOrmRepositoryAdapter
   protected readonly outputDtoName = "DiaCalendarioFindOneOutputDto";
 
   constructor(
-    protected readonly databaseContext: DatabaseContextService,
+    @Inject(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
     protected readonly paginationAdapter: NestJsPaginateAdapter,
   ) {
     super();
   }
 
   protected get repository() {
-    return this.databaseContext.diaCalendarioRepository;
+    return createDiaCalendarioRepository(this.dataSource);
   }
 
   protected getPaginateConfig(): ITypeOrmPaginationConfig<DiaCalendarioEntity> {

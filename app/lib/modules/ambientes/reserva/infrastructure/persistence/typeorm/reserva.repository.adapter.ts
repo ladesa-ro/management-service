@@ -1,7 +1,8 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
-import { DatabaseContextService } from "@/modules/@database-context";
+import { DataSource } from "typeorm";
 import {
+  APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
   type ITypeOrmPaginationConfig,
   NestJsPaginateAdapter,
@@ -15,6 +16,7 @@ import type {
 } from "@/modules/ambientes/reserva/application/dtos";
 import type { IReservaRepositoryPort } from "@/modules/ambientes/reserva/application/ports";
 import type { ReservaEntity } from "./reserva.entity";
+import { createReservaRepository } from "./reserva.repository";
 
 @Injectable()
 export class ReservaTypeOrmRepositoryAdapter
@@ -32,14 +34,14 @@ export class ReservaTypeOrmRepositoryAdapter
   protected readonly outputDtoName = "ReservaFindOneOutputDto";
 
   constructor(
-    protected readonly databaseContext: DatabaseContextService,
+    @Inject(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
     protected readonly paginationAdapter: NestJsPaginateAdapter,
   ) {
     super();
   }
 
   protected get repository() {
-    return this.databaseContext.reservaRepository;
+    return createReservaRepository(this.dataSource);
   }
 
   protected getPaginateConfig(): ITypeOrmPaginationConfig<ReservaEntity> {

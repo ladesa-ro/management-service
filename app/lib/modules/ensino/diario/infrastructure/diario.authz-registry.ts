@@ -1,6 +1,6 @@
 import { createAuthzRegistryProvider } from "@/modules/@core/contexto-acesso";
+import { createDiarioRepository } from "./persistence/typeorm/diario.repository";
 
-export const DiarioAuthzRegistrySetup = createAuthzRegistryProvider(
-  "diario",
-  (db) => db.diarioRepository,
+export const DiarioAuthzRegistrySetup = createAuthzRegistryProvider("diario", (ds) =>
+  createDiarioRepository(ds),
 );

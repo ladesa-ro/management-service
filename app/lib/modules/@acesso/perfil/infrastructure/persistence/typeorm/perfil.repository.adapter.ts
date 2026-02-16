@@ -1,6 +1,7 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
 import type { DeepPartial } from "typeorm";
+import { DataSource } from "typeorm";
 import type {
   PerfilFindOneInputDto,
   PerfilFindOneOutputDto,
@@ -10,9 +11,9 @@ import type {
 import type { IPerfilRepositoryPort } from "@/modules/@acesso/perfil/application/ports";
 import type { UsuarioEntity } from "@/modules/@acesso/usuario/infrastructure/persistence/typeorm";
 import type { AccessContext } from "@/modules/@core/contexto-acesso";
-import { DatabaseContextService } from "@/modules/@database-context";
 import type { IPaginationCriteria, IPaginationResult } from "@/modules/@shared";
 import {
+  APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
   type ITypeOrmPaginationConfig,
   NestJsPaginateAdapter,
@@ -20,6 +21,7 @@ import {
   QbEfficientLoad,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type { PerfilEntity } from "./perfil.entity";
+import { createPerfilRepository } from "./perfil.repository";
 
 @Injectable()
 export class PerfilTypeOrmRepositoryAdapter
@@ -37,14 +39,14 @@ export class PerfilTypeOrmRepositoryAdapter
   protected readonly outputDtoName = "PerfilFindOneOutputDto";
 
   constructor(
-    protected readonly databaseContext: DatabaseContextService,
+    @Inject(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
     protected readonly paginationAdapter: NestJsPaginateAdapter,
   ) {
     super();
   }
 
   protected get repository() {
-    return this.databaseContext.perfilRepository;
+    return createPerfilRepository(this.dataSource);
   }
 
   async findAllActiveByUsuarioId(

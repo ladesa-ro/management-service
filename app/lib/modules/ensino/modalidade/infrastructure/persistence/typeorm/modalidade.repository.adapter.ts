@@ -1,6 +1,7 @@
-import { Injectable } from "@nestjs/common";
-import { DatabaseContextService } from "@/modules/@database-context";
+import { Inject, Injectable } from "@nestjs/common";
+import { DataSource } from "typeorm";
 import {
+  APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
   type ITypeOrmPaginationConfig,
   NestJsPaginateAdapter,
@@ -14,6 +15,7 @@ import type {
   ModalidadeListOutputDto,
 } from "@/modules/ensino/modalidade";
 import type { ModalidadeEntity } from "./modalidade.entity";
+import { createModalidadeRepository } from "./modalidade.repository";
 
 /**
  * Adapter TypeORM que implementa o port de repositório de Modalidade.
@@ -35,14 +37,14 @@ export class ModalidadeTypeOrmRepositoryAdapter
   protected readonly outputDtoName = "ModalidadeFindOneOutputDto";
 
   constructor(
-    protected readonly databaseContext: DatabaseContextService,
+    @Inject(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
     protected readonly paginationAdapter: NestJsPaginateAdapter,
   ) {
     super();
   }
 
   protected get repository() {
-    return this.databaseContext.modalidadeRepository;
+    return createModalidadeRepository(this.dataSource);
   }
 
   protected getPaginateConfig(): ITypeOrmPaginationConfig<ModalidadeEntity> {
