@@ -7,7 +7,7 @@ import {
   TurmaListInputDto,
   TurmaUpdateInputDto,
 } from "@/modules/ensino/turma";
-import { createListOutputMapper, mapDatedFields } from "@/server/nest/shared/mappers";
+import { createListOutputMapper, mapDatedFields } from "@/modules/@shared/application/mappers";
 import {
   TurmaCreateInputGraphQlDto,
   TurmaFindOneOutputGraphQlDto,

@@ -9,7 +9,7 @@ import {
   createFindOneInputMapper,
   createListInputMapper,
   createListOutputMapper,
-} from "@/server/nest/shared/mappers";
+} from "@/modules/@shared/application/mappers";
 import {
   DisponibilidadeCreateInputRestDto,
   DisponibilidadeFindOneOutputRestDto,

@@ -11,7 +11,7 @@ import {
   createListInputMapper,
   createListOutputMapper,
   mapDatedFields,
-} from "@/server/nest/shared/mappers";
+} from "@/modules/@shared/application/mappers";
 import {
   CampusCreateInputRestDto,
   CampusFindOneInputRestDto,

@@ -7,7 +7,7 @@ import {
   CalendarioLetivoListInputDto,
   CalendarioLetivoUpdateInputDto,
 } from "@/modules/horarios/calendario-letivo";
-import { createListOutputMapper, mapDatedFields } from "@/server/nest/shared/mappers";
+import { createListOutputMapper, mapDatedFields } from "@/modules/@shared/application/mappers";
 import {
   CalendarioLetivoCreateInputGraphQlDto,
   CalendarioLetivoFindOneOutputGraphQlDto,

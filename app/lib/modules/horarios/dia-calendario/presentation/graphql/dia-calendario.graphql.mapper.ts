@@ -6,7 +6,7 @@ import {
   DiaCalendarioListInputDto,
   DiaCalendarioUpdateInputDto,
 } from "@/modules/horarios/dia-calendario";
-import { createListOutputMapper, mapDatedFields } from "@/server/nest/shared/mappers";
+import { createListOutputMapper, mapDatedFields } from "@/modules/@shared/application/mappers";
 import {
   DiaCalendarioCreateInputGraphQlDto,
   DiaCalendarioFindOneOutputGraphQlDto,

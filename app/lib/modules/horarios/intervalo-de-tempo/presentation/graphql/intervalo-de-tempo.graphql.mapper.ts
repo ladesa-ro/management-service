@@ -3,7 +3,7 @@ import {
   IntervaloDeTempoFindOneOutputDto,
   IntervaloDeTempoListInputDto,
 } from "@/modules/horarios/intervalo-de-tempo";
-import { createListOutputMapper, mapDatedFields } from "@/server/nest/shared/mappers";
+import { createListOutputMapper, mapDatedFields } from "@/modules/@shared/application/mappers";
 import {
   IntervaloDeTempoFindOneOutputGraphQlDto,
   IntervaloDeTempoListInputGraphQlDto,

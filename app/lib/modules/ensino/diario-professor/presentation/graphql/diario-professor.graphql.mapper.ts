@@ -6,7 +6,7 @@ import {
   DiarioProfessorListInputDto,
   DiarioProfessorUpdateInputDto,
 } from "@/modules/ensino/diario-professor";
-import { createListOutputMapper, mapDatedFields } from "@/server/nest/shared/mappers";
+import { createListOutputMapper, mapDatedFields } from "@/modules/@shared/application/mappers";
 import {
   DiarioProfessorCreateInputGraphQlDto,
   DiarioProfessorDiarioOutputGraphQlDto,

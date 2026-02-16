@@ -3,7 +3,7 @@ import {
   EnderecoFindOneInputDto,
   EnderecoFindOneOutputDto,
 } from "@/modules/@base/localidades/endereco";
-import { mapDatedFields } from "@/server/nest/shared/mappers";
+import { mapDatedFields } from "@/modules/@shared/application/mappers";
 import { EnderecoFindOneOutputGraphQlDto } from "./endereco.graphql.dto";
 
 export class EnderecoGraphqlMapper {

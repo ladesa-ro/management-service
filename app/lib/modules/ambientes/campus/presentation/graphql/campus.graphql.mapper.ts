@@ -6,7 +6,7 @@ import {
   CampusListInputDto,
   CampusUpdateInputDto,
 } from "@/modules/ambientes/campus";
-import { createListOutputMapper, mapDatedFields } from "@/server/nest/shared/mappers";
+import { createListOutputMapper, mapDatedFields } from "@/modules/@shared/application/mappers";
 import {
   CampusCreateInputGraphQlDto,
   CampusFindOneOutputGraphQlDto,

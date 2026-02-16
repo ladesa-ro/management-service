@@ -5,7 +5,7 @@ import {
   DisciplinaListInputDto,
   DisciplinaUpdateInputDto,
 } from "@/modules/ensino/disciplina";
-import { createListOutputMapper, mapDatedFields } from "@/server/nest/shared/mappers";
+import { createListOutputMapper, mapDatedFields } from "@/modules/@shared/application/mappers";
 import {
   DisciplinaCreateInputGraphQlDto,
   DisciplinaFindOneOutputGraphQlDto,

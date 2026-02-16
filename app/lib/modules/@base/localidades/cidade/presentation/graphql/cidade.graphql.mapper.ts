@@ -4,7 +4,7 @@ import {
   CidadeListInputDto,
 } from "@/modules/@base/localidades/cidade";
 import { EstadoGraphqlMapper } from "@/modules/@base/localidades/estado/presentation/graphql/estado.graphql.mapper";
-import { createListOutputMapper } from "@/server/nest/shared/mappers";
+import { createListOutputMapper } from "@/modules/@shared/application/mappers";
 import {
   CidadeFindOneOutputGraphQlDto,
   CidadeListInputGraphQlDto,

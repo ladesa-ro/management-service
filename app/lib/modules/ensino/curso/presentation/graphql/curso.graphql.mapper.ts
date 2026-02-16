@@ -7,7 +7,7 @@ import {
   CursoUpdateInputDto,
 } from "@/modules/ensino/curso";
 import { OfertaFormacaoGraphqlMapper } from "@/modules/ensino/oferta-formacao/presentation/graphql/oferta-formacao.graphql.mapper";
-import { createListOutputMapper, mapDatedFields } from "@/server/nest/shared/mappers";
+import { createListOutputMapper, mapDatedFields } from "@/modules/@shared/application/mappers";
 import {
   CursoCreateInputGraphQlDto,
   CursoFindOneOutputGraphQlDto,

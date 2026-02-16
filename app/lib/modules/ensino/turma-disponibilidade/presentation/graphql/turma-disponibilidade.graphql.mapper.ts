@@ -6,7 +6,7 @@ import {
   TurmaDisponibilidadeListInputDto,
   TurmaDisponibilidadeUpdateInputDto,
 } from "@/modules/ensino/turma-disponibilidade";
-import { createListOutputMapper, mapDatedFields } from "@/server/nest/shared/mappers";
+import { createListOutputMapper, mapDatedFields } from "@/modules/@shared/application/mappers";
 import {
   TurmaDisponibilidadeCreateInputGraphQlDto,
   TurmaDisponibilidadeFindOneOutputGraphQlDto,

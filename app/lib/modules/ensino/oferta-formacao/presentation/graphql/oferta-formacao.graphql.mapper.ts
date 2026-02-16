@@ -6,7 +6,7 @@ import {
   OfertaFormacaoListInputDto,
   OfertaFormacaoUpdateInputDto,
 } from "@/modules/ensino/oferta-formacao";
-import { createListOutputMapper, mapDatedFields } from "@/server/nest/shared/mappers";
+import { createListOutputMapper, mapDatedFields } from "@/modules/@shared/application/mappers";
 import {
   OfertaFormacaoCreateInputGraphQlDto,
   OfertaFormacaoFindOneOutputGraphQlDto,

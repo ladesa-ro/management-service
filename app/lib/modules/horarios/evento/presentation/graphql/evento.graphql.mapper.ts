@@ -6,7 +6,7 @@ import {
   EventoListInputDto,
   EventoUpdateInputDto,
 } from "@/modules/horarios/evento";
-import { createListOutputMapper, mapDatedFields } from "@/server/nest/shared/mappers";
+import { createListOutputMapper, mapDatedFields } from "@/modules/@shared/application/mappers";
 import {
   AmbienteFindOneOutputForEventoGraphQlDto,
   EventoCreateInputGraphQlDto,

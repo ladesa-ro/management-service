@@ -10,7 +10,7 @@ import {
   createFindOneInputMapper,
   createListInputMapper,
   createListOutputMapper,
-} from "@/server/nest/shared/mappers";
+} from "@/modules/@shared/application/mappers";
 import {
   DiaCalendarioCreateInputRestDto,
   DiaCalendarioFindOneInputRestDto,
