@@ -1,5 +1,5 @@
 import { BaseDatedEntity, type ScalarDate } from "@/modules/@shared";
-import type { CalendarioLetivo } from "@/modules/sisgha/calendario-letivo";
+import type { CalendarioLetivo } from "@/modules/horarios/calendario-letivo";
 import type { IEtapa, IEtapaCreate, IEtapaUpdate } from "./etapa.types";
 
 /**

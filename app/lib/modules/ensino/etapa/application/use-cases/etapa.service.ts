@@ -3,7 +3,7 @@ import { has } from "lodash";
 import type { AccessContext } from "@/modules/@core/access-context";
 import { BaseCrudService, type PersistInput } from "@/modules/@shared";
 import { Etapa, type IEtapa } from "@/modules/ensino/etapa";
-import { CalendarioLetivoService } from "@/modules/sisgha/calendario-letivo";
+import { CalendarioLetivoService } from "@/modules/horarios/calendario-letivo";
 import type {
   EtapaCreateInputDto,
   EtapaFindOneInputDto,

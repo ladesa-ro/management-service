@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
   type Relation,
 } from "typeorm";
-import { ImagemEntity } from "@/modules/base/armazenamento/imagem/infrastructure/persistence/typeorm/imagem.entity";
+import { ImagemEntity } from "@/modules/@base/armazenamento/imagem/infrastructure/persistence/typeorm/imagem.entity";
 import { DiarioEntity } from "@/modules/ensino/diario/infrastructure/persistence/typeorm/diario.entity";
 
 @Entity("disciplina")

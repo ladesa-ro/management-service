@@ -7,7 +7,7 @@ import {
   DiarioPreferenciaAgrupamento,
   type IDiarioPreferenciaAgrupamento,
 } from "@/modules/ensino/diario-preferencia-agrupamento";
-import { IntervaloDeTempoService } from "@/modules/sisgha/intervalo-de-tempo/application/use-cases/intervalo-de-tempo.service";
+import { IntervaloDeTempoService } from "@/modules/horarios/intervalo-de-tempo/application/use-cases/intervalo-de-tempo.service";
 import type {
   DiarioPreferenciaAgrupamentoCreateInputDto,
   DiarioPreferenciaAgrupamentoFindOneInputDto,

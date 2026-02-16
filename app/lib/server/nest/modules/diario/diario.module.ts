@@ -4,12 +4,12 @@ import { DIARIO_REPOSITORY_PORT } from "@/modules/ensino/diario/application/port
 import { DiarioService } from "@/modules/ensino/diario/application/use-cases/diario.service";
 import { DiarioAuthzRegistrySetup } from "@/modules/ensino/diario/infrastructure";
 import { DiarioTypeOrmRepositoryAdapter } from "@/modules/ensino/diario/infrastructure/persistence/typeorm";
+import { DiarioGraphqlResolver } from "@/modules/ensino/diario/presentation/graphql/diario.graphql.resolver";
+import { DiarioRestController } from "@/modules/ensino/diario/presentation/rest/diario.rest.controller";
 import { AmbienteModule } from "@/server/nest/modules/ambiente";
 import { CalendarioLetivoModule } from "@/server/nest/modules/calendario-letivo";
 import { DisciplinaModule } from "@/server/nest/modules/disciplina";
 import { TurmaModule } from "@/server/nest/modules/turma";
-import { DiarioGraphqlResolver } from "./graphql/diario.graphql.resolver";
-import { DiarioRestController } from "./rest/diario.rest.controller";
 
 /**
  * Modulo NestJS para Diario

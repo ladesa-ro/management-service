@@ -6,9 +6,9 @@ import {
 } from "@/modules/ensino/oferta-formacao";
 import { OfertaFormacaoAuthzRegistrySetup } from "@/modules/ensino/oferta-formacao/infrastructure";
 import { OfertaFormacaoTypeOrmRepositoryAdapter } from "@/modules/ensino/oferta-formacao/infrastructure/persistence/typeorm";
+import { OfertaFormacaoGraphqlResolver } from "@/modules/ensino/oferta-formacao/presentation/graphql/oferta-formacao.graphql.resolver";
+import { OfertaFormacaoRestController } from "@/modules/ensino/oferta-formacao/presentation/rest/oferta-formacao.rest.controller";
 import { ModalidadeModule } from "@/server/nest/modules/modalidade";
-import { OfertaFormacaoGraphqlResolver } from "./graphql/oferta-formacao.graphql.resolver";
-import { OfertaFormacaoRestController } from "./rest/oferta-formacao.rest.controller";
 
 @Module({
   imports: [ModalidadeModule],

@@ -7,10 +7,10 @@ import {
   PrimaryGeneratedColumn,
   type Relation,
 } from "typeorm";
-import { ImagemEntity } from "@/modules/base/armazenamento/imagem/infrastructure/persistence/typeorm/imagem.entity";
+import { ImagemEntity } from "@/modules/@base/armazenamento/imagem/infrastructure/persistence/typeorm/imagem.entity";
+import { AmbienteEntity } from "@/modules/ambientes/ambiente/infrastructure/persistence/typeorm/ambiente.entity";
 import { CursoEntity } from "@/modules/ensino/curso/infrastructure/persistence/typeorm/curso.entity";
 import { DiarioEntity } from "@/modules/ensino/diario/infrastructure/persistence/typeorm/diario.entity";
-import { AmbienteEntity } from "@/modules/sisgea/ambiente/infrastructure/persistence/typeorm/ambiente.entity";
 
 @Entity("turma")
 export class TurmaEntity {

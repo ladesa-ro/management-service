@@ -7,7 +7,7 @@ import {
   type Relation,
   RelationId,
 } from "typeorm";
-import { UsuarioEntity } from "@/modules/acesso/usuario/infrastructure/persistence/typeorm/usuario.entity";
+import { UsuarioEntity } from "@/modules/@acesso/usuario/infrastructure/persistence/typeorm/usuario.entity";
 
 @Entity("indisponibilidade_professor")
 export class ProfessorIndisponibilidadeEntity {

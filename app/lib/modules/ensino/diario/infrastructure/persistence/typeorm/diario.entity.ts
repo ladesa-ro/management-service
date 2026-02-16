@@ -7,12 +7,12 @@ import {
   PrimaryGeneratedColumn,
   type Relation,
 } from "typeorm";
-import { ImagemEntity } from "@/modules/base/armazenamento/imagem/infrastructure/persistence/typeorm/imagem.entity";
+import { ImagemEntity } from "@/modules/@base/armazenamento/imagem/infrastructure/persistence/typeorm/imagem.entity";
+import { AmbienteEntity } from "@/modules/ambientes/ambiente/infrastructure/persistence/typeorm/ambiente.entity";
 import { DiarioProfessorEntity } from "@/modules/ensino/diario-professor/infrastructure/persistence/typeorm/diario-professor.entity";
 import { DisciplinaEntity } from "@/modules/ensino/disciplina/infrastructure/persistence/typeorm/disciplina.entity";
 import { TurmaEntity } from "@/modules/ensino/turma/infrastructure/persistence/typeorm/turma.entity";
-import { AmbienteEntity } from "@/modules/sisgea/ambiente/infrastructure/persistence/typeorm/ambiente.entity";
-import { CalendarioLetivoEntity } from "@/modules/sisgha/calendario-letivo/infrastructure/persistence/typeorm/calendario-letivo.entity";
+import { CalendarioLetivoEntity } from "@/modules/horarios/calendario-letivo/infrastructure/persistence/typeorm/calendario-letivo.entity";
 
 @Entity("diario")
 export class DiarioEntity {

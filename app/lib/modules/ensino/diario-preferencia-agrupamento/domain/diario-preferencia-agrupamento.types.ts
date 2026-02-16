@@ -1,6 +1,6 @@
 import type { IdUuid, IEntityBase, ScalarDateTimeString } from "@/modules/@shared";
 import type { IDiario } from "@/modules/ensino/diario/domain/diario.types";
-import type { IIntervaloDeTempo } from "@/modules/sisgha/intervalo-de-tempo/domain/intervalo-de-tempo.types";
+import type { IIntervaloDeTempo } from "@/modules/horarios/intervalo-de-tempo/domain/intervalo-de-tempo.types";
 
 export interface IDiarioPreferenciaAgrupamento extends IEntityBase {
   dataInicio: ScalarDateTimeString;

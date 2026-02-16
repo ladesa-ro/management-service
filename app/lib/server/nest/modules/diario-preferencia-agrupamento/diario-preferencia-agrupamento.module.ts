@@ -6,10 +6,10 @@ import {
 } from "@/modules/ensino/diario-preferencia-agrupamento";
 import { DiarioPreferenciaAgrupamentoAuthzRegistrySetup } from "@/modules/ensino/diario-preferencia-agrupamento/infrastructure";
 import { DiarioPreferenciaAgrupamentoTypeOrmRepositoryAdapter } from "@/modules/ensino/diario-preferencia-agrupamento/infrastructure/persistence/typeorm";
+import { DiarioPreferenciaAgrupamentoGraphqlResolver } from "@/modules/ensino/diario-preferencia-agrupamento/presentation/graphql/diario-preferencia-agrupamento.graphql.resolver";
+import { DiarioPreferenciaAgrupamentoController } from "@/modules/ensino/diario-preferencia-agrupamento/presentation/rest";
 import { DiarioModule } from "@/server/nest/modules/diario";
 import { IntervaloDeTempoModule } from "@/server/nest/modules/intervalo-de-tempo";
-import { DiarioPreferenciaAgrupamentoGraphqlResolver } from "./graphql/diario-preferencia-agrupamento.graphql.resolver";
-import { DiarioPreferenciaAgrupamentoController } from "./rest";
 
 @Module({
   imports: [DiarioModule, IntervaloDeTempoModule],

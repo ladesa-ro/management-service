@@ -1,9 +1,10 @@
 import { Inject, Injectable, type StreamableFile } from "@nestjs/common";
 import { has } from "lodash";
+import { ArquivoService } from "@/modules/@base/armazenamento/arquivo/application/use-cases/arquivo.service";
+import { ImagemService } from "@/modules/@base/armazenamento/imagem/application/use-cases/imagem.service";
 import type { AccessContext } from "@/modules/@core/access-context";
 import { BaseCrudService, type PersistInput } from "@/modules/@shared";
-import { ArquivoService } from "@/modules/base/armazenamento/arquivo/application/use-cases/arquivo.service";
-import { ImagemService } from "@/modules/base/armazenamento/imagem/application/use-cases/imagem.service";
+import { CampusService } from "@/modules/ambientes/campus";
 import { Curso, type ICurso } from "@/modules/ensino/curso";
 import type {
   CursoCreateInputDto,
@@ -19,7 +20,6 @@ import {
   type ICursoUseCasePort,
 } from "@/modules/ensino/curso/application/ports";
 import { OfertaFormacaoService } from "@/modules/ensino/oferta-formacao";
-import { CampusService } from "@/modules/sisgea/campus";
 
 @Injectable()
 export class CursoService

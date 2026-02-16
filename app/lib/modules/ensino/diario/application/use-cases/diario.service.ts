@@ -2,6 +2,7 @@ import { Inject, Injectable } from "@nestjs/common";
 import { has } from "lodash";
 import type { AccessContext } from "@/modules/@core/access-context";
 import { BaseCrudService, type PersistInput } from "@/modules/@shared";
+import { AmbienteService } from "@/modules/ambientes/ambiente/application/use-cases/ambiente.service";
 import { Diario, type IDiario } from "@/modules/ensino/diario";
 import type {
   DiarioCreateInputDto,
@@ -18,8 +19,7 @@ import {
 } from "@/modules/ensino/diario/application/ports";
 import { DisciplinaService } from "@/modules/ensino/disciplina/application/use-cases/disciplina.service";
 import { TurmaService } from "@/modules/ensino/turma/application/use-cases/turma.service";
-import { AmbienteService } from "@/modules/sisgea/ambiente/application/use-cases/ambiente.service";
-import { CalendarioLetivoService } from "@/modules/sisgha/calendario-letivo";
+import { CalendarioLetivoService } from "@/modules/horarios/calendario-letivo";
 
 @Injectable()
 export class DiarioService

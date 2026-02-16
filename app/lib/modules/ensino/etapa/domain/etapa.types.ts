@@ -1,5 +1,5 @@
 import type { IdUuid, IEntityBase, ScalarDateTimeString } from "@/modules/@shared";
-import type { ICalendarioLetivo } from "@/modules/sisgha/calendario-letivo";
+import type { ICalendarioLetivo } from "@/modules/horarios/calendario-letivo";
 
 export interface IEtapa extends IEntityBase {
   numero: number | null;

@@ -1,16 +1,16 @@
 import { Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
-import { BLOCO_REPOSITORY_PORT } from "@/modules/sisgea/bloco/application/ports";
-import { BlocoService } from "@/modules/sisgea/bloco/application/use-cases/bloco.service";
+import { BLOCO_REPOSITORY_PORT } from "@/modules/ambientes/bloco/application/ports";
+import { BlocoService } from "@/modules/ambientes/bloco/application/use-cases/bloco.service";
 import {
   BlocoAuthzRegistrySetup,
   BlocoTypeOrmRepositoryAdapter,
-} from "@/modules/sisgea/bloco/infrastructure";
+} from "@/modules/ambientes/bloco/infrastructure";
+import { BlocoGraphqlResolver } from "@/modules/ambientes/bloco/presentation/graphql/bloco.graphql.resolver";
+import { BlocoRestController } from "@/modules/ambientes/bloco/presentation/rest/bloco.rest.controller";
 import { ArquivoModule } from "@/server/nest/modules/arquivo";
 import { CampusModule } from "@/server/nest/modules/campus";
 import { ImagemModule } from "@/server/nest/modules/imagem";
-import { BlocoGraphqlResolver } from "./graphql/bloco.graphql.resolver";
-import { BlocoRestController } from "./rest/bloco.rest.controller";
 
 @Module({
   imports: [CampusModule, ImagemModule, ArquivoModule],

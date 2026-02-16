@@ -6,10 +6,10 @@ import {
 } from "@/modules/ensino/oferta-formacao-nivel-formacao";
 import { OfertaFormacaoNivelFormacaoAuthzRegistrySetup } from "@/modules/ensino/oferta-formacao-nivel-formacao/infrastructure";
 import { OfertaFormacaoNivelFormacaoTypeOrmRepositoryAdapter } from "@/modules/ensino/oferta-formacao-nivel-formacao/infrastructure/persistence/typeorm";
+import { OfertaFormacaoNivelFormacaoGraphqlResolver } from "@/modules/ensino/oferta-formacao-nivel-formacao/presentation/graphql/oferta-formacao-nivel-formacao.graphql.resolver";
+import { OfertaFormacaoNivelFormacaoRestController } from "@/modules/ensino/oferta-formacao-nivel-formacao/presentation/rest/oferta-formacao-nivel-formacao.rest.controller";
 import { NivelFormacaoModule } from "@/server/nest/modules/nivel-formacao";
 import { OfertaFormacaoModule } from "@/server/nest/modules/oferta-formacao";
-import { OfertaFormacaoNivelFormacaoGraphqlResolver } from "./graphql/oferta-formacao-nivel-formacao.graphql.resolver";
-import { OfertaFormacaoNivelFormacaoRestController } from "./rest/oferta-formacao-nivel-formacao.rest.controller";
 
 @Module({
   imports: [OfertaFormacaoModule, NivelFormacaoModule],

@@ -6,10 +6,10 @@ import {
   DisciplinaAuthzRegistrySetup,
   DisciplinaTypeOrmRepositoryAdapter,
 } from "@/modules/ensino/disciplina/infrastructure";
+import { DisciplinaGraphqlResolver } from "@/modules/ensino/disciplina/presentation/graphql/disciplina.graphql.resolver";
+import { DisciplinaRestController } from "@/modules/ensino/disciplina/presentation/rest/disciplina.rest.controller";
 import { ArquivoModule } from "@/server/nest/modules/arquivo";
 import { ImagemModule } from "@/server/nest/modules/imagem";
-import { DisciplinaGraphqlResolver } from "./graphql/disciplina.graphql.resolver";
-import { DisciplinaRestController } from "./rest/disciplina.rest.controller";
 
 @Module({
   imports: [ImagemModule, ArquivoModule],

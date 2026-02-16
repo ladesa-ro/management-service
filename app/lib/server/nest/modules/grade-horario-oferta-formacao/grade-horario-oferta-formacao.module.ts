@@ -3,11 +3,11 @@ import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persiste
 import {
   GRADE_HORARIO_OFERTA_FORMACAO_REPOSITORY_PORT,
   GradeHorarioOfertaFormacaoService,
-} from "@/modules/sisgha/grade-horario-oferta-formacao";
-import { GradeHorarioOfertaFormacaoAuthzRegistrySetup } from "@/modules/sisgha/grade-horario-oferta-formacao/infrastructure";
-import { GradeHorarioOfertaFormacaoTypeOrmRepositoryAdapter } from "@/modules/sisgha/grade-horario-oferta-formacao/infrastructure/persistence/typeorm";
-import { GradeHorarioOfertaFormacaoGraphqlResolver } from "./graphql/grade-horario-oferta-formacao.graphql.resolver";
-import { GradeHorarioOfertaFormacaoRestController } from "./rest/grade-horario-oferta-formacao.rest.controller";
+} from "@/modules/horarios/grade-horario-oferta-formacao";
+import { GradeHorarioOfertaFormacaoAuthzRegistrySetup } from "@/modules/horarios/grade-horario-oferta-formacao/infrastructure";
+import { GradeHorarioOfertaFormacaoTypeOrmRepositoryAdapter } from "@/modules/horarios/grade-horario-oferta-formacao/infrastructure/persistence/typeorm";
+import { GradeHorarioOfertaFormacaoGraphqlResolver } from "@/modules/horarios/grade-horario-oferta-formacao/presentation/graphql/grade-horario-oferta-formacao.graphql.resolver";
+import { GradeHorarioOfertaFormacaoRestController } from "@/modules/horarios/grade-horario-oferta-formacao/presentation/rest/grade-horario-oferta-formacao.rest.controller";
 
 @Module({
   imports: [],

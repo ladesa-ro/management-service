@@ -7,7 +7,7 @@ import {
   type Relation,
 } from "typeorm";
 import { DiarioEntity } from "@/modules/ensino/diario/infrastructure/persistence/typeorm/diario.entity";
-import { IntervaloDeTempoEntity } from "@/modules/sisgha/intervalo-de-tempo/infrastructure/persistence/typeorm/intervalo-de-tempo.entity";
+import { IntervaloDeTempoEntity } from "@/modules/horarios/intervalo-de-tempo/infrastructure/persistence/typeorm/intervalo-de-tempo.entity";
 
 @Entity("diario_preferencia_agrupamento")
 export class DiarioPreferenciaAgrupamentoEntity {

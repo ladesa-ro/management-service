@@ -1,2 +1,1 @@
 export * from "./curso.module";
-export * from "./rest";

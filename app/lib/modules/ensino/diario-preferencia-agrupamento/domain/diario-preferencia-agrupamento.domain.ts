@@ -1,6 +1,6 @@
 import { BaseDatedEntity, type ScalarDate } from "@/modules/@shared";
 import type { Diario } from "@/modules/ensino/diario/domain/diario.domain";
-import type { IntervaloDeTempo } from "@/modules/sisgha/intervalo-de-tempo/domain/intervalo-de-tempo.domain";
+import type { IntervaloDeTempo } from "@/modules/horarios/intervalo-de-tempo/domain/intervalo-de-tempo.domain";
 import type {
   IDiarioPreferenciaAgrupamento,
   IDiarioPreferenciaAgrupamentoCreate,

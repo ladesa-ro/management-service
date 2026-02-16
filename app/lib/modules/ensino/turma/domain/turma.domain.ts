@@ -1,7 +1,7 @@
+import type { IImagem } from "@/modules/@base/armazenamento/imagem/domain/imagem.types";
 import { BaseDatedEntity } from "@/modules/@shared";
-import type { IImagem } from "@/modules/base/armazenamento/imagem/domain/imagem.types";
+import type { IAmbiente } from "@/modules/ambientes/ambiente/domain/ambiente.types";
 import type { ICurso } from "@/modules/ensino/curso";
-import type { IAmbiente } from "@/modules/sisgea/ambiente/domain/ambiente.types";
 import type { ITurma, ITurmaCreate, ITurmaUpdate } from "./turma.types";
 
 /**

@@ -1,12 +1,12 @@
 import { Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
-import { RESERVA_REPOSITORY_PORT, ReservaService } from "@/modules/sisgea/reserva";
-import { ReservaAuthzRegistrySetup } from "@/modules/sisgea/reserva/infrastructure";
-import { ReservaTypeOrmRepositoryAdapter } from "@/modules/sisgea/reserva/infrastructure/persistence/typeorm";
+import { RESERVA_REPOSITORY_PORT, ReservaService } from "@/modules/ambientes/reserva";
+import { ReservaAuthzRegistrySetup } from "@/modules/ambientes/reserva/infrastructure";
+import { ReservaTypeOrmRepositoryAdapter } from "@/modules/ambientes/reserva/infrastructure/persistence/typeorm";
+import { ReservaGraphqlResolver } from "@/modules/ambientes/reserva/presentation/graphql/reserva.graphql.resolver";
+import { ReservaRestController } from "@/modules/ambientes/reserva/presentation/rest";
 import { AmbienteModule } from "@/server/nest/modules/ambiente";
 import { UsuarioModule } from "@/server/nest/modules/usuario";
-import { ReservaGraphqlResolver } from "./graphql/reserva.graphql.resolver";
-import { ReservaRestController } from "./rest";
 
 /**
  * Módulo Reserva configurado com Arquitetura Hexagonal

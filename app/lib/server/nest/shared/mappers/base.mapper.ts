@@ -70,6 +70,61 @@ export function createListOutputMapper<
 }
 
 /**
+ * Mapeia campos de timestamp do core para o DTO de apresentação.
+ * Usado em todos os toFindOneOutputDto.
+ */
+export function mapDatedFields(
+  dto: { dateCreated: Date; dateUpdated: Date; dateDeleted: Date | null },
+  output: { dateCreated: unknown; dateUpdated: unknown; dateDeleted: unknown },
+): void {
+  dto.dateCreated = new Date(output.dateCreated as string);
+  dto.dateUpdated = new Date(output.dateUpdated as string);
+  dto.dateDeleted = output.dateDeleted ? new Date(output.dateDeleted as string) : null;
+}
+
+/**
+ * Cria um mapeador de FindOneInput genérico para entidades com id UUID.
+ *
+ * @example
+ * static toFindOneInput = createFindOneInputMapper(ModalidadeFindOneInputDto);
+ */
+export function createFindOneInputMapper<T extends { id: string }>(
+  InputClass: new () => T,
+): (dto: { id: string }) => T {
+  return (dto) => {
+    const input = new InputClass();
+    input.id = dto.id;
+    return input;
+  };
+}
+
+/**
+ * Cria um mapeador de ListInput genérico com suporte a filtros.
+ *
+ * @example
+ * static toListInput = createListInputMapper(ModalidadeListInputDto, ["filter.id"]);
+ */
+export function createListInputMapper<TCore>(
+  CoreClass: new () => TCore,
+  filterKeys: string[] = [],
+): (dto: Record<string, unknown> | null) => TCore | null {
+  return (dto) => {
+    if (!dto) return null;
+    const input = new CoreClass();
+    const rec = input as Record<string, unknown>;
+    rec.page = dto.page;
+    rec.limit = dto.limit;
+    rec.search = dto.search;
+    rec.sortBy = dto.sortBy;
+    rec.selection = dto.selection;
+    for (const key of filterKeys) {
+      rec[key] = dto[key];
+    }
+    return input;
+  };
+}
+
+/**
  * Helper para mapear campos condicionalmente no update.
  * Evita repetição de `if (dto.field !== undefined)`.
  */

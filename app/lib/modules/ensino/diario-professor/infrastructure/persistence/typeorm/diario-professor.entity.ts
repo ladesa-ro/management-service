@@ -6,7 +6,7 @@ import {
   PrimaryGeneratedColumn,
   type Relation,
 } from "typeorm";
-import { PerfilEntity } from "@/modules/acesso/perfil/infrastructure/persistence/typeorm/perfil.entity";
+import { PerfilEntity } from "@/modules/@acesso/perfil/infrastructure/persistence/typeorm/perfil.entity";
 import { DiarioEntity } from "@/modules/ensino/diario/infrastructure/persistence/typeorm/diario.entity";
 
 @Entity("diario_professor")
