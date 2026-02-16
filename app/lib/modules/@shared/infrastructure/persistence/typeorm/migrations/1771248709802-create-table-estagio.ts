@@ -45,6 +45,23 @@ export class CreateTableEstagio1771248709802 implements MigrationInterface {
             enum: ["ABERTA", "EM_ANDAMENTO", "CONCLUIDA"],
             default: "'ABERTA'",
           },
+          {
+            name: "date_created",
+            type: "timestamptz",
+            isNullable: false,
+            default: "NOW()",
+          },
+          {
+            name: "date_updated",
+            type: "timestamptz",
+            isNullable: false,
+            default: "NOW()",
+          },
+          {
+            name: "date_deleted",
+            type: "timestamptz",
+            isNullable: true,
+          },
         ],
         foreignKeys: [
           {

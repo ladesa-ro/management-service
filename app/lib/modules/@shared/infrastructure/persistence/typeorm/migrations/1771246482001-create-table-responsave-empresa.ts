@@ -46,6 +46,23 @@ export class CreateTableResponsaveEmpresa1771246482001 implements MigrationInter
             type: "text",
             isNullable: false,
           },
+          {
+            name: "date_created",
+            type: "timestamptz",
+            isNullable: false,
+            default: "NOW()",
+          },
+          {
+            name: "date_updated",
+            type: "timestamptz",
+            isNullable: false,
+            default: "NOW()",
+          },
+          {
+            name: "date_deleted",
+            type: "timestamptz",
+            isNullable: true,
+          },
         ],
         foreignKeys: [
           {

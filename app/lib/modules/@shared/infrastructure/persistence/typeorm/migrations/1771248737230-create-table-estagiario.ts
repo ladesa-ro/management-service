@@ -40,6 +40,23 @@ export class CreateTableEstagiario1771248737230 implements MigrationInterface {
             type: "date",
             isNullable: false,
           },
+          {
+            name: "date_created",
+            type: "timestamptz",
+            isNullable: false,
+            default: "NOW()",
+          },
+          {
+            name: "date_updated",
+            type: "timestamptz",
+            isNullable: false,
+            default: "NOW()",
+          },
+          {
+            name: "date_deleted",
+            type: "timestamptz",
+            isNullable: true,
+          },
         ],
         foreignKeys: [
           {
