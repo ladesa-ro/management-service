@@ -1,5 +1,5 @@
 import { Inject, Injectable, Optional, type PipeTransform } from "@nestjs/common";
-import type { IRequestActor } from "@/modules/@core/request-actor";
+import type { IRequestActor } from "@/modules/@core/ator-requisicao";
 import { DatabaseContextService } from "@/modules/@database-context";
 import { CONFIG_PORT, type IConfigPort } from "@/modules/@shared/application/ports/out/config";
 import { AccessContext } from "../access-context";

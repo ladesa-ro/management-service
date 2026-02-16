@@ -1,4 +1,4 @@
-import type { AccessContext } from "@/modules/@core/access-context";
+import type { AccessContext } from "@/modules/@core/contexto-acesso";
 
 /**
  * Interface para repositórios read-only (apenas listagem e busca por ID)

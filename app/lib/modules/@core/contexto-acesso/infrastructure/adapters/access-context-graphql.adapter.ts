@@ -1,4 +1,4 @@
-import { RequestActorGraphQL } from "@/modules/@core/request-actor";
+import { RequestActorGraphQL } from "@/modules/@core/ator-requisicao";
 import { ResolveAccessContextPipe } from "../pipes/resolve-access-context.pipe";
 
 /**

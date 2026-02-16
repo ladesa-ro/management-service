@@ -1,4 +1,4 @@
-import type { AccessContext } from "@/modules/@core/access-context";
+import type { AccessContext } from "@/modules/@core/contexto-acesso";
 import type { IBaseCrudRepositoryPort } from "@/modules/@shared";
 import type { IReserva } from "@/modules/ambientes/reserva";
 import type { ReservaFindOneOutputDto, ReservaListOutputDto } from "../../dtos";

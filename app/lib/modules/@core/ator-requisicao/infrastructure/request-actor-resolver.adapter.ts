@@ -3,7 +3,7 @@ import { pick } from "lodash";
 import {
   IDENTITY_PROVIDER_PORT,
   type IIdentityProviderPort,
-} from "@/modules/@core/identity-provider/ports";
+} from "@/modules/@core/provedor-identidade/ports";
 import { DatabaseContextService } from "@/modules/@database-context";
 import type { IRequestActorResolverPort } from "../ports";
 import type { IRequestActor } from "../domain";

@@ -1,5 +1,5 @@
 import { Global, Module } from "@nestjs/common";
-import { AccessContextCoreModule } from "@/modules/@core/access-context";
+import { AccessContextCoreModule } from "@/modules/@core/contexto-acesso";
 import { AUTHORIZATION_SERVICE_PORT } from "@/modules/@shared";
 import { AuthorizationServiceAdapter } from "./infrastructure";
 

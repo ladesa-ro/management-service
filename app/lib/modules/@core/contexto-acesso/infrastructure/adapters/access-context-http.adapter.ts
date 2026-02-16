@@ -1,4 +1,4 @@
-import { RequestActorHttp } from "@/modules/@core/request-actor";
+import { RequestActorHttp } from "@/modules/@core/ator-requisicao";
 import { ResolveAccessContextPipe } from "../pipes/resolve-access-context.pipe";
 
 /**

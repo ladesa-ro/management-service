@@ -1,6 +1,6 @@
 import type { Promisable } from "type-fest";
 import type { WhereExpressionBuilder } from "typeorm";
-import type { IAccessContext } from "@/modules/@core/access-context/domain";
+import type { IAccessContext } from "@/modules/@core/contexto-acesso/domain";
 
 /**
  * Tipos de statement de autorização.

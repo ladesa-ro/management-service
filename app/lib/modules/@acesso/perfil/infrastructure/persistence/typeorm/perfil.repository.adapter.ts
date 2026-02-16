@@ -9,7 +9,7 @@ import type {
 } from "@/modules/@acesso/perfil/application/dtos";
 import type { IPerfilRepositoryPort } from "@/modules/@acesso/perfil/application/ports";
 import type { UsuarioEntity } from "@/modules/@acesso/usuario/infrastructure/persistence/typeorm";
-import type { AccessContext } from "@/modules/@core/access-context";
+import type { AccessContext } from "@/modules/@core/contexto-acesso";
 import { DatabaseContextService } from "@/modules/@database-context";
 import type { IPaginationCriteria, IPaginationResult } from "@/modules/@shared";
 import {

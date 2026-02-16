@@ -1,5 +1,5 @@
 import type { StreamableFile } from "@nestjs/common";
-import type { AccessContext, IAuthzPayload } from "@/modules/@core/access-context";
+import type { AccessContext, IAuthzPayload } from "@/modules/@core/contexto-acesso";
 import { ResourceNotFoundError } from "../errors";
 import { getEntityImagemStreamableFile, saveEntityImagemField } from "../helpers";
 import type { IAuthorizationServicePort } from "../ports/in";

@@ -7,8 +7,8 @@ import {
   type IAuthzStatementCheck,
   type IAuthzStatementFilter,
   type IBaseAuthzStatementContext,
-} from "@/modules/@core/authorization";
-import type { IRequestActor } from "@/modules/@core/request-actor";
+} from "@/modules/@core/autorizacao";
+import type { IRequestActor } from "@/modules/@core/ator-requisicao";
 import { DatabaseContextService } from "@/modules/@database-context";
 import { createForbiddenExceptionForAction } from "@/modules/@shared/application/errors";
 import type { IAccessContext, IAuthzPayload } from "../domain";

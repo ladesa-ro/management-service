@@ -1,4 +1,4 @@
-import type { AccessContext } from "@/modules/@core/access-context";
+import type { AccessContext } from "@/modules/@core/contexto-acesso";
 import type { IBaseCrudRepositoryPort } from "@/modules/@shared";
 import type { IAula } from "@/modules/horarios/aula";
 import type { AulaFindOneOutputDto, AulaListOutputDto } from "../../dtos";

@@ -4,7 +4,7 @@ import { Strategy } from "passport-http-bearer";
 import {
   type IRequestActorResolverPort,
   REQUEST_ACTOR_RESOLVER_PORT,
-} from "@/modules/@core/request-actor";
+} from "@/modules/@core/ator-requisicao";
 import { AuthStrategy } from "../../domain";
 
 /**

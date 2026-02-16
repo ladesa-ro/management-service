@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { map, pick } from "lodash";
-import type { AccessContext } from "@/modules/@core/access-context";
+import type { AccessContext } from "@/modules/@core/contexto-acesso";
 import { DatabaseContextService } from "@/modules/@database-context";
 import {
   paginateConfig,

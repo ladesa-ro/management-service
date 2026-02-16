@@ -1,4 +1,4 @@
-import { createAuthzRegistryProvider } from "@/modules/@core/access-context";
+import { createAuthzRegistryProvider } from "@/modules/@core/contexto-acesso";
 
 export const GradeHorarioOfertaFormacaoAuthzRegistrySetup = createAuthzRegistryProvider(
   "grade_horario_oferta_formacao",

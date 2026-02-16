@@ -1,5 +1,5 @@
 import type { SelectQueryBuilder } from "typeorm";
-import type { AccessContext } from "@/modules/@core/access-context";
+import type { AccessContext } from "@/modules/@core/contexto-acesso";
 import type { IBaseCrudRepositoryPort } from "@/modules/@shared";
 import type { IDiarioPreferenciaAgrupamento } from "@/modules/ensino/diario-preferencia-agrupamento";
 import type { DiarioPreferenciaAgrupamentoEntity } from "@/modules/ensino/diario-preferencia-agrupamento/infrastructure/persistence/typeorm";

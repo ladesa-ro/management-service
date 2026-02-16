@@ -3,7 +3,7 @@ import { AutenticacaoService } from "@/modules/@acesso/autenticacao";
 import { AutenticacaoRestController } from "@/modules/@acesso/autenticacao/presentation/rest";
 import { PerfilModule } from "@/modules/@acesso/perfil";
 import { UsuarioModule } from "@/modules/@acesso/usuario";
-import { KeycloakModule, OpenidConnectModule } from "@/modules/@core/identity-provider";
+import { KeycloakModule, OpenidConnectModule } from "@/modules/@core/provedor-identidade";
 
 /**
  * Módulo NestJS para Autenticacao

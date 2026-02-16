@@ -1,5 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
-import type { AccessContext } from "@/modules/@core/access-context";
+import type { AccessContext } from "@/modules/@core/contexto-acesso";
 import { ResourceNotFoundError } from "@/modules/@shared";
 import type { IIntervaloDeTempo } from "@/modules/horarios/intervalo-de-tempo";
 import {

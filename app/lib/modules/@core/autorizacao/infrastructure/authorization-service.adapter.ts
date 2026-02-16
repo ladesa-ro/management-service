@@ -1,8 +1,8 @@
 import { Inject, Injectable, Scope } from "@nestjs/common";
 import { REQUEST } from "@nestjs/core";
 import type { Request } from "express";
-import { AccessContext } from "@/modules/@core/access-context";
-import type { IRequestActor } from "@/modules/@core/request-actor";
+import { AccessContext } from "@/modules/@core/contexto-acesso";
+import type { IRequestActor } from "@/modules/@core/ator-requisicao";
 import { DatabaseContextService } from "@/modules/@database-context";
 import type { IAuthorizationPayload, IAuthorizationServicePort } from "@/modules/@shared";
 

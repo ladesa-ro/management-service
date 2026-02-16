@@ -1,5 +1,5 @@
 import { Global, Module } from "@nestjs/common";
-import { RequestActorCoreModule } from "@/modules/@core/request-actor";
+import { RequestActorCoreModule } from "@/modules/@core/ator-requisicao";
 import { RESOURCE_AUTHZ_REGISTRY, ResourceAuthzRegistry } from "./infrastructure";
 import { ResolveAccessContextPipe } from "./infrastructure/pipes";
 

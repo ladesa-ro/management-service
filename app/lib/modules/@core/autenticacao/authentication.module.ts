@@ -1,7 +1,7 @@
 import { Module } from "@nestjs/common";
 import { APP_GUARD } from "@nestjs/core";
 import { PassportModule } from "@nestjs/passport";
-import { RequestActorCoreModule } from "@/modules/@core/request-actor";
+import { RequestActorCoreModule } from "@/modules/@core/ator-requisicao";
 import { AuthStrategy } from "./domain";
 import {
   AccessTokenStrategyAdapter,

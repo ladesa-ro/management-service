@@ -1,7 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { get } from "lodash";
 import { type EnderecoInputDto, EnderecoService } from "@/modules/@base/localidades/endereco";
-import type { AccessContext } from "@/modules/@core/access-context";
+import type { AccessContext } from "@/modules/@core/contexto-acesso";
 import {
   AUTHORIZATION_SERVICE_PORT,
   BaseCrudService,

@@ -19,7 +19,7 @@ import {
   type IArquivoRepositoryPort,
   type IArquivoUseCasePort,
 } from "@/modules/@base/armazenamento/arquivo/application/ports";
-import type { AccessContext } from "@/modules/@core/access-context";
+import type { AccessContext } from "@/modules/@core/contexto-acesso";
 import { isValidUuid, ResourceNotFoundError } from "@/modules/@shared";
 import { CONFIG_PORT, type IConfigPort } from "@/modules/@shared/application/ports/out/config";
 

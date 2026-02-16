@@ -1,4 +1,4 @@
-import { createAuthzRegistryProvider } from "@/modules/@core/access-context";
+import { createAuthzRegistryProvider } from "@/modules/@core/contexto-acesso";
 
 export const PerfilAuthzRegistrySetup = createAuthzRegistryProvider(
   "vinculo",

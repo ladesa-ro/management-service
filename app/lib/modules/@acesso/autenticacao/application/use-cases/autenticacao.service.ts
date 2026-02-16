@@ -9,8 +9,8 @@ import {
 import * as client from "openid-client";
 import { PerfilService } from "@/modules/@acesso/perfil";
 import { UsuarioService } from "@/modules/@acesso/usuario";
-import type { AccessContext } from "@/modules/@core/access-context";
-import { KeycloakService, OpenidConnectService } from "@/modules/@core/identity-provider";
+import type { AccessContext } from "@/modules/@core/contexto-acesso";
+import { KeycloakService, OpenidConnectService } from "@/modules/@core/provedor-identidade";
 import type {
   AuthCredentialsSetInitialPasswordInputDto,
   AuthLoginInputDto,

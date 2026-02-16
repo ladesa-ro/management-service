@@ -1,4 +1,4 @@
-import type { AccessContext } from "@/modules/@core/access-context";
+import type { AccessContext } from "@/modules/@core/contexto-acesso";
 
 /**
  * Interface para operações de listagem em repositórios

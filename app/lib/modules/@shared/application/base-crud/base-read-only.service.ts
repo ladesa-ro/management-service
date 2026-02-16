@@ -1,4 +1,4 @@
-import type { AccessContext } from "@/modules/@core/access-context";
+import type { AccessContext } from "@/modules/@core/contexto-acesso";
 import { ResourceNotFoundError } from "../errors";
 import type { IReadOnlyRepositoryPort } from "../ports/out";
 
