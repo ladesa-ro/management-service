@@ -181,7 +181,7 @@ export class EnvironmentConfigAdapter implements IConfigPort {
   // ========================================
 
   getTypeOrmBasePath(): string {
-    return join(this.getRootSrc(), "./modules/@shared/infrastructure/persistence/typeorm");
+    return join(this.getRootSrc(), "./@shared/infrastructure/persistence/typeorm");
   }
 
   getTypeOrmPathEntities(): string {
