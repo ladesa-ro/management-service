@@ -6,8 +6,8 @@ import {
 } from "@/modules/sisgha/grade-horario-oferta-formacao";
 import { GradeHorarioOfertaFormacaoAuthzRegistrySetup } from "@/modules/sisgha/grade-horario-oferta-formacao/infrastructure";
 import { GradeHorarioOfertaFormacaoTypeOrmRepositoryAdapter } from "@/modules/sisgha/grade-horario-oferta-formacao/infrastructure/persistence/typeorm";
-import { GradeHorarioOfertaFormacaoGraphqlResolver } from "./graphql/grade-horario-oferta-formacao.graphql.resolver";
-import { GradeHorarioOfertaFormacaoRestController } from "./rest/grade-horario-oferta-formacao.rest.controller";
+import { GradeHorarioOfertaFormacaoGraphqlResolver } from "@/modules/sisgha/grade-horario-oferta-formacao/presentation/graphql/grade-horario-oferta-formacao.graphql.resolver";
+import { GradeHorarioOfertaFormacaoRestController } from "@/modules/sisgha/grade-horario-oferta-formacao/presentation/rest/grade-horario-oferta-formacao.rest.controller";
 
 @Module({
   imports: [],

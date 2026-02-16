@@ -6,11 +6,11 @@ import {
   BlocoAuthzRegistrySetup,
   BlocoTypeOrmRepositoryAdapter,
 } from "@/modules/sisgea/bloco/infrastructure";
+import { BlocoGraphqlResolver } from "@/modules/sisgea/bloco/presentation/graphql/bloco.graphql.resolver";
+import { BlocoRestController } from "@/modules/sisgea/bloco/presentation/rest/bloco.rest.controller";
 import { ArquivoModule } from "@/server/nest/modules/arquivo";
 import { CampusModule } from "@/server/nest/modules/campus";
 import { ImagemModule } from "@/server/nest/modules/imagem";
-import { BlocoGraphqlResolver } from "./graphql/bloco.graphql.resolver";
-import { BlocoRestController } from "./rest/bloco.rest.controller";
 
 @Module({
   imports: [CampusModule, ImagemModule, ArquivoModule],

@@ -6,8 +6,8 @@ import {
   ModalidadeAuthzRegistrySetup,
   ModalidadeTypeOrmRepositoryAdapter,
 } from "@/modules/ensino/modalidade/infrastructure";
-import { ModalidadeGraphqlResolver } from "./graphql/modalidade.graphql.resolver";
-import { ModalidadeRestController } from "./rest/modalidade.rest.controller";
+import { ModalidadeGraphqlResolver } from "@/modules/ensino/modalidade/presentation/graphql/modalidade.graphql.resolver";
+import { ModalidadeRestController } from "@/modules/ensino/modalidade/presentation/rest/modalidade.rest.controller";
 
 @Module({
   imports: [],

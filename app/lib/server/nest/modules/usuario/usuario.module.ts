@@ -7,10 +7,10 @@ import {
   UsuarioAuthzRegistrySetup,
   UsuarioTypeOrmRepositoryAdapter,
 } from "@/modules/acesso/usuario/infrastructure";
+import { UsuarioGraphqlResolver } from "@/modules/acesso/usuario/presentation/graphql/usuario.graphql.resolver";
+import { UsuarioRestController } from "@/modules/acesso/usuario/presentation/rest/usuario.rest.controller";
 import { ArquivoModule } from "@/server/nest/modules/arquivo";
 import { ImagemModule } from "@/server/nest/modules/imagem";
-import { UsuarioGraphqlResolver } from "./graphql/usuario.graphql.resolver";
-import { UsuarioRestController } from "./rest/usuario.rest.controller";
 
 @Module({
   imports: [KeycloakModule, ImagemModule, ArquivoModule],

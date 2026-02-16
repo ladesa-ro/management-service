@@ -6,8 +6,8 @@ import {
   CidadeAuthzRegistrySetup,
   CidadeTypeOrmRepositoryAdapter,
 } from "@/modules/base/localidades/cidade/infrastructure";
-import { CidadeGraphqlResolver } from "./graphql/cidade.graphql.resolver";
-import { CidadeRestController } from "./rest/cidade.rest.controller";
+import { CidadeGraphqlResolver } from "@/modules/base/localidades/cidade/presentation/graphql/cidade.graphql.resolver";
+import { CidadeRestController } from "@/modules/base/localidades/cidade/presentation/rest/cidade.rest.controller";
 
 @Module({
   imports: [],

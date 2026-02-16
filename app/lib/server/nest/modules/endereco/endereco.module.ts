@@ -5,7 +5,7 @@ import {
   EnderecoAuthzRegistrySetup,
   EnderecoTypeOrmRepositoryAdapter,
 } from "@/modules/base/localidades/endereco/infrastructure";
-import { EnderecoGraphqlResolver } from "./graphql/endereco.graphql.resolver";
+import { EnderecoGraphqlResolver } from "@/modules/base/localidades/endereco/presentation/graphql/endereco.graphql.resolver";
 
 @Module({
   imports: [],

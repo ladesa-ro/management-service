@@ -6,9 +6,9 @@ import {
 } from "@/modules/sisgha/horario-gerado";
 import { HorarioGeradoAuthzRegistrySetup } from "@/modules/sisgha/horario-gerado/infrastructure";
 import { HorarioGeradoTypeOrmRepositoryAdapter } from "@/modules/sisgha/horario-gerado/infrastructure/persistence/typeorm";
+import { HorarioGeradoGraphqlResolver } from "@/modules/sisgha/horario-gerado/presentation/graphql/horario-gerado.graphql.resolver";
+import { HorarioGeradoRestController } from "@/modules/sisgha/horario-gerado/presentation/rest/horario-gerado.rest.controller";
 import { CalendarioLetivoModule } from "@/server/nest/modules/calendario-letivo";
-import { HorarioGeradoGraphqlResolver } from "./graphql/horario-gerado.graphql.resolver";
-import { HorarioGeradoRestController } from "./rest/horario-gerado.rest.controller";
 
 @Module({
   imports: [CalendarioLetivoModule],
