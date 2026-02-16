@@ -8,7 +8,7 @@ import { BlocoModule } from "@/server/nest/modules/bloco";
 import { CalendarioLetivoModule } from "@/server/nest/modules/calendario-letivo";
 import { CampusModule } from "@/server/nest/modules/campus";
 import { CidadeModule } from "@/server/nest/modules/cidade";
-import { AppConfigModule } from "@/server/nest/modules/config";
+import { AppConfigModule } from "@/modules/@shared/infrastructure/config";
 import { CursoModule } from "@/server/nest/modules/curso";
 import { DiaCalendarioModule } from "@/server/nest/modules/dia-calendario";
 import { DiarioModule } from "@/server/nest/modules/diario";

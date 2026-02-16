@@ -1,6 +1,6 @@
 import { Global, Module } from "@nestjs/common";
 import { ConfigModule as NestConfigModule } from "@nestjs/config";
-import { EnvironmentConfigModule } from "@/server/adapters/config";
+import { EnvironmentConfigModule } from "./environment-config.module";
 import { AppConfigProvider } from "./app-config.provider";
 
 /**

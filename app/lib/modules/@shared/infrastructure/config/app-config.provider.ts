@@ -1,6 +1,6 @@
 import type { Provider } from "@nestjs/common";
 import { CONFIG_PORT } from "@/modules/@shared/application/ports/out/config";
-import { EnvironmentConfigAdapter } from "@/server/adapters/config";
+import { EnvironmentConfigAdapter } from "./environment-config.adapter";
 
 /**
  * Provider que conecta o token CONFIG_PORT ao adapter EnvironmentConfigAdapter

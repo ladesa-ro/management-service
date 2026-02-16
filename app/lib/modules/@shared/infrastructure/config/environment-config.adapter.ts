@@ -8,7 +8,7 @@ import type {
   IOidcClientCredentials,
 } from "@/modules/@shared/application/ports/out/config";
 import * as entities from "@/modules/@shared/infrastructure/persistence/typeorm/entities";
-import pkg from "../../../../package.json";
+import pkg from "../../../../../package.json";
 
 const now = new Date();
 
