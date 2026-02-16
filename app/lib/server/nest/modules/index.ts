@@ -13,7 +13,6 @@ export * from "./etapa";
 export * from "./evento";
 export * from "./gerar-horario";
 export * from "./grade-horario-oferta-formacao-intervalo-de-tempo";
-export * from "./health";
 export * from "./horario-gerado";
 export * from "./horario-gerado-aula";
 export * from "./imagem-arquivo";

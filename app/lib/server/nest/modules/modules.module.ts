@@ -23,7 +23,6 @@ import { EventoModule } from "@/server/nest/modules/evento";
 import { GerarHorarioModule } from "@/server/nest/modules/gerar-horario";
 import { GradeHorarioOfertaFormacaoModule } from "@/server/nest/modules/grade-horario-oferta-formacao";
 import { GradeHorarioOfertaFormacaoIntervaloDeTempoModule } from "@/server/nest/modules/grade-horario-oferta-formacao-intervalo-de-tempo";
-import { HealthModule } from "@/server/nest/modules/health";
 import { HorarioGeradoModule } from "@/server/nest/modules/horario-gerado";
 import { HorarioGeradoAulaModule } from "@/server/nest/modules/horario-gerado-aula";
 import { ImagemModule } from "@/server/nest/modules/imagem";
@@ -79,7 +78,6 @@ import { UsuarioModule } from "@/server/nest/modules/usuario";
     EnderecoModule,
     EstadoModule,
     TurmaDisponibilidadeModule,
-    HealthModule,
     HorarioGeradoAulaModule,
     DiarioProfessorModule,
   ],
