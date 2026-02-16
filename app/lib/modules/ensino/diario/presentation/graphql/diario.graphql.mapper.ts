@@ -1,3 +1,4 @@
+import { createListOutputMapper, mapDatedFields } from "@/modules/@shared/application/mappers";
 import {
   DiarioCreateInputDto,
   DiarioFindOneInputDto,
@@ -6,7 +7,6 @@ import {
   DiarioUpdateInputDto,
 } from "@/modules/ensino/diario";
 import { CalendarioLetivoGraphqlMapper } from "@/modules/horarios/calendario-letivo/presentation/graphql/calendario-letivo.graphql.mapper";
-import { createListOutputMapper, mapDatedFields } from "@/modules/@shared/application/mappers";
 import {
   AmbienteFindOneOutputForDiarioGraphQlDto,
   DiarioCreateInputGraphQlDto,

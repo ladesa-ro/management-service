@@ -1,4 +1,5 @@
 import { PerfilGraphqlMapper } from "@/modules/@acesso/perfil/presentation/graphql/perfil.graphql.mapper";
+import { createListOutputMapper, mapDatedFields } from "@/modules/@shared/application/mappers";
 import {
   DiarioProfessorCreateInputDto,
   DiarioProfessorFindOneInputDto,
@@ -6,7 +7,6 @@ import {
   DiarioProfessorListInputDto,
   DiarioProfessorUpdateInputDto,
 } from "@/modules/ensino/diario-professor";
-import { createListOutputMapper, mapDatedFields } from "@/modules/@shared/application/mappers";
 import {
   DiarioProfessorCreateInputGraphQlDto,
   DiarioProfessorDiarioOutputGraphQlDto,

@@ -5,8 +5,8 @@ import {
   PerfilSetVinculosInputDto,
 } from "@/modules/@acesso/perfil";
 import { UsuarioGraphqlMapper } from "@/modules/@acesso/usuario/presentation/graphql/usuario.graphql.mapper";
-import { CampusGraphqlMapper } from "@/modules/ambientes/campus/presentation/graphql/campus.graphql.mapper";
 import { createListOutputMapper, mapDatedFields } from "@/modules/@shared/application/mappers";
+import { CampusGraphqlMapper } from "@/modules/ambientes/campus/presentation/graphql/campus.graphql.mapper";
 import {
   PerfilFindOneOutputGraphQlDto,
   PerfilListInputGraphQlDto,

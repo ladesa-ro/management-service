@@ -1,3 +1,4 @@
+import { createListOutputMapper, mapDatedFields } from "@/modules/@shared/application/mappers";
 import {
   EtapaCreateInputDto,
   EtapaFindOneInputDto,
@@ -6,7 +7,6 @@ import {
   EtapaUpdateInputDto,
 } from "@/modules/ensino/etapa";
 import { CalendarioLetivoGraphqlMapper } from "@/modules/horarios/calendario-letivo/presentation/graphql/calendario-letivo.graphql.mapper";
-import { createListOutputMapper, mapDatedFields } from "@/modules/@shared/application/mappers";
 import {
   EtapaCreateInputGraphQlDto,
   EtapaFindOneOutputGraphQlDto,

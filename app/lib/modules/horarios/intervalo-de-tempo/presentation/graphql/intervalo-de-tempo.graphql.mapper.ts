@@ -1,9 +1,9 @@
+import { createListOutputMapper, mapDatedFields } from "@/modules/@shared/application/mappers";
 import {
   IntervaloDeTempoFindOneInputDto,
   IntervaloDeTempoFindOneOutputDto,
   IntervaloDeTempoListInputDto,
 } from "@/modules/horarios/intervalo-de-tempo";
-import { createListOutputMapper, mapDatedFields } from "@/modules/@shared/application/mappers";
 import {
   IntervaloDeTempoFindOneOutputGraphQlDto,
   IntervaloDeTempoListInputGraphQlDto,

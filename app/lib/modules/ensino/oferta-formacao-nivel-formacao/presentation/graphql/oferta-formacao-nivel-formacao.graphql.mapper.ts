@@ -1,3 +1,4 @@
+import { createListOutputMapper, mapDatedFields } from "@/modules/@shared/application/mappers";
 import { NivelFormacaoGraphqlMapper } from "@/modules/ensino/nivel-formacao/presentation/graphql/nivel-formacao.graphql.mapper";
 import { OfertaFormacaoGraphqlMapper } from "@/modules/ensino/oferta-formacao/presentation/graphql/oferta-formacao.graphql.mapper";
 import {
@@ -7,7 +8,6 @@ import {
   OfertaFormacaoNivelFormacaoListInputDto,
   OfertaFormacaoNivelFormacaoUpdateInputDto,
 } from "@/modules/ensino/oferta-formacao-nivel-formacao";
-import { createListOutputMapper, mapDatedFields } from "@/modules/@shared/application/mappers";
 import {
   OfertaFormacaoNivelFormacaoCreateInputGraphQlDto,
   OfertaFormacaoNivelFormacaoFindOneOutputGraphQlDto,

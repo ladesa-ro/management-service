@@ -1,3 +1,8 @@
+import {
+  createFindOneInputMapper,
+  createListOutputMapper,
+  mapDatedFields,
+} from "@/modules/@shared/application/mappers";
 import { CampusGraphqlMapper } from "@/modules/ambientes/campus/presentation/graphql/campus.graphql.mapper";
 import { OfertaFormacaoGraphqlMapper } from "@/modules/ensino/oferta-formacao/presentation/graphql/oferta-formacao.graphql.mapper";
 import {
@@ -7,11 +12,6 @@ import {
   GradeHorarioOfertaFormacaoListInputDto,
   GradeHorarioOfertaFormacaoUpdateInputDto,
 } from "@/modules/horarios/grade-horario-oferta-formacao";
-import {
-  createFindOneInputMapper,
-  createListOutputMapper,
-  mapDatedFields,
-} from "@/modules/@shared/application/mappers";
 import {
   GradeHorarioOfertaFormacaoCreateInputGraphQlDto,
   GradeHorarioOfertaFormacaoFindOneOutputGraphQlDto,

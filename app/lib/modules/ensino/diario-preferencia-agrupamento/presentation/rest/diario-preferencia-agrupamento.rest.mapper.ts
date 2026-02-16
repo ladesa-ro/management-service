@@ -1,3 +1,9 @@
+import {
+  createFindOneInputMapper,
+  createListInputMapper,
+  createListOutputMapper,
+  mapDatedFields,
+} from "@/modules/@shared/application/mappers";
 import { DiarioRestMapper } from "@/modules/ensino/diario/presentation/rest";
 import {
   DiarioPreferenciaAgrupamentoCreateInputDto,
@@ -7,12 +13,6 @@ import {
   DiarioPreferenciaAgrupamentoUpdateInputDto,
 } from "@/modules/ensino/diario-preferencia-agrupamento";
 import { IntervaloDeTempoRestMapper } from "@/modules/horarios/intervalo-de-tempo/presentation/rest";
-import {
-  createFindOneInputMapper,
-  createListInputMapper,
-  createListOutputMapper,
-  mapDatedFields,
-} from "@/modules/@shared/application/mappers";
 import {
   DiarioPreferenciaAgrupamentoCreateInputRestDto,
   DiarioPreferenciaAgrupamentoFindOneInputRestDto,

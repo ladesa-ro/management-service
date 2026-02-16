@@ -4,7 +4,10 @@ import {
   CidadeListInputDto,
 } from "@/modules/@base/localidades/cidade";
 import { EstadoRestMapper } from "@/modules/@base/localidades/estado/presentation/rest/estado.rest.mapper";
-import { createListInputMapper, createListOutputMapper } from "@/modules/@shared/application/mappers";
+import {
+  createListInputMapper,
+  createListOutputMapper,
+} from "@/modules/@shared/application/mappers";
 import {
   CidadeFindOneInputRestDto,
   CidadeFindOneOutputRestDto,

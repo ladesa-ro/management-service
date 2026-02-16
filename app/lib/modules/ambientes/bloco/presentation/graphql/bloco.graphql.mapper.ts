@@ -1,3 +1,4 @@
+import { createListOutputMapper, mapDatedFields } from "@/modules/@shared/application/mappers";
 import {
   BlocoCreateInputDto,
   BlocoFindOneInputDto,
@@ -6,7 +7,6 @@ import {
   BlocoUpdateInputDto,
 } from "@/modules/ambientes/bloco";
 import { CampusGraphqlMapper } from "@/modules/ambientes/campus/presentation/graphql/campus.graphql.mapper";
-import { createListOutputMapper, mapDatedFields } from "@/modules/@shared/application/mappers";
 import {
   BlocoCreateInputGraphQlDto,
   BlocoFindOneOutputGraphQlDto,
