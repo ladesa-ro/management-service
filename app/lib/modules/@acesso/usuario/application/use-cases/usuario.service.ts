@@ -21,8 +21,8 @@ import {
 } from "@/modules/@acesso/usuario/application/ports";
 import { ArquivoService } from "@/modules/@base/armazenamento/arquivo/application/use-cases/arquivo.service";
 import { ImagemService } from "@/modules/@base/armazenamento/imagem/application/use-cases/imagem.service";
-import type { AccessContext } from "@/modules/@core/access-context";
-import { KeycloakService } from "@/modules/@core/identity-provider";
+import type { AccessContext } from "@/modules/@core/contexto-acesso";
+import { KeycloakService } from "@/modules/@core/provedor-identidade";
 import {
   getEntityImagemStreamableFile,
   ResourceNotFoundError,

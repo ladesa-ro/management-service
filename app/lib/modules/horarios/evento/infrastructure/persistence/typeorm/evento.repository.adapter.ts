@@ -1,8 +1,9 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
 import type { SelectQueryBuilder } from "typeorm";
-import { DatabaseContextService } from "@/modules/@database-context";
+import { DataSource } from "typeorm";
 import {
+  APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
   type ITypeOrmPaginationConfig,
   NestJsPaginateAdapter,
@@ -16,6 +17,7 @@ import type {
 } from "@/modules/horarios/evento";
 import type { IEventoRepositoryPort } from "@/modules/horarios/evento/application/ports/out";
 import type { EventoEntity } from "./evento.entity";
+import { createEventoRepository } from "./evento.repository";
 
 /**
  * Adapter TypeORM que implementa o port de repositório de Evento.
@@ -37,14 +39,14 @@ export class EventoTypeOrmRepositoryAdapter
   protected readonly outputDtoName = "EventoFindOneOutputDto";
 
   constructor(
-    protected readonly databaseContext: DatabaseContextService,
+    @Inject(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
     protected readonly paginationAdapter: NestJsPaginateAdapter,
   ) {
     super();
   }
 
   protected get repository() {
-    return this.databaseContext.eventoRepository;
+    return createEventoRepository(this.dataSource);
   }
 
   /**

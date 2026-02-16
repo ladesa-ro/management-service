@@ -1,6 +1,6 @@
-import { createAuthzRegistryProvider } from "@/modules/@core/access-context";
+import { createAuthzRegistryProvider } from "@/modules/@core/contexto-acesso";
+import { createReservaRepository } from "./persistence/typeorm/reserva.repository";
 
-export const ReservaAuthzRegistrySetup = createAuthzRegistryProvider(
-  "reserva",
-  (db) => db.reservaRepository,
+export const ReservaAuthzRegistrySetup = createAuthzRegistryProvider("reserva", (ds) =>
+  createReservaRepository(ds),
 );

@@ -1,3 +1,4 @@
+import { createListOutputMapper, mapDatedFields } from "@/modules/@shared/application/mappers";
 import { DiarioGraphqlMapper } from "@/modules/ensino/diario/presentation/graphql/diario.graphql.mapper";
 import {
   AulaCreateInputDto,
@@ -7,7 +8,6 @@ import {
   AulaUpdateInputDto,
 } from "@/modules/horarios/aula";
 import { IntervaloDeTempoGraphqlMapper } from "@/modules/horarios/intervalo-de-tempo/presentation/graphql/intervalo-de-tempo.graphql.mapper";
-import { createListOutputMapper, mapDatedFields } from "@/server/nest/shared/mappers";
 import {
   AmbienteFindOneOutputForAulaGraphQlDto,
   AulaCreateInputGraphQlDto,

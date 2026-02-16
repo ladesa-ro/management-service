@@ -1,3 +1,4 @@
+import { createListOutputMapper, mapDatedFields } from "@/modules/@shared/application/mappers";
 import { CalendarioLetivoGraphqlMapper } from "@/modules/horarios/calendario-letivo/presentation/graphql/calendario-letivo.graphql.mapper";
 import {
   DiaCalendarioCreateInputDto,
@@ -6,7 +7,6 @@ import {
   DiaCalendarioListInputDto,
   DiaCalendarioUpdateInputDto,
 } from "@/modules/horarios/dia-calendario";
-import { createListOutputMapper, mapDatedFields } from "@/server/nest/shared/mappers";
 import {
   DiaCalendarioCreateInputGraphQlDto,
   DiaCalendarioFindOneOutputGraphQlDto,

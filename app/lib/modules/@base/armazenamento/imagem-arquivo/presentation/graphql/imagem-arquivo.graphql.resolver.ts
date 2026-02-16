@@ -1,7 +1,7 @@
 import { Args, ID, Info, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
 import { ImagemArquivoService } from "@/modules/@base/armazenamento/imagem-arquivo/application/use-cases/imagem-arquivo.service";
-import { AccessContext, AccessContextGraphQL } from "@/modules/@core/access-context";
+import { AccessContext, AccessContextGraphQL } from "@/modules/@core/contexto-acesso";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
 import {
   ImagemArquivoFindOneOutputGraphQlDto,

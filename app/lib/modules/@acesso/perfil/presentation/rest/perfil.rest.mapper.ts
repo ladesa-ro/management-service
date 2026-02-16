@@ -5,13 +5,13 @@ import {
   PerfilSetVinculosInputDto,
 } from "@/modules/@acesso/perfil";
 import { UsuarioRestMapper } from "@/modules/@acesso/usuario/presentation/rest";
-import { CampusRestMapper } from "@/modules/ambientes/campus/presentation/rest";
 import {
   createFindOneInputMapper,
   createListInputMapper,
   createListOutputMapper,
   mapDatedFields,
-} from "@/server/nest/shared/mappers";
+} from "@/modules/@shared/application/mappers";
+import { CampusRestMapper } from "@/modules/ambientes/campus/presentation/rest";
 import {
   PerfilFindOneOutputRestDto,
   PerfilListOutputRestDto,

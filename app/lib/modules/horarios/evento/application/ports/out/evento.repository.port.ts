@@ -1,5 +1,5 @@
 import type { SelectQueryBuilder } from "typeorm";
-import type { AccessContext } from "@/modules/@core/access-context";
+import type { AccessContext } from "@/modules/@core/contexto-acesso";
 import type { IEvento } from "@/modules/horarios/evento";
 import type { EventoEntity } from "@/modules/horarios/evento/infrastructure/persistence/typeorm";
 import type {

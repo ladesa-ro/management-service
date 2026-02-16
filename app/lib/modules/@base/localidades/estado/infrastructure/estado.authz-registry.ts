@@ -1,7 +1,8 @@
-import { createAuthzRegistryProvider } from "@/modules/@core/access-context";
+import { createAuthzRegistryProvider } from "@/modules/@core/contexto-acesso";
+import { createEstadoRepository } from "./persistence/typeorm/estado.repository";
 
 export const EstadoAuthzRegistrySetup = createAuthzRegistryProvider(
   "estado",
-  (db) => db.estadoRepository,
+  (ds) => createEstadoRepository(ds),
   { actions: { find: true } },
 );

@@ -10,8 +10,8 @@ import {
 import { AutenticacaoService } from "@/modules/@acesso/autenticacao";
 import { UsuarioService } from "@/modules/@acesso/usuario";
 import { UsuarioEnsinoOutputRestDto } from "@/modules/@acesso/usuario/presentation/rest";
-import { AccessContext, AccessContextHttp } from "@/modules/@core/access-context";
-import { Public } from "@/modules/@core/authentication";
+import { Public } from "@/modules/@core/autenticacao";
+import { AccessContext, AccessContextHttp } from "@/modules/@core/contexto-acesso";
 import {
   AuthCredentialsSetInitialPasswordInputRestDto,
   AuthLoginInputRestDto,

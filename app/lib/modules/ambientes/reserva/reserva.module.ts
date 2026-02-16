@@ -1,0 +1,32 @@
+import { Module } from "@nestjs/common";
+import { UsuarioModule } from "@/modules/@acesso/usuario/usuario.module";
+import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
+import { AmbienteModule } from "@/modules/ambientes/ambiente/ambiente.module";
+import { RESERVA_REPOSITORY_PORT, ReservaService } from "@/modules/ambientes/reserva";
+import { ReservaAuthzRegistrySetup } from "@/modules/ambientes/reserva/infrastructure";
+import { ReservaTypeOrmRepositoryAdapter } from "@/modules/ambientes/reserva/infrastructure/persistence/typeorm";
+import { ReservaGraphqlResolver } from "@/modules/ambientes/reserva/presentation/graphql/reserva.graphql.resolver";
+import { ReservaRestController } from "@/modules/ambientes/reserva/presentation/rest";
+
+/**
+ * Módulo Reserva configurado com Arquitetura Hexagonal
+ * - ReservaService: Implementa casos de uso (porta de entrada)
+ * - ReservaTypeOrmRepositoryAdapter: Implementa IReservaRepositoryPort (porta de saída)
+ * - NestJsPaginateAdapter: Adapter de paginação com nestjs-paginate
+ */
+@Module({
+  imports: [UsuarioModule, AmbienteModule],
+  controllers: [ReservaRestController],
+  providers: [
+    NestJsPaginateAdapter,
+    {
+      provide: RESERVA_REPOSITORY_PORT,
+      useClass: ReservaTypeOrmRepositoryAdapter,
+    },
+    ReservaService,
+    ReservaGraphqlResolver,
+    ReservaAuthzRegistrySetup,
+  ],
+  exports: [ReservaService],
+})
+export class ReservaModule {}

@@ -1,7 +1,8 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { FilterOperator, FilterSuffix } from "nestjs-paginate";
-import { DatabaseContextService } from "@/modules/@database-context";
+import { DataSource } from "typeorm";
 import {
+  APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
   type ITypeOrmPaginationConfig,
   NestJsPaginateAdapter,
@@ -15,6 +16,7 @@ import type {
 } from "@/modules/ensino/disciplina/application/dtos";
 import type { IDisciplinaRepositoryPort } from "@/modules/ensino/disciplina/application/ports";
 import type { DisciplinaEntity } from "./disciplina.entity";
+import { createDisciplinaRepository } from "./disciplina.repository";
 
 @Injectable()
 export class DisciplinaTypeOrmRepositoryAdapter
@@ -32,14 +34,14 @@ export class DisciplinaTypeOrmRepositoryAdapter
   protected readonly outputDtoName = "DisciplinaFindOneOutputDto";
 
   constructor(
-    protected readonly databaseContext: DatabaseContextService,
+    @Inject(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
     protected readonly paginationAdapter: NestJsPaginateAdapter,
   ) {
     super();
   }
 
   protected get repository() {
-    return this.databaseContext.disciplinaRepository;
+    return createDisciplinaRepository(this.dataSource);
   }
 
   protected getPaginateConfig(): ITypeOrmPaginationConfig<DisciplinaEntity> {

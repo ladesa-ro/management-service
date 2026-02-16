@@ -1,6 +1,7 @@
-import { Injectable } from "@nestjs/common";
-import { DatabaseContextService } from "@/modules/@database-context";
+import { Inject, Injectable } from "@nestjs/common";
+import { DataSource } from "typeorm";
 import {
+  APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
   type ITypeOrmPaginationConfig,
   NestJsPaginateAdapter,
@@ -14,6 +15,7 @@ import type {
 } from "@/modules/ensino/professor-indisponibilidade/application/dtos";
 import type { IProfessorIndisponibilidadeRepositoryPort } from "@/modules/ensino/professor-indisponibilidade/application/ports";
 import type { ProfessorIndisponibilidadeEntity } from "./professor-indisponibilidade.entity";
+import { createProfessorIndisponibilidadeRepository } from "./professor-indisponibilidade.repository";
 
 /**
  * Adapter TypeORM que implementa o port de repositório de ProfessorIndisponibilidade.
@@ -35,14 +37,14 @@ export class ProfessorIndisponibilidadeTypeOrmRepositoryAdapter
   protected readonly outputDtoName = "ProfessorIndisponibilidadeFindOneOutputDto";
 
   constructor(
-    protected readonly databaseContext: DatabaseContextService,
+    @Inject(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
     protected readonly paginationAdapter: NestJsPaginateAdapter,
   ) {
     super();
   }
 
   protected get repository() {
-    return this.databaseContext.professorIndisponibilidadeRepository;
+    return createProfessorIndisponibilidadeRepository(this.dataSource);
   }
 
   protected getPaginateConfig(): ITypeOrmPaginationConfig<ProfessorIndisponibilidadeEntity> {

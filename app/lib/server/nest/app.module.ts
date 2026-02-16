@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
 import { APP_FILTER } from "@nestjs/core";
-import { AuthorizationCoreModule } from "@/modules/@core/authorization";
+import { AuthorizationCoreModule } from "@/modules/@core/autorizacao";
 import { InfrastructureModule } from "@/modules/@shared/infrastructure";
 import {
   SearchModule,

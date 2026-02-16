@@ -1,4 +1,10 @@
 import { PerfilRestMapper } from "@/modules/@acesso/perfil/presentation/rest";
+import {
+  createFindOneInputMapper,
+  createListInputMapper,
+  createListOutputMapper,
+  mapDatedFields,
+} from "@/modules/@shared/application/mappers";
 import { DiarioRestMapper } from "@/modules/ensino/diario/presentation/rest";
 import {
   DiarioProfessorCreateInputDto,
@@ -7,12 +13,6 @@ import {
   DiarioProfessorListInputDto,
   DiarioProfessorUpdateInputDto,
 } from "@/modules/ensino/diario-professor";
-import {
-  createFindOneInputMapper,
-  createListInputMapper,
-  createListOutputMapper,
-  mapDatedFields,
-} from "@/server/nest/shared/mappers";
 import {
   DiarioProfessorCreateInputRestDto,
   DiarioProfessorFindOneInputRestDto,

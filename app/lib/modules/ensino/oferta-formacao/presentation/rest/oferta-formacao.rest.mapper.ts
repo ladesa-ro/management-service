@@ -1,3 +1,9 @@
+import {
+  createFindOneInputMapper,
+  createListInputMapper,
+  createListOutputMapper,
+  mapDatedFields,
+} from "@/modules/@shared/application/mappers";
 import { ModalidadeRestMapper } from "@/modules/ensino/modalidade/presentation/rest";
 import {
   OfertaFormacaoCreateInputDto,
@@ -6,12 +12,6 @@ import {
   OfertaFormacaoListInputDto,
   OfertaFormacaoUpdateInputDto,
 } from "@/modules/ensino/oferta-formacao";
-import {
-  createFindOneInputMapper,
-  createListInputMapper,
-  createListOutputMapper,
-  mapDatedFields,
-} from "@/server/nest/shared/mappers";
 import {
   OfertaFormacaoCreateInputRestDto,
   OfertaFormacaoFindOneInputRestDto,

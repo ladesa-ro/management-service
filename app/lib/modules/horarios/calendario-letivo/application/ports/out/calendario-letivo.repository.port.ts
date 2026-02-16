@@ -1,4 +1,4 @@
-import type { AccessContext } from "@/modules/@core/access-context";
+import type { AccessContext } from "@/modules/@core/contexto-acesso";
 import type { IBaseCrudRepositoryPort } from "@/modules/@shared";
 import type { ICalendarioLetivo } from "@/modules/horarios/calendario-letivo";
 import type { CalendarioLetivoFindOneOutputDto, CalendarioLetivoListOutputDto } from "../../dtos";

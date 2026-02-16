@@ -3,7 +3,7 @@ import {
   EnderecoCreateInputDto,
   EnderecoFindOneOutputDto,
 } from "@/modules/@base/localidades/endereco";
-import { mapDatedFields } from "@/server/nest/shared/mappers";
+import { mapDatedFields } from "@/modules/@shared/application/mappers";
 import { EnderecoFindOneOutputRestDto, EnderecoInputRestDto } from "./endereco.rest.dto";
 
 export class EnderecoRestMapper {

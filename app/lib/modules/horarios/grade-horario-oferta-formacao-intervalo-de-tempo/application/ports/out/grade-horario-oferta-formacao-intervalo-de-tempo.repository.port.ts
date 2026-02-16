@@ -1,5 +1,5 @@
 import type { SelectQueryBuilder } from "typeorm";
-import type { AccessContext } from "@/modules/@core/access-context";
+import type { AccessContext } from "@/modules/@core/contexto-acesso";
 import type { IBaseCrudRepositoryPort } from "@/modules/@shared";
 import type { IGradeHorarioOfertaFormacaoIntervaloDeTempo } from "@/modules/horarios/grade-horario-oferta-formacao-intervalo-de-tempo";
 import type { GradeHorarioOfertaFormacaoIntervaloDeTempoEntity } from "@/modules/horarios/grade-horario-oferta-formacao-intervalo-de-tempo/infrastructure/persistence/typeorm";

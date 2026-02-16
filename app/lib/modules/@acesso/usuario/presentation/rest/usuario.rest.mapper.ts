@@ -6,13 +6,13 @@ import {
   UsuarioListInputDto,
   UsuarioUpdateInputDto,
 } from "@/modules/@acesso/usuario";
-import { BlocoRestMapper } from "@/modules/ambientes/bloco/presentation/rest";
 import {
   createFindOneInputMapper,
   createListInputMapper,
   createListOutputMapper,
   mapDatedFields,
-} from "@/server/nest/shared/mappers";
+} from "@/modules/@shared/application/mappers";
+import { BlocoRestMapper } from "@/modules/ambientes/bloco/presentation/rest";
 import {
   UsuarioCreateInputRestDto,
   UsuarioEnsinoCursoRefRestDto,

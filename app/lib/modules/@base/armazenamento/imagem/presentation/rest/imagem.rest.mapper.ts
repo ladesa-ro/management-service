@@ -8,7 +8,7 @@ import {
   createListInputMapper,
   createListOutputMapper,
   mapDatedFields,
-} from "@/server/nest/shared/mappers";
+} from "@/modules/@shared/application/mappers";
 import { ImagemFindOneOutputRestDto, ImagemListOutputRestDto } from "./imagem.rest.dto";
 
 export class ImagemRestMapper {

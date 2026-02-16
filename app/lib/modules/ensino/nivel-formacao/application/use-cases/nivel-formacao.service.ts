@@ -1,5 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
-import type { AccessContext } from "@/modules/@core/access-context";
+import type { AccessContext } from "@/modules/@core/contexto-acesso";
 import { BaseCrudService, type PersistInput } from "@/modules/@shared";
 import { type INivelFormacao, NivelFormacao } from "@/modules/ensino/nivel-formacao";
 import type {

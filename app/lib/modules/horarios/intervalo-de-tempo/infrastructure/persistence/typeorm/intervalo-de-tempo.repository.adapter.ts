@@ -1,6 +1,7 @@
-import { Injectable } from "@nestjs/common";
-import { DatabaseContextService } from "@/modules/@database-context";
+import { Inject, Injectable } from "@nestjs/common";
+import { DataSource } from "typeorm";
 import {
+  APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
   type ITypeOrmPaginationConfig,
   NestJsPaginateAdapter,
@@ -15,6 +16,7 @@ import type {
   IntervaloDeTempoListOutputDto,
 } from "@/modules/horarios/intervalo-de-tempo";
 import type { IntervaloDeTempoEntity } from "@/modules/horarios/intervalo-de-tempo/infrastructure/persistence/typeorm/index";
+import { createIntervaloDeTempoRepository } from "./intervalo-de-tempo.repository";
 
 @Injectable()
 export class IntervaloDeTempoTypeOrmRepositoryAdapter
@@ -32,14 +34,14 @@ export class IntervaloDeTempoTypeOrmRepositoryAdapter
   protected readonly outputDtoName = "IntervaloDeTempoFindOneOutputDto";
 
   constructor(
-    protected readonly databaseContext: DatabaseContextService,
+    @Inject(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
     protected readonly paginationAdapter: NestJsPaginateAdapter,
   ) {
     super();
   }
 
   protected get repository() {
-    return this.databaseContext.intervaloDeTempoRepository;
+    return createIntervaloDeTempoRepository(this.dataSource);
   }
 
   // Custom methods specific to IntervaloDeTempo

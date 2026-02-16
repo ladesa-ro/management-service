@@ -1,3 +1,8 @@
+import {
+  createFindOneInputMapper,
+  createListOutputMapper,
+  mapDatedFields,
+} from "@/modules/@shared/application/mappers";
 import { CalendarioLetivoGraphqlMapper } from "@/modules/horarios/calendario-letivo/presentation/graphql/calendario-letivo.graphql.mapper";
 import {
   HorarioGeradoCreateInputDto,
@@ -6,11 +11,6 @@ import {
   HorarioGeradoListInputDto,
   HorarioGeradoUpdateInputDto,
 } from "@/modules/horarios/horario-gerado";
-import {
-  createFindOneInputMapper,
-  createListOutputMapper,
-  mapDatedFields,
-} from "@/server/nest/shared/mappers";
 import {
   HorarioGeradoCreateInputGraphQlDto,
   HorarioGeradoFindOneOutputGraphQlDto,

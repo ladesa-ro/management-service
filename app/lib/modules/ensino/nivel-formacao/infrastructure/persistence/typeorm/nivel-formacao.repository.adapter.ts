@@ -1,6 +1,7 @@
-import { Injectable } from "@nestjs/common";
-import { DatabaseContextService } from "@/modules/@database-context";
+import { Inject, Injectable } from "@nestjs/common";
+import { DataSource } from "typeorm";
 import {
+  APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
   type ITypeOrmPaginationConfig,
   NestJsPaginateAdapter,
@@ -14,6 +15,7 @@ import type {
   NivelFormacaoListOutputDto,
 } from "@/modules/ensino/nivel-formacao";
 import type { NivelFormacaoEntity } from "./nivel-formacao.entity";
+import { createNivelFormacaoRepository } from "./nivel-formacao.repository";
 
 @Injectable()
 export class NivelFormacaoTypeOrmRepositoryAdapter
@@ -31,14 +33,14 @@ export class NivelFormacaoTypeOrmRepositoryAdapter
   protected readonly outputDtoName = "NivelFormacaoFindOneOutputDto";
 
   constructor(
-    protected readonly databaseContext: DatabaseContextService,
+    @Inject(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
     protected readonly paginationAdapter: NestJsPaginateAdapter,
   ) {
     super();
   }
 
   protected get repository() {
-    return this.databaseContext.nivelFormacaoRepository;
+    return createNivelFormacaoRepository(this.dataSource);
   }
 
   protected getPaginateConfig(): ITypeOrmPaginationConfig<NivelFormacaoEntity> {

@@ -1,3 +1,9 @@
+import {
+  createFindOneInputMapper,
+  createListInputMapper,
+  createListOutputMapper,
+  mapDatedFields,
+} from "@/modules/@shared/application/mappers";
 import { AmbienteRestMapper } from "@/modules/ambientes/ambiente/presentation/rest";
 import { BlocoRestMapper } from "@/modules/ambientes/bloco/presentation/rest";
 import { CursoRestMapper } from "@/modules/ensino/curso/presentation/rest";
@@ -8,12 +14,6 @@ import {
   TurmaListInputDto,
   TurmaUpdateInputDto,
 } from "@/modules/ensino/turma";
-import {
-  createFindOneInputMapper,
-  createListInputMapper,
-  createListOutputMapper,
-  mapDatedFields,
-} from "@/server/nest/shared/mappers";
 import {
   TurmaCreateInputRestDto,
   TurmaFindOneInputRestDto,

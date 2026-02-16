@@ -1,4 +1,9 @@
 import {
+  createFindOneInputMapper,
+  createListOutputMapper,
+  mapDatedFields,
+} from "@/modules/@shared/application/mappers";
+import {
   HorarioGeradoAulaCreateInputDto,
   HorarioGeradoAulaFindOneInputDto,
   HorarioGeradoAulaFindOneOutputDto,
@@ -6,11 +11,6 @@ import {
   HorarioGeradoAulaUpdateInputDto,
 } from "@/modules/horarios/horario-gerado-aula";
 import { IntervaloDeTempoGraphqlMapper } from "@/modules/horarios/intervalo-de-tempo/presentation/graphql/intervalo-de-tempo.graphql.mapper";
-import {
-  createFindOneInputMapper,
-  createListOutputMapper,
-  mapDatedFields,
-} from "@/server/nest/shared/mappers";
 import {
   HorarioGeradoAulaCreateInputGraphQlDto,
   HorarioGeradoAulaDiarioProfessorOutputGraphQlDto,

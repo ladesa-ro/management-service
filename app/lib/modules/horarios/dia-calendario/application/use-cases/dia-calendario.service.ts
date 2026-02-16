@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { has } from "lodash";
-import type { AccessContext } from "@/modules/@core/access-context";
+import type { AccessContext } from "@/modules/@core/contexto-acesso";
 import { BaseCrudService, type PersistInput } from "@/modules/@shared";
 import { CalendarioLetivoService } from "@/modules/horarios/calendario-letivo";
 import { DiaCalendario, type IDiaCalendario } from "@/modules/horarios/dia-calendario";

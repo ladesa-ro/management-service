@@ -1,7 +1,8 @@
-import { createAuthzRegistryProvider } from "@/modules/@core/access-context";
+import { createAuthzRegistryProvider } from "@/modules/@core/contexto-acesso";
+import { createEnderecoRepository } from "./persistence/typeorm/endereco.repository";
 
 export const EnderecoAuthzRegistrySetup = createAuthzRegistryProvider(
   "endereco",
-  (db) => db.enderecoRepository,
+  (ds) => createEnderecoRepository(ds),
   { actions: { find: true } },
 );

@@ -1,7 +1,8 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
-import { DatabaseContextService } from "@/modules/@database-context";
+import { DataSource } from "typeorm";
 import {
+  APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
   type ITypeOrmPaginationConfig,
   NestJsPaginateAdapter,
@@ -15,6 +16,7 @@ import type {
 } from "@/modules/ensino/curso/application/dtos";
 import type { ICursoRepositoryPort } from "@/modules/ensino/curso/application/ports";
 import type { CursoEntity } from "./curso.entity";
+import { createCursoRepository } from "./curso.repository";
 
 @Injectable()
 export class CursoTypeOrmRepositoryAdapter
@@ -32,14 +34,14 @@ export class CursoTypeOrmRepositoryAdapter
   protected readonly outputDtoName = "CursoFindOneOutputDto";
 
   constructor(
-    protected readonly databaseContext: DatabaseContextService,
+    @Inject(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
     protected readonly paginationAdapter: NestJsPaginateAdapter,
   ) {
     super();
   }
 
   protected get repository() {
-    return this.databaseContext.cursoRepository;
+    return createCursoRepository(this.dataSource);
   }
 
   protected getPaginateConfig(): ITypeOrmPaginationConfig<CursoEntity> {

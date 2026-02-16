@@ -1,14 +1,14 @@
 import {
-  IntervaloDeTempoFindOneInputDto,
-  IntervaloDeTempoFindOneOutputDto,
-  IntervaloDeTempoListInputDto,
-} from "@/modules/horarios/intervalo-de-tempo";
-import {
   createFindOneInputMapper,
   createListInputMapper,
   createListOutputMapper,
   mapDatedFields,
-} from "@/server/nest/shared/mappers";
+} from "@/modules/@shared/application/mappers";
+import {
+  IntervaloDeTempoFindOneInputDto,
+  IntervaloDeTempoFindOneOutputDto,
+  IntervaloDeTempoListInputDto,
+} from "@/modules/horarios/intervalo-de-tempo";
 import {
   IntervaloDeTempoFindOneOutputRestDto,
   IntervaloDeTempoListOutputRestDto,

@@ -13,7 +13,7 @@ import {
   PERFIL_REPOSITORY_PORT,
 } from "@/modules/@acesso/perfil/application/ports";
 import { UsuarioService } from "@/modules/@acesso/usuario";
-import type { AccessContext } from "@/modules/@core/access-context";
+import type { AccessContext } from "@/modules/@core/contexto-acesso";
 import { ResourceNotFoundError } from "@/modules/@shared";
 import { CampusService } from "@/modules/ambientes/campus";
 

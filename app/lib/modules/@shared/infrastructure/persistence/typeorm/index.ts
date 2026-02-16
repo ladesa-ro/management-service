@@ -1,8 +1,8 @@
 // Base repository adapter
 export * from "./base-repository.adapter";
-
 // Repository factory utilities
 export * from "./create-repository-factory";
+export { APP_DATA_SOURCE_TOKEN } from "./providers/app-data-source.provider";
 
 // NOTE: entities.ts is NOT re-exported here to avoid loading all 35 entities
 // when importing unrelated utilities. Import directly from entities.ts if needed.

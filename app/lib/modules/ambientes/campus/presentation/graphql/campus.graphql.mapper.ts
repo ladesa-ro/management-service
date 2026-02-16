@@ -1,4 +1,5 @@
 import { EnderecoGraphqlMapper } from "@/modules/@base/localidades/endereco/presentation/graphql/endereco.graphql.mapper";
+import { createListOutputMapper, mapDatedFields } from "@/modules/@shared/application/mappers";
 import {
   CampusCreateInputDto,
   CampusFindOneInputDto,
@@ -6,7 +7,6 @@ import {
   CampusListInputDto,
   CampusUpdateInputDto,
 } from "@/modules/ambientes/campus";
-import { createListOutputMapper, mapDatedFields } from "@/server/nest/shared/mappers";
 import {
   CampusCreateInputGraphQlDto,
   CampusFindOneOutputGraphQlDto,

@@ -1,3 +1,4 @@
+import { createListOutputMapper, mapDatedFields } from "@/modules/@shared/application/mappers";
 import {
   ModalidadeCreateInputDto,
   ModalidadeFindOneInputDto,
@@ -5,7 +6,6 @@ import {
   ModalidadeListInputDto,
   ModalidadeUpdateInputDto,
 } from "@/modules/ensino/modalidade";
-import { createListOutputMapper, mapDatedFields } from "@/server/nest/shared/mappers";
 import {
   ModalidadeCreateInputGraphQlDto,
   ModalidadeFindOneOutputGraphQlDto,

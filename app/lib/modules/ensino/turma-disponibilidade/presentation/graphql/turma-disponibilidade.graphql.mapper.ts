@@ -1,3 +1,4 @@
+import { createListOutputMapper, mapDatedFields } from "@/modules/@shared/application/mappers";
 import { DisponibilidadeGraphqlMapper } from "@/modules/ensino/disponibilidade/presentation/graphql/disponibilidade.graphql.mapper";
 import {
   TurmaDisponibilidadeCreateInputDto,
@@ -6,7 +7,6 @@ import {
   TurmaDisponibilidadeListInputDto,
   TurmaDisponibilidadeUpdateInputDto,
 } from "@/modules/ensino/turma-disponibilidade";
-import { createListOutputMapper, mapDatedFields } from "@/server/nest/shared/mappers";
 import {
   TurmaDisponibilidadeCreateInputGraphQlDto,
   TurmaDisponibilidadeFindOneOutputGraphQlDto,

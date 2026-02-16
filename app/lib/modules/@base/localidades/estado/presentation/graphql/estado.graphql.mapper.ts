@@ -3,7 +3,7 @@ import {
   EstadoFindOneOutputDto,
   EstadoListInputDto,
 } from "@/modules/@base/localidades/estado";
-import { createListOutputMapper } from "@/server/nest/shared/mappers";
+import { createListOutputMapper } from "@/modules/@shared/application/mappers";
 import {
   EstadoFindOneOutputGraphQlDto,
   EstadoListInputGraphQlDto,

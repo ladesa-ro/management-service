@@ -1,4 +1,5 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
+import { DataSource } from "typeorm";
 import type {
   IUsuarioRepositoryPort,
   UsuarioFindOneInputDto,
@@ -6,15 +7,19 @@ import type {
   UsuarioListInputDto,
   UsuarioListOutputDto,
 } from "@/modules/@acesso/usuario";
-import { DatabaseContextService } from "@/modules/@database-context";
 import {
+  APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
   type ITypeOrmPaginationConfig,
   NestJsPaginateAdapter,
   paginateConfig,
   QbEfficientLoad,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
+import { createCursoRepository } from "../../../../../ensino/curso/infrastructure/persistence/typeorm/curso.repository";
+import { createDisciplinaRepository } from "../../../../../ensino/disciplina/infrastructure/persistence/typeorm/disciplina.repository";
+import { createTurmaRepository } from "../../../../../ensino/turma/infrastructure/persistence/typeorm/turma.repository";
 import type { UsuarioEntity } from "./usuario.entity";
+import { createUsuarioRepository } from "./usuario.repository";
 
 @Injectable()
 export class UsuarioTypeOrmRepositoryAdapter
@@ -32,14 +37,14 @@ export class UsuarioTypeOrmRepositoryAdapter
   protected readonly outputDtoName = "UsuarioFindOneOutputDto";
 
   constructor(
-    protected readonly databaseContext: DatabaseContextService,
+    @Inject(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
     protected readonly paginationAdapter: NestJsPaginateAdapter,
   ) {
     super();
   }
 
   protected get repository() {
-    return this.databaseContext.usuarioRepository;
+    return createUsuarioRepository(this.dataSource);
   }
 
   async findByMatriculaSiape(
@@ -115,7 +120,7 @@ export class UsuarioTypeOrmRepositoryAdapter
       }>;
     }>;
   }> {
-    const disciplinas = await this.databaseContext.disciplinaRepository.find({
+    const disciplinas = await createDisciplinaRepository(this.dataSource).find({
       where: {
         diarios: {
           ativo: true,
@@ -155,7 +160,7 @@ export class UsuarioTypeOrmRepositoryAdapter
         cursos: [],
       };
 
-      const cursos = await this.databaseContext.cursoRepository.find({
+      const cursos = await createCursoRepository(this.dataSource).find({
         where: {
           turmas: {
             diarios: {
@@ -187,7 +192,7 @@ export class UsuarioTypeOrmRepositoryAdapter
           turmas: [],
         };
 
-        const turmas = await this.databaseContext.turmaRepository.find({
+        const turmas = await createTurmaRepository(this.dataSource).find({
           where: [
             {
               curso: {

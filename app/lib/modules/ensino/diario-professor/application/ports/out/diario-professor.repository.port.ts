@@ -1,4 +1,4 @@
-import type { AccessContext } from "@/modules/@core/access-context";
+import type { AccessContext } from "@/modules/@core/contexto-acesso";
 import type { IBaseCrudRepositoryPort } from "@/modules/@shared";
 import type { IDiarioProfessor } from "@/modules/ensino/diario-professor";
 import type { DiarioProfessorFindOneOutputDto, DiarioProfessorListOutputDto } from "../../dtos";

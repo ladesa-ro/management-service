@@ -1,4 +1,5 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
+import { DataSource } from "typeorm";
 import type {
   EstadoFindOneInputDto,
   EstadoFindOneOutputDto,
@@ -6,14 +7,15 @@ import type {
   EstadoListOutputDto,
 } from "@/modules/@base/localidades/estado/application/dtos";
 import type { IEstadoRepositoryPort } from "@/modules/@base/localidades/estado/application/ports";
-import { DatabaseContextService } from "@/modules/@database-context";
 import {
+  APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
   type ITypeOrmPaginationConfig,
   NestJsPaginateAdapter,
   paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type { EstadoEntity } from "./estado.entity";
+import { createEstadoRepository } from "./estado.repository";
 
 /**
  * Adapter TypeORM que implementa o port de repositório de Estado.
@@ -36,14 +38,14 @@ export class EstadoTypeOrmRepositoryAdapter
   protected readonly outputDtoName = "EstadoFindOneOutputDto";
 
   constructor(
-    protected readonly databaseContext: DatabaseContextService,
+    @Inject(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
     protected readonly paginationAdapter: NestJsPaginateAdapter,
   ) {
     super();
   }
 
   protected get repository() {
-    return this.databaseContext.estadoRepository;
+    return createEstadoRepository(this.dataSource);
   }
 
   protected getPaginateConfig(): ITypeOrmPaginationConfig<EstadoEntity> {

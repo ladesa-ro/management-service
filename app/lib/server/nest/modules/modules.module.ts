@@ -1,44 +1,43 @@
 import { Module } from "@nestjs/common";
-import { AmbienteModule } from "@/server/nest/modules/ambiente";
-import { ArquivoModule } from "@/server/nest/modules/arquivo";
-import { AulaModule } from "@/server/nest/modules/aula";
-import { AutenticacaoModule } from "@/server/nest/modules/autenticacao";
-import { AutorizacaoModule } from "@/server/nest/modules/autorizacao";
-import { BlocoModule } from "@/server/nest/modules/bloco";
-import { CalendarioLetivoModule } from "@/server/nest/modules/calendario-letivo";
-import { CampusModule } from "@/server/nest/modules/campus";
-import { CidadeModule } from "@/server/nest/modules/cidade";
-import { AppConfigModule } from "@/server/nest/modules/config";
-import { CursoModule } from "@/server/nest/modules/curso";
-import { DiaCalendarioModule } from "@/server/nest/modules/dia-calendario";
-import { DiarioModule } from "@/server/nest/modules/diario";
-import { DiarioPreferenciaAgrupamentoModule } from "@/server/nest/modules/diario-preferencia-agrupamento";
-import { DiarioProfessorModule } from "@/server/nest/modules/diario-professor";
-import { DisciplinaModule } from "@/server/nest/modules/disciplina";
-import { DisponibilidadeModule } from "@/server/nest/modules/disponibilidade";
-import { EnderecoModule } from "@/server/nest/modules/endereco";
-import { EstadoModule } from "@/server/nest/modules/estado/estado.module";
-import { EtapaModule } from "@/server/nest/modules/etapa";
-import { EventoModule } from "@/server/nest/modules/evento";
-import { GerarHorarioModule } from "@/server/nest/modules/gerar-horario";
-import { GradeHorarioOfertaFormacaoModule } from "@/server/nest/modules/grade-horario-oferta-formacao";
-import { GradeHorarioOfertaFormacaoIntervaloDeTempoModule } from "@/server/nest/modules/grade-horario-oferta-formacao-intervalo-de-tempo";
-import { HealthModule } from "@/server/nest/modules/health";
-import { HorarioGeradoModule } from "@/server/nest/modules/horario-gerado";
-import { HorarioGeradoAulaModule } from "@/server/nest/modules/horario-gerado-aula";
-import { ImagemModule } from "@/server/nest/modules/imagem";
-import { ImagemArquivoModule } from "@/server/nest/modules/imagem-arquivo";
-import { IntervaloDeTempoModule } from "@/server/nest/modules/intervalo-de-tempo";
-import { ModalidadeModule } from "@/server/nest/modules/modalidade";
-import { NivelFormacaoModule } from "@/server/nest/modules/nivel-formacao";
-import { OfertaFormacaoModule } from "@/server/nest/modules/oferta-formacao";
-import { OfertaFormacaoNivelFormacaoModule } from "@/server/nest/modules/oferta-formacao-nivel-formacao";
-import { PerfilModule } from "@/server/nest/modules/perfil";
-import { ProfessorIndisponibilidadeModule } from "@/server/nest/modules/professor-indisponibilidade";
-import { ReservaModule } from "@/server/nest/modules/reserva";
-import { TurmaModule } from "@/server/nest/modules/turma";
-import { TurmaDisponibilidadeModule } from "@/server/nest/modules/turma-disponibilidade";
-import { UsuarioModule } from "@/server/nest/modules/usuario";
+import { AutenticacaoModule } from "@/modules/@acesso/autenticacao/autenticacao.module";
+import { AutorizacaoModule } from "@/modules/@acesso/autorizacao/autorizacao.module";
+import { PerfilModule } from "@/modules/@acesso/perfil/perfil.module";
+import { UsuarioModule } from "@/modules/@acesso/usuario/usuario.module";
+import { ArquivoModule } from "@/modules/@base/armazenamento/arquivo/arquivo.module";
+import { ImagemModule } from "@/modules/@base/armazenamento/imagem/imagem.module";
+import { ImagemArquivoModule } from "@/modules/@base/armazenamento/imagem-arquivo/imagem-arquivo.module";
+import { CidadeModule } from "@/modules/@base/localidades/cidade/cidade.module";
+import { EnderecoModule } from "@/modules/@base/localidades/endereco/endereco.module";
+import { EstadoModule } from "@/modules/@base/localidades/estado/estado.module";
+import { AppConfigModule } from "@/modules/@shared/infrastructure/config";
+import { AmbienteModule } from "@/modules/ambientes/ambiente/ambiente.module";
+import { BlocoModule } from "@/modules/ambientes/bloco/bloco.module";
+import { CampusModule } from "@/modules/ambientes/campus/campus.module";
+import { ReservaModule } from "@/modules/ambientes/reserva/reserva.module";
+import { CursoModule } from "@/modules/ensino/curso/curso.module";
+import { DiarioModule } from "@/modules/ensino/diario/diario.module";
+import { DiarioPreferenciaAgrupamentoModule } from "@/modules/ensino/diario-preferencia-agrupamento/diario-preferencia-agrupamento.module";
+import { DiarioProfessorModule } from "@/modules/ensino/diario-professor/diario-professor.module";
+import { DisciplinaModule } from "@/modules/ensino/disciplina/disciplina.module";
+import { DisponibilidadeModule } from "@/modules/ensino/disponibilidade/disponibilidade.module";
+import { EtapaModule } from "@/modules/ensino/etapa/etapa.module";
+import { ModalidadeModule } from "@/modules/ensino/modalidade/modalidade.module";
+import { NivelFormacaoModule } from "@/modules/ensino/nivel-formacao/nivel-formacao.module";
+import { OfertaFormacaoModule } from "@/modules/ensino/oferta-formacao/oferta-formacao.module";
+import { OfertaFormacaoNivelFormacaoModule } from "@/modules/ensino/oferta-formacao-nivel-formacao/oferta-formacao-nivel-formacao.module";
+import { ProfessorIndisponibilidadeModule } from "@/modules/ensino/professor-indisponibilidade/professor-indisponibilidade.module";
+import { TurmaModule } from "@/modules/ensino/turma/turma.module";
+import { TurmaDisponibilidadeModule } from "@/modules/ensino/turma-disponibilidade/turma-disponibilidade.module";
+import { AulaModule } from "@/modules/horarios/aula/aula.module";
+import { CalendarioLetivoModule } from "@/modules/horarios/calendario-letivo/calendario-letivo.module";
+import { DiaCalendarioModule } from "@/modules/horarios/dia-calendario/dia-calendario.module";
+import { EventoModule } from "@/modules/horarios/evento/evento.module";
+import { GerarHorarioModule } from "@/modules/horarios/gerar-horario/gerar-horario.module";
+import { GradeHorarioOfertaFormacaoModule } from "@/modules/horarios/grade-horario-oferta-formacao/grade-horario-oferta-formacao.module";
+import { GradeHorarioOfertaFormacaoIntervaloDeTempoModule } from "@/modules/horarios/grade-horario-oferta-formacao-intervalo-de-tempo/grade-horario-oferta-formacao-intervalo-de-tempo.module";
+import { HorarioGeradoModule } from "@/modules/horarios/horario-gerado/horario-gerado.module";
+import { HorarioGeradoAulaModule } from "@/modules/horarios/horario-gerado-aula/horario-gerado-aula.module";
+import { IntervaloDeTempoModule } from "@/modules/horarios/intervalo-de-tempo/intervalo-de-tempo.module";
 
 @Module({
   imports: [
@@ -79,7 +78,6 @@ import { UsuarioModule } from "@/server/nest/modules/usuario";
     EnderecoModule,
     EstadoModule,
     TurmaDisponibilidadeModule,
-    HealthModule,
     HorarioGeradoAulaModule,
     DiarioProfessorModule,
   ],

@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { has } from "lodash";
-import type { AccessContext } from "@/modules/@core/access-context";
+import type { AccessContext } from "@/modules/@core/contexto-acesso";
 import { BaseCrudService, type PersistInput } from "@/modules/@shared";
 import { ModalidadeService } from "@/modules/ensino/modalidade";
 import { type IOfertaFormacao, OfertaFormacao } from "@/modules/ensino/oferta-formacao";

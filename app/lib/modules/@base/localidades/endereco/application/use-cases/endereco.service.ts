@@ -9,7 +9,7 @@ import {
   type IEnderecoRepositoryPort,
   type IEnderecoUseCasePort,
 } from "@/modules/@base/localidades/endereco/application/ports";
-import type { AccessContext } from "@/modules/@core/access-context";
+import type { AccessContext } from "@/modules/@core/contexto-acesso";
 import { ResourceNotFoundError } from "@/modules/@shared";
 
 @Injectable()

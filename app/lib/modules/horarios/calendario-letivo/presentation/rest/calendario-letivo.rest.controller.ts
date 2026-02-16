@@ -7,7 +7,7 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
-import { AccessContext, AccessContextHttp } from "@/modules/@core/access-context";
+import { AccessContext, AccessContextHttp } from "@/modules/@core/contexto-acesso";
 import { CalendarioLetivoService } from "@/modules/horarios/calendario-letivo";
 import {
   CalendarioLetivoCreateInputRestDto,

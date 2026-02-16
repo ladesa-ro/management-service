@@ -1,3 +1,4 @@
+import { createListOutputMapper, mapDatedFields } from "@/modules/@shared/application/mappers";
 import { CampusGraphqlMapper } from "@/modules/ambientes/campus/presentation/graphql/campus.graphql.mapper";
 import { OfertaFormacaoGraphqlMapper } from "@/modules/ensino/oferta-formacao/presentation/graphql/oferta-formacao.graphql.mapper";
 import {
@@ -7,7 +8,6 @@ import {
   CalendarioLetivoListInputDto,
   CalendarioLetivoUpdateInputDto,
 } from "@/modules/horarios/calendario-letivo";
-import { createListOutputMapper, mapDatedFields } from "@/server/nest/shared/mappers";
 import {
   CalendarioLetivoCreateInputGraphQlDto,
   CalendarioLetivoFindOneOutputGraphQlDto,

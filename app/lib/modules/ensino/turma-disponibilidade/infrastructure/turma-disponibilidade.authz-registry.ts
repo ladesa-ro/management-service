@@ -1,6 +1,7 @@
-import { createAuthzRegistryProvider } from "@/modules/@core/access-context";
+import { createAuthzRegistryProvider } from "@/modules/@core/contexto-acesso";
+import { createTurmaDisponibilidadeRepository } from "./persistence/typeorm/turma-disponibilidade.repository";
 
 export const TurmaDisponibilidadeAuthzRegistrySetup = createAuthzRegistryProvider(
   "turma_disponibilidade",
-  (db) => db.turmaDisponibilidadeRepository,
+  (ds) => createTurmaDisponibilidadeRepository(ds),
 );

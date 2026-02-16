@@ -22,7 +22,7 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
-import { AccessContext, AccessContextHttp } from "@/modules/@core/access-context";
+import { AccessContext, AccessContextHttp } from "@/modules/@core/contexto-acesso";
 import { AmbienteService } from "@/modules/ambientes/ambiente/application/use-cases/ambiente.service";
 import {
   AmbienteCreateInputRestDto,

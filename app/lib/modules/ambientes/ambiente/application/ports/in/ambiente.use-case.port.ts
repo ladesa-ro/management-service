@@ -1,5 +1,5 @@
 import type { StreamableFile } from "@nestjs/common";
-import type { AccessContext } from "@/modules/@core/access-context";
+import type { AccessContext } from "@/modules/@core/contexto-acesso";
 import type {
   AmbienteCreateInputDto,
   AmbienteFindOneInputDto,

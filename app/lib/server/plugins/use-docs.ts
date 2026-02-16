@@ -4,7 +4,7 @@ import { apiReference } from "@scalar/nestjs-api-reference";
 import type express from "express";
 import swaggerUi from "swagger-ui-express";
 import { CONFIG_PORT, type IConfigPort } from "@/modules/@shared/application/ports/out/config";
-import { detectHostAndProtocolFromRequest } from "@/server";
+import { detectHostAndProtocolFromRequest } from "./detect-host-and-protocol-from-request";
 
 export const useDocs = (app: INestApplication) => {
   const configService = app.get<IConfigPort>(CONFIG_PORT);

@@ -1,6 +1,7 @@
-import { createAuthzRegistryProvider } from "@/modules/@core/access-context";
+import { createAuthzRegistryProvider } from "@/modules/@core/contexto-acesso";
+import { createCalendarioLetivoRepository } from "./persistence/typeorm/calendario-letivo.repository";
 
 export const CalendarioLetivoAuthzRegistrySetup = createAuthzRegistryProvider(
   "calendario_letivo",
-  (db) => db.calendarioLetivoRepository,
+  (ds) => createCalendarioLetivoRepository(ds),
 );

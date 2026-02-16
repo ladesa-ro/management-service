@@ -1,3 +1,4 @@
+import { createListOutputMapper, mapDatedFields } from "@/modules/@shared/application/mappers";
 import {
   DisponibilidadeCreateInputDto,
   DisponibilidadeFindOneInputDto,
@@ -5,7 +6,6 @@ import {
   DisponibilidadeListInputDto,
   DisponibilidadeUpdateInputDto,
 } from "@/modules/ensino/disponibilidade";
-import { createListOutputMapper, mapDatedFields } from "@/server/nest/shared/mappers";
 import {
   DisponibilidadeCreateInputGraphQlDto,
   DisponibilidadeFindOneOutputGraphQlDto,

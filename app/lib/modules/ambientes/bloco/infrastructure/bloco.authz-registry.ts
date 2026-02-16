@@ -1,6 +1,6 @@
-import { createAuthzRegistryProvider } from "@/modules/@core/access-context";
+import { createAuthzRegistryProvider } from "@/modules/@core/contexto-acesso";
+import { createBlocoRepository } from "./persistence/typeorm/bloco.repository";
 
-export const BlocoAuthzRegistrySetup = createAuthzRegistryProvider(
-  "bloco",
-  (db) => db.blocoRepository,
+export const BlocoAuthzRegistrySetup = createAuthzRegistryProvider("bloco", (ds) =>
+  createBlocoRepository(ds),
 );

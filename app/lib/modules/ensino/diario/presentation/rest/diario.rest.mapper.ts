@@ -1,3 +1,9 @@
+import {
+  createFindOneInputMapper,
+  createListInputMapper,
+  createListOutputMapper,
+  mapDatedFields,
+} from "@/modules/@shared/application/mappers";
 import { AmbienteRestMapper } from "@/modules/ambientes/ambiente/presentation/rest";
 import { BlocoRestMapper } from "@/modules/ambientes/bloco/presentation/rest";
 import {
@@ -10,12 +16,6 @@ import {
 import { DisciplinaRestMapper } from "@/modules/ensino/disciplina/presentation/rest";
 import { TurmaRestMapper } from "@/modules/ensino/turma/presentation/rest";
 import { CalendarioLetivoRestMapper } from "@/modules/horarios/calendario-letivo/presentation/rest";
-import {
-  createFindOneInputMapper,
-  createListInputMapper,
-  createListOutputMapper,
-  mapDatedFields,
-} from "@/server/nest/shared/mappers";
 import {
   DiarioCreateInputRestDto,
   DiarioFindOneInputRestDto,

@@ -1,7 +1,8 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
-import { DatabaseContextService } from "@/modules/@database-context";
+import { DataSource } from "typeorm";
 import {
+  APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
   type ITypeOrmPaginationConfig,
   NestJsPaginateAdapter,
@@ -15,6 +16,7 @@ import type {
 } from "@/modules/ensino/diario-professor/application/dtos";
 import type { IDiarioProfessorRepositoryPort } from "@/modules/ensino/diario-professor/application/ports";
 import type { DiarioProfessorEntity } from "./diario-professor.entity";
+import { createDiarioProfessorRepository } from "./diario-professor.repository";
 
 @Injectable()
 export class DiarioProfessorTypeOrmRepositoryAdapter
@@ -32,14 +34,14 @@ export class DiarioProfessorTypeOrmRepositoryAdapter
   protected readonly outputDtoName = "DiarioProfessorFindOneOutputDto";
 
   constructor(
-    protected readonly databaseContext: DatabaseContextService,
+    @Inject(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
     protected readonly paginationAdapter: NestJsPaginateAdapter,
   ) {
     super();
   }
 
   protected get repository() {
-    return this.databaseContext.diarioProfessorRepository;
+    return createDiarioProfessorRepository(this.dataSource);
   }
 
   protected getPaginateConfig(): ITypeOrmPaginationConfig<DiarioProfessorEntity> {

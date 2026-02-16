@@ -1,6 +1,7 @@
-import { Injectable } from "@nestjs/common";
-import { DatabaseContextService } from "@/modules/@database-context";
+import { Inject, Injectable } from "@nestjs/common";
+import { DataSource } from "typeorm";
 import {
+  APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
   type ITypeOrmPaginationConfig,
   NestJsPaginateAdapter,
@@ -14,6 +15,7 @@ import type {
   IDisponibilidadeRepositoryPort,
 } from "@/modules/ensino/disponibilidade";
 import type { DisponibilidadeEntity } from "./disponibilidade.entity";
+import { createDisponibilidadeRepository } from "./disponibilidade.repository";
 
 @Injectable()
 export class DisponibilidadeTypeOrmRepositoryAdapter
@@ -31,14 +33,14 @@ export class DisponibilidadeTypeOrmRepositoryAdapter
   protected readonly outputDtoName = "DisponibilidadeFindOneOutputDto";
 
   constructor(
-    protected readonly databaseContext: DatabaseContextService,
+    @Inject(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
     protected readonly paginationAdapter: NestJsPaginateAdapter,
   ) {
     super();
   }
 
   protected get repository() {
-    return this.databaseContext.disponibilidadeRepository;
+    return createDisponibilidadeRepository(this.dataSource);
   }
 
   protected getPaginateConfig(): ITypeOrmPaginationConfig<DisponibilidadeEntity> {
