@@ -1,8 +1,8 @@
 import { Module } from "@nestjs/common";
 import { AutenticacaoService } from "@/modules/@acesso/autenticacao";
 import { AutenticacaoRestController } from "@/modules/@acesso/autenticacao/presentation/rest";
-import { PerfilModule } from "@/modules/@acesso/perfil";
-import { UsuarioModule } from "@/modules/@acesso/usuario";
+import { PerfilModule } from "@/modules/@acesso/perfil/perfil.module";
+import { UsuarioModule } from "@/modules/@acesso/usuario/usuario.module";
 import { KeycloakModule, OpenidConnectModule } from "@/modules/@core/provedor-identidade";
 
 /**

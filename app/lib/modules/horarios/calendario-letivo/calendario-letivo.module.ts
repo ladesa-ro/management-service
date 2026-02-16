@@ -1,7 +1,7 @@
 import { Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
-import { CampusModule } from "@/modules/ambientes/campus";
-import { OfertaFormacaoModule } from "@/modules/ensino/oferta-formacao";
+import { CampusModule } from "@/modules/ambientes/campus/campus.module";
+import { OfertaFormacaoModule } from "@/modules/ensino/oferta-formacao/oferta-formacao.module";
 import {
   CALENDARIO_LETIVO_REPOSITORY_PORT,
   CalendarioLetivoService,

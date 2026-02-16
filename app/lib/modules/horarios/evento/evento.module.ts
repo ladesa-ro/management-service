@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
-import { CalendarioLetivoModule } from "@/modules/horarios/calendario-letivo";
+import { CalendarioLetivoModule } from "@/modules/horarios/calendario-letivo/calendario-letivo.module";
 import { EVENTO_REPOSITORY_PORT, EventoService } from "@/modules/horarios/evento";
 import { EventoAuthzRegistrySetup } from "@/modules/horarios/evento/infrastructure";
 import { EventoTypeOrmRepositoryAdapter } from "@/modules/horarios/evento/infrastructure/persistence/typeorm";

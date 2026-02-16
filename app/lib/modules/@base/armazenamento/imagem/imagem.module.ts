@@ -1,5 +1,5 @@
 import { Global, Module } from "@nestjs/common";
-import { ArquivoModule } from "@/modules/@base/armazenamento/arquivo";
+import { ArquivoModule } from "@/modules/@base/armazenamento/arquivo/arquivo.module";
 import {
   IMAGEM_ARQUIVO_REPOSITORY_PORT,
   IMAGEM_TRANSACTION_PORT,

@@ -1,7 +1,7 @@
 import { Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
-import { DisponibilidadeModule } from "@/modules/ensino/disponibilidade";
-import { TurmaModule } from "@/modules/ensino/turma";
+import { DisponibilidadeModule } from "@/modules/ensino/disponibilidade/disponibilidade.module";
+import { TurmaModule } from "@/modules/ensino/turma/turma.module";
 import {
   TURMA_DISPONIBILIDADE_REPOSITORY_PORT,
   TurmaDisponibilidadeService,

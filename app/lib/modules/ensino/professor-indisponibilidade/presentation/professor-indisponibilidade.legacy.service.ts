@@ -8,8 +8,8 @@ import {
   QbEfficientLoad,
   SearchService,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
-import { createProfessorIndisponibilidadeRepository } from "@/modules/ensino/professor-indisponibilidade/infrastructure/persistence/typeorm/professor-indisponibilidade.repository";
 import { ProfessorIndisponibilidadeEntity } from "@/modules/ensino/professor-indisponibilidade/infrastructure/persistence/typeorm";
+import { createProfessorIndisponibilidadeRepository } from "@/modules/ensino/professor-indisponibilidade/infrastructure/persistence/typeorm/professor-indisponibilidade.repository";
 import type {
   ProfessorIndisponibilidadeCreateInputRestDto,
   ProfessorIndisponibilidadeFindOneInputRestDto,

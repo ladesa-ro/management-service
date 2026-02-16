@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
-import { CalendarioLetivoModule } from "@/modules/horarios/calendario-letivo";
+import { CalendarioLetivoModule } from "@/modules/horarios/calendario-letivo/calendario-letivo.module";
 import {
   HORARIO_GERADO_REPOSITORY_PORT,
   HorarioGeradoService,

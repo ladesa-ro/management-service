@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
-import { ArquivoModule } from "@/modules/@base/armazenamento/arquivo";
-import { ImagemModule } from "@/modules/@base/armazenamento/imagem";
+import { ArquivoModule } from "@/modules/@base/armazenamento/arquivo/arquivo.module";
+import { ImagemModule } from "@/modules/@base/armazenamento/imagem/imagem.module";
 import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import { BLOCO_REPOSITORY_PORT } from "@/modules/ambientes/bloco/application/ports";
 import { BlocoService } from "@/modules/ambientes/bloco/application/use-cases/bloco.service";
@@ -10,7 +10,7 @@ import {
 } from "@/modules/ambientes/bloco/infrastructure";
 import { BlocoGraphqlResolver } from "@/modules/ambientes/bloco/presentation/graphql/bloco.graphql.resolver";
 import { BlocoRestController } from "@/modules/ambientes/bloco/presentation/rest/bloco.rest.controller";
-import { CampusModule } from "@/modules/ambientes/campus";
+import { CampusModule } from "@/modules/ambientes/campus/campus.module";
 
 @Module({
   imports: [CampusModule, ImagemModule, ArquivoModule],

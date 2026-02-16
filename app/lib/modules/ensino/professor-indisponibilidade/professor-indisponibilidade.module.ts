@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { PerfilModule } from "@/modules/@acesso/perfil";
+import { PerfilModule } from "@/modules/@acesso/perfil/perfil.module";
 import {
   NestJsPaginateAdapter,
   TypeormModule,

@@ -7,8 +7,8 @@ import {
 } from "@/modules/@acesso/usuario/infrastructure";
 import { UsuarioGraphqlResolver } from "@/modules/@acesso/usuario/presentation/graphql/usuario.graphql.resolver";
 import { UsuarioRestController } from "@/modules/@acesso/usuario/presentation/rest/usuario.rest.controller";
-import { ArquivoModule } from "@/modules/@base/armazenamento/arquivo";
-import { ImagemModule } from "@/modules/@base/armazenamento/imagem";
+import { ArquivoModule } from "@/modules/@base/armazenamento/arquivo/arquivo.module";
+import { ImagemModule } from "@/modules/@base/armazenamento/imagem/imagem.module";
 import { KeycloakModule } from "@/modules/@core/provedor-identidade";
 import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
 

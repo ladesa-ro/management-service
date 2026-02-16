@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
 import { AutorizacaoService } from "@/modules/@acesso/autorizacao";
-import { PerfilModule } from "@/modules/@acesso/perfil";
+import { PerfilModule } from "@/modules/@acesso/perfil/perfil.module";
 
 @Module({
   imports: [PerfilModule],

@@ -5,7 +5,7 @@ import { EtapaAuthzRegistrySetup } from "@/modules/ensino/etapa/infrastructure";
 import { EtapaTypeOrmRepositoryAdapter } from "@/modules/ensino/etapa/infrastructure/persistence/typeorm";
 import { EtapaGraphqlResolver } from "@/modules/ensino/etapa/presentation/graphql/etapa.graphql.resolver";
 import { EtapaRestController } from "@/modules/ensino/etapa/presentation/rest/etapa.rest.controller";
-import { CalendarioLetivoModule } from "@/modules/horarios/calendario-letivo";
+import { CalendarioLetivoModule } from "@/modules/horarios/calendario-letivo/calendario-letivo.module";
 
 @Module({
   imports: [CalendarioLetivoModule],

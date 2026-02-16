@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
-import { DiarioModule } from "@/modules/ensino/diario";
+import { DiarioModule } from "@/modules/ensino/diario/diario.module";
 import {
   DIARIO_PREFERENCIA_AGRUPAMENTO_REPOSITORY_PORT,
   DiarioPreferenciaAgrupamentoService,
@@ -9,7 +9,7 @@ import { DiarioPreferenciaAgrupamentoAuthzRegistrySetup } from "@/modules/ensino
 import { DiarioPreferenciaAgrupamentoTypeOrmRepositoryAdapter } from "@/modules/ensino/diario-preferencia-agrupamento/infrastructure/persistence/typeorm";
 import { DiarioPreferenciaAgrupamentoGraphqlResolver } from "@/modules/ensino/diario-preferencia-agrupamento/presentation/graphql/diario-preferencia-agrupamento.graphql.resolver";
 import { DiarioPreferenciaAgrupamentoController } from "@/modules/ensino/diario-preferencia-agrupamento/presentation/rest";
-import { IntervaloDeTempoModule } from "@/modules/horarios/intervalo-de-tempo";
+import { IntervaloDeTempoModule } from "@/modules/horarios/intervalo-de-tempo/intervalo-de-tempo.module";
 
 @Module({
   imports: [DiarioModule, IntervaloDeTempoModule],
