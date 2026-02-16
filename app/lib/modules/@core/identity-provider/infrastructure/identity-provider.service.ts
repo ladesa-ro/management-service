@@ -3,7 +3,7 @@ import { GetPublicKeyOrSecret, JwtPayload, verify } from "jsonwebtoken";
 import { LRUCache } from "lru-cache";
 import type { IntrospectionResponse } from "openid-client";
 import { tokenIntrospection } from "openid-client";
-import type { IIdentityProviderPort } from "../application/ports/out";
+import type { IIdentityProviderPort } from "../ports";
 import type { IIdentityResponse } from "../domain";
 import { JwksRsaClientService } from "./jwks";
 import { OpenidConnectService } from "./openid-connect";

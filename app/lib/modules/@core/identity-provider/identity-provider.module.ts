@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { IDENTITY_PROVIDER_PORT } from "./application/ports/out";
+import { IDENTITY_PROVIDER_PORT } from "./ports";
 import {
   IdentityProviderService,
   JwksRsaClientModule,
