@@ -21,12 +21,14 @@ export class CreateTableEmpresa1770849021768 implements MigrationInterface {
           },
           {
             name: "telefone",
-            type: "varchar(12)",
+            type: "varchar",
+            length: "15",
             isNullable: false,
           },
           {
             name: "cnpj",
-            type: "varchar(14)",
+            type: "varchar",
+            length: "14",
             isNullable: false,
           },
           {
@@ -76,7 +78,7 @@ export class CreateTableEmpresa1770849021768 implements MigrationInterface {
     );
   }
 
-  public async down(queryRunner: QueryRunner): Promise<void>{
+  public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.dropForeignKey("empresa", "fk_empresa_endereco");
     await queryRunner.dropTable("empresa");
   }
