@@ -2,9 +2,7 @@ import { MigrationInterface, QueryRunner, Table } from "typeorm";
 
 const tableName = "horario_estagio";
 
-export class CreateTableHorarioEstagio1771248750919
-  implements MigrationInterface
-{
+export class CreateTableHorarioEstagio1771257147199 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
@@ -50,7 +48,7 @@ export class CreateTableHorarioEstagio1771248750919
             columnNames: ["id_estagio_fk"],
           },
         ],
-      })
+      }),
     );
   }
 
