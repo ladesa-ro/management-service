@@ -1,7 +1,7 @@
 import { Module } from "@nestjs/common";
+import { AutenticacaoService } from "@/modules/@acesso/autenticacao";
+import { AutenticacaoRestController } from "@/modules/@acesso/autenticacao/presentation/rest";
 import { KeycloakModule, OpenidConnectModule } from "@/modules/@core/identity-provider";
-import { AutenticacaoService } from "@/modules/acesso/autenticacao";
-import { AutenticacaoRestController } from "@/modules/acesso/autenticacao/presentation/rest";
 import { PerfilModule } from "@/server/nest/modules/perfil";
 import { UsuarioModule } from "@/server/nest/modules/usuario";
 

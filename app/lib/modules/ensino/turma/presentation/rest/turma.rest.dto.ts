@@ -15,15 +15,15 @@ import {
   TransformToArray,
 } from "@/modules/@shared/infrastructure/presentation/rest/dtos";
 import {
+  AmbienteFindOneInputRestDto,
+  AmbienteFindOneOutputRestDto,
+} from "@/modules/ambientes/ambiente/presentation/rest";
+import { ImagemFindOneOutputRestDto } from "@/modules/ambientes/bloco/presentation/rest";
+import {
   CursoFindOneInputRestDto,
   CursoFindOneOutputRestDto,
 } from "@/modules/ensino/curso/presentation/rest";
 import { TurmaFieldsMixin } from "@/modules/ensino/turma/presentation/turma.validation-mixin";
-import {
-  AmbienteFindOneInputRestDto,
-  AmbienteFindOneOutputRestDto,
-} from "@/modules/sisgea/ambiente/presentation/rest";
-import { ImagemFindOneOutputRestDto } from "@/modules/sisgea/bloco/presentation/rest";
 
 // ============================================================================
 // FindOne Output

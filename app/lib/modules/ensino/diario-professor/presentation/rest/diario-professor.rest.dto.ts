@@ -3,6 +3,10 @@ import { Type } from "class-transformer";
 import { IsArray, IsOptional, IsUUID, ValidateNested } from "class-validator";
 import { decorate, Mixin } from "ts-mixer";
 import {
+  PerfilFindOneInputRestDto,
+  PerfilFindOneOutputRestDto,
+} from "@/modules/@acesso/perfil/presentation/rest";
+import {
   commonProperties,
   RegisterModel,
   referenceProperty,
@@ -14,10 +18,6 @@ import {
   PaginationMetaRestDto,
   TransformToArray,
 } from "@/modules/@shared/infrastructure/presentation/rest/dtos";
-import {
-  PerfilFindOneInputRestDto,
-  PerfilFindOneOutputRestDto,
-} from "@/modules/acesso/perfil/presentation/rest";
 import {
   DiarioFindOneInputRestDto,
   DiarioFindOneOutputRestDto,

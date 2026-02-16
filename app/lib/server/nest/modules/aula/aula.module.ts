@@ -1,11 +1,11 @@
 import { Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
-import { AULA_REPOSITORY_PORT } from "@/modules/sisgha/aula/application/ports";
-import { AulaService } from "@/modules/sisgha/aula/application/use-cases/aula.service";
-import { AulaAuthzRegistrySetup } from "@/modules/sisgha/aula/infrastructure";
-import { AulaTypeOrmRepositoryAdapter } from "@/modules/sisgha/aula/infrastructure/persistence/typeorm";
-import { AulaGraphqlResolver } from "@/modules/sisgha/aula/presentation/graphql/aula.graphql.resolver";
-import { AulaController } from "@/modules/sisgha/aula/presentation/rest";
+import { AULA_REPOSITORY_PORT } from "@/modules/horarios/aula/application/ports";
+import { AulaService } from "@/modules/horarios/aula/application/use-cases/aula.service";
+import { AulaAuthzRegistrySetup } from "@/modules/horarios/aula/infrastructure";
+import { AulaTypeOrmRepositoryAdapter } from "@/modules/horarios/aula/infrastructure/persistence/typeorm";
+import { AulaGraphqlResolver } from "@/modules/horarios/aula/presentation/graphql/aula.graphql.resolver";
+import { AulaController } from "@/modules/horarios/aula/presentation/rest";
 import { AmbienteModule } from "@/server/nest/modules/ambiente";
 import { DiarioModule } from "@/server/nest/modules/diario";
 import { IntervaloDeTempoModule } from "@/server/nest/modules/intervalo-de-tempo";

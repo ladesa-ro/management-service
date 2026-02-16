@@ -1,3 +1,5 @@
+import { AmbienteRestMapper } from "@/modules/ambientes/ambiente/presentation/rest";
+import { BlocoRestMapper } from "@/modules/ambientes/bloco/presentation/rest";
 import {
   DiarioCreateInputDto,
   DiarioFindOneInputDto,
@@ -7,9 +9,7 @@ import {
 } from "@/modules/ensino/diario";
 import { DisciplinaRestMapper } from "@/modules/ensino/disciplina/presentation/rest";
 import { TurmaRestMapper } from "@/modules/ensino/turma/presentation/rest";
-import { AmbienteRestMapper } from "@/modules/sisgea/ambiente/presentation/rest";
-import { BlocoRestMapper } from "@/modules/sisgea/bloco/presentation/rest";
-import { CalendarioLetivoRestMapper } from "@/modules/sisgha/calendario-letivo/presentation/rest";
+import { CalendarioLetivoRestMapper } from "@/modules/horarios/calendario-letivo/presentation/rest";
 import {
   createFindOneInputMapper,
   createListInputMapper,

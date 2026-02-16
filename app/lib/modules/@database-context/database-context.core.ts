@@ -1,12 +1,17 @@
 import { DataSource, EntityManager } from "typeorm";
-import { createPerfilRepository } from "@/modules/acesso/perfil/infrastructure/persistence/typeorm/perfil.repository";
-import { createUsuarioRepository } from "@/modules/acesso/usuario/infrastructure/persistence/typeorm/usuario.repository";
-import { createArquivoRepository } from "@/modules/base/armazenamento/arquivo/infrastructure/persistence/typeorm/arquivo.repository";
-import { createImagemRepository } from "@/modules/base/armazenamento/imagem/infrastructure/persistence/typeorm/imagem.repository";
-import { createImagemArquivoRepository } from "@/modules/base/armazenamento/imagem-arquivo/infrastructure/persistence/typeorm/imagem-arquivo.repository";
-import { createCidadeRepository } from "@/modules/base/localidades/cidade/infrastructure/persistence/typeorm/cidade.repository";
-import { createEnderecoRepository } from "@/modules/base/localidades/endereco/infrastructure/persistence/typeorm/endereco.repository";
-import { createEstadoRepository } from "@/modules/base/localidades/estado/infrastructure/persistence/typeorm/estado.repository";
+import { createPerfilRepository } from "@/modules/@acesso/perfil/infrastructure/persistence/typeorm/perfil.repository";
+import { createUsuarioRepository } from "@/modules/@acesso/usuario/infrastructure/persistence/typeorm/usuario.repository";
+import { createArquivoRepository } from "@/modules/@base/armazenamento/arquivo/infrastructure/persistence/typeorm/arquivo.repository";
+import { createImagemRepository } from "@/modules/@base/armazenamento/imagem/infrastructure/persistence/typeorm/imagem.repository";
+import { createImagemArquivoRepository } from "@/modules/@base/armazenamento/imagem-arquivo/infrastructure/persistence/typeorm/imagem-arquivo.repository";
+import { createCidadeRepository } from "@/modules/@base/localidades/cidade/infrastructure/persistence/typeorm/cidade.repository";
+import { createEnderecoRepository } from "@/modules/@base/localidades/endereco/infrastructure/persistence/typeorm/endereco.repository";
+import { createEstadoRepository } from "@/modules/@base/localidades/estado/infrastructure/persistence/typeorm/estado.repository";
+// Import directly from repository files to avoid circular dependencies with adapters
+import { createAmbienteRepository } from "@/modules/ambientes/ambiente/infrastructure/persistence/typeorm/ambiente.repository";
+import { createBlocoRepository } from "@/modules/ambientes/bloco/infrastructure/persistence/typeorm/bloco.repository";
+import { createCampusRepository } from "@/modules/ambientes/campus/infrastructure/persistence/typeorm/campus.repository";
+import { createReservaRepository } from "@/modules/ambientes/reserva/infrastructure/persistence/typeorm/reserva.repository";
 import { createCursoRepository } from "@/modules/ensino/curso/infrastructure/persistence/typeorm/curso.repository";
 import { createDiarioRepository } from "@/modules/ensino/diario/infrastructure/persistence/typeorm/diario.repository";
 import { createDiarioPreferenciaAgrupamentoRepository } from "@/modules/ensino/diario-preferencia-agrupamento/infrastructure/persistence/typeorm/diario-preferencia-agrupamento.repository";
@@ -21,20 +26,15 @@ import { createOfertaFormacaoNivelFormacaoRepository } from "@/modules/ensino/of
 import { createProfessorIndisponibilidadeRepository } from "@/modules/ensino/professor-indisponibilidade/infrastructure/persistence/typeorm/professor-indisponibilidade.repository";
 import { createTurmaRepository } from "@/modules/ensino/turma/infrastructure/persistence/typeorm/turma.repository";
 import { createTurmaDisponibilidadeRepository } from "@/modules/ensino/turma-disponibilidade/infrastructure/persistence/typeorm/turma-disponibilidade.repository";
-// Import directly from repository files to avoid circular dependencies with adapters
-import { createAmbienteRepository } from "@/modules/sisgea/ambiente/infrastructure/persistence/typeorm/ambiente.repository";
-import { createBlocoRepository } from "@/modules/sisgea/bloco/infrastructure/persistence/typeorm/bloco.repository";
-import { createCampusRepository } from "@/modules/sisgea/campus/infrastructure/persistence/typeorm/campus.repository";
-import { createReservaRepository } from "@/modules/sisgea/reserva/infrastructure/persistence/typeorm/reserva.repository";
-import { createAulaRepository } from "@/modules/sisgha/aula/infrastructure/persistence/typeorm/aula.repository";
-import { createCalendarioLetivoRepository } from "@/modules/sisgha/calendario-letivo/infrastructure/persistence/typeorm/calendario-letivo.repository";
-import { createDiaCalendarioRepository } from "@/modules/sisgha/dia-calendario/infrastructure/persistence/typeorm/dia-calendario.repository";
-import { createEventoRepository } from "@/modules/sisgha/evento/infrastructure/persistence/typeorm/evento.repository";
-import { createGradeHorarioOfertaFormacaoRepository } from "@/modules/sisgha/grade-horario-oferta-formacao/infrastructure/persistence/typeorm/grade-horario-oferta-formacao.repository";
-import { createGradeHorarioOfertaFormacaoIntervaloDeTempoRepository } from "@/modules/sisgha/grade-horario-oferta-formacao-intervalo-de-tempo/infrastructure/persistence/typeorm/grade-horario-oferta-formacao-intervalo-de-tempo.repository";
-import { createHorarioGeradoRepository } from "@/modules/sisgha/horario-gerado/infrastructure/persistence/typeorm/horario-gerado.repository";
-import { createHorarioGeradoAulaRepository } from "@/modules/sisgha/horario-gerado-aula/infrastructure/persistence/typeorm/horario-gerado-aula.repository";
-import { createIntervaloDeTempoRepository } from "@/modules/sisgha/intervalo-de-tempo/infrastructure/persistence/typeorm/intervalo-de-tempo.repository";
+import { createAulaRepository } from "@/modules/horarios/aula/infrastructure/persistence/typeorm/aula.repository";
+import { createCalendarioLetivoRepository } from "@/modules/horarios/calendario-letivo/infrastructure/persistence/typeorm/calendario-letivo.repository";
+import { createDiaCalendarioRepository } from "@/modules/horarios/dia-calendario/infrastructure/persistence/typeorm/dia-calendario.repository";
+import { createEventoRepository } from "@/modules/horarios/evento/infrastructure/persistence/typeorm/evento.repository";
+import { createGradeHorarioOfertaFormacaoRepository } from "@/modules/horarios/grade-horario-oferta-formacao/infrastructure/persistence/typeorm/grade-horario-oferta-formacao.repository";
+import { createGradeHorarioOfertaFormacaoIntervaloDeTempoRepository } from "@/modules/horarios/grade-horario-oferta-formacao-intervalo-de-tempo/infrastructure/persistence/typeorm/grade-horario-oferta-formacao-intervalo-de-tempo.repository";
+import { createHorarioGeradoRepository } from "@/modules/horarios/horario-gerado/infrastructure/persistence/typeorm/horario-gerado.repository";
+import { createHorarioGeradoAulaRepository } from "@/modules/horarios/horario-gerado-aula/infrastructure/persistence/typeorm/horario-gerado-aula.repository";
+import { createIntervaloDeTempoRepository } from "@/modules/horarios/intervalo-de-tempo/infrastructure/persistence/typeorm/intervalo-de-tempo.repository";
 
 export class DatabaseContext {
   constructor(readonly ds: DataSource | EntityManager) {}

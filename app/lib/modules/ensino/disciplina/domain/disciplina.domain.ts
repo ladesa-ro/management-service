@@ -1,5 +1,5 @@
+import type { IImagem } from "@/modules/@base/armazenamento/imagem/domain/imagem.types";
 import { BaseDatedEntity } from "@/modules/@shared";
-import type { IImagem } from "@/modules/base/armazenamento/imagem/domain/imagem.types";
 import type { IDisciplina, IDisciplinaCreate, IDisciplinaUpdate } from "./disciplina.types";
 
 /**

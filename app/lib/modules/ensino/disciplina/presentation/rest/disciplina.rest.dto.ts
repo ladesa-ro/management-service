@@ -14,7 +14,7 @@ import {
   PaginationMetaRestDto,
   TransformToArray,
 } from "@/modules/@shared/infrastructure/presentation/rest/dtos";
-import { ImagemFindOneOutputRestDto } from "@/modules/sisgea/bloco/presentation/rest";
+import { ImagemFindOneOutputRestDto } from "@/modules/ambientes/bloco/presentation/rest";
 import { DisciplinaFieldsMixin } from "../disciplina.validation-mixin";
 
 // ============================================================================

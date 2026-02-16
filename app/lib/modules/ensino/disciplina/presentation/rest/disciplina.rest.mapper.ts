@@ -1,3 +1,4 @@
+import { BlocoRestMapper } from "@/modules/ambientes/bloco/presentation/rest";
 import {
   DisciplinaCreateInputDto,
   DisciplinaFindOneInputDto,
@@ -5,7 +6,6 @@ import {
   DisciplinaListInputDto,
   DisciplinaUpdateInputDto,
 } from "@/modules/ensino/disciplina";
-import { BlocoRestMapper } from "@/modules/sisgea/bloco/presentation/rest";
 import {
   createFindOneInputMapper,
   createListInputMapper,

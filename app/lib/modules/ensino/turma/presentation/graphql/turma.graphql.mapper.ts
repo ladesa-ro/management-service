@@ -1,3 +1,4 @@
+import { AmbienteGraphqlMapper } from "@/modules/ambientes/ambiente/presentation/graphql/ambiente.graphql.mapper";
 import { CursoGraphqlMapper } from "@/modules/ensino/curso/presentation/graphql/curso.graphql.mapper";
 import {
   TurmaCreateInputDto,
@@ -6,7 +7,6 @@ import {
   TurmaListInputDto,
   TurmaUpdateInputDto,
 } from "@/modules/ensino/turma";
-import { AmbienteGraphqlMapper } from "@/modules/sisgea/ambiente/presentation/graphql/ambiente.graphql.mapper";
 import { createListOutputMapper, mapDatedFields } from "@/server/nest/shared/mappers";
 import {
   TurmaCreateInputGraphQlDto,

@@ -1,4 +1,4 @@
-import { PerfilGraphqlMapper } from "@/modules/acesso/perfil/presentation/graphql/perfil.graphql.mapper";
+import { PerfilGraphqlMapper } from "@/modules/@acesso/perfil/presentation/graphql/perfil.graphql.mapper";
 import {
   DiarioProfessorCreateInputDto,
   DiarioProfessorFindOneInputDto,

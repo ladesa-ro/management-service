@@ -1,3 +1,5 @@
+import { BlocoRestMapper } from "@/modules/ambientes/bloco/presentation/rest";
+import { CampusRestMapper } from "@/modules/ambientes/campus/presentation/rest";
 import {
   CursoCreateInputDto,
   CursoFindOneInputDto,
@@ -6,8 +8,6 @@ import {
   CursoUpdateInputDto,
 } from "@/modules/ensino/curso";
 import { OfertaFormacaoRestMapper } from "@/modules/ensino/oferta-formacao/presentation/rest";
-import { BlocoRestMapper } from "@/modules/sisgea/bloco/presentation/rest";
-import { CampusRestMapper } from "@/modules/sisgea/campus/presentation/rest";
 import {
   createFindOneInputMapper,
   createListInputMapper,

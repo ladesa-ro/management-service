@@ -1,4 +1,4 @@
-import { PerfilRestMapper } from "@/modules/acesso/perfil/presentation/rest";
+import { PerfilRestMapper } from "@/modules/@acesso/perfil/presentation/rest";
 import { DiarioRestMapper } from "@/modules/ensino/diario/presentation/rest";
 import {
   DiarioProfessorCreateInputDto,

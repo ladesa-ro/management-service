@@ -16,7 +16,7 @@ import {
   PaginatedFilterByIdGraphQlDto,
   PaginationMetaGraphQlDto,
 } from "@/modules/@shared/infrastructure/graphql/dtos";
-import { CalendarioLetivoFindOneOutputGraphQlDto } from "@/modules/sisgha/calendario-letivo/presentation/graphql/calendario-letivo.graphql.dto";
+import { CalendarioLetivoFindOneOutputGraphQlDto } from "@/modules/horarios/calendario-letivo/presentation/graphql/calendario-letivo.graphql.dto";
 import { EtapaFieldsMixin } from "../etapa.validation-mixin";
 
 // ============================================================================

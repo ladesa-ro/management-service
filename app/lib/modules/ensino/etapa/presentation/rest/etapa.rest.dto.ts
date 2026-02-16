@@ -17,7 +17,7 @@ import {
 import {
   CalendarioLetivoFindOneInputRestDto,
   CalendarioLetivoFindOneOutputRestDto,
-} from "@/modules/sisgha/calendario-letivo/presentation/rest";
+} from "@/modules/horarios/calendario-letivo/presentation/rest";
 import { EtapaFieldsMixin } from "../etapa.validation-mixin";
 
 // ============================================================================

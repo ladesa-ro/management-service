@@ -7,7 +7,7 @@ import {
   type Relation,
 } from "typeorm";
 
-import { CalendarioLetivoEntity } from "@/modules/sisgha/calendario-letivo/infrastructure/persistence/typeorm/calendario-letivo.entity";
+import { CalendarioLetivoEntity } from "@/modules/horarios/calendario-letivo/infrastructure/persistence/typeorm/calendario-letivo.entity";
 
 @Entity("etapa")
 export class EtapaEntity {

@@ -5,7 +5,7 @@ import {
   EtapaListInputDto,
   EtapaUpdateInputDto,
 } from "@/modules/ensino/etapa";
-import { CalendarioLetivoGraphqlMapper } from "@/modules/sisgha/calendario-letivo/presentation/graphql/calendario-letivo.graphql.mapper";
+import { CalendarioLetivoGraphqlMapper } from "@/modules/horarios/calendario-letivo/presentation/graphql/calendario-letivo.graphql.mapper";
 import { createListOutputMapper, mapDatedFields } from "@/server/nest/shared/mappers";
 import {
   EtapaCreateInputGraphQlDto,

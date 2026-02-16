@@ -1,3 +1,4 @@
+import { ImagemFindOneOutputDto, ImagemInputRefDto } from "@/modules/@base/armazenamento/imagem";
 import {
   EntityOutputDto,
   FindOneInputDto,
@@ -6,17 +7,16 @@ import {
   PaginationInputDto,
   PaginationResultDto,
 } from "@/modules/@shared/application/dtos";
-import { ImagemFindOneOutputDto, ImagemInputRefDto } from "@/modules/base/armazenamento/imagem";
+import { AmbienteFindOneOutputDto, AmbienteInputRefDto } from "@/modules/ambientes/ambiente";
 import {
   DisciplinaFindOneOutputDto,
   DisciplinaInputRefDto,
 } from "@/modules/ensino/disciplina/application/dtos";
 import { TurmaFindOneOutputDto, TurmaInputRefDto } from "@/modules/ensino/turma";
-import { AmbienteFindOneOutputDto, AmbienteInputRefDto } from "@/modules/sisgea/ambiente";
 import {
   CalendarioLetivoFindOneOutputDto,
   CalendarioLetivoInputRefDto,
-} from "@/modules/sisgha/calendario-letivo";
+} from "@/modules/horarios/calendario-letivo";
 
 // ============================================================================
 // FindOne Input/Output

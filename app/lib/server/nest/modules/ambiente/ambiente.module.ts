@@ -1,13 +1,13 @@
 import { Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
-import { AMBIENTE_REPOSITORY_PORT } from "@/modules/sisgea/ambiente/application/ports";
-import { AmbienteService } from "@/modules/sisgea/ambiente/application/use-cases/ambiente.service";
+import { AMBIENTE_REPOSITORY_PORT } from "@/modules/ambientes/ambiente/application/ports";
+import { AmbienteService } from "@/modules/ambientes/ambiente/application/use-cases/ambiente.service";
 import {
   AmbienteAuthzRegistrySetup,
   AmbienteTypeOrmRepositoryAdapter,
-} from "@/modules/sisgea/ambiente/infrastructure";
-import { AmbienteGraphqlResolver } from "@/modules/sisgea/ambiente/presentation/graphql/ambiente.graphql.resolver";
-import { AmbienteRestController } from "@/modules/sisgea/ambiente/presentation/rest/ambiente.rest.controller";
+} from "@/modules/ambientes/ambiente/infrastructure";
+import { AmbienteGraphqlResolver } from "@/modules/ambientes/ambiente/presentation/graphql/ambiente.graphql.resolver";
+import { AmbienteRestController } from "@/modules/ambientes/ambiente/presentation/rest/ambiente.rest.controller";
 import { ArquivoModule } from "@/server/nest/modules/arquivo";
 import { BlocoModule } from "@/server/nest/modules/bloco";
 import { ImagemModule } from "@/server/nest/modules/imagem";

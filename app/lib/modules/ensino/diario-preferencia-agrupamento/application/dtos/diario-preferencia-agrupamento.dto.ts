@@ -14,7 +14,7 @@ import {
 import {
   IntervaloDeTempoFindOneOutputDto,
   IntervaloDeTempoInputRefDto,
-} from "@/modules/sisgha/intervalo-de-tempo";
+} from "@/modules/horarios/intervalo-de-tempo";
 
 // ============================================================================
 // FindOne Input/Output

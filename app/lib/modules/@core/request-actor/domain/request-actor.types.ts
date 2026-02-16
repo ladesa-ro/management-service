@@ -1,4 +1,4 @@
-import type { UsuarioFindOneOutputDto } from "@/modules/acesso/usuario/application/dtos";
+import type { UsuarioFindOneOutputDto } from "@/modules/@acesso/usuario/application/dtos";
 
 /**
  * Representa o ator (usuário) que está fazendo a requisição.

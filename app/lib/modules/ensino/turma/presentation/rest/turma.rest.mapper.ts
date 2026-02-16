@@ -1,3 +1,5 @@
+import { AmbienteRestMapper } from "@/modules/ambientes/ambiente/presentation/rest";
+import { BlocoRestMapper } from "@/modules/ambientes/bloco/presentation/rest";
 import { CursoRestMapper } from "@/modules/ensino/curso/presentation/rest";
 import {
   TurmaCreateInputDto,
@@ -6,8 +8,6 @@ import {
   TurmaListInputDto,
   TurmaUpdateInputDto,
 } from "@/modules/ensino/turma";
-import { AmbienteRestMapper } from "@/modules/sisgea/ambiente/presentation/rest";
-import { BlocoRestMapper } from "@/modules/sisgea/bloco/presentation/rest";
 import {
   createFindOneInputMapper,
   createListInputMapper,

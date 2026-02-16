@@ -1,12 +1,12 @@
 import { ArgsType, Field, InputType, ObjectType } from "@nestjs/graphql";
 import { IsArray, IsBoolean, IsOptional, IsString, IsUUID, ValidateNested } from "class-validator";
 import { decorate } from "ts-mixer";
+import { PerfilFindOneOutputGraphQlDto } from "@/modules/@acesso/perfil/presentation/graphql/perfil.graphql.dto";
 import {
   EntityBaseGraphQlDto,
   PaginatedFilterByIdGraphQlDto,
   PaginationMetaGraphQlDto,
 } from "@/modules/@shared/infrastructure/graphql/dtos";
-import { PerfilFindOneOutputGraphQlDto } from "@/modules/acesso/perfil/presentation/graphql/perfil.graphql.dto";
 import { DiarioProfessorFieldsMixin } from "../diario-professor.validation-mixin";
 
 // ============================================================================

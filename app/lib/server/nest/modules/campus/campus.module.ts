@@ -1,12 +1,12 @@
 import { Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
-import { CAMPUS_REPOSITORY_PORT, CampusService } from "@/modules/sisgea/campus";
+import { CAMPUS_REPOSITORY_PORT, CampusService } from "@/modules/ambientes/campus";
 import {
   CampusAuthzRegistrySetup,
   CampusTypeOrmRepositoryAdapter,
-} from "@/modules/sisgea/campus/infrastructure";
-import { CampusGraphqlResolver } from "@/modules/sisgea/campus/presentation/graphql/campus.graphql.resolver";
-import { CampusRestController } from "@/modules/sisgea/campus/presentation/rest/campus.rest.controller";
+} from "@/modules/ambientes/campus/infrastructure";
+import { CampusGraphqlResolver } from "@/modules/ambientes/campus/presentation/graphql/campus.graphql.resolver";
+import { CampusRestController } from "@/modules/ambientes/campus/presentation/rest/campus.rest.controller";
 import { EnderecoModule } from "@/server/nest/modules/endereco";
 
 @Module({

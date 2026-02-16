@@ -5,7 +5,7 @@ import {
   DiarioPreferenciaAgrupamentoListInputDto,
   DiarioPreferenciaAgrupamentoUpdateInputDto,
 } from "@/modules/ensino/diario-preferencia-agrupamento";
-import { IntervaloDeTempoGraphqlMapper } from "@/modules/sisgha/intervalo-de-tempo/presentation/graphql/intervalo-de-tempo.graphql.mapper";
+import { IntervaloDeTempoGraphqlMapper } from "@/modules/horarios/intervalo-de-tempo/presentation/graphql/intervalo-de-tempo.graphql.mapper";
 import { createListOutputMapper, mapDatedFields } from "@/server/nest/shared/mappers";
 import {
   DiarioPreferenciaAgrupamentoCreateInputGraphQlDto,

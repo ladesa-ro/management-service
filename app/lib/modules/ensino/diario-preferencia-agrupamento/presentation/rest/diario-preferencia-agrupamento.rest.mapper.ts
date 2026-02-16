@@ -6,7 +6,7 @@ import {
   DiarioPreferenciaAgrupamentoListInputDto,
   DiarioPreferenciaAgrupamentoUpdateInputDto,
 } from "@/modules/ensino/diario-preferencia-agrupamento";
-import { IntervaloDeTempoRestMapper } from "@/modules/sisgha/intervalo-de-tempo/presentation/rest";
+import { IntervaloDeTempoRestMapper } from "@/modules/horarios/intervalo-de-tempo/presentation/rest";
 import {
   createFindOneInputMapper,
   createListInputMapper,

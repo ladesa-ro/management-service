@@ -10,7 +10,7 @@ import {
 import {
   CalendarioLetivoFindOneOutputDto,
   CalendarioLetivoInputRefDto,
-} from "@/modules/sisgha/calendario-letivo";
+} from "@/modules/horarios/calendario-letivo";
 
 // ============================================================================
 // FindOne Input/Output

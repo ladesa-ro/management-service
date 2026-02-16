@@ -1,12 +1,12 @@
 import { Inject, Injectable, type StreamableFile } from "@nestjs/common";
 import { has } from "lodash";
+import { ArquivoService } from "@/modules/@base/armazenamento/arquivo/application/use-cases/arquivo.service";
+import { ImagemService } from "@/modules/@base/armazenamento/imagem/application/use-cases/imagem.service";
 import type { AccessContext } from "@/modules/@core/access-context";
 import { BaseCrudService, type PersistInput } from "@/modules/@shared";
-import { ArquivoService } from "@/modules/base/armazenamento/arquivo/application/use-cases/arquivo.service";
-import { ImagemService } from "@/modules/base/armazenamento/imagem/application/use-cases/imagem.service";
+import { AmbienteService } from "@/modules/ambientes/ambiente/application/use-cases/ambiente.service";
 import { CursoService } from "@/modules/ensino/curso";
 import { type ITurma, Turma } from "@/modules/ensino/turma";
-import { AmbienteService } from "@/modules/sisgea/ambiente/application/use-cases/ambiente.service";
 import type {
   TurmaCreateInputDto,
   TurmaFindOneInputDto,

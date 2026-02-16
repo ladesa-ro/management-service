@@ -1,3 +1,4 @@
+import { ImagemFindOneOutputDto, ImagemInputRefDto } from "@/modules/@base/armazenamento/imagem";
 import {
   EntityOutputDto,
   FindOneInputDto,
@@ -6,9 +7,8 @@ import {
   PaginationInputDto,
   PaginationResultDto,
 } from "@/modules/@shared/application/dtos";
-import { ImagemFindOneOutputDto, ImagemInputRefDto } from "@/modules/base/armazenamento/imagem";
+import { AmbienteFindOneOutputDto, AmbienteInputRefDto } from "@/modules/ambientes/ambiente";
 import { CursoFindOneOutputDto, CursoInputRefDto } from "@/modules/ensino/curso";
-import { AmbienteFindOneOutputDto, AmbienteInputRefDto } from "@/modules/sisgea/ambiente";
 
 // ============================================================================
 // FindOne Input/Output

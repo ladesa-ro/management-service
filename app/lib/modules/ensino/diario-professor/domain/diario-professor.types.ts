@@ -1,5 +1,5 @@
+import type { IPerfil } from "@/modules/@acesso/perfil";
 import type { IdUuid, IEntityBase } from "@/modules/@shared";
-import type { IPerfil } from "@/modules/acesso/perfil";
 import type { IDiario } from "@/modules/ensino/diario/domain/diario.types";
 
 export interface IDiarioProfessor extends IEntityBase {

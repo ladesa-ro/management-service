@@ -1,15 +1,15 @@
 import { ArgsType, Field, InputType, ObjectType } from "@nestjs/graphql";
 import { IsArray, IsOptional, IsString, IsUUID, MinLength, ValidateNested } from "class-validator";
 import { decorate } from "ts-mixer";
+import { ImagemFindOneOutputGraphQlDto } from "@/modules/@base/armazenamento/imagem-arquivo/presentation/graphql/imagem-arquivo.graphql.dto";
 import {
   EntityBaseGraphQlDto,
   PaginatedFilterByIdGraphQlDto,
   PaginationMetaGraphQlDto,
 } from "@/modules/@shared/infrastructure/graphql/dtos";
-import { ImagemFindOneOutputGraphQlDto } from "@/modules/base/armazenamento/imagem-arquivo/presentation/graphql/imagem-arquivo.graphql.dto";
+import { CampusFindOneOutputGraphQlDto } from "@/modules/ambientes/campus/presentation/graphql/campus.graphql.dto";
 import { CursoFieldsMixin } from "@/modules/ensino/curso/presentation/curso.validation-mixin";
 import { OfertaFormacaoFindOneOutputGraphQlDto } from "@/modules/ensino/oferta-formacao/presentation/graphql/oferta-formacao.graphql.dto";
-import { CampusFindOneOutputGraphQlDto } from "@/modules/sisgea/campus/presentation/graphql/campus.graphql.dto";
 
 // ============================================================================
 // FindOne Output

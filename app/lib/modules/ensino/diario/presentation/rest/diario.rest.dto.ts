@@ -14,6 +14,11 @@ import {
   PaginationMetaRestDto,
   TransformToArray,
 } from "@/modules/@shared/infrastructure/presentation/rest/dtos";
+import {
+  AmbienteFindOneInputRestDto,
+  AmbienteFindOneOutputRestDto,
+} from "@/modules/ambientes/ambiente/presentation/rest";
+import { ImagemFindOneOutputRestDto } from "@/modules/ambientes/bloco/presentation/rest";
 import { DiarioFieldsMixin } from "@/modules/ensino/diario/presentation/diario.validation-mixin";
 import {
   DisciplinaFindOneInputRestDto,
@@ -23,12 +28,7 @@ import {
   TurmaFindOneInputRestDto,
   TurmaFindOneOutputRestDto,
 } from "@/modules/ensino/turma/presentation/rest";
-import {
-  AmbienteFindOneInputRestDto,
-  AmbienteFindOneOutputRestDto,
-} from "@/modules/sisgea/ambiente/presentation/rest";
-import { ImagemFindOneOutputRestDto } from "@/modules/sisgea/bloco/presentation/rest";
-import { CalendarioLetivoFindOneOutputRestDto } from "@/modules/sisgha/calendario-letivo/presentation/rest";
+import { CalendarioLetivoFindOneOutputRestDto } from "@/modules/horarios/calendario-letivo/presentation/rest";
 
 @decorate(ApiSchema({ name: "CalendarioLetivoFindOneInputDto" }))
 export class CalendarioLetivoFindOneInputRestDto {

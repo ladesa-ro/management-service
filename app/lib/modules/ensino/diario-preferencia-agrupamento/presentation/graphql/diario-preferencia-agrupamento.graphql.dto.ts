@@ -15,7 +15,7 @@ import {
   PaginationMetaGraphQlDto,
 } from "@/modules/@shared/infrastructure/graphql/dtos";
 import { DiarioPreferenciaAgrupamentoFieldsMixin } from "@/modules/ensino/diario-preferencia-agrupamento/presentation/diario-preferencia-agrupamento.validation-mixin";
-import { IntervaloDeTempoFindOneOutputGraphQlDto } from "@/modules/sisgha/intervalo-de-tempo/presentation/graphql/intervalo-de-tempo.graphql.dto";
+import { IntervaloDeTempoFindOneOutputGraphQlDto } from "@/modules/horarios/intervalo-de-tempo/presentation/graphql/intervalo-de-tempo.graphql.dto";
 
 // ============================================================================
 // Ref Input DTOs for cross-module references

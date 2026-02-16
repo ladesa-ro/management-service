@@ -1,3 +1,4 @@
+import { PerfilFindOneOutputDto, PerfilInputRefDto } from "@/modules/@acesso/perfil";
 import {
   EntityOutputDto,
   FindOneInputDto,
@@ -6,7 +7,6 @@ import {
   PaginationInputDto,
   PaginationResultDto,
 } from "@/modules/@shared";
-import { PerfilFindOneOutputDto, PerfilInputRefDto } from "@/modules/acesso/perfil";
 import {
   DiarioFindOneOutputDto,
   DiarioInputRefDto,

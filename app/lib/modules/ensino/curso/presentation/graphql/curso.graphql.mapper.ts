@@ -1,3 +1,4 @@
+import { CampusGraphqlMapper } from "@/modules/ambientes/campus/presentation/graphql/campus.graphql.mapper";
 import {
   CursoCreateInputDto,
   CursoFindOneInputDto,
@@ -6,7 +7,6 @@ import {
   CursoUpdateInputDto,
 } from "@/modules/ensino/curso";
 import { OfertaFormacaoGraphqlMapper } from "@/modules/ensino/oferta-formacao/presentation/graphql/oferta-formacao.graphql.mapper";
-import { CampusGraphqlMapper } from "@/modules/sisgea/campus/presentation/graphql/campus.graphql.mapper";
 import { createListOutputMapper, mapDatedFields } from "@/server/nest/shared/mappers";
 import {
   CursoCreateInputGraphQlDto,

@@ -22,7 +22,7 @@ import { DiarioPreferenciaAgrupamentoFieldsMixin } from "@/modules/ensino/diario
 import {
   IntervaloDeTempoFindOneInputRestDto,
   IntervaloDeTempoFindOneOutputRestDto,
-} from "@/modules/sisgha/intervalo-de-tempo/presentation/rest";
+} from "@/modules/horarios/intervalo-de-tempo/presentation/rest";
 
 // ============================================================================
 // FindOne Output

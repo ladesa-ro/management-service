@@ -1,9 +1,9 @@
+import type { IImagem } from "@/modules/@base/armazenamento/imagem/domain/imagem.types";
 import type { IdUuid, IEntityBase } from "@/modules/@shared";
-import type { IImagem } from "@/modules/base/armazenamento/imagem/domain/imagem.types";
+import type { IAmbiente } from "@/modules/ambientes/ambiente/domain/ambiente.types";
 import type { IDisciplina } from "@/modules/ensino/disciplina/domain/disciplina.types";
 import type { ITurma } from "@/modules/ensino/turma/domain/turma.types";
-import type { IAmbiente } from "@/modules/sisgea/ambiente/domain/ambiente.types";
-import type { ICalendarioLetivo } from "@/modules/sisgha/calendario-letivo";
+import type { ICalendarioLetivo } from "@/modules/horarios/calendario-letivo";
 
 /**
  * Interface que define a estrutura de dados de Diario

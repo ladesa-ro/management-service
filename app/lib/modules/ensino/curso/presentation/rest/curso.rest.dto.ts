@@ -14,16 +14,16 @@ import {
   PaginationMetaRestDto,
   TransformToArray,
 } from "@/modules/@shared/infrastructure/presentation/rest/dtos";
+import { ImagemFindOneOutputRestDto } from "@/modules/ambientes/bloco/presentation/rest";
+import {
+  CampusFindOneInputRestDto,
+  CampusFindOneOutputRestDto,
+} from "@/modules/ambientes/campus/presentation/rest";
 import { CursoFieldsMixin } from "@/modules/ensino/curso/presentation/curso.validation-mixin";
 import {
   OfertaFormacaoFindOneInputRestDto,
   OfertaFormacaoFindOneOutputRestDto,
 } from "@/modules/ensino/oferta-formacao/presentation/rest";
-import { ImagemFindOneOutputRestDto } from "@/modules/sisgea/bloco/presentation/rest";
-import {
-  CampusFindOneInputRestDto,
-  CampusFindOneOutputRestDto,
-} from "@/modules/sisgea/campus/presentation/rest";
 
 // ============================================================================
 // FindOne Output
