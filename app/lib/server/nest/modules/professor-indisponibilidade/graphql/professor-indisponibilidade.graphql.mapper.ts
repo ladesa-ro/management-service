@@ -1,4 +1,4 @@
-import { mapPaginationMeta } from "@/server/nest/shared/mappers";
+import { createListOutputMapper, mapDatedFields } from "@/server/nest/shared/mappers";
 import {
   ProfessorIndisponibilidadeFindOneOutputGraphQlDto,
   ProfessorIndisponibilidadeListInputGraphQlDto,
@@ -34,20 +34,12 @@ export class ProfessorIndisponibilidadeGraphqlMapper {
     dto.horaInicio = output.horaInicio;
     dto.horaFim = output.horaFim;
     dto.motivo = output.motivo;
-    dto.dateCreated = output.dateCreated
-      ? new Date(output.dateCreated)
-      : (undefined as unknown as Date);
-    dto.dateUpdated = output.dateUpdated
-      ? new Date(output.dateUpdated)
-      : (undefined as unknown as Date);
-    dto.dateDeleted = output.dateDeleted ? new Date(output.dateDeleted) : null;
+    mapDatedFields(dto, output);
     return dto;
   }
 
-  static toListOutputDto(output: any): ProfessorIndisponibilidadeListOutputGraphQlDto {
-    const dto = new ProfessorIndisponibilidadeListOutputGraphQlDto();
-    dto.meta = mapPaginationMeta(output.meta);
-    dto.data = output.data.map((item: any) => this.toFindOneOutputDto(item));
-    return dto;
-  }
+  static toListOutputDto = createListOutputMapper(
+    ProfessorIndisponibilidadeListOutputGraphQlDto,
+    ProfessorIndisponibilidadeGraphqlMapper.toFindOneOutputDto,
+  );
 }

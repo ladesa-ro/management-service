@@ -3,7 +3,6 @@ import {
   DiarioFindOneInputDto,
   DiarioFindOneOutputDto,
   DiarioListInputDto,
-  DiarioListOutputDto,
   DiarioUpdateInputDto,
 } from "@/modules/ensino/diario";
 import { AmbienteRestMapper } from "@/server/nest/modules/ambiente/rest";
@@ -11,12 +10,16 @@ import { BlocoRestMapper } from "@/server/nest/modules/bloco/rest";
 import { CalendarioLetivoRestMapper } from "@/server/nest/modules/calendario-letivo/rest";
 import { DisciplinaRestMapper } from "@/server/nest/modules/disciplina/rest";
 import { TurmaRestMapper } from "@/server/nest/modules/turma/rest";
-import { mapPaginationMeta } from "@/server/nest/shared/mappers";
+import {
+  createFindOneInputMapper,
+  createListInputMapper,
+  createListOutputMapper,
+  mapDatedFields,
+} from "@/server/nest/shared/mappers";
 import {
   DiarioCreateInputRestDto,
   DiarioFindOneInputRestDto,
   DiarioFindOneOutputRestDto,
-  DiarioListInputRestDto,
   DiarioListOutputRestDto,
   DiarioUpdateInputRestDto,
 } from "./diario.rest.dto";
@@ -26,29 +29,14 @@ export class DiarioRestMapper {
   // Input: Server DTO -> Core DTO
   // ============================================================================
 
-  static toFindOneInput(dto: DiarioFindOneInputRestDto): DiarioFindOneInputDto {
-    const input = new DiarioFindOneInputDto();
-    input.id = dto.id;
-    return input;
-  }
+  static toFindOneInput = createFindOneInputMapper(DiarioFindOneInputDto);
 
-  static toListInput(dto: DiarioListInputRestDto | null): DiarioListInputDto | null {
-    if (!dto) {
-      return null;
-    }
-
-    const input = new DiarioListInputDto();
-    input.page = dto.page;
-    input.limit = dto.limit;
-    input.search = dto.search;
-    input.sortBy = dto.sortBy;
-    input.selection = dto.selection;
-    input["filter.id"] = dto["filter.id"];
-    input["filter.turma.id"] = dto["filter.turma.id"];
-    input["filter.disciplina.id"] = dto["filter.disciplina.id"];
-    input["filter.calendarioLetivo.id"] = dto["filter.calendarioLetivo.id"];
-    return input;
-  }
+  static toListInput = createListInputMapper(DiarioListInputDto, [
+    "filter.id",
+    "filter.turma.id",
+    "filter.disciplina.id",
+    "filter.calendarioLetivo.id",
+  ]);
 
   static toCreateInput(dto: DiarioCreateInputRestDto): DiarioCreateInputDto {
     const input = new DiarioCreateInputDto();
@@ -103,16 +91,12 @@ export class DiarioRestMapper {
     dto.imagemCapa = output.imagemCapa
       ? BlocoRestMapper.toImagemOutputDto(output.imagemCapa)
       : null;
-    dto.dateCreated = new Date(output.dateCreated);
-    dto.dateUpdated = new Date(output.dateUpdated);
-    dto.dateDeleted = output.dateDeleted ? new Date(output.dateDeleted) : null;
+    mapDatedFields(dto, output);
     return dto;
   }
 
-  static toListOutputDto(output: DiarioListOutputDto): DiarioListOutputRestDto {
-    const dto = new DiarioListOutputRestDto();
-    dto.meta = mapPaginationMeta(output.meta);
-    dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
-    return dto;
-  }
+  static toListOutputDto = createListOutputMapper(
+    DiarioListOutputRestDto,
+    DiarioRestMapper.toFindOneOutputDto,
+  );
 }

@@ -1,16 +1,7 @@
 import { ApiProperty, ApiPropertyOptional, ApiSchema, PartialType } from "@nestjs/swagger";
 import { Type } from "class-transformer";
-import {
-  IsArray,
-  IsDateString,
-  IsInt,
-  IsOptional,
-  IsString,
-  IsUUID,
-  Max,
-  Min,
-  ValidateNested,
-} from "class-validator";
+import { IsArray, IsOptional, IsString, IsUUID, ValidateNested } from "class-validator";
+import { decorate, Mixin } from "ts-mixer";
 import {
   commonProperties,
   RegisterModel,
@@ -18,7 +9,8 @@ import {
   simpleProperty,
 } from "@/modules/@shared/infrastructure/persistence/typeorm/metadata";
 import {
-  PaginationInputRestDto,
+  EntityBaseRestDto,
+  PaginatedFilterByIdRestDto,
   PaginationMetaRestDto,
   TransformToArray,
 } from "@/modules/@shared/infrastructure/presentation/rest/dtos";
@@ -26,124 +18,115 @@ import {
   CalendarioLetivoFindOneInputRestDto,
   CalendarioLetivoFindOneOutputRestDto,
 } from "@/server/nest/modules/calendario-letivo/rest";
+import { EtapaFieldsMixin } from "../etapa.validation-mixin";
 
 // ============================================================================
 // FindOne Output
 // ============================================================================
 
-@ApiSchema({ name: "EtapaFindOneOutputDto" })
-@RegisterModel({
-  name: "EtapaFindOneOutputDto",
-  properties: [
-    simpleProperty("id"),
-    simpleProperty("numero", { nullable: true }),
-    simpleProperty("dataInicio"),
-    simpleProperty("dataTermino"),
-    simpleProperty("cor", { nullable: true }),
-    referenceProperty("calendario", "CalendarioLetivoFindOneOutputDto"),
-    ...commonProperties.dated,
-  ],
-})
-export class EtapaFindOneOutputRestDto {
-  @ApiProperty({ description: "Identificador do registro (uuid)", format: "uuid" })
-  @IsUUID()
-  id: string;
+@decorate(ApiSchema({ name: "EtapaFindOneOutputDto" }))
+@decorate(
+  RegisterModel({
+    name: "EtapaFindOneOutputDto",
+    properties: [
+      simpleProperty("id"),
+      simpleProperty("numero", { nullable: true }),
+      simpleProperty("dataInicio"),
+      simpleProperty("dataTermino"),
+      simpleProperty("cor", { nullable: true }),
+      referenceProperty("calendario", "CalendarioLetivoFindOneOutputDto"),
+      ...commonProperties.dated,
+    ],
+  }),
+)
+export class EtapaFindOneOutputRestDto extends Mixin(EntityBaseRestDto, EtapaFieldsMixin) {
+  @decorate(
+    ApiPropertyOptional({
+      type: "integer",
+      description: "Numero da etapa",
+      nullable: true,
+      minimum: 0,
+      maximum: 255,
+    }),
+  )
+  declare numero: number | null;
 
-  @ApiPropertyOptional({ description: "Numero da etapa", nullable: true, minimum: 0, maximum: 255 })
-  @IsOptional()
-  @IsInt()
-  @Min(0)
-  @Max(255)
-  numero: number | null;
+  @decorate(ApiProperty({ type: "string", description: "Data de inicio da etapa", format: "date" }))
+  declare dataInicio: string;
 
-  @ApiProperty({ description: "Data de inicio da etapa", format: "date" })
-  @IsDateString()
-  dataInicio: string;
+  @decorate(
+    ApiProperty({ type: "string", description: "Data de termino da etapa", format: "date" }),
+  )
+  declare dataTermino: string;
 
-  @ApiProperty({ description: "Data de termino da etapa", format: "date" })
-  @IsDateString()
-  dataTermino: string;
+  @decorate(ApiPropertyOptional({ type: "string", description: "Cor da etapa", nullable: true }))
+  declare cor: string | null;
 
-  @ApiPropertyOptional({ description: "Cor da etapa", nullable: true })
-  @IsOptional()
-  @IsString()
-  cor: string | null;
-
-  @ApiProperty({
-    type: () => CalendarioLetivoFindOneOutputRestDto,
-    description: "Calendario letivo ao qual a etapa pertence",
-  })
-  @ValidateNested()
-  @Type(() => CalendarioLetivoFindOneOutputRestDto)
+  @decorate(
+    ApiProperty({
+      type: () => CalendarioLetivoFindOneOutputRestDto,
+      description: "Calendario letivo ao qual a etapa pertence",
+    }),
+  )
+  @decorate(ValidateNested())
+  @decorate(Type(() => CalendarioLetivoFindOneOutputRestDto))
   calendario: CalendarioLetivoFindOneOutputRestDto;
-
-  @ApiProperty({ description: "Data e hora da criacao do registro" })
-  @IsDateString()
-  dateCreated: Date;
-
-  @ApiProperty({ description: "Data e hora da alteracao do registro" })
-  @IsDateString()
-  dateUpdated: Date;
-
-  @ApiPropertyOptional({ description: "Data e hora da exclusao do registro", nullable: true })
-  @IsOptional()
-  @IsDateString()
-  dateDeleted: Date | null;
 }
 
 // ============================================================================
 // List Input/Output
 // ============================================================================
 
-@ApiSchema({ name: "EtapaListInputDto" })
-export class EtapaListInputRestDto extends PaginationInputRestDto {
-  @ApiPropertyOptional({
-    description: "Filtro por ID",
-    type: [String],
-  })
-  @TransformToArray()
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
-  "filter.id"?: string[];
-
-  @ApiPropertyOptional({
-    description: "Filtro por ID do Calendario",
-    type: [String],
-  })
-  @TransformToArray()
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
+@decorate(ApiSchema({ name: "EtapaListInputDto" }))
+export class EtapaListInputRestDto extends PaginatedFilterByIdRestDto {
+  @decorate(
+    ApiPropertyOptional({
+      type: "string",
+      isArray: true,
+      description: "Filtro por ID do Calendario",
+    }),
+  )
+  @decorate(TransformToArray())
+  @decorate(IsOptional())
+  @decorate(IsArray())
+  @decorate(IsUUID(undefined, { each: true }))
   "filter.calendario.id"?: string[];
 
-  @ApiPropertyOptional({
-    description: "Filtro por nome do Calendario",
-    type: [String],
-  })
-  @TransformToArray()
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
+  @decorate(
+    ApiPropertyOptional({
+      type: "string",
+      isArray: true,
+      description: "Filtro por nome do Calendario",
+    }),
+  )
+  @decorate(TransformToArray())
+  @decorate(IsOptional())
+  @decorate(IsArray())
+  @decorate(IsString({ each: true }))
   "filter.calendario.nome"?: string[];
 
-  @ApiPropertyOptional({
-    description: "Filtro por ano do Calendario",
-    type: [String],
-  })
-  @TransformToArray()
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
+  @decorate(
+    ApiPropertyOptional({
+      type: "string",
+      isArray: true,
+      description: "Filtro por ano do Calendario",
+    }),
+  )
+  @decorate(TransformToArray())
+  @decorate(IsOptional())
+  @decorate(IsArray())
+  @decorate(IsString({ each: true }))
   "filter.calendario.ano"?: string[];
 }
 
-@ApiSchema({ name: "EtapaListOutputDto" })
+@decorate(ApiSchema({ name: "EtapaListOutputDto" }))
 export class EtapaListOutputRestDto {
-  @ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" })
+  @decorate(ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" }))
   meta: PaginationMetaRestDto;
 
-  @ApiProperty({ type: () => [EtapaFindOneOutputRestDto], description: "Resultados da busca" })
+  @decorate(
+    ApiProperty({ type: () => [EtapaFindOneOutputRestDto], description: "Resultados da busca" }),
+  )
   data: EtapaFindOneOutputRestDto[];
 }
 
@@ -151,47 +134,57 @@ export class EtapaListOutputRestDto {
 // Create/Update Input
 // ============================================================================
 
-@ApiSchema({ name: "EtapaCreateInputDto" })
-export class EtapaCreateInputRestDto {
-  @ApiPropertyOptional({ description: "Numero da etapa", nullable: true, minimum: 0, maximum: 255 })
-  @IsOptional()
-  @IsInt()
-  @Min(0)
-  @Max(255)
-  numero?: number | null;
+@decorate(ApiSchema({ name: "EtapaCreateInputDto" }))
+export class EtapaCreateInputRestDto extends EtapaFieldsMixin {
+  @decorate(
+    ApiPropertyOptional({
+      type: "integer",
+      description: "Numero da etapa",
+      nullable: true,
+      minimum: 0,
+      maximum: 255,
+    }),
+  )
+  declare numero: number | null;
 
-  @ApiProperty({ description: "Data de inicio da etapa", format: "date" })
-  @IsDateString()
-  dataInicio: string;
+  @decorate(ApiProperty({ type: "string", description: "Data de inicio da etapa", format: "date" }))
+  declare dataInicio: string;
 
-  @ApiProperty({ description: "Data de termino da etapa", format: "date" })
-  @IsDateString()
-  dataTermino: string;
+  @decorate(
+    ApiProperty({ type: "string", description: "Data de termino da etapa", format: "date" }),
+  )
+  declare dataTermino: string;
 
-  @ApiPropertyOptional({ description: "Cor da etapa", nullable: true })
-  @IsOptional()
-  @IsString()
-  cor?: string | null;
+  @decorate(ApiPropertyOptional({ type: "string", description: "Cor da etapa", nullable: true }))
+  declare cor: string | null;
 
-  @ApiProperty({
-    type: () => CalendarioLetivoFindOneInputRestDto,
-    description: "Calendario letivo ao qual a etapa pertence",
-  })
-  @ValidateNested()
-  @Type(() => CalendarioLetivoFindOneInputRestDto)
+  @decorate(
+    ApiProperty({
+      type: () => CalendarioLetivoFindOneInputRestDto,
+      description: "Calendario letivo ao qual a etapa pertence",
+    }),
+  )
+  @decorate(ValidateNested())
+  @decorate(Type(() => CalendarioLetivoFindOneInputRestDto))
   calendario: CalendarioLetivoFindOneInputRestDto;
 }
 
-@ApiSchema({ name: "EtapaUpdateInputDto" })
+@decorate(ApiSchema({ name: "EtapaUpdateInputDto" }))
 export class EtapaUpdateInputRestDto extends PartialType(EtapaCreateInputRestDto) {}
 
 // ============================================================================
 // FindOne Input (for path params)
 // ============================================================================
 
-@ApiSchema({ name: "EtapaFindOneInputDto" })
+@decorate(ApiSchema({ name: "EtapaFindOneInputDto" }))
 export class EtapaFindOneInputRestDto {
-  @ApiProperty({ description: "Identificador do registro (uuid)", format: "uuid" })
-  @IsUUID()
+  @decorate(
+    ApiProperty({
+      type: "string",
+      description: "Identificador do registro (uuid)",
+      format: "uuid",
+    }),
+  )
+  @decorate(IsUUID())
   id: string;
 }

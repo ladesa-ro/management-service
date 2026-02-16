@@ -1,14 +1,7 @@
 import { ApiProperty, ApiPropertyOptional, ApiSchema, PartialType } from "@nestjs/swagger";
 import { Type } from "class-transformer";
-import {
-  IsArray,
-  IsDateString,
-  IsOptional,
-  IsString,
-  IsUUID,
-  MinLength,
-  ValidateNested,
-} from "class-validator";
+import { IsArray, IsOptional, IsUUID, ValidateNested } from "class-validator";
+import { decorate, Mixin } from "ts-mixer";
 import {
   commonProperties,
   RegisterModel,
@@ -16,7 +9,8 @@ import {
   simpleProperty,
 } from "@/modules/@shared/infrastructure/persistence/typeorm/metadata";
 import {
-  PaginationInputRestDto,
+  EntityBaseRestDto,
+  PaginatedFilterByIdRestDto,
   PaginationMetaRestDto,
   TransformToArray,
 } from "@/modules/@shared/infrastructure/presentation/rest/dtos";
@@ -24,95 +18,81 @@ import {
   ModalidadeFindOneInputRestDto,
   ModalidadeFindOneOutputRestDto,
 } from "@/server/nest/modules/modalidade/rest/modalidade.rest.dto";
+import { OfertaFormacaoFieldsMixin } from "@/server/nest/modules/oferta-formacao/oferta-formacao.validation-mixin";
 
 // ============================================================================
 // FindOne Output
 // ============================================================================
 
-@ApiSchema({ name: "OfertaFormacaoFindOneOutputDto" })
-@RegisterModel({
-  name: "OfertaFormacaoFindOneOutputDto",
-  properties: [
-    simpleProperty("id"),
-    simpleProperty("nome"),
-    simpleProperty("slug"),
-    referenceProperty("modalidade", "ModalidadeFindOneOutputDto"),
-    ...commonProperties.dated,
-  ],
-})
-export class OfertaFormacaoFindOneOutputRestDto {
-  @ApiProperty({ description: "Identificador do registro (uuid)", format: "uuid" })
-  @IsUUID()
-  id: string;
+@decorate(ApiSchema({ name: "OfertaFormacaoFindOneOutputDto" }))
+@decorate(
+  RegisterModel({
+    name: "OfertaFormacaoFindOneOutputDto",
+    properties: [
+      simpleProperty("id"),
+      simpleProperty("nome"),
+      simpleProperty("slug"),
+      referenceProperty("modalidade", "ModalidadeFindOneOutputDto"),
+      ...commonProperties.dated,
+    ],
+  }),
+)
+export class OfertaFormacaoFindOneOutputRestDto extends Mixin(
+  EntityBaseRestDto,
+  OfertaFormacaoFieldsMixin,
+) {
+  @decorate(
+    ApiProperty({ type: "string", description: "Nome da oferta de formacao", minLength: 1 }),
+  )
+  declare nome: string;
 
-  @ApiProperty({ description: "Nome da oferta de formacao", minLength: 1 })
-  @IsString()
-  @MinLength(1)
-  nome: string;
+  @decorate(
+    ApiProperty({ type: "string", description: "Apelido da oferta de formacao", minLength: 1 }),
+  )
+  declare slug: string;
 
-  @ApiProperty({ description: "Apelido da oferta de formacao", minLength: 1 })
-  @IsString()
-  @MinLength(1)
-  slug: string;
-
-  @ApiProperty({
-    type: () => ModalidadeFindOneOutputRestDto,
-    description: "Modalidade da oferta de formacao",
-  })
-  @ValidateNested()
-  @Type(() => ModalidadeFindOneOutputRestDto)
+  @decorate(
+    ApiProperty({
+      type: () => ModalidadeFindOneOutputRestDto,
+      description: "Modalidade da oferta de formacao",
+    }),
+  )
+  @decorate(ValidateNested())
+  @decorate(Type(() => ModalidadeFindOneOutputRestDto))
   modalidade: ModalidadeFindOneOutputRestDto;
-
-  @ApiProperty({ description: "Data e hora da criacao do registro" })
-  @IsDateString()
-  dateCreated: Date;
-
-  @ApiProperty({ description: "Data e hora da alteracao do registro" })
-  @IsDateString()
-  dateUpdated: Date;
-
-  @ApiPropertyOptional({ description: "Data e hora da exclusao do registro", nullable: true })
-  @IsOptional()
-  @IsDateString()
-  dateDeleted: Date | null;
 }
 
 // ============================================================================
 // List Input/Output
 // ============================================================================
 
-@ApiSchema({ name: "OfertaFormacaoListInputDto" })
-export class OfertaFormacaoListInputRestDto extends PaginationInputRestDto {
-  @ApiPropertyOptional({
-    description: "Filtro por ID",
-    type: [String],
-  })
-  @TransformToArray()
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
-  "filter.id"?: string[];
-
-  @ApiPropertyOptional({
-    description: "Filtro por ID da Modalidade",
-    type: [String],
-  })
-  @TransformToArray()
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
+@decorate(ApiSchema({ name: "OfertaFormacaoListInputDto" }))
+export class OfertaFormacaoListInputRestDto extends PaginatedFilterByIdRestDto {
+  @decorate(
+    ApiPropertyOptional({
+      type: "string",
+      isArray: true,
+      description: "Filtro por ID da Modalidade",
+    }),
+  )
+  @decorate(TransformToArray())
+  @decorate(IsOptional())
+  @decorate(IsArray())
+  @decorate(IsUUID(undefined, { each: true }))
   "filter.modalidade.id"?: string[];
 }
 
-@ApiSchema({ name: "OfertaFormacaoListOutputDto" })
+@decorate(ApiSchema({ name: "OfertaFormacaoListOutputDto" }))
 export class OfertaFormacaoListOutputRestDto {
-  @ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" })
+  @decorate(ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" }))
   meta: PaginationMetaRestDto;
 
-  @ApiProperty({
-    type: () => [OfertaFormacaoFindOneOutputRestDto],
-    description: "Resultados da busca",
-  })
+  @decorate(
+    ApiProperty({
+      type: () => [OfertaFormacaoFindOneOutputRestDto],
+      description: "Resultados da busca",
+    }),
+  )
   data: OfertaFormacaoFindOneOutputRestDto[];
 }
 
@@ -120,28 +100,30 @@ export class OfertaFormacaoListOutputRestDto {
 // Create/Update Input
 // ============================================================================
 
-@ApiSchema({ name: "OfertaFormacaoCreateInputDto" })
-export class OfertaFormacaoCreateInputRestDto {
-  @ApiProperty({ description: "Nome da oferta de formacao", minLength: 1 })
-  @IsString()
-  @MinLength(1)
-  nome: string;
+@decorate(ApiSchema({ name: "OfertaFormacaoCreateInputDto" }))
+export class OfertaFormacaoCreateInputRestDto extends OfertaFormacaoFieldsMixin {
+  @decorate(
+    ApiProperty({ type: "string", description: "Nome da oferta de formacao", minLength: 1 }),
+  )
+  declare nome: string;
 
-  @ApiProperty({ description: "Apelido da oferta de formacao", minLength: 1 })
-  @IsString()
-  @MinLength(1)
-  slug: string;
+  @decorate(
+    ApiProperty({ type: "string", description: "Apelido da oferta de formacao", minLength: 1 }),
+  )
+  declare slug: string;
 
-  @ApiProperty({
-    type: () => ModalidadeFindOneInputRestDto,
-    description: "Modalidade da oferta de formacao",
-  })
-  @ValidateNested()
-  @Type(() => ModalidadeFindOneInputRestDto)
+  @decorate(
+    ApiProperty({
+      type: () => ModalidadeFindOneInputRestDto,
+      description: "Modalidade da oferta de formacao",
+    }),
+  )
+  @decorate(ValidateNested())
+  @decorate(Type(() => ModalidadeFindOneInputRestDto))
   modalidade: ModalidadeFindOneInputRestDto;
 }
 
-@ApiSchema({ name: "OfertaFormacaoUpdateInputDto" })
+@decorate(ApiSchema({ name: "OfertaFormacaoUpdateInputDto" }))
 export class OfertaFormacaoUpdateInputRestDto extends PartialType(
   OfertaFormacaoCreateInputRestDto,
 ) {}
@@ -150,9 +132,15 @@ export class OfertaFormacaoUpdateInputRestDto extends PartialType(
 // FindOne Input (for path params)
 // ============================================================================
 
-@ApiSchema({ name: "OfertaFormacaoFindOneInputDto" })
+@decorate(ApiSchema({ name: "OfertaFormacaoFindOneInputDto" }))
 export class OfertaFormacaoFindOneInputRestDto {
-  @ApiProperty({ description: "Identificador do registro (uuid)", format: "uuid" })
-  @IsUUID()
+  @decorate(
+    ApiProperty({
+      type: "string",
+      description: "Identificador do registro (uuid)",
+      format: "uuid",
+    }),
+  )
+  @decorate(IsUUID())
   id: string;
 }

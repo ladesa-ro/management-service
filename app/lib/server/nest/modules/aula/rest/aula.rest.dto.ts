@@ -1,14 +1,7 @@
 import { ApiProperty, ApiPropertyOptional, ApiSchema, PartialType } from "@nestjs/swagger";
 import { Type } from "class-transformer";
-import {
-  IsArray,
-  IsDateString,
-  IsOptional,
-  IsString,
-  IsUUID,
-  MinLength,
-  ValidateNested,
-} from "class-validator";
+import { IsArray, IsOptional, IsUUID, ValidateNested } from "class-validator";
+import { decorate, Mixin } from "ts-mixer";
 import {
   commonProperties,
   RegisterModel,
@@ -16,7 +9,8 @@ import {
   simpleProperty,
 } from "@/modules/@shared/infrastructure/persistence/typeorm/metadata";
 import {
-  PaginationInputRestDto,
+  EntityBaseRestDto,
+  PaginatedFilterByIdRestDto,
   PaginationMetaRestDto,
   TransformToArray,
 } from "@/modules/@shared/infrastructure/presentation/rest/dtos";
@@ -32,129 +26,120 @@ import {
   IntervaloDeTempoFindOneInputRestDto,
   IntervaloDeTempoFindOneOutputRestDto,
 } from "@/server/nest/modules/intervalo-de-tempo/rest";
+import { AulaFieldsMixin } from "../aula.validation-mixin";
 
 // ============================================================================
 // FindOne Output
 // ============================================================================
 
-@ApiSchema({ name: "AulaFindOneOutputDto" })
-@RegisterModel({
-  name: "AulaFindOneOutputDto",
-  properties: [
-    simpleProperty("id"),
-    simpleProperty("data"),
-    simpleProperty("modalidade", { nullable: true }),
-    referenceProperty("intervaloDeTempo", "IntervaloDeTempoFindOneOutputDto"),
-    referenceProperty("diario", "DiarioFindOneOutputDto"),
-    referenceProperty("ambiente", "AmbienteFindOneOutputDto", { nullable: true }),
-    ...commonProperties.dated,
-  ],
-})
-export class AulaFindOneOutputRestDto {
-  @ApiProperty({ description: "Identificador do registro (uuid)", format: "uuid" })
-  @IsUUID()
-  id: string;
+@decorate(ApiSchema({ name: "AulaFindOneOutputDto" }))
+@decorate(
+  RegisterModel({
+    name: "AulaFindOneOutputDto",
+    properties: [
+      simpleProperty("id"),
+      simpleProperty("data"),
+      simpleProperty("modalidade", { nullable: true }),
+      referenceProperty("intervaloDeTempo", "IntervaloDeTempoFindOneOutputDto"),
+      referenceProperty("diario", "DiarioFindOneOutputDto"),
+      referenceProperty("ambiente", "AmbienteFindOneOutputDto", { nullable: true }),
+      ...commonProperties.dated,
+    ],
+  }),
+)
+export class AulaFindOneOutputRestDto extends Mixin(EntityBaseRestDto, AulaFieldsMixin) {
+  @decorate(ApiProperty({ type: "string", description: "Data da aula" }))
+  declare data: string;
 
-  @ApiProperty({ description: "Data da aula" })
-  @IsDateString()
-  data: string;
+  @decorate(
+    ApiPropertyOptional({ type: "string", description: "Modalidade da aula", nullable: true }),
+  )
+  declare modalidade: string | null;
 
-  @ApiPropertyOptional({ description: "Modalidade da aula", nullable: true })
-  @IsOptional()
-  @IsString()
-  @MinLength(1)
-  modalidade: string | null;
-
-  @ApiProperty({
-    type: () => IntervaloDeTempoFindOneOutputRestDto,
-    description: "Intervalo de tempo associado a aula",
-  })
-  @ValidateNested()
-  @Type(() => IntervaloDeTempoFindOneOutputRestDto)
+  @decorate(
+    ApiProperty({
+      type: () => IntervaloDeTempoFindOneOutputRestDto,
+      description: "Intervalo de tempo associado a aula",
+    }),
+  )
+  @decorate(ValidateNested())
+  @decorate(Type(() => IntervaloDeTempoFindOneOutputRestDto))
   intervaloDeTempo: IntervaloDeTempoFindOneOutputRestDto;
 
-  @ApiProperty({ type: () => DiarioFindOneOutputRestDto, description: "Diario associado a aula" })
-  @ValidateNested()
-  @Type(() => DiarioFindOneOutputRestDto)
+  @decorate(
+    ApiProperty({ type: () => DiarioFindOneOutputRestDto, description: "Diario associado a aula" }),
+  )
+  @decorate(ValidateNested())
+  @decorate(Type(() => DiarioFindOneOutputRestDto))
   diario: DiarioFindOneOutputRestDto;
 
-  @ApiPropertyOptional({
-    type: () => AmbienteFindOneOutputRestDto,
-    description: "Ambiente associado a aula",
-    nullable: true,
-  })
-  @IsOptional()
-  @ValidateNested()
-  @Type(() => AmbienteFindOneOutputRestDto)
+  @decorate(
+    ApiPropertyOptional({
+      type: () => AmbienteFindOneOutputRestDto,
+      description: "Ambiente associado a aula",
+      nullable: true,
+    }),
+  )
+  @decorate(IsOptional())
+  @decorate(ValidateNested())
+  @decorate(Type(() => AmbienteFindOneOutputRestDto))
   ambiente: AmbienteFindOneOutputRestDto | null;
-
-  @ApiProperty({ description: "Data e hora da criacao do registro" })
-  @IsDateString()
-  dateCreated: Date;
-
-  @ApiProperty({ description: "Data e hora da alteracao do registro" })
-  @IsDateString()
-  dateUpdated: Date;
-
-  @ApiPropertyOptional({ description: "Data e hora da exclusao do registro", nullable: true })
-  @IsOptional()
-  @IsDateString()
-  dateDeleted: Date | null;
 }
 
 // ============================================================================
 // List Input/Output
 // ============================================================================
 
-@ApiSchema({ name: "AulaListInputDto" })
-export class AulaListInputRestDto extends PaginationInputRestDto {
-  @ApiPropertyOptional({
-    description: "Filtro por ID",
-    type: [String],
-  })
-  @TransformToArray()
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
-  "filter.id"?: string[];
-
-  @ApiPropertyOptional({
-    description: "Filtro por ID do Intervalo de Tempo",
-    type: [String],
-  })
-  @TransformToArray()
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
+@decorate(ApiSchema({ name: "AulaListInputDto" }))
+export class AulaListInputRestDto extends PaginatedFilterByIdRestDto {
+  @decorate(
+    ApiPropertyOptional({
+      type: "string",
+      isArray: true,
+      description: "Filtro por ID do Intervalo de Tempo",
+    }),
+  )
+  @decorate(TransformToArray())
+  @decorate(IsOptional())
+  @decorate(IsArray())
+  @decorate(IsUUID(undefined, { each: true }))
   "filter.intervaloDeTempo.id"?: string[];
 
-  @ApiPropertyOptional({
-    description: "Filtro por ID do Diario",
-    type: [String],
-  })
-  @TransformToArray()
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
+  @decorate(
+    ApiPropertyOptional({
+      type: "string",
+      isArray: true,
+      description: "Filtro por ID do Diario",
+    }),
+  )
+  @decorate(TransformToArray())
+  @decorate(IsOptional())
+  @decorate(IsArray())
+  @decorate(IsUUID(undefined, { each: true }))
   "filter.diario.id"?: string[];
 
-  @ApiPropertyOptional({
-    description: "Filtro por ID do Ambiente",
-    type: [String],
-  })
-  @TransformToArray()
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
+  @decorate(
+    ApiPropertyOptional({
+      type: "string",
+      isArray: true,
+      description: "Filtro por ID do Ambiente",
+    }),
+  )
+  @decorate(TransformToArray())
+  @decorate(IsOptional())
+  @decorate(IsArray())
+  @decorate(IsUUID(undefined, { each: true }))
   "filter.ambiente.id"?: string[];
 }
 
-@ApiSchema({ name: "AulaListOutputDto" })
+@decorate(ApiSchema({ name: "AulaListOutputDto" }))
 export class AulaListOutputRestDto {
-  @ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" })
+  @decorate(ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" }))
   meta: PaginationMetaRestDto;
 
-  @ApiProperty({ type: () => [AulaFindOneOutputRestDto], description: "Resultados da busca" })
+  @decorate(
+    ApiProperty({ type: () => [AulaFindOneOutputRestDto], description: "Resultados da busca" }),
+  )
   data: AulaFindOneOutputRestDto[];
 }
 
@@ -162,52 +147,62 @@ export class AulaListOutputRestDto {
 // Create/Update Input
 // ============================================================================
 
-@ApiSchema({ name: "AulaCreateInputDto" })
-export class AulaCreateInputRestDto {
-  @ApiProperty({ description: "Data da aula" })
-  @IsDateString()
-  data: string;
+@decorate(ApiSchema({ name: "AulaCreateInputDto" }))
+export class AulaCreateInputRestDto extends AulaFieldsMixin {
+  @decorate(ApiProperty({ type: "string", description: "Data da aula" }))
+  declare data: string;
 
-  @ApiPropertyOptional({ description: "Modalidade da aula", nullable: true })
-  @IsOptional()
-  @IsString()
-  @MinLength(1)
-  modalidade?: string | null;
+  @decorate(
+    ApiPropertyOptional({ type: "string", description: "Modalidade da aula", nullable: true }),
+  )
+  declare modalidade?: string | null;
 
-  @ApiProperty({
-    type: () => IntervaloDeTempoFindOneInputRestDto,
-    description: "Intervalo de tempo associado a aula",
-  })
-  @ValidateNested()
-  @Type(() => IntervaloDeTempoFindOneInputRestDto)
+  @decorate(
+    ApiProperty({
+      type: () => IntervaloDeTempoFindOneInputRestDto,
+      description: "Intervalo de tempo associado a aula",
+    }),
+  )
+  @decorate(ValidateNested())
+  @decorate(Type(() => IntervaloDeTempoFindOneInputRestDto))
   intervaloDeTempo: IntervaloDeTempoFindOneInputRestDto;
 
-  @ApiProperty({ type: () => DiarioFindOneInputRestDto, description: "Diario associado a aula" })
-  @ValidateNested()
-  @Type(() => DiarioFindOneInputRestDto)
+  @decorate(
+    ApiProperty({ type: () => DiarioFindOneInputRestDto, description: "Diario associado a aula" }),
+  )
+  @decorate(ValidateNested())
+  @decorate(Type(() => DiarioFindOneInputRestDto))
   diario: DiarioFindOneInputRestDto;
 
-  @ApiPropertyOptional({
-    type: () => AmbienteFindOneInputRestDto,
-    description: "Ambiente associado a aula",
-    nullable: true,
-  })
-  @IsOptional()
-  @ValidateNested()
-  @Type(() => AmbienteFindOneInputRestDto)
+  @decorate(
+    ApiPropertyOptional({
+      type: () => AmbienteFindOneInputRestDto,
+      description: "Ambiente associado a aula",
+      nullable: true,
+    }),
+  )
+  @decorate(IsOptional())
+  @decorate(ValidateNested())
+  @decorate(Type(() => AmbienteFindOneInputRestDto))
   ambiente?: AmbienteFindOneInputRestDto | null;
 }
 
-@ApiSchema({ name: "AulaUpdateInputDto" })
+@decorate(ApiSchema({ name: "AulaUpdateInputDto" }))
 export class AulaUpdateInputRestDto extends PartialType(AulaCreateInputRestDto) {}
 
 // ============================================================================
 // FindOne Input (for path params)
 // ============================================================================
 
-@ApiSchema({ name: "AulaFindOneInputDto" })
+@decorate(ApiSchema({ name: "AulaFindOneInputDto" }))
 export class AulaFindOneInputRestDto {
-  @ApiProperty({ description: "Identificador do registro (uuid)", format: "uuid" })
-  @IsUUID()
+  @decorate(
+    ApiProperty({
+      type: "string",
+      description: "Identificador do registro (uuid)",
+      format: "uuid",
+    }),
+  )
+  @decorate(IsUUID())
   id: string;
 }

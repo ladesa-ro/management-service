@@ -4,11 +4,15 @@ import {
   UsuarioFindOneInputDto,
   UsuarioFindOneOutputDto,
   UsuarioListInputDto,
-  UsuarioListOutputDto,
   UsuarioUpdateInputDto,
 } from "@/modules/acesso/usuario";
 import { BlocoRestMapper } from "@/server/nest/modules/bloco/rest";
-import { mapPaginationMeta } from "@/server/nest/shared/mappers";
+import {
+  createFindOneInputMapper,
+  createListInputMapper,
+  createListOutputMapper,
+  mapDatedFields,
+} from "@/server/nest/shared/mappers";
 import {
   UsuarioCreateInputRestDto,
   UsuarioEnsinoCursoRefRestDto,
@@ -17,7 +21,6 @@ import {
   UsuarioEnsinoTurmaRefRestDto,
   UsuarioFindOneInputRestDto,
   UsuarioFindOneOutputRestDto,
-  UsuarioListInputRestDto,
   UsuarioListOutputRestDto,
   UsuarioUpdateInputRestDto,
 } from "./usuario.rest.dto";
@@ -27,26 +30,9 @@ export class UsuarioRestMapper {
   // Input: Server DTO -> Core DTO
   // ============================================================================
 
-  static toFindOneInput(dto: UsuarioFindOneInputRestDto): UsuarioFindOneInputDto {
-    const input = new UsuarioFindOneInputDto();
-    input.id = dto.id;
-    return input;
-  }
+  static toFindOneInput = createFindOneInputMapper(UsuarioFindOneInputDto);
 
-  static toListInput(dto: UsuarioListInputRestDto | null): UsuarioListInputDto | null {
-    if (!dto) {
-      return null;
-    }
-
-    const input = new UsuarioListInputDto();
-    input.page = dto.page;
-    input.limit = dto.limit;
-    input.search = dto.search;
-    input.sortBy = dto.sortBy;
-    input.selection = dto.selection;
-    input["filter.id"] = dto["filter.id"];
-    return input;
-  }
+  static toListInput = createListInputMapper(UsuarioListInputDto, ["filter.id"]);
 
   static toCreateInput(dto: UsuarioCreateInputRestDto): UsuarioCreateInputDto {
     const input = new UsuarioCreateInputDto();
@@ -91,18 +77,14 @@ export class UsuarioRestMapper {
     dto.imagemPerfil = output.imagemPerfil
       ? BlocoRestMapper.toImagemOutputDto(output.imagemPerfil)
       : null;
-    dto.dateCreated = new Date(output.dateCreated);
-    dto.dateUpdated = new Date(output.dateUpdated);
-    dto.dateDeleted = output.dateDeleted ? new Date(output.dateDeleted) : null;
+    mapDatedFields(dto, output);
     return dto;
   }
 
-  static toListOutputDto(output: UsuarioListOutputDto): UsuarioListOutputRestDto {
-    const dto = new UsuarioListOutputRestDto();
-    dto.meta = mapPaginationMeta(output.meta);
-    dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
-    return dto;
-  }
+  static toListOutputDto = createListOutputMapper(
+    UsuarioListOutputRestDto,
+    UsuarioRestMapper.toFindOneOutputDto,
+  );
 
   static toEnsinoOutputDto(output: UsuarioEnsinoOutput): UsuarioEnsinoOutputRestDto {
     const dto = new UsuarioEnsinoOutputRestDto();

@@ -1,62 +1,74 @@
-import { ArgsType, Field, InputType, Int, ObjectType } from "@nestjs/graphql";
-import {
-  IsArray,
-  IsInt,
-  IsOptional,
-  IsString,
-  IsUUID,
-  Min,
-  MinLength,
-  ValidateNested,
-} from "class-validator";
+import { ArgsType, Field, InputType, ObjectType } from "@nestjs/graphql";
+import { IsOptional, IsString, MinLength, ValidateNested } from "class-validator";
+import { decorate } from "ts-mixer";
 import {
   EntityBaseGraphQlDto,
+  PaginatedFilterByIdGraphQlDto,
   PaginationMetaGraphQlDto,
 } from "@/modules/@shared/infrastructure/graphql/dtos";
 import {
   EnderecoFindOneOutputGraphQlDto,
   EnderecoInputGraphQlDto,
 } from "@/server/nest/modules/endereco/graphql/endereco.graphql.dto";
+import { CampusFieldsMixin } from "../campus.validation-mixin";
 
 // ============================================================================
 // FindOne Output
 // ============================================================================
 
-@ObjectType("CampusFindOneOutputDto")
+@decorate(ObjectType("CampusFindOneOutputDto"))
 export class CampusFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
-  @Field() nomeFantasia: string;
-  @Field() razaoSocial: string;
-  @Field() apelido: string;
-  @Field() cnpj: string;
-  @Field(() => EnderecoFindOneOutputGraphQlDto) endereco: EnderecoFindOneOutputGraphQlDto;
+  @decorate(Field(() => String)) nomeFantasia: string;
+  @decorate(Field(() => String)) razaoSocial: string;
+  @decorate(Field(() => String)) apelido: string;
+  @decorate(Field(() => String)) cnpj: string;
+  @decorate(Field(() => EnderecoFindOneOutputGraphQlDto)) endereco: EnderecoFindOneOutputGraphQlDto;
 }
 
 // ============================================================================
 // Create Input
 // ============================================================================
 
-@InputType("CampusCreateInputDto")
-export class CampusCreateInputGraphQlDto {
-  @Field() @IsString() @MinLength(1) nomeFantasia: string;
-  @Field() @IsString() @MinLength(1) razaoSocial: string;
-  @Field() @IsString() @MinLength(1) apelido: string;
-  @Field() @IsString() @MinLength(1) cnpj: string;
-  @Field(() => EnderecoInputGraphQlDto) @ValidateNested() endereco: EnderecoInputGraphQlDto;
+@decorate(InputType("CampusCreateInputDto"))
+export class CampusCreateInputGraphQlDto extends CampusFieldsMixin {
+  @decorate(Field(() => String)) declare nomeFantasia: string;
+  @decorate(Field(() => String)) declare razaoSocial: string;
+  @decorate(Field(() => String)) declare apelido: string;
+  @decorate(Field(() => String)) declare cnpj: string;
+  @decorate(Field(() => EnderecoInputGraphQlDto))
+  @decorate(ValidateNested())
+  endereco: EnderecoInputGraphQlDto;
 }
 
 // ============================================================================
 // Update Input
 // ============================================================================
 
-@InputType("CampusUpdateInputDto")
+@decorate(InputType("CampusUpdateInputDto"))
 export class CampusUpdateInputGraphQlDto {
-  @Field({ nullable: true }) @IsOptional() @IsString() @MinLength(1) nomeFantasia?: string;
-  @Field({ nullable: true }) @IsOptional() @IsString() @MinLength(1) razaoSocial?: string;
-  @Field({ nullable: true }) @IsOptional() @IsString() @MinLength(1) apelido?: string;
-  @Field({ nullable: true }) @IsOptional() @IsString() @MinLength(1) cnpj?: string;
-  @Field(() => EnderecoInputGraphQlDto, { nullable: true })
-  @IsOptional()
-  @ValidateNested()
+  @decorate(Field(() => String, { nullable: true }))
+  @decorate(IsOptional())
+  @decorate(IsString())
+  @decorate(MinLength(1))
+  nomeFantasia?: string;
+  @decorate(Field(() => String, { nullable: true }))
+  @decorate(IsOptional())
+  @decorate(IsString())
+  @decorate(MinLength(1))
+  razaoSocial?: string;
+  @decorate(Field(() => String, { nullable: true }))
+  @decorate(IsOptional())
+  @decorate(IsString())
+  @decorate(MinLength(1))
+  apelido?: string;
+  @decorate(Field(() => String, { nullable: true }))
+  @decorate(IsOptional())
+  @decorate(IsString())
+  @decorate(MinLength(1))
+  cnpj?: string;
+  @decorate(Field(() => EnderecoInputGraphQlDto, { nullable: true }))
+  @decorate(IsOptional())
+  @decorate(ValidateNested())
   endereco?: EnderecoInputGraphQlDto;
 }
 
@@ -64,47 +76,18 @@ export class CampusUpdateInputGraphQlDto {
 // List Input (GraphQL-compatible - no dots in field names)
 // ============================================================================
 
-@ArgsType()
-export class CampusListInputGraphQlDto {
-  @Field(() => Int, { nullable: true, defaultValue: 1 })
-  @IsOptional()
-  @IsInt()
-  @Min(1)
-  page?: number = 1;
-
-  @Field(() => Int, { nullable: true })
-  @IsOptional()
-  @IsInt()
-  @Min(1)
-  limit?: number;
-
-  @Field(() => String, { nullable: true })
-  @IsOptional()
-  @IsString()
-  search?: string;
-
-  @Field(() => [String], { nullable: true })
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
-  sortBy?: string[];
-
-  @Field(() => [String], { nullable: true, description: "Filtro por ID" })
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
-  filterId?: string[];
-}
+@decorate(ArgsType())
+export class CampusListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {}
 
 // ============================================================================
 // List Output
 // ============================================================================
 
-@ObjectType("CampusListResult")
+@decorate(ObjectType("CampusListResult"))
 export class CampusListOutputGraphQlDto {
-  @Field(() => PaginationMetaGraphQlDto)
+  @decorate(Field(() => PaginationMetaGraphQlDto))
   meta: PaginationMetaGraphQlDto;
 
-  @Field(() => [CampusFindOneOutputGraphQlDto])
+  @decorate(Field(() => [CampusFindOneOutputGraphQlDto]))
   data: CampusFindOneOutputGraphQlDto[];
 }

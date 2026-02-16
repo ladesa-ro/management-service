@@ -1,13 +1,14 @@
 import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { IsArray, IsInt, IsOptional, IsString, ValidateNested } from "class-validator";
+import { decorate } from "ts-mixer";
 import {
   RegisterModel,
   referenceProperty,
   simpleProperty,
 } from "@/modules/@shared/infrastructure/persistence/typeorm/metadata";
 import {
-  PaginationInputRestDto,
+  PaginatedFilterByStringIdRestDto,
   PaginationMetaRestDto,
   TransformToArray,
 } from "@/modules/@shared/infrastructure/presentation/rest/dtos";
@@ -17,27 +18,31 @@ import { EstadoFindOneOutputRestDto } from "@/server/nest/modules/estado/rest/es
 // FindOne Output
 // ============================================================================
 
-@ApiSchema({ name: "CidadeFindOneOutputDto" })
-@RegisterModel({
-  name: "CidadeFindOneOutputDto",
-  properties: [
-    simpleProperty("id"),
-    simpleProperty("nome"),
-    referenceProperty("estado", "EstadoFindOneOutputDto"),
-  ],
-})
+@decorate(ApiSchema({ name: "CidadeFindOneOutputDto" }))
+@decorate(
+  RegisterModel({
+    name: "CidadeFindOneOutputDto",
+    properties: [
+      simpleProperty("id"),
+      simpleProperty("nome"),
+      referenceProperty("estado", "EstadoFindOneOutputDto"),
+    ],
+  }),
+)
 export class CidadeFindOneOutputRestDto {
-  @ApiProperty({ description: "Identificador do registro (numerico)" })
-  @IsInt()
+  @decorate(ApiProperty({ type: "integer", description: "Identificador do registro (numerico)" }))
+  @decorate(IsInt())
   id: number;
 
-  @ApiProperty({ description: "Nome oficial da cidade" })
-  @IsString()
+  @decorate(ApiProperty({ type: "string", description: "Nome oficial da cidade" }))
+  @decorate(IsString())
   nome: string;
 
-  @ApiProperty({ type: () => EstadoFindOneOutputRestDto, description: "Estado da cidade" })
-  @ValidateNested()
-  @Type(() => EstadoFindOneOutputRestDto)
+  @decorate(
+    ApiProperty({ type: () => EstadoFindOneOutputRestDto, description: "Estado da cidade" }),
+  )
+  @decorate(ValidateNested())
+  @decorate(Type(() => EstadoFindOneOutputRestDto))
   estado: EstadoFindOneOutputRestDto;
 }
 
@@ -45,55 +50,56 @@ export class CidadeFindOneOutputRestDto {
 // List Input/Output
 // ============================================================================
 
-@ApiSchema({ name: "CidadeListInputDto" })
-export class CidadeListInputRestDto extends PaginationInputRestDto {
-  @ApiPropertyOptional({
-    description: "Filtro por ID",
-    type: [String],
-  })
-  @TransformToArray()
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
-  "filter.id"?: string[];
-
-  @ApiPropertyOptional({
-    description: "Filtro por ID do Estado",
-    type: [String],
-  })
-  @TransformToArray()
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
+@decorate(ApiSchema({ name: "CidadeListInputDto" }))
+export class CidadeListInputRestDto extends PaginatedFilterByStringIdRestDto {
+  @decorate(
+    ApiPropertyOptional({
+      description: "Filtro por ID do Estado",
+      type: "string",
+      isArray: true,
+    }),
+  )
+  @decorate(TransformToArray())
+  @decorate(IsOptional())
+  @decorate(IsArray())
+  @decorate(IsString({ each: true }))
   "filter.estado.id"?: string[];
 
-  @ApiPropertyOptional({
-    description: "Filtro por nome do Estado",
-    type: [String],
-  })
-  @TransformToArray()
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
+  @decorate(
+    ApiPropertyOptional({
+      description: "Filtro por nome do Estado",
+      type: "string",
+      isArray: true,
+    }),
+  )
+  @decorate(TransformToArray())
+  @decorate(IsOptional())
+  @decorate(IsArray())
+  @decorate(IsString({ each: true }))
   "filter.estado.nome"?: string[];
 
-  @ApiPropertyOptional({
-    description: "Filtro por sigla do Estado",
-    type: [String],
-  })
-  @TransformToArray()
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
+  @decorate(
+    ApiPropertyOptional({
+      description: "Filtro por sigla do Estado",
+      type: "string",
+      isArray: true,
+    }),
+  )
+  @decorate(TransformToArray())
+  @decorate(IsOptional())
+  @decorate(IsArray())
+  @decorate(IsString({ each: true }))
   "filter.estado.sigla"?: string[];
 }
 
-@ApiSchema({ name: "CidadeListOutputDto" })
+@decorate(ApiSchema({ name: "CidadeListOutputDto" }))
 export class CidadeListOutputRestDto {
-  @ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" })
+  @decorate(ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" }))
   meta: PaginationMetaRestDto;
 
-  @ApiProperty({ type: () => [CidadeFindOneOutputRestDto], description: "Resultados da busca" })
+  @decorate(
+    ApiProperty({ type: () => [CidadeFindOneOutputRestDto], description: "Resultados da busca" }),
+  )
   data: CidadeFindOneOutputRestDto[];
 }
 
@@ -101,10 +107,10 @@ export class CidadeListOutputRestDto {
 // FindOne Input (for path params)
 // ============================================================================
 
-@ApiSchema({ name: "CidadeFindOneInputDto" })
+@decorate(ApiSchema({ name: "CidadeFindOneInputDto" }))
 export class CidadeFindOneInputRestDto {
-  @ApiProperty({ description: "Identificador do registro (numerico)" })
-  @Type(() => Number)
-  @IsInt()
+  @decorate(ApiProperty({ type: "integer", description: "Identificador do registro (numerico)" }))
+  @decorate(Type(() => Number))
+  @decorate(IsInt())
   id: number;
 }

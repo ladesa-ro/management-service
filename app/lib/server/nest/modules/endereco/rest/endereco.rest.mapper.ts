@@ -3,6 +3,7 @@ import {
   EnderecoFindOneOutputDto,
 } from "@/modules/base/localidades/endereco";
 import { CidadeRestMapper } from "@/server/nest/modules/cidade/rest/cidade.rest.mapper";
+import { mapDatedFields } from "@/server/nest/shared/mappers";
 import { EnderecoFindOneOutputRestDto, EnderecoInputRestDto } from "./endereco.rest.dto";
 
 export class EnderecoRestMapper {
@@ -28,9 +29,7 @@ export class EnderecoRestMapper {
     dto.complemento = output.complemento;
     dto.pontoReferencia = output.pontoReferencia;
     dto.cidade = CidadeRestMapper.toFindOneOutputDto(output.cidade);
-    dto.dateCreated = new Date(output.dateCreated);
-    dto.dateUpdated = new Date(output.dateUpdated);
-    dto.dateDeleted = output.dateDeleted ? new Date(output.dateDeleted) : null;
+    mapDatedFields(dto, output);
     return dto;
   }
 }

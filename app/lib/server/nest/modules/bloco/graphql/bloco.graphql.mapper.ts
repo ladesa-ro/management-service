@@ -3,11 +3,10 @@ import {
   BlocoFindOneInputDto,
   BlocoFindOneOutputDto,
   BlocoListInputDto,
-  BlocoListOutputDto,
   BlocoUpdateInputDto,
 } from "@/modules/sisgea/bloco";
 import { CampusGraphqlMapper } from "@/server/nest/modules/campus/graphql/campus.graphql.mapper";
-import { mapPaginationMeta } from "@/server/nest/shared/mappers";
+import { createListOutputMapper, mapDatedFields } from "@/server/nest/shared/mappers";
 import {
   BlocoCreateInputGraphQlDto,
   BlocoFindOneOutputGraphQlDto,
@@ -98,16 +97,12 @@ export class BlocoGraphqlMapper {
     dto.codigo = output.codigo;
     dto.campus = CampusGraphqlMapper.toFindOneOutputDto(output.campus);
     dto.imagemCapa = mapImagemOutput(output.imagemCapa);
-    dto.dateCreated = output.dateCreated as unknown as Date;
-    dto.dateUpdated = output.dateUpdated as unknown as Date;
-    dto.dateDeleted = output.dateDeleted as unknown as Date | null;
+    mapDatedFields(dto, output);
     return dto;
   }
 
-  static toListOutputDto(output: BlocoListOutputDto): BlocoListOutputGraphQlDto {
-    const dto = new BlocoListOutputGraphQlDto();
-    dto.meta = mapPaginationMeta(output.meta);
-    dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
-    return dto;
-  }
+  static toListOutputDto = createListOutputMapper(
+    BlocoListOutputGraphQlDto,
+    BlocoGraphqlMapper.toFindOneOutputDto,
+  );
 }

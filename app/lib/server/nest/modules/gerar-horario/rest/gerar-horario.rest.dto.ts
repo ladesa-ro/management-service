@@ -1,6 +1,7 @@
 import { ApiProperty, ApiSchema } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { IsArray, IsDateString, ValidateNested } from "class-validator";
+import { decorate } from "ts-mixer";
 import { HorarioGeradoAulaFindOneInputRestDto } from "@/server/nest/modules/horario-gerado-aula/rest";
 import { IntervaloDeTempoFindOneInputRestDto } from "@/server/nest/modules/intervalo-de-tempo/rest/intervalo-de-tempo.rest.dto";
 import { PerfilFindOneInputRestDto } from "@/server/nest/modules/perfil/rest";
@@ -10,32 +11,34 @@ import { TurmaFindOneInputRestDto } from "@/server/nest/modules/turma/rest";
 // Gerar Horario Input
 // ============================================================================
 
-@ApiSchema({ name: "GerarHorarioInputDto" })
+@decorate(ApiSchema({ name: "GerarHorarioInputDto" }))
 export class GerarHorarioInputRestDto {
-  @ApiProperty({ description: "Data inicial" })
-  @IsDateString()
+  @decorate(ApiProperty({ type: "string", description: "Data inicial" }))
+  @decorate(IsDateString())
   dataInicial: string;
 
-  @ApiProperty({ description: "Data final" })
-  @IsDateString()
+  @decorate(ApiProperty({ type: "string", description: "Data final" }))
+  @decorate(IsDateString())
   dataFinal: string;
 
-  @ApiProperty({ type: () => [PerfilFindOneInputRestDto], description: "Professores" })
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => PerfilFindOneInputRestDto)
+  @decorate(ApiProperty({ type: () => [PerfilFindOneInputRestDto], description: "Professores" }))
+  @decorate(IsArray())
+  @decorate(ValidateNested({ each: true }))
+  @decorate(Type(() => PerfilFindOneInputRestDto))
   professores: PerfilFindOneInputRestDto[];
 
-  @ApiProperty({ type: () => [TurmaFindOneInputRestDto], description: "Turmas" })
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => TurmaFindOneInputRestDto)
+  @decorate(ApiProperty({ type: () => [TurmaFindOneInputRestDto], description: "Turmas" }))
+  @decorate(IsArray())
+  @decorate(ValidateNested({ each: true }))
+  @decorate(Type(() => TurmaFindOneInputRestDto))
   turmas: TurmaFindOneInputRestDto[];
 
-  @ApiProperty({ type: () => [IntervaloDeTempoFindOneInputRestDto], description: "Intervalos" })
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => IntervaloDeTempoFindOneInputRestDto)
+  @decorate(
+    ApiProperty({ type: () => [IntervaloDeTempoFindOneInputRestDto], description: "Intervalos" }),
+  )
+  @decorate(IsArray())
+  @decorate(ValidateNested({ each: true }))
+  @decorate(Type(() => IntervaloDeTempoFindOneInputRestDto))
   intervalos: IntervaloDeTempoFindOneInputRestDto[];
 }
 
@@ -43,19 +46,24 @@ export class GerarHorarioInputRestDto {
 // Gerar Horario Output
 // ============================================================================
 
-@ApiSchema({ name: "GerarHorarioOutputDto" })
+@decorate(ApiSchema({ name: "GerarHorarioOutputDto" }))
 export class GerarHorarioOutputRestDto {
-  @ApiProperty({ description: "Data inicial" })
-  @IsDateString()
+  @decorate(ApiProperty({ type: "string", description: "Data inicial" }))
+  @decorate(IsDateString())
   dataInicial: string;
 
-  @ApiProperty({ description: "Data final" })
-  @IsDateString()
+  @decorate(ApiProperty({ type: "string", description: "Data final" }))
+  @decorate(IsDateString())
   dataFinal: string;
 
-  @ApiProperty({ type: () => [HorarioGeradoAulaFindOneInputRestDto], description: "Aulas geradas" })
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => HorarioGeradoAulaFindOneInputRestDto)
+  @decorate(
+    ApiProperty({
+      type: () => [HorarioGeradoAulaFindOneInputRestDto],
+      description: "Aulas geradas",
+    }),
+  )
+  @decorate(IsArray())
+  @decorate(ValidateNested({ each: true }))
+  @decorate(Type(() => HorarioGeradoAulaFindOneInputRestDto))
   aulas: HorarioGeradoAulaFindOneInputRestDto[];
 }

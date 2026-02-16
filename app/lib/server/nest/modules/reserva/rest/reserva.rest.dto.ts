@@ -1,14 +1,7 @@
 import { ApiProperty, ApiPropertyOptional, ApiSchema, PartialType } from "@nestjs/swagger";
 import { Type } from "class-transformer";
-import {
-  IsArray,
-  IsDateString,
-  IsOptional,
-  IsString,
-  IsUUID,
-  MinLength,
-  ValidateNested,
-} from "class-validator";
+import { IsArray, IsOptional, IsString, IsUUID, ValidateNested } from "class-validator";
+import { decorate, Mixin } from "ts-mixer";
 import {
   commonProperties,
   RegisterModel,
@@ -16,7 +9,8 @@ import {
   simpleProperty,
 } from "@/modules/@shared/infrastructure/persistence/typeorm/metadata";
 import {
-  PaginationInputRestDto,
+  EntityBaseRestDto,
+  PaginatedFilterByIdRestDto,
   PaginationMetaRestDto,
   TransformToArray,
 } from "@/modules/@shared/infrastructure/presentation/rest/dtos";
@@ -28,153 +22,146 @@ import {
   UsuarioFindOneInputRestDto,
   UsuarioFindOneOutputRestDto,
 } from "@/server/nest/modules/usuario/rest";
+import { ReservaFieldsMixin } from "../reserva.validation-mixin";
 
 // ============================================================================
 // FindOne Output
 // ============================================================================
 
-@ApiSchema({ name: "ReservaFindOneOutputDto" })
-@RegisterModel({
-  name: "ReservaFindOneOutputDto",
-  properties: [
-    simpleProperty("id"),
-    simpleProperty("situacao"),
-    simpleProperty("motivo", { nullable: true }),
-    simpleProperty("tipo", { nullable: true }),
-    simpleProperty("rrule"),
-    referenceProperty("usuario", "UsuarioFindOneOutputDto"),
-    referenceProperty("ambiente", "AmbienteFindOneOutputDto"),
-    ...commonProperties.dated,
-  ],
-})
-export class ReservaFindOneOutputRestDto {
-  @ApiProperty({ description: "Identificador do registro (uuid)", format: "uuid" })
-  @IsUUID()
-  id: string;
+@decorate(ApiSchema({ name: "ReservaFindOneOutputDto" }))
+@decorate(
+  RegisterModel({
+    name: "ReservaFindOneOutputDto",
+    properties: [
+      simpleProperty("id"),
+      simpleProperty("situacao"),
+      simpleProperty("motivo", { nullable: true }),
+      simpleProperty("tipo", { nullable: true }),
+      simpleProperty("rrule"),
+      referenceProperty("usuario", "UsuarioFindOneOutputDto"),
+      referenceProperty("ambiente", "AmbienteFindOneOutputDto"),
+      ...commonProperties.dated,
+    ],
+  }),
+)
+export class ReservaFindOneOutputRestDto extends Mixin(EntityBaseRestDto, ReservaFieldsMixin) {
+  @decorate(ApiProperty({ type: "string", description: "Situacao da reserva", minLength: 1 }))
+  declare situacao: string;
 
-  @ApiProperty({ description: "Situacao da reserva", minLength: 1 })
-  @IsString()
-  @MinLength(1)
-  situacao: string;
+  @decorate(
+    ApiPropertyOptional({ type: "string", description: "Motivo da reserva", nullable: true }),
+  )
+  declare motivo: string | null;
 
-  @ApiPropertyOptional({ description: "Motivo da reserva", nullable: true })
-  @IsOptional()
-  @IsString()
-  @MinLength(1)
-  motivo: string | null;
+  @decorate(ApiPropertyOptional({ type: "string", description: "Tipo da reserva", nullable: true }))
+  declare tipo: string | null;
 
-  @ApiPropertyOptional({ description: "Tipo da reserva", nullable: true })
-  @IsOptional()
-  @IsString()
-  @MinLength(1)
-  tipo: string | null;
+  @decorate(
+    ApiProperty({
+      type: "string",
+      description: "Regra RRule para a recorrencia da reserva. Segue a RFC 5545 do iCalendar",
+    }),
+  )
+  declare rrule: string;
 
-  @ApiProperty({
-    description: "Regra RRule para a recorrencia da reserva. Segue a RFC 5545 do iCalendar",
-  })
-  @IsString()
-  rrule: string;
-
-  @ApiProperty({
-    type: () => UsuarioFindOneOutputRestDto,
-    description: "Usuario que fez a reserva",
-  })
-  @ValidateNested()
-  @Type(() => UsuarioFindOneOutputRestDto)
+  @decorate(
+    ApiProperty({
+      type: () => UsuarioFindOneOutputRestDto,
+      description: "Usuario que fez a reserva",
+    }),
+  )
+  @decorate(ValidateNested())
+  @decorate(Type(() => UsuarioFindOneOutputRestDto))
   usuario: UsuarioFindOneOutputRestDto;
 
-  @ApiProperty({ type: () => AmbienteFindOneOutputRestDto, description: "Ambiente reservado" })
-  @ValidateNested()
-  @Type(() => AmbienteFindOneOutputRestDto)
+  @decorate(
+    ApiProperty({ type: () => AmbienteFindOneOutputRestDto, description: "Ambiente reservado" }),
+  )
+  @decorate(ValidateNested())
+  @decorate(Type(() => AmbienteFindOneOutputRestDto))
   ambiente: AmbienteFindOneOutputRestDto;
-
-  @ApiProperty({ description: "Data e hora da criacao do registro" })
-  @IsDateString()
-  dateCreated: Date;
-
-  @ApiProperty({ description: "Data e hora da alteracao do registro" })
-  @IsDateString()
-  dateUpdated: Date;
-
-  @ApiPropertyOptional({ description: "Data e hora da exclusao do registro", nullable: true })
-  @IsOptional()
-  @IsDateString()
-  dateDeleted: Date | null;
 }
 
 // ============================================================================
 // List Input/Output
 // ============================================================================
 
-@ApiSchema({ name: "ReservaListInputDto" })
-export class ReservaListInputRestDto extends PaginationInputRestDto {
-  @ApiPropertyOptional({
-    description: "Filtro por ID",
-    type: [String],
-  })
-  @TransformToArray()
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
-  "filter.id"?: string[];
-
-  @ApiPropertyOptional({
-    description: "Filtro por situacao",
-    type: [String],
-  })
-  @TransformToArray()
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
+@decorate(ApiSchema({ name: "ReservaListInputDto" }))
+export class ReservaListInputRestDto extends PaginatedFilterByIdRestDto {
+  @decorate(
+    ApiPropertyOptional({
+      type: "string",
+      isArray: true,
+      description: "Filtro por situacao",
+    }),
+  )
+  @decorate(TransformToArray())
+  @decorate(IsOptional())
+  @decorate(IsArray())
+  @decorate(IsString({ each: true }))
   "filter.situacao"?: string[];
 
-  @ApiPropertyOptional({
-    description: "Filtro por tipo",
-    type: [String],
-  })
-  @TransformToArray()
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
+  @decorate(
+    ApiPropertyOptional({
+      type: "string",
+      isArray: true,
+      description: "Filtro por tipo",
+    }),
+  )
+  @decorate(TransformToArray())
+  @decorate(IsOptional())
+  @decorate(IsArray())
+  @decorate(IsString({ each: true }))
   "filter.tipo"?: string[];
 
-  @ApiPropertyOptional({
-    description: "Filtro por ID do Ambiente",
-    type: [String],
-  })
-  @TransformToArray()
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
+  @decorate(
+    ApiPropertyOptional({
+      type: "string",
+      isArray: true,
+      description: "Filtro por ID do Ambiente",
+    }),
+  )
+  @decorate(TransformToArray())
+  @decorate(IsOptional())
+  @decorate(IsArray())
+  @decorate(IsUUID(undefined, { each: true }))
   "filter.ambiente.id"?: string[];
 
-  @ApiPropertyOptional({
-    description: "Filtro por ID do Bloco do Ambiente",
-    type: [String],
-  })
-  @TransformToArray()
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
+  @decorate(
+    ApiPropertyOptional({
+      type: "string",
+      isArray: true,
+      description: "Filtro por ID do Bloco do Ambiente",
+    }),
+  )
+  @decorate(TransformToArray())
+  @decorate(IsOptional())
+  @decorate(IsArray())
+  @decorate(IsUUID(undefined, { each: true }))
   "filter.ambiente.bloco.id"?: string[];
 
-  @ApiPropertyOptional({
-    description: "Filtro por ID do Campus do Bloco do Ambiente",
-    type: [String],
-  })
-  @TransformToArray()
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
+  @decorate(
+    ApiPropertyOptional({
+      type: "string",
+      isArray: true,
+      description: "Filtro por ID do Campus do Bloco do Ambiente",
+    }),
+  )
+  @decorate(TransformToArray())
+  @decorate(IsOptional())
+  @decorate(IsArray())
+  @decorate(IsUUID(undefined, { each: true }))
   "filter.ambiente.bloco.campus.id"?: string[];
 }
 
-@ApiSchema({ name: "ReservaListOutputDto" })
+@decorate(ApiSchema({ name: "ReservaListOutputDto" }))
 export class ReservaListOutputRestDto {
-  @ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" })
+  @decorate(ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" }))
   meta: PaginationMetaRestDto;
 
-  @ApiProperty({ type: () => [ReservaFindOneOutputRestDto], description: "Resultados da busca" })
+  @decorate(
+    ApiProperty({ type: () => [ReservaFindOneOutputRestDto], description: "Resultados da busca" }),
+  )
   data: ReservaFindOneOutputRestDto[];
 }
 
@@ -182,52 +169,61 @@ export class ReservaListOutputRestDto {
 // Create/Update Input
 // ============================================================================
 
-@ApiSchema({ name: "ReservaCreateInputDto" })
-export class ReservaCreateInputRestDto {
-  @ApiProperty({ description: "Situacao da reserva", minLength: 1 })
-  @IsString()
-  @MinLength(1)
-  situacao: string;
+@decorate(ApiSchema({ name: "ReservaCreateInputDto" }))
+export class ReservaCreateInputRestDto extends ReservaFieldsMixin {
+  @decorate(ApiProperty({ type: "string", description: "Situacao da reserva", minLength: 1 }))
+  declare situacao: string;
 
-  @ApiPropertyOptional({ description: "Motivo da reserva", nullable: true })
-  @IsOptional()
-  @IsString()
-  @MinLength(1)
-  motivo?: string | null;
+  @decorate(
+    ApiPropertyOptional({ type: "string", description: "Motivo da reserva", nullable: true }),
+  )
+  declare motivo: string | null;
 
-  @ApiPropertyOptional({ description: "Tipo da reserva", nullable: true })
-  @IsOptional()
-  @IsString()
-  @MinLength(1)
-  tipo?: string | null;
+  @decorate(ApiPropertyOptional({ type: "string", description: "Tipo da reserva", nullable: true }))
+  declare tipo: string | null;
 
-  @ApiProperty({
-    description: "Regra RRule para a recorrencia da reserva. Segue a RFC 5545 do iCalendar",
-  })
-  @IsString()
-  rrule: string;
+  @decorate(
+    ApiProperty({
+      type: "string",
+      description: "Regra RRule para a recorrencia da reserva. Segue a RFC 5545 do iCalendar",
+    }),
+  )
+  declare rrule: string;
 
-  @ApiProperty({ type: () => UsuarioFindOneInputRestDto, description: "Usuario que fez a reserva" })
-  @ValidateNested()
-  @Type(() => UsuarioFindOneInputRestDto)
+  @decorate(
+    ApiProperty({
+      type: () => UsuarioFindOneInputRestDto,
+      description: "Usuario que fez a reserva",
+    }),
+  )
+  @decorate(ValidateNested())
+  @decorate(Type(() => UsuarioFindOneInputRestDto))
   usuario: UsuarioFindOneInputRestDto;
 
-  @ApiProperty({ type: () => AmbienteFindOneInputRestDto, description: "Ambiente reservado" })
-  @ValidateNested()
-  @Type(() => AmbienteFindOneInputRestDto)
+  @decorate(
+    ApiProperty({ type: () => AmbienteFindOneInputRestDto, description: "Ambiente reservado" }),
+  )
+  @decorate(ValidateNested())
+  @decorate(Type(() => AmbienteFindOneInputRestDto))
   ambiente: AmbienteFindOneInputRestDto;
 }
 
-@ApiSchema({ name: "ReservaUpdateInputDto" })
+@decorate(ApiSchema({ name: "ReservaUpdateInputDto" }))
 export class ReservaUpdateInputRestDto extends PartialType(ReservaCreateInputRestDto) {}
 
 // ============================================================================
 // FindOne Input (for path params)
 // ============================================================================
 
-@ApiSchema({ name: "ReservaFindOneInputDto" })
+@decorate(ApiSchema({ name: "ReservaFindOneInputDto" }))
 export class ReservaFindOneInputRestDto {
-  @ApiProperty({ description: "Identificador do registro (uuid)", format: "uuid" })
-  @IsUUID()
+  @decorate(
+    ApiProperty({
+      type: "string",
+      description: "Identificador do registro (uuid)",
+      format: "uuid",
+    }),
+  )
+  @decorate(IsUUID())
   id: string;
 }

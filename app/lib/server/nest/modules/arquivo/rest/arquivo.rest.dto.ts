@@ -1,106 +1,101 @@
 import { ApiProperty, ApiPropertyOptional, ApiSchema, PartialType } from "@nestjs/swagger";
-import {
-  IsArray,
-  IsDateString,
-  IsInt,
-  IsOptional,
-  IsString,
-  IsUUID,
-  Min,
-  MinLength,
-} from "class-validator";
+import { IsInt, IsOptional, IsString, IsUUID, Min, MinLength } from "class-validator";
+import { decorate } from "ts-mixer";
 import {
   commonProperties,
   RegisterModel,
   simpleProperty,
 } from "@/modules/@shared/infrastructure/persistence/typeorm/metadata";
 import {
-  PaginationInputRestDto,
+  EntityBaseRestDto,
+  PaginatedFilterByIdRestDto,
   PaginationMetaRestDto,
-  TransformToArray,
 } from "@/modules/@shared/infrastructure/presentation/rest/dtos";
 
 // ============================================================================
 // FindOne Output
 // ============================================================================
 
-@ApiSchema({ name: "ArquivoFindOneOutputDto" })
-@RegisterModel({
-  name: "ArquivoFindOneOutputDto",
-  properties: [
-    simpleProperty("id"),
-    simpleProperty("name"),
-    simpleProperty("mimeType"),
-    simpleProperty("sizeBytes"),
-    simpleProperty("storageType"),
-    ...commonProperties.dated,
-  ],
-})
-export class ArquivoFindOneOutputRestDto {
-  @ApiProperty({ description: "Identificador do registro (uuid)", format: "uuid" })
-  @IsUUID()
-  id: string;
-
-  @ApiPropertyOptional({ description: "Nome do arquivo", nullable: true, minLength: 1 })
-  @IsOptional()
-  @IsString()
-  @MinLength(1)
+@decorate(ApiSchema({ name: "ArquivoFindOneOutputDto" }))
+@decorate(
+  RegisterModel({
+    name: "ArquivoFindOneOutputDto",
+    properties: [
+      simpleProperty("id"),
+      simpleProperty("name"),
+      simpleProperty("mimeType"),
+      simpleProperty("sizeBytes"),
+      simpleProperty("storageType"),
+      ...commonProperties.dated,
+    ],
+  }),
+)
+export class ArquivoFindOneOutputRestDto extends EntityBaseRestDto {
+  @decorate(
+    ApiPropertyOptional({
+      type: "string",
+      description: "Nome do arquivo",
+      nullable: true,
+      minLength: 1,
+    }),
+  )
+  @decorate(IsOptional())
+  @decorate(IsString())
+  @decorate(MinLength(1))
   name: string | null;
 
-  @ApiPropertyOptional({ description: "Formato do arquivo", nullable: true, minLength: 1 })
-  @IsOptional()
-  @IsString()
-  @MinLength(1)
+  @decorate(
+    ApiPropertyOptional({
+      type: "string",
+      description: "Formato do arquivo",
+      nullable: true,
+      minLength: 1,
+    }),
+  )
+  @decorate(IsOptional())
+  @decorate(IsString())
+  @decorate(MinLength(1))
   mimeType: string | null;
 
-  @ApiPropertyOptional({ description: "Tamanho do arquivo (em bytes)", nullable: true })
-  @IsOptional()
-  @IsInt()
-  @Min(0)
+  @decorate(
+    ApiPropertyOptional({
+      type: "integer",
+      description: "Tamanho do arquivo (em bytes)",
+      nullable: true,
+    }),
+  )
+  @decorate(IsOptional())
+  @decorate(IsInt())
+  @decorate(Min(0))
   sizeBytes: number | null;
 
-  @ApiProperty({ description: "Estratégia de armazenamento do conteúdo", minLength: 1 })
-  @IsString()
-  @MinLength(1)
+  @decorate(
+    ApiProperty({
+      type: "string",
+      description: "Estratégia de armazenamento do conteúdo",
+      minLength: 1,
+    }),
+  )
+  @decorate(IsString())
+  @decorate(MinLength(1))
   storageType: string;
-
-  @ApiProperty({ description: "Data e hora da criacao do registro" })
-  @IsDateString()
-  dateCreated: Date;
-
-  @ApiProperty({ description: "Data e hora da alteracao do registro" })
-  @IsDateString()
-  dateUpdated: Date;
-
-  @ApiPropertyOptional({ description: "Data e hora da exclusao do registro", nullable: true })
-  @IsOptional()
-  @IsDateString()
-  dateDeleted: Date | null;
 }
 
 // ============================================================================
 // List Input/Output
 // ============================================================================
 
-@ApiSchema({ name: "ArquivoListInputDto" })
-export class ArquivoListInputRestDto extends PaginationInputRestDto {
-  @ApiPropertyOptional({
-    description: "Filtro por ID",
-    type: [String],
-  })
-  @TransformToArray()
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
-  "filter.id"?: string[];
-}
+@decorate(ApiSchema({ name: "ArquivoListInputDto" }))
+export class ArquivoListInputRestDto extends PaginatedFilterByIdRestDto {}
 
-@ApiSchema({ name: "ArquivoListOutputDto" })
+@decorate(ApiSchema({ name: "ArquivoListOutputDto" }))
 export class ArquivoListOutputRestDto {
-  @ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" })
+  @decorate(ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" }))
   meta: PaginationMetaRestDto;
 
-  @ApiProperty({ type: () => [ArquivoFindOneOutputRestDto], description: "Resultados da busca" })
+  @decorate(
+    ApiProperty({ type: () => [ArquivoFindOneOutputRestDto], description: "Resultados da busca" }),
+  )
   data: ArquivoFindOneOutputRestDto[];
 }
 
@@ -108,43 +103,75 @@ export class ArquivoListOutputRestDto {
 // Create/Update Input
 // ============================================================================
 
-@ApiSchema({ name: "ArquivoCreateInputDto" })
+@decorate(ApiSchema({ name: "ArquivoCreateInputDto" }))
 export class ArquivoCreateInputRestDto {
-  @ApiPropertyOptional({ description: "Nome do arquivo", nullable: true, minLength: 1 })
-  @IsOptional()
-  @IsString()
-  @MinLength(1)
+  @decorate(
+    ApiPropertyOptional({
+      type: "string",
+      description: "Nome do arquivo",
+      nullable: true,
+      minLength: 1,
+    }),
+  )
+  @decorate(IsOptional())
+  @decorate(IsString())
+  @decorate(MinLength(1))
   name?: string | null;
 
-  @ApiPropertyOptional({ description: "Formato do arquivo", nullable: true, minLength: 1 })
-  @IsOptional()
-  @IsString()
-  @MinLength(1)
+  @decorate(
+    ApiPropertyOptional({
+      type: "string",
+      description: "Formato do arquivo",
+      nullable: true,
+      minLength: 1,
+    }),
+  )
+  @decorate(IsOptional())
+  @decorate(IsString())
+  @decorate(MinLength(1))
   mimeType?: string | null;
 
-  @ApiPropertyOptional({ description: "Tamanho do arquivo (em bytes)", nullable: true })
-  @IsOptional()
-  @IsInt()
-  @Min(0)
+  @decorate(
+    ApiPropertyOptional({
+      type: "integer",
+      description: "Tamanho do arquivo (em bytes)",
+      nullable: true,
+    }),
+  )
+  @decorate(IsOptional())
+  @decorate(IsInt())
+  @decorate(Min(0))
   sizeBytes?: number | null;
 
-  @ApiProperty({ description: "Estratégia de armazenamento do conteúdo", minLength: 1 })
-  @IsString()
-  @MinLength(1)
+  @decorate(
+    ApiProperty({
+      type: "string",
+      description: "Estratégia de armazenamento do conteúdo",
+      minLength: 1,
+    }),
+  )
+  @decorate(IsString())
+  @decorate(MinLength(1))
   storageType: string;
 }
 
-@ApiSchema({ name: "ArquivoUpdateInputDto" })
+@decorate(ApiSchema({ name: "ArquivoUpdateInputDto" }))
 export class ArquivoUpdateInputRestDto extends PartialType(ArquivoCreateInputRestDto) {}
 
 // ============================================================================
 // FindOne Input (for path params)
 // ============================================================================
 
-@ApiSchema({ name: "ArquivoFindOneInputDto" })
+@decorate(ApiSchema({ name: "ArquivoFindOneInputDto" }))
 export class ArquivoFindOneInputRestDto {
-  @ApiProperty({ description: "Identificador do registro (uuid)", format: "uuid" })
-  @IsUUID()
+  @decorate(
+    ApiProperty({
+      type: "string",
+      description: "Identificador do registro (uuid)",
+      format: "uuid",
+    }),
+  )
+  @decorate(IsUUID())
   id: string;
 }
 
@@ -152,15 +179,21 @@ export class ArquivoFindOneInputRestDto {
 // GetFile Query Input
 // ============================================================================
 
-@ApiSchema({ name: "ArquivoGetFileQueryInputDto" })
+@decorate(ApiSchema({ name: "ArquivoGetFileQueryInputDto" }))
 export class ArquivoGetFileQueryInputRestDto {
-  @ApiPropertyOptional({ description: "ID do recurso de acesso (uuid)", format: "uuid" })
-  @IsOptional()
-  @IsUUID()
+  @decorate(
+    ApiPropertyOptional({
+      type: "string",
+      description: "ID do recurso de acesso (uuid)",
+      format: "uuid",
+    }),
+  )
+  @decorate(IsOptional())
+  @decorate(IsUUID())
   "acesso.recurso.id"?: string;
 
-  @ApiPropertyOptional({ description: "Nome do recurso de acesso" })
-  @IsOptional()
-  @IsString()
+  @decorate(ApiPropertyOptional({ type: "string", description: "Nome do recurso de acesso" }))
+  @decorate(IsOptional())
+  @decorate(IsString())
   "acesso.recurso.nome"?: string;
 }

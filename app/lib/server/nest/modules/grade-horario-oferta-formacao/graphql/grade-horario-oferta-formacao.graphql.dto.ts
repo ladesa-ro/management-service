@@ -1,10 +1,11 @@
 import { ArgsType, Field, InputType, ObjectType } from "@nestjs/graphql";
 import { IsArray, IsOptional, IsString, IsUUID, ValidateNested } from "class-validator";
+import { decorate } from "ts-mixer";
 import {
   EntityBaseGraphQlDto,
+  PaginatedFilterByIdGraphQlDto,
   PaginationMetaGraphQlDto,
 } from "@/modules/@shared/infrastructure/graphql/dtos";
-import { PaginationInputGraphQlDto } from "@/modules/@shared/infrastructure/graphql/dtos/pagination-graphql.dto";
 import { CampusFindOneOutputGraphQlDto } from "@/server/nest/modules/campus/graphql/campus.graphql.dto";
 import { OfertaFormacaoFindOneOutputGraphQlDto } from "@/server/nest/modules/oferta-formacao/graphql/oferta-formacao.graphql.dto";
 
@@ -12,11 +13,11 @@ import { OfertaFormacaoFindOneOutputGraphQlDto } from "@/server/nest/modules/ofe
 // FindOne Output
 // ============================================================================
 
-@ObjectType("GradeHorarioOfertaFormacaoFindOneOutputDto")
+@decorate(ObjectType("GradeHorarioOfertaFormacaoFindOneOutputDto"))
 export class GradeHorarioOfertaFormacaoFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
-  @Field(() => CampusFindOneOutputGraphQlDto)
+  @decorate(Field(() => CampusFindOneOutputGraphQlDto))
   campus: CampusFindOneOutputGraphQlDto;
-  @Field(() => OfertaFormacaoFindOneOutputGraphQlDto)
+  @decorate(Field(() => OfertaFormacaoFindOneOutputGraphQlDto))
   ofertaFormacao: OfertaFormacaoFindOneOutputGraphQlDto;
 }
 
@@ -24,28 +25,28 @@ export class GradeHorarioOfertaFormacaoFindOneOutputGraphQlDto extends EntityBas
 // Ref Input DTOs
 // ============================================================================
 
-@InputType("CampusRefInputForGradeHorarioOfertaFormacaoDto")
+@decorate(InputType("CampusRefInputForGradeHorarioOfertaFormacaoDto"))
 export class CampusRefInputForGradeHorarioOfertaFormacaoGraphQlDto {
-  @Field() @IsString() id: string;
+  @decorate(Field(() => String)) @decorate(IsString()) id: string;
 }
 
-@InputType("OfertaFormacaoRefInputForGradeHorarioOfertaFormacaoDto")
+@decorate(InputType("OfertaFormacaoRefInputForGradeHorarioOfertaFormacaoDto"))
 export class OfertaFormacaoRefInputForGradeHorarioOfertaFormacaoGraphQlDto {
-  @Field() @IsString() id: string;
+  @decorate(Field(() => String)) @decorate(IsString()) id: string;
 }
 
 // ============================================================================
 // Create Input
 // ============================================================================
 
-@InputType("GradeHorarioOfertaFormacaoCreateInputDto")
+@decorate(InputType("GradeHorarioOfertaFormacaoCreateInputDto"))
 export class GradeHorarioOfertaFormacaoCreateInputGraphQlDto {
-  @Field(() => CampusRefInputForGradeHorarioOfertaFormacaoGraphQlDto)
-  @ValidateNested()
+  @decorate(Field(() => CampusRefInputForGradeHorarioOfertaFormacaoGraphQlDto))
+  @decorate(ValidateNested())
   campus: CampusRefInputForGradeHorarioOfertaFormacaoGraphQlDto;
 
-  @Field(() => OfertaFormacaoRefInputForGradeHorarioOfertaFormacaoGraphQlDto)
-  @ValidateNested()
+  @decorate(Field(() => OfertaFormacaoRefInputForGradeHorarioOfertaFormacaoGraphQlDto))
+  @decorate(ValidateNested())
   ofertaFormacao: OfertaFormacaoRefInputForGradeHorarioOfertaFormacaoGraphQlDto;
 }
 
@@ -53,16 +54,18 @@ export class GradeHorarioOfertaFormacaoCreateInputGraphQlDto {
 // Update Input
 // ============================================================================
 
-@InputType("GradeHorarioOfertaFormacaoUpdateInputDto")
+@decorate(InputType("GradeHorarioOfertaFormacaoUpdateInputDto"))
 export class GradeHorarioOfertaFormacaoUpdateInputGraphQlDto {
-  @Field(() => CampusRefInputForGradeHorarioOfertaFormacaoGraphQlDto, { nullable: true })
-  @IsOptional()
-  @ValidateNested()
+  @decorate(Field(() => CampusRefInputForGradeHorarioOfertaFormacaoGraphQlDto, { nullable: true }))
+  @decorate(IsOptional())
+  @decorate(ValidateNested())
   campus?: CampusRefInputForGradeHorarioOfertaFormacaoGraphQlDto;
 
-  @Field(() => OfertaFormacaoRefInputForGradeHorarioOfertaFormacaoGraphQlDto, { nullable: true })
-  @IsOptional()
-  @ValidateNested()
+  @decorate(
+    Field(() => OfertaFormacaoRefInputForGradeHorarioOfertaFormacaoGraphQlDto, { nullable: true }),
+  )
+  @decorate(IsOptional())
+  @decorate(ValidateNested())
   ofertaFormacao?: OfertaFormacaoRefInputForGradeHorarioOfertaFormacaoGraphQlDto;
 }
 
@@ -70,24 +73,20 @@ export class GradeHorarioOfertaFormacaoUpdateInputGraphQlDto {
 // List Input
 // ============================================================================
 
-@ArgsType()
-export class GradeHorarioOfertaFormacaoListInputGraphQlDto extends PaginationInputGraphQlDto {
-  @Field(() => [String], { nullable: true, description: "Filtro por ID" })
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
-  filterId?: string[];
-
-  @Field(() => [String], { nullable: true, description: "Filtro por ID do Campus" })
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
+@decorate(ArgsType())
+export class GradeHorarioOfertaFormacaoListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {
+  @decorate(Field(() => [String], { nullable: true, description: "Filtro por ID do Campus" }))
+  @decorate(IsOptional())
+  @decorate(IsArray())
+  @decorate(IsUUID(undefined, { each: true }))
   filterCampusId?: string[];
 
-  @Field(() => [String], { nullable: true, description: "Filtro por ID da Oferta de Formacao" })
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
+  @decorate(
+    Field(() => [String], { nullable: true, description: "Filtro por ID da Oferta de Formacao" }),
+  )
+  @decorate(IsOptional())
+  @decorate(IsArray())
+  @decorate(IsUUID(undefined, { each: true }))
   filterOfertaFormacaoId?: string[];
 }
 
@@ -95,11 +94,11 @@ export class GradeHorarioOfertaFormacaoListInputGraphQlDto extends PaginationInp
 // List Output
 // ============================================================================
 
-@ObjectType("GradeHorarioOfertaFormacaoListResult")
+@decorate(ObjectType("GradeHorarioOfertaFormacaoListResult"))
 export class GradeHorarioOfertaFormacaoListOutputGraphQlDto {
-  @Field(() => PaginationMetaGraphQlDto)
+  @decorate(Field(() => PaginationMetaGraphQlDto))
   meta: PaginationMetaGraphQlDto;
 
-  @Field(() => [GradeHorarioOfertaFormacaoFindOneOutputGraphQlDto])
+  @decorate(Field(() => [GradeHorarioOfertaFormacaoFindOneOutputGraphQlDto]))
   data: GradeHorarioOfertaFormacaoFindOneOutputGraphQlDto[];
 }

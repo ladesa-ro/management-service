@@ -1,56 +1,58 @@
 import { ArgsType, Field, InputType, ObjectType } from "@nestjs/graphql";
 import { IsArray, IsOptional, IsString, IsUUID, MinLength, ValidateNested } from "class-validator";
+import { decorate } from "ts-mixer";
 import {
   EntityBaseGraphQlDto,
+  PaginatedFilterByIdGraphQlDto,
   PaginationMetaGraphQlDto,
 } from "@/modules/@shared/infrastructure/graphql/dtos";
-import { PaginationInputGraphQlDto } from "@/modules/@shared/infrastructure/graphql/dtos/pagination-graphql.dto";
 import { AmbienteFindOneOutputGraphQlDto } from "@/server/nest/modules/ambiente/graphql/ambiente.graphql.dto";
 import { UsuarioFindOneOutputGraphQlDto } from "@/server/nest/modules/usuario/graphql/usuario.graphql.dto";
+import { ReservaFieldsMixin } from "../reserva.validation-mixin";
 
 // ============================================================================
 // FindOne Output
 // ============================================================================
 
-@ObjectType("ReservaFindOneOutputDto")
+@decorate(ObjectType("ReservaFindOneOutputDto"))
 export class ReservaFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
-  @Field() situacao: string;
-  @Field(() => String, { nullable: true }) motivo: string | null;
-  @Field(() => String, { nullable: true }) tipo: string | null;
-  @Field() rrule: string;
-  @Field(() => AmbienteFindOneOutputGraphQlDto) ambiente: AmbienteFindOneOutputGraphQlDto;
-  @Field(() => UsuarioFindOneOutputGraphQlDto) usuario: UsuarioFindOneOutputGraphQlDto;
+  @decorate(Field(() => String)) situacao: string;
+  @decorate(Field(() => String, { nullable: true })) motivo: string | null;
+  @decorate(Field(() => String, { nullable: true })) tipo: string | null;
+  @decorate(Field(() => String)) rrule: string;
+  @decorate(Field(() => AmbienteFindOneOutputGraphQlDto)) ambiente: AmbienteFindOneOutputGraphQlDto;
+  @decorate(Field(() => UsuarioFindOneOutputGraphQlDto)) usuario: UsuarioFindOneOutputGraphQlDto;
 }
 
 // ============================================================================
 // Ref Inputs
 // ============================================================================
 
-@InputType("ReservaAmbienteRefInputDto")
+@decorate(InputType("ReservaAmbienteRefInputDto"))
 export class ReservaAmbienteRefInputGraphQlDto {
-  @Field() @IsString() id: string;
+  @decorate(Field(() => String)) @decorate(IsString()) id: string;
 }
 
-@InputType("ReservaUsuarioRefInputDto")
+@decorate(InputType("ReservaUsuarioRefInputDto"))
 export class ReservaUsuarioRefInputGraphQlDto {
-  @Field() @IsString() id: string;
+  @decorate(Field(() => String)) @decorate(IsString()) id: string;
 }
 
 // ============================================================================
 // Create Input
 // ============================================================================
 
-@InputType("ReservaCreateInputDto")
-export class ReservaCreateInputGraphQlDto {
-  @Field() @IsString() @MinLength(1) situacao: string;
-  @Field({ nullable: true }) @IsOptional() @IsString() @MinLength(1) motivo?: string | null;
-  @Field({ nullable: true }) @IsOptional() @IsString() @MinLength(1) tipo?: string | null;
-  @Field() @IsString() rrule: string;
-  @Field(() => ReservaAmbienteRefInputGraphQlDto)
-  @ValidateNested()
+@decorate(InputType("ReservaCreateInputDto"))
+export class ReservaCreateInputGraphQlDto extends ReservaFieldsMixin {
+  @decorate(Field(() => String)) declare situacao: string;
+  @decorate(Field(() => String, { nullable: true })) declare motivo: string | null;
+  @decorate(Field(() => String, { nullable: true })) declare tipo: string | null;
+  @decorate(Field(() => String)) declare rrule: string;
+  @decorate(Field(() => ReservaAmbienteRefInputGraphQlDto))
+  @decorate(ValidateNested())
   ambiente: ReservaAmbienteRefInputGraphQlDto;
-  @Field(() => ReservaUsuarioRefInputGraphQlDto)
-  @ValidateNested()
+  @decorate(Field(() => ReservaUsuarioRefInputGraphQlDto))
+  @decorate(ValidateNested())
   usuario: ReservaUsuarioRefInputGraphQlDto;
 }
 
@@ -58,19 +60,34 @@ export class ReservaCreateInputGraphQlDto {
 // Update Input
 // ============================================================================
 
-@InputType("ReservaUpdateInputDto")
+@decorate(InputType("ReservaUpdateInputDto"))
 export class ReservaUpdateInputGraphQlDto {
-  @Field({ nullable: true }) @IsOptional() @IsString() @MinLength(1) situacao?: string;
-  @Field({ nullable: true }) @IsOptional() @IsString() @MinLength(1) motivo?: string | null;
-  @Field({ nullable: true }) @IsOptional() @IsString() @MinLength(1) tipo?: string | null;
-  @Field({ nullable: true }) @IsOptional() @IsString() rrule?: string;
-  @Field(() => ReservaAmbienteRefInputGraphQlDto, { nullable: true })
-  @IsOptional()
-  @ValidateNested()
+  @decorate(Field(() => String, { nullable: true }))
+  @decorate(IsOptional())
+  @decorate(IsString())
+  @decorate(MinLength(1))
+  situacao?: string;
+  @decorate(Field(() => String, { nullable: true }))
+  @decorate(IsOptional())
+  @decorate(IsString())
+  @decorate(MinLength(1))
+  motivo?: string | null;
+  @decorate(Field(() => String, { nullable: true }))
+  @decorate(IsOptional())
+  @decorate(IsString())
+  @decorate(MinLength(1))
+  tipo?: string | null;
+  @decorate(Field(() => String, { nullable: true }))
+  @decorate(IsOptional())
+  @decorate(IsString())
+  rrule?: string;
+  @decorate(Field(() => ReservaAmbienteRefInputGraphQlDto, { nullable: true }))
+  @decorate(IsOptional())
+  @decorate(ValidateNested())
   ambiente?: ReservaAmbienteRefInputGraphQlDto;
-  @Field(() => ReservaUsuarioRefInputGraphQlDto, { nullable: true })
-  @IsOptional()
-  @ValidateNested()
+  @decorate(Field(() => ReservaUsuarioRefInputGraphQlDto, { nullable: true }))
+  @decorate(IsOptional())
+  @decorate(ValidateNested())
   usuario?: ReservaUsuarioRefInputGraphQlDto;
 }
 
@@ -78,45 +95,43 @@ export class ReservaUpdateInputGraphQlDto {
 // List Input (GraphQL-compatible - no dots in field names)
 // ============================================================================
 
-@ArgsType()
-export class ReservaListInputGraphQlDto extends PaginationInputGraphQlDto {
-  @Field(() => [String], { nullable: true, description: "Filtro por ID" })
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
-  filterId?: string[];
-
-  @Field(() => [String], { nullable: true, description: "Filtro por situacao" })
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
+@decorate(ArgsType())
+export class ReservaListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {
+  @decorate(Field(() => [String], { nullable: true, description: "Filtro por situacao" }))
+  @decorate(IsOptional())
+  @decorate(IsArray())
+  @decorate(IsString({ each: true }))
   filterSituacao?: string[];
 
-  @Field(() => [String], { nullable: true, description: "Filtro por tipo" })
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
+  @decorate(Field(() => [String], { nullable: true, description: "Filtro por tipo" }))
+  @decorate(IsOptional())
+  @decorate(IsArray())
+  @decorate(IsString({ each: true }))
   filterTipo?: string[];
 
-  @Field(() => [String], { nullable: true, description: "Filtro por ID do Ambiente" })
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
+  @decorate(Field(() => [String], { nullable: true, description: "Filtro por ID do Ambiente" }))
+  @decorate(IsOptional())
+  @decorate(IsArray())
+  @decorate(IsUUID(undefined, { each: true }))
   filterAmbienteId?: string[];
 
-  @Field(() => [String], { nullable: true, description: "Filtro por ID do Bloco do Ambiente" })
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
+  @decorate(
+    Field(() => [String], { nullable: true, description: "Filtro por ID do Bloco do Ambiente" }),
+  )
+  @decorate(IsOptional())
+  @decorate(IsArray())
+  @decorate(IsUUID(undefined, { each: true }))
   filterAmbienteBlocoId?: string[];
 
-  @Field(() => [String], {
-    nullable: true,
-    description: "Filtro por ID do Campus do Bloco do Ambiente",
-  })
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
+  @decorate(
+    Field(() => [String], {
+      nullable: true,
+      description: "Filtro por ID do Campus do Bloco do Ambiente",
+    }),
+  )
+  @decorate(IsOptional())
+  @decorate(IsArray())
+  @decorate(IsUUID(undefined, { each: true }))
   filterAmbienteBlocoCampusId?: string[];
 }
 
@@ -124,11 +139,11 @@ export class ReservaListInputGraphQlDto extends PaginationInputGraphQlDto {
 // List Output
 // ============================================================================
 
-@ObjectType("ReservaListResult")
+@decorate(ObjectType("ReservaListResult"))
 export class ReservaListOutputGraphQlDto {
-  @Field(() => PaginationMetaGraphQlDto)
+  @decorate(Field(() => PaginationMetaGraphQlDto))
   meta: PaginationMetaGraphQlDto;
 
-  @Field(() => [ReservaFindOneOutputGraphQlDto])
+  @decorate(Field(() => [ReservaFindOneOutputGraphQlDto]))
   data: ReservaFindOneOutputGraphQlDto[];
 }

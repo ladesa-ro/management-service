@@ -3,18 +3,21 @@ import {
   AulaFindOneInputDto,
   AulaFindOneOutputDto,
   AulaListInputDto,
-  AulaListOutputDto,
   AulaUpdateInputDto,
 } from "@/modules/sisgha/aula";
 import { AmbienteRestMapper } from "@/server/nest/modules/ambiente/rest";
 import { DiarioRestMapper } from "@/server/nest/modules/diario/rest";
 import { IntervaloDeTempoRestMapper } from "@/server/nest/modules/intervalo-de-tempo/rest";
-import { mapPaginationMeta } from "@/server/nest/shared/mappers";
+import {
+  createFindOneInputMapper,
+  createListInputMapper,
+  createListOutputMapper,
+  mapDatedFields,
+} from "@/server/nest/shared/mappers";
 import {
   AulaCreateInputRestDto,
   AulaFindOneInputRestDto,
   AulaFindOneOutputRestDto,
-  AulaListInputRestDto,
   AulaListOutputRestDto,
   AulaUpdateInputRestDto,
 } from "./aula.rest.dto";
@@ -24,28 +27,13 @@ export class AulaRestMapper {
   // Input: Server DTO -> Core DTO
   // ============================================================================
 
-  static toFindOneInput(dto: AulaFindOneInputRestDto): AulaFindOneInputDto {
-    const input = new AulaFindOneInputDto();
-    input.id = dto.id;
-    return input;
-  }
+  static toFindOneInput = createFindOneInputMapper(AulaFindOneInputDto);
 
-  static toListInput(dto: AulaListInputRestDto | null): AulaListInputDto | null {
-    if (!dto) {
-      return null;
-    }
-
-    const input = new AulaListInputDto();
-    input.page = dto.page;
-    input.limit = dto.limit;
-    input.search = dto.search;
-    input.sortBy = dto.sortBy;
-    input.selection = dto.selection;
-    input["filter.id"] = dto["filter.id"];
-    input["filter.diario.id"] = dto["filter.diario.id"];
-    input["filter.intervaloDeTempo.id"] = dto["filter.intervaloDeTempo.id"];
-    return input;
-  }
+  static toListInput = createListInputMapper(AulaListInputDto, [
+    "filter.id",
+    "filter.diario.id",
+    "filter.intervaloDeTempo.id",
+  ]);
 
   static toCreateInput(dto: AulaCreateInputRestDto): AulaCreateInputDto {
     const input = new AulaCreateInputDto();
@@ -95,16 +83,12 @@ export class AulaRestMapper {
     dto.intervaloDeTempo = IntervaloDeTempoRestMapper.toFindOneOutputDto(output.intervaloDeTempo);
     dto.diario = DiarioRestMapper.toFindOneOutputDto(output.diario);
     dto.ambiente = output.ambiente ? AmbienteRestMapper.toFindOneOutputDto(output.ambiente) : null;
-    dto.dateCreated = new Date(output.dateCreated);
-    dto.dateUpdated = new Date(output.dateUpdated);
-    dto.dateDeleted = output.dateDeleted ? new Date(output.dateDeleted) : null;
+    mapDatedFields(dto, output);
     return dto;
   }
 
-  static toListOutputDto(output: AulaListOutputDto): AulaListOutputRestDto {
-    const dto = new AulaListOutputRestDto();
-    dto.meta = mapPaginationMeta(output.meta);
-    dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
-    return dto;
-  }
+  static toListOutputDto = createListOutputMapper(
+    AulaListOutputRestDto,
+    AulaRestMapper.toFindOneOutputDto,
+  );
 }

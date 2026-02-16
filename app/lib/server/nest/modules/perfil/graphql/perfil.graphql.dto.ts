@@ -1,10 +1,11 @@
 import { ArgsType, Field, InputType, ObjectType } from "@nestjs/graphql";
 import { IsArray, IsOptional, IsString, IsUUID, ValidateNested } from "class-validator";
+import { decorate } from "ts-mixer";
 import {
   EntityBaseGraphQlDto,
+  PaginatedFilterByIdGraphQlDto,
   PaginationMetaGraphQlDto,
 } from "@/modules/@shared/infrastructure/graphql/dtos";
-import { PaginationInputGraphQlDto } from "@/modules/@shared/infrastructure/graphql/dtos/pagination-graphql.dto";
 import { CampusFindOneOutputGraphQlDto } from "@/server/nest/modules/campus/graphql/campus.graphql.dto";
 import { UsuarioFindOneOutputGraphQlDto } from "@/server/nest/modules/usuario/graphql/usuario.graphql.dto";
 
@@ -12,64 +13,65 @@ import { UsuarioFindOneOutputGraphQlDto } from "@/server/nest/modules/usuario/gr
 // FindOne Output
 // ============================================================================
 
-@ObjectType("PerfilFindOneOutputDto")
+@decorate(ObjectType("PerfilFindOneOutputDto"))
 export class PerfilFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
-  @Field() ativo: boolean;
-  @Field() cargo: string;
-  @Field(() => CampusFindOneOutputGraphQlDto) campus: CampusFindOneOutputGraphQlDto;
-  @Field(() => UsuarioFindOneOutputGraphQlDto) usuario: UsuarioFindOneOutputGraphQlDto;
+  @decorate(Field(() => Boolean)) ativo: boolean;
+  @decorate(Field(() => String)) cargo: string;
+  @decorate(Field(() => CampusFindOneOutputGraphQlDto)) campus: CampusFindOneOutputGraphQlDto;
+  @decorate(Field(() => UsuarioFindOneOutputGraphQlDto)) usuario: UsuarioFindOneOutputGraphQlDto;
 }
 
 // ============================================================================
 // SetVinculos Input
 // ============================================================================
 
-@InputType("PerfilRefInputDto")
+@decorate(InputType("PerfilRefInputDto"))
 export class PerfilRefInputGraphQlDto {
-  @Field() @IsString() id: string;
+  @decorate(Field(() => String)) @decorate(IsString()) id: string;
 }
 
-@InputType("PerfilSetVinculosInputDto")
+@decorate(InputType("PerfilSetVinculosInputDto"))
 export class PerfilSetVinculosInputGraphQlDto {
-  @Field(() => [String]) @IsArray() @IsString({ each: true }) cargos: string[];
-  @Field(() => PerfilRefInputGraphQlDto) @ValidateNested() campus: PerfilRefInputGraphQlDto;
-  @Field(() => PerfilRefInputGraphQlDto) @ValidateNested() usuario: PerfilRefInputGraphQlDto;
+  @decorate(Field(() => [String]))
+  @decorate(IsArray())
+  @decorate(IsString({ each: true }))
+  cargos: string[];
+  @decorate(Field(() => PerfilRefInputGraphQlDto))
+  @decorate(ValidateNested())
+  campus: PerfilRefInputGraphQlDto;
+  @decorate(Field(() => PerfilRefInputGraphQlDto))
+  @decorate(ValidateNested())
+  usuario: PerfilRefInputGraphQlDto;
 }
 
 // ============================================================================
 // List Input
 // ============================================================================
 
-@ArgsType()
-export class PerfilListInputGraphQlDto extends PaginationInputGraphQlDto {
-  @Field(() => [String], { nullable: true, description: "Filtro por ID" })
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
-  filterId?: string[];
-
-  @Field(() => [String], { nullable: true, description: "Filtro por ativo" })
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
+@decorate(ArgsType())
+export class PerfilListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {
+  @decorate(Field(() => [String], { nullable: true, description: "Filtro por ativo" }))
+  @decorate(IsOptional())
+  @decorate(IsArray())
+  @decorate(IsString({ each: true }))
   filterAtivo?: string[];
 
-  @Field(() => [String], { nullable: true, description: "Filtro por cargo" })
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
+  @decorate(Field(() => [String], { nullable: true, description: "Filtro por cargo" }))
+  @decorate(IsOptional())
+  @decorate(IsArray())
+  @decorate(IsString({ each: true }))
   filterCargo?: string[];
 
-  @Field(() => [String], { nullable: true, description: "Filtro por ID do Campus" })
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
+  @decorate(Field(() => [String], { nullable: true, description: "Filtro por ID do Campus" }))
+  @decorate(IsOptional())
+  @decorate(IsArray())
+  @decorate(IsUUID(undefined, { each: true }))
   filterCampusId?: string[];
 
-  @Field(() => [String], { nullable: true, description: "Filtro por ID do Usuario" })
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
+  @decorate(Field(() => [String], { nullable: true, description: "Filtro por ID do Usuario" }))
+  @decorate(IsOptional())
+  @decorate(IsArray())
+  @decorate(IsUUID(undefined, { each: true }))
   filterUsuarioId?: string[];
 }
 
@@ -77,11 +79,11 @@ export class PerfilListInputGraphQlDto extends PaginationInputGraphQlDto {
 // List Output
 // ============================================================================
 
-@ObjectType("PerfilListResult")
+@decorate(ObjectType("PerfilListResult"))
 export class PerfilListOutputGraphQlDto {
-  @Field(() => PaginationMetaGraphQlDto)
+  @decorate(Field(() => PaginationMetaGraphQlDto))
   meta: PaginationMetaGraphQlDto;
 
-  @Field(() => [PerfilFindOneOutputGraphQlDto])
+  @decorate(Field(() => [PerfilFindOneOutputGraphQlDto]))
   data: PerfilFindOneOutputGraphQlDto[];
 }

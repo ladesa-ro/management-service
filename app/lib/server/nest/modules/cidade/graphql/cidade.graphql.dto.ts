@@ -1,7 +1,9 @@
 import { ArgsType, Field, InputType, Int, ObjectType } from "@nestjs/graphql";
-import { IsArray, IsInt, IsOptional, IsString, IsUUID, Min } from "class-validator";
+import { IsArray, IsInt, IsOptional, IsString, IsUUID } from "class-validator";
+import { decorate } from "ts-mixer";
 import {
   EntityIdIntGraphQlDto,
+  PaginatedFilterByIdGraphQlDto,
   PaginationMetaGraphQlDto,
 } from "@/modules/@shared/infrastructure/graphql/dtos";
 import { EstadoFindOneOutputGraphQlDto } from "@/server/nest/modules/estado/graphql/estado.graphql.dto";
@@ -10,72 +12,43 @@ import { EstadoFindOneOutputGraphQlDto } from "@/server/nest/modules/estado/grap
 // FindOne Output
 // ============================================================================
 
-@ObjectType("CidadeFindOneOutputDto")
+@decorate(ObjectType("CidadeFindOneOutputDto"))
 export class CidadeFindOneOutputGraphQlDto extends EntityIdIntGraphQlDto {
-  @Field() nome: string;
-  @Field(() => EstadoFindOneOutputGraphQlDto) estado: EstadoFindOneOutputGraphQlDto;
+  @decorate(Field(() => String)) nome: string;
+  @decorate(Field(() => EstadoFindOneOutputGraphQlDto)) estado: EstadoFindOneOutputGraphQlDto;
 }
 
 // ============================================================================
 // FindOne Input (for nested references)
 // ============================================================================
 
-@InputType("CidadeFindOneInputDto")
+@decorate(InputType("CidadeFindOneInputDto"))
 export class CidadeFindOneInputGraphQlDto {
-  @Field(() => Int) @IsInt() id: number;
+  @decorate(Field(() => Int)) @decorate(IsInt()) id: number;
 }
 
 // ============================================================================
 // List Input (GraphQL-compatible - no dots in field names)
 // ============================================================================
 
-@ArgsType()
-export class CidadeListInputGraphQlDto {
-  @Field(() => Int, { nullable: true, defaultValue: 1 })
-  @IsOptional()
-  @IsInt()
-  @Min(1)
-  page?: number = 1;
-
-  @Field(() => Int, { nullable: true })
-  @IsOptional()
-  @IsInt()
-  @Min(1)
-  limit?: number;
-
-  @Field(() => String, { nullable: true })
-  @IsOptional()
-  @IsString()
-  search?: string;
-
-  @Field(() => [String], { nullable: true })
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
-  sortBy?: string[];
-
-  @Field(() => [String], { nullable: true, description: "Filtro por ID" })
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
-  filterId?: string[];
-
-  @Field(() => [String], { nullable: true, description: "Filtro por ID do Estado" })
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
+@decorate(ArgsType())
+export class CidadeListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {
+  @decorate(Field(() => [String], { nullable: true, description: "Filtro por ID do Estado" }))
+  @decorate(IsOptional())
+  @decorate(IsArray())
+  @decorate(IsUUID(undefined, { each: true }))
   filterEstadoId?: string[];
 
-  @Field(() => [String], { nullable: true, description: "Filtro por nome do Estado" })
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
+  @decorate(Field(() => [String], { nullable: true, description: "Filtro por nome do Estado" }))
+  @decorate(IsOptional())
+  @decorate(IsArray())
+  @decorate(IsString({ each: true }))
   filterEstadoNome?: string[];
 
-  @Field(() => [String], { nullable: true, description: "Filtro por sigla do Estado" })
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
+  @decorate(Field(() => [String], { nullable: true, description: "Filtro por sigla do Estado" }))
+  @decorate(IsOptional())
+  @decorate(IsArray())
+  @decorate(IsString({ each: true }))
   filterEstadoSigla?: string[];
 }
 
@@ -83,11 +56,11 @@ export class CidadeListInputGraphQlDto {
 // List Output
 // ============================================================================
 
-@ObjectType("CidadeListResult")
+@decorate(ObjectType("CidadeListResult"))
 export class CidadeListOutputGraphQlDto {
-  @Field(() => PaginationMetaGraphQlDto)
+  @decorate(Field(() => PaginationMetaGraphQlDto))
   meta: PaginationMetaGraphQlDto;
 
-  @Field(() => [CidadeFindOneOutputGraphQlDto])
+  @decorate(Field(() => [CidadeFindOneOutputGraphQlDto]))
   data: CidadeFindOneOutputGraphQlDto[];
 }

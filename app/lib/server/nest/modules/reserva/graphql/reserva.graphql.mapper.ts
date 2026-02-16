@@ -3,12 +3,15 @@ import {
   ReservaFindOneInputDto,
   ReservaFindOneOutputDto,
   ReservaListInputDto,
-  ReservaListOutputDto,
   ReservaUpdateInputDto,
 } from "@/modules/sisgea/reserva";
 import { AmbienteGraphqlMapper } from "@/server/nest/modules/ambiente/graphql/ambiente.graphql.mapper";
 import { UsuarioGraphqlMapper } from "@/server/nest/modules/usuario/graphql/usuario.graphql.mapper";
-import { mapPaginationMeta } from "@/server/nest/shared/mappers";
+import {
+  createFindOneInputMapper,
+  createListOutputMapper,
+  mapDatedFields,
+} from "@/server/nest/shared/mappers";
 import {
   ReservaCreateInputGraphQlDto,
   ReservaFindOneOutputGraphQlDto,
@@ -37,12 +40,7 @@ export class ReservaGraphqlMapper {
     return input;
   }
 
-  static toFindOneInput(id: string, selection?: string[]): ReservaFindOneInputDto {
-    const input = new ReservaFindOneInputDto();
-    input.id = id;
-    input.selection = selection;
-    return input;
-  }
+  static toFindOneInput = createFindOneInputMapper(ReservaFindOneInputDto);
 
   static toCreateInput(dto: ReservaCreateInputGraphQlDto): ReservaCreateInputDto {
     const input = new ReservaCreateInputDto();
@@ -79,16 +77,12 @@ export class ReservaGraphqlMapper {
     dto.rrule = output.rrule;
     dto.ambiente = AmbienteGraphqlMapper.toFindOneOutputDto(output.ambiente);
     dto.usuario = UsuarioGraphqlMapper.toFindOneOutputDto(output.usuario);
-    dto.dateCreated = output.dateCreated as unknown as Date;
-    dto.dateUpdated = output.dateUpdated as unknown as Date;
-    dto.dateDeleted = output.dateDeleted as unknown as Date | null;
+    mapDatedFields(dto, output);
     return dto;
   }
 
-  static toListOutputDto(output: ReservaListOutputDto): ReservaListOutputGraphQlDto {
-    const dto = new ReservaListOutputGraphQlDto();
-    dto.meta = mapPaginationMeta(output.meta);
-    dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
-    return dto;
-  }
+  static toListOutputDto = createListOutputMapper(
+    ReservaListOutputGraphQlDto,
+    ReservaGraphqlMapper.toFindOneOutputDto,
+  );
 }

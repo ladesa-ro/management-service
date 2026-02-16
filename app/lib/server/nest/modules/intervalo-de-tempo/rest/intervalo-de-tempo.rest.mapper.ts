@@ -2,13 +2,15 @@ import {
   IntervaloDeTempoFindOneInputDto,
   IntervaloDeTempoFindOneOutputDto,
   IntervaloDeTempoListInputDto,
-  IntervaloDeTempoListOutputDto,
 } from "@/modules/sisgha/intervalo-de-tempo";
-import { mapPaginationMeta } from "@/server/nest/shared/mappers";
 import {
-  IntervaloDeTempoFindOneInputRestDto,
+  createFindOneInputMapper,
+  createListInputMapper,
+  createListOutputMapper,
+  mapDatedFields,
+} from "@/server/nest/shared/mappers";
+import {
   IntervaloDeTempoFindOneOutputRestDto,
-  IntervaloDeTempoListInputRestDto,
   IntervaloDeTempoListOutputRestDto,
 } from "./intervalo-de-tempo.rest.dto";
 
@@ -17,28 +19,9 @@ export class IntervaloDeTempoRestMapper {
   // Input: Server DTO -> Core DTO
   // ============================================================================
 
-  static toFindOneInput(dto: IntervaloDeTempoFindOneInputRestDto): IntervaloDeTempoFindOneInputDto {
-    const input = new IntervaloDeTempoFindOneInputDto();
-    input.id = dto.id;
-    return input;
-  }
+  static toFindOneInput = createFindOneInputMapper(IntervaloDeTempoFindOneInputDto);
 
-  static toListInput(
-    dto: IntervaloDeTempoListInputRestDto | null,
-  ): IntervaloDeTempoListInputDto | null {
-    if (!dto) {
-      return null;
-    }
-
-    const input = new IntervaloDeTempoListInputDto();
-    input.page = dto.page;
-    input.limit = dto.limit;
-    input.search = dto.search;
-    input.sortBy = dto.sortBy;
-    input.selection = dto.selection;
-    input["filter.id"] = dto["filter.id"];
-    return input;
-  }
+  static toListInput = createListInputMapper(IntervaloDeTempoListInputDto, ["filter.id"]);
 
   // ============================================================================
   // Output: Core DTO -> Server DTO
@@ -51,16 +34,12 @@ export class IntervaloDeTempoRestMapper {
     dto.id = output.id;
     dto.periodoInicio = output.periodoInicio;
     dto.periodoFim = output.periodoFim;
-    dto.dateCreated = new Date(output.dateCreated);
-    dto.dateUpdated = new Date(output.dateUpdated);
-    dto.dateDeleted = output.dateDeleted ? new Date(output.dateDeleted) : null;
+    mapDatedFields(dto, output);
     return dto;
   }
 
-  static toListOutputDto(output: IntervaloDeTempoListOutputDto): IntervaloDeTempoListOutputRestDto {
-    const dto = new IntervaloDeTempoListOutputRestDto();
-    dto.meta = mapPaginationMeta(output.meta);
-    dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
-    return dto;
-  }
+  static toListOutputDto = createListOutputMapper(
+    IntervaloDeTempoListOutputRestDto,
+    IntervaloDeTempoRestMapper.toFindOneOutputDto,
+  );
 }

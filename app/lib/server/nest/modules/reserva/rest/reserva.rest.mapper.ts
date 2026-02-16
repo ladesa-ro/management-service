@@ -3,17 +3,20 @@ import {
   ReservaFindOneInputDto,
   ReservaFindOneOutputDto,
   ReservaListInputDto,
-  ReservaListOutputDto,
   ReservaUpdateInputDto,
 } from "@/modules/sisgea/reserva";
 import { AmbienteRestMapper } from "@/server/nest/modules/ambiente/rest";
 import { UsuarioRestMapper } from "@/server/nest/modules/usuario/rest";
-import { mapPaginationMeta } from "@/server/nest/shared/mappers";
+import {
+  createFindOneInputMapper,
+  createListInputMapper,
+  createListOutputMapper,
+  mapDatedFields,
+} from "@/server/nest/shared/mappers";
 import {
   ReservaCreateInputRestDto,
   ReservaFindOneInputRestDto,
   ReservaFindOneOutputRestDto,
-  ReservaListInputRestDto,
   ReservaListOutputRestDto,
   ReservaUpdateInputRestDto,
 } from "./reserva.rest.dto";
@@ -23,32 +26,17 @@ export class ReservaRestMapper {
   // Input: Server DTO -> Core DTO
   // ============================================================================
 
-  static toFindOneInput(dto: ReservaFindOneInputRestDto): ReservaFindOneInputDto {
-    const input = new ReservaFindOneInputDto();
-    input.id = dto.id;
-    return input;
-  }
+  static toFindOneInput = createFindOneInputMapper(ReservaFindOneInputDto);
 
-  static toListInput(dto: ReservaListInputRestDto | null): ReservaListInputDto | null {
-    if (!dto) {
-      return null;
-    }
-
-    const input = new ReservaListInputDto();
-    input.page = dto.page;
-    input.limit = dto.limit;
-    input.search = dto.search;
-    input.sortBy = dto.sortBy;
-    input.selection = dto.selection;
-    input["filter.id"] = dto["filter.id"];
-    input["filter.situacao"] = dto["filter.situacao"];
-    input["filter.tipo"] = dto["filter.tipo"];
-    input["filter.ambiente.id"] = dto["filter.ambiente.id"];
-    input["filter.ambiente.bloco.id"] = dto["filter.ambiente.bloco.id"];
-    input["filter.ambiente.bloco.campus.id"] = dto["filter.ambiente.bloco.campus.id"];
-    input["filter.usuario.id"] = dto["filter.usuario.id"];
-    return input;
-  }
+  static toListInput = createListInputMapper(ReservaListInputDto, [
+    "filter.id",
+    "filter.situacao",
+    "filter.tipo",
+    "filter.ambiente.id",
+    "filter.ambiente.bloco.id",
+    "filter.ambiente.bloco.campus.id",
+    "filter.usuario.id",
+  ]);
 
   static toCreateInput(dto: ReservaCreateInputRestDto): ReservaCreateInputDto {
     const input = new ReservaCreateInputDto();
@@ -101,16 +89,12 @@ export class ReservaRestMapper {
     dto.rrule = output.rrule;
     dto.usuario = UsuarioRestMapper.toFindOneOutputDto(output.usuario);
     dto.ambiente = AmbienteRestMapper.toFindOneOutputDto(output.ambiente);
-    dto.dateCreated = new Date(output.dateCreated);
-    dto.dateUpdated = new Date(output.dateUpdated);
-    dto.dateDeleted = output.dateDeleted ? new Date(output.dateDeleted) : null;
+    mapDatedFields(dto, output);
     return dto;
   }
 
-  static toListOutputDto(output: ReservaListOutputDto): ReservaListOutputRestDto {
-    const dto = new ReservaListOutputRestDto();
-    dto.meta = mapPaginationMeta(output.meta);
-    dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
-    return dto;
-  }
+  static toListOutputDto = createListOutputMapper(
+    ReservaListOutputRestDto,
+    ReservaRestMapper.toFindOneOutputDto,
+  );
 }

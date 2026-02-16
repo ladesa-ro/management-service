@@ -1,6 +1,7 @@
 import { ApiProperty, ApiPropertyOptional, ApiSchema, PartialType } from "@nestjs/swagger";
 import { Type } from "class-transformer";
-import { IsArray, IsDateString, IsOptional, IsUUID, ValidateNested } from "class-validator";
+import { IsArray, IsOptional, IsUUID, ValidateNested } from "class-validator";
+import { decorate, Mixin } from "ts-mixer";
 import {
   commonProperties,
   RegisterModel,
@@ -8,7 +9,8 @@ import {
   simpleProperty,
 } from "@/modules/@shared/infrastructure/persistence/typeorm/metadata";
 import {
-  PaginationInputRestDto,
+  EntityBaseRestDto,
+  PaginatedFilterByIdRestDto,
   PaginationMetaRestDto,
   TransformToArray,
 } from "@/modules/@shared/infrastructure/presentation/rest/dtos";
@@ -24,106 +26,95 @@ import {
   IntervaloDeTempoFindOneInputRestDto,
   IntervaloDeTempoFindOneOutputRestDto,
 } from "@/server/nest/modules/intervalo-de-tempo/rest/intervalo-de-tempo.rest.dto";
+import { HorarioGeradoAulaFieldsMixin } from "../horario-gerado-aula.validation-mixin";
 
 // ============================================================================
 // FindOne Output
 // ============================================================================
 
-@ApiSchema({ name: "HorarioGeradoAulaFindOneOutputDto" })
-@RegisterModel({
-  name: "HorarioGeradoAulaFindOneOutputDto",
-  properties: [
-    simpleProperty("id"),
-    simpleProperty("data"),
-    referenceProperty("intervaloDeTempo", "IntervaloDeTempoFindOneOutputDto"),
-    referenceProperty("diarioProfessor", "DiarioProfessorFindOneOutputDto"),
-    referenceProperty("horarioGerado", "HorarioGeradoFindOneOutputDto"),
-    ...commonProperties.dated,
-  ],
-})
-export class HorarioGeradoAulaFindOneOutputRestDto {
-  @ApiProperty({ description: "Identificador do registro (uuid)", format: "uuid" })
-  @IsUUID()
-  id: string;
+@decorate(ApiSchema({ name: "HorarioGeradoAulaFindOneOutputDto" }))
+@decorate(
+  RegisterModel({
+    name: "HorarioGeradoAulaFindOneOutputDto",
+    properties: [
+      simpleProperty("id"),
+      simpleProperty("data"),
+      referenceProperty("intervaloDeTempo", "IntervaloDeTempoFindOneOutputDto"),
+      referenceProperty("diarioProfessor", "DiarioProfessorFindOneOutputDto"),
+      referenceProperty("horarioGerado", "HorarioGeradoFindOneOutputDto"),
+      ...commonProperties.dated,
+    ],
+  }),
+)
+export class HorarioGeradoAulaFindOneOutputRestDto extends Mixin(
+  EntityBaseRestDto,
+  HorarioGeradoAulaFieldsMixin,
+) {
+  @decorate(ApiProperty({ type: "string", description: "Data da aula gerada" }))
+  declare data: Date;
 
-  @ApiProperty({ description: "Data da aula gerada" })
-  @IsDateString()
-  data: Date;
-
-  @ApiProperty({
-    type: () => IntervaloDeTempoFindOneOutputRestDto,
-    description: "Intervalo de tempo",
-  })
-  @ValidateNested()
-  @Type(() => IntervaloDeTempoFindOneOutputRestDto)
+  @decorate(
+    ApiProperty({
+      type: () => IntervaloDeTempoFindOneOutputRestDto,
+      description: "Intervalo de tempo",
+    }),
+  )
+  @decorate(ValidateNested())
+  @decorate(Type(() => IntervaloDeTempoFindOneOutputRestDto))
   intervaloDeTempo: IntervaloDeTempoFindOneOutputRestDto;
 
-  @ApiProperty({
-    type: () => DiarioProfessorFindOneOutputRestDto,
-    description: "Vinculo de diario e professor",
-  })
-  @ValidateNested()
-  @Type(() => DiarioProfessorFindOneOutputRestDto)
+  @decorate(
+    ApiProperty({
+      type: () => DiarioProfessorFindOneOutputRestDto,
+      description: "Vinculo de diario e professor",
+    }),
+  )
+  @decorate(ValidateNested())
+  @decorate(Type(() => DiarioProfessorFindOneOutputRestDto))
   diarioProfessor: DiarioProfessorFindOneOutputRestDto;
 
-  @ApiProperty({
-    type: () => HorarioGeradoFindOneOutputRestDto,
-    description: "Horario ao qual a aula pertence",
-  })
-  @ValidateNested()
-  @Type(() => HorarioGeradoFindOneOutputRestDto)
+  @decorate(
+    ApiProperty({
+      type: () => HorarioGeradoFindOneOutputRestDto,
+      description: "Horario ao qual a aula pertence",
+    }),
+  )
+  @decorate(ValidateNested())
+  @decorate(Type(() => HorarioGeradoFindOneOutputRestDto))
   horarioGerado: HorarioGeradoFindOneOutputRestDto;
-
-  @ApiProperty({ description: "Data e hora da criacao do registro" })
-  @IsDateString()
-  dateCreated: Date;
-
-  @ApiProperty({ description: "Data e hora da alteracao do registro" })
-  @IsDateString()
-  dateUpdated: Date;
-
-  @ApiPropertyOptional({ description: "Data e hora da exclusao do registro", nullable: true })
-  @IsOptional()
-  @IsDateString()
-  dateDeleted: Date | null;
 }
 
 // ============================================================================
 // List Input/Output
 // ============================================================================
 
-@ApiSchema({ name: "HorarioGeradoAulaListInputDto" })
-export class HorarioGeradoAulaListInputRestDto extends PaginationInputRestDto {
-  @ApiPropertyOptional({
-    description: "Filtro por ID",
-    type: [String],
-  })
-  @TransformToArray()
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
-  "filter.id"?: string[];
-
-  @ApiPropertyOptional({
-    description: "Filtro por ID do Horario Gerado",
-    type: [String],
-  })
-  @TransformToArray()
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
+@decorate(ApiSchema({ name: "HorarioGeradoAulaListInputDto" }))
+export class HorarioGeradoAulaListInputRestDto extends PaginatedFilterByIdRestDto {
+  @decorate(
+    ApiPropertyOptional({
+      type: "string",
+      isArray: true,
+      description: "Filtro por ID do Horario Gerado",
+    }),
+  )
+  @decorate(TransformToArray())
+  @decorate(IsOptional())
+  @decorate(IsArray())
+  @decorate(IsUUID(undefined, { each: true }))
   "filter.horarioGerado.id"?: string[];
 }
 
-@ApiSchema({ name: "HorarioGeradoAulaListOutputDto" })
+@decorate(ApiSchema({ name: "HorarioGeradoAulaListOutputDto" }))
 export class HorarioGeradoAulaListOutputRestDto {
-  @ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" })
+  @decorate(ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" }))
   meta: PaginationMetaRestDto;
 
-  @ApiProperty({
-    type: () => [HorarioGeradoAulaFindOneOutputRestDto],
-    description: "Resultados da busca",
-  })
+  @decorate(
+    ApiProperty({
+      type: () => [HorarioGeradoAulaFindOneOutputRestDto],
+      description: "Resultados da busca",
+    }),
+  )
   data: HorarioGeradoAulaFindOneOutputRestDto[];
 }
 
@@ -131,38 +122,43 @@ export class HorarioGeradoAulaListOutputRestDto {
 // Create/Update Input
 // ============================================================================
 
-@ApiSchema({ name: "HorarioGeradoAulaCreateInputDto" })
-export class HorarioGeradoAulaCreateInputRestDto {
-  @ApiProperty({ description: "Data da aula gerada" })
-  @IsDateString()
-  data: Date;
+@decorate(ApiSchema({ name: "HorarioGeradoAulaCreateInputDto" }))
+export class HorarioGeradoAulaCreateInputRestDto extends HorarioGeradoAulaFieldsMixin {
+  @decorate(ApiProperty({ type: "string", description: "Data da aula gerada" }))
+  declare data: Date;
 
-  @ApiProperty({
-    type: () => IntervaloDeTempoFindOneInputRestDto,
-    description: "Intervalo de tempo",
-  })
-  @ValidateNested()
-  @Type(() => IntervaloDeTempoFindOneInputRestDto)
+  @decorate(
+    ApiProperty({
+      type: () => IntervaloDeTempoFindOneInputRestDto,
+      description: "Intervalo de tempo",
+    }),
+  )
+  @decorate(ValidateNested())
+  @decorate(Type(() => IntervaloDeTempoFindOneInputRestDto))
   intervaloDeTempo: IntervaloDeTempoFindOneInputRestDto;
 
-  @ApiProperty({
-    type: () => DiarioProfessorFindOneInputRestDto,
-    description: "Vinculo de diario e professor",
-  })
-  @ValidateNested()
-  @Type(() => DiarioProfessorFindOneInputRestDto)
+  @decorate(
+    ApiProperty({
+      type: () => DiarioProfessorFindOneInputRestDto,
+      description: "Vinculo de diario e professor",
+    }),
+  )
+  @decorate(ValidateNested())
+  @decorate(Type(() => DiarioProfessorFindOneInputRestDto))
   diarioProfessor: DiarioProfessorFindOneInputRestDto;
 
-  @ApiProperty({
-    type: () => HorarioGeradoFindOneInputRestDto,
-    description: "Horario ao qual a aula pertence",
-  })
-  @ValidateNested()
-  @Type(() => HorarioGeradoFindOneInputRestDto)
+  @decorate(
+    ApiProperty({
+      type: () => HorarioGeradoFindOneInputRestDto,
+      description: "Horario ao qual a aula pertence",
+    }),
+  )
+  @decorate(ValidateNested())
+  @decorate(Type(() => HorarioGeradoFindOneInputRestDto))
   horarioGerado: HorarioGeradoFindOneInputRestDto;
 }
 
-@ApiSchema({ name: "HorarioGeradoAulaUpdateInputDto" })
+@decorate(ApiSchema({ name: "HorarioGeradoAulaUpdateInputDto" }))
 export class HorarioGeradoAulaUpdateInputRestDto extends PartialType(
   HorarioGeradoAulaCreateInputRestDto,
 ) {}
@@ -171,9 +167,15 @@ export class HorarioGeradoAulaUpdateInputRestDto extends PartialType(
 // FindOne Input (for path params)
 // ============================================================================
 
-@ApiSchema({ name: "HorarioGeradoAulaFindOneInputDto" })
+@decorate(ApiSchema({ name: "HorarioGeradoAulaFindOneInputDto" }))
 export class HorarioGeradoAulaFindOneInputRestDto {
-  @ApiProperty({ description: "Identificador do registro (uuid)", format: "uuid" })
-  @IsUUID()
+  @decorate(
+    ApiProperty({
+      type: "string",
+      description: "Identificador do registro (uuid)",
+      format: "uuid",
+    }),
+  )
+  @decorate(IsUUID())
   id: string;
 }

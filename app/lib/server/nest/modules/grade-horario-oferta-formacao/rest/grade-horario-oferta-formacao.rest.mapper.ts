@@ -3,17 +3,20 @@ import {
   GradeHorarioOfertaFormacaoFindOneInputDto,
   GradeHorarioOfertaFormacaoFindOneOutputDto,
   GradeHorarioOfertaFormacaoListInputDto,
-  GradeHorarioOfertaFormacaoListOutputDto,
   GradeHorarioOfertaFormacaoUpdateInputDto,
 } from "@/modules/sisgha/grade-horario-oferta-formacao";
 import { CampusRestMapper } from "@/server/nest/modules/campus/rest";
 import { OfertaFormacaoRestMapper } from "@/server/nest/modules/oferta-formacao/rest";
-import { mapPaginationMeta } from "@/server/nest/shared/mappers";
+import {
+  createFindOneInputMapper,
+  createListInputMapper,
+  createListOutputMapper,
+  mapDatedFields,
+} from "@/server/nest/shared/mappers";
 import {
   GradeHorarioOfertaFormacaoCreateInputRestDto,
   GradeHorarioOfertaFormacaoFindOneInputRestDto,
   GradeHorarioOfertaFormacaoFindOneOutputRestDto,
-  GradeHorarioOfertaFormacaoListInputRestDto,
   GradeHorarioOfertaFormacaoListOutputRestDto,
   GradeHorarioOfertaFormacaoUpdateInputRestDto,
 } from "./grade-horario-oferta-formacao.rest.dto";
@@ -23,30 +26,9 @@ export class GradeHorarioOfertaFormacaoRestMapper {
   // Input: Server DTO -> Core DTO
   // ============================================================================
 
-  static toFindOneInput(
-    dto: GradeHorarioOfertaFormacaoFindOneInputRestDto,
-  ): GradeHorarioOfertaFormacaoFindOneInputDto {
-    const input = new GradeHorarioOfertaFormacaoFindOneInputDto();
-    input.id = dto.id;
-    return input;
-  }
+  static toFindOneInput = createFindOneInputMapper(GradeHorarioOfertaFormacaoFindOneInputDto);
 
-  static toListInput(
-    dto: GradeHorarioOfertaFormacaoListInputRestDto | null,
-  ): GradeHorarioOfertaFormacaoListInputDto | null {
-    if (!dto) {
-      return null;
-    }
-
-    const input = new GradeHorarioOfertaFormacaoListInputDto();
-    input.page = dto.page;
-    input.limit = dto.limit;
-    input.search = dto.search;
-    input.sortBy = dto.sortBy;
-    input.selection = dto.selection;
-    input["filter.id"] = dto["filter.id"];
-    return input;
-  }
+  static toListInput = createListInputMapper(GradeHorarioOfertaFormacaoListInputDto, ["filter.id"]);
 
   static toCreateInput(
     dto: GradeHorarioOfertaFormacaoCreateInputRestDto,
@@ -85,18 +67,12 @@ export class GradeHorarioOfertaFormacaoRestMapper {
     dto.id = output.id;
     dto.campus = CampusRestMapper.toFindOneOutputDto(output.campus);
     dto.ofertaFormacao = OfertaFormacaoRestMapper.toFindOneOutputDto(output.ofertaFormacao);
-    dto.dateCreated = new Date(output.dateCreated);
-    dto.dateUpdated = new Date(output.dateUpdated);
-    dto.dateDeleted = output.dateDeleted ? new Date(output.dateDeleted) : null;
+    mapDatedFields(dto, output);
     return dto;
   }
 
-  static toListOutputDto(
-    output: GradeHorarioOfertaFormacaoListOutputDto,
-  ): GradeHorarioOfertaFormacaoListOutputRestDto {
-    const dto = new GradeHorarioOfertaFormacaoListOutputRestDto();
-    dto.meta = mapPaginationMeta(output.meta);
-    dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
-    return dto;
-  }
+  static toListOutputDto = createListOutputMapper(
+    GradeHorarioOfertaFormacaoListOutputRestDto,
+    GradeHorarioOfertaFormacaoRestMapper.toFindOneOutputDto,
+  );
 }

@@ -2,9 +2,8 @@ import {
   IntervaloDeTempoFindOneInputDto,
   IntervaloDeTempoFindOneOutputDto,
   IntervaloDeTempoListInputDto,
-  IntervaloDeTempoListOutputDto,
 } from "@/modules/sisgha/intervalo-de-tempo";
-import { mapPaginationMeta } from "@/server/nest/shared/mappers";
+import { createListOutputMapper, mapDatedFields } from "@/server/nest/shared/mappers";
 import {
   IntervaloDeTempoFindOneOutputGraphQlDto,
   IntervaloDeTempoListInputGraphQlDto,
@@ -42,18 +41,12 @@ export class IntervaloDeTempoGraphqlMapper {
     dto.id = output.id;
     dto.periodoInicio = output.periodoInicio;
     dto.periodoFim = output.periodoFim;
-    dto.dateCreated = output.dateCreated as unknown as Date;
-    dto.dateUpdated = output.dateUpdated as unknown as Date;
-    dto.dateDeleted = output.dateDeleted as unknown as Date | null;
+    mapDatedFields(dto, output);
     return dto;
   }
 
-  static toListOutputDto(
-    output: IntervaloDeTempoListOutputDto,
-  ): IntervaloDeTempoListOutputGraphQlDto {
-    const dto = new IntervaloDeTempoListOutputGraphQlDto();
-    dto.meta = mapPaginationMeta(output.meta);
-    dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
-    return dto;
-  }
+  static toListOutputDto = createListOutputMapper(
+    IntervaloDeTempoListOutputGraphQlDto,
+    IntervaloDeTempoGraphqlMapper.toFindOneOutputDto,
+  );
 }

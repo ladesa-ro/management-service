@@ -2,17 +2,8 @@
 // because GraphQL field names cannot contain dots. Use AmbienteListInputGraphQlDto for GraphQL.
 import { ApiProperty, ApiPropertyOptional, ApiSchema, PartialType } from "@nestjs/swagger";
 import { Type } from "class-transformer";
-import {
-  IsArray,
-  IsDateString,
-  IsInt,
-  IsOptional,
-  IsString,
-  IsUUID,
-  Min,
-  MinLength,
-  ValidateNested,
-} from "class-validator";
+import { IsArray, IsOptional, IsUUID, ValidateNested } from "class-validator";
+import { decorate, Mixin } from "ts-mixer";
 import {
   commonProperties,
   RegisterModel,
@@ -20,7 +11,8 @@ import {
   simpleProperty,
 } from "@/modules/@shared/infrastructure/persistence/typeorm/metadata";
 import {
-  PaginationInputRestDto,
+  EntityBaseRestDto,
+  PaginatedFilterByIdRestDto,
   PaginationMetaRestDto,
   TransformToArray,
 } from "@/modules/@shared/infrastructure/presentation/rest/dtos";
@@ -29,135 +21,127 @@ import {
   BlocoFindOneOutputRestDto,
   ImagemFindOneOutputRestDto,
 } from "@/server/nest/modules/bloco/rest";
+import { AmbienteFieldsMixin } from "../ambiente.validation-mixin";
 
 // ============================================================================
 // FindOne Output
 // ============================================================================
 
-@ApiSchema({ name: "AmbienteFindOneOutputDto" })
-@RegisterModel({
-  name: "AmbienteFindOneOutputDto",
-  properties: [
-    simpleProperty("id"),
-    simpleProperty("nome"),
-    simpleProperty("descricao", { nullable: true }),
-    simpleProperty("codigo"),
-    simpleProperty("capacidade", { nullable: true }),
-    simpleProperty("tipo", { nullable: true }),
-    referenceProperty("bloco", "BlocoFindOneOutputDto"),
-    referenceProperty("imagemCapa", "ImagemFindOneOutputDto", { nullable: true }),
-    ...commonProperties.dated,
-  ],
-})
-export class AmbienteFindOneOutputRestDto {
-  @ApiProperty({ description: "Identificador do registro (uuid)", format: "uuid" })
-  @IsUUID()
-  id: string;
+@decorate(ApiSchema({ name: "AmbienteFindOneOutputDto" }))
+@decorate(
+  RegisterModel({
+    name: "AmbienteFindOneOutputDto",
+    properties: [
+      simpleProperty("id"),
+      simpleProperty("nome"),
+      simpleProperty("descricao", { nullable: true }),
+      simpleProperty("codigo"),
+      simpleProperty("capacidade", { nullable: true }),
+      simpleProperty("tipo", { nullable: true }),
+      referenceProperty("bloco", "BlocoFindOneOutputDto"),
+      referenceProperty("imagemCapa", "ImagemFindOneOutputDto", { nullable: true }),
+      ...commonProperties.dated,
+    ],
+  }),
+)
+export class AmbienteFindOneOutputRestDto extends Mixin(EntityBaseRestDto, AmbienteFieldsMixin) {
+  @decorate(ApiProperty({ type: "string", description: "Nome do ambiente/sala", minLength: 1 }))
+  declare nome: string;
 
-  @ApiProperty({ description: "Nome do ambiente/sala", minLength: 1 })
-  @IsString()
-  @MinLength(1)
-  nome: string;
+  @decorate(
+    ApiPropertyOptional({
+      type: "string",
+      description: "Descricao do ambiente/sala",
+      nullable: true,
+    }),
+  )
+  declare descricao: string | null;
 
-  @ApiPropertyOptional({ description: "Descricao do ambiente/sala", nullable: true })
-  @IsOptional()
-  @IsString()
-  descricao: string | null;
+  @decorate(ApiProperty({ type: "string", description: "Codigo do ambiente/sala", minLength: 1 }))
+  declare codigo: string;
 
-  @ApiProperty({ description: "Codigo do ambiente/sala", minLength: 1 })
-  @IsString()
-  @MinLength(1)
-  codigo: string;
+  @decorate(
+    ApiPropertyOptional({
+      type: "integer",
+      description: "Capacidade do ambiente/sala",
+      nullable: true,
+    }),
+  )
+  declare capacidade: number | null;
 
-  @ApiPropertyOptional({ description: "Capacidade do ambiente/sala", nullable: true })
-  @IsOptional()
-  @IsInt()
-  @Min(0)
-  capacidade: number | null;
+  @decorate(
+    ApiPropertyOptional({
+      type: "string",
+      description: "Tipo do ambiente/sala. Ex.: sala aula, auditorio, laboratorio de quimica",
+      nullable: true,
+    }),
+  )
+  declare tipo: string | null;
 
-  @ApiPropertyOptional({
-    description: "Tipo do ambiente/sala. Ex.: sala aula, auditorio, laboratorio de quimica",
-    nullable: true,
-  })
-  @IsOptional()
-  @IsString()
-  tipo: string | null;
-
-  @ApiProperty({
-    type: () => BlocoFindOneOutputRestDto,
-    description: "Bloco que o ambiente/sala pertence",
-  })
-  @ValidateNested()
-  @Type(() => BlocoFindOneOutputRestDto)
+  @decorate(
+    ApiProperty({
+      type: () => BlocoFindOneOutputRestDto,
+      description: "Bloco que o ambiente/sala pertence",
+    }),
+  )
+  @decorate(ValidateNested())
+  @decorate(Type(() => BlocoFindOneOutputRestDto))
   bloco: BlocoFindOneOutputRestDto;
 
-  @ApiPropertyOptional({
-    type: () => ImagemFindOneOutputRestDto,
-    description: "Imagem de capa do ambiente",
-    nullable: true,
-  })
-  @IsOptional()
-  @ValidateNested()
-  @Type(() => ImagemFindOneOutputRestDto)
+  @decorate(
+    ApiPropertyOptional({
+      type: () => ImagemFindOneOutputRestDto,
+      description: "Imagem de capa do ambiente",
+      nullable: true,
+    }),
+  )
+  @decorate(IsOptional())
+  @decorate(ValidateNested())
+  @decorate(Type(() => ImagemFindOneOutputRestDto))
   imagemCapa: ImagemFindOneOutputRestDto | null;
-
-  @ApiProperty({ description: "Data e hora da criacao do registro" })
-  @IsDateString()
-  dateCreated: Date;
-
-  @ApiProperty({ description: "Data e hora da alteracao do registro" })
-  @IsDateString()
-  dateUpdated: Date;
-
-  @ApiPropertyOptional({ description: "Data e hora da exclusao do registro", nullable: true })
-  @IsOptional()
-  @IsDateString()
-  dateDeleted: Date | null;
 }
 
 // ============================================================================
 // List Input/Output
 // ============================================================================
 
-@ApiSchema({ name: "AmbienteListInputDto" })
-export class AmbienteListInputRestDto extends PaginationInputRestDto {
-  @ApiPropertyOptional({
-    description: "Filtro por ID",
-    type: [String],
-  })
-  @TransformToArray()
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
-  "filter.id"?: string[];
-
-  @ApiPropertyOptional({
-    description: "Filtro por ID do Bloco",
-    type: [String],
-  })
-  @TransformToArray()
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
+@decorate(ApiSchema({ name: "AmbienteListInputDto" }))
+export class AmbienteListInputRestDto extends PaginatedFilterByIdRestDto {
+  @decorate(
+    ApiPropertyOptional({
+      description: "Filtro por ID do Bloco",
+      type: "string",
+      isArray: true,
+    }),
+  )
+  @decorate(TransformToArray())
+  @decorate(IsOptional())
+  @decorate(IsArray())
+  @decorate(IsUUID(undefined, { each: true }))
   "filter.bloco.id"?: string[];
 
-  @ApiPropertyOptional({
-    description: "Filtro por ID do Campus do Bloco",
-    type: [String],
-  })
-  @TransformToArray()
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
+  @decorate(
+    ApiPropertyOptional({
+      description: "Filtro por ID do Campus do Bloco",
+      type: "string",
+      isArray: true,
+    }),
+  )
+  @decorate(TransformToArray())
+  @decorate(IsOptional())
+  @decorate(IsArray())
+  @decorate(IsUUID(undefined, { each: true }))
   "filter.bloco.campus.id"?: string[];
 }
 
-@ApiSchema({ name: "AmbienteListOutputDto" })
+@decorate(ApiSchema({ name: "AmbienteListOutputDto" }))
 export class AmbienteListOutputRestDto {
-  @ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" })
+  @decorate(ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" }))
   meta: PaginationMetaRestDto;
 
-  @ApiProperty({ type: () => [AmbienteFindOneOutputRestDto], description: "Resultados da busca" })
+  @decorate(
+    ApiProperty({ type: () => [AmbienteFindOneOutputRestDto], description: "Resultados da busca" }),
+  )
   data: AmbienteFindOneOutputRestDto[];
 }
 
@@ -165,56 +149,68 @@ export class AmbienteListOutputRestDto {
 // Create/Update Input
 // ============================================================================
 
-@ApiSchema({ name: "AmbienteCreateInputDto" })
-export class AmbienteCreateInputRestDto {
-  @ApiProperty({ description: "Nome do ambiente/sala", minLength: 1 })
-  @IsString()
-  @MinLength(1)
-  nome: string;
+@decorate(ApiSchema({ name: "AmbienteCreateInputDto" }))
+export class AmbienteCreateInputRestDto extends AmbienteFieldsMixin {
+  @decorate(ApiProperty({ type: "string", description: "Nome do ambiente/sala", minLength: 1 }))
+  declare nome: string;
 
-  @ApiPropertyOptional({ description: "Descricao do ambiente/sala", nullable: true })
-  @IsOptional()
-  @IsString()
-  descricao?: string | null;
+  @decorate(
+    ApiPropertyOptional({
+      type: "string",
+      description: "Descricao do ambiente/sala",
+      nullable: true,
+    }),
+  )
+  declare descricao?: string | null;
 
-  @ApiProperty({ description: "Codigo do ambiente/sala", minLength: 1 })
-  @IsString()
-  @MinLength(1)
-  codigo: string;
+  @decorate(ApiProperty({ type: "string", description: "Codigo do ambiente/sala", minLength: 1 }))
+  declare codigo: string;
 
-  @ApiPropertyOptional({ description: "Capacidade do ambiente/sala", nullable: true })
-  @IsOptional()
-  @IsInt()
-  @Min(0)
-  capacidade?: number | null;
+  @decorate(
+    ApiPropertyOptional({
+      type: "integer",
+      description: "Capacidade do ambiente/sala",
+      nullable: true,
+    }),
+  )
+  declare capacidade?: number | null;
 
-  @ApiPropertyOptional({
-    description: "Tipo do ambiente/sala. Ex.: sala aula, auditorio, laboratorio de quimica",
-    nullable: true,
-  })
-  @IsOptional()
-  @IsString()
-  tipo?: string | null;
+  @decorate(
+    ApiPropertyOptional({
+      type: "string",
+      description: "Tipo do ambiente/sala. Ex.: sala aula, auditorio, laboratorio de quimica",
+      nullable: true,
+    }),
+  )
+  declare tipo?: string | null;
 
-  @ApiProperty({
-    type: () => BlocoFindOneInputRestDto,
-    description: "Bloco que o ambiente/sala pertence",
-  })
-  @ValidateNested()
-  @Type(() => BlocoFindOneInputRestDto)
+  @decorate(
+    ApiProperty({
+      type: () => BlocoFindOneInputRestDto,
+      description: "Bloco que o ambiente/sala pertence",
+    }),
+  )
+  @decorate(ValidateNested())
+  @decorate(Type(() => BlocoFindOneInputRestDto))
   bloco: BlocoFindOneInputRestDto;
 }
 
-@ApiSchema({ name: "AmbienteUpdateInputDto" })
+@decorate(ApiSchema({ name: "AmbienteUpdateInputDto" }))
 export class AmbienteUpdateInputRestDto extends PartialType(AmbienteCreateInputRestDto) {}
 
 // ============================================================================
 // FindOne Input (for path params)
 // ============================================================================
 
-@ApiSchema({ name: "AmbienteFindOneInputDto" })
+@decorate(ApiSchema({ name: "AmbienteFindOneInputDto" }))
 export class AmbienteFindOneInputRestDto {
-  @ApiProperty({ description: "Identificador do registro (uuid)", format: "uuid" })
-  @IsUUID()
+  @decorate(
+    ApiProperty({
+      type: "string",
+      description: "Identificador do registro (uuid)",
+      format: "uuid",
+    }),
+  )
+  @decorate(IsUUID())
   id: string;
 }

@@ -3,11 +3,10 @@ import {
   TurmaDisponibilidadeFindOneInputDto,
   TurmaDisponibilidadeFindOneOutputDto,
   TurmaDisponibilidadeListInputDto,
-  TurmaDisponibilidadeListOutputDto,
   TurmaDisponibilidadeUpdateInputDto,
 } from "@/modules/ensino/turma-disponibilidade";
 import { DisponibilidadeGraphqlMapper } from "@/server/nest/modules/disponibilidade/graphql/disponibilidade.graphql.mapper";
-import { mapPaginationMeta } from "@/server/nest/shared/mappers";
+import { createListOutputMapper, mapDatedFields } from "@/server/nest/shared/mappers";
 import {
   TurmaDisponibilidadeCreateInputGraphQlDto,
   TurmaDisponibilidadeFindOneOutputGraphQlDto,
@@ -73,18 +72,12 @@ export class TurmaDisponibilidadeGraphqlMapper {
     dto.id = output.id;
     dto.turma = output.turma as unknown as TurmaDisponibilidadeTurmaOutputGraphQlDto;
     dto.disponibilidade = DisponibilidadeGraphqlMapper.toFindOneOutputDto(output.disponibilidade);
-    dto.dateCreated = output.dateCreated as unknown as Date;
-    dto.dateUpdated = output.dateUpdated as unknown as Date;
-    dto.dateDeleted = output.dateDeleted as unknown as Date | null;
+    mapDatedFields(dto, output);
     return dto;
   }
 
-  static toListOutputDto(
-    output: TurmaDisponibilidadeListOutputDto,
-  ): TurmaDisponibilidadeListOutputGraphQlDto {
-    const dto = new TurmaDisponibilidadeListOutputGraphQlDto();
-    dto.meta = mapPaginationMeta(output.meta);
-    dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
-    return dto;
-  }
+  static toListOutputDto = createListOutputMapper(
+    TurmaDisponibilidadeListOutputGraphQlDto,
+    TurmaDisponibilidadeGraphqlMapper.toFindOneOutputDto,
+  );
 }

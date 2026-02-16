@@ -83,7 +83,9 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoGraphqlResolver {
     @Args("data") dto: GradeHorarioOfertaFormacaoIntervaloDeTempoUpdateInputGraphQlDto,
     @Info() info: GraphQLResolveInfo,
   ): Promise<GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputGraphQlDto> {
-    const findOneInput = GradeHorarioOfertaFormacaoIntervaloDeTempoGraphqlMapper.toFindOneInput(id);
+    const findOneInput = GradeHorarioOfertaFormacaoIntervaloDeTempoGraphqlMapper.toFindOneInput({
+      id,
+    });
     const updateInput = GradeHorarioOfertaFormacaoIntervaloDeTempoGraphqlMapper.toUpdateInput(dto);
     const result = await this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.update(
       accessContext,
@@ -97,7 +99,7 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoGraphqlResolver {
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
   ): Promise<boolean> {
-    const input = GradeHorarioOfertaFormacaoIntervaloDeTempoGraphqlMapper.toFindOneInput(id);
+    const input = GradeHorarioOfertaFormacaoIntervaloDeTempoGraphqlMapper.toFindOneInput({ id });
     return this.gradeHorarioOfertaFormacaoIntervaloDeTempoService.deleteOneById(
       accessContext,
       input,

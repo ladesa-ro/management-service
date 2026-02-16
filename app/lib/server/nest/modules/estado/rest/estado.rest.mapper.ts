@@ -2,13 +2,11 @@ import {
   EstadoFindOneInputDto,
   EstadoFindOneOutputDto,
   EstadoListInputDto,
-  EstadoListOutputDto,
 } from "@/modules/base/localidades/estado";
-import { mapPaginationMeta } from "@/server/nest/shared/mappers";
+import { createListInputMapper, createListOutputMapper } from "@/server/nest/shared/mappers";
 import {
   EstadoFindOneInputRestDto,
   EstadoFindOneOutputRestDto,
-  EstadoListInputRestDto,
   EstadoListOutputRestDto,
 } from "./estado.rest.dto";
 
@@ -23,20 +21,7 @@ export class EstadoRestMapper {
     return input;
   }
 
-  static toListInput(dto: EstadoListInputRestDto | null): EstadoListInputDto | null {
-    if (!dto) {
-      return null;
-    }
-
-    const input = new EstadoListInputDto();
-    input.page = dto.page;
-    input.limit = dto.limit;
-    input.search = dto.search;
-    input.sortBy = dto.sortBy;
-    input.selection = dto.selection;
-    input["filter.id"] = dto["filter.id"];
-    return input;
-  }
+  static toListInput = createListInputMapper(EstadoListInputDto, ["filter.id"]);
 
   // ============================================================================
   // Output: Core DTO -> Server DTO
@@ -50,10 +35,8 @@ export class EstadoRestMapper {
     return dto;
   }
 
-  static toListOutputDto(output: EstadoListOutputDto): EstadoListOutputRestDto {
-    const dto = new EstadoListOutputRestDto();
-    dto.meta = mapPaginationMeta(output.meta);
-    dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
-    return dto;
-  }
+  static toListOutputDto = createListOutputMapper(
+    EstadoListOutputRestDto,
+    EstadoRestMapper.toFindOneOutputDto,
+  );
 }

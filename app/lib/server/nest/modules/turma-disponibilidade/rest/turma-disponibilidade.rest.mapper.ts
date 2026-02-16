@@ -3,17 +3,20 @@ import {
   TurmaDisponibilidadeFindOneInputDto,
   TurmaDisponibilidadeFindOneOutputDto,
   TurmaDisponibilidadeListInputDto,
-  TurmaDisponibilidadeListOutputDto,
   TurmaDisponibilidadeUpdateInputDto,
 } from "@/modules/ensino/turma-disponibilidade";
 import { DisponibilidadeRestMapper } from "@/server/nest/modules/disponibilidade/rest";
 import { TurmaRestMapper } from "@/server/nest/modules/turma/rest";
-import { mapPaginationMeta } from "@/server/nest/shared/mappers";
+import {
+  createFindOneInputMapper,
+  createListInputMapper,
+  createListOutputMapper,
+  mapDatedFields,
+} from "@/server/nest/shared/mappers";
 import {
   TurmaDisponibilidadeCreateInputRestDto,
   TurmaDisponibilidadeFindOneInputRestDto,
   TurmaDisponibilidadeFindOneOutputRestDto,
-  TurmaDisponibilidadeListInputRestDto,
   TurmaDisponibilidadeListOutputRestDto,
   TurmaDisponibilidadeUpdateInputRestDto,
 } from "./turma-disponibilidade.rest.dto";
@@ -23,30 +26,9 @@ export class TurmaDisponibilidadeRestMapper {
   // Input: Server DTO -> Core DTO
   // ============================================================================
 
-  static toFindOneInput(
-    dto: TurmaDisponibilidadeFindOneInputRestDto,
-  ): TurmaDisponibilidadeFindOneInputDto {
-    const input = new TurmaDisponibilidadeFindOneInputDto();
-    input.id = dto.id;
-    return input;
-  }
+  static toFindOneInput = createFindOneInputMapper(TurmaDisponibilidadeFindOneInputDto);
 
-  static toListInput(
-    dto: TurmaDisponibilidadeListInputRestDto | null,
-  ): TurmaDisponibilidadeListInputDto | null {
-    if (!dto) {
-      return null;
-    }
-
-    const input = new TurmaDisponibilidadeListInputDto();
-    input.page = dto.page;
-    input.limit = dto.limit;
-    input.search = dto.search;
-    input.sortBy = dto.sortBy;
-    input.selection = dto.selection;
-    input["filter.id"] = dto["filter.id"];
-    return input;
-  }
+  static toListInput = createListInputMapper(TurmaDisponibilidadeListInputDto, ["filter.id"]);
 
   static toCreateInput(
     dto: TurmaDisponibilidadeCreateInputRestDto,
@@ -84,18 +66,12 @@ export class TurmaDisponibilidadeRestMapper {
     dto.id = output.id;
     dto.disponibilidade = DisponibilidadeRestMapper.toFindOneOutputDto(output.disponibilidade);
     dto.turma = TurmaRestMapper.toFindOneOutputDto(output.turma);
-    dto.dateCreated = new Date(output.dateCreated);
-    dto.dateUpdated = new Date(output.dateUpdated);
-    dto.dateDeleted = output.dateDeleted ? new Date(output.dateDeleted) : null;
+    mapDatedFields(dto, output);
     return dto;
   }
 
-  static toListOutputDto(
-    output: TurmaDisponibilidadeListOutputDto,
-  ): TurmaDisponibilidadeListOutputRestDto {
-    const dto = new TurmaDisponibilidadeListOutputRestDto();
-    dto.meta = mapPaginationMeta(output.meta);
-    dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
-    return dto;
-  }
+  static toListOutputDto = createListOutputMapper(
+    TurmaDisponibilidadeListOutputRestDto,
+    TurmaDisponibilidadeRestMapper.toFindOneOutputDto,
+  );
 }

@@ -3,11 +3,10 @@ import {
   DiarioFindOneInputDto,
   DiarioFindOneOutputDto,
   DiarioListInputDto,
-  DiarioListOutputDto,
   DiarioUpdateInputDto,
 } from "@/modules/ensino/diario";
 import { CalendarioLetivoGraphqlMapper } from "@/server/nest/modules/calendario-letivo/graphql/calendario-letivo.graphql.mapper";
-import { mapPaginationMeta } from "@/server/nest/shared/mappers";
+import { createListOutputMapper, mapDatedFields } from "@/server/nest/shared/mappers";
 import {
   AmbienteFindOneOutputForDiarioGraphQlDto,
   DiarioCreateInputGraphQlDto,
@@ -117,9 +116,7 @@ export class DiarioGraphqlMapper {
     const dto = new TurmaFindOneOutputForDiarioGraphQlDto();
     dto.id = turma.id;
     dto.periodo = turma.periodo;
-    dto.dateCreated = turma.dateCreated as unknown as Date;
-    dto.dateUpdated = turma.dateUpdated as unknown as Date;
-    dto.dateDeleted = turma.dateDeleted as unknown as Date | null;
+    mapDatedFields(dto, turma);
     return dto;
   }
 
@@ -129,9 +126,7 @@ export class DiarioGraphqlMapper {
     dto.nome = disciplina.nome;
     dto.nomeAbreviado = disciplina.nomeAbreviado;
     dto.cargaHoraria = disciplina.cargaHoraria;
-    dto.dateCreated = disciplina.dateCreated as unknown as Date;
-    dto.dateUpdated = disciplina.dateUpdated as unknown as Date;
-    dto.dateDeleted = disciplina.dateDeleted as unknown as Date | null;
+    mapDatedFields(dto, disciplina);
     return dto;
   }
 
@@ -146,9 +141,7 @@ export class DiarioGraphqlMapper {
     dto.codigo = ambiente.codigo;
     dto.capacidade = ambiente.capacidade;
     dto.tipo = ambiente.tipo;
-    dto.dateCreated = ambiente.dateCreated as unknown as Date;
-    dto.dateUpdated = ambiente.dateUpdated as unknown as Date;
-    dto.dateDeleted = ambiente.dateDeleted as unknown as Date | null;
+    mapDatedFields(dto, ambiente);
     return dto;
   }
 
@@ -163,16 +156,12 @@ export class DiarioGraphqlMapper {
     dto.disciplina = this.mapDisciplina(output.disciplina);
     dto.ambientePadrao = this.mapAmbiente(output.ambientePadrao);
     dto.imagemCapa = mapImagemOutput(output.imagemCapa);
-    dto.dateCreated = output.dateCreated as unknown as Date;
-    dto.dateUpdated = output.dateUpdated as unknown as Date;
-    dto.dateDeleted = output.dateDeleted as unknown as Date | null;
+    mapDatedFields(dto, output);
     return dto;
   }
 
-  static toListOutputDto(output: DiarioListOutputDto): DiarioListOutputGraphQlDto {
-    const dto = new DiarioListOutputGraphQlDto();
-    dto.meta = mapPaginationMeta(output.meta);
-    dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
-    return dto;
-  }
+  static toListOutputDto = createListOutputMapper(
+    DiarioListOutputGraphQlDto,
+    DiarioGraphqlMapper.toFindOneOutputDto,
+  );
 }

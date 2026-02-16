@@ -3,11 +3,14 @@ import {
   HorarioGeradoFindOneInputDto,
   HorarioGeradoFindOneOutputDto,
   HorarioGeradoListInputDto,
-  HorarioGeradoListOutputDto,
   HorarioGeradoUpdateInputDto,
 } from "@/modules/sisgha/horario-gerado";
 import { CalendarioLetivoGraphqlMapper } from "@/server/nest/modules/calendario-letivo/graphql/calendario-letivo.graphql.mapper";
-import { mapPaginationMeta } from "@/server/nest/shared/mappers";
+import {
+  createFindOneInputMapper,
+  createListOutputMapper,
+  mapDatedFields,
+} from "@/server/nest/shared/mappers";
 import {
   HorarioGeradoCreateInputGraphQlDto,
   HorarioGeradoFindOneOutputGraphQlDto,
@@ -34,12 +37,7 @@ export class HorarioGeradoGraphqlMapper {
     return input;
   }
 
-  static toFindOneInput(id: string, selection?: string[]): HorarioGeradoFindOneInputDto {
-    const input = new HorarioGeradoFindOneInputDto();
-    input.id = id;
-    input.selection = selection;
-    return input;
-  }
+  static toFindOneInput = createFindOneInputMapper(HorarioGeradoFindOneInputDto);
 
   static toCreateInput(dto: HorarioGeradoCreateInputGraphQlDto): HorarioGeradoCreateInputDto {
     const input = new HorarioGeradoCreateInputDto();
@@ -91,16 +89,12 @@ export class HorarioGeradoGraphqlMapper {
     dto.vigenciaInicio = output.vigenciaInicio as string | null;
     dto.vigenciaFim = output.vigenciaFim as string | null;
     dto.calendario = CalendarioLetivoGraphqlMapper.toFindOneOutputDto(output.calendario);
-    dto.dateCreated = output.dateCreated as unknown as Date;
-    dto.dateUpdated = output.dateUpdated as unknown as Date;
-    dto.dateDeleted = output.dateDeleted as unknown as Date | null;
+    mapDatedFields(dto, output);
     return dto;
   }
 
-  static toListOutputDto(output: HorarioGeradoListOutputDto): HorarioGeradoListOutputGraphQlDto {
-    const dto = new HorarioGeradoListOutputGraphQlDto();
-    dto.meta = mapPaginationMeta(output.meta);
-    dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
-    return dto;
-  }
+  static toListOutputDto = createListOutputMapper(
+    HorarioGeradoListOutputGraphQlDto,
+    HorarioGeradoGraphqlMapper.toFindOneOutputDto,
+  );
 }

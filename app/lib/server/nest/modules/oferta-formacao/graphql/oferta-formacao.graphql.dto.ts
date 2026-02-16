@@ -1,38 +1,41 @@
 import { ArgsType, Field, InputType, ObjectType } from "@nestjs/graphql";
 import { IsArray, IsOptional, IsString, IsUUID, MinLength, ValidateNested } from "class-validator";
+import { decorate } from "ts-mixer";
 import {
   EntityBaseGraphQlDto,
+  PaginatedFilterByIdGraphQlDto,
   PaginationMetaGraphQlDto,
 } from "@/modules/@shared/infrastructure/graphql/dtos";
-import { PaginationInputGraphQlDto } from "@/modules/@shared/infrastructure/graphql/dtos/pagination-graphql.dto";
 import { ModalidadeFindOneOutputGraphQlDto } from "@/server/nest/modules/modalidade/graphql/modalidade.graphql.dto";
+import { OfertaFormacaoFieldsMixin } from "@/server/nest/modules/oferta-formacao/oferta-formacao.validation-mixin";
 
 // ============================================================================
 // FindOne Output
 // ============================================================================
 
-@ObjectType("OfertaFormacaoFindOneOutputDto")
+@decorate(ObjectType("OfertaFormacaoFindOneOutputDto"))
 export class OfertaFormacaoFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
-  @Field() nome: string;
-  @Field() slug: string;
-  @Field(() => ModalidadeFindOneOutputGraphQlDto) modalidade: ModalidadeFindOneOutputGraphQlDto;
+  @decorate(Field(() => String)) nome: string;
+  @decorate(Field(() => String)) slug: string;
+  @decorate(Field(() => ModalidadeFindOneOutputGraphQlDto))
+  modalidade: ModalidadeFindOneOutputGraphQlDto;
 }
 
 // ============================================================================
 // Create Input
 // ============================================================================
 
-@InputType("OfertaFormacaoModalidadeRefInputDto")
+@decorate(InputType("OfertaFormacaoModalidadeRefInputDto"))
 export class OfertaFormacaoModalidadeRefInputGraphQlDto {
-  @Field() @IsString() id: string;
+  @decorate(Field(() => String)) @decorate(IsString()) id: string;
 }
 
-@InputType("OfertaFormacaoCreateInputDto")
-export class OfertaFormacaoCreateInputGraphQlDto {
-  @Field() @IsString() @MinLength(1) nome: string;
-  @Field() @IsString() @MinLength(1) slug: string;
-  @Field(() => OfertaFormacaoModalidadeRefInputGraphQlDto)
-  @ValidateNested()
+@decorate(InputType("OfertaFormacaoCreateInputDto"))
+export class OfertaFormacaoCreateInputGraphQlDto extends OfertaFormacaoFieldsMixin {
+  @decorate(Field(() => String)) declare nome: string;
+  @decorate(Field(() => String)) declare slug: string;
+  @decorate(Field(() => OfertaFormacaoModalidadeRefInputGraphQlDto))
+  @decorate(ValidateNested())
   modalidade: OfertaFormacaoModalidadeRefInputGraphQlDto;
 }
 
@@ -40,13 +43,21 @@ export class OfertaFormacaoCreateInputGraphQlDto {
 // Update Input
 // ============================================================================
 
-@InputType("OfertaFormacaoUpdateInputDto")
+@decorate(InputType("OfertaFormacaoUpdateInputDto"))
 export class OfertaFormacaoUpdateInputGraphQlDto {
-  @Field({ nullable: true }) @IsOptional() @IsString() @MinLength(1) nome?: string;
-  @Field({ nullable: true }) @IsOptional() @IsString() @MinLength(1) slug?: string;
-  @Field(() => OfertaFormacaoModalidadeRefInputGraphQlDto, { nullable: true })
-  @IsOptional()
-  @ValidateNested()
+  @decorate(Field(() => String, { nullable: true }))
+  @decorate(IsOptional())
+  @decorate(IsString())
+  @decorate(MinLength(1))
+  nome?: string;
+  @decorate(Field(() => String, { nullable: true }))
+  @decorate(IsOptional())
+  @decorate(IsString())
+  @decorate(MinLength(1))
+  slug?: string;
+  @decorate(Field(() => OfertaFormacaoModalidadeRefInputGraphQlDto, { nullable: true }))
+  @decorate(IsOptional())
+  @decorate(ValidateNested())
   modalidade?: OfertaFormacaoModalidadeRefInputGraphQlDto;
 }
 
@@ -54,18 +65,12 @@ export class OfertaFormacaoUpdateInputGraphQlDto {
 // List Input
 // ============================================================================
 
-@ArgsType()
-export class OfertaFormacaoListInputGraphQlDto extends PaginationInputGraphQlDto {
-  @Field(() => [String], { nullable: true, description: "Filtro por ID" })
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
-  filterId?: string[];
-
-  @Field(() => [String], { nullable: true, description: "Filtro por ID da Modalidade" })
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
+@decorate(ArgsType())
+export class OfertaFormacaoListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {
+  @decorate(Field(() => [String], { nullable: true, description: "Filtro por ID da Modalidade" }))
+  @decorate(IsOptional())
+  @decorate(IsArray())
+  @decorate(IsUUID(undefined, { each: true }))
   filterModalidadeId?: string[];
 }
 
@@ -73,11 +78,11 @@ export class OfertaFormacaoListInputGraphQlDto extends PaginationInputGraphQlDto
 // List Output
 // ============================================================================
 
-@ObjectType("OfertaFormacaoListResult")
+@decorate(ObjectType("OfertaFormacaoListResult"))
 export class OfertaFormacaoListOutputGraphQlDto {
-  @Field(() => PaginationMetaGraphQlDto)
+  @decorate(Field(() => PaginationMetaGraphQlDto))
   meta: PaginationMetaGraphQlDto;
 
-  @Field(() => [OfertaFormacaoFindOneOutputGraphQlDto])
+  @decorate(Field(() => [OfertaFormacaoFindOneOutputGraphQlDto]))
   data: OfertaFormacaoFindOneOutputGraphQlDto[];
 }

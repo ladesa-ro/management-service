@@ -3,10 +3,9 @@ import {
   DisciplinaFindOneInputDto,
   DisciplinaFindOneOutputDto,
   DisciplinaListInputDto,
-  DisciplinaListOutputDto,
   DisciplinaUpdateInputDto,
 } from "@/modules/ensino/disciplina";
-import { mapPaginationMeta } from "@/server/nest/shared/mappers";
+import { createListOutputMapper, mapDatedFields } from "@/server/nest/shared/mappers";
 import {
   DisciplinaCreateInputGraphQlDto,
   DisciplinaFindOneOutputGraphQlDto,
@@ -106,16 +105,12 @@ export class DisciplinaGraphqlMapper {
     dto.nomeAbreviado = output.nomeAbreviado;
     dto.cargaHoraria = output.cargaHoraria;
     dto.imagemCapa = mapImagemOutput(output.imagemCapa);
-    dto.dateCreated = output.dateCreated as unknown as Date;
-    dto.dateUpdated = output.dateUpdated as unknown as Date;
-    dto.dateDeleted = output.dateDeleted as unknown as Date | null;
+    mapDatedFields(dto, output);
     return dto;
   }
 
-  static toListOutputDto(output: DisciplinaListOutputDto): DisciplinaListOutputGraphQlDto {
-    const dto = new DisciplinaListOutputGraphQlDto();
-    dto.meta = mapPaginationMeta(output.meta);
-    dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
-    return dto;
-  }
+  static toListOutputDto = createListOutputMapper(
+    DisciplinaListOutputGraphQlDto,
+    DisciplinaGraphqlMapper.toFindOneOutputDto,
+  );
 }

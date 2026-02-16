@@ -1,84 +1,63 @@
 import { ApiProperty, ApiPropertyOptional, ApiSchema, PartialType } from "@nestjs/swagger";
-import { IsArray, IsDateString, IsOptional, IsUUID } from "class-validator";
+import { IsUUID } from "class-validator";
+import { decorate, Mixin } from "ts-mixer";
 import {
   commonProperties,
   RegisterModel,
   simpleProperty,
 } from "@/modules/@shared/infrastructure/persistence/typeorm/metadata";
 import {
-  PaginationInputRestDto,
+  EntityBaseRestDto,
+  PaginatedFilterByIdRestDto,
   PaginationMetaRestDto,
-  TransformToArray,
 } from "@/modules/@shared/infrastructure/presentation/rest/dtos";
+import { DisponibilidadeFieldsMixin } from "../disponibilidade.validation-mixin";
 
 // ============================================================================
 // FindOne Output
 // ============================================================================
 
-@ApiSchema({ name: "DisponibilidadeFindOneOutputDto" })
-@RegisterModel({
-  name: "DisponibilidadeFindOneOutputDto",
-  properties: [
-    simpleProperty("id"),
-    simpleProperty("dataInicio"),
-    simpleProperty("dataFim", { nullable: true }),
-    ...commonProperties.dated,
-  ],
-})
-export class DisponibilidadeFindOneOutputRestDto {
-  @ApiProperty({ description: "Identificador do registro (uuid)", format: "uuid" })
-  @IsUUID()
-  id: string;
+@decorate(ApiSchema({ name: "DisponibilidadeFindOneOutputDto" }))
+@decorate(
+  RegisterModel({
+    name: "DisponibilidadeFindOneOutputDto",
+    properties: [
+      simpleProperty("id"),
+      simpleProperty("dataInicio"),
+      simpleProperty("dataFim", { nullable: true }),
+      ...commonProperties.dated,
+    ],
+  }),
+)
+export class DisponibilidadeFindOneOutputRestDto extends Mixin(
+  EntityBaseRestDto,
+  DisponibilidadeFieldsMixin,
+) {
+  @decorate(ApiProperty({ type: "string", description: "Data de inicio" }))
+  declare dataInicio: Date;
 
-  @ApiProperty({ description: "Data de inicio" })
-  @IsDateString()
-  dataInicio: Date;
-
-  @ApiPropertyOptional({ description: "Data de termino", nullable: true })
-  @IsOptional()
-  @IsDateString()
-  dataFim: Date | null;
-
-  @ApiProperty({ description: "Data e hora da criacao do registro" })
-  @IsDateString()
-  dateCreated: Date;
-
-  @ApiProperty({ description: "Data e hora da alteracao do registro" })
-  @IsDateString()
-  dateUpdated: Date;
-
-  @ApiPropertyOptional({ description: "Data e hora da exclusao do registro", nullable: true })
-  @IsOptional()
-  @IsDateString()
-  dateDeleted: Date | null;
+  @decorate(ApiPropertyOptional({ type: "string", description: "Data de termino", nullable: true }))
+  declare dataFim: Date | null;
 }
 
 // ============================================================================
 // List Input/Output
 // ============================================================================
 
-@ApiSchema({ name: "DisponibilidadeListInputDto" })
-export class DisponibilidadeListInputRestDto extends PaginationInputRestDto {
-  @ApiPropertyOptional({
-    description: "Filtro por ID",
-    type: [String],
-  })
-  @TransformToArray()
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
-  "filter.id"?: string[];
-}
+@decorate(ApiSchema({ name: "DisponibilidadeListInputDto" }))
+export class DisponibilidadeListInputRestDto extends PaginatedFilterByIdRestDto {}
 
-@ApiSchema({ name: "DisponibilidadeListOutputDto" })
+@decorate(ApiSchema({ name: "DisponibilidadeListOutputDto" }))
 export class DisponibilidadeListOutputRestDto {
-  @ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" })
+  @decorate(ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" }))
   meta: PaginationMetaRestDto;
 
-  @ApiProperty({
-    type: () => [DisponibilidadeFindOneOutputRestDto],
-    description: "Resultados da busca",
-  })
+  @decorate(
+    ApiProperty({
+      type: () => [DisponibilidadeFindOneOutputRestDto],
+      description: "Resultados da busca",
+    }),
+  )
   data: DisponibilidadeFindOneOutputRestDto[];
 }
 
@@ -86,19 +65,16 @@ export class DisponibilidadeListOutputRestDto {
 // Create/Update Input
 // ============================================================================
 
-@ApiSchema({ name: "DisponibilidadeCreateInputDto" })
-export class DisponibilidadeCreateInputRestDto {
-  @ApiProperty({ description: "Data de inicio" })
-  @IsDateString()
-  dataInicio: Date;
+@decorate(ApiSchema({ name: "DisponibilidadeCreateInputDto" }))
+export class DisponibilidadeCreateInputRestDto extends DisponibilidadeFieldsMixin {
+  @decorate(ApiProperty({ type: "string", description: "Data de inicio" }))
+  declare dataInicio: Date;
 
-  @ApiPropertyOptional({ description: "Data de termino", nullable: true })
-  @IsOptional()
-  @IsDateString()
-  dataFim?: Date | null;
+  @decorate(ApiPropertyOptional({ type: "string", description: "Data de termino", nullable: true }))
+  declare dataFim: Date | null;
 }
 
-@ApiSchema({ name: "DisponibilidadeUpdateInputDto" })
+@decorate(ApiSchema({ name: "DisponibilidadeUpdateInputDto" }))
 export class DisponibilidadeUpdateInputRestDto extends PartialType(
   DisponibilidadeCreateInputRestDto,
 ) {}
@@ -107,9 +83,15 @@ export class DisponibilidadeUpdateInputRestDto extends PartialType(
 // FindOne Input (for path params)
 // ============================================================================
 
-@ApiSchema({ name: "DisponibilidadeFindOneInputDto" })
+@decorate(ApiSchema({ name: "DisponibilidadeFindOneInputDto" }))
 export class DisponibilidadeFindOneInputRestDto {
-  @ApiProperty({ description: "Identificador do registro (uuid)", format: "uuid" })
-  @IsUUID()
+  @decorate(
+    ApiProperty({
+      type: "string",
+      description: "Identificador do registro (uuid)",
+      format: "uuid",
+    }),
+  )
+  @decorate(IsUUID())
   id: string;
 }

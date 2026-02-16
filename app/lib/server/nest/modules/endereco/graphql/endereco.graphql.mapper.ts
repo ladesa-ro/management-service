@@ -3,6 +3,7 @@ import {
   EnderecoFindOneOutputDto,
 } from "@/modules/base/localidades/endereco";
 import { CidadeGraphqlMapper } from "@/server/nest/modules/cidade/graphql/cidade.graphql.mapper";
+import { mapDatedFields } from "@/server/nest/shared/mappers";
 import { EnderecoFindOneOutputGraphQlDto } from "./endereco.graphql.dto";
 
 export class EnderecoGraphqlMapper {
@@ -23,9 +24,7 @@ export class EnderecoGraphqlMapper {
     dto.complemento = output.complemento;
     dto.pontoReferencia = output.pontoReferencia;
     dto.cidade = CidadeGraphqlMapper.toFindOneOutputDto(output.cidade);
-    dto.dateCreated = output.dateCreated as unknown as Date;
-    dto.dateUpdated = output.dateUpdated as unknown as Date;
-    dto.dateDeleted = output.dateDeleted as unknown as Date | null;
+    mapDatedFields(dto, output);
     return dto;
   }
 }

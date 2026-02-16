@@ -3,43 +3,30 @@ import {
   DiaCalendarioFindOneInputDto,
   DiaCalendarioFindOneOutputDto,
   DiaCalendarioListInputDto,
-  DiaCalendarioListOutputDto,
   DiaCalendarioUpdateInputDto,
 } from "@/modules/sisgha/dia-calendario";
 import { CalendarioLetivoRestMapper } from "@/server/nest/modules/calendario-letivo/rest";
-import { mapPaginationMeta } from "@/server/nest/shared/mappers";
+import {
+  createFindOneInputMapper,
+  createListInputMapper,
+  createListOutputMapper,
+} from "@/server/nest/shared/mappers";
 import {
   DiaCalendarioCreateInputRestDto,
   DiaCalendarioFindOneInputRestDto,
   DiaCalendarioFindOneOutputRestDto,
-  DiaCalendarioListInputRestDto,
   DiaCalendarioListOutputRestDto,
   DiaCalendarioUpdateInputRestDto,
   type TipoDiaCalendario,
 } from "./dia-calendario.rest.dto";
 
 export class DiaCalendarioRestMapper {
-  static toFindOneInput(dto: DiaCalendarioFindOneInputRestDto): DiaCalendarioFindOneInputDto {
-    const input = new DiaCalendarioFindOneInputDto();
-    input.id = dto.id;
-    return input;
-  }
+  static toFindOneInput = createFindOneInputMapper(DiaCalendarioFindOneInputDto);
 
-  static toListInput(dto: DiaCalendarioListInputRestDto | null): DiaCalendarioListInputDto | null {
-    if (!dto) {
-      return null;
-    }
-
-    const input = new DiaCalendarioListInputDto();
-    input.page = dto.page;
-    input.limit = dto.limit;
-    input.search = dto.search;
-    input.sortBy = dto.sortBy;
-    input.selection = dto.selection;
-    input["filter.id"] = dto["filter.id"];
-    input["filter.calendario.id"] = dto["filter.calendario.id"];
-    return input;
-  }
+  static toListInput = createListInputMapper(DiaCalendarioListInputDto, [
+    "filter.id",
+    "filter.calendario.id",
+  ]);
 
   static toCreateInput(dto: DiaCalendarioCreateInputRestDto): DiaCalendarioCreateInputDto {
     const input = new DiaCalendarioCreateInputDto();
@@ -102,10 +89,8 @@ export class DiaCalendarioRestMapper {
     return dto;
   }
 
-  static toListOutputDto(output: DiaCalendarioListOutputDto): DiaCalendarioListOutputRestDto {
-    const dto = new DiaCalendarioListOutputRestDto();
-    dto.meta = mapPaginationMeta(output.meta);
-    dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
-    return dto;
-  }
+  static toListOutputDto = createListOutputMapper(
+    DiaCalendarioListOutputRestDto,
+    DiaCalendarioRestMapper.toFindOneOutputDto,
+  );
 }

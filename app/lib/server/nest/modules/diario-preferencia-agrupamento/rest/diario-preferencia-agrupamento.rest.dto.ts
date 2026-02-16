@@ -1,15 +1,7 @@
 import { ApiProperty, ApiPropertyOptional, ApiSchema, PartialType } from "@nestjs/swagger";
 import { Type } from "class-transformer";
-import {
-  IsArray,
-  IsDateString,
-  IsInt,
-  IsOptional,
-  IsUUID,
-  Max,
-  Min,
-  ValidateNested,
-} from "class-validator";
+import { IsArray, IsOptional, IsUUID, ValidateNested } from "class-validator";
+import { decorate, Mixin } from "ts-mixer";
 import {
   commonProperties,
   RegisterModel,
@@ -17,7 +9,8 @@ import {
   simpleProperty,
 } from "@/modules/@shared/infrastructure/persistence/typeorm/metadata";
 import {
-  PaginationInputRestDto,
+  EntityBaseRestDto,
+  PaginatedFilterByIdRestDto,
   PaginationMetaRestDto,
   TransformToArray,
 } from "@/modules/@shared/infrastructure/presentation/rest/dtos";
@@ -25,6 +18,7 @@ import {
   DiarioFindOneInputRestDto,
   DiarioFindOneOutputRestDto,
 } from "@/server/nest/modules/diario/rest";
+import { DiarioPreferenciaAgrupamentoFieldsMixin } from "@/server/nest/modules/diario-preferencia-agrupamento/diario-preferencia-agrupamento.validation-mixin";
 import {
   IntervaloDeTempoFindOneInputRestDto,
   IntervaloDeTempoFindOneOutputRestDto,
@@ -34,115 +28,107 @@ import {
 // FindOne Output
 // ============================================================================
 
-@ApiSchema({ name: "DiarioPreferenciaAgrupamentoFindOneOutputDto" })
-@RegisterModel({
-  name: "DiarioPreferenciaAgrupamentoFindOneOutputDto",
-  properties: [
-    simpleProperty("id"),
-    simpleProperty("dataInicio"),
-    simpleProperty("dataFim", { nullable: true }),
-    simpleProperty("diaSemanaIso"),
-    simpleProperty("aulasSeguidas"),
-    referenceProperty("intervaloDeTempo", "IntervaloDeTempoFindOneOutputDto"),
-    referenceProperty("diario", "DiarioFindOneOutputDto"),
-    ...commonProperties.dated,
-  ],
-})
-export class DiarioPreferenciaAgrupamentoFindOneOutputRestDto {
-  @ApiProperty({ description: "Identificador do registro (uuid)", format: "uuid" })
-  @IsUUID()
-  id: string;
+@decorate(ApiSchema({ name: "DiarioPreferenciaAgrupamentoFindOneOutputDto" }))
+@decorate(
+  RegisterModel({
+    name: "DiarioPreferenciaAgrupamentoFindOneOutputDto",
+    properties: [
+      simpleProperty("id"),
+      simpleProperty("dataInicio"),
+      simpleProperty("dataFim", { nullable: true }),
+      simpleProperty("diaSemanaIso"),
+      simpleProperty("aulasSeguidas"),
+      referenceProperty("intervaloDeTempo", "IntervaloDeTempoFindOneOutputDto"),
+      referenceProperty("diario", "DiarioFindOneOutputDto"),
+      ...commonProperties.dated,
+    ],
+  }),
+)
+export class DiarioPreferenciaAgrupamentoFindOneOutputRestDto extends Mixin(
+  EntityBaseRestDto,
+  DiarioPreferenciaAgrupamentoFieldsMixin,
+) {
+  @decorate(
+    ApiProperty({
+      type: "string",
+      description: "Inicio da vigencia da preferencia de agrupamento",
+    }),
+  )
+  declare dataInicio: string;
 
-  @ApiProperty({ description: "Inicio da vigencia da preferencia de agrupamento" })
-  @IsDateString()
-  dataInicio: string;
+  @decorate(
+    ApiPropertyOptional({
+      type: "string",
+      description: "Fim da vigencia da preferencia de agrupamento",
+      nullable: true,
+    }),
+  )
+  declare dataFim: string | null;
 
-  @ApiPropertyOptional({
-    description: "Fim da vigencia da preferencia de agrupamento",
-    nullable: true,
-  })
-  @IsOptional()
-  @IsDateString()
-  dataFim: string | null;
+  @decorate(
+    ApiProperty({
+      type: "integer",
+      description: "Dia da semana (ISO 8601: 1=Segunda, 7=Domingo)",
+      minimum: 1,
+      maximum: 7,
+    }),
+  )
+  declare diaSemanaIso: number;
 
-  @ApiProperty({
-    description: "Dia da semana (ISO 8601: 1=Segunda, 7=Domingo)",
-    minimum: 1,
-    maximum: 7,
-  })
-  @IsInt()
-  @Min(1)
-  @Max(7)
-  diaSemanaIso: number;
+  @decorate(
+    ApiProperty({ type: "integer", description: "Quantidade de aulas seguidas", minimum: 1 }),
+  )
+  declare aulasSeguidas: number;
 
-  @ApiProperty({ description: "Quantidade de aulas seguidas", minimum: 1 })
-  @IsInt()
-  @Min(1)
-  aulasSeguidas: number;
-
-  @ApiProperty({
-    type: () => IntervaloDeTempoFindOneOutputRestDto,
-    description: "Intervalo de tempo",
-  })
-  @ValidateNested()
-  @Type(() => IntervaloDeTempoFindOneOutputRestDto)
+  @decorate(
+    ApiProperty({
+      type: () => IntervaloDeTempoFindOneOutputRestDto,
+      description: "Intervalo de tempo",
+    }),
+  )
+  @decorate(ValidateNested())
+  @decorate(Type(() => IntervaloDeTempoFindOneOutputRestDto))
   intervaloDeTempo: IntervaloDeTempoFindOneOutputRestDto;
 
-  @ApiProperty({ type: () => DiarioFindOneOutputRestDto, description: "Diario vinculado" })
-  @ValidateNested()
-  @Type(() => DiarioFindOneOutputRestDto)
+  @decorate(
+    ApiProperty({ type: () => DiarioFindOneOutputRestDto, description: "Diario vinculado" }),
+  )
+  @decorate(ValidateNested())
+  @decorate(Type(() => DiarioFindOneOutputRestDto))
   diario: DiarioFindOneOutputRestDto;
-
-  @ApiProperty({ description: "Data e hora da criacao do registro" })
-  @IsDateString()
-  dateCreated: Date;
-
-  @ApiProperty({ description: "Data e hora da alteracao do registro" })
-  @IsDateString()
-  dateUpdated: Date;
-
-  @ApiPropertyOptional({ description: "Data e hora da exclusao do registro", nullable: true })
-  @IsOptional()
-  @IsDateString()
-  dateDeleted: Date | null;
 }
 
 // ============================================================================
 // List Input/Output
 // ============================================================================
 
-@ApiSchema({ name: "DiarioPreferenciaAgrupamentoListInputDto" })
-export class DiarioPreferenciaAgrupamentoListInputRestDto extends PaginationInputRestDto {
-  @ApiPropertyOptional({
-    description: "Filtro por ID",
-    type: [String],
-  })
-  @TransformToArray()
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
-  "filter.id"?: string[];
-
-  @ApiPropertyOptional({
-    description: "Filtro por ID do Diario",
-    type: [String],
-  })
-  @TransformToArray()
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
+@decorate(ApiSchema({ name: "DiarioPreferenciaAgrupamentoListInputDto" }))
+export class DiarioPreferenciaAgrupamentoListInputRestDto extends PaginatedFilterByIdRestDto {
+  @decorate(
+    ApiPropertyOptional({
+      type: "string",
+      isArray: true,
+      description: "Filtro por ID do Diario",
+    }),
+  )
+  @decorate(TransformToArray())
+  @decorate(IsOptional())
+  @decorate(IsArray())
+  @decorate(IsUUID(undefined, { each: true }))
   "filter.diario.id"?: string[];
 }
 
-@ApiSchema({ name: "DiarioPreferenciaAgrupamentoListOutputDto" })
+@decorate(ApiSchema({ name: "DiarioPreferenciaAgrupamentoListOutputDto" }))
 export class DiarioPreferenciaAgrupamentoListOutputRestDto {
-  @ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" })
+  @decorate(ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" }))
   meta: PaginationMetaRestDto;
 
-  @ApiProperty({
-    type: () => [DiarioPreferenciaAgrupamentoFindOneOutputRestDto],
-    description: "Resultados da busca",
-  })
+  @decorate(
+    ApiProperty({
+      type: () => [DiarioPreferenciaAgrupamentoFindOneOutputRestDto],
+      description: "Resultados da busca",
+    }),
+  )
   data: DiarioPreferenciaAgrupamentoFindOneOutputRestDto[];
 }
 
@@ -150,50 +136,57 @@ export class DiarioPreferenciaAgrupamentoListOutputRestDto {
 // Create/Update Input
 // ============================================================================
 
-@ApiSchema({ name: "DiarioPreferenciaAgrupamentoCreateInputDto" })
-export class DiarioPreferenciaAgrupamentoCreateInputRestDto {
-  @ApiProperty({ description: "Inicio da vigencia da preferencia de agrupamento" })
-  @IsDateString()
-  dataInicio: string;
+@decorate(ApiSchema({ name: "DiarioPreferenciaAgrupamentoCreateInputDto" }))
+export class DiarioPreferenciaAgrupamentoCreateInputRestDto extends DiarioPreferenciaAgrupamentoFieldsMixin {
+  @decorate(
+    ApiProperty({
+      type: "string",
+      description: "Inicio da vigencia da preferencia de agrupamento",
+    }),
+  )
+  declare dataInicio: string;
 
-  @ApiPropertyOptional({
-    description: "Fim da vigencia da preferencia de agrupamento",
-    nullable: true,
-  })
-  @IsOptional()
-  @IsDateString()
-  dataFim?: string | null;
+  @decorate(
+    ApiPropertyOptional({
+      type: "string",
+      description: "Fim da vigencia da preferencia de agrupamento",
+      nullable: true,
+    }),
+  )
+  declare dataFim?: string | null;
 
-  @ApiProperty({
-    description: "Dia da semana (ISO 8601: 1=Segunda, 7=Domingo)",
-    minimum: 1,
-    maximum: 7,
-  })
-  @IsInt()
-  @Min(1)
-  @Max(7)
-  diaSemanaIso: number;
+  @decorate(
+    ApiProperty({
+      type: "integer",
+      description: "Dia da semana (ISO 8601: 1=Segunda, 7=Domingo)",
+      minimum: 1,
+      maximum: 7,
+    }),
+  )
+  declare diaSemanaIso: number;
 
-  @ApiProperty({ description: "Quantidade de aulas seguidas", minimum: 1 })
-  @IsInt()
-  @Min(1)
-  aulasSeguidas: number;
+  @decorate(
+    ApiProperty({ type: "integer", description: "Quantidade de aulas seguidas", minimum: 1 }),
+  )
+  declare aulasSeguidas: number;
 
-  @ApiProperty({
-    type: () => IntervaloDeTempoFindOneInputRestDto,
-    description: "Intervalo de tempo",
-  })
-  @ValidateNested()
-  @Type(() => IntervaloDeTempoFindOneInputRestDto)
+  @decorate(
+    ApiProperty({
+      type: () => IntervaloDeTempoFindOneInputRestDto,
+      description: "Intervalo de tempo",
+    }),
+  )
+  @decorate(ValidateNested())
+  @decorate(Type(() => IntervaloDeTempoFindOneInputRestDto))
   intervaloDeTempo: IntervaloDeTempoFindOneInputRestDto;
 
-  @ApiProperty({ type: () => DiarioFindOneInputRestDto, description: "Diario vinculado" })
-  @ValidateNested()
-  @Type(() => DiarioFindOneInputRestDto)
+  @decorate(ApiProperty({ type: () => DiarioFindOneInputRestDto, description: "Diario vinculado" }))
+  @decorate(ValidateNested())
+  @decorate(Type(() => DiarioFindOneInputRestDto))
   diario: DiarioFindOneInputRestDto;
 }
 
-@ApiSchema({ name: "DiarioPreferenciaAgrupamentoUpdateInputDto" })
+@decorate(ApiSchema({ name: "DiarioPreferenciaAgrupamentoUpdateInputDto" }))
 export class DiarioPreferenciaAgrupamentoUpdateInputRestDto extends PartialType(
   DiarioPreferenciaAgrupamentoCreateInputRestDto,
 ) {}
@@ -202,9 +195,15 @@ export class DiarioPreferenciaAgrupamentoUpdateInputRestDto extends PartialType(
 // FindOne Input (for path params)
 // ============================================================================
 
-@ApiSchema({ name: "DiarioPreferenciaAgrupamentoFindOneInputDto" })
+@decorate(ApiSchema({ name: "DiarioPreferenciaAgrupamentoFindOneInputDto" }))
 export class DiarioPreferenciaAgrupamentoFindOneInputRestDto {
-  @ApiProperty({ description: "Identificador do registro (uuid)", format: "uuid" })
-  @IsUUID()
+  @decorate(
+    ApiProperty({
+      type: "string",
+      description: "Identificador do registro (uuid)",
+      format: "uuid",
+    }),
+  )
+  @decorate(IsUUID())
   id: string;
 }

@@ -3,11 +3,10 @@ import {
   DiaCalendarioFindOneInputDto,
   DiaCalendarioFindOneOutputDto,
   DiaCalendarioListInputDto,
-  DiaCalendarioListOutputDto,
   DiaCalendarioUpdateInputDto,
 } from "@/modules/sisgha/dia-calendario";
 import { CalendarioLetivoGraphqlMapper } from "@/server/nest/modules/calendario-letivo/graphql/calendario-letivo.graphql.mapper";
-import { mapPaginationMeta } from "@/server/nest/shared/mappers";
+import { createListOutputMapper, mapDatedFields } from "@/server/nest/shared/mappers";
 import {
   DiaCalendarioCreateInputGraphQlDto,
   DiaCalendarioFindOneOutputGraphQlDto,
@@ -96,16 +95,12 @@ export class DiaCalendarioGraphqlMapper {
     dto.tipo = output.tipo;
     dto.extraCurricular = output.extraCurricular;
     dto.calendario = CalendarioLetivoGraphqlMapper.toFindOneOutputDto(output.calendario);
-    dto.dateCreated = output.dateCreated as unknown as Date;
-    dto.dateUpdated = output.dateUpdated as unknown as Date;
-    dto.dateDeleted = output.dateDeleted as unknown as Date | null;
+    mapDatedFields(dto, output);
     return dto;
   }
 
-  static toListOutputDto(output: DiaCalendarioListOutputDto): DiaCalendarioListOutputGraphQlDto {
-    const dto = new DiaCalendarioListOutputGraphQlDto();
-    dto.meta = mapPaginationMeta(output.meta);
-    dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
-    return dto;
-  }
+  static toListOutputDto = createListOutputMapper(
+    DiaCalendarioListOutputGraphQlDto,
+    DiaCalendarioGraphqlMapper.toFindOneOutputDto,
+  );
 }

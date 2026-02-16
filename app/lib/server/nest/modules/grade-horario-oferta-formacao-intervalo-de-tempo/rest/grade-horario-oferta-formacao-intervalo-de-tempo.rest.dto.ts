@@ -1,6 +1,7 @@
-import { ApiProperty, ApiPropertyOptional, ApiSchema, PartialType } from "@nestjs/swagger";
+import { ApiProperty, ApiSchema, PartialType } from "@nestjs/swagger";
 import { Type } from "class-transformer";
-import { IsArray, IsDateString, IsOptional, IsUUID, ValidateNested } from "class-validator";
+import { IsUUID, ValidateNested } from "class-validator";
+import { decorate } from "ts-mixer";
 import {
   commonProperties,
   RegisterModel,
@@ -8,9 +9,9 @@ import {
   simpleProperty,
 } from "@/modules/@shared/infrastructure/persistence/typeorm/metadata";
 import {
-  PaginationInputRestDto,
+  EntityBaseRestDto,
+  PaginatedFilterByIdRestDto,
   PaginationMetaRestDto,
-  TransformToArray,
 } from "@/modules/@shared/infrastructure/presentation/rest/dtos";
 import {
   GradeHorarioOfertaFormacaoFindOneInputRestDto,
@@ -25,77 +26,58 @@ import {
 // FindOne Output
 // ============================================================================
 
-@ApiSchema({ name: "GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputDto" })
-@RegisterModel({
-  name: "GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputDto",
-  properties: [
-    simpleProperty("id"),
-    referenceProperty("gradeHorarioOfertaFormacao", "GradeHorarioOfertaFormacaoFindOneOutputDto"),
-    referenceProperty("intervaloDeTempo", "IntervaloDeTempoFindOneOutputDto"),
-    ...commonProperties.dated,
-  ],
-})
-export class GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputRestDto {
-  @ApiProperty({ description: "Identificador do registro (uuid)", format: "uuid" })
-  @IsUUID()
-  id: string;
-
-  @ApiProperty({
-    type: () => GradeHorarioOfertaFormacaoFindOneOutputRestDto,
-    description: "Grade horaria da oferta de formacao",
-  })
-  @ValidateNested()
-  @Type(() => GradeHorarioOfertaFormacaoFindOneOutputRestDto)
+@decorate(ApiSchema({ name: "GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputDto" }))
+@decorate(
+  RegisterModel({
+    name: "GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputDto",
+    properties: [
+      simpleProperty("id"),
+      referenceProperty("gradeHorarioOfertaFormacao", "GradeHorarioOfertaFormacaoFindOneOutputDto"),
+      referenceProperty("intervaloDeTempo", "IntervaloDeTempoFindOneOutputDto"),
+      ...commonProperties.dated,
+    ],
+  }),
+)
+export class GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputRestDto extends EntityBaseRestDto {
+  @decorate(
+    ApiProperty({
+      type: () => GradeHorarioOfertaFormacaoFindOneOutputRestDto,
+      description: "Grade horaria da oferta de formacao",
+    }),
+  )
+  @decorate(ValidateNested())
+  @decorate(Type(() => GradeHorarioOfertaFormacaoFindOneOutputRestDto))
   gradeHorarioOfertaFormacao: GradeHorarioOfertaFormacaoFindOneOutputRestDto;
 
-  @ApiProperty({
-    type: () => IntervaloDeTempoFindOneOutputRestDto,
-    description: "Intervalo de tempo",
-  })
-  @ValidateNested()
-  @Type(() => IntervaloDeTempoFindOneOutputRestDto)
+  @decorate(
+    ApiProperty({
+      type: () => IntervaloDeTempoFindOneOutputRestDto,
+      description: "Intervalo de tempo",
+    }),
+  )
+  @decorate(ValidateNested())
+  @decorate(Type(() => IntervaloDeTempoFindOneOutputRestDto))
   intervaloDeTempo: IntervaloDeTempoFindOneOutputRestDto;
-
-  @ApiProperty({ description: "Data e hora da criacao do registro" })
-  @IsDateString()
-  dateCreated: Date;
-
-  @ApiProperty({ description: "Data e hora da alteracao do registro" })
-  @IsDateString()
-  dateUpdated: Date;
-
-  @ApiPropertyOptional({ description: "Data e hora da exclusao do registro", nullable: true })
-  @IsOptional()
-  @IsDateString()
-  dateDeleted: Date | null;
 }
 
 // ============================================================================
 // List Input/Output
 // ============================================================================
 
-@ApiSchema({ name: "GradeHorarioOfertaFormacaoIntervaloDeTempoListInputDto" })
-export class GradeHorarioOfertaFormacaoIntervaloDeTempoListInputRestDto extends PaginationInputRestDto {
-  @ApiPropertyOptional({
-    description: "Filtro por ID",
-    type: [String],
-  })
-  @TransformToArray()
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
-  "filter.id"?: string[];
-}
+@decorate(ApiSchema({ name: "GradeHorarioOfertaFormacaoIntervaloDeTempoListInputDto" }))
+export class GradeHorarioOfertaFormacaoIntervaloDeTempoListInputRestDto extends PaginatedFilterByIdRestDto {}
 
-@ApiSchema({ name: "GradeHorarioOfertaFormacaoIntervaloDeTempoListOutputDto" })
+@decorate(ApiSchema({ name: "GradeHorarioOfertaFormacaoIntervaloDeTempoListOutputDto" }))
 export class GradeHorarioOfertaFormacaoIntervaloDeTempoListOutputRestDto {
-  @ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" })
+  @decorate(ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" }))
   meta: PaginationMetaRestDto;
 
-  @ApiProperty({
-    type: () => [GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputRestDto],
-    description: "Resultados da busca",
-  })
+  @decorate(
+    ApiProperty({
+      type: () => [GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputRestDto],
+      description: "Resultados da busca",
+    }),
+  )
   data: GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputRestDto[];
 }
 
@@ -103,26 +85,30 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoListOutputRestDto {
 // Create/Update Input
 // ============================================================================
 
-@ApiSchema({ name: "GradeHorarioOfertaFormacaoIntervaloDeTempoCreateInputDto" })
+@decorate(ApiSchema({ name: "GradeHorarioOfertaFormacaoIntervaloDeTempoCreateInputDto" }))
 export class GradeHorarioOfertaFormacaoIntervaloDeTempoCreateInputRestDto {
-  @ApiProperty({
-    type: () => GradeHorarioOfertaFormacaoFindOneInputRestDto,
-    description: "Grade horaria da oferta de formacao",
-  })
-  @ValidateNested()
-  @Type(() => GradeHorarioOfertaFormacaoFindOneInputRestDto)
+  @decorate(
+    ApiProperty({
+      type: () => GradeHorarioOfertaFormacaoFindOneInputRestDto,
+      description: "Grade horaria da oferta de formacao",
+    }),
+  )
+  @decorate(ValidateNested())
+  @decorate(Type(() => GradeHorarioOfertaFormacaoFindOneInputRestDto))
   gradeHorarioOfertaFormacao: GradeHorarioOfertaFormacaoFindOneInputRestDto;
 
-  @ApiProperty({
-    type: () => IntervaloDeTempoFindOneInputRestDto,
-    description: "Intervalo de tempo",
-  })
-  @ValidateNested()
-  @Type(() => IntervaloDeTempoFindOneInputRestDto)
+  @decorate(
+    ApiProperty({
+      type: () => IntervaloDeTempoFindOneInputRestDto,
+      description: "Intervalo de tempo",
+    }),
+  )
+  @decorate(ValidateNested())
+  @decorate(Type(() => IntervaloDeTempoFindOneInputRestDto))
   intervaloDeTempo: IntervaloDeTempoFindOneInputRestDto;
 }
 
-@ApiSchema({ name: "GradeHorarioOfertaFormacaoIntervaloDeTempoUpdateInputDto" })
+@decorate(ApiSchema({ name: "GradeHorarioOfertaFormacaoIntervaloDeTempoUpdateInputDto" }))
 export class GradeHorarioOfertaFormacaoIntervaloDeTempoUpdateInputRestDto extends PartialType(
   GradeHorarioOfertaFormacaoIntervaloDeTempoCreateInputRestDto,
 ) {}
@@ -131,9 +117,15 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoUpdateInputRestDto extend
 // FindOne Input (for path params)
 // ============================================================================
 
-@ApiSchema({ name: "GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInputDto" })
+@decorate(ApiSchema({ name: "GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInputDto" }))
 export class GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInputRestDto {
-  @ApiProperty({ description: "Identificador do registro (uuid)", format: "uuid" })
-  @IsUUID()
+  @decorate(
+    ApiProperty({
+      type: "string",
+      description: "Identificador do registro (uuid)",
+      format: "uuid",
+    }),
+  )
+  @decorate(IsUUID())
   id: string;
 }

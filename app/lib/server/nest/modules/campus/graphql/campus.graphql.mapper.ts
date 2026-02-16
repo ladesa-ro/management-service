@@ -3,11 +3,10 @@ import {
   CampusFindOneInputDto,
   CampusFindOneOutputDto,
   CampusListInputDto,
-  CampusListOutputDto,
   CampusUpdateInputDto,
 } from "@/modules/sisgea/campus";
 import { EnderecoGraphqlMapper } from "@/server/nest/modules/endereco/graphql/endereco.graphql.mapper";
-import { mapPaginationMeta } from "@/server/nest/shared/mappers";
+import { createListOutputMapper, mapDatedFields } from "@/server/nest/shared/mappers";
 import {
   CampusCreateInputGraphQlDto,
   CampusFindOneOutputGraphQlDto,
@@ -96,16 +95,12 @@ export class CampusGraphqlMapper {
     dto.apelido = output.apelido;
     dto.cnpj = output.cnpj;
     dto.endereco = EnderecoGraphqlMapper.toFindOneOutputDto(output.endereco);
-    dto.dateCreated = output.dateCreated as unknown as Date;
-    dto.dateUpdated = output.dateUpdated as unknown as Date;
-    dto.dateDeleted = output.dateDeleted as unknown as Date | null;
+    mapDatedFields(dto, output);
     return dto;
   }
 
-  static toListOutputDto(output: CampusListOutputDto): CampusListOutputGraphQlDto {
-    const dto = new CampusListOutputGraphQlDto();
-    dto.meta = mapPaginationMeta(output.meta);
-    dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
-    return dto;
-  }
+  static toListOutputDto = createListOutputMapper(
+    CampusListOutputGraphQlDto,
+    CampusGraphqlMapper.toFindOneOutputDto,
+  );
 }

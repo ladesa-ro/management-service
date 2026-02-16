@@ -1,54 +1,56 @@
 import { ArgsType, Field, InputType, Int, ObjectType } from "@nestjs/graphql";
 import { IsArray, IsBoolean, IsOptional, IsString, IsUUID, ValidateNested } from "class-validator";
+import { decorate } from "ts-mixer";
 import {
   EntityBaseGraphQlDto,
+  PaginatedFilterByIdGraphQlDto,
   PaginationMetaGraphQlDto,
 } from "@/modules/@shared/infrastructure/graphql/dtos";
-import { PaginationInputGraphQlDto } from "@/modules/@shared/infrastructure/graphql/dtos/pagination-graphql.dto";
 import { CalendarioLetivoFindOneOutputGraphQlDto } from "@/server/nest/modules/calendario-letivo/graphql/calendario-letivo.graphql.dto";
+import { DiarioFieldsMixin } from "@/server/nest/modules/diario/diario.validation-mixin";
 import { ImagemFindOneOutputGraphQlDto } from "@/server/nest/modules/imagem-arquivo/graphql/imagem-arquivo.graphql.dto";
 
 // ============================================================================
 // Nested ref output DTOs
 // ============================================================================
 
-@ObjectType("TurmaFindOneOutputForDiarioDto")
+@decorate(ObjectType("TurmaFindOneOutputForDiarioDto"))
 export class TurmaFindOneOutputForDiarioGraphQlDto extends EntityBaseGraphQlDto {
-  @Field() periodo: string;
+  @decorate(Field(() => String)) periodo: string;
 }
 
-@ObjectType("DisciplinaFindOneOutputForDiarioDto")
+@decorate(ObjectType("DisciplinaFindOneOutputForDiarioDto"))
 export class DisciplinaFindOneOutputForDiarioGraphQlDto extends EntityBaseGraphQlDto {
-  @Field() nome: string;
-  @Field() nomeAbreviado: string;
-  @Field(() => Int) cargaHoraria: number;
+  @decorate(Field(() => String)) nome: string;
+  @decorate(Field(() => String)) nomeAbreviado: string;
+  @decorate(Field(() => Int)) cargaHoraria: number;
 }
 
-@ObjectType("AmbienteFindOneOutputForDiarioDto")
+@decorate(ObjectType("AmbienteFindOneOutputForDiarioDto"))
 export class AmbienteFindOneOutputForDiarioGraphQlDto extends EntityBaseGraphQlDto {
-  @Field() nome: string;
-  @Field(() => String, { nullable: true }) descricao: string | null;
-  @Field() codigo: string;
-  @Field(() => Int, { nullable: true }) capacidade: number | null;
-  @Field(() => String, { nullable: true }) tipo: string | null;
+  @decorate(Field(() => String)) nome: string;
+  @decorate(Field(() => String, { nullable: true })) descricao: string | null;
+  @decorate(Field(() => String)) codigo: string;
+  @decorate(Field(() => Int, { nullable: true })) capacidade: number | null;
+  @decorate(Field(() => String, { nullable: true })) tipo: string | null;
 }
 
 // ============================================================================
 // FindOne Output
 // ============================================================================
 
-@ObjectType("DiarioFindOneOutputDto")
+@decorate(ObjectType("DiarioFindOneOutputDto"))
 export class DiarioFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
-  @Field() ativo: boolean;
-  @Field(() => CalendarioLetivoFindOneOutputGraphQlDto)
+  @decorate(Field(() => Boolean)) ativo: boolean;
+  @decorate(Field(() => CalendarioLetivoFindOneOutputGraphQlDto))
   calendarioLetivo: CalendarioLetivoFindOneOutputGraphQlDto;
-  @Field(() => TurmaFindOneOutputForDiarioGraphQlDto)
+  @decorate(Field(() => TurmaFindOneOutputForDiarioGraphQlDto))
   turma: TurmaFindOneOutputForDiarioGraphQlDto;
-  @Field(() => DisciplinaFindOneOutputForDiarioGraphQlDto)
+  @decorate(Field(() => DisciplinaFindOneOutputForDiarioGraphQlDto))
   disciplina: DisciplinaFindOneOutputForDiarioGraphQlDto;
-  @Field(() => AmbienteFindOneOutputForDiarioGraphQlDto, { nullable: true })
+  @decorate(Field(() => AmbienteFindOneOutputForDiarioGraphQlDto, { nullable: true }))
   ambientePadrao: AmbienteFindOneOutputForDiarioGraphQlDto | null;
-  @Field(() => ImagemFindOneOutputGraphQlDto, { nullable: true })
+  @decorate(Field(() => ImagemFindOneOutputGraphQlDto, { nullable: true }))
   imagemCapa: ImagemFindOneOutputGraphQlDto | null;
 }
 
@@ -56,59 +58,59 @@ export class DiarioFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
 // Ref Input DTOs
 // ============================================================================
 
-@InputType("CalendarioLetivoRefInputForDiarioDto")
+@decorate(InputType("CalendarioLetivoRefInputForDiarioDto"))
 export class CalendarioLetivoRefInputForDiarioGraphQlDto {
-  @Field() @IsString() id: string;
+  @decorate(Field(() => String)) @decorate(IsString()) id: string;
 }
 
-@InputType("TurmaRefInputForDiarioDto")
+@decorate(InputType("TurmaRefInputForDiarioDto"))
 export class TurmaRefInputForDiarioGraphQlDto {
-  @Field() @IsString() id: string;
+  @decorate(Field(() => String)) @decorate(IsString()) id: string;
 }
 
-@InputType("DisciplinaRefInputForDiarioDto")
+@decorate(InputType("DisciplinaRefInputForDiarioDto"))
 export class DisciplinaRefInputForDiarioGraphQlDto {
-  @Field() @IsString() id: string;
+  @decorate(Field(() => String)) @decorate(IsString()) id: string;
 }
 
-@InputType("AmbienteRefInputForDiarioDto")
+@decorate(InputType("AmbienteRefInputForDiarioDto"))
 export class AmbienteRefInputForDiarioGraphQlDto {
-  @Field() @IsString() id: string;
+  @decorate(Field(() => String)) @decorate(IsString()) id: string;
 }
 
-@InputType("ImagemRefInputForDiarioDto")
+@decorate(InputType("ImagemRefInputForDiarioDto"))
 export class ImagemRefInputForDiarioGraphQlDto {
-  @Field() @IsString() id: string;
+  @decorate(Field(() => String)) @decorate(IsString()) id: string;
 }
 
 // ============================================================================
 // Create Input
 // ============================================================================
 
-@InputType("DiarioCreateInputDto")
-export class DiarioCreateInputGraphQlDto {
-  @Field() @IsBoolean() ativo: boolean;
+@decorate(InputType("DiarioCreateInputDto"))
+export class DiarioCreateInputGraphQlDto extends DiarioFieldsMixin {
+  @decorate(Field(() => Boolean)) declare ativo: boolean;
 
-  @Field(() => CalendarioLetivoRefInputForDiarioGraphQlDto)
-  @ValidateNested()
+  @decorate(Field(() => CalendarioLetivoRefInputForDiarioGraphQlDto))
+  @decorate(ValidateNested())
   calendarioLetivo: CalendarioLetivoRefInputForDiarioGraphQlDto;
 
-  @Field(() => TurmaRefInputForDiarioGraphQlDto)
-  @ValidateNested()
+  @decorate(Field(() => TurmaRefInputForDiarioGraphQlDto))
+  @decorate(ValidateNested())
   turma: TurmaRefInputForDiarioGraphQlDto;
 
-  @Field(() => DisciplinaRefInputForDiarioGraphQlDto)
-  @ValidateNested()
+  @decorate(Field(() => DisciplinaRefInputForDiarioGraphQlDto))
+  @decorate(ValidateNested())
   disciplina: DisciplinaRefInputForDiarioGraphQlDto;
 
-  @Field(() => AmbienteRefInputForDiarioGraphQlDto, { nullable: true })
-  @IsOptional()
-  @ValidateNested()
+  @decorate(Field(() => AmbienteRefInputForDiarioGraphQlDto, { nullable: true }))
+  @decorate(IsOptional())
+  @decorate(ValidateNested())
   ambientePadrao?: AmbienteRefInputForDiarioGraphQlDto | null;
 
-  @Field(() => ImagemRefInputForDiarioGraphQlDto, { nullable: true })
-  @IsOptional()
-  @ValidateNested()
+  @decorate(Field(() => ImagemRefInputForDiarioGraphQlDto, { nullable: true }))
+  @decorate(IsOptional())
+  @decorate(ValidateNested())
   imagemCapa?: ImagemRefInputForDiarioGraphQlDto | null;
 }
 
@@ -116,33 +118,36 @@ export class DiarioCreateInputGraphQlDto {
 // Update Input
 // ============================================================================
 
-@InputType("DiarioUpdateInputDto")
+@decorate(InputType("DiarioUpdateInputDto"))
 export class DiarioUpdateInputGraphQlDto {
-  @Field({ nullable: true }) @IsOptional() @IsBoolean() ativo?: boolean;
+  @decorate(Field(() => Boolean, { nullable: true }))
+  @decorate(IsOptional())
+  @decorate(IsBoolean())
+  ativo?: boolean;
 
-  @Field(() => CalendarioLetivoRefInputForDiarioGraphQlDto, { nullable: true })
-  @IsOptional()
-  @ValidateNested()
+  @decorate(Field(() => CalendarioLetivoRefInputForDiarioGraphQlDto, { nullable: true }))
+  @decorate(IsOptional())
+  @decorate(ValidateNested())
   calendarioLetivo?: CalendarioLetivoRefInputForDiarioGraphQlDto;
 
-  @Field(() => TurmaRefInputForDiarioGraphQlDto, { nullable: true })
-  @IsOptional()
-  @ValidateNested()
+  @decorate(Field(() => TurmaRefInputForDiarioGraphQlDto, { nullable: true }))
+  @decorate(IsOptional())
+  @decorate(ValidateNested())
   turma?: TurmaRefInputForDiarioGraphQlDto;
 
-  @Field(() => DisciplinaRefInputForDiarioGraphQlDto, { nullable: true })
-  @IsOptional()
-  @ValidateNested()
+  @decorate(Field(() => DisciplinaRefInputForDiarioGraphQlDto, { nullable: true }))
+  @decorate(IsOptional())
+  @decorate(ValidateNested())
   disciplina?: DisciplinaRefInputForDiarioGraphQlDto;
 
-  @Field(() => AmbienteRefInputForDiarioGraphQlDto, { nullable: true })
-  @IsOptional()
-  @ValidateNested()
+  @decorate(Field(() => AmbienteRefInputForDiarioGraphQlDto, { nullable: true }))
+  @decorate(IsOptional())
+  @decorate(ValidateNested())
   ambientePadrao?: AmbienteRefInputForDiarioGraphQlDto | null;
 
-  @Field(() => ImagemRefInputForDiarioGraphQlDto, { nullable: true })
-  @IsOptional()
-  @ValidateNested()
+  @decorate(Field(() => ImagemRefInputForDiarioGraphQlDto, { nullable: true }))
+  @decorate(IsOptional())
+  @decorate(ValidateNested())
   imagemCapa?: ImagemRefInputForDiarioGraphQlDto | null;
 }
 
@@ -150,30 +155,26 @@ export class DiarioUpdateInputGraphQlDto {
 // List Input
 // ============================================================================
 
-@ArgsType()
-export class DiarioListInputGraphQlDto extends PaginationInputGraphQlDto {
-  @Field(() => [String], { nullable: true, description: "Filtro por ID" })
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
-  filterId?: string[];
-
-  @Field(() => [String], { nullable: true, description: "Filtro por ID da Turma" })
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
+@decorate(ArgsType())
+export class DiarioListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {
+  @decorate(Field(() => [String], { nullable: true, description: "Filtro por ID da Turma" }))
+  @decorate(IsOptional())
+  @decorate(IsArray())
+  @decorate(IsUUID(undefined, { each: true }))
   filterTurmaId?: string[];
 
-  @Field(() => [String], { nullable: true, description: "Filtro por ID da Disciplina" })
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
+  @decorate(Field(() => [String], { nullable: true, description: "Filtro por ID da Disciplina" }))
+  @decorate(IsOptional())
+  @decorate(IsArray())
+  @decorate(IsUUID(undefined, { each: true }))
   filterDisciplinaId?: string[];
 
-  @Field(() => [String], { nullable: true, description: "Filtro por ID do Calendario Letivo" })
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
+  @decorate(
+    Field(() => [String], { nullable: true, description: "Filtro por ID do Calendario Letivo" }),
+  )
+  @decorate(IsOptional())
+  @decorate(IsArray())
+  @decorate(IsUUID(undefined, { each: true }))
   filterCalendarioLetivoId?: string[];
 }
 
@@ -181,11 +182,11 @@ export class DiarioListInputGraphQlDto extends PaginationInputGraphQlDto {
 // List Output
 // ============================================================================
 
-@ObjectType("DiarioListResult")
+@decorate(ObjectType("DiarioListResult"))
 export class DiarioListOutputGraphQlDto {
-  @Field(() => PaginationMetaGraphQlDto)
+  @decorate(Field(() => PaginationMetaGraphQlDto))
   meta: PaginationMetaGraphQlDto;
 
-  @Field(() => [DiarioFindOneOutputGraphQlDto])
+  @decorate(Field(() => [DiarioFindOneOutputGraphQlDto]))
   data: DiarioFindOneOutputGraphQlDto[];
 }

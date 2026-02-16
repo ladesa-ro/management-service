@@ -3,12 +3,11 @@ import {
   AulaFindOneInputDto,
   AulaFindOneOutputDto,
   AulaListInputDto,
-  AulaListOutputDto,
   AulaUpdateInputDto,
 } from "@/modules/sisgha/aula";
 import { DiarioGraphqlMapper } from "@/server/nest/modules/diario/graphql/diario.graphql.mapper";
 import { IntervaloDeTempoGraphqlMapper } from "@/server/nest/modules/intervalo-de-tempo/graphql/intervalo-de-tempo.graphql.mapper";
-import { mapPaginationMeta } from "@/server/nest/shared/mappers";
+import { createListOutputMapper, mapDatedFields } from "@/server/nest/shared/mappers";
 import {
   AmbienteFindOneOutputForAulaGraphQlDto,
   AulaCreateInputGraphQlDto,
@@ -85,9 +84,7 @@ export class AulaGraphqlMapper {
     dto.codigo = ambiente.codigo;
     dto.capacidade = ambiente.capacidade;
     dto.tipo = ambiente.tipo;
-    dto.dateCreated = ambiente.dateCreated as unknown as Date;
-    dto.dateUpdated = ambiente.dateUpdated as unknown as Date;
-    dto.dateDeleted = ambiente.dateDeleted as unknown as Date | null;
+    mapDatedFields(dto, ambiente);
     return dto;
   }
 
@@ -101,16 +98,12 @@ export class AulaGraphqlMapper {
     );
     dto.diario = DiarioGraphqlMapper.toFindOneOutputDto(output.diario);
     dto.ambiente = this.mapAmbiente(output.ambiente);
-    dto.dateCreated = output.dateCreated as unknown as Date;
-    dto.dateUpdated = output.dateUpdated as unknown as Date;
-    dto.dateDeleted = output.dateDeleted as unknown as Date | null;
+    mapDatedFields(dto, output);
     return dto;
   }
 
-  static toListOutputDto(output: AulaListOutputDto): AulaListOutputGraphQlDto {
-    const dto = new AulaListOutputGraphQlDto();
-    dto.meta = mapPaginationMeta(output.meta);
-    dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
-    return dto;
-  }
+  static toListOutputDto = createListOutputMapper(
+    AulaListOutputGraphQlDto,
+    AulaGraphqlMapper.toFindOneOutputDto,
+  );
 }

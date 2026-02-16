@@ -2,10 +2,9 @@ import {
   CidadeFindOneInputDto,
   CidadeFindOneOutputDto,
   CidadeListInputDto,
-  CidadeListOutputDto,
 } from "@/modules/base/localidades/cidade";
 import { EstadoGraphqlMapper } from "@/server/nest/modules/estado/graphql/estado.graphql.mapper";
-import { mapPaginationMeta } from "@/server/nest/shared/mappers";
+import { createListOutputMapper } from "@/server/nest/shared/mappers";
 import {
   CidadeFindOneOutputGraphQlDto,
   CidadeListInputGraphQlDto,
@@ -45,10 +44,8 @@ export class CidadeGraphqlMapper {
     return dto;
   }
 
-  static toListOutputDto(output: CidadeListOutputDto): CidadeListOutputGraphQlDto {
-    const dto = new CidadeListOutputGraphQlDto();
-    dto.meta = mapPaginationMeta(output.meta);
-    dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
-    return dto;
-  }
+  static toListOutputDto = createListOutputMapper(
+    CidadeListOutputGraphQlDto,
+    CidadeGraphqlMapper.toFindOneOutputDto,
+  );
 }

@@ -7,40 +7,42 @@ import {
   IsUUID,
   ValidateNested,
 } from "class-validator";
+import { decorate } from "ts-mixer";
 import {
   EntityBaseGraphQlDto,
+  PaginatedFilterByIdGraphQlDto,
   PaginationMetaGraphQlDto,
 } from "@/modules/@shared/infrastructure/graphql/dtos";
-import { PaginationInputGraphQlDto } from "@/modules/@shared/infrastructure/graphql/dtos/pagination-graphql.dto";
 import { DiarioFindOneOutputGraphQlDto } from "@/server/nest/modules/diario/graphql/diario.graphql.dto";
 import { IntervaloDeTempoFindOneOutputGraphQlDto } from "@/server/nest/modules/intervalo-de-tempo/graphql/intervalo-de-tempo.graphql.dto";
+import { AulaFieldsMixin } from "../aula.validation-mixin";
 
 // ============================================================================
 // Nested ref output DTOs
 // ============================================================================
 
-@ObjectType("AmbienteFindOneOutputForAulaDto")
+@decorate(ObjectType("AmbienteFindOneOutputForAulaDto"))
 export class AmbienteFindOneOutputForAulaGraphQlDto extends EntityBaseGraphQlDto {
-  @Field() nome: string;
-  @Field(() => String, { nullable: true }) descricao: string | null;
-  @Field() codigo: string;
-  @Field(() => Int, { nullable: true }) capacidade: number | null;
-  @Field(() => String, { nullable: true }) tipo: string | null;
+  @decorate(Field(() => String)) nome: string;
+  @decorate(Field(() => String, { nullable: true })) descricao: string | null;
+  @decorate(Field(() => String)) codigo: string;
+  @decorate(Field(() => Int, { nullable: true })) capacidade: number | null;
+  @decorate(Field(() => String, { nullable: true })) tipo: string | null;
 }
 
 // ============================================================================
 // FindOne Output
 // ============================================================================
 
-@ObjectType("AulaFindOneOutputDto")
+@decorate(ObjectType("AulaFindOneOutputDto"))
 export class AulaFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
-  @Field() data: string;
-  @Field(() => String, { nullable: true }) modalidade: string | null;
-  @Field(() => IntervaloDeTempoFindOneOutputGraphQlDto)
+  @decorate(Field(() => String)) data: string;
+  @decorate(Field(() => String, { nullable: true })) modalidade: string | null;
+  @decorate(Field(() => IntervaloDeTempoFindOneOutputGraphQlDto))
   intervaloDeTempo: IntervaloDeTempoFindOneOutputGraphQlDto;
-  @Field(() => DiarioFindOneOutputGraphQlDto)
+  @decorate(Field(() => DiarioFindOneOutputGraphQlDto))
   diario: DiarioFindOneOutputGraphQlDto;
-  @Field(() => AmbienteFindOneOutputForAulaGraphQlDto, { nullable: true })
+  @decorate(Field(() => AmbienteFindOneOutputForAulaGraphQlDto, { nullable: true }))
   ambiente: AmbienteFindOneOutputForAulaGraphQlDto | null;
 }
 
@@ -48,41 +50,41 @@ export class AulaFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
 // Ref Input DTOs
 // ============================================================================
 
-@InputType("IntervaloDeTempoRefInputForAulaDto")
+@decorate(InputType("IntervaloDeTempoRefInputForAulaDto"))
 export class IntervaloDeTempoRefInputForAulaGraphQlDto {
-  @Field() @IsString() id: string;
+  @decorate(Field(() => String)) @decorate(IsString()) id: string;
 }
 
-@InputType("DiarioRefInputForAulaDto")
+@decorate(InputType("DiarioRefInputForAulaDto"))
 export class DiarioRefInputForAulaGraphQlDto {
-  @Field() @IsString() id: string;
+  @decorate(Field(() => String)) @decorate(IsString()) id: string;
 }
 
-@InputType("AmbienteRefInputForAulaDto")
+@decorate(InputType("AmbienteRefInputForAulaDto"))
 export class AmbienteRefInputForAulaGraphQlDto {
-  @Field() @IsString() id: string;
+  @decorate(Field(() => String)) @decorate(IsString()) id: string;
 }
 
 // ============================================================================
 // Create Input
 // ============================================================================
 
-@InputType("AulaCreateInputDto")
-export class AulaCreateInputGraphQlDto {
-  @Field() @IsDateString() data: string;
-  @Field({ nullable: true }) @IsOptional() @IsString() modalidade?: string | null;
+@decorate(InputType("AulaCreateInputDto"))
+export class AulaCreateInputGraphQlDto extends AulaFieldsMixin {
+  @decorate(Field(() => String)) declare data: string;
+  @decorate(Field(() => String, { nullable: true })) declare modalidade?: string | null;
 
-  @Field(() => IntervaloDeTempoRefInputForAulaGraphQlDto)
-  @ValidateNested()
+  @decorate(Field(() => IntervaloDeTempoRefInputForAulaGraphQlDto))
+  @decorate(ValidateNested())
   intervaloDeTempo: IntervaloDeTempoRefInputForAulaGraphQlDto;
 
-  @Field(() => DiarioRefInputForAulaGraphQlDto)
-  @ValidateNested()
+  @decorate(Field(() => DiarioRefInputForAulaGraphQlDto))
+  @decorate(ValidateNested())
   diario: DiarioRefInputForAulaGraphQlDto;
 
-  @Field(() => AmbienteRefInputForAulaGraphQlDto, { nullable: true })
-  @IsOptional()
-  @ValidateNested()
+  @decorate(Field(() => AmbienteRefInputForAulaGraphQlDto, { nullable: true }))
+  @decorate(IsOptional())
+  @decorate(ValidateNested())
   ambiente?: AmbienteRefInputForAulaGraphQlDto | null;
 }
 
@@ -90,24 +92,30 @@ export class AulaCreateInputGraphQlDto {
 // Update Input
 // ============================================================================
 
-@InputType("AulaUpdateInputDto")
+@decorate(InputType("AulaUpdateInputDto"))
 export class AulaUpdateInputGraphQlDto {
-  @Field({ nullable: true }) @IsOptional() @IsDateString() data?: string;
-  @Field({ nullable: true }) @IsOptional() @IsString() modalidade?: string | null;
+  @decorate(Field(() => String, { nullable: true }))
+  @decorate(IsOptional())
+  @decorate(IsDateString())
+  data?: string;
+  @decorate(Field(() => String, { nullable: true }))
+  @decorate(IsOptional())
+  @decorate(IsString())
+  modalidade?: string | null;
 
-  @Field(() => IntervaloDeTempoRefInputForAulaGraphQlDto, { nullable: true })
-  @IsOptional()
-  @ValidateNested()
+  @decorate(Field(() => IntervaloDeTempoRefInputForAulaGraphQlDto, { nullable: true }))
+  @decorate(IsOptional())
+  @decorate(ValidateNested())
   intervaloDeTempo?: IntervaloDeTempoRefInputForAulaGraphQlDto;
 
-  @Field(() => DiarioRefInputForAulaGraphQlDto, { nullable: true })
-  @IsOptional()
-  @ValidateNested()
+  @decorate(Field(() => DiarioRefInputForAulaGraphQlDto, { nullable: true }))
+  @decorate(IsOptional())
+  @decorate(ValidateNested())
   diario?: DiarioRefInputForAulaGraphQlDto;
 
-  @Field(() => AmbienteRefInputForAulaGraphQlDto, { nullable: true })
-  @IsOptional()
-  @ValidateNested()
+  @decorate(Field(() => AmbienteRefInputForAulaGraphQlDto, { nullable: true }))
+  @decorate(IsOptional())
+  @decorate(ValidateNested())
   ambiente?: AmbienteRefInputForAulaGraphQlDto | null;
 }
 
@@ -115,24 +123,20 @@ export class AulaUpdateInputGraphQlDto {
 // List Input
 // ============================================================================
 
-@ArgsType()
-export class AulaListInputGraphQlDto extends PaginationInputGraphQlDto {
-  @Field(() => [String], { nullable: true, description: "Filtro por ID" })
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
-  filterId?: string[];
-
-  @Field(() => [String], { nullable: true, description: "Filtro por ID do Intervalo de Tempo" })
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
+@decorate(ArgsType())
+export class AulaListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {
+  @decorate(
+    Field(() => [String], { nullable: true, description: "Filtro por ID do Intervalo de Tempo" }),
+  )
+  @decorate(IsOptional())
+  @decorate(IsArray())
+  @decorate(IsUUID(undefined, { each: true }))
   filterIntervaloDeTempoId?: string[];
 
-  @Field(() => [String], { nullable: true, description: "Filtro por ID do Diario" })
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
+  @decorate(Field(() => [String], { nullable: true, description: "Filtro por ID do Diario" }))
+  @decorate(IsOptional())
+  @decorate(IsArray())
+  @decorate(IsUUID(undefined, { each: true }))
   filterDiarioId?: string[];
 }
 
@@ -140,11 +144,11 @@ export class AulaListInputGraphQlDto extends PaginationInputGraphQlDto {
 // List Output
 // ============================================================================
 
-@ObjectType("AulaListResult")
+@decorate(ObjectType("AulaListResult"))
 export class AulaListOutputGraphQlDto {
-  @Field(() => PaginationMetaGraphQlDto)
+  @decorate(Field(() => PaginationMetaGraphQlDto))
   meta: PaginationMetaGraphQlDto;
 
-  @Field(() => [AulaFindOneOutputGraphQlDto])
+  @decorate(Field(() => [AulaFindOneOutputGraphQlDto]))
   data: AulaFindOneOutputGraphQlDto[];
 }

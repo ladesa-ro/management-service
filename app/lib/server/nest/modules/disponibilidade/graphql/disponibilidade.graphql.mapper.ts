@@ -3,10 +3,9 @@ import {
   DisponibilidadeFindOneInputDto,
   DisponibilidadeFindOneOutputDto,
   DisponibilidadeListInputDto,
-  DisponibilidadeListOutputDto,
   DisponibilidadeUpdateInputDto,
 } from "@/modules/ensino/disponibilidade";
-import { mapPaginationMeta } from "@/server/nest/shared/mappers";
+import { createListOutputMapper, mapDatedFields } from "@/server/nest/shared/mappers";
 import {
   DisponibilidadeCreateInputGraphQlDto,
   DisponibilidadeFindOneOutputGraphQlDto,
@@ -69,18 +68,12 @@ export class DisponibilidadeGraphqlMapper {
     dto.id = output.id;
     dto.dataInicio = output.dataInicio as unknown as Date;
     dto.dataFim = output.dataFim as unknown as Date | null;
-    dto.dateCreated = output.dateCreated as unknown as Date;
-    dto.dateUpdated = output.dateUpdated as unknown as Date;
-    dto.dateDeleted = output.dateDeleted as unknown as Date | null;
+    mapDatedFields(dto, output);
     return dto;
   }
 
-  static toListOutputDto(
-    output: DisponibilidadeListOutputDto,
-  ): DisponibilidadeListOutputGraphQlDto {
-    const dto = new DisponibilidadeListOutputGraphQlDto();
-    dto.meta = mapPaginationMeta(output.meta);
-    dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
-    return dto;
-  }
+  static toListOutputDto = createListOutputMapper(
+    DisponibilidadeListOutputGraphQlDto,
+    DisponibilidadeGraphqlMapper.toFindOneOutputDto,
+  );
 }

@@ -1,60 +1,60 @@
 import { ArgsType, Field, InputType, ObjectType } from "@nestjs/graphql";
-import { IsArray, IsOptional, IsString, IsUUID, MinLength } from "class-validator";
+import { IsOptional, IsString, MinLength } from "class-validator";
+import { decorate } from "ts-mixer";
 import {
   EntityBaseGraphQlDto,
+  PaginatedFilterByIdGraphQlDto,
   PaginationMetaGraphQlDto,
 } from "@/modules/@shared/infrastructure/graphql/dtos";
-import { PaginationInputGraphQlDto } from "@/modules/@shared/infrastructure/graphql/dtos/pagination-graphql.dto";
+import { NivelFormacaoFieldsMixin } from "@/server/nest/modules/nivel-formacao/nivel-formacao.validation-mixin";
 
 // ============================================================================
 // FindOne Output
 // ============================================================================
 
-@ObjectType("NivelFormacaoFindOneOutputDto")
+@decorate(ObjectType("NivelFormacaoFindOneOutputDto"))
 export class NivelFormacaoFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
-  @Field() slug: string;
+  @decorate(Field(() => String)) slug: string;
 }
 
 // ============================================================================
 // Create Input
 // ============================================================================
 
-@InputType("NivelFormacaoCreateInputDto")
-export class NivelFormacaoCreateInputGraphQlDto {
-  @Field() @IsString() @MinLength(1) slug: string;
+@decorate(InputType("NivelFormacaoCreateInputDto"))
+export class NivelFormacaoCreateInputGraphQlDto extends NivelFormacaoFieldsMixin {
+  @decorate(Field(() => String)) declare slug: string;
 }
 
 // ============================================================================
 // Update Input
 // ============================================================================
 
-@InputType("NivelFormacaoUpdateInputDto")
+@decorate(InputType("NivelFormacaoUpdateInputDto"))
 export class NivelFormacaoUpdateInputGraphQlDto {
-  @Field({ nullable: true }) @IsOptional() @IsString() @MinLength(1) slug?: string;
+  @decorate(Field(() => String, { nullable: true }))
+  @decorate(IsOptional())
+  @decorate(IsString())
+  @decorate(MinLength(1))
+  slug?: string;
 }
 
 // ============================================================================
 // List Input
 // ============================================================================
 
-@ArgsType()
-export class NivelFormacaoListInputGraphQlDto extends PaginationInputGraphQlDto {
-  @Field(() => [String], { nullable: true, description: "Filtro por ID" })
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
-  filterId?: string[];
-}
+@decorate(ArgsType())
+export class NivelFormacaoListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {}
 
 // ============================================================================
 // List Output
 // ============================================================================
 
-@ObjectType("NivelFormacaoListResult")
+@decorate(ObjectType("NivelFormacaoListResult"))
 export class NivelFormacaoListOutputGraphQlDto {
-  @Field(() => PaginationMetaGraphQlDto)
+  @decorate(Field(() => PaginationMetaGraphQlDto))
   meta: PaginationMetaGraphQlDto;
 
-  @Field(() => [NivelFormacaoFindOneOutputGraphQlDto])
+  @decorate(Field(() => [NivelFormacaoFindOneOutputGraphQlDto]))
   data: NivelFormacaoFindOneOutputGraphQlDto[];
 }

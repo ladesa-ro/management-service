@@ -3,16 +3,19 @@ import {
   DisciplinaFindOneInputDto,
   DisciplinaFindOneOutputDto,
   DisciplinaListInputDto,
-  DisciplinaListOutputDto,
   DisciplinaUpdateInputDto,
 } from "@/modules/ensino/disciplina";
 import { BlocoRestMapper } from "@/server/nest/modules/bloco/rest";
-import { mapPaginationMeta } from "@/server/nest/shared/mappers";
+import {
+  createFindOneInputMapper,
+  createListInputMapper,
+  createListOutputMapper,
+  mapDatedFields,
+} from "@/server/nest/shared/mappers";
 import {
   DisciplinaCreateInputRestDto,
   DisciplinaFindOneInputRestDto,
   DisciplinaFindOneOutputRestDto,
-  DisciplinaListInputRestDto,
   DisciplinaListOutputRestDto,
   DisciplinaUpdateInputRestDto,
 } from "./disciplina.rest.dto";
@@ -22,26 +25,9 @@ export class DisciplinaRestMapper {
   // Input: Server DTO -> Core DTO
   // ============================================================================
 
-  static toFindOneInput(dto: DisciplinaFindOneInputRestDto): DisciplinaFindOneInputDto {
-    const input = new DisciplinaFindOneInputDto();
-    input.id = dto.id;
-    return input;
-  }
+  static toFindOneInput = createFindOneInputMapper(DisciplinaFindOneInputDto);
 
-  static toListInput(dto: DisciplinaListInputRestDto | null): DisciplinaListInputDto | null {
-    if (!dto) {
-      return null;
-    }
-
-    const input = new DisciplinaListInputDto();
-    input.page = dto.page;
-    input.limit = dto.limit;
-    input.search = dto.search;
-    input.sortBy = dto.sortBy;
-    input.selection = dto.selection;
-    input["filter.id"] = dto["filter.id"];
-    return input;
-  }
+  static toListInput = createListInputMapper(DisciplinaListInputDto, ["filter.id"]);
 
   static toCreateInput(dto: DisciplinaCreateInputRestDto): DisciplinaCreateInputDto {
     const input = new DisciplinaCreateInputDto();
@@ -83,16 +69,12 @@ export class DisciplinaRestMapper {
     dto.imagemCapa = output.imagemCapa
       ? BlocoRestMapper.toImagemOutputDto(output.imagemCapa)
       : null;
-    dto.dateCreated = new Date(output.dateCreated);
-    dto.dateUpdated = new Date(output.dateUpdated);
-    dto.dateDeleted = output.dateDeleted ? new Date(output.dateDeleted) : null;
+    mapDatedFields(dto, output);
     return dto;
   }
 
-  static toListOutputDto(output: DisciplinaListOutputDto): DisciplinaListOutputRestDto {
-    const dto = new DisciplinaListOutputRestDto();
-    dto.meta = mapPaginationMeta(output.meta);
-    dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
-    return dto;
-  }
+  static toListOutputDto = createListOutputMapper(
+    DisciplinaListOutputRestDto,
+    DisciplinaRestMapper.toFindOneOutputDto,
+  );
 }

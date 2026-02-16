@@ -3,15 +3,16 @@ import {
   DisponibilidadeFindOneInputDto,
   DisponibilidadeFindOneOutputDto,
   DisponibilidadeListInputDto,
-  DisponibilidadeListOutputDto,
   DisponibilidadeUpdateInputDto,
 } from "@/modules/ensino/disponibilidade";
-import { mapPaginationMeta } from "@/server/nest/shared/mappers";
+import {
+  createFindOneInputMapper,
+  createListInputMapper,
+  createListOutputMapper,
+} from "@/server/nest/shared/mappers";
 import {
   DisponibilidadeCreateInputRestDto,
-  DisponibilidadeFindOneInputRestDto,
   DisponibilidadeFindOneOutputRestDto,
-  DisponibilidadeListInputRestDto,
   DisponibilidadeListOutputRestDto,
   DisponibilidadeUpdateInputRestDto,
 } from "./disponibilidade.rest.dto";
@@ -21,28 +22,9 @@ export class DisponibilidadeRestMapper {
   // Input: Server DTO -> Core DTO
   // ============================================================================
 
-  static toFindOneInput(dto: DisponibilidadeFindOneInputRestDto): DisponibilidadeFindOneInputDto {
-    const input = new DisponibilidadeFindOneInputDto();
-    input.id = dto.id;
-    return input;
-  }
+  static toFindOneInput = createFindOneInputMapper(DisponibilidadeFindOneInputDto);
 
-  static toListInput(
-    dto: DisponibilidadeListInputRestDto | null,
-  ): DisponibilidadeListInputDto | null {
-    if (!dto) {
-      return null;
-    }
-
-    const input = new DisponibilidadeListInputDto();
-    input.page = dto.page;
-    input.limit = dto.limit;
-    input.search = dto.search;
-    input.sortBy = dto.sortBy;
-    input.selection = dto.selection;
-    input["filter.id"] = dto["filter.id"];
-    return input;
-  }
+  static toListInput = createListInputMapper(DisponibilidadeListInputDto, ["filter.id"]);
 
   static toCreateInput(dto: DisponibilidadeCreateInputRestDto): DisponibilidadeCreateInputDto {
     const input = new DisponibilidadeCreateInputDto();
@@ -79,10 +61,8 @@ export class DisponibilidadeRestMapper {
     return dto;
   }
 
-  static toListOutputDto(output: DisponibilidadeListOutputDto): DisponibilidadeListOutputRestDto {
-    const dto = new DisponibilidadeListOutputRestDto();
-    dto.meta = mapPaginationMeta(output.meta);
-    dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
-    return dto;
-  }
+  static toListOutputDto = createListOutputMapper(
+    DisponibilidadeListOutputRestDto,
+    DisponibilidadeRestMapper.toFindOneOutputDto,
+  );
 }

@@ -3,11 +3,14 @@ import {
   AmbienteFindOneInputDto,
   AmbienteFindOneOutputDto,
   AmbienteListInputDto,
-  AmbienteListOutputDto,
   AmbienteUpdateInputDto,
 } from "@/modules/sisgea/ambiente";
 import { BlocoGraphqlMapper } from "@/server/nest/modules/bloco/graphql/bloco.graphql.mapper";
-import { mapPaginationMeta } from "@/server/nest/shared/mappers";
+import {
+  createFindOneInputMapper,
+  createListOutputMapper,
+  mapDatedFields,
+} from "@/server/nest/shared/mappers";
 import {
   AmbienteCreateInputGraphQlDto,
   AmbienteFindOneOutputGraphQlDto,
@@ -65,12 +68,7 @@ export class AmbienteGraphqlMapper {
     return input;
   }
 
-  static toFindOneInput(id: string, selection?: string[]): AmbienteFindOneInputDto {
-    const input = new AmbienteFindOneInputDto();
-    input.id = id;
-    input.selection = selection;
-    return input;
-  }
+  static toFindOneInput = createFindOneInputMapper(AmbienteFindOneInputDto);
 
   static toCreateInput(dto: AmbienteCreateInputGraphQlDto): AmbienteCreateInputDto {
     const input = new AmbienteCreateInputDto();
@@ -108,16 +106,12 @@ export class AmbienteGraphqlMapper {
     dto.tipo = output.tipo;
     dto.bloco = BlocoGraphqlMapper.toFindOneOutputDto(output.bloco);
     dto.imagemCapa = mapImagemOutput(output.imagemCapa);
-    dto.dateCreated = output.dateCreated as unknown as Date;
-    dto.dateUpdated = output.dateUpdated as unknown as Date;
-    dto.dateDeleted = output.dateDeleted as unknown as Date | null;
+    mapDatedFields(dto, output);
     return dto;
   }
 
-  static toListOutputDto(output: AmbienteListOutputDto): AmbienteListOutputGraphQlDto {
-    const dto = new AmbienteListOutputGraphQlDto();
-    dto.meta = mapPaginationMeta(output.meta);
-    dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
-    return dto;
-  }
+  static toListOutputDto = createListOutputMapper(
+    AmbienteListOutputGraphQlDto,
+    AmbienteGraphqlMapper.toFindOneOutputDto,
+  );
 }

@@ -3,11 +3,10 @@ import {
   EventoFindOneInputDto,
   EventoFindOneOutputDto,
   EventoListInputDto,
-  EventoListOutputDto,
   EventoUpdateInputDto,
 } from "@/modules/sisgha/evento";
 import { CalendarioLetivoGraphqlMapper } from "@/server/nest/modules/calendario-letivo/graphql/calendario-letivo.graphql.mapper";
-import { mapPaginationMeta } from "@/server/nest/shared/mappers";
+import { createListOutputMapper, mapDatedFields } from "@/server/nest/shared/mappers";
 import {
   AmbienteFindOneOutputForEventoGraphQlDto,
   EventoCreateInputGraphQlDto,
@@ -89,9 +88,7 @@ export class EventoGraphqlMapper {
     dto.codigo = ambiente.codigo;
     dto.capacidade = ambiente.capacidade;
     dto.tipo = ambiente.tipo;
-    dto.dateCreated = ambiente.dateCreated as unknown as Date;
-    dto.dateUpdated = ambiente.dateUpdated as unknown as Date;
-    dto.dateDeleted = ambiente.dateDeleted as unknown as Date | null;
+    mapDatedFields(dto, ambiente);
     return dto;
   }
 
@@ -105,16 +102,12 @@ export class EventoGraphqlMapper {
     dto.dataFim = output.dataFim as string | null;
     dto.calendario = CalendarioLetivoGraphqlMapper.toFindOneOutputDto(output.calendario);
     dto.ambiente = this.mapAmbiente(output.ambiente);
-    dto.dateCreated = output.dateCreated as unknown as Date;
-    dto.dateUpdated = output.dateUpdated as unknown as Date;
-    dto.dateDeleted = output.dateDeleted as unknown as Date | null;
+    mapDatedFields(dto, output);
     return dto;
   }
 
-  static toListOutputDto(output: EventoListOutputDto): EventoListOutputGraphQlDto {
-    const dto = new EventoListOutputGraphQlDto();
-    dto.meta = mapPaginationMeta(output.meta);
-    dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
-    return dto;
-  }
+  static toListOutputDto = createListOutputMapper(
+    EventoListOutputGraphQlDto,
+    EventoGraphqlMapper.toFindOneOutputDto,
+  );
 }

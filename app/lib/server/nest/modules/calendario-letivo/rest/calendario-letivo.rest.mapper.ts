@@ -3,17 +3,20 @@ import {
   CalendarioLetivoFindOneInputDto,
   CalendarioLetivoFindOneOutputDto,
   CalendarioLetivoListInputDto,
-  CalendarioLetivoListOutputDto,
   CalendarioLetivoUpdateInputDto,
 } from "@/modules/sisgha/calendario-letivo";
 import { CampusRestMapper } from "@/server/nest/modules/campus/rest";
 import { OfertaFormacaoRestMapper } from "@/server/nest/modules/oferta-formacao/rest";
-import { mapPaginationMeta } from "@/server/nest/shared/mappers";
+import {
+  createFindOneInputMapper,
+  createListInputMapper,
+  createListOutputMapper,
+  mapDatedFields,
+} from "@/server/nest/shared/mappers";
 import {
   CalendarioLetivoCreateInputRestDto,
   CalendarioLetivoFindOneInputRestDto,
   CalendarioLetivoFindOneOutputRestDto,
-  CalendarioLetivoListInputRestDto,
   CalendarioLetivoListOutputRestDto,
   CalendarioLetivoUpdateInputRestDto,
 } from "./calendario-letivo.rest.dto";
@@ -23,30 +26,13 @@ export class CalendarioLetivoRestMapper {
   // Input: Server DTO -> Core DTO
   // ============================================================================
 
-  static toFindOneInput(dto: CalendarioLetivoFindOneInputRestDto): CalendarioLetivoFindOneInputDto {
-    const input = new CalendarioLetivoFindOneInputDto();
-    input.id = dto.id;
-    return input;
-  }
+  static toFindOneInput = createFindOneInputMapper(CalendarioLetivoFindOneInputDto);
 
-  static toListInput(
-    dto: CalendarioLetivoListInputRestDto | null,
-  ): CalendarioLetivoListInputDto | null {
-    if (!dto) {
-      return null;
-    }
-
-    const input = new CalendarioLetivoListInputDto();
-    input.page = dto.page;
-    input.limit = dto.limit;
-    input.search = dto.search;
-    input.sortBy = dto.sortBy;
-    input.selection = dto.selection;
-    input["filter.id"] = dto["filter.id"];
-    input["filter.campus.id"] = dto["filter.campus.id"];
-    input["filter.ofertaFormacao.id"] = dto["filter.ofertaFormacao.id"];
-    return input;
-  }
+  static toListInput = createListInputMapper(CalendarioLetivoListInputDto, [
+    "filter.id",
+    "filter.campus.id",
+    "filter.ofertaFormacao.id",
+  ]);
 
   static toCreateInput(dto: CalendarioLetivoCreateInputRestDto): CalendarioLetivoCreateInputDto {
     const input = new CalendarioLetivoCreateInputDto();
@@ -92,16 +78,12 @@ export class CalendarioLetivoRestMapper {
     dto.ano = output.ano;
     dto.campus = CampusRestMapper.toFindOneOutputDto(output.campus);
     dto.ofertaFormacao = OfertaFormacaoRestMapper.toFindOneOutputDto(output.ofertaFormacao);
-    dto.dateCreated = new Date(output.dateCreated);
-    dto.dateUpdated = new Date(output.dateUpdated);
-    dto.dateDeleted = output.dateDeleted ? new Date(output.dateDeleted) : null;
+    mapDatedFields(dto, output);
     return dto;
   }
 
-  static toListOutputDto(output: CalendarioLetivoListOutputDto): CalendarioLetivoListOutputRestDto {
-    const dto = new CalendarioLetivoListOutputRestDto();
-    dto.meta = mapPaginationMeta(output.meta);
-    dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
-    return dto;
-  }
+  static toListOutputDto = createListOutputMapper(
+    CalendarioLetivoListOutputRestDto,
+    CalendarioLetivoRestMapper.toFindOneOutputDto,
+  );
 }

@@ -7,66 +7,68 @@ import {
   IsUUID,
   ValidateNested,
 } from "class-validator";
-import { PaginationInputGraphQlDto } from "@/modules/@shared/infrastructure/graphql";
+import { decorate } from "ts-mixer";
 import {
   EntityBaseGraphQlDto,
+  PaginatedFilterByIdGraphQlDto,
   PaginationMetaGraphQlDto,
 } from "@/modules/@shared/infrastructure/graphql/dtos";
 import { IntervaloDeTempoFindOneOutputGraphQlDto } from "@/server/nest/modules/intervalo-de-tempo/graphql/intervalo-de-tempo.graphql.dto";
+import { HorarioGeradoAulaFieldsMixin } from "../horario-gerado-aula.validation-mixin";
 
 // ============================================================================
 // DiarioProfessor nested output (not yet refactored to GraphQL)
 // ============================================================================
 
-@ObjectType("HorarioGeradoAulaDiarioProfessorOutput")
+@decorate(ObjectType("HorarioGeradoAulaDiarioProfessorOutput"))
 export class HorarioGeradoAulaDiarioProfessorOutputGraphQlDto extends EntityBaseGraphQlDto {
-  @Field() situacao: boolean;
+  @decorate(Field(() => Boolean)) situacao: boolean;
 }
 
 // ============================================================================
 // HorarioGerado nested output (not yet refactored to GraphQL)
 // ============================================================================
 
-@ObjectType("HorarioGeradoAulaHorarioGeradoOutput")
+@decorate(ObjectType("HorarioGeradoAulaHorarioGeradoOutput"))
 export class HorarioGeradoAulaHorarioGeradoOutputGraphQlDto extends EntityBaseGraphQlDto {
-  @Field(() => String, { nullable: true }) status: string | null;
-  @Field(() => String, { nullable: true }) tipo: string | null;
-  @Field(() => Date, { nullable: true }) dataGeracao: Date | null;
-  @Field(() => Date, { nullable: true }) vigenciaInicio: Date | null;
-  @Field(() => Date, { nullable: true }) vigenciaFim: Date | null;
+  @decorate(Field(() => String, { nullable: true })) status: string | null;
+  @decorate(Field(() => String, { nullable: true })) tipo: string | null;
+  @decorate(Field(() => Date, { nullable: true })) dataGeracao: Date | null;
+  @decorate(Field(() => Date, { nullable: true })) vigenciaInicio: Date | null;
+  @decorate(Field(() => Date, { nullable: true })) vigenciaFim: Date | null;
 }
 
 // ============================================================================
 // Ref Input DTOs for cross-module references
 // ============================================================================
 
-@InputType("HorarioGeradoAulaDiarioProfessorRefInputDto")
+@decorate(InputType("HorarioGeradoAulaDiarioProfessorRefInputDto"))
 export class HorarioGeradoAulaDiarioProfessorRefInputGraphQlDto {
-  @Field() @IsString() id: string;
+  @decorate(Field(() => String)) @decorate(IsString()) id: string;
 }
 
-@InputType("HorarioGeradoAulaHorarioGeradoRefInputDto")
+@decorate(InputType("HorarioGeradoAulaHorarioGeradoRefInputDto"))
 export class HorarioGeradoAulaHorarioGeradoRefInputGraphQlDto {
-  @Field() @IsString() id: string;
+  @decorate(Field(() => String)) @decorate(IsString()) id: string;
 }
 
-@InputType("HorarioGeradoAulaIntervaloDeTempoRefInputDto")
+@decorate(InputType("HorarioGeradoAulaIntervaloDeTempoRefInputDto"))
 export class HorarioGeradoAulaIntervaloDeTempoRefInputGraphQlDto {
-  @Field() @IsString() id: string;
+  @decorate(Field(() => String)) @decorate(IsString()) id: string;
 }
 
 // ============================================================================
 // FindOne Output
 // ============================================================================
 
-@ObjectType("HorarioGeradoAulaFindOneOutputDto")
+@decorate(ObjectType("HorarioGeradoAulaFindOneOutputDto"))
 export class HorarioGeradoAulaFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
-  @Field() data: Date;
-  @Field(() => HorarioGeradoAulaDiarioProfessorOutputGraphQlDto)
+  @decorate(Field(() => Date)) data: Date;
+  @decorate(Field(() => HorarioGeradoAulaDiarioProfessorOutputGraphQlDto))
   diarioProfessor: HorarioGeradoAulaDiarioProfessorOutputGraphQlDto;
-  @Field(() => HorarioGeradoAulaHorarioGeradoOutputGraphQlDto)
+  @decorate(Field(() => HorarioGeradoAulaHorarioGeradoOutputGraphQlDto))
   horarioGerado: HorarioGeradoAulaHorarioGeradoOutputGraphQlDto;
-  @Field(() => IntervaloDeTempoFindOneOutputGraphQlDto)
+  @decorate(Field(() => IntervaloDeTempoFindOneOutputGraphQlDto))
   intervaloDeTempo: IntervaloDeTempoFindOneOutputGraphQlDto;
 }
 
@@ -74,17 +76,17 @@ export class HorarioGeradoAulaFindOneOutputGraphQlDto extends EntityBaseGraphQlD
 // Create Input
 // ============================================================================
 
-@InputType("HorarioGeradoAulaCreateInputDto")
-export class HorarioGeradoAulaCreateInputGraphQlDto {
-  @Field() @IsDateString() data: Date;
-  @Field(() => HorarioGeradoAulaDiarioProfessorRefInputGraphQlDto)
-  @ValidateNested()
+@decorate(InputType("HorarioGeradoAulaCreateInputDto"))
+export class HorarioGeradoAulaCreateInputGraphQlDto extends HorarioGeradoAulaFieldsMixin {
+  @decorate(Field(() => Date)) declare data: Date;
+  @decorate(Field(() => HorarioGeradoAulaDiarioProfessorRefInputGraphQlDto))
+  @decorate(ValidateNested())
   diarioProfessor: HorarioGeradoAulaDiarioProfessorRefInputGraphQlDto;
-  @Field(() => HorarioGeradoAulaHorarioGeradoRefInputGraphQlDto)
-  @ValidateNested()
+  @decorate(Field(() => HorarioGeradoAulaHorarioGeradoRefInputGraphQlDto))
+  @decorate(ValidateNested())
   horarioGerado: HorarioGeradoAulaHorarioGeradoRefInputGraphQlDto;
-  @Field(() => HorarioGeradoAulaIntervaloDeTempoRefInputGraphQlDto)
-  @ValidateNested()
+  @decorate(Field(() => HorarioGeradoAulaIntervaloDeTempoRefInputGraphQlDto))
+  @decorate(ValidateNested())
   intervaloDeTempo: HorarioGeradoAulaIntervaloDeTempoRefInputGraphQlDto;
 }
 
@@ -92,20 +94,23 @@ export class HorarioGeradoAulaCreateInputGraphQlDto {
 // Update Input
 // ============================================================================
 
-@InputType("HorarioGeradoAulaUpdateInputDto")
+@decorate(InputType("HorarioGeradoAulaUpdateInputDto"))
 export class HorarioGeradoAulaUpdateInputGraphQlDto {
-  @Field({ nullable: true }) @IsOptional() @IsDateString() data?: Date;
-  @Field(() => HorarioGeradoAulaDiarioProfessorRefInputGraphQlDto, { nullable: true })
-  @IsOptional()
-  @ValidateNested()
+  @decorate(Field(() => Date, { nullable: true }))
+  @decorate(IsOptional())
+  @decorate(IsDateString())
+  data?: Date;
+  @decorate(Field(() => HorarioGeradoAulaDiarioProfessorRefInputGraphQlDto, { nullable: true }))
+  @decorate(IsOptional())
+  @decorate(ValidateNested())
   diarioProfessor?: HorarioGeradoAulaDiarioProfessorRefInputGraphQlDto;
-  @Field(() => HorarioGeradoAulaHorarioGeradoRefInputGraphQlDto, { nullable: true })
-  @IsOptional()
-  @ValidateNested()
+  @decorate(Field(() => HorarioGeradoAulaHorarioGeradoRefInputGraphQlDto, { nullable: true }))
+  @decorate(IsOptional())
+  @decorate(ValidateNested())
   horarioGerado?: HorarioGeradoAulaHorarioGeradoRefInputGraphQlDto;
-  @Field(() => HorarioGeradoAulaIntervaloDeTempoRefInputGraphQlDto, { nullable: true })
-  @IsOptional()
-  @ValidateNested()
+  @decorate(Field(() => HorarioGeradoAulaIntervaloDeTempoRefInputGraphQlDto, { nullable: true }))
+  @decorate(IsOptional())
+  @decorate(ValidateNested())
   intervaloDeTempo?: HorarioGeradoAulaIntervaloDeTempoRefInputGraphQlDto;
 }
 
@@ -113,18 +118,14 @@ export class HorarioGeradoAulaUpdateInputGraphQlDto {
 // List Input (GraphQL-compatible - no dots in field names)
 // ============================================================================
 
-@ArgsType()
-export class HorarioGeradoAulaListInputGraphQlDto extends PaginationInputGraphQlDto {
-  @Field(() => [String], { nullable: true, description: "Filtro por ID" })
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
-  filterId?: string[];
-
-  @Field(() => [String], { nullable: true, description: "Filtro por ID do Horario Gerado" })
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
+@decorate(ArgsType())
+export class HorarioGeradoAulaListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {
+  @decorate(
+    Field(() => [String], { nullable: true, description: "Filtro por ID do Horario Gerado" }),
+  )
+  @decorate(IsOptional())
+  @decorate(IsArray())
+  @decorate(IsUUID(undefined, { each: true }))
   filterHorarioGeradoId?: string[];
 }
 
@@ -132,11 +133,11 @@ export class HorarioGeradoAulaListInputGraphQlDto extends PaginationInputGraphQl
 // List Output
 // ============================================================================
 
-@ObjectType("HorarioGeradoAulaListResult")
+@decorate(ObjectType("HorarioGeradoAulaListResult"))
 export class HorarioGeradoAulaListOutputGraphQlDto {
-  @Field(() => PaginationMetaGraphQlDto)
+  @decorate(Field(() => PaginationMetaGraphQlDto))
   meta: PaginationMetaGraphQlDto;
 
-  @Field(() => [HorarioGeradoAulaFindOneOutputGraphQlDto])
+  @decorate(Field(() => [HorarioGeradoAulaFindOneOutputGraphQlDto]))
   data: HorarioGeradoAulaFindOneOutputGraphQlDto[];
 }

@@ -3,12 +3,11 @@ import {
   CursoFindOneInputDto,
   CursoFindOneOutputDto,
   CursoListInputDto,
-  CursoListOutputDto,
   CursoUpdateInputDto,
 } from "@/modules/ensino/curso";
 import { CampusGraphqlMapper } from "@/server/nest/modules/campus/graphql/campus.graphql.mapper";
 import { OfertaFormacaoGraphqlMapper } from "@/server/nest/modules/oferta-formacao/graphql/oferta-formacao.graphql.mapper";
-import { mapPaginationMeta } from "@/server/nest/shared/mappers";
+import { createListOutputMapper, mapDatedFields } from "@/server/nest/shared/mappers";
 import {
   CursoCreateInputGraphQlDto,
   CursoFindOneOutputGraphQlDto,
@@ -114,16 +113,12 @@ export class CursoGraphqlMapper {
     dto.campus = CampusGraphqlMapper.toFindOneOutputDto(output.campus);
     dto.ofertaFormacao = OfertaFormacaoGraphqlMapper.toFindOneOutputDto(output.ofertaFormacao);
     dto.imagemCapa = mapImagemOutput(output.imagemCapa);
-    dto.dateCreated = output.dateCreated as unknown as Date;
-    dto.dateUpdated = output.dateUpdated as unknown as Date;
-    dto.dateDeleted = output.dateDeleted as unknown as Date | null;
+    mapDatedFields(dto, output);
     return dto;
   }
 
-  static toListOutputDto(output: CursoListOutputDto): CursoListOutputGraphQlDto {
-    const dto = new CursoListOutputGraphQlDto();
-    dto.meta = mapPaginationMeta(output.meta);
-    dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
-    return dto;
-  }
+  static toListOutputDto = createListOutputMapper(
+    CursoListOutputGraphQlDto,
+    CursoGraphqlMapper.toFindOneOutputDto,
+  );
 }

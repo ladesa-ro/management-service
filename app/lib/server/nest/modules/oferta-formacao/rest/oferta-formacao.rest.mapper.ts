@@ -3,16 +3,19 @@ import {
   OfertaFormacaoFindOneInputDto,
   OfertaFormacaoFindOneOutputDto,
   OfertaFormacaoListInputDto,
-  OfertaFormacaoListOutputDto,
   OfertaFormacaoUpdateInputDto,
 } from "@/modules/ensino/oferta-formacao";
 import { ModalidadeRestMapper } from "@/server/nest/modules/modalidade/rest";
-import { mapPaginationMeta } from "@/server/nest/shared/mappers";
+import {
+  createFindOneInputMapper,
+  createListInputMapper,
+  createListOutputMapper,
+  mapDatedFields,
+} from "@/server/nest/shared/mappers";
 import {
   OfertaFormacaoCreateInputRestDto,
   OfertaFormacaoFindOneInputRestDto,
   OfertaFormacaoFindOneOutputRestDto,
-  OfertaFormacaoListInputRestDto,
   OfertaFormacaoListOutputRestDto,
   OfertaFormacaoUpdateInputRestDto,
 } from "./oferta-formacao.rest.dto";
@@ -22,29 +25,12 @@ export class OfertaFormacaoRestMapper {
   // Input: Server DTO -> Core DTO
   // ============================================================================
 
-  static toFindOneInput(dto: OfertaFormacaoFindOneInputRestDto): OfertaFormacaoFindOneInputDto {
-    const input = new OfertaFormacaoFindOneInputDto();
-    input.id = dto.id;
-    return input;
-  }
+  static toFindOneInput = createFindOneInputMapper(OfertaFormacaoFindOneInputDto);
 
-  static toListInput(
-    dto: OfertaFormacaoListInputRestDto | null,
-  ): OfertaFormacaoListInputDto | null {
-    if (!dto) {
-      return null;
-    }
-
-    const input = new OfertaFormacaoListInputDto();
-    input.page = dto.page;
-    input.limit = dto.limit;
-    input.search = dto.search;
-    input.sortBy = dto.sortBy;
-    input.selection = dto.selection;
-    input["filter.id"] = dto["filter.id"];
-    input["filter.modalidade.id"] = dto["filter.modalidade.id"];
-    return input;
-  }
+  static toListInput = createListInputMapper(OfertaFormacaoListInputDto, [
+    "filter.id",
+    "filter.modalidade.id",
+  ]);
 
   static toCreateInput(dto: OfertaFormacaoCreateInputRestDto): OfertaFormacaoCreateInputDto {
     const input = new OfertaFormacaoCreateInputDto();
@@ -85,16 +71,12 @@ export class OfertaFormacaoRestMapper {
     dto.nome = output.nome;
     dto.slug = output.slug;
     dto.modalidade = ModalidadeRestMapper.toFindOneOutputDto(output.modalidade);
-    dto.dateCreated = new Date(output.dateCreated);
-    dto.dateUpdated = new Date(output.dateUpdated);
-    dto.dateDeleted = output.dateDeleted ? new Date(output.dateDeleted) : null;
+    mapDatedFields(dto, output);
     return dto;
   }
 
-  static toListOutputDto(output: OfertaFormacaoListOutputDto): OfertaFormacaoListOutputRestDto {
-    const dto = new OfertaFormacaoListOutputRestDto();
-    dto.meta = mapPaginationMeta(output.meta);
-    dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
-    return dto;
-  }
+  static toListOutputDto = createListOutputMapper(
+    OfertaFormacaoListOutputRestDto,
+    OfertaFormacaoRestMapper.toFindOneOutputDto,
+  );
 }

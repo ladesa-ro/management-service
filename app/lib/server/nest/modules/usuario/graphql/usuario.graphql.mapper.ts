@@ -3,10 +3,13 @@ import {
   UsuarioFindOneInputDto,
   UsuarioFindOneOutputDto,
   UsuarioListInputDto,
-  UsuarioListOutputDto,
   UsuarioUpdateInputDto,
 } from "@/modules/acesso/usuario";
-import { mapPaginationMeta } from "@/server/nest/shared/mappers";
+import {
+  createFindOneInputMapper,
+  createListOutputMapper,
+  mapDatedFields,
+} from "@/server/nest/shared/mappers";
 import {
   UsuarioCreateInputGraphQlDto,
   UsuarioFindOneOutputGraphQlDto,
@@ -61,12 +64,7 @@ export class UsuarioGraphqlMapper {
     return input;
   }
 
-  static toFindOneInput(id: string, selection?: string[]): UsuarioFindOneInputDto {
-    const input = new UsuarioFindOneInputDto();
-    input.id = id;
-    input.selection = selection;
-    return input;
-  }
+  static toFindOneInput = createFindOneInputMapper(UsuarioFindOneInputDto);
 
   static toCreateInput(dto: UsuarioCreateInputGraphQlDto): UsuarioCreateInputDto {
     const input = new UsuarioCreateInputDto();
@@ -103,16 +101,12 @@ export class UsuarioGraphqlMapper {
     dto.isSuperUser = output.isSuperUser;
     dto.imagemCapa = mapImagemOutput(output.imagemCapa);
     dto.imagemPerfil = mapImagemOutput(output.imagemPerfil);
-    dto.dateCreated = output.dateCreated as unknown as Date;
-    dto.dateUpdated = output.dateUpdated as unknown as Date;
-    dto.dateDeleted = output.dateDeleted as unknown as Date | null;
+    mapDatedFields(dto, output);
     return dto;
   }
 
-  static toListOutputDto(output: UsuarioListOutputDto): UsuarioListOutputGraphQlDto {
-    const dto = new UsuarioListOutputGraphQlDto();
-    dto.meta = mapPaginationMeta(output.meta);
-    dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
-    return dto;
-  }
+  static toListOutputDto = createListOutputMapper(
+    UsuarioListOutputGraphQlDto,
+    UsuarioGraphqlMapper.toFindOneOutputDto,
+  );
 }

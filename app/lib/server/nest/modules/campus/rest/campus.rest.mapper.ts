@@ -3,16 +3,19 @@ import {
   CampusFindOneInputDto,
   CampusFindOneOutputDto,
   CampusListInputDto,
-  CampusListOutputDto,
   CampusUpdateInputDto,
 } from "@/modules/sisgea/campus";
 import { EnderecoRestMapper } from "@/server/nest/modules/endereco/rest";
-import { mapPaginationMeta } from "@/server/nest/shared/mappers";
+import {
+  createFindOneInputMapper,
+  createListInputMapper,
+  createListOutputMapper,
+  mapDatedFields,
+} from "@/server/nest/shared/mappers";
 import {
   CampusCreateInputRestDto,
   CampusFindOneInputRestDto,
   CampusFindOneOutputRestDto,
-  CampusListInputRestDto,
   CampusListOutputRestDto,
   CampusUpdateInputRestDto,
 } from "./campus.rest.dto";
@@ -22,26 +25,9 @@ export class CampusRestMapper {
   // Input: Server DTO -> Core DTO
   // ============================================================================
 
-  static toFindOneInput(dto: CampusFindOneInputRestDto): CampusFindOneInputDto {
-    const input = new CampusFindOneInputDto();
-    input.id = dto.id;
-    return input;
-  }
+  static toFindOneInput = createFindOneInputMapper(CampusFindOneInputDto);
 
-  static toListInput(dto: CampusListInputRestDto | null): CampusListInputDto | null {
-    if (!dto) {
-      return null;
-    }
-
-    const input = new CampusListInputDto();
-    input.page = dto.page;
-    input.limit = dto.limit;
-    input.search = dto.search;
-    input.sortBy = dto.sortBy;
-    input.selection = dto.selection;
-    input["filter.id"] = dto["filter.id"];
-    return input;
-  }
+  static toListInput = createListInputMapper(CampusListInputDto, ["filter.id"]);
 
   static toCreateInput(dto: CampusCreateInputRestDto): CampusCreateInputDto {
     const input = new CampusCreateInputDto();
@@ -89,16 +75,12 @@ export class CampusRestMapper {
     dto.apelido = output.apelido;
     dto.cnpj = output.cnpj;
     dto.endereco = EnderecoRestMapper.toFindOneOutputDto(output.endereco);
-    dto.dateCreated = new Date(output.dateCreated);
-    dto.dateUpdated = new Date(output.dateUpdated);
-    dto.dateDeleted = output.dateDeleted ? new Date(output.dateDeleted) : null;
+    mapDatedFields(dto, output);
     return dto;
   }
 
-  static toListOutputDto(output: CampusListOutputDto): CampusListOutputRestDto {
-    const dto = new CampusListOutputRestDto();
-    dto.meta = mapPaginationMeta(output.meta);
-    dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
-    return dto;
-  }
+  static toListOutputDto = createListOutputMapper(
+    CampusListOutputRestDto,
+    CampusRestMapper.toFindOneOutputDto,
+  );
 }

@@ -3,17 +3,20 @@ import {
   DiarioPreferenciaAgrupamentoFindOneInputDto,
   DiarioPreferenciaAgrupamentoFindOneOutputDto,
   DiarioPreferenciaAgrupamentoListInputDto,
-  DiarioPreferenciaAgrupamentoListOutputDto,
   DiarioPreferenciaAgrupamentoUpdateInputDto,
 } from "@/modules/ensino/diario-preferencia-agrupamento";
 import { DiarioRestMapper } from "@/server/nest/modules/diario/rest";
 import { IntervaloDeTempoRestMapper } from "@/server/nest/modules/intervalo-de-tempo/rest";
-import { mapPaginationMeta } from "@/server/nest/shared/mappers";
+import {
+  createFindOneInputMapper,
+  createListInputMapper,
+  createListOutputMapper,
+  mapDatedFields,
+} from "@/server/nest/shared/mappers";
 import {
   DiarioPreferenciaAgrupamentoCreateInputRestDto,
   DiarioPreferenciaAgrupamentoFindOneInputRestDto,
   DiarioPreferenciaAgrupamentoFindOneOutputRestDto,
-  DiarioPreferenciaAgrupamentoListInputRestDto,
   DiarioPreferenciaAgrupamentoListOutputRestDto,
   DiarioPreferenciaAgrupamentoUpdateInputRestDto,
 } from "./diario-preferencia-agrupamento.rest.dto";
@@ -23,31 +26,12 @@ export class DiarioPreferenciaAgrupamentoRestMapper {
   // Input: Server DTO -> Core DTO
   // ============================================================================
 
-  static toFindOneInput(
-    dto: DiarioPreferenciaAgrupamentoFindOneInputRestDto,
-  ): DiarioPreferenciaAgrupamentoFindOneInputDto {
-    const input = new DiarioPreferenciaAgrupamentoFindOneInputDto();
-    input.id = dto.id;
-    return input;
-  }
+  static toFindOneInput = createFindOneInputMapper(DiarioPreferenciaAgrupamentoFindOneInputDto);
 
-  static toListInput(
-    dto: DiarioPreferenciaAgrupamentoListInputRestDto | null,
-  ): DiarioPreferenciaAgrupamentoListInputDto | null {
-    if (!dto) {
-      return null;
-    }
-
-    const input = new DiarioPreferenciaAgrupamentoListInputDto();
-    input.page = dto.page;
-    input.limit = dto.limit;
-    input.search = dto.search;
-    input.sortBy = dto.sortBy;
-    input.selection = dto.selection;
-    input["filter.id"] = dto["filter.id"];
-    input["filter.diario.id"] = dto["filter.diario.id"];
-    return input;
-  }
+  static toListInput = createListInputMapper(DiarioPreferenciaAgrupamentoListInputDto, [
+    "filter.id",
+    "filter.diario.id",
+  ]);
 
   static toCreateInput(
     dto: DiarioPreferenciaAgrupamentoCreateInputRestDto,
@@ -106,18 +90,12 @@ export class DiarioPreferenciaAgrupamentoRestMapper {
     dto.aulasSeguidas = output.aulasSeguidas;
     dto.intervaloDeTempo = IntervaloDeTempoRestMapper.toFindOneOutputDto(output.intervaloDeTempo);
     dto.diario = DiarioRestMapper.toFindOneOutputDto(output.diario);
-    dto.dateCreated = new Date(output.dateCreated);
-    dto.dateUpdated = new Date(output.dateUpdated);
-    dto.dateDeleted = output.dateDeleted ? new Date(output.dateDeleted) : null;
+    mapDatedFields(dto, output);
     return dto;
   }
 
-  static toListOutputDto(
-    output: DiarioPreferenciaAgrupamentoListOutputDto,
-  ): DiarioPreferenciaAgrupamentoListOutputRestDto {
-    const dto = new DiarioPreferenciaAgrupamentoListOutputRestDto();
-    dto.meta = mapPaginationMeta(output.meta);
-    dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
-    return dto;
-  }
+  static toListOutputDto = createListOutputMapper(
+    DiarioPreferenciaAgrupamentoListOutputRestDto,
+    DiarioPreferenciaAgrupamentoRestMapper.toFindOneOutputDto,
+  );
 }

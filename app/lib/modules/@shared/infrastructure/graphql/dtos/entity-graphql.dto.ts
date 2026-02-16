@@ -1,49 +1,41 @@
 import { Field, ID, Int, ObjectType } from "@nestjs/graphql";
+import { decorate, Mixin } from "ts-mixer";
 
 /**
  * Base GraphQL DTO for entities identified by UUID.
  */
-@ObjectType({ isAbstract: true })
+@decorate(ObjectType({ isAbstract: true }))
 export class EntityIdUuidGraphQlDto {
-  @Field(() => ID)
+  @decorate(Field(() => ID))
   id: string;
 }
 
 /**
  * Base GraphQL DTO for entities identified by integer ID.
  */
-@ObjectType({ isAbstract: true })
+@decorate(ObjectType({ isAbstract: true }))
 export class EntityIdIntGraphQlDto {
-  @Field(() => Int)
+  @decorate(Field(() => Int))
   id: number;
 }
 
 /**
  * Base GraphQL DTO for entities with timestamps.
  */
-@ObjectType({ isAbstract: true })
+@decorate(ObjectType({ isAbstract: true }))
 export class EntityDatedGraphQlDto {
-  @Field()
+  @decorate(Field(() => Date))
   dateCreated: Date;
 
-  @Field()
+  @decorate(Field(() => Date))
   dateUpdated: Date;
 
-  @Field(() => Date, { nullable: true })
+  @decorate(Field(() => Date, { nullable: true }))
   dateDeleted: Date | null;
 }
 
 /**
  * Combined base GraphQL DTO with UUID and timestamps.
  */
-@ObjectType({ isAbstract: true })
-export class EntityBaseGraphQlDto extends EntityIdUuidGraphQlDto {
-  @Field()
-  dateCreated: Date;
-
-  @Field()
-  dateUpdated: Date;
-
-  @Field(() => Date, { nullable: true })
-  dateDeleted: Date | null;
-}
+@decorate(ObjectType({ isAbstract: true }))
+export class EntityBaseGraphQlDto extends Mixin(EntityIdUuidGraphQlDto, EntityDatedGraphQlDto) {}

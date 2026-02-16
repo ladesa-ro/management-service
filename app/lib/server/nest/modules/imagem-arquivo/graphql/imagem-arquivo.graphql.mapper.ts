@@ -2,9 +2,12 @@ import {
   ImagemArquivoFindOneInputDto,
   ImagemArquivoFindOneOutputDto,
   ImagemArquivoListInputDto,
-  ImagemArquivoListOutputDto,
 } from "@/modules/base/armazenamento/imagem-arquivo";
-import { mapPaginationMeta } from "@/server/nest/shared/mappers";
+import {
+  createFindOneInputMapper,
+  createListOutputMapper,
+  mapDatedFields,
+} from "@/server/nest/shared/mappers";
 import {
   ArquivoFindOneOutputGraphQlDto,
   ImagemArquivoFindOneOutputGraphQlDto,
@@ -30,12 +33,7 @@ export class ImagemArquivoGraphqlMapper {
     return input;
   }
 
-  static toFindOneInput(id: string, selection?: string[]): ImagemArquivoFindOneInputDto {
-    const input = new ImagemArquivoFindOneInputDto();
-    input.id = id;
-    input.selection = selection;
-    return input;
-  }
+  static toFindOneInput = createFindOneInputMapper(ImagemArquivoFindOneInputDto);
 
   static toFindOneOutputDto(
     output: ImagemArquivoFindOneOutputDto,
@@ -57,21 +55,15 @@ export class ImagemArquivoGraphqlMapper {
     arquivo.mimeType = output.arquivo.mimeType;
     arquivo.sizeBytes = output.arquivo.sizeBytes;
     arquivo.storageType = output.arquivo.storageType;
-    arquivo.dateCreated = output.arquivo.dateCreated as unknown as Date;
-    arquivo.dateUpdated = output.arquivo.dateUpdated as unknown as Date;
-    arquivo.dateDeleted = output.arquivo.dateDeleted as unknown as Date | null;
+    mapDatedFields(arquivo, output.arquivo);
     dto.arquivo = arquivo;
 
-    dto.dateCreated = output.dateCreated as unknown as Date;
-    dto.dateUpdated = output.dateUpdated as unknown as Date;
-    dto.dateDeleted = output.dateDeleted as unknown as Date | null;
+    mapDatedFields(dto, output);
     return dto;
   }
 
-  static toListOutputDto(output: ImagemArquivoListOutputDto): ImagemArquivoListOutputGraphQlDto {
-    const dto = new ImagemArquivoListOutputGraphQlDto();
-    dto.meta = mapPaginationMeta(output.meta);
-    dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
-    return dto;
-  }
+  static toListOutputDto = createListOutputMapper(
+    ImagemArquivoListOutputGraphQlDto,
+    ImagemArquivoGraphqlMapper.toFindOneOutputDto,
+  );
 }

@@ -3,17 +3,20 @@ import {
   EventoFindOneInputDto,
   EventoFindOneOutputDto,
   EventoListInputDto,
-  EventoListOutputDto,
   EventoUpdateInputDto,
 } from "@/modules/sisgha/evento";
 import { AmbienteRestMapper } from "@/server/nest/modules/ambiente/rest";
 import { CalendarioLetivoRestMapper } from "@/server/nest/modules/calendario-letivo/rest";
-import { mapPaginationMeta } from "@/server/nest/shared/mappers";
+import {
+  createFindOneInputMapper,
+  createListInputMapper,
+  createListOutputMapper,
+  mapDatedFields,
+} from "@/server/nest/shared/mappers";
 import {
   EventoCreateInputRestDto,
   EventoFindOneInputRestDto,
   EventoFindOneOutputRestDto,
-  EventoListInputRestDto,
   EventoListOutputRestDto,
   EventoUpdateInputRestDto,
 } from "./evento.rest.dto";
@@ -23,27 +26,12 @@ export class EventoRestMapper {
   // Input: Server DTO -> Core DTO
   // ============================================================================
 
-  static toFindOneInput(dto: EventoFindOneInputRestDto): EventoFindOneInputDto {
-    const input = new EventoFindOneInputDto();
-    input.id = dto.id;
-    return input;
-  }
+  static toFindOneInput = createFindOneInputMapper(EventoFindOneInputDto);
 
-  static toListInput(dto: EventoListInputRestDto | null): EventoListInputDto | null {
-    if (!dto) {
-      return null;
-    }
-
-    const input = new EventoListInputDto();
-    input.page = dto.page;
-    input.limit = dto.limit;
-    input.search = dto.search;
-    input.sortBy = dto.sortBy;
-    input.selection = dto.selection;
-    input["filter.id"] = dto["filter.id"];
-    input["filter.calendario.id"] = dto["filter.calendario.id"];
-    return input;
-  }
+  static toListInput = createListInputMapper(EventoListInputDto, [
+    "filter.id",
+    "filter.calendario.id",
+  ]);
 
   static toCreateInput(dto: EventoCreateInputRestDto): EventoCreateInputDto {
     const input = new EventoCreateInputDto();
@@ -101,16 +89,12 @@ export class EventoRestMapper {
     dto.dataFim = output.dataFim;
     dto.calendario = CalendarioLetivoRestMapper.toFindOneOutputDto(output.calendario);
     dto.ambiente = output.ambiente ? AmbienteRestMapper.toFindOneOutputDto(output.ambiente) : null;
-    dto.dateCreated = new Date(output.dateCreated);
-    dto.dateUpdated = new Date(output.dateUpdated);
-    dto.dateDeleted = output.dateDeleted ? new Date(output.dateDeleted) : null;
+    mapDatedFields(dto, output);
     return dto;
   }
 
-  static toListOutputDto(output: EventoListOutputDto): EventoListOutputRestDto {
-    const dto = new EventoListOutputRestDto();
-    dto.meta = mapPaginationMeta(output.meta);
-    dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
-    return dto;
-  }
+  static toListOutputDto = createListOutputMapper(
+    EventoListOutputRestDto,
+    EventoRestMapper.toFindOneOutputDto,
+  );
 }

@@ -1,63 +1,65 @@
 import { ArgsType, Field, InputType, ObjectType } from "@nestjs/graphql";
-import { IsArray, IsDateString, IsOptional, IsUUID } from "class-validator";
+import { IsDateString, IsOptional } from "class-validator";
+import { decorate } from "ts-mixer";
 import {
   EntityBaseGraphQlDto,
+  PaginatedFilterByIdGraphQlDto,
   PaginationMetaGraphQlDto,
 } from "@/modules/@shared/infrastructure/graphql/dtos";
-import { PaginationInputGraphQlDto } from "@/modules/@shared/infrastructure/graphql/dtos/pagination-graphql.dto";
+import { DisponibilidadeFieldsMixin } from "../disponibilidade.validation-mixin";
 
 // ============================================================================
 // FindOne Output
 // ============================================================================
 
-@ObjectType("DisponibilidadeFindOneOutputDto")
+@decorate(ObjectType("DisponibilidadeFindOneOutputDto"))
 export class DisponibilidadeFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
-  @Field() dataInicio: Date;
-  @Field(() => Date, { nullable: true }) dataFim: Date | null;
+  @decorate(Field(() => Date)) dataInicio: Date;
+  @decorate(Field(() => Date, { nullable: true })) dataFim: Date | null;
 }
 
 // ============================================================================
 // Create Input
 // ============================================================================
 
-@InputType("DisponibilidadeCreateInputDto")
-export class DisponibilidadeCreateInputGraphQlDto {
-  @Field() @IsDateString() dataInicio: Date;
-  @Field(() => Date, { nullable: true }) @IsOptional() @IsDateString() dataFim?: Date | null;
+@decorate(InputType("DisponibilidadeCreateInputDto"))
+export class DisponibilidadeCreateInputGraphQlDto extends DisponibilidadeFieldsMixin {
+  @decorate(Field(() => Date)) declare dataInicio: Date;
+  @decorate(Field(() => Date, { nullable: true })) declare dataFim: Date | null;
 }
 
 // ============================================================================
 // Update Input
 // ============================================================================
 
-@InputType("DisponibilidadeUpdateInputDto")
+@decorate(InputType("DisponibilidadeUpdateInputDto"))
 export class DisponibilidadeUpdateInputGraphQlDto {
-  @Field({ nullable: true }) @IsOptional() @IsDateString() dataInicio?: Date;
-  @Field(() => Date, { nullable: true }) @IsOptional() @IsDateString() dataFim?: Date | null;
+  @decorate(Field(() => Date, { nullable: true }))
+  @decorate(IsOptional())
+  @decorate(IsDateString())
+  dataInicio?: Date;
+  @decorate(Field(() => Date, { nullable: true }))
+  @decorate(IsOptional())
+  @decorate(IsDateString())
+  dataFim?: Date | null;
 }
 
 // ============================================================================
 // List Input
 // ============================================================================
 
-@ArgsType()
-export class DisponibilidadeListInputGraphQlDto extends PaginationInputGraphQlDto {
-  @Field(() => [String], { nullable: true, description: "Filtro por ID" })
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
-  filterId?: string[];
-}
+@decorate(ArgsType())
+export class DisponibilidadeListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {}
 
 // ============================================================================
 // List Output
 // ============================================================================
 
-@ObjectType("DisponibilidadeListResult")
+@decorate(ObjectType("DisponibilidadeListResult"))
 export class DisponibilidadeListOutputGraphQlDto {
-  @Field(() => PaginationMetaGraphQlDto)
+  @decorate(Field(() => PaginationMetaGraphQlDto))
   meta: PaginationMetaGraphQlDto;
 
-  @Field(() => [DisponibilidadeFindOneOutputGraphQlDto])
+  @decorate(Field(() => [DisponibilidadeFindOneOutputGraphQlDto]))
   data: DisponibilidadeFindOneOutputGraphQlDto[];
 }

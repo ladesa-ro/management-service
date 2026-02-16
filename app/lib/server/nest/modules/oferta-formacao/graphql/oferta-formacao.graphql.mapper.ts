@@ -3,11 +3,10 @@ import {
   OfertaFormacaoFindOneInputDto,
   OfertaFormacaoFindOneOutputDto,
   OfertaFormacaoListInputDto,
-  OfertaFormacaoListOutputDto,
   OfertaFormacaoUpdateInputDto,
 } from "@/modules/ensino/oferta-formacao";
 import { ModalidadeGraphqlMapper } from "@/server/nest/modules/modalidade/graphql/modalidade.graphql.mapper";
-import { mapPaginationMeta } from "@/server/nest/shared/mappers";
+import { createListOutputMapper, mapDatedFields } from "@/server/nest/shared/mappers";
 import {
   OfertaFormacaoCreateInputGraphQlDto,
   OfertaFormacaoFindOneOutputGraphQlDto,
@@ -76,16 +75,12 @@ export class OfertaFormacaoGraphqlMapper {
     dto.nome = output.nome;
     dto.slug = output.slug;
     dto.modalidade = ModalidadeGraphqlMapper.toFindOneOutputDto(output.modalidade);
-    dto.dateCreated = output.dateCreated as unknown as Date;
-    dto.dateUpdated = output.dateUpdated as unknown as Date;
-    dto.dateDeleted = output.dateDeleted as unknown as Date | null;
+    mapDatedFields(dto, output);
     return dto;
   }
 
-  static toListOutputDto(output: OfertaFormacaoListOutputDto): OfertaFormacaoListOutputGraphQlDto {
-    const dto = new OfertaFormacaoListOutputGraphQlDto();
-    dto.meta = mapPaginationMeta(output.meta);
-    dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
-    return dto;
-  }
+  static toListOutputDto = createListOutputMapper(
+    OfertaFormacaoListOutputGraphQlDto,
+    OfertaFormacaoGraphqlMapper.toFindOneOutputDto,
+  );
 }

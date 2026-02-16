@@ -3,10 +3,9 @@ import {
   ModalidadeFindOneInputDto,
   ModalidadeFindOneOutputDto,
   ModalidadeListInputDto,
-  ModalidadeListOutputDto,
   ModalidadeUpdateInputDto,
 } from "@/modules/ensino/modalidade";
-import { mapPaginationMeta } from "@/server/nest/shared/mappers";
+import { createListOutputMapper, mapDatedFields } from "@/server/nest/shared/mappers";
 import {
   ModalidadeCreateInputGraphQlDto,
   ModalidadeFindOneOutputGraphQlDto,
@@ -65,16 +64,12 @@ export class ModalidadeGraphqlMapper {
     dto.id = output.id;
     dto.nome = output.nome;
     dto.slug = output.slug;
-    dto.dateCreated = output.dateCreated as unknown as Date;
-    dto.dateUpdated = output.dateUpdated as unknown as Date;
-    dto.dateDeleted = output.dateDeleted as unknown as Date | null;
+    mapDatedFields(dto, output);
     return dto;
   }
 
-  static toListOutputDto(output: ModalidadeListOutputDto): ModalidadeListOutputGraphQlDto {
-    const dto = new ModalidadeListOutputGraphQlDto();
-    dto.meta = mapPaginationMeta(output.meta);
-    dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
-    return dto;
-  }
+  static toListOutputDto = createListOutputMapper(
+    ModalidadeListOutputGraphQlDto,
+    ModalidadeGraphqlMapper.toFindOneOutputDto,
+  );
 }

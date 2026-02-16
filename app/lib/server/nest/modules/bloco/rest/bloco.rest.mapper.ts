@@ -4,16 +4,19 @@ import {
   BlocoFindOneInputDto,
   BlocoFindOneOutputDto,
   BlocoListInputDto,
-  BlocoListOutputDto,
   BlocoUpdateInputDto,
 } from "@/modules/sisgea/bloco";
 import { CampusRestMapper } from "@/server/nest/modules/campus/rest";
-import { mapPaginationMeta } from "@/server/nest/shared/mappers";
+import {
+  createFindOneInputMapper,
+  createListInputMapper,
+  createListOutputMapper,
+  mapDatedFields,
+} from "@/server/nest/shared/mappers";
 import {
   BlocoCreateInputRestDto,
   BlocoFindOneInputRestDto,
   BlocoFindOneOutputRestDto,
-  BlocoListInputRestDto,
   BlocoListOutputRestDto,
   BlocoUpdateInputRestDto,
   ImagemArquivoFindOneFromImagemOutputRestDto,
@@ -25,27 +28,9 @@ export class BlocoRestMapper {
   // Input: Server DTO -> Core DTO
   // ============================================================================
 
-  static toFindOneInput(dto: BlocoFindOneInputRestDto): BlocoFindOneInputDto {
-    const input = new BlocoFindOneInputDto();
-    input.id = dto.id;
-    return input;
-  }
+  static toFindOneInput = createFindOneInputMapper(BlocoFindOneInputDto);
 
-  static toListInput(dto: BlocoListInputRestDto | null): BlocoListInputDto | null {
-    if (!dto) {
-      return null;
-    }
-
-    const input = new BlocoListInputDto();
-    input.page = dto.page;
-    input.limit = dto.limit;
-    input.search = dto.search;
-    input.sortBy = dto.sortBy;
-    input.selection = dto.selection;
-    input["filter.id"] = dto["filter.id"];
-    input["filter.campus.id"] = dto["filter.campus.id"];
-    return input;
-  }
+  static toListInput = createListInputMapper(BlocoListInputDto, ["filter.id", "filter.campus.id"]);
 
   static toCreateInput(dto: BlocoCreateInputRestDto): BlocoCreateInputDto {
     const input = new BlocoCreateInputDto();
@@ -84,9 +69,7 @@ export class BlocoRestMapper {
     dto.codigo = output.codigo;
     dto.campus = CampusRestMapper.toFindOneOutputDto(output.campus);
     dto.imagemCapa = output.imagemCapa ? this.toImagemOutputDto(output.imagemCapa) : null;
-    dto.dateCreated = new Date(output.dateCreated);
-    dto.dateUpdated = new Date(output.dateUpdated);
-    dto.dateDeleted = output.dateDeleted ? new Date(output.dateDeleted) : null;
+    mapDatedFields(dto, output);
     return dto;
   }
 
@@ -110,10 +93,8 @@ export class BlocoRestMapper {
     return dto;
   }
 
-  static toListOutputDto(output: BlocoListOutputDto): BlocoListOutputRestDto {
-    const dto = new BlocoListOutputRestDto();
-    dto.meta = mapPaginationMeta(output.meta);
-    dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
-    return dto;
-  }
+  static toListOutputDto = createListOutputMapper(
+    BlocoListOutputRestDto,
+    BlocoRestMapper.toFindOneOutputDto,
+  );
 }

@@ -1,66 +1,61 @@
-import { ArgsType, Field, InputType, Int, ObjectType } from "@nestjs/graphql";
-import {
-  IsArray,
-  IsBoolean,
-  IsInt,
-  IsOptional,
-  IsString,
-  IsUUID,
-  Min,
-  ValidateNested,
-} from "class-validator";
+import { ArgsType, Field, InputType, ObjectType } from "@nestjs/graphql";
+import { IsArray, IsBoolean, IsOptional, IsString, IsUUID, ValidateNested } from "class-validator";
+import { decorate } from "ts-mixer";
 import {
   EntityBaseGraphQlDto,
+  PaginatedFilterByIdGraphQlDto,
   PaginationMetaGraphQlDto,
 } from "@/modules/@shared/infrastructure/graphql/dtos";
 import { PerfilFindOneOutputGraphQlDto } from "@/server/nest/modules/perfil/graphql/perfil.graphql.dto";
+import { DiarioProfessorFieldsMixin } from "../diario-professor.validation-mixin";
 
 // ============================================================================
 // Ref Input DTOs for cross-module references
 // ============================================================================
 
-@InputType("DiarioProfessorDiarioRefInputDto")
+@decorate(InputType("DiarioProfessorDiarioRefInputDto"))
 export class DiarioProfessorDiarioRefInputGraphQlDto {
-  @Field() @IsString() id: string;
+  @decorate(Field(() => String)) @decorate(IsString()) id: string;
 }
 
-@InputType("DiarioProfessorPerfilRefInputDto")
+@decorate(InputType("DiarioProfessorPerfilRefInputDto"))
 export class DiarioProfessorPerfilRefInputGraphQlDto {
-  @Field() @IsString() id: string;
+  @decorate(Field(() => String)) @decorate(IsString()) id: string;
 }
 
 // ============================================================================
 // Diario nested output (diario module not yet refactored to GraphQL)
 // ============================================================================
 
-@ObjectType("DiarioProfessorDiarioOutput")
+@decorate(ObjectType("DiarioProfessorDiarioOutput"))
 export class DiarioProfessorDiarioOutputGraphQlDto extends EntityBaseGraphQlDto {
-  @Field() ativo: boolean;
+  @decorate(Field(() => Boolean)) ativo: boolean;
 }
 
 // ============================================================================
 // FindOne Output
 // ============================================================================
 
-@ObjectType("DiarioProfessorFindOneOutputDto")
+@decorate(ObjectType("DiarioProfessorFindOneOutputDto"))
 export class DiarioProfessorFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
-  @Field() situacao: boolean;
-  @Field(() => DiarioProfessorDiarioOutputGraphQlDto) diario: DiarioProfessorDiarioOutputGraphQlDto;
-  @Field(() => PerfilFindOneOutputGraphQlDto) perfil: PerfilFindOneOutputGraphQlDto;
+  @decorate(Field(() => Boolean)) situacao: boolean;
+  @decorate(Field(() => DiarioProfessorDiarioOutputGraphQlDto))
+  diario: DiarioProfessorDiarioOutputGraphQlDto;
+  @decorate(Field(() => PerfilFindOneOutputGraphQlDto)) perfil: PerfilFindOneOutputGraphQlDto;
 }
 
 // ============================================================================
 // Create Input
 // ============================================================================
 
-@InputType("DiarioProfessorCreateInputDto")
-export class DiarioProfessorCreateInputGraphQlDto {
-  @Field() @IsBoolean() situacao: boolean;
-  @Field(() => DiarioProfessorDiarioRefInputGraphQlDto)
-  @ValidateNested()
+@decorate(InputType("DiarioProfessorCreateInputDto"))
+export class DiarioProfessorCreateInputGraphQlDto extends DiarioProfessorFieldsMixin {
+  @decorate(Field(() => Boolean)) declare situacao: boolean;
+  @decorate(Field(() => DiarioProfessorDiarioRefInputGraphQlDto))
+  @decorate(ValidateNested())
   diario: DiarioProfessorDiarioRefInputGraphQlDto;
-  @Field(() => DiarioProfessorPerfilRefInputGraphQlDto)
-  @ValidateNested()
+  @decorate(Field(() => DiarioProfessorPerfilRefInputGraphQlDto))
+  @decorate(ValidateNested())
   perfil: DiarioProfessorPerfilRefInputGraphQlDto;
 }
 
@@ -68,16 +63,19 @@ export class DiarioProfessorCreateInputGraphQlDto {
 // Update Input
 // ============================================================================
 
-@InputType("DiarioProfessorUpdateInputDto")
+@decorate(InputType("DiarioProfessorUpdateInputDto"))
 export class DiarioProfessorUpdateInputGraphQlDto {
-  @Field({ nullable: true }) @IsOptional() @IsBoolean() situacao?: boolean;
-  @Field(() => DiarioProfessorDiarioRefInputGraphQlDto, { nullable: true })
-  @IsOptional()
-  @ValidateNested()
+  @decorate(Field(() => Boolean, { nullable: true }))
+  @decorate(IsOptional())
+  @decorate(IsBoolean())
+  situacao?: boolean;
+  @decorate(Field(() => DiarioProfessorDiarioRefInputGraphQlDto, { nullable: true }))
+  @decorate(IsOptional())
+  @decorate(ValidateNested())
   diario?: DiarioProfessorDiarioRefInputGraphQlDto;
-  @Field(() => DiarioProfessorPerfilRefInputGraphQlDto, { nullable: true })
-  @IsOptional()
-  @ValidateNested()
+  @decorate(Field(() => DiarioProfessorPerfilRefInputGraphQlDto, { nullable: true }))
+  @decorate(IsOptional())
+  @decorate(ValidateNested())
   perfil?: DiarioProfessorPerfilRefInputGraphQlDto;
 }
 
@@ -85,53 +83,26 @@ export class DiarioProfessorUpdateInputGraphQlDto {
 // List Input (GraphQL-compatible - no dots in field names)
 // ============================================================================
 
-@ArgsType()
-export class DiarioProfessorListInputGraphQlDto {
-  @Field(() => Int, { nullable: true, defaultValue: 1 })
-  @IsOptional()
-  @IsInt()
-  @Min(1)
-  page?: number = 1;
-
-  @Field(() => Int, { nullable: true })
-  @IsOptional()
-  @IsInt()
-  @Min(1)
-  limit?: number;
-
-  @Field(() => String, { nullable: true })
-  @IsOptional()
-  @IsString()
-  search?: string;
-
-  @Field(() => [String], { nullable: true })
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
-  sortBy?: string[];
-
-  @Field(() => [String], { nullable: true, description: "Filtro por ID" })
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
-  filterId?: string[];
-
-  @Field(() => [String], { nullable: true, description: "Filtro por ID do Usuario do Perfil" })
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
+@decorate(ArgsType())
+export class DiarioProfessorListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {
+  @decorate(
+    Field(() => [String], { nullable: true, description: "Filtro por ID do Usuario do Perfil" }),
+  )
+  @decorate(IsOptional())
+  @decorate(IsArray())
+  @decorate(IsUUID(undefined, { each: true }))
   filterPerfilUsuarioId?: string[];
 
-  @Field(() => [String], { nullable: true, description: "Filtro por ID do Perfil" })
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
+  @decorate(Field(() => [String], { nullable: true, description: "Filtro por ID do Perfil" }))
+  @decorate(IsOptional())
+  @decorate(IsArray())
+  @decorate(IsUUID(undefined, { each: true }))
   filterPerfilId?: string[];
 
-  @Field(() => [String], { nullable: true, description: "Filtro por ID do Diario" })
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
+  @decorate(Field(() => [String], { nullable: true, description: "Filtro por ID do Diario" }))
+  @decorate(IsOptional())
+  @decorate(IsArray())
+  @decorate(IsUUID(undefined, { each: true }))
   filterDiarioId?: string[];
 }
 
@@ -139,11 +110,11 @@ export class DiarioProfessorListInputGraphQlDto {
 // List Output
 // ============================================================================
 
-@ObjectType("DiarioProfessorListResult")
+@decorate(ObjectType("DiarioProfessorListResult"))
 export class DiarioProfessorListOutputGraphQlDto {
-  @Field(() => PaginationMetaGraphQlDto)
+  @decorate(Field(() => PaginationMetaGraphQlDto))
   meta: PaginationMetaGraphQlDto;
 
-  @Field(() => [DiarioProfessorFindOneOutputGraphQlDto])
+  @decorate(Field(() => [DiarioProfessorFindOneOutputGraphQlDto]))
   data: DiarioProfessorFindOneOutputGraphQlDto[];
 }

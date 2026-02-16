@@ -1,43 +1,37 @@
 import { ArgsType, Field, ObjectType } from "@nestjs/graphql";
-import { IsArray, IsOptional, IsUUID } from "class-validator";
+import { decorate } from "ts-mixer";
 import {
   EntityBaseGraphQlDto,
+  PaginatedFilterByIdGraphQlDto,
   PaginationMetaGraphQlDto,
 } from "@/modules/@shared/infrastructure/graphql/dtos";
-import { PaginationInputGraphQlDto } from "@/modules/@shared/infrastructure/graphql/dtos/pagination-graphql.dto";
 
 // ============================================================================
 // FindOne Output
 // ============================================================================
 
-@ObjectType("IntervaloDeTempoFindOneOutputDto")
+@decorate(ObjectType("IntervaloDeTempoFindOneOutputDto"))
 export class IntervaloDeTempoFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
-  @Field() periodoInicio: string;
-  @Field() periodoFim: string;
+  @decorate(Field(() => String)) periodoInicio: string;
+  @decorate(Field(() => String)) periodoFim: string;
 }
 
 // ============================================================================
 // List Input
 // ============================================================================
 
-@ArgsType()
-export class IntervaloDeTempoListInputGraphQlDto extends PaginationInputGraphQlDto {
-  @Field(() => [String], { nullable: true, description: "Filtro por ID" })
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
-  filterId?: string[];
-}
+@decorate(ArgsType())
+export class IntervaloDeTempoListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {}
 
 // ============================================================================
 // List Output
 // ============================================================================
 
-@ObjectType("IntervaloDeTempoListResult")
+@decorate(ObjectType("IntervaloDeTempoListResult"))
 export class IntervaloDeTempoListOutputGraphQlDto {
-  @Field(() => PaginationMetaGraphQlDto)
+  @decorate(Field(() => PaginationMetaGraphQlDto))
   meta: PaginationMetaGraphQlDto;
 
-  @Field(() => [IntervaloDeTempoFindOneOutputGraphQlDto])
+  @decorate(Field(() => [IntervaloDeTempoFindOneOutputGraphQlDto]))
   data: IntervaloDeTempoFindOneOutputGraphQlDto[];
 }

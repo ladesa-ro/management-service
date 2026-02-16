@@ -1,7 +1,8 @@
-import { ArgsType, Field, Int, ObjectType } from "@nestjs/graphql";
-import { IsArray, IsInt, IsOptional, IsString, IsUUID, Min } from "class-validator";
+import { ArgsType, Field, ObjectType } from "@nestjs/graphql";
+import { decorate } from "ts-mixer";
 import {
   EntityIdIntGraphQlDto,
+  PaginatedFilterByIdGraphQlDto,
   PaginationMetaGraphQlDto,
 } from "@/modules/@shared/infrastructure/graphql/dtos";
 
@@ -9,57 +10,28 @@ import {
 // FindOne Output
 // ============================================================================
 
-@ObjectType("EstadoFindOneOutputDto")
+@decorate(ObjectType("EstadoFindOneOutputDto"))
 export class EstadoFindOneOutputGraphQlDto extends EntityIdIntGraphQlDto {
-  @Field() nome: string;
-  @Field() sigla: string;
+  @decorate(Field(() => String)) nome: string;
+  @decorate(Field(() => String)) sigla: string;
 }
 
 // ============================================================================
 // List Input (GraphQL-compatible - no dots in field names)
 // ============================================================================
 
-@ArgsType()
-export class EstadoListInputGraphQlDto {
-  @Field(() => Int, { nullable: true, defaultValue: 1 })
-  @IsOptional()
-  @IsInt()
-  @Min(1)
-  page?: number = 1;
-
-  @Field(() => Int, { nullable: true })
-  @IsOptional()
-  @IsInt()
-  @Min(1)
-  limit?: number;
-
-  @Field(() => String, { nullable: true })
-  @IsOptional()
-  @IsString()
-  search?: string;
-
-  @Field(() => [String], { nullable: true })
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
-  sortBy?: string[];
-
-  @Field(() => [String], { nullable: true, description: "Filtro por ID" })
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
-  filterId?: string[];
-}
+@decorate(ArgsType())
+export class EstadoListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {}
 
 // ============================================================================
 // List Output
 // ============================================================================
 
-@ObjectType("EstadoListResult")
+@decorate(ObjectType("EstadoListResult"))
 export class EstadoListOutputGraphQlDto {
-  @Field(() => PaginationMetaGraphQlDto)
+  @decorate(Field(() => PaginationMetaGraphQlDto))
   meta: PaginationMetaGraphQlDto;
 
-  @Field(() => [EstadoFindOneOutputGraphQlDto])
+  @decorate(Field(() => [EstadoFindOneOutputGraphQlDto]))
   data: EstadoFindOneOutputGraphQlDto[];
 }

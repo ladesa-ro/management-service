@@ -1,8 +1,9 @@
 import { ArgsType, Field, ID, InputType, ObjectType } from "@nestjs/graphql";
-import { IsArray, IsOptional, IsString, IsUUID, ValidateNested } from "class-validator";
-import { PaginationInputGraphQlDto } from "@/modules/@shared/infrastructure/graphql";
+import { IsOptional, IsString, ValidateNested } from "class-validator";
+import { decorate } from "ts-mixer";
 import {
   EntityBaseGraphQlDto,
+  PaginatedFilterByIdGraphQlDto,
   PaginationMetaGraphQlDto,
 } from "@/modules/@shared/infrastructure/graphql/dtos";
 import { DisponibilidadeFindOneOutputGraphQlDto } from "@/server/nest/modules/disponibilidade/graphql/disponibilidade.graphql.dto";
@@ -11,34 +12,34 @@ import { DisponibilidadeFindOneOutputGraphQlDto } from "@/server/nest/modules/di
 // Turma nested output (turma module not yet refactored to GraphQL)
 // ============================================================================
 
-@ObjectType("TurmaDisponibilidadeTurmaOutput")
+@decorate(ObjectType("TurmaDisponibilidadeTurmaOutput"))
 export class TurmaDisponibilidadeTurmaOutputGraphQlDto extends EntityBaseGraphQlDto {
-  @Field() periodo: string;
+  @decorate(Field(() => String)) periodo: string;
 }
 
 // ============================================================================
 // Ref Input DTOs for cross-module references
 // ============================================================================
 
-@InputType("TurmaDisponibilidadeTurmaRefInputDto")
+@decorate(InputType("TurmaDisponibilidadeTurmaRefInputDto"))
 export class TurmaDisponibilidadeTurmaRefInputGraphQlDto {
-  @Field() @IsString() id: string;
+  @decorate(Field(() => String)) @decorate(IsString()) id: string;
 }
 
-@InputType("TurmaDisponibilidadeDisponibilidadeRefInputDto")
+@decorate(InputType("TurmaDisponibilidadeDisponibilidadeRefInputDto"))
 export class TurmaDisponibilidadeDisponibilidadeRefInputGraphQlDto {
-  @Field() @IsString() id: string;
+  @decorate(Field(() => String)) @decorate(IsString()) id: string;
 }
 
 // ============================================================================
 // FindOne Output
 // ============================================================================
 
-@ObjectType("TurmaDisponibilidadeFindOneOutputDto")
+@decorate(ObjectType("TurmaDisponibilidadeFindOneOutputDto"))
 export class TurmaDisponibilidadeFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
-  @Field(() => TurmaDisponibilidadeTurmaOutputGraphQlDto)
+  @decorate(Field(() => TurmaDisponibilidadeTurmaOutputGraphQlDto))
   turma: TurmaDisponibilidadeTurmaOutputGraphQlDto;
-  @Field(() => DisponibilidadeFindOneOutputGraphQlDto)
+  @decorate(Field(() => DisponibilidadeFindOneOutputGraphQlDto))
   disponibilidade: DisponibilidadeFindOneOutputGraphQlDto;
 }
 
@@ -46,13 +47,13 @@ export class TurmaDisponibilidadeFindOneOutputGraphQlDto extends EntityBaseGraph
 // Create Input
 // ============================================================================
 
-@InputType("TurmaDisponibilidadeCreateInputDto")
+@decorate(InputType("TurmaDisponibilidadeCreateInputDto"))
 export class TurmaDisponibilidadeCreateInputGraphQlDto {
-  @Field(() => TurmaDisponibilidadeTurmaRefInputGraphQlDto)
-  @ValidateNested()
+  @decorate(Field(() => TurmaDisponibilidadeTurmaRefInputGraphQlDto))
+  @decorate(ValidateNested())
   turma: TurmaDisponibilidadeTurmaRefInputGraphQlDto;
-  @Field(() => TurmaDisponibilidadeDisponibilidadeRefInputGraphQlDto)
-  @ValidateNested()
+  @decorate(Field(() => TurmaDisponibilidadeDisponibilidadeRefInputGraphQlDto))
+  @decorate(ValidateNested())
   disponibilidade: TurmaDisponibilidadeDisponibilidadeRefInputGraphQlDto;
 }
 
@@ -60,15 +61,15 @@ export class TurmaDisponibilidadeCreateInputGraphQlDto {
 // Update Input
 // ============================================================================
 
-@InputType("TurmaDisponibilidadeUpdateInputDto")
+@decorate(InputType("TurmaDisponibilidadeUpdateInputDto"))
 export class TurmaDisponibilidadeUpdateInputGraphQlDto {
-  @Field(() => TurmaDisponibilidadeTurmaRefInputGraphQlDto, { nullable: true })
-  @IsOptional()
-  @ValidateNested()
+  @decorate(Field(() => TurmaDisponibilidadeTurmaRefInputGraphQlDto, { nullable: true }))
+  @decorate(IsOptional())
+  @decorate(ValidateNested())
   turma?: TurmaDisponibilidadeTurmaRefInputGraphQlDto;
-  @Field(() => TurmaDisponibilidadeDisponibilidadeRefInputGraphQlDto, { nullable: true })
-  @IsOptional()
-  @ValidateNested()
+  @decorate(Field(() => TurmaDisponibilidadeDisponibilidadeRefInputGraphQlDto, { nullable: true }))
+  @decorate(IsOptional())
+  @decorate(ValidateNested())
   disponibilidade?: TurmaDisponibilidadeDisponibilidadeRefInputGraphQlDto;
 }
 
@@ -76,25 +77,19 @@ export class TurmaDisponibilidadeUpdateInputGraphQlDto {
 // List Input (GraphQL-compatible - no dots in field names)
 // ============================================================================
 
-@ArgsType()
-export class TurmaDisponibilidadeListInputGraphQlDto extends PaginationInputGraphQlDto {
-  @Field(() => [String], { nullable: true, description: "Filtro por ID" })
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
-  filterId?: string[];
-}
+@decorate(ArgsType())
+export class TurmaDisponibilidadeListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {}
 
 // ============================================================================
 // List Output
 // ============================================================================
 
-@ObjectType("TurmaDisponibilidadeListResult")
+@decorate(ObjectType("TurmaDisponibilidadeListResult"))
 export class TurmaDisponibilidadeListOutputGraphQlDto {
-  @Field(() => PaginationMetaGraphQlDto)
+  @decorate(Field(() => PaginationMetaGraphQlDto))
   meta: PaginationMetaGraphQlDto;
 
-  @Field(() => [TurmaDisponibilidadeFindOneOutputGraphQlDto])
+  @decorate(Field(() => [TurmaDisponibilidadeFindOneOutputGraphQlDto]))
   data: TurmaDisponibilidadeFindOneOutputGraphQlDto[];
 }
 
@@ -102,9 +97,9 @@ export class TurmaDisponibilidadeListOutputGraphQlDto {
 // Input DTOs for mutations
 // ============================================================================
 
-@ArgsType()
+@decorate(ArgsType())
 export class TurmaDisponibilidadeFindOneInputGraphQlDto {
-  @Field(() => ID, { description: "Identificador do registro (uuid)" })
-  @IsString()
+  @decorate(Field(() => ID, { description: "Identificador do registro (uuid)" }))
+  @decorate(IsString())
   id: string;
 }

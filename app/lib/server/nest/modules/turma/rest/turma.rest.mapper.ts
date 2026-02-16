@@ -3,18 +3,21 @@ import {
   TurmaFindOneInputDto,
   TurmaFindOneOutputDto,
   TurmaListInputDto,
-  TurmaListOutputDto,
   TurmaUpdateInputDto,
 } from "@/modules/ensino/turma";
 import { AmbienteRestMapper } from "@/server/nest/modules/ambiente/rest";
 import { BlocoRestMapper } from "@/server/nest/modules/bloco/rest";
 import { CursoRestMapper } from "@/server/nest/modules/curso/rest";
-import { mapPaginationMeta } from "@/server/nest/shared/mappers";
+import {
+  createFindOneInputMapper,
+  createListInputMapper,
+  createListOutputMapper,
+  mapDatedFields,
+} from "@/server/nest/shared/mappers";
 import {
   TurmaCreateInputRestDto,
   TurmaFindOneInputRestDto,
   TurmaFindOneOutputRestDto,
-  TurmaListInputRestDto,
   TurmaListOutputRestDto,
   TurmaUpdateInputRestDto,
 } from "./turma.rest.dto";
@@ -24,37 +27,22 @@ export class TurmaRestMapper {
   // Input: Server DTO -> Core DTO
   // ============================================================================
 
-  static toFindOneInput(dto: TurmaFindOneInputRestDto): TurmaFindOneInputDto {
-    const input = new TurmaFindOneInputDto();
-    input.id = dto.id;
-    return input;
-  }
+  static toFindOneInput = createFindOneInputMapper(TurmaFindOneInputDto);
 
-  static toListInput(dto: TurmaListInputRestDto | null): TurmaListInputDto | null {
-    if (!dto) {
-      return null;
-    }
-
-    const input = new TurmaListInputDto();
-    input.page = dto.page;
-    input.limit = dto.limit;
-    input.search = dto.search;
-    input.sortBy = dto.sortBy;
-    input.selection = dto.selection;
-    input["filter.id"] = dto["filter.id"];
-    input["filter.ambientePadraoAula.nome"] = dto["filter.ambientePadraoAula.nome"];
-    input["filter.ambientePadraoAula.codigo"] = dto["filter.ambientePadraoAula.codigo"];
-    input["filter.ambientePadraoAula.capacidade"] = dto["filter.ambientePadraoAula.capacidade"];
-    input["filter.ambientePadraoAula.tipo"] = dto["filter.ambientePadraoAula.tipo"];
-    input["filter.curso.id"] = dto["filter.curso.id"];
-    input["filter.curso.nome"] = dto["filter.curso.nome"];
-    input["filter.curso.nomeAbreviado"] = dto["filter.curso.nomeAbreviado"];
-    input["filter.curso.campus.id"] = dto["filter.curso.campus.id"];
-    input["filter.curso.ofertaFormacao.id"] = dto["filter.curso.ofertaFormacao.id"];
-    input["filter.curso.ofertaFormacao.nome"] = dto["filter.curso.ofertaFormacao.nome"];
-    input["filter.curso.ofertaFormacao.slug"] = dto["filter.curso.ofertaFormacao.slug"];
-    return input;
-  }
+  static toListInput = createListInputMapper(TurmaListInputDto, [
+    "filter.id",
+    "filter.ambientePadraoAula.nome",
+    "filter.ambientePadraoAula.codigo",
+    "filter.ambientePadraoAula.capacidade",
+    "filter.ambientePadraoAula.tipo",
+    "filter.curso.id",
+    "filter.curso.nome",
+    "filter.curso.nomeAbreviado",
+    "filter.curso.campus.id",
+    "filter.curso.ofertaFormacao.id",
+    "filter.curso.ofertaFormacao.nome",
+    "filter.curso.ofertaFormacao.slug",
+  ]);
 
   static toCreateInput(dto: TurmaCreateInputRestDto): TurmaCreateInputDto {
     const input = new TurmaCreateInputDto();
@@ -97,16 +85,12 @@ export class TurmaRestMapper {
     dto.imagemCapa = output.imagemCapa
       ? BlocoRestMapper.toImagemOutputDto(output.imagemCapa)
       : null;
-    dto.dateCreated = new Date(output.dateCreated);
-    dto.dateUpdated = new Date(output.dateUpdated);
-    dto.dateDeleted = output.dateDeleted ? new Date(output.dateDeleted) : null;
+    mapDatedFields(dto, output);
     return dto;
   }
 
-  static toListOutputDto(output: TurmaListOutputDto): TurmaListOutputRestDto {
-    const dto = new TurmaListOutputRestDto();
-    dto.meta = mapPaginationMeta(output.meta);
-    dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
-    return dto;
-  }
+  static toListOutputDto = createListOutputMapper(
+    TurmaListOutputRestDto,
+    TurmaRestMapper.toFindOneOutputDto,
+  );
 }

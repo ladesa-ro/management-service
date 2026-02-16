@@ -2,9 +2,8 @@ import {
   EstadoFindOneInputDto,
   EstadoFindOneOutputDto,
   EstadoListInputDto,
-  EstadoListOutputDto,
 } from "@/modules/base/localidades/estado";
-import { mapPaginationMeta } from "@/server/nest/shared/mappers";
+import { createListOutputMapper } from "@/server/nest/shared/mappers";
 import {
   EstadoFindOneOutputGraphQlDto,
   EstadoListInputGraphQlDto,
@@ -41,10 +40,8 @@ export class EstadoGraphqlMapper {
     return dto;
   }
 
-  static toListOutputDto(output: EstadoListOutputDto): EstadoListOutputGraphQlDto {
-    const dto = new EstadoListOutputGraphQlDto();
-    dto.meta = mapPaginationMeta(output.meta);
-    dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
-    return dto;
-  }
+  static toListOutputDto = createListOutputMapper(
+    EstadoListOutputGraphQlDto,
+    EstadoGraphqlMapper.toFindOneOutputDto,
+  );
 }

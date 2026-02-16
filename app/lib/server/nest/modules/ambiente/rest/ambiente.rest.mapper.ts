@@ -3,16 +3,19 @@ import {
   AmbienteFindOneInputDto,
   AmbienteFindOneOutputDto,
   AmbienteListInputDto,
-  AmbienteListOutputDto,
   AmbienteUpdateInputDto,
 } from "@/modules/sisgea/ambiente";
 import { BlocoRestMapper } from "@/server/nest/modules/bloco/rest";
-import { mapPaginationMeta } from "@/server/nest/shared/mappers";
+import {
+  createFindOneInputMapper,
+  createListInputMapper,
+  createListOutputMapper,
+  mapDatedFields,
+} from "@/server/nest/shared/mappers";
 import {
   AmbienteCreateInputRestDto,
   AmbienteFindOneInputRestDto,
   AmbienteFindOneOutputRestDto,
-  AmbienteListInputRestDto,
   AmbienteListOutputRestDto,
   AmbienteUpdateInputRestDto,
 } from "./ambiente.rest.dto";
@@ -22,28 +25,13 @@ export class AmbienteRestMapper {
   // Input: Server DTO -> Core DTO
   // ============================================================================
 
-  static toFindOneInput(dto: AmbienteFindOneInputRestDto): AmbienteFindOneInputDto {
-    const input = new AmbienteFindOneInputDto();
-    input.id = dto.id;
-    return input;
-  }
+  static toFindOneInput = createFindOneInputMapper(AmbienteFindOneInputDto);
 
-  static toListInput(dto: AmbienteListInputRestDto | null): AmbienteListInputDto | null {
-    if (!dto) {
-      return null;
-    }
-
-    const input = new AmbienteListInputDto();
-    input.page = dto.page;
-    input.limit = dto.limit;
-    input.search = dto.search;
-    input.sortBy = dto.sortBy;
-    input.selection = dto.selection;
-    input["filter.id"] = dto["filter.id"];
-    input["filter.bloco.id"] = dto["filter.bloco.id"];
-    input["filter.bloco.campus.id"] = dto["filter.bloco.campus.id"];
-    return input;
-  }
+  static toListInput = createListInputMapper(AmbienteListInputDto, [
+    "filter.id",
+    "filter.bloco.id",
+    "filter.bloco.campus.id",
+  ]);
 
   static toCreateInput(dto: AmbienteCreateInputRestDto): AmbienteCreateInputDto {
     const input = new AmbienteCreateInputDto();
@@ -99,16 +87,12 @@ export class AmbienteRestMapper {
     dto.imagemCapa = output.imagemCapa
       ? BlocoRestMapper.toImagemOutputDto(output.imagemCapa)
       : null;
-    dto.dateCreated = output.dateCreated ? new Date(output.dateCreated) : new Date();
-    dto.dateUpdated = output.dateUpdated ? new Date(output.dateUpdated) : new Date();
-    dto.dateDeleted = output.dateDeleted ? new Date(output.dateDeleted) : null;
+    mapDatedFields(dto, output);
     return dto;
   }
 
-  static toListOutputDto(output: AmbienteListOutputDto): AmbienteListOutputRestDto {
-    const dto = new AmbienteListOutputRestDto();
-    dto.meta = mapPaginationMeta(output.meta);
-    dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
-    return dto;
-  }
+  static toListOutputDto = createListOutputMapper(
+    AmbienteListOutputRestDto,
+    AmbienteRestMapper.toFindOneOutputDto,
+  );
 }

@@ -10,24 +10,26 @@ import {
   Min,
   ValidateNested,
 } from "class-validator";
+import { decorate } from "ts-mixer";
 import {
   EntityBaseGraphQlDto,
+  PaginatedFilterByIdGraphQlDto,
   PaginationMetaGraphQlDto,
 } from "@/modules/@shared/infrastructure/graphql/dtos";
-import { PaginationInputGraphQlDto } from "@/modules/@shared/infrastructure/graphql/dtos/pagination-graphql.dto";
 import { CalendarioLetivoFindOneOutputGraphQlDto } from "@/server/nest/modules/calendario-letivo/graphql/calendario-letivo.graphql.dto";
+import { EtapaFieldsMixin } from "../etapa.validation-mixin";
 
 // ============================================================================
 // FindOne Output
 // ============================================================================
 
-@ObjectType("EtapaFindOneOutputDto")
+@decorate(ObjectType("EtapaFindOneOutputDto"))
 export class EtapaFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
-  @Field(() => Int, { nullable: true }) numero: number | null;
-  @Field() dataInicio: string;
-  @Field() dataTermino: string;
-  @Field({ nullable: true }) cor: string | null;
-  @Field(() => CalendarioLetivoFindOneOutputGraphQlDto)
+  @decorate(Field(() => Int, { nullable: true })) numero: number | null;
+  @decorate(Field(() => String)) dataInicio: string;
+  @decorate(Field(() => String)) dataTermino: string;
+  @decorate(Field(() => String, { nullable: true })) cor: string | null;
+  @decorate(Field(() => CalendarioLetivoFindOneOutputGraphQlDto))
   calendario: CalendarioLetivoFindOneOutputGraphQlDto;
 }
 
@@ -35,27 +37,23 @@ export class EtapaFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
 // Create Input
 // ============================================================================
 
-@InputType("CalendarioLetivoRefInputForEtapaDto")
+@decorate(InputType("CalendarioLetivoRefInputForEtapaDto"))
 export class CalendarioLetivoRefInputForEtapaGraphQlDto {
-  @Field() @IsString() id: string;
+  @decorate(Field(() => String)) @decorate(IsString()) id: string;
 }
 
-@InputType("EtapaCreateInputDto")
-export class EtapaCreateInputGraphQlDto {
-  @Field(() => Int, { nullable: true })
-  @IsOptional()
-  @IsInt()
-  @Min(0)
-  @Max(255)
-  numero?: number | null;
+@decorate(InputType("EtapaCreateInputDto"))
+export class EtapaCreateInputGraphQlDto extends EtapaFieldsMixin {
+  @decorate(Field(() => Int, { nullable: true }))
+  declare numero: number | null;
 
-  @Field() @IsDateString() dataInicio: string;
-  @Field() @IsDateString() dataTermino: string;
+  @decorate(Field(() => String)) declare dataInicio: string;
+  @decorate(Field(() => String)) declare dataTermino: string;
 
-  @Field({ nullable: true }) @IsOptional() @IsString() cor?: string | null;
+  @decorate(Field(() => String, { nullable: true })) declare cor: string | null;
 
-  @Field(() => CalendarioLetivoRefInputForEtapaGraphQlDto)
-  @ValidateNested()
+  @decorate(Field(() => CalendarioLetivoRefInputForEtapaGraphQlDto))
+  @decorate(ValidateNested())
   calendario: CalendarioLetivoRefInputForEtapaGraphQlDto;
 }
 
@@ -63,22 +61,31 @@ export class EtapaCreateInputGraphQlDto {
 // Update Input
 // ============================================================================
 
-@InputType("EtapaUpdateInputDto")
+@decorate(InputType("EtapaUpdateInputDto"))
 export class EtapaUpdateInputGraphQlDto {
-  @Field(() => Int, { nullable: true })
-  @IsOptional()
-  @IsInt()
-  @Min(0)
-  @Max(255)
+  @decorate(Field(() => Int, { nullable: true }))
+  @decorate(IsOptional())
+  @decorate(IsInt())
+  @decorate(Min(0))
+  @decorate(Max(255))
   numero?: number | null;
 
-  @Field({ nullable: true }) @IsOptional() @IsDateString() dataInicio?: string;
-  @Field({ nullable: true }) @IsOptional() @IsDateString() dataTermino?: string;
-  @Field({ nullable: true }) @IsOptional() @IsString() cor?: string | null;
+  @decorate(Field(() => String, { nullable: true }))
+  @decorate(IsOptional())
+  @decorate(IsDateString())
+  dataInicio?: string;
+  @decorate(Field(() => String, { nullable: true }))
+  @decorate(IsOptional())
+  @decorate(IsDateString())
+  dataTermino?: string;
+  @decorate(Field(() => String, { nullable: true }))
+  @decorate(IsOptional())
+  @decorate(IsString())
+  cor?: string | null;
 
-  @Field(() => CalendarioLetivoRefInputForEtapaGraphQlDto, { nullable: true })
-  @IsOptional()
-  @ValidateNested()
+  @decorate(Field(() => CalendarioLetivoRefInputForEtapaGraphQlDto, { nullable: true }))
+  @decorate(IsOptional())
+  @decorate(ValidateNested())
   calendario?: CalendarioLetivoRefInputForEtapaGraphQlDto;
 }
 
@@ -86,18 +93,12 @@ export class EtapaUpdateInputGraphQlDto {
 // List Input
 // ============================================================================
 
-@ArgsType()
-export class EtapaListInputGraphQlDto extends PaginationInputGraphQlDto {
-  @Field(() => [String], { nullable: true, description: "Filtro por ID" })
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
-  filterId?: string[];
-
-  @Field(() => [String], { nullable: true, description: "Filtro por ID do Calendario" })
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
+@decorate(ArgsType())
+export class EtapaListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {
+  @decorate(Field(() => [String], { nullable: true, description: "Filtro por ID do Calendario" }))
+  @decorate(IsOptional())
+  @decorate(IsArray())
+  @decorate(IsUUID(undefined, { each: true }))
   filterCalendarioId?: string[];
 }
 
@@ -105,11 +106,11 @@ export class EtapaListInputGraphQlDto extends PaginationInputGraphQlDto {
 // List Output
 // ============================================================================
 
-@ObjectType("EtapaListResult")
+@decorate(ObjectType("EtapaListResult"))
 export class EtapaListOutputGraphQlDto {
-  @Field(() => PaginationMetaGraphQlDto)
+  @decorate(Field(() => PaginationMetaGraphQlDto))
   meta: PaginationMetaGraphQlDto;
 
-  @Field(() => [EtapaFindOneOutputGraphQlDto])
+  @decorate(Field(() => [EtapaFindOneOutputGraphQlDto]))
   data: EtapaFindOneOutputGraphQlDto[];
 }

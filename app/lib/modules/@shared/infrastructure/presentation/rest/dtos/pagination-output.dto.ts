@@ -1,17 +1,21 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { decorate } from "ts-mixer";
 
 /**
  * Representa uma entrada de ordenação [campo, direcao]
  */
 export class SortByEntryRestDto {
-  @ApiProperty({ description: "Nome do campo", example: "nome" })
+  @decorate(ApiProperty({ type: "string", description: "Nome do campo", example: "nome" }))
   0: string;
 
-  @ApiProperty({
-    description: "Direcao da ordenacao (ASC ou DESC)",
-    example: "ASC",
-    enum: ["ASC", "DESC"],
-  })
+  @decorate(
+    ApiProperty({
+      type: "string",
+      description: "Direcao da ordenacao (ASC ou DESC)",
+      example: "ASC",
+      enum: ["ASC", "DESC"],
+    }),
+  )
   1: string;
 }
 
@@ -19,42 +23,46 @@ export class SortByEntryRestDto {
  * Pagination metadata DTO for REST.
  */
 export class PaginationMetaRestDto {
-  @ApiProperty({ description: "Quantidade de itens por pagina" })
+  @decorate(ApiProperty({ type: "integer", description: "Quantidade de itens por pagina" }))
   itemsPerPage: number;
 
-  @ApiProperty({ description: "Total de itens" })
+  @decorate(ApiProperty({ type: "integer", description: "Total de itens" }))
   totalItems: number;
 
-  @ApiProperty({ description: "Pagina atual" })
+  @decorate(ApiProperty({ type: "integer", description: "Pagina atual" }))
   currentPage: number;
 
-  @ApiProperty({ description: "Quantidade total de paginas" })
+  @decorate(ApiProperty({ type: "integer", description: "Quantidade total de paginas" }))
   totalPages: number;
 
-  @ApiProperty({ description: "Termo textual da busca" })
+  @decorate(ApiProperty({ type: "string", description: "Termo textual da busca" }))
   search: string;
 
-  @ApiProperty({
-    description: "Ordenacao aplicada",
-    type: "array",
-    items: {
+  @decorate(
+    ApiProperty({
+      description: "Ordenacao aplicada",
       type: "array",
-      items: { type: "string" },
-      minItems: 2,
-      maxItems: 2,
-      example: ["nome", "ASC"],
-    },
-    example: [
-      ["nome", "ASC"],
-      ["dateCreated", "DESC"],
-    ],
-  })
+      items: {
+        type: "array",
+        items: { type: "string" },
+        minItems: 2,
+        maxItems: 2,
+        example: ["nome", "ASC"],
+      },
+      example: [
+        ["nome", "ASC"],
+        ["dateCreated", "DESC"],
+      ],
+    }),
+  )
   sortBy: [string, string][];
 
-  @ApiPropertyOptional({
-    description: "Filtros aplicados",
-    type: "object",
-    additionalProperties: true,
-  })
+  @decorate(
+    ApiPropertyOptional({
+      description: "Filtros aplicados",
+      type: "object",
+      additionalProperties: true,
+    }),
+  )
   filter?: Record<string, string | string[]>;
 }

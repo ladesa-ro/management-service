@@ -1,48 +1,48 @@
 import { ArgsType, Field, ID, Int, ObjectType } from "@nestjs/graphql";
-import { IsArray, IsOptional, IsUUID } from "class-validator";
+import { decorate } from "ts-mixer";
 import {
   EntityBaseGraphQlDto,
+  PaginatedFilterByIdGraphQlDto,
   PaginationMetaGraphQlDto,
 } from "@/modules/@shared/infrastructure/graphql/dtos";
-import { PaginationInputGraphQlDto } from "@/modules/@shared/infrastructure/graphql/dtos/pagination-graphql.dto";
 
 // ============================================================================
 // Arquivo nested output for GraphQL
 // ============================================================================
 
-@ObjectType("ArquivoFindOneOutputDto")
+@decorate(ObjectType("ArquivoFindOneOutputDto"))
 export class ArquivoFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
-  @Field(() => String, { nullable: true }) name: string | null;
-  @Field(() => String, { nullable: true }) mimeType: string | null;
-  @Field(() => Int, { nullable: true }) sizeBytes: number | null;
-  @Field() storageType: string;
+  @decorate(Field(() => String, { nullable: true })) name: string | null;
+  @decorate(Field(() => String, { nullable: true })) mimeType: string | null;
+  @decorate(Field(() => Int, { nullable: true })) sizeBytes: number | null;
+  @decorate(Field(() => String)) storageType: string;
 }
 
 // ============================================================================
 // ImagemArquivo from Imagem (for versoes)
 // ============================================================================
 
-@ObjectType("ImagemArquivoFindOneFromImagemOutputDto")
+@decorate(ObjectType("ImagemArquivoFindOneFromImagemOutputDto"))
 export class ImagemArquivoFindOneFromImagemOutputGraphQlDto {
-  @Field(() => ID) id: string;
-  @Field(() => Int, { nullable: true }) largura: number | null;
-  @Field(() => Int, { nullable: true }) altura: number | null;
-  @Field(() => String, { nullable: true }) formato: string | null;
-  @Field(() => String, { nullable: true }) mimeType: string | null;
-  @Field(() => ArquivoFindOneOutputGraphQlDto) arquivo: ArquivoFindOneOutputGraphQlDto;
-  @Field() dateCreated: Date;
-  @Field() dateUpdated: Date;
-  @Field(() => Date, { nullable: true }) dateDeleted: Date | null;
+  @decorate(Field(() => ID)) id: string;
+  @decorate(Field(() => Int, { nullable: true })) largura: number | null;
+  @decorate(Field(() => Int, { nullable: true })) altura: number | null;
+  @decorate(Field(() => String, { nullable: true })) formato: string | null;
+  @decorate(Field(() => String, { nullable: true })) mimeType: string | null;
+  @decorate(Field(() => ArquivoFindOneOutputGraphQlDto)) arquivo: ArquivoFindOneOutputGraphQlDto;
+  @decorate(Field(() => Date)) dateCreated: Date;
+  @decorate(Field(() => Date)) dateUpdated: Date;
+  @decorate(Field(() => Date, { nullable: true })) dateDeleted: Date | null;
 }
 
 // ============================================================================
 // Imagem output for GraphQL (used by bloco, usuario, etc.)
 // ============================================================================
 
-@ObjectType("ImagemFindOneOutputDto")
+@decorate(ObjectType("ImagemFindOneOutputDto"))
 export class ImagemFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
-  @Field(() => String, { nullable: true }) descricao: string | null;
-  @Field(() => [ImagemArquivoFindOneFromImagemOutputGraphQlDto])
+  @decorate(Field(() => String, { nullable: true })) descricao: string | null;
+  @decorate(Field(() => [ImagemArquivoFindOneFromImagemOutputGraphQlDto]))
   versoes: ImagemArquivoFindOneFromImagemOutputGraphQlDto[];
 }
 
@@ -50,48 +50,42 @@ export class ImagemFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
 // Imagem ref (just id) for nested in ImagemArquivo
 // ============================================================================
 
-@ObjectType("ImagemFindOneFromImagemArquivoOutputDto")
+@decorate(ObjectType("ImagemFindOneFromImagemArquivoOutputDto"))
 export class ImagemFindOneFromImagemArquivoOutputGraphQlDto {
-  @Field(() => ID) id: string;
+  @decorate(Field(() => ID)) id: string;
 }
 
 // ============================================================================
 // ImagemArquivo full output
 // ============================================================================
 
-@ObjectType("ImagemArquivoFindOneOutputDto")
+@decorate(ObjectType("ImagemArquivoFindOneOutputDto"))
 export class ImagemArquivoFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
-  @Field(() => Int) largura: number;
-  @Field(() => Int) altura: number;
-  @Field() formato: string;
-  @Field() mimeType: string;
-  @Field(() => ImagemFindOneFromImagemArquivoOutputGraphQlDto)
+  @decorate(Field(() => Int)) largura: number;
+  @decorate(Field(() => Int)) altura: number;
+  @decorate(Field(() => String)) formato: string;
+  @decorate(Field(() => String)) mimeType: string;
+  @decorate(Field(() => ImagemFindOneFromImagemArquivoOutputGraphQlDto))
   imagem: ImagemFindOneFromImagemArquivoOutputGraphQlDto;
-  @Field(() => ArquivoFindOneOutputGraphQlDto) arquivo: ArquivoFindOneOutputGraphQlDto;
+  @decorate(Field(() => ArquivoFindOneOutputGraphQlDto)) arquivo: ArquivoFindOneOutputGraphQlDto;
 }
 
 // ============================================================================
 // List Input
 // ============================================================================
 
-@ArgsType()
-export class ImagemArquivoListInputGraphQlDto extends PaginationInputGraphQlDto {
-  @Field(() => [String], { nullable: true, description: "Filtro por ID" })
-  @IsOptional()
-  @IsArray()
-  @IsUUID(undefined, { each: true })
-  filterId?: string[];
-}
+@decorate(ArgsType())
+export class ImagemArquivoListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {}
 
 // ============================================================================
 // List Output
 // ============================================================================
 
-@ObjectType("ImagemArquivoListResult")
+@decorate(ObjectType("ImagemArquivoListResult"))
 export class ImagemArquivoListOutputGraphQlDto {
-  @Field(() => PaginationMetaGraphQlDto)
+  @decorate(Field(() => PaginationMetaGraphQlDto))
   meta: PaginationMetaGraphQlDto;
 
-  @Field(() => [ImagemArquivoFindOneOutputGraphQlDto])
+  @decorate(Field(() => [ImagemArquivoFindOneOutputGraphQlDto]))
   data: ImagemArquivoFindOneOutputGraphQlDto[];
 }

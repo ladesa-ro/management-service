@@ -2,14 +2,12 @@ import {
   CidadeFindOneInputDto,
   CidadeFindOneOutputDto,
   CidadeListInputDto,
-  CidadeListOutputDto,
 } from "@/modules/base/localidades/cidade";
 import { EstadoRestMapper } from "@/server/nest/modules/estado/rest/estado.rest.mapper";
-import { mapPaginationMeta } from "@/server/nest/shared/mappers";
+import { createListInputMapper, createListOutputMapper } from "@/server/nest/shared/mappers";
 import {
   CidadeFindOneInputRestDto,
   CidadeFindOneOutputRestDto,
-  CidadeListInputRestDto,
   CidadeListOutputRestDto,
 } from "./cidade.rest.dto";
 
@@ -24,23 +22,12 @@ export class CidadeRestMapper {
     return input;
   }
 
-  static toListInput(dto: CidadeListInputRestDto | null): CidadeListInputDto | null {
-    if (!dto) {
-      return null;
-    }
-
-    const input = new CidadeListInputDto();
-    input.page = dto.page;
-    input.limit = dto.limit;
-    input.search = dto.search;
-    input.sortBy = dto.sortBy;
-    input.selection = dto.selection;
-    input["filter.id"] = dto["filter.id"];
-    input["filter.estado.id"] = dto["filter.estado.id"];
-    input["filter.estado.nome"] = dto["filter.estado.nome"];
-    input["filter.estado.sigla"] = dto["filter.estado.sigla"];
-    return input;
-  }
+  static toListInput = createListInputMapper(CidadeListInputDto, [
+    "filter.id",
+    "filter.estado.id",
+    "filter.estado.nome",
+    "filter.estado.sigla",
+  ]);
 
   // ============================================================================
   // Output: Core DTO -> Server DTO
@@ -54,10 +41,8 @@ export class CidadeRestMapper {
     return dto;
   }
 
-  static toListOutputDto(output: CidadeListOutputDto): CidadeListOutputRestDto {
-    const dto = new CidadeListOutputRestDto();
-    dto.meta = mapPaginationMeta(output.meta);
-    dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
-    return dto;
-  }
+  static toListOutputDto = createListOutputMapper(
+    CidadeListOutputRestDto,
+    CidadeRestMapper.toFindOneOutputDto,
+  );
 }

@@ -3,11 +3,14 @@ import {
   HorarioGeradoAulaFindOneInputDto,
   HorarioGeradoAulaFindOneOutputDto,
   HorarioGeradoAulaListInputDto,
-  HorarioGeradoAulaListOutputDto,
   HorarioGeradoAulaUpdateInputDto,
 } from "@/modules/sisgha/horario-gerado-aula";
 import { IntervaloDeTempoGraphqlMapper } from "@/server/nest/modules/intervalo-de-tempo/graphql/intervalo-de-tempo.graphql.mapper";
-import { mapPaginationMeta } from "@/server/nest/shared/mappers";
+import {
+  createFindOneInputMapper,
+  createListOutputMapper,
+  mapDatedFields,
+} from "@/server/nest/shared/mappers";
 import {
   HorarioGeradoAulaCreateInputGraphQlDto,
   HorarioGeradoAulaDiarioProfessorOutputGraphQlDto,
@@ -36,12 +39,7 @@ export class HorarioGeradoAulaGraphqlMapper {
     return input;
   }
 
-  static toFindOneInput(id: string, selection?: string[]): HorarioGeradoAulaFindOneInputDto {
-    const input = new HorarioGeradoAulaFindOneInputDto();
-    input.id = id;
-    input.selection = selection;
-    return input;
-  }
+  static toFindOneInput = createFindOneInputMapper(HorarioGeradoAulaFindOneInputDto);
 
   private static dateToString(date: Date | string | undefined): string | undefined {
     if (date === undefined) return undefined;
@@ -94,18 +92,12 @@ export class HorarioGeradoAulaGraphqlMapper {
     dto.intervaloDeTempo = IntervaloDeTempoGraphqlMapper.toFindOneOutputDto(
       output.intervaloDeTempo,
     );
-    dto.dateCreated = output.dateCreated as unknown as Date;
-    dto.dateUpdated = output.dateUpdated as unknown as Date;
-    dto.dateDeleted = output.dateDeleted as unknown as Date | null;
+    mapDatedFields(dto, output);
     return dto;
   }
 
-  static toListOutputDto(
-    output: HorarioGeradoAulaListOutputDto,
-  ): HorarioGeradoAulaListOutputGraphQlDto {
-    const dto = new HorarioGeradoAulaListOutputGraphQlDto();
-    dto.meta = mapPaginationMeta(output.meta);
-    dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
-    return dto;
-  }
+  static toListOutputDto = createListOutputMapper(
+    HorarioGeradoAulaListOutputGraphQlDto,
+    HorarioGeradoAulaGraphqlMapper.toFindOneOutputDto,
+  );
 }

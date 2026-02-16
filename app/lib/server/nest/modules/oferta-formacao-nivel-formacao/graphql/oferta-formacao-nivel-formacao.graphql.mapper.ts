@@ -3,12 +3,11 @@ import {
   OfertaFormacaoNivelFormacaoFindOneInputDto,
   OfertaFormacaoNivelFormacaoFindOneOutputDto,
   OfertaFormacaoNivelFormacaoListInputDto,
-  OfertaFormacaoNivelFormacaoListOutputDto,
   OfertaFormacaoNivelFormacaoUpdateInputDto,
 } from "@/modules/ensino/oferta-formacao-nivel-formacao";
 import { NivelFormacaoGraphqlMapper } from "@/server/nest/modules/nivel-formacao/graphql/nivel-formacao.graphql.mapper";
 import { OfertaFormacaoGraphqlMapper } from "@/server/nest/modules/oferta-formacao/graphql/oferta-formacao.graphql.mapper";
-import { mapPaginationMeta } from "@/server/nest/shared/mappers";
+import { createListOutputMapper, mapDatedFields } from "@/server/nest/shared/mappers";
 import {
   OfertaFormacaoNivelFormacaoCreateInputGraphQlDto,
   OfertaFormacaoNivelFormacaoFindOneOutputGraphQlDto,
@@ -79,18 +78,12 @@ export class OfertaFormacaoNivelFormacaoGraphqlMapper {
     dto.id = output.id;
     dto.ofertaFormacao = OfertaFormacaoGraphqlMapper.toFindOneOutputDto(output.ofertaFormacao);
     dto.nivelFormacao = NivelFormacaoGraphqlMapper.toFindOneOutputDto(output.nivelFormacao);
-    dto.dateCreated = output.dateCreated as unknown as Date;
-    dto.dateUpdated = output.dateUpdated as unknown as Date;
-    dto.dateDeleted = output.dateDeleted as unknown as Date | null;
+    mapDatedFields(dto, output);
     return dto;
   }
 
-  static toListOutputDto(
-    output: OfertaFormacaoNivelFormacaoListOutputDto,
-  ): OfertaFormacaoNivelFormacaoListOutputGraphQlDto {
-    const dto = new OfertaFormacaoNivelFormacaoListOutputGraphQlDto();
-    dto.meta = mapPaginationMeta(output.meta);
-    dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
-    return dto;
-  }
+  static toListOutputDto = createListOutputMapper(
+    OfertaFormacaoNivelFormacaoListOutputGraphQlDto,
+    OfertaFormacaoNivelFormacaoGraphqlMapper.toFindOneOutputDto,
+  );
 }

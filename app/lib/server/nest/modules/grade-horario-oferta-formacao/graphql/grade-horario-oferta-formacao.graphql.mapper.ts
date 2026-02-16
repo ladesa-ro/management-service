@@ -3,12 +3,15 @@ import {
   GradeHorarioOfertaFormacaoFindOneInputDto,
   GradeHorarioOfertaFormacaoFindOneOutputDto,
   GradeHorarioOfertaFormacaoListInputDto,
-  GradeHorarioOfertaFormacaoListOutputDto,
   GradeHorarioOfertaFormacaoUpdateInputDto,
 } from "@/modules/sisgha/grade-horario-oferta-formacao";
 import { CampusGraphqlMapper } from "@/server/nest/modules/campus/graphql/campus.graphql.mapper";
 import { OfertaFormacaoGraphqlMapper } from "@/server/nest/modules/oferta-formacao/graphql/oferta-formacao.graphql.mapper";
-import { mapPaginationMeta } from "@/server/nest/shared/mappers";
+import {
+  createFindOneInputMapper,
+  createListOutputMapper,
+  mapDatedFields,
+} from "@/server/nest/shared/mappers";
 import {
   GradeHorarioOfertaFormacaoCreateInputGraphQlDto,
   GradeHorarioOfertaFormacaoFindOneOutputGraphQlDto,
@@ -36,15 +39,7 @@ export class GradeHorarioOfertaFormacaoGraphqlMapper {
     return input;
   }
 
-  static toFindOneInput(
-    id: string,
-    selection?: string[],
-  ): GradeHorarioOfertaFormacaoFindOneInputDto {
-    const input = new GradeHorarioOfertaFormacaoFindOneInputDto();
-    input.id = id;
-    input.selection = selection;
-    return input;
-  }
+  static toFindOneInput = createFindOneInputMapper(GradeHorarioOfertaFormacaoFindOneInputDto);
 
   static toCreateInput(
     dto: GradeHorarioOfertaFormacaoCreateInputGraphQlDto,
@@ -75,18 +70,12 @@ export class GradeHorarioOfertaFormacaoGraphqlMapper {
     dto.id = output.id;
     dto.campus = CampusGraphqlMapper.toFindOneOutputDto(output.campus);
     dto.ofertaFormacao = OfertaFormacaoGraphqlMapper.toFindOneOutputDto(output.ofertaFormacao);
-    dto.dateCreated = output.dateCreated as unknown as Date;
-    dto.dateUpdated = output.dateUpdated as unknown as Date;
-    dto.dateDeleted = output.dateDeleted as unknown as Date | null;
+    mapDatedFields(dto, output);
     return dto;
   }
 
-  static toListOutputDto(
-    output: GradeHorarioOfertaFormacaoListOutputDto,
-  ): GradeHorarioOfertaFormacaoListOutputGraphQlDto {
-    const dto = new GradeHorarioOfertaFormacaoListOutputGraphQlDto();
-    dto.meta = mapPaginationMeta(output.meta);
-    dto.data = output.data.map((item) => this.toFindOneOutputDto(item));
-    return dto;
-  }
+  static toListOutputDto = createListOutputMapper(
+    GradeHorarioOfertaFormacaoListOutputGraphQlDto,
+    GradeHorarioOfertaFormacaoGraphqlMapper.toFindOneOutputDto,
+  );
 }
