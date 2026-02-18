@@ -7,7 +7,6 @@
     "@apollo/utils.keyvaluecache": "^4.0.0",
     "@as-integrations/express5": "^1.1.2",
     "@keycloak/keycloak-admin-client": "^26.5.3",
-    "@ladesa-ro/messages.timetable-generator.v1": "^0.0.2",
     "@nestjs/apollo": "^13.2.4",
     "@nestjs/common": "^11.1.13",
     "@nestjs/config": "^4.0.3",
@@ -47,7 +46,8 @@
     "ts-mixer": "^6.0.4",
     "tslib": "^2.8.1",
     "typeorm": "^0.3.28",
-    "uuid": "^13.0.0"
+    "uuid": "^13.0.0",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.4.0",

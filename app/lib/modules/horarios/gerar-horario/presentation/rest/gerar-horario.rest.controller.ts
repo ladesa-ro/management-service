@@ -1,7 +1,7 @@
 import {
-  GenerateRequest,
-  ServiceGenerateResponse,
-} from "@ladesa-ro/messages.timetable-generator.v1";
+  type GenerateRequest,
+  type ServiceGenerateResponse,
+} from "@/modules/horarios/gerar-horario/infrastructure/messages/timetable-generator-v1.schemas";
 import { Controller, Get } from "@nestjs/common";
 import { ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { GerarHorarioService } from "@/modules/horarios/gerar-horario";
@@ -21,11 +21,10 @@ export class GerarHorarioRestController {
   async poc(): Promise<ServiceGenerateResponse> {
     const request: GenerateRequest = {
       request_id: "009c8198-fa90-41ca-b234-011d221d50c7",
-      date_start: new Date("2026-02-02"),
-      date_end: new Date("2026-06-30"),
+      date_start: "2026-02-02",
+      date_end: "2026-06-30",
       time_slots: [
-        { start: "07:00:00", end: "07:50:00" },
-        { start: "07:50:00", end: "08:40:00" },
+        { start: "07:30:00", end: "08:40:00" },
         { start: "09:00:00", end: "09:50:00" },
         { start: "09:50:00", end: "10:40:00" },
         { start: "11:00:00", end: "11:50:00" },

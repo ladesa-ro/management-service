@@ -9,7 +9,7 @@ MESSAGE_PKG_VERSION=v0.1.1
 MESSAGE_PKG_SCHEMA_FILE=schema.json
 
 TMP_FILENAME=/tmp/schema.json.tmp
-OUT_FILE="out.ts"
+OUT_FILE="lib/modules/horarios/gerar-horario/infrastructure/messages/timetable-generator-v1.schemas.ts"
 
 SCHEMA_PATH="https://github.com/${REPO}/releases/download/${MESSAGE_PKG}%2F${MESSAGE_PKG_VERSION}/${MESSAGE_PKG_SCHEMA_FILE}"
 
