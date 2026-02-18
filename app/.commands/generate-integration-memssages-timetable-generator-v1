@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+REPO=ladesa-ro/messages
+
+MESSAGE_PKG=timetable-generator-v1
+MESSAGE_PKG_VERSION=v0.1.1
+MESSAGE_PKG_SCHEMA_FILE=schema.json
+
+TMP_FILENAME=/tmp/schema.json.tmp
+OUT_FILE="out.ts"
+
+SCHEMA_PATH="https://github.com/${REPO}/releases/download/${MESSAGE_PKG}%2F${MESSAGE_PKG_VERSION}/${MESSAGE_PKG_SCHEMA_FILE}"
+
+curl -L -s $SCHEMA_PATH -o ${TMP_FILENAME}
+echo "baixado $SCHEMA_PATH para ${TMP_FILENAME}"
+
+echo ${SCHEMA_PATH}
+
+bunx quicktype@23 --src-lang schema "${TMP_FILENAME}#/\$defs/" --lang typescript-zod -o ${OUT_FILE}
+echo "gerado ${OUT_FILE}"
+
+rm ${TMP_FILENAME}
+echo "removido ${TMP_FILENAME}"
