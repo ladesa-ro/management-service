@@ -101,6 +101,7 @@
     "code:check:lint": ".commands/code-check-lint",
     "code:fix": ".commands/code-fix",
     "code:fix:format": ".commands/code-fix-format",
-    "code:fix:lint": ".commands/code-fix-lint"
+    "code:fix:lint": ".commands/code-fix-lint",
+    "generate-integration-memssages-timetable-generator-v1": ".commands/generate-integration-memssages-timetable-generator-v1"
   }
 }
