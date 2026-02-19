@@ -6,6 +6,6 @@ CODEOWNERS  @ladesa-ro/security
 **/package.json @ladesa-ro/security
 **/bun.lock @ladesa-ro/security
 **/bunfig.toml @ladesa-ro/security
-**/.dockerignore @ladesa-ro/security @ladesa-ro/devops
+**/.containerignore @ladesa-ro/security @ladesa-ro/devops
 **/*.sh  @ladesa-ro/security
 Makefile @ladesa-ro/security @ladesa-ro/devops

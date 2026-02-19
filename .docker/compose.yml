@@ -8,7 +8,7 @@ services:
     user: root
     build:
       context: ../src
-      dockerfile: ../.docker/Dockerfile
+      dockerfile: ../.docker/Containerfile
       target: devcontainer
       args:
         BUN_VERSION: ${BUN_VERSION}
