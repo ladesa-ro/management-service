@@ -1,0 +1,7 @@
+# Para usar com Podman: cp compose.override.example.yml compose.override.yml
+x-podman:
+  in_pod: false
+
+services:
+  ladesa-management-service:
+    userns_mode: "keep-id:uid=1000,gid=1000"
