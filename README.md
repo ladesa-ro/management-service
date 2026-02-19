@@ -75,14 +75,13 @@ git clone https://github.com/ladesa-ro/management-service.git
 cd management-service
 ```
 
-Em seguida, copie os arquivos de configuracao de exemplo:
+Em seguida, copie o arquivo de configuracao de exemplo:
 
 ```bash
 cp -n .env.example .env
-cp -n .db.env.example .db.env
 ```
 
-> Os valores padrao do `.env.example` e `.db.env.example` ja estao prontos para desenvolvimento local. Nenhuma alteracao e necessaria para comecar.
+> Os valores padrao do `.env.example` ja estao prontos para desenvolvimento local. Nenhuma alteracao e necessaria para comecar.
 
 ---
 
