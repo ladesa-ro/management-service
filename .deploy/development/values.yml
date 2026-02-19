@@ -32,7 +32,7 @@ deployment:
 
   ports:
     - containerPort: 3000
-      name: web-port-container
+      name: http-c
 
   envFrom:
     api-config:
@@ -52,7 +52,7 @@ deployment:
     enabled: true
     httpGet:
       path: /health/
-      port: web-port-container
+      port: http-c
     initialDelaySeconds: 5
     periodSeconds: 10
 
@@ -60,7 +60,7 @@ deployment:
     enabled: true
     httpGet:
       path: /health/
-      port: web-port-container
+      port: http-c
     initialDelaySeconds: 10
     periodSeconds: 15
 
@@ -68,7 +68,7 @@ deployment:
     enabled: true
     httpGet:
       path: /health/
-      port: web-port-container
+      port: http-c
     failureThreshold: 30
     periodSeconds: 10
 
@@ -76,9 +76,9 @@ service:
   enabled: true
   type: NodePort
   ports:
-    - name: web-port-service
+    - name: http-s
       port: 3000 # porta do service
-      targetPort: web-port-container # porta alvo
+      targetPort: http-c # porta alvo
 
 ingress:
   enabled: true
@@ -89,7 +89,7 @@ ingress:
       paths:
         - path: /api/v1
           pathType: ImplementationSpecific
-          servicePort: web-port-service
+          servicePort: http-s
   tls:
     - secretName: ladesa-ro-development-management-service-tls
       hosts:
