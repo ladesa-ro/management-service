@@ -32,7 +32,7 @@ deployment:
 
   ports:
     - containerPort: 3000
-      name: web-port
+      name: web-port-container
 
   envFrom:
     api-config:
@@ -49,23 +49,26 @@ deployment:
       mountPath: /var/lib/ladesa-ro-api/uploaded
 
   readinessProbe:
+    enabled: true
     httpGet:
       path: /health/
-      port: 3000
+      port: web-port-container
     initialDelaySeconds: 5
     periodSeconds: 10
 
   livenessProbe:
+    enabled: true
     httpGet:
       path: /health/
-      port: 3000
+      port: web-port-container
     initialDelaySeconds: 10
     periodSeconds: 15
 
   startupProbe:
+    enabled: true
     httpGet:
       path: /health/
-      port: 3000
+      port: web-port-container
     failureThreshold: 30
     periodSeconds: 10
 
@@ -73,9 +76,9 @@ service:
   enabled: true
   type: NodePort
   ports:
-    - name: web-service
-      port: 3000
-      targetPort: web-port
+    - name: web-port-service
+      port: 3000 # porta do service
+      targetPort: web-port-container # porta alvo
 
 ingress:
   enabled: true
@@ -86,7 +89,7 @@ ingress:
       paths:
         - path: /api/v1
           pathType: ImplementationSpecific
-          servicePort: web-service
+          servicePort: web-port-service
   tls:
     - secretName: ladesa-ro-development-management-service-tls
       hosts:
