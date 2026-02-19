@@ -1,672 +1,217 @@
 # Management Service
 
-API de gerenciamento acadêmico desenvolvida com NestJS, TypeORM e PostgreSQL, seguindo princípios de arquitetura hexagonal.
+API REST/GraphQL de gerenciamento academico desenvolvida com NestJS, TypeORM e PostgreSQL, seguindo principios de arquitetura hexagonal.
 
 [![CI/CD - Management Service][action-build-deploy-dev-src]][action-build-deploy-dev-href]
 
----
-
-## Sumário
-
-- [Sobre o Projeto](#sobre-o-projeto)
-- [Stack Tecnológico](#stack-tecnológico)
-- [Requisitos](#requisitos)
-- [Quick Start](#quick-start)
-- [Desenvolvimento](#desenvolvimento)
-  - [Estrutura do Projeto](#estrutura-do-projeto)
-  - [Scripts Disponíveis](#scripts-disponíveis)
-  - [Workflow de Desenvolvimento](#workflow-de-desenvolvimento)
-- [Arquitetura](#arquitetura)
-- [Docker e Infraestrutura](#docker-e-infraestrutura)
-- [Migrations e Banco de Dados](#migrations-e-banco-de-dados)
-- [Integrações](#integrações)
-- [Testes](#testes)
-- [Code Quality](#code-quality)
-- [Troubleshooting](#troubleshooting)
-- [Licença](#licença)
+**Ambiente de desenvolvimento publico**: <https://dev.ladesa.com.br/api/v1/docs/>
 
 ---
 
-## Sobre o Projeto
+## Sumario
 
-O **Management Service** é uma API REST/GraphQL para gestão de instituições acadêmicas, cobrindo desde estrutura organizacional (campus, blocos, ambientes) até gestão de cursos, disciplinas, turmas, diários e horários.
-
-**Ambiente de desenvolvimento público**: <https://dev.ladesa.com.br/api/v1/docs/>
-
-### Principais Funcionalidades
-
-- Gestão de estrutura física (campus, blocos, ambientes)
-- Gestão acadêmica (cursos, disciplinas, turmas, etapas)
-- Gestão de calendários e horários
-- Sistema de diários e aulas
-- Controle de acesso e autenticação
-- Integração com Keycloak
-- Geração automática de horários
+- [Por que containers?](#por-que-containers)
+- [Pre-requisitos](#pre-requisitos)
+- [Clonando o repositorio](#clonando-o-repositorio)
+- [Rodando o projeto](#rodando-o-projeto)
+  - [Caminho A: Dev Container (recomendado)](#caminho-a-dev-container-recomendado)
+  - [Caminho B: Makefile (sem Dev Container)](#caminho-b-makefile-sem-dev-container)
+- [Acessando a aplicacao](#acessando-a-aplicacao)
+- [Stack tecnologico](#stack-tecnologico)
+- [Licenca](#licenca)
 
 ---
 
-## Stack Tecnológico
+## Por que containers?
 
-- **Runtime**: [Bun](https://bun.sh/) - JavaScript runtime ultrarrápido
-- **Framework**: [NestJS](https://nestjs.com/) - Framework Node.js progressivo
-- **ORM**: [TypeORM](https://typeorm.io/) - Mapeamento objeto-relacional
-- **Banco de Dados**: [PostgreSQL 15](https://www.postgresql.org/)
-- **Documentação**: [Swagger/OpenAPI](https://swagger.io/) + [Scalar](https://scalar.com/)
-- **GraphQL**: Apollo Server
-- **Autenticação**: Keycloak + OAuth2/OIDC
-- **Containerização**: Docker + Docker Compose
-- **Linting/Formatting**: [Biome](https://biomejs.dev/)
-- **Testes**: [Vitest](https://vitest.dev/)
+No mundo do desenvolvimento de software, existem diversas linguagens de programacao (TypeScript, Python, Go...) e cada uma possui varias versoes diferentes, que podem ter mudancas significativas entre si. Alem disso, cada projeto pode depender de ferramentas e bibliotecas especificas, cada qual com suas proprias versoes.
+
+Ter tudo isso instalado e corretamente configurado na maquina de cada desenvolvedor - e nos ambientes de producao - pode rapidamente se tornar um pesadelo: conflitos de versao, dependencias incompativeis, aquele classico "na minha maquina funciona".
+
+**Containers** resolvem isso. Um container empacota um sistema operacional minimo junto com todas as ferramentas, bibliotecas e configuracoes que o projeto precisa, de forma isolada e reproduzivel. Isso garante que **todos os desenvolvedores** - independentemente do sistema operacional ou do que ja tem instalado - trabalhem com exatamente o mesmo ambiente.
+
+Na pratica, isso significa que voce **nao precisa instalar** Bun, Node.js, PostgreSQL, nem nenhuma outra dependencia diretamente na sua maquina. Tudo roda dentro do container.
 
 ---
 
-## Requisitos
+## Pre-requisitos
 
-### Para Iniciantes
+Para contribuir com este projeto, voce precisa de:
 
-Tudo que você precisa para começar:
+### Container runtime (escolha um)
 
-- **Docker** (versão 20+)
-- **Docker Compose** (versão 2+)
-- **Git**
-- **Make** (opcional, facilita comandos)
+| Opcao | Instalacao |
+|-------|------------|
+| **Docker + Docker Compose** (v2+) | [docs.docker.com](https://docs.docker.com/get-docker/) |
+| **Podman + Podman Compose** | [podman.io](https://podman.io/getting-started/installation) |
 
-Não precisa instalar Node.js, Bun ou PostgreSQL - tudo roda dentro do Docker.
+> Se voce usa **Podman**, o arquivo `.docker/compose.override.yml` ja vem configurado com `userns_mode: "keep-id"` para compatibilidade.
 
-### Para Desenvolvedores Experientes
+### Git
 
-Se preferir rodar localmente sem Docker:
+Necessario para clonar e versionar o codigo-fonte.
 
-- **Bun** 1.3.6+
-- **Node.js** 22+ (alternativa ao Bun)
-- **PostgreSQL** 15+
-- **Make** (GNU Make)
+- Tutorial de instalacao e configuracao: <https://docs.ladesa.com.br/docs/developers-guide/tutorials/source-code/git/>
+
+### Editor de codigo (escolha um)
+
+| Editor | Dev Container |
+|--------|---------------|
+| **VS Code** | Suporte nativo via extensao [Dev Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) |
+| **WebStorm** | Suporte via [Remote Development](https://www.jetbrains.com/help/webstorm/connect-to-devcontainer.html) |
+
+### Familiaridade com linha de comando
+
+Voce vai precisar usar o terminal para clonar o repositorio, executar comandos Make e interagir com o container.
+
+- Tutorial basico: <https://docs.ladesa.com.br/docs/developers-guide/tutorials/os/command-line/>
 
 ---
 
-## Quick Start
-
-### 1. Clonar o repositório
+## Clonando o repositorio
 
 ```bash
 git clone https://github.com/ladesa-ro/management-service.git
 cd management-service
 ```
 
-### 2. Configurar ambiente
+Em seguida, copie os arquivos de configuracao de exemplo:
 
 ```bash
-make setup
+cp -n .env.example .env
+cp -n .db.env.example .db.env
 ```
 
-Isso vai:
-- Criar arquivos `.env` e `.db.env` a partir dos exemplos
-- Criar rede Docker `ladesa-net`
-- Baixar e buildar as imagens dos containers
+> Os valores padrao do `.env.example` e `.db.env.example` ja estao prontos para desenvolvimento local. Nenhuma alteracao e necessaria para comecar.
 
-### 3. Subir a aplicação
+---
+
+## Rodando o projeto
+
+Existem dois caminhos para subir o ambiente de desenvolvimento. Escolha o que preferir:
+
+| Caminho | Quando usar |
+|---------|-------------|
+| **A: Dev Container** | Voce usa VS Code ou WebStorm e quer que o editor abra diretamente dentro do container, com extensoes, terminal e tudo configurado automaticamente. |
+| **B: Makefile** | Voce prefere gerenciar os containers manualmente pelo terminal, independentemente do editor. |
+
+### Caminho A: Dev Container (recomendado)
+
+O [Dev Container](https://containers.dev/) configura automaticamente todo o ambiente de desenvolvimento - extensoes, formatacao, terminal, portas - dentro do container Docker/Podman, sem precisar instalar nada localmente.
+
+#### VS Code
+
+1. Instale a extensao **Dev Containers** (`ms-vscode-remote.remote-containers`).
+2. Abra a pasta do projeto no VS Code.
+3. Quando aparecer a notificacao _"Reopen in Container"_, clique nela.
+   - Ou use o Command Palette (`Ctrl+Shift+P`) e selecione **Dev Containers: Reopen in Container**.
+4. Aguarde o build do container e a instalacao das dependencias (primeira vez pode demorar alguns minutos).
+5. Abra o terminal integrado (`` Ctrl+` ``) e inicie o servidor:
+
+```bash
+cd src/app
+bun run dev
+```
+
+#### WebStorm
+
+1. Abra a pasta do projeto no WebStorm.
+2. Va em **File > Remote Development > Dev Containers** e selecione o `devcontainer.json` do projeto.
+3. Aguarde o build e a inicializacao do container.
+4. Abra o terminal integrado e inicie o servidor:
+
+```bash
+cd src/app
+bun run dev
+```
+
+#### O que o Dev Container configura para voce
+
+- Extensoes do editor (Biome, Vitest, GitLens, GraphQL, etc.)
+- Formatacao automatica ao salvar (Biome)
+- Terminal padrao: `zsh` (com Oh My Zsh)
+- Portas encaminhadas: `3701` (API), `9229` (debug), `5432` (PostgreSQL)
+- Instalacao automatica de dependencias (`bun install`)
+
+---
+
+### Caminho B: Makefile (sem Dev Container)
+
+Se voce prefere nao usar Dev Container, o `Makefile` oferece atalhos para gerenciar os containers pelo terminal.
+
+#### 1. Configurar e subir o ambiente
 
 ```bash
 make up
 ```
 
-Isso vai:
-- Iniciar containers da aplicação e banco de dados
-- Instalar dependências
-- Abrir shell dentro do container
+Esse unico comando faz tudo:
 
-### 4. Iniciar servidor de desenvolvimento
+- Copia os arquivos `.env` e `.db.env` a partir dos exemplos (se ainda nao existirem)
+- Cria a rede Docker `ladesa-net`
+- Builda as imagens dos containers
+- Sobe os containers (aplicacao + PostgreSQL + RabbitMQ)
+- Instala as dependencias (`bun install`)
+- Abre um shell `zsh` dentro do container da aplicacao
 
-Dentro do container:
+#### 2. Iniciar o servidor de desenvolvimento
+
+Voce ja estara dentro do container apos o `make up`. Basta rodar:
 
 ```bash
 bun run dev
 ```
 
-### 5. Acessar a aplicação
+#### Outros comandos uteis do Makefile
 
-- **API**: http://localhost:3701
-- **Documentação Swagger**: http://localhost:3701/api/v1/docs
-- **GraphQL Playground**: http://localhost:3701/graphql
+| Comando | O que faz |
+|---------|-----------|
+| `make up` | Sobe tudo (com recreate) e abre shell no container |
+| `make up-no-recreate` | Sobe sem recriar containers ja existentes |
+| `make stop` | Para os containers (sem remover) |
+| `make down` | Para e remove os containers |
+| `make cleanup` | Para, remove containers **e volumes** (reset completo) |
+| `make logs` | Mostra logs dos containers em tempo real |
+| `make shell-1000` | Abre shell como usuario `happy` (uid 1000) |
+| `make shell-root` | Abre shell como `root` |
+| `make start` | Restart completo + inicia `bun run dev` em background |
 
-Pronto! A aplicação está rodando.
-
----
-
-## Desenvolvimento
-
-### Estrutura do Projeto
-
-```
-management-service/
-├── app/                          # Código-fonte da aplicação
-│   ├── lib/
-│   │   └── v2/                   # Versão 2 da API (arquitetura hexagonal)
-│   │       ├── core/             # Lógica de negócio (core domain)
-│   │       │   ├── {modulo}/
-│   │       │   │   ├── domain/           # Entidades de domínio
-│   │       │   │   ├── application/      # Casos de uso
-│   │       │   │   │   ├── ports/        # Interfaces (contratos)
-│   │       │   │   │   │   ├── in/       # Use Case Ports
-│   │       │   │   │   │   └── out/      # Repository Ports
-│   │       │   │   │   ├── dto/          # Data Transfer Objects
-│   │       │   │   │   └── use-cases/    # Implementação dos casos de uso
-│   │       │   │   └── {modulo}.module.ts
-│   │       │
-│   │       ├── adapters/         # Adaptadores (infraestrutura)
-│   │       │   ├── in/           # Adaptadores de entrada
-│   │       │   │   └── http/     # Controllers REST
-│   │       │   └── out/          # Adaptadores de saída
-│   │       │       └── persistence/
-│   │       │           └── typeorm/
-│   │       │               ├── adapters/     # Repository Adapters
-│   │       │               └── entities/     # Entidades TypeORM
-│   │       │
-│   │       └── server/           # Camada de apresentação
-│   │           ├── main.ts       # Bootstrap da aplicação
-│   │           └── ...
-│   │
-│   ├── package.json
-│   ├── biome.json                # Configuração Biome
-│   ├── tsconfig.json
-│   └── vitest.config.mts
-│
-├── compose.yml                   # Docker Compose
-├── Makefile                      # Comandos úteis
-├── .env.example                  # Exemplo de variáveis de ambiente
-├── .db.env.example               # Exemplo de variáveis do banco
-├── PLANO_REFATORACAO.md          # Plano de migração arquitetural
-└── README.md
-```
-
-### Sobre a Arquitetura Hexagonal
-
-O projeto está sendo migrado para **arquitetura hexagonal (Ports & Adapters)**. Veja [PLANO_REFATORACAO.md](./PLANO_REFATORACAO.md) para detalhes completos.
-
-**Princípios:**
-- **Core independente**: Lógica de negócio não depende de frameworks
-- **Portas e Adaptadores**: Interfaces claras entre camadas
-- **Testabilidade**: Fácil mockar dependências
-- **Inversão de Dependência**: Core define contratos, adapters implementam
-
-### Scripts Disponíveis
-
-#### Dentro do container (após `make up`):
-
-```bash
-# Desenvolvimento
-bun run dev              # Inicia servidor em modo watch
-bun run debug            # Inicia servidor com debugger
-bun run start            # Inicia servidor em produção
-
-# Build e Type Check
-bun run build            # Build do projeto
-bun run check:static     # Verifica tipos TypeScript
-
-# Testes
-bun run test             # Executa testes unitários
-bun run test:cov         # Testes com cobertura
-bun run test:e2e         # Testes end-to-end
-bun run test:watch       # Testes em modo watch
-
-# Migrations
-bun run migration:run    # Executa migrations pendentes
-bun run migration:revert # Reverte última migration
-bun run typeorm:generate # Gera migration baseada nas entidades
-bun run typeorm:create   # Cria migration vazia
-
-# Code Quality
-bun run code:check       # Verifica código (lint + format)
-bun run code:fix         # Corrige código automaticamente
-```
-
-#### Fora do container (comandos Make):
-
-```bash
-make setup          # Configura ambiente inicial
-make up             # Sobe containers e abre shell
-make up-no-recreate # Sobe sem recriar containers
-make down           # Para containers
-make cleanup        # Para e remove containers + volumes
-make logs           # Mostra logs dos containers
-make shell-1000     # Abre shell como usuário happy (uid 1000)
-make shell-root     # Abre shell como root
-```
-
-### Workflow de Desenvolvimento
-
-1. **Inicie o ambiente:**
-   ```bash
-   make up
-   ```
-
-2. **Rode o servidor de desenvolvimento:**
-   ```bash
-   bun run dev
-   ```
-
-3. **Faça suas alterações** - O servidor recarrega automaticamente
-
-4. **Execute testes:**
-   ```bash
-   bun run test
-   ```
-
-5. **Verifique o código:**
-   ```bash
-   bun run code:check
-   ```
-
-6. **Crie/rode migrations se necessário:**
-   ```bash
-   bun run typeorm:generate -- lib/v2/adapters/out/persistence/typeorm/typeorm/migrations/NomeDaMigration
-   bun run migration:run
-   ```
-
-7. **Commite suas alterações**
+> **Dica:** se voce usa **Podman** em vez de Docker, edite o Makefile e altere a variavel `COMMAND_TOOL_OCI_RUNTIME` de `docker` para `podman`.
 
 ---
 
-## Arquitetura
+## Acessando a aplicacao
 
-### Modelo Hexagonal
+Apos iniciar o servidor com `bun run dev`, acesse:
 
-```
-┌─────────────────────────────────────────────────────┐
-│              ADAPTERS IN (Drivers)                  │
-│  ┌───────────┐  ┌───────────┐  ┌───────────┐      │
-│  │   REST    │  │  GraphQL  │  │  gRPC     │      │
-│  │Controllers│  │ Resolvers │  │   ...     │      │
-│  └─────┬─────┘  └─────┬─────┘  └─────┬─────┘      │
-│        │              │              │              │
-│        └──────────────┴──────────────┘              │
-│                       │                              │
-│            ┌──────────▼──────────┐                  │
-│            │   USE CASE PORTS    │                  │
-│            │    (Interfaces)     │                  │
-│            └──────────┬──────────┘                  │
-│                       │                              │
-│        ┌──────────────▼──────────────┐              │
-│        │        APPLICATION           │              │
-│        │  ┌────────────────────────┐ │              │
-│        │  │    Use Cases/Services  │ │              │
-│        │  └────────────────────────┘ │              │
-│        │  ┌────────────────────────┐ │              │
-│        │  │    Domain Models       │ │   CORE       │
-│        │  └────────────────────────┘ │              │
-│        └──────────────┬──────────────┘              │
-│                       │                              │
-│            ┌──────────▼──────────┐                  │
-│            │  REPOSITORY PORTS   │                  │
-│            │    (Interfaces)     │                  │
-│            └──────────┬──────────┘                  │
-│                       │                              │
-│        ┌──────────────┴──────────────┐              │
-│        │              │               │              │
-│  ┌─────▼─────┐  ┌────▼────┐  ┌──────▼──────┐      │
-│  │  TypeORM  │  │  Cache  │  │  External   │      │
-│  │ Adapters  │  │ Adapters│  │  APIs       │      │
-│  └───────────┘  └─────────┘  └─────────────┘      │
-│              ADAPTERS OUT (Driven)                  │
-└─────────────────────────────────────────────────────┘
-```
-
-### Camadas
-
-1. **Core (core/)**: Lógica de negócio pura
-   - Domain: Entidades com regras de domínio
-   - Application: Casos de uso e DTOs
-   - Ports: Interfaces (contratos entre camadas)
-
-2. **Adapters (adapters/)**: Infraestrutura
-   - In: HTTP/REST, GraphQL, eventos
-   - Out: Bancos de dados, APIs externas, cache
-
-3. **Server (server/)**: Bootstrap e configuração
+| Recurso | URL |
+|---------|-----|
+| API REST | <http://localhost:3701> |
+| Documentacao Swagger | <http://localhost:3701/api/v1/docs> |
+| GraphQL Playground | <http://localhost:3701/graphql> |
 
 ---
 
-## Docker e Infraestrutura
+## Stack tecnologico
 
-### Serviços
-
-| Serviço | Container | Porta Host | Porta Container | Descrição |
-|---------|-----------|------------|-----------------|-----------|
-| API | `ladesa-management-service` | 3701 | 3701 | Aplicação NestJS |
-| Debugger | `ladesa-management-service` | 9229 | 9229 | Node Inspector |
-| Banco de Dados | `ladesa-management-service-db` | 5432 | 5432 | PostgreSQL 15 |
-
-### Volumes Persistentes
-
-- `ladesa-management-service-db-data`: Dados do PostgreSQL
-- `ladesa-management-service-uploaded-files`: Arquivos enviados
-- `./volumes/history/`: Histórico de comandos (bash/zsh)
-
-### Variáveis de Ambiente
-
-#### `.env` (Aplicação)
-
-```env
-PORT=3701
-NODE_ENV=development
-
-# Database
-DATABASE_URL=postgresql://postgres:senha@ladesa-management-service-db:5432/main
-DATABASE_USE_SSL=false
-TYPEORM_LOGGING=true
-
-# OAuth2/Keycloak
-OAUTH2_CLIENT_PROVIDER_OIDC_ISSUER=https://sso.ladesa.com.br/realms/sisgea-playground
-OAUTH2_CLIENT_REGISTRATION_LOGIN_CLIENT_ID=seu-client-id
-OAUTH2_CLIENT_REGISTRATION_LOGIN_CLIENT_SECRET=seu-secret
-OAUTH2_CLIENT_REGISTRATION_LOGIN_SCOPE=openid profile
-
-KC_BASE_URL=https://sso.ladesa.com.br
-```
-
-#### `.db.env` (PostgreSQL)
-
-```env
-POSTGRESQL_USERNAME=postgres
-POSTGRESQL_PASSWORD=sua-senha-segura
-POSTGRESQL_DATABASE=main
-```
+| Categoria | Tecnologia |
+|-----------|------------|
+| Runtime | [Bun](https://bun.sh/) |
+| Framework | [NestJS](https://nestjs.com/) |
+| ORM | [TypeORM](https://typeorm.io/) |
+| Banco de Dados | [PostgreSQL 15](https://www.postgresql.org/) |
+| Documentacao API | [Swagger/OpenAPI](https://swagger.io/) + [Scalar](https://scalar.com/) |
+| GraphQL | Apollo Server |
+| Autenticacao | Keycloak + OAuth2/OIDC |
+| Containerizacao | Docker / Podman |
+| Linting/Formatacao | [Biome](https://biomejs.dev/) |
+| Testes | [Vitest](https://vitest.dev/) |
 
 ---
 
-## Migrations e Banco de Dados
+## Licenca
 
-### Comandos de Migration
-
-```bash
-# Criar migration vazia
-bun run typeorm:create -- lib/v2/adapters/out/persistence/typeorm/typeorm/migrations/NomeDaMigration
-
-# Gerar migration automaticamente baseada nas entidades
-bun run typeorm:generate -- lib/v2/adapters/out/persistence/typeorm/typeorm/migrations/NomeDaMigration
-
-# Executar migrations pendentes
-bun run migration:run
-
-# Reverter última migration
-bun run migration:revert
-```
-
-### Trabalhando com Entidades TypeORM
-
-As entidades ficam em: `app/lib/v2/adapters/out/persistence/typeorm/typeorm/entities/`
-
-Após criar/modificar entidades:
-
-1. Gere a migration: `bun run typeorm:generate -- lib/v2/adapters/out/persistence/typeorm/typeorm/migrations/AddNovaTabela`
-2. Revise a migration gerada
-3. Execute: `bun run migration:run`
-
----
-
-## Integrações
-
-### Cliente JavaScript/TypeScript
-
-O projeto gera automaticamente um cliente NPM para consumir a API.
-
-```bash
-npm install @ladesa-ro/management-service-client@latest
-```
-
-```typescript
-import { ManagementServiceClient } from '@ladesa-ro/management-service-client';
-
-const client = new ManagementServiceClient({
-  baseURL: 'https://dev.ladesa.com.br/api/v1',
-  token: 'seu-bearer-token'
-});
-
-const campus = await client.campus.findAll();
-```
-
-### GraphQL
-
-Endpoint GraphQL: `http://localhost:3701/graphql`
-
-Exemplo de query:
-
-```graphql
-query {
-  campus {
-    id
-    nome
-    cnpj
-  }
-}
-```
-
----
-
-## Testes
-
-### Executando Testes
-
-```bash
-# Testes unitários
-bun run test
-
-# Testes com cobertura
-bun run test:cov
-
-# Testes end-to-end
-bun run test:e2e
-
-# Testes em modo watch
-bun run test:watch
-
-# Testes com debug
-bun run test:debug
-```
-
-### Estrutura de Testes
-
-```
-app/
-├── lib/v2/core/{modulo}/
-│   ├── application/
-│   │   └── use-cases/
-│   │       ├── {modulo}.service.ts
-│   │       └── {modulo}.service.spec.ts    # Testes unitários
-│   └── ...
-└── test/
-    └── app.e2e-spec.ts                      # Testes E2E
-```
-
----
-
-## Code Quality
-
-### Linting e Formatação
-
-O projeto usa **Biome** para linting e formatação de código.
-
-```bash
-# Verificar código
-bun run code:check
-
-# Corrigir automaticamente
-bun run code:fix
-
-# Apenas formatação
-bun run code:check:format
-bun run code:fix:format
-
-# Apenas linting
-bun run code:check:lint
-bun run code:fix:lint
-```
-
-### Type Checking
-
-```bash
-# Verificar tipos TypeScript
-bun run check:static
-```
-
-### Pre-commit Hooks
-
-Recomenda-se configurar hooks de pre-commit para garantir qualidade:
-
-```bash
-# .git/hooks/pre-commit
-#!/bin/bash
-bun run code:fix
-bun run check:static
-bun run test
-```
-
----
-
-## Troubleshooting
-
-### Problemas Comuns
-
-#### 1. Erro ao conectar no banco de dados
-
-**Sintoma:** `ECONNREFUSED` ou `Connection refused`
-
-**Solução:**
-```bash
-# Verifique se o container do banco está rodando
-docker ps | grep ladesa-management-service-db
-
-# Se não estiver, suba novamente
-make down && make up
-```
-
-#### 2. Porta 3701 já está em uso
-
-**Sintoma:** `Error: listen EADDRINUSE: address already in use :::3701`
-
-**Solução:**
-```bash
-# Encontre o processo usando a porta
-lsof -i :3701
-
-# Mate o processo
-kill -9 <PID>
-
-# Ou use outra porta (altere no .env)
-PORT=3702
-```
-
-#### 3. Dependências desatualizadas
-
-**Sintoma:** Erros de import ou módulos não encontrados
-
-**Solução:**
-```bash
-# Dentro do container
-bun install
-
-# Ou recrie o container
-make cleanup && make up
-```
-
-#### 4. Migration falhou
-
-**Sintoma:** Erro ao executar migration
-
-**Solução:**
-```bash
-# Reverta a última migration
-bun run migration:revert
-
-# Corrija o arquivo de migration
-# Re-execute
-bun run migration:run
-```
-
-#### 5. Container não inicia
-
-**Sintoma:** Container para imediatamente após iniciar
-
-**Solução:**
-```bash
-# Veja os logs
-make logs
-
-# Reconstrua as imagens
-make cleanup
-docker system prune -a  # Cuidado: remove todas imagens não usadas
-make setup
-```
-
-### Logs e Debug
-
-```bash
-# Ver logs em tempo real
-make logs
-
-# Ver logs de um serviço específico
-docker compose logs -f ladesa-management-service
-
-# Entrar no container como root (para debug de sistema)
-make shell-root
-
-# Verificar saúde dos containers
-docker compose ps
-```
-
-### Resetar Ambiente Completamente
-
-Se nada funcionar:
-
-```bash
-make cleanup           # Remove containers e volumes
-docker system prune -a # Remove imagens não usadas
-rm -rf app/node_modules
-rm .env .db.env
-make setup             # Reconfigure
-make up                # Suba novamente
-```
-
----
-
-## Contribuindo
-
-### Guidelines
-
-1. **Siga a arquitetura hexagonal** - Veja [PLANO_REFATORACAO.md](./PLANO_REFATORACAO.md)
-2. **Escreva testes** para novos recursos
-3. **Use Biome** para formatar código (`bun run code:fix`)
-4. **Valide tipos** antes de comitar (`bun run check:static`)
-5. **Documente** mudanças significativas
-6. **Commits semânticos**: `feat:`, `fix:`, `chore:`, `docs:`, etc.
-
-### Processo de Pull Request
-
-1. Crie uma branch: `git checkout -b feat/minha-feature`
-2. Faça suas alterações
-3. Execute testes: `bun run test`
-4. Verifique código: `bun run code:fix && bun run check:static`
-5. Commit: `git commit -m "feat: adiciona funcionalidade X"`
-6. Push: `git push origin feat/minha-feature`
-7. Abra Pull Request no GitHub
-
----
-
-## Recursos Adicionais
-
-- **Documentação da API**: <https://dev.ladesa.com.br/api/v1/docs/>
-- **Repositório**: <https://github.com/ladesa-ro/management-service>
-- **Cliente NPM**: <https://www.npmjs.com/package/@ladesa-ro/management-service-client>
-- **Plano de Refatoração**: [PLANO_REFATORACAO.md](./PLANO_REFATORACAO.md)
-- **Issues**: <https://github.com/ladesa-ro/management-service/issues>
-
----
-
-## Licença
-
-[MIT](./LICENSE) © 2024 – presente, Ladesa.
-
----
+[MIT](./LICENSE) &copy; 2024 &ndash; presente, Ladesa.
 
 <!-- Links dos Badges -->
 
