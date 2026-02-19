@@ -1,4 +1,4 @@
-import { ImagemFindOneOutputDto, ImagemInputRefDto } from "@/modules/@base/armazenamento/imagem";
+import { ImagemFindOneOutputDto, ImagemInputRefDto } from "@/modules/armazenamento/imagem";
 import {
   EntityOutputDto,
   FindOneInputDto,

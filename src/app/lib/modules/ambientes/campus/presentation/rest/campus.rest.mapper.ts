@@ -1,4 +1,4 @@
-import { EnderecoRestMapper } from "@/modules/@base/localidades/endereco/presentation/rest";
+import { EnderecoRestMapper } from "@/modules/localidades/endereco/presentation/rest";
 import {
   createFindOneInputMapper,
   createListInputMapper,

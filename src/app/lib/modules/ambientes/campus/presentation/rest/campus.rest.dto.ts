@@ -5,7 +5,7 @@ import { decorate, Mixin } from "ts-mixer";
 import {
   EnderecoFindOneOutputRestDto,
   EnderecoInputRestDto,
-} from "@/modules/@base/localidades/endereco/presentation/rest";
+} from "@/modules/localidades/endereco/presentation/rest";
 import {
   commonProperties,
   RegisterModel,

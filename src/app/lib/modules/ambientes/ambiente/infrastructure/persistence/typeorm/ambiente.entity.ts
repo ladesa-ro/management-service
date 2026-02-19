@@ -6,7 +6,7 @@ import {
   PrimaryGeneratedColumn,
   type Relation,
 } from "typeorm";
-import { ImagemEntity } from "@/modules/@base/armazenamento/imagem/infrastructure/persistence/typeorm/imagem.entity";
+import { ImagemEntity } from "@/modules/armazenamento/imagem/infrastructure/persistence/typeorm/imagem.entity";
 import { BlocoEntity } from "@/modules/ambientes/bloco/infrastructure/persistence/typeorm/bloco.entity";
 
 @Entity("ambiente")

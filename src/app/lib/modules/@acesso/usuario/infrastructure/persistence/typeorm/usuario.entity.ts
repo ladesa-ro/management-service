@@ -8,7 +8,7 @@ import {
   type Relation,
 } from "typeorm";
 import { PerfilEntity } from "@/modules/@acesso/perfil/infrastructure/persistence/typeorm/perfil.entity";
-import { ImagemEntity } from "@/modules/@base/armazenamento/imagem/infrastructure/persistence/typeorm/imagem.entity";
+import { ImagemEntity } from "@/modules/armazenamento/imagem/infrastructure/persistence/typeorm/imagem.entity";
 
 @Entity("usuario")
 export class UsuarioEntity {

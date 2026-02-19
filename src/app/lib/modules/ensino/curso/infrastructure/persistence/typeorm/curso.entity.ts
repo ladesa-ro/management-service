@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
   type Relation,
 } from "typeorm";
-import { ImagemEntity } from "@/modules/@base/armazenamento/imagem/infrastructure/persistence/typeorm/imagem.entity";
+import { ImagemEntity } from "@/modules/armazenamento/imagem/infrastructure/persistence/typeorm/imagem.entity";
 import { CampusEntity } from "@/modules/ambientes/campus/infrastructure/persistence/typeorm/campus.entity";
 import { OfertaFormacaoEntity } from "@/modules/ensino/oferta-formacao/infrastructure/persistence/typeorm/oferta-formacao.entity";
 import { TurmaEntity } from "@/modules/ensino/turma/infrastructure/persistence/typeorm/turma.entity";

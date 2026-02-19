@@ -9,7 +9,7 @@ import {
   ValidateNested,
 } from "class-validator";
 import { decorate } from "ts-mixer";
-import { ImagemFindOneOutputGraphQlDto } from "@/modules/@base/armazenamento/imagem-arquivo/presentation/graphql/imagem-arquivo.graphql.dto";
+import { ImagemFindOneOutputGraphQlDto } from "@/modules/armazenamento/imagem-arquivo/presentation/graphql/imagem-arquivo.graphql.dto";
 import {
   EntityBaseGraphQlDto,
   PaginatedFilterByIdGraphQlDto,

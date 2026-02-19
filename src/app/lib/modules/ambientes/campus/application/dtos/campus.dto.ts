@@ -2,7 +2,7 @@ import {
   EnderecoCreateInputDto,
   EnderecoFindOneOutputDto,
   EnderecoUpdateInputDto,
-} from "@/modules/@base/localidades/endereco";
+} from "@/modules/localidades/endereco";
 import {
   EntityOutputDto,
   FindOneInputDto,

@@ -1,4 +1,4 @@
-import type { IImagem } from "@/modules/@base/armazenamento/imagem/domain/imagem.types";
+import type { IImagem } from "@/modules/armazenamento/imagem/domain/imagem.types";
 import type { IEntityBase } from "@/modules/@shared";
 
 /**

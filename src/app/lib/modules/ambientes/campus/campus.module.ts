@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { EnderecoModule } from "@/modules/@base/localidades/endereco/endereco.module";
+import { EnderecoModule } from "@/modules/localidades/endereco/endereco.module";
 import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import { CAMPUS_REPOSITORY_PORT, CampusService } from "@/modules/ambientes/campus";
 import {

@@ -1,4 +1,4 @@
-import type { IImagem } from "@/modules/@base/armazenamento/imagem";
+import type { IImagem } from "@/modules/armazenamento/imagem";
 import type { IdUuid, IEntityBase } from "@/modules/@shared";
 import type { ICampus } from "@/modules/ambientes/campus";
 import type { IOfertaFormacao } from "@/modules/ensino/oferta-formacao";

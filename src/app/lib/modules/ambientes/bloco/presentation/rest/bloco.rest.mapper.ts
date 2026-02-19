@@ -1,4 +1,4 @@
-import type { ImagemFindOneOutputDto } from "@/modules/@base/armazenamento/imagem";
+import type { ImagemFindOneOutputDto } from "@/modules/armazenamento/imagem";
 import {
   createFindOneInputMapper,
   createListInputMapper,

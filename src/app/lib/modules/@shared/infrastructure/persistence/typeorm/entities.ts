@@ -3,12 +3,12 @@
 
 export { PerfilEntity } from "@/modules/@acesso/perfil/infrastructure/persistence/typeorm/perfil.entity";
 export { UsuarioEntity } from "@/modules/@acesso/usuario/infrastructure/persistence/typeorm/usuario.entity";
-export { ArquivoEntity } from "@/modules/@base/armazenamento/arquivo/infrastructure/persistence/typeorm/arquivo.entity";
-export { ImagemEntity } from "@/modules/@base/armazenamento/imagem/infrastructure/persistence/typeorm/imagem.entity";
-export { ImagemArquivoEntity } from "@/modules/@base/armazenamento/imagem-arquivo/infrastructure/persistence/typeorm/imagem-arquivo.entity";
-export { CidadeEntity } from "@/modules/@base/localidades/cidade/infrastructure/persistence/typeorm/cidade.entity";
-export { EnderecoEntity } from "@/modules/@base/localidades/endereco/infrastructure/persistence/typeorm/endereco.entity";
-export { EstadoEntity } from "@/modules/@base/localidades/estado/infrastructure/persistence/typeorm/estado.entity";
+export { ArquivoEntity } from "@/modules/armazenamento/arquivo/infrastructure/persistence/typeorm/arquivo.entity";
+export { ImagemEntity } from "@/modules/armazenamento/imagem/infrastructure/persistence/typeorm/imagem.entity";
+export { ImagemArquivoEntity } from "@/modules/armazenamento/imagem-arquivo/infrastructure/persistence/typeorm/imagem-arquivo.entity";
+export { CidadeEntity } from "@/modules/localidades/cidade/infrastructure/persistence/typeorm/cidade.entity";
+export { EnderecoEntity } from "@/modules/localidades/endereco/infrastructure/persistence/typeorm/endereco.entity";
+export { EstadoEntity } from "@/modules/localidades/estado/infrastructure/persistence/typeorm/estado.entity";
 export { AmbienteEntity } from "@/modules/ambientes/ambiente/infrastructure/persistence/typeorm/ambiente.entity";
 export { BlocoEntity } from "@/modules/ambientes/bloco/infrastructure/persistence/typeorm/bloco.entity";
 export { CampusEntity } from "@/modules/ambientes/campus/infrastructure/persistence/typeorm/campus.entity";

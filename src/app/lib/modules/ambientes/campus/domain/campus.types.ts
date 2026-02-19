@@ -1,4 +1,4 @@
-import type { IEndereco } from "@/modules/@base/localidades/endereco";
+import type { IEndereco } from "@/modules/localidades/endereco";
 import type { IdNumeric, IEntityBase } from "@/modules/@shared";
 
 /**

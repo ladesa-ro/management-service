@@ -4,7 +4,7 @@ import { decorate } from "ts-mixer";
 import {
   EnderecoFindOneOutputGraphQlDto,
   EnderecoInputGraphQlDto,
-} from "@/modules/@base/localidades/endereco/presentation/graphql/endereco.graphql.dto";
+} from "@/modules/localidades/endereco/presentation/graphql/endereco.graphql.dto";
 import {
   EntityBaseGraphQlDto,
   PaginatedFilterByIdGraphQlDto,

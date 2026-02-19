@@ -1,0 +1,32 @@
+import { Controller, Get, Param, Query, type StreamableFile } from "@nestjs/common";
+import {
+  ApiForbiddenResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from "@nestjs/swagger";
+import { ArquivoService } from "@/modules/armazenamento/arquivo/application/use-cases/arquivo.service";
+import { AccessContext, AccessContextHttp } from "@/modules/@core/contexto-acesso";
+import { ArquivoFindOneInputRestDto, ArquivoGetFileQueryInputRestDto } from "./arquivo.rest.dto";
+import { ArquivoRestMapper } from "./arquivo.rest.mapper";
+
+@ApiTags("arquivos")
+@Controller("/arquivos")
+export class ArquivoRestController {
+  constructor(private arquivoService: ArquivoService) {}
+
+  @Get(":id")
+  @ApiOperation({ summary: "Busca um arquivo por ID", operationId: "arquivoFindById" })
+  @ApiOkResponse({ description: "Arquivo encontrado" })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async getFile(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: ArquivoFindOneInputRestDto,
+    @Query() query: ArquivoGetFileQueryInputRestDto,
+  ): Promise<StreamableFile> {
+    const input = ArquivoRestMapper.toGetFileInput(params, query);
+    return this.arquivoService.getStreamableFile(accessContext, input);
+  }
+}

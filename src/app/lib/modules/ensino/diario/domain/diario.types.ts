@@ -1,4 +1,4 @@
-import type { IImagem } from "@/modules/@base/armazenamento/imagem/domain/imagem.types";
+import type { IImagem } from "@/modules/armazenamento/imagem/domain/imagem.types";
 import type { IdUuid, IEntityBase } from "@/modules/@shared";
 import type { IAmbiente } from "@/modules/ambientes/ambiente/domain/ambiente.types";
 import type { IDisciplina } from "@/modules/ensino/disciplina/domain/disciplina.types";

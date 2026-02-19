@@ -19,8 +19,8 @@ import {
   type IUsuarioUseCasePort,
   USUARIO_REPOSITORY_PORT,
 } from "@/modules/@acesso/usuario/application/ports";
-import { ArquivoService } from "@/modules/@base/armazenamento/arquivo/application/use-cases/arquivo.service";
-import { ImagemService } from "@/modules/@base/armazenamento/imagem/application/use-cases/imagem.service";
+import { ArquivoService } from "@/modules/armazenamento/arquivo/application/use-cases/arquivo.service";
+import { ImagemService } from "@/modules/armazenamento/imagem/application/use-cases/imagem.service";
 import type { AccessContext } from "@/modules/@core/contexto-acesso";
 import { KeycloakService } from "@/modules/@core/provedor-identidade";
 import {
