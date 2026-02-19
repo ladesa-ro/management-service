@@ -7,9 +7,9 @@ import {
   PrimaryGeneratedColumn,
   type Relation,
 } from "typeorm";
-import { PerfilEntity } from "@/modules/@acesso/perfil/infrastructure/persistence/typeorm/perfil.entity";
-import { EnderecoEntity } from "@/modules/localidades/endereco/infrastructure/persistence/typeorm/endereco.entity";
+import { PerfilEntity } from "@/modules/acesso/perfil/infrastructure/persistence/typeorm/perfil.entity";
 import { ModalidadeEntity } from "@/modules/ensino/modalidade/infrastructure/persistence/typeorm/modalidade.entity";
+import { EnderecoEntity } from "@/modules/localidades/endereco/infrastructure/persistence/typeorm/endereco.entity";
 
 @Entity("campus")
 export class CampusEntity {

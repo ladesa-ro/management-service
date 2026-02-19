@@ -1,4 +1,3 @@
-import { EnderecoRestMapper } from "@/modules/localidades/endereco/presentation/rest";
 import {
   createFindOneInputMapper,
   createListInputMapper,
@@ -12,6 +11,7 @@ import {
   CampusListInputDto,
   CampusUpdateInputDto,
 } from "@/modules/ambientes/campus";
+import { EnderecoRestMapper } from "@/modules/localidades/endereco/presentation/rest";
 import {
   CampusCreateInputRestDto,
   CampusFindOneInputRestDto,

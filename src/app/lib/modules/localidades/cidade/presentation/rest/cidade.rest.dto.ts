@@ -2,7 +2,6 @@ import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { IsArray, IsInt, IsOptional, IsString, ValidateNested } from "class-validator";
 import { decorate } from "ts-mixer";
-import { EstadoFindOneOutputRestDto } from "@/modules/localidades/estado/presentation/rest/estado.rest.dto";
 import {
   RegisterModel,
   referenceProperty,
@@ -13,6 +12,7 @@ import {
   PaginationMetaRestDto,
   TransformToArray,
 } from "@/modules/@shared/infrastructure/presentation/rest/dtos";
+import { EstadoFindOneOutputRestDto } from "@/modules/localidades/estado/presentation/rest/estado.rest.dto";
 
 // ============================================================================
 // FindOne Output

@@ -2,7 +2,7 @@ import { ApiProperty, ApiSchema } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { IsArray, IsDateString, ValidateNested } from "class-validator";
 import { decorate } from "ts-mixer";
-import { PerfilFindOneInputRestDto } from "@/modules/@acesso/perfil/presentation/rest";
+import { PerfilFindOneInputRestDto } from "@/modules/acesso/perfil/presentation/rest";
 import { TurmaFindOneInputRestDto } from "@/modules/ensino/turma/presentation/rest";
 import { HorarioGeradoAulaFindOneInputRestDto } from "@/modules/horarios/horario-gerado-aula/presentation/rest";
 import { IntervaloDeTempoFindOneInputRestDto } from "@/modules/horarios/intervalo-de-tempo/presentation/rest/intervalo-de-tempo.rest.dto";

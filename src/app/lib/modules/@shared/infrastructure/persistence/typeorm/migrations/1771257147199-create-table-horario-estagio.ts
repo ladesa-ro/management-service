@@ -34,7 +34,7 @@ export class CreateTableHorarioEstagio1771257147199 implements MigrationInterfac
             type: "time",
             isNullable: false,
           },
-                    {
+          {
             name: "date_created",
             type: "timestamptz",
             isNullable: false,

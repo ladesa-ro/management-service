@@ -1,8 +1,8 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { UsuarioEntity } from "@/modules/@acesso/usuario/infrastructure/persistence/typeorm/usuario.entity";
-import { ImagemArquivoEntity } from "@/modules/armazenamento/imagem-arquivo/infrastructure/persistence/typeorm/imagem-arquivo.entity";
+import { UsuarioEntity } from "@/modules/acesso/usuario/infrastructure/persistence/typeorm/usuario.entity";
 import { AmbienteEntity } from "@/modules/ambientes/ambiente/infrastructure/persistence/typeorm/ambiente.entity";
 import { BlocoEntity } from "@/modules/ambientes/bloco/infrastructure/persistence/typeorm/bloco.entity";
+import { ImagemArquivoEntity } from "@/modules/armazenamento/imagem-arquivo/infrastructure/persistence/typeorm/imagem-arquivo.entity";
 
 @Entity("imagem")
 export class ImagemEntity {

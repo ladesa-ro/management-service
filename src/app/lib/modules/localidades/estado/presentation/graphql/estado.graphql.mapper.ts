@@ -1,9 +1,9 @@
+import { createListOutputMapper } from "@/modules/@shared/application/mappers";
 import {
   EstadoFindOneInputDto,
   EstadoFindOneOutputDto,
   EstadoListInputDto,
 } from "@/modules/localidades/estado";
-import { createListOutputMapper } from "@/modules/@shared/application/mappers";
 import {
   EstadoFindOneOutputGraphQlDto,
   EstadoListInputGraphQlDto,

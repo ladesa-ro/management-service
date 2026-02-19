@@ -1,7 +1,7 @@
 import { Module } from "@nestjs/common";
+import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import { ArquivoModule } from "@/modules/armazenamento/arquivo/arquivo.module";
 import { ImagemModule } from "@/modules/armazenamento/imagem/imagem.module";
-import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import { DISCIPLINA_REPOSITORY_PORT } from "@/modules/ensino/disciplina/application/ports";
 import { DisciplinaService } from "@/modules/ensino/disciplina/application/use-cases/disciplina.service";
 import {

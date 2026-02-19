@@ -1,4 +1,3 @@
-import { ArquivoFindOneOutputDto } from "@/modules/armazenamento/arquivo";
 import {
   EntityOutputDto,
   FindOneInputDto,
@@ -7,6 +6,7 @@ import {
   PaginationInputDto,
   PaginationResultDto,
 } from "@/modules/@shared";
+import { ArquivoFindOneOutputDto } from "@/modules/armazenamento/arquivo";
 
 // ============================================================================
 // Imagem Arquivo Output (for versoes relation)

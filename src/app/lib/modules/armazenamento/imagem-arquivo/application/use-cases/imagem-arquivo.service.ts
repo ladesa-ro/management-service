@@ -1,4 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
+import { BaseReadOnlyService } from "@/modules/@shared";
 import type {
   ImagemArquivoFindOneInputDto,
   ImagemArquivoFindOneOutputDto,
@@ -10,7 +11,6 @@ import {
   type IImagemArquivoUseCasePort,
   IMAGEM_ARQUIVO_QUERY_REPOSITORY_PORT,
 } from "@/modules/armazenamento/imagem-arquivo/application/ports";
-import { BaseReadOnlyService } from "@/modules/@shared";
 
 @Injectable()
 export class ImagemArquivoService

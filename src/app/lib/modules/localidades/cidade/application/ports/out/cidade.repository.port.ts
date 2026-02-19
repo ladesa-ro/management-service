@@ -1,10 +1,10 @@
+import type { IReadOnlyRepositoryPort } from "@/modules/@shared";
 import {
   CidadeFindOneInputDto,
   CidadeFindOneOutputDto,
   CidadeListInputDto,
   CidadeListOutputDto,
 } from "@/modules/localidades/cidade";
-import type { IReadOnlyRepositoryPort } from "@/modules/@shared";
 
 /**
  * Token de injeção para o repositório de Cidade

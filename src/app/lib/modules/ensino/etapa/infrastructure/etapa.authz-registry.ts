@@ -1,4 +1,4 @@
-import { createAuthzRegistryProvider } from "@/modules/@core/contexto-acesso";
+import { createAuthzRegistryProvider } from "@/modules/@seguranca/contexto-acesso";
 import { createEtapaRepository } from "./persistence/typeorm/etapa.repository";
 
 export const EtapaAuthzRegistrySetup = createAuthzRegistryProvider("etapa", (ds) =>

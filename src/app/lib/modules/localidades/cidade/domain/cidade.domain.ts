@@ -1,5 +1,5 @@
-import type { IEstado } from "@/modules/localidades/estado";
 import { BaseEntity, type IdNumeric } from "@/modules/@shared";
+import type { IEstado } from "@/modules/localidades/estado";
 import type { ICidade, ICidadeCreate, ICidadeUpdate } from "./cidade.types";
 
 /**

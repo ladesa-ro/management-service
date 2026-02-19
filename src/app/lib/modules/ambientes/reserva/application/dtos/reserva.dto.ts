@@ -1,8 +1,4 @@
 import {
-  UsuarioFindOneOutputDto,
-  UsuarioInputRefDto,
-} from "@/modules/@acesso/usuario/application/dtos";
-import {
   EntityOutputDto,
   FindOneInputDto,
   IFilterAcceptableValues,
@@ -10,6 +6,10 @@ import {
   PaginationInputDto,
   PaginationResultDto,
 } from "@/modules/@shared/application/dtos";
+import {
+  UsuarioFindOneOutputDto,
+  UsuarioInputRefDto,
+} from "@/modules/acesso/usuario/application/dtos";
 import { AmbienteFindOneOutputDto, AmbienteInputRefDto } from "@/modules/ambientes/ambiente";
 
 // ============================================================================

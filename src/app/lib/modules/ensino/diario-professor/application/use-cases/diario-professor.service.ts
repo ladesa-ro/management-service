@@ -1,8 +1,8 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { has } from "lodash";
-import { PerfilService } from "@/modules/@acesso/perfil";
-import type { AccessContext } from "@/modules/@core/contexto-acesso";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { BaseCrudService, type PersistInput } from "@/modules/@shared";
+import { PerfilService } from "@/modules/acesso/perfil";
 import { DiarioService } from "@/modules/ensino/diario/application/use-cases/diario.service";
 import { DiarioProfessor, type IDiarioProfessor } from "@/modules/ensino/diario-professor";
 import type {

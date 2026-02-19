@@ -1,18 +1,15 @@
 // Re-export all entities from their respective modules for backwards compatibility
 // Import directly from entity files to avoid circular dependencies with adapters
 
-export { PerfilEntity } from "@/modules/@acesso/perfil/infrastructure/persistence/typeorm/perfil.entity";
-export { UsuarioEntity } from "@/modules/@acesso/usuario/infrastructure/persistence/typeorm/usuario.entity";
-export { ArquivoEntity } from "@/modules/armazenamento/arquivo/infrastructure/persistence/typeorm/arquivo.entity";
-export { ImagemEntity } from "@/modules/armazenamento/imagem/infrastructure/persistence/typeorm/imagem.entity";
-export { ImagemArquivoEntity } from "@/modules/armazenamento/imagem-arquivo/infrastructure/persistence/typeorm/imagem-arquivo.entity";
-export { CidadeEntity } from "@/modules/localidades/cidade/infrastructure/persistence/typeorm/cidade.entity";
-export { EnderecoEntity } from "@/modules/localidades/endereco/infrastructure/persistence/typeorm/endereco.entity";
-export { EstadoEntity } from "@/modules/localidades/estado/infrastructure/persistence/typeorm/estado.entity";
+export { PerfilEntity } from "@/modules/acesso/perfil/infrastructure/persistence/typeorm/perfil.entity";
+export { UsuarioEntity } from "@/modules/acesso/usuario/infrastructure/persistence/typeorm/usuario.entity";
 export { AmbienteEntity } from "@/modules/ambientes/ambiente/infrastructure/persistence/typeorm/ambiente.entity";
 export { BlocoEntity } from "@/modules/ambientes/bloco/infrastructure/persistence/typeorm/bloco.entity";
 export { CampusEntity } from "@/modules/ambientes/campus/infrastructure/persistence/typeorm/campus.entity";
 export { ReservaEntity } from "@/modules/ambientes/reserva/infrastructure/persistence/typeorm/reserva.entity";
+export { ArquivoEntity } from "@/modules/armazenamento/arquivo/infrastructure/persistence/typeorm/arquivo.entity";
+export { ImagemEntity } from "@/modules/armazenamento/imagem/infrastructure/persistence/typeorm/imagem.entity";
+export { ImagemArquivoEntity } from "@/modules/armazenamento/imagem-arquivo/infrastructure/persistence/typeorm/imagem-arquivo.entity";
 export { CursoEntity } from "@/modules/ensino/curso/infrastructure/persistence/typeorm/curso.entity";
 export { DiarioEntity } from "@/modules/ensino/diario/infrastructure/persistence/typeorm/diario.entity";
 export { DiarioPreferenciaAgrupamentoEntity } from "@/modules/ensino/diario-preferencia-agrupamento/infrastructure/persistence/typeorm/diario-preferencia-agrupamento.entity";
@@ -36,3 +33,6 @@ export { GradeHorarioOfertaFormacaoIntervaloDeTempoEntity } from "@/modules/hora
 export { HorarioGeradoEntity } from "@/modules/horarios/horario-gerado/infrastructure/persistence/typeorm/horario-gerado.entity";
 export { HorarioGeradoAulaEntity } from "@/modules/horarios/horario-gerado-aula/infrastructure/persistence/typeorm/horario-gerado-aula.entity";
 export { IntervaloDeTempoEntity } from "@/modules/horarios/intervalo-de-tempo/infrastructure/persistence/typeorm/intervalo-de-tempo.entity";
+export { CidadeEntity } from "@/modules/localidades/cidade/infrastructure/persistence/typeorm/cidade.entity";
+export { EnderecoEntity } from "@/modules/localidades/endereco/infrastructure/persistence/typeorm/endereco.entity";
+export { EstadoEntity } from "@/modules/localidades/estado/infrastructure/persistence/typeorm/estado.entity";

@@ -1,6 +1,6 @@
-import type { IImagem } from "@/modules/armazenamento/imagem/domain/imagem.types";
 import { BaseDatedEntity } from "@/modules/@shared";
 import type { IAmbiente } from "@/modules/ambientes/ambiente/domain/ambiente.types";
+import type { IImagem } from "@/modules/armazenamento/imagem/domain/imagem.types";
 import type { IDisciplina } from "@/modules/ensino/disciplina/domain/disciplina.types";
 import type { ITurma } from "@/modules/ensino/turma/domain/turma.types";
 import type { ICalendarioLetivo } from "@/modules/horarios/calendario-letivo";

@@ -9,13 +9,13 @@ import {
   ValidateNested,
 } from "class-validator";
 import { decorate } from "ts-mixer";
-import { ImagemFindOneOutputGraphQlDto } from "@/modules/armazenamento/imagem-arquivo/presentation/graphql/imagem-arquivo.graphql.dto";
 import {
   EntityBaseGraphQlDto,
   PaginatedFilterByIdGraphQlDto,
   PaginationMetaGraphQlDto,
 } from "@/modules/@shared/infrastructure/graphql/dtos";
 import { BlocoFindOneOutputGraphQlDto } from "@/modules/ambientes/bloco/presentation/graphql/bloco.graphql.dto";
+import { ImagemFindOneOutputGraphQlDto } from "@/modules/armazenamento/imagem-arquivo/presentation/graphql/imagem-arquivo.graphql.dto";
 import { AmbienteFieldsMixin } from "../ambiente.validation-mixin";
 
 // ============================================================================

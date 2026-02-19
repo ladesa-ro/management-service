@@ -1,8 +1,8 @@
 import { Module } from "@nestjs/common";
-import { ArquivoModule } from "@/modules/armazenamento/arquivo/arquivo.module";
-import { ImagemModule } from "@/modules/armazenamento/imagem/imagem.module";
 import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import { AmbienteModule } from "@/modules/ambientes/ambiente/ambiente.module";
+import { ArquivoModule } from "@/modules/armazenamento/arquivo/arquivo.module";
+import { ImagemModule } from "@/modules/armazenamento/imagem/imagem.module";
 import { CursoModule } from "@/modules/ensino/curso/curso.module";
 import { TURMA_REPOSITORY_PORT } from "@/modules/ensino/turma/application/ports";
 import { TurmaService } from "@/modules/ensino/turma/application/use-cases/turma.service";

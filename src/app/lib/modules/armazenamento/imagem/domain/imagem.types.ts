@@ -1,5 +1,5 @@
-import type { IImagemArquivo } from "@/modules/armazenamento/imagem-arquivo/domain/imagem-arquivo.types";
 import type { IEntityBase } from "@/modules/@shared";
+import type { IImagemArquivo } from "@/modules/armazenamento/imagem-arquivo/domain/imagem-arquivo.types";
 
 /**
  * Tipagem da entidade Imagem

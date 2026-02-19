@@ -7,7 +7,7 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
-import { AccessContext, AccessContextHttp } from "@/modules/@core/contexto-acesso";
+import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
 import { GradeHorarioOfertaFormacaoIntervaloDeTempoService } from "@/modules/horarios/grade-horario-oferta-formacao-intervalo-de-tempo";
 import {
   GradeHorarioOfertaFormacaoIntervaloDeTempoCreateInputRestDto,

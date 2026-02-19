@@ -1,6 +1,6 @@
 import { map } from "lodash";
 import type { DataSource, DeepPartial, Repository } from "typeorm";
-import type { AccessContext } from "@/modules/@core/contexto-acesso";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import type { IPaginationCriteria } from "@/modules/@shared";
 import type { NestJsPaginateAdapter } from "./pagination/nestjs-paginate.adapter";
 import type { ITypeOrmPaginationConfig } from "./pagination-config.types";

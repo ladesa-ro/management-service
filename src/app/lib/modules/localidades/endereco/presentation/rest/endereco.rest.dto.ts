@@ -3,16 +3,16 @@ import { Type } from "class-transformer";
 import { IsUUID, ValidateNested } from "class-validator";
 import { decorate, Mixin } from "ts-mixer";
 import {
-  CidadeFindOneInputRestDto,
-  CidadeFindOneOutputRestDto,
-} from "@/modules/localidades/cidade/presentation/rest/cidade.rest.dto";
-import {
   commonProperties,
   RegisterModel,
   referenceProperty,
   simpleProperty,
 } from "@/modules/@shared/infrastructure/persistence/typeorm/metadata";
 import { EntityBaseRestDto } from "@/modules/@shared/infrastructure/presentation/rest/dtos";
+import {
+  CidadeFindOneInputRestDto,
+  CidadeFindOneOutputRestDto,
+} from "@/modules/localidades/cidade/presentation/rest/cidade.rest.dto";
 import { EnderecoFieldsMixin } from "../endereco.validation-mixin";
 
 // ============================================================================

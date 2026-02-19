@@ -2,7 +2,6 @@ import { ApiProperty, ApiPropertyOptional, ApiSchema, PartialType } from "@nestj
 import { Type } from "class-transformer";
 import { IsArray, IsOptional, IsString, IsUUID, MinLength, ValidateNested } from "class-validator";
 import { decorate } from "ts-mixer";
-import { ImagemArquivoFindOneFromImagemOutputRestDto } from "@/modules/armazenamento/imagem-arquivo/presentation/rest";
 import {
   commonProperties,
   RegisterModel,
@@ -13,6 +12,7 @@ import {
   PaginatedFilterByIdRestDto,
   PaginationMetaRestDto,
 } from "@/modules/@shared/infrastructure/presentation/rest/dtos";
+import { ImagemArquivoFindOneFromImagemOutputRestDto } from "@/modules/armazenamento/imagem-arquivo/presentation/rest";
 
 // ============================================================================
 // FindOne Output

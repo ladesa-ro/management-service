@@ -1,4 +1,3 @@
-import { ImagemFindOneOutputDto, ImagemInputRefDto } from "@/modules/armazenamento/imagem";
 import {
   EntityOutputDto,
   FindOneInputDto,
@@ -7,6 +6,7 @@ import {
   PaginationInputDto,
   PaginationResultDto,
 } from "@/modules/@shared/application/dtos";
+import { ImagemFindOneOutputDto, ImagemInputRefDto } from "@/modules/armazenamento/imagem";
 
 // ============================================================================
 // FindOne Input/Output

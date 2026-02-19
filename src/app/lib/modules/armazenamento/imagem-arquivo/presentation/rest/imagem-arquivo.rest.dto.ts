@@ -2,7 +2,6 @@ import { ApiProperty, ApiSchema, PartialType } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { IsInt, IsString, IsUUID, Min, MinLength, ValidateNested } from "class-validator";
 import { decorate } from "ts-mixer";
-import { ArquivoFindOneOutputRestDto } from "@/modules/armazenamento/arquivo/presentation/rest/arquivo.rest.dto";
 import {
   commonProperties,
   RegisterModel,
@@ -13,6 +12,7 @@ import {
   PaginatedFilterByIdRestDto,
   PaginationMetaRestDto,
 } from "@/modules/@shared/infrastructure/presentation/rest/dtos";
+import { ArquivoFindOneOutputRestDto } from "@/modules/armazenamento/arquivo/presentation/rest/arquivo.rest.dto";
 
 // ============================================================================
 // Nested DTOs

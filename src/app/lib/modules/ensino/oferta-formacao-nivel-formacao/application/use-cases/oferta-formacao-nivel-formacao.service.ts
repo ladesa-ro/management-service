@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { has } from "lodash";
-import type { AccessContext } from "@/modules/@core/contexto-acesso";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { BaseCrudService, type PersistInput } from "@/modules/@shared";
 import { NivelFormacaoService } from "@/modules/ensino/nivel-formacao/application/use-cases/nivel-formacao.service";
 import { OfertaFormacaoService } from "@/modules/ensino/oferta-formacao";

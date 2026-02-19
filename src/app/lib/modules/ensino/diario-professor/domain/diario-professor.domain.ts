@@ -1,5 +1,5 @@
-import type { Perfil } from "@/modules/@acesso/perfil";
 import { BaseDatedEntity } from "@/modules/@shared";
+import type { Perfil } from "@/modules/acesso/perfil";
 import type { Diario } from "@/modules/ensino/diario/domain/diario.domain";
 import type {
   IDiarioProfessor,

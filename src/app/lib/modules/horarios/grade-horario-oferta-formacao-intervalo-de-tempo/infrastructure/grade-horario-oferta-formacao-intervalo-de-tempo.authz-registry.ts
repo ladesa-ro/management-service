@@ -1,4 +1,4 @@
-import { createAuthzRegistryProvider } from "@/modules/@core/contexto-acesso";
+import { createAuthzRegistryProvider } from "@/modules/@seguranca/contexto-acesso";
 import { createGradeHorarioOfertaFormacaoIntervaloDeTempoRepository } from "./persistence/typeorm/grade-horario-oferta-formacao-intervalo-de-tempo.repository";
 
 export const GradeHorarioOfertaFormacaoIntervaloDeTempoAuthzRegistrySetup =

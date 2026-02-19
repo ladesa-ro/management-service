@@ -1,13 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
 import { DataSource } from "typeorm";
-import type {
-  CidadeFindOneInputDto,
-  CidadeFindOneOutputDto,
-  CidadeListInputDto,
-  CidadeListOutputDto,
-  ICidadeRepositoryPort,
-} from "@/modules/localidades/cidade";
 import {
   APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
@@ -15,6 +8,13 @@ import {
   NestJsPaginateAdapter,
   paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
+import type {
+  CidadeFindOneInputDto,
+  CidadeFindOneOutputDto,
+  CidadeListInputDto,
+  CidadeListOutputDto,
+  ICidadeRepositoryPort,
+} from "@/modules/localidades/cidade";
 import type { CidadeEntity } from "./cidade.entity";
 import { createCidadeRepository } from "./cidade.repository";
 

@@ -1,6 +1,6 @@
-import type { IImagem } from "@/modules/armazenamento/imagem/domain/imagem.types";
 import type { IdUuid, IEntityBase } from "@/modules/@shared";
 import type { IAmbiente } from "@/modules/ambientes/ambiente/domain/ambiente.types";
+import type { IImagem } from "@/modules/armazenamento/imagem/domain/imagem.types";
 import type { ICurso } from "@/modules/ensino/curso";
 
 /**

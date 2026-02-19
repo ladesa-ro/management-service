@@ -1,5 +1,5 @@
-import type { ICidade } from "@/modules/localidades/cidade";
 import { BaseDatedEntity } from "@/modules/@shared";
+import type { ICidade } from "@/modules/localidades/cidade";
 import type { IEndereco, IEnderecoCreate, IEnderecoUpdate } from "./endereco.types";
 
 /**

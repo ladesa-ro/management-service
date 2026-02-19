@@ -1,19 +1,15 @@
 import { Module } from "@nestjs/common";
-import { AutenticacaoModule } from "@/modules/@acesso/autenticacao/autenticacao.module";
-import { AutorizacaoModule } from "@/modules/@acesso/autorizacao/autorizacao.module";
-import { PerfilModule } from "@/modules/@acesso/perfil/perfil.module";
-import { UsuarioModule } from "@/modules/@acesso/usuario/usuario.module";
-import { ArquivoModule } from "@/modules/armazenamento/arquivo/arquivo.module";
-import { ImagemModule } from "@/modules/armazenamento/imagem/imagem.module";
-import { ImagemArquivoModule } from "@/modules/armazenamento/imagem-arquivo/imagem-arquivo.module";
-import { CidadeModule } from "@/modules/localidades/cidade/cidade.module";
-import { EnderecoModule } from "@/modules/localidades/endereco/endereco.module";
-import { EstadoModule } from "@/modules/localidades/estado/estado.module";
 import { AppConfigModule } from "@/modules/@shared/infrastructure/config";
+import { AutenticacaoModule } from "@/modules/acesso/autenticacao/autenticacao.module";
+import { PerfilModule } from "@/modules/acesso/perfil/perfil.module";
+import { UsuarioModule } from "@/modules/acesso/usuario/usuario.module";
 import { AmbienteModule } from "@/modules/ambientes/ambiente/ambiente.module";
 import { BlocoModule } from "@/modules/ambientes/bloco/bloco.module";
 import { CampusModule } from "@/modules/ambientes/campus/campus.module";
 import { ReservaModule } from "@/modules/ambientes/reserva/reserva.module";
+import { ArquivoModule } from "@/modules/armazenamento/arquivo/arquivo.module";
+import { ImagemModule } from "@/modules/armazenamento/imagem/imagem.module";
+import { ImagemArquivoModule } from "@/modules/armazenamento/imagem-arquivo/imagem-arquivo.module";
 import { CursoModule } from "@/modules/ensino/curso/curso.module";
 import { DiarioModule } from "@/modules/ensino/diario/diario.module";
 import { DiarioPreferenciaAgrupamentoModule } from "@/modules/ensino/diario-preferencia-agrupamento/diario-preferencia-agrupamento.module";
@@ -38,6 +34,9 @@ import { GradeHorarioOfertaFormacaoIntervaloDeTempoModule } from "@/modules/hora
 import { HorarioGeradoModule } from "@/modules/horarios/horario-gerado/horario-gerado.module";
 import { HorarioGeradoAulaModule } from "@/modules/horarios/horario-gerado-aula/horario-gerado-aula.module";
 import { IntervaloDeTempoModule } from "@/modules/horarios/intervalo-de-tempo/intervalo-de-tempo.module";
+import { CidadeModule } from "@/modules/localidades/cidade/cidade.module";
+import { EnderecoModule } from "@/modules/localidades/endereco/endereco.module";
+import { EstadoModule } from "@/modules/localidades/estado/estado.module";
 
 @Module({
   imports: [
@@ -47,7 +46,6 @@ import { IntervaloDeTempoModule } from "@/modules/horarios/intervalo-de-tempo/in
     ProfessorIndisponibilidadeModule,
     CursoModule,
     IntervaloDeTempoModule,
-    AutorizacaoModule,
     AulaModule,
     UsuarioModule,
     EventoModule,

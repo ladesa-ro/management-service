@@ -1,12 +1,12 @@
 import { ArgsType, Field, InputType, Int, ObjectType } from "@nestjs/graphql";
 import { IsArray, IsInt, IsOptional, IsString, IsUUID } from "class-validator";
 import { decorate } from "ts-mixer";
-import { EstadoFindOneOutputGraphQlDto } from "@/modules/localidades/estado/presentation/graphql/estado.graphql.dto";
 import {
   EntityIdIntGraphQlDto,
   PaginatedFilterByIdGraphQlDto,
   PaginationMetaGraphQlDto,
 } from "@/modules/@shared/infrastructure/graphql/dtos";
+import { EstadoFindOneOutputGraphQlDto } from "@/modules/localidades/estado/presentation/graphql/estado.graphql.dto";
 
 // ============================================================================
 // FindOne Output

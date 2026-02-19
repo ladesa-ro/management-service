@@ -1,6 +1,6 @@
+import type { IdUuid, IEntityBase } from "@/modules/@shared";
 import type { IArquivo } from "@/modules/armazenamento/arquivo/domain/arquivo.types";
 import type { IImagem } from "@/modules/armazenamento/imagem/domain/imagem.types";
-import type { IdUuid, IEntityBase } from "@/modules/@shared";
 
 /**
  * Interface que define a estrutura de um ImagemArquivo

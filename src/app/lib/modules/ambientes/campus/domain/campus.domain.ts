@@ -1,5 +1,5 @@
-import type { IEndereco } from "@/modules/localidades/endereco";
 import { BaseDatedEntity } from "@/modules/@shared";
+import type { IEndereco } from "@/modules/localidades/endereco";
 import type { ICampus, ICampusCreate, ICampusUpdate } from "./campus.types";
 
 /**

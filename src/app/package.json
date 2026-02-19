@@ -105,7 +105,9 @@
     "targets": {
       "dev": {
         "executor": "nx:run-commands",
-        "dependsOn": ["@ladesa-ro/messages.timetable-generator.v1:codegen:cold"],
+        "dependsOn": [
+          "@ladesa-ro/messages.timetable-generator.v1:codegen:cold"
+        ],
         "options": {
           "command": "bash .commands/dev",
           "cwd": "{projectRoot}"
@@ -113,7 +115,9 @@
       },
       "start": {
         "executor": "nx:run-commands",
-        "dependsOn": ["@ladesa-ro/messages.timetable-generator.v1:codegen:cold"],
+        "dependsOn": [
+          "@ladesa-ro/messages.timetable-generator.v1:codegen:cold"
+        ],
         "options": {
           "command": "bash .commands/start",
           "cwd": "{projectRoot}"
@@ -121,7 +125,9 @@
       },
       "debug": {
         "executor": "nx:run-commands",
-        "dependsOn": ["@ladesa-ro/messages.timetable-generator.v1:codegen:cold"],
+        "dependsOn": [
+          "@ladesa-ro/messages.timetable-generator.v1:codegen:cold"
+        ],
         "options": {
           "command": "bash .commands/debug",
           "cwd": "{projectRoot}"
@@ -129,7 +135,9 @@
       },
       "test": {
         "executor": "nx:run-commands",
-        "dependsOn": ["@ladesa-ro/messages.timetable-generator.v1:codegen:cold"],
+        "dependsOn": [
+          "@ladesa-ro/messages.timetable-generator.v1:codegen:cold"
+        ],
         "options": {
           "command": "bash .commands/test",
           "cwd": "{projectRoot}"
@@ -137,7 +145,9 @@
       },
       "typecheck": {
         "executor": "nx:run-commands",
-        "dependsOn": ["@ladesa-ro/messages.timetable-generator.v1:codegen:cold"],
+        "dependsOn": [
+          "@ladesa-ro/messages.timetable-generator.v1:codegen:cold"
+        ],
         "options": {
           "command": "bash .commands/typecheck",
           "cwd": "{projectRoot}"

@@ -6,7 +6,7 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
-import { AccessContext, AccessContextHttp } from "@/modules/@core/contexto-acesso";
+import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
 import { IntervaloDeTempoService } from "@/modules/horarios/intervalo-de-tempo/application/use-cases/intervalo-de-tempo.service";
 import {
   IntervaloDeTempoFindOneInputRestDto,

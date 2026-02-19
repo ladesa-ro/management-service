@@ -1,56 +1,42 @@
+import { Controller, Get, Param, Query } from "@nestjs/common";
 import {
-  BadRequestException,
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Post,
-} from "@nestjs/common";
-import {
-  ApiCreatedResponse,
   ApiForbiddenResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
-import { AccessContext, AccessContextHttp } from "@/modules/@core/contexto-acesso";
-import { ProfessorIndisponibilidadeLegacyService } from "../professor-indisponibilidade.legacy.service";
+import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
+import { ProfessorIndisponibilidadeService } from "@/modules/ensino/professor-indisponibilidade/application/use-cases/professor-indisponibilidade.service";
 import {
-  ProfessorIndisponibilidadeCreateInputRestDto,
-  ProfessorIndisponibilidadeCreatePerfilInputRestDto,
   ProfessorIndisponibilidadeFindOneInputRestDto,
   ProfessorIndisponibilidadeFindOneOutputRestDto,
-  ProfessorIndisponibilidadeListByPerfilInputRestDto,
+  ProfessorIndisponibilidadeListInputRestDto,
   ProfessorIndisponibilidadeListOutputRestDto,
-  ProfessorIndisponibilidadeRRuleOutputRestDto,
-  ProfessorIndisponibilidadeUpdateInputRestDto,
 } from "./professor-indisponibilidade.rest.dto";
+import { ProfessorIndisponibilidadeRestMapper } from "./professor-indisponibilidade.rest.mapper";
 
 @ApiTags("indisponibilidades-professores")
 @Controller("/indisponibilidades")
 export class ProfessorIndisponibilidadeRestController {
   constructor(
-    private readonly professorIndisponibilidadeService: ProfessorIndisponibilidadeLegacyService,
+    private readonly professorIndisponibilidadeService: ProfessorIndisponibilidadeService,
   ) {}
 
-  @Get("/list/:idPerfilFk")
+  @Get("/")
   @ApiOperation({
-    summary: "Lista indisponibilidades de um professor por perfil",
-    operationId: "professorIndisponibilidadeFindAllByPerfilId",
+    summary: "Lista indisponibilidades de professores",
+    operationId: "professorIndisponibilidadeFindAll",
   })
   @ApiOkResponse({ type: ProfessorIndisponibilidadeListOutputRestDto })
   @ApiForbiddenResponse()
-  async listByPerfil(
+  async findAll(
     @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: ProfessorIndisponibilidadeListByPerfilInputRestDto,
+    @Query() dto: ProfessorIndisponibilidadeListInputRestDto,
   ): Promise<ProfessorIndisponibilidadeListOutputRestDto> {
-    return this.professorIndisponibilidadeService.ProfessorIndisponibilidadeListByPerfil(
-      accessContext,
-      params.idPerfilFk,
-    );
+    const input = ProfessorIndisponibilidadeRestMapper.toListInput(dto);
+    const result = await this.professorIndisponibilidadeService.findAll(accessContext, input);
+    return ProfessorIndisponibilidadeRestMapper.toListOutputDto(result);
   }
 
   @Get("/:id")
@@ -65,80 +51,11 @@ export class ProfessorIndisponibilidadeRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: ProfessorIndisponibilidadeFindOneInputRestDto,
   ): Promise<ProfessorIndisponibilidadeFindOneOutputRestDto> {
-    return this.professorIndisponibilidadeService.indisponibilidadeFindByIdSimple(
+    const input = ProfessorIndisponibilidadeRestMapper.toFindOneInput(params);
+    const result = await this.professorIndisponibilidadeService.findByIdStrict(
       accessContext,
-      params.id,
+      input,
     );
-  }
-
-  @Post("/:id_perfil/create")
-  @ApiOperation({
-    summary: "Cria uma indisponibilidade de professor",
-    operationId: "professorIndisponibilidadeCreate",
-  })
-  @ApiCreatedResponse({ type: ProfessorIndisponibilidadeFindOneOutputRestDto })
-  @ApiForbiddenResponse()
-  async create(
-    @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: ProfessorIndisponibilidadeCreatePerfilInputRestDto,
-    @Body() dto: ProfessorIndisponibilidadeCreateInputRestDto,
-  ): Promise<ProfessorIndisponibilidadeFindOneOutputRestDto> {
-    return this.professorIndisponibilidadeService.createIndisponibilidade(accessContext, {
-      ...dto,
-      idPerfilFk: params.id_perfil,
-    });
-  }
-
-  @Patch("/:id")
-  @ApiOperation({
-    summary: "Atualiza uma indisponibilidade de professor",
-    operationId: "professorIndisponibilidadeUpdate",
-  })
-  @ApiOkResponse({ type: ProfessorIndisponibilidadeFindOneOutputRestDto })
-  @ApiForbiddenResponse()
-  @ApiNotFoundResponse()
-  async update(
-    @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: ProfessorIndisponibilidadeFindOneInputRestDto,
-    @Body() dto: ProfessorIndisponibilidadeUpdateInputRestDto,
-  ): Promise<ProfessorIndisponibilidadeFindOneOutputRestDto> {
-    return this.professorIndisponibilidadeService.indisponibilidadeUpdate(accessContext, {
-      id: params.id,
-      ...dto,
-    });
-  }
-
-  @Delete("/:id")
-  @ApiOperation({
-    summary: "Remove uma indisponibilidade de professor",
-    operationId: "professorIndisponibilidadeDeleteOneById",
-  })
-  @ApiOkResponse({ type: ProfessorIndisponibilidadeFindOneOutputRestDto })
-  @ApiForbiddenResponse()
-  @ApiNotFoundResponse()
-  async deleteOneById(
-    @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: ProfessorIndisponibilidadeFindOneInputRestDto,
-  ): Promise<ProfessorIndisponibilidadeFindOneOutputRestDto> {
-    if (!params.id) throw new BadRequestException();
-    return this.professorIndisponibilidadeService.indisponibilidadeDelete(accessContext, params.id);
-  }
-
-  @Get("/rrule-indisponibilidade/:id")
-  @ApiOperation({
-    summary: "Busca a RRULE de uma indisponibilidade de professor por ID",
-    operationId: "professorIndisponibilidadeGetRrule",
-  })
-  @ApiOkResponse({ type: ProfessorIndisponibilidadeRRuleOutputRestDto })
-  @ApiForbiddenResponse()
-  @ApiNotFoundResponse()
-  async findRRuleById(
-    @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: ProfessorIndisponibilidadeFindOneInputRestDto,
-  ): Promise<ProfessorIndisponibilidadeRRuleOutputRestDto> {
-    return this.professorIndisponibilidadeService.ProfessorIndisponibilidadeRRuleFindOneById(
-      accessContext,
-      params.id,
-    );
+    return ProfessorIndisponibilidadeRestMapper.toFindOneOutputDto(result);
   }
 }

@@ -6,8 +6,8 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
+import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
 import { CidadeService } from "@/modules/localidades/cidade/application/use-cases/cidade.service";
-import { AccessContext, AccessContextHttp } from "@/modules/@core/contexto-acesso";
 import {
   CidadeFindOneInputRestDto,
   CidadeFindOneOutputRestDto,

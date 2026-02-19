@@ -9,7 +9,10 @@ import {
 } from "@nestjs/common";
 import jetpack, { createReadStream } from "fs-jetpack";
 import { v4 } from "uuid";
-import { UsuarioEntity } from "@/modules/@acesso/usuario/infrastructure/persistence/typeorm";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
+import { isValidUuid, ResourceNotFoundError } from "@/modules/@shared";
+import { CONFIG_PORT, type IConfigPort } from "@/modules/@shared/application/ports/out/config";
+import { UsuarioEntity } from "@/modules/acesso/usuario/infrastructure/persistence/typeorm";
 import type {
   ArquivoCreateInputDto,
   ArquivoGetFileInputDto,
@@ -19,9 +22,6 @@ import {
   type IArquivoRepositoryPort,
   type IArquivoUseCasePort,
 } from "@/modules/armazenamento/arquivo/application/ports";
-import type { AccessContext } from "@/modules/@core/contexto-acesso";
-import { isValidUuid, ResourceNotFoundError } from "@/modules/@shared";
-import { CONFIG_PORT, type IConfigPort } from "@/modules/@shared/application/ports/out/config";
 
 @Injectable()
 export class ArquivoService implements IArquivoUseCasePort {

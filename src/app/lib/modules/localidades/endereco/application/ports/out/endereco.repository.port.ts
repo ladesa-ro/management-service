@@ -1,9 +1,9 @@
+import type { IBaseCrudRepositoryPort } from "@/modules/@shared";
 import type {
   EnderecoFindOneOutputDto,
   EnderecoListOutputDto,
   IEndereco,
 } from "@/modules/localidades/endereco";
-import type { IBaseCrudRepositoryPort } from "@/modules/@shared";
 
 export const ENDERECO_REPOSITORY_PORT = Symbol("IEnderecoRepositoryPort");
 

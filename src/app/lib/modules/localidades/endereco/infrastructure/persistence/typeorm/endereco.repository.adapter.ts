@@ -1,5 +1,12 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { DataSource } from "typeorm";
+import {
+  APP_DATA_SOURCE_TOKEN,
+  BaseTypeOrmRepositoryAdapter,
+  type ITypeOrmPaginationConfig,
+  NestJsPaginateAdapter,
+  paginateConfig,
+} from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
   EnderecoFindOneInputDto,
   EnderecoFindOneOutputDto,
@@ -8,13 +15,6 @@ import type {
   IEnderecoRepositoryPort,
 } from "@/modules/localidades/endereco";
 import type { EnderecoEntity } from "@/modules/localidades/endereco/infrastructure/persistence/typeorm/index";
-import {
-  APP_DATA_SOURCE_TOKEN,
-  BaseTypeOrmRepositoryAdapter,
-  type ITypeOrmPaginationConfig,
-  NestJsPaginateAdapter,
-  paginateConfig,
-} from "@/modules/@shared/infrastructure/persistence/typeorm";
 import { createEnderecoRepository } from "./endereco.repository";
 
 @Injectable()

@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
-import { UsuarioModule } from "@/modules/@acesso/usuario/usuario.module";
 import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
+import { UsuarioModule } from "@/modules/acesso/usuario/usuario.module";
 import { AmbienteModule } from "@/modules/ambientes/ambiente/ambiente.module";
 import { RESERVA_REPOSITORY_PORT, ReservaService } from "@/modules/ambientes/reserva";
 import { ReservaAuthzRegistrySetup } from "@/modules/ambientes/reserva/infrastructure";

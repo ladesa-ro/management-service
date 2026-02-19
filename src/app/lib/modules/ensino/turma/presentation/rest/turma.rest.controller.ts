@@ -23,7 +23,7 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import type { Express } from "express";
-import { AccessContext, AccessContextHttp } from "@/modules/@core/contexto-acesso";
+import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
 import { TurmaService } from "@/modules/ensino/turma/application/use-cases/turma.service";
 import {
   TurmaCreateInputRestDto,

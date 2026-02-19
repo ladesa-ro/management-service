@@ -1,6 +1,6 @@
+import type { PartialEntity } from "@/modules/@shared";
 import type { Imagem } from "@/modules/armazenamento/imagem/domain/imagem.domain";
 import type { ImagemArquivo } from "@/modules/armazenamento/imagem-arquivo/domain/imagem-arquivo.domain";
-import type { PartialEntity } from "@/modules/@shared";
 
 /**
  * Token de injecao para o repositorio de Imagem

@@ -1,4 +1,4 @@
-import { createAuthzRegistryProvider } from "@/modules/@core/contexto-acesso";
+import { createAuthzRegistryProvider } from "@/modules/@seguranca/contexto-acesso";
 import { createDisponibilidadeRepository } from "./persistence/typeorm/disponibilidade.repository";
 
 export const DisponibilidadeAuthzRegistrySetup = createAuthzRegistryProvider(

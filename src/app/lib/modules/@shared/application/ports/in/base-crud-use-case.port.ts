@@ -1,4 +1,4 @@
-import type { AccessContext } from "@/modules/@core/contexto-acesso";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 
 /**
  * Interface base para ports de use case (entrada)

@@ -1,9 +1,4 @@
 import {
-  EnderecoCreateInputDto,
-  EnderecoFindOneOutputDto,
-  EnderecoUpdateInputDto,
-} from "@/modules/localidades/endereco";
-import {
   EntityOutputDto,
   FindOneInputDto,
   IFilterAcceptableValues,
@@ -11,6 +6,11 @@ import {
   PaginationInputDto,
   PaginationResultDto,
 } from "@/modules/@shared/application/dtos";
+import {
+  EnderecoCreateInputDto,
+  EnderecoFindOneOutputDto,
+  EnderecoUpdateInputDto,
+} from "@/modules/localidades/endereco";
 
 // ============================================================================
 // FindOne Input/Output

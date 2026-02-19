@@ -1,10 +1,10 @@
-import { UsuarioRestMapper } from "@/modules/@acesso/usuario/presentation/rest";
 import {
   createFindOneInputMapper,
   createListInputMapper,
   createListOutputMapper,
   mapDatedFields,
 } from "@/modules/@shared/application/mappers";
+import { UsuarioRestMapper } from "@/modules/acesso/usuario/presentation/rest";
 import { AmbienteRestMapper } from "@/modules/ambientes/ambiente/presentation/rest";
 import {
   ReservaCreateInputDto,

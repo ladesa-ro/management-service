@@ -1,10 +1,10 @@
+import type { IReadOnlyRepositoryPort } from "@/modules/@shared";
 import {
   ImagemArquivoFindOneInputDto,
   ImagemArquivoFindOneOutputDto,
   ImagemArquivoListInputDto,
   ImagemArquivoListOutputDto,
 } from "@/modules/armazenamento/imagem-arquivo";
-import type { IReadOnlyRepositoryPort } from "@/modules/@shared";
 
 /**
  * Token de injeção para o repositório de consulta de ImagemArquivo

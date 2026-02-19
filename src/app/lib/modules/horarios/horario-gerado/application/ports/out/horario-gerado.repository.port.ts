@@ -1,4 +1,4 @@
-import type { AccessContext } from "@/modules/@core/contexto-acesso";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import type { IBaseCrudRepositoryPort } from "@/modules/@shared";
 import type { IHorarioGerado } from "@/modules/horarios/horario-gerado";
 import type { HorarioGeradoFindOneOutputDto, HorarioGeradoListOutputDto } from "../../dtos";

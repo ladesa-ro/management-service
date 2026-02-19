@@ -1,5 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { DataSource } from "typeorm";
+import type { PartialEntity } from "@/modules/@shared";
+import { APP_DATA_SOURCE_TOKEN } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
   IImagemArquivoRepositoryPort,
   IImagemRepositoryPort,
@@ -7,8 +9,6 @@ import type {
 } from "@/modules/armazenamento/imagem/application/ports";
 import type { Imagem } from "@/modules/armazenamento/imagem/domain/imagem.domain";
 import type { ImagemArquivo } from "@/modules/armazenamento/imagem-arquivo/domain/imagem-arquivo.domain";
-import type { PartialEntity } from "@/modules/@shared";
-import { APP_DATA_SOURCE_TOKEN } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import { createImagemArquivoRepository } from "../../../../imagem-arquivo/infrastructure/persistence/typeorm/imagem-arquivo.repository";
 import { createImagemRepository } from "./imagem.repository";
 

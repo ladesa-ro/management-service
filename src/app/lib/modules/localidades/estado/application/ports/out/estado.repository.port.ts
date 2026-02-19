@@ -1,10 +1,10 @@
+import type { IReadOnlyRepositoryPort } from "@/modules/@shared";
 import {
   EstadoFindOneInputDto,
   EstadoFindOneOutputDto,
   EstadoListInputDto,
   EstadoListOutputDto,
 } from "@/modules/localidades/estado";
-import type { IReadOnlyRepositoryPort } from "@/modules/@shared";
 
 /**
  * Token de injeção para o repositório de Estado

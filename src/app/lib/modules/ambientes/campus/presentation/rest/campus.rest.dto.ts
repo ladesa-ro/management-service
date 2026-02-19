@@ -3,10 +3,6 @@ import { Type } from "class-transformer";
 import { IsUUID, ValidateNested } from "class-validator";
 import { decorate, Mixin } from "ts-mixer";
 import {
-  EnderecoFindOneOutputRestDto,
-  EnderecoInputRestDto,
-} from "@/modules/localidades/endereco/presentation/rest";
-import {
   commonProperties,
   RegisterModel,
   referenceProperty,
@@ -17,6 +13,10 @@ import {
   PaginatedFilterByIdRestDto,
   PaginationMetaRestDto,
 } from "@/modules/@shared/infrastructure/presentation/rest/dtos";
+import {
+  EnderecoFindOneOutputRestDto,
+  EnderecoInputRestDto,
+} from "@/modules/localidades/endereco/presentation/rest";
 import { CampusFieldsMixin } from "../campus.validation-mixin";
 
 // ============================================================================

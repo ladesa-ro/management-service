@@ -2,14 +2,14 @@ import { ArgsType, Field, InputType, ObjectType } from "@nestjs/graphql";
 import { IsOptional, IsString, MinLength, ValidateNested } from "class-validator";
 import { decorate } from "ts-mixer";
 import {
-  EnderecoFindOneOutputGraphQlDto,
-  EnderecoInputGraphQlDto,
-} from "@/modules/localidades/endereco/presentation/graphql/endereco.graphql.dto";
-import {
   EntityBaseGraphQlDto,
   PaginatedFilterByIdGraphQlDto,
   PaginationMetaGraphQlDto,
 } from "@/modules/@shared/infrastructure/graphql/dtos";
+import {
+  EnderecoFindOneOutputGraphQlDto,
+  EnderecoInputGraphQlDto,
+} from "@/modules/localidades/endereco/presentation/graphql/endereco.graphql.dto";
 import { CampusFieldsMixin } from "../campus.validation-mixin";
 
 // ============================================================================

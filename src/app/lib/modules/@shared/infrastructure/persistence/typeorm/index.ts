@@ -16,8 +16,6 @@ export * from "./pagination";
 export * from "./pagination-config.types";
 // Query builder utilities
 export * from "./qb-efficient-load";
-// Legacy search service (deprecated - use NestJsPaginateAdapter)
-export * from "./search";
 // Transaction module
 export * from "./transaction";
 // TypeORM module and providers

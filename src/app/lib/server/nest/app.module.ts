@@ -1,11 +1,8 @@
 import { Module } from "@nestjs/common";
 import { APP_FILTER } from "@nestjs/core";
-import { AuthorizationCoreModule } from "@/modules/@core/autorizacao";
+import { AuthorizationCoreModule } from "@/modules/@seguranca/autorizacao";
 import { InfrastructureModule } from "@/modules/@shared/infrastructure";
-import {
-  SearchModule,
-  TransactionModule,
-} from "@/modules/@shared/infrastructure/persistence/typeorm";
+import { TransactionModule } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import { AppController } from "@/server/nest/app.controller";
 import { AppService } from "@/server/nest/app.service";
 import {
@@ -16,13 +13,7 @@ import {
 import { ModulesModule } from "@/server/nest/modules/modules.module";
 
 @Module({
-  imports: [
-    SearchModule,
-    ModulesModule,
-    InfrastructureModule,
-    AuthorizationCoreModule,
-    TransactionModule,
-  ],
+  imports: [ModulesModule, InfrastructureModule, AuthorizationCoreModule, TransactionModule],
   controllers: [AppController],
   providers: [
     AppService,

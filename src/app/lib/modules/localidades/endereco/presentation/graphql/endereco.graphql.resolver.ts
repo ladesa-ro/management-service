@@ -1,8 +1,8 @@
 import { Args, ID, Info, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
-import { EnderecoService } from "@/modules/localidades/endereco/application/use-cases/endereco.service";
-import { AccessContext, AccessContextGraphQL } from "@/modules/@core/contexto-acesso";
+import { AccessContext, AccessContextGraphQL } from "@/modules/@seguranca/contexto-acesso";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
+import { EnderecoService } from "@/modules/localidades/endereco/application/use-cases/endereco.service";
 import { EnderecoFindOneOutputGraphQlDto } from "./endereco.graphql.dto";
 import { EnderecoGraphqlMapper } from "./endereco.graphql.mapper";
 

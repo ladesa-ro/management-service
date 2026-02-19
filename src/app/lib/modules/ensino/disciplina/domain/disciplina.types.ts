@@ -1,5 +1,5 @@
-import type { IImagem } from "@/modules/armazenamento/imagem/domain/imagem.types";
 import type { IEntityBase } from "@/modules/@shared";
+import type { IImagem } from "@/modules/armazenamento/imagem/domain/imagem.types";
 
 /**
  * Interface que define a estrutura de dados de Disciplina

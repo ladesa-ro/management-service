@@ -1,4 +1,4 @@
-import type { AccessContext } from "@/modules/@core/contexto-acesso";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 
 /**
  * Interface que define os métodos padrão de um service CRUD.

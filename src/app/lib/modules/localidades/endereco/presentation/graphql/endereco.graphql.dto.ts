@@ -1,11 +1,11 @@
 import { Field, InputType, Int, ObjectType } from "@nestjs/graphql";
 import { ValidateNested } from "class-validator";
 import { decorate } from "ts-mixer";
+import { EntityBaseGraphQlDto } from "@/modules/@shared/infrastructure/graphql/dtos";
 import {
   CidadeFindOneInputGraphQlDto,
   CidadeFindOneOutputGraphQlDto,
 } from "@/modules/localidades/cidade/presentation/graphql/cidade.graphql.dto";
-import { EntityBaseGraphQlDto } from "@/modules/@shared/infrastructure/graphql/dtos";
 import { EnderecoFieldsMixin } from "../endereco.validation-mixin";
 
 // ============================================================================

@@ -1,7 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { get } from "lodash";
-import { type EnderecoInputDto, EnderecoService } from "@/modules/localidades/endereco";
-import type { AccessContext } from "@/modules/@core/contexto-acesso";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import {
   AUTHORIZATION_SERVICE_PORT,
   BaseCrudService,
@@ -22,6 +21,7 @@ import {
   type ICampusRepositoryPort,
   type ICampusUseCasePort,
 } from "@/modules/ambientes/campus/application/ports";
+import { type EnderecoInputDto, EnderecoService } from "@/modules/localidades/endereco";
 
 @Injectable()
 export class CampusService

@@ -1,12 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { DataSource } from "typeorm";
-import type {
-  EstadoFindOneInputDto,
-  EstadoFindOneOutputDto,
-  EstadoListInputDto,
-  EstadoListOutputDto,
-} from "@/modules/localidades/estado/application/dtos";
-import type { IEstadoRepositoryPort } from "@/modules/localidades/estado/application/ports";
 import {
   APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
@@ -14,6 +7,13 @@ import {
   NestJsPaginateAdapter,
   paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
+import type {
+  EstadoFindOneInputDto,
+  EstadoFindOneOutputDto,
+  EstadoListInputDto,
+  EstadoListOutputDto,
+} from "@/modules/localidades/estado/application/dtos";
+import type { IEstadoRepositoryPort } from "@/modules/localidades/estado/application/ports";
 import type { EstadoEntity } from "./estado.entity";
 import { createEstadoRepository } from "./estado.repository";
 

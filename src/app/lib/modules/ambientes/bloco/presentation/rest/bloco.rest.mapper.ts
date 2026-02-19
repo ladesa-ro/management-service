@@ -1,4 +1,3 @@
-import type { ImagemFindOneOutputDto } from "@/modules/armazenamento/imagem";
 import {
   createFindOneInputMapper,
   createListInputMapper,
@@ -13,6 +12,7 @@ import {
   BlocoUpdateInputDto,
 } from "@/modules/ambientes/bloco";
 import { CampusRestMapper } from "@/modules/ambientes/campus/presentation/rest";
+import type { ImagemFindOneOutputDto } from "@/modules/armazenamento/imagem";
 import {
   BlocoCreateInputRestDto,
   BlocoFindOneInputRestDto,

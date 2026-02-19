@@ -1,13 +1,13 @@
 import { ArgsType, Field, InputType, ObjectType } from "@nestjs/graphql";
 import { IsOptional, IsString, MinLength, ValidateNested } from "class-validator";
 import { decorate } from "ts-mixer";
-import { ImagemFindOneOutputGraphQlDto } from "@/modules/armazenamento/imagem-arquivo/presentation/graphql/imagem-arquivo.graphql.dto";
 import {
   EntityBaseGraphQlDto,
   PaginatedFilterByIdGraphQlDto,
   PaginationMetaGraphQlDto,
 } from "@/modules/@shared/infrastructure/graphql/dtos";
 import { AmbienteFindOneOutputGraphQlDto } from "@/modules/ambientes/ambiente/presentation/graphql/ambiente.graphql.dto";
+import { ImagemFindOneOutputGraphQlDto } from "@/modules/armazenamento/imagem-arquivo/presentation/graphql/imagem-arquivo.graphql.dto";
 import { CursoFindOneOutputGraphQlDto } from "@/modules/ensino/curso/presentation/graphql/curso.graphql.dto";
 import { TurmaFieldsMixin } from "@/modules/ensino/turma/presentation/turma.validation-mixin";
 

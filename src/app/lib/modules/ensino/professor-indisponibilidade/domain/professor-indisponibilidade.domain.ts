@@ -1,5 +1,5 @@
-import type { Usuario } from "@/modules/@acesso/usuario/domain/usuario.domain";
 import { BaseDatedEntity } from "@/modules/@shared";
+import type { Usuario } from "@/modules/acesso/usuario/domain/usuario.domain";
 import type {
   IProfessorIndisponibilidade,
   IProfessorIndisponibilidadeCreate,

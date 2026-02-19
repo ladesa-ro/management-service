@@ -1,13 +1,13 @@
 import {
-  ImagemArquivoFindOneInputDto,
-  ImagemArquivoFindOneOutputDto,
-  ImagemArquivoListInputDto,
-} from "@/modules/armazenamento/imagem-arquivo";
-import {
   createFindOneInputMapper,
   createListOutputMapper,
   mapDatedFields,
 } from "@/modules/@shared/application/mappers";
+import {
+  ImagemArquivoFindOneInputDto,
+  ImagemArquivoFindOneOutputDto,
+  ImagemArquivoListInputDto,
+} from "@/modules/armazenamento/imagem-arquivo";
 import {
   ArquivoFindOneOutputGraphQlDto,
   ImagemArquivoFindOneOutputGraphQlDto,

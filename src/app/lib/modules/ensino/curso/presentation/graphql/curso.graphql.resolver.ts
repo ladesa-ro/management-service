@@ -1,6 +1,6 @@
 import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
-import { AccessContext, AccessContextGraphQL } from "@/modules/@core/contexto-acesso";
+import { AccessContext, AccessContextGraphQL } from "@/modules/@seguranca/contexto-acesso";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
 import { CursoService } from "@/modules/ensino/curso/application/use-cases/curso.service";
 import {

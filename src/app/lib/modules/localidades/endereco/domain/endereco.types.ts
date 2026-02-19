@@ -1,5 +1,5 @@
-import type { ICidade } from "@/modules/localidades/cidade";
 import type { IdNumeric, IEntityBase } from "@/modules/@shared";
+import type { ICidade } from "@/modules/localidades/cidade";
 
 export interface IEndereco extends IEntityBase {
   cep: string;

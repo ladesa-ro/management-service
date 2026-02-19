@@ -1,12 +1,12 @@
 import { ArgsType, Field, InputType, ObjectType } from "@nestjs/graphql";
 import { IsArray, IsOptional, IsString, IsUUID, MinLength, ValidateNested } from "class-validator";
 import { decorate } from "ts-mixer";
-import { UsuarioFindOneOutputGraphQlDto } from "@/modules/@acesso/usuario/presentation/graphql/usuario.graphql.dto";
 import {
   EntityBaseGraphQlDto,
   PaginatedFilterByIdGraphQlDto,
   PaginationMetaGraphQlDto,
 } from "@/modules/@shared/infrastructure/graphql/dtos";
+import { UsuarioFindOneOutputGraphQlDto } from "@/modules/acesso/usuario/presentation/graphql/usuario.graphql.dto";
 import { AmbienteFindOneOutputGraphQlDto } from "@/modules/ambientes/ambiente/presentation/graphql/ambiente.graphql.dto";
 import { ReservaFieldsMixin } from "../reserva.validation-mixin";
 

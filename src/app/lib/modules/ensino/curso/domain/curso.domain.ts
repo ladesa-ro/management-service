@@ -1,6 +1,6 @@
-import type { IImagem } from "@/modules/armazenamento/imagem";
 import { BaseDatedEntity } from "@/modules/@shared";
 import type { ICampus } from "@/modules/ambientes/campus";
+import type { IImagem } from "@/modules/armazenamento/imagem";
 import type { IOfertaFormacao } from "@/modules/ensino/oferta-formacao";
 import type { ICurso, ICursoCreate, ICursoUpdate } from "./curso.types";
 

@@ -1,10 +1,10 @@
-import { PerfilRestMapper } from "@/modules/@acesso/perfil/presentation/rest";
 import {
   createFindOneInputMapper,
   createListInputMapper,
   createListOutputMapper,
   mapDatedFields,
 } from "@/modules/@shared/application/mappers";
+import { PerfilRestMapper } from "@/modules/acesso/perfil/presentation/rest";
 import { DiarioRestMapper } from "@/modules/ensino/diario/presentation/rest";
 import {
   DiarioProfessorCreateInputDto,

@@ -1,6 +1,6 @@
+import { BaseDatedEntity } from "@/modules/@shared";
 import type { Arquivo } from "@/modules/armazenamento/arquivo/domain/arquivo.domain";
 import type { Imagem } from "@/modules/armazenamento/imagem/domain/imagem.domain";
-import { BaseDatedEntity } from "@/modules/@shared";
 import type {
   IImagemArquivo,
   IImagemArquivoCreate,

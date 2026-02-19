@@ -1,9 +1,8 @@
 import { Module } from "@nestjs/common";
-import { AuthenticationCoreModule } from "@/modules/@core/autenticacao";
-import { IdentityProviderCoreModule } from "@/modules/@core/provedor-identidade";
+import { AuthenticationCoreModule } from "@/modules/@seguranca/autenticacao";
+import { IdentityProviderCoreModule } from "@/modules/@seguranca/provedor-identidade";
 import { AppConfigModule } from "./config";
 import { GraphqlModule } from "./graphql";
-import { MessageBrokerModule } from "./message-broker";
 import { TypeormModule } from "./persistence/typeorm";
 
 @Module({
@@ -13,7 +12,6 @@ import { TypeormModule } from "./persistence/typeorm";
     GraphqlModule,
     IdentityProviderCoreModule,
     AuthenticationCoreModule,
-    MessageBrokerModule,
   ],
 })
 export class InfrastructureModule {}

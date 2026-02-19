@@ -1,4 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
+import { BaseReadOnlyService } from "@/modules/@shared";
 import type {
   EstadoFindOneInputDto,
   EstadoFindOneOutputDto,
@@ -10,7 +11,6 @@ import {
   type IEstadoRepositoryPort,
   type IEstadoUseCasePort,
 } from "@/modules/localidades/estado/application/ports";
-import { BaseReadOnlyService } from "@/modules/@shared";
 
 @Injectable()
 export class EstadoService

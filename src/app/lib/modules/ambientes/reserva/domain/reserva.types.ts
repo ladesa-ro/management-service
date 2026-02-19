@@ -1,5 +1,5 @@
-import type { IUsuario } from "@/modules/@acesso/usuario/domain/usuario.types";
 import type { IdUuid, IEntityBase } from "@/modules/@shared";
+import type { IUsuario } from "@/modules/acesso/usuario/domain/usuario.types";
 import type { IAmbiente } from "@/modules/ambientes/ambiente/domain/ambiente.types";
 
 /**

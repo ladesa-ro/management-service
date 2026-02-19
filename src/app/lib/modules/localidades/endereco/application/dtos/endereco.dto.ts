@@ -1,4 +1,3 @@
-import { CidadeFindOneOutputDto, CidadeInputRefDto } from "@/modules/localidades/cidade";
 import {
   EntityOutputDto,
   FindOneInputDto,
@@ -7,6 +6,7 @@ import {
   PaginationInputDto,
   PaginationResultDto,
 } from "@/modules/@shared";
+import { CidadeFindOneOutputDto, CidadeInputRefDto } from "@/modules/localidades/cidade";
 
 // ============================================================================
 // FindOne Input/Output

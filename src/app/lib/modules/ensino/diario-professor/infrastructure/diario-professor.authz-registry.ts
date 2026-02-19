@@ -1,4 +1,4 @@
-import { createAuthzRegistryProvider } from "@/modules/@core/contexto-acesso";
+import { createAuthzRegistryProvider } from "@/modules/@seguranca/contexto-acesso";
 import { createDiarioProfessorRepository } from "./persistence/typeorm/diario-professor.repository";
 
 export const DiarioProfessorAuthzRegistrySetup = createAuthzRegistryProvider(

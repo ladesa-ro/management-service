@@ -1,4 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
+import { ResourceNotFoundError } from "@/modules/@shared";
 import type {
   EnderecoFindOneInputDto,
   EnderecoFindOneOutputDto,
@@ -9,8 +11,6 @@ import {
   type IEnderecoRepositoryPort,
   type IEnderecoUseCasePort,
 } from "@/modules/localidades/endereco/application/ports";
-import type { AccessContext } from "@/modules/@core/contexto-acesso";
-import { ResourceNotFoundError } from "@/modules/@shared";
 
 @Injectable()
 export class EnderecoService implements IEnderecoUseCasePort {

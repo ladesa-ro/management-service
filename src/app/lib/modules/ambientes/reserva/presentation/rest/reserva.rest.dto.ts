@@ -3,10 +3,6 @@ import { Type } from "class-transformer";
 import { IsArray, IsOptional, IsString, IsUUID, ValidateNested } from "class-validator";
 import { decorate, Mixin } from "ts-mixer";
 import {
-  UsuarioFindOneInputRestDto,
-  UsuarioFindOneOutputRestDto,
-} from "@/modules/@acesso/usuario/presentation/rest";
-import {
   commonProperties,
   RegisterModel,
   referenceProperty,
@@ -18,6 +14,10 @@ import {
   PaginationMetaRestDto,
   TransformToArray,
 } from "@/modules/@shared/infrastructure/presentation/rest/dtos";
+import {
+  UsuarioFindOneInputRestDto,
+  UsuarioFindOneOutputRestDto,
+} from "@/modules/acesso/usuario/presentation/rest";
 import {
   AmbienteFindOneInputRestDto,
   AmbienteFindOneOutputRestDto,

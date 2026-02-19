@@ -1,8 +1,8 @@
 import { Inject, Injectable, type StreamableFile } from "@nestjs/common";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
+import { BaseCrudService, type PersistInput } from "@/modules/@shared";
 import { ArquivoService } from "@/modules/armazenamento/arquivo/application/use-cases/arquivo.service";
 import { ImagemService } from "@/modules/armazenamento/imagem/application/use-cases/imagem.service";
-import type { AccessContext } from "@/modules/@core/contexto-acesso";
-import { BaseCrudService, type PersistInput } from "@/modules/@shared";
 import { Disciplina, type IDisciplina } from "@/modules/ensino/disciplina";
 import type {
   DisciplinaCreateInputDto,

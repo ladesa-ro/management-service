@@ -1,5 +1,5 @@
-import type { IEstado } from "@/modules/localidades/estado";
 import type { IdNumeric } from "@/modules/@shared";
+import type { IEstado } from "@/modules/localidades/estado";
 
 /**
  * Tipagem da entidade Cidade

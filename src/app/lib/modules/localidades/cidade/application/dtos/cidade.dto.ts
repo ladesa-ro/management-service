@@ -1,4 +1,3 @@
-import { EstadoFindOneOutputDto } from "@/modules/localidades/estado";
 import {
   IdNumeric,
   IFilterAcceptableValues,
@@ -6,6 +5,7 @@ import {
   PaginationInputDto,
   PaginationResultDto,
 } from "@/modules/@shared";
+import { EstadoFindOneOutputDto } from "@/modules/localidades/estado";
 
 // ============================================================================
 // FindOne Input/Output

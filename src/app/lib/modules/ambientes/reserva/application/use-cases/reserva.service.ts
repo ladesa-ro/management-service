@@ -1,8 +1,8 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { has } from "lodash";
-import { UsuarioService } from "@/modules/@acesso/usuario/application/use-cases/usuario.service";
-import type { AccessContext } from "@/modules/@core/contexto-acesso";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { BaseCrudService, type PersistInput } from "@/modules/@shared";
+import { UsuarioService } from "@/modules/acesso/usuario/application/use-cases/usuario.service";
 import { AmbienteService } from "@/modules/ambientes/ambiente/application/use-cases/ambiente.service";
 import { type IReserva, Reserva } from "@/modules/ambientes/reserva";
 import type {
