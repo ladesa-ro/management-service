@@ -73,3 +73,7 @@ shell-1000:
 
 shell-root:
 	$(COMMAND_COMPOSE_SERVICE) exec -u root -w $(SHELL_WORKING_DIR) $(COMPOSE_SERVICE_APP) bash -c "cd $(SHELL_INSIDE_PATH); clear; $(SHELL_INSIDE)";
+
+generate-erd:
+	$(COMMAND_COMPOSE_SERVICE) exec -u $(COMPOSE_SERVICE_USER) $(COMPOSE_SERVICE_APP) \
+		bash -c 'mermerd -c "$$DATABASE_URL" -s public --useAllTables --encloseWithMermaidBackticks --showDescriptions notNull --showAllConstraints -o /ladesa/management-service/docs/erd/erd.md'
