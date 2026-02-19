@@ -108,7 +108,7 @@ RUN --mount=type=cache,id=bun,uid=1000,gid=1000,target=${BUN_INSTALL_CACHE_DIR} 
 
 FROM source-with-dev-dependencies AS service-build
 USER 1000:1000
-RUN bun run --filter "*" typecheck
+RUN bun --bun run typecheck
 
 # ==========================================
 # IMAGEM FINAL DE EXECUÇÃO
@@ -130,8 +130,5 @@ USER happy
 COPY --from=service-build --chown=1000:1000 /ladesa/management-service/src /ladesa/management-service/src
 
 WORKDIR "/ladesa/management-service/src/app"
-
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:$PORT/health || exit 1
 
 CMD bun run migration:run && bun run start
