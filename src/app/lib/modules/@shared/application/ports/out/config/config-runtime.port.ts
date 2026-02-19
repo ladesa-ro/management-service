@@ -17,7 +17,7 @@ export interface IConfigRuntimePort {
 
   withRuntimePrefix(path: string): string;
 
-  getRuntimeBuildTime(): Date;
+  getRuntimeBuildTime(): Date | null;
 
   getRuntimeGitCommitHash(): string | null;
 

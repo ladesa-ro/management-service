@@ -10,8 +10,6 @@ import type {
 import * as entities from "@/modules/@shared/infrastructure/persistence/typeorm/entities";
 import pkg from "../../../../../package.json";
 
-const now = new Date();
-
 /**
  * Adapter de configuração baseado em variáveis de ambiente
  * Implementa IConfigPort lendo configurações de process.env
@@ -57,14 +55,14 @@ export class EnvironmentConfigAdapter implements IConfigPort {
     return runtimeNodeEnv;
   }
 
-  getRuntimeBuildTime(): Date {
+  getRuntimeBuildTime(): Date | null {
     const buildTime = this.nestConfigService.get<string>("BUILD_TIME");
 
     if (buildTime) {
       return new Date(buildTime);
     }
 
-    return now;
+    return null;
   }
 
   getRuntimeGitCommitHash(): string | null {

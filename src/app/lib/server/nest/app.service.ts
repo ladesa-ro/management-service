@@ -6,7 +6,7 @@ export interface ServiceInfo {
   service: string;
   prefix: string;
   version: string;
-  buildTime: Date;
+  buildTime: Date | null;
   gitCommitHash: string | null;
 }
 

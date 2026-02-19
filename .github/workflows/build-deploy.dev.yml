@@ -59,6 +59,8 @@ jobs:
           push: true
           build-args: |
             BUN_VERSION=${{ steps.bun-version.outputs.version }}
+            BUILD_TIME=${{ github.event.head_commit.timestamp }}
+            GIT_COMMIT_HASH=${{ github.sha }}
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_BASENAME }}/management-service:development
           cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_BASENAME }}/management-service:cache-development
           cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_BASENAME }}/management-service:cache-development,mode=max

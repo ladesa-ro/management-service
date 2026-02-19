@@ -128,8 +128,13 @@ LABEL maintainer="Equipe de Desenvolvimento do Ladesa"
 LABEL version="1.0"
 LABEL description="Serviço de gerenciamento da aplicação"
 
+ARG BUILD_TIME
+ARG GIT_COMMIT_HASH
+
 ENV NODE_ENV=production
 ENV PORT=3000
+ENV BUILD_TIME=${BUILD_TIME}
+ENV GIT_COMMIT_HASH=${GIT_COMMIT_HASH}
 
 EXPOSE $PORT
 
