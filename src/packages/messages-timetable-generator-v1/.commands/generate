@@ -18,7 +18,7 @@ echo "baixado $SCHEMA_PATH para ${TMP_FILENAME}"
 
 echo ${SCHEMA_PATH}
 
-bunx quicktype@23 --src-lang schema "${TMP_FILENAME}#/\$defs/" --lang typescript-zod -o ${OUT_FILE}
+bun x --no-install --package quicktype quicktype --src-lang schema "${TMP_FILENAME}#/\$defs/" --lang typescript-zod -o ${OUT_FILE}
 echo "gerado ${OUT_FILE}"
 
 rm ${TMP_FILENAME}

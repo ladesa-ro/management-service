@@ -12,5 +12,8 @@
   },
   "scripts": {
     "generate": ".commands/generate"
+  },
+  "devDependencies": {
+    "quicktype": "^23.2.6"
   }
 }
