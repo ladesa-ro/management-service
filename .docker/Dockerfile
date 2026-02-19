@@ -22,6 +22,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 # ==========================================
 
 FROM os-core AS os-runtime
+ARG BUN_VERSION
 USER root
 
 # Configuração do ambiente Bun
@@ -34,7 +35,7 @@ ENV PATH="${BUN_INSTALL}/bin:$PATH"
 RUN mkdir -p "${BUN_INSTALL}/bin" "${BUN_INSTALL_CACHE_DIR}" "${TMPDIR}" \
     && chmod -R 777 "${BUN_INSTALL_CACHE_DIR}" "${TMPDIR}"
 
-RUN curl -fsSL "https://github.com/oven-sh/bun/releases/download/bun-v1.3.8/bun-linux-x64-baseline.zip" -o bun.zip \
+RUN curl -fsSL "https://github.com/oven-sh/bun/releases/download/bun-v${BUN_VERSION}/bun-linux-x64-baseline.zip" -o bun.zip \
     && unzip bun.zip \
     && mv bun-linux-x64-baseline/bun "${BUN_INSTALL}/bin/bun" \
     && chmod +x "${BUN_INSTALL}/bin/bun" \

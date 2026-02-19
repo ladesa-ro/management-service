@@ -10,6 +10,8 @@ services:
       context: ../src
       dockerfile: ../.docker/Dockerfile
       target: devcontainer
+      args:
+        BUN_VERSION: ${BUN_VERSION}
     command:
       - sleep
       - infinity
