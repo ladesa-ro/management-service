@@ -108,7 +108,7 @@ RUN --mount=type=cache,id=bun,uid=1000,gid=1000,target=${BUN_INSTALL_CACHE_DIR} 
 
 FROM source-with-dev-dependencies AS service-build
 USER 1000:1000
-RUN bun run typecheck
+RUN bun run --filter "*" typecheck
 
 # ==========================================
 # IMAGEM FINAL DE EXECUÇÃO
