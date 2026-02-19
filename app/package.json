@@ -81,10 +81,9 @@
   },
   "scripts": {
     "dev": ".commands/dev",
-    "build": ".commands/build",
+    "typecheck": ".commands/build",
     "debug": ".commands/debug",
     "start": ".commands/start",
-    "check:static": ".commands/build",
     "test": ".commands/test",
     "test:cov": ".commands/test-cov",
     "test:debug": ".commands/test-debug",
@@ -102,6 +101,6 @@
     "code:fix": ".commands/code-fix",
     "code:fix:format": ".commands/code-fix-format",
     "code:fix:lint": ".commands/code-fix-lint",
-    "generate-integration-memssages-timetable-generator-v1": ".commands/generate-integration-memssages-timetable-generator-v1"
+    "generate-integration-messages-timetable-generator-v1": ".commands/generate-integration-messages-timetable-generator-v1"
   }
 }

@@ -13,7 +13,10 @@ services:
       - sleep
       - infinity
     depends_on:
-      - ladesa-management-service-db
+      ladesa-management-service-db:
+        condition: service_healthy
+      sisgea-message-broker:
+        condition: service_healthy
     networks:
       - ladesa-net
     ports:
@@ -39,13 +42,35 @@ services:
     container_name: ladesa-management-service-db
     volumes:
       - "ladesa-management-service-db-data:/bitnami/postgresql"
-      # - './volumes/db/scripts/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d'
     networks:
       - ladesa-net
     ports:
       - "5432:5432"
     env_file:
       - .db.env
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  sisgea-message-broker:
+    image: docker.io/rabbitmq:3-management-alpine
+    container_name: sisgea-message-broker
+    hostname: sisgea-message-broker
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin
+    networks:
+      - ladesa-net
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    healthcheck:
+      test: ["CMD-SHELL", "rabbitmq-diagnostics -q ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
 networks:
   ladesa-net:

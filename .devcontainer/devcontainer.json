@@ -1,6 +1,6 @@
 {
   "name": "Ladesa Management Service",
-  "dockerComposeFile": ["../docker-compose.yml", "docker-compose.devcontainer.yml"],
+  "dockerComposeFile": ["../compose.yml", "docker-compose.devcontainer.yml"],
   "service": "ladesa-management-service",
   "workspaceFolder": "/ladesa/management-service",
   "shutdownAction": "stopCompose",
@@ -12,7 +12,6 @@
         // TypeScript/JavaScript
         "ms-vscode.vscode-typescript-next",
         "bradlc.vscode-tailwindcss",
-        "esbenp.prettier-vscode",
         "biomejs.biome",
 
         // Node.js/Bun
@@ -37,7 +36,6 @@
         "redhat.vscode-yaml",
         "christian-kohler.path-intellisense",
         "streetsidesoftware.code-spell-checker",
-        "ms-vscode.vscode-eslint",
 
         // GraphQL/API
         "graphql.vscode-graphql",

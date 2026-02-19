@@ -1,5 +1,3 @@
-version: '3.8'
-
 x-podman:
   in_pod: false
 
@@ -7,9 +5,9 @@ services:
   ladesa-management-service:
     # Sobrescrever configurações específicas para desenvolvimento
     build:
-      context: .
+      context: ../app
       target: devcontainer
-      dockerfile: ./Dockerfile
+      dockerfile: Dockerfile
     volumes:
       # Adicionar cache de bun para melhor performance
       - bun-cache:/home/happy/.bun:z

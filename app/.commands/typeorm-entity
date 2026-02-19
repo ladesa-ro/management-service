@@ -2,4 +2,4 @@
 set -euo pipefail
 
 # Create a new TypeORM entity
-exec ./commands/typeorm-migration entity:create "$@"
+exec ./.commands/typeorm-migration entity:create "$@"

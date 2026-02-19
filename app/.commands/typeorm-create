@@ -2,4 +2,4 @@
 set -euo pipefail
 
 # Create a new TypeORM migration
-exec ./commands/typeorm-migration migration:create "$@"
+exec ./.commands/typeorm-migration migration:create "$@"

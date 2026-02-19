@@ -2,4 +2,4 @@
 set -euo pipefail
 
 # Run e2e tests
-exec ./node_modules/.bin/vitest run --config ./vitest.config.e2e.ts "$@"
+exec ./node_modules/.bin/vitest run "$@"

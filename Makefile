@@ -15,11 +15,11 @@ SHELL_INSIDE_PATH?=./
 SHELL_WORKING_DIR=/ladesa/management-service-app
 
 setup:
-	$(shell bash -c "mkdir -p volumes/history && touch volumes/history/{root,happy}-{bash,zsh}")
-	$(shell (cd .; find . -type f -name "*.example" -exec sh -c 'cp -n {} $$(basename {} .example)' \;))
-	$(shell (bash -c "$(COMMAND_TOOL_OCI_RUNTIME) network create $(COMPOSE_SERVICE_NETWORK) &>/dev/null"))
-	
-	echo "baixando e buildando as imagens dos containers, aguarde um instante"
+	mkdir -p volumes/history
+	touch volumes/history/{root,happy}-{bash,zsh}
+	find . -maxdepth 1 -type f -name "*.example" -exec sh -c 'cp -n "$$1" "$$(echo $$1 | sed s/.example//)"' _ {} \;
+	$(COMMAND_TOOL_OCI_RUNTIME) network create $(COMPOSE_SERVICE_NETWORK) 2>/dev/null || true
+	@echo "baixando e buildando as imagens dos containers, aguarde um instante"
 	$(COMMAND_COMPOSE_SERVICE) build
 
 post-init:
@@ -54,14 +54,15 @@ start:
 	make setup;
 
 	make down;
-	make up;
+	make up-clean;
+	make post-init;
 
 	$(COMMAND_COMPOSE_SERVICE) \
 		exec \
-		-u node \
+		-u $(COMPOSE_SERVICE_USER) \
 		--no-TTY \
 		-d $(COMPOSE_SERVICE_APP) \
-			bash -c "bun install && bun run migration:run && bun run start:dev" \&;
+			bash -c "bun install && bun run migration:run && bun run dev";
 
 logs:
 	make setup;

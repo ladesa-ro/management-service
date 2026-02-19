@@ -8,8 +8,6 @@ export const getMigrationDataSource = async (appConfigServiceBase: IConfigPort |
 
   const options = appConfigService.getTypeOrmMigrationDataSourceOptions();
 
-  console.log({ options });
-
   const dataSource = new DataSource(options);
 
   return dataSource;
