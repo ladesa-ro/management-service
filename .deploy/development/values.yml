@@ -1,0 +1,93 @@
+applicationName: ladesa-ro-api
+
+deployment:
+  enabled: true
+  replicas: 1
+
+  reloadOnChange: false
+  annotations:
+    secrets.infisical.com/auto-reload: "true"
+
+  image:
+    repository: ghcr.io/ladesa-ro/management-service/management-service
+    tag: development
+    pullPolicy: Always
+
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+
+  resources:
+    requests:
+      cpu: "50m"
+      memory: "250Mi"
+    limits:
+      memory: "2Gi"
+      cpu: "2"
+
+  containerSecurityContext:
+    runAsNonRoot: false
+    readOnlyRootFilesystem: false
+
+  ports:
+    - containerPort: 3000
+      name: web-port
+
+  envFrom:
+    api-config:
+      type: secret
+      name: ladesa-ro-api-config
+
+  volumes:
+    uploaded-data:
+      persistentVolumeClaim:
+        claimName: ladesa-ro-api-uploaded-pvc
+
+  volumeMounts:
+    uploaded-data:
+      mountPath: /var/lib/ladesa-ro-api/uploaded
+
+  readinessProbe:
+    httpGet:
+      path: /health/
+      port: 3000
+    initialDelaySeconds: 5
+    periodSeconds: 10
+
+  livenessProbe:
+    httpGet:
+      path: /health/
+      port: 3000
+    initialDelaySeconds: 10
+    periodSeconds: 15
+
+  startupProbe:
+    httpGet:
+      path: /health/
+      port: 3000
+    failureThreshold: 30
+    periodSeconds: 10
+
+service:
+  enabled: true
+  type: NodePort
+  ports:
+    - name: web-service
+      port: 3000
+      targetPort: web-port
+
+ingress:
+  enabled: true
+  annotations:
+    cert-manager.io/cluster-issuer: ladesa-ro-issuer-production
+  hosts:
+    - host: dev.ladesa.com.br
+      paths:
+        - path: /api/v1
+          pathType: ImplementationSpecific
+          servicePort: web-service
+  tls:
+    - secretName: ladesa-ro-development-management-service-tls
+      hosts:
+        - dev.ladesa.com.br

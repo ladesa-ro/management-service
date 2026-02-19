@@ -1,19 +1,24 @@
 #!/usr/bin/env bash
-set -euo pipefail
 
-# Apply Kubernetes manifests
-kubectl apply -f ./deployments/api.yaml
-kubectl apply -f ./ingress/api.yaml
-kubectl apply -f ./services/api.yaml
+set -xe;
 
-# Restart deployment
-kubectl rollout restart \
-  deployment.apps/ladesa-ro-api \
-  --namespace ladesa-ro-development \
+K8S_NAMESPACE=ladesa-ro-development
+K8S_DEPLOYMENT=ladesa-ro-api
+
+helm upgrade -i ${K8S_DEPLOYMENT} \
+  --repo https://stakater.github.io/stakater-charts \
+  application \
+  --version 6.0.2 \
+  --namespace=${K8S_NAMESPACE} \
+  -f ./values.yml \
 ;
 
-# Wait for rollout to complete
+kubectl \
+  rollout restart \
+  --namespace ${K8S_NAMESPACE} \
+  deployment.apps/${K8S_DEPLOYMENT};
+
 kubectl rollout status \
-  deployment.apps/ladesa-ro-api \
-  --namespace ladesa-ro-development \
-  --timeout=720s
+  deployment.apps/${K8S_DEPLOYMENT} \
+  --namespace ${K8S_NAMESPACE} \
+  --timeout=720s;
