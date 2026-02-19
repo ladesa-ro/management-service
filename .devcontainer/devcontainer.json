@@ -1,6 +1,6 @@
 {
   "name": "Ladesa Management Service",
-  "dockerComposeFile": ["../compose.yml", "docker-compose.devcontainer.yml"],
+  "dockerComposeFile": ["../.docker/compose.yml", "docker-compose.devcontainer.yml"],
   "service": "ladesa-management-service",
   "workspaceFolder": "/ladesa/management-service",
   "shutdownAction": "stopCompose",
@@ -85,7 +85,7 @@
   },
 
   // Comandos pós-criação
-  "postCreateCommand": "bun install",
+  "postCreateCommand": "cd src && bun install",
   "postStartCommand": "echo 'Devcontainer iniciado com sucesso!'",
 
   // Configurações do usuário

@@ -3,6 +3,7 @@
   "version": "1.0.0-alpha",
   "private": true,
   "dependencies": {
+    "@ladesa-ro/messages.timetable-generator.v1": "workspace:*",
     "@apollo/server": "^5.4.0",
     "@apollo/utils.keyvaluecache": "^4.0.0",
     "@as-integrations/express5": "^1.1.2",
@@ -46,11 +47,9 @@
     "ts-mixer": "^6.0.4",
     "tslib": "^2.8.1",
     "typeorm": "^0.3.28",
-    "uuid": "^13.0.0",
-    "zod": "^4.3.6"
+    "uuid": "^13.0.0"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.4.2",
     "@nestjs/cli": "^11.0.16",
     "@nestjs/schematics": "^11.0.9",
     "@nestjs/testing": "^11.1.14",
@@ -100,7 +99,6 @@
     "code:check:lint": ".commands/code-check-lint",
     "code:fix": ".commands/code-fix",
     "code:fix:format": ".commands/code-fix-format",
-    "code:fix:lint": ".commands/code-fix-lint",
-    "generate-integration-messages-timetable-generator-v1": ".commands/generate-integration-messages-timetable-generator-v1"
+    "code:fix:lint": ".commands/code-fix-lint"
   }
 }

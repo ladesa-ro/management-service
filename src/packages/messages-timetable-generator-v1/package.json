@@ -1,0 +1,16 @@
+{
+  "name": "@ladesa-ro/messages.timetable-generator.v1",
+  "version": "0.0.1",
+  "private": true,
+  "main": "./src/schemas.ts",
+  "types": "./src/schemas.ts",
+  "exports": {
+    ".": "./src/schemas.ts"
+  },
+  "dependencies": {
+    "zod": "^4.3.6"
+  },
+  "scripts": {
+    "generate": ".commands/generate"
+  }
+}

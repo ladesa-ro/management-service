@@ -56,7 +56,7 @@ USER 1000:1000
 FROM os-runtime AS os-development
 
 USER 1000:1000
-WORKDIR "/ladesa/management-service-app"
+WORKDIR "/ladesa/management-service/src/app"
 
 # ==========================================
 # IMAGEM PARA AMBIENTE DE DESENVOLVIMENTO
@@ -83,7 +83,11 @@ FROM os-development AS source-with-production-dependencies
 
 USER 1000:1000
 
+WORKDIR "/ladesa/management-service/src"
+
 COPY --chown=1000:1000 . .
+
+WORKDIR "/ladesa/management-service/src/app"
 
 # Instalação de dependências com cache eficiente
 RUN --mount=type=cache,id=bun,uid=1000,gid=1000,target=${BUN_INSTALL_CACHE_DIR} \
@@ -123,9 +127,9 @@ EXPOSE $PORT
 
 USER happy
 
-COPY --from=service-build --chown=1000:1000 /ladesa/management-service-app /ladesa/management-service-app
+COPY --from=service-build --chown=1000:1000 /ladesa/management-service/src /ladesa/management-service/src
 
-WORKDIR "/ladesa/management-service-app"
+WORKDIR "/ladesa/management-service/src/app"
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD curl -f http://localhost:$PORT/health || exit 1

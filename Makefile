@@ -7,12 +7,12 @@ COMPOSE_SERVICE_USER=happy
 COMMAND_TOOL_OCI_RUNTIME=docker
 COMMAND_TOOL_OCI_COMPOSE=$(COMMAND_TOOL_OCI_RUNTIME) compose
 
-COMMAND_COMPOSE_SERVICE_OPTIONS=--file compose.yml -p ladesa-management-service
+COMMAND_COMPOSE_SERVICE_OPTIONS=--file .docker/compose.yml -p ladesa-management-service
 COMMAND_COMPOSE_SERVICE=$(COMMAND_TOOL_OCI_COMPOSE) $(COMMAND_COMPOSE_SERVICE_OPTIONS)
 
 SHELL_INSIDE=zsh
 SHELL_INSIDE_PATH?=./
-SHELL_WORKING_DIR=/ladesa/management-service-app
+SHELL_WORKING_DIR=/ladesa/management-service/src/app
 
 setup:
 	mkdir -p volumes/history
@@ -23,7 +23,7 @@ setup:
 	$(COMMAND_COMPOSE_SERVICE) build
 
 post-init:
-	$(COMMAND_COMPOSE_SERVICE) exec -u $(COMPOSE_SERVICE_USER) $(COMPOSE_SERVICE_APP) bash -c "bun install";
+	$(COMMAND_COMPOSE_SERVICE) exec -u $(COMPOSE_SERVICE_USER) $(COMPOSE_SERVICE_APP) bash -c "cd /ladesa/management-service/src && bun install";
 
 up-no-recreate:
 	make setup;
@@ -62,7 +62,7 @@ start:
 		-u $(COMPOSE_SERVICE_USER) \
 		--no-TTY \
 		-d $(COMPOSE_SERVICE_APP) \
-			bash -c "bun install && bun run migration:run && bun run dev";
+			bash -c "cd /ladesa/management-service/src && bun install && cd app && bun run migration:run && bun run dev";
 
 logs:
 	make setup;

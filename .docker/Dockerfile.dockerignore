@@ -12,11 +12,6 @@
 
 **/volumes
 
-Dockerfile
-*.dockerignore
-
-Makefile
-
 # deprecated
 
 **/.pnpm-store
