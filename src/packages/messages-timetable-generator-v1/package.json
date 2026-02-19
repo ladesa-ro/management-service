@@ -14,12 +14,12 @@
     "quicktype": "^23.2.6"
   },
   "scripts": {
-    "codegen:fresh": "nx run @ladesa-ro/messages.timetable-generator.v1:codegen",
-    "codegen:cold": "echo 'pulando geração do schemas.ts'"
+    "codegen:fresh": "nx run @ladesa-ro/messages.timetable-generator.v1:codegen:fresh",
+    "codegen:cold": "nx run @ladesa-ro/messages.timetable-generator.v1:codegen:cold"
   },
   "nx": {
     "targets": {
-      "codegen": {
+      "codegen:fresh": {
         "executor": "nx:run-commands",
         "cache": true,
         "inputs": [
@@ -30,6 +30,20 @@
         ],
         "options": {
           "command": "bash .commands/generate",
+          "cwd": "{projectRoot}"
+        }
+      },
+      "codegen:cold": {
+        "executor": "nx:run-commands",
+        "cache": false,
+        "inputs": [
+          "{projectRoot}/.commands/generate"
+        ],
+        "outputs": [
+          "{projectRoot}/src/schemas.ts"
+        ],
+        "options": {
+          "command": "echo 'pulando geração do schemas.ts'",
           "cwd": "{projectRoot}"
         }
       }

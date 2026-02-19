@@ -139,7 +139,7 @@
         "executor": "nx:run-commands",
         "dependsOn": ["@ladesa-ro/messages.timetable-generator.v1:codegen:cold"],
         "options": {
-          "command": "bash .commands/build",
+          "command": "bash .commands/typecheck",
           "cwd": "{projectRoot}"
         }
       }
