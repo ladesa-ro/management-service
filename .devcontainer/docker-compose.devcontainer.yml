@@ -8,8 +8,6 @@ services:
       context: ../src
       dockerfile: ../.docker/Containerfile
       target: devcontainer
-      args:
-        BUN_VERSION: ${BUN_VERSION}
     volumes:
       # Adicionar cache de bun para melhor performance
       - bun-cache:/home/happy/.bun:z

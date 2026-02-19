@@ -1,8 +1,5 @@
 #MAKEFLAGS += --silent
 
-BUN_VERSION := $(shell cat .bun-version)
-export BUN_VERSION
-
 COMPOSE_SERVICE_NETWORK=ladesa-net
 COMPOSE_SERVICE_APP=ladesa-management-service
 COMPOSE_SERVICE_USER=happy
