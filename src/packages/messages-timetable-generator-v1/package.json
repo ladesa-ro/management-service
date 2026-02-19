@@ -10,10 +10,29 @@
   "dependencies": {
     "zod": "^4.3.6"
   },
-  "scripts": {
-    "generate": ".commands/generate"
-  },
   "devDependencies": {
     "quicktype": "^23.2.6"
+  },
+  "scripts": {
+    "codegen:fresh": "nx run @ladesa-ro/messages.timetable-generator.v1:codegen",
+    "codegen:cold": "echo 'pulando geração do schemas.ts'"
+  },
+  "nx": {
+    "targets": {
+      "codegen": {
+        "executor": "nx:run-commands",
+        "cache": true,
+        "inputs": [
+          "{projectRoot}/.commands/generate"
+        ],
+        "outputs": [
+          "{projectRoot}/src/schemas.ts"
+        ],
+        "options": {
+          "command": "bash .commands/generate",
+          "cwd": "{projectRoot}"
+        }
+      }
+    }
   }
 }

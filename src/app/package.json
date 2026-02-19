@@ -79,11 +79,11 @@
     "vitest": "^4.0.18"
   },
   "scripts": {
-    "dev": ".commands/dev",
-    "typecheck": ".commands/build",
-    "debug": ".commands/debug",
-    "start": ".commands/start",
-    "test": ".commands/test",
+    "dev": "nx run @ladesa-ro/management-service:dev",
+    "typecheck": "nx run @ladesa-ro/management-service:typecheck",
+    "debug": "nx run @ladesa-ro/management-service:debug",
+    "start": "nx run @ladesa-ro/management-service:start",
+    "test": "nx run @ladesa-ro/management-service:test",
     "test:cov": ".commands/test-cov",
     "test:debug": ".commands/test-debug",
     "test:e2e": ".commands/test-e2e",
@@ -100,5 +100,49 @@
     "code:fix": ".commands/code-fix",
     "code:fix:format": ".commands/code-fix-format",
     "code:fix:lint": ".commands/code-fix-lint"
+  },
+  "nx": {
+    "targets": {
+      "dev": {
+        "executor": "nx:run-commands",
+        "dependsOn": ["@ladesa-ro/messages.timetable-generator.v1:codegen:cold"],
+        "options": {
+          "command": "bash .commands/dev",
+          "cwd": "{projectRoot}"
+        }
+      },
+      "start": {
+        "executor": "nx:run-commands",
+        "dependsOn": ["@ladesa-ro/messages.timetable-generator.v1:codegen:cold"],
+        "options": {
+          "command": "bash .commands/start",
+          "cwd": "{projectRoot}"
+        }
+      },
+      "debug": {
+        "executor": "nx:run-commands",
+        "dependsOn": ["@ladesa-ro/messages.timetable-generator.v1:codegen:cold"],
+        "options": {
+          "command": "bash .commands/debug",
+          "cwd": "{projectRoot}"
+        }
+      },
+      "test": {
+        "executor": "nx:run-commands",
+        "dependsOn": ["@ladesa-ro/messages.timetable-generator.v1:codegen:cold"],
+        "options": {
+          "command": "bash .commands/test",
+          "cwd": "{projectRoot}"
+        }
+      },
+      "typecheck": {
+        "executor": "nx:run-commands",
+        "dependsOn": ["@ladesa-ro/messages.timetable-generator.v1:codegen:cold"],
+        "options": {
+          "command": "bash .commands/build",
+          "cwd": "{projectRoot}"
+        }
+      }
+    }
   }
 }

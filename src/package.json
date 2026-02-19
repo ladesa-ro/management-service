@@ -1,7 +1,11 @@
 {
   "private": true,
-  "workspaces": ["app", "packages/*"],
+  "workspaces": [
+    "app",
+    "packages/*"
+  ],
   "devDependencies": {
-    "@biomejs/biome": "^2.4.2"
+    "@biomejs/biome": "^2.4.2",
+    "nx": "22.5.1"
   }
 }
