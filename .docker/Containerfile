@@ -74,13 +74,6 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     apt-get update -y && apt-get install -y git vim zsh && \
     rm -rf /var/lib/apt/lists/*
 
-# Instalação do mermerd (gerador de ERD a partir do banco)
-RUN curl -fsSL "https://github.com/KarnerTh/mermerd/releases/download/v0.13.0/mermerd_0.13.0_linux_amd64.tar.gz" -o mermerd.tar.gz \
-    && tar -xzf mermerd.tar.gz mermerd \
-    && mv mermerd /usr/local/bin/mermerd \
-    && chmod +x /usr/local/bin/mermerd \
-    && rm -f mermerd.tar.gz
-
 USER 1000:1000
 RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 RUN sed -i 's/^ZSH_THEME=.*/ZSH_THEME="josh"/' ~/.zshrc

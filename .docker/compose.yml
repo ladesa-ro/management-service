@@ -2,9 +2,8 @@ x-podman:
   in_pod: false
 
 services:
-  ladesa-management-service:
+  management-service:
     container_name: ladesa-management-service
-    hostname: ladesa-management-service
     user: root
     build:
       context: ../src
@@ -14,8 +13,8 @@ services:
       - sleep
       - infinity
     depends_on:
-      - ladesa-management-service-db
-      - sisgea-message-broker
+      - db
+      - rabbitmq
     networks:
       - ladesa-net
     ports:
@@ -26,7 +25,7 @@ services:
     userns_mode: keep-id:uid=1000,gid=1000
     volumes:
       - ..:/ladesa/management-service:z
-      - ladesa-management-service-uploaded-files:/container/uploaded
+      - management-service-uploaded-files:/container/uploaded
       - ../volumes/history/root-zsh:/root/.zsh_history:z
       - ../volumes/history/root-bash:/root/.bash_history:z
       - ../volumes/history/happy-zsh:/home/happy/.zsh_history:z
@@ -36,11 +35,11 @@ services:
     env_file:
       - ../.env
 
-  ladesa-management-service-db:
-    image: docker.io/bitnamilegacy/postgresql:15
+  db:
     container_name: ladesa-management-service-db
+    image: docker.io/bitnamilegacy/postgresql:15
     volumes:
-      - "ladesa-management-service-db-data:/bitnami/postgresql"
+      - "management-service-db-data:/bitnami/postgresql"
     networks:
       - ladesa-net
     ports:
@@ -54,10 +53,9 @@ services:
 #      timeout: 5s
 #      retries: 5
 
-  sisgea-message-broker:
+  rabbitmq:
+    container_name: ladesa-rabbitmq
     image: docker.io/rabbitmq:3-management-alpine
-    container_name: sisgea-message-broker
-    hostname: sisgea-message-broker
     environment:
       RABBITMQ_DEFAULT_USER: admin
       RABBITMQ_DEFAULT_PASS: admin
@@ -66,16 +64,15 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
-#    healthcheck:
-#      test: ["CMD-SHELL", "rabbitmq-diagnostics -q ping"]
-#      interval: 5s
-#      timeout: 5s
-#      retries: 5
+
+  chart-db:
+    image: ghcr.io/chartdb/chartdb:latest
+    ports:
+      - "8099:80"
 
 networks:
   ladesa-net:
-    external: true
 
 volumes:
-  ladesa-management-service-db-data:
-  ladesa-management-service-uploaded-files:
+  management-service-db-data:
+  management-service-uploaded-files:
