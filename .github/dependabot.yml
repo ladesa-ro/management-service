@@ -1,9 +1,9 @@
 version: 2
 updates:
   - package-ecosystem: docker
-    directory: "/app"
+    directory: "/.docker"
     schedule:
-      interval: "monthly"
+      interval: "daily"
     open-pull-requests-limit: 10
 
   - package-ecosystem: github-actions
@@ -12,7 +12,7 @@ updates:
       interval: "daily"
 
   - package-ecosystem: bun
-    directory: "/app"
+    directory: "/src"
     schedule:
       interval: "daily"
     groups:
