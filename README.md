@@ -15,7 +15,7 @@ API REST/GraphQL de gerenciamento academico desenvolvida com NestJS, TypeORM e P
 - [Clonando o repositorio](#clonando-o-repositorio)
 - [Rodando o projeto](#rodando-o-projeto)
   - [Caminho A: Dev Container (recomendado)](#caminho-a-dev-container-recomendado)
-  - [Caminho B: Makefile (sem Dev Container)](#caminho-b-makefile-sem-dev-container)
+  - [Caminho B: justfile (sem Dev Container)](#caminho-b-justfile-sem-dev-container)
 - [Acessando a aplicacao](#acessando-a-aplicacao)
 - [Stack tecnologico](#stack-tecnologico)
 - [Licenca](#licenca)
@@ -38,14 +38,29 @@ Na pratica, isso significa que voce **nao precisa instalar** Bun, Node.js, Postg
 
 Para contribuir com este projeto, voce precisa de:
 
-### Container runtime (escolha um)
+### Container runtime
 
 | Opcao | Instalacao |
 |-------|------------|
-| **Docker + Docker Compose** (v2+) | [docs.docker.com](https://docs.docker.com/get-docker/) |
-| **Podman + Podman Compose** | [podman.io](https://podman.io/getting-started/installation) |
+| **Docker + Docker Compose** (v2+) **(recomendado)** | [docs.docker.com](https://docs.docker.com/get-docker/) |
+| Podman + Podman Compose | [podman.io](https://podman.io/getting-started/installation) |
 
-> Se voce usa **Podman**, o arquivo `.docker/compose.override.yml` ja vem configurado com `userns_mode: "keep-id"` para compatibilidade.
+> **Nota sobre Podman:** o projeto possui configuracoes de compatibilidade com Podman (`userns_mode`, `x-podman`), mas o **Docker e o runtime recomendado**. O Podman pode funcionar, porem nao e garantido.
+>
+> Se optar pelo Podman, defina a variavel de ambiente `OCI_RUNTIME=podman` antes de rodar os comandos.
+
+### just (command runner)
+
+O projeto usa o [just](https://github.com/casey/just) como task runner no lugar do Make.
+
+| Plataforma | Instalacao |
+|------------|------------|
+| Linux (curl) | `curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh \| bash -s -- --to /usr/local/bin` |
+| macOS (Homebrew) | `brew install just` |
+| Windows (Scoop) | `scoop install just` |
+| Cargo | `cargo install just` |
+
+Mais opcoes em: <https://github.com/casey/just#installation>
 
 ### Git
 
@@ -62,7 +77,7 @@ Necessario para clonar e versionar o codigo-fonte.
 
 ### Familiaridade com linha de comando
 
-Voce vai precisar usar o terminal para clonar o repositorio, executar comandos Make e interagir com o container.
+Voce vai precisar usar o terminal para clonar o repositorio, executar comandos e interagir com o container.
 
 - Tutorial basico: <https://docs.ladesa.com.br/docs/developers-guide/tutorials/os/command-line/>
 
@@ -75,13 +90,7 @@ git clone https://github.com/ladesa-ro/management-service.git
 cd management-service
 ```
 
-Em seguida, copie o arquivo de configuracao de exemplo:
-
-```bash
-cp -n .env.example .env
-```
-
-> Os valores padrao do `.env.example` ja estao prontos para desenvolvimento local. Nenhuma alteracao e necessaria para comecar.
+> O `just setup` ja copia automaticamente os arquivos `.example` para voce. Nenhuma configuracao manual e necessaria para comecar.
 
 ---
 
@@ -92,7 +101,7 @@ Existem dois caminhos para subir o ambiente de desenvolvimento. Escolha o que pr
 | Caminho | Quando usar |
 |---------|-------------|
 | **A: Dev Container** | Voce usa VS Code ou WebStorm e quer que o editor abra diretamente dentro do container, com extensoes, terminal e tudo configurado automaticamente. |
-| **B: Makefile** | Voce prefere gerenciar os containers manualmente pelo terminal, independentemente do editor. |
+| **B: justfile** | Voce prefere gerenciar os containers manualmente pelo terminal, independentemente do editor. |
 
 ### Caminho A: Dev Container (recomendado)
 
@@ -134,48 +143,52 @@ bun run dev
 
 ---
 
-### Caminho B: Makefile (sem Dev Container)
+### Caminho B: justfile (sem Dev Container)
 
-Se voce prefere nao usar Dev Container, o `Makefile` oferece atalhos para gerenciar os containers pelo terminal.
+Se voce prefere nao usar Dev Container, o `justfile` oferece receitas para gerenciar os containers pelo terminal.
 
 #### 1. Configurar e subir o ambiente
 
 ```bash
-make up
+just up
 ```
 
 Esse unico comando faz tudo:
 
-- Copia os arquivos `.env` e `.db.env` a partir dos exemplos (se ainda nao existirem)
-- Cria a rede Docker `ladesa-net`
-- Builda as imagens dos containers
+- Copia os arquivos `.env` a partir dos exemplos (se ainda nao existirem)
+- Builda as imagens dos containers (apenas se houve mudancas)
 - Sobe os containers (aplicacao + PostgreSQL + RabbitMQ)
 - Instala as dependencias (`bun install`)
 - Abre um shell `zsh` dentro do container da aplicacao
 
 #### 2. Iniciar o servidor de desenvolvimento
 
-Voce ja estara dentro do container apos o `make up`. Basta rodar:
+Voce ja estara dentro do container apos o `just up`. Basta rodar:
 
 ```bash
 bun run dev
 ```
 
-#### Outros comandos uteis do Makefile
+#### Receitas disponiveis
 
 | Comando | O que faz |
 |---------|-----------|
-| `make up` | Sobe tudo (com recreate) e abre shell no container |
-| `make up-no-recreate` | Sobe sem recriar containers ja existentes |
-| `make stop` | Para os containers (sem remover) |
-| `make down` | Para e remove os containers |
-| `make cleanup` | Para, remove containers **e volumes** (reset completo) |
-| `make logs` | Mostra logs dos containers em tempo real |
-| `make shell-1000` | Abre shell como usuario `happy` (uid 1000) |
-| `make shell-root` | Abre shell como `root` |
-| `make start` | Restart completo + inicia `bun run dev` em background |
+| `just up` | Sobe tudo e abre shell no container |
+| `just start` | Sobe os containers em background (sem abrir shell) |
+| `just stop` | Para os containers (sem remover) |
+| `just down` | Para e remove os containers |
+| `just cleanup` | Para, remove containers **e volumes** (reset completo) |
+| `just logs` | Mostra logs dos containers em tempo real |
+| `just shell-1000` | Abre shell como usuario `happy` (uid 1000) |
+| `just shell-root` | Abre shell como `root` |
+| `just build` | Builda a imagem (apenas se inputs mudaram) |
+| `just rebuild` | Forca rebuild da imagem |
+| `just compose <args>` | Passa argumentos direto pro `docker compose` |
 
-> **Dica:** se voce usa **Podman** em vez de Docker, edite o Makefile e altere a variavel `COMMAND_TOOL_OCI_RUNTIME` de `docker` para `podman`.
+> **Usando Podman?** Defina a variavel `OCI_RUNTIME=podman` antes dos comandos:
+> ```bash
+> OCI_RUNTIME=podman just up
+> ```
 
 ---
 
@@ -202,7 +215,8 @@ Apos iniciar o servidor com `bun run dev`, acesse:
 | Documentacao API | [Swagger/OpenAPI](https://swagger.io/) + [Scalar](https://scalar.com/) |
 | GraphQL | Apollo Server |
 | Autenticacao | Keycloak + OAuth2/OIDC |
-| Containerizacao | Docker / Podman |
+| Containerizacao | Docker (recomendado) / Podman |
+| Task Runner | [just](https://github.com/casey/just) |
 | Linting/Formatacao | [Biome](https://biomejs.dev/) |
 | Testes | [Vitest](https://vitest.dev/) |
 

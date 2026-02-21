@@ -1,14 +1,18 @@
-x-podman:
+x-podman: # para funcionar com o podman
   in_pod: false
 
 services:
   management-service:
+    userns_mode: keep-id:uid=1000,gid=1000 # para funcionar com o podman
+
     container_name: ladesa-management-service
     user: root
+
     build:
       context: ../src
       dockerfile: ../.docker/Containerfile
       target: devcontainer
+
     command:
       - sleep
       - infinity
@@ -20,9 +24,8 @@ services:
     ports:
       - "3701:3701"
       - "9229:9229"
-      - "6499:6499"
+
     working_dir: /ladesa/management-service/src/app
-    userns_mode: keep-id:uid=1000,gid=1000
     volumes:
       - ..:/ladesa/management-service:z
       - management-service-uploaded-files:/container/uploaded
@@ -47,11 +50,6 @@ services:
     environment:
       POSTGRESQL_DATABASE: main
       POSTGRESQL_PASSWORD: 7f22682363b549a389e03b7fe512488b
-#    healthcheck:
-#      test: ["CMD-SHELL", "pg_isready -U postgres"]
-#      interval: 5s
-#      timeout: 5s
-#      retries: 5
 
   rabbitmq:
     container_name: ladesa-rabbitmq

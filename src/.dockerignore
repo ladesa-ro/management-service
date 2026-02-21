@@ -73,6 +73,3 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 **/volumes
 
 **/.pnpm-store
-
-# Build cache
-.docker/.build-hash
