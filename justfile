@@ -46,8 +46,6 @@ rebuild:
 
 # Prepara volumes e copia .example
 setup:
-    mkdir -p volumes/history
-    touch volumes/history/{root,happy}-{bash,zsh}
     find . -maxdepth 1 -type f -name "*.example" -exec sh -c \
         'cp -n "$1" "$(echo $1 | sed s/.example//)"' _ {} \;
 

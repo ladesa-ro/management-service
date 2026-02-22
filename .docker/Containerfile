@@ -74,9 +74,42 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     apt-get update -y && apt-get install -y git vim zsh && \
     rm -rf /var/lib/apt/lists/*
 
+# Diretório de histórico compartilhado via volume gerenciado
+RUN mkdir -p /container/shell-history/root /container/shell-history/happy \
+    && chown -R 1000:1000 /container/shell-history/happy \
+    && chmod 700 /container/shell-history/root /container/shell-history/happy
+
+# .profile do root com HISTFILE
+RUN printf '# Shell history via managed Docker volume\n\
+_histdir="/container/shell-history/$(id -un)"\n\
+if [ -n "$ZSH_VERSION" ]; then\n\
+    HISTFILE="$_histdir/.zsh_history"\n\
+elif [ -n "$BASH_VERSION" ]; then\n\
+    HISTFILE="$_histdir/.bash_history"\n\
+fi\n\
+export HISTFILE\n\
+unset _histdir\n' > /root/.profile
+
+# .zshrc e .bashrc do root que sourceiam o .profile
+RUN printf '[ -f ~/.profile ] && . ~/.profile\n' > /root/.zshrc \
+    && printf '[ -f ~/.profile ] && . ~/.profile\n' >> /root/.bashrc
+
 USER 1000:1000
 RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 RUN sed -i 's/^ZSH_THEME=.*/ZSH_THEME="josh"/' ~/.zshrc
+
+# .profile do happy (mesmo conteúdo do root)
+USER root
+RUN cp /root/.profile /home/happy/.profile \
+    && chown 1000:1000 /home/happy/.profile
+
+USER 1000:1000
+
+# Sourcear .profile no .zshrc do happy (antes do oh-my-zsh que já respeita HISTFILE se setado)
+RUN sed -i '1i\[ -f ~/.profile ] && . ~/.profile' ~/.zshrc
+
+# Sourcear .profile no .bashrc do happy (para quando bash for usado interativamente)
+RUN printf '[ -f ~/.profile ] && . ~/.profile\n' >> /home/happy/.bashrc
 
 # ==========================================
 # INSTALAÇÃO DE DEPENDÊNCIAS DE PRODUÇÃO

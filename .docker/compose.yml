@@ -29,10 +29,8 @@ services:
     volumes:
       - ..:/ladesa/management-service:z
       - management-service-uploaded-files:/container/uploaded
-      - ../volumes/history/root-zsh:/root/.zsh_history:z
-      - ../volumes/history/root-bash:/root/.bash_history:z
-      - ../volumes/history/happy-zsh:/home/happy/.zsh_history:z
-      - ../volumes/history/happy-bash:/home/happy/.bash_history:z
+      - management-service-shell-history:/container/shell-history
+
     environment:
       - STORAGE_PATH=/container/uploaded
     env_file:
@@ -74,3 +72,4 @@ networks:
 volumes:
   management-service-db-data:
   management-service-uploaded-files:
+  management-service-shell-history:
