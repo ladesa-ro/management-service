@@ -1,7 +1,7 @@
 import type express from "express";
 
 export const detectHostAndProtocolFromRequest = (req: express.Request) => {
-  let protocol = "http";
+  let protocol: string;
 
   const cfVisitor = req.get("cf-visitor");
 
@@ -13,9 +13,13 @@ export const detectHostAndProtocolFromRequest = (req: express.Request) => {
       protocol = "https";
     }
   } else {
-    const isCloudflare = req.get("cf-connecting-ip") || req.get("cf-ray");
+    const isCloudflare = Boolean(req.get("cf-connecting-ip") || req.get("cf-ray"));
 
-    protocol = isCloudflare ? "https" : req.get("x-forwarded-proto") || req.protocol || "http";
+    if(isCloudflare) {
+      protocol = "https";
+    } else {
+      protocol = req.get("x-forwarded-proto") || req.protocol || "http";
+    }
   }
 
   const host = req.get("x-forwarded-host") || req.get("host");
