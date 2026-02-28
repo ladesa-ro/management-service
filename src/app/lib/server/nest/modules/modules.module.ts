@@ -37,6 +37,7 @@ import { IntervaloDeTempoModule } from "@/modules/horarios/intervalo-de-tempo/in
 import { CidadeModule } from "@/modules/localidades/cidade/cidade.module";
 import { EnderecoModule } from "@/modules/localidades/endereco/endereco.module";
 import { EstadoModule } from "@/modules/localidades/estado/estado.module";
+import { EmpresaModule } from "@/modules/estagio/empresa/empresa.module";
 
 @Module({
   imports: [
@@ -75,6 +76,7 @@ import { EstadoModule } from "@/modules/localidades/estado/estado.module";
     DiaCalendarioModule,
     EnderecoModule,
     EstadoModule,
+      EmpresaModule,
     TurmaDisponibilidadeModule,
     HorarioGeradoAulaModule,
     DiarioProfessorModule,
