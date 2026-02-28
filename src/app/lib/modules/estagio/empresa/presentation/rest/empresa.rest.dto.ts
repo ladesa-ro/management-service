@@ -50,22 +50,18 @@ export class EmpresaFindOneInputRestDto extends UuidParamRestDto {}
 export class EmpresaListInputRestDto extends PaginationInputRestDto {
   @ApiPropertyOptional({
     type: "string",
-    description: "Filtro por CNPJ (array)",
-    isArray: true,
+    description: "Filtro por CNPJ (string ou array)",
   })
   @IsOptional()
-  @IsString({ each: true })
-  "filter.cnpj"?: string[];
+  "filter.cnpj"?: string | string[];
 
   @ApiPropertyOptional({
     type: "string",
     format: "uuid",
-    description: "Filtro por ID de endereço (array)",
-    isArray: true,
+    description: "Filtro por ID de endereço (string ou array)",
   })
   @IsOptional()
-  @IsUUID(undefined, { each: true })
-  "filter.idEnderecoFk"?: string[];
+  "filter.idEnderecoFk"?: string | string[];
 }
 
 @ApiSchema({ name: "EmpresaFindOneOutputDto" })

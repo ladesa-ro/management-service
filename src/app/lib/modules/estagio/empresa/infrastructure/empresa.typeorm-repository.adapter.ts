@@ -58,6 +58,28 @@ export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepositoryPort {
       );
     }
 
+    if (dto?.filterCnpj && Array.isArray(dto.filterCnpj) && dto.filterCnpj.length > 0) {
+      const validCnpjs = dto.filterCnpj.filter((cnpj) => cnpj && cnpj.trim());
+      if (validCnpjs.length > 0) {
+        query.andWhere("empresa.cnpj IN (:...cnpjs)", {
+          cnpjs: validCnpjs,
+        });
+      }
+    }
+
+    if (
+      dto?.filterIdEnderecoFk &&
+      Array.isArray(dto.filterIdEnderecoFk) &&
+      dto.filterIdEnderecoFk.length > 0
+    ) {
+      const validIdEnderecos = dto.filterIdEnderecoFk.filter((id) => id && id.trim());
+      if (validIdEnderecos.length > 0) {
+        query.andWhere("empresa.idEnderecoFk IN (:...idEnderecos)", {
+          idEnderecos: validIdEnderecos,
+        });
+      }
+    }
+
     const [data, total] = await query
       .skip(skip)
       .take(limit)

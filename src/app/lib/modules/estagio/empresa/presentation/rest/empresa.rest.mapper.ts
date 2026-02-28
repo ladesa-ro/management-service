@@ -48,10 +48,26 @@ export class EmpresaRestMapper {
   }
 
   static toListInput(dto: EmpresaListInputRestDto): EmpresaListInputDto {
+    const normalizeCnpj = (value: string | string[] | undefined): string[] | undefined => {
+      if (!value) return undefined;
+      const arr = Array.isArray(value) ? value : [value];
+      const filtered = arr.filter((c) => c && c.trim());
+      return filtered.length > 0 ? filtered : undefined;
+    };
+
+    const normalizeIdEndereco = (value: string | string[] | undefined): string[] | undefined => {
+      if (!value) return undefined;
+      const arr = Array.isArray(value) ? value : [value];
+      const filtered = arr.filter((id) => id && id.trim());
+      return filtered.length > 0 ? filtered : undefined;
+    };
+
     return {
       page: dto.page,
       limit: dto.limit,
       search: dto.search,
+      filterCnpj: normalizeCnpj(dto["filter.cnpj"]),
+      filterIdEnderecoFk: normalizeIdEndereco(dto["filter.idEnderecoFk"]),
     };
   }
 
