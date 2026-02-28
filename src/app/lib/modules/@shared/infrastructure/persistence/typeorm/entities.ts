@@ -36,3 +36,4 @@ export { IntervaloDeTempoEntity } from "@/modules/horarios/intervalo-de-tempo/in
 export { CidadeEntity } from "@/modules/localidades/cidade/infrastructure/persistence/typeorm/cidade.entity";
 export { EnderecoEntity } from "@/modules/localidades/endereco/infrastructure/persistence/typeorm/endereco.entity";
 export { EstadoEntity } from "@/modules/localidades/estado/infrastructure/persistence/typeorm/estado.entity";
+export { EmpresaTypeormEntity } from "@/modules/estagio/empresa/infrastructure/persistence/empresa.typeorm.entity";
