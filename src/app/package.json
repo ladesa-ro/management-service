@@ -29,7 +29,7 @@
     "graphql-list-fields": "^2.0.4",
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.3",
-    "jwks-rsa": "^3.2.2",
+    "jwks-rsa": "^4.0.0",
     "lodash": "^4.17.23",
     "lru-cache": "^11.2.6",
     "nestjs-paginate": "^12.8.3",
