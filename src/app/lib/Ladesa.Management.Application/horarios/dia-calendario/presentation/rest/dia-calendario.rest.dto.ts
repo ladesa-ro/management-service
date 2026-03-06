@@ -15,7 +15,7 @@ import {
 import {
   TIPO_DIA_CALENDARIO_VALUES,
   type TipoDiaCalendario,
-} from "@/Ladesa.Management.Application/horarios/dia-calendario/domain/dia-calendario.types";
+} from "@/Ladesa.Management.Domain/Entities/DiaCalendario";
 import {
   commonProperties,
   RegisterModel,

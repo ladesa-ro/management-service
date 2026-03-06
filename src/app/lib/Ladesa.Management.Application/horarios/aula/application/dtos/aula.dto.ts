@@ -6,7 +6,6 @@ import {
   PaginationInputDto,
   PaginationResultDto,
 } from "@/Ladesa.Management.Application/@shared/application/dtos";
-import type { ScalarDate } from "@/Ladesa.Management.Application/@shared/domain/scalars.types";
 import {
   AmbienteFindOneOutputDto,
   AmbienteInputRefDto,
@@ -19,6 +18,7 @@ import {
   IntervaloDeTempoFindOneOutputDto,
   IntervaloDeTempoInputRefDto,
 } from "@/Ladesa.Management.Application/horarios/intervalo-de-tempo";
+import type { ScalarDate } from "@/Ladesa.Management.Domain/Abstractions/Scalars";
 
 // ============================================================================
 // FindOne Input/Output

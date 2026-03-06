@@ -1,4 +1,4 @@
-import type { IdUuid } from "@/Ladesa.Management.Application/@shared/domain/scalars.types";
+import type { IdUuid } from "@/Ladesa.Management.Domain/Abstractions/Scalars";
 import { DatedOutputDto } from "./dated-output.dto";
 
 /**

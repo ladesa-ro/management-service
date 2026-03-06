@@ -1,2 +1,2 @@
-export * from "./diario-preferencia-agrupamento.domain";
-export * from "./diario-preferencia-agrupamento.types";
+export * from "@/Ladesa.Management.Domain/Entities/DiarioPreferenciaAgrupamento";
+export * from "@/Ladesa.Management.Domain/Entities/DiarioPreferenciaAgrupamento";

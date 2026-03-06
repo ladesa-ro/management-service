@@ -11,11 +11,11 @@ import type {
   EmpresaUpdateInputDto,
 } from "@/Ladesa.Management.Application/estagio/empresa/application/dtos";
 import type { IEmpresaRepositoryPort } from "@/Ladesa.Management.Application/estagio/empresa/application/ports";
-import { Empresa } from "@/Ladesa.Management.Application/estagio/empresa/domain/empresa.domain";
 import {
   createEmpresaRepository,
   EmpresaMapper,
 } from "@/Ladesa.Management.Application/estagio/empresa/infrastructure/persistence";
+import { Empresa } from "@/Ladesa.Management.Domain/Entities/Empresa";
 import { createEnderecoRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/EnderecoRepository";
 import { APP_DATA_SOURCE_TOKEN } from "@/Ladesa.Management.Infrastructure.Database/typeorm";
 

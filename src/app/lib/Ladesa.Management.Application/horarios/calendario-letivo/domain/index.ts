@@ -1,2 +1,2 @@
-export * from "./calendario-letivo.domain";
-export * from "./calendario-letivo.types";
+export * from "@/Ladesa.Management.Domain/Entities/CalendarioLetivo";
+export * from "@/Ladesa.Management.Domain/Entities/CalendarioLetivo";

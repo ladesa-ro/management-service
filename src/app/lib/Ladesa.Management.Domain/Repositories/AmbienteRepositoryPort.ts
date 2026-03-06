@@ -1,6 +1,9 @@
 import type { IBaseCrudRepositoryPort } from "@/Ladesa.Management.Application/@shared";
 import type { IAmbiente } from "@/Ladesa.Management.Application/ambientes/ambiente";
-import type { AmbienteFindOneOutputDto, AmbienteListOutputDto } from "@/Ladesa.Management.Application/ambientes/ambiente/application/dtos";
+import type {
+  AmbienteFindOneOutputDto,
+  AmbienteListOutputDto,
+} from "@/Ladesa.Management.Application/ambientes/ambiente/application/dtos";
 
 /**
  * Token de injeção para o repositório de Ambiente

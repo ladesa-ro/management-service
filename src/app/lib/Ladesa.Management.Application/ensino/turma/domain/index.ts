@@ -1,2 +1,2 @@
-export * from "./turma.domain";
-export * from "./turma.types";
+export * from "@/Ladesa.Management.Domain/Entities/Turma";
+export * from "@/Ladesa.Management.Domain/Entities/Turma";

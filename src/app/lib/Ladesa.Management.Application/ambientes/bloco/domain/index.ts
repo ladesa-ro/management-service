@@ -1,2 +1,2 @@
-export * from "./bloco.domain";
-export * from "./bloco.types";
+export * from "@/Ladesa.Management.Domain/Entities/Bloco";
+export * from "@/Ladesa.Management.Domain/Entities/Bloco";

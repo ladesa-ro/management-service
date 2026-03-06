@@ -6,7 +6,7 @@ import {
   PrimaryGeneratedColumn,
   type Relation,
 } from "typeorm";
-import { type TipoDiaCalendario } from "@/Ladesa.Management.Application/horarios/dia-calendario/domain/dia-calendario.types";
+import { type TipoDiaCalendario } from "@/Ladesa.Management.Domain/Entities/DiaCalendario";
 import { CalendarioLetivoEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/CalendarioLetivoEntity";
 
 @Entity("dia_calendario")

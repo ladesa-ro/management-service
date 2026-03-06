@@ -1,7 +1,10 @@
 import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/contexto-acesso";
 import type { IBaseCrudRepositoryPort } from "@/Ladesa.Management.Application/@shared";
 import type { IDiaCalendario } from "@/Ladesa.Management.Application/horarios/dia-calendario";
-import type { DiaCalendarioFindOneOutputDto, DiaCalendarioListOutputDto } from "@/Ladesa.Management.Application/horarios/dia-calendario/application/dtos";
+import type {
+  DiaCalendarioFindOneOutputDto,
+  DiaCalendarioListOutputDto,
+} from "@/Ladesa.Management.Application/horarios/dia-calendario/application/dtos";
 
 export const DIA_CALENDARIO_REPOSITORY_PORT = Symbol("IDiaCalendarioRepositoryPort");
 

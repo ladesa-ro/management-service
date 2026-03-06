@@ -1,2 +1,2 @@
-export * from "./ambiente.domain";
-export * from "./ambiente.types";
+export * from "@/Ladesa.Management.Domain/Entities/Ambiente";
+export * from "@/Ladesa.Management.Domain/Entities/Ambiente";

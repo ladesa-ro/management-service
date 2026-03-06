@@ -1,2 +1,2 @@
-export * from "./nivel-formacao.domain";
-export * from "./nivel-formacao.types";
+export * from "@/Ladesa.Management.Domain/Entities/NivelFormacao";
+export * from "@/Ladesa.Management.Domain/Entities/NivelFormacao";

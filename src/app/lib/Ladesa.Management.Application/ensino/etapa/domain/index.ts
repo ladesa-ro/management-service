@@ -1,2 +1,2 @@
-export * from "./etapa.domain";
-export * from "./etapa.types";
+export * from "@/Ladesa.Management.Domain/Entities/Etapa";
+export * from "@/Ladesa.Management.Domain/Entities/Etapa";

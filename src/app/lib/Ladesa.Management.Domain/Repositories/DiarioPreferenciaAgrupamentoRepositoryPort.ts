@@ -2,11 +2,11 @@ import type { SelectQueryBuilder } from "typeorm";
 import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/contexto-acesso";
 import type { IBaseCrudRepositoryPort } from "@/Ladesa.Management.Application/@shared";
 import type { IDiarioPreferenciaAgrupamento } from "@/Ladesa.Management.Application/ensino/diario-preferencia-agrupamento";
-import type { DiarioPreferenciaAgrupamentoEntity } from "@/Ladesa.Management.Application/ensino/diario-preferencia-agrupamento/infrastructure/persistence/typeorm";
 import type {
   DiarioPreferenciaAgrupamentoFindOneOutputDto,
   DiarioPreferenciaAgrupamentoListOutputDto,
 } from "@/Ladesa.Management.Application/ensino/diario-preferencia-agrupamento/application/dtos";
+import type { DiarioPreferenciaAgrupamentoEntity } from "@/Ladesa.Management.Application/ensino/diario-preferencia-agrupamento/infrastructure/persistence/typeorm";
 
 /**
  * Token de injeção para o repositório de DiarioPreferenciaAgrupamento

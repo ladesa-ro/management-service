@@ -1,2 +1,2 @@
-export * from "./professor-indisponibilidade.domain";
-export * from "./professor-indisponibilidade.types";
+export * from "@/Ladesa.Management.Domain/Entities/ProfessorIndisponibilidade";
+export * from "@/Ladesa.Management.Domain/Entities/ProfessorIndisponibilidade";

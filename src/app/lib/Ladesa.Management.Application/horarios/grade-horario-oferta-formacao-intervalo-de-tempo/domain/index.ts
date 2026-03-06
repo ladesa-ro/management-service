@@ -1,2 +1,2 @@
-export * from "./grade-horario-oferta-formacao-intervalo-de-tempo.domain";
-export * from "./grade-horario-oferta-formacao-intervalo-de-tempo.types";
+export * from "@/Ladesa.Management.Domain/Entities/GradeHorarioOfertaFormacaoIntervaloDeTempo";
+export * from "@/Ladesa.Management.Domain/Entities/GradeHorarioOfertaFormacaoIntervaloDeTempo";

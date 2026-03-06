@@ -1,0 +1,90 @@
+import type { IEntityBase } from "@/Ladesa.Management.Application/@shared";
+import {
+  BaseDatedEntity,
+  type ScalarDateTimeString,
+} from "@/Ladesa.Management.Application/@shared";
+import type { DisponibilidadeCreateDto } from "@/Ladesa.Management.Domain/Dtos/DisponibilidadeCreateDto";
+import type { DisponibilidadeUpdateDto } from "@/Ladesa.Management.Domain/Dtos/DisponibilidadeUpdateDto";
+
+/**
+ * Tipagem da entidade Disponibilidade
+ * Define a estrutura de dados sem comportamento
+ */
+export interface IDisponibilidade extends IEntityBase {
+  /** Data de inicio */
+  dataInicio: ScalarDateTimeString;
+
+  /** Data de termino */
+  dataFim: ScalarDateTimeString | null;
+}
+
+/**
+ * Entidade de Domínio: Disponibilidade
+ * Implementa a tipagem IDisponibilidade e adiciona regras de negócio
+ */
+export class Disponibilidade extends BaseDatedEntity implements IDisponibilidade {
+  dataInicio!: ScalarDateTimeString;
+  dataFim!: ScalarDateTimeString | null;
+
+  protected static get entityName(): string {
+    return "Disponibilidade";
+  }
+
+  // ========================================
+  // Validação
+  // ========================================
+
+  /**
+   * Cria uma nova instância válida de Disponibilidade
+   * @throws EntityValidationError se os dados forem inválidos
+   */
+  static criar(dados: DisponibilidadeCreateDto): Disponibilidade {
+    const instance = new Disponibilidade();
+    instance.dataInicio = dados.dataInicio;
+    instance.dataFim = dados.dataFim ?? null;
+    instance.initDates();
+    instance.validar();
+
+    return instance;
+  }
+
+  // ========================================
+  // Factory Methods
+  // ========================================
+
+  /**
+   * Reconstrói uma instância a partir de dados existentes (ex: do banco)
+   */
+  static fromData(dados: Record<string, any>): Disponibilidade {
+    const instance = new Disponibilidade();
+    Object.assign(instance, dados);
+    return instance;
+  }
+
+  validar(): void {
+    const { result, rules } = Disponibilidade.createValidation();
+    rules.required(this.dataInicio, "dataInicio");
+    Disponibilidade.throwIfInvalid(result);
+  }
+
+  // ========================================
+  // Métodos de Domínio
+  // ========================================
+
+  /**
+   * Atualiza os dados da disponibilidade
+   * @throws EntityValidationError se os dados forem inválidos
+   */
+  atualizar(dados: DisponibilidadeUpdateDto): void {
+    if (dados.dataInicio !== undefined) {
+      this.dataInicio = dados.dataInicio;
+    }
+
+    if (dados.dataFim !== undefined) {
+      this.dataFim = dados.dataFim;
+    }
+
+    this.touchUpdated();
+    this.validar();
+  }
+}

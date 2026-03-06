@@ -1,2 +1,2 @@
-export * from "./cidade.domain";
-export * from "./cidade.types";
+export * from "@/Ladesa.Management.Domain/Entities/Cidade";
+export * from "@/Ladesa.Management.Domain/Entities/Cidade";

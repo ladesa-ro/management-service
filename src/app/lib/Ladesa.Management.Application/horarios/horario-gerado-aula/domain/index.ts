@@ -1,2 +1,2 @@
-export * from "./horario-gerado-aula.domain";
-export * from "./horario-gerado-aula.types";
+export * from "@/Ladesa.Management.Domain/Entities/HorarioGeradoAula";
+export * from "@/Ladesa.Management.Domain/Entities/HorarioGeradoAula";

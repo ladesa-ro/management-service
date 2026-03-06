@@ -1,6 +1,6 @@
 import type { PartialEntity } from "@/Ladesa.Management.Application/@shared";
-import type { Imagem } from "@/Ladesa.Management.Application/armazenamento/imagem/domain/imagem.domain";
-import type { ImagemArquivo } from "@/Ladesa.Management.Application/armazenamento/imagem-arquivo/domain/imagem-arquivo.domain";
+import type { Imagem } from "@/Ladesa.Management.Domain/Entities/Imagem";
+import type { ImagemArquivo } from "@/Ladesa.Management.Domain/Entities/ImagemArquivo";
 
 /**
  * Token de injecao para o repositorio de Imagem

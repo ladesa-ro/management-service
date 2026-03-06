@@ -3,11 +3,11 @@ import type {
   AccessContext,
   IAuthzPayload,
 } from "@/Ladesa.Management.Application/@seguranca/contexto-acesso";
+import type { PersistInput } from "@/Ladesa.Management.Domain/Abstractions/Repositories/IPersistRepositoryPort";
 import { ResourceNotFoundError } from "../errors";
 import { getEntityImagemStreamableFile, saveEntityImagemField } from "../helpers";
 import type { IAuthorizationServicePort } from "../ports/in";
 import type { IBaseCrudRepositoryPort } from "../ports/out";
-import type { PersistInput } from "@/Ladesa.Management.Domain/Abstractions/Repositories/IPersistRepositoryPort";
 
 /**
  * Classe base abstrata para services CRUD.

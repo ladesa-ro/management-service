@@ -1,2 +1,2 @@
-export * from "./modalidade.domain";
-export * from "./modalidade.types";
+export * from "@/Ladesa.Management.Domain/Entities/Modalidade";
+export * from "@/Ladesa.Management.Domain/Entities/Modalidade";

@@ -2,11 +2,11 @@ import type { SelectQueryBuilder } from "typeorm";
 import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/contexto-acesso";
 import type { IBaseCrudRepositoryPort } from "@/Ladesa.Management.Application/@shared";
 import type { ITurmaDisponibilidade } from "@/Ladesa.Management.Application/ensino/turma-disponibilidade";
-import type { TurmaDisponibilidadeEntity } from "@/Ladesa.Management.Application/ensino/turma-disponibilidade/infrastructure/persistence/typeorm";
 import type {
   TurmaDisponibilidadeFindOneOutputDto,
   TurmaDisponibilidadeListOutputDto,
 } from "@/Ladesa.Management.Application/ensino/turma-disponibilidade/application/dtos";
+import type { TurmaDisponibilidadeEntity } from "@/Ladesa.Management.Application/ensino/turma-disponibilidade/infrastructure/persistence/typeorm";
 
 /**
  * Token de injeção para o repositório de TurmaDisponibilidade

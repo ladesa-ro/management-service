@@ -6,8 +6,8 @@ import type {
   IImagemRepositoryPort,
   IImagemTransactionPort,
 } from "@/Ladesa.Management.Application/armazenamento/imagem/application/ports";
-import type { Imagem } from "@/Ladesa.Management.Application/armazenamento/imagem/domain/imagem.domain";
-import type { ImagemArquivo } from "@/Ladesa.Management.Application/armazenamento/imagem-arquivo/domain/imagem-arquivo.domain";
+import type { Imagem } from "@/Ladesa.Management.Domain/Entities/Imagem";
+import type { ImagemArquivo } from "@/Ladesa.Management.Domain/Entities/ImagemArquivo";
 import { createImagemArquivoRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/ImagemArquivoRepository";
 import { createImagemRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/ImagemRepository";
 import { APP_DATA_SOURCE_TOKEN } from "@/Ladesa.Management.Infrastructure.Database/typeorm";

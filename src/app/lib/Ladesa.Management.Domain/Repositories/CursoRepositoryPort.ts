@@ -1,6 +1,9 @@
 import type { IBaseCrudRepositoryPort } from "@/Ladesa.Management.Application/@shared";
 import type { ICurso } from "@/Ladesa.Management.Application/ensino/curso";
-import type { CursoFindOneOutputDto, CursoListOutputDto } from "@/Ladesa.Management.Application/ensino/curso/application/dtos";
+import type {
+  CursoFindOneOutputDto,
+  CursoListOutputDto,
+} from "@/Ladesa.Management.Application/ensino/curso/application/dtos";
 
 /**
  * Token de injeção para o repositório de Curso

@@ -1,7 +1,10 @@
 import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/contexto-acesso";
 import type { IBaseCrudRepositoryPort } from "@/Ladesa.Management.Application/@shared";
 import type { IEtapa } from "@/Ladesa.Management.Application/ensino/etapa";
-import type { EtapaFindOneOutputDto, EtapaListOutputDto } from "@/Ladesa.Management.Application/ensino/etapa/application/dtos";
+import type {
+  EtapaFindOneOutputDto,
+  EtapaListOutputDto,
+} from "@/Ladesa.Management.Application/ensino/etapa/application/dtos";
 
 /**
  * Token de injeção para o repositório de Etapa

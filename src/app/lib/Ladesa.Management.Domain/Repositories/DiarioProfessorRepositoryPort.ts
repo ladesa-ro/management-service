@@ -1,7 +1,10 @@
 import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/contexto-acesso";
 import type { IBaseCrudRepositoryPort } from "@/Ladesa.Management.Application/@shared";
 import type { IDiarioProfessor } from "@/Ladesa.Management.Application/ensino/diario-professor";
-import type { DiarioProfessorFindOneOutputDto, DiarioProfessorListOutputDto } from "@/Ladesa.Management.Application/ensino/diario-professor/application/dtos";
+import type {
+  DiarioProfessorFindOneOutputDto,
+  DiarioProfessorListOutputDto,
+} from "@/Ladesa.Management.Application/ensino/diario-professor/application/dtos";
 
 export const DIARIO_PROFESSOR_REPOSITORY_PORT = Symbol("IDiarioProfessorRepositoryPort");
 

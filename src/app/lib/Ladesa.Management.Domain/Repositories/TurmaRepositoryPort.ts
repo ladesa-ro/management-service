@@ -1,6 +1,9 @@
 import type { IBaseCrudRepositoryPort } from "@/Ladesa.Management.Application/@shared";
 import type { ITurma } from "@/Ladesa.Management.Application/ensino/turma";
-import type { TurmaFindOneOutputDto, TurmaListOutputDto } from "@/Ladesa.Management.Application/ensino/turma/application/dtos";
+import type {
+  TurmaFindOneOutputDto,
+  TurmaListOutputDto,
+} from "@/Ladesa.Management.Application/ensino/turma/application/dtos";
 
 /**
  * Token de injeção para o repositório de Turma

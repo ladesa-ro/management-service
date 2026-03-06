@@ -1,2 +1,2 @@
-export * from "./evento.domain";
-export * from "./evento.types";
+export * from "@/Ladesa.Management.Domain/Entities/Evento";
+export * from "@/Ladesa.Management.Domain/Entities/Evento";

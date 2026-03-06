@@ -2,11 +2,11 @@ import type { SelectQueryBuilder } from "typeorm";
 import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/contexto-acesso";
 import type { IBaseCrudRepositoryPort } from "@/Ladesa.Management.Application/@shared";
 import type { IGradeHorarioOfertaFormacaoIntervaloDeTempo } from "@/Ladesa.Management.Application/horarios/grade-horario-oferta-formacao-intervalo-de-tempo";
-import type { GradeHorarioOfertaFormacaoIntervaloDeTempoEntity } from "@/Ladesa.Management.Application/horarios/grade-horario-oferta-formacao-intervalo-de-tempo/infrastructure/persistence/typeorm";
 import type {
   GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputDto,
   GradeHorarioOfertaFormacaoIntervaloDeTempoListOutputDto,
 } from "@/Ladesa.Management.Application/horarios/grade-horario-oferta-formacao-intervalo-de-tempo/application/dtos";
+import type { GradeHorarioOfertaFormacaoIntervaloDeTempoEntity } from "@/Ladesa.Management.Application/horarios/grade-horario-oferta-formacao-intervalo-de-tempo/infrastructure/persistence/typeorm";
 
 /**
  * Token de injeção para o repositório de GradeHorarioOfertaFormacaoIntervaloDeTempo

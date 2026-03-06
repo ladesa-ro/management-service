@@ -1,2 +1,2 @@
-export * from "./disponibilidade.domain";
-export * from "./disponibilidade.types";
+export * from "@/Ladesa.Management.Domain/Entities/Disponibilidade";
+export * from "@/Ladesa.Management.Domain/Entities/Disponibilidade";

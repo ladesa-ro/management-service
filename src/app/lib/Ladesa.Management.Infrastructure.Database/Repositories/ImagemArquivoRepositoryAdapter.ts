@@ -2,7 +2,7 @@ import { Inject, Injectable } from "@nestjs/common";
 import { DataSource } from "typeorm";
 import type { PartialEntity } from "@/Ladesa.Management.Application/@shared";
 import type { IImagemArquivoRepositoryPort } from "@/Ladesa.Management.Application/armazenamento/imagem/application/ports";
-import type { ImagemArquivo } from "@/Ladesa.Management.Application/armazenamento/imagem-arquivo/domain/imagem-arquivo.domain";
+import type { ImagemArquivo } from "@/Ladesa.Management.Domain/Entities/ImagemArquivo";
 import { createImagemArquivoRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/ImagemArquivoRepository";
 import { APP_DATA_SOURCE_TOKEN } from "@/Ladesa.Management.Infrastructure.Database/typeorm";
 

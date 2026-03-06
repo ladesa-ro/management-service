@@ -1,2 +1,2 @@
-export * from "./aula.domain";
-export * from "./aula.types";
+export * from "@/Ladesa.Management.Domain/Entities/Aula";
+export * from "@/Ladesa.Management.Domain/Entities/Aula";

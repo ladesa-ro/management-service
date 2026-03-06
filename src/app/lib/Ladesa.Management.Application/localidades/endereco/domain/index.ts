@@ -1,2 +1,2 @@
-export * from "./endereco.domain";
-export * from "./endereco.types";
+export * from "@/Ladesa.Management.Domain/Entities/Endereco";
+export * from "@/Ladesa.Management.Domain/Entities/Endereco";

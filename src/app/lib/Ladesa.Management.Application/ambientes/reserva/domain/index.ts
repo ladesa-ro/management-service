@@ -1,2 +1,2 @@
-export * from "./reserva.domain";
-export * from "./reserva.types";
+export * from "@/Ladesa.Management.Domain/Entities/Reserva";
+export * from "@/Ladesa.Management.Domain/Entities/Reserva";

@@ -1,2 +1,2 @@
-export * from "./imagem-arquivo.domain";
-export * from "./imagem-arquivo.types";
+export * from "@/Ladesa.Management.Domain/Entities/ImagemArquivo";
+export * from "@/Ladesa.Management.Domain/Entities/ImagemArquivo";

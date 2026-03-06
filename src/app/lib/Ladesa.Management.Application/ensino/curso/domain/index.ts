@@ -1,2 +1,2 @@
-export * from "./curso.domain";
-export * from "./curso.types";
+export * from "@/Ladesa.Management.Domain/Entities/Curso";
+export * from "@/Ladesa.Management.Domain/Entities/Curso";

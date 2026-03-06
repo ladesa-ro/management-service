@@ -6,7 +6,7 @@ import {
   PaginationInputDto,
   PaginationResultDto,
 } from "@/Ladesa.Management.Application/@shared";
-import type { IdUuid } from "@/Ladesa.Management.Application/@shared/domain/scalars.types";
+import type { IdUuid } from "@/Ladesa.Management.Domain/Abstractions/Scalars";
 
 // ============================================================================
 // FindOne Input/Output

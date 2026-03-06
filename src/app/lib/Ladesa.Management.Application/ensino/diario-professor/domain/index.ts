@@ -1,2 +1,2 @@
-export * from "./diario-professor.domain";
-export * from "./diario-professor.types";
+export * from "@/Ladesa.Management.Domain/Entities/DiarioProfessor";
+export * from "@/Ladesa.Management.Domain/Entities/DiarioProfessor";

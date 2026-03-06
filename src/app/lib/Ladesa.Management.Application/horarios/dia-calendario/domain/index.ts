@@ -1,2 +1,2 @@
-export * from "./dia-calendario.domain";
-export * from "./dia-calendario.types";
+export * from "@/Ladesa.Management.Domain/Entities/DiaCalendario";
+export * from "@/Ladesa.Management.Domain/Entities/DiaCalendario";
