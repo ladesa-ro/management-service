@@ -187,7 +187,7 @@ export class EnvironmentConfigAdapter implements IConfigPort {
   }
 
   getTypeOrmPathMigrations(): string {
-    return join(this.getTypeOrmBasePath(), "migrations");
+    return join(this.getRootSrc(), "../Ladesa.Management.Infrastructure.Database/TypeOrmNew/Migrations");
   }
 
   getTypeOrmPathSubscribers(): string {
