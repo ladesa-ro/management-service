@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { AppConfigModule } from "@/modules/@shared/infrastructure/config";
+import { AppConfigModule } from "@/infrastructure.config";
 import { AutenticacaoModule } from "@/modules/acesso/autenticacao/autenticacao.module";
 import { PerfilModule } from "@/modules/acesso/perfil/perfil.module";
 import { UsuarioModule } from "@/modules/acesso/usuario/usuario.module";

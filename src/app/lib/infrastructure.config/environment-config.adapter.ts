@@ -8,7 +8,7 @@ import type {
   IOidcClientCredentials,
 } from "@/modules/@shared/application/ports/out/config";
 import * as entities from "@/infrastructure.database/typeorm/entities";
-import pkg from "../../../../../package.json";
+import pkg from "../../package.json";
 
 /**
  * Adapter de configuração baseado em variáveis de ambiente
@@ -26,7 +26,7 @@ export class EnvironmentConfigAdapter implements IConfigPort {
   // ========================================
 
   getRootSrc(): string {
-    return join(__dirname, "../../..");
+    return join(__dirname, "../modules");
   }
 
   getRuntimeVersion(): string {
