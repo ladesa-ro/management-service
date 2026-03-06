@@ -7,7 +7,7 @@ import type {
   IKeycloakCredentials,
   IOidcClientCredentials,
 } from "@/Ladesa.Management.Application/@shared/application/ports/out/config";
-import * as entities from "@/Ladesa.Management.Infrastructure.Database/typeorm/entities";
+import * as entities from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities";
 import pkg from "../../package.json";
 
 /**

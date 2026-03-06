@@ -1,2 +1,2 @@
-export * from "@/Ladesa.Management.Infrastructure.Database/Repositories/estagio/empresa/EmpresaRepositoryAdapter";
+export * from "@/Ladesa.Management.Infrastructure.Database/Repositories/EmpresaRepositoryAdapter";
 export * from "./persistence";

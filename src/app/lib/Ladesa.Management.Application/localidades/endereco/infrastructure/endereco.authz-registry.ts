@@ -1,5 +1,5 @@
 import { createAuthzRegistryProvider } from "@/Ladesa.Management.Application/@seguranca/contexto-acesso";
-import { createEnderecoRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/localidades/endereco/endereco.repository";
+import { createEnderecoRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/EnderecoRepository";
 
 export const EnderecoAuthzRegistrySetup = createAuthzRegistryProvider(
   "endereco",

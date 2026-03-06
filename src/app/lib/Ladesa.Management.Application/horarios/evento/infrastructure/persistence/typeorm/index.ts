@@ -1,3 +1,3 @@
-export * from "@/Ladesa.Management.Infrastructure.Database/Repositories/horarios/evento/EventoRepositoryAdapter";
-export * from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/horarios/evento/evento.repository";
-export * from "./evento.entity";
+export * from "@/Ladesa.Management.Infrastructure.Database/Repositories/EventoRepositoryAdapter";
+export * from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/EventoEntity";
+export * from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/EventoRepository";

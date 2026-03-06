@@ -1,3 +1,3 @@
-export * from "@/Ladesa.Management.Infrastructure.Database/Repositories/ensino/professor-indisponibilidade/ProfessorIndisponibilidadeRepositoryAdapter";
-export * from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/ensino/professor-indisponibilidade/professor-indisponibilidade.repository";
-export * from "./professor-indisponibilidade.entity";
+export * from "@/Ladesa.Management.Infrastructure.Database/Repositories/ProfessorIndisponibilidadeRepositoryAdapter";
+export * from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/ProfessorIndisponibilidadeEntity";
+export * from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/ProfessorIndisponibilidadeRepository";

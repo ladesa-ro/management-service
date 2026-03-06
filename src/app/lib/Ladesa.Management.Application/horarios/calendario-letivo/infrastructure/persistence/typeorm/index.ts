@@ -1,3 +1,3 @@
-export * from "@/Ladesa.Management.Infrastructure.Database/Repositories/horarios/calendario-letivo/CalendarioLetivoRepositoryAdapter";
-export * from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/horarios/calendario-letivo/calendario-letivo.repository";
-export * from "./calendario-letivo.entity";
+export * from "@/Ladesa.Management.Infrastructure.Database/Repositories/CalendarioLetivoRepositoryAdapter";
+export * from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/CalendarioLetivoEntity";
+export * from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/CalendarioLetivoRepository";

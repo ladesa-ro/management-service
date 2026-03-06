@@ -1,3 +1,3 @@
-export * from "@/Ladesa.Management.Infrastructure.Database/Repositories/localidades/estado/EstadoRepositoryAdapter";
-export * from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/localidades/estado/estado.repository";
-export * from "./estado.entity";
+export * from "@/Ladesa.Management.Infrastructure.Database/Repositories/EstadoRepositoryAdapter";
+export * from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/EstadoEntity";
+export * from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/EstadoRepository";

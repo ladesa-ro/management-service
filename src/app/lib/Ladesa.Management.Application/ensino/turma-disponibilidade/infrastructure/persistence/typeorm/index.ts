@@ -1,3 +1,3 @@
-export * from "@/Ladesa.Management.Infrastructure.Database/Repositories/ensino/turma-disponibilidade/TurmaDisponibilidadeRepositoryAdapter";
-export * from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/ensino/turma-disponibilidade/turma-disponibilidade.repository";
-export * from "./turma-disponibilidade.entity";
+export * from "@/Ladesa.Management.Infrastructure.Database/Repositories/TurmaDisponibilidadeRepositoryAdapter";
+export * from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/TurmaDisponibilidadeEntity";
+export * from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/TurmaDisponibilidadeRepository";

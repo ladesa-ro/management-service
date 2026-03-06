@@ -1,3 +1,3 @@
-export * from "@/Ladesa.Management.Infrastructure.Database/Repositories/ambientes/ambiente/AmbienteRepositoryAdapter";
-export * from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/ambientes/ambiente/ambiente.repository";
-export * from "./ambiente.entity";
+export * from "@/Ladesa.Management.Infrastructure.Database/Repositories/AmbienteRepositoryAdapter";
+export * from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/AmbienteEntity";
+export * from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/AmbienteRepository";

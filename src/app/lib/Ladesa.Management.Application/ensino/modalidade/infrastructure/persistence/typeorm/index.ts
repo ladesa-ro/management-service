@@ -1,3 +1,3 @@
-export * from "@/Ladesa.Management.Infrastructure.Database/Repositories/ensino/modalidade/ModalidadeRepositoryAdapter";
-export * from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/ensino/modalidade/modalidade.repository";
-export * from "./modalidade.entity";
+export * from "@/Ladesa.Management.Infrastructure.Database/Repositories/ModalidadeRepositoryAdapter";
+export * from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/ModalidadeEntity";
+export * from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/ModalidadeRepository";

@@ -1,3 +1,3 @@
-export * from "@/Ladesa.Management.Infrastructure.Database/Repositories/armazenamento/arquivo/ArquivoRepositoryAdapter";
-export * from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/armazenamento/arquivo/arquivo.repository";
-export * from "./arquivo.entity";
+export * from "@/Ladesa.Management.Infrastructure.Database/Repositories/ArquivoRepositoryAdapter";
+export * from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/ArquivoEntity";
+export * from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/ArquivoRepository";

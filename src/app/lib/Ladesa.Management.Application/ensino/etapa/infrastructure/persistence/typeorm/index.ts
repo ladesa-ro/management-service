@@ -1,3 +1,3 @@
-export * from "@/Ladesa.Management.Infrastructure.Database/Repositories/ensino/etapa/EtapaRepositoryAdapter";
-export * from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/ensino/etapa/etapa.repository";
-export * from "./etapa.entity";
+export * from "@/Ladesa.Management.Infrastructure.Database/Repositories/EtapaRepositoryAdapter";
+export * from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/EtapaEntity";
+export * from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/EtapaRepository";

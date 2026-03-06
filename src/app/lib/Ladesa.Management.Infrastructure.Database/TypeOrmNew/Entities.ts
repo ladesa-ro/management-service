@@ -1,0 +1,39 @@
+// Re-export all entities from their respective modules for backwards compatibility
+// Import directly from entity files to avoid circular dependencies with adapters
+
+export { AmbienteEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/AmbienteEntity";
+export { ArquivoEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/ArquivoEntity";
+export { AulaEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/AulaEntity";
+export { BlocoEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/BlocoEntity";
+export { CalendarioLetivoEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/CalendarioLetivoEntity";
+export { CampusEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/CampusEntity";
+export { CidadeEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/CidadeEntity";
+export { CursoEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/CursoEntity";
+export { DiaCalendarioEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/DiaCalendarioEntity";
+export { DiarioEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/DiarioEntity";
+export { DiarioPreferenciaAgrupamentoEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/DiarioPreferenciaAgrupamentoEntity";
+export { DiarioProfessorEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/DiarioProfessorEntity";
+export { DisciplinaEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/DisciplinaEntity";
+export { DisponibilidadeEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/DisponibilidadeEntity";
+export { EmpresaTypeormEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/EmpresaTypeormEntity";
+export { EnderecoEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/EnderecoEntity";
+export { EstadoEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/EstadoEntity";
+export { EtapaEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/EtapaEntity";
+export { EventoEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/EventoEntity";
+export { GradeHorarioOfertaFormacaoEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/GradeHorarioOfertaFormacaoEntity";
+export { GradeHorarioOfertaFormacaoIntervaloDeTempoEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/GradeHorarioOfertaFormacaoIntervaloDeTempoEntity";
+export { HorarioGeradoAulaEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/HorarioGeradoAulaEntity";
+export { HorarioGeradoEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/HorarioGeradoEntity";
+export { ImagemArquivoEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/ImagemArquivoEntity";
+export { ImagemEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/ImagemEntity";
+export { IntervaloDeTempoEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/IntervaloDeTempoEntity";
+export { ModalidadeEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/ModalidadeEntity";
+export { NivelFormacaoEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/NivelFormacaoEntity";
+export { OfertaFormacaoEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/OfertaFormacaoEntity";
+export { OfertaFormacaoNivelFormacaoEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/OfertaFormacaoNivelFormacaoEntity";
+export { PerfilEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/PerfilEntity";
+export { ProfessorIndisponibilidadeEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/ProfessorIndisponibilidadeEntity";
+export { ReservaEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/ReservaEntity";
+export { TurmaDisponibilidadeEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/TurmaDisponibilidadeEntity";
+export { TurmaEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/TurmaEntity";
+export { UsuarioEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/UsuarioEntity";
