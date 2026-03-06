@@ -2,4 +2,4 @@
 set -euo pipefail
 
 # Run database migrations
-exec bun x --bun typeorm -d lib/modules/@shared/infrastructure/persistence/typeorm/data-sources/migration.data-source.ts migration:run "$@"
+exec bun run lib/Ladesa.Management.Infrastructure.Database/commands/migration-up.ts "$@"
