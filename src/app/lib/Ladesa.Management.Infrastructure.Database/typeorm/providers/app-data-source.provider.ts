@@ -1,17 +1,19 @@
 import type { Provider } from "@nestjs/common";
 import { DataSource } from "typeorm";
 import {
-  CONFIG_PORT,
-  type IConfigPort,
-} from "@/Ladesa.Management.Application/@shared/application/ports/out/config";
+  CONFIG_INFRASTRUCTURE_DATABASE,
+  type IConfigInfrastructureDatabase,
+} from "../../Config/IConfigInfrastructureDatabase";
+import { DataSourceOptionsFactory } from "../data-sources/DataSourceOptionsFactory";
 
 export const APP_DATA_SOURCE_TOKEN = Symbol();
 
 export const appDataSourceProvider: Provider = {
   provide: APP_DATA_SOURCE_TOKEN,
 
-  useFactory: async (appConfigService: IConfigPort) => {
-    const options = appConfigService.getTypeOrmAppDataSourceOptions();
+  useFactory: async (config: IConfigInfrastructureDatabase) => {
+    const factory = new DataSourceOptionsFactory(config);
+    const options = factory.getAppDataSourceOptions();
 
     const dataSource = new DataSource(options);
 
@@ -32,5 +34,5 @@ export const appDataSourceProvider: Provider = {
     return initializePromise;
   },
 
-  inject: [CONFIG_PORT],
+  inject: [CONFIG_INFRASTRUCTURE_DATABASE],
 };

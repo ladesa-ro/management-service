@@ -1,13 +1,10 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { ConfigService as NestConfigService } from "@nestjs/config";
-import { join } from "path";
-import type { DataSourceOptions } from "typeorm";
 import type {
   IConfigPort,
   IKeycloakCredentials,
   IOidcClientCredentials,
 } from "@/Ladesa.Management.Application/@shared/application/ports/out/config";
-import * as entities from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities";
 import pkg from "../../package.json";
 
 /**
@@ -24,10 +21,6 @@ export class EnvironmentConfigAdapter implements IConfigPort {
   // ========================================
   // Runtime
   // ========================================
-
-  getRootSrc(): string {
-    return join(__dirname, "../Ladesa.Management.Application");
-  }
 
   getRuntimeVersion(): string {
     return this.nestConfigService.get<string>("LADESA_API_VERSION") ?? pkg.version;
@@ -138,28 +131,8 @@ export class EnvironmentConfigAdapter implements IConfigPort {
   // Database
   // ========================================
 
-  getDbDatabase(): string | undefined {
-    return this.nestConfigService.get<string>("DB_DATABASE");
-  }
-
-  getDbHost(): string | undefined {
-    return this.nestConfigService.get<string>("DB_HOST");
-  }
-
-  getDbPassword(): string | undefined {
-    return this.nestConfigService.get<string>("DB_PASSWORD");
-  }
-
-  getDbPort(): string | undefined {
-    return this.nestConfigService.get<string>("DB_PORT");
-  }
-
   getDbSchema(): string | undefined {
     return this.nestConfigService.get<string>("DB_SCHEMA");
-  }
-
-  getDbUsername(): string | undefined {
-    return this.nestConfigService.get<string>("DB_USERNAME");
   }
 
   getDbConnection(): string | undefined {
@@ -174,106 +147,8 @@ export class EnvironmentConfigAdapter implements IConfigPort {
     return this.nestConfigService.get<string>("DATABASE_USE_SSL");
   }
 
-  // ========================================
-  // TypeORM
-  // ========================================
-
-  getTypeOrmBasePath(): string {
-    return join(this.getRootSrc(), "../Ladesa.Management.Infrastructure.Database/typeorm");
-  }
-
-  getTypeOrmPathEntities(): string {
-    return join(this.getTypeOrmBasePath(), "entities");
-  }
-
-  getTypeOrmPathMigrations(): string {
-    return join(this.getRootSrc(), "../Ladesa.Management.Infrastructure.Database/TypeOrmNew/Migrations");
-  }
-
-  getTypeOrmPathSubscribers(): string {
-    return join(this.getTypeOrmBasePath(), "subscribers");
-  }
-
-  getTypeOrmLogging(): string | undefined {
+  getDbLogging(): string | undefined {
     return this.nestConfigService.get<string>("TYPEORM_LOGGING");
-  }
-
-  getTypeOrmSharedDataSourceOptions(): Partial<DataSourceOptions> {
-    const sharedEnvConfig: Partial<DataSourceOptions> = {};
-
-    const DB_CONNECTION = this.getDbConnection();
-
-    if (DB_CONNECTION !== undefined) {
-      const DB_HOST = this.getDbHost();
-      const DB_PORT = this.getDbPort();
-      const DB_USERNAME = this.getDbUsername();
-      const DB_PASSWORD = this.getDbPassword();
-      const DB_DATABASE = this.getDbDatabase();
-      const DB_SCHEMA = this.getDbSchema();
-
-      const TYPEORM_LOGGING = this.getTypeOrmLogging();
-
-      const DATABASE_URL = this.getDbUrl();
-      const DATABASE_USE_SSL = this.getDbUseSSL();
-
-      Object.assign(sharedEnvConfig, {
-        type: DB_CONNECTION,
-
-        host: DB_HOST,
-        port: DB_PORT && Number.parseInt(DB_PORT),
-
-        username: DB_USERNAME,
-        password: DB_PASSWORD,
-        database: DB_DATABASE,
-        schema: DB_SCHEMA,
-
-        synchronize: false,
-
-        logging: TYPEORM_LOGGING,
-      } as Partial<DataSourceOptions>);
-
-      if (DATABASE_URL) {
-        Object.assign(sharedEnvConfig, {
-          url: DATABASE_URL,
-        });
-      }
-
-      if (DATABASE_USE_SSL !== "false") {
-        Object.assign(sharedEnvConfig, {
-          options: {
-            validateConnection: false,
-            trustServerCertificate: true,
-          },
-
-          extra: {
-            ssl: {
-              rejectUnauthorized: false,
-            },
-          },
-        });
-      }
-    }
-
-    return sharedEnvConfig;
-  }
-
-  getTypeOrmAppDataSourceOptions(): DataSourceOptions {
-    const options = {
-      ...this.getTypeOrmSharedDataSourceOptions(),
-      entities: [...Object.values(entities)],
-    };
-
-    return options as DataSourceOptions;
-  }
-
-  getTypeOrmMigrationDataSourceOptions(): DataSourceOptions {
-    const options = {
-      ...this.getTypeOrmSharedDataSourceOptions(),
-      migrations: [`${this.getTypeOrmPathMigrations()}/*{.ts,.js}`],
-      migrationsTableName: "app_migration_db",
-    };
-
-    return options as DataSourceOptions;
   }
 
   // ========================================

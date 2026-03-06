@@ -1,12 +1,16 @@
-import type { IConfigPort } from "@/Ladesa.Management.Application/@shared/application/ports/out/config";
+import type { IConfigInfrastructureDatabase } from "../../Config/IConfigInfrastructureDatabase";
 import "reflect-metadata";
 import { DataSource } from "typeorm";
-import { getDataSourceAppConfigService } from "./utils/getDataSourceEnvironmentConfigService";
+import { DataSourceOptionsFactory } from "./DataSourceOptionsFactory";
+import { getDataSourceDbConfig } from "./utils/getDataSourceDbConfig";
 
-export const getMigrationDataSource = async (appConfigServiceBase: IConfigPort | null = null) => {
-  const appConfigService = await getDataSourceAppConfigService(appConfigServiceBase);
+export const getMigrationDataSource = async (
+  configBase: IConfigInfrastructureDatabase | null = null,
+) => {
+  const config = await getDataSourceDbConfig(configBase);
 
-  const options = appConfigService.getTypeOrmMigrationDataSourceOptions();
+  const factory = new DataSourceOptionsFactory(config);
+  const options = factory.getMigrationDataSourceOptions();
 
   const dataSource = new DataSource(options);
 

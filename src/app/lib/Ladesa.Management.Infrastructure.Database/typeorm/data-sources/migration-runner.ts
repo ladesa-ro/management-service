@@ -1,10 +1,12 @@
 import "reflect-metadata";
 import { DataSource } from "typeorm";
-import { getDataSourceAppConfigService } from "./utils/getDataSourceEnvironmentConfigService";
+import { DataSourceOptionsFactory } from "./DataSourceOptionsFactory";
+import { getDataSourceDbConfig } from "./utils/getDataSourceDbConfig";
 
 const getDataSource = async () => {
-  const config = await getDataSourceAppConfigService(null);
-  const options = config.getTypeOrmMigrationDataSourceOptions();
+  const config = await getDataSourceDbConfig(null);
+  const factory = new DataSourceOptionsFactory(config);
+  const options = factory.getMigrationDataSourceOptions();
   return new DataSource({ ...options, logging: "all" });
 };
 

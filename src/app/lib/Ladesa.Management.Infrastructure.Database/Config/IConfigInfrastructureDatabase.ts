@@ -1,15 +1,9 @@
-/**
- * Port de configuração de banco de dados
- * Define as configurações de conexão com o banco
- */
-export interface IConfigDatabasePort {
+export interface IConfigInfrastructureDatabase {
   getDbConnection(): string | undefined;
-
   getDbSchema(): string | undefined;
-
   getDbUrl(): string | undefined;
-
   getDbUseSSL(): string | undefined;
-
   getDbLogging(): string | undefined;
 }
+
+export const CONFIG_INFRASTRUCTURE_DATABASE = Symbol.for("CONFIG_INFRASTRUCTURE_DATABASE");

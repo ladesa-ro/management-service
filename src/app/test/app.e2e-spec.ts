@@ -29,14 +29,6 @@ const mockConfigService = {
   getDatabaseUsername: () => "test",
   getDatabasePassword: () => "test",
   getDatabaseType: () => "better-sqlite3",
-  // TypeORM config
-  getTypeOrmAppDataSourceOptions: () => ({
-    type: "better-sqlite3" as const,
-    database: ":memory:",
-    entities: [],
-    synchronize: true,
-    logging: false,
-  }),
 };
 
 /**
