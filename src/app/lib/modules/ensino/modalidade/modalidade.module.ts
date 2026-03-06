@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
+import { NestJsPaginateAdapter } from "@/infrastructure.database/typeorm";
 import { MODALIDADE_REPOSITORY_PORT } from "@/modules/ensino/modalidade/application/ports";
 import { ModalidadeService } from "@/modules/ensino/modalidade/application/use-cases/modalidade.service";
 import {

@@ -5,7 +5,7 @@ import { decorate } from "ts-mixer";
 import {
   RegisterModel,
   simpleProperty,
-} from "@/modules/@shared/infrastructure/persistence/typeorm/metadata";
+} from "@/infrastructure.database/typeorm/metadata";
 import {
   PaginatedFilterByStringIdRestDto,
   PaginationMetaRestDto,

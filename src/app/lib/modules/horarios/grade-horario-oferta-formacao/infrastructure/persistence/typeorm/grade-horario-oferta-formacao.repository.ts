@@ -1,7 +1,7 @@
 import {
   createRepositoryFactory,
   IRepositoryFactoryOutput,
-} from "@/modules/@shared/infrastructure/persistence/typeorm/create-repository-factory";
+} from "@/infrastructure.database/typeorm/create-repository-factory";
 import { GradeHorarioOfertaFormacaoEntity } from "./grade-horario-oferta-formacao.entity";
 
 export const createGradeHorarioOfertaFormacaoRepository = createRepositoryFactory((ds) => {

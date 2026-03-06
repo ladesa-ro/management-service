@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
+import { NestJsPaginateAdapter } from "@/infrastructure.database/typeorm";
 import { DISPONIBILIDADE_REPOSITORY_PORT } from "@/modules/ensino/disponibilidade/application/ports";
 import { DisponibilidadeService } from "@/modules/ensino/disponibilidade/application/use-cases/disponibilidade.service";
 import { DisponibilidadeAuthzRegistrySetup } from "@/modules/ensino/disponibilidade/infrastructure";

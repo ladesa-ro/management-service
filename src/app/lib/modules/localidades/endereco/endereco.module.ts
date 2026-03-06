@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
+import { NestJsPaginateAdapter } from "@/infrastructure.database/typeorm";
 import { ENDERECO_REPOSITORY_PORT, EnderecoService } from "@/modules/localidades/endereco";
 import {
   EnderecoAuthzRegistrySetup,

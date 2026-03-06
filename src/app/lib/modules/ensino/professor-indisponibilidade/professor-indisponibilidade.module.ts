@@ -2,7 +2,7 @@ import { Module } from "@nestjs/common";
 import {
   NestJsPaginateAdapter,
   TypeormModule,
-} from "@/modules/@shared/infrastructure/persistence/typeorm";
+} from "@/infrastructure.database/typeorm";
 import { PerfilModule } from "@/modules/acesso/perfil/perfil.module";
 import { PROFESSOR_INDISPONIBILIDADE_REPOSITORY_PORT } from "@/modules/ensino/professor-indisponibilidade/application/ports";
 import { ProfessorIndisponibilidadeService } from "@/modules/ensino/professor-indisponibilidade/application/use-cases/professor-indisponibilidade.service";

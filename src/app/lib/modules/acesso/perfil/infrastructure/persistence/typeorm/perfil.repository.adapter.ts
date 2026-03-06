@@ -11,7 +11,7 @@ import {
   NestJsPaginateAdapter,
   paginateConfig,
   QbEfficientLoad,
-} from "@/modules/@shared/infrastructure/persistence/typeorm";
+} from "@/infrastructure.database/typeorm";
 import type {
   PerfilFindOneInputDto,
   PerfilFindOneOutputDto,

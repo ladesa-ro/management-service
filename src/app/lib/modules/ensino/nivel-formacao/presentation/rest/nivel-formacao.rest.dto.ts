@@ -5,7 +5,7 @@ import {
   commonProperties,
   RegisterModel,
   simpleProperty,
-} from "@/modules/@shared/infrastructure/persistence/typeorm/metadata";
+} from "@/infrastructure.database/typeorm/metadata";
 import {
   EntityBaseRestDto,
   PaginatedFilterByIdRestDto,

@@ -3,7 +3,7 @@ import { Test, TestingModule } from "@nestjs/testing";
 import request from "supertest";
 import { afterAll, beforeAll, describe, it } from "vitest";
 import { CONFIG_PORT } from "@/modules/@shared/application/ports/out/config";
-import { APP_DATA_SOURCE_TOKEN } from "@/modules/@shared/infrastructure/persistence/typeorm/providers/app-data-source.provider";
+import { APP_DATA_SOURCE_TOKEN } from "@/infrastructure.database/typeorm/providers/app-data-source.provider";
 import { AppController } from "@/server/nest/app.controller";
 import { AppService } from "@/server/nest/app.service";
 

@@ -1,7 +1,7 @@
 import {
   createRepositoryFactory,
   IRepositoryFactoryOutput,
-} from "@/modules/@shared/infrastructure/persistence/typeorm/create-repository-factory";
+} from "@/infrastructure.database/typeorm/create-repository-factory";
 import { CidadeEntity } from "./cidade.entity";
 
 export const createCidadeRepository = createRepositoryFactory((ds) => {

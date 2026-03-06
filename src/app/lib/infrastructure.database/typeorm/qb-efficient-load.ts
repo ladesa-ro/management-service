@@ -4,7 +4,7 @@ import {
   initializeModelDefinitions,
   ModelRepresentation,
   modelRegistry,
-} from "@/modules/@shared/infrastructure/persistence/typeorm/metadata";
+} from "@/infrastructure.database/typeorm/metadata";
 
 // Ensure model definitions are loaded
 initializeModelDefinitions();

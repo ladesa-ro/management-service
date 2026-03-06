@@ -3,7 +3,7 @@ import { AuthenticationCoreModule } from "@/modules/@seguranca/autenticacao";
 import { IdentityProviderCoreModule } from "@/modules/@seguranca/provedor-identidade";
 import { AppConfigModule } from "./config";
 import { GraphqlModule } from "./graphql";
-import { TypeormModule } from "./persistence/typeorm";
+import { TypeormModule } from "@/infrastructure.database/typeorm";
 
 @Module({
   imports: [

@@ -1,7 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { DataSource } from "typeorm";
 import type { PartialEntity } from "@/modules/@shared";
-import { APP_DATA_SOURCE_TOKEN } from "@/modules/@shared/infrastructure/persistence/typeorm";
+import { APP_DATA_SOURCE_TOKEN } from "@/infrastructure.database/typeorm";
 import type {
   IImagemArquivoRepositoryPort,
   IImagemRepositoryPort,

@@ -2,7 +2,7 @@ import { Inject, Injectable, Optional, type PipeTransform } from "@nestjs/common
 import { DataSource } from "typeorm";
 import type { IRequestActor } from "@/modules/@seguranca/ator-requisicao";
 import { CONFIG_PORT, type IConfigPort } from "@/modules/@shared/application/ports/out/config";
-import { APP_DATA_SOURCE_TOKEN } from "@/modules/@shared/infrastructure/persistence/typeorm";
+import { APP_DATA_SOURCE_TOKEN } from "@/infrastructure.database/typeorm";
 import { AccessContext } from "../access-context";
 import { RESOURCE_AUTHZ_REGISTRY, ResourceAuthzRegistry } from "../resource-authz-registry";
 

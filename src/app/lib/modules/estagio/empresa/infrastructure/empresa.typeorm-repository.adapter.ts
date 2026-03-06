@@ -2,7 +2,7 @@ import { Inject, Injectable } from "@nestjs/common";
 import { DataSource } from "typeorm";
 import {
   APP_DATA_SOURCE_TOKEN,
-} from "@/modules/@shared/infrastructure/persistence/typeorm";
+} from "@/infrastructure.database/typeorm";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ResourceNotFoundError } from "@/modules/@shared";
 import type {

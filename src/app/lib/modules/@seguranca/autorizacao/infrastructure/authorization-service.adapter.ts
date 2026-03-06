@@ -5,7 +5,7 @@ import { DataSource } from "typeorm";
 import type { IRequestActor } from "@/modules/@seguranca/ator-requisicao";
 import { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import type { IAuthorizationPayload, IAuthorizationServicePort } from "@/modules/@shared";
-import { APP_DATA_SOURCE_TOKEN } from "@/modules/@shared/infrastructure/persistence/typeorm";
+import { APP_DATA_SOURCE_TOKEN } from "@/infrastructure.database/typeorm";
 
 /**
  * Adapter que implementa o port de autorização usando AccessContext.

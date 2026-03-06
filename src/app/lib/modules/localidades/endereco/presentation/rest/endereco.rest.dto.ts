@@ -7,7 +7,7 @@ import {
   RegisterModel,
   referenceProperty,
   simpleProperty,
-} from "@/modules/@shared/infrastructure/persistence/typeorm/metadata";
+} from "@/infrastructure.database/typeorm/metadata";
 import { EntityBaseRestDto } from "@/modules/@shared/infrastructure/presentation/rest/dtos";
 import {
   CidadeFindOneInputRestDto,

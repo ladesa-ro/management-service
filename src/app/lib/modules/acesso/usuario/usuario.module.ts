@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
 import { KeycloakModule } from "@/modules/@seguranca/provedor-identidade";
-import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
+import { NestJsPaginateAdapter } from "@/infrastructure.database/typeorm";
 import { USUARIO_REPOSITORY_PORT } from "@/modules/acesso/usuario/application/ports";
 import { UsuarioService } from "@/modules/acesso/usuario/application/use-cases/usuario.service";
 import {

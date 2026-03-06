@@ -1,6 +1,6 @@
 import { Inject, Injectable, type OnModuleInit, type Type } from "@nestjs/common";
 import type { DataSource, ObjectLiteral, Repository } from "typeorm";
-import { APP_DATA_SOURCE_TOKEN } from "@/modules/@shared/infrastructure/persistence/typeorm";
+import { APP_DATA_SOURCE_TOKEN } from "@/infrastructure.database/typeorm";
 import { type ResourceActions, ResourceAuthzRegistry } from "./resource-authz-registry";
 
 /**

@@ -5,7 +5,7 @@ import {
   IDENTITY_PROVIDER_PORT,
   type IIdentityProviderPort,
 } from "@/modules/@seguranca/provedor-identidade/ports";
-import { APP_DATA_SOURCE_TOKEN } from "@/modules/@shared/infrastructure/persistence/typeorm";
+import { APP_DATA_SOURCE_TOKEN } from "@/infrastructure.database/typeorm";
 import { createUsuarioRepository } from "@/modules/acesso/usuario/infrastructure/persistence/typeorm/usuario.repository";
 import type { IRequestActor } from "../domain";
 import type { IRequestActorResolverPort } from "../ports";

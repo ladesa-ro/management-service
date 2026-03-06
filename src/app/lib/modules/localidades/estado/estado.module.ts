@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
+import { NestJsPaginateAdapter } from "@/infrastructure.database/typeorm";
 import { ESTADO_REPOSITORY_PORT } from "@/modules/localidades/estado/application/ports";
 import { EstadoService } from "@/modules/localidades/estado/application/use-cases/estado.service";
 import {

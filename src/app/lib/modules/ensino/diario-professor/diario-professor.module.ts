@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
+import { NestJsPaginateAdapter } from "@/infrastructure.database/typeorm";
 import { PerfilModule } from "@/modules/acesso/perfil/perfil.module";
 import { DiarioModule } from "@/modules/ensino/diario/diario.module";
 import { DIARIO_PROFESSOR_REPOSITORY_PORT } from "@/modules/ensino/diario-professor/application/ports";

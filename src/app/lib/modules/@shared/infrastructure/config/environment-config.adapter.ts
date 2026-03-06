@@ -7,7 +7,7 @@ import type {
   IKeycloakCredentials,
   IOidcClientCredentials,
 } from "@/modules/@shared/application/ports/out/config";
-import * as entities from "@/modules/@shared/infrastructure/persistence/typeorm/entities";
+import * as entities from "@/infrastructure.database/typeorm/entities";
 import pkg from "../../../../../package.json";
 
 /**
@@ -179,7 +179,7 @@ export class EnvironmentConfigAdapter implements IConfigPort {
   // ========================================
 
   getTypeOrmBasePath(): string {
-    return join(this.getRootSrc(), "./@shared/infrastructure/persistence/typeorm");
+    return join(this.getRootSrc(), "../infrastructure.database/typeorm");
   }
 
   getTypeOrmPathEntities(): string {

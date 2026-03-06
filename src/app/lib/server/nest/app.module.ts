@@ -2,7 +2,7 @@ import { Module } from "@nestjs/common";
 import { APP_FILTER } from "@nestjs/core";
 import { AuthorizationCoreModule } from "@/modules/@seguranca/autorizacao";
 import { InfrastructureModule } from "@/modules/@shared/infrastructure";
-import { TransactionModule } from "@/modules/@shared/infrastructure/persistence/typeorm";
+import { TransactionModule } from "@/infrastructure.database/typeorm";
 import { AppController } from "@/server/nest/app.controller";
 import { AppService } from "@/server/nest/app.service";
 import {

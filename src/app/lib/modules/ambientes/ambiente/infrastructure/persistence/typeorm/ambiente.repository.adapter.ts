@@ -1,12 +1,12 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
 import { DataSource } from "typeorm";
-import type { ITypeOrmPaginationConfig } from "@/modules/@shared/infrastructure/persistence/typeorm";
+import type { ITypeOrmPaginationConfig } from "@/infrastructure.database/typeorm";
 import {
   APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
   NestJsPaginateAdapter,
-} from "@/modules/@shared/infrastructure/persistence/typeorm";
+} from "@/infrastructure.database/typeorm";
 import type {
   AmbienteFindOneInputDto as AmbienteFindOneInputDto,
   AmbienteFindOneOutputDto as AmbienteFindOneOutputDto,

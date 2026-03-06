@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
+import { NestJsPaginateAdapter } from "@/infrastructure.database/typeorm";
 import { INTERVALO_DE_TEMPO_REPOSITORY_PORT } from "@/modules/horarios/intervalo-de-tempo/application/ports";
 import { IntervaloDeTempoService } from "@/modules/horarios/intervalo-de-tempo/application/use-cases/intervalo-de-tempo.service";
 import { IntervaloDeTempoTypeOrmRepositoryAdapter } from "@/modules/horarios/intervalo-de-tempo/infrastructure/persistence/typeorm";

@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
+import { NestJsPaginateAdapter } from "@/infrastructure.database/typeorm";
 import { ETAPA_REPOSITORY_PORT, EtapaService } from "@/modules/ensino/etapa";
 import { EtapaAuthzRegistrySetup } from "@/modules/ensino/etapa/infrastructure";
 import { EtapaTypeOrmRepositoryAdapter } from "@/modules/ensino/etapa/infrastructure/persistence/typeorm";

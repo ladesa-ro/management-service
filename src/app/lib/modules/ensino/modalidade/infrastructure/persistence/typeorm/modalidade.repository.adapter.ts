@@ -6,7 +6,7 @@ import {
   type ITypeOrmPaginationConfig,
   NestJsPaginateAdapter,
   paginateConfig,
-} from "@/modules/@shared/infrastructure/persistence/typeorm";
+} from "@/infrastructure.database/typeorm";
 import type {
   IModalidadeRepositoryPort,
   ModalidadeFindOneInputDto,
