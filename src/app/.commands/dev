@@ -3,4 +3,4 @@ set -euo pipefail
 
 # Start development server with watch mode
 # exec bun run --watch lib/commands/start.ts
-exec bun run --watch lib/server/start.ts
+exec bun run --watch lib/Ladesa.Management.Server.Api/start.ts

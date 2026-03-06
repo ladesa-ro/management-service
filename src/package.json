@@ -5,7 +5,7 @@
     "packages/*"
   ],
   "devDependencies": {
-    "@biomejs/biome": "^2.4.5",
-    "nx": "22.5.3"
+    "@biomejs/biome": "^2.4.6",
+    "nx": "22.5.4"
   }
 }
