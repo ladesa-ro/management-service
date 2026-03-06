@@ -7,7 +7,7 @@ import type {
   EventoFindOneOutputDto,
   EventoListInputDto,
   EventoListOutputDto,
-} from "../../dtos";
+} from "@/Ladesa.Management.Application/horarios/evento/application/dtos";
 
 /**
  * Token de injeção para o repositório de Evento

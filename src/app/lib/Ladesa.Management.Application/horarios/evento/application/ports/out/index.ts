@@ -1,1 +1,1 @@
-export * from "./evento.repository.port";
+export * from "@/Ladesa.Management.Domain/Repositories/EventoRepositoryPort";

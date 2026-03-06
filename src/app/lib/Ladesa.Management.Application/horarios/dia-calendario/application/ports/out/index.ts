@@ -1,1 +1,1 @@
-export * from "./dia-calendario.repository.port";
+export * from "@/Ladesa.Management.Domain/Repositories/DiaCalendarioRepositoryPort";

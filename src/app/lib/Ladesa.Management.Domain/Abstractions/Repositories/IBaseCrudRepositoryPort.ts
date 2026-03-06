@@ -1,7 +1,7 @@
-import type { IFindOneRepositoryPort } from "./find-one-repository.port";
-import type { IListRepositoryPort } from "./list-repository.port";
-import type { IPersistRepositoryPort } from "./persist-repository.port";
-import type { ISoftDeleteRepositoryPort } from "./soft-delete-repository.port";
+import type { IFindOneRepositoryPort } from "@/Ladesa.Management.Domain/Abstractions/Repositories/IFindOneRepositoryPort";
+import type { IListRepositoryPort } from "@/Ladesa.Management.Domain/Abstractions/Repositories/IListRepositoryPort";
+import type { IPersistRepositoryPort } from "@/Ladesa.Management.Domain/Abstractions/Repositories/IPersistRepositoryPort";
+import type { ISoftDeleteRepositoryPort } from "@/Ladesa.Management.Domain/Abstractions/Repositories/ISoftDeleteRepositoryPort";
 
 /**
  * Interface base para ports de repositório (saída)

@@ -6,7 +6,7 @@ import type { GradeHorarioOfertaFormacaoIntervaloDeTempoEntity } from "@/Ladesa.
 import type {
   GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputDto,
   GradeHorarioOfertaFormacaoIntervaloDeTempoListOutputDto,
-} from "../../dtos";
+} from "@/Ladesa.Management.Application/horarios/grade-horario-oferta-formacao-intervalo-de-tempo/application/dtos";
 
 /**
  * Token de injeção para o repositório de GradeHorarioOfertaFormacaoIntervaloDeTempo

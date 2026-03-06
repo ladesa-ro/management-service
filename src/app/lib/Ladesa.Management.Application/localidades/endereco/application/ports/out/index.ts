@@ -1,1 +1,1 @@
-export * from "./endereco.repository.port";
+export * from "@/Ladesa.Management.Domain/Repositories/EnderecoRepositoryPort";

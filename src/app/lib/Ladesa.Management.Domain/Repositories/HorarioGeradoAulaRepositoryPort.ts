@@ -1,7 +1,7 @@
 import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/contexto-acesso";
 import type { IBaseCrudRepositoryPort } from "@/Ladesa.Management.Application/@shared";
 import type { IHorarioGeradoAula } from "@/Ladesa.Management.Application/horarios/horario-gerado-aula";
-import type { HorarioGeradoAulaFindOneOutputDto, HorarioGeradoAulaListOutputDto } from "../../dtos";
+import type { HorarioGeradoAulaFindOneOutputDto, HorarioGeradoAulaListOutputDto } from "@/Ladesa.Management.Application/horarios/horario-gerado-aula/application/dtos";
 
 /**
  * Token de injeção para o repositório de HorarioGeradoAula

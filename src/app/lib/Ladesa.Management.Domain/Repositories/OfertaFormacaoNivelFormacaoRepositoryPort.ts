@@ -3,7 +3,7 @@ import type { IOfertaFormacaoNivelFormacao } from "@/Ladesa.Management.Applicati
 import type {
   OfertaFormacaoNivelFormacaoFindOneOutputDto,
   OfertaFormacaoNivelFormacaoListOutputDto,
-} from "../../dtos";
+} from "@/Ladesa.Management.Application/ensino/oferta-formacao-nivel-formacao/application/dtos";
 
 /**
  * Token de injecao para o repositorio de OfertaFormacaoNivelFormacao

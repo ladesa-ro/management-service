@@ -6,7 +6,7 @@ import type { TurmaDisponibilidadeEntity } from "@/Ladesa.Management.Application
 import type {
   TurmaDisponibilidadeFindOneOutputDto,
   TurmaDisponibilidadeListOutputDto,
-} from "../../dtos";
+} from "@/Ladesa.Management.Application/ensino/turma-disponibilidade/application/dtos";
 
 /**
  * Token de injeção para o repositório de TurmaDisponibilidade

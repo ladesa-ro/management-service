@@ -1,1 +1,1 @@
-export * from "./modalidade.repository.port";
+export * from "@/Ladesa.Management.Domain/Repositories/ModalidadeRepositoryPort";

@@ -1,1 +1,1 @@
-export * from "./reserva.repository.port";
+export * from "@/Ladesa.Management.Domain/Repositories/ReservaRepositoryPort";

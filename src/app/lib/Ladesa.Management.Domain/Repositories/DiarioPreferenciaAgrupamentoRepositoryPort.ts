@@ -6,7 +6,7 @@ import type { DiarioPreferenciaAgrupamentoEntity } from "@/Ladesa.Management.App
 import type {
   DiarioPreferenciaAgrupamentoFindOneOutputDto,
   DiarioPreferenciaAgrupamentoListOutputDto,
-} from "../../dtos";
+} from "@/Ladesa.Management.Application/ensino/diario-preferencia-agrupamento/application/dtos";
 
 /**
  * Token de injeção para o repositório de DiarioPreferenciaAgrupamento

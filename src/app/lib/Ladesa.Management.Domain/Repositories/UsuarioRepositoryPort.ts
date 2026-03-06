@@ -5,7 +5,7 @@ import type {
   UsuarioFindOneOutputDto,
   UsuarioListInputDto,
   UsuarioListOutputDto,
-} from "../../dtos";
+} from "@/Ladesa.Management.Application/acesso/usuario/application/dtos";
 
 /**
  * Token de injeção para o repositório de Usuario

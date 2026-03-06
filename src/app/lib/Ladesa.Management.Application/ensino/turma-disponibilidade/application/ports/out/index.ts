@@ -1,1 +1,1 @@
-export * from "./turma-disponibilidade.repository.port";
+export * from "@/Ladesa.Management.Domain/Repositories/TurmaDisponibilidadeRepositoryPort";

@@ -3,7 +3,7 @@ import type { IGradeHorarioOfertaFormacao } from "@/Ladesa.Management.Applicatio
 import type {
   GradeHorarioOfertaFormacaoFindOneOutputDto,
   GradeHorarioOfertaFormacaoListOutputDto,
-} from "../../dtos";
+} from "@/Ladesa.Management.Application/horarios/grade-horario-oferta-formacao/application/dtos";
 
 /**
  * Token de injecao para o repositorio de GradeHorarioOfertaFormacao

@@ -1,1 +1,1 @@
-export * from "./campus.repository.port";
+export * from "@/Ladesa.Management.Domain/Repositories/CampusRepositoryPort";

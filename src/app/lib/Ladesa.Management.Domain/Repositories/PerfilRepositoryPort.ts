@@ -5,7 +5,7 @@ import type {
   PerfilFindOneOutputDto,
   PerfilListInputDto,
   PerfilListOutputDto,
-} from "../../dtos";
+} from "@/Ladesa.Management.Application/acesso/perfil/application/dtos";
 
 /**
  * Token de injeção para o repositório de Perfil

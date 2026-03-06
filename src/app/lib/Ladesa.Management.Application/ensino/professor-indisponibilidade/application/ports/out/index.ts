@@ -1,1 +1,1 @@
-export * from "./professor-indisponibilidade.repository.port";
+export * from "@/Ladesa.Management.Domain/Repositories/ProfessorIndisponibilidadeRepositoryPort";
