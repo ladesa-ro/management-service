@@ -2,4 +2,4 @@
 set -euo pipefail
 
 # Revert last database migration
-exec bun x --bun typeorm -d lib/Ladesa.Management.Infrastructure.Database/typeorm/data-sources/migration.data-source.ts migration:revert "$@"
+exec bun run lib/Ladesa.Management.Infrastructure.Database/commands/migration-down.ts "$@"
