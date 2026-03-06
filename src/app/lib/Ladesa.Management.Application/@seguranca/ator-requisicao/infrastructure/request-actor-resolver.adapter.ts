@@ -5,7 +5,7 @@ import {
   IDENTITY_PROVIDER_PORT,
   type IIdentityProviderPort,
 } from "@/Ladesa.Management.Application/@seguranca/provedor-identidade/ports";
-import { createUsuarioRepository } from "@/Ladesa.Management.Application/acesso/usuario/infrastructure/persistence/typeorm/usuario.repository";
+import { createUsuarioRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/acesso/usuario/usuario.repository";
 import { APP_DATA_SOURCE_TOKEN } from "@/Ladesa.Management.Infrastructure.Database/typeorm";
 import type { IRequestActor } from "../domain";
 import type { IRequestActorResolverPort } from "../ports";

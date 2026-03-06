@@ -1,5 +1,5 @@
 import { createAuthzRegistryProvider } from "@/Ladesa.Management.Application/@seguranca/contexto-acesso";
-import { createEtapaRepository } from "./persistence/typeorm/etapa.repository";
+import { createEtapaRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/ensino/etapa/etapa.repository";
 
 export const EtapaAuthzRegistrySetup = createAuthzRegistryProvider("etapa", (ds) =>
   createEtapaRepository(ds),

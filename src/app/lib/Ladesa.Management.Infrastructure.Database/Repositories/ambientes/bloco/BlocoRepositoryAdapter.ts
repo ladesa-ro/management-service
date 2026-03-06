@@ -1,0 +1,84 @@
+import { Inject, Injectable } from "@nestjs/common";
+import { FilterOperator } from "nestjs-paginate";
+import { DataSource } from "typeorm";
+import type {
+  BlocoFindOneInputDto,
+  BlocoFindOneOutputDto,
+  BlocoListInputDto,
+  BlocoListOutputDto,
+} from "@/Ladesa.Management.Application/ambientes/bloco";
+import type { IBlocoRepositoryPort } from "@/Ladesa.Management.Application/ambientes/bloco/application/ports";
+import type { BlocoEntity } from "@/Ladesa.Management.Application/ambientes/bloco/infrastructure/persistence/typeorm/bloco.entity";
+import { createBlocoRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/ambientes/bloco/bloco.repository";
+import {
+  APP_DATA_SOURCE_TOKEN,
+  BaseTypeOrmRepositoryAdapter,
+  type ITypeOrmPaginationConfig,
+  NestJsPaginateAdapter,
+  paginateConfig,
+} from "@/Ladesa.Management.Infrastructure.Database/typeorm";
+
+/**
+ * Adapter TypeORM que implementa o port de repositório de Bloco.
+ * Estende BaseTypeOrmRepositoryAdapter para reutilizar operações CRUD comuns.
+ */
+@Injectable()
+export class BlocoTypeOrmRepositoryAdapter
+  extends BaseTypeOrmRepositoryAdapter<
+    BlocoEntity,
+    BlocoListInputDto,
+    BlocoListOutputDto,
+    BlocoFindOneInputDto,
+    BlocoFindOneOutputDto
+  >
+  implements IBlocoRepositoryPort
+{
+  protected readonly alias = "bloco";
+  protected readonly authzAction = "bloco:find";
+  protected readonly outputDtoName = "BlocoFindOneOutputDto";
+
+  constructor(
+    @Inject(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
+    protected readonly paginationAdapter: NestJsPaginateAdapter,
+  ) {
+    super();
+  }
+
+  protected get repository() {
+    return createBlocoRepository(this.dataSource);
+  }
+
+  protected getPaginateConfig(): ITypeOrmPaginationConfig<BlocoEntity> {
+    return {
+      ...paginateConfig,
+      select: [
+        "id",
+        "nome",
+        "codigo",
+        "dateCreated",
+        "campus.id",
+        "campus.razaoSocial",
+        "campus.nomeFantasia",
+      ],
+      relations: {
+        campus: true,
+      },
+      sortableColumns: [
+        "nome",
+        "codigo",
+        "dateCreated",
+        "campus.id",
+        "campus.razaoSocial",
+        "campus.nomeFantasia",
+      ],
+      searchableColumns: ["id", "nome", "codigo"],
+      defaultSortBy: [
+        ["nome", "ASC"],
+        ["dateCreated", "ASC"],
+      ],
+      filterableColumns: {
+        "campus.id": [FilterOperator.EQ],
+      },
+    };
+  }
+}

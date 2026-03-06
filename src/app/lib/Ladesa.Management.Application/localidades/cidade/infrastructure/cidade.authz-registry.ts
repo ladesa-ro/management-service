@@ -1,5 +1,5 @@
 import { createAuthzRegistryProvider } from "@/Ladesa.Management.Application/@seguranca/contexto-acesso";
-import { createCidadeRepository } from "./persistence/typeorm/cidade.repository";
+import { createCidadeRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/localidades/cidade/cidade.repository";
 
 export const CidadeAuthzRegistrySetup = createAuthzRegistryProvider(
   "cidade",

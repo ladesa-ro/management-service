@@ -1,5 +1,5 @@
 import { createAuthzRegistryProvider } from "@/Ladesa.Management.Application/@seguranca/contexto-acesso";
-import { createReservaRepository } from "./persistence/typeorm/reserva.repository";
+import { createReservaRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/ambientes/reserva/reserva.repository";
 
 export const ReservaAuthzRegistrySetup = createAuthzRegistryProvider("reserva", (ds) =>
   createReservaRepository(ds),
