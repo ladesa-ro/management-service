@@ -8,7 +8,7 @@ import type { IUsuario, IUsuarioCreate, IUsuarioUpdate } from "./usuario.types";
  */
 export class Usuario extends BaseDatedEntity implements IUsuario {
   nome!: string | null;
-  matriculaSiape!: string | null;
+  matricula!: string | null;
   email!: string | null;
   isSuperUser!: boolean;
   imagemCapa!: IImagem | null;
@@ -36,7 +36,7 @@ export class Usuario extends BaseDatedEntity implements IUsuario {
   static criar(dados: IUsuarioCreate): Usuario {
     const instance = new Usuario();
     instance.nome = dados.nome?.trim() || null;
-    instance.matriculaSiape = dados.matriculaSiape?.trim() || null;
+    instance.matricula = dados.matricula?.trim() || null;
     instance.email = dados.email?.trim() || null;
     instance.isSuperUser = false;
     instance.imagemCapa = null;
@@ -67,8 +67,8 @@ export class Usuario extends BaseDatedEntity implements IUsuario {
       this.nome = dados.nome?.trim() || null;
     }
 
-    if (dados.matriculaSiape !== undefined) {
-      this.matriculaSiape = dados.matriculaSiape?.trim() || null;
+    if (dados.matricula !== undefined) {
+      this.matricula = dados.matricula?.trim() || null;
     }
 
     if (dados.email !== undefined) {
@@ -98,8 +98,8 @@ export class Usuario extends BaseDatedEntity implements IUsuario {
     return this.email !== null && this.email.trim().length > 0;
   }
 
-  temMatriculaSiape(): boolean {
-    return this.matriculaSiape !== null && this.matriculaSiape.trim().length > 0;
+  temMatricula(): boolean {
+    return this.matricula !== null && this.matricula.trim().length > 0;
   }
 
   temImagemCapa(): boolean {

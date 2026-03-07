@@ -20,14 +20,14 @@ describe("IIdentityProviderPort", () => {
         getIdentityFromAccessToken: async (_accessToken: string): Promise<IIdentityResponse> => {
           return {
             usuario: {
-              matriculaSiape: "12345",
+              matricula: "12345",
             },
           };
         },
       };
 
       const result = await mockProvider.getIdentityFromAccessToken("token");
-      expect(result.usuario?.matriculaSiape).toBe("12345");
+      expect(result.usuario?.matricula).toBe("12345");
     });
 
     it("deve retornar resposta vazia para token inválido", async () => {

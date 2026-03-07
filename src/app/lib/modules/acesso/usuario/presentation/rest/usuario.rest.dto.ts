@@ -27,7 +27,7 @@ import { ImagemFindOneOutputRestDto } from "@/modules/ambientes/bloco/presentati
     properties: [
       simpleProperty("id"),
       simpleProperty("nome", { nullable: true }),
-      simpleProperty("matriculaSiape", { nullable: true }),
+      simpleProperty("matricula", { nullable: true }),
       simpleProperty("email", { nullable: true }),
       simpleProperty("isSuperUser"),
       referenceProperty("imagemCapa", "ImagemFindOneOutputDto", { nullable: true }),
@@ -50,12 +50,12 @@ export class UsuarioFindOneOutputRestDto extends Mixin(EntityBaseRestDto, Usuari
   @decorate(
     ApiPropertyOptional({
       type: "string",
-      description: "Matricula SIAPE do usuario",
+      description: "Matrícula do usuário",
       nullable: true,
       minLength: 1,
     }),
   )
-  declare matriculaSiape: string | null;
+  declare matricula: string | null;
 
   @decorate(
     ApiPropertyOptional({
@@ -212,12 +212,12 @@ export class UsuarioCreateInputRestDto extends UsuarioFieldsMixin {
   @decorate(
     ApiPropertyOptional({
       type: "string",
-      description: "Matricula SIAPE do usuario",
+      description: "Matrícula do usuário",
       nullable: true,
       minLength: 1,
     }),
   )
-  declare matriculaSiape?: string | null;
+  declare matricula?: string | null;
 
   @decorate(
     ApiPropertyOptional({

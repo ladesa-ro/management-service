@@ -55,11 +55,11 @@ export class UsuarioService implements IUsuarioUseCasePort {
     };
   }
 
-  async internalFindByMatriculaSiape(
-    matriculaSiape: string,
+  async internalFindByMatricula(
+    matricula: string,
     selection?: string[] | boolean,
   ): Promise<UsuarioFindOneOutputDto | null> {
-    return this.usuarioRepository.findByMatriculaSiape(matriculaSiape, selection);
+    return this.usuarioRepository.findByMatricula(matricula, selection);
   }
 
   // Generic method names
@@ -187,7 +187,7 @@ export class UsuarioService implements IUsuarioUseCasePort {
 
     const input = {
       nome: dto.nome,
-      matriculaSiape: dto.matriculaSiape,
+      matricula: dto.matricula,
       email: dto.email,
     };
 
@@ -204,13 +204,13 @@ export class UsuarioService implements IUsuarioUseCasePort {
       await kcAdminClient.users.create({
         enabled: true,
 
-        username: input.matriculaSiape ?? undefined,
+        username: input.matricula ?? undefined,
         email: input.email ?? undefined,
 
         requiredActions: ["UPDATE_PASSWORD"],
 
         attributes: {
-          "usuario.matriculaSiape": input.matriculaSiape,
+          "usuario.matricula": input.matricula,
         },
       });
 
@@ -227,13 +227,13 @@ export class UsuarioService implements IUsuarioUseCasePort {
   ): Promise<UsuarioFindOneOutputDto> {
     const currentUsuario = await this.findByIdStrict(accessContext, dto);
 
-    const currentMatriculaSiape =
-      currentUsuario.matriculaSiape ??
-      (await this.usuarioRepository.resolveProperty(currentUsuario.id, "matriculaSiape"));
+    const currentMatricula =
+      currentUsuario.matricula ??
+      (await this.usuarioRepository.resolveProperty(currentUsuario.id, "matricula"));
 
     const kcUser =
-      currentMatriculaSiape &&
-      (await this.keycloakService.findUserByMatriculaSiape(currentMatriculaSiape));
+      currentMatricula &&
+      (await this.keycloakService.findUserByMatricula(currentMatricula));
 
     if (!kcUser) {
       throw new ServiceUnavailableException();
@@ -243,7 +243,7 @@ export class UsuarioService implements IUsuarioUseCasePort {
 
     const input = {
       nome: dto.nome,
-      matriculaSiape: dto.matriculaSiape,
+      matricula: dto.matricula,
       email: dto.email,
     };
 
@@ -252,18 +252,18 @@ export class UsuarioService implements IUsuarioUseCasePort {
     await this.usuarioRepository.updateFromDomain(currentUsuario.id, input);
 
     const changedEmail = has(dto, "email");
-    const changedMatriculaSiape = has(dto, "matriculaSiape");
+    const changedMatricula = has(dto, "matricula");
 
-    if (changedEmail || changedMatriculaSiape) {
+    if (changedEmail || changedMatricula) {
       const kcAdminClient = await this.keycloakService.getAdminClient();
 
-      if (changedMatriculaSiape) {
+      if (changedMatricula) {
         await kcAdminClient.users.update(
           { id: kcUser.id! },
           {
-            username: input.matriculaSiape ?? undefined,
+            username: input.matricula ?? undefined,
             attributes: {
-              "usuario.matriculaSiape": input.matriculaSiape,
+              "usuario.matricula": input.matricula,
             },
           },
         );
@@ -295,11 +295,11 @@ export class UsuarioService implements IUsuarioUseCasePort {
   }
 
   private async ensureDtoAvailability(
-    dto: Partial<Pick<UsuarioFindOneOutputDto, "email" | "matriculaSiape">>,
+    dto: Partial<Pick<UsuarioFindOneOutputDto, "email" | "matricula">>,
     currentUsuarioId: string | null = null,
   ) {
     let isEmailAvailable = true;
-    let isMatriculaSiapeAvailable = true;
+    let isMatriculaAvailable = true;
 
     const email = dto.email;
 
@@ -307,16 +307,16 @@ export class UsuarioService implements IUsuarioUseCasePort {
       isEmailAvailable = await this.usuarioRepository.isEmailAvailable(email, currentUsuarioId);
     }
 
-    const matriculaSiape = dto.matriculaSiape;
+    const matricula = dto.matricula;
 
-    if (matriculaSiape) {
-      isMatriculaSiapeAvailable = await this.usuarioRepository.isMatriculaSiapeAvailable(
-        matriculaSiape,
+    if (matricula) {
+      isMatriculaAvailable = await this.usuarioRepository.isMatriculaAvailable(
+        matricula,
         currentUsuarioId,
       );
     }
 
-    if (!isMatriculaSiapeAvailable || !isEmailAvailable) {
+    if (!isMatriculaAvailable || !isEmailAvailable) {
       throw new ValidationFailedException([
         ...(!isEmailAvailable
           ? [
@@ -330,15 +330,15 @@ export class UsuarioService implements IUsuarioUseCasePort {
               },
             ]
           : []),
-        ...(!isMatriculaSiapeAvailable
+        ...(!isMatriculaAvailable
           ? [
               {
                 scope: "body",
-                path: "matriculaSiape",
-                type: "matricula-siape-is-available",
-                errors: ["A Matrícula SIAPE informada não está disponível."],
+                path: "matricula",
+                type: "matricula-is-available",
+                errors: ["A matrícula informada não está disponível."],
                 name: "ValidationError",
-                message: "A Matrícula SIAPE informada não está disponível.",
+                message: "A matrícula informada não está disponível.",
               },
             ]
           : []),
