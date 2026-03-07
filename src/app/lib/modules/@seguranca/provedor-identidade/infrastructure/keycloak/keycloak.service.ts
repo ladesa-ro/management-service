@@ -100,13 +100,23 @@ export class KeycloakService {
     throw new Error("[KeycloakService::error] kcAdminClient is null");
   }
 
-  async findUserByMatriculaSiape(matriculaSiape: string) {
+  async findUserByMatricula(matricula: string) {
     const kcAdminClient = await this.getAdminClient();
-    const [userRepresentation] = await kcAdminClient.users.find(
-      { q: `usuario.matriculaSiape:${matriculaSiape}` },
+    const [userByMatricula] = await kcAdminClient.users.find(
+      { q: `usuario.matricula:${matricula}` },
       { catchNotFound: true },
     );
-    return userRepresentation;
+
+    if (userByMatricula) {
+      return userByMatricula;
+    }
+
+    const [legacyUser] = await kcAdminClient.users.find(
+      { q: `usuario.matriculaSiape:${matricula}` },
+      { catchNotFound: true },
+    );
+
+    return legacyUser;
   }
 
   private getClientAuthCredentials(): Credentials {

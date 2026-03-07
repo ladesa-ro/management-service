@@ -68,7 +68,7 @@ export class AutenticacaoService implements IAutenticacaoUseCasePort {
       throw new ServiceUnavailableException();
     }
 
-    const { usuario, userRepresentation } = await this.findByMatriculaSiape(domain.matriculaSiape);
+    const { usuario, userRepresentation } = await this.findByMatricula(domain.matricula);
 
     try {
       if (usuario && userRepresentation?.username) {
@@ -116,8 +116,8 @@ export class AutenticacaoService implements IAutenticacaoUseCasePort {
     try {
       const kcAdminClient = await this.keycloakService.getAdminClient();
 
-      const { usuario, userRepresentation } = await this.findByMatriculaSiape(
-        domain.matriculaSiape,
+      const { usuario, userRepresentation } = await this.findByMatricula(
+        domain.matricula,
       );
 
       if (!usuario || !userRepresentation) {
@@ -199,9 +199,9 @@ export class AutenticacaoService implements IAutenticacaoUseCasePort {
     };
   }
 
-  private async findByMatriculaSiape(matriculaSiape: string) {
-    const usuario = await this.usuarioService.internalFindByMatriculaSiape(matriculaSiape);
-    const userRepresentation = await this.keycloakService.findUserByMatriculaSiape(matriculaSiape);
+  private async findByMatricula(matricula: string) {
+    const usuario = await this.usuarioService.internalFindByMatricula(matricula);
+    const userRepresentation = await this.keycloakService.findUserByMatricula(matricula);
 
     return {
       usuario,

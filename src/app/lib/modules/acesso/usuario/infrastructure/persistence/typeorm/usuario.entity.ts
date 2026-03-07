@@ -18,8 +18,8 @@ export class UsuarioEntity {
   @Column({ name: "nome", type: "text", nullable: true })
   nome!: string | null;
 
-  @Column({ name: "matricula_siape", type: "text", nullable: true })
-  matriculaSiape!: string | null;
+  @Column({ name: "matricula", type: "text", nullable: true })
+  matricula!: string | null;
 
   @Column({ name: "email", type: "text", nullable: true })
   email!: string | null;

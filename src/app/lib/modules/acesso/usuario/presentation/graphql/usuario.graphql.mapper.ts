@@ -69,7 +69,7 @@ export class UsuarioGraphqlMapper {
   static toCreateInput(dto: UsuarioCreateInputGraphQlDto): UsuarioCreateInputDto {
     const input = new UsuarioCreateInputDto();
     input.nome = dto.nome;
-    input.matriculaSiape = dto.matriculaSiape;
+    input.matricula = dto.matricula;
     input.email = dto.email;
     return input;
   }
@@ -83,8 +83,8 @@ export class UsuarioGraphqlMapper {
     if (dto.nome !== undefined) {
       input.nome = dto.nome;
     }
-    if (dto.matriculaSiape !== undefined) {
-      input.matriculaSiape = dto.matriculaSiape;
+    if (dto.matricula !== undefined) {
+      input.matricula = dto.matricula;
     }
     if (dto.email !== undefined) {
       input.email = dto.email;
@@ -96,7 +96,7 @@ export class UsuarioGraphqlMapper {
     const dto = new UsuarioFindOneOutputGraphQlDto();
     dto.id = output.id;
     dto.nome = output.nome;
-    dto.matriculaSiape = output.matriculaSiape;
+    dto.matricula = output.matricula;
     dto.email = output.email;
     dto.isSuperUser = output.isSuperUser;
     dto.imagemCapa = mapImagemOutput(output.imagemCapa);

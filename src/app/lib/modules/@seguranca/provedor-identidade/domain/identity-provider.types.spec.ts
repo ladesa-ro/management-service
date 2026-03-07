@@ -7,15 +7,15 @@ describe("IIdentityResponse", () => {
     expect(response).toBeDefined();
   });
 
-  it("deve aceitar usuario com matriculaSiape", () => {
+  it("deve aceitar usuario com matricula", () => {
     const response: IIdentityResponse = {
       usuario: {
-        matriculaSiape: "12345",
+        matricula: "12345",
       },
     };
 
     expect(response.usuario).toBeDefined();
-    expect(response.usuario?.matriculaSiape).toBe("12345");
+    expect(response.usuario?.matricula).toBe("12345");
   });
 
   it("deve aceitar usuario undefined", () => {

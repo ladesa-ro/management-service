@@ -143,7 +143,7 @@ export class PerfilTypeOrmRepositoryAdapter
         "campus.apelido",
         "campus.cnpj",
         "usuario.id",
-        "usuario.matriculaSiape",
+        "usuario.matricula",
         "usuario.email",
         "dateCreated",
       ],

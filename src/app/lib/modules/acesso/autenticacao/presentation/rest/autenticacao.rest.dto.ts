@@ -11,9 +11,9 @@ import { UsuarioFindOneOutputRestDto } from "@/modules/acesso/usuario/presentati
 
 @decorate(ApiSchema({ name: "AuthLoginInputDto" }))
 export class AuthLoginInputRestDto {
-  @decorate(ApiProperty({ type: "string", description: "Matricula SIAPE" }))
+  @decorate(ApiProperty({ type: "string", description: "Matrícula" }))
   @decorate(IsString())
-  matriculaSiape: string;
+  matricula: string;
 
   @decorate(ApiProperty({ type: "string", description: "Senha" }))
   @decorate(IsString())
@@ -134,9 +134,9 @@ export class AuthSessionCredentialsRestDto {
 
 @decorate(ApiSchema({ name: "AuthCredentialsSetInitialPasswordInputDto" }))
 export class AuthCredentialsSetInitialPasswordInputRestDto {
-  @decorate(ApiProperty({ type: "string", description: "Matricula SIAPE" }))
+  @decorate(ApiProperty({ type: "string", description: "Matrícula" }))
   @decorate(IsString())
-  matriculaSiape: string;
+  matricula: string;
 
   @decorate(ApiProperty({ type: "string", description: "Nova senha" }))
   @decorate(IsString())
