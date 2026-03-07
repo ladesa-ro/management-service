@@ -38,6 +38,7 @@ import { CidadeModule } from "@/modules/localidades/cidade/cidade.module";
 import { EnderecoModule } from "@/modules/localidades/endereco/endereco.module";
 import { EstadoModule } from "@/modules/localidades/estado/estado.module";
 import { EmpresaModule } from "@/modules/estagio/empresa/empresa.module";
+import { EstagiarioModule } from "@/modules/estagio/estagiario/estagiario.module";
 
 @Module({
   imports: [
@@ -77,6 +78,7 @@ import { EmpresaModule } from "@/modules/estagio/empresa/empresa.module";
     EnderecoModule,
     EstadoModule,
       EmpresaModule,
+    EstagiarioModule,
     TurmaDisponibilidadeModule,
     HorarioGeradoAulaModule,
     DiarioProfessorModule,
