@@ -152,7 +152,7 @@ defineModel("ReservaFindOneOutputDto", [
 defineModel("UsuarioFindOneOutputDto", [
   simpleProperty("id"),
   simpleProperty("nome", { nullable: true }),
-  simpleProperty("matriculaSiape", { nullable: true }),
+  simpleProperty("matricula", { nullable: true }),
   simpleProperty("email", { nullable: true }),
   simpleProperty("isSuperUser"),
   referenceProperty("imagemCapa", "ImagemFindOneOutputDto", { nullable: true }),

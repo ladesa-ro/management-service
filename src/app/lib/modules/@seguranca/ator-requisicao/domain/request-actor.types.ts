@@ -6,5 +6,5 @@ import type { UsuarioFindOneOutputDto } from "@/modules/acesso/usuario/applicati
  */
 export type IRequestActor = null | Pick<
   UsuarioFindOneOutputDto,
-  "id" | "nome" | "matriculaSiape" | "email" | "isSuperUser"
+  "id" | "nome" | "matricula" | "email" | "isSuperUser"
 >;

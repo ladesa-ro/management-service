@@ -16,7 +16,7 @@ describe("IAccessContext", () => {
       id: "123",
       nome: "Test User",
       email: "test@example.com",
-      matriculaSiape: "12345",
+      matricula: "12345",
       isSuperUser: false,
     });
 
@@ -42,7 +42,7 @@ describe("IAccessContext", () => {
       id: "123",
       nome: "Test",
       email: "test@test.com",
-      matriculaSiape: "12345",
+      matricula: "12345",
       isSuperUser: true,
     });
 
@@ -55,7 +55,7 @@ describe("IAccessContext", () => {
       id: "123",
       nome: "Test",
       email: "test@test.com",
-      matriculaSiape: "12345",
+      matricula: "12345",
       isSuperUser: true,
     });
 

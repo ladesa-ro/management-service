@@ -16,7 +16,7 @@ import { ImagemFindOneOutputGraphQlDto } from "@/modules/armazenamento/imagem-ar
 @decorate(ObjectType("UsuarioFindOneOutputDto"))
 export class UsuarioFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
   @decorate(Field(() => String, { nullable: true })) nome: string | null;
-  @decorate(Field(() => String, { nullable: true })) matriculaSiape: string | null;
+  @decorate(Field(() => String, { nullable: true })) matricula: string | null;
   @decorate(Field(() => String, { nullable: true })) email: string | null;
   @decorate(Field(() => Boolean)) isSuperUser: boolean;
   @decorate(Field(() => ImagemFindOneOutputGraphQlDto, { nullable: true }))
@@ -32,7 +32,7 @@ export class UsuarioFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
 @decorate(InputType("UsuarioCreateInputDto"))
 export class UsuarioCreateInputGraphQlDto extends UsuarioFieldsMixin {
   @decorate(Field(() => String, { nullable: true })) declare nome?: string | null;
-  @decorate(Field(() => String, { nullable: true })) declare matriculaSiape?: string | null;
+  @decorate(Field(() => String, { nullable: true })) declare matricula?: string | null;
   @decorate(Field(() => String, { nullable: true })) declare email?: string | null;
 }
 
@@ -50,7 +50,7 @@ export class UsuarioUpdateInputGraphQlDto {
   @decorate(Field(() => String, { nullable: true }))
   @decorate(IsOptional())
   @decorate(IsString())
-  matriculaSiape?: string | null;
+  matricula?: string | null;
   @decorate(Field(() => String, { nullable: true }))
   @decorate(IsOptional())
   @decorate(IsString())

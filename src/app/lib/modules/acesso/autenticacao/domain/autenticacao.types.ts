@@ -21,7 +21,7 @@ export interface IAuthSessionCredentials {
  * Dados para login
  */
 export interface IAuthLoginInput {
-  matriculaSiape: string;
+  matricula: string;
   senha: string;
 }
 
@@ -36,7 +36,7 @@ export interface IAuthRefreshInput {
  * Dados para definir senha inicial
  */
 export interface IAuthSetInitialPasswordInput {
-  matriculaSiape: string;
+  matricula: string;
   senha: string;
 }
 

@@ -70,10 +70,10 @@ export interface IUsuarioUseCasePort {
   ): Promise<UsuarioEnsinoOutput>;
 
   /**
-   * Busca interno por matricula SIAPE
+   * Busca interna por matrícula
    */
-  internalFindByMatriculaSiape(
-    matriculaSiape: string,
+  internalFindByMatricula(
+    matricula: string,
     selection?: string[] | boolean,
   ): Promise<UsuarioFindOneOutputDto | null>;
 

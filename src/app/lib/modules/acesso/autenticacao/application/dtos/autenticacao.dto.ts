@@ -6,7 +6,7 @@ import { UsuarioFindOneOutputDto } from "@/modules/acesso/usuario";
 // ============================================================================
 
 export class AuthLoginInputDto {
-  matriculaSiape!: string;
+  matricula!: string;
 
   senha!: string;
 }
@@ -56,7 +56,7 @@ export class AuthSessionCredentialsDto {
 // ============================================================================
 
 export class AuthCredentialsSetInitialPasswordInputDto {
-  matriculaSiape!: string;
+  matricula!: string;
 
   senha!: string;
 }
