@@ -1,0 +1,9 @@
+import type { ImagemInputRefDto } from "./ImagemInputRefDto";
+
+export class UsuarioUpdateInputDto {
+  nome?: string | null;
+  matriculaSiape?: string | null;
+  email?: string | null;
+  imagemCapa?: ImagemInputRefDto | null;
+  imagemPerfil?: ImagemInputRefDto | null;
+}
