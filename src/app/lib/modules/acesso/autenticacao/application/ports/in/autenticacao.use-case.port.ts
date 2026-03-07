@@ -19,7 +19,7 @@ export interface IAutenticacaoUseCasePort {
   whoAmI(accessContext: AccessContext): Promise<AuthWhoAmIOutputDto>;
 
   /**
-   * Realiza login com matrícula SIAPE e senha
+   * Realiza login com matrícula e senha
    */
   login(
     accessContext: AccessContext,

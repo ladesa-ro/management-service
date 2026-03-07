@@ -10,7 +10,7 @@ export class UsuarioFieldsMixin {
   @decorate(IsOptional())
   @decorate(IsString())
   @decorate(MinLength(1))
-  matriculaSiape?: string | null;
+  matricula?: string | null;
 
   @decorate(IsOptional())
   @decorate(IsEmail())

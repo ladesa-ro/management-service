@@ -47,14 +47,14 @@ export class UsuarioTypeOrmRepositoryAdapter
     return createUsuarioRepository(this.dataSource);
   }
 
-  async findByMatriculaSiape(
-    matriculaSiape: string,
+  async findByMatricula(
+    matricula: string,
     selection?: string[] | boolean,
   ): Promise<UsuarioFindOneOutputDto | null> {
     const qb = this.repository.createQueryBuilder(this.alias);
 
-    qb.andWhere(`${this.alias}.matriculaSiape = :matriculaSiape`, {
-      matriculaSiape: matriculaSiape,
+    qb.andWhere(`${this.alias}.matricula = :matricula`, {
+      matricula: matricula,
     });
 
     qb.select([]);
@@ -67,14 +67,14 @@ export class UsuarioTypeOrmRepositoryAdapter
 
   // Métodos específicos do Usuario que não estão na classe base
 
-  async isMatriculaSiapeAvailable(
-    matriculaSiape: string,
+  async isMatriculaAvailable(
+    matricula: string,
     excludeUsuarioId?: string | null,
   ): Promise<boolean> {
     const qb = this.repository.createQueryBuilder(this.alias);
 
-    qb.where(`${this.alias}.matriculaSiape = :matriculaSiape`, {
-      matriculaSiape: matriculaSiape,
+    qb.where(`${this.alias}.matricula = :matricula`, {
+      matricula: matricula,
     });
 
     if (excludeUsuarioId) {
@@ -231,13 +231,13 @@ export class UsuarioTypeOrmRepositoryAdapter
   protected getPaginateConfig(): ITypeOrmPaginationConfig<UsuarioEntity> {
     return {
       ...paginateConfig,
-      select: ["id", "nome", "matriculaSiape", "email", "dateCreated"],
-      sortableColumns: ["nome", "matriculaSiape", "email", "dateCreated"],
-      searchableColumns: ["id", "nome", "matriculaSiape", "email"],
+      select: ["id", "nome", "matricula", "email", "dateCreated"],
+      sortableColumns: ["nome", "matricula", "email", "dateCreated"],
+      searchableColumns: ["id", "nome", "matricula", "email"],
       defaultSortBy: [
         ["nome", "ASC"],
         ["dateCreated", "ASC"],
-        ["matriculaSiape", "ASC"],
+        ["matricula", "ASC"],
       ],
       filterableColumns: {},
     };

@@ -16,7 +16,7 @@ export class UsuarioFindOneInputDto extends FindOneInputDto {}
 
 export class UsuarioFindOneOutputDto extends EntityOutputDto {
   nome!: string | null;
-  matriculaSiape!: string | null;
+  matricula!: string | null;
   email!: string | null;
   isSuperUser!: boolean;
   imagemCapa!: ImagemFindOneOutputDto | null;
@@ -39,7 +39,7 @@ export class UsuarioListOutputDto extends PaginationResultDto<UsuarioFindOneOutp
 
 export class UsuarioCreateInputDto {
   nome?: string | null;
-  matriculaSiape?: string | null;
+  matricula?: string | null;
   email?: string | null;
   imagemCapa?: ImagemInputRefDto | null;
   imagemPerfil?: ImagemInputRefDto | null;
@@ -47,7 +47,7 @@ export class UsuarioCreateInputDto {
 
 export class UsuarioUpdateInputDto {
   nome?: string | null;
-  matriculaSiape?: string | null;
+  matricula?: string | null;
   email?: string | null;
   imagemCapa?: ImagemInputRefDto | null;
   imagemPerfil?: ImagemInputRefDto | null;

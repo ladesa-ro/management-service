@@ -7,7 +7,7 @@ import type { IImagem } from "@/modules/armazenamento/imagem/domain/imagem.types
  */
 export interface IUsuario extends IEntityBase {
   nome: string | null;
-  matriculaSiape: string | null;
+  matricula: string | null;
   email: string | null;
   isSuperUser: boolean;
   imagemCapa: IImagem | null;
@@ -19,7 +19,7 @@ export interface IUsuario extends IEntityBase {
  */
 export interface IUsuarioCreate {
   nome?: string | null;
-  matriculaSiape?: string | null;
+  matricula?: string | null;
   email?: string | null;
 }
 
@@ -28,6 +28,6 @@ export interface IUsuarioCreate {
  */
 export interface IUsuarioUpdate {
   nome?: string | null;
-  matriculaSiape?: string | null;
+  matricula?: string | null;
   email?: string | null;
 }

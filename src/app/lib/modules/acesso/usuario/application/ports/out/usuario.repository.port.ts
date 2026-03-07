@@ -45,18 +45,18 @@ export interface IUsuarioRepositoryPort extends IPersistRepositoryPort<Record<st
   ): Promise<UsuarioFindOneOutputDto | null>;
 
   /**
-   * Busca um usuário pela matrícula SIAPE (sem filtro de acesso)
+   * Busca um usuário pela matrícula (sem filtro de acesso)
    */
-  findByMatriculaSiape(
-    matriculaSiape: string,
+  findByMatricula(
+    matricula: string,
     selection?: string[] | boolean,
   ): Promise<UsuarioFindOneOutputDto | null>;
 
   /**
-   * Verifica se uma matrícula SIAPE está disponível
+   * Verifica se uma matrícula está disponível
    */
-  isMatriculaSiapeAvailable(
-    matriculaSiape: string,
+  isMatriculaAvailable(
+    matricula: string,
     excludeUsuarioId?: string | null,
   ): Promise<boolean>;
 

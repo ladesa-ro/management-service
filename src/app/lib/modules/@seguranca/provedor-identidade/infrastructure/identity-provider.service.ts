@@ -10,7 +10,7 @@ import { OpenidConnectService } from "./openid-connect";
 
 interface IntrospectionResponseWithUser extends IntrospectionResponse {
   usuario: {
-    matriculaSiape: string;
+    matricula: string;
   };
 }
 

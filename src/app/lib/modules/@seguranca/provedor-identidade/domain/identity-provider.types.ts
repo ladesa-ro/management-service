@@ -22,6 +22,6 @@ export interface IKeycloakCredentials {
  */
 export interface IIdentityResponse {
   usuario?: {
-    matriculaSiape?: string;
+    matricula?: string;
   };
 }

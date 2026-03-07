@@ -30,23 +30,23 @@ export class RequestActorResolverAdapter implements IRequestActorResolverPort {
 
     // Suporte a mock tokens para desenvolvimento
     if (process.env.ENABLE_MOCK_ACCESS_TOKEN === "true") {
-      const matriculaSiapeMockMatch = accessToken.match(/^mock\.siape\.(\d+)$/);
+      const matriculaMockMatch = accessToken.match(/^mock\.matricula\.(\d+)$/);
 
-      if (matriculaSiapeMockMatch) {
-        const matriculaSiape = matriculaSiapeMockMatch[1];
-        return this.resolveByMatriculaSiape(matriculaSiape);
+      if (matriculaMockMatch) {
+        const matricula = matriculaMockMatch[1];
+        return this.resolveByMatricula(matricula);
       }
     }
 
     const tokenSet = await this.identityProvider.getIdentityFromAccessToken(accessToken);
 
-    return this.resolveByMatriculaSiape(tokenSet.usuario?.matriculaSiape);
+    return this.resolveByMatricula(tokenSet.usuario?.matricula);
   }
 
-  private async resolveByMatriculaSiape(
-    matriculaSiape: string | undefined,
+  private async resolveByMatricula(
+    matricula: string | undefined,
   ): Promise<IRequestActor> {
-    if (!matriculaSiape) {
+    if (!matricula) {
       return null;
     }
 
@@ -55,11 +55,11 @@ export class RequestActorResolverAdapter implements IRequestActorResolverPort {
       .select([
         "usuario.id",
         "usuario.nome",
-        "usuario.matriculaSiape",
+        "usuario.matricula",
         "usuario.email",
         "usuario.isSuperUser",
       ])
-      .where("usuario.matriculaSiape = :matriculaSiape", { matriculaSiape })
+      .where("usuario.matricula = :matricula", { matricula })
       .andWhere("usuario.dateDeleted IS NULL")
       .getOne();
 
@@ -67,6 +67,6 @@ export class RequestActorResolverAdapter implements IRequestActorResolverPort {
       throw new ForbiddenException("O usuário não possui perfil no sistema.");
     }
 
-    return pick(usuario, ["id", "nome", "matriculaSiape", "email", "isSuperUser"]);
+    return pick(usuario, ["id", "nome", "matricula", "email", "isSuperUser"]);
   }
 }
