@@ -11,16 +11,28 @@ export class EstagiarioMapper {
    * Converte entidade TypeORM para domínio
    */
   static toDomain(entity: EstagiarioTypeormEntity): Estagiario {
+    const formatDateToISOString = (date: Date | string | null | undefined): string | null => {
+      if (!date) return null;
+      if (typeof date === 'string') return date;
+      return (date as Date).toISOString();
+    };
+
+    const formatDateToDateString = (date: Date | string | null | undefined): string => {
+      if (!date) return new Date().toISOString();
+      if (typeof date === 'string') return date;
+      return (date as Date).toISOString();
+    };
+
     const estagiario = Estagiario.fromData({
       id: entity.id,
       idPerfilFk: entity.idPerfilFk,
       idCursoFk: entity.idCursoFk,
       idTurmaFk: entity.idTurmaFk,
       telefone: entity.telefone,
-      dataNascimento: entity.dataNascimento.toISOString().split("T")[0],
-      dateCreated: entity.dateCreated.toISOString(),
-      dateUpdated: entity.dateUpdated.toISOString(),
-      dateDeleted: entity.dateDeleted ? entity.dateDeleted.toISOString() : null,
+      dataNascimento: typeof entity.dataNascimento === 'string' ? entity.dataNascimento : (entity.dataNascimento as Date).toISOString().split("T")[0],
+      dateCreated: formatDateToDateString(entity.dateCreated),
+      dateUpdated: formatDateToDateString(entity.dateUpdated),
+      dateDeleted: formatDateToISOString(entity.dateDeleted),
     });
     return estagiario;
   }
@@ -49,16 +61,26 @@ export class EstagiarioMapper {
    * Converte TypeORM para DTO output
    */
   static toOutputDto(entity: EstagiarioTypeormEntity): EstagiarioFindOneOutputDto {
+    const formatDateToISOString = (date: Date | string | null | undefined): string => {
+      if (!date) return new Date().toISOString();
+      if (typeof date === 'string') return date;
+      return (date as Date).toISOString();
+    };
+
+    const dataNascimentoFormatted = typeof entity.dataNascimento === 'string'
+      ? entity.dataNascimento
+      : (entity.dataNascimento as Date).toISOString().split("T")[0];
+
     return {
       id: entity.id,
       idPerfilFk: entity.idPerfilFk,
       idCursoFk: entity.idCursoFk,
       idTurmaFk: entity.idTurmaFk,
       telefone: entity.telefone,
-      dataNascimento: entity.dataNascimento.toISOString().split("T")[0],
+      dataNascimento: dataNascimentoFormatted,
       ativo: !entity.dateDeleted,
-      dateCreated: entity.dateCreated.toISOString(),
-      dateUpdated: entity.dateUpdated.toISOString(),
+      dateCreated: formatDateToISOString(entity.dateCreated),
+      dateUpdated: formatDateToISOString(entity.dateUpdated),
     };
   }
 
