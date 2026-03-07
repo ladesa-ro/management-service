@@ -1,12 +1,10 @@
 import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/contexto-acesso";
-import {
-  OfertaFormacaoNivelFormacaoCreateInputDto,
-  OfertaFormacaoNivelFormacaoFindOneInputDto,
-  OfertaFormacaoNivelFormacaoFindOneOutputDto,
-  OfertaFormacaoNivelFormacaoListInputDto,
-  OfertaFormacaoNivelFormacaoListOutputDto,
-  OfertaFormacaoNivelFormacaoUpdateInputDto,
-} from "../../dtos";
+import { OfertaFormacaoNivelFormacaoCreateInputDto } from "@/Ladesa.Management.Domain/Dtos/OfertaFormacaoNivelFormacaoCreateInputDto";
+import { OfertaFormacaoNivelFormacaoFindOneInputDto } from "@/Ladesa.Management.Domain/Dtos/OfertaFormacaoNivelFormacaoFindOneInputDto";
+import { OfertaFormacaoNivelFormacaoFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/OfertaFormacaoNivelFormacaoFindOneOutputDto";
+import { OfertaFormacaoNivelFormacaoListInputDto } from "@/Ladesa.Management.Domain/Dtos/OfertaFormacaoNivelFormacaoListInputDto";
+import { OfertaFormacaoNivelFormacaoListOutputDto } from "@/Ladesa.Management.Domain/Dtos/OfertaFormacaoNivelFormacaoListOutputDto";
+import { OfertaFormacaoNivelFormacaoUpdateInputDto } from "@/Ladesa.Management.Domain/Dtos/OfertaFormacaoNivelFormacaoUpdateInputDto";
 
 /**
  * Port de entrada para casos de uso de OfertaFormacaoNivelFormacao

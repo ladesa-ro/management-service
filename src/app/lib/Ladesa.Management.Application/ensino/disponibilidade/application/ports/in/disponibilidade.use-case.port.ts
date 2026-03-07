@@ -1,12 +1,10 @@
 import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/contexto-acesso";
-import {
-  DisponibilidadeCreateInputDto,
-  DisponibilidadeFindOneInputDto,
-  DisponibilidadeFindOneOutputDto,
-  DisponibilidadeListInputDto,
-  DisponibilidadeListOutputDto,
-  DisponibilidadeUpdateInputDto,
-} from "../../dtos";
+import { DisponibilidadeCreateInputDto } from "@/Ladesa.Management.Domain/Dtos/DisponibilidadeCreateInputDto";
+import { DisponibilidadeFindOneInputDto } from "@/Ladesa.Management.Domain/Dtos/DisponibilidadeFindOneInputDto";
+import { DisponibilidadeFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/DisponibilidadeFindOneOutputDto";
+import { DisponibilidadeListInputDto } from "@/Ladesa.Management.Domain/Dtos/DisponibilidadeListInputDto";
+import { DisponibilidadeListOutputDto } from "@/Ladesa.Management.Domain/Dtos/DisponibilidadeListOutputDto";
+import { DisponibilidadeUpdateInputDto } from "@/Ladesa.Management.Domain/Dtos/DisponibilidadeUpdateInputDto";
 
 export interface IDisponibilidadeUseCasePort {
   findAll(

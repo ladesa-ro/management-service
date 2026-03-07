@@ -1,9 +1,7 @@
 import type { IBaseCrudRepositoryPort } from "@/Ladesa.Management.Application/@shared";
 import type { OfertaFormacaoNivelFormacao } from "@/Ladesa.Management.Application/ensino/oferta-formacao-nivel-formacao";
-import type {
-  OfertaFormacaoNivelFormacaoFindOneOutputDto,
-  OfertaFormacaoNivelFormacaoListOutputDto,
-} from "@/Ladesa.Management.Application/ensino/oferta-formacao-nivel-formacao/application/dtos";
+import { type OfertaFormacaoNivelFormacaoFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/OfertaFormacaoNivelFormacaoFindOneOutputDto";
+import { type OfertaFormacaoNivelFormacaoListOutputDto } from "@/Ladesa.Management.Domain/Dtos/OfertaFormacaoNivelFormacaoListOutputDto";
 
 /**
  * Token de injecao para o repositorio de OfertaFormacaoNivelFormacao

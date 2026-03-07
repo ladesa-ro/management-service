@@ -7,7 +7,7 @@ import type {
   EnderecoListOutputDto,
   IEnderecoRepository,
 } from "@/Ladesa.Management.Application/localidades/endereco";
-import type { EnderecoEntity } from "@/Ladesa.Management.Application/localidades/endereco/infrastructure/persistence/typeorm/index";
+import { type EnderecoEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/EnderecoEntity";
 import { createEnderecoRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/CreateEnderecoRepository";
 import {
   APP_DATA_SOURCE_TOKEN,

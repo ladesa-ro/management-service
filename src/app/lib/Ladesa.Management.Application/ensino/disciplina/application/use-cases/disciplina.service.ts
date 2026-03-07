@@ -4,15 +4,13 @@ import { BaseCrudService, type PersistInput } from "@/Ladesa.Management.Applicat
 import { ArquivoService } from "@/Ladesa.Management.Application/armazenamento/arquivo/application/use-cases/arquivo.service";
 import { ImagemService } from "@/Ladesa.Management.Application/armazenamento/imagem/application/use-cases/imagem.service";
 import { Disciplina } from "@/Ladesa.Management.Application/ensino/disciplina";
-import type {
-  DisciplinaCreateInputDto,
-  DisciplinaFindOneInputDto,
-  DisciplinaFindOneOutputDto,
-  DisciplinaListInputDto,
-  DisciplinaListOutputDto,
-  DisciplinaUpdateInputDto,
-} from "@/Ladesa.Management.Application/ensino/disciplina/application/dtos";
 import { IDisciplinaRepository } from "@/Ladesa.Management.Application/ensino/disciplina/application/ports";
+import { type DisciplinaCreateInputDto } from "@/Ladesa.Management.Domain/Dtos/DisciplinaCreateInputDto";
+import { type DisciplinaFindOneInputDto } from "@/Ladesa.Management.Domain/Dtos/DisciplinaFindOneInputDto";
+import { type DisciplinaFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/DisciplinaFindOneOutputDto";
+import { type DisciplinaListInputDto } from "@/Ladesa.Management.Domain/Dtos/DisciplinaListInputDto";
+import { type DisciplinaListOutputDto } from "@/Ladesa.Management.Domain/Dtos/DisciplinaListOutputDto";
+import { type DisciplinaUpdateInputDto } from "@/Ladesa.Management.Domain/Dtos/DisciplinaUpdateInputDto";
 
 @Injectable()
 export class DisciplinaService extends BaseCrudService<

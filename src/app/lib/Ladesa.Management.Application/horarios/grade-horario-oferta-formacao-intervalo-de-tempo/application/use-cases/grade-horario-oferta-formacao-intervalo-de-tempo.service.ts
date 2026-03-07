@@ -5,15 +5,13 @@ import { BaseCrudService, type PersistInput } from "@/Ladesa.Management.Applicat
 import { GradeHorarioOfertaFormacaoService } from "@/Ladesa.Management.Application/horarios/grade-horario-oferta-formacao";
 import type { GradeHorarioOfertaFormacaoIntervaloDeTempo } from "@/Ladesa.Management.Application/horarios/grade-horario-oferta-formacao-intervalo-de-tempo";
 import { IntervaloDeTempoService } from "@/Ladesa.Management.Application/horarios/intervalo-de-tempo";
-import type {
-  GradeHorarioOfertaFormacaoIntervaloDeTempoCreateInputDto,
-  GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInputDto,
-  GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputDto,
-  GradeHorarioOfertaFormacaoIntervaloDeTempoListInputDto,
-  GradeHorarioOfertaFormacaoIntervaloDeTempoListOutputDto,
-  GradeHorarioOfertaFormacaoIntervaloDeTempoUpdateInputDto,
-} from "../dtos";
-import { IGradeHorarioOfertaFormacaoIntervaloDeTempoRepository } from "../ports/out";
+import { type GradeHorarioOfertaFormacaoIntervaloDeTempoCreateInputDto } from "@/Ladesa.Management.Domain/Dtos/GradeHorarioOfertaFormacaoIntervaloDeTempoCreateInputDto";
+import { type GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInputDto } from "@/Ladesa.Management.Domain/Dtos/GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInputDto";
+import { type GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputDto";
+import { type GradeHorarioOfertaFormacaoIntervaloDeTempoListInputDto } from "@/Ladesa.Management.Domain/Dtos/GradeHorarioOfertaFormacaoIntervaloDeTempoListInputDto";
+import { type GradeHorarioOfertaFormacaoIntervaloDeTempoListOutputDto } from "@/Ladesa.Management.Domain/Dtos/GradeHorarioOfertaFormacaoIntervaloDeTempoListOutputDto";
+import { type GradeHorarioOfertaFormacaoIntervaloDeTempoUpdateInputDto } from "@/Ladesa.Management.Domain/Dtos/GradeHorarioOfertaFormacaoIntervaloDeTempoUpdateInputDto";
+import { IGradeHorarioOfertaFormacaoIntervaloDeTempoRepository } from "@/Ladesa.Management.Domain/Repositories/IGradeHorarioOfertaFormacaoIntervaloDeTempoRepository";
 
 @Injectable()
 export class GradeHorarioOfertaFormacaoIntervaloDeTempoService extends BaseCrudService<

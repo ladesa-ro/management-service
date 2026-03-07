@@ -7,14 +7,6 @@ import {
   type PersistInput,
 } from "@/Ladesa.Management.Application/@shared";
 import { Bloco } from "@/Ladesa.Management.Application/ambientes/bloco";
-import type {
-  BlocoCreateInputDto,
-  BlocoFindOneInputDto,
-  BlocoFindOneOutputDto,
-  BlocoListInputDto,
-  BlocoListOutputDto,
-  BlocoUpdateInputDto,
-} from "@/Ladesa.Management.Application/ambientes/bloco/application/dtos";
 import {
   IBlocoRepository,
   type IBlocoUseCasePort,
@@ -22,6 +14,12 @@ import {
 import { CampusService } from "@/Ladesa.Management.Application/ambientes/campus";
 import { ArquivoService } from "@/Ladesa.Management.Application/armazenamento/arquivo/application/use-cases/arquivo.service";
 import { ImagemService } from "@/Ladesa.Management.Application/armazenamento/imagem/application/use-cases/imagem.service";
+import { type BlocoCreateInputDto } from "@/Ladesa.Management.Domain/Dtos/BlocoCreateInputDto";
+import { type BlocoFindOneInputDto } from "@/Ladesa.Management.Domain/Dtos/BlocoFindOneInputDto";
+import { type BlocoFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/BlocoFindOneOutputDto";
+import { type BlocoListInputDto } from "@/Ladesa.Management.Domain/Dtos/BlocoListInputDto";
+import { type BlocoListOutputDto } from "@/Ladesa.Management.Domain/Dtos/BlocoListOutputDto";
+import { type BlocoUpdateInputDto } from "@/Ladesa.Management.Domain/Dtos/BlocoUpdateInputDto";
 
 @Injectable()
 export class BlocoService

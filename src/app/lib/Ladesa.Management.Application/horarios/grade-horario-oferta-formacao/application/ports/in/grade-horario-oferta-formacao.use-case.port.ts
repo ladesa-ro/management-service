@@ -1,12 +1,10 @@
 import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/contexto-acesso";
-import type {
-  GradeHorarioOfertaFormacaoCreateInputDto,
-  GradeHorarioOfertaFormacaoFindOneInputDto,
-  GradeHorarioOfertaFormacaoFindOneOutputDto,
-  GradeHorarioOfertaFormacaoListInputDto,
-  GradeHorarioOfertaFormacaoListOutputDto,
-  GradeHorarioOfertaFormacaoUpdateInputDto,
-} from "../../dtos";
+import { type GradeHorarioOfertaFormacaoCreateInputDto } from "@/Ladesa.Management.Domain/Dtos/GradeHorarioOfertaFormacaoCreateInputDto";
+import { type GradeHorarioOfertaFormacaoFindOneInputDto } from "@/Ladesa.Management.Domain/Dtos/GradeHorarioOfertaFormacaoFindOneInputDto";
+import { type GradeHorarioOfertaFormacaoFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/GradeHorarioOfertaFormacaoFindOneOutputDto";
+import { type GradeHorarioOfertaFormacaoListInputDto } from "@/Ladesa.Management.Domain/Dtos/GradeHorarioOfertaFormacaoListInputDto";
+import { type GradeHorarioOfertaFormacaoListOutputDto } from "@/Ladesa.Management.Domain/Dtos/GradeHorarioOfertaFormacaoListOutputDto";
+import { type GradeHorarioOfertaFormacaoUpdateInputDto } from "@/Ladesa.Management.Domain/Dtos/GradeHorarioOfertaFormacaoUpdateInputDto";
 
 /**
  * Port de entrada para casos de uso de GradeHorarioOfertaFormacao

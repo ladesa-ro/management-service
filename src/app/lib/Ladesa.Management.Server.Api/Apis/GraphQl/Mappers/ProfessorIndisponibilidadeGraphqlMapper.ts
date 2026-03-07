@@ -2,10 +2,8 @@ import {
   createListOutputMapper,
   mapDatedFields,
 } from "@/Ladesa.Management.Application/@shared/application/mappers";
-import {
-  ProfessorIndisponibilidadeFindOneOutputDto,
-  ProfessorIndisponibilidadeListInputDto,
-} from "@/Ladesa.Management.Application/ensino/professor-indisponibilidade/application/dtos";
+import { ProfessorIndisponibilidadeFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/ProfessorIndisponibilidadeFindOneOutputDto";
+import { ProfessorIndisponibilidadeListInputDto } from "@/Ladesa.Management.Domain/Dtos/ProfessorIndisponibilidadeListInputDto";
 import {
   ProfessorIndisponibilidadeFindOneOutputGraphQlDto,
   ProfessorIndisponibilidadeListInputGraphQlDto,

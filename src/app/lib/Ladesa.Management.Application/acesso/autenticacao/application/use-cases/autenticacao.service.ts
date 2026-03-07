@@ -14,14 +14,12 @@ import {
 } from "@/Ladesa.Management.Application/@seguranca/provedor-identidade";
 import { PerfilService } from "@/Ladesa.Management.Application/acesso/perfil";
 import { UsuarioService } from "@/Ladesa.Management.Application/acesso/usuario";
-import type {
-  AuthCredentialsSetInitialPasswordInputDto,
-  AuthLoginInputDto,
-  AuthRecoverPasswordInputDto,
-  AuthRefreshInputDto,
-  AuthSessionCredentialsDto,
-  AuthWhoAmIOutputDto,
-} from "../dtos";
+import { type AuthCredentialsSetInitialPasswordInputDto } from "@/Ladesa.Management.Domain/Dtos/AuthCredentialsSetInitialPasswordInputDto";
+import { type AuthLoginInputDto } from "@/Ladesa.Management.Domain/Dtos/AuthLoginInputDto";
+import { type AuthRecoverPasswordInputDto } from "@/Ladesa.Management.Domain/Dtos/AuthRecoverPasswordInputDto";
+import { type AuthRefreshInputDto } from "@/Ladesa.Management.Domain/Dtos/AuthRefreshInputDto";
+import { type AuthSessionCredentialsDto } from "@/Ladesa.Management.Domain/Dtos/AuthSessionCredentialsDto";
+import { type AuthWhoAmIOutputDto } from "@/Ladesa.Management.Domain/Dtos/AuthWhoAmIOutputDto";
 import type { IAutenticacaoUseCasePort } from "../ports";
 
 @Injectable()

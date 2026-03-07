@@ -1,13 +1,11 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
 import { DataSource } from "typeorm";
-import type {
-  ReservaFindOneInputDto,
-  ReservaFindOneOutputDto,
-  ReservaListInputDto,
-  ReservaListOutputDto,
-} from "@/Ladesa.Management.Application/ambientes/reserva/application/dtos";
 import type { IReservaRepository } from "@/Ladesa.Management.Application/ambientes/reserva/application/ports";
+import { type ReservaFindOneInputDto } from "@/Ladesa.Management.Domain/Dtos/ReservaFindOneInputDto";
+import { type ReservaFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/ReservaFindOneOutputDto";
+import { type ReservaListInputDto } from "@/Ladesa.Management.Domain/Dtos/ReservaListInputDto";
+import { type ReservaListOutputDto } from "@/Ladesa.Management.Domain/Dtos/ReservaListOutputDto";
 import type { ReservaEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/ReservaEntity";
 import { createReservaRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/CreateReservaRepository";
 import {

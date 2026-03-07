@@ -1,13 +1,11 @@
 import type { StreamableFile } from "@nestjs/common";
 import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/contexto-acesso";
-import type {
-  DisciplinaCreateInputDto,
-  DisciplinaFindOneInputDto,
-  DisciplinaFindOneOutputDto,
-  DisciplinaListInputDto,
-  DisciplinaListOutputDto,
-  DisciplinaUpdateInputDto,
-} from "@/Ladesa.Management.Application/ensino/disciplina/application/dtos";
+import { type DisciplinaCreateInputDto } from "@/Ladesa.Management.Domain/Dtos/DisciplinaCreateInputDto";
+import { type DisciplinaFindOneInputDto } from "@/Ladesa.Management.Domain/Dtos/DisciplinaFindOneInputDto";
+import { type DisciplinaFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/DisciplinaFindOneOutputDto";
+import { type DisciplinaListInputDto } from "@/Ladesa.Management.Domain/Dtos/DisciplinaListInputDto";
+import { type DisciplinaListOutputDto } from "@/Ladesa.Management.Domain/Dtos/DisciplinaListOutputDto";
+import { type DisciplinaUpdateInputDto } from "@/Ladesa.Management.Domain/Dtos/DisciplinaUpdateInputDto";
 
 /**
  * Port de entrada para casos de uso de Disciplina

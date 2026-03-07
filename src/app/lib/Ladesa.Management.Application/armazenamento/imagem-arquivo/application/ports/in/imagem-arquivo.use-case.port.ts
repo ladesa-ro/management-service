@@ -1,10 +1,8 @@
 import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/contexto-acesso";
-import {
-  ImagemArquivoFindOneInputDto,
-  ImagemArquivoFindOneOutputDto,
-  ImagemArquivoListInputDto,
-  ImagemArquivoListOutputDto,
-} from "../../dtos";
+import { ImagemArquivoFindOneInputDto } from "@/Ladesa.Management.Domain/Dtos/ImagemArquivoFindOneInputDto";
+import { ImagemArquivoFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/ImagemArquivoFindOneOutputDto";
+import { ImagemArquivoListInputDto } from "@/Ladesa.Management.Domain/Dtos/ImagemArquivoListInputDto";
+import { ImagemArquivoListOutputDto } from "@/Ladesa.Management.Domain/Dtos/ImagemArquivoListOutputDto";
 
 /**
  * Port de entrada para casos de uso de ImagemArquivo

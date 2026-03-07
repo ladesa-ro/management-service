@@ -1,10 +1,8 @@
 import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/contexto-acesso";
-import {
-  ProfessorIndisponibilidadeFindOneInputDto,
-  ProfessorIndisponibilidadeFindOneOutputDto,
-  ProfessorIndisponibilidadeListInputDto,
-  ProfessorIndisponibilidadeListOutputDto,
-} from "../../dtos";
+import { ProfessorIndisponibilidadeFindOneInputDto } from "@/Ladesa.Management.Domain/Dtos/ProfessorIndisponibilidadeFindOneInputDto";
+import { ProfessorIndisponibilidadeFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/ProfessorIndisponibilidadeFindOneOutputDto";
+import { ProfessorIndisponibilidadeListInputDto } from "@/Ladesa.Management.Domain/Dtos/ProfessorIndisponibilidadeListInputDto";
+import { ProfessorIndisponibilidadeListOutputDto } from "@/Ladesa.Management.Domain/Dtos/ProfessorIndisponibilidadeListOutputDto";
 
 /**
  * Port de entrada para casos de uso de ProfessorIndisponibilidade

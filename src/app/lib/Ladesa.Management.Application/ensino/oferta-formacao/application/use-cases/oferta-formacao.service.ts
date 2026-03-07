@@ -4,18 +4,16 @@ import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/c
 import { BaseCrudService, type PersistInput } from "@/Ladesa.Management.Application/@shared";
 import { ModalidadeService } from "@/Ladesa.Management.Application/ensino/modalidade";
 import { OfertaFormacao } from "@/Ladesa.Management.Application/ensino/oferta-formacao";
-import type {
-  OfertaFormacaoCreateInputDto,
-  OfertaFormacaoFindOneInputDto,
-  OfertaFormacaoFindOneOutputDto,
-  OfertaFormacaoListInputDto,
-  OfertaFormacaoListOutputDto,
-  OfertaFormacaoUpdateInputDto,
-} from "@/Ladesa.Management.Application/ensino/oferta-formacao/application/dtos";
 import {
   IOfertaFormacaoRepository,
   type IOfertaFormacaoUseCasePort,
 } from "@/Ladesa.Management.Application/ensino/oferta-formacao/application/ports";
+import { type OfertaFormacaoCreateInputDto } from "@/Ladesa.Management.Domain/Dtos/OfertaFormacaoCreateInputDto";
+import { type OfertaFormacaoFindOneInputDto } from "@/Ladesa.Management.Domain/Dtos/OfertaFormacaoFindOneInputDto";
+import { type OfertaFormacaoFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/OfertaFormacaoFindOneOutputDto";
+import { type OfertaFormacaoListInputDto } from "@/Ladesa.Management.Domain/Dtos/OfertaFormacaoListInputDto";
+import { type OfertaFormacaoListOutputDto } from "@/Ladesa.Management.Domain/Dtos/OfertaFormacaoListOutputDto";
+import { type OfertaFormacaoUpdateInputDto } from "@/Ladesa.Management.Domain/Dtos/OfertaFormacaoUpdateInputDto";
 
 @Injectable()
 export class OfertaFormacaoService

@@ -1,12 +1,10 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { DataSource } from "typeorm";
-import type {
-  ProfessorIndisponibilidadeFindOneInputDto,
-  ProfessorIndisponibilidadeFindOneOutputDto,
-  ProfessorIndisponibilidadeListInputDto,
-  ProfessorIndisponibilidadeListOutputDto,
-} from "@/Ladesa.Management.Application/ensino/professor-indisponibilidade/application/dtos";
 import type { IProfessorIndisponibilidadeRepository } from "@/Ladesa.Management.Application/ensino/professor-indisponibilidade/application/ports";
+import { type ProfessorIndisponibilidadeFindOneInputDto } from "@/Ladesa.Management.Domain/Dtos/ProfessorIndisponibilidadeFindOneInputDto";
+import { type ProfessorIndisponibilidadeFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/ProfessorIndisponibilidadeFindOneOutputDto";
+import { type ProfessorIndisponibilidadeListInputDto } from "@/Ladesa.Management.Domain/Dtos/ProfessorIndisponibilidadeListInputDto";
+import { type ProfessorIndisponibilidadeListOutputDto } from "@/Ladesa.Management.Domain/Dtos/ProfessorIndisponibilidadeListOutputDto";
 import type { ProfessorIndisponibilidadeEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/ProfessorIndisponibilidadeEntity";
 import { createProfessorIndisponibilidadeRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/ProfessorIndisponibilidadeRepository";
 import {

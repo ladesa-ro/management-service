@@ -8,7 +8,7 @@ import type {
   DiarioPreferenciaAgrupamentoListInputDto,
   DiarioPreferenciaAgrupamentoListOutputDto,
 } from "@/Ladesa.Management.Application/ensino/diario-preferencia-agrupamento";
-import type { IDiarioPreferenciaAgrupamentoRepository } from "@/Ladesa.Management.Application/ensino/diario-preferencia-agrupamento/application/ports/out";
+import { type IDiarioPreferenciaAgrupamentoRepository } from "@/Ladesa.Management.Domain/Repositories/IDiarioPreferenciaAgrupamentoRepository";
 import type { DiarioPreferenciaAgrupamentoEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/DiarioPreferenciaAgrupamentoEntity";
 import { createDiarioPreferenciaAgrupamentoRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/CreateDiarioPreferenciaAgrupamentoRepository";
 import {

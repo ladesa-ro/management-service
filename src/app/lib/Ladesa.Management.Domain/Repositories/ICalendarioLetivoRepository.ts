@@ -1,10 +1,8 @@
 import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/contexto-acesso";
 import type { IBaseCrudRepositoryPort } from "@/Ladesa.Management.Application/@shared";
 import type { CalendarioLetivo } from "@/Ladesa.Management.Application/horarios/calendario-letivo";
-import type {
-  CalendarioLetivoFindOneOutputDto,
-  CalendarioLetivoListOutputDto,
-} from "@/Ladesa.Management.Application/horarios/calendario-letivo/application/dtos";
+import { type CalendarioLetivoFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/CalendarioLetivoFindOneOutputDto";
+import { type CalendarioLetivoListOutputDto } from "@/Ladesa.Management.Domain/Dtos/CalendarioLetivoListOutputDto";
 
 /**
  * Token de injeção para o repositório de CalendarioLetivo

@@ -3,7 +3,7 @@ import { PerfilModule } from "@/Ladesa.Management.Application/acesso/perfil/perf
 import { IProfessorIndisponibilidadeRepository } from "@/Ladesa.Management.Application/ensino/professor-indisponibilidade/application/ports";
 import { ProfessorIndisponibilidadeService } from "@/Ladesa.Management.Application/ensino/professor-indisponibilidade/application/use-cases/professor-indisponibilidade.service";
 import { ProfessorIndisponibilidadeAuthzRegistrySetup } from "@/Ladesa.Management.Application/ensino/professor-indisponibilidade/infrastructure";
-import { ProfessorIndisponibilidadeTypeOrmRepositoryAdapter } from "@/Ladesa.Management.Application/ensino/professor-indisponibilidade/infrastructure/persistence/typeorm";
+import { ProfessorIndisponibilidadeTypeOrmRepositoryAdapter } from "@/Ladesa.Management.Infrastructure.Database/Repositories/ProfessorIndisponibilidadeRepositoryAdapter";
 import {
   NestJsPaginateAdapter,
   TypeormModule,

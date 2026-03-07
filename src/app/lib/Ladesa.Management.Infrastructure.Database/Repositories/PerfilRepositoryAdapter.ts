@@ -7,15 +7,13 @@ import type {
   IPaginationCriteria,
   IPaginationResult,
 } from "@/Ladesa.Management.Application/@shared";
-import type {
-  PerfilFindOneInputDto,
-  PerfilFindOneOutputDto,
-  PerfilListInputDto,
-  PerfilListOutputDto,
-} from "@/Ladesa.Management.Application/acesso/perfil/application/dtos";
 import type { IPerfilRepository } from "@/Ladesa.Management.Application/acesso/perfil/application/ports";
-import type { UsuarioEntity } from "@/Ladesa.Management.Application/acesso/usuario/infrastructure/persistence/typeorm";
+import { type PerfilFindOneInputDto } from "@/Ladesa.Management.Domain/Dtos/PerfilFindOneInputDto";
+import { type PerfilFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/PerfilFindOneOutputDto";
+import { type PerfilListInputDto } from "@/Ladesa.Management.Domain/Dtos/PerfilListInputDto";
+import { type PerfilListOutputDto } from "@/Ladesa.Management.Domain/Dtos/PerfilListOutputDto";
 import type { PerfilEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/PerfilEntity";
+import { type UsuarioEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/UsuarioEntity";
 import { createPerfilRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/CreatePerfilRepository";
 import {
   APP_DATA_SOURCE_TOKEN,

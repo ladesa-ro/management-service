@@ -1,13 +1,11 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { FilterOperator, FilterSuffix } from "nestjs-paginate";
 import { DataSource } from "typeorm";
-import type {
-  DisciplinaFindOneInputDto,
-  DisciplinaFindOneOutputDto,
-  DisciplinaListInputDto,
-  DisciplinaListOutputDto,
-} from "@/Ladesa.Management.Application/ensino/disciplina/application/dtos";
 import type { IDisciplinaRepository } from "@/Ladesa.Management.Application/ensino/disciplina/application/ports";
+import { type DisciplinaFindOneInputDto } from "@/Ladesa.Management.Domain/Dtos/DisciplinaFindOneInputDto";
+import { type DisciplinaFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/DisciplinaFindOneOutputDto";
+import { type DisciplinaListInputDto } from "@/Ladesa.Management.Domain/Dtos/DisciplinaListInputDto";
+import { type DisciplinaListOutputDto } from "@/Ladesa.Management.Domain/Dtos/DisciplinaListOutputDto";
 import type { DisciplinaEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/DisciplinaEntity";
 import { createDisciplinaRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/CreateDisciplinaRepository";
 import {

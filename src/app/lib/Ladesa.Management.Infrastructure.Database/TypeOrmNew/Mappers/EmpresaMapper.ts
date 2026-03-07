@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
-import type { EmpresaFindOneOutputDto } from "@/Ladesa.Management.Application/estagio/empresa/application/dtos";
+import { type EmpresaFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/EmpresaFindOneOutputDto";
 import { Empresa } from "@/Ladesa.Management.Domain/Entities/Empresa";
 import { EmpresaTypeormEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/EmpresaTypeormEntity";
 

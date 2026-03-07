@@ -15,15 +15,13 @@ import {
   CONFIG_PORT,
   type IConfigPort,
 } from "@/Ladesa.Management.Application/@shared/application/ports/out/config";
-import { UsuarioEntity } from "@/Ladesa.Management.Application/acesso/usuario/infrastructure/persistence/typeorm";
-import type {
-  ArquivoCreateInputDto,
-  ArquivoGetFileInputDto,
-} from "@/Ladesa.Management.Application/armazenamento/arquivo/application/dtos";
 import {
   IArquivoRepository,
   type IArquivoUseCasePort,
 } from "@/Ladesa.Management.Application/armazenamento/arquivo/application/ports";
+import { type ArquivoCreateInputDto } from "@/Ladesa.Management.Domain/Dtos/ArquivoCreateInputDto";
+import { type ArquivoGetFileInputDto } from "@/Ladesa.Management.Domain/Dtos/ArquivoGetFileInputDto";
+import { UsuarioEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/UsuarioEntity";
 
 @Injectable()
 export class ArquivoService implements IArquivoUseCasePort {

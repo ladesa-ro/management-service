@@ -6,14 +6,12 @@ import { DiarioProfessorService } from "@/Ladesa.Management.Application/ensino/d
 import { HorarioGeradoService } from "@/Ladesa.Management.Application/horarios/horario-gerado";
 import { HorarioGeradoAula } from "@/Ladesa.Management.Application/horarios/horario-gerado-aula";
 import { IntervaloDeTempoService } from "@/Ladesa.Management.Application/horarios/intervalo-de-tempo/application/use-cases/intervalo-de-tempo.service";
-import type {
-  HorarioGeradoAulaCreateInputDto,
-  HorarioGeradoAulaFindOneInputDto,
-  HorarioGeradoAulaFindOneOutputDto,
-  HorarioGeradoAulaListInputDto,
-  HorarioGeradoAulaListOutputDto,
-  HorarioGeradoAulaUpdateInputDto,
-} from "../dtos";
+import { type HorarioGeradoAulaCreateInputDto } from "@/Ladesa.Management.Domain/Dtos/HorarioGeradoAulaCreateInputDto";
+import { type HorarioGeradoAulaFindOneInputDto } from "@/Ladesa.Management.Domain/Dtos/HorarioGeradoAulaFindOneInputDto";
+import { type HorarioGeradoAulaFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/HorarioGeradoAulaFindOneOutputDto";
+import { type HorarioGeradoAulaListInputDto } from "@/Ladesa.Management.Domain/Dtos/HorarioGeradoAulaListInputDto";
+import { type HorarioGeradoAulaListOutputDto } from "@/Ladesa.Management.Domain/Dtos/HorarioGeradoAulaListOutputDto";
+import { type HorarioGeradoAulaUpdateInputDto } from "@/Ladesa.Management.Domain/Dtos/HorarioGeradoAulaUpdateInputDto";
 import { IHorarioGeradoAulaRepository } from "../ports";
 
 @Injectable()

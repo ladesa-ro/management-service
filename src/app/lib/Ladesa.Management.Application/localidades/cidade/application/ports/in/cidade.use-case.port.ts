@@ -1,10 +1,8 @@
 import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/contexto-acesso";
-import {
-  CidadeFindOneInputDto,
-  CidadeFindOneOutputDto,
-  CidadeListInputDto,
-  CidadeListOutputDto,
-} from "../../dtos";
+import { CidadeFindOneInputDto } from "@/Ladesa.Management.Domain/Dtos/CidadeFindOneInputDto";
+import { CidadeFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/CidadeFindOneOutputDto";
+import { CidadeListInputDto } from "@/Ladesa.Management.Domain/Dtos/CidadeListInputDto";
+import { CidadeListOutputDto } from "@/Ladesa.Management.Domain/Dtos/CidadeListOutputDto";
 
 /**
  * Port de entrada para casos de uso de Cidade

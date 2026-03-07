@@ -6,7 +6,7 @@ import {
   TurmaDisponibilidadeService,
 } from "@/Ladesa.Management.Application/ensino/turma-disponibilidade";
 import { TurmaDisponibilidadeAuthzRegistrySetup } from "@/Ladesa.Management.Application/ensino/turma-disponibilidade/infrastructure";
-import { TurmaDisponibilidadeTypeOrmRepositoryAdapter } from "@/Ladesa.Management.Application/ensino/turma-disponibilidade/infrastructure/persistence/typeorm";
+import { TurmaDisponibilidadeTypeOrmRepositoryAdapter } from "@/Ladesa.Management.Infrastructure.Database/Repositories/TurmaDisponibilidadeRepositoryAdapter";
 import { NestJsPaginateAdapter } from "@/Ladesa.Management.Infrastructure.Database/typeorm";
 import { TurmaDisponibilidadeGraphqlResolver } from "@/Ladesa.Management.Server.Api/Apis/GraphQl/Resolvers/TurmaDisponibilidadeGraphqlResolver";
 import { TurmaDisponibilidadeRestController } from "@/Ladesa.Management.Server.Api/Apis/Rest/Controllers/TurmaDisponibilidadeRestController";

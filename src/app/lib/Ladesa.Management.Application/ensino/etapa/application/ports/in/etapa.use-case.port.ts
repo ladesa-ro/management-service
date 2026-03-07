@@ -1,12 +1,10 @@
 import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/contexto-acesso";
-import type {
-  EtapaCreateInputDto,
-  EtapaFindOneInputDto,
-  EtapaFindOneOutputDto,
-  EtapaListInputDto,
-  EtapaListOutputDto,
-  EtapaUpdateInputDto,
-} from "../../dtos";
+import { type EtapaCreateInputDto } from "@/Ladesa.Management.Domain/Dtos/EtapaCreateInputDto";
+import { type EtapaFindOneInputDto } from "@/Ladesa.Management.Domain/Dtos/EtapaFindOneInputDto";
+import { type EtapaFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/EtapaFindOneOutputDto";
+import { type EtapaListInputDto } from "@/Ladesa.Management.Domain/Dtos/EtapaListInputDto";
+import { type EtapaListOutputDto } from "@/Ladesa.Management.Domain/Dtos/EtapaListOutputDto";
+import { type EtapaUpdateInputDto } from "@/Ladesa.Management.Domain/Dtos/EtapaUpdateInputDto";
 
 export interface IEtapaUseCasePort {
   etapaFindAll(

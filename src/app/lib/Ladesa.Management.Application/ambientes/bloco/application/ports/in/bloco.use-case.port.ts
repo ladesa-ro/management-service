@@ -1,13 +1,11 @@
 import type { StreamableFile } from "@nestjs/common";
 import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/contexto-acesso";
-import type {
-  BlocoCreateInputDto,
-  BlocoFindOneInputDto,
-  BlocoFindOneOutputDto,
-  BlocoListInputDto,
-  BlocoListOutputDto,
-  BlocoUpdateInputDto,
-} from "../../dtos";
+import { type BlocoCreateInputDto } from "@/Ladesa.Management.Domain/Dtos/BlocoCreateInputDto";
+import { type BlocoFindOneInputDto } from "@/Ladesa.Management.Domain/Dtos/BlocoFindOneInputDto";
+import { type BlocoFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/BlocoFindOneOutputDto";
+import { type BlocoListInputDto } from "@/Ladesa.Management.Domain/Dtos/BlocoListInputDto";
+import { type BlocoListOutputDto } from "@/Ladesa.Management.Domain/Dtos/BlocoListOutputDto";
+import { type BlocoUpdateInputDto } from "@/Ladesa.Management.Domain/Dtos/BlocoUpdateInputDto";
 
 /**
  * Port de entrada para casos de uso de Bloco

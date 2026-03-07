@@ -8,7 +8,7 @@ import type {
   TurmaDisponibilidadeListInputDto,
   TurmaDisponibilidadeListOutputDto,
 } from "@/Ladesa.Management.Application/ensino/turma-disponibilidade";
-import type { ITurmaDisponibilidadeRepository } from "@/Ladesa.Management.Application/ensino/turma-disponibilidade/application/ports/out";
+import { type ITurmaDisponibilidadeRepository } from "@/Ladesa.Management.Domain/Repositories/ITurmaDisponibilidadeRepository";
 import type { TurmaDisponibilidadeEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/TurmaDisponibilidadeEntity";
 import { createTurmaDisponibilidadeRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/CreateTurmaDisponibilidadeRepository";
 import {

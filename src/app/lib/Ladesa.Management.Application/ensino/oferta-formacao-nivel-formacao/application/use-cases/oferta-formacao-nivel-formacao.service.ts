@@ -5,18 +5,16 @@ import { BaseCrudService, type PersistInput } from "@/Ladesa.Management.Applicat
 import { NivelFormacaoService } from "@/Ladesa.Management.Application/ensino/nivel-formacao/application/use-cases/nivel-formacao.service";
 import { OfertaFormacaoService } from "@/Ladesa.Management.Application/ensino/oferta-formacao";
 import type { OfertaFormacaoNivelFormacao } from "@/Ladesa.Management.Application/ensino/oferta-formacao-nivel-formacao";
-import type {
-  OfertaFormacaoNivelFormacaoCreateInputDto,
-  OfertaFormacaoNivelFormacaoFindOneInputDto,
-  OfertaFormacaoNivelFormacaoFindOneOutputDto,
-  OfertaFormacaoNivelFormacaoListInputDto,
-  OfertaFormacaoNivelFormacaoListOutputDto,
-  OfertaFormacaoNivelFormacaoUpdateInputDto,
-} from "@/Ladesa.Management.Application/ensino/oferta-formacao-nivel-formacao/application/dtos";
 import {
   IOfertaFormacaoNivelFormacaoRepository,
   type IOfertaFormacaoNivelFormacaoUseCasePort,
 } from "@/Ladesa.Management.Application/ensino/oferta-formacao-nivel-formacao/application/ports";
+import { type OfertaFormacaoNivelFormacaoCreateInputDto } from "@/Ladesa.Management.Domain/Dtos/OfertaFormacaoNivelFormacaoCreateInputDto";
+import { type OfertaFormacaoNivelFormacaoFindOneInputDto } from "@/Ladesa.Management.Domain/Dtos/OfertaFormacaoNivelFormacaoFindOneInputDto";
+import { type OfertaFormacaoNivelFormacaoFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/OfertaFormacaoNivelFormacaoFindOneOutputDto";
+import { type OfertaFormacaoNivelFormacaoListInputDto } from "@/Ladesa.Management.Domain/Dtos/OfertaFormacaoNivelFormacaoListInputDto";
+import { type OfertaFormacaoNivelFormacaoListOutputDto } from "@/Ladesa.Management.Domain/Dtos/OfertaFormacaoNivelFormacaoListOutputDto";
+import { type OfertaFormacaoNivelFormacaoUpdateInputDto } from "@/Ladesa.Management.Domain/Dtos/OfertaFormacaoNivelFormacaoUpdateInputDto";
 
 @Injectable()
 export class OfertaFormacaoNivelFormacaoService

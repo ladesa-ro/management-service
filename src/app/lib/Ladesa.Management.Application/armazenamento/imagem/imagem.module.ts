@@ -5,8 +5,8 @@ import {
   IImagemTransaction,
 } from "@/Ladesa.Management.Application/armazenamento/imagem/application/ports";
 import { ImagemService } from "@/Ladesa.Management.Application/armazenamento/imagem/application/use-cases/imagem.service";
-import { ImagemTypeOrmRepositoryAdapter } from "@/Ladesa.Management.Application/armazenamento/imagem/infrastructure/persistence/typeorm";
-import { ImagemArquivoTypeOrmRepositoryAdapter } from "@/Ladesa.Management.Application/armazenamento/imagem-arquivo/infrastructure/persistence/typeorm";
+import { ImagemArquivoTypeOrmRepositoryAdapter } from "@/Ladesa.Management.Infrastructure.Database/Repositories/ImagemArquivoRepositoryAdapter";
+import { ImagemTypeOrmRepositoryAdapter } from "@/Ladesa.Management.Infrastructure.Database/Repositories/ImagemRepositoryAdapter";
 
 /**
  * Modulo Imagem configurado com Arquitetura Hexagonal

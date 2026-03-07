@@ -1,13 +1,11 @@
 import type { SelectQueryBuilder } from "typeorm";
 import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/contexto-acesso";
 import type { Evento } from "@/Ladesa.Management.Application/horarios/evento";
-import type {
-  EventoFindOneInputDto,
-  EventoFindOneOutputDto,
-  EventoListInputDto,
-  EventoListOutputDto,
-} from "@/Ladesa.Management.Application/horarios/evento/application/dtos";
-import type { EventoEntity } from "@/Ladesa.Management.Application/horarios/evento/infrastructure/persistence/typeorm";
+import { type EventoFindOneInputDto } from "@/Ladesa.Management.Domain/Dtos/EventoFindOneInputDto";
+import { type EventoFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/EventoFindOneOutputDto";
+import { type EventoListInputDto } from "@/Ladesa.Management.Domain/Dtos/EventoListInputDto";
+import { type EventoListOutputDto } from "@/Ladesa.Management.Domain/Dtos/EventoListOutputDto";
+import { type EventoEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/EventoEntity";
 
 /**
  * Token de injeção para o repositório de Evento

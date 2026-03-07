@@ -5,15 +5,13 @@ import { BaseCrudService, type PersistInput } from "@/Ladesa.Management.Applicat
 import { DiarioService } from "@/Ladesa.Management.Application/ensino/diario/application/use-cases/diario.service";
 import { DiarioPreferenciaAgrupamento } from "@/Ladesa.Management.Application/ensino/diario-preferencia-agrupamento";
 import { IntervaloDeTempoService } from "@/Ladesa.Management.Application/horarios/intervalo-de-tempo/application/use-cases/intervalo-de-tempo.service";
-import type {
-  DiarioPreferenciaAgrupamentoCreateInputDto,
-  DiarioPreferenciaAgrupamentoFindOneInputDto,
-  DiarioPreferenciaAgrupamentoFindOneOutputDto,
-  DiarioPreferenciaAgrupamentoListInputDto,
-  DiarioPreferenciaAgrupamentoListOutputDto,
-  DiarioPreferenciaAgrupamentoUpdateInputDto,
-} from "../dtos";
-import { IDiarioPreferenciaAgrupamentoRepository } from "../ports/out";
+import { type DiarioPreferenciaAgrupamentoCreateInputDto } from "@/Ladesa.Management.Domain/Dtos/DiarioPreferenciaAgrupamentoCreateInputDto";
+import { type DiarioPreferenciaAgrupamentoFindOneInputDto } from "@/Ladesa.Management.Domain/Dtos/DiarioPreferenciaAgrupamentoFindOneInputDto";
+import { type DiarioPreferenciaAgrupamentoFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/DiarioPreferenciaAgrupamentoFindOneOutputDto";
+import { type DiarioPreferenciaAgrupamentoListInputDto } from "@/Ladesa.Management.Domain/Dtos/DiarioPreferenciaAgrupamentoListInputDto";
+import { type DiarioPreferenciaAgrupamentoListOutputDto } from "@/Ladesa.Management.Domain/Dtos/DiarioPreferenciaAgrupamentoListOutputDto";
+import { type DiarioPreferenciaAgrupamentoUpdateInputDto } from "@/Ladesa.Management.Domain/Dtos/DiarioPreferenciaAgrupamentoUpdateInputDto";
+import { IDiarioPreferenciaAgrupamentoRepository } from "@/Ladesa.Management.Domain/Repositories/IDiarioPreferenciaAgrupamentoRepository";
 
 @Injectable()
 export class DiarioPreferenciaAgrupamentoService extends BaseCrudService<

@@ -1,13 +1,11 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
 import { DataSource } from "typeorm";
-import type {
-  TurmaFindOneInputDto,
-  TurmaFindOneOutputDto,
-  TurmaListInputDto,
-  TurmaListOutputDto,
-} from "@/Ladesa.Management.Application/ensino/turma/application/dtos";
 import type { ITurmaRepository } from "@/Ladesa.Management.Application/ensino/turma/application/ports";
+import { type TurmaFindOneInputDto } from "@/Ladesa.Management.Domain/Dtos/TurmaFindOneInputDto";
+import { type TurmaFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/TurmaFindOneOutputDto";
+import { type TurmaListInputDto } from "@/Ladesa.Management.Domain/Dtos/TurmaListInputDto";
+import { type TurmaListOutputDto } from "@/Ladesa.Management.Domain/Dtos/TurmaListOutputDto";
 import type { TurmaEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/TurmaEntity";
 import { createTurmaRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/CreateTurmaRepository";
 import {

@@ -1,13 +1,11 @@
 import type { StreamableFile } from "@nestjs/common";
 import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/contexto-acesso";
-import type {
-  CursoCreateInputDto,
-  CursoFindOneInputDto,
-  CursoFindOneOutputDto,
-  CursoListInputDto,
-  CursoListOutputDto,
-  CursoUpdateInputDto,
-} from "../../dtos";
+import { type CursoCreateInputDto } from "@/Ladesa.Management.Domain/Dtos/CursoCreateInputDto";
+import { type CursoFindOneInputDto } from "@/Ladesa.Management.Domain/Dtos/CursoFindOneInputDto";
+import { type CursoFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/CursoFindOneOutputDto";
+import { type CursoListInputDto } from "@/Ladesa.Management.Domain/Dtos/CursoListInputDto";
+import { type CursoListOutputDto } from "@/Ladesa.Management.Domain/Dtos/CursoListOutputDto";
+import { type CursoUpdateInputDto } from "@/Ladesa.Management.Domain/Dtos/CursoUpdateInputDto";
 
 /**
  * Port de entrada para casos de uso de Curso

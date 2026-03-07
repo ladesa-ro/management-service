@@ -1,13 +1,11 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
 import { DataSource } from "typeorm";
-import type {
-  CursoFindOneInputDto,
-  CursoFindOneOutputDto,
-  CursoListInputDto,
-  CursoListOutputDto,
-} from "@/Ladesa.Management.Application/ensino/curso/application/dtos";
 import type { ICursoRepository } from "@/Ladesa.Management.Application/ensino/curso/application/ports";
+import { type CursoFindOneInputDto } from "@/Ladesa.Management.Domain/Dtos/CursoFindOneInputDto";
+import { type CursoFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/CursoFindOneOutputDto";
+import { type CursoListInputDto } from "@/Ladesa.Management.Domain/Dtos/CursoListInputDto";
+import { type CursoListOutputDto } from "@/Ladesa.Management.Domain/Dtos/CursoListOutputDto";
 import type { CursoEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/CursoEntity";
 import { createCursoRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/CreateCursoRepository";
 import {

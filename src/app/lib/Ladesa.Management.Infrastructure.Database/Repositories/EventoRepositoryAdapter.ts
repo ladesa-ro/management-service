@@ -8,7 +8,7 @@ import type {
   EventoListInputDto,
   EventoListOutputDto,
 } from "@/Ladesa.Management.Application/horarios/evento";
-import type { IEventoRepository } from "@/Ladesa.Management.Application/horarios/evento/application/ports/out";
+import { type IEventoRepository } from "@/Ladesa.Management.Domain/Repositories/IEventoRepository";
 import type { EventoEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/EventoEntity";
 import { createEventoRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/CreateEventoRepository";
 import {

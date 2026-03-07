@@ -2,18 +2,16 @@ import { Inject, Injectable } from "@nestjs/common";
 import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/contexto-acesso";
 import { BaseCrudService, type PersistInput } from "@/Ladesa.Management.Application/@shared";
 import { Modalidade } from "@/Ladesa.Management.Application/ensino/modalidade";
-import type {
-  ModalidadeCreateInputDto,
-  ModalidadeFindOneInputDto,
-  ModalidadeFindOneOutputDto,
-  ModalidadeListInputDto,
-  ModalidadeListOutputDto,
-  ModalidadeUpdateInputDto,
-} from "@/Ladesa.Management.Application/ensino/modalidade/application/dtos";
 import {
   IModalidadeRepository,
   type IModalidadeUseCasePort,
 } from "@/Ladesa.Management.Application/ensino/modalidade/application/ports";
+import { type ModalidadeCreateInputDto } from "@/Ladesa.Management.Domain/Dtos/ModalidadeCreateInputDto";
+import { type ModalidadeFindOneInputDto } from "@/Ladesa.Management.Domain/Dtos/ModalidadeFindOneInputDto";
+import { type ModalidadeFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/ModalidadeFindOneOutputDto";
+import { type ModalidadeListInputDto } from "@/Ladesa.Management.Domain/Dtos/ModalidadeListInputDto";
+import { type ModalidadeListOutputDto } from "@/Ladesa.Management.Domain/Dtos/ModalidadeListOutputDto";
+import { type ModalidadeUpdateInputDto } from "@/Ladesa.Management.Domain/Dtos/ModalidadeUpdateInputDto";
 
 @Injectable()
 export class ModalidadeService

@@ -7,14 +7,12 @@ import { ArquivoService } from "@/Ladesa.Management.Application/armazenamento/ar
 import { ImagemService } from "@/Ladesa.Management.Application/armazenamento/imagem/application/use-cases/imagem.service";
 import { CursoService } from "@/Ladesa.Management.Application/ensino/curso";
 import { Turma } from "@/Ladesa.Management.Application/ensino/turma";
-import type {
-  TurmaCreateInputDto,
-  TurmaFindOneInputDto,
-  TurmaFindOneOutputDto,
-  TurmaListInputDto,
-  TurmaListOutputDto,
-  TurmaUpdateInputDto,
-} from "../dtos";
+import { type TurmaCreateInputDto } from "@/Ladesa.Management.Domain/Dtos/TurmaCreateInputDto";
+import { type TurmaFindOneInputDto } from "@/Ladesa.Management.Domain/Dtos/TurmaFindOneInputDto";
+import { type TurmaFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/TurmaFindOneOutputDto";
+import { type TurmaListInputDto } from "@/Ladesa.Management.Domain/Dtos/TurmaListInputDto";
+import { type TurmaListOutputDto } from "@/Ladesa.Management.Domain/Dtos/TurmaListOutputDto";
+import { type TurmaUpdateInputDto } from "@/Ladesa.Management.Domain/Dtos/TurmaUpdateInputDto";
 import { ITurmaRepository } from "../ports";
 
 @Injectable()

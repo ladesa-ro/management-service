@@ -1,5 +1,5 @@
 import type { SelectQueryBuilder } from "typeorm";
-import type { ArquivoEntity } from "@/Ladesa.Management.Application/armazenamento/arquivo/infrastructure/persistence/typeorm";
+import { type ArquivoEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/ArquivoEntity";
 
 /**
  * Token de injeção para o repositório de Arquivo

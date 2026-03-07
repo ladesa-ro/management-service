@@ -1,12 +1,10 @@
 import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/contexto-acesso";
-import {
-  OfertaFormacaoCreateInputDto,
-  OfertaFormacaoFindOneInputDto,
-  OfertaFormacaoFindOneOutputDto,
-  OfertaFormacaoListInputDto,
-  OfertaFormacaoListOutputDto,
-  OfertaFormacaoUpdateInputDto,
-} from "../../dtos";
+import { OfertaFormacaoCreateInputDto } from "@/Ladesa.Management.Domain/Dtos/OfertaFormacaoCreateInputDto";
+import { OfertaFormacaoFindOneInputDto } from "@/Ladesa.Management.Domain/Dtos/OfertaFormacaoFindOneInputDto";
+import { OfertaFormacaoFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/OfertaFormacaoFindOneOutputDto";
+import { OfertaFormacaoListInputDto } from "@/Ladesa.Management.Domain/Dtos/OfertaFormacaoListInputDto";
+import { OfertaFormacaoListOutputDto } from "@/Ladesa.Management.Domain/Dtos/OfertaFormacaoListOutputDto";
+import { OfertaFormacaoUpdateInputDto } from "@/Ladesa.Management.Domain/Dtos/OfertaFormacaoUpdateInputDto";
 
 export interface IOfertaFormacaoUseCasePort {
   findAll(

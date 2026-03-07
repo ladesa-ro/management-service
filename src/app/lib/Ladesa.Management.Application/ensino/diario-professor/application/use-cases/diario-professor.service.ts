@@ -5,14 +5,12 @@ import { BaseCrudService, type PersistInput } from "@/Ladesa.Management.Applicat
 import { PerfilService } from "@/Ladesa.Management.Application/acesso/perfil";
 import { DiarioService } from "@/Ladesa.Management.Application/ensino/diario/application/use-cases/diario.service";
 import { DiarioProfessor } from "@/Ladesa.Management.Application/ensino/diario-professor";
-import type {
-  DiarioProfessorCreateInputDto,
-  DiarioProfessorFindOneInputDto,
-  DiarioProfessorFindOneOutputDto,
-  DiarioProfessorListInputDto,
-  DiarioProfessorListOutputDto,
-  DiarioProfessorUpdateInputDto,
-} from "../dtos";
+import { type DiarioProfessorCreateInputDto } from "@/Ladesa.Management.Domain/Dtos/DiarioProfessorCreateInputDto";
+import { type DiarioProfessorFindOneInputDto } from "@/Ladesa.Management.Domain/Dtos/DiarioProfessorFindOneInputDto";
+import { type DiarioProfessorFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/DiarioProfessorFindOneOutputDto";
+import { type DiarioProfessorListInputDto } from "@/Ladesa.Management.Domain/Dtos/DiarioProfessorListInputDto";
+import { type DiarioProfessorListOutputDto } from "@/Ladesa.Management.Domain/Dtos/DiarioProfessorListOutputDto";
+import { type DiarioProfessorUpdateInputDto } from "@/Ladesa.Management.Domain/Dtos/DiarioProfessorUpdateInputDto";
 import { IDiarioProfessorRepository } from "../ports";
 
 @Injectable()

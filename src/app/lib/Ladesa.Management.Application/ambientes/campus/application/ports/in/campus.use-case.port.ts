@@ -1,12 +1,10 @@
 import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/contexto-acesso";
-import type {
-  CampusCreateInputDto,
-  CampusFindOneInputDto,
-  CampusFindOneOutputDto,
-  CampusListInputDto,
-  CampusListOutputDto,
-  CampusUpdateInputDto,
-} from "../../dtos";
+import { type CampusCreateInputDto } from "@/Ladesa.Management.Domain/Dtos/CampusCreateInputDto";
+import { type CampusFindOneInputDto } from "@/Ladesa.Management.Domain/Dtos/CampusFindOneInputDto";
+import { type CampusFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/CampusFindOneOutputDto";
+import { type CampusListInputDto } from "@/Ladesa.Management.Domain/Dtos/CampusListInputDto";
+import { type CampusListOutputDto } from "@/Ladesa.Management.Domain/Dtos/CampusListOutputDto";
+import { type CampusUpdateInputDto } from "@/Ladesa.Management.Domain/Dtos/CampusUpdateInputDto";
 
 /**
  * Port de entrada para casos de uso de Campus

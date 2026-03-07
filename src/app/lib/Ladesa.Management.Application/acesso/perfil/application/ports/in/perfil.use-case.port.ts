@@ -1,11 +1,9 @@
 import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/contexto-acesso";
-import type {
-  PerfilFindOneInputDto,
-  PerfilFindOneOutputDto,
-  PerfilListInputDto,
-  PerfilListOutputDto,
-  PerfilSetVinculosInputDto,
-} from "../../dtos";
+import { type PerfilFindOneInputDto } from "@/Ladesa.Management.Domain/Dtos/PerfilFindOneInputDto";
+import { type PerfilFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/PerfilFindOneOutputDto";
+import { type PerfilListInputDto } from "@/Ladesa.Management.Domain/Dtos/PerfilListInputDto";
+import { type PerfilListOutputDto } from "@/Ladesa.Management.Domain/Dtos/PerfilListOutputDto";
+import { type PerfilSetVinculosInputDto } from "@/Ladesa.Management.Domain/Dtos/PerfilSetVinculosInputDto";
 
 /**
  * Port de entrada para casos de uso de Perfil

@@ -1,12 +1,10 @@
 import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/contexto-acesso";
-import {
-  ModalidadeCreateInputDto,
-  ModalidadeFindOneInputDto,
-  ModalidadeFindOneOutputDto,
-  ModalidadeListInputDto,
-  ModalidadeListOutputDto,
-  ModalidadeUpdateInputDto,
-} from "../../dtos";
+import { ModalidadeCreateInputDto } from "@/Ladesa.Management.Domain/Dtos/ModalidadeCreateInputDto";
+import { ModalidadeFindOneInputDto } from "@/Ladesa.Management.Domain/Dtos/ModalidadeFindOneInputDto";
+import { ModalidadeFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/ModalidadeFindOneOutputDto";
+import { ModalidadeListInputDto } from "@/Ladesa.Management.Domain/Dtos/ModalidadeListInputDto";
+import { ModalidadeListOutputDto } from "@/Ladesa.Management.Domain/Dtos/ModalidadeListOutputDto";
+import { ModalidadeUpdateInputDto } from "@/Ladesa.Management.Domain/Dtos/ModalidadeUpdateInputDto";
 
 export interface IModalidadeUseCasePort {
   findAll(

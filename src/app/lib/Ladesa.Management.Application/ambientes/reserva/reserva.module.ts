@@ -6,7 +6,7 @@ import {
   ReservaService,
 } from "@/Ladesa.Management.Application/ambientes/reserva";
 import { ReservaAuthzRegistrySetup } from "@/Ladesa.Management.Application/ambientes/reserva/infrastructure";
-import { ReservaTypeOrmRepositoryAdapter } from "@/Ladesa.Management.Application/ambientes/reserva/infrastructure/persistence/typeorm";
+import { ReservaTypeOrmRepositoryAdapter } from "@/Ladesa.Management.Infrastructure.Database/Repositories/ReservaRepositoryAdapter";
 import { NestJsPaginateAdapter } from "@/Ladesa.Management.Infrastructure.Database/typeorm";
 import { ReservaGraphqlResolver } from "@/Ladesa.Management.Server.Api/Apis/GraphQl/Resolvers/ReservaGraphqlResolver";
 import { ReservaRestController } from "@/Ladesa.Management.Server.Api/Apis/Rest/Controllers/ReservaRestController";

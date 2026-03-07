@@ -4,7 +4,7 @@ import { DiarioModule } from "@/Ladesa.Management.Application/ensino/diario/diar
 import { IDiarioProfessorRepository } from "@/Ladesa.Management.Application/ensino/diario-professor/application/ports";
 import { DiarioProfessorService } from "@/Ladesa.Management.Application/ensino/diario-professor/application/use-cases/diario-professor.service";
 import { DiarioProfessorAuthzRegistrySetup } from "@/Ladesa.Management.Application/ensino/diario-professor/infrastructure";
-import { DiarioProfessorTypeOrmRepositoryAdapter } from "@/Ladesa.Management.Application/ensino/diario-professor/infrastructure/persistence/typeorm";
+import { DiarioProfessorTypeOrmRepositoryAdapter } from "@/Ladesa.Management.Infrastructure.Database/Repositories/DiarioProfessorRepositoryAdapter";
 import { NestJsPaginateAdapter } from "@/Ladesa.Management.Infrastructure.Database/typeorm";
 import { DiarioProfessorGraphqlResolver } from "@/Ladesa.Management.Server.Api/Apis/GraphQl/Resolvers/DiarioProfessorGraphqlResolver";
 import { DiarioProfessorController } from "@/Ladesa.Management.Server.Api/Apis/Rest/Controllers/DiarioProfessorRestController";

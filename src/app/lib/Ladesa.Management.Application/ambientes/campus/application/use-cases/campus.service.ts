@@ -8,14 +8,6 @@ import {
   type PersistInput,
 } from "@/Ladesa.Management.Application/@shared";
 import { Campus } from "@/Ladesa.Management.Application/ambientes/campus";
-import type {
-  CampusCreateInputDto,
-  CampusFindOneInputDto,
-  CampusFindOneOutputDto,
-  CampusListInputDto,
-  CampusListOutputDto,
-  CampusUpdateInputDto,
-} from "@/Ladesa.Management.Application/ambientes/campus/application/dtos";
 import {
   ICampusRepository,
   type ICampusUseCasePort,
@@ -24,6 +16,12 @@ import {
   type EnderecoInputDto,
   EnderecoService,
 } from "@/Ladesa.Management.Application/localidades/endereco";
+import { type CampusCreateInputDto } from "@/Ladesa.Management.Domain/Dtos/CampusCreateInputDto";
+import { type CampusFindOneInputDto } from "@/Ladesa.Management.Domain/Dtos/CampusFindOneInputDto";
+import { type CampusFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/CampusFindOneOutputDto";
+import { type CampusListInputDto } from "@/Ladesa.Management.Domain/Dtos/CampusListInputDto";
+import { type CampusListOutputDto } from "@/Ladesa.Management.Domain/Dtos/CampusListOutputDto";
+import { type CampusUpdateInputDto } from "@/Ladesa.Management.Domain/Dtos/CampusUpdateInputDto";
 
 @Injectable()
 export class CampusService

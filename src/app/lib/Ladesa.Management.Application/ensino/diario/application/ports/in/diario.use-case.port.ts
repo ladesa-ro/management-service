@@ -1,12 +1,10 @@
 import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/contexto-acesso";
-import type {
-  DiarioCreateInputDto,
-  DiarioFindOneInputDto,
-  DiarioFindOneOutputDto,
-  DiarioListInputDto,
-  DiarioListOutputDto,
-  DiarioUpdateInputDto,
-} from "@/Ladesa.Management.Application/ensino/diario/application/dtos";
+import { type DiarioCreateInputDto } from "@/Ladesa.Management.Domain/Dtos/DiarioCreateInputDto";
+import { type DiarioFindOneInputDto } from "@/Ladesa.Management.Domain/Dtos/DiarioFindOneInputDto";
+import { type DiarioFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/DiarioFindOneOutputDto";
+import { type DiarioListInputDto } from "@/Ladesa.Management.Domain/Dtos/DiarioListInputDto";
+import { type DiarioListOutputDto } from "@/Ladesa.Management.Domain/Dtos/DiarioListOutputDto";
+import { type DiarioUpdateInputDto } from "@/Ladesa.Management.Domain/Dtos/DiarioUpdateInputDto";
 
 export interface IDiarioUseCasePort {
   findAll(

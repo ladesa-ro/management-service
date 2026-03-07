@@ -4,15 +4,13 @@ import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/c
 import { BaseCrudService, type PersistInput } from "@/Ladesa.Management.Application/@shared";
 import { CalendarioLetivoService } from "@/Ladesa.Management.Application/horarios/calendario-letivo";
 import { Evento } from "@/Ladesa.Management.Application/horarios/evento";
-import type {
-  EventoCreateInputDto,
-  EventoFindOneInputDto,
-  EventoFindOneOutputDto,
-  EventoListInputDto,
-  EventoListOutputDto,
-  EventoUpdateInputDto,
-} from "../dtos";
-import { IEventoRepository } from "../ports/out";
+import { type EventoCreateInputDto } from "@/Ladesa.Management.Domain/Dtos/EventoCreateInputDto";
+import { type EventoFindOneInputDto } from "@/Ladesa.Management.Domain/Dtos/EventoFindOneInputDto";
+import { type EventoFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/EventoFindOneOutputDto";
+import { type EventoListInputDto } from "@/Ladesa.Management.Domain/Dtos/EventoListInputDto";
+import { type EventoListOutputDto } from "@/Ladesa.Management.Domain/Dtos/EventoListOutputDto";
+import { type EventoUpdateInputDto } from "@/Ladesa.Management.Domain/Dtos/EventoUpdateInputDto";
+import { IEventoRepository } from "@/Ladesa.Management.Domain/Repositories/IEventoRepository";
 
 @Injectable()
 export class EventoService extends BaseCrudService<

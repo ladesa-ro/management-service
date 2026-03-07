@@ -1,13 +1,11 @@
 import type { StreamableFile } from "@nestjs/common";
 import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/contexto-acesso";
-import type {
-  TurmaCreateInputDto,
-  TurmaFindOneInputDto,
-  TurmaFindOneOutputDto,
-  TurmaListInputDto,
-  TurmaListOutputDto,
-  TurmaUpdateInputDto,
-} from "../../dtos";
+import { type TurmaCreateInputDto } from "@/Ladesa.Management.Domain/Dtos/TurmaCreateInputDto";
+import { type TurmaFindOneInputDto } from "@/Ladesa.Management.Domain/Dtos/TurmaFindOneInputDto";
+import { type TurmaFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/TurmaFindOneOutputDto";
+import { type TurmaListInputDto } from "@/Ladesa.Management.Domain/Dtos/TurmaListInputDto";
+import { type TurmaListOutputDto } from "@/Ladesa.Management.Domain/Dtos/TurmaListOutputDto";
+import { type TurmaUpdateInputDto } from "@/Ladesa.Management.Domain/Dtos/TurmaUpdateInputDto";
 
 /**
  * Port de entrada para casos de uso de Turma

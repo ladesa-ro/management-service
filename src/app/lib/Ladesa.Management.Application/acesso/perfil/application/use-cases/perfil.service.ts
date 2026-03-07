@@ -3,18 +3,16 @@ import { v4 as uuid } from "uuid";
 import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/contexto-acesso";
 import { ResourceNotFoundError } from "@/Ladesa.Management.Application/@shared";
 import {
-  PerfilFindOneInputDto,
-  PerfilFindOneOutputDto,
-  PerfilListInputDto,
-  PerfilListOutputDto,
-  PerfilSetVinculosInputDto,
-} from "@/Ladesa.Management.Application/acesso/perfil/application/dtos";
-import {
   IPerfilRepository,
   type IPerfilUseCasePort,
 } from "@/Ladesa.Management.Application/acesso/perfil/application/ports";
 import { UsuarioService } from "@/Ladesa.Management.Application/acesso/usuario";
 import { CampusService } from "@/Ladesa.Management.Application/ambientes/campus";
+import { PerfilFindOneInputDto } from "@/Ladesa.Management.Domain/Dtos/PerfilFindOneInputDto";
+import { PerfilFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/PerfilFindOneOutputDto";
+import { PerfilListInputDto } from "@/Ladesa.Management.Domain/Dtos/PerfilListInputDto";
+import { PerfilListOutputDto } from "@/Ladesa.Management.Domain/Dtos/PerfilListOutputDto";
+import { PerfilSetVinculosInputDto } from "@/Ladesa.Management.Domain/Dtos/PerfilSetVinculosInputDto";
 
 /**
  * Implementação dos casos de uso de Perfil (Hexagonal Architecture)

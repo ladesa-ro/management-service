@@ -1,10 +1,8 @@
 import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/contexto-acesso";
 import type { IBaseCrudRepositoryPort } from "@/Ladesa.Management.Application/@shared";
 import type { Reserva } from "@/Ladesa.Management.Application/ambientes/reserva";
-import type {
-  ReservaFindOneOutputDto,
-  ReservaListOutputDto,
-} from "@/Ladesa.Management.Application/ambientes/reserva/application/dtos";
+import { type ReservaFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/ReservaFindOneOutputDto";
+import { type ReservaListOutputDto } from "@/Ladesa.Management.Domain/Dtos/ReservaListOutputDto";
 
 export const IReservaRepository = Symbol("IReservaRepository");
 

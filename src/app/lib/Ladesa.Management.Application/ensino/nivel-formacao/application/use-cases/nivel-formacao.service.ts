@@ -2,18 +2,16 @@ import { Inject, Injectable } from "@nestjs/common";
 import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/contexto-acesso";
 import { BaseCrudService, type PersistInput } from "@/Ladesa.Management.Application/@shared";
 import { NivelFormacao } from "@/Ladesa.Management.Application/ensino/nivel-formacao";
-import type {
-  NivelFormacaoCreateInputDto,
-  NivelFormacaoFindOneInputDto,
-  NivelFormacaoFindOneOutputDto,
-  NivelFormacaoListInputDto,
-  NivelFormacaoListOutputDto,
-  NivelFormacaoUpdateInputDto,
-} from "@/Ladesa.Management.Application/ensino/nivel-formacao/application/dtos";
 import {
   INivelFormacaoRepository,
   type INivelFormacaoUseCasePort,
 } from "@/Ladesa.Management.Application/ensino/nivel-formacao/application/ports";
+import { type NivelFormacaoCreateInputDto } from "@/Ladesa.Management.Domain/Dtos/NivelFormacaoCreateInputDto";
+import { type NivelFormacaoFindOneInputDto } from "@/Ladesa.Management.Domain/Dtos/NivelFormacaoFindOneInputDto";
+import { type NivelFormacaoFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/NivelFormacaoFindOneOutputDto";
+import { type NivelFormacaoListInputDto } from "@/Ladesa.Management.Domain/Dtos/NivelFormacaoListInputDto";
+import { type NivelFormacaoListOutputDto } from "@/Ladesa.Management.Domain/Dtos/NivelFormacaoListOutputDto";
+import { type NivelFormacaoUpdateInputDto } from "@/Ladesa.Management.Domain/Dtos/NivelFormacaoUpdateInputDto";
 
 @Injectable()
 export class NivelFormacaoService

@@ -1,19 +1,17 @@
 import { Inject, Injectable, InternalServerErrorException } from "@nestjs/common";
 import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/contexto-acesso";
 import { ResourceNotFoundError } from "@/Ladesa.Management.Application/@shared";
-import type {
-  EmpresaCreateInputDto,
-  EmpresaFindOneInputDto,
-  EmpresaFindOneOutputDto,
-  EmpresaListInputDto,
-  EmpresaListOutputDto,
-  EmpresaUpdateInputDto,
-} from "@/Ladesa.Management.Application/estagio/empresa/application/dtos";
 import {
   EMPRESA_REPOSITORY_PORT,
   type IEmpresaRepositoryPort,
   type IEmpresaUseCasePort,
 } from "@/Ladesa.Management.Application/estagio/empresa/application/ports";
+import { type EmpresaCreateInputDto } from "@/Ladesa.Management.Domain/Dtos/EmpresaCreateInputDto";
+import { type EmpresaFindOneInputDto } from "@/Ladesa.Management.Domain/Dtos/EmpresaFindOneInputDto";
+import { type EmpresaFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/EmpresaFindOneOutputDto";
+import { type EmpresaListInputDto } from "@/Ladesa.Management.Domain/Dtos/EmpresaListInputDto";
+import { type EmpresaListOutputDto } from "@/Ladesa.Management.Domain/Dtos/EmpresaListOutputDto";
+import { type EmpresaUpdateInputDto } from "@/Ladesa.Management.Domain/Dtos/EmpresaUpdateInputDto";
 
 @Injectable()
 export class EmpresaService implements IEmpresaUseCasePort {

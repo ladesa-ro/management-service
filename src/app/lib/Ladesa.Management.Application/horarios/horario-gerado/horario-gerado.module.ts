@@ -5,7 +5,7 @@ import {
   IHorarioGeradoRepository,
 } from "@/Ladesa.Management.Application/horarios/horario-gerado";
 import { HorarioGeradoAuthzRegistrySetup } from "@/Ladesa.Management.Application/horarios/horario-gerado/infrastructure";
-import { HorarioGeradoTypeOrmRepositoryAdapter } from "@/Ladesa.Management.Application/horarios/horario-gerado/infrastructure/persistence/typeorm";
+import { HorarioGeradoTypeOrmRepositoryAdapter } from "@/Ladesa.Management.Infrastructure.Database/Repositories/HorarioGeradoRepositoryAdapter";
 import { NestJsPaginateAdapter } from "@/Ladesa.Management.Infrastructure.Database/typeorm";
 import { HorarioGeradoGraphqlResolver } from "@/Ladesa.Management.Server.Api/Apis/GraphQl/Resolvers/HorarioGeradoGraphqlResolver";
 import { HorarioGeradoRestController } from "@/Ladesa.Management.Server.Api/Apis/Rest/Controllers/HorarioGeradoRestController";

@@ -1,12 +1,10 @@
 import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/contexto-acesso";
-import type {
-  ReservaCreateInputDto,
-  ReservaFindOneInputDto,
-  ReservaFindOneOutputDto,
-  ReservaListInputDto,
-  ReservaListOutputDto,
-  ReservaUpdateInputDto,
-} from "../../dtos";
+import { type ReservaCreateInputDto } from "@/Ladesa.Management.Domain/Dtos/ReservaCreateInputDto";
+import { type ReservaFindOneInputDto } from "@/Ladesa.Management.Domain/Dtos/ReservaFindOneInputDto";
+import { type ReservaFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/ReservaFindOneOutputDto";
+import { type ReservaListInputDto } from "@/Ladesa.Management.Domain/Dtos/ReservaListInputDto";
+import { type ReservaListOutputDto } from "@/Ladesa.Management.Domain/Dtos/ReservaListOutputDto";
+import { type ReservaUpdateInputDto } from "@/Ladesa.Management.Domain/Dtos/ReservaUpdateInputDto";
 
 /**
  * Porta de entrada (use case) para operacoes de Reserva

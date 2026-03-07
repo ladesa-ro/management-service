@@ -10,14 +10,12 @@ import { Ambiente } from "@/Ladesa.Management.Application/ambientes/ambiente";
 import { BlocoService } from "@/Ladesa.Management.Application/ambientes/bloco/application/use-cases/bloco.service";
 import { ArquivoService } from "@/Ladesa.Management.Application/armazenamento/arquivo/application/use-cases/arquivo.service";
 import { ImagemService } from "@/Ladesa.Management.Application/armazenamento/imagem/application/use-cases/imagem.service";
-import type {
-  AmbienteCreateInputDto,
-  AmbienteFindOneInputDto,
-  AmbienteFindOneOutputDto,
-  AmbienteListInputDto,
-  AmbienteListOutputDto,
-  AmbienteUpdateInputDto,
-} from "../dtos";
+import { type AmbienteCreateInputDto } from "@/Ladesa.Management.Domain/Dtos/AmbienteCreateInputDto";
+import { type AmbienteFindOneInputDto } from "@/Ladesa.Management.Domain/Dtos/AmbienteFindOneInputDto";
+import { type AmbienteFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/AmbienteFindOneOutputDto";
+import { type AmbienteListInputDto } from "@/Ladesa.Management.Domain/Dtos/AmbienteListInputDto";
+import { type AmbienteListOutputDto } from "@/Ladesa.Management.Domain/Dtos/AmbienteListOutputDto";
+import { type AmbienteUpdateInputDto } from "@/Ladesa.Management.Domain/Dtos/AmbienteUpdateInputDto";
 import { IAmbienteRepository, type IAmbienteUseCasePort } from "../ports";
 
 @Injectable()

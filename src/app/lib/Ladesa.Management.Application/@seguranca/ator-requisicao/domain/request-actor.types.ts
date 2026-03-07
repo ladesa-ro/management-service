@@ -1,4 +1,4 @@
-import type { UsuarioFindOneOutputDto } from "@/Ladesa.Management.Application/acesso/usuario/application/dtos";
+import { type UsuarioFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/UsuarioFindOneOutputDto";
 
 /**
  * Representa o ator (usuário) que está fazendo a requisição.

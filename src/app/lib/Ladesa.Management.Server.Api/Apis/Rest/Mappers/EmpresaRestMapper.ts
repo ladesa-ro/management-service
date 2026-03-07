@@ -1,11 +1,9 @@
-import type {
-  EmpresaCreateInputDto,
-  EmpresaFindOneInputDto,
-  EmpresaFindOneOutputDto,
-  EmpresaListInputDto,
-  EmpresaListOutputDto,
-  EmpresaUpdateInputDto,
-} from "@/Ladesa.Management.Application/estagio/empresa/application/dtos";
+import { type EmpresaCreateInputDto } from "@/Ladesa.Management.Domain/Dtos/EmpresaCreateInputDto";
+import { type EmpresaFindOneInputDto } from "@/Ladesa.Management.Domain/Dtos/EmpresaFindOneInputDto";
+import { type EmpresaFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/EmpresaFindOneOutputDto";
+import { type EmpresaListInputDto } from "@/Ladesa.Management.Domain/Dtos/EmpresaListInputDto";
+import { type EmpresaListOutputDto } from "@/Ladesa.Management.Domain/Dtos/EmpresaListOutputDto";
+import { type EmpresaUpdateInputDto } from "@/Ladesa.Management.Domain/Dtos/EmpresaUpdateInputDto";
 import {
   EmpresaCreateInputRestDto,
   EmpresaFindOneInputRestDto,

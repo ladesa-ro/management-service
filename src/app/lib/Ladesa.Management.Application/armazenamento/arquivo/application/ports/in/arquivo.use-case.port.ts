@@ -1,7 +1,8 @@
 import type { Readable } from "node:stream";
 import type { StreamableFile } from "@nestjs/common";
 import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/contexto-acesso";
-import type { ArquivoCreateInputDto, ArquivoGetFileInputDto } from "../../dtos";
+import { type ArquivoCreateInputDto } from "@/Ladesa.Management.Domain/Dtos/ArquivoCreateInputDto";
+import { type ArquivoGetFileInputDto } from "@/Ladesa.Management.Domain/Dtos/ArquivoGetFileInputDto";
 
 /**
  * Porta de entrada (use case) para operações de Arquivo

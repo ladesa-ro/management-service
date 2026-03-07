@@ -1,13 +1,11 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
 import { DataSource } from "typeorm";
-import type {
-  ImagemArquivoFindOneInputDto,
-  ImagemArquivoFindOneOutputDto,
-  ImagemArquivoListInputDto,
-  ImagemArquivoListOutputDto,
-} from "@/Ladesa.Management.Application/armazenamento/imagem-arquivo/application/dtos";
 import type { IImagemArquivoQueryRepository } from "@/Ladesa.Management.Application/armazenamento/imagem-arquivo/application/ports";
+import { type ImagemArquivoFindOneInputDto } from "@/Ladesa.Management.Domain/Dtos/ImagemArquivoFindOneInputDto";
+import { type ImagemArquivoFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/ImagemArquivoFindOneOutputDto";
+import { type ImagemArquivoListInputDto } from "@/Ladesa.Management.Domain/Dtos/ImagemArquivoListInputDto";
+import { type ImagemArquivoListOutputDto } from "@/Ladesa.Management.Domain/Dtos/ImagemArquivoListOutputDto";
 import type { ImagemArquivoEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/ImagemArquivoEntity";
 import { createImagemArquivoRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/CreateImagemArquivoRepository";
 import {

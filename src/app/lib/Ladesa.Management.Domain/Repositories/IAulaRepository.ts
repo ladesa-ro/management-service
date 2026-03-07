@@ -1,10 +1,8 @@
 import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/contexto-acesso";
 import type { IBaseCrudRepositoryPort } from "@/Ladesa.Management.Application/@shared";
 import type { Aula } from "@/Ladesa.Management.Application/horarios/aula";
-import type {
-  AulaFindOneOutputDto,
-  AulaListOutputDto,
-} from "@/Ladesa.Management.Application/horarios/aula/application/dtos";
+import { type AulaFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/AulaFindOneOutputDto";
+import { type AulaListOutputDto } from "@/Ladesa.Management.Domain/Dtos/AulaListOutputDto";
 
 export const IAulaRepository = Symbol("IAulaRepository");
 

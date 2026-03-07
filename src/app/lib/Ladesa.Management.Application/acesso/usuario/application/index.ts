@@ -1,3 +1,13 @@
-export * from "./dtos";
+export { UsuarioCreateInputDto } from "@/Ladesa.Management.Domain/Dtos/UsuarioCreateInputDto";
+export { type UsuarioEnsinoCursoRef } from "@/Ladesa.Management.Domain/Dtos/UsuarioEnsinoCursoRef";
+export { type UsuarioEnsinoDisciplinaRef } from "@/Ladesa.Management.Domain/Dtos/UsuarioEnsinoDisciplinaRef";
+export { type UsuarioEnsinoOutput } from "@/Ladesa.Management.Domain/Dtos/UsuarioEnsinoOutput";
+export { type UsuarioEnsinoTurmaRef } from "@/Ladesa.Management.Domain/Dtos/UsuarioEnsinoTurmaRef";
+export { UsuarioFindOneInputDto } from "@/Ladesa.Management.Domain/Dtos/UsuarioFindOneInputDto";
+export { UsuarioFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/UsuarioFindOneOutputDto";
+export { type UsuarioInputRefDto } from "@/Ladesa.Management.Domain/Dtos/UsuarioInputRefDto";
+export { UsuarioListInputDto } from "@/Ladesa.Management.Domain/Dtos/UsuarioListInputDto";
+export { UsuarioListOutputDto } from "@/Ladesa.Management.Domain/Dtos/UsuarioListOutputDto";
+export { UsuarioUpdateInputDto } from "@/Ladesa.Management.Domain/Dtos/UsuarioUpdateInputDto";
 export * from "./ports";
 export * from "./use-cases";

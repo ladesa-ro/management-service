@@ -3,7 +3,7 @@ import { CalendarioLetivoModule } from "@/Ladesa.Management.Application/horarios
 import { IDiaCalendarioRepository } from "@/Ladesa.Management.Application/horarios/dia-calendario/application/ports";
 import { DiaCalendarioService } from "@/Ladesa.Management.Application/horarios/dia-calendario/application/use-cases/dia-calendario.service";
 import { DiaCalendarioAuthzRegistrySetup } from "@/Ladesa.Management.Application/horarios/dia-calendario/infrastructure";
-import { DiaCalendarioTypeOrmRepositoryAdapter } from "@/Ladesa.Management.Application/horarios/dia-calendario/infrastructure/persistence/typeorm";
+import { DiaCalendarioTypeOrmRepositoryAdapter } from "@/Ladesa.Management.Infrastructure.Database/Repositories/DiaCalendarioRepositoryAdapter";
 import { NestJsPaginateAdapter } from "@/Ladesa.Management.Infrastructure.Database/typeorm";
 import { DiaCalendarioGraphqlResolver } from "@/Ladesa.Management.Server.Api/Apis/GraphQl/Resolvers/DiaCalendarioGraphqlResolver";
 import { DiaCalendarioRestController } from "@/Ladesa.Management.Server.Api/Apis/Rest/Controllers/DiaCalendarioRestController";

@@ -1,12 +1,10 @@
 import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/contexto-acesso";
-import type {
-  CalendarioLetivoCreateInputDto,
-  CalendarioLetivoFindOneInputDto,
-  CalendarioLetivoFindOneOutputDto,
-  CalendarioLetivoListInputDto,
-  CalendarioLetivoListOutputDto,
-  CalendarioLetivoUpdateInputDto,
-} from "../../dtos";
+import { type CalendarioLetivoCreateInputDto } from "@/Ladesa.Management.Domain/Dtos/CalendarioLetivoCreateInputDto";
+import { type CalendarioLetivoFindOneInputDto } from "@/Ladesa.Management.Domain/Dtos/CalendarioLetivoFindOneInputDto";
+import { type CalendarioLetivoFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/CalendarioLetivoFindOneOutputDto";
+import { type CalendarioLetivoListInputDto } from "@/Ladesa.Management.Domain/Dtos/CalendarioLetivoListInputDto";
+import { type CalendarioLetivoListOutputDto } from "@/Ladesa.Management.Domain/Dtos/CalendarioLetivoListOutputDto";
+import { type CalendarioLetivoUpdateInputDto } from "@/Ladesa.Management.Domain/Dtos/CalendarioLetivoUpdateInputDto";
 
 /**
  * Port de entrada para casos de uso de CalendarioLetivo

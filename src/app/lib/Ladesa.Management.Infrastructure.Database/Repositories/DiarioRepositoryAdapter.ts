@@ -1,13 +1,11 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
 import { DataSource } from "typeorm";
-import type {
-  DiarioFindOneInputDto,
-  DiarioFindOneOutputDto,
-  DiarioListInputDto,
-  DiarioListOutputDto,
-} from "@/Ladesa.Management.Application/ensino/diario/application/dtos";
 import type { IDiarioRepository } from "@/Ladesa.Management.Application/ensino/diario/application/ports";
+import { type DiarioFindOneInputDto } from "@/Ladesa.Management.Domain/Dtos/DiarioFindOneInputDto";
+import { type DiarioFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/DiarioFindOneOutputDto";
+import { type DiarioListInputDto } from "@/Ladesa.Management.Domain/Dtos/DiarioListInputDto";
+import { type DiarioListOutputDto } from "@/Ladesa.Management.Domain/Dtos/DiarioListOutputDto";
 import type { DiarioEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/DiarioEntity";
 import { createDiarioRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/CreateDiarioRepository";
 import {

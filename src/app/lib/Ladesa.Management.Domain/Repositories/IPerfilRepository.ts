@@ -1,11 +1,9 @@
 import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/contexto-acesso";
 import type { IPersistRepositoryPort } from "@/Ladesa.Management.Application/@shared";
-import type {
-  PerfilFindOneInputDto,
-  PerfilFindOneOutputDto,
-  PerfilListInputDto,
-  PerfilListOutputDto,
-} from "@/Ladesa.Management.Application/acesso/perfil/application/dtos";
+import { type PerfilFindOneInputDto } from "@/Ladesa.Management.Domain/Dtos/PerfilFindOneInputDto";
+import { type PerfilFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/PerfilFindOneOutputDto";
+import { type PerfilListInputDto } from "@/Ladesa.Management.Domain/Dtos/PerfilListInputDto";
+import { type PerfilListOutputDto } from "@/Ladesa.Management.Domain/Dtos/PerfilListOutputDto";
 
 /**
  * Token de injeção para o repositório de Perfil

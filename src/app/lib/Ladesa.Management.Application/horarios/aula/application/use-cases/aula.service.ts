@@ -6,14 +6,12 @@ import { AmbienteService } from "@/Ladesa.Management.Application/ambientes/ambie
 import { DiarioService } from "@/Ladesa.Management.Application/ensino/diario/application/use-cases/diario.service";
 import { Aula } from "@/Ladesa.Management.Application/horarios/aula";
 import { IntervaloDeTempoService } from "@/Ladesa.Management.Application/horarios/intervalo-de-tempo/application/use-cases/intervalo-de-tempo.service";
-import type {
-  AulaCreateInputDto,
-  AulaFindOneInputDto,
-  AulaFindOneOutputDto,
-  AulaListInputDto,
-  AulaListOutputDto,
-  AulaUpdateInputDto,
-} from "../dtos";
+import { type AulaCreateInputDto } from "@/Ladesa.Management.Domain/Dtos/AulaCreateInputDto";
+import { type AulaFindOneInputDto } from "@/Ladesa.Management.Domain/Dtos/AulaFindOneInputDto";
+import { type AulaFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/AulaFindOneOutputDto";
+import { type AulaListInputDto } from "@/Ladesa.Management.Domain/Dtos/AulaListInputDto";
+import { type AulaListOutputDto } from "@/Ladesa.Management.Domain/Dtos/AulaListOutputDto";
+import { type AulaUpdateInputDto } from "@/Ladesa.Management.Domain/Dtos/AulaUpdateInputDto";
 import { IAulaRepository } from "../ports";
 import type { IAulaUseCasePort } from "../ports/in/aula.use-case.port";
 

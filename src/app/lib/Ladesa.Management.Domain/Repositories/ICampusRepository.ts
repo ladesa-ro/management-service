@@ -1,10 +1,8 @@
 import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/contexto-acesso";
 import type { IBaseCrudRepositoryPort } from "@/Ladesa.Management.Application/@shared";
 import type { Campus } from "@/Ladesa.Management.Application/ambientes/campus";
-import type {
-  CampusFindOneOutputDto,
-  CampusListOutputDto,
-} from "@/Ladesa.Management.Application/ambientes/campus/application/dtos";
+import { type CampusFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/CampusFindOneOutputDto";
+import { type CampusListOutputDto } from "@/Ladesa.Management.Domain/Dtos/CampusListOutputDto";
 
 /**
  * Token de injeção para o repositório de Campus

@@ -8,7 +8,7 @@ import type {
   GradeHorarioOfertaFormacaoIntervaloDeTempoListInputDto,
   GradeHorarioOfertaFormacaoIntervaloDeTempoListOutputDto,
 } from "@/Ladesa.Management.Application/horarios/grade-horario-oferta-formacao-intervalo-de-tempo";
-import type { IGradeHorarioOfertaFormacaoIntervaloDeTempoRepository } from "@/Ladesa.Management.Application/horarios/grade-horario-oferta-formacao-intervalo-de-tempo/application/ports/out";
+import { type IGradeHorarioOfertaFormacaoIntervaloDeTempoRepository } from "@/Ladesa.Management.Domain/Repositories/IGradeHorarioOfertaFormacaoIntervaloDeTempoRepository";
 import type { GradeHorarioOfertaFormacaoIntervaloDeTempoEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/GradeHorarioOfertaFormacaoIntervaloDeTempoEntity";
 import { createGradeHorarioOfertaFormacaoIntervaloDeTempoRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/CreateGradeHorarioOfertaFormacaoIntervaloDeTempoRepository";
 import {

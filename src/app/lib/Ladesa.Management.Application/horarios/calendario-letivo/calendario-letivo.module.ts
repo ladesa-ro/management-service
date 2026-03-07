@@ -6,7 +6,7 @@ import {
   ICalendarioLetivoRepository,
 } from "@/Ladesa.Management.Application/horarios/calendario-letivo";
 import { CalendarioLetivoAuthzRegistrySetup } from "@/Ladesa.Management.Application/horarios/calendario-letivo/infrastructure";
-import { CalendarioLetivoTypeOrmRepositoryAdapter } from "@/Ladesa.Management.Application/horarios/calendario-letivo/infrastructure/persistence/typeorm";
+import { CalendarioLetivoTypeOrmRepositoryAdapter } from "@/Ladesa.Management.Infrastructure.Database/Repositories/CalendarioLetivoRepositoryAdapter";
 import { NestJsPaginateAdapter } from "@/Ladesa.Management.Infrastructure.Database/typeorm";
 import { CalendarioLetivoGraphqlResolver } from "@/Ladesa.Management.Server.Api/Apis/GraphQl/Resolvers/CalendarioLetivoGraphqlResolver";
 import { CalendarioLetivoRestController } from "@/Ladesa.Management.Server.Api/Apis/Rest/Controllers/CalendarioLetivoRestController";

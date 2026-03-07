@@ -1,10 +1,8 @@
 import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/contexto-acesso";
-import {
-  EstadoFindOneInputDto,
-  EstadoFindOneOutputDto,
-  EstadoListInputDto,
-  EstadoListOutputDto,
-} from "../../dtos";
+import { EstadoFindOneInputDto } from "@/Ladesa.Management.Domain/Dtos/EstadoFindOneInputDto";
+import { EstadoFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/EstadoFindOneOutputDto";
+import { EstadoListInputDto } from "@/Ladesa.Management.Domain/Dtos/EstadoListInputDto";
+import { EstadoListOutputDto } from "@/Ladesa.Management.Domain/Dtos/EstadoListOutputDto";
 
 /**
  * Port de entrada para casos de uso de Estado

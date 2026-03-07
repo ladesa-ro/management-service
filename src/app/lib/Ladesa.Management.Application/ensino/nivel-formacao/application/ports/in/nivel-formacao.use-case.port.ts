@@ -1,12 +1,10 @@
 import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/contexto-acesso";
-import {
-  NivelFormacaoCreateInputDto,
-  NivelFormacaoFindOneInputDto,
-  NivelFormacaoFindOneOutputDto,
-  NivelFormacaoListInputDto,
-  NivelFormacaoListOutputDto,
-  NivelFormacaoUpdateInputDto,
-} from "../../dtos";
+import { NivelFormacaoCreateInputDto } from "@/Ladesa.Management.Domain/Dtos/NivelFormacaoCreateInputDto";
+import { NivelFormacaoFindOneInputDto } from "@/Ladesa.Management.Domain/Dtos/NivelFormacaoFindOneInputDto";
+import { NivelFormacaoFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/NivelFormacaoFindOneOutputDto";
+import { NivelFormacaoListInputDto } from "@/Ladesa.Management.Domain/Dtos/NivelFormacaoListInputDto";
+import { NivelFormacaoListOutputDto } from "@/Ladesa.Management.Domain/Dtos/NivelFormacaoListOutputDto";
+import { NivelFormacaoUpdateInputDto } from "@/Ladesa.Management.Domain/Dtos/NivelFormacaoUpdateInputDto";
 
 export interface INivelFormacaoUseCasePort {
   findAll(

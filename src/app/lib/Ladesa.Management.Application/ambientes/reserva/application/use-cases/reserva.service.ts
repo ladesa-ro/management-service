@@ -5,14 +5,12 @@ import { BaseCrudService, type PersistInput } from "@/Ladesa.Management.Applicat
 import { UsuarioService } from "@/Ladesa.Management.Application/acesso/usuario/application/use-cases/usuario.service";
 import { AmbienteService } from "@/Ladesa.Management.Application/ambientes/ambiente/application/use-cases/ambiente.service";
 import { Reserva } from "@/Ladesa.Management.Application/ambientes/reserva";
-import type {
-  ReservaCreateInputDto,
-  ReservaFindOneInputDto,
-  ReservaFindOneOutputDto,
-  ReservaListInputDto,
-  ReservaListOutputDto,
-  ReservaUpdateInputDto,
-} from "../dtos";
+import { type ReservaCreateInputDto } from "@/Ladesa.Management.Domain/Dtos/ReservaCreateInputDto";
+import { type ReservaFindOneInputDto } from "@/Ladesa.Management.Domain/Dtos/ReservaFindOneInputDto";
+import { type ReservaFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/ReservaFindOneOutputDto";
+import { type ReservaListInputDto } from "@/Ladesa.Management.Domain/Dtos/ReservaListInputDto";
+import { type ReservaListOutputDto } from "@/Ladesa.Management.Domain/Dtos/ReservaListOutputDto";
+import { type ReservaUpdateInputDto } from "@/Ladesa.Management.Domain/Dtos/ReservaUpdateInputDto";
 import { IReservaRepository, type IReservaUseCasePort } from "../ports";
 
 @Injectable()

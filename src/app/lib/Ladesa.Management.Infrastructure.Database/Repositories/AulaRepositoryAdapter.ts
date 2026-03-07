@@ -1,13 +1,11 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
 import { DataSource } from "typeorm";
-import type {
-  AulaFindOneInputDto,
-  AulaFindOneOutputDto,
-  AulaListInputDto,
-  AulaListOutputDto,
-} from "@/Ladesa.Management.Application/horarios/aula/application/dtos";
 import type { IAulaRepository } from "@/Ladesa.Management.Application/horarios/aula/application/ports";
+import { type AulaFindOneInputDto } from "@/Ladesa.Management.Domain/Dtos/AulaFindOneInputDto";
+import { type AulaFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/AulaFindOneOutputDto";
+import { type AulaListInputDto } from "@/Ladesa.Management.Domain/Dtos/AulaListInputDto";
+import { type AulaListOutputDto } from "@/Ladesa.Management.Domain/Dtos/AulaListOutputDto";
 import type { AulaEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/AulaEntity";
 import { createAulaRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/CreateAulaRepository";
 import {

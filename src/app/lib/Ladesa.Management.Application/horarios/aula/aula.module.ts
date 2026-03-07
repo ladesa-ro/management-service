@@ -4,8 +4,8 @@ import { DiarioModule } from "@/Ladesa.Management.Application/ensino/diario/diar
 import { IAulaRepository } from "@/Ladesa.Management.Application/horarios/aula/application/ports";
 import { AulaService } from "@/Ladesa.Management.Application/horarios/aula/application/use-cases/aula.service";
 import { AulaAuthzRegistrySetup } from "@/Ladesa.Management.Application/horarios/aula/infrastructure";
-import { AulaTypeOrmRepositoryAdapter } from "@/Ladesa.Management.Application/horarios/aula/infrastructure/persistence/typeorm";
 import { IntervaloDeTempoModule } from "@/Ladesa.Management.Application/horarios/intervalo-de-tempo/intervalo-de-tempo.module";
+import { AulaTypeOrmRepositoryAdapter } from "@/Ladesa.Management.Infrastructure.Database/Repositories/AulaRepositoryAdapter";
 import { NestJsPaginateAdapter } from "@/Ladesa.Management.Infrastructure.Database/typeorm";
 import { AulaGraphqlResolver } from "@/Ladesa.Management.Server.Api/Apis/GraphQl/Resolvers/AulaGraphqlResolver";
 import { AulaController } from "@/Ladesa.Management.Server.Api/Apis/Rest/Controllers/AulaRestController";

@@ -2,18 +2,16 @@ import { Inject, Injectable } from "@nestjs/common";
 import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/contexto-acesso";
 import { BaseCrudService, type PersistInput } from "@/Ladesa.Management.Application/@shared";
 import { Disponibilidade } from "@/Ladesa.Management.Application/ensino/disponibilidade";
-import type {
-  DisponibilidadeCreateInputDto,
-  DisponibilidadeFindOneInputDto,
-  DisponibilidadeFindOneOutputDto,
-  DisponibilidadeListInputDto,
-  DisponibilidadeListOutputDto,
-  DisponibilidadeUpdateInputDto,
-} from "@/Ladesa.Management.Application/ensino/disponibilidade/application/dtos";
 import {
   IDisponibilidadeRepository,
   type IDisponibilidadeUseCasePort,
 } from "@/Ladesa.Management.Application/ensino/disponibilidade/application/ports";
+import { type DisponibilidadeCreateInputDto } from "@/Ladesa.Management.Domain/Dtos/DisponibilidadeCreateInputDto";
+import { type DisponibilidadeFindOneInputDto } from "@/Ladesa.Management.Domain/Dtos/DisponibilidadeFindOneInputDto";
+import { type DisponibilidadeFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/DisponibilidadeFindOneOutputDto";
+import { type DisponibilidadeListInputDto } from "@/Ladesa.Management.Domain/Dtos/DisponibilidadeListInputDto";
+import { type DisponibilidadeListOutputDto } from "@/Ladesa.Management.Domain/Dtos/DisponibilidadeListOutputDto";
+import { type DisponibilidadeUpdateInputDto } from "@/Ladesa.Management.Domain/Dtos/DisponibilidadeUpdateInputDto";
 
 @Injectable()
 export class DisponibilidadeService

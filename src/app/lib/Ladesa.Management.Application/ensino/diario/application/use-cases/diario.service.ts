@@ -4,14 +4,6 @@ import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/c
 import { BaseCrudService, type PersistInput } from "@/Ladesa.Management.Application/@shared";
 import { AmbienteService } from "@/Ladesa.Management.Application/ambientes/ambiente/application/use-cases/ambiente.service";
 import { Diario } from "@/Ladesa.Management.Application/ensino/diario";
-import type {
-  DiarioCreateInputDto,
-  DiarioFindOneInputDto,
-  DiarioFindOneOutputDto,
-  DiarioListInputDto,
-  DiarioListOutputDto,
-  DiarioUpdateInputDto,
-} from "@/Ladesa.Management.Application/ensino/diario/application/dtos";
 import {
   IDiarioRepository,
   type IDiarioUseCasePort,
@@ -19,6 +11,12 @@ import {
 import { DisciplinaService } from "@/Ladesa.Management.Application/ensino/disciplina/application/use-cases/disciplina.service";
 import { TurmaService } from "@/Ladesa.Management.Application/ensino/turma/application/use-cases/turma.service";
 import { CalendarioLetivoService } from "@/Ladesa.Management.Application/horarios/calendario-letivo";
+import { type DiarioCreateInputDto } from "@/Ladesa.Management.Domain/Dtos/DiarioCreateInputDto";
+import { type DiarioFindOneInputDto } from "@/Ladesa.Management.Domain/Dtos/DiarioFindOneInputDto";
+import { type DiarioFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/DiarioFindOneOutputDto";
+import { type DiarioListInputDto } from "@/Ladesa.Management.Domain/Dtos/DiarioListInputDto";
+import { type DiarioListOutputDto } from "@/Ladesa.Management.Domain/Dtos/DiarioListOutputDto";
+import { type DiarioUpdateInputDto } from "@/Ladesa.Management.Domain/Dtos/DiarioUpdateInputDto";
 
 @Injectable()
 export class DiarioService

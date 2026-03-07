@@ -6,19 +6,17 @@ import { CampusService } from "@/Ladesa.Management.Application/ambientes/campus"
 import { ArquivoService } from "@/Ladesa.Management.Application/armazenamento/arquivo/application/use-cases/arquivo.service";
 import { ImagemService } from "@/Ladesa.Management.Application/armazenamento/imagem/application/use-cases/imagem.service";
 import { Curso } from "@/Ladesa.Management.Application/ensino/curso";
-import type {
-  CursoCreateInputDto,
-  CursoFindOneInputDto,
-  CursoFindOneOutputDto,
-  CursoListInputDto,
-  CursoListOutputDto,
-  CursoUpdateInputDto,
-} from "@/Ladesa.Management.Application/ensino/curso/application/dtos";
 import {
   ICursoRepository,
   type ICursoUseCasePort,
 } from "@/Ladesa.Management.Application/ensino/curso/application/ports";
 import { OfertaFormacaoService } from "@/Ladesa.Management.Application/ensino/oferta-formacao";
+import { type CursoCreateInputDto } from "@/Ladesa.Management.Domain/Dtos/CursoCreateInputDto";
+import { type CursoFindOneInputDto } from "@/Ladesa.Management.Domain/Dtos/CursoFindOneInputDto";
+import { type CursoFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/CursoFindOneOutputDto";
+import { type CursoListInputDto } from "@/Ladesa.Management.Domain/Dtos/CursoListInputDto";
+import { type CursoListOutputDto } from "@/Ladesa.Management.Domain/Dtos/CursoListOutputDto";
+import { type CursoUpdateInputDto } from "@/Ladesa.Management.Domain/Dtos/CursoUpdateInputDto";
 
 @Injectable()
 export class CursoService

@@ -1,11 +1,9 @@
 import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/contexto-acesso";
-import type {
-  IntervaloDeTempoFindOneInputDto,
-  IntervaloDeTempoFindOneOutputDto,
-  IntervaloDeTempoInputDto,
-  IntervaloDeTempoListInputDto,
-  IntervaloDeTempoListOutputDto,
-} from "../../dtos";
+import { type IntervaloDeTempoFindOneInputDto } from "@/Ladesa.Management.Domain/Dtos/IntervaloDeTempoFindOneInputDto";
+import { type IntervaloDeTempoFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/IntervaloDeTempoFindOneOutputDto";
+import { type IntervaloDeTempoInputDto } from "@/Ladesa.Management.Domain/Dtos/IntervaloDeTempoInputDto";
+import { type IntervaloDeTempoListInputDto } from "@/Ladesa.Management.Domain/Dtos/IntervaloDeTempoListInputDto";
+import { type IntervaloDeTempoListOutputDto } from "@/Ladesa.Management.Domain/Dtos/IntervaloDeTempoListOutputDto";
 
 export interface IIntervaloDeTempoUseCasePort {
   findAll(

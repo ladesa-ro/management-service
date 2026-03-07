@@ -1,13 +1,11 @@
 import type { StreamableFile } from "@nestjs/common";
 import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/contexto-acesso";
-import type {
-  AmbienteCreateInputDto,
-  AmbienteFindOneInputDto,
-  AmbienteFindOneOutputDto,
-  AmbienteListInputDto,
-  AmbienteListOutputDto,
-  AmbienteUpdateInputDto,
-} from "../../dtos";
+import { type AmbienteCreateInputDto } from "@/Ladesa.Management.Domain/Dtos/AmbienteCreateInputDto";
+import { type AmbienteFindOneInputDto } from "@/Ladesa.Management.Domain/Dtos/AmbienteFindOneInputDto";
+import { type AmbienteFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/AmbienteFindOneOutputDto";
+import { type AmbienteListInputDto } from "@/Ladesa.Management.Domain/Dtos/AmbienteListInputDto";
+import { type AmbienteListOutputDto } from "@/Ladesa.Management.Domain/Dtos/AmbienteListOutputDto";
+import { type AmbienteUpdateInputDto } from "@/Ladesa.Management.Domain/Dtos/AmbienteUpdateInputDto";
 
 /**
  * Port de entrada para casos de uso de Ambiente

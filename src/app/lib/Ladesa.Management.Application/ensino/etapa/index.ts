@@ -1,3 +1,4 @@
+export * from "@/Ladesa.Management.Domain/Entities/Etapa";
+export * from "@/Ladesa.Management.Domain/Entities/Etapa";
 export * from "./application";
-export * from "./domain";
 export * from "./infrastructure";

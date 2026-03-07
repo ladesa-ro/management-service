@@ -5,15 +5,13 @@ import { BaseCrudService, type PersistInput } from "@/Ladesa.Management.Applicat
 import { DisponibilidadeService } from "@/Ladesa.Management.Application/ensino/disponibilidade/application/use-cases/disponibilidade.service";
 import { TurmaService } from "@/Ladesa.Management.Application/ensino/turma/application/use-cases/turma.service";
 import type { TurmaDisponibilidade } from "@/Ladesa.Management.Application/ensino/turma-disponibilidade";
-import type {
-  TurmaDisponibilidadeCreateInputDto,
-  TurmaDisponibilidadeFindOneInputDto,
-  TurmaDisponibilidadeFindOneOutputDto,
-  TurmaDisponibilidadeListInputDto,
-  TurmaDisponibilidadeListOutputDto,
-  TurmaDisponibilidadeUpdateInputDto,
-} from "../dtos";
-import { ITurmaDisponibilidadeRepository } from "../ports/out";
+import { type TurmaDisponibilidadeCreateInputDto } from "@/Ladesa.Management.Domain/Dtos/TurmaDisponibilidadeCreateInputDto";
+import { type TurmaDisponibilidadeFindOneInputDto } from "@/Ladesa.Management.Domain/Dtos/TurmaDisponibilidadeFindOneInputDto";
+import { type TurmaDisponibilidadeFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/TurmaDisponibilidadeFindOneOutputDto";
+import { type TurmaDisponibilidadeListInputDto } from "@/Ladesa.Management.Domain/Dtos/TurmaDisponibilidadeListInputDto";
+import { type TurmaDisponibilidadeListOutputDto } from "@/Ladesa.Management.Domain/Dtos/TurmaDisponibilidadeListOutputDto";
+import { type TurmaDisponibilidadeUpdateInputDto } from "@/Ladesa.Management.Domain/Dtos/TurmaDisponibilidadeUpdateInputDto";
+import { ITurmaDisponibilidadeRepository } from "@/Ladesa.Management.Domain/Repositories/ITurmaDisponibilidadeRepository";
 
 @Injectable()
 export class TurmaDisponibilidadeService extends BaseCrudService<

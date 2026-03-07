@@ -1,12 +1,10 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { DataSource } from "typeorm";
-import type {
-  EstadoFindOneInputDto,
-  EstadoFindOneOutputDto,
-  EstadoListInputDto,
-  EstadoListOutputDto,
-} from "@/Ladesa.Management.Application/localidades/estado/application/dtos";
 import type { IEstadoRepository } from "@/Ladesa.Management.Application/localidades/estado/application/ports";
+import { type EstadoFindOneInputDto } from "@/Ladesa.Management.Domain/Dtos/EstadoFindOneInputDto";
+import { type EstadoFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/EstadoFindOneOutputDto";
+import { type EstadoListInputDto } from "@/Ladesa.Management.Domain/Dtos/EstadoListInputDto";
+import { type EstadoListOutputDto } from "@/Ladesa.Management.Domain/Dtos/EstadoListOutputDto";
 import type { EstadoEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/EstadoEntity";
 import { createEstadoRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/CreateEstadoRepository";
 import {

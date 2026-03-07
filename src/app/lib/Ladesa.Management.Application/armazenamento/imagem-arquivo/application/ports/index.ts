@@ -1,2 +1,2 @@
+export * from "@/Ladesa.Management.Domain/Repositories/IImagemArquivoQueryRepository";
 export * from "./in";
-export * from "./out";

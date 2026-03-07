@@ -2,18 +2,16 @@ import { Inject, Injectable } from "@nestjs/common";
 import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/contexto-acesso";
 import { BaseCrudService, type PersistInput } from "@/Ladesa.Management.Application/@shared";
 import type { GradeHorarioOfertaFormacao } from "@/Ladesa.Management.Application/horarios/grade-horario-oferta-formacao";
-import type {
-  GradeHorarioOfertaFormacaoCreateInputDto,
-  GradeHorarioOfertaFormacaoFindOneInputDto,
-  GradeHorarioOfertaFormacaoFindOneOutputDto,
-  GradeHorarioOfertaFormacaoListInputDto,
-  GradeHorarioOfertaFormacaoListOutputDto,
-  GradeHorarioOfertaFormacaoUpdateInputDto,
-} from "@/Ladesa.Management.Application/horarios/grade-horario-oferta-formacao/application/dtos";
 import {
   IGradeHorarioOfertaFormacaoRepository,
   type IGradeHorarioOfertaFormacaoUseCasePort,
 } from "@/Ladesa.Management.Application/horarios/grade-horario-oferta-formacao/application/ports";
+import { type GradeHorarioOfertaFormacaoCreateInputDto } from "@/Ladesa.Management.Domain/Dtos/GradeHorarioOfertaFormacaoCreateInputDto";
+import { type GradeHorarioOfertaFormacaoFindOneInputDto } from "@/Ladesa.Management.Domain/Dtos/GradeHorarioOfertaFormacaoFindOneInputDto";
+import { type GradeHorarioOfertaFormacaoFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/GradeHorarioOfertaFormacaoFindOneOutputDto";
+import { type GradeHorarioOfertaFormacaoListInputDto } from "@/Ladesa.Management.Domain/Dtos/GradeHorarioOfertaFormacaoListInputDto";
+import { type GradeHorarioOfertaFormacaoListOutputDto } from "@/Ladesa.Management.Domain/Dtos/GradeHorarioOfertaFormacaoListOutputDto";
+import { type GradeHorarioOfertaFormacaoUpdateInputDto } from "@/Ladesa.Management.Domain/Dtos/GradeHorarioOfertaFormacaoUpdateInputDto";
 
 @Injectable()
 export class GradeHorarioOfertaFormacaoService

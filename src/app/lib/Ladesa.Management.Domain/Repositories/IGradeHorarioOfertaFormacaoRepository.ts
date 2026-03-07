@@ -1,9 +1,7 @@
 import type { IBaseCrudRepositoryPort } from "@/Ladesa.Management.Application/@shared";
 import type { GradeHorarioOfertaFormacao } from "@/Ladesa.Management.Application/horarios/grade-horario-oferta-formacao";
-import type {
-  GradeHorarioOfertaFormacaoFindOneOutputDto,
-  GradeHorarioOfertaFormacaoListOutputDto,
-} from "@/Ladesa.Management.Application/horarios/grade-horario-oferta-formacao/application/dtos";
+import { type GradeHorarioOfertaFormacaoFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/GradeHorarioOfertaFormacaoFindOneOutputDto";
+import { type GradeHorarioOfertaFormacaoListOutputDto } from "@/Ladesa.Management.Domain/Dtos/GradeHorarioOfertaFormacaoListOutputDto";
 
 /**
  * Token de injecao para o repositorio de GradeHorarioOfertaFormacao

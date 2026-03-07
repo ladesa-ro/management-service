@@ -1,14 +1,12 @@
 import type { StreamableFile } from "@nestjs/common";
 import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/contexto-acesso";
-import type {
-  UsuarioCreateInputDto,
-  UsuarioEnsinoOutput,
-  UsuarioFindOneInputDto,
-  UsuarioFindOneOutputDto,
-  UsuarioListInputDto,
-  UsuarioListOutputDto,
-  UsuarioUpdateInputDto,
-} from "../../dtos";
+import { type UsuarioCreateInputDto } from "@/Ladesa.Management.Domain/Dtos/UsuarioCreateInputDto";
+import { type UsuarioEnsinoOutput } from "@/Ladesa.Management.Domain/Dtos/UsuarioEnsinoOutput";
+import { type UsuarioFindOneInputDto } from "@/Ladesa.Management.Domain/Dtos/UsuarioFindOneInputDto";
+import { type UsuarioFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/UsuarioFindOneOutputDto";
+import { type UsuarioListInputDto } from "@/Ladesa.Management.Domain/Dtos/UsuarioListInputDto";
+import { type UsuarioListOutputDto } from "@/Ladesa.Management.Domain/Dtos/UsuarioListOutputDto";
+import { type UsuarioUpdateInputDto } from "@/Ladesa.Management.Domain/Dtos/UsuarioUpdateInputDto";
 
 /**
  * Port de entrada para casos de uso de Usuario

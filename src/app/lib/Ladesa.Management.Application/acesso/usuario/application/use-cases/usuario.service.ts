@@ -13,21 +13,19 @@ import {
   saveEntityImagemField,
   ValidationFailedException,
 } from "@/Ladesa.Management.Application/@shared";
-import type {
-  UsuarioCreateInputDto,
-  UsuarioEnsinoOutput,
-  UsuarioFindOneInputDto,
-  UsuarioFindOneOutputDto,
-  UsuarioListInputDto,
-  UsuarioListOutputDto,
-  UsuarioUpdateInputDto,
-} from "@/Ladesa.Management.Application/acesso/usuario/application/dtos";
 import {
   IUsuarioRepository,
   type IUsuarioUseCasePort,
 } from "@/Ladesa.Management.Application/acesso/usuario/application/ports";
 import { ArquivoService } from "@/Ladesa.Management.Application/armazenamento/arquivo/application/use-cases/arquivo.service";
 import { ImagemService } from "@/Ladesa.Management.Application/armazenamento/imagem/application/use-cases/imagem.service";
+import { type UsuarioCreateInputDto } from "@/Ladesa.Management.Domain/Dtos/UsuarioCreateInputDto";
+import { type UsuarioEnsinoOutput } from "@/Ladesa.Management.Domain/Dtos/UsuarioEnsinoOutput";
+import { type UsuarioFindOneInputDto } from "@/Ladesa.Management.Domain/Dtos/UsuarioFindOneInputDto";
+import { type UsuarioFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/UsuarioFindOneOutputDto";
+import { type UsuarioListInputDto } from "@/Ladesa.Management.Domain/Dtos/UsuarioListInputDto";
+import { type UsuarioListOutputDto } from "@/Ladesa.Management.Domain/Dtos/UsuarioListOutputDto";
+import { type UsuarioUpdateInputDto } from "@/Ladesa.Management.Domain/Dtos/UsuarioUpdateInputDto";
 
 @Injectable()
 export class UsuarioService implements IUsuarioUseCasePort {

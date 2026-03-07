@@ -1,2 +1,2 @@
+export * from "@/Ladesa.Management.Domain/Repositories/IArquivoRepository";
 export * from "./in";
-export * from "./out";

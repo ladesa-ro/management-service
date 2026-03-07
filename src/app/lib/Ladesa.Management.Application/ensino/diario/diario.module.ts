@@ -3,10 +3,10 @@ import { AmbienteModule } from "@/Ladesa.Management.Application/ambientes/ambien
 import { IDiarioRepository } from "@/Ladesa.Management.Application/ensino/diario/application/ports";
 import { DiarioService } from "@/Ladesa.Management.Application/ensino/diario/application/use-cases/diario.service";
 import { DiarioAuthzRegistrySetup } from "@/Ladesa.Management.Application/ensino/diario/infrastructure";
-import { DiarioTypeOrmRepositoryAdapter } from "@/Ladesa.Management.Application/ensino/diario/infrastructure/persistence/typeorm";
 import { DisciplinaModule } from "@/Ladesa.Management.Application/ensino/disciplina/disciplina.module";
 import { TurmaModule } from "@/Ladesa.Management.Application/ensino/turma/turma.module";
 import { CalendarioLetivoModule } from "@/Ladesa.Management.Application/horarios/calendario-letivo/calendario-letivo.module";
+import { DiarioTypeOrmRepositoryAdapter } from "@/Ladesa.Management.Infrastructure.Database/Repositories/DiarioRepositoryAdapter";
 import { NestJsPaginateAdapter } from "@/Ladesa.Management.Infrastructure.Database/typeorm";
 import { DiarioGraphqlResolver } from "@/Ladesa.Management.Server.Api/Apis/GraphQl/Resolvers/DiarioGraphqlResolver";
 import { DiarioRestController } from "@/Ladesa.Management.Server.Api/Apis/Rest/Controllers/DiarioRestController";

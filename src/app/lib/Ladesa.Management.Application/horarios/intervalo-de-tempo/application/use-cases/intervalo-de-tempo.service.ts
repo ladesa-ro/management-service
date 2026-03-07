@@ -3,16 +3,14 @@ import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/c
 import { ResourceNotFoundError } from "@/Ladesa.Management.Application/@shared";
 import type { IntervaloDeTempo } from "@/Ladesa.Management.Application/horarios/intervalo-de-tempo";
 import {
-  IntervaloDeTempoFindOneInputDto,
-  IntervaloDeTempoFindOneOutputDto,
-  IntervaloDeTempoInputDto,
-  IntervaloDeTempoListInputDto,
-  IntervaloDeTempoListOutputDto,
-} from "@/Ladesa.Management.Application/horarios/intervalo-de-tempo/application/dtos";
-import {
   IIntervaloDeTempoRepository,
   type IIntervaloDeTempoUseCasePort,
 } from "@/Ladesa.Management.Application/horarios/intervalo-de-tempo/application/ports";
+import { IntervaloDeTempoFindOneInputDto } from "@/Ladesa.Management.Domain/Dtos/IntervaloDeTempoFindOneInputDto";
+import { IntervaloDeTempoFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/IntervaloDeTempoFindOneOutputDto";
+import { IntervaloDeTempoInputDto } from "@/Ladesa.Management.Domain/Dtos/IntervaloDeTempoInputDto";
+import { IntervaloDeTempoListInputDto } from "@/Ladesa.Management.Domain/Dtos/IntervaloDeTempoListInputDto";
+import { IntervaloDeTempoListOutputDto } from "@/Ladesa.Management.Domain/Dtos/IntervaloDeTempoListOutputDto";
 
 @Injectable()
 export class IntervaloDeTempoService implements IIntervaloDeTempoUseCasePort {

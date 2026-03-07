@@ -1,9 +1,7 @@
 import type { IBaseCrudRepositoryPort } from "@/Ladesa.Management.Application/@shared";
 import type { Diario } from "@/Ladesa.Management.Application/ensino/diario";
-import type {
-  DiarioFindOneOutputDto,
-  DiarioListOutputDto,
-} from "@/Ladesa.Management.Application/ensino/diario/application/dtos";
+import { type DiarioFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/DiarioFindOneOutputDto";
+import { type DiarioListOutputDto } from "@/Ladesa.Management.Domain/Dtos/DiarioListOutputDto";
 
 /**
  * Token de injeção para o repositório de Diario

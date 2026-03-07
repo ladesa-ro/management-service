@@ -1,12 +1,10 @@
 import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/contexto-acesso";
-import type {
-  HorarioGeradoCreateInputDto,
-  HorarioGeradoFindOneInputDto,
-  HorarioGeradoFindOneOutputDto,
-  HorarioGeradoListInputDto,
-  HorarioGeradoListOutputDto,
-  HorarioGeradoUpdateInputDto,
-} from "../../dtos";
+import { type HorarioGeradoCreateInputDto } from "@/Ladesa.Management.Domain/Dtos/HorarioGeradoCreateInputDto";
+import { type HorarioGeradoFindOneInputDto } from "@/Ladesa.Management.Domain/Dtos/HorarioGeradoFindOneInputDto";
+import { type HorarioGeradoFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/HorarioGeradoFindOneOutputDto";
+import { type HorarioGeradoListInputDto } from "@/Ladesa.Management.Domain/Dtos/HorarioGeradoListInputDto";
+import { type HorarioGeradoListOutputDto } from "@/Ladesa.Management.Domain/Dtos/HorarioGeradoListOutputDto";
+import { type HorarioGeradoUpdateInputDto } from "@/Ladesa.Management.Domain/Dtos/HorarioGeradoUpdateInputDto";
 
 export interface IHorarioGeradoUseCasePort {
   horarioGeradoFindAll(

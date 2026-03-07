@@ -8,7 +8,7 @@ import type {
   IntervaloDeTempoListInputDto,
   IntervaloDeTempoListOutputDto,
 } from "@/Ladesa.Management.Application/horarios/intervalo-de-tempo";
-import type { IntervaloDeTempoEntity } from "@/Ladesa.Management.Application/horarios/intervalo-de-tempo/infrastructure/persistence/typeorm/index";
+import { type IntervaloDeTempoEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/IntervaloDeTempoEntity";
 import { createIntervaloDeTempoRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/CreateIntervaloDeTempoRepository";
 import {
   APP_DATA_SOURCE_TOKEN,

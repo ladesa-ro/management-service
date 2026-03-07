@@ -1,9 +1,7 @@
 import type { IBaseCrudRepositoryPort } from "@/Ladesa.Management.Application/@shared";
 import type { Disciplina } from "@/Ladesa.Management.Application/ensino/disciplina";
-import type {
-  DisciplinaFindOneOutputDto,
-  DisciplinaListOutputDto,
-} from "@/Ladesa.Management.Application/ensino/disciplina/application/dtos";
+import { type DisciplinaFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/DisciplinaFindOneOutputDto";
+import { type DisciplinaListOutputDto } from "@/Ladesa.Management.Domain/Dtos/DisciplinaListOutputDto";
 
 /**
  * Token de injeção para o repositório de Disciplina

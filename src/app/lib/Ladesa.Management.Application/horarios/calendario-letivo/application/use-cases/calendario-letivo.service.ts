@@ -5,18 +5,16 @@ import { BaseCrudService, type PersistInput } from "@/Ladesa.Management.Applicat
 import { CampusService } from "@/Ladesa.Management.Application/ambientes/campus";
 import { OfertaFormacaoService } from "@/Ladesa.Management.Application/ensino/oferta-formacao";
 import { CalendarioLetivo } from "@/Ladesa.Management.Application/horarios/calendario-letivo";
-import type {
-  CalendarioLetivoCreateInputDto,
-  CalendarioLetivoFindOneInputDto,
-  CalendarioLetivoFindOneOutputDto,
-  CalendarioLetivoListInputDto,
-  CalendarioLetivoListOutputDto,
-  CalendarioLetivoUpdateInputDto,
-} from "@/Ladesa.Management.Application/horarios/calendario-letivo/application/dtos";
 import {
   ICalendarioLetivoRepository,
   type ICalendarioLetivoUseCasePort,
 } from "@/Ladesa.Management.Application/horarios/calendario-letivo/application/ports";
+import { type CalendarioLetivoCreateInputDto } from "@/Ladesa.Management.Domain/Dtos/CalendarioLetivoCreateInputDto";
+import { type CalendarioLetivoFindOneInputDto } from "@/Ladesa.Management.Domain/Dtos/CalendarioLetivoFindOneInputDto";
+import { type CalendarioLetivoFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/CalendarioLetivoFindOneOutputDto";
+import { type CalendarioLetivoListInputDto } from "@/Ladesa.Management.Domain/Dtos/CalendarioLetivoListInputDto";
+import { type CalendarioLetivoListOutputDto } from "@/Ladesa.Management.Domain/Dtos/CalendarioLetivoListOutputDto";
+import { type CalendarioLetivoUpdateInputDto } from "@/Ladesa.Management.Domain/Dtos/CalendarioLetivoUpdateInputDto";
 
 @Injectable()
 export class CalendarioLetivoService

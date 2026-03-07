@@ -1,11 +1,9 @@
 import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/contexto-acesso";
 import type { IPersistRepositoryPort } from "@/Ladesa.Management.Application/@shared";
-import type {
-  UsuarioFindOneInputDto,
-  UsuarioFindOneOutputDto,
-  UsuarioListInputDto,
-  UsuarioListOutputDto,
-} from "@/Ladesa.Management.Application/acesso/usuario/application/dtos";
+import { type UsuarioFindOneInputDto } from "@/Ladesa.Management.Domain/Dtos/UsuarioFindOneInputDto";
+import { type UsuarioFindOneOutputDto } from "@/Ladesa.Management.Domain/Dtos/UsuarioFindOneOutputDto";
+import { type UsuarioListInputDto } from "@/Ladesa.Management.Domain/Dtos/UsuarioListInputDto";
+import { type UsuarioListOutputDto } from "@/Ladesa.Management.Domain/Dtos/UsuarioListOutputDto";
 
 /**
  * Token de injeção para o repositório de Usuario
