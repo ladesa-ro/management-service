@@ -5,9 +5,9 @@ import {
   CidadeAuthzRegistrySetup,
   CidadeTypeOrmRepositoryAdapter,
 } from "@/Ladesa.Management.Application/localidades/cidade/infrastructure";
-import { CidadeGraphqlResolver } from "@/Ladesa.Management.Application/localidades/cidade/presentation/graphql/cidade.graphql.resolver";
-import { CidadeRestController } from "@/Ladesa.Management.Application/localidades/cidade/presentation/rest/cidade.rest.controller";
 import { NestJsPaginateAdapter } from "@/Ladesa.Management.Infrastructure.Database/typeorm";
+import { CidadeGraphqlResolver } from "@/Ladesa.Management.Server.Api/Apis/GraphQl/Resolvers/CidadeGraphqlResolver";
+import { CidadeRestController } from "@/Ladesa.Management.Server.Api/Apis/Rest/Controllers/CidadeRestController";
 
 @Module({
   imports: [],

@@ -7,10 +7,10 @@ import {
 } from "@/Ladesa.Management.Application/horarios/horario-gerado-aula";
 import { HorarioGeradoAulaAuthzRegistrySetup } from "@/Ladesa.Management.Application/horarios/horario-gerado-aula/infrastructure";
 import { HorarioGeradoAulaTypeOrmRepositoryAdapter } from "@/Ladesa.Management.Application/horarios/horario-gerado-aula/infrastructure/persistence/typeorm";
-import { HorarioGeradoAulaGraphqlResolver } from "@/Ladesa.Management.Application/horarios/horario-gerado-aula/presentation/graphql/horario-gerado-aula.graphql.resolver";
-import { HorarioGeradoAulaRestController } from "@/Ladesa.Management.Application/horarios/horario-gerado-aula/presentation/rest/horario-gerado-aula.rest.controller";
 import { IntervaloDeTempoModule } from "@/Ladesa.Management.Application/horarios/intervalo-de-tempo/intervalo-de-tempo.module";
 import { NestJsPaginateAdapter } from "@/Ladesa.Management.Infrastructure.Database/typeorm";
+import { HorarioGeradoAulaGraphqlResolver } from "@/Ladesa.Management.Server.Api/Apis/GraphQl/Resolvers/HorarioGeradoAulaGraphqlResolver";
+import { HorarioGeradoAulaRestController } from "@/Ladesa.Management.Server.Api/Apis/Rest/Controllers/HorarioGeradoAulaRestController";
 
 @Module({
   imports: [DiarioProfessorModule, HorarioGeradoModule, IntervaloDeTempoModule],

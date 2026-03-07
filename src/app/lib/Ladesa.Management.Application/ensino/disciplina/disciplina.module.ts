@@ -7,9 +7,9 @@ import {
   DisciplinaAuthzRegistrySetup,
   DisciplinaTypeOrmRepositoryAdapter,
 } from "@/Ladesa.Management.Application/ensino/disciplina/infrastructure";
-import { DisciplinaGraphqlResolver } from "@/Ladesa.Management.Application/ensino/disciplina/presentation/graphql/disciplina.graphql.resolver";
-import { DisciplinaRestController } from "@/Ladesa.Management.Application/ensino/disciplina/presentation/rest/disciplina.rest.controller";
 import { NestJsPaginateAdapter } from "@/Ladesa.Management.Infrastructure.Database/typeorm";
+import { DisciplinaGraphqlResolver } from "@/Ladesa.Management.Server.Api/Apis/GraphQl/Resolvers/DisciplinaGraphqlResolver";
+import { DisciplinaRestController } from "@/Ladesa.Management.Server.Api/Apis/Rest/Controllers/DisciplinaRestController";
 
 @Module({
   imports: [ImagemModule, ArquivoModule],

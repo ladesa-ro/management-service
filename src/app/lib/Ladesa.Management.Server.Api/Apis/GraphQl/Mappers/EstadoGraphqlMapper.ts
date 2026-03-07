@@ -1,0 +1,47 @@
+import { createListOutputMapper } from "@/Ladesa.Management.Application/@shared/application/mappers";
+import {
+  EstadoFindOneInputDto,
+  EstadoFindOneOutputDto,
+  EstadoListInputDto,
+} from "@/Ladesa.Management.Application/localidades/estado";
+import {
+  EstadoFindOneOutputGraphQlDto,
+  EstadoListInputGraphQlDto,
+  EstadoListOutputGraphQlDto,
+} from "@/Ladesa.Management.Server.Api/Apis/GraphQl/Dtos/EstadoGraphqlDto";
+
+export class EstadoGraphqlMapper {
+  static toListInput(dto: EstadoListInputGraphQlDto | null): EstadoListInputDto | null {
+    if (!dto) {
+      return null;
+    }
+
+    const input = new EstadoListInputDto();
+    input.page = dto.page;
+    input.limit = dto.limit;
+    input.search = dto.search;
+    input.sortBy = dto.sortBy;
+    input["filter.id"] = dto.filterId;
+    return input;
+  }
+
+  static toFindOneInput(id: number, selection?: string[]): EstadoFindOneInputDto {
+    const input = new EstadoFindOneInputDto();
+    input.id = id;
+    input.selection = selection;
+    return input;
+  }
+
+  static toFindOneOutputDto(output: EstadoFindOneOutputDto): EstadoFindOneOutputGraphQlDto {
+    const dto = new EstadoFindOneOutputGraphQlDto();
+    dto.id = output.id;
+    dto.nome = output.nome;
+    dto.sigla = output.sigla;
+    return dto;
+  }
+
+  static toListOutputDto = createListOutputMapper(
+    EstadoListOutputGraphQlDto,
+    EstadoGraphqlMapper.toFindOneOutputDto,
+  );
+}

@@ -6,9 +6,9 @@ import {
 } from "@/Ladesa.Management.Application/horarios/horario-gerado";
 import { HorarioGeradoAuthzRegistrySetup } from "@/Ladesa.Management.Application/horarios/horario-gerado/infrastructure";
 import { HorarioGeradoTypeOrmRepositoryAdapter } from "@/Ladesa.Management.Application/horarios/horario-gerado/infrastructure/persistence/typeorm";
-import { HorarioGeradoGraphqlResolver } from "@/Ladesa.Management.Application/horarios/horario-gerado/presentation/graphql/horario-gerado.graphql.resolver";
-import { HorarioGeradoRestController } from "@/Ladesa.Management.Application/horarios/horario-gerado/presentation/rest/horario-gerado.rest.controller";
 import { NestJsPaginateAdapter } from "@/Ladesa.Management.Infrastructure.Database/typeorm";
+import { HorarioGeradoGraphqlResolver } from "@/Ladesa.Management.Server.Api/Apis/GraphQl/Resolvers/HorarioGeradoGraphqlResolver";
+import { HorarioGeradoRestController } from "@/Ladesa.Management.Server.Api/Apis/Rest/Controllers/HorarioGeradoRestController";
 
 @Module({
   imports: [CalendarioLetivoModule],

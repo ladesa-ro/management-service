@@ -5,9 +5,9 @@ import {
   EstadoAuthzRegistrySetup,
   EstadoTypeOrmRepositoryAdapter,
 } from "@/Ladesa.Management.Application/localidades/estado/infrastructure";
-import { EstadoGraphqlResolver } from "@/Ladesa.Management.Application/localidades/estado/presentation/graphql/estado.graphql.resolver";
-import { EstadoRestController } from "@/Ladesa.Management.Application/localidades/estado/presentation/rest/estado.rest.controller";
 import { NestJsPaginateAdapter } from "@/Ladesa.Management.Infrastructure.Database/typeorm";
+import { EstadoGraphqlResolver } from "@/Ladesa.Management.Server.Api/Apis/GraphQl/Resolvers/EstadoGraphqlResolver";
+import { EstadoRestController } from "@/Ladesa.Management.Server.Api/Apis/Rest/Controllers/EstadoRestController";
 
 @Module({
   imports: [],

@@ -7,10 +7,10 @@ import {
   CampusAuthzRegistrySetup,
   CampusTypeOrmRepositoryAdapter,
 } from "@/Ladesa.Management.Application/ambientes/campus/infrastructure";
-import { CampusGraphqlResolver } from "@/Ladesa.Management.Application/ambientes/campus/presentation/graphql/campus.graphql.resolver";
-import { CampusRestController } from "@/Ladesa.Management.Application/ambientes/campus/presentation/rest/campus.rest.controller";
 import { EnderecoModule } from "@/Ladesa.Management.Application/localidades/endereco/endereco.module";
 import { NestJsPaginateAdapter } from "@/Ladesa.Management.Infrastructure.Database/typeorm";
+import { CampusGraphqlResolver } from "@/Ladesa.Management.Server.Api/Apis/GraphQl/Resolvers/CampusGraphqlResolver";
+import { CampusRestController } from "@/Ladesa.Management.Server.Api/Apis/Rest/Controllers/CampusRestController";
 
 @Module({
   imports: [EnderecoModule],

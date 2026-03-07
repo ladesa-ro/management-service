@@ -7,9 +7,9 @@ import {
 } from "@/Ladesa.Management.Application/horarios/calendario-letivo";
 import { CalendarioLetivoAuthzRegistrySetup } from "@/Ladesa.Management.Application/horarios/calendario-letivo/infrastructure";
 import { CalendarioLetivoTypeOrmRepositoryAdapter } from "@/Ladesa.Management.Application/horarios/calendario-letivo/infrastructure/persistence/typeorm";
-import { CalendarioLetivoGraphqlResolver } from "@/Ladesa.Management.Application/horarios/calendario-letivo/presentation/graphql/calendario-letivo.graphql.resolver";
-import { CalendarioLetivoRestController } from "@/Ladesa.Management.Application/horarios/calendario-letivo/presentation/rest/calendario-letivo.rest.controller";
 import { NestJsPaginateAdapter } from "@/Ladesa.Management.Infrastructure.Database/typeorm";
+import { CalendarioLetivoGraphqlResolver } from "@/Ladesa.Management.Server.Api/Apis/GraphQl/Resolvers/CalendarioLetivoGraphqlResolver";
+import { CalendarioLetivoRestController } from "@/Ladesa.Management.Server.Api/Apis/Rest/Controllers/CalendarioLetivoRestController";
 
 @Module({
   imports: [CampusModule, OfertaFormacaoModule],

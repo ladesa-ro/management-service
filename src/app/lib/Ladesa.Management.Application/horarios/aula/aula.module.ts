@@ -5,10 +5,10 @@ import { AULA_REPOSITORY_PORT } from "@/Ladesa.Management.Application/horarios/a
 import { AulaService } from "@/Ladesa.Management.Application/horarios/aula/application/use-cases/aula.service";
 import { AulaAuthzRegistrySetup } from "@/Ladesa.Management.Application/horarios/aula/infrastructure";
 import { AulaTypeOrmRepositoryAdapter } from "@/Ladesa.Management.Application/horarios/aula/infrastructure/persistence/typeorm";
-import { AulaGraphqlResolver } from "@/Ladesa.Management.Application/horarios/aula/presentation/graphql/aula.graphql.resolver";
-import { AulaController } from "@/Ladesa.Management.Application/horarios/aula/presentation/rest";
 import { IntervaloDeTempoModule } from "@/Ladesa.Management.Application/horarios/intervalo-de-tempo/intervalo-de-tempo.module";
 import { NestJsPaginateAdapter } from "@/Ladesa.Management.Infrastructure.Database/typeorm";
+import { AulaGraphqlResolver } from "@/Ladesa.Management.Server.Api/Apis/GraphQl/Resolvers/AulaGraphqlResolver";
+import { AulaController } from "@/Ladesa.Management.Server.Api/Apis/Rest/Controllers/AulaRestController";
 
 /**
  * Módulo Aula configurado com Arquitetura Hexagonal

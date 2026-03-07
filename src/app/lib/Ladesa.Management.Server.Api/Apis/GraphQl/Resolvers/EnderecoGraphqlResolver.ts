@@ -1,0 +1,26 @@
+import { Args, ID, Info, Query, Resolver } from "@nestjs/graphql";
+import { type GraphQLResolveInfo } from "graphql";
+import {
+  AccessContext,
+  AccessContextGraphQL,
+} from "@/Ladesa.Management.Application/@seguranca/contexto-acesso";
+import { graphqlExtractSelection } from "@/Ladesa.Management.Application/@shared/infrastructure/graphql";
+import { EnderecoService } from "@/Ladesa.Management.Application/localidades/endereco/application/use-cases/endereco.service";
+import { EnderecoFindOneOutputGraphQlDto } from "@/Ladesa.Management.Server.Api/Apis/GraphQl/Dtos/EnderecoGraphqlDto";
+import { EnderecoGraphqlMapper } from "@/Ladesa.Management.Server.Api/Apis/GraphQl/Mappers/EnderecoGraphqlMapper";
+
+@Resolver(() => EnderecoFindOneOutputGraphQlDto)
+export class EnderecoGraphqlResolver {
+  constructor(private readonly enderecoService: EnderecoService) {}
+
+  @Query(() => EnderecoFindOneOutputGraphQlDto, { name: "enderecoFindById" })
+  async findById(
+    @AccessContextGraphQL() accessContext: AccessContext,
+    @Args("id", { type: () => ID }) id: string,
+    @Info() info: GraphQLResolveInfo,
+  ): Promise<EnderecoFindOneOutputGraphQlDto> {
+    const selection = graphqlExtractSelection(info);
+    const result = await this.enderecoService.findByIdStrict(accessContext, { id, selection });
+    return EnderecoGraphqlMapper.toFindOneOutputDto(result);
+  }
+}

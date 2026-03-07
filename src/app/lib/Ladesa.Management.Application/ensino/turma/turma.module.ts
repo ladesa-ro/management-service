@@ -9,9 +9,9 @@ import {
   TurmaAuthzRegistrySetup,
   TurmaTypeOrmRepositoryAdapter,
 } from "@/Ladesa.Management.Application/ensino/turma/infrastructure";
-import { TurmaGraphqlResolver } from "@/Ladesa.Management.Application/ensino/turma/presentation/graphql/turma.graphql.resolver";
-import { TurmaRestController } from "@/Ladesa.Management.Application/ensino/turma/presentation/rest/turma.rest.controller";
 import { NestJsPaginateAdapter } from "@/Ladesa.Management.Infrastructure.Database/typeorm";
+import { TurmaGraphqlResolver } from "@/Ladesa.Management.Server.Api/Apis/GraphQl/Resolvers/TurmaGraphqlResolver";
+import { TurmaRestController } from "@/Ladesa.Management.Server.Api/Apis/Rest/Controllers/TurmaRestController";
 
 @Module({
   imports: [AmbienteModule, CursoModule, ImagemModule, ArquivoModule],

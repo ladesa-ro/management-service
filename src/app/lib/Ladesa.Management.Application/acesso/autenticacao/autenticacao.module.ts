@@ -4,9 +4,9 @@ import {
   OpenidConnectModule,
 } from "@/Ladesa.Management.Application/@seguranca/provedor-identidade";
 import { AutenticacaoService } from "@/Ladesa.Management.Application/acesso/autenticacao";
-import { AutenticacaoRestController } from "@/Ladesa.Management.Application/acesso/autenticacao/presentation/rest";
 import { PerfilModule } from "@/Ladesa.Management.Application/acesso/perfil/perfil.module";
 import { UsuarioModule } from "@/Ladesa.Management.Application/acesso/usuario/usuario.module";
+import { AutenticacaoRestController } from "@/Ladesa.Management.Server.Api/Apis/Rest/Controllers/AutenticacaoRestController";
 
 /**
  * Módulo NestJS para Autenticacao

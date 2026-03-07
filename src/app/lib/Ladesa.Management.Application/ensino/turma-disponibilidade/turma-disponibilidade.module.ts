@@ -7,9 +7,9 @@ import {
 } from "@/Ladesa.Management.Application/ensino/turma-disponibilidade";
 import { TurmaDisponibilidadeAuthzRegistrySetup } from "@/Ladesa.Management.Application/ensino/turma-disponibilidade/infrastructure";
 import { TurmaDisponibilidadeTypeOrmRepositoryAdapter } from "@/Ladesa.Management.Application/ensino/turma-disponibilidade/infrastructure/persistence/typeorm";
-import { TurmaDisponibilidadeGraphqlResolver } from "@/Ladesa.Management.Application/ensino/turma-disponibilidade/presentation/graphql/turma-disponibilidade.graphql.resolver";
-import { TurmaDisponibilidadeRestController } from "@/Ladesa.Management.Application/ensino/turma-disponibilidade/presentation/rest";
 import { NestJsPaginateAdapter } from "@/Ladesa.Management.Infrastructure.Database/typeorm";
+import { TurmaDisponibilidadeGraphqlResolver } from "@/Ladesa.Management.Server.Api/Apis/GraphQl/Resolvers/TurmaDisponibilidadeGraphqlResolver";
+import { TurmaDisponibilidadeRestController } from "@/Ladesa.Management.Server.Api/Apis/Rest/Controllers/TurmaDisponibilidadeRestController";
 
 @Module({
   imports: [TurmaModule, DisponibilidadeModule],

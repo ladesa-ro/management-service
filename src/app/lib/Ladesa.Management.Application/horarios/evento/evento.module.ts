@@ -6,9 +6,9 @@ import {
 } from "@/Ladesa.Management.Application/horarios/evento";
 import { EventoAuthzRegistrySetup } from "@/Ladesa.Management.Application/horarios/evento/infrastructure";
 import { EventoTypeOrmRepositoryAdapter } from "@/Ladesa.Management.Application/horarios/evento/infrastructure/persistence/typeorm";
-import { EventoGraphqlResolver } from "@/Ladesa.Management.Application/horarios/evento/presentation/graphql/evento.graphql.resolver";
-import { EventoRestController } from "@/Ladesa.Management.Application/horarios/evento/presentation/rest";
 import { NestJsPaginateAdapter } from "@/Ladesa.Management.Infrastructure.Database/typeorm";
+import { EventoGraphqlResolver } from "@/Ladesa.Management.Server.Api/Apis/GraphQl/Resolvers/EventoGraphqlResolver";
+import { EventoRestController } from "@/Ladesa.Management.Server.Api/Apis/Rest/Controllers/EventoRestController";
 
 @Module({
   imports: [CalendarioLetivoModule],

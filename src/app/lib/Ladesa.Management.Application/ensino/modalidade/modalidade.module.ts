@@ -5,9 +5,9 @@ import {
   ModalidadeAuthzRegistrySetup,
   ModalidadeTypeOrmRepositoryAdapter,
 } from "@/Ladesa.Management.Application/ensino/modalidade/infrastructure";
-import { ModalidadeGraphqlResolver } from "@/Ladesa.Management.Application/ensino/modalidade/presentation/graphql/modalidade.graphql.resolver";
-import { ModalidadeRestController } from "@/Ladesa.Management.Application/ensino/modalidade/presentation/rest/modalidade.rest.controller";
 import { NestJsPaginateAdapter } from "@/Ladesa.Management.Infrastructure.Database/typeorm";
+import { ModalidadeGraphqlResolver } from "@/Ladesa.Management.Server.Api/Apis/GraphQl/Resolvers/ModalidadeGraphqlResolver";
+import { ModalidadeRestController } from "@/Ladesa.Management.Server.Api/Apis/Rest/Controllers/ModalidadeRestController";
 
 @Module({
   imports: [],

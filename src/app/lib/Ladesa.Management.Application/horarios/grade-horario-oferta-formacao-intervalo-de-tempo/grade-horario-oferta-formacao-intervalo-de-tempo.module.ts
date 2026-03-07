@@ -6,10 +6,10 @@ import {
 } from "@/Ladesa.Management.Application/horarios/grade-horario-oferta-formacao-intervalo-de-tempo";
 import { GradeHorarioOfertaFormacaoIntervaloDeTempoAuthzRegistrySetup } from "@/Ladesa.Management.Application/horarios/grade-horario-oferta-formacao-intervalo-de-tempo/infrastructure";
 import { GradeHorarioOfertaFormacaoIntervaloDeTempoTypeOrmRepositoryAdapter } from "@/Ladesa.Management.Application/horarios/grade-horario-oferta-formacao-intervalo-de-tempo/infrastructure/persistence/typeorm";
-import { GradeHorarioOfertaFormacaoIntervaloDeTempoGraphqlResolver } from "@/Ladesa.Management.Application/horarios/grade-horario-oferta-formacao-intervalo-de-tempo/presentation/graphql/grade-horario-oferta-formacao-intervalo-de-tempo.graphql.resolver";
-import { GradeHorarioOfertaFormacaoIntervaloDeTempoRestController } from "@/Ladesa.Management.Application/horarios/grade-horario-oferta-formacao-intervalo-de-tempo/presentation/rest/grade-horario-oferta-formacao-intervalo-de-tempo.rest.controller";
 import { IntervaloDeTempoModule } from "@/Ladesa.Management.Application/horarios/intervalo-de-tempo/intervalo-de-tempo.module";
 import { NestJsPaginateAdapter } from "@/Ladesa.Management.Infrastructure.Database/typeorm";
+import { GradeHorarioOfertaFormacaoIntervaloDeTempoGraphqlResolver } from "@/Ladesa.Management.Server.Api/Apis/GraphQl/Resolvers/GradeHorarioOfertaFormacaoIntervaloDeTempoGraphqlResolver";
+import { GradeHorarioOfertaFormacaoIntervaloDeTempoRestController } from "@/Ladesa.Management.Server.Api/Apis/Rest/Controllers/GradeHorarioOfertaFormacaoIntervaloDeTempoRestController";
 
 @Module({
   imports: [GradeHorarioOfertaFormacaoModule, IntervaloDeTempoModule],

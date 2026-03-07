@@ -4,12 +4,12 @@ import { PROFESSOR_INDISPONIBILIDADE_REPOSITORY_PORT } from "@/Ladesa.Management
 import { ProfessorIndisponibilidadeService } from "@/Ladesa.Management.Application/ensino/professor-indisponibilidade/application/use-cases/professor-indisponibilidade.service";
 import { ProfessorIndisponibilidadeAuthzRegistrySetup } from "@/Ladesa.Management.Application/ensino/professor-indisponibilidade/infrastructure";
 import { ProfessorIndisponibilidadeTypeOrmRepositoryAdapter } from "@/Ladesa.Management.Application/ensino/professor-indisponibilidade/infrastructure/persistence/typeorm";
-import { ProfessorIndisponibilidadeGraphqlResolver } from "@/Ladesa.Management.Application/ensino/professor-indisponibilidade/presentation/graphql/professor-indisponibilidade.graphql.resolver";
-import { ProfessorIndisponibilidadeRestController } from "@/Ladesa.Management.Application/ensino/professor-indisponibilidade/presentation/rest/professor-indisponibilidade.rest.controller";
 import {
   NestJsPaginateAdapter,
   TypeormModule,
 } from "@/Ladesa.Management.Infrastructure.Database/typeorm";
+import { ProfessorIndisponibilidadeGraphqlResolver } from "@/Ladesa.Management.Server.Api/Apis/GraphQl/Resolvers/ProfessorIndisponibilidadeGraphqlResolver";
+import { ProfessorIndisponibilidadeRestController } from "@/Ladesa.Management.Server.Api/Apis/Rest/Controllers/ProfessorIndisponibilidadeRestController";
 
 @Module({
   imports: [PerfilModule, TypeormModule],

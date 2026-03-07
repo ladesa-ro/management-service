@@ -6,9 +6,9 @@ import {
 } from "@/Ladesa.Management.Application/ensino/oferta-formacao";
 import { OfertaFormacaoAuthzRegistrySetup } from "@/Ladesa.Management.Application/ensino/oferta-formacao/infrastructure";
 import { OfertaFormacaoTypeOrmRepositoryAdapter } from "@/Ladesa.Management.Application/ensino/oferta-formacao/infrastructure/persistence/typeorm";
-import { OfertaFormacaoGraphqlResolver } from "@/Ladesa.Management.Application/ensino/oferta-formacao/presentation/graphql/oferta-formacao.graphql.resolver";
-import { OfertaFormacaoRestController } from "@/Ladesa.Management.Application/ensino/oferta-formacao/presentation/rest/oferta-formacao.rest.controller";
 import { NestJsPaginateAdapter } from "@/Ladesa.Management.Infrastructure.Database/typeorm";
+import { OfertaFormacaoGraphqlResolver } from "@/Ladesa.Management.Server.Api/Apis/GraphQl/Resolvers/OfertaFormacaoGraphqlResolver";
+import { OfertaFormacaoRestController } from "@/Ladesa.Management.Server.Api/Apis/Rest/Controllers/OfertaFormacaoRestController";
 
 @Module({
   imports: [ModalidadeModule],

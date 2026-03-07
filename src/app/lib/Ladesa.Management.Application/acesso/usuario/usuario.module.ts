@@ -6,11 +6,11 @@ import {
   UsuarioAuthzRegistrySetup,
   UsuarioTypeOrmRepositoryAdapter,
 } from "@/Ladesa.Management.Application/acesso/usuario/infrastructure";
-import { UsuarioGraphqlResolver } from "@/Ladesa.Management.Application/acesso/usuario/presentation/graphql/usuario.graphql.resolver";
-import { UsuarioRestController } from "@/Ladesa.Management.Application/acesso/usuario/presentation/rest/usuario.rest.controller";
 import { ArquivoModule } from "@/Ladesa.Management.Application/armazenamento/arquivo/arquivo.module";
 import { ImagemModule } from "@/Ladesa.Management.Application/armazenamento/imagem/imagem.module";
 import { NestJsPaginateAdapter } from "@/Ladesa.Management.Infrastructure.Database/typeorm";
+import { UsuarioGraphqlResolver } from "@/Ladesa.Management.Server.Api/Apis/GraphQl/Resolvers/UsuarioGraphqlResolver";
+import { UsuarioRestController } from "@/Ladesa.Management.Server.Api/Apis/Rest/Controllers/UsuarioRestController";
 
 @Module({
   imports: [KeycloakModule, ImagemModule, ArquivoModule],

@@ -7,10 +7,10 @@ import {
   CursoAuthzRegistrySetup,
   CursoTypeOrmRepositoryAdapter,
 } from "@/Ladesa.Management.Application/ensino/curso/infrastructure";
-import { CursoGraphqlResolver } from "@/Ladesa.Management.Application/ensino/curso/presentation/graphql/curso.graphql.resolver";
-import { CursoRestController } from "@/Ladesa.Management.Application/ensino/curso/presentation/rest/curso.rest.controller";
 import { OfertaFormacaoModule } from "@/Ladesa.Management.Application/ensino/oferta-formacao/oferta-formacao.module";
 import { NestJsPaginateAdapter } from "@/Ladesa.Management.Infrastructure.Database/typeorm";
+import { CursoGraphqlResolver } from "@/Ladesa.Management.Server.Api/Apis/GraphQl/Resolvers/CursoGraphqlResolver";
+import { CursoRestController } from "@/Ladesa.Management.Server.Api/Apis/Rest/Controllers/CursoRestController";
 
 @Module({
   imports: [CampusModule, ImagemModule, ArquivoModule, OfertaFormacaoModule],

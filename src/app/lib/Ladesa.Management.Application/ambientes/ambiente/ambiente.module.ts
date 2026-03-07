@@ -5,12 +5,12 @@ import {
   AmbienteAuthzRegistrySetup,
   AmbienteTypeOrmRepositoryAdapter,
 } from "@/Ladesa.Management.Application/ambientes/ambiente/infrastructure";
-import { AmbienteGraphqlResolver } from "@/Ladesa.Management.Application/ambientes/ambiente/presentation/graphql/ambiente.graphql.resolver";
-import { AmbienteRestController } from "@/Ladesa.Management.Application/ambientes/ambiente/presentation/rest/ambiente.rest.controller";
 import { BlocoModule } from "@/Ladesa.Management.Application/ambientes/bloco/bloco.module";
 import { ArquivoModule } from "@/Ladesa.Management.Application/armazenamento/arquivo/arquivo.module";
 import { ImagemModule } from "@/Ladesa.Management.Application/armazenamento/imagem/imagem.module";
 import { NestJsPaginateAdapter } from "@/Ladesa.Management.Infrastructure.Database/typeorm";
+import { AmbienteGraphqlResolver } from "@/Ladesa.Management.Server.Api/Apis/GraphQl/Resolvers/AmbienteGraphqlResolver";
+import { AmbienteRestController } from "@/Ladesa.Management.Server.Api/Apis/Rest/Controllers/AmbienteRestController";
 
 @Module({
   imports: [BlocoModule, ImagemModule, ArquivoModule],

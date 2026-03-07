@@ -6,10 +6,10 @@ import {
 } from "@/Ladesa.Management.Application/ensino/diario-preferencia-agrupamento";
 import { DiarioPreferenciaAgrupamentoAuthzRegistrySetup } from "@/Ladesa.Management.Application/ensino/diario-preferencia-agrupamento/infrastructure";
 import { DiarioPreferenciaAgrupamentoTypeOrmRepositoryAdapter } from "@/Ladesa.Management.Application/ensino/diario-preferencia-agrupamento/infrastructure/persistence/typeorm";
-import { DiarioPreferenciaAgrupamentoGraphqlResolver } from "@/Ladesa.Management.Application/ensino/diario-preferencia-agrupamento/presentation/graphql/diario-preferencia-agrupamento.graphql.resolver";
-import { DiarioPreferenciaAgrupamentoController } from "@/Ladesa.Management.Application/ensino/diario-preferencia-agrupamento/presentation/rest";
 import { IntervaloDeTempoModule } from "@/Ladesa.Management.Application/horarios/intervalo-de-tempo/intervalo-de-tempo.module";
 import { NestJsPaginateAdapter } from "@/Ladesa.Management.Infrastructure.Database/typeorm";
+import { DiarioPreferenciaAgrupamentoGraphqlResolver } from "@/Ladesa.Management.Server.Api/Apis/GraphQl/Resolvers/DiarioPreferenciaAgrupamentoGraphqlResolver";
+import { DiarioPreferenciaAgrupamentoController } from "@/Ladesa.Management.Server.Api/Apis/Rest/Controllers/DiarioPreferenciaAgrupamentoRestController";
 
 @Module({
   imports: [DiarioModule, IntervaloDeTempoModule],

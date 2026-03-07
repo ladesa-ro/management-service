@@ -7,8 +7,8 @@ import {
   EnderecoAuthzRegistrySetup,
   EnderecoTypeOrmRepositoryAdapter,
 } from "@/Ladesa.Management.Application/localidades/endereco/infrastructure";
-import { EnderecoGraphqlResolver } from "@/Ladesa.Management.Application/localidades/endereco/presentation/graphql/endereco.graphql.resolver";
 import { NestJsPaginateAdapter } from "@/Ladesa.Management.Infrastructure.Database/typeorm";
+import { EnderecoGraphqlResolver } from "@/Ladesa.Management.Server.Api/Apis/GraphQl/Resolvers/EnderecoGraphqlResolver";
 
 @Module({
   imports: [],

@@ -5,9 +5,9 @@ import {
 } from "@/Ladesa.Management.Application/horarios/grade-horario-oferta-formacao";
 import { GradeHorarioOfertaFormacaoAuthzRegistrySetup } from "@/Ladesa.Management.Application/horarios/grade-horario-oferta-formacao/infrastructure";
 import { GradeHorarioOfertaFormacaoTypeOrmRepositoryAdapter } from "@/Ladesa.Management.Application/horarios/grade-horario-oferta-formacao/infrastructure/persistence/typeorm";
-import { GradeHorarioOfertaFormacaoGraphqlResolver } from "@/Ladesa.Management.Application/horarios/grade-horario-oferta-formacao/presentation/graphql/grade-horario-oferta-formacao.graphql.resolver";
-import { GradeHorarioOfertaFormacaoRestController } from "@/Ladesa.Management.Application/horarios/grade-horario-oferta-formacao/presentation/rest/grade-horario-oferta-formacao.rest.controller";
 import { NestJsPaginateAdapter } from "@/Ladesa.Management.Infrastructure.Database/typeorm";
+import { GradeHorarioOfertaFormacaoGraphqlResolver } from "@/Ladesa.Management.Server.Api/Apis/GraphQl/Resolvers/GradeHorarioOfertaFormacaoGraphqlResolver";
+import { GradeHorarioOfertaFormacaoRestController } from "@/Ladesa.Management.Server.Api/Apis/Rest/Controllers/GradeHorarioOfertaFormacaoRestController";
 
 @Module({
   imports: [],
