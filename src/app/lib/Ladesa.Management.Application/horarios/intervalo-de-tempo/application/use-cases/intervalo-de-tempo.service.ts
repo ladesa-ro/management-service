@@ -1,7 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
 import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/contexto-acesso";
 import { ResourceNotFoundError } from "@/Ladesa.Management.Application/@shared";
-import type { IIntervaloDeTempo } from "@/Ladesa.Management.Application/horarios/intervalo-de-tempo";
+import type { IntervaloDeTempo } from "@/Ladesa.Management.Application/horarios/intervalo-de-tempo";
 import {
   IntervaloDeTempoFindOneInputDto,
   IntervaloDeTempoFindOneOutputDto,
@@ -10,16 +10,15 @@ import {
   IntervaloDeTempoListOutputDto,
 } from "@/Ladesa.Management.Application/horarios/intervalo-de-tempo/application/dtos";
 import {
-  type IIntervaloDeTempoRepositoryPort,
+  IIntervaloDeTempoRepository,
   type IIntervaloDeTempoUseCasePort,
-  INTERVALO_DE_TEMPO_REPOSITORY_PORT,
 } from "@/Ladesa.Management.Application/horarios/intervalo-de-tempo/application/ports";
 
 @Injectable()
 export class IntervaloDeTempoService implements IIntervaloDeTempoUseCasePort {
   constructor(
-    @Inject(INTERVALO_DE_TEMPO_REPOSITORY_PORT)
-    private readonly intervaloDeTempoRepository: IIntervaloDeTempoRepositoryPort,
+    @Inject(IIntervaloDeTempoRepository)
+    private readonly intervaloDeTempoRepository: IIntervaloDeTempoRepository,
   ) {}
 
   async findAll(
@@ -60,7 +59,7 @@ export class IntervaloDeTempoService implements IIntervaloDeTempoUseCasePort {
     const { id } = await this.intervaloDeTempoRepository.createFromDomain({
       periodoInicio: dto.periodoInicio,
       periodoFim: dto.periodoFim,
-    } as IIntervaloDeTempo);
+    } as unknown as IntervaloDeTempo);
 
     return this.intervaloDeTempoRepository.findOneByIdOrFail(id as string);
   }

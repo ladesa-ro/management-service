@@ -19,6 +19,11 @@ import {
 import { CalendarioLetivoGraphqlMapper } from "@/Ladesa.Management.Server.Api/Apis/GraphQl/Mappers/CalendarioLetivoGraphqlMapper";
 
 export class DiaCalendarioGraphqlMapper {
+  static toListOutputDto = createListOutputMapper(
+    DiaCalendarioListOutputGraphQlDto,
+    DiaCalendarioGraphqlMapper.toFindOneOutputDto,
+  );
+
   static toListInput(
     dto: DiaCalendarioListInputGraphQlDto | null,
   ): DiaCalendarioListInputDto | null {
@@ -101,9 +106,4 @@ export class DiaCalendarioGraphqlMapper {
     mapDatedFields(dto, output);
     return dto;
   }
-
-  static toListOutputDto = createListOutputMapper(
-    DiaCalendarioListOutputGraphQlDto,
-    DiaCalendarioGraphqlMapper.toFindOneOutputDto,
-  );
 }

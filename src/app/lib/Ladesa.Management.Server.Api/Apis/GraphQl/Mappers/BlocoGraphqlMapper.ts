@@ -51,6 +51,11 @@ function mapImagemOutput(imagem: any): any {
 }
 
 export class BlocoGraphqlMapper {
+  static toListOutputDto = createListOutputMapper(
+    BlocoListOutputGraphQlDto,
+    BlocoGraphqlMapper.toFindOneOutputDto,
+  );
+
   static toListInput(dto: BlocoListInputGraphQlDto | null): BlocoListInputDto | null {
     if (!dto) {
       return null;
@@ -103,9 +108,4 @@ export class BlocoGraphqlMapper {
     mapDatedFields(dto, output);
     return dto;
   }
-
-  static toListOutputDto = createListOutputMapper(
-    BlocoListOutputGraphQlDto,
-    BlocoGraphqlMapper.toFindOneOutputDto,
-  );
 }

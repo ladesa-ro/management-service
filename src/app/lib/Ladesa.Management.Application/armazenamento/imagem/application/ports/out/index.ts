@@ -1,1 +1,1 @@
-export * from "@/Ladesa.Management.Domain/Repositories/ImagemRepositoryPort";
+export * from "@/Ladesa.Management.Domain/Repositories/IImagemRepository";

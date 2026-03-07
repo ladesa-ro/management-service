@@ -1,7 +1,7 @@
 import { Module } from "@nestjs/common";
 import { ArquivoModule } from "@/Ladesa.Management.Application/armazenamento/arquivo/arquivo.module";
 import { ImagemModule } from "@/Ladesa.Management.Application/armazenamento/imagem/imagem.module";
-import { DISCIPLINA_REPOSITORY_PORT } from "@/Ladesa.Management.Application/ensino/disciplina/application/ports";
+import { IDisciplinaRepository } from "@/Ladesa.Management.Application/ensino/disciplina/application/ports";
 import { DisciplinaService } from "@/Ladesa.Management.Application/ensino/disciplina/application/use-cases/disciplina.service";
 import {
   DisciplinaAuthzRegistrySetup,
@@ -20,7 +20,7 @@ import { DisciplinaRestController } from "@/Ladesa.Management.Server.Api/Apis/Re
     DisciplinaGraphqlResolver,
     DisciplinaAuthzRegistrySetup,
     {
-      provide: DISCIPLINA_REPOSITORY_PORT,
+      provide: IDisciplinaRepository,
       useClass: DisciplinaTypeOrmRepositoryAdapter,
     },
   ],

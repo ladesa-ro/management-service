@@ -7,9 +7,8 @@ import type {
   ImagemArquivoListOutputDto,
 } from "@/Ladesa.Management.Application/armazenamento/imagem-arquivo/application/dtos";
 import {
-  type IImagemArquivoQueryRepositoryPort,
+  IImagemArquivoQueryRepository,
   type IImagemArquivoUseCasePort,
-  IMAGEM_ARQUIVO_QUERY_REPOSITORY_PORT,
 } from "@/Ladesa.Management.Application/armazenamento/imagem-arquivo/application/ports";
 
 @Injectable()
@@ -25,8 +24,8 @@ export class ImagemArquivoService
   protected readonly resourceName = "ImagemArquivo";
 
   constructor(
-    @Inject(IMAGEM_ARQUIVO_QUERY_REPOSITORY_PORT)
-    protected readonly repository: IImagemArquivoQueryRepositoryPort,
+    @Inject(IImagemArquivoQueryRepository)
+    protected readonly repository: IImagemArquivoQueryRepository,
   ) {
     super();
   }

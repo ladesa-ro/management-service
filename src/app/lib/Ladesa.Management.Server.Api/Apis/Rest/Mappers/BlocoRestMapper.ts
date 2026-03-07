@@ -31,6 +31,10 @@ export class BlocoRestMapper {
   static toFindOneInput = createFindOneInputMapper(BlocoFindOneInputDto);
 
   static toListInput = createListInputMapper(BlocoListInputDto, ["filter.id", "filter.campus.id"]);
+  static toListOutputDto = createListOutputMapper(
+    BlocoListOutputRestDto,
+    BlocoRestMapper.toFindOneOutputDto,
+  );
 
   static toCreateInput(dto: BlocoCreateInputRestDto): BlocoCreateInputDto {
     const input = new BlocoCreateInputDto();
@@ -39,6 +43,10 @@ export class BlocoRestMapper {
     input.campus = { id: dto.campus.id };
     return input;
   }
+
+  // ============================================================================
+  // Output: Core DTO -> Server DTO
+  // ============================================================================
 
   static toUpdateInput(
     params: BlocoFindOneInputRestDto,
@@ -57,10 +65,6 @@ export class BlocoRestMapper {
     }
     return input;
   }
-
-  // ============================================================================
-  // Output: Core DTO -> Server DTO
-  // ============================================================================
 
   static toFindOneOutputDto(output: BlocoFindOneOutputDto): BlocoFindOneOutputRestDto {
     const dto = new BlocoFindOneOutputRestDto();
@@ -92,9 +96,4 @@ export class BlocoRestMapper {
     dto.dateDeleted = output.dateDeleted ? new Date(output.dateDeleted) : null;
     return dto;
   }
-
-  static toListOutputDto = createListOutputMapper(
-    BlocoListOutputRestDto,
-    BlocoRestMapper.toFindOneOutputDto,
-  );
 }

@@ -4,7 +4,7 @@ import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/c
 import { BaseCrudService, type PersistInput } from "@/Ladesa.Management.Application/@shared";
 import { AmbienteService } from "@/Ladesa.Management.Application/ambientes/ambiente/application/use-cases/ambiente.service";
 import { DiarioService } from "@/Ladesa.Management.Application/ensino/diario/application/use-cases/diario.service";
-import { Aula, type IAula } from "@/Ladesa.Management.Application/horarios/aula";
+import { Aula } from "@/Ladesa.Management.Application/horarios/aula";
 import { IntervaloDeTempoService } from "@/Ladesa.Management.Application/horarios/intervalo-de-tempo/application/use-cases/intervalo-de-tempo.service";
 import type {
   AulaCreateInputDto,
@@ -14,13 +14,13 @@ import type {
   AulaListOutputDto,
   AulaUpdateInputDto,
 } from "../dtos";
-import { AULA_REPOSITORY_PORT, type IAulaRepositoryPort } from "../ports";
+import { IAulaRepository } from "../ports";
 import type { IAulaUseCasePort } from "../ports/in/aula.use-case.port";
 
 @Injectable()
 export class AulaService
   extends BaseCrudService<
-    IAula,
+    Aula,
     AulaListInputDto,
     AulaListOutputDto,
     AulaFindOneInputDto,
@@ -36,8 +36,8 @@ export class AulaService
   protected readonly deleteAction = "aula:delete";
 
   constructor(
-    @Inject(AULA_REPOSITORY_PORT)
-    protected readonly repository: IAulaRepositoryPort,
+    @Inject(IAulaRepository)
+    protected readonly repository: IAulaRepository,
     private readonly diarioService: DiarioService,
     private readonly intervaloService: IntervaloDeTempoService,
     private readonly ambienteService: AmbienteService,
@@ -48,7 +48,7 @@ export class AulaService
   protected async buildCreateData(
     accessContext: AccessContext,
     dto: AulaCreateInputDto,
-  ): Promise<Partial<PersistInput<IAula>>> {
+  ): Promise<Partial<PersistInput<Aula>>> {
     let ambienteRef: { id: string } | null = null;
     if (dto.ambiente && dto.ambiente !== null) {
       const ambiente = await this.ambienteService.findByIdStrict(accessContext, {
@@ -70,22 +70,22 @@ export class AulaService
       diario: { id: diario.id },
       ambiente: ambienteRef,
     });
-    return {
-      ...domain,
-      diario: { id: diario.id },
-      intervaloDeTempo: { id: intervalo!.id },
-      ambiente: ambienteRef,
-    };
+    return { ...domain };
   }
 
   protected async buildUpdateData(
     accessContext: AccessContext,
     dto: AulaFindOneInputDto & AulaUpdateInputDto,
     current: AulaFindOneOutputDto,
-  ): Promise<Partial<PersistInput<IAula>>> {
-    const domain = Aula.fromData(current);
+  ): Promise<Partial<PersistInput<Aula>>> {
+    const domain = Aula.fromData({
+      ...current,
+      intervaloDeTempoId: current.intervaloDeTempo.id,
+      diarioId: current.diario.id,
+      ambienteId: current.ambiente?.id ?? null,
+    } as unknown as Aula);
     domain.atualizar({ data: dto.data, modalidade: dto.modalidade });
-    const result: Partial<PersistInput<IAula>> = {
+    const result: Partial<PersistInput<Aula>> = {
       data: domain.data,
       modalidade: domain.modalidade,
     };
@@ -95,15 +95,15 @@ export class AulaService
         const ambiente = await this.ambienteService.findByIdStrict(accessContext, {
           id: dto.ambiente.id,
         });
-        result.ambiente = { id: ambiente.id };
+        result.ambienteId = ambiente.id;
       } else {
-        result.ambiente = null;
+        result.ambienteId = null;
       }
     }
 
     if (has(dto, "diario") && dto.diario !== undefined) {
       const diario = await this.diarioService.findByIdSimpleStrict(accessContext, dto.diario.id);
-      result.diario = { id: diario.id };
+      result.diarioId = diario.id;
     }
 
     if (has(dto, "intervaloDeTempo") && dto.intervaloDeTempo !== undefined) {
@@ -111,7 +111,7 @@ export class AulaService
         accessContext,
         dto.intervaloDeTempo,
       );
-      result.intervaloDeTempo = { id: intervaloDeTempo!.id };
+      result.intervaloDeTempoId = intervaloDeTempo!.id;
     }
 
     return result;

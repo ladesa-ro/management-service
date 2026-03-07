@@ -1,1 +1,1 @@
-export * from "@/Ladesa.Management.Domain/Repositories/ArquivoRepositoryPort";
+export * from "@/Ladesa.Management.Domain/Repositories/IArquivoRepository";

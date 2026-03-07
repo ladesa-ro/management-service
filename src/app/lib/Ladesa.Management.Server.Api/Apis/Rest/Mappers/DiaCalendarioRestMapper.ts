@@ -27,6 +27,10 @@ export class DiaCalendarioRestMapper {
     "filter.id",
     "filter.calendario.id",
   ]);
+  static toListOutputDto = createListOutputMapper(
+    DiaCalendarioListOutputRestDto,
+    DiaCalendarioRestMapper.toFindOneOutputDto,
+  );
 
   static toCreateInput(dto: DiaCalendarioCreateInputRestDto): DiaCalendarioCreateInputDto {
     const input = new DiaCalendarioCreateInputDto();
@@ -88,9 +92,4 @@ export class DiaCalendarioRestMapper {
     dto.dateDeleted = output.dateDeleted ? new Date(output.dateDeleted) : null;
     return dto;
   }
-
-  static toListOutputDto = createListOutputMapper(
-    DiaCalendarioListOutputRestDto,
-    DiaCalendarioRestMapper.toFindOneOutputDto,
-  );
 }

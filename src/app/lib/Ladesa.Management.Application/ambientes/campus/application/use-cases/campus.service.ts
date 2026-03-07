@@ -7,7 +7,7 @@ import {
   type IAuthorizationServicePort,
   type PersistInput,
 } from "@/Ladesa.Management.Application/@shared";
-import { Campus, type ICampus } from "@/Ladesa.Management.Application/ambientes/campus";
+import { Campus } from "@/Ladesa.Management.Application/ambientes/campus";
 import type {
   CampusCreateInputDto,
   CampusFindOneInputDto,
@@ -17,8 +17,7 @@ import type {
   CampusUpdateInputDto,
 } from "@/Ladesa.Management.Application/ambientes/campus/application/dtos";
 import {
-  CAMPUS_REPOSITORY_PORT,
-  type ICampusRepositoryPort,
+  ICampusRepository,
   type ICampusUseCasePort,
 } from "@/Ladesa.Management.Application/ambientes/campus/application/ports";
 import {
@@ -29,7 +28,7 @@ import {
 @Injectable()
 export class CampusService
   extends BaseCrudService<
-    ICampus,
+    Campus,
     CampusListInputDto,
     CampusListOutputDto,
     CampusFindOneInputDto,
@@ -45,8 +44,8 @@ export class CampusService
   protected readonly deleteAction = "campus:delete";
 
   constructor(
-    @Inject(CAMPUS_REPOSITORY_PORT)
-    protected readonly repository: ICampusRepositoryPort,
+    @Inject(ICampusRepository)
+    protected readonly repository: ICampusRepository,
     @Inject(AUTHORIZATION_SERVICE_PORT)
     protected readonly authorizationService: IAuthorizationServicePort,
     private readonly enderecoService: EnderecoService,
@@ -57,24 +56,30 @@ export class CampusService
   protected async buildCreateData(
     _ac: AccessContext,
     dto: CampusCreateInputDto,
-  ): Promise<Partial<PersistInput<ICampus>>> {
+  ): Promise<Partial<PersistInput<Campus>>> {
     const endereco = await this.enderecoService.internalEnderecoCreateOrUpdate(null, dto.endereco);
-    const domain = Campus.criar({
-      nomeFantasia: dto.nomeFantasia,
-      razaoSocial: dto.razaoSocial,
-      apelido: dto.apelido,
-      cnpj: dto.cnpj,
-      endereco: dto.endereco,
-    });
-    return { ...domain, endereco: { id: endereco.id as string } };
+    const domain = Campus.criar(
+      {
+        nomeFantasia: dto.nomeFantasia,
+        razaoSocial: dto.razaoSocial,
+        apelido: dto.apelido,
+        cnpj: dto.cnpj,
+        endereco: dto.endereco,
+      },
+      endereco.id as string,
+    );
+    return { ...domain };
   }
 
   protected async buildUpdateData(
     _ac: AccessContext,
     dto: CampusFindOneInputDto & CampusUpdateInputDto,
     current: CampusFindOneOutputDto,
-  ): Promise<Partial<PersistInput<ICampus>>> {
-    const domain = Campus.fromData(current);
+  ): Promise<Partial<PersistInput<Campus>>> {
+    const domain = Campus.fromData({
+      ...current,
+      enderecoId: current.endereco.id as string,
+    } as unknown as Campus);
     domain.atualizar({
       nomeFantasia: dto.nomeFantasia,
       razaoSocial: dto.razaoSocial,
@@ -82,7 +87,7 @@ export class CampusService
       cnpj: dto.cnpj,
     });
 
-    const result: Partial<PersistInput<ICampus>> = {
+    const result: Partial<PersistInput<Campus>> = {
       nomeFantasia: domain.nomeFantasia,
       razaoSocial: domain.razaoSocial,
       apelido: domain.apelido,
@@ -95,7 +100,7 @@ export class CampusService
         current.endereco.id,
         dtoEndereco as EnderecoInputDto,
       );
-      result.endereco = { id: endereco.id as string };
+      result.enderecoId = endereco.id as string;
     }
 
     return result;

@@ -7,9 +7,9 @@ import type {
   AmbienteListInputDto as AmbienteListInputDto,
   AmbienteListOutputDto as AmbienteListOutputDto,
 } from "@/Ladesa.Management.Application/ambientes/ambiente";
-import type { IAmbienteRepositoryPort } from "@/Ladesa.Management.Application/ambientes/ambiente/application/ports";
+import { IAmbienteRepository } from "@/Ladesa.Management.Domain/Repositories/IAmbienteRepository";
 import type { AmbienteEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/AmbienteEntity";
-import { createAmbienteRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/AmbienteRepository";
+import { createAmbienteRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/CreateAmbienteRepository";
 import type { ITypeOrmPaginationConfig } from "@/Ladesa.Management.Infrastructure.Database/typeorm";
 import {
   APP_DATA_SOURCE_TOKEN,
@@ -30,7 +30,7 @@ export class AmbienteTypeOrmRepositoryAdapter
     AmbienteFindOneInputDto,
     AmbienteFindOneOutputDto
   >
-  implements IAmbienteRepositoryPort
+  implements IAmbienteRepository
 {
   protected readonly alias = "ambiente";
   protected readonly authzAction = "ambiente:find";

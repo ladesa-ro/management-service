@@ -3,7 +3,7 @@ import { has } from "lodash";
 import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/contexto-acesso";
 import { BaseCrudService, type PersistInput } from "@/Ladesa.Management.Application/@shared";
 import { GradeHorarioOfertaFormacaoService } from "@/Ladesa.Management.Application/horarios/grade-horario-oferta-formacao";
-import type { IGradeHorarioOfertaFormacaoIntervaloDeTempo } from "@/Ladesa.Management.Application/horarios/grade-horario-oferta-formacao-intervalo-de-tempo";
+import type { GradeHorarioOfertaFormacaoIntervaloDeTempo } from "@/Ladesa.Management.Application/horarios/grade-horario-oferta-formacao-intervalo-de-tempo";
 import { IntervaloDeTempoService } from "@/Ladesa.Management.Application/horarios/intervalo-de-tempo";
 import type {
   GradeHorarioOfertaFormacaoIntervaloDeTempoCreateInputDto,
@@ -13,14 +13,11 @@ import type {
   GradeHorarioOfertaFormacaoIntervaloDeTempoListOutputDto,
   GradeHorarioOfertaFormacaoIntervaloDeTempoUpdateInputDto,
 } from "../dtos";
-import {
-  GRADE_HORARIO_OFERTA_FORMACAO_INTERVALO_DE_TEMPO_REPOSITORY_PORT,
-  type IGradeHorarioOfertaFormacaoIntervaloDeTempoRepositoryPort,
-} from "../ports/out";
+import { IGradeHorarioOfertaFormacaoIntervaloDeTempoRepository } from "../ports/out";
 
 @Injectable()
 export class GradeHorarioOfertaFormacaoIntervaloDeTempoService extends BaseCrudService<
-  IGradeHorarioOfertaFormacaoIntervaloDeTempo,
+  GradeHorarioOfertaFormacaoIntervaloDeTempo,
   GradeHorarioOfertaFormacaoIntervaloDeTempoListInputDto,
   GradeHorarioOfertaFormacaoIntervaloDeTempoListOutputDto,
   GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInputDto,
@@ -34,8 +31,8 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService extends BaseCrudS
   protected readonly deleteAction = "grade_horario_oferta_formacao_intervalo_de_tempo:delete";
 
   constructor(
-    @Inject(GRADE_HORARIO_OFERTA_FORMACAO_INTERVALO_DE_TEMPO_REPOSITORY_PORT)
-    protected readonly repository: IGradeHorarioOfertaFormacaoIntervaloDeTempoRepositoryPort,
+    @Inject(IGradeHorarioOfertaFormacaoIntervaloDeTempoRepository)
+    protected readonly repository: IGradeHorarioOfertaFormacaoIntervaloDeTempoRepository,
     private readonly intervaloDeTempoService: IntervaloDeTempoService,
     private readonly gradeHorarioOfertaFormacaoService: GradeHorarioOfertaFormacaoService,
   ) {
@@ -45,7 +42,7 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService extends BaseCrudS
   protected async buildCreateData(
     accessContext: AccessContext,
     dto: GradeHorarioOfertaFormacaoIntervaloDeTempoCreateInputDto,
-  ): Promise<Partial<PersistInput<IGradeHorarioOfertaFormacaoIntervaloDeTempo>>> {
+  ): Promise<Partial<PersistInput<GradeHorarioOfertaFormacaoIntervaloDeTempo>>> {
     const result: Record<string, any> = {};
 
     if (dto.gradeHorarioOfertaFormacao) {
@@ -53,7 +50,7 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService extends BaseCrudS
         await this.gradeHorarioOfertaFormacaoService.findByIdStrict(accessContext, {
           id: dto.gradeHorarioOfertaFormacao.id,
         });
-      result.gradeHorarioOfertaFormacao = { id: gradeHorarioOfertaFormacao.id };
+      result.gradeHorarioOfertaFormacaoId = gradeHorarioOfertaFormacao.id;
     }
 
     if (dto.intervaloDeTempo) {
@@ -61,10 +58,10 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService extends BaseCrudS
         accessContext,
         dto.intervaloDeTempo,
       );
-      result.intervaloDeTempo = { id: intervaloDeTempo.id };
+      result.intervaloDeTempoId = intervaloDeTempo.id;
     }
 
-    return result as IGradeHorarioOfertaFormacaoIntervaloDeTempo;
+    return result as GradeHorarioOfertaFormacaoIntervaloDeTempo;
   }
 
   protected async buildUpdateData(
@@ -72,8 +69,8 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService extends BaseCrudS
     dto: GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInputDto &
       GradeHorarioOfertaFormacaoIntervaloDeTempoUpdateInputDto,
     _current: GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputDto,
-  ): Promise<Partial<PersistInput<IGradeHorarioOfertaFormacaoIntervaloDeTempo>>> {
-    const result: Partial<PersistInput<IGradeHorarioOfertaFormacaoIntervaloDeTempo>> = {};
+  ): Promise<Partial<PersistInput<GradeHorarioOfertaFormacaoIntervaloDeTempo>>> {
+    const result: Partial<PersistInput<GradeHorarioOfertaFormacaoIntervaloDeTempo>> = {};
 
     if (has(dto, "gradeHorarioOfertaFormacao") && dto.gradeHorarioOfertaFormacao !== undefined) {
       if (dto.gradeHorarioOfertaFormacao) {
@@ -81,9 +78,9 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService extends BaseCrudS
           await this.gradeHorarioOfertaFormacaoService.findByIdStrict(accessContext, {
             id: dto.gradeHorarioOfertaFormacao.id,
           });
-        result.gradeHorarioOfertaFormacao = { id: gradeHorarioOfertaFormacao.id };
+        result.gradeHorarioOfertaFormacaoId = gradeHorarioOfertaFormacao.id;
       } else {
-        result.gradeHorarioOfertaFormacao = null;
+        result.gradeHorarioOfertaFormacaoId = undefined;
       }
     }
 
@@ -93,9 +90,9 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoService extends BaseCrudS
           accessContext,
           dto.intervaloDeTempo,
         );
-        result.intervaloDeTempo = { id: intervaloDeTempo.id };
+        result.intervaloDeTempoId = intervaloDeTempo.id;
       } else {
-        result.intervaloDeTempo = null;
+        result.intervaloDeTempoId = undefined;
       }
     }
 

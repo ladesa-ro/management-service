@@ -1,14 +1,14 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { DataSource } from "typeorm";
 import type {
-  IModalidadeRepositoryPort,
+  IModalidadeRepository,
   ModalidadeFindOneInputDto,
   ModalidadeFindOneOutputDto,
   ModalidadeListInputDto,
   ModalidadeListOutputDto,
 } from "@/Ladesa.Management.Application/ensino/modalidade";
 import type { ModalidadeEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/ModalidadeEntity";
-import { createModalidadeRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/ModalidadeRepository";
+import { createModalidadeRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/CreateModalidadeRepository";
 import {
   APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
@@ -30,7 +30,7 @@ export class ModalidadeTypeOrmRepositoryAdapter
     ModalidadeFindOneInputDto,
     ModalidadeFindOneOutputDto
   >
-  implements IModalidadeRepositoryPort
+  implements IModalidadeRepository
 {
   protected readonly alias = "modalidade";
   protected readonly authzAction = "modalidade:find";

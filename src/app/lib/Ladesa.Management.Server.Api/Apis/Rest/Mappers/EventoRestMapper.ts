@@ -32,6 +32,10 @@ export class EventoRestMapper {
     "filter.id",
     "filter.calendario.id",
   ]);
+  static toListOutputDto = createListOutputMapper(
+    EventoListOutputRestDto,
+    EventoRestMapper.toFindOneOutputDto,
+  );
 
   static toCreateInput(dto: EventoCreateInputRestDto): EventoCreateInputDto {
     const input = new EventoCreateInputDto();
@@ -44,6 +48,10 @@ export class EventoRestMapper {
     input.ambiente = dto.ambiente ? { id: dto.ambiente.id } : undefined;
     return input;
   }
+
+  // ============================================================================
+  // Output: Core DTO -> Server DTO
+  // ============================================================================
 
   static toUpdateInput(
     params: EventoFindOneInputRestDto,
@@ -75,10 +83,6 @@ export class EventoRestMapper {
     return input;
   }
 
-  // ============================================================================
-  // Output: Core DTO -> Server DTO
-  // ============================================================================
-
   static toFindOneOutputDto(output: EventoFindOneOutputDto): EventoFindOneOutputRestDto {
     const dto = new EventoFindOneOutputRestDto();
     dto.id = output.id;
@@ -92,9 +96,4 @@ export class EventoRestMapper {
     mapDatedFields(dto, output);
     return dto;
   }
-
-  static toListOutputDto = createListOutputMapper(
-    EventoListOutputRestDto,
-    EventoRestMapper.toFindOneOutputDto,
-  );
 }

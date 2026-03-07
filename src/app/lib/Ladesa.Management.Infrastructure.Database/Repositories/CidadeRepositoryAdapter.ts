@@ -6,10 +6,10 @@ import type {
   CidadeFindOneOutputDto,
   CidadeListInputDto,
   CidadeListOutputDto,
-  ICidadeRepositoryPort,
+  ICidadeRepository,
 } from "@/Ladesa.Management.Application/localidades/cidade";
 import type { CidadeEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/CidadeEntity";
-import { createCidadeRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/CidadeRepository";
+import { createCidadeRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/CreateCidadeRepository";
 import {
   APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
@@ -32,7 +32,7 @@ export class CidadeTypeOrmRepositoryAdapter
     CidadeFindOneInputDto,
     CidadeFindOneOutputDto
   >
-  implements ICidadeRepositoryPort
+  implements ICidadeRepository
 {
   protected readonly alias = "cidade";
   protected readonly authzAction = "cidade:find";

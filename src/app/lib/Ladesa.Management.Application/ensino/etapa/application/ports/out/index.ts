@@ -1,1 +1,1 @@
-export * from "@/Ladesa.Management.Domain/Repositories/EtapaRepositoryPort";
+export * from "@/Ladesa.Management.Domain/Repositories/IEtapaRepository";

@@ -13,6 +13,11 @@ import {
 } from "@/Ladesa.Management.Server.Api/Apis/GraphQl/Dtos/ProfessorIndisponibilidadeGraphqlDto";
 
 export class ProfessorIndisponibilidadeGraphqlMapper {
+  static toListOutputDto = createListOutputMapper(
+    ProfessorIndisponibilidadeListOutputGraphQlDto,
+    ProfessorIndisponibilidadeGraphqlMapper.toFindOneOutputDto,
+  );
+
   static toListInput(
     dto: ProfessorIndisponibilidadeListInputGraphQlDto | null,
   ): ProfessorIndisponibilidadeListInputDto | null {
@@ -41,9 +46,4 @@ export class ProfessorIndisponibilidadeGraphqlMapper {
     mapDatedFields(dto, output);
     return dto;
   }
-
-  static toListOutputDto = createListOutputMapper(
-    ProfessorIndisponibilidadeListOutputGraphQlDto,
-    ProfessorIndisponibilidadeGraphqlMapper.toFindOneOutputDto,
-  );
 }

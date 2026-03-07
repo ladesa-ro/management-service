@@ -33,6 +33,10 @@ export class UsuarioRestMapper {
   static toFindOneInput = createFindOneInputMapper(UsuarioFindOneInputDto);
 
   static toListInput = createListInputMapper(UsuarioListInputDto, ["filter.id"]);
+  static toListOutputDto = createListOutputMapper(
+    UsuarioListOutputRestDto,
+    UsuarioRestMapper.toFindOneOutputDto,
+  );
 
   static toCreateInput(dto: UsuarioCreateInputRestDto): UsuarioCreateInputDto {
     const input = new UsuarioCreateInputDto();
@@ -41,6 +45,10 @@ export class UsuarioRestMapper {
     input.email = dto.email;
     return input;
   }
+
+  // ============================================================================
+  // Output: Core DTO -> Server DTO
+  // ============================================================================
 
   static toUpdateInput(
     params: UsuarioFindOneInputRestDto,
@@ -60,10 +68,6 @@ export class UsuarioRestMapper {
     return input;
   }
 
-  // ============================================================================
-  // Output: Core DTO -> Server DTO
-  // ============================================================================
-
   static toFindOneOutputDto(output: UsuarioFindOneOutputDto): UsuarioFindOneOutputRestDto {
     const dto = new UsuarioFindOneOutputRestDto();
     dto.id = output.id;
@@ -80,11 +84,6 @@ export class UsuarioRestMapper {
     mapDatedFields(dto, output);
     return dto;
   }
-
-  static toListOutputDto = createListOutputMapper(
-    UsuarioListOutputRestDto,
-    UsuarioRestMapper.toFindOneOutputDto,
-  );
 
   static toEnsinoOutputDto(output: UsuarioEnsinoOutput): UsuarioEnsinoOutputRestDto {
     const dto = new UsuarioEnsinoOutputRestDto();

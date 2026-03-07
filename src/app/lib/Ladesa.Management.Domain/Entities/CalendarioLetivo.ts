@@ -1,63 +1,49 @@
-import type { IEntityBase } from "@/Ladesa.Management.Application/@shared";
+import type { IdUuid } from "@/Ladesa.Management.Application/@shared";
 import { BaseDatedEntity } from "@/Ladesa.Management.Application/@shared";
-import type { ICampus } from "@/Ladesa.Management.Application/ambientes/campus";
-import type { IOfertaFormacao } from "@/Ladesa.Management.Application/ensino/oferta-formacao";
 import type { CalendarioLetivoCreateDto } from "@/Ladesa.Management.Domain/Dtos/CalendarioLetivoCreateDto";
 import type { CalendarioLetivoUpdateDto } from "@/Ladesa.Management.Domain/Dtos/CalendarioLetivoUpdateDto";
-
-/**
- * Interface que define a estrutura de dados de CalendarioLetivo
- * Tipagem pura sem implementacao de regras
- */
-export interface ICalendarioLetivo extends IEntityBase {
-  nome: string;
-  ano: number;
-  campus: ICampus;
-  ofertaFormacao: IOfertaFormacao | null;
-}
 
 /**
  * Entidade de Dominio: CalendarioLetivo
  * Implementa a tipagem ICalendarioLetivo e adiciona regras de negocio
  */
-export class CalendarioLetivo extends BaseDatedEntity implements ICalendarioLetivo {
-  nome!: string;
-  ano!: number;
-  campus!: ICampus;
-  ofertaFormacao!: IOfertaFormacao;
+export class CalendarioLetivo extends BaseDatedEntity {
+  private constructor(
+    public nome: string,
+    public ano: number,
+    public campusId: IdUuid,
+    public ofertaFormacaoId: IdUuid | null,
+  ) {
+    super();
+  }
 
   protected static get entityName(): string {
     return "CalendarioLetivo";
   }
 
-  // ========================================
-  // Validação
-  // ========================================
-
-  /**
-   * Cria uma nova instancia valida de CalendarioLetivo
-   * @throws EntityValidationError se os dados forem invalidos
-   */
   static criar(dados: CalendarioLetivoCreateDto): CalendarioLetivo {
-    const instance = new CalendarioLetivo();
-    instance.nome = dados.nome?.trim() ?? "";
-    instance.ano = dados.ano;
+    const instance = new CalendarioLetivo(
+      dados.nome?.trim() ?? "",
+      dados.ano,
+      dados.campus.id,
+      dados.ofertaFormacao?.id ?? null,
+    );
     instance.initDates();
     instance.validar();
-
     return instance;
   }
 
-  // ========================================
-  // Factory Methods
-  // ========================================
-
-  /**
-   * Reconstroi uma instancia a partir de dados existentes (ex: do banco)
-   */
-  static fromData(dados: Record<string, any>): CalendarioLetivo {
-    const instance = new CalendarioLetivo();
-    Object.assign(instance, dados);
+  static fromData(data: CalendarioLetivo): CalendarioLetivo {
+    const instance = new CalendarioLetivo(
+      data.nome,
+      data.ano,
+      data.campusId,
+      data.ofertaFormacaoId,
+    );
+    instance.id = data.id;
+    instance.dateCreated = data.dateCreated;
+    instance.dateUpdated = data.dateUpdated;
+    instance.dateDeleted = data.dateDeleted;
     return instance;
   }
 
@@ -70,14 +56,6 @@ export class CalendarioLetivo extends BaseDatedEntity implements ICalendarioLeti
     CalendarioLetivo.throwIfInvalid(result);
   }
 
-  // ========================================
-  // Metodos de Dominio
-  // ========================================
-
-  /**
-   * Atualiza os dados do calendario letivo
-   * @throws EntityValidationError se os dados forem invalidos
-   */
   atualizar(dados: CalendarioLetivoUpdateDto): void {
     if (dados.nome !== undefined) {
       this.nome = dados.nome?.trim() ?? "";

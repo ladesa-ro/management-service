@@ -20,6 +20,11 @@ import {
 import { DisponibilidadeGraphqlMapper } from "@/Ladesa.Management.Server.Api/Apis/GraphQl/Mappers/DisponibilidadeGraphqlMapper";
 
 export class TurmaDisponibilidadeGraphqlMapper {
+  static toListOutputDto = createListOutputMapper(
+    TurmaDisponibilidadeListOutputGraphQlDto,
+    TurmaDisponibilidadeGraphqlMapper.toFindOneOutputDto,
+  );
+
   static toListInput(
     dto: TurmaDisponibilidadeListInputGraphQlDto | null,
   ): TurmaDisponibilidadeListInputDto | null {
@@ -78,9 +83,4 @@ export class TurmaDisponibilidadeGraphqlMapper {
     mapDatedFields(dto, output);
     return dto;
   }
-
-  static toListOutputDto = createListOutputMapper(
-    TurmaDisponibilidadeListOutputGraphQlDto,
-    TurmaDisponibilidadeGraphqlMapper.toFindOneOutputDto,
-  );
 }

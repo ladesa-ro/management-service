@@ -49,6 +49,11 @@ function mapImagemOutput(imagem: any): any {
 }
 
 export class DisciplinaGraphqlMapper {
+  static toListOutputDto = createListOutputMapper(
+    DisciplinaListOutputGraphQlDto,
+    DisciplinaGraphqlMapper.toFindOneOutputDto,
+  );
+
   static toListInput(dto: DisciplinaListInputGraphQlDto | null): DisciplinaListInputDto | null {
     if (!dto) {
       return null;
@@ -111,9 +116,4 @@ export class DisciplinaGraphqlMapper {
     mapDatedFields(dto, output);
     return dto;
   }
-
-  static toListOutputDto = createListOutputMapper(
-    DisciplinaListOutputGraphQlDto,
-    DisciplinaGraphqlMapper.toFindOneOutputDto,
-  );
 }

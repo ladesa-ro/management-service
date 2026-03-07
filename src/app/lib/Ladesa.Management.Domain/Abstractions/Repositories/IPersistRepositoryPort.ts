@@ -10,13 +10,13 @@
  *
  * @example
  * ```ts
- * interface IAmbiente extends IEntityBase {
+ * interface Ambiente extends IEntityBase {
  *   nome: string;
- *   bloco: IBloco;
+ *   bloco: Bloco;
  *   imagemCapa: { id: IdUuid } | null;
  * }
  *
- * // PersistInput<IAmbiente> resulta em:
+ * // PersistInput<Ambiente> resulta em:
  * // {
  * //   id: IdUuid;
  * //   nome: string;
@@ -36,7 +36,7 @@ export type PersistInput<T> = {
 /**
  * Interface para operações de persistência baseadas em dados de domínio
  *
- * @template DomainData - Tipo da interface de domínio (ex: IAmbiente, ICampus)
+ * @template DomainData - Tipo da interface de domínio (ex: Ambiente, Campus)
  */
 export interface IPersistRepositoryPort<DomainData> {
   /**

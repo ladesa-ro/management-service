@@ -19,6 +19,11 @@ import {
 import { CalendarioLetivoGraphqlMapper } from "@/Ladesa.Management.Server.Api/Apis/GraphQl/Mappers/CalendarioLetivoGraphqlMapper";
 
 export class EtapaGraphqlMapper {
+  static toListOutputDto = createListOutputMapper(
+    EtapaListOutputGraphQlDto,
+    EtapaGraphqlMapper.toFindOneOutputDto,
+  );
+
   static toListInput(dto: EtapaListInputGraphQlDto | null): EtapaListInputDto | null {
     if (!dto) {
       return null;
@@ -82,9 +87,4 @@ export class EtapaGraphqlMapper {
     mapDatedFields(dto, output);
     return dto;
   }
-
-  static toListOutputDto = createListOutputMapper(
-    EtapaListOutputGraphQlDto,
-    EtapaGraphqlMapper.toFindOneOutputDto,
-  );
 }

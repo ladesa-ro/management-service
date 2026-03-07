@@ -5,10 +5,10 @@ import type {
   DisponibilidadeFindOneOutputDto,
   DisponibilidadeListInputDto,
   DisponibilidadeListOutputDto,
-  IDisponibilidadeRepositoryPort,
+  IDisponibilidadeRepository,
 } from "@/Ladesa.Management.Application/ensino/disponibilidade";
 import type { DisponibilidadeEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/DisponibilidadeEntity";
-import { createDisponibilidadeRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/DisponibilidadeRepository";
+import { createDisponibilidadeRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/CreateDisponibilidadeRepository";
 import {
   APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
@@ -26,7 +26,7 @@ export class DisponibilidadeTypeOrmRepositoryAdapter
     DisponibilidadeFindOneInputDto,
     DisponibilidadeFindOneOutputDto
   >
-  implements IDisponibilidadeRepositoryPort
+  implements IDisponibilidadeRepository
 {
   protected readonly alias = "disponibilidade";
   protected readonly authzAction = "disponibilidade:find";

@@ -19,22 +19,26 @@ export class CidadeRestMapper {
   // Input: Server DTO -> Core DTO
   // ============================================================================
 
-  static toFindOneInput(dto: CidadeFindOneInputRestDto): CidadeFindOneInputDto {
-    const input = new CidadeFindOneInputDto();
-    input.id = dto.id;
-    return input;
-  }
-
   static toListInput = createListInputMapper(CidadeListInputDto, [
     "filter.id",
     "filter.estado.id",
     "filter.estado.nome",
     "filter.estado.sigla",
   ]);
+  static toListOutputDto = createListOutputMapper(
+    CidadeListOutputRestDto,
+    CidadeRestMapper.toFindOneOutputDto,
+  );
 
   // ============================================================================
   // Output: Core DTO -> Server DTO
   // ============================================================================
+
+  static toFindOneInput(dto: CidadeFindOneInputRestDto): CidadeFindOneInputDto {
+    const input = new CidadeFindOneInputDto();
+    input.id = dto.id;
+    return input;
+  }
 
   static toFindOneOutputDto(output: CidadeFindOneOutputDto): CidadeFindOneOutputRestDto {
     const dto = new CidadeFindOneOutputRestDto();
@@ -43,9 +47,4 @@ export class CidadeRestMapper {
     dto.estado = EstadoRestMapper.toFindOneOutputDto(output.estado);
     return dto;
   }
-
-  static toListOutputDto = createListOutputMapper(
-    CidadeListOutputRestDto,
-    CidadeRestMapper.toFindOneOutputDto,
-  );
 }

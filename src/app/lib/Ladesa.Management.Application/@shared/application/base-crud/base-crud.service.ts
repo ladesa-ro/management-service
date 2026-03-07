@@ -22,7 +22,7 @@ import type { IBaseCrudRepositoryPort } from "../ports/out";
  * - update: atualização de registro existente
  * - deleteOneById: exclusão lógica
  *
- * @template DomainData - Tipo da interface de domínio (ex: IAmbiente, ICampus)
+ * @template DomainData - Tipo da interface de domínio (ex: Ambiente, Campus)
  * @template ListInputDto - Tipo do DTO de entrada para listagem
  * @template ListOutputDto - Tipo do DTO de saída para listagem
  * @template FindOneInputDto - Tipo do DTO de entrada para busca única
@@ -74,23 +74,6 @@ export abstract class BaseCrudService<
    * Quando não fornecido, usa accessContext.ensurePermission diretamente.
    */
   protected readonly authorizationService?: IAuthorizationServicePort;
-
-  /**
-   * Constrói os dados de domínio para criação de uma nova entidade.
-   */
-  protected abstract buildCreateData(
-    accessContext: AccessContext,
-    dto: CreateInputDto,
-  ): Promise<Partial<PersistInput<DomainData>>>;
-
-  /**
-   * Constrói os dados de domínio parciais para atualização de uma entidade existente.
-   */
-  protected abstract buildUpdateData(
-    accessContext: AccessContext,
-    dto: FindOneInputDto & UpdateInputDto,
-    current: FindOneOutputDto,
-  ): Promise<Partial<PersistInput<DomainData>>>;
 
   /**
    * Lista todos os registros
@@ -206,6 +189,23 @@ export abstract class BaseCrudService<
 
     return true;
   }
+
+  /**
+   * Constrói os dados de domínio para criação de uma nova entidade.
+   */
+  protected abstract buildCreateData(
+    accessContext: AccessContext,
+    dto: CreateInputDto,
+  ): Promise<Partial<PersistInput<DomainData>>>;
+
+  /**
+   * Constrói os dados de domínio parciais para atualização de uma entidade existente.
+   */
+  protected abstract buildUpdateData(
+    accessContext: AccessContext,
+    dto: FindOneInputDto & UpdateInputDto,
+    current: FindOneOutputDto,
+  ): Promise<Partial<PersistInput<DomainData>>>;
 
   /**
    * Verifica permissão usando o serviço de autorização ou accessContext

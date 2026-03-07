@@ -21,6 +21,11 @@ import { DiarioGraphqlMapper } from "@/Ladesa.Management.Server.Api/Apis/GraphQl
 import { IntervaloDeTempoGraphqlMapper } from "@/Ladesa.Management.Server.Api/Apis/GraphQl/Mappers/IntervaloDeTempoGraphqlMapper";
 
 export class AulaGraphqlMapper {
+  static toListOutputDto = createListOutputMapper(
+    AulaListOutputGraphQlDto,
+    AulaGraphqlMapper.toFindOneOutputDto,
+  );
+
   static toListInput(dto: AulaListInputGraphQlDto | null): AulaListInputDto | null {
     if (!dto) {
       return null;
@@ -78,19 +83,6 @@ export class AulaGraphqlMapper {
     return input;
   }
 
-  private static mapAmbiente(ambiente: any | null): AmbienteFindOneOutputForAulaGraphQlDto | null {
-    if (!ambiente) return null;
-    const dto = new AmbienteFindOneOutputForAulaGraphQlDto();
-    dto.id = ambiente.id;
-    dto.nome = ambiente.nome;
-    dto.descricao = ambiente.descricao;
-    dto.codigo = ambiente.codigo;
-    dto.capacidade = ambiente.capacidade;
-    dto.tipo = ambiente.tipo;
-    mapDatedFields(dto, ambiente);
-    return dto;
-  }
-
   static toFindOneOutputDto(output: AulaFindOneOutputDto): AulaFindOneOutputGraphQlDto {
     const dto = new AulaFindOneOutputGraphQlDto();
     dto.id = output.id;
@@ -105,8 +97,16 @@ export class AulaGraphqlMapper {
     return dto;
   }
 
-  static toListOutputDto = createListOutputMapper(
-    AulaListOutputGraphQlDto,
-    AulaGraphqlMapper.toFindOneOutputDto,
-  );
+  private static mapAmbiente(ambiente: any | null): AmbienteFindOneOutputForAulaGraphQlDto | null {
+    if (!ambiente) return null;
+    const dto = new AmbienteFindOneOutputForAulaGraphQlDto();
+    dto.id = ambiente.id;
+    dto.nome = ambiente.nome;
+    dto.descricao = ambiente.descricao;
+    dto.codigo = ambiente.codigo;
+    dto.capacidade = ambiente.capacidade;
+    dto.tipo = ambiente.tipo;
+    mapDatedFields(dto, ambiente);
+    return dto;
+  }
 }

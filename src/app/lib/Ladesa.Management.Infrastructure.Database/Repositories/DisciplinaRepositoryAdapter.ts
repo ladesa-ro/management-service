@@ -7,9 +7,9 @@ import type {
   DisciplinaListInputDto,
   DisciplinaListOutputDto,
 } from "@/Ladesa.Management.Application/ensino/disciplina/application/dtos";
-import type { IDisciplinaRepositoryPort } from "@/Ladesa.Management.Application/ensino/disciplina/application/ports";
+import type { IDisciplinaRepository } from "@/Ladesa.Management.Application/ensino/disciplina/application/ports";
 import type { DisciplinaEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/DisciplinaEntity";
-import { createDisciplinaRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/DisciplinaRepository";
+import { createDisciplinaRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/CreateDisciplinaRepository";
 import {
   APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
@@ -27,7 +27,7 @@ export class DisciplinaTypeOrmRepositoryAdapter
     DisciplinaFindOneInputDto,
     DisciplinaFindOneOutputDto
   >
-  implements IDisciplinaRepositoryPort
+  implements IDisciplinaRepository
 {
   protected readonly alias = "disciplina";
   protected readonly authzAction = "disciplina:find";

@@ -8,9 +8,9 @@ import type {
   DiarioPreferenciaAgrupamentoListInputDto,
   DiarioPreferenciaAgrupamentoListOutputDto,
 } from "@/Ladesa.Management.Application/ensino/diario-preferencia-agrupamento";
-import type { IDiarioPreferenciaAgrupamentoRepositoryPort } from "@/Ladesa.Management.Application/ensino/diario-preferencia-agrupamento/application/ports/out";
+import type { IDiarioPreferenciaAgrupamentoRepository } from "@/Ladesa.Management.Application/ensino/diario-preferencia-agrupamento/application/ports/out";
 import type { DiarioPreferenciaAgrupamentoEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/DiarioPreferenciaAgrupamentoEntity";
-import { createDiarioPreferenciaAgrupamentoRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/DiarioPreferenciaAgrupamentoRepository";
+import { createDiarioPreferenciaAgrupamentoRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/CreateDiarioPreferenciaAgrupamentoRepository";
 import {
   APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
@@ -32,7 +32,7 @@ export class DiarioPreferenciaAgrupamentoTypeOrmRepositoryAdapter
     DiarioPreferenciaAgrupamentoFindOneInputDto,
     DiarioPreferenciaAgrupamentoFindOneOutputDto
   >
-  implements IDiarioPreferenciaAgrupamentoRepositoryPort
+  implements IDiarioPreferenciaAgrupamentoRepository
 {
   protected readonly alias = "diario_preferencia_agrupamento";
   protected readonly authzAction = "diario_preferencia_agrupamento:find";

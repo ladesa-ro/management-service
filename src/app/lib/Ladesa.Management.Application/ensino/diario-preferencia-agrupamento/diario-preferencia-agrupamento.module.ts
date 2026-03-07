@@ -1,8 +1,8 @@
 import { Module } from "@nestjs/common";
 import { DiarioModule } from "@/Ladesa.Management.Application/ensino/diario/diario.module";
 import {
-  DIARIO_PREFERENCIA_AGRUPAMENTO_REPOSITORY_PORT,
   DiarioPreferenciaAgrupamentoService,
+  IDiarioPreferenciaAgrupamentoRepository,
 } from "@/Ladesa.Management.Application/ensino/diario-preferencia-agrupamento";
 import { DiarioPreferenciaAgrupamentoAuthzRegistrySetup } from "@/Ladesa.Management.Application/ensino/diario-preferencia-agrupamento/infrastructure";
 import { DiarioPreferenciaAgrupamentoTypeOrmRepositoryAdapter } from "@/Ladesa.Management.Application/ensino/diario-preferencia-agrupamento/infrastructure/persistence/typeorm";
@@ -19,7 +19,7 @@ import { DiarioPreferenciaAgrupamentoController } from "@/Ladesa.Management.Serv
     DiarioPreferenciaAgrupamentoGraphqlResolver,
     DiarioPreferenciaAgrupamentoAuthzRegistrySetup,
     {
-      provide: DIARIO_PREFERENCIA_AGRUPAMENTO_REPOSITORY_PORT,
+      provide: IDiarioPreferenciaAgrupamentoRepository,
       useClass: DiarioPreferenciaAgrupamentoTypeOrmRepositoryAdapter,
     },
   ],

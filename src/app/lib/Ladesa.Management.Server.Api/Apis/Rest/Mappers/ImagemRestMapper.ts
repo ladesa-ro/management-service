@@ -26,6 +26,10 @@ export class ImagemRestMapper {
   // ============================================================================
   // Output: Core DTO -> Server DTO
   // ============================================================================
+  static toListOutputDto = createListOutputMapper(
+    ImagemListOutputRestDto,
+    ImagemRestMapper.toFindOneOutputDto,
+  );
 
   static toFindOneOutputDto(output: ImagemFindOneOutputDto): ImagemFindOneOutputRestDto {
     const dto = new ImagemFindOneOutputRestDto();
@@ -35,9 +39,4 @@ export class ImagemRestMapper {
     // Note: versoes mapping would need to be done by the consumer
     return dto;
   }
-
-  static toListOutputDto = createListOutputMapper(
-    ImagemListOutputRestDto,
-    ImagemRestMapper.toFindOneOutputDto,
-  );
 }

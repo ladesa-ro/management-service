@@ -4,7 +4,7 @@ import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/c
 import { BaseCrudService, type PersistInput } from "@/Ladesa.Management.Application/@shared";
 import { NivelFormacaoService } from "@/Ladesa.Management.Application/ensino/nivel-formacao/application/use-cases/nivel-formacao.service";
 import { OfertaFormacaoService } from "@/Ladesa.Management.Application/ensino/oferta-formacao";
-import type { IOfertaFormacaoNivelFormacao } from "@/Ladesa.Management.Application/ensino/oferta-formacao-nivel-formacao";
+import type { OfertaFormacaoNivelFormacao } from "@/Ladesa.Management.Application/ensino/oferta-formacao-nivel-formacao";
 import type {
   OfertaFormacaoNivelFormacaoCreateInputDto,
   OfertaFormacaoNivelFormacaoFindOneInputDto,
@@ -14,15 +14,14 @@ import type {
   OfertaFormacaoNivelFormacaoUpdateInputDto,
 } from "@/Ladesa.Management.Application/ensino/oferta-formacao-nivel-formacao/application/dtos";
 import {
-  type IOfertaFormacaoNivelFormacaoRepositoryPort,
+  IOfertaFormacaoNivelFormacaoRepository,
   type IOfertaFormacaoNivelFormacaoUseCasePort,
-  OFERTA_FORMACAO_NIVEL_FORMACAO_REPOSITORY_PORT,
 } from "@/Ladesa.Management.Application/ensino/oferta-formacao-nivel-formacao/application/ports";
 
 @Injectable()
 export class OfertaFormacaoNivelFormacaoService
   extends BaseCrudService<
-    IOfertaFormacaoNivelFormacao,
+    OfertaFormacaoNivelFormacao,
     OfertaFormacaoNivelFormacaoListInputDto,
     OfertaFormacaoNivelFormacaoListOutputDto,
     OfertaFormacaoNivelFormacaoFindOneInputDto,
@@ -38,8 +37,8 @@ export class OfertaFormacaoNivelFormacaoService
   protected readonly deleteAction = "oferta_formacao_nivel_formacao:delete";
 
   constructor(
-    @Inject(OFERTA_FORMACAO_NIVEL_FORMACAO_REPOSITORY_PORT)
-    protected readonly repository: IOfertaFormacaoNivelFormacaoRepositoryPort,
+    @Inject(IOfertaFormacaoNivelFormacaoRepository)
+    protected readonly repository: IOfertaFormacaoNivelFormacaoRepository,
     private readonly ofertaFormacaoService: OfertaFormacaoService,
     private readonly nivelFormacaoService: NivelFormacaoService,
   ) {
@@ -49,32 +48,32 @@ export class OfertaFormacaoNivelFormacaoService
   protected async buildCreateData(
     accessContext: AccessContext,
     dto: OfertaFormacaoNivelFormacaoCreateInputDto,
-  ): Promise<Partial<PersistInput<IOfertaFormacaoNivelFormacao>>> {
+  ): Promise<Partial<PersistInput<OfertaFormacaoNivelFormacao>>> {
     const result: Record<string, any> = {};
 
     if (dto.ofertaFormacao) {
       const ofertaFormacao = await this.ofertaFormacaoService.findByIdStrict(accessContext, {
         id: dto.ofertaFormacao.id,
       });
-      result.ofertaFormacao = { id: ofertaFormacao.id };
+      result.ofertaFormacaoId = ofertaFormacao.id;
     }
 
     if (dto.nivelFormacao) {
       const nivelFormacao = await this.nivelFormacaoService.findByIdStrict(accessContext, {
         id: dto.nivelFormacao.id,
       });
-      result.nivelFormacao = { id: nivelFormacao.id };
+      result.nivelFormacaoId = nivelFormacao.id;
     }
 
-    return result as IOfertaFormacaoNivelFormacao;
+    return result as OfertaFormacaoNivelFormacao;
   }
 
   protected async buildUpdateData(
     accessContext: AccessContext,
     dto: OfertaFormacaoNivelFormacaoFindOneInputDto & OfertaFormacaoNivelFormacaoUpdateInputDto,
     _current: OfertaFormacaoNivelFormacaoFindOneOutputDto,
-  ): Promise<Partial<PersistInput<IOfertaFormacaoNivelFormacao>>> {
-    const result: Partial<PersistInput<IOfertaFormacaoNivelFormacao>> = {};
+  ): Promise<Partial<PersistInput<OfertaFormacaoNivelFormacao>>> {
+    const result: Partial<PersistInput<OfertaFormacaoNivelFormacao>> = {};
 
     if (has(dto, "ofertaFormacao") && dto.ofertaFormacao !== undefined) {
       const ofertaFormacao =
@@ -82,7 +81,7 @@ export class OfertaFormacaoNivelFormacaoService
         (await this.ofertaFormacaoService.findByIdStrict(accessContext, {
           id: dto.ofertaFormacao.id,
         }));
-      result.ofertaFormacao = ofertaFormacao && { id: ofertaFormacao.id };
+      result.ofertaFormacaoId = ofertaFormacao ? ofertaFormacao.id : undefined;
     }
 
     if (has(dto, "nivelFormacao") && dto.nivelFormacao !== undefined) {
@@ -91,7 +90,7 @@ export class OfertaFormacaoNivelFormacaoService
         (await this.nivelFormacaoService.findByIdStrict(accessContext, {
           id: dto.nivelFormacao.id,
         }));
-      result.nivelFormacao = nivelFormacao && { id: nivelFormacao.id };
+      result.nivelFormacaoId = nivelFormacao ? nivelFormacao.id : undefined;
     }
 
     return result;

@@ -1,65 +1,55 @@
-import type { IEntityBase } from "@/Ladesa.Management.Application/@shared";
+import type { IdUuid } from "@/Ladesa.Management.Application/@shared";
 import { BaseDatedEntity } from "@/Ladesa.Management.Application/@shared";
-import type { ICalendarioLetivo } from "@/Ladesa.Management.Application/horarios/calendario-letivo";
 import type { DiarioCreateDto } from "@/Ladesa.Management.Domain/Dtos/DiarioCreateDto";
 import type { DiarioUpdateDto } from "@/Ladesa.Management.Domain/Dtos/DiarioUpdateDto";
-import type { IAmbiente } from "@/Ladesa.Management.Domain/Entities/Ambiente";
-import type { IDisciplina } from "@/Ladesa.Management.Domain/Entities/Disciplina";
-import type { IImagem } from "@/Ladesa.Management.Domain/Entities/Imagem";
-import type { ITurma } from "@/Ladesa.Management.Domain/Entities/Turma";
-
-export interface IDiario extends IEntityBase {
-  ativo: boolean;
-  calendarioLetivo: ICalendarioLetivo;
-  turma: ITurma;
-  disciplina: IDisciplina;
-  ambientePadrao: IAmbiente | null;
-  imagemCapa: IImagem | null;
-}
 
 /**
  * Entidade de Domínio: Diario
  * Implementa a tipagem IDiario e adiciona regras de negócio
  */
-export class Diario extends BaseDatedEntity implements IDiario {
-  ativo!: boolean;
-  calendarioLetivo!: ICalendarioLetivo;
-  turma!: ITurma;
-  disciplina!: IDisciplina;
-  ambientePadrao!: IAmbiente | null;
-  imagemCapa!: IImagem | null;
+export class Diario extends BaseDatedEntity {
+  private constructor(
+    public ativo: boolean,
+    public calendarioLetivoId: IdUuid,
+    public turmaId: IdUuid,
+    public disciplinaId: IdUuid,
+    public ambientePadraoId: IdUuid | null,
+    public imagemCapaId: IdUuid | null,
+  ) {
+    super();
+  }
 
   protected static get entityName(): string {
     return "Diario";
   }
 
-  // ========================================
-  // Validação
-  // ========================================
-
-  /**
-   * Cria uma nova instância válida de Diario
-   */
   static criar(dados: DiarioCreateDto): Diario {
-    const instance = new Diario();
-    instance.ativo = dados.ativo ?? true;
-    instance.ambientePadrao = null;
-    instance.imagemCapa = null;
+    const instance = new Diario(
+      dados.ativo ?? true,
+      dados.calendarioLetivo.id,
+      dados.turma.id,
+      dados.disciplina.id,
+      dados.ambientePadrao?.id ?? null,
+      null,
+    );
     instance.initDates();
     instance.validar();
     return instance;
   }
 
-  // ========================================
-  // Factory Methods
-  // ========================================
-
-  /**
-   * Reconstrói uma instância a partir de dados existentes (ex: do banco)
-   */
-  static fromData(dados: Record<string, any>): Diario {
-    const instance = new Diario();
-    Object.assign(instance, dados);
+  static fromData(data: Diario): Diario {
+    const instance = new Diario(
+      data.ativo,
+      data.calendarioLetivoId,
+      data.turmaId,
+      data.disciplinaId,
+      data.ambientePadraoId,
+      data.imagemCapaId,
+    );
+    instance.id = data.id;
+    instance.dateCreated = data.dateCreated;
+    instance.dateUpdated = data.dateUpdated;
+    instance.dateDeleted = data.dateDeleted;
     return instance;
   }
 
@@ -67,13 +57,6 @@ export class Diario extends BaseDatedEntity implements IDiario {
     // Sem validações de campos escalares
   }
 
-  // ========================================
-  // Métodos de Domínio
-  // ========================================
-
-  /**
-   * Atualiza os dados do diário
-   */
   atualizar(dados: DiarioUpdateDto): void {
     if (dados.ativo !== undefined) {
       this.ativo = dados.ativo;
@@ -83,24 +66,15 @@ export class Diario extends BaseDatedEntity implements IDiario {
     this.validar();
   }
 
-  /**
-   * Verifica se o diário está ativo (override: considera campo 'ativo' além de dateDeleted)
-   */
   override isAtivo(): boolean {
     return this.ativo && this.dateDeleted === null;
   }
 
-  /**
-   * Ativa o diário
-   */
   ativar(): void {
     this.ativo = true;
     this.touchUpdated();
   }
 
-  /**
-   * Desativa o diário
-   */
   desativar(): void {
     this.ativo = false;
     this.touchUpdated();

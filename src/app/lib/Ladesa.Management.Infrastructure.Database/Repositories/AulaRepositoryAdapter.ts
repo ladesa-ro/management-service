@@ -7,9 +7,9 @@ import type {
   AulaListInputDto,
   AulaListOutputDto,
 } from "@/Ladesa.Management.Application/horarios/aula/application/dtos";
-import type { IAulaRepositoryPort } from "@/Ladesa.Management.Application/horarios/aula/application/ports";
+import type { IAulaRepository } from "@/Ladesa.Management.Application/horarios/aula/application/ports";
 import type { AulaEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/AulaEntity";
-import { createAulaRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/AulaRepository";
+import { createAulaRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/CreateAulaRepository";
 import {
   APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
@@ -27,7 +27,7 @@ export class AulaTypeOrmRepositoryAdapter
     AulaFindOneInputDto,
     AulaFindOneOutputDto
   >
-  implements IAulaRepositoryPort
+  implements IAulaRepository
 {
   protected readonly alias = "aula";
   protected readonly authzAction = "aula:find";

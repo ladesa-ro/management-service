@@ -8,9 +8,9 @@ import type {
   GradeHorarioOfertaFormacaoIntervaloDeTempoListInputDto,
   GradeHorarioOfertaFormacaoIntervaloDeTempoListOutputDto,
 } from "@/Ladesa.Management.Application/horarios/grade-horario-oferta-formacao-intervalo-de-tempo";
-import type { IGradeHorarioOfertaFormacaoIntervaloDeTempoRepositoryPort } from "@/Ladesa.Management.Application/horarios/grade-horario-oferta-formacao-intervalo-de-tempo/application/ports/out";
+import type { IGradeHorarioOfertaFormacaoIntervaloDeTempoRepository } from "@/Ladesa.Management.Application/horarios/grade-horario-oferta-formacao-intervalo-de-tempo/application/ports/out";
 import type { GradeHorarioOfertaFormacaoIntervaloDeTempoEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/GradeHorarioOfertaFormacaoIntervaloDeTempoEntity";
-import { createGradeHorarioOfertaFormacaoIntervaloDeTempoRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/GradeHorarioOfertaFormacaoIntervaloDeTempoRepository";
+import { createGradeHorarioOfertaFormacaoIntervaloDeTempoRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/CreateGradeHorarioOfertaFormacaoIntervaloDeTempoRepository";
 import {
   APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
@@ -32,7 +32,7 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoTypeOrmRepositoryAdapter
     GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInputDto,
     GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputDto
   >
-  implements IGradeHorarioOfertaFormacaoIntervaloDeTempoRepositoryPort
+  implements IGradeHorarioOfertaFormacaoIntervaloDeTempoRepository
 {
   protected readonly alias = "gh_of_it";
   protected readonly authzAction = "grade_horario_oferta_formacao_intervalo_de_tempo:find";

@@ -7,7 +7,7 @@ import type { ISoftDeleteRepositoryPort } from "@/Ladesa.Management.Domain/Abstr
  * Interface base para ports de repositório (saída)
  * Compõe todas as operações CRUD padrão que todo repositório deve implementar
  *
- * @template DomainData - Tipo da interface de domínio (ex: IAmbiente, ICampus)
+ * @template DomainData - Tipo da interface de domínio (ex: Ambiente, Campus)
  * @template ListOutputDto - Tipo do DTO de saída para listagem (paginado)
  * @template FindOneOutputDto - Tipo do DTO de saída para busca única
  */

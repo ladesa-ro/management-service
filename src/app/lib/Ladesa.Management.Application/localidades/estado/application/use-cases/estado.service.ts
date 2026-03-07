@@ -7,8 +7,7 @@ import type {
   EstadoListOutputDto,
 } from "@/Ladesa.Management.Application/localidades/estado/application/dtos";
 import {
-  ESTADO_REPOSITORY_PORT,
-  type IEstadoRepositoryPort,
+  IEstadoRepository,
   type IEstadoUseCasePort,
 } from "@/Ladesa.Management.Application/localidades/estado/application/ports";
 
@@ -25,8 +24,8 @@ export class EstadoService
   protected readonly resourceName = "Estado";
 
   constructor(
-    @Inject(ESTADO_REPOSITORY_PORT)
-    protected readonly repository: IEstadoRepositoryPort,
+    @Inject(IEstadoRepository)
+    protected readonly repository: IEstadoRepository,
   ) {
     super();
   }

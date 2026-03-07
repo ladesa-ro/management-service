@@ -3,7 +3,7 @@ import { has } from "lodash";
 import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/contexto-acesso";
 import { BaseCrudService, type PersistInput } from "@/Ladesa.Management.Application/@shared";
 import { CalendarioLetivoService } from "@/Ladesa.Management.Application/horarios/calendario-letivo";
-import { Evento, type IEvento } from "@/Ladesa.Management.Application/horarios/evento";
+import { Evento } from "@/Ladesa.Management.Application/horarios/evento";
 import type {
   EventoCreateInputDto,
   EventoFindOneInputDto,
@@ -12,11 +12,11 @@ import type {
   EventoListOutputDto,
   EventoUpdateInputDto,
 } from "../dtos";
-import { EVENTO_REPOSITORY_PORT, type IEventoRepositoryPort } from "../ports/out";
+import { IEventoRepository } from "../ports/out";
 
 @Injectable()
 export class EventoService extends BaseCrudService<
-  IEvento,
+  Evento,
   EventoListInputDto,
   EventoListOutputDto,
   EventoFindOneInputDto,
@@ -30,8 +30,8 @@ export class EventoService extends BaseCrudService<
   protected readonly deleteAction = "evento:delete";
 
   constructor(
-    @Inject(EVENTO_REPOSITORY_PORT)
-    protected readonly repository: IEventoRepositoryPort,
+    @Inject(IEventoRepository)
+    protected readonly repository: IEventoRepository,
     private readonly calendarioLetivoService: CalendarioLetivoService,
   ) {
     super();
@@ -40,7 +40,7 @@ export class EventoService extends BaseCrudService<
   protected async buildCreateData(
     accessContext: AccessContext,
     dto: EventoCreateInputDto,
-  ): Promise<Partial<PersistInput<IEvento>>> {
+  ): Promise<Partial<PersistInput<Evento>>> {
     let calendarioRef: { id: string } | undefined;
     if (dto.calendario) {
       const calendario = await this.calendarioLetivoService.findByIdSimpleStrict(
@@ -59,19 +59,19 @@ export class EventoService extends BaseCrudService<
       calendario: calendarioRef!,
       ambiente: dto.ambiente,
     });
-    return {
-      ...domain,
-      ...(calendarioRef ? { calendario: calendarioRef } : {}),
-      ambiente: dto.ambiente ?? null,
-    };
+    return { ...domain };
   }
 
   protected async buildUpdateData(
     accessContext: AccessContext,
     dto: EventoFindOneInputDto & EventoUpdateInputDto,
     current: EventoFindOneOutputDto,
-  ): Promise<Partial<PersistInput<IEvento>>> {
-    const domain = Evento.fromData(current);
+  ): Promise<Partial<PersistInput<Evento>>> {
+    const domain = Evento.fromData({
+      ...current,
+      calendarioId: current.calendario.id,
+      ambienteId: current.ambiente?.id ?? null,
+    } as unknown as Evento);
     domain.atualizar({
       nome: dto.nome,
       cor: dto.cor,
@@ -79,7 +79,7 @@ export class EventoService extends BaseCrudService<
       dataInicio: dto.dataInicio,
       dataFim: dto.dataFim,
     });
-    const result: Partial<PersistInput<IEvento>> = {
+    const result: Partial<PersistInput<Evento>> = {
       nome: domain.nome,
       cor: domain.cor,
       rrule: domain.rrule,
@@ -92,7 +92,7 @@ export class EventoService extends BaseCrudService<
         accessContext,
         dto.calendario!.id,
       );
-      result.calendario = { id: calendario.id };
+      result.calendarioId = calendario.id;
     }
 
     return result;

@@ -4,10 +4,7 @@ import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/c
 import { BaseCrudService, type PersistInput } from "@/Ladesa.Management.Application/@shared";
 import { CampusService } from "@/Ladesa.Management.Application/ambientes/campus";
 import { OfertaFormacaoService } from "@/Ladesa.Management.Application/ensino/oferta-formacao";
-import {
-  CalendarioLetivo,
-  type ICalendarioLetivo,
-} from "@/Ladesa.Management.Application/horarios/calendario-letivo";
+import { CalendarioLetivo } from "@/Ladesa.Management.Application/horarios/calendario-letivo";
 import type {
   CalendarioLetivoCreateInputDto,
   CalendarioLetivoFindOneInputDto,
@@ -17,15 +14,14 @@ import type {
   CalendarioLetivoUpdateInputDto,
 } from "@/Ladesa.Management.Application/horarios/calendario-letivo/application/dtos";
 import {
-  CALENDARIO_LETIVO_REPOSITORY_PORT,
-  type ICalendarioLetivoRepositoryPort,
+  ICalendarioLetivoRepository,
   type ICalendarioLetivoUseCasePort,
 } from "@/Ladesa.Management.Application/horarios/calendario-letivo/application/ports";
 
 @Injectable()
 export class CalendarioLetivoService
   extends BaseCrudService<
-    ICalendarioLetivo,
+    CalendarioLetivo,
     CalendarioLetivoListInputDto,
     CalendarioLetivoListOutputDto,
     CalendarioLetivoFindOneInputDto,
@@ -41,8 +37,8 @@ export class CalendarioLetivoService
   protected readonly deleteAction = "calendario_letivo:delete";
 
   constructor(
-    @Inject(CALENDARIO_LETIVO_REPOSITORY_PORT)
-    protected readonly repository: ICalendarioLetivoRepositoryPort,
+    @Inject(ICalendarioLetivoRepository)
+    protected readonly repository: ICalendarioLetivoRepository,
     private readonly campusService: CampusService,
     private readonly ofertaFormacaoService: OfertaFormacaoService,
   ) {
@@ -52,7 +48,7 @@ export class CalendarioLetivoService
   protected async buildCreateData(
     accessContext: AccessContext,
     dto: CalendarioLetivoCreateInputDto,
-  ): Promise<Partial<PersistInput<ICalendarioLetivo>>> {
+  ): Promise<Partial<PersistInput<CalendarioLetivo>>> {
     const campus = await this.campusService.findByIdSimpleStrict(accessContext, dto.campus.id);
 
     let ofertaFormacaoRef: { id: string } | undefined;
@@ -70,25 +66,25 @@ export class CalendarioLetivoService
       campus: { id: campus.id },
       ofertaFormacao: ofertaFormacaoRef,
     });
-    return {
-      ...domain,
-      campus: { id: campus.id },
-      ...(ofertaFormacaoRef ? { ofertaFormacao: ofertaFormacaoRef } : {}),
-    };
+    return { ...domain };
   }
 
   protected async buildUpdateData(
     accessContext: AccessContext,
     dto: CalendarioLetivoFindOneInputDto & CalendarioLetivoUpdateInputDto,
     current: CalendarioLetivoFindOneOutputDto,
-  ): Promise<Partial<PersistInput<ICalendarioLetivo>>> {
-    const domain = CalendarioLetivo.fromData(current);
+  ): Promise<Partial<PersistInput<CalendarioLetivo>>> {
+    const domain = CalendarioLetivo.fromData({
+      ...current,
+      campusId: current.campus.id,
+      ofertaFormacaoId: current.ofertaFormacao?.id ?? null,
+    } as unknown as CalendarioLetivo);
     domain.atualizar({ nome: dto.nome, ano: dto.ano });
-    const result: Partial<PersistInput<ICalendarioLetivo>> = { nome: domain.nome, ano: domain.ano };
+    const result: Partial<PersistInput<CalendarioLetivo>> = { nome: domain.nome, ano: domain.ano };
 
     if (has(dto, "campus") && dto.campus !== undefined) {
       const campus = await this.campusService.findByIdSimpleStrict(accessContext, dto.campus.id);
-      result.campus = { id: campus.id };
+      result.campusId = campus.id;
     }
 
     if (has(dto, "ofertaFormacao") && dto.ofertaFormacao !== undefined) {
@@ -97,9 +93,9 @@ export class CalendarioLetivoService
           accessContext,
           dto.ofertaFormacao.id,
         );
-        result.ofertaFormacao = { id: ofertaFormacao.id };
+        result.ofertaFormacaoId = ofertaFormacao.id;
       } else {
-        result.ofertaFormacao = null;
+        result.ofertaFormacaoId = null;
       }
     }
 

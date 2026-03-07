@@ -14,18 +14,16 @@ export abstract class BaseEntity {
   // Métodos Abstratos
   // ========================================
 
-  abstract validar(): void;
-
-  // ========================================
-  // Métodos de Validação
-  // ========================================
-
   protected static createValidation(entityName?: string): {
     result: ValidationResult;
     rules: ValidationRules;
   } {
     return createValidator(entityName ?? this.entityName);
   }
+
+  // ========================================
+  // Métodos de Validação
+  // ========================================
 
   protected static throwIfInvalid(result: ValidationResult, entityName?: string): void {
     if (result.hasErrors) {
@@ -44,4 +42,6 @@ export abstract class BaseEntity {
     }
     return rules;
   }
+
+  abstract validar(): void;
 }

@@ -20,6 +20,11 @@ import { NivelFormacaoGraphqlMapper } from "@/Ladesa.Management.Server.Api/Apis/
 import { OfertaFormacaoGraphqlMapper } from "@/Ladesa.Management.Server.Api/Apis/GraphQl/Mappers/OfertaFormacaoGraphqlMapper";
 
 export class OfertaFormacaoNivelFormacaoGraphqlMapper {
+  static toListOutputDto = createListOutputMapper(
+    OfertaFormacaoNivelFormacaoListOutputGraphQlDto,
+    OfertaFormacaoNivelFormacaoGraphqlMapper.toFindOneOutputDto,
+  );
+
   static toListInput(
     dto: OfertaFormacaoNivelFormacaoListInputGraphQlDto | null,
   ): OfertaFormacaoNivelFormacaoListInputDto | null {
@@ -84,9 +89,4 @@ export class OfertaFormacaoNivelFormacaoGraphqlMapper {
     mapDatedFields(dto, output);
     return dto;
   }
-
-  static toListOutputDto = createListOutputMapper(
-    OfertaFormacaoNivelFormacaoListOutputGraphQlDto,
-    OfertaFormacaoNivelFormacaoGraphqlMapper.toFindOneOutputDto,
-  );
 }

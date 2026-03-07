@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { MODALIDADE_REPOSITORY_PORT } from "@/Ladesa.Management.Application/ensino/modalidade/application/ports";
+import { IModalidadeRepository } from "@/Ladesa.Management.Application/ensino/modalidade/application/ports";
 import { ModalidadeService } from "@/Ladesa.Management.Application/ensino/modalidade/application/use-cases/modalidade.service";
 import {
   ModalidadeAuthzRegistrySetup,
@@ -18,7 +18,7 @@ import { ModalidadeRestController } from "@/Ladesa.Management.Server.Api/Apis/Re
     ModalidadeGraphqlResolver,
     ModalidadeAuthzRegistrySetup,
     {
-      provide: MODALIDADE_REPOSITORY_PORT,
+      provide: IModalidadeRepository,
       useClass: ModalidadeTypeOrmRepositoryAdapter,
     },
   ],

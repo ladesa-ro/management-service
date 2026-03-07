@@ -20,6 +20,11 @@ import { CampusGraphqlMapper } from "@/Ladesa.Management.Server.Api/Apis/GraphQl
 import { OfertaFormacaoGraphqlMapper } from "@/Ladesa.Management.Server.Api/Apis/GraphQl/Mappers/OfertaFormacaoGraphqlMapper";
 
 export class CalendarioLetivoGraphqlMapper {
+  static toListOutputDto = createListOutputMapper(
+    CalendarioLetivoListOutputGraphQlDto,
+    CalendarioLetivoGraphqlMapper.toFindOneOutputDto,
+  );
+
   static toListInput(
     dto: CalendarioLetivoListInputGraphQlDto | null,
   ): CalendarioLetivoListInputDto | null {
@@ -80,9 +85,4 @@ export class CalendarioLetivoGraphqlMapper {
     mapDatedFields(dto, output);
     return dto;
   }
-
-  static toListOutputDto = createListOutputMapper(
-    CalendarioLetivoListOutputGraphQlDto,
-    CalendarioLetivoGraphqlMapper.toFindOneOutputDto,
-  );
 }

@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { AMBIENTE_REPOSITORY_PORT } from "@/Ladesa.Management.Application/ambientes/ambiente/application/ports";
+import { IAmbienteRepository } from "@/Ladesa.Management.Application/ambientes/ambiente/application/ports";
 import { AmbienteService } from "@/Ladesa.Management.Application/ambientes/ambiente/application/use-cases/ambiente.service";
 import {
   AmbienteAuthzRegistrySetup,
@@ -21,7 +21,7 @@ import { AmbienteRestController } from "@/Ladesa.Management.Server.Api/Apis/Rest
     AmbienteGraphqlResolver,
     AmbienteAuthzRegistrySetup,
     {
-      provide: AMBIENTE_REPOSITORY_PORT,
+      provide: IAmbienteRepository,
       useClass: AmbienteTypeOrmRepositoryAdapter,
     },
   ],

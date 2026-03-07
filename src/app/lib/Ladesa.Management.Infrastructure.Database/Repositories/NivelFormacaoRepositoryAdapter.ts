@@ -1,14 +1,14 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { DataSource } from "typeorm";
 import type {
-  INivelFormacaoRepositoryPort,
+  INivelFormacaoRepository,
   NivelFormacaoFindOneInputDto,
   NivelFormacaoFindOneOutputDto,
   NivelFormacaoListInputDto,
   NivelFormacaoListOutputDto,
 } from "@/Ladesa.Management.Application/ensino/nivel-formacao";
 import type { NivelFormacaoEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/NivelFormacaoEntity";
-import { createNivelFormacaoRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/NivelFormacaoRepository";
+import { createNivelFormacaoRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/CreateNivelFormacaoRepository";
 import {
   APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
@@ -26,7 +26,7 @@ export class NivelFormacaoTypeOrmRepositoryAdapter
     NivelFormacaoFindOneInputDto,
     NivelFormacaoFindOneOutputDto
   >
-  implements INivelFormacaoRepositoryPort
+  implements INivelFormacaoRepository
 {
   protected readonly alias = "nivel_formacao";
   protected readonly authzAction = "nivel_formacao:find";

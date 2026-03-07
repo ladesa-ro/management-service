@@ -21,16 +21,15 @@ import type {
   ArquivoGetFileInputDto,
 } from "@/Ladesa.Management.Application/armazenamento/arquivo/application/dtos";
 import {
-  ARQUIVO_REPOSITORY_PORT,
-  type IArquivoRepositoryPort,
+  IArquivoRepository,
   type IArquivoUseCasePort,
 } from "@/Ladesa.Management.Application/armazenamento/arquivo/application/ports";
 
 @Injectable()
 export class ArquivoService implements IArquivoUseCasePort {
   constructor(
-    @Inject(ARQUIVO_REPOSITORY_PORT)
-    private arquivoRepository: IArquivoRepositoryPort,
+    @Inject(IArquivoRepository)
+    private arquivoRepository: IArquivoRepository,
     @Inject(CONFIG_PORT)
     private appConfigService: IConfigPort,
   ) {}

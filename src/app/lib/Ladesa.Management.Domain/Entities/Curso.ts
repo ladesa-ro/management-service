@@ -1,67 +1,52 @@
-import type { IEntityBase } from "@/Ladesa.Management.Application/@shared";
+import type { IdUuid } from "@/Ladesa.Management.Application/@shared";
 import { BaseDatedEntity } from "@/Ladesa.Management.Application/@shared";
-import type { ICampus } from "@/Ladesa.Management.Application/ambientes/campus";
-import type { IImagem } from "@/Ladesa.Management.Application/armazenamento/imagem";
-import type { IOfertaFormacao } from "@/Ladesa.Management.Application/ensino/oferta-formacao";
 import type { CursoCreateDto } from "@/Ladesa.Management.Domain/Dtos/CursoCreateDto";
 import type { CursoUpdateDto } from "@/Ladesa.Management.Domain/Dtos/CursoUpdateDto";
-
-/**
- * Interface que define a estrutura de dados de Curso
- * Tipagem pura sem implementacao de regras
- */
-export interface ICurso extends IEntityBase {
-  nome: string;
-  nomeAbreviado: string;
-  campus: ICampus;
-  ofertaFormacao: IOfertaFormacao;
-  imagemCapa: IImagem | null;
-}
 
 /**
  * Entidade de Dominio: Curso
  * Implementa a tipagem ICurso e adiciona regras de negocio
  */
-export class Curso extends BaseDatedEntity implements ICurso {
-  nome!: string;
-  nomeAbreviado!: string;
-  campus!: ICampus;
-  ofertaFormacao!: IOfertaFormacao;
-  imagemCapa!: IImagem | null;
+export class Curso extends BaseDatedEntity {
+  private constructor(
+    public nome: string,
+    public nomeAbreviado: string,
+    public campusId: IdUuid,
+    public ofertaFormacaoId: IdUuid,
+    public imagemCapaId: IdUuid | null,
+  ) {
+    super();
+  }
 
   protected static get entityName(): string {
     return "Curso";
   }
 
-  // ========================================
-  // Validação
-  // ========================================
-
-  /**
-   * Cria uma nova instancia valida de Curso
-   * @throws EntityValidationError se os dados forem invalidos
-   */
   static criar(dados: CursoCreateDto): Curso {
-    const instance = new Curso();
-    instance.nome = dados.nome?.trim() ?? "";
-    instance.nomeAbreviado = dados.nomeAbreviado?.trim() ?? "";
-    instance.imagemCapa = null;
+    const instance = new Curso(
+      dados.nome?.trim() ?? "",
+      dados.nomeAbreviado?.trim() ?? "",
+      dados.campus.id,
+      dados.ofertaFormacao.id,
+      null,
+    );
     instance.initDates();
     instance.validar();
-
     return instance;
   }
 
-  // ========================================
-  // Factory Methods
-  // ========================================
-
-  /**
-   * Reconstroi uma instancia a partir de dados existentes (ex: do banco)
-   */
-  static fromData(dados: Record<string, any>): Curso {
-    const instance = new Curso();
-    Object.assign(instance, dados);
+  static fromData(data: Curso): Curso {
+    const instance = new Curso(
+      data.nome,
+      data.nomeAbreviado,
+      data.campusId,
+      data.ofertaFormacaoId,
+      data.imagemCapaId,
+    );
+    instance.id = data.id;
+    instance.dateCreated = data.dateCreated;
+    instance.dateUpdated = data.dateUpdated;
+    instance.dateDeleted = data.dateDeleted;
     return instance;
   }
 
@@ -74,14 +59,6 @@ export class Curso extends BaseDatedEntity implements ICurso {
     Curso.throwIfInvalid(result);
   }
 
-  // ========================================
-  // Metodos de Dominio
-  // ========================================
-
-  /**
-   * Atualiza os dados do curso
-   * @throws EntityValidationError se os dados forem invalidos
-   */
   atualizar(dados: CursoUpdateDto): void {
     if (dados.nome !== undefined) {
       this.nome = dados.nome?.trim() ?? "";
@@ -95,14 +72,7 @@ export class Curso extends BaseDatedEntity implements ICurso {
     this.validar();
   }
 
-  // ========================================
-  // Metodos especificos do dominio Curso
-  // ========================================
-
-  /**
-   * Verifica se tem imagem de capa
-   */
   temImagemCapa(): boolean {
-    return this.imagemCapa !== null;
+    return this.imagemCapaId !== null;
   }
 }

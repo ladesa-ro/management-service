@@ -1,7 +1,7 @@
 import { Module } from "@nestjs/common";
 import {
-  GRADE_HORARIO_OFERTA_FORMACAO_REPOSITORY_PORT,
   GradeHorarioOfertaFormacaoService,
+  IGradeHorarioOfertaFormacaoRepository,
 } from "@/Ladesa.Management.Application/horarios/grade-horario-oferta-formacao";
 import { GradeHorarioOfertaFormacaoAuthzRegistrySetup } from "@/Ladesa.Management.Application/horarios/grade-horario-oferta-formacao/infrastructure";
 import { GradeHorarioOfertaFormacaoTypeOrmRepositoryAdapter } from "@/Ladesa.Management.Application/horarios/grade-horario-oferta-formacao/infrastructure/persistence/typeorm";
@@ -18,7 +18,7 @@ import { GradeHorarioOfertaFormacaoRestController } from "@/Ladesa.Management.Se
     GradeHorarioOfertaFormacaoGraphqlResolver,
     GradeHorarioOfertaFormacaoAuthzRegistrySetup,
     {
-      provide: GRADE_HORARIO_OFERTA_FORMACAO_REPOSITORY_PORT,
+      provide: IGradeHorarioOfertaFormacaoRepository,
       useClass: GradeHorarioOfertaFormacaoTypeOrmRepositoryAdapter,
     },
   ],

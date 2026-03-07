@@ -13,10 +13,10 @@ import type {
   PerfilListInputDto,
   PerfilListOutputDto,
 } from "@/Ladesa.Management.Application/acesso/perfil/application/dtos";
-import type { IPerfilRepositoryPort } from "@/Ladesa.Management.Application/acesso/perfil/application/ports";
+import type { IPerfilRepository } from "@/Ladesa.Management.Application/acesso/perfil/application/ports";
 import type { UsuarioEntity } from "@/Ladesa.Management.Application/acesso/usuario/infrastructure/persistence/typeorm";
 import type { PerfilEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/PerfilEntity";
-import { createPerfilRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/PerfilRepository";
+import { createPerfilRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/CreatePerfilRepository";
 import {
   APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
@@ -35,7 +35,7 @@ export class PerfilTypeOrmRepositoryAdapter
     PerfilFindOneInputDto,
     PerfilFindOneOutputDto
   >
-  implements IPerfilRepositoryPort
+  implements IPerfilRepository
 {
   protected readonly alias = "vinculo";
   protected readonly authzAction = "vinculo:find";

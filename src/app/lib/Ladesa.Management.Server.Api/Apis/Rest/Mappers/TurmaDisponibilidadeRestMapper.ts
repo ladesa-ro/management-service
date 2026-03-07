@@ -29,6 +29,10 @@ export class TurmaDisponibilidadeRestMapper {
   static toFindOneInput = createFindOneInputMapper(TurmaDisponibilidadeFindOneInputDto);
 
   static toListInput = createListInputMapper(TurmaDisponibilidadeListInputDto, ["filter.id"]);
+  static toListOutputDto = createListOutputMapper(
+    TurmaDisponibilidadeListOutputRestDto,
+    TurmaDisponibilidadeRestMapper.toFindOneOutputDto,
+  );
 
   static toCreateInput(
     dto: TurmaDisponibilidadeCreateInputRestDto,
@@ -38,6 +42,10 @@ export class TurmaDisponibilidadeRestMapper {
     input.turma = { id: dto.turma.id };
     return input;
   }
+
+  // ============================================================================
+  // Output: Core DTO -> Server DTO
+  // ============================================================================
 
   static toUpdateInput(
     params: TurmaDisponibilidadeFindOneInputRestDto,
@@ -55,10 +63,6 @@ export class TurmaDisponibilidadeRestMapper {
     return input;
   }
 
-  // ============================================================================
-  // Output: Core DTO -> Server DTO
-  // ============================================================================
-
   static toFindOneOutputDto(
     output: TurmaDisponibilidadeFindOneOutputDto,
   ): TurmaDisponibilidadeFindOneOutputRestDto {
@@ -69,9 +73,4 @@ export class TurmaDisponibilidadeRestMapper {
     mapDatedFields(dto, output);
     return dto;
   }
-
-  static toListOutputDto = createListOutputMapper(
-    TurmaDisponibilidadeListOutputRestDto,
-    TurmaDisponibilidadeRestMapper.toFindOneOutputDto,
-  );
 }

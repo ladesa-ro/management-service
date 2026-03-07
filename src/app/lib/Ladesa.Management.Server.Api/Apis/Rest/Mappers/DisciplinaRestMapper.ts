@@ -28,6 +28,10 @@ export class DisciplinaRestMapper {
   static toFindOneInput = createFindOneInputMapper(DisciplinaFindOneInputDto);
 
   static toListInput = createListInputMapper(DisciplinaListInputDto, ["filter.id"]);
+  static toListOutputDto = createListOutputMapper(
+    DisciplinaListOutputRestDto,
+    DisciplinaRestMapper.toFindOneOutputDto,
+  );
 
   static toCreateInput(dto: DisciplinaCreateInputRestDto): DisciplinaCreateInputDto {
     const input = new DisciplinaCreateInputDto();
@@ -36,6 +40,10 @@ export class DisciplinaRestMapper {
     input.cargaHoraria = dto.cargaHoraria;
     return input;
   }
+
+  // ============================================================================
+  // Output: Core DTO -> Server DTO
+  // ============================================================================
 
   static toUpdateInput(
     params: DisciplinaFindOneInputRestDto,
@@ -56,10 +64,6 @@ export class DisciplinaRestMapper {
     return input;
   }
 
-  // ============================================================================
-  // Output: Core DTO -> Server DTO
-  // ============================================================================
-
   static toFindOneOutputDto(output: DisciplinaFindOneOutputDto): DisciplinaFindOneOutputRestDto {
     const dto = new DisciplinaFindOneOutputRestDto();
     dto.id = output.id;
@@ -72,9 +76,4 @@ export class DisciplinaRestMapper {
     mapDatedFields(dto, output);
     return dto;
   }
-
-  static toListOutputDto = createListOutputMapper(
-    DisciplinaListOutputRestDto,
-    DisciplinaRestMapper.toFindOneOutputDto,
-  );
 }

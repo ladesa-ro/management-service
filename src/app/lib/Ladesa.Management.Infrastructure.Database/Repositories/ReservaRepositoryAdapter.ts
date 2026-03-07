@@ -7,9 +7,9 @@ import type {
   ReservaListInputDto,
   ReservaListOutputDto,
 } from "@/Ladesa.Management.Application/ambientes/reserva/application/dtos";
-import type { IReservaRepositoryPort } from "@/Ladesa.Management.Application/ambientes/reserva/application/ports";
+import type { IReservaRepository } from "@/Ladesa.Management.Application/ambientes/reserva/application/ports";
 import type { ReservaEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/ReservaEntity";
-import { createReservaRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/ReservaRepository";
+import { createReservaRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/CreateReservaRepository";
 import {
   APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
@@ -27,7 +27,7 @@ export class ReservaTypeOrmRepositoryAdapter
     ReservaFindOneInputDto,
     ReservaFindOneOutputDto
   >
-  implements IReservaRepositoryPort
+  implements IReservaRepository
 {
   protected readonly alias = "reserva";
   protected readonly authzAction = "reserva:find";

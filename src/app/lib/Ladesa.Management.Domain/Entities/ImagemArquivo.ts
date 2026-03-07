@@ -1,68 +1,55 @@
-import type { IEntityBase } from "@/Ladesa.Management.Application/@shared";
+import type { IdUuid } from "@/Ladesa.Management.Application/@shared";
 import { BaseDatedEntity } from "@/Ladesa.Management.Application/@shared";
 import type { ImagemArquivoCreateDto } from "@/Ladesa.Management.Domain/Dtos/ImagemArquivoCreateDto";
 import type { ImagemArquivoUpdateDto } from "@/Ladesa.Management.Domain/Dtos/ImagemArquivoUpdateDto";
-import type { Arquivo, IArquivo } from "@/Ladesa.Management.Domain/Entities/Arquivo";
-import type { IImagem, Imagem } from "@/Ladesa.Management.Domain/Entities/Imagem";
-
-/**
- * Interface que define a estrutura de um ImagemArquivo
- */
-export interface IImagemArquivo extends IEntityBase {
-  largura: number;
-  altura: number;
-  formato: string;
-  mimeType: string;
-  imagem: IImagem;
-  arquivo: IArquivo;
-}
 
 /**
  * Entidade de Domínio: ImagemArquivo
  * Implementa a tipagem IImagemArquivo e adiciona regras de negócio
  */
-export class ImagemArquivo extends BaseDatedEntity implements IImagemArquivo {
-  largura!: number;
-  altura!: number;
-  formato!: string;
-  mimeType!: string;
-  imagem!: Imagem;
-  arquivo!: Arquivo;
+export class ImagemArquivo extends BaseDatedEntity {
+  private constructor(
+    public largura: number,
+    public altura: number,
+    public formato: string,
+    public mimeType: string,
+    public imagemId: IdUuid,
+    public arquivoId: IdUuid,
+  ) {
+    super();
+  }
 
   protected static get entityName(): string {
     return "ImagemArquivo";
   }
 
-  // ========================================
-  // Validação
-  // ========================================
-
-  /**
-   * Cria uma nova instância válida de ImagemArquivo
-   * @throws EntityValidationError se os dados forem inválidos
-   */
   static criar(dados: ImagemArquivoCreateDto): ImagemArquivo {
-    const instance = new ImagemArquivo();
-    instance.largura = dados.largura ?? 0;
-    instance.altura = dados.altura ?? 0;
-    instance.formato = dados.formato?.trim() ?? "";
-    instance.mimeType = dados.mimeType?.trim() ?? "";
+    const instance = new ImagemArquivo(
+      dados.largura ?? 0,
+      dados.altura ?? 0,
+      dados.formato?.trim() ?? "",
+      dados.mimeType?.trim() ?? "",
+      dados.imagem.id,
+      dados.arquivo.id,
+    );
     instance.initDates();
     instance.validar();
-
     return instance;
   }
 
-  // ========================================
-  // Factory Methods
-  // ========================================
-
-  /**
-   * Reconstrói uma instância a partir de dados existentes (ex: do banco)
-   */
-  static fromData(dados: Record<string, any>): ImagemArquivo {
-    const instance = new ImagemArquivo();
-    Object.assign(instance, dados);
+  static fromData(data: ImagemArquivo): ImagemArquivo {
+    const instance = new ImagemArquivo(
+      data.largura,
+      data.altura,
+      data.formato,
+      data.mimeType,
+      data.imagemId,
+      data.arquivoId,
+    );
+    instance.id = data.id;
+    instance.dateCreated = data.dateCreated;
+    instance.dateUpdated = data.dateUpdated;
+    instance.dateDeleted = data.dateDeleted;
     return instance;
   }
 
@@ -77,14 +64,6 @@ export class ImagemArquivo extends BaseDatedEntity implements IImagemArquivo {
     ImagemArquivo.throwIfInvalid(result);
   }
 
-  // ========================================
-  // Métodos de Domínio
-  // ========================================
-
-  /**
-   * Atualiza os dados da imagem arquivo
-   * @throws EntityValidationError se os dados forem inválidos
-   */
   atualizar(dados: ImagemArquivoUpdateDto): void {
     if (dados.largura !== undefined) {
       this.largura = dados.largura ?? 0;

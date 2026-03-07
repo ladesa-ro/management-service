@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { ESTADO_REPOSITORY_PORT } from "@/Ladesa.Management.Application/localidades/estado/application/ports";
+import { IEstadoRepository } from "@/Ladesa.Management.Application/localidades/estado/application/ports";
 import { EstadoService } from "@/Ladesa.Management.Application/localidades/estado/application/use-cases/estado.service";
 import {
   EstadoAuthzRegistrySetup,
@@ -18,7 +18,7 @@ import { EstadoRestController } from "@/Ladesa.Management.Server.Api/Apis/Rest/C
     EstadoGraphqlResolver,
     EstadoAuthzRegistrySetup,
     {
-      provide: ESTADO_REPOSITORY_PORT,
+      provide: IEstadoRepository,
       useClass: EstadoTypeOrmRepositoryAdapter,
     },
   ],

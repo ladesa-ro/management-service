@@ -50,6 +50,12 @@ function mapImagemOutput(imagem: any): any {
 }
 
 export class UsuarioGraphqlMapper {
+  static toFindOneInput = createFindOneInputMapper(UsuarioFindOneInputDto);
+  static toListOutputDto = createListOutputMapper(
+    UsuarioListOutputGraphQlDto,
+    UsuarioGraphqlMapper.toFindOneOutputDto,
+  );
+
   static toListInput(dto: UsuarioListInputGraphQlDto | null): UsuarioListInputDto | null {
     if (!dto) {
       return null;
@@ -63,8 +69,6 @@ export class UsuarioGraphqlMapper {
     input["filter.id"] = dto.filterId;
     return input;
   }
-
-  static toFindOneInput = createFindOneInputMapper(UsuarioFindOneInputDto);
 
   static toCreateInput(dto: UsuarioCreateInputGraphQlDto): UsuarioCreateInputDto {
     const input = new UsuarioCreateInputDto();
@@ -104,9 +108,4 @@ export class UsuarioGraphqlMapper {
     mapDatedFields(dto, output);
     return dto;
   }
-
-  static toListOutputDto = createListOutputMapper(
-    UsuarioListOutputGraphQlDto,
-    UsuarioGraphqlMapper.toFindOneOutputDto,
-  );
 }

@@ -37,6 +37,10 @@ export class ReservaRestMapper {
     "filter.ambiente.bloco.campus.id",
     "filter.usuario.id",
   ]);
+  static toListOutputDto = createListOutputMapper(
+    ReservaListOutputRestDto,
+    ReservaRestMapper.toFindOneOutputDto,
+  );
 
   static toCreateInput(dto: ReservaCreateInputRestDto): ReservaCreateInputDto {
     const input = new ReservaCreateInputDto();
@@ -48,6 +52,10 @@ export class ReservaRestMapper {
     input.ambiente = { id: dto.ambiente.id };
     return input;
   }
+
+  // ============================================================================
+  // Output: Core DTO -> Server DTO
+  // ============================================================================
 
   static toUpdateInput(
     params: ReservaFindOneInputRestDto,
@@ -76,10 +84,6 @@ export class ReservaRestMapper {
     return input;
   }
 
-  // ============================================================================
-  // Output: Core DTO -> Server DTO
-  // ============================================================================
-
   static toFindOneOutputDto(output: ReservaFindOneOutputDto): ReservaFindOneOutputRestDto {
     const dto = new ReservaFindOneOutputRestDto();
     dto.id = output.id;
@@ -92,9 +96,4 @@ export class ReservaRestMapper {
     mapDatedFields(dto, output);
     return dto;
   }
-
-  static toListOutputDto = createListOutputMapper(
-    ReservaListOutputRestDto,
-    ReservaRestMapper.toFindOneOutputDto,
-  );
 }

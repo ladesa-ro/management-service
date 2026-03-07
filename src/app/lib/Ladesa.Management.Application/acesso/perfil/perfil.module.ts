@@ -1,8 +1,5 @@
 import { Module } from "@nestjs/common";
-import {
-  PERFIL_REPOSITORY_PORT,
-  PerfilService,
-} from "@/Ladesa.Management.Application/acesso/perfil";
+import { IPerfilRepository, PerfilService } from "@/Ladesa.Management.Application/acesso/perfil";
 import {
   PerfilAuthzRegistrySetup,
   PerfilTypeOrmRepositoryAdapter,
@@ -22,7 +19,7 @@ import { PerfilRestController } from "@/Ladesa.Management.Server.Api/Apis/Rest/C
     PerfilGraphqlResolver,
     PerfilAuthzRegistrySetup,
     {
-      provide: PERFIL_REPOSITORY_PORT,
+      provide: IPerfilRepository,
       useClass: PerfilTypeOrmRepositoryAdapter,
     },
   ],

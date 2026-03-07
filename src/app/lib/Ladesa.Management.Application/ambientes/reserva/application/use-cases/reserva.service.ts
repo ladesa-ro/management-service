@@ -4,7 +4,7 @@ import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/c
 import { BaseCrudService, type PersistInput } from "@/Ladesa.Management.Application/@shared";
 import { UsuarioService } from "@/Ladesa.Management.Application/acesso/usuario/application/use-cases/usuario.service";
 import { AmbienteService } from "@/Ladesa.Management.Application/ambientes/ambiente/application/use-cases/ambiente.service";
-import { type IReserva, Reserva } from "@/Ladesa.Management.Application/ambientes/reserva";
+import { Reserva } from "@/Ladesa.Management.Application/ambientes/reserva";
 import type {
   ReservaCreateInputDto,
   ReservaFindOneInputDto,
@@ -13,13 +13,12 @@ import type {
   ReservaListOutputDto,
   ReservaUpdateInputDto,
 } from "../dtos";
-import type { IReservaRepositoryPort, IReservaUseCasePort } from "../ports";
-import { RESERVA_REPOSITORY_PORT } from "../ports";
+import { IReservaRepository, type IReservaUseCasePort } from "../ports";
 
 @Injectable()
 export class ReservaService
   extends BaseCrudService<
-    IReserva,
+    Reserva,
     ReservaListInputDto,
     ReservaListOutputDto,
     ReservaFindOneInputDto,
@@ -35,8 +34,8 @@ export class ReservaService
   protected readonly deleteAction = "reserva:delete";
 
   constructor(
-    @Inject(RESERVA_REPOSITORY_PORT)
-    protected readonly repository: IReservaRepositoryPort,
+    @Inject(IReservaRepository)
+    protected readonly repository: IReservaRepository,
     private readonly usuarioService: UsuarioService,
     private readonly ambienteService: AmbienteService,
   ) {
@@ -46,7 +45,7 @@ export class ReservaService
   protected async buildCreateData(
     accessContext: AccessContext,
     dto: ReservaCreateInputDto,
-  ): Promise<Partial<PersistInput<IReserva>>> {
+  ): Promise<Partial<PersistInput<Reserva>>> {
     const ambiente = await this.ambienteService.findByIdStrict(accessContext, {
       id: dto.ambiente.id,
     });
@@ -59,22 +58,26 @@ export class ReservaService
       ambiente: { id: ambiente.id },
       usuario: { id: usuario.id },
     });
-    return { ...domain, ambiente: { id: ambiente.id }, usuario: { id: usuario.id } };
+    return { ...domain };
   }
 
   protected async buildUpdateData(
     accessContext: AccessContext,
     dto: ReservaFindOneInputDto & ReservaUpdateInputDto,
     current: ReservaFindOneOutputDto,
-  ): Promise<Partial<PersistInput<IReserva>>> {
-    const domain = Reserva.fromData(current);
+  ): Promise<Partial<PersistInput<Reserva>>> {
+    const domain = Reserva.fromData({
+      ...current,
+      ambienteId: current.ambiente.id,
+      usuarioId: current.usuario.id,
+    } as unknown as Reserva);
     domain.atualizar({
       situacao: dto.situacao,
       rrule: dto.rrule,
       motivo: dto.motivo,
       tipo: dto.tipo,
     });
-    const result: Partial<PersistInput<IReserva>> = {
+    const result: Partial<PersistInput<Reserva>> = {
       situacao: domain.situacao,
       rrule: domain.rrule,
       motivo: domain.motivo,
@@ -85,12 +88,12 @@ export class ReservaService
       const ambiente = await this.ambienteService.findByIdStrict(accessContext, {
         id: dto.ambiente.id,
       });
-      result.ambiente = { id: ambiente.id };
+      result.ambienteId = ambiente.id;
     }
 
     if (has(dto, "usuario") && dto.usuario !== undefined) {
       const usuario = await this.usuarioService.findByIdSimpleStrict(accessContext, dto.usuario.id);
-      result.usuario = { id: usuario.id };
+      result.usuarioId = usuario.id;
     }
 
     return result;

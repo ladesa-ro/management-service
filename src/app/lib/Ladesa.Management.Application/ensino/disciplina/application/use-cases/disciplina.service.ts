@@ -3,7 +3,7 @@ import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/c
 import { BaseCrudService, type PersistInput } from "@/Ladesa.Management.Application/@shared";
 import { ArquivoService } from "@/Ladesa.Management.Application/armazenamento/arquivo/application/use-cases/arquivo.service";
 import { ImagemService } from "@/Ladesa.Management.Application/armazenamento/imagem/application/use-cases/imagem.service";
-import { Disciplina, type IDisciplina } from "@/Ladesa.Management.Application/ensino/disciplina";
+import { Disciplina } from "@/Ladesa.Management.Application/ensino/disciplina";
 import type {
   DisciplinaCreateInputDto,
   DisciplinaFindOneInputDto,
@@ -12,14 +12,11 @@ import type {
   DisciplinaListOutputDto,
   DisciplinaUpdateInputDto,
 } from "@/Ladesa.Management.Application/ensino/disciplina/application/dtos";
-import {
-  DISCIPLINA_REPOSITORY_PORT,
-  type IDisciplinaRepositoryPort,
-} from "@/Ladesa.Management.Application/ensino/disciplina/application/ports";
+import { IDisciplinaRepository } from "@/Ladesa.Management.Application/ensino/disciplina/application/ports";
 
 @Injectable()
 export class DisciplinaService extends BaseCrudService<
-  IDisciplina,
+  Disciplina,
   DisciplinaListInputDto,
   DisciplinaListOutputDto,
   DisciplinaFindOneInputDto,
@@ -33,8 +30,8 @@ export class DisciplinaService extends BaseCrudService<
   protected readonly deleteAction = "disciplina:delete";
 
   constructor(
-    @Inject(DISCIPLINA_REPOSITORY_PORT)
-    protected readonly repository: IDisciplinaRepositoryPort,
+    @Inject(IDisciplinaRepository)
+    protected readonly repository: IDisciplinaRepository,
     private readonly imagemService: ImagemService,
     private readonly arquivoService: ArquivoService,
   ) {
@@ -63,7 +60,7 @@ export class DisciplinaService extends BaseCrudService<
   protected async buildCreateData(
     _ac: AccessContext,
     dto: DisciplinaCreateInputDto,
-  ): Promise<Partial<PersistInput<IDisciplina>>> {
+  ): Promise<Partial<PersistInput<Disciplina>>> {
     const domain = Disciplina.criar({
       nome: dto.nome,
       nomeAbreviado: dto.nomeAbreviado,
@@ -76,8 +73,11 @@ export class DisciplinaService extends BaseCrudService<
     _ac: AccessContext,
     dto: DisciplinaFindOneInputDto & DisciplinaUpdateInputDto,
     current: DisciplinaFindOneOutputDto,
-  ): Promise<Partial<PersistInput<IDisciplina>>> {
-    const domain = Disciplina.fromData(current);
+  ): Promise<Partial<PersistInput<Disciplina>>> {
+    const domain = Disciplina.fromData({
+      ...current,
+      imagemCapaId: current.imagemCapa?.id ?? null,
+    } as unknown as Disciplina);
     domain.atualizar({
       nome: dto.nome,
       nomeAbreviado: dto.nomeAbreviado,

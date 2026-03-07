@@ -33,6 +33,10 @@ export class CalendarioLetivoRestMapper {
     "filter.campus.id",
     "filter.ofertaFormacao.id",
   ]);
+  static toListOutputDto = createListOutputMapper(
+    CalendarioLetivoListOutputRestDto,
+    CalendarioLetivoRestMapper.toFindOneOutputDto,
+  );
 
   static toCreateInput(dto: CalendarioLetivoCreateInputRestDto): CalendarioLetivoCreateInputDto {
     const input = new CalendarioLetivoCreateInputDto();
@@ -42,6 +46,10 @@ export class CalendarioLetivoRestMapper {
     input.ofertaFormacao = { id: dto.ofertaFormacao.id };
     return input;
   }
+
+  // ============================================================================
+  // Output: Core DTO -> Server DTO
+  // ============================================================================
 
   static toUpdateInput(
     params: CalendarioLetivoFindOneInputRestDto,
@@ -65,10 +73,6 @@ export class CalendarioLetivoRestMapper {
     return input;
   }
 
-  // ============================================================================
-  // Output: Core DTO -> Server DTO
-  // ============================================================================
-
   static toFindOneOutputDto(
     output: CalendarioLetivoFindOneOutputDto,
   ): CalendarioLetivoFindOneOutputRestDto {
@@ -81,9 +85,4 @@ export class CalendarioLetivoRestMapper {
     mapDatedFields(dto, output);
     return dto;
   }
-
-  static toListOutputDto = createListOutputMapper(
-    CalendarioLetivoListOutputRestDto,
-    CalendarioLetivoRestMapper.toFindOneOutputDto,
-  );
 }

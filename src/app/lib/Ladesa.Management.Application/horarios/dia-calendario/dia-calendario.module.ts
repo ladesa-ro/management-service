@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
 import { CalendarioLetivoModule } from "@/Ladesa.Management.Application/horarios/calendario-letivo/calendario-letivo.module";
-import { DIA_CALENDARIO_REPOSITORY_PORT } from "@/Ladesa.Management.Application/horarios/dia-calendario/application/ports";
+import { IDiaCalendarioRepository } from "@/Ladesa.Management.Application/horarios/dia-calendario/application/ports";
 import { DiaCalendarioService } from "@/Ladesa.Management.Application/horarios/dia-calendario/application/use-cases/dia-calendario.service";
 import { DiaCalendarioAuthzRegistrySetup } from "@/Ladesa.Management.Application/horarios/dia-calendario/infrastructure";
 import { DiaCalendarioTypeOrmRepositoryAdapter } from "@/Ladesa.Management.Application/horarios/dia-calendario/infrastructure/persistence/typeorm";
@@ -13,7 +13,7 @@ import { DiaCalendarioRestController } from "@/Ladesa.Management.Server.Api/Apis
   providers: [
     NestJsPaginateAdapter,
     {
-      provide: DIA_CALENDARIO_REPOSITORY_PORT,
+      provide: IDiaCalendarioRepository,
       useClass: DiaCalendarioTypeOrmRepositoryAdapter,
     },
     DiaCalendarioService,

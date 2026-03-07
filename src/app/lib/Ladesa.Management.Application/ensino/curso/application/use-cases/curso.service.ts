@@ -5,7 +5,7 @@ import { BaseCrudService, type PersistInput } from "@/Ladesa.Management.Applicat
 import { CampusService } from "@/Ladesa.Management.Application/ambientes/campus";
 import { ArquivoService } from "@/Ladesa.Management.Application/armazenamento/arquivo/application/use-cases/arquivo.service";
 import { ImagemService } from "@/Ladesa.Management.Application/armazenamento/imagem/application/use-cases/imagem.service";
-import { Curso, type ICurso } from "@/Ladesa.Management.Application/ensino/curso";
+import { Curso } from "@/Ladesa.Management.Application/ensino/curso";
 import type {
   CursoCreateInputDto,
   CursoFindOneInputDto,
@@ -15,8 +15,7 @@ import type {
   CursoUpdateInputDto,
 } from "@/Ladesa.Management.Application/ensino/curso/application/dtos";
 import {
-  CURSO_REPOSITORY_PORT,
-  type ICursoRepositoryPort,
+  ICursoRepository,
   type ICursoUseCasePort,
 } from "@/Ladesa.Management.Application/ensino/curso/application/ports";
 import { OfertaFormacaoService } from "@/Ladesa.Management.Application/ensino/oferta-formacao";
@@ -24,7 +23,7 @@ import { OfertaFormacaoService } from "@/Ladesa.Management.Application/ensino/of
 @Injectable()
 export class CursoService
   extends BaseCrudService<
-    ICurso,
+    Curso,
     CursoListInputDto,
     CursoListOutputDto,
     CursoFindOneInputDto,
@@ -40,8 +39,8 @@ export class CursoService
   protected readonly deleteAction = "curso:delete";
 
   constructor(
-    @Inject(CURSO_REPOSITORY_PORT)
-    protected readonly repository: ICursoRepositoryPort,
+    @Inject(ICursoRepository)
+    protected readonly repository: ICursoRepository,
     private readonly campusService: CampusService,
     private readonly ofertaFormacaoService: OfertaFormacaoService,
     private readonly imagemService: ImagemService,
@@ -72,7 +71,7 @@ export class CursoService
   protected async buildCreateData(
     accessContext: AccessContext,
     dto: CursoCreateInputDto,
-  ): Promise<Partial<PersistInput<ICurso>>> {
+  ): Promise<Partial<PersistInput<Curso>>> {
     const campus = await this.campusService.findByIdSimpleStrict(accessContext, dto.campus.id);
     const ofertaFormacao = await this.ofertaFormacaoService.findByIdSimpleStrict(
       accessContext,
@@ -84,28 +83,29 @@ export class CursoService
       campus: { id: campus.id },
       ofertaFormacao: { id: ofertaFormacao.id },
     });
-    return {
-      ...domain,
-      campus: { id: campus.id },
-      ofertaFormacao: { id: ofertaFormacao.id },
-    };
+    return { ...domain };
   }
 
   protected async buildUpdateData(
     accessContext: AccessContext,
     dto: CursoFindOneInputDto & CursoUpdateInputDto,
     current: CursoFindOneOutputDto,
-  ): Promise<Partial<PersistInput<ICurso>>> {
-    const domain = Curso.fromData(current);
+  ): Promise<Partial<PersistInput<Curso>>> {
+    const domain = Curso.fromData({
+      ...current,
+      campusId: current.campus.id,
+      ofertaFormacaoId: current.ofertaFormacao.id,
+      imagemCapaId: current.imagemCapa?.id ?? null,
+    } as unknown as Curso);
     domain.atualizar({ nome: dto.nome, nomeAbreviado: dto.nomeAbreviado });
-    const result: Partial<PersistInput<ICurso>> = {
+    const result: Partial<PersistInput<Curso>> = {
       nome: domain.nome,
       nomeAbreviado: domain.nomeAbreviado,
     };
 
     if (has(dto, "campus") && dto.campus !== undefined) {
       const campus = await this.campusService.findByIdSimpleStrict(accessContext, dto.campus.id);
-      result.campus = { id: campus.id };
+      result.campusId = campus.id;
     }
 
     if (has(dto, "ofertaFormacao") && dto.ofertaFormacao !== undefined) {
@@ -113,7 +113,7 @@ export class CursoService
         accessContext,
         dto.ofertaFormacao.id,
       );
-      result.ofertaFormacao = { id: ofertaFormacao.id };
+      result.ofertaFormacaoId = ofertaFormacao.id;
     }
 
     return result;

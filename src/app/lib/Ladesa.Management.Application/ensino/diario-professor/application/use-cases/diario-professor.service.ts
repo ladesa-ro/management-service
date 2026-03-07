@@ -4,10 +4,7 @@ import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/c
 import { BaseCrudService, type PersistInput } from "@/Ladesa.Management.Application/@shared";
 import { PerfilService } from "@/Ladesa.Management.Application/acesso/perfil";
 import { DiarioService } from "@/Ladesa.Management.Application/ensino/diario/application/use-cases/diario.service";
-import {
-  DiarioProfessor,
-  type IDiarioProfessor,
-} from "@/Ladesa.Management.Application/ensino/diario-professor";
+import { DiarioProfessor } from "@/Ladesa.Management.Application/ensino/diario-professor";
 import type {
   DiarioProfessorCreateInputDto,
   DiarioProfessorFindOneInputDto,
@@ -16,11 +13,11 @@ import type {
   DiarioProfessorListOutputDto,
   DiarioProfessorUpdateInputDto,
 } from "../dtos";
-import { DIARIO_PROFESSOR_REPOSITORY_PORT, type IDiarioProfessorRepositoryPort } from "../ports";
+import { IDiarioProfessorRepository } from "../ports";
 
 @Injectable()
 export class DiarioProfessorService extends BaseCrudService<
-  IDiarioProfessor,
+  DiarioProfessor,
   DiarioProfessorListInputDto,
   DiarioProfessorListOutputDto,
   DiarioProfessorFindOneInputDto,
@@ -34,8 +31,8 @@ export class DiarioProfessorService extends BaseCrudService<
   protected readonly deleteAction = "diario_professor:delete";
 
   constructor(
-    @Inject(DIARIO_PROFESSOR_REPOSITORY_PORT)
-    protected readonly repository: IDiarioProfessorRepositoryPort,
+    @Inject(IDiarioProfessorRepository)
+    protected readonly repository: IDiarioProfessorRepository,
     private readonly diarioService: DiarioService,
     private readonly perfilService: PerfilService,
   ) {
@@ -45,7 +42,7 @@ export class DiarioProfessorService extends BaseCrudService<
   protected async buildCreateData(
     accessContext: AccessContext,
     dto: DiarioProfessorCreateInputDto,
-  ): Promise<Partial<PersistInput<IDiarioProfessor>>> {
+  ): Promise<Partial<PersistInput<DiarioProfessor>>> {
     let diarioRef: { id: string } | undefined;
     if (has(dto, "diario") && dto.diario) {
       const diario = await this.diarioService.findByIdStrict(accessContext, { id: dto.diario.id });
@@ -63,30 +60,30 @@ export class DiarioProfessorService extends BaseCrudService<
       diario: diarioRef!,
       perfil: perfilRef!,
     });
-    return {
-      ...domain,
-      ...(diarioRef ? { diario: diarioRef } : {}),
-      ...(perfilRef ? { perfil: perfilRef } : {}),
-    };
+    return { ...domain };
   }
 
   protected async buildUpdateData(
     accessContext: AccessContext,
     dto: DiarioProfessorFindOneInputDto & DiarioProfessorUpdateInputDto,
     current: DiarioProfessorFindOneOutputDto,
-  ): Promise<Partial<PersistInput<IDiarioProfessor>>> {
-    const domain = DiarioProfessor.fromData(current);
+  ): Promise<Partial<PersistInput<DiarioProfessor>>> {
+    const domain = DiarioProfessor.fromData({
+      ...current,
+      diarioId: current.diario.id,
+      perfilId: current.perfil.id,
+    } as unknown as DiarioProfessor);
     domain.atualizar({ situacao: dto.situacao });
-    const result: Partial<PersistInput<IDiarioProfessor>> = { situacao: domain.situacao };
+    const result: Partial<PersistInput<DiarioProfessor>> = { situacao: domain.situacao };
 
     if (has(dto, "diario") && dto.diario !== undefined && dto.diario !== null) {
       const diario = await this.diarioService.findByIdStrict(accessContext, { id: dto.diario.id });
-      result.diario = { id: diario.id };
+      result.diarioId = diario.id;
     }
 
     if (has(dto, "perfil") && dto.perfil !== undefined && dto.perfil !== null) {
       const perfil = await this.perfilService.findByIdStrict(accessContext, { id: dto.perfil.id });
-      result.perfil = { id: perfil.id };
+      result.perfilId = perfil.id;
     }
 
     return result;

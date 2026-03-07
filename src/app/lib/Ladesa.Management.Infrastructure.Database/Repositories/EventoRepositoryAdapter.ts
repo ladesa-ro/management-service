@@ -8,9 +8,9 @@ import type {
   EventoListInputDto,
   EventoListOutputDto,
 } from "@/Ladesa.Management.Application/horarios/evento";
-import type { IEventoRepositoryPort } from "@/Ladesa.Management.Application/horarios/evento/application/ports/out";
+import type { IEventoRepository } from "@/Ladesa.Management.Application/horarios/evento/application/ports/out";
 import type { EventoEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/EventoEntity";
-import { createEventoRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/EventoRepository";
+import { createEventoRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/CreateEventoRepository";
 import {
   APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
@@ -32,7 +32,7 @@ export class EventoTypeOrmRepositoryAdapter
     EventoFindOneInputDto,
     EventoFindOneOutputDto
   >
-  implements IEventoRepositoryPort
+  implements IEventoRepository
 {
   protected readonly alias = "evento";
   protected readonly authzAction = "evento:find";

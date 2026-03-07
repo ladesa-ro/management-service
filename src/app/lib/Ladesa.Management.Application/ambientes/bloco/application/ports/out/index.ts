@@ -1,1 +1,1 @@
-export * from "@/Ladesa.Management.Domain/Repositories/BlocoRepositoryPort";
+export * from "@/Ladesa.Management.Domain/Repositories/IBlocoRepository";

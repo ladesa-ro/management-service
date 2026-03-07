@@ -1,17 +1,17 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { DataSource } from "typeorm";
 import type {
-  IUsuarioRepositoryPort,
+  IUsuarioRepository,
   UsuarioFindOneInputDto,
   UsuarioFindOneOutputDto,
   UsuarioListInputDto,
   UsuarioListOutputDto,
 } from "@/Ladesa.Management.Application/acesso/usuario";
 import type { UsuarioEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/UsuarioEntity";
-import { createCursoRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/CursoRepository";
-import { createDisciplinaRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/DisciplinaRepository";
-import { createTurmaRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/TurmaRepository";
-import { createUsuarioRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/UsuarioRepository";
+import { createCursoRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/CreateCursoRepository";
+import { createDisciplinaRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/CreateDisciplinaRepository";
+import { createTurmaRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/CreateTurmaRepository";
+import { createUsuarioRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/CreateUsuarioRepository";
 import {
   APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
@@ -30,7 +30,7 @@ export class UsuarioTypeOrmRepositoryAdapter
     UsuarioFindOneInputDto,
     UsuarioFindOneOutputDto
   >
-  implements IUsuarioRepositoryPort
+  implements IUsuarioRepository
 {
   protected readonly alias = "usuario";
   protected readonly authzAction = "usuario:find";

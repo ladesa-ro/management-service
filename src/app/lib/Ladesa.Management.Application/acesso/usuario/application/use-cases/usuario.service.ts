@@ -23,9 +23,8 @@ import type {
   UsuarioUpdateInputDto,
 } from "@/Ladesa.Management.Application/acesso/usuario/application/dtos";
 import {
-  type IUsuarioRepositoryPort,
+  IUsuarioRepository,
   type IUsuarioUseCasePort,
-  USUARIO_REPOSITORY_PORT,
 } from "@/Ladesa.Management.Application/acesso/usuario/application/ports";
 import { ArquivoService } from "@/Ladesa.Management.Application/armazenamento/arquivo/application/use-cases/arquivo.service";
 import { ImagemService } from "@/Ladesa.Management.Application/armazenamento/imagem/application/use-cases/imagem.service";
@@ -33,8 +32,8 @@ import { ImagemService } from "@/Ladesa.Management.Application/armazenamento/ima
 @Injectable()
 export class UsuarioService implements IUsuarioUseCasePort {
   constructor(
-    @Inject(USUARIO_REPOSITORY_PORT)
-    private usuarioRepository: IUsuarioRepositoryPort,
+    @Inject(IUsuarioRepository)
+    private usuarioRepository: IUsuarioRepository,
     private keycloakService: KeycloakService,
     private imagemService: ImagemService,
     private arquivoService: ArquivoService,

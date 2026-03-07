@@ -43,6 +43,10 @@ export class TurmaRestMapper {
     "filter.curso.ofertaFormacao.nome",
     "filter.curso.ofertaFormacao.slug",
   ]);
+  static toListOutputDto = createListOutputMapper(
+    TurmaListOutputRestDto,
+    TurmaRestMapper.toFindOneOutputDto,
+  );
 
   static toCreateInput(dto: TurmaCreateInputRestDto): TurmaCreateInputDto {
     const input = new TurmaCreateInputDto();
@@ -51,6 +55,10 @@ export class TurmaRestMapper {
     input.ambientePadraoAula = dto.ambientePadraoAula ? { id: dto.ambientePadraoAula.id } : null;
     return input;
   }
+
+  // ============================================================================
+  // Output: Core DTO -> Server DTO
+  // ============================================================================
 
   static toUpdateInput(
     params: TurmaFindOneInputRestDto,
@@ -70,10 +78,6 @@ export class TurmaRestMapper {
     return input;
   }
 
-  // ============================================================================
-  // Output: Core DTO -> Server DTO
-  // ============================================================================
-
   static toFindOneOutputDto(output: TurmaFindOneOutputDto): TurmaFindOneOutputRestDto {
     const dto = new TurmaFindOneOutputRestDto();
     dto.id = output.id;
@@ -88,9 +92,4 @@ export class TurmaRestMapper {
     mapDatedFields(dto, output);
     return dto;
   }
-
-  static toListOutputDto = createListOutputMapper(
-    TurmaListOutputRestDto,
-    TurmaRestMapper.toFindOneOutputDto,
-  );
 }

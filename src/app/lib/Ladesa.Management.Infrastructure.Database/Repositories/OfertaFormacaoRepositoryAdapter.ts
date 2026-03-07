@@ -7,9 +7,9 @@ import type {
   OfertaFormacaoListInputDto,
   OfertaFormacaoListOutputDto,
 } from "@/Ladesa.Management.Application/ensino/oferta-formacao";
-import type { IOfertaFormacaoRepositoryPort } from "@/Ladesa.Management.Application/ensino/oferta-formacao/application/ports";
+import type { IOfertaFormacaoRepository } from "@/Ladesa.Management.Application/ensino/oferta-formacao/application/ports";
 import type { OfertaFormacaoEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/OfertaFormacaoEntity";
-import { createOfertaFormacaoRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/OfertaFormacaoRepository";
+import { createOfertaFormacaoRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/CreateOfertaFormacaoRepository";
 import {
   APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
@@ -27,7 +27,7 @@ export class OfertaFormacaoTypeOrmRepositoryAdapter
     OfertaFormacaoFindOneInputDto,
     OfertaFormacaoFindOneOutputDto
   >
-  implements IOfertaFormacaoRepositoryPort
+  implements IOfertaFormacaoRepository
 {
   protected readonly alias = "oferta_formacao";
   protected readonly authzAction = "oferta_formacao:find";

@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
 import { KeycloakModule } from "@/Ladesa.Management.Application/@seguranca/provedor-identidade";
-import { USUARIO_REPOSITORY_PORT } from "@/Ladesa.Management.Application/acesso/usuario/application/ports";
+import { IUsuarioRepository } from "@/Ladesa.Management.Application/acesso/usuario/application/ports";
 import { UsuarioService } from "@/Ladesa.Management.Application/acesso/usuario/application/use-cases/usuario.service";
 import {
   UsuarioAuthzRegistrySetup,
@@ -21,7 +21,7 @@ import { UsuarioRestController } from "@/Ladesa.Management.Server.Api/Apis/Rest/
     UsuarioGraphqlResolver,
     UsuarioAuthzRegistrySetup,
     {
-      provide: USUARIO_REPOSITORY_PORT,
+      provide: IUsuarioRepository,
       useClass: UsuarioTypeOrmRepositoryAdapter,
     },
   ],

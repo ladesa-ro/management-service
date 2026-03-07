@@ -15,20 +15,6 @@ export abstract class BaseDatedEntity extends BaseEntity {
   // Helpers de Datas
   // ========================================
 
-  protected initDates(): void {
-    this.dateCreated = new Date().toISOString();
-    this.dateUpdated = new Date().toISOString();
-    this.dateDeleted = null;
-  }
-
-  protected touchUpdated(): void {
-    this.dateUpdated = new Date().toISOString();
-  }
-
-  // ========================================
-  // Métodos de Estado
-  // ========================================
-
   isAtivo(): boolean {
     return this.dateDeleted === null;
   }
@@ -37,7 +23,21 @@ export abstract class BaseDatedEntity extends BaseEntity {
     return this.isAtivo();
   }
 
+  // ========================================
+  // Métodos de Estado
+  // ========================================
+
   podeSerDeletado(): boolean {
     return this.isAtivo();
+  }
+
+  protected initDates(): void {
+    this.dateCreated = new Date().toISOString();
+    this.dateUpdated = new Date().toISOString();
+    this.dateDeleted = null;
+  }
+
+  protected touchUpdated(): void {
+    this.dateUpdated = new Date().toISOString();
   }
 }

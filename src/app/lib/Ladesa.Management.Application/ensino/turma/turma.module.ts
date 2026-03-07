@@ -3,7 +3,7 @@ import { AmbienteModule } from "@/Ladesa.Management.Application/ambientes/ambien
 import { ArquivoModule } from "@/Ladesa.Management.Application/armazenamento/arquivo/arquivo.module";
 import { ImagemModule } from "@/Ladesa.Management.Application/armazenamento/imagem/imagem.module";
 import { CursoModule } from "@/Ladesa.Management.Application/ensino/curso/curso.module";
-import { TURMA_REPOSITORY_PORT } from "@/Ladesa.Management.Application/ensino/turma/application/ports";
+import { ITurmaRepository } from "@/Ladesa.Management.Application/ensino/turma/application/ports";
 import { TurmaService } from "@/Ladesa.Management.Application/ensino/turma/application/use-cases/turma.service";
 import {
   TurmaAuthzRegistrySetup,
@@ -22,7 +22,7 @@ import { TurmaRestController } from "@/Ladesa.Management.Server.Api/Apis/Rest/Co
     TurmaGraphqlResolver,
     TurmaAuthzRegistrySetup,
     {
-      provide: TURMA_REPOSITORY_PORT,
+      provide: ITurmaRepository,
       useClass: TurmaTypeOrmRepositoryAdapter,
     },
   ],

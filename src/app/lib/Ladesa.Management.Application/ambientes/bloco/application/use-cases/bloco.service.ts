@@ -6,7 +6,7 @@ import {
   type IAuthorizationServicePort,
   type PersistInput,
 } from "@/Ladesa.Management.Application/@shared";
-import { Bloco, type IBloco } from "@/Ladesa.Management.Application/ambientes/bloco";
+import { Bloco } from "@/Ladesa.Management.Application/ambientes/bloco";
 import type {
   BlocoCreateInputDto,
   BlocoFindOneInputDto,
@@ -16,8 +16,7 @@ import type {
   BlocoUpdateInputDto,
 } from "@/Ladesa.Management.Application/ambientes/bloco/application/dtos";
 import {
-  BLOCO_REPOSITORY_PORT,
-  type IBlocoRepositoryPort,
+  IBlocoRepository,
   type IBlocoUseCasePort,
 } from "@/Ladesa.Management.Application/ambientes/bloco/application/ports";
 import { CampusService } from "@/Ladesa.Management.Application/ambientes/campus";
@@ -27,7 +26,7 @@ import { ImagemService } from "@/Ladesa.Management.Application/armazenamento/ima
 @Injectable()
 export class BlocoService
   extends BaseCrudService<
-    IBloco,
+    Bloco,
     BlocoListInputDto,
     BlocoListOutputDto,
     BlocoFindOneInputDto,
@@ -43,8 +42,8 @@ export class BlocoService
   protected readonly deleteAction = "bloco:delete";
 
   constructor(
-    @Inject(BLOCO_REPOSITORY_PORT)
-    protected readonly repository: IBlocoRepositoryPort,
+    @Inject(IBlocoRepository)
+    protected readonly repository: IBlocoRepository,
     @Inject(AUTHORIZATION_SERVICE_PORT)
     protected readonly authorizationService: IAuthorizationServicePort,
     private readonly campusService: CampusService,
@@ -76,22 +75,26 @@ export class BlocoService
   protected async buildCreateData(
     accessContext: AccessContext,
     dto: BlocoCreateInputDto,
-  ): Promise<Partial<PersistInput<IBloco>>> {
+  ): Promise<Partial<PersistInput<Bloco>>> {
     const campus = await this.campusService.findByIdSimpleStrict(accessContext, dto.campus.id);
     const domain = Bloco.criar({
       nome: dto.nome,
       codigo: dto.codigo,
       campus: { id: campus.id },
     });
-    return { ...domain, campus: { id: campus.id } };
+    return { ...domain };
   }
 
   protected async buildUpdateData(
     _ac: AccessContext,
     dto: BlocoFindOneInputDto & BlocoUpdateInputDto,
     current: BlocoFindOneOutputDto,
-  ): Promise<Partial<PersistInput<IBloco>>> {
-    const domain = Bloco.fromData(current);
+  ): Promise<Partial<PersistInput<Bloco>>> {
+    const domain = Bloco.fromData({
+      ...current,
+      campusId: current.campus.id,
+      imagemCapaId: current.imagemCapa?.id ?? null,
+    } as unknown as Bloco);
     domain.atualizar({ nome: dto.nome, codigo: dto.codigo });
     return { nome: domain.nome, codigo: domain.codigo };
   }

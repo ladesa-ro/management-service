@@ -6,9 +6,9 @@ import type {
   EstadoListInputDto,
   EstadoListOutputDto,
 } from "@/Ladesa.Management.Application/localidades/estado/application/dtos";
-import type { IEstadoRepositoryPort } from "@/Ladesa.Management.Application/localidades/estado/application/ports";
+import type { IEstadoRepository } from "@/Ladesa.Management.Application/localidades/estado/application/ports";
 import type { EstadoEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/EstadoEntity";
-import { createEstadoRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/EstadoRepository";
+import { createEstadoRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/CreateEstadoRepository";
 import {
   APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
@@ -31,7 +31,7 @@ export class EstadoTypeOrmRepositoryAdapter
     EstadoFindOneInputDto,
     EstadoFindOneOutputDto
   >
-  implements IEstadoRepositoryPort
+  implements IEstadoRepository
 {
   protected readonly alias = "estado";
   protected readonly authzAction = "estado:find";

@@ -1,9 +1,6 @@
 import { Module } from "@nestjs/common";
 import { CalendarioLetivoModule } from "@/Ladesa.Management.Application/horarios/calendario-letivo/calendario-letivo.module";
-import {
-  EVENTO_REPOSITORY_PORT,
-  EventoService,
-} from "@/Ladesa.Management.Application/horarios/evento";
+import { EventoService, IEventoRepository } from "@/Ladesa.Management.Application/horarios/evento";
 import { EventoAuthzRegistrySetup } from "@/Ladesa.Management.Application/horarios/evento/infrastructure";
 import { EventoTypeOrmRepositoryAdapter } from "@/Ladesa.Management.Application/horarios/evento/infrastructure/persistence/typeorm";
 import { NestJsPaginateAdapter } from "@/Ladesa.Management.Infrastructure.Database/typeorm";
@@ -18,7 +15,7 @@ import { EventoRestController } from "@/Ladesa.Management.Server.Api/Apis/Rest/C
     EventoGraphqlResolver,
     EventoAuthzRegistrySetup,
     {
-      provide: EVENTO_REPOSITORY_PORT,
+      provide: IEventoRepository,
       useClass: EventoTypeOrmRepositoryAdapter,
     },
   ],

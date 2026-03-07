@@ -21,6 +21,14 @@ import {
 import { IntervaloDeTempoGraphqlMapper } from "@/Ladesa.Management.Server.Api/Apis/GraphQl/Mappers/IntervaloDeTempoGraphqlMapper";
 
 export class GradeHorarioOfertaFormacaoIntervaloDeTempoGraphqlMapper {
+  static toFindOneInput = createFindOneInputMapper(
+    GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInputDto,
+  );
+  static toListOutputDto = createListOutputMapper(
+    GradeHorarioOfertaFormacaoIntervaloDeTempoListOutputGraphQlDto,
+    GradeHorarioOfertaFormacaoIntervaloDeTempoGraphqlMapper.toFindOneOutputDto,
+  );
+
   static toListInput(
     dto: GradeHorarioOfertaFormacaoIntervaloDeTempoListInputGraphQlDto | null,
   ): GradeHorarioOfertaFormacaoIntervaloDeTempoListInputDto | null {
@@ -36,10 +44,6 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoGraphqlMapper {
     input["filter.id"] = dto.filterId;
     return input;
   }
-
-  static toFindOneInput = createFindOneInputMapper(
-    GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInputDto,
-  );
 
   static toCreateInput(
     dto: GradeHorarioOfertaFormacaoIntervaloDeTempoCreateInputGraphQlDto,
@@ -76,9 +80,4 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempoGraphqlMapper {
     mapDatedFields(dto, output);
     return dto;
   }
-
-  static toListOutputDto = createListOutputMapper(
-    GradeHorarioOfertaFormacaoIntervaloDeTempoListOutputGraphQlDto,
-    GradeHorarioOfertaFormacaoIntervaloDeTempoGraphqlMapper.toFindOneOutputDto,
-  );
 }

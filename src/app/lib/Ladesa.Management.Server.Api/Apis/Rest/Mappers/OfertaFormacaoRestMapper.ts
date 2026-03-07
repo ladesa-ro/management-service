@@ -31,6 +31,10 @@ export class OfertaFormacaoRestMapper {
     "filter.id",
     "filter.modalidade.id",
   ]);
+  static toListOutputDto = createListOutputMapper(
+    OfertaFormacaoListOutputRestDto,
+    OfertaFormacaoRestMapper.toFindOneOutputDto,
+  );
 
   static toCreateInput(dto: OfertaFormacaoCreateInputRestDto): OfertaFormacaoCreateInputDto {
     const input = new OfertaFormacaoCreateInputDto();
@@ -39,6 +43,10 @@ export class OfertaFormacaoRestMapper {
     input.modalidade = { id: dto.modalidade.id };
     return input;
   }
+
+  // ============================================================================
+  // Output: Core DTO -> Server DTO
+  // ============================================================================
 
   static toUpdateInput(
     params: OfertaFormacaoFindOneInputRestDto,
@@ -59,10 +67,6 @@ export class OfertaFormacaoRestMapper {
     return input;
   }
 
-  // ============================================================================
-  // Output: Core DTO -> Server DTO
-  // ============================================================================
-
   static toFindOneOutputDto(
     output: OfertaFormacaoFindOneOutputDto,
   ): OfertaFormacaoFindOneOutputRestDto {
@@ -74,9 +78,4 @@ export class OfertaFormacaoRestMapper {
     mapDatedFields(dto, output);
     return dto;
   }
-
-  static toListOutputDto = createListOutputMapper(
-    OfertaFormacaoListOutputRestDto,
-    OfertaFormacaoRestMapper.toFindOneOutputDto,
-  );
 }

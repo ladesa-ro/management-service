@@ -21,6 +21,12 @@ import { AmbienteGraphqlMapper } from "@/Ladesa.Management.Server.Api/Apis/Graph
 import { UsuarioGraphqlMapper } from "@/Ladesa.Management.Server.Api/Apis/GraphQl/Mappers/UsuarioGraphqlMapper";
 
 export class ReservaGraphqlMapper {
+  static toFindOneInput = createFindOneInputMapper(ReservaFindOneInputDto);
+  static toListOutputDto = createListOutputMapper(
+    ReservaListOutputGraphQlDto,
+    ReservaGraphqlMapper.toFindOneOutputDto,
+  );
+
   static toListInput(dto: ReservaListInputGraphQlDto | null): ReservaListInputDto | null {
     if (!dto) {
       return null;
@@ -39,8 +45,6 @@ export class ReservaGraphqlMapper {
     input["filter.ambiente.bloco.campus.id"] = dto.filterAmbienteBlocoCampusId;
     return input;
   }
-
-  static toFindOneInput = createFindOneInputMapper(ReservaFindOneInputDto);
 
   static toCreateInput(dto: ReservaCreateInputGraphQlDto): ReservaCreateInputDto {
     const input = new ReservaCreateInputDto();
@@ -80,9 +84,4 @@ export class ReservaGraphqlMapper {
     mapDatedFields(dto, output);
     return dto;
   }
-
-  static toListOutputDto = createListOutputMapper(
-    ReservaListOutputGraphQlDto,
-    ReservaGraphqlMapper.toFindOneOutputDto,
-  );
 }

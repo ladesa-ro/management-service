@@ -6,7 +6,7 @@ import { AmbienteService } from "@/Ladesa.Management.Application/ambientes/ambie
 import { ArquivoService } from "@/Ladesa.Management.Application/armazenamento/arquivo/application/use-cases/arquivo.service";
 import { ImagemService } from "@/Ladesa.Management.Application/armazenamento/imagem/application/use-cases/imagem.service";
 import { CursoService } from "@/Ladesa.Management.Application/ensino/curso";
-import { type ITurma, Turma } from "@/Ladesa.Management.Application/ensino/turma";
+import { Turma } from "@/Ladesa.Management.Application/ensino/turma";
 import type {
   TurmaCreateInputDto,
   TurmaFindOneInputDto,
@@ -15,11 +15,11 @@ import type {
   TurmaListOutputDto,
   TurmaUpdateInputDto,
 } from "../dtos";
-import { type ITurmaRepositoryPort, TURMA_REPOSITORY_PORT } from "../ports";
+import { ITurmaRepository } from "../ports";
 
 @Injectable()
 export class TurmaService extends BaseCrudService<
-  ITurma,
+  Turma,
   TurmaListInputDto,
   TurmaListOutputDto,
   TurmaFindOneInputDto,
@@ -33,8 +33,8 @@ export class TurmaService extends BaseCrudService<
   protected readonly deleteAction = "turma:delete";
 
   constructor(
-    @Inject(TURMA_REPOSITORY_PORT)
-    protected readonly repository: ITurmaRepositoryPort,
+    @Inject(ITurmaRepository)
+    protected readonly repository: ITurmaRepository,
     private readonly ambienteService: AmbienteService,
     private readonly cursoService: CursoService,
     private readonly imagemService: ImagemService,
@@ -65,7 +65,7 @@ export class TurmaService extends BaseCrudService<
   protected async buildCreateData(
     accessContext: AccessContext,
     dto: TurmaCreateInputDto,
-  ): Promise<Partial<PersistInput<ITurma>>> {
+  ): Promise<Partial<PersistInput<Turma>>> {
     const curso = await this.cursoService.findByIdSimpleStrict(accessContext, dto.curso.id);
 
     let ambientePadraoAulaRef: { id: string } | null = null;
@@ -81,36 +81,37 @@ export class TurmaService extends BaseCrudService<
       curso: { id: curso.id },
       ambientePadraoAula: ambientePadraoAulaRef,
     });
-    return {
-      ...domain,
-      curso: { id: curso.id },
-      ambientePadraoAula: ambientePadraoAulaRef,
-    };
+    return { ...domain };
   }
 
   protected async buildUpdateData(
     accessContext: AccessContext,
     dto: TurmaFindOneInputDto & TurmaUpdateInputDto,
     current: TurmaFindOneOutputDto,
-  ): Promise<Partial<PersistInput<ITurma>>> {
-    const domain = Turma.fromData(current);
+  ): Promise<Partial<PersistInput<Turma>>> {
+    const domain = Turma.fromData({
+      ...current,
+      cursoId: current.curso.id,
+      ambientePadraoAulaId: current.ambientePadraoAula?.id ?? null,
+      imagemCapaId: current.imagemCapa?.id ?? null,
+    } as unknown as Turma);
     domain.atualizar({ periodo: dto.periodo });
-    const result: Partial<PersistInput<ITurma>> = { periodo: domain.periodo };
+    const result: Partial<PersistInput<Turma>> = { periodo: domain.periodo };
 
     if (has(dto, "ambientePadraoAula") && dto.ambientePadraoAula !== undefined) {
       if (dto.ambientePadraoAula !== null) {
         const ambientePadraoAula = await this.ambienteService.findByIdStrict(accessContext, {
           id: dto.ambientePadraoAula.id,
         });
-        result.ambientePadraoAula = { id: ambientePadraoAula.id };
+        result.ambientePadraoAulaId = ambientePadraoAula.id;
       } else {
-        result.ambientePadraoAula = null;
+        result.ambientePadraoAulaId = null;
       }
     }
 
     if (has(dto, "curso") && dto.curso !== undefined) {
       const curso = await this.cursoService.findByIdSimpleStrict(accessContext, dto.curso.id);
-      result.curso = { id: curso.id };
+      result.cursoId = curso.id;
     }
 
     return result;

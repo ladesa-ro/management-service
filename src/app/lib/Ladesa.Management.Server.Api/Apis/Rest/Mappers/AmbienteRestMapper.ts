@@ -32,6 +32,10 @@ export class AmbienteRestMapper {
     "filter.bloco.id",
     "filter.bloco.campus.id",
   ]);
+  static toListOutputDto = createListOutputMapper(
+    AmbienteListOutputRestDto,
+    AmbienteRestMapper.toFindOneOutputDto,
+  );
 
   static toCreateInput(dto: AmbienteCreateInputRestDto): AmbienteCreateInputDto {
     const input = new AmbienteCreateInputDto();
@@ -43,6 +47,10 @@ export class AmbienteRestMapper {
     input.bloco = { id: dto.bloco.id };
     return input;
   }
+
+  // ============================================================================
+  // Output: Core DTO -> Server DTO
+  // ============================================================================
 
   static toUpdateInput(
     params: AmbienteFindOneInputRestDto,
@@ -71,10 +79,6 @@ export class AmbienteRestMapper {
     return input;
   }
 
-  // ============================================================================
-  // Output: Core DTO -> Server DTO
-  // ============================================================================
-
   static toFindOneOutputDto(output: AmbienteFindOneOutputDto): AmbienteFindOneOutputRestDto {
     const dto = new AmbienteFindOneOutputRestDto();
     dto.id = output.id;
@@ -90,9 +94,4 @@ export class AmbienteRestMapper {
     mapDatedFields(dto, output);
     return dto;
   }
-
-  static toListOutputDto = createListOutputMapper(
-    AmbienteListOutputRestDto,
-    AmbienteRestMapper.toFindOneOutputDto,
-  );
 }

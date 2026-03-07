@@ -1,64 +1,49 @@
-import type { IEntityBase } from "@/Ladesa.Management.Application/@shared";
+import type { IdUuid } from "@/Ladesa.Management.Application/@shared";
 import { BaseDatedEntity } from "@/Ladesa.Management.Application/@shared";
 import type { DisciplinaCreateDto } from "@/Ladesa.Management.Domain/Dtos/DisciplinaCreateDto";
 import type { DisciplinaUpdateDto } from "@/Ladesa.Management.Domain/Dtos/DisciplinaUpdateDto";
-import type { IImagem } from "@/Ladesa.Management.Domain/Entities/Imagem";
-
-/**
- * Interface que define a estrutura de dados de Disciplina
- * Tipagem pura sem implementação de regras
- */
-export interface IDisciplina extends IEntityBase {
-  nome: string;
-  nomeAbreviado: string;
-  cargaHoraria: number;
-  imagemCapa: IImagem | null;
-}
 
 /**
  * Entidade de Domínio: Disciplina
  * Implementa a tipagem IDisciplina e adiciona regras de negócio
  */
-export class Disciplina extends BaseDatedEntity implements IDisciplina {
-  nome!: string;
-  nomeAbreviado!: string;
-  cargaHoraria!: number;
-  imagemCapa!: IImagem | null;
+export class Disciplina extends BaseDatedEntity {
+  private constructor(
+    public nome: string,
+    public nomeAbreviado: string,
+    public cargaHoraria: number,
+    public imagemCapaId: IdUuid | null,
+  ) {
+    super();
+  }
 
   protected static get entityName(): string {
     return "Disciplina";
   }
 
-  // ========================================
-  // Validação
-  // ========================================
-
-  /**
-   * Cria uma nova instância válida de Disciplina
-   * @throws EntityValidationError se os dados forem inválidos
-   */
   static criar(dados: DisciplinaCreateDto): Disciplina {
-    const instance = new Disciplina();
-    instance.nome = dados.nome?.trim() ?? "";
-    instance.nomeAbreviado = dados.nomeAbreviado?.trim() ?? "";
-    instance.cargaHoraria = dados.cargaHoraria ?? 0;
-    instance.imagemCapa = null;
+    const instance = new Disciplina(
+      dados.nome?.trim() ?? "",
+      dados.nomeAbreviado?.trim() ?? "",
+      dados.cargaHoraria ?? 0,
+      null,
+    );
     instance.initDates();
     instance.validar();
-
     return instance;
   }
 
-  // ========================================
-  // Factory Methods
-  // ========================================
-
-  /**
-   * Reconstrói uma instância a partir de dados existentes (ex: do banco)
-   */
-  static fromData(dados: Record<string, any>): Disciplina {
-    const instance = new Disciplina();
-    Object.assign(instance, dados);
+  static fromData(data: Disciplina): Disciplina {
+    const instance = new Disciplina(
+      data.nome,
+      data.nomeAbreviado,
+      data.cargaHoraria,
+      data.imagemCapaId,
+    );
+    instance.id = data.id;
+    instance.dateCreated = data.dateCreated;
+    instance.dateUpdated = data.dateUpdated;
+    instance.dateDeleted = data.dateDeleted;
     return instance;
   }
 
@@ -73,14 +58,6 @@ export class Disciplina extends BaseDatedEntity implements IDisciplina {
     Disciplina.throwIfInvalid(result);
   }
 
-  // ========================================
-  // Métodos de Domínio
-  // ========================================
-
-  /**
-   * Atualiza os dados da disciplina
-   * @throws EntityValidationError se os dados forem inválidos
-   */
   atualizar(dados: DisciplinaUpdateDto): void {
     if (dados.nome !== undefined) {
       this.nome = dados.nome?.trim() ?? "";
@@ -98,20 +75,10 @@ export class Disciplina extends BaseDatedEntity implements IDisciplina {
     this.validar();
   }
 
-  // ========================================
-  // Métodos específicos do domínio Disciplina
-  // ========================================
-
-  /**
-   * Verifica se tem imagem de capa
-   */
   temImagemCapa(): boolean {
-    return this.imagemCapa !== null;
+    return this.imagemCapaId !== null;
   }
 
-  /**
-   * Verifica se a carga horária é válida
-   */
   temCargaHorariaValida(): boolean {
     return this.cargaHoraria > 0;
   }

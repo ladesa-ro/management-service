@@ -2,14 +2,14 @@ import { Inject, Injectable } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
 import { DataSource } from "typeorm";
 import type {
-  IOfertaFormacaoNivelFormacaoRepositoryPort,
+  IOfertaFormacaoNivelFormacaoRepository,
   OfertaFormacaoNivelFormacaoFindOneInputDto,
   OfertaFormacaoNivelFormacaoFindOneOutputDto,
   OfertaFormacaoNivelFormacaoListInputDto,
   OfertaFormacaoNivelFormacaoListOutputDto,
 } from "@/Ladesa.Management.Application/ensino/oferta-formacao-nivel-formacao";
 import type { OfertaFormacaoNivelFormacaoEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/OfertaFormacaoNivelFormacaoEntity";
-import { createOfertaFormacaoNivelFormacaoRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/OfertaFormacaoNivelFormacaoRepository";
+import { createOfertaFormacaoNivelFormacaoRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/CreateOfertaFormacaoNivelFormacaoRepository";
 import {
   APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
@@ -27,7 +27,7 @@ export class OfertaFormacaoNivelFormacaoTypeOrmRepositoryAdapter
     OfertaFormacaoNivelFormacaoFindOneInputDto,
     OfertaFormacaoNivelFormacaoFindOneOutputDto
   >
-  implements IOfertaFormacaoNivelFormacaoRepositoryPort
+  implements IOfertaFormacaoNivelFormacaoRepository
 {
   protected readonly alias = "oferta_formacao_nivel_formacao";
   protected readonly authzAction = "oferta_formacao_nivel_formacao:find";

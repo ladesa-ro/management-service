@@ -2,8 +2,8 @@ import { Module } from "@nestjs/common";
 import { CampusModule } from "@/Ladesa.Management.Application/ambientes/campus/campus.module";
 import { OfertaFormacaoModule } from "@/Ladesa.Management.Application/ensino/oferta-formacao/oferta-formacao.module";
 import {
-  CALENDARIO_LETIVO_REPOSITORY_PORT,
   CalendarioLetivoService,
+  ICalendarioLetivoRepository,
 } from "@/Ladesa.Management.Application/horarios/calendario-letivo";
 import { CalendarioLetivoAuthzRegistrySetup } from "@/Ladesa.Management.Application/horarios/calendario-letivo/infrastructure";
 import { CalendarioLetivoTypeOrmRepositoryAdapter } from "@/Ladesa.Management.Application/horarios/calendario-letivo/infrastructure/persistence/typeorm";
@@ -20,7 +20,7 @@ import { CalendarioLetivoRestController } from "@/Ladesa.Management.Server.Api/A
     CalendarioLetivoGraphqlResolver,
     CalendarioLetivoAuthzRegistrySetup,
     {
-      provide: CALENDARIO_LETIVO_REPOSITORY_PORT,
+      provide: ICalendarioLetivoRepository,
       useClass: CalendarioLetivoTypeOrmRepositoryAdapter,
     },
   ],

@@ -34,6 +34,10 @@ export class CursoRestMapper {
     "filter.campus.id",
     "filter.ofertaFormacao.id",
   ]);
+  static toListOutputDto = createListOutputMapper(
+    CursoListOutputRestDto,
+    CursoRestMapper.toFindOneOutputDto,
+  );
 
   static toCreateInput(dto: CursoCreateInputRestDto): CursoCreateInputDto {
     const input = new CursoCreateInputDto();
@@ -43,6 +47,10 @@ export class CursoRestMapper {
     input.ofertaFormacao = { id: dto.ofertaFormacao.id };
     return input;
   }
+
+  // ============================================================================
+  // Output: Core DTO -> Server DTO
+  // ============================================================================
 
   static toUpdateInput(
     params: CursoFindOneInputRestDto,
@@ -65,10 +73,6 @@ export class CursoRestMapper {
     return input;
   }
 
-  // ============================================================================
-  // Output: Core DTO -> Server DTO
-  // ============================================================================
-
   static toFindOneOutputDto(output: CursoFindOneOutputDto): CursoFindOneOutputRestDto {
     const dto = new CursoFindOneOutputRestDto();
     dto.id = output.id;
@@ -82,9 +86,4 @@ export class CursoRestMapper {
     mapDatedFields(dto, output);
     return dto;
   }
-
-  static toListOutputDto = createListOutputMapper(
-    CursoListOutputRestDto,
-    CursoRestMapper.toFindOneOutputDto,
-  );
 }

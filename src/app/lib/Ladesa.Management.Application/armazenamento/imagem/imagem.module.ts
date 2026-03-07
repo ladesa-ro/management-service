@@ -1,8 +1,8 @@
 import { Global, Module } from "@nestjs/common";
 import { ArquivoModule } from "@/Ladesa.Management.Application/armazenamento/arquivo/arquivo.module";
 import {
-  IMAGEM_ARQUIVO_REPOSITORY_PORT,
-  IMAGEM_TRANSACTION_PORT,
+  IImagemArquivoRepository,
+  IImagemTransaction,
 } from "@/Ladesa.Management.Application/armazenamento/imagem/application/ports";
 import { ImagemService } from "@/Ladesa.Management.Application/armazenamento/imagem/application/use-cases/imagem.service";
 import { ImagemTypeOrmRepositoryAdapter } from "@/Ladesa.Management.Application/armazenamento/imagem/infrastructure/persistence/typeorm";
@@ -11,8 +11,8 @@ import { ImagemArquivoTypeOrmRepositoryAdapter } from "@/Ladesa.Management.Appli
 /**
  * Modulo Imagem configurado com Arquitetura Hexagonal
  * - ImagemService: Implementa casos de uso (porta de entrada)
- * - ImagemTypeOrmRepositoryAdapter: Implementa IImagemTransactionPort (porta de saida)
- * - ImagemArquivoTypeOrmRepositoryAdapter: Implementa IImagemArquivoRepositoryPort (porta de saida)
+ * - ImagemTypeOrmRepositoryAdapter: Implementa IImagemTransaction (porta de saida)
+ * - ImagemArquivoTypeOrmRepositoryAdapter: Implementa IImagemArquivoRepository (porta de saida)
  */
 @Global()
 @Module({
@@ -20,11 +20,11 @@ import { ImagemArquivoTypeOrmRepositoryAdapter } from "@/Ladesa.Management.Appli
   controllers: [],
   providers: [
     {
-      provide: IMAGEM_TRANSACTION_PORT,
+      provide: IImagemTransaction,
       useClass: ImagemTypeOrmRepositoryAdapter,
     },
     {
-      provide: IMAGEM_ARQUIVO_REPOSITORY_PORT,
+      provide: IImagemArquivoRepository,
       useClass: ImagemArquivoTypeOrmRepositoryAdapter,
     },
     ImagemService,

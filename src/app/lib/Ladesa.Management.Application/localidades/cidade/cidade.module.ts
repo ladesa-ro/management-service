@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { CIDADE_REPOSITORY_PORT } from "@/Ladesa.Management.Application/localidades/cidade/application/ports";
+import { ICidadeRepository } from "@/Ladesa.Management.Application/localidades/cidade/application/ports";
 import { CidadeService } from "@/Ladesa.Management.Application/localidades/cidade/application/use-cases/cidade.service";
 import {
   CidadeAuthzRegistrySetup,
@@ -18,7 +18,7 @@ import { CidadeRestController } from "@/Ladesa.Management.Server.Api/Apis/Rest/C
     CidadeGraphqlResolver,
     CidadeAuthzRegistrySetup,
     {
-      provide: CIDADE_REPOSITORY_PORT,
+      provide: ICidadeRepository,
       useClass: CidadeTypeOrmRepositoryAdapter,
     },
   ],

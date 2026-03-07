@@ -1,59 +1,39 @@
-import type { IEntityBase } from "@/Ladesa.Management.Application/@shared";
+import type { IdUuid } from "@/Ladesa.Management.Application/@shared";
 import { BaseDatedEntity } from "@/Ladesa.Management.Application/@shared";
 import type { OfertaFormacaoNivelFormacaoCreateDto } from "@/Ladesa.Management.Domain/Dtos/OfertaFormacaoNivelFormacaoCreateDto";
-import type {
-  INivelFormacao,
-  NivelFormacao,
-} from "@/Ladesa.Management.Domain/Entities/NivelFormacao";
-import type {
-  IOfertaFormacao,
-  OfertaFormacao,
-} from "@/Ladesa.Management.Domain/Entities/OfertaFormacao";
-
-export interface IOfertaFormacaoNivelFormacao extends IEntityBase {
-  nivelFormacao: INivelFormacao;
-  ofertaFormacao: IOfertaFormacao;
-}
 
 /**
  * Entidade de Domínio: OfertaFormacaoNivelFormacao
  * Entidade de relacionamento N:N entre OfertaFormacao e NivelFormacao
  */
-export class OfertaFormacaoNivelFormacao
-  extends BaseDatedEntity
-  implements IOfertaFormacaoNivelFormacao
-{
-  nivelFormacao!: NivelFormacao;
-  ofertaFormacao!: OfertaFormacao;
+export class OfertaFormacaoNivelFormacao extends BaseDatedEntity {
+  private constructor(
+    public nivelFormacaoId: IdUuid,
+    public ofertaFormacaoId: IdUuid,
+  ) {
+    super();
+  }
 
   protected static get entityName(): string {
     return "OfertaFormacaoNivelFormacao";
   }
 
-  // ========================================
-  // Validação
-  // ========================================
-
-  /**
-   * Cria uma nova instância válida de OfertaFormacaoNivelFormacao
-   */
-  static criar(_dados: OfertaFormacaoNivelFormacaoCreateDto): OfertaFormacaoNivelFormacao {
-    const instance = new OfertaFormacaoNivelFormacao();
+  static criar(dados: OfertaFormacaoNivelFormacaoCreateDto): OfertaFormacaoNivelFormacao {
+    const instance = new OfertaFormacaoNivelFormacao(
+      dados.nivelFormacao.id,
+      dados.ofertaFormacao.id,
+    );
     instance.initDates();
     instance.validar();
     return instance;
   }
 
-  // ========================================
-  // Factory Methods
-  // ========================================
-
-  /**
-   * Reconstrói uma instância a partir de dados existentes (ex: do banco)
-   */
-  static fromData(dados: Record<string, any>): OfertaFormacaoNivelFormacao {
-    const instance = new OfertaFormacaoNivelFormacao();
-    Object.assign(instance, dados);
+  static fromData(data: OfertaFormacaoNivelFormacao): OfertaFormacaoNivelFormacao {
+    const instance = new OfertaFormacaoNivelFormacao(data.nivelFormacaoId, data.ofertaFormacaoId);
+    instance.id = data.id;
+    instance.dateCreated = data.dateCreated;
+    instance.dateUpdated = data.dateUpdated;
+    instance.dateDeleted = data.dateDeleted;
     return instance;
   }
 

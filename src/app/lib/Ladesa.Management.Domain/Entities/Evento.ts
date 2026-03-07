@@ -1,78 +1,61 @@
-import type { IEntityBase } from "@/Ladesa.Management.Application/@shared";
+import type { IdUuid } from "@/Ladesa.Management.Application/@shared";
 import {
   BaseDatedEntity,
   type ScalarDateTimeString,
 } from "@/Ladesa.Management.Application/@shared";
-import type {
-  CalendarioLetivo,
-  ICalendarioLetivo,
-} from "@/Ladesa.Management.Application/horarios/calendario-letivo";
 import type { EventoCreateDto } from "@/Ladesa.Management.Domain/Dtos/EventoCreateDto";
 import type { EventoUpdateDto } from "@/Ladesa.Management.Domain/Dtos/EventoUpdateDto";
-import type { Ambiente, IAmbiente } from "@/Ladesa.Management.Domain/Entities/Ambiente";
-
-/**
- * Interface que define a estrutura de um Evento
- */
-export interface IEvento extends IEntityBase {
-  nome: string | null;
-  rrule: string;
-  cor: string | null;
-  dataInicio: ScalarDateTimeString | null;
-  dataFim: ScalarDateTimeString | null;
-  calendario: ICalendarioLetivo;
-  ambiente: IAmbiente | null;
-}
 
 /**
  * Entidade de Domínio: Evento
  * Implementa a tipagem IEvento e adiciona regras de negócio
  */
-export class Evento extends BaseDatedEntity implements IEvento {
-  nome!: string | null;
-  rrule!: string;
-  cor!: string | null;
-  dataInicio!: ScalarDateTimeString | null;
-  dataFim!: ScalarDateTimeString | null;
-  calendario!: CalendarioLetivo;
-  ambiente!: Ambiente | null;
+export class Evento extends BaseDatedEntity {
+  private constructor(
+    public rrule: string,
+    public nome: string | null,
+    public cor: string | null,
+    public dataInicio: ScalarDateTimeString | null,
+    public dataFim: ScalarDateTimeString | null,
+    public calendarioId: IdUuid,
+    public ambienteId: IdUuid | null,
+  ) {
+    super();
+  }
 
   protected static get entityName(): string {
     return "Evento";
   }
 
-  // ========================================
-  // Validação
-  // ========================================
-
-  /**
-   * Cria uma nova instância válida de Evento
-   * @throws EntityValidationError se os dados forem inválidos
-   */
   static criar(dados: EventoCreateDto): Evento {
-    const instance = new Evento();
-    instance.rrule = dados.rrule?.trim() ?? "";
-    instance.nome = dados.nome?.trim() || null;
-    instance.cor = dados.cor?.trim() || null;
-    instance.dataInicio = dados.dataInicio ?? null;
-    instance.dataFim = dados.dataFim ?? null;
-    instance.ambiente = null;
+    const instance = new Evento(
+      dados.rrule?.trim() ?? "",
+      dados.nome?.trim() || null,
+      dados.cor?.trim() || null,
+      dados.dataInicio ?? null,
+      dados.dataFim ?? null,
+      dados.calendario.id,
+      dados.ambiente?.id ?? null,
+    );
     instance.initDates();
     instance.validar();
-
     return instance;
   }
 
-  // ========================================
-  // Factory Methods
-  // ========================================
-
-  /**
-   * Reconstrói uma instância a partir de dados existentes (ex: do banco)
-   */
-  static fromData(dados: Record<string, any>): Evento {
-    const instance = new Evento();
-    Object.assign(instance, dados);
+  static fromData(data: Evento): Evento {
+    const instance = new Evento(
+      data.rrule,
+      data.nome,
+      data.cor,
+      data.dataInicio,
+      data.dataFim,
+      data.calendarioId,
+      data.ambienteId,
+    );
+    instance.id = data.id;
+    instance.dateCreated = data.dateCreated;
+    instance.dateUpdated = data.dateUpdated;
+    instance.dateDeleted = data.dateDeleted;
     return instance;
   }
 
@@ -82,14 +65,6 @@ export class Evento extends BaseDatedEntity implements IEvento {
     Evento.throwIfInvalid(result);
   }
 
-  // ========================================
-  // Métodos de Domínio
-  // ========================================
-
-  /**
-   * Atualiza os dados do evento
-   * @throws EntityValidationError se os dados forem inválidos
-   */
   atualizar(dados: EventoUpdateDto): void {
     if (dados.rrule !== undefined) {
       this.rrule = dados.rrule?.trim() ?? "";

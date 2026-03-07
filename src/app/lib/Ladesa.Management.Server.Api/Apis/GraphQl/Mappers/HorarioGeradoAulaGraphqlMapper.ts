@@ -22,6 +22,12 @@ import {
 import { IntervaloDeTempoGraphqlMapper } from "@/Ladesa.Management.Server.Api/Apis/GraphQl/Mappers/IntervaloDeTempoGraphqlMapper";
 
 export class HorarioGeradoAulaGraphqlMapper {
+  static toFindOneInput = createFindOneInputMapper(HorarioGeradoAulaFindOneInputDto);
+  static toListOutputDto = createListOutputMapper(
+    HorarioGeradoAulaListOutputGraphQlDto,
+    HorarioGeradoAulaGraphqlMapper.toFindOneOutputDto,
+  );
+
   static toListInput(
     dto: HorarioGeradoAulaListInputGraphQlDto | null,
   ): HorarioGeradoAulaListInputDto | null {
@@ -37,13 +43,6 @@ export class HorarioGeradoAulaGraphqlMapper {
     input["filter.id"] = dto.filterId;
     input["filter.horarioGerado.id"] = dto.filterHorarioGeradoId;
     return input;
-  }
-
-  static toFindOneInput = createFindOneInputMapper(HorarioGeradoAulaFindOneInputDto);
-
-  private static dateToString(date: Date | string | undefined): string | undefined {
-    if (date === undefined) return undefined;
-    return date instanceof Date ? date.toISOString() : date;
   }
 
   static toCreateInput(
@@ -96,8 +95,8 @@ export class HorarioGeradoAulaGraphqlMapper {
     return dto;
   }
 
-  static toListOutputDto = createListOutputMapper(
-    HorarioGeradoAulaListOutputGraphQlDto,
-    HorarioGeradoAulaGraphqlMapper.toFindOneOutputDto,
-  );
+  private static dateToString(date: Date | string | undefined): string | undefined {
+    if (date === undefined) return undefined;
+    return date instanceof Date ? date.toISOString() : date;
+  }
 }

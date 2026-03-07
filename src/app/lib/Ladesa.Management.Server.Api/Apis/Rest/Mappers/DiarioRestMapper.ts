@@ -37,6 +37,10 @@ export class DiarioRestMapper {
     "filter.disciplina.id",
     "filter.calendarioLetivo.id",
   ]);
+  static toListOutputDto = createListOutputMapper(
+    DiarioListOutputRestDto,
+    DiarioRestMapper.toFindOneOutputDto,
+  );
 
   static toCreateInput(dto: DiarioCreateInputRestDto): DiarioCreateInputDto {
     const input = new DiarioCreateInputDto();
@@ -49,6 +53,10 @@ export class DiarioRestMapper {
     }
     return input;
   }
+
+  // ============================================================================
+  // Output: Core DTO -> Server DTO
+  // ============================================================================
 
   static toUpdateInput(
     params: DiarioFindOneInputRestDto,
@@ -74,10 +82,6 @@ export class DiarioRestMapper {
     return input;
   }
 
-  // ============================================================================
-  // Output: Core DTO -> Server DTO
-  // ============================================================================
-
   static toFindOneOutputDto(output: DiarioFindOneOutputDto): DiarioFindOneOutputRestDto {
     const dto = new DiarioFindOneOutputRestDto();
     dto.id = output.id;
@@ -94,9 +98,4 @@ export class DiarioRestMapper {
     mapDatedFields(dto, output);
     return dto;
   }
-
-  static toListOutputDto = createListOutputMapper(
-    DiarioListOutputRestDto,
-    DiarioRestMapper.toFindOneOutputDto,
-  );
 }

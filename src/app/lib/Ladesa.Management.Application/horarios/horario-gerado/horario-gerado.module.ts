@@ -1,8 +1,8 @@
 import { Module } from "@nestjs/common";
 import { CalendarioLetivoModule } from "@/Ladesa.Management.Application/horarios/calendario-letivo/calendario-letivo.module";
 import {
-  HORARIO_GERADO_REPOSITORY_PORT,
   HorarioGeradoService,
+  IHorarioGeradoRepository,
 } from "@/Ladesa.Management.Application/horarios/horario-gerado";
 import { HorarioGeradoAuthzRegistrySetup } from "@/Ladesa.Management.Application/horarios/horario-gerado/infrastructure";
 import { HorarioGeradoTypeOrmRepositoryAdapter } from "@/Ladesa.Management.Application/horarios/horario-gerado/infrastructure/persistence/typeorm";
@@ -19,7 +19,7 @@ import { HorarioGeradoRestController } from "@/Ladesa.Management.Server.Api/Apis
     HorarioGeradoAuthzRegistrySetup,
     HorarioGeradoGraphqlResolver,
     {
-      provide: HORARIO_GERADO_REPOSITORY_PORT,
+      provide: IHorarioGeradoRepository,
       useClass: HorarioGeradoTypeOrmRepositoryAdapter,
     },
   ],

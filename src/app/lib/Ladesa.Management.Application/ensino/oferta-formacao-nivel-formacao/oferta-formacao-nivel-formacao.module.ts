@@ -2,7 +2,7 @@ import { Module } from "@nestjs/common";
 import { NivelFormacaoModule } from "@/Ladesa.Management.Application/ensino/nivel-formacao/nivel-formacao.module";
 import { OfertaFormacaoModule } from "@/Ladesa.Management.Application/ensino/oferta-formacao/oferta-formacao.module";
 import {
-  OFERTA_FORMACAO_NIVEL_FORMACAO_REPOSITORY_PORT,
+  IOfertaFormacaoNivelFormacaoRepository,
   OfertaFormacaoNivelFormacaoService,
 } from "@/Ladesa.Management.Application/ensino/oferta-formacao-nivel-formacao";
 import { OfertaFormacaoNivelFormacaoAuthzRegistrySetup } from "@/Ladesa.Management.Application/ensino/oferta-formacao-nivel-formacao/infrastructure";
@@ -20,7 +20,7 @@ import { OfertaFormacaoNivelFormacaoRestController } from "@/Ladesa.Management.S
     OfertaFormacaoNivelFormacaoAuthzRegistrySetup,
     OfertaFormacaoNivelFormacaoGraphqlResolver,
     {
-      provide: OFERTA_FORMACAO_NIVEL_FORMACAO_REPOSITORY_PORT,
+      provide: IOfertaFormacaoNivelFormacaoRepository,
       useClass: OfertaFormacaoNivelFormacaoTypeOrmRepositoryAdapter,
     },
   ],

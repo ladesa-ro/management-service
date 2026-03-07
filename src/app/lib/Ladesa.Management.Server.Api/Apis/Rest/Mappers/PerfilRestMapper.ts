@@ -32,6 +32,14 @@ export class PerfilRestMapper {
     "filter.campus.id",
     "filter.usuario.id",
   ]);
+  static toListOutputDto = createListOutputMapper(
+    PerfilListOutputRestDto,
+    PerfilRestMapper.toFindOneOutputDto,
+  );
+
+  // ============================================================================
+  // Output: Core DTO -> Server DTO
+  // ============================================================================
 
   static toSetVinculosInput(dto: PerfilSetVinculosInputRestDto): PerfilSetVinculosInputDto {
     const input = new PerfilSetVinculosInputDto();
@@ -40,10 +48,6 @@ export class PerfilRestMapper {
     input.usuario = { id: dto.usuario.id };
     return input;
   }
-
-  // ============================================================================
-  // Output: Core DTO -> Server DTO
-  // ============================================================================
 
   static toFindOneOutputDto(output: PerfilFindOneOutputDto): PerfilFindOneOutputRestDto {
     const dto = new PerfilFindOneOutputRestDto();
@@ -55,9 +59,4 @@ export class PerfilRestMapper {
     mapDatedFields(dto, output);
     return dto;
   }
-
-  static toListOutputDto = createListOutputMapper(
-    PerfilListOutputRestDto,
-    PerfilRestMapper.toFindOneOutputDto,
-  );
 }

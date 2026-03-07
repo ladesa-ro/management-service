@@ -34,6 +34,10 @@ export class AulaRestMapper {
     "filter.diario.id",
     "filter.intervaloDeTempo.id",
   ]);
+  static toListOutputDto = createListOutputMapper(
+    AulaListOutputRestDto,
+    AulaRestMapper.toFindOneOutputDto,
+  );
 
   static toCreateInput(dto: AulaCreateInputRestDto): AulaCreateInputDto {
     const input = new AulaCreateInputDto();
@@ -46,6 +50,10 @@ export class AulaRestMapper {
     }
     return input;
   }
+
+  // ============================================================================
+  // Output: Core DTO -> Server DTO
+  // ============================================================================
 
   static toUpdateInput(
     params: AulaFindOneInputRestDto,
@@ -71,10 +79,6 @@ export class AulaRestMapper {
     return input;
   }
 
-  // ============================================================================
-  // Output: Core DTO -> Server DTO
-  // ============================================================================
-
   static toFindOneOutputDto(output: AulaFindOneOutputDto): AulaFindOneOutputRestDto {
     const dto = new AulaFindOneOutputRestDto();
     dto.id = output.id;
@@ -86,9 +90,4 @@ export class AulaRestMapper {
     mapDatedFields(dto, output);
     return dto;
   }
-
-  static toListOutputDto = createListOutputMapper(
-    AulaListOutputRestDto,
-    AulaRestMapper.toFindOneOutputDto,
-  );
 }

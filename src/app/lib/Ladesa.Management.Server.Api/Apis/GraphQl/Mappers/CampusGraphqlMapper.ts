@@ -19,6 +19,11 @@ import {
 import { EnderecoGraphqlMapper } from "@/Ladesa.Management.Server.Api/Apis/GraphQl/Mappers/EnderecoGraphqlMapper";
 
 export class CampusGraphqlMapper {
+  static toListOutputDto = createListOutputMapper(
+    CampusListOutputGraphQlDto,
+    CampusGraphqlMapper.toFindOneOutputDto,
+  );
+
   static toListInput(dto: CampusListInputGraphQlDto | null): CampusListInputDto | null {
     if (!dto) {
       return null;
@@ -101,9 +106,4 @@ export class CampusGraphqlMapper {
     mapDatedFields(dto, output);
     return dto;
   }
-
-  static toListOutputDto = createListOutputMapper(
-    CampusListOutputGraphQlDto,
-    CampusGraphqlMapper.toFindOneOutputDto,
-  );
 }

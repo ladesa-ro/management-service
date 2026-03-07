@@ -18,6 +18,11 @@ import { CampusGraphqlMapper } from "@/Ladesa.Management.Server.Api/Apis/GraphQl
 import { UsuarioGraphqlMapper } from "@/Ladesa.Management.Server.Api/Apis/GraphQl/Mappers/UsuarioGraphqlMapper";
 
 export class PerfilGraphqlMapper {
+  static toListOutputDto = createListOutputMapper(
+    PerfilListOutputGraphQlDto,
+    PerfilGraphqlMapper.toFindOneOutputDto,
+  );
+
   static toListInput(dto: PerfilListInputGraphQlDto | null): PerfilListInputDto | null {
     if (!dto) {
       return null;
@@ -61,9 +66,4 @@ export class PerfilGraphqlMapper {
     mapDatedFields(dto, output);
     return dto;
   }
-
-  static toListOutputDto = createListOutputMapper(
-    PerfilListOutputGraphQlDto,
-    PerfilGraphqlMapper.toFindOneOutputDto,
-  );
 }

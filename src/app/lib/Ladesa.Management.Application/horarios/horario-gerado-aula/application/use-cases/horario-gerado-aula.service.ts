@@ -4,10 +4,7 @@ import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/c
 import { BaseCrudService, type PersistInput } from "@/Ladesa.Management.Application/@shared";
 import { DiarioProfessorService } from "@/Ladesa.Management.Application/ensino/diario-professor/application/use-cases/diario-professor.service";
 import { HorarioGeradoService } from "@/Ladesa.Management.Application/horarios/horario-gerado";
-import {
-  HorarioGeradoAula,
-  type IHorarioGeradoAula,
-} from "@/Ladesa.Management.Application/horarios/horario-gerado-aula";
+import { HorarioGeradoAula } from "@/Ladesa.Management.Application/horarios/horario-gerado-aula";
 import { IntervaloDeTempoService } from "@/Ladesa.Management.Application/horarios/intervalo-de-tempo/application/use-cases/intervalo-de-tempo.service";
 import type {
   HorarioGeradoAulaCreateInputDto,
@@ -17,14 +14,11 @@ import type {
   HorarioGeradoAulaListOutputDto,
   HorarioGeradoAulaUpdateInputDto,
 } from "../dtos";
-import {
-  HORARIO_GERADO_AULA_REPOSITORY_PORT,
-  type IHorarioGeradoAulaRepositoryPort,
-} from "../ports";
+import { IHorarioGeradoAulaRepository } from "../ports";
 
 @Injectable()
 export class HorarioGeradoAulaService extends BaseCrudService<
-  IHorarioGeradoAula,
+  HorarioGeradoAula,
   HorarioGeradoAulaListInputDto,
   HorarioGeradoAulaListOutputDto,
   HorarioGeradoAulaFindOneInputDto,
@@ -38,8 +32,8 @@ export class HorarioGeradoAulaService extends BaseCrudService<
   protected readonly deleteAction = "horario_gerado_aula:delete";
 
   constructor(
-    @Inject(HORARIO_GERADO_AULA_REPOSITORY_PORT)
-    protected readonly repository: IHorarioGeradoAulaRepositoryPort,
+    @Inject(IHorarioGeradoAulaRepository)
+    protected readonly repository: IHorarioGeradoAulaRepository,
     private readonly diarioProfessorService: DiarioProfessorService,
     private readonly horarioGeradoService: HorarioGeradoService,
     private readonly intervaloDeTempoService: IntervaloDeTempoService,
@@ -50,7 +44,7 @@ export class HorarioGeradoAulaService extends BaseCrudService<
   protected async buildCreateData(
     accessContext: AccessContext,
     dto: HorarioGeradoAulaCreateInputDto,
-  ): Promise<Partial<PersistInput<IHorarioGeradoAula>>> {
+  ): Promise<Partial<PersistInput<HorarioGeradoAula>>> {
     const result: Record<string, any> = { data: dto.data };
 
     if (dto.diarioProfessor) {
@@ -58,7 +52,7 @@ export class HorarioGeradoAulaService extends BaseCrudService<
         accessContext,
         dto.diarioProfessor,
       );
-      result.diarioProfessor = { id: diarioProfessor.id };
+      result.diarioProfessorId = diarioProfessor.id;
     }
 
     if (dto.horarioGerado) {
@@ -66,7 +60,7 @@ export class HorarioGeradoAulaService extends BaseCrudService<
         accessContext,
         dto.horarioGerado,
       );
-      result.horarioGerado = { id: horarioGerado.id };
+      result.horarioGeradoId = horarioGerado.id;
     }
 
     if (dto.intervaloDeTempo) {
@@ -74,27 +68,32 @@ export class HorarioGeradoAulaService extends BaseCrudService<
         accessContext,
         dto.intervaloDeTempo,
       );
-      result.intervaloDeTempo = { id: intervalo!.id };
+      result.intervaloDeTempoId = intervalo!.id;
     }
 
-    return result as IHorarioGeradoAula;
+    return result as HorarioGeradoAula;
   }
 
   protected async buildUpdateData(
     accessContext: AccessContext,
     dto: HorarioGeradoAulaFindOneInputDto & HorarioGeradoAulaUpdateInputDto,
     current: HorarioGeradoAulaFindOneOutputDto,
-  ): Promise<Partial<PersistInput<IHorarioGeradoAula>>> {
-    const domain = HorarioGeradoAula.fromData(current);
+  ): Promise<Partial<PersistInput<HorarioGeradoAula>>> {
+    const domain = HorarioGeradoAula.fromData({
+      ...current,
+      diarioProfessorId: current.diarioProfessor.id,
+      horarioGeradoId: current.horarioGerado.id,
+      intervaloDeTempoId: current.intervaloDeTempo.id,
+    } as unknown as HorarioGeradoAula);
     domain.atualizar({ data: dto.data });
-    const result: Partial<PersistInput<IHorarioGeradoAula>> = { data: domain.data };
+    const result: Partial<PersistInput<HorarioGeradoAula>> = { data: domain.data };
 
     if (has(dto, "diarioProfessor") && dto.diarioProfessor !== undefined) {
       const diarioProfessor = await this.diarioProfessorService.findByIdStrict(
         accessContext,
         dto.diarioProfessor!,
       );
-      result.diarioProfessor = { id: diarioProfessor.id };
+      result.diarioProfessorId = diarioProfessor.id;
     }
 
     if (has(dto, "horarioGerado") && dto.horarioGerado !== undefined) {
@@ -102,7 +101,7 @@ export class HorarioGeradoAulaService extends BaseCrudService<
         accessContext,
         dto.horarioGerado,
       );
-      result.horarioGerado = { id: horarioGerado.id };
+      result.horarioGeradoId = horarioGerado.id;
     }
 
     if (has(dto, "intervaloDeTempo") && dto.intervaloDeTempo !== undefined) {
@@ -110,7 +109,7 @@ export class HorarioGeradoAulaService extends BaseCrudService<
         accessContext,
         dto.intervaloDeTempo!,
       );
-      result.intervaloDeTempo = { id: intervaloDeTempo!.id };
+      result.intervaloDeTempoId = intervaloDeTempo!.id;
     }
 
     return result;

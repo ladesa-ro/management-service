@@ -3,70 +3,41 @@ import type { EstadoCreateDto } from "@/Ladesa.Management.Domain/Dtos/EstadoCrea
 import type { EstadoUpdateDto } from "@/Ladesa.Management.Domain/Dtos/EstadoUpdateDto";
 
 /**
- * Tipagem da entidade Estado
- * Define a estrutura de dados sem comportamento
- */
-export interface IEstado {
-  /** Identificador do estado (numérico - IBGE) */
-  id: IdNumeric;
-
-  /** Nome oficial do estado */
-  nome: string;
-
-  /** Sigla do estado (ex: SP, RJ, MG) */
-  sigla: string;
-}
-
-/**
  * Entidade de Domínio: Estado
  * Entidade de referência (códigos IBGE)
  */
-export class Estado extends BaseEntity implements IEstado {
-  id!: IdNumeric;
-  nome!: string;
-  sigla!: string;
+export class Estado extends BaseEntity {
+  private constructor(
+    public id: IdNumeric,
+    public nome: string,
+    public sigla: string,
+  ) {
+    super();
+  }
 
   protected static get entityName(): string {
     return "Estado";
   }
 
-  // ========================================
-  // Validação
-  // ========================================
-
-  /**
-   * Cria uma nova instância válida de Estado
-   * @throws EntityValidationError se os dados forem inválidos
-   */
   static criar(dados: EstadoCreateDto): Estado {
-    const instance = new Estado();
-    instance.id = dados.id;
-    instance.nome = dados.nome?.trim() ?? "";
-    instance.sigla = dados.sigla?.trim().toUpperCase() ?? "";
+    const instance = new Estado(
+      dados.id,
+      dados.nome?.trim() ?? "",
+      dados.sigla?.trim().toUpperCase() ?? "",
+    );
     instance.validar();
     return instance;
   }
 
-  // ========================================
-  // Factory Methods
-  // ========================================
-
-  /**
-   * Reconstrói uma instância a partir de dados existentes (ex: do banco)
-   */
-  static fromData(dados: Record<string, any>): Estado {
-    const instance = new Estado();
-    Object.assign(instance, dados);
-    return instance;
+  static fromData(data: Estado): Estado {
+    return new Estado(data.id, data.nome, data.sigla);
   }
 
   validar(): void {
     const { result, rules } = Estado.createValidation();
-
     rules.required(this.nome, "nome");
     rules.minLength(this.nome, "nome", 1);
     rules.required(this.sigla, "sigla");
-
     rules.custom(
       this.sigla,
       "sigla",
@@ -74,18 +45,9 @@ export class Estado extends BaseEntity implements IEstado {
       "sigla deve ter 2 letras maiusculas",
       "format",
     );
-
     Estado.throwIfInvalid(result);
   }
 
-  // ========================================
-  // Métodos de Domínio
-  // ========================================
-
-  /**
-   * Atualiza os dados do estado
-   * @throws EntityValidationError se os dados forem inválidos
-   */
   atualizar(dados: EstadoUpdateDto): void {
     if (dados.nome !== undefined) {
       this.nome = dados.nome?.trim() ?? "";

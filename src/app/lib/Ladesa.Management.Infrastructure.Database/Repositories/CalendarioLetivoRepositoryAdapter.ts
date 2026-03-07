@@ -6,10 +6,10 @@ import type {
   CalendarioLetivoFindOneOutputDto,
   CalendarioLetivoListInputDto,
   CalendarioLetivoListOutputDto,
-  ICalendarioLetivoRepositoryPort,
+  ICalendarioLetivoRepository,
 } from "@/Ladesa.Management.Application/horarios/calendario-letivo";
 import type { CalendarioLetivoEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/CalendarioLetivoEntity";
-import { createCalendarioLetivoRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/CalendarioLetivoRepository";
+import { createCalendarioLetivoRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/CreateCalendarioLetivoRepository";
 import {
   APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
@@ -27,7 +27,7 @@ export class CalendarioLetivoTypeOrmRepositoryAdapter
     CalendarioLetivoFindOneInputDto,
     CalendarioLetivoFindOneOutputDto
   >
-  implements ICalendarioLetivoRepositoryPort
+  implements ICalendarioLetivoRepository
 {
   protected readonly alias = "calendario_letivo";
   protected readonly authzAction = "calendario_letivo:find";

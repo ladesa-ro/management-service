@@ -53,6 +53,11 @@ function mapImagemOutput(imagem: any): any {
 }
 
 export class DiarioGraphqlMapper {
+  static toListOutputDto = createListOutputMapper(
+    DiarioListOutputGraphQlDto,
+    DiarioGraphqlMapper.toFindOneOutputDto,
+  );
+
   static toListInput(dto: DiarioListInputGraphQlDto | null): DiarioListInputDto | null {
     if (!dto) {
       return null;
@@ -115,6 +120,21 @@ export class DiarioGraphqlMapper {
     return input;
   }
 
+  static toFindOneOutputDto(output: DiarioFindOneOutputDto): DiarioFindOneOutputGraphQlDto {
+    const dto = new DiarioFindOneOutputGraphQlDto();
+    dto.id = output.id;
+    dto.ativo = output.ativo;
+    dto.calendarioLetivo = CalendarioLetivoGraphqlMapper.toFindOneOutputDto(
+      output.calendarioLetivo,
+    );
+    dto.turma = this.mapTurma(output.turma);
+    dto.disciplina = this.mapDisciplina(output.disciplina);
+    dto.ambientePadrao = this.mapAmbiente(output.ambientePadrao);
+    dto.imagemCapa = mapImagemOutput(output.imagemCapa);
+    mapDatedFields(dto, output);
+    return dto;
+  }
+
   private static mapTurma(turma: any): TurmaFindOneOutputForDiarioGraphQlDto {
     const dto = new TurmaFindOneOutputForDiarioGraphQlDto();
     dto.id = turma.id;
@@ -147,24 +167,4 @@ export class DiarioGraphqlMapper {
     mapDatedFields(dto, ambiente);
     return dto;
   }
-
-  static toFindOneOutputDto(output: DiarioFindOneOutputDto): DiarioFindOneOutputGraphQlDto {
-    const dto = new DiarioFindOneOutputGraphQlDto();
-    dto.id = output.id;
-    dto.ativo = output.ativo;
-    dto.calendarioLetivo = CalendarioLetivoGraphqlMapper.toFindOneOutputDto(
-      output.calendarioLetivo,
-    );
-    dto.turma = this.mapTurma(output.turma);
-    dto.disciplina = this.mapDisciplina(output.disciplina);
-    dto.ambientePadrao = this.mapAmbiente(output.ambientePadrao);
-    dto.imagemCapa = mapImagemOutput(output.imagemCapa);
-    mapDatedFields(dto, output);
-    return dto;
-  }
-
-  static toListOutputDto = createListOutputMapper(
-    DiarioListOutputGraphQlDto,
-    DiarioGraphqlMapper.toFindOneOutputDto,
-  );
 }

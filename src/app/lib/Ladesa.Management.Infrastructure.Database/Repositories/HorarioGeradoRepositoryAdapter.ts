@@ -6,10 +6,10 @@ import type {
   HorarioGeradoFindOneOutputDto,
   HorarioGeradoListInputDto,
   HorarioGeradoListOutputDto,
-  IHorarioGeradoRepositoryPort,
+  IHorarioGeradoRepository,
 } from "@/Ladesa.Management.Application/horarios/horario-gerado";
 import type { HorarioGeradoEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/HorarioGeradoEntity";
-import { createHorarioGeradoRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/HorarioGeradoRepository";
+import { createHorarioGeradoRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/CreateHorarioGeradoRepository";
 import {
   APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
@@ -27,7 +27,7 @@ export class HorarioGeradoTypeOrmRepositoryAdapter
     HorarioGeradoFindOneInputDto,
     HorarioGeradoFindOneOutputDto
   >
-  implements IHorarioGeradoRepositoryPort
+  implements IHorarioGeradoRepository
 {
   protected readonly alias = "horario_gerado";
   protected readonly authzAction = "horario_gerado:find";

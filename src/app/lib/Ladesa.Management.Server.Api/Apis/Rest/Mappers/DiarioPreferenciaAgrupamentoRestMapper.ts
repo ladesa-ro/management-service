@@ -32,6 +32,10 @@ export class DiarioPreferenciaAgrupamentoRestMapper {
     "filter.id",
     "filter.diario.id",
   ]);
+  static toListOutputDto = createListOutputMapper(
+    DiarioPreferenciaAgrupamentoListOutputRestDto,
+    DiarioPreferenciaAgrupamentoRestMapper.toFindOneOutputDto,
+  );
 
   static toCreateInput(
     dto: DiarioPreferenciaAgrupamentoCreateInputRestDto,
@@ -45,6 +49,10 @@ export class DiarioPreferenciaAgrupamentoRestMapper {
     input.diario = { id: dto.diario.id };
     return input;
   }
+
+  // ============================================================================
+  // Output: Core DTO -> Server DTO
+  // ============================================================================
 
   static toUpdateInput(
     params: DiarioPreferenciaAgrupamentoFindOneInputRestDto,
@@ -75,10 +83,6 @@ export class DiarioPreferenciaAgrupamentoRestMapper {
     return input;
   }
 
-  // ============================================================================
-  // Output: Core DTO -> Server DTO
-  // ============================================================================
-
   static toFindOneOutputDto(
     output: DiarioPreferenciaAgrupamentoFindOneOutputDto,
   ): DiarioPreferenciaAgrupamentoFindOneOutputRestDto {
@@ -93,9 +97,4 @@ export class DiarioPreferenciaAgrupamentoRestMapper {
     mapDatedFields(dto, output);
     return dto;
   }
-
-  static toListOutputDto = createListOutputMapper(
-    DiarioPreferenciaAgrupamentoListOutputRestDto,
-    DiarioPreferenciaAgrupamentoRestMapper.toFindOneOutputDto,
-  );
 }

@@ -7,9 +7,9 @@ import type {
   DiarioProfessorListInputDto,
   DiarioProfessorListOutputDto,
 } from "@/Ladesa.Management.Application/ensino/diario-professor/application/dtos";
-import type { IDiarioProfessorRepositoryPort } from "@/Ladesa.Management.Application/ensino/diario-professor/application/ports";
+import type { IDiarioProfessorRepository } from "@/Ladesa.Management.Application/ensino/diario-professor/application/ports";
 import type { DiarioProfessorEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/DiarioProfessorEntity";
-import { createDiarioProfessorRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/DiarioProfessorRepository";
+import { createDiarioProfessorRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/CreateDiarioProfessorRepository";
 import {
   APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
@@ -27,7 +27,7 @@ export class DiarioProfessorTypeOrmRepositoryAdapter
     DiarioProfessorFindOneInputDto,
     DiarioProfessorFindOneOutputDto
   >
-  implements IDiarioProfessorRepositoryPort
+  implements IDiarioProfessorRepository
 {
   protected readonly alias = "diario_professor";
   protected readonly authzAction = "diario_professor:find";

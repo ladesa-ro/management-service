@@ -1,59 +1,47 @@
-import type { IEntityBase } from "@/Ladesa.Management.Application/@shared";
+import type { IdUuid } from "@/Ladesa.Management.Application/@shared";
 import { BaseDatedEntity } from "@/Ladesa.Management.Application/@shared";
-import type {
-  GradeHorarioOfertaFormacao,
-  IGradeHorarioOfertaFormacao,
-} from "@/Ladesa.Management.Application/horarios/grade-horario-oferta-formacao";
-import type { IIntervaloDeTempo } from "@/Ladesa.Management.Application/horarios/intervalo-de-tempo";
-import { IntervaloDeTempo } from "@/Ladesa.Management.Application/horarios/intervalo-de-tempo";
 import type { GradeHorarioOfertaFormacaoIntervaloDeTempoCreateDto } from "@/Ladesa.Management.Domain/Dtos/GradeHorarioOfertaFormacaoIntervaloDeTempoCreateDto";
-
-export interface IGradeHorarioOfertaFormacaoIntervaloDeTempo extends IEntityBase {
-  intervaloDeTempo: IIntervaloDeTempo | null;
-  gradeHorarioOfertaFormacao: IGradeHorarioOfertaFormacao | null;
-}
+import type { IntervaloDeTempo } from "@/Ladesa.Management.Domain/Entities/IntervaloDeTempo";
 
 /**
  * Entidade de Domínio: GradeHorarioOfertaFormacaoIntervaloDeTempo
  * Entidade de relacionamento N:N entre GradeHorarioOfertaFormacao e IntervaloDeTempo
  */
-export class GradeHorarioOfertaFormacaoIntervaloDeTempo
-  extends BaseDatedEntity
-  implements IGradeHorarioOfertaFormacaoIntervaloDeTempo
-{
-  intervaloDeTempo!: IntervaloDeTempo;
-  gradeHorarioOfertaFormacao!: GradeHorarioOfertaFormacao;
+export class GradeHorarioOfertaFormacaoIntervaloDeTempo extends BaseDatedEntity {
+  private constructor(
+    public intervaloDeTempoId: IdUuid,
+    public gradeHorarioOfertaFormacaoId: IdUuid,
+  ) {
+    super();
+  }
 
   protected static get entityName(): string {
     return "GradeHorarioOfertaFormacaoIntervaloDeTempo";
   }
 
-  // ========================================
-  // Validação
-  // ========================================
-
-  /**
-   * Cria uma nova instância válida de GradeHorarioOfertaFormacaoIntervaloDeTempo
-   */
   static criar(
-    _dados: GradeHorarioOfertaFormacaoIntervaloDeTempoCreateDto,
+    dados: GradeHorarioOfertaFormacaoIntervaloDeTempoCreateDto,
   ): GradeHorarioOfertaFormacaoIntervaloDeTempo {
-    const instance = new GradeHorarioOfertaFormacaoIntervaloDeTempo();
+    const instance = new GradeHorarioOfertaFormacaoIntervaloDeTempo(
+      dados.intervaloDeTempo.id,
+      dados.gradeHorarioOfertaFormacao.id,
+    );
     instance.initDates();
     instance.validar();
     return instance;
   }
 
-  // ========================================
-  // Factory Methods
-  // ========================================
-
-  /**
-   * Reconstrói uma instância a partir de dados existentes (ex: do banco)
-   */
-  static fromData(dados: Record<string, any>): GradeHorarioOfertaFormacaoIntervaloDeTempo {
-    const instance = new GradeHorarioOfertaFormacaoIntervaloDeTempo();
-    Object.assign(instance, dados);
+  static fromData(
+    data: GradeHorarioOfertaFormacaoIntervaloDeTempo,
+  ): GradeHorarioOfertaFormacaoIntervaloDeTempo {
+    const instance = new GradeHorarioOfertaFormacaoIntervaloDeTempo(
+      data.intervaloDeTempoId,
+      data.gradeHorarioOfertaFormacaoId,
+    );
+    instance.id = data.id;
+    instance.dateCreated = data.dateCreated;
+    instance.dateUpdated = data.dateUpdated;
+    instance.dateDeleted = data.dateDeleted;
     return instance;
   }
 
@@ -61,30 +49,25 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempo
     // Entidade de relacionamento: sem validações de campos escalares
   }
 
-  // ========================================
-  // Métodos de Domínio
-  // ========================================
-
   /**
    * Verifica se este item de grade conflita com outro (mesmo dia/horário sobreposto).
    * Usado pelo service para validar conflitos antes de inserir novos intervalos.
    *
    * @param outro - Outro item de grade para comparação
+   * @param intervaloA - IntervaloDeTempo deste item
+   * @param intervaloB - IntervaloDeTempo do outro item
    * @returns true se houver conflito de horário
    */
-  conflitaCom(outro: GradeHorarioOfertaFormacaoIntervaloDeTempo): boolean {
-    // Se são da mesma grade e os intervalos de tempo se sobrepõem, há conflito
-    if (this.gradeHorarioOfertaFormacao?.id !== outro.gradeHorarioOfertaFormacao?.id) {
+  conflitaCom(
+    outro: GradeHorarioOfertaFormacaoIntervaloDeTempo,
+    intervaloA: IntervaloDeTempo,
+    intervaloB: IntervaloDeTempo,
+  ): boolean {
+    if (this.gradeHorarioOfertaFormacaoId !== outro.gradeHorarioOfertaFormacaoId) {
       return false;
     }
 
-    // Usa o método sobrepoe do IntervaloDeTempo para verificar conflito
-    const intervaloA =
-      this.intervaloDeTempo instanceof IntervaloDeTempo
-        ? this.intervaloDeTempo
-        : IntervaloDeTempo.fromData(this.intervaloDeTempo);
-
-    return intervaloA.sobrepoe(outro.intervaloDeTempo);
+    return intervaloA.sobrepoe(intervaloB);
   }
 
   /**
@@ -92,13 +75,20 @@ export class GradeHorarioOfertaFormacaoIntervaloDeTempo
    * Útil para validação antes de criar/atualizar.
    *
    * @param existentes - Lista de itens de grade existentes
+   * @param meuIntervalo - IntervaloDeTempo deste item
+   * @param intervalosExistentes - Map de intervaloDeTempoId → IntervaloDeTempo dos existentes
    * @returns Lista de itens que conflitam com este
    */
   encontrarConflitos(
     existentes: GradeHorarioOfertaFormacaoIntervaloDeTempo[],
+    meuIntervalo: IntervaloDeTempo,
+    intervalosExistentes: Map<IdUuid, IntervaloDeTempo>,
   ): GradeHorarioOfertaFormacaoIntervaloDeTempo[] {
-    return existentes.filter(
-      (existente) => existente.id !== this.id && this.conflitaCom(existente),
-    );
+    return existentes.filter((existente) => {
+      if (existente.id === this.id) return false;
+      const intervaloExistente = intervalosExistentes.get(existente.intervaloDeTempoId);
+      if (!intervaloExistente) return false;
+      return this.conflitaCom(existente, meuIntervalo, intervaloExistente);
+    });
   }
 }

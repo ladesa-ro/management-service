@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
 import { AmbienteModule } from "@/Ladesa.Management.Application/ambientes/ambiente/ambiente.module";
-import { DIARIO_REPOSITORY_PORT } from "@/Ladesa.Management.Application/ensino/diario/application/ports";
+import { IDiarioRepository } from "@/Ladesa.Management.Application/ensino/diario/application/ports";
 import { DiarioService } from "@/Ladesa.Management.Application/ensino/diario/application/use-cases/diario.service";
 import { DiarioAuthzRegistrySetup } from "@/Ladesa.Management.Application/ensino/diario/infrastructure";
 import { DiarioTypeOrmRepositoryAdapter } from "@/Ladesa.Management.Application/ensino/diario/infrastructure/persistence/typeorm";
@@ -23,7 +23,7 @@ import { DiarioRestController } from "@/Ladesa.Management.Server.Api/Apis/Rest/C
     DiarioGraphqlResolver,
     DiarioAuthzRegistrySetup,
     {
-      provide: DIARIO_REPOSITORY_PORT,
+      provide: IDiarioRepository,
       useClass: DiarioTypeOrmRepositoryAdapter,
     },
   ],

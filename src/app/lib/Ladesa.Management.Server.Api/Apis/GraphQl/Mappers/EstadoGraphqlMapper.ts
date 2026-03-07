@@ -11,6 +11,11 @@ import {
 } from "@/Ladesa.Management.Server.Api/Apis/GraphQl/Dtos/EstadoGraphqlDto";
 
 export class EstadoGraphqlMapper {
+  static toListOutputDto = createListOutputMapper(
+    EstadoListOutputGraphQlDto,
+    EstadoGraphqlMapper.toFindOneOutputDto,
+  );
+
   static toListInput(dto: EstadoListInputGraphQlDto | null): EstadoListInputDto | null {
     if (!dto) {
       return null;
@@ -39,9 +44,4 @@ export class EstadoGraphqlMapper {
     dto.sigla = output.sigla;
     return dto;
   }
-
-  static toListOutputDto = createListOutputMapper(
-    EstadoListOutputGraphQlDto,
-    EstadoGraphqlMapper.toFindOneOutputDto,
-  );
 }

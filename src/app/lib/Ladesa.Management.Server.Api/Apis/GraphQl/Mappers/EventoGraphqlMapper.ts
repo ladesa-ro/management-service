@@ -20,6 +20,11 @@ import {
 import { CalendarioLetivoGraphqlMapper } from "@/Ladesa.Management.Server.Api/Apis/GraphQl/Mappers/CalendarioLetivoGraphqlMapper";
 
 export class EventoGraphqlMapper {
+  static toListOutputDto = createListOutputMapper(
+    EventoListOutputGraphQlDto,
+    EventoGraphqlMapper.toFindOneOutputDto,
+  );
+
   static toListInput(dto: EventoListInputGraphQlDto | null): EventoListInputDto | null {
     if (!dto) {
       return null;
@@ -80,21 +85,6 @@ export class EventoGraphqlMapper {
     return input;
   }
 
-  private static mapAmbiente(
-    ambiente: any | null,
-  ): AmbienteFindOneOutputForEventoGraphQlDto | null {
-    if (!ambiente) return null;
-    const dto = new AmbienteFindOneOutputForEventoGraphQlDto();
-    dto.id = ambiente.id;
-    dto.nome = ambiente.nome;
-    dto.descricao = ambiente.descricao;
-    dto.codigo = ambiente.codigo;
-    dto.capacidade = ambiente.capacidade;
-    dto.tipo = ambiente.tipo;
-    mapDatedFields(dto, ambiente);
-    return dto;
-  }
-
   static toFindOneOutputDto(output: EventoFindOneOutputDto): EventoFindOneOutputGraphQlDto {
     const dto = new EventoFindOneOutputGraphQlDto();
     dto.id = output.id;
@@ -109,8 +99,18 @@ export class EventoGraphqlMapper {
     return dto;
   }
 
-  static toListOutputDto = createListOutputMapper(
-    EventoListOutputGraphQlDto,
-    EventoGraphqlMapper.toFindOneOutputDto,
-  );
+  private static mapAmbiente(
+    ambiente: any | null,
+  ): AmbienteFindOneOutputForEventoGraphQlDto | null {
+    if (!ambiente) return null;
+    const dto = new AmbienteFindOneOutputForEventoGraphQlDto();
+    dto.id = ambiente.id;
+    dto.nome = ambiente.nome;
+    dto.descricao = ambiente.descricao;
+    dto.codigo = ambiente.codigo;
+    dto.capacidade = ambiente.capacidade;
+    dto.tipo = ambiente.tipo;
+    mapDatedFields(dto, ambiente);
+    return dto;
+  }
 }

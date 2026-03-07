@@ -51,6 +51,11 @@ function mapImagemOutput(imagem: any): any {
 }
 
 export class CursoGraphqlMapper {
+  static toListOutputDto = createListOutputMapper(
+    CursoListOutputGraphQlDto,
+    CursoGraphqlMapper.toFindOneOutputDto,
+  );
+
   static toListInput(dto: CursoListInputGraphQlDto | null): CursoListInputDto | null {
     if (!dto) {
       return null;
@@ -119,9 +124,4 @@ export class CursoGraphqlMapper {
     mapDatedFields(dto, output);
     return dto;
   }
-
-  static toListOutputDto = createListOutputMapper(
-    CursoListOutputGraphQlDto,
-    CursoGraphqlMapper.toFindOneOutputDto,
-  );
 }

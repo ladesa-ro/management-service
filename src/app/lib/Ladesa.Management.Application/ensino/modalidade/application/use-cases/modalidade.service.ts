@@ -1,7 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
 import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/contexto-acesso";
 import { BaseCrudService, type PersistInput } from "@/Ladesa.Management.Application/@shared";
-import { type IModalidade, Modalidade } from "@/Ladesa.Management.Application/ensino/modalidade";
+import { Modalidade } from "@/Ladesa.Management.Application/ensino/modalidade";
 import type {
   ModalidadeCreateInputDto,
   ModalidadeFindOneInputDto,
@@ -11,15 +11,14 @@ import type {
   ModalidadeUpdateInputDto,
 } from "@/Ladesa.Management.Application/ensino/modalidade/application/dtos";
 import {
-  type IModalidadeRepositoryPort,
+  IModalidadeRepository,
   type IModalidadeUseCasePort,
-  MODALIDADE_REPOSITORY_PORT,
 } from "@/Ladesa.Management.Application/ensino/modalidade/application/ports";
 
 @Injectable()
 export class ModalidadeService
   extends BaseCrudService<
-    IModalidade,
+    Modalidade,
     ModalidadeListInputDto,
     ModalidadeListOutputDto,
     ModalidadeFindOneInputDto,
@@ -35,8 +34,8 @@ export class ModalidadeService
   protected readonly deleteAction = "modalidade:delete";
 
   constructor(
-    @Inject(MODALIDADE_REPOSITORY_PORT)
-    protected readonly repository: IModalidadeRepositoryPort,
+    @Inject(IModalidadeRepository)
+    protected readonly repository: IModalidadeRepository,
   ) {
     super();
   }
@@ -44,7 +43,7 @@ export class ModalidadeService
   protected async buildCreateData(
     _ac: AccessContext,
     dto: ModalidadeCreateInputDto,
-  ): Promise<Partial<PersistInput<IModalidade>>> {
+  ): Promise<Partial<PersistInput<Modalidade>>> {
     const domain = Modalidade.criar({ nome: dto.nome, slug: dto.slug });
     return { ...domain };
   }
@@ -53,8 +52,8 @@ export class ModalidadeService
     _ac: AccessContext,
     dto: ModalidadeFindOneInputDto & ModalidadeUpdateInputDto,
     current: ModalidadeFindOneOutputDto,
-  ): Promise<Partial<PersistInput<IModalidade>>> {
-    const domain = Modalidade.fromData(current);
+  ): Promise<Partial<PersistInput<Modalidade>>> {
+    const domain = Modalidade.fromData(current as unknown as Modalidade);
     domain.atualizar({ nome: dto.nome, slug: dto.slug });
     return { nome: domain.nome, slug: domain.slug };
   }

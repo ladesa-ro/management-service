@@ -13,8 +13,8 @@ import type {
 import type { IEmpresaRepositoryPort } from "@/Ladesa.Management.Application/estagio/empresa/application/ports";
 import { Empresa } from "@/Ladesa.Management.Domain/Entities/Empresa";
 import { EmpresaMapper } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Mappers/EmpresaMapper";
-import { createEmpresaRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/EmpresaRepository";
-import { createEnderecoRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/EnderecoRepository";
+import { createEmpresaRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/CreateEmpresaRepository";
+import { createEnderecoRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/CreateEnderecoRepository";
 import { APP_DATA_SOURCE_TOKEN } from "@/Ladesa.Management.Infrastructure.Database/typeorm";
 
 @Injectable()

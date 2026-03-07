@@ -31,6 +31,10 @@ export class OfertaFormacaoNivelFormacaoRestMapper {
   static toListInput = createListInputMapper(OfertaFormacaoNivelFormacaoListInputDto, [
     "filter.id",
   ]);
+  static toListOutputDto = createListOutputMapper(
+    OfertaFormacaoNivelFormacaoListOutputRestDto,
+    OfertaFormacaoNivelFormacaoRestMapper.toFindOneOutputDto,
+  );
 
   static toCreateInput(
     dto: OfertaFormacaoNivelFormacaoCreateInputRestDto,
@@ -40,6 +44,10 @@ export class OfertaFormacaoNivelFormacaoRestMapper {
     input.nivelFormacao = { id: dto.nivelFormacao.id };
     return input;
   }
+
+  // ============================================================================
+  // Output: Core DTO -> Server DTO
+  // ============================================================================
 
   static toUpdateInput(
     params: OfertaFormacaoNivelFormacaoFindOneInputRestDto,
@@ -58,10 +66,6 @@ export class OfertaFormacaoNivelFormacaoRestMapper {
     return input;
   }
 
-  // ============================================================================
-  // Output: Core DTO -> Server DTO
-  // ============================================================================
-
   static toFindOneOutputDto(
     output: OfertaFormacaoNivelFormacaoFindOneOutputDto,
   ): OfertaFormacaoNivelFormacaoFindOneOutputRestDto {
@@ -72,9 +76,4 @@ export class OfertaFormacaoNivelFormacaoRestMapper {
     mapDatedFields(dto, output);
     return dto;
   }
-
-  static toListOutputDto = createListOutputMapper(
-    OfertaFormacaoNivelFormacaoListOutputRestDto,
-    OfertaFormacaoNivelFormacaoRestMapper.toFindOneOutputDto,
-  );
 }

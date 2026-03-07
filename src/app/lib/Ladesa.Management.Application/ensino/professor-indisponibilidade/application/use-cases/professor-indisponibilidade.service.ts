@@ -7,9 +7,8 @@ import type {
   ProfessorIndisponibilidadeListOutputDto,
 } from "@/Ladesa.Management.Application/ensino/professor-indisponibilidade/application/dtos";
 import {
-  type IProfessorIndisponibilidadeRepositoryPort,
+  IProfessorIndisponibilidadeRepository,
   type IProfessorIndisponibilidadeUseCasePort,
-  PROFESSOR_INDISPONIBILIDADE_REPOSITORY_PORT,
 } from "@/Ladesa.Management.Application/ensino/professor-indisponibilidade/application/ports";
 
 @Injectable()
@@ -25,8 +24,8 @@ export class ProfessorIndisponibilidadeService
   protected readonly resourceName = "ProfessorIndisponibilidade";
 
   constructor(
-    @Inject(PROFESSOR_INDISPONIBILIDADE_REPOSITORY_PORT)
-    protected readonly repository: IProfessorIndisponibilidadeRepositoryPort,
+    @Inject(IProfessorIndisponibilidadeRepository)
+    protected readonly repository: IProfessorIndisponibilidadeRepository,
   ) {
     super();
   }

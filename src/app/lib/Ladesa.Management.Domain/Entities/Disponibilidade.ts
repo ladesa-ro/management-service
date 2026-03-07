@@ -1,4 +1,3 @@
-import type { IEntityBase } from "@/Ladesa.Management.Application/@shared";
 import {
   BaseDatedEntity,
   type ScalarDateTimeString,
@@ -7,57 +6,34 @@ import type { DisponibilidadeCreateDto } from "@/Ladesa.Management.Domain/Dtos/D
 import type { DisponibilidadeUpdateDto } from "@/Ladesa.Management.Domain/Dtos/DisponibilidadeUpdateDto";
 
 /**
- * Tipagem da entidade Disponibilidade
- * Define a estrutura de dados sem comportamento
- */
-export interface IDisponibilidade extends IEntityBase {
-  /** Data de inicio */
-  dataInicio: ScalarDateTimeString;
-
-  /** Data de termino */
-  dataFim: ScalarDateTimeString | null;
-}
-
-/**
  * Entidade de Domínio: Disponibilidade
  * Implementa a tipagem IDisponibilidade e adiciona regras de negócio
  */
-export class Disponibilidade extends BaseDatedEntity implements IDisponibilidade {
-  dataInicio!: ScalarDateTimeString;
-  dataFim!: ScalarDateTimeString | null;
+export class Disponibilidade extends BaseDatedEntity {
+  private constructor(
+    public dataInicio: ScalarDateTimeString,
+    public dataFim: ScalarDateTimeString | null,
+  ) {
+    super();
+  }
 
   protected static get entityName(): string {
     return "Disponibilidade";
   }
 
-  // ========================================
-  // Validação
-  // ========================================
-
-  /**
-   * Cria uma nova instância válida de Disponibilidade
-   * @throws EntityValidationError se os dados forem inválidos
-   */
   static criar(dados: DisponibilidadeCreateDto): Disponibilidade {
-    const instance = new Disponibilidade();
-    instance.dataInicio = dados.dataInicio;
-    instance.dataFim = dados.dataFim ?? null;
+    const instance = new Disponibilidade(dados.dataInicio, dados.dataFim ?? null);
     instance.initDates();
     instance.validar();
-
     return instance;
   }
 
-  // ========================================
-  // Factory Methods
-  // ========================================
-
-  /**
-   * Reconstrói uma instância a partir de dados existentes (ex: do banco)
-   */
-  static fromData(dados: Record<string, any>): Disponibilidade {
-    const instance = new Disponibilidade();
-    Object.assign(instance, dados);
+  static fromData(data: Disponibilidade): Disponibilidade {
+    const instance = new Disponibilidade(data.dataInicio, data.dataFim);
+    instance.id = data.id;
+    instance.dateCreated = data.dateCreated;
+    instance.dateUpdated = data.dateUpdated;
+    instance.dateDeleted = data.dateDeleted;
     return instance;
   }
 
@@ -67,14 +43,6 @@ export class Disponibilidade extends BaseDatedEntity implements IDisponibilidade
     Disponibilidade.throwIfInvalid(result);
   }
 
-  // ========================================
-  // Métodos de Domínio
-  // ========================================
-
-  /**
-   * Atualiza os dados da disponibilidade
-   * @throws EntityValidationError se os dados forem inválidos
-   */
   atualizar(dados: DisponibilidadeUpdateDto): void {
     if (dados.dataInicio !== undefined) {
       this.dataInicio = dados.dataInicio;

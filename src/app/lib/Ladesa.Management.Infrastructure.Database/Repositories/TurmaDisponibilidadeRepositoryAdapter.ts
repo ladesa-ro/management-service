@@ -8,9 +8,9 @@ import type {
   TurmaDisponibilidadeListInputDto,
   TurmaDisponibilidadeListOutputDto,
 } from "@/Ladesa.Management.Application/ensino/turma-disponibilidade";
-import type { ITurmaDisponibilidadeRepositoryPort } from "@/Ladesa.Management.Application/ensino/turma-disponibilidade/application/ports/out";
+import type { ITurmaDisponibilidadeRepository } from "@/Ladesa.Management.Application/ensino/turma-disponibilidade/application/ports/out";
 import type { TurmaDisponibilidadeEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/TurmaDisponibilidadeEntity";
-import { createTurmaDisponibilidadeRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/TurmaDisponibilidadeRepository";
+import { createTurmaDisponibilidadeRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/CreateTurmaDisponibilidadeRepository";
 import {
   APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
@@ -32,7 +32,7 @@ export class TurmaDisponibilidadeTypeOrmRepositoryAdapter
     TurmaDisponibilidadeFindOneInputDto,
     TurmaDisponibilidadeFindOneOutputDto
   >
-  implements ITurmaDisponibilidadeRepositoryPort
+  implements ITurmaDisponibilidadeRepository
 {
   protected readonly alias = "turma_disponibilidade";
   protected readonly authzAction = "turma_disponibilidade:find";

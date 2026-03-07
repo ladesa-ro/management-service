@@ -6,7 +6,7 @@ import type {
   ProfessorIndisponibilidadeListInputDto,
   ProfessorIndisponibilidadeListOutputDto,
 } from "@/Ladesa.Management.Application/ensino/professor-indisponibilidade/application/dtos";
-import type { IProfessorIndisponibilidadeRepositoryPort } from "@/Ladesa.Management.Application/ensino/professor-indisponibilidade/application/ports";
+import type { IProfessorIndisponibilidadeRepository } from "@/Ladesa.Management.Application/ensino/professor-indisponibilidade/application/ports";
 import type { ProfessorIndisponibilidadeEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/ProfessorIndisponibilidadeEntity";
 import { createProfessorIndisponibilidadeRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/ProfessorIndisponibilidadeRepository";
 import {
@@ -30,7 +30,7 @@ export class ProfessorIndisponibilidadeTypeOrmRepositoryAdapter
     ProfessorIndisponibilidadeFindOneInputDto,
     ProfessorIndisponibilidadeFindOneOutputDto
   >
-  implements IProfessorIndisponibilidadeRepositoryPort
+  implements IProfessorIndisponibilidadeRepository
 {
   protected readonly alias = "professor_indisponibilidade";
   protected readonly authzAction = "vinculo:find";

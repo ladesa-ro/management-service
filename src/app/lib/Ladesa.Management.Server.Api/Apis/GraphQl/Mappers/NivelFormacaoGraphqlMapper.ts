@@ -18,6 +18,11 @@ import {
 } from "@/Ladesa.Management.Server.Api/Apis/GraphQl/Dtos/NivelFormacaoGraphqlDto";
 
 export class NivelFormacaoGraphqlMapper {
+  static toListOutputDto = createListOutputMapper(
+    NivelFormacaoListOutputGraphQlDto,
+    NivelFormacaoGraphqlMapper.toFindOneOutputDto,
+  );
+
   static toListInput(
     dto: NivelFormacaoListInputGraphQlDto | null,
   ): NivelFormacaoListInputDto | null {
@@ -69,9 +74,4 @@ export class NivelFormacaoGraphqlMapper {
     mapDatedFields(dto, output);
     return dto;
   }
-
-  static toListOutputDto = createListOutputMapper(
-    NivelFormacaoListOutputGraphQlDto,
-    NivelFormacaoGraphqlMapper.toFindOneOutputDto,
-  );
 }

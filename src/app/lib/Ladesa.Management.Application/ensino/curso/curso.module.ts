@@ -2,7 +2,7 @@ import { Module } from "@nestjs/common";
 import { CampusModule } from "@/Ladesa.Management.Application/ambientes/campus/campus.module";
 import { ArquivoModule } from "@/Ladesa.Management.Application/armazenamento/arquivo/arquivo.module";
 import { ImagemModule } from "@/Ladesa.Management.Application/armazenamento/imagem/imagem.module";
-import { CURSO_REPOSITORY_PORT, CursoService } from "@/Ladesa.Management.Application/ensino/curso";
+import { CursoService, ICursoRepository } from "@/Ladesa.Management.Application/ensino/curso";
 import {
   CursoAuthzRegistrySetup,
   CursoTypeOrmRepositoryAdapter,
@@ -21,7 +21,7 @@ import { CursoRestController } from "@/Ladesa.Management.Server.Api/Apis/Rest/Co
     CursoGraphqlResolver,
     CursoAuthzRegistrySetup,
     {
-      provide: CURSO_REPOSITORY_PORT,
+      provide: ICursoRepository,
       useClass: CursoTypeOrmRepositoryAdapter,
     },
   ],

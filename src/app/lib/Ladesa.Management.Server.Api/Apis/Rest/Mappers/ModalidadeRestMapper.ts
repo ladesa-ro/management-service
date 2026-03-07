@@ -27,6 +27,10 @@ export class ModalidadeRestMapper {
   static toFindOneInput = createFindOneInputMapper(ModalidadeFindOneInputDto);
 
   static toListInput = createListInputMapper(ModalidadeListInputDto, ["filter.id"]);
+  static toListOutputDto = createListOutputMapper(
+    ModalidadeListOutputRestDto,
+    ModalidadeRestMapper.toFindOneOutputDto,
+  );
 
   static toCreateInput(dto: ModalidadeCreateInputRestDto): ModalidadeCreateInputDto {
     const input = new ModalidadeCreateInputDto();
@@ -34,6 +38,10 @@ export class ModalidadeRestMapper {
     input.slug = dto.slug;
     return input;
   }
+
+  // ============================================================================
+  // Output: Core DTO -> Server DTO
+  // ============================================================================
 
   static toUpdateInput(
     params: ModalidadeFindOneInputRestDto,
@@ -51,10 +59,6 @@ export class ModalidadeRestMapper {
     return input;
   }
 
-  // ============================================================================
-  // Output: Core DTO -> Server DTO
-  // ============================================================================
-
   static toFindOneOutputDto(output: ModalidadeFindOneOutputDto): ModalidadeFindOneOutputRestDto {
     const dto = new ModalidadeFindOneOutputRestDto();
     dto.id = output.id;
@@ -63,9 +67,4 @@ export class ModalidadeRestMapper {
     mapDatedFields(dto, output);
     return dto;
   }
-
-  static toListOutputDto = createListOutputMapper(
-    ModalidadeListOutputRestDto,
-    ModalidadeRestMapper.toFindOneOutputDto,
-  );
 }

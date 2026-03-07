@@ -7,9 +7,9 @@ import type {
   TurmaListInputDto,
   TurmaListOutputDto,
 } from "@/Ladesa.Management.Application/ensino/turma/application/dtos";
-import type { ITurmaRepositoryPort } from "@/Ladesa.Management.Application/ensino/turma/application/ports";
+import type { ITurmaRepository } from "@/Ladesa.Management.Application/ensino/turma/application/ports";
 import type { TurmaEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/TurmaEntity";
-import { createTurmaRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/TurmaRepository";
+import { createTurmaRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/CreateTurmaRepository";
 import {
   APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
@@ -27,7 +27,7 @@ export class TurmaTypeOrmRepositoryAdapter
     TurmaFindOneInputDto,
     TurmaFindOneOutputDto
   >
-  implements ITurmaRepositoryPort
+  implements ITurmaRepository
 {
   protected readonly alias = "turma";
   protected readonly authzAction = "turma:find";

@@ -3,10 +3,7 @@ import { has } from "lodash";
 import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/contexto-acesso";
 import { BaseCrudService, type PersistInput } from "@/Ladesa.Management.Application/@shared";
 import { CalendarioLetivoService } from "@/Ladesa.Management.Application/horarios/calendario-letivo";
-import {
-  HorarioGerado,
-  type IHorarioGerado,
-} from "@/Ladesa.Management.Application/horarios/horario-gerado";
+import { HorarioGerado } from "@/Ladesa.Management.Application/horarios/horario-gerado";
 import type {
   HorarioGeradoCreateInputDto,
   HorarioGeradoFindOneInputDto,
@@ -15,11 +12,11 @@ import type {
   HorarioGeradoListOutputDto,
   HorarioGeradoUpdateInputDto,
 } from "../dtos";
-import { HORARIO_GERADO_REPOSITORY_PORT, type IHorarioGeradoRepositoryPort } from "../ports";
+import { IHorarioGeradoRepository } from "../ports";
 
 @Injectable()
 export class HorarioGeradoService extends BaseCrudService<
-  IHorarioGerado,
+  HorarioGerado,
   HorarioGeradoListInputDto,
   HorarioGeradoListOutputDto,
   HorarioGeradoFindOneInputDto,
@@ -33,8 +30,8 @@ export class HorarioGeradoService extends BaseCrudService<
   protected readonly deleteAction = "horario_gerado:delete";
 
   constructor(
-    @Inject(HORARIO_GERADO_REPOSITORY_PORT)
-    protected readonly repository: IHorarioGeradoRepositoryPort,
+    @Inject(IHorarioGeradoRepository)
+    protected readonly repository: IHorarioGeradoRepository,
     private readonly calendarioLetivoService: CalendarioLetivoService,
   ) {
     super();
@@ -43,7 +40,7 @@ export class HorarioGeradoService extends BaseCrudService<
   protected async buildCreateData(
     accessContext: AccessContext,
     dto: HorarioGeradoCreateInputDto,
-  ): Promise<Partial<PersistInput<IHorarioGerado>>> {
+  ): Promise<Partial<PersistInput<HorarioGerado>>> {
     let calendarioRef: { id: string } | undefined;
     if (dto.calendario) {
       const calendario = await this.calendarioLetivoService.findByIdSimpleStrict(
@@ -61,18 +58,18 @@ export class HorarioGeradoService extends BaseCrudService<
       vigenciaFim: dto.vigenciaFim,
       calendario: calendarioRef!,
     });
-    return {
-      ...domain,
-      ...(calendarioRef ? { calendario: calendarioRef } : {}),
-    };
+    return { ...domain };
   }
 
   protected async buildUpdateData(
     accessContext: AccessContext,
     dto: HorarioGeradoFindOneInputDto & HorarioGeradoUpdateInputDto,
     current: HorarioGeradoFindOneOutputDto,
-  ): Promise<Partial<PersistInput<IHorarioGerado>>> {
-    const domain = HorarioGerado.fromData(current);
+  ): Promise<Partial<PersistInput<HorarioGerado>>> {
+    const domain = HorarioGerado.fromData({
+      ...current,
+      calendarioId: current.calendario.id,
+    } as unknown as HorarioGerado);
     domain.atualizar({
       status: dto.status,
       tipo: dto.tipo,
@@ -80,7 +77,7 @@ export class HorarioGeradoService extends BaseCrudService<
       vigenciaInicio: dto.vigenciaInicio,
       vigenciaFim: dto.vigenciaFim,
     });
-    const result: Partial<PersistInput<IHorarioGerado>> = {
+    const result: Partial<PersistInput<HorarioGerado>> = {
       status: domain.status,
       tipo: domain.tipo,
       dataGeracao: domain.dataGeracao,
@@ -93,7 +90,7 @@ export class HorarioGeradoService extends BaseCrudService<
         accessContext,
         dto.calendario.id,
       );
-      result.calendario = { id: calendario.id };
+      result.calendarioId = calendario.id;
     }
 
     return result;

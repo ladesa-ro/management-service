@@ -2,7 +2,7 @@ import { Module } from "@nestjs/common";
 import { DisponibilidadeModule } from "@/Ladesa.Management.Application/ensino/disponibilidade/disponibilidade.module";
 import { TurmaModule } from "@/Ladesa.Management.Application/ensino/turma/turma.module";
 import {
-  TURMA_DISPONIBILIDADE_REPOSITORY_PORT,
+  ITurmaDisponibilidadeRepository,
   TurmaDisponibilidadeService,
 } from "@/Ladesa.Management.Application/ensino/turma-disponibilidade";
 import { TurmaDisponibilidadeAuthzRegistrySetup } from "@/Ladesa.Management.Application/ensino/turma-disponibilidade/infrastructure";
@@ -20,7 +20,7 @@ import { TurmaDisponibilidadeRestController } from "@/Ladesa.Management.Server.A
     TurmaDisponibilidadeAuthzRegistrySetup,
     TurmaDisponibilidadeGraphqlResolver,
     {
-      provide: TURMA_DISPONIBILIDADE_REPOSITORY_PORT,
+      provide: ITurmaDisponibilidadeRepository,
       useClass: TurmaDisponibilidadeTypeOrmRepositoryAdapter,
     },
   ],

@@ -28,6 +28,10 @@ export class CampusRestMapper {
   static toFindOneInput = createFindOneInputMapper(CampusFindOneInputDto);
 
   static toListInput = createListInputMapper(CampusListInputDto, ["filter.id"]);
+  static toListOutputDto = createListOutputMapper(
+    CampusListOutputRestDto,
+    CampusRestMapper.toFindOneOutputDto,
+  );
 
   static toCreateInput(dto: CampusCreateInputRestDto): CampusCreateInputDto {
     const input = new CampusCreateInputDto();
@@ -38,6 +42,10 @@ export class CampusRestMapper {
     input.endereco = EnderecoRestMapper.toCreateInput(dto.endereco);
     return input;
   }
+
+  // ============================================================================
+  // Output: Core DTO -> Server DTO
+  // ============================================================================
 
   static toUpdateInput(
     params: CampusFindOneInputRestDto,
@@ -63,10 +71,6 @@ export class CampusRestMapper {
     return input;
   }
 
-  // ============================================================================
-  // Output: Core DTO -> Server DTO
-  // ============================================================================
-
   static toFindOneOutputDto(output: CampusFindOneOutputDto): CampusFindOneOutputRestDto {
     const dto = new CampusFindOneOutputRestDto();
     dto.id = output.id;
@@ -78,9 +82,4 @@ export class CampusRestMapper {
     mapDatedFields(dto, output);
     return dto;
   }
-
-  static toListOutputDto = createListOutputMapper(
-    CampusListOutputRestDto,
-    CampusRestMapper.toFindOneOutputDto,
-  );
 }

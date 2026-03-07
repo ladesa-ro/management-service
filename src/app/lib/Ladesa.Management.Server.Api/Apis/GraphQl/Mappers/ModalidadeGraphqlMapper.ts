@@ -18,6 +18,11 @@ import {
 } from "@/Ladesa.Management.Server.Api/Apis/GraphQl/Dtos/ModalidadeGraphqlDto";
 
 export class ModalidadeGraphqlMapper {
+  static toListOutputDto = createListOutputMapper(
+    ModalidadeListOutputGraphQlDto,
+    ModalidadeGraphqlMapper.toFindOneOutputDto,
+  );
+
   static toListInput(dto: ModalidadeListInputGraphQlDto | null): ModalidadeListInputDto | null {
     if (!dto) {
       return null;
@@ -70,9 +75,4 @@ export class ModalidadeGraphqlMapper {
     mapDatedFields(dto, output);
     return dto;
   }
-
-  static toListOutputDto = createListOutputMapper(
-    ModalidadeListOutputGraphQlDto,
-    ModalidadeGraphqlMapper.toFindOneOutputDto,
-  );
 }

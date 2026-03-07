@@ -1,1 +1,1 @@
-export * from "@/Ladesa.Management.Domain/Repositories/CalendarioLetivoRepositoryPort";
+export * from "@/Ladesa.Management.Domain/Repositories/ICalendarioLetivoRepository";

@@ -52,6 +52,11 @@ function mapImagemOutput(imagem: any): any {
 }
 
 export class TurmaGraphqlMapper {
+  static toListOutputDto = createListOutputMapper(
+    TurmaListOutputGraphQlDto,
+    TurmaGraphqlMapper.toFindOneOutputDto,
+  );
+
   static toListInput(dto: TurmaListInputGraphQlDto | null): TurmaListInputDto | null {
     if (!dto) {
       return null;
@@ -111,9 +116,4 @@ export class TurmaGraphqlMapper {
     mapDatedFields(dto, output);
     return dto;
   }
-
-  static toListOutputDto = createListOutputMapper(
-    TurmaListOutputGraphQlDto,
-    TurmaGraphqlMapper.toFindOneOutputDto,
-  );
 }

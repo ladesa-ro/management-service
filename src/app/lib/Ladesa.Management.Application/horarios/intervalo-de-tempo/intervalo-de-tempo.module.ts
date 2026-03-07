@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { INTERVALO_DE_TEMPO_REPOSITORY_PORT } from "@/Ladesa.Management.Application/horarios/intervalo-de-tempo/application/ports";
+import { IIntervaloDeTempoRepository } from "@/Ladesa.Management.Application/horarios/intervalo-de-tempo/application/ports";
 import { IntervaloDeTempoService } from "@/Ladesa.Management.Application/horarios/intervalo-de-tempo/application/use-cases/intervalo-de-tempo.service";
 import { IntervaloDeTempoTypeOrmRepositoryAdapter } from "@/Ladesa.Management.Application/horarios/intervalo-de-tempo/infrastructure/persistence/typeorm";
 import { NestJsPaginateAdapter } from "@/Ladesa.Management.Infrastructure.Database/typeorm";
@@ -14,7 +14,7 @@ import { IntervaloDeTempoRestController } from "@/Ladesa.Management.Server.Api/A
     IntervaloDeTempoService,
     IntervaloDeTempoGraphqlResolver,
     {
-      provide: INTERVALO_DE_TEMPO_REPOSITORY_PORT,
+      provide: IIntervaloDeTempoRepository,
       useClass: IntervaloDeTempoTypeOrmRepositoryAdapter,
     },
   ],

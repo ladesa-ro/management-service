@@ -26,12 +26,20 @@ export class NivelFormacaoRestMapper {
   static toFindOneInput = createFindOneInputMapper(NivelFormacaoFindOneInputDto);
 
   static toListInput = createListInputMapper(NivelFormacaoListInputDto, ["filter.id"]);
+  static toListOutputDto = createListOutputMapper(
+    NivelFormacaoListOutputRestDto,
+    NivelFormacaoRestMapper.toFindOneOutputDto,
+  );
 
   static toCreateInput(dto: NivelFormacaoCreateInputRestDto): NivelFormacaoCreateInputDto {
     const input = new NivelFormacaoCreateInputDto();
     input.slug = dto.slug;
     return input;
   }
+
+  // ============================================================================
+  // Output: Core DTO -> Server DTO
+  // ============================================================================
 
   static toUpdateInput(dto: NivelFormacaoUpdateInputRestDto): NivelFormacaoUpdateInputDto {
     const input = new NivelFormacaoUpdateInputDto();
@@ -40,10 +48,6 @@ export class NivelFormacaoRestMapper {
     }
     return input;
   }
-
-  // ============================================================================
-  // Output: Core DTO -> Server DTO
-  // ============================================================================
 
   static toFindOneOutputDto(
     output: NivelFormacaoFindOneOutputDto,
@@ -54,9 +58,4 @@ export class NivelFormacaoRestMapper {
     mapDatedFields(dto, output);
     return dto;
   }
-
-  static toListOutputDto = createListOutputMapper(
-    NivelFormacaoListOutputRestDto,
-    NivelFormacaoRestMapper.toFindOneOutputDto,
-  );
 }

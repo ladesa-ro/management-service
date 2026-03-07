@@ -3,10 +3,7 @@ import { has } from "lodash";
 import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/contexto-acesso";
 import { BaseCrudService, type PersistInput } from "@/Ladesa.Management.Application/@shared";
 import { ModalidadeService } from "@/Ladesa.Management.Application/ensino/modalidade";
-import {
-  type IOfertaFormacao,
-  OfertaFormacao,
-} from "@/Ladesa.Management.Application/ensino/oferta-formacao";
+import { OfertaFormacao } from "@/Ladesa.Management.Application/ensino/oferta-formacao";
 import type {
   OfertaFormacaoCreateInputDto,
   OfertaFormacaoFindOneInputDto,
@@ -16,15 +13,14 @@ import type {
   OfertaFormacaoUpdateInputDto,
 } from "@/Ladesa.Management.Application/ensino/oferta-formacao/application/dtos";
 import {
-  type IOfertaFormacaoRepositoryPort,
+  IOfertaFormacaoRepository,
   type IOfertaFormacaoUseCasePort,
-  OFERTA_FORMACAO_REPOSITORY_PORT,
 } from "@/Ladesa.Management.Application/ensino/oferta-formacao/application/ports";
 
 @Injectable()
 export class OfertaFormacaoService
   extends BaseCrudService<
-    IOfertaFormacao,
+    OfertaFormacao,
     OfertaFormacaoListInputDto,
     OfertaFormacaoListOutputDto,
     OfertaFormacaoFindOneInputDto,
@@ -40,8 +36,8 @@ export class OfertaFormacaoService
   protected readonly deleteAction = "oferta_formacao:delete";
 
   constructor(
-    @Inject(OFERTA_FORMACAO_REPOSITORY_PORT)
-    protected readonly repository: IOfertaFormacaoRepositoryPort,
+    @Inject(IOfertaFormacaoRepository)
+    protected readonly repository: IOfertaFormacaoRepository,
     private readonly modalidadeService: ModalidadeService,
   ) {
     super();
@@ -50,7 +46,7 @@ export class OfertaFormacaoService
   protected async buildCreateData(
     accessContext: AccessContext,
     dto: OfertaFormacaoCreateInputDto,
-  ): Promise<Partial<PersistInput<IOfertaFormacao>>> {
+  ): Promise<Partial<PersistInput<OfertaFormacao>>> {
     let modalidadeRef: { id: string } | undefined;
     if (dto.modalidade) {
       const modalidade = await this.modalidadeService.findByIdSimpleStrict(
@@ -65,20 +61,20 @@ export class OfertaFormacaoService
       slug: dto.slug,
       modalidade: modalidadeRef,
     });
-    return {
-      ...domain,
-      ...(modalidadeRef ? { modalidade: modalidadeRef } : {}),
-    };
+    return { ...domain };
   }
 
   protected async buildUpdateData(
     accessContext: AccessContext,
     dto: OfertaFormacaoFindOneInputDto & OfertaFormacaoUpdateInputDto,
     current: OfertaFormacaoFindOneOutputDto,
-  ): Promise<Partial<PersistInput<IOfertaFormacao>>> {
-    const domain = OfertaFormacao.fromData(current);
+  ): Promise<Partial<PersistInput<OfertaFormacao>>> {
+    const domain = OfertaFormacao.fromData({
+      ...current,
+      modalidadeId: current.modalidade?.id ?? null,
+    } as unknown as OfertaFormacao);
     domain.atualizar({ nome: dto.nome, slug: dto.slug });
-    const result: Partial<PersistInput<IOfertaFormacao>> = { nome: domain.nome, slug: domain.slug };
+    const result: Partial<PersistInput<OfertaFormacao>> = { nome: domain.nome, slug: domain.slug };
 
     if (has(dto, "modalidade") && dto.modalidade !== undefined) {
       if (dto.modalidade) {
@@ -86,9 +82,9 @@ export class OfertaFormacaoService
           accessContext,
           dto.modalidade.id,
         );
-        result.modalidade = { id: modalidade.id };
+        result.modalidadeId = modalidade.id;
       } else {
-        result.modalidade = null;
+        result.modalidadeId = null;
       }
     }
 

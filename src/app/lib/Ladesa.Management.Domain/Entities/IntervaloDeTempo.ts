@@ -1,61 +1,36 @@
-import type { IEntityBase } from "@/Ladesa.Management.Application/@shared";
 import { BaseDatedEntity } from "@/Ladesa.Management.Application/@shared";
 import type { IntervaloDeTempoCreateDto } from "@/Ladesa.Management.Domain/Dtos/IntervaloDeTempoCreateDto";
 import type { IntervaloDeTempoUpdateDto } from "@/Ladesa.Management.Domain/Dtos/IntervaloDeTempoUpdateDto";
 
 /**
- * Tipagem da entidade IntervaloDeTempo
- * Define a estrutura de dados sem comportamento
- */
-export interface IIntervaloDeTempo extends IEntityBase {
-  /** Horário de início do intervalo (formato HH:MM ou HH:MM:SS) */
-  periodoInicio: string;
-
-  /** Horário de fim do intervalo (formato HH:MM ou HH:MM:SS) */
-  periodoFim: string;
-}
-
-/**
  * Entidade de Domínio: IntervaloDeTempo
  * Implementa a tipagem IIntervaloDeTempo e adiciona regras de negócio
  */
-export class IntervaloDeTempo extends BaseDatedEntity implements IIntervaloDeTempo {
-  periodoInicio!: string;
-  periodoFim!: string;
+export class IntervaloDeTempo extends BaseDatedEntity {
+  private constructor(
+    public periodoInicio: string,
+    public periodoFim: string,
+  ) {
+    super();
+  }
 
   protected static get entityName(): string {
     return "IntervaloDeTempo";
   }
 
-  // ========================================
-  // Validação
-  // ========================================
-
-  /**
-   * Cria uma nova instância válida de IntervaloDeTempo
-   * @throws EntityValidationError se os dados forem inválidos
-   */
   static criar(dados: IntervaloDeTempoCreateDto): IntervaloDeTempo {
-    const instance = new IntervaloDeTempo();
-    instance.periodoInicio = dados.periodoInicio;
-    instance.periodoFim = dados.periodoFim;
-
+    const instance = new IntervaloDeTempo(dados.periodoInicio, dados.periodoFim);
     instance.initDates();
     instance.validar();
-
     return instance;
   }
 
-  // ========================================
-  // Factory Methods
-  // ========================================
-
-  /**
-   * Reconstrói uma instância a partir de dados existentes (ex: do banco)
-   */
-  static fromData(dados: Record<string, any>): IntervaloDeTempo {
-    const instance = new IntervaloDeTempo();
-    Object.assign(instance, dados);
+  static fromData(data: IntervaloDeTempo): IntervaloDeTempo {
+    const instance = new IntervaloDeTempo(data.periodoInicio, data.periodoFim);
+    instance.id = data.id;
+    instance.dateCreated = data.dateCreated;
+    instance.dateUpdated = data.dateUpdated;
+    instance.dateDeleted = data.dateDeleted;
     return instance;
   }
 
@@ -67,10 +42,6 @@ export class IntervaloDeTempo extends BaseDatedEntity implements IIntervaloDeTem
     return hora * 60 + min;
   }
 
-  // ========================================
-  // Métodos de Domínio
-  // ========================================
-
   validar(): void {
     const { result, rules } = IntervaloDeTempo.createValidation();
     rules.required(this.periodoInicio, "periodoInicio");
@@ -80,14 +51,6 @@ export class IntervaloDeTempo extends BaseDatedEntity implements IIntervaloDeTem
     IntervaloDeTempo.throwIfInvalid(result);
   }
 
-  // ========================================
-  // Métodos específicos do domínio
-  // ========================================
-
-  /**
-   * Atualiza os dados do intervalo de tempo
-   * @throws EntityValidationError se os dados forem inválidos
-   */
   atualizar(dados: IntervaloDeTempoUpdateDto): void {
     if (dados.periodoInicio !== undefined) {
       this.periodoInicio = dados.periodoInicio;
@@ -119,7 +82,7 @@ export class IntervaloDeTempo extends BaseDatedEntity implements IIntervaloDeTem
    * @param outro - Outro intervalo de tempo para comparação
    * @returns true se houver sobreposição
    */
-  sobrepoe(outro: IntervaloDeTempo | IIntervaloDeTempo): boolean {
+  sobrepoe(outro: IntervaloDeTempo): boolean {
     const inicioA = IntervaloDeTempo.horarioParaMinutos(this.periodoInicio);
     const fimA = IntervaloDeTempo.horarioParaMinutos(this.periodoFim);
     const inicioB = IntervaloDeTempo.horarioParaMinutos(outro.periodoInicio);
@@ -149,7 +112,7 @@ export class IntervaloDeTempo extends BaseDatedEntity implements IIntervaloDeTem
    * @param outro - Intervalo de tempo que possivelmente contém este
    * @returns true se este intervalo está dentro do outro
    */
-  estaContidoEm(outro: IntervaloDeTempo | IIntervaloDeTempo): boolean {
+  estaContidoEm(outro: IntervaloDeTempo): boolean {
     const inicioA = IntervaloDeTempo.horarioParaMinutos(this.periodoInicio);
     const fimA = IntervaloDeTempo.horarioParaMinutos(this.periodoFim);
     const inicioB = IntervaloDeTempo.horarioParaMinutos(outro.periodoInicio);

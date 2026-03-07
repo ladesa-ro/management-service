@@ -1,66 +1,52 @@
-import type { IEntityBase } from "@/Ladesa.Management.Application/@shared";
+import type { IdUuid } from "@/Ladesa.Management.Application/@shared";
 import { BaseDatedEntity } from "@/Ladesa.Management.Application/@shared";
 import type { ProfessorIndisponibilidadeCreateDto } from "@/Ladesa.Management.Domain/Dtos/ProfessorIndisponibilidadeCreateDto";
 import type { ProfessorIndisponibilidadeUpdateDto } from "@/Ladesa.Management.Domain/Dtos/ProfessorIndisponibilidadeUpdateDto";
-import type { IUsuario, Usuario } from "@/Ladesa.Management.Domain/Entities/Usuario";
-
-export interface IProfessorIndisponibilidade extends IEntityBase {
-  perfil: IUsuario;
-  diaDaSemana: number;
-  horaInicio: string;
-  horaFim: string;
-  motivo: string;
-}
 
 /**
  * Entidade de Domínio: ProfessorIndisponibilidade
  * Implementa a tipagem IProfessorIndisponibilidade e adiciona regras de negócio
  */
-export class ProfessorIndisponibilidade
-  extends BaseDatedEntity
-  implements IProfessorIndisponibilidade
-{
-  perfil!: Usuario;
-  diaDaSemana!: number;
-  horaInicio!: string;
-  horaFim!: string;
-  motivo!: string;
+export class ProfessorIndisponibilidade extends BaseDatedEntity {
+  private constructor(
+    public diaDaSemana: number,
+    public horaInicio: string,
+    public horaFim: string,
+    public motivo: string,
+    public perfilId: IdUuid,
+  ) {
+    super();
+  }
 
   protected static get entityName(): string {
     return "ProfessorIndisponibilidade";
   }
 
-  // ========================================
-  // Validação
-  // ========================================
-
-  /**
-   * Cria uma nova instância válida de ProfessorIndisponibilidade
-   * @throws EntityValidationError se os dados forem inválidos
-   */
   static criar(dados: ProfessorIndisponibilidadeCreateDto): ProfessorIndisponibilidade {
-    const instance = new ProfessorIndisponibilidade();
-    instance.diaDaSemana = dados.diaDaSemana;
-    instance.horaInicio = dados.horaInicio;
-    instance.horaFim = dados.horaFim;
-    instance.motivo = dados.motivo;
-
+    const instance = new ProfessorIndisponibilidade(
+      dados.diaDaSemana,
+      dados.horaInicio,
+      dados.horaFim,
+      dados.motivo,
+      dados.perfil.id,
+    );
     instance.initDates();
     instance.validar();
-
     return instance;
   }
 
-  // ========================================
-  // Factory Methods
-  // ========================================
-
-  /**
-   * Reconstrói uma instância a partir de dados existentes (ex: do banco)
-   */
-  static fromData(dados: Record<string, any>): ProfessorIndisponibilidade {
-    const instance = new ProfessorIndisponibilidade();
-    Object.assign(instance, dados);
+  static fromData(data: ProfessorIndisponibilidade): ProfessorIndisponibilidade {
+    const instance = new ProfessorIndisponibilidade(
+      data.diaDaSemana,
+      data.horaInicio,
+      data.horaFim,
+      data.motivo,
+      data.perfilId,
+    );
+    instance.id = data.id;
+    instance.dateCreated = data.dateCreated;
+    instance.dateUpdated = data.dateUpdated;
+    instance.dateDeleted = data.dateDeleted;
     return instance;
   }
 
@@ -76,14 +62,6 @@ export class ProfessorIndisponibilidade
     ProfessorIndisponibilidade.throwIfInvalid(result);
   }
 
-  // ========================================
-  // Métodos de Domínio
-  // ========================================
-
-  /**
-   * Atualiza os dados da indisponibilidade do professor
-   * @throws EntityValidationError se os dados forem inválidos
-   */
   atualizar(dados: ProfessorIndisponibilidadeUpdateDto): void {
     if (dados.diaDaSemana !== undefined) {
       this.diaDaSemana = dados.diaDaSemana;

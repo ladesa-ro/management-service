@@ -10,9 +10,8 @@ import {
   PerfilSetVinculosInputDto,
 } from "@/Ladesa.Management.Application/acesso/perfil/application/dtos";
 import {
-  type IPerfilRepositoryPort,
+  IPerfilRepository,
   type IPerfilUseCasePort,
-  PERFIL_REPOSITORY_PORT,
 } from "@/Ladesa.Management.Application/acesso/perfil/application/ports";
 import { UsuarioService } from "@/Ladesa.Management.Application/acesso/usuario";
 import { CampusService } from "@/Ladesa.Management.Application/ambientes/campus";
@@ -20,13 +19,13 @@ import { CampusService } from "@/Ladesa.Management.Application/ambientes/campus"
 /**
  * Implementação dos casos de uso de Perfil (Hexagonal Architecture)
  * Implementa o port de entrada IPerfilUseCasePort
- * Usa o port de saída IPerfilRepositoryPort para acesso a dados
+ * Usa o port de saída IPerfilRepository para acesso a dados
  */
 @Injectable()
 export class PerfilService implements IPerfilUseCasePort {
   constructor(
-    @Inject(PERFIL_REPOSITORY_PORT)
-    private readonly perfilRepository: IPerfilRepositoryPort,
+    @Inject(IPerfilRepository)
+    private readonly perfilRepository: IPerfilRepository,
     private readonly campusService: CampusService,
     private readonly usuarioService: UsuarioService,
   ) {}

@@ -1,10 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
 import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/contexto-acesso";
 import { BaseCrudService, type PersistInput } from "@/Ladesa.Management.Application/@shared";
-import {
-  Disponibilidade,
-  type IDisponibilidade,
-} from "@/Ladesa.Management.Application/ensino/disponibilidade";
+import { Disponibilidade } from "@/Ladesa.Management.Application/ensino/disponibilidade";
 import type {
   DisponibilidadeCreateInputDto,
   DisponibilidadeFindOneInputDto,
@@ -14,15 +11,14 @@ import type {
   DisponibilidadeUpdateInputDto,
 } from "@/Ladesa.Management.Application/ensino/disponibilidade/application/dtos";
 import {
-  DISPONIBILIDADE_REPOSITORY_PORT,
-  type IDisponibilidadeRepositoryPort,
+  IDisponibilidadeRepository,
   type IDisponibilidadeUseCasePort,
 } from "@/Ladesa.Management.Application/ensino/disponibilidade/application/ports";
 
 @Injectable()
 export class DisponibilidadeService
   extends BaseCrudService<
-    IDisponibilidade,
+    Disponibilidade,
     DisponibilidadeListInputDto,
     DisponibilidadeListOutputDto,
     DisponibilidadeFindOneInputDto,
@@ -38,8 +34,8 @@ export class DisponibilidadeService
   protected readonly deleteAction = "disponibilidade:delete";
 
   constructor(
-    @Inject(DISPONIBILIDADE_REPOSITORY_PORT)
-    protected readonly repository: IDisponibilidadeRepositoryPort,
+    @Inject(IDisponibilidadeRepository)
+    protected readonly repository: IDisponibilidadeRepository,
   ) {
     super();
   }
@@ -47,7 +43,7 @@ export class DisponibilidadeService
   protected async buildCreateData(
     _ac: AccessContext,
     dto: DisponibilidadeCreateInputDto,
-  ): Promise<Partial<PersistInput<IDisponibilidade>>> {
+  ): Promise<Partial<PersistInput<Disponibilidade>>> {
     const domain = Disponibilidade.criar({ dataInicio: dto.dataInicio, dataFim: dto.dataFim });
     return { ...domain };
   }
@@ -56,8 +52,8 @@ export class DisponibilidadeService
     _ac: AccessContext,
     dto: DisponibilidadeFindOneInputDto & DisponibilidadeUpdateInputDto,
     current: DisponibilidadeFindOneOutputDto,
-  ): Promise<Partial<PersistInput<IDisponibilidade>>> {
-    const domain = Disponibilidade.fromData(current);
+  ): Promise<Partial<PersistInput<Disponibilidade>>> {
+    const domain = Disponibilidade.fromData(current as unknown as Disponibilidade);
     domain.atualizar({ dataInicio: dto.dataInicio, dataFim: dto.dataFim });
     return { dataInicio: domain.dataInicio, dataFim: domain.dataFim };
   }

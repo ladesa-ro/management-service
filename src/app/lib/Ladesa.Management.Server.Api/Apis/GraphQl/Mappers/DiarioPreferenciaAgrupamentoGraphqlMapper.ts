@@ -20,6 +20,11 @@ import {
 import { IntervaloDeTempoGraphqlMapper } from "@/Ladesa.Management.Server.Api/Apis/GraphQl/Mappers/IntervaloDeTempoGraphqlMapper";
 
 export class DiarioPreferenciaAgrupamentoGraphqlMapper {
+  static toListOutputDto = createListOutputMapper(
+    DiarioPreferenciaAgrupamentoListOutputGraphQlDto,
+    DiarioPreferenciaAgrupamentoGraphqlMapper.toFindOneOutputDto,
+  );
+
   static toListInput(
     dto: DiarioPreferenciaAgrupamentoListInputGraphQlDto | null,
   ): DiarioPreferenciaAgrupamentoListInputDto | null {
@@ -105,9 +110,4 @@ export class DiarioPreferenciaAgrupamentoGraphqlMapper {
     mapDatedFields(dto, output);
     return dto;
   }
-
-  static toListOutputDto = createListOutputMapper(
-    DiarioPreferenciaAgrupamentoListOutputGraphQlDto,
-    DiarioPreferenciaAgrupamentoGraphqlMapper.toFindOneOutputDto,
-  );
 }

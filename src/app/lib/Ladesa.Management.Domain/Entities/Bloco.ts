@@ -1,70 +1,44 @@
-import type { IdUuid, IEntityBase } from "@/Ladesa.Management.Application/@shared";
+import type { IdUuid } from "@/Ladesa.Management.Application/@shared";
 import { BaseDatedEntity } from "@/Ladesa.Management.Application/@shared";
-import type { ICampus } from "@/Ladesa.Management.Application/ambientes/campus";
 import type { BlocoCreateDto } from "@/Ladesa.Management.Domain/Dtos/BlocoCreateDto";
 import type { BlocoUpdateDto } from "@/Ladesa.Management.Domain/Dtos/BlocoUpdateDto";
-
-/**
- * Tipagem da entidade Bloco
- * Define a estrutura de dados sem comportamento
- */
-export interface IBloco extends IEntityBase {
-  /** Nome do bloco */
-  nome: string;
-
-  /** Código identificador do bloco */
-  codigo: string;
-
-  /** Campus ao qual o bloco pertence */
-  campus: ICampus;
-
-  /** Imagem de capa do bloco (opcional) */
-  imagemCapa: { id: IdUuid } | null;
-}
 
 /**
  * Entidade de Domínio: Bloco
  * Implementa a tipagem IBloco e adiciona regras de negócio
  */
-export class Bloco extends BaseDatedEntity implements IBloco {
-  nome!: string;
-  codigo!: string;
-  campus!: ICampus;
-  imagemCapa!: { id: string } | null;
+export class Bloco extends BaseDatedEntity {
+  private constructor(
+    public nome: string,
+    public codigo: string,
+    public campusId: IdUuid,
+    public imagemCapaId: IdUuid | null,
+  ) {
+    super();
+  }
 
   protected static get entityName(): string {
     return "Bloco";
   }
 
-  // ========================================
-  // Validação
-  // ========================================
-
-  /**
-   * Cria uma nova instância válida de Bloco
-   * @throws EntityValidationError se os dados forem inválidos
-   */
   static criar(dados: BlocoCreateDto): Bloco {
-    const instance = new Bloco();
-    instance.nome = dados.nome?.trim() ?? "";
-    instance.codigo = dados.codigo?.trim() ?? "";
-    instance.imagemCapa = null;
+    const instance = new Bloco(
+      dados.nome?.trim() ?? "",
+      dados.codigo?.trim() ?? "",
+      dados.campus.id,
+      null,
+    );
     instance.initDates();
     instance.validar();
-
     return instance;
   }
 
-  // ========================================
-  // Factory Methods
-  // ========================================
-
-  /**
-   * Reconstrói uma instância a partir de dados existentes (ex: do banco)
-   */
-  static fromData(dados: Record<string, any>): Bloco {
-    const instance = new Bloco();
-    Object.assign(instance, dados);
+  static fromData(data: Bloco): Bloco {
+    const instance = new Bloco(data.nome, data.codigo, data.campusId, data.imagemCapaId);
+    instance.id = data.id;
+    instance.dateCreated = data.dateCreated;
+    instance.dateUpdated = data.dateUpdated;
+    instance.dateDeleted = data.dateDeleted;
     return instance;
   }
 
@@ -77,14 +51,6 @@ export class Bloco extends BaseDatedEntity implements IBloco {
     Bloco.throwIfInvalid(result);
   }
 
-  // ========================================
-  // Métodos de Domínio
-  // ========================================
-
-  /**
-   * Atualiza os dados do bloco
-   * @throws EntityValidationError se os dados forem inválidos
-   */
   atualizar(dados: BlocoUpdateDto): void {
     if (dados.nome !== undefined) {
       this.nome = dados.nome?.trim() ?? "";
@@ -98,14 +64,7 @@ export class Bloco extends BaseDatedEntity implements IBloco {
     this.validar();
   }
 
-  // ========================================
-  // Métodos específicos do domínio Bloco
-  // ========================================
-
-  /**
-   * Verifica se o bloco tem imagem de capa
-   */
   temImagemCapa(): boolean {
-    return this.imagemCapa !== null;
+    return this.imagemCapaId !== null;
   }
 }

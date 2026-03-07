@@ -25,6 +25,10 @@ export class DisponibilidadeRestMapper {
   static toFindOneInput = createFindOneInputMapper(DisponibilidadeFindOneInputDto);
 
   static toListInput = createListInputMapper(DisponibilidadeListInputDto, ["filter.id"]);
+  static toListOutputDto = createListOutputMapper(
+    DisponibilidadeListOutputRestDto,
+    DisponibilidadeRestMapper.toFindOneOutputDto,
+  );
 
   static toCreateInput(dto: DisponibilidadeCreateInputRestDto): DisponibilidadeCreateInputDto {
     const input = new DisponibilidadeCreateInputDto();
@@ -32,6 +36,10 @@ export class DisponibilidadeRestMapper {
     input.dataFim = dto.dataFim as unknown as string | null;
     return input;
   }
+
+  // ============================================================================
+  // Output: Core DTO -> Server DTO
+  // ============================================================================
 
   static toUpdateInput(dto: DisponibilidadeUpdateInputRestDto): DisponibilidadeUpdateInputDto {
     const input = new DisponibilidadeUpdateInputDto();
@@ -43,10 +51,6 @@ export class DisponibilidadeRestMapper {
     }
     return input;
   }
-
-  // ============================================================================
-  // Output: Core DTO -> Server DTO
-  // ============================================================================
 
   static toFindOneOutputDto(
     output: DisponibilidadeFindOneOutputDto,
@@ -60,9 +64,4 @@ export class DisponibilidadeRestMapper {
     dto.dateDeleted = output.dateDeleted as unknown as Date | null;
     return dto;
   }
-
-  static toListOutputDto = createListOutputMapper(
-    DisponibilidadeListOutputRestDto,
-    DisponibilidadeRestMapper.toFindOneOutputDto,
-  );
 }

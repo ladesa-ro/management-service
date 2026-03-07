@@ -12,6 +12,11 @@ import {
 import { EstadoGraphqlMapper } from "@/Ladesa.Management.Server.Api/Apis/GraphQl/Mappers/EstadoGraphqlMapper";
 
 export class CidadeGraphqlMapper {
+  static toListOutputDto = createListOutputMapper(
+    CidadeListOutputGraphQlDto,
+    CidadeGraphqlMapper.toFindOneOutputDto,
+  );
+
   static toListInput(dto: CidadeListInputGraphQlDto | null): CidadeListInputDto | null {
     if (!dto) {
       return null;
@@ -43,9 +48,4 @@ export class CidadeGraphqlMapper {
     dto.estado = EstadoGraphqlMapper.toFindOneOutputDto(output.estado);
     return dto;
   }
-
-  static toListOutputDto = createListOutputMapper(
-    CidadeListOutputGraphQlDto,
-    CidadeGraphqlMapper.toFindOneOutputDto,
-  );
 }

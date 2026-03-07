@@ -1,7 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { DataSource } from "typeorm";
 import type {
-  IIntervaloDeTempoRepositoryPort,
+  IIntervaloDeTempoRepository,
   IntervaloDeTempoFindOneInputDto,
   IntervaloDeTempoFindOneOutputDto,
   IntervaloDeTempoInputDto,
@@ -9,7 +9,7 @@ import type {
   IntervaloDeTempoListOutputDto,
 } from "@/Ladesa.Management.Application/horarios/intervalo-de-tempo";
 import type { IntervaloDeTempoEntity } from "@/Ladesa.Management.Application/horarios/intervalo-de-tempo/infrastructure/persistence/typeorm/index";
-import { createIntervaloDeTempoRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/IntervaloDeTempoRepository";
+import { createIntervaloDeTempoRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/CreateIntervaloDeTempoRepository";
 import {
   APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
@@ -27,7 +27,7 @@ export class IntervaloDeTempoTypeOrmRepositoryAdapter
     IntervaloDeTempoFindOneInputDto,
     IntervaloDeTempoFindOneOutputDto
   >
-  implements IIntervaloDeTempoRepositoryPort
+  implements IIntervaloDeTempoRepository
 {
   protected readonly alias = "intervalo_de_tempo";
   protected readonly authzAction = "intervalo_de_tempo:find";

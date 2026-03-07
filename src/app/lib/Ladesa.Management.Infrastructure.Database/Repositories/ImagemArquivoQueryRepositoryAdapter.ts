@@ -7,9 +7,9 @@ import type {
   ImagemArquivoListInputDto,
   ImagemArquivoListOutputDto,
 } from "@/Ladesa.Management.Application/armazenamento/imagem-arquivo/application/dtos";
-import type { IImagemArquivoQueryRepositoryPort } from "@/Ladesa.Management.Application/armazenamento/imagem-arquivo/application/ports";
+import type { IImagemArquivoQueryRepository } from "@/Ladesa.Management.Application/armazenamento/imagem-arquivo/application/ports";
 import type { ImagemArquivoEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/ImagemArquivoEntity";
-import { createImagemArquivoRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/ImagemArquivoRepository";
+import { createImagemArquivoRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/CreateImagemArquivoRepository";
 import {
   APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
@@ -31,7 +31,7 @@ export class ImagemArquivoQueryTypeOrmRepositoryAdapter
     ImagemArquivoFindOneInputDto,
     ImagemArquivoFindOneOutputDto
   >
-  implements IImagemArquivoQueryRepositoryPort
+  implements IImagemArquivoQueryRepository
 {
   protected readonly alias = "imagem_arquivo";
   protected readonly authzAction = "imagem_arquivo:find";

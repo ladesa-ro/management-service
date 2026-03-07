@@ -2,7 +2,7 @@ import { Inject, Injectable } from "@nestjs/common";
 import { has } from "lodash";
 import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/contexto-acesso";
 import { BaseCrudService, type PersistInput } from "@/Ladesa.Management.Application/@shared";
-import { Etapa, type IEtapa } from "@/Ladesa.Management.Application/ensino/etapa";
+import { Etapa } from "@/Ladesa.Management.Application/ensino/etapa";
 import { CalendarioLetivoService } from "@/Ladesa.Management.Application/horarios/calendario-letivo";
 import type {
   EtapaCreateInputDto,
@@ -12,11 +12,11 @@ import type {
   EtapaListOutputDto,
   EtapaUpdateInputDto,
 } from "../dtos";
-import { ETAPA_REPOSITORY_PORT, type IEtapaRepositoryPort } from "../ports";
+import { IEtapaRepository } from "../ports";
 
 @Injectable()
 export class EtapaService extends BaseCrudService<
-  IEtapa,
+  Etapa,
   EtapaListInputDto,
   EtapaListOutputDto,
   EtapaFindOneInputDto,
@@ -30,8 +30,8 @@ export class EtapaService extends BaseCrudService<
   protected readonly deleteAction = "etapa:delete";
 
   constructor(
-    @Inject(ETAPA_REPOSITORY_PORT)
-    protected readonly repository: IEtapaRepositoryPort,
+    @Inject(IEtapaRepository)
+    protected readonly repository: IEtapaRepository,
     private readonly calendarioLetivoService: CalendarioLetivoService,
   ) {
     super();
@@ -40,7 +40,7 @@ export class EtapaService extends BaseCrudService<
   protected async buildCreateData(
     accessContext: AccessContext,
     dto: EtapaCreateInputDto,
-  ): Promise<Partial<PersistInput<IEtapa>>> {
+  ): Promise<Partial<PersistInput<Etapa>>> {
     let calendarioRef: { id: string } | undefined;
     if (dto.calendario) {
       const calendario = await this.calendarioLetivoService.findByIdSimpleStrict(
@@ -57,25 +57,25 @@ export class EtapaService extends BaseCrudService<
       dataTermino: dto.dataTermino,
       calendario: calendarioRef!,
     });
-    return {
-      ...domain,
-      ...(calendarioRef ? { calendario: calendarioRef } : {}),
-    };
+    return { ...domain };
   }
 
   protected async buildUpdateData(
     accessContext: AccessContext,
     dto: EtapaFindOneInputDto & EtapaUpdateInputDto,
     current: EtapaFindOneOutputDto,
-  ): Promise<Partial<PersistInput<IEtapa>>> {
-    const domain = Etapa.fromData(current);
+  ): Promise<Partial<PersistInput<Etapa>>> {
+    const domain = Etapa.fromData({
+      ...current,
+      calendarioId: current.calendario.id,
+    } as unknown as Etapa);
     domain.atualizar({
       numero: dto.numero,
       cor: dto.cor,
       dataInicio: dto.dataInicio,
       dataTermino: dto.dataTermino,
     });
-    const result: Partial<PersistInput<IEtapa>> = {
+    const result: Partial<PersistInput<Etapa>> = {
       numero: domain.numero,
       cor: domain.cor,
       dataInicio: domain.dataInicio,
@@ -87,7 +87,7 @@ export class EtapaService extends BaseCrudService<
         accessContext,
         dto.calendario.id,
       );
-      result.calendario = { id: calendario.id };
+      result.calendarioId = calendario.id;
     }
 
     return result;

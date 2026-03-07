@@ -52,6 +52,12 @@ function mapImagemOutput(imagem: any): any {
 }
 
 export class AmbienteGraphqlMapper {
+  static toFindOneInput = createFindOneInputMapper(AmbienteFindOneInputDto);
+  static toListOutputDto = createListOutputMapper(
+    AmbienteListOutputGraphQlDto,
+    AmbienteGraphqlMapper.toFindOneOutputDto,
+  );
+
   static toListInput(dto: AmbienteListInputGraphQlDto | null): AmbienteListInputDto | null {
     if (!dto) {
       return null;
@@ -67,8 +73,6 @@ export class AmbienteGraphqlMapper {
     input["filter.bloco.campus.id"] = dto.filterBlocoCampusId;
     return input;
   }
-
-  static toFindOneInput = createFindOneInputMapper(AmbienteFindOneInputDto);
 
   static toCreateInput(dto: AmbienteCreateInputGraphQlDto): AmbienteCreateInputDto {
     const input = new AmbienteCreateInputDto();
@@ -109,9 +113,4 @@ export class AmbienteGraphqlMapper {
     mapDatedFields(dto, output);
     return dto;
   }
-
-  static toListOutputDto = createListOutputMapper(
-    AmbienteListOutputGraphQlDto,
-    AmbienteGraphqlMapper.toFindOneOutputDto,
-  );
 }

@@ -2,8 +2,8 @@ import { Module } from "@nestjs/common";
 import { DiarioProfessorModule } from "@/Ladesa.Management.Application/ensino/diario-professor/diario-professor.module";
 import { HorarioGeradoModule } from "@/Ladesa.Management.Application/horarios/horario-gerado/horario-gerado.module";
 import {
-  HORARIO_GERADO_AULA_REPOSITORY_PORT,
   HorarioGeradoAulaService,
+  IHorarioGeradoAulaRepository,
 } from "@/Ladesa.Management.Application/horarios/horario-gerado-aula";
 import { HorarioGeradoAulaAuthzRegistrySetup } from "@/Ladesa.Management.Application/horarios/horario-gerado-aula/infrastructure";
 import { HorarioGeradoAulaTypeOrmRepositoryAdapter } from "@/Ladesa.Management.Application/horarios/horario-gerado-aula/infrastructure/persistence/typeorm";
@@ -21,7 +21,7 @@ import { HorarioGeradoAulaRestController } from "@/Ladesa.Management.Server.Api/
     HorarioGeradoAulaAuthzRegistrySetup,
     HorarioGeradoAulaGraphqlResolver,
     {
-      provide: HORARIO_GERADO_AULA_REPOSITORY_PORT,
+      provide: IHorarioGeradoAulaRepository,
       useClass: HorarioGeradoAulaTypeOrmRepositoryAdapter,
     },
   ],

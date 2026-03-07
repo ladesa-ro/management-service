@@ -1,10 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
 import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/contexto-acesso";
 import { BaseCrudService, type PersistInput } from "@/Ladesa.Management.Application/@shared";
-import {
-  type INivelFormacao,
-  NivelFormacao,
-} from "@/Ladesa.Management.Application/ensino/nivel-formacao";
+import { NivelFormacao } from "@/Ladesa.Management.Application/ensino/nivel-formacao";
 import type {
   NivelFormacaoCreateInputDto,
   NivelFormacaoFindOneInputDto,
@@ -14,15 +11,14 @@ import type {
   NivelFormacaoUpdateInputDto,
 } from "@/Ladesa.Management.Application/ensino/nivel-formacao/application/dtos";
 import {
-  type INivelFormacaoRepositoryPort,
+  INivelFormacaoRepository,
   type INivelFormacaoUseCasePort,
-  NIVEL_FORMACAO_REPOSITORY_PORT,
 } from "@/Ladesa.Management.Application/ensino/nivel-formacao/application/ports";
 
 @Injectable()
 export class NivelFormacaoService
   extends BaseCrudService<
-    INivelFormacao,
+    NivelFormacao,
     NivelFormacaoListInputDto,
     NivelFormacaoListOutputDto,
     NivelFormacaoFindOneInputDto,
@@ -38,8 +34,8 @@ export class NivelFormacaoService
   protected readonly deleteAction = "nivel_formacao:delete";
 
   constructor(
-    @Inject(NIVEL_FORMACAO_REPOSITORY_PORT)
-    protected readonly repository: INivelFormacaoRepositoryPort,
+    @Inject(INivelFormacaoRepository)
+    protected readonly repository: INivelFormacaoRepository,
   ) {
     super();
   }
@@ -47,7 +43,7 @@ export class NivelFormacaoService
   protected async buildCreateData(
     _ac: AccessContext,
     dto: NivelFormacaoCreateInputDto,
-  ): Promise<Partial<PersistInput<INivelFormacao>>> {
+  ): Promise<Partial<PersistInput<NivelFormacao>>> {
     const domain = NivelFormacao.criar({ slug: dto.slug });
     return { ...domain };
   }
@@ -56,8 +52,8 @@ export class NivelFormacaoService
     _ac: AccessContext,
     dto: NivelFormacaoFindOneInputDto & NivelFormacaoUpdateInputDto,
     current: NivelFormacaoFindOneOutputDto,
-  ): Promise<Partial<PersistInput<INivelFormacao>>> {
-    const domain = NivelFormacao.fromData(current);
+  ): Promise<Partial<PersistInput<NivelFormacao>>> {
+    const domain = NivelFormacao.fromData(current as unknown as NivelFormacao);
     domain.atualizar({ slug: dto.slug });
     return { slug: domain.slug };
   }

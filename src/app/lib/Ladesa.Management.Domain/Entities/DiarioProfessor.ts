@@ -1,54 +1,38 @@
-import type { IEntityBase } from "@/Ladesa.Management.Application/@shared";
+import type { IdUuid } from "@/Ladesa.Management.Application/@shared";
 import { BaseDatedEntity } from "@/Ladesa.Management.Application/@shared";
-import type { IPerfil, Perfil } from "@/Ladesa.Management.Application/acesso/perfil";
 import type { DiarioProfessorCreateDto } from "@/Ladesa.Management.Domain/Dtos/DiarioProfessorCreateDto";
 import type { DiarioProfessorUpdateDto } from "@/Ladesa.Management.Domain/Dtos/DiarioProfessorUpdateDto";
-import type { Diario, IDiario } from "@/Ladesa.Management.Domain/Entities/Diario";
-
-export interface IDiarioProfessor extends IEntityBase {
-  situacao: boolean;
-  diario: IDiario;
-  perfil: IPerfil;
-}
 
 /**
  * Entidade de Domínio: DiarioProfessor
  * Implementa a tipagem IDiarioProfessor e adiciona regras de negócio
  */
-export class DiarioProfessor extends BaseDatedEntity implements IDiarioProfessor {
-  situacao!: boolean;
-  diario!: Diario;
-  perfil!: Perfil;
+export class DiarioProfessor extends BaseDatedEntity {
+  private constructor(
+    public situacao: boolean,
+    public diarioId: IdUuid,
+    public perfilId: IdUuid,
+  ) {
+    super();
+  }
 
   protected static get entityName(): string {
     return "DiarioProfessor";
   }
 
-  // ========================================
-  // Validação
-  // ========================================
-
-  /**
-   * Cria uma nova instância válida de DiarioProfessor
-   */
   static criar(dados: DiarioProfessorCreateDto): DiarioProfessor {
-    const instance = new DiarioProfessor();
-    instance.situacao = dados.situacao;
+    const instance = new DiarioProfessor(dados.situacao, dados.diario.id, dados.perfil.id);
     instance.initDates();
     instance.validar();
     return instance;
   }
 
-  // ========================================
-  // Factory Methods
-  // ========================================
-
-  /**
-   * Reconstrói uma instância a partir de dados existentes (ex: do banco)
-   */
-  static fromData(dados: Record<string, any>): DiarioProfessor {
-    const instance = new DiarioProfessor();
-    Object.assign(instance, dados);
+  static fromData(data: DiarioProfessor): DiarioProfessor {
+    const instance = new DiarioProfessor(data.situacao, data.diarioId, data.perfilId);
+    instance.id = data.id;
+    instance.dateCreated = data.dateCreated;
+    instance.dateUpdated = data.dateUpdated;
+    instance.dateDeleted = data.dateDeleted;
     return instance;
   }
 
@@ -56,13 +40,6 @@ export class DiarioProfessor extends BaseDatedEntity implements IDiarioProfessor
     // Sem validações de campos escalares
   }
 
-  // ========================================
-  // Métodos de Domínio
-  // ========================================
-
-  /**
-   * Atualiza os dados do diário professor
-   */
   atualizar(dados: DiarioProfessorUpdateDto): void {
     if (dados.situacao !== undefined) {
       this.situacao = dados.situacao;

@@ -7,16 +7,15 @@ import type {
   EnderecoInputDto,
 } from "@/Ladesa.Management.Application/localidades/endereco/application/dtos";
 import {
-  ENDERECO_REPOSITORY_PORT,
-  type IEnderecoRepositoryPort,
+  IEnderecoRepository,
   type IEnderecoUseCasePort,
 } from "@/Ladesa.Management.Application/localidades/endereco/application/ports";
 
 @Injectable()
 export class EnderecoService implements IEnderecoUseCasePort {
   constructor(
-    @Inject(ENDERECO_REPOSITORY_PORT)
-    private readonly enderecoRepository: IEnderecoRepositoryPort,
+    @Inject(IEnderecoRepository)
+    private readonly enderecoRepository: IEnderecoRepository,
   ) {}
 
   async internalFindOneById(id: string): Promise<EnderecoFindOneOutputDto | null> {

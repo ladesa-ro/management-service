@@ -1,78 +1,58 @@
-import type { IdNumeric, IEntityBase } from "@/Ladesa.Management.Application/@shared";
+import type { IdNumeric } from "@/Ladesa.Management.Application/@shared";
 import { BaseDatedEntity } from "@/Ladesa.Management.Application/@shared";
-import type { ICidade } from "@/Ladesa.Management.Application/localidades/cidade";
 import type { EnderecoCreateDto } from "@/Ladesa.Management.Domain/Dtos/EnderecoCreateDto";
 import type { EnderecoUpdateDto } from "@/Ladesa.Management.Domain/Dtos/EnderecoUpdateDto";
-
-export interface IEndereco extends IEntityBase {
-  cep: string;
-  logradouro: string;
-  numero: number;
-  bairro: string;
-  complemento: string | null;
-  pontoReferencia: string | null;
-  cidade: ICidade;
-}
-
-export interface IEnderecoInput {
-  cep: string;
-  logradouro: string;
-  numero: number;
-  bairro: string;
-  complemento?: string | null;
-  pontoReferencia?: string | null;
-  cidade: { id: IdNumeric };
-}
 
 /**
  * Entidade de Domínio: Endereco
  * Implementa a tipagem IEndereco e adiciona regras de negócio
  */
-export class Endereco extends BaseDatedEntity implements IEndereco {
-  cep!: string;
-  logradouro!: string;
-  numero!: number;
-  bairro!: string;
-  complemento!: string | null;
-  pontoReferencia!: string | null;
-  cidade!: ICidade;
+export class Endereco extends BaseDatedEntity {
+  private constructor(
+    public cep: string,
+    public logradouro: string,
+    public numero: number,
+    public bairro: string,
+    public complemento: string | null,
+    public pontoReferencia: string | null,
+    public cidadeId: IdNumeric,
+  ) {
+    super();
+  }
 
   protected static get entityName(): string {
     return "Endereco";
   }
 
-  // ========================================
-  // Validação
-  // ========================================
-
-  /**
-   * Cria uma nova instância válida de Endereco
-   * @throws EntityValidationError se os dados forem inválidos
-   */
   static criar(dados: EnderecoCreateDto): Endereco {
-    const instance = new Endereco();
-    instance.cep = dados.cep?.trim() ?? "";
-    instance.logradouro = dados.logradouro?.trim() ?? "";
-    instance.numero = dados.numero ?? 0;
-    instance.bairro = dados.bairro?.trim() ?? "";
-    instance.complemento = dados.complemento?.trim() || null;
-    instance.pontoReferencia = dados.pontoReferencia?.trim() || null;
+    const instance = new Endereco(
+      dados.cep?.trim() ?? "",
+      dados.logradouro?.trim() ?? "",
+      dados.numero ?? 0,
+      dados.bairro?.trim() ?? "",
+      dados.complemento?.trim() || null,
+      dados.pontoReferencia?.trim() || null,
+      dados.cidade.id,
+    );
     instance.initDates();
     instance.validar();
-
     return instance;
   }
 
-  // ========================================
-  // Factory Methods
-  // ========================================
-
-  /**
-   * Reconstrói uma instância a partir de dados existentes (ex: do banco)
-   */
-  static fromData(dados: Record<string, any>): Endereco {
-    const instance = new Endereco();
-    Object.assign(instance, dados);
+  static fromData(data: Endereco): Endereco {
+    const instance = new Endereco(
+      data.cep,
+      data.logradouro,
+      data.numero,
+      data.bairro,
+      data.complemento,
+      data.pontoReferencia,
+      data.cidadeId,
+    );
+    instance.id = data.id;
+    instance.dateCreated = data.dateCreated;
+    instance.dateUpdated = data.dateUpdated;
+    instance.dateDeleted = data.dateDeleted;
     return instance;
   }
 
@@ -87,14 +67,6 @@ export class Endereco extends BaseDatedEntity implements IEndereco {
     Endereco.throwIfInvalid(result);
   }
 
-  // ========================================
-  // Métodos de Domínio
-  // ========================================
-
-  /**
-   * Atualiza os dados do endereço
-   * @throws EntityValidationError se os dados forem inválidos
-   */
   atualizar(dados: EnderecoUpdateDto): void {
     if (dados.cep !== undefined) {
       this.cep = dados.cep?.trim() ?? "";
@@ -124,18 +96,12 @@ export class Endereco extends BaseDatedEntity implements IEndereco {
     this.validar();
   }
 
-  // ========================================
-  // Métodos específicos do domínio
-  // ========================================
-
   getEnderecoFormatado(): string {
     const partes = [
       this.logradouro,
       this.numero.toString(),
       this.complemento,
       this.bairro,
-      this.cidade?.nome,
-      this.cidade?.estado?.sigla,
       this.cep,
     ].filter(Boolean);
 

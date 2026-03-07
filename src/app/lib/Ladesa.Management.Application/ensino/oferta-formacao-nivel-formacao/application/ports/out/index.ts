@@ -1,1 +1,1 @@
-export * from "@/Ladesa.Management.Domain/Repositories/OfertaFormacaoNivelFormacaoRepositoryPort";
+export * from "@/Ladesa.Management.Domain/Repositories/IOfertaFormacaoNivelFormacaoRepository";

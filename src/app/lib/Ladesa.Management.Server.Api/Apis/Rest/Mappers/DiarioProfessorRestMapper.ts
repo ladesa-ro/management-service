@@ -34,6 +34,10 @@ export class DiarioProfessorRestMapper {
     "filter.perfil.id",
     "filter.perfil.usuario.id",
   ]);
+  static toListOutputDto = createListOutputMapper(
+    DiarioProfessorListOutputRestDto,
+    DiarioProfessorRestMapper.toFindOneOutputDto,
+  );
 
   static toCreateInput(dto: DiarioProfessorCreateInputRestDto): DiarioProfessorCreateInputDto {
     const input = new DiarioProfessorCreateInputDto();
@@ -42,6 +46,10 @@ export class DiarioProfessorRestMapper {
     input.perfil = { id: dto.perfil.id };
     return input;
   }
+
+  // ============================================================================
+  // Output: Core DTO -> Server DTO
+  // ============================================================================
 
   static toUpdateInput(
     params: DiarioProfessorFindOneInputRestDto,
@@ -62,10 +70,6 @@ export class DiarioProfessorRestMapper {
     return input;
   }
 
-  // ============================================================================
-  // Output: Core DTO -> Server DTO
-  // ============================================================================
-
   static toFindOneOutputDto(
     output: DiarioProfessorFindOneOutputDto,
   ): DiarioProfessorFindOneOutputRestDto {
@@ -77,9 +81,4 @@ export class DiarioProfessorRestMapper {
     mapDatedFields(dto, output);
     return dto;
   }
-
-  static toListOutputDto = createListOutputMapper(
-    DiarioProfessorListOutputRestDto,
-    DiarioProfessorRestMapper.toFindOneOutputDto,
-  );
 }

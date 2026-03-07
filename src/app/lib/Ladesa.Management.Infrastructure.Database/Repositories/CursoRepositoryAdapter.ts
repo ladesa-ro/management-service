@@ -7,9 +7,9 @@ import type {
   CursoListInputDto,
   CursoListOutputDto,
 } from "@/Ladesa.Management.Application/ensino/curso/application/dtos";
-import type { ICursoRepositoryPort } from "@/Ladesa.Management.Application/ensino/curso/application/ports";
+import type { ICursoRepository } from "@/Ladesa.Management.Application/ensino/curso/application/ports";
 import type { CursoEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/CursoEntity";
-import { createCursoRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/CursoRepository";
+import { createCursoRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/CreateCursoRepository";
 import {
   APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
@@ -27,7 +27,7 @@ export class CursoTypeOrmRepositoryAdapter
     CursoFindOneInputDto,
     CursoFindOneOutputDto
   >
-  implements ICursoRepositoryPort
+  implements ICursoRepository
 {
   protected readonly alias = "curso";
   protected readonly authzAction = "curso:find";

@@ -1,7 +1,7 @@
 import { Module } from "@nestjs/common";
 import {
-  ENDERECO_REPOSITORY_PORT,
   EnderecoService,
+  IEnderecoRepository,
 } from "@/Ladesa.Management.Application/localidades/endereco";
 import {
   EnderecoAuthzRegistrySetup,
@@ -19,7 +19,7 @@ import { EnderecoGraphqlResolver } from "@/Ladesa.Management.Server.Api/Apis/Gra
     EnderecoGraphqlResolver,
     EnderecoAuthzRegistrySetup,
     {
-      provide: ENDERECO_REPOSITORY_PORT,
+      provide: IEnderecoRepository,
       useClass: EnderecoTypeOrmRepositoryAdapter,
     },
   ],

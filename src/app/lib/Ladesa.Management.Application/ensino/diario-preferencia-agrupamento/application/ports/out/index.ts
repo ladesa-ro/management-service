@@ -1,1 +1,1 @@
-export * from "@/Ladesa.Management.Domain/Repositories/DiarioPreferenciaAgrupamentoRepositoryPort";
+export * from "@/Ladesa.Management.Domain/Repositories/IDiarioPreferenciaAgrupamentoRepository";

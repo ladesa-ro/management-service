@@ -3,7 +3,7 @@ import { has } from "lodash";
 import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/contexto-acesso";
 import { BaseCrudService, type PersistInput } from "@/Ladesa.Management.Application/@shared";
 import { AmbienteService } from "@/Ladesa.Management.Application/ambientes/ambiente/application/use-cases/ambiente.service";
-import { Diario, type IDiario } from "@/Ladesa.Management.Application/ensino/diario";
+import { Diario } from "@/Ladesa.Management.Application/ensino/diario";
 import type {
   DiarioCreateInputDto,
   DiarioFindOneInputDto,
@@ -13,8 +13,7 @@ import type {
   DiarioUpdateInputDto,
 } from "@/Ladesa.Management.Application/ensino/diario/application/dtos";
 import {
-  DIARIO_REPOSITORY_PORT,
-  type IDiarioRepositoryPort,
+  IDiarioRepository,
   type IDiarioUseCasePort,
 } from "@/Ladesa.Management.Application/ensino/diario/application/ports";
 import { DisciplinaService } from "@/Ladesa.Management.Application/ensino/disciplina/application/use-cases/disciplina.service";
@@ -24,7 +23,7 @@ import { CalendarioLetivoService } from "@/Ladesa.Management.Application/horario
 @Injectable()
 export class DiarioService
   extends BaseCrudService<
-    IDiario,
+    Diario,
     DiarioListInputDto,
     DiarioListOutputDto,
     DiarioFindOneInputDto,
@@ -40,8 +39,8 @@ export class DiarioService
   protected readonly deleteAction = "diario:delete";
 
   constructor(
-    @Inject(DIARIO_REPOSITORY_PORT)
-    protected readonly repository: IDiarioRepositoryPort,
+    @Inject(IDiarioRepository)
+    protected readonly repository: IDiarioRepository,
     private readonly calendarioLetivoService: CalendarioLetivoService,
     private readonly turmaService: TurmaService,
     private readonly disciplinaService: DisciplinaService,
@@ -53,7 +52,7 @@ export class DiarioService
   protected async buildCreateData(
     accessContext: AccessContext,
     dto: DiarioCreateInputDto,
-  ): Promise<Partial<PersistInput<IDiario>>> {
+  ): Promise<Partial<PersistInput<Diario>>> {
     let ambientePadraoRef: { id: string } | null = null;
     if (dto.ambientePadrao != null) {
       const ambientePadrao = await this.ambienteService.findByIdStrict(accessContext, {
@@ -79,32 +78,33 @@ export class DiarioService
       disciplina: { id: disciplina.id },
       ambientePadrao: ambientePadraoRef,
     });
-    return {
-      ...domain,
-      calendarioLetivo: { id: calendarioLetivo.id },
-      turma: { id: turma.id },
-      disciplina: { id: disciplina.id },
-      ambientePadrao: ambientePadraoRef,
-    };
+    return { ...domain };
   }
 
   protected async buildUpdateData(
     accessContext: AccessContext,
     dto: DiarioFindOneInputDto & DiarioUpdateInputDto,
     current: DiarioFindOneOutputDto,
-  ): Promise<Partial<PersistInput<IDiario>>> {
-    const domain = Diario.fromData(current);
+  ): Promise<Partial<PersistInput<Diario>>> {
+    const domain = Diario.fromData({
+      ...current,
+      calendarioLetivoId: current.calendarioLetivo.id,
+      turmaId: current.turma.id,
+      disciplinaId: current.disciplina.id,
+      ambientePadraoId: current.ambientePadrao?.id ?? null,
+      imagemCapaId: current.imagemCapa?.id ?? null,
+    } as unknown as Diario);
     domain.atualizar({ ativo: dto.ativo });
-    const result: Partial<PersistInput<IDiario>> = { ativo: domain.ativo };
+    const result: Partial<PersistInput<Diario>> = { ativo: domain.ativo };
 
     if (has(dto, "ambientePadrao") && dto.ambientePadrao !== undefined) {
       if (dto.ambientePadrao !== null) {
         const ambientePadrao = await this.ambienteService.findByIdStrict(accessContext, {
           id: dto.ambientePadrao.id,
         });
-        result.ambientePadrao = { id: ambientePadrao.id };
+        result.ambientePadraoId = ambientePadrao.id;
       } else {
-        result.ambientePadrao = null;
+        result.ambientePadraoId = null;
       }
     }
 
@@ -113,12 +113,12 @@ export class DiarioService
         accessContext,
         dto.disciplina.id,
       );
-      result.disciplina = { id: disciplina.id };
+      result.disciplinaId = disciplina.id;
     }
 
     if (has(dto, "turma") && dto.turma !== undefined) {
       const turma = await this.turmaService.findByIdSimpleStrict(accessContext, dto.turma.id);
-      result.turma = { id: turma.id };
+      result.turmaId = turma.id;
     }
 
     if (has(dto, "calendarioLetivo") && dto.calendarioLetivo !== undefined) {
@@ -126,7 +126,7 @@ export class DiarioService
         accessContext,
         dto.calendarioLetivo.id,
       );
-      result.calendarioLetivo = { id: calendarioLetivo.id };
+      result.calendarioLetivoId = calendarioLetivo.id;
     }
 
     return result;

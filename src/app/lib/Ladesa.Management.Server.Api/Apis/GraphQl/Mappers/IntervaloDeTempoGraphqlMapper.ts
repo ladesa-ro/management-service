@@ -14,6 +14,11 @@ import {
 } from "@/Ladesa.Management.Server.Api/Apis/GraphQl/Dtos/IntervaloDeTempoGraphqlDto";
 
 export class IntervaloDeTempoGraphqlMapper {
+  static toListOutputDto = createListOutputMapper(
+    IntervaloDeTempoListOutputGraphQlDto,
+    IntervaloDeTempoGraphqlMapper.toFindOneOutputDto,
+  );
+
   static toListInput(
     dto: IntervaloDeTempoListInputGraphQlDto | null,
   ): IntervaloDeTempoListInputDto | null {
@@ -47,9 +52,4 @@ export class IntervaloDeTempoGraphqlMapper {
     mapDatedFields(dto, output);
     return dto;
   }
-
-  static toListOutputDto = createListOutputMapper(
-    IntervaloDeTempoListOutputGraphQlDto,
-    IntervaloDeTempoGraphqlMapper.toFindOneOutputDto,
-  );
 }

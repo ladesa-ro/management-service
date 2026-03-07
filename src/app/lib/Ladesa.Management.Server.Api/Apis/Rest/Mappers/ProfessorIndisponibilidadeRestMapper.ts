@@ -21,6 +21,10 @@ export class ProfessorIndisponibilidadeRestMapper {
     "filter.id",
     "filter.perfil.id",
   ]);
+  static toListOutputDto = createListOutputMapper(
+    ProfessorIndisponibilidadeListOutputRestDto,
+    ProfessorIndisponibilidadeRestMapper.toFindOneOutputDto,
+  );
 
   static toFindOneOutputDto(
     output: ProfessorIndisponibilidadeFindOneOutputDto,
@@ -35,9 +39,4 @@ export class ProfessorIndisponibilidadeRestMapper {
     mapDatedFields(dto, output);
     return dto;
   }
-
-  static toListOutputDto = createListOutputMapper(
-    ProfessorIndisponibilidadeListOutputRestDto,
-    ProfessorIndisponibilidadeRestMapper.toFindOneOutputDto,
-  );
 }

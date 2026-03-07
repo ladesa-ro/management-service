@@ -8,11 +8,9 @@ import sharp from "sharp";
 import { v4 } from "uuid";
 import { ArquivoService } from "@/Ladesa.Management.Application/armazenamento/arquivo/application/use-cases/arquivo.service";
 import {
-  type IImagemArquivoRepositoryPort,
-  type IImagemTransactionPort,
+  IImagemArquivoRepository,
+  IImagemTransaction,
   type IImagemUseCasePort,
-  IMAGEM_ARQUIVO_REPOSITORY_PORT,
-  IMAGEM_TRANSACTION_PORT,
   type ISaveImageOptions,
 } from "@/Ladesa.Management.Application/armazenamento/imagem/application/ports";
 
@@ -20,10 +18,10 @@ import {
 export class ImagemService implements IImagemUseCasePort {
   constructor(
     private readonly arquivoService: ArquivoService,
-    @Inject(IMAGEM_TRANSACTION_PORT)
-    private readonly imagemTransactionPort: IImagemTransactionPort,
-    @Inject(IMAGEM_ARQUIVO_REPOSITORY_PORT)
-    private readonly imagemArquivoRepository: IImagemArquivoRepositoryPort,
+    @Inject(IImagemTransaction)
+    private readonly imagemTransactionPort: IImagemTransaction,
+    @Inject(IImagemArquivoRepository)
+    private readonly imagemArquivoRepository: IImagemArquivoRepository,
   ) {}
 
   async saveImage(file: Express.Multer.File, options: ISaveImageOptions) {
@@ -88,12 +86,8 @@ export class ImagemService implements IImagemUseCasePort {
             largura: metadata.width,
             altura: metadata.height,
 
-            arquivo: {
-              id: arquivo.id,
-            },
-            imagem: {
-              id: imagem.id,
-            },
+            arquivoId: arquivo.id,
+            imagemId: imagem.id,
           });
 
           imagem.versoes.push(versao);

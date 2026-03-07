@@ -26,6 +26,10 @@ export class IntervaloDeTempoRestMapper {
   // ============================================================================
   // Output: Core DTO -> Server DTO
   // ============================================================================
+  static toListOutputDto = createListOutputMapper(
+    IntervaloDeTempoListOutputRestDto,
+    IntervaloDeTempoRestMapper.toFindOneOutputDto,
+  );
 
   static toFindOneOutputDto(
     output: IntervaloDeTempoFindOneOutputDto,
@@ -37,9 +41,4 @@ export class IntervaloDeTempoRestMapper {
     mapDatedFields(dto, output);
     return dto;
   }
-
-  static toListOutputDto = createListOutputMapper(
-    IntervaloDeTempoListOutputRestDto,
-    IntervaloDeTempoRestMapper.toFindOneOutputDto,
-  );
 }

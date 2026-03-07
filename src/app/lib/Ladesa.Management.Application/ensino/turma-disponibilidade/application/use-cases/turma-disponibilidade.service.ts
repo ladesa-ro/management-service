@@ -4,7 +4,7 @@ import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/c
 import { BaseCrudService, type PersistInput } from "@/Ladesa.Management.Application/@shared";
 import { DisponibilidadeService } from "@/Ladesa.Management.Application/ensino/disponibilidade/application/use-cases/disponibilidade.service";
 import { TurmaService } from "@/Ladesa.Management.Application/ensino/turma/application/use-cases/turma.service";
-import type { ITurmaDisponibilidade } from "@/Ladesa.Management.Application/ensino/turma-disponibilidade";
+import type { TurmaDisponibilidade } from "@/Ladesa.Management.Application/ensino/turma-disponibilidade";
 import type {
   TurmaDisponibilidadeCreateInputDto,
   TurmaDisponibilidadeFindOneInputDto,
@@ -13,14 +13,11 @@ import type {
   TurmaDisponibilidadeListOutputDto,
   TurmaDisponibilidadeUpdateInputDto,
 } from "../dtos";
-import {
-  type ITurmaDisponibilidadeRepositoryPort,
-  TURMA_DISPONIBILIDADE_REPOSITORY_PORT,
-} from "../ports/out";
+import { ITurmaDisponibilidadeRepository } from "../ports/out";
 
 @Injectable()
 export class TurmaDisponibilidadeService extends BaseCrudService<
-  ITurmaDisponibilidade,
+  TurmaDisponibilidade,
   TurmaDisponibilidadeListInputDto,
   TurmaDisponibilidadeListOutputDto,
   TurmaDisponibilidadeFindOneInputDto,
@@ -34,8 +31,8 @@ export class TurmaDisponibilidadeService extends BaseCrudService<
   protected readonly deleteAction = "turma_disponibilidade:delete";
 
   constructor(
-    @Inject(TURMA_DISPONIBILIDADE_REPOSITORY_PORT)
-    protected readonly repository: ITurmaDisponibilidadeRepositoryPort,
+    @Inject(ITurmaDisponibilidadeRepository)
+    protected readonly repository: ITurmaDisponibilidadeRepository,
     private readonly turmaService: TurmaService,
     private readonly disponibilidadeService: DisponibilidadeService,
   ) {
@@ -45,12 +42,12 @@ export class TurmaDisponibilidadeService extends BaseCrudService<
   protected async buildCreateData(
     accessContext: AccessContext,
     dto: TurmaDisponibilidadeCreateInputDto,
-  ): Promise<Partial<PersistInput<ITurmaDisponibilidade>>> {
+  ): Promise<Partial<PersistInput<TurmaDisponibilidade>>> {
     const result: Record<string, any> = {};
 
     if (dto.turma) {
       const turma = await this.turmaService.findByIdSimpleStrict(accessContext, dto.turma.id);
-      result.turma = { id: turma.id };
+      result.turmaId = turma.id;
     }
 
     if (dto.disponibilidade) {
@@ -58,25 +55,25 @@ export class TurmaDisponibilidadeService extends BaseCrudService<
         accessContext,
         dto.disponibilidade.id,
       );
-      result.disponibilidade = { id: disponibilidade.id };
+      result.disponibilidadeId = disponibilidade.id;
     }
 
-    return result as ITurmaDisponibilidade;
+    return result as TurmaDisponibilidade;
   }
 
   protected async buildUpdateData(
     accessContext: AccessContext,
     dto: TurmaDisponibilidadeFindOneInputDto & TurmaDisponibilidadeUpdateInputDto,
     _current: TurmaDisponibilidadeFindOneOutputDto,
-  ): Promise<Partial<PersistInput<ITurmaDisponibilidade>>> {
-    const result: Partial<PersistInput<ITurmaDisponibilidade>> = {};
+  ): Promise<Partial<PersistInput<TurmaDisponibilidade>>> {
+    const result: Partial<PersistInput<TurmaDisponibilidade>> = {};
 
     if (has(dto, "turma") && dto.turma !== undefined) {
       if (dto.turma) {
         const turma = await this.turmaService.findByIdSimpleStrict(accessContext, dto.turma.id);
-        result.turma = { id: turma.id };
+        result.turmaId = turma.id;
       } else {
-        result.turma = null;
+        result.turmaId = undefined;
       }
     }
 
@@ -86,9 +83,9 @@ export class TurmaDisponibilidadeService extends BaseCrudService<
           accessContext,
           dto.disponibilidade.id,
         );
-        result.disponibilidade = { id: disponibilidade.id };
+        result.disponibilidadeId = disponibilidade.id;
       } else {
-        result.disponibilidade = null;
+        result.disponibilidadeId = undefined;
       }
     }
 

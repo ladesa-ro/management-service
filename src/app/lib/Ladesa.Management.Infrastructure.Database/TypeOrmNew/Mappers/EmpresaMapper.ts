@@ -22,7 +22,7 @@ export class EmpresaMapper {
       dateCreated: entity.dateCreated.toISOString(),
       dateUpdated: entity.dateUpdated.toISOString(),
       dateDeleted: entity.dateDeleted ? entity.dateDeleted.toISOString() : null,
-    });
+    } as unknown as Empresa);
     return empresa;
   }
 

@@ -6,10 +6,10 @@ import type {
   EtapaFindOneOutputDto,
   EtapaListInputDto,
   EtapaListOutputDto,
-  IEtapaRepositoryPort,
+  IEtapaRepository,
 } from "@/Ladesa.Management.Application/ensino/etapa";
 import type { EtapaEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/EtapaEntity";
-import { createEtapaRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/EtapaRepository";
+import { createEtapaRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/CreateEtapaRepository";
 import {
   APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
@@ -27,7 +27,7 @@ export class EtapaTypeOrmRepositoryAdapter
     EtapaFindOneInputDto,
     EtapaFindOneOutputDto
   >
-  implements IEtapaRepositoryPort
+  implements IEtapaRepository
 {
   protected readonly alias = "etapa";
   protected readonly authzAction = "etapa:find";

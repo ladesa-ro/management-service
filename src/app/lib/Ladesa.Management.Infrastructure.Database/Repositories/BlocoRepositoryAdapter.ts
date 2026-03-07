@@ -7,9 +7,9 @@ import type {
   BlocoListInputDto,
   BlocoListOutputDto,
 } from "@/Ladesa.Management.Application/ambientes/bloco";
-import type { IBlocoRepositoryPort } from "@/Ladesa.Management.Application/ambientes/bloco/application/ports";
+import type { IBlocoRepository } from "@/Ladesa.Management.Application/ambientes/bloco/application/ports";
 import type { BlocoEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/BlocoEntity";
-import { createBlocoRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/BlocoRepository";
+import { createBlocoRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/CreateBlocoRepository";
 import {
   APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
@@ -31,7 +31,7 @@ export class BlocoTypeOrmRepositoryAdapter
     BlocoFindOneInputDto,
     BlocoFindOneOutputDto
   >
-  implements IBlocoRepositoryPort
+  implements IBlocoRepository
 {
   protected readonly alias = "bloco";
   protected readonly authzAction = "bloco:find";

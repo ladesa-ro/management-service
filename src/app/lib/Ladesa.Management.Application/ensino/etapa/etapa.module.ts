@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { ETAPA_REPOSITORY_PORT, EtapaService } from "@/Ladesa.Management.Application/ensino/etapa";
+import { EtapaService, IEtapaRepository } from "@/Ladesa.Management.Application/ensino/etapa";
 import { EtapaAuthzRegistrySetup } from "@/Ladesa.Management.Application/ensino/etapa/infrastructure";
 import { EtapaTypeOrmRepositoryAdapter } from "@/Ladesa.Management.Application/ensino/etapa/infrastructure/persistence/typeorm";
 import { CalendarioLetivoModule } from "@/Ladesa.Management.Application/horarios/calendario-letivo/calendario-letivo.module";
@@ -16,7 +16,7 @@ import { EtapaRestController } from "@/Ladesa.Management.Server.Api/Apis/Rest/Co
     EtapaGraphqlResolver,
     EtapaAuthzRegistrySetup,
     {
-      provide: ETAPA_REPOSITORY_PORT,
+      provide: IEtapaRepository,
       useClass: EtapaTypeOrmRepositoryAdapter,
     },
   ],

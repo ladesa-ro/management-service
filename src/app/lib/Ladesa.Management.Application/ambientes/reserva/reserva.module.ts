@@ -2,7 +2,7 @@ import { Module } from "@nestjs/common";
 import { UsuarioModule } from "@/Ladesa.Management.Application/acesso/usuario/usuario.module";
 import { AmbienteModule } from "@/Ladesa.Management.Application/ambientes/ambiente/ambiente.module";
 import {
-  RESERVA_REPOSITORY_PORT,
+  IReservaRepository,
   ReservaService,
 } from "@/Ladesa.Management.Application/ambientes/reserva";
 import { ReservaAuthzRegistrySetup } from "@/Ladesa.Management.Application/ambientes/reserva/infrastructure";
@@ -14,7 +14,7 @@ import { ReservaRestController } from "@/Ladesa.Management.Server.Api/Apis/Rest/
 /**
  * Módulo Reserva configurado com Arquitetura Hexagonal
  * - ReservaService: Implementa casos de uso (porta de entrada)
- * - ReservaTypeOrmRepositoryAdapter: Implementa IReservaRepositoryPort (porta de saída)
+ * - ReservaTypeOrmRepositoryAdapter: Implementa IReservaRepository (porta de saída)
  * - NestJsPaginateAdapter: Adapter de paginação com nestjs-paginate
  */
 @Module({
@@ -23,7 +23,7 @@ import { ReservaRestController } from "@/Ladesa.Management.Server.Api/Apis/Rest/
   providers: [
     NestJsPaginateAdapter,
     {
-      provide: RESERVA_REPOSITORY_PORT,
+      provide: IReservaRepository,
       useClass: ReservaTypeOrmRepositoryAdapter,
     },
     ReservaService,

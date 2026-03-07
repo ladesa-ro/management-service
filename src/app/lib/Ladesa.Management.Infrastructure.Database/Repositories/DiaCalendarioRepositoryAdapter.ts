@@ -7,9 +7,9 @@ import type {
   DiaCalendarioListInputDto as DiaCalendarioListInputDto,
   DiaCalendarioListOutputDto as DiaCalendarioListOutputDto,
 } from "@/Ladesa.Management.Application/horarios/dia-calendario";
-import type { IDiaCalendarioRepositoryPort } from "@/Ladesa.Management.Application/horarios/dia-calendario/application/ports";
+import type { IDiaCalendarioRepository } from "@/Ladesa.Management.Application/horarios/dia-calendario/application/ports";
 import type { DiaCalendarioEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/DiaCalendarioEntity";
-import { createDiaCalendarioRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/DiaCalendarioRepository";
+import { createDiaCalendarioRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/CreateDiaCalendarioRepository";
 import {
   APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
@@ -27,7 +27,7 @@ export class DiaCalendarioTypeOrmRepositoryAdapter
     DiaCalendarioFindOneInputDto,
     DiaCalendarioFindOneOutputDto
   >
-  implements IDiaCalendarioRepositoryPort
+  implements IDiaCalendarioRepository
 {
   protected readonly alias = "dia_calendario";
   protected readonly authzAction = "dia_calendario:find";

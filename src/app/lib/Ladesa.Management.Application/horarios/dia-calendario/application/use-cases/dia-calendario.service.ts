@@ -3,10 +3,7 @@ import { has } from "lodash";
 import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/contexto-acesso";
 import { BaseCrudService, type PersistInput } from "@/Ladesa.Management.Application/@shared";
 import { CalendarioLetivoService } from "@/Ladesa.Management.Application/horarios/calendario-letivo";
-import {
-  DiaCalendario,
-  type IDiaCalendario,
-} from "@/Ladesa.Management.Application/horarios/dia-calendario";
+import { DiaCalendario } from "@/Ladesa.Management.Application/horarios/dia-calendario";
 import type {
   DiaCalendarioCreateInputDto,
   DiaCalendarioFindOneInputDto,
@@ -15,11 +12,11 @@ import type {
   DiaCalendarioListOutputDto,
   DiaCalendarioUpdateInputDto,
 } from "../dtos";
-import { DIA_CALENDARIO_REPOSITORY_PORT, type IDiaCalendarioRepositoryPort } from "../ports";
+import { IDiaCalendarioRepository } from "../ports";
 
 @Injectable()
 export class DiaCalendarioService extends BaseCrudService<
-  IDiaCalendario,
+  DiaCalendario,
   DiaCalendarioListInputDto,
   DiaCalendarioListOutputDto,
   DiaCalendarioFindOneInputDto,
@@ -33,8 +30,8 @@ export class DiaCalendarioService extends BaseCrudService<
   protected readonly deleteAction = "dia_calendario:delete";
 
   constructor(
-    @Inject(DIA_CALENDARIO_REPOSITORY_PORT)
-    protected readonly repository: IDiaCalendarioRepositoryPort,
+    @Inject(IDiaCalendarioRepository)
+    protected readonly repository: IDiaCalendarioRepository,
     private readonly calendarioLetivoService: CalendarioLetivoService,
   ) {
     super();
@@ -43,7 +40,7 @@ export class DiaCalendarioService extends BaseCrudService<
   protected async buildCreateData(
     accessContext: AccessContext,
     dto: DiaCalendarioCreateInputDto,
-  ): Promise<Partial<PersistInput<IDiaCalendario>>> {
+  ): Promise<Partial<PersistInput<DiaCalendario>>> {
     let calendarioRef: { id: string } | undefined;
     if (dto.calendario) {
       const calendario = await this.calendarioLetivoService.findByIdSimpleStrict(
@@ -62,20 +59,20 @@ export class DiaCalendarioService extends BaseCrudService<
       extraCurricular: dto.extraCurricular,
       calendario: calendarioRef!,
     });
-    return {
-      ...domain,
-      ...(calendarioRef ? { calendario: calendarioRef } : {}),
-    };
+    return { ...domain };
   }
 
   protected async buildUpdateData(
     accessContext: AccessContext,
     dto: DiaCalendarioFindOneInputDto & DiaCalendarioUpdateInputDto,
     current: DiaCalendarioFindOneOutputDto,
-  ): Promise<Partial<PersistInput<IDiaCalendario>>> {
-    const domain = DiaCalendario.fromData(current);
+  ): Promise<Partial<PersistInput<DiaCalendario>>> {
+    const domain = DiaCalendario.fromData({
+      ...current,
+      calendarioId: current.calendario.id,
+    } as unknown as DiaCalendario);
     domain.atualizar({ data: dto.data, diaLetivo: dto.diaLetivo, feriado: dto.feriado });
-    const result: Partial<PersistInput<IDiaCalendario>> = {
+    const result: Partial<PersistInput<DiaCalendario>> = {
       data: domain.data,
       diaLetivo: domain.diaLetivo,
       feriado: domain.feriado,
@@ -86,7 +83,7 @@ export class DiaCalendarioService extends BaseCrudService<
         accessContext,
         dto.calendario!.id,
       );
-      result.calendario = { id: calendario.id };
+      result.calendarioId = calendario.id;
     }
 
     return result;

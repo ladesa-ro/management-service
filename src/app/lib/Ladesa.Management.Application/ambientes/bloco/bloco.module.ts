@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { BLOCO_REPOSITORY_PORT } from "@/Ladesa.Management.Application/ambientes/bloco/application/ports";
+import { IBlocoRepository } from "@/Ladesa.Management.Application/ambientes/bloco/application/ports";
 import { BlocoService } from "@/Ladesa.Management.Application/ambientes/bloco/application/use-cases/bloco.service";
 import {
   BlocoAuthzRegistrySetup,
@@ -21,7 +21,7 @@ import { BlocoRestController } from "@/Ladesa.Management.Server.Api/Apis/Rest/Co
     BlocoGraphqlResolver,
     BlocoAuthzRegistrySetup,
     {
-      provide: BLOCO_REPOSITORY_PORT,
+      provide: IBlocoRepository,
       useClass: BlocoTypeOrmRepositoryAdapter,
     },
   ],

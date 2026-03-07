@@ -1,1 +1,1 @@
-export * from "@/Ladesa.Management.Domain/Repositories/IntervaloDeTempoRepositoryPort";
+export * from "@/Ladesa.Management.Domain/Repositories/IIntervaloDeTempoRepository";

@@ -1,75 +1,52 @@
-import type { IEntityBase } from "@/Ladesa.Management.Application/@shared";
+import type { IdUuid } from "@/Ladesa.Management.Application/@shared";
 import { BaseDatedEntity } from "@/Ladesa.Management.Application/@shared";
-import type { IEndereco } from "@/Ladesa.Management.Application/localidades/endereco";
 import type { CampusCreateDto } from "@/Ladesa.Management.Domain/Dtos/CampusCreateDto";
 import type { CampusUpdateDto } from "@/Ladesa.Management.Domain/Dtos/CampusUpdateDto";
-
-/**
- * Tipagem da entidade Campus
- * Define a estrutura de dados sem comportamento
- */
-export interface ICampus extends IEntityBase {
-  /** Nome fantasia do campus */
-  nomeFantasia: string;
-
-  /** Razão social do campus */
-  razaoSocial: string;
-
-  /** Apelido/nome curto do campus */
-  apelido: string;
-
-  /** CNPJ do campus */
-  cnpj: string;
-
-  /** Endereço do campus */
-  endereco: IEndereco;
-}
 
 /**
  * Entidade de Domínio: Campus
  * Implementa a tipagem ICampus e adiciona regras de negócio
  */
-export class Campus extends BaseDatedEntity implements ICampus {
-  nomeFantasia!: string;
-  razaoSocial!: string;
-  apelido!: string;
-  cnpj!: string;
-  endereco!: IEndereco;
+export class Campus extends BaseDatedEntity {
+  private constructor(
+    public nomeFantasia: string,
+    public razaoSocial: string,
+    public apelido: string,
+    public cnpj: string,
+    public enderecoId: IdUuid,
+  ) {
+    super();
+  }
 
   protected static get entityName(): string {
     return "Campus";
   }
 
-  // ========================================
-  // Validação
-  // ========================================
-
-  /**
-   * Cria uma nova instância válida de Campus
-   * @throws EntityValidationError se os dados forem inválidos
-   */
-  static criar(dados: CampusCreateDto): Campus {
-    const instance = new Campus();
-    instance.nomeFantasia = dados.nomeFantasia?.trim() ?? "";
-    instance.razaoSocial = dados.razaoSocial?.trim() ?? "";
-    instance.apelido = dados.apelido?.trim() || "";
-    instance.cnpj = dados.cnpj;
+  static criar(dados: CampusCreateDto, enderecoId: IdUuid): Campus {
+    const instance = new Campus(
+      dados.nomeFantasia?.trim() ?? "",
+      dados.razaoSocial?.trim() ?? "",
+      dados.apelido?.trim() || "",
+      dados.cnpj,
+      enderecoId,
+    );
     instance.initDates();
     instance.validar();
-
     return instance;
   }
 
-  // ========================================
-  // Factory Methods
-  // ========================================
-
-  /**
-   * Reconstrói uma instância a partir de dados existentes (ex: do banco)
-   */
-  static fromData(dados: Record<string, any>): Campus {
-    const instance = new Campus();
-    Object.assign(instance, dados);
+  static fromData(data: Campus): Campus {
+    const instance = new Campus(
+      data.nomeFantasia,
+      data.razaoSocial,
+      data.apelido,
+      data.cnpj,
+      data.enderecoId,
+    );
+    instance.id = data.id;
+    instance.dateCreated = data.dateCreated;
+    instance.dateUpdated = data.dateUpdated;
+    instance.dateDeleted = data.dateDeleted;
     return instance;
   }
 
@@ -82,14 +59,6 @@ export class Campus extends BaseDatedEntity implements ICampus {
     Campus.throwIfInvalid(result);
   }
 
-  // ========================================
-  // Métodos de Domínio
-  // ========================================
-
-  /**
-   * Atualiza os dados do campus
-   * @throws EntityValidationError se os dados forem inválidos
-   */
   atualizar(dados: CampusUpdateDto): void {
     if (dados.nomeFantasia !== undefined) {
       this.nomeFantasia = dados.nomeFantasia?.trim() ?? "";
@@ -111,13 +80,6 @@ export class Campus extends BaseDatedEntity implements ICampus {
     this.validar();
   }
 
-  // ========================================
-  // Métodos específicos do domínio Campus
-  // ========================================
-
-  /**
-   * Valida se o CNPJ tem formato válido (apenas números, 14 dígitos)
-   */
   isCnpjValido(): boolean {
     const cnpjLimpo = this.cnpj.replace(/\D/g, "");
     return /^\d{14}$/.test(cnpjLimpo);

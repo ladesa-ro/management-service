@@ -20,6 +20,12 @@ import {
 import { CalendarioLetivoGraphqlMapper } from "@/Ladesa.Management.Server.Api/Apis/GraphQl/Mappers/CalendarioLetivoGraphqlMapper";
 
 export class HorarioGeradoGraphqlMapper {
+  static toFindOneInput = createFindOneInputMapper(HorarioGeradoFindOneInputDto);
+  static toListOutputDto = createListOutputMapper(
+    HorarioGeradoListOutputGraphQlDto,
+    HorarioGeradoGraphqlMapper.toFindOneOutputDto,
+  );
+
   static toListInput(
     dto: HorarioGeradoListInputGraphQlDto | null,
   ): HorarioGeradoListInputDto | null {
@@ -36,8 +42,6 @@ export class HorarioGeradoGraphqlMapper {
     input["filter.calendario.id"] = dto.filterCalendarioId;
     return input;
   }
-
-  static toFindOneInput = createFindOneInputMapper(HorarioGeradoFindOneInputDto);
 
   static toCreateInput(dto: HorarioGeradoCreateInputGraphQlDto): HorarioGeradoCreateInputDto {
     const input = new HorarioGeradoCreateInputDto();
@@ -92,9 +96,4 @@ export class HorarioGeradoGraphqlMapper {
     mapDatedFields(dto, output);
     return dto;
   }
-
-  static toListOutputDto = createListOutputMapper(
-    HorarioGeradoListOutputGraphQlDto,
-    HorarioGeradoGraphqlMapper.toFindOneOutputDto,
-  );
 }

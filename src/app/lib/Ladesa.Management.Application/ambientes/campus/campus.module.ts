@@ -1,8 +1,5 @@
 import { Module } from "@nestjs/common";
-import {
-  CAMPUS_REPOSITORY_PORT,
-  CampusService,
-} from "@/Ladesa.Management.Application/ambientes/campus";
+import { CampusService, ICampusRepository } from "@/Ladesa.Management.Application/ambientes/campus";
 import {
   CampusAuthzRegistrySetup,
   CampusTypeOrmRepositoryAdapter,
@@ -21,7 +18,7 @@ import { CampusRestController } from "@/Ladesa.Management.Server.Api/Apis/Rest/C
     CampusGraphqlResolver,
     CampusAuthzRegistrySetup,
     {
-      provide: CAMPUS_REPOSITORY_PORT,
+      provide: ICampusRepository,
       useClass: CampusTypeOrmRepositoryAdapter,
     },
   ],

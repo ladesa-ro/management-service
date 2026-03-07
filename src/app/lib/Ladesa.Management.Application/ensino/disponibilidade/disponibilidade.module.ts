@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { DISPONIBILIDADE_REPOSITORY_PORT } from "@/Ladesa.Management.Application/ensino/disponibilidade/application/ports";
+import { IDisponibilidadeRepository } from "@/Ladesa.Management.Application/ensino/disponibilidade/application/ports";
 import { DisponibilidadeService } from "@/Ladesa.Management.Application/ensino/disponibilidade/application/use-cases/disponibilidade.service";
 import { DisponibilidadeAuthzRegistrySetup } from "@/Ladesa.Management.Application/ensino/disponibilidade/infrastructure";
 import { DisponibilidadeTypeOrmRepositoryAdapter } from "@/Ladesa.Management.Application/ensino/disponibilidade/infrastructure/persistence/typeorm";
@@ -16,7 +16,7 @@ import { DisponibilidadeRestController } from "@/Ladesa.Management.Server.Api/Ap
     DisponibilidadeGraphqlResolver,
     DisponibilidadeAuthzRegistrySetup,
     {
-      provide: DISPONIBILIDADE_REPOSITORY_PORT,
+      provide: IDisponibilidadeRepository,
       useClass: DisponibilidadeTypeOrmRepositoryAdapter,
     },
   ],

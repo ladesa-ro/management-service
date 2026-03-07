@@ -6,10 +6,10 @@ import type {
   CampusFindOneOutputDto,
   CampusListInputDto,
   CampusListOutputDto,
-  ICampusRepositoryPort,
+  ICampusRepository,
 } from "@/Ladesa.Management.Application/ambientes/campus";
 import type { CampusEntity } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Entities/CampusEntity";
-import { createCampusRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/CampusRepository";
+import { createCampusRepository } from "@/Ladesa.Management.Infrastructure.Database/TypeOrmNew/Repositories/CreateCampusRepository";
 import {
   APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
@@ -27,7 +27,7 @@ export class CampusTypeOrmRepositoryAdapter
     CampusFindOneInputDto,
     CampusFindOneOutputDto
   >
-  implements ICampusRepositoryPort
+  implements ICampusRepository
 {
   protected readonly alias = "campus";
   protected readonly authzAction = "campus:find";

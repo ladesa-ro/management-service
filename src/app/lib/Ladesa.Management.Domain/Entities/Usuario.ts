@@ -1,68 +1,55 @@
-import type { IEntityBase } from "@/Ladesa.Management.Application/@shared";
+import type { IdUuid } from "@/Ladesa.Management.Application/@shared";
 import { BaseDatedEntity } from "@/Ladesa.Management.Application/@shared";
 import type { UsuarioCreateDto } from "@/Ladesa.Management.Domain/Dtos/UsuarioCreateDto";
 import type { UsuarioUpdateDto } from "@/Ladesa.Management.Domain/Dtos/UsuarioUpdateDto";
-import type { IImagem } from "@/Ladesa.Management.Domain/Entities/Imagem";
-
-/**
- * Interface que define a estrutura de dados de Usuario
- * Tipagem pura sem implementação de regras
- */
-export interface IUsuario extends IEntityBase {
-  nome: string | null;
-  matriculaSiape: string | null;
-  email: string | null;
-  isSuperUser: boolean;
-  imagemCapa: IImagem | null;
-  imagemPerfil: IImagem | null;
-}
 
 /**
  * Entidade de Domínio: Usuario
  * Implementa a tipagem IUsuario e adiciona regras de negócio
  */
-export class Usuario extends BaseDatedEntity implements IUsuario {
-  nome!: string | null;
-  matriculaSiape!: string | null;
-  email!: string | null;
-  isSuperUser!: boolean;
-  imagemCapa!: IImagem | null;
-  imagemPerfil!: IImagem | null;
+export class Usuario extends BaseDatedEntity {
+  private constructor(
+    public nome: string | null,
+    public matriculaSiape: string | null,
+    public email: string | null,
+    public isSuperUser: boolean,
+    public imagemCapaId: IdUuid | null,
+    public imagemPerfilId: IdUuid | null,
+  ) {
+    super();
+  }
 
   protected static get entityName(): string {
     return "Usuario";
   }
 
-  // ========================================
-  // Validação
-  // ========================================
-
-  /**
-   * Cria uma nova instância válida de Usuario
-   */
   static criar(dados: UsuarioCreateDto): Usuario {
-    const instance = new Usuario();
-    instance.nome = dados.nome?.trim() || null;
-    instance.matriculaSiape = dados.matriculaSiape?.trim() || null;
-    instance.email = dados.email?.trim() || null;
-    instance.isSuperUser = false;
-    instance.imagemCapa = null;
-    instance.imagemPerfil = null;
+    const instance = new Usuario(
+      dados.nome?.trim() || null,
+      dados.matriculaSiape?.trim() || null,
+      dados.email?.trim() || null,
+      false,
+      null,
+      null,
+    );
     instance.initDates();
     instance.validar();
     return instance;
   }
 
-  // ========================================
-  // Factory Methods
-  // ========================================
-
-  /**
-   * Reconstrói uma instância a partir de dados existentes (ex: do banco)
-   */
-  static fromData(dados: Record<string, any>): Usuario {
-    const instance = new Usuario();
-    Object.assign(instance, dados);
+  static fromData(data: Usuario): Usuario {
+    const instance = new Usuario(
+      data.nome,
+      data.matriculaSiape,
+      data.email,
+      data.isSuperUser,
+      data.imagemCapaId,
+      data.imagemPerfilId,
+    );
+    instance.id = data.id;
+    instance.dateCreated = data.dateCreated;
+    instance.dateUpdated = data.dateUpdated;
+    instance.dateDeleted = data.dateDeleted;
     return instance;
   }
 
@@ -70,13 +57,6 @@ export class Usuario extends BaseDatedEntity implements IUsuario {
     // Campos são opcionais, sem validações obrigatórias
   }
 
-  // ========================================
-  // Métodos de Domínio
-  // ========================================
-
-  /**
-   * Atualiza os dados do usuário
-   */
   atualizar(dados: UsuarioUpdateDto): void {
     if (dados.nome !== undefined) {
       this.nome = dados.nome?.trim() || null;
@@ -94,16 +74,9 @@ export class Usuario extends BaseDatedEntity implements IUsuario {
     this.validar();
   }
 
-  /**
-   * Valida se pode ser deletado (override: super users não podem ser deletados)
-   */
   override podeSerDeletado(): boolean {
     return this.isAtivo() && !this.isSuperUser;
   }
-
-  // ========================================
-  // Métodos específicos do domínio
-  // ========================================
 
   temNome(): boolean {
     return this.nome !== null && this.nome.trim().length > 0;
@@ -118,10 +91,10 @@ export class Usuario extends BaseDatedEntity implements IUsuario {
   }
 
   temImagemCapa(): boolean {
-    return this.imagemCapa !== null;
+    return this.imagemCapaId !== null;
   }
 
   temImagemPerfil(): boolean {
-    return this.imagemPerfil !== null;
+    return this.imagemPerfilId !== null;
   }
 }

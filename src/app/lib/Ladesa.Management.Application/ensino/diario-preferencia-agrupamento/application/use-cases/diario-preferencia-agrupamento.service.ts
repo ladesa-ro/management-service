@@ -3,10 +3,7 @@ import { has } from "lodash";
 import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/contexto-acesso";
 import { BaseCrudService, type PersistInput } from "@/Ladesa.Management.Application/@shared";
 import { DiarioService } from "@/Ladesa.Management.Application/ensino/diario/application/use-cases/diario.service";
-import {
-  DiarioPreferenciaAgrupamento,
-  type IDiarioPreferenciaAgrupamento,
-} from "@/Ladesa.Management.Application/ensino/diario-preferencia-agrupamento";
+import { DiarioPreferenciaAgrupamento } from "@/Ladesa.Management.Application/ensino/diario-preferencia-agrupamento";
 import { IntervaloDeTempoService } from "@/Ladesa.Management.Application/horarios/intervalo-de-tempo/application/use-cases/intervalo-de-tempo.service";
 import type {
   DiarioPreferenciaAgrupamentoCreateInputDto,
@@ -16,14 +13,11 @@ import type {
   DiarioPreferenciaAgrupamentoListOutputDto,
   DiarioPreferenciaAgrupamentoUpdateInputDto,
 } from "../dtos";
-import {
-  DIARIO_PREFERENCIA_AGRUPAMENTO_REPOSITORY_PORT,
-  type IDiarioPreferenciaAgrupamentoRepositoryPort,
-} from "../ports/out";
+import { IDiarioPreferenciaAgrupamentoRepository } from "../ports/out";
 
 @Injectable()
 export class DiarioPreferenciaAgrupamentoService extends BaseCrudService<
-  IDiarioPreferenciaAgrupamento,
+  DiarioPreferenciaAgrupamento,
   DiarioPreferenciaAgrupamentoListInputDto,
   DiarioPreferenciaAgrupamentoListOutputDto,
   DiarioPreferenciaAgrupamentoFindOneInputDto,
@@ -37,8 +31,8 @@ export class DiarioPreferenciaAgrupamentoService extends BaseCrudService<
   protected readonly deleteAction = "diario_preferencia_agrupamento:delete";
 
   constructor(
-    @Inject(DIARIO_PREFERENCIA_AGRUPAMENTO_REPOSITORY_PORT)
-    protected readonly repository: IDiarioPreferenciaAgrupamentoRepositoryPort,
+    @Inject(IDiarioPreferenciaAgrupamentoRepository)
+    protected readonly repository: IDiarioPreferenciaAgrupamentoRepository,
     private readonly diarioService: DiarioService,
     private readonly intervaloDeTempoService: IntervaloDeTempoService,
   ) {
@@ -48,7 +42,7 @@ export class DiarioPreferenciaAgrupamentoService extends BaseCrudService<
   protected async buildCreateData(
     accessContext: AccessContext,
     dto: DiarioPreferenciaAgrupamentoCreateInputDto,
-  ): Promise<Partial<PersistInput<IDiarioPreferenciaAgrupamento>>> {
+  ): Promise<Partial<PersistInput<DiarioPreferenciaAgrupamento>>> {
     let diarioRef: { id: string } | undefined;
     if (dto.diario) {
       const diario = await this.diarioService.findByIdStrict(accessContext, dto.diario);
@@ -72,26 +66,26 @@ export class DiarioPreferenciaAgrupamentoService extends BaseCrudService<
       diario: diarioRef!,
       intervaloDeTempo: intervaloRef!,
     });
-    return {
-      ...domain,
-      ...(diarioRef ? { diario: diarioRef } : {}),
-      ...(intervaloRef ? { intervaloDeTempo: intervaloRef } : {}),
-    };
+    return { ...domain };
   }
 
   protected async buildUpdateData(
     accessContext: AccessContext,
     dto: DiarioPreferenciaAgrupamentoFindOneInputDto & DiarioPreferenciaAgrupamentoUpdateInputDto,
     current: DiarioPreferenciaAgrupamentoFindOneOutputDto,
-  ): Promise<Partial<PersistInput<IDiarioPreferenciaAgrupamento>>> {
-    const domain = DiarioPreferenciaAgrupamento.fromData(current);
+  ): Promise<Partial<PersistInput<DiarioPreferenciaAgrupamento>>> {
+    const domain = DiarioPreferenciaAgrupamento.fromData({
+      ...current,
+      diarioId: current.diario.id,
+      intervaloDeTempoId: current.intervaloDeTempo.id,
+    } as unknown as DiarioPreferenciaAgrupamento);
     domain.atualizar({
       diaSemanaIso: dto.diaSemanaIso,
       aulasSeguidas: dto.aulasSeguidas,
       dataInicio: dto.dataInicio,
       dataFim: dto.dataFim,
     });
-    const result: Partial<PersistInput<IDiarioPreferenciaAgrupamento>> = {
+    const result: Partial<PersistInput<DiarioPreferenciaAgrupamento>> = {
       diaSemanaIso: domain.diaSemanaIso,
       aulasSeguidas: domain.aulasSeguidas,
       dataInicio: domain.dataInicio,
@@ -100,7 +94,7 @@ export class DiarioPreferenciaAgrupamentoService extends BaseCrudService<
 
     if (has(dto, "diario") && dto.diario !== undefined) {
       const diario = await this.diarioService.findByIdStrict(accessContext, dto.diario);
-      result.diario = { id: diario.id };
+      result.diarioId = diario.id;
     }
 
     if (has(dto, "intervaloDeTempo") && dto.intervaloDeTempo !== undefined) {
@@ -108,7 +102,7 @@ export class DiarioPreferenciaAgrupamentoService extends BaseCrudService<
         accessContext,
         dto.intervaloDeTempo!,
       );
-      result.intervaloDeTempo = { id: intervaloDeTempo!.id };
+      result.intervaloDeTempoId = intervaloDeTempo!.id;
     }
 
     return result;

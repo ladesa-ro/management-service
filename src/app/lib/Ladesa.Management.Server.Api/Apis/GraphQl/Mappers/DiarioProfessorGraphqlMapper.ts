@@ -20,6 +20,11 @@ import {
 import { PerfilGraphqlMapper } from "@/Ladesa.Management.Server.Api/Apis/GraphQl/Mappers/PerfilGraphqlMapper";
 
 export class DiarioProfessorGraphqlMapper {
+  static toListOutputDto = createListOutputMapper(
+    DiarioProfessorListOutputGraphQlDto,
+    DiarioProfessorGraphqlMapper.toFindOneOutputDto,
+  );
+
   static toListInput(
     dto: DiarioProfessorListInputGraphQlDto | null,
   ): DiarioProfessorListInputDto | null {
@@ -84,9 +89,4 @@ export class DiarioProfessorGraphqlMapper {
     mapDatedFields(dto, output);
     return dto;
   }
-
-  static toListOutputDto = createListOutputMapper(
-    DiarioProfessorListOutputGraphQlDto,
-    DiarioProfessorGraphqlMapper.toFindOneOutputDto,
-  );
 }

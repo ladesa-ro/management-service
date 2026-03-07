@@ -17,6 +17,12 @@ import {
 } from "@/Ladesa.Management.Server.Api/Apis/GraphQl/Dtos/ImagemArquivoGraphqlDto";
 
 export class ImagemArquivoGraphqlMapper {
+  static toFindOneInput = createFindOneInputMapper(ImagemArquivoFindOneInputDto);
+  static toListOutputDto = createListOutputMapper(
+    ImagemArquivoListOutputGraphQlDto,
+    ImagemArquivoGraphqlMapper.toFindOneOutputDto,
+  );
+
   static toListInput(
     dto: ImagemArquivoListInputGraphQlDto | null,
   ): ImagemArquivoListInputDto | null {
@@ -32,8 +38,6 @@ export class ImagemArquivoGraphqlMapper {
     input["filter.id"] = dto.filterId;
     return input;
   }
-
-  static toFindOneInput = createFindOneInputMapper(ImagemArquivoFindOneInputDto);
 
   static toFindOneOutputDto(
     output: ImagemArquivoFindOneOutputDto,
@@ -61,9 +65,4 @@ export class ImagemArquivoGraphqlMapper {
     mapDatedFields(dto, output);
     return dto;
   }
-
-  static toListOutputDto = createListOutputMapper(
-    ImagemArquivoListOutputGraphQlDto,
-    ImagemArquivoGraphqlMapper.toFindOneOutputDto,
-  );
 }

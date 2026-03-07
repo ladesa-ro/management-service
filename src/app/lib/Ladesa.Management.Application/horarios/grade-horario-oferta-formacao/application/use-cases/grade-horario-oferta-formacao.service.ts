@@ -1,7 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
 import type { AccessContext } from "@/Ladesa.Management.Application/@seguranca/contexto-acesso";
 import { BaseCrudService, type PersistInput } from "@/Ladesa.Management.Application/@shared";
-import type { IGradeHorarioOfertaFormacao } from "@/Ladesa.Management.Application/horarios/grade-horario-oferta-formacao";
+import type { GradeHorarioOfertaFormacao } from "@/Ladesa.Management.Application/horarios/grade-horario-oferta-formacao";
 import type {
   GradeHorarioOfertaFormacaoCreateInputDto,
   GradeHorarioOfertaFormacaoFindOneInputDto,
@@ -11,15 +11,14 @@ import type {
   GradeHorarioOfertaFormacaoUpdateInputDto,
 } from "@/Ladesa.Management.Application/horarios/grade-horario-oferta-formacao/application/dtos";
 import {
-  GRADE_HORARIO_OFERTA_FORMACAO_REPOSITORY_PORT,
-  type IGradeHorarioOfertaFormacaoRepositoryPort,
+  IGradeHorarioOfertaFormacaoRepository,
   type IGradeHorarioOfertaFormacaoUseCasePort,
 } from "@/Ladesa.Management.Application/horarios/grade-horario-oferta-formacao/application/ports";
 
 @Injectable()
 export class GradeHorarioOfertaFormacaoService
   extends BaseCrudService<
-    IGradeHorarioOfertaFormacao,
+    GradeHorarioOfertaFormacao,
     GradeHorarioOfertaFormacaoListInputDto,
     GradeHorarioOfertaFormacaoListOutputDto,
     GradeHorarioOfertaFormacaoFindOneInputDto,
@@ -35,8 +34,8 @@ export class GradeHorarioOfertaFormacaoService
   protected readonly deleteAction = "grade_horario_oferta_formacao:delete";
 
   constructor(
-    @Inject(GRADE_HORARIO_OFERTA_FORMACAO_REPOSITORY_PORT)
-    protected readonly repository: IGradeHorarioOfertaFormacaoRepositoryPort,
+    @Inject(IGradeHorarioOfertaFormacaoRepository)
+    protected readonly repository: IGradeHorarioOfertaFormacaoRepository,
   ) {
     super();
   }
@@ -44,10 +43,10 @@ export class GradeHorarioOfertaFormacaoService
   protected async buildCreateData(
     _ac: AccessContext,
     dto: GradeHorarioOfertaFormacaoCreateInputDto,
-  ): Promise<Partial<PersistInput<IGradeHorarioOfertaFormacao>>> {
+  ): Promise<Partial<PersistInput<GradeHorarioOfertaFormacao>>> {
     return {
-      campus: { id: dto.campus.id },
-      ofertaFormacao: { id: dto.ofertaFormacao.id },
+      campusId: dto.campus.id,
+      ofertaFormacaoId: dto.ofertaFormacao.id,
     };
   }
 
@@ -55,15 +54,15 @@ export class GradeHorarioOfertaFormacaoService
     _ac: AccessContext,
     dto: GradeHorarioOfertaFormacaoFindOneInputDto & GradeHorarioOfertaFormacaoUpdateInputDto,
     _current: GradeHorarioOfertaFormacaoFindOneOutputDto,
-  ): Promise<Partial<PersistInput<IGradeHorarioOfertaFormacao>>> {
-    const result: Partial<PersistInput<IGradeHorarioOfertaFormacao>> = {};
+  ): Promise<Partial<PersistInput<GradeHorarioOfertaFormacao>>> {
+    const result: Partial<PersistInput<GradeHorarioOfertaFormacao>> = {};
 
     if (dto.campus !== undefined) {
-      result.campus = dto.campus ? { id: dto.campus.id } : null;
+      result.campusId = dto.campus ? dto.campus.id : undefined;
     }
 
     if (dto.ofertaFormacao !== undefined) {
-      result.ofertaFormacao = dto.ofertaFormacao ? { id: dto.ofertaFormacao.id } : null;
+      result.ofertaFormacaoId = dto.ofertaFormacao ? dto.ofertaFormacao.id : undefined;
     }
 
     return result;

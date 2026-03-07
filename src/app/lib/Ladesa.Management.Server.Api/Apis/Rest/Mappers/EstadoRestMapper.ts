@@ -18,17 +18,21 @@ export class EstadoRestMapper {
   // Input: Server DTO -> Core DTO
   // ============================================================================
 
+  static toListInput = createListInputMapper(EstadoListInputDto, ["filter.id"]);
+  static toListOutputDto = createListOutputMapper(
+    EstadoListOutputRestDto,
+    EstadoRestMapper.toFindOneOutputDto,
+  );
+
+  // ============================================================================
+  // Output: Core DTO -> Server DTO
+  // ============================================================================
+
   static toFindOneInput(dto: EstadoFindOneInputRestDto): EstadoFindOneInputDto {
     const input = new EstadoFindOneInputDto();
     input.id = dto.id;
     return input;
   }
-
-  static toListInput = createListInputMapper(EstadoListInputDto, ["filter.id"]);
-
-  // ============================================================================
-  // Output: Core DTO -> Server DTO
-  // ============================================================================
 
   static toFindOneOutputDto(output: EstadoFindOneOutputDto): EstadoFindOneOutputRestDto {
     const dto = new EstadoFindOneOutputRestDto();
@@ -37,9 +41,4 @@ export class EstadoRestMapper {
     dto.sigla = output.sigla;
     return dto;
   }
-
-  static toListOutputDto = createListOutputMapper(
-    EstadoListOutputRestDto,
-    EstadoRestMapper.toFindOneOutputDto,
-  );
 }

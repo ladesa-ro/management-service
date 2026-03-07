@@ -6,7 +6,7 @@ import {
   type IAuthorizationServicePort,
   type PersistInput,
 } from "@/Ladesa.Management.Application/@shared";
-import { Ambiente, type IAmbiente } from "@/Ladesa.Management.Application/ambientes/ambiente";
+import { Ambiente } from "@/Ladesa.Management.Application/ambientes/ambiente";
 import { BlocoService } from "@/Ladesa.Management.Application/ambientes/bloco/application/use-cases/bloco.service";
 import { ArquivoService } from "@/Ladesa.Management.Application/armazenamento/arquivo/application/use-cases/arquivo.service";
 import { ImagemService } from "@/Ladesa.Management.Application/armazenamento/imagem/application/use-cases/imagem.service";
@@ -18,16 +18,12 @@ import type {
   AmbienteListOutputDto,
   AmbienteUpdateInputDto,
 } from "../dtos";
-import {
-  AMBIENTE_REPOSITORY_PORT,
-  type IAmbienteRepositoryPort,
-  type IAmbienteUseCasePort,
-} from "../ports";
+import { IAmbienteRepository, type IAmbienteUseCasePort } from "../ports";
 
 @Injectable()
 export class AmbienteService
   extends BaseCrudService<
-    IAmbiente,
+    Ambiente,
     AmbienteListInputDto,
     AmbienteListOutputDto,
     AmbienteFindOneInputDto,
@@ -43,8 +39,8 @@ export class AmbienteService
   protected readonly deleteAction = "ambiente:delete";
 
   constructor(
-    @Inject(AMBIENTE_REPOSITORY_PORT)
-    protected readonly repository: IAmbienteRepositoryPort,
+    @Inject(IAmbienteRepository)
+    protected readonly repository: IAmbienteRepository,
     @Inject(AUTHORIZATION_SERVICE_PORT)
     protected readonly authorizationService: IAuthorizationServicePort,
     private readonly blocoService: BlocoService,
@@ -76,7 +72,7 @@ export class AmbienteService
   protected async buildCreateData(
     accessContext: AccessContext,
     dto: AmbienteCreateInputDto,
-  ): Promise<Partial<PersistInput<IAmbiente>>> {
+  ): Promise<Partial<PersistInput<Ambiente>>> {
     const bloco = await this.blocoService.findByIdSimpleStrict(accessContext, dto.bloco.id);
     const domain = Ambiente.criar({
       nome: dto.nome,
@@ -86,15 +82,19 @@ export class AmbienteService
       tipo: dto.tipo,
       bloco: { id: bloco.id },
     });
-    return { ...domain, bloco: { id: bloco.id } };
+    return { ...domain };
   }
 
   protected async buildUpdateData(
     _ac: AccessContext,
     dto: AmbienteFindOneInputDto & AmbienteUpdateInputDto,
     current: AmbienteFindOneOutputDto,
-  ): Promise<Partial<PersistInput<IAmbiente>>> {
-    const domain = Ambiente.fromData(current);
+  ): Promise<Partial<PersistInput<Ambiente>>> {
+    const domain = Ambiente.fromData({
+      ...current,
+      blocoId: current.bloco.id,
+      imagemCapaId: current.imagemCapa?.id ?? null,
+    } as unknown as Ambiente);
     domain.atualizar({
       nome: dto.nome,
       descricao: dto.descricao,

@@ -1,62 +1,43 @@
-import type { IEntityBase } from "@/Ladesa.Management.Application/@shared";
 import { BaseDatedEntity } from "@/Ladesa.Management.Application/@shared";
 import type { ArquivoCreateDto } from "@/Ladesa.Management.Domain/Dtos/ArquivoCreateDto";
 import type { ArquivoUpdateDto } from "@/Ladesa.Management.Domain/Dtos/ArquivoUpdateDto";
 
 /**
- * Interface que define a estrutura de um Arquivo
- */
-export interface IArquivo extends IEntityBase {
-  name: string;
-  mimeType: string;
-  sizeBytes: number;
-  storageType: string;
-}
-
-/**
  * Entidade de Domínio: Arquivo
  * Implementa a tipagem IArquivo e adiciona regras de negócio
  */
-export class Arquivo extends BaseDatedEntity implements IArquivo {
-  name!: string;
-  mimeType!: string;
-  sizeBytes!: number;
-  storageType!: string;
+export class Arquivo extends BaseDatedEntity {
+  private constructor(
+    public name: string,
+    public mimeType: string,
+    public sizeBytes: number,
+    public storageType: string,
+  ) {
+    super();
+  }
 
   protected static get entityName(): string {
     return "Arquivo";
   }
 
-  // ========================================
-  // Validação
-  // ========================================
-
-  /**
-   * Cria uma nova instância válida de Arquivo
-   * @throws EntityValidationError se os dados forem inválidos
-   */
   static criar(dados: ArquivoCreateDto): Arquivo {
-    const instance = new Arquivo();
-    instance.name = dados.name?.trim() ?? "";
-    instance.mimeType = dados.mimeType?.trim() ?? "";
-    instance.sizeBytes = dados.sizeBytes;
-    instance.storageType = dados.storageType;
+    const instance = new Arquivo(
+      dados.name?.trim() ?? "",
+      dados.mimeType?.trim() ?? "",
+      dados.sizeBytes,
+      dados.storageType,
+    );
     instance.initDates();
     instance.validar();
-
     return instance;
   }
 
-  // ========================================
-  // Factory Methods
-  // ========================================
-
-  /**
-   * Reconstrói uma instância a partir de dados existentes (ex: do banco)
-   */
-  static fromData(dados: Record<string, any>): Arquivo {
-    const instance = new Arquivo();
-    Object.assign(instance, dados);
+  static fromData(data: Arquivo): Arquivo {
+    const instance = new Arquivo(data.name, data.mimeType, data.sizeBytes, data.storageType);
+    instance.id = data.id;
+    instance.dateCreated = data.dateCreated;
+    instance.dateUpdated = data.dateUpdated;
+    instance.dateDeleted = data.dateDeleted;
     return instance;
   }
 
@@ -71,14 +52,6 @@ export class Arquivo extends BaseDatedEntity implements IArquivo {
     Arquivo.throwIfInvalid(result);
   }
 
-  // ========================================
-  // Métodos de Domínio
-  // ========================================
-
-  /**
-   * Atualiza os dados do arquivo
-   * @throws EntityValidationError se os dados forem inválidos
-   */
   atualizar(dados: ArquivoUpdateDto): void {
     if (dados.name !== undefined) {
       this.name = dados.name?.trim() ?? "";

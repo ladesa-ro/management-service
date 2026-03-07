@@ -7,8 +7,7 @@ import type {
   CidadeListOutputDto,
 } from "@/Ladesa.Management.Application/localidades/cidade/application/dtos";
 import {
-  CIDADE_REPOSITORY_PORT,
-  type ICidadeRepositoryPort,
+  ICidadeRepository,
   type ICidadeUseCasePort,
 } from "@/Ladesa.Management.Application/localidades/cidade/application/ports";
 
@@ -25,8 +24,8 @@ export class CidadeService
   protected readonly resourceName = "Cidade";
 
   constructor(
-    @Inject(CIDADE_REPOSITORY_PORT)
-    protected readonly repository: ICidadeRepositoryPort,
+    @Inject(ICidadeRepository)
+    protected readonly repository: ICidadeRepository,
   ) {
     super();
   }

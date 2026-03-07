@@ -29,6 +29,10 @@ export class GradeHorarioOfertaFormacaoRestMapper {
   static toFindOneInput = createFindOneInputMapper(GradeHorarioOfertaFormacaoFindOneInputDto);
 
   static toListInput = createListInputMapper(GradeHorarioOfertaFormacaoListInputDto, ["filter.id"]);
+  static toListOutputDto = createListOutputMapper(
+    GradeHorarioOfertaFormacaoListOutputRestDto,
+    GradeHorarioOfertaFormacaoRestMapper.toFindOneOutputDto,
+  );
 
   static toCreateInput(
     dto: GradeHorarioOfertaFormacaoCreateInputRestDto,
@@ -38,6 +42,10 @@ export class GradeHorarioOfertaFormacaoRestMapper {
     input.ofertaFormacao = { id: dto.ofertaFormacao.id };
     return input;
   }
+
+  // ============================================================================
+  // Output: Core DTO -> Server DTO
+  // ============================================================================
 
   static toUpdateInput(
     params: GradeHorarioOfertaFormacaoFindOneInputRestDto,
@@ -56,10 +64,6 @@ export class GradeHorarioOfertaFormacaoRestMapper {
     return input;
   }
 
-  // ============================================================================
-  // Output: Core DTO -> Server DTO
-  // ============================================================================
-
   static toFindOneOutputDto(
     output: GradeHorarioOfertaFormacaoFindOneOutputDto,
   ): GradeHorarioOfertaFormacaoFindOneOutputRestDto {
@@ -70,9 +74,4 @@ export class GradeHorarioOfertaFormacaoRestMapper {
     mapDatedFields(dto, output);
     return dto;
   }
-
-  static toListOutputDto = createListOutputMapper(
-    GradeHorarioOfertaFormacaoListOutputRestDto,
-    GradeHorarioOfertaFormacaoRestMapper.toFindOneOutputDto,
-  );
 }
