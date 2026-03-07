@@ -75,6 +75,7 @@ export class EmpresaListInputDto {
   limit?: number;
   search?: string;
   filterCnpj?: string[];
+  filterNomeFantasia?: string[];
   filterIdEnderecoFk?: string[];
 }
 
