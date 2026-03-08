@@ -57,6 +57,13 @@ export class EmpresaListInputRestDto extends PaginationInputRestDto {
 
   @ApiPropertyOptional({
     type: "string",
+    description: "Filtro por nome fantasia (string ou array)",
+  })
+  @IsOptional()
+  "filter.nomeFantasia"?: string | string[];
+
+  @ApiPropertyOptional({
+    type: "string",
     format: "uuid",
     description: "Filtro por ID de endereço (string ou array)",
   })

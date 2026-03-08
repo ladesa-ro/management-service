@@ -68,6 +68,19 @@ export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepositoryPort {
     }
 
     if (
+      dto?.filterNomeFantasia &&
+      Array.isArray(dto.filterNomeFantasia) &&
+      dto.filterNomeFantasia.length > 0
+    ) {
+      const validNomes = dto.filterNomeFantasia.filter((nome) => nome && nome.trim());
+      if (validNomes.length > 0) {
+        query.andWhere("empresa.nomeFantasia IN (:...nomes)", {
+          nomes: validNomes,
+        });
+      }
+    }
+
+    if (
       dto?.filterIdEnderecoFk &&
       Array.isArray(dto.filterIdEnderecoFk) &&
       dto.filterIdEnderecoFk.length > 0

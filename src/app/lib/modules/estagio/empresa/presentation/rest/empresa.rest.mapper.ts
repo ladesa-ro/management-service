@@ -55,6 +55,13 @@ export class EmpresaRestMapper {
       return filtered.length > 0 ? filtered : undefined;
     };
 
+    const normalizeNomeFantasia = (value: string | string[] | undefined): string[] | undefined => {
+      if (!value) return undefined;
+      const arr = Array.isArray(value) ? value : [value];
+      const filtered = arr.filter((nome) => nome && nome.trim());
+      return filtered.length > 0 ? filtered : undefined;
+    };
+
     const normalizeIdEndereco = (value: string | string[] | undefined): string[] | undefined => {
       if (!value) return undefined;
       const arr = Array.isArray(value) ? value : [value];
@@ -67,6 +74,7 @@ export class EmpresaRestMapper {
       limit: dto.limit,
       search: dto.search,
       filterCnpj: normalizeCnpj(dto["filter.cnpj"]),
+      filterNomeFantasia: normalizeNomeFantasia(dto["filter.nomeFantasia"]),
       filterIdEnderecoFk: normalizeIdEndereco(dto["filter.idEnderecoFk"]),
     };
   }
