@@ -1,4 +1,4 @@
-import { IsString, IsUUID, Length, IsDateString, IsOptional } from "class-validator";
+import { IsDateString, IsEmail, IsOptional, IsString, IsUUID, Length } from "class-validator";
 
 /**
  * DTO para criar estagiário
@@ -16,6 +16,10 @@ export class EstagiarioCreateInputDto {
   @IsString()
   @Length(1, 15)
   telefone!: string;
+
+  @IsEmail()
+  @IsOptional()
+  emailInstitucional?: string;
 
   @IsDateString()
   dataNascimento!: string;
@@ -41,6 +45,10 @@ export class EstagiarioUpdateInputDto {
   @Length(1, 15)
   @IsOptional()
   telefone?: string;
+
+  @IsEmail()
+  @IsOptional()
+  emailInstitucional?: string;
 
   @IsDateString()
   @IsOptional()
@@ -75,6 +83,7 @@ export class EstagiarioFindOneOutputDto {
   idCursoFk!: string;
   idTurmaFk!: string;
   telefone!: string;
+  emailInstitucional!: string | null;
   dataNascimento!: string;
   ativo!: boolean;
   dateCreated!: string;
