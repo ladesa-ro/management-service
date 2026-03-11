@@ -116,9 +116,7 @@ export class AutenticacaoService implements IAutenticacaoUseCasePort {
     try {
       const kcAdminClient = await this.keycloakService.getAdminClient();
 
-      const { usuario, userRepresentation } = await this.findByMatricula(
-        domain.matricula,
-      );
+      const { usuario, userRepresentation } = await this.findByMatricula(domain.matricula);
 
       if (!usuario || !userRepresentation) {
         throw new ForbiddenException("Usuário indisponível.");

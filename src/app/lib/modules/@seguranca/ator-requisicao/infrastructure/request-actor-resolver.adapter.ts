@@ -43,9 +43,7 @@ export class RequestActorResolverAdapter implements IRequestActorResolverPort {
     return this.resolveByMatricula(tokenSet.usuario?.matricula);
   }
 
-  private async resolveByMatricula(
-    matricula: string | undefined,
-  ): Promise<IRequestActor> {
+  private async resolveByMatricula(matricula: string | undefined): Promise<IRequestActor> {
     if (!matricula) {
       return null;
     }

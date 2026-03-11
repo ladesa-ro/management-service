@@ -15,7 +15,7 @@ export const detectHostAndProtocolFromRequest = (req: express.Request) => {
   } else {
     const isCloudflare = Boolean(req.get("cf-connecting-ip") || req.get("cf-ray"));
 
-    if(isCloudflare) {
+    if (isCloudflare) {
       protocol = "https";
     } else {
       protocol = req.get("x-forwarded-proto") || req.protocol || "http";

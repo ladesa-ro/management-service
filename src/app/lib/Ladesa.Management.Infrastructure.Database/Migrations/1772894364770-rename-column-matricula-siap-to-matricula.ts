@@ -4,7 +4,6 @@ const tableName = "usuario";
 
 export class RenameColumnMatriculaSiapToMatricula1772894364770 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
-    
     const table = await queryRunner.getTable(tableName);
 
     if (table?.findColumnByName("matricula_siap")) {

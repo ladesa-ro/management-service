@@ -24,6 +24,8 @@ export { OfertaFormacaoNivelFormacaoEntity } from "@/modules/ensino/oferta-forma
 export { ProfessorIndisponibilidadeEntity } from "@/modules/ensino/professor-indisponibilidade/infrastructure/persistence/typeorm/professor-indisponibilidade.entity";
 export { TurmaEntity } from "@/modules/ensino/turma/infrastructure/persistence/typeorm/turma.entity";
 export { TurmaDisponibilidadeEntity } from "@/modules/ensino/turma-disponibilidade/infrastructure/persistence/typeorm/turma-disponibilidade.entity";
+export { EmpresaTypeormEntity } from "@/modules/estagio/empresa/infrastructure/persistence/empresa.typeorm.entity";
+export { EstagiarioTypeormEntity } from "@/modules/estagio/estagiario/infrastructure/persistence/estagiario.typeorm.entity";
 export { AulaEntity } from "@/modules/horarios/aula/infrastructure/persistence/typeorm/aula.entity";
 export { CalendarioLetivoEntity } from "@/modules/horarios/calendario-letivo/infrastructure/persistence/typeorm/calendario-letivo.entity";
 export { DiaCalendarioEntity } from "@/modules/horarios/dia-calendario/infrastructure/persistence/typeorm/dia-calendario.entity";
@@ -36,5 +38,3 @@ export { IntervaloDeTempoEntity } from "@/modules/horarios/intervalo-de-tempo/in
 export { CidadeEntity } from "@/modules/localidades/cidade/infrastructure/persistence/typeorm/cidade.entity";
 export { EnderecoEntity } from "@/modules/localidades/endereco/infrastructure/persistence/typeorm/endereco.entity";
 export { EstadoEntity } from "@/modules/localidades/estado/infrastructure/persistence/typeorm/estado.entity";
-export { EmpresaTypeormEntity } from "@/modules/estagio/empresa/infrastructure/persistence/empresa.typeorm.entity";
-export { EstagiarioTypeormEntity } from "@/modules/estagio/estagiario/infrastructure/persistence/estagiario.typeorm.entity";
