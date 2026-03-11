@@ -9,6 +9,7 @@ export interface IEstagiario extends IEntityBase {
   idCursoFk: string;
   idTurmaFk: string;
   telefone: string;
+  emailInstitucional?: string | null;
   dataNascimento: string;
   ativo?: boolean;
 }
@@ -21,6 +22,7 @@ export interface IEstagiarioCreate {
   idCursoFk: string;
   idTurmaFk: string;
   telefone: string;
+  emailInstitucional?: string;
   dataNascimento: string;
 }
 
@@ -32,5 +34,6 @@ export interface IEstagiarioUpdate {
   idCursoFk?: string;
   idTurmaFk?: string;
   telefone?: string;
+  emailInstitucional?: string;
   dataNascimento?: string;
 }
