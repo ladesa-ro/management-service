@@ -88,7 +88,7 @@
         "vitest": "^4.0.18",
       },
     },
-    "packages/messages-timetable-generator-v1": {
+    "packages/Ladesa.Messages.TimetableGenerator": {
       "name": "@ladesa-ro/messages.timetable-generator.v1",
       "version": "0.0.1",
       "dependencies": {
@@ -374,7 +374,7 @@
 
     "@ladesa-ro/management-service": ["@ladesa-ro/management-service@workspace:app"],
 
-    "@ladesa-ro/messages.timetable-generator.v1": ["@ladesa-ro/messages.timetable-generator.v1@workspace:packages/messages-timetable-generator-v1"],
+    "@ladesa-ro/messages.timetable-generator.v1": ["@ladesa-ro/messages.timetable-generator.v1@workspace:packages/Ladesa.Messages.TimetableGenerator"],
 
     "@lukeed/csprng": ["@lukeed/csprng@1.1.0", "", {}, "sha512-Z7C/xXCiGWsg0KuKsHTKJxbWhpI3Vs5GwLfOean7MGyVFGqdRgBbAjOCh6u4bbjPc/8MJ2pZmK/0DLdCbivLDA=="],
 
