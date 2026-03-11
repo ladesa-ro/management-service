@@ -29,6 +29,7 @@ export class EstagiarioMapper {
       idCursoFk: entity.idCursoFk,
       idTurmaFk: entity.idTurmaFk,
       telefone: entity.telefone,
+      emailInstitucional: entity.emailInstitucional,
       dataNascimento: typeof entity.dataNascimento === 'string' ? entity.dataNascimento : (entity.dataNascimento as Date).toISOString().split("T")[0],
       dateCreated: formatDateToDateString(entity.dateCreated),
       dateUpdated: formatDateToDateString(entity.dateUpdated),
@@ -47,6 +48,7 @@ export class EstagiarioMapper {
     entity.idCursoFk = estagiario.idCursoFk;
     entity.idTurmaFk = estagiario.idTurmaFk;
     entity.telefone = estagiario.telefone;
+    entity.emailInstitucional = estagiario.emailInstitucional || null;
     entity.dataNascimento = new Date(estagiario.dataNascimento);
     entity.perfil = { id: estagiario.idPerfilFk } as any;
     entity.curso = { id: estagiario.idCursoFk } as any;
@@ -77,6 +79,7 @@ export class EstagiarioMapper {
       idCursoFk: entity.idCursoFk,
       idTurmaFk: entity.idTurmaFk,
       telefone: entity.telefone,
+      emailInstitucional: entity.emailInstitucional,
       dataNascimento: dataNascimentoFormatted,
       ativo: !entity.dateDeleted,
       dateCreated: formatDateToISOString(entity.dateCreated),
@@ -94,6 +97,7 @@ export class EstagiarioMapper {
       idCursoFk: estagiario.idCursoFk,
       idTurmaFk: estagiario.idTurmaFk,
       telefone: estagiario.telefone,
+      emailInstitucional: estagiario.emailInstitucional || null,
       dataNascimento: estagiario.dataNascimento,
       ativo: estagiario.isAtivo(),
       dateCreated: estagiario.dateCreated,
