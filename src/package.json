@@ -1,8 +1,7 @@
 {
   "private": true,
   "workspaces": [
-    "app",
-    "packages/*"
+    "app"
   ],
   "devDependencies": {
     "@biomejs/biome": "^2.4.6",

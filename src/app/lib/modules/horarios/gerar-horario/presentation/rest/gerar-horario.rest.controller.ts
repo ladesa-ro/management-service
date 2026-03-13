@@ -1,7 +1,7 @@
 import {
   type GenerateRequest,
   type ServiceGenerateResponse,
-} from "@ladesa-ro/messages.timetable-generator.v1";
+} from "@/infrastructure.messages.timetable-generator/schemas";
 import { Controller, Get } from "@nestjs/common";
 import { ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { GerarHorarioService } from "@/modules/horarios/gerar-horario";

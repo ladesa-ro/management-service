@@ -3,7 +3,6 @@
   "version": "1.0.0-alpha",
   "private": true,
   "dependencies": {
-    "@ladesa-ro/messages.timetable-generator.v1": "workspace:*",
     "@apollo/server": "^5.4.0",
     "@apollo/utils.keyvaluecache": "^4.0.0",
     "@as-integrations/express5": "^1.1.2",
@@ -47,7 +46,8 @@
     "ts-mixer": "^6.0.4",
     "tslib": "^2.8.1",
     "typeorm": "^0.3.28",
-    "uuid": "^13.0.0"
+    "uuid": "^13.0.0",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@nestjs/cli": "^11.0.16",
@@ -76,7 +76,8 @@
     "typescript": "^5.9.3",
     "unplugin-swc": "^1.5.9",
     "vite-tsconfig-paths": "^6.1.1",
-    "vitest": "^4.1.0"
+    "vitest": "^4.1.0",
+    "quicktype": "^23.2.6"
   },
   "scripts": {
     "dev": "nx run @ladesa-ro/management-service:dev",
@@ -105,9 +106,6 @@
     "targets": {
       "dev": {
         "executor": "nx:run-commands",
-        "dependsOn": [
-          "@ladesa-ro/messages.timetable-generator.v1:codegen:cold"
-        ],
         "options": {
           "command": "bash .commands/dev",
           "cwd": "{projectRoot}"
@@ -115,9 +113,6 @@
       },
       "start": {
         "executor": "nx:run-commands",
-        "dependsOn": [
-          "@ladesa-ro/messages.timetable-generator.v1:codegen:cold"
-        ],
         "options": {
           "command": "bash .commands/start",
           "cwd": "{projectRoot}"
@@ -125,9 +120,6 @@
       },
       "debug": {
         "executor": "nx:run-commands",
-        "dependsOn": [
-          "@ladesa-ro/messages.timetable-generator.v1:codegen:cold"
-        ],
         "options": {
           "command": "bash .commands/debug",
           "cwd": "{projectRoot}"
@@ -135,9 +127,6 @@
       },
       "test": {
         "executor": "nx:run-commands",
-        "dependsOn": [
-          "@ladesa-ro/messages.timetable-generator.v1:codegen:cold"
-        ],
         "options": {
           "command": "bash .commands/test",
           "cwd": "{projectRoot}"
@@ -145,12 +134,23 @@
       },
       "typecheck": {
         "executor": "nx:run-commands",
-        "dependsOn": [
-          "@ladesa-ro/messages.timetable-generator.v1:codegen:cold"
-        ],
         "options": {
           "command": "bash .commands/typecheck",
           "cwd": "{projectRoot}"
+        }
+      },
+      "codegen:timetable-generator:fresh": {
+        "executor": "nx:run-commands",
+        "cache": true,
+        "inputs": [
+          "{projectRoot}/lib/infrastructure.messages.timetable-generator/.commands/generate"
+        ],
+        "outputs": [
+          "{projectRoot}/lib/infrastructure.messages.timetable-generator/schemas.ts"
+        ],
+        "options": {
+          "command": "bash .commands/generate",
+          "cwd": "{projectRoot}/lib/infrastructure.messages.timetable-generator"
         }
       }
     }

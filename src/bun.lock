@@ -16,7 +16,6 @@
         "@apollo/utils.keyvaluecache": "^4.0.0",
         "@as-integrations/express5": "^1.1.2",
         "@keycloak/keycloak-admin-client": "^26.5.5",
-        "@ladesa-ro/messages.timetable-generator.v1": "workspace:*",
         "@nestjs/apollo": "^13.2.4",
         "@nestjs/common": "^11.1.16",
         "@nestjs/config": "^4.0.3",
@@ -57,6 +56,7 @@
         "tslib": "^2.8.1",
         "typeorm": "^0.3.28",
         "uuid": "^13.0.0",
+        "zod": "^4.3.6",
       },
       "devDependencies": {
         "@nestjs/cli": "^11.0.16",
@@ -77,6 +77,7 @@
         "@types/uuid": "^11.0.0",
         "@vitest/coverage-v8": "^4.1.0",
         "module-alias": "^2.3.4",
+        "quicktype": "^23.2.6",
         "source-map-support": "^0.5.21",
         "supertest": "^7.2.2",
         "ts-node": "^10.9.2",
@@ -86,16 +87,6 @@
         "unplugin-swc": "^1.5.9",
         "vite-tsconfig-paths": "^6.1.1",
         "vitest": "^4.1.0",
-      },
-    },
-    "packages/Ladesa.Messages.TimetableGenerator": {
-      "name": "@ladesa-ro/messages.timetable-generator.v1",
-      "version": "0.0.1",
-      "dependencies": {
-        "zod": "^4.3.6",
-      },
-      "devDependencies": {
-        "quicktype": "^23.2.6",
       },
     },
   },
@@ -373,8 +364,6 @@
     "@keycloak/keycloak-admin-client": ["@keycloak/keycloak-admin-client@26.5.5", "", { "dependencies": { "camelize-ts": "^3.0.0", "url-template": "^3.1.1" } }, "sha512-ZYP1Z+4qZ+vChNKWI+g1X08F2gCpZEWRlEMjwF03xet7bB5j5898nSJNFT1g6XIqVslHq15R8pt55fcULpRuvw=="],
 
     "@ladesa-ro/management-service": ["@ladesa-ro/management-service@workspace:app"],
-
-    "@ladesa-ro/messages.timetable-generator.v1": ["@ladesa-ro/messages.timetable-generator.v1@workspace:packages/Ladesa.Messages.TimetableGenerator"],
 
     "@lukeed/csprng": ["@lukeed/csprng@1.1.0", "", {}, "sha512-Z7C/xXCiGWsg0KuKsHTKJxbWhpI3Vs5GwLfOean7MGyVFGqdRgBbAjOCh6u4bbjPc/8MJ2pZmK/0DLdCbivLDA=="],
 
