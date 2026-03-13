@@ -16,7 +16,7 @@
     "declaration": true,
     "sourceMap": true,
     "outDir": "./dist",
-    "baseUrl": "./lib",
+    "baseUrl": ".",
     "paths": {
       "@/*": ["./*"]
     },
