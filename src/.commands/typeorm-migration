@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-set -euo pipefail
-
-# TypeORM CLI with migration data source
-exec ./.commands/typeorm -d infrastructure.database/data-sources/entrypoints/migration.data-source.ts "$@"
