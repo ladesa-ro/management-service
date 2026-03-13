@@ -61,7 +61,7 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
 
     if (dto?.search) {
       query.andWhere(
-        "(estagiario.telefone ILIKE :search)",
+        "(estagiario.telefone ILIKE :search OR estagiario.emailInstitucional ILIKE :search)",
         {
           search: `%${dto.search}%`,
         },

@@ -42,6 +42,9 @@ export class EstagiarioTypeormEntity {
   @Column({ name: "telefone", type: "varchar", length: 15, nullable: false })
   telefone!: string;
 
+  @Column({ name: "email_institucional", type: "text", nullable: true })
+  emailInstitucional!: string | null;
+
   @Column({ name: "data_nascimento", type: "date", nullable: false })
   dataNascimento!: Date;
 

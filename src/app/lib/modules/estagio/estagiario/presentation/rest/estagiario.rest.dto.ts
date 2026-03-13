@@ -1,5 +1,5 @@
-import { ApiProperty, ApiPropertyOptional, ApiSchema, PartialType } from "@nestjs/swagger";
-import { IsDateString, IsOptional, IsString, IsUUID, Length } from "class-validator";
+import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@nestjs/swagger";
+import { IsDateString, IsEmail, IsNotEmpty, IsOptional, IsString, IsUUID, Length } from "class-validator";
 import {
   PaginationInputRestDto,
   UuidParamRestDto,
@@ -36,13 +36,69 @@ export class EstagiarioCreateInputRestDto {
   @Length(1, 15)
   telefone!: string;
 
+  @ApiProperty({
+    type: "string",
+    format: "email",
+    description: "Email institucional do estagiário",
+  })
+  @IsEmail()
+  @IsNotEmpty()
+  emailInstitucional!: string;
+
   @ApiProperty({ type: "string", format: "date", description: "Data de nascimento do estagiário" })
   @IsDateString()
   dataNascimento!: string;
 }
 
 @ApiSchema({ name: "EstagiarioUpdateInputDto" })
-export class EstagiarioUpdateInputRestDto extends PartialType(EstagiarioCreateInputRestDto) {}
+export class EstagiarioUpdateInputRestDto {
+  @ApiPropertyOptional({
+    type: "string",
+    format: "uuid",
+    description: "ID do perfil vinculado ao estagiário",
+  })
+  @IsUUID("4")
+  @IsOptional()
+  idPerfilFk?: string;
+
+  @ApiPropertyOptional({
+    type: "string",
+    format: "uuid",
+    description: "ID do curso vinculado ao estagiário",
+  })
+  @IsUUID("4")
+  @IsOptional()
+  idCursoFk?: string;
+
+  @ApiPropertyOptional({
+    type: "string",
+    format: "uuid",
+    description: "ID da turma vinculada ao estagiário",
+  })
+  @IsUUID("4")
+  @IsOptional()
+  idTurmaFk?: string;
+
+  @ApiPropertyOptional({ type: "string", description: "Telefone do estagiário", minLength: 1, maxLength: 15 })
+  @IsString()
+  @Length(1, 15)
+  @IsOptional()
+  telefone?: string;
+
+  @ApiProperty({
+    type: "string",
+    format: "email",
+    description: "Email institucional do estagiário",
+  })
+  @IsEmail()
+  @IsNotEmpty()
+  emailInstitucional!: string;
+
+  @ApiPropertyOptional({ type: "string", format: "date", description: "Data de nascimento do estagiário" })
+  @IsDateString()
+  @IsOptional()
+  dataNascimento?: string;
+}
 
 @ApiSchema({ name: "EstagiarioFindOneInputDto" })
 export class EstagiarioFindOneInputRestDto extends UuidParamRestDto {}
@@ -90,6 +146,9 @@ export class EstagiarioFindOneOutputRestDto {
 
   @ApiProperty({ type: "string" })
   telefone!: string;
+
+  @ApiPropertyOptional({ type: "string", format: "email", nullable: false })
+  emailInstitucional!: string | null;
 
   @ApiProperty({ type: "string", format: "date" })
   dataNascimento!: string;

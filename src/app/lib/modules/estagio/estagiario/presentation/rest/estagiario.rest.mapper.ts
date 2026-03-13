@@ -25,6 +25,7 @@ export class EstagiarioRestMapper {
       idCursoFk: dto.idCursoFk,
       idTurmaFk: dto.idTurmaFk,
       telefone: dto.telefone,
+      emailInstitucional: dto.emailInstitucional,
       dataNascimento: dto.dataNascimento,
     };
   }
@@ -35,6 +36,7 @@ export class EstagiarioRestMapper {
       idCursoFk: dto.idCursoFk,
       idTurmaFk: dto.idTurmaFk,
       telefone: dto.telefone,
+      emailInstitucional: dto.emailInstitucional,
       dataNascimento: dto.dataNascimento,
     };
   }
@@ -72,6 +74,7 @@ export class EstagiarioRestMapper {
       idCursoFk: data.idCursoFk,
       idTurmaFk: data.idTurmaFk,
       telefone: data.telefone,
+      emailInstitucional: data.emailInstitucional,
       dataNascimento: data.dataNascimento,
       ativo: data.ativo,
       dateCreated: data.dateCreated,

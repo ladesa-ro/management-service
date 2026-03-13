@@ -10,6 +10,7 @@ export class Estagiario extends BaseDatedEntity implements IEstagiario {
   idCursoFk!: string;
   idTurmaFk!: string;
   telefone!: string;
+  emailInstitucional!: string | null;
   dataNascimento!: string;
 
   protected static get entityName(): string {
@@ -74,6 +75,7 @@ export class Estagiario extends BaseDatedEntity implements IEstagiario {
     instance.idCursoFk = dados.idCursoFk.trim();
     instance.idTurmaFk = dados.idTurmaFk.trim();
     instance.telefone = dados.telefone.trim();
+    instance.emailInstitucional = dados.emailInstitucional?.trim() || null;
     instance.dataNascimento = dados.dataNascimento.trim();
     instance.initDates();
     instance.validar();
@@ -107,6 +109,10 @@ export class Estagiario extends BaseDatedEntity implements IEstagiario {
 
     if (dados.telefone !== undefined) {
       this.telefone = dados.telefone.trim();
+    }
+
+    if (dados.emailInstitucional !== undefined) {
+      this.emailInstitucional = dados.emailInstitucional.trim();
     }
 
     if (dados.dataNascimento !== undefined) {
