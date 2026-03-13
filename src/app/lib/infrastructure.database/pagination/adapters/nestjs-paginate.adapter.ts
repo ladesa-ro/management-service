@@ -3,8 +3,8 @@ import { type PaginateConfig, paginate } from "nestjs-paginate";
 import type { PaginateQuery } from "nestjs-paginate/lib/decorator";
 import type { ObjectLiteral, SelectQueryBuilder } from "typeorm";
 import type { IPaginationCriteria, IPaginationResult } from "@/modules/@shared";
-import type { ITypeOrmPaginationConfig } from "../pagination-config.types";
-import { paginateConfig } from "./paginate-config";
+import { paginateConfig } from "../config/paginate-config";
+import type { ITypeOrmPaginationConfig } from "../interfaces/pagination-config.types";
 
 /**
  * Adapter que implementa paginação usando nestjs-paginate

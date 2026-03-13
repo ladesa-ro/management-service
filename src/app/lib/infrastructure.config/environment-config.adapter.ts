@@ -7,7 +7,7 @@ import type {
   IKeycloakCredentials,
   IOidcClientCredentials,
 } from "@/modules/@shared/application/ports/out/config";
-import * as entities from "@/modules/@shared/infrastructure/persistence/typeorm/entities";
+import * as entities from "@/infrastructure.database/entities";
 import pkg from "../../package.json";
 
 /**

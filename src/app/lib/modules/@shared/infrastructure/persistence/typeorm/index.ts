@@ -11,9 +11,9 @@ export { APP_DATA_SOURCE_TOKEN } from "./providers/app-data-source.provider";
 export * from "./metadata";
 
 // Pagination adapter and config
-export * from "./pagination";
+export * from "../../../../../infrastructure.database/pagination";
 // Pagination types
-export * from "./pagination-config.types";
+export * from "../../../../../infrastructure.database/pagination/interfaces/pagination-config.types";
 // Query builder utilities
 export * from "./qb-efficient-load";
 // Transaction module
