@@ -1,7 +1,6 @@
 import type { Provider } from "@nestjs/common";
-import { join } from "path";
 import { DataSource, type DataSourceOptions } from "typeorm";
-import { buildDataSourceConnectionOptions } from "@/infrastructure.database/data-sources/helpers/build-data-source-connection-options";
+import { DataSourceAppFactory } from "@/infrastructure.database/data-sources/factories/data-source-app-factory";
 import { IDatabaseOptions } from "@/infrastructure.database/options/database-options.interface";
 
 export const APP_DATA_SOURCE_TOKEN = Symbol();
@@ -10,12 +9,7 @@ export const appDataSourceProvider: Provider = {
   provide: APP_DATA_SOURCE_TOKEN,
 
   useFactory: async (opts: IDatabaseOptions) => {
-    const entitiesPath = join(__dirname, "../../../../../..");
-
-    const dataSource = new DataSource({
-      ...buildDataSourceConnectionOptions(opts),
-      entities: [`${entitiesPath}/**/*.entity{.ts,.js}`],
-    } as DataSourceOptions);
+    const dataSource = new DataSource(DataSourceAppFactory.fromOptions(opts) as DataSourceOptions);
 
     console.log("[INFO] app data source created.");
 

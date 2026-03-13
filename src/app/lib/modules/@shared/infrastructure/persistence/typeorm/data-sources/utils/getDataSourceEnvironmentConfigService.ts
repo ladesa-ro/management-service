@@ -10,7 +10,6 @@ export const getDataSourceAppConfigService = async (
 ): Promise<IDatabaseOptionsType> => {
   if (databaseOptions === null) {
     const app = await NestFactory.create(DataSourceSetupModule);
-
     return app.get<IDatabaseOptionsType>(IDatabaseOptions);
   }
 
