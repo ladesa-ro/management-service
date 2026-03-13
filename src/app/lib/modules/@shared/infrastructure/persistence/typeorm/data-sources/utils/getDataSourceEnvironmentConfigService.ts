@@ -1,15 +1,17 @@
 import { NestFactory } from "@nestjs/core";
-import { CONFIG_PORT, type IConfigPort } from "@/modules/@shared/application/ports/out/config";
+import {
+  IDatabaseOptions,
+  type IDatabaseOptions as IDatabaseOptionsType,
+} from "@/infrastructure.database/options/database-options.interface";
 import { DataSourceSetupModule } from "./DataSourceSetupModule";
 
-export const getDataSourceAppConfigService = async (appConfigService: IConfigPort | null) => {
-  if (appConfigService === null) {
+export const getDataSourceAppConfigService = async (
+  databaseOptions: IDatabaseOptionsType | null,
+): Promise<IDatabaseOptionsType> => {
+  if (databaseOptions === null) {
     const app = await NestFactory.create(DataSourceSetupModule);
-
-    const appConfigService = app.get<IConfigPort>(CONFIG_PORT);
-
-    return appConfigService;
+    return app.get<IDatabaseOptionsType>(IDatabaseOptions);
   }
 
-  return appConfigService;
+  return databaseOptions;
 };

@@ -1,5 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { CONFIG_PORT, type IConfigPort } from "@/modules/@shared/application/ports/out/config";
+import { IRuntimeOptions, IRuntimeOptions as IRuntimeOptionsToken } from "@/infrastructure.config/options/runtime-options.interface";
 
 export interface ServiceInfo {
   status: string;
@@ -13,18 +13,18 @@ export interface ServiceInfo {
 @Injectable()
 export class AppService {
   constructor(
-    @Inject(CONFIG_PORT)
-    private readonly configService: IConfigPort,
+    @Inject(IRuntimeOptionsToken)
+    private readonly runtimeOptions: IRuntimeOptions,
   ) {}
 
   getServiceInfo(): ServiceInfo {
     return {
       status: "up",
       service: "@ladesa-ro/management.service",
-      prefix: this.configService.getRuntimePrefix(),
-      version: this.configService.getRuntimeVersion(),
-      buildTime: this.configService.getRuntimeBuildTime(),
-      gitCommitHash: this.configService.getRuntimeGitCommitHash(),
+      prefix: this.runtimeOptions.prefix,
+      version: this.runtimeOptions.version,
+      buildTime: this.runtimeOptions.buildTime,
+      gitCommitHash: this.runtimeOptions.gitCommitHash,
     };
   }
 

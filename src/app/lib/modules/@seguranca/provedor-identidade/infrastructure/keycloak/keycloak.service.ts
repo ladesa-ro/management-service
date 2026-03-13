@@ -2,7 +2,7 @@ import KeycloakAdminClient from "@keycloak/keycloak-admin-client";
 import type { Credentials } from "@keycloak/keycloak-admin-client/lib/utils/auth";
 import { Inject, Injectable } from "@nestjs/common";
 import { wait } from "@/modules/@shared";
-import { CONFIG_PORT, type IConfigPort } from "@/modules/@shared/application/ports/out/config";
+import { IAuthOptions, IAuthOptions as IAuthOptionsToken } from "@/infrastructure.config/options/auth-options.interface";
 
 const INTERVAL_AUTH = 58 * 1000;
 
@@ -16,12 +16,17 @@ export class KeycloakService {
   #authInterval: NodeJS.Timeout | null = null;
 
   constructor(
-    @Inject(CONFIG_PORT)
-    readonly appConfigService: IConfigPort,
+    @Inject(IAuthOptionsToken)
+    readonly authOptions: IAuthOptions,
   ) {}
 
   get keycloakConfigCredentials() {
-    return this.appConfigService.getKeycloakConfigCredentials();
+    return {
+      baseUrl: this.authOptions.keycloakBaseUrl,
+      realm: this.authOptions.keycloakRealm,
+      clientId: this.authOptions.keycloakClientId,
+      clientSecret: this.authOptions.keycloakClientSecret,
+    };
   }
 
   async setupAuthInterval(): Promise<void> {
@@ -35,11 +40,9 @@ export class KeycloakService {
   async setup(): Promise<boolean> {
     if (!this.#initialized) {
       try {
-        const keycloakConfigCredentials = this.keycloakConfigCredentials;
-
         this.kcAdminClient = new KeycloakAdminClient({
-          baseUrl: keycloakConfigCredentials.baseUrl,
-          realmName: keycloakConfigCredentials.realm,
+          baseUrl: this.authOptions.keycloakBaseUrl,
+          realmName: this.authOptions.keycloakRealm,
         });
 
         await this.authenticate();
@@ -56,14 +59,13 @@ export class KeycloakService {
   }
 
   async authenticate(): Promise<void> {
-    const keycloakConfigCredentials = this.keycloakConfigCredentials;
     const kcAdminClient = this.kcAdminClient;
 
     if (kcAdminClient) {
       const currentRealm = kcAdminClient.realmName;
 
       kcAdminClient.setConfig({
-        realmName: keycloakConfigCredentials.realm,
+        realmName: this.authOptions.keycloakRealm,
       });
 
       const credentials = this.getClientAuthCredentials();
@@ -120,12 +122,10 @@ export class KeycloakService {
   }
 
   private getClientAuthCredentials(): Credentials {
-    const keycloakConfigCredentials = this.keycloakConfigCredentials;
-
     return {
       grantType: "client_credentials",
-      clientId: keycloakConfigCredentials.clientId,
-      clientSecret: keycloakConfigCredentials.clientSecret,
+      clientId: this.authOptions.keycloakClientId,
+      clientSecret: this.authOptions.keycloakClientSecret,
     };
   }
 

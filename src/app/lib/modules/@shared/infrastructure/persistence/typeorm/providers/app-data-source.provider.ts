@@ -1,16 +1,15 @@
 import type { Provider } from "@nestjs/common";
-import { DataSource } from "typeorm";
-import { CONFIG_PORT, type IConfigPort } from "@/modules/@shared/application/ports/out/config";
+import { DataSource, type DataSourceOptions } from "typeorm";
+import { DataSourceAppFactory } from "@/infrastructure.database/data-sources/factories/data-source-app-factory";
+import { IDatabaseOptions } from "@/infrastructure.database/options/database-options.interface";
 
 export const APP_DATA_SOURCE_TOKEN = Symbol();
 
 export const appDataSourceProvider: Provider = {
   provide: APP_DATA_SOURCE_TOKEN,
 
-  useFactory: async (appConfigService: IConfigPort) => {
-    const options = appConfigService.getTypeOrmAppDataSourceOptions();
-
-    const dataSource = new DataSource(options);
+  useFactory: async (opts: IDatabaseOptions) => {
+    const dataSource = new DataSource(DataSourceAppFactory.fromOptions(opts) as DataSourceOptions);
 
     console.log("[INFO] app data source created.");
 
@@ -29,5 +28,5 @@ export const appDataSourceProvider: Provider = {
     return initializePromise;
   },
 
-  inject: [CONFIG_PORT],
+  inject: [IDatabaseOptions],
 };

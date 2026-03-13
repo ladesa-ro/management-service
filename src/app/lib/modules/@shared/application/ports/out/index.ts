@@ -1,5 +1,4 @@
 export * from "./base-crud-repository.port";
-export * from "./config";
 export * from "./find-one-repository.port";
 export * from "./list-repository.port";
 export * from "./persist-repository.port";

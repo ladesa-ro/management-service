@@ -1,5 +1,5 @@
 import { Inject, Injectable, Logger } from "@nestjs/common";
-import { CONFIG_PORT, type IConfigPort } from "@/modules/@shared/application/ports/out/config";
+import { IMessageBrokerOptions, IMessageBrokerOptions as IMessageBrokerOptionsToken } from "@/infrastructure.config/options/message-broker-options.interface";
 import { MessageBrokerContainerService } from "./message-broker-container.service";
 
 @Injectable()
@@ -8,8 +8,8 @@ export class MessageBrokerService {
 
   constructor(
     private messageBrokerContainerService: MessageBrokerContainerService,
-    @Inject(CONFIG_PORT)
-    private readonly configPort: IConfigPort,
+    @Inject(IMessageBrokerOptionsToken)
+    private readonly messageBrokerOptions: IMessageBrokerOptions,
   ) {}
 
   async publishTimetableRequest<TRequest, TResponse>(
@@ -17,8 +17,8 @@ export class MessageBrokerService {
     timeoutMs = 60000,
   ): Promise<TResponse> {
     const broker = await this.messageBrokerContainerService.getBroker();
-    const queueRequest = this.configPort.getMessageBrokerQueueTimetableRequest();
-    const queueResponse = this.configPort.getMessageBrokerQueueTimetableResponse();
+    const queueRequest = this.messageBrokerOptions.queueTimetableRequest;
+    const queueResponse = this.messageBrokerOptions.queueTimetableResponse;
 
     return new Promise<TResponse>((resolve, reject) => {
       let subscription: any;

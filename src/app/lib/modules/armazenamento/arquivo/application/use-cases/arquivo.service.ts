@@ -11,7 +11,7 @@ import jetpack, { createReadStream } from "fs-jetpack";
 import { v4 } from "uuid";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { isValidUuid, ResourceNotFoundError } from "@/modules/@shared";
-import { CONFIG_PORT, type IConfigPort } from "@/modules/@shared/application/ports/out/config";
+import { IRuntimeOptions, IRuntimeOptions as IRuntimeOptionsToken } from "@/infrastructure.config/options/runtime-options.interface";
 import { UsuarioEntity } from "@/modules/acesso/usuario/infrastructure/persistence/typeorm";
 import type {
   ArquivoCreateInputDto,
@@ -28,12 +28,12 @@ export class ArquivoService implements IArquivoUseCasePort {
   constructor(
     @Inject(ARQUIVO_REPOSITORY_PORT)
     private arquivoRepository: IArquivoRepositoryPort,
-    @Inject(CONFIG_PORT)
-    private appConfigService: IConfigPort,
+    @Inject(IRuntimeOptionsToken)
+    private runtimeOptions: IRuntimeOptions,
   ) {}
 
   private get storagePath() {
-    return this.appConfigService.getStoragePath();
+    return this.runtimeOptions.storagePath;
   }
 
   async dataExists(id: string): Promise<false | "dir" | "file" | "other"> {

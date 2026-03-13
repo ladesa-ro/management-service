@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { AppConfigModule } from "@/modules/@shared/infrastructure/config";
+import { AppConfigModule } from "@/infrastructure.config";
 import { AutenticacaoModule } from "@/modules/acesso/autenticacao/autenticacao.module";
 import { PerfilModule } from "@/modules/acesso/perfil/perfil.module";
 import { UsuarioModule } from "@/modules/acesso/usuario/usuario.module";
@@ -24,6 +24,8 @@ import { OfertaFormacaoNivelFormacaoModule } from "@/modules/ensino/oferta-forma
 import { ProfessorIndisponibilidadeModule } from "@/modules/ensino/professor-indisponibilidade/professor-indisponibilidade.module";
 import { TurmaModule } from "@/modules/ensino/turma/turma.module";
 import { TurmaDisponibilidadeModule } from "@/modules/ensino/turma-disponibilidade/turma-disponibilidade.module";
+import { EmpresaModule } from "@/modules/estagio/empresa/empresa.module";
+import { EstagiarioModule } from "@/modules/estagio/estagiario/estagiario.module";
 import { AulaModule } from "@/modules/horarios/aula/aula.module";
 import { CalendarioLetivoModule } from "@/modules/horarios/calendario-letivo/calendario-letivo.module";
 import { DiaCalendarioModule } from "@/modules/horarios/dia-calendario/dia-calendario.module";
@@ -37,8 +39,6 @@ import { IntervaloDeTempoModule } from "@/modules/horarios/intervalo-de-tempo/in
 import { CidadeModule } from "@/modules/localidades/cidade/cidade.module";
 import { EnderecoModule } from "@/modules/localidades/endereco/endereco.module";
 import { EstadoModule } from "@/modules/localidades/estado/estado.module";
-import { EmpresaModule } from "@/modules/estagio/empresa/empresa.module";
-import { EstagiarioModule } from "@/modules/estagio/estagiario/estagiario.module";
 
 @Module({
   imports: [
@@ -77,7 +77,7 @@ import { EstagiarioModule } from "@/modules/estagio/estagiario/estagiario.module
     DiaCalendarioModule,
     EnderecoModule,
     EstadoModule,
-      EmpresaModule,
+    EmpresaModule,
     EstagiarioModule,
     TurmaDisponibilidadeModule,
     HorarioGeradoAulaModule,
