@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { BrokerAsPromised as Broker, BrokerConfig } from "rascal";
-import { IMessageBrokerOptions, IMessageBrokerOptions as IMessageBrokerOptionsToken } from "@/infrastructure.config/options/message-broker-options.interface";
+import { IMessageBrokerOptions, IMessageBrokerOptions as IMessageBrokerOptionsToken } from "@/infrastructure.config/options/message-broker/message-broker-options.interface";
 
 @Injectable()
 export class MessageBrokerContainerService {

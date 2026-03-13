@@ -11,7 +11,7 @@ import jetpack, { createReadStream } from "fs-jetpack";
 import { v4 } from "uuid";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { isValidUuid, ResourceNotFoundError } from "@/modules/@shared";
-import { IRuntimeOptions, IRuntimeOptions as IRuntimeOptionsToken } from "@/infrastructure.config/options/runtime-options.interface";
+import { IRuntimeOptions, IRuntimeOptions as IRuntimeOptionsToken } from "@/infrastructure.config/options/runtime/runtime-options.interface";
 import { UsuarioEntity } from "@/modules/acesso/usuario/infrastructure/persistence/typeorm";
 import type {
   ArquivoCreateInputDto,

@@ -109,35 +109,35 @@
       "dev": {
         "executor": "nx:run-commands",
         "options": {
-          "command": "bash .commands/dev",
+          "command": "bash commands/dev",
           "cwd": "{projectRoot}"
         }
       },
       "start": {
         "executor": "nx:run-commands",
         "options": {
-          "command": "bash .commands/start",
+          "command": "bash commands/start",
           "cwd": "{projectRoot}"
         }
       },
       "debug": {
         "executor": "nx:run-commands",
         "options": {
-          "command": "bash .commands/debug",
+          "command": "bash commands/debug",
           "cwd": "{projectRoot}"
         }
       },
       "test": {
         "executor": "nx:run-commands",
         "options": {
-          "command": "bash .commands/test",
+          "command": "bash commands/test",
           "cwd": "{projectRoot}"
         }
       },
       "typecheck": {
         "executor": "nx:run-commands",
         "options": {
-          "command": "bash .commands/typecheck",
+          "command": "bash commands/typecheck",
           "cwd": "{projectRoot}"
         }
       },
@@ -145,13 +145,13 @@
         "executor": "nx:run-commands",
         "cache": true,
         "inputs": [
-          "{projectRoot}/infrastructure.messages.timetable-generator/.commands/generate"
+          "{projectRoot}/infrastructure.messages.timetable-generator/commands/generate"
         ],
         "outputs": [
           "{projectRoot}/infrastructure.messages.timetable-generator/schemas.ts"
         ],
         "options": {
-          "command": "bash .commands/generate",
+          "command": "bash commands/generate",
           "cwd": "{projectRoot}/infrastructure.messages.timetable-generator"
         }
       }

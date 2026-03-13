@@ -1,5 +1,5 @@
 import { Inject, Injectable, Logger } from "@nestjs/common";
-import { IMessageBrokerOptions, IMessageBrokerOptions as IMessageBrokerOptionsToken } from "@/infrastructure.config/options/message-broker-options.interface";
+import { IMessageBrokerOptions, IMessageBrokerOptions as IMessageBrokerOptionsToken } from "@/infrastructure.config/options/message-broker/message-broker-options.interface";
 import { MessageBrokerContainerService } from "./message-broker-container.service";
 
 @Injectable()
