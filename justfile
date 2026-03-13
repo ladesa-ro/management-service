@@ -10,7 +10,7 @@ COMMAND_COMPOSE_SERVICE := COMMAND_TOOL_OCI_RUNTIME + " compose --file .docker/c
 
 SHELL_INSIDE := "zsh"
 SHELL_INSIDE_PATH := "./"
-SHELL_WORKING_DIR := "/ladesa/management-service/src/app"
+SHELL_WORKING_DIR := "/ladesa/management-service/src"
 
 # Mostra as receitas disponíveis
 default:
