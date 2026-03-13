@@ -1,14 +1,22 @@
-import type { IConfigPort } from "@/modules/@shared/application/ports/out/config";
 import "reflect-metadata";
-import { DataSource } from "typeorm";
+import { join } from "path";
+import { DataSource, type DataSourceOptions } from "typeorm";
+import type { IDatabaseOptions } from "@/infrastructure.database/options/database-options.interface";
 import { getDataSourceAppConfigService } from "./utils/getDataSourceEnvironmentConfigService";
+import {
+  buildDataSourceConnectionOptions
+} from "@/infrastructure.database/data-sources/helpers/build-data-source-connection-options";
 
-export const getMigrationDataSource = async (appConfigServiceBase: IConfigPort | null = null) => {
-  const appConfigService = await getDataSourceAppConfigService(appConfigServiceBase);
+export const getMigrationDataSource = async (databaseOptions: IDatabaseOptions | null = null) => {
+  const opts = await getDataSourceAppConfigService(databaseOptions);
 
-  const options = appConfigService.getTypeOrmMigrationDataSourceOptions();
+  const migrationsPath = join(__dirname, "../../../../../../infrastructure.database/migrations");
 
-  const dataSource = new DataSource(options);
+  const dataSource = new DataSource({
+    ...buildDataSourceConnectionOptions(opts),
+    migrations: [`${migrationsPath}/*{.ts,.js}`],
+    migrationsTableName: "app_migration_db",
+  } as DataSourceOptions);
 
   return dataSource;
 };

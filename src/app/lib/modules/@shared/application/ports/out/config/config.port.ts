@@ -1,8 +1,6 @@
 import type { IConfigAuthPort } from "./config-auth.port";
-import type { IConfigDatabasePort } from "./config-database.port";
 import type { IConfigMessageBrokerPort } from "./config-message-broker.port";
 import type { IConfigRuntimePort } from "./config-runtime.port";
-import type { IConfigTypeOrmPort } from "./config-typeorm.port";
 
 /**
  * Port unificado de configuração
@@ -10,8 +8,6 @@ import type { IConfigTypeOrmPort } from "./config-typeorm.port";
  */
 export interface IConfigPort
   extends IConfigRuntimePort,
-    IConfigDatabasePort,
-    IConfigTypeOrmPort,
     IConfigAuthPort,
     IConfigMessageBrokerPort {}
 
