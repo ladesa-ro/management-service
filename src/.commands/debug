@@ -2,4 +2,4 @@
 set -euo pipefail
 
 # Start development server with debugger
-exec bun run --watch --inspect-wait lib/commands/start.ts
+exec bun run --watch --inspect-wait commands/start.ts

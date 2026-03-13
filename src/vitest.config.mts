@@ -11,12 +11,12 @@ export default defineConfig({
     globals: true,
     root: "./",
     alias: {
-      "@/*": path.resolve(here, "./lib"),
+      "@/*": path.resolve(here, "."),
     },
   },
   resolve: {
     alias: {
-      "@/*": path.resolve(here, "./lib"),
+      "@/*": path.resolve(here, "."),
     },
   },
   plugins: [

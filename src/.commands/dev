@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Start development server with watch mode
+# exec bun run --watch commands/start.ts
+exec bun run --watch server/start.ts

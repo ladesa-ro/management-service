@@ -25,7 +25,7 @@ services:
       - "3701:3701"
       - "9229:9229"
 
-    working_dir: /ladesa/management-service/src/app
+    working_dir: /ladesa/management-service/src
     volumes:
       - ..:/ladesa/management-service:z
       - management-service-uploaded-files:/container/uploaded

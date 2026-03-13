@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-set -euo pipefail
-
-# Revert last database migration
-exec bun x --bun typeorm -d lib/infrastructure.database/data-sources/entrypoints/migration.data-source.ts migration:revert "$@"

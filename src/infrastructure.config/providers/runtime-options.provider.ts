@@ -3,7 +3,7 @@ import type { IRuntimeOptions } from "../options/runtime-options.interface";
 import { IRuntimeOptions as IRuntimeOptionsToken } from "../options/runtime-options.interface";
 import type { IConfigService } from "../config-service.interface";
 import { IConfigService as IConfigServiceToken } from "../config-service.interface";
-import pkg from "../../../package.json";
+import pkg from "../../package.json";
 import { EnvKeys } from "../env-keys";
 
 export const RuntimeOptionsProvider: Provider = {
