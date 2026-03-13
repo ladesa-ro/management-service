@@ -29,7 +29,7 @@
         "@nestjs/schedule": "^6.1.1",
         "@nestjs/swagger": "^11.2.6",
         "@nestjs/throttler": "^6.5.0",
-        "@scalar/nestjs-api-reference": "^1.1.1",
+        "@scalar/nestjs-api-reference": "^1.1.2",
         "class-transformer": "^0.5.1",
         "class-validator": "^0.15.1",
         "compression": "^1.8.1",
@@ -510,13 +510,13 @@
 
     "@rollup/rollup-win32-x64-msvc": ["@rollup/rollup-win32-x64-msvc@4.46.2", "", { "os": "win32", "cpu": "x64" }, "sha512-CvUo2ixeIQGtF6WvuB87XWqPQkoFAFqW+HUo/WzHwuHDvIwZCtjdWXoYCcr06iKGydiqTclC4jU/TNObC/xKZg=="],
 
-    "@scalar/core": ["@scalar/core@0.4.1", "", { "dependencies": { "@scalar/types": "0.7.1" } }, "sha512-I8bhVhqAyX5ddhBbzwEs0llfPOzwlvwBwNKFFdyUhcJFxnu7joQGMDqA54o8cdoYv95W4TX48i9zw5GUq8/XMg=="],
+    "@scalar/core": ["@scalar/core@0.4.2", "", { "dependencies": { "@scalar/types": "0.7.2" } }, "sha512-Ff+/Oad4eRsqqAxswLGhdgxBWluQYCqp8y7jLl20+U7Y7BDSRq+pE1LVwFW5AIRK5i3/uSWXtLZEVm7N0aszPA=="],
 
-    "@scalar/helpers": ["@scalar/helpers@0.3.0", "", {}, "sha512-lhQdehgighJC+PiSTJbbggM/SM3UydcRQil6Cfp/M4l539qklIh35pt4eh1+H+5Esa03gHnJwhTHF3TwglSOJw=="],
+    "@scalar/helpers": ["@scalar/helpers@0.4.0", "", {}, "sha512-1XOdy0jZp0Yu+lOmvDlPfG8+oLJK9MUhx7Q7OFggSS+zKG3n01xJKnTpgm9uhETgJrGy2yxG9y0cz4KPexXHng=="],
 
-    "@scalar/nestjs-api-reference": ["@scalar/nestjs-api-reference@1.1.1", "", { "dependencies": { "@scalar/core": "0.4.1" } }, "sha512-Aox13Wsi2FpUNvNnKVS1R/cHjJye+94VvIPotPfgMh80ntftexCGFAbmAJgECr4RCUhMQ+l6bGEIRn5h9/PNRQ=="],
+    "@scalar/nestjs-api-reference": ["@scalar/nestjs-api-reference@1.1.2", "", { "dependencies": { "@scalar/core": "0.4.2" } }, "sha512-FrclX8FQFxVkGtpwCBSBxR/IbyFmMcv0pLwxRI2tOtJKP1gwRvPJqZSHfeXJgDvmhK85owaT7Cd3VWsX7AQCXQ=="],
 
-    "@scalar/types": ["@scalar/types@0.7.1", "", { "dependencies": { "@scalar/helpers": "0.3.0", "nanoid": "^5.1.6", "type-fest": "^5.3.1", "zod": "^4.3.5" } }, "sha512-yJ6FebyOQ+VCftXTUpJDrvJWMoMPaP1HSdBD2L3SsoQvmhXnJ6zbCd2IT7XNrfBIwsYvIYVUBVl9umPjKTNdMw=="],
+    "@scalar/types": ["@scalar/types@0.7.2", "", { "dependencies": { "@scalar/helpers": "0.4.0", "nanoid": "^5.1.6", "type-fest": "^5.3.1", "zod": "^4.3.5" } }, "sha512-y2qesMS43aVA2QdhLP/r6/sD2LlTeGjryoF0s6q11jU/UQV22vXD4dNGoCynF3qIFp4VuLE3d04wcsyZ5BD6HA=="],
 
     "@scarf/scarf": ["@scarf/scarf@1.4.0", "", {}, "sha512-xxeapPiUXdZAE3che6f3xogoJPeZgig6omHEy1rIY5WVsB3H2BHNnZH+gHG6x91SCWyQCzWGsuL2Hh3ClO5/qQ=="],
 
