@@ -3,13 +3,13 @@ import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { apiReference } from "@scalar/nestjs-api-reference";
 import type express from "express";
 import swaggerUi from "swagger-ui-express";
-import { CONFIG_PORT, type IConfigPort } from "@/modules/@shared/application/ports/out/config";
+import { IRuntimeOptions, IRuntimeOptions as IRuntimeOptionsToken } from "@/infrastructure.config/options/runtime-options.interface";
 import { detectHostAndProtocolFromRequest } from "./detect-host-and-protocol-from-request";
 
 export const useDocs = (app: INestApplication) => {
-  const configService = app.get<IConfigPort>(CONFIG_PORT);
+  const runtimeOptions = app.get<IRuntimeOptions>(IRuntimeOptionsToken);
 
-  const prefix = configService.getRuntimePrefix();
+  const prefix = runtimeOptions.prefix;
 
   const paths = {
     openapi: `${prefix}docs/openapi.v3.json`,

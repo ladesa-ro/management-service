@@ -1,4 +1,0 @@
-export * from "./config.port";
-export * from "./config-auth.port";
-export * from "./config-message-broker.port";
-export * from "./config-runtime.port";

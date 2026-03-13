@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import { NestFactory } from "@nestjs/core";
-import { CONFIG_PORT, type IConfigPort } from "@/modules/@shared/application/ports/out/config";
+import { IRuntimeOptions } from "@/infrastructure.config/options/runtime-options.interface";
 import { AppModule } from "@/server/nest/app.module";
 import { useCompression } from "@/server/plugins/use-compression";
 import { useCors } from "@/server/plugins/use-cors";
@@ -19,8 +19,8 @@ export async function setupServer() {
   useCors(app);
   useCompression(app);
 
-  const config = app.get<IConfigPort>(CONFIG_PORT);
-  const port = config.getRuntimePort();
+  const runtimeOptions = app.get<IRuntimeOptions>(IRuntimeOptions);
+  const port = runtimeOptions.port;
 
   await app.listen(port);
 }

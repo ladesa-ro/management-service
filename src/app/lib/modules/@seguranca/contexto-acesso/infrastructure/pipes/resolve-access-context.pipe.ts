@@ -1,7 +1,7 @@
 import { Inject, Injectable, Optional, type PipeTransform } from "@nestjs/common";
 import { DataSource } from "typeorm";
 import type { IRequestActor } from "@/modules/@seguranca/ator-requisicao";
-import { CONFIG_PORT, type IConfigPort } from "@/modules/@shared/application/ports/out/config";
+import { IRuntimeOptions, IRuntimeOptions as IRuntimeOptionsToken } from "@/infrastructure.config/options/runtime-options.interface";
 import { APP_DATA_SOURCE_TOKEN } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import { AccessContext } from "../access-context";
 import { RESOURCE_AUTHZ_REGISTRY, ResourceAuthzRegistry } from "../resource-authz-registry";
@@ -15,20 +15,18 @@ export class ResolveAccessContextPipe implements PipeTransform {
   constructor(
     @Inject(APP_DATA_SOURCE_TOKEN)
     private readonly dataSource: DataSource,
-    @Inject(CONFIG_PORT)
-    private readonly config: IConfigPort,
+    @Inject(IRuntimeOptionsToken)
+    private readonly runtimeOptions: IRuntimeOptions,
     @Optional()
     @Inject(RESOURCE_AUTHZ_REGISTRY)
     private readonly resourceRegistry?: ResourceAuthzRegistry,
   ) {}
 
   async transform(requestActor: IRequestActor | null): Promise<AccessContext> {
-    const permissionCheckEnabled = this.config.getPermissionCheckEnabled();
-
     return new AccessContext(
       this.dataSource,
       requestActor ?? null,
-      permissionCheckEnabled,
+      this.runtimeOptions.permissionCheckEnabled,
       this.resourceRegistry,
     );
   }

@@ -2,41 +2,24 @@ import { INestApplication } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
 import request from "supertest";
 import { afterAll, beforeAll, describe, it } from "vitest";
-import { CONFIG_PORT } from "@/modules/@shared/application/ports/out/config";
+import { IRuntimeOptions as IRuntimeOptionsToken } from "@/infrastructure.config/options/runtime-options.interface";
 import { APP_DATA_SOURCE_TOKEN } from "@/modules/@shared/infrastructure/persistence/typeorm/providers/app-data-source.provider";
 import { AppController } from "@/server/nest/app.controller";
 import { AppService } from "@/server/nest/app.service";
 
 /**
- * Mock ConfigService for E2E tests
+ * Mock RuntimeOptions for E2E tests
  */
-const mockConfigService = {
-  // Runtime config
-  getRuntimePort: () => 3000,
-  getRuntimeHost: () => "localhost",
-  getRuntimePrefix: () => "/api",
-  getRuntimeVersion: () => "1.0.0-test",
-  getRuntimeBuildTime: () => new Date("2026-01-31"),
-  getRuntimeGitCommitHash: () => "test-commit-hash",
-  // Auth config
-  getAuthOidcIssuerUri: () => "http://localhost:8080/realms/test",
-  getAuthOidcClientId: () => "test-client",
-  getAuthOidcJwksUri: () => "http://localhost:8080/realms/test/protocol/openid-connect/certs",
-  // Database config
-  getDatabaseHost: () => "localhost",
-  getDatabasePort: () => 5432,
-  getDatabaseDatabase: () => "test",
-  getDatabaseUsername: () => "test",
-  getDatabasePassword: () => "test",
-  getDatabaseType: () => "better-sqlite3",
-  // TypeORM config
-  getTypeOrmAppDataSourceOptions: () => ({
-    type: "better-sqlite3" as const,
-    database: ":memory:",
-    entities: [],
-    synchronize: true,
-    logging: false,
-  }),
+const mockRuntimeOptions = {
+  port: 3000,
+  prefix: "/api",
+  version: "1.0.0-test",
+  buildTime: new Date("2026-01-31"),
+  gitCommitHash: "test-commit-hash",
+  nodeEnv: "test",
+  swaggerServers: null,
+  storagePath: "/tmp/test",
+  permissionCheckEnabled: false,
 };
 
 /**
@@ -67,8 +50,8 @@ describe("AppController (e2e)", () => {
       providers: [
         AppService,
         {
-          provide: CONFIG_PORT,
-          useValue: mockConfigService,
+          provide: IRuntimeOptionsToken,
+          useValue: mockRuntimeOptions,
         },
         {
           provide: APP_DATA_SOURCE_TOKEN,

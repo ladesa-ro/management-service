@@ -1,10 +1,10 @@
 import { INestApplication } from "@nestjs/common";
-import { CONFIG_PORT, type IConfigPort } from "@/modules/@shared/application/ports/out/config";
+import { IRuntimeOptions, IRuntimeOptions as IRuntimeOptionsToken } from "@/infrastructure.config/options/runtime-options.interface";
 
 export const usePrefix = (app: INestApplication) => {
-  const configService = app.get<IConfigPort>(CONFIG_PORT);
+  const runtimeOptions = app.get<IRuntimeOptions>(IRuntimeOptionsToken);
 
-  const prefix = configService.getRuntimePrefix();
+  const prefix = runtimeOptions.prefix;
 
   if (prefix) {
     app.setGlobalPrefix(prefix, { exclude: ["health"] });

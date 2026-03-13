@@ -2,15 +2,15 @@ import { InMemoryLRUCache } from "@apollo/utils.keyvaluecache";
 import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
 import { Module } from "@nestjs/common";
 import { GraphQLModule } from "@nestjs/graphql";
-import { CONFIG_PORT, type IConfigPort } from "@/modules/@shared/application/ports/out/config";
+import { IRuntimeOptions, IRuntimeOptions as IRuntimeOptionsToken } from "@/infrastructure.config/options/runtime-options.interface";
 
 @Module({
   imports: [
     GraphQLModule.forRootAsync<ApolloDriverConfig>({
       driver: ApolloDriver,
-      inject: [CONFIG_PORT],
-      useFactory: (configService: IConfigPort) => {
-        const prefix = configService.getRuntimePrefix() || "";
+      inject: [IRuntimeOptionsToken],
+      useFactory: (runtimeOptions: IRuntimeOptions) => {
+        const prefix = runtimeOptions.prefix || "";
         const graphqlPath = "graphql";
 
         const fullPath = prefix ? `${prefix}${graphqlPath}` : graphqlPath;

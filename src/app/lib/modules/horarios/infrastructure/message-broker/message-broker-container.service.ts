@@ -1,14 +1,14 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { BrokerAsPromised as Broker, BrokerConfig } from "rascal";
-import { CONFIG_PORT, type IConfigPort } from "@/modules/@shared/application/ports/out/config";
+import { IMessageBrokerOptions, IMessageBrokerOptions as IMessageBrokerOptionsToken } from "@/infrastructure.config/options/message-broker-options.interface";
 
 @Injectable()
 export class MessageBrokerContainerService {
   #broker: Broker | null = null;
 
   constructor(
-    @Inject(CONFIG_PORT)
-    private readonly configPort: IConfigPort,
+    @Inject(IMessageBrokerOptionsToken)
+    private readonly messageBrokerOptions: IMessageBrokerOptions,
   ) {}
 
   async setup() {
@@ -31,9 +31,7 @@ export class MessageBrokerContainerService {
   }
 
   getConfig(): BrokerConfig {
-    const messageBrokerUrl = this.configPort.getMessageBrokerUrl();
-    const queueTimetableRequest = this.configPort.getMessageBrokerQueueTimetableRequest();
-    const queueTimetableResponse = this.configPort.getMessageBrokerQueueTimetableResponse();
+    const { url: messageBrokerUrl, queueTimetableRequest, queueTimetableResponse } = this.messageBrokerOptions;
 
     const config: BrokerConfig = {
       vhosts: {
