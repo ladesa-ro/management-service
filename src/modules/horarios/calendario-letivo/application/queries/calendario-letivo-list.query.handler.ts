@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
   type ICalendarioLetivoListQuery,
   ICalendarioLetivoListQueryHandler,
@@ -6,10 +6,10 @@ import {
 import { ICalendarioLetivoRepository } from "../../domain/repositories";
 import type { CalendarioLetivoListOutputDto } from "../dtos";
 
-@Injectable()
+@DeclareImplementation()
 export class CalendarioLetivoListQueryHandlerImpl implements ICalendarioLetivoListQueryHandler {
   constructor(
-    @Inject(ICalendarioLetivoRepository)
+    @DeclareDependency(ICalendarioLetivoRepository)
     private readonly repository: ICalendarioLetivoRepository,
   ) {}
 

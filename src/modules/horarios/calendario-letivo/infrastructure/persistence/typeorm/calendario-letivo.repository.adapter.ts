@@ -1,6 +1,6 @@
-import { Inject, Injectable } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
 import { DataSource } from "typeorm";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
   APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
@@ -18,7 +18,7 @@ import type {
 import type { CalendarioLetivoEntity } from "./calendario-letivo.entity";
 import { createCalendarioLetivoRepository } from "./calendario-letivo.repository";
 
-@Injectable()
+@DeclareImplementation()
 export class CalendarioLetivoTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     CalendarioLetivoEntity,
@@ -34,7 +34,7 @@ export class CalendarioLetivoTypeOrmRepositoryAdapter
   protected readonly outputDtoName = "CalendarioLetivoFindOneOutputDto";
 
   constructor(
-    @Inject(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
+    @DeclareDependency(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
     protected readonly paginationAdapter: NestJsPaginateAdapter,
   ) {
     super();

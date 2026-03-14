@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { ensureExists } from "@/modules/@shared";
 import { Campus } from "@/modules/ambientes/campus/domain/campus.domain";
 import { ICampusFindOneQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-find-one.query.handler.interface";
@@ -13,18 +13,18 @@ import { ICalendarioLetivoPermissionChecker } from "../../domain/authorization";
 import { ICalendarioLetivoRepository } from "../../domain/repositories";
 import type { CalendarioLetivoFindOneOutputDto } from "../dtos";
 
-@Injectable()
+@DeclareImplementation()
 export class CalendarioLetivoCreateCommandHandlerImpl
   implements ICalendarioLetivoCreateCommandHandler
 {
   constructor(
-    @Inject(ICalendarioLetivoRepository)
+    @DeclareDependency(ICalendarioLetivoRepository)
     private readonly repository: ICalendarioLetivoRepository,
-    @Inject(ICalendarioLetivoPermissionChecker)
+    @DeclareDependency(ICalendarioLetivoPermissionChecker)
     private readonly permissionChecker: ICalendarioLetivoPermissionChecker,
-    @Inject(ICampusFindOneQueryHandler)
+    @DeclareDependency(ICampusFindOneQueryHandler)
     private readonly campusFindOneHandler: ICampusFindOneQueryHandler,
-    @Inject(IOfertaFormacaoFindOneQueryHandler)
+    @DeclareDependency(IOfertaFormacaoFindOneQueryHandler)
     private readonly ofertaFormacaoFindOneHandler: IOfertaFormacaoFindOneQueryHandler,
   ) {}
 

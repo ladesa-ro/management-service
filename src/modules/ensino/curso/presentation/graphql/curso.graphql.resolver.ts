@@ -1,6 +1,6 @@
-import { Inject } from "@nestjs/common";
 import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
+import { DeclareDependency } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextGraphQL } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
@@ -22,11 +22,15 @@ import { CursoGraphqlMapper } from "./curso.graphql.mapper";
 @Resolver(() => CursoFindOneOutputGraphQlDto)
 export class CursoGraphqlResolver {
   constructor(
-    @Inject(ICursoListQueryHandler) private readonly listHandler: ICursoListQueryHandler,
-    @Inject(ICursoFindOneQueryHandler) private readonly findOneHandler: ICursoFindOneQueryHandler,
-    @Inject(ICursoCreateCommandHandler) private readonly createHandler: ICursoCreateCommandHandler,
-    @Inject(ICursoUpdateCommandHandler) private readonly updateHandler: ICursoUpdateCommandHandler,
-    @Inject(ICursoDeleteCommandHandler) private readonly deleteHandler: ICursoDeleteCommandHandler,
+    @DeclareDependency(ICursoListQueryHandler) private readonly listHandler: ICursoListQueryHandler,
+    @DeclareDependency(ICursoFindOneQueryHandler)
+    private readonly findOneHandler: ICursoFindOneQueryHandler,
+    @DeclareDependency(ICursoCreateCommandHandler)
+    private readonly createHandler: ICursoCreateCommandHandler,
+    @DeclareDependency(ICursoUpdateCommandHandler)
+    private readonly updateHandler: ICursoUpdateCommandHandler,
+    @DeclareDependency(ICursoDeleteCommandHandler)
+    private readonly deleteHandler: ICursoDeleteCommandHandler,
   ) {}
 
   @Query(() => CursoListOutputGraphQlDto, { name: "cursoFindAll" })

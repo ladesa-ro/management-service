@@ -1,4 +1,4 @@
-import { Controller, Get, Inject, Param, Query, type StreamableFile } from "@nestjs/common";
+import { Controller, Get, Param, Query, type StreamableFile } from "@nestjs/common";
 import {
   ApiForbiddenResponse,
   ApiNotFoundResponse,
@@ -6,6 +6,7 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
+import { DeclareDependency } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
 import {
   IArquivoGetStreamableFileQueryHandler,
@@ -18,7 +19,7 @@ import { ArquivoRestMapper } from "./arquivo.rest.mapper";
 @Controller("/arquivos")
 export class ArquivoRestController {
   constructor(
-    @Inject(IArquivoGetStreamableFileQueryHandler)
+    @DeclareDependency(IArquivoGetStreamableFileQueryHandler)
     private readonly getStreamableFileHandler: IArquivoGetStreamableFileQueryHandlerType,
   ) {}
 

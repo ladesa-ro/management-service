@@ -1,5 +1,5 @@
-import { Inject, Injectable } from "@nestjs/common";
 import { DataSource } from "typeorm";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { APP_DATA_SOURCE_TOKEN } from "@/modules/@shared/infrastructure/persistence/typeorm";
@@ -21,9 +21,9 @@ import { Estagiario } from "@/modules/estagio/estagiario/domain/estagiario.domai
 import type { IEstagiarioRepository } from "@/modules/estagio/estagiario/domain/repositories";
 import { createEstagiarioRepository, EstagiarioMapper } from "./persistence";
 
-@Injectable()
+@DeclareImplementation()
 export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository {
-  constructor(@Inject(APP_DATA_SOURCE_TOKEN) private readonly dataSource: DataSource) {}
+  constructor(@DeclareDependency(APP_DATA_SOURCE_TOKEN) private readonly dataSource: DataSource) {}
 
   private get repository() {
     return createEstagiarioRepository(this.dataSource);

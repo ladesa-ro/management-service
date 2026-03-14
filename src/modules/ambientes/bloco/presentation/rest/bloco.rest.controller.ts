@@ -3,7 +3,6 @@ import {
   Controller,
   Delete,
   Get,
-  Inject,
   Param,
   Patch,
   Post,
@@ -23,6 +22,7 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
+import { DeclareDependency } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { Bloco } from "@/modules/ambientes/bloco/domain/bloco.domain";
@@ -47,14 +47,18 @@ import { BlocoRestMapper } from "./bloco.rest.mapper";
 @Controller("/blocos")
 export class BlocoRestController {
   constructor(
-    @Inject(IBlocoListQueryHandler) private readonly listHandler: IBlocoListQueryHandler,
-    @Inject(IBlocoFindOneQueryHandler) private readonly findOneHandler: IBlocoFindOneQueryHandler,
-    @Inject(IBlocoCreateCommandHandler) private readonly createHandler: IBlocoCreateCommandHandler,
-    @Inject(IBlocoUpdateCommandHandler) private readonly updateHandler: IBlocoUpdateCommandHandler,
-    @Inject(IBlocoDeleteCommandHandler) private readonly deleteHandler: IBlocoDeleteCommandHandler,
-    @Inject(IBlocoUpdateImagemCapaCommandHandler)
+    @DeclareDependency(IBlocoListQueryHandler) private readonly listHandler: IBlocoListQueryHandler,
+    @DeclareDependency(IBlocoFindOneQueryHandler)
+    private readonly findOneHandler: IBlocoFindOneQueryHandler,
+    @DeclareDependency(IBlocoCreateCommandHandler)
+    private readonly createHandler: IBlocoCreateCommandHandler,
+    @DeclareDependency(IBlocoUpdateCommandHandler)
+    private readonly updateHandler: IBlocoUpdateCommandHandler,
+    @DeclareDependency(IBlocoDeleteCommandHandler)
+    private readonly deleteHandler: IBlocoDeleteCommandHandler,
+    @DeclareDependency(IBlocoUpdateImagemCapaCommandHandler)
     private readonly updateImagemCapaHandler: IBlocoUpdateImagemCapaCommandHandler,
-    @Inject(IBlocoGetImagemCapaQueryHandler)
+    @DeclareDependency(IBlocoGetImagemCapaQueryHandler)
     private readonly getImagemCapaHandler: IBlocoGetImagemCapaQueryHandler,
   ) {}
 

@@ -1,7 +1,7 @@
-import { Injectable } from "@nestjs/common";
 import { type PaginateConfig, paginate } from "nestjs-paginate";
 import type { PaginateQuery } from "nestjs-paginate/lib/decorator";
 import type { ObjectLiteral, SelectQueryBuilder } from "typeorm";
+import { DeclareImplementation } from "@/domain/dependency-injection";
 import type { IPaginationCriteria, IPaginationResult } from "@/modules/@shared";
 import { paginateConfig } from "../config/paginate-config";
 import type { ITypeOrmPaginationConfig } from "../interfaces/pagination-config.types";
@@ -10,7 +10,7 @@ import type { ITypeOrmPaginationConfig } from "../interfaces/pagination-config.t
  * Adapter que implementa paginação usando nestjs-paginate
  * Encapsula toda a lógica do nestjs-paginate, mantendo o domínio limpo
  */
-@Injectable()
+@DeclareImplementation()
 export class NestJsPaginateAdapter {
   async paginate<T extends ObjectLiteral>(
     queryBuilder: SelectQueryBuilder<T>,

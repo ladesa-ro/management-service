@@ -1,6 +1,6 @@
-import { Inject, Injectable } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
 import { DataSource } from "typeorm";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
   APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
@@ -18,7 +18,7 @@ import type { IDiaCalendarioRepository } from "@/modules/horarios/dia-calendario
 import type { DiaCalendarioEntity } from "./dia-calendario.entity";
 import { createDiaCalendarioRepository } from "./dia-calendario.repository";
 
-@Injectable()
+@DeclareImplementation()
 export class DiaCalendarioTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     DiaCalendarioEntity,
@@ -34,7 +34,7 @@ export class DiaCalendarioTypeOrmRepositoryAdapter
   protected readonly outputDtoName = "DiaCalendarioFindOneOutputDto";
 
   constructor(
-    @Inject(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
+    @DeclareDependency(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
     protected readonly paginationAdapter: NestJsPaginateAdapter,
   ) {
     super();

@@ -1,6 +1,6 @@
-import { Inject, Injectable } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
 import { DataSource } from "typeorm";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
   APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
@@ -22,7 +22,7 @@ import { createImagemArquivoRepository } from "./imagem-arquivo.repository";
  * Adapter TypeORM que implementa o port de repositório de consulta de ImagemArquivo.
  * Estende BaseTypeOrmRepositoryAdapter para reutilizar operações de leitura.
  */
-@Injectable()
+@DeclareImplementation()
 export class ImagemArquivoQueryTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     ImagemArquivoEntity,
@@ -38,7 +38,7 @@ export class ImagemArquivoQueryTypeOrmRepositoryAdapter
   protected readonly outputDtoName = "ImagemArquivoFindOneOutputDto";
 
   constructor(
-    @Inject(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
+    @DeclareDependency(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
     protected readonly paginationAdapter: NestJsPaginateAdapter,
   ) {
     super();

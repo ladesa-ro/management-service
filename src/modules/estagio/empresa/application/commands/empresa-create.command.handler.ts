@@ -1,4 +1,5 @@
-import { Inject, Injectable, InternalServerErrorException } from "@nestjs/common";
+import { InternalServerErrorException } from "@nestjs/common";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { ResourceNotFoundError } from "@/modules/@shared";
 import {
   type IEmpresaCreateCommand,
@@ -7,10 +8,10 @@ import {
 import { IEmpresaRepository } from "../../domain/repositories";
 import type { EmpresaFindOneOutputDto } from "../dtos";
 
-@Injectable()
+@DeclareImplementation()
 export class EmpresaCreateCommandHandlerImpl implements IEmpresaCreateCommandHandler {
   constructor(
-    @Inject(IEmpresaRepository)
+    @DeclareDependency(IEmpresaRepository)
     private readonly repository: IEmpresaRepository,
   ) {}
 

@@ -1,5 +1,6 @@
-import { Inject, Injectable, type OnModuleInit, type Type } from "@nestjs/common";
+import { type OnModuleInit, type Type } from "@nestjs/common";
 import type { DataSource, ObjectLiteral, Repository } from "typeorm";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { APP_DATA_SOURCE_TOKEN } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import { type ResourceActions, ResourceAuthzRegistry } from "./resource-authz-registry";
 
@@ -38,11 +39,11 @@ export function createAuthzRegistryProvider(
   const alias = options?.alias ?? resourceName;
   const actions = options?.actions ?? { find: true, update: true, delete: true };
 
-  @Injectable()
+  @DeclareImplementation()
   class AuthzRegistrySetup implements OnModuleInit {
     constructor(
       private readonly registry: ResourceAuthzRegistry,
-      @Inject(APP_DATA_SOURCE_TOKEN)
+      @DeclareDependency(APP_DATA_SOURCE_TOKEN)
       private readonly dataSource: DataSource,
     ) {}
 

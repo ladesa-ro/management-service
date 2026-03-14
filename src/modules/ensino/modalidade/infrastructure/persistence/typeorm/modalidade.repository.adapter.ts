@@ -1,5 +1,5 @@
-import { Inject, Injectable } from "@nestjs/common";
 import { DataSource } from "typeorm";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
   APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
@@ -21,7 +21,7 @@ import { createModalidadeRepository } from "./modalidade.repository";
  * Adapter TypeORM que implementa o port de repositório de Modalidade.
  * Estende BaseTypeOrmRepositoryAdapter para reutilizar operações CRUD comuns.
  */
-@Injectable()
+@DeclareImplementation()
 export class ModalidadeTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     ModalidadeEntity,
@@ -37,7 +37,7 @@ export class ModalidadeTypeOrmRepositoryAdapter
   protected readonly outputDtoName = "ModalidadeFindOneOutputDto";
 
   constructor(
-    @Inject(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
+    @DeclareDependency(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
     protected readonly paginationAdapter: NestJsPaginateAdapter,
   ) {
     super();

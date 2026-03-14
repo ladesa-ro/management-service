@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
   IRuntimeOptions,
   IRuntimeOptions as IRuntimeOptionsToken,
@@ -13,10 +13,10 @@ export interface ServiceInfo {
   gitCommitHash: string | null;
 }
 
-@Injectable()
+@DeclareImplementation()
 export class AppService {
   constructor(
-    @Inject(IRuntimeOptionsToken)
+    @DeclareDependency(IRuntimeOptionsToken)
     private readonly runtimeOptions: IRuntimeOptions,
   ) {}
 

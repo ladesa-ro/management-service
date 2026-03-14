@@ -1,6 +1,6 @@
-import { Inject } from "@nestjs/common";
 import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
+import { DeclareDependency } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextGraphQL } from "@/modules/@seguranca/contexto-acesso";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
 import { IPerfilSetVinculosCommandHandler } from "@/modules/acesso/perfil/domain/commands/perfil-set-vinculos.command.handler.interface";
@@ -17,9 +17,11 @@ import { PerfilGraphqlMapper } from "./perfil.graphql.mapper";
 @Resolver(() => PerfilFindOneOutputGraphQlDto)
 export class PerfilGraphqlResolver {
   constructor(
-    @Inject(IPerfilListQueryHandler) private readonly listHandler: IPerfilListQueryHandler,
-    @Inject(IPerfilFindOneQueryHandler) private readonly findOneHandler: IPerfilFindOneQueryHandler,
-    @Inject(IPerfilSetVinculosCommandHandler)
+    @DeclareDependency(IPerfilListQueryHandler)
+    private readonly listHandler: IPerfilListQueryHandler,
+    @DeclareDependency(IPerfilFindOneQueryHandler)
+    private readonly findOneHandler: IPerfilFindOneQueryHandler,
+    @DeclareDependency(IPerfilSetVinculosCommandHandler)
     private readonly setVinculosHandler: IPerfilSetVinculosCommandHandler,
   ) {}
 

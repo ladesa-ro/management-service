@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { ensureExists, saveEntityImagemField } from "@/modules/@shared";
 import {
   type IUsuarioUpdateImagemCapaCommand,
@@ -12,16 +12,16 @@ import {
 import { IUsuarioPermissionChecker } from "../../domain/authorization";
 import { IUsuarioRepository } from "../../domain/repositories";
 
-@Injectable()
+@DeclareImplementation()
 export class UsuarioUpdateImagemCapaCommandHandlerImpl
   implements IUsuarioUpdateImagemCapaCommandHandler
 {
   constructor(
-    @Inject(IUsuarioRepository)
+    @DeclareDependency(IUsuarioRepository)
     private readonly repository: IUsuarioRepository,
-    @Inject(IImagemSaveImagemCapaCommandHandler)
+    @DeclareDependency(IImagemSaveImagemCapaCommandHandler)
     private readonly saveImagemCapaHandler: IImagemSaveImagemCapaCommandHandlerType,
-    @Inject(IUsuarioPermissionChecker)
+    @DeclareDependency(IUsuarioPermissionChecker)
     private readonly permissionChecker: IUsuarioPermissionChecker,
   ) {}
 

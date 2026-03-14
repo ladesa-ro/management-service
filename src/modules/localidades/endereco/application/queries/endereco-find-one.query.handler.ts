@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
   type IEnderecoFindOneQuery,
   IEnderecoFindOneQueryHandler,
@@ -6,10 +6,10 @@ import {
 import { IEnderecoRepository } from "../../domain/repositories";
 import type { EnderecoFindOneOutputDto } from "../dtos";
 
-@Injectable()
+@DeclareImplementation()
 export class EnderecoFindOneQueryHandlerImpl implements IEnderecoFindOneQueryHandler {
   constructor(
-    @Inject(IEnderecoRepository)
+    @DeclareDependency(IEnderecoRepository)
     private readonly repository: IEnderecoRepository,
   ) {}
 

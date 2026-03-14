@@ -1,6 +1,6 @@
-import { Inject, Injectable } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
 import { DataSource } from "typeorm";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
   APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
@@ -18,7 +18,7 @@ import type { IDiarioRepository } from "@/modules/ensino/diario/domain/repositor
 import type { DiarioEntity } from "./diario.entity";
 import { createDiarioRepository } from "./diario.repository";
 
-@Injectable()
+@DeclareImplementation()
 export class DiarioTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     DiarioEntity,
@@ -34,7 +34,7 @@ export class DiarioTypeOrmRepositoryAdapter
   protected readonly outputDtoName = "DiarioFindOneOutputDto";
 
   constructor(
-    @Inject(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
+    @DeclareDependency(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
     protected readonly paginationAdapter: NestJsPaginateAdapter,
   ) {
     super();

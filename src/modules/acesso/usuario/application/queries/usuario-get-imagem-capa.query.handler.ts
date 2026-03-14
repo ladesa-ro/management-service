@@ -1,4 +1,5 @@
-import { Inject, Injectable, type StreamableFile } from "@nestjs/common";
+import { type StreamableFile } from "@nestjs/common";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { ensureExists, getEntityImagemStreamableFile } from "@/modules/@shared";
 import {
   type IUsuarioGetImagemCapaQuery,
@@ -15,14 +16,14 @@ import {
 } from "@/modules/armazenamento/imagem/domain/queries";
 import { IUsuarioRepository } from "../../domain/repositories";
 
-@Injectable()
+@DeclareImplementation()
 export class UsuarioGetImagemCapaQueryHandlerImpl implements IUsuarioGetImagemCapaQueryHandler {
   constructor(
-    @Inject(IUsuarioRepository)
+    @DeclareDependency(IUsuarioRepository)
     private readonly repository: IUsuarioRepository,
-    @Inject(IImagemGetLatestArquivoIdQueryHandler)
+    @DeclareDependency(IImagemGetLatestArquivoIdQueryHandler)
     private readonly getLatestArquivoIdHandler: IImagemGetLatestArquivoIdQueryHandlerType,
-    @Inject(IArquivoGetStreamableFileQueryHandler)
+    @DeclareDependency(IArquivoGetStreamableFileQueryHandler)
     private readonly getStreamableFileHandler: IArquivoGetStreamableFileQueryHandlerType,
   ) {}
 

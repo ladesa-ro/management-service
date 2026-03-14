@@ -1,7 +1,7 @@
-import { Injectable } from "@nestjs/common";
+import { DeclareImplementation } from "@/domain/dependency-injection";
 import { BasePermissionChecker } from "@/modules/@shared/application/authorization";
 
-@Injectable()
+@DeclareImplementation()
 export class AmbientePermissionCheckerImpl extends BasePermissionChecker {
   protected readonly resource = "ambiente";
 }

@@ -1,6 +1,6 @@
-import { Inject } from "@nestjs/common";
 import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
+import { DeclareDependency } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextGraphQL } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
@@ -22,15 +22,15 @@ import { DiaCalendarioGraphqlMapper } from "./dia-calendario.graphql.mapper";
 @Resolver(() => DiaCalendarioFindOneOutputGraphQlDto)
 export class DiaCalendarioGraphqlResolver {
   constructor(
-    @Inject(IDiaCalendarioListQueryHandler)
+    @DeclareDependency(IDiaCalendarioListQueryHandler)
     private readonly listHandler: IDiaCalendarioListQueryHandler,
-    @Inject(IDiaCalendarioFindOneQueryHandler)
+    @DeclareDependency(IDiaCalendarioFindOneQueryHandler)
     private readonly findOneHandler: IDiaCalendarioFindOneQueryHandler,
-    @Inject(IDiaCalendarioCreateCommandHandler)
+    @DeclareDependency(IDiaCalendarioCreateCommandHandler)
     private readonly createHandler: IDiaCalendarioCreateCommandHandler,
-    @Inject(IDiaCalendarioUpdateCommandHandler)
+    @DeclareDependency(IDiaCalendarioUpdateCommandHandler)
     private readonly updateHandler: IDiaCalendarioUpdateCommandHandler,
-    @Inject(IDiaCalendarioDeleteCommandHandler)
+    @DeclareDependency(IDiaCalendarioDeleteCommandHandler)
     private readonly deleteHandler: IDiaCalendarioDeleteCommandHandler,
   ) {}
 

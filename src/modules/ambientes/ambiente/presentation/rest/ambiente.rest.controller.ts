@@ -3,7 +3,6 @@ import {
   Controller,
   Delete,
   Get,
-  Inject,
   Param,
   Patch,
   Post,
@@ -23,6 +22,7 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
+import { DeclareDependency } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { Ambiente } from "@/modules/ambientes/ambiente/domain/ambiente.domain";
@@ -47,18 +47,19 @@ import { AmbienteRestMapper } from "./ambiente.rest.mapper";
 @Controller("/ambientes")
 export class AmbienteRestController {
   constructor(
-    @Inject(IAmbienteListQueryHandler) private readonly listHandler: IAmbienteListQueryHandler,
-    @Inject(IAmbienteFindOneQueryHandler)
+    @DeclareDependency(IAmbienteListQueryHandler)
+    private readonly listHandler: IAmbienteListQueryHandler,
+    @DeclareDependency(IAmbienteFindOneQueryHandler)
     private readonly findOneHandler: IAmbienteFindOneQueryHandler,
-    @Inject(IAmbienteCreateCommandHandler)
+    @DeclareDependency(IAmbienteCreateCommandHandler)
     private readonly createHandler: IAmbienteCreateCommandHandler,
-    @Inject(IAmbienteUpdateCommandHandler)
+    @DeclareDependency(IAmbienteUpdateCommandHandler)
     private readonly updateHandler: IAmbienteUpdateCommandHandler,
-    @Inject(IAmbienteDeleteCommandHandler)
+    @DeclareDependency(IAmbienteDeleteCommandHandler)
     private readonly deleteHandler: IAmbienteDeleteCommandHandler,
-    @Inject(IAmbienteUpdateImagemCapaCommandHandler)
+    @DeclareDependency(IAmbienteUpdateImagemCapaCommandHandler)
     private readonly updateImagemCapaHandler: IAmbienteUpdateImagemCapaCommandHandler,
-    @Inject(IAmbienteGetImagemCapaQueryHandler)
+    @DeclareDependency(IAmbienteGetImagemCapaQueryHandler)
     private readonly getImagemCapaHandler: IAmbienteGetImagemCapaQueryHandler,
   ) {}
 

@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
   type ITurmaListQuery,
   ITurmaListQueryHandler,
@@ -6,10 +6,10 @@ import {
 import { ITurmaRepository } from "../../domain/repositories";
 import type { TurmaListOutputDto } from "../dtos";
 
-@Injectable()
+@DeclareImplementation()
 export class TurmaListQueryHandlerImpl implements ITurmaListQueryHandler {
   constructor(
-    @Inject(ITurmaRepository)
+    @DeclareDependency(ITurmaRepository)
     private readonly repository: ITurmaRepository,
   ) {}
 

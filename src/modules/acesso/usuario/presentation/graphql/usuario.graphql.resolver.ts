@@ -1,6 +1,6 @@
-import { Inject } from "@nestjs/common";
 import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
+import { DeclareDependency } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextGraphQL } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
@@ -22,15 +22,15 @@ import { UsuarioGraphqlMapper } from "./usuario.graphql.mapper";
 @Resolver(() => UsuarioFindOneOutputGraphQlDto)
 export class UsuarioGraphqlResolver {
   constructor(
-    @Inject(IUsuarioListQueryHandler)
+    @DeclareDependency(IUsuarioListQueryHandler)
     private readonly listHandler: IUsuarioListQueryHandler,
-    @Inject(IUsuarioFindOneQueryHandler)
+    @DeclareDependency(IUsuarioFindOneQueryHandler)
     private readonly findOneHandler: IUsuarioFindOneQueryHandler,
-    @Inject(IUsuarioCreateCommandHandler)
+    @DeclareDependency(IUsuarioCreateCommandHandler)
     private readonly createHandler: IUsuarioCreateCommandHandler,
-    @Inject(IUsuarioUpdateCommandHandler)
+    @DeclareDependency(IUsuarioUpdateCommandHandler)
     private readonly updateHandler: IUsuarioUpdateCommandHandler,
-    @Inject(IUsuarioDeleteCommandHandler)
+    @DeclareDependency(IUsuarioDeleteCommandHandler)
     private readonly deleteHandler: IUsuarioDeleteCommandHandler,
   ) {}
 

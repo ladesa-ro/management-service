@@ -1,5 +1,5 @@
-import { Inject, Injectable } from "@nestjs/common";
 import { has } from "lodash";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { ensureExists, type PersistInput } from "@/modules/@shared";
 import { Perfil } from "@/modules/acesso/perfil/domain/perfil.domain";
 import { IPerfilFindOneQueryHandler } from "@/modules/acesso/perfil/domain/queries/perfil-find-one.query.handler.interface";
@@ -15,18 +15,18 @@ import { IDiarioProfessorPermissionChecker } from "../../domain/authorization";
 import { IDiarioProfessorRepository } from "../../domain/repositories";
 import type { DiarioProfessorFindOneOutputDto } from "../dtos";
 
-@Injectable()
+@DeclareImplementation()
 export class DiarioProfessorUpdateCommandHandlerImpl
   implements IDiarioProfessorUpdateCommandHandler
 {
   constructor(
-    @Inject(IDiarioProfessorRepository)
+    @DeclareDependency(IDiarioProfessorRepository)
     private readonly repository: IDiarioProfessorRepository,
-    @Inject(IDiarioProfessorPermissionChecker)
+    @DeclareDependency(IDiarioProfessorPermissionChecker)
     private readonly permissionChecker: IDiarioProfessorPermissionChecker,
-    @Inject(IDiarioFindOneQueryHandler)
+    @DeclareDependency(IDiarioFindOneQueryHandler)
     private readonly diarioFindOneHandler: IDiarioFindOneQueryHandler,
-    @Inject(IPerfilFindOneQueryHandler)
+    @DeclareDependency(IPerfilFindOneQueryHandler)
     private readonly perfilFindOneHandler: IPerfilFindOneQueryHandler,
   ) {}
 

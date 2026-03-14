@@ -1,5 +1,5 @@
-import { Inject, Injectable } from "@nestjs/common";
 import { has } from "lodash";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { ensureExists, type PersistInput } from "@/modules/@shared";
 import { Campus } from "@/modules/ambientes/campus/domain/campus.domain";
 import { ICampusFindOneQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-find-one.query.handler.interface";
@@ -15,16 +15,16 @@ import { ICursoPermissionChecker } from "../../domain/authorization";
 import { ICursoRepository } from "../../domain/repositories";
 import type { CursoFindOneOutputDto } from "../dtos";
 
-@Injectable()
+@DeclareImplementation()
 export class CursoUpdateCommandHandlerImpl implements ICursoUpdateCommandHandler {
   constructor(
-    @Inject(ICursoRepository)
+    @DeclareDependency(ICursoRepository)
     private readonly repository: ICursoRepository,
-    @Inject(ICursoPermissionChecker)
+    @DeclareDependency(ICursoPermissionChecker)
     private readonly permissionChecker: ICursoPermissionChecker,
-    @Inject(ICampusFindOneQueryHandler)
+    @DeclareDependency(ICampusFindOneQueryHandler)
     private readonly campusFindOneHandler: ICampusFindOneQueryHandler,
-    @Inject(IOfertaFormacaoFindOneQueryHandler)
+    @DeclareDependency(IOfertaFormacaoFindOneQueryHandler)
     private readonly ofertaFormacaoFindOneHandler: IOfertaFormacaoFindOneQueryHandler,
   ) {}
 

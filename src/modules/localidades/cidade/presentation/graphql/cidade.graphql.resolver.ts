@@ -1,6 +1,6 @@
-import { Inject } from "@nestjs/common";
 import { Args, Info, Int, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
+import { DeclareDependency } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextGraphQL } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
@@ -17,9 +17,9 @@ import { CidadeGraphqlMapper } from "./cidade.graphql.mapper";
 @Resolver(() => CidadeFindOneOutputGraphQlDto)
 export class CidadeGraphqlResolver {
   constructor(
-    @Inject(ICidadeListQueryHandler)
+    @DeclareDependency(ICidadeListQueryHandler)
     private readonly listHandler: ICidadeListQueryHandler,
-    @Inject(ICidadeFindOneQueryHandler)
+    @DeclareDependency(ICidadeFindOneQueryHandler)
     private readonly findOneHandler: ICidadeFindOneQueryHandler,
   ) {}
 

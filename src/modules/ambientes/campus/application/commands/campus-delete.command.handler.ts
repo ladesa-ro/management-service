@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { ensureExists } from "@/modules/@shared";
 import { Campus } from "@/modules/ambientes/campus/domain/campus.domain";
 import {
@@ -8,12 +8,12 @@ import {
 import { ICampusPermissionChecker } from "../../domain/authorization";
 import { ICampusRepository } from "../../domain/repositories";
 
-@Injectable()
+@DeclareImplementation()
 export class CampusDeleteCommandHandlerImpl implements ICampusDeleteCommandHandler {
   constructor(
-    @Inject(ICampusRepository)
+    @DeclareDependency(ICampusRepository)
     private readonly repository: ICampusRepository,
-    @Inject(ICampusPermissionChecker)
+    @DeclareDependency(ICampusPermissionChecker)
     private readonly permissionChecker: ICampusPermissionChecker,
   ) {}
 

@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
   type IModalidadeListQuery,
   IModalidadeListQueryHandler,
@@ -6,10 +6,10 @@ import {
 import { IModalidadeRepository } from "../../domain/repositories";
 import type { ModalidadeListOutputDto } from "../dtos";
 
-@Injectable()
+@DeclareImplementation()
 export class ModalidadeListQueryHandlerImpl implements IModalidadeListQueryHandler {
   constructor(
-    @Inject(IModalidadeRepository)
+    @DeclareDependency(IModalidadeRepository)
     private readonly repository: IModalidadeRepository,
   ) {}
 

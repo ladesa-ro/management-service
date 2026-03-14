@@ -1,5 +1,5 @@
-import { Inject, Injectable } from "@nestjs/common";
 import { has } from "lodash";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { ensureExists, type PersistInput } from "@/modules/@shared";
 import { Ambiente } from "@/modules/ambientes/ambiente/domain/ambiente.domain";
 import { IAmbienteFindOneQueryHandler } from "@/modules/ambientes/ambiente/domain/queries/ambiente-find-one.query.handler.interface";
@@ -15,16 +15,16 @@ import { ITurmaPermissionChecker } from "../../domain/authorization";
 import { ITurmaRepository } from "../../domain/repositories";
 import type { TurmaFindOneOutputDto } from "../dtos";
 
-@Injectable()
+@DeclareImplementation()
 export class TurmaUpdateCommandHandlerImpl implements ITurmaUpdateCommandHandler {
   constructor(
-    @Inject(ITurmaRepository)
+    @DeclareDependency(ITurmaRepository)
     private readonly repository: ITurmaRepository,
-    @Inject(ITurmaPermissionChecker)
+    @DeclareDependency(ITurmaPermissionChecker)
     private readonly permissionChecker: ITurmaPermissionChecker,
-    @Inject(IAmbienteFindOneQueryHandler)
+    @DeclareDependency(IAmbienteFindOneQueryHandler)
     private readonly ambienteFindOneHandler: IAmbienteFindOneQueryHandler,
-    @Inject(ICursoFindOneQueryHandler)
+    @DeclareDependency(ICursoFindOneQueryHandler)
     private readonly cursoFindOneHandler: ICursoFindOneQueryHandler,
   ) {}
 

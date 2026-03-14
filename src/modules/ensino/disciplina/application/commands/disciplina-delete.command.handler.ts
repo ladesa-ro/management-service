@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { ensureExists } from "@/modules/@shared";
 import {
   type IDisciplinaDeleteCommand,
@@ -8,12 +8,12 @@ import { Disciplina } from "@/modules/ensino/disciplina/domain/disciplina.domain
 import { IDisciplinaPermissionChecker } from "../../domain/authorization";
 import { IDisciplinaRepository } from "../../domain/repositories";
 
-@Injectable()
+@DeclareImplementation()
 export class DisciplinaDeleteCommandHandlerImpl implements IDisciplinaDeleteCommandHandler {
   constructor(
-    @Inject(IDisciplinaRepository)
+    @DeclareDependency(IDisciplinaRepository)
     private readonly repository: IDisciplinaRepository,
-    @Inject(IDisciplinaPermissionChecker)
+    @DeclareDependency(IDisciplinaPermissionChecker)
     private readonly permissionChecker: IDisciplinaPermissionChecker,
   ) {}
 

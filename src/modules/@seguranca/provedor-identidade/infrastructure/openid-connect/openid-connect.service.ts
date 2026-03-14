@@ -1,5 +1,5 @@
-import { Inject, Injectable } from "@nestjs/common";
 import * as client from "openid-client";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
   IAuthOptions,
   IAuthOptions as IAuthOptionsToken,
@@ -8,13 +8,13 @@ import {
 /**
  * Serviço para conexão OpenID Connect.
  */
-@Injectable()
+@DeclareImplementation()
 export class OpenidConnectService {
   config: client.Configuration | null = null;
   #initialized = false;
 
   constructor(
-    @Inject(IAuthOptionsToken)
+    @DeclareDependency(IAuthOptionsToken)
     readonly authOptions: IAuthOptions,
   ) {}
 

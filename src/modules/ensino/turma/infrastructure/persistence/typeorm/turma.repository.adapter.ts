@@ -1,6 +1,6 @@
-import { Inject, Injectable } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
 import { DataSource } from "typeorm";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
   APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
@@ -18,7 +18,7 @@ import type { ITurmaRepository } from "@/modules/ensino/turma/domain/repositorie
 import type { TurmaEntity } from "./turma.entity";
 import { createTurmaRepository } from "./turma.repository";
 
-@Injectable()
+@DeclareImplementation()
 export class TurmaTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     TurmaEntity,
@@ -34,7 +34,7 @@ export class TurmaTypeOrmRepositoryAdapter
   protected readonly outputDtoName = "TurmaFindOneOutputDto";
 
   constructor(
-    @Inject(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
+    @DeclareDependency(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
     protected readonly paginationAdapter: NestJsPaginateAdapter,
   ) {
     super();

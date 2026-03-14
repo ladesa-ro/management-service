@@ -1,11 +1,9 @@
-import { applyDecorators, Inject as NestjsInject } from "@nestjs/common";
+import { Inject as NestjsInject } from "@nestjs/common";
 
-export const DeclareDependency = (token: any) => {
-  const decorators: PropertyDecorator[] = [];
+export const DeclareDependency = (token: any): ParameterDecorator => {
+  const injectDecorator = NestjsInject(token);
 
-  decorators.push(NestjsInject(token));
-
-  return applyDecorators(...decorators);
+  return (target: any, propertyKey: string | symbol | undefined, parameterIndex: number) => {
+    return injectDecorator(target, propertyKey!, parameterIndex);
+  };
 };
-
-export const Inject = DeclareDependency;

@@ -1,5 +1,5 @@
-import { Inject, Injectable } from "@nestjs/common";
 import { DataSource } from "typeorm";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { ITransaction, ITransactionContext, TransactionCallback } from "@/modules/@shared";
 import { APP_DATA_SOURCE_TOKEN } from "../providers/app-data-source.provider";
 
@@ -8,10 +8,10 @@ import { APP_DATA_SOURCE_TOKEN } from "../providers/app-data-source.provider";
  *
  * Utiliza o DataSource diretamente para gerenciar transações.
  */
-@Injectable()
+@DeclareImplementation()
 export class TransactionTypeOrmAdapter implements ITransaction {
   constructor(
-    @Inject(APP_DATA_SOURCE_TOKEN)
+    @DeclareDependency(APP_DATA_SOURCE_TOKEN)
     private readonly dataSource: DataSource,
   ) {}
 

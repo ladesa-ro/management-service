@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Inject, Param, Patch, Post, Query } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from "@nestjs/common";
 import {
   ApiCreatedResponse,
   ApiForbiddenResponse,
@@ -7,6 +7,7 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
+import { DeclareDependency } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { IOfertaFormacaoCreateCommandHandler } from "@/modules/ensino/oferta-formacao/domain/commands/oferta-formacao-create.command.handler.interface";
@@ -29,15 +30,15 @@ import { OfertaFormacaoRestMapper } from "./oferta-formacao.rest.mapper";
 @Controller("/ofertas-formacoes")
 export class OfertaFormacaoRestController {
   constructor(
-    @Inject(IOfertaFormacaoListQueryHandler)
+    @DeclareDependency(IOfertaFormacaoListQueryHandler)
     private readonly listHandler: IOfertaFormacaoListQueryHandler,
-    @Inject(IOfertaFormacaoFindOneQueryHandler)
+    @DeclareDependency(IOfertaFormacaoFindOneQueryHandler)
     private readonly findOneHandler: IOfertaFormacaoFindOneQueryHandler,
-    @Inject(IOfertaFormacaoCreateCommandHandler)
+    @DeclareDependency(IOfertaFormacaoCreateCommandHandler)
     private readonly createHandler: IOfertaFormacaoCreateCommandHandler,
-    @Inject(IOfertaFormacaoUpdateCommandHandler)
+    @DeclareDependency(IOfertaFormacaoUpdateCommandHandler)
     private readonly updateHandler: IOfertaFormacaoUpdateCommandHandler,
-    @Inject(IOfertaFormacaoDeleteCommandHandler)
+    @DeclareDependency(IOfertaFormacaoDeleteCommandHandler)
     private readonly deleteHandler: IOfertaFormacaoDeleteCommandHandler,
   ) {}
 

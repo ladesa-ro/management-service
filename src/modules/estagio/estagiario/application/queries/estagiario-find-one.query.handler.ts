@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
   type IEstagiarioFindOneQuery,
   IEstagiarioFindOneQueryHandler,
@@ -6,10 +6,10 @@ import {
 import { IEstagiarioRepository } from "../../domain/repositories";
 import type { EstagiarioFindOneOutputDto } from "../dtos";
 
-@Injectable()
+@DeclareImplementation()
 export class EstagiarioFindOneQueryHandlerImpl implements IEstagiarioFindOneQueryHandler {
   constructor(
-    @Inject(IEstagiarioRepository)
+    @DeclareDependency(IEstagiarioRepository)
     private readonly repository: IEstagiarioRepository,
   ) {}
 

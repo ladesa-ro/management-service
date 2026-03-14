@@ -3,7 +3,6 @@ import {
   Controller,
   Delete,
   Get,
-  Inject,
   Param,
   Patch,
   Post,
@@ -24,6 +23,7 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import type { Express } from "express";
+import { DeclareDependency } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { ITurmaCreateCommandHandler } from "@/modules/ensino/turma/domain/commands/turma-create.command.handler.interface";
@@ -48,14 +48,18 @@ import { TurmaRestMapper } from "./turma.rest.mapper";
 @Controller("/turmas")
 export class TurmaRestController {
   constructor(
-    @Inject(ITurmaListQueryHandler) private readonly listHandler: ITurmaListQueryHandler,
-    @Inject(ITurmaFindOneQueryHandler) private readonly findOneHandler: ITurmaFindOneQueryHandler,
-    @Inject(ITurmaCreateCommandHandler) private readonly createHandler: ITurmaCreateCommandHandler,
-    @Inject(ITurmaUpdateCommandHandler) private readonly updateHandler: ITurmaUpdateCommandHandler,
-    @Inject(ITurmaDeleteCommandHandler) private readonly deleteHandler: ITurmaDeleteCommandHandler,
-    @Inject(ITurmaUpdateImagemCapaCommandHandler)
+    @DeclareDependency(ITurmaListQueryHandler) private readonly listHandler: ITurmaListQueryHandler,
+    @DeclareDependency(ITurmaFindOneQueryHandler)
+    private readonly findOneHandler: ITurmaFindOneQueryHandler,
+    @DeclareDependency(ITurmaCreateCommandHandler)
+    private readonly createHandler: ITurmaCreateCommandHandler,
+    @DeclareDependency(ITurmaUpdateCommandHandler)
+    private readonly updateHandler: ITurmaUpdateCommandHandler,
+    @DeclareDependency(ITurmaDeleteCommandHandler)
+    private readonly deleteHandler: ITurmaDeleteCommandHandler,
+    @DeclareDependency(ITurmaUpdateImagemCapaCommandHandler)
     private readonly updateImagemCapaHandler: ITurmaUpdateImagemCapaCommandHandler,
-    @Inject(ITurmaGetImagemCapaQueryHandler)
+    @DeclareDependency(ITurmaGetImagemCapaQueryHandler)
     private readonly getImagemCapaHandler: ITurmaGetImagemCapaQueryHandler,
   ) {}
 

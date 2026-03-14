@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
   type IAmbienteListQuery,
   IAmbienteListQueryHandler,
@@ -6,10 +6,10 @@ import {
 import { IAmbienteRepository } from "../../domain/repositories";
 import type { AmbienteListOutputDto } from "../dtos";
 
-@Injectable()
+@DeclareImplementation()
 export class AmbienteListQueryHandlerImpl implements IAmbienteListQueryHandler {
   constructor(
-    @Inject(IAmbienteRepository)
+    @DeclareDependency(IAmbienteRepository)
     private readonly repository: IAmbienteRepository,
   ) {}
 

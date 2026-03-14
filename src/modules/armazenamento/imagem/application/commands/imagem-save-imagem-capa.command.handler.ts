@@ -1,14 +1,14 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
   IImagemSaveImageCommandHandler,
   type IImagemSaveImagemCapaCommand,
   type IImagemSaveImagemCapaCommandHandler,
 } from "@/modules/armazenamento/imagem/domain/commands";
 
-@Injectable()
+@DeclareImplementation()
 export class ImagemSaveImagemCapaCommandHandlerImpl implements IImagemSaveImagemCapaCommandHandler {
   constructor(
-    @Inject(IImagemSaveImageCommandHandler)
+    @DeclareDependency(IImagemSaveImageCommandHandler)
     private readonly saveImageHandler: IImagemSaveImageCommandHandler,
   ) {}
 

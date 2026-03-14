@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { ensureExists } from "@/modules/@shared";
 import { Ambiente } from "@/modules/ambientes/ambiente/domain/ambiente.domain";
 import {
@@ -8,12 +8,12 @@ import {
 import { IAmbientePermissionChecker } from "../../domain/authorization";
 import { IAmbienteRepository } from "../../domain/repositories";
 
-@Injectable()
+@DeclareImplementation()
 export class AmbienteDeleteCommandHandlerImpl implements IAmbienteDeleteCommandHandler {
   constructor(
-    @Inject(IAmbienteRepository)
+    @DeclareDependency(IAmbienteRepository)
     private readonly repository: IAmbienteRepository,
-    @Inject(IAmbientePermissionChecker)
+    @DeclareDependency(IAmbientePermissionChecker)
     private readonly permissionChecker: IAmbientePermissionChecker,
   ) {}
 

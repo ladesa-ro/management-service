@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { ensureExists, saveEntityImagemField } from "@/modules/@shared";
 import { Bloco } from "@/modules/ambientes/bloco/domain/bloco.domain";
 import {
@@ -12,16 +12,16 @@ import {
 import { IBlocoPermissionChecker } from "../../domain/authorization";
 import { IBlocoRepository } from "../../domain/repositories";
 
-@Injectable()
+@DeclareImplementation()
 export class BlocoUpdateImagemCapaCommandHandlerImpl
   implements IBlocoUpdateImagemCapaCommandHandler
 {
   constructor(
-    @Inject(IBlocoRepository)
+    @DeclareDependency(IBlocoRepository)
     private readonly repository: IBlocoRepository,
-    @Inject(IBlocoPermissionChecker)
+    @DeclareDependency(IBlocoPermissionChecker)
     private readonly permissionChecker: IBlocoPermissionChecker,
-    @Inject(IImagemSaveImagemCapaCommandHandler)
+    @DeclareDependency(IImagemSaveImagemCapaCommandHandler)
     private readonly saveImagemCapaHandler: IImagemSaveImagemCapaCommandHandlerType,
   ) {}
 

@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { ensureExists } from "@/modules/@shared";
 import { CalendarioLetivo } from "@/modules/horarios/calendario-letivo/domain/calendario-letivo.domain";
 import {
@@ -14,14 +14,14 @@ import { IDiaCalendarioPermissionChecker } from "../../domain/authorization";
 import { IDiaCalendarioRepository } from "../../domain/repositories";
 import type { DiaCalendarioFindOneOutputDto } from "../dtos";
 
-@Injectable()
+@DeclareImplementation()
 export class DiaCalendarioCreateCommandHandlerImpl implements IDiaCalendarioCreateCommandHandler {
   constructor(
-    @Inject(IDiaCalendarioRepository)
+    @DeclareDependency(IDiaCalendarioRepository)
     private readonly repository: IDiaCalendarioRepository,
-    @Inject(IDiaCalendarioPermissionChecker)
+    @DeclareDependency(IDiaCalendarioPermissionChecker)
     private readonly permissionChecker: IDiaCalendarioPermissionChecker,
-    @Inject(ICalendarioLetivoFindOneQueryHandlerToken)
+    @DeclareDependency(ICalendarioLetivoFindOneQueryHandlerToken)
     private readonly calendarioLetivoFindOneHandler: ICalendarioLetivoFindOneQueryHandler,
   ) {}
 

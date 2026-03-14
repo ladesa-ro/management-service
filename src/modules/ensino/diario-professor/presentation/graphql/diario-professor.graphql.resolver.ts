@@ -1,6 +1,6 @@
-import { Inject } from "@nestjs/common";
 import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
+import { DeclareDependency } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextGraphQL } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
@@ -22,15 +22,15 @@ import { DiarioProfessorGraphqlMapper } from "./diario-professor.graphql.mapper"
 @Resolver(() => DiarioProfessorFindOneOutputGraphQlDto)
 export class DiarioProfessorGraphqlResolver {
   constructor(
-    @Inject(IDiarioProfessorListQueryHandler)
+    @DeclareDependency(IDiarioProfessorListQueryHandler)
     private readonly listHandler: IDiarioProfessorListQueryHandler,
-    @Inject(IDiarioProfessorFindOneQueryHandler)
+    @DeclareDependency(IDiarioProfessorFindOneQueryHandler)
     private readonly findOneHandler: IDiarioProfessorFindOneQueryHandler,
-    @Inject(IDiarioProfessorCreateCommandHandler)
+    @DeclareDependency(IDiarioProfessorCreateCommandHandler)
     private readonly createHandler: IDiarioProfessorCreateCommandHandler,
-    @Inject(IDiarioProfessorUpdateCommandHandler)
+    @DeclareDependency(IDiarioProfessorUpdateCommandHandler)
     private readonly updateHandler: IDiarioProfessorUpdateCommandHandler,
-    @Inject(IDiarioProfessorDeleteCommandHandler)
+    @DeclareDependency(IDiarioProfessorDeleteCommandHandler)
     private readonly deleteHandler: IDiarioProfessorDeleteCommandHandler,
   ) {}
 

@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { ensureExists } from "@/modules/@shared";
 import {
   type ITurmaDeleteCommand,
@@ -8,12 +8,12 @@ import { Turma } from "@/modules/ensino/turma/domain/turma.domain";
 import { ITurmaPermissionChecker } from "../../domain/authorization";
 import { ITurmaRepository } from "../../domain/repositories";
 
-@Injectable()
+@DeclareImplementation()
 export class TurmaDeleteCommandHandlerImpl implements ITurmaDeleteCommandHandler {
   constructor(
-    @Inject(ITurmaRepository)
+    @DeclareDependency(ITurmaRepository)
     private readonly repository: ITurmaRepository,
-    @Inject(ITurmaPermissionChecker)
+    @DeclareDependency(ITurmaPermissionChecker)
     private readonly permissionChecker: ITurmaPermissionChecker,
   ) {}
 

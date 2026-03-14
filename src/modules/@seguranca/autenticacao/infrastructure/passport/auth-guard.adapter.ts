@@ -1,7 +1,8 @@
-import { ExecutionContext, Injectable, UnauthorizedException } from "@nestjs/common";
+import { ExecutionContext, UnauthorizedException } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { GqlExecutionContext } from "@nestjs/graphql";
 import { AuthGuard } from "@nestjs/passport";
+import { DeclareImplementation } from "@/domain/dependency-injection";
 import { AuthStrategy } from "../../domain";
 import { NEEDS_AUTH_KEY } from "../decorators";
 
@@ -9,7 +10,7 @@ import { NEEDS_AUTH_KEY } from "../decorators";
  * Guard de autenticação que verifica se o usuário está autenticado.
  * Suporta tanto HTTP quanto GraphQL.
  */
-@Injectable()
+@DeclareImplementation()
 export class AuthGuardAdapter extends AuthGuard(AuthStrategy.ACCESS_TOKEN) {
   constructor(private reflector: Reflector) {
     super();

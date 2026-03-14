@@ -1,4 +1,4 @@
-import { Controller, Get, Inject, Param, Query } from "@nestjs/common";
+import { Controller, Get, Param, Query } from "@nestjs/common";
 import {
   ApiForbiddenResponse,
   ApiNotFoundResponse,
@@ -6,6 +6,7 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
+import { DeclareDependency } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { Estado } from "@/modules/localidades/estado/domain/estado.domain";
@@ -23,9 +24,9 @@ import { EstadoRestMapper } from "./estado.rest.mapper";
 @Controller("/base/estados")
 export class EstadoRestController {
   constructor(
-    @Inject(IEstadoListQueryHandler)
+    @DeclareDependency(IEstadoListQueryHandler)
     private readonly listHandler: IEstadoListQueryHandler,
-    @Inject(IEstadoFindOneQueryHandler)
+    @DeclareDependency(IEstadoFindOneQueryHandler)
     private readonly findOneHandler: IEstadoFindOneQueryHandler,
   ) {}
 

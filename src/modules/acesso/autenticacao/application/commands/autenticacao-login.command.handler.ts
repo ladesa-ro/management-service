@@ -1,11 +1,10 @@
 import {
   BadRequestException,
   ForbiddenException,
-  Inject,
-  Injectable,
   ServiceUnavailableException,
 } from "@nestjs/common";
 import * as client from "openid-client";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { KeycloakService, OpenidConnectService } from "@/modules/@seguranca/provedor-identidade";
 import {
   type IAutenticacaoLoginCommand,
@@ -14,10 +13,10 @@ import {
 import { IUsuarioFindByMatriculaQueryHandler } from "@/modules/acesso/usuario/domain/queries/usuario-find-by-matricula.query.handler.interface";
 import type { AuthSessionCredentialsDto } from "../dtos";
 
-@Injectable()
+@DeclareImplementation()
 export class AutenticacaoLoginCommandHandlerImpl implements IAutenticacaoLoginCommandHandler {
   constructor(
-    @Inject(IUsuarioFindByMatriculaQueryHandler)
+    @DeclareDependency(IUsuarioFindByMatriculaQueryHandler)
     private readonly usuarioFindByMatriculaHandler: IUsuarioFindByMatriculaQueryHandler,
     private readonly keycloakService: KeycloakService,
     private readonly openidConnectService: OpenidConnectService,

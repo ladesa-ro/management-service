@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Inject, Param, Patch, Post, Query } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from "@nestjs/common";
 import {
   ApiCreatedResponse,
   ApiForbiddenResponse,
@@ -7,6 +7,7 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
+import { DeclareDependency } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { IDiarioProfessorCreateCommandHandler } from "@/modules/ensino/diario-professor/domain/commands/diario-professor-create.command.handler.interface";
@@ -29,15 +30,15 @@ import { DiarioProfessorRestMapper } from "./diario-professor.rest.mapper";
 @Controller("/diarios-professores")
 export class DiarioProfessorController {
   constructor(
-    @Inject(IDiarioProfessorListQueryHandler)
+    @DeclareDependency(IDiarioProfessorListQueryHandler)
     private readonly listHandler: IDiarioProfessorListQueryHandler,
-    @Inject(IDiarioProfessorFindOneQueryHandler)
+    @DeclareDependency(IDiarioProfessorFindOneQueryHandler)
     private readonly findOneHandler: IDiarioProfessorFindOneQueryHandler,
-    @Inject(IDiarioProfessorCreateCommandHandler)
+    @DeclareDependency(IDiarioProfessorCreateCommandHandler)
     private readonly createHandler: IDiarioProfessorCreateCommandHandler,
-    @Inject(IDiarioProfessorUpdateCommandHandler)
+    @DeclareDependency(IDiarioProfessorUpdateCommandHandler)
     private readonly updateHandler: IDiarioProfessorUpdateCommandHandler,
-    @Inject(IDiarioProfessorDeleteCommandHandler)
+    @DeclareDependency(IDiarioProfessorDeleteCommandHandler)
     private readonly deleteHandler: IDiarioProfessorDeleteCommandHandler,
   ) {}
 

@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Get, Inject, Post } from "@nestjs/common";
+import { BadRequestException, Body, Controller, Get, Post } from "@nestjs/common";
 import {
   ApiBadRequestResponse,
   ApiCreatedResponse,
@@ -7,6 +7,7 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
+import { DeclareDependency } from "@/domain/dependency-injection";
 import { Public } from "@/modules/@seguranca/autenticacao";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
 import { IAutenticacaoDefinirSenhaCommandHandler } from "@/modules/acesso/autenticacao/domain/commands/autenticacao-definir-senha.command.handler.interface";
@@ -29,17 +30,17 @@ import {
 @Controller("/autenticacao")
 export class AutenticacaoRestController {
   constructor(
-    @Inject(IAutenticacaoWhoAmIQueryHandler)
+    @DeclareDependency(IAutenticacaoWhoAmIQueryHandler)
     private readonly whoAmIHandler: IAutenticacaoWhoAmIQueryHandler,
-    @Inject(IAutenticacaoLoginCommandHandler)
+    @DeclareDependency(IAutenticacaoLoginCommandHandler)
     private readonly loginHandler: IAutenticacaoLoginCommandHandler,
-    @Inject(IAutenticacaoRefreshCommandHandler)
+    @DeclareDependency(IAutenticacaoRefreshCommandHandler)
     private readonly refreshHandler: IAutenticacaoRefreshCommandHandler,
-    @Inject(IAutenticacaoDefinirSenhaCommandHandler)
+    @DeclareDependency(IAutenticacaoDefinirSenhaCommandHandler)
     private readonly definirSenhaHandler: IAutenticacaoDefinirSenhaCommandHandler,
-    @Inject(IAutenticacaoRecoverPasswordCommandHandler)
+    @DeclareDependency(IAutenticacaoRecoverPasswordCommandHandler)
     private readonly recoverPasswordHandler: IAutenticacaoRecoverPasswordCommandHandler,
-    @Inject(IUsuarioEnsinoQueryHandler)
+    @DeclareDependency(IUsuarioEnsinoQueryHandler)
     private readonly usuarioEnsinoHandler: IUsuarioEnsinoQueryHandler,
   ) {}
 

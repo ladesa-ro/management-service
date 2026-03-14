@@ -1,5 +1,5 @@
-import { Inject, Injectable } from "@nestjs/common";
 import { DataSource } from "typeorm";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
   APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
@@ -17,7 +17,7 @@ import type {
 import type { EnderecoEntity } from "@/modules/localidades/endereco/infrastructure/persistence/typeorm/index";
 import { createEnderecoRepository } from "./endereco.repository";
 
-@Injectable()
+@DeclareImplementation()
 export class EnderecoTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     EnderecoEntity,
@@ -33,7 +33,7 @@ export class EnderecoTypeOrmRepositoryAdapter
   protected readonly outputDtoName = "EnderecoFindOneOutputDto";
 
   constructor(
-    @Inject(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
+    @DeclareDependency(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
     protected readonly paginationAdapter: NestJsPaginateAdapter,
   ) {
     super();

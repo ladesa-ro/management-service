@@ -1,6 +1,6 @@
-import { Inject } from "@nestjs/common";
 import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
+import { DeclareDependency } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextGraphQL } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
@@ -22,15 +22,15 @@ import { DiarioPreferenciaAgrupamentoGraphqlMapper } from "./diario-preferencia-
 @Resolver(() => DiarioPreferenciaAgrupamentoFindOneOutputGraphQlDto)
 export class DiarioPreferenciaAgrupamentoGraphqlResolver {
   constructor(
-    @Inject(IDiarioPreferenciaAgrupamentoListQueryHandler)
+    @DeclareDependency(IDiarioPreferenciaAgrupamentoListQueryHandler)
     private readonly listHandler: IDiarioPreferenciaAgrupamentoListQueryHandler,
-    @Inject(IDiarioPreferenciaAgrupamentoFindOneQueryHandler)
+    @DeclareDependency(IDiarioPreferenciaAgrupamentoFindOneQueryHandler)
     private readonly findOneHandler: IDiarioPreferenciaAgrupamentoFindOneQueryHandler,
-    @Inject(IDiarioPreferenciaAgrupamentoCreateCommandHandler)
+    @DeclareDependency(IDiarioPreferenciaAgrupamentoCreateCommandHandler)
     private readonly createHandler: IDiarioPreferenciaAgrupamentoCreateCommandHandler,
-    @Inject(IDiarioPreferenciaAgrupamentoUpdateCommandHandler)
+    @DeclareDependency(IDiarioPreferenciaAgrupamentoUpdateCommandHandler)
     private readonly updateHandler: IDiarioPreferenciaAgrupamentoUpdateCommandHandler,
-    @Inject(IDiarioPreferenciaAgrupamentoDeleteCommandHandler)
+    @DeclareDependency(IDiarioPreferenciaAgrupamentoDeleteCommandHandler)
     private readonly deleteHandler: IDiarioPreferenciaAgrupamentoDeleteCommandHandler,
   ) {}
 

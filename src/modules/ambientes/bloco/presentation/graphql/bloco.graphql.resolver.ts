@@ -1,6 +1,6 @@
-import { Inject } from "@nestjs/common";
 import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
+import { DeclareDependency } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextGraphQL } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
@@ -22,11 +22,15 @@ import { BlocoGraphqlMapper } from "./bloco.graphql.mapper";
 @Resolver(() => BlocoFindOneOutputGraphQlDto)
 export class BlocoGraphqlResolver {
   constructor(
-    @Inject(IBlocoListQueryHandler) private readonly listHandler: IBlocoListQueryHandler,
-    @Inject(IBlocoFindOneQueryHandler) private readonly findOneHandler: IBlocoFindOneQueryHandler,
-    @Inject(IBlocoCreateCommandHandler) private readonly createHandler: IBlocoCreateCommandHandler,
-    @Inject(IBlocoUpdateCommandHandler) private readonly updateHandler: IBlocoUpdateCommandHandler,
-    @Inject(IBlocoDeleteCommandHandler) private readonly deleteHandler: IBlocoDeleteCommandHandler,
+    @DeclareDependency(IBlocoListQueryHandler) private readonly listHandler: IBlocoListQueryHandler,
+    @DeclareDependency(IBlocoFindOneQueryHandler)
+    private readonly findOneHandler: IBlocoFindOneQueryHandler,
+    @DeclareDependency(IBlocoCreateCommandHandler)
+    private readonly createHandler: IBlocoCreateCommandHandler,
+    @DeclareDependency(IBlocoUpdateCommandHandler)
+    private readonly updateHandler: IBlocoUpdateCommandHandler,
+    @DeclareDependency(IBlocoDeleteCommandHandler)
+    private readonly deleteHandler: IBlocoDeleteCommandHandler,
   ) {}
 
   @Query(() => BlocoListOutputGraphQlDto, { name: "blocoFindAll" })

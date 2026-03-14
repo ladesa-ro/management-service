@@ -1,5 +1,5 @@
-import { Injectable } from "@nestjs/common";
 import type { DataSource, SelectQueryBuilder } from "typeorm";
+import { DeclareImplementation } from "@/domain/dependency-injection";
 
 /**
  * Configuração de um recurso de autorização.
@@ -43,7 +43,7 @@ export interface IResourceRegistration {
  * }, { find: true });
  * ```
  */
-@Injectable()
+@DeclareImplementation()
 export class ResourceAuthzRegistry {
   private readonly resources = new Map<string, IResourceRegistration>();
 

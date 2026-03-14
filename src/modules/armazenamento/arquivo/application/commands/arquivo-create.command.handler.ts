@@ -1,18 +1,18 @@
-import { Inject, Injectable } from "@nestjs/common";
 import { v4 } from "uuid";
 import { IStorageService } from "@/domain/abstractions/storage";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type {
   IArquivoCreateCommand,
   IArquivoCreateCommandHandler,
 } from "@/modules/armazenamento/arquivo/domain/commands";
 import { IArquivoRepository } from "@/modules/armazenamento/arquivo/domain/repositories";
 
-@Injectable()
+@DeclareImplementation()
 export class ArquivoCreateCommandHandlerImpl implements IArquivoCreateCommandHandler {
   constructor(
-    @Inject(IArquivoRepository)
+    @DeclareDependency(IArquivoRepository)
     private arquivoRepository: IArquivoRepository,
-    @Inject(IStorageService)
+    @DeclareDependency(IStorageService)
     private storageService: IStorageService,
   ) {}
 

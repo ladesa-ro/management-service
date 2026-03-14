@@ -1,6 +1,6 @@
-import { Inject } from "@nestjs/common";
 import { Args, Info, Int, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
+import { DeclareDependency } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextGraphQL } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
@@ -17,9 +17,9 @@ import { EstadoGraphqlMapper } from "./estado.graphql.mapper";
 @Resolver(() => EstadoFindOneOutputGraphQlDto)
 export class EstadoGraphqlResolver {
   constructor(
-    @Inject(IEstadoListQueryHandler)
+    @DeclareDependency(IEstadoListQueryHandler)
     private readonly listHandler: IEstadoListQueryHandler,
-    @Inject(IEstadoFindOneQueryHandler)
+    @DeclareDependency(IEstadoFindOneQueryHandler)
     private readonly findOneHandler: IEstadoFindOneQueryHandler,
   ) {}
 

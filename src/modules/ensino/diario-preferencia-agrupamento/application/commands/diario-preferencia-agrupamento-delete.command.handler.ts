@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { ensureExists } from "@/modules/@shared";
 import {
   type IDiarioPreferenciaAgrupamentoDeleteCommand,
@@ -8,14 +8,14 @@ import { DiarioPreferenciaAgrupamento } from "@/modules/ensino/diario-preferenci
 import { IDiarioPreferenciaAgrupamentoPermissionChecker } from "../../domain/authorization";
 import { IDiarioPreferenciaAgrupamentoRepository } from "../../domain/repositories";
 
-@Injectable()
+@DeclareImplementation()
 export class DiarioPreferenciaAgrupamentoDeleteCommandHandlerImpl
   implements IDiarioPreferenciaAgrupamentoDeleteCommandHandler
 {
   constructor(
-    @Inject(IDiarioPreferenciaAgrupamentoRepository)
+    @DeclareDependency(IDiarioPreferenciaAgrupamentoRepository)
     private readonly repository: IDiarioPreferenciaAgrupamentoRepository,
-    @Inject(IDiarioPreferenciaAgrupamentoPermissionChecker)
+    @DeclareDependency(IDiarioPreferenciaAgrupamentoPermissionChecker)
     private readonly permissionChecker: IDiarioPreferenciaAgrupamentoPermissionChecker,
   ) {}
 

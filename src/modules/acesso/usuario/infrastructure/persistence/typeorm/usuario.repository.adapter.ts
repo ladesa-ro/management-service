@@ -1,5 +1,5 @@
-import { Inject, Injectable } from "@nestjs/common";
 import { DataSource } from "typeorm";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
   APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
@@ -21,7 +21,7 @@ import { createTurmaRepository } from "../../../../../ensino/turma/infrastructur
 import type { UsuarioEntity } from "./usuario.entity";
 import { createUsuarioRepository } from "./usuario.repository";
 
-@Injectable()
+@DeclareImplementation()
 export class UsuarioTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     UsuarioEntity,
@@ -37,7 +37,7 @@ export class UsuarioTypeOrmRepositoryAdapter
   protected readonly outputDtoName = "UsuarioFindOneOutputDto";
 
   constructor(
-    @Inject(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
+    @DeclareDependency(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
     protected readonly paginationAdapter: NestJsPaginateAdapter,
   ) {
     super();

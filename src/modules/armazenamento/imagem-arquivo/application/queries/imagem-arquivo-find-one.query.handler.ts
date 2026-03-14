@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
   type IImagemArquivoFindOneQuery,
   IImagemArquivoFindOneQueryHandler,
@@ -6,10 +6,10 @@ import {
 import { IImagemArquivoQueryRepository } from "../../domain/repositories";
 import type { ImagemArquivoFindOneOutputDto } from "../dtos";
 
-@Injectable()
+@DeclareImplementation()
 export class ImagemArquivoFindOneQueryHandlerImpl implements IImagemArquivoFindOneQueryHandler {
   constructor(
-    @Inject(IImagemArquivoQueryRepository)
+    @DeclareDependency(IImagemArquivoQueryRepository)
     private readonly repository: IImagemArquivoQueryRepository,
   ) {}
 

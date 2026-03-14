@@ -1,5 +1,5 @@
-import { Inject, Injectable } from "@nestjs/common";
 import { DataSource } from "typeorm";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { PartialEntity } from "@/modules/@shared";
 import { APP_DATA_SOURCE_TOKEN } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type { Imagem } from "@/modules/armazenamento/imagem/domain/imagem.domain";
@@ -12,9 +12,9 @@ import type { ImagemArquivo } from "@/modules/armazenamento/imagem-arquivo/domai
 import { createImagemArquivoRepository } from "../../../../imagem-arquivo/infrastructure/persistence/typeorm/imagem-arquivo.repository";
 import { createImagemRepository } from "./imagem.repository";
 
-@Injectable()
+@DeclareImplementation()
 export class ImagemTypeOrmRepositoryAdapter implements IImagemTransactionPort {
-  constructor(@Inject(APP_DATA_SOURCE_TOKEN) private readonly dataSource: DataSource) {}
+  constructor(@DeclareDependency(APP_DATA_SOURCE_TOKEN) private readonly dataSource: DataSource) {}
 
   async transaction<T>(
     callback: (context: {

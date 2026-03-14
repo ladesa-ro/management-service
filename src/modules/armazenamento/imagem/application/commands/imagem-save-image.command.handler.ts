@@ -1,11 +1,7 @@
-import {
-  Inject,
-  Injectable,
-  ServiceUnavailableException,
-  UnprocessableEntityException,
-} from "@nestjs/common";
+import { ServiceUnavailableException, UnprocessableEntityException } from "@nestjs/common";
 import sharp from "sharp";
 import { v4 } from "uuid";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { IArquivoCreateCommandHandler } from "@/modules/armazenamento/arquivo/domain/commands";
 import type {
   IImagemSaveImageCommand,
@@ -16,12 +12,12 @@ import {
   IMAGEM_ITransaction,
 } from "@/modules/armazenamento/imagem/domain/repositories";
 
-@Injectable()
+@DeclareImplementation()
 export class ImagemSaveImageCommandHandlerImpl implements IImagemSaveImageCommandHandler {
   constructor(
-    @Inject(IArquivoCreateCommandHandler)
+    @DeclareDependency(IArquivoCreateCommandHandler)
     private readonly arquivoCreateHandler: IArquivoCreateCommandHandler,
-    @Inject(IMAGEM_ITransaction)
+    @DeclareDependency(IMAGEM_ITransaction)
     private readonly imagemTransactionPort: IImagemTransactionPort,
   ) {}
 

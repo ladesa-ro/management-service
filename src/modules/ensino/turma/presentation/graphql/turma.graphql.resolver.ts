@@ -1,6 +1,6 @@
-import { Inject } from "@nestjs/common";
 import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
+import { DeclareDependency } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextGraphQL } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
@@ -22,11 +22,15 @@ import { TurmaGraphqlMapper } from "./turma.graphql.mapper";
 @Resolver(() => TurmaFindOneOutputGraphQlDto)
 export class TurmaGraphqlResolver {
   constructor(
-    @Inject(ITurmaListQueryHandler) private readonly listHandler: ITurmaListQueryHandler,
-    @Inject(ITurmaFindOneQueryHandler) private readonly findOneHandler: ITurmaFindOneQueryHandler,
-    @Inject(ITurmaCreateCommandHandler) private readonly createHandler: ITurmaCreateCommandHandler,
-    @Inject(ITurmaUpdateCommandHandler) private readonly updateHandler: ITurmaUpdateCommandHandler,
-    @Inject(ITurmaDeleteCommandHandler) private readonly deleteHandler: ITurmaDeleteCommandHandler,
+    @DeclareDependency(ITurmaListQueryHandler) private readonly listHandler: ITurmaListQueryHandler,
+    @DeclareDependency(ITurmaFindOneQueryHandler)
+    private readonly findOneHandler: ITurmaFindOneQueryHandler,
+    @DeclareDependency(ITurmaCreateCommandHandler)
+    private readonly createHandler: ITurmaCreateCommandHandler,
+    @DeclareDependency(ITurmaUpdateCommandHandler)
+    private readonly updateHandler: ITurmaUpdateCommandHandler,
+    @DeclareDependency(ITurmaDeleteCommandHandler)
+    private readonly deleteHandler: ITurmaDeleteCommandHandler,
   ) {}
 
   @Query(() => TurmaListOutputGraphQlDto, { name: "turmaFindAll" })

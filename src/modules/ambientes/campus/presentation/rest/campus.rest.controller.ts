@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Inject, Param, Patch, Post, Query } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from "@nestjs/common";
 import {
   ApiCreatedResponse,
   ApiForbiddenResponse,
@@ -7,6 +7,7 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
+import { DeclareDependency } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { Campus } from "@/modules/ambientes/campus/domain/campus.domain";
@@ -29,13 +30,15 @@ import { CampusRestMapper } from "./campus.rest.mapper";
 @Controller("/campi")
 export class CampusRestController {
   constructor(
-    @Inject(ICampusListQueryHandler) private readonly listHandler: ICampusListQueryHandler,
-    @Inject(ICampusFindOneQueryHandler) private readonly findOneHandler: ICampusFindOneQueryHandler,
-    @Inject(ICampusCreateCommandHandler)
+    @DeclareDependency(ICampusListQueryHandler)
+    private readonly listHandler: ICampusListQueryHandler,
+    @DeclareDependency(ICampusFindOneQueryHandler)
+    private readonly findOneHandler: ICampusFindOneQueryHandler,
+    @DeclareDependency(ICampusCreateCommandHandler)
     private readonly createHandler: ICampusCreateCommandHandler,
-    @Inject(ICampusUpdateCommandHandler)
+    @DeclareDependency(ICampusUpdateCommandHandler)
     private readonly updateHandler: ICampusUpdateCommandHandler,
-    @Inject(ICampusDeleteCommandHandler)
+    @DeclareDependency(ICampusDeleteCommandHandler)
     private readonly deleteHandler: ICampusDeleteCommandHandler,
   ) {}
 

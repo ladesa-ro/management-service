@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { ensureExists } from "@/modules/@shared";
 import { Modalidade } from "@/modules/ensino/modalidade/domain/modalidade.domain";
 import { IModalidadeFindOneQueryHandler } from "@/modules/ensino/modalidade/domain/queries/modalidade-find-one.query.handler.interface";
@@ -11,14 +11,14 @@ import { IOfertaFormacaoPermissionChecker } from "../../domain/authorization";
 import { IOfertaFormacaoRepository } from "../../domain/repositories";
 import type { OfertaFormacaoFindOneOutputDto } from "../dtos";
 
-@Injectable()
+@DeclareImplementation()
 export class OfertaFormacaoCreateCommandHandlerImpl implements IOfertaFormacaoCreateCommandHandler {
   constructor(
-    @Inject(IOfertaFormacaoRepository)
+    @DeclareDependency(IOfertaFormacaoRepository)
     private readonly repository: IOfertaFormacaoRepository,
-    @Inject(IOfertaFormacaoPermissionChecker)
+    @DeclareDependency(IOfertaFormacaoPermissionChecker)
     private readonly permissionChecker: IOfertaFormacaoPermissionChecker,
-    @Inject(IModalidadeFindOneQueryHandler)
+    @DeclareDependency(IModalidadeFindOneQueryHandler)
     private readonly modalidadeFindOneHandler: IModalidadeFindOneQueryHandler,
   ) {}
 

@@ -1,5 +1,6 @@
-import { Controller, Get, Inject } from "@nestjs/common";
+import { Controller, Get } from "@nestjs/common";
 import { ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
+import { DeclareDependency } from "@/domain/dependency-injection";
 import {
   type GenerateRequest,
   type ServiceGenerateResponse,
@@ -10,7 +11,7 @@ import { IGerarHorarioPublishTimetableRequestCommandHandler } from "@/modules/ho
 @Controller("/gerar-horario")
 export class GerarHorarioRestController {
   constructor(
-    @Inject(IGerarHorarioPublishTimetableRequestCommandHandler)
+    @DeclareDependency(IGerarHorarioPublishTimetableRequestCommandHandler)
     private readonly publishTimetableRequestHandler: IGerarHorarioPublishTimetableRequestCommandHandler,
   ) {}
 

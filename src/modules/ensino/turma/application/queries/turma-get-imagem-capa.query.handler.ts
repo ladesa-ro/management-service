@@ -1,4 +1,5 @@
-import { Inject, Injectable, type StreamableFile } from "@nestjs/common";
+import { type StreamableFile } from "@nestjs/common";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { ensureExists, getEntityImagemStreamableFile } from "@/modules/@shared";
 import {
   IArquivoGetStreamableFileQueryHandler,
@@ -15,14 +16,14 @@ import {
 import { Turma } from "@/modules/ensino/turma/domain/turma.domain";
 import { ITurmaRepository } from "../../domain/repositories";
 
-@Injectable()
+@DeclareImplementation()
 export class TurmaGetImagemCapaQueryHandlerImpl implements ITurmaGetImagemCapaQueryHandler {
   constructor(
-    @Inject(ITurmaRepository)
+    @DeclareDependency(ITurmaRepository)
     private readonly repository: ITurmaRepository,
-    @Inject(IImagemGetLatestArquivoIdQueryHandler)
+    @DeclareDependency(IImagemGetLatestArquivoIdQueryHandler)
     private readonly getLatestArquivoIdHandler: IImagemGetLatestArquivoIdQueryHandlerType,
-    @Inject(IArquivoGetStreamableFileQueryHandler)
+    @DeclareDependency(IArquivoGetStreamableFileQueryHandler)
     private readonly getStreamableFileHandler: IArquivoGetStreamableFileQueryHandlerType,
   ) {}
 

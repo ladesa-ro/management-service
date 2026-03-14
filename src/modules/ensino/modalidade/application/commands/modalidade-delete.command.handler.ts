@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { ensureExists } from "@/modules/@shared";
 import {
   type IModalidadeDeleteCommand,
@@ -8,12 +8,12 @@ import { Modalidade } from "@/modules/ensino/modalidade/domain/modalidade.domain
 import { IModalidadePermissionChecker } from "../../domain/authorization";
 import { IModalidadeRepository } from "../../domain/repositories";
 
-@Injectable()
+@DeclareImplementation()
 export class ModalidadeDeleteCommandHandlerImpl implements IModalidadeDeleteCommandHandler {
   constructor(
-    @Inject(IModalidadeRepository)
+    @DeclareDependency(IModalidadeRepository)
     private readonly repository: IModalidadeRepository,
-    @Inject(IModalidadePermissionChecker)
+    @DeclareDependency(IModalidadePermissionChecker)
     private readonly permissionChecker: IModalidadePermissionChecker,
   ) {}
 

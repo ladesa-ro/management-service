@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
   type IEmpresaFindOneQuery,
   IEmpresaFindOneQueryHandler,
@@ -6,10 +6,10 @@ import {
 import { IEmpresaRepository } from "../../domain/repositories";
 import type { EmpresaFindOneOutputDto } from "../dtos";
 
-@Injectable()
+@DeclareImplementation()
 export class EmpresaFindOneQueryHandlerImpl implements IEmpresaFindOneQueryHandler {
   constructor(
-    @Inject(IEmpresaRepository)
+    @DeclareDependency(IEmpresaRepository)
     private readonly repository: IEmpresaRepository,
   ) {}
 

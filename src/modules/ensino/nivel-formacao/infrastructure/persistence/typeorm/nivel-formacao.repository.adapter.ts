@@ -1,5 +1,5 @@
-import { Inject, Injectable } from "@nestjs/common";
 import { DataSource } from "typeorm";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
   APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
@@ -17,7 +17,7 @@ import type {
 import type { NivelFormacaoEntity } from "./nivel-formacao.entity";
 import { createNivelFormacaoRepository } from "./nivel-formacao.repository";
 
-@Injectable()
+@DeclareImplementation()
 export class NivelFormacaoTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     NivelFormacaoEntity,
@@ -33,7 +33,7 @@ export class NivelFormacaoTypeOrmRepositoryAdapter
   protected readonly outputDtoName = "NivelFormacaoFindOneOutputDto";
 
   constructor(
-    @Inject(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
+    @DeclareDependency(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
     protected readonly paginationAdapter: NestJsPaginateAdapter,
   ) {
     super();

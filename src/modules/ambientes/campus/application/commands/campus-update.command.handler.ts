@@ -1,5 +1,5 @@
-import { Inject, Injectable } from "@nestjs/common";
 import { get } from "lodash";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { ensureExists, type PersistInput } from "@/modules/@shared";
 import { Campus } from "@/modules/ambientes/campus/domain/campus.domain";
 import type { ICampus } from "@/modules/ambientes/campus/domain/campus.types";
@@ -12,14 +12,14 @@ import { ICampusPermissionChecker } from "../../domain/authorization";
 import { ICampusRepository } from "../../domain/repositories";
 import type { CampusFindOneOutputDto } from "../dtos";
 
-@Injectable()
+@DeclareImplementation()
 export class CampusUpdateCommandHandlerImpl implements ICampusUpdateCommandHandler {
   constructor(
-    @Inject(ICampusRepository)
+    @DeclareDependency(ICampusRepository)
     private readonly repository: ICampusRepository,
-    @Inject(ICampusPermissionChecker)
+    @DeclareDependency(ICampusPermissionChecker)
     private readonly permissionChecker: ICampusPermissionChecker,
-    @Inject(IEnderecoCreateOrUpdateCommandHandler)
+    @DeclareDependency(IEnderecoCreateOrUpdateCommandHandler)
     private readonly enderecoCreateOrUpdateHandler: IEnderecoCreateOrUpdateCommandHandler,
   ) {}
 

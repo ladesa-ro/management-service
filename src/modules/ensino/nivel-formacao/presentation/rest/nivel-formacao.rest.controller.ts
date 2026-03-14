@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Inject, Param, Patch, Post, Query } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from "@nestjs/common";
 import {
   ApiCreatedResponse,
   ApiForbiddenResponse,
@@ -7,6 +7,7 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
+import { DeclareDependency } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { INivelFormacaoCreateCommandHandler } from "@/modules/ensino/nivel-formacao/domain/commands/nivel-formacao-create.command.handler.interface";
@@ -29,15 +30,15 @@ import { NivelFormacaoRestMapper } from "./nivel-formacao.rest.mapper";
 @Controller("/niveis-formacoes")
 export class NivelFormacaoRestController {
   constructor(
-    @Inject(INivelFormacaoListQueryHandler)
+    @DeclareDependency(INivelFormacaoListQueryHandler)
     private readonly listHandler: INivelFormacaoListQueryHandler,
-    @Inject(INivelFormacaoFindOneQueryHandler)
+    @DeclareDependency(INivelFormacaoFindOneQueryHandler)
     private readonly findOneHandler: INivelFormacaoFindOneQueryHandler,
-    @Inject(INivelFormacaoCreateCommandHandler)
+    @DeclareDependency(INivelFormacaoCreateCommandHandler)
     private readonly createHandler: INivelFormacaoCreateCommandHandler,
-    @Inject(INivelFormacaoUpdateCommandHandler)
+    @DeclareDependency(INivelFormacaoUpdateCommandHandler)
     private readonly updateHandler: INivelFormacaoUpdateCommandHandler,
-    @Inject(INivelFormacaoDeleteCommandHandler)
+    @DeclareDependency(INivelFormacaoDeleteCommandHandler)
     private readonly deleteHandler: INivelFormacaoDeleteCommandHandler,
   ) {}
 

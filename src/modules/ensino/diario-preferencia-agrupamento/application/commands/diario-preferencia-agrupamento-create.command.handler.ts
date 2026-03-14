@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { ensureExists } from "@/modules/@shared";
 import { Diario } from "@/modules/ensino/diario/domain/diario.domain";
 import { IDiarioFindOneQueryHandler } from "@/modules/ensino/diario/domain/queries/diario-find-one.query.handler.interface";
@@ -11,16 +11,16 @@ import { IDiarioPreferenciaAgrupamentoPermissionChecker } from "../../domain/aut
 import { IDiarioPreferenciaAgrupamentoRepository } from "../../domain/repositories";
 import type { DiarioPreferenciaAgrupamentoFindOneOutputDto } from "../dtos";
 
-@Injectable()
+@DeclareImplementation()
 export class DiarioPreferenciaAgrupamentoCreateCommandHandlerImpl
   implements IDiarioPreferenciaAgrupamentoCreateCommandHandler
 {
   constructor(
-    @Inject(IDiarioPreferenciaAgrupamentoRepository)
+    @DeclareDependency(IDiarioPreferenciaAgrupamentoRepository)
     private readonly repository: IDiarioPreferenciaAgrupamentoRepository,
-    @Inject(IDiarioPreferenciaAgrupamentoPermissionChecker)
+    @DeclareDependency(IDiarioPreferenciaAgrupamentoPermissionChecker)
     private readonly permissionChecker: IDiarioPreferenciaAgrupamentoPermissionChecker,
-    @Inject(IDiarioFindOneQueryHandler)
+    @DeclareDependency(IDiarioFindOneQueryHandler)
     private readonly diarioFindOneHandler: IDiarioFindOneQueryHandler,
   ) {}
 

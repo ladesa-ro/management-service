@@ -1,8 +1,9 @@
-import { Injectable, UnauthorizedException } from "@nestjs/common";
+import { UnauthorizedException } from "@nestjs/common";
 import { GetPublicKeyOrSecret, JwtPayload, verify } from "jsonwebtoken";
 import { LRUCache } from "lru-cache";
 import type { IntrospectionResponse } from "openid-client";
 import { tokenIntrospection } from "openid-client";
+import { DeclareImplementation } from "@/domain/dependency-injection";
 import type { IIdentityResponse } from "../domain";
 import type { IIdentityProvider } from "../ports";
 import { JwksRsaClientService } from "./jwks";
@@ -18,7 +19,7 @@ interface IntrospectionResponseWithUser extends IntrospectionResponse {
  * Serviço principal de Identity Provider.
  * Implementa validação de tokens e cache de identidades.
  */
-@Injectable()
+@DeclareImplementation()
 export class IdentityProviderService implements IIdentityProvider {
   #cache = new LRUCache<string, IntrospectionResponseWithUser>({
     max: 500,

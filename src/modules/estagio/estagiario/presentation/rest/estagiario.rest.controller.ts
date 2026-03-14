@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Inject, Param, Patch, Post, Query } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from "@nestjs/common";
 import {
   ApiBody,
   ApiCreatedResponse,
@@ -8,6 +8,7 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
+import { DeclareDependency } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { IEstagiarioCreateCommandHandler } from "@/modules/estagio/estagiario/domain/commands/estagiario-create.command.handler.interface";
@@ -30,14 +31,15 @@ import { EstagiarioRestMapper } from "./estagiario.rest.mapper";
 @Controller("/estagiarios")
 export class EstagiarioRestController {
   constructor(
-    @Inject(IEstagiarioListQueryHandler) private readonly listHandler: IEstagiarioListQueryHandler,
-    @Inject(IEstagiarioFindOneQueryHandler)
+    @DeclareDependency(IEstagiarioListQueryHandler)
+    private readonly listHandler: IEstagiarioListQueryHandler,
+    @DeclareDependency(IEstagiarioFindOneQueryHandler)
     private readonly findOneHandler: IEstagiarioFindOneQueryHandler,
-    @Inject(IEstagiarioCreateCommandHandler)
+    @DeclareDependency(IEstagiarioCreateCommandHandler)
     private readonly createHandler: IEstagiarioCreateCommandHandler,
-    @Inject(IEstagiarioUpdateCommandHandler)
+    @DeclareDependency(IEstagiarioUpdateCommandHandler)
     private readonly updateHandler: IEstagiarioUpdateCommandHandler,
-    @Inject(IEstagiarioDeleteCommandHandler)
+    @DeclareDependency(IEstagiarioDeleteCommandHandler)
     private readonly deleteHandler: IEstagiarioDeleteCommandHandler,
   ) {}
 

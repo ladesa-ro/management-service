@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { ensureExists, saveEntityImagemField } from "@/modules/@shared";
 import {
   IImagemSaveImagemCapaCommandHandler,
@@ -12,16 +12,16 @@ import { Disciplina } from "@/modules/ensino/disciplina/domain/disciplina.domain
 import { IDisciplinaPermissionChecker } from "../../domain/authorization";
 import { IDisciplinaRepository } from "../../domain/repositories";
 
-@Injectable()
+@DeclareImplementation()
 export class DisciplinaUpdateImagemCapaCommandHandlerImpl
   implements IDisciplinaUpdateImagemCapaCommandHandler
 {
   constructor(
-    @Inject(IDisciplinaRepository)
+    @DeclareDependency(IDisciplinaRepository)
     private readonly repository: IDisciplinaRepository,
-    @Inject(IDisciplinaPermissionChecker)
+    @DeclareDependency(IDisciplinaPermissionChecker)
     private readonly permissionChecker: IDisciplinaPermissionChecker,
-    @Inject(IImagemSaveImagemCapaCommandHandler)
+    @DeclareDependency(IImagemSaveImagemCapaCommandHandler)
     private readonly saveImagemCapaHandler: IImagemSaveImagemCapaCommandHandlerType,
   ) {}
 

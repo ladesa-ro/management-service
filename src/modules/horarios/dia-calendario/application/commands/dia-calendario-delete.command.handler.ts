@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { ensureExists } from "@/modules/@shared";
 import {
   type IDiaCalendarioDeleteCommand,
@@ -8,12 +8,12 @@ import { DiaCalendario } from "@/modules/horarios/dia-calendario/domain/dia-cale
 import { IDiaCalendarioPermissionChecker } from "../../domain/authorization";
 import { IDiaCalendarioRepository } from "../../domain/repositories";
 
-@Injectable()
+@DeclareImplementation()
 export class DiaCalendarioDeleteCommandHandlerImpl implements IDiaCalendarioDeleteCommandHandler {
   constructor(
-    @Inject(IDiaCalendarioRepository)
+    @DeclareDependency(IDiaCalendarioRepository)
     private readonly repository: IDiaCalendarioRepository,
-    @Inject(IDiaCalendarioPermissionChecker)
+    @DeclareDependency(IDiaCalendarioPermissionChecker)
     private readonly permissionChecker: IDiaCalendarioPermissionChecker,
   ) {}
 

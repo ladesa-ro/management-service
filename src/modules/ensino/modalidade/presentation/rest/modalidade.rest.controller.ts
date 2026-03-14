@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Inject, Param, Patch, Post, Query } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from "@nestjs/common";
 import {
   ApiCreatedResponse,
   ApiForbiddenResponse,
@@ -7,6 +7,7 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
+import { DeclareDependency } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { IModalidadeCreateCommandHandler } from "@/modules/ensino/modalidade/domain/commands/modalidade-create.command.handler.interface";
@@ -29,14 +30,15 @@ import { ModalidadeRestMapper } from "./modalidade.rest.mapper";
 @Controller("/modalidades")
 export class ModalidadeRestController {
   constructor(
-    @Inject(IModalidadeListQueryHandler) private readonly listHandler: IModalidadeListQueryHandler,
-    @Inject(IModalidadeFindOneQueryHandler)
+    @DeclareDependency(IModalidadeListQueryHandler)
+    private readonly listHandler: IModalidadeListQueryHandler,
+    @DeclareDependency(IModalidadeFindOneQueryHandler)
     private readonly findOneHandler: IModalidadeFindOneQueryHandler,
-    @Inject(IModalidadeCreateCommandHandler)
+    @DeclareDependency(IModalidadeCreateCommandHandler)
     private readonly createHandler: IModalidadeCreateCommandHandler,
-    @Inject(IModalidadeUpdateCommandHandler)
+    @DeclareDependency(IModalidadeUpdateCommandHandler)
     private readonly updateHandler: IModalidadeUpdateCommandHandler,
-    @Inject(IModalidadeDeleteCommandHandler)
+    @DeclareDependency(IModalidadeDeleteCommandHandler)
     private readonly deleteHandler: IModalidadeDeleteCommandHandler,
   ) {}
 

@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { ensureExists } from "@/modules/@shared";
 import { Ambiente } from "@/modules/ambientes/ambiente/domain/ambiente.domain";
 import {
@@ -11,14 +11,14 @@ import { IAmbientePermissionChecker } from "../../domain/authorization";
 import { IAmbienteRepository } from "../../domain/repositories";
 import type { AmbienteFindOneOutputDto } from "../dtos";
 
-@Injectable()
+@DeclareImplementation()
 export class AmbienteCreateCommandHandlerImpl implements IAmbienteCreateCommandHandler {
   constructor(
-    @Inject(IAmbienteRepository)
+    @DeclareDependency(IAmbienteRepository)
     private readonly repository: IAmbienteRepository,
-    @Inject(IAmbientePermissionChecker)
+    @DeclareDependency(IAmbientePermissionChecker)
     private readonly permissionChecker: IAmbientePermissionChecker,
-    @Inject(IBlocoFindOneQueryHandler)
+    @DeclareDependency(IBlocoFindOneQueryHandler)
     private readonly blocoFindOneHandler: IBlocoFindOneQueryHandler,
   ) {}
 

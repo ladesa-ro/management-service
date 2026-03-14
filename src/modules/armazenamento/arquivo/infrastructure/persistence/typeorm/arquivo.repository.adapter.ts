@@ -1,14 +1,14 @@
-import { Inject, Injectable } from "@nestjs/common";
 import type { SelectQueryBuilder } from "typeorm";
 import { DataSource } from "typeorm";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { APP_DATA_SOURCE_TOKEN } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type { IArquivoRepository } from "@/modules/armazenamento/arquivo";
 import type { ArquivoEntity } from "./arquivo.entity";
 import { createArquivoRepository } from "./arquivo.repository";
 
-@Injectable()
+@DeclareImplementation()
 export class ArquivoTypeOrmRepositoryAdapter implements IArquivoRepository {
-  constructor(@Inject(APP_DATA_SOURCE_TOKEN) private dataSource: DataSource) {}
+  constructor(@DeclareDependency(APP_DATA_SOURCE_TOKEN) private dataSource: DataSource) {}
 
   private get repository() {
     return createArquivoRepository(this.dataSource);

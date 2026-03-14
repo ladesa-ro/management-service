@@ -1,4 +1,5 @@
-import { Inject, Injectable, InternalServerErrorException } from "@nestjs/common";
+import { InternalServerErrorException } from "@nestjs/common";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { ResourceNotFoundError } from "@/modules/@shared";
 import {
   type IEstagiarioUpdateCommand,
@@ -7,10 +8,10 @@ import {
 import { IEstagiarioRepository } from "../../domain/repositories";
 import type { EstagiarioFindOneOutputDto } from "../dtos";
 
-@Injectable()
+@DeclareImplementation()
 export class EstagiarioUpdateCommandHandlerImpl implements IEstagiarioUpdateCommandHandler {
   constructor(
-    @Inject(IEstagiarioRepository)
+    @DeclareDependency(IEstagiarioRepository)
     private readonly repository: IEstagiarioRepository,
   ) {}
 

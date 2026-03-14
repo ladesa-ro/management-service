@@ -3,7 +3,6 @@ import {
   Controller,
   Delete,
   Get,
-  Inject,
   Param,
   Patch,
   Post,
@@ -23,6 +22,7 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
+import { DeclareDependency } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { IUsuarioCreateCommandHandler } from "@/modules/acesso/usuario/domain/commands/usuario-create.command.handler.interface";
@@ -51,25 +51,25 @@ import { UsuarioRestMapper } from "./usuario.rest.mapper";
 @Controller("/usuarios")
 export class UsuarioRestController {
   constructor(
-    @Inject(IUsuarioListQueryHandler)
+    @DeclareDependency(IUsuarioListQueryHandler)
     private readonly listHandler: IUsuarioListQueryHandler,
-    @Inject(IUsuarioFindOneQueryHandler)
+    @DeclareDependency(IUsuarioFindOneQueryHandler)
     private readonly findOneHandler: IUsuarioFindOneQueryHandler,
-    @Inject(IUsuarioEnsinoQueryHandler)
+    @DeclareDependency(IUsuarioEnsinoQueryHandler)
     private readonly ensinoHandler: IUsuarioEnsinoQueryHandler,
-    @Inject(IUsuarioGetImagemCapaQueryHandler)
+    @DeclareDependency(IUsuarioGetImagemCapaQueryHandler)
     private readonly getImagemCapaHandler: IUsuarioGetImagemCapaQueryHandler,
-    @Inject(IUsuarioGetImagemPerfilQueryHandler)
+    @DeclareDependency(IUsuarioGetImagemPerfilQueryHandler)
     private readonly getImagemPerfilHandler: IUsuarioGetImagemPerfilQueryHandler,
-    @Inject(IUsuarioCreateCommandHandler)
+    @DeclareDependency(IUsuarioCreateCommandHandler)
     private readonly createHandler: IUsuarioCreateCommandHandler,
-    @Inject(IUsuarioUpdateCommandHandler)
+    @DeclareDependency(IUsuarioUpdateCommandHandler)
     private readonly updateHandler: IUsuarioUpdateCommandHandler,
-    @Inject(IUsuarioDeleteCommandHandler)
+    @DeclareDependency(IUsuarioDeleteCommandHandler)
     private readonly deleteHandler: IUsuarioDeleteCommandHandler,
-    @Inject(IUsuarioUpdateImagemCapaCommandHandler)
+    @DeclareDependency(IUsuarioUpdateImagemCapaCommandHandler)
     private readonly updateImagemCapaHandler: IUsuarioUpdateImagemCapaCommandHandler,
-    @Inject(IUsuarioUpdateImagemPerfilCommandHandler)
+    @DeclareDependency(IUsuarioUpdateImagemPerfilCommandHandler)
     private readonly updateImagemPerfilHandler: IUsuarioUpdateImagemPerfilCommandHandler,
   ) {}
 

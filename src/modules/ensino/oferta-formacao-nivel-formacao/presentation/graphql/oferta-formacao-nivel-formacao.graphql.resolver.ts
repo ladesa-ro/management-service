@@ -1,6 +1,6 @@
-import { Inject } from "@nestjs/common";
 import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
+import { DeclareDependency } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextGraphQL } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
@@ -22,15 +22,15 @@ import { OfertaFormacaoNivelFormacaoGraphqlMapper } from "./oferta-formacao-nive
 @Resolver(() => OfertaFormacaoNivelFormacaoFindOneOutputGraphQlDto)
 export class OfertaFormacaoNivelFormacaoGraphqlResolver {
   constructor(
-    @Inject(IOfertaFormacaoNivelFormacaoListQueryHandler)
+    @DeclareDependency(IOfertaFormacaoNivelFormacaoListQueryHandler)
     private readonly listHandler: IOfertaFormacaoNivelFormacaoListQueryHandler,
-    @Inject(IOfertaFormacaoNivelFormacaoFindOneQueryHandler)
+    @DeclareDependency(IOfertaFormacaoNivelFormacaoFindOneQueryHandler)
     private readonly findOneHandler: IOfertaFormacaoNivelFormacaoFindOneQueryHandler,
-    @Inject(IOfertaFormacaoNivelFormacaoCreateCommandHandler)
+    @DeclareDependency(IOfertaFormacaoNivelFormacaoCreateCommandHandler)
     private readonly createHandler: IOfertaFormacaoNivelFormacaoCreateCommandHandler,
-    @Inject(IOfertaFormacaoNivelFormacaoUpdateCommandHandler)
+    @DeclareDependency(IOfertaFormacaoNivelFormacaoUpdateCommandHandler)
     private readonly updateHandler: IOfertaFormacaoNivelFormacaoUpdateCommandHandler,
-    @Inject(IOfertaFormacaoNivelFormacaoDeleteCommandHandler)
+    @DeclareDependency(IOfertaFormacaoNivelFormacaoDeleteCommandHandler)
     private readonly deleteHandler: IOfertaFormacaoNivelFormacaoDeleteCommandHandler,
   ) {}
 

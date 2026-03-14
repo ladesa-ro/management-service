@@ -1,6 +1,6 @@
-import { Inject } from "@nestjs/common";
 import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
+import { DeclareDependency } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextGraphQL } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
@@ -22,14 +22,15 @@ import { ModalidadeGraphqlMapper } from "./modalidade.graphql.mapper";
 @Resolver(() => ModalidadeFindOneOutputGraphQlDto)
 export class ModalidadeGraphqlResolver {
   constructor(
-    @Inject(IModalidadeListQueryHandler) private readonly listHandler: IModalidadeListQueryHandler,
-    @Inject(IModalidadeFindOneQueryHandler)
+    @DeclareDependency(IModalidadeListQueryHandler)
+    private readonly listHandler: IModalidadeListQueryHandler,
+    @DeclareDependency(IModalidadeFindOneQueryHandler)
     private readonly findOneHandler: IModalidadeFindOneQueryHandler,
-    @Inject(IModalidadeCreateCommandHandler)
+    @DeclareDependency(IModalidadeCreateCommandHandler)
     private readonly createHandler: IModalidadeCreateCommandHandler,
-    @Inject(IModalidadeUpdateCommandHandler)
+    @DeclareDependency(IModalidadeUpdateCommandHandler)
     private readonly updateHandler: IModalidadeUpdateCommandHandler,
-    @Inject(IModalidadeDeleteCommandHandler)
+    @DeclareDependency(IModalidadeDeleteCommandHandler)
     private readonly deleteHandler: IModalidadeDeleteCommandHandler,
   ) {}
 

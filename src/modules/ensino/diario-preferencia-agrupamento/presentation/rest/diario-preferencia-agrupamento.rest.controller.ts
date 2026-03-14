@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Inject, Param, Patch, Post, Query } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from "@nestjs/common";
 import {
   ApiCreatedResponse,
   ApiForbiddenResponse,
@@ -7,6 +7,7 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
+import { DeclareDependency } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { IDiarioPreferenciaAgrupamentoCreateCommandHandler } from "@/modules/ensino/diario-preferencia-agrupamento/domain/commands/diario-preferencia-agrupamento-create.command.handler.interface";
@@ -29,15 +30,15 @@ import { DiarioPreferenciaAgrupamentoRestMapper } from "./diario-preferencia-agr
 @Controller("/diarios-preferencia-agrupamento")
 export class DiarioPreferenciaAgrupamentoController {
   constructor(
-    @Inject(IDiarioPreferenciaAgrupamentoListQueryHandler)
+    @DeclareDependency(IDiarioPreferenciaAgrupamentoListQueryHandler)
     private readonly listHandler: IDiarioPreferenciaAgrupamentoListQueryHandler,
-    @Inject(IDiarioPreferenciaAgrupamentoFindOneQueryHandler)
+    @DeclareDependency(IDiarioPreferenciaAgrupamentoFindOneQueryHandler)
     private readonly findOneHandler: IDiarioPreferenciaAgrupamentoFindOneQueryHandler,
-    @Inject(IDiarioPreferenciaAgrupamentoCreateCommandHandler)
+    @DeclareDependency(IDiarioPreferenciaAgrupamentoCreateCommandHandler)
     private readonly createHandler: IDiarioPreferenciaAgrupamentoCreateCommandHandler,
-    @Inject(IDiarioPreferenciaAgrupamentoUpdateCommandHandler)
+    @DeclareDependency(IDiarioPreferenciaAgrupamentoUpdateCommandHandler)
     private readonly updateHandler: IDiarioPreferenciaAgrupamentoUpdateCommandHandler,
-    @Inject(IDiarioPreferenciaAgrupamentoDeleteCommandHandler)
+    @DeclareDependency(IDiarioPreferenciaAgrupamentoDeleteCommandHandler)
     private readonly deleteHandler: IDiarioPreferenciaAgrupamentoDeleteCommandHandler,
   ) {}
 

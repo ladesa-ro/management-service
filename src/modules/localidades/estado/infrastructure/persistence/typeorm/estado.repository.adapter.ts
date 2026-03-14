@@ -1,5 +1,5 @@
-import { Inject, Injectable } from "@nestjs/common";
 import { DataSource } from "typeorm";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
   APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
@@ -22,7 +22,7 @@ import { createEstadoRepository } from "./estado.repository";
  * Estende BaseTypeOrmRepositoryAdapter para reutilizar operações de leitura.
  * Estado é um recurso somente leitura (dados do IBGE).
  */
-@Injectable()
+@DeclareImplementation()
 export class EstadoTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     EstadoEntity,
@@ -38,7 +38,7 @@ export class EstadoTypeOrmRepositoryAdapter
   protected readonly outputDtoName = "EstadoFindOneOutputDto";
 
   constructor(
-    @Inject(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
+    @DeclareDependency(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
     protected readonly paginationAdapter: NestJsPaginateAdapter,
   ) {
     super();

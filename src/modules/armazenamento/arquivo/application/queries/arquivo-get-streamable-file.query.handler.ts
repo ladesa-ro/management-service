@@ -1,12 +1,7 @@
 import type { Readable } from "node:stream";
-import {
-  ForbiddenException,
-  Inject,
-  Injectable,
-  ServiceUnavailableException,
-  StreamableFile,
-} from "@nestjs/common";
+import { ForbiddenException, ServiceUnavailableException, StreamableFile } from "@nestjs/common";
 import { IStorageService } from "@/domain/abstractions/storage";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists, isValidUuid } from "@/modules/@shared";
 import { UsuarioEntity } from "@/modules/acesso/usuario/infrastructure/persistence/typeorm";
@@ -15,14 +10,14 @@ import { Arquivo } from "@/modules/armazenamento/arquivo/domain/arquivo.domain";
 import type { IArquivoGetStreamableFileQueryHandler } from "@/modules/armazenamento/arquivo/domain/queries";
 import { IArquivoRepository } from "@/modules/armazenamento/arquivo/domain/repositories";
 
-@Injectable()
+@DeclareImplementation()
 export class ArquivoGetStreamableFileQueryHandlerImpl
   implements IArquivoGetStreamableFileQueryHandler
 {
   constructor(
-    @Inject(IArquivoRepository)
+    @DeclareDependency(IArquivoRepository)
     private arquivoRepository: IArquivoRepository,
-    @Inject(IStorageService)
+    @DeclareDependency(IStorageService)
     private storageService: IStorageService,
   ) {}
 

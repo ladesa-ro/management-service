@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
   type IBlocoFindOneQuery,
   IBlocoFindOneQueryHandler,
@@ -6,10 +6,10 @@ import {
 import { IBlocoRepository } from "../../domain/repositories";
 import type { BlocoFindOneOutputDto } from "../dtos";
 
-@Injectable()
+@DeclareImplementation()
 export class BlocoFindOneQueryHandlerImpl implements IBlocoFindOneQueryHandler {
   constructor(
-    @Inject(IBlocoRepository)
+    @DeclareDependency(IBlocoRepository)
     private readonly repository: IBlocoRepository,
   ) {}
 

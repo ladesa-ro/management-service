@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { ensureExists } from "@/modules/@shared";
 import {
   type IDisciplinaCreateCommand,
@@ -9,12 +9,12 @@ import { IDisciplinaPermissionChecker } from "../../domain/authorization";
 import { IDisciplinaRepository } from "../../domain/repositories";
 import type { DisciplinaFindOneOutputDto } from "../dtos";
 
-@Injectable()
+@DeclareImplementation()
 export class DisciplinaCreateCommandHandlerImpl implements IDisciplinaCreateCommandHandler {
   constructor(
-    @Inject(IDisciplinaRepository)
+    @DeclareDependency(IDisciplinaRepository)
     private readonly repository: IDisciplinaRepository,
-    @Inject(IDisciplinaPermissionChecker)
+    @DeclareDependency(IDisciplinaPermissionChecker)
     private readonly permissionChecker: IDisciplinaPermissionChecker,
   ) {}
 

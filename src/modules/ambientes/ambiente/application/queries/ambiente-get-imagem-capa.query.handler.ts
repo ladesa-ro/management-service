@@ -1,4 +1,5 @@
-import { Inject, Injectable, type StreamableFile } from "@nestjs/common";
+import { type StreamableFile } from "@nestjs/common";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { ensureExists, getEntityImagemStreamableFile } from "@/modules/@shared";
 import { Ambiente } from "@/modules/ambientes/ambiente/domain/ambiente.domain";
 import {
@@ -15,14 +16,14 @@ import {
 } from "@/modules/armazenamento/imagem/domain/queries";
 import { IAmbienteRepository } from "../../domain/repositories";
 
-@Injectable()
+@DeclareImplementation()
 export class AmbienteGetImagemCapaQueryHandlerImpl implements IAmbienteGetImagemCapaQueryHandler {
   constructor(
-    @Inject(IAmbienteRepository)
+    @DeclareDependency(IAmbienteRepository)
     private readonly repository: IAmbienteRepository,
-    @Inject(IImagemGetLatestArquivoIdQueryHandler)
+    @DeclareDependency(IImagemGetLatestArquivoIdQueryHandler)
     private readonly getLatestArquivoIdHandler: IImagemGetLatestArquivoIdQueryHandlerType,
-    @Inject(IArquivoGetStreamableFileQueryHandler)
+    @DeclareDependency(IArquivoGetStreamableFileQueryHandler)
     private readonly getStreamableFileHandler: IArquivoGetStreamableFileQueryHandlerType,
   ) {}
 

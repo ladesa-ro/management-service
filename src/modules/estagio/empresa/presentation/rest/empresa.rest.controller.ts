@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Inject, Param, Patch, Post, Query } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from "@nestjs/common";
 import {
   ApiBody,
   ApiCreatedResponse,
@@ -8,6 +8,7 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
+import { DeclareDependency } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { IEmpresaCreateCommandHandler } from "@/modules/estagio/empresa/domain/commands/empresa-create.command.handler.interface";
@@ -30,14 +31,15 @@ import { EmpresaRestMapper } from "./empresa.rest.mapper";
 @Controller("/empresas")
 export class EmpresaRestController {
   constructor(
-    @Inject(IEmpresaListQueryHandler) private readonly listHandler: IEmpresaListQueryHandler,
-    @Inject(IEmpresaFindOneQueryHandler)
+    @DeclareDependency(IEmpresaListQueryHandler)
+    private readonly listHandler: IEmpresaListQueryHandler,
+    @DeclareDependency(IEmpresaFindOneQueryHandler)
     private readonly findOneHandler: IEmpresaFindOneQueryHandler,
-    @Inject(IEmpresaCreateCommandHandler)
+    @DeclareDependency(IEmpresaCreateCommandHandler)
     private readonly createHandler: IEmpresaCreateCommandHandler,
-    @Inject(IEmpresaUpdateCommandHandler)
+    @DeclareDependency(IEmpresaUpdateCommandHandler)
     private readonly updateHandler: IEmpresaUpdateCommandHandler,
-    @Inject(IEmpresaDeleteCommandHandler)
+    @DeclareDependency(IEmpresaDeleteCommandHandler)
     private readonly deleteHandler: IEmpresaDeleteCommandHandler,
   ) {}
 

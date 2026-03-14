@@ -13,7 +13,7 @@ import { TransactionTypeOrmAdapter } from "./transaction-typeorm.adapter";
  * ```typescript
  * // No service
  * constructor(
- *   @Inject(ITransaction)
+ *   @DeclareDependency(ITransaction)
  *   private readonly transactionPort: ITransaction,
  * ) {}
  *

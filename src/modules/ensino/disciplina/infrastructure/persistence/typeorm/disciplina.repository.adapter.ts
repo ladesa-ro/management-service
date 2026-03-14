@@ -1,6 +1,6 @@
-import { Inject, Injectable } from "@nestjs/common";
 import { FilterOperator, FilterSuffix } from "nestjs-paginate";
 import { DataSource } from "typeorm";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
   APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
@@ -18,7 +18,7 @@ import type { IDisciplinaRepository } from "@/modules/ensino/disciplina/domain/r
 import type { DisciplinaEntity } from "./disciplina.entity";
 import { createDisciplinaRepository } from "./disciplina.repository";
 
-@Injectable()
+@DeclareImplementation()
 export class DisciplinaTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     DisciplinaEntity,
@@ -34,7 +34,7 @@ export class DisciplinaTypeOrmRepositoryAdapter
   protected readonly outputDtoName = "DisciplinaFindOneOutputDto";
 
   constructor(
-    @Inject(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
+    @DeclareDependency(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
     protected readonly paginationAdapter: NestJsPaginateAdapter,
   ) {
     super();

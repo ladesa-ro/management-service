@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { ensureExists } from "@/modules/@shared";
 import { Bloco } from "@/modules/ambientes/bloco/domain/bloco.domain";
 import {
@@ -8,12 +8,12 @@ import {
 import { IBlocoPermissionChecker } from "../../domain/authorization";
 import { IBlocoRepository } from "../../domain/repositories";
 
-@Injectable()
+@DeclareImplementation()
 export class BlocoDeleteCommandHandlerImpl implements IBlocoDeleteCommandHandler {
   constructor(
-    @Inject(IBlocoRepository)
+    @DeclareDependency(IBlocoRepository)
     private readonly repository: IBlocoRepository,
-    @Inject(IBlocoPermissionChecker)
+    @DeclareDependency(IBlocoPermissionChecker)
     private readonly permissionChecker: IBlocoPermissionChecker,
   ) {}
 

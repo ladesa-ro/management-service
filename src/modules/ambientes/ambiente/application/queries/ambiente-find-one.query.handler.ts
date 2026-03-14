@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
   type IAmbienteFindOneQuery,
   IAmbienteFindOneQueryHandler,
@@ -6,10 +6,10 @@ import {
 import { IAmbienteRepository } from "../../domain/repositories";
 import type { AmbienteFindOneOutputDto } from "../dtos";
 
-@Injectable()
+@DeclareImplementation()
 export class AmbienteFindOneQueryHandlerImpl implements IAmbienteFindOneQueryHandler {
   constructor(
-    @Inject(IAmbienteRepository)
+    @DeclareDependency(IAmbienteRepository)
     private readonly repository: IAmbienteRepository,
   ) {}
 

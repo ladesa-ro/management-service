@@ -1,13 +1,13 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { IImagemGetLatestArquivoIdQueryHandler } from "@/modules/armazenamento/imagem/domain/queries";
 import { IImagemArquivoRepository } from "@/modules/armazenamento/imagem/domain/repositories";
 
-@Injectable()
+@DeclareImplementation()
 export class ImagemGetLatestArquivoIdQueryHandlerImpl
   implements IImagemGetLatestArquivoIdQueryHandler
 {
   constructor(
-    @Inject(IImagemArquivoRepository)
+    @DeclareDependency(IImagemArquivoRepository)
     private readonly imagemArquivoRepository: IImagemArquivoRepository,
   ) {}
 

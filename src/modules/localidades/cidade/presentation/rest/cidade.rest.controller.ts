@@ -1,4 +1,4 @@
-import { Controller, Get, Inject, Param, Query } from "@nestjs/common";
+import { Controller, Get, Param, Query } from "@nestjs/common";
 import {
   ApiForbiddenResponse,
   ApiNotFoundResponse,
@@ -6,6 +6,7 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
+import { DeclareDependency } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { Cidade } from "@/modules/localidades/cidade/domain/cidade.domain";
@@ -23,9 +24,9 @@ import { CidadeRestMapper } from "./cidade.rest.mapper";
 @Controller("/base/cidades")
 export class CidadeRestController {
   constructor(
-    @Inject(ICidadeListQueryHandler)
+    @DeclareDependency(ICidadeListQueryHandler)
     private readonly listHandler: ICidadeListQueryHandler,
-    @Inject(ICidadeFindOneQueryHandler)
+    @DeclareDependency(ICidadeFindOneQueryHandler)
     private readonly findOneHandler: ICidadeFindOneQueryHandler,
   ) {}
 

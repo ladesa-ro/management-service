@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
   type IPerfilListQuery,
   IPerfilListQueryHandler,
@@ -6,10 +6,10 @@ import {
 import { IPerfilRepository } from "../../domain/repositories";
 import type { PerfilListOutputDto } from "../dtos";
 
-@Injectable()
+@DeclareImplementation()
 export class PerfilListQueryHandlerImpl implements IPerfilListQueryHandler {
   constructor(
-    @Inject(IPerfilRepository)
+    @DeclareDependency(IPerfilRepository)
     private readonly repository: IPerfilRepository,
   ) {}
 

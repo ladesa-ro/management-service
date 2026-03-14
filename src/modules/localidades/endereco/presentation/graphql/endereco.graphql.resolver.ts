@@ -1,6 +1,6 @@
-import { Inject } from "@nestjs/common";
 import { Args, ID, Info, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
+import { DeclareDependency } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextGraphQL } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
@@ -12,7 +12,7 @@ import { EnderecoGraphqlMapper } from "./endereco.graphql.mapper";
 @Resolver(() => EnderecoFindOneOutputGraphQlDto)
 export class EnderecoGraphqlResolver {
   constructor(
-    @Inject(IEnderecoFindOneQueryHandler)
+    @DeclareDependency(IEnderecoFindOneQueryHandler)
     private readonly findOneHandler: IEnderecoFindOneQueryHandler,
   ) {}
 

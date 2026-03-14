@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { ensureExists } from "@/modules/@shared";
 import { Ambiente } from "@/modules/ambientes/ambiente/domain/ambiente.domain";
 import { IAmbienteFindOneQueryHandler } from "@/modules/ambientes/ambiente/domain/queries/ambiente-find-one.query.handler.interface";
@@ -17,20 +17,20 @@ import { IDiarioPermissionChecker } from "../../domain/authorization";
 import { IDiarioRepository } from "../../domain/repositories";
 import type { DiarioFindOneOutputDto } from "../dtos";
 
-@Injectable()
+@DeclareImplementation()
 export class DiarioCreateCommandHandlerImpl implements IDiarioCreateCommandHandler {
   constructor(
-    @Inject(IDiarioRepository)
+    @DeclareDependency(IDiarioRepository)
     private readonly repository: IDiarioRepository,
-    @Inject(IDiarioPermissionChecker)
+    @DeclareDependency(IDiarioPermissionChecker)
     private readonly permissionChecker: IDiarioPermissionChecker,
-    @Inject(ICalendarioLetivoFindOneQueryHandler)
+    @DeclareDependency(ICalendarioLetivoFindOneQueryHandler)
     private readonly calendarioLetivoFindOneHandler: ICalendarioLetivoFindOneQueryHandler,
-    @Inject(ITurmaFindOneQueryHandler)
+    @DeclareDependency(ITurmaFindOneQueryHandler)
     private readonly turmaFindOneHandler: ITurmaFindOneQueryHandler,
-    @Inject(IDisciplinaFindOneQueryHandler)
+    @DeclareDependency(IDisciplinaFindOneQueryHandler)
     private readonly disciplinaFindOneHandler: IDisciplinaFindOneQueryHandler,
-    @Inject(IAmbienteFindOneQueryHandler)
+    @DeclareDependency(IAmbienteFindOneQueryHandler)
     private readonly ambienteFindOneHandler: IAmbienteFindOneQueryHandler,
   ) {}
 

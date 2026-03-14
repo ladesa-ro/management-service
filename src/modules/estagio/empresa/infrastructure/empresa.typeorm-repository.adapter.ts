@@ -1,5 +1,5 @@
-import { Inject, Injectable } from "@nestjs/common";
 import { DataSource } from "typeorm";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { APP_DATA_SOURCE_TOKEN } from "@/modules/@shared/infrastructure/persistence/typeorm";
@@ -17,9 +17,9 @@ import { Endereco } from "@/modules/localidades/endereco/domain/endereco.domain"
 import { createEnderecoRepository } from "@/modules/localidades/endereco/infrastructure/persistence/typeorm/endereco.repository";
 import { createEmpresaRepository, EmpresaMapper } from "./persistence";
 
-@Injectable()
+@DeclareImplementation()
 export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepository {
-  constructor(@Inject(APP_DATA_SOURCE_TOKEN) private readonly dataSource: DataSource) {}
+  constructor(@DeclareDependency(APP_DATA_SOURCE_TOKEN) private readonly dataSource: DataSource) {}
 
   private get repository() {
     return createEmpresaRepository(this.dataSource);

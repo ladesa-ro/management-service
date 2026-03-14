@@ -1,5 +1,6 @@
-import { ForbiddenException, Injectable, ServiceUnavailableException } from "@nestjs/common";
+import { ForbiddenException, ServiceUnavailableException } from "@nestjs/common";
 import * as client from "openid-client";
+import { DeclareImplementation } from "@/domain/dependency-injection";
 import { OpenidConnectService } from "@/modules/@seguranca/provedor-identidade";
 import {
   type IAutenticacaoRefreshCommand,
@@ -7,7 +8,7 @@ import {
 } from "@/modules/acesso/autenticacao/domain/commands/autenticacao-refresh.command.handler.interface";
 import type { AuthSessionCredentialsDto } from "../dtos";
 
-@Injectable()
+@DeclareImplementation()
 export class AutenticacaoRefreshCommandHandlerImpl implements IAutenticacaoRefreshCommandHandler {
   constructor(private readonly openidConnectService: OpenidConnectService) {}
 

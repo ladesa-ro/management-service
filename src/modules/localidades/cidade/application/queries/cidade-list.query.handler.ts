@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
   type ICidadeListQuery,
   ICidadeListQueryHandler,
@@ -6,10 +6,10 @@ import {
 import { ICidadeRepository } from "../../domain/repositories";
 import type { CidadeListOutputDto } from "../dtos";
 
-@Injectable()
+@DeclareImplementation()
 export class CidadeListQueryHandlerImpl implements ICidadeListQueryHandler {
   constructor(
-    @Inject(ICidadeRepository)
+    @DeclareDependency(ICidadeRepository)
     private readonly repository: ICidadeRepository,
   ) {}
 

@@ -1,11 +1,11 @@
-import { Injectable } from "@nestjs/common";
 import { JwksClient, SigningKey } from "jwks-rsa";
+import { DeclareImplementation } from "@/domain/dependency-injection";
 import { OpenidConnectService } from "../openid-connect";
 
 /**
  * Serviço para obter chaves públicas via JWKS.
  */
-@Injectable()
+@DeclareImplementation()
 export class JwksRsaClientService {
   #jwksClient: JwksClient | null = null;
 

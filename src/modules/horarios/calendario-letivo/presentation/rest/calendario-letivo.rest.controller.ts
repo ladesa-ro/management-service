@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Inject, Param, Patch, Post, Query } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from "@nestjs/common";
 import {
   ApiCreatedResponse,
   ApiForbiddenResponse,
@@ -7,6 +7,7 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
+import { DeclareDependency } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { CalendarioLetivo } from "@/modules/horarios/calendario-letivo/domain/calendario-letivo.domain";
@@ -29,15 +30,15 @@ import { CalendarioLetivoRestMapper } from "./calendario-letivo.rest.mapper";
 @Controller("/calendarios-letivos")
 export class CalendarioLetivoRestController {
   constructor(
-    @Inject(ICalendarioLetivoListQueryHandler)
+    @DeclareDependency(ICalendarioLetivoListQueryHandler)
     private readonly listHandler: ICalendarioLetivoListQueryHandler,
-    @Inject(ICalendarioLetivoFindOneQueryHandler)
+    @DeclareDependency(ICalendarioLetivoFindOneQueryHandler)
     private readonly findOneHandler: ICalendarioLetivoFindOneQueryHandler,
-    @Inject(ICalendarioLetivoCreateCommandHandler)
+    @DeclareDependency(ICalendarioLetivoCreateCommandHandler)
     private readonly createHandler: ICalendarioLetivoCreateCommandHandler,
-    @Inject(ICalendarioLetivoUpdateCommandHandler)
+    @DeclareDependency(ICalendarioLetivoUpdateCommandHandler)
     private readonly updateHandler: ICalendarioLetivoUpdateCommandHandler,
-    @Inject(ICalendarioLetivoDeleteCommandHandler)
+    @DeclareDependency(ICalendarioLetivoDeleteCommandHandler)
     private readonly deleteHandler: ICalendarioLetivoDeleteCommandHandler,
   ) {}
 

@@ -1,16 +1,16 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
   type IEnderecoCreateOrUpdateCommand,
   IEnderecoCreateOrUpdateCommandHandler,
 } from "@/modules/localidades/endereco/domain/commands/endereco-create-or-update.command.handler.interface";
 import { IEnderecoRepository } from "../../domain/repositories";
 
-@Injectable()
+@DeclareImplementation()
 export class EnderecoCreateOrUpdateCommandHandlerImpl
   implements IEnderecoCreateOrUpdateCommandHandler
 {
   constructor(
-    @Inject(IEnderecoRepository)
+    @DeclareDependency(IEnderecoRepository)
     private readonly repository: IEnderecoRepository,
   ) {}
 

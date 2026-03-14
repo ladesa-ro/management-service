@@ -1,6 +1,6 @@
-import { Inject, Injectable } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
 import { DataSource } from "typeorm";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
   APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
@@ -23,7 +23,7 @@ import { createCidadeRepository } from "./cidade.repository";
  * Estende BaseTypeOrmRepositoryAdapter para reutilizar operações de leitura.
  * Cidade é um recurso somente leitura (dados do IBGE).
  */
-@Injectable()
+@DeclareImplementation()
 export class CidadeTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     CidadeEntity,
@@ -39,7 +39,7 @@ export class CidadeTypeOrmRepositoryAdapter
   protected readonly outputDtoName = "CidadeFindOneOutputDto";
 
   constructor(
-    @Inject(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
+    @DeclareDependency(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
     protected readonly paginationAdapter: NestJsPaginateAdapter,
   ) {
     super();

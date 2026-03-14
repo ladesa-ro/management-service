@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { ensureExists } from "@/modules/@shared";
 import {
   type ICursoDeleteCommand,
@@ -8,12 +8,12 @@ import { Curso } from "@/modules/ensino/curso/domain/curso.domain";
 import { ICursoPermissionChecker } from "../../domain/authorization";
 import { ICursoRepository } from "../../domain/repositories";
 
-@Injectable()
+@DeclareImplementation()
 export class CursoDeleteCommandHandlerImpl implements ICursoDeleteCommandHandler {
   constructor(
-    @Inject(ICursoRepository)
+    @DeclareDependency(ICursoRepository)
     private readonly repository: ICursoRepository,
-    @Inject(ICursoPermissionChecker)
+    @DeclareDependency(ICursoPermissionChecker)
     private readonly permissionChecker: ICursoPermissionChecker,
   ) {}
 

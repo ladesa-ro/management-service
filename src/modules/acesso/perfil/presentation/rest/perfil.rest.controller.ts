@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Inject, Param, Post, Query } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, Query } from "@nestjs/common";
 import {
   ApiCreatedResponse,
   ApiForbiddenResponse,
@@ -7,6 +7,7 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
+import { DeclareDependency } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
 import { IPerfilSetVinculosCommandHandler } from "@/modules/acesso/perfil/domain/commands/perfil-set-vinculos.command.handler.interface";
 import { IPerfilFindOneQueryHandler } from "@/modules/acesso/perfil/domain/queries/perfil-find-one.query.handler.interface";
@@ -24,9 +25,11 @@ import { PerfilRestMapper } from "./perfil.rest.mapper";
 @Controller("/perfis")
 export class PerfilRestController {
   constructor(
-    @Inject(IPerfilListQueryHandler) private readonly listHandler: IPerfilListQueryHandler,
-    @Inject(IPerfilFindOneQueryHandler) private readonly findOneHandler: IPerfilFindOneQueryHandler,
-    @Inject(IPerfilSetVinculosCommandHandler)
+    @DeclareDependency(IPerfilListQueryHandler)
+    private readonly listHandler: IPerfilListQueryHandler,
+    @DeclareDependency(IPerfilFindOneQueryHandler)
+    private readonly findOneHandler: IPerfilFindOneQueryHandler,
+    @DeclareDependency(IPerfilSetVinculosCommandHandler)
     private readonly setVinculosHandler: IPerfilSetVinculosCommandHandler,
   ) {}
 

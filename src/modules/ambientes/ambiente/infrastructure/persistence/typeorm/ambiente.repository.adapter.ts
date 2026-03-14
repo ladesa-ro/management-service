@@ -1,6 +1,6 @@
-import { Inject, Injectable } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
 import { DataSource } from "typeorm";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { ITypeOrmPaginationConfig } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import {
   APP_DATA_SOURCE_TOKEN,
@@ -21,7 +21,7 @@ import { createAmbienteRepository } from "./ambiente.repository";
  * Adapter TypeORM que implementa o port de repositório de Ambiente.
  * Estende BaseTypeOrmRepositoryAdapter para reutilizar operações CRUD comuns.
  */
-@Injectable()
+@DeclareImplementation()
 export class AmbienteTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     AmbienteEntity,
@@ -37,7 +37,7 @@ export class AmbienteTypeOrmRepositoryAdapter
   protected readonly outputDtoName = "AmbienteFindOneOutputDto";
 
   constructor(
-    @Inject(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
+    @DeclareDependency(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
     protected readonly paginationAdapter: NestJsPaginateAdapter,
   ) {
     super();

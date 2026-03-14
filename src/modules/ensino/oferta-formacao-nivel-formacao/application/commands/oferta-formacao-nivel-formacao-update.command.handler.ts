@@ -1,5 +1,5 @@
-import { Inject, Injectable } from "@nestjs/common";
 import { has } from "lodash";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { ensureExists, type PersistInput, ResourceNotFoundError } from "@/modules/@shared";
 import { INivelFormacaoFindOneQueryHandler } from "@/modules/ensino/nivel-formacao/domain/queries/nivel-formacao-find-one.query.handler.interface";
 import { IOfertaFormacaoFindOneQueryHandler } from "@/modules/ensino/oferta-formacao/domain/queries/oferta-formacao-find-one.query.handler.interface";
@@ -13,18 +13,18 @@ import { IOfertaFormacaoNivelFormacaoPermissionChecker } from "../../domain/auth
 import { IOfertaFormacaoNivelFormacaoRepository } from "../../domain/repositories";
 import type { OfertaFormacaoNivelFormacaoFindOneOutputDto } from "../dtos";
 
-@Injectable()
+@DeclareImplementation()
 export class OfertaFormacaoNivelFormacaoUpdateCommandHandlerImpl
   implements IOfertaFormacaoNivelFormacaoUpdateCommandHandler
 {
   constructor(
-    @Inject(IOfertaFormacaoNivelFormacaoRepository)
+    @DeclareDependency(IOfertaFormacaoNivelFormacaoRepository)
     private readonly repository: IOfertaFormacaoNivelFormacaoRepository,
-    @Inject(IOfertaFormacaoNivelFormacaoPermissionChecker)
+    @DeclareDependency(IOfertaFormacaoNivelFormacaoPermissionChecker)
     private readonly permissionChecker: IOfertaFormacaoNivelFormacaoPermissionChecker,
-    @Inject(IOfertaFormacaoFindOneQueryHandler)
+    @DeclareDependency(IOfertaFormacaoFindOneQueryHandler)
     private readonly ofertaFormacaoFindOneHandler: IOfertaFormacaoFindOneQueryHandler,
-    @Inject(INivelFormacaoFindOneQueryHandler)
+    @DeclareDependency(INivelFormacaoFindOneQueryHandler)
     private readonly nivelFormacaoFindOneHandler: INivelFormacaoFindOneQueryHandler,
   ) {}
 

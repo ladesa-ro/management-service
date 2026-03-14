@@ -1,4 +1,5 @@
-import { Inject, Injectable, InternalServerErrorException } from "@nestjs/common";
+import { InternalServerErrorException } from "@nestjs/common";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { KeycloakService } from "@/modules/@seguranca/provedor-identidade";
 import { ensureExists, ValidationFailedException } from "@/modules/@shared";
 import {
@@ -10,13 +11,13 @@ import { IUsuarioPermissionChecker } from "../../domain/authorization";
 import { IUsuarioRepository } from "../../domain/repositories";
 import type { UsuarioFindOneOutputDto } from "../dtos";
 
-@Injectable()
+@DeclareImplementation()
 export class UsuarioCreateCommandHandlerImpl implements IUsuarioCreateCommandHandler {
   constructor(
-    @Inject(IUsuarioRepository)
+    @DeclareDependency(IUsuarioRepository)
     private readonly repository: IUsuarioRepository,
     private readonly keycloakService: KeycloakService,
-    @Inject(IUsuarioPermissionChecker)
+    @DeclareDependency(IUsuarioPermissionChecker)
     private readonly permissionChecker: IUsuarioPermissionChecker,
   ) {}
 

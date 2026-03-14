@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { ensureExists } from "@/modules/@shared";
 import { Campus } from "@/modules/ambientes/campus/domain/campus.domain";
 import {
@@ -10,14 +10,14 @@ import { ICampusPermissionChecker } from "../../domain/authorization";
 import { ICampusRepository } from "../../domain/repositories";
 import type { CampusFindOneOutputDto } from "../dtos";
 
-@Injectable()
+@DeclareImplementation()
 export class CampusCreateCommandHandlerImpl implements ICampusCreateCommandHandler {
   constructor(
-    @Inject(ICampusRepository)
+    @DeclareDependency(ICampusRepository)
     private readonly repository: ICampusRepository,
-    @Inject(ICampusPermissionChecker)
+    @DeclareDependency(ICampusPermissionChecker)
     private readonly permissionChecker: ICampusPermissionChecker,
-    @Inject(IEnderecoCreateOrUpdateCommandHandler)
+    @DeclareDependency(IEnderecoCreateOrUpdateCommandHandler)
     private readonly enderecoCreateOrUpdateHandler: IEnderecoCreateOrUpdateCommandHandler,
   ) {}
 

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Inject, Param, Patch, Post, Query } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from "@nestjs/common";
 import {
   ApiCreatedResponse,
   ApiForbiddenResponse,
@@ -7,6 +7,7 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
+import { DeclareDependency } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { IDiaCalendarioCreateCommandHandler } from "@/modules/horarios/dia-calendario/domain/commands/dia-calendario-create.command.handler.interface";
@@ -29,15 +30,15 @@ import { DiaCalendarioRestMapper } from "./dia-calendario.rest.mapper";
 @Controller("/dias-calendario")
 export class DiaCalendarioRestController {
   constructor(
-    @Inject(IDiaCalendarioListQueryHandler)
+    @DeclareDependency(IDiaCalendarioListQueryHandler)
     private readonly listHandler: IDiaCalendarioListQueryHandler,
-    @Inject(IDiaCalendarioFindOneQueryHandler)
+    @DeclareDependency(IDiaCalendarioFindOneQueryHandler)
     private readonly findOneHandler: IDiaCalendarioFindOneQueryHandler,
-    @Inject(IDiaCalendarioCreateCommandHandler)
+    @DeclareDependency(IDiaCalendarioCreateCommandHandler)
     private readonly createHandler: IDiaCalendarioCreateCommandHandler,
-    @Inject(IDiaCalendarioUpdateCommandHandler)
+    @DeclareDependency(IDiaCalendarioUpdateCommandHandler)
     private readonly updateHandler: IDiaCalendarioUpdateCommandHandler,
-    @Inject(IDiaCalendarioDeleteCommandHandler)
+    @DeclareDependency(IDiaCalendarioDeleteCommandHandler)
     private readonly deleteHandler: IDiaCalendarioDeleteCommandHandler,
   ) {}
 

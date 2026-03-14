@@ -1,10 +1,5 @@
-import {
-  ForbiddenException,
-  HttpException,
-  Inject,
-  Injectable,
-  ServiceUnavailableException,
-} from "@nestjs/common";
+import { ForbiddenException, HttpException, ServiceUnavailableException } from "@nestjs/common";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { KeycloakService } from "@/modules/@seguranca/provedor-identidade";
 import {
   type IAutenticacaoDefinirSenhaCommand,
@@ -12,12 +7,12 @@ import {
 } from "@/modules/acesso/autenticacao/domain/commands/autenticacao-definir-senha.command.handler.interface";
 import { IUsuarioFindByMatriculaQueryHandler } from "@/modules/acesso/usuario/domain/queries/usuario-find-by-matricula.query.handler.interface";
 
-@Injectable()
+@DeclareImplementation()
 export class AutenticacaoDefinirSenhaCommandHandlerImpl
   implements IAutenticacaoDefinirSenhaCommandHandler
 {
   constructor(
-    @Inject(IUsuarioFindByMatriculaQueryHandler)
+    @DeclareDependency(IUsuarioFindByMatriculaQueryHandler)
     private readonly usuarioFindByMatriculaHandler: IUsuarioFindByMatriculaQueryHandler,
     private readonly keycloakService: KeycloakService,
   ) {}

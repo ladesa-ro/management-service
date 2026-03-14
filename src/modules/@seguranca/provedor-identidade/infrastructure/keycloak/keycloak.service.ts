@@ -1,6 +1,6 @@
 import KeycloakAdminClient from "@keycloak/keycloak-admin-client";
 import type { Credentials } from "@keycloak/keycloak-admin-client/lib/utils/auth";
-import { Inject, Injectable } from "@nestjs/common";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
   IAuthOptions,
   IAuthOptions as IAuthOptionsToken,
@@ -12,14 +12,14 @@ const INTERVAL_AUTH = 58 * 1000;
 /**
  * Serviço para integração com Keycloak Admin API.
  */
-@Injectable()
+@DeclareImplementation()
 export class KeycloakService {
   kcAdminClient: KeycloakAdminClient | null = null;
   #initialized = false;
   #authInterval: NodeJS.Timeout | null = null;
 
   constructor(
-    @Inject(IAuthOptionsToken)
+    @DeclareDependency(IAuthOptionsToken)
     readonly authOptions: IAuthOptions,
   ) {}
 

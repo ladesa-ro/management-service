@@ -1,5 +1,6 @@
-import { Inject, Injectable, Optional, type PipeTransform } from "@nestjs/common";
+import { Optional, type PipeTransform } from "@nestjs/common";
 import { DataSource } from "typeorm";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
   IRuntimeOptions,
   IRuntimeOptions as IRuntimeOptionsToken,
@@ -13,15 +14,15 @@ import { RESOURCE_AUTHZ_REGISTRY, ResourceAuthzRegistry } from "../resource-auth
  * Pipe que transforma IRequestActor em AccessContext.
  * Usado pelos decorators AccessContextHttp e AccessContextGraphQL.
  */
-@Injectable()
+@DeclareImplementation()
 export class ResolveAccessContextPipe implements PipeTransform {
   constructor(
-    @Inject(APP_DATA_SOURCE_TOKEN)
+    @DeclareDependency(APP_DATA_SOURCE_TOKEN)
     private readonly dataSource: DataSource,
-    @Inject(IRuntimeOptionsToken)
+    @DeclareDependency(IRuntimeOptionsToken)
     private readonly runtimeOptions: IRuntimeOptions,
     @Optional()
-    @Inject(RESOURCE_AUTHZ_REGISTRY)
+    @DeclareDependency(RESOURCE_AUTHZ_REGISTRY)
     private readonly resourceRegistry?: ResourceAuthzRegistry,
   ) {}
 

@@ -1,4 +1,5 @@
-import { Inject, Injectable, InternalServerErrorException } from "@nestjs/common";
+import { InternalServerErrorException } from "@nestjs/common";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { ResourceNotFoundError } from "@/modules/@shared";
 import {
   type IEstagiarioDeleteCommand,
@@ -6,10 +7,10 @@ import {
 } from "@/modules/estagio/estagiario/domain/commands/estagiario-delete.command.handler.interface";
 import { IEstagiarioRepository } from "../../domain/repositories";
 
-@Injectable()
+@DeclareImplementation()
 export class EstagiarioDeleteCommandHandlerImpl implements IEstagiarioDeleteCommandHandler {
   constructor(
-    @Inject(IEstagiarioRepository)
+    @DeclareDependency(IEstagiarioRepository)
     private readonly repository: IEstagiarioRepository,
   ) {}
 

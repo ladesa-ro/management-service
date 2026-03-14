@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { ensureExists } from "@/modules/@shared";
 import {
   type IDiarioDeleteCommand,
@@ -8,12 +8,12 @@ import { Diario } from "@/modules/ensino/diario/domain/diario.domain";
 import { IDiarioPermissionChecker } from "../../domain/authorization";
 import { IDiarioRepository } from "../../domain/repositories";
 
-@Injectable()
+@DeclareImplementation()
 export class DiarioDeleteCommandHandlerImpl implements IDiarioDeleteCommandHandler {
   constructor(
-    @Inject(IDiarioRepository)
+    @DeclareDependency(IDiarioRepository)
     private readonly repository: IDiarioRepository,
-    @Inject(IDiarioPermissionChecker)
+    @DeclareDependency(IDiarioPermissionChecker)
     private readonly permissionChecker: IDiarioPermissionChecker,
   ) {}
 

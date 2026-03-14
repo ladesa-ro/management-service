@@ -1,7 +1,7 @@
-import { Inject, Injectable } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
 import type { DeepPartial } from "typeorm";
 import { DataSource } from "typeorm";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import type { IPaginationCriteria, IPaginationResult } from "@/modules/@shared";
 import {
@@ -23,7 +23,7 @@ import type { UsuarioEntity } from "@/modules/acesso/usuario/infrastructure/pers
 import type { PerfilEntity } from "./perfil.entity";
 import { createPerfilRepository } from "./perfil.repository";
 
-@Injectable()
+@DeclareImplementation()
 export class PerfilTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     PerfilEntity,
@@ -39,7 +39,7 @@ export class PerfilTypeOrmRepositoryAdapter
   protected readonly outputDtoName = "PerfilFindOneOutputDto";
 
   constructor(
-    @Inject(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
+    @DeclareDependency(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
     protected readonly paginationAdapter: NestJsPaginateAdapter,
   ) {
     super();

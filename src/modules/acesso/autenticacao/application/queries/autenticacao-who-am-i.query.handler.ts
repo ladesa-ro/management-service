@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
   type IAutenticacaoWhoAmIQuery,
   IAutenticacaoWhoAmIQueryHandler,
@@ -7,12 +7,12 @@ import { IPerfilFindAllActiveQueryHandler } from "@/modules/acesso/perfil/domain
 import { IUsuarioFindOneQueryHandler } from "@/modules/acesso/usuario/domain/queries/usuario-find-one.query.handler.interface";
 import type { AuthWhoAmIOutputDto } from "../dtos";
 
-@Injectable()
+@DeclareImplementation()
 export class AutenticacaoWhoAmIQueryHandlerImpl implements IAutenticacaoWhoAmIQueryHandler {
   constructor(
-    @Inject(IUsuarioFindOneQueryHandler)
+    @DeclareDependency(IUsuarioFindOneQueryHandler)
     private readonly usuarioFindOneHandler: IUsuarioFindOneQueryHandler,
-    @Inject(IPerfilFindAllActiveQueryHandler)
+    @DeclareDependency(IPerfilFindAllActiveQueryHandler)
     private readonly perfilFindAllActiveHandler: IPerfilFindAllActiveQueryHandler,
   ) {}
 

@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { ensureExists } from "@/modules/@shared";
 import {
   type IOfertaFormacaoNivelFormacaoDeleteCommand,
@@ -8,14 +8,14 @@ import { OfertaFormacaoNivelFormacao } from "@/modules/ensino/oferta-formacao-ni
 import { IOfertaFormacaoNivelFormacaoPermissionChecker } from "../../domain/authorization";
 import { IOfertaFormacaoNivelFormacaoRepository } from "../../domain/repositories";
 
-@Injectable()
+@DeclareImplementation()
 export class OfertaFormacaoNivelFormacaoDeleteCommandHandlerImpl
   implements IOfertaFormacaoNivelFormacaoDeleteCommandHandler
 {
   constructor(
-    @Inject(IOfertaFormacaoNivelFormacaoRepository)
+    @DeclareDependency(IOfertaFormacaoNivelFormacaoRepository)
     private readonly repository: IOfertaFormacaoNivelFormacaoRepository,
-    @Inject(IOfertaFormacaoNivelFormacaoPermissionChecker)
+    @DeclareDependency(IOfertaFormacaoNivelFormacaoPermissionChecker)
     private readonly permissionChecker: IOfertaFormacaoNivelFormacaoPermissionChecker,
   ) {}
 

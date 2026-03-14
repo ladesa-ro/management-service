@@ -1,19 +1,20 @@
-import { Inject, Injectable, UnauthorizedException } from "@nestjs/common";
+import { UnauthorizedException } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
 import { Strategy } from "passport-http-bearer";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { IRequestActorResolver } from "@/modules/@seguranca/ator-requisicao";
 import { AuthStrategy } from "../../domain";
 
 /**
  * Estratégia de autenticação via Bearer Token.
  */
-@Injectable()
+@DeclareImplementation()
 export class AccessTokenStrategyAdapter extends PassportStrategy(
   Strategy,
   AuthStrategy.ACCESS_TOKEN,
 ) {
   constructor(
-    @Inject(IRequestActorResolver)
+    @DeclareDependency(IRequestActorResolver)
     private readonly requestActorResolver: IRequestActorResolver,
   ) {
     super();

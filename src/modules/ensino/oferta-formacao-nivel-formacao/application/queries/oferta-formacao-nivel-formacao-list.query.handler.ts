@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
   type IOfertaFormacaoNivelFormacaoListQuery,
   IOfertaFormacaoNivelFormacaoListQueryHandler,
@@ -6,12 +6,12 @@ import {
 import { IOfertaFormacaoNivelFormacaoRepository } from "../../domain/repositories";
 import type { OfertaFormacaoNivelFormacaoListOutputDto } from "../dtos";
 
-@Injectable()
+@DeclareImplementation()
 export class OfertaFormacaoNivelFormacaoListQueryHandlerImpl
   implements IOfertaFormacaoNivelFormacaoListQueryHandler
 {
   constructor(
-    @Inject(IOfertaFormacaoNivelFormacaoRepository)
+    @DeclareDependency(IOfertaFormacaoNivelFormacaoRepository)
     private readonly repository: IOfertaFormacaoNivelFormacaoRepository,
   ) {}
 

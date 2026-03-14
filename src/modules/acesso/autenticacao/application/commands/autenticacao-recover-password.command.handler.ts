@@ -1,12 +1,12 @@
 import { RequiredActionAlias } from "@keycloak/keycloak-admin-client/lib/defs/requiredActionProviderRepresentation";
-import { Injectable } from "@nestjs/common";
+import { DeclareImplementation } from "@/domain/dependency-injection";
 import { KeycloakService } from "@/modules/@seguranca/provedor-identidade";
 import {
   type IAutenticacaoRecoverPasswordCommand,
   IAutenticacaoRecoverPasswordCommandHandler,
 } from "@/modules/acesso/autenticacao/domain/commands/autenticacao-recover-password.command.handler.interface";
 
-@Injectable()
+@DeclareImplementation()
 export class AutenticacaoRecoverPasswordCommandHandlerImpl
   implements IAutenticacaoRecoverPasswordCommandHandler
 {

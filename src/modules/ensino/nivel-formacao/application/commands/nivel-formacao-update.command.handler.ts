@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { ensureExists } from "@/modules/@shared";
 import {
   type INivelFormacaoUpdateCommand,
@@ -9,12 +9,12 @@ import { INivelFormacaoPermissionChecker } from "../../domain/authorization";
 import { INivelFormacaoRepository } from "../../domain/repositories";
 import type { NivelFormacaoFindOneOutputDto } from "../dtos";
 
-@Injectable()
+@DeclareImplementation()
 export class NivelFormacaoUpdateCommandHandlerImpl implements INivelFormacaoUpdateCommandHandler {
   constructor(
-    @Inject(INivelFormacaoRepository)
+    @DeclareDependency(INivelFormacaoRepository)
     private readonly repository: INivelFormacaoRepository,
-    @Inject(INivelFormacaoPermissionChecker)
+    @DeclareDependency(INivelFormacaoPermissionChecker)
     private readonly permissionChecker: INivelFormacaoPermissionChecker,
   ) {}
 

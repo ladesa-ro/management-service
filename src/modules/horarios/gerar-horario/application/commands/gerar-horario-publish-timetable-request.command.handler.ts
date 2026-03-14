@@ -1,11 +1,11 @@
-import { Injectable } from "@nestjs/common";
+import { DeclareImplementation } from "@/domain/dependency-injection";
 import {
   type IGerarHorarioPublishTimetableRequestCommand,
   IGerarHorarioPublishTimetableRequestCommandHandler,
 } from "@/modules/horarios/gerar-horario/domain/commands/gerar-horario-publish-timetable-request.command.handler.interface";
 import { MessageBrokerService } from "@/modules/horarios/infrastructure/message-broker";
 
-@Injectable()
+@DeclareImplementation()
 export class GerarHorarioPublishTimetableRequestCommandHandlerImpl
   implements IGerarHorarioPublishTimetableRequestCommandHandler
 {

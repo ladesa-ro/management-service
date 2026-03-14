@@ -1,4 +1,5 @@
-import { Inject, Injectable, type StreamableFile } from "@nestjs/common";
+import { type StreamableFile } from "@nestjs/common";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { ensureExists, getEntityImagemStreamableFile } from "@/modules/@shared";
 import {
   IArquivoGetStreamableFileQueryHandler,
@@ -15,16 +16,16 @@ import {
 } from "@/modules/ensino/disciplina/domain/queries/disciplina-get-imagem-capa.query.handler.interface";
 import { IDisciplinaRepository } from "../../domain/repositories";
 
-@Injectable()
+@DeclareImplementation()
 export class DisciplinaGetImagemCapaQueryHandlerImpl
   implements IDisciplinaGetImagemCapaQueryHandler
 {
   constructor(
-    @Inject(IDisciplinaRepository)
+    @DeclareDependency(IDisciplinaRepository)
     private readonly repository: IDisciplinaRepository,
-    @Inject(IImagemGetLatestArquivoIdQueryHandler)
+    @DeclareDependency(IImagemGetLatestArquivoIdQueryHandler)
     private readonly getLatestArquivoIdHandler: IImagemGetLatestArquivoIdQueryHandlerType,
-    @Inject(IArquivoGetStreamableFileQueryHandler)
+    @DeclareDependency(IArquivoGetStreamableFileQueryHandler)
     private readonly getStreamableFileHandler: IArquivoGetStreamableFileQueryHandlerType,
   ) {}
 

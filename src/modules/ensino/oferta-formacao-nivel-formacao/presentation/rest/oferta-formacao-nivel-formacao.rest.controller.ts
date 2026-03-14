@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Inject, Param, Patch, Post, Query } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from "@nestjs/common";
 import {
   ApiCreatedResponse,
   ApiForbiddenResponse,
@@ -7,6 +7,7 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
+import { DeclareDependency } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { IOfertaFormacaoNivelFormacaoCreateCommandHandler } from "@/modules/ensino/oferta-formacao-nivel-formacao/domain/commands/oferta-formacao-nivel-formacao-create.command.handler.interface";
@@ -29,15 +30,15 @@ import { OfertaFormacaoNivelFormacaoRestMapper } from "./oferta-formacao-nivel-f
 @Controller("/ofertas-formacoes-niveis-formacoes")
 export class OfertaFormacaoNivelFormacaoRestController {
   constructor(
-    @Inject(IOfertaFormacaoNivelFormacaoListQueryHandler)
+    @DeclareDependency(IOfertaFormacaoNivelFormacaoListQueryHandler)
     private readonly listHandler: IOfertaFormacaoNivelFormacaoListQueryHandler,
-    @Inject(IOfertaFormacaoNivelFormacaoFindOneQueryHandler)
+    @DeclareDependency(IOfertaFormacaoNivelFormacaoFindOneQueryHandler)
     private readonly findOneHandler: IOfertaFormacaoNivelFormacaoFindOneQueryHandler,
-    @Inject(IOfertaFormacaoNivelFormacaoCreateCommandHandler)
+    @DeclareDependency(IOfertaFormacaoNivelFormacaoCreateCommandHandler)
     private readonly createHandler: IOfertaFormacaoNivelFormacaoCreateCommandHandler,
-    @Inject(IOfertaFormacaoNivelFormacaoUpdateCommandHandler)
+    @DeclareDependency(IOfertaFormacaoNivelFormacaoUpdateCommandHandler)
     private readonly updateHandler: IOfertaFormacaoNivelFormacaoUpdateCommandHandler,
-    @Inject(IOfertaFormacaoNivelFormacaoDeleteCommandHandler)
+    @DeclareDependency(IOfertaFormacaoNivelFormacaoDeleteCommandHandler)
     private readonly deleteHandler: IOfertaFormacaoNivelFormacaoDeleteCommandHandler,
   ) {}
 

@@ -1,6 +1,6 @@
-import { Inject } from "@nestjs/common";
 import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
+import { DeclareDependency } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextGraphQL } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
@@ -22,15 +22,15 @@ import { CalendarioLetivoGraphqlMapper } from "./calendario-letivo.graphql.mappe
 @Resolver(() => CalendarioLetivoFindOneOutputGraphQlDto)
 export class CalendarioLetivoGraphqlResolver {
   constructor(
-    @Inject(ICalendarioLetivoListQueryHandler)
+    @DeclareDependency(ICalendarioLetivoListQueryHandler)
     private readonly listHandler: ICalendarioLetivoListQueryHandler,
-    @Inject(ICalendarioLetivoFindOneQueryHandler)
+    @DeclareDependency(ICalendarioLetivoFindOneQueryHandler)
     private readonly findOneHandler: ICalendarioLetivoFindOneQueryHandler,
-    @Inject(ICalendarioLetivoCreateCommandHandler)
+    @DeclareDependency(ICalendarioLetivoCreateCommandHandler)
     private readonly createHandler: ICalendarioLetivoCreateCommandHandler,
-    @Inject(ICalendarioLetivoUpdateCommandHandler)
+    @DeclareDependency(ICalendarioLetivoUpdateCommandHandler)
     private readonly updateHandler: ICalendarioLetivoUpdateCommandHandler,
-    @Inject(ICalendarioLetivoDeleteCommandHandler)
+    @DeclareDependency(ICalendarioLetivoDeleteCommandHandler)
     private readonly deleteHandler: ICalendarioLetivoDeleteCommandHandler,
   ) {}
 

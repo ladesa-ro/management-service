@@ -3,7 +3,6 @@ import {
   Controller,
   Delete,
   Get,
-  Inject,
   Param,
   Patch,
   Post,
@@ -23,6 +22,7 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
+import { DeclareDependency } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { ICursoCreateCommandHandler } from "@/modules/ensino/curso/domain/commands/curso-create.command.handler.interface";
@@ -47,14 +47,18 @@ import { CursoRestMapper } from "./curso.rest.mapper";
 @Controller("/cursos")
 export class CursoRestController {
   constructor(
-    @Inject(ICursoListQueryHandler) private readonly listHandler: ICursoListQueryHandler,
-    @Inject(ICursoFindOneQueryHandler) private readonly findOneHandler: ICursoFindOneQueryHandler,
-    @Inject(ICursoCreateCommandHandler) private readonly createHandler: ICursoCreateCommandHandler,
-    @Inject(ICursoUpdateCommandHandler) private readonly updateHandler: ICursoUpdateCommandHandler,
-    @Inject(ICursoDeleteCommandHandler) private readonly deleteHandler: ICursoDeleteCommandHandler,
-    @Inject(ICursoUpdateImagemCapaCommandHandler)
+    @DeclareDependency(ICursoListQueryHandler) private readonly listHandler: ICursoListQueryHandler,
+    @DeclareDependency(ICursoFindOneQueryHandler)
+    private readonly findOneHandler: ICursoFindOneQueryHandler,
+    @DeclareDependency(ICursoCreateCommandHandler)
+    private readonly createHandler: ICursoCreateCommandHandler,
+    @DeclareDependency(ICursoUpdateCommandHandler)
+    private readonly updateHandler: ICursoUpdateCommandHandler,
+    @DeclareDependency(ICursoDeleteCommandHandler)
+    private readonly deleteHandler: ICursoDeleteCommandHandler,
+    @DeclareDependency(ICursoUpdateImagemCapaCommandHandler)
     private readonly updateImagemCapaHandler: ICursoUpdateImagemCapaCommandHandler,
-    @Inject(ICursoGetImagemCapaQueryHandler)
+    @DeclareDependency(ICursoGetImagemCapaQueryHandler)
     private readonly getImagemCapaHandler: ICursoGetImagemCapaQueryHandler,
   ) {}
 

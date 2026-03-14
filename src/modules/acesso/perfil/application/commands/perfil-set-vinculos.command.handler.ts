@@ -1,5 +1,5 @@
-import { Inject, Injectable } from "@nestjs/common";
 import { v4 as uuid } from "uuid";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { ensureExists } from "@/modules/@shared";
 import {
   type IPerfilSetVinculosCommand,
@@ -13,16 +13,16 @@ import { ICampusFindOneQueryHandler } from "@/modules/ambientes/campus/domain/qu
 import { IPerfilRepository } from "../../domain/repositories";
 import type { PerfilListInputDto, PerfilListOutputDto } from "../dtos";
 
-@Injectable()
+@DeclareImplementation()
 export class PerfilSetVinculosCommandHandlerImpl implements IPerfilSetVinculosCommandHandler {
   constructor(
-    @Inject(IPerfilRepository)
+    @DeclareDependency(IPerfilRepository)
     private readonly perfilRepository: IPerfilRepository,
-    @Inject(ICampusFindOneQueryHandler)
+    @DeclareDependency(ICampusFindOneQueryHandler)
     private readonly campusFindOneHandler: ICampusFindOneQueryHandler,
-    @Inject(IPerfilListQueryHandler)
+    @DeclareDependency(IPerfilListQueryHandler)
     private readonly perfilListHandler: IPerfilListQueryHandler,
-    @Inject(IUsuarioFindByIdSimpleQueryHandler)
+    @DeclareDependency(IUsuarioFindByIdSimpleQueryHandler)
     private readonly usuarioFindByIdSimpleHandler: IUsuarioFindByIdSimpleQueryHandler,
   ) {}
 

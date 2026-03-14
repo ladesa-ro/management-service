@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
   type ITurmaFindOneQuery,
   ITurmaFindOneQueryHandler,
@@ -6,10 +6,10 @@ import {
 import { ITurmaRepository } from "../../domain/repositories";
 import type { TurmaFindOneOutputDto } from "../dtos";
 
-@Injectable()
+@DeclareImplementation()
 export class TurmaFindOneQueryHandlerImpl implements ITurmaFindOneQueryHandler {
   constructor(
-    @Inject(ITurmaRepository)
+    @DeclareDependency(ITurmaRepository)
     private readonly repository: ITurmaRepository,
   ) {}
 

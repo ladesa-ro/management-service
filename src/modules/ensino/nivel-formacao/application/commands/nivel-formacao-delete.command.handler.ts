@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { ensureExists } from "@/modules/@shared";
 import {
   type INivelFormacaoDeleteCommand,
@@ -8,12 +8,12 @@ import { NivelFormacao } from "@/modules/ensino/nivel-formacao/domain/nivel-form
 import { INivelFormacaoPermissionChecker } from "../../domain/authorization";
 import { INivelFormacaoRepository } from "../../domain/repositories";
 
-@Injectable()
+@DeclareImplementation()
 export class NivelFormacaoDeleteCommandHandlerImpl implements INivelFormacaoDeleteCommandHandler {
   constructor(
-    @Inject(INivelFormacaoRepository)
+    @DeclareDependency(INivelFormacaoRepository)
     private readonly repository: INivelFormacaoRepository,
-    @Inject(INivelFormacaoPermissionChecker)
+    @DeclareDependency(INivelFormacaoPermissionChecker)
     private readonly permissionChecker: INivelFormacaoPermissionChecker,
   ) {}
 
