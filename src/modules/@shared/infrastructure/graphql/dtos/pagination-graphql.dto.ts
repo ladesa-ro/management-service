@@ -1,62 +1,60 @@
-import { Field, InputType, Int, ObjectType } from "@nestjs/graphql";
-import { IsArray, IsInt, IsOptional, IsString, Min } from "class-validator";
-import { decorate } from "ts-mixer";
-
+import { Field, InputType, Int, ObjectType } from "@/modules/@shared/presentation/graphql";
+import { IsArray, IsInt, IsOptional, IsString, Min } from "@/modules/@shared/presentation/shared";
 /**
  * Base pagination input DTO for GraphQL queries.
  */
-@decorate(InputType("PaginationInput"))
+@InputType("PaginationInput")
 export class PaginationInputGraphQlDto {
-  @decorate(Field(() => Int, { nullable: true, defaultValue: 1 }))
-  @decorate(IsOptional())
-  @decorate(IsInt())
-  @decorate(Min(1))
+  @Field(() => Int, { nullable: true, defaultValue: 1 })
+  @IsOptional()
+  @IsInt()
+  @Min(1)
   page?: number = 1;
 
-  @decorate(Field(() => Int, { nullable: true }))
-  @decorate(IsOptional())
-  @decorate(IsInt())
-  @decorate(Min(1))
+  @Field(() => Int, { nullable: true })
+  @IsOptional()
+  @IsInt()
+  @Min(1)
   limit?: number;
 
-  @decorate(Field(() => String, { nullable: true }))
-  @decorate(IsOptional())
-  @decorate(IsString())
+  @Field(() => String, { nullable: true })
+  @IsOptional()
+  @IsString()
   search?: string;
 
-  @decorate(Field(() => [String], { nullable: true }))
-  @decorate(IsOptional())
-  @decorate(IsArray())
-  @decorate(IsString({ each: true }))
+  @Field(() => [String], { nullable: true })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
   sortBy?: string[];
 
-  @decorate(Field(() => [String], { nullable: true }))
-  @decorate(IsOptional())
-  @decorate(IsArray())
-  @decorate(IsString({ each: true }))
+  @Field(() => [String], { nullable: true })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
   selection?: string[];
 }
 
 /**
  * Pagination metadata DTO for GraphQL.
  */
-@decorate(ObjectType())
+@ObjectType()
 export class PaginationMetaGraphQlDto {
-  @decorate(Field(() => Int))
+  @Field(() => Int)
   itemsPerPage: number;
 
-  @decorate(Field(() => Int))
+  @Field(() => Int)
   totalItems: number;
 
-  @decorate(Field(() => Int))
+  @Field(() => Int)
   currentPage: number;
 
-  @decorate(Field(() => Int))
+  @Field(() => Int)
   totalPages: number;
 
-  @decorate(Field(() => String))
+  @Field(() => String)
   search: string;
 
-  @decorate(Field(() => [[String]]))
+  @Field(() => [[String]])
   sortBy: [string, string][];
 }

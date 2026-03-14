@@ -1,11 +1,10 @@
-import { ArgsType, Field, InputType, ObjectType } from "@nestjs/graphql";
-import { IsOptional, IsString, MinLength } from "class-validator";
-import { decorate } from "ts-mixer";
 import {
   EntityBaseGraphQlDto,
   PaginatedFilterByIdGraphQlDto,
   PaginationMetaGraphQlDto,
 } from "@/modules/@shared/infrastructure/graphql/dtos";
+import { ArgsType, Field, InputType, ObjectType } from "@/modules/@shared/presentation/graphql";
+import { IsOptional, IsString, MinLength } from "@/modules/@shared/presentation/shared";
 import { UsuarioFieldsMixin } from "@/modules/acesso/usuario/presentation/usuario.validation-mixin";
 import { ImagemFindOneOutputGraphQlDto } from "@/modules/armazenamento/imagem-arquivo/presentation/graphql/imagem-arquivo.graphql.dto";
 
@@ -13,15 +12,15 @@ import { ImagemFindOneOutputGraphQlDto } from "@/modules/armazenamento/imagem-ar
 // FindOne Output
 // ============================================================================
 
-@decorate(ObjectType("UsuarioFindOneOutputDto"))
+@ObjectType("UsuarioFindOneOutputDto")
 export class UsuarioFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
-  @decorate(Field(() => String, { nullable: true })) nome: string | null;
-  @decorate(Field(() => String, { nullable: true })) matricula: string | null;
-  @decorate(Field(() => String, { nullable: true })) email: string | null;
-  @decorate(Field(() => Boolean)) isSuperUser: boolean;
-  @decorate(Field(() => ImagemFindOneOutputGraphQlDto, { nullable: true }))
+  @Field(() => String, { nullable: true }) nome: string | null;
+  @Field(() => String, { nullable: true }) matricula: string | null;
+  @Field(() => String, { nullable: true }) email: string | null;
+  @Field(() => Boolean) isSuperUser: boolean;
+  @Field(() => ImagemFindOneOutputGraphQlDto, { nullable: true })
   imagemCapa: ImagemFindOneOutputGraphQlDto | null;
-  @decorate(Field(() => ImagemFindOneOutputGraphQlDto, { nullable: true }))
+  @Field(() => ImagemFindOneOutputGraphQlDto, { nullable: true })
   imagemPerfil: ImagemFindOneOutputGraphQlDto | null;
 }
 
@@ -29,31 +28,31 @@ export class UsuarioFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
 // Create Input
 // ============================================================================
 
-@decorate(InputType("UsuarioCreateInputDto"))
+@InputType("UsuarioCreateInputDto")
 export class UsuarioCreateInputGraphQlDto extends UsuarioFieldsMixin {
-  @decorate(Field(() => String, { nullable: true })) declare nome?: string | null;
-  @decorate(Field(() => String, { nullable: true })) declare matricula?: string | null;
-  @decorate(Field(() => String, { nullable: true })) declare email?: string | null;
+  @Field(() => String, { nullable: true }) declare nome?: string | null;
+  @Field(() => String, { nullable: true }) declare matricula?: string | null;
+  @Field(() => String, { nullable: true }) declare email?: string | null;
 }
 
 // ============================================================================
 // Update Input
 // ============================================================================
 
-@decorate(InputType("UsuarioUpdateInputDto"))
+@InputType("UsuarioUpdateInputDto")
 export class UsuarioUpdateInputGraphQlDto {
-  @decorate(Field(() => String, { nullable: true }))
-  @decorate(IsOptional())
-  @decorate(IsString())
-  @decorate(MinLength(1))
+  @Field(() => String, { nullable: true })
+  @IsOptional()
+  @IsString()
+  @MinLength(1)
   nome?: string | null;
-  @decorate(Field(() => String, { nullable: true }))
-  @decorate(IsOptional())
-  @decorate(IsString())
+  @Field(() => String, { nullable: true })
+  @IsOptional()
+  @IsString()
   matricula?: string | null;
-  @decorate(Field(() => String, { nullable: true }))
-  @decorate(IsOptional())
-  @decorate(IsString())
+  @Field(() => String, { nullable: true })
+  @IsOptional()
+  @IsString()
   email?: string | null;
 }
 
@@ -61,18 +60,18 @@ export class UsuarioUpdateInputGraphQlDto {
 // List Input
 // ============================================================================
 
-@decorate(ArgsType())
+@ArgsType()
 export class UsuarioListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {}
 
 // ============================================================================
 // List Output
 // ============================================================================
 
-@decorate(ObjectType("UsuarioListResult"))
+@ObjectType("UsuarioListResult")
 export class UsuarioListOutputGraphQlDto {
-  @decorate(Field(() => PaginationMetaGraphQlDto))
+  @Field(() => PaginationMetaGraphQlDto)
   meta: PaginationMetaGraphQlDto;
 
-  @decorate(Field(() => [UsuarioFindOneOutputGraphQlDto]))
+  @Field(() => [UsuarioFindOneOutputGraphQlDto])
   data: UsuarioFindOneOutputGraphQlDto[];
 }

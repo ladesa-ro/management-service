@@ -1,14 +1,15 @@
-import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@nestjs/swagger";
-import { Type } from "class-transformer";
-import { IsUUID, ValidateNested } from "class-validator";
-import { decorate, Mixin } from "ts-mixer";
+import { Mixin } from "ts-mixer";
+import { EntityBaseRestDto } from "@/modules/@shared/infrastructure/presentation/rest/dtos";
 import {
+  ApiProperty,
+  ApiPropertyOptional,
+  ApiSchema,
   commonProperties,
   RegisterModel,
   referenceProperty,
   simpleProperty,
-} from "@/modules/@shared/infrastructure/persistence/typeorm/metadata";
-import { EntityBaseRestDto } from "@/modules/@shared/infrastructure/presentation/rest/dtos";
+} from "@/modules/@shared/presentation/rest";
+import { IsUUID, Type, ValidateNested } from "@/modules/@shared/presentation/shared";
 import {
   CidadeFindOneInputRestDto,
   CidadeFindOneOutputRestDto,
@@ -19,47 +20,43 @@ import { EnderecoFieldsMixin } from "../endereco.validation-mixin";
 // FindOne Output
 // ============================================================================
 
-@decorate(ApiSchema({ name: "EnderecoFindOneOutputDto" }))
-@decorate(
-  RegisterModel({
-    name: "EnderecoFindOneOutputDto",
-    properties: [
-      simpleProperty("id"),
-      simpleProperty("cep"),
-      simpleProperty("logradouro"),
-      simpleProperty("numero"),
-      simpleProperty("bairro"),
-      simpleProperty("complemento", { nullable: true }),
-      simpleProperty("pontoReferencia", { nullable: true }),
-      referenceProperty("cidade", "CidadeFindOneOutputDto"),
-      ...commonProperties.dated,
-    ],
-  }),
-)
+@ApiSchema({ name: "EnderecoFindOneOutputDto" })
+@RegisterModel({
+  name: "EnderecoFindOneOutputDto",
+  properties: [
+    simpleProperty("id"),
+    simpleProperty("cep"),
+    simpleProperty("logradouro"),
+    simpleProperty("numero"),
+    simpleProperty("bairro"),
+    simpleProperty("complemento", { nullable: true }),
+    simpleProperty("pontoReferencia", { nullable: true }),
+    referenceProperty("cidade", "CidadeFindOneOutputDto"),
+    ...commonProperties.dated,
+  ],
+})
 export class EnderecoFindOneOutputRestDto extends Mixin(EntityBaseRestDto, EnderecoFieldsMixin) {
-  @decorate(ApiProperty({ type: "string", description: "Codigo postal (CEP)" }))
+  @ApiProperty({ type: "string", description: "Codigo postal (CEP)" })
   declare cep: string;
 
-  @decorate(ApiProperty({ type: "string", description: "Logradouro" }))
+  @ApiProperty({ type: "string", description: "Logradouro" })
   declare logradouro: string;
 
-  @decorate(ApiProperty({ type: "integer", description: "Numero", minimum: 0, maximum: 99999 }))
+  @ApiProperty({ type: "integer", description: "Numero", minimum: 0, maximum: 99999 })
   declare numero: number;
 
-  @decorate(ApiProperty({ type: "string", description: "Bairro" }))
+  @ApiProperty({ type: "string", description: "Bairro" })
   declare bairro: string;
 
-  @decorate(ApiPropertyOptional({ type: "string", description: "Complemento", nullable: true }))
+  @ApiPropertyOptional({ type: "string", description: "Complemento", nullable: true })
   declare complemento: string | null;
 
-  @decorate(
-    ApiPropertyOptional({ type: "string", description: "Ponto de referencia", nullable: true }),
-  )
+  @ApiPropertyOptional({ type: "string", description: "Ponto de referencia", nullable: true })
   declare pontoReferencia: string | null;
 
-  @decorate(ApiProperty({ type: () => CidadeFindOneOutputRestDto, description: "Cidade" }))
-  @decorate(ValidateNested())
-  @decorate(Type(() => CidadeFindOneOutputRestDto))
+  @ApiProperty({ type: () => CidadeFindOneOutputRestDto, description: "Cidade" })
+  @ValidateNested()
+  @Type(() => CidadeFindOneOutputRestDto)
   cidade: CidadeFindOneOutputRestDto;
 }
 
@@ -67,31 +64,29 @@ export class EnderecoFindOneOutputRestDto extends Mixin(EntityBaseRestDto, Ender
 // Input (for create/update with nested city reference)
 // ============================================================================
 
-@decorate(ApiSchema({ name: "EnderecoInputDto" }))
+@ApiSchema({ name: "EnderecoInputDto" })
 export class EnderecoInputRestDto extends EnderecoFieldsMixin {
-  @decorate(ApiProperty({ type: "string", description: "Codigo postal (CEP)" }))
+  @ApiProperty({ type: "string", description: "Codigo postal (CEP)" })
   declare cep: string;
 
-  @decorate(ApiProperty({ type: "string", description: "Logradouro" }))
+  @ApiProperty({ type: "string", description: "Logradouro" })
   declare logradouro: string;
 
-  @decorate(ApiProperty({ type: "integer", description: "Numero", minimum: 0, maximum: 99999 }))
+  @ApiProperty({ type: "integer", description: "Numero", minimum: 0, maximum: 99999 })
   declare numero: number;
 
-  @decorate(ApiProperty({ type: "string", description: "Bairro" }))
+  @ApiProperty({ type: "string", description: "Bairro" })
   declare bairro: string;
 
-  @decorate(ApiPropertyOptional({ type: "string", description: "Complemento", nullable: true }))
+  @ApiPropertyOptional({ type: "string", description: "Complemento", nullable: true })
   declare complemento: string | null;
 
-  @decorate(
-    ApiPropertyOptional({ type: "string", description: "Ponto de referencia", nullable: true }),
-  )
+  @ApiPropertyOptional({ type: "string", description: "Ponto de referencia", nullable: true })
   declare pontoReferencia: string | null;
 
-  @decorate(ApiProperty({ type: () => CidadeFindOneInputRestDto, description: "Cidade" }))
-  @decorate(ValidateNested())
-  @decorate(Type(() => CidadeFindOneInputRestDto))
+  @ApiProperty({ type: () => CidadeFindOneInputRestDto, description: "Cidade" })
+  @ValidateNested()
+  @Type(() => CidadeFindOneInputRestDto)
   cidade: CidadeFindOneInputRestDto;
 }
 
@@ -99,15 +94,13 @@ export class EnderecoInputRestDto extends EnderecoFieldsMixin {
 // FindOne Input (for path params)
 // ============================================================================
 
-@decorate(ApiSchema({ name: "EnderecoFindOneInputDto" }))
+@ApiSchema({ name: "EnderecoFindOneInputDto" })
 export class EnderecoFindOneInputRestDto {
-  @decorate(
-    ApiProperty({
-      type: "string",
-      description: "Identificador do registro (uuid)",
-      format: "uuid",
-    }),
-  )
-  @decorate(IsUUID())
+  @ApiProperty({
+    type: "string",
+    description: "Identificador do registro (uuid)",
+    format: "uuid",
+  })
+  @IsUUID()
   id: string;
 }

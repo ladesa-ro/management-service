@@ -1,37 +1,36 @@
-import { ArgsType, Field, ObjectType } from "@nestjs/graphql";
-import { decorate } from "ts-mixer";
 import {
   EntityIdIntGraphQlDto,
   PaginatedFilterByIdGraphQlDto,
   PaginationMetaGraphQlDto,
 } from "@/modules/@shared/infrastructure/graphql/dtos";
+import { ArgsType, Field, ObjectType } from "@/modules/@shared/presentation/graphql";
 
 // ============================================================================
 // FindOne Output
 // ============================================================================
 
-@decorate(ObjectType("EstadoFindOneOutputDto"))
+@ObjectType("EstadoFindOneOutputDto")
 export class EstadoFindOneOutputGraphQlDto extends EntityIdIntGraphQlDto {
-  @decorate(Field(() => String)) nome: string;
-  @decorate(Field(() => String)) sigla: string;
+  @Field(() => String) nome: string;
+  @Field(() => String) sigla: string;
 }
 
 // ============================================================================
 // List Input (GraphQL-compatible - no dots in field names)
 // ============================================================================
 
-@decorate(ArgsType())
+@ArgsType()
 export class EstadoListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {}
 
 // ============================================================================
 // List Output
 // ============================================================================
 
-@decorate(ObjectType("EstadoListResult"))
+@ObjectType("EstadoListResult")
 export class EstadoListOutputGraphQlDto {
-  @decorate(Field(() => PaginationMetaGraphQlDto))
+  @Field(() => PaginationMetaGraphQlDto)
   meta: PaginationMetaGraphQlDto;
 
-  @decorate(Field(() => [EstadoFindOneOutputGraphQlDto]))
+  @Field(() => [EstadoFindOneOutputGraphQlDto])
   data: EstadoFindOneOutputGraphQlDto[];
 }

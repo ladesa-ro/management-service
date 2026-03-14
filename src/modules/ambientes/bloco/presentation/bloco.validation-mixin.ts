@@ -1,12 +1,10 @@
-import { IsString, MinLength } from "class-validator";
-import { decorate } from "ts-mixer";
-
+import { IsString, MinLength } from "@/modules/@shared/presentation/shared";
 export class BlocoFieldsMixin {
-  @decorate(IsString())
-  @decorate(MinLength(1))
+  @IsString()
+  @MinLength(1)
   nome: string;
 
-  @decorate(IsString())
-  @decorate(MinLength(1))
+  @IsString()
+  @MinLength(1)
   codigo: string;
 }

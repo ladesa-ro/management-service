@@ -1,38 +1,35 @@
-import { ApiProperty, ApiSchema } from "@nestjs/swagger";
-import { Type } from "class-transformer";
-import { IsInt, IsString } from "class-validator";
-import { decorate } from "ts-mixer";
-import {
-  RegisterModel,
-  simpleProperty,
-} from "@/modules/@shared/infrastructure/persistence/typeorm/metadata";
 import {
   PaginatedFilterByStringIdRestDto,
   PaginationMetaRestDto,
 } from "@/modules/@shared/infrastructure/presentation/rest/dtos";
+import {
+  ApiProperty,
+  ApiSchema,
+  RegisterModel,
+  simpleProperty,
+} from "@/modules/@shared/presentation/rest";
+import { IsInt, IsString, Type } from "@/modules/@shared/presentation/shared";
 
 // ============================================================================
 // FindOne Output
 // ============================================================================
 
-@decorate(ApiSchema({ name: "EstadoFindOneOutputDto" }))
-@decorate(
-  RegisterModel({
-    name: "EstadoFindOneOutputDto",
-    properties: [simpleProperty("id"), simpleProperty("nome"), simpleProperty("sigla")],
-  }),
-)
+@ApiSchema({ name: "EstadoFindOneOutputDto" })
+@RegisterModel({
+  name: "EstadoFindOneOutputDto",
+  properties: [simpleProperty("id"), simpleProperty("nome"), simpleProperty("sigla")],
+})
 export class EstadoFindOneOutputRestDto {
-  @decorate(ApiProperty({ type: "integer", description: "Identificador do registro (numerico)" }))
-  @decorate(IsInt())
+  @ApiProperty({ type: "integer", description: "Identificador do registro (numerico)" })
+  @IsInt()
   id: number;
 
-  @decorate(ApiProperty({ type: "string", description: "Nome oficial do estado" }))
-  @decorate(IsString())
+  @ApiProperty({ type: "string", description: "Nome oficial do estado" })
+  @IsString()
   nome: string;
 
-  @decorate(ApiProperty({ type: "string", description: "Sigla do estado" }))
-  @decorate(IsString())
+  @ApiProperty({ type: "string", description: "Sigla do estado" })
+  @IsString()
   sigla: string;
 }
 
@@ -40,17 +37,15 @@ export class EstadoFindOneOutputRestDto {
 // List Input/Output
 // ============================================================================
 
-@decorate(ApiSchema({ name: "EstadoListInputDto" }))
+@ApiSchema({ name: "EstadoListInputDto" })
 export class EstadoListInputRestDto extends PaginatedFilterByStringIdRestDto {}
 
-@decorate(ApiSchema({ name: "EstadoListOutputDto" }))
+@ApiSchema({ name: "EstadoListOutputDto" })
 export class EstadoListOutputRestDto {
-  @decorate(ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" }))
+  @ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" })
   meta: PaginationMetaRestDto;
 
-  @decorate(
-    ApiProperty({ type: () => [EstadoFindOneOutputRestDto], description: "Resultados da busca" }),
-  )
+  @ApiProperty({ type: () => [EstadoFindOneOutputRestDto], description: "Resultados da busca" })
   data: EstadoFindOneOutputRestDto[];
 }
 
@@ -58,10 +53,10 @@ export class EstadoListOutputRestDto {
 // FindOne Input (for path params)
 // ============================================================================
 
-@decorate(ApiSchema({ name: "EstadoFindOneInputDto" }))
+@ApiSchema({ name: "EstadoFindOneInputDto" })
 export class EstadoFindOneInputRestDto {
-  @decorate(ApiProperty({ type: "integer", description: "Identificador do registro (numerico)" }))
-  @decorate(Type(() => Number))
-  @decorate(IsInt())
+  @ApiProperty({ type: "integer", description: "Identificador do registro (numerico)" })
+  @Type(() => Number)
+  @IsInt()
   id: number;
 }

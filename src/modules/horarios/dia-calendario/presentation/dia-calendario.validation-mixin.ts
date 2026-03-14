@@ -1,23 +1,26 @@
-import { IsBoolean, IsDateString, IsOptional, IsString } from "class-validator";
-import { decorate } from "ts-mixer";
-
+import {
+  IsBoolean,
+  IsDateString,
+  IsOptional,
+  IsString,
+} from "@/modules/@shared/presentation/shared";
 export class DiaCalendarioFieldsMixin {
-  @decorate(IsDateString())
+  @IsDateString()
   data: string;
 
-  @decorate(IsBoolean())
+  @IsBoolean()
   diaLetivo: boolean;
 
-  @decorate(IsBoolean())
+  @IsBoolean()
   diaPresencial: boolean;
 
-  @decorate(IsOptional())
-  @decorate(IsString())
+  @IsOptional()
+  @IsString()
   feriado?: string | null;
 
-  @decorate(IsString())
+  @IsString()
   tipo: string;
 
-  @decorate(IsBoolean())
+  @IsBoolean()
   extraCurricular: boolean;
 }

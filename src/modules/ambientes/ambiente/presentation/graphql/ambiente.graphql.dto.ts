@@ -1,4 +1,15 @@
-import { ArgsType, Field, InputType, Int, ObjectType } from "@nestjs/graphql";
+import {
+  EntityBaseGraphQlDto,
+  PaginatedFilterByIdGraphQlDto,
+  PaginationMetaGraphQlDto,
+} from "@/modules/@shared/infrastructure/graphql/dtos";
+import {
+  ArgsType,
+  Field,
+  InputType,
+  Int,
+  ObjectType,
+} from "@/modules/@shared/presentation/graphql";
 import {
   IsArray,
   IsInt,
@@ -7,13 +18,7 @@ import {
   IsUUID,
   MinLength,
   ValidateNested,
-} from "class-validator";
-import { decorate } from "ts-mixer";
-import {
-  EntityBaseGraphQlDto,
-  PaginatedFilterByIdGraphQlDto,
-  PaginationMetaGraphQlDto,
-} from "@/modules/@shared/infrastructure/graphql/dtos";
+} from "@/modules/@shared/presentation/shared";
 import { BlocoFindOneOutputGraphQlDto } from "@/modules/ambientes/bloco/presentation/graphql/bloco.graphql.dto";
 import { ImagemFindOneOutputGraphQlDto } from "@/modules/armazenamento/imagem-arquivo/presentation/graphql/imagem-arquivo.graphql.dto";
 import { AmbienteFieldsMixin } from "../ambiente.validation-mixin";
@@ -22,15 +27,15 @@ import { AmbienteFieldsMixin } from "../ambiente.validation-mixin";
 // FindOne Output
 // ============================================================================
 
-@decorate(ObjectType("AmbienteFindOneOutputDto"))
+@ObjectType("AmbienteFindOneOutputDto")
 export class AmbienteFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
-  @decorate(Field(() => String)) nome: string;
-  @decorate(Field(() => String, { nullable: true })) descricao: string | null;
-  @decorate(Field(() => String)) codigo: string;
-  @decorate(Field(() => Int, { nullable: true })) capacidade: number | null;
-  @decorate(Field(() => String, { nullable: true })) tipo: string | null;
-  @decorate(Field(() => BlocoFindOneOutputGraphQlDto)) bloco: BlocoFindOneOutputGraphQlDto;
-  @decorate(Field(() => ImagemFindOneOutputGraphQlDto, { nullable: true }))
+  @Field(() => String) nome: string;
+  @Field(() => String, { nullable: true }) descricao: string | null;
+  @Field(() => String) codigo: string;
+  @Field(() => Int, { nullable: true }) capacidade: number | null;
+  @Field(() => String, { nullable: true }) tipo: string | null;
+  @Field(() => BlocoFindOneOutputGraphQlDto) bloco: BlocoFindOneOutputGraphQlDto;
+  @Field(() => ImagemFindOneOutputGraphQlDto, { nullable: true })
   imagemCapa: ImagemFindOneOutputGraphQlDto | null;
 }
 
@@ -38,24 +43,24 @@ export class AmbienteFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
 // Ref Input
 // ============================================================================
 
-@decorate(InputType("AmbienteRefInputDto"))
+@InputType("AmbienteRefInputDto")
 export class AmbienteRefInputGraphQlDto {
-  @decorate(Field(() => String)) @decorate(IsString()) id: string;
+  @Field(() => String) @IsString() id: string;
 }
 
 // ============================================================================
 // Create Input
 // ============================================================================
 
-@decorate(InputType("AmbienteCreateInputDto"))
+@InputType("AmbienteCreateInputDto")
 export class AmbienteCreateInputGraphQlDto extends AmbienteFieldsMixin {
-  @decorate(Field(() => String)) declare nome: string;
-  @decorate(Field(() => String, { nullable: true })) declare descricao?: string | null;
-  @decorate(Field(() => String)) declare codigo: string;
-  @decorate(Field(() => Int, { nullable: true })) declare capacidade?: number | null;
-  @decorate(Field(() => String, { nullable: true })) declare tipo?: string | null;
-  @decorate(Field(() => AmbienteRefInputGraphQlDto))
-  @decorate(ValidateNested())
+  @Field(() => String) declare nome: string;
+  @Field(() => String, { nullable: true }) declare descricao?: string | null;
+  @Field(() => String) declare codigo: string;
+  @Field(() => Int, { nullable: true }) declare capacidade?: number | null;
+  @Field(() => String, { nullable: true }) declare tipo?: string | null;
+  @Field(() => AmbienteRefInputGraphQlDto)
+  @ValidateNested()
   bloco: AmbienteRefInputGraphQlDto;
 }
 
@@ -63,33 +68,33 @@ export class AmbienteCreateInputGraphQlDto extends AmbienteFieldsMixin {
 // Update Input
 // ============================================================================
 
-@decorate(InputType("AmbienteUpdateInputDto"))
+@InputType("AmbienteUpdateInputDto")
 export class AmbienteUpdateInputGraphQlDto {
-  @decorate(Field(() => String, { nullable: true }))
-  @decorate(IsOptional())
-  @decorate(IsString())
-  @decorate(MinLength(1))
+  @Field(() => String, { nullable: true })
+  @IsOptional()
+  @IsString()
+  @MinLength(1)
   nome?: string;
-  @decorate(Field(() => String, { nullable: true }))
-  @decorate(IsOptional())
-  @decorate(IsString())
+  @Field(() => String, { nullable: true })
+  @IsOptional()
+  @IsString()
   descricao?: string | null;
-  @decorate(Field(() => String, { nullable: true }))
-  @decorate(IsOptional())
-  @decorate(IsString())
-  @decorate(MinLength(1))
+  @Field(() => String, { nullable: true })
+  @IsOptional()
+  @IsString()
+  @MinLength(1)
   codigo?: string;
-  @decorate(Field(() => Int, { nullable: true }))
-  @decorate(IsOptional())
-  @decorate(IsInt())
+  @Field(() => Int, { nullable: true })
+  @IsOptional()
+  @IsInt()
   capacidade?: number | null;
-  @decorate(Field(() => String, { nullable: true }))
-  @decorate(IsOptional())
-  @decorate(IsString())
+  @Field(() => String, { nullable: true })
+  @IsOptional()
+  @IsString()
   tipo?: string | null;
-  @decorate(Field(() => AmbienteRefInputGraphQlDto, { nullable: true }))
-  @decorate(IsOptional())
-  @decorate(ValidateNested())
+  @Field(() => AmbienteRefInputGraphQlDto, { nullable: true })
+  @IsOptional()
+  @ValidateNested()
   bloco?: AmbienteRefInputGraphQlDto;
 }
 
@@ -97,20 +102,18 @@ export class AmbienteUpdateInputGraphQlDto {
 // List Input (GraphQL-compatible - no dots in field names)
 // ============================================================================
 
-@decorate(ArgsType())
+@ArgsType()
 export class AmbienteListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {
-  @decorate(Field(() => [String], { nullable: true, description: "Filtro por ID do Bloco" }))
-  @decorate(IsOptional())
-  @decorate(IsArray())
-  @decorate(IsUUID(undefined, { each: true }))
+  @Field(() => [String], { nullable: true, description: "Filtro por ID do Bloco" })
+  @IsOptional()
+  @IsArray()
+  @IsUUID(undefined, { each: true })
   filterBlocoId?: string[];
 
-  @decorate(
-    Field(() => [String], { nullable: true, description: "Filtro por ID do Campus do Bloco" }),
-  )
-  @decorate(IsOptional())
-  @decorate(IsArray())
-  @decorate(IsUUID(undefined, { each: true }))
+  @Field(() => [String], { nullable: true, description: "Filtro por ID do Campus do Bloco" })
+  @IsOptional()
+  @IsArray()
+  @IsUUID(undefined, { each: true })
   filterBlocoCampusId?: string[];
 }
 
@@ -118,11 +121,11 @@ export class AmbienteListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {
 // List Output
 // ============================================================================
 
-@decorate(ObjectType("AmbienteListResult"))
+@ObjectType("AmbienteListResult")
 export class AmbienteListOutputGraphQlDto {
-  @decorate(Field(() => PaginationMetaGraphQlDto))
+  @Field(() => PaginationMetaGraphQlDto)
   meta: PaginationMetaGraphQlDto;
 
-  @decorate(Field(() => [AmbienteFindOneOutputGraphQlDto]))
+  @Field(() => [AmbienteFindOneOutputGraphQlDto])
   data: AmbienteFindOneOutputGraphQlDto[];
 }

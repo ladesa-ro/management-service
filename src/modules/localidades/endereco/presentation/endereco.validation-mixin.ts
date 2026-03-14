@@ -1,26 +1,24 @@
-import { IsInt, IsOptional, IsString, Max, Min } from "class-validator";
-import { decorate } from "ts-mixer";
-
+import { IsInt, IsOptional, IsString, Max, Min } from "@/modules/@shared/presentation/shared";
 export class EnderecoFieldsMixin {
-  @decorate(IsString())
+  @IsString()
   cep: string;
 
-  @decorate(IsString())
+  @IsString()
   logradouro: string;
 
-  @decorate(IsInt())
-  @decorate(Min(0))
-  @decorate(Max(99999))
+  @IsInt()
+  @Min(0)
+  @Max(99999)
   numero: number;
 
-  @decorate(IsString())
+  @IsString()
   bairro: string;
 
-  @decorate(IsOptional())
-  @decorate(IsString())
+  @IsOptional()
+  @IsString()
   complemento?: string | null;
 
-  @decorate(IsOptional())
-  @decorate(IsString())
+  @IsOptional()
+  @IsString()
   pontoReferencia?: string | null;
 }

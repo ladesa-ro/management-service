@@ -1,8 +1,6 @@
-import { IsString, MinLength } from "class-validator";
-import { decorate } from "ts-mixer";
-
+import { IsString, MinLength } from "@/modules/@shared/presentation/shared";
 export class TurmaFieldsMixin {
-  @decorate(IsString())
-  @decorate(MinLength(1))
+  @IsString()
+  @MinLength(1)
   periodo: string;
 }

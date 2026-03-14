@@ -1,19 +1,27 @@
-import { ApiProperty, ApiPropertyOptional, ApiSchema, PartialType } from "@nestjs/swagger";
-import { Type } from "class-transformer";
-import { IsArray, IsOptional, IsUUID, ValidateNested } from "class-validator";
-import { decorate, Mixin } from "ts-mixer";
-import {
-  commonProperties,
-  RegisterModel,
-  referenceProperty,
-  simpleProperty,
-} from "@/modules/@shared/infrastructure/persistence/typeorm/metadata";
+import { Mixin } from "ts-mixer";
 import {
   EntityBaseRestDto,
   PaginatedFilterByIdRestDto,
   PaginationMetaRestDto,
-  TransformToArray,
 } from "@/modules/@shared/infrastructure/presentation/rest/dtos";
+import {
+  ApiProperty,
+  ApiPropertyOptional,
+  ApiSchema,
+  commonProperties,
+  PartialType,
+  RegisterModel,
+  referenceProperty,
+  simpleProperty,
+  TransformToArray,
+} from "@/modules/@shared/presentation/rest";
+import {
+  IsArray,
+  IsOptional,
+  IsUUID,
+  Type,
+  ValidateNested,
+} from "@/modules/@shared/presentation/shared";
 import {
   PerfilFindOneInputRestDto,
   PerfilFindOneOutputRestDto,
@@ -28,41 +36,35 @@ import { DiarioProfessorFieldsMixin } from "../diario-professor.validation-mixin
 // FindOne Output
 // ============================================================================
 
-@decorate(ApiSchema({ name: "DiarioProfessorFindOneOutputDto" }))
-@decorate(
-  RegisterModel({
-    name: "DiarioProfessorFindOneOutputDto",
-    properties: [
-      simpleProperty("id"),
-      simpleProperty("situacao"),
-      referenceProperty("perfil", "PerfilFindOneOutputDto"),
-      referenceProperty("diario", "DiarioFindOneOutputDto"),
-      ...commonProperties.dated,
-    ],
-  }),
-)
+@ApiSchema({ name: "DiarioProfessorFindOneOutputDto" })
+@RegisterModel({
+  name: "DiarioProfessorFindOneOutputDto",
+  properties: [
+    simpleProperty("id"),
+    simpleProperty("situacao"),
+    referenceProperty("perfil", "PerfilFindOneOutputDto"),
+    referenceProperty("diario", "DiarioFindOneOutputDto"),
+    ...commonProperties.dated,
+  ],
+})
 export class DiarioProfessorFindOneOutputRestDto extends Mixin(
   EntityBaseRestDto,
   DiarioProfessorFieldsMixin,
 ) {
-  @decorate(ApiProperty({ type: "boolean", description: "Situacao do vinculo" }))
+  @ApiProperty({ type: "boolean", description: "Situacao do vinculo" })
   declare situacao: boolean;
 
-  @decorate(
-    ApiProperty({
-      type: () => PerfilFindOneOutputRestDto,
-      description: "Perfil do usuario ao campus",
-    }),
-  )
-  @decorate(ValidateNested())
-  @decorate(Type(() => PerfilFindOneOutputRestDto))
+  @ApiProperty({
+    type: () => PerfilFindOneOutputRestDto,
+    description: "Perfil do usuario ao campus",
+  })
+  @ValidateNested()
+  @Type(() => PerfilFindOneOutputRestDto)
   perfil: PerfilFindOneOutputRestDto;
 
-  @decorate(
-    ApiProperty({ type: () => DiarioFindOneOutputRestDto, description: "Diario vinculado" }),
-  )
-  @decorate(ValidateNested())
-  @decorate(Type(() => DiarioFindOneOutputRestDto))
+  @ApiProperty({ type: () => DiarioFindOneOutputRestDto, description: "Diario vinculado" })
+  @ValidateNested()
+  @Type(() => DiarioFindOneOutputRestDto)
   diario: DiarioFindOneOutputRestDto;
 }
 
@@ -70,59 +72,51 @@ export class DiarioProfessorFindOneOutputRestDto extends Mixin(
 // List Input/Output
 // ============================================================================
 
-@decorate(ApiSchema({ name: "DiarioProfessorListInputDto" }))
+@ApiSchema({ name: "DiarioProfessorListInputDto" })
 export class DiarioProfessorListInputRestDto extends PaginatedFilterByIdRestDto {
-  @decorate(
-    ApiPropertyOptional({
-      type: "string",
-      isArray: true,
-      description: "Filtro por ID do Usuario do Perfil",
-    }),
-  )
-  @decorate(TransformToArray())
-  @decorate(IsOptional())
-  @decorate(IsArray())
-  @decorate(IsUUID(undefined, { each: true }))
+  @ApiPropertyOptional({
+    type: "string",
+    isArray: true,
+    description: "Filtro por ID do Usuario do Perfil",
+  })
+  @TransformToArray()
+  @IsOptional()
+  @IsArray()
+  @IsUUID(undefined, { each: true })
   "filter.perfil.usuario.id"?: string[];
 
-  @decorate(
-    ApiPropertyOptional({
-      type: "string",
-      isArray: true,
-      description: "Filtro por ID do Perfil",
-    }),
-  )
-  @decorate(TransformToArray())
-  @decorate(IsOptional())
-  @decorate(IsArray())
-  @decorate(IsUUID(undefined, { each: true }))
+  @ApiPropertyOptional({
+    type: "string",
+    isArray: true,
+    description: "Filtro por ID do Perfil",
+  })
+  @TransformToArray()
+  @IsOptional()
+  @IsArray()
+  @IsUUID(undefined, { each: true })
   "filter.perfil.id"?: string[];
 
-  @decorate(
-    ApiPropertyOptional({
-      type: "string",
-      isArray: true,
-      description: "Filtro por ID do Diario",
-    }),
-  )
-  @decorate(TransformToArray())
-  @decorate(IsOptional())
-  @decorate(IsArray())
-  @decorate(IsUUID(undefined, { each: true }))
+  @ApiPropertyOptional({
+    type: "string",
+    isArray: true,
+    description: "Filtro por ID do Diario",
+  })
+  @TransformToArray()
+  @IsOptional()
+  @IsArray()
+  @IsUUID(undefined, { each: true })
   "filter.diario.id"?: string[];
 }
 
-@decorate(ApiSchema({ name: "DiarioProfessorListOutputDto" }))
+@ApiSchema({ name: "DiarioProfessorListOutputDto" })
 export class DiarioProfessorListOutputRestDto {
-  @decorate(ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" }))
+  @ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" })
   meta: PaginationMetaRestDto;
 
-  @decorate(
-    ApiProperty({
-      type: () => [DiarioProfessorFindOneOutputRestDto],
-      description: "Resultados da busca",
-    }),
-  )
+  @ApiProperty({
+    type: () => [DiarioProfessorFindOneOutputRestDto],
+    description: "Resultados da busca",
+  })
   data: DiarioProfessorFindOneOutputRestDto[];
 }
 
@@ -130,28 +124,26 @@ export class DiarioProfessorListOutputRestDto {
 // Create/Update Input
 // ============================================================================
 
-@decorate(ApiSchema({ name: "DiarioProfessorCreateInputDto" }))
+@ApiSchema({ name: "DiarioProfessorCreateInputDto" })
 export class DiarioProfessorCreateInputRestDto extends DiarioProfessorFieldsMixin {
-  @decorate(ApiProperty({ type: "boolean", description: "Situacao do vinculo" }))
+  @ApiProperty({ type: "boolean", description: "Situacao do vinculo" })
   declare situacao: boolean;
 
-  @decorate(
-    ApiProperty({
-      type: () => PerfilFindOneInputRestDto,
-      description: "Perfil do usuario ao campus",
-    }),
-  )
-  @decorate(ValidateNested())
-  @decorate(Type(() => PerfilFindOneInputRestDto))
+  @ApiProperty({
+    type: () => PerfilFindOneInputRestDto,
+    description: "Perfil do usuario ao campus",
+  })
+  @ValidateNested()
+  @Type(() => PerfilFindOneInputRestDto)
   perfil: PerfilFindOneInputRestDto;
 
-  @decorate(ApiProperty({ type: () => DiarioFindOneInputRestDto, description: "Diario vinculado" }))
-  @decorate(ValidateNested())
-  @decorate(Type(() => DiarioFindOneInputRestDto))
+  @ApiProperty({ type: () => DiarioFindOneInputRestDto, description: "Diario vinculado" })
+  @ValidateNested()
+  @Type(() => DiarioFindOneInputRestDto)
   diario: DiarioFindOneInputRestDto;
 }
 
-@decorate(ApiSchema({ name: "DiarioProfessorUpdateInputDto" }))
+@ApiSchema({ name: "DiarioProfessorUpdateInputDto" })
 export class DiarioProfessorUpdateInputRestDto extends PartialType(
   DiarioProfessorCreateInputRestDto,
 ) {}
@@ -160,15 +152,13 @@ export class DiarioProfessorUpdateInputRestDto extends PartialType(
 // FindOne Input (for path params)
 // ============================================================================
 
-@decorate(ApiSchema({ name: "DiarioProfessorFindOneInputDto" }))
+@ApiSchema({ name: "DiarioProfessorFindOneInputDto" })
 export class DiarioProfessorFindOneInputRestDto {
-  @decorate(
-    ApiProperty({
-      type: "string",
-      description: "Identificador do registro (uuid)",
-      format: "uuid",
-    }),
-  )
-  @decorate(IsUUID())
+  @ApiProperty({
+    type: "string",
+    description: "Identificador do registro (uuid)",
+    format: "uuid",
+  })
+  @IsUUID()
   id: string;
 }

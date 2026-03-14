@@ -1,18 +1,16 @@
-import { IsEmail, IsOptional, IsString, MinLength } from "class-validator";
-import { decorate } from "ts-mixer";
-
+import { IsEmail, IsOptional, IsString, MinLength } from "@/modules/@shared/presentation/shared";
 export class UsuarioFieldsMixin {
-  @decorate(IsOptional())
-  @decorate(IsString())
-  @decorate(MinLength(1))
+  @IsOptional()
+  @IsString()
+  @MinLength(1)
   nome?: string | null;
 
-  @decorate(IsOptional())
-  @decorate(IsString())
-  @decorate(MinLength(1))
+  @IsOptional()
+  @IsString()
+  @MinLength(1)
   matricula?: string | null;
 
-  @decorate(IsOptional())
-  @decorate(IsEmail())
+  @IsOptional()
+  @IsEmail()
   email?: string | null;
 }

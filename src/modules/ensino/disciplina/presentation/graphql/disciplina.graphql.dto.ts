@@ -1,11 +1,23 @@
-import { ArgsType, Field, InputType, Int, ObjectType } from "@nestjs/graphql";
-import { IsInt, IsOptional, IsString, Min, MinLength, ValidateNested } from "class-validator";
-import { decorate } from "ts-mixer";
 import {
   EntityBaseGraphQlDto,
   PaginatedFilterByIdGraphQlDto,
   PaginationMetaGraphQlDto,
 } from "@/modules/@shared/infrastructure/graphql/dtos";
+import {
+  ArgsType,
+  Field,
+  InputType,
+  Int,
+  ObjectType,
+} from "@/modules/@shared/presentation/graphql";
+import {
+  IsInt,
+  IsOptional,
+  IsString,
+  Min,
+  MinLength,
+  ValidateNested,
+} from "@/modules/@shared/presentation/shared";
 import { ImagemFindOneOutputGraphQlDto } from "@/modules/armazenamento/imagem-arquivo/presentation/graphql/imagem-arquivo.graphql.dto";
 import { DisciplinaFieldsMixin } from "../disciplina.validation-mixin";
 
@@ -13,12 +25,12 @@ import { DisciplinaFieldsMixin } from "../disciplina.validation-mixin";
 // FindOne Output
 // ============================================================================
 
-@decorate(ObjectType("DisciplinaFindOneOutputDto"))
+@ObjectType("DisciplinaFindOneOutputDto")
 export class DisciplinaFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
-  @decorate(Field(() => String)) nome: string;
-  @decorate(Field(() => String)) nomeAbreviado: string;
-  @decorate(Field(() => Int)) cargaHoraria: number;
-  @decorate(Field(() => ImagemFindOneOutputGraphQlDto, { nullable: true }))
+  @Field(() => String) nome: string;
+  @Field(() => String) nomeAbreviado: string;
+  @Field(() => Int) cargaHoraria: number;
+  @Field(() => ImagemFindOneOutputGraphQlDto, { nullable: true })
   imagemCapa: ImagemFindOneOutputGraphQlDto | null;
 }
 
@@ -26,19 +38,19 @@ export class DisciplinaFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
 // Create Input
 // ============================================================================
 
-@decorate(InputType("DisciplinaImagemCapaRefInputDto"))
+@InputType("DisciplinaImagemCapaRefInputDto")
 export class DisciplinaImagemCapaRefInputGraphQlDto {
-  @decorate(Field(() => String)) @decorate(IsString()) id: string;
+  @Field(() => String) @IsString() id: string;
 }
 
-@decorate(InputType("DisciplinaCreateInputDto"))
+@InputType("DisciplinaCreateInputDto")
 export class DisciplinaCreateInputGraphQlDto extends DisciplinaFieldsMixin {
-  @decorate(Field(() => String)) declare nome: string;
-  @decorate(Field(() => String)) declare nomeAbreviado: string;
-  @decorate(Field(() => Int)) declare cargaHoraria: number;
-  @decorate(Field(() => DisciplinaImagemCapaRefInputGraphQlDto, { nullable: true }))
-  @decorate(IsOptional())
-  @decorate(ValidateNested())
+  @Field(() => String) declare nome: string;
+  @Field(() => String) declare nomeAbreviado: string;
+  @Field(() => Int) declare cargaHoraria: number;
+  @Field(() => DisciplinaImagemCapaRefInputGraphQlDto, { nullable: true })
+  @IsOptional()
+  @ValidateNested()
   imagemCapa?: DisciplinaImagemCapaRefInputGraphQlDto | null;
 }
 
@@ -46,26 +58,26 @@ export class DisciplinaCreateInputGraphQlDto extends DisciplinaFieldsMixin {
 // Update Input
 // ============================================================================
 
-@decorate(InputType("DisciplinaUpdateInputDto"))
+@InputType("DisciplinaUpdateInputDto")
 export class DisciplinaUpdateInputGraphQlDto {
-  @decorate(Field(() => String, { nullable: true }))
-  @decorate(IsOptional())
-  @decorate(IsString())
-  @decorate(MinLength(1))
+  @Field(() => String, { nullable: true })
+  @IsOptional()
+  @IsString()
+  @MinLength(1)
   nome?: string;
-  @decorate(Field(() => String, { nullable: true }))
-  @decorate(IsOptional())
-  @decorate(IsString())
-  @decorate(MinLength(1))
+  @Field(() => String, { nullable: true })
+  @IsOptional()
+  @IsString()
+  @MinLength(1)
   nomeAbreviado?: string;
-  @decorate(Field(() => Int, { nullable: true }))
-  @decorate(IsOptional())
-  @decorate(IsInt())
-  @decorate(Min(1))
+  @Field(() => Int, { nullable: true })
+  @IsOptional()
+  @IsInt()
+  @Min(1)
   cargaHoraria?: number;
-  @decorate(Field(() => DisciplinaImagemCapaRefInputGraphQlDto, { nullable: true }))
-  @decorate(IsOptional())
-  @decorate(ValidateNested())
+  @Field(() => DisciplinaImagemCapaRefInputGraphQlDto, { nullable: true })
+  @IsOptional()
+  @ValidateNested()
   imagemCapa?: DisciplinaImagemCapaRefInputGraphQlDto | null;
 }
 
@@ -73,18 +85,18 @@ export class DisciplinaUpdateInputGraphQlDto {
 // List Input
 // ============================================================================
 
-@decorate(ArgsType())
+@ArgsType()
 export class DisciplinaListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {}
 
 // ============================================================================
 // List Output
 // ============================================================================
 
-@decorate(ObjectType("DisciplinaListResult"))
+@ObjectType("DisciplinaListResult")
 export class DisciplinaListOutputGraphQlDto {
-  @decorate(Field(() => PaginationMetaGraphQlDto))
+  @Field(() => PaginationMetaGraphQlDto)
   meta: PaginationMetaGraphQlDto;
 
-  @decorate(Field(() => [DisciplinaFindOneOutputGraphQlDto]))
+  @Field(() => [DisciplinaFindOneOutputGraphQlDto])
   data: DisciplinaFindOneOutputGraphQlDto[];
 }

@@ -1,19 +1,27 @@
-import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@nestjs/swagger";
-import { Type } from "class-transformer";
-import { IsArray, IsBoolean, IsOptional, IsString, IsUUID, ValidateNested } from "class-validator";
-import { decorate } from "ts-mixer";
-import {
-  commonProperties,
-  RegisterModel,
-  referenceProperty,
-  simpleProperty,
-} from "@/modules/@shared/infrastructure/persistence/typeorm/metadata";
 import {
   EntityBaseRestDto,
   PaginatedFilterByIdRestDto,
   PaginationMetaRestDto,
-  TransformToArray,
 } from "@/modules/@shared/infrastructure/presentation/rest/dtos";
+import {
+  ApiProperty,
+  ApiPropertyOptional,
+  ApiSchema,
+  commonProperties,
+  RegisterModel,
+  referenceProperty,
+  simpleProperty,
+  TransformToArray,
+} from "@/modules/@shared/presentation/rest";
+import {
+  IsArray,
+  IsBoolean,
+  IsOptional,
+  IsString,
+  IsUUID,
+  Type,
+  ValidateNested,
+} from "@/modules/@shared/presentation/shared";
 import {
   UsuarioFindOneInputRestDto,
   UsuarioFindOneOutputRestDto,
@@ -27,47 +35,41 @@ import {
 // FindOne Output
 // ============================================================================
 
-@decorate(ApiSchema({ name: "PerfilFindOneOutputDto" }))
-@decorate(
-  RegisterModel({
-    name: "PerfilFindOneOutputDto",
-    properties: [
-      simpleProperty("id"),
-      simpleProperty("ativo"),
-      simpleProperty("cargo"),
-      referenceProperty("campus", "CampusFindOneOutputDto"),
-      referenceProperty("usuario", "UsuarioFindOneOutputDto"),
-      ...commonProperties.dated,
-    ],
-  }),
-)
+@ApiSchema({ name: "PerfilFindOneOutputDto" })
+@RegisterModel({
+  name: "PerfilFindOneOutputDto",
+  properties: [
+    simpleProperty("id"),
+    simpleProperty("ativo"),
+    simpleProperty("cargo"),
+    referenceProperty("campus", "CampusFindOneOutputDto"),
+    referenceProperty("usuario", "UsuarioFindOneOutputDto"),
+    ...commonProperties.dated,
+  ],
+})
 export class PerfilFindOneOutputRestDto extends EntityBaseRestDto {
-  @decorate(ApiProperty({ type: "boolean", description: "Indica se o vinculo esta ativo" }))
-  @decorate(IsBoolean())
+  @ApiProperty({ type: "boolean", description: "Indica se o vinculo esta ativo" })
+  @IsBoolean()
   ativo: boolean;
 
-  @decorate(ApiProperty({ type: "string", description: "Cargo do usuario no vinculo" }))
-  @decorate(IsString())
+  @ApiProperty({ type: "string", description: "Cargo do usuario no vinculo" })
+  @IsString()
   cargo: string;
 
-  @decorate(
-    ApiProperty({
-      type: () => CampusFindOneOutputRestDto,
-      description: "Campus associado ao vinculo",
-    }),
-  )
-  @decorate(ValidateNested())
-  @decorate(Type(() => CampusFindOneOutputRestDto))
+  @ApiProperty({
+    type: () => CampusFindOneOutputRestDto,
+    description: "Campus associado ao vinculo",
+  })
+  @ValidateNested()
+  @Type(() => CampusFindOneOutputRestDto)
   campus: CampusFindOneOutputRestDto;
 
-  @decorate(
-    ApiProperty({
-      type: () => UsuarioFindOneOutputRestDto,
-      description: "Usuario associado ao vinculo",
-    }),
-  )
-  @decorate(ValidateNested())
-  @decorate(Type(() => UsuarioFindOneOutputRestDto))
+  @ApiProperty({
+    type: () => UsuarioFindOneOutputRestDto,
+    description: "Usuario associado ao vinculo",
+  })
+  @ValidateNested()
+  @Type(() => UsuarioFindOneOutputRestDto)
   usuario: UsuarioFindOneOutputRestDto;
 }
 
@@ -75,69 +77,59 @@ export class PerfilFindOneOutputRestDto extends EntityBaseRestDto {
 // List Input/Output
 // ============================================================================
 
-@decorate(ApiSchema({ name: "PerfilListInputDto" }))
+@ApiSchema({ name: "PerfilListInputDto" })
 export class PerfilListInputRestDto extends PaginatedFilterByIdRestDto {
-  @decorate(
-    ApiPropertyOptional({
-      type: "string",
-      isArray: true,
-      description: "Filtro por ativo",
-    }),
-  )
-  @decorate(TransformToArray())
-  @decorate(IsOptional())
-  @decorate(IsArray())
-  @decorate(IsString({ each: true }))
+  @ApiPropertyOptional({
+    type: "string",
+    isArray: true,
+    description: "Filtro por ativo",
+  })
+  @TransformToArray()
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
   "filter.ativo"?: string[];
 
-  @decorate(
-    ApiPropertyOptional({
-      type: "string",
-      isArray: true,
-      description: "Filtro por cargo",
-    }),
-  )
-  @decorate(TransformToArray())
-  @decorate(IsOptional())
-  @decorate(IsArray())
-  @decorate(IsString({ each: true }))
+  @ApiPropertyOptional({
+    type: "string",
+    isArray: true,
+    description: "Filtro por cargo",
+  })
+  @TransformToArray()
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
   "filter.cargo"?: string[];
 
-  @decorate(
-    ApiPropertyOptional({
-      type: "string",
-      isArray: true,
-      description: "Filtro por ID do Campus",
-    }),
-  )
-  @decorate(TransformToArray())
-  @decorate(IsOptional())
-  @decorate(IsArray())
-  @decorate(IsUUID(undefined, { each: true }))
+  @ApiPropertyOptional({
+    type: "string",
+    isArray: true,
+    description: "Filtro por ID do Campus",
+  })
+  @TransformToArray()
+  @IsOptional()
+  @IsArray()
+  @IsUUID(undefined, { each: true })
   "filter.campus.id"?: string[];
 
-  @decorate(
-    ApiPropertyOptional({
-      type: "string",
-      isArray: true,
-      description: "Filtro por ID do Usuario",
-    }),
-  )
-  @decorate(TransformToArray())
-  @decorate(IsOptional())
-  @decorate(IsArray())
-  @decorate(IsUUID(undefined, { each: true }))
+  @ApiPropertyOptional({
+    type: "string",
+    isArray: true,
+    description: "Filtro por ID do Usuario",
+  })
+  @TransformToArray()
+  @IsOptional()
+  @IsArray()
+  @IsUUID(undefined, { each: true })
   "filter.usuario.id"?: string[];
 }
 
-@decorate(ApiSchema({ name: "PerfilListOutputDto" }))
+@ApiSchema({ name: "PerfilListOutputDto" })
 export class PerfilListOutputRestDto {
-  @decorate(ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" }))
+  @ApiProperty({ type: () => PaginationMetaRestDto, description: "Metadados da busca" })
   meta: PaginationMetaRestDto;
 
-  @decorate(
-    ApiProperty({ type: () => [PerfilFindOneOutputRestDto], description: "Resultados da busca" }),
-  )
+  @ApiProperty({ type: () => [PerfilFindOneOutputRestDto], description: "Resultados da busca" })
   data: PerfilFindOneOutputRestDto[];
 }
 
@@ -145,38 +137,32 @@ export class PerfilListOutputRestDto {
 // SetVinculos Input
 // ============================================================================
 
-@decorate(ApiSchema({ name: "PerfilSetVinculosInputDto" }))
+@ApiSchema({ name: "PerfilSetVinculosInputDto" })
 export class PerfilSetVinculosInputRestDto {
-  @decorate(
-    ApiProperty({
-      type: "string",
-      isArray: true,
-      description: "Lista de cargos que o usuario tera no campus",
-      example: ["professor", "coordenador"],
-    }),
-  )
-  @decorate(IsArray())
-  @decorate(IsString({ each: true }))
+  @ApiProperty({
+    type: "string",
+    isArray: true,
+    description: "Lista de cargos que o usuario tera no campus",
+    example: ["professor", "coordenador"],
+  })
+  @IsArray()
+  @IsString({ each: true })
   cargos: string[];
 
-  @decorate(
-    ApiProperty({
-      type: () => CampusFindOneInputRestDto,
-      description: "Campus onde os vinculos serao definidos",
-    }),
-  )
-  @decorate(ValidateNested())
-  @decorate(Type(() => CampusFindOneInputRestDto))
+  @ApiProperty({
+    type: () => CampusFindOneInputRestDto,
+    description: "Campus onde os vinculos serao definidos",
+  })
+  @ValidateNested()
+  @Type(() => CampusFindOneInputRestDto)
   campus: CampusFindOneInputRestDto;
 
-  @decorate(
-    ApiProperty({
-      type: () => UsuarioFindOneInputRestDto,
-      description: "Usuario que recebera os vinculos",
-    }),
-  )
-  @decorate(ValidateNested())
-  @decorate(Type(() => UsuarioFindOneInputRestDto))
+  @ApiProperty({
+    type: () => UsuarioFindOneInputRestDto,
+    description: "Usuario que recebera os vinculos",
+  })
+  @ValidateNested()
+  @Type(() => UsuarioFindOneInputRestDto)
   usuario: UsuarioFindOneInputRestDto;
 }
 
@@ -184,15 +170,13 @@ export class PerfilSetVinculosInputRestDto {
 // FindOne Input (for path params)
 // ============================================================================
 
-@decorate(ApiSchema({ name: "PerfilFindOneInputDto" }))
+@ApiSchema({ name: "PerfilFindOneInputDto" })
 export class PerfilFindOneInputRestDto {
-  @decorate(
-    ApiProperty({
-      type: "string",
-      description: "Identificador do registro (uuid)",
-      format: "uuid",
-    }),
-  )
-  @decorate(IsUUID())
+  @ApiProperty({
+    type: "string",
+    description: "Identificador do registro (uuid)",
+    format: "uuid",
+  })
+  @IsUUID()
   id: string;
 }

@@ -1,11 +1,16 @@
-import { ArgsType, Field, InputType, ObjectType } from "@nestjs/graphql";
-import { IsArray, IsOptional, IsString, IsUUID, ValidateNested } from "class-validator";
-import { decorate } from "ts-mixer";
 import {
   EntityBaseGraphQlDto,
   PaginatedFilterByIdGraphQlDto,
   PaginationMetaGraphQlDto,
 } from "@/modules/@shared/infrastructure/graphql/dtos";
+import { ArgsType, Field, InputType, ObjectType } from "@/modules/@shared/presentation/graphql";
+import {
+  IsArray,
+  IsOptional,
+  IsString,
+  IsUUID,
+  ValidateNested,
+} from "@/modules/@shared/presentation/shared";
 import { NivelFormacaoFindOneOutputGraphQlDto } from "@/modules/ensino/nivel-formacao/presentation/graphql/nivel-formacao.graphql.dto";
 import { OfertaFormacaoFindOneOutputGraphQlDto } from "@/modules/ensino/oferta-formacao/presentation/graphql/oferta-formacao.graphql.dto";
 
@@ -13,25 +18,25 @@ import { OfertaFormacaoFindOneOutputGraphQlDto } from "@/modules/ensino/oferta-f
 // Ref Input DTOs for cross-module references
 // ============================================================================
 
-@decorate(InputType("OfertaFormacaoNivelFormacaoOfertaFormacaoRefInputDto"))
+@InputType("OfertaFormacaoNivelFormacaoOfertaFormacaoRefInputDto")
 export class OfertaFormacaoNivelFormacaoOfertaFormacaoRefInputGraphQlDto {
-  @decorate(Field(() => String)) @decorate(IsString()) id: string;
+  @Field(() => String) @IsString() id: string;
 }
 
-@decorate(InputType("OfertaFormacaoNivelFormacaoNivelFormacaoRefInputDto"))
+@InputType("OfertaFormacaoNivelFormacaoNivelFormacaoRefInputDto")
 export class OfertaFormacaoNivelFormacaoNivelFormacaoRefInputGraphQlDto {
-  @decorate(Field(() => String)) @decorate(IsString()) id: string;
+  @Field(() => String) @IsString() id: string;
 }
 
 // ============================================================================
 // FindOne Output
 // ============================================================================
 
-@decorate(ObjectType("OfertaFormacaoNivelFormacaoFindOneOutputDto"))
+@ObjectType("OfertaFormacaoNivelFormacaoFindOneOutputDto")
 export class OfertaFormacaoNivelFormacaoFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
-  @decorate(Field(() => NivelFormacaoFindOneOutputGraphQlDto))
+  @Field(() => NivelFormacaoFindOneOutputGraphQlDto)
   nivelFormacao: NivelFormacaoFindOneOutputGraphQlDto;
-  @decorate(Field(() => OfertaFormacaoFindOneOutputGraphQlDto))
+  @Field(() => OfertaFormacaoFindOneOutputGraphQlDto)
   ofertaFormacao: OfertaFormacaoFindOneOutputGraphQlDto;
 }
 
@@ -39,13 +44,13 @@ export class OfertaFormacaoNivelFormacaoFindOneOutputGraphQlDto extends EntityBa
 // Create Input
 // ============================================================================
 
-@decorate(InputType("OfertaFormacaoNivelFormacaoCreateInputDto"))
+@InputType("OfertaFormacaoNivelFormacaoCreateInputDto")
 export class OfertaFormacaoNivelFormacaoCreateInputGraphQlDto {
-  @decorate(Field(() => OfertaFormacaoNivelFormacaoOfertaFormacaoRefInputGraphQlDto))
-  @decorate(ValidateNested())
+  @Field(() => OfertaFormacaoNivelFormacaoOfertaFormacaoRefInputGraphQlDto)
+  @ValidateNested()
   ofertaFormacao: OfertaFormacaoNivelFormacaoOfertaFormacaoRefInputGraphQlDto;
-  @decorate(Field(() => OfertaFormacaoNivelFormacaoNivelFormacaoRefInputGraphQlDto))
-  @decorate(ValidateNested())
+  @Field(() => OfertaFormacaoNivelFormacaoNivelFormacaoRefInputGraphQlDto)
+  @ValidateNested()
   nivelFormacao: OfertaFormacaoNivelFormacaoNivelFormacaoRefInputGraphQlDto;
 }
 
@@ -53,19 +58,15 @@ export class OfertaFormacaoNivelFormacaoCreateInputGraphQlDto {
 // Update Input
 // ============================================================================
 
-@decorate(InputType("OfertaFormacaoNivelFormacaoUpdateInputDto"))
+@InputType("OfertaFormacaoNivelFormacaoUpdateInputDto")
 export class OfertaFormacaoNivelFormacaoUpdateInputGraphQlDto {
-  @decorate(
-    Field(() => OfertaFormacaoNivelFormacaoOfertaFormacaoRefInputGraphQlDto, { nullable: true }),
-  )
-  @decorate(IsOptional())
-  @decorate(ValidateNested())
+  @Field(() => OfertaFormacaoNivelFormacaoOfertaFormacaoRefInputGraphQlDto, { nullable: true })
+  @IsOptional()
+  @ValidateNested()
   ofertaFormacao?: OfertaFormacaoNivelFormacaoOfertaFormacaoRefInputGraphQlDto;
-  @decorate(
-    Field(() => OfertaFormacaoNivelFormacaoNivelFormacaoRefInputGraphQlDto, { nullable: true }),
-  )
-  @decorate(IsOptional())
-  @decorate(ValidateNested())
+  @Field(() => OfertaFormacaoNivelFormacaoNivelFormacaoRefInputGraphQlDto, { nullable: true })
+  @IsOptional()
+  @ValidateNested()
   nivelFormacao?: OfertaFormacaoNivelFormacaoNivelFormacaoRefInputGraphQlDto;
 }
 
@@ -73,22 +74,18 @@ export class OfertaFormacaoNivelFormacaoUpdateInputGraphQlDto {
 // List Input (GraphQL-compatible - no dots in field names)
 // ============================================================================
 
-@decorate(ArgsType())
+@ArgsType()
 export class OfertaFormacaoNivelFormacaoListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {
-  @decorate(
-    Field(() => [String], { nullable: true, description: "Filtro por ID do Nivel de Formacao" }),
-  )
-  @decorate(IsOptional())
-  @decorate(IsArray())
-  @decorate(IsUUID(undefined, { each: true }))
+  @Field(() => [String], { nullable: true, description: "Filtro por ID do Nivel de Formacao" })
+  @IsOptional()
+  @IsArray()
+  @IsUUID(undefined, { each: true })
   filterNivelFormacaoId?: string[];
 
-  @decorate(
-    Field(() => [String], { nullable: true, description: "Filtro por ID da Oferta de Formacao" }),
-  )
-  @decorate(IsOptional())
-  @decorate(IsArray())
-  @decorate(IsUUID(undefined, { each: true }))
+  @Field(() => [String], { nullable: true, description: "Filtro por ID da Oferta de Formacao" })
+  @IsOptional()
+  @IsArray()
+  @IsUUID(undefined, { each: true })
   filterOfertaFormacaoId?: string[];
 }
 
@@ -96,11 +93,11 @@ export class OfertaFormacaoNivelFormacaoListInputGraphQlDto extends PaginatedFil
 // List Output
 // ============================================================================
 
-@decorate(ObjectType("OfertaFormacaoNivelFormacaoListResult"))
+@ObjectType("OfertaFormacaoNivelFormacaoListResult")
 export class OfertaFormacaoNivelFormacaoListOutputGraphQlDto {
-  @decorate(Field(() => PaginationMetaGraphQlDto))
+  @Field(() => PaginationMetaGraphQlDto)
   meta: PaginationMetaGraphQlDto;
 
-  @decorate(Field(() => [OfertaFormacaoNivelFormacaoFindOneOutputGraphQlDto]))
+  @Field(() => [OfertaFormacaoNivelFormacaoFindOneOutputGraphQlDto])
   data: OfertaFormacaoNivelFormacaoFindOneOutputGraphQlDto[];
 }
