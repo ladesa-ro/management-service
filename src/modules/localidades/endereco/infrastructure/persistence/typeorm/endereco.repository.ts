@@ -8,4 +8,4 @@ export const createEnderecoRepository = createRepositoryFactory((ds) => {
   return ds.getRepository(EnderecoEntity).extend({});
 });
 
-export type IEnderecoRepository = IRepositoryFactoryOutput<typeof createEnderecoRepository>;
+export type EnderecoTypeOrmRepository = IRepositoryFactoryOutput<typeof createEnderecoRepository>;

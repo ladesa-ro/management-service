@@ -7,11 +7,11 @@ import {
 import { PerfilRestMapper } from "@/modules/acesso/perfil/presentation/rest";
 import { DiarioRestMapper } from "@/modules/ensino/diario/presentation/rest";
 import {
-  DiarioProfessorCreateInputDto,
-  DiarioProfessorFindOneInputDto,
-  DiarioProfessorFindOneOutputDto,
-  DiarioProfessorListInputDto,
-  DiarioProfessorUpdateInputDto,
+  DiarioProfessorCreateCommand,
+  DiarioProfessorFindOneQuery,
+  DiarioProfessorFindOneQueryResult,
+  DiarioProfessorListQuery,
+  DiarioProfessorUpdateCommand,
 } from "@/modules/ensino/diario-professor";
 import {
   DiarioProfessorCreateInputRestDto,
@@ -26,17 +26,17 @@ export class DiarioProfessorRestMapper {
   // Input: Server DTO -> Core DTO
   // ============================================================================
 
-  static toFindOneInput = createFindOneInputMapper(DiarioProfessorFindOneInputDto);
+  static toFindOneInput = createFindOneInputMapper(DiarioProfessorFindOneQuery);
 
-  static toListInput = createListInputMapper(DiarioProfessorListInputDto, [
+  static toListInput = createListInputMapper(DiarioProfessorListQuery, [
     "filter.id",
     "filter.diario.id",
     "filter.perfil.id",
     "filter.perfil.usuario.id",
   ]);
 
-  static toCreateInput(dto: DiarioProfessorCreateInputRestDto): DiarioProfessorCreateInputDto {
-    const input = new DiarioProfessorCreateInputDto();
+  static toCreateInput(dto: DiarioProfessorCreateInputRestDto): DiarioProfessorCreateCommand {
+    const input = new DiarioProfessorCreateCommand();
     input.situacao = dto.situacao;
     input.diario = { id: dto.diario.id };
     input.perfil = { id: dto.perfil.id };
@@ -46,9 +46,9 @@ export class DiarioProfessorRestMapper {
   static toUpdateInput(
     params: DiarioProfessorFindOneInputRestDto,
     dto: DiarioProfessorUpdateInputRestDto,
-  ): DiarioProfessorFindOneInputDto & DiarioProfessorUpdateInputDto {
-    const input = new DiarioProfessorFindOneInputDto() as DiarioProfessorFindOneInputDto &
-      DiarioProfessorUpdateInputDto;
+  ): DiarioProfessorFindOneQuery & DiarioProfessorUpdateCommand {
+    const input = new DiarioProfessorFindOneQuery() as DiarioProfessorFindOneQuery &
+      DiarioProfessorUpdateCommand;
     input.id = params.id;
     if (dto.situacao !== undefined) {
       input.situacao = dto.situacao;
@@ -67,7 +67,7 @@ export class DiarioProfessorRestMapper {
   // ============================================================================
 
   static toFindOneOutputDto(
-    output: DiarioProfessorFindOneOutputDto,
+    output: DiarioProfessorFindOneQueryResult,
   ): DiarioProfessorFindOneOutputRestDto {
     const dto = new DiarioProfessorFindOneOutputRestDto();
     dto.id = output.id;

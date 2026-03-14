@@ -59,7 +59,9 @@ export class AlterExistingTables1773000000005 implements MigrationInterface {
     await queryRunner.query(`ALTER TABLE base_cidade ALTER COLUMN id_estado_fk SET NOT NULL`);
 
     // endereco: alter numero to text, drop defaults from date_created/date_updated
-    await queryRunner.query(`ALTER TABLE endereco ALTER COLUMN numero TYPE text USING numero::text`);
+    await queryRunner.query(
+      `ALTER TABLE endereco ALTER COLUMN numero TYPE text USING numero::text`,
+    );
     await queryRunner.query(`ALTER TABLE endereco ALTER COLUMN date_created DROP DEFAULT`);
     await queryRunner.query(`ALTER TABLE endereco ALTER COLUMN date_updated DROP DEFAULT`);
   }
@@ -68,7 +70,9 @@ export class AlterExistingTables1773000000005 implements MigrationInterface {
     // endereco: restore defaults and type
     await queryRunner.query(`ALTER TABLE endereco ALTER COLUMN date_updated SET DEFAULT NOW()`);
     await queryRunner.query(`ALTER TABLE endereco ALTER COLUMN date_created SET DEFAULT NOW()`);
-    await queryRunner.query(`ALTER TABLE endereco ALTER COLUMN numero TYPE integer USING numero::integer`);
+    await queryRunner.query(
+      `ALTER TABLE endereco ALTER COLUMN numero TYPE integer USING numero::integer`,
+    );
 
     // base_cidade: drop NOT NULL constraint
     await queryRunner.query(`ALTER TABLE base_cidade ALTER COLUMN id_estado_fk DROP NOT NULL`);

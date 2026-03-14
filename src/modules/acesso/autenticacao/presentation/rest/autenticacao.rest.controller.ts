@@ -7,11 +7,16 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
-import { Public } from "@/modules/@seguranca/autenticacao";
+import { DeclareDependency, IContainer } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
-import { AutenticacaoService } from "@/modules/acesso/autenticacao";
-import { UsuarioService } from "@/modules/acesso/usuario";
+import { IAutenticacaoDefinirSenhaCommandHandler } from "@/modules/acesso/autenticacao/domain/commands/autenticacao-definir-senha.command.handler.interface";
+import { IAutenticacaoLoginCommandHandler } from "@/modules/acesso/autenticacao/domain/commands/autenticacao-login.command.handler.interface";
+import { IAutenticacaoRecoverPasswordCommandHandler } from "@/modules/acesso/autenticacao/domain/commands/autenticacao-recover-password.command.handler.interface";
+import { IAutenticacaoRefreshCommandHandler } from "@/modules/acesso/autenticacao/domain/commands/autenticacao-refresh.command.handler.interface";
+import { IAutenticacaoWhoAmIQueryHandler } from "@/modules/acesso/autenticacao/domain/queries/autenticacao-who-am-i.query.handler.interface";
+import { IUsuarioEnsinoQueryHandler } from "@/modules/acesso/usuario/domain/queries/usuario-ensino.query.handler.interface";
 import { UsuarioEnsinoOutputRestDto } from "@/modules/acesso/usuario/presentation/rest";
+import { Public } from "@/server/nest/auth";
 import {
   AuthCredentialsSetInitialPasswordInputRestDto,
   AuthLoginInputRestDto,
@@ -24,10 +29,7 @@ import {
 @ApiTags("autenticacao")
 @Controller("/autenticacao")
 export class AutenticacaoRestController {
-  constructor(
-    private readonly autenticacaoService: AutenticacaoService,
-    private usuarioService: UsuarioService,
-  ) {}
+  constructor(@DeclareDependency(IContainer) private readonly container: IContainer) {}
 
   @Get("/quem-sou-eu/ensino")
   @ApiOperation({
@@ -44,7 +46,13 @@ export class AutenticacaoRestController {
     if (!idUsuario) {
       throw new BadRequestException();
     }
-    return this.usuarioService.usuarioEnsinoById(accessContext, { id: idUsuario }) as any;
+    const usuarioEnsinoHandler = this.container.get<IUsuarioEnsinoQueryHandler>(
+      IUsuarioEnsinoQueryHandler,
+    );
+    return usuarioEnsinoHandler.execute({
+      accessContext,
+      dto: { id: idUsuario },
+    }) as any;
   }
 
   @Get("/quem-sou-eu")
@@ -57,9 +65,12 @@ export class AutenticacaoRestController {
   async whoAmI(
     @AccessContextHttp() accessContext: AccessContext,
   ): Promise<AuthWhoAmIOutputRestDto> {
-    return this.autenticacaoService.whoAmI(
+    const whoAmIHandler = this.container.get<IAutenticacaoWhoAmIQueryHandler>(
+      IAutenticacaoWhoAmIQueryHandler,
+    );
+    return whoAmIHandler.execute({
       accessContext,
-    ) as unknown as Promise<AuthWhoAmIOutputRestDto>;
+    }) as unknown as Promise<AuthWhoAmIOutputRestDto>;
   }
 
   @Post("/login")
@@ -74,7 +85,10 @@ export class AutenticacaoRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Body() dto: AuthLoginInputRestDto,
   ): Promise<AuthSessionCredentialsRestDto> {
-    return this.autenticacaoService.login(accessContext, dto);
+    const loginHandler = this.container.get<IAutenticacaoLoginCommandHandler>(
+      IAutenticacaoLoginCommandHandler,
+    );
+    return loginHandler.execute({ accessContext, dto });
   }
 
   @Post("/login/refresh")
@@ -89,7 +103,10 @@ export class AutenticacaoRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Body() dto: AuthRefreshInputRestDto,
   ): Promise<AuthSessionCredentialsRestDto> {
-    return this.autenticacaoService.refresh(accessContext, dto);
+    const refreshHandler = this.container.get<IAutenticacaoRefreshCommandHandler>(
+      IAutenticacaoRefreshCommandHandler,
+    );
+    return refreshHandler.execute({ accessContext, dto });
   }
 
   @Post("/definir-senha")
@@ -103,7 +120,10 @@ export class AutenticacaoRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Body() dto: AuthCredentialsSetInitialPasswordInputRestDto,
   ): Promise<boolean> {
-    return this.autenticacaoService.definirSenha(accessContext, dto);
+    const definirSenhaHandler = this.container.get<IAutenticacaoDefinirSenhaCommandHandler>(
+      IAutenticacaoDefinirSenhaCommandHandler,
+    );
+    return definirSenhaHandler.execute({ accessContext, dto });
   }
 
   @Post("/redefinir-senha")
@@ -117,6 +137,9 @@ export class AutenticacaoRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Body() dto: AuthRecoverPasswordInputRestDto,
   ): Promise<boolean> {
-    return this.autenticacaoService.recoverPassword(accessContext, dto);
+    const recoverPasswordHandler = this.container.get<IAutenticacaoRecoverPasswordCommandHandler>(
+      IAutenticacaoRecoverPasswordCommandHandler,
+    );
+    return recoverPasswordHandler.execute({ accessContext, dto });
   }
 }

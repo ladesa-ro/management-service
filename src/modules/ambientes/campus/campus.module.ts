@@ -1,10 +1,27 @@
 import { Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
-import { CAMPUS_REPOSITORY_PORT, CampusService } from "@/modules/ambientes/campus";
+import { CampusPermissionCheckerImpl } from "@/modules/ambientes/campus/application/authorization";
 import {
-  CampusAuthzRegistrySetup,
-  CampusTypeOrmRepositoryAdapter,
-} from "@/modules/ambientes/campus/infrastructure";
+  CampusCreateCommandHandlerImpl,
+  CampusDeleteCommandHandlerImpl,
+  CampusUpdateCommandHandlerImpl,
+} from "@/modules/ambientes/campus/application/commands";
+import {
+  CampusFindOneQueryHandlerImpl,
+  CampusListQueryHandlerImpl,
+} from "@/modules/ambientes/campus/application/queries";
+import { ICampusPermissionChecker } from "@/modules/ambientes/campus/domain/authorization";
+import {
+  ICampusCreateCommandHandler,
+  ICampusDeleteCommandHandler,
+  ICampusUpdateCommandHandler,
+} from "@/modules/ambientes/campus/domain/commands";
+import {
+  ICampusFindOneQueryHandler,
+  ICampusListQueryHandler,
+} from "@/modules/ambientes/campus/domain/queries";
+import { ICampusRepository } from "@/modules/ambientes/campus/domain/repositories";
+import { CampusTypeOrmRepositoryAdapter } from "@/modules/ambientes/campus/infrastructure";
 import { CampusGraphqlResolver } from "@/modules/ambientes/campus/presentation/graphql/campus.graphql.resolver";
 import { CampusRestController } from "@/modules/ambientes/campus/presentation/rest/campus.rest.controller";
 import { EnderecoModule } from "@/modules/localidades/endereco/endereco.module";
@@ -14,14 +31,22 @@ import { EnderecoModule } from "@/modules/localidades/endereco/endereco.module";
   controllers: [CampusRestController],
   providers: [
     NestJsPaginateAdapter,
-    CampusService,
     CampusGraphqlResolver,
-    CampusAuthzRegistrySetup,
     {
-      provide: CAMPUS_REPOSITORY_PORT,
+      provide: ICampusRepository,
       useClass: CampusTypeOrmRepositoryAdapter,
     },
+
+    // Authorization
+    { provide: ICampusPermissionChecker, useClass: CampusPermissionCheckerImpl },
+    // Commands
+    { provide: ICampusCreateCommandHandler, useClass: CampusCreateCommandHandlerImpl },
+    { provide: ICampusUpdateCommandHandler, useClass: CampusUpdateCommandHandlerImpl },
+    { provide: ICampusDeleteCommandHandler, useClass: CampusDeleteCommandHandlerImpl },
+    // Queries
+    { provide: ICampusListQueryHandler, useClass: CampusListQueryHandlerImpl },
+    { provide: ICampusFindOneQueryHandler, useClass: CampusFindOneQueryHandlerImpl },
   ],
-  exports: [CampusService],
+  exports: [ICampusFindOneQueryHandler],
 })
 export class CampusModule {}

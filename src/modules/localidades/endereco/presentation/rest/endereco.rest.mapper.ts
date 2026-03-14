@@ -1,11 +1,11 @@
 import { mapDatedFields } from "@/modules/@shared/application/mappers";
 import { CidadeRestMapper } from "@/modules/localidades/cidade/presentation/rest/cidade.rest.mapper";
-import { EnderecoCreateInputDto, EnderecoFindOneOutputDto } from "@/modules/localidades/endereco";
+import { EnderecoCreateCommand, EnderecoFindOneQueryResult } from "@/modules/localidades/endereco";
 import { EnderecoFindOneOutputRestDto, EnderecoInputRestDto } from "./endereco.rest.dto";
 
 export class EnderecoRestMapper {
-  static toCreateInput(dto: EnderecoInputRestDto): EnderecoCreateInputDto {
-    const input = new EnderecoCreateInputDto();
+  static toCreateInput(dto: EnderecoInputRestDto): EnderecoCreateCommand {
+    const input = new EnderecoCreateCommand();
     input.cep = dto.cep;
     input.logradouro = dto.logradouro;
     input.numero = dto.numero;
@@ -16,7 +16,7 @@ export class EnderecoRestMapper {
     return input;
   }
 
-  static toFindOneOutputDto(output: EnderecoFindOneOutputDto): EnderecoFindOneOutputRestDto {
+  static toFindOneOutputDto(output: EnderecoFindOneQueryResult): EnderecoFindOneOutputRestDto {
     const dto = new EnderecoFindOneOutputRestDto();
     dto.id = output.id;
     dto.cep = output.cep;

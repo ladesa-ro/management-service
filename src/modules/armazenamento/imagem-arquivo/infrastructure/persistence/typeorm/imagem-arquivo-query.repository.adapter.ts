@@ -1,6 +1,6 @@
-import { Inject, Injectable } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
 import { DataSource } from "typeorm";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
   APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
@@ -9,12 +9,12 @@ import {
   paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
-  ImagemArquivoFindOneInputDto,
-  ImagemArquivoFindOneOutputDto,
-  ImagemArquivoListInputDto,
-  ImagemArquivoListOutputDto,
-} from "@/modules/armazenamento/imagem-arquivo/application/dtos";
-import type { IImagemArquivoQueryRepositoryPort } from "@/modules/armazenamento/imagem-arquivo/application/ports";
+  ImagemArquivoFindOneQuery,
+  ImagemArquivoFindOneQueryResult,
+  ImagemArquivoListQuery,
+  ImagemArquivoListQueryResult,
+} from "@/modules/armazenamento/imagem-arquivo/domain/queries";
+import type { IImagemArquivoQueryRepository } from "@/modules/armazenamento/imagem-arquivo/domain/repositories";
 import type { ImagemArquivoEntity } from "./imagem-arquivo.entity";
 import { createImagemArquivoRepository } from "./imagem-arquivo.repository";
 
@@ -22,23 +22,23 @@ import { createImagemArquivoRepository } from "./imagem-arquivo.repository";
  * Adapter TypeORM que implementa o port de repositório de consulta de ImagemArquivo.
  * Estende BaseTypeOrmRepositoryAdapter para reutilizar operações de leitura.
  */
-@Injectable()
+
+@DeclareImplementation()
 export class ImagemArquivoQueryTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     ImagemArquivoEntity,
-    ImagemArquivoListInputDto,
-    ImagemArquivoListOutputDto,
-    ImagemArquivoFindOneInputDto,
-    ImagemArquivoFindOneOutputDto
+    ImagemArquivoListQuery,
+    ImagemArquivoListQueryResult,
+    ImagemArquivoFindOneQuery,
+    ImagemArquivoFindOneQueryResult
   >
-  implements IImagemArquivoQueryRepositoryPort
+  implements IImagemArquivoQueryRepository
 {
   protected readonly alias = "imagem_arquivo";
-  protected readonly authzAction = "imagem_arquivo:find";
-  protected readonly outputDtoName = "ImagemArquivoFindOneOutputDto";
+  protected readonly outputDtoName = "ImagemArquivoFindOneQueryResult";
 
   constructor(
-    @Inject(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
+    @DeclareDependency(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
     protected readonly paginationAdapter: NestJsPaginateAdapter,
   ) {
     super();

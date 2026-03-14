@@ -1,8 +1,12 @@
 import { Args, ID, Info, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
+import { DeclareDependency, IContainer } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextGraphQL } from "@/modules/@seguranca/contexto-acesso";
+import { ensureExists } from "@/modules/@shared";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
-import { ImagemArquivoService } from "@/modules/armazenamento/imagem-arquivo/application/use-cases/imagem-arquivo.service";
+import { ImagemArquivo } from "@/modules/armazenamento/imagem-arquivo/domain/imagem-arquivo.domain";
+import { IImagemArquivoFindOneQueryHandler } from "@/modules/armazenamento/imagem-arquivo/domain/queries/imagem-arquivo-find-one.query.handler.interface";
+import { IImagemArquivoListQueryHandler } from "@/modules/armazenamento/imagem-arquivo/domain/queries/imagem-arquivo-list.query.handler.interface";
 import {
   ImagemArquivoFindOneOutputGraphQlDto,
   ImagemArquivoListInputGraphQlDto,
@@ -12,7 +16,7 @@ import { ImagemArquivoGraphqlMapper } from "./imagem-arquivo.graphql.mapper";
 
 @Resolver(() => ImagemArquivoFindOneOutputGraphQlDto)
 export class ImagemArquivoGraphqlResolver {
-  constructor(private readonly imagemArquivoService: ImagemArquivoService) {}
+  constructor(@DeclareDependency(IContainer) private readonly container: IContainer) {}
 
   @Query(() => ImagemArquivoListOutputGraphQlDto, { name: "imagemArquivoFindAll" })
   async findAll(
@@ -26,7 +30,10 @@ export class ImagemArquivoGraphqlResolver {
       input.selection = graphqlExtractSelection(info, "paginated");
     }
 
-    const result = await this.imagemArquivoService.findAll(accessContext, input);
+    const listHandler = this.container.get<IImagemArquivoListQueryHandler>(
+      IImagemArquivoListQueryHandler,
+    );
+    const result = await listHandler.execute({ accessContext, dto: input });
     return ImagemArquivoGraphqlMapper.toListOutputDto(result);
   }
 
@@ -37,7 +44,11 @@ export class ImagemArquivoGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<ImagemArquivoFindOneOutputGraphQlDto> {
     const selection = graphqlExtractSelection(info);
-    const result = await this.imagemArquivoService.findByIdStrict(accessContext, { id, selection });
+    const findOneHandler = this.container.get<IImagemArquivoFindOneQueryHandler>(
+      IImagemArquivoFindOneQueryHandler,
+    );
+    const result = await findOneHandler.execute({ accessContext, dto: { id, selection } });
+    ensureExists(result, ImagemArquivo.entityName, id);
     return ImagemArquivoGraphqlMapper.toFindOneOutputDto(result);
   }
 }

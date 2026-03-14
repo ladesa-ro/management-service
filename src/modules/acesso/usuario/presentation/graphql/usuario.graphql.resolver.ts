@@ -1,8 +1,15 @@
 import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
+import { DeclareDependency, IContainer } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextGraphQL } from "@/modules/@seguranca/contexto-acesso";
+import { ensureExists } from "@/modules/@shared";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
-import { UsuarioService } from "@/modules/acesso/usuario/application/use-cases/usuario.service";
+import { IUsuarioCreateCommandHandler } from "@/modules/acesso/usuario/domain/commands/usuario-create.command.handler.interface";
+import { IUsuarioDeleteCommandHandler } from "@/modules/acesso/usuario/domain/commands/usuario-delete.command.handler.interface";
+import { IUsuarioUpdateCommandHandler } from "@/modules/acesso/usuario/domain/commands/usuario-update.command.handler.interface";
+import { IUsuarioFindOneQueryHandler } from "@/modules/acesso/usuario/domain/queries/usuario-find-one.query.handler.interface";
+import { IUsuarioListQueryHandler } from "@/modules/acesso/usuario/domain/queries/usuario-list.query.handler.interface";
+import { Usuario } from "@/modules/acesso/usuario/domain/usuario.domain";
 import {
   UsuarioCreateInputGraphQlDto,
   UsuarioFindOneOutputGraphQlDto,
@@ -14,7 +21,7 @@ import { UsuarioGraphqlMapper } from "./usuario.graphql.mapper";
 
 @Resolver(() => UsuarioFindOneOutputGraphQlDto)
 export class UsuarioGraphqlResolver {
-  constructor(private readonly usuarioService: UsuarioService) {}
+  constructor(@DeclareDependency(IContainer) private readonly container: IContainer) {}
 
   @Query(() => UsuarioListOutputGraphQlDto, { name: "usuarioFindAll" })
   async findAll(
@@ -23,12 +30,10 @@ export class UsuarioGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<UsuarioListOutputGraphQlDto> {
     const input = UsuarioGraphqlMapper.toListInput(dto);
+    const selection = graphqlExtractSelection(info, "paginated");
 
-    if (input) {
-      input.selection = graphqlExtractSelection(info, "paginated");
-    }
-
-    const result = await this.usuarioService.findAll(accessContext, input);
+    const listHandler = this.container.get<IUsuarioListQueryHandler>(IUsuarioListQueryHandler);
+    const result = await listHandler.execute({ accessContext, dto: input, selection });
     return UsuarioGraphqlMapper.toListOutputDto(result);
   }
 
@@ -39,7 +44,14 @@ export class UsuarioGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<UsuarioFindOneOutputGraphQlDto> {
     const selection = graphqlExtractSelection(info);
-    const result = await this.usuarioService.findByIdStrict(accessContext, { id, selection });
+    const findOneHandler = this.container.get<IUsuarioFindOneQueryHandler>(
+      IUsuarioFindOneQueryHandler,
+    );
+    const result = await findOneHandler.execute({
+      accessContext,
+      dto: { id, selection },
+    });
+    ensureExists(result, Usuario.entityName, id);
     return UsuarioGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -50,7 +62,10 @@ export class UsuarioGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<UsuarioFindOneOutputGraphQlDto> {
     const input = UsuarioGraphqlMapper.toCreateInput(dto);
-    const result = await this.usuarioService.create(accessContext, input as any);
+    const createHandler = this.container.get<IUsuarioCreateCommandHandler>(
+      IUsuarioCreateCommandHandler,
+    );
+    const result = await createHandler.execute({ accessContext, dto: input as any });
     return UsuarioGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -62,7 +77,10 @@ export class UsuarioGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<UsuarioFindOneOutputGraphQlDto> {
     const input = UsuarioGraphqlMapper.toUpdateInput({ id }, dto);
-    const result = await this.usuarioService.update(accessContext, input as any);
+    const updateHandler = this.container.get<IUsuarioUpdateCommandHandler>(
+      IUsuarioUpdateCommandHandler,
+    );
+    const result = await updateHandler.execute({ accessContext, dto: input as any });
     return UsuarioGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -71,6 +89,9 @@ export class UsuarioGraphqlResolver {
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
   ): Promise<boolean> {
-    return this.usuarioService.deleteOneById(accessContext, { id });
+    const deleteHandler = this.container.get<IUsuarioDeleteCommandHandler>(
+      IUsuarioDeleteCommandHandler,
+    );
+    return deleteHandler.execute({ accessContext, dto: { id } });
   }
 }

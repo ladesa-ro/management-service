@@ -1,6 +1,6 @@
-import { Inject, Injectable } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
 import { DataSource } from "typeorm";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
   APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
@@ -9,32 +9,31 @@ import {
   paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
-  DiarioFindOneInputDto,
-  DiarioFindOneOutputDto,
-  DiarioListInputDto,
-  DiarioListOutputDto,
-} from "@/modules/ensino/diario/application/dtos";
-import type { IDiarioRepositoryPort } from "@/modules/ensino/diario/application/ports";
+  DiarioFindOneQuery,
+  DiarioFindOneQueryResult,
+  DiarioListQuery,
+  DiarioListQueryResult,
+} from "@/modules/ensino/diario/domain/queries";
+import type { IDiarioRepository } from "@/modules/ensino/diario/domain/repositories";
 import type { DiarioEntity } from "./diario.entity";
 import { createDiarioRepository } from "./diario.repository";
 
-@Injectable()
+@DeclareImplementation()
 export class DiarioTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     DiarioEntity,
-    DiarioListInputDto,
-    DiarioListOutputDto,
-    DiarioFindOneInputDto,
-    DiarioFindOneOutputDto
+    DiarioListQuery,
+    DiarioListQueryResult,
+    DiarioFindOneQuery,
+    DiarioFindOneQueryResult
   >
-  implements IDiarioRepositoryPort
+  implements IDiarioRepository
 {
   protected readonly alias = "diario";
-  protected readonly authzAction = "diario:find";
-  protected readonly outputDtoName = "DiarioFindOneOutputDto";
+  protected readonly outputDtoName = "DiarioFindOneQueryResult";
 
   constructor(
-    @Inject(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
+    @DeclareDependency(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
     protected readonly paginationAdapter: NestJsPaginateAdapter,
   ) {
     super();

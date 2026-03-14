@@ -1,9 +1,27 @@
 import { Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import { CalendarioLetivoModule } from "@/modules/horarios/calendario-letivo/calendario-letivo.module";
-import { DIA_CALENDARIO_REPOSITORY_PORT } from "@/modules/horarios/dia-calendario/application/ports";
-import { DiaCalendarioService } from "@/modules/horarios/dia-calendario/application/use-cases/dia-calendario.service";
-import { DiaCalendarioAuthzRegistrySetup } from "@/modules/horarios/dia-calendario/infrastructure";
+import { DiaCalendarioPermissionCheckerImpl } from "@/modules/horarios/dia-calendario/application/authorization";
+import {
+  DiaCalendarioCreateCommandHandlerImpl,
+  DiaCalendarioDeleteCommandHandlerImpl,
+  DiaCalendarioUpdateCommandHandlerImpl,
+} from "@/modules/horarios/dia-calendario/application/commands";
+import {
+  DiaCalendarioFindOneQueryHandlerImpl,
+  DiaCalendarioListQueryHandlerImpl,
+} from "@/modules/horarios/dia-calendario/application/queries";
+import { IDiaCalendarioPermissionChecker } from "@/modules/horarios/dia-calendario/domain/authorization";
+import {
+  IDiaCalendarioCreateCommandHandler,
+  IDiaCalendarioDeleteCommandHandler,
+  IDiaCalendarioUpdateCommandHandler,
+} from "@/modules/horarios/dia-calendario/domain/commands";
+import {
+  IDiaCalendarioFindOneQueryHandler,
+  IDiaCalendarioListQueryHandler,
+} from "@/modules/horarios/dia-calendario/domain/queries";
+import { IDiaCalendarioRepository } from "@/modules/horarios/dia-calendario/domain/repositories";
 import { DiaCalendarioTypeOrmRepositoryAdapter } from "@/modules/horarios/dia-calendario/infrastructure/persistence/typeorm";
 import { DiaCalendarioGraphqlResolver } from "@/modules/horarios/dia-calendario/presentation/graphql/dia-calendario.graphql.resolver";
 import { DiaCalendarioRestController } from "@/modules/horarios/dia-calendario/presentation/rest/dia-calendario.rest.controller";
@@ -13,14 +31,33 @@ import { DiaCalendarioRestController } from "@/modules/horarios/dia-calendario/p
   providers: [
     NestJsPaginateAdapter,
     {
-      provide: DIA_CALENDARIO_REPOSITORY_PORT,
+      provide: IDiaCalendarioRepository,
       useClass: DiaCalendarioTypeOrmRepositoryAdapter,
     },
-    DiaCalendarioService,
     DiaCalendarioGraphqlResolver,
-    DiaCalendarioAuthzRegistrySetup,
+    {
+      provide: IDiaCalendarioPermissionChecker,
+      useClass: DiaCalendarioPermissionCheckerImpl,
+    },
+
+    // Commands
+    {
+      provide: IDiaCalendarioCreateCommandHandler,
+      useClass: DiaCalendarioCreateCommandHandlerImpl,
+    },
+    {
+      provide: IDiaCalendarioUpdateCommandHandler,
+      useClass: DiaCalendarioUpdateCommandHandlerImpl,
+    },
+    {
+      provide: IDiaCalendarioDeleteCommandHandler,
+      useClass: DiaCalendarioDeleteCommandHandlerImpl,
+    },
+    // Queries
+    { provide: IDiaCalendarioListQueryHandler, useClass: DiaCalendarioListQueryHandlerImpl },
+    { provide: IDiaCalendarioFindOneQueryHandler, useClass: DiaCalendarioFindOneQueryHandlerImpl },
   ],
   controllers: [DiaCalendarioRestController],
-  exports: [DiaCalendarioService],
+  exports: [],
 })
 export class DiaCalendarioModule {}

@@ -1,8 +1,15 @@
 import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
+import { DeclareDependency, IContainer } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextGraphQL } from "@/modules/@seguranca/contexto-acesso";
+import { ensureExists } from "@/modules/@shared";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
-import { DiarioPreferenciaAgrupamentoService } from "@/modules/ensino/diario-preferencia-agrupamento/application/use-cases/diario-preferencia-agrupamento.service";
+import { IDiarioPreferenciaAgrupamentoCreateCommandHandler } from "@/modules/ensino/diario-preferencia-agrupamento/domain/commands/diario-preferencia-agrupamento-create.command.handler.interface";
+import { IDiarioPreferenciaAgrupamentoDeleteCommandHandler } from "@/modules/ensino/diario-preferencia-agrupamento/domain/commands/diario-preferencia-agrupamento-delete.command.handler.interface";
+import { IDiarioPreferenciaAgrupamentoUpdateCommandHandler } from "@/modules/ensino/diario-preferencia-agrupamento/domain/commands/diario-preferencia-agrupamento-update.command.handler.interface";
+import { DiarioPreferenciaAgrupamento } from "@/modules/ensino/diario-preferencia-agrupamento/domain/diario-preferencia-agrupamento.domain";
+import { IDiarioPreferenciaAgrupamentoFindOneQueryHandler } from "@/modules/ensino/diario-preferencia-agrupamento/domain/queries/diario-preferencia-agrupamento-find-one.query.handler.interface";
+import { IDiarioPreferenciaAgrupamentoListQueryHandler } from "@/modules/ensino/diario-preferencia-agrupamento/domain/queries/diario-preferencia-agrupamento-list.query.handler.interface";
 import {
   DiarioPreferenciaAgrupamentoCreateInputGraphQlDto,
   DiarioPreferenciaAgrupamentoFindOneOutputGraphQlDto,
@@ -15,7 +22,8 @@ import { DiarioPreferenciaAgrupamentoGraphqlMapper } from "./diario-preferencia-
 @Resolver(() => DiarioPreferenciaAgrupamentoFindOneOutputGraphQlDto)
 export class DiarioPreferenciaAgrupamentoGraphqlResolver {
   constructor(
-    private readonly diarioPreferenciaAgrupamentoService: DiarioPreferenciaAgrupamentoService,
+    @DeclareDependency(IContainer)
+    private readonly container: IContainer,
   ) {}
 
   @Query(() => DiarioPreferenciaAgrupamentoListOutputGraphQlDto, {
@@ -32,7 +40,10 @@ export class DiarioPreferenciaAgrupamentoGraphqlResolver {
       input.selection = graphqlExtractSelection(info, "paginated");
     }
 
-    const result = await this.diarioPreferenciaAgrupamentoService.findAll(accessContext, input);
+    const listHandler = this.container.get<IDiarioPreferenciaAgrupamentoListQueryHandler>(
+      IDiarioPreferenciaAgrupamentoListQueryHandler,
+    );
+    const result = await listHandler.execute({ accessContext, dto: input });
     return DiarioPreferenciaAgrupamentoGraphqlMapper.toListOutputDto(result);
   }
 
@@ -45,10 +56,11 @@ export class DiarioPreferenciaAgrupamentoGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<DiarioPreferenciaAgrupamentoFindOneOutputGraphQlDto> {
     const selection = graphqlExtractSelection(info);
-    const result = await this.diarioPreferenciaAgrupamentoService.findByIdStrict(accessContext, {
-      id,
-      selection,
-    });
+    const findOneHandler = this.container.get<IDiarioPreferenciaAgrupamentoFindOneQueryHandler>(
+      IDiarioPreferenciaAgrupamentoFindOneQueryHandler,
+    );
+    const result = await findOneHandler.execute({ accessContext, dto: { id, selection } });
+    ensureExists(result, DiarioPreferenciaAgrupamento.entityName, id);
     return DiarioPreferenciaAgrupamentoGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -61,7 +73,10 @@ export class DiarioPreferenciaAgrupamentoGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<DiarioPreferenciaAgrupamentoFindOneOutputGraphQlDto> {
     const input = DiarioPreferenciaAgrupamentoGraphqlMapper.toCreateInput(dto);
-    const result = await this.diarioPreferenciaAgrupamentoService.create(accessContext, input);
+    const createHandler = this.container.get<IDiarioPreferenciaAgrupamentoCreateCommandHandler>(
+      IDiarioPreferenciaAgrupamentoCreateCommandHandler,
+    );
+    const result = await createHandler.execute({ accessContext, dto: input });
     return DiarioPreferenciaAgrupamentoGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -75,7 +90,10 @@ export class DiarioPreferenciaAgrupamentoGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<DiarioPreferenciaAgrupamentoFindOneOutputGraphQlDto> {
     const input = DiarioPreferenciaAgrupamentoGraphqlMapper.toUpdateInput({ id }, dto);
-    const result = await this.diarioPreferenciaAgrupamentoService.update(accessContext, input);
+    const updateHandler = this.container.get<IDiarioPreferenciaAgrupamentoUpdateCommandHandler>(
+      IDiarioPreferenciaAgrupamentoUpdateCommandHandler,
+    );
+    const result = await updateHandler.execute({ accessContext, dto: input });
     return DiarioPreferenciaAgrupamentoGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -84,6 +102,9 @@ export class DiarioPreferenciaAgrupamentoGraphqlResolver {
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
   ): Promise<boolean> {
-    return this.diarioPreferenciaAgrupamentoService.deleteOneById(accessContext, { id });
+    const deleteHandler = this.container.get<IDiarioPreferenciaAgrupamentoDeleteCommandHandler>(
+      IDiarioPreferenciaAgrupamentoDeleteCommandHandler,
+    );
+    return deleteHandler.execute({ accessContext, dto: { id } });
   }
 }

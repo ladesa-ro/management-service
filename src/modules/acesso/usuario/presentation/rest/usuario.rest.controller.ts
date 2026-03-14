@@ -22,8 +22,20 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
+import { DeclareDependency, IContainer } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
-import { UsuarioService } from "@/modules/acesso/usuario/application/use-cases/usuario.service";
+import { ensureExists } from "@/modules/@shared";
+import { IUsuarioCreateCommandHandler } from "@/modules/acesso/usuario/domain/commands/usuario-create.command.handler.interface";
+import { IUsuarioDeleteCommandHandler } from "@/modules/acesso/usuario/domain/commands/usuario-delete.command.handler.interface";
+import { IUsuarioUpdateCommandHandler } from "@/modules/acesso/usuario/domain/commands/usuario-update.command.handler.interface";
+import { IUsuarioUpdateImagemCapaCommandHandler } from "@/modules/acesso/usuario/domain/commands/usuario-update-imagem-capa.command.handler.interface";
+import { IUsuarioUpdateImagemPerfilCommandHandler } from "@/modules/acesso/usuario/domain/commands/usuario-update-imagem-perfil.command.handler.interface";
+import { IUsuarioEnsinoQueryHandler } from "@/modules/acesso/usuario/domain/queries/usuario-ensino.query.handler.interface";
+import { IUsuarioFindOneQueryHandler } from "@/modules/acesso/usuario/domain/queries/usuario-find-one.query.handler.interface";
+import { IUsuarioGetImagemCapaQueryHandler } from "@/modules/acesso/usuario/domain/queries/usuario-get-imagem-capa.query.handler.interface";
+import { IUsuarioGetImagemPerfilQueryHandler } from "@/modules/acesso/usuario/domain/queries/usuario-get-imagem-perfil.query.handler.interface";
+import { IUsuarioListQueryHandler } from "@/modules/acesso/usuario/domain/queries/usuario-list.query.handler.interface";
+import { Usuario } from "@/modules/acesso/usuario/domain/usuario.domain";
 import {
   UsuarioCreateInputRestDto,
   UsuarioEnsinoOutputRestDto,
@@ -38,7 +50,7 @@ import { UsuarioRestMapper } from "./usuario.rest.mapper";
 @ApiTags("usuarios")
 @Controller("/usuarios")
 export class UsuarioRestController {
-  constructor(private usuarioService: UsuarioService) {}
+  constructor(@DeclareDependency(IContainer) private readonly container: IContainer) {}
 
   @Get("/")
   @ApiOperation({ summary: "Lista usuarios", operationId: "usuarioFindAll" })
@@ -48,8 +60,9 @@ export class UsuarioRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Query() dto: UsuarioListInputRestDto,
   ): Promise<UsuarioListOutputRestDto> {
+    const listHandler = this.container.get<IUsuarioListQueryHandler>(IUsuarioListQueryHandler);
     const input = UsuarioRestMapper.toListInput(dto);
-    const result = await this.usuarioService.findAll(accessContext, input);
+    const result = await listHandler.execute({ accessContext, dto: input });
     return UsuarioRestMapper.toListOutputDto(result);
   }
 
@@ -62,8 +75,12 @@ export class UsuarioRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: UsuarioFindOneInputRestDto,
   ): Promise<UsuarioFindOneOutputRestDto> {
+    const findOneHandler = this.container.get<IUsuarioFindOneQueryHandler>(
+      IUsuarioFindOneQueryHandler,
+    );
     const input = UsuarioRestMapper.toFindOneInput(params);
-    const result = await this.usuarioService.findByIdStrict(accessContext, input);
+    const result = await findOneHandler.execute({ accessContext, dto: input });
+    ensureExists(result, Usuario.entityName, input.id);
     return UsuarioRestMapper.toFindOneOutputDto(result);
   }
 
@@ -79,8 +96,11 @@ export class UsuarioRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: UsuarioFindOneInputRestDto,
   ): Promise<UsuarioEnsinoOutputRestDto> {
+    const ensinoHandler = this.container.get<IUsuarioEnsinoQueryHandler>(
+      IUsuarioEnsinoQueryHandler,
+    );
     const input = UsuarioRestMapper.toFindOneInput(params);
-    const result = await this.usuarioService.usuarioEnsinoById(accessContext, input);
+    const result = await ensinoHandler.execute({ accessContext, dto: input });
     return UsuarioRestMapper.toEnsinoOutputDto(result);
   }
 
@@ -92,8 +112,11 @@ export class UsuarioRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Body() dto: UsuarioCreateInputRestDto,
   ): Promise<UsuarioFindOneOutputRestDto> {
+    const createHandler = this.container.get<IUsuarioCreateCommandHandler>(
+      IUsuarioCreateCommandHandler,
+    );
     const input = UsuarioRestMapper.toCreateInput(dto);
-    const result = await this.usuarioService.create(accessContext, input);
+    const result = await createHandler.execute({ accessContext, dto: input });
     return UsuarioRestMapper.toFindOneOutputDto(result);
   }
 
@@ -107,8 +130,11 @@ export class UsuarioRestController {
     @Param() params: UsuarioFindOneInputRestDto,
     @Body() dto: UsuarioUpdateInputRestDto,
   ): Promise<UsuarioFindOneOutputRestDto> {
+    const updateHandler = this.container.get<IUsuarioUpdateCommandHandler>(
+      IUsuarioUpdateCommandHandler,
+    );
     const input = UsuarioRestMapper.toUpdateInput(params, dto);
-    const result = await this.usuarioService.update(accessContext, input);
+    const result = await updateHandler.execute({ accessContext, dto: input });
     return UsuarioRestMapper.toFindOneOutputDto(result);
   }
 
@@ -124,7 +150,10 @@ export class UsuarioRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: UsuarioFindOneInputRestDto,
   ) {
-    return this.usuarioService.getImagemCapa(accessContext, params.id);
+    const getImagemCapaHandler = this.container.get<IUsuarioGetImagemCapaQueryHandler>(
+      IUsuarioGetImagemCapaQueryHandler,
+    );
+    return getImagemCapaHandler.execute({ accessContext, id: params.id });
   }
 
   @Put("/:id/imagem/capa")
@@ -151,7 +180,10 @@ export class UsuarioRestController {
     @Param() params: UsuarioFindOneInputRestDto,
     @UploadedFile() file: Express.Multer.File,
   ): Promise<boolean> {
-    return this.usuarioService.updateImagemCapa(accessContext, params, file);
+    const updateImagemCapaHandler = this.container.get<IUsuarioUpdateImagemCapaCommandHandler>(
+      IUsuarioUpdateImagemCapaCommandHandler,
+    );
+    return updateImagemCapaHandler.execute({ accessContext, dto: params, file });
   }
 
   @Get("/:id/imagem/perfil")
@@ -166,7 +198,10 @@ export class UsuarioRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: UsuarioFindOneInputRestDto,
   ) {
-    return this.usuarioService.getImagemPerfil(accessContext, params.id);
+    const getImagemPerfilHandler = this.container.get<IUsuarioGetImagemPerfilQueryHandler>(
+      IUsuarioGetImagemPerfilQueryHandler,
+    );
+    return getImagemPerfilHandler.execute({ accessContext, id: params.id });
   }
 
   @Put("/:id/imagem/perfil")
@@ -193,7 +228,10 @@ export class UsuarioRestController {
     @Param() params: UsuarioFindOneInputRestDto,
     @UploadedFile() file: Express.Multer.File,
   ): Promise<boolean> {
-    return this.usuarioService.updateImagemPerfil(accessContext, params, file);
+    const updateImagemPerfilHandler = this.container.get<IUsuarioUpdateImagemPerfilCommandHandler>(
+      IUsuarioUpdateImagemPerfilCommandHandler,
+    );
+    return updateImagemPerfilHandler.execute({ accessContext, dto: params, file });
   }
 
   @Delete("/:id")
@@ -205,7 +243,10 @@ export class UsuarioRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: UsuarioFindOneInputRestDto,
   ): Promise<boolean> {
+    const deleteHandler = this.container.get<IUsuarioDeleteCommandHandler>(
+      IUsuarioDeleteCommandHandler,
+    );
     const input = UsuarioRestMapper.toFindOneInput(params);
-    return this.usuarioService.deleteOneById(accessContext, input);
+    return deleteHandler.execute({ accessContext, dto: input });
   }
 }

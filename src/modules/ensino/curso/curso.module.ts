@@ -3,11 +3,31 @@ import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persiste
 import { CampusModule } from "@/modules/ambientes/campus/campus.module";
 import { ArquivoModule } from "@/modules/armazenamento/arquivo/arquivo.module";
 import { ImagemModule } from "@/modules/armazenamento/imagem/imagem.module";
-import { CURSO_REPOSITORY_PORT, CursoService } from "@/modules/ensino/curso";
+import { ICursoPermissionChecker, ICursoRepository } from "@/modules/ensino/curso";
+import { CursoPermissionCheckerImpl } from "@/modules/ensino/curso/application/authorization";
 import {
-  CursoAuthzRegistrySetup,
-  CursoTypeOrmRepositoryAdapter,
-} from "@/modules/ensino/curso/infrastructure";
+  CursoCreateCommandHandlerImpl,
+  CursoDeleteCommandHandlerImpl,
+  CursoUpdateCommandHandlerImpl,
+  CursoUpdateImagemCapaCommandHandlerImpl,
+} from "@/modules/ensino/curso/application/commands";
+import {
+  CursoFindOneQueryHandlerImpl,
+  CursoGetImagemCapaQueryHandlerImpl,
+  CursoListQueryHandlerImpl,
+} from "@/modules/ensino/curso/application/queries";
+import {
+  ICursoCreateCommandHandler,
+  ICursoDeleteCommandHandler,
+  ICursoUpdateCommandHandler,
+  ICursoUpdateImagemCapaCommandHandler,
+} from "@/modules/ensino/curso/domain/commands";
+import {
+  ICursoFindOneQueryHandler,
+  ICursoGetImagemCapaQueryHandler,
+  ICursoListQueryHandler,
+} from "@/modules/ensino/curso/domain/queries";
+import { CursoTypeOrmRepositoryAdapter } from "@/modules/ensino/curso/infrastructure";
 import { CursoGraphqlResolver } from "@/modules/ensino/curso/presentation/graphql/curso.graphql.resolver";
 import { CursoRestController } from "@/modules/ensino/curso/presentation/rest/curso.rest.controller";
 import { OfertaFormacaoModule } from "@/modules/ensino/oferta-formacao/oferta-formacao.module";
@@ -17,14 +37,26 @@ import { OfertaFormacaoModule } from "@/modules/ensino/oferta-formacao/oferta-fo
   controllers: [CursoRestController],
   providers: [
     NestJsPaginateAdapter,
-    CursoService,
     CursoGraphqlResolver,
-    CursoAuthzRegistrySetup,
     {
-      provide: CURSO_REPOSITORY_PORT,
+      provide: ICursoRepository,
       useClass: CursoTypeOrmRepositoryAdapter,
     },
+    { provide: ICursoPermissionChecker, useClass: CursoPermissionCheckerImpl },
+
+    // Commands
+    { provide: ICursoCreateCommandHandler, useClass: CursoCreateCommandHandlerImpl },
+    { provide: ICursoUpdateCommandHandler, useClass: CursoUpdateCommandHandlerImpl },
+    { provide: ICursoDeleteCommandHandler, useClass: CursoDeleteCommandHandlerImpl },
+    {
+      provide: ICursoUpdateImagemCapaCommandHandler,
+      useClass: CursoUpdateImagemCapaCommandHandlerImpl,
+    },
+    // Queries
+    { provide: ICursoListQueryHandler, useClass: CursoListQueryHandlerImpl },
+    { provide: ICursoFindOneQueryHandler, useClass: CursoFindOneQueryHandlerImpl },
+    { provide: ICursoGetImagemCapaQueryHandler, useClass: CursoGetImagemCapaQueryHandlerImpl },
   ],
-  exports: [CursoService],
+  exports: [ICursoFindOneQueryHandler],
 })
 export class CursoModule {}

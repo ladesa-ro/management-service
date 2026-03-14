@@ -1,21 +1,43 @@
 import { Module } from "@nestjs/common";
-import { EstagiarioService } from "@/modules/estagio/estagiario/application/use-cases/estagiario.service";
 import {
-  EstagiarioTypeOrmRepositoryAdapter,
-} from "@/modules/estagio/estagiario/infrastructure";
+  EstagiarioCreateCommandHandlerImpl,
+  EstagiarioDeleteCommandHandlerImpl,
+  EstagiarioUpdateCommandHandlerImpl,
+} from "@/modules/estagio/estagiario/application/commands";
+import {
+  EstagiarioFindOneQueryHandlerImpl,
+  EstagiarioListQueryHandlerImpl,
+} from "@/modules/estagio/estagiario/application/queries";
+import {
+  IEstagiarioCreateCommandHandler,
+  IEstagiarioDeleteCommandHandler,
+  IEstagiarioUpdateCommandHandler,
+} from "@/modules/estagio/estagiario/domain/commands";
+import {
+  IEstagiarioFindOneQueryHandler,
+  IEstagiarioListQueryHandler,
+} from "@/modules/estagio/estagiario/domain/queries";
+import { IEstagiarioRepository } from "@/modules/estagio/estagiario/domain/repositories";
+import { EstagiarioTypeOrmRepositoryAdapter } from "@/modules/estagio/estagiario/infrastructure";
 import { EstagiarioRestController } from "@/modules/estagio/estagiario/presentation/rest/estagiario.rest.controller";
-import { ESTAGIARIO_REPOSITORY_PORT } from "@/modules/estagio/estagiario/application/ports";
 
 @Module({
   imports: [],
   controllers: [EstagiarioRestController],
   providers: [
-    EstagiarioService,
     {
-      provide: ESTAGIARIO_REPOSITORY_PORT,
+      provide: IEstagiarioRepository,
       useClass: EstagiarioTypeOrmRepositoryAdapter,
     },
+
+    // Commands
+    { provide: IEstagiarioCreateCommandHandler, useClass: EstagiarioCreateCommandHandlerImpl },
+    { provide: IEstagiarioUpdateCommandHandler, useClass: EstagiarioUpdateCommandHandlerImpl },
+    { provide: IEstagiarioDeleteCommandHandler, useClass: EstagiarioDeleteCommandHandlerImpl },
+    // Queries
+    { provide: IEstagiarioListQueryHandler, useClass: EstagiarioListQueryHandlerImpl },
+    { provide: IEstagiarioFindOneQueryHandler, useClass: EstagiarioFindOneQueryHandlerImpl },
   ],
-  exports: [EstagiarioService],
+  exports: [IEstagiarioFindOneQueryHandler],
 })
 export class EstagiarioModule {}

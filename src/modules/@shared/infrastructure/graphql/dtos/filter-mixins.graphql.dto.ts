@@ -1,6 +1,5 @@
-import { Field } from "@nestjs/graphql";
-import { IsArray, IsOptional, IsUUID } from "class-validator";
-import { decorate } from "ts-mixer";
+import { Field } from "@/modules/@shared/presentation/graphql";
+import { IsArray, IsOptional, IsUUID } from "@/modules/@shared/presentation/shared";
 import { PaginationInputGraphQlDto } from "./pagination-graphql.dto";
 
 /**
@@ -8,9 +7,9 @@ import { PaginationInputGraphQlDto } from "./pagination-graphql.dto";
  * Praticamente todos os módulos usam filterId.
  */
 export class PaginatedFilterByIdGraphQlDto extends PaginationInputGraphQlDto {
-  @decorate(Field(() => [String], { nullable: true, description: "Filtro por ID" }))
-  @decorate(IsOptional())
-  @decorate(IsArray())
-  @decorate(IsUUID(undefined, { each: true }))
+  @Field(() => [String], { nullable: true, description: "Filtro por ID" })
+  @IsOptional()
+  @IsArray()
+  @IsUUID(undefined, { each: true })
   filterId?: string[];
 }

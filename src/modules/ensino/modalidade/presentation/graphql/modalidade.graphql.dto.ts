@@ -1,48 +1,47 @@
-import { ArgsType, Field, InputType, ObjectType } from "@nestjs/graphql";
-import { IsOptional, IsString, MinLength } from "class-validator";
-import { decorate } from "ts-mixer";
 import {
   EntityBaseGraphQlDto,
   PaginatedFilterByIdGraphQlDto,
   PaginationMetaGraphQlDto,
 } from "@/modules/@shared/infrastructure/graphql/dtos";
+import { ArgsType, Field, InputType, ObjectType } from "@/modules/@shared/presentation/graphql";
+import { IsOptional, IsString, MinLength } from "@/modules/@shared/presentation/shared";
 import { ModalidadeFieldsMixin } from "../modalidade.validation-mixin";
 
 // ============================================================================
 // FindOne Output
 // ============================================================================
 
-@decorate(ObjectType("ModalidadeFindOneOutputDto"))
+@ObjectType("ModalidadeFindOneOutputDto")
 export class ModalidadeFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
-  @decorate(Field(() => String)) nome: string;
-  @decorate(Field(() => String)) slug: string;
+  @Field(() => String) nome: string;
+  @Field(() => String) slug: string;
 }
 
 // ============================================================================
 // Create Input
 // ============================================================================
 
-@decorate(InputType("ModalidadeCreateInputDto"))
+@InputType("ModalidadeCreateInputDto")
 export class ModalidadeCreateInputGraphQlDto extends ModalidadeFieldsMixin {
-  @decorate(Field(() => String)) declare nome: string;
-  @decorate(Field(() => String)) declare slug: string;
+  @Field(() => String) declare nome: string;
+  @Field(() => String) declare slug: string;
 }
 
 // ============================================================================
 // Update Input
 // ============================================================================
 
-@decorate(InputType("ModalidadeUpdateInputDto"))
+@InputType("ModalidadeUpdateInputDto")
 export class ModalidadeUpdateInputGraphQlDto {
-  @decorate(Field(() => String, { nullable: true }))
-  @decorate(IsOptional())
-  @decorate(IsString())
-  @decorate(MinLength(1))
+  @Field(() => String, { nullable: true })
+  @IsOptional()
+  @IsString()
+  @MinLength(1)
   nome?: string;
-  @decorate(Field(() => String, { nullable: true }))
-  @decorate(IsOptional())
-  @decorate(IsString())
-  @decorate(MinLength(1))
+  @Field(() => String, { nullable: true })
+  @IsOptional()
+  @IsString()
+  @MinLength(1)
   slug?: string;
 }
 
@@ -50,18 +49,18 @@ export class ModalidadeUpdateInputGraphQlDto {
 // List Input
 // ============================================================================
 
-@decorate(ArgsType())
+@ArgsType()
 export class ModalidadeListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {}
 
 // ============================================================================
 // List Output
 // ============================================================================
 
-@decorate(ObjectType("ModalidadeListResult"))
+@ObjectType("ModalidadeListResult")
 export class ModalidadeListOutputGraphQlDto {
-  @decorate(Field(() => PaginationMetaGraphQlDto))
+  @Field(() => PaginationMetaGraphQlDto)
   meta: PaginationMetaGraphQlDto;
 
-  @decorate(Field(() => [ModalidadeFindOneOutputGraphQlDto]))
+  @Field(() => [ModalidadeFindOneOutputGraphQlDto])
   data: ModalidadeFindOneOutputGraphQlDto[];
 }

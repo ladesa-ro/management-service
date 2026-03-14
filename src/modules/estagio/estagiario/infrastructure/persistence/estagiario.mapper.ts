@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 import { Estagiario } from "@/modules/estagio/estagiario/domain/estagiario.domain";
-import type { EstagiarioFindOneOutputDto } from "@/modules/estagio/estagiario/application/dtos";
+import type { EstagiarioFindOneQueryResult } from "@/modules/estagio/estagiario/domain/queries";
 import { EstagiarioTypeormEntity } from "./estagiario.typeorm.entity";
 
 /**
@@ -13,13 +13,13 @@ export class EstagiarioMapper {
   static toDomain(entity: EstagiarioTypeormEntity): Estagiario {
     const formatDateToISOString = (date: Date | string | null | undefined): string | null => {
       if (!date) return null;
-      if (typeof date === 'string') return date;
+      if (typeof date === "string") return date;
       return (date as Date).toISOString();
     };
 
     const formatDateToDateString = (date: Date | string | null | undefined): string => {
       if (!date) return new Date().toISOString();
-      if (typeof date === 'string') return date;
+      if (typeof date === "string") return date;
       return (date as Date).toISOString();
     };
 
@@ -30,7 +30,10 @@ export class EstagiarioMapper {
       idTurmaFk: entity.idTurmaFk,
       telefone: entity.telefone,
       emailInstitucional: entity.emailInstitucional,
-      dataNascimento: typeof entity.dataNascimento === 'string' ? entity.dataNascimento : (entity.dataNascimento as Date).toISOString().split("T")[0],
+      dataNascimento:
+        typeof entity.dataNascimento === "string"
+          ? entity.dataNascimento
+          : (entity.dataNascimento as Date).toISOString().split("T")[0],
       dateCreated: formatDateToDateString(entity.dateCreated),
       dateUpdated: formatDateToDateString(entity.dateUpdated),
       dateDeleted: formatDateToISOString(entity.dateDeleted),
@@ -62,16 +65,17 @@ export class EstagiarioMapper {
   /**
    * Converte TypeORM para DTO output
    */
-  static toOutputDto(entity: EstagiarioTypeormEntity): EstagiarioFindOneOutputDto {
+  static toOutputDto(entity: EstagiarioTypeormEntity): EstagiarioFindOneQueryResult {
     const formatDateToISOString = (date: Date | string | null | undefined): string => {
       if (!date) return new Date().toISOString();
-      if (typeof date === 'string') return date;
+      if (typeof date === "string") return date;
       return (date as Date).toISOString();
     };
 
-    const dataNascimentoFormatted = typeof entity.dataNascimento === 'string'
-      ? entity.dataNascimento
-      : (entity.dataNascimento as Date).toISOString().split("T")[0];
+    const dataNascimentoFormatted =
+      typeof entity.dataNascimento === "string"
+        ? entity.dataNascimento
+        : (entity.dataNascimento as Date).toISOString().split("T")[0];
 
     return {
       id: entity.id,
@@ -90,7 +94,7 @@ export class EstagiarioMapper {
   /**
    * Converte domínio para DTO output
    */
-  static domainToOutputDto(estagiario: Estagiario): EstagiarioFindOneOutputDto {
+  static domainToOutputDto(estagiario: Estagiario): EstagiarioFindOneQueryResult {
     return {
       id: estagiario.id!,
       idPerfilFk: estagiario.idPerfilFk,

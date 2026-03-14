@@ -1,7 +1,7 @@
-import { Inject, Injectable } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
 import type { SelectQueryBuilder } from "typeorm";
 import { DataSource } from "typeorm";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
   APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
@@ -10,12 +10,12 @@ import {
   paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
-  DiarioPreferenciaAgrupamentoFindOneInputDto,
-  DiarioPreferenciaAgrupamentoFindOneOutputDto,
-  DiarioPreferenciaAgrupamentoListInputDto,
-  DiarioPreferenciaAgrupamentoListOutputDto,
+  DiarioPreferenciaAgrupamentoFindOneQuery,
+  DiarioPreferenciaAgrupamentoFindOneQueryResult,
+  DiarioPreferenciaAgrupamentoListQuery,
+  DiarioPreferenciaAgrupamentoListQueryResult,
 } from "@/modules/ensino/diario-preferencia-agrupamento";
-import type { IDiarioPreferenciaAgrupamentoRepositoryPort } from "@/modules/ensino/diario-preferencia-agrupamento/application/ports/out";
+import type { IDiarioPreferenciaAgrupamentoRepository } from "@/modules/ensino/diario-preferencia-agrupamento/domain/repositories";
 import type { DiarioPreferenciaAgrupamentoEntity } from "./diario-preferencia-agrupamento.entity";
 import { createDiarioPreferenciaAgrupamentoRepository } from "./diario-preferencia-agrupamento.repository";
 
@@ -23,23 +23,23 @@ import { createDiarioPreferenciaAgrupamentoRepository } from "./diario-preferenc
  * Adapter TypeORM que implementa o port de repositório de DiarioPreferenciaAgrupamento.
  * Estende BaseTypeOrmRepositoryAdapter para reutilizar operações CRUD comuns.
  */
-@Injectable()
+
+@DeclareImplementation()
 export class DiarioPreferenciaAgrupamentoTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     DiarioPreferenciaAgrupamentoEntity,
-    DiarioPreferenciaAgrupamentoListInputDto,
-    DiarioPreferenciaAgrupamentoListOutputDto,
-    DiarioPreferenciaAgrupamentoFindOneInputDto,
-    DiarioPreferenciaAgrupamentoFindOneOutputDto
+    DiarioPreferenciaAgrupamentoListQuery,
+    DiarioPreferenciaAgrupamentoListQueryResult,
+    DiarioPreferenciaAgrupamentoFindOneQuery,
+    DiarioPreferenciaAgrupamentoFindOneQueryResult
   >
-  implements IDiarioPreferenciaAgrupamentoRepositoryPort
+  implements IDiarioPreferenciaAgrupamentoRepository
 {
   protected readonly alias = "diario_preferencia_agrupamento";
-  protected readonly authzAction = "diario_preferencia_agrupamento:find";
-  protected readonly outputDtoName = "DiarioPreferenciaAgrupamentoFindOneOutputDto";
+  protected readonly outputDtoName = "DiarioPreferenciaAgrupamentoFindOneQueryResult";
 
   constructor(
-    @Inject(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
+    @DeclareDependency(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
     protected readonly paginationAdapter: NestJsPaginateAdapter,
   ) {
     super();

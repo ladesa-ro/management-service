@@ -13,7 +13,7 @@ export class Perfil extends BaseDatedEntity implements IPerfil {
   campus!: ICampus;
   usuario!: IUsuario;
 
-  protected static get entityName(): string {
+  static get entityName(): string {
     return "Perfil";
   }
 

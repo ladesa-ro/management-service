@@ -1,5 +1,5 @@
-import { Inject, Injectable } from "@nestjs/common";
 import { DataSource } from "typeorm";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
   APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
@@ -8,12 +8,12 @@ import {
   paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
-  EstadoFindOneInputDto,
-  EstadoFindOneOutputDto,
-  EstadoListInputDto,
-  EstadoListOutputDto,
-} from "@/modules/localidades/estado/application/dtos";
-import type { IEstadoRepositoryPort } from "@/modules/localidades/estado/application/ports";
+  EstadoFindOneQuery,
+  EstadoFindOneQueryResult,
+  EstadoListQuery,
+  EstadoListQueryResult,
+} from "@/modules/localidades/estado/domain/queries";
+import type { IEstadoRepository } from "@/modules/localidades/estado/domain/repositories";
 import type { EstadoEntity } from "./estado.entity";
 import { createEstadoRepository } from "./estado.repository";
 
@@ -22,23 +22,24 @@ import { createEstadoRepository } from "./estado.repository";
  * Estende BaseTypeOrmRepositoryAdapter para reutilizar operações de leitura.
  * Estado é um recurso somente leitura (dados do IBGE).
  */
-@Injectable()
+
+@DeclareImplementation()
 export class EstadoTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     EstadoEntity,
-    EstadoListInputDto,
-    EstadoListOutputDto,
-    EstadoFindOneInputDto,
-    EstadoFindOneOutputDto
+    EstadoListQuery,
+    EstadoListQueryResult,
+    EstadoFindOneQuery,
+    EstadoFindOneQueryResult
   >
-  implements IEstadoRepositoryPort
+  implements IEstadoRepository
 {
   protected readonly alias = "estado";
-  protected readonly authzAction = "estado:find";
-  protected readonly outputDtoName = "EstadoFindOneOutputDto";
+  protected readonly hasSoftDelete = false;
+  protected readonly outputDtoName = "EstadoFindOneQueryResult";
 
   constructor(
-    @Inject(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
+    @DeclareDependency(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
     protected readonly paginationAdapter: NestJsPaginateAdapter,
   ) {
     super();

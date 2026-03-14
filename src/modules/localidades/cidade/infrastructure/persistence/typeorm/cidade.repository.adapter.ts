@@ -1,6 +1,6 @@
-import { Inject, Injectable } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
 import { DataSource } from "typeorm";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
   APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
@@ -9,11 +9,11 @@ import {
   paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
-  CidadeFindOneInputDto,
-  CidadeFindOneOutputDto,
-  CidadeListInputDto,
-  CidadeListOutputDto,
-  ICidadeRepositoryPort,
+  CidadeFindOneQuery,
+  CidadeFindOneQueryResult,
+  CidadeListQuery,
+  CidadeListQueryResult,
+  ICidadeRepository,
 } from "@/modules/localidades/cidade";
 import type { CidadeEntity } from "./cidade.entity";
 import { createCidadeRepository } from "./cidade.repository";
@@ -23,23 +23,24 @@ import { createCidadeRepository } from "./cidade.repository";
  * Estende BaseTypeOrmRepositoryAdapter para reutilizar operações de leitura.
  * Cidade é um recurso somente leitura (dados do IBGE).
  */
-@Injectable()
+
+@DeclareImplementation()
 export class CidadeTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     CidadeEntity,
-    CidadeListInputDto,
-    CidadeListOutputDto,
-    CidadeFindOneInputDto,
-    CidadeFindOneOutputDto
+    CidadeListQuery,
+    CidadeListQueryResult,
+    CidadeFindOneQuery,
+    CidadeFindOneQueryResult
   >
-  implements ICidadeRepositoryPort
+  implements ICidadeRepository
 {
   protected readonly alias = "cidade";
-  protected readonly authzAction = "cidade:find";
-  protected readonly outputDtoName = "CidadeFindOneOutputDto";
+  protected readonly hasSoftDelete = false;
+  protected readonly outputDtoName = "CidadeFindOneQueryResult";
 
   constructor(
-    @Inject(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
+    @DeclareDependency(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
     protected readonly paginationAdapter: NestJsPaginateAdapter,
   ) {
     super();

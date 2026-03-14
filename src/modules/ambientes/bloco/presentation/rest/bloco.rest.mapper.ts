@@ -5,14 +5,14 @@ import {
   mapDatedFields,
 } from "@/modules/@shared/application/mappers";
 import {
-  BlocoCreateInputDto,
-  BlocoFindOneInputDto,
-  BlocoFindOneOutputDto,
-  BlocoListInputDto,
-  BlocoUpdateInputDto,
+  BlocoCreateCommand,
+  BlocoFindOneQuery,
+  BlocoFindOneQueryResult,
+  BlocoListQuery,
+  BlocoUpdateCommand,
 } from "@/modules/ambientes/bloco";
 import { CampusRestMapper } from "@/modules/ambientes/campus/presentation/rest";
-import type { ImagemFindOneOutputDto } from "@/modules/armazenamento/imagem";
+import type { ImagemFindOneQueryResult } from "@/modules/armazenamento/imagem";
 import {
   BlocoCreateInputRestDto,
   BlocoFindOneInputRestDto,
@@ -28,12 +28,12 @@ export class BlocoRestMapper {
   // Input: Server DTO -> Core DTO
   // ============================================================================
 
-  static toFindOneInput = createFindOneInputMapper(BlocoFindOneInputDto);
+  static toFindOneInput = createFindOneInputMapper(BlocoFindOneQuery);
 
-  static toListInput = createListInputMapper(BlocoListInputDto, ["filter.id", "filter.campus.id"]);
+  static toListInput = createListInputMapper(BlocoListQuery, ["filter.id", "filter.campus.id"]);
 
-  static toCreateInput(dto: BlocoCreateInputRestDto): BlocoCreateInputDto {
-    const input = new BlocoCreateInputDto();
+  static toCreateInput(dto: BlocoCreateInputRestDto): BlocoCreateCommand {
+    const input = new BlocoCreateCommand();
     input.nome = dto.nome;
     input.codigo = dto.codigo;
     input.campus = { id: dto.campus.id };
@@ -43,8 +43,8 @@ export class BlocoRestMapper {
   static toUpdateInput(
     params: BlocoFindOneInputRestDto,
     dto: BlocoUpdateInputRestDto,
-  ): BlocoFindOneInputDto & BlocoUpdateInputDto {
-    const input = new BlocoFindOneInputDto() as BlocoFindOneInputDto & BlocoUpdateInputDto;
+  ): BlocoFindOneQuery & BlocoUpdateCommand {
+    const input = new BlocoFindOneQuery() as BlocoFindOneQuery & BlocoUpdateCommand;
     input.id = params.id;
     if (dto.nome !== undefined) {
       input.nome = dto.nome;
@@ -62,7 +62,7 @@ export class BlocoRestMapper {
   // Output: Core DTO -> Server DTO
   // ============================================================================
 
-  static toFindOneOutputDto(output: BlocoFindOneOutputDto): BlocoFindOneOutputRestDto {
+  static toFindOneOutputDto(output: BlocoFindOneQueryResult): BlocoFindOneOutputRestDto {
     const dto = new BlocoFindOneOutputRestDto();
     dto.id = output.id;
     dto.nome = output.nome;
@@ -73,7 +73,7 @@ export class BlocoRestMapper {
     return dto;
   }
 
-  static toImagemOutputDto(output: ImagemFindOneOutputDto): ImagemFindOneOutputRestDto {
+  static toImagemOutputDto(output: ImagemFindOneQueryResult): ImagemFindOneOutputRestDto {
     const dto = new ImagemFindOneOutputRestDto();
     dto.id = output.id;
     dto.descricao = output.descricao;

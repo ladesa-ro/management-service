@@ -1,5 +1,5 @@
-import { Inject, Injectable } from "@nestjs/common";
 import { DataSource } from "typeorm";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
   APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
@@ -8,11 +8,11 @@ import {
   paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
-  IModalidadeRepositoryPort,
-  ModalidadeFindOneInputDto,
-  ModalidadeFindOneOutputDto,
-  ModalidadeListInputDto,
-  ModalidadeListOutputDto,
+  IModalidadeRepository,
+  ModalidadeFindOneQuery,
+  ModalidadeFindOneQueryResult,
+  ModalidadeListQuery,
+  ModalidadeListQueryResult,
 } from "@/modules/ensino/modalidade";
 import type { ModalidadeEntity } from "./modalidade.entity";
 import { createModalidadeRepository } from "./modalidade.repository";
@@ -21,23 +21,23 @@ import { createModalidadeRepository } from "./modalidade.repository";
  * Adapter TypeORM que implementa o port de repositório de Modalidade.
  * Estende BaseTypeOrmRepositoryAdapter para reutilizar operações CRUD comuns.
  */
-@Injectable()
+
+@DeclareImplementation()
 export class ModalidadeTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     ModalidadeEntity,
-    ModalidadeListInputDto,
-    ModalidadeListOutputDto,
-    ModalidadeFindOneInputDto,
-    ModalidadeFindOneOutputDto
+    ModalidadeListQuery,
+    ModalidadeListQueryResult,
+    ModalidadeFindOneQuery,
+    ModalidadeFindOneQueryResult
   >
-  implements IModalidadeRepositoryPort
+  implements IModalidadeRepository
 {
   protected readonly alias = "modalidade";
-  protected readonly authzAction = "modalidade:find";
-  protected readonly outputDtoName = "ModalidadeFindOneOutputDto";
+  protected readonly outputDtoName = "ModalidadeFindOneQueryResult";
 
   constructor(
-    @Inject(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
+    @DeclareDependency(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
     protected readonly paginationAdapter: NestJsPaginateAdapter,
   ) {
     super();

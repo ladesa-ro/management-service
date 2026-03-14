@@ -1,11 +1,11 @@
 import { createListOutputMapper, mapDatedFields } from "@/modules/@shared/application/mappers";
 import { ModalidadeGraphqlMapper } from "@/modules/ensino/modalidade/presentation/graphql/modalidade.graphql.mapper";
 import {
-  OfertaFormacaoCreateInputDto,
-  OfertaFormacaoFindOneInputDto,
-  OfertaFormacaoFindOneOutputDto,
-  OfertaFormacaoListInputDto,
-  OfertaFormacaoUpdateInputDto,
+  OfertaFormacaoCreateCommand,
+  OfertaFormacaoFindOneQuery,
+  OfertaFormacaoFindOneQueryResult,
+  OfertaFormacaoListQuery,
+  OfertaFormacaoUpdateCommand,
 } from "@/modules/ensino/oferta-formacao";
 import {
   OfertaFormacaoCreateInputGraphQlDto,
@@ -18,12 +18,12 @@ import {
 export class OfertaFormacaoGraphqlMapper {
   static toListInput(
     dto: OfertaFormacaoListInputGraphQlDto | null,
-  ): OfertaFormacaoListInputDto | null {
+  ): OfertaFormacaoListQuery | null {
     if (!dto) {
       return null;
     }
 
-    const input = new OfertaFormacaoListInputDto();
+    const input = new OfertaFormacaoListQuery();
     input.page = dto.page;
     input.limit = dto.limit;
     input.search = dto.search;
@@ -33,15 +33,15 @@ export class OfertaFormacaoGraphqlMapper {
     return input;
   }
 
-  static toFindOneInput(id: string, selection?: string[]): OfertaFormacaoFindOneInputDto {
-    const input = new OfertaFormacaoFindOneInputDto();
+  static toFindOneInput(id: string, selection?: string[]): OfertaFormacaoFindOneQuery {
+    const input = new OfertaFormacaoFindOneQuery();
     input.id = id;
     input.selection = selection;
     return input;
   }
 
-  static toCreateInput(dto: OfertaFormacaoCreateInputGraphQlDto): OfertaFormacaoCreateInputDto {
-    const input = new OfertaFormacaoCreateInputDto();
+  static toCreateInput(dto: OfertaFormacaoCreateInputGraphQlDto): OfertaFormacaoCreateCommand {
+    const input = new OfertaFormacaoCreateCommand();
     input.nome = dto.nome;
     input.slug = dto.slug;
     input.modalidade = { id: dto.modalidade.id };
@@ -51,9 +51,9 @@ export class OfertaFormacaoGraphqlMapper {
   static toUpdateInput(
     params: { id: string },
     dto: OfertaFormacaoUpdateInputGraphQlDto,
-  ): OfertaFormacaoFindOneInputDto & OfertaFormacaoUpdateInputDto {
-    const input = new OfertaFormacaoFindOneInputDto() as OfertaFormacaoFindOneInputDto &
-      OfertaFormacaoUpdateInputDto;
+  ): OfertaFormacaoFindOneQuery & OfertaFormacaoUpdateCommand {
+    const input = new OfertaFormacaoFindOneQuery() as OfertaFormacaoFindOneQuery &
+      OfertaFormacaoUpdateCommand;
     input.id = params.id;
     if (dto.nome !== undefined) {
       input.nome = dto.nome;
@@ -68,7 +68,7 @@ export class OfertaFormacaoGraphqlMapper {
   }
 
   static toFindOneOutputDto(
-    output: OfertaFormacaoFindOneOutputDto,
+    output: OfertaFormacaoFindOneQueryResult,
   ): OfertaFormacaoFindOneOutputGraphQlDto {
     const dto = new OfertaFormacaoFindOneOutputGraphQlDto();
     dto.id = output.id;

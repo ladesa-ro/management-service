@@ -1,6 +1,6 @@
-import { Inject, Injectable } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
 import { DataSource } from "typeorm";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
   APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
@@ -9,32 +9,31 @@ import {
   paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
-  OfertaFormacaoFindOneInputDto,
-  OfertaFormacaoFindOneOutputDto,
-  OfertaFormacaoListInputDto,
-  OfertaFormacaoListOutputDto,
+  OfertaFormacaoFindOneQuery,
+  OfertaFormacaoFindOneQueryResult,
+  OfertaFormacaoListQuery,
+  OfertaFormacaoListQueryResult,
 } from "@/modules/ensino/oferta-formacao";
-import type { IOfertaFormacaoRepositoryPort } from "@/modules/ensino/oferta-formacao/application/ports";
+import type { IOfertaFormacaoRepository } from "@/modules/ensino/oferta-formacao/domain/repositories";
 import type { OfertaFormacaoEntity } from "./oferta-formacao.entity";
 import { createOfertaFormacaoRepository } from "./oferta-formacao.repository";
 
-@Injectable()
+@DeclareImplementation()
 export class OfertaFormacaoTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     OfertaFormacaoEntity,
-    OfertaFormacaoListInputDto,
-    OfertaFormacaoListOutputDto,
-    OfertaFormacaoFindOneInputDto,
-    OfertaFormacaoFindOneOutputDto
+    OfertaFormacaoListQuery,
+    OfertaFormacaoListQueryResult,
+    OfertaFormacaoFindOneQuery,
+    OfertaFormacaoFindOneQueryResult
   >
-  implements IOfertaFormacaoRepositoryPort
+  implements IOfertaFormacaoRepository
 {
   protected readonly alias = "oferta_formacao";
-  protected readonly authzAction = "oferta_formacao:find";
-  protected readonly outputDtoName = "OfertaFormacaoFindOneOutputDto";
+  protected readonly outputDtoName = "OfertaFormacaoFindOneQueryResult";
 
   constructor(
-    @Inject(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
+    @DeclareDependency(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
     protected readonly paginationAdapter: NestJsPaginateAdapter,
   ) {
     super();

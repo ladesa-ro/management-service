@@ -19,7 +19,7 @@ export class ImagemArquivo extends BaseDatedEntity implements IImagemArquivo {
   imagem!: Imagem;
   arquivo!: Arquivo;
 
-  protected static get entityName(): string {
+  static get entityName(): string {
     return "ImagemArquivo";
   }
 

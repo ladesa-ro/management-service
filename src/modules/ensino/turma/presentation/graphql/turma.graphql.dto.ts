@@ -1,11 +1,15 @@
-import { ArgsType, Field, InputType, ObjectType } from "@nestjs/graphql";
-import { IsOptional, IsString, MinLength, ValidateNested } from "class-validator";
-import { decorate } from "ts-mixer";
 import {
   EntityBaseGraphQlDto,
   PaginatedFilterByIdGraphQlDto,
   PaginationMetaGraphQlDto,
 } from "@/modules/@shared/infrastructure/graphql/dtos";
+import { ArgsType, Field, InputType, ObjectType } from "@/modules/@shared/presentation/graphql";
+import {
+  IsOptional,
+  IsString,
+  MinLength,
+  ValidateNested,
+} from "@/modules/@shared/presentation/shared";
 import { AmbienteFindOneOutputGraphQlDto } from "@/modules/ambientes/ambiente/presentation/graphql/ambiente.graphql.dto";
 import { ImagemFindOneOutputGraphQlDto } from "@/modules/armazenamento/imagem-arquivo/presentation/graphql/imagem-arquivo.graphql.dto";
 import { CursoFindOneOutputGraphQlDto } from "@/modules/ensino/curso/presentation/graphql/curso.graphql.dto";
@@ -15,13 +19,13 @@ import { TurmaFieldsMixin } from "@/modules/ensino/turma/presentation/turma.vali
 // FindOne Output
 // ============================================================================
 
-@decorate(ObjectType("TurmaFindOneOutputDto"))
+@ObjectType("TurmaFindOneOutputDto")
 export class TurmaFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
-  @decorate(Field(() => String)) periodo: string;
-  @decorate(Field(() => CursoFindOneOutputGraphQlDto)) curso: CursoFindOneOutputGraphQlDto;
-  @decorate(Field(() => AmbienteFindOneOutputGraphQlDto, { nullable: true }))
+  @Field(() => String) periodo: string;
+  @Field(() => CursoFindOneOutputGraphQlDto) curso: CursoFindOneOutputGraphQlDto;
+  @Field(() => AmbienteFindOneOutputGraphQlDto, { nullable: true })
   ambientePadraoAula: AmbienteFindOneOutputGraphQlDto | null;
-  @decorate(Field(() => ImagemFindOneOutputGraphQlDto, { nullable: true }))
+  @Field(() => ImagemFindOneOutputGraphQlDto, { nullable: true })
   imagemCapa: ImagemFindOneOutputGraphQlDto | null;
 }
 
@@ -29,38 +33,38 @@ export class TurmaFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
 // Ref Inputs
 // ============================================================================
 
-@decorate(InputType("TurmaCursoRefInputDto"))
+@InputType("TurmaCursoRefInputDto")
 export class TurmaCursoRefInputGraphQlDto {
-  @decorate(Field(() => String)) @decorate(IsString()) id: string;
+  @Field(() => String) @IsString() id: string;
 }
 
-@decorate(InputType("TurmaAmbienteRefInputDto"))
+@InputType("TurmaAmbienteRefInputDto")
 export class TurmaAmbienteRefInputGraphQlDto {
-  @decorate(Field(() => String)) @decorate(IsString()) id: string;
+  @Field(() => String) @IsString() id: string;
 }
 
-@decorate(InputType("TurmaImagemCapaRefInputDto"))
+@InputType("TurmaImagemCapaRefInputDto")
 export class TurmaImagemCapaRefInputGraphQlDto {
-  @decorate(Field(() => String)) @decorate(IsString()) id: string;
+  @Field(() => String) @IsString() id: string;
 }
 
 // ============================================================================
 // Create Input
 // ============================================================================
 
-@decorate(InputType("TurmaCreateInputDto"))
+@InputType("TurmaCreateInputDto")
 export class TurmaCreateInputGraphQlDto extends TurmaFieldsMixin {
-  @decorate(Field(() => String)) declare periodo: string;
-  @decorate(Field(() => TurmaCursoRefInputGraphQlDto))
-  @decorate(ValidateNested())
+  @Field(() => String) declare periodo: string;
+  @Field(() => TurmaCursoRefInputGraphQlDto)
+  @ValidateNested()
   curso: TurmaCursoRefInputGraphQlDto;
-  @decorate(Field(() => TurmaAmbienteRefInputGraphQlDto, { nullable: true }))
-  @decorate(IsOptional())
-  @decorate(ValidateNested())
+  @Field(() => TurmaAmbienteRefInputGraphQlDto, { nullable: true })
+  @IsOptional()
+  @ValidateNested()
   ambientePadraoAula?: TurmaAmbienteRefInputGraphQlDto | null;
-  @decorate(Field(() => TurmaImagemCapaRefInputGraphQlDto, { nullable: true }))
-  @decorate(IsOptional())
-  @decorate(ValidateNested())
+  @Field(() => TurmaImagemCapaRefInputGraphQlDto, { nullable: true })
+  @IsOptional()
+  @ValidateNested()
   imagemCapa?: TurmaImagemCapaRefInputGraphQlDto | null;
 }
 
@@ -68,24 +72,24 @@ export class TurmaCreateInputGraphQlDto extends TurmaFieldsMixin {
 // Update Input
 // ============================================================================
 
-@decorate(InputType("TurmaUpdateInputDto"))
+@InputType("TurmaUpdateInputDto")
 export class TurmaUpdateInputGraphQlDto {
-  @decorate(Field(() => String, { nullable: true }))
-  @decorate(IsOptional())
-  @decorate(IsString())
-  @decorate(MinLength(1))
+  @Field(() => String, { nullable: true })
+  @IsOptional()
+  @IsString()
+  @MinLength(1)
   periodo?: string;
-  @decorate(Field(() => TurmaCursoRefInputGraphQlDto, { nullable: true }))
-  @decorate(IsOptional())
-  @decorate(ValidateNested())
+  @Field(() => TurmaCursoRefInputGraphQlDto, { nullable: true })
+  @IsOptional()
+  @ValidateNested()
   curso?: TurmaCursoRefInputGraphQlDto;
-  @decorate(Field(() => TurmaAmbienteRefInputGraphQlDto, { nullable: true }))
-  @decorate(IsOptional())
-  @decorate(ValidateNested())
+  @Field(() => TurmaAmbienteRefInputGraphQlDto, { nullable: true })
+  @IsOptional()
+  @ValidateNested()
   ambientePadraoAula?: TurmaAmbienteRefInputGraphQlDto | null;
-  @decorate(Field(() => TurmaImagemCapaRefInputGraphQlDto, { nullable: true }))
-  @decorate(IsOptional())
-  @decorate(ValidateNested())
+  @Field(() => TurmaImagemCapaRefInputGraphQlDto, { nullable: true })
+  @IsOptional()
+  @ValidateNested()
   imagemCapa?: TurmaImagemCapaRefInputGraphQlDto | null;
 }
 
@@ -93,18 +97,18 @@ export class TurmaUpdateInputGraphQlDto {
 // List Input (GraphQL-compatible - no dots in field names)
 // ============================================================================
 
-@decorate(ArgsType())
+@ArgsType()
 export class TurmaListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {}
 
 // ============================================================================
 // List Output
 // ============================================================================
 
-@decorate(ObjectType("TurmaListResult"))
+@ObjectType("TurmaListResult")
 export class TurmaListOutputGraphQlDto {
-  @decorate(Field(() => PaginationMetaGraphQlDto))
+  @Field(() => PaginationMetaGraphQlDto)
   meta: PaginationMetaGraphQlDto;
 
-  @decorate(Field(() => [TurmaFindOneOutputGraphQlDto]))
+  @Field(() => [TurmaFindOneOutputGraphQlDto])
   data: TurmaFindOneOutputGraphQlDto[];
 }

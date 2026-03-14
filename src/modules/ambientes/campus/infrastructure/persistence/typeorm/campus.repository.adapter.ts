@@ -1,6 +1,6 @@
-import { Inject, Injectable } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
 import { DataSource } from "typeorm";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
   APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
@@ -9,32 +9,31 @@ import {
   paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
-  CampusFindOneInputDto,
-  CampusFindOneOutputDto,
-  CampusListInputDto,
-  CampusListOutputDto,
-  ICampusRepositoryPort,
+  CampusFindOneQuery,
+  CampusFindOneQueryResult,
+  CampusListQuery,
+  CampusListQueryResult,
+  ICampusRepository,
 } from "@/modules/ambientes/campus";
 import type { CampusEntity } from "./campus.entity";
 import { createCampusRepository } from "./campus.repository";
 
-@Injectable()
+@DeclareImplementation()
 export class CampusTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     CampusEntity,
-    CampusListInputDto,
-    CampusListOutputDto,
-    CampusFindOneInputDto,
-    CampusFindOneOutputDto
+    CampusListQuery,
+    CampusListQueryResult,
+    CampusFindOneQuery,
+    CampusFindOneQueryResult
   >
-  implements ICampusRepositoryPort
+  implements ICampusRepository
 {
   protected readonly alias = "campus";
-  protected readonly authzAction = "campus:find";
-  protected readonly outputDtoName = "CampusFindOneOutputDto";
+  protected readonly outputDtoName = "CampusFindOneQueryResult";
 
   constructor(
-    @Inject(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
+    @DeclareDependency(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
     protected readonly paginationAdapter: NestJsPaginateAdapter,
   ) {
     super();

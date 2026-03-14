@@ -1,9 +1,9 @@
 import { createListOutputMapper, mapDatedFields } from "@/modules/@shared/application/mappers";
 import {
-  PerfilFindOneInputDto,
-  PerfilFindOneOutputDto,
-  PerfilListInputDto,
-  PerfilSetVinculosInputDto,
+  PerfilFindOneQuery,
+  PerfilFindOneQueryResult,
+  PerfilListQuery,
+  PerfilSetVinculosCommand,
 } from "@/modules/acesso/perfil";
 import { UsuarioGraphqlMapper } from "@/modules/acesso/usuario/presentation/graphql/usuario.graphql.mapper";
 import { CampusGraphqlMapper } from "@/modules/ambientes/campus/presentation/graphql/campus.graphql.mapper";
@@ -15,12 +15,12 @@ import {
 } from "./perfil.graphql.dto";
 
 export class PerfilGraphqlMapper {
-  static toListInput(dto: PerfilListInputGraphQlDto | null): PerfilListInputDto | null {
+  static toListInput(dto: PerfilListInputGraphQlDto | null): PerfilListQuery | null {
     if (!dto) {
       return null;
     }
 
-    const input = new PerfilListInputDto();
+    const input = new PerfilListQuery();
     input.page = dto.page;
     input.limit = dto.limit;
     input.search = dto.search;
@@ -33,22 +33,22 @@ export class PerfilGraphqlMapper {
     return input;
   }
 
-  static toFindOneInput(id: string, selection?: string[]): PerfilFindOneInputDto {
-    const input = new PerfilFindOneInputDto();
+  static toFindOneInput(id: string, selection?: string[]): PerfilFindOneQuery {
+    const input = new PerfilFindOneQuery();
     input.id = id;
     input.selection = selection;
     return input;
   }
 
-  static toSetVinculosInput(dto: PerfilSetVinculosInputGraphQlDto): PerfilSetVinculosInputDto {
-    const input = new PerfilSetVinculosInputDto();
+  static toSetVinculosInput(dto: PerfilSetVinculosInputGraphQlDto): PerfilSetVinculosCommand {
+    const input = new PerfilSetVinculosCommand();
     input.cargos = dto.cargos;
     input.campus = { id: dto.campus.id };
     input.usuario = { id: dto.usuario.id };
     return input;
   }
 
-  static toFindOneOutputDto(output: PerfilFindOneOutputDto): PerfilFindOneOutputGraphQlDto {
+  static toFindOneOutputDto(output: PerfilFindOneQueryResult): PerfilFindOneOutputGraphQlDto {
     const dto = new PerfilFindOneOutputGraphQlDto();
     dto.id = output.id;
     dto.ativo = output.ativo;

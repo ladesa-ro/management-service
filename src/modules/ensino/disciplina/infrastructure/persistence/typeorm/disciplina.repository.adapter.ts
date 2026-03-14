@@ -1,6 +1,6 @@
-import { Inject, Injectable } from "@nestjs/common";
 import { FilterOperator, FilterSuffix } from "nestjs-paginate";
 import { DataSource } from "typeorm";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
   APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
@@ -9,32 +9,31 @@ import {
   paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
-  DisciplinaFindOneInputDto,
-  DisciplinaFindOneOutputDto,
-  DisciplinaListInputDto,
-  DisciplinaListOutputDto,
-} from "@/modules/ensino/disciplina/application/dtos";
-import type { IDisciplinaRepositoryPort } from "@/modules/ensino/disciplina/application/ports";
+  DisciplinaFindOneQuery,
+  DisciplinaFindOneQueryResult,
+  DisciplinaListQuery,
+  DisciplinaListQueryResult,
+} from "@/modules/ensino/disciplina/domain/queries";
+import type { IDisciplinaRepository } from "@/modules/ensino/disciplina/domain/repositories";
 import type { DisciplinaEntity } from "./disciplina.entity";
 import { createDisciplinaRepository } from "./disciplina.repository";
 
-@Injectable()
+@DeclareImplementation()
 export class DisciplinaTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     DisciplinaEntity,
-    DisciplinaListInputDto,
-    DisciplinaListOutputDto,
-    DisciplinaFindOneInputDto,
-    DisciplinaFindOneOutputDto
+    DisciplinaListQuery,
+    DisciplinaListQueryResult,
+    DisciplinaFindOneQuery,
+    DisciplinaFindOneQueryResult
   >
-  implements IDisciplinaRepositoryPort
+  implements IDisciplinaRepository
 {
   protected readonly alias = "disciplina";
-  protected readonly authzAction = "disciplina:find";
-  protected readonly outputDtoName = "DisciplinaFindOneOutputDto";
+  protected readonly outputDtoName = "DisciplinaFindOneQueryResult";
 
   constructor(
-    @Inject(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
+    @DeclareDependency(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
     protected readonly paginationAdapter: NestJsPaginateAdapter,
   ) {
     super();

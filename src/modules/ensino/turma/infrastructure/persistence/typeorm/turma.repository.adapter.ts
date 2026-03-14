@@ -1,6 +1,6 @@
-import { Inject, Injectable } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
 import { DataSource } from "typeorm";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
   APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
@@ -9,32 +9,31 @@ import {
   paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
-  TurmaFindOneInputDto,
-  TurmaFindOneOutputDto,
-  TurmaListInputDto,
-  TurmaListOutputDto,
-} from "@/modules/ensino/turma/application/dtos";
-import type { ITurmaRepositoryPort } from "@/modules/ensino/turma/application/ports";
+  TurmaFindOneQuery,
+  TurmaFindOneQueryResult,
+  TurmaListQuery,
+  TurmaListQueryResult,
+} from "@/modules/ensino/turma/domain/queries";
+import type { ITurmaRepository } from "@/modules/ensino/turma/domain/repositories";
 import type { TurmaEntity } from "./turma.entity";
 import { createTurmaRepository } from "./turma.repository";
 
-@Injectable()
+@DeclareImplementation()
 export class TurmaTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     TurmaEntity,
-    TurmaListInputDto,
-    TurmaListOutputDto,
-    TurmaFindOneInputDto,
-    TurmaFindOneOutputDto
+    TurmaListQuery,
+    TurmaListQueryResult,
+    TurmaFindOneQuery,
+    TurmaFindOneQueryResult
   >
-  implements ITurmaRepositoryPort
+  implements ITurmaRepository
 {
   protected readonly alias = "turma";
-  protected readonly authzAction = "turma:find";
-  protected readonly outputDtoName = "TurmaFindOneOutputDto";
+  protected readonly outputDtoName = "TurmaFindOneQueryResult";
 
   constructor(
-    @Inject(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
+    @DeclareDependency(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
     protected readonly paginationAdapter: NestJsPaginateAdapter,
   ) {
     super();

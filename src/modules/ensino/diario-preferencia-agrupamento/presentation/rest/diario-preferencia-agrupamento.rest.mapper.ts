@@ -6,13 +6,12 @@ import {
 } from "@/modules/@shared/application/mappers";
 import { DiarioRestMapper } from "@/modules/ensino/diario/presentation/rest";
 import {
-  DiarioPreferenciaAgrupamentoCreateInputDto,
-  DiarioPreferenciaAgrupamentoFindOneInputDto,
-  DiarioPreferenciaAgrupamentoFindOneOutputDto,
-  DiarioPreferenciaAgrupamentoListInputDto,
-  DiarioPreferenciaAgrupamentoUpdateInputDto,
+  DiarioPreferenciaAgrupamentoCreateCommand,
+  DiarioPreferenciaAgrupamentoFindOneQuery,
+  DiarioPreferenciaAgrupamentoFindOneQueryResult,
+  DiarioPreferenciaAgrupamentoListQuery,
+  DiarioPreferenciaAgrupamentoUpdateCommand,
 } from "@/modules/ensino/diario-preferencia-agrupamento";
-import { IntervaloDeTempoRestMapper } from "@/modules/horarios/intervalo-de-tempo/presentation/rest";
 import {
   DiarioPreferenciaAgrupamentoCreateInputRestDto,
   DiarioPreferenciaAgrupamentoFindOneInputRestDto,
@@ -26,22 +25,21 @@ export class DiarioPreferenciaAgrupamentoRestMapper {
   // Input: Server DTO -> Core DTO
   // ============================================================================
 
-  static toFindOneInput = createFindOneInputMapper(DiarioPreferenciaAgrupamentoFindOneInputDto);
+  static toFindOneInput = createFindOneInputMapper(DiarioPreferenciaAgrupamentoFindOneQuery);
 
-  static toListInput = createListInputMapper(DiarioPreferenciaAgrupamentoListInputDto, [
+  static toListInput = createListInputMapper(DiarioPreferenciaAgrupamentoListQuery, [
     "filter.id",
     "filter.diario.id",
   ]);
 
   static toCreateInput(
     dto: DiarioPreferenciaAgrupamentoCreateInputRestDto,
-  ): DiarioPreferenciaAgrupamentoCreateInputDto {
-    const input = new DiarioPreferenciaAgrupamentoCreateInputDto();
+  ): DiarioPreferenciaAgrupamentoCreateCommand {
+    const input = new DiarioPreferenciaAgrupamentoCreateCommand();
     input.dataInicio = dto.dataInicio;
     input.dataFim = dto.dataFim ?? null;
     input.diaSemanaIso = dto.diaSemanaIso;
     input.aulasSeguidas = dto.aulasSeguidas;
-    input.intervaloDeTempo = { id: dto.intervaloDeTempo.id };
     input.diario = { id: dto.diario.id };
     return input;
   }
@@ -49,10 +47,10 @@ export class DiarioPreferenciaAgrupamentoRestMapper {
   static toUpdateInput(
     params: DiarioPreferenciaAgrupamentoFindOneInputRestDto,
     dto: DiarioPreferenciaAgrupamentoUpdateInputRestDto,
-  ): DiarioPreferenciaAgrupamentoFindOneInputDto & DiarioPreferenciaAgrupamentoUpdateInputDto {
+  ): DiarioPreferenciaAgrupamentoFindOneQuery & DiarioPreferenciaAgrupamentoUpdateCommand {
     const input =
-      new DiarioPreferenciaAgrupamentoFindOneInputDto() as DiarioPreferenciaAgrupamentoFindOneInputDto &
-        DiarioPreferenciaAgrupamentoUpdateInputDto;
+      new DiarioPreferenciaAgrupamentoFindOneQuery() as DiarioPreferenciaAgrupamentoFindOneQuery &
+        DiarioPreferenciaAgrupamentoUpdateCommand;
     input.id = params.id;
     if (dto.dataInicio !== undefined) {
       input.dataInicio = dto.dataInicio;
@@ -66,9 +64,6 @@ export class DiarioPreferenciaAgrupamentoRestMapper {
     if (dto.aulasSeguidas !== undefined) {
       input.aulasSeguidas = dto.aulasSeguidas;
     }
-    if (dto.intervaloDeTempo !== undefined) {
-      input.intervaloDeTempo = { id: dto.intervaloDeTempo.id };
-    }
     if (dto.diario !== undefined) {
       input.diario = { id: dto.diario.id };
     }
@@ -80,7 +75,7 @@ export class DiarioPreferenciaAgrupamentoRestMapper {
   // ============================================================================
 
   static toFindOneOutputDto(
-    output: DiarioPreferenciaAgrupamentoFindOneOutputDto,
+    output: DiarioPreferenciaAgrupamentoFindOneQueryResult,
   ): DiarioPreferenciaAgrupamentoFindOneOutputRestDto {
     const dto = new DiarioPreferenciaAgrupamentoFindOneOutputRestDto();
     dto.id = output.id;
@@ -88,7 +83,6 @@ export class DiarioPreferenciaAgrupamentoRestMapper {
     dto.dataFim = output.dataFim;
     dto.diaSemanaIso = output.diaSemanaIso;
     dto.aulasSeguidas = output.aulasSeguidas;
-    dto.intervaloDeTempo = IntervaloDeTempoRestMapper.toFindOneOutputDto(output.intervaloDeTempo);
     dto.diario = DiarioRestMapper.toFindOneOutputDto(output.diario);
     mapDatedFields(dto, output);
     return dto;

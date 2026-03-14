@@ -7,11 +7,11 @@ import {
 import { CampusRestMapper } from "@/modules/ambientes/campus/presentation/rest";
 import { OfertaFormacaoRestMapper } from "@/modules/ensino/oferta-formacao/presentation/rest";
 import {
-  CalendarioLetivoCreateInputDto,
-  CalendarioLetivoFindOneInputDto,
-  CalendarioLetivoFindOneOutputDto,
-  CalendarioLetivoListInputDto,
-  CalendarioLetivoUpdateInputDto,
+  CalendarioLetivoCreateCommand,
+  CalendarioLetivoFindOneQuery,
+  CalendarioLetivoFindOneQueryResult,
+  CalendarioLetivoListQuery,
+  CalendarioLetivoUpdateCommand,
 } from "@/modules/horarios/calendario-letivo";
 import {
   CalendarioLetivoCreateInputRestDto,
@@ -26,16 +26,16 @@ export class CalendarioLetivoRestMapper {
   // Input: Server DTO -> Core DTO
   // ============================================================================
 
-  static toFindOneInput = createFindOneInputMapper(CalendarioLetivoFindOneInputDto);
+  static toFindOneInput = createFindOneInputMapper(CalendarioLetivoFindOneQuery);
 
-  static toListInput = createListInputMapper(CalendarioLetivoListInputDto, [
+  static toListInput = createListInputMapper(CalendarioLetivoListQuery, [
     "filter.id",
     "filter.campus.id",
     "filter.ofertaFormacao.id",
   ]);
 
-  static toCreateInput(dto: CalendarioLetivoCreateInputRestDto): CalendarioLetivoCreateInputDto {
-    const input = new CalendarioLetivoCreateInputDto();
+  static toCreateInput(dto: CalendarioLetivoCreateInputRestDto): CalendarioLetivoCreateCommand {
+    const input = new CalendarioLetivoCreateCommand();
     input.nome = dto.nome;
     input.ano = dto.ano;
     input.campus = { id: dto.campus.id };
@@ -46,9 +46,9 @@ export class CalendarioLetivoRestMapper {
   static toUpdateInput(
     params: CalendarioLetivoFindOneInputRestDto,
     dto: CalendarioLetivoUpdateInputRestDto,
-  ): CalendarioLetivoFindOneInputDto & CalendarioLetivoUpdateInputDto {
-    const input = new CalendarioLetivoFindOneInputDto() as CalendarioLetivoFindOneInputDto &
-      CalendarioLetivoUpdateInputDto;
+  ): CalendarioLetivoFindOneQuery & CalendarioLetivoUpdateCommand {
+    const input = new CalendarioLetivoFindOneQuery() as CalendarioLetivoFindOneQuery &
+      CalendarioLetivoUpdateCommand;
     input.id = params.id;
     if (dto.nome !== undefined) {
       input.nome = dto.nome;
@@ -70,7 +70,7 @@ export class CalendarioLetivoRestMapper {
   // ============================================================================
 
   static toFindOneOutputDto(
-    output: CalendarioLetivoFindOneOutputDto,
+    output: CalendarioLetivoFindOneQueryResult,
   ): CalendarioLetivoFindOneOutputRestDto {
     const dto = new CalendarioLetivoFindOneOutputRestDto();
     dto.id = output.id;

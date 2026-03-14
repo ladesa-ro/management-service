@@ -1,5 +1,5 @@
 import { Global, Module } from "@nestjs/common";
-import { TRANSACTION_PORT } from "@/modules/@shared";
+import { ITransaction } from "@/modules/@shared";
 import { TransactionTypeOrmAdapter } from "./transaction-typeorm.adapter";
 
 /**
@@ -7,14 +7,14 @@ import { TransactionTypeOrmAdapter } from "./transaction-typeorm.adapter";
  *
  * Fornece o serviço de transações para toda a aplicação,
  * permitindo que os services do core layer executem operações
- * de banco de dados dentro de transações através do port ITransactionPort.
+ * de banco de dados dentro de transações através do port ITransaction.
  *
  * @example
  * ```typescript
  * // No service
  * constructor(
- *   @Inject(TRANSACTION_PORT)
- *   private readonly transactionPort: ITransactionPort,
+ *   @DeclareDependency(ITransaction)
+ *   private readonly transactionPort: ITransaction,
  * ) {}
  *
  * async createWithRelations(dto: CreateDto) {
@@ -31,11 +31,11 @@ import { TransactionTypeOrmAdapter } from "./transaction-typeorm.adapter";
 @Module({
   providers: [
     {
-      provide: TRANSACTION_PORT,
+      provide: ITransaction,
       useClass: TransactionTypeOrmAdapter,
     },
     TransactionTypeOrmAdapter,
   ],
-  exports: [TRANSACTION_PORT, TransactionTypeOrmAdapter],
+  exports: [ITransaction, TransactionTypeOrmAdapter],
 })
 export class TransactionModule {}

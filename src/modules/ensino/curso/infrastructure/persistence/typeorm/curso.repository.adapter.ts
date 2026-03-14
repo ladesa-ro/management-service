@@ -1,6 +1,6 @@
-import { Inject, Injectable } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
 import { DataSource } from "typeorm";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
   APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
@@ -9,32 +9,31 @@ import {
   paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
-  CursoFindOneInputDto,
-  CursoFindOneOutputDto,
-  CursoListInputDto,
-  CursoListOutputDto,
-} from "@/modules/ensino/curso/application/dtos";
-import type { ICursoRepositoryPort } from "@/modules/ensino/curso/application/ports";
+  CursoFindOneQuery,
+  CursoFindOneQueryResult,
+  CursoListQuery,
+  CursoListQueryResult,
+} from "@/modules/ensino/curso/domain/queries";
+import type { ICursoRepository } from "@/modules/ensino/curso/domain/repositories";
 import type { CursoEntity } from "./curso.entity";
 import { createCursoRepository } from "./curso.repository";
 
-@Injectable()
+@DeclareImplementation()
 export class CursoTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     CursoEntity,
-    CursoListInputDto,
-    CursoListOutputDto,
-    CursoFindOneInputDto,
-    CursoFindOneOutputDto
+    CursoListQuery,
+    CursoListQueryResult,
+    CursoFindOneQuery,
+    CursoFindOneQueryResult
   >
-  implements ICursoRepositoryPort
+  implements ICursoRepository
 {
   protected readonly alias = "curso";
-  protected readonly authzAction = "curso:find";
-  protected readonly outputDtoName = "CursoFindOneOutputDto";
+  protected readonly outputDtoName = "CursoFindOneQueryResult";
 
   constructor(
-    @Inject(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
+    @DeclareDependency(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
     protected readonly paginationAdapter: NestJsPaginateAdapter,
   ) {
     super();

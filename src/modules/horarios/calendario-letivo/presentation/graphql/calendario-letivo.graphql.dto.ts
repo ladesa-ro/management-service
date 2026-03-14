@@ -1,4 +1,15 @@
-import { ArgsType, Field, InputType, Int, ObjectType } from "@nestjs/graphql";
+import {
+  EntityBaseGraphQlDto,
+  PaginatedFilterByIdGraphQlDto,
+  PaginationMetaGraphQlDto,
+} from "@/modules/@shared/infrastructure/graphql/dtos";
+import {
+  ArgsType,
+  Field,
+  InputType,
+  Int,
+  ObjectType,
+} from "@/modules/@shared/presentation/graphql";
 import {
   IsArray,
   IsInt,
@@ -7,13 +18,7 @@ import {
   IsUUID,
   MinLength,
   ValidateNested,
-} from "class-validator";
-import { decorate } from "ts-mixer";
-import {
-  EntityBaseGraphQlDto,
-  PaginatedFilterByIdGraphQlDto,
-  PaginationMetaGraphQlDto,
-} from "@/modules/@shared/infrastructure/graphql/dtos";
+} from "@/modules/@shared/presentation/shared";
 import { CampusFindOneOutputGraphQlDto } from "@/modules/ambientes/campus/presentation/graphql/campus.graphql.dto";
 import { OfertaFormacaoFindOneOutputGraphQlDto } from "@/modules/ensino/oferta-formacao/presentation/graphql/oferta-formacao.graphql.dto";
 
@@ -21,12 +26,12 @@ import { OfertaFormacaoFindOneOutputGraphQlDto } from "@/modules/ensino/oferta-f
 // FindOne Output
 // ============================================================================
 
-@decorate(ObjectType("CalendarioLetivoFindOneOutputDto"))
+@ObjectType("CalendarioLetivoFindOneOutputDto")
 export class CalendarioLetivoFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
-  @decorate(Field(() => String)) nome: string;
-  @decorate(Field(() => Int)) ano: number;
-  @decorate(Field(() => CampusFindOneOutputGraphQlDto)) campus: CampusFindOneOutputGraphQlDto;
-  @decorate(Field(() => OfertaFormacaoFindOneOutputGraphQlDto))
+  @Field(() => String) nome: string;
+  @Field(() => Int) ano: number;
+  @Field(() => CampusFindOneOutputGraphQlDto) campus: CampusFindOneOutputGraphQlDto;
+  @Field(() => OfertaFormacaoFindOneOutputGraphQlDto)
   ofertaFormacao: OfertaFormacaoFindOneOutputGraphQlDto;
 }
 
@@ -34,29 +39,29 @@ export class CalendarioLetivoFindOneOutputGraphQlDto extends EntityBaseGraphQlDt
 // Ref Inputs
 // ============================================================================
 
-@decorate(InputType("CalendarioLetivoCampusRefInputDto"))
+@InputType("CalendarioLetivoCampusRefInputDto")
 export class CalendarioLetivoCampusRefInputGraphQlDto {
-  @decorate(Field(() => String)) @decorate(IsString()) id: string;
+  @Field(() => String) @IsString() id: string;
 }
 
-@decorate(InputType("CalendarioLetivoOfertaFormacaoRefInputDto"))
+@InputType("CalendarioLetivoOfertaFormacaoRefInputDto")
 export class CalendarioLetivoOfertaFormacaoRefInputGraphQlDto {
-  @decorate(Field(() => String)) @decorate(IsString()) id: string;
+  @Field(() => String) @IsString() id: string;
 }
 
 // ============================================================================
 // Create Input
 // ============================================================================
 
-@decorate(InputType("CalendarioLetivoCreateInputDto"))
+@InputType("CalendarioLetivoCreateInputDto")
 export class CalendarioLetivoCreateInputGraphQlDto {
-  @decorate(Field(() => String)) @decorate(IsString()) @decorate(MinLength(1)) nome: string;
-  @decorate(Field(() => Int)) @decorate(IsInt()) ano: number;
-  @decorate(Field(() => CalendarioLetivoCampusRefInputGraphQlDto))
-  @decorate(ValidateNested())
+  @Field(() => String) @IsString() @MinLength(1) nome: string;
+  @Field(() => Int) @IsInt() ano: number;
+  @Field(() => CalendarioLetivoCampusRefInputGraphQlDto)
+  @ValidateNested()
   campus: CalendarioLetivoCampusRefInputGraphQlDto;
-  @decorate(Field(() => CalendarioLetivoOfertaFormacaoRefInputGraphQlDto))
-  @decorate(ValidateNested())
+  @Field(() => CalendarioLetivoOfertaFormacaoRefInputGraphQlDto)
+  @ValidateNested()
   ofertaFormacao: CalendarioLetivoOfertaFormacaoRefInputGraphQlDto;
 }
 
@@ -64,24 +69,24 @@ export class CalendarioLetivoCreateInputGraphQlDto {
 // Update Input
 // ============================================================================
 
-@decorate(InputType("CalendarioLetivoUpdateInputDto"))
+@InputType("CalendarioLetivoUpdateInputDto")
 export class CalendarioLetivoUpdateInputGraphQlDto {
-  @decorate(Field(() => String, { nullable: true }))
-  @decorate(IsOptional())
-  @decorate(IsString())
-  @decorate(MinLength(1))
+  @Field(() => String, { nullable: true })
+  @IsOptional()
+  @IsString()
+  @MinLength(1)
   nome?: string;
-  @decorate(Field(() => Int, { nullable: true }))
-  @decorate(IsOptional())
-  @decorate(IsInt())
+  @Field(() => Int, { nullable: true })
+  @IsOptional()
+  @IsInt()
   ano?: number;
-  @decorate(Field(() => CalendarioLetivoCampusRefInputGraphQlDto, { nullable: true }))
-  @decorate(IsOptional())
-  @decorate(ValidateNested())
+  @Field(() => CalendarioLetivoCampusRefInputGraphQlDto, { nullable: true })
+  @IsOptional()
+  @ValidateNested()
   campus?: CalendarioLetivoCampusRefInputGraphQlDto;
-  @decorate(Field(() => CalendarioLetivoOfertaFormacaoRefInputGraphQlDto, { nullable: true }))
-  @decorate(IsOptional())
-  @decorate(ValidateNested())
+  @Field(() => CalendarioLetivoOfertaFormacaoRefInputGraphQlDto, { nullable: true })
+  @IsOptional()
+  @ValidateNested()
   ofertaFormacao?: CalendarioLetivoOfertaFormacaoRefInputGraphQlDto;
 }
 
@@ -89,20 +94,18 @@ export class CalendarioLetivoUpdateInputGraphQlDto {
 // List Input (GraphQL-compatible - no dots in field names)
 // ============================================================================
 
-@decorate(ArgsType())
+@ArgsType()
 export class CalendarioLetivoListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {
-  @decorate(Field(() => [String], { nullable: true, description: "Filtro por ID do Campus" }))
-  @decorate(IsOptional())
-  @decorate(IsArray())
-  @decorate(IsUUID(undefined, { each: true }))
+  @Field(() => [String], { nullable: true, description: "Filtro por ID do Campus" })
+  @IsOptional()
+  @IsArray()
+  @IsUUID(undefined, { each: true })
   filterCampusId?: string[];
 
-  @decorate(
-    Field(() => [String], { nullable: true, description: "Filtro por ID da Oferta de Formacao" }),
-  )
-  @decorate(IsOptional())
-  @decorate(IsArray())
-  @decorate(IsUUID(undefined, { each: true }))
+  @Field(() => [String], { nullable: true, description: "Filtro por ID da Oferta de Formacao" })
+  @IsOptional()
+  @IsArray()
+  @IsUUID(undefined, { each: true })
   filterOfertaFormacaoId?: string[];
 }
 
@@ -110,11 +113,11 @@ export class CalendarioLetivoListInputGraphQlDto extends PaginatedFilterByIdGrap
 // List Output
 // ============================================================================
 
-@decorate(ObjectType("CalendarioLetivoListResult"))
+@ObjectType("CalendarioLetivoListResult")
 export class CalendarioLetivoListOutputGraphQlDto {
-  @decorate(Field(() => PaginationMetaGraphQlDto))
+  @Field(() => PaginationMetaGraphQlDto)
   meta: PaginationMetaGraphQlDto;
 
-  @decorate(Field(() => [CalendarioLetivoFindOneOutputGraphQlDto]))
+  @Field(() => [CalendarioLetivoFindOneOutputGraphQlDto])
   data: CalendarioLetivoFindOneOutputGraphQlDto[];
 }

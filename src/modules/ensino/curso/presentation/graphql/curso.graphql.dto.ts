@@ -1,11 +1,17 @@
-import { ArgsType, Field, InputType, ObjectType } from "@nestjs/graphql";
-import { IsArray, IsOptional, IsString, IsUUID, MinLength, ValidateNested } from "class-validator";
-import { decorate } from "ts-mixer";
 import {
   EntityBaseGraphQlDto,
   PaginatedFilterByIdGraphQlDto,
   PaginationMetaGraphQlDto,
 } from "@/modules/@shared/infrastructure/graphql/dtos";
+import { ArgsType, Field, InputType, ObjectType } from "@/modules/@shared/presentation/graphql";
+import {
+  IsArray,
+  IsOptional,
+  IsString,
+  IsUUID,
+  MinLength,
+  ValidateNested,
+} from "@/modules/@shared/presentation/shared";
 import { CampusFindOneOutputGraphQlDto } from "@/modules/ambientes/campus/presentation/graphql/campus.graphql.dto";
 import { ImagemFindOneOutputGraphQlDto } from "@/modules/armazenamento/imagem-arquivo/presentation/graphql/imagem-arquivo.graphql.dto";
 import { CursoFieldsMixin } from "@/modules/ensino/curso/presentation/curso.validation-mixin";
@@ -15,14 +21,14 @@ import { OfertaFormacaoFindOneOutputGraphQlDto } from "@/modules/ensino/oferta-f
 // FindOne Output
 // ============================================================================
 
-@decorate(ObjectType("CursoFindOneOutputDto"))
+@ObjectType("CursoFindOneOutputDto")
 export class CursoFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
-  @decorate(Field(() => String)) nome: string;
-  @decorate(Field(() => String)) nomeAbreviado: string;
-  @decorate(Field(() => CampusFindOneOutputGraphQlDto)) campus: CampusFindOneOutputGraphQlDto;
-  @decorate(Field(() => OfertaFormacaoFindOneOutputGraphQlDto))
+  @Field(() => String) nome: string;
+  @Field(() => String) nomeAbreviado: string;
+  @Field(() => CampusFindOneOutputGraphQlDto) campus: CampusFindOneOutputGraphQlDto;
+  @Field(() => OfertaFormacaoFindOneOutputGraphQlDto)
   ofertaFormacao: OfertaFormacaoFindOneOutputGraphQlDto;
-  @decorate(Field(() => ImagemFindOneOutputGraphQlDto, { nullable: true }))
+  @Field(() => ImagemFindOneOutputGraphQlDto, { nullable: true })
   imagemCapa: ImagemFindOneOutputGraphQlDto | null;
 }
 
@@ -30,34 +36,34 @@ export class CursoFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
 // Create Input
 // ============================================================================
 
-@decorate(InputType("CursoCampusRefInputDto"))
+@InputType("CursoCampusRefInputDto")
 export class CursoCampusRefInputGraphQlDto {
-  @decorate(Field(() => String)) @decorate(IsString()) id: string;
+  @Field(() => String) @IsString() id: string;
 }
 
-@decorate(InputType("CursoOfertaFormacaoRefInputDto"))
+@InputType("CursoOfertaFormacaoRefInputDto")
 export class CursoOfertaFormacaoRefInputGraphQlDto {
-  @decorate(Field(() => String)) @decorate(IsString()) id: string;
+  @Field(() => String) @IsString() id: string;
 }
 
-@decorate(InputType("CursoImagemCapaRefInputDto"))
+@InputType("CursoImagemCapaRefInputDto")
 export class CursoImagemCapaRefInputGraphQlDto {
-  @decorate(Field(() => String)) @decorate(IsString()) id: string;
+  @Field(() => String) @IsString() id: string;
 }
 
-@decorate(InputType("CursoCreateInputDto"))
+@InputType("CursoCreateInputDto")
 export class CursoCreateInputGraphQlDto extends CursoFieldsMixin {
-  @decorate(Field(() => String)) declare nome: string;
-  @decorate(Field(() => String)) declare nomeAbreviado: string;
-  @decorate(Field(() => CursoCampusRefInputGraphQlDto))
-  @decorate(ValidateNested())
+  @Field(() => String) declare nome: string;
+  @Field(() => String) declare nomeAbreviado: string;
+  @Field(() => CursoCampusRefInputGraphQlDto)
+  @ValidateNested()
   campus: CursoCampusRefInputGraphQlDto;
-  @decorate(Field(() => CursoOfertaFormacaoRefInputGraphQlDto))
-  @decorate(ValidateNested())
+  @Field(() => CursoOfertaFormacaoRefInputGraphQlDto)
+  @ValidateNested()
   ofertaFormacao: CursoOfertaFormacaoRefInputGraphQlDto;
-  @decorate(Field(() => CursoImagemCapaRefInputGraphQlDto, { nullable: true }))
-  @decorate(IsOptional())
-  @decorate(ValidateNested())
+  @Field(() => CursoImagemCapaRefInputGraphQlDto, { nullable: true })
+  @IsOptional()
+  @ValidateNested()
   imagemCapa?: CursoImagemCapaRefInputGraphQlDto | null;
 }
 
@@ -65,29 +71,29 @@ export class CursoCreateInputGraphQlDto extends CursoFieldsMixin {
 // Update Input
 // ============================================================================
 
-@decorate(InputType("CursoUpdateInputDto"))
+@InputType("CursoUpdateInputDto")
 export class CursoUpdateInputGraphQlDto {
-  @decorate(Field(() => String, { nullable: true }))
-  @decorate(IsOptional())
-  @decorate(IsString())
-  @decorate(MinLength(1))
+  @Field(() => String, { nullable: true })
+  @IsOptional()
+  @IsString()
+  @MinLength(1)
   nome?: string;
-  @decorate(Field(() => String, { nullable: true }))
-  @decorate(IsOptional())
-  @decorate(IsString())
-  @decorate(MinLength(1))
+  @Field(() => String, { nullable: true })
+  @IsOptional()
+  @IsString()
+  @MinLength(1)
   nomeAbreviado?: string;
-  @decorate(Field(() => CursoCampusRefInputGraphQlDto, { nullable: true }))
-  @decorate(IsOptional())
-  @decorate(ValidateNested())
+  @Field(() => CursoCampusRefInputGraphQlDto, { nullable: true })
+  @IsOptional()
+  @ValidateNested()
   campus?: CursoCampusRefInputGraphQlDto;
-  @decorate(Field(() => CursoOfertaFormacaoRefInputGraphQlDto, { nullable: true }))
-  @decorate(IsOptional())
-  @decorate(ValidateNested())
+  @Field(() => CursoOfertaFormacaoRefInputGraphQlDto, { nullable: true })
+  @IsOptional()
+  @ValidateNested()
   ofertaFormacao?: CursoOfertaFormacaoRefInputGraphQlDto;
-  @decorate(Field(() => CursoImagemCapaRefInputGraphQlDto, { nullable: true }))
-  @decorate(IsOptional())
-  @decorate(ValidateNested())
+  @Field(() => CursoImagemCapaRefInputGraphQlDto, { nullable: true })
+  @IsOptional()
+  @ValidateNested()
   imagemCapa?: CursoImagemCapaRefInputGraphQlDto | null;
 }
 
@@ -95,20 +101,18 @@ export class CursoUpdateInputGraphQlDto {
 // List Input
 // ============================================================================
 
-@decorate(ArgsType())
+@ArgsType()
 export class CursoListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {
-  @decorate(Field(() => [String], { nullable: true, description: "Filtro por ID do Campus" }))
-  @decorate(IsOptional())
-  @decorate(IsArray())
-  @decorate(IsUUID(undefined, { each: true }))
+  @Field(() => [String], { nullable: true, description: "Filtro por ID do Campus" })
+  @IsOptional()
+  @IsArray()
+  @IsUUID(undefined, { each: true })
   filterCampusId?: string[];
 
-  @decorate(
-    Field(() => [String], { nullable: true, description: "Filtro por ID da Oferta de Formacao" }),
-  )
-  @decorate(IsOptional())
-  @decorate(IsArray())
-  @decorate(IsUUID(undefined, { each: true }))
+  @Field(() => [String], { nullable: true, description: "Filtro por ID da Oferta de Formacao" })
+  @IsOptional()
+  @IsArray()
+  @IsUUID(undefined, { each: true })
   filterOfertaFormacaoId?: string[];
 }
 
@@ -116,11 +120,11 @@ export class CursoListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {
 // List Output
 // ============================================================================
 
-@decorate(ObjectType("CursoListResult"))
+@ObjectType("CursoListResult")
 export class CursoListOutputGraphQlDto {
-  @decorate(Field(() => PaginationMetaGraphQlDto))
+  @Field(() => PaginationMetaGraphQlDto)
   meta: PaginationMetaGraphQlDto;
 
-  @decorate(Field(() => [CursoFindOneOutputGraphQlDto]))
+  @Field(() => [CursoFindOneOutputGraphQlDto])
   data: CursoFindOneOutputGraphQlDto[];
 }

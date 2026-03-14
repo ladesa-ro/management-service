@@ -1,14 +1,14 @@
-import { Inject, Injectable } from "@nestjs/common";
 import { DataSource } from "typeorm";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { PartialEntity } from "@/modules/@shared";
 import { APP_DATA_SOURCE_TOKEN } from "@/modules/@shared/infrastructure/persistence/typeorm";
-import type { IImagemArquivoRepositoryPort } from "@/modules/armazenamento/imagem/application/ports";
+import type { IImagemArquivoRepository } from "@/modules/armazenamento/imagem/domain/repositories";
 import type { ImagemArquivo } from "@/modules/armazenamento/imagem-arquivo/domain/imagem-arquivo.domain";
 import { createImagemArquivoRepository } from "./imagem-arquivo.repository";
 
-@Injectable()
-export class ImagemArquivoTypeOrmRepositoryAdapter implements IImagemArquivoRepositoryPort {
-  constructor(@Inject(APP_DATA_SOURCE_TOKEN) private readonly dataSource: DataSource) {}
+@DeclareImplementation()
+export class ImagemArquivoTypeOrmRepositoryAdapter implements IImagemArquivoRepository {
+  constructor(@DeclareDependency(APP_DATA_SOURCE_TOKEN) private readonly dataSource: DataSource) {}
 
   create(): ImagemArquivo {
     return createImagemArquivoRepository(this.dataSource).create() as unknown as ImagemArquivo;

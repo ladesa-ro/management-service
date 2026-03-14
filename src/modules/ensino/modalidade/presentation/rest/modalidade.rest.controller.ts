@@ -7,8 +7,15 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
+import { DeclareDependency, IContainer } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
-import { ModalidadeService } from "@/modules/ensino/modalidade/application/use-cases/modalidade.service";
+import { ensureExists } from "@/modules/@shared";
+import { IModalidadeCreateCommandHandler } from "@/modules/ensino/modalidade/domain/commands/modalidade-create.command.handler.interface";
+import { IModalidadeDeleteCommandHandler } from "@/modules/ensino/modalidade/domain/commands/modalidade-delete.command.handler.interface";
+import { IModalidadeUpdateCommandHandler } from "@/modules/ensino/modalidade/domain/commands/modalidade-update.command.handler.interface";
+import { Modalidade } from "@/modules/ensino/modalidade/domain/modalidade.domain";
+import { IModalidadeFindOneQueryHandler } from "@/modules/ensino/modalidade/domain/queries/modalidade-find-one.query.handler.interface";
+import { IModalidadeListQueryHandler } from "@/modules/ensino/modalidade/domain/queries/modalidade-list.query.handler.interface";
 import {
   ModalidadeCreateInputRestDto,
   ModalidadeFindOneInputRestDto,
@@ -22,7 +29,7 @@ import { ModalidadeRestMapper } from "./modalidade.rest.mapper";
 @ApiTags("modalidades")
 @Controller("/modalidades")
 export class ModalidadeRestController {
-  constructor(private modalidadeService: ModalidadeService) {}
+  constructor(@DeclareDependency(IContainer) private readonly container: IContainer) {}
 
   @Get("/")
   @ApiOperation({ summary: "Lista modalidades", operationId: "modalidadeFindAll" })
@@ -33,7 +40,10 @@ export class ModalidadeRestController {
     @Query() dto: ModalidadeListInputRestDto,
   ): Promise<ModalidadeListOutputRestDto> {
     const input = ModalidadeRestMapper.toListInput(dto);
-    const result = await this.modalidadeService.findAll(accessContext, input);
+    const listHandler = this.container.get<IModalidadeListQueryHandler>(
+      IModalidadeListQueryHandler,
+    );
+    const result = await listHandler.execute({ accessContext, dto: input });
     return ModalidadeRestMapper.toListOutputDto(result);
   }
 
@@ -47,7 +57,11 @@ export class ModalidadeRestController {
     @Param() params: ModalidadeFindOneInputRestDto,
   ): Promise<ModalidadeFindOneOutputRestDto> {
     const input = ModalidadeRestMapper.toFindOneInput(params);
-    const result = await this.modalidadeService.findByIdStrict(accessContext, input);
+    const findOneHandler = this.container.get<IModalidadeFindOneQueryHandler>(
+      IModalidadeFindOneQueryHandler,
+    );
+    const result = await findOneHandler.execute({ accessContext, dto: input });
+    ensureExists(result, Modalidade.entityName, input.id);
     return ModalidadeRestMapper.toFindOneOutputDto(result);
   }
 
@@ -60,7 +74,10 @@ export class ModalidadeRestController {
     @Body() dto: ModalidadeCreateInputRestDto,
   ): Promise<ModalidadeFindOneOutputRestDto> {
     const input = ModalidadeRestMapper.toCreateInput(dto);
-    const result = await this.modalidadeService.create(accessContext, input);
+    const createHandler = this.container.get<IModalidadeCreateCommandHandler>(
+      IModalidadeCreateCommandHandler,
+    );
+    const result = await createHandler.execute({ accessContext, dto: input });
     return ModalidadeRestMapper.toFindOneOutputDto(result);
   }
 
@@ -75,7 +92,10 @@ export class ModalidadeRestController {
     @Body() dto: ModalidadeUpdateInputRestDto,
   ): Promise<ModalidadeFindOneOutputRestDto> {
     const input = ModalidadeRestMapper.toUpdateInput(params, dto);
-    const result = await this.modalidadeService.update(accessContext, input);
+    const updateHandler = this.container.get<IModalidadeUpdateCommandHandler>(
+      IModalidadeUpdateCommandHandler,
+    );
+    const result = await updateHandler.execute({ accessContext, dto: input });
     return ModalidadeRestMapper.toFindOneOutputDto(result);
   }
 
@@ -89,6 +109,9 @@ export class ModalidadeRestController {
     @Param() params: ModalidadeFindOneInputRestDto,
   ): Promise<boolean> {
     const input = ModalidadeRestMapper.toFindOneInput(params);
-    return this.modalidadeService.deleteOneById(accessContext, input);
+    const deleteHandler = this.container.get<IModalidadeDeleteCommandHandler>(
+      IModalidadeDeleteCommandHandler,
+    );
+    return deleteHandler.execute({ accessContext, dto: input });
   }
 }

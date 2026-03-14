@@ -7,8 +7,15 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
+import { DeclareDependency, IContainer } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
-import { CampusService } from "@/modules/ambientes/campus";
+import { ensureExists } from "@/modules/@shared";
+import { Campus } from "@/modules/ambientes/campus/domain/campus.domain";
+import { ICampusCreateCommandHandler } from "@/modules/ambientes/campus/domain/commands/campus-create.command.handler.interface";
+import { ICampusDeleteCommandHandler } from "@/modules/ambientes/campus/domain/commands/campus-delete.command.handler.interface";
+import { ICampusUpdateCommandHandler } from "@/modules/ambientes/campus/domain/commands/campus-update.command.handler.interface";
+import { ICampusFindOneQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-find-one.query.handler.interface";
+import { ICampusListQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-list.query.handler.interface";
 import {
   CampusCreateInputRestDto,
   CampusFindOneInputRestDto,
@@ -22,7 +29,7 @@ import { CampusRestMapper } from "./campus.rest.mapper";
 @ApiTags("campi")
 @Controller("/campi")
 export class CampusRestController {
-  constructor(private campusService: CampusService) {}
+  constructor(@DeclareDependency(IContainer) private readonly container: IContainer) {}
 
   @Get("/")
   @ApiOperation({ summary: "Lista campi", operationId: "campusFindAll" })
@@ -33,7 +40,8 @@ export class CampusRestController {
     @Query() dto: CampusListInputRestDto,
   ): Promise<CampusListOutputRestDto> {
     const input = CampusRestMapper.toListInput(dto);
-    const result = await this.campusService.findAll(accessContext, input);
+    const listHandler = this.container.get<ICampusListQueryHandler>(ICampusListQueryHandler);
+    const result = await listHandler.execute({ accessContext, dto: input });
     return CampusRestMapper.toListOutputDto(result);
   }
 
@@ -47,7 +55,11 @@ export class CampusRestController {
     @Param() params: CampusFindOneInputRestDto,
   ): Promise<CampusFindOneOutputRestDto> {
     const input = CampusRestMapper.toFindOneInput(params);
-    const result = await this.campusService.findByIdStrict(accessContext, input);
+    const findOneHandler = this.container.get<ICampusFindOneQueryHandler>(
+      ICampusFindOneQueryHandler,
+    );
+    const result = await findOneHandler.execute({ accessContext, dto: input });
+    ensureExists(result, Campus.entityName, input.id);
     return CampusRestMapper.toFindOneOutputDto(result);
   }
 
@@ -60,7 +72,10 @@ export class CampusRestController {
     @Body() dto: CampusCreateInputRestDto,
   ): Promise<CampusFindOneOutputRestDto> {
     const input = CampusRestMapper.toCreateInput(dto);
-    const result = await this.campusService.create(accessContext, input);
+    const createHandler = this.container.get<ICampusCreateCommandHandler>(
+      ICampusCreateCommandHandler,
+    );
+    const result = await createHandler.execute({ accessContext, dto: input });
     return CampusRestMapper.toFindOneOutputDto(result);
   }
 
@@ -75,7 +90,10 @@ export class CampusRestController {
     @Body() dto: CampusUpdateInputRestDto,
   ): Promise<CampusFindOneOutputRestDto> {
     const input = CampusRestMapper.toUpdateInput(params, dto);
-    const result = await this.campusService.update(accessContext, input);
+    const updateHandler = this.container.get<ICampusUpdateCommandHandler>(
+      ICampusUpdateCommandHandler,
+    );
+    const result = await updateHandler.execute({ accessContext, dto: input });
     return CampusRestMapper.toFindOneOutputDto(result);
   }
 
@@ -89,6 +107,9 @@ export class CampusRestController {
     @Param() params: CampusFindOneInputRestDto,
   ): Promise<boolean> {
     const input = CampusRestMapper.toFindOneInput(params);
-    return this.campusService.deleteOneById(accessContext, input);
+    const deleteHandler = this.container.get<ICampusDeleteCommandHandler>(
+      ICampusDeleteCommandHandler,
+    );
+    return deleteHandler.execute({ accessContext, dto: input });
   }
 }

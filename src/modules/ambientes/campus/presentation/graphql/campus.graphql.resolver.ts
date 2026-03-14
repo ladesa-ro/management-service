@@ -1,8 +1,15 @@
 import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
+import { DeclareDependency, IContainer } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextGraphQL } from "@/modules/@seguranca/contexto-acesso";
+import { ensureExists } from "@/modules/@shared";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
-import { CampusService } from "@/modules/ambientes/campus";
+import { Campus } from "@/modules/ambientes/campus/domain/campus.domain";
+import { ICampusCreateCommandHandler } from "@/modules/ambientes/campus/domain/commands/campus-create.command.handler.interface";
+import { ICampusDeleteCommandHandler } from "@/modules/ambientes/campus/domain/commands/campus-delete.command.handler.interface";
+import { ICampusUpdateCommandHandler } from "@/modules/ambientes/campus/domain/commands/campus-update.command.handler.interface";
+import { ICampusFindOneQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-find-one.query.handler.interface";
+import { ICampusListQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-list.query.handler.interface";
 import {
   CampusCreateInputGraphQlDto,
   CampusFindOneOutputGraphQlDto,
@@ -14,7 +21,10 @@ import { CampusGraphqlMapper } from "./campus.graphql.mapper";
 
 @Resolver(() => CampusFindOneOutputGraphQlDto)
 export class CampusGraphqlResolver {
-  constructor(private readonly campusService: CampusService) {}
+  constructor(
+    @DeclareDependency(IContainer)
+    private readonly container: IContainer,
+  ) {}
 
   @Query(() => CampusListOutputGraphQlDto, { name: "campusFindAll" })
   async findAll(
@@ -28,7 +38,8 @@ export class CampusGraphqlResolver {
       input.selection = graphqlExtractSelection(info, "paginated");
     }
 
-    const result = await this.campusService.findAll(accessContext, input);
+    const listHandler = this.container.get<ICampusListQueryHandler>(ICampusListQueryHandler);
+    const result = await listHandler.execute({ accessContext, dto: input });
     return CampusGraphqlMapper.toListOutputDto(result);
   }
 
@@ -39,7 +50,11 @@ export class CampusGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<CampusFindOneOutputGraphQlDto> {
     const selection = graphqlExtractSelection(info);
-    const result = await this.campusService.findByIdStrict(accessContext, { id, selection });
+    const findOneHandler = this.container.get<ICampusFindOneQueryHandler>(
+      ICampusFindOneQueryHandler,
+    );
+    const result = await findOneHandler.execute({ accessContext, dto: { id, selection } });
+    ensureExists(result, Campus.entityName, id);
     return CampusGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -50,7 +65,10 @@ export class CampusGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<CampusFindOneOutputGraphQlDto> {
     const input = CampusGraphqlMapper.toCreateInput(dto);
-    const result = await this.campusService.create(accessContext, input);
+    const createHandler = this.container.get<ICampusCreateCommandHandler>(
+      ICampusCreateCommandHandler,
+    );
+    const result = await createHandler.execute({ accessContext, dto: input });
     return CampusGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -62,7 +80,10 @@ export class CampusGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<CampusFindOneOutputGraphQlDto> {
     const input = CampusGraphqlMapper.toUpdateInput({ id }, dto);
-    const result = await this.campusService.update(accessContext, input);
+    const updateHandler = this.container.get<ICampusUpdateCommandHandler>(
+      ICampusUpdateCommandHandler,
+    );
+    const result = await updateHandler.execute({ accessContext, dto: input });
     return CampusGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -71,6 +92,9 @@ export class CampusGraphqlResolver {
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
   ): Promise<boolean> {
-    return this.campusService.deleteOneById(accessContext, { id });
+    const deleteHandler = this.container.get<ICampusDeleteCommandHandler>(
+      ICampusDeleteCommandHandler,
+    );
+    return deleteHandler.execute({ accessContext, dto: { id } });
   }
 }

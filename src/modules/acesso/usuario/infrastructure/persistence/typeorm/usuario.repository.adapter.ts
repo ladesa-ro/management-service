@@ -1,5 +1,5 @@
-import { Inject, Injectable } from "@nestjs/common";
 import { DataSource } from "typeorm";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
   APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
@@ -9,11 +9,11 @@ import {
   QbEfficientLoad,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
-  IUsuarioRepositoryPort,
-  UsuarioFindOneInputDto,
-  UsuarioFindOneOutputDto,
-  UsuarioListInputDto,
-  UsuarioListOutputDto,
+  IUsuarioRepository,
+  UsuarioFindOneQuery,
+  UsuarioFindOneQueryResult,
+  UsuarioListQuery,
+  UsuarioListQueryResult,
 } from "@/modules/acesso/usuario";
 import { createCursoRepository } from "../../../../../ensino/curso/infrastructure/persistence/typeorm/curso.repository";
 import { createDisciplinaRepository } from "../../../../../ensino/disciplina/infrastructure/persistence/typeorm/disciplina.repository";
@@ -21,23 +21,22 @@ import { createTurmaRepository } from "../../../../../ensino/turma/infrastructur
 import type { UsuarioEntity } from "./usuario.entity";
 import { createUsuarioRepository } from "./usuario.repository";
 
-@Injectable()
+@DeclareImplementation()
 export class UsuarioTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     UsuarioEntity,
-    UsuarioListInputDto,
-    UsuarioListOutputDto,
-    UsuarioFindOneInputDto,
-    UsuarioFindOneOutputDto
+    UsuarioListQuery,
+    UsuarioListQueryResult,
+    UsuarioFindOneQuery,
+    UsuarioFindOneQueryResult
   >
-  implements IUsuarioRepositoryPort
+  implements IUsuarioRepository
 {
   protected readonly alias = "usuario";
-  protected readonly authzAction = "usuario:find";
-  protected readonly outputDtoName = "UsuarioFindOneOutputDto";
+  protected readonly outputDtoName = "UsuarioFindOneQueryResult";
 
   constructor(
-    @Inject(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
+    @DeclareDependency(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
     protected readonly paginationAdapter: NestJsPaginateAdapter,
   ) {
     super();
@@ -50,7 +49,7 @@ export class UsuarioTypeOrmRepositoryAdapter
   async findByMatricula(
     matricula: string,
     selection?: string[] | boolean,
-  ): Promise<UsuarioFindOneOutputDto | null> {
+  ): Promise<UsuarioFindOneQueryResult | null> {
     const qb = this.repository.createQueryBuilder(this.alias);
 
     qb.andWhere(`${this.alias}.matricula = :matricula`, {
@@ -62,7 +61,7 @@ export class UsuarioTypeOrmRepositoryAdapter
 
     const usuario = await qb.getOne();
 
-    return usuario as UsuarioFindOneOutputDto | null;
+    return usuario as UsuarioFindOneQueryResult | null;
   }
 
   // Métodos específicos do Usuario que não estão na classe base

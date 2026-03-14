@@ -1,20 +1,18 @@
-import { IsDateString, IsInt, IsOptional, Max, Min } from "class-validator";
-import { decorate } from "ts-mixer";
-
+import { IsDateString, IsInt, IsOptional, Max, Min } from "@/modules/@shared/presentation/shared";
 export class DiarioPreferenciaAgrupamentoFieldsMixin {
-  @decorate(IsDateString())
+  @IsDateString()
   dataInicio: string | Date;
 
-  @decorate(IsOptional())
-  @decorate(IsDateString())
+  @IsOptional()
+  @IsDateString()
   dataFim?: string | Date | null;
 
-  @decorate(IsInt())
-  @decorate(Min(1))
-  @decorate(Max(7))
+  @IsInt()
+  @Min(1)
+  @Max(7)
   diaSemanaIso: number;
 
-  @decorate(IsInt())
-  @decorate(Min(1))
+  @IsInt()
+  @Min(1)
   aulasSeguidas: number;
 }

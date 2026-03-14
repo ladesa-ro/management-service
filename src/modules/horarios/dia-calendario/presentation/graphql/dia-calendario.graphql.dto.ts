@@ -1,4 +1,9 @@
-import { ArgsType, Field, InputType, ObjectType } from "@nestjs/graphql";
+import {
+  EntityBaseGraphQlDto,
+  PaginatedFilterByIdGraphQlDto,
+  PaginationMetaGraphQlDto,
+} from "@/modules/@shared/infrastructure/graphql/dtos";
+import { ArgsType, Field, InputType, ObjectType } from "@/modules/@shared/presentation/graphql";
 import {
   IsArray,
   IsBoolean,
@@ -7,13 +12,7 @@ import {
   IsString,
   IsUUID,
   ValidateNested,
-} from "class-validator";
-import { decorate } from "ts-mixer";
-import {
-  EntityBaseGraphQlDto,
-  PaginatedFilterByIdGraphQlDto,
-  PaginationMetaGraphQlDto,
-} from "@/modules/@shared/infrastructure/graphql/dtos";
+} from "@/modules/@shared/presentation/shared";
 import { CalendarioLetivoFindOneOutputGraphQlDto } from "@/modules/horarios/calendario-letivo/presentation/graphql/calendario-letivo.graphql.dto";
 import { DiaCalendarioFieldsMixin } from "../dia-calendario.validation-mixin";
 
@@ -21,15 +20,15 @@ import { DiaCalendarioFieldsMixin } from "../dia-calendario.validation-mixin";
 // FindOne Output
 // ============================================================================
 
-@decorate(ObjectType("DiaCalendarioFindOneOutputDto"))
+@ObjectType("DiaCalendarioFindOneOutputDto")
 export class DiaCalendarioFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
-  @decorate(Field(() => String)) data: string;
-  @decorate(Field(() => Boolean)) diaLetivo: boolean;
-  @decorate(Field(() => String)) feriado: string;
-  @decorate(Field(() => Boolean)) diaPresencial: boolean;
-  @decorate(Field(() => String)) tipo: string;
-  @decorate(Field(() => Boolean)) extraCurricular: boolean;
-  @decorate(Field(() => CalendarioLetivoFindOneOutputGraphQlDto))
+  @Field(() => String) data: string;
+  @Field(() => Boolean) diaLetivo: boolean;
+  @Field(() => String) feriado: string;
+  @Field(() => Boolean) diaPresencial: boolean;
+  @Field(() => String) tipo: string;
+  @Field(() => Boolean) extraCurricular: boolean;
+  @Field(() => CalendarioLetivoFindOneOutputGraphQlDto)
   calendario: CalendarioLetivoFindOneOutputGraphQlDto;
 }
 
@@ -37,22 +36,22 @@ export class DiaCalendarioFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
 // Create Input
 // ============================================================================
 
-@decorate(InputType("CalendarioLetivoRefInputForDiaCalendarioDto"))
+@InputType("CalendarioLetivoRefInputForDiaCalendarioDto")
 export class CalendarioLetivoRefInputForDiaCalendarioGraphQlDto {
-  @decorate(Field(() => String)) @decorate(IsString()) id: string;
+  @Field(() => String) @IsString() id: string;
 }
 
-@decorate(InputType("DiaCalendarioCreateInputDto"))
+@InputType("DiaCalendarioCreateInputDto")
 export class DiaCalendarioCreateInputGraphQlDto extends DiaCalendarioFieldsMixin {
-  @decorate(Field(() => String)) declare data: string;
-  @decorate(Field(() => Boolean)) declare diaLetivo: boolean;
-  @decorate(Field(() => String)) declare feriado: string;
-  @decorate(Field(() => Boolean)) declare diaPresencial: boolean;
-  @decorate(Field(() => String)) declare tipo: string;
-  @decorate(Field(() => Boolean)) declare extraCurricular: boolean;
+  @Field(() => String) declare data: string;
+  @Field(() => Boolean) declare diaLetivo: boolean;
+  @Field(() => String) declare feriado: string;
+  @Field(() => Boolean) declare diaPresencial: boolean;
+  @Field(() => String) declare tipo: string;
+  @Field(() => Boolean) declare extraCurricular: boolean;
 
-  @decorate(Field(() => CalendarioLetivoRefInputForDiaCalendarioGraphQlDto))
-  @decorate(ValidateNested())
+  @Field(() => CalendarioLetivoRefInputForDiaCalendarioGraphQlDto)
+  @ValidateNested()
   calendario: CalendarioLetivoRefInputForDiaCalendarioGraphQlDto;
 }
 
@@ -60,36 +59,36 @@ export class DiaCalendarioCreateInputGraphQlDto extends DiaCalendarioFieldsMixin
 // Update Input
 // ============================================================================
 
-@decorate(InputType("DiaCalendarioUpdateInputDto"))
+@InputType("DiaCalendarioUpdateInputDto")
 export class DiaCalendarioUpdateInputGraphQlDto {
-  @decorate(Field(() => String, { nullable: true }))
-  @decorate(IsOptional())
-  @decorate(IsDateString())
+  @Field(() => String, { nullable: true })
+  @IsOptional()
+  @IsDateString()
   data?: string;
-  @decorate(Field(() => Boolean, { nullable: true }))
-  @decorate(IsOptional())
-  @decorate(IsBoolean())
+  @Field(() => Boolean, { nullable: true })
+  @IsOptional()
+  @IsBoolean()
   diaLetivo?: boolean;
-  @decorate(Field(() => String, { nullable: true }))
-  @decorate(IsOptional())
-  @decorate(IsString())
+  @Field(() => String, { nullable: true })
+  @IsOptional()
+  @IsString()
   feriado?: string;
-  @decorate(Field(() => Boolean, { nullable: true }))
-  @decorate(IsOptional())
-  @decorate(IsBoolean())
+  @Field(() => Boolean, { nullable: true })
+  @IsOptional()
+  @IsBoolean()
   diaPresencial?: boolean;
-  @decorate(Field(() => String, { nullable: true }))
-  @decorate(IsOptional())
-  @decorate(IsString())
+  @Field(() => String, { nullable: true })
+  @IsOptional()
+  @IsString()
   tipo?: string;
-  @decorate(Field(() => Boolean, { nullable: true }))
-  @decorate(IsOptional())
-  @decorate(IsBoolean())
+  @Field(() => Boolean, { nullable: true })
+  @IsOptional()
+  @IsBoolean()
   extraCurricular?: boolean;
 
-  @decorate(Field(() => CalendarioLetivoRefInputForDiaCalendarioGraphQlDto, { nullable: true }))
-  @decorate(IsOptional())
-  @decorate(ValidateNested())
+  @Field(() => CalendarioLetivoRefInputForDiaCalendarioGraphQlDto, { nullable: true })
+  @IsOptional()
+  @ValidateNested()
   calendario?: CalendarioLetivoRefInputForDiaCalendarioGraphQlDto;
 }
 
@@ -97,12 +96,12 @@ export class DiaCalendarioUpdateInputGraphQlDto {
 // List Input
 // ============================================================================
 
-@decorate(ArgsType())
+@ArgsType()
 export class DiaCalendarioListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {
-  @decorate(Field(() => [String], { nullable: true, description: "Filtro por ID do Calendario" }))
-  @decorate(IsOptional())
-  @decorate(IsArray())
-  @decorate(IsUUID(undefined, { each: true }))
+  @Field(() => [String], { nullable: true, description: "Filtro por ID do Calendario" })
+  @IsOptional()
+  @IsArray()
+  @IsUUID(undefined, { each: true })
   filterCalendarioId?: string[];
 }
 
@@ -110,11 +109,11 @@ export class DiaCalendarioListInputGraphQlDto extends PaginatedFilterByIdGraphQl
 // List Output
 // ============================================================================
 
-@decorate(ObjectType("DiaCalendarioListResult"))
+@ObjectType("DiaCalendarioListResult")
 export class DiaCalendarioListOutputGraphQlDto {
-  @decorate(Field(() => PaginationMetaGraphQlDto))
+  @Field(() => PaginationMetaGraphQlDto)
   meta: PaginationMetaGraphQlDto;
 
-  @decorate(Field(() => [DiaCalendarioFindOneOutputGraphQlDto]))
+  @Field(() => [DiaCalendarioFindOneOutputGraphQlDto])
   data: DiaCalendarioFindOneOutputGraphQlDto[];
 }

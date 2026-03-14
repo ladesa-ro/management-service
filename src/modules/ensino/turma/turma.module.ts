@@ -4,12 +4,32 @@ import { AmbienteModule } from "@/modules/ambientes/ambiente/ambiente.module";
 import { ArquivoModule } from "@/modules/armazenamento/arquivo/arquivo.module";
 import { ImagemModule } from "@/modules/armazenamento/imagem/imagem.module";
 import { CursoModule } from "@/modules/ensino/curso/curso.module";
-import { TURMA_REPOSITORY_PORT } from "@/modules/ensino/turma/application/ports";
-import { TurmaService } from "@/modules/ensino/turma/application/use-cases/turma.service";
+import { TurmaPermissionCheckerImpl } from "@/modules/ensino/turma/application/authorization";
 import {
-  TurmaAuthzRegistrySetup,
-  TurmaTypeOrmRepositoryAdapter,
-} from "@/modules/ensino/turma/infrastructure";
+  TurmaCreateCommandHandlerImpl,
+  TurmaDeleteCommandHandlerImpl,
+  TurmaUpdateCommandHandlerImpl,
+  TurmaUpdateImagemCapaCommandHandlerImpl,
+} from "@/modules/ensino/turma/application/commands";
+import {
+  TurmaFindOneQueryHandlerImpl,
+  TurmaGetImagemCapaQueryHandlerImpl,
+  TurmaListQueryHandlerImpl,
+} from "@/modules/ensino/turma/application/queries";
+import { ITurmaPermissionChecker } from "@/modules/ensino/turma/domain/authorization";
+import {
+  ITurmaCreateCommandHandler,
+  ITurmaDeleteCommandHandler,
+  ITurmaUpdateCommandHandler,
+  ITurmaUpdateImagemCapaCommandHandler,
+} from "@/modules/ensino/turma/domain/commands";
+import {
+  ITurmaFindOneQueryHandler,
+  ITurmaGetImagemCapaQueryHandler,
+  ITurmaListQueryHandler,
+} from "@/modules/ensino/turma/domain/queries";
+import { ITurmaRepository } from "@/modules/ensino/turma/domain/repositories";
+import { TurmaTypeOrmRepositoryAdapter } from "@/modules/ensino/turma/infrastructure";
 import { TurmaGraphqlResolver } from "@/modules/ensino/turma/presentation/graphql/turma.graphql.resolver";
 import { TurmaRestController } from "@/modules/ensino/turma/presentation/rest/turma.rest.controller";
 
@@ -18,14 +38,26 @@ import { TurmaRestController } from "@/modules/ensino/turma/presentation/rest/tu
   controllers: [TurmaRestController],
   providers: [
     NestJsPaginateAdapter,
-    TurmaService,
     TurmaGraphqlResolver,
-    TurmaAuthzRegistrySetup,
     {
-      provide: TURMA_REPOSITORY_PORT,
+      provide: ITurmaRepository,
       useClass: TurmaTypeOrmRepositoryAdapter,
     },
+    { provide: ITurmaPermissionChecker, useClass: TurmaPermissionCheckerImpl },
+
+    // Commands
+    { provide: ITurmaCreateCommandHandler, useClass: TurmaCreateCommandHandlerImpl },
+    { provide: ITurmaUpdateCommandHandler, useClass: TurmaUpdateCommandHandlerImpl },
+    { provide: ITurmaDeleteCommandHandler, useClass: TurmaDeleteCommandHandlerImpl },
+    {
+      provide: ITurmaUpdateImagemCapaCommandHandler,
+      useClass: TurmaUpdateImagemCapaCommandHandlerImpl,
+    },
+    // Queries
+    { provide: ITurmaListQueryHandler, useClass: TurmaListQueryHandlerImpl },
+    { provide: ITurmaFindOneQueryHandler, useClass: TurmaFindOneQueryHandlerImpl },
+    { provide: ITurmaGetImagemCapaQueryHandler, useClass: TurmaGetImagemCapaQueryHandlerImpl },
   ],
-  exports: [TurmaService],
+  exports: [ITurmaFindOneQueryHandler],
 })
 export class TurmaModule {}

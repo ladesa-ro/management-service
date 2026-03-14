@@ -6,8 +6,12 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
+import { DeclareDependency, IContainer } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
-import { EstadoService } from "@/modules/localidades/estado/application/use-cases/estado.service";
+import { ensureExists } from "@/modules/@shared";
+import { Estado } from "@/modules/localidades/estado/domain/estado.domain";
+import { IEstadoFindOneQueryHandler } from "@/modules/localidades/estado/domain/queries/estado-find-one.query.handler.interface";
+import { IEstadoListQueryHandler } from "@/modules/localidades/estado/domain/queries/estado-list.query.handler.interface";
 import {
   EstadoFindOneInputRestDto,
   EstadoFindOneOutputRestDto,
@@ -19,7 +23,7 @@ import { EstadoRestMapper } from "./estado.rest.mapper";
 @ApiTags("estados")
 @Controller("/base/estados")
 export class EstadoRestController {
-  constructor(private estadoService: EstadoService) {}
+  constructor(@DeclareDependency(IContainer) private readonly container: IContainer) {}
 
   @Get("/")
   @ApiOperation({ summary: "Lista estados", operationId: "estadoFindAll" })
@@ -29,8 +33,9 @@ export class EstadoRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Query() dto: EstadoListInputRestDto,
   ): Promise<EstadoListOutputRestDto> {
+    const listHandler = this.container.get<IEstadoListQueryHandler>(IEstadoListQueryHandler);
     const input = EstadoRestMapper.toListInput(dto);
-    const result = await this.estadoService.findAll(accessContext, input);
+    const result = await listHandler.execute({ accessContext, dto: input });
     return EstadoRestMapper.toListOutputDto(result);
   }
 
@@ -43,8 +48,12 @@ export class EstadoRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: EstadoFindOneInputRestDto,
   ): Promise<EstadoFindOneOutputRestDto> {
+    const findOneHandler = this.container.get<IEstadoFindOneQueryHandler>(
+      IEstadoFindOneQueryHandler,
+    );
     const input = EstadoRestMapper.toFindOneInput(params);
-    const result = await this.estadoService.findByIdStrict(accessContext, input);
+    const result = await findOneHandler.execute({ accessContext, dto: input });
+    ensureExists(result, Estado.entityName, input.id);
     return EstadoRestMapper.toFindOneOutputDto(result);
   }
 }

@@ -1,5 +1,5 @@
-import { Inject, Injectable } from "@nestjs/common";
 import { DataSource } from "typeorm";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
   APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
@@ -8,32 +8,31 @@ import {
   paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
-  EnderecoFindOneInputDto,
-  EnderecoFindOneOutputDto,
-  EnderecoListInputDto,
-  EnderecoListOutputDto,
-  IEnderecoRepositoryPort,
+  EnderecoFindOneQuery,
+  EnderecoFindOneQueryResult,
+  EnderecoListQuery,
+  EnderecoListQueryResult,
+  IEnderecoRepository,
 } from "@/modules/localidades/endereco";
 import type { EnderecoEntity } from "@/modules/localidades/endereco/infrastructure/persistence/typeorm/index";
 import { createEnderecoRepository } from "./endereco.repository";
 
-@Injectable()
+@DeclareImplementation()
 export class EnderecoTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     EnderecoEntity,
-    EnderecoListInputDto,
-    EnderecoListOutputDto,
-    EnderecoFindOneInputDto,
-    EnderecoFindOneOutputDto
+    EnderecoListQuery,
+    EnderecoListQueryResult,
+    EnderecoFindOneQuery,
+    EnderecoFindOneQueryResult
   >
-  implements IEnderecoRepositoryPort
+  implements IEnderecoRepository
 {
   protected readonly alias = "endereco";
-  protected readonly authzAction = "endereco:find";
-  protected readonly outputDtoName = "EnderecoFindOneOutputDto";
+  protected readonly outputDtoName = "EnderecoFindOneQueryResult";
 
   constructor(
-    @Inject(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
+    @DeclareDependency(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
     protected readonly paginationAdapter: NestJsPaginateAdapter,
   ) {
     super();
@@ -44,13 +43,13 @@ export class EnderecoTypeOrmRepositoryAdapter
   }
 
   // Custom method for internal lookup
-  async findOneById(id: string): Promise<EnderecoFindOneOutputDto | null> {
+  async findOneById(id: string): Promise<EnderecoFindOneQueryResult | null> {
     const endereco = await this.repository.findOne({
       where: { id },
       relations: ["cidade", "cidade.estado"],
     });
 
-    return endereco as EnderecoFindOneOutputDto | null;
+    return endereco as EnderecoFindOneQueryResult | null;
   }
 
   async exists(id: string): Promise<boolean> {

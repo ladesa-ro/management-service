@@ -7,8 +7,15 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
+import { DeclareDependency, IContainer } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
-import { DiarioService } from "@/modules/ensino/diario/application/use-cases/diario.service";
+import { ensureExists } from "@/modules/@shared";
+import { IDiarioCreateCommandHandler } from "@/modules/ensino/diario/domain/commands/diario-create.command.handler.interface";
+import { IDiarioDeleteCommandHandler } from "@/modules/ensino/diario/domain/commands/diario-delete.command.handler.interface";
+import { IDiarioUpdateCommandHandler } from "@/modules/ensino/diario/domain/commands/diario-update.command.handler.interface";
+import { Diario } from "@/modules/ensino/diario/domain/diario.domain";
+import { IDiarioFindOneQueryHandler } from "@/modules/ensino/diario/domain/queries/diario-find-one.query.handler.interface";
+import { IDiarioListQueryHandler } from "@/modules/ensino/diario/domain/queries/diario-list.query.handler.interface";
 import {
   DiarioCreateInputRestDto,
   DiarioFindOneInputRestDto,
@@ -22,7 +29,7 @@ import { DiarioRestMapper } from "./diario.rest.mapper";
 @ApiTags("diarios")
 @Controller("/diarios")
 export class DiarioRestController {
-  constructor(private diarioService: DiarioService) {}
+  constructor(@DeclareDependency(IContainer) private readonly container: IContainer) {}
 
   @Get("/")
   @ApiOperation({ summary: "Lista diarios", operationId: "diarioFindAll" })
@@ -33,7 +40,8 @@ export class DiarioRestController {
     @Query() dto: DiarioListInputRestDto,
   ): Promise<DiarioListOutputRestDto> {
     const input = DiarioRestMapper.toListInput(dto);
-    const result = await this.diarioService.findAll(accessContext, input);
+    const listHandler = this.container.get<IDiarioListQueryHandler>(IDiarioListQueryHandler);
+    const result = await listHandler.execute({ accessContext, dto: input });
     return DiarioRestMapper.toListOutputDto(result);
   }
 
@@ -47,7 +55,11 @@ export class DiarioRestController {
     @Param() params: DiarioFindOneInputRestDto,
   ): Promise<DiarioFindOneOutputRestDto> {
     const input = DiarioRestMapper.toFindOneInput(params);
-    const result = await this.diarioService.findByIdStrict(accessContext, input);
+    const findOneHandler = this.container.get<IDiarioFindOneQueryHandler>(
+      IDiarioFindOneQueryHandler,
+    );
+    const result = await findOneHandler.execute({ accessContext, dto: input });
+    ensureExists(result, Diario.entityName, input.id);
     return DiarioRestMapper.toFindOneOutputDto(result);
   }
 
@@ -60,7 +72,10 @@ export class DiarioRestController {
     @Body() dto: DiarioCreateInputRestDto,
   ): Promise<DiarioFindOneOutputRestDto> {
     const input = DiarioRestMapper.toCreateInput(dto);
-    const result = await this.diarioService.create(accessContext, input);
+    const createHandler = this.container.get<IDiarioCreateCommandHandler>(
+      IDiarioCreateCommandHandler,
+    );
+    const result = await createHandler.execute({ accessContext, dto: input });
     return DiarioRestMapper.toFindOneOutputDto(result);
   }
 
@@ -75,7 +90,10 @@ export class DiarioRestController {
     @Body() dto: DiarioUpdateInputRestDto,
   ): Promise<DiarioFindOneOutputRestDto> {
     const input = DiarioRestMapper.toUpdateInput(params, dto);
-    const result = await this.diarioService.update(accessContext, input);
+    const updateHandler = this.container.get<IDiarioUpdateCommandHandler>(
+      IDiarioUpdateCommandHandler,
+    );
+    const result = await updateHandler.execute({ accessContext, dto: input });
     return DiarioRestMapper.toFindOneOutputDto(result);
   }
 
@@ -89,6 +107,9 @@ export class DiarioRestController {
     @Param() params: DiarioFindOneInputRestDto,
   ): Promise<boolean> {
     const input = DiarioRestMapper.toFindOneInput(params);
-    return this.diarioService.deleteOneById(accessContext, input);
+    const deleteHandler = this.container.get<IDiarioDeleteCommandHandler>(
+      IDiarioDeleteCommandHandler,
+    );
+    return deleteHandler.execute({ accessContext, dto: input });
   }
 }

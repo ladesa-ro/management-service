@@ -1,32 +1,27 @@
-import { Inject, Injectable } from "@nestjs/common";
 import { DataSource } from "typeorm";
-import {
-  APP_DATA_SOURCE_TOKEN,
-} from "@/modules/@shared/infrastructure/persistence/typeorm";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
-import { ResourceNotFoundError } from "@/modules/@shared";
+import { ensureExists } from "@/modules/@shared";
+import { APP_DATA_SOURCE_TOKEN } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
-  EmpresaCreateInputDto,
-  EmpresaFindOneInputDto,
-  EmpresaFindOneOutputDto,
-  EmpresaListInputDto,
-  EmpresaListOutputDto,
-  EmpresaUpdateInputDto,
-} from "@/modules/estagio/empresa/application/dtos";
-import type { IEmpresaRepositoryPort } from "@/modules/estagio/empresa/application/ports";
+  EmpresaCreateCommand,
+  EmpresaUpdateCommand,
+} from "@/modules/estagio/empresa/domain/commands";
 import { Empresa } from "@/modules/estagio/empresa/domain/empresa.domain";
+import type {
+  EmpresaFindOneQuery,
+  EmpresaFindOneQueryResult,
+  EmpresaListQuery,
+  EmpresaListQueryResult,
+} from "@/modules/estagio/empresa/domain/queries";
+import type { IEmpresaRepository } from "@/modules/estagio/empresa/domain/repositories";
+import { Endereco } from "@/modules/localidades/endereco/domain/endereco.domain";
 import { createEnderecoRepository } from "@/modules/localidades/endereco/infrastructure/persistence/typeorm/endereco.repository";
-import {
-  EmpresaTypeormEntity,
-  EmpresaMapper,
-  createEmpresaRepository,
-} from "./persistence";
+import { createEmpresaRepository, EmpresaMapper } from "./persistence";
 
-@Injectable()
-export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepositoryPort {
-  constructor(
-    @Inject(APP_DATA_SOURCE_TOKEN) private readonly dataSource: DataSource,
-  ) {}
+@DeclareImplementation()
+export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepository {
+  constructor(@DeclareDependency(APP_DATA_SOURCE_TOKEN) private readonly dataSource: DataSource) {}
 
   private get repository() {
     return createEmpresaRepository(this.dataSource);
@@ -38,9 +33,9 @@ export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepositoryPort {
 
   async findAll(
     accessContext: AccessContext,
-    dto: EmpresaListInputDto | null = null,
+    dto: EmpresaListQuery | null = null,
     selection?: string[] | boolean,
-  ): Promise<EmpresaListOutputDto> {
+  ): Promise<EmpresaListQueryResult> {
     const page = dto?.page || 1;
     const limit = dto?.limit || 10;
     const skip = (page - 1) * limit;
@@ -93,10 +88,7 @@ export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepositoryPort {
       }
     }
 
-    const [data, total] = await query
-      .skip(skip)
-      .take(limit)
-      .getManyAndCount();
+    const [data, total] = await query.skip(skip).take(limit).getManyAndCount();
 
     return {
       data: data.map((entity) => EmpresaMapper.toOutputDto(entity)),
@@ -108,9 +100,9 @@ export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepositoryPort {
 
   async findById(
     accessContext: AccessContext | null,
-    dto: EmpresaFindOneInputDto,
+    dto: EmpresaFindOneQuery,
     selection?: string[] | boolean,
-  ): Promise<EmpresaFindOneOutputDto | null> {
+  ): Promise<EmpresaFindOneQueryResult | null> {
     const entity = await this.repository.findOne({
       where: { id: dto.id, dateDeleted: null as any },
     });
@@ -124,15 +116,13 @@ export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepositoryPort {
 
   async create(
     accessContext: AccessContext,
-    dto: EmpresaCreateInputDto,
-  ): Promise<EmpresaFindOneOutputDto> {
+    dto: EmpresaCreateCommand,
+  ): Promise<EmpresaFindOneQueryResult> {
     const endereco = await this.enderecoRepository.findOne({
       where: { id: dto.idEnderecoFk, dateDeleted: null as any },
     });
 
-    if (!endereco) {
-      throw new ResourceNotFoundError("Endereco", dto.idEnderecoFk);
-    }
+    ensureExists(endereco, Endereco.entityName, dto.idEnderecoFk);
 
     const empresa = Empresa.criar(dto);
 
@@ -145,15 +135,13 @@ export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepositoryPort {
   async update(
     accessContext: AccessContext,
     id: string,
-    dto: EmpresaUpdateInputDto,
-  ): Promise<EmpresaFindOneOutputDto> {
+    dto: EmpresaUpdateCommand,
+  ): Promise<EmpresaFindOneQueryResult> {
     const entity = await this.repository.findOne({
       where: { id, dateDeleted: null as any },
     });
 
-    if (!entity) {
-      throw new ResourceNotFoundError("Empresa", id);
-    }
+    ensureExists(entity, Empresa.entityName, id);
 
     const empresa = EmpresaMapper.toDomain(entity);
 
@@ -162,9 +150,7 @@ export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepositoryPort {
         where: { id: dto.idEnderecoFk, dateDeleted: null as any },
       });
 
-      if (!endereco) {
-        throw new ResourceNotFoundError("Endereco", dto.idEnderecoFk);
-      }
+      ensureExists(endereco, Endereco.entityName, dto.idEnderecoFk);
     }
 
     empresa.atualizar(dto);
@@ -180,9 +166,7 @@ export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepositoryPort {
       where: { id, dateDeleted: null as any },
     });
 
-    if (!entity) {
-      throw new ResourceNotFoundError("Empresa", id);
-    }
+    ensureExists(entity, Empresa.entityName, id);
 
     entity.dateDeleted = new Date();
     await this.repository.save(entity);

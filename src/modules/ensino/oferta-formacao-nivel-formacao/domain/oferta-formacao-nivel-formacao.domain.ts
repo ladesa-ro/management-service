@@ -17,7 +17,7 @@ export class OfertaFormacaoNivelFormacao
   nivelFormacao!: NivelFormacao;
   ofertaFormacao!: OfertaFormacao;
 
-  protected static get entityName(): string {
+  static get entityName(): string {
     return "OfertaFormacaoNivelFormacao";
   }
 

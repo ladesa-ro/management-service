@@ -1,14 +1,18 @@
-import { Inject, Injectable, Logger } from "@nestjs/common";
-import { IMessageBrokerOptions, IMessageBrokerOptions as IMessageBrokerOptionsToken } from "@/infrastructure.config/options/message-broker/message-broker-options.interface";
+import { Logger } from "@nestjs/common";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import {
+  IMessageBrokerOptions,
+  IMessageBrokerOptions as IMessageBrokerOptionsToken,
+} from "@/infrastructure.config/options/message-broker/message-broker-options.interface";
 import { MessageBrokerContainerService } from "./message-broker-container.service";
 
-@Injectable()
+@DeclareImplementation()
 export class MessageBrokerService {
   private readonly logger = new Logger(MessageBrokerService.name);
 
   constructor(
     private messageBrokerContainerService: MessageBrokerContainerService,
-    @Inject(IMessageBrokerOptionsToken)
+    @DeclareDependency(IMessageBrokerOptionsToken)
     private readonly messageBrokerOptions: IMessageBrokerOptions,
   ) {}
 

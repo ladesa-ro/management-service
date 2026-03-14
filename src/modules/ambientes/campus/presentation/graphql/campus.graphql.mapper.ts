@@ -1,10 +1,10 @@
 import { createListOutputMapper, mapDatedFields } from "@/modules/@shared/application/mappers";
 import {
-  CampusCreateInputDto,
-  CampusFindOneInputDto,
-  CampusFindOneOutputDto,
-  CampusListInputDto,
-  CampusUpdateInputDto,
+  CampusCreateCommand,
+  CampusFindOneQuery,
+  CampusFindOneQueryResult,
+  CampusListQuery,
+  CampusUpdateCommand,
 } from "@/modules/ambientes/campus";
 import { EnderecoGraphqlMapper } from "@/modules/localidades/endereco/presentation/graphql/endereco.graphql.mapper";
 import {
@@ -16,12 +16,12 @@ import {
 } from "./campus.graphql.dto";
 
 export class CampusGraphqlMapper {
-  static toListInput(dto: CampusListInputGraphQlDto | null): CampusListInputDto | null {
+  static toListInput(dto: CampusListInputGraphQlDto | null): CampusListQuery | null {
     if (!dto) {
       return null;
     }
 
-    const input = new CampusListInputDto();
+    const input = new CampusListQuery();
     input.page = dto.page;
     input.limit = dto.limit;
     input.search = dto.search;
@@ -30,15 +30,15 @@ export class CampusGraphqlMapper {
     return input;
   }
 
-  static toFindOneInput(id: string, selection?: string[]): CampusFindOneInputDto {
-    const input = new CampusFindOneInputDto();
+  static toFindOneInput(id: string, selection?: string[]): CampusFindOneQuery {
+    const input = new CampusFindOneQuery();
     input.id = id;
     input.selection = selection;
     return input;
   }
 
-  static toCreateInput(dto: CampusCreateInputGraphQlDto): CampusCreateInputDto {
-    const input = new CampusCreateInputDto();
+  static toCreateInput(dto: CampusCreateInputGraphQlDto): CampusCreateCommand {
+    const input = new CampusCreateCommand();
     input.nomeFantasia = dto.nomeFantasia;
     input.razaoSocial = dto.razaoSocial;
     input.apelido = dto.apelido;
@@ -58,8 +58,8 @@ export class CampusGraphqlMapper {
   static toUpdateInput(
     params: { id: string },
     dto: CampusUpdateInputGraphQlDto,
-  ): CampusFindOneInputDto & CampusUpdateInputDto {
-    const input = new CampusFindOneInputDto() as CampusFindOneInputDto & CampusUpdateInputDto;
+  ): CampusFindOneQuery & CampusUpdateCommand {
+    const input = new CampusFindOneQuery() as CampusFindOneQuery & CampusUpdateCommand;
     input.id = params.id;
     if (dto.nomeFantasia !== undefined) {
       input.nomeFantasia = dto.nomeFantasia;
@@ -87,7 +87,7 @@ export class CampusGraphqlMapper {
     return input;
   }
 
-  static toFindOneOutputDto(output: CampusFindOneOutputDto): CampusFindOneOutputGraphQlDto {
+  static toFindOneOutputDto(output: CampusFindOneQueryResult): CampusFindOneOutputGraphQlDto {
     const dto = new CampusFindOneOutputGraphQlDto();
     dto.id = output.id;
     dto.nomeFantasia = output.nomeFantasia;

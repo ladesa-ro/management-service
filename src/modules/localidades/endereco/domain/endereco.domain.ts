@@ -15,7 +15,7 @@ export class Endereco extends BaseDatedEntity implements IEndereco {
   pontoReferencia!: string | null;
   cidade!: ICidade;
 
-  protected static get entityName(): string {
+  static get entityName(): string {
     return "Endereco";
   }
 

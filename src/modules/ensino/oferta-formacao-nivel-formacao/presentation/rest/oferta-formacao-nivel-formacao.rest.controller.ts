@@ -7,8 +7,15 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
+import { DeclareDependency, IContainer } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
-import { OfertaFormacaoNivelFormacaoService } from "@/modules/ensino/oferta-formacao-nivel-formacao";
+import { ensureExists } from "@/modules/@shared";
+import { IOfertaFormacaoNivelFormacaoCreateCommandHandler } from "@/modules/ensino/oferta-formacao-nivel-formacao/domain/commands/oferta-formacao-nivel-formacao-create.command.handler.interface";
+import { IOfertaFormacaoNivelFormacaoDeleteCommandHandler } from "@/modules/ensino/oferta-formacao-nivel-formacao/domain/commands/oferta-formacao-nivel-formacao-delete.command.handler.interface";
+import { IOfertaFormacaoNivelFormacaoUpdateCommandHandler } from "@/modules/ensino/oferta-formacao-nivel-formacao/domain/commands/oferta-formacao-nivel-formacao-update.command.handler.interface";
+import { OfertaFormacaoNivelFormacao } from "@/modules/ensino/oferta-formacao-nivel-formacao/domain/oferta-formacao-nivel-formacao.domain";
+import { IOfertaFormacaoNivelFormacaoFindOneQueryHandler } from "@/modules/ensino/oferta-formacao-nivel-formacao/domain/queries/oferta-formacao-nivel-formacao-find-one.query.handler.interface";
+import { IOfertaFormacaoNivelFormacaoListQueryHandler } from "@/modules/ensino/oferta-formacao-nivel-formacao/domain/queries/oferta-formacao-nivel-formacao-list.query.handler.interface";
 import {
   OfertaFormacaoNivelFormacaoCreateInputRestDto,
   OfertaFormacaoNivelFormacaoFindOneInputRestDto,
@@ -22,7 +29,7 @@ import { OfertaFormacaoNivelFormacaoRestMapper } from "./oferta-formacao-nivel-f
 @ApiTags("ofertas-formacoes-niveis-formacoes")
 @Controller("/ofertas-formacoes-niveis-formacoes")
 export class OfertaFormacaoNivelFormacaoRestController {
-  constructor(private ofertaFormacaoNivelFormacaoService: OfertaFormacaoNivelFormacaoService) {}
+  constructor(@DeclareDependency(IContainer) private readonly container: IContainer) {}
 
   @Get("/")
   @ApiOperation({
@@ -36,7 +43,10 @@ export class OfertaFormacaoNivelFormacaoRestController {
     @Query() dto: OfertaFormacaoNivelFormacaoListInputRestDto,
   ): Promise<OfertaFormacaoNivelFormacaoListOutputRestDto> {
     const input = OfertaFormacaoNivelFormacaoRestMapper.toListInput(dto);
-    const result = await this.ofertaFormacaoNivelFormacaoService.findAll(accessContext, input);
+    const listHandler = this.container.get<IOfertaFormacaoNivelFormacaoListQueryHandler>(
+      IOfertaFormacaoNivelFormacaoListQueryHandler,
+    );
+    const result = await listHandler.execute({ accessContext, dto: input });
     return OfertaFormacaoNivelFormacaoRestMapper.toListOutputDto(result);
   }
 
@@ -53,10 +63,11 @@ export class OfertaFormacaoNivelFormacaoRestController {
     @Param() params: OfertaFormacaoNivelFormacaoFindOneInputRestDto,
   ): Promise<OfertaFormacaoNivelFormacaoFindOneOutputRestDto> {
     const input = OfertaFormacaoNivelFormacaoRestMapper.toFindOneInput(params);
-    const result = await this.ofertaFormacaoNivelFormacaoService.findByIdStrict(
-      accessContext,
-      input,
+    const findOneHandler = this.container.get<IOfertaFormacaoNivelFormacaoFindOneQueryHandler>(
+      IOfertaFormacaoNivelFormacaoFindOneQueryHandler,
     );
+    const result = await findOneHandler.execute({ accessContext, dto: input });
+    ensureExists(result, OfertaFormacaoNivelFormacao.entityName, input.id);
     return OfertaFormacaoNivelFormacaoRestMapper.toFindOneOutputDto(result);
   }
 
@@ -72,7 +83,10 @@ export class OfertaFormacaoNivelFormacaoRestController {
     @Body() dto: OfertaFormacaoNivelFormacaoCreateInputRestDto,
   ): Promise<OfertaFormacaoNivelFormacaoFindOneOutputRestDto> {
     const input = OfertaFormacaoNivelFormacaoRestMapper.toCreateInput(dto);
-    const result = await this.ofertaFormacaoNivelFormacaoService.create(accessContext, input);
+    const createHandler = this.container.get<IOfertaFormacaoNivelFormacaoCreateCommandHandler>(
+      IOfertaFormacaoNivelFormacaoCreateCommandHandler,
+    );
+    const result = await createHandler.execute({ accessContext, dto: input });
     return OfertaFormacaoNivelFormacaoRestMapper.toFindOneOutputDto(result);
   }
 
@@ -90,7 +104,10 @@ export class OfertaFormacaoNivelFormacaoRestController {
     @Body() dto: OfertaFormacaoNivelFormacaoUpdateInputRestDto,
   ): Promise<OfertaFormacaoNivelFormacaoFindOneOutputRestDto> {
     const input = OfertaFormacaoNivelFormacaoRestMapper.toUpdateInput(params, dto);
-    const result = await this.ofertaFormacaoNivelFormacaoService.update(accessContext, input);
+    const updateHandler = this.container.get<IOfertaFormacaoNivelFormacaoUpdateCommandHandler>(
+      IOfertaFormacaoNivelFormacaoUpdateCommandHandler,
+    );
+    const result = await updateHandler.execute({ accessContext, dto: input });
     return OfertaFormacaoNivelFormacaoRestMapper.toFindOneOutputDto(result);
   }
 
@@ -107,6 +124,9 @@ export class OfertaFormacaoNivelFormacaoRestController {
     @Param() params: OfertaFormacaoNivelFormacaoFindOneInputRestDto,
   ): Promise<boolean> {
     const input = OfertaFormacaoNivelFormacaoRestMapper.toFindOneInput(params);
-    return this.ofertaFormacaoNivelFormacaoService.deleteOneById(accessContext, input);
+    const deleteHandler = this.container.get<IOfertaFormacaoNivelFormacaoDeleteCommandHandler>(
+      IOfertaFormacaoNivelFormacaoDeleteCommandHandler,
+    );
+    return deleteHandler.execute({ accessContext, dto: input });
   }
 }

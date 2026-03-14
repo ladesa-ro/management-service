@@ -1,8 +1,15 @@
 import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
+import { DeclareDependency, IContainer } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextGraphQL } from "@/modules/@seguranca/contexto-acesso";
+import { ensureExists } from "@/modules/@shared";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
-import { DiaCalendarioService } from "@/modules/horarios/dia-calendario/application/use-cases/dia-calendario.service";
+import { IDiaCalendarioCreateCommandHandler } from "@/modules/horarios/dia-calendario/domain/commands/dia-calendario-create.command.handler.interface";
+import { IDiaCalendarioDeleteCommandHandler } from "@/modules/horarios/dia-calendario/domain/commands/dia-calendario-delete.command.handler.interface";
+import { IDiaCalendarioUpdateCommandHandler } from "@/modules/horarios/dia-calendario/domain/commands/dia-calendario-update.command.handler.interface";
+import { DiaCalendario } from "@/modules/horarios/dia-calendario/domain/dia-calendario.domain";
+import { IDiaCalendarioFindOneQueryHandler } from "@/modules/horarios/dia-calendario/domain/queries/dia-calendario-find-one.query.handler.interface";
+import { IDiaCalendarioListQueryHandler } from "@/modules/horarios/dia-calendario/domain/queries/dia-calendario-list.query.handler.interface";
 import {
   DiaCalendarioCreateInputGraphQlDto,
   DiaCalendarioFindOneOutputGraphQlDto,
@@ -14,7 +21,7 @@ import { DiaCalendarioGraphqlMapper } from "./dia-calendario.graphql.mapper";
 
 @Resolver(() => DiaCalendarioFindOneOutputGraphQlDto)
 export class DiaCalendarioGraphqlResolver {
-  constructor(private readonly diaCalendarioService: DiaCalendarioService) {}
+  constructor(@DeclareDependency(IContainer) private readonly container: IContainer) {}
 
   @Query(() => DiaCalendarioListOutputGraphQlDto, { name: "diaCalendarioFindAll" })
   async findAll(
@@ -28,7 +35,10 @@ export class DiaCalendarioGraphqlResolver {
       input.selection = graphqlExtractSelection(info, "paginated");
     }
 
-    const result = await this.diaCalendarioService.findAll(accessContext, input);
+    const listHandler = this.container.get<IDiaCalendarioListQueryHandler>(
+      IDiaCalendarioListQueryHandler,
+    );
+    const result = await listHandler.execute({ accessContext, dto: input });
     return DiaCalendarioGraphqlMapper.toListOutputDto(result);
   }
 
@@ -39,10 +49,11 @@ export class DiaCalendarioGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<DiaCalendarioFindOneOutputGraphQlDto> {
     const selection = graphqlExtractSelection(info);
-    const result = await this.diaCalendarioService.findByIdStrict(accessContext, {
-      id,
-      selection,
-    });
+    const findOneHandler = this.container.get<IDiaCalendarioFindOneQueryHandler>(
+      IDiaCalendarioFindOneQueryHandler,
+    );
+    const result = await findOneHandler.execute({ accessContext, dto: { id, selection } });
+    ensureExists(result, DiaCalendario.entityName, id);
     return DiaCalendarioGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -53,7 +64,10 @@ export class DiaCalendarioGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<DiaCalendarioFindOneOutputGraphQlDto> {
     const input = DiaCalendarioGraphqlMapper.toCreateInput(dto);
-    const result = await this.diaCalendarioService.create(accessContext, input);
+    const createHandler = this.container.get<IDiaCalendarioCreateCommandHandler>(
+      IDiaCalendarioCreateCommandHandler,
+    );
+    const result = await createHandler.execute({ accessContext, dto: input });
     return DiaCalendarioGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -65,7 +79,10 @@ export class DiaCalendarioGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<DiaCalendarioFindOneOutputGraphQlDto> {
     const input = DiaCalendarioGraphqlMapper.toUpdateInput(id, dto);
-    const result = await this.diaCalendarioService.update(accessContext, input);
+    const updateHandler = this.container.get<IDiaCalendarioUpdateCommandHandler>(
+      IDiaCalendarioUpdateCommandHandler,
+    );
+    const result = await updateHandler.execute({ accessContext, dto: input });
     return DiaCalendarioGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -74,6 +91,9 @@ export class DiaCalendarioGraphqlResolver {
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
   ): Promise<boolean> {
-    return this.diaCalendarioService.deleteOneById(accessContext, { id });
+    const deleteHandler = this.container.get<IDiaCalendarioDeleteCommandHandler>(
+      IDiaCalendarioDeleteCommandHandler,
+    );
+    return deleteHandler.execute({ accessContext, dto: { id } });
   }
 }

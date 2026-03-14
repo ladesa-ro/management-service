@@ -3,9 +3,9 @@ import {
   createListOutputMapper,
 } from "@/modules/@shared/application/mappers";
 import {
-  CidadeFindOneInputDto,
-  CidadeFindOneOutputDto,
-  CidadeListInputDto,
+  CidadeFindOneQuery,
+  CidadeFindOneQueryResult,
+  CidadeListQuery,
 } from "@/modules/localidades/cidade";
 import { EstadoRestMapper } from "@/modules/localidades/estado/presentation/rest/estado.rest.mapper";
 import {
@@ -19,13 +19,13 @@ export class CidadeRestMapper {
   // Input: Server DTO -> Core DTO
   // ============================================================================
 
-  static toFindOneInput(dto: CidadeFindOneInputRestDto): CidadeFindOneInputDto {
-    const input = new CidadeFindOneInputDto();
+  static toFindOneInput(dto: CidadeFindOneInputRestDto): CidadeFindOneQuery {
+    const input = new CidadeFindOneQuery();
     input.id = dto.id;
     return input;
   }
 
-  static toListInput = createListInputMapper(CidadeListInputDto, [
+  static toListInput = createListInputMapper(CidadeListQuery, [
     "filter.id",
     "filter.estado.id",
     "filter.estado.nome",
@@ -36,7 +36,7 @@ export class CidadeRestMapper {
   // Output: Core DTO -> Server DTO
   // ============================================================================
 
-  static toFindOneOutputDto(output: CidadeFindOneOutputDto): CidadeFindOneOutputRestDto {
+  static toFindOneOutputDto(output: CidadeFindOneQueryResult): CidadeFindOneOutputRestDto {
     const dto = new CidadeFindOneOutputRestDto();
     dto.id = output.id;
     dto.nome = output.nome;

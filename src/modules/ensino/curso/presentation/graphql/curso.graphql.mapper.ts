@@ -1,11 +1,11 @@
 import { createListOutputMapper, mapDatedFields } from "@/modules/@shared/application/mappers";
 import { CampusGraphqlMapper } from "@/modules/ambientes/campus/presentation/graphql/campus.graphql.mapper";
 import {
-  CursoCreateInputDto,
-  CursoFindOneInputDto,
-  CursoFindOneOutputDto,
-  CursoListInputDto,
-  CursoUpdateInputDto,
+  CursoCreateCommand,
+  CursoFindOneQuery,
+  CursoFindOneQueryResult,
+  CursoListQuery,
+  CursoUpdateCommand,
 } from "@/modules/ensino/curso";
 import { OfertaFormacaoGraphqlMapper } from "@/modules/ensino/oferta-formacao/presentation/graphql/oferta-formacao.graphql.mapper";
 import {
@@ -48,12 +48,12 @@ function mapImagemOutput(imagem: any): any {
 }
 
 export class CursoGraphqlMapper {
-  static toListInput(dto: CursoListInputGraphQlDto | null): CursoListInputDto | null {
+  static toListInput(dto: CursoListInputGraphQlDto | null): CursoListQuery | null {
     if (!dto) {
       return null;
     }
 
-    const input = new CursoListInputDto();
+    const input = new CursoListQuery();
     input.page = dto.page;
     input.limit = dto.limit;
     input.search = dto.search;
@@ -64,15 +64,15 @@ export class CursoGraphqlMapper {
     return input;
   }
 
-  static toFindOneInput(id: string, selection?: string[]): CursoFindOneInputDto {
-    const input = new CursoFindOneInputDto();
+  static toFindOneInput(id: string, selection?: string[]): CursoFindOneQuery {
+    const input = new CursoFindOneQuery();
     input.id = id;
     input.selection = selection;
     return input;
   }
 
-  static toCreateInput(dto: CursoCreateInputGraphQlDto): CursoCreateInputDto {
-    const input = new CursoCreateInputDto();
+  static toCreateInput(dto: CursoCreateInputGraphQlDto): CursoCreateCommand {
+    const input = new CursoCreateCommand();
     input.nome = dto.nome;
     input.nomeAbreviado = dto.nomeAbreviado;
     input.campus = { id: dto.campus.id };
@@ -84,8 +84,8 @@ export class CursoGraphqlMapper {
   static toUpdateInput(
     params: { id: string },
     dto: CursoUpdateInputGraphQlDto,
-  ): CursoFindOneInputDto & CursoUpdateInputDto {
-    const input = new CursoFindOneInputDto() as CursoFindOneInputDto & CursoUpdateInputDto;
+  ): CursoFindOneQuery & CursoUpdateCommand {
+    const input = new CursoFindOneQuery() as CursoFindOneQuery & CursoUpdateCommand;
     input.id = params.id;
     if (dto.nome !== undefined) {
       input.nome = dto.nome;
@@ -105,7 +105,7 @@ export class CursoGraphqlMapper {
     return input;
   }
 
-  static toFindOneOutputDto(output: CursoFindOneOutputDto): CursoFindOneOutputGraphQlDto {
+  static toFindOneOutputDto(output: CursoFindOneQueryResult): CursoFindOneOutputGraphQlDto {
     const dto = new CursoFindOneOutputGraphQlDto();
     dto.id = output.id;
     dto.nome = output.nome;

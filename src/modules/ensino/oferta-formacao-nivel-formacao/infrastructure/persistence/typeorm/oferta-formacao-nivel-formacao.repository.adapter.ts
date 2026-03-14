@@ -1,6 +1,6 @@
-import { Inject, Injectable } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
 import { DataSource } from "typeorm";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
   APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
@@ -9,32 +9,31 @@ import {
   paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
-  IOfertaFormacaoNivelFormacaoRepositoryPort,
-  OfertaFormacaoNivelFormacaoFindOneInputDto,
-  OfertaFormacaoNivelFormacaoFindOneOutputDto,
-  OfertaFormacaoNivelFormacaoListInputDto,
-  OfertaFormacaoNivelFormacaoListOutputDto,
+  IOfertaFormacaoNivelFormacaoRepository,
+  OfertaFormacaoNivelFormacaoFindOneQuery,
+  OfertaFormacaoNivelFormacaoFindOneQueryResult,
+  OfertaFormacaoNivelFormacaoListQuery,
+  OfertaFormacaoNivelFormacaoListQueryResult,
 } from "@/modules/ensino/oferta-formacao-nivel-formacao";
 import type { OfertaFormacaoNivelFormacaoEntity } from "./oferta-formacao-nivel-formacao.entity";
 import { createOfertaFormacaoNivelFormacaoRepository } from "./oferta-formacao-nivel-formacao.repository";
 
-@Injectable()
+@DeclareImplementation()
 export class OfertaFormacaoNivelFormacaoTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     OfertaFormacaoNivelFormacaoEntity,
-    OfertaFormacaoNivelFormacaoListInputDto,
-    OfertaFormacaoNivelFormacaoListOutputDto,
-    OfertaFormacaoNivelFormacaoFindOneInputDto,
-    OfertaFormacaoNivelFormacaoFindOneOutputDto
+    OfertaFormacaoNivelFormacaoListQuery,
+    OfertaFormacaoNivelFormacaoListQueryResult,
+    OfertaFormacaoNivelFormacaoFindOneQuery,
+    OfertaFormacaoNivelFormacaoFindOneQueryResult
   >
-  implements IOfertaFormacaoNivelFormacaoRepositoryPort
+  implements IOfertaFormacaoNivelFormacaoRepository
 {
   protected readonly alias = "oferta_formacao_nivel_formacao";
-  protected readonly authzAction = "oferta_formacao_nivel_formacao:find";
-  protected readonly outputDtoName = "OfertaFormacaoNivelFormacaoFindOneOutputDto";
+  protected readonly outputDtoName = "OfertaFormacaoNivelFormacaoFindOneQueryResult";
 
   constructor(
-    @Inject(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
+    @DeclareDependency(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
     protected readonly paginationAdapter: NestJsPaginateAdapter,
   ) {
     super();

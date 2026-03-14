@@ -7,8 +7,15 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
+import { DeclareDependency, IContainer } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
-import { NivelFormacaoService } from "@/modules/ensino/nivel-formacao/application/use-cases/nivel-formacao.service";
+import { ensureExists } from "@/modules/@shared";
+import { INivelFormacaoCreateCommandHandler } from "@/modules/ensino/nivel-formacao/domain/commands/nivel-formacao-create.command.handler.interface";
+import { INivelFormacaoDeleteCommandHandler } from "@/modules/ensino/nivel-formacao/domain/commands/nivel-formacao-delete.command.handler.interface";
+import { INivelFormacaoUpdateCommandHandler } from "@/modules/ensino/nivel-formacao/domain/commands/nivel-formacao-update.command.handler.interface";
+import { NivelFormacao } from "@/modules/ensino/nivel-formacao/domain/nivel-formacao.domain";
+import { INivelFormacaoFindOneQueryHandler } from "@/modules/ensino/nivel-formacao/domain/queries/nivel-formacao-find-one.query.handler.interface";
+import { INivelFormacaoListQueryHandler } from "@/modules/ensino/nivel-formacao/domain/queries/nivel-formacao-list.query.handler.interface";
 import {
   NivelFormacaoCreateInputRestDto,
   NivelFormacaoFindOneInputRestDto,
@@ -22,7 +29,7 @@ import { NivelFormacaoRestMapper } from "./nivel-formacao.rest.mapper";
 @ApiTags("niveis-formacoes")
 @Controller("/niveis-formacoes")
 export class NivelFormacaoRestController {
-  constructor(private nivelFormacaoService: NivelFormacaoService) {}
+  constructor(@DeclareDependency(IContainer) private readonly container: IContainer) {}
 
   @Get("/")
   @ApiOperation({ summary: "Lista niveis de formacao", operationId: "nivelFormacaoFindAll" })
@@ -33,7 +40,10 @@ export class NivelFormacaoRestController {
     @Query() dto: NivelFormacaoListInputRestDto,
   ): Promise<NivelFormacaoListOutputRestDto> {
     const input = NivelFormacaoRestMapper.toListInput(dto);
-    const result = await this.nivelFormacaoService.findAll(accessContext, input);
+    const listHandler = this.container.get<INivelFormacaoListQueryHandler>(
+      INivelFormacaoListQueryHandler,
+    );
+    const result = await listHandler.execute({ accessContext, dto: input });
     return NivelFormacaoRestMapper.toListOutputDto(result);
   }
 
@@ -50,7 +60,11 @@ export class NivelFormacaoRestController {
     @Param() params: NivelFormacaoFindOneInputRestDto,
   ): Promise<NivelFormacaoFindOneOutputRestDto> {
     const input = NivelFormacaoRestMapper.toFindOneInput(params);
-    const result = await this.nivelFormacaoService.findByIdStrict(accessContext, input);
+    const findOneHandler = this.container.get<INivelFormacaoFindOneQueryHandler>(
+      INivelFormacaoFindOneQueryHandler,
+    );
+    const result = await findOneHandler.execute({ accessContext, dto: input });
+    ensureExists(result, NivelFormacao.entityName, input.id);
     return NivelFormacaoRestMapper.toFindOneOutputDto(result);
   }
 
@@ -63,7 +77,10 @@ export class NivelFormacaoRestController {
     @Body() dto: NivelFormacaoCreateInputRestDto,
   ): Promise<NivelFormacaoFindOneOutputRestDto> {
     const input = NivelFormacaoRestMapper.toCreateInput(dto);
-    const result = await this.nivelFormacaoService.create(accessContext, input);
+    const createHandler = this.container.get<INivelFormacaoCreateCommandHandler>(
+      INivelFormacaoCreateCommandHandler,
+    );
+    const result = await createHandler.execute({ accessContext, dto: input });
     return NivelFormacaoRestMapper.toFindOneOutputDto(result);
   }
 
@@ -79,9 +96,12 @@ export class NivelFormacaoRestController {
   ): Promise<NivelFormacaoFindOneOutputRestDto> {
     const findOneInput = NivelFormacaoRestMapper.toFindOneInput(params);
     const updateInput = NivelFormacaoRestMapper.toUpdateInput(dto);
-    const result = await this.nivelFormacaoService.update(accessContext, {
-      ...findOneInput,
-      ...updateInput,
+    const updateHandler = this.container.get<INivelFormacaoUpdateCommandHandler>(
+      INivelFormacaoUpdateCommandHandler,
+    );
+    const result = await updateHandler.execute({
+      accessContext,
+      dto: { ...findOneInput, ...updateInput },
     });
     return NivelFormacaoRestMapper.toFindOneOutputDto(result);
   }
@@ -99,6 +119,9 @@ export class NivelFormacaoRestController {
     @Param() params: NivelFormacaoFindOneInputRestDto,
   ): Promise<boolean> {
     const input = NivelFormacaoRestMapper.toFindOneInput(params);
-    return this.nivelFormacaoService.deleteOneById(accessContext, input);
+    const deleteHandler = this.container.get<INivelFormacaoDeleteCommandHandler>(
+      INivelFormacaoDeleteCommandHandler,
+    );
+    return deleteHandler.execute({ accessContext, dto: input });
   }
 }

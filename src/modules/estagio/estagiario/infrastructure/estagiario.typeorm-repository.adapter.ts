@@ -1,34 +1,31 @@
-import { Inject, Injectable } from "@nestjs/common";
 import { DataSource } from "typeorm";
-import {
-  APP_DATA_SOURCE_TOKEN,
-} from "@/modules/@shared/infrastructure/persistence/typeorm";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
-import { ResourceNotFoundError } from "@/modules/@shared";
-import type {
-  EstagiarioCreateInputDto,
-  EstagiarioFindOneInputDto,
-  EstagiarioFindOneOutputDto,
-  EstagiarioListInputDto,
-  EstagiarioListOutputDto,
-  EstagiarioUpdateInputDto,
-} from "@/modules/estagio/estagiario/application/dtos";
-import type { IEstagiarioRepositoryPort } from "@/modules/estagio/estagiario/application/ports";
-import { Estagiario } from "@/modules/estagio/estagiario/domain/estagiario.domain";
+import { ensureExists } from "@/modules/@shared";
+import { APP_DATA_SOURCE_TOKEN } from "@/modules/@shared/infrastructure/persistence/typeorm";
+import { Perfil } from "@/modules/acesso/perfil/domain/perfil.domain";
 import { createPerfilRepository } from "@/modules/acesso/perfil/infrastructure/persistence/typeorm/perfil.repository";
+import { Curso } from "@/modules/ensino/curso/domain/curso.domain";
 import { createCursoRepository } from "@/modules/ensino/curso/infrastructure/persistence/typeorm/curso.repository";
+import { Turma } from "@/modules/ensino/turma/domain/turma.domain";
 import { createTurmaRepository } from "@/modules/ensino/turma/infrastructure/persistence/typeorm/turma.repository";
-import {
-  EstagiarioTypeormEntity,
-  EstagiarioMapper,
-  createEstagiarioRepository,
-} from "./persistence";
+import type {
+  EstagiarioCreateCommand,
+  EstagiarioUpdateCommand,
+} from "@/modules/estagio/estagiario/domain/commands";
+import { Estagiario } from "@/modules/estagio/estagiario/domain/estagiario.domain";
+import type {
+  EstagiarioFindOneQuery,
+  EstagiarioFindOneQueryResult,
+  EstagiarioListQuery,
+  EstagiarioListQueryResult,
+} from "@/modules/estagio/estagiario/domain/queries";
+import type { IEstagiarioRepository } from "@/modules/estagio/estagiario/domain/repositories";
+import { createEstagiarioRepository, EstagiarioMapper } from "./persistence";
 
-@Injectable()
-export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepositoryPort {
-  constructor(
-    @Inject(APP_DATA_SOURCE_TOKEN) private readonly dataSource: DataSource,
-  ) {}
+@DeclareImplementation()
+export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository {
+  constructor(@DeclareDependency(APP_DATA_SOURCE_TOKEN) private readonly dataSource: DataSource) {}
 
   private get repository() {
     return createEstagiarioRepository(this.dataSource);
@@ -48,9 +45,9 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
 
   async findAll(
     accessContext: AccessContext,
-    dto: EstagiarioListInputDto | null = null,
+    dto: EstagiarioListQuery | null = null,
     selection?: string[] | boolean,
-  ): Promise<EstagiarioListOutputDto> {
+  ): Promise<EstagiarioListQueryResult> {
     const page = dto?.page || 1;
     const limit = dto?.limit || 10;
     const skip = (page - 1) * limit;
@@ -68,7 +65,11 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
       );
     }
 
-    if (dto?.filterIdPerfilFk && Array.isArray(dto.filterIdPerfilFk) && dto.filterIdPerfilFk.length > 0) {
+    if (
+      dto?.filterIdPerfilFk &&
+      Array.isArray(dto.filterIdPerfilFk) &&
+      dto.filterIdPerfilFk.length > 0
+    ) {
       const validIds = dto.filterIdPerfilFk.filter((id) => id && id.trim());
       if (validIds.length > 0) {
         query.andWhere("estagiario.idPerfilFk IN (:...idPerfis)", {
@@ -77,7 +78,11 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
       }
     }
 
-    if (dto?.filterIdCursoFk && Array.isArray(dto.filterIdCursoFk) && dto.filterIdCursoFk.length > 0) {
+    if (
+      dto?.filterIdCursoFk &&
+      Array.isArray(dto.filterIdCursoFk) &&
+      dto.filterIdCursoFk.length > 0
+    ) {
       const validIds = dto.filterIdCursoFk.filter((id) => id && id.trim());
       if (validIds.length > 0) {
         query.andWhere("estagiario.idCursoFk IN (:...idCursos)", {
@@ -86,7 +91,11 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
       }
     }
 
-    if (dto?.filterIdTurmaFk && Array.isArray(dto.filterIdTurmaFk) && dto.filterIdTurmaFk.length > 0) {
+    if (
+      dto?.filterIdTurmaFk &&
+      Array.isArray(dto.filterIdTurmaFk) &&
+      dto.filterIdTurmaFk.length > 0
+    ) {
       const validIds = dto.filterIdTurmaFk.filter((id) => id && id.trim());
       if (validIds.length > 0) {
         query.andWhere("estagiario.idTurmaFk IN (:...idTurmas)", {
@@ -95,10 +104,7 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
       }
     }
 
-    const [data, total] = await query
-      .skip(skip)
-      .take(limit)
-      .getManyAndCount();
+    const [data, total] = await query.skip(skip).take(limit).getManyAndCount();
 
     return {
       data: data.map((entity) => EstagiarioMapper.toOutputDto(entity)),
@@ -110,9 +116,9 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
 
   async findById(
     accessContext: AccessContext | null,
-    dto: EstagiarioFindOneInputDto,
+    dto: EstagiarioFindOneQuery,
     selection?: string[] | boolean,
-  ): Promise<EstagiarioFindOneOutputDto | null> {
+  ): Promise<EstagiarioFindOneQueryResult | null> {
     const entity = await this.repository.findOne({
       where: { id: dto.id, dateDeleted: null as any },
     });
@@ -126,31 +132,25 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
 
   async create(
     accessContext: AccessContext,
-    dto: EstagiarioCreateInputDto,
-  ): Promise<EstagiarioFindOneOutputDto> {
+    dto: EstagiarioCreateCommand,
+  ): Promise<EstagiarioFindOneQueryResult> {
     const perfil = await this.perfilRepository.findOne({
       where: { id: dto.idPerfilFk, dateDeleted: null as any },
     });
 
-    if (!perfil) {
-      throw new ResourceNotFoundError("Perfil", dto.idPerfilFk);
-    }
+    ensureExists(perfil, Perfil.entityName, dto.idPerfilFk);
 
     const curso = await this.cursoRepository.findOne({
       where: { id: dto.idCursoFk, dateDeleted: null as any },
     });
 
-    if (!curso) {
-      throw new ResourceNotFoundError("Curso", dto.idCursoFk);
-    }
+    ensureExists(curso, Curso.entityName, dto.idCursoFk);
 
     const turma = await this.turmaRepository.findOne({
       where: { id: dto.idTurmaFk, dateDeleted: null as any },
     });
 
-    if (!turma) {
-      throw new ResourceNotFoundError("Turma", dto.idTurmaFk);
-    }
+    ensureExists(turma, Turma.entityName, dto.idTurmaFk);
 
     const estagiario = Estagiario.criar(dto);
 
@@ -163,15 +163,13 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
   async update(
     accessContext: AccessContext,
     id: string,
-    dto: EstagiarioUpdateInputDto,
-  ): Promise<EstagiarioFindOneOutputDto> {
+    dto: EstagiarioUpdateCommand,
+  ): Promise<EstagiarioFindOneQueryResult> {
     const entity = await this.repository.findOne({
       where: { id, dateDeleted: null as any },
     });
 
-    if (!entity) {
-      throw new ResourceNotFoundError("Estagiario", id);
-    }
+    ensureExists(entity, Estagiario.entityName, id);
 
     const estagiario = EstagiarioMapper.toDomain(entity);
 
@@ -180,9 +178,7 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
         where: { id: dto.idPerfilFk, dateDeleted: null as any },
       });
 
-      if (!perfil) {
-        throw new ResourceNotFoundError("Perfil", dto.idPerfilFk);
-      }
+      ensureExists(perfil, Perfil.entityName, dto.idPerfilFk);
     }
 
     if (dto.idCursoFk) {
@@ -190,9 +186,7 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
         where: { id: dto.idCursoFk, dateDeleted: null as any },
       });
 
-      if (!curso) {
-        throw new ResourceNotFoundError("Curso", dto.idCursoFk);
-      }
+      ensureExists(curso, Curso.entityName, dto.idCursoFk);
     }
 
     if (dto.idTurmaFk) {
@@ -200,9 +194,7 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
         where: { id: dto.idTurmaFk, dateDeleted: null as any },
       });
 
-      if (!turma) {
-        throw new ResourceNotFoundError("Turma", dto.idTurmaFk);
-      }
+      ensureExists(turma, Turma.entityName, dto.idTurmaFk);
     }
 
     estagiario.atualizar(dto);
@@ -218,9 +210,7 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
       where: { id, dateDeleted: null as any },
     });
 
-    if (!entity) {
-      throw new ResourceNotFoundError("Estagiario", id);
-    }
+    ensureExists(entity, Estagiario.entityName, id);
 
     entity.dateDeleted = new Date();
     await this.repository.save(entity);

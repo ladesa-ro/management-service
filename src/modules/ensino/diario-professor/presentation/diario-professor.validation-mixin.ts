@@ -1,7 +1,5 @@
-import { IsBoolean } from "class-validator";
-import { decorate } from "ts-mixer";
-
+import { IsBoolean } from "@/modules/@shared/presentation/shared";
 export class DiarioProfessorFieldsMixin {
-  @decorate(IsBoolean())
+  @IsBoolean()
   situacao: boolean;
 }

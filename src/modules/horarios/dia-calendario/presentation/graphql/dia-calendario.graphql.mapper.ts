@@ -1,11 +1,11 @@
 import { createListOutputMapper, mapDatedFields } from "@/modules/@shared/application/mappers";
 import { CalendarioLetivoGraphqlMapper } from "@/modules/horarios/calendario-letivo/presentation/graphql/calendario-letivo.graphql.mapper";
 import {
-  DiaCalendarioCreateInputDto,
-  DiaCalendarioFindOneInputDto,
-  DiaCalendarioFindOneOutputDto,
-  DiaCalendarioListInputDto,
-  DiaCalendarioUpdateInputDto,
+  DiaCalendarioCreateCommand,
+  DiaCalendarioFindOneQuery,
+  DiaCalendarioFindOneQueryResult,
+  DiaCalendarioListQuery,
+  DiaCalendarioUpdateCommand,
 } from "@/modules/horarios/dia-calendario";
 import {
   DiaCalendarioCreateInputGraphQlDto,
@@ -16,14 +16,12 @@ import {
 } from "./dia-calendario.graphql.dto";
 
 export class DiaCalendarioGraphqlMapper {
-  static toListInput(
-    dto: DiaCalendarioListInputGraphQlDto | null,
-  ): DiaCalendarioListInputDto | null {
+  static toListInput(dto: DiaCalendarioListInputGraphQlDto | null): DiaCalendarioListQuery | null {
     if (!dto) {
       return null;
     }
 
-    const input = new DiaCalendarioListInputDto();
+    const input = new DiaCalendarioListQuery();
     input.page = dto.page;
     input.limit = dto.limit;
     input.search = dto.search;
@@ -33,15 +31,15 @@ export class DiaCalendarioGraphqlMapper {
     return input;
   }
 
-  static toFindOneInput(id: string, selection?: string[]): DiaCalendarioFindOneInputDto {
-    const input = new DiaCalendarioFindOneInputDto();
+  static toFindOneInput(id: string, selection?: string[]): DiaCalendarioFindOneQuery {
+    const input = new DiaCalendarioFindOneQuery();
     input.id = id;
     input.selection = selection;
     return input;
   }
 
-  static toCreateInput(dto: DiaCalendarioCreateInputGraphQlDto): DiaCalendarioCreateInputDto {
-    const input = new DiaCalendarioCreateInputDto();
+  static toCreateInput(dto: DiaCalendarioCreateInputGraphQlDto): DiaCalendarioCreateCommand {
+    const input = new DiaCalendarioCreateCommand();
     input.data = dto.data;
     input.diaLetivo = dto.diaLetivo;
     input.feriado = dto.feriado;
@@ -55,9 +53,9 @@ export class DiaCalendarioGraphqlMapper {
   static toUpdateInput(
     id: string,
     dto: DiaCalendarioUpdateInputGraphQlDto,
-  ): DiaCalendarioFindOneInputDto & DiaCalendarioUpdateInputDto {
-    const input = new DiaCalendarioFindOneInputDto() as DiaCalendarioFindOneInputDto &
-      DiaCalendarioUpdateInputDto;
+  ): DiaCalendarioFindOneQuery & DiaCalendarioUpdateCommand {
+    const input = new DiaCalendarioFindOneQuery() as DiaCalendarioFindOneQuery &
+      DiaCalendarioUpdateCommand;
     input.id = id;
     if (dto.data !== undefined) {
       input.data = dto.data;
@@ -84,7 +82,7 @@ export class DiaCalendarioGraphqlMapper {
   }
 
   static toFindOneOutputDto(
-    output: DiaCalendarioFindOneOutputDto,
+    output: DiaCalendarioFindOneQueryResult,
   ): DiaCalendarioFindOneOutputGraphQlDto {
     const dto = new DiaCalendarioFindOneOutputGraphQlDto();
     dto.id = output.id;

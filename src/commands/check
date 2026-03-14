@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Run all validations: typecheck, modulecheck, test, code:check
+bash commands/typecheck && \
+bash commands/modulecheck && \
+bash commands/test && \
+bash commands/code-check

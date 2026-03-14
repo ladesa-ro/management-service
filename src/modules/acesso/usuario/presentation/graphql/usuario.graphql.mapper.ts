@@ -4,11 +4,11 @@ import {
   mapDatedFields,
 } from "@/modules/@shared/application/mappers";
 import {
-  UsuarioCreateInputDto,
-  UsuarioFindOneInputDto,
-  UsuarioFindOneOutputDto,
-  UsuarioListInputDto,
-  UsuarioUpdateInputDto,
+  UsuarioCreateCommand,
+  UsuarioFindOneQuery,
+  UsuarioFindOneQueryResult,
+  UsuarioListQuery,
+  UsuarioUpdateCommand,
 } from "@/modules/acesso/usuario";
 import {
   UsuarioCreateInputGraphQlDto,
@@ -50,12 +50,12 @@ function mapImagemOutput(imagem: any): any {
 }
 
 export class UsuarioGraphqlMapper {
-  static toListInput(dto: UsuarioListInputGraphQlDto | null): UsuarioListInputDto | null {
+  static toListInput(dto: UsuarioListInputGraphQlDto | null): UsuarioListQuery | null {
     if (!dto) {
       return null;
     }
 
-    const input = new UsuarioListInputDto();
+    const input = new UsuarioListQuery();
     input.page = dto.page;
     input.limit = dto.limit;
     input.search = dto.search;
@@ -64,10 +64,10 @@ export class UsuarioGraphqlMapper {
     return input;
   }
 
-  static toFindOneInput = createFindOneInputMapper(UsuarioFindOneInputDto);
+  static toFindOneInput = createFindOneInputMapper(UsuarioFindOneQuery);
 
-  static toCreateInput(dto: UsuarioCreateInputGraphQlDto): UsuarioCreateInputDto {
-    const input = new UsuarioCreateInputDto();
+  static toCreateInput(dto: UsuarioCreateInputGraphQlDto): UsuarioCreateCommand {
+    const input = new UsuarioCreateCommand();
     input.nome = dto.nome;
     input.matricula = dto.matricula;
     input.email = dto.email;
@@ -77,8 +77,8 @@ export class UsuarioGraphqlMapper {
   static toUpdateInput(
     params: { id: string },
     dto: UsuarioUpdateInputGraphQlDto,
-  ): UsuarioFindOneInputDto & UsuarioUpdateInputDto {
-    const input = new UsuarioFindOneInputDto() as UsuarioFindOneInputDto & UsuarioUpdateInputDto;
+  ): UsuarioFindOneQuery & UsuarioUpdateCommand {
+    const input = new UsuarioFindOneQuery() as UsuarioFindOneQuery & UsuarioUpdateCommand;
     input.id = params.id;
     if (dto.nome !== undefined) {
       input.nome = dto.nome;
@@ -92,7 +92,7 @@ export class UsuarioGraphqlMapper {
     return input;
   }
 
-  static toFindOneOutputDto(output: UsuarioFindOneOutputDto): UsuarioFindOneOutputGraphQlDto {
+  static toFindOneOutputDto(output: UsuarioFindOneQueryResult): UsuarioFindOneOutputGraphQlDto {
     const dto = new UsuarioFindOneOutputGraphQlDto();
     dto.id = output.id;
     dto.nome = output.nome;

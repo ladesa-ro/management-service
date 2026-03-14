@@ -1,9 +1,27 @@
 import { Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import { AmbienteModule } from "@/modules/ambientes/ambiente/ambiente.module";
-import { DIARIO_REPOSITORY_PORT } from "@/modules/ensino/diario/application/ports";
-import { DiarioService } from "@/modules/ensino/diario/application/use-cases/diario.service";
-import { DiarioAuthzRegistrySetup } from "@/modules/ensino/diario/infrastructure";
+import { DiarioPermissionCheckerImpl } from "@/modules/ensino/diario/application/authorization";
+import {
+  DiarioCreateCommandHandlerImpl,
+  DiarioDeleteCommandHandlerImpl,
+  DiarioUpdateCommandHandlerImpl,
+} from "@/modules/ensino/diario/application/commands";
+import {
+  DiarioFindOneQueryHandlerImpl,
+  DiarioListQueryHandlerImpl,
+} from "@/modules/ensino/diario/application/queries";
+import { IDiarioPermissionChecker } from "@/modules/ensino/diario/domain/authorization";
+import {
+  IDiarioCreateCommandHandler,
+  IDiarioDeleteCommandHandler,
+  IDiarioUpdateCommandHandler,
+} from "@/modules/ensino/diario/domain/commands";
+import {
+  IDiarioFindOneQueryHandler,
+  IDiarioListQueryHandler,
+} from "@/modules/ensino/diario/domain/queries";
+import { IDiarioRepository } from "@/modules/ensino/diario/domain/repositories";
 import { DiarioTypeOrmRepositoryAdapter } from "@/modules/ensino/diario/infrastructure/persistence/typeorm";
 import { DiarioGraphqlResolver } from "@/modules/ensino/diario/presentation/graphql/diario.graphql.resolver";
 import { DiarioRestController } from "@/modules/ensino/diario/presentation/rest/diario.rest.controller";
@@ -19,14 +37,21 @@ import { CalendarioLetivoModule } from "@/modules/horarios/calendario-letivo/cal
   controllers: [DiarioRestController],
   providers: [
     NestJsPaginateAdapter,
-    DiarioService,
     DiarioGraphqlResolver,
-    DiarioAuthzRegistrySetup,
+    { provide: IDiarioPermissionChecker, useClass: DiarioPermissionCheckerImpl },
     {
-      provide: DIARIO_REPOSITORY_PORT,
+      provide: IDiarioRepository,
       useClass: DiarioTypeOrmRepositoryAdapter,
     },
+
+    // Commands
+    { provide: IDiarioCreateCommandHandler, useClass: DiarioCreateCommandHandlerImpl },
+    { provide: IDiarioUpdateCommandHandler, useClass: DiarioUpdateCommandHandlerImpl },
+    { provide: IDiarioDeleteCommandHandler, useClass: DiarioDeleteCommandHandlerImpl },
+    // Queries
+    { provide: IDiarioListQueryHandler, useClass: DiarioListQueryHandlerImpl },
+    { provide: IDiarioFindOneQueryHandler, useClass: DiarioFindOneQueryHandlerImpl },
   ],
-  exports: [DiarioService],
+  exports: [IDiarioFindOneQueryHandler],
 })
 export class DiarioModule {}

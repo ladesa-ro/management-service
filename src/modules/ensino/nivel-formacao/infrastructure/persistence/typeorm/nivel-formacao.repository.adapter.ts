@@ -1,5 +1,5 @@
-import { Inject, Injectable } from "@nestjs/common";
 import { DataSource } from "typeorm";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
   APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
@@ -8,32 +8,31 @@ import {
   paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
-  INivelFormacaoRepositoryPort,
-  NivelFormacaoFindOneInputDto,
-  NivelFormacaoFindOneOutputDto,
-  NivelFormacaoListInputDto,
-  NivelFormacaoListOutputDto,
+  INivelFormacaoRepository,
+  NivelFormacaoFindOneQuery,
+  NivelFormacaoFindOneQueryResult,
+  NivelFormacaoListQuery,
+  NivelFormacaoListQueryResult,
 } from "@/modules/ensino/nivel-formacao";
 import type { NivelFormacaoEntity } from "./nivel-formacao.entity";
 import { createNivelFormacaoRepository } from "./nivel-formacao.repository";
 
-@Injectable()
+@DeclareImplementation()
 export class NivelFormacaoTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     NivelFormacaoEntity,
-    NivelFormacaoListInputDto,
-    NivelFormacaoListOutputDto,
-    NivelFormacaoFindOneInputDto,
-    NivelFormacaoFindOneOutputDto
+    NivelFormacaoListQuery,
+    NivelFormacaoListQueryResult,
+    NivelFormacaoFindOneQuery,
+    NivelFormacaoFindOneQueryResult
   >
-  implements INivelFormacaoRepositoryPort
+  implements INivelFormacaoRepository
 {
   protected readonly alias = "nivel_formacao";
-  protected readonly authzAction = "nivel_formacao:find";
-  protected readonly outputDtoName = "NivelFormacaoFindOneOutputDto";
+  protected readonly outputDtoName = "NivelFormacaoFindOneQueryResult";
 
   constructor(
-    @Inject(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
+    @DeclareDependency(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
     protected readonly paginationAdapter: NestJsPaginateAdapter,
   ) {
     super();

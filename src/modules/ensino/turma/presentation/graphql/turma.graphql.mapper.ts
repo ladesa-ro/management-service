@@ -2,11 +2,11 @@ import { createListOutputMapper, mapDatedFields } from "@/modules/@shared/applic
 import { AmbienteGraphqlMapper } from "@/modules/ambientes/ambiente/presentation/graphql/ambiente.graphql.mapper";
 import { CursoGraphqlMapper } from "@/modules/ensino/curso/presentation/graphql/curso.graphql.mapper";
 import {
-  TurmaCreateInputDto,
-  TurmaFindOneInputDto,
-  TurmaFindOneOutputDto,
-  TurmaListInputDto,
-  TurmaUpdateInputDto,
+  TurmaCreateCommand,
+  TurmaFindOneQuery,
+  TurmaFindOneQueryResult,
+  TurmaListQuery,
+  TurmaUpdateCommand,
 } from "@/modules/ensino/turma";
 import {
   TurmaCreateInputGraphQlDto,
@@ -49,12 +49,12 @@ function mapImagemOutput(imagem: any): any {
 }
 
 export class TurmaGraphqlMapper {
-  static toListInput(dto: TurmaListInputGraphQlDto | null): TurmaListInputDto | null {
+  static toListInput(dto: TurmaListInputGraphQlDto | null): TurmaListQuery | null {
     if (!dto) {
       return null;
     }
 
-    const input = new TurmaListInputDto();
+    const input = new TurmaListQuery();
     input.page = dto.page;
     input.limit = dto.limit;
     input.search = dto.search;
@@ -63,15 +63,15 @@ export class TurmaGraphqlMapper {
     return input;
   }
 
-  static toFindOneInput(id: string, selection?: string[]): TurmaFindOneInputDto {
-    const input = new TurmaFindOneInputDto();
+  static toFindOneInput(id: string, selection?: string[]): TurmaFindOneQuery {
+    const input = new TurmaFindOneQuery();
     input.id = id;
     input.selection = selection;
     return input;
   }
 
-  static toCreateInput(dto: TurmaCreateInputGraphQlDto): TurmaCreateInputDto {
-    const input = new TurmaCreateInputDto();
+  static toCreateInput(dto: TurmaCreateInputGraphQlDto): TurmaCreateCommand {
+    const input = new TurmaCreateCommand();
     input.periodo = dto.periodo;
     input.curso = { id: dto.curso.id };
     input.ambientePadraoAula = dto.ambientePadraoAula ? { id: dto.ambientePadraoAula.id } : null;
@@ -82,8 +82,8 @@ export class TurmaGraphqlMapper {
   static toUpdateInput(
     params: { id: string },
     dto: TurmaUpdateInputGraphQlDto,
-  ): TurmaFindOneInputDto & TurmaUpdateInputDto {
-    const input = new TurmaFindOneInputDto() as TurmaFindOneInputDto & TurmaUpdateInputDto;
+  ): TurmaFindOneQuery & TurmaUpdateCommand {
+    const input = new TurmaFindOneQuery() as TurmaFindOneQuery & TurmaUpdateCommand;
     input.id = params.id;
     if (dto.periodo !== undefined) input.periodo = dto.periodo;
     if (dto.curso !== undefined) input.curso = { id: dto.curso.id };
@@ -96,7 +96,7 @@ export class TurmaGraphqlMapper {
     return input;
   }
 
-  static toFindOneOutputDto(output: TurmaFindOneOutputDto): TurmaFindOneOutputGraphQlDto {
+  static toFindOneOutputDto(output: TurmaFindOneQueryResult): TurmaFindOneOutputGraphQlDto {
     const dto = new TurmaFindOneOutputGraphQlDto();
     dto.id = output.id;
     dto.periodo = output.periodo;

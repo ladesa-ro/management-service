@@ -1,17 +1,17 @@
 import { mapDatedFields } from "@/modules/@shared/application/mappers";
 import { CidadeGraphqlMapper } from "@/modules/localidades/cidade/presentation/graphql/cidade.graphql.mapper";
-import { EnderecoFindOneInputDto, EnderecoFindOneOutputDto } from "@/modules/localidades/endereco";
+import { EnderecoFindOneQuery, EnderecoFindOneQueryResult } from "@/modules/localidades/endereco";
 import { EnderecoFindOneOutputGraphQlDto } from "./endereco.graphql.dto";
 
 export class EnderecoGraphqlMapper {
-  static toFindOneInput(id: string, selection?: string[]): EnderecoFindOneInputDto {
-    const input = new EnderecoFindOneInputDto();
+  static toFindOneInput(id: string, selection?: string[]): EnderecoFindOneQuery {
+    const input = new EnderecoFindOneQuery();
     input.id = id;
     input.selection = selection;
     return input;
   }
 
-  static toFindOneOutputDto(output: EnderecoFindOneOutputDto): EnderecoFindOneOutputGraphQlDto {
+  static toFindOneOutputDto(output: EnderecoFindOneQueryResult): EnderecoFindOneOutputGraphQlDto {
     const dto = new EnderecoFindOneOutputGraphQlDto();
     dto.id = output.id;
     dto.cep = output.cep;

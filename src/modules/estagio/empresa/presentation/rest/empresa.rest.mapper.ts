@@ -1,3 +1,13 @@
+import type {
+  EmpresaCreateCommand,
+  EmpresaUpdateCommand,
+} from "@/modules/estagio/empresa/domain/commands";
+import type {
+  EmpresaFindOneQuery,
+  EmpresaFindOneQueryResult,
+  EmpresaListQuery,
+  EmpresaListQueryResult,
+} from "@/modules/estagio/empresa/domain/queries";
 import {
   EmpresaCreateInputRestDto,
   EmpresaFindOneInputRestDto,
@@ -6,20 +16,12 @@ import {
   EmpresaListOutputRestDto,
   EmpresaUpdateInputRestDto,
 } from "./empresa.rest.dto";
-import type {
-  EmpresaCreateInputDto,
-  EmpresaFindOneInputDto,
-  EmpresaFindOneOutputDto,
-  EmpresaListInputDto,
-  EmpresaListOutputDto,
-  EmpresaUpdateInputDto,
-} from "@/modules/estagio/empresa/application/dtos";
 
 /**
  * Mapeador de DTOs REST para aplicação
  */
 export class EmpresaRestMapper {
-  static toCreateInput(dto: EmpresaCreateInputRestDto): EmpresaCreateInputDto {
+  static toCreateInput(dto: EmpresaCreateInputRestDto): EmpresaCreateCommand {
     return {
       razaoSocial: dto.razaoSocial,
       nomeFantasia: dto.nomeFantasia,
@@ -30,7 +32,7 @@ export class EmpresaRestMapper {
     };
   }
 
-  static toUpdateInput(dto: EmpresaUpdateInputRestDto): EmpresaUpdateInputDto {
+  static toUpdateInput(dto: EmpresaUpdateInputRestDto): EmpresaUpdateCommand {
     return {
       razaoSocial: dto.razaoSocial,
       nomeFantasia: dto.nomeFantasia,
@@ -41,13 +43,13 @@ export class EmpresaRestMapper {
     };
   }
 
-  static toFindOneInput(dto: EmpresaFindOneInputRestDto): EmpresaFindOneInputDto {
+  static toFindOneInput(dto: EmpresaFindOneInputRestDto): EmpresaFindOneQuery {
     return {
       id: dto.id,
     };
   }
 
-  static toListInput(dto: EmpresaListInputRestDto): EmpresaListInputDto {
+  static toListInput(dto: EmpresaListInputRestDto): EmpresaListQuery {
     const normalizeCnpj = (value: string | string[] | undefined): string[] | undefined => {
       if (!value) return undefined;
       const arr = Array.isArray(value) ? value : [value];
@@ -79,9 +81,7 @@ export class EmpresaRestMapper {
     };
   }
 
-  static toFindOneOutputDto(
-    data: EmpresaFindOneOutputDto,
-  ): EmpresaFindOneOutputRestDto {
+  static toFindOneOutputDto(data: EmpresaFindOneQueryResult): EmpresaFindOneOutputRestDto {
     return {
       id: data.id,
       razaoSocial: data.razaoSocial,
@@ -96,7 +96,7 @@ export class EmpresaRestMapper {
     };
   }
 
-  static toListOutputDto(data: EmpresaListOutputDto): EmpresaListOutputRestDto {
+  static toListOutputDto(data: EmpresaListQueryResult): EmpresaListOutputRestDto {
     return {
       data: data.data.map((item) => this.toFindOneOutputDto(item)),
       total: data.total,

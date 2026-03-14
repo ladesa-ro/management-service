@@ -1,11 +1,11 @@
-import { Inject, Injectable } from "@nestjs/common";
 import { DataSource } from "typeorm";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { APP_DATA_SOURCE_TOKEN } from "./providers/app-data-source.provider";
 
-@Injectable()
+@DeclareImplementation()
 export class TypeormService {
   constructor(
-    @Inject(APP_DATA_SOURCE_TOKEN)
+    @DeclareDependency(APP_DATA_SOURCE_TOKEN)
     private appDataSource: DataSource,
   ) {}
 

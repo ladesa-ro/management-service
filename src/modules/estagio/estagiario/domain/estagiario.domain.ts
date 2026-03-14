@@ -13,7 +13,7 @@ export class Estagiario extends BaseDatedEntity implements IEstagiario {
   emailInstitucional!: string | null;
   dataNascimento!: string;
 
-  protected static get entityName(): string {
+  static get entityName(): string {
     return "Estagiario";
   }
 

@@ -1,7 +1,12 @@
-import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@nestjs/swagger";
-import { Type } from "class-transformer";
-import { IsArray, IsInt, IsOptional, IsString, ValidateNested } from "class-validator";
-import { decorate } from "ts-mixer";
+import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@/modules/@shared/presentation/rest";
+import {
+  IsArray,
+  IsInt,
+  IsOptional,
+  IsString,
+  Type,
+  ValidateNested,
+} from "@/modules/@shared/presentation/shared";
 import { PerfilFindOneOutputRestDto } from "@/modules/acesso/perfil/presentation/rest";
 import { UsuarioFindOneOutputRestDto } from "@/modules/acesso/usuario/presentation/rest";
 
@@ -9,14 +14,14 @@ import { UsuarioFindOneOutputRestDto } from "@/modules/acesso/usuario/presentati
 // Auth Login Input
 // ============================================================================
 
-@decorate(ApiSchema({ name: "AuthLoginInputDto" }))
+@ApiSchema({ name: "AuthLoginInputDto" })
 export class AuthLoginInputRestDto {
-  @decorate(ApiProperty({ type: "string", description: "Matrícula" }))
-  @decorate(IsString())
+  @ApiProperty({ type: "string", description: "Matrícula" })
+  @IsString()
   matricula: string;
 
-  @decorate(ApiProperty({ type: "string", description: "Senha" }))
-  @decorate(IsString())
+  @ApiProperty({ type: "string", description: "Senha" })
+  @IsString()
   senha: string;
 }
 
@@ -24,10 +29,10 @@ export class AuthLoginInputRestDto {
 // Auth Refresh Input
 // ============================================================================
 
-@decorate(ApiSchema({ name: "AuthRefreshInputDto" }))
+@ApiSchema({ name: "AuthRefreshInputDto" })
 export class AuthRefreshInputRestDto {
-  @decorate(ApiProperty({ type: "string", description: "Token de refresh" }))
-  @decorate(IsString())
+  @ApiProperty({ type: "string", description: "Token de refresh" })
+  @IsString()
   refreshToken: string;
 }
 
@@ -35,29 +40,25 @@ export class AuthRefreshInputRestDto {
 // Auth WhoAmI Output
 // ============================================================================
 
-@decorate(ApiSchema({ name: "AuthWhoAmIOutputDto" }))
+@ApiSchema({ name: "AuthWhoAmIOutputDto" })
 export class AuthWhoAmIOutputRestDto {
-  @decorate(
-    ApiPropertyOptional({
-      type: () => UsuarioFindOneOutputRestDto,
-      description: "Usuario autenticado",
-      nullable: true,
-    }),
-  )
-  @decorate(IsOptional())
-  @decorate(ValidateNested())
-  @decorate(Type(() => UsuarioFindOneOutputRestDto))
+  @ApiPropertyOptional({
+    type: () => UsuarioFindOneOutputRestDto,
+    description: "Usuario autenticado",
+    nullable: true,
+  })
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => UsuarioFindOneOutputRestDto)
   usuario: UsuarioFindOneOutputRestDto | null;
 
-  @decorate(
-    ApiProperty({
-      type: () => [PerfilFindOneOutputRestDto],
-      description: "Vinculos do usuario logado",
-    }),
-  )
-  @decorate(IsArray())
-  @decorate(ValidateNested({ each: true }))
-  @decorate(Type(() => PerfilFindOneOutputRestDto))
+  @ApiProperty({
+    type: () => [PerfilFindOneOutputRestDto],
+    description: "Vinculos do usuario logado",
+  })
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => PerfilFindOneOutputRestDto)
   perfisAtivos: PerfilFindOneOutputRestDto[];
 }
 
@@ -65,66 +66,54 @@ export class AuthWhoAmIOutputRestDto {
 // Auth Session Credentials
 // ============================================================================
 
-@decorate(ApiSchema({ name: "AuthSessionCredentialsDto" }))
+@ApiSchema({ name: "AuthSessionCredentialsDto" })
 export class AuthSessionCredentialsRestDto {
-  @decorate(ApiPropertyOptional({ type: "string", description: "Token de acesso", nullable: true }))
-  @decorate(IsOptional())
-  @decorate(IsString())
+  @ApiPropertyOptional({ type: "string", description: "Token de acesso", nullable: true })
+  @IsOptional()
+  @IsString()
   access_token: string | null;
 
-  @decorate(ApiPropertyOptional({ type: "string", description: "Tipo do token", nullable: true }))
-  @decorate(IsOptional())
-  @decorate(IsString())
+  @ApiPropertyOptional({ type: "string", description: "Tipo do token", nullable: true })
+  @IsOptional()
+  @IsString()
   token_type: string | null;
 
-  @decorate(
-    ApiPropertyOptional({ type: "string", description: "Token de identificacao", nullable: true }),
-  )
-  @decorate(IsOptional())
-  @decorate(IsString())
+  @ApiPropertyOptional({ type: "string", description: "Token de identificacao", nullable: true })
+  @IsOptional()
+  @IsString()
   id_token: string | null;
 
-  @decorate(
-    ApiPropertyOptional({ type: "string", description: "Token de refresh", nullable: true }),
-  )
-  @decorate(IsOptional())
-  @decorate(IsString())
+  @ApiPropertyOptional({ type: "string", description: "Token de refresh", nullable: true })
+  @IsOptional()
+  @IsString()
   refresh_token: string | null;
 
-  @decorate(
-    ApiPropertyOptional({
-      type: "integer",
-      description: "Tempo de expiracao do token",
-      nullable: true,
-    }),
-  )
-  @decorate(IsOptional())
-  @decorate(IsInt())
+  @ApiPropertyOptional({
+    type: "integer",
+    description: "Tempo de expiracao do token",
+    nullable: true,
+  })
+  @IsOptional()
+  @IsInt()
   expires_in: number | null;
 
-  @decorate(
-    ApiPropertyOptional({
-      type: "integer",
-      description: "Tempo de expiracao do token",
-      nullable: true,
-    }),
-  )
-  @decorate(IsOptional())
-  @decorate(IsInt())
+  @ApiPropertyOptional({
+    type: "integer",
+    description: "Tempo de expiracao do token",
+    nullable: true,
+  })
+  @IsOptional()
+  @IsInt()
   expires_at: number | null;
 
-  @decorate(
-    ApiPropertyOptional({ type: "string", description: "Estado da sessao", nullable: true }),
-  )
-  @decorate(IsOptional())
-  @decorate(IsString())
+  @ApiPropertyOptional({ type: "string", description: "Estado da sessao", nullable: true })
+  @IsOptional()
+  @IsString()
   session_state: string | null;
 
-  @decorate(
-    ApiPropertyOptional({ type: "string", description: "Escopo da autenticacao", nullable: true }),
-  )
-  @decorate(IsOptional())
-  @decorate(IsString())
+  @ApiPropertyOptional({ type: "string", description: "Escopo da autenticacao", nullable: true })
+  @IsOptional()
+  @IsString()
   scope: string | null;
 }
 
@@ -132,14 +121,14 @@ export class AuthSessionCredentialsRestDto {
 // Auth Set Initial Password
 // ============================================================================
 
-@decorate(ApiSchema({ name: "AuthCredentialsSetInitialPasswordInputDto" }))
+@ApiSchema({ name: "AuthCredentialsSetInitialPasswordInputDto" })
 export class AuthCredentialsSetInitialPasswordInputRestDto {
-  @decorate(ApiProperty({ type: "string", description: "Matrícula" }))
-  @decorate(IsString())
+  @ApiProperty({ type: "string", description: "Matrícula" })
+  @IsString()
   matricula: string;
 
-  @decorate(ApiProperty({ type: "string", description: "Nova senha" }))
-  @decorate(IsString())
+  @ApiProperty({ type: "string", description: "Nova senha" })
+  @IsString()
   senha: string;
 }
 
@@ -147,9 +136,9 @@ export class AuthCredentialsSetInitialPasswordInputRestDto {
 // Auth Recover Password
 // ============================================================================
 
-@decorate(ApiSchema({ name: "AuthRecoverPasswordInputDto" }))
+@ApiSchema({ name: "AuthRecoverPasswordInputDto" })
 export class AuthRecoverPasswordInputRestDto {
-  @decorate(ApiProperty({ type: "string", description: "E-mail" }))
-  @decorate(IsString())
+  @ApiProperty({ type: "string", description: "E-mail" })
+  @IsString()
   email: string;
 }

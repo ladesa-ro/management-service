@@ -13,7 +13,7 @@ export class Empresa extends BaseDatedEntity implements IEmpresa {
   email!: string;
   idEnderecoFk!: string;
 
-  protected static get entityName(): string {
+  static get entityName(): string {
     return "Empresa";
   }
 

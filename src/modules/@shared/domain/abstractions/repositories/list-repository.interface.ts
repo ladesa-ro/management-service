@@ -1,0 +1,17 @@
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
+
+/**
+ * Interface para operações de listagem em repositórios
+ *
+ * @template ListOutputDto - Tipo do DTO de saída para listagem (paginado)
+ */
+export interface IListRepository<ListOutputDto> {
+  /**
+   * Lista entidades com paginação e filtros
+   */
+  findAll(
+    accessContext: AccessContext,
+    dto: unknown,
+    selection?: string[] | boolean,
+  ): Promise<ListOutputDto>;
+}

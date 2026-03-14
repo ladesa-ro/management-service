@@ -7,11 +7,11 @@ import {
 import { AmbienteRestMapper } from "@/modules/ambientes/ambiente/presentation/rest";
 import { BlocoRestMapper } from "@/modules/ambientes/bloco/presentation/rest";
 import {
-  DiarioCreateInputDto,
-  DiarioFindOneInputDto,
-  DiarioFindOneOutputDto,
-  DiarioListInputDto,
-  DiarioUpdateInputDto,
+  DiarioCreateCommand,
+  DiarioFindOneQuery,
+  DiarioFindOneQueryResult,
+  DiarioListQuery,
+  DiarioUpdateCommand,
 } from "@/modules/ensino/diario";
 import { DisciplinaRestMapper } from "@/modules/ensino/disciplina/presentation/rest";
 import { TurmaRestMapper } from "@/modules/ensino/turma/presentation/rest";
@@ -29,17 +29,17 @@ export class DiarioRestMapper {
   // Input: Server DTO -> Core DTO
   // ============================================================================
 
-  static toFindOneInput = createFindOneInputMapper(DiarioFindOneInputDto);
+  static toFindOneInput = createFindOneInputMapper(DiarioFindOneQuery);
 
-  static toListInput = createListInputMapper(DiarioListInputDto, [
+  static toListInput = createListInputMapper(DiarioListQuery, [
     "filter.id",
     "filter.turma.id",
     "filter.disciplina.id",
     "filter.calendarioLetivo.id",
   ]);
 
-  static toCreateInput(dto: DiarioCreateInputRestDto): DiarioCreateInputDto {
-    const input = new DiarioCreateInputDto();
+  static toCreateInput(dto: DiarioCreateInputRestDto): DiarioCreateCommand {
+    const input = new DiarioCreateCommand();
     input.ativo = dto.ativo;
     input.calendarioLetivo = { id: dto.calendarioLetivo.id };
     input.turma = { id: dto.turma.id };
@@ -53,8 +53,8 @@ export class DiarioRestMapper {
   static toUpdateInput(
     params: DiarioFindOneInputRestDto,
     dto: DiarioUpdateInputRestDto,
-  ): DiarioFindOneInputDto & DiarioUpdateInputDto {
-    const input = new DiarioFindOneInputDto() as DiarioFindOneInputDto & DiarioUpdateInputDto;
+  ): DiarioFindOneQuery & DiarioUpdateCommand {
+    const input = new DiarioFindOneQuery() as DiarioFindOneQuery & DiarioUpdateCommand;
     input.id = params.id;
     if (dto.ativo !== undefined) {
       input.ativo = dto.ativo;
@@ -78,7 +78,7 @@ export class DiarioRestMapper {
   // Output: Core DTO -> Server DTO
   // ============================================================================
 
-  static toFindOneOutputDto(output: DiarioFindOneOutputDto): DiarioFindOneOutputRestDto {
+  static toFindOneOutputDto(output: DiarioFindOneQueryResult): DiarioFindOneOutputRestDto {
     const dto = new DiarioFindOneOutputRestDto();
     dto.id = output.id;
     dto.ativo = output.ativo;

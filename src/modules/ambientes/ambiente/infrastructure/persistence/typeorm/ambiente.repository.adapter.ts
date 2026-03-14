@@ -1,6 +1,6 @@
-import { Inject, Injectable } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
 import { DataSource } from "typeorm";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { ITypeOrmPaginationConfig } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import {
   APP_DATA_SOURCE_TOKEN,
@@ -8,12 +8,12 @@ import {
   NestJsPaginateAdapter,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
-  AmbienteFindOneInputDto as AmbienteFindOneInputDto,
-  AmbienteFindOneOutputDto as AmbienteFindOneOutputDto,
-  AmbienteListInputDto as AmbienteListInputDto,
-  AmbienteListOutputDto as AmbienteListOutputDto,
+  AmbienteFindOneQuery as AmbienteFindOneQuery,
+  AmbienteFindOneQueryResult as AmbienteFindOneQueryResult,
+  AmbienteListQuery as AmbienteListQuery,
+  AmbienteListQueryResult as AmbienteListQueryResult,
 } from "@/modules/ambientes/ambiente";
-import type { IAmbienteRepositoryPort } from "@/modules/ambientes/ambiente/application/ports";
+import type { IAmbienteRepository } from "@/modules/ambientes/ambiente/domain/repositories";
 import type { AmbienteEntity } from "./ambiente.entity";
 import { createAmbienteRepository } from "./ambiente.repository";
 
@@ -21,23 +21,23 @@ import { createAmbienteRepository } from "./ambiente.repository";
  * Adapter TypeORM que implementa o port de repositório de Ambiente.
  * Estende BaseTypeOrmRepositoryAdapter para reutilizar operações CRUD comuns.
  */
-@Injectable()
+
+@DeclareImplementation()
 export class AmbienteTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     AmbienteEntity,
-    AmbienteListInputDto,
-    AmbienteListOutputDto,
-    AmbienteFindOneInputDto,
-    AmbienteFindOneOutputDto
+    AmbienteListQuery,
+    AmbienteListQueryResult,
+    AmbienteFindOneQuery,
+    AmbienteFindOneQueryResult
   >
-  implements IAmbienteRepositoryPort
+  implements IAmbienteRepository
 {
   protected readonly alias = "ambiente";
-  protected readonly authzAction = "ambiente:find";
-  protected readonly outputDtoName = "AmbienteFindOneOutputDto";
+  protected readonly outputDtoName = "AmbienteFindOneQueryResult";
 
   constructor(
-    @Inject(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
+    @DeclareDependency(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
     protected readonly paginationAdapter: NestJsPaginateAdapter,
   ) {
     super();

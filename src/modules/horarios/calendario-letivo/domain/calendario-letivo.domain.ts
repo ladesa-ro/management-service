@@ -17,7 +17,7 @@ export class CalendarioLetivo extends BaseDatedEntity implements ICalendarioLeti
   campus!: ICampus;
   ofertaFormacao!: IOfertaFormacao;
 
-  protected static get entityName(): string {
+  static get entityName(): string {
     return "CalendarioLetivo";
   }
 

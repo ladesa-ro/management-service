@@ -5,11 +5,11 @@ import {
 } from "@/modules/@shared/application/mappers";
 import { CalendarioLetivoRestMapper } from "@/modules/horarios/calendario-letivo/presentation/rest";
 import {
-  DiaCalendarioCreateInputDto,
-  DiaCalendarioFindOneInputDto,
-  DiaCalendarioFindOneOutputDto,
-  DiaCalendarioListInputDto,
-  DiaCalendarioUpdateInputDto,
+  DiaCalendarioCreateCommand,
+  DiaCalendarioFindOneQuery,
+  DiaCalendarioFindOneQueryResult,
+  DiaCalendarioListQuery,
+  DiaCalendarioUpdateCommand,
 } from "@/modules/horarios/dia-calendario";
 import {
   DiaCalendarioCreateInputRestDto,
@@ -21,15 +21,15 @@ import {
 } from "./dia-calendario.rest.dto";
 
 export class DiaCalendarioRestMapper {
-  static toFindOneInput = createFindOneInputMapper(DiaCalendarioFindOneInputDto);
+  static toFindOneInput = createFindOneInputMapper(DiaCalendarioFindOneQuery);
 
-  static toListInput = createListInputMapper(DiaCalendarioListInputDto, [
+  static toListInput = createListInputMapper(DiaCalendarioListQuery, [
     "filter.id",
     "filter.calendario.id",
   ]);
 
-  static toCreateInput(dto: DiaCalendarioCreateInputRestDto): DiaCalendarioCreateInputDto {
-    const input = new DiaCalendarioCreateInputDto();
+  static toCreateInput(dto: DiaCalendarioCreateInputRestDto): DiaCalendarioCreateCommand {
+    const input = new DiaCalendarioCreateCommand();
     input.data = dto.data;
     input.diaLetivo = dto.diaLetivo;
     input.feriado = dto.feriado ?? "";
@@ -43,9 +43,9 @@ export class DiaCalendarioRestMapper {
   static toUpdateInput(
     params: DiaCalendarioFindOneInputRestDto,
     dto: DiaCalendarioUpdateInputRestDto,
-  ): DiaCalendarioFindOneInputDto & DiaCalendarioUpdateInputDto {
-    const input = new DiaCalendarioFindOneInputDto() as DiaCalendarioFindOneInputDto &
-      DiaCalendarioUpdateInputDto;
+  ): DiaCalendarioFindOneQuery & DiaCalendarioUpdateCommand {
+    const input = new DiaCalendarioFindOneQuery() as DiaCalendarioFindOneQuery &
+      DiaCalendarioUpdateCommand;
     input.id = params.id;
     if (dto.data !== undefined) {
       input.data = dto.data;
@@ -72,7 +72,7 @@ export class DiaCalendarioRestMapper {
   }
 
   static toFindOneOutputDto(
-    output: DiaCalendarioFindOneOutputDto,
+    output: DiaCalendarioFindOneQueryResult,
   ): DiaCalendarioFindOneOutputRestDto {
     const dto = new DiaCalendarioFindOneOutputRestDto();
     dto.id = output.id;

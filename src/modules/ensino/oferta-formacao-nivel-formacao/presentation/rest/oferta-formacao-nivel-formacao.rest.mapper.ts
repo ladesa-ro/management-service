@@ -7,11 +7,11 @@ import {
 import { NivelFormacaoRestMapper } from "@/modules/ensino/nivel-formacao/presentation/rest";
 import { OfertaFormacaoRestMapper } from "@/modules/ensino/oferta-formacao/presentation/rest";
 import {
-  OfertaFormacaoNivelFormacaoCreateInputDto,
-  OfertaFormacaoNivelFormacaoFindOneInputDto,
-  OfertaFormacaoNivelFormacaoFindOneOutputDto,
-  OfertaFormacaoNivelFormacaoListInputDto,
-  OfertaFormacaoNivelFormacaoUpdateInputDto,
+  OfertaFormacaoNivelFormacaoCreateCommand,
+  OfertaFormacaoNivelFormacaoFindOneQuery,
+  OfertaFormacaoNivelFormacaoFindOneQueryResult,
+  OfertaFormacaoNivelFormacaoListQuery,
+  OfertaFormacaoNivelFormacaoUpdateCommand,
 } from "@/modules/ensino/oferta-formacao-nivel-formacao";
 import {
   OfertaFormacaoNivelFormacaoCreateInputRestDto,
@@ -26,16 +26,14 @@ export class OfertaFormacaoNivelFormacaoRestMapper {
   // Input: Server DTO -> Core DTO
   // ============================================================================
 
-  static toFindOneInput = createFindOneInputMapper(OfertaFormacaoNivelFormacaoFindOneInputDto);
+  static toFindOneInput = createFindOneInputMapper(OfertaFormacaoNivelFormacaoFindOneQuery);
 
-  static toListInput = createListInputMapper(OfertaFormacaoNivelFormacaoListInputDto, [
-    "filter.id",
-  ]);
+  static toListInput = createListInputMapper(OfertaFormacaoNivelFormacaoListQuery, ["filter.id"]);
 
   static toCreateInput(
     dto: OfertaFormacaoNivelFormacaoCreateInputRestDto,
-  ): OfertaFormacaoNivelFormacaoCreateInputDto {
-    const input = new OfertaFormacaoNivelFormacaoCreateInputDto();
+  ): OfertaFormacaoNivelFormacaoCreateCommand {
+    const input = new OfertaFormacaoNivelFormacaoCreateCommand();
     input.ofertaFormacao = { id: dto.ofertaFormacao.id };
     input.nivelFormacao = { id: dto.nivelFormacao.id };
     return input;
@@ -44,10 +42,10 @@ export class OfertaFormacaoNivelFormacaoRestMapper {
   static toUpdateInput(
     params: OfertaFormacaoNivelFormacaoFindOneInputRestDto,
     dto: OfertaFormacaoNivelFormacaoUpdateInputRestDto,
-  ): OfertaFormacaoNivelFormacaoFindOneInputDto & OfertaFormacaoNivelFormacaoUpdateInputDto {
+  ): OfertaFormacaoNivelFormacaoFindOneQuery & OfertaFormacaoNivelFormacaoUpdateCommand {
     const input =
-      new OfertaFormacaoNivelFormacaoFindOneInputDto() as OfertaFormacaoNivelFormacaoFindOneInputDto &
-        OfertaFormacaoNivelFormacaoUpdateInputDto;
+      new OfertaFormacaoNivelFormacaoFindOneQuery() as OfertaFormacaoNivelFormacaoFindOneQuery &
+        OfertaFormacaoNivelFormacaoUpdateCommand;
     input.id = params.id;
     if (dto.ofertaFormacao !== undefined) {
       input.ofertaFormacao = { id: dto.ofertaFormacao.id };
@@ -63,7 +61,7 @@ export class OfertaFormacaoNivelFormacaoRestMapper {
   // ============================================================================
 
   static toFindOneOutputDto(
-    output: OfertaFormacaoNivelFormacaoFindOneOutputDto,
+    output: OfertaFormacaoNivelFormacaoFindOneQueryResult,
   ): OfertaFormacaoNivelFormacaoFindOneOutputRestDto {
     const dto = new OfertaFormacaoNivelFormacaoFindOneOutputRestDto();
     dto.id = output.id;

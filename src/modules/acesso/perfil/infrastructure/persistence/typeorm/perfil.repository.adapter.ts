@@ -1,8 +1,7 @@
-import { Inject, Injectable } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
 import type { DeepPartial } from "typeorm";
 import { DataSource } from "typeorm";
-import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { IPaginationCriteria, IPaginationResult } from "@/modules/@shared";
 import {
   APP_DATA_SOURCE_TOKEN,
@@ -13,33 +12,32 @@ import {
   QbEfficientLoad,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
-  PerfilFindOneInputDto,
-  PerfilFindOneOutputDto,
-  PerfilListInputDto,
-  PerfilListOutputDto,
-} from "@/modules/acesso/perfil/application/dtos";
-import type { IPerfilRepositoryPort } from "@/modules/acesso/perfil/application/ports";
+  PerfilFindOneQuery,
+  PerfilFindOneQueryResult,
+  PerfilListQuery,
+  PerfilListQueryResult,
+} from "@/modules/acesso/perfil/domain/queries";
+import type { IPerfilRepository } from "@/modules/acesso/perfil/domain/repositories";
 import type { UsuarioEntity } from "@/modules/acesso/usuario/infrastructure/persistence/typeorm";
 import type { PerfilEntity } from "./perfil.entity";
 import { createPerfilRepository } from "./perfil.repository";
 
-@Injectable()
+@DeclareImplementation()
 export class PerfilTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     PerfilEntity,
-    PerfilListInputDto,
-    PerfilListOutputDto,
-    PerfilFindOneInputDto,
-    PerfilFindOneOutputDto
+    PerfilListQuery,
+    PerfilListQueryResult,
+    PerfilFindOneQuery,
+    PerfilFindOneQueryResult
   >
-  implements IPerfilRepositoryPort
+  implements IPerfilRepository
 {
   protected readonly alias = "vinculo";
-  protected readonly authzAction = "vinculo:find";
-  protected readonly outputDtoName = "PerfilFindOneOutputDto";
+  protected readonly outputDtoName = "PerfilFindOneQueryResult";
 
   constructor(
-    @Inject(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
+    @DeclareDependency(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
     protected readonly paginationAdapter: NestJsPaginateAdapter,
   ) {
     super();
@@ -50,42 +48,44 @@ export class PerfilTypeOrmRepositoryAdapter
   }
 
   async findAllActiveByUsuarioId(
-    accessContext: AccessContext | null,
+    _accessContext: unknown,
     usuarioId: UsuarioEntity["id"],
-  ): Promise<PerfilFindOneOutputDto[]> {
+  ): Promise<PerfilFindOneQueryResult[]> {
     const qb = this.repository.createQueryBuilder(this.alias);
 
     qb.innerJoin(`${this.alias}.usuario`, "usuario");
     qb.where("usuario.id = :usuarioId", { usuarioId });
     qb.andWhere(`${this.alias}.ativo = :ativo`, { ativo: true });
 
-    if (accessContext) {
-      await accessContext.applyFilter(this.authzAction, qb, this.alias, null);
+    if (this.hasSoftDelete) {
+      qb.andWhere(`${this.alias}.dateDeleted IS NULL`);
     }
 
     QbEfficientLoad(this.outputDtoName, qb, this.alias);
 
     const vinculos = await qb.getMany();
 
-    return vinculos as unknown as PerfilFindOneOutputDto[];
+    return vinculos as unknown as PerfilFindOneQueryResult[];
   }
 
   // Métodos específicos do Perfil que não estão na classe base
 
   async findPaginated(
-    accessContext: AccessContext,
+    _accessContext: unknown,
     criteria: IPaginationCriteria | null,
-    config: ITypeOrmPaginationConfig<PerfilFindOneOutputDto>,
+    config: ITypeOrmPaginationConfig<PerfilFindOneQueryResult>,
     selection?: string[] | boolean,
-  ): Promise<IPaginationResult<PerfilFindOneOutputDto>> {
+  ): Promise<IPaginationResult<PerfilFindOneQueryResult>> {
     const qb = this.repository.createQueryBuilder(this.alias);
 
     QbEfficientLoad(this.outputDtoName, qb, this.alias, selection);
 
-    await accessContext.applyFilter(this.authzAction, qb, this.alias, null);
+    if (this.hasSoftDelete) {
+      qb.andWhere(`${this.alias}.dateDeleted IS NULL`);
+    }
 
     return this.paginationAdapter.paginate(qb, criteria, config) as unknown as Promise<
-      IPaginationResult<PerfilFindOneOutputDto>
+      IPaginationResult<PerfilFindOneQueryResult>
     >;
   }
 
@@ -98,7 +98,7 @@ export class PerfilTypeOrmRepositoryAdapter
   async findByUsuarioAndCampus(
     usuarioId: string,
     campusId: string,
-  ): Promise<PerfilFindOneOutputDto[]> {
+  ): Promise<PerfilFindOneQueryResult[]> {
     const vinculos = await this.repository
       .createQueryBuilder(this.alias)
       .innerJoin(`${this.alias}.campus`, "campus")
@@ -108,7 +108,7 @@ export class PerfilTypeOrmRepositoryAdapter
       .select([this.alias, "campus", "usuario"])
       .getMany();
 
-    return vinculos as unknown as PerfilFindOneOutputDto[];
+    return vinculos as unknown as PerfilFindOneQueryResult[];
   }
 
   async deactivateByIds(ids: string[]): Promise<void> {

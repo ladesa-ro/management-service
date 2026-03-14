@@ -1,21 +1,43 @@
 import { Module } from "@nestjs/common";
-import { EmpresaService } from "@/modules/estagio/empresa/application/use-cases/empresa.service";
 import {
-  EmpresaTypeOrmRepositoryAdapter,
-} from "@/modules/estagio/empresa/infrastructure";
+  EmpresaCreateCommandHandlerImpl,
+  EmpresaDeleteCommandHandlerImpl,
+  EmpresaUpdateCommandHandlerImpl,
+} from "@/modules/estagio/empresa/application/commands";
+import {
+  EmpresaFindOneQueryHandlerImpl,
+  EmpresaListQueryHandlerImpl,
+} from "@/modules/estagio/empresa/application/queries";
+import {
+  IEmpresaCreateCommandHandler,
+  IEmpresaDeleteCommandHandler,
+  IEmpresaUpdateCommandHandler,
+} from "@/modules/estagio/empresa/domain/commands";
+import {
+  IEmpresaFindOneQueryHandler,
+  IEmpresaListQueryHandler,
+} from "@/modules/estagio/empresa/domain/queries";
+import { IEmpresaRepository } from "@/modules/estagio/empresa/domain/repositories";
+import { EmpresaTypeOrmRepositoryAdapter } from "@/modules/estagio/empresa/infrastructure";
 import { EmpresaRestController } from "@/modules/estagio/empresa/presentation/rest/empresa.rest.controller";
-import { EMPRESA_REPOSITORY_PORT } from "@/modules/estagio/empresa/application/ports";
 
 @Module({
   imports: [],
   controllers: [EmpresaRestController],
   providers: [
-    EmpresaService,
     {
-      provide: EMPRESA_REPOSITORY_PORT,
+      provide: IEmpresaRepository,
       useClass: EmpresaTypeOrmRepositoryAdapter,
     },
+
+    // Commands
+    { provide: IEmpresaCreateCommandHandler, useClass: EmpresaCreateCommandHandlerImpl },
+    { provide: IEmpresaUpdateCommandHandler, useClass: EmpresaUpdateCommandHandlerImpl },
+    { provide: IEmpresaDeleteCommandHandler, useClass: EmpresaDeleteCommandHandlerImpl },
+    // Queries
+    { provide: IEmpresaListQueryHandler, useClass: EmpresaListQueryHandlerImpl },
+    { provide: IEmpresaFindOneQueryHandler, useClass: EmpresaFindOneQueryHandlerImpl },
   ],
-  exports: [EmpresaService],
+  exports: [IEmpresaFindOneQueryHandler],
 })
 export class EmpresaModule {}

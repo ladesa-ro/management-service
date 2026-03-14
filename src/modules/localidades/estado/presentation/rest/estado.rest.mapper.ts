@@ -3,9 +3,9 @@ import {
   createListOutputMapper,
 } from "@/modules/@shared/application/mappers";
 import {
-  EstadoFindOneInputDto,
-  EstadoFindOneOutputDto,
-  EstadoListInputDto,
+  EstadoFindOneQuery,
+  EstadoFindOneQueryResult,
+  EstadoListQuery,
 } from "@/modules/localidades/estado";
 import {
   EstadoFindOneInputRestDto,
@@ -18,19 +18,19 @@ export class EstadoRestMapper {
   // Input: Server DTO -> Core DTO
   // ============================================================================
 
-  static toFindOneInput(dto: EstadoFindOneInputRestDto): EstadoFindOneInputDto {
-    const input = new EstadoFindOneInputDto();
+  static toFindOneInput(dto: EstadoFindOneInputRestDto): EstadoFindOneQuery {
+    const input = new EstadoFindOneQuery();
     input.id = dto.id;
     return input;
   }
 
-  static toListInput = createListInputMapper(EstadoListInputDto, ["filter.id"]);
+  static toListInput = createListInputMapper(EstadoListQuery, ["filter.id"]);
 
   // ============================================================================
   // Output: Core DTO -> Server DTO
   // ============================================================================
 
-  static toFindOneOutputDto(output: EstadoFindOneOutputDto): EstadoFindOneOutputRestDto {
+  static toFindOneOutputDto(output: EstadoFindOneQueryResult): EstadoFindOneOutputRestDto {
     const dto = new EstadoFindOneOutputRestDto();
     dto.id = output.id;
     dto.nome = output.nome;

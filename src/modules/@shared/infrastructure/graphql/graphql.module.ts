@@ -2,7 +2,10 @@ import { InMemoryLRUCache } from "@apollo/utils.keyvaluecache";
 import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
 import { Module } from "@nestjs/common";
 import { GraphQLModule } from "@nestjs/graphql";
-import { IRuntimeOptions, IRuntimeOptions as IRuntimeOptionsToken } from "@/infrastructure.config/options/runtime/runtime-options.interface";
+import {
+  IRuntimeOptions,
+  IRuntimeOptions as IRuntimeOptionsToken,
+} from "@/infrastructure.config/options/runtime/runtime-options.interface";
 
 @Module({
   imports: [

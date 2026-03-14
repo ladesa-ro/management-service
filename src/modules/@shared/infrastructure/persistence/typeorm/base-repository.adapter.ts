@@ -1,8 +1,7 @@
 import { map } from "lodash";
 import type { DataSource, DeepPartial, Repository } from "typeorm";
-import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
-import type { IPaginationCriteria } from "@/modules/@shared";
 import type { NestJsPaginateAdapter } from "@/infrastructure.database/pagination/adapters/nestjs-paginate.adapter";
+import type { IPaginationCriteria } from "@/modules/@shared";
 import type { ITypeOrmPaginationConfig } from "../../../../../infrastructure.database/pagination/interfaces/pagination-config.types";
 import { QbEfficientLoad } from "./qb-efficient-load";
 
@@ -39,14 +38,14 @@ type DtoWithFilters = Record<string, unknown>;
  * @template Entity - Tipo da entidade TypeORM
  * @template ListInputDto - Tipo do DTO de entrada para listagem
  * @template ListOutputDto - Tipo do DTO de saída para listagem
- * @template FindOneInputDto - Tipo do DTO de entrada para busca única
+ * @template FindOneQuery - Tipo do DTO de entrada para busca única
  * @template FindOneOutputDto - Tipo do DTO de saída para busca única
  */
 export abstract class BaseTypeOrmRepositoryAdapter<
   Entity extends IEntityWithId,
   ListInputDto,
   ListOutputDto,
-  FindOneInputDto extends IFindOneInputDto,
+  FindOneQuery extends IFindOneInputDto,
   FindOneOutputDto,
 > {
   /**
@@ -55,12 +54,13 @@ export abstract class BaseTypeOrmRepositoryAdapter<
   protected abstract readonly alias: string;
 
   /**
-   * Ação de autorização para filtros (ex: "modalidade:find")
+   * Indica se a entidade suporta soft delete (dateDeleted).
+   * Quando true, queries de listagem e busca filtram registros deletados.
    */
-  protected abstract readonly authzAction: string;
+  protected readonly hasSoftDelete: boolean = true;
 
   /**
-   * Nome do DTO de saída para QbEfficientLoad (ex: "ModalidadeFindOneOutputDto")
+   * Nome do DTO de saída para QbEfficientLoad (ex: "ModalidadeFindOneQueryResult")
    */
   protected abstract readonly outputDtoName: string;
   /**
@@ -78,10 +78,10 @@ export abstract class BaseTypeOrmRepositoryAdapter<
   protected abstract get repository(): Repository<Entity>;
 
   /**
-   * Lista todos os registros com paginação e filtros de autorização
+   * Lista todos os registros com paginação e filtro de soft delete
    */
   async findAll(
-    accessContext: AccessContext,
+    _accessContext: unknown,
     dto: ListInputDto | null = null,
     selection?: string[] | boolean,
   ): Promise<ListOutputDto> {
@@ -90,7 +90,10 @@ export abstract class BaseTypeOrmRepositoryAdapter<
     }
 
     const qb = this.repository.createQueryBuilder(this.alias);
-    await accessContext.applyFilter(this.authzAction as any, qb, this.alias, null);
+
+    if (this.hasSoftDelete) {
+      qb.andWhere(`${this.alias}.dateDeleted IS NULL`);
+    }
 
     const criteria: IPaginationCriteria = {
       ...(dto as object),
@@ -110,17 +113,17 @@ export abstract class BaseTypeOrmRepositoryAdapter<
   }
 
   /**
-   * Busca um registro por ID com filtros de autorização
+   * Busca um registro por ID com filtro de soft delete
    */
   async findById(
-    accessContext: AccessContext | null,
-    dto: FindOneInputDto,
+    _accessContext: unknown,
+    dto: FindOneQuery,
     selection?: string[] | boolean,
   ): Promise<FindOneOutputDto | null> {
     const qb = this.repository.createQueryBuilder(this.alias);
 
-    if (accessContext) {
-      await accessContext.applyFilter(this.authzAction as any, qb, this.alias, null);
+    if (this.hasSoftDelete) {
+      qb.andWhere(`${this.alias}.dateDeleted IS NULL`);
     }
 
     qb.andWhere(`${this.alias}.id = :id`, { id: dto.id });
@@ -134,11 +137,11 @@ export abstract class BaseTypeOrmRepositoryAdapter<
    * Busca simplificada por ID (wrapper para findById)
    */
   async findByIdSimple(
-    accessContext: AccessContext,
+    accessContext: unknown,
     id: string,
     selection?: string[] | boolean,
   ): Promise<FindOneOutputDto | null> {
-    return this.findById(accessContext, { id } as FindOneInputDto, selection);
+    return this.findById(accessContext, { id } as FindOneQuery, selection);
   }
 
   /**

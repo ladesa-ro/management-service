@@ -1,8 +1,15 @@
 import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
+import { DeclareDependency, IContainer } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextGraphQL } from "@/modules/@seguranca/contexto-acesso";
+import { ensureExists } from "@/modules/@shared";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
-import { NivelFormacaoService } from "@/modules/ensino/nivel-formacao/application/use-cases/nivel-formacao.service";
+import { INivelFormacaoCreateCommandHandler } from "@/modules/ensino/nivel-formacao/domain/commands/nivel-formacao-create.command.handler.interface";
+import { INivelFormacaoDeleteCommandHandler } from "@/modules/ensino/nivel-formacao/domain/commands/nivel-formacao-delete.command.handler.interface";
+import { INivelFormacaoUpdateCommandHandler } from "@/modules/ensino/nivel-formacao/domain/commands/nivel-formacao-update.command.handler.interface";
+import { NivelFormacao } from "@/modules/ensino/nivel-formacao/domain/nivel-formacao.domain";
+import { INivelFormacaoFindOneQueryHandler } from "@/modules/ensino/nivel-formacao/domain/queries/nivel-formacao-find-one.query.handler.interface";
+import { INivelFormacaoListQueryHandler } from "@/modules/ensino/nivel-formacao/domain/queries/nivel-formacao-list.query.handler.interface";
 import {
   NivelFormacaoCreateInputGraphQlDto,
   NivelFormacaoFindOneOutputGraphQlDto,
@@ -14,7 +21,10 @@ import { NivelFormacaoGraphqlMapper } from "./nivel-formacao.graphql.mapper";
 
 @Resolver(() => NivelFormacaoFindOneOutputGraphQlDto)
 export class NivelFormacaoGraphqlResolver {
-  constructor(private readonly nivelFormacaoService: NivelFormacaoService) {}
+  constructor(
+    @DeclareDependency(IContainer)
+    private readonly container: IContainer,
+  ) {}
 
   @Query(() => NivelFormacaoListOutputGraphQlDto, { name: "nivelFormacaoFindAll" })
   async findAll(
@@ -28,7 +38,10 @@ export class NivelFormacaoGraphqlResolver {
       input.selection = graphqlExtractSelection(info, "paginated");
     }
 
-    const result = await this.nivelFormacaoService.findAll(accessContext, input);
+    const listHandler = this.container.get<INivelFormacaoListQueryHandler>(
+      INivelFormacaoListQueryHandler,
+    );
+    const result = await listHandler.execute({ accessContext, dto: input });
     return NivelFormacaoGraphqlMapper.toListOutputDto(result);
   }
 
@@ -39,7 +52,11 @@ export class NivelFormacaoGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<NivelFormacaoFindOneOutputGraphQlDto> {
     const selection = graphqlExtractSelection(info);
-    const result = await this.nivelFormacaoService.findByIdStrict(accessContext, { id, selection });
+    const findOneHandler = this.container.get<INivelFormacaoFindOneQueryHandler>(
+      INivelFormacaoFindOneQueryHandler,
+    );
+    const result = await findOneHandler.execute({ accessContext, dto: { id, selection } });
+    ensureExists(result, NivelFormacao.entityName, id);
     return NivelFormacaoGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -50,7 +67,10 @@ export class NivelFormacaoGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<NivelFormacaoFindOneOutputGraphQlDto> {
     const input = NivelFormacaoGraphqlMapper.toCreateInput(dto);
-    const result = await this.nivelFormacaoService.create(accessContext, input);
+    const createHandler = this.container.get<INivelFormacaoCreateCommandHandler>(
+      INivelFormacaoCreateCommandHandler,
+    );
+    const result = await createHandler.execute({ accessContext, dto: input });
     return NivelFormacaoGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -62,7 +82,10 @@ export class NivelFormacaoGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<NivelFormacaoFindOneOutputGraphQlDto> {
     const input = NivelFormacaoGraphqlMapper.toUpdateInput({ id }, dto);
-    const result = await this.nivelFormacaoService.update(accessContext, input);
+    const updateHandler = this.container.get<INivelFormacaoUpdateCommandHandler>(
+      INivelFormacaoUpdateCommandHandler,
+    );
+    const result = await updateHandler.execute({ accessContext, dto: input });
     return NivelFormacaoGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -71,6 +94,9 @@ export class NivelFormacaoGraphqlResolver {
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
   ): Promise<boolean> {
-    return this.nivelFormacaoService.deleteOneById(accessContext, { id });
+    const deleteHandler = this.container.get<INivelFormacaoDeleteCommandHandler>(
+      INivelFormacaoDeleteCommandHandler,
+    );
+    return deleteHandler.execute({ accessContext, dto: { id } });
   }
 }

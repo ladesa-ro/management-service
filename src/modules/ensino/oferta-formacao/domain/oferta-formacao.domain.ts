@@ -15,7 +15,7 @@ export class OfertaFormacao extends BaseDatedEntity implements IOfertaFormacao {
   slug!: string;
   modalidade!: IModalidade;
 
-  protected static get entityName(): string {
+  static get entityName(): string {
     return "OfertaFormacao";
   }
 

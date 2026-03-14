@@ -1,11 +1,15 @@
 import { Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
-import { CIDADE_REPOSITORY_PORT } from "@/modules/localidades/cidade/application/ports";
-import { CidadeService } from "@/modules/localidades/cidade/application/use-cases/cidade.service";
 import {
-  CidadeAuthzRegistrySetup,
-  CidadeTypeOrmRepositoryAdapter,
-} from "@/modules/localidades/cidade/infrastructure";
+  CidadeFindOneQueryHandlerImpl,
+  CidadeListQueryHandlerImpl,
+} from "@/modules/localidades/cidade/application/queries";
+import {
+  ICidadeFindOneQueryHandler,
+  ICidadeListQueryHandler,
+} from "@/modules/localidades/cidade/domain/queries";
+import { ICidadeRepository } from "@/modules/localidades/cidade/domain/repositories";
+import { CidadeTypeOrmRepositoryAdapter } from "@/modules/localidades/cidade/infrastructure";
 import { CidadeGraphqlResolver } from "@/modules/localidades/cidade/presentation/graphql/cidade.graphql.resolver";
 import { CidadeRestController } from "@/modules/localidades/cidade/presentation/rest/cidade.rest.controller";
 
@@ -14,14 +18,15 @@ import { CidadeRestController } from "@/modules/localidades/cidade/presentation/
   controllers: [CidadeRestController],
   providers: [
     NestJsPaginateAdapter,
-    CidadeService,
     CidadeGraphqlResolver,
-    CidadeAuthzRegistrySetup,
     {
-      provide: CIDADE_REPOSITORY_PORT,
+      provide: ICidadeRepository,
       useClass: CidadeTypeOrmRepositoryAdapter,
     },
+    // Queries
+    { provide: ICidadeListQueryHandler, useClass: CidadeListQueryHandlerImpl },
+    { provide: ICidadeFindOneQueryHandler, useClass: CidadeFindOneQueryHandlerImpl },
   ],
-  exports: [CidadeService],
+  exports: [],
 })
 export class CidadeModule {}

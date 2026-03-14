@@ -8,11 +8,11 @@ import { AmbienteRestMapper } from "@/modules/ambientes/ambiente/presentation/re
 import { BlocoRestMapper } from "@/modules/ambientes/bloco/presentation/rest";
 import { CursoRestMapper } from "@/modules/ensino/curso/presentation/rest";
 import {
-  TurmaCreateInputDto,
-  TurmaFindOneInputDto,
-  TurmaFindOneOutputDto,
-  TurmaListInputDto,
-  TurmaUpdateInputDto,
+  TurmaCreateCommand,
+  TurmaFindOneQuery,
+  TurmaFindOneQueryResult,
+  TurmaListQuery,
+  TurmaUpdateCommand,
 } from "@/modules/ensino/turma";
 import {
   TurmaCreateInputRestDto,
@@ -27,9 +27,9 @@ export class TurmaRestMapper {
   // Input: Server DTO -> Core DTO
   // ============================================================================
 
-  static toFindOneInput = createFindOneInputMapper(TurmaFindOneInputDto);
+  static toFindOneInput = createFindOneInputMapper(TurmaFindOneQuery);
 
-  static toListInput = createListInputMapper(TurmaListInputDto, [
+  static toListInput = createListInputMapper(TurmaListQuery, [
     "filter.id",
     "filter.ambientePadraoAula.nome",
     "filter.ambientePadraoAula.codigo",
@@ -44,8 +44,8 @@ export class TurmaRestMapper {
     "filter.curso.ofertaFormacao.slug",
   ]);
 
-  static toCreateInput(dto: TurmaCreateInputRestDto): TurmaCreateInputDto {
-    const input = new TurmaCreateInputDto();
+  static toCreateInput(dto: TurmaCreateInputRestDto): TurmaCreateCommand {
+    const input = new TurmaCreateCommand();
     input.periodo = dto.periodo;
     input.curso = { id: dto.curso.id };
     input.ambientePadraoAula = dto.ambientePadraoAula ? { id: dto.ambientePadraoAula.id } : null;
@@ -55,8 +55,8 @@ export class TurmaRestMapper {
   static toUpdateInput(
     params: TurmaFindOneInputRestDto,
     dto: TurmaUpdateInputRestDto,
-  ): TurmaFindOneInputDto & TurmaUpdateInputDto {
-    const input = new TurmaFindOneInputDto() as TurmaFindOneInputDto & TurmaUpdateInputDto;
+  ): TurmaFindOneQuery & TurmaUpdateCommand {
+    const input = new TurmaFindOneQuery() as TurmaFindOneQuery & TurmaUpdateCommand;
     input.id = params.id;
     if (dto.periodo !== undefined) {
       input.periodo = dto.periodo;
@@ -74,7 +74,7 @@ export class TurmaRestMapper {
   // Output: Core DTO -> Server DTO
   // ============================================================================
 
-  static toFindOneOutputDto(output: TurmaFindOneOutputDto): TurmaFindOneOutputRestDto {
+  static toFindOneOutputDto(output: TurmaFindOneQueryResult): TurmaFindOneOutputRestDto {
     const dto = new TurmaFindOneOutputRestDto();
     dto.id = output.id;
     dto.periodo = output.periodo;

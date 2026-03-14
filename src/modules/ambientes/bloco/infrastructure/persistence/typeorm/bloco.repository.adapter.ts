@@ -1,6 +1,6 @@
-import { Inject, Injectable } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
 import { DataSource } from "typeorm";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
   APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
@@ -9,12 +9,12 @@ import {
   paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
-  BlocoFindOneInputDto,
-  BlocoFindOneOutputDto,
-  BlocoListInputDto,
-  BlocoListOutputDto,
+  BlocoFindOneQuery,
+  BlocoFindOneQueryResult,
+  BlocoListQuery,
+  BlocoListQueryResult,
 } from "@/modules/ambientes/bloco";
-import type { IBlocoRepositoryPort } from "@/modules/ambientes/bloco/application/ports";
+import type { IBlocoRepository } from "@/modules/ambientes/bloco/domain/repositories";
 import type { BlocoEntity } from "./bloco.entity";
 import { createBlocoRepository } from "./bloco.repository";
 
@@ -22,23 +22,23 @@ import { createBlocoRepository } from "./bloco.repository";
  * Adapter TypeORM que implementa o port de repositório de Bloco.
  * Estende BaseTypeOrmRepositoryAdapter para reutilizar operações CRUD comuns.
  */
-@Injectable()
+
+@DeclareImplementation()
 export class BlocoTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     BlocoEntity,
-    BlocoListInputDto,
-    BlocoListOutputDto,
-    BlocoFindOneInputDto,
-    BlocoFindOneOutputDto
+    BlocoListQuery,
+    BlocoListQueryResult,
+    BlocoFindOneQuery,
+    BlocoFindOneQueryResult
   >
-  implements IBlocoRepositoryPort
+  implements IBlocoRepository
 {
   protected readonly alias = "bloco";
-  protected readonly authzAction = "bloco:find";
-  protected readonly outputDtoName = "BlocoFindOneOutputDto";
+  protected readonly outputDtoName = "BlocoFindOneQueryResult";
 
   constructor(
-    @Inject(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
+    @DeclareDependency(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
     protected readonly paginationAdapter: NestJsPaginateAdapter,
   ) {
     super();

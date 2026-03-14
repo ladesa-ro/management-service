@@ -12,7 +12,7 @@ import type {
 export class NivelFormacao extends BaseDatedEntity implements INivelFormacao {
   slug!: string;
 
-  protected static get entityName(): string {
+  static get entityName(): string {
     return "NivelFormacao";
   }
 

@@ -22,8 +22,17 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
+import { DeclareDependency, IContainer } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
-import { AmbienteService } from "@/modules/ambientes/ambiente/application/use-cases/ambiente.service";
+import { ensureExists } from "@/modules/@shared";
+import { Ambiente } from "@/modules/ambientes/ambiente/domain/ambiente.domain";
+import { IAmbienteCreateCommandHandler } from "@/modules/ambientes/ambiente/domain/commands/ambiente-create.command.handler.interface";
+import { IAmbienteDeleteCommandHandler } from "@/modules/ambientes/ambiente/domain/commands/ambiente-delete.command.handler.interface";
+import { IAmbienteUpdateCommandHandler } from "@/modules/ambientes/ambiente/domain/commands/ambiente-update.command.handler.interface";
+import { IAmbienteUpdateImagemCapaCommandHandler } from "@/modules/ambientes/ambiente/domain/commands/ambiente-update-imagem-capa.command.handler.interface";
+import { IAmbienteFindOneQueryHandler } from "@/modules/ambientes/ambiente/domain/queries/ambiente-find-one.query.handler.interface";
+import { IAmbienteGetImagemCapaQueryHandler } from "@/modules/ambientes/ambiente/domain/queries/ambiente-get-imagem-capa.query.handler.interface";
+import { IAmbienteListQueryHandler } from "@/modules/ambientes/ambiente/domain/queries/ambiente-list.query.handler.interface";
 import {
   AmbienteCreateInputRestDto,
   AmbienteFindOneInputRestDto,
@@ -37,7 +46,7 @@ import { AmbienteRestMapper } from "./ambiente.rest.mapper";
 @ApiTags("ambientes")
 @Controller("/ambientes")
 export class AmbienteRestController {
-  constructor(private ambienteService: AmbienteService) {}
+  constructor(@DeclareDependency(IContainer) private readonly container: IContainer) {}
 
   @Get("/")
   @ApiOperation({ summary: "Lista ambientes", operationId: "ambienteFindAll" })
@@ -48,7 +57,8 @@ export class AmbienteRestController {
     @Query() dto: AmbienteListInputRestDto,
   ): Promise<AmbienteListOutputRestDto> {
     const input = AmbienteRestMapper.toListInput(dto);
-    const result = await this.ambienteService.findAll(accessContext, input as any);
+    const listHandler = this.container.get<IAmbienteListQueryHandler>(IAmbienteListQueryHandler);
+    const result = await listHandler.execute({ accessContext, dto: input as any });
     return AmbienteRestMapper.toListOutputDto(result as any);
   }
 
@@ -62,7 +72,11 @@ export class AmbienteRestController {
     @Param() params: AmbienteFindOneInputRestDto,
   ): Promise<AmbienteFindOneOutputRestDto> {
     const input = AmbienteRestMapper.toFindOneInput(params);
-    const result = await this.ambienteService.findByIdStrict(accessContext, input as any);
+    const findOneHandler = this.container.get<IAmbienteFindOneQueryHandler>(
+      IAmbienteFindOneQueryHandler,
+    );
+    const result = await findOneHandler.execute({ accessContext, dto: input as any });
+    ensureExists(result, Ambiente.entityName, input.id);
     return AmbienteRestMapper.toFindOneOutputDto(result as any);
   }
 
@@ -75,7 +89,10 @@ export class AmbienteRestController {
     @Body() dto: AmbienteCreateInputRestDto,
   ): Promise<AmbienteFindOneOutputRestDto> {
     const input = AmbienteRestMapper.toCreateInput(dto);
-    const result = await this.ambienteService.create(accessContext, input as any);
+    const createHandler = this.container.get<IAmbienteCreateCommandHandler>(
+      IAmbienteCreateCommandHandler,
+    );
+    const result = await createHandler.execute({ accessContext, dto: input as any });
     return AmbienteRestMapper.toFindOneOutputDto(result as any);
   }
 
@@ -90,7 +107,10 @@ export class AmbienteRestController {
     @Body() dto: AmbienteUpdateInputRestDto,
   ): Promise<AmbienteFindOneOutputRestDto> {
     const input = AmbienteRestMapper.toUpdateInput(params, dto);
-    const result = await this.ambienteService.update(accessContext, input as any);
+    const updateHandler = this.container.get<IAmbienteUpdateCommandHandler>(
+      IAmbienteUpdateCommandHandler,
+    );
+    const result = await updateHandler.execute({ accessContext, dto: input as any });
     return AmbienteRestMapper.toFindOneOutputDto(result as any);
   }
 
@@ -106,7 +126,10 @@ export class AmbienteRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: AmbienteFindOneInputRestDto,
   ) {
-    return this.ambienteService.getImagemCapa(accessContext, params.id);
+    const getImagemCapaHandler = this.container.get<IAmbienteGetImagemCapaQueryHandler>(
+      IAmbienteGetImagemCapaQueryHandler,
+    );
+    return getImagemCapaHandler.execute({ accessContext, id: params.id });
   }
 
   @Put("/:id/imagem/capa")
@@ -133,7 +156,10 @@ export class AmbienteRestController {
     @Param() params: AmbienteFindOneInputRestDto,
     @UploadedFile() file: Express.Multer.File,
   ): Promise<boolean> {
-    return this.ambienteService.updateImagemCapa(accessContext, params, file);
+    const updateImagemCapaHandler = this.container.get<IAmbienteUpdateImagemCapaCommandHandler>(
+      IAmbienteUpdateImagemCapaCommandHandler,
+    );
+    return updateImagemCapaHandler.execute({ accessContext, dto: params, file });
   }
 
   @Delete("/:id")
@@ -146,6 +172,9 @@ export class AmbienteRestController {
     @Param() params: AmbienteFindOneInputRestDto,
   ): Promise<boolean> {
     const input = AmbienteRestMapper.toFindOneInput(params);
-    return this.ambienteService.deleteOneById(accessContext, input as any);
+    const deleteHandler = this.container.get<IAmbienteDeleteCommandHandler>(
+      IAmbienteDeleteCommandHandler,
+    );
+    return deleteHandler.execute({ accessContext, dto: input as any });
   }
 }

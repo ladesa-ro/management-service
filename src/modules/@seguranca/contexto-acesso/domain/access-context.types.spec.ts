@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import type { IAccessContext } from "./access-context.types";
 
 describe("IAccessContext", () => {
@@ -6,9 +6,6 @@ describe("IAccessContext", () => {
     requestActor: IAccessContext["requestActor"],
   ): IAccessContext => ({
     requestActor,
-    applyFilter: vi.fn(),
-    verifyPermission: vi.fn().mockResolvedValue(true),
-    ensurePermission: vi.fn().mockResolvedValue(undefined),
   });
 
   it("deve aceitar objeto com requestActor", () => {
@@ -28,37 +25,5 @@ describe("IAccessContext", () => {
     const context = createMockAccessContext(null);
 
     expect(context.requestActor).toBeNull();
-  });
-
-  it("deve ter método applyFilter", () => {
-    const context = createMockAccessContext(null);
-
-    expect(context.applyFilter).toBeDefined();
-    expect(typeof context.applyFilter).toBe("function");
-  });
-
-  it("deve ter método verifyPermission", async () => {
-    const context = createMockAccessContext({
-      id: "123",
-      nome: "Test",
-      email: "test@test.com",
-      matricula: "12345",
-      isSuperUser: true,
-    });
-
-    const result = await context.verifyPermission("campus:find", {});
-    expect(result).toBe(true);
-  });
-
-  it("deve ter método ensurePermission", async () => {
-    const context = createMockAccessContext({
-      id: "123",
-      nome: "Test",
-      email: "test@test.com",
-      matricula: "12345",
-      isSuperUser: true,
-    });
-
-    await expect(context.ensurePermission("campus:find", {})).resolves.toBeUndefined();
   });
 });

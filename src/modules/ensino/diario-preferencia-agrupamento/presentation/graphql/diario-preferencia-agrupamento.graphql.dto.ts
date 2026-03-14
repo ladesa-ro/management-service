@@ -1,4 +1,15 @@
-import { ArgsType, Field, InputType, Int, ObjectType } from "@nestjs/graphql";
+import {
+  EntityBaseGraphQlDto,
+  PaginatedFilterByIdGraphQlDto,
+  PaginationMetaGraphQlDto,
+} from "@/modules/@shared/infrastructure/graphql/dtos";
+import {
+  ArgsType,
+  Field,
+  InputType,
+  Int,
+  ObjectType,
+} from "@/modules/@shared/presentation/graphql";
 import {
   IsArray,
   IsDateString,
@@ -7,52 +18,38 @@ import {
   IsString,
   IsUUID,
   ValidateNested,
-} from "class-validator";
-import { decorate } from "ts-mixer";
-import {
-  EntityBaseGraphQlDto,
-  PaginatedFilterByIdGraphQlDto,
-  PaginationMetaGraphQlDto,
-} from "@/modules/@shared/infrastructure/graphql/dtos";
+} from "@/modules/@shared/presentation/shared";
 import { DiarioPreferenciaAgrupamentoFieldsMixin } from "@/modules/ensino/diario-preferencia-agrupamento/presentation/diario-preferencia-agrupamento.validation-mixin";
-import { IntervaloDeTempoFindOneOutputGraphQlDto } from "@/modules/horarios/intervalo-de-tempo/presentation/graphql/intervalo-de-tempo.graphql.dto";
 
 // ============================================================================
 // Ref Input DTOs for cross-module references
 // ============================================================================
 
-@decorate(InputType("DiarioPreferenciaAgrupamentoDiarioRefInputDto"))
+@InputType("DiarioPreferenciaAgrupamentoDiarioRefInputDto")
 export class DiarioPreferenciaAgrupamentoDiarioRefInputGraphQlDto {
-  @decorate(Field(() => String)) @decorate(IsString()) id: string;
-}
-
-@decorate(InputType("DiarioPreferenciaAgrupamentoIntervaloDeTempoRefInputDto"))
-export class DiarioPreferenciaAgrupamentoIntervaloDeTempoRefInputGraphQlDto {
-  @decorate(Field(() => String)) @decorate(IsString()) id: string;
+  @Field(() => String) @IsString() id: string;
 }
 
 // ============================================================================
 // Diario nested output (diario module not yet refactored to GraphQL)
 // ============================================================================
 
-@decorate(ObjectType("DiarioPreferenciaAgrupamentoDiarioOutput"))
+@ObjectType("DiarioPreferenciaAgrupamentoDiarioOutput")
 export class DiarioPreferenciaAgrupamentoDiarioOutputGraphQlDto extends EntityBaseGraphQlDto {
-  @decorate(Field(() => Boolean)) ativo: boolean;
+  @Field(() => Boolean) ativo: boolean;
 }
 
 // ============================================================================
 // FindOne Output
 // ============================================================================
 
-@decorate(ObjectType("DiarioPreferenciaAgrupamentoFindOneOutputDto"))
+@ObjectType("DiarioPreferenciaAgrupamentoFindOneOutputDto")
 export class DiarioPreferenciaAgrupamentoFindOneOutputGraphQlDto extends EntityBaseGraphQlDto {
-  @decorate(Field(() => Date)) dataInicio: Date;
-  @decorate(Field(() => Date, { nullable: true })) dataFim: Date | null;
-  @decorate(Field(() => Int)) diaSemanaIso: number;
-  @decorate(Field(() => Int)) aulasSeguidas: number;
-  @decorate(Field(() => IntervaloDeTempoFindOneOutputGraphQlDto))
-  intervaloDeTempo: IntervaloDeTempoFindOneOutputGraphQlDto;
-  @decorate(Field(() => DiarioPreferenciaAgrupamentoDiarioOutputGraphQlDto))
+  @Field(() => Date) dataInicio: Date;
+  @Field(() => Date, { nullable: true }) dataFim: Date | null;
+  @Field(() => Int) diaSemanaIso: number;
+  @Field(() => Int) aulasSeguidas: number;
+  @Field(() => DiarioPreferenciaAgrupamentoDiarioOutputGraphQlDto)
   diario: DiarioPreferenciaAgrupamentoDiarioOutputGraphQlDto;
 }
 
@@ -60,17 +57,14 @@ export class DiarioPreferenciaAgrupamentoFindOneOutputGraphQlDto extends EntityB
 // Create Input
 // ============================================================================
 
-@decorate(InputType("DiarioPreferenciaAgrupamentoCreateInputDto"))
+@InputType("DiarioPreferenciaAgrupamentoCreateInputDto")
 export class DiarioPreferenciaAgrupamentoCreateInputGraphQlDto extends DiarioPreferenciaAgrupamentoFieldsMixin {
-  @decorate(Field(() => Date)) declare dataInicio: Date;
-  @decorate(Field(() => Date, { nullable: true })) declare dataFim?: Date | null;
-  @decorate(Field(() => Int)) declare diaSemanaIso: number;
-  @decorate(Field(() => Int)) declare aulasSeguidas: number;
-  @decorate(Field(() => DiarioPreferenciaAgrupamentoIntervaloDeTempoRefInputGraphQlDto))
-  @decorate(ValidateNested())
-  intervaloDeTempo: DiarioPreferenciaAgrupamentoIntervaloDeTempoRefInputGraphQlDto;
-  @decorate(Field(() => DiarioPreferenciaAgrupamentoDiarioRefInputGraphQlDto))
-  @decorate(ValidateNested())
+  @Field(() => Date) declare dataInicio: Date;
+  @Field(() => Date, { nullable: true }) declare dataFim?: Date | null;
+  @Field(() => Int) declare diaSemanaIso: number;
+  @Field(() => Int) declare aulasSeguidas: number;
+  @Field(() => DiarioPreferenciaAgrupamentoDiarioRefInputGraphQlDto)
+  @ValidateNested()
   diario: DiarioPreferenciaAgrupamentoDiarioRefInputGraphQlDto;
 }
 
@@ -78,33 +72,27 @@ export class DiarioPreferenciaAgrupamentoCreateInputGraphQlDto extends DiarioPre
 // Update Input
 // ============================================================================
 
-@decorate(InputType("DiarioPreferenciaAgrupamentoUpdateInputDto"))
+@InputType("DiarioPreferenciaAgrupamentoUpdateInputDto")
 export class DiarioPreferenciaAgrupamentoUpdateInputGraphQlDto {
-  @decorate(Field(() => Date, { nullable: true }))
-  @decorate(IsOptional())
-  @decorate(IsDateString())
+  @Field(() => Date, { nullable: true })
+  @IsOptional()
+  @IsDateString()
   dataInicio?: Date;
-  @decorate(Field(() => Date, { nullable: true }))
-  @decorate(IsOptional())
-  @decorate(IsDateString())
+  @Field(() => Date, { nullable: true })
+  @IsOptional()
+  @IsDateString()
   dataFim?: Date | null;
-  @decorate(Field(() => Int, { nullable: true }))
-  @decorate(IsOptional())
-  @decorate(IsInt())
+  @Field(() => Int, { nullable: true })
+  @IsOptional()
+  @IsInt()
   diaSemanaIso?: number;
-  @decorate(Field(() => Int, { nullable: true }))
-  @decorate(IsOptional())
-  @decorate(IsInt())
+  @Field(() => Int, { nullable: true })
+  @IsOptional()
+  @IsInt()
   aulasSeguidas?: number;
-  @decorate(
-    Field(() => DiarioPreferenciaAgrupamentoIntervaloDeTempoRefInputGraphQlDto, { nullable: true }),
-  )
-  @decorate(IsOptional())
-  @decorate(ValidateNested())
-  intervaloDeTempo?: DiarioPreferenciaAgrupamentoIntervaloDeTempoRefInputGraphQlDto;
-  @decorate(Field(() => DiarioPreferenciaAgrupamentoDiarioRefInputGraphQlDto, { nullable: true }))
-  @decorate(IsOptional())
-  @decorate(ValidateNested())
+  @Field(() => DiarioPreferenciaAgrupamentoDiarioRefInputGraphQlDto, { nullable: true })
+  @IsOptional()
+  @ValidateNested()
   diario?: DiarioPreferenciaAgrupamentoDiarioRefInputGraphQlDto;
 }
 
@@ -112,12 +100,12 @@ export class DiarioPreferenciaAgrupamentoUpdateInputGraphQlDto {
 // List Input (GraphQL-compatible - no dots in field names)
 // ============================================================================
 
-@decorate(ArgsType())
+@ArgsType()
 export class DiarioPreferenciaAgrupamentoListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {
-  @decorate(Field(() => [String], { nullable: true, description: "Filtro por ID do Diario" }))
-  @decorate(IsOptional())
-  @decorate(IsArray())
-  @decorate(IsUUID(undefined, { each: true }))
+  @Field(() => [String], { nullable: true, description: "Filtro por ID do Diario" })
+  @IsOptional()
+  @IsArray()
+  @IsUUID(undefined, { each: true })
   filterDiarioId?: string[];
 }
 
@@ -125,11 +113,11 @@ export class DiarioPreferenciaAgrupamentoListInputGraphQlDto extends PaginatedFi
 // List Output
 // ============================================================================
 
-@decorate(ObjectType("DiarioPreferenciaAgrupamentoListResult"))
+@ObjectType("DiarioPreferenciaAgrupamentoListResult")
 export class DiarioPreferenciaAgrupamentoListOutputGraphQlDto {
-  @decorate(Field(() => PaginationMetaGraphQlDto))
+  @Field(() => PaginationMetaGraphQlDto)
   meta: PaginationMetaGraphQlDto;
 
-  @decorate(Field(() => [DiarioPreferenciaAgrupamentoFindOneOutputGraphQlDto]))
+  @Field(() => [DiarioPreferenciaAgrupamentoFindOneOutputGraphQlDto])
   data: DiarioPreferenciaAgrupamentoFindOneOutputGraphQlDto[];
 }

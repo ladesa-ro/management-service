@@ -1,13 +1,16 @@
-import { Inject, Injectable } from "@nestjs/common";
 import { BrokerAsPromised as Broker, BrokerConfig } from "rascal";
-import { IMessageBrokerOptions, IMessageBrokerOptions as IMessageBrokerOptionsToken } from "@/infrastructure.config/options/message-broker/message-broker-options.interface";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import {
+  IMessageBrokerOptions,
+  IMessageBrokerOptions as IMessageBrokerOptionsToken,
+} from "@/infrastructure.config/options/message-broker/message-broker-options.interface";
 
-@Injectable()
+@DeclareImplementation()
 export class MessageBrokerContainerService {
   #broker: Broker | null = null;
 
   constructor(
-    @Inject(IMessageBrokerOptionsToken)
+    @DeclareDependency(IMessageBrokerOptionsToken)
     private readonly messageBrokerOptions: IMessageBrokerOptions,
   ) {}
 
@@ -31,7 +34,11 @@ export class MessageBrokerContainerService {
   }
 
   getConfig(): BrokerConfig {
-    const { url: messageBrokerUrl, queueTimetableRequest, queueTimetableResponse } = this.messageBrokerOptions;
+    const {
+      url: messageBrokerUrl,
+      queueTimetableRequest,
+      queueTimetableResponse,
+    } = this.messageBrokerOptions;
 
     const config: BrokerConfig = {
       vhosts: {

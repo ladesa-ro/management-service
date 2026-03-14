@@ -12,7 +12,7 @@ export class Disciplina extends BaseDatedEntity implements IDisciplina {
   cargaHoraria!: number;
   imagemCapa!: IImagem | null;
 
-  protected static get entityName(): string {
+  static get entityName(): string {
     return "Disciplina";
   }
 

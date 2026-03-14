@@ -1,6 +1,6 @@
-import { Inject, Injectable } from "@nestjs/common";
 import { FilterOperator } from "nestjs-paginate";
 import { DataSource } from "typeorm";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
   APP_DATA_SOURCE_TOKEN,
   BaseTypeOrmRepositoryAdapter,
@@ -9,32 +9,31 @@ import {
   paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
-  CalendarioLetivoFindOneInputDto,
-  CalendarioLetivoFindOneOutputDto,
-  CalendarioLetivoListInputDto,
-  CalendarioLetivoListOutputDto,
-  ICalendarioLetivoRepositoryPort,
+  CalendarioLetivoFindOneQuery,
+  CalendarioLetivoFindOneQueryResult,
+  CalendarioLetivoListQuery,
+  CalendarioLetivoListQueryResult,
+  ICalendarioLetivoRepository,
 } from "@/modules/horarios/calendario-letivo";
 import type { CalendarioLetivoEntity } from "./calendario-letivo.entity";
 import { createCalendarioLetivoRepository } from "./calendario-letivo.repository";
 
-@Injectable()
+@DeclareImplementation()
 export class CalendarioLetivoTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     CalendarioLetivoEntity,
-    CalendarioLetivoListInputDto,
-    CalendarioLetivoListOutputDto,
-    CalendarioLetivoFindOneInputDto,
-    CalendarioLetivoFindOneOutputDto
+    CalendarioLetivoListQuery,
+    CalendarioLetivoListQueryResult,
+    CalendarioLetivoFindOneQuery,
+    CalendarioLetivoFindOneQueryResult
   >
-  implements ICalendarioLetivoRepositoryPort
+  implements ICalendarioLetivoRepository
 {
   protected readonly alias = "calendario_letivo";
-  protected readonly authzAction = "calendario_letivo:find";
-  protected readonly outputDtoName = "CalendarioLetivoFindOneOutputDto";
+  protected readonly outputDtoName = "CalendarioLetivoFindOneQueryResult";
 
   constructor(
-    @Inject(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
+    @DeclareDependency(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
     protected readonly paginationAdapter: NestJsPaginateAdapter,
   ) {
     super();

@@ -18,7 +18,7 @@ export class Diario extends BaseDatedEntity implements IDiario {
   ambientePadrao!: IAmbiente | null;
   imagemCapa!: IImagem | null;
 
-  protected static get entityName(): string {
+  static get entityName(): string {
     return "Diario";
   }
 

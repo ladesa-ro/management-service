@@ -1,8 +1,8 @@
 import { createListOutputMapper } from "@/modules/@shared/application/mappers";
 import {
-  CidadeFindOneInputDto,
-  CidadeFindOneOutputDto,
-  CidadeListInputDto,
+  CidadeFindOneQuery,
+  CidadeFindOneQueryResult,
+  CidadeListQuery,
 } from "@/modules/localidades/cidade";
 import { EstadoGraphqlMapper } from "@/modules/localidades/estado/presentation/graphql/estado.graphql.mapper";
 import {
@@ -12,12 +12,12 @@ import {
 } from "./cidade.graphql.dto";
 
 export class CidadeGraphqlMapper {
-  static toListInput(dto: CidadeListInputGraphQlDto | null): CidadeListInputDto | null {
+  static toListInput(dto: CidadeListInputGraphQlDto | null): CidadeListQuery | null {
     if (!dto) {
       return null;
     }
 
-    const input = new CidadeListInputDto();
+    const input = new CidadeListQuery();
     input.page = dto.page;
     input.limit = dto.limit;
     input.search = dto.search;
@@ -29,14 +29,14 @@ export class CidadeGraphqlMapper {
     return input;
   }
 
-  static toFindOneInput(id: number, selection?: string[]): CidadeFindOneInputDto {
-    const input = new CidadeFindOneInputDto();
+  static toFindOneInput(id: number, selection?: string[]): CidadeFindOneQuery {
+    const input = new CidadeFindOneQuery();
     input.id = id;
     input.selection = selection;
     return input;
   }
 
-  static toFindOneOutputDto(output: CidadeFindOneOutputDto): CidadeFindOneOutputGraphQlDto {
+  static toFindOneOutputDto(output: CidadeFindOneQueryResult): CidadeFindOneOutputGraphQlDto {
     const dto = new CidadeFindOneOutputGraphQlDto();
     dto.id = output.id;
     dto.nome = output.nome;
