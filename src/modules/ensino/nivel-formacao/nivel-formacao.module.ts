@@ -1,5 +1,6 @@
 import { Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
+import { NivelFormacaoPermissionCheckerImpl } from "@/modules/ensino/nivel-formacao/application/authorization";
 import {
   NivelFormacaoCreateCommandHandlerImpl,
   NivelFormacaoDeleteCommandHandlerImpl,
@@ -9,6 +10,7 @@ import {
   NivelFormacaoFindOneQueryHandlerImpl,
   NivelFormacaoListQueryHandlerImpl,
 } from "@/modules/ensino/nivel-formacao/application/queries";
+import { INivelFormacaoPermissionChecker } from "@/modules/ensino/nivel-formacao/domain/authorization";
 import {
   INivelFormacaoCreateCommandHandler,
   INivelFormacaoDeleteCommandHandler,
@@ -30,6 +32,7 @@ import { NivelFormacaoRestController } from "@/modules/ensino/nivel-formacao/pre
   providers: [
     NestJsPaginateAdapter,
     NivelFormacaoAuthzRegistrySetup,
+    { provide: INivelFormacaoPermissionChecker, useClass: NivelFormacaoPermissionCheckerImpl },
     NivelFormacaoGraphqlResolver,
     {
       provide: INivelFormacaoRepository,

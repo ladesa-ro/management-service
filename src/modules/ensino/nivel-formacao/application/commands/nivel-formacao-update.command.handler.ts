@@ -1,10 +1,11 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { ensureExists, IAuthorizationService } from "@/modules/@shared";
+import { ensureExists } from "@/modules/@shared";
 import {
   type INivelFormacaoUpdateCommand,
   INivelFormacaoUpdateCommandHandler,
 } from "@/modules/ensino/nivel-formacao/domain/commands/nivel-formacao-update.command.handler.interface";
 import { NivelFormacao } from "@/modules/ensino/nivel-formacao/domain/nivel-formacao.domain";
+import { INivelFormacaoPermissionChecker } from "../../domain/authorization";
 import { INivelFormacaoRepository } from "../../domain/repositories";
 import type { NivelFormacaoFindOneOutputDto } from "../dtos";
 
@@ -13,8 +14,8 @@ export class NivelFormacaoUpdateCommandHandlerImpl implements INivelFormacaoUpda
   constructor(
     @Inject(INivelFormacaoRepository)
     private readonly repository: INivelFormacaoRepository,
-    @Inject(IAuthorizationService)
-    private readonly authorizationService: IAuthorizationService,
+    @Inject(INivelFormacaoPermissionChecker)
+    private readonly permissionChecker: INivelFormacaoPermissionChecker,
   ) {}
 
   async execute({
@@ -25,7 +26,7 @@ export class NivelFormacaoUpdateCommandHandlerImpl implements INivelFormacaoUpda
 
     ensureExists(current, NivelFormacao.entityName, dto.id);
 
-    await this.authorizationService.ensurePermission("nivel_formacao:update", { dto }, dto.id);
+    await this.permissionChecker.ensureCanUpdate(accessContext, { dto }, dto.id);
 
     const domain = NivelFormacao.fromData(current);
     domain.atualizar({ slug: dto.slug });

@@ -1,10 +1,11 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { ensureExists, IAuthorizationService } from "@/modules/@shared";
+import { ensureExists } from "@/modules/@shared";
 import {
   type IModalidadeUpdateCommand,
   IModalidadeUpdateCommandHandler,
 } from "@/modules/ensino/modalidade/domain/commands/modalidade-update.command.handler.interface";
 import { Modalidade } from "@/modules/ensino/modalidade/domain/modalidade.domain";
+import { IModalidadePermissionChecker } from "../../domain/authorization";
 import { IModalidadeRepository } from "../../domain/repositories";
 import type { ModalidadeFindOneOutputDto } from "../dtos";
 
@@ -13,8 +14,8 @@ export class ModalidadeUpdateCommandHandlerImpl implements IModalidadeUpdateComm
   constructor(
     @Inject(IModalidadeRepository)
     private readonly repository: IModalidadeRepository,
-    @Inject(IAuthorizationService)
-    private readonly authorizationService: IAuthorizationService,
+    @Inject(IModalidadePermissionChecker)
+    private readonly permissionChecker: IModalidadePermissionChecker,
   ) {}
 
   async execute({
@@ -25,7 +26,7 @@ export class ModalidadeUpdateCommandHandlerImpl implements IModalidadeUpdateComm
 
     ensureExists(current, Modalidade.entityName, dto.id);
 
-    await this.authorizationService.ensurePermission("modalidade:update", { dto }, dto.id);
+    await this.permissionChecker.ensureCanUpdate(accessContext, { dto }, dto.id);
 
     const domain = Modalidade.fromData(current);
     domain.atualizar({ nome: dto.nome, slug: dto.slug });

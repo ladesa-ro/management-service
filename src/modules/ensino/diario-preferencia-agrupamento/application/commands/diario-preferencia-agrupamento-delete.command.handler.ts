@@ -1,10 +1,11 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { ensureExists, IAuthorizationService } from "@/modules/@shared";
+import { ensureExists } from "@/modules/@shared";
 import {
   type IDiarioPreferenciaAgrupamentoDeleteCommand,
   IDiarioPreferenciaAgrupamentoDeleteCommandHandler,
 } from "@/modules/ensino/diario-preferencia-agrupamento/domain/commands/diario-preferencia-agrupamento-delete.command.handler.interface";
 import { DiarioPreferenciaAgrupamento } from "@/modules/ensino/diario-preferencia-agrupamento/domain/diario-preferencia-agrupamento.domain";
+import { IDiarioPreferenciaAgrupamentoPermissionChecker } from "../../domain/authorization";
 import { IDiarioPreferenciaAgrupamentoRepository } from "../../domain/repositories";
 
 @Injectable()
@@ -14,19 +15,15 @@ export class DiarioPreferenciaAgrupamentoDeleteCommandHandlerImpl
   constructor(
     @Inject(IDiarioPreferenciaAgrupamentoRepository)
     private readonly repository: IDiarioPreferenciaAgrupamentoRepository,
-    @Inject(IAuthorizationService)
-    private readonly authorizationService: IAuthorizationService,
+    @Inject(IDiarioPreferenciaAgrupamentoPermissionChecker)
+    private readonly permissionChecker: IDiarioPreferenciaAgrupamentoPermissionChecker,
   ) {}
 
   async execute({
     accessContext,
     dto,
   }: IDiarioPreferenciaAgrupamentoDeleteCommand): Promise<boolean> {
-    await this.authorizationService.ensurePermission(
-      "diario_preferencia_agrupamento:delete",
-      { dto },
-      dto.id,
-    );
+    await this.permissionChecker.ensureCanDelete(accessContext, { dto }, dto.id);
 
     const entity = await this.repository.findById(accessContext, dto);
 

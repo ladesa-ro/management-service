@@ -1,5 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { ensureExists, IAuthorizationService, type PersistInput } from "@/modules/@shared";
+import { ensureExists, type PersistInput } from "@/modules/@shared";
 import { NivelFormacao } from "@/modules/ensino/nivel-formacao/domain/nivel-formacao.domain";
 import { INivelFormacaoFindOneQueryHandler } from "@/modules/ensino/nivel-formacao/domain/queries/nivel-formacao-find-one.query.handler.interface";
 import { OfertaFormacao } from "@/modules/ensino/oferta-formacao/domain/oferta-formacao.domain";
@@ -10,6 +10,7 @@ import {
 } from "@/modules/ensino/oferta-formacao-nivel-formacao/domain/commands/oferta-formacao-nivel-formacao-create.command.handler.interface";
 import { OfertaFormacaoNivelFormacao } from "@/modules/ensino/oferta-formacao-nivel-formacao/domain/oferta-formacao-nivel-formacao.domain";
 import type { IOfertaFormacaoNivelFormacao } from "@/modules/ensino/oferta-formacao-nivel-formacao/domain/oferta-formacao-nivel-formacao.types";
+import { IOfertaFormacaoNivelFormacaoPermissionChecker } from "../../domain/authorization";
 import { IOfertaFormacaoNivelFormacaoRepository } from "../../domain/repositories";
 import type { OfertaFormacaoNivelFormacaoFindOneOutputDto } from "../dtos";
 
@@ -20,8 +21,8 @@ export class OfertaFormacaoNivelFormacaoCreateCommandHandlerImpl
   constructor(
     @Inject(IOfertaFormacaoNivelFormacaoRepository)
     private readonly repository: IOfertaFormacaoNivelFormacaoRepository,
-    @Inject(IAuthorizationService)
-    private readonly authorizationService: IAuthorizationService,
+    @Inject(IOfertaFormacaoNivelFormacaoPermissionChecker)
+    private readonly permissionChecker: IOfertaFormacaoNivelFormacaoPermissionChecker,
     @Inject(IOfertaFormacaoFindOneQueryHandler)
     private readonly ofertaFormacaoFindOneHandler: IOfertaFormacaoFindOneQueryHandler,
     @Inject(INivelFormacaoFindOneQueryHandler)
@@ -32,9 +33,7 @@ export class OfertaFormacaoNivelFormacaoCreateCommandHandlerImpl
     accessContext,
     dto,
   }: IOfertaFormacaoNivelFormacaoCreateCommand): Promise<OfertaFormacaoNivelFormacaoFindOneOutputDto> {
-    await this.authorizationService.ensurePermission("oferta_formacao_nivel_formacao:create", {
-      dto,
-    });
+    await this.permissionChecker.ensureCanCreate(accessContext, { dto });
 
     const createData: Partial<PersistInput<IOfertaFormacaoNivelFormacao>> = {};
     if (dto.ofertaFormacao) {

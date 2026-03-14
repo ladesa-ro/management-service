@@ -1,10 +1,11 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { ensureExists, IAuthorizationService } from "@/modules/@shared";
+import { ensureExists } from "@/modules/@shared";
 import {
   type IDiaCalendarioDeleteCommand,
   IDiaCalendarioDeleteCommandHandler,
 } from "@/modules/horarios/dia-calendario/domain/commands/dia-calendario-delete.command.handler.interface";
 import { DiaCalendario } from "@/modules/horarios/dia-calendario/domain/dia-calendario.domain";
+import { IDiaCalendarioPermissionChecker } from "../../domain/authorization";
 import { IDiaCalendarioRepository } from "../../domain/repositories";
 
 @Injectable()
@@ -12,12 +13,12 @@ export class DiaCalendarioDeleteCommandHandlerImpl implements IDiaCalendarioDele
   constructor(
     @Inject(IDiaCalendarioRepository)
     private readonly repository: IDiaCalendarioRepository,
-    @Inject(IAuthorizationService)
-    private readonly authorizationService: IAuthorizationService,
+    @Inject(IDiaCalendarioPermissionChecker)
+    private readonly permissionChecker: IDiaCalendarioPermissionChecker,
   ) {}
 
   async execute({ accessContext, dto }: IDiaCalendarioDeleteCommand): Promise<boolean> {
-    await this.authorizationService.ensurePermission("dia_calendario:delete", { dto }, dto.id);
+    await this.permissionChecker.ensureCanDelete(accessContext, { dto }, dto.id);
 
     const entity = await this.repository.findById(accessContext, dto);
 

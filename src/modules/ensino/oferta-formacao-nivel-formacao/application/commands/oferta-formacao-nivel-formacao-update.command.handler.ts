@@ -1,11 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { has } from "lodash";
-import {
-  ensureExists,
-  IAuthorizationService,
-  type PersistInput,
-  ResourceNotFoundError,
-} from "@/modules/@shared";
+import { ensureExists, type PersistInput, ResourceNotFoundError } from "@/modules/@shared";
 import { INivelFormacaoFindOneQueryHandler } from "@/modules/ensino/nivel-formacao/domain/queries/nivel-formacao-find-one.query.handler.interface";
 import { IOfertaFormacaoFindOneQueryHandler } from "@/modules/ensino/oferta-formacao/domain/queries/oferta-formacao-find-one.query.handler.interface";
 import {
@@ -14,6 +9,7 @@ import {
 } from "@/modules/ensino/oferta-formacao-nivel-formacao/domain/commands/oferta-formacao-nivel-formacao-update.command.handler.interface";
 import { OfertaFormacaoNivelFormacao } from "@/modules/ensino/oferta-formacao-nivel-formacao/domain/oferta-formacao-nivel-formacao.domain";
 import type { IOfertaFormacaoNivelFormacao } from "@/modules/ensino/oferta-formacao-nivel-formacao/domain/oferta-formacao-nivel-formacao.types";
+import { IOfertaFormacaoNivelFormacaoPermissionChecker } from "../../domain/authorization";
 import { IOfertaFormacaoNivelFormacaoRepository } from "../../domain/repositories";
 import type { OfertaFormacaoNivelFormacaoFindOneOutputDto } from "../dtos";
 
@@ -24,8 +20,8 @@ export class OfertaFormacaoNivelFormacaoUpdateCommandHandlerImpl
   constructor(
     @Inject(IOfertaFormacaoNivelFormacaoRepository)
     private readonly repository: IOfertaFormacaoNivelFormacaoRepository,
-    @Inject(IAuthorizationService)
-    private readonly authorizationService: IAuthorizationService,
+    @Inject(IOfertaFormacaoNivelFormacaoPermissionChecker)
+    private readonly permissionChecker: IOfertaFormacaoNivelFormacaoPermissionChecker,
     @Inject(IOfertaFormacaoFindOneQueryHandler)
     private readonly ofertaFormacaoFindOneHandler: IOfertaFormacaoFindOneQueryHandler,
     @Inject(INivelFormacaoFindOneQueryHandler)
@@ -40,11 +36,7 @@ export class OfertaFormacaoNivelFormacaoUpdateCommandHandlerImpl
 
     ensureExists(current, OfertaFormacaoNivelFormacao.entityName, dto.id);
 
-    await this.authorizationService.ensurePermission(
-      "oferta_formacao_nivel_formacao:update",
-      { dto },
-      dto.id,
-    );
+    await this.permissionChecker.ensureCanUpdate(accessContext, { dto }, dto.id);
 
     const updateData: Partial<PersistInput<IOfertaFormacaoNivelFormacao>> = {};
     if (has(dto, "ofertaFormacao") && dto.ofertaFormacao !== undefined) {

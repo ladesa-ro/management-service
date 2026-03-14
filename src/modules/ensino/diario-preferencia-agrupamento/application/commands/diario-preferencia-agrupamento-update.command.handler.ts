@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { has } from "lodash";
-import { ensureExists, IAuthorizationService, type PersistInput } from "@/modules/@shared";
+import { ensureExists, type PersistInput } from "@/modules/@shared";
 import { Diario } from "@/modules/ensino/diario/domain/diario.domain";
 import { IDiarioFindOneQueryHandler } from "@/modules/ensino/diario/domain/queries/diario-find-one.query.handler.interface";
 import {
@@ -9,6 +9,7 @@ import {
 } from "@/modules/ensino/diario-preferencia-agrupamento/domain/commands/diario-preferencia-agrupamento-update.command.handler.interface";
 import { DiarioPreferenciaAgrupamento } from "@/modules/ensino/diario-preferencia-agrupamento/domain/diario-preferencia-agrupamento.domain";
 import type { IDiarioPreferenciaAgrupamento } from "@/modules/ensino/diario-preferencia-agrupamento/domain/diario-preferencia-agrupamento.types";
+import { IDiarioPreferenciaAgrupamentoPermissionChecker } from "../../domain/authorization";
 import { IDiarioPreferenciaAgrupamentoRepository } from "../../domain/repositories";
 import type { DiarioPreferenciaAgrupamentoFindOneOutputDto } from "../dtos";
 
@@ -19,8 +20,8 @@ export class DiarioPreferenciaAgrupamentoUpdateCommandHandlerImpl
   constructor(
     @Inject(IDiarioPreferenciaAgrupamentoRepository)
     private readonly repository: IDiarioPreferenciaAgrupamentoRepository,
-    @Inject(IAuthorizationService)
-    private readonly authorizationService: IAuthorizationService,
+    @Inject(IDiarioPreferenciaAgrupamentoPermissionChecker)
+    private readonly permissionChecker: IDiarioPreferenciaAgrupamentoPermissionChecker,
     @Inject(IDiarioFindOneQueryHandler)
     private readonly diarioFindOneHandler: IDiarioFindOneQueryHandler,
   ) {}
@@ -33,11 +34,7 @@ export class DiarioPreferenciaAgrupamentoUpdateCommandHandlerImpl
 
     ensureExists(current, DiarioPreferenciaAgrupamento.entityName, dto.id);
 
-    await this.authorizationService.ensurePermission(
-      "diario_preferencia_agrupamento:update",
-      { dto },
-      dto.id,
-    );
+    await this.permissionChecker.ensureCanUpdate(accessContext, { dto }, dto.id);
 
     const domain = DiarioPreferenciaAgrupamento.fromData(current);
     domain.atualizar({

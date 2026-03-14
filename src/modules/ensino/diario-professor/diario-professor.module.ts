@@ -2,6 +2,7 @@ import { Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import { PerfilModule } from "@/modules/acesso/perfil/perfil.module";
 import { DiarioModule } from "@/modules/ensino/diario/diario.module";
+import { DiarioProfessorPermissionCheckerImpl } from "@/modules/ensino/diario-professor/application/authorization";
 import {
   DiarioProfessorCreateCommandHandlerImpl,
   DiarioProfessorDeleteCommandHandlerImpl,
@@ -11,6 +12,7 @@ import {
   DiarioProfessorFindOneQueryHandlerImpl,
   DiarioProfessorListQueryHandlerImpl,
 } from "@/modules/ensino/diario-professor/application/queries";
+import { IDiarioProfessorPermissionChecker } from "@/modules/ensino/diario-professor/domain/authorization";
 import {
   IDiarioProfessorCreateCommandHandler,
   IDiarioProfessorDeleteCommandHandler,
@@ -37,6 +39,7 @@ import { DiarioProfessorController } from "@/modules/ensino/diario-professor/pre
     },
     DiarioProfessorGraphqlResolver,
     DiarioProfessorAuthzRegistrySetup,
+    { provide: IDiarioProfessorPermissionChecker, useClass: DiarioProfessorPermissionCheckerImpl },
 
     // Commands
     {

@@ -1,6 +1,7 @@
 import { Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import { AmbienteModule } from "@/modules/ambientes/ambiente/ambiente.module";
+import { DiarioPermissionCheckerImpl } from "@/modules/ensino/diario/application/authorization";
 import {
   DiarioCreateCommandHandlerImpl,
   DiarioDeleteCommandHandlerImpl,
@@ -10,6 +11,7 @@ import {
   DiarioFindOneQueryHandlerImpl,
   DiarioListQueryHandlerImpl,
 } from "@/modules/ensino/diario/application/queries";
+import { IDiarioPermissionChecker } from "@/modules/ensino/diario/domain/authorization";
 import {
   IDiarioCreateCommandHandler,
   IDiarioDeleteCommandHandler,
@@ -38,6 +40,7 @@ import { CalendarioLetivoModule } from "@/modules/horarios/calendario-letivo/cal
     NestJsPaginateAdapter,
     DiarioGraphqlResolver,
     DiarioAuthzRegistrySetup,
+    { provide: IDiarioPermissionChecker, useClass: DiarioPermissionCheckerImpl },
     {
       provide: IDiarioRepository,
       useClass: DiarioTypeOrmRepositoryAdapter,

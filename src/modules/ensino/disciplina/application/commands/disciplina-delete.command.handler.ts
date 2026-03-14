@@ -1,10 +1,11 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { ensureExists, IAuthorizationService } from "@/modules/@shared";
+import { ensureExists } from "@/modules/@shared";
 import {
   type IDisciplinaDeleteCommand,
   IDisciplinaDeleteCommandHandler,
 } from "@/modules/ensino/disciplina/domain/commands/disciplina-delete.command.handler.interface";
 import { Disciplina } from "@/modules/ensino/disciplina/domain/disciplina.domain";
+import { IDisciplinaPermissionChecker } from "../../domain/authorization";
 import { IDisciplinaRepository } from "../../domain/repositories";
 
 @Injectable()
@@ -12,12 +13,12 @@ export class DisciplinaDeleteCommandHandlerImpl implements IDisciplinaDeleteComm
   constructor(
     @Inject(IDisciplinaRepository)
     private readonly repository: IDisciplinaRepository,
-    @Inject(IAuthorizationService)
-    private readonly authorizationService: IAuthorizationService,
+    @Inject(IDisciplinaPermissionChecker)
+    private readonly permissionChecker: IDisciplinaPermissionChecker,
   ) {}
 
   async execute({ accessContext, dto }: IDisciplinaDeleteCommand): Promise<boolean> {
-    await this.authorizationService.ensurePermission("disciplina:delete", { dto }, dto.id);
+    await this.permissionChecker.ensureCanDelete(accessContext, { dto }, dto.id);
 
     const entity = await this.repository.findById(accessContext, dto);
 

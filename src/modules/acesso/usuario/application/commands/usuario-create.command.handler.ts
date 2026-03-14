@@ -6,6 +6,7 @@ import {
   IUsuarioCreateCommandHandler,
 } from "@/modules/acesso/usuario/domain/commands/usuario-create.command.handler.interface";
 import { Usuario } from "@/modules/acesso/usuario/domain/usuario.domain";
+import { IUsuarioPermissionChecker } from "../../domain/authorization";
 import { IUsuarioRepository } from "../../domain/repositories";
 import type { UsuarioFindOneOutputDto } from "../dtos";
 
@@ -15,10 +16,12 @@ export class UsuarioCreateCommandHandlerImpl implements IUsuarioCreateCommandHan
     @Inject(IUsuarioRepository)
     private readonly repository: IUsuarioRepository,
     private readonly keycloakService: KeycloakService,
+    @Inject(IUsuarioPermissionChecker)
+    private readonly permissionChecker: IUsuarioPermissionChecker,
   ) {}
 
   async execute({ accessContext, dto }: IUsuarioCreateCommand): Promise<UsuarioFindOneOutputDto> {
-    await accessContext.ensurePermission("usuario:create", { dto });
+    await this.permissionChecker.ensureCanCreate(accessContext, { dto });
 
     const input = {
       nome: dto.nome,

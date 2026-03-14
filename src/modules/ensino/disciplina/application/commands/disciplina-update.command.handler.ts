@@ -1,10 +1,11 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { ensureExists, IAuthorizationService } from "@/modules/@shared";
+import { ensureExists } from "@/modules/@shared";
 import {
   type IDisciplinaUpdateCommand,
   IDisciplinaUpdateCommandHandler,
 } from "@/modules/ensino/disciplina/domain/commands/disciplina-update.command.handler.interface";
 import { Disciplina } from "@/modules/ensino/disciplina/domain/disciplina.domain";
+import { IDisciplinaPermissionChecker } from "../../domain/authorization";
 import { IDisciplinaRepository } from "../../domain/repositories";
 import type { DisciplinaFindOneOutputDto } from "../dtos";
 
@@ -13,8 +14,8 @@ export class DisciplinaUpdateCommandHandlerImpl implements IDisciplinaUpdateComm
   constructor(
     @Inject(IDisciplinaRepository)
     private readonly repository: IDisciplinaRepository,
-    @Inject(IAuthorizationService)
-    private readonly authorizationService: IAuthorizationService,
+    @Inject(IDisciplinaPermissionChecker)
+    private readonly permissionChecker: IDisciplinaPermissionChecker,
   ) {}
 
   async execute({
@@ -25,7 +26,7 @@ export class DisciplinaUpdateCommandHandlerImpl implements IDisciplinaUpdateComm
 
     ensureExists(current, Disciplina.entityName, dto.id);
 
-    await this.authorizationService.ensurePermission("disciplina:update", { dto }, dto.id);
+    await this.permissionChecker.ensureCanUpdate(accessContext, { dto }, dto.id);
 
     const domain = Disciplina.fromData(current);
     domain.atualizar({

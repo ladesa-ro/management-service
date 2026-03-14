@@ -1,5 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { ensureExists, IAuthorizationService } from "@/modules/@shared";
+import { ensureExists } from "@/modules/@shared";
 import { Ambiente } from "@/modules/ambientes/ambiente/domain/ambiente.domain";
 import { IAmbienteFindOneQueryHandler } from "@/modules/ambientes/ambiente/domain/queries/ambiente-find-one.query.handler.interface";
 import {
@@ -13,6 +13,7 @@ import { ITurmaFindOneQueryHandler } from "@/modules/ensino/turma/domain/queries
 import { Turma } from "@/modules/ensino/turma/domain/turma.domain";
 import { CalendarioLetivo } from "@/modules/horarios/calendario-letivo/domain/calendario-letivo.domain";
 import { ICalendarioLetivoFindOneQueryHandler } from "@/modules/horarios/calendario-letivo/domain/queries/calendario-letivo-find-one.query.handler.interface";
+import { IDiarioPermissionChecker } from "../../domain/authorization";
 import { IDiarioRepository } from "../../domain/repositories";
 import type { DiarioFindOneOutputDto } from "../dtos";
 
@@ -21,8 +22,8 @@ export class DiarioCreateCommandHandlerImpl implements IDiarioCreateCommandHandl
   constructor(
     @Inject(IDiarioRepository)
     private readonly repository: IDiarioRepository,
-    @Inject(IAuthorizationService)
-    private readonly authorizationService: IAuthorizationService,
+    @Inject(IDiarioPermissionChecker)
+    private readonly permissionChecker: IDiarioPermissionChecker,
     @Inject(ICalendarioLetivoFindOneQueryHandler)
     private readonly calendarioLetivoFindOneHandler: ICalendarioLetivoFindOneQueryHandler,
     @Inject(ITurmaFindOneQueryHandler)
@@ -34,7 +35,7 @@ export class DiarioCreateCommandHandlerImpl implements IDiarioCreateCommandHandl
   ) {}
 
   async execute({ accessContext, dto }: IDiarioCreateCommand): Promise<DiarioFindOneOutputDto> {
-    await this.authorizationService.ensurePermission("diario:create", { dto });
+    await this.permissionChecker.ensureCanCreate(accessContext, { dto });
 
     let ambientePadraoRef: { id: string } | null = null;
     if (dto.ambientePadrao != null) {

@@ -2,6 +2,7 @@ import { Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import { DiarioModule } from "@/modules/ensino/diario/diario.module";
 import { IDiarioPreferenciaAgrupamentoRepository } from "@/modules/ensino/diario-preferencia-agrupamento";
+import { DiarioPreferenciaAgrupamentoPermissionCheckerImpl } from "@/modules/ensino/diario-preferencia-agrupamento/application/authorization";
 import {
   DiarioPreferenciaAgrupamentoCreateCommandHandlerImpl,
   DiarioPreferenciaAgrupamentoDeleteCommandHandlerImpl,
@@ -11,6 +12,7 @@ import {
   DiarioPreferenciaAgrupamentoFindOneQueryHandlerImpl,
   DiarioPreferenciaAgrupamentoListQueryHandlerImpl,
 } from "@/modules/ensino/diario-preferencia-agrupamento/application/queries";
+import { IDiarioPreferenciaAgrupamentoPermissionChecker } from "@/modules/ensino/diario-preferencia-agrupamento/domain/authorization";
 import {
   IDiarioPreferenciaAgrupamentoCreateCommandHandler,
   IDiarioPreferenciaAgrupamentoDeleteCommandHandler,
@@ -30,6 +32,10 @@ import { DiarioPreferenciaAgrupamentoController } from "@/modules/ensino/diario-
     NestJsPaginateAdapter,
     DiarioPreferenciaAgrupamentoGraphqlResolver,
     DiarioPreferenciaAgrupamentoAuthzRegistrySetup,
+    {
+      provide: IDiarioPreferenciaAgrupamentoPermissionChecker,
+      useClass: DiarioPreferenciaAgrupamentoPermissionCheckerImpl,
+    },
     {
       provide: IDiarioPreferenciaAgrupamentoRepository,
       useClass: DiarioPreferenciaAgrupamentoTypeOrmRepositoryAdapter,

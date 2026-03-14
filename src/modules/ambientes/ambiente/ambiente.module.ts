@@ -1,5 +1,6 @@
 import { Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
+import { AmbientePermissionCheckerImpl } from "@/modules/ambientes/ambiente/application/authorization";
 import {
   AmbienteCreateCommandHandlerImpl,
   AmbienteDeleteCommandHandlerImpl,
@@ -11,6 +12,7 @@ import {
   AmbienteGetImagemCapaQueryHandlerImpl,
   AmbienteListQueryHandlerImpl,
 } from "@/modules/ambientes/ambiente/application/queries";
+import { IAmbientePermissionChecker } from "@/modules/ambientes/ambiente/domain/authorization";
 import {
   IAmbienteCreateCommandHandler,
   IAmbienteDeleteCommandHandler,
@@ -41,6 +43,8 @@ import { ImagemModule } from "@/modules/armazenamento/imagem/imagem.module";
     AmbienteGraphqlResolver,
     AmbienteAuthzRegistrySetup,
     { provide: IAmbienteRepository, useClass: AmbienteTypeOrmRepositoryAdapter },
+    // Authorization
+    { provide: IAmbientePermissionChecker, useClass: AmbientePermissionCheckerImpl },
     // Commands
     { provide: IAmbienteCreateCommandHandler, useClass: AmbienteCreateCommandHandlerImpl },
     { provide: IAmbienteUpdateCommandHandler, useClass: AmbienteUpdateCommandHandlerImpl },

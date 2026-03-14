@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { has } from "lodash";
-import { ensureExists, IAuthorizationService } from "@/modules/@shared";
+import { ensureExists } from "@/modules/@shared";
 import { Perfil } from "@/modules/acesso/perfil/domain/perfil.domain";
 import { IPerfilFindOneQueryHandler } from "@/modules/acesso/perfil/domain/queries/perfil-find-one.query.handler.interface";
 import { Diario } from "@/modules/ensino/diario/domain/diario.domain";
@@ -10,6 +10,7 @@ import {
   IDiarioProfessorCreateCommandHandler,
 } from "@/modules/ensino/diario-professor/domain/commands/diario-professor-create.command.handler.interface";
 import { DiarioProfessor } from "@/modules/ensino/diario-professor/domain/diario-professor.domain";
+import { IDiarioProfessorPermissionChecker } from "../../domain/authorization";
 import { IDiarioProfessorRepository } from "../../domain/repositories";
 import type { DiarioProfessorFindOneOutputDto } from "../dtos";
 
@@ -20,8 +21,8 @@ export class DiarioProfessorCreateCommandHandlerImpl
   constructor(
     @Inject(IDiarioProfessorRepository)
     private readonly repository: IDiarioProfessorRepository,
-    @Inject(IAuthorizationService)
-    private readonly authorizationService: IAuthorizationService,
+    @Inject(IDiarioProfessorPermissionChecker)
+    private readonly permissionChecker: IDiarioProfessorPermissionChecker,
     @Inject(IDiarioFindOneQueryHandler)
     private readonly diarioFindOneHandler: IDiarioFindOneQueryHandler,
     @Inject(IPerfilFindOneQueryHandler)
@@ -32,7 +33,7 @@ export class DiarioProfessorCreateCommandHandlerImpl
     accessContext,
     dto,
   }: IDiarioProfessorCreateCommand): Promise<DiarioProfessorFindOneOutputDto> {
-    await this.authorizationService.ensurePermission("diario_professor:create", { dto });
+    await this.permissionChecker.ensureCanCreate(accessContext, { dto });
 
     let diarioRef: { id: string } | undefined;
     if (has(dto, "diario") && dto.diario) {

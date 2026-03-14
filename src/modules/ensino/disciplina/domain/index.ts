@@ -1,3 +1,4 @@
+export * from "./authorization";
 export * from "./commands";
 export * from "./disciplina.domain";
 export * from "./disciplina.types";

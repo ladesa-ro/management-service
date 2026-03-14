@@ -1,6 +1,7 @@
 import { Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import { CalendarioLetivoModule } from "@/modules/horarios/calendario-letivo/calendario-letivo.module";
+import { DiaCalendarioPermissionCheckerImpl } from "@/modules/horarios/dia-calendario/application/authorization";
 import {
   DiaCalendarioCreateCommandHandlerImpl,
   DiaCalendarioDeleteCommandHandlerImpl,
@@ -10,6 +11,7 @@ import {
   DiaCalendarioFindOneQueryHandlerImpl,
   DiaCalendarioListQueryHandlerImpl,
 } from "@/modules/horarios/dia-calendario/application/queries";
+import { IDiaCalendarioPermissionChecker } from "@/modules/horarios/dia-calendario/domain/authorization";
 import {
   IDiaCalendarioCreateCommandHandler,
   IDiaCalendarioDeleteCommandHandler,
@@ -35,6 +37,10 @@ import { DiaCalendarioRestController } from "@/modules/horarios/dia-calendario/p
     },
     DiaCalendarioGraphqlResolver,
     DiaCalendarioAuthzRegistrySetup,
+    {
+      provide: IDiaCalendarioPermissionChecker,
+      useClass: DiaCalendarioPermissionCheckerImpl,
+    },
 
     // Commands
     {

@@ -3,7 +3,7 @@ export * from "./abstractions/entities/base-dated-entity";
 export * from "./abstractions/entities/base-entity";
 export * from "./abstractions/entities/base-read-only-entity";
 export * from "./abstractions/scalars.types";
-export * from "./authorization.interface";
 export * from "./errors";
+export * from "./permission-checker.interface";
 export * from "./utils";
 export * from "./validation";

@@ -4,6 +4,7 @@ import { AmbienteModule } from "@/modules/ambientes/ambiente/ambiente.module";
 import { ArquivoModule } from "@/modules/armazenamento/arquivo/arquivo.module";
 import { ImagemModule } from "@/modules/armazenamento/imagem/imagem.module";
 import { CursoModule } from "@/modules/ensino/curso/curso.module";
+import { TurmaPermissionCheckerImpl } from "@/modules/ensino/turma/application/authorization";
 import {
   TurmaCreateCommandHandlerImpl,
   TurmaDeleteCommandHandlerImpl,
@@ -15,6 +16,7 @@ import {
   TurmaGetImagemCapaQueryHandlerImpl,
   TurmaListQueryHandlerImpl,
 } from "@/modules/ensino/turma/application/queries";
+import { ITurmaPermissionChecker } from "@/modules/ensino/turma/domain/authorization";
 import {
   ITurmaCreateCommandHandler,
   ITurmaDeleteCommandHandler,
@@ -45,6 +47,7 @@ import { TurmaRestController } from "@/modules/ensino/turma/presentation/rest/tu
       provide: ITurmaRepository,
       useClass: TurmaTypeOrmRepositoryAdapter,
     },
+    { provide: ITurmaPermissionChecker, useClass: TurmaPermissionCheckerImpl },
 
     // Commands
     { provide: ITurmaCreateCommandHandler, useClass: TurmaCreateCommandHandlerImpl },

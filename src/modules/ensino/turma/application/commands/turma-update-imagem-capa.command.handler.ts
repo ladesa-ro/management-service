@@ -1,5 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { ensureExists, IAuthorizationService, saveEntityImagemField } from "@/modules/@shared";
+import { ensureExists, saveEntityImagemField } from "@/modules/@shared";
 import {
   IImagemSaveImagemCapaCommandHandler,
   type IImagemSaveImagemCapaCommandHandler as IImagemSaveImagemCapaCommandHandlerType,
@@ -9,6 +9,7 @@ import {
   ITurmaUpdateImagemCapaCommandHandler,
 } from "@/modules/ensino/turma/domain/commands/turma-update-imagem-capa.command.handler.interface";
 import { Turma } from "@/modules/ensino/turma/domain/turma.domain";
+import { ITurmaPermissionChecker } from "../../domain/authorization";
 import { ITurmaRepository } from "../../domain/repositories";
 
 @Injectable()
@@ -18,8 +19,8 @@ export class TurmaUpdateImagemCapaCommandHandlerImpl
   constructor(
     @Inject(ITurmaRepository)
     private readonly repository: ITurmaRepository,
-    @Inject(IAuthorizationService)
-    private readonly authorizationService: IAuthorizationService,
+    @Inject(ITurmaPermissionChecker)
+    private readonly permissionChecker: ITurmaPermissionChecker,
     @Inject(IImagemSaveImagemCapaCommandHandler)
     private readonly saveImagemCapaHandler: IImagemSaveImagemCapaCommandHandlerType,
   ) {}
@@ -29,8 +30,8 @@ export class TurmaUpdateImagemCapaCommandHandlerImpl
 
     ensureExists(current, Turma.entityName, dto.id);
 
-    await this.authorizationService.ensurePermission(
-      "turma:update",
+    await this.permissionChecker.ensureCanUpdate(
+      accessContext,
       { dto: { id: current.id } },
       current.id,
     );

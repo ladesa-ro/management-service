@@ -2,6 +2,7 @@ import { Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import { ModalidadeModule } from "@/modules/ensino/modalidade/modalidade.module";
 import { IOfertaFormacaoRepository } from "@/modules/ensino/oferta-formacao";
+import { OfertaFormacaoPermissionCheckerImpl } from "@/modules/ensino/oferta-formacao/application/authorization";
 import {
   OfertaFormacaoCreateCommandHandlerImpl,
   OfertaFormacaoDeleteCommandHandlerImpl,
@@ -11,6 +12,7 @@ import {
   OfertaFormacaoFindOneQueryHandlerImpl,
   OfertaFormacaoListQueryHandlerImpl,
 } from "@/modules/ensino/oferta-formacao/application/queries";
+import { IOfertaFormacaoPermissionChecker } from "@/modules/ensino/oferta-formacao/domain/authorization";
 import {
   IOfertaFormacaoCreateCommandHandler,
   IOfertaFormacaoDeleteCommandHandler,
@@ -31,6 +33,7 @@ import { OfertaFormacaoRestController } from "@/modules/ensino/oferta-formacao/p
   providers: [
     NestJsPaginateAdapter,
     OfertaFormacaoAuthzRegistrySetup,
+    { provide: IOfertaFormacaoPermissionChecker, useClass: OfertaFormacaoPermissionCheckerImpl },
     OfertaFormacaoGraphqlResolver,
     {
       provide: IOfertaFormacaoRepository,

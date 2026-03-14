@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { has } from "lodash";
-import { ensureExists, IAuthorizationService, type PersistInput } from "@/modules/@shared";
+import { ensureExists, type PersistInput } from "@/modules/@shared";
 import { Modalidade } from "@/modules/ensino/modalidade/domain/modalidade.domain";
 import { IModalidadeFindOneQueryHandler } from "@/modules/ensino/modalidade/domain/queries/modalidade-find-one.query.handler.interface";
 import {
@@ -9,6 +9,7 @@ import {
 } from "@/modules/ensino/oferta-formacao/domain/commands/oferta-formacao-update.command.handler.interface";
 import { OfertaFormacao } from "@/modules/ensino/oferta-formacao/domain/oferta-formacao.domain";
 import type { IOfertaFormacao } from "@/modules/ensino/oferta-formacao/domain/oferta-formacao.types";
+import { IOfertaFormacaoPermissionChecker } from "../../domain/authorization";
 import { IOfertaFormacaoRepository } from "../../domain/repositories";
 import type { OfertaFormacaoFindOneOutputDto } from "../dtos";
 
@@ -17,8 +18,8 @@ export class OfertaFormacaoUpdateCommandHandlerImpl implements IOfertaFormacaoUp
   constructor(
     @Inject(IOfertaFormacaoRepository)
     private readonly repository: IOfertaFormacaoRepository,
-    @Inject(IAuthorizationService)
-    private readonly authorizationService: IAuthorizationService,
+    @Inject(IOfertaFormacaoPermissionChecker)
+    private readonly permissionChecker: IOfertaFormacaoPermissionChecker,
     @Inject(IModalidadeFindOneQueryHandler)
     private readonly modalidadeFindOneHandler: IModalidadeFindOneQueryHandler,
   ) {}
@@ -31,7 +32,7 @@ export class OfertaFormacaoUpdateCommandHandlerImpl implements IOfertaFormacaoUp
 
     ensureExists(current, OfertaFormacao.entityName, dto.id);
 
-    await this.authorizationService.ensurePermission("oferta_formacao:update", { dto }, dto.id);
+    await this.permissionChecker.ensureCanUpdate(accessContext, { dto }, dto.id);
 
     const domain = OfertaFormacao.fromData(current);
     domain.atualizar({ nome: dto.nome, slug: dto.slug });

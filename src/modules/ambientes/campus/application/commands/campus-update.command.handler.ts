@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { get } from "lodash";
-import { ensureExists, IAuthorizationService, type PersistInput } from "@/modules/@shared";
+import { ensureExists, type PersistInput } from "@/modules/@shared";
 import { Campus } from "@/modules/ambientes/campus/domain/campus.domain";
 import type { ICampus } from "@/modules/ambientes/campus/domain/campus.types";
 import {
@@ -8,6 +8,7 @@ import {
   ICampusUpdateCommandHandler,
 } from "@/modules/ambientes/campus/domain/commands/campus-update.command.handler.interface";
 import { IEnderecoCreateOrUpdateCommandHandler } from "@/modules/localidades/endereco/domain/commands/endereco-create-or-update.command.handler.interface";
+import { ICampusPermissionChecker } from "../../domain/authorization";
 import { ICampusRepository } from "../../domain/repositories";
 import type { CampusFindOneOutputDto } from "../dtos";
 
@@ -16,8 +17,8 @@ export class CampusUpdateCommandHandlerImpl implements ICampusUpdateCommandHandl
   constructor(
     @Inject(ICampusRepository)
     private readonly repository: ICampusRepository,
-    @Inject(IAuthorizationService)
-    private readonly authorizationService: IAuthorizationService,
+    @Inject(ICampusPermissionChecker)
+    private readonly permissionChecker: ICampusPermissionChecker,
     @Inject(IEnderecoCreateOrUpdateCommandHandler)
     private readonly enderecoCreateOrUpdateHandler: IEnderecoCreateOrUpdateCommandHandler,
   ) {}
@@ -27,7 +28,7 @@ export class CampusUpdateCommandHandlerImpl implements ICampusUpdateCommandHandl
 
     ensureExists(current, Campus.entityName, dto.id);
 
-    await this.authorizationService.ensurePermission("campus:update", { dto }, dto.id);
+    await this.permissionChecker.ensureCanUpdate(accessContext, { dto }, dto.id);
 
     const domain = Campus.fromData(current);
     domain.atualizar({

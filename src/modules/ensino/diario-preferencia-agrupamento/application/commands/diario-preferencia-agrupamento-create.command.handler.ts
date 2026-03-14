@@ -1,5 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { ensureExists, IAuthorizationService } from "@/modules/@shared";
+import { ensureExists } from "@/modules/@shared";
 import { Diario } from "@/modules/ensino/diario/domain/diario.domain";
 import { IDiarioFindOneQueryHandler } from "@/modules/ensino/diario/domain/queries/diario-find-one.query.handler.interface";
 import {
@@ -7,6 +7,7 @@ import {
   IDiarioPreferenciaAgrupamentoCreateCommandHandler,
 } from "@/modules/ensino/diario-preferencia-agrupamento/domain/commands/diario-preferencia-agrupamento-create.command.handler.interface";
 import { DiarioPreferenciaAgrupamento } from "@/modules/ensino/diario-preferencia-agrupamento/domain/diario-preferencia-agrupamento.domain";
+import { IDiarioPreferenciaAgrupamentoPermissionChecker } from "../../domain/authorization";
 import { IDiarioPreferenciaAgrupamentoRepository } from "../../domain/repositories";
 import type { DiarioPreferenciaAgrupamentoFindOneOutputDto } from "../dtos";
 
@@ -17,8 +18,8 @@ export class DiarioPreferenciaAgrupamentoCreateCommandHandlerImpl
   constructor(
     @Inject(IDiarioPreferenciaAgrupamentoRepository)
     private readonly repository: IDiarioPreferenciaAgrupamentoRepository,
-    @Inject(IAuthorizationService)
-    private readonly authorizationService: IAuthorizationService,
+    @Inject(IDiarioPreferenciaAgrupamentoPermissionChecker)
+    private readonly permissionChecker: IDiarioPreferenciaAgrupamentoPermissionChecker,
     @Inject(IDiarioFindOneQueryHandler)
     private readonly diarioFindOneHandler: IDiarioFindOneQueryHandler,
   ) {}
@@ -27,9 +28,7 @@ export class DiarioPreferenciaAgrupamentoCreateCommandHandlerImpl
     accessContext,
     dto,
   }: IDiarioPreferenciaAgrupamentoCreateCommand): Promise<DiarioPreferenciaAgrupamentoFindOneOutputDto> {
-    await this.authorizationService.ensurePermission("diario_preferencia_agrupamento:create", {
-      dto,
-    });
+    await this.permissionChecker.ensureCanCreate(accessContext, { dto });
 
     let diarioRef: { id: string } | undefined;
     if (dto.diario) {

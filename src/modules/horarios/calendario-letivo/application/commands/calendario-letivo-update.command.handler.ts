@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { has } from "lodash";
-import { ensureExists, IAuthorizationService, type PersistInput } from "@/modules/@shared";
+import { ensureExists, type PersistInput } from "@/modules/@shared";
 import { Campus } from "@/modules/ambientes/campus/domain/campus.domain";
 import { ICampusFindOneQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-find-one.query.handler.interface";
 import { OfertaFormacao } from "@/modules/ensino/oferta-formacao/domain/oferta-formacao.domain";
@@ -11,6 +11,7 @@ import {
   type ICalendarioLetivoUpdateCommand,
   ICalendarioLetivoUpdateCommandHandler,
 } from "@/modules/horarios/calendario-letivo/domain/commands/calendario-letivo-update.command.handler.interface";
+import { ICalendarioLetivoPermissionChecker } from "../../domain/authorization";
 import { ICalendarioLetivoRepository } from "../../domain/repositories";
 import type { CalendarioLetivoFindOneOutputDto } from "../dtos";
 
@@ -21,8 +22,8 @@ export class CalendarioLetivoUpdateCommandHandlerImpl
   constructor(
     @Inject(ICalendarioLetivoRepository)
     private readonly repository: ICalendarioLetivoRepository,
-    @Inject(IAuthorizationService)
-    private readonly authorizationService: IAuthorizationService,
+    @Inject(ICalendarioLetivoPermissionChecker)
+    private readonly permissionChecker: ICalendarioLetivoPermissionChecker,
     @Inject(ICampusFindOneQueryHandler)
     private readonly campusFindOneHandler: ICampusFindOneQueryHandler,
     @Inject(IOfertaFormacaoFindOneQueryHandler)
@@ -37,7 +38,7 @@ export class CalendarioLetivoUpdateCommandHandlerImpl
 
     ensureExists(current, CalendarioLetivo.entityName, dto.id);
 
-    await this.authorizationService.ensurePermission("calendario_letivo:update", { dto }, dto.id);
+    await this.permissionChecker.ensureCanUpdate(accessContext, { dto }, dto.id);
 
     const domain = CalendarioLetivo.fromData(current);
     domain.atualizar({ nome: dto.nome, ano: dto.ano });

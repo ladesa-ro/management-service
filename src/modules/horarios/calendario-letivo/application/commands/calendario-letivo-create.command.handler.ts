@@ -1,5 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { ensureExists, IAuthorizationService } from "@/modules/@shared";
+import { ensureExists } from "@/modules/@shared";
 import { Campus } from "@/modules/ambientes/campus/domain/campus.domain";
 import { ICampusFindOneQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-find-one.query.handler.interface";
 import { OfertaFormacao } from "@/modules/ensino/oferta-formacao/domain/oferta-formacao.domain";
@@ -9,6 +9,7 @@ import {
   type ICalendarioLetivoCreateCommand,
   ICalendarioLetivoCreateCommandHandler,
 } from "@/modules/horarios/calendario-letivo/domain/commands/calendario-letivo-create.command.handler.interface";
+import { ICalendarioLetivoPermissionChecker } from "../../domain/authorization";
 import { ICalendarioLetivoRepository } from "../../domain/repositories";
 import type { CalendarioLetivoFindOneOutputDto } from "../dtos";
 
@@ -19,8 +20,8 @@ export class CalendarioLetivoCreateCommandHandlerImpl
   constructor(
     @Inject(ICalendarioLetivoRepository)
     private readonly repository: ICalendarioLetivoRepository,
-    @Inject(IAuthorizationService)
-    private readonly authorizationService: IAuthorizationService,
+    @Inject(ICalendarioLetivoPermissionChecker)
+    private readonly permissionChecker: ICalendarioLetivoPermissionChecker,
     @Inject(ICampusFindOneQueryHandler)
     private readonly campusFindOneHandler: ICampusFindOneQueryHandler,
     @Inject(IOfertaFormacaoFindOneQueryHandler)
@@ -31,7 +32,7 @@ export class CalendarioLetivoCreateCommandHandlerImpl
     accessContext,
     dto,
   }: ICalendarioLetivoCreateCommand): Promise<CalendarioLetivoFindOneOutputDto> {
-    await this.authorizationService.ensurePermission("calendario_letivo:create", { dto });
+    await this.permissionChecker.ensureCanCreate(accessContext, { dto });
 
     const campus = await this.campusFindOneHandler.execute({
       accessContext,

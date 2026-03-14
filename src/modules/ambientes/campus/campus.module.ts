@@ -1,5 +1,6 @@
 import { Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
+import { CampusPermissionCheckerImpl } from "@/modules/ambientes/campus/application/authorization";
 import {
   CampusCreateCommandHandlerImpl,
   CampusDeleteCommandHandlerImpl,
@@ -9,6 +10,7 @@ import {
   CampusFindOneQueryHandlerImpl,
   CampusListQueryHandlerImpl,
 } from "@/modules/ambientes/campus/application/queries";
+import { ICampusPermissionChecker } from "@/modules/ambientes/campus/domain/authorization";
 import {
   ICampusCreateCommandHandler,
   ICampusDeleteCommandHandler,
@@ -39,6 +41,8 @@ import { EnderecoModule } from "@/modules/localidades/endereco/endereco.module";
       useClass: CampusTypeOrmRepositoryAdapter,
     },
 
+    // Authorization
+    { provide: ICampusPermissionChecker, useClass: CampusPermissionCheckerImpl },
     // Commands
     { provide: ICampusCreateCommandHandler, useClass: CampusCreateCommandHandlerImpl },
     { provide: ICampusUpdateCommandHandler, useClass: CampusUpdateCommandHandlerImpl },

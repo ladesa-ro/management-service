@@ -1,5 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { ensureExists, IAuthorizationService } from "@/modules/@shared";
+import { ensureExists } from "@/modules/@shared";
 import { Ambiente } from "@/modules/ambientes/ambiente/domain/ambiente.domain";
 import { IAmbienteFindOneQueryHandler } from "@/modules/ambientes/ambiente/domain/queries/ambiente-find-one.query.handler.interface";
 import { Curso } from "@/modules/ensino/curso/domain/curso.domain";
@@ -9,6 +9,7 @@ import {
   ITurmaCreateCommandHandler,
 } from "@/modules/ensino/turma/domain/commands/turma-create.command.handler.interface";
 import { Turma } from "@/modules/ensino/turma/domain/turma.domain";
+import { ITurmaPermissionChecker } from "../../domain/authorization";
 import { ITurmaRepository } from "../../domain/repositories";
 import type { TurmaFindOneOutputDto } from "../dtos";
 
@@ -17,8 +18,8 @@ export class TurmaCreateCommandHandlerImpl implements ITurmaCreateCommandHandler
   constructor(
     @Inject(ITurmaRepository)
     private readonly repository: ITurmaRepository,
-    @Inject(IAuthorizationService)
-    private readonly authorizationService: IAuthorizationService,
+    @Inject(ITurmaPermissionChecker)
+    private readonly permissionChecker: ITurmaPermissionChecker,
     @Inject(IAmbienteFindOneQueryHandler)
     private readonly ambienteFindOneHandler: IAmbienteFindOneQueryHandler,
     @Inject(ICursoFindOneQueryHandler)
@@ -26,7 +27,7 @@ export class TurmaCreateCommandHandlerImpl implements ITurmaCreateCommandHandler
   ) {}
 
   async execute({ accessContext, dto }: ITurmaCreateCommand): Promise<TurmaFindOneOutputDto> {
-    await this.authorizationService.ensurePermission("turma:create", { dto });
+    await this.permissionChecker.ensureCanCreate(accessContext, { dto });
 
     const curso = await this.cursoFindOneHandler.execute({
       accessContext,

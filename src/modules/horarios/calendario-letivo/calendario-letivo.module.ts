@@ -3,6 +3,7 @@ import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persiste
 import { CampusModule } from "@/modules/ambientes/campus/campus.module";
 import { OfertaFormacaoModule } from "@/modules/ensino/oferta-formacao/oferta-formacao.module";
 import { ICalendarioLetivoRepository } from "@/modules/horarios/calendario-letivo";
+import { CalendarioLetivoPermissionCheckerImpl } from "@/modules/horarios/calendario-letivo/application/authorization";
 import {
   CalendarioLetivoCreateCommandHandlerImpl,
   CalendarioLetivoDeleteCommandHandlerImpl,
@@ -12,6 +13,7 @@ import {
   CalendarioLetivoFindOneQueryHandlerImpl,
   CalendarioLetivoListQueryHandlerImpl,
 } from "@/modules/horarios/calendario-letivo/application/queries";
+import { ICalendarioLetivoPermissionChecker } from "@/modules/horarios/calendario-letivo/domain/authorization";
 import {
   ICalendarioLetivoCreateCommandHandler,
   ICalendarioLetivoDeleteCommandHandler,
@@ -33,6 +35,10 @@ import { CalendarioLetivoRestController } from "@/modules/horarios/calendario-le
     NestJsPaginateAdapter,
     CalendarioLetivoGraphqlResolver,
     CalendarioLetivoAuthzRegistrySetup,
+    {
+      provide: ICalendarioLetivoPermissionChecker,
+      useClass: CalendarioLetivoPermissionCheckerImpl,
+    },
     {
       provide: ICalendarioLetivoRepository,
       useClass: CalendarioLetivoTypeOrmRepositoryAdapter,

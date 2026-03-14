@@ -2,11 +2,11 @@ import { writeFile } from "node:fs/promises";
 import type { Readable } from "node:stream";
 import { Inject, Injectable } from "@nestjs/common";
 import jetpack, { createReadStream } from "fs-jetpack";
+import type { IStorageService } from "@/domain/abstractions/storage";
 import {
   IRuntimeOptions,
   IRuntimeOptions as IRuntimeOptionsToken,
 } from "@/infrastructure.config/options/runtime/runtime-options.interface";
-import type { IStorageService } from "@/domain/abstractions/storage";
 
 @Injectable()
 export class FilesystemStorageService implements IStorageService {

@@ -1,3 +1,4 @@
+export * from "./authorization";
 export * from "./calendario-letivo.domain";
 export * from "./calendario-letivo.types";
 export * from "./commands";

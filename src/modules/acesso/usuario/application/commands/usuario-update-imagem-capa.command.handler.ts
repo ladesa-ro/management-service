@@ -9,6 +9,7 @@ import {
   IImagemSaveImagemCapaCommandHandler,
   type IImagemSaveImagemCapaCommandHandler as IImagemSaveImagemCapaCommandHandlerType,
 } from "@/modules/armazenamento/imagem/domain/commands";
+import { IUsuarioPermissionChecker } from "../../domain/authorization";
 import { IUsuarioRepository } from "../../domain/repositories";
 
 @Injectable()
@@ -20,6 +21,8 @@ export class UsuarioUpdateImagemCapaCommandHandlerImpl
     private readonly repository: IUsuarioRepository,
     @Inject(IImagemSaveImagemCapaCommandHandler)
     private readonly saveImagemCapaHandler: IImagemSaveImagemCapaCommandHandlerType,
+    @Inject(IUsuarioPermissionChecker)
+    private readonly permissionChecker: IUsuarioPermissionChecker,
   ) {}
 
   async execute({ accessContext, dto, file }: IUsuarioUpdateImagemCapaCommand): Promise<boolean> {
@@ -27,8 +30,8 @@ export class UsuarioUpdateImagemCapaCommandHandlerImpl
 
     ensureExists(currentUsuario, Usuario.entityName, dto.id);
 
-    await accessContext.ensurePermission(
-      "usuario:update",
+    await this.permissionChecker.ensureCanUpdate(
+      accessContext,
       { dto: { id: currentUsuario.id } },
       currentUsuario.id,
     );

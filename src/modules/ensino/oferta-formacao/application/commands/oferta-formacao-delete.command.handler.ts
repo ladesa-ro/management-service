@@ -1,10 +1,11 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { ensureExists, IAuthorizationService } from "@/modules/@shared";
+import { ensureExists } from "@/modules/@shared";
 import {
   type IOfertaFormacaoDeleteCommand,
   IOfertaFormacaoDeleteCommandHandler,
 } from "@/modules/ensino/oferta-formacao/domain/commands/oferta-formacao-delete.command.handler.interface";
 import { OfertaFormacao } from "@/modules/ensino/oferta-formacao/domain/oferta-formacao.domain";
+import { IOfertaFormacaoPermissionChecker } from "../../domain/authorization";
 import { IOfertaFormacaoRepository } from "../../domain/repositories";
 
 @Injectable()
@@ -12,12 +13,12 @@ export class OfertaFormacaoDeleteCommandHandlerImpl implements IOfertaFormacaoDe
   constructor(
     @Inject(IOfertaFormacaoRepository)
     private readonly repository: IOfertaFormacaoRepository,
-    @Inject(IAuthorizationService)
-    private readonly authorizationService: IAuthorizationService,
+    @Inject(IOfertaFormacaoPermissionChecker)
+    private readonly permissionChecker: IOfertaFormacaoPermissionChecker,
   ) {}
 
   async execute({ accessContext, dto }: IOfertaFormacaoDeleteCommand): Promise<boolean> {
-    await this.authorizationService.ensurePermission("oferta_formacao:delete", { dto }, dto.id);
+    await this.permissionChecker.ensureCanDelete(accessContext, { dto }, dto.id);
 
     const entity = await this.repository.findById(accessContext, dto);
 

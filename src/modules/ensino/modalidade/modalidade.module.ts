@@ -1,5 +1,6 @@
 import { Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
+import { ModalidadePermissionCheckerImpl } from "@/modules/ensino/modalidade/application/authorization";
 import {
   ModalidadeCreateCommandHandlerImpl,
   ModalidadeDeleteCommandHandlerImpl,
@@ -9,6 +10,7 @@ import {
   ModalidadeFindOneQueryHandlerImpl,
   ModalidadeListQueryHandlerImpl,
 } from "@/modules/ensino/modalidade/application/queries";
+import { IModalidadePermissionChecker } from "@/modules/ensino/modalidade/domain/authorization";
 import {
   IModalidadeCreateCommandHandler,
   IModalidadeDeleteCommandHandler,
@@ -37,6 +39,7 @@ import { ModalidadeRestController } from "@/modules/ensino/modalidade/presentati
       provide: IModalidadeRepository,
       useClass: ModalidadeTypeOrmRepositoryAdapter,
     },
+    { provide: IModalidadePermissionChecker, useClass: ModalidadePermissionCheckerImpl },
 
     // Commands
     { provide: IModalidadeCreateCommandHandler, useClass: ModalidadeCreateCommandHandlerImpl },

@@ -7,6 +7,7 @@ import {
   IUsuarioUpdateCommandHandler,
 } from "@/modules/acesso/usuario/domain/commands/usuario-update.command.handler.interface";
 import { Usuario } from "@/modules/acesso/usuario/domain/usuario.domain";
+import { IUsuarioPermissionChecker } from "../../domain/authorization";
 import { IUsuarioRepository } from "../../domain/repositories";
 import type { UsuarioFindOneOutputDto } from "../dtos";
 
@@ -16,6 +17,8 @@ export class UsuarioUpdateCommandHandlerImpl implements IUsuarioUpdateCommandHan
     @Inject(IUsuarioRepository)
     private readonly repository: IUsuarioRepository,
     private readonly keycloakService: KeycloakService,
+    @Inject(IUsuarioPermissionChecker)
+    private readonly permissionChecker: IUsuarioPermissionChecker,
   ) {}
 
   async execute({ accessContext, dto }: IUsuarioUpdateCommand): Promise<UsuarioFindOneOutputDto> {
@@ -34,7 +37,7 @@ export class UsuarioUpdateCommandHandlerImpl implements IUsuarioUpdateCommandHan
       throw new ServiceUnavailableException();
     }
 
-    await accessContext.ensurePermission("usuario:update", { dto }, dto.id);
+    await this.permissionChecker.ensureCanUpdate(accessContext, { dto }, dto.id);
 
     const input = {
       nome: dto.nome,

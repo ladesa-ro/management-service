@@ -1,5 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { ensureExists, IAuthorizationService } from "@/modules/@shared";
+import { ensureExists } from "@/modules/@shared";
 import { Campus } from "@/modules/ambientes/campus/domain/campus.domain";
 import { ICampusFindOneQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-find-one.query.handler.interface";
 import {
@@ -9,6 +9,7 @@ import {
 import { Curso } from "@/modules/ensino/curso/domain/curso.domain";
 import { OfertaFormacao } from "@/modules/ensino/oferta-formacao/domain/oferta-formacao.domain";
 import { IOfertaFormacaoFindOneQueryHandler } from "@/modules/ensino/oferta-formacao/domain/queries/oferta-formacao-find-one.query.handler.interface";
+import { ICursoPermissionChecker } from "../../domain/authorization";
 import { ICursoRepository } from "../../domain/repositories";
 import type { CursoFindOneOutputDto } from "../dtos";
 
@@ -17,8 +18,8 @@ export class CursoCreateCommandHandlerImpl implements ICursoCreateCommandHandler
   constructor(
     @Inject(ICursoRepository)
     private readonly repository: ICursoRepository,
-    @Inject(IAuthorizationService)
-    private readonly authorizationService: IAuthorizationService,
+    @Inject(ICursoPermissionChecker)
+    private readonly permissionChecker: ICursoPermissionChecker,
     @Inject(ICampusFindOneQueryHandler)
     private readonly campusFindOneHandler: ICampusFindOneQueryHandler,
     @Inject(IOfertaFormacaoFindOneQueryHandler)
@@ -26,7 +27,7 @@ export class CursoCreateCommandHandlerImpl implements ICursoCreateCommandHandler
   ) {}
 
   async execute({ accessContext, dto }: ICursoCreateCommand): Promise<CursoFindOneOutputDto> {
-    await this.authorizationService.ensurePermission("curso:create", { dto });
+    await this.permissionChecker.ensureCanCreate(accessContext, { dto });
 
     const campus = await this.campusFindOneHandler.execute({
       accessContext,

@@ -1,10 +1,11 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { ensureExists, IAuthorizationService } from "@/modules/@shared";
+import { ensureExists } from "@/modules/@shared";
 import { Ambiente } from "@/modules/ambientes/ambiente/domain/ambiente.domain";
 import {
   type IAmbienteUpdateCommand,
   IAmbienteUpdateCommandHandler,
 } from "@/modules/ambientes/ambiente/domain/commands/ambiente-update.command.handler.interface";
+import { IAmbientePermissionChecker } from "../../domain/authorization";
 import { IAmbienteRepository } from "../../domain/repositories";
 import type { AmbienteFindOneOutputDto } from "../dtos";
 
@@ -13,8 +14,8 @@ export class AmbienteUpdateCommandHandlerImpl implements IAmbienteUpdateCommandH
   constructor(
     @Inject(IAmbienteRepository)
     private readonly repository: IAmbienteRepository,
-    @Inject(IAuthorizationService)
-    private readonly authorizationService: IAuthorizationService,
+    @Inject(IAmbientePermissionChecker)
+    private readonly permissionChecker: IAmbientePermissionChecker,
   ) {}
 
   async execute({ accessContext, dto }: IAmbienteUpdateCommand): Promise<AmbienteFindOneOutputDto> {
@@ -22,7 +23,7 @@ export class AmbienteUpdateCommandHandlerImpl implements IAmbienteUpdateCommandH
 
     ensureExists(current, Ambiente.entityName, dto.id);
 
-    await this.authorizationService.ensurePermission("ambiente:update", { dto }, dto.id);
+    await this.permissionChecker.ensureCanUpdate(accessContext, { dto }, dto.id);
 
     const domain = Ambiente.fromData(current);
     domain.atualizar({

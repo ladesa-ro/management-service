@@ -3,7 +3,8 @@ import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persiste
 import { CampusModule } from "@/modules/ambientes/campus/campus.module";
 import { ArquivoModule } from "@/modules/armazenamento/arquivo/arquivo.module";
 import { ImagemModule } from "@/modules/armazenamento/imagem/imagem.module";
-import { ICursoRepository } from "@/modules/ensino/curso";
+import { ICursoPermissionChecker, ICursoRepository } from "@/modules/ensino/curso";
+import { CursoPermissionCheckerImpl } from "@/modules/ensino/curso/application/authorization";
 import {
   CursoCreateCommandHandlerImpl,
   CursoDeleteCommandHandlerImpl,
@@ -45,6 +46,7 @@ import { OfertaFormacaoModule } from "@/modules/ensino/oferta-formacao/oferta-fo
       provide: ICursoRepository,
       useClass: CursoTypeOrmRepositoryAdapter,
     },
+    { provide: ICursoPermissionChecker, useClass: CursoPermissionCheckerImpl },
 
     // Commands
     { provide: ICursoCreateCommandHandler, useClass: CursoCreateCommandHandlerImpl },

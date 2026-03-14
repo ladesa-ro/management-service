@@ -1,5 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { ensureExists, IAuthorizationService } from "@/modules/@shared";
+import { ensureExists } from "@/modules/@shared";
 import { CalendarioLetivo } from "@/modules/horarios/calendario-letivo/domain/calendario-letivo.domain";
 import {
   type ICalendarioLetivoFindOneQueryHandler,
@@ -10,6 +10,7 @@ import {
   IDiaCalendarioCreateCommandHandler,
 } from "@/modules/horarios/dia-calendario/domain/commands/dia-calendario-create.command.handler.interface";
 import { DiaCalendario } from "@/modules/horarios/dia-calendario/domain/dia-calendario.domain";
+import { IDiaCalendarioPermissionChecker } from "../../domain/authorization";
 import { IDiaCalendarioRepository } from "../../domain/repositories";
 import type { DiaCalendarioFindOneOutputDto } from "../dtos";
 
@@ -18,8 +19,8 @@ export class DiaCalendarioCreateCommandHandlerImpl implements IDiaCalendarioCrea
   constructor(
     @Inject(IDiaCalendarioRepository)
     private readonly repository: IDiaCalendarioRepository,
-    @Inject(IAuthorizationService)
-    private readonly authorizationService: IAuthorizationService,
+    @Inject(IDiaCalendarioPermissionChecker)
+    private readonly permissionChecker: IDiaCalendarioPermissionChecker,
     @Inject(ICalendarioLetivoFindOneQueryHandlerToken)
     private readonly calendarioLetivoFindOneHandler: ICalendarioLetivoFindOneQueryHandler,
   ) {}
@@ -28,7 +29,7 @@ export class DiaCalendarioCreateCommandHandlerImpl implements IDiaCalendarioCrea
     accessContext,
     dto,
   }: IDiaCalendarioCreateCommand): Promise<DiaCalendarioFindOneOutputDto> {
-    await this.authorizationService.ensurePermission("dia_calendario:create", { dto });
+    await this.permissionChecker.ensureCanCreate(accessContext, { dto });
 
     let calendarioRef: { id: string } | undefined;
     if (dto.calendario) {

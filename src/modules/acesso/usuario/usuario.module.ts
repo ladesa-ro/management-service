@@ -1,6 +1,7 @@
 import { Module } from "@nestjs/common";
 import { KeycloakModule } from "@/modules/@seguranca/provedor-identidade";
 import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
+import { UsuarioPermissionCheckerImpl } from "@/modules/acesso/usuario/application/authorization";
 import {
   UsuarioCreateCommandHandlerImpl,
   UsuarioDeleteCommandHandlerImpl,
@@ -17,6 +18,7 @@ import {
   UsuarioGetImagemPerfilQueryHandlerImpl,
   UsuarioListQueryHandlerImpl,
 } from "@/modules/acesso/usuario/application/queries";
+import { IUsuarioPermissionChecker } from "@/modules/acesso/usuario/domain/authorization";
 import {
   IUsuarioCreateCommandHandler,
   IUsuarioDeleteCommandHandler,
@@ -50,6 +52,10 @@ import { ImagemModule } from "@/modules/armazenamento/imagem/imagem.module";
     NestJsPaginateAdapter,
     UsuarioGraphqlResolver,
     UsuarioAuthzRegistrySetup,
+    {
+      provide: IUsuarioPermissionChecker,
+      useClass: UsuarioPermissionCheckerImpl,
+    },
     {
       provide: IUsuarioRepository,
       useClass: UsuarioTypeOrmRepositoryAdapter,

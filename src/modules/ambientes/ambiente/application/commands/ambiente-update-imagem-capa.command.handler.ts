@@ -1,5 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { ensureExists, IAuthorizationService, saveEntityImagemField } from "@/modules/@shared";
+import { ensureExists, saveEntityImagemField } from "@/modules/@shared";
 import { Ambiente } from "@/modules/ambientes/ambiente/domain/ambiente.domain";
 import {
   type IAmbienteUpdateImagemCapaCommand,
@@ -9,6 +9,7 @@ import {
   IImagemSaveImagemCapaCommandHandler,
   type IImagemSaveImagemCapaCommandHandler as IImagemSaveImagemCapaCommandHandlerType,
 } from "@/modules/armazenamento/imagem/domain/commands";
+import { IAmbientePermissionChecker } from "../../domain/authorization";
 import { IAmbienteRepository } from "../../domain/repositories";
 
 @Injectable()
@@ -18,8 +19,8 @@ export class AmbienteUpdateImagemCapaCommandHandlerImpl
   constructor(
     @Inject(IAmbienteRepository)
     private readonly repository: IAmbienteRepository,
-    @Inject(IAuthorizationService)
-    private readonly authorizationService: IAuthorizationService,
+    @Inject(IAmbientePermissionChecker)
+    private readonly permissionChecker: IAmbientePermissionChecker,
     @Inject(IImagemSaveImagemCapaCommandHandler)
     private readonly saveImagemCapaHandler: IImagemSaveImagemCapaCommandHandlerType,
   ) {}
@@ -29,8 +30,8 @@ export class AmbienteUpdateImagemCapaCommandHandlerImpl
 
     ensureExists(current, Ambiente.entityName, dto.id);
 
-    await this.authorizationService.ensurePermission(
-      "ambiente:update",
+    await this.permissionChecker.ensureCanUpdate(
+      accessContext,
       { dto: { id: current.id } },
       current.id,
     );

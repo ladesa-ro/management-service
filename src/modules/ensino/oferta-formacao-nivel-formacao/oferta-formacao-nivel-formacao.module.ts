@@ -3,6 +3,7 @@ import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persiste
 import { NivelFormacaoModule } from "@/modules/ensino/nivel-formacao/nivel-formacao.module";
 import { OfertaFormacaoModule } from "@/modules/ensino/oferta-formacao/oferta-formacao.module";
 import { IOfertaFormacaoNivelFormacaoRepository } from "@/modules/ensino/oferta-formacao-nivel-formacao";
+import { OfertaFormacaoNivelFormacaoPermissionCheckerImpl } from "@/modules/ensino/oferta-formacao-nivel-formacao/application/authorization";
 import {
   OfertaFormacaoNivelFormacaoCreateCommandHandlerImpl,
   OfertaFormacaoNivelFormacaoDeleteCommandHandlerImpl,
@@ -12,6 +13,7 @@ import {
   OfertaFormacaoNivelFormacaoFindOneQueryHandlerImpl,
   OfertaFormacaoNivelFormacaoListQueryHandlerImpl,
 } from "@/modules/ensino/oferta-formacao-nivel-formacao/application/queries";
+import { IOfertaFormacaoNivelFormacaoPermissionChecker } from "@/modules/ensino/oferta-formacao-nivel-formacao/domain/authorization";
 import {
   IOfertaFormacaoNivelFormacaoCreateCommandHandler,
   IOfertaFormacaoNivelFormacaoDeleteCommandHandler,
@@ -32,6 +34,10 @@ import { OfertaFormacaoNivelFormacaoRestController } from "@/modules/ensino/ofer
   providers: [
     NestJsPaginateAdapter,
     OfertaFormacaoNivelFormacaoAuthzRegistrySetup,
+    {
+      provide: IOfertaFormacaoNivelFormacaoPermissionChecker,
+      useClass: OfertaFormacaoNivelFormacaoPermissionCheckerImpl,
+    },
     OfertaFormacaoNivelFormacaoGraphqlResolver,
     {
       provide: IOfertaFormacaoNivelFormacaoRepository,

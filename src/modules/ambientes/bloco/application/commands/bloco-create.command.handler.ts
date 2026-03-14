@@ -1,5 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { ensureExists, IAuthorizationService } from "@/modules/@shared";
+import { ensureExists } from "@/modules/@shared";
 import { Bloco } from "@/modules/ambientes/bloco/domain/bloco.domain";
 import {
   type IBlocoCreateCommand,
@@ -7,6 +7,7 @@ import {
 } from "@/modules/ambientes/bloco/domain/commands/bloco-create.command.handler.interface";
 import { Campus } from "@/modules/ambientes/campus/domain/campus.domain";
 import { ICampusFindOneQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-find-one.query.handler.interface";
+import { IBlocoPermissionChecker } from "../../domain/authorization";
 import { IBlocoRepository } from "../../domain/repositories";
 import type { BlocoFindOneOutputDto } from "../dtos";
 
@@ -15,14 +16,14 @@ export class BlocoCreateCommandHandlerImpl implements IBlocoCreateCommandHandler
   constructor(
     @Inject(IBlocoRepository)
     private readonly repository: IBlocoRepository,
-    @Inject(IAuthorizationService)
-    private readonly authorizationService: IAuthorizationService,
+    @Inject(IBlocoPermissionChecker)
+    private readonly permissionChecker: IBlocoPermissionChecker,
     @Inject(ICampusFindOneQueryHandler)
     private readonly campusFindOneHandler: ICampusFindOneQueryHandler,
   ) {}
 
   async execute({ accessContext, dto }: IBlocoCreateCommand): Promise<BlocoFindOneOutputDto> {
-    await this.authorizationService.ensurePermission("bloco:create", { dto });
+    await this.permissionChecker.ensureCanCreate(accessContext, { dto });
 
     const campus = await this.campusFindOneHandler.execute({
       accessContext,

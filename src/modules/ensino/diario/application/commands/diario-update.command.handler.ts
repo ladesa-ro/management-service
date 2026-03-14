@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { has } from "lodash";
-import { ensureExists, IAuthorizationService, type PersistInput } from "@/modules/@shared";
+import { ensureExists, type PersistInput } from "@/modules/@shared";
 import { Ambiente } from "@/modules/ambientes/ambiente/domain/ambiente.domain";
 import { IAmbienteFindOneQueryHandler } from "@/modules/ambientes/ambiente/domain/queries/ambiente-find-one.query.handler.interface";
 import {
@@ -15,6 +15,7 @@ import { ITurmaFindOneQueryHandler } from "@/modules/ensino/turma/domain/queries
 import { Turma } from "@/modules/ensino/turma/domain/turma.domain";
 import { CalendarioLetivo } from "@/modules/horarios/calendario-letivo/domain/calendario-letivo.domain";
 import { ICalendarioLetivoFindOneQueryHandler } from "@/modules/horarios/calendario-letivo/domain/queries/calendario-letivo-find-one.query.handler.interface";
+import { IDiarioPermissionChecker } from "../../domain/authorization";
 import { IDiarioRepository } from "../../domain/repositories";
 import type { DiarioFindOneOutputDto } from "../dtos";
 
@@ -23,8 +24,8 @@ export class DiarioUpdateCommandHandlerImpl implements IDiarioUpdateCommandHandl
   constructor(
     @Inject(IDiarioRepository)
     private readonly repository: IDiarioRepository,
-    @Inject(IAuthorizationService)
-    private readonly authorizationService: IAuthorizationService,
+    @Inject(IDiarioPermissionChecker)
+    private readonly permissionChecker: IDiarioPermissionChecker,
     @Inject(ICalendarioLetivoFindOneQueryHandler)
     private readonly calendarioLetivoFindOneHandler: ICalendarioLetivoFindOneQueryHandler,
     @Inject(ITurmaFindOneQueryHandler)
@@ -40,7 +41,7 @@ export class DiarioUpdateCommandHandlerImpl implements IDiarioUpdateCommandHandl
 
     ensureExists(current, Diario.entityName, dto.id);
 
-    await this.authorizationService.ensurePermission("diario:update", { dto }, dto.id);
+    await this.permissionChecker.ensureCanUpdate(accessContext, { dto }, dto.id);
 
     const domain = Diario.fromData(current);
     domain.atualizar({ ativo: dto.ativo });

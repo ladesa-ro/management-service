@@ -1,10 +1,11 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { ensureExists, IAuthorizationService } from "@/modules/@shared";
+import { ensureExists } from "@/modules/@shared";
 import { Bloco } from "@/modules/ambientes/bloco/domain/bloco.domain";
 import {
   type IBlocoUpdateCommand,
   IBlocoUpdateCommandHandler,
 } from "@/modules/ambientes/bloco/domain/commands/bloco-update.command.handler.interface";
+import { IBlocoPermissionChecker } from "../../domain/authorization";
 import { IBlocoRepository } from "../../domain/repositories";
 import type { BlocoFindOneOutputDto } from "../dtos";
 
@@ -13,8 +14,8 @@ export class BlocoUpdateCommandHandlerImpl implements IBlocoUpdateCommandHandler
   constructor(
     @Inject(IBlocoRepository)
     private readonly repository: IBlocoRepository,
-    @Inject(IAuthorizationService)
-    private readonly authorizationService: IAuthorizationService,
+    @Inject(IBlocoPermissionChecker)
+    private readonly permissionChecker: IBlocoPermissionChecker,
   ) {}
 
   async execute({ accessContext, dto }: IBlocoUpdateCommand): Promise<BlocoFindOneOutputDto> {
@@ -22,7 +23,7 @@ export class BlocoUpdateCommandHandlerImpl implements IBlocoUpdateCommandHandler
 
     ensureExists(current, Bloco.entityName, dto.id);
 
-    await this.authorizationService.ensurePermission("bloco:update", { dto }, dto.id);
+    await this.permissionChecker.ensureCanUpdate(accessContext, { dto }, dto.id);
 
     const domain = Bloco.fromData(current);
     domain.atualizar({ nome: dto.nome, codigo: dto.codigo });

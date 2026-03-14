@@ -1,5 +1,6 @@
 import { Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
+import { BlocoPermissionCheckerImpl } from "@/modules/ambientes/bloco/application/authorization";
 import {
   BlocoCreateCommandHandlerImpl,
   BlocoDeleteCommandHandlerImpl,
@@ -11,6 +12,7 @@ import {
   BlocoGetImagemCapaQueryHandlerImpl,
   BlocoListQueryHandlerImpl,
 } from "@/modules/ambientes/bloco/application/queries";
+import { IBlocoPermissionChecker } from "@/modules/ambientes/bloco/domain/authorization";
 import {
   IBlocoCreateCommandHandler,
   IBlocoDeleteCommandHandler,
@@ -44,6 +46,8 @@ import { ImagemModule } from "@/modules/armazenamento/imagem/imagem.module";
       provide: IBlocoRepository,
       useClass: BlocoTypeOrmRepositoryAdapter,
     },
+    // Authorization
+    { provide: IBlocoPermissionChecker, useClass: BlocoPermissionCheckerImpl },
     // Commands
     { provide: IBlocoCreateCommandHandler, useClass: BlocoCreateCommandHandlerImpl },
     { provide: IBlocoUpdateCommandHandler, useClass: BlocoUpdateCommandHandlerImpl },

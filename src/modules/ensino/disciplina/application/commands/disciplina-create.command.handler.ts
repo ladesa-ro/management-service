@@ -1,10 +1,11 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { ensureExists, IAuthorizationService } from "@/modules/@shared";
+import { ensureExists } from "@/modules/@shared";
 import {
   type IDisciplinaCreateCommand,
   IDisciplinaCreateCommandHandler,
 } from "@/modules/ensino/disciplina/domain/commands/disciplina-create.command.handler.interface";
 import { Disciplina } from "@/modules/ensino/disciplina/domain/disciplina.domain";
+import { IDisciplinaPermissionChecker } from "../../domain/authorization";
 import { IDisciplinaRepository } from "../../domain/repositories";
 import type { DisciplinaFindOneOutputDto } from "../dtos";
 
@@ -13,15 +14,15 @@ export class DisciplinaCreateCommandHandlerImpl implements IDisciplinaCreateComm
   constructor(
     @Inject(IDisciplinaRepository)
     private readonly repository: IDisciplinaRepository,
-    @Inject(IAuthorizationService)
-    private readonly authorizationService: IAuthorizationService,
+    @Inject(IDisciplinaPermissionChecker)
+    private readonly permissionChecker: IDisciplinaPermissionChecker,
   ) {}
 
   async execute({
     accessContext,
     dto,
   }: IDisciplinaCreateCommand): Promise<DisciplinaFindOneOutputDto> {
-    await this.authorizationService.ensurePermission("disciplina:create", { dto });
+    await this.permissionChecker.ensureCanCreate(accessContext, { dto });
 
     const domain = Disciplina.criar({
       nome: dto.nome,

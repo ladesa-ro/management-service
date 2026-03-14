@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { has } from "lodash";
-import { ensureExists, IAuthorizationService, type PersistInput } from "@/modules/@shared";
+import { ensureExists, type PersistInput } from "@/modules/@shared";
 import { Ambiente } from "@/modules/ambientes/ambiente/domain/ambiente.domain";
 import { IAmbienteFindOneQueryHandler } from "@/modules/ambientes/ambiente/domain/queries/ambiente-find-one.query.handler.interface";
 import { Curso } from "@/modules/ensino/curso/domain/curso.domain";
@@ -11,6 +11,7 @@ import {
 } from "@/modules/ensino/turma/domain/commands/turma-update.command.handler.interface";
 import { Turma } from "@/modules/ensino/turma/domain/turma.domain";
 import type { ITurma } from "@/modules/ensino/turma/domain/turma.types";
+import { ITurmaPermissionChecker } from "../../domain/authorization";
 import { ITurmaRepository } from "../../domain/repositories";
 import type { TurmaFindOneOutputDto } from "../dtos";
 
@@ -19,8 +20,8 @@ export class TurmaUpdateCommandHandlerImpl implements ITurmaUpdateCommandHandler
   constructor(
     @Inject(ITurmaRepository)
     private readonly repository: ITurmaRepository,
-    @Inject(IAuthorizationService)
-    private readonly authorizationService: IAuthorizationService,
+    @Inject(ITurmaPermissionChecker)
+    private readonly permissionChecker: ITurmaPermissionChecker,
     @Inject(IAmbienteFindOneQueryHandler)
     private readonly ambienteFindOneHandler: IAmbienteFindOneQueryHandler,
     @Inject(ICursoFindOneQueryHandler)
@@ -32,7 +33,7 @@ export class TurmaUpdateCommandHandlerImpl implements ITurmaUpdateCommandHandler
 
     ensureExists(current, Turma.entityName, dto.id);
 
-    await this.authorizationService.ensurePermission("turma:update", { dto }, dto.id);
+    await this.permissionChecker.ensureCanUpdate(accessContext, { dto }, dto.id);
 
     const domain = Turma.fromData(current);
     domain.atualizar({ periodo: dto.periodo });

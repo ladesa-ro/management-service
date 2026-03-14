@@ -2,6 +2,7 @@ import { Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import { ArquivoModule } from "@/modules/armazenamento/arquivo/arquivo.module";
 import { ImagemModule } from "@/modules/armazenamento/imagem/imagem.module";
+import { DisciplinaPermissionCheckerImpl } from "@/modules/ensino/disciplina/application/authorization";
 import {
   DisciplinaCreateCommandHandlerImpl,
   DisciplinaDeleteCommandHandlerImpl,
@@ -13,6 +14,7 @@ import {
   DisciplinaGetImagemCapaQueryHandlerImpl,
   DisciplinaListQueryHandlerImpl,
 } from "@/modules/ensino/disciplina/application/queries";
+import { IDisciplinaPermissionChecker } from "@/modules/ensino/disciplina/domain/authorization";
 import {
   IDisciplinaCreateCommandHandler,
   IDisciplinaDeleteCommandHandler,
@@ -43,6 +45,7 @@ import { DisciplinaRestController } from "@/modules/ensino/disciplina/presentati
       provide: IDisciplinaRepository,
       useClass: DisciplinaTypeOrmRepositoryAdapter,
     },
+    { provide: IDisciplinaPermissionChecker, useClass: DisciplinaPermissionCheckerImpl },
 
     // Commands
     { provide: IDisciplinaCreateCommandHandler, useClass: DisciplinaCreateCommandHandlerImpl },

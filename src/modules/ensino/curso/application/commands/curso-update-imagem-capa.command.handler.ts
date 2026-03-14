@@ -1,5 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { ensureExists, IAuthorizationService, saveEntityImagemField } from "@/modules/@shared";
+import { ensureExists, saveEntityImagemField } from "@/modules/@shared";
 import {
   IImagemSaveImagemCapaCommandHandler,
   type IImagemSaveImagemCapaCommandHandler as IImagemSaveImagemCapaCommandHandlerType,
@@ -9,6 +9,7 @@ import {
   ICursoUpdateImagemCapaCommandHandler,
 } from "@/modules/ensino/curso/domain/commands/curso-update-imagem-capa.command.handler.interface";
 import { Curso } from "@/modules/ensino/curso/domain/curso.domain";
+import { ICursoPermissionChecker } from "../../domain/authorization";
 import { ICursoRepository } from "../../domain/repositories";
 
 @Injectable()
@@ -18,8 +19,8 @@ export class CursoUpdateImagemCapaCommandHandlerImpl
   constructor(
     @Inject(ICursoRepository)
     private readonly repository: ICursoRepository,
-    @Inject(IAuthorizationService)
-    private readonly authorizationService: IAuthorizationService,
+    @Inject(ICursoPermissionChecker)
+    private readonly permissionChecker: ICursoPermissionChecker,
     @Inject(IImagemSaveImagemCapaCommandHandler)
     private readonly saveImagemCapaHandler: IImagemSaveImagemCapaCommandHandlerType,
   ) {}
@@ -29,8 +30,8 @@ export class CursoUpdateImagemCapaCommandHandlerImpl
 
     ensureExists(current, Curso.entityName, dto.id);
 
-    await this.authorizationService.ensurePermission(
-      "curso:update",
+    await this.permissionChecker.ensureCanUpdate(
+      accessContext,
       { dto: { id: current.id } },
       current.id,
     );

@@ -1,10 +1,11 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { ensureExists, IAuthorizationService } from "@/modules/@shared";
+import { ensureExists } from "@/modules/@shared";
 import { Ambiente } from "@/modules/ambientes/ambiente/domain/ambiente.domain";
 import {
   type IAmbienteDeleteCommand,
   IAmbienteDeleteCommandHandler,
 } from "@/modules/ambientes/ambiente/domain/commands/ambiente-delete.command.handler.interface";
+import { IAmbientePermissionChecker } from "../../domain/authorization";
 import { IAmbienteRepository } from "../../domain/repositories";
 
 @Injectable()
@@ -12,12 +13,12 @@ export class AmbienteDeleteCommandHandlerImpl implements IAmbienteDeleteCommandH
   constructor(
     @Inject(IAmbienteRepository)
     private readonly repository: IAmbienteRepository,
-    @Inject(IAuthorizationService)
-    private readonly authorizationService: IAuthorizationService,
+    @Inject(IAmbientePermissionChecker)
+    private readonly permissionChecker: IAmbientePermissionChecker,
   ) {}
 
   async execute({ accessContext, dto }: IAmbienteDeleteCommand): Promise<boolean> {
-    await this.authorizationService.ensurePermission("ambiente:delete", { dto }, dto.id);
+    await this.permissionChecker.ensureCanDelete(accessContext, { dto }, dto.id);
 
     const entity = await this.repository.findById(accessContext, dto);
 

@@ -1,5 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { ensureExists, IAuthorizationService } from "@/modules/@shared";
+import { ensureExists } from "@/modules/@shared";
 import { Modalidade } from "@/modules/ensino/modalidade/domain/modalidade.domain";
 import { IModalidadeFindOneQueryHandler } from "@/modules/ensino/modalidade/domain/queries/modalidade-find-one.query.handler.interface";
 import {
@@ -7,6 +7,7 @@ import {
   IOfertaFormacaoCreateCommandHandler,
 } from "@/modules/ensino/oferta-formacao/domain/commands/oferta-formacao-create.command.handler.interface";
 import { OfertaFormacao } from "@/modules/ensino/oferta-formacao/domain/oferta-formacao.domain";
+import { IOfertaFormacaoPermissionChecker } from "../../domain/authorization";
 import { IOfertaFormacaoRepository } from "../../domain/repositories";
 import type { OfertaFormacaoFindOneOutputDto } from "../dtos";
 
@@ -15,8 +16,8 @@ export class OfertaFormacaoCreateCommandHandlerImpl implements IOfertaFormacaoCr
   constructor(
     @Inject(IOfertaFormacaoRepository)
     private readonly repository: IOfertaFormacaoRepository,
-    @Inject(IAuthorizationService)
-    private readonly authorizationService: IAuthorizationService,
+    @Inject(IOfertaFormacaoPermissionChecker)
+    private readonly permissionChecker: IOfertaFormacaoPermissionChecker,
     @Inject(IModalidadeFindOneQueryHandler)
     private readonly modalidadeFindOneHandler: IModalidadeFindOneQueryHandler,
   ) {}
@@ -25,7 +26,7 @@ export class OfertaFormacaoCreateCommandHandlerImpl implements IOfertaFormacaoCr
     accessContext,
     dto,
   }: IOfertaFormacaoCreateCommand): Promise<OfertaFormacaoFindOneOutputDto> {
-    await this.authorizationService.ensurePermission("oferta_formacao:create", { dto });
+    await this.permissionChecker.ensureCanCreate(accessContext, { dto });
 
     let modalidadeRef: { id: string } | undefined;
     if (dto.modalidade) {

@@ -1,5 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { ensureExists, IAuthorizationService, saveEntityImagemField } from "@/modules/@shared";
+import { ensureExists, saveEntityImagemField } from "@/modules/@shared";
 import {
   IImagemSaveImagemCapaCommandHandler,
   type IImagemSaveImagemCapaCommandHandler as IImagemSaveImagemCapaCommandHandlerType,
@@ -9,6 +9,7 @@ import {
   IDisciplinaUpdateImagemCapaCommandHandler,
 } from "@/modules/ensino/disciplina/domain/commands/disciplina-update-imagem-capa.command.handler.interface";
 import { Disciplina } from "@/modules/ensino/disciplina/domain/disciplina.domain";
+import { IDisciplinaPermissionChecker } from "../../domain/authorization";
 import { IDisciplinaRepository } from "../../domain/repositories";
 
 @Injectable()
@@ -18,8 +19,8 @@ export class DisciplinaUpdateImagemCapaCommandHandlerImpl
   constructor(
     @Inject(IDisciplinaRepository)
     private readonly repository: IDisciplinaRepository,
-    @Inject(IAuthorizationService)
-    private readonly authorizationService: IAuthorizationService,
+    @Inject(IDisciplinaPermissionChecker)
+    private readonly permissionChecker: IDisciplinaPermissionChecker,
     @Inject(IImagemSaveImagemCapaCommandHandler)
     private readonly saveImagemCapaHandler: IImagemSaveImagemCapaCommandHandlerType,
   ) {}
@@ -33,8 +34,8 @@ export class DisciplinaUpdateImagemCapaCommandHandlerImpl
 
     ensureExists(current, Disciplina.entityName, dto.id);
 
-    await this.authorizationService.ensurePermission(
-      "disciplina:update",
+    await this.permissionChecker.ensureCanUpdate(
+      accessContext,
       { dto: { id: current.id } },
       current.id,
     );

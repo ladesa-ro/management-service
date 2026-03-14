@@ -1,10 +1,11 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { ensureExists, IAuthorizationService } from "@/modules/@shared";
+import { ensureExists } from "@/modules/@shared";
 import {
   type IModalidadeDeleteCommand,
   IModalidadeDeleteCommandHandler,
 } from "@/modules/ensino/modalidade/domain/commands/modalidade-delete.command.handler.interface";
 import { Modalidade } from "@/modules/ensino/modalidade/domain/modalidade.domain";
+import { IModalidadePermissionChecker } from "../../domain/authorization";
 import { IModalidadeRepository } from "../../domain/repositories";
 
 @Injectable()
@@ -12,12 +13,12 @@ export class ModalidadeDeleteCommandHandlerImpl implements IModalidadeDeleteComm
   constructor(
     @Inject(IModalidadeRepository)
     private readonly repository: IModalidadeRepository,
-    @Inject(IAuthorizationService)
-    private readonly authorizationService: IAuthorizationService,
+    @Inject(IModalidadePermissionChecker)
+    private readonly permissionChecker: IModalidadePermissionChecker,
   ) {}
 
   async execute({ accessContext, dto }: IModalidadeDeleteCommand): Promise<boolean> {
-    await this.authorizationService.ensurePermission("modalidade:delete", { dto }, dto.id);
+    await this.permissionChecker.ensureCanDelete(accessContext, { dto }, dto.id);
 
     const entity = await this.repository.findById(accessContext, dto);
 
