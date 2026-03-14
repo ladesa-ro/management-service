@@ -29,7 +29,6 @@ export class EnderecoTypeOrmRepositoryAdapter
   implements IEnderecoRepository
 {
   protected readonly alias = "endereco";
-  protected readonly authzAction = "endereco:find";
   protected readonly outputDtoName = "EnderecoFindOneOutputDto";
 
   constructor(

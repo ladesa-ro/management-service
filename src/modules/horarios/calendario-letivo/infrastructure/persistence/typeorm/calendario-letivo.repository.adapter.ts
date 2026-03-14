@@ -30,7 +30,6 @@ export class CalendarioLetivoTypeOrmRepositoryAdapter
   implements ICalendarioLetivoRepository
 {
   protected readonly alias = "calendario_letivo";
-  protected readonly authzAction = "calendario_letivo:find";
   protected readonly outputDtoName = "CalendarioLetivoFindOneOutputDto";
 
   constructor(

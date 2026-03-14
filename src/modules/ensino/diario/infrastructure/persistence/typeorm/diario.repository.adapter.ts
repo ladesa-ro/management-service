@@ -30,7 +30,6 @@ export class DiarioTypeOrmRepositoryAdapter
   implements IDiarioRepository
 {
   protected readonly alias = "diario";
-  protected readonly authzAction = "diario:find";
   protected readonly outputDtoName = "DiarioFindOneOutputDto";
 
   constructor(

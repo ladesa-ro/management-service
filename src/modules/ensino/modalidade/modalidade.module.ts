@@ -21,10 +21,7 @@ import {
   IModalidadeListQueryHandler,
 } from "@/modules/ensino/modalidade/domain/queries";
 import { IModalidadeRepository } from "@/modules/ensino/modalidade/domain/repositories";
-import {
-  ModalidadeAuthzRegistrySetup,
-  ModalidadeTypeOrmRepositoryAdapter,
-} from "@/modules/ensino/modalidade/infrastructure";
+import { ModalidadeTypeOrmRepositoryAdapter } from "@/modules/ensino/modalidade/infrastructure";
 import { ModalidadeGraphqlResolver } from "@/modules/ensino/modalidade/presentation/graphql/modalidade.graphql.resolver";
 import { ModalidadeRestController } from "@/modules/ensino/modalidade/presentation/rest/modalidade.rest.controller";
 
@@ -34,7 +31,6 @@ import { ModalidadeRestController } from "@/modules/ensino/modalidade/presentati
   providers: [
     NestJsPaginateAdapter,
     ModalidadeGraphqlResolver,
-    ModalidadeAuthzRegistrySetup,
     {
       provide: IModalidadeRepository,
       useClass: ModalidadeTypeOrmRepositoryAdapter,

@@ -21,7 +21,6 @@ import {
   INivelFormacaoListQueryHandler,
 } from "@/modules/ensino/nivel-formacao/domain/queries";
 import { INivelFormacaoRepository } from "@/modules/ensino/nivel-formacao/domain/repositories";
-import { NivelFormacaoAuthzRegistrySetup } from "@/modules/ensino/nivel-formacao/infrastructure";
 import { NivelFormacaoTypeOrmRepositoryAdapter } from "@/modules/ensino/nivel-formacao/infrastructure/persistence/typeorm";
 import { NivelFormacaoGraphqlResolver } from "@/modules/ensino/nivel-formacao/presentation/graphql/nivel-formacao.graphql.resolver";
 import { NivelFormacaoRestController } from "@/modules/ensino/nivel-formacao/presentation/rest/nivel-formacao.rest.controller";
@@ -31,7 +30,6 @@ import { NivelFormacaoRestController } from "@/modules/ensino/nivel-formacao/pre
   controllers: [NivelFormacaoRestController],
   providers: [
     NestJsPaginateAdapter,
-    NivelFormacaoAuthzRegistrySetup,
     { provide: INivelFormacaoPermissionChecker, useClass: NivelFormacaoPermissionCheckerImpl },
     NivelFormacaoGraphqlResolver,
     {

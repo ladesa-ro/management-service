@@ -33,7 +33,6 @@ export class UsuarioTypeOrmRepositoryAdapter
   implements IUsuarioRepository
 {
   protected readonly alias = "usuario";
-  protected readonly authzAction = "usuario:find";
   protected readonly outputDtoName = "UsuarioFindOneOutputDto";
 
   constructor(

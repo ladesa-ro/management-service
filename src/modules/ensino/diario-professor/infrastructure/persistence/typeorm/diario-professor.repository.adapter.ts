@@ -30,7 +30,6 @@ export class DiarioProfessorTypeOrmRepositoryAdapter
   implements IDiarioProfessorRepository
 {
   protected readonly alias = "diario_professor";
-  protected readonly authzAction = "diario_professor:find";
   protected readonly outputDtoName = "DiarioProfessorFindOneOutputDto";
 
   constructor(

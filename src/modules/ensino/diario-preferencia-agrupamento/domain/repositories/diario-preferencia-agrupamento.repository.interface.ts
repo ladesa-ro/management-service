@@ -36,8 +36,6 @@ export interface IDiarioPreferenciaAgrupamentoRepository
 
   /**
    * Cria um QueryBuilder para a entidade.
-   * Usado para verificações de permissão com accessContext.ensurePermission.
-   * @deprecated Deve ser removido em fases futuras quando a autorização for movida para o adapter
    */
   createQueryBuilder(alias: string): SelectQueryBuilder<DiarioPreferenciaAgrupamentoEntity>;
 }

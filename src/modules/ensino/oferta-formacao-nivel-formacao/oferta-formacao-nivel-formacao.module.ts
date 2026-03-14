@@ -23,7 +23,6 @@ import {
   IOfertaFormacaoNivelFormacaoFindOneQueryHandler,
   IOfertaFormacaoNivelFormacaoListQueryHandler,
 } from "@/modules/ensino/oferta-formacao-nivel-formacao/domain/queries";
-import { OfertaFormacaoNivelFormacaoAuthzRegistrySetup } from "@/modules/ensino/oferta-formacao-nivel-formacao/infrastructure";
 import { OfertaFormacaoNivelFormacaoTypeOrmRepositoryAdapter } from "@/modules/ensino/oferta-formacao-nivel-formacao/infrastructure/persistence/typeorm";
 import { OfertaFormacaoNivelFormacaoGraphqlResolver } from "@/modules/ensino/oferta-formacao-nivel-formacao/presentation/graphql/oferta-formacao-nivel-formacao.graphql.resolver";
 import { OfertaFormacaoNivelFormacaoRestController } from "@/modules/ensino/oferta-formacao-nivel-formacao/presentation/rest/oferta-formacao-nivel-formacao.rest.controller";
@@ -33,7 +32,6 @@ import { OfertaFormacaoNivelFormacaoRestController } from "@/modules/ensino/ofer
   controllers: [OfertaFormacaoNivelFormacaoRestController],
   providers: [
     NestJsPaginateAdapter,
-    OfertaFormacaoNivelFormacaoAuthzRegistrySetup,
     {
       provide: IOfertaFormacaoNivelFormacaoPermissionChecker,
       useClass: OfertaFormacaoNivelFormacaoPermissionCheckerImpl,

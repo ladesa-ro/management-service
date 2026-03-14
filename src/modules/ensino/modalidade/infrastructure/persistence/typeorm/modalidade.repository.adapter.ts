@@ -33,7 +33,6 @@ export class ModalidadeTypeOrmRepositoryAdapter
   implements IModalidadeRepository
 {
   protected readonly alias = "modalidade";
-  protected readonly authzAction = "modalidade:find";
   protected readonly outputDtoName = "ModalidadeFindOneOutputDto";
 
   constructor(

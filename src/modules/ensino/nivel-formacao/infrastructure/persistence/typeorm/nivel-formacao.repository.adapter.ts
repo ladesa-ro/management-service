@@ -29,7 +29,6 @@ export class NivelFormacaoTypeOrmRepositoryAdapter
   implements INivelFormacaoRepository
 {
   protected readonly alias = "nivel_formacao";
-  protected readonly authzAction = "nivel_formacao:find";
   protected readonly outputDtoName = "NivelFormacaoFindOneOutputDto";
 
   constructor(

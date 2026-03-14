@@ -12,7 +12,6 @@ export const ConfigTokens = {
     GitCommitHash: Symbol("RuntimeOptions.GitCommitHash"),
     SwaggerServers: Symbol("RuntimeOptions.SwaggerServers"),
     StoragePath: Symbol("RuntimeOptions.StoragePath"),
-    EnablePermissionCheck: Symbol("RuntimeOptions.EnablePermissionCheck"),
     ApiVersion: Symbol("RuntimeOptions.ApiVersion"),
   },
   AuthOptions: {

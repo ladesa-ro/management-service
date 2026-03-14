@@ -9,10 +9,7 @@ import {
   ICidadeListQueryHandler,
 } from "@/modules/localidades/cidade/domain/queries";
 import { ICidadeRepository } from "@/modules/localidades/cidade/domain/repositories";
-import {
-  CidadeAuthzRegistrySetup,
-  CidadeTypeOrmRepositoryAdapter,
-} from "@/modules/localidades/cidade/infrastructure";
+import { CidadeTypeOrmRepositoryAdapter } from "@/modules/localidades/cidade/infrastructure";
 import { CidadeGraphqlResolver } from "@/modules/localidades/cidade/presentation/graphql/cidade.graphql.resolver";
 import { CidadeRestController } from "@/modules/localidades/cidade/presentation/rest/cidade.rest.controller";
 
@@ -22,7 +19,6 @@ import { CidadeRestController } from "@/modules/localidades/cidade/presentation/
   providers: [
     NestJsPaginateAdapter,
     CidadeGraphqlResolver,
-    CidadeAuthzRegistrySetup,
     {
       provide: ICidadeRepository,
       useClass: CidadeTypeOrmRepositoryAdapter,

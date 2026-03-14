@@ -23,7 +23,6 @@ import {
   IDiarioProfessorListQueryHandler,
 } from "@/modules/ensino/diario-professor/domain/queries";
 import { IDiarioProfessorRepository } from "@/modules/ensino/diario-professor/domain/repositories";
-import { DiarioProfessorAuthzRegistrySetup } from "@/modules/ensino/diario-professor/infrastructure";
 import { DiarioProfessorTypeOrmRepositoryAdapter } from "@/modules/ensino/diario-professor/infrastructure/persistence/typeorm";
 import { DiarioProfessorGraphqlResolver } from "@/modules/ensino/diario-professor/presentation/graphql/diario-professor.graphql.resolver";
 import { DiarioProfessorController } from "@/modules/ensino/diario-professor/presentation/rest";
@@ -38,7 +37,6 @@ import { DiarioProfessorController } from "@/modules/ensino/diario-professor/pre
       useClass: DiarioProfessorTypeOrmRepositoryAdapter,
     },
     DiarioProfessorGraphqlResolver,
-    DiarioProfessorAuthzRegistrySetup,
     { provide: IDiarioProfessorPermissionChecker, useClass: DiarioProfessorPermissionCheckerImpl },
 
     // Commands

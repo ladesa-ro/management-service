@@ -23,7 +23,6 @@ import {
   ICalendarioLetivoFindOneQueryHandler,
   ICalendarioLetivoListQueryHandler,
 } from "@/modules/horarios/calendario-letivo/domain/queries";
-import { CalendarioLetivoAuthzRegistrySetup } from "@/modules/horarios/calendario-letivo/infrastructure";
 import { CalendarioLetivoTypeOrmRepositoryAdapter } from "@/modules/horarios/calendario-letivo/infrastructure/persistence/typeorm";
 import { CalendarioLetivoGraphqlResolver } from "@/modules/horarios/calendario-letivo/presentation/graphql/calendario-letivo.graphql.resolver";
 import { CalendarioLetivoRestController } from "@/modules/horarios/calendario-letivo/presentation/rest/calendario-letivo.rest.controller";
@@ -34,7 +33,6 @@ import { CalendarioLetivoRestController } from "@/modules/horarios/calendario-le
   providers: [
     NestJsPaginateAdapter,
     CalendarioLetivoGraphqlResolver,
-    CalendarioLetivoAuthzRegistrySetup,
     {
       provide: ICalendarioLetivoPermissionChecker,
       useClass: CalendarioLetivoPermissionCheckerImpl,

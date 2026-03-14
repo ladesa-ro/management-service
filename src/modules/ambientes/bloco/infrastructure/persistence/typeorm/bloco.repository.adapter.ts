@@ -34,7 +34,6 @@ export class BlocoTypeOrmRepositoryAdapter
   implements IBlocoRepository
 {
   protected readonly alias = "bloco";
-  protected readonly authzAction = "bloco:find";
   protected readonly outputDtoName = "BlocoFindOneOutputDto";
 
   constructor(

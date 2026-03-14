@@ -25,10 +25,7 @@ import {
   IBlocoListQueryHandler,
 } from "@/modules/ambientes/bloco/domain/queries";
 import { IBlocoRepository } from "@/modules/ambientes/bloco/domain/repositories";
-import {
-  BlocoAuthzRegistrySetup,
-  BlocoTypeOrmRepositoryAdapter,
-} from "@/modules/ambientes/bloco/infrastructure";
+import { BlocoTypeOrmRepositoryAdapter } from "@/modules/ambientes/bloco/infrastructure";
 import { BlocoGraphqlResolver } from "@/modules/ambientes/bloco/presentation/graphql/bloco.graphql.resolver";
 import { BlocoRestController } from "@/modules/ambientes/bloco/presentation/rest/bloco.rest.controller";
 import { CampusModule } from "@/modules/ambientes/campus/campus.module";
@@ -41,7 +38,6 @@ import { ImagemModule } from "@/modules/armazenamento/imagem/imagem.module";
   providers: [
     NestJsPaginateAdapter,
     BlocoGraphqlResolver,
-    BlocoAuthzRegistrySetup,
     {
       provide: IBlocoRepository,
       useClass: BlocoTypeOrmRepositoryAdapter,

@@ -33,7 +33,6 @@ export class AmbienteTypeOrmRepositoryAdapter
   implements IAmbienteRepository
 {
   protected readonly alias = "ambiente";
-  protected readonly authzAction = "ambiente:find";
   protected readonly outputDtoName = "AmbienteFindOneOutputDto";
 
   constructor(

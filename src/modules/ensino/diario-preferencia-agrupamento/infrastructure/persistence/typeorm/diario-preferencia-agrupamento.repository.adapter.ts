@@ -35,7 +35,6 @@ export class DiarioPreferenciaAgrupamentoTypeOrmRepositoryAdapter
   implements IDiarioPreferenciaAgrupamentoRepository
 {
   protected readonly alias = "diario_preferencia_agrupamento";
-  protected readonly authzAction = "diario_preferencia_agrupamento:find";
   protected readonly outputDtoName = "DiarioPreferenciaAgrupamentoFindOneOutputDto";
 
   constructor(

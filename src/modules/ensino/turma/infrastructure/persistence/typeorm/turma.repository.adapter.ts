@@ -30,7 +30,6 @@ export class TurmaTypeOrmRepositoryAdapter
   implements ITurmaRepository
 {
   protected readonly alias = "turma";
-  protected readonly authzAction = "turma:find";
   protected readonly outputDtoName = "TurmaFindOneOutputDto";
 
   constructor(

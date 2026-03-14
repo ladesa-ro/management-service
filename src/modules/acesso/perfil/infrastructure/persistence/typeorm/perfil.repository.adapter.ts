@@ -2,7 +2,6 @@ import { FilterOperator } from "nestjs-paginate";
 import type { DeepPartial } from "typeorm";
 import { DataSource } from "typeorm";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import type { IPaginationCriteria, IPaginationResult } from "@/modules/@shared";
 import {
   APP_DATA_SOURCE_TOKEN,
@@ -35,7 +34,6 @@ export class PerfilTypeOrmRepositoryAdapter
   implements IPerfilRepository
 {
   protected readonly alias = "vinculo";
-  protected readonly authzAction = "vinculo:find";
   protected readonly outputDtoName = "PerfilFindOneOutputDto";
 
   constructor(
@@ -50,7 +48,7 @@ export class PerfilTypeOrmRepositoryAdapter
   }
 
   async findAllActiveByUsuarioId(
-    accessContext: AccessContext | null,
+    _accessContext: unknown,
     usuarioId: UsuarioEntity["id"],
   ): Promise<PerfilFindOneOutputDto[]> {
     const qb = this.repository.createQueryBuilder(this.alias);
@@ -59,8 +57,8 @@ export class PerfilTypeOrmRepositoryAdapter
     qb.where("usuario.id = :usuarioId", { usuarioId });
     qb.andWhere(`${this.alias}.ativo = :ativo`, { ativo: true });
 
-    if (accessContext) {
-      await accessContext.applyFilter(this.authzAction, qb, this.alias, null);
+    if (this.hasSoftDelete) {
+      qb.andWhere(`${this.alias}.dateDeleted IS NULL`);
     }
 
     QbEfficientLoad(this.outputDtoName, qb, this.alias);
@@ -73,7 +71,7 @@ export class PerfilTypeOrmRepositoryAdapter
   // Métodos específicos do Perfil que não estão na classe base
 
   async findPaginated(
-    accessContext: AccessContext,
+    _accessContext: unknown,
     criteria: IPaginationCriteria | null,
     config: ITypeOrmPaginationConfig<PerfilFindOneOutputDto>,
     selection?: string[] | boolean,
@@ -82,7 +80,9 @@ export class PerfilTypeOrmRepositoryAdapter
 
     QbEfficientLoad(this.outputDtoName, qb, this.alias, selection);
 
-    await accessContext.applyFilter(this.authzAction, qb, this.alias, null);
+    if (this.hasSoftDelete) {
+      qb.andWhere(`${this.alias}.dateDeleted IS NULL`);
+    }
 
     return this.paginationAdapter.paginate(qb, criteria, config) as unknown as Promise<
       IPaginationResult<PerfilFindOneOutputDto>

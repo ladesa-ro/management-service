@@ -34,7 +34,7 @@ export class EstadoTypeOrmRepositoryAdapter
   implements IEstadoRepository
 {
   protected readonly alias = "estado";
-  protected readonly authzAction = "estado:find";
+  protected readonly hasSoftDelete = false;
   protected readonly outputDtoName = "EstadoFindOneOutputDto";
 
   constructor(

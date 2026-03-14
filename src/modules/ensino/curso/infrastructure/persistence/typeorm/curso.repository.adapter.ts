@@ -30,7 +30,6 @@ export class CursoTypeOrmRepositoryAdapter
   implements ICursoRepository
 {
   protected readonly alias = "curso";
-  protected readonly authzAction = "curso:find";
   protected readonly outputDtoName = "CursoFindOneOutputDto";
 
   constructor(

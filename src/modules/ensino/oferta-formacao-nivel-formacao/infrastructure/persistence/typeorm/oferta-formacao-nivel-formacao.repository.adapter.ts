@@ -30,7 +30,6 @@ export class OfertaFormacaoNivelFormacaoTypeOrmRepositoryAdapter
   implements IOfertaFormacaoNivelFormacaoRepository
 {
   protected readonly alias = "oferta_formacao_nivel_formacao";
-  protected readonly authzAction = "oferta_formacao_nivel_formacao:find";
   protected readonly outputDtoName = "OfertaFormacaoNivelFormacaoFindOneOutputDto";
 
   constructor(

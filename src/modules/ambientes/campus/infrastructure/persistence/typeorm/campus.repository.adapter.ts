@@ -30,7 +30,6 @@ export class CampusTypeOrmRepositoryAdapter
   implements ICampusRepository
 {
   protected readonly alias = "campus";
-  protected readonly authzAction = "campus:find";
   protected readonly outputDtoName = "CampusFindOneOutputDto";
 
   constructor(

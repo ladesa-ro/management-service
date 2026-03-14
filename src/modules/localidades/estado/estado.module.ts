@@ -9,10 +9,7 @@ import {
   IEstadoListQueryHandler,
 } from "@/modules/localidades/estado/domain/queries";
 import { IEstadoRepository } from "@/modules/localidades/estado/domain/repositories";
-import {
-  EstadoAuthzRegistrySetup,
-  EstadoTypeOrmRepositoryAdapter,
-} from "@/modules/localidades/estado/infrastructure";
+import { EstadoTypeOrmRepositoryAdapter } from "@/modules/localidades/estado/infrastructure";
 import { EstadoGraphqlResolver } from "@/modules/localidades/estado/presentation/graphql/estado.graphql.resolver";
 import { EstadoRestController } from "@/modules/localidades/estado/presentation/rest/estado.rest.controller";
 
@@ -22,7 +19,6 @@ import { EstadoRestController } from "@/modules/localidades/estado/presentation/
   providers: [
     NestJsPaginateAdapter,
     EstadoGraphqlResolver,
-    EstadoAuthzRegistrySetup,
     {
       provide: IEstadoRepository,
       useClass: EstadoTypeOrmRepositoryAdapter,

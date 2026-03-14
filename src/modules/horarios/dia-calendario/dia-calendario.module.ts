@@ -22,7 +22,6 @@ import {
   IDiaCalendarioListQueryHandler,
 } from "@/modules/horarios/dia-calendario/domain/queries";
 import { IDiaCalendarioRepository } from "@/modules/horarios/dia-calendario/domain/repositories";
-import { DiaCalendarioAuthzRegistrySetup } from "@/modules/horarios/dia-calendario/infrastructure";
 import { DiaCalendarioTypeOrmRepositoryAdapter } from "@/modules/horarios/dia-calendario/infrastructure/persistence/typeorm";
 import { DiaCalendarioGraphqlResolver } from "@/modules/horarios/dia-calendario/presentation/graphql/dia-calendario.graphql.resolver";
 import { DiaCalendarioRestController } from "@/modules/horarios/dia-calendario/presentation/rest/dia-calendario.rest.controller";
@@ -36,7 +35,6 @@ import { DiaCalendarioRestController } from "@/modules/horarios/dia-calendario/p
       useClass: DiaCalendarioTypeOrmRepositoryAdapter,
     },
     DiaCalendarioGraphqlResolver,
-    DiaCalendarioAuthzRegistrySetup,
     {
       provide: IDiaCalendarioPermissionChecker,
       useClass: DiaCalendarioPermissionCheckerImpl,

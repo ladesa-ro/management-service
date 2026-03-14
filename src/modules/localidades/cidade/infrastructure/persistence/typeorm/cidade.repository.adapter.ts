@@ -35,7 +35,7 @@ export class CidadeTypeOrmRepositoryAdapter
   implements ICidadeRepository
 {
   protected readonly alias = "cidade";
-  protected readonly authzAction = "cidade:find";
+  protected readonly hasSoftDelete = false;
   protected readonly outputDtoName = "CidadeFindOneOutputDto";
 
   constructor(

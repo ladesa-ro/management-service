@@ -27,10 +27,7 @@ import {
   ICursoGetImagemCapaQueryHandler,
   ICursoListQueryHandler,
 } from "@/modules/ensino/curso/domain/queries";
-import {
-  CursoAuthzRegistrySetup,
-  CursoTypeOrmRepositoryAdapter,
-} from "@/modules/ensino/curso/infrastructure";
+import { CursoTypeOrmRepositoryAdapter } from "@/modules/ensino/curso/infrastructure";
 import { CursoGraphqlResolver } from "@/modules/ensino/curso/presentation/graphql/curso.graphql.resolver";
 import { CursoRestController } from "@/modules/ensino/curso/presentation/rest/curso.rest.controller";
 import { OfertaFormacaoModule } from "@/modules/ensino/oferta-formacao/oferta-formacao.module";
@@ -41,7 +38,6 @@ import { OfertaFormacaoModule } from "@/modules/ensino/oferta-formacao/oferta-fo
   providers: [
     NestJsPaginateAdapter,
     CursoGraphqlResolver,
-    CursoAuthzRegistrySetup,
     {
       provide: ICursoRepository,
       useClass: CursoTypeOrmRepositoryAdapter,

@@ -12,7 +12,6 @@ export const RuntimeOptionsProvider: Provider = {
     const nodeEnv = (configService.get<string>(ConfigTokens.RuntimeOptions.NodeEnv) ?? "production")
       .trim()
       .toLocaleLowerCase();
-    const isProduction = nodeEnv === "production";
 
     const rawPort = configService.get<number | string>(ConfigTokens.RuntimeOptions.Port) ?? null;
     let port = 3471;
@@ -46,9 +45,6 @@ export const RuntimeOptionsProvider: Provider = {
       throw new Error("Please provide env.STORAGE_PATH (e.g. /tmp/uploaded)");
     }
 
-    const envValue = configService.get<string>(ConfigTokens.RuntimeOptions.EnablePermissionCheck);
-    const permissionCheckEnabled = isProduction ? envValue !== "false" : envValue === "true";
-
     return {
       version: configService.get<string>(ConfigTokens.RuntimeOptions.ApiVersion) ?? pkg.version,
       port,
@@ -58,7 +54,6 @@ export const RuntimeOptionsProvider: Provider = {
       gitCommitHash,
       swaggerServers,
       storagePath,
-      permissionCheckEnabled,
     };
   },
   inject: [IConfigServiceToken],

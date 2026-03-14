@@ -22,7 +22,6 @@ import {
   IOfertaFormacaoFindOneQueryHandler,
   IOfertaFormacaoListQueryHandler,
 } from "@/modules/ensino/oferta-formacao/domain/queries";
-import { OfertaFormacaoAuthzRegistrySetup } from "@/modules/ensino/oferta-formacao/infrastructure";
 import { OfertaFormacaoTypeOrmRepositoryAdapter } from "@/modules/ensino/oferta-formacao/infrastructure/persistence/typeorm";
 import { OfertaFormacaoGraphqlResolver } from "@/modules/ensino/oferta-formacao/presentation/graphql/oferta-formacao.graphql.resolver";
 import { OfertaFormacaoRestController } from "@/modules/ensino/oferta-formacao/presentation/rest/oferta-formacao.rest.controller";
@@ -32,7 +31,6 @@ import { OfertaFormacaoRestController } from "@/modules/ensino/oferta-formacao/p
   controllers: [OfertaFormacaoRestController],
   providers: [
     NestJsPaginateAdapter,
-    OfertaFormacaoAuthzRegistrySetup,
     { provide: IOfertaFormacaoPermissionChecker, useClass: OfertaFormacaoPermissionCheckerImpl },
     OfertaFormacaoGraphqlResolver,
     {

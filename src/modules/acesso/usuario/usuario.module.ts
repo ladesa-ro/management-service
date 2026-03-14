@@ -36,10 +36,7 @@ import {
   IUsuarioListQueryHandler,
 } from "@/modules/acesso/usuario/domain/queries";
 import { IUsuarioRepository } from "@/modules/acesso/usuario/domain/repositories";
-import {
-  UsuarioAuthzRegistrySetup,
-  UsuarioTypeOrmRepositoryAdapter,
-} from "@/modules/acesso/usuario/infrastructure";
+import { UsuarioTypeOrmRepositoryAdapter } from "@/modules/acesso/usuario/infrastructure";
 import { UsuarioGraphqlResolver } from "@/modules/acesso/usuario/presentation/graphql/usuario.graphql.resolver";
 import { UsuarioRestController } from "@/modules/acesso/usuario/presentation/rest/usuario.rest.controller";
 import { ArquivoModule } from "@/modules/armazenamento/arquivo/arquivo.module";
@@ -51,7 +48,6 @@ import { ImagemModule } from "@/modules/armazenamento/imagem/imagem.module";
   providers: [
     NestJsPaginateAdapter,
     UsuarioGraphqlResolver,
-    UsuarioAuthzRegistrySetup,
     {
       provide: IUsuarioPermissionChecker,
       useClass: UsuarioPermissionCheckerImpl,

@@ -30,7 +30,6 @@ export class DisciplinaTypeOrmRepositoryAdapter
   implements IDisciplinaRepository
 {
   protected readonly alias = "disciplina";
-  protected readonly authzAction = "disciplina:find";
   protected readonly outputDtoName = "DisciplinaFindOneOutputDto";
 
   constructor(

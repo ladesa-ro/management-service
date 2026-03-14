@@ -19,7 +19,6 @@ const mockRuntimeOptions = {
   nodeEnv: "test",
   swaggerServers: null,
   storagePath: "/tmp/test",
-  permissionCheckEnabled: false,
 };
 
 /**

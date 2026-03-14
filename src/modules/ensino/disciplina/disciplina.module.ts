@@ -27,10 +27,7 @@ import {
   IDisciplinaListQueryHandler,
 } from "@/modules/ensino/disciplina/domain/queries";
 import { IDisciplinaRepository } from "@/modules/ensino/disciplina/domain/repositories";
-import {
-  DisciplinaAuthzRegistrySetup,
-  DisciplinaTypeOrmRepositoryAdapter,
-} from "@/modules/ensino/disciplina/infrastructure";
+import { DisciplinaTypeOrmRepositoryAdapter } from "@/modules/ensino/disciplina/infrastructure";
 import { DisciplinaGraphqlResolver } from "@/modules/ensino/disciplina/presentation/graphql/disciplina.graphql.resolver";
 import { DisciplinaRestController } from "@/modules/ensino/disciplina/presentation/rest/disciplina.rest.controller";
 
@@ -40,7 +37,6 @@ import { DisciplinaRestController } from "@/modules/ensino/disciplina/presentati
   providers: [
     NestJsPaginateAdapter,
     DisciplinaGraphqlResolver,
-    DisciplinaAuthzRegistrySetup,
     {
       provide: IDisciplinaRepository,
       useClass: DisciplinaTypeOrmRepositoryAdapter,

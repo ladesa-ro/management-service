@@ -30,7 +30,6 @@ export class OfertaFormacaoTypeOrmRepositoryAdapter
   implements IOfertaFormacaoRepository
 {
   protected readonly alias = "oferta_formacao";
-  protected readonly authzAction = "oferta_formacao:find";
   protected readonly outputDtoName = "OfertaFormacaoFindOneOutputDto";
 
   constructor(

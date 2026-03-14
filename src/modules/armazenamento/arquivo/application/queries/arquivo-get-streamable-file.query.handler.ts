@@ -2,7 +2,6 @@ import type { Readable } from "node:stream";
 import { ForbiddenException, ServiceUnavailableException, StreamableFile } from "@nestjs/common";
 import { IStorageService } from "@/domain/abstractions/storage";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists, isValidUuid } from "@/modules/@shared";
 import { UsuarioEntity } from "@/modules/acesso/usuario/infrastructure/persistence/typeorm";
 import type { ArquivoGetFileInputDto } from "@/modules/armazenamento/arquivo/application/dtos";
@@ -22,13 +21,12 @@ export class ArquivoGetStreamableFileQueryHandlerImpl
   ) {}
 
   async execute({
-    accessContext,
     input,
   }: {
-    accessContext: AccessContext | null;
+    accessContext?: unknown;
     input: ArquivoGetFileInputDto;
   }): Promise<StreamableFile> {
-    const file = await this.getFile(accessContext, input);
+    const file = await this.getFile(input);
 
     if (!file.stream) {
       throw new ServiceUnavailableException();
@@ -40,10 +38,7 @@ export class ArquivoGetStreamableFileQueryHandlerImpl
     });
   }
 
-  private async getFile(
-    accessContext: AccessContext | null,
-    input: ArquivoGetFileInputDto,
-  ): Promise<{
+  private async getFile(input: ArquivoGetFileInputDto): Promise<{
     id: string;
     nome: string | null;
     mimeType: string | null;
@@ -64,20 +59,14 @@ export class ArquivoGetStreamableFileQueryHandlerImpl
           .innerJoin("versao.imagem", "imagem")
           .innerJoin("imagem.blocoCapa", "blocoCapa");
 
-        if (accessContext) {
-          await accessContext.applyFilter("bloco:find", qb, "blocoCapa", null);
-        }
-
+        qb.andWhere("blocoCapa.dateDeleted IS NULL");
         qb.andWhere("blocoCapa.id = :blocoId", { blocoId: acesso.id });
       } else if (acesso.nome === "ambiente" && isValidUuid(acesso.id)) {
         qb.innerJoin("arquivo.versao", "versao")
           .innerJoin("versao.imagem", "imagem")
           .innerJoin("imagem.ambienteCapa", "ambienteCapa");
 
-        if (accessContext) {
-          await accessContext.applyFilter("ambiente:find", qb, "ambienteCapa", null);
-        }
-
+        qb.andWhere("ambienteCapa.dateDeleted IS NULL");
         qb.andWhere("ambienteCapa.id = :ambienteId", { ambienteId: acesso.id });
       } else if (acesso.nome === "usuario" && isValidUuid(acesso.id)) {
         qb.innerJoin("arquivo.versao", "versao")
@@ -88,10 +77,7 @@ export class ArquivoGetStreamableFileQueryHandlerImpl
             "(usuario.id_imagem_capa_fk = imagem.id OR usuario.id_imagem_perfil_fk = imagem.id)",
           );
 
-        if (accessContext) {
-          await accessContext.applyFilter("usuario:find", qb, "usuario", null);
-        }
-
+        qb.andWhere("usuario.dateDeleted IS NULL");
         qb.andWhere("usuario.id = :usuarioId", { usuarioId: acesso.id });
       } else {
         qb.andWhere("FALSE");

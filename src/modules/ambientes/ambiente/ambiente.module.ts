@@ -25,10 +25,7 @@ import {
   IAmbienteListQueryHandler,
 } from "@/modules/ambientes/ambiente/domain/queries";
 import { IAmbienteRepository } from "@/modules/ambientes/ambiente/domain/repositories";
-import {
-  AmbienteAuthzRegistrySetup,
-  AmbienteTypeOrmRepositoryAdapter,
-} from "@/modules/ambientes/ambiente/infrastructure";
+import { AmbienteTypeOrmRepositoryAdapter } from "@/modules/ambientes/ambiente/infrastructure";
 import { AmbienteGraphqlResolver } from "@/modules/ambientes/ambiente/presentation/graphql/ambiente.graphql.resolver";
 import { AmbienteRestController } from "@/modules/ambientes/ambiente/presentation/rest/ambiente.rest.controller";
 import { BlocoModule } from "@/modules/ambientes/bloco/bloco.module";
@@ -41,7 +38,6 @@ import { ImagemModule } from "@/modules/armazenamento/imagem/imagem.module";
   providers: [
     NestJsPaginateAdapter,
     AmbienteGraphqlResolver,
-    AmbienteAuthzRegistrySetup,
     { provide: IAmbienteRepository, useClass: AmbienteTypeOrmRepositoryAdapter },
     // Authorization
     { provide: IAmbientePermissionChecker, useClass: AmbientePermissionCheckerImpl },

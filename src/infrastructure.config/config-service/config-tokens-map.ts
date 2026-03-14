@@ -12,7 +12,6 @@ export const ConfigTokensMap = new Map<symbol, string>([
   [ConfigTokens.RuntimeOptions.GitCommitHash, EnvKeys.GIT_COMMIT_HASH],
   [ConfigTokens.RuntimeOptions.SwaggerServers, EnvKeys.SWAGGER_SERVERS],
   [ConfigTokens.RuntimeOptions.StoragePath, EnvKeys.STORAGE_PATH],
-  [ConfigTokens.RuntimeOptions.EnablePermissionCheck, EnvKeys.ENABLE_PERMISSION_CHECK],
   [ConfigTokens.RuntimeOptions.ApiVersion, EnvKeys.LADESA_API_VERSION],
   [ConfigTokens.AuthOptions.Oidc.Issuer, EnvKeys.OAUTH2_CLIENT_PROVIDER_OIDC_ISSUER],
   [ConfigTokens.AuthOptions.Oidc.ClientId, EnvKeys.OAUTH2_CLIENT_REGISTRATION_LOGIN_CLIENT_ID],

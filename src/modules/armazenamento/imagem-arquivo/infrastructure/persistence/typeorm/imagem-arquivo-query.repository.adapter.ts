@@ -34,7 +34,6 @@ export class ImagemArquivoQueryTypeOrmRepositoryAdapter
   implements IImagemArquivoQueryRepository
 {
   protected readonly alias = "imagem_arquivo";
-  protected readonly authzAction = "imagem_arquivo:find";
   protected readonly outputDtoName = "ImagemArquivoFindOneOutputDto";
 
   constructor(

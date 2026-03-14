@@ -22,7 +22,6 @@ import {
   IDiarioListQueryHandler,
 } from "@/modules/ensino/diario/domain/queries";
 import { IDiarioRepository } from "@/modules/ensino/diario/domain/repositories";
-import { DiarioAuthzRegistrySetup } from "@/modules/ensino/diario/infrastructure";
 import { DiarioTypeOrmRepositoryAdapter } from "@/modules/ensino/diario/infrastructure/persistence/typeorm";
 import { DiarioGraphqlResolver } from "@/modules/ensino/diario/presentation/graphql/diario.graphql.resolver";
 import { DiarioRestController } from "@/modules/ensino/diario/presentation/rest/diario.rest.controller";
@@ -39,7 +38,6 @@ import { CalendarioLetivoModule } from "@/modules/horarios/calendario-letivo/cal
   providers: [
     NestJsPaginateAdapter,
     DiarioGraphqlResolver,
-    DiarioAuthzRegistrySetup,
     { provide: IDiarioPermissionChecker, useClass: DiarioPermissionCheckerImpl },
     {
       provide: IDiarioRepository,

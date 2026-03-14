@@ -29,10 +29,7 @@ import {
   ITurmaListQueryHandler,
 } from "@/modules/ensino/turma/domain/queries";
 import { ITurmaRepository } from "@/modules/ensino/turma/domain/repositories";
-import {
-  TurmaAuthzRegistrySetup,
-  TurmaTypeOrmRepositoryAdapter,
-} from "@/modules/ensino/turma/infrastructure";
+import { TurmaTypeOrmRepositoryAdapter } from "@/modules/ensino/turma/infrastructure";
 import { TurmaGraphqlResolver } from "@/modules/ensino/turma/presentation/graphql/turma.graphql.resolver";
 import { TurmaRestController } from "@/modules/ensino/turma/presentation/rest/turma.rest.controller";
 
@@ -42,7 +39,6 @@ import { TurmaRestController } from "@/modules/ensino/turma/presentation/rest/tu
   providers: [
     NestJsPaginateAdapter,
     TurmaGraphqlResolver,
-    TurmaAuthzRegistrySetup,
     {
       provide: ITurmaRepository,
       useClass: TurmaTypeOrmRepositoryAdapter,

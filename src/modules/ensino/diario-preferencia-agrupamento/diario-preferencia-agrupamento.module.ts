@@ -22,7 +22,6 @@ import {
   IDiarioPreferenciaAgrupamentoFindOneQueryHandler,
   IDiarioPreferenciaAgrupamentoListQueryHandler,
 } from "@/modules/ensino/diario-preferencia-agrupamento/domain/queries";
-import { DiarioPreferenciaAgrupamentoAuthzRegistrySetup } from "@/modules/ensino/diario-preferencia-agrupamento/infrastructure";
 import { DiarioPreferenciaAgrupamentoTypeOrmRepositoryAdapter } from "@/modules/ensino/diario-preferencia-agrupamento/infrastructure/persistence/typeorm";
 import { DiarioPreferenciaAgrupamentoGraphqlResolver } from "@/modules/ensino/diario-preferencia-agrupamento/presentation/graphql/diario-preferencia-agrupamento.graphql.resolver";
 import { DiarioPreferenciaAgrupamentoController } from "@/modules/ensino/diario-preferencia-agrupamento/presentation/rest";
@@ -31,7 +30,6 @@ import { DiarioPreferenciaAgrupamentoController } from "@/modules/ensino/diario-
   providers: [
     NestJsPaginateAdapter,
     DiarioPreferenciaAgrupamentoGraphqlResolver,
-    DiarioPreferenciaAgrupamentoAuthzRegistrySetup,
     {
       provide: IDiarioPreferenciaAgrupamentoPermissionChecker,
       useClass: DiarioPreferenciaAgrupamentoPermissionCheckerImpl,

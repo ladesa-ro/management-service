@@ -30,7 +30,6 @@ export class DiaCalendarioTypeOrmRepositoryAdapter
   implements IDiaCalendarioRepository
 {
   protected readonly alias = "dia_calendario";
-  protected readonly authzAction = "dia_calendario:find";
   protected readonly outputDtoName = "DiaCalendarioFindOneOutputDto";
 
   constructor(
