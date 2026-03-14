@@ -8,4 +8,4 @@ export const createCidadeRepository = createRepositoryFactory((ds) => {
   return ds.getRepository(CidadeEntity).extend({});
 });
 
-export type ICidadeRepository = IRepositoryFactoryOutput<typeof createCidadeRepository>;
+export type CidadeTypeOrmRepository = IRepositoryFactoryOutput<typeof createCidadeRepository>;

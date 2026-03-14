@@ -24,7 +24,7 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
-import { ResourceNotFoundError } from "@/modules/@shared";
+import { ensureExists } from "@/modules/@shared";
 import { IBlocoCreateCommandHandler } from "@/modules/ambientes/bloco/domain/commands/bloco-create.command.handler.interface";
 import { IBlocoDeleteCommandHandler } from "@/modules/ambientes/bloco/domain/commands/bloco-delete.command.handler.interface";
 import { IBlocoUpdateCommandHandler } from "@/modules/ambientes/bloco/domain/commands/bloco-update.command.handler.interface";
@@ -81,9 +81,7 @@ export class BlocoRestController {
   ): Promise<BlocoFindOneOutputRestDto> {
     const input = BlocoRestMapper.toFindOneInput(params);
     const result = await this.findOneHandler.execute({ accessContext, dto: input });
-    if (!result) {
-      throw new ResourceNotFoundError("Bloco", input.id);
-    }
+    ensureExists(result, "Bloco", input.id);
     return BlocoRestMapper.toFindOneOutputDto(result);
   }
 

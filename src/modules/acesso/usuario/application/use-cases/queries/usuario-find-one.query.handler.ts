@@ -3,14 +3,14 @@ import {
   type IUsuarioFindOneQuery,
   IUsuarioFindOneQueryHandler,
 } from "@/modules/acesso/usuario/domain/queries/usuario-find-one.query.handler.interface";
-import { type IUsuarioRepositoryPort, USUARIO_REPOSITORY_PORT } from "../../../domain/repositories";
+import { IUsuarioRepository } from "../../../domain/repositories";
 import type { UsuarioFindOneOutputDto } from "../../dtos";
 
 @Injectable()
 export class UsuarioFindOneQueryHandlerImpl implements IUsuarioFindOneQueryHandler {
   constructor(
-    @Inject(USUARIO_REPOSITORY_PORT)
-    private readonly repository: IUsuarioRepositoryPort,
+    @Inject(IUsuarioRepository)
+    private readonly repository: IUsuarioRepository,
   ) {}
 
   async execute({

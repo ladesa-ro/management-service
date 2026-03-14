@@ -13,7 +13,7 @@ import type {
   CidadeFindOneOutputDto,
   CidadeListInputDto,
   CidadeListOutputDto,
-  ICidadeRepositoryPort,
+  ICidadeRepository,
 } from "@/modules/localidades/cidade";
 import type { CidadeEntity } from "./cidade.entity";
 import { createCidadeRepository } from "./cidade.repository";
@@ -32,7 +32,7 @@ export class CidadeTypeOrmRepositoryAdapter
     CidadeFindOneInputDto,
     CidadeFindOneOutputDto
   >
-  implements ICidadeRepositoryPort
+  implements ICidadeRepository
 {
   protected readonly alias = "cidade";
   protected readonly authzAction = "cidade:find";

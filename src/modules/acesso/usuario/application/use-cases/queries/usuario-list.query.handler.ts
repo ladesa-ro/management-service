@@ -3,14 +3,14 @@ import {
   type IUsuarioListQuery,
   IUsuarioListQueryHandler,
 } from "@/modules/acesso/usuario/domain/queries/usuario-list.query.handler.interface";
-import { type IUsuarioRepositoryPort, USUARIO_REPOSITORY_PORT } from "../../../domain/repositories";
+import { IUsuarioRepository } from "../../../domain/repositories";
 import type { UsuarioListOutputDto } from "../../dtos";
 
 @Injectable()
 export class UsuarioListQueryHandlerImpl implements IUsuarioListQueryHandler {
   constructor(
-    @Inject(USUARIO_REPOSITORY_PORT)
-    private readonly repository: IUsuarioRepositoryPort,
+    @Inject(IUsuarioRepository)
+    private readonly repository: IUsuarioRepository,
   ) {}
 
   async execute({

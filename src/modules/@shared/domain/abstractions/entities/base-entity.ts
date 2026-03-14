@@ -1,5 +1,5 @@
-import { EntityValidationError } from "./errors";
-import { createValidator, ValidationResult, ValidationRules } from "./validation";
+import { EntityValidationError } from "../../errors";
+import { createValidator, ValidationResult, ValidationRules } from "../../validation";
 
 /**
  * Classe base abstrata para todas as entidades de domínio.

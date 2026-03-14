@@ -24,7 +24,7 @@ import {
   IDisciplinaGetImagemCapaQueryHandler,
   IDisciplinaListQueryHandler,
 } from "@/modules/ensino/disciplina/domain/queries";
-import { DISCIPLINA_REPOSITORY_PORT } from "@/modules/ensino/disciplina/domain/repositories";
+import { IDisciplinaRepository } from "@/modules/ensino/disciplina/domain/repositories";
 import {
   DisciplinaAuthzRegistrySetup,
   DisciplinaTypeOrmRepositoryAdapter,
@@ -40,7 +40,7 @@ import { DisciplinaRestController } from "@/modules/ensino/disciplina/presentati
     DisciplinaGraphqlResolver,
     DisciplinaAuthzRegistrySetup,
     {
-      provide: DISCIPLINA_REPOSITORY_PORT,
+      provide: IDisciplinaRepository,
       useClass: DisciplinaTypeOrmRepositoryAdapter,
     },
 

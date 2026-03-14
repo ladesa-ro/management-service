@@ -1,8 +1,8 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { has } from "lodash";
 import {
-  AUTHORIZATION_SERVICE_PORT,
-  type IAuthorizationServicePort,
+  ensureExists,
+  IAuthorizationService,
   type PersistInput,
   ResourceNotFoundError,
 } from "@/modules/@shared";
@@ -13,10 +13,7 @@ import {
   IOfertaFormacaoNivelFormacaoUpdateCommandHandler,
 } from "@/modules/ensino/oferta-formacao-nivel-formacao/domain/commands/oferta-formacao-nivel-formacao-update.command.handler.interface";
 import type { IOfertaFormacaoNivelFormacao } from "@/modules/ensino/oferta-formacao-nivel-formacao/domain/oferta-formacao-nivel-formacao.types";
-import {
-  type IOfertaFormacaoNivelFormacaoRepositoryPort,
-  OFERTA_FORMACAO_NIVEL_FORMACAO_REPOSITORY_PORT,
-} from "../../../domain/repositories";
+import { IOfertaFormacaoNivelFormacaoRepository } from "../../../domain/repositories";
 import type { OfertaFormacaoNivelFormacaoFindOneOutputDto } from "../../dtos";
 
 @Injectable()
@@ -24,10 +21,10 @@ export class OfertaFormacaoNivelFormacaoUpdateCommandHandlerImpl
   implements IOfertaFormacaoNivelFormacaoUpdateCommandHandler
 {
   constructor(
-    @Inject(OFERTA_FORMACAO_NIVEL_FORMACAO_REPOSITORY_PORT)
-    private readonly repository: IOfertaFormacaoNivelFormacaoRepositoryPort,
-    @Inject(AUTHORIZATION_SERVICE_PORT)
-    private readonly authorizationService: IAuthorizationServicePort,
+    @Inject(IOfertaFormacaoNivelFormacaoRepository)
+    private readonly repository: IOfertaFormacaoNivelFormacaoRepository,
+    @Inject(IAuthorizationService)
+    private readonly authorizationService: IAuthorizationService,
     @Inject(IOfertaFormacaoFindOneQueryHandler)
     private readonly ofertaFormacaoFindOneHandler: IOfertaFormacaoFindOneQueryHandler,
     @Inject(INivelFormacaoFindOneQueryHandler)
@@ -40,9 +37,7 @@ export class OfertaFormacaoNivelFormacaoUpdateCommandHandlerImpl
   }: IOfertaFormacaoNivelFormacaoUpdateCommand): Promise<OfertaFormacaoNivelFormacaoFindOneOutputDto> {
     const current = await this.repository.findById(accessContext, { id: dto.id });
 
-    if (!current) {
-      throw new ResourceNotFoundError("OfertaFormacaoNivelFormacao", dto.id);
-    }
+    ensureExists(current, "OfertaFormacaoNivelFormacao", dto.id);
 
     await this.authorizationService.ensurePermission(
       "oferta_formacao_nivel_formacao:update",
@@ -79,9 +74,7 @@ export class OfertaFormacaoNivelFormacaoUpdateCommandHandlerImpl
 
     const result = await this.repository.findById(accessContext, { id: dto.id });
 
-    if (!result) {
-      throw new ResourceNotFoundError("OfertaFormacaoNivelFormacao", dto.id);
-    }
+    ensureExists(result, "OfertaFormacaoNivelFormacao", dto.id);
 
     return result;
   }

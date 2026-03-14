@@ -3,14 +3,14 @@ import {
   type IEmpresaFindOneQuery,
   IEmpresaFindOneQueryHandler,
 } from "@/modules/estagio/empresa/domain/queries/empresa-find-one.query.handler.interface";
-import { EMPRESA_REPOSITORY_PORT, type IEmpresaRepositoryPort } from "../../../domain/repositories";
+import { IEmpresaRepository } from "../../../domain/repositories";
 import type { EmpresaFindOneOutputDto } from "../../dtos";
 
 @Injectable()
 export class EmpresaFindOneQueryHandlerImpl implements IEmpresaFindOneQueryHandler {
   constructor(
-    @Inject(EMPRESA_REPOSITORY_PORT)
-    private readonly repository: IEmpresaRepositoryPort,
+    @Inject(IEmpresaRepository)
+    private readonly repository: IEmpresaRepository,
   ) {}
 
   async execute({

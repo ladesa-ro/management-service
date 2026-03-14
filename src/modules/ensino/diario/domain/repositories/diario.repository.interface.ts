@@ -1,4 +1,4 @@
-import type { IBaseCrudRepositoryPort } from "@/modules/@shared";
+import type { IBaseCrudRepository } from "@/modules/@shared";
 import type { IDiario } from "@/modules/ensino/diario";
 import type {
   DiarioFindOneOutputDto,
@@ -8,11 +8,11 @@ import type {
 /**
  * Token de injeção para o repositório de Diario
  */
-export const DIARIO_REPOSITORY_PORT = Symbol("IDiarioRepositoryPort");
+export const IDiarioRepository = Symbol("IDiarioRepository");
 
 /**
  * Port de saída para operações de persistência de Diario
  * Estende a interface base de CRUD com operações padrão
  */
-export interface IDiarioRepositoryPort
-  extends IBaseCrudRepositoryPort<IDiario, DiarioListOutputDto, DiarioFindOneOutputDto> {}
+export interface IDiarioRepository
+  extends IBaseCrudRepository<IDiario, DiarioListOutputDto, DiarioFindOneOutputDto> {}

@@ -1,27 +1,20 @@
 import { Inject, Injectable } from "@nestjs/common";
-import {
-  AUTHORIZATION_SERVICE_PORT,
-  type IAuthorizationServicePort,
-  ResourceNotFoundError,
-} from "@/modules/@shared";
+import { ensureExists, IAuthorizationService } from "@/modules/@shared";
 import {
   type ICalendarioLetivoDeleteCommand,
   ICalendarioLetivoDeleteCommandHandler,
 } from "@/modules/horarios/calendario-letivo/domain/commands/calendario-letivo-delete.command.handler.interface";
-import {
-  CALENDARIO_LETIVO_REPOSITORY_PORT,
-  type ICalendarioLetivoRepositoryPort,
-} from "../../../domain/repositories";
+import { ICalendarioLetivoRepository } from "../../../domain/repositories";
 
 @Injectable()
 export class CalendarioLetivoDeleteCommandHandlerImpl
   implements ICalendarioLetivoDeleteCommandHandler
 {
   constructor(
-    @Inject(CALENDARIO_LETIVO_REPOSITORY_PORT)
-    private readonly repository: ICalendarioLetivoRepositoryPort,
-    @Inject(AUTHORIZATION_SERVICE_PORT)
-    private readonly authorizationService: IAuthorizationServicePort,
+    @Inject(ICalendarioLetivoRepository)
+    private readonly repository: ICalendarioLetivoRepository,
+    @Inject(IAuthorizationService)
+    private readonly authorizationService: IAuthorizationService,
   ) {}
 
   async execute({ accessContext, dto }: ICalendarioLetivoDeleteCommand): Promise<boolean> {
@@ -29,9 +22,7 @@ export class CalendarioLetivoDeleteCommandHandlerImpl
 
     const entity = await this.repository.findById(accessContext, dto);
 
-    if (!entity) {
-      throw new ResourceNotFoundError("CalendarioLetivo", dto.id);
-    }
+    ensureExists(entity, "CalendarioLetivo", dto.id);
 
     await this.repository.softDeleteById(entity.id);
 

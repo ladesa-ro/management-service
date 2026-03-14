@@ -1,27 +1,20 @@
 import { Inject, Injectable } from "@nestjs/common";
-import {
-  AUTHORIZATION_SERVICE_PORT,
-  type IAuthorizationServicePort,
-  ResourceNotFoundError,
-} from "@/modules/@shared";
+import { ensureExists, IAuthorizationService } from "@/modules/@shared";
 import {
   type IDiarioProfessorDeleteCommand,
   IDiarioProfessorDeleteCommandHandler,
 } from "@/modules/ensino/diario-professor/domain/commands/diario-professor-delete.command.handler.interface";
-import {
-  DIARIO_PROFESSOR_REPOSITORY_PORT,
-  type IDiarioProfessorRepositoryPort,
-} from "../../../domain/repositories";
+import { IDiarioProfessorRepository } from "../../../domain/repositories";
 
 @Injectable()
 export class DiarioProfessorDeleteCommandHandlerImpl
   implements IDiarioProfessorDeleteCommandHandler
 {
   constructor(
-    @Inject(DIARIO_PROFESSOR_REPOSITORY_PORT)
-    private readonly repository: IDiarioProfessorRepositoryPort,
-    @Inject(AUTHORIZATION_SERVICE_PORT)
-    private readonly authorizationService: IAuthorizationServicePort,
+    @Inject(IDiarioProfessorRepository)
+    private readonly repository: IDiarioProfessorRepository,
+    @Inject(IAuthorizationService)
+    private readonly authorizationService: IAuthorizationService,
   ) {}
 
   async execute({ accessContext, dto }: IDiarioProfessorDeleteCommand): Promise<boolean> {
@@ -29,9 +22,7 @@ export class DiarioProfessorDeleteCommandHandlerImpl
 
     const entity = await this.repository.findById(accessContext, dto);
 
-    if (!entity) {
-      throw new ResourceNotFoundError("DiarioProfessor", dto.id);
-    }
+    ensureExists(entity, "DiarioProfessor", dto.id);
 
     await this.repository.softDeleteById(entity.id);
 

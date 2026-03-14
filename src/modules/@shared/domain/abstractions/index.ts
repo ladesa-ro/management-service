@@ -1,2 +1,2 @@
-export * from "./command-handler.interface";
-export * from "./query-handler.interface";
+export * from "./cqrs";
+export * from "./repositories";

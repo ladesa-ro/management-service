@@ -9,7 +9,7 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
-import { ResourceNotFoundError } from "@/modules/@shared";
+import { ensureExists } from "@/modules/@shared";
 import { IEstagiarioCreateCommandHandler } from "@/modules/estagio/estagiario/domain/commands/estagiario-create.command.handler.interface";
 import { IEstagiarioDeleteCommandHandler } from "@/modules/estagio/estagiario/domain/commands/estagiario-delete.command.handler.interface";
 import { IEstagiarioUpdateCommandHandler } from "@/modules/estagio/estagiario/domain/commands/estagiario-update.command.handler.interface";
@@ -64,9 +64,7 @@ export class EstagiarioRestController {
   ): Promise<EstagiarioFindOneOutputRestDto> {
     const input = EstagiarioRestMapper.toFindOneInput(params);
     const result = await this.findOneHandler.execute({ accessContext, dto: input });
-    if (!result) {
-      throw new ResourceNotFoundError("Estagiario", input.id);
-    }
+    ensureExists(result, "Estagiario", input.id);
     return EstagiarioRestMapper.toFindOneOutputDto(result);
   }
 

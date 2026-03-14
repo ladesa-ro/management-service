@@ -3,14 +3,14 @@ import {
   type ICidadeListQuery,
   ICidadeListQueryHandler,
 } from "@/modules/localidades/cidade/domain/queries/cidade-list.query.handler.interface";
-import { CIDADE_REPOSITORY_PORT, type ICidadeRepositoryPort } from "../../../domain/repositories";
+import { ICidadeRepository } from "../../../domain/repositories";
 import type { CidadeListOutputDto } from "../../dtos";
 
 @Injectable()
 export class CidadeListQueryHandlerImpl implements ICidadeListQueryHandler {
   constructor(
-    @Inject(CIDADE_REPOSITORY_PORT)
-    private readonly repository: ICidadeRepositoryPort,
+    @Inject(ICidadeRepository)
+    private readonly repository: ICidadeRepository,
   ) {}
 
   async execute({ accessContext, dto }: ICidadeListQuery): Promise<CidadeListOutputDto> {

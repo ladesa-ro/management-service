@@ -1,15 +1,15 @@
-import type { IBaseCrudRepositoryPort } from "@/modules/@shared";
+import type { IBaseCrudRepository } from "@/modules/@shared";
 import type { ITurma } from "@/modules/ensino/turma";
 import type { TurmaFindOneOutputDto, TurmaListOutputDto } from "../../application/dtos";
 
 /**
  * Token de injeção para o repositório de Turma
  */
-export const TURMA_REPOSITORY_PORT = Symbol("ITurmaRepositoryPort");
+export const ITurmaRepository = Symbol("ITurmaRepository");
 
 /**
  * Port de saída para operações de persistência de Turma
  * Estende a interface base de CRUD com operações padrão
  */
-export interface ITurmaRepositoryPort
-  extends IBaseCrudRepositoryPort<ITurma, TurmaListOutputDto, TurmaFindOneOutputDto> {}
+export interface ITurmaRepository
+  extends IBaseCrudRepository<ITurma, TurmaListOutputDto, TurmaFindOneOutputDto> {}

@@ -1,6 +1,6 @@
 import type { SelectQueryBuilder } from "typeorm";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
-import type { IBaseCrudRepositoryPort } from "@/modules/@shared";
+import type { IBaseCrudRepository } from "@/modules/@shared";
 import type { IDiarioPreferenciaAgrupamento } from "@/modules/ensino/diario-preferencia-agrupamento";
 import type { DiarioPreferenciaAgrupamentoEntity } from "@/modules/ensino/diario-preferencia-agrupamento/infrastructure/persistence/typeorm";
 import type {
@@ -11,16 +11,16 @@ import type {
 /**
  * Token de injeção para o repositório de DiarioPreferenciaAgrupamento
  */
-export const DIARIO_PREFERENCIA_AGRUPAMENTO_REPOSITORY_PORT = Symbol(
-  "IDiarioPreferenciaAgrupamentoRepositoryPort",
+export const IDiarioPreferenciaAgrupamentoRepository = Symbol(
+  "IDiarioPreferenciaAgrupamentoRepository",
 );
 
 /**
  * Port de saída para operações de persistência de DiarioPreferenciaAgrupamento
  * Estende a interface base de CRUD com operações padrão
  */
-export interface IDiarioPreferenciaAgrupamentoRepositoryPort
-  extends IBaseCrudRepositoryPort<
+export interface IDiarioPreferenciaAgrupamentoRepository
+  extends IBaseCrudRepository<
     IDiarioPreferenciaAgrupamento,
     DiarioPreferenciaAgrupamentoListOutputDto,
     DiarioPreferenciaAgrupamentoFindOneOutputDto

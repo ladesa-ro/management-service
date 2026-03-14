@@ -3,10 +3,7 @@ import {
   type IOfertaFormacaoNivelFormacaoFindOneQuery,
   IOfertaFormacaoNivelFormacaoFindOneQueryHandler,
 } from "@/modules/ensino/oferta-formacao-nivel-formacao/domain/queries/oferta-formacao-nivel-formacao-find-one.query.handler.interface";
-import {
-  type IOfertaFormacaoNivelFormacaoRepositoryPort,
-  OFERTA_FORMACAO_NIVEL_FORMACAO_REPOSITORY_PORT,
-} from "../../../domain/repositories";
+import { IOfertaFormacaoNivelFormacaoRepository } from "../../../domain/repositories";
 import type { OfertaFormacaoNivelFormacaoFindOneOutputDto } from "../../dtos";
 
 @Injectable()
@@ -14,8 +11,8 @@ export class OfertaFormacaoNivelFormacaoFindOneQueryHandlerImpl
   implements IOfertaFormacaoNivelFormacaoFindOneQueryHandler
 {
   constructor(
-    @Inject(OFERTA_FORMACAO_NIVEL_FORMACAO_REPOSITORY_PORT)
-    private readonly repository: IOfertaFormacaoNivelFormacaoRepositoryPort,
+    @Inject(IOfertaFormacaoNivelFormacaoRepository)
+    private readonly repository: IOfertaFormacaoNivelFormacaoRepository,
   ) {}
 
   async execute({

@@ -1,19 +1,15 @@
-import type { IBaseCrudRepositoryPort } from "@/modules/@shared";
+import type { IBaseCrudRepository } from "@/modules/@shared";
 import {
   type IModalidade,
   ModalidadeFindOneOutputDto,
   ModalidadeListOutputDto,
 } from "@/modules/ensino/modalidade";
 
-export const MODALIDADE_REPOSITORY_PORT = Symbol("IModalidadeRepositoryPort");
+export const IModalidadeRepository = Symbol("IModalidadeRepository");
 
 /**
  * Port de saída para operações de persistência de Modalidade
  * Estende a interface base de CRUD com operações padrão
  */
-export interface IModalidadeRepositoryPort
-  extends IBaseCrudRepositoryPort<
-    IModalidade,
-    ModalidadeListOutputDto,
-    ModalidadeFindOneOutputDto
-  > {}
+export interface IModalidadeRepository
+  extends IBaseCrudRepository<IModalidade, ModalidadeListOutputDto, ModalidadeFindOneOutputDto> {}

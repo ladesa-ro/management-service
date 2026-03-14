@@ -11,12 +11,12 @@ import type {
 /**
  * Symbol para injetar a porta de repositório
  */
-export const EMPRESA_REPOSITORY_PORT = Symbol("EMPRESA_REPOSITORY_PORT");
+export const IEmpresaRepository = Symbol("IEmpresaRepository");
 
 /**
  * Interface da porta de repositório
  */
-export interface IEmpresaRepositoryPort {
+export interface IEmpresaRepository {
   findAll(
     accessContext: AccessContext,
     dto: EmpresaListInputDto | null,

@@ -1,27 +1,20 @@
 import { Inject, Injectable } from "@nestjs/common";
-import {
-  AUTHORIZATION_SERVICE_PORT,
-  type IAuthorizationServicePort,
-  ResourceNotFoundError,
-} from "@/modules/@shared";
+import { ensureExists, IAuthorizationService } from "@/modules/@shared";
 import {
   type IModalidadeCreateCommand,
   IModalidadeCreateCommandHandler,
 } from "@/modules/ensino/modalidade/domain/commands/modalidade-create.command.handler.interface";
 import { Modalidade } from "@/modules/ensino/modalidade/domain/modalidade.domain";
-import {
-  type IModalidadeRepositoryPort,
-  MODALIDADE_REPOSITORY_PORT,
-} from "../../../domain/repositories";
+import { IModalidadeRepository } from "../../../domain/repositories";
 import type { ModalidadeFindOneOutputDto } from "../../dtos";
 
 @Injectable()
 export class ModalidadeCreateCommandHandlerImpl implements IModalidadeCreateCommandHandler {
   constructor(
-    @Inject(MODALIDADE_REPOSITORY_PORT)
-    private readonly repository: IModalidadeRepositoryPort,
-    @Inject(AUTHORIZATION_SERVICE_PORT)
-    private readonly authorizationService: IAuthorizationServicePort,
+    @Inject(IModalidadeRepository)
+    private readonly repository: IModalidadeRepository,
+    @Inject(IAuthorizationService)
+    private readonly authorizationService: IAuthorizationService,
   ) {}
 
   async execute({
@@ -35,9 +28,7 @@ export class ModalidadeCreateCommandHandlerImpl implements IModalidadeCreateComm
 
     const result = await this.repository.findById(accessContext, { id });
 
-    if (!result) {
-      throw new ResourceNotFoundError("Modalidade", id);
-    }
+    ensureExists(result, "Modalidade", id);
 
     return result;
   }

@@ -1,5 +1,5 @@
 import { Inject, Injectable, type StreamableFile } from "@nestjs/common";
-import { getEntityImagemStreamableFile, ResourceNotFoundError } from "@/modules/@shared";
+import { ensureExists, getEntityImagemStreamableFile } from "@/modules/@shared";
 import {
   type IUsuarioGetImagemPerfilQuery,
   IUsuarioGetImagemPerfilQueryHandler,
@@ -12,13 +12,13 @@ import {
   IImagemGetLatestArquivoIdQueryHandler,
   type IImagemGetLatestArquivoIdQueryHandler as IImagemGetLatestArquivoIdQueryHandlerType,
 } from "@/modules/armazenamento/imagem/domain/queries";
-import { type IUsuarioRepositoryPort, USUARIO_REPOSITORY_PORT } from "../../../domain/repositories";
+import { IUsuarioRepository } from "../../../domain/repositories";
 
 @Injectable()
 export class UsuarioGetImagemPerfilQueryHandlerImpl implements IUsuarioGetImagemPerfilQueryHandler {
   constructor(
-    @Inject(USUARIO_REPOSITORY_PORT)
-    private readonly repository: IUsuarioRepositoryPort,
+    @Inject(IUsuarioRepository)
+    private readonly repository: IUsuarioRepository,
     @Inject(IImagemGetLatestArquivoIdQueryHandler)
     private readonly getLatestArquivoIdHandler: IImagemGetLatestArquivoIdQueryHandlerType,
     @Inject(IArquivoGetStreamableFileQueryHandler)
@@ -28,9 +28,7 @@ export class UsuarioGetImagemPerfilQueryHandlerImpl implements IUsuarioGetImagem
   async execute({ accessContext, id }: IUsuarioGetImagemPerfilQuery): Promise<StreamableFile> {
     const usuario = await this.repository.findById(accessContext, { id });
 
-    if (!usuario) {
-      throw new ResourceNotFoundError("Usuario", id);
-    }
+    ensureExists(usuario, "Usuario", id);
 
     return getEntityImagemStreamableFile(
       usuario,

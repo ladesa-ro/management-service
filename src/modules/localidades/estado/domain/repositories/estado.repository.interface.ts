@@ -1,4 +1,4 @@
-import type { IReadOnlyRepositoryPort } from "@/modules/@shared";
+import type { IReadOnlyRepository } from "@/modules/@shared";
 import {
   EstadoFindOneInputDto,
   EstadoFindOneOutputDto,
@@ -9,14 +9,14 @@ import {
 /**
  * Token de injeção para o repositório de Estado
  */
-export const ESTADO_REPOSITORY_PORT = Symbol("IEstadoRepositoryPort");
+export const IEstadoRepository = Symbol("IEstadoRepository");
 
 /**
  * Port de saída para operações de persistência de Estado (read-only)
  * Define o contrato que os adapters de persistência devem implementar
  */
-export interface IEstadoRepositoryPort
-  extends IReadOnlyRepositoryPort<
+export interface IEstadoRepository
+  extends IReadOnlyRepository<
     EstadoListInputDto,
     EstadoListOutputDto,
     EstadoFindOneInputDto,

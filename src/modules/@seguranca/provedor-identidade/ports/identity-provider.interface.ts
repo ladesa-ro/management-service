@@ -3,7 +3,7 @@ import type { IIdentityResponse } from "../domain";
 /**
  * Port para integração com provedores de identidade (Keycloak, OIDC, etc).
  */
-export interface IIdentityProviderPort {
+export interface IIdentityProvider {
   /**
    * Obtém informações de identidade a partir de um access token.
    * @param accessToken Token de acesso
@@ -12,4 +12,4 @@ export interface IIdentityProviderPort {
   getIdentityFromAccessToken(accessToken: string): Promise<IIdentityResponse>;
 }
 
-export const IDENTITY_PROVIDER_PORT = Symbol("IIdentityProviderPort");
+export const IIdentityProvider = Symbol("IIdentityProvider");

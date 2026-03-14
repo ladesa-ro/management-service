@@ -3,14 +3,14 @@ import {
   type IBlocoFindOneQuery,
   IBlocoFindOneQueryHandler,
 } from "@/modules/ambientes/bloco/domain/queries/bloco-find-one.query.handler.interface";
-import { BLOCO_REPOSITORY_PORT, type IBlocoRepositoryPort } from "../../../domain/repositories";
+import { IBlocoRepository } from "../../../domain/repositories";
 import type { BlocoFindOneOutputDto } from "../../dtos";
 
 @Injectable()
 export class BlocoFindOneQueryHandlerImpl implements IBlocoFindOneQueryHandler {
   constructor(
-    @Inject(BLOCO_REPOSITORY_PORT)
-    private readonly repository: IBlocoRepositoryPort,
+    @Inject(IBlocoRepository)
+    private readonly repository: IBlocoRepository,
   ) {}
 
   async execute({

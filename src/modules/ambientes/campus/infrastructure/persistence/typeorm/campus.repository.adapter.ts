@@ -13,7 +13,7 @@ import type {
   CampusFindOneOutputDto,
   CampusListInputDto,
   CampusListOutputDto,
-  ICampusRepositoryPort,
+  ICampusRepository,
 } from "@/modules/ambientes/campus";
 import type { CampusEntity } from "./campus.entity";
 import { createCampusRepository } from "./campus.repository";
@@ -27,7 +27,7 @@ export class CampusTypeOrmRepositoryAdapter
     CampusFindOneInputDto,
     CampusFindOneOutputDto
   >
-  implements ICampusRepositoryPort
+  implements ICampusRepository
 {
   protected readonly alias = "campus";
   protected readonly authzAction = "campus:find";

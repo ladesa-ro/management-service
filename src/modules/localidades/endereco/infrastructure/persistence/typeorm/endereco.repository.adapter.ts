@@ -12,7 +12,7 @@ import type {
   EnderecoFindOneOutputDto,
   EnderecoListInputDto,
   EnderecoListOutputDto,
-  IEnderecoRepositoryPort,
+  IEnderecoRepository,
 } from "@/modules/localidades/endereco";
 import type { EnderecoEntity } from "@/modules/localidades/endereco/infrastructure/persistence/typeorm/index";
 import { createEnderecoRepository } from "./endereco.repository";
@@ -26,7 +26,7 @@ export class EnderecoTypeOrmRepositoryAdapter
     EnderecoFindOneInputDto,
     EnderecoFindOneOutputDto
   >
-  implements IEnderecoRepositoryPort
+  implements IEnderecoRepository
 {
   protected readonly alias = "endereco";
   protected readonly authzAction = "endereco:find";

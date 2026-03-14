@@ -18,7 +18,7 @@ import {
   IModalidadeFindOneQueryHandler,
   IModalidadeListQueryHandler,
 } from "@/modules/ensino/modalidade/domain/queries";
-import { MODALIDADE_REPOSITORY_PORT } from "@/modules/ensino/modalidade/domain/repositories";
+import { IModalidadeRepository } from "@/modules/ensino/modalidade/domain/repositories";
 import {
   ModalidadeAuthzRegistrySetup,
   ModalidadeTypeOrmRepositoryAdapter,
@@ -34,7 +34,7 @@ import { ModalidadeRestController } from "@/modules/ensino/modalidade/presentati
     ModalidadeGraphqlResolver,
     ModalidadeAuthzRegistrySetup,
     {
-      provide: MODALIDADE_REPOSITORY_PORT,
+      provide: IModalidadeRepository,
       useClass: ModalidadeTypeOrmRepositoryAdapter,
     },
 

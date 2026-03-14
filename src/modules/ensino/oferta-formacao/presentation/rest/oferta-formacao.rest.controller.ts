@@ -8,7 +8,7 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
-import { ResourceNotFoundError } from "@/modules/@shared";
+import { ensureExists } from "@/modules/@shared";
 import { IOfertaFormacaoCreateCommandHandler } from "@/modules/ensino/oferta-formacao/domain/commands/oferta-formacao-create.command.handler.interface";
 import { IOfertaFormacaoDeleteCommandHandler } from "@/modules/ensino/oferta-formacao/domain/commands/oferta-formacao-delete.command.handler.interface";
 import { IOfertaFormacaoUpdateCommandHandler } from "@/modules/ensino/oferta-formacao/domain/commands/oferta-formacao-update.command.handler.interface";
@@ -67,9 +67,7 @@ export class OfertaFormacaoRestController {
   ): Promise<OfertaFormacaoFindOneOutputRestDto> {
     const input = OfertaFormacaoRestMapper.toFindOneInput(params);
     const result = await this.findOneHandler.execute({ accessContext, dto: input });
-    if (!result) {
-      throw new ResourceNotFoundError("OfertaFormacao", input.id);
-    }
+    ensureExists(result, "OfertaFormacao", input.id);
     return OfertaFormacaoRestMapper.toFindOneOutputDto(result);
   }
 

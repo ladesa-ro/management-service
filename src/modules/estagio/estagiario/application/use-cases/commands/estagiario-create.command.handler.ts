@@ -4,17 +4,14 @@ import {
   type IEstagiarioCreateCommand,
   IEstagiarioCreateCommandHandler,
 } from "@/modules/estagio/estagiario/domain/commands/estagiario-create.command.handler.interface";
-import {
-  ESTAGIARIO_REPOSITORY_PORT,
-  type IEstagiarioRepositoryPort,
-} from "../../../domain/repositories";
+import { IEstagiarioRepository } from "../../../domain/repositories";
 import type { EstagiarioFindOneOutputDto } from "../../dtos";
 
 @Injectable()
 export class EstagiarioCreateCommandHandlerImpl implements IEstagiarioCreateCommandHandler {
   constructor(
-    @Inject(ESTAGIARIO_REPOSITORY_PORT)
-    private readonly repository: IEstagiarioRepositoryPort,
+    @Inject(IEstagiarioRepository)
+    private readonly repository: IEstagiarioRepository,
   ) {}
 
   async execute({

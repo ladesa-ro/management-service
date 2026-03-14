@@ -1,25 +1,21 @@
 import { Inject, Injectable } from "@nestjs/common";
-import {
-  AUTHORIZATION_SERVICE_PORT,
-  type IAuthorizationServicePort,
-  ResourceNotFoundError,
-} from "@/modules/@shared";
+import { ensureExists, IAuthorizationService } from "@/modules/@shared";
 import { Bloco } from "@/modules/ambientes/bloco/domain/bloco.domain";
 import {
   type IBlocoCreateCommand,
   IBlocoCreateCommandHandler,
 } from "@/modules/ambientes/bloco/domain/commands/bloco-create.command.handler.interface";
 import { ICampusFindOneQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-find-one.query.handler.interface";
-import { BLOCO_REPOSITORY_PORT, type IBlocoRepositoryPort } from "../../../domain/repositories";
+import { IBlocoRepository } from "../../../domain/repositories";
 import type { BlocoFindOneOutputDto } from "../../dtos";
 
 @Injectable()
 export class BlocoCreateCommandHandlerImpl implements IBlocoCreateCommandHandler {
   constructor(
-    @Inject(BLOCO_REPOSITORY_PORT)
-    private readonly repository: IBlocoRepositoryPort,
-    @Inject(AUTHORIZATION_SERVICE_PORT)
-    private readonly authorizationService: IAuthorizationServicePort,
+    @Inject(IBlocoRepository)
+    private readonly repository: IBlocoRepository,
+    @Inject(IAuthorizationService)
+    private readonly authorizationService: IAuthorizationService,
     @Inject(ICampusFindOneQueryHandler)
     private readonly campusFindOneHandler: ICampusFindOneQueryHandler,
   ) {}
@@ -31,9 +27,7 @@ export class BlocoCreateCommandHandlerImpl implements IBlocoCreateCommandHandler
       accessContext,
       dto: { id: dto.campus.id },
     });
-    if (!campus) {
-      throw new ResourceNotFoundError("Campus", dto.campus.id);
-    }
+    ensureExists(campus, "Campus", dto.campus.id);
     const domain = Bloco.criar({
       nome: dto.nome,
       codigo: dto.codigo,
@@ -43,9 +37,7 @@ export class BlocoCreateCommandHandlerImpl implements IBlocoCreateCommandHandler
 
     const result = await this.repository.findById(accessContext, { id });
 
-    if (!result) {
-      throw new ResourceNotFoundError("Bloco", id);
-    }
+    ensureExists(result, "Bloco", id);
 
     return result;
   }

@@ -2,7 +2,7 @@ import { Inject } from "@nestjs/common";
 import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
 import { AccessContext, AccessContextGraphQL } from "@/modules/@seguranca/contexto-acesso";
-import { ResourceNotFoundError } from "@/modules/@shared";
+import { ensureExists } from "@/modules/@shared";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
 import { IDiaCalendarioCreateCommandHandler } from "@/modules/horarios/dia-calendario/domain/commands/dia-calendario-create.command.handler.interface";
 import { IDiaCalendarioDeleteCommandHandler } from "@/modules/horarios/dia-calendario/domain/commands/dia-calendario-delete.command.handler.interface";
@@ -57,9 +57,7 @@ export class DiaCalendarioGraphqlResolver {
   ): Promise<DiaCalendarioFindOneOutputGraphQlDto> {
     const selection = graphqlExtractSelection(info);
     const result = await this.findOneHandler.execute({ accessContext, dto: { id, selection } });
-    if (!result) {
-      throw new ResourceNotFoundError("DiaCalendario", id);
-    }
+    ensureExists(result, "DiaCalendario", id);
     return DiaCalendarioGraphqlMapper.toFindOneOutputDto(result);
   }
 

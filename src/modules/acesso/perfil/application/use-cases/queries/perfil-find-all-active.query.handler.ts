@@ -3,14 +3,14 @@ import {
   type IPerfilFindAllActiveQuery,
   IPerfilFindAllActiveQueryHandler,
 } from "@/modules/acesso/perfil/domain/queries/perfil-find-all-active.query.handler.interface";
-import { type IPerfilRepositoryPort, PERFIL_REPOSITORY_PORT } from "../../../domain/repositories";
+import { IPerfilRepository } from "../../../domain/repositories";
 import type { PerfilFindOneOutputDto } from "../../dtos";
 
 @Injectable()
 export class PerfilFindAllActiveQueryHandlerImpl implements IPerfilFindAllActiveQueryHandler {
   constructor(
-    @Inject(PERFIL_REPOSITORY_PORT)
-    private readonly repository: IPerfilRepositoryPort,
+    @Inject(IPerfilRepository)
+    private readonly repository: IPerfilRepository,
   ) {}
 
   async execute({

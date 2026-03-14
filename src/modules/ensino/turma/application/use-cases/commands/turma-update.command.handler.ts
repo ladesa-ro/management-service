@@ -1,11 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { has } from "lodash";
-import {
-  AUTHORIZATION_SERVICE_PORT,
-  type IAuthorizationServicePort,
-  type PersistInput,
-  ResourceNotFoundError,
-} from "@/modules/@shared";
+import { ensureExists, IAuthorizationService, type PersistInput } from "@/modules/@shared";
 import { IAmbienteFindOneQueryHandler } from "@/modules/ambientes/ambiente/domain/queries/ambiente-find-one.query.handler.interface";
 import { ICursoFindOneQueryHandler } from "@/modules/ensino/curso/domain/queries/curso-find-one.query.handler.interface";
 import {
@@ -14,16 +9,16 @@ import {
 } from "@/modules/ensino/turma/domain/commands/turma-update.command.handler.interface";
 import { Turma } from "@/modules/ensino/turma/domain/turma.domain";
 import type { ITurma } from "@/modules/ensino/turma/domain/turma.types";
-import { type ITurmaRepositoryPort, TURMA_REPOSITORY_PORT } from "../../../domain/repositories";
+import { ITurmaRepository } from "../../../domain/repositories";
 import type { TurmaFindOneOutputDto } from "../../dtos";
 
 @Injectable()
 export class TurmaUpdateCommandHandlerImpl implements ITurmaUpdateCommandHandler {
   constructor(
-    @Inject(TURMA_REPOSITORY_PORT)
-    private readonly repository: ITurmaRepositoryPort,
-    @Inject(AUTHORIZATION_SERVICE_PORT)
-    private readonly authorizationService: IAuthorizationServicePort,
+    @Inject(ITurmaRepository)
+    private readonly repository: ITurmaRepository,
+    @Inject(IAuthorizationService)
+    private readonly authorizationService: IAuthorizationService,
     @Inject(IAmbienteFindOneQueryHandler)
     private readonly ambienteFindOneHandler: IAmbienteFindOneQueryHandler,
     @Inject(ICursoFindOneQueryHandler)
@@ -33,9 +28,7 @@ export class TurmaUpdateCommandHandlerImpl implements ITurmaUpdateCommandHandler
   async execute({ accessContext, dto }: ITurmaUpdateCommand): Promise<TurmaFindOneOutputDto> {
     const current = await this.repository.findById(accessContext, { id: dto.id });
 
-    if (!current) {
-      throw new ResourceNotFoundError("Turma", dto.id);
-    }
+    ensureExists(current, "Turma", dto.id);
 
     await this.authorizationService.ensurePermission("turma:update", { dto }, dto.id);
 
@@ -48,9 +41,7 @@ export class TurmaUpdateCommandHandlerImpl implements ITurmaUpdateCommandHandler
           accessContext,
           dto: { id: dto.ambientePadraoAula.id },
         });
-        if (!ambientePadraoAula) {
-          throw new ResourceNotFoundError("Ambiente", dto.ambientePadraoAula.id);
-        }
+        ensureExists(ambientePadraoAula, "Ambiente", dto.ambientePadraoAula.id);
         updateData.ambientePadraoAula = { id: ambientePadraoAula.id };
       } else {
         updateData.ambientePadraoAula = null;
@@ -61,18 +52,14 @@ export class TurmaUpdateCommandHandlerImpl implements ITurmaUpdateCommandHandler
         accessContext,
         dto: { id: dto.curso.id },
       });
-      if (!curso) {
-        throw new ResourceNotFoundError("Curso", dto.curso.id);
-      }
+      ensureExists(curso, "Curso", dto.curso.id);
       updateData.curso = { id: curso.id };
     }
     await this.repository.updateFromDomain(current.id, updateData);
 
     const result = await this.repository.findById(accessContext, { id: dto.id });
 
-    if (!result) {
-      throw new ResourceNotFoundError("Turma", dto.id);
-    }
+    ensureExists(result, "Turma", dto.id);
 
     return result;
   }

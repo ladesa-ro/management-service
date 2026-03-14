@@ -1,5 +1,5 @@
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
-import type { IPersistRepositoryPort } from "@/modules/@shared";
+import type { IPersistRepository } from "@/modules/@shared";
 import type {
   PerfilFindOneInputDto,
   PerfilFindOneOutputDto,
@@ -10,13 +10,13 @@ import type {
 /**
  * Token de injeção para o repositório de Perfil
  */
-export const PERFIL_REPOSITORY_PORT = Symbol("IPerfilRepositoryPort");
+export const IPerfilRepository = Symbol("IPerfilRepository");
 
 /**
  * Port de saída para operações de persistência de Perfil
  * Define o contrato que os adapters de persistência devem implementar
  */
-export interface IPerfilRepositoryPort extends IPersistRepositoryPort<Record<string, any>> {
+export interface IPerfilRepository extends IPersistRepository<Record<string, any>> {
   /**
    * Lista perfis com paginação
    */

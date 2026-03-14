@@ -7,7 +7,7 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
-import { ResourceNotFoundError } from "@/modules/@shared";
+import { ensureExists } from "@/modules/@shared";
 import { IEstadoFindOneQueryHandler } from "@/modules/localidades/estado/domain/queries/estado-find-one.query.handler.interface";
 import { IEstadoListQueryHandler } from "@/modules/localidades/estado/domain/queries/estado-list.query.handler.interface";
 import {
@@ -52,9 +52,7 @@ export class EstadoRestController {
   ): Promise<EstadoFindOneOutputRestDto> {
     const input = EstadoRestMapper.toFindOneInput(params);
     const result = await this.findOneHandler.execute({ accessContext, dto: input });
-    if (!result) {
-      throw new ResourceNotFoundError("Estado", input.id);
-    }
+    ensureExists(result, "Estado", input.id);
     return EstadoRestMapper.toFindOneOutputDto(result);
   }
 }

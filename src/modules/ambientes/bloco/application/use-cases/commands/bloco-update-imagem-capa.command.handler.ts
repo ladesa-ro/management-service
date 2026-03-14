@@ -1,10 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
-import {
-  AUTHORIZATION_SERVICE_PORT,
-  type IAuthorizationServicePort,
-  ResourceNotFoundError,
-  saveEntityImagemField,
-} from "@/modules/@shared";
+import { ensureExists, IAuthorizationService, saveEntityImagemField } from "@/modules/@shared";
 import {
   type IBlocoUpdateImagemCapaCommand,
   IBlocoUpdateImagemCapaCommandHandler,
@@ -13,17 +8,17 @@ import {
   IImagemSaveImagemCapaCommandHandler,
   type IImagemSaveImagemCapaCommandHandler as IImagemSaveImagemCapaCommandHandlerType,
 } from "@/modules/armazenamento/imagem/domain/commands";
-import { BLOCO_REPOSITORY_PORT, type IBlocoRepositoryPort } from "../../../domain/repositories";
+import { IBlocoRepository } from "../../../domain/repositories";
 
 @Injectable()
 export class BlocoUpdateImagemCapaCommandHandlerImpl
   implements IBlocoUpdateImagemCapaCommandHandler
 {
   constructor(
-    @Inject(BLOCO_REPOSITORY_PORT)
-    private readonly repository: IBlocoRepositoryPort,
-    @Inject(AUTHORIZATION_SERVICE_PORT)
-    private readonly authorizationService: IAuthorizationServicePort,
+    @Inject(IBlocoRepository)
+    private readonly repository: IBlocoRepository,
+    @Inject(IAuthorizationService)
+    private readonly authorizationService: IAuthorizationService,
     @Inject(IImagemSaveImagemCapaCommandHandler)
     private readonly saveImagemCapaHandler: IImagemSaveImagemCapaCommandHandlerType,
   ) {}
@@ -31,9 +26,7 @@ export class BlocoUpdateImagemCapaCommandHandlerImpl
   async execute({ accessContext, dto, file }: IBlocoUpdateImagemCapaCommand): Promise<boolean> {
     const current = await this.repository.findById(accessContext, dto);
 
-    if (!current) {
-      throw new ResourceNotFoundError("Bloco", dto.id);
-    }
+    ensureExists(current, "Bloco", dto.id);
 
     await this.authorizationService.ensurePermission(
       "bloco:update",

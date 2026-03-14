@@ -3,14 +3,14 @@ import {
   type IBlocoListQuery,
   IBlocoListQueryHandler,
 } from "@/modules/ambientes/bloco/domain/queries/bloco-list.query.handler.interface";
-import { BLOCO_REPOSITORY_PORT, type IBlocoRepositoryPort } from "../../../domain/repositories";
+import { IBlocoRepository } from "../../../domain/repositories";
 import type { BlocoListOutputDto } from "../../dtos";
 
 @Injectable()
 export class BlocoListQueryHandlerImpl implements IBlocoListQueryHandler {
   constructor(
-    @Inject(BLOCO_REPOSITORY_PORT)
-    private readonly repository: IBlocoRepositoryPort,
+    @Inject(IBlocoRepository)
+    private readonly repository: IBlocoRepository,
   ) {}
 
   async execute({ accessContext, dto, selection }: IBlocoListQuery): Promise<BlocoListOutputDto> {

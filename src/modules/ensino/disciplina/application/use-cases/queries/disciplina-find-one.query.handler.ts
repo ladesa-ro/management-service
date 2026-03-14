@@ -3,17 +3,14 @@ import {
   type IDisciplinaFindOneQuery,
   IDisciplinaFindOneQueryHandler,
 } from "@/modules/ensino/disciplina/domain/queries/disciplina-find-one.query.handler.interface";
-import {
-  DISCIPLINA_REPOSITORY_PORT,
-  type IDisciplinaRepositoryPort,
-} from "../../../domain/repositories";
+import { IDisciplinaRepository } from "../../../domain/repositories";
 import type { DisciplinaFindOneOutputDto } from "../../dtos";
 
 @Injectable()
 export class DisciplinaFindOneQueryHandlerImpl implements IDisciplinaFindOneQueryHandler {
   constructor(
-    @Inject(DISCIPLINA_REPOSITORY_PORT)
-    private readonly repository: IDisciplinaRepositoryPort,
+    @Inject(IDisciplinaRepository)
+    private readonly repository: IDisciplinaRepository,
   ) {}
 
   async execute({

@@ -8,7 +8,7 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
-import { ResourceNotFoundError } from "@/modules/@shared";
+import { ensureExists } from "@/modules/@shared";
 import { IDiarioPreferenciaAgrupamentoCreateCommandHandler } from "@/modules/ensino/diario-preferencia-agrupamento/domain/commands/diario-preferencia-agrupamento-create.command.handler.interface";
 import { IDiarioPreferenciaAgrupamentoDeleteCommandHandler } from "@/modules/ensino/diario-preferencia-agrupamento/domain/commands/diario-preferencia-agrupamento-delete.command.handler.interface";
 import { IDiarioPreferenciaAgrupamentoUpdateCommandHandler } from "@/modules/ensino/diario-preferencia-agrupamento/domain/commands/diario-preferencia-agrupamento-update.command.handler.interface";
@@ -70,9 +70,7 @@ export class DiarioPreferenciaAgrupamentoController {
   ): Promise<DiarioPreferenciaAgrupamentoFindOneOutputRestDto> {
     const input = DiarioPreferenciaAgrupamentoRestMapper.toFindOneInput(params);
     const result = await this.findOneHandler.execute({ accessContext, dto: input });
-    if (!result) {
-      throw new ResourceNotFoundError("DiarioPreferenciaAgrupamento", input.id);
-    }
+    ensureExists(result, "DiarioPreferenciaAgrupamento", input.id);
     return DiarioPreferenciaAgrupamentoRestMapper.toFindOneOutputDto(result);
   }
 

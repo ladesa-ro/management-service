@@ -2,7 +2,7 @@ import { Inject } from "@nestjs/common";
 import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
 import { AccessContext, AccessContextGraphQL } from "@/modules/@seguranca/contexto-acesso";
-import { ResourceNotFoundError } from "@/modules/@shared";
+import { ensureExists } from "@/modules/@shared";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
 import { ICampusCreateCommandHandler } from "@/modules/ambientes/campus/domain/commands/campus-create.command.handler.interface";
 import { ICampusDeleteCommandHandler } from "@/modules/ambientes/campus/domain/commands/campus-delete.command.handler.interface";
@@ -55,9 +55,7 @@ export class CampusGraphqlResolver {
   ): Promise<CampusFindOneOutputGraphQlDto> {
     const selection = graphqlExtractSelection(info);
     const result = await this.findOneHandler.execute({ accessContext, dto: { id, selection } });
-    if (!result) {
-      throw new ResourceNotFoundError("Campus", id);
-    }
+    ensureExists(result, "Campus", id);
     return CampusGraphqlMapper.toFindOneOutputDto(result);
   }
 

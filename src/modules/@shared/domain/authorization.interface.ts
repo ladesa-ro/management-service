@@ -1,7 +1,7 @@
 /**
  * Token de injeção para o serviço de autorização
  */
-export const AUTHORIZATION_SERVICE_PORT = Symbol("IAuthorizationServicePort");
+export const IAuthorizationService = Symbol("IAuthorizationService");
 
 /**
  * Payload padrão para operações de autorização
@@ -19,7 +19,7 @@ export interface IAuthorizationPayload {
  * Este port abstrai o mecanismo de autorização do core layer,
  * permitindo diferentes implementações (RBAC, ABAC, etc).
  */
-export interface IAuthorizationServicePort {
+export interface IAuthorizationService {
   /**
    * Verifica se a operação é permitida e lança exceção se não for
    *

@@ -1,27 +1,20 @@
 import { Inject, Injectable } from "@nestjs/common";
-import {
-  AUTHORIZATION_SERVICE_PORT,
-  type IAuthorizationServicePort,
-  ResourceNotFoundError,
-} from "@/modules/@shared";
+import { ensureExists, IAuthorizationService } from "@/modules/@shared";
 import {
   type IDisciplinaUpdateCommand,
   IDisciplinaUpdateCommandHandler,
 } from "@/modules/ensino/disciplina/domain/commands/disciplina-update.command.handler.interface";
 import { Disciplina } from "@/modules/ensino/disciplina/domain/disciplina.domain";
-import {
-  DISCIPLINA_REPOSITORY_PORT,
-  type IDisciplinaRepositoryPort,
-} from "../../../domain/repositories";
+import { IDisciplinaRepository } from "../../../domain/repositories";
 import type { DisciplinaFindOneOutputDto } from "../../dtos";
 
 @Injectable()
 export class DisciplinaUpdateCommandHandlerImpl implements IDisciplinaUpdateCommandHandler {
   constructor(
-    @Inject(DISCIPLINA_REPOSITORY_PORT)
-    private readonly repository: IDisciplinaRepositoryPort,
-    @Inject(AUTHORIZATION_SERVICE_PORT)
-    private readonly authorizationService: IAuthorizationServicePort,
+    @Inject(IDisciplinaRepository)
+    private readonly repository: IDisciplinaRepository,
+    @Inject(IAuthorizationService)
+    private readonly authorizationService: IAuthorizationService,
   ) {}
 
   async execute({
@@ -30,9 +23,7 @@ export class DisciplinaUpdateCommandHandlerImpl implements IDisciplinaUpdateComm
   }: IDisciplinaUpdateCommand): Promise<DisciplinaFindOneOutputDto> {
     const current = await this.repository.findById(accessContext, { id: dto.id });
 
-    if (!current) {
-      throw new ResourceNotFoundError("Disciplina", dto.id);
-    }
+    ensureExists(current, "Disciplina", dto.id);
 
     await this.authorizationService.ensurePermission("disciplina:update", { dto }, dto.id);
 
@@ -50,9 +41,7 @@ export class DisciplinaUpdateCommandHandlerImpl implements IDisciplinaUpdateComm
 
     const result = await this.repository.findById(accessContext, { id: dto.id });
 
-    if (!result) {
-      throw new ResourceNotFoundError("Disciplina", dto.id);
-    }
+    ensureExists(result, "Disciplina", dto.id);
 
     return result;
   }

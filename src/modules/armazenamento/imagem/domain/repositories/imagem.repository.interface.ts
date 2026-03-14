@@ -5,13 +5,13 @@ import type { ImagemArquivo } from "@/modules/armazenamento/imagem-arquivo/domai
 /**
  * Token de injecao para o repositorio de Imagem
  */
-export const IMAGEM_REPOSITORY_PORT = Symbol("IImagemRepositoryPort");
+export const IImagemRepository = Symbol("IImagemRepository");
 
 /**
  * Port de saida para operacoes de persistencia de Imagem
  * Define o contrato que os adapters de persistencia devem implementar
  */
-export interface IImagemRepositoryPort {
+export interface IImagemRepository {
   create(): Imagem;
   merge(entity: Imagem, data: PartialEntity<Imagem>): void;
   save(entity: PartialEntity<Imagem>): Promise<Imagem>;
@@ -20,12 +20,12 @@ export interface IImagemRepositoryPort {
 /**
  * Token de injecao para o repositorio de ImagemArquivo
  */
-export const IMAGEM_ARQUIVO_REPOSITORY_PORT = Symbol("IImagemArquivoRepositoryPort");
+export const IImagemArquivoRepository = Symbol("IImagemArquivoRepository");
 
 /**
  * Port de saida para operacoes de persistencia de ImagemArquivo
  */
-export interface IImagemArquivoRepositoryPort {
+export interface IImagemArquivoRepository {
   create(): ImagemArquivo;
 
   merge(imagemArquivo: ImagemArquivo, data: PartialEntity<ImagemArquivo>): void;
@@ -39,7 +39,7 @@ export interface IImagemArquivoRepositoryPort {
 /**
  * Token de injecao para a porta de transacao de Imagem
  */
-export const IMAGEM_TRANSACTION_PORT = Symbol("IImagemTransactionPort");
+export const IMAGEM_ITransaction = Symbol("IImagemTransactionPort");
 
 /**
  * Port de saida para operacoes de transacao de Imagem
@@ -47,8 +47,8 @@ export const IMAGEM_TRANSACTION_PORT = Symbol("IImagemTransactionPort");
 export interface IImagemTransactionPort {
   transaction<T>(
     callback: (context: {
-      imagemRepository: IImagemRepositoryPort;
-      imagemArquivoRepository: IImagemArquivoRepositoryPort;
+      imagemRepository: IImagemRepository;
+      imagemArquivoRepository: IImagemArquivoRepository;
     }) => Promise<T>,
   ): Promise<T>;
 }

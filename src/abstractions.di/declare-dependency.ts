@@ -1,6 +1,6 @@
 import { applyDecorators, Inject as NestjsInject } from "@nestjs/common";
 
-export const AnnotateDependency = (token: any) => {
+export const DeclareDependency = (token: any) => {
   const decorators: PropertyDecorator[] = [];
 
   decorators.push(NestjsInject(token));
@@ -8,4 +8,4 @@ export const AnnotateDependency = (token: any) => {
   return applyDecorators(...decorators);
 };
 
-export const Inject = AnnotateDependency;
+export const Inject = DeclareDependency;

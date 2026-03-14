@@ -2,7 +2,7 @@ import { Inject } from "@nestjs/common";
 import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
 import { AccessContext, AccessContextGraphQL } from "@/modules/@seguranca/contexto-acesso";
-import { ResourceNotFoundError } from "@/modules/@shared";
+import { ensureExists } from "@/modules/@shared";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
 import { ICalendarioLetivoCreateCommandHandler } from "@/modules/horarios/calendario-letivo/domain/commands/calendario-letivo-create.command.handler.interface";
 import { ICalendarioLetivoDeleteCommandHandler } from "@/modules/horarios/calendario-letivo/domain/commands/calendario-letivo-delete.command.handler.interface";
@@ -57,9 +57,7 @@ export class CalendarioLetivoGraphqlResolver {
   ): Promise<CalendarioLetivoFindOneOutputGraphQlDto> {
     const selection = graphqlExtractSelection(info);
     const result = await this.findOneHandler.execute({ accessContext, dto: { id, selection } });
-    if (!result) {
-      throw new ResourceNotFoundError("CalendarioLetivo", id);
-    }
+    ensureExists(result, "CalendarioLetivo", id);
     return CalendarioLetivoGraphqlMapper.toFindOneOutputDto(result);
   }
 

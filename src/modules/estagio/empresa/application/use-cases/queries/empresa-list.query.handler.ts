@@ -3,14 +3,14 @@ import {
   type IEmpresaListQuery,
   IEmpresaListQueryHandler,
 } from "@/modules/estagio/empresa/domain/queries/empresa-list.query.handler.interface";
-import { EMPRESA_REPOSITORY_PORT, type IEmpresaRepositoryPort } from "../../../domain/repositories";
+import { IEmpresaRepository } from "../../../domain/repositories";
 import type { EmpresaListOutputDto } from "../../dtos";
 
 @Injectable()
 export class EmpresaListQueryHandlerImpl implements IEmpresaListQueryHandler {
   constructor(
-    @Inject(EMPRESA_REPOSITORY_PORT)
-    private readonly repository: IEmpresaRepositoryPort,
+    @Inject(IEmpresaRepository)
+    private readonly repository: IEmpresaRepository,
   ) {}
 
   async execute({

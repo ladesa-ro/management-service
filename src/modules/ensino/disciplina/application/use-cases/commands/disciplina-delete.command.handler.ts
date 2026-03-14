@@ -1,25 +1,18 @@
 import { Inject, Injectable } from "@nestjs/common";
-import {
-  AUTHORIZATION_SERVICE_PORT,
-  type IAuthorizationServicePort,
-  ResourceNotFoundError,
-} from "@/modules/@shared";
+import { ensureExists, IAuthorizationService } from "@/modules/@shared";
 import {
   type IDisciplinaDeleteCommand,
   IDisciplinaDeleteCommandHandler,
 } from "@/modules/ensino/disciplina/domain/commands/disciplina-delete.command.handler.interface";
-import {
-  DISCIPLINA_REPOSITORY_PORT,
-  type IDisciplinaRepositoryPort,
-} from "../../../domain/repositories";
+import { IDisciplinaRepository } from "../../../domain/repositories";
 
 @Injectable()
 export class DisciplinaDeleteCommandHandlerImpl implements IDisciplinaDeleteCommandHandler {
   constructor(
-    @Inject(DISCIPLINA_REPOSITORY_PORT)
-    private readonly repository: IDisciplinaRepositoryPort,
-    @Inject(AUTHORIZATION_SERVICE_PORT)
-    private readonly authorizationService: IAuthorizationServicePort,
+    @Inject(IDisciplinaRepository)
+    private readonly repository: IDisciplinaRepository,
+    @Inject(IAuthorizationService)
+    private readonly authorizationService: IAuthorizationService,
   ) {}
 
   async execute({ accessContext, dto }: IDisciplinaDeleteCommand): Promise<boolean> {
@@ -27,9 +20,7 @@ export class DisciplinaDeleteCommandHandlerImpl implements IDisciplinaDeleteComm
 
     const entity = await this.repository.findById(accessContext, dto);
 
-    if (!entity) {
-      throw new ResourceNotFoundError("Disciplina", dto.id);
-    }
+    ensureExists(entity, "Disciplina", dto.id);
 
     await this.repository.softDeleteById(entity.id);
 

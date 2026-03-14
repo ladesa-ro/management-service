@@ -1,4 +1,4 @@
-import type { IdUuid } from "@/modules/@shared/domain/scalars.types";
+import type { IdUuid } from "@/modules/@shared/domain/abstractions/scalars.types";
 import { DatedOutputDto } from "./dated-output.dto";
 
 /**

@@ -3,14 +3,14 @@ import {
   type ITurmaListQuery,
   ITurmaListQueryHandler,
 } from "@/modules/ensino/turma/domain/queries/turma-list.query.handler.interface";
-import { type ITurmaRepositoryPort, TURMA_REPOSITORY_PORT } from "../../../domain/repositories";
+import { ITurmaRepository } from "../../../domain/repositories";
 import type { TurmaListOutputDto } from "../../dtos";
 
 @Injectable()
 export class TurmaListQueryHandlerImpl implements ITurmaListQueryHandler {
   constructor(
-    @Inject(TURMA_REPOSITORY_PORT)
-    private readonly repository: ITurmaRepositoryPort,
+    @Inject(ITurmaRepository)
+    private readonly repository: ITurmaRepository,
   ) {}
 
   async execute({ accessContext, dto, selection }: ITurmaListQuery): Promise<TurmaListOutputDto> {

@@ -1,25 +1,18 @@
 import { Inject, Injectable } from "@nestjs/common";
-import {
-  AUTHORIZATION_SERVICE_PORT,
-  type IAuthorizationServicePort,
-  ResourceNotFoundError,
-} from "@/modules/@shared";
+import { ensureExists, IAuthorizationService } from "@/modules/@shared";
 import {
   type IOfertaFormacaoDeleteCommand,
   IOfertaFormacaoDeleteCommandHandler,
 } from "@/modules/ensino/oferta-formacao/domain/commands/oferta-formacao-delete.command.handler.interface";
-import {
-  type IOfertaFormacaoRepositoryPort,
-  OFERTA_FORMACAO_REPOSITORY_PORT,
-} from "../../../domain/repositories";
+import { IOfertaFormacaoRepository } from "../../../domain/repositories";
 
 @Injectable()
 export class OfertaFormacaoDeleteCommandHandlerImpl implements IOfertaFormacaoDeleteCommandHandler {
   constructor(
-    @Inject(OFERTA_FORMACAO_REPOSITORY_PORT)
-    private readonly repository: IOfertaFormacaoRepositoryPort,
-    @Inject(AUTHORIZATION_SERVICE_PORT)
-    private readonly authorizationService: IAuthorizationServicePort,
+    @Inject(IOfertaFormacaoRepository)
+    private readonly repository: IOfertaFormacaoRepository,
+    @Inject(IAuthorizationService)
+    private readonly authorizationService: IAuthorizationService,
   ) {}
 
   async execute({ accessContext, dto }: IOfertaFormacaoDeleteCommand): Promise<boolean> {
@@ -27,9 +20,7 @@ export class OfertaFormacaoDeleteCommandHandlerImpl implements IOfertaFormacaoDe
 
     const entity = await this.repository.findById(accessContext, dto);
 
-    if (!entity) {
-      throw new ResourceNotFoundError("OfertaFormacao", dto.id);
-    }
+    ensureExists(entity, "OfertaFormacao", dto.id);
 
     await this.repository.softDeleteById(entity.id);
 

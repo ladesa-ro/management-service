@@ -1,11 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { get } from "lodash";
-import {
-  AUTHORIZATION_SERVICE_PORT,
-  type IAuthorizationServicePort,
-  type PersistInput,
-  ResourceNotFoundError,
-} from "@/modules/@shared";
+import { ensureExists, IAuthorizationService, type PersistInput } from "@/modules/@shared";
 import { Campus } from "@/modules/ambientes/campus/domain/campus.domain";
 import type { ICampus } from "@/modules/ambientes/campus/domain/campus.types";
 import {
@@ -13,16 +8,16 @@ import {
   ICampusUpdateCommandHandler,
 } from "@/modules/ambientes/campus/domain/commands/campus-update.command.handler.interface";
 import { IEnderecoCreateOrUpdateCommandHandler } from "@/modules/localidades/endereco/domain/commands/endereco-create-or-update.command.handler.interface";
-import { CAMPUS_REPOSITORY_PORT, type ICampusRepositoryPort } from "../../../domain/repositories";
+import { ICampusRepository } from "../../../domain/repositories";
 import type { CampusFindOneOutputDto } from "../../dtos";
 
 @Injectable()
 export class CampusUpdateCommandHandlerImpl implements ICampusUpdateCommandHandler {
   constructor(
-    @Inject(CAMPUS_REPOSITORY_PORT)
-    private readonly repository: ICampusRepositoryPort,
-    @Inject(AUTHORIZATION_SERVICE_PORT)
-    private readonly authorizationService: IAuthorizationServicePort,
+    @Inject(ICampusRepository)
+    private readonly repository: ICampusRepository,
+    @Inject(IAuthorizationService)
+    private readonly authorizationService: IAuthorizationService,
     @Inject(IEnderecoCreateOrUpdateCommandHandler)
     private readonly enderecoCreateOrUpdateHandler: IEnderecoCreateOrUpdateCommandHandler,
   ) {}
@@ -30,9 +25,7 @@ export class CampusUpdateCommandHandlerImpl implements ICampusUpdateCommandHandl
   async execute({ accessContext, dto }: ICampusUpdateCommand): Promise<CampusFindOneOutputDto> {
     const current = await this.repository.findById(accessContext, { id: dto.id });
 
-    if (!current) {
-      throw new ResourceNotFoundError("Campus", dto.id);
-    }
+    ensureExists(current, "Campus", dto.id);
 
     await this.authorizationService.ensurePermission("campus:update", { dto }, dto.id);
 
@@ -61,9 +54,7 @@ export class CampusUpdateCommandHandlerImpl implements ICampusUpdateCommandHandl
 
     const result = await this.repository.findById(accessContext, { id: dto.id });
 
-    if (!result) {
-      throw new ResourceNotFoundError("Campus", dto.id);
-    }
+    ensureExists(result, "Campus", dto.id);
 
     return result;
   }

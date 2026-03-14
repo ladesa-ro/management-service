@@ -1,5 +1,5 @@
 import { Inject, Injectable, type StreamableFile } from "@nestjs/common";
-import { getEntityImagemStreamableFile, ResourceNotFoundError } from "@/modules/@shared";
+import { ensureExists, getEntityImagemStreamableFile } from "@/modules/@shared";
 import {
   type IAmbienteGetImagemCapaQuery,
   IAmbienteGetImagemCapaQueryHandler,
@@ -12,16 +12,13 @@ import {
   IImagemGetLatestArquivoIdQueryHandler,
   type IImagemGetLatestArquivoIdQueryHandler as IImagemGetLatestArquivoIdQueryHandlerType,
 } from "@/modules/armazenamento/imagem/domain/queries";
-import {
-  AMBIENTE_REPOSITORY_PORT,
-  type IAmbienteRepositoryPort,
-} from "../../../domain/repositories";
+import { IAmbienteRepository } from "../../../domain/repositories";
 
 @Injectable()
 export class AmbienteGetImagemCapaQueryHandlerImpl implements IAmbienteGetImagemCapaQueryHandler {
   constructor(
-    @Inject(AMBIENTE_REPOSITORY_PORT)
-    private readonly repository: IAmbienteRepositoryPort,
+    @Inject(IAmbienteRepository)
+    private readonly repository: IAmbienteRepository,
     @Inject(IImagemGetLatestArquivoIdQueryHandler)
     private readonly getLatestArquivoIdHandler: IImagemGetLatestArquivoIdQueryHandlerType,
     @Inject(IArquivoGetStreamableFileQueryHandler)
@@ -31,9 +28,7 @@ export class AmbienteGetImagemCapaQueryHandlerImpl implements IAmbienteGetImagem
   async execute({ accessContext, id }: IAmbienteGetImagemCapaQuery): Promise<StreamableFile> {
     const entity = await this.repository.findById(accessContext, { id });
 
-    if (!entity) {
-      throw new ResourceNotFoundError("Ambiente", id);
-    }
+    ensureExists(entity, "Ambiente", id);
 
     return getEntityImagemStreamableFile(
       entity as Record<string, any>,

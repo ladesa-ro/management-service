@@ -1,7 +1,7 @@
 /**
  * Token de injeção para o serviço de transações
  */
-export const TRANSACTION_PORT = Symbol("ITransactionPort");
+export const ITransaction = Symbol("ITransaction");
 
 /**
  * Contexto disponível durante uma transação.
@@ -41,7 +41,7 @@ export type TransactionCallback<T> = (context: ITransactionContext) => Promise<T
  * }
  * ```
  */
-export interface ITransactionPort {
+export interface ITransaction {
   /**
    * Executa um callback dentro de uma transação.
    *

@@ -4,16 +4,13 @@ import {
   type IEstagiarioDeleteCommand,
   IEstagiarioDeleteCommandHandler,
 } from "@/modules/estagio/estagiario/domain/commands/estagiario-delete.command.handler.interface";
-import {
-  ESTAGIARIO_REPOSITORY_PORT,
-  type IEstagiarioRepositoryPort,
-} from "../../../domain/repositories";
+import { IEstagiarioRepository } from "../../../domain/repositories";
 
 @Injectable()
 export class EstagiarioDeleteCommandHandlerImpl implements IEstagiarioDeleteCommandHandler {
   constructor(
-    @Inject(ESTAGIARIO_REPOSITORY_PORT)
-    private readonly repository: IEstagiarioRepositoryPort,
+    @Inject(IEstagiarioRepository)
+    private readonly repository: IEstagiarioRepository,
   ) {}
 
   async execute({ accessContext, id }: IEstagiarioDeleteCommand): Promise<void> {

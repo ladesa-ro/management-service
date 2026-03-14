@@ -1,18 +1,18 @@
-import type { IBaseCrudRepositoryPort } from "@/modules/@shared";
+import type { IBaseCrudRepository } from "@/modules/@shared";
 import {
   type INivelFormacao,
   NivelFormacaoFindOneOutputDto,
   NivelFormacaoListOutputDto,
 } from "@/modules/ensino/nivel-formacao";
 
-export const NIVEL_FORMACAO_REPOSITORY_PORT = Symbol("INivelFormacaoRepositoryPort");
+export const INivelFormacaoRepository = Symbol("INivelFormacaoRepository");
 
 /**
  * Port de saída para operações de persistência de NivelFormacao
  * Estende a interface base de CRUD com operações padrão
  */
-export interface INivelFormacaoRepositoryPort
-  extends IBaseCrudRepositoryPort<
+export interface INivelFormacaoRepository
+  extends IBaseCrudRepository<
     INivelFormacao,
     NivelFormacaoListOutputDto,
     NivelFormacaoFindOneOutputDto

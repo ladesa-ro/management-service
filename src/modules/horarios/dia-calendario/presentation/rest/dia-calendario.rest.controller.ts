@@ -8,7 +8,7 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
-import { ResourceNotFoundError } from "@/modules/@shared";
+import { ensureExists } from "@/modules/@shared";
 import { IDiaCalendarioCreateCommandHandler } from "@/modules/horarios/dia-calendario/domain/commands/dia-calendario-create.command.handler.interface";
 import { IDiaCalendarioDeleteCommandHandler } from "@/modules/horarios/dia-calendario/domain/commands/dia-calendario-delete.command.handler.interface";
 import { IDiaCalendarioUpdateCommandHandler } from "@/modules/horarios/dia-calendario/domain/commands/dia-calendario-update.command.handler.interface";
@@ -67,9 +67,7 @@ export class DiaCalendarioRestController {
   ): Promise<DiaCalendarioFindOneOutputRestDto> {
     const input = DiaCalendarioRestMapper.toFindOneInput(params);
     const result = await this.findOneHandler.execute({ accessContext, dto: input as any });
-    if (!result) {
-      throw new ResourceNotFoundError("DiaCalendario", (input as any).id);
-    }
+    ensureExists(result, "DiaCalendario", (input as any).id);
     return DiaCalendarioRestMapper.toFindOneOutputDto(result as any);
   }
 

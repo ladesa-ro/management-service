@@ -18,7 +18,7 @@ import {
   ICampusFindOneQueryHandler,
   ICampusListQueryHandler,
 } from "@/modules/ambientes/campus/domain/queries";
-import { CAMPUS_REPOSITORY_PORT } from "@/modules/ambientes/campus/domain/repositories";
+import { ICampusRepository } from "@/modules/ambientes/campus/domain/repositories";
 import {
   CampusAuthzRegistrySetup,
   CampusTypeOrmRepositoryAdapter,
@@ -35,7 +35,7 @@ import { EnderecoModule } from "@/modules/localidades/endereco/endereco.module";
     CampusGraphqlResolver,
     CampusAuthzRegistrySetup,
     {
-      provide: CAMPUS_REPOSITORY_PORT,
+      provide: ICampusRepository,
       useClass: CampusTypeOrmRepositoryAdapter,
     },
 

@@ -1,22 +1,22 @@
 import { describe, expect, it } from "vitest";
-import type { IIdentityProviderPort, IIdentityResponse } from "..";
-import { IDENTITY_PROVIDER_PORT } from "./identity-provider.port";
+import type { IIdentityResponse } from "..";
+import { IIdentityProvider } from "./identity-provider.interface";
 
-describe("IIdentityProviderPort", () => {
-  describe("IDENTITY_PROVIDER_PORT", () => {
+describe("IIdentityProvider", () => {
+  describe("IIdentityProvider", () => {
     it("deve ter o symbol definido", () => {
-      expect(IDENTITY_PROVIDER_PORT).toBeDefined();
-      expect(typeof IDENTITY_PROVIDER_PORT).toBe("symbol");
+      expect(IIdentityProvider).toBeDefined();
+      expect(typeof IIdentityProvider).toBe("symbol");
     });
 
     it("deve ter descrição correta", () => {
-      expect(IDENTITY_PROVIDER_PORT.toString()).toBe("Symbol(IIdentityProviderPort)");
+      expect(IIdentityProvider.toString()).toBe("Symbol(IIdentityProvider)");
     });
   });
 
-  describe("IIdentityProviderPort interface", () => {
+  describe("IIdentityProvider interface", () => {
     it("deve aceitar implementação válida", async () => {
-      const mockProvider: IIdentityProviderPort = {
+      const mockProvider: IIdentityProvider = {
         getIdentityFromAccessToken: async (_accessToken: string): Promise<IIdentityResponse> => {
           return {
             usuario: {
@@ -31,7 +31,7 @@ describe("IIdentityProviderPort", () => {
     });
 
     it("deve retornar resposta vazia para token inválido", async () => {
-      const mockProvider: IIdentityProviderPort = {
+      const mockProvider: IIdentityProvider = {
         getIdentityFromAccessToken: async (): Promise<IIdentityResponse> => {
           return {};
         },

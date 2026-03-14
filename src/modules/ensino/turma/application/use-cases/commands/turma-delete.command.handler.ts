@@ -1,22 +1,18 @@
 import { Inject, Injectable } from "@nestjs/common";
-import {
-  AUTHORIZATION_SERVICE_PORT,
-  type IAuthorizationServicePort,
-  ResourceNotFoundError,
-} from "@/modules/@shared";
+import { ensureExists, IAuthorizationService } from "@/modules/@shared";
 import {
   type ITurmaDeleteCommand,
   ITurmaDeleteCommandHandler,
 } from "@/modules/ensino/turma/domain/commands/turma-delete.command.handler.interface";
-import { type ITurmaRepositoryPort, TURMA_REPOSITORY_PORT } from "../../../domain/repositories";
+import { ITurmaRepository } from "../../../domain/repositories";
 
 @Injectable()
 export class TurmaDeleteCommandHandlerImpl implements ITurmaDeleteCommandHandler {
   constructor(
-    @Inject(TURMA_REPOSITORY_PORT)
-    private readonly repository: ITurmaRepositoryPort,
-    @Inject(AUTHORIZATION_SERVICE_PORT)
-    private readonly authorizationService: IAuthorizationServicePort,
+    @Inject(ITurmaRepository)
+    private readonly repository: ITurmaRepository,
+    @Inject(IAuthorizationService)
+    private readonly authorizationService: IAuthorizationService,
   ) {}
 
   async execute({ accessContext, dto }: ITurmaDeleteCommand): Promise<boolean> {
@@ -24,9 +20,7 @@ export class TurmaDeleteCommandHandlerImpl implements ITurmaDeleteCommandHandler
 
     const entity = await this.repository.findById(accessContext, dto);
 
-    if (!entity) {
-      throw new ResourceNotFoundError("Turma", dto.id);
-    }
+    ensureExists(entity, "Turma", dto.id);
 
     await this.repository.softDeleteById(entity.id);
 

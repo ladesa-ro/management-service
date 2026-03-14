@@ -1,1 +1,1 @@
-export * from "./identity-provider.port";
+export * from "./identity-provider.interface";

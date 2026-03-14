@@ -1,5 +1,5 @@
 import { Inject, Injectable, type StreamableFile } from "@nestjs/common";
-import { getEntityImagemStreamableFile, ResourceNotFoundError } from "@/modules/@shared";
+import { ensureExists, getEntityImagemStreamableFile } from "@/modules/@shared";
 import {
   IArquivoGetStreamableFileQueryHandler,
   type IArquivoGetStreamableFileQueryHandler as IArquivoGetStreamableFileQueryHandlerType,
@@ -12,13 +12,13 @@ import {
   type ICursoGetImagemCapaQuery,
   ICursoGetImagemCapaQueryHandler,
 } from "@/modules/ensino/curso/domain/queries/curso-get-imagem-capa.query.handler.interface";
-import { CURSO_REPOSITORY_PORT, type ICursoRepositoryPort } from "../../../domain/repositories";
+import { ICursoRepository } from "../../../domain/repositories";
 
 @Injectable()
 export class CursoGetImagemCapaQueryHandlerImpl implements ICursoGetImagemCapaQueryHandler {
   constructor(
-    @Inject(CURSO_REPOSITORY_PORT)
-    private readonly repository: ICursoRepositoryPort,
+    @Inject(ICursoRepository)
+    private readonly repository: ICursoRepository,
     @Inject(IImagemGetLatestArquivoIdQueryHandler)
     private readonly getLatestArquivoIdHandler: IImagemGetLatestArquivoIdQueryHandlerType,
     @Inject(IArquivoGetStreamableFileQueryHandler)
@@ -28,9 +28,7 @@ export class CursoGetImagemCapaQueryHandlerImpl implements ICursoGetImagemCapaQu
   async execute({ accessContext, id }: ICursoGetImagemCapaQuery): Promise<StreamableFile> {
     const entity = await this.repository.findById(accessContext, { id });
 
-    if (!entity) {
-      throw new ResourceNotFoundError("Curso", id);
-    }
+    ensureExists(entity, "Curso", id);
 
     return getEntityImagemStreamableFile(
       entity as Record<string, any>,

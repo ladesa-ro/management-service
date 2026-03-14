@@ -13,7 +13,7 @@ import type {
   CalendarioLetivoFindOneOutputDto,
   CalendarioLetivoListInputDto,
   CalendarioLetivoListOutputDto,
-  ICalendarioLetivoRepositoryPort,
+  ICalendarioLetivoRepository,
 } from "@/modules/horarios/calendario-letivo";
 import type { CalendarioLetivoEntity } from "./calendario-letivo.entity";
 import { createCalendarioLetivoRepository } from "./calendario-letivo.repository";
@@ -27,7 +27,7 @@ export class CalendarioLetivoTypeOrmRepositoryAdapter
     CalendarioLetivoFindOneInputDto,
     CalendarioLetivoFindOneOutputDto
   >
-  implements ICalendarioLetivoRepositoryPort
+  implements ICalendarioLetivoRepository
 {
   protected readonly alias = "calendario_letivo";
   protected readonly authzAction = "calendario_letivo:find";

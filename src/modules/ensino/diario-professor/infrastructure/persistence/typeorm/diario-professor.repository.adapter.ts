@@ -14,7 +14,7 @@ import type {
   DiarioProfessorListInputDto,
   DiarioProfessorListOutputDto,
 } from "@/modules/ensino/diario-professor/application/dtos";
-import type { IDiarioProfessorRepositoryPort } from "@/modules/ensino/diario-professor/domain/repositories";
+import type { IDiarioProfessorRepository } from "@/modules/ensino/diario-professor/domain/repositories";
 import type { DiarioProfessorEntity } from "./diario-professor.entity";
 import { createDiarioProfessorRepository } from "./diario-professor.repository";
 
@@ -27,7 +27,7 @@ export class DiarioProfessorTypeOrmRepositoryAdapter
     DiarioProfessorFindOneInputDto,
     DiarioProfessorFindOneOutputDto
   >
-  implements IDiarioProfessorRepositoryPort
+  implements IDiarioProfessorRepository
 {
   protected readonly alias = "diario_professor";
   protected readonly authzAction = "diario_professor:find";

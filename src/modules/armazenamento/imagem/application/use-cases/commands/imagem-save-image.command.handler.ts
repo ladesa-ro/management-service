@@ -13,7 +13,7 @@ import type {
 } from "@/modules/armazenamento/imagem/domain/commands/imagem-save-image.command.handler.interface";
 import {
   type IImagemTransactionPort,
-  IMAGEM_TRANSACTION_PORT,
+  IMAGEM_ITransaction,
 } from "@/modules/armazenamento/imagem/domain/repositories";
 
 @Injectable()
@@ -21,7 +21,7 @@ export class ImagemSaveImageCommandHandlerImpl implements IImagemSaveImageComman
   constructor(
     @Inject(IArquivoCreateCommandHandler)
     private readonly arquivoCreateHandler: IArquivoCreateCommandHandler,
-    @Inject(IMAGEM_TRANSACTION_PORT)
+    @Inject(IMAGEM_ITransaction)
     private readonly imagemTransactionPort: IImagemTransactionPort,
   ) {}
 

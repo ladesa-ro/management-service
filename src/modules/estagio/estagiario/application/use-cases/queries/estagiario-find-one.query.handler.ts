@@ -3,17 +3,14 @@ import {
   type IEstagiarioFindOneQuery,
   IEstagiarioFindOneQueryHandler,
 } from "@/modules/estagio/estagiario/domain/queries/estagiario-find-one.query.handler.interface";
-import {
-  ESTAGIARIO_REPOSITORY_PORT,
-  type IEstagiarioRepositoryPort,
-} from "../../../domain/repositories";
+import { IEstagiarioRepository } from "../../../domain/repositories";
 import type { EstagiarioFindOneOutputDto } from "../../dtos";
 
 @Injectable()
 export class EstagiarioFindOneQueryHandlerImpl implements IEstagiarioFindOneQueryHandler {
   constructor(
-    @Inject(ESTAGIARIO_REPOSITORY_PORT)
-    private readonly repository: IEstagiarioRepositoryPort,
+    @Inject(IEstagiarioRepository)
+    private readonly repository: IEstagiarioRepository,
   ) {}
 
   async execute({

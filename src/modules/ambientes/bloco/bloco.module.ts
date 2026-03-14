@@ -22,7 +22,7 @@ import {
   IBlocoGetImagemCapaQueryHandler,
   IBlocoListQueryHandler,
 } from "@/modules/ambientes/bloco/domain/queries";
-import { BLOCO_REPOSITORY_PORT } from "@/modules/ambientes/bloco/domain/repositories";
+import { IBlocoRepository } from "@/modules/ambientes/bloco/domain/repositories";
 import {
   BlocoAuthzRegistrySetup,
   BlocoTypeOrmRepositoryAdapter,
@@ -41,7 +41,7 @@ import { ImagemModule } from "@/modules/armazenamento/imagem/imagem.module";
     BlocoGraphqlResolver,
     BlocoAuthzRegistrySetup,
     {
-      provide: BLOCO_REPOSITORY_PORT,
+      provide: IBlocoRepository,
       useClass: BlocoTypeOrmRepositoryAdapter,
     },
     // Commands

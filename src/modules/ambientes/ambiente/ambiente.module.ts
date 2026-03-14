@@ -22,7 +22,7 @@ import {
   IAmbienteGetImagemCapaQueryHandler,
   IAmbienteListQueryHandler,
 } from "@/modules/ambientes/ambiente/domain/queries";
-import { AMBIENTE_REPOSITORY_PORT } from "@/modules/ambientes/ambiente/domain/repositories";
+import { IAmbienteRepository } from "@/modules/ambientes/ambiente/domain/repositories";
 import {
   AmbienteAuthzRegistrySetup,
   AmbienteTypeOrmRepositoryAdapter,
@@ -40,7 +40,7 @@ import { ImagemModule } from "@/modules/armazenamento/imagem/imagem.module";
     NestJsPaginateAdapter,
     AmbienteGraphqlResolver,
     AmbienteAuthzRegistrySetup,
-    { provide: AMBIENTE_REPOSITORY_PORT, useClass: AmbienteTypeOrmRepositoryAdapter },
+    { provide: IAmbienteRepository, useClass: AmbienteTypeOrmRepositoryAdapter },
     // Commands
     { provide: IAmbienteCreateCommandHandler, useClass: AmbienteCreateCommandHandlerImpl },
     { provide: IAmbienteUpdateCommandHandler, useClass: AmbienteUpdateCommandHandlerImpl },

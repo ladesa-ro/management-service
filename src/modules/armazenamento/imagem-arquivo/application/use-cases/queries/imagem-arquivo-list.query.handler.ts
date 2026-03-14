@@ -3,17 +3,14 @@ import {
   type IImagemArquivoListQuery,
   IImagemArquivoListQueryHandler,
 } from "@/modules/armazenamento/imagem-arquivo/domain/queries/imagem-arquivo-list.query.handler.interface";
-import {
-  type IImagemArquivoQueryRepositoryPort,
-  IMAGEM_ARQUIVO_QUERY_REPOSITORY_PORT,
-} from "../../../domain/repositories";
+import { IImagemArquivoQueryRepository } from "../../../domain/repositories";
 import type { ImagemArquivoListOutputDto } from "../../dtos";
 
 @Injectable()
 export class ImagemArquivoListQueryHandlerImpl implements IImagemArquivoListQueryHandler {
   constructor(
-    @Inject(IMAGEM_ARQUIVO_QUERY_REPOSITORY_PORT)
-    private readonly repository: IImagemArquivoQueryRepositoryPort,
+    @Inject(IImagemArquivoQueryRepository)
+    private readonly repository: IImagemArquivoQueryRepository,
   ) {}
 
   async execute({

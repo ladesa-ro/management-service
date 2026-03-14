@@ -3,18 +3,15 @@ import {
   type IEnderecoCreateOrUpdateCommand,
   IEnderecoCreateOrUpdateCommandHandler,
 } from "@/modules/localidades/endereco/domain/commands/endereco-create-or-update.command.handler.interface";
-import {
-  ENDERECO_REPOSITORY_PORT,
-  type IEnderecoRepositoryPort,
-} from "../../../domain/repositories";
+import { IEnderecoRepository } from "../../../domain/repositories";
 
 @Injectable()
 export class EnderecoCreateOrUpdateCommandHandlerImpl
   implements IEnderecoCreateOrUpdateCommandHandler
 {
   constructor(
-    @Inject(ENDERECO_REPOSITORY_PORT)
-    private readonly repository: IEnderecoRepositoryPort,
+    @Inject(IEnderecoRepository)
+    private readonly repository: IEnderecoRepository,
   ) {}
 
   async execute({ id, dto }: IEnderecoCreateOrUpdateCommand): Promise<{ id: string | number }> {

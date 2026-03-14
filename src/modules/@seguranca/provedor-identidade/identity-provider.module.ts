@@ -5,7 +5,7 @@ import {
   KeycloakModule,
   OpenidConnectModule,
 } from "./infrastructure";
-import { IDENTITY_PROVIDER_PORT } from "./ports";
+import { IIdentityProvider } from "./ports";
 
 /**
  * Módulo de Identity Provider.
@@ -16,10 +16,10 @@ import { IDENTITY_PROVIDER_PORT } from "./ports";
   providers: [
     IdentityProviderService,
     {
-      provide: IDENTITY_PROVIDER_PORT,
+      provide: IIdentityProvider,
       useExisting: IdentityProviderService,
     },
   ],
-  exports: [IDENTITY_PROVIDER_PORT, IdentityProviderService, KeycloakModule],
+  exports: [IIdentityProvider, IdentityProviderService, KeycloakModule],
 })
 export class IdentityProviderCoreModule {}

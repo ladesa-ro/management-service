@@ -14,7 +14,7 @@ import type {
   DiaCalendarioListInputDto as DiaCalendarioListInputDto,
   DiaCalendarioListOutputDto as DiaCalendarioListOutputDto,
 } from "@/modules/horarios/dia-calendario";
-import type { IDiaCalendarioRepositoryPort } from "@/modules/horarios/dia-calendario/domain/repositories";
+import type { IDiaCalendarioRepository } from "@/modules/horarios/dia-calendario/domain/repositories";
 import type { DiaCalendarioEntity } from "./dia-calendario.entity";
 import { createDiaCalendarioRepository } from "./dia-calendario.repository";
 
@@ -27,7 +27,7 @@ export class DiaCalendarioTypeOrmRepositoryAdapter
     DiaCalendarioFindOneInputDto,
     DiaCalendarioFindOneOutputDto
   >
-  implements IDiaCalendarioRepositoryPort
+  implements IDiaCalendarioRepository
 {
   protected readonly alias = "dia_calendario";
   protected readonly authzAction = "dia_calendario:find";

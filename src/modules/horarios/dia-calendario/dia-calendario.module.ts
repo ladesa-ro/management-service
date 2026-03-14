@@ -19,7 +19,7 @@ import {
   IDiaCalendarioFindOneQueryHandler,
   IDiaCalendarioListQueryHandler,
 } from "@/modules/horarios/dia-calendario/domain/queries";
-import { DIA_CALENDARIO_REPOSITORY_PORT } from "@/modules/horarios/dia-calendario/domain/repositories";
+import { IDiaCalendarioRepository } from "@/modules/horarios/dia-calendario/domain/repositories";
 import { DiaCalendarioAuthzRegistrySetup } from "@/modules/horarios/dia-calendario/infrastructure";
 import { DiaCalendarioTypeOrmRepositoryAdapter } from "@/modules/horarios/dia-calendario/infrastructure/persistence/typeorm";
 import { DiaCalendarioGraphqlResolver } from "@/modules/horarios/dia-calendario/presentation/graphql/dia-calendario.graphql.resolver";
@@ -30,7 +30,7 @@ import { DiaCalendarioRestController } from "@/modules/horarios/dia-calendario/p
   providers: [
     NestJsPaginateAdapter,
     {
-      provide: DIA_CALENDARIO_REPOSITORY_PORT,
+      provide: IDiaCalendarioRepository,
       useClass: DiaCalendarioTypeOrmRepositoryAdapter,
     },
     DiaCalendarioGraphqlResolver,

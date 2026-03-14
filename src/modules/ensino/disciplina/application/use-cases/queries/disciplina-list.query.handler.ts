@@ -3,17 +3,14 @@ import {
   type IDisciplinaListQuery,
   IDisciplinaListQueryHandler,
 } from "@/modules/ensino/disciplina/domain/queries/disciplina-list.query.handler.interface";
-import {
-  DISCIPLINA_REPOSITORY_PORT,
-  type IDisciplinaRepositoryPort,
-} from "../../../domain/repositories";
+import { IDisciplinaRepository } from "../../../domain/repositories";
 import type { DisciplinaListOutputDto } from "../../dtos";
 
 @Injectable()
 export class DisciplinaListQueryHandlerImpl implements IDisciplinaListQueryHandler {
   constructor(
-    @Inject(DISCIPLINA_REPOSITORY_PORT)
-    private readonly repository: IDisciplinaRepositoryPort,
+    @Inject(IDisciplinaRepository)
+    private readonly repository: IDisciplinaRepository,
   ) {}
 
   async execute({

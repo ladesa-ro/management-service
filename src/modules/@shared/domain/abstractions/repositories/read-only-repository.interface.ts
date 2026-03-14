@@ -9,7 +9,7 @@ import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
  * @template FindOneInputDto - Tipo do DTO de entrada para busca única
  * @template FindOneOutputDto - Tipo do DTO de saída para busca única
  */
-export interface IReadOnlyRepositoryPort<
+export interface IReadOnlyRepository<
   ListInputDto,
   ListOutputDto,
   FindOneInputDto extends { id: string | number },

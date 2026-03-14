@@ -18,7 +18,7 @@ import type {
   PerfilListInputDto,
   PerfilListOutputDto,
 } from "@/modules/acesso/perfil/application/dtos";
-import type { IPerfilRepositoryPort } from "@/modules/acesso/perfil/domain/repositories";
+import type { IPerfilRepository } from "@/modules/acesso/perfil/domain/repositories";
 import type { UsuarioEntity } from "@/modules/acesso/usuario/infrastructure/persistence/typeorm";
 import type { PerfilEntity } from "./perfil.entity";
 import { createPerfilRepository } from "./perfil.repository";
@@ -32,7 +32,7 @@ export class PerfilTypeOrmRepositoryAdapter
     PerfilFindOneInputDto,
     PerfilFindOneOutputDto
   >
-  implements IPerfilRepositoryPort
+  implements IPerfilRepository
 {
   protected readonly alias = "vinculo";
   protected readonly authzAction = "vinculo:find";

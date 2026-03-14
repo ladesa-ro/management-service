@@ -3,17 +3,14 @@ import {
   type IEnderecoFindOneQuery,
   IEnderecoFindOneQueryHandler,
 } from "@/modules/localidades/endereco/domain/queries/endereco-find-one.query.handler.interface";
-import {
-  ENDERECO_REPOSITORY_PORT,
-  type IEnderecoRepositoryPort,
-} from "../../../domain/repositories";
+import { IEnderecoRepository } from "../../../domain/repositories";
 import type { EnderecoFindOneOutputDto } from "../../dtos";
 
 @Injectable()
 export class EnderecoFindOneQueryHandlerImpl implements IEnderecoFindOneQueryHandler {
   constructor(
-    @Inject(ENDERECO_REPOSITORY_PORT)
-    private readonly repository: IEnderecoRepositoryPort,
+    @Inject(IEnderecoRepository)
+    private readonly repository: IEnderecoRepository,
   ) {}
 
   async execute({

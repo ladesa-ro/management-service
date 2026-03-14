@@ -1,4 +1,4 @@
-import type { IBaseCrudRepositoryPort } from "@/modules/@shared";
+import type { IBaseCrudRepository } from "@/modules/@shared";
 import type { IDisciplina } from "@/modules/ensino/disciplina";
 import type {
   DisciplinaFindOneOutputDto,
@@ -8,15 +8,11 @@ import type {
 /**
  * Token de injeção para o repositório de Disciplina
  */
-export const DISCIPLINA_REPOSITORY_PORT = Symbol("IDisciplinaRepositoryPort");
+export const IDisciplinaRepository = Symbol("IDisciplinaRepository");
 
 /**
  * Port de saída para operações de persistência de Disciplina
  * Estende a interface base de CRUD com operações padrão
  */
-export interface IDisciplinaRepositoryPort
-  extends IBaseCrudRepositoryPort<
-    IDisciplina,
-    DisciplinaListOutputDto,
-    DisciplinaFindOneOutputDto
-  > {}
+export interface IDisciplinaRepository
+  extends IBaseCrudRepository<IDisciplina, DisciplinaListOutputDto, DisciplinaFindOneOutputDto> {}

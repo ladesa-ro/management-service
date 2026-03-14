@@ -25,7 +25,7 @@ import {
 } from "@nestjs/swagger";
 import type { Express } from "express";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
-import { ResourceNotFoundError } from "@/modules/@shared";
+import { ensureExists } from "@/modules/@shared";
 import { ITurmaCreateCommandHandler } from "@/modules/ensino/turma/domain/commands/turma-create.command.handler.interface";
 import { ITurmaDeleteCommandHandler } from "@/modules/ensino/turma/domain/commands/turma-delete.command.handler.interface";
 import { ITurmaUpdateCommandHandler } from "@/modules/ensino/turma/domain/commands/turma-update.command.handler.interface";
@@ -82,9 +82,7 @@ export class TurmaRestController {
   ): Promise<TurmaFindOneOutputRestDto> {
     const input = TurmaRestMapper.toFindOneInput(params);
     const result = await this.findOneHandler.execute({ accessContext, dto: input });
-    if (!result) {
-      throw new ResourceNotFoundError("Turma", input.id);
-    }
+    ensureExists(result, "Turma", input.id);
     return TurmaRestMapper.toFindOneOutputDto(result);
   }
 

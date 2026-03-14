@@ -12,7 +12,7 @@ import {
   IPerfilFindOneQueryHandler,
   IPerfilListQueryHandler,
 } from "@/modules/acesso/perfil/domain/queries";
-import { PERFIL_REPOSITORY_PORT } from "@/modules/acesso/perfil/domain/repositories";
+import { IPerfilRepository } from "@/modules/acesso/perfil/domain/repositories";
 import {
   PerfilAuthzRegistrySetup,
   PerfilTypeOrmRepositoryAdapter,
@@ -30,7 +30,7 @@ import { CampusModule } from "@/modules/ambientes/campus/campus.module";
     PerfilGraphqlResolver,
     PerfilAuthzRegistrySetup,
     {
-      provide: PERFIL_REPOSITORY_PORT,
+      provide: IPerfilRepository,
       useClass: PerfilTypeOrmRepositoryAdapter,
     },
 

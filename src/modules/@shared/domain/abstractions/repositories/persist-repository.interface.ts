@@ -38,7 +38,7 @@ export type PersistInput<T> = {
  *
  * @template DomainData - Tipo da interface de domínio (ex: IAmbiente, ICampus)
  */
-export interface IPersistRepositoryPort<DomainData> {
+export interface IPersistRepository<DomainData> {
   /**
    * Cria uma nova entidade a partir de dados de domínio
    */

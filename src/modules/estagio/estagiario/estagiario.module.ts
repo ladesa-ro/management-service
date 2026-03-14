@@ -17,7 +17,7 @@ import {
   IEstagiarioFindOneQueryHandler,
   IEstagiarioListQueryHandler,
 } from "@/modules/estagio/estagiario/domain/queries";
-import { ESTAGIARIO_REPOSITORY_PORT } from "@/modules/estagio/estagiario/domain/repositories";
+import { IEstagiarioRepository } from "@/modules/estagio/estagiario/domain/repositories";
 import { EstagiarioTypeOrmRepositoryAdapter } from "@/modules/estagio/estagiario/infrastructure";
 import { EstagiarioRestController } from "@/modules/estagio/estagiario/presentation/rest/estagiario.rest.controller";
 
@@ -26,7 +26,7 @@ import { EstagiarioRestController } from "@/modules/estagio/estagiario/presentat
   controllers: [EstagiarioRestController],
   providers: [
     {
-      provide: ESTAGIARIO_REPOSITORY_PORT,
+      provide: IEstagiarioRepository,
       useClass: EstagiarioTypeOrmRepositoryAdapter,
     },
 

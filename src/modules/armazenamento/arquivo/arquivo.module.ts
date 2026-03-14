@@ -3,7 +3,7 @@ import { ArquivoCreateCommandHandlerImpl } from "@/modules/armazenamento/arquivo
 import { ArquivoGetStreamableFileQueryHandlerImpl } from "@/modules/armazenamento/arquivo/application/use-cases/queries";
 import { IArquivoCreateCommandHandler } from "@/modules/armazenamento/arquivo/domain/commands";
 import { IArquivoGetStreamableFileQueryHandler } from "@/modules/armazenamento/arquivo/domain/queries";
-import { ARQUIVO_REPOSITORY_PORT } from "@/modules/armazenamento/arquivo/domain/repositories";
+import { IArquivoRepository } from "@/modules/armazenamento/arquivo/domain/repositories";
 import { ArquivoTypeOrmRepositoryAdapter } from "@/modules/armazenamento/arquivo/infrastructure/persistence/typeorm";
 import { ArquivoRestController } from "@/modules/armazenamento/arquivo/presentation/rest/arquivo.rest.controller";
 
@@ -13,7 +13,7 @@ import { ArquivoRestController } from "@/modules/armazenamento/arquivo/presentat
   controllers: [ArquivoRestController],
   providers: [
     {
-      provide: ARQUIVO_REPOSITORY_PORT,
+      provide: IArquivoRepository,
       useClass: ArquivoTypeOrmRepositoryAdapter,
     },
     {

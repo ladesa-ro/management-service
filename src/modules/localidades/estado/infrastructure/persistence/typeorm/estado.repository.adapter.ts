@@ -13,7 +13,7 @@ import type {
   EstadoListInputDto,
   EstadoListOutputDto,
 } from "@/modules/localidades/estado/application/dtos";
-import type { IEstadoRepositoryPort } from "@/modules/localidades/estado/domain/repositories";
+import type { IEstadoRepository } from "@/modules/localidades/estado/domain/repositories";
 import type { EstadoEntity } from "./estado.entity";
 import { createEstadoRepository } from "./estado.repository";
 
@@ -31,7 +31,7 @@ export class EstadoTypeOrmRepositoryAdapter
     EstadoFindOneInputDto,
     EstadoFindOneOutputDto
   >
-  implements IEstadoRepositoryPort
+  implements IEstadoRepository
 {
   protected readonly alias = "estado";
   protected readonly authzAction = "estado:find";

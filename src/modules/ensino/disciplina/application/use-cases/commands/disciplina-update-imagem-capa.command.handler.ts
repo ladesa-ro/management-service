@@ -1,10 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
-import {
-  AUTHORIZATION_SERVICE_PORT,
-  type IAuthorizationServicePort,
-  ResourceNotFoundError,
-  saveEntityImagemField,
-} from "@/modules/@shared";
+import { ensureExists, IAuthorizationService, saveEntityImagemField } from "@/modules/@shared";
 import {
   IImagemSaveImagemCapaCommandHandler,
   type IImagemSaveImagemCapaCommandHandler as IImagemSaveImagemCapaCommandHandlerType,
@@ -13,20 +8,17 @@ import {
   type IDisciplinaUpdateImagemCapaCommand,
   IDisciplinaUpdateImagemCapaCommandHandler,
 } from "@/modules/ensino/disciplina/domain/commands/disciplina-update-imagem-capa.command.handler.interface";
-import {
-  DISCIPLINA_REPOSITORY_PORT,
-  type IDisciplinaRepositoryPort,
-} from "../../../domain/repositories";
+import { IDisciplinaRepository } from "../../../domain/repositories";
 
 @Injectable()
 export class DisciplinaUpdateImagemCapaCommandHandlerImpl
   implements IDisciplinaUpdateImagemCapaCommandHandler
 {
   constructor(
-    @Inject(DISCIPLINA_REPOSITORY_PORT)
-    private readonly repository: IDisciplinaRepositoryPort,
-    @Inject(AUTHORIZATION_SERVICE_PORT)
-    private readonly authorizationService: IAuthorizationServicePort,
+    @Inject(IDisciplinaRepository)
+    private readonly repository: IDisciplinaRepository,
+    @Inject(IAuthorizationService)
+    private readonly authorizationService: IAuthorizationService,
     @Inject(IImagemSaveImagemCapaCommandHandler)
     private readonly saveImagemCapaHandler: IImagemSaveImagemCapaCommandHandlerType,
   ) {}
@@ -38,9 +30,7 @@ export class DisciplinaUpdateImagemCapaCommandHandlerImpl
   }: IDisciplinaUpdateImagemCapaCommand): Promise<boolean> {
     const current = await this.repository.findById(accessContext, dto);
 
-    if (!current) {
-      throw new ResourceNotFoundError("Disciplina", dto.id);
-    }
+    ensureExists(current, "Disciplina", dto.id);
 
     await this.authorizationService.ensurePermission(
       "disciplina:update",

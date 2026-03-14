@@ -1,35 +1,26 @@
 import { Inject, Injectable } from "@nestjs/common";
-import {
-  AUTHORIZATION_SERVICE_PORT,
-  type IAuthorizationServicePort,
-  ResourceNotFoundError,
-} from "@/modules/@shared";
+import { ensureExists, IAuthorizationService } from "@/modules/@shared";
 import { Ambiente } from "@/modules/ambientes/ambiente/domain/ambiente.domain";
 import {
   type IAmbienteUpdateCommand,
   IAmbienteUpdateCommandHandler,
 } from "@/modules/ambientes/ambiente/domain/commands/ambiente-update.command.handler.interface";
-import {
-  AMBIENTE_REPOSITORY_PORT,
-  type IAmbienteRepositoryPort,
-} from "../../../domain/repositories";
+import { IAmbienteRepository } from "../../../domain/repositories";
 import type { AmbienteFindOneOutputDto } from "../../dtos";
 
 @Injectable()
 export class AmbienteUpdateCommandHandlerImpl implements IAmbienteUpdateCommandHandler {
   constructor(
-    @Inject(AMBIENTE_REPOSITORY_PORT)
-    private readonly repository: IAmbienteRepositoryPort,
-    @Inject(AUTHORIZATION_SERVICE_PORT)
-    private readonly authorizationService: IAuthorizationServicePort,
+    @Inject(IAmbienteRepository)
+    private readonly repository: IAmbienteRepository,
+    @Inject(IAuthorizationService)
+    private readonly authorizationService: IAuthorizationService,
   ) {}
 
   async execute({ accessContext, dto }: IAmbienteUpdateCommand): Promise<AmbienteFindOneOutputDto> {
     const current = await this.repository.findById(accessContext, { id: dto.id });
 
-    if (!current) {
-      throw new ResourceNotFoundError("Ambiente", dto.id);
-    }
+    ensureExists(current, "Ambiente", dto.id);
 
     await this.authorizationService.ensurePermission("ambiente:update", { dto }, dto.id);
 
@@ -52,9 +43,7 @@ export class AmbienteUpdateCommandHandlerImpl implements IAmbienteUpdateCommandH
 
     const result = await this.repository.findById(accessContext, { id: dto.id });
 
-    if (!result) {
-      throw new ResourceNotFoundError("Ambiente", dto.id);
-    }
+    ensureExists(result, "Ambiente", dto.id);
 
     return result;
   }

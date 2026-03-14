@@ -14,7 +14,7 @@ import type {
   BlocoListInputDto,
   BlocoListOutputDto,
 } from "@/modules/ambientes/bloco";
-import type { IBlocoRepositoryPort } from "@/modules/ambientes/bloco/domain/repositories";
+import type { IBlocoRepository } from "@/modules/ambientes/bloco/domain/repositories";
 import type { BlocoEntity } from "./bloco.entity";
 import { createBlocoRepository } from "./bloco.repository";
 
@@ -31,7 +31,7 @@ export class BlocoTypeOrmRepositoryAdapter
     BlocoFindOneInputDto,
     BlocoFindOneOutputDto
   >
-  implements IBlocoRepositoryPort
+  implements IBlocoRepository
 {
   protected readonly alias = "bloco";
   protected readonly authzAction = "bloco:find";

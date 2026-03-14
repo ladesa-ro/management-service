@@ -2,7 +2,7 @@ import { Inject } from "@nestjs/common";
 import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
 import { AccessContext, AccessContextGraphQL } from "@/modules/@seguranca/contexto-acesso";
-import { ResourceNotFoundError } from "@/modules/@shared";
+import { ensureExists } from "@/modules/@shared";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
 import { IDiarioCreateCommandHandler } from "@/modules/ensino/diario/domain/commands/diario-create.command.handler.interface";
 import { IDiarioDeleteCommandHandler } from "@/modules/ensino/diario/domain/commands/diario-delete.command.handler.interface";
@@ -55,9 +55,7 @@ export class DiarioGraphqlResolver {
   ): Promise<DiarioFindOneOutputGraphQlDto> {
     const selection = graphqlExtractSelection(info);
     const result = await this.findOneHandler.execute({ accessContext, dto: { id, selection } });
-    if (!result) {
-      throw new ResourceNotFoundError("Diario", id);
-    }
+    ensureExists(result, "Diario", id);
     return DiarioGraphqlMapper.toFindOneOutputDto(result);
   }
 

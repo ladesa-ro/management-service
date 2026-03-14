@@ -6,7 +6,7 @@ import {
   PaginationInputDto,
   PaginationResultDto,
 } from "@/modules/@shared";
-import type { IdUuid } from "@/modules/@shared/domain/scalars.types";
+import type { IdUuid } from "@/modules/@shared/domain/abstractions/scalars.types";
 
 // ============================================================================
 // FindOne Input/Output

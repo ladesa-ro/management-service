@@ -3,17 +3,14 @@ import {
   type IAmbienteFindOneQuery,
   IAmbienteFindOneQueryHandler,
 } from "@/modules/ambientes/ambiente/domain/queries/ambiente-find-one.query.handler.interface";
-import {
-  AMBIENTE_REPOSITORY_PORT,
-  type IAmbienteRepositoryPort,
-} from "../../../domain/repositories";
+import { IAmbienteRepository } from "../../../domain/repositories";
 import type { AmbienteFindOneOutputDto } from "../../dtos";
 
 @Injectable()
 export class AmbienteFindOneQueryHandlerImpl implements IAmbienteFindOneQueryHandler {
   constructor(
-    @Inject(AMBIENTE_REPOSITORY_PORT)
-    private readonly repository: IAmbienteRepositoryPort,
+    @Inject(IAmbienteRepository)
+    private readonly repository: IAmbienteRepository,
   ) {}
 
   async execute({

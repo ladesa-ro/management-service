@@ -1,19 +1,12 @@
 import { Inject, Injectable } from "@nestjs/common";
-import {
-  AUTHORIZATION_SERVICE_PORT,
-  type IAuthorizationServicePort,
-  ResourceNotFoundError,
-} from "@/modules/@shared";
+import { ensureExists, IAuthorizationService } from "@/modules/@shared";
 import { IDiarioFindOneQueryHandler } from "@/modules/ensino/diario/domain/queries/diario-find-one.query.handler.interface";
 import {
   type IDiarioPreferenciaAgrupamentoCreateCommand,
   IDiarioPreferenciaAgrupamentoCreateCommandHandler,
 } from "@/modules/ensino/diario-preferencia-agrupamento/domain/commands/diario-preferencia-agrupamento-create.command.handler.interface";
 import { DiarioPreferenciaAgrupamento } from "@/modules/ensino/diario-preferencia-agrupamento/domain/diario-preferencia-agrupamento.domain";
-import {
-  DIARIO_PREFERENCIA_AGRUPAMENTO_REPOSITORY_PORT,
-  type IDiarioPreferenciaAgrupamentoRepositoryPort,
-} from "../../../domain/repositories";
+import { IDiarioPreferenciaAgrupamentoRepository } from "../../../domain/repositories";
 import type { DiarioPreferenciaAgrupamentoFindOneOutputDto } from "../../dtos";
 
 @Injectable()
@@ -21,10 +14,10 @@ export class DiarioPreferenciaAgrupamentoCreateCommandHandlerImpl
   implements IDiarioPreferenciaAgrupamentoCreateCommandHandler
 {
   constructor(
-    @Inject(DIARIO_PREFERENCIA_AGRUPAMENTO_REPOSITORY_PORT)
-    private readonly repository: IDiarioPreferenciaAgrupamentoRepositoryPort,
-    @Inject(AUTHORIZATION_SERVICE_PORT)
-    private readonly authorizationService: IAuthorizationServicePort,
+    @Inject(IDiarioPreferenciaAgrupamentoRepository)
+    private readonly repository: IDiarioPreferenciaAgrupamentoRepository,
+    @Inject(IAuthorizationService)
+    private readonly authorizationService: IAuthorizationService,
     @Inject(IDiarioFindOneQueryHandler)
     private readonly diarioFindOneHandler: IDiarioFindOneQueryHandler,
   ) {}
@@ -43,9 +36,7 @@ export class DiarioPreferenciaAgrupamentoCreateCommandHandlerImpl
         accessContext,
         dto: dto.diario,
       });
-      if (!diario) {
-        throw new ResourceNotFoundError("Diario", dto.diario.id);
-      }
+      ensureExists(diario, "Diario", dto.diario.id);
       diarioRef = { id: diario.id };
     }
     const domain = DiarioPreferenciaAgrupamento.criar({
@@ -62,9 +53,7 @@ export class DiarioPreferenciaAgrupamentoCreateCommandHandlerImpl
 
     const result = await this.repository.findById(accessContext, { id });
 
-    if (!result) {
-      throw new ResourceNotFoundError("DiarioPreferenciaAgrupamento", id);
-    }
+    ensureExists(result, "DiarioPreferenciaAgrupamento", id);
 
     return result;
   }

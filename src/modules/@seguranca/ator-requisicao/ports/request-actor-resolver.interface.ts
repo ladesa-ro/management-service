@@ -3,7 +3,7 @@ import type { IRequestActor } from "../domain";
 /**
  * Port para resolver o ator da requisição a partir de um access token.
  */
-export interface IRequestActorResolverPort {
+export interface IRequestActorResolver {
   /**
    * Resolve o ator da requisição a partir do access token.
    * @param accessToken Token de acesso (Bearer token)
@@ -12,4 +12,4 @@ export interface IRequestActorResolverPort {
   resolveFromAccessToken(accessToken?: string): Promise<IRequestActor>;
 }
 
-export const REQUEST_ACTOR_RESOLVER_PORT = Symbol("IRequestActorResolverPort");
+export const IRequestActorResolver = Symbol("IRequestActorResolver");

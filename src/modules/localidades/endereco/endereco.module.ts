@@ -4,7 +4,7 @@ import { EnderecoCreateOrUpdateCommandHandlerImpl } from "@/modules/localidades/
 import { EnderecoFindOneQueryHandlerImpl } from "@/modules/localidades/endereco/application/use-cases/queries";
 import { IEnderecoCreateOrUpdateCommandHandler } from "@/modules/localidades/endereco/domain/commands";
 import { IEnderecoFindOneQueryHandler } from "@/modules/localidades/endereco/domain/queries";
-import { ENDERECO_REPOSITORY_PORT } from "@/modules/localidades/endereco/domain/repositories";
+import { IEnderecoRepository } from "@/modules/localidades/endereco/domain/repositories";
 import {
   EnderecoAuthzRegistrySetup,
   EnderecoTypeOrmRepositoryAdapter,
@@ -19,7 +19,7 @@ import { EnderecoGraphqlResolver } from "@/modules/localidades/endereco/presenta
     EnderecoGraphqlResolver,
     EnderecoAuthzRegistrySetup,
     {
-      provide: ENDERECO_REPOSITORY_PORT,
+      provide: IEnderecoRepository,
       useClass: EnderecoTypeOrmRepositoryAdapter,
     },
 

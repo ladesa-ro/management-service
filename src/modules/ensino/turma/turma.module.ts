@@ -26,7 +26,7 @@ import {
   ITurmaGetImagemCapaQueryHandler,
   ITurmaListQueryHandler,
 } from "@/modules/ensino/turma/domain/queries";
-import { TURMA_REPOSITORY_PORT } from "@/modules/ensino/turma/domain/repositories";
+import { ITurmaRepository } from "@/modules/ensino/turma/domain/repositories";
 import {
   TurmaAuthzRegistrySetup,
   TurmaTypeOrmRepositoryAdapter,
@@ -42,7 +42,7 @@ import { TurmaRestController } from "@/modules/ensino/turma/presentation/rest/tu
     TurmaGraphqlResolver,
     TurmaAuthzRegistrySetup,
     {
-      provide: TURMA_REPOSITORY_PORT,
+      provide: ITurmaRepository,
       useClass: TurmaTypeOrmRepositoryAdapter,
     },
 

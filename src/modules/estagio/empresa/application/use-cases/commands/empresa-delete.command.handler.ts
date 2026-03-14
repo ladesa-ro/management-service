@@ -4,13 +4,13 @@ import {
   type IEmpresaDeleteCommand,
   IEmpresaDeleteCommandHandler,
 } from "@/modules/estagio/empresa/domain/commands/empresa-delete.command.handler.interface";
-import { EMPRESA_REPOSITORY_PORT, type IEmpresaRepositoryPort } from "../../../domain/repositories";
+import { IEmpresaRepository } from "../../../domain/repositories";
 
 @Injectable()
 export class EmpresaDeleteCommandHandlerImpl implements IEmpresaDeleteCommandHandler {
   constructor(
-    @Inject(EMPRESA_REPOSITORY_PORT)
-    private readonly repository: IEmpresaRepositoryPort,
+    @Inject(IEmpresaRepository)
+    private readonly repository: IEmpresaRepository,
   ) {}
 
   async execute({ accessContext, id }: IEmpresaDeleteCommand): Promise<void> {

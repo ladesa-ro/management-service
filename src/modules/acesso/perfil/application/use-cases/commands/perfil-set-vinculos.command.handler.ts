@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { v4 as uuid } from "uuid";
-import { ResourceNotFoundError } from "@/modules/@shared";
+import { ensureExists } from "@/modules/@shared";
 import {
   type IPerfilSetVinculosCommand,
   IPerfilSetVinculosCommandHandler,
@@ -8,14 +8,14 @@ import {
 import { IPerfilListQueryHandler } from "@/modules/acesso/perfil/domain/queries/perfil-list.query.handler.interface";
 import { IUsuarioFindByIdSimpleQueryHandler } from "@/modules/acesso/usuario/domain/queries/usuario-find-by-id-simple.query.handler.interface";
 import { ICampusFindOneQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-find-one.query.handler.interface";
-import { type IPerfilRepositoryPort, PERFIL_REPOSITORY_PORT } from "../../../domain/repositories";
+import { IPerfilRepository } from "../../../domain/repositories";
 import type { PerfilListInputDto, PerfilListOutputDto } from "../../dtos";
 
 @Injectable()
 export class PerfilSetVinculosCommandHandlerImpl implements IPerfilSetVinculosCommandHandler {
   constructor(
-    @Inject(PERFIL_REPOSITORY_PORT)
-    private readonly perfilRepository: IPerfilRepositoryPort,
+    @Inject(IPerfilRepository)
+    private readonly perfilRepository: IPerfilRepository,
     @Inject(ICampusFindOneQueryHandler)
     private readonly campusFindOneHandler: ICampusFindOneQueryHandler,
     @Inject(IPerfilListQueryHandler)
@@ -30,16 +30,12 @@ export class PerfilSetVinculosCommandHandlerImpl implements IPerfilSetVinculosCo
       accessContext,
       dto: { id: dto.campus.id },
     });
-    if (!campus) {
-      throw new ResourceNotFoundError("Campus", dto.campus.id);
-    }
+    ensureExists(campus, "Campus", dto.campus.id);
     const usuarioResult = await this.usuarioFindByIdSimpleHandler.execute({
       accessContext,
       id: dto.usuario.id,
     });
-    if (!usuarioResult) {
-      throw new ResourceNotFoundError("Usuario", dto.usuario.id);
-    }
+    ensureExists(usuarioResult, "Usuario", dto.usuario.id);
     const usuario = usuarioResult;
 
     const vinculosParaManter = new Set<string>();

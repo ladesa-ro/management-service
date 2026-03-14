@@ -19,7 +19,7 @@ import {
   IDiarioFindOneQueryHandler,
   IDiarioListQueryHandler,
 } from "@/modules/ensino/diario/domain/queries";
-import { DIARIO_REPOSITORY_PORT } from "@/modules/ensino/diario/domain/repositories";
+import { IDiarioRepository } from "@/modules/ensino/diario/domain/repositories";
 import { DiarioAuthzRegistrySetup } from "@/modules/ensino/diario/infrastructure";
 import { DiarioTypeOrmRepositoryAdapter } from "@/modules/ensino/diario/infrastructure/persistence/typeorm";
 import { DiarioGraphqlResolver } from "@/modules/ensino/diario/presentation/graphql/diario.graphql.resolver";
@@ -39,7 +39,7 @@ import { CalendarioLetivoModule } from "@/modules/horarios/calendario-letivo/cal
     DiarioGraphqlResolver,
     DiarioAuthzRegistrySetup,
     {
-      provide: DIARIO_REPOSITORY_PORT,
+      provide: IDiarioRepository,
       useClass: DiarioTypeOrmRepositoryAdapter,
     },
 

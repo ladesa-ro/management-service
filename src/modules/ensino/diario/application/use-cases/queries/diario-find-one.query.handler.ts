@@ -3,14 +3,14 @@ import {
   type IDiarioFindOneQuery,
   IDiarioFindOneQueryHandler,
 } from "@/modules/ensino/diario/domain/queries/diario-find-one.query.handler.interface";
-import { DIARIO_REPOSITORY_PORT, type IDiarioRepositoryPort } from "../../../domain/repositories";
+import { IDiarioRepository } from "../../../domain/repositories";
 import type { DiarioFindOneOutputDto } from "../../dtos";
 
 @Injectable()
 export class DiarioFindOneQueryHandlerImpl implements IDiarioFindOneQueryHandler {
   constructor(
-    @Inject(DIARIO_REPOSITORY_PORT)
-    private readonly repository: IDiarioRepositoryPort,
+    @Inject(IDiarioRepository)
+    private readonly repository: IDiarioRepository,
   ) {}
 
   async execute({

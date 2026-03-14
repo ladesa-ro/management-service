@@ -1,10 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { has } from "lodash";
-import {
-  AUTHORIZATION_SERVICE_PORT,
-  type IAuthorizationServicePort,
-  ResourceNotFoundError,
-} from "@/modules/@shared";
+import { ensureExists, IAuthorizationService } from "@/modules/@shared";
 import { IPerfilFindOneQueryHandler } from "@/modules/acesso/perfil/domain/queries/perfil-find-one.query.handler.interface";
 import { IDiarioFindOneQueryHandler } from "@/modules/ensino/diario/domain/queries/diario-find-one.query.handler.interface";
 import {
@@ -12,10 +8,7 @@ import {
   IDiarioProfessorCreateCommandHandler,
 } from "@/modules/ensino/diario-professor/domain/commands/diario-professor-create.command.handler.interface";
 import { DiarioProfessor } from "@/modules/ensino/diario-professor/domain/diario-professor.domain";
-import {
-  DIARIO_PROFESSOR_REPOSITORY_PORT,
-  type IDiarioProfessorRepositoryPort,
-} from "../../../domain/repositories";
+import { IDiarioProfessorRepository } from "../../../domain/repositories";
 import type { DiarioProfessorFindOneOutputDto } from "../../dtos";
 
 @Injectable()
@@ -23,10 +16,10 @@ export class DiarioProfessorCreateCommandHandlerImpl
   implements IDiarioProfessorCreateCommandHandler
 {
   constructor(
-    @Inject(DIARIO_PROFESSOR_REPOSITORY_PORT)
-    private readonly repository: IDiarioProfessorRepositoryPort,
-    @Inject(AUTHORIZATION_SERVICE_PORT)
-    private readonly authorizationService: IAuthorizationServicePort,
+    @Inject(IDiarioProfessorRepository)
+    private readonly repository: IDiarioProfessorRepository,
+    @Inject(IAuthorizationService)
+    private readonly authorizationService: IAuthorizationService,
     @Inject(IDiarioFindOneQueryHandler)
     private readonly diarioFindOneHandler: IDiarioFindOneQueryHandler,
     @Inject(IPerfilFindOneQueryHandler)
@@ -45,9 +38,7 @@ export class DiarioProfessorCreateCommandHandlerImpl
         accessContext,
         dto: { id: dto.diario.id },
       });
-      if (!diario) {
-        throw new ResourceNotFoundError("Diario", dto.diario.id);
-      }
+      ensureExists(diario, "Diario", dto.diario.id);
       diarioRef = { id: diario.id };
     }
     let perfilRef: { id: string } | undefined;
@@ -56,9 +47,7 @@ export class DiarioProfessorCreateCommandHandlerImpl
         accessContext,
         dto: { id: dto.perfil.id },
       });
-      if (!perfil) {
-        throw new ResourceNotFoundError("Perfil", dto.perfil.id);
-      }
+      ensureExists(perfil, "Perfil", dto.perfil.id);
       perfilRef = { id: perfil.id };
     }
     const domain = DiarioProfessor.criar({
@@ -74,9 +63,7 @@ export class DiarioProfessorCreateCommandHandlerImpl
 
     const result = await this.repository.findById(accessContext, { id });
 
-    if (!result) {
-      throw new ResourceNotFoundError("DiarioProfessor", id);
-    }
+    ensureExists(result, "DiarioProfessor", id);
 
     return result;
   }

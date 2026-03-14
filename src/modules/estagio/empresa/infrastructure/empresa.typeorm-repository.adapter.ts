@@ -1,7 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { DataSource } from "typeorm";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
-import { ResourceNotFoundError } from "@/modules/@shared";
+import { ensureExists } from "@/modules/@shared";
 import { APP_DATA_SOURCE_TOKEN } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
   EmpresaCreateInputDto,
@@ -12,12 +12,12 @@ import type {
   EmpresaUpdateInputDto,
 } from "@/modules/estagio/empresa/application/dtos";
 import { Empresa } from "@/modules/estagio/empresa/domain/empresa.domain";
-import type { IEmpresaRepositoryPort } from "@/modules/estagio/empresa/domain/repositories";
+import type { IEmpresaRepository } from "@/modules/estagio/empresa/domain/repositories";
 import { createEnderecoRepository } from "@/modules/localidades/endereco/infrastructure/persistence/typeorm/endereco.repository";
 import { createEmpresaRepository, EmpresaMapper } from "./persistence";
 
 @Injectable()
-export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepositoryPort {
+export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepository {
   constructor(@Inject(APP_DATA_SOURCE_TOKEN) private readonly dataSource: DataSource) {}
 
   private get repository() {
@@ -119,9 +119,7 @@ export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepositoryPort {
       where: { id: dto.idEnderecoFk, dateDeleted: null as any },
     });
 
-    if (!endereco) {
-      throw new ResourceNotFoundError("Endereco", dto.idEnderecoFk);
-    }
+    ensureExists(endereco, "Endereco", dto.idEnderecoFk);
 
     const empresa = Empresa.criar(dto);
 
@@ -140,9 +138,7 @@ export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepositoryPort {
       where: { id, dateDeleted: null as any },
     });
 
-    if (!entity) {
-      throw new ResourceNotFoundError("Empresa", id);
-    }
+    ensureExists(entity, "Empresa", id);
 
     const empresa = EmpresaMapper.toDomain(entity);
 
@@ -151,9 +147,7 @@ export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepositoryPort {
         where: { id: dto.idEnderecoFk, dateDeleted: null as any },
       });
 
-      if (!endereco) {
-        throw new ResourceNotFoundError("Endereco", dto.idEnderecoFk);
-      }
+      ensureExists(endereco, "Endereco", dto.idEnderecoFk);
     }
 
     empresa.atualizar(dto);
@@ -169,9 +163,7 @@ export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepositoryPort {
       where: { id, dateDeleted: null as any },
     });
 
-    if (!entity) {
-      throw new ResourceNotFoundError("Empresa", id);
-    }
+    ensureExists(entity, "Empresa", id);
 
     entity.dateDeleted = new Date();
     await this.repository.save(entity);

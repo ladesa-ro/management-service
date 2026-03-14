@@ -1,5 +1,5 @@
+import type { IdUuid, ScalarDateTimeString } from "../scalars.types";
 import { BaseEntity } from "./base-entity";
-import type { IdUuid, ScalarDateTimeString } from "./scalars.types";
 
 /**
  * Classe base para entidades de domínio com datas e ID UUID.

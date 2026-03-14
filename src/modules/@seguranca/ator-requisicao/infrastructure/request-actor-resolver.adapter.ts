@@ -1,20 +1,17 @@
 import { ForbiddenException, Inject, Injectable } from "@nestjs/common";
 import { pick } from "lodash";
 import { DataSource } from "typeorm";
-import {
-  IDENTITY_PROVIDER_PORT,
-  type IIdentityProviderPort,
-} from "@/modules/@seguranca/provedor-identidade/ports";
+import { IIdentityProvider } from "@/modules/@seguranca/provedor-identidade/ports";
 import { APP_DATA_SOURCE_TOKEN } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import { createUsuarioRepository } from "@/modules/acesso/usuario/infrastructure/persistence/typeorm/usuario.repository";
 import type { IRequestActor } from "../domain";
-import type { IRequestActorResolverPort } from "../ports";
+import type { IRequestActorResolver } from "../ports";
 
 @Injectable()
-export class RequestActorResolverAdapter implements IRequestActorResolverPort {
+export class RequestActorResolverAdapter implements IRequestActorResolver {
   constructor(
-    @Inject(IDENTITY_PROVIDER_PORT)
-    private readonly identityProvider: IIdentityProviderPort,
+    @Inject(IIdentityProvider)
+    private readonly identityProvider: IIdentityProvider,
     @Inject(APP_DATA_SOURCE_TOKEN)
     private readonly dataSource: DataSource,
   ) {}

@@ -5,7 +5,7 @@ import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
  *
  * @template ListOutputDto - Tipo do DTO de saída para listagem (paginado)
  */
-export interface IListRepositoryPort<ListOutputDto> {
+export interface IListRepository<ListOutputDto> {
   /**
    * Lista entidades com paginação e filtros
    */

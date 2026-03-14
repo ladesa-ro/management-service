@@ -1,10 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
-import {
-  AUTHORIZATION_SERVICE_PORT,
-  type IAuthorizationServicePort,
-  type PersistInput,
-  ResourceNotFoundError,
-} from "@/modules/@shared";
+import { ensureExists, IAuthorizationService, type PersistInput } from "@/modules/@shared";
 import { INivelFormacaoFindOneQueryHandler } from "@/modules/ensino/nivel-formacao/domain/queries/nivel-formacao-find-one.query.handler.interface";
 import { IOfertaFormacaoFindOneQueryHandler } from "@/modules/ensino/oferta-formacao/domain/queries/oferta-formacao-find-one.query.handler.interface";
 import {
@@ -12,10 +7,7 @@ import {
   IOfertaFormacaoNivelFormacaoCreateCommandHandler,
 } from "@/modules/ensino/oferta-formacao-nivel-formacao/domain/commands/oferta-formacao-nivel-formacao-create.command.handler.interface";
 import type { IOfertaFormacaoNivelFormacao } from "@/modules/ensino/oferta-formacao-nivel-formacao/domain/oferta-formacao-nivel-formacao.types";
-import {
-  type IOfertaFormacaoNivelFormacaoRepositoryPort,
-  OFERTA_FORMACAO_NIVEL_FORMACAO_REPOSITORY_PORT,
-} from "../../../domain/repositories";
+import { IOfertaFormacaoNivelFormacaoRepository } from "../../../domain/repositories";
 import type { OfertaFormacaoNivelFormacaoFindOneOutputDto } from "../../dtos";
 
 @Injectable()
@@ -23,10 +15,10 @@ export class OfertaFormacaoNivelFormacaoCreateCommandHandlerImpl
   implements IOfertaFormacaoNivelFormacaoCreateCommandHandler
 {
   constructor(
-    @Inject(OFERTA_FORMACAO_NIVEL_FORMACAO_REPOSITORY_PORT)
-    private readonly repository: IOfertaFormacaoNivelFormacaoRepositoryPort,
-    @Inject(AUTHORIZATION_SERVICE_PORT)
-    private readonly authorizationService: IAuthorizationServicePort,
+    @Inject(IOfertaFormacaoNivelFormacaoRepository)
+    private readonly repository: IOfertaFormacaoNivelFormacaoRepository,
+    @Inject(IAuthorizationService)
+    private readonly authorizationService: IAuthorizationService,
     @Inject(IOfertaFormacaoFindOneQueryHandler)
     private readonly ofertaFormacaoFindOneHandler: IOfertaFormacaoFindOneQueryHandler,
     @Inject(INivelFormacaoFindOneQueryHandler)
@@ -47,9 +39,7 @@ export class OfertaFormacaoNivelFormacaoCreateCommandHandlerImpl
         accessContext,
         dto: { id: dto.ofertaFormacao.id },
       });
-      if (!ofertaFormacao) {
-        throw new ResourceNotFoundError("OfertaFormacao", dto.ofertaFormacao.id);
-      }
+      ensureExists(ofertaFormacao, "OfertaFormacao", dto.ofertaFormacao.id);
       createData.ofertaFormacao = { id: ofertaFormacao.id };
     }
     if (dto.nivelFormacao) {
@@ -57,18 +47,14 @@ export class OfertaFormacaoNivelFormacaoCreateCommandHandlerImpl
         accessContext,
         dto: { id: dto.nivelFormacao.id },
       });
-      if (!nivelFormacao) {
-        throw new ResourceNotFoundError("NivelFormacao", dto.nivelFormacao.id);
-      }
+      ensureExists(nivelFormacao, "NivelFormacao", dto.nivelFormacao.id);
       createData.nivelFormacao = { id: nivelFormacao.id };
     }
     const { id } = await this.repository.createFromDomain(createData as any);
 
     const result = await this.repository.findById(accessContext, { id });
 
-    if (!result) {
-      throw new ResourceNotFoundError("OfertaFormacaoNivelFormacao", id);
-    }
+    ensureExists(result, "OfertaFormacaoNivelFormacao", id);
 
     return result;
   }

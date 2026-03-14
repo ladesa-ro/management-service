@@ -1,16 +1,16 @@
 import { Module } from "@nestjs/common";
 import { IdentityProviderCoreModule } from "@/modules/@seguranca/provedor-identidade/identity-provider.module";
 import { RequestActorResolverAdapter } from "./infrastructure";
-import { REQUEST_ACTOR_RESOLVER_PORT } from "./ports";
+import { IRequestActorResolver } from "./ports";
 
 @Module({
   imports: [IdentityProviderCoreModule],
   providers: [
     {
-      provide: REQUEST_ACTOR_RESOLVER_PORT,
+      provide: IRequestActorResolver,
       useClass: RequestActorResolverAdapter,
     },
   ],
-  exports: [REQUEST_ACTOR_RESOLVER_PORT],
+  exports: [IRequestActorResolver],
 })
 export class RequestActorCoreModule {}

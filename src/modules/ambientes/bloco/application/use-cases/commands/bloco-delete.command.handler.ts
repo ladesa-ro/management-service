@@ -1,22 +1,18 @@
 import { Inject, Injectable } from "@nestjs/common";
-import {
-  AUTHORIZATION_SERVICE_PORT,
-  type IAuthorizationServicePort,
-  ResourceNotFoundError,
-} from "@/modules/@shared";
+import { ensureExists, IAuthorizationService } from "@/modules/@shared";
 import {
   type IBlocoDeleteCommand,
   IBlocoDeleteCommandHandler,
 } from "@/modules/ambientes/bloco/domain/commands/bloco-delete.command.handler.interface";
-import { BLOCO_REPOSITORY_PORT, type IBlocoRepositoryPort } from "../../../domain/repositories";
+import { IBlocoRepository } from "../../../domain/repositories";
 
 @Injectable()
 export class BlocoDeleteCommandHandlerImpl implements IBlocoDeleteCommandHandler {
   constructor(
-    @Inject(BLOCO_REPOSITORY_PORT)
-    private readonly repository: IBlocoRepositoryPort,
-    @Inject(AUTHORIZATION_SERVICE_PORT)
-    private readonly authorizationService: IAuthorizationServicePort,
+    @Inject(IBlocoRepository)
+    private readonly repository: IBlocoRepository,
+    @Inject(IAuthorizationService)
+    private readonly authorizationService: IAuthorizationService,
   ) {}
 
   async execute({ accessContext, dto }: IBlocoDeleteCommand): Promise<boolean> {
@@ -24,9 +20,7 @@ export class BlocoDeleteCommandHandlerImpl implements IBlocoDeleteCommandHandler
 
     const entity = await this.repository.findById(accessContext, dto);
 
-    if (!entity) {
-      throw new ResourceNotFoundError("Bloco", dto.id);
-    }
+    ensureExists(entity, "Bloco", dto.id);
 
     await this.repository.softDeleteById(entity.id);
 

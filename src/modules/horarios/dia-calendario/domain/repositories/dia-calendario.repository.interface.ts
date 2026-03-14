@@ -1,19 +1,19 @@
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
-import type { IBaseCrudRepositoryPort } from "@/modules/@shared";
+import type { IBaseCrudRepository } from "@/modules/@shared";
 import type { IDiaCalendario } from "@/modules/horarios/dia-calendario";
 import type {
   DiaCalendarioFindOneOutputDto,
   DiaCalendarioListOutputDto,
 } from "../../application/dtos";
 
-export const DIA_CALENDARIO_REPOSITORY_PORT = Symbol("IDiaCalendarioRepositoryPort");
+export const IDiaCalendarioRepository = Symbol("IDiaCalendarioRepository");
 
 /**
  * Port de saída para operações de persistência de DiaCalendario
  * Estende a interface base de CRUD com operações padrão
  */
-export interface IDiaCalendarioRepositoryPort
-  extends IBaseCrudRepositoryPort<
+export interface IDiaCalendarioRepository
+  extends IBaseCrudRepository<
     IDiaCalendario,
     DiaCalendarioListOutputDto,
     DiaCalendarioFindOneOutputDto

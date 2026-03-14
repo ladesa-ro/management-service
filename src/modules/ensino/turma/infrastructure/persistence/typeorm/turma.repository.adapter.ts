@@ -14,7 +14,7 @@ import type {
   TurmaListInputDto,
   TurmaListOutputDto,
 } from "@/modules/ensino/turma/application/dtos";
-import type { ITurmaRepositoryPort } from "@/modules/ensino/turma/domain/repositories";
+import type { ITurmaRepository } from "@/modules/ensino/turma/domain/repositories";
 import type { TurmaEntity } from "./turma.entity";
 import { createTurmaRepository } from "./turma.repository";
 
@@ -27,7 +27,7 @@ export class TurmaTypeOrmRepositoryAdapter
     TurmaFindOneInputDto,
     TurmaFindOneOutputDto
   >
-  implements ITurmaRepositoryPort
+  implements ITurmaRepository
 {
   protected readonly alias = "turma";
   protected readonly authzAction = "turma:find";

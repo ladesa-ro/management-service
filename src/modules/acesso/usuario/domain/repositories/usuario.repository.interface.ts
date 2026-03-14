@@ -1,5 +1,5 @@
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
-import type { IPersistRepositoryPort } from "@/modules/@shared";
+import type { IPersistRepository } from "@/modules/@shared";
 import type {
   UsuarioFindOneInputDto,
   UsuarioFindOneOutputDto,
@@ -10,13 +10,13 @@ import type {
 /**
  * Token de injeção para o repositório de Usuario
  */
-export const USUARIO_REPOSITORY_PORT = Symbol("IUsuarioRepositoryPort");
+export const IUsuarioRepository = Symbol("IUsuarioRepository");
 
 /**
  * Port de saída para operações de persistência de Usuario
  * Define o contrato que os adapters de persistência devem implementar
  */
-export interface IUsuarioRepositoryPort extends IPersistRepositoryPort<Record<string, any>> {
+export interface IUsuarioRepository extends IPersistRepository<Record<string, any>> {
   /**
    * Lista usuários com paginação
    */

@@ -8,7 +8,7 @@ import {
   IImagemArquivoFindOneQueryHandler,
   IImagemArquivoListQueryHandler,
 } from "@/modules/armazenamento/imagem-arquivo/domain/queries";
-import { IMAGEM_ARQUIVO_QUERY_REPOSITORY_PORT } from "@/modules/armazenamento/imagem-arquivo/domain/repositories";
+import { IImagemArquivoQueryRepository } from "@/modules/armazenamento/imagem-arquivo/domain/repositories";
 import { ImagemArquivoQueryTypeOrmRepositoryAdapter } from "@/modules/armazenamento/imagem-arquivo/infrastructure/persistence/typeorm";
 import { ImagemArquivoGraphqlResolver } from "@/modules/armazenamento/imagem-arquivo/presentation/graphql/imagem-arquivo.graphql.resolver";
 
@@ -20,7 +20,7 @@ import { ImagemArquivoGraphqlResolver } from "@/modules/armazenamento/imagem-arq
     NestJsPaginateAdapter,
     ImagemArquivoGraphqlResolver,
     {
-      provide: IMAGEM_ARQUIVO_QUERY_REPOSITORY_PORT,
+      provide: IImagemArquivoQueryRepository,
       useClass: ImagemArquivoQueryTypeOrmRepositoryAdapter,
     },
     // Queries

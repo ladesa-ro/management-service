@@ -1,14 +1,14 @@
-import type { IBaseCrudRepositoryPort } from "@/modules/@shared";
+import type { IBaseCrudRepository } from "@/modules/@shared";
 import type { BlocoFindOneOutputDto, BlocoListOutputDto, IBloco } from "@/modules/ambientes/bloco";
 
 /**
  * Token de injeção para o repositório de Bloco
  */
-export const BLOCO_REPOSITORY_PORT = Symbol("IBlocoRepositoryPort");
+export const IBlocoRepository = Symbol("IBlocoRepository");
 
 /**
  * Port de saída para operações de persistência de Bloco
  * Estende a interface base de CRUD com operações padrão
  */
-export interface IBlocoRepositoryPort
-  extends IBaseCrudRepositoryPort<IBloco, BlocoListOutputDto, BlocoFindOneOutputDto> {}
+export interface IBlocoRepository
+  extends IBaseCrudRepository<IBloco, BlocoListOutputDto, BlocoFindOneOutputDto> {}

@@ -17,7 +17,7 @@ import {
   IEmpresaFindOneQueryHandler,
   IEmpresaListQueryHandler,
 } from "@/modules/estagio/empresa/domain/queries";
-import { EMPRESA_REPOSITORY_PORT } from "@/modules/estagio/empresa/domain/repositories";
+import { IEmpresaRepository } from "@/modules/estagio/empresa/domain/repositories";
 import { EmpresaTypeOrmRepositoryAdapter } from "@/modules/estagio/empresa/infrastructure";
 import { EmpresaRestController } from "@/modules/estagio/empresa/presentation/rest/empresa.rest.controller";
 
@@ -26,7 +26,7 @@ import { EmpresaRestController } from "@/modules/estagio/empresa/presentation/re
   controllers: [EmpresaRestController],
   providers: [
     {
-      provide: EMPRESA_REPOSITORY_PORT,
+      provide: IEmpresaRepository,
       useClass: EmpresaTypeOrmRepositoryAdapter,
     },
 

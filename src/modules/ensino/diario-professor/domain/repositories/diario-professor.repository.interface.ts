@@ -1,19 +1,19 @@
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
-import type { IBaseCrudRepositoryPort } from "@/modules/@shared";
+import type { IBaseCrudRepository } from "@/modules/@shared";
 import type { IDiarioProfessor } from "@/modules/ensino/diario-professor";
 import type {
   DiarioProfessorFindOneOutputDto,
   DiarioProfessorListOutputDto,
 } from "../../application/dtos";
 
-export const DIARIO_PROFESSOR_REPOSITORY_PORT = Symbol("IDiarioProfessorRepositoryPort");
+export const IDiarioProfessorRepository = Symbol("IDiarioProfessorRepository");
 
 /**
  * Port de saída para operações de persistência de DiarioProfessor
  * Estende a interface base de CRUD com operações padrão
  */
-export interface IDiarioProfessorRepositoryPort
-  extends IBaseCrudRepositoryPort<
+export interface IDiarioProfessorRepository
+  extends IBaseCrudRepository<
     IDiarioProfessor,
     DiarioProfessorListOutputDto,
     DiarioProfessorFindOneOutputDto

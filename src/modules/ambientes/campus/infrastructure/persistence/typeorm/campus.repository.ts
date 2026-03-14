@@ -8,4 +8,4 @@ export const createCampusRepository = createRepositoryFactory((ds) =>
   ds.getRepository(CampusEntity).extend({}),
 );
 
-export type ICampusRepository = IRepositoryFactoryOutput<typeof createCampusRepository>;
+export type CampusTypeOrmRepository = IRepositoryFactoryOutput<typeof createCampusRepository>;

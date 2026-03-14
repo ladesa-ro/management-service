@@ -1,32 +1,26 @@
 import { Inject, Injectable } from "@nestjs/common";
-import {
-  AUTHORIZATION_SERVICE_PORT,
-  type IAuthorizationServicePort,
-  ResourceNotFoundError,
-} from "@/modules/@shared";
+import { ensureExists, IAuthorizationService } from "@/modules/@shared";
 import { Bloco } from "@/modules/ambientes/bloco/domain/bloco.domain";
 import {
   type IBlocoUpdateCommand,
   IBlocoUpdateCommandHandler,
 } from "@/modules/ambientes/bloco/domain/commands/bloco-update.command.handler.interface";
-import { BLOCO_REPOSITORY_PORT, type IBlocoRepositoryPort } from "../../../domain/repositories";
+import { IBlocoRepository } from "../../../domain/repositories";
 import type { BlocoFindOneOutputDto } from "../../dtos";
 
 @Injectable()
 export class BlocoUpdateCommandHandlerImpl implements IBlocoUpdateCommandHandler {
   constructor(
-    @Inject(BLOCO_REPOSITORY_PORT)
-    private readonly repository: IBlocoRepositoryPort,
-    @Inject(AUTHORIZATION_SERVICE_PORT)
-    private readonly authorizationService: IAuthorizationServicePort,
+    @Inject(IBlocoRepository)
+    private readonly repository: IBlocoRepository,
+    @Inject(IAuthorizationService)
+    private readonly authorizationService: IAuthorizationService,
   ) {}
 
   async execute({ accessContext, dto }: IBlocoUpdateCommand): Promise<BlocoFindOneOutputDto> {
     const current = await this.repository.findById(accessContext, { id: dto.id });
 
-    if (!current) {
-      throw new ResourceNotFoundError("Bloco", dto.id);
-    }
+    ensureExists(current, "Bloco", dto.id);
 
     await this.authorizationService.ensurePermission("bloco:update", { dto }, dto.id);
 
@@ -39,9 +33,7 @@ export class BlocoUpdateCommandHandlerImpl implements IBlocoUpdateCommandHandler
 
     const result = await this.repository.findById(accessContext, { id: dto.id });
 
-    if (!result) {
-      throw new ResourceNotFoundError("Bloco", dto.id);
-    }
+    ensureExists(result, "Bloco", dto.id);
 
     return result;
   }

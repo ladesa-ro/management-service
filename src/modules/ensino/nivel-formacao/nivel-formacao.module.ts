@@ -18,7 +18,7 @@ import {
   INivelFormacaoFindOneQueryHandler,
   INivelFormacaoListQueryHandler,
 } from "@/modules/ensino/nivel-formacao/domain/queries";
-import { NIVEL_FORMACAO_REPOSITORY_PORT } from "@/modules/ensino/nivel-formacao/domain/repositories";
+import { INivelFormacaoRepository } from "@/modules/ensino/nivel-formacao/domain/repositories";
 import { NivelFormacaoAuthzRegistrySetup } from "@/modules/ensino/nivel-formacao/infrastructure";
 import { NivelFormacaoTypeOrmRepositoryAdapter } from "@/modules/ensino/nivel-formacao/infrastructure/persistence/typeorm";
 import { NivelFormacaoGraphqlResolver } from "@/modules/ensino/nivel-formacao/presentation/graphql/nivel-formacao.graphql.resolver";
@@ -32,7 +32,7 @@ import { NivelFormacaoRestController } from "@/modules/ensino/nivel-formacao/pre
     NivelFormacaoAuthzRegistrySetup,
     NivelFormacaoGraphqlResolver,
     {
-      provide: NIVEL_FORMACAO_REPOSITORY_PORT,
+      provide: INivelFormacaoRepository,
       useClass: NivelFormacaoTypeOrmRepositoryAdapter,
     },
 

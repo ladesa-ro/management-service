@@ -1,4 +1,4 @@
-import type { IReadOnlyRepositoryPort } from "@/modules/@shared";
+import type { IReadOnlyRepository } from "@/modules/@shared";
 import {
   ImagemArquivoFindOneInputDto,
   ImagemArquivoFindOneOutputDto,
@@ -9,14 +9,14 @@ import {
 /**
  * Token de injeção para o repositório de consulta de ImagemArquivo
  */
-export const IMAGEM_ARQUIVO_QUERY_REPOSITORY_PORT = Symbol("IImagemArquivoQueryRepositoryPort");
+export const IImagemArquivoQueryRepository = Symbol("IImagemArquivoQueryRepository");
 
 /**
  * Port de saída para operações de consulta de ImagemArquivo (read-only)
  * Define o contrato que os adapters de persistência devem implementar
  */
-export interface IImagemArquivoQueryRepositoryPort
-  extends IReadOnlyRepositoryPort<
+export interface IImagemArquivoQueryRepository
+  extends IReadOnlyRepository<
     ImagemArquivoListInputDto,
     ImagemArquivoListOutputDto,
     ImagemArquivoFindOneInputDto,

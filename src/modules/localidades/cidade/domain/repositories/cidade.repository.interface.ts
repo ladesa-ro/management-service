@@ -1,4 +1,4 @@
-import type { IReadOnlyRepositoryPort } from "@/modules/@shared";
+import type { IReadOnlyRepository } from "@/modules/@shared";
 import {
   CidadeFindOneInputDto,
   CidadeFindOneOutputDto,
@@ -9,14 +9,14 @@ import {
 /**
  * Token de injeção para o repositório de Cidade
  */
-export const CIDADE_REPOSITORY_PORT = Symbol("ICidadeRepositoryPort");
+export const ICidadeRepository = Symbol("ICidadeRepository");
 
 /**
  * Port de saída para operações de persistência de Cidade (read-only)
  * Define o contrato que os adapters de persistência devem implementar
  */
-export interface ICidadeRepositoryPort
-  extends IReadOnlyRepositoryPort<
+export interface ICidadeRepository
+  extends IReadOnlyRepository<
     CidadeListInputDto,
     CidadeListOutputDto,
     CidadeFindOneInputDto,

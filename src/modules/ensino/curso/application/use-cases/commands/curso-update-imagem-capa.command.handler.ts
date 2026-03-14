@@ -1,10 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
-import {
-  AUTHORIZATION_SERVICE_PORT,
-  type IAuthorizationServicePort,
-  ResourceNotFoundError,
-  saveEntityImagemField,
-} from "@/modules/@shared";
+import { ensureExists, IAuthorizationService, saveEntityImagemField } from "@/modules/@shared";
 import {
   IImagemSaveImagemCapaCommandHandler,
   type IImagemSaveImagemCapaCommandHandler as IImagemSaveImagemCapaCommandHandlerType,
@@ -13,17 +8,17 @@ import {
   type ICursoUpdateImagemCapaCommand,
   ICursoUpdateImagemCapaCommandHandler,
 } from "@/modules/ensino/curso/domain/commands/curso-update-imagem-capa.command.handler.interface";
-import { CURSO_REPOSITORY_PORT, type ICursoRepositoryPort } from "../../../domain/repositories";
+import { ICursoRepository } from "../../../domain/repositories";
 
 @Injectable()
 export class CursoUpdateImagemCapaCommandHandlerImpl
   implements ICursoUpdateImagemCapaCommandHandler
 {
   constructor(
-    @Inject(CURSO_REPOSITORY_PORT)
-    private readonly repository: ICursoRepositoryPort,
-    @Inject(AUTHORIZATION_SERVICE_PORT)
-    private readonly authorizationService: IAuthorizationServicePort,
+    @Inject(ICursoRepository)
+    private readonly repository: ICursoRepository,
+    @Inject(IAuthorizationService)
+    private readonly authorizationService: IAuthorizationService,
     @Inject(IImagemSaveImagemCapaCommandHandler)
     private readonly saveImagemCapaHandler: IImagemSaveImagemCapaCommandHandlerType,
   ) {}
@@ -31,9 +26,7 @@ export class CursoUpdateImagemCapaCommandHandlerImpl
   async execute({ accessContext, dto, file }: ICursoUpdateImagemCapaCommand): Promise<boolean> {
     const current = await this.repository.findById(accessContext, dto);
 
-    if (!current) {
-      throw new ResourceNotFoundError("Curso", dto.id);
-    }
+    ensureExists(current, "Curso", dto.id);
 
     await this.authorizationService.ensurePermission(
       "curso:update",

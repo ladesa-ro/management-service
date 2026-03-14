@@ -2,12 +2,12 @@ import { Inject, Injectable } from "@nestjs/common";
 import type { SelectQueryBuilder } from "typeorm";
 import { DataSource } from "typeorm";
 import { APP_DATA_SOURCE_TOKEN } from "@/modules/@shared/infrastructure/persistence/typeorm";
-import type { IArquivoRepositoryPort } from "@/modules/armazenamento/arquivo";
+import type { IArquivoRepository } from "@/modules/armazenamento/arquivo";
 import type { ArquivoEntity } from "./arquivo.entity";
 import { createArquivoRepository } from "./arquivo.repository";
 
 @Injectable()
-export class ArquivoTypeOrmRepositoryAdapter implements IArquivoRepositoryPort {
+export class ArquivoTypeOrmRepositoryAdapter implements IArquivoRepository {
   constructor(@Inject(APP_DATA_SOURCE_TOKEN) private dataSource: DataSource) {}
 
   private get repository() {

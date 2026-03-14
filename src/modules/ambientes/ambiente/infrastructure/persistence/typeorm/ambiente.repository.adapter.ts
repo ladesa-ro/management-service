@@ -13,7 +13,7 @@ import type {
   AmbienteListInputDto as AmbienteListInputDto,
   AmbienteListOutputDto as AmbienteListOutputDto,
 } from "@/modules/ambientes/ambiente";
-import type { IAmbienteRepositoryPort } from "@/modules/ambientes/ambiente/domain/repositories";
+import type { IAmbienteRepository } from "@/modules/ambientes/ambiente/domain/repositories";
 import type { AmbienteEntity } from "./ambiente.entity";
 import { createAmbienteRepository } from "./ambiente.repository";
 
@@ -30,7 +30,7 @@ export class AmbienteTypeOrmRepositoryAdapter
     AmbienteFindOneInputDto,
     AmbienteFindOneOutputDto
   >
-  implements IAmbienteRepositoryPort
+  implements IAmbienteRepository
 {
   protected readonly alias = "ambiente";
   protected readonly authzAction = "ambiente:find";

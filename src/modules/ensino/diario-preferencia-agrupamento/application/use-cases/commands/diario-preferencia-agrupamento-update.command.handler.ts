@@ -1,11 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { has } from "lodash";
-import {
-  AUTHORIZATION_SERVICE_PORT,
-  type IAuthorizationServicePort,
-  type PersistInput,
-  ResourceNotFoundError,
-} from "@/modules/@shared";
+import { ensureExists, IAuthorizationService, type PersistInput } from "@/modules/@shared";
 import { IDiarioFindOneQueryHandler } from "@/modules/ensino/diario/domain/queries/diario-find-one.query.handler.interface";
 import {
   type IDiarioPreferenciaAgrupamentoUpdateCommand,
@@ -13,10 +8,7 @@ import {
 } from "@/modules/ensino/diario-preferencia-agrupamento/domain/commands/diario-preferencia-agrupamento-update.command.handler.interface";
 import { DiarioPreferenciaAgrupamento } from "@/modules/ensino/diario-preferencia-agrupamento/domain/diario-preferencia-agrupamento.domain";
 import type { IDiarioPreferenciaAgrupamento } from "@/modules/ensino/diario-preferencia-agrupamento/domain/diario-preferencia-agrupamento.types";
-import {
-  DIARIO_PREFERENCIA_AGRUPAMENTO_REPOSITORY_PORT,
-  type IDiarioPreferenciaAgrupamentoRepositoryPort,
-} from "../../../domain/repositories";
+import { IDiarioPreferenciaAgrupamentoRepository } from "../../../domain/repositories";
 import type { DiarioPreferenciaAgrupamentoFindOneOutputDto } from "../../dtos";
 
 @Injectable()
@@ -24,10 +16,10 @@ export class DiarioPreferenciaAgrupamentoUpdateCommandHandlerImpl
   implements IDiarioPreferenciaAgrupamentoUpdateCommandHandler
 {
   constructor(
-    @Inject(DIARIO_PREFERENCIA_AGRUPAMENTO_REPOSITORY_PORT)
-    private readonly repository: IDiarioPreferenciaAgrupamentoRepositoryPort,
-    @Inject(AUTHORIZATION_SERVICE_PORT)
-    private readonly authorizationService: IAuthorizationServicePort,
+    @Inject(IDiarioPreferenciaAgrupamentoRepository)
+    private readonly repository: IDiarioPreferenciaAgrupamentoRepository,
+    @Inject(IAuthorizationService)
+    private readonly authorizationService: IAuthorizationService,
     @Inject(IDiarioFindOneQueryHandler)
     private readonly diarioFindOneHandler: IDiarioFindOneQueryHandler,
   ) {}
@@ -38,9 +30,7 @@ export class DiarioPreferenciaAgrupamentoUpdateCommandHandlerImpl
   }: IDiarioPreferenciaAgrupamentoUpdateCommand): Promise<DiarioPreferenciaAgrupamentoFindOneOutputDto> {
     const current = await this.repository.findById(accessContext, { id: dto.id });
 
-    if (!current) {
-      throw new ResourceNotFoundError("DiarioPreferenciaAgrupamento", dto.id);
-    }
+    ensureExists(current, "DiarioPreferenciaAgrupamento", dto.id);
 
     await this.authorizationService.ensurePermission(
       "diario_preferencia_agrupamento:update",
@@ -66,18 +56,14 @@ export class DiarioPreferenciaAgrupamentoUpdateCommandHandlerImpl
         accessContext,
         dto: dto.diario,
       });
-      if (!diario) {
-        throw new ResourceNotFoundError("Diario", dto.diario.id);
-      }
+      ensureExists(diario, "Diario", dto.diario.id);
       updateData.diario = { id: diario.id };
     }
     await this.repository.updateFromDomain(current.id, updateData);
 
     const result = await this.repository.findById(accessContext, { id: dto.id });
 
-    if (!result) {
-      throw new ResourceNotFoundError("DiarioPreferenciaAgrupamento", dto.id);
-    }
+    ensureExists(result, "DiarioPreferenciaAgrupamento", dto.id);
 
     return result;
   }

@@ -8,7 +8,7 @@ import {
   ICidadeFindOneQueryHandler,
   ICidadeListQueryHandler,
 } from "@/modules/localidades/cidade/domain/queries";
-import { CIDADE_REPOSITORY_PORT } from "@/modules/localidades/cidade/domain/repositories";
+import { ICidadeRepository } from "@/modules/localidades/cidade/domain/repositories";
 import {
   CidadeAuthzRegistrySetup,
   CidadeTypeOrmRepositoryAdapter,
@@ -24,7 +24,7 @@ import { CidadeRestController } from "@/modules/localidades/cidade/presentation/
     CidadeGraphqlResolver,
     CidadeAuthzRegistrySetup,
     {
-      provide: CIDADE_REPOSITORY_PORT,
+      provide: ICidadeRepository,
       useClass: CidadeTypeOrmRepositoryAdapter,
     },
     // Queries

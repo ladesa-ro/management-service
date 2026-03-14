@@ -8,7 +8,7 @@ import {
   paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
-  IModalidadeRepositoryPort,
+  IModalidadeRepository,
   ModalidadeFindOneInputDto,
   ModalidadeFindOneOutputDto,
   ModalidadeListInputDto,
@@ -30,7 +30,7 @@ export class ModalidadeTypeOrmRepositoryAdapter
     ModalidadeFindOneInputDto,
     ModalidadeFindOneOutputDto
   >
-  implements IModalidadeRepositoryPort
+  implements IModalidadeRepository
 {
   protected readonly alias = "modalidade";
   protected readonly authzAction = "modalidade:find";

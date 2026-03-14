@@ -1,5 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { ResourceNotFoundError, saveEntityImagemField } from "@/modules/@shared";
+import { ensureExists, saveEntityImagemField } from "@/modules/@shared";
 import {
   type IUsuarioUpdateImagemPerfilCommand,
   IUsuarioUpdateImagemPerfilCommandHandler,
@@ -8,15 +8,15 @@ import {
   IImagemSaveImagemCapaCommandHandler,
   type IImagemSaveImagemCapaCommandHandler as IImagemSaveImagemCapaCommandHandlerType,
 } from "@/modules/armazenamento/imagem/domain/commands";
-import { type IUsuarioRepositoryPort, USUARIO_REPOSITORY_PORT } from "../../../domain/repositories";
+import { IUsuarioRepository } from "../../../domain/repositories";
 
 @Injectable()
 export class UsuarioUpdateImagemPerfilCommandHandlerImpl
   implements IUsuarioUpdateImagemPerfilCommandHandler
 {
   constructor(
-    @Inject(USUARIO_REPOSITORY_PORT)
-    private readonly repository: IUsuarioRepositoryPort,
+    @Inject(IUsuarioRepository)
+    private readonly repository: IUsuarioRepository,
     @Inject(IImagemSaveImagemCapaCommandHandler)
     private readonly saveImagemCapaHandler: IImagemSaveImagemCapaCommandHandlerType,
   ) {}
@@ -24,9 +24,7 @@ export class UsuarioUpdateImagemPerfilCommandHandlerImpl
   async execute({ accessContext, dto, file }: IUsuarioUpdateImagemPerfilCommand): Promise<boolean> {
     const currentUsuario = await this.repository.findById(accessContext, { id: dto.id });
 
-    if (!currentUsuario) {
-      throw new ResourceNotFoundError("Usuario", dto.id);
-    }
+    ensureExists(currentUsuario, "Usuario", dto.id);
 
     await accessContext.ensurePermission(
       "usuario:update",

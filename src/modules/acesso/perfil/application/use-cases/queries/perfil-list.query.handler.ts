@@ -3,14 +3,14 @@ import {
   type IPerfilListQuery,
   IPerfilListQueryHandler,
 } from "@/modules/acesso/perfil/domain/queries/perfil-list.query.handler.interface";
-import { type IPerfilRepositoryPort, PERFIL_REPOSITORY_PORT } from "../../../domain/repositories";
+import { IPerfilRepository } from "../../../domain/repositories";
 import type { PerfilListOutputDto } from "../../dtos";
 
 @Injectable()
 export class PerfilListQueryHandlerImpl implements IPerfilListQueryHandler {
   constructor(
-    @Inject(PERFIL_REPOSITORY_PORT)
-    private readonly repository: IPerfilRepositoryPort,
+    @Inject(IPerfilRepository)
+    private readonly repository: IPerfilRepository,
   ) {}
 
   async execute({ accessContext, dto }: IPerfilListQuery): Promise<PerfilListOutputDto> {

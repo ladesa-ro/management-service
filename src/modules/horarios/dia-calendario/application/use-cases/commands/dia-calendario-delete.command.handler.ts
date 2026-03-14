@@ -1,25 +1,18 @@
 import { Inject, Injectable } from "@nestjs/common";
-import {
-  AUTHORIZATION_SERVICE_PORT,
-  type IAuthorizationServicePort,
-  ResourceNotFoundError,
-} from "@/modules/@shared";
+import { ensureExists, IAuthorizationService } from "@/modules/@shared";
 import {
   type IDiaCalendarioDeleteCommand,
   IDiaCalendarioDeleteCommandHandler,
 } from "@/modules/horarios/dia-calendario/domain/commands/dia-calendario-delete.command.handler.interface";
-import {
-  DIA_CALENDARIO_REPOSITORY_PORT,
-  type IDiaCalendarioRepositoryPort,
-} from "../../../domain/repositories";
+import { IDiaCalendarioRepository } from "../../../domain/repositories";
 
 @Injectable()
 export class DiaCalendarioDeleteCommandHandlerImpl implements IDiaCalendarioDeleteCommandHandler {
   constructor(
-    @Inject(DIA_CALENDARIO_REPOSITORY_PORT)
-    private readonly repository: IDiaCalendarioRepositoryPort,
-    @Inject(AUTHORIZATION_SERVICE_PORT)
-    private readonly authorizationService: IAuthorizationServicePort,
+    @Inject(IDiaCalendarioRepository)
+    private readonly repository: IDiaCalendarioRepository,
+    @Inject(IAuthorizationService)
+    private readonly authorizationService: IAuthorizationService,
   ) {}
 
   async execute({ accessContext, dto }: IDiaCalendarioDeleteCommand): Promise<boolean> {
@@ -27,9 +20,7 @@ export class DiaCalendarioDeleteCommandHandlerImpl implements IDiaCalendarioDele
 
     const entity = await this.repository.findById(accessContext, dto);
 
-    if (!entity) {
-      throw new ResourceNotFoundError("DiaCalendario", dto.id);
-    }
+    ensureExists(entity, "DiaCalendario", dto.id);
 
     await this.repository.softDeleteById(entity.id);
 

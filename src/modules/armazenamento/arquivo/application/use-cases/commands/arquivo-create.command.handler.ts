@@ -11,16 +11,13 @@ import type {
   IArquivoCreateCommand,
   IArquivoCreateCommandHandler,
 } from "@/modules/armazenamento/arquivo/domain/commands";
-import {
-  ARQUIVO_REPOSITORY_PORT,
-  type IArquivoRepositoryPort,
-} from "@/modules/armazenamento/arquivo/domain/repositories";
+import { IArquivoRepository } from "@/modules/armazenamento/arquivo/domain/repositories";
 
 @Injectable()
 export class ArquivoCreateCommandHandlerImpl implements IArquivoCreateCommandHandler {
   constructor(
-    @Inject(ARQUIVO_REPOSITORY_PORT)
-    private arquivoRepository: IArquivoRepositoryPort,
+    @Inject(IArquivoRepository)
+    private arquivoRepository: IArquivoRepository,
     @Inject(IRuntimeOptionsToken)
     private runtimeOptions: IRuntimeOptions,
   ) {}

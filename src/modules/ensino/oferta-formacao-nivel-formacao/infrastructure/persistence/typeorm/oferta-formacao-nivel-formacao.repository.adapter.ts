@@ -9,7 +9,7 @@ import {
   paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
-  IOfertaFormacaoNivelFormacaoRepositoryPort,
+  IOfertaFormacaoNivelFormacaoRepository,
   OfertaFormacaoNivelFormacaoFindOneInputDto,
   OfertaFormacaoNivelFormacaoFindOneOutputDto,
   OfertaFormacaoNivelFormacaoListInputDto,
@@ -27,7 +27,7 @@ export class OfertaFormacaoNivelFormacaoTypeOrmRepositoryAdapter
     OfertaFormacaoNivelFormacaoFindOneInputDto,
     OfertaFormacaoNivelFormacaoFindOneOutputDto
   >
-  implements IOfertaFormacaoNivelFormacaoRepositoryPort
+  implements IOfertaFormacaoNivelFormacaoRepository
 {
   protected readonly alias = "oferta_formacao_nivel_formacao";
   protected readonly authzAction = "oferta_formacao_nivel_formacao:find";

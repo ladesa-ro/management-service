@@ -1,7 +1,7 @@
 /**
  * Interface para operações de soft delete em repositórios
  */
-export interface ISoftDeleteRepositoryPort {
+export interface ISoftDeleteRepository {
   /**
    * Realiza soft delete de uma entidade por ID
    */

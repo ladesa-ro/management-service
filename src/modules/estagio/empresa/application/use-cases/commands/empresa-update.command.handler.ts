@@ -4,14 +4,14 @@ import {
   type IEmpresaUpdateCommand,
   IEmpresaUpdateCommandHandler,
 } from "@/modules/estagio/empresa/domain/commands/empresa-update.command.handler.interface";
-import { EMPRESA_REPOSITORY_PORT, type IEmpresaRepositoryPort } from "../../../domain/repositories";
+import { IEmpresaRepository } from "../../../domain/repositories";
 import type { EmpresaFindOneOutputDto } from "../../dtos";
 
 @Injectable()
 export class EmpresaUpdateCommandHandlerImpl implements IEmpresaUpdateCommandHandler {
   constructor(
-    @Inject(EMPRESA_REPOSITORY_PORT)
-    private readonly repository: IEmpresaRepositoryPort,
+    @Inject(IEmpresaRepository)
+    private readonly repository: IEmpresaRepository,
   ) {}
 
   async execute({

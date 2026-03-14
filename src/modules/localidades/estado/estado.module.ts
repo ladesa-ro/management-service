@@ -8,7 +8,7 @@ import {
   IEstadoFindOneQueryHandler,
   IEstadoListQueryHandler,
 } from "@/modules/localidades/estado/domain/queries";
-import { ESTADO_REPOSITORY_PORT } from "@/modules/localidades/estado/domain/repositories";
+import { IEstadoRepository } from "@/modules/localidades/estado/domain/repositories";
 import {
   EstadoAuthzRegistrySetup,
   EstadoTypeOrmRepositoryAdapter,
@@ -24,7 +24,7 @@ import { EstadoRestController } from "@/modules/localidades/estado/presentation/
     EstadoGraphqlResolver,
     EstadoAuthzRegistrySetup,
     {
-      provide: ESTADO_REPOSITORY_PORT,
+      provide: IEstadoRepository,
       useClass: EstadoTypeOrmRepositoryAdapter,
     },
     // Queries

@@ -1,5 +1,5 @@
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
-import type { IBaseCrudRepositoryPort } from "@/modules/@shared";
+import type { IBaseCrudRepository } from "@/modules/@shared";
 import type { ICalendarioLetivo } from "@/modules/horarios/calendario-letivo";
 import type {
   CalendarioLetivoFindOneOutputDto,
@@ -9,14 +9,14 @@ import type {
 /**
  * Token de injeção para o repositório de CalendarioLetivo
  */
-export const CALENDARIO_LETIVO_REPOSITORY_PORT = Symbol("ICalendarioLetivoRepositoryPort");
+export const ICalendarioLetivoRepository = Symbol("ICalendarioLetivoRepository");
 
 /**
  * Port de saída para operações de persistência de CalendarioLetivo
  * Estende a interface base de CRUD com operações padrão
  */
-export interface ICalendarioLetivoRepositoryPort
-  extends IBaseCrudRepositoryPort<
+export interface ICalendarioLetivoRepository
+  extends IBaseCrudRepository<
     ICalendarioLetivo,
     CalendarioLetivoListOutputDto,
     CalendarioLetivoFindOneOutputDto

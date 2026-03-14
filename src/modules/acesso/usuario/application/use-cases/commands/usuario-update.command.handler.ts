@@ -1,28 +1,26 @@
 import { Inject, Injectable, ServiceUnavailableException } from "@nestjs/common";
 import { has } from "lodash";
 import { KeycloakService } from "@/modules/@seguranca/provedor-identidade";
-import { ResourceNotFoundError, ValidationFailedException } from "@/modules/@shared";
+import { ensureExists, ValidationFailedException } from "@/modules/@shared";
 import {
   type IUsuarioUpdateCommand,
   IUsuarioUpdateCommandHandler,
 } from "@/modules/acesso/usuario/domain/commands/usuario-update.command.handler.interface";
-import { type IUsuarioRepositoryPort, USUARIO_REPOSITORY_PORT } from "../../../domain/repositories";
+import { IUsuarioRepository } from "../../../domain/repositories";
 import type { UsuarioFindOneOutputDto } from "../../dtos";
 
 @Injectable()
 export class UsuarioUpdateCommandHandlerImpl implements IUsuarioUpdateCommandHandler {
   constructor(
-    @Inject(USUARIO_REPOSITORY_PORT)
-    private readonly repository: IUsuarioRepositoryPort,
+    @Inject(IUsuarioRepository)
+    private readonly repository: IUsuarioRepository,
     private readonly keycloakService: KeycloakService,
   ) {}
 
   async execute({ accessContext, dto }: IUsuarioUpdateCommand): Promise<UsuarioFindOneOutputDto> {
     const currentUsuario = await this.repository.findById(accessContext, dto);
 
-    if (!currentUsuario) {
-      throw new ResourceNotFoundError("Usuario", dto.id);
-    }
+    ensureExists(currentUsuario, "Usuario", dto.id);
 
     const currentMatricula =
       currentUsuario.matricula ??
@@ -77,9 +75,7 @@ export class UsuarioUpdateCommandHandlerImpl implements IUsuarioUpdateCommandHan
 
     const result = await this.repository.findById(accessContext, { id: currentUsuario.id });
 
-    if (!result) {
-      throw new ResourceNotFoundError("Usuario", currentUsuario.id);
-    }
+    ensureExists(result, "Usuario", currentUsuario.id);
 
     return result;
   }

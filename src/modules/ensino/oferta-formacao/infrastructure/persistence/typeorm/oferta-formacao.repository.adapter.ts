@@ -14,7 +14,7 @@ import type {
   OfertaFormacaoListInputDto,
   OfertaFormacaoListOutputDto,
 } from "@/modules/ensino/oferta-formacao";
-import type { IOfertaFormacaoRepositoryPort } from "@/modules/ensino/oferta-formacao/domain/repositories";
+import type { IOfertaFormacaoRepository } from "@/modules/ensino/oferta-formacao/domain/repositories";
 import type { OfertaFormacaoEntity } from "./oferta-formacao.entity";
 import { createOfertaFormacaoRepository } from "./oferta-formacao.repository";
 
@@ -27,7 +27,7 @@ export class OfertaFormacaoTypeOrmRepositoryAdapter
     OfertaFormacaoFindOneInputDto,
     OfertaFormacaoFindOneOutputDto
   >
-  implements IOfertaFormacaoRepositoryPort
+  implements IOfertaFormacaoRepository
 {
   protected readonly alias = "oferta_formacao";
   protected readonly authzAction = "oferta_formacao:find";

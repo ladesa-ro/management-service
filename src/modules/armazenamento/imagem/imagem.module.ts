@@ -11,8 +11,8 @@ import {
 } from "@/modules/armazenamento/imagem/domain/commands";
 import { IImagemGetLatestArquivoIdQueryHandler } from "@/modules/armazenamento/imagem/domain/queries";
 import {
-  IMAGEM_ARQUIVO_REPOSITORY_PORT,
-  IMAGEM_TRANSACTION_PORT,
+  IImagemArquivoRepository,
+  IMAGEM_ITransaction,
 } from "@/modules/armazenamento/imagem/domain/repositories";
 import { ImagemTypeOrmRepositoryAdapter } from "@/modules/armazenamento/imagem/infrastructure/persistence/typeorm";
 import { ImagemArquivoTypeOrmRepositoryAdapter } from "@/modules/armazenamento/imagem-arquivo/infrastructure/persistence/typeorm";
@@ -23,11 +23,11 @@ import { ImagemArquivoTypeOrmRepositoryAdapter } from "@/modules/armazenamento/i
   controllers: [],
   providers: [
     {
-      provide: IMAGEM_TRANSACTION_PORT,
+      provide: IMAGEM_ITransaction,
       useClass: ImagemTypeOrmRepositoryAdapter,
     },
     {
-      provide: IMAGEM_ARQUIVO_REPOSITORY_PORT,
+      provide: IImagemArquivoRepository,
       useClass: ImagemArquivoTypeOrmRepositoryAdapter,
     },
     {

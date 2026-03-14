@@ -3,14 +3,14 @@ import {
   type ICampusListQuery,
   ICampusListQueryHandler,
 } from "@/modules/ambientes/campus/domain/queries/campus-list.query.handler.interface";
-import { CAMPUS_REPOSITORY_PORT, type ICampusRepositoryPort } from "../../../domain/repositories";
+import { ICampusRepository } from "../../../domain/repositories";
 import type { CampusListOutputDto } from "../../dtos";
 
 @Injectable()
 export class CampusListQueryHandlerImpl implements ICampusListQueryHandler {
   constructor(
-    @Inject(CAMPUS_REPOSITORY_PORT)
-    private readonly repository: ICampusRepositoryPort,
+    @Inject(ICampusRepository)
+    private readonly repository: ICampusRepository,
   ) {}
 
   async execute({ accessContext, dto, selection }: ICampusListQuery): Promise<CampusListOutputDto> {

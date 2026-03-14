@@ -3,17 +3,14 @@ import {
   type ICalendarioLetivoListQuery,
   ICalendarioLetivoListQueryHandler,
 } from "@/modules/horarios/calendario-letivo/domain/queries/calendario-letivo-list.query.handler.interface";
-import {
-  CALENDARIO_LETIVO_REPOSITORY_PORT,
-  type ICalendarioLetivoRepositoryPort,
-} from "../../../domain/repositories";
+import { ICalendarioLetivoRepository } from "../../../domain/repositories";
 import type { CalendarioLetivoListOutputDto } from "../../dtos";
 
 @Injectable()
 export class CalendarioLetivoListQueryHandlerImpl implements ICalendarioLetivoListQueryHandler {
   constructor(
-    @Inject(CALENDARIO_LETIVO_REPOSITORY_PORT)
-    private readonly repository: ICalendarioLetivoRepositoryPort,
+    @Inject(ICalendarioLetivoRepository)
+    private readonly repository: ICalendarioLetivoRepository,
   ) {}
 
   async execute({

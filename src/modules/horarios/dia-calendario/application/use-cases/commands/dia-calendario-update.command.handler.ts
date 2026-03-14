@@ -1,11 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { has } from "lodash";
-import {
-  AUTHORIZATION_SERVICE_PORT,
-  type IAuthorizationServicePort,
-  type PersistInput,
-  ResourceNotFoundError,
-} from "@/modules/@shared";
+import { ensureExists, IAuthorizationService, type PersistInput } from "@/modules/@shared";
 import {
   type ICalendarioLetivoFindOneQueryHandler,
   ICalendarioLetivoFindOneQueryHandler as ICalendarioLetivoFindOneQueryHandlerToken,
@@ -16,19 +11,16 @@ import {
 } from "@/modules/horarios/dia-calendario/domain/commands/dia-calendario-update.command.handler.interface";
 import { DiaCalendario } from "@/modules/horarios/dia-calendario/domain/dia-calendario.domain";
 import type { IDiaCalendario } from "@/modules/horarios/dia-calendario/domain/dia-calendario.types";
-import {
-  DIA_CALENDARIO_REPOSITORY_PORT,
-  type IDiaCalendarioRepositoryPort,
-} from "../../../domain/repositories";
+import { IDiaCalendarioRepository } from "../../../domain/repositories";
 import type { DiaCalendarioFindOneOutputDto } from "../../dtos";
 
 @Injectable()
 export class DiaCalendarioUpdateCommandHandlerImpl implements IDiaCalendarioUpdateCommandHandler {
   constructor(
-    @Inject(DIA_CALENDARIO_REPOSITORY_PORT)
-    private readonly repository: IDiaCalendarioRepositoryPort,
-    @Inject(AUTHORIZATION_SERVICE_PORT)
-    private readonly authorizationService: IAuthorizationServicePort,
+    @Inject(IDiaCalendarioRepository)
+    private readonly repository: IDiaCalendarioRepository,
+    @Inject(IAuthorizationService)
+    private readonly authorizationService: IAuthorizationService,
     @Inject(ICalendarioLetivoFindOneQueryHandlerToken)
     private readonly calendarioLetivoFindOneHandler: ICalendarioLetivoFindOneQueryHandler,
   ) {}
@@ -39,9 +31,7 @@ export class DiaCalendarioUpdateCommandHandlerImpl implements IDiaCalendarioUpda
   }: IDiaCalendarioUpdateCommand): Promise<DiaCalendarioFindOneOutputDto> {
     const current = await this.repository.findById(accessContext, { id: dto.id });
 
-    if (!current) {
-      throw new ResourceNotFoundError("DiaCalendario", dto.id);
-    }
+    ensureExists(current, "DiaCalendario", dto.id);
 
     await this.authorizationService.ensurePermission("dia_calendario:update", { dto }, dto.id);
 
@@ -57,18 +47,14 @@ export class DiaCalendarioUpdateCommandHandlerImpl implements IDiaCalendarioUpda
         accessContext,
         dto: { id: dto.calendario!.id },
       });
-      if (!calendario) {
-        throw new ResourceNotFoundError("CalendarioLetivo", dto.calendario!.id);
-      }
+      ensureExists(calendario, "CalendarioLetivo", dto.calendario!.id);
       updateData.calendario = { id: calendario.id };
     }
     await this.repository.updateFromDomain(current.id, updateData);
 
     const result = await this.repository.findById(accessContext, { id: dto.id });
 
-    if (!result) {
-      throw new ResourceNotFoundError("DiaCalendario", dto.id);
-    }
+    ensureExists(result, "DiaCalendario", dto.id);
 
     return result;
   }

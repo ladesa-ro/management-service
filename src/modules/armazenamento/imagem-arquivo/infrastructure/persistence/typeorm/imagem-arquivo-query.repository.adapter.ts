@@ -14,7 +14,7 @@ import type {
   ImagemArquivoListInputDto,
   ImagemArquivoListOutputDto,
 } from "@/modules/armazenamento/imagem-arquivo/application/dtos";
-import type { IImagemArquivoQueryRepositoryPort } from "@/modules/armazenamento/imagem-arquivo/domain/repositories";
+import type { IImagemArquivoQueryRepository } from "@/modules/armazenamento/imagem-arquivo/domain/repositories";
 import type { ImagemArquivoEntity } from "./imagem-arquivo.entity";
 import { createImagemArquivoRepository } from "./imagem-arquivo.repository";
 
@@ -31,7 +31,7 @@ export class ImagemArquivoQueryTypeOrmRepositoryAdapter
     ImagemArquivoFindOneInputDto,
     ImagemArquivoFindOneOutputDto
   >
-  implements IImagemArquivoQueryRepositoryPort
+  implements IImagemArquivoQueryRepository
 {
   protected readonly alias = "imagem_arquivo";
   protected readonly authzAction = "imagem_arquivo:find";

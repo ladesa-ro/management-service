@@ -5,7 +5,7 @@ import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
  *
  * @template FindOneOutputDto - Tipo do DTO de saída para busca única
  */
-export interface IFindOneRepositoryPort<FindOneOutputDto> {
+export interface IFindOneRepository<FindOneOutputDto> {
   /**
    * Busca uma entidade por ID
    * @returns A entidade ou null se não encontrada

@@ -1,10 +1,7 @@
 import { Inject, Injectable, UnauthorizedException } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
 import { Strategy } from "passport-http-bearer";
-import {
-  type IRequestActorResolverPort,
-  REQUEST_ACTOR_RESOLVER_PORT,
-} from "@/modules/@seguranca/ator-requisicao";
+import { IRequestActorResolver } from "@/modules/@seguranca/ator-requisicao";
 import { AuthStrategy } from "../../domain";
 
 /**
@@ -16,8 +13,8 @@ export class AccessTokenStrategyAdapter extends PassportStrategy(
   AuthStrategy.ACCESS_TOKEN,
 ) {
   constructor(
-    @Inject(REQUEST_ACTOR_RESOLVER_PORT)
-    private readonly requestActorResolver: IRequestActorResolverPort,
+    @Inject(IRequestActorResolver)
+    private readonly requestActorResolver: IRequestActorResolver,
   ) {
     super();
   }

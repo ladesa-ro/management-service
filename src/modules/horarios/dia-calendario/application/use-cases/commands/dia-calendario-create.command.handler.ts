@@ -1,9 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
-import {
-  AUTHORIZATION_SERVICE_PORT,
-  type IAuthorizationServicePort,
-  ResourceNotFoundError,
-} from "@/modules/@shared";
+import { ensureExists, IAuthorizationService } from "@/modules/@shared";
 import {
   type ICalendarioLetivoFindOneQueryHandler,
   ICalendarioLetivoFindOneQueryHandler as ICalendarioLetivoFindOneQueryHandlerToken,
@@ -13,19 +9,16 @@ import {
   IDiaCalendarioCreateCommandHandler,
 } from "@/modules/horarios/dia-calendario/domain/commands/dia-calendario-create.command.handler.interface";
 import { DiaCalendario } from "@/modules/horarios/dia-calendario/domain/dia-calendario.domain";
-import {
-  DIA_CALENDARIO_REPOSITORY_PORT,
-  type IDiaCalendarioRepositoryPort,
-} from "../../../domain/repositories";
+import { IDiaCalendarioRepository } from "../../../domain/repositories";
 import type { DiaCalendarioFindOneOutputDto } from "../../dtos";
 
 @Injectable()
 export class DiaCalendarioCreateCommandHandlerImpl implements IDiaCalendarioCreateCommandHandler {
   constructor(
-    @Inject(DIA_CALENDARIO_REPOSITORY_PORT)
-    private readonly repository: IDiaCalendarioRepositoryPort,
-    @Inject(AUTHORIZATION_SERVICE_PORT)
-    private readonly authorizationService: IAuthorizationServicePort,
+    @Inject(IDiaCalendarioRepository)
+    private readonly repository: IDiaCalendarioRepository,
+    @Inject(IAuthorizationService)
+    private readonly authorizationService: IAuthorizationService,
     @Inject(ICalendarioLetivoFindOneQueryHandlerToken)
     private readonly calendarioLetivoFindOneHandler: ICalendarioLetivoFindOneQueryHandler,
   ) {}
@@ -42,9 +35,7 @@ export class DiaCalendarioCreateCommandHandlerImpl implements IDiaCalendarioCrea
         accessContext,
         dto: { id: dto.calendario.id },
       });
-      if (!calendario) {
-        throw new ResourceNotFoundError("CalendarioLetivo", dto.calendario.id);
-      }
+      ensureExists(calendario, "CalendarioLetivo", dto.calendario.id);
       calendarioRef = { id: calendario.id };
     }
     const domain = DiaCalendario.criar({
@@ -63,9 +54,7 @@ export class DiaCalendarioCreateCommandHandlerImpl implements IDiaCalendarioCrea
 
     const result = await this.repository.findById(accessContext, { id });
 
-    if (!result) {
-      throw new ResourceNotFoundError("DiaCalendario", id);
-    }
+    ensureExists(result, "DiaCalendario", id);
 
     return result;
   }

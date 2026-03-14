@@ -3,17 +3,14 @@ import {
   type IModalidadeFindOneQuery,
   IModalidadeFindOneQueryHandler,
 } from "@/modules/ensino/modalidade/domain/queries/modalidade-find-one.query.handler.interface";
-import {
-  type IModalidadeRepositoryPort,
-  MODALIDADE_REPOSITORY_PORT,
-} from "../../../domain/repositories";
+import { IModalidadeRepository } from "../../../domain/repositories";
 import type { ModalidadeFindOneOutputDto } from "../../dtos";
 
 @Injectable()
 export class ModalidadeFindOneQueryHandlerImpl implements IModalidadeFindOneQueryHandler {
   constructor(
-    @Inject(MODALIDADE_REPOSITORY_PORT)
-    private readonly repository: IModalidadeRepositoryPort,
+    @Inject(IModalidadeRepository)
+    private readonly repository: IModalidadeRepository,
   ) {}
 
   async execute({

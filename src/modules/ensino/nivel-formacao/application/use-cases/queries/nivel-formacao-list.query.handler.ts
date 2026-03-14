@@ -3,17 +3,14 @@ import {
   type INivelFormacaoListQuery,
   INivelFormacaoListQueryHandler,
 } from "@/modules/ensino/nivel-formacao/domain/queries/nivel-formacao-list.query.handler.interface";
-import {
-  type INivelFormacaoRepositoryPort,
-  NIVEL_FORMACAO_REPOSITORY_PORT,
-} from "../../../domain/repositories";
+import { INivelFormacaoRepository } from "../../../domain/repositories";
 import type { NivelFormacaoListOutputDto } from "../../dtos";
 
 @Injectable()
 export class NivelFormacaoListQueryHandlerImpl implements INivelFormacaoListQueryHandler {
   constructor(
-    @Inject(NIVEL_FORMACAO_REPOSITORY_PORT)
-    private readonly repository: INivelFormacaoRepositoryPort,
+    @Inject(INivelFormacaoRepository)
+    private readonly repository: INivelFormacaoRepository,
   ) {}
 
   async execute({

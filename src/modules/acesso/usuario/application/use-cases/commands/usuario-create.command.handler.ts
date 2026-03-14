@@ -1,18 +1,18 @@
 import { Inject, Injectable, InternalServerErrorException } from "@nestjs/common";
 import { KeycloakService } from "@/modules/@seguranca/provedor-identidade";
-import { ResourceNotFoundError, ValidationFailedException } from "@/modules/@shared";
+import { ensureExists, ValidationFailedException } from "@/modules/@shared";
 import {
   type IUsuarioCreateCommand,
   IUsuarioCreateCommandHandler,
 } from "@/modules/acesso/usuario/domain/commands/usuario-create.command.handler.interface";
-import { type IUsuarioRepositoryPort, USUARIO_REPOSITORY_PORT } from "../../../domain/repositories";
+import { IUsuarioRepository } from "../../../domain/repositories";
 import type { UsuarioFindOneOutputDto } from "../../dtos";
 
 @Injectable()
 export class UsuarioCreateCommandHandlerImpl implements IUsuarioCreateCommandHandler {
   constructor(
-    @Inject(USUARIO_REPOSITORY_PORT)
-    private readonly repository: IUsuarioRepositoryPort,
+    @Inject(IUsuarioRepository)
+    private readonly repository: IUsuarioRepository,
     private readonly keycloakService: KeycloakService,
   ) {}
 
@@ -50,13 +50,11 @@ export class UsuarioCreateCommandHandlerImpl implements IUsuarioCreateCommandHan
 
       const result = await this.repository.findById(accessContext, { id: id as string });
 
-      if (!result) {
-        throw new ResourceNotFoundError("Usuario", id as string);
-      }
+      ensureExists(result, "Usuario", id as string);
 
       return result;
     } catch (err) {
-      if (err instanceof ResourceNotFoundError || err instanceof ValidationFailedException) {
+      if (err instanceof ensureExists || err instanceof ValidationFailedException) {
         throw err;
       }
       console.debug("Erro ao cadastrar usuario:", err);

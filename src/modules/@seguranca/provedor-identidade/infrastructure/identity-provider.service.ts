@@ -4,7 +4,7 @@ import { LRUCache } from "lru-cache";
 import type { IntrospectionResponse } from "openid-client";
 import { tokenIntrospection } from "openid-client";
 import type { IIdentityResponse } from "../domain";
-import type { IIdentityProviderPort } from "../ports";
+import type { IIdentityProvider } from "../ports";
 import { JwksRsaClientService } from "./jwks";
 import { OpenidConnectService } from "./openid-connect";
 
@@ -19,7 +19,7 @@ interface IntrospectionResponseWithUser extends IntrospectionResponse {
  * Implementa validação de tokens e cache de identidades.
  */
 @Injectable()
-export class IdentityProviderService implements IIdentityProviderPort {
+export class IdentityProviderService implements IIdentityProvider {
   #cache = new LRUCache<string, IntrospectionResponseWithUser>({
     max: 500,
     ttl: 1000 * 10,

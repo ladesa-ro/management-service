@@ -8,4 +8,4 @@ export const createEstadoRepository = createRepositoryFactory((ds) => {
   return ds.getRepository(EstadoEntity).extend({});
 });
 
-export type IEstadoRepository = IRepositoryFactoryOutput<typeof createEstadoRepository>;
+export type EstadoTypeOrmRepository = IRepositoryFactoryOutput<typeof createEstadoRepository>;

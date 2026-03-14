@@ -2,7 +2,7 @@ import { Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import { NivelFormacaoModule } from "@/modules/ensino/nivel-formacao/nivel-formacao.module";
 import { OfertaFormacaoModule } from "@/modules/ensino/oferta-formacao/oferta-formacao.module";
-import { OFERTA_FORMACAO_NIVEL_FORMACAO_REPOSITORY_PORT } from "@/modules/ensino/oferta-formacao-nivel-formacao";
+import { IOfertaFormacaoNivelFormacaoRepository } from "@/modules/ensino/oferta-formacao-nivel-formacao";
 import {
   OfertaFormacaoNivelFormacaoCreateCommandHandlerImpl,
   OfertaFormacaoNivelFormacaoDeleteCommandHandlerImpl,
@@ -34,7 +34,7 @@ import { OfertaFormacaoNivelFormacaoRestController } from "@/modules/ensino/ofer
     OfertaFormacaoNivelFormacaoAuthzRegistrySetup,
     OfertaFormacaoNivelFormacaoGraphqlResolver,
     {
-      provide: OFERTA_FORMACAO_NIVEL_FORMACAO_REPOSITORY_PORT,
+      provide: IOfertaFormacaoNivelFormacaoRepository,
       useClass: OfertaFormacaoNivelFormacaoTypeOrmRepositoryAdapter,
     },
 

@@ -1,10 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
-import {
-  AUTHORIZATION_SERVICE_PORT,
-  type IAuthorizationServicePort,
-  ResourceNotFoundError,
-  saveEntityImagemField,
-} from "@/modules/@shared";
+import { ensureExists, IAuthorizationService, saveEntityImagemField } from "@/modules/@shared";
 import {
   type IAmbienteUpdateImagemCapaCommand,
   IAmbienteUpdateImagemCapaCommandHandler,
@@ -13,20 +8,17 @@ import {
   IImagemSaveImagemCapaCommandHandler,
   type IImagemSaveImagemCapaCommandHandler as IImagemSaveImagemCapaCommandHandlerType,
 } from "@/modules/armazenamento/imagem/domain/commands";
-import {
-  AMBIENTE_REPOSITORY_PORT,
-  type IAmbienteRepositoryPort,
-} from "../../../domain/repositories";
+import { IAmbienteRepository } from "../../../domain/repositories";
 
 @Injectable()
 export class AmbienteUpdateImagemCapaCommandHandlerImpl
   implements IAmbienteUpdateImagemCapaCommandHandler
 {
   constructor(
-    @Inject(AMBIENTE_REPOSITORY_PORT)
-    private readonly repository: IAmbienteRepositoryPort,
-    @Inject(AUTHORIZATION_SERVICE_PORT)
-    private readonly authorizationService: IAuthorizationServicePort,
+    @Inject(IAmbienteRepository)
+    private readonly repository: IAmbienteRepository,
+    @Inject(IAuthorizationService)
+    private readonly authorizationService: IAuthorizationService,
     @Inject(IImagemSaveImagemCapaCommandHandler)
     private readonly saveImagemCapaHandler: IImagemSaveImagemCapaCommandHandlerType,
   ) {}
@@ -34,9 +26,7 @@ export class AmbienteUpdateImagemCapaCommandHandlerImpl
   async execute({ accessContext, dto, file }: IAmbienteUpdateImagemCapaCommand): Promise<boolean> {
     const current = await this.repository.findById(accessContext, dto);
 
-    if (!current) {
-      throw new ResourceNotFoundError("Ambiente", dto.id);
-    }
+    ensureExists(current, "Ambiente", dto.id);
 
     await this.authorizationService.ensurePermission(
       "ambiente:update",

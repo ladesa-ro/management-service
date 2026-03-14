@@ -33,7 +33,7 @@ import {
   IUsuarioGetImagemPerfilQueryHandler,
   IUsuarioListQueryHandler,
 } from "@/modules/acesso/usuario/domain/queries";
-import { USUARIO_REPOSITORY_PORT } from "@/modules/acesso/usuario/domain/repositories";
+import { IUsuarioRepository } from "@/modules/acesso/usuario/domain/repositories";
 import {
   UsuarioAuthzRegistrySetup,
   UsuarioTypeOrmRepositoryAdapter,
@@ -51,7 +51,7 @@ import { ImagemModule } from "@/modules/armazenamento/imagem/imagem.module";
     UsuarioGraphqlResolver,
     UsuarioAuthzRegistrySetup,
     {
-      provide: USUARIO_REPOSITORY_PORT,
+      provide: IUsuarioRepository,
       useClass: UsuarioTypeOrmRepositoryAdapter,
     },
 

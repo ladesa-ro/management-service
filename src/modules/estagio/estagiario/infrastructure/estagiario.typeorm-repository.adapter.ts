@@ -1,7 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { DataSource } from "typeorm";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
-import { ResourceNotFoundError } from "@/modules/@shared";
+import { ensureExists } from "@/modules/@shared";
 import { APP_DATA_SOURCE_TOKEN } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import { createPerfilRepository } from "@/modules/acesso/perfil/infrastructure/persistence/typeorm/perfil.repository";
 import { createCursoRepository } from "@/modules/ensino/curso/infrastructure/persistence/typeorm/curso.repository";
@@ -15,11 +15,11 @@ import type {
   EstagiarioUpdateInputDto,
 } from "@/modules/estagio/estagiario/application/dtos";
 import { Estagiario } from "@/modules/estagio/estagiario/domain/estagiario.domain";
-import type { IEstagiarioRepositoryPort } from "@/modules/estagio/estagiario/domain/repositories";
+import type { IEstagiarioRepository } from "@/modules/estagio/estagiario/domain/repositories";
 import { createEstagiarioRepository, EstagiarioMapper } from "./persistence";
 
 @Injectable()
-export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepositoryPort {
+export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository {
   constructor(@Inject(APP_DATA_SOURCE_TOKEN) private readonly dataSource: DataSource) {}
 
   private get repository() {
@@ -133,25 +133,19 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
       where: { id: dto.idPerfilFk, dateDeleted: null as any },
     });
 
-    if (!perfil) {
-      throw new ResourceNotFoundError("Perfil", dto.idPerfilFk);
-    }
+    ensureExists(perfil, "Perfil", dto.idPerfilFk);
 
     const curso = await this.cursoRepository.findOne({
       where: { id: dto.idCursoFk, dateDeleted: null as any },
     });
 
-    if (!curso) {
-      throw new ResourceNotFoundError("Curso", dto.idCursoFk);
-    }
+    ensureExists(curso, "Curso", dto.idCursoFk);
 
     const turma = await this.turmaRepository.findOne({
       where: { id: dto.idTurmaFk, dateDeleted: null as any },
     });
 
-    if (!turma) {
-      throw new ResourceNotFoundError("Turma", dto.idTurmaFk);
-    }
+    ensureExists(turma, "Turma", dto.idTurmaFk);
 
     const estagiario = Estagiario.criar(dto);
 
@@ -170,9 +164,7 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
       where: { id, dateDeleted: null as any },
     });
 
-    if (!entity) {
-      throw new ResourceNotFoundError("Estagiario", id);
-    }
+    ensureExists(entity, "Estagiario", id);
 
     const estagiario = EstagiarioMapper.toDomain(entity);
 
@@ -181,9 +173,7 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
         where: { id: dto.idPerfilFk, dateDeleted: null as any },
       });
 
-      if (!perfil) {
-        throw new ResourceNotFoundError("Perfil", dto.idPerfilFk);
-      }
+      ensureExists(perfil, "Perfil", dto.idPerfilFk);
     }
 
     if (dto.idCursoFk) {
@@ -191,9 +181,7 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
         where: { id: dto.idCursoFk, dateDeleted: null as any },
       });
 
-      if (!curso) {
-        throw new ResourceNotFoundError("Curso", dto.idCursoFk);
-      }
+      ensureExists(curso, "Curso", dto.idCursoFk);
     }
 
     if (dto.idTurmaFk) {
@@ -201,9 +189,7 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
         where: { id: dto.idTurmaFk, dateDeleted: null as any },
       });
 
-      if (!turma) {
-        throw new ResourceNotFoundError("Turma", dto.idTurmaFk);
-      }
+      ensureExists(turma, "Turma", dto.idTurmaFk);
     }
 
     estagiario.atualizar(dto);
@@ -219,9 +205,7 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
       where: { id, dateDeleted: null as any },
     });
 
-    if (!entity) {
-      throw new ResourceNotFoundError("Estagiario", id);
-    }
+    ensureExists(entity, "Estagiario", id);
 
     entity.dateDeleted = new Date();
     await this.repository.save(entity);

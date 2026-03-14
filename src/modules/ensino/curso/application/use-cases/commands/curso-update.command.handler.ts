@@ -1,11 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { has } from "lodash";
-import {
-  AUTHORIZATION_SERVICE_PORT,
-  type IAuthorizationServicePort,
-  type PersistInput,
-  ResourceNotFoundError,
-} from "@/modules/@shared";
+import { ensureExists, IAuthorizationService, type PersistInput } from "@/modules/@shared";
 import { ICampusFindOneQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-find-one.query.handler.interface";
 import {
   type ICursoUpdateCommand,
@@ -14,16 +9,16 @@ import {
 import { Curso } from "@/modules/ensino/curso/domain/curso.domain";
 import type { ICurso } from "@/modules/ensino/curso/domain/curso.types";
 import { IOfertaFormacaoFindOneQueryHandler } from "@/modules/ensino/oferta-formacao/domain/queries/oferta-formacao-find-one.query.handler.interface";
-import { CURSO_REPOSITORY_PORT, type ICursoRepositoryPort } from "../../../domain/repositories";
+import { ICursoRepository } from "../../../domain/repositories";
 import type { CursoFindOneOutputDto } from "../../dtos";
 
 @Injectable()
 export class CursoUpdateCommandHandlerImpl implements ICursoUpdateCommandHandler {
   constructor(
-    @Inject(CURSO_REPOSITORY_PORT)
-    private readonly repository: ICursoRepositoryPort,
-    @Inject(AUTHORIZATION_SERVICE_PORT)
-    private readonly authorizationService: IAuthorizationServicePort,
+    @Inject(ICursoRepository)
+    private readonly repository: ICursoRepository,
+    @Inject(IAuthorizationService)
+    private readonly authorizationService: IAuthorizationService,
     @Inject(ICampusFindOneQueryHandler)
     private readonly campusFindOneHandler: ICampusFindOneQueryHandler,
     @Inject(IOfertaFormacaoFindOneQueryHandler)
@@ -33,9 +28,7 @@ export class CursoUpdateCommandHandlerImpl implements ICursoUpdateCommandHandler
   async execute({ accessContext, dto }: ICursoUpdateCommand): Promise<CursoFindOneOutputDto> {
     const current = await this.repository.findById(accessContext, { id: dto.id });
 
-    if (!current) {
-      throw new ResourceNotFoundError("Curso", dto.id);
-    }
+    ensureExists(current, "Curso", dto.id);
 
     await this.authorizationService.ensurePermission("curso:update", { dto }, dto.id);
 
@@ -50,9 +43,7 @@ export class CursoUpdateCommandHandlerImpl implements ICursoUpdateCommandHandler
         accessContext,
         dto: { id: dto.campus.id },
       });
-      if (!campus) {
-        throw new ResourceNotFoundError("Campus", dto.campus.id);
-      }
+      ensureExists(campus, "Campus", dto.campus.id);
       updateData.campus = { id: campus.id };
     }
     if (has(dto, "ofertaFormacao") && dto.ofertaFormacao !== undefined) {
@@ -60,18 +51,14 @@ export class CursoUpdateCommandHandlerImpl implements ICursoUpdateCommandHandler
         accessContext,
         dto: { id: dto.ofertaFormacao.id },
       });
-      if (!ofertaFormacao) {
-        throw new ResourceNotFoundError("OfertaFormacao", dto.ofertaFormacao.id);
-      }
+      ensureExists(ofertaFormacao, "OfertaFormacao", dto.ofertaFormacao.id);
       updateData.ofertaFormacao = { id: ofertaFormacao.id };
     }
     await this.repository.updateFromDomain(current.id, updateData);
 
     const result = await this.repository.findById(accessContext, { id: dto.id });
 
-    if (!result) {
-      throw new ResourceNotFoundError("Curso", dto.id);
-    }
+    ensureExists(result, "Curso", dto.id);
 
     return result;
   }

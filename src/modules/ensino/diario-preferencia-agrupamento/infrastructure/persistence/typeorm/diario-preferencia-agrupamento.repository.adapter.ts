@@ -15,7 +15,7 @@ import type {
   DiarioPreferenciaAgrupamentoListInputDto,
   DiarioPreferenciaAgrupamentoListOutputDto,
 } from "@/modules/ensino/diario-preferencia-agrupamento";
-import type { IDiarioPreferenciaAgrupamentoRepositoryPort } from "@/modules/ensino/diario-preferencia-agrupamento/domain/repositories";
+import type { IDiarioPreferenciaAgrupamentoRepository } from "@/modules/ensino/diario-preferencia-agrupamento/domain/repositories";
 import type { DiarioPreferenciaAgrupamentoEntity } from "./diario-preferencia-agrupamento.entity";
 import { createDiarioPreferenciaAgrupamentoRepository } from "./diario-preferencia-agrupamento.repository";
 
@@ -32,7 +32,7 @@ export class DiarioPreferenciaAgrupamentoTypeOrmRepositoryAdapter
     DiarioPreferenciaAgrupamentoFindOneInputDto,
     DiarioPreferenciaAgrupamentoFindOneOutputDto
   >
-  implements IDiarioPreferenciaAgrupamentoRepositoryPort
+  implements IDiarioPreferenciaAgrupamentoRepository
 {
   protected readonly alias = "diario_preferencia_agrupamento";
   protected readonly authzAction = "diario_preferencia_agrupamento:find";

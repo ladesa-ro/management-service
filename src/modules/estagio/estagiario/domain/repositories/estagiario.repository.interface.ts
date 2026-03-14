@@ -11,12 +11,12 @@ import type {
 /**
  * Symbol para injetar a porta de repositório
  */
-export const ESTAGIARIO_REPOSITORY_PORT = Symbol("ESTAGIARIO_REPOSITORY_PORT");
+export const IEstagiarioRepository = Symbol("IEstagiarioRepository");
 
 /**
  * Interface da porta de repositório
  */
-export interface IEstagiarioRepositoryPort {
+export interface IEstagiarioRepository {
   findAll(
     accessContext: AccessContext,
     dto: EstagiarioListInputDto | null,

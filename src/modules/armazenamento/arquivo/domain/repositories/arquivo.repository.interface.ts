@@ -4,12 +4,12 @@ import type { ArquivoEntity } from "@/modules/armazenamento/arquivo/infrastructu
 /**
  * Token de injeção para o repositório de Arquivo
  */
-export const ARQUIVO_REPOSITORY_PORT = Symbol("IArquivoRepositoryPort");
+export const IArquivoRepository = Symbol("IArquivoRepository");
 
 /**
  * Port de saída para operações de persistência de Arquivo
  */
-export interface IArquivoRepositoryPort {
+export interface IArquivoRepository {
   createQueryBuilder(alias: string): SelectQueryBuilder<ArquivoEntity>;
 
   save(arquivo: Partial<ArquivoEntity>): Promise<ArquivoEntity>;

@@ -9,7 +9,7 @@ import {
   QbEfficientLoad,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
-  IUsuarioRepositoryPort,
+  IUsuarioRepository,
   UsuarioFindOneInputDto,
   UsuarioFindOneOutputDto,
   UsuarioListInputDto,
@@ -30,7 +30,7 @@ export class UsuarioTypeOrmRepositoryAdapter
     UsuarioFindOneInputDto,
     UsuarioFindOneOutputDto
   >
-  implements IUsuarioRepositoryPort
+  implements IUsuarioRepository
 {
   protected readonly alias = "usuario";
   protected readonly authzAction = "usuario:find";

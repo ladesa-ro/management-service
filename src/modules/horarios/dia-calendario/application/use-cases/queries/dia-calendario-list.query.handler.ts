@@ -3,17 +3,14 @@ import {
   type IDiaCalendarioListQuery,
   IDiaCalendarioListQueryHandler,
 } from "@/modules/horarios/dia-calendario/domain/queries/dia-calendario-list.query.handler.interface";
-import {
-  DIA_CALENDARIO_REPOSITORY_PORT,
-  type IDiaCalendarioRepositoryPort,
-} from "../../../domain/repositories";
+import { IDiaCalendarioRepository } from "../../../domain/repositories";
 import type { DiaCalendarioListOutputDto } from "../../dtos";
 
 @Injectable()
 export class DiaCalendarioListQueryHandlerImpl implements IDiaCalendarioListQueryHandler {
   constructor(
-    @Inject(DIA_CALENDARIO_REPOSITORY_PORT)
-    private readonly repository: IDiaCalendarioRepositoryPort,
+    @Inject(IDiaCalendarioRepository)
+    private readonly repository: IDiaCalendarioRepository,
   ) {}
 
   async execute({

@@ -4,7 +4,7 @@ import type { Request } from "express";
 import { DataSource } from "typeorm";
 import type { IRequestActor } from "@/modules/@seguranca/ator-requisicao";
 import { AccessContext } from "@/modules/@seguranca/contexto-acesso";
-import type { IAuthorizationPayload, IAuthorizationServicePort } from "@/modules/@shared";
+import type { IAuthorizationPayload, IAuthorizationService } from "@/modules/@shared";
 import { APP_DATA_SOURCE_TOKEN } from "@/modules/@shared/infrastructure/persistence/typeorm";
 
 /**
@@ -16,7 +16,7 @@ import { APP_DATA_SOURCE_TOKEN } from "@/modules/@shared/infrastructure/persiste
  * É scoped por request para manter o contexto de autorização isolado.
  */
 @Injectable({ scope: Scope.REQUEST })
-export class AuthorizationServiceAdapter implements IAuthorizationServicePort {
+export class AuthorizationServiceAdapter implements IAuthorizationService {
   private readonly accessContext: AccessContext;
 
   constructor(

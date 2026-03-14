@@ -4,8 +4,8 @@ import type { PartialEntity } from "@/modules/@shared";
 import { APP_DATA_SOURCE_TOKEN } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type { Imagem } from "@/modules/armazenamento/imagem/domain/imagem.domain";
 import type {
-  IImagemArquivoRepositoryPort,
-  IImagemRepositoryPort,
+  IImagemArquivoRepository,
+  IImagemRepository,
   IImagemTransactionPort,
 } from "@/modules/armazenamento/imagem/domain/repositories";
 import type { ImagemArquivo } from "@/modules/armazenamento/imagem-arquivo/domain/imagem-arquivo.domain";
@@ -18,15 +18,15 @@ export class ImagemTypeOrmRepositoryAdapter implements IImagemTransactionPort {
 
   async transaction<T>(
     callback: (context: {
-      imagemRepository: IImagemRepositoryPort;
-      imagemArquivoRepository: IImagemArquivoRepositoryPort;
+      imagemRepository: IImagemRepository;
+      imagemArquivoRepository: IImagemArquivoRepository;
     }) => Promise<T>,
   ): Promise<T> {
     return this.dataSource.transaction(async (entityManager) => {
       const imagemRepository = createImagemRepository(entityManager);
       const imagemArquivoRepository = createImagemArquivoRepository(entityManager);
 
-      const imagemRepoAdapter: IImagemRepositoryPort = {
+      const imagemRepoAdapter: IImagemRepository = {
         create: () => imagemRepository.create() as unknown as Imagem,
         merge: (imagem: Imagem, data: PartialEntity<Imagem>) => {
           imagemRepository.merge(imagem as any, data as any);
@@ -35,7 +35,7 @@ export class ImagemTypeOrmRepositoryAdapter implements IImagemTransactionPort {
           imagemRepository.save(imagem as any) as Promise<Imagem>,
       };
 
-      const imagemArquivoRepoAdapter: IImagemArquivoRepositoryPort = {
+      const imagemArquivoRepoAdapter: IImagemArquivoRepository = {
         create: () => imagemArquivoRepository.create() as unknown as ImagemArquivo,
         merge: (imagemArquivo: ImagemArquivo, data: PartialEntity<ImagemArquivo>) => {
           imagemArquivoRepository.merge(imagemArquivo as any, data as any);

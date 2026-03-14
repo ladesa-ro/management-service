@@ -8,7 +8,7 @@ import {
   paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
-  INivelFormacaoRepositoryPort,
+  INivelFormacaoRepository,
   NivelFormacaoFindOneInputDto,
   NivelFormacaoFindOneOutputDto,
   NivelFormacaoListInputDto,
@@ -26,7 +26,7 @@ export class NivelFormacaoTypeOrmRepositoryAdapter
     NivelFormacaoFindOneInputDto,
     NivelFormacaoFindOneOutputDto
   >
-  implements INivelFormacaoRepositoryPort
+  implements INivelFormacaoRepository
 {
   protected readonly alias = "nivel_formacao";
   protected readonly authzAction = "nivel_formacao:find";

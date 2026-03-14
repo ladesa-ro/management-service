@@ -12,22 +12,19 @@ import {
   IRuntimeOptions as IRuntimeOptionsToken,
 } from "@/infrastructure.config/options/runtime/runtime-options.interface";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
-import { isValidUuid, ResourceNotFoundError } from "@/modules/@shared";
+import { ensureExists, isValidUuid } from "@/modules/@shared";
 import { UsuarioEntity } from "@/modules/acesso/usuario/infrastructure/persistence/typeorm";
 import type { ArquivoGetFileInputDto } from "@/modules/armazenamento/arquivo/application/dtos";
 import type { IArquivoGetStreamableFileQueryHandler } from "@/modules/armazenamento/arquivo/domain/queries";
-import {
-  ARQUIVO_REPOSITORY_PORT,
-  type IArquivoRepositoryPort,
-} from "@/modules/armazenamento/arquivo/domain/repositories";
+import { IArquivoRepository } from "@/modules/armazenamento/arquivo/domain/repositories";
 
 @Injectable()
 export class ArquivoGetStreamableFileQueryHandlerImpl
   implements IArquivoGetStreamableFileQueryHandler
 {
   constructor(
-    @Inject(ARQUIVO_REPOSITORY_PORT)
-    private arquivoRepository: IArquivoRepositoryPort,
+    @Inject(IArquivoRepository)
+    private arquivoRepository: IArquivoRepository,
     @Inject(IRuntimeOptionsToken)
     private runtimeOptions: IRuntimeOptions,
   ) {}
@@ -71,9 +68,7 @@ export class ArquivoGetStreamableFileQueryHandlerImpl
 
     const exists = await qb.getExists();
 
-    if (!exists) {
-      throw new ResourceNotFoundError("Arquivo", id);
-    }
+    ensureExists(exists, "Arquivo", id);
 
     if (acesso) {
       if (acesso.nome === "bloco" && isValidUuid(acesso.id)) {

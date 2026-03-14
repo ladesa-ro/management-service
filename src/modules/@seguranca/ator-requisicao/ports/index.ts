@@ -1,1 +1,1 @@
-export * from "./request-actor-resolver.port";
+export * from "./request-actor-resolver.interface";

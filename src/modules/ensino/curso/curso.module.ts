@@ -3,7 +3,7 @@ import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persiste
 import { CampusModule } from "@/modules/ambientes/campus/campus.module";
 import { ArquivoModule } from "@/modules/armazenamento/arquivo/arquivo.module";
 import { ImagemModule } from "@/modules/armazenamento/imagem/imagem.module";
-import { CURSO_REPOSITORY_PORT } from "@/modules/ensino/curso";
+import { ICursoRepository } from "@/modules/ensino/curso";
 import {
   CursoCreateCommandHandlerImpl,
   CursoDeleteCommandHandlerImpl,
@@ -42,7 +42,7 @@ import { OfertaFormacaoModule } from "@/modules/ensino/oferta-formacao/oferta-fo
     CursoGraphqlResolver,
     CursoAuthzRegistrySetup,
     {
-      provide: CURSO_REPOSITORY_PORT,
+      provide: ICursoRepository,
       useClass: CursoTypeOrmRepositoryAdapter,
     },
 
