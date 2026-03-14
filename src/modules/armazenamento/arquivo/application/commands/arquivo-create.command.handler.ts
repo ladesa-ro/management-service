@@ -1,12 +1,6 @@
-import { writeFile } from "node:fs/promises";
-import type { Readable } from "node:stream";
 import { Inject, Injectable } from "@nestjs/common";
-import jetpack from "fs-jetpack";
 import { v4 } from "uuid";
-import {
-  IRuntimeOptions,
-  IRuntimeOptions as IRuntimeOptionsToken,
-} from "@/infrastructure.config/options/runtime/runtime-options.interface";
+import { IStorageService } from "@/domain/abstractions/storage";
 import type {
   IArquivoCreateCommand,
   IArquivoCreateCommandHandler,
@@ -18,22 +12,18 @@ export class ArquivoCreateCommandHandlerImpl implements IArquivoCreateCommandHan
   constructor(
     @Inject(IArquivoRepository)
     private arquivoRepository: IArquivoRepository,
-    @Inject(IRuntimeOptionsToken)
-    private runtimeOptions: IRuntimeOptions,
+    @Inject(IStorageService)
+    private storageService: IStorageService,
   ) {}
-
-  private get storagePath() {
-    return this.runtimeOptions.storagePath;
-  }
 
   async execute({ dto, data }: IArquivoCreateCommand): Promise<{ id: string }> {
     let id: string;
 
     do {
       id = v4();
-    } while (await this.dataExists(id));
+    } while (await this.storageService.exists(id));
 
-    await this.dataSave(id, data);
+    await this.storageService.save(id, data);
 
     const sizeBytes = 0;
     const mimeType = dto.mimeType;
@@ -47,21 +37,5 @@ export class ArquivoCreateCommandHandlerImpl implements IArquivoCreateCommandHan
     });
 
     return { id };
-  }
-
-  private async dataExists(id: string): Promise<false | "dir" | "file" | "other"> {
-    const fileFullPath = this.datGetFilePath(id);
-    return jetpack.exists(fileFullPath);
-  }
-
-  private async dataSave(id: string, data: NodeJS.ArrayBufferView | Readable): Promise<boolean> {
-    const fileFullPath = this.datGetFilePath(id);
-    await writeFile(fileFullPath, data);
-    return true;
-  }
-
-  private datGetFilePath(id: string): string {
-    jetpack.dir(this.storagePath);
-    return `${this.storagePath}/${id}`;
   }
 }

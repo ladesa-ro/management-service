@@ -6,11 +6,7 @@ import {
   ServiceUnavailableException,
   StreamableFile,
 } from "@nestjs/common";
-import jetpack, { createReadStream } from "fs-jetpack";
-import {
-  IRuntimeOptions,
-  IRuntimeOptions as IRuntimeOptionsToken,
-} from "@/infrastructure.config/options/runtime/runtime-options.interface";
+import { IStorageService } from "@/domain/abstractions/storage";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists, isValidUuid } from "@/modules/@shared";
 import { UsuarioEntity } from "@/modules/acesso/usuario/infrastructure/persistence/typeorm";
@@ -26,13 +22,9 @@ export class ArquivoGetStreamableFileQueryHandlerImpl
   constructor(
     @Inject(IArquivoRepository)
     private arquivoRepository: IArquivoRepository,
-    @Inject(IRuntimeOptionsToken)
-    private runtimeOptions: IRuntimeOptions,
+    @Inject(IStorageService)
+    private storageService: IStorageService,
   ) {}
-
-  private get storagePath() {
-    return this.runtimeOptions.storagePath;
-  }
 
   async execute({
     accessContext,
@@ -119,11 +111,11 @@ export class ArquivoGetStreamableFileQueryHandlerImpl
       throw new ForbiddenException();
     }
 
-    if (!(await this.dataExists(id))) {
+    if (!(await this.storageService.exists(id))) {
       throw new ServiceUnavailableException();
     }
 
-    const stream = await this.dataReadAsStream(id);
+    const stream = await this.storageService.readAsStream(id);
 
     return {
       id: arquivo.id,
@@ -131,25 +123,5 @@ export class ArquivoGetStreamableFileQueryHandlerImpl
       mimeType: arquivo.mimeType,
       stream,
     };
-  }
-
-  private async dataExists(id: string): Promise<false | "dir" | "file" | "other"> {
-    const fileFullPath = this.datGetFilePath(id);
-    return jetpack.exists(fileFullPath);
-  }
-
-  private async dataReadAsStream(id: string): Promise<Readable | null> {
-    if (await this.dataExists(id)) {
-      const fileFullPath = this.datGetFilePath(id);
-      const fileReadStream = createReadStream(fileFullPath);
-      return fileReadStream;
-    }
-
-    return null;
-  }
-
-  private datGetFilePath(id: string): string {
-    jetpack.dir(this.storagePath);
-    return `${this.storagePath}/${id}`;
   }
 }

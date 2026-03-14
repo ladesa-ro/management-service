@@ -1,4 +1,6 @@
 import { Global, Module } from "@nestjs/common";
+import { IStorageService } from "@/domain/abstractions/storage";
+import { FilesystemStorageService } from "@/infrastructure.storage";
 import { ArquivoCreateCommandHandlerImpl } from "@/modules/armazenamento/arquivo/application/commands";
 import { ArquivoGetStreamableFileQueryHandlerImpl } from "@/modules/armazenamento/arquivo/application/queries";
 import { IArquivoCreateCommandHandler } from "@/modules/armazenamento/arquivo/domain/commands";
@@ -13,6 +15,10 @@ import { ArquivoRestController } from "@/modules/armazenamento/arquivo/presentat
   controllers: [ArquivoRestController],
   providers: [
     {
+      provide: IStorageService,
+      useClass: FilesystemStorageService,
+    },
+    {
       provide: IArquivoRepository,
       useClass: ArquivoTypeOrmRepositoryAdapter,
     },
@@ -25,6 +31,6 @@ import { ArquivoRestController } from "@/modules/armazenamento/arquivo/presentat
       useClass: ArquivoCreateCommandHandlerImpl,
     },
   ],
-  exports: [IArquivoGetStreamableFileQueryHandler, IArquivoCreateCommandHandler],
+  exports: [IStorageService, IArquivoGetStreamableFileQueryHandler, IArquivoCreateCommandHandler],
 })
 export class ArquivoModule {}
