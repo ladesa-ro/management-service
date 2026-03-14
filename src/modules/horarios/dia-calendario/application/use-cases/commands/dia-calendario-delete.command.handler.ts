@@ -4,6 +4,7 @@ import {
   type IDiaCalendarioDeleteCommand,
   IDiaCalendarioDeleteCommandHandler,
 } from "@/modules/horarios/dia-calendario/domain/commands/dia-calendario-delete.command.handler.interface";
+import { DiaCalendario } from "@/modules/horarios/dia-calendario/domain/dia-calendario.domain";
 import { IDiaCalendarioRepository } from "../../../domain/repositories";
 
 @Injectable()
@@ -20,7 +21,7 @@ export class DiaCalendarioDeleteCommandHandlerImpl implements IDiaCalendarioDele
 
     const entity = await this.repository.findById(accessContext, dto);
 
-    ensureExists(entity, "DiaCalendario", dto.id);
+    ensureExists(entity, DiaCalendario.entityName, dto.id);
 
     await this.repository.softDeleteById(entity.id);
 

@@ -4,6 +4,7 @@ import {
   type ITurmaDeleteCommand,
   ITurmaDeleteCommandHandler,
 } from "@/modules/ensino/turma/domain/commands/turma-delete.command.handler.interface";
+import { Turma } from "@/modules/ensino/turma/domain/turma.domain";
 import { ITurmaRepository } from "../../../domain/repositories";
 
 @Injectable()
@@ -20,7 +21,7 @@ export class TurmaDeleteCommandHandlerImpl implements ITurmaDeleteCommandHandler
 
     const entity = await this.repository.findById(accessContext, dto);
 
-    ensureExists(entity, "Turma", dto.id);
+    ensureExists(entity, Turma.entityName, dto.id);
 
     await this.repository.softDeleteById(entity.id);
 

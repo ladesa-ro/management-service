@@ -1,7 +1,9 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { has } from "lodash";
 import { ensureExists, IAuthorizationService, type PersistInput } from "@/modules/@shared";
+import { Ambiente } from "@/modules/ambientes/ambiente/domain/ambiente.domain";
 import { IAmbienteFindOneQueryHandler } from "@/modules/ambientes/ambiente/domain/queries/ambiente-find-one.query.handler.interface";
+import { Curso } from "@/modules/ensino/curso/domain/curso.domain";
 import { ICursoFindOneQueryHandler } from "@/modules/ensino/curso/domain/queries/curso-find-one.query.handler.interface";
 import {
   type ITurmaUpdateCommand,
@@ -28,7 +30,7 @@ export class TurmaUpdateCommandHandlerImpl implements ITurmaUpdateCommandHandler
   async execute({ accessContext, dto }: ITurmaUpdateCommand): Promise<TurmaFindOneOutputDto> {
     const current = await this.repository.findById(accessContext, { id: dto.id });
 
-    ensureExists(current, "Turma", dto.id);
+    ensureExists(current, Turma.entityName, dto.id);
 
     await this.authorizationService.ensurePermission("turma:update", { dto }, dto.id);
 
@@ -41,7 +43,7 @@ export class TurmaUpdateCommandHandlerImpl implements ITurmaUpdateCommandHandler
           accessContext,
           dto: { id: dto.ambientePadraoAula.id },
         });
-        ensureExists(ambientePadraoAula, "Ambiente", dto.ambientePadraoAula.id);
+        ensureExists(ambientePadraoAula, Ambiente.entityName, dto.ambientePadraoAula.id);
         updateData.ambientePadraoAula = { id: ambientePadraoAula.id };
       } else {
         updateData.ambientePadraoAula = null;
@@ -52,14 +54,14 @@ export class TurmaUpdateCommandHandlerImpl implements ITurmaUpdateCommandHandler
         accessContext,
         dto: { id: dto.curso.id },
       });
-      ensureExists(curso, "Curso", dto.curso.id);
+      ensureExists(curso, Curso.entityName, dto.curso.id);
       updateData.curso = { id: curso.id };
     }
     await this.repository.updateFromDomain(current.id, updateData);
 
     const result = await this.repository.findById(accessContext, { id: dto.id });
 
-    ensureExists(result, "Turma", dto.id);
+    ensureExists(result, Turma.entityName, dto.id);
 
     return result;
   }

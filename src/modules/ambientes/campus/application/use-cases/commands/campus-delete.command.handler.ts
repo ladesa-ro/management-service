@@ -1,5 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { ensureExists, IAuthorizationService } from "@/modules/@shared";
+import { Campus } from "@/modules/ambientes/campus/domain/campus.domain";
 import {
   type ICampusDeleteCommand,
   ICampusDeleteCommandHandler,
@@ -20,7 +21,7 @@ export class CampusDeleteCommandHandlerImpl implements ICampusDeleteCommandHandl
 
     const entity = await this.repository.findById(accessContext, dto);
 
-    ensureExists(entity, "Campus", dto.id);
+    ensureExists(entity, Campus.entityName, dto.id);
 
     await this.repository.softDeleteById(entity.id);
 

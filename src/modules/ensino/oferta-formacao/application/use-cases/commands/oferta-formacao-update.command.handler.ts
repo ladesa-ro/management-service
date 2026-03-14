@@ -1,6 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { has } from "lodash";
 import { ensureExists, IAuthorizationService, type PersistInput } from "@/modules/@shared";
+import { Modalidade } from "@/modules/ensino/modalidade/domain/modalidade.domain";
 import { IModalidadeFindOneQueryHandler } from "@/modules/ensino/modalidade/domain/queries/modalidade-find-one.query.handler.interface";
 import {
   type IOfertaFormacaoUpdateCommand,
@@ -28,7 +29,7 @@ export class OfertaFormacaoUpdateCommandHandlerImpl implements IOfertaFormacaoUp
   }: IOfertaFormacaoUpdateCommand): Promise<OfertaFormacaoFindOneOutputDto> {
     const current = await this.repository.findById(accessContext, { id: dto.id });
 
-    ensureExists(current, "OfertaFormacao", dto.id);
+    ensureExists(current, OfertaFormacao.entityName, dto.id);
 
     await this.authorizationService.ensurePermission("oferta_formacao:update", { dto }, dto.id);
 
@@ -44,7 +45,7 @@ export class OfertaFormacaoUpdateCommandHandlerImpl implements IOfertaFormacaoUp
           accessContext,
           dto: { id: dto.modalidade.id },
         });
-        ensureExists(modalidade, "Modalidade", dto.modalidade.id);
+        ensureExists(modalidade, Modalidade.entityName, dto.modalidade.id);
         updateData.modalidade = { id: modalidade.id };
       } else {
         updateData.modalidade = null;
@@ -54,7 +55,7 @@ export class OfertaFormacaoUpdateCommandHandlerImpl implements IOfertaFormacaoUp
 
     const result = await this.repository.findById(accessContext, { id: dto.id });
 
-    ensureExists(result, "OfertaFormacao", dto.id);
+    ensureExists(result, OfertaFormacao.entityName, dto.id);
 
     return result;
   }

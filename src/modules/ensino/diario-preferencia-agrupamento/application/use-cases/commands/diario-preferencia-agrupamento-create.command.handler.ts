@@ -1,5 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { ensureExists, IAuthorizationService } from "@/modules/@shared";
+import { Diario } from "@/modules/ensino/diario/domain/diario.domain";
 import { IDiarioFindOneQueryHandler } from "@/modules/ensino/diario/domain/queries/diario-find-one.query.handler.interface";
 import {
   type IDiarioPreferenciaAgrupamentoCreateCommand,
@@ -36,7 +37,7 @@ export class DiarioPreferenciaAgrupamentoCreateCommandHandlerImpl
         accessContext,
         dto: dto.diario,
       });
-      ensureExists(diario, "Diario", dto.diario.id);
+      ensureExists(diario, Diario.entityName, dto.diario.id);
       diarioRef = { id: diario.id };
     }
     const domain = DiarioPreferenciaAgrupamento.criar({
@@ -53,7 +54,7 @@ export class DiarioPreferenciaAgrupamentoCreateCommandHandlerImpl
 
     const result = await this.repository.findById(accessContext, { id });
 
-    ensureExists(result, "DiarioPreferenciaAgrupamento", id);
+    ensureExists(result, DiarioPreferenciaAgrupamento.entityName, id);
 
     return result;
   }

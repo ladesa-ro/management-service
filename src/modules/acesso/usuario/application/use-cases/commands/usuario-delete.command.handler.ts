@@ -4,6 +4,7 @@ import {
   type IUsuarioDeleteCommand,
   IUsuarioDeleteCommandHandler,
 } from "@/modules/acesso/usuario/domain/commands/usuario-delete.command.handler.interface";
+import { Usuario } from "@/modules/acesso/usuario/domain/usuario.domain";
 import { IUsuarioRepository } from "../../../domain/repositories";
 
 @Injectable()
@@ -18,7 +19,7 @@ export class UsuarioDeleteCommandHandlerImpl implements IUsuarioDeleteCommandHan
 
     const usuario = await this.repository.findById(accessContext, dto);
 
-    ensureExists(usuario, "Usuario", dto.id);
+    ensureExists(usuario, Usuario.entityName, dto.id);
 
     await this.repository.softDeleteById(usuario.id);
 

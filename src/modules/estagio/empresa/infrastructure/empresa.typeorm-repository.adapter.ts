@@ -13,6 +13,7 @@ import type {
 } from "@/modules/estagio/empresa/application/dtos";
 import { Empresa } from "@/modules/estagio/empresa/domain/empresa.domain";
 import type { IEmpresaRepository } from "@/modules/estagio/empresa/domain/repositories";
+import { Endereco } from "@/modules/localidades/endereco/domain/endereco.domain";
 import { createEnderecoRepository } from "@/modules/localidades/endereco/infrastructure/persistence/typeorm/endereco.repository";
 import { createEmpresaRepository, EmpresaMapper } from "./persistence";
 
@@ -119,7 +120,7 @@ export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepository {
       where: { id: dto.idEnderecoFk, dateDeleted: null as any },
     });
 
-    ensureExists(endereco, "Endereco", dto.idEnderecoFk);
+    ensureExists(endereco, Endereco.entityName, dto.idEnderecoFk);
 
     const empresa = Empresa.criar(dto);
 
@@ -138,7 +139,7 @@ export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepository {
       where: { id, dateDeleted: null as any },
     });
 
-    ensureExists(entity, "Empresa", id);
+    ensureExists(entity, Empresa.entityName, id);
 
     const empresa = EmpresaMapper.toDomain(entity);
 
@@ -147,7 +148,7 @@ export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepository {
         where: { id: dto.idEnderecoFk, dateDeleted: null as any },
       });
 
-      ensureExists(endereco, "Endereco", dto.idEnderecoFk);
+      ensureExists(endereco, Endereco.entityName, dto.idEnderecoFk);
     }
 
     empresa.atualizar(dto);
@@ -163,7 +164,7 @@ export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepository {
       where: { id, dateDeleted: null as any },
     });
 
-    ensureExists(entity, "Empresa", id);
+    ensureExists(entity, Empresa.entityName, id);
 
     entity.dateDeleted = new Date();
     await this.repository.save(entity);

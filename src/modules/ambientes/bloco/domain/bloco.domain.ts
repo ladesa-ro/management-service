@@ -12,7 +12,7 @@ export class Bloco extends BaseDatedEntity implements IBloco {
   campus!: ICampus;
   imagemCapa!: { id: string } | null;
 
-  protected static get entityName(): string {
+  static get entityName(): string {
     return "Bloco";
   }
 

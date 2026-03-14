@@ -5,6 +5,7 @@ import {
   type IAmbienteCreateCommand,
   IAmbienteCreateCommandHandler,
 } from "@/modules/ambientes/ambiente/domain/commands/ambiente-create.command.handler.interface";
+import { Bloco } from "@/modules/ambientes/bloco/domain/bloco.domain";
 import { IBlocoFindOneQueryHandler } from "@/modules/ambientes/bloco/domain/queries/bloco-find-one.query.handler.interface";
 import { IAmbienteRepository } from "../../../domain/repositories";
 import type { AmbienteFindOneOutputDto } from "../../dtos";
@@ -27,7 +28,7 @@ export class AmbienteCreateCommandHandlerImpl implements IAmbienteCreateCommandH
       accessContext,
       dto: { id: dto.bloco.id },
     });
-    ensureExists(bloco, "Bloco", dto.bloco.id);
+    ensureExists(bloco, Bloco.entityName, dto.bloco.id);
 
     const domain = Ambiente.criar({
       nome: dto.nome,
@@ -42,7 +43,7 @@ export class AmbienteCreateCommandHandlerImpl implements IAmbienteCreateCommandH
 
     const result = await this.repository.findById(accessContext, { id });
 
-    ensureExists(result, "Ambiente", id);
+    ensureExists(result, Ambiente.entityName, id);
 
     return result;
   }

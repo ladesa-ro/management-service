@@ -25,6 +25,7 @@ import {
 } from "@nestjs/swagger";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
+import { Bloco } from "@/modules/ambientes/bloco/domain/bloco.domain";
 import { IBlocoCreateCommandHandler } from "@/modules/ambientes/bloco/domain/commands/bloco-create.command.handler.interface";
 import { IBlocoDeleteCommandHandler } from "@/modules/ambientes/bloco/domain/commands/bloco-delete.command.handler.interface";
 import { IBlocoUpdateCommandHandler } from "@/modules/ambientes/bloco/domain/commands/bloco-update.command.handler.interface";
@@ -81,7 +82,7 @@ export class BlocoRestController {
   ): Promise<BlocoFindOneOutputRestDto> {
     const input = BlocoRestMapper.toFindOneInput(params);
     const result = await this.findOneHandler.execute({ accessContext, dto: input });
-    ensureExists(result, "Bloco", input.id);
+    ensureExists(result, Bloco.entityName, input.id);
     return BlocoRestMapper.toFindOneOutputDto(result);
   }
 

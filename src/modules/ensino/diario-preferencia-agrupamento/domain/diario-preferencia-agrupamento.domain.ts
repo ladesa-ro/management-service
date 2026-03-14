@@ -20,7 +20,7 @@ export class DiarioPreferenciaAgrupamento
   aulasSeguidas!: number;
   diario!: Diario;
 
-  protected static get entityName(): string {
+  static get entityName(): string {
     return "DiarioPreferenciaAgrupamento";
   }
 

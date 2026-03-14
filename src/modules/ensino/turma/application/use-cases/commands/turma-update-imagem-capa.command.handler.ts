@@ -8,6 +8,7 @@ import {
   type ITurmaUpdateImagemCapaCommand,
   ITurmaUpdateImagemCapaCommandHandler,
 } from "@/modules/ensino/turma/domain/commands/turma-update-imagem-capa.command.handler.interface";
+import { Turma } from "@/modules/ensino/turma/domain/turma.domain";
 import { ITurmaRepository } from "../../../domain/repositories";
 
 @Injectable()
@@ -26,7 +27,7 @@ export class TurmaUpdateImagemCapaCommandHandlerImpl
   async execute({ accessContext, dto, file }: ITurmaUpdateImagemCapaCommand): Promise<boolean> {
     const current = await this.repository.findById(accessContext, dto);
 
-    ensureExists(current, "Turma", dto.id);
+    ensureExists(current, Turma.entityName, dto.id);
 
     await this.authorizationService.ensurePermission(
       "turma:update",

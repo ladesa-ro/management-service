@@ -15,7 +15,7 @@ export class Ambiente extends BaseDatedEntity implements IAmbiente {
   bloco!: IBloco;
   imagemCapa!: { id: string } | null;
 
-  protected static get entityName(): string {
+  static get entityName(): string {
     return "Ambiente";
   }
 

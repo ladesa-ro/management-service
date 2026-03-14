@@ -1,7 +1,9 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { has } from "lodash";
 import { ensureExists, IAuthorizationService, type PersistInput } from "@/modules/@shared";
+import { Campus } from "@/modules/ambientes/campus/domain/campus.domain";
 import { ICampusFindOneQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-find-one.query.handler.interface";
+import { OfertaFormacao } from "@/modules/ensino/oferta-formacao/domain/oferta-formacao.domain";
 import { IOfertaFormacaoFindOneQueryHandler } from "@/modules/ensino/oferta-formacao/domain/queries/oferta-formacao-find-one.query.handler.interface";
 import { CalendarioLetivo } from "@/modules/horarios/calendario-letivo/domain/calendario-letivo.domain";
 import type { ICalendarioLetivo } from "@/modules/horarios/calendario-letivo/domain/calendario-letivo.types";
@@ -33,7 +35,7 @@ export class CalendarioLetivoUpdateCommandHandlerImpl
   }: ICalendarioLetivoUpdateCommand): Promise<CalendarioLetivoFindOneOutputDto> {
     const current = await this.repository.findById(accessContext, { id: dto.id });
 
-    ensureExists(current, "CalendarioLetivo", dto.id);
+    ensureExists(current, CalendarioLetivo.entityName, dto.id);
 
     await this.authorizationService.ensurePermission("calendario_letivo:update", { dto }, dto.id);
 
@@ -48,7 +50,7 @@ export class CalendarioLetivoUpdateCommandHandlerImpl
         accessContext,
         dto: { id: dto.campus.id },
       });
-      ensureExists(campus, "Campus", dto.campus.id);
+      ensureExists(campus, Campus.entityName, dto.campus.id);
       updateData.campus = { id: campus.id };
     }
     if (has(dto, "ofertaFormacao") && dto.ofertaFormacao !== undefined) {
@@ -57,7 +59,7 @@ export class CalendarioLetivoUpdateCommandHandlerImpl
           accessContext,
           dto: { id: dto.ofertaFormacao.id },
         });
-        ensureExists(ofertaFormacao, "OfertaFormacao", dto.ofertaFormacao.id);
+        ensureExists(ofertaFormacao, OfertaFormacao.entityName, dto.ofertaFormacao.id);
         updateData.ofertaFormacao = { id: ofertaFormacao.id };
       } else {
         updateData.ofertaFormacao = null;
@@ -67,7 +69,7 @@ export class CalendarioLetivoUpdateCommandHandlerImpl
 
     const result = await this.repository.findById(accessContext, { id: dto.id });
 
-    ensureExists(result, "CalendarioLetivo", dto.id);
+    ensureExists(result, CalendarioLetivo.entityName, dto.id);
 
     return result;
   }

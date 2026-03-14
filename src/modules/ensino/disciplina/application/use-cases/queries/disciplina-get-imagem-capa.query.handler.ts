@@ -8,6 +8,7 @@ import {
   IImagemGetLatestArquivoIdQueryHandler,
   type IImagemGetLatestArquivoIdQueryHandler as IImagemGetLatestArquivoIdQueryHandlerType,
 } from "@/modules/armazenamento/imagem/domain/queries";
+import { Disciplina } from "@/modules/ensino/disciplina/domain/disciplina.domain";
 import {
   type IDisciplinaGetImagemCapaQuery,
   IDisciplinaGetImagemCapaQueryHandler,
@@ -30,7 +31,7 @@ export class DisciplinaGetImagemCapaQueryHandlerImpl
   async execute({ accessContext, id }: IDisciplinaGetImagemCapaQuery): Promise<StreamableFile> {
     const entity = await this.repository.findById(accessContext, { id });
 
-    ensureExists(entity, "Disciplina", id);
+    ensureExists(entity, Disciplina.entityName, id);
 
     return getEntityImagemStreamableFile(
       entity as Record<string, any>,

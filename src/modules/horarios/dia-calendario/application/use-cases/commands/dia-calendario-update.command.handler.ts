@@ -1,6 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { has } from "lodash";
 import { ensureExists, IAuthorizationService, type PersistInput } from "@/modules/@shared";
+import { CalendarioLetivo } from "@/modules/horarios/calendario-letivo/domain/calendario-letivo.domain";
 import {
   type ICalendarioLetivoFindOneQueryHandler,
   ICalendarioLetivoFindOneQueryHandler as ICalendarioLetivoFindOneQueryHandlerToken,
@@ -31,7 +32,7 @@ export class DiaCalendarioUpdateCommandHandlerImpl implements IDiaCalendarioUpda
   }: IDiaCalendarioUpdateCommand): Promise<DiaCalendarioFindOneOutputDto> {
     const current = await this.repository.findById(accessContext, { id: dto.id });
 
-    ensureExists(current, "DiaCalendario", dto.id);
+    ensureExists(current, DiaCalendario.entityName, dto.id);
 
     await this.authorizationService.ensurePermission("dia_calendario:update", { dto }, dto.id);
 
@@ -47,14 +48,14 @@ export class DiaCalendarioUpdateCommandHandlerImpl implements IDiaCalendarioUpda
         accessContext,
         dto: { id: dto.calendario!.id },
       });
-      ensureExists(calendario, "CalendarioLetivo", dto.calendario!.id);
+      ensureExists(calendario, CalendarioLetivo.entityName, dto.calendario!.id);
       updateData.calendario = { id: calendario.id };
     }
     await this.repository.updateFromDomain(current.id, updateData);
 
     const result = await this.repository.findById(accessContext, { id: dto.id });
 
-    ensureExists(result, "DiaCalendario", dto.id);
+    ensureExists(result, DiaCalendario.entityName, dto.id);
 
     return result;
   }

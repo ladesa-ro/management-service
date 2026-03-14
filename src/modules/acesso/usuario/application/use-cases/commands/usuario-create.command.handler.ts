@@ -5,6 +5,7 @@ import {
   type IUsuarioCreateCommand,
   IUsuarioCreateCommandHandler,
 } from "@/modules/acesso/usuario/domain/commands/usuario-create.command.handler.interface";
+import { Usuario } from "@/modules/acesso/usuario/domain/usuario.domain";
 import { IUsuarioRepository } from "../../../domain/repositories";
 import type { UsuarioFindOneOutputDto } from "../../dtos";
 
@@ -50,7 +51,7 @@ export class UsuarioCreateCommandHandlerImpl implements IUsuarioCreateCommandHan
 
       const result = await this.repository.findById(accessContext, { id: id as string });
 
-      ensureExists(result, "Usuario", id as string);
+      ensureExists(result, Usuario.entityName, id as string);
 
       return result;
     } catch (err) {

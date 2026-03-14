@@ -12,6 +12,7 @@ import {
   type IOfertaFormacaoNivelFormacaoUpdateCommand,
   IOfertaFormacaoNivelFormacaoUpdateCommandHandler,
 } from "@/modules/ensino/oferta-formacao-nivel-formacao/domain/commands/oferta-formacao-nivel-formacao-update.command.handler.interface";
+import { OfertaFormacaoNivelFormacao } from "@/modules/ensino/oferta-formacao-nivel-formacao/domain/oferta-formacao-nivel-formacao.domain";
 import type { IOfertaFormacaoNivelFormacao } from "@/modules/ensino/oferta-formacao-nivel-formacao/domain/oferta-formacao-nivel-formacao.types";
 import { IOfertaFormacaoNivelFormacaoRepository } from "../../../domain/repositories";
 import type { OfertaFormacaoNivelFormacaoFindOneOutputDto } from "../../dtos";
@@ -37,7 +38,7 @@ export class OfertaFormacaoNivelFormacaoUpdateCommandHandlerImpl
   }: IOfertaFormacaoNivelFormacaoUpdateCommand): Promise<OfertaFormacaoNivelFormacaoFindOneOutputDto> {
     const current = await this.repository.findById(accessContext, { id: dto.id });
 
-    ensureExists(current, "OfertaFormacaoNivelFormacao", dto.id);
+    ensureExists(current, OfertaFormacaoNivelFormacao.entityName, dto.id);
 
     await this.authorizationService.ensurePermission(
       "oferta_formacao_nivel_formacao:update",
@@ -74,7 +75,7 @@ export class OfertaFormacaoNivelFormacaoUpdateCommandHandlerImpl
 
     const result = await this.repository.findById(accessContext, { id: dto.id });
 
-    ensureExists(result, "OfertaFormacaoNivelFormacao", dto.id);
+    ensureExists(result, OfertaFormacaoNivelFormacao.entityName, dto.id);
 
     return result;
   }

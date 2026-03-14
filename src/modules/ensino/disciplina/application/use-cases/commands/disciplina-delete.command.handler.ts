@@ -4,6 +4,7 @@ import {
   type IDisciplinaDeleteCommand,
   IDisciplinaDeleteCommandHandler,
 } from "@/modules/ensino/disciplina/domain/commands/disciplina-delete.command.handler.interface";
+import { Disciplina } from "@/modules/ensino/disciplina/domain/disciplina.domain";
 import { IDisciplinaRepository } from "../../../domain/repositories";
 
 @Injectable()
@@ -20,7 +21,7 @@ export class DisciplinaDeleteCommandHandlerImpl implements IDisciplinaDeleteComm
 
     const entity = await this.repository.findById(accessContext, dto);
 
-    ensureExists(entity, "Disciplina", dto.id);
+    ensureExists(entity, Disciplina.entityName, dto.id);
 
     await this.repository.softDeleteById(entity.id);
 

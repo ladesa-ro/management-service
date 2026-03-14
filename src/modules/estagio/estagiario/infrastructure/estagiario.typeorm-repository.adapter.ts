@@ -3,8 +3,11 @@ import { DataSource } from "typeorm";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { APP_DATA_SOURCE_TOKEN } from "@/modules/@shared/infrastructure/persistence/typeorm";
+import { Perfil } from "@/modules/acesso/perfil/domain/perfil.domain";
 import { createPerfilRepository } from "@/modules/acesso/perfil/infrastructure/persistence/typeorm/perfil.repository";
+import { Curso } from "@/modules/ensino/curso/domain/curso.domain";
 import { createCursoRepository } from "@/modules/ensino/curso/infrastructure/persistence/typeorm/curso.repository";
+import { Turma } from "@/modules/ensino/turma/domain/turma.domain";
 import { createTurmaRepository } from "@/modules/ensino/turma/infrastructure/persistence/typeorm/turma.repository";
 import type {
   EstagiarioCreateInputDto,
@@ -133,19 +136,19 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
       where: { id: dto.idPerfilFk, dateDeleted: null as any },
     });
 
-    ensureExists(perfil, "Perfil", dto.idPerfilFk);
+    ensureExists(perfil, Perfil.entityName, dto.idPerfilFk);
 
     const curso = await this.cursoRepository.findOne({
       where: { id: dto.idCursoFk, dateDeleted: null as any },
     });
 
-    ensureExists(curso, "Curso", dto.idCursoFk);
+    ensureExists(curso, Curso.entityName, dto.idCursoFk);
 
     const turma = await this.turmaRepository.findOne({
       where: { id: dto.idTurmaFk, dateDeleted: null as any },
     });
 
-    ensureExists(turma, "Turma", dto.idTurmaFk);
+    ensureExists(turma, Turma.entityName, dto.idTurmaFk);
 
     const estagiario = Estagiario.criar(dto);
 
@@ -164,7 +167,7 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
       where: { id, dateDeleted: null as any },
     });
 
-    ensureExists(entity, "Estagiario", id);
+    ensureExists(entity, Estagiario.entityName, id);
 
     const estagiario = EstagiarioMapper.toDomain(entity);
 
@@ -173,7 +176,7 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
         where: { id: dto.idPerfilFk, dateDeleted: null as any },
       });
 
-      ensureExists(perfil, "Perfil", dto.idPerfilFk);
+      ensureExists(perfil, Perfil.entityName, dto.idPerfilFk);
     }
 
     if (dto.idCursoFk) {
@@ -181,7 +184,7 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
         where: { id: dto.idCursoFk, dateDeleted: null as any },
       });
 
-      ensureExists(curso, "Curso", dto.idCursoFk);
+      ensureExists(curso, Curso.entityName, dto.idCursoFk);
     }
 
     if (dto.idTurmaFk) {
@@ -189,7 +192,7 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
         where: { id: dto.idTurmaFk, dateDeleted: null as any },
       });
 
-      ensureExists(turma, "Turma", dto.idTurmaFk);
+      ensureExists(turma, Turma.entityName, dto.idTurmaFk);
     }
 
     estagiario.atualizar(dto);
@@ -205,7 +208,7 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
       where: { id, dateDeleted: null as any },
     });
 
-    ensureExists(entity, "Estagiario", id);
+    ensureExists(entity, Estagiario.entityName, id);
 
     entity.dateDeleted = new Date();
     await this.repository.save(entity);

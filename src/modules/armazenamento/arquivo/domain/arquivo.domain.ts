@@ -11,7 +11,7 @@ export class Arquivo extends BaseDatedEntity implements IArquivo {
   sizeBytes!: number;
   storageType!: string;
 
-  protected static get entityName(): string {
+  static get entityName(): string {
     return "Arquivo";
   }
 

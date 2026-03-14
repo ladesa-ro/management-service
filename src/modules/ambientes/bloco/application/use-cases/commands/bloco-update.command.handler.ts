@@ -20,7 +20,7 @@ export class BlocoUpdateCommandHandlerImpl implements IBlocoUpdateCommandHandler
   async execute({ accessContext, dto }: IBlocoUpdateCommand): Promise<BlocoFindOneOutputDto> {
     const current = await this.repository.findById(accessContext, { id: dto.id });
 
-    ensureExists(current, "Bloco", dto.id);
+    ensureExists(current, Bloco.entityName, dto.id);
 
     await this.authorizationService.ensurePermission("bloco:update", { dto }, dto.id);
 
@@ -33,7 +33,7 @@ export class BlocoUpdateCommandHandlerImpl implements IBlocoUpdateCommandHandler
 
     const result = await this.repository.findById(accessContext, { id: dto.id });
 
-    ensureExists(result, "Bloco", dto.id);
+    ensureExists(result, Bloco.entityName, dto.id);
 
     return result;
   }

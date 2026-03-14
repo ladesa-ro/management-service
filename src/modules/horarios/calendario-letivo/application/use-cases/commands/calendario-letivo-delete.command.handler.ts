@@ -1,5 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { ensureExists, IAuthorizationService } from "@/modules/@shared";
+import { CalendarioLetivo } from "@/modules/horarios/calendario-letivo/domain/calendario-letivo.domain";
 import {
   type ICalendarioLetivoDeleteCommand,
   ICalendarioLetivoDeleteCommandHandler,
@@ -22,7 +23,7 @@ export class CalendarioLetivoDeleteCommandHandlerImpl
 
     const entity = await this.repository.findById(accessContext, dto);
 
-    ensureExists(entity, "CalendarioLetivo", dto.id);
+    ensureExists(entity, CalendarioLetivo.entityName, dto.id);
 
     await this.repository.softDeleteById(entity.id);
 

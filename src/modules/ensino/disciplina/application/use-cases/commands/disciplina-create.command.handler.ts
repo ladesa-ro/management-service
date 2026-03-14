@@ -32,7 +32,7 @@ export class DisciplinaCreateCommandHandlerImpl implements IDisciplinaCreateComm
 
     const result = await this.repository.findById(accessContext, { id });
 
-    ensureExists(result, "Disciplina", id);
+    ensureExists(result, Disciplina.entityName, id);
 
     return result;
   }

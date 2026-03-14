@@ -8,6 +8,7 @@ import {
   type ICursoUpdateImagemCapaCommand,
   ICursoUpdateImagemCapaCommandHandler,
 } from "@/modules/ensino/curso/domain/commands/curso-update-imagem-capa.command.handler.interface";
+import { Curso } from "@/modules/ensino/curso/domain/curso.domain";
 import { ICursoRepository } from "../../../domain/repositories";
 
 @Injectable()
@@ -26,7 +27,7 @@ export class CursoUpdateImagemCapaCommandHandlerImpl
   async execute({ accessContext, dto, file }: ICursoUpdateImagemCapaCommand): Promise<boolean> {
     const current = await this.repository.findById(accessContext, dto);
 
-    ensureExists(current, "Curso", dto.id);
+    ensureExists(current, Curso.entityName, dto.id);
 
     await this.authorizationService.ensurePermission(
       "curso:update",

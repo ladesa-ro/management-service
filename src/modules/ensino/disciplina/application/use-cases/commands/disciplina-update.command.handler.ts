@@ -23,7 +23,7 @@ export class DisciplinaUpdateCommandHandlerImpl implements IDisciplinaUpdateComm
   }: IDisciplinaUpdateCommand): Promise<DisciplinaFindOneOutputDto> {
     const current = await this.repository.findById(accessContext, { id: dto.id });
 
-    ensureExists(current, "Disciplina", dto.id);
+    ensureExists(current, Disciplina.entityName, dto.id);
 
     await this.authorizationService.ensurePermission("disciplina:update", { dto }, dto.id);
 
@@ -41,7 +41,7 @@ export class DisciplinaUpdateCommandHandlerImpl implements IDisciplinaUpdateComm
 
     const result = await this.repository.findById(accessContext, { id: dto.id });
 
-    ensureExists(result, "Disciplina", dto.id);
+    ensureExists(result, Disciplina.entityName, dto.id);
 
     return result;
   }

@@ -4,6 +4,7 @@ import {
   type IOfertaFormacaoDeleteCommand,
   IOfertaFormacaoDeleteCommandHandler,
 } from "@/modules/ensino/oferta-formacao/domain/commands/oferta-formacao-delete.command.handler.interface";
+import { OfertaFormacao } from "@/modules/ensino/oferta-formacao/domain/oferta-formacao.domain";
 import { IOfertaFormacaoRepository } from "../../../domain/repositories";
 
 @Injectable()
@@ -20,7 +21,7 @@ export class OfertaFormacaoDeleteCommandHandlerImpl implements IOfertaFormacaoDe
 
     const entity = await this.repository.findById(accessContext, dto);
 
-    ensureExists(entity, "OfertaFormacao", dto.id);
+    ensureExists(entity, OfertaFormacao.entityName, dto.id);
 
     await this.repository.softDeleteById(entity.id);
 

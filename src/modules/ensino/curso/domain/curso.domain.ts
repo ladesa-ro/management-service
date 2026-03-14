@@ -15,7 +15,7 @@ export class Curso extends BaseDatedEntity implements ICurso {
   ofertaFormacao!: IOfertaFormacao;
   imagemCapa!: IImagem | null;
 
-  protected static get entityName(): string {
+  static get entityName(): string {
     return "Curso";
   }
 

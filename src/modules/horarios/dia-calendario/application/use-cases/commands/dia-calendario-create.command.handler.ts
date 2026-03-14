@@ -1,5 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { ensureExists, IAuthorizationService } from "@/modules/@shared";
+import { CalendarioLetivo } from "@/modules/horarios/calendario-letivo/domain/calendario-letivo.domain";
 import {
   type ICalendarioLetivoFindOneQueryHandler,
   ICalendarioLetivoFindOneQueryHandler as ICalendarioLetivoFindOneQueryHandlerToken,
@@ -35,7 +36,7 @@ export class DiaCalendarioCreateCommandHandlerImpl implements IDiaCalendarioCrea
         accessContext,
         dto: { id: dto.calendario.id },
       });
-      ensureExists(calendario, "CalendarioLetivo", dto.calendario.id);
+      ensureExists(calendario, CalendarioLetivo.entityName, dto.calendario.id);
       calendarioRef = { id: calendario.id };
     }
     const domain = DiaCalendario.criar({
@@ -54,7 +55,7 @@ export class DiaCalendarioCreateCommandHandlerImpl implements IDiaCalendarioCrea
 
     const result = await this.repository.findById(accessContext, { id });
 
-    ensureExists(result, "DiaCalendario", id);
+    ensureExists(result, DiaCalendario.entityName, id);
 
     return result;
   }

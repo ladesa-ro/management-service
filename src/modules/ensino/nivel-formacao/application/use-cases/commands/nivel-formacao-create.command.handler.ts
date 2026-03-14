@@ -28,7 +28,7 @@ export class NivelFormacaoCreateCommandHandlerImpl implements INivelFormacaoCrea
 
     const result = await this.repository.findById(accessContext, { id });
 
-    ensureExists(result, "NivelFormacao", id);
+    ensureExists(result, NivelFormacao.entityName, id);
 
     return result;
   }

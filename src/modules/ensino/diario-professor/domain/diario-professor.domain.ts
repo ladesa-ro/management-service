@@ -16,7 +16,7 @@ export class DiarioProfessor extends BaseDatedEntity implements IDiarioProfessor
   diario!: Diario;
   perfil!: Perfil;
 
-  protected static get entityName(): string {
+  static get entityName(): string {
     return "DiarioProfessor";
   }
 

@@ -4,6 +4,7 @@ import {
   type IDiarioProfessorDeleteCommand,
   IDiarioProfessorDeleteCommandHandler,
 } from "@/modules/ensino/diario-professor/domain/commands/diario-professor-delete.command.handler.interface";
+import { DiarioProfessor } from "@/modules/ensino/diario-professor/domain/diario-professor.domain";
 import { IDiarioProfessorRepository } from "../../../domain/repositories";
 
 @Injectable()
@@ -22,7 +23,7 @@ export class DiarioProfessorDeleteCommandHandlerImpl
 
     const entity = await this.repository.findById(accessContext, dto);
 
-    ensureExists(entity, "DiarioProfessor", dto.id);
+    ensureExists(entity, DiarioProfessor.entityName, dto.id);
 
     await this.repository.softDeleteById(entity.id);
 

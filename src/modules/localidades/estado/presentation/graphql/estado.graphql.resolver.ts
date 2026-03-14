@@ -4,6 +4,7 @@ import { type GraphQLResolveInfo } from "graphql";
 import { AccessContext, AccessContextGraphQL } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
+import { Estado } from "@/modules/localidades/estado/domain/estado.domain";
 import { IEstadoFindOneQueryHandler } from "@/modules/localidades/estado/domain/queries/estado-find-one.query.handler.interface";
 import { IEstadoListQueryHandler } from "@/modules/localidades/estado/domain/queries/estado-list.query.handler.interface";
 import {
@@ -46,7 +47,7 @@ export class EstadoGraphqlResolver {
   ): Promise<EstadoFindOneOutputGraphQlDto> {
     const selection = graphqlExtractSelection(info);
     const result = await this.findOneHandler.execute({ accessContext, dto: { id, selection } });
-    ensureExists(result, "Estado", id);
+    ensureExists(result, Estado.entityName, id);
     return EstadoGraphqlMapper.toFindOneOutputDto(result);
   }
 }

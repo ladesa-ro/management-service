@@ -19,7 +19,7 @@ export class DiaCalendario extends BaseDatedEntity implements IDiaCalendario {
   extraCurricular!: boolean;
   calendario!: CalendarioLetivo;
 
-  protected static get entityName(): string {
+  static get entityName(): string {
     return "DiaCalendario";
   }
 

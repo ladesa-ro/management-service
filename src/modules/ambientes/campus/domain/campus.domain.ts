@@ -13,7 +13,7 @@ export class Campus extends BaseDatedEntity implements ICampus {
   cnpj!: string;
   endereco!: IEndereco;
 
-  protected static get entityName(): string {
+  static get entityName(): string {
     return "Campus";
   }
 

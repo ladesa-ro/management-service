@@ -25,7 +25,7 @@ export class CampusUpdateCommandHandlerImpl implements ICampusUpdateCommandHandl
   async execute({ accessContext, dto }: ICampusUpdateCommand): Promise<CampusFindOneOutputDto> {
     const current = await this.repository.findById(accessContext, { id: dto.id });
 
-    ensureExists(current, "Campus", dto.id);
+    ensureExists(current, Campus.entityName, dto.id);
 
     await this.authorizationService.ensurePermission("campus:update", { dto }, dto.id);
 
@@ -54,7 +54,7 @@ export class CampusUpdateCommandHandlerImpl implements ICampusUpdateCommandHandl
 
     const result = await this.repository.findById(accessContext, { id: dto.id });
 
-    ensureExists(result, "Campus", dto.id);
+    ensureExists(result, Campus.entityName, dto.id);
 
     return result;
   }

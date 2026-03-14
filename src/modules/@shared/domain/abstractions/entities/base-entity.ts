@@ -6,7 +6,7 @@ import { createValidator, ValidationResult, ValidationRules } from "../../valida
  * Fornece validação padronizada.
  */
 export abstract class BaseEntity {
-  protected static get entityName(): string {
+  static get entityName(): string {
     return this.name;
   }
 

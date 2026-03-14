@@ -9,6 +9,7 @@ import { IUsuarioDeleteCommandHandler } from "@/modules/acesso/usuario/domain/co
 import { IUsuarioUpdateCommandHandler } from "@/modules/acesso/usuario/domain/commands/usuario-update.command.handler.interface";
 import { IUsuarioFindOneQueryHandler } from "@/modules/acesso/usuario/domain/queries/usuario-find-one.query.handler.interface";
 import { IUsuarioListQueryHandler } from "@/modules/acesso/usuario/domain/queries/usuario-list.query.handler.interface";
+import { Usuario } from "@/modules/acesso/usuario/domain/usuario.domain";
 import {
   UsuarioCreateInputGraphQlDto,
   UsuarioFindOneOutputGraphQlDto,
@@ -57,7 +58,7 @@ export class UsuarioGraphqlResolver {
       accessContext,
       dto: { id, selection },
     });
-    ensureExists(result, "Usuario", id);
+    ensureExists(result, Usuario.entityName, id);
     return UsuarioGraphqlMapper.toFindOneOutputDto(result);
   }
 

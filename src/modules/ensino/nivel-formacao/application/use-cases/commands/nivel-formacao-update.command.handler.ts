@@ -23,7 +23,7 @@ export class NivelFormacaoUpdateCommandHandlerImpl implements INivelFormacaoUpda
   }: INivelFormacaoUpdateCommand): Promise<NivelFormacaoFindOneOutputDto> {
     const current = await this.repository.findById(accessContext, { id: dto.id });
 
-    ensureExists(current, "NivelFormacao", dto.id);
+    ensureExists(current, NivelFormacao.entityName, dto.id);
 
     await this.authorizationService.ensurePermission("nivel_formacao:update", { dto }, dto.id);
 
@@ -33,7 +33,7 @@ export class NivelFormacaoUpdateCommandHandlerImpl implements INivelFormacaoUpda
 
     const result = await this.repository.findById(accessContext, { id: dto.id });
 
-    ensureExists(result, "NivelFormacao", dto.id);
+    ensureExists(result, NivelFormacao.entityName, dto.id);
 
     return result;
   }

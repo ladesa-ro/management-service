@@ -1,5 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { ensureExists, IAuthorizationService } from "@/modules/@shared";
+import { Modalidade } from "@/modules/ensino/modalidade/domain/modalidade.domain";
 import { IModalidadeFindOneQueryHandler } from "@/modules/ensino/modalidade/domain/queries/modalidade-find-one.query.handler.interface";
 import {
   type IOfertaFormacaoCreateCommand,
@@ -32,7 +33,7 @@ export class OfertaFormacaoCreateCommandHandlerImpl implements IOfertaFormacaoCr
         accessContext,
         dto: { id: dto.modalidade.id },
       });
-      ensureExists(modalidade, "Modalidade", dto.modalidade.id);
+      ensureExists(modalidade, Modalidade.entityName, dto.modalidade.id);
       modalidadeRef = { id: modalidade.id };
     }
     const domain = OfertaFormacao.criar({
@@ -47,7 +48,7 @@ export class OfertaFormacaoCreateCommandHandlerImpl implements IOfertaFormacaoCr
 
     const result = await this.repository.findById(accessContext, { id });
 
-    ensureExists(result, "OfertaFormacao", id);
+    ensureExists(result, OfertaFormacao.entityName, id);
 
     return result;
   }

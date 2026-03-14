@@ -8,6 +8,7 @@ import {
 } from "@nestjs/swagger";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
+import { Estado } from "@/modules/localidades/estado/domain/estado.domain";
 import { IEstadoFindOneQueryHandler } from "@/modules/localidades/estado/domain/queries/estado-find-one.query.handler.interface";
 import { IEstadoListQueryHandler } from "@/modules/localidades/estado/domain/queries/estado-list.query.handler.interface";
 import {
@@ -52,7 +53,7 @@ export class EstadoRestController {
   ): Promise<EstadoFindOneOutputRestDto> {
     const input = EstadoRestMapper.toFindOneInput(params);
     const result = await this.findOneHandler.execute({ accessContext, dto: input });
-    ensureExists(result, "Estado", input.id);
+    ensureExists(result, Estado.entityName, input.id);
     return EstadoRestMapper.toFindOneOutputDto(result);
   }
 }

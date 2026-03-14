@@ -1,5 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { ensureExists, IAuthorizationService, saveEntityImagemField } from "@/modules/@shared";
+import { Bloco } from "@/modules/ambientes/bloco/domain/bloco.domain";
 import {
   type IBlocoUpdateImagemCapaCommand,
   IBlocoUpdateImagemCapaCommandHandler,
@@ -26,7 +27,7 @@ export class BlocoUpdateImagemCapaCommandHandlerImpl
   async execute({ accessContext, dto, file }: IBlocoUpdateImagemCapaCommand): Promise<boolean> {
     const current = await this.repository.findById(accessContext, dto);
 
-    ensureExists(current, "Bloco", dto.id);
+    ensureExists(current, Bloco.entityName, dto.id);
 
     await this.authorizationService.ensurePermission(
       "bloco:update",

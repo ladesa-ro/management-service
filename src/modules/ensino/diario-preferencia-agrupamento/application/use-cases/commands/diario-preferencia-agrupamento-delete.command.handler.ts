@@ -4,6 +4,7 @@ import {
   type IDiarioPreferenciaAgrupamentoDeleteCommand,
   IDiarioPreferenciaAgrupamentoDeleteCommandHandler,
 } from "@/modules/ensino/diario-preferencia-agrupamento/domain/commands/diario-preferencia-agrupamento-delete.command.handler.interface";
+import { DiarioPreferenciaAgrupamento } from "@/modules/ensino/diario-preferencia-agrupamento/domain/diario-preferencia-agrupamento.domain";
 import { IDiarioPreferenciaAgrupamentoRepository } from "../../../domain/repositories";
 
 @Injectable()
@@ -29,7 +30,7 @@ export class DiarioPreferenciaAgrupamentoDeleteCommandHandlerImpl
 
     const entity = await this.repository.findById(accessContext, dto);
 
-    ensureExists(entity, "DiarioPreferenciaAgrupamento", dto.id);
+    ensureExists(entity, DiarioPreferenciaAgrupamento.entityName, dto.id);
 
     await this.repository.softDeleteById(entity.id);
 

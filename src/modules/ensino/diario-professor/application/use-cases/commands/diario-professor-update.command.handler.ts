@@ -1,7 +1,9 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { has } from "lodash";
 import { ensureExists, IAuthorizationService, type PersistInput } from "@/modules/@shared";
+import { Perfil } from "@/modules/acesso/perfil/domain/perfil.domain";
 import { IPerfilFindOneQueryHandler } from "@/modules/acesso/perfil/domain/queries/perfil-find-one.query.handler.interface";
+import { Diario } from "@/modules/ensino/diario/domain/diario.domain";
 import { IDiarioFindOneQueryHandler } from "@/modules/ensino/diario/domain/queries/diario-find-one.query.handler.interface";
 import {
   type IDiarioProfessorUpdateCommand,
@@ -33,7 +35,7 @@ export class DiarioProfessorUpdateCommandHandlerImpl
   }: IDiarioProfessorUpdateCommand): Promise<DiarioProfessorFindOneOutputDto> {
     const current = await this.repository.findById(accessContext, { id: dto.id });
 
-    ensureExists(current, "DiarioProfessor", dto.id);
+    ensureExists(current, DiarioProfessor.entityName, dto.id);
 
     await this.authorizationService.ensurePermission("diario_professor:update", { dto }, dto.id);
 
@@ -45,7 +47,7 @@ export class DiarioProfessorUpdateCommandHandlerImpl
         accessContext,
         dto: { id: dto.diario.id },
       });
-      ensureExists(diario, "Diario", dto.diario.id);
+      ensureExists(diario, Diario.entityName, dto.diario.id);
       updateData.diario = { id: diario.id };
     }
     if (has(dto, "perfil") && dto.perfil !== undefined && dto.perfil !== null) {
@@ -53,14 +55,14 @@ export class DiarioProfessorUpdateCommandHandlerImpl
         accessContext,
         dto: { id: dto.perfil.id },
       });
-      ensureExists(perfil, "Perfil", dto.perfil.id);
+      ensureExists(perfil, Perfil.entityName, dto.perfil.id);
       updateData.perfil = { id: perfil.id };
     }
     await this.repository.updateFromDomain(current.id, updateData);
 
     const result = await this.repository.findById(accessContext, { id: dto.id });
 
-    ensureExists(result, "DiarioProfessor", dto.id);
+    ensureExists(result, DiarioProfessor.entityName, dto.id);
 
     return result;
   }

@@ -41,7 +41,7 @@ export class CampusCreateCommandHandlerImpl implements ICampusCreateCommandHandl
 
     const result = await this.repository.findById(accessContext, { id });
 
-    ensureExists(result, "Campus", id);
+    ensureExists(result, Campus.entityName, id);
 
     return result;
   }

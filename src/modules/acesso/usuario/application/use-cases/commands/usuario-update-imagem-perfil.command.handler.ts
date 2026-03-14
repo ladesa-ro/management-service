@@ -4,6 +4,7 @@ import {
   type IUsuarioUpdateImagemPerfilCommand,
   IUsuarioUpdateImagemPerfilCommandHandler,
 } from "@/modules/acesso/usuario/domain/commands/usuario-update-imagem-perfil.command.handler.interface";
+import { Usuario } from "@/modules/acesso/usuario/domain/usuario.domain";
 import {
   IImagemSaveImagemCapaCommandHandler,
   type IImagemSaveImagemCapaCommandHandler as IImagemSaveImagemCapaCommandHandlerType,
@@ -24,7 +25,7 @@ export class UsuarioUpdateImagemPerfilCommandHandlerImpl
   async execute({ accessContext, dto, file }: IUsuarioUpdateImagemPerfilCommand): Promise<boolean> {
     const currentUsuario = await this.repository.findById(accessContext, { id: dto.id });
 
-    ensureExists(currentUsuario, "Usuario", dto.id);
+    ensureExists(currentUsuario, Usuario.entityName, dto.id);
 
     await accessContext.ensurePermission(
       "usuario:update",

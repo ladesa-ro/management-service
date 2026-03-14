@@ -20,7 +20,7 @@ export class AmbienteUpdateCommandHandlerImpl implements IAmbienteUpdateCommandH
   async execute({ accessContext, dto }: IAmbienteUpdateCommand): Promise<AmbienteFindOneOutputDto> {
     const current = await this.repository.findById(accessContext, { id: dto.id });
 
-    ensureExists(current, "Ambiente", dto.id);
+    ensureExists(current, Ambiente.entityName, dto.id);
 
     await this.authorizationService.ensurePermission("ambiente:update", { dto }, dto.id);
 
@@ -43,7 +43,7 @@ export class AmbienteUpdateCommandHandlerImpl implements IAmbienteUpdateCommandH
 
     const result = await this.repository.findById(accessContext, { id: dto.id });
 
-    ensureExists(result, "Ambiente", dto.id);
+    ensureExists(result, Ambiente.entityName, dto.id);
 
     return result;
   }

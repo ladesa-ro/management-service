@@ -4,6 +4,7 @@ import {
   type IDiarioDeleteCommand,
   IDiarioDeleteCommandHandler,
 } from "@/modules/ensino/diario/domain/commands/diario-delete.command.handler.interface";
+import { Diario } from "@/modules/ensino/diario/domain/diario.domain";
 import { IDiarioRepository } from "../../../domain/repositories";
 
 @Injectable()
@@ -20,7 +21,7 @@ export class DiarioDeleteCommandHandlerImpl implements IDiarioDeleteCommandHandl
 
     const entity = await this.repository.findById(accessContext, dto);
 
-    ensureExists(entity, "Diario", dto.id);
+    ensureExists(entity, Diario.entityName, dto.id);
 
     await this.repository.softDeleteById(entity.id);
 

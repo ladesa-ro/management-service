@@ -12,6 +12,7 @@ import { ensureExists } from "@/modules/@shared";
 import { IDiaCalendarioCreateCommandHandler } from "@/modules/horarios/dia-calendario/domain/commands/dia-calendario-create.command.handler.interface";
 import { IDiaCalendarioDeleteCommandHandler } from "@/modules/horarios/dia-calendario/domain/commands/dia-calendario-delete.command.handler.interface";
 import { IDiaCalendarioUpdateCommandHandler } from "@/modules/horarios/dia-calendario/domain/commands/dia-calendario-update.command.handler.interface";
+import { DiaCalendario } from "@/modules/horarios/dia-calendario/domain/dia-calendario.domain";
 import { IDiaCalendarioFindOneQueryHandler } from "@/modules/horarios/dia-calendario/domain/queries/dia-calendario-find-one.query.handler.interface";
 import { IDiaCalendarioListQueryHandler } from "@/modules/horarios/dia-calendario/domain/queries/dia-calendario-list.query.handler.interface";
 import {
@@ -67,7 +68,7 @@ export class DiaCalendarioRestController {
   ): Promise<DiaCalendarioFindOneOutputRestDto> {
     const input = DiaCalendarioRestMapper.toFindOneInput(params);
     const result = await this.findOneHandler.execute({ accessContext, dto: input as any });
-    ensureExists(result, "DiaCalendario", (input as any).id);
+    ensureExists(result, DiaCalendario.entityName, (input as any).id);
     return DiaCalendarioRestMapper.toFindOneOutputDto(result as any);
   }
 

@@ -13,6 +13,7 @@ import { ensureExists } from "@/modules/@shared";
 import { IEstagiarioCreateCommandHandler } from "@/modules/estagio/estagiario/domain/commands/estagiario-create.command.handler.interface";
 import { IEstagiarioDeleteCommandHandler } from "@/modules/estagio/estagiario/domain/commands/estagiario-delete.command.handler.interface";
 import { IEstagiarioUpdateCommandHandler } from "@/modules/estagio/estagiario/domain/commands/estagiario-update.command.handler.interface";
+import { Estagiario } from "@/modules/estagio/estagiario/domain/estagiario.domain";
 import { IEstagiarioFindOneQueryHandler } from "@/modules/estagio/estagiario/domain/queries/estagiario-find-one.query.handler.interface";
 import { IEstagiarioListQueryHandler } from "@/modules/estagio/estagiario/domain/queries/estagiario-list.query.handler.interface";
 import {
@@ -64,7 +65,7 @@ export class EstagiarioRestController {
   ): Promise<EstagiarioFindOneOutputRestDto> {
     const input = EstagiarioRestMapper.toFindOneInput(params);
     const result = await this.findOneHandler.execute({ accessContext, dto: input });
-    ensureExists(result, "Estagiario", input.id);
+    ensureExists(result, Estagiario.entityName, input.id);
     return EstagiarioRestMapper.toFindOneOutputDto(result);
   }
 

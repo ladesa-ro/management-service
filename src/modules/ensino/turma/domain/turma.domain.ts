@@ -14,7 +14,7 @@ export class Turma extends BaseDatedEntity implements ITurma {
   curso!: ICurso;
   imagemCapa!: IImagem | null;
 
-  protected static get entityName(): string {
+  static get entityName(): string {
     return "Turma";
   }
 

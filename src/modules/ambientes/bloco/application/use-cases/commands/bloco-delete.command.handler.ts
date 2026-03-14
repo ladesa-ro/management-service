@@ -1,5 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { ensureExists, IAuthorizationService } from "@/modules/@shared";
+import { Bloco } from "@/modules/ambientes/bloco/domain/bloco.domain";
 import {
   type IBlocoDeleteCommand,
   IBlocoDeleteCommandHandler,
@@ -20,7 +21,7 @@ export class BlocoDeleteCommandHandlerImpl implements IBlocoDeleteCommandHandler
 
     const entity = await this.repository.findById(accessContext, dto);
 
-    ensureExists(entity, "Bloco", dto.id);
+    ensureExists(entity, Bloco.entityName, dto.id);
 
     await this.repository.softDeleteById(entity.id);
 

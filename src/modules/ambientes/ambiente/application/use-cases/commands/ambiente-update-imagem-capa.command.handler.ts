@@ -1,5 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { ensureExists, IAuthorizationService, saveEntityImagemField } from "@/modules/@shared";
+import { Ambiente } from "@/modules/ambientes/ambiente/domain/ambiente.domain";
 import {
   type IAmbienteUpdateImagemCapaCommand,
   IAmbienteUpdateImagemCapaCommandHandler,
@@ -26,7 +27,7 @@ export class AmbienteUpdateImagemCapaCommandHandlerImpl
   async execute({ accessContext, dto, file }: IAmbienteUpdateImagemCapaCommand): Promise<boolean> {
     const current = await this.repository.findById(accessContext, dto);
 
-    ensureExists(current, "Ambiente", dto.id);
+    ensureExists(current, Ambiente.entityName, dto.id);
 
     await this.authorizationService.ensurePermission(
       "ambiente:update",

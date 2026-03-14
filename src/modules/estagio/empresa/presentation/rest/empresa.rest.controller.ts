@@ -13,6 +13,7 @@ import { ensureExists } from "@/modules/@shared";
 import { IEmpresaCreateCommandHandler } from "@/modules/estagio/empresa/domain/commands/empresa-create.command.handler.interface";
 import { IEmpresaDeleteCommandHandler } from "@/modules/estagio/empresa/domain/commands/empresa-delete.command.handler.interface";
 import { IEmpresaUpdateCommandHandler } from "@/modules/estagio/empresa/domain/commands/empresa-update.command.handler.interface";
+import { Empresa } from "@/modules/estagio/empresa/domain/empresa.domain";
 import { IEmpresaFindOneQueryHandler } from "@/modules/estagio/empresa/domain/queries/empresa-find-one.query.handler.interface";
 import { IEmpresaListQueryHandler } from "@/modules/estagio/empresa/domain/queries/empresa-list.query.handler.interface";
 import {
@@ -64,7 +65,7 @@ export class EmpresaRestController {
   ): Promise<EmpresaFindOneOutputRestDto> {
     const input = EmpresaRestMapper.toFindOneInput(params);
     const result = await this.findOneHandler.execute({ accessContext, dto: input });
-    ensureExists(result, "Empresa", input.id);
+    ensureExists(result, Empresa.entityName, input.id);
     return EmpresaRestMapper.toFindOneOutputDto(result);
   }
 

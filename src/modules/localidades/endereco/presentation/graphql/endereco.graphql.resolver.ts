@@ -4,6 +4,7 @@ import { type GraphQLResolveInfo } from "graphql";
 import { AccessContext, AccessContextGraphQL } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
+import { Endereco } from "@/modules/localidades/endereco/domain/endereco.domain";
 import { IEnderecoFindOneQueryHandler } from "@/modules/localidades/endereco/domain/queries/endereco-find-one.query.handler.interface";
 import { EnderecoFindOneOutputGraphQlDto } from "./endereco.graphql.dto";
 import { EnderecoGraphqlMapper } from "./endereco.graphql.mapper";
@@ -23,7 +24,7 @@ export class EnderecoGraphqlResolver {
   ): Promise<EnderecoFindOneOutputGraphQlDto> {
     const selection = graphqlExtractSelection(info);
     const result = await this.findOneHandler.execute({ accessContext, dto: { id, selection } });
-    ensureExists(result, "Endereco", id);
+    ensureExists(result, Endereco.entityName, id);
     return EnderecoGraphqlMapper.toFindOneOutputDto(result);
   }
 }

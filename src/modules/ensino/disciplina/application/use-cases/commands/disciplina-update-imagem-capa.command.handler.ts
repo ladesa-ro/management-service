@@ -8,6 +8,7 @@ import {
   type IDisciplinaUpdateImagemCapaCommand,
   IDisciplinaUpdateImagemCapaCommandHandler,
 } from "@/modules/ensino/disciplina/domain/commands/disciplina-update-imagem-capa.command.handler.interface";
+import { Disciplina } from "@/modules/ensino/disciplina/domain/disciplina.domain";
 import { IDisciplinaRepository } from "../../../domain/repositories";
 
 @Injectable()
@@ -30,7 +31,7 @@ export class DisciplinaUpdateImagemCapaCommandHandlerImpl
   }: IDisciplinaUpdateImagemCapaCommand): Promise<boolean> {
     const current = await this.repository.findById(accessContext, dto);
 
-    ensureExists(current, "Disciplina", dto.id);
+    ensureExists(current, Disciplina.entityName, dto.id);
 
     await this.authorizationService.ensurePermission(
       "disciplina:update",

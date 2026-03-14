@@ -14,7 +14,7 @@ export class Usuario extends BaseDatedEntity implements IUsuario {
   imagemCapa!: IImagem | null;
   imagemPerfil!: IImagem | null;
 
-  protected static get entityName(): string {
+  static get entityName(): string {
     return "Usuario";
   }
 

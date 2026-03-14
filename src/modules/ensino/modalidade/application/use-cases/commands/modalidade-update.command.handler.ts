@@ -23,7 +23,7 @@ export class ModalidadeUpdateCommandHandlerImpl implements IModalidadeUpdateComm
   }: IModalidadeUpdateCommand): Promise<ModalidadeFindOneOutputDto> {
     const current = await this.repository.findById(accessContext, { id: dto.id });
 
-    ensureExists(current, "Modalidade", dto.id);
+    ensureExists(current, Modalidade.entityName, dto.id);
 
     await this.authorizationService.ensurePermission("modalidade:update", { dto }, dto.id);
 
@@ -33,7 +33,7 @@ export class ModalidadeUpdateCommandHandlerImpl implements IModalidadeUpdateComm
 
     const result = await this.repository.findById(accessContext, { id: dto.id });
 
-    ensureExists(result, "Modalidade", dto.id);
+    ensureExists(result, Modalidade.entityName, dto.id);
 
     return result;
   }

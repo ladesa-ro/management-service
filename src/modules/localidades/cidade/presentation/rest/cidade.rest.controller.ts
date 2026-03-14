@@ -8,6 +8,7 @@ import {
 } from "@nestjs/swagger";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
+import { Cidade } from "@/modules/localidades/cidade/domain/cidade.domain";
 import { ICidadeFindOneQueryHandler } from "@/modules/localidades/cidade/domain/queries/cidade-find-one.query.handler.interface";
 import { ICidadeListQueryHandler } from "@/modules/localidades/cidade/domain/queries/cidade-list.query.handler.interface";
 import {
@@ -52,7 +53,7 @@ export class CidadeRestController {
   ): Promise<CidadeFindOneOutputRestDto> {
     const input = CidadeRestMapper.toFindOneInput(params);
     const result = await this.findOneHandler.execute({ accessContext, dto: input });
-    ensureExists(result, "Cidade", input.id);
+    ensureExists(result, Cidade.entityName, input.id);
     return CidadeRestMapper.toFindOneOutputDto(result);
   }
 }

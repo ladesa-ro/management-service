@@ -1,6 +1,8 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { ensureExists, IAuthorizationService } from "@/modules/@shared";
+import { Campus } from "@/modules/ambientes/campus/domain/campus.domain";
 import { ICampusFindOneQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-find-one.query.handler.interface";
+import { OfertaFormacao } from "@/modules/ensino/oferta-formacao/domain/oferta-formacao.domain";
 import { IOfertaFormacaoFindOneQueryHandler } from "@/modules/ensino/oferta-formacao/domain/queries/oferta-formacao-find-one.query.handler.interface";
 import { CalendarioLetivo } from "@/modules/horarios/calendario-letivo/domain/calendario-letivo.domain";
 import {
@@ -35,14 +37,14 @@ export class CalendarioLetivoCreateCommandHandlerImpl
       accessContext,
       dto: { id: dto.campus.id },
     });
-    ensureExists(campus, "Campus", dto.campus.id);
+    ensureExists(campus, Campus.entityName, dto.campus.id);
     let ofertaFormacaoRef: { id: string } | undefined;
     if (dto.ofertaFormacao) {
       const ofertaFormacao = await this.ofertaFormacaoFindOneHandler.execute({
         accessContext,
         dto: { id: dto.ofertaFormacao.id },
       });
-      ensureExists(ofertaFormacao, "OfertaFormacao", dto.ofertaFormacao.id);
+      ensureExists(ofertaFormacao, OfertaFormacao.entityName, dto.ofertaFormacao.id);
       ofertaFormacaoRef = { id: ofertaFormacao.id };
     }
     const domain = CalendarioLetivo.criar({
@@ -59,7 +61,7 @@ export class CalendarioLetivoCreateCommandHandlerImpl
 
     const result = await this.repository.findById(accessContext, { id });
 
-    ensureExists(result, "CalendarioLetivo", id);
+    ensureExists(result, CalendarioLetivo.entityName, id);
 
     return result;
   }

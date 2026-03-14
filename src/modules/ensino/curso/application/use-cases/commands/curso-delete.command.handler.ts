@@ -4,6 +4,7 @@ import {
   type ICursoDeleteCommand,
   ICursoDeleteCommandHandler,
 } from "@/modules/ensino/curso/domain/commands/curso-delete.command.handler.interface";
+import { Curso } from "@/modules/ensino/curso/domain/curso.domain";
 import { ICursoRepository } from "../../../domain/repositories";
 
 @Injectable()
@@ -20,7 +21,7 @@ export class CursoDeleteCommandHandlerImpl implements ICursoDeleteCommandHandler
 
     const entity = await this.repository.findById(accessContext, dto);
 
-    ensureExists(entity, "Curso", dto.id);
+    ensureExists(entity, Curso.entityName, dto.id);
 
     await this.repository.softDeleteById(entity.id);
 

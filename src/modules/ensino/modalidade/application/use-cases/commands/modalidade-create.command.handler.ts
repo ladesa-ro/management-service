@@ -28,7 +28,7 @@ export class ModalidadeCreateCommandHandlerImpl implements IModalidadeCreateComm
 
     const result = await this.repository.findById(accessContext, { id });
 
-    ensureExists(result, "Modalidade", id);
+    ensureExists(result, Modalidade.entityName, id);
 
     return result;
   }

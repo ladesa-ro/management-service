@@ -6,6 +6,7 @@ import {
   type IUsuarioUpdateCommand,
   IUsuarioUpdateCommandHandler,
 } from "@/modules/acesso/usuario/domain/commands/usuario-update.command.handler.interface";
+import { Usuario } from "@/modules/acesso/usuario/domain/usuario.domain";
 import { IUsuarioRepository } from "../../../domain/repositories";
 import type { UsuarioFindOneOutputDto } from "../../dtos";
 
@@ -20,7 +21,7 @@ export class UsuarioUpdateCommandHandlerImpl implements IUsuarioUpdateCommandHan
   async execute({ accessContext, dto }: IUsuarioUpdateCommand): Promise<UsuarioFindOneOutputDto> {
     const currentUsuario = await this.repository.findById(accessContext, dto);
 
-    ensureExists(currentUsuario, "Usuario", dto.id);
+    ensureExists(currentUsuario, Usuario.entityName, dto.id);
 
     const currentMatricula =
       currentUsuario.matricula ??
@@ -75,7 +76,7 @@ export class UsuarioUpdateCommandHandlerImpl implements IUsuarioUpdateCommandHan
 
     const result = await this.repository.findById(accessContext, { id: currentUsuario.id });
 
-    ensureExists(result, "Usuario", currentUsuario.id);
+    ensureExists(result, Usuario.entityName, currentUsuario.id);
 
     return result;
   }

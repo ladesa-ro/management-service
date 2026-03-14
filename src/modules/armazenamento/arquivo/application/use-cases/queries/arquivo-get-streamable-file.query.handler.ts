@@ -15,6 +15,7 @@ import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists, isValidUuid } from "@/modules/@shared";
 import { UsuarioEntity } from "@/modules/acesso/usuario/infrastructure/persistence/typeorm";
 import type { ArquivoGetFileInputDto } from "@/modules/armazenamento/arquivo/application/dtos";
+import { Arquivo } from "@/modules/armazenamento/arquivo/domain/arquivo.domain";
 import type { IArquivoGetStreamableFileQueryHandler } from "@/modules/armazenamento/arquivo/domain/queries";
 import { IArquivoRepository } from "@/modules/armazenamento/arquivo/domain/repositories";
 
@@ -68,7 +69,7 @@ export class ArquivoGetStreamableFileQueryHandlerImpl
 
     const exists = await qb.getExists();
 
-    ensureExists(exists, "Arquivo", id);
+    ensureExists(exists, Arquivo.entityName, id);
 
     if (acesso) {
       if (acesso.nome === "bloco" && isValidUuid(acesso.id)) {

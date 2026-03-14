@@ -12,6 +12,7 @@ import {
   type ITurmaGetImagemCapaQuery,
   ITurmaGetImagemCapaQueryHandler,
 } from "@/modules/ensino/turma/domain/queries/turma-get-imagem-capa.query.handler.interface";
+import { Turma } from "@/modules/ensino/turma/domain/turma.domain";
 import { ITurmaRepository } from "../../../domain/repositories";
 
 @Injectable()
@@ -28,7 +29,7 @@ export class TurmaGetImagemCapaQueryHandlerImpl implements ITurmaGetImagemCapaQu
   async execute({ accessContext, id }: ITurmaGetImagemCapaQuery): Promise<StreamableFile> {
     const entity = await this.repository.findById(accessContext, { id });
 
-    ensureExists(entity, "Turma", id);
+    ensureExists(entity, Turma.entityName, id);
 
     return getEntityImagemStreamableFile(
       entity as Record<string, any>,

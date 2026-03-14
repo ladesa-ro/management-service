@@ -25,6 +25,7 @@ import {
 } from "@nestjs/swagger";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
+import { Ambiente } from "@/modules/ambientes/ambiente/domain/ambiente.domain";
 import { IAmbienteCreateCommandHandler } from "@/modules/ambientes/ambiente/domain/commands/ambiente-create.command.handler.interface";
 import { IAmbienteDeleteCommandHandler } from "@/modules/ambientes/ambiente/domain/commands/ambiente-delete.command.handler.interface";
 import { IAmbienteUpdateCommandHandler } from "@/modules/ambientes/ambiente/domain/commands/ambiente-update.command.handler.interface";
@@ -85,7 +86,7 @@ export class AmbienteRestController {
   ): Promise<AmbienteFindOneOutputRestDto> {
     const input = AmbienteRestMapper.toFindOneInput(params);
     const result = await this.findOneHandler.execute({ accessContext, dto: input as any });
-    ensureExists(result, "Ambiente", input.id);
+    ensureExists(result, Ambiente.entityName, input.id);
     return AmbienteRestMapper.toFindOneOutputDto(result as any);
   }
 

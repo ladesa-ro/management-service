@@ -35,6 +35,7 @@ import { IUsuarioFindOneQueryHandler } from "@/modules/acesso/usuario/domain/que
 import { IUsuarioGetImagemCapaQueryHandler } from "@/modules/acesso/usuario/domain/queries/usuario-get-imagem-capa.query.handler.interface";
 import { IUsuarioGetImagemPerfilQueryHandler } from "@/modules/acesso/usuario/domain/queries/usuario-get-imagem-perfil.query.handler.interface";
 import { IUsuarioListQueryHandler } from "@/modules/acesso/usuario/domain/queries/usuario-list.query.handler.interface";
+import { Usuario } from "@/modules/acesso/usuario/domain/usuario.domain";
 import {
   UsuarioCreateInputRestDto,
   UsuarioEnsinoOutputRestDto,
@@ -96,7 +97,7 @@ export class UsuarioRestController {
   ): Promise<UsuarioFindOneOutputRestDto> {
     const input = UsuarioRestMapper.toFindOneInput(params);
     const result = await this.findOneHandler.execute({ accessContext, dto: input });
-    ensureExists(result, "Usuario", input.id);
+    ensureExists(result, Usuario.entityName, input.id);
     return UsuarioRestMapper.toFindOneOutputDto(result);
   }
 

@@ -7,6 +7,8 @@ import {
 } from "@/modules/acesso/perfil/domain/commands/perfil-set-vinculos.command.handler.interface";
 import { IPerfilListQueryHandler } from "@/modules/acesso/perfil/domain/queries/perfil-list.query.handler.interface";
 import { IUsuarioFindByIdSimpleQueryHandler } from "@/modules/acesso/usuario/domain/queries/usuario-find-by-id-simple.query.handler.interface";
+import { Usuario } from "@/modules/acesso/usuario/domain/usuario.domain";
+import { Campus } from "@/modules/ambientes/campus/domain/campus.domain";
 import { ICampusFindOneQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-find-one.query.handler.interface";
 import { IPerfilRepository } from "../../../domain/repositories";
 import type { PerfilListInputDto, PerfilListOutputDto } from "../../dtos";
@@ -30,12 +32,12 @@ export class PerfilSetVinculosCommandHandlerImpl implements IPerfilSetVinculosCo
       accessContext,
       dto: { id: dto.campus.id },
     });
-    ensureExists(campus, "Campus", dto.campus.id);
+    ensureExists(campus, Campus.entityName, dto.campus.id);
     const usuarioResult = await this.usuarioFindByIdSimpleHandler.execute({
       accessContext,
       id: dto.usuario.id,
     });
-    ensureExists(usuarioResult, "Usuario", dto.usuario.id);
+    ensureExists(usuarioResult, Usuario.entityName, dto.usuario.id);
     const usuario = usuarioResult;
 
     const vinculosParaManter = new Set<string>();

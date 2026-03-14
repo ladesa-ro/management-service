@@ -1,6 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { has } from "lodash";
 import { ensureExists, IAuthorizationService, type PersistInput } from "@/modules/@shared";
+import { Campus } from "@/modules/ambientes/campus/domain/campus.domain";
 import { ICampusFindOneQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-find-one.query.handler.interface";
 import {
   type ICursoUpdateCommand,
@@ -8,6 +9,7 @@ import {
 } from "@/modules/ensino/curso/domain/commands/curso-update.command.handler.interface";
 import { Curso } from "@/modules/ensino/curso/domain/curso.domain";
 import type { ICurso } from "@/modules/ensino/curso/domain/curso.types";
+import { OfertaFormacao } from "@/modules/ensino/oferta-formacao/domain/oferta-formacao.domain";
 import { IOfertaFormacaoFindOneQueryHandler } from "@/modules/ensino/oferta-formacao/domain/queries/oferta-formacao-find-one.query.handler.interface";
 import { ICursoRepository } from "../../../domain/repositories";
 import type { CursoFindOneOutputDto } from "../../dtos";
@@ -28,7 +30,7 @@ export class CursoUpdateCommandHandlerImpl implements ICursoUpdateCommandHandler
   async execute({ accessContext, dto }: ICursoUpdateCommand): Promise<CursoFindOneOutputDto> {
     const current = await this.repository.findById(accessContext, { id: dto.id });
 
-    ensureExists(current, "Curso", dto.id);
+    ensureExists(current, Curso.entityName, dto.id);
 
     await this.authorizationService.ensurePermission("curso:update", { dto }, dto.id);
 
@@ -43,7 +45,7 @@ export class CursoUpdateCommandHandlerImpl implements ICursoUpdateCommandHandler
         accessContext,
         dto: { id: dto.campus.id },
       });
-      ensureExists(campus, "Campus", dto.campus.id);
+      ensureExists(campus, Campus.entityName, dto.campus.id);
       updateData.campus = { id: campus.id };
     }
     if (has(dto, "ofertaFormacao") && dto.ofertaFormacao !== undefined) {
@@ -51,14 +53,14 @@ export class CursoUpdateCommandHandlerImpl implements ICursoUpdateCommandHandler
         accessContext,
         dto: { id: dto.ofertaFormacao.id },
       });
-      ensureExists(ofertaFormacao, "OfertaFormacao", dto.ofertaFormacao.id);
+      ensureExists(ofertaFormacao, OfertaFormacao.entityName, dto.ofertaFormacao.id);
       updateData.ofertaFormacao = { id: ofertaFormacao.id };
     }
     await this.repository.updateFromDomain(current.id, updateData);
 
     const result = await this.repository.findById(accessContext, { id: dto.id });
 
-    ensureExists(result, "Curso", dto.id);
+    ensureExists(result, Curso.entityName, dto.id);
 
     return result;
   }

@@ -1,5 +1,6 @@
 import { Inject, Injectable, type StreamableFile } from "@nestjs/common";
 import { ensureExists, getEntityImagemStreamableFile } from "@/modules/@shared";
+import { Bloco } from "@/modules/ambientes/bloco/domain/bloco.domain";
 import {
   type IBlocoGetImagemCapaQuery,
   IBlocoGetImagemCapaQueryHandler,
@@ -28,7 +29,7 @@ export class BlocoGetImagemCapaQueryHandlerImpl implements IBlocoGetImagemCapaQu
   async execute({ accessContext, id }: IBlocoGetImagemCapaQuery): Promise<StreamableFile> {
     const entity = await this.repository.findById(accessContext, { id });
 
-    ensureExists(entity, "Bloco", id);
+    ensureExists(entity, Bloco.entityName, id);
 
     return getEntityImagemStreamableFile(
       entity as Record<string, any>,

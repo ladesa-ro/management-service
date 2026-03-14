@@ -1,6 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { has } from "lodash";
 import { ensureExists, IAuthorizationService, type PersistInput } from "@/modules/@shared";
+import { Ambiente } from "@/modules/ambientes/ambiente/domain/ambiente.domain";
 import { IAmbienteFindOneQueryHandler } from "@/modules/ambientes/ambiente/domain/queries/ambiente-find-one.query.handler.interface";
 import {
   type IDiarioUpdateCommand,
@@ -8,8 +9,11 @@ import {
 } from "@/modules/ensino/diario/domain/commands/diario-update.command.handler.interface";
 import { Diario } from "@/modules/ensino/diario/domain/diario.domain";
 import type { IDiario } from "@/modules/ensino/diario/domain/diario.types";
+import { Disciplina } from "@/modules/ensino/disciplina/domain/disciplina.domain";
 import { IDisciplinaFindOneQueryHandler } from "@/modules/ensino/disciplina/domain/queries/disciplina-find-one.query.handler.interface";
 import { ITurmaFindOneQueryHandler } from "@/modules/ensino/turma/domain/queries/turma-find-one.query.handler.interface";
+import { Turma } from "@/modules/ensino/turma/domain/turma.domain";
+import { CalendarioLetivo } from "@/modules/horarios/calendario-letivo/domain/calendario-letivo.domain";
 import { ICalendarioLetivoFindOneQueryHandler } from "@/modules/horarios/calendario-letivo/domain/queries/calendario-letivo-find-one.query.handler.interface";
 import { IDiarioRepository } from "../../../domain/repositories";
 import type { DiarioFindOneOutputDto } from "../../dtos";
@@ -34,7 +38,7 @@ export class DiarioUpdateCommandHandlerImpl implements IDiarioUpdateCommandHandl
   async execute({ accessContext, dto }: IDiarioUpdateCommand): Promise<DiarioFindOneOutputDto> {
     const current = await this.repository.findById(accessContext, { id: dto.id });
 
-    ensureExists(current, "Diario", dto.id);
+    ensureExists(current, Diario.entityName, dto.id);
 
     await this.authorizationService.ensurePermission("diario:update", { dto }, dto.id);
 
@@ -47,7 +51,7 @@ export class DiarioUpdateCommandHandlerImpl implements IDiarioUpdateCommandHandl
           accessContext,
           dto: { id: dto.ambientePadrao.id },
         });
-        ensureExists(ambientePadrao, "Ambiente", dto.ambientePadrao.id);
+        ensureExists(ambientePadrao, Ambiente.entityName, dto.ambientePadrao.id);
         updateData.ambientePadrao = { id: ambientePadrao.id };
       } else {
         updateData.ambientePadrao = null;
@@ -58,7 +62,7 @@ export class DiarioUpdateCommandHandlerImpl implements IDiarioUpdateCommandHandl
         accessContext,
         dto: { id: dto.disciplina.id },
       });
-      ensureExists(disciplina, "Disciplina", dto.disciplina.id);
+      ensureExists(disciplina, Disciplina.entityName, dto.disciplina.id);
       updateData.disciplina = { id: disciplina.id };
     }
     if (has(dto, "turma") && dto.turma !== undefined) {
@@ -66,7 +70,7 @@ export class DiarioUpdateCommandHandlerImpl implements IDiarioUpdateCommandHandl
         accessContext,
         dto: { id: dto.turma.id },
       });
-      ensureExists(turma, "Turma", dto.turma.id);
+      ensureExists(turma, Turma.entityName, dto.turma.id);
       updateData.turma = { id: turma.id };
     }
     if (has(dto, "calendarioLetivo") && dto.calendarioLetivo !== undefined) {
@@ -74,14 +78,14 @@ export class DiarioUpdateCommandHandlerImpl implements IDiarioUpdateCommandHandl
         accessContext,
         dto: { id: dto.calendarioLetivo.id },
       });
-      ensureExists(calendarioLetivo, "CalendarioLetivo", dto.calendarioLetivo.id);
+      ensureExists(calendarioLetivo, CalendarioLetivo.entityName, dto.calendarioLetivo.id);
       updateData.calendarioLetivo = { id: calendarioLetivo.id };
     }
     await this.repository.updateFromDomain(current.id, updateData);
 
     const result = await this.repository.findById(accessContext, { id: dto.id });
 
-    ensureExists(result, "Diario", dto.id);
+    ensureExists(result, Diario.entityName, dto.id);
 
     return result;
   }

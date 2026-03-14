@@ -5,6 +5,7 @@ import {
   type IBlocoCreateCommand,
   IBlocoCreateCommandHandler,
 } from "@/modules/ambientes/bloco/domain/commands/bloco-create.command.handler.interface";
+import { Campus } from "@/modules/ambientes/campus/domain/campus.domain";
 import { ICampusFindOneQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-find-one.query.handler.interface";
 import { IBlocoRepository } from "../../../domain/repositories";
 import type { BlocoFindOneOutputDto } from "../../dtos";
@@ -27,7 +28,7 @@ export class BlocoCreateCommandHandlerImpl implements IBlocoCreateCommandHandler
       accessContext,
       dto: { id: dto.campus.id },
     });
-    ensureExists(campus, "Campus", dto.campus.id);
+    ensureExists(campus, Campus.entityName, dto.campus.id);
     const domain = Bloco.criar({
       nome: dto.nome,
       codigo: dto.codigo,
@@ -37,7 +38,7 @@ export class BlocoCreateCommandHandlerImpl implements IBlocoCreateCommandHandler
 
     const result = await this.repository.findById(accessContext, { id });
 
-    ensureExists(result, "Bloco", id);
+    ensureExists(result, Bloco.entityName, id);
 
     return result;
   }

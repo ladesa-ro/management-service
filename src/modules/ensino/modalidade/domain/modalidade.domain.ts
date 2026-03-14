@@ -9,7 +9,7 @@ export class Modalidade extends BaseDatedEntity implements IModalidade {
   nome!: string;
   slug!: string;
 
-  protected static get entityName(): string {
+  static get entityName(): string {
     return "Modalidade";
   }
 

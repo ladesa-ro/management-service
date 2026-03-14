@@ -11,7 +11,7 @@ export class Cidade extends BaseEntity implements ICidade {
   nome!: string;
   estado!: IEstado;
 
-  protected static get entityName(): string {
+  static get entityName(): string {
     return "Cidade";
   }
 

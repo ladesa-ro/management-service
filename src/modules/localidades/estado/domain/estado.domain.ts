@@ -10,7 +10,7 @@ export class Estado extends BaseEntity implements IEstado {
   nome!: string;
   sigla!: string;
 
-  protected static get entityName(): string {
+  static get entityName(): string {
     return "Estado";
   }
 

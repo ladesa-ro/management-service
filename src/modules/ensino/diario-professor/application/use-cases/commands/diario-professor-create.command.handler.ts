@@ -1,7 +1,9 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { has } from "lodash";
 import { ensureExists, IAuthorizationService } from "@/modules/@shared";
+import { Perfil } from "@/modules/acesso/perfil/domain/perfil.domain";
 import { IPerfilFindOneQueryHandler } from "@/modules/acesso/perfil/domain/queries/perfil-find-one.query.handler.interface";
+import { Diario } from "@/modules/ensino/diario/domain/diario.domain";
 import { IDiarioFindOneQueryHandler } from "@/modules/ensino/diario/domain/queries/diario-find-one.query.handler.interface";
 import {
   type IDiarioProfessorCreateCommand,
@@ -38,7 +40,7 @@ export class DiarioProfessorCreateCommandHandlerImpl
         accessContext,
         dto: { id: dto.diario.id },
       });
-      ensureExists(diario, "Diario", dto.diario.id);
+      ensureExists(diario, Diario.entityName, dto.diario.id);
       diarioRef = { id: diario.id };
     }
     let perfilRef: { id: string } | undefined;
@@ -47,7 +49,7 @@ export class DiarioProfessorCreateCommandHandlerImpl
         accessContext,
         dto: { id: dto.perfil.id },
       });
-      ensureExists(perfil, "Perfil", dto.perfil.id);
+      ensureExists(perfil, Perfil.entityName, dto.perfil.id);
       perfilRef = { id: perfil.id };
     }
     const domain = DiarioProfessor.criar({
@@ -63,7 +65,7 @@ export class DiarioProfessorCreateCommandHandlerImpl
 
     const result = await this.repository.findById(accessContext, { id });
 
-    ensureExists(result, "DiarioProfessor", id);
+    ensureExists(result, DiarioProfessor.entityName, id);
 
     return result;
   }

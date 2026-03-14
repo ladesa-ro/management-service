@@ -1,6 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { has } from "lodash";
 import { ensureExists, IAuthorizationService, type PersistInput } from "@/modules/@shared";
+import { Diario } from "@/modules/ensino/diario/domain/diario.domain";
 import { IDiarioFindOneQueryHandler } from "@/modules/ensino/diario/domain/queries/diario-find-one.query.handler.interface";
 import {
   type IDiarioPreferenciaAgrupamentoUpdateCommand,
@@ -30,7 +31,7 @@ export class DiarioPreferenciaAgrupamentoUpdateCommandHandlerImpl
   }: IDiarioPreferenciaAgrupamentoUpdateCommand): Promise<DiarioPreferenciaAgrupamentoFindOneOutputDto> {
     const current = await this.repository.findById(accessContext, { id: dto.id });
 
-    ensureExists(current, "DiarioPreferenciaAgrupamento", dto.id);
+    ensureExists(current, DiarioPreferenciaAgrupamento.entityName, dto.id);
 
     await this.authorizationService.ensurePermission(
       "diario_preferencia_agrupamento:update",
@@ -56,14 +57,14 @@ export class DiarioPreferenciaAgrupamentoUpdateCommandHandlerImpl
         accessContext,
         dto: dto.diario,
       });
-      ensureExists(diario, "Diario", dto.diario.id);
+      ensureExists(diario, Diario.entityName, dto.diario.id);
       updateData.diario = { id: diario.id };
     }
     await this.repository.updateFromDomain(current.id, updateData);
 
     const result = await this.repository.findById(accessContext, { id: dto.id });
 
-    ensureExists(result, "DiarioPreferenciaAgrupamento", dto.id);
+    ensureExists(result, DiarioPreferenciaAgrupamento.entityName, dto.id);
 
     return result;
   }

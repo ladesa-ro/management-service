@@ -1,5 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { ensureExists, IAuthorizationService } from "@/modules/@shared";
+import { Ambiente } from "@/modules/ambientes/ambiente/domain/ambiente.domain";
 import {
   type IAmbienteDeleteCommand,
   IAmbienteDeleteCommandHandler,
@@ -20,7 +21,7 @@ export class AmbienteDeleteCommandHandlerImpl implements IAmbienteDeleteCommandH
 
     const entity = await this.repository.findById(accessContext, dto);
 
-    ensureExists(entity, "Ambiente", dto.id);
+    ensureExists(entity, Ambiente.entityName, dto.id);
 
     await this.repository.softDeleteById(entity.id);
 

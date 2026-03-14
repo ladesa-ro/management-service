@@ -4,6 +4,7 @@ import {
   type IUsuarioGetImagemPerfilQuery,
   IUsuarioGetImagemPerfilQueryHandler,
 } from "@/modules/acesso/usuario/domain/queries/usuario-get-imagem-perfil.query.handler.interface";
+import { Usuario } from "@/modules/acesso/usuario/domain/usuario.domain";
 import {
   IArquivoGetStreamableFileQueryHandler,
   type IArquivoGetStreamableFileQueryHandler as IArquivoGetStreamableFileQueryHandlerType,
@@ -28,7 +29,7 @@ export class UsuarioGetImagemPerfilQueryHandlerImpl implements IUsuarioGetImagem
   async execute({ accessContext, id }: IUsuarioGetImagemPerfilQuery): Promise<StreamableFile> {
     const usuario = await this.repository.findById(accessContext, { id });
 
-    ensureExists(usuario, "Usuario", id);
+    ensureExists(usuario, Usuario.entityName, id);
 
     return getEntityImagemStreamableFile(
       usuario,
