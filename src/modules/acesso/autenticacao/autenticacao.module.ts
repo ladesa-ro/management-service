@@ -5,8 +5,8 @@ import {
   AutenticacaoLoginCommandHandlerImpl,
   AutenticacaoRecoverPasswordCommandHandlerImpl,
   AutenticacaoRefreshCommandHandlerImpl,
-} from "@/modules/acesso/autenticacao/application/use-cases/commands";
-import { AutenticacaoWhoAmIQueryHandlerImpl } from "@/modules/acesso/autenticacao/application/use-cases/queries";
+} from "@/modules/acesso/autenticacao/application/commands";
+import { AutenticacaoWhoAmIQueryHandlerImpl } from "@/modules/acesso/autenticacao/application/queries";
 import {
   IAutenticacaoDefinirSenhaCommandHandler,
   IAutenticacaoLoginCommandHandler,

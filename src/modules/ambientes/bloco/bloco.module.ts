@@ -5,12 +5,12 @@ import {
   BlocoDeleteCommandHandlerImpl,
   BlocoUpdateCommandHandlerImpl,
   BlocoUpdateImagemCapaCommandHandlerImpl,
-} from "@/modules/ambientes/bloco/application/use-cases/commands";
+} from "@/modules/ambientes/bloco/application/commands";
 import {
   BlocoFindOneQueryHandlerImpl,
   BlocoGetImagemCapaQueryHandlerImpl,
   BlocoListQueryHandlerImpl,
-} from "@/modules/ambientes/bloco/application/use-cases/queries";
+} from "@/modules/ambientes/bloco/application/queries";
 import {
   IBlocoCreateCommandHandler,
   IBlocoDeleteCommandHandler,

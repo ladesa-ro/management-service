@@ -3,7 +3,7 @@ import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persiste
 import {
   CidadeFindOneQueryHandlerImpl,
   CidadeListQueryHandlerImpl,
-} from "@/modules/localidades/cidade/application/use-cases/queries";
+} from "@/modules/localidades/cidade/application/queries";
 import {
   ICidadeFindOneQueryHandler,
   ICidadeListQueryHandler,

@@ -7,11 +7,11 @@ import {
   OfertaFormacaoNivelFormacaoCreateCommandHandlerImpl,
   OfertaFormacaoNivelFormacaoDeleteCommandHandlerImpl,
   OfertaFormacaoNivelFormacaoUpdateCommandHandlerImpl,
-} from "@/modules/ensino/oferta-formacao-nivel-formacao/application/use-cases/commands";
+} from "@/modules/ensino/oferta-formacao-nivel-formacao/application/commands";
 import {
   OfertaFormacaoNivelFormacaoFindOneQueryHandlerImpl,
   OfertaFormacaoNivelFormacaoListQueryHandlerImpl,
-} from "@/modules/ensino/oferta-formacao-nivel-formacao/application/use-cases/queries";
+} from "@/modules/ensino/oferta-formacao-nivel-formacao/application/queries";
 import {
   IOfertaFormacaoNivelFormacaoCreateCommandHandler,
   IOfertaFormacaoNivelFormacaoDeleteCommandHandler,

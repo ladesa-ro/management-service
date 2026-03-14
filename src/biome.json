@@ -7,7 +7,7 @@
   },
   "files": {
     "ignoreUnknown": true,
-    "includes": ["**"]
+    "includes": ["**", "!.nx/**/*"]
   },
   "formatter": {
     "enabled": true,

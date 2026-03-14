@@ -3,11 +3,11 @@ import {
   EmpresaCreateCommandHandlerImpl,
   EmpresaDeleteCommandHandlerImpl,
   EmpresaUpdateCommandHandlerImpl,
-} from "@/modules/estagio/empresa/application/use-cases/commands";
+} from "@/modules/estagio/empresa/application/commands";
 import {
   EmpresaFindOneQueryHandlerImpl,
   EmpresaListQueryHandlerImpl,
-} from "@/modules/estagio/empresa/application/use-cases/queries";
+} from "@/modules/estagio/empresa/application/queries";
 import {
   IEmpresaCreateCommandHandler,
   IEmpresaDeleteCommandHandler,

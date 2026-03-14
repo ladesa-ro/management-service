@@ -3,11 +3,11 @@ import {
   EstagiarioCreateCommandHandlerImpl,
   EstagiarioDeleteCommandHandlerImpl,
   EstagiarioUpdateCommandHandlerImpl,
-} from "@/modules/estagio/estagiario/application/use-cases/commands";
+} from "@/modules/estagio/estagiario/application/commands";
 import {
   EstagiarioFindOneQueryHandlerImpl,
   EstagiarioListQueryHandlerImpl,
-} from "@/modules/estagio/estagiario/application/use-cases/queries";
+} from "@/modules/estagio/estagiario/application/queries";
 import {
   IEstagiarioCreateCommandHandler,
   IEstagiarioDeleteCommandHandler,

@@ -1,11 +1,11 @@
 import { Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
-import { PerfilSetVinculosCommandHandlerImpl } from "@/modules/acesso/perfil/application/use-cases/commands";
+import { PerfilSetVinculosCommandHandlerImpl } from "@/modules/acesso/perfil/application/commands";
 import {
   PerfilFindAllActiveQueryHandlerImpl,
   PerfilFindOneQueryHandlerImpl,
   PerfilListQueryHandlerImpl,
-} from "@/modules/acesso/perfil/application/use-cases/queries";
+} from "@/modules/acesso/perfil/application/queries";
 import { IPerfilSetVinculosCommandHandler } from "@/modules/acesso/perfil/domain/commands";
 import {
   IPerfilFindAllActiveQueryHandler,

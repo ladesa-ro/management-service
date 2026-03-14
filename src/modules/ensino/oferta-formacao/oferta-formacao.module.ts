@@ -6,11 +6,11 @@ import {
   OfertaFormacaoCreateCommandHandlerImpl,
   OfertaFormacaoDeleteCommandHandlerImpl,
   OfertaFormacaoUpdateCommandHandlerImpl,
-} from "@/modules/ensino/oferta-formacao/application/use-cases/commands";
+} from "@/modules/ensino/oferta-formacao/application/commands";
 import {
   OfertaFormacaoFindOneQueryHandlerImpl,
   OfertaFormacaoListQueryHandlerImpl,
-} from "@/modules/ensino/oferta-formacao/application/use-cases/queries";
+} from "@/modules/ensino/oferta-formacao/application/queries";
 import {
   IOfertaFormacaoCreateCommandHandler,
   IOfertaFormacaoDeleteCommandHandler,

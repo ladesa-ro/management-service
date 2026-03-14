@@ -9,12 +9,12 @@ import {
   CursoDeleteCommandHandlerImpl,
   CursoUpdateCommandHandlerImpl,
   CursoUpdateImagemCapaCommandHandlerImpl,
-} from "@/modules/ensino/curso/application/use-cases/commands";
+} from "@/modules/ensino/curso/application/commands";
 import {
   CursoFindOneQueryHandlerImpl,
   CursoGetImagemCapaQueryHandlerImpl,
   CursoListQueryHandlerImpl,
-} from "@/modules/ensino/curso/application/use-cases/queries";
+} from "@/modules/ensino/curso/application/queries";
 import {
   ICursoCreateCommandHandler,
   ICursoDeleteCommandHandler,

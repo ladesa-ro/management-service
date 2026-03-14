@@ -6,11 +6,11 @@ import {
   DiarioProfessorCreateCommandHandlerImpl,
   DiarioProfessorDeleteCommandHandlerImpl,
   DiarioProfessorUpdateCommandHandlerImpl,
-} from "@/modules/ensino/diario-professor/application/use-cases/commands";
+} from "@/modules/ensino/diario-professor/application/commands";
 import {
   DiarioProfessorFindOneQueryHandlerImpl,
   DiarioProfessorListQueryHandlerImpl,
-} from "@/modules/ensino/diario-professor/application/use-cases/queries";
+} from "@/modules/ensino/diario-professor/application/queries";
 import {
   IDiarioProfessorCreateCommandHandler,
   IDiarioProfessorDeleteCommandHandler,

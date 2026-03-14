@@ -5,11 +5,11 @@ import {
   DiarioCreateCommandHandlerImpl,
   DiarioDeleteCommandHandlerImpl,
   DiarioUpdateCommandHandlerImpl,
-} from "@/modules/ensino/diario/application/use-cases/commands";
+} from "@/modules/ensino/diario/application/commands";
 import {
   DiarioFindOneQueryHandlerImpl,
   DiarioListQueryHandlerImpl,
-} from "@/modules/ensino/diario/application/use-cases/queries";
+} from "@/modules/ensino/diario/application/queries";
 import {
   IDiarioCreateCommandHandler,
   IDiarioDeleteCommandHandler,

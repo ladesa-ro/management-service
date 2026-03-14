@@ -4,11 +4,11 @@ import {
   CampusCreateCommandHandlerImpl,
   CampusDeleteCommandHandlerImpl,
   CampusUpdateCommandHandlerImpl,
-} from "@/modules/ambientes/campus/application/use-cases/commands";
+} from "@/modules/ambientes/campus/application/commands";
 import {
   CampusFindOneQueryHandlerImpl,
   CampusListQueryHandlerImpl,
-} from "@/modules/ambientes/campus/application/use-cases/queries";
+} from "@/modules/ambientes/campus/application/queries";
 import {
   ICampusCreateCommandHandler,
   ICampusDeleteCommandHandler,

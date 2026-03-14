@@ -3,8 +3,8 @@ import { ArquivoModule } from "@/modules/armazenamento/arquivo/arquivo.module";
 import {
   ImagemSaveImageCommandHandlerImpl,
   ImagemSaveImagemCapaCommandHandlerImpl,
-} from "@/modules/armazenamento/imagem/application/use-cases/commands";
-import { ImagemGetLatestArquivoIdQueryHandlerImpl } from "@/modules/armazenamento/imagem/application/use-cases/queries";
+} from "@/modules/armazenamento/imagem/application/commands";
+import { ImagemGetLatestArquivoIdQueryHandlerImpl } from "@/modules/armazenamento/imagem/application/queries";
 import {
   IImagemSaveImageCommandHandler,
   IImagemSaveImagemCapaCommandHandler,

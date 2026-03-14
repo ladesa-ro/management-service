@@ -5,11 +5,11 @@ import {
   DiaCalendarioCreateCommandHandlerImpl,
   DiaCalendarioDeleteCommandHandlerImpl,
   DiaCalendarioUpdateCommandHandlerImpl,
-} from "@/modules/horarios/dia-calendario/application/use-cases/commands";
+} from "@/modules/horarios/dia-calendario/application/commands";
 import {
   DiaCalendarioFindOneQueryHandlerImpl,
   DiaCalendarioListQueryHandlerImpl,
-} from "@/modules/horarios/dia-calendario/application/use-cases/queries";
+} from "@/modules/horarios/dia-calendario/application/queries";
 import {
   IDiaCalendarioCreateCommandHandler,
   IDiaCalendarioDeleteCommandHandler,

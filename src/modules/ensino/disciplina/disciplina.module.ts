@@ -7,12 +7,12 @@ import {
   DisciplinaDeleteCommandHandlerImpl,
   DisciplinaUpdateCommandHandlerImpl,
   DisciplinaUpdateImagemCapaCommandHandlerImpl,
-} from "@/modules/ensino/disciplina/application/use-cases/commands";
+} from "@/modules/ensino/disciplina/application/commands";
 import {
   DisciplinaFindOneQueryHandlerImpl,
   DisciplinaGetImagemCapaQueryHandlerImpl,
   DisciplinaListQueryHandlerImpl,
-} from "@/modules/ensino/disciplina/application/use-cases/queries";
+} from "@/modules/ensino/disciplina/application/queries";
 import {
   IDisciplinaCreateCommandHandler,
   IDisciplinaDeleteCommandHandler,

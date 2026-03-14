@@ -1,6 +1,6 @@
 import { Global, Module } from "@nestjs/common";
-import { ArquivoCreateCommandHandlerImpl } from "@/modules/armazenamento/arquivo/application/use-cases/commands";
-import { ArquivoGetStreamableFileQueryHandlerImpl } from "@/modules/armazenamento/arquivo/application/use-cases/queries";
+import { ArquivoCreateCommandHandlerImpl } from "@/modules/armazenamento/arquivo/application/commands";
+import { ArquivoGetStreamableFileQueryHandlerImpl } from "@/modules/armazenamento/arquivo/application/queries";
 import { IArquivoCreateCommandHandler } from "@/modules/armazenamento/arquivo/domain/commands";
 import { IArquivoGetStreamableFileQueryHandler } from "@/modules/armazenamento/arquivo/domain/queries";
 import { IArquivoRepository } from "@/modules/armazenamento/arquivo/domain/repositories";

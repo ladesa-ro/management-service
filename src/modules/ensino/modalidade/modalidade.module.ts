@@ -4,11 +4,11 @@ import {
   ModalidadeCreateCommandHandlerImpl,
   ModalidadeDeleteCommandHandlerImpl,
   ModalidadeUpdateCommandHandlerImpl,
-} from "@/modules/ensino/modalidade/application/use-cases/commands";
+} from "@/modules/ensino/modalidade/application/commands";
 import {
   ModalidadeFindOneQueryHandlerImpl,
   ModalidadeListQueryHandlerImpl,
-} from "@/modules/ensino/modalidade/application/use-cases/queries";
+} from "@/modules/ensino/modalidade/application/queries";
 import {
   IModalidadeCreateCommandHandler,
   IModalidadeDeleteCommandHandler,

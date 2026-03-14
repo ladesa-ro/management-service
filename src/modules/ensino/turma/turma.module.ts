@@ -9,12 +9,12 @@ import {
   TurmaDeleteCommandHandlerImpl,
   TurmaUpdateCommandHandlerImpl,
   TurmaUpdateImagemCapaCommandHandlerImpl,
-} from "@/modules/ensino/turma/application/use-cases/commands";
+} from "@/modules/ensino/turma/application/commands";
 import {
   TurmaFindOneQueryHandlerImpl,
   TurmaGetImagemCapaQueryHandlerImpl,
   TurmaListQueryHandlerImpl,
-} from "@/modules/ensino/turma/application/use-cases/queries";
+} from "@/modules/ensino/turma/application/queries";
 import {
   ITurmaCreateCommandHandler,
   ITurmaDeleteCommandHandler,

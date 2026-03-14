@@ -4,11 +4,11 @@ import {
   NivelFormacaoCreateCommandHandlerImpl,
   NivelFormacaoDeleteCommandHandlerImpl,
   NivelFormacaoUpdateCommandHandlerImpl,
-} from "@/modules/ensino/nivel-formacao/application/use-cases/commands";
+} from "@/modules/ensino/nivel-formacao/application/commands";
 import {
   NivelFormacaoFindOneQueryHandlerImpl,
   NivelFormacaoListQueryHandlerImpl,
-} from "@/modules/ensino/nivel-formacao/application/use-cases/queries";
+} from "@/modules/ensino/nivel-formacao/application/queries";
 import {
   INivelFormacaoCreateCommandHandler,
   INivelFormacaoDeleteCommandHandler,

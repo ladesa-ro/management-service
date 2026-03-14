@@ -7,11 +7,11 @@ import {
   CalendarioLetivoCreateCommandHandlerImpl,
   CalendarioLetivoDeleteCommandHandlerImpl,
   CalendarioLetivoUpdateCommandHandlerImpl,
-} from "@/modules/horarios/calendario-letivo/application/use-cases/commands";
+} from "@/modules/horarios/calendario-letivo/application/commands";
 import {
   CalendarioLetivoFindOneQueryHandlerImpl,
   CalendarioLetivoListQueryHandlerImpl,
-} from "@/modules/horarios/calendario-letivo/application/use-cases/queries";
+} from "@/modules/horarios/calendario-letivo/application/queries";
 import {
   ICalendarioLetivoCreateCommandHandler,
   ICalendarioLetivoDeleteCommandHandler,

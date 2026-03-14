@@ -5,12 +5,12 @@ import {
   AmbienteDeleteCommandHandlerImpl,
   AmbienteUpdateCommandHandlerImpl,
   AmbienteUpdateImagemCapaCommandHandlerImpl,
-} from "@/modules/ambientes/ambiente/application/use-cases/commands";
+} from "@/modules/ambientes/ambiente/application/commands";
 import {
   AmbienteFindOneQueryHandlerImpl,
   AmbienteGetImagemCapaQueryHandlerImpl,
   AmbienteListQueryHandlerImpl,
-} from "@/modules/ambientes/ambiente/application/use-cases/queries";
+} from "@/modules/ambientes/ambiente/application/queries";
 import {
   IAmbienteCreateCommandHandler,
   IAmbienteDeleteCommandHandler,

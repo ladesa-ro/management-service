@@ -7,7 +7,7 @@ import {
   UsuarioUpdateCommandHandlerImpl,
   UsuarioUpdateImagemCapaCommandHandlerImpl,
   UsuarioUpdateImagemPerfilCommandHandlerImpl,
-} from "@/modules/acesso/usuario/application/use-cases/commands";
+} from "@/modules/acesso/usuario/application/commands";
 import {
   UsuarioEnsinoQueryHandlerImpl,
   UsuarioFindByIdSimpleQueryHandlerImpl,
@@ -16,7 +16,7 @@ import {
   UsuarioGetImagemCapaQueryHandlerImpl,
   UsuarioGetImagemPerfilQueryHandlerImpl,
   UsuarioListQueryHandlerImpl,
-} from "@/modules/acesso/usuario/application/use-cases/queries";
+} from "@/modules/acesso/usuario/application/queries";
 import {
   IUsuarioCreateCommandHandler,
   IUsuarioDeleteCommandHandler,

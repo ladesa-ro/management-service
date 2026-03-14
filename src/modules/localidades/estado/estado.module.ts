@@ -3,7 +3,7 @@ import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persiste
 import {
   EstadoFindOneQueryHandlerImpl,
   EstadoListQueryHandlerImpl,
-} from "@/modules/localidades/estado/application/use-cases/queries";
+} from "@/modules/localidades/estado/application/queries";
 import {
   IEstadoFindOneQueryHandler,
   IEstadoListQueryHandler,

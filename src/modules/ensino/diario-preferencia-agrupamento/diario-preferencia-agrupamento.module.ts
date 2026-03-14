@@ -6,11 +6,11 @@ import {
   DiarioPreferenciaAgrupamentoCreateCommandHandlerImpl,
   DiarioPreferenciaAgrupamentoDeleteCommandHandlerImpl,
   DiarioPreferenciaAgrupamentoUpdateCommandHandlerImpl,
-} from "@/modules/ensino/diario-preferencia-agrupamento/application/use-cases/commands";
+} from "@/modules/ensino/diario-preferencia-agrupamento/application/commands";
 import {
   DiarioPreferenciaAgrupamentoFindOneQueryHandlerImpl,
   DiarioPreferenciaAgrupamentoListQueryHandlerImpl,
-} from "@/modules/ensino/diario-preferencia-agrupamento/application/use-cases/queries";
+} from "@/modules/ensino/diario-preferencia-agrupamento/application/queries";
 import {
   IDiarioPreferenciaAgrupamentoCreateCommandHandler,
   IDiarioPreferenciaAgrupamentoDeleteCommandHandler,

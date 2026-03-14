@@ -3,7 +3,7 @@ import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persiste
 import {
   ImagemArquivoFindOneQueryHandlerImpl,
   ImagemArquivoListQueryHandlerImpl,
-} from "@/modules/armazenamento/imagem-arquivo/application/use-cases/queries";
+} from "@/modules/armazenamento/imagem-arquivo/application/queries";
 import {
   IImagemArquivoFindOneQueryHandler,
   IImagemArquivoListQueryHandler,
