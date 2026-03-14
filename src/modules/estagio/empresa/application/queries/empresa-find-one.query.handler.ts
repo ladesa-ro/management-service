@@ -3,9 +3,8 @@ import {
   type IEmpresaFindOneQuery,
   IEmpresaFindOneQueryHandler,
 } from "@/modules/estagio/empresa/domain/queries/empresa-find-one.query.handler.interface";
+import type { EmpresaFindOneQueryResult } from "../../domain/queries";
 import { IEmpresaRepository } from "../../domain/repositories";
-import type { EmpresaFindOneOutputDto } from "../dtos";
-
 @DeclareImplementation()
 export class EmpresaFindOneQueryHandlerImpl implements IEmpresaFindOneQueryHandler {
   constructor(
@@ -17,7 +16,7 @@ export class EmpresaFindOneQueryHandlerImpl implements IEmpresaFindOneQueryHandl
     accessContext,
     dto,
     selection,
-  }: IEmpresaFindOneQuery): Promise<EmpresaFindOneOutputDto | null> {
+  }: IEmpresaFindOneQuery): Promise<EmpresaFindOneQueryResult | null> {
     return this.repository.findById(accessContext, dto, selection);
   }
 }

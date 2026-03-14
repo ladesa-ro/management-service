@@ -1,10 +1,10 @@
 import { createListOutputMapper, mapDatedFields } from "@/modules/@shared/application/mappers";
 import {
-  DisciplinaCreateInputDto,
-  DisciplinaFindOneInputDto,
-  DisciplinaFindOneOutputDto,
-  DisciplinaListInputDto,
-  DisciplinaUpdateInputDto,
+  DisciplinaCreateCommand,
+  DisciplinaFindOneQuery,
+  DisciplinaFindOneQueryResult,
+  DisciplinaListQuery,
+  DisciplinaUpdateCommand,
 } from "@/modules/ensino/disciplina";
 import {
   DisciplinaCreateInputGraphQlDto,
@@ -46,12 +46,12 @@ function mapImagemOutput(imagem: any): any {
 }
 
 export class DisciplinaGraphqlMapper {
-  static toListInput(dto: DisciplinaListInputGraphQlDto | null): DisciplinaListInputDto | null {
+  static toListInput(dto: DisciplinaListInputGraphQlDto | null): DisciplinaListQuery | null {
     if (!dto) {
       return null;
     }
 
-    const input = new DisciplinaListInputDto();
+    const input = new DisciplinaListQuery();
     input.page = dto.page;
     input.limit = dto.limit;
     input.search = dto.search;
@@ -60,15 +60,15 @@ export class DisciplinaGraphqlMapper {
     return input;
   }
 
-  static toFindOneInput(id: string, selection?: string[]): DisciplinaFindOneInputDto {
-    const input = new DisciplinaFindOneInputDto();
+  static toFindOneInput(id: string, selection?: string[]): DisciplinaFindOneQuery {
+    const input = new DisciplinaFindOneQuery();
     input.id = id;
     input.selection = selection;
     return input;
   }
 
-  static toCreateInput(dto: DisciplinaCreateInputGraphQlDto): DisciplinaCreateInputDto {
-    const input = new DisciplinaCreateInputDto();
+  static toCreateInput(dto: DisciplinaCreateInputGraphQlDto): DisciplinaCreateCommand {
+    const input = new DisciplinaCreateCommand();
     input.nome = dto.nome;
     input.nomeAbreviado = dto.nomeAbreviado;
     input.cargaHoraria = dto.cargaHoraria;
@@ -79,9 +79,8 @@ export class DisciplinaGraphqlMapper {
   static toUpdateInput(
     params: { id: string },
     dto: DisciplinaUpdateInputGraphQlDto,
-  ): DisciplinaFindOneInputDto & DisciplinaUpdateInputDto {
-    const input = new DisciplinaFindOneInputDto() as DisciplinaFindOneInputDto &
-      DisciplinaUpdateInputDto;
+  ): DisciplinaFindOneQuery & DisciplinaUpdateCommand {
+    const input = new DisciplinaFindOneQuery() as DisciplinaFindOneQuery & DisciplinaUpdateCommand;
     input.id = params.id;
     if (dto.nome !== undefined) {
       input.nome = dto.nome;
@@ -98,7 +97,9 @@ export class DisciplinaGraphqlMapper {
     return input;
   }
 
-  static toFindOneOutputDto(output: DisciplinaFindOneOutputDto): DisciplinaFindOneOutputGraphQlDto {
+  static toFindOneOutputDto(
+    output: DisciplinaFindOneQueryResult,
+  ): DisciplinaFindOneOutputGraphQlDto {
     const dto = new DisciplinaFindOneOutputGraphQlDto();
     dto.id = output.id;
     dto.nome = output.nome;

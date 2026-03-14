@@ -1,7 +1,6 @@
 import type { IBaseCrudRepository } from "@/modules/@shared";
 import type { ITurma } from "@/modules/ensino/turma";
-import type { TurmaFindOneOutputDto, TurmaListOutputDto } from "../../application/dtos";
-
+import type { TurmaFindOneQueryResult, TurmaListQueryResult } from "../queries";
 /**
  * Token de injeção para o repositório de Turma
  */
@@ -12,4 +11,4 @@ export const ITurmaRepository = Symbol("ITurmaRepository");
  * Estende a interface base de CRUD com operações padrão
  */
 export interface ITurmaRepository
-  extends IBaseCrudRepository<ITurma, TurmaListOutputDto, TurmaFindOneOutputDto> {}
+  extends IBaseCrudRepository<ITurma, TurmaListQueryResult, TurmaFindOneQueryResult> {}

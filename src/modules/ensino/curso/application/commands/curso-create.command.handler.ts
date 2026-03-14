@@ -10,9 +10,8 @@ import { Curso } from "@/modules/ensino/curso/domain/curso.domain";
 import { OfertaFormacao } from "@/modules/ensino/oferta-formacao/domain/oferta-formacao.domain";
 import { IOfertaFormacaoFindOneQueryHandler } from "@/modules/ensino/oferta-formacao/domain/queries/oferta-formacao-find-one.query.handler.interface";
 import { ICursoPermissionChecker } from "../../domain/authorization";
+import type { CursoFindOneQueryResult } from "../../domain/queries";
 import { ICursoRepository } from "../../domain/repositories";
-import type { CursoFindOneOutputDto } from "../dtos";
-
 @DeclareImplementation()
 export class CursoCreateCommandHandlerImpl implements ICursoCreateCommandHandler {
   constructor(
@@ -26,7 +25,7 @@ export class CursoCreateCommandHandlerImpl implements ICursoCreateCommandHandler
     private readonly ofertaFormacaoFindOneHandler: IOfertaFormacaoFindOneQueryHandler,
   ) {}
 
-  async execute({ accessContext, dto }: ICursoCreateCommand): Promise<CursoFindOneOutputDto> {
+  async execute({ accessContext, dto }: ICursoCreateCommand): Promise<CursoFindOneQueryResult> {
     await this.permissionChecker.ensureCanCreate(accessContext, { dto });
 
     const campus = await this.campusFindOneHandler.execute({

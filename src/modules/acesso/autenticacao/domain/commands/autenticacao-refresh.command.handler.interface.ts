@@ -1,14 +1,14 @@
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import type { ICommandHandler } from "@/modules/@shared/domain/abstractions";
-import type { AuthRefreshInputDto, AuthSessionCredentialsDto } from "../../application/dtos";
-
+import type { AuthSessionCredentials } from "../shared";
+import type { AuthRefreshCommand } from "./auth-refresh.command";
 export type IAutenticacaoRefreshCommand = {
   accessContext: AccessContext;
-  dto: AuthRefreshInputDto;
+  dto: AuthRefreshCommand;
 };
 
 export type IAutenticacaoRefreshCommandHandler = ICommandHandler<
   IAutenticacaoRefreshCommand,
-  AuthSessionCredentialsDto
+  AuthSessionCredentials
 >;
 export const IAutenticacaoRefreshCommandHandler = Symbol("IAutenticacaoRefreshCommandHandler");

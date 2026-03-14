@@ -1,10 +1,6 @@
 import type { IBaseCrudRepository } from "@/modules/@shared";
 import type { IDiario } from "@/modules/ensino/diario";
-import type {
-  DiarioFindOneOutputDto,
-  DiarioListOutputDto,
-} from "@/modules/ensino/diario/application/dtos";
-
+import type { DiarioFindOneQueryResult, DiarioListQueryResult } from "../queries";
 /**
  * Token de injeção para o repositório de Diario
  */
@@ -15,4 +11,4 @@ export const IDiarioRepository = Symbol("IDiarioRepository");
  * Estende a interface base de CRUD com operações padrão
  */
 export interface IDiarioRepository
-  extends IBaseCrudRepository<IDiario, DiarioListOutputDto, DiarioFindOneOutputDto> {}
+  extends IBaseCrudRepository<IDiario, DiarioListQueryResult, DiarioFindOneQueryResult> {}

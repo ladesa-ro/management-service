@@ -5,11 +5,11 @@ import {
   mapDatedFields,
 } from "@/modules/@shared/application/mappers";
 import {
-  ModalidadeCreateInputDto,
-  ModalidadeFindOneInputDto,
-  ModalidadeFindOneOutputDto,
-  ModalidadeListInputDto,
-  ModalidadeUpdateInputDto,
+  ModalidadeCreateCommand,
+  ModalidadeFindOneQuery,
+  ModalidadeFindOneQueryResult,
+  ModalidadeListQuery,
+  ModalidadeUpdateCommand,
 } from "@/modules/ensino/modalidade";
 import {
   ModalidadeCreateInputRestDto,
@@ -24,12 +24,12 @@ export class ModalidadeRestMapper {
   // Input: Server DTO -> Core DTO
   // ============================================================================
 
-  static toFindOneInput = createFindOneInputMapper(ModalidadeFindOneInputDto);
+  static toFindOneInput = createFindOneInputMapper(ModalidadeFindOneQuery);
 
-  static toListInput = createListInputMapper(ModalidadeListInputDto, ["filter.id"]);
+  static toListInput = createListInputMapper(ModalidadeListQuery, ["filter.id"]);
 
-  static toCreateInput(dto: ModalidadeCreateInputRestDto): ModalidadeCreateInputDto {
-    const input = new ModalidadeCreateInputDto();
+  static toCreateInput(dto: ModalidadeCreateInputRestDto): ModalidadeCreateCommand {
+    const input = new ModalidadeCreateCommand();
     input.nome = dto.nome;
     input.slug = dto.slug;
     return input;
@@ -38,9 +38,8 @@ export class ModalidadeRestMapper {
   static toUpdateInput(
     params: ModalidadeFindOneInputRestDto,
     dto: ModalidadeUpdateInputRestDto,
-  ): ModalidadeFindOneInputDto & ModalidadeUpdateInputDto {
-    const input = new ModalidadeFindOneInputDto() as ModalidadeFindOneInputDto &
-      ModalidadeUpdateInputDto;
+  ): ModalidadeFindOneQuery & ModalidadeUpdateCommand {
+    const input = new ModalidadeFindOneQuery() as ModalidadeFindOneQuery & ModalidadeUpdateCommand;
     input.id = params.id;
     if (dto.nome !== undefined) {
       input.nome = dto.nome;
@@ -55,7 +54,7 @@ export class ModalidadeRestMapper {
   // Output: Core DTO -> Server DTO
   // ============================================================================
 
-  static toFindOneOutputDto(output: ModalidadeFindOneOutputDto): ModalidadeFindOneOutputRestDto {
+  static toFindOneOutputDto(output: ModalidadeFindOneQueryResult): ModalidadeFindOneOutputRestDto {
     const dto = new ModalidadeFindOneOutputRestDto();
     dto.id = output.id;
     dto.nome = output.nome;

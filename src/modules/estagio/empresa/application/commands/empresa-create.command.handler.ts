@@ -5,9 +5,8 @@ import {
   type IEmpresaCreateCommand,
   IEmpresaCreateCommandHandler,
 } from "@/modules/estagio/empresa/domain/commands/empresa-create.command.handler.interface";
+import type { EmpresaFindOneQueryResult } from "../../domain/queries";
 import { IEmpresaRepository } from "../../domain/repositories";
-import type { EmpresaFindOneOutputDto } from "../dtos";
-
 @DeclareImplementation()
 export class EmpresaCreateCommandHandlerImpl implements IEmpresaCreateCommandHandler {
   constructor(
@@ -15,7 +14,7 @@ export class EmpresaCreateCommandHandlerImpl implements IEmpresaCreateCommandHan
     private readonly repository: IEmpresaRepository,
   ) {}
 
-  async execute({ accessContext, dto }: IEmpresaCreateCommand): Promise<EmpresaFindOneOutputDto> {
+  async execute({ accessContext, dto }: IEmpresaCreateCommand): Promise<EmpresaFindOneQueryResult> {
     try {
       return await this.repository.create(accessContext, dto);
     } catch (error) {

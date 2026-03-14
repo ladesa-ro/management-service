@@ -1,18 +1,14 @@
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import type { ICommandHandler } from "@/modules/@shared/domain/abstractions";
-import type {
-  DisciplinaFindOneInputDto,
-  DisciplinaFindOneOutputDto,
-  DisciplinaUpdateInputDto,
-} from "../../application/dtos";
-
+import type { DisciplinaFindOneQuery, DisciplinaFindOneQueryResult } from "../queries";
+import type { DisciplinaUpdateCommand } from "./disciplina-update.command";
 export type IDisciplinaUpdateCommand = {
   accessContext: AccessContext;
-  dto: DisciplinaFindOneInputDto & DisciplinaUpdateInputDto;
+  dto: DisciplinaFindOneQuery & DisciplinaUpdateCommand;
 };
 
 export type IDisciplinaUpdateCommandHandler = ICommandHandler<
   IDisciplinaUpdateCommand,
-  DisciplinaFindOneOutputDto
+  DisciplinaFindOneQueryResult
 >;
 export const IDisciplinaUpdateCommandHandler = Symbol("IDisciplinaUpdateCommandHandler");

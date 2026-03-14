@@ -1,9 +1,8 @@
 import type { Readable } from "node:stream";
 import type { ICommandHandler } from "@/modules/@shared/domain/abstractions";
-import type { ArquivoCreateInputDto } from "../../application/dtos";
-
+import type { ArquivoCreateCommand } from "./arquivo-create.command";
 export type IArquivoCreateCommand = {
-  dto: Pick<ArquivoCreateInputDto, "name" | "mimeType">;
+  dto: Pick<ArquivoCreateCommand, "name" | "mimeType">;
   data: NodeJS.ArrayBufferView | Readable;
 };
 

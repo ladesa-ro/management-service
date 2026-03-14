@@ -7,11 +7,11 @@ import {
 import { BlocoRestMapper } from "@/modules/ambientes/bloco/presentation/rest";
 import { CampusRestMapper } from "@/modules/ambientes/campus/presentation/rest";
 import {
-  CursoCreateInputDto,
-  CursoFindOneInputDto,
-  CursoFindOneOutputDto,
-  CursoListInputDto,
-  CursoUpdateInputDto,
+  CursoCreateCommand,
+  CursoFindOneQuery,
+  CursoFindOneQueryResult,
+  CursoListQuery,
+  CursoUpdateCommand,
 } from "@/modules/ensino/curso";
 import { OfertaFormacaoRestMapper } from "@/modules/ensino/oferta-formacao/presentation/rest";
 import {
@@ -27,16 +27,16 @@ export class CursoRestMapper {
   // Input: Server DTO -> Core DTO
   // ============================================================================
 
-  static toFindOneInput = createFindOneInputMapper(CursoFindOneInputDto);
+  static toFindOneInput = createFindOneInputMapper(CursoFindOneQuery);
 
-  static toListInput = createListInputMapper(CursoListInputDto, [
+  static toListInput = createListInputMapper(CursoListQuery, [
     "filter.id",
     "filter.campus.id",
     "filter.ofertaFormacao.id",
   ]);
 
-  static toCreateInput(dto: CursoCreateInputRestDto): CursoCreateInputDto {
-    const input = new CursoCreateInputDto();
+  static toCreateInput(dto: CursoCreateInputRestDto): CursoCreateCommand {
+    const input = new CursoCreateCommand();
     input.nome = dto.nome;
     input.nomeAbreviado = dto.nomeAbreviado;
     input.campus = { id: dto.campus.id };
@@ -47,8 +47,8 @@ export class CursoRestMapper {
   static toUpdateInput(
     params: CursoFindOneInputRestDto,
     dto: CursoUpdateInputRestDto,
-  ): CursoFindOneInputDto & CursoUpdateInputDto {
-    const input = new CursoFindOneInputDto() as CursoFindOneInputDto & CursoUpdateInputDto;
+  ): CursoFindOneQuery & CursoUpdateCommand {
+    const input = new CursoFindOneQuery() as CursoFindOneQuery & CursoUpdateCommand;
     input.id = params.id;
     if (dto.nome !== undefined) {
       input.nome = dto.nome;
@@ -69,7 +69,7 @@ export class CursoRestMapper {
   // Output: Core DTO -> Server DTO
   // ============================================================================
 
-  static toFindOneOutputDto(output: CursoFindOneOutputDto): CursoFindOneOutputRestDto {
+  static toFindOneOutputDto(output: CursoFindOneQueryResult): CursoFindOneOutputRestDto {
     const dto = new CursoFindOneOutputRestDto();
     dto.id = output.id;
     dto.nome = output.nome;

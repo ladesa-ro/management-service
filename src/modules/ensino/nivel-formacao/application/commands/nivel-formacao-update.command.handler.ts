@@ -6,9 +6,8 @@ import {
 } from "@/modules/ensino/nivel-formacao/domain/commands/nivel-formacao-update.command.handler.interface";
 import { NivelFormacao } from "@/modules/ensino/nivel-formacao/domain/nivel-formacao.domain";
 import { INivelFormacaoPermissionChecker } from "../../domain/authorization";
+import type { NivelFormacaoFindOneQueryResult } from "../../domain/queries";
 import { INivelFormacaoRepository } from "../../domain/repositories";
-import type { NivelFormacaoFindOneOutputDto } from "../dtos";
-
 @DeclareImplementation()
 export class NivelFormacaoUpdateCommandHandlerImpl implements INivelFormacaoUpdateCommandHandler {
   constructor(
@@ -21,7 +20,7 @@ export class NivelFormacaoUpdateCommandHandlerImpl implements INivelFormacaoUpda
   async execute({
     accessContext,
     dto,
-  }: INivelFormacaoUpdateCommand): Promise<NivelFormacaoFindOneOutputDto> {
+  }: INivelFormacaoUpdateCommand): Promise<NivelFormacaoFindOneQueryResult> {
     const current = await this.repository.findById(accessContext, { id: dto.id });
 
     ensureExists(current, NivelFormacao.entityName, dto.id);

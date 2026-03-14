@@ -1,2 +1,6 @@
+export * from "./nivel-formacao-find-one.query";
 export * from "./nivel-formacao-find-one.query.handler.interface";
+export * from "./nivel-formacao-find-one.query.result";
+export * from "./nivel-formacao-list.query";
 export * from "./nivel-formacao-list.query.handler.interface";
+export * from "./nivel-formacao-list.query.result";

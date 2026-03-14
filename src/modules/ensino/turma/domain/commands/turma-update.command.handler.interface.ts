@@ -1,18 +1,14 @@
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import type { ICommandHandler } from "@/modules/@shared/domain/abstractions";
-import type {
-  TurmaFindOneInputDto,
-  TurmaFindOneOutputDto,
-  TurmaUpdateInputDto,
-} from "../../application/dtos";
-
+import type { TurmaFindOneQuery, TurmaFindOneQueryResult } from "../queries";
+import type { TurmaUpdateCommand } from "./turma-update.command";
 export type ITurmaUpdateCommand = {
   accessContext: AccessContext;
-  dto: TurmaFindOneInputDto & TurmaUpdateInputDto;
+  dto: TurmaFindOneQuery & TurmaUpdateCommand;
 };
 
 export type ITurmaUpdateCommandHandler = ICommandHandler<
   ITurmaUpdateCommand,
-  TurmaFindOneOutputDto
+  TurmaFindOneQueryResult
 >;
 export const ITurmaUpdateCommandHandler = Symbol("ITurmaUpdateCommandHandler");

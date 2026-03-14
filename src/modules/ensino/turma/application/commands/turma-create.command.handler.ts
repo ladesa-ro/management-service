@@ -10,9 +10,8 @@ import {
 } from "@/modules/ensino/turma/domain/commands/turma-create.command.handler.interface";
 import { Turma } from "@/modules/ensino/turma/domain/turma.domain";
 import { ITurmaPermissionChecker } from "../../domain/authorization";
+import type { TurmaFindOneQueryResult } from "../../domain/queries";
 import { ITurmaRepository } from "../../domain/repositories";
-import type { TurmaFindOneOutputDto } from "../dtos";
-
 @DeclareImplementation()
 export class TurmaCreateCommandHandlerImpl implements ITurmaCreateCommandHandler {
   constructor(
@@ -26,7 +25,7 @@ export class TurmaCreateCommandHandlerImpl implements ITurmaCreateCommandHandler
     private readonly cursoFindOneHandler: ICursoFindOneQueryHandler,
   ) {}
 
-  async execute({ accessContext, dto }: ITurmaCreateCommand): Promise<TurmaFindOneOutputDto> {
+  async execute({ accessContext, dto }: ITurmaCreateCommand): Promise<TurmaFindOneQueryResult> {
     await this.permissionChecker.ensureCanCreate(accessContext, { dto });
 
     const curso = await this.cursoFindOneHandler.execute({

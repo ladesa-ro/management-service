@@ -1,10 +1,9 @@
 import type { IBaseCrudRepository } from "@/modules/@shared";
 import type { IOfertaFormacaoNivelFormacao } from "@/modules/ensino/oferta-formacao-nivel-formacao";
 import type {
-  OfertaFormacaoNivelFormacaoFindOneOutputDto,
-  OfertaFormacaoNivelFormacaoListOutputDto,
-} from "../../application/dtos";
-
+  OfertaFormacaoNivelFormacaoFindOneQueryResult,
+  OfertaFormacaoNivelFormacaoListQueryResult,
+} from "../queries";
 /**
  * Token de injecao para o repositorio de OfertaFormacaoNivelFormacao
  */
@@ -19,6 +18,6 @@ export const IOfertaFormacaoNivelFormacaoRepository = Symbol(
 export interface IOfertaFormacaoNivelFormacaoRepository
   extends IBaseCrudRepository<
     IOfertaFormacaoNivelFormacao,
-    OfertaFormacaoNivelFormacaoListOutputDto,
-    OfertaFormacaoNivelFormacaoFindOneOutputDto
+    OfertaFormacaoNivelFormacaoListQueryResult,
+    OfertaFormacaoNivelFormacaoFindOneQueryResult
   > {}

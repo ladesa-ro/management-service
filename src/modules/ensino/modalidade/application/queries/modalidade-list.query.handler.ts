@@ -3,9 +3,8 @@ import {
   type IModalidadeListQuery,
   IModalidadeListQueryHandler,
 } from "@/modules/ensino/modalidade/domain/queries/modalidade-list.query.handler.interface";
+import type { ModalidadeListQueryResult } from "../../domain/queries";
 import { IModalidadeRepository } from "../../domain/repositories";
-import type { ModalidadeListOutputDto } from "../dtos";
-
 @DeclareImplementation()
 export class ModalidadeListQueryHandlerImpl implements IModalidadeListQueryHandler {
   constructor(
@@ -17,7 +16,7 @@ export class ModalidadeListQueryHandlerImpl implements IModalidadeListQueryHandl
     accessContext,
     dto,
     selection,
-  }: IModalidadeListQuery): Promise<ModalidadeListOutputDto> {
+  }: IModalidadeListQuery): Promise<ModalidadeListQueryResult> {
     return this.repository.findAll(accessContext, dto, selection);
   }
 }

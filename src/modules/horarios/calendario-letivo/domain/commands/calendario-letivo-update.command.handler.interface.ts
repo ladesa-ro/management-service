@@ -1,19 +1,15 @@
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import type { ICommandHandler } from "@/modules/@shared/domain/abstractions";
-import type {
-  CalendarioLetivoFindOneInputDto,
-  CalendarioLetivoFindOneOutputDto,
-  CalendarioLetivoUpdateInputDto,
-} from "../../application/dtos";
-
+import type { CalendarioLetivoFindOneQuery, CalendarioLetivoFindOneQueryResult } from "../queries";
+import type { CalendarioLetivoUpdateCommand } from "./calendario-letivo-update.command";
 export type ICalendarioLetivoUpdateCommand = {
   accessContext: AccessContext;
-  dto: CalendarioLetivoFindOneInputDto & CalendarioLetivoUpdateInputDto;
+  dto: CalendarioLetivoFindOneQuery & CalendarioLetivoUpdateCommand;
 };
 
 export type ICalendarioLetivoUpdateCommandHandler = ICommandHandler<
   ICalendarioLetivoUpdateCommand,
-  CalendarioLetivoFindOneOutputDto
+  CalendarioLetivoFindOneQueryResult
 >;
 export const ICalendarioLetivoUpdateCommandHandler = Symbol(
   "ICalendarioLetivoUpdateCommandHandler",

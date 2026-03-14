@@ -1,15 +1,15 @@
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import type { ICommandHandler } from "@/modules/@shared/domain/abstractions";
-import type { EmpresaFindOneOutputDto, EmpresaUpdateInputDto } from "../../application/dtos";
-
+import type { EmpresaFindOneQueryResult } from "../queries";
+import type { EmpresaUpdateCommand } from "./empresa-update.command";
 export type IEmpresaUpdateCommand = {
   accessContext: AccessContext;
   id: string;
-  dto: EmpresaUpdateInputDto;
+  dto: EmpresaUpdateCommand;
 };
 
 export type IEmpresaUpdateCommandHandler = ICommandHandler<
   IEmpresaUpdateCommand,
-  EmpresaFindOneOutputDto
+  EmpresaFindOneQueryResult
 >;
 export const IEmpresaUpdateCommandHandler = Symbol("IEmpresaUpdateCommandHandler");

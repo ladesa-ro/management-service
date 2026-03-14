@@ -1,8 +1,8 @@
 import type { IBaseCrudRepository } from "@/modules/@shared";
 import {
   type INivelFormacao,
-  NivelFormacaoFindOneOutputDto,
-  NivelFormacaoListOutputDto,
+  NivelFormacaoFindOneQueryResult,
+  NivelFormacaoListQueryResult,
 } from "@/modules/ensino/nivel-formacao";
 
 export const INivelFormacaoRepository = Symbol("INivelFormacaoRepository");
@@ -14,6 +14,6 @@ export const INivelFormacaoRepository = Symbol("INivelFormacaoRepository");
 export interface INivelFormacaoRepository
   extends IBaseCrudRepository<
     INivelFormacao,
-    NivelFormacaoListOutputDto,
-    NivelFormacaoFindOneOutputDto
+    NivelFormacaoListQueryResult,
+    NivelFormacaoFindOneQueryResult
   > {}

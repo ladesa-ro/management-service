@@ -3,9 +3,8 @@ import {
   type IDiarioListQuery,
   IDiarioListQueryHandler,
 } from "@/modules/ensino/diario/domain/queries/diario-list.query.handler.interface";
+import type { DiarioListQueryResult } from "../../domain/queries";
 import { IDiarioRepository } from "../../domain/repositories";
-import type { DiarioListOutputDto } from "../dtos";
-
 @DeclareImplementation()
 export class DiarioListQueryHandlerImpl implements IDiarioListQueryHandler {
   constructor(
@@ -13,7 +12,11 @@ export class DiarioListQueryHandlerImpl implements IDiarioListQueryHandler {
     private readonly repository: IDiarioRepository,
   ) {}
 
-  async execute({ accessContext, dto, selection }: IDiarioListQuery): Promise<DiarioListOutputDto> {
+  async execute({
+    accessContext,
+    dto,
+    selection,
+  }: IDiarioListQuery): Promise<DiarioListQueryResult> {
     return this.repository.findAll(accessContext, dto, selection);
   }
 }

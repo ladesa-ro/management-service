@@ -8,9 +8,8 @@ import {
 import { Bloco } from "@/modules/ambientes/bloco/domain/bloco.domain";
 import { IBlocoFindOneQueryHandler } from "@/modules/ambientes/bloco/domain/queries/bloco-find-one.query.handler.interface";
 import { IAmbientePermissionChecker } from "../../domain/authorization";
+import type { AmbienteFindOneQueryResult } from "../../domain/queries";
 import { IAmbienteRepository } from "../../domain/repositories";
-import type { AmbienteFindOneOutputDto } from "../dtos";
-
 @DeclareImplementation()
 export class AmbienteCreateCommandHandlerImpl implements IAmbienteCreateCommandHandler {
   constructor(
@@ -22,7 +21,10 @@ export class AmbienteCreateCommandHandlerImpl implements IAmbienteCreateCommandH
     private readonly blocoFindOneHandler: IBlocoFindOneQueryHandler,
   ) {}
 
-  async execute({ accessContext, dto }: IAmbienteCreateCommand): Promise<AmbienteFindOneOutputDto> {
+  async execute({
+    accessContext,
+    dto,
+  }: IAmbienteCreateCommand): Promise<AmbienteFindOneQueryResult> {
     await this.permissionChecker.ensureCanCreate(accessContext, { dto });
 
     const bloco = await this.blocoFindOneHandler.execute({

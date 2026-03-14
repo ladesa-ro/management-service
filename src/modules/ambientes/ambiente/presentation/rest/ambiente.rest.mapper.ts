@@ -5,11 +5,11 @@ import {
   mapDatedFields,
 } from "@/modules/@shared/application/mappers";
 import {
-  AmbienteCreateInputDto,
-  AmbienteFindOneInputDto,
-  AmbienteFindOneOutputDto,
-  AmbienteListInputDto,
-  AmbienteUpdateInputDto,
+  AmbienteCreateCommand,
+  AmbienteFindOneQuery,
+  AmbienteFindOneQueryResult,
+  AmbienteListQuery,
+  AmbienteUpdateCommand,
 } from "@/modules/ambientes/ambiente";
 import { BlocoRestMapper } from "@/modules/ambientes/bloco/presentation/rest";
 import {
@@ -25,16 +25,16 @@ export class AmbienteRestMapper {
   // Input: Server DTO -> Core DTO
   // ============================================================================
 
-  static toFindOneInput = createFindOneInputMapper(AmbienteFindOneInputDto);
+  static toFindOneInput = createFindOneInputMapper(AmbienteFindOneQuery);
 
-  static toListInput = createListInputMapper(AmbienteListInputDto, [
+  static toListInput = createListInputMapper(AmbienteListQuery, [
     "filter.id",
     "filter.bloco.id",
     "filter.bloco.campus.id",
   ]);
 
-  static toCreateInput(dto: AmbienteCreateInputRestDto): AmbienteCreateInputDto {
-    const input = new AmbienteCreateInputDto();
+  static toCreateInput(dto: AmbienteCreateInputRestDto): AmbienteCreateCommand {
+    const input = new AmbienteCreateCommand();
     input.nome = dto.nome;
     input.codigo = dto.codigo;
     input.descricao = dto.descricao;
@@ -47,8 +47,8 @@ export class AmbienteRestMapper {
   static toUpdateInput(
     params: AmbienteFindOneInputRestDto,
     dto: AmbienteUpdateInputRestDto,
-  ): AmbienteFindOneInputDto & AmbienteUpdateInputDto {
-    const input = new AmbienteFindOneInputDto() as AmbienteFindOneInputDto & AmbienteUpdateInputDto;
+  ): AmbienteFindOneQuery & AmbienteUpdateCommand {
+    const input = new AmbienteFindOneQuery() as AmbienteFindOneQuery & AmbienteUpdateCommand;
     input.id = params.id;
     if (dto.nome !== undefined) {
       input.nome = dto.nome;
@@ -75,7 +75,7 @@ export class AmbienteRestMapper {
   // Output: Core DTO -> Server DTO
   // ============================================================================
 
-  static toFindOneOutputDto(output: AmbienteFindOneOutputDto): AmbienteFindOneOutputRestDto {
+  static toFindOneOutputDto(output: AmbienteFindOneQueryResult): AmbienteFindOneOutputRestDto {
     const dto = new AmbienteFindOneOutputRestDto();
     dto.id = output.id;
     dto.nome = output.nome;

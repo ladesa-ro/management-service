@@ -1,15 +1,15 @@
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import type { IQueryHandler } from "@/modules/@shared/domain/abstractions";
-import type { NivelFormacaoListInputDto, NivelFormacaoListOutputDto } from "../../application/dtos";
-
+import type { NivelFormacaoListQuery } from "./nivel-formacao-list.query";
+import type { NivelFormacaoListQueryResult } from "./nivel-formacao-list.query.result";
 export type INivelFormacaoListQuery = {
   accessContext: AccessContext;
-  dto: NivelFormacaoListInputDto | null;
+  dto: NivelFormacaoListQuery | null;
   selection?: string[] | boolean;
 };
 
 export type INivelFormacaoListQueryHandler = IQueryHandler<
   INivelFormacaoListQuery,
-  NivelFormacaoListOutputDto
+  NivelFormacaoListQueryResult
 >;
 export const INivelFormacaoListQueryHandler = Symbol("INivelFormacaoListQueryHandler");

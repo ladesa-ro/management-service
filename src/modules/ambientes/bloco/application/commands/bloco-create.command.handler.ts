@@ -8,9 +8,8 @@ import {
 import { Campus } from "@/modules/ambientes/campus/domain/campus.domain";
 import { ICampusFindOneQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-find-one.query.handler.interface";
 import { IBlocoPermissionChecker } from "../../domain/authorization";
+import type { BlocoFindOneQueryResult } from "../../domain/queries";
 import { IBlocoRepository } from "../../domain/repositories";
-import type { BlocoFindOneOutputDto } from "../dtos";
-
 @DeclareImplementation()
 export class BlocoCreateCommandHandlerImpl implements IBlocoCreateCommandHandler {
   constructor(
@@ -22,7 +21,7 @@ export class BlocoCreateCommandHandlerImpl implements IBlocoCreateCommandHandler
     private readonly campusFindOneHandler: ICampusFindOneQueryHandler,
   ) {}
 
-  async execute({ accessContext, dto }: IBlocoCreateCommand): Promise<BlocoFindOneOutputDto> {
+  async execute({ accessContext, dto }: IBlocoCreateCommand): Promise<BlocoFindOneQueryResult> {
     await this.permissionChecker.ensureCanCreate(accessContext, { dto });
 
     const campus = await this.campusFindOneHandler.execute({

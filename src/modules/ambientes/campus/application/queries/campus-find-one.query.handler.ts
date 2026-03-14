@@ -3,9 +3,8 @@ import {
   type ICampusFindOneQuery,
   ICampusFindOneQueryHandler,
 } from "@/modules/ambientes/campus/domain/queries/campus-find-one.query.handler.interface";
+import type { CampusFindOneQueryResult } from "../../domain/queries";
 import { ICampusRepository } from "../../domain/repositories";
-import type { CampusFindOneOutputDto } from "../dtos";
-
 @DeclareImplementation()
 export class CampusFindOneQueryHandlerImpl implements ICampusFindOneQueryHandler {
   constructor(
@@ -17,7 +16,7 @@ export class CampusFindOneQueryHandlerImpl implements ICampusFindOneQueryHandler
     accessContext,
     dto,
     selection,
-  }: ICampusFindOneQuery): Promise<CampusFindOneOutputDto | null> {
+  }: ICampusFindOneQuery): Promise<CampusFindOneQueryResult | null> {
     return this.repository.findById(accessContext, dto, selection);
   }
 }

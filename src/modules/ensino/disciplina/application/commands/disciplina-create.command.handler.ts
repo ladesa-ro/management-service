@@ -6,9 +6,8 @@ import {
 } from "@/modules/ensino/disciplina/domain/commands/disciplina-create.command.handler.interface";
 import { Disciplina } from "@/modules/ensino/disciplina/domain/disciplina.domain";
 import { IDisciplinaPermissionChecker } from "../../domain/authorization";
+import type { DisciplinaFindOneQueryResult } from "../../domain/queries";
 import { IDisciplinaRepository } from "../../domain/repositories";
-import type { DisciplinaFindOneOutputDto } from "../dtos";
-
 @DeclareImplementation()
 export class DisciplinaCreateCommandHandlerImpl implements IDisciplinaCreateCommandHandler {
   constructor(
@@ -21,7 +20,7 @@ export class DisciplinaCreateCommandHandlerImpl implements IDisciplinaCreateComm
   async execute({
     accessContext,
     dto,
-  }: IDisciplinaCreateCommand): Promise<DisciplinaFindOneOutputDto> {
+  }: IDisciplinaCreateCommand): Promise<DisciplinaFindOneQueryResult> {
     await this.permissionChecker.ensureCanCreate(accessContext, { dto });
 
     const domain = Disciplina.criar({

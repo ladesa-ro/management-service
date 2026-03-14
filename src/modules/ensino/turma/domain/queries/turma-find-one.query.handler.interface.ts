@@ -1,15 +1,15 @@
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import type { IQueryHandler } from "@/modules/@shared/domain/abstractions";
-import type { TurmaFindOneInputDto, TurmaFindOneOutputDto } from "../../application/dtos";
-
+import type { TurmaFindOneQuery } from "./turma-find-one.query";
+import type { TurmaFindOneQueryResult } from "./turma-find-one.query.result";
 export type ITurmaFindOneQuery = {
   accessContext: AccessContext | null;
-  dto: TurmaFindOneInputDto;
+  dto: TurmaFindOneQuery;
   selection?: string[] | boolean;
 };
 
 export type ITurmaFindOneQueryHandler = IQueryHandler<
   ITurmaFindOneQuery,
-  TurmaFindOneOutputDto | null
+  TurmaFindOneQueryResult | null
 >;
 export const ITurmaFindOneQueryHandler = Symbol("ITurmaFindOneQueryHandler");

@@ -38,14 +38,14 @@ type DtoWithFilters = Record<string, unknown>;
  * @template Entity - Tipo da entidade TypeORM
  * @template ListInputDto - Tipo do DTO de entrada para listagem
  * @template ListOutputDto - Tipo do DTO de saída para listagem
- * @template FindOneInputDto - Tipo do DTO de entrada para busca única
+ * @template FindOneQuery - Tipo do DTO de entrada para busca única
  * @template FindOneOutputDto - Tipo do DTO de saída para busca única
  */
 export abstract class BaseTypeOrmRepositoryAdapter<
   Entity extends IEntityWithId,
   ListInputDto,
   ListOutputDto,
-  FindOneInputDto extends IFindOneInputDto,
+  FindOneQuery extends IFindOneInputDto,
   FindOneOutputDto,
 > {
   /**
@@ -60,7 +60,7 @@ export abstract class BaseTypeOrmRepositoryAdapter<
   protected readonly hasSoftDelete: boolean = true;
 
   /**
-   * Nome do DTO de saída para QbEfficientLoad (ex: "ModalidadeFindOneOutputDto")
+   * Nome do DTO de saída para QbEfficientLoad (ex: "ModalidadeFindOneQueryResult")
    */
   protected abstract readonly outputDtoName: string;
   /**
@@ -117,7 +117,7 @@ export abstract class BaseTypeOrmRepositoryAdapter<
    */
   async findById(
     _accessContext: unknown,
-    dto: FindOneInputDto,
+    dto: FindOneQuery,
     selection?: string[] | boolean,
   ): Promise<FindOneOutputDto | null> {
     const qb = this.repository.createQueryBuilder(this.alias);
@@ -141,7 +141,7 @@ export abstract class BaseTypeOrmRepositoryAdapter<
     id: string,
     selection?: string[] | boolean,
   ): Promise<FindOneOutputDto | null> {
-    return this.findById(accessContext, { id } as FindOneInputDto, selection);
+    return this.findById(accessContext, { id } as FindOneQuery, selection);
   }
 
   /**

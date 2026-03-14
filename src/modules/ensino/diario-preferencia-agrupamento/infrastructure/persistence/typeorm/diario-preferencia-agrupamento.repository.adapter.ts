@@ -10,10 +10,10 @@ import {
   paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
-  DiarioPreferenciaAgrupamentoFindOneInputDto,
-  DiarioPreferenciaAgrupamentoFindOneOutputDto,
-  DiarioPreferenciaAgrupamentoListInputDto,
-  DiarioPreferenciaAgrupamentoListOutputDto,
+  DiarioPreferenciaAgrupamentoFindOneQuery,
+  DiarioPreferenciaAgrupamentoFindOneQueryResult,
+  DiarioPreferenciaAgrupamentoListQuery,
+  DiarioPreferenciaAgrupamentoListQueryResult,
 } from "@/modules/ensino/diario-preferencia-agrupamento";
 import type { IDiarioPreferenciaAgrupamentoRepository } from "@/modules/ensino/diario-preferencia-agrupamento/domain/repositories";
 import type { DiarioPreferenciaAgrupamentoEntity } from "./diario-preferencia-agrupamento.entity";
@@ -27,15 +27,15 @@ import { createDiarioPreferenciaAgrupamentoRepository } from "./diario-preferenc
 export class DiarioPreferenciaAgrupamentoTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     DiarioPreferenciaAgrupamentoEntity,
-    DiarioPreferenciaAgrupamentoListInputDto,
-    DiarioPreferenciaAgrupamentoListOutputDto,
-    DiarioPreferenciaAgrupamentoFindOneInputDto,
-    DiarioPreferenciaAgrupamentoFindOneOutputDto
+    DiarioPreferenciaAgrupamentoListQuery,
+    DiarioPreferenciaAgrupamentoListQueryResult,
+    DiarioPreferenciaAgrupamentoFindOneQuery,
+    DiarioPreferenciaAgrupamentoFindOneQueryResult
   >
   implements IDiarioPreferenciaAgrupamentoRepository
 {
   protected readonly alias = "diario_preferencia_agrupamento";
-  protected readonly outputDtoName = "DiarioPreferenciaAgrupamentoFindOneOutputDto";
+  protected readonly outputDtoName = "DiarioPreferenciaAgrupamentoFindOneQueryResult";
 
   constructor(
     @DeclareDependency(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,

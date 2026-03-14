@@ -1,12 +1,11 @@
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import type { IPersistRepository } from "@/modules/@shared";
 import type {
-  PerfilFindOneInputDto,
-  PerfilFindOneOutputDto,
-  PerfilListInputDto,
-  PerfilListOutputDto,
-} from "../../application/dtos";
-
+  PerfilFindOneQuery,
+  PerfilFindOneQueryResult,
+  PerfilListQuery,
+  PerfilListQueryResult,
+} from "../queries";
 /**
  * Token de injeção para o repositório de Perfil
  */
@@ -22,16 +21,16 @@ export interface IPerfilRepository extends IPersistRepository<Record<string, any
    */
   findAll(
     accessContext: AccessContext,
-    dto: PerfilListInputDto | null,
-  ): Promise<PerfilListOutputDto>;
+    dto: PerfilListQuery | null,
+  ): Promise<PerfilListQueryResult>;
 
   /**
    * Busca um perfil por ID
    */
   findById(
     accessContext: AccessContext,
-    dto: PerfilFindOneInputDto,
-  ): Promise<PerfilFindOneOutputDto | null>;
+    dto: PerfilFindOneQuery,
+  ): Promise<PerfilFindOneQueryResult | null>;
 
   /**
    * Busca perfis ativos de um usuário
@@ -39,12 +38,12 @@ export interface IPerfilRepository extends IPersistRepository<Record<string, any
   findAllActiveByUsuarioId(
     accessContext: AccessContext | null,
     usuarioId: string,
-  ): Promise<PerfilFindOneOutputDto[]>;
+  ): Promise<PerfilFindOneQueryResult[]>;
 
   /**
    * Busca perfis existentes por usuário e campus
    */
-  findByUsuarioAndCampus(usuarioId: string, campusId: string): Promise<PerfilFindOneOutputDto[]>;
+  findByUsuarioAndCampus(usuarioId: string, campusId: string): Promise<PerfilFindOneQueryResult[]>;
 
   /**
    * Desativa perfis por IDs

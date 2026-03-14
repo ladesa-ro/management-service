@@ -6,9 +6,8 @@ import {
   IBlocoUpdateCommandHandler,
 } from "@/modules/ambientes/bloco/domain/commands/bloco-update.command.handler.interface";
 import { IBlocoPermissionChecker } from "../../domain/authorization";
+import type { BlocoFindOneQueryResult } from "../../domain/queries";
 import { IBlocoRepository } from "../../domain/repositories";
-import type { BlocoFindOneOutputDto } from "../dtos";
-
 @DeclareImplementation()
 export class BlocoUpdateCommandHandlerImpl implements IBlocoUpdateCommandHandler {
   constructor(
@@ -18,7 +17,7 @@ export class BlocoUpdateCommandHandlerImpl implements IBlocoUpdateCommandHandler
     private readonly permissionChecker: IBlocoPermissionChecker,
   ) {}
 
-  async execute({ accessContext, dto }: IBlocoUpdateCommand): Promise<BlocoFindOneOutputDto> {
+  async execute({ accessContext, dto }: IBlocoUpdateCommand): Promise<BlocoFindOneQueryResult> {
     const current = await this.repository.findById(accessContext, { id: dto.id });
 
     ensureExists(current, Bloco.entityName, dto.id);

@@ -11,9 +11,8 @@ import {
 } from "@/modules/ensino/diario-professor/domain/commands/diario-professor-create.command.handler.interface";
 import { DiarioProfessor } from "@/modules/ensino/diario-professor/domain/diario-professor.domain";
 import { IDiarioProfessorPermissionChecker } from "../../domain/authorization";
+import type { DiarioProfessorFindOneQueryResult } from "../../domain/queries";
 import { IDiarioProfessorRepository } from "../../domain/repositories";
-import type { DiarioProfessorFindOneOutputDto } from "../dtos";
-
 @DeclareImplementation()
 export class DiarioProfessorCreateCommandHandlerImpl
   implements IDiarioProfessorCreateCommandHandler
@@ -32,7 +31,7 @@ export class DiarioProfessorCreateCommandHandlerImpl
   async execute({
     accessContext,
     dto,
-  }: IDiarioProfessorCreateCommand): Promise<DiarioProfessorFindOneOutputDto> {
+  }: IDiarioProfessorCreateCommand): Promise<DiarioProfessorFindOneQueryResult> {
     await this.permissionChecker.ensureCanCreate(accessContext, { dto });
 
     let diarioRef: { id: string } | undefined;

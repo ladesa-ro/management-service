@@ -10,9 +10,8 @@ import {
 import { DiarioPreferenciaAgrupamento } from "@/modules/ensino/diario-preferencia-agrupamento/domain/diario-preferencia-agrupamento.domain";
 import type { IDiarioPreferenciaAgrupamento } from "@/modules/ensino/diario-preferencia-agrupamento/domain/diario-preferencia-agrupamento.types";
 import { IDiarioPreferenciaAgrupamentoPermissionChecker } from "../../domain/authorization";
+import type { DiarioPreferenciaAgrupamentoFindOneQueryResult } from "../../domain/queries";
 import { IDiarioPreferenciaAgrupamentoRepository } from "../../domain/repositories";
-import type { DiarioPreferenciaAgrupamentoFindOneOutputDto } from "../dtos";
-
 @DeclareImplementation()
 export class DiarioPreferenciaAgrupamentoUpdateCommandHandlerImpl
   implements IDiarioPreferenciaAgrupamentoUpdateCommandHandler
@@ -29,7 +28,7 @@ export class DiarioPreferenciaAgrupamentoUpdateCommandHandlerImpl
   async execute({
     accessContext,
     dto,
-  }: IDiarioPreferenciaAgrupamentoUpdateCommand): Promise<DiarioPreferenciaAgrupamentoFindOneOutputDto> {
+  }: IDiarioPreferenciaAgrupamentoUpdateCommand): Promise<DiarioPreferenciaAgrupamentoFindOneQueryResult> {
     const current = await this.repository.findById(accessContext, { id: dto.id });
 
     ensureExists(current, DiarioPreferenciaAgrupamento.entityName, dto.id);

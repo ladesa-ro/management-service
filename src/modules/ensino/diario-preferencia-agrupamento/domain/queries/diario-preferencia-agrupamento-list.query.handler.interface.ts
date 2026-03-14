@@ -1,19 +1,16 @@
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import type { IQueryHandler } from "@/modules/@shared/domain/abstractions";
-import type {
-  DiarioPreferenciaAgrupamentoListInputDto,
-  DiarioPreferenciaAgrupamentoListOutputDto,
-} from "../../application/dtos";
-
+import type { DiarioPreferenciaAgrupamentoListQuery } from "./diario-preferencia-agrupamento-list.query";
+import type { DiarioPreferenciaAgrupamentoListQueryResult } from "./diario-preferencia-agrupamento-list.query.result";
 export type IDiarioPreferenciaAgrupamentoListQuery = {
   accessContext: AccessContext;
-  dto: DiarioPreferenciaAgrupamentoListInputDto | null;
+  dto: DiarioPreferenciaAgrupamentoListQuery | null;
   selection?: string[] | boolean;
 };
 
 export type IDiarioPreferenciaAgrupamentoListQueryHandler = IQueryHandler<
   IDiarioPreferenciaAgrupamentoListQuery,
-  DiarioPreferenciaAgrupamentoListOutputDto
+  DiarioPreferenciaAgrupamentoListQueryResult
 >;
 export const IDiarioPreferenciaAgrupamentoListQueryHandler = Symbol(
   "IDiarioPreferenciaAgrupamentoListQueryHandler",

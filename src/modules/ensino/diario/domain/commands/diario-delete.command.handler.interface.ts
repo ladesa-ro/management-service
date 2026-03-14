@@ -1,10 +1,9 @@
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import type { ICommandHandler } from "@/modules/@shared/domain/abstractions";
-import type { DiarioFindOneInputDto } from "../../application/dtos";
-
+import type { DiarioFindOneQuery } from "../queries";
 export type IDiarioDeleteCommand = {
   accessContext: AccessContext;
-  dto: DiarioFindOneInputDto;
+  dto: DiarioFindOneQuery;
 };
 
 export type IDiarioDeleteCommandHandler = ICommandHandler<IDiarioDeleteCommand, boolean>;

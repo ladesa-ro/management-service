@@ -3,9 +3,8 @@ import {
   type IDiaCalendarioFindOneQuery,
   IDiaCalendarioFindOneQueryHandler,
 } from "@/modules/horarios/dia-calendario/domain/queries/dia-calendario-find-one.query.handler.interface";
+import type { DiaCalendarioFindOneQueryResult } from "../../domain/queries";
 import { IDiaCalendarioRepository } from "../../domain/repositories";
-import type { DiaCalendarioFindOneOutputDto } from "../dtos";
-
 @DeclareImplementation()
 export class DiaCalendarioFindOneQueryHandlerImpl implements IDiaCalendarioFindOneQueryHandler {
   constructor(
@@ -17,7 +16,7 @@ export class DiaCalendarioFindOneQueryHandlerImpl implements IDiaCalendarioFindO
     accessContext,
     dto,
     selection,
-  }: IDiaCalendarioFindOneQuery): Promise<DiaCalendarioFindOneOutputDto | null> {
+  }: IDiaCalendarioFindOneQuery): Promise<DiaCalendarioFindOneQueryResult | null> {
     return this.repository.findById(accessContext, dto, selection);
   }
 }

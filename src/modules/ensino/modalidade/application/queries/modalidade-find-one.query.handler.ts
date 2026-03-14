@@ -3,9 +3,8 @@ import {
   type IModalidadeFindOneQuery,
   IModalidadeFindOneQueryHandler,
 } from "@/modules/ensino/modalidade/domain/queries/modalidade-find-one.query.handler.interface";
+import type { ModalidadeFindOneQueryResult } from "../../domain/queries";
 import { IModalidadeRepository } from "../../domain/repositories";
-import type { ModalidadeFindOneOutputDto } from "../dtos";
-
 @DeclareImplementation()
 export class ModalidadeFindOneQueryHandlerImpl implements IModalidadeFindOneQueryHandler {
   constructor(
@@ -17,7 +16,7 @@ export class ModalidadeFindOneQueryHandlerImpl implements IModalidadeFindOneQuer
     accessContext,
     dto,
     selection,
-  }: IModalidadeFindOneQuery): Promise<ModalidadeFindOneOutputDto | null> {
+  }: IModalidadeFindOneQuery): Promise<ModalidadeFindOneQueryResult | null> {
     return this.repository.findById(accessContext, dto, selection);
   }
 }

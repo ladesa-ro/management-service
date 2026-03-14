@@ -1,19 +1,16 @@
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import type { IQueryHandler } from "@/modules/@shared/domain/abstractions";
-import type {
-  DiarioPreferenciaAgrupamentoFindOneInputDto,
-  DiarioPreferenciaAgrupamentoFindOneOutputDto,
-} from "../../application/dtos";
-
+import type { DiarioPreferenciaAgrupamentoFindOneQuery } from "./diario-preferencia-agrupamento-find-one.query";
+import type { DiarioPreferenciaAgrupamentoFindOneQueryResult } from "./diario-preferencia-agrupamento-find-one.query.result";
 export type IDiarioPreferenciaAgrupamentoFindOneQuery = {
   accessContext: AccessContext | null;
-  dto: DiarioPreferenciaAgrupamentoFindOneInputDto;
+  dto: DiarioPreferenciaAgrupamentoFindOneQuery;
   selection?: string[] | boolean;
 };
 
 export type IDiarioPreferenciaAgrupamentoFindOneQueryHandler = IQueryHandler<
   IDiarioPreferenciaAgrupamentoFindOneQuery,
-  DiarioPreferenciaAgrupamentoFindOneOutputDto | null
+  DiarioPreferenciaAgrupamentoFindOneQueryResult | null
 >;
 export const IDiarioPreferenciaAgrupamentoFindOneQueryHandler = Symbol(
   "IDiarioPreferenciaAgrupamentoFindOneQueryHandler",

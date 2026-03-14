@@ -10,9 +10,8 @@ import {
 import { OfertaFormacao } from "@/modules/ensino/oferta-formacao/domain/oferta-formacao.domain";
 import type { IOfertaFormacao } from "@/modules/ensino/oferta-formacao/domain/oferta-formacao.types";
 import { IOfertaFormacaoPermissionChecker } from "../../domain/authorization";
+import type { OfertaFormacaoFindOneQueryResult } from "../../domain/queries";
 import { IOfertaFormacaoRepository } from "../../domain/repositories";
-import type { OfertaFormacaoFindOneOutputDto } from "../dtos";
-
 @DeclareImplementation()
 export class OfertaFormacaoUpdateCommandHandlerImpl implements IOfertaFormacaoUpdateCommandHandler {
   constructor(
@@ -27,7 +26,7 @@ export class OfertaFormacaoUpdateCommandHandlerImpl implements IOfertaFormacaoUp
   async execute({
     accessContext,
     dto,
-  }: IOfertaFormacaoUpdateCommand): Promise<OfertaFormacaoFindOneOutputDto> {
+  }: IOfertaFormacaoUpdateCommand): Promise<OfertaFormacaoFindOneQueryResult> {
     const current = await this.repository.findById(accessContext, { id: dto.id });
 
     ensureExists(current, OfertaFormacao.entityName, dto.id);

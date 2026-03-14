@@ -4,3 +4,4 @@ export * from "./nivel-formacao.types";
 export * from "./queries";
 
 export * from "./repositories";
+export * from "./shared";

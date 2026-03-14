@@ -5,3 +5,4 @@ export * from "./modalidade.types";
 export * from "./queries";
 
 export * from "./repositories";
+export * from "./shared";

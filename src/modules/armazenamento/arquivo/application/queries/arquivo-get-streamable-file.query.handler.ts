@@ -4,9 +4,11 @@ import { IStorageService } from "@/domain/abstractions/storage";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { ensureExists, isValidUuid } from "@/modules/@shared";
 import { UsuarioEntity } from "@/modules/acesso/usuario/infrastructure/persistence/typeorm";
-import type { ArquivoGetFileInputDto } from "@/modules/armazenamento/arquivo/application/dtos";
 import { Arquivo } from "@/modules/armazenamento/arquivo/domain/arquivo.domain";
-import type { IArquivoGetStreamableFileQueryHandler } from "@/modules/armazenamento/arquivo/domain/queries";
+import type {
+  ArquivoGetFileQuery,
+  IArquivoGetStreamableFileQueryHandler,
+} from "@/modules/armazenamento/arquivo/domain/queries";
 import { IArquivoRepository } from "@/modules/armazenamento/arquivo/domain/repositories";
 
 @DeclareImplementation()
@@ -24,7 +26,7 @@ export class ArquivoGetStreamableFileQueryHandlerImpl
     input,
   }: {
     accessContext?: unknown;
-    input: ArquivoGetFileInputDto;
+    input: ArquivoGetFileQuery;
   }): Promise<StreamableFile> {
     const file = await this.getFile(input);
 
@@ -38,7 +40,7 @@ export class ArquivoGetStreamableFileQueryHandlerImpl
     });
   }
 
-  private async getFile(input: ArquivoGetFileInputDto): Promise<{
+  private async getFile(input: ArquivoGetFileQuery): Promise<{
     id: string;
     nome: string | null;
     mimeType: string | null;

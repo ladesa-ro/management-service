@@ -5,11 +5,11 @@ import {
   mapDatedFields,
 } from "@/modules/@shared/application/mappers";
 import {
-  CampusCreateInputDto,
-  CampusFindOneInputDto,
-  CampusFindOneOutputDto,
-  CampusListInputDto,
-  CampusUpdateInputDto,
+  CampusCreateCommand,
+  CampusFindOneQuery,
+  CampusFindOneQueryResult,
+  CampusListQuery,
+  CampusUpdateCommand,
 } from "@/modules/ambientes/campus";
 import { EnderecoRestMapper } from "@/modules/localidades/endereco/presentation/rest";
 import {
@@ -25,12 +25,12 @@ export class CampusRestMapper {
   // Input: Server DTO -> Core DTO
   // ============================================================================
 
-  static toFindOneInput = createFindOneInputMapper(CampusFindOneInputDto);
+  static toFindOneInput = createFindOneInputMapper(CampusFindOneQuery);
 
-  static toListInput = createListInputMapper(CampusListInputDto, ["filter.id"]);
+  static toListInput = createListInputMapper(CampusListQuery, ["filter.id"]);
 
-  static toCreateInput(dto: CampusCreateInputRestDto): CampusCreateInputDto {
-    const input = new CampusCreateInputDto();
+  static toCreateInput(dto: CampusCreateInputRestDto): CampusCreateCommand {
+    const input = new CampusCreateCommand();
     input.nomeFantasia = dto.nomeFantasia;
     input.razaoSocial = dto.razaoSocial;
     input.apelido = dto.apelido;
@@ -42,8 +42,8 @@ export class CampusRestMapper {
   static toUpdateInput(
     params: CampusFindOneInputRestDto,
     dto: CampusUpdateInputRestDto,
-  ): CampusFindOneInputDto & CampusUpdateInputDto {
-    const input = new CampusFindOneInputDto() as CampusFindOneInputDto & CampusUpdateInputDto;
+  ): CampusFindOneQuery & CampusUpdateCommand {
+    const input = new CampusFindOneQuery() as CampusFindOneQuery & CampusUpdateCommand;
     input.id = params.id;
     if (dto.nomeFantasia !== undefined) {
       input.nomeFantasia = dto.nomeFantasia;
@@ -67,7 +67,7 @@ export class CampusRestMapper {
   // Output: Core DTO -> Server DTO
   // ============================================================================
 
-  static toFindOneOutputDto(output: CampusFindOneOutputDto): CampusFindOneOutputRestDto {
+  static toFindOneOutputDto(output: CampusFindOneQueryResult): CampusFindOneOutputRestDto {
     const dto = new CampusFindOneOutputRestDto();
     dto.id = output.id;
     dto.nomeFantasia = output.nomeFantasia;

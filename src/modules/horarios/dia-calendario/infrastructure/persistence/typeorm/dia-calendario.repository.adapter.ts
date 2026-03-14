@@ -9,10 +9,10 @@ import {
   paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
-  DiaCalendarioFindOneInputDto as DiaCalendarioFindOneInputDto,
-  DiaCalendarioFindOneOutputDto as DiaCalendarioFindOneOutputDto,
-  DiaCalendarioListInputDto as DiaCalendarioListInputDto,
-  DiaCalendarioListOutputDto as DiaCalendarioListOutputDto,
+  DiaCalendarioFindOneQuery as DiaCalendarioFindOneQuery,
+  DiaCalendarioFindOneQueryResult as DiaCalendarioFindOneQueryResult,
+  DiaCalendarioListQuery as DiaCalendarioListQuery,
+  DiaCalendarioListQueryResult as DiaCalendarioListQueryResult,
 } from "@/modules/horarios/dia-calendario";
 import type { IDiaCalendarioRepository } from "@/modules/horarios/dia-calendario/domain/repositories";
 import type { DiaCalendarioEntity } from "./dia-calendario.entity";
@@ -22,15 +22,15 @@ import { createDiaCalendarioRepository } from "./dia-calendario.repository";
 export class DiaCalendarioTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     DiaCalendarioEntity,
-    DiaCalendarioListInputDto,
-    DiaCalendarioListOutputDto,
-    DiaCalendarioFindOneInputDto,
-    DiaCalendarioFindOneOutputDto
+    DiaCalendarioListQuery,
+    DiaCalendarioListQueryResult,
+    DiaCalendarioFindOneQuery,
+    DiaCalendarioFindOneQueryResult
   >
   implements IDiaCalendarioRepository
 {
   protected readonly alias = "dia_calendario";
-  protected readonly outputDtoName = "DiaCalendarioFindOneOutputDto";
+  protected readonly outputDtoName = "DiaCalendarioFindOneQueryResult";
 
   constructor(
     @DeclareDependency(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,

@@ -9,10 +9,10 @@ import {
   paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
-  CampusFindOneInputDto,
-  CampusFindOneOutputDto,
-  CampusListInputDto,
-  CampusListOutputDto,
+  CampusFindOneQuery,
+  CampusFindOneQueryResult,
+  CampusListQuery,
+  CampusListQueryResult,
   ICampusRepository,
 } from "@/modules/ambientes/campus";
 import type { CampusEntity } from "./campus.entity";
@@ -22,15 +22,15 @@ import { createCampusRepository } from "./campus.repository";
 export class CampusTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     CampusEntity,
-    CampusListInputDto,
-    CampusListOutputDto,
-    CampusFindOneInputDto,
-    CampusFindOneOutputDto
+    CampusListQuery,
+    CampusListQueryResult,
+    CampusFindOneQuery,
+    CampusFindOneQueryResult
   >
   implements ICampusRepository
 {
   protected readonly alias = "campus";
-  protected readonly outputDtoName = "CampusFindOneOutputDto";
+  protected readonly outputDtoName = "CampusFindOneQueryResult";
 
   constructor(
     @DeclareDependency(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,

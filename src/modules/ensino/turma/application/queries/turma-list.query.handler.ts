@@ -3,9 +3,8 @@ import {
   type ITurmaListQuery,
   ITurmaListQueryHandler,
 } from "@/modules/ensino/turma/domain/queries/turma-list.query.handler.interface";
+import type { TurmaListQueryResult } from "../../domain/queries";
 import { ITurmaRepository } from "../../domain/repositories";
-import type { TurmaListOutputDto } from "../dtos";
-
 @DeclareImplementation()
 export class TurmaListQueryHandlerImpl implements ITurmaListQueryHandler {
   constructor(
@@ -13,7 +12,7 @@ export class TurmaListQueryHandlerImpl implements ITurmaListQueryHandler {
     private readonly repository: ITurmaRepository,
   ) {}
 
-  async execute({ accessContext, dto, selection }: ITurmaListQuery): Promise<TurmaListOutputDto> {
+  async execute({ accessContext, dto, selection }: ITurmaListQuery): Promise<TurmaListQueryResult> {
     return this.repository.findAll(accessContext, dto, selection);
   }
 }

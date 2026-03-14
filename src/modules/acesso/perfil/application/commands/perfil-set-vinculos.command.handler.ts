@@ -10,9 +10,8 @@ import { IUsuarioFindByIdSimpleQueryHandler } from "@/modules/acesso/usuario/dom
 import { Usuario } from "@/modules/acesso/usuario/domain/usuario.domain";
 import { Campus } from "@/modules/ambientes/campus/domain/campus.domain";
 import { ICampusFindOneQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-find-one.query.handler.interface";
+import type { PerfilListQuery, PerfilListQueryResult } from "../../domain/queries";
 import { IPerfilRepository } from "../../domain/repositories";
-import type { PerfilListInputDto, PerfilListOutputDto } from "../dtos";
-
 @DeclareImplementation()
 export class PerfilSetVinculosCommandHandlerImpl implements IPerfilSetVinculosCommandHandler {
   constructor(
@@ -26,7 +25,7 @@ export class PerfilSetVinculosCommandHandlerImpl implements IPerfilSetVinculosCo
     private readonly usuarioFindByIdSimpleHandler: IUsuarioFindByIdSimpleQueryHandler,
   ) {}
 
-  async execute({ accessContext, dto }: IPerfilSetVinculosCommand): Promise<PerfilListOutputDto> {
+  async execute({ accessContext, dto }: IPerfilSetVinculosCommand): Promise<PerfilListQueryResult> {
     // Valida campus e usuário
     const campus = await this.campusFindOneHandler.execute({
       accessContext,
@@ -96,7 +95,7 @@ export class PerfilSetVinculosCommandHandlerImpl implements IPerfilSetVinculosCo
     }
 
     // Retorna lista filtrada com os perfis do usuário no campus
-    const filterCriteria: PerfilListInputDto = {
+    const filterCriteria: PerfilListQuery = {
       "filter.ativo": ["true"],
       "filter.usuario.id": [`${usuario.id}`],
       "filter.campus.id": [`${campus.id}`],

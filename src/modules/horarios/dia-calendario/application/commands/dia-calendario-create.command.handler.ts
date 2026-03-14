@@ -11,9 +11,8 @@ import {
 } from "@/modules/horarios/dia-calendario/domain/commands/dia-calendario-create.command.handler.interface";
 import { DiaCalendario } from "@/modules/horarios/dia-calendario/domain/dia-calendario.domain";
 import { IDiaCalendarioPermissionChecker } from "../../domain/authorization";
+import type { DiaCalendarioFindOneQueryResult } from "../../domain/queries";
 import { IDiaCalendarioRepository } from "../../domain/repositories";
-import type { DiaCalendarioFindOneOutputDto } from "../dtos";
-
 @DeclareImplementation()
 export class DiaCalendarioCreateCommandHandlerImpl implements IDiaCalendarioCreateCommandHandler {
   constructor(
@@ -28,7 +27,7 @@ export class DiaCalendarioCreateCommandHandlerImpl implements IDiaCalendarioCrea
   async execute({
     accessContext,
     dto,
-  }: IDiaCalendarioCreateCommand): Promise<DiaCalendarioFindOneOutputDto> {
+  }: IDiaCalendarioCreateCommand): Promise<DiaCalendarioFindOneQueryResult> {
     await this.permissionChecker.ensureCanCreate(accessContext, { dto });
 
     let calendarioRef: { id: string } | undefined;

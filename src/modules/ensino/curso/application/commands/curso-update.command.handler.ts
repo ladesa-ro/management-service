@@ -12,9 +12,8 @@ import type { ICurso } from "@/modules/ensino/curso/domain/curso.types";
 import { OfertaFormacao } from "@/modules/ensino/oferta-formacao/domain/oferta-formacao.domain";
 import { IOfertaFormacaoFindOneQueryHandler } from "@/modules/ensino/oferta-formacao/domain/queries/oferta-formacao-find-one.query.handler.interface";
 import { ICursoPermissionChecker } from "../../domain/authorization";
+import type { CursoFindOneQueryResult } from "../../domain/queries";
 import { ICursoRepository } from "../../domain/repositories";
-import type { CursoFindOneOutputDto } from "../dtos";
-
 @DeclareImplementation()
 export class CursoUpdateCommandHandlerImpl implements ICursoUpdateCommandHandler {
   constructor(
@@ -28,7 +27,7 @@ export class CursoUpdateCommandHandlerImpl implements ICursoUpdateCommandHandler
     private readonly ofertaFormacaoFindOneHandler: IOfertaFormacaoFindOneQueryHandler,
   ) {}
 
-  async execute({ accessContext, dto }: ICursoUpdateCommand): Promise<CursoFindOneOutputDto> {
+  async execute({ accessContext, dto }: ICursoUpdateCommand): Promise<CursoFindOneQueryResult> {
     const current = await this.repository.findById(accessContext, { id: dto.id });
 
     ensureExists(current, Curso.entityName, dto.id);

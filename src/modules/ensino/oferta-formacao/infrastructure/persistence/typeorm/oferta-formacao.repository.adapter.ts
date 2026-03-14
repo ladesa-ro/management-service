@@ -9,10 +9,10 @@ import {
   paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
-  OfertaFormacaoFindOneInputDto,
-  OfertaFormacaoFindOneOutputDto,
-  OfertaFormacaoListInputDto,
-  OfertaFormacaoListOutputDto,
+  OfertaFormacaoFindOneQuery,
+  OfertaFormacaoFindOneQueryResult,
+  OfertaFormacaoListQuery,
+  OfertaFormacaoListQueryResult,
 } from "@/modules/ensino/oferta-formacao";
 import type { IOfertaFormacaoRepository } from "@/modules/ensino/oferta-formacao/domain/repositories";
 import type { OfertaFormacaoEntity } from "./oferta-formacao.entity";
@@ -22,15 +22,15 @@ import { createOfertaFormacaoRepository } from "./oferta-formacao.repository";
 export class OfertaFormacaoTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     OfertaFormacaoEntity,
-    OfertaFormacaoListInputDto,
-    OfertaFormacaoListOutputDto,
-    OfertaFormacaoFindOneInputDto,
-    OfertaFormacaoFindOneOutputDto
+    OfertaFormacaoListQuery,
+    OfertaFormacaoListQueryResult,
+    OfertaFormacaoFindOneQuery,
+    OfertaFormacaoFindOneQueryResult
   >
   implements IOfertaFormacaoRepository
 {
   protected readonly alias = "oferta_formacao";
-  protected readonly outputDtoName = "OfertaFormacaoFindOneOutputDto";
+  protected readonly outputDtoName = "OfertaFormacaoFindOneQueryResult";
 
   constructor(
     @DeclareDependency(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,

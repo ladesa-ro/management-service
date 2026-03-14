@@ -6,9 +6,8 @@ import {
 } from "@/modules/ensino/modalidade/domain/commands/modalidade-create.command.handler.interface";
 import { Modalidade } from "@/modules/ensino/modalidade/domain/modalidade.domain";
 import { IModalidadePermissionChecker } from "../../domain/authorization";
+import type { ModalidadeFindOneQueryResult } from "../../domain/queries";
 import { IModalidadeRepository } from "../../domain/repositories";
-import type { ModalidadeFindOneOutputDto } from "../dtos";
-
 @DeclareImplementation()
 export class ModalidadeCreateCommandHandlerImpl implements IModalidadeCreateCommandHandler {
   constructor(
@@ -21,7 +20,7 @@ export class ModalidadeCreateCommandHandlerImpl implements IModalidadeCreateComm
   async execute({
     accessContext,
     dto,
-  }: IModalidadeCreateCommand): Promise<ModalidadeFindOneOutputDto> {
+  }: IModalidadeCreateCommand): Promise<ModalidadeFindOneQueryResult> {
     await this.permissionChecker.ensureCanCreate(accessContext, { dto });
 
     const domain = Modalidade.criar({ nome: dto.nome, slug: dto.slug });

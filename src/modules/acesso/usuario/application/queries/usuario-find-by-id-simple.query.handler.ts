@@ -3,9 +3,8 @@ import {
   type IUsuarioFindByIdSimpleQuery,
   IUsuarioFindByIdSimpleQueryHandler,
 } from "@/modules/acesso/usuario/domain/queries/usuario-find-by-id-simple.query.handler.interface";
+import type { UsuarioFindOneQueryResult } from "../../domain/queries";
 import { IUsuarioRepository } from "../../domain/repositories";
-import type { UsuarioFindOneOutputDto } from "../dtos";
-
 @DeclareImplementation()
 export class UsuarioFindByIdSimpleQueryHandlerImpl implements IUsuarioFindByIdSimpleQueryHandler {
   constructor(
@@ -17,7 +16,7 @@ export class UsuarioFindByIdSimpleQueryHandlerImpl implements IUsuarioFindByIdSi
     accessContext,
     id,
     selection,
-  }: IUsuarioFindByIdSimpleQuery): Promise<UsuarioFindOneOutputDto | null> {
+  }: IUsuarioFindByIdSimpleQuery): Promise<UsuarioFindOneQueryResult | null> {
     return this.repository.findByIdSimple(accessContext, id, selection);
   }
 }

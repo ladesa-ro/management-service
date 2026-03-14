@@ -2,10 +2,9 @@ import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import type { IBaseCrudRepository } from "@/modules/@shared";
 import type { ICalendarioLetivo } from "@/modules/horarios/calendario-letivo";
 import type {
-  CalendarioLetivoFindOneOutputDto,
-  CalendarioLetivoListOutputDto,
-} from "../../application/dtos";
-
+  CalendarioLetivoFindOneQueryResult,
+  CalendarioLetivoListQueryResult,
+} from "../queries";
 /**
  * Token de injeção para o repositório de CalendarioLetivo
  */
@@ -18,8 +17,8 @@ export const ICalendarioLetivoRepository = Symbol("ICalendarioLetivoRepository")
 export interface ICalendarioLetivoRepository
   extends IBaseCrudRepository<
     ICalendarioLetivo,
-    CalendarioLetivoListOutputDto,
-    CalendarioLetivoFindOneOutputDto
+    CalendarioLetivoListQueryResult,
+    CalendarioLetivoFindOneQueryResult
   > {
   /**
    * Busca um calendário letivo por ID (formato simples) - método obrigatório
@@ -28,5 +27,5 @@ export interface ICalendarioLetivoRepository
     accessContext: AccessContext,
     id: string,
     selection?: string[] | boolean,
-  ): Promise<CalendarioLetivoFindOneOutputDto | null>;
+  ): Promise<CalendarioLetivoFindOneQueryResult | null>;
 }

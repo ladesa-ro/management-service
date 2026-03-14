@@ -9,19 +9,19 @@ import { commonProperties, defineModel, referenceProperty, simpleProperty } from
 // Base/Geographic Entities
 // ============================================================================
 
-defineModel("EstadoFindOneOutputDto", [
+defineModel("EstadoFindOneQueryResult", [
   simpleProperty("id"),
   simpleProperty("nome"),
   simpleProperty("sigla"),
 ]);
 
-defineModel("CidadeFindOneOutputDto", [
+defineModel("CidadeFindOneQueryResult", [
   simpleProperty("id"),
   simpleProperty("nome"),
-  referenceProperty("estado", "EstadoFindOneOutputDto"),
+  referenceProperty("estado", "EstadoFindOneQueryResult"),
 ]);
 
-defineModel("EnderecoFindOneOutputDto", [
+defineModel("EnderecoFindOneQueryResult", [
   simpleProperty("id"),
   simpleProperty("cep"),
   simpleProperty("logradouro"),
@@ -29,7 +29,7 @@ defineModel("EnderecoFindOneOutputDto", [
   simpleProperty("bairro"),
   simpleProperty("complemento", { nullable: true }),
   simpleProperty("pontoReferencia", { nullable: true }),
-  referenceProperty("cidade", "CidadeFindOneOutputDto"),
+  referenceProperty("cidade", "CidadeFindOneQueryResult"),
   ...commonProperties.dated,
 ]);
 
@@ -37,14 +37,14 @@ defineModel("EnderecoFindOneOutputDto", [
 // Simple Entities (no relations or simple relations)
 // ============================================================================
 
-defineModel("ModalidadeFindOneOutputDto", [
+defineModel("ModalidadeFindOneQueryResult", [
   simpleProperty("id"),
   simpleProperty("nome"),
   simpleProperty("slug"),
   ...commonProperties.dated,
 ]);
 
-defineModel("NivelFormacaoFindOneOutputDto", [
+defineModel("NivelFormacaoFindOneQueryResult", [
   simpleProperty("id"),
   simpleProperty("slug"),
   ...commonProperties.dated,
@@ -54,7 +54,7 @@ defineModel("NivelFormacaoFindOneOutputDto", [
 // File/Image Entities
 // ============================================================================
 
-defineModel("ArquivoFindOneOutputDto", [
+defineModel("ArquivoFindOneQueryResult", [
   simpleProperty("id"),
   simpleProperty("name", { nullable: true }),
   simpleProperty("mimeType", { nullable: true }),
@@ -63,24 +63,24 @@ defineModel("ArquivoFindOneOutputDto", [
   ...commonProperties.dated,
 ]);
 
-defineModel("ImagemArquivoFindOneFromImagemOutputDto", [
+defineModel("ImagemArquivoFindOneFromImagemQueryResult", [
   simpleProperty("id"),
   simpleProperty("largura"),
   simpleProperty("altura"),
   simpleProperty("formato"),
   simpleProperty("mimeType"),
-  referenceProperty("arquivo", "ArquivoFindOneOutputDto"),
+  referenceProperty("arquivo", "ArquivoFindOneQueryResult"),
   ...commonProperties.dated,
 ]);
 
-defineModel("ImagemArquivoFindOneOutputDto", [
+defineModel("ImagemArquivoFindOneQueryResult", [
   simpleProperty("id"),
   simpleProperty("largura"),
   simpleProperty("altura"),
   simpleProperty("formato"),
   simpleProperty("mimeType"),
   referenceProperty("imagem", "ImagemFindOneFromImagemArquivoOutput"),
-  referenceProperty("arquivo", "ArquivoFindOneOutputDto"),
+  referenceProperty("arquivo", "ArquivoFindOneQueryResult"),
   ...commonProperties.dated,
 ]);
 
@@ -90,7 +90,7 @@ defineModel("ImagemFindOneFromImagemArquivoOutput", [
   ...commonProperties.dated,
 ]);
 
-defineModel("ImagemFindOneOutputDto", [
+defineModel("ImagemFindOneQueryResult", [
   simpleProperty("id"),
   simpleProperty("descricao", { nullable: true }),
   // Note: 'versoes' is a OneToMany relation (loaded separately, not via QbEfficientLoad)
@@ -101,34 +101,34 @@ defineModel("ImagemFindOneOutputDto", [
 // Campus Infrastructure Entities
 // ============================================================================
 
-defineModel("CampusFindOneOutputDto", [
+defineModel("CampusFindOneQueryResult", [
   simpleProperty("id"),
   simpleProperty("nomeFantasia"),
   simpleProperty("razaoSocial"),
   simpleProperty("apelido"),
   simpleProperty("cnpj"),
-  referenceProperty("endereco", "EnderecoFindOneOutputDto"),
+  referenceProperty("endereco", "EnderecoFindOneQueryResult"),
   ...commonProperties.dated,
 ]);
 
-defineModel("BlocoFindOneOutputDto", [
+defineModel("BlocoFindOneQueryResult", [
   simpleProperty("id"),
   simpleProperty("nome"),
   simpleProperty("codigo"),
-  referenceProperty("campus", "CampusFindOneOutputDto"),
-  referenceProperty("imagemCapa", "ImagemFindOneOutputDto", { nullable: true }),
+  referenceProperty("campus", "CampusFindOneQueryResult"),
+  referenceProperty("imagemCapa", "ImagemFindOneQueryResult", { nullable: true }),
   ...commonProperties.dated,
 ]);
 
-defineModel("AmbienteFindOneOutputDto", [
+defineModel("AmbienteFindOneQueryResult", [
   simpleProperty("id"),
   simpleProperty("nome"),
   simpleProperty("descricao", { nullable: true }),
   simpleProperty("codigo"),
   simpleProperty("capacidade", { nullable: true }),
   simpleProperty("tipo", { nullable: true }),
-  referenceProperty("bloco", "BlocoFindOneOutputDto"),
-  referenceProperty("imagemCapa", "ImagemFindOneOutputDto", { nullable: true }),
+  referenceProperty("bloco", "BlocoFindOneQueryResult"),
+  referenceProperty("imagemCapa", "ImagemFindOneQueryResult", { nullable: true }),
   ...commonProperties.dated,
 ]);
 
@@ -140,8 +140,8 @@ defineModel("ReservaFindOneOutputDto", [
   simpleProperty("dataInicio"),
   simpleProperty("dataTermino", { nullable: true }),
   simpleProperty("rrule"),
-  referenceProperty("ambiente", "AmbienteFindOneOutputDto"),
-  referenceProperty("usuario", "UsuarioFindOneOutputDto"),
+  referenceProperty("ambiente", "AmbienteFindOneQueryResult"),
+  referenceProperty("usuario", "UsuarioFindOneQueryResult"),
   ...commonProperties.dated,
 ]);
 
@@ -149,23 +149,23 @@ defineModel("ReservaFindOneOutputDto", [
 // User/Authentication Entities
 // ============================================================================
 
-defineModel("UsuarioFindOneOutputDto", [
+defineModel("UsuarioFindOneQueryResult", [
   simpleProperty("id"),
   simpleProperty("nome", { nullable: true }),
   simpleProperty("matricula", { nullable: true }),
   simpleProperty("email", { nullable: true }),
   simpleProperty("isSuperUser"),
-  referenceProperty("imagemCapa", "ImagemFindOneOutputDto", { nullable: true }),
-  referenceProperty("imagemPerfil", "ImagemFindOneOutputDto", { nullable: true }),
+  referenceProperty("imagemCapa", "ImagemFindOneQueryResult", { nullable: true }),
+  referenceProperty("imagemPerfil", "ImagemFindOneQueryResult", { nullable: true }),
   ...commonProperties.dated,
 ]);
 
-defineModel("PerfilFindOneOutputDto", [
+defineModel("PerfilFindOneQueryResult", [
   simpleProperty("id"),
   simpleProperty("ativo"),
   simpleProperty("cargo"),
-  referenceProperty("campus", "CampusFindOneOutputDto"),
-  referenceProperty("usuario", "UsuarioFindOneOutputDto"),
+  referenceProperty("campus", "CampusFindOneQueryResult"),
+  referenceProperty("usuario", "UsuarioFindOneQueryResult"),
   ...commonProperties.dated,
 ]);
 
@@ -173,37 +173,37 @@ defineModel("PerfilFindOneOutputDto", [
 // Academic Structure Entities
 // ============================================================================
 
-defineModel("OfertaFormacaoNivelFormacaoFindOneOutputDto", [
+defineModel("OfertaFormacaoNivelFormacaoFindOneQueryResult", [
   simpleProperty("id"),
-  referenceProperty("ofertaFormacao", "OfertaFormacaoFindOneOutputDto"),
-  referenceProperty("nivelFormacao", "NivelFormacaoFindOneOutputDto"),
+  referenceProperty("ofertaFormacao", "OfertaFormacaoFindOneQueryResult"),
+  referenceProperty("nivelFormacao", "NivelFormacaoFindOneQueryResult"),
   ...commonProperties.dated,
 ]);
 
-defineModel("OfertaFormacaoFindOneOutputDto", [
+defineModel("OfertaFormacaoFindOneQueryResult", [
   simpleProperty("id"),
   simpleProperty("nome"),
   simpleProperty("slug"),
-  referenceProperty("modalidade", "ModalidadeFindOneOutputDto"),
+  referenceProperty("modalidade", "ModalidadeFindOneQueryResult"),
   ...commonProperties.dated,
 ]);
 
-defineModel("CursoFindOneOutputDto", [
+defineModel("CursoFindOneQueryResult", [
   simpleProperty("id"),
   simpleProperty("nome"),
   simpleProperty("nomeAbreviado"),
-  referenceProperty("campus", "CampusFindOneOutputDto"),
-  referenceProperty("ofertaFormacao", "OfertaFormacaoFindOneOutputDto"),
-  referenceProperty("imagemCapa", "ImagemFindOneOutputDto", { nullable: true }),
+  referenceProperty("campus", "CampusFindOneQueryResult"),
+  referenceProperty("ofertaFormacao", "OfertaFormacaoFindOneQueryResult"),
+  referenceProperty("imagemCapa", "ImagemFindOneQueryResult", { nullable: true }),
   ...commonProperties.dated,
 ]);
 
-defineModel("DisciplinaFindOneOutputDto", [
+defineModel("DisciplinaFindOneQueryResult", [
   simpleProperty("id"),
   simpleProperty("nome"),
   simpleProperty("nomeAbreviado"),
   simpleProperty("cargaHoraria"),
-  referenceProperty("imagemCapa", "ImagemFindOneOutputDto", { nullable: true }),
+  referenceProperty("imagemCapa", "ImagemFindOneQueryResult", { nullable: true }),
   ...commonProperties.dated,
 ]);
 
@@ -211,21 +211,21 @@ defineModel("DisciplinaFindOneOutputDto", [
 // Calendar Entities
 // ============================================================================
 
-defineModel("CalendarioLetivoFindOneOutputDto", [
+defineModel("CalendarioLetivoFindOneQueryResult", [
   simpleProperty("id"),
   simpleProperty("nome"),
   simpleProperty("ano"),
-  referenceProperty("campus", "CampusFindOneOutputDto"),
-  referenceProperty("ofertaFormacao", "OfertaFormacaoFindOneOutputDto"),
+  referenceProperty("campus", "CampusFindOneQueryResult"),
+  referenceProperty("ofertaFormacao", "OfertaFormacaoFindOneQueryResult"),
   ...commonProperties.dated,
 ]);
 
-defineModel("DiaCalendarioFindOneOutputDto", [
+defineModel("DiaCalendarioFindOneQueryResult", [
   simpleProperty("id"),
   simpleProperty("data"),
   simpleProperty("diaLetivo"),
   simpleProperty("fpiado"),
-  referenceProperty("calendario", "CalendarioLetivoFindOneOutputDto"),
+  referenceProperty("calendario", "CalendarioLetivoFindOneQueryResult"),
   ...commonProperties.dated,
 ]);
 
@@ -235,7 +235,7 @@ defineModel("EtapaFindOneOutputDto", [
   simpleProperty("dataInicio"),
   simpleProperty("dataTermino"),
   simpleProperty("cor", { nullable: true }),
-  referenceProperty("calendario", "CalendarioLetivoFindOneOutputDto"),
+  referenceProperty("calendario", "CalendarioLetivoFindOneQueryResult"),
   ...commonProperties.dated,
 ]);
 
@@ -245,7 +245,7 @@ defineModel("EventoFindOneOutputDto", [
   simpleProperty("dataInicio"),
   simpleProperty("dataTermino"),
   simpleProperty("cor", { nullable: true }),
-  referenceProperty("calendario", "CalendarioLetivoFindOneOutputDto"),
+  referenceProperty("calendario", "CalendarioLetivoFindOneQueryResult"),
   ...commonProperties.dated,
 ]);
 
@@ -259,8 +259,8 @@ defineModel("IntervaloDeTempoFindOneOutputDto", [
 defineModel("GradeHorarioOfertaFormacaoFindOneOutputDto", [
   simpleProperty("id"),
   simpleProperty("nome"),
-  referenceProperty("campus", "CampusFindOneOutputDto"),
-  referenceProperty("ofertaFormacao", "OfertaFormacaoFindOneOutputDto"),
+  referenceProperty("campus", "CampusFindOneQueryResult"),
+  referenceProperty("ofertaFormacao", "OfertaFormacaoFindOneQueryResult"),
   ...commonProperties.dated,
 ]);
 
@@ -276,39 +276,39 @@ defineModel("GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputDto", [
 // Class/Teaching Entities
 // ============================================================================
 
-defineModel("TurmaFindOneOutputDto", [
+defineModel("TurmaFindOneQueryResult", [
   simpleProperty("id"),
   simpleProperty("periodo"),
-  referenceProperty("curso", "CursoFindOneOutputDto"),
-  referenceProperty("ambientePadraoAula", "AmbienteFindOneOutputDto", { nullable: true }),
-  referenceProperty("imagemCapa", "ImagemFindOneOutputDto", { nullable: true }),
+  referenceProperty("curso", "CursoFindOneQueryResult"),
+  referenceProperty("ambientePadraoAula", "AmbienteFindOneQueryResult", { nullable: true }),
+  referenceProperty("imagemCapa", "ImagemFindOneQueryResult", { nullable: true }),
   ...commonProperties.dated,
 ]);
 
-defineModel("DiarioFindOneOutputDto", [
+defineModel("DiarioFindOneQueryResult", [
   simpleProperty("id"),
   simpleProperty("ativo"),
-  referenceProperty("calendarioLetivo", "CalendarioLetivoFindOneOutputDto"),
-  referenceProperty("turma", "TurmaFindOneOutputDto"),
-  referenceProperty("disciplina", "DisciplinaFindOneOutputDto"),
-  referenceProperty("ambientePadrao", "AmbienteFindOneOutputDto", { nullable: true }),
-  referenceProperty("imagemCapa", "ImagemFindOneOutputDto", { nullable: true }),
+  referenceProperty("calendarioLetivo", "CalendarioLetivoFindOneQueryResult"),
+  referenceProperty("turma", "TurmaFindOneQueryResult"),
+  referenceProperty("disciplina", "DisciplinaFindOneQueryResult"),
+  referenceProperty("ambientePadrao", "AmbienteFindOneQueryResult", { nullable: true }),
+  referenceProperty("imagemCapa", "ImagemFindOneQueryResult", { nullable: true }),
   ...commonProperties.dated,
 ]);
 
-defineModel("DiarioProfessorFindOneOutputDto", [
+defineModel("DiarioProfessorFindOneQueryResult", [
   simpleProperty("id"),
   simpleProperty("situacao"),
-  referenceProperty("perfil", "PerfilFindOneOutputDto"),
-  referenceProperty("diario", "DiarioFindOneOutputDto"),
+  referenceProperty("perfil", "PerfilFindOneQueryResult"),
+  referenceProperty("diario", "DiarioFindOneQueryResult"),
   ...commonProperties.dated,
 ]);
 
-defineModel("DiarioPreferenciaAgrupamentoFindOneOutputDto", [
+defineModel("DiarioPreferenciaAgrupamentoFindOneQueryResult", [
   simpleProperty("id"),
   simpleProperty("aulasSeguidas"),
   simpleProperty("recpirrencia"),
-  referenceProperty("diario", "DiarioFindOneOutputDto"),
+  referenceProperty("diario", "DiarioFindOneQueryResult"),
   referenceProperty("intervaloDeTempo", "IntervaloDeTempoFindOneOutputDto"),
   ...commonProperties.dated,
 ]);
@@ -318,8 +318,8 @@ defineModel("AulaFindOneOutputDto", [
   simpleProperty("data"),
   simpleProperty("modalidade", { nullable: true }),
   referenceProperty("intervaloDeTempo", "IntervaloDeTempoFindOneOutputDto"),
-  referenceProperty("diario", "DiarioFindOneOutputDto"),
-  referenceProperty("ambiente", "AmbienteFindOneOutputDto", { nullable: true }),
+  referenceProperty("diario", "DiarioFindOneQueryResult"),
+  referenceProperty("ambiente", "AmbienteFindOneQueryResult", { nullable: true }),
   ...commonProperties.dated,
 ]);
 
@@ -331,7 +331,7 @@ defineModel("DisponibilidadeFindOneOutputDto", [
   simpleProperty("id"),
   simpleProperty("dataInicio"),
   simpleProperty("dataFim", { nullable: true }),
-  referenceProperty("perfil", "PerfilFindOneOutputDto"),
+  referenceProperty("perfil", "PerfilFindOneQueryResult"),
   referenceProperty("intervaloDeTempo", "IntervaloDeTempoFindOneOutputDto"),
   ...commonProperties.dated,
 ]);
@@ -340,7 +340,7 @@ defineModel("TurmaDisponibilidadeFindOneOutputDto", [
   simpleProperty("id"),
   simpleProperty("dataInicio"),
   simpleProperty("dataFim", { nullable: true }),
-  referenceProperty("turma", "TurmaFindOneOutputDto"),
+  referenceProperty("turma", "TurmaFindOneQueryResult"),
   referenceProperty("intervaloDeTempo", "IntervaloDeTempoFindOneOutputDto"),
   ...commonProperties.dated,
 ]);
@@ -350,7 +350,7 @@ defineModel("ProfessorIndisponibilidadeFindOneOutputDto", [
   simpleProperty("dataInicio"),
   simpleProperty("dataFim", { nullable: true }),
   simpleProperty("motivo", { nullable: true }),
-  referenceProperty("perfil", "PerfilFindOneOutputDto"),
+  referenceProperty("perfil", "PerfilFindOneQueryResult"),
   referenceProperty("intervaloDeTempo", "IntervaloDeTempoFindOneOutputDto", { nullable: true }),
   ...commonProperties.dated,
 ]);
@@ -362,7 +362,7 @@ defineModel("HorarioGeradoFindOneOutputDto", [
   simpleProperty("data"),
   simpleProperty("vigpienciaInicio"),
   simpleProperty("vigpienciaFim", { nullable: true }),
-  referenceProperty("calendarioLetivo", "CalendarioLetivoFindOneOutputDto"),
+  referenceProperty("calendarioLetivo", "CalendarioLetivoFindOneQueryResult"),
   ...commonProperties.dated,
 ]);
 
@@ -370,9 +370,9 @@ defineModel("HorarioGeradoAulaFindOneOutputDto", [
   simpleProperty("id"),
   simpleProperty("diaSemana"),
   referenceProperty("horarioGerado", "HorarioGeradoFindOneOutputDto"),
-  referenceProperty("diario", "DiarioFindOneOutputDto"),
+  referenceProperty("diario", "DiarioFindOneQueryResult"),
   referenceProperty("intervaloDeTempo", "IntervaloDeTempoFindOneOutputDto"),
-  referenceProperty("ambiente", "AmbienteFindOneOutputDto", { nullable: true }),
+  referenceProperty("ambiente", "AmbienteFindOneQueryResult", { nullable: true }),
   ...commonProperties.dated,
 ]);
 

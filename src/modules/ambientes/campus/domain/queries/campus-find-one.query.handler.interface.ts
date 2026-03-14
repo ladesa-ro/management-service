@@ -1,15 +1,15 @@
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import type { IQueryHandler } from "@/modules/@shared/domain/abstractions";
-import type { CampusFindOneInputDto, CampusFindOneOutputDto } from "../../application/dtos";
-
+import type { CampusFindOneQuery } from "./campus-find-one.query";
+import type { CampusFindOneQueryResult } from "./campus-find-one.query.result";
 export type ICampusFindOneQuery = {
   accessContext: AccessContext | null;
-  dto: CampusFindOneInputDto;
+  dto: CampusFindOneQuery;
   selection?: string[] | boolean;
 };
 
 export type ICampusFindOneQueryHandler = IQueryHandler<
   ICampusFindOneQuery,
-  CampusFindOneOutputDto | null
+  CampusFindOneQueryResult | null
 >;
 export const ICampusFindOneQueryHandler = Symbol("ICampusFindOneQueryHandler");

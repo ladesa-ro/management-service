@@ -9,10 +9,10 @@ import {
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
   IModalidadeRepository,
-  ModalidadeFindOneInputDto,
-  ModalidadeFindOneOutputDto,
-  ModalidadeListInputDto,
-  ModalidadeListOutputDto,
+  ModalidadeFindOneQuery,
+  ModalidadeFindOneQueryResult,
+  ModalidadeListQuery,
+  ModalidadeListQueryResult,
 } from "@/modules/ensino/modalidade";
 import type { ModalidadeEntity } from "./modalidade.entity";
 import { createModalidadeRepository } from "./modalidade.repository";
@@ -25,15 +25,15 @@ import { createModalidadeRepository } from "./modalidade.repository";
 export class ModalidadeTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     ModalidadeEntity,
-    ModalidadeListInputDto,
-    ModalidadeListOutputDto,
-    ModalidadeFindOneInputDto,
-    ModalidadeFindOneOutputDto
+    ModalidadeListQuery,
+    ModalidadeListQueryResult,
+    ModalidadeFindOneQuery,
+    ModalidadeFindOneQueryResult
   >
   implements IModalidadeRepository
 {
   protected readonly alias = "modalidade";
-  protected readonly outputDtoName = "ModalidadeFindOneOutputDto";
+  protected readonly outputDtoName = "ModalidadeFindOneQueryResult";
 
   constructor(
     @DeclareDependency(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,

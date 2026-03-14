@@ -10,9 +10,8 @@ import {
   ICalendarioLetivoCreateCommandHandler,
 } from "@/modules/horarios/calendario-letivo/domain/commands/calendario-letivo-create.command.handler.interface";
 import { ICalendarioLetivoPermissionChecker } from "../../domain/authorization";
+import type { CalendarioLetivoFindOneQueryResult } from "../../domain/queries";
 import { ICalendarioLetivoRepository } from "../../domain/repositories";
-import type { CalendarioLetivoFindOneOutputDto } from "../dtos";
-
 @DeclareImplementation()
 export class CalendarioLetivoCreateCommandHandlerImpl
   implements ICalendarioLetivoCreateCommandHandler
@@ -31,7 +30,7 @@ export class CalendarioLetivoCreateCommandHandlerImpl
   async execute({
     accessContext,
     dto,
-  }: ICalendarioLetivoCreateCommand): Promise<CalendarioLetivoFindOneOutputDto> {
+  }: ICalendarioLetivoCreateCommand): Promise<CalendarioLetivoFindOneQueryResult> {
     await this.permissionChecker.ensureCanCreate(accessContext, { dto });
 
     const campus = await this.campusFindOneHandler.execute({

@@ -1,7 +1,6 @@
 import type { IBaseCrudRepository } from "@/modules/@shared";
 import type { ICurso } from "@/modules/ensino/curso";
-import type { CursoFindOneOutputDto, CursoListOutputDto } from "../../application/dtos";
-
+import type { CursoFindOneQueryResult, CursoListQueryResult } from "../queries";
 /**
  * Token de injeção para o repositório de Curso
  */
@@ -12,4 +11,4 @@ export const ICursoRepository = Symbol("ICursoRepository");
  * Estende a interface base de CRUD com operações padrão
  */
 export interface ICursoRepository
-  extends IBaseCrudRepository<ICurso, CursoListOutputDto, CursoFindOneOutputDto> {}
+  extends IBaseCrudRepository<ICurso, CursoListQueryResult, CursoFindOneQueryResult> {}

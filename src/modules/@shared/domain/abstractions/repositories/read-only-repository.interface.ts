@@ -6,13 +6,13 @@ import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
  *
  * @template ListInputDto - Tipo do DTO de entrada para listagem
  * @template ListOutputDto - Tipo do DTO de saída para listagem (paginado)
- * @template FindOneInputDto - Tipo do DTO de entrada para busca única
+ * @template FindOneQuery - Tipo do DTO de entrada para busca única
  * @template FindOneOutputDto - Tipo do DTO de saída para busca única
  */
 export interface IReadOnlyRepository<
   ListInputDto,
   ListOutputDto,
-  FindOneInputDto extends { id: string | number },
+  FindOneQuery extends { id: string | number },
   FindOneOutputDto,
 > {
   /**
@@ -24,5 +24,5 @@ export interface IReadOnlyRepository<
    * Busca uma entidade por ID
    * @returns A entidade ou null se não encontrada
    */
-  findById(accessContext: AccessContext, dto: FindOneInputDto): Promise<FindOneOutputDto | null>;
+  findById(accessContext: AccessContext, dto: FindOneQuery): Promise<FindOneOutputDto | null>;
 }

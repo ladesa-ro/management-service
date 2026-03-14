@@ -9,11 +9,11 @@ import {
   paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
-  CursoFindOneInputDto,
-  CursoFindOneOutputDto,
-  CursoListInputDto,
-  CursoListOutputDto,
-} from "@/modules/ensino/curso/application/dtos";
+  CursoFindOneQuery,
+  CursoFindOneQueryResult,
+  CursoListQuery,
+  CursoListQueryResult,
+} from "@/modules/ensino/curso/domain/queries";
 import type { ICursoRepository } from "@/modules/ensino/curso/domain/repositories";
 import type { CursoEntity } from "./curso.entity";
 import { createCursoRepository } from "./curso.repository";
@@ -22,15 +22,15 @@ import { createCursoRepository } from "./curso.repository";
 export class CursoTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     CursoEntity,
-    CursoListInputDto,
-    CursoListOutputDto,
-    CursoFindOneInputDto,
-    CursoFindOneOutputDto
+    CursoListQuery,
+    CursoListQueryResult,
+    CursoFindOneQuery,
+    CursoFindOneQueryResult
   >
   implements ICursoRepository
 {
   protected readonly alias = "curso";
-  protected readonly outputDtoName = "CursoFindOneOutputDto";
+  protected readonly outputDtoName = "CursoFindOneQueryResult";
 
   constructor(
     @DeclareDependency(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,

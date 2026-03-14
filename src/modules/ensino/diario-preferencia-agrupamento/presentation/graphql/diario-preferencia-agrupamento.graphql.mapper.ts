@@ -1,10 +1,10 @@
 import { createListOutputMapper, mapDatedFields } from "@/modules/@shared/application/mappers";
 import {
-  DiarioPreferenciaAgrupamentoCreateInputDto,
-  DiarioPreferenciaAgrupamentoFindOneInputDto,
-  DiarioPreferenciaAgrupamentoFindOneOutputDto,
-  DiarioPreferenciaAgrupamentoListInputDto,
-  DiarioPreferenciaAgrupamentoUpdateInputDto,
+  DiarioPreferenciaAgrupamentoCreateCommand,
+  DiarioPreferenciaAgrupamentoFindOneQuery,
+  DiarioPreferenciaAgrupamentoFindOneQueryResult,
+  DiarioPreferenciaAgrupamentoListQuery,
+  DiarioPreferenciaAgrupamentoUpdateCommand,
 } from "@/modules/ensino/diario-preferencia-agrupamento";
 import {
   DiarioPreferenciaAgrupamentoCreateInputGraphQlDto,
@@ -18,12 +18,12 @@ import {
 export class DiarioPreferenciaAgrupamentoGraphqlMapper {
   static toListInput(
     dto: DiarioPreferenciaAgrupamentoListInputGraphQlDto | null,
-  ): DiarioPreferenciaAgrupamentoListInputDto | null {
+  ): DiarioPreferenciaAgrupamentoListQuery | null {
     if (!dto) {
       return null;
     }
 
-    const input = new DiarioPreferenciaAgrupamentoListInputDto();
+    const input = new DiarioPreferenciaAgrupamentoListQuery();
     input.page = dto.page;
     input.limit = dto.limit;
     input.search = dto.search;
@@ -36,8 +36,8 @@ export class DiarioPreferenciaAgrupamentoGraphqlMapper {
   static toFindOneInput(
     id: string,
     selection?: string[],
-  ): DiarioPreferenciaAgrupamentoFindOneInputDto {
-    const input = new DiarioPreferenciaAgrupamentoFindOneInputDto();
+  ): DiarioPreferenciaAgrupamentoFindOneQuery {
+    const input = new DiarioPreferenciaAgrupamentoFindOneQuery();
     input.id = id;
     input.selection = selection;
     return input;
@@ -45,8 +45,8 @@ export class DiarioPreferenciaAgrupamentoGraphqlMapper {
 
   static toCreateInput(
     dto: DiarioPreferenciaAgrupamentoCreateInputGraphQlDto,
-  ): DiarioPreferenciaAgrupamentoCreateInputDto {
-    const input = new DiarioPreferenciaAgrupamentoCreateInputDto();
+  ): DiarioPreferenciaAgrupamentoCreateCommand {
+    const input = new DiarioPreferenciaAgrupamentoCreateCommand();
     input.dataInicio = dto.dataInicio as unknown as string;
     input.dataFim = dto.dataFim as unknown as string | null;
     input.diaSemanaIso = dto.diaSemanaIso;
@@ -58,10 +58,10 @@ export class DiarioPreferenciaAgrupamentoGraphqlMapper {
   static toUpdateInput(
     params: { id: string },
     dto: DiarioPreferenciaAgrupamentoUpdateInputGraphQlDto,
-  ): DiarioPreferenciaAgrupamentoFindOneInputDto & DiarioPreferenciaAgrupamentoUpdateInputDto {
+  ): DiarioPreferenciaAgrupamentoFindOneQuery & DiarioPreferenciaAgrupamentoUpdateCommand {
     const input =
-      new DiarioPreferenciaAgrupamentoFindOneInputDto() as DiarioPreferenciaAgrupamentoFindOneInputDto &
-        DiarioPreferenciaAgrupamentoUpdateInputDto;
+      new DiarioPreferenciaAgrupamentoFindOneQuery() as DiarioPreferenciaAgrupamentoFindOneQuery &
+        DiarioPreferenciaAgrupamentoUpdateCommand;
     input.id = params.id;
     if (dto.dataInicio !== undefined) {
       input.dataInicio = dto.dataInicio as unknown as string;
@@ -82,7 +82,7 @@ export class DiarioPreferenciaAgrupamentoGraphqlMapper {
   }
 
   static toFindOneOutputDto(
-    output: DiarioPreferenciaAgrupamentoFindOneOutputDto,
+    output: DiarioPreferenciaAgrupamentoFindOneQueryResult,
   ): DiarioPreferenciaAgrupamentoFindOneOutputGraphQlDto {
     const dto = new DiarioPreferenciaAgrupamentoFindOneOutputGraphQlDto();
     dto.id = output.id;

@@ -2,11 +2,11 @@ import { createListOutputMapper, mapDatedFields } from "@/modules/@shared/applic
 import { CampusGraphqlMapper } from "@/modules/ambientes/campus/presentation/graphql/campus.graphql.mapper";
 import { OfertaFormacaoGraphqlMapper } from "@/modules/ensino/oferta-formacao/presentation/graphql/oferta-formacao.graphql.mapper";
 import {
-  CalendarioLetivoCreateInputDto,
-  CalendarioLetivoFindOneInputDto,
-  CalendarioLetivoFindOneOutputDto,
-  CalendarioLetivoListInputDto,
-  CalendarioLetivoUpdateInputDto,
+  CalendarioLetivoCreateCommand,
+  CalendarioLetivoFindOneQuery,
+  CalendarioLetivoFindOneQueryResult,
+  CalendarioLetivoListQuery,
+  CalendarioLetivoUpdateCommand,
 } from "@/modules/horarios/calendario-letivo";
 import {
   CalendarioLetivoCreateInputGraphQlDto,
@@ -19,12 +19,12 @@ import {
 export class CalendarioLetivoGraphqlMapper {
   static toListInput(
     dto: CalendarioLetivoListInputGraphQlDto | null,
-  ): CalendarioLetivoListInputDto | null {
+  ): CalendarioLetivoListQuery | null {
     if (!dto) {
       return null;
     }
 
-    const input = new CalendarioLetivoListInputDto();
+    const input = new CalendarioLetivoListQuery();
     input.page = dto.page;
     input.limit = dto.limit;
     input.search = dto.search;
@@ -35,15 +35,15 @@ export class CalendarioLetivoGraphqlMapper {
     return input;
   }
 
-  static toFindOneInput(id: string, selection?: string[]): CalendarioLetivoFindOneInputDto {
-    const input = new CalendarioLetivoFindOneInputDto();
+  static toFindOneInput(id: string, selection?: string[]): CalendarioLetivoFindOneQuery {
+    const input = new CalendarioLetivoFindOneQuery();
     input.id = id;
     input.selection = selection;
     return input;
   }
 
-  static toCreateInput(dto: CalendarioLetivoCreateInputGraphQlDto): CalendarioLetivoCreateInputDto {
-    const input = new CalendarioLetivoCreateInputDto();
+  static toCreateInput(dto: CalendarioLetivoCreateInputGraphQlDto): CalendarioLetivoCreateCommand {
+    const input = new CalendarioLetivoCreateCommand();
     input.nome = dto.nome;
     input.ano = dto.ano;
     input.campus = { id: dto.campus.id };
@@ -54,9 +54,9 @@ export class CalendarioLetivoGraphqlMapper {
   static toUpdateInput(
     params: { id: string },
     dto: CalendarioLetivoUpdateInputGraphQlDto,
-  ): CalendarioLetivoFindOneInputDto & CalendarioLetivoUpdateInputDto {
-    const input = new CalendarioLetivoFindOneInputDto() as CalendarioLetivoFindOneInputDto &
-      CalendarioLetivoUpdateInputDto;
+  ): CalendarioLetivoFindOneQuery & CalendarioLetivoUpdateCommand {
+    const input = new CalendarioLetivoFindOneQuery() as CalendarioLetivoFindOneQuery &
+      CalendarioLetivoUpdateCommand;
     input.id = params.id;
     if (dto.nome !== undefined) input.nome = dto.nome;
     if (dto.ano !== undefined) input.ano = dto.ano;
@@ -66,7 +66,7 @@ export class CalendarioLetivoGraphqlMapper {
   }
 
   static toFindOneOutputDto(
-    output: CalendarioLetivoFindOneOutputDto,
+    output: CalendarioLetivoFindOneQueryResult,
   ): CalendarioLetivoFindOneOutputGraphQlDto {
     const dto = new CalendarioLetivoFindOneOutputGraphQlDto();
     dto.id = output.id;

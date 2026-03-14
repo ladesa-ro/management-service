@@ -6,11 +6,11 @@ import {
 } from "@/modules/@shared/application/mappers";
 import { ModalidadeRestMapper } from "@/modules/ensino/modalidade/presentation/rest";
 import {
-  OfertaFormacaoCreateInputDto,
-  OfertaFormacaoFindOneInputDto,
-  OfertaFormacaoFindOneOutputDto,
-  OfertaFormacaoListInputDto,
-  OfertaFormacaoUpdateInputDto,
+  OfertaFormacaoCreateCommand,
+  OfertaFormacaoFindOneQuery,
+  OfertaFormacaoFindOneQueryResult,
+  OfertaFormacaoListQuery,
+  OfertaFormacaoUpdateCommand,
 } from "@/modules/ensino/oferta-formacao";
 import {
   OfertaFormacaoCreateInputRestDto,
@@ -25,15 +25,15 @@ export class OfertaFormacaoRestMapper {
   // Input: Server DTO -> Core DTO
   // ============================================================================
 
-  static toFindOneInput = createFindOneInputMapper(OfertaFormacaoFindOneInputDto);
+  static toFindOneInput = createFindOneInputMapper(OfertaFormacaoFindOneQuery);
 
-  static toListInput = createListInputMapper(OfertaFormacaoListInputDto, [
+  static toListInput = createListInputMapper(OfertaFormacaoListQuery, [
     "filter.id",
     "filter.modalidade.id",
   ]);
 
-  static toCreateInput(dto: OfertaFormacaoCreateInputRestDto): OfertaFormacaoCreateInputDto {
-    const input = new OfertaFormacaoCreateInputDto();
+  static toCreateInput(dto: OfertaFormacaoCreateInputRestDto): OfertaFormacaoCreateCommand {
+    const input = new OfertaFormacaoCreateCommand();
     input.nome = dto.nome;
     input.slug = dto.slug;
     input.modalidade = { id: dto.modalidade.id };
@@ -43,9 +43,9 @@ export class OfertaFormacaoRestMapper {
   static toUpdateInput(
     params: OfertaFormacaoFindOneInputRestDto,
     dto: OfertaFormacaoUpdateInputRestDto,
-  ): OfertaFormacaoFindOneInputDto & OfertaFormacaoUpdateInputDto {
-    const input = new OfertaFormacaoFindOneInputDto() as OfertaFormacaoFindOneInputDto &
-      OfertaFormacaoUpdateInputDto;
+  ): OfertaFormacaoFindOneQuery & OfertaFormacaoUpdateCommand {
+    const input = new OfertaFormacaoFindOneQuery() as OfertaFormacaoFindOneQuery &
+      OfertaFormacaoUpdateCommand;
     input.id = params.id;
     if (dto.nome !== undefined) {
       input.nome = dto.nome;
@@ -64,7 +64,7 @@ export class OfertaFormacaoRestMapper {
   // ============================================================================
 
   static toFindOneOutputDto(
-    output: OfertaFormacaoFindOneOutputDto,
+    output: OfertaFormacaoFindOneQueryResult,
   ): OfertaFormacaoFindOneOutputRestDto {
     const dto = new OfertaFormacaoFindOneOutputRestDto();
     dto.id = output.id;

@@ -9,10 +9,10 @@ import {
   paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
-  CalendarioLetivoFindOneInputDto,
-  CalendarioLetivoFindOneOutputDto,
-  CalendarioLetivoListInputDto,
-  CalendarioLetivoListOutputDto,
+  CalendarioLetivoFindOneQuery,
+  CalendarioLetivoFindOneQueryResult,
+  CalendarioLetivoListQuery,
+  CalendarioLetivoListQueryResult,
   ICalendarioLetivoRepository,
 } from "@/modules/horarios/calendario-letivo";
 import type { CalendarioLetivoEntity } from "./calendario-letivo.entity";
@@ -22,15 +22,15 @@ import { createCalendarioLetivoRepository } from "./calendario-letivo.repository
 export class CalendarioLetivoTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     CalendarioLetivoEntity,
-    CalendarioLetivoListInputDto,
-    CalendarioLetivoListOutputDto,
-    CalendarioLetivoFindOneInputDto,
-    CalendarioLetivoFindOneOutputDto
+    CalendarioLetivoListQuery,
+    CalendarioLetivoListQueryResult,
+    CalendarioLetivoFindOneQuery,
+    CalendarioLetivoFindOneQueryResult
   >
   implements ICalendarioLetivoRepository
 {
   protected readonly alias = "calendario_letivo";
-  protected readonly outputDtoName = "CalendarioLetivoFindOneOutputDto";
+  protected readonly outputDtoName = "CalendarioLetivoFindOneQueryResult";
 
   constructor(
     @DeclareDependency(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,

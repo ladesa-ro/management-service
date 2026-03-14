@@ -1,7 +1,6 @@
 import type { IBaseCrudRepository } from "@/modules/@shared";
 import type { IAmbiente } from "@/modules/ambientes/ambiente";
-import type { AmbienteFindOneOutputDto, AmbienteListOutputDto } from "../../application/dtos";
-
+import type { AmbienteFindOneQueryResult, AmbienteListQueryResult } from "../queries";
 /**
  * Token de injeção para o repositório de Ambiente
  */
@@ -12,4 +11,4 @@ export const IAmbienteRepository = Symbol("IAmbienteRepository");
  * Estende a interface base de CRUD com operações padrão
  */
 export interface IAmbienteRepository
-  extends IBaseCrudRepository<IAmbiente, AmbienteListOutputDto, AmbienteFindOneOutputDto> {}
+  extends IBaseCrudRepository<IAmbiente, AmbienteListQueryResult, AmbienteFindOneQueryResult> {}

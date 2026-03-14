@@ -86,7 +86,7 @@ export function mapDatedFields(
  * Cria um mapeador de FindOneInput genérico para entidades com id UUID.
  *
  * @example
- * static toFindOneInput = createFindOneInputMapper(ModalidadeFindOneInputDto);
+ * static toFindOneInput = createFindOneInputMapper(ModalidadeFindOneQuery);
  */
 export function createFindOneInputMapper<T extends { id: string }>(
   InputClass: new () => T,
@@ -102,7 +102,7 @@ export function createFindOneInputMapper<T extends { id: string }>(
  * Cria um mapeador de ListInput genérico com suporte a filtros.
  *
  * @example
- * static toListInput = createListInputMapper(ModalidadeListInputDto, ["filter.id"]);
+ * static toListInput = createListInputMapper(ModalidadeListQuery, ["filter.id"]);
  */
 export function createListInputMapper<TCore>(
   CoreClass: new () => TCore,

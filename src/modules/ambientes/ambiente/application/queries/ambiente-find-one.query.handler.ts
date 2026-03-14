@@ -3,9 +3,8 @@ import {
   type IAmbienteFindOneQuery,
   IAmbienteFindOneQueryHandler,
 } from "@/modules/ambientes/ambiente/domain/queries/ambiente-find-one.query.handler.interface";
+import type { AmbienteFindOneQueryResult } from "../../domain/queries";
 import { IAmbienteRepository } from "../../domain/repositories";
-import type { AmbienteFindOneOutputDto } from "../dtos";
-
 @DeclareImplementation()
 export class AmbienteFindOneQueryHandlerImpl implements IAmbienteFindOneQueryHandler {
   constructor(
@@ -17,7 +16,7 @@ export class AmbienteFindOneQueryHandlerImpl implements IAmbienteFindOneQueryHan
     accessContext,
     dto,
     selection,
-  }: IAmbienteFindOneQuery): Promise<AmbienteFindOneOutputDto | null> {
+  }: IAmbienteFindOneQuery): Promise<AmbienteFindOneQueryResult | null> {
     return this.repository.findById(accessContext, dto, selection);
   }
 }

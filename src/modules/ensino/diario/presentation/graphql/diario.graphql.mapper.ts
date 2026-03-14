@@ -1,10 +1,10 @@
 import { createListOutputMapper, mapDatedFields } from "@/modules/@shared/application/mappers";
 import {
-  DiarioCreateInputDto,
-  DiarioFindOneInputDto,
-  DiarioFindOneOutputDto,
-  DiarioListInputDto,
-  DiarioUpdateInputDto,
+  DiarioCreateCommand,
+  DiarioFindOneQuery,
+  DiarioFindOneQueryResult,
+  DiarioListQuery,
+  DiarioUpdateCommand,
 } from "@/modules/ensino/diario";
 import { CalendarioLetivoGraphqlMapper } from "@/modules/horarios/calendario-letivo/presentation/graphql/calendario-letivo.graphql.mapper";
 import {
@@ -50,12 +50,12 @@ function mapImagemOutput(imagem: any): any {
 }
 
 export class DiarioGraphqlMapper {
-  static toListInput(dto: DiarioListInputGraphQlDto | null): DiarioListInputDto | null {
+  static toListInput(dto: DiarioListInputGraphQlDto | null): DiarioListQuery | null {
     if (!dto) {
       return null;
     }
 
-    const input = new DiarioListInputDto();
+    const input = new DiarioListQuery();
     input.page = dto.page;
     input.limit = dto.limit;
     input.search = dto.search;
@@ -67,15 +67,15 @@ export class DiarioGraphqlMapper {
     return input;
   }
 
-  static toFindOneInput(id: string, selection?: string[]): DiarioFindOneInputDto {
-    const input = new DiarioFindOneInputDto();
+  static toFindOneInput(id: string, selection?: string[]): DiarioFindOneQuery {
+    const input = new DiarioFindOneQuery();
     input.id = id;
     input.selection = selection;
     return input;
   }
 
-  static toCreateInput(dto: DiarioCreateInputGraphQlDto): DiarioCreateInputDto {
-    const input = new DiarioCreateInputDto();
+  static toCreateInput(dto: DiarioCreateInputGraphQlDto): DiarioCreateCommand {
+    const input = new DiarioCreateCommand();
     input.ativo = dto.ativo;
     input.calendarioLetivo = { id: dto.calendarioLetivo.id };
     input.turma = { id: dto.turma.id };
@@ -88,8 +88,8 @@ export class DiarioGraphqlMapper {
   static toUpdateInput(
     id: string,
     dto: DiarioUpdateInputGraphQlDto,
-  ): DiarioFindOneInputDto & DiarioUpdateInputDto {
-    const input = new DiarioFindOneInputDto() as DiarioFindOneInputDto & DiarioUpdateInputDto;
+  ): DiarioFindOneQuery & DiarioUpdateCommand {
+    const input = new DiarioFindOneQuery() as DiarioFindOneQuery & DiarioUpdateCommand;
     input.id = id;
     if (dto.ativo !== undefined) {
       input.ativo = dto.ativo;
@@ -145,7 +145,7 @@ export class DiarioGraphqlMapper {
     return dto;
   }
 
-  static toFindOneOutputDto(output: DiarioFindOneOutputDto): DiarioFindOneOutputGraphQlDto {
+  static toFindOneOutputDto(output: DiarioFindOneQueryResult): DiarioFindOneOutputGraphQlDto {
     const dto = new DiarioFindOneOutputGraphQlDto();
     dto.id = output.id;
     dto.ativo = output.ativo;

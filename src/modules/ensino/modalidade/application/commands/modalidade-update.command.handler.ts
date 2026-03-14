@@ -6,9 +6,8 @@ import {
 } from "@/modules/ensino/modalidade/domain/commands/modalidade-update.command.handler.interface";
 import { Modalidade } from "@/modules/ensino/modalidade/domain/modalidade.domain";
 import { IModalidadePermissionChecker } from "../../domain/authorization";
+import type { ModalidadeFindOneQueryResult } from "../../domain/queries";
 import { IModalidadeRepository } from "../../domain/repositories";
-import type { ModalidadeFindOneOutputDto } from "../dtos";
-
 @DeclareImplementation()
 export class ModalidadeUpdateCommandHandlerImpl implements IModalidadeUpdateCommandHandler {
   constructor(
@@ -21,7 +20,7 @@ export class ModalidadeUpdateCommandHandlerImpl implements IModalidadeUpdateComm
   async execute({
     accessContext,
     dto,
-  }: IModalidadeUpdateCommand): Promise<ModalidadeFindOneOutputDto> {
+  }: IModalidadeUpdateCommand): Promise<ModalidadeFindOneQueryResult> {
     const current = await this.repository.findById(accessContext, { id: dto.id });
 
     ensureExists(current, Modalidade.entityName, dto.id);

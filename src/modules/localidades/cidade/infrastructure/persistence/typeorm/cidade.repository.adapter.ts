@@ -9,10 +9,10 @@ import {
   paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
-  CidadeFindOneInputDto,
-  CidadeFindOneOutputDto,
-  CidadeListInputDto,
-  CidadeListOutputDto,
+  CidadeFindOneQuery,
+  CidadeFindOneQueryResult,
+  CidadeListQuery,
+  CidadeListQueryResult,
   ICidadeRepository,
 } from "@/modules/localidades/cidade";
 import type { CidadeEntity } from "./cidade.entity";
@@ -27,16 +27,16 @@ import { createCidadeRepository } from "./cidade.repository";
 export class CidadeTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     CidadeEntity,
-    CidadeListInputDto,
-    CidadeListOutputDto,
-    CidadeFindOneInputDto,
-    CidadeFindOneOutputDto
+    CidadeListQuery,
+    CidadeListQueryResult,
+    CidadeFindOneQuery,
+    CidadeFindOneQueryResult
   >
   implements ICidadeRepository
 {
   protected readonly alias = "cidade";
   protected readonly hasSoftDelete = false;
-  protected readonly outputDtoName = "CidadeFindOneOutputDto";
+  protected readonly outputDtoName = "CidadeFindOneQueryResult";
 
   constructor(
     @DeclareDependency(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,

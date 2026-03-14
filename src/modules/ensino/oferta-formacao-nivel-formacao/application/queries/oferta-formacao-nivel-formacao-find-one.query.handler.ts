@@ -3,9 +3,8 @@ import {
   type IOfertaFormacaoNivelFormacaoFindOneQuery,
   IOfertaFormacaoNivelFormacaoFindOneQueryHandler,
 } from "@/modules/ensino/oferta-formacao-nivel-formacao/domain/queries/oferta-formacao-nivel-formacao-find-one.query.handler.interface";
+import type { OfertaFormacaoNivelFormacaoFindOneQueryResult } from "../../domain/queries";
 import { IOfertaFormacaoNivelFormacaoRepository } from "../../domain/repositories";
-import type { OfertaFormacaoNivelFormacaoFindOneOutputDto } from "../dtos";
-
 @DeclareImplementation()
 export class OfertaFormacaoNivelFormacaoFindOneQueryHandlerImpl
   implements IOfertaFormacaoNivelFormacaoFindOneQueryHandler
@@ -19,7 +18,7 @@ export class OfertaFormacaoNivelFormacaoFindOneQueryHandlerImpl
     accessContext,
     dto,
     selection,
-  }: IOfertaFormacaoNivelFormacaoFindOneQuery): Promise<OfertaFormacaoNivelFormacaoFindOneOutputDto | null> {
+  }: IOfertaFormacaoNivelFormacaoFindOneQuery): Promise<OfertaFormacaoNivelFormacaoFindOneQueryResult | null> {
     return this.repository.findById(accessContext, dto, selection);
   }
 }

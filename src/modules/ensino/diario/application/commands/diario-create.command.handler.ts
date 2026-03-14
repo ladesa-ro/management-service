@@ -14,9 +14,8 @@ import { Turma } from "@/modules/ensino/turma/domain/turma.domain";
 import { CalendarioLetivo } from "@/modules/horarios/calendario-letivo/domain/calendario-letivo.domain";
 import { ICalendarioLetivoFindOneQueryHandler } from "@/modules/horarios/calendario-letivo/domain/queries/calendario-letivo-find-one.query.handler.interface";
 import { IDiarioPermissionChecker } from "../../domain/authorization";
+import type { DiarioFindOneQueryResult } from "../../domain/queries";
 import { IDiarioRepository } from "../../domain/repositories";
-import type { DiarioFindOneOutputDto } from "../dtos";
-
 @DeclareImplementation()
 export class DiarioCreateCommandHandlerImpl implements IDiarioCreateCommandHandler {
   constructor(
@@ -34,7 +33,7 @@ export class DiarioCreateCommandHandlerImpl implements IDiarioCreateCommandHandl
     private readonly ambienteFindOneHandler: IAmbienteFindOneQueryHandler,
   ) {}
 
-  async execute({ accessContext, dto }: IDiarioCreateCommand): Promise<DiarioFindOneOutputDto> {
+  async execute({ accessContext, dto }: IDiarioCreateCommand): Promise<DiarioFindOneQueryResult> {
     await this.permissionChecker.ensureCanCreate(accessContext, { dto });
 
     let ambientePadraoRef: { id: string } | null = null;

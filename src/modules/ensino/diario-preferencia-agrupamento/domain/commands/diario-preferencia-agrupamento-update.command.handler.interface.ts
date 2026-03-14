@@ -1,19 +1,18 @@
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import type { ICommandHandler } from "@/modules/@shared/domain/abstractions";
 import type {
-  DiarioPreferenciaAgrupamentoFindOneInputDto,
-  DiarioPreferenciaAgrupamentoFindOneOutputDto,
-  DiarioPreferenciaAgrupamentoUpdateInputDto,
-} from "../../application/dtos";
-
+  DiarioPreferenciaAgrupamentoFindOneQuery,
+  DiarioPreferenciaAgrupamentoFindOneQueryResult,
+} from "../queries";
+import type { DiarioPreferenciaAgrupamentoUpdateCommand } from "./diario-preferencia-agrupamento-update.command";
 export type IDiarioPreferenciaAgrupamentoUpdateCommand = {
   accessContext: AccessContext;
-  dto: DiarioPreferenciaAgrupamentoFindOneInputDto & DiarioPreferenciaAgrupamentoUpdateInputDto;
+  dto: DiarioPreferenciaAgrupamentoFindOneQuery & DiarioPreferenciaAgrupamentoUpdateCommand;
 };
 
 export type IDiarioPreferenciaAgrupamentoUpdateCommandHandler = ICommandHandler<
   IDiarioPreferenciaAgrupamentoUpdateCommand,
-  DiarioPreferenciaAgrupamentoFindOneOutputDto
+  DiarioPreferenciaAgrupamentoFindOneQueryResult
 >;
 export const IDiarioPreferenciaAgrupamentoUpdateCommandHandler = Symbol(
   "IDiarioPreferenciaAgrupamentoUpdateCommandHandler",

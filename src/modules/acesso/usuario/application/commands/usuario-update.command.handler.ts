@@ -9,9 +9,8 @@ import {
 } from "@/modules/acesso/usuario/domain/commands/usuario-update.command.handler.interface";
 import { Usuario } from "@/modules/acesso/usuario/domain/usuario.domain";
 import { IUsuarioPermissionChecker } from "../../domain/authorization";
+import type { UsuarioFindOneQueryResult } from "../../domain/queries";
 import { IUsuarioRepository } from "../../domain/repositories";
-import type { UsuarioFindOneOutputDto } from "../dtos";
-
 @DeclareImplementation()
 export class UsuarioUpdateCommandHandlerImpl implements IUsuarioUpdateCommandHandler {
   constructor(
@@ -23,7 +22,7 @@ export class UsuarioUpdateCommandHandlerImpl implements IUsuarioUpdateCommandHan
     private readonly permissionChecker: IUsuarioPermissionChecker,
   ) {}
 
-  async execute({ accessContext, dto }: IUsuarioUpdateCommand): Promise<UsuarioFindOneOutputDto> {
+  async execute({ accessContext, dto }: IUsuarioUpdateCommand): Promise<UsuarioFindOneQueryResult> {
     const currentUsuario = await this.repository.findById(accessContext, dto);
 
     ensureExists(currentUsuario, Usuario.entityName, dto.id);
@@ -72,7 +71,7 @@ export class UsuarioUpdateCommandHandlerImpl implements IUsuarioUpdateCommandHan
   }
 
   private async ensureDtoAvailability(
-    dto: Partial<Pick<UsuarioFindOneOutputDto, "email" | "matricula">>,
+    dto: Partial<Pick<UsuarioFindOneQueryResult, "email" | "matricula">>,
     currentUsuarioId: string | null = null,
   ) {
     let isEmailAvailable = true;

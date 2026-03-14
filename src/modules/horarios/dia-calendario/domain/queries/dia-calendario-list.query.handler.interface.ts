@@ -1,15 +1,15 @@
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import type { IQueryHandler } from "@/modules/@shared/domain/abstractions";
-import type { DiaCalendarioListInputDto, DiaCalendarioListOutputDto } from "../../application/dtos";
-
+import type { DiaCalendarioListQuery } from "./dia-calendario-list.query";
+import type { DiaCalendarioListQueryResult } from "./dia-calendario-list.query.result";
 export type IDiaCalendarioListQuery = {
   accessContext: AccessContext;
-  dto: DiaCalendarioListInputDto | null;
+  dto: DiaCalendarioListQuery | null;
   selection?: string[] | boolean;
 };
 
 export type IDiaCalendarioListQueryHandler = IQueryHandler<
   IDiaCalendarioListQuery,
-  DiaCalendarioListOutputDto
+  DiaCalendarioListQueryResult
 >;
 export const IDiaCalendarioListQueryHandler = Symbol("IDiaCalendarioListQueryHandler");

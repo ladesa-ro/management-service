@@ -1,18 +1,14 @@
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import type { ICommandHandler } from "@/modules/@shared/domain/abstractions";
-import type {
-  CampusFindOneInputDto,
-  CampusFindOneOutputDto,
-  CampusUpdateInputDto,
-} from "../../application/dtos";
-
+import type { CampusFindOneQuery, CampusFindOneQueryResult } from "../queries";
+import type { CampusUpdateCommand } from "./campus-update.command";
 export type ICampusUpdateCommand = {
   accessContext: AccessContext;
-  dto: CampusFindOneInputDto & CampusUpdateInputDto;
+  dto: CampusFindOneQuery & CampusUpdateCommand;
 };
 
 export type ICampusUpdateCommandHandler = ICommandHandler<
   ICampusUpdateCommand,
-  CampusFindOneOutputDto
+  CampusFindOneQueryResult
 >;
 export const ICampusUpdateCommandHandler = Symbol("ICampusUpdateCommandHandler");

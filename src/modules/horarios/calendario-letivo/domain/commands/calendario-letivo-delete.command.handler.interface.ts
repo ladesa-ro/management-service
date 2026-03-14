@@ -1,10 +1,9 @@
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import type { ICommandHandler } from "@/modules/@shared/domain/abstractions";
-import type { CalendarioLetivoFindOneInputDto } from "../../application/dtos";
-
+import type { CalendarioLetivoFindOneQuery } from "../queries";
 export type ICalendarioLetivoDeleteCommand = {
   accessContext: AccessContext;
-  dto: CalendarioLetivoFindOneInputDto;
+  dto: CalendarioLetivoFindOneQuery;
 };
 
 export type ICalendarioLetivoDeleteCommandHandler = ICommandHandler<

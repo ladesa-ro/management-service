@@ -13,9 +13,8 @@ import {
 import { DiaCalendario } from "@/modules/horarios/dia-calendario/domain/dia-calendario.domain";
 import type { IDiaCalendario } from "@/modules/horarios/dia-calendario/domain/dia-calendario.types";
 import { IDiaCalendarioPermissionChecker } from "../../domain/authorization";
+import type { DiaCalendarioFindOneQueryResult } from "../../domain/queries";
 import { IDiaCalendarioRepository } from "../../domain/repositories";
-import type { DiaCalendarioFindOneOutputDto } from "../dtos";
-
 @DeclareImplementation()
 export class DiaCalendarioUpdateCommandHandlerImpl implements IDiaCalendarioUpdateCommandHandler {
   constructor(
@@ -30,7 +29,7 @@ export class DiaCalendarioUpdateCommandHandlerImpl implements IDiaCalendarioUpda
   async execute({
     accessContext,
     dto,
-  }: IDiaCalendarioUpdateCommand): Promise<DiaCalendarioFindOneOutputDto> {
+  }: IDiaCalendarioUpdateCommand): Promise<DiaCalendarioFindOneQueryResult> {
     const current = await this.repository.findById(accessContext, { id: dto.id });
 
     ensureExists(current, DiaCalendario.entityName, dto.id);

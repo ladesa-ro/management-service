@@ -1,10 +1,10 @@
 import { createListOutputMapper, mapDatedFields } from "@/modules/@shared/application/mappers";
 import {
-  NivelFormacaoCreateInputDto,
-  NivelFormacaoFindOneInputDto,
-  NivelFormacaoFindOneOutputDto,
-  NivelFormacaoListInputDto,
-  NivelFormacaoUpdateInputDto,
+  NivelFormacaoCreateCommand,
+  NivelFormacaoFindOneQuery,
+  NivelFormacaoFindOneQueryResult,
+  NivelFormacaoListQuery,
+  NivelFormacaoUpdateCommand,
 } from "@/modules/ensino/nivel-formacao";
 import {
   NivelFormacaoCreateInputGraphQlDto,
@@ -15,14 +15,12 @@ import {
 } from "./nivel-formacao.graphql.dto";
 
 export class NivelFormacaoGraphqlMapper {
-  static toListInput(
-    dto: NivelFormacaoListInputGraphQlDto | null,
-  ): NivelFormacaoListInputDto | null {
+  static toListInput(dto: NivelFormacaoListInputGraphQlDto | null): NivelFormacaoListQuery | null {
     if (!dto) {
       return null;
     }
 
-    const input = new NivelFormacaoListInputDto();
+    const input = new NivelFormacaoListQuery();
     input.page = dto.page;
     input.limit = dto.limit;
     input.search = dto.search;
@@ -31,15 +29,15 @@ export class NivelFormacaoGraphqlMapper {
     return input;
   }
 
-  static toFindOneInput(id: string, selection?: string[]): NivelFormacaoFindOneInputDto {
-    const input = new NivelFormacaoFindOneInputDto();
+  static toFindOneInput(id: string, selection?: string[]): NivelFormacaoFindOneQuery {
+    const input = new NivelFormacaoFindOneQuery();
     input.id = id;
     input.selection = selection;
     return input;
   }
 
-  static toCreateInput(dto: NivelFormacaoCreateInputGraphQlDto): NivelFormacaoCreateInputDto {
-    const input = new NivelFormacaoCreateInputDto();
+  static toCreateInput(dto: NivelFormacaoCreateInputGraphQlDto): NivelFormacaoCreateCommand {
+    const input = new NivelFormacaoCreateCommand();
     input.slug = dto.slug;
     return input;
   }
@@ -47,9 +45,9 @@ export class NivelFormacaoGraphqlMapper {
   static toUpdateInput(
     params: { id: string },
     dto: NivelFormacaoUpdateInputGraphQlDto,
-  ): NivelFormacaoFindOneInputDto & NivelFormacaoUpdateInputDto {
-    const input = new NivelFormacaoFindOneInputDto() as NivelFormacaoFindOneInputDto &
-      NivelFormacaoUpdateInputDto;
+  ): NivelFormacaoFindOneQuery & NivelFormacaoUpdateCommand {
+    const input = new NivelFormacaoFindOneQuery() as NivelFormacaoFindOneQuery &
+      NivelFormacaoUpdateCommand;
     input.id = params.id;
     if (dto.slug !== undefined) {
       input.slug = dto.slug;
@@ -58,7 +56,7 @@ export class NivelFormacaoGraphqlMapper {
   }
 
   static toFindOneOutputDto(
-    output: NivelFormacaoFindOneOutputDto,
+    output: NivelFormacaoFindOneQueryResult,
   ): NivelFormacaoFindOneOutputGraphQlDto {
     const dto = new NivelFormacaoFindOneOutputGraphQlDto();
     dto.id = output.id;

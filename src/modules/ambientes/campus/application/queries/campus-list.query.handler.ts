@@ -3,9 +3,8 @@ import {
   type ICampusListQuery,
   ICampusListQueryHandler,
 } from "@/modules/ambientes/campus/domain/queries/campus-list.query.handler.interface";
+import type { CampusListQueryResult } from "../../domain/queries";
 import { ICampusRepository } from "../../domain/repositories";
-import type { CampusListOutputDto } from "../dtos";
-
 @DeclareImplementation()
 export class CampusListQueryHandlerImpl implements ICampusListQueryHandler {
   constructor(
@@ -13,7 +12,11 @@ export class CampusListQueryHandlerImpl implements ICampusListQueryHandler {
     private readonly repository: ICampusRepository,
   ) {}
 
-  async execute({ accessContext, dto, selection }: ICampusListQuery): Promise<CampusListOutputDto> {
+  async execute({
+    accessContext,
+    dto,
+    selection,
+  }: ICampusListQuery): Promise<CampusListQueryResult> {
     return this.repository.findAll(accessContext, dto, selection);
   }
 }

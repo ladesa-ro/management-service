@@ -7,9 +7,8 @@ import {
 } from "@/modules/ambientes/campus/domain/commands/campus-create.command.handler.interface";
 import { IEnderecoCreateOrUpdateCommandHandler } from "@/modules/localidades/endereco/domain/commands/endereco-create-or-update.command.handler.interface";
 import { ICampusPermissionChecker } from "../../domain/authorization";
+import type { CampusFindOneQueryResult } from "../../domain/queries";
 import { ICampusRepository } from "../../domain/repositories";
-import type { CampusFindOneOutputDto } from "../dtos";
-
 @DeclareImplementation()
 export class CampusCreateCommandHandlerImpl implements ICampusCreateCommandHandler {
   constructor(
@@ -21,7 +20,7 @@ export class CampusCreateCommandHandlerImpl implements ICampusCreateCommandHandl
     private readonly enderecoCreateOrUpdateHandler: IEnderecoCreateOrUpdateCommandHandler,
   ) {}
 
-  async execute({ accessContext, dto }: ICampusCreateCommand): Promise<CampusFindOneOutputDto> {
+  async execute({ accessContext, dto }: ICampusCreateCommand): Promise<CampusFindOneQueryResult> {
     await this.permissionChecker.ensureCanCreate(accessContext, { dto });
 
     const endereco = await this.enderecoCreateOrUpdateHandler.execute({

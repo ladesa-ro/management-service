@@ -1,9 +1,9 @@
 import type { IReadOnlyRepository } from "@/modules/@shared";
 import {
-  ImagemArquivoFindOneInputDto,
-  ImagemArquivoFindOneOutputDto,
-  ImagemArquivoListInputDto,
-  ImagemArquivoListOutputDto,
+  ImagemArquivoFindOneQuery,
+  ImagemArquivoFindOneQueryResult,
+  ImagemArquivoListQuery,
+  ImagemArquivoListQueryResult,
 } from "@/modules/armazenamento/imagem-arquivo";
 
 /**
@@ -17,8 +17,8 @@ export const IImagemArquivoQueryRepository = Symbol("IImagemArquivoQueryReposito
  */
 export interface IImagemArquivoQueryRepository
   extends IReadOnlyRepository<
-    ImagemArquivoListInputDto,
-    ImagemArquivoListOutputDto,
-    ImagemArquivoFindOneInputDto,
-    ImagemArquivoFindOneOutputDto
+    ImagemArquivoListQuery,
+    ImagemArquivoListQueryResult,
+    ImagemArquivoFindOneQuery,
+    ImagemArquivoFindOneQueryResult
   > {}

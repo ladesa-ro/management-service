@@ -1,10 +1,9 @@
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import type { ICommandHandler } from "@/modules/@shared/domain/abstractions";
-import type { ModalidadeFindOneInputDto } from "../../application/dtos";
-
+import type { ModalidadeFindOneQuery } from "../queries";
 export type IModalidadeDeleteCommand = {
   accessContext: AccessContext;
-  dto: ModalidadeFindOneInputDto;
+  dto: ModalidadeFindOneQuery;
 };
 
 export type IModalidadeDeleteCommandHandler = ICommandHandler<IModalidadeDeleteCommand, boolean>;

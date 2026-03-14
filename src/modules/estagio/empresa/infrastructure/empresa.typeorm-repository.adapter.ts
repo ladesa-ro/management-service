@@ -4,14 +4,16 @@ import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { APP_DATA_SOURCE_TOKEN } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
-  EmpresaCreateInputDto,
-  EmpresaFindOneInputDto,
-  EmpresaFindOneOutputDto,
-  EmpresaListInputDto,
-  EmpresaListOutputDto,
-  EmpresaUpdateInputDto,
-} from "@/modules/estagio/empresa/application/dtos";
+  EmpresaCreateCommand,
+  EmpresaUpdateCommand,
+} from "@/modules/estagio/empresa/domain/commands";
 import { Empresa } from "@/modules/estagio/empresa/domain/empresa.domain";
+import type {
+  EmpresaFindOneQuery,
+  EmpresaFindOneQueryResult,
+  EmpresaListQuery,
+  EmpresaListQueryResult,
+} from "@/modules/estagio/empresa/domain/queries";
 import type { IEmpresaRepository } from "@/modules/estagio/empresa/domain/repositories";
 import { Endereco } from "@/modules/localidades/endereco/domain/endereco.domain";
 import { createEnderecoRepository } from "@/modules/localidades/endereco/infrastructure/persistence/typeorm/endereco.repository";
@@ -31,9 +33,9 @@ export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepository {
 
   async findAll(
     accessContext: AccessContext,
-    dto: EmpresaListInputDto | null = null,
+    dto: EmpresaListQuery | null = null,
     selection?: string[] | boolean,
-  ): Promise<EmpresaListOutputDto> {
+  ): Promise<EmpresaListQueryResult> {
     const page = dto?.page || 1;
     const limit = dto?.limit || 10;
     const skip = (page - 1) * limit;
@@ -98,9 +100,9 @@ export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepository {
 
   async findById(
     accessContext: AccessContext | null,
-    dto: EmpresaFindOneInputDto,
+    dto: EmpresaFindOneQuery,
     selection?: string[] | boolean,
-  ): Promise<EmpresaFindOneOutputDto | null> {
+  ): Promise<EmpresaFindOneQueryResult | null> {
     const entity = await this.repository.findOne({
       where: { id: dto.id, dateDeleted: null as any },
     });
@@ -114,8 +116,8 @@ export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepository {
 
   async create(
     accessContext: AccessContext,
-    dto: EmpresaCreateInputDto,
-  ): Promise<EmpresaFindOneOutputDto> {
+    dto: EmpresaCreateCommand,
+  ): Promise<EmpresaFindOneQueryResult> {
     const endereco = await this.enderecoRepository.findOne({
       where: { id: dto.idEnderecoFk, dateDeleted: null as any },
     });
@@ -133,8 +135,8 @@ export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepository {
   async update(
     accessContext: AccessContext,
     id: string,
-    dto: EmpresaUpdateInputDto,
-  ): Promise<EmpresaFindOneOutputDto> {
+    dto: EmpresaUpdateCommand,
+  ): Promise<EmpresaFindOneQueryResult> {
     const entity = await this.repository.findOne({
       where: { id, dateDeleted: null as any },
     });

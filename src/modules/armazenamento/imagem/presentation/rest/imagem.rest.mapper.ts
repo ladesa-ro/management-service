@@ -5,9 +5,9 @@ import {
   mapDatedFields,
 } from "@/modules/@shared/application/mappers";
 import {
-  ImagemFindOneInputDto,
-  ImagemFindOneOutputDto,
-  ImagemListInputDto,
+  ImagemFindOneQuery,
+  ImagemFindOneQueryResult,
+  ImagemListQuery,
 } from "@/modules/armazenamento/imagem";
 import { ImagemFindOneOutputRestDto, ImagemListOutputRestDto } from "./imagem.rest.dto";
 
@@ -16,15 +16,15 @@ export class ImagemRestMapper {
   // Input: Server DTO -> Core DTO
   // ============================================================================
 
-  static toFindOneInput = createFindOneInputMapper(ImagemFindOneInputDto);
+  static toFindOneInput = createFindOneInputMapper(ImagemFindOneQuery);
 
-  static toListInput = createListInputMapper(ImagemListInputDto, ["filter.id"]);
+  static toListInput = createListInputMapper(ImagemListQuery, ["filter.id"]);
 
   // ============================================================================
   // Output: Core DTO -> Server DTO
   // ============================================================================
 
-  static toFindOneOutputDto(output: ImagemFindOneOutputDto): ImagemFindOneOutputRestDto {
+  static toFindOneOutputDto(output: ImagemFindOneQueryResult): ImagemFindOneOutputRestDto {
     const dto = new ImagemFindOneOutputRestDto();
     dto.id = output.id;
     dto.descricao = output.descricao;

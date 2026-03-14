@@ -8,9 +8,8 @@ import {
 } from "@/modules/acesso/usuario/domain/commands/usuario-create.command.handler.interface";
 import { Usuario } from "@/modules/acesso/usuario/domain/usuario.domain";
 import { IUsuarioPermissionChecker } from "../../domain/authorization";
+import type { UsuarioFindOneQueryResult } from "../../domain/queries";
 import { IUsuarioRepository } from "../../domain/repositories";
-import type { UsuarioFindOneOutputDto } from "../dtos";
-
 @DeclareImplementation()
 export class UsuarioCreateCommandHandlerImpl implements IUsuarioCreateCommandHandler {
   constructor(
@@ -22,7 +21,7 @@ export class UsuarioCreateCommandHandlerImpl implements IUsuarioCreateCommandHan
     private readonly permissionChecker: IUsuarioPermissionChecker,
   ) {}
 
-  async execute({ accessContext, dto }: IUsuarioCreateCommand): Promise<UsuarioFindOneOutputDto> {
+  async execute({ accessContext, dto }: IUsuarioCreateCommand): Promise<UsuarioFindOneQueryResult> {
     await this.permissionChecker.ensureCanCreate(accessContext, { dto });
 
     const input = {
@@ -59,7 +58,7 @@ export class UsuarioCreateCommandHandlerImpl implements IUsuarioCreateCommandHan
   }
 
   private async ensureDtoAvailability(
-    dto: Partial<Pick<UsuarioFindOneOutputDto, "email" | "matricula">>,
+    dto: Partial<Pick<UsuarioFindOneQueryResult, "email" | "matricula">>,
     currentUsuarioId: string | null = null,
   ) {
     let isEmailAvailable = true;

@@ -3,9 +3,8 @@ import {
   type IOfertaFormacaoListQuery,
   IOfertaFormacaoListQueryHandler,
 } from "@/modules/ensino/oferta-formacao/domain/queries/oferta-formacao-list.query.handler.interface";
+import type { OfertaFormacaoListQueryResult } from "../../domain/queries";
 import { IOfertaFormacaoRepository } from "../../domain/repositories";
-import type { OfertaFormacaoListOutputDto } from "../dtos";
-
 @DeclareImplementation()
 export class OfertaFormacaoListQueryHandlerImpl implements IOfertaFormacaoListQueryHandler {
   constructor(
@@ -17,7 +16,7 @@ export class OfertaFormacaoListQueryHandlerImpl implements IOfertaFormacaoListQu
     accessContext,
     dto,
     selection,
-  }: IOfertaFormacaoListQuery): Promise<OfertaFormacaoListOutputDto> {
+  }: IOfertaFormacaoListQuery): Promise<OfertaFormacaoListQueryResult> {
     return this.repository.findAll(accessContext, dto, selection);
   }
 }

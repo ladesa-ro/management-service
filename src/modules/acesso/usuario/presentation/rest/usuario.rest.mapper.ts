@@ -4,13 +4,13 @@ import {
   createListOutputMapper,
   mapDatedFields,
 } from "@/modules/@shared/application/mappers";
-import type { UsuarioEnsinoOutput } from "@/modules/acesso/usuario";
+import type { UsuarioEnsinoQueryResult } from "@/modules/acesso/usuario";
 import {
-  UsuarioCreateInputDto,
-  UsuarioFindOneInputDto,
-  UsuarioFindOneOutputDto,
-  UsuarioListInputDto,
-  UsuarioUpdateInputDto,
+  UsuarioCreateCommand,
+  UsuarioFindOneQuery,
+  UsuarioFindOneQueryResult,
+  UsuarioListQuery,
+  UsuarioUpdateCommand,
 } from "@/modules/acesso/usuario";
 import { BlocoRestMapper } from "@/modules/ambientes/bloco/presentation/rest";
 import {
@@ -30,12 +30,12 @@ export class UsuarioRestMapper {
   // Input: Server DTO -> Core DTO
   // ============================================================================
 
-  static toFindOneInput = createFindOneInputMapper(UsuarioFindOneInputDto);
+  static toFindOneInput = createFindOneInputMapper(UsuarioFindOneQuery);
 
-  static toListInput = createListInputMapper(UsuarioListInputDto, ["filter.id"]);
+  static toListInput = createListInputMapper(UsuarioListQuery, ["filter.id"]);
 
-  static toCreateInput(dto: UsuarioCreateInputRestDto): UsuarioCreateInputDto {
-    const input = new UsuarioCreateInputDto();
+  static toCreateInput(dto: UsuarioCreateInputRestDto): UsuarioCreateCommand {
+    const input = new UsuarioCreateCommand();
     input.nome = dto.nome;
     input.matricula = dto.matricula;
     input.email = dto.email;
@@ -45,8 +45,8 @@ export class UsuarioRestMapper {
   static toUpdateInput(
     params: UsuarioFindOneInputRestDto,
     dto: UsuarioUpdateInputRestDto,
-  ): UsuarioFindOneInputDto & UsuarioUpdateInputDto {
-    const input = new UsuarioFindOneInputDto() as UsuarioFindOneInputDto & UsuarioUpdateInputDto;
+  ): UsuarioFindOneQuery & UsuarioUpdateCommand {
+    const input = new UsuarioFindOneQuery() as UsuarioFindOneQuery & UsuarioUpdateCommand;
     input.id = params.id;
     if (dto.nome !== undefined) {
       input.nome = dto.nome;
@@ -64,7 +64,7 @@ export class UsuarioRestMapper {
   // Output: Core DTO -> Server DTO
   // ============================================================================
 
-  static toFindOneOutputDto(output: UsuarioFindOneOutputDto): UsuarioFindOneOutputRestDto {
+  static toFindOneOutputDto(output: UsuarioFindOneQueryResult): UsuarioFindOneOutputRestDto {
     const dto = new UsuarioFindOneOutputRestDto();
     dto.id = output.id;
     dto.nome = output.nome;
@@ -86,7 +86,7 @@ export class UsuarioRestMapper {
     UsuarioRestMapper.toFindOneOutputDto,
   );
 
-  static toEnsinoOutputDto(output: UsuarioEnsinoOutput): UsuarioEnsinoOutputRestDto {
+  static toEnsinoOutputDto(output: UsuarioEnsinoQueryResult): UsuarioEnsinoOutputRestDto {
     const dto = new UsuarioEnsinoOutputRestDto();
     dto.usuario = this.toFindOneOutputDto(output.usuario);
     dto.disciplinas = output.disciplinas.map((vinculoDisciplina) => {

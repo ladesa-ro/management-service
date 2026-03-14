@@ -1,11 +1,11 @@
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import type { IQueryHandler } from "@/modules/@shared/domain/abstractions";
-import type { EstadoListInputDto, EstadoListOutputDto } from "../../application/dtos";
-
+import type { EstadoListQuery } from "./estado-list.query";
+import type { EstadoListQueryResult } from "./estado-list.query.result";
 export type IEstadoListQuery = {
   accessContext: AccessContext;
-  dto: EstadoListInputDto | null;
+  dto: EstadoListQuery | null;
 };
 
-export type IEstadoListQueryHandler = IQueryHandler<IEstadoListQuery, EstadoListOutputDto>;
+export type IEstadoListQueryHandler = IQueryHandler<IEstadoListQuery, EstadoListQueryResult>;
 export const IEstadoListQueryHandler = Symbol("IEstadoListQueryHandler");

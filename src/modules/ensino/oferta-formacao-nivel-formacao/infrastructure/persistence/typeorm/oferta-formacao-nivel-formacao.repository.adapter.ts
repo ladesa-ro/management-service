@@ -10,10 +10,10 @@ import {
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
   IOfertaFormacaoNivelFormacaoRepository,
-  OfertaFormacaoNivelFormacaoFindOneInputDto,
-  OfertaFormacaoNivelFormacaoFindOneOutputDto,
-  OfertaFormacaoNivelFormacaoListInputDto,
-  OfertaFormacaoNivelFormacaoListOutputDto,
+  OfertaFormacaoNivelFormacaoFindOneQuery,
+  OfertaFormacaoNivelFormacaoFindOneQueryResult,
+  OfertaFormacaoNivelFormacaoListQuery,
+  OfertaFormacaoNivelFormacaoListQueryResult,
 } from "@/modules/ensino/oferta-formacao-nivel-formacao";
 import type { OfertaFormacaoNivelFormacaoEntity } from "./oferta-formacao-nivel-formacao.entity";
 import { createOfertaFormacaoNivelFormacaoRepository } from "./oferta-formacao-nivel-formacao.repository";
@@ -22,15 +22,15 @@ import { createOfertaFormacaoNivelFormacaoRepository } from "./oferta-formacao-n
 export class OfertaFormacaoNivelFormacaoTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     OfertaFormacaoNivelFormacaoEntity,
-    OfertaFormacaoNivelFormacaoListInputDto,
-    OfertaFormacaoNivelFormacaoListOutputDto,
-    OfertaFormacaoNivelFormacaoFindOneInputDto,
-    OfertaFormacaoNivelFormacaoFindOneOutputDto
+    OfertaFormacaoNivelFormacaoListQuery,
+    OfertaFormacaoNivelFormacaoListQueryResult,
+    OfertaFormacaoNivelFormacaoFindOneQuery,
+    OfertaFormacaoNivelFormacaoFindOneQueryResult
   >
   implements IOfertaFormacaoNivelFormacaoRepository
 {
   protected readonly alias = "oferta_formacao_nivel_formacao";
-  protected readonly outputDtoName = "OfertaFormacaoNivelFormacaoFindOneOutputDto";
+  protected readonly outputDtoName = "OfertaFormacaoNivelFormacaoFindOneQueryResult";
 
   constructor(
     @DeclareDependency(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,

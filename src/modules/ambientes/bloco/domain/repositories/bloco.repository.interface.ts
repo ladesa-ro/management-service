@@ -1,5 +1,9 @@
 import type { IBaseCrudRepository } from "@/modules/@shared";
-import type { BlocoFindOneOutputDto, BlocoListOutputDto, IBloco } from "@/modules/ambientes/bloco";
+import type {
+  BlocoFindOneQueryResult,
+  BlocoListQueryResult,
+  IBloco,
+} from "@/modules/ambientes/bloco";
 
 /**
  * Token de injeção para o repositório de Bloco
@@ -11,4 +15,4 @@ export const IBlocoRepository = Symbol("IBlocoRepository");
  * Estende a interface base de CRUD com operações padrão
  */
 export interface IBlocoRepository
-  extends IBaseCrudRepository<IBloco, BlocoListOutputDto, BlocoFindOneOutputDto> {}
+  extends IBaseCrudRepository<IBloco, BlocoListQueryResult, BlocoFindOneQueryResult> {}

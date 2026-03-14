@@ -9,10 +9,10 @@ import {
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
   INivelFormacaoRepository,
-  NivelFormacaoFindOneInputDto,
-  NivelFormacaoFindOneOutputDto,
-  NivelFormacaoListInputDto,
-  NivelFormacaoListOutputDto,
+  NivelFormacaoFindOneQuery,
+  NivelFormacaoFindOneQueryResult,
+  NivelFormacaoListQuery,
+  NivelFormacaoListQueryResult,
 } from "@/modules/ensino/nivel-formacao";
 import type { NivelFormacaoEntity } from "./nivel-formacao.entity";
 import { createNivelFormacaoRepository } from "./nivel-formacao.repository";
@@ -21,15 +21,15 @@ import { createNivelFormacaoRepository } from "./nivel-formacao.repository";
 export class NivelFormacaoTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     NivelFormacaoEntity,
-    NivelFormacaoListInputDto,
-    NivelFormacaoListOutputDto,
-    NivelFormacaoFindOneInputDto,
-    NivelFormacaoFindOneOutputDto
+    NivelFormacaoListQuery,
+    NivelFormacaoListQueryResult,
+    NivelFormacaoFindOneQuery,
+    NivelFormacaoFindOneQueryResult
   >
   implements INivelFormacaoRepository
 {
   protected readonly alias = "nivel_formacao";
-  protected readonly outputDtoName = "NivelFormacaoFindOneOutputDto";
+  protected readonly outputDtoName = "NivelFormacaoFindOneQueryResult";
 
   constructor(
     @DeclareDependency(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,

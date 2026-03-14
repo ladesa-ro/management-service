@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
-import type { EmpresaFindOneOutputDto } from "@/modules/estagio/empresa/application/dtos";
 import { Empresa } from "@/modules/estagio/empresa/domain/empresa.domain";
+import type { EmpresaFindOneQueryResult } from "@/modules/estagio/empresa/domain/queries";
 import { EmpresaTypeormEntity } from "./empresa.typeorm.entity";
 
 /**
@@ -48,7 +48,7 @@ export class EmpresaMapper {
   /**
    * Converte TypeORM para DTO output
    */
-  static toOutputDto(entity: EmpresaTypeormEntity): EmpresaFindOneOutputDto {
+  static toOutputDto(entity: EmpresaTypeormEntity): EmpresaFindOneQueryResult {
     return {
       id: entity.id,
       razaoSocial: entity.razaoSocial,
@@ -66,7 +66,7 @@ export class EmpresaMapper {
   /**
    * Converte domínio para DTO output
    */
-  static domainToOutputDto(empresa: Empresa): EmpresaFindOneOutputDto {
+  static domainToOutputDto(empresa: Empresa): EmpresaFindOneQueryResult {
     return {
       id: empresa.id!,
       razaoSocial: empresa.razaoSocial,

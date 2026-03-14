@@ -3,9 +3,8 @@ import {
   type IDiaCalendarioListQuery,
   IDiaCalendarioListQueryHandler,
 } from "@/modules/horarios/dia-calendario/domain/queries/dia-calendario-list.query.handler.interface";
+import type { DiaCalendarioListQueryResult } from "../../domain/queries";
 import { IDiaCalendarioRepository } from "../../domain/repositories";
-import type { DiaCalendarioListOutputDto } from "../dtos";
-
 @DeclareImplementation()
 export class DiaCalendarioListQueryHandlerImpl implements IDiaCalendarioListQueryHandler {
   constructor(
@@ -17,7 +16,7 @@ export class DiaCalendarioListQueryHandlerImpl implements IDiaCalendarioListQuer
     accessContext,
     dto,
     selection,
-  }: IDiaCalendarioListQuery): Promise<DiaCalendarioListOutputDto> {
+  }: IDiaCalendarioListQuery): Promise<DiaCalendarioListQueryResult> {
     return this.repository.findAll(accessContext, dto, selection);
   }
 }

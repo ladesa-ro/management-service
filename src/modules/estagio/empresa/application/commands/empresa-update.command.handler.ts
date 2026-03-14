@@ -5,9 +5,8 @@ import {
   type IEmpresaUpdateCommand,
   IEmpresaUpdateCommandHandler,
 } from "@/modules/estagio/empresa/domain/commands/empresa-update.command.handler.interface";
+import type { EmpresaFindOneQueryResult } from "../../domain/queries";
 import { IEmpresaRepository } from "../../domain/repositories";
-import type { EmpresaFindOneOutputDto } from "../dtos";
-
 @DeclareImplementation()
 export class EmpresaUpdateCommandHandlerImpl implements IEmpresaUpdateCommandHandler {
   constructor(
@@ -19,7 +18,7 @@ export class EmpresaUpdateCommandHandlerImpl implements IEmpresaUpdateCommandHan
     accessContext,
     id,
     dto,
-  }: IEmpresaUpdateCommand): Promise<EmpresaFindOneOutputDto> {
+  }: IEmpresaUpdateCommand): Promise<EmpresaFindOneQueryResult> {
     try {
       return await this.repository.update(accessContext, id, dto);
     } catch (error) {

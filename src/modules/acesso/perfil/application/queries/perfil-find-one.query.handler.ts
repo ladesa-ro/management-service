@@ -3,9 +3,8 @@ import {
   type IPerfilFindOneQuery,
   IPerfilFindOneQueryHandler,
 } from "@/modules/acesso/perfil/domain/queries/perfil-find-one.query.handler.interface";
+import type { PerfilFindOneQueryResult } from "../../domain/queries";
 import { IPerfilRepository } from "../../domain/repositories";
-import type { PerfilFindOneOutputDto } from "../dtos";
-
 @DeclareImplementation()
 export class PerfilFindOneQueryHandlerImpl implements IPerfilFindOneQueryHandler {
   constructor(
@@ -16,7 +15,7 @@ export class PerfilFindOneQueryHandlerImpl implements IPerfilFindOneQueryHandler
   async execute({
     accessContext,
     dto,
-  }: IPerfilFindOneQuery): Promise<PerfilFindOneOutputDto | null> {
+  }: IPerfilFindOneQuery): Promise<PerfilFindOneQueryResult | null> {
     return this.repository.findById(accessContext, dto);
   }
 }

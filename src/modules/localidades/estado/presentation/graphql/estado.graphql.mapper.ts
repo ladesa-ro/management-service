@@ -1,8 +1,8 @@
 import { createListOutputMapper } from "@/modules/@shared/application/mappers";
 import {
-  EstadoFindOneInputDto,
-  EstadoFindOneOutputDto,
-  EstadoListInputDto,
+  EstadoFindOneQuery,
+  EstadoFindOneQueryResult,
+  EstadoListQuery,
 } from "@/modules/localidades/estado";
 import {
   EstadoFindOneOutputGraphQlDto,
@@ -11,12 +11,12 @@ import {
 } from "./estado.graphql.dto";
 
 export class EstadoGraphqlMapper {
-  static toListInput(dto: EstadoListInputGraphQlDto | null): EstadoListInputDto | null {
+  static toListInput(dto: EstadoListInputGraphQlDto | null): EstadoListQuery | null {
     if (!dto) {
       return null;
     }
 
-    const input = new EstadoListInputDto();
+    const input = new EstadoListQuery();
     input.page = dto.page;
     input.limit = dto.limit;
     input.search = dto.search;
@@ -25,14 +25,14 @@ export class EstadoGraphqlMapper {
     return input;
   }
 
-  static toFindOneInput(id: number, selection?: string[]): EstadoFindOneInputDto {
-    const input = new EstadoFindOneInputDto();
+  static toFindOneInput(id: number, selection?: string[]): EstadoFindOneQuery {
+    const input = new EstadoFindOneQuery();
     input.id = id;
     input.selection = selection;
     return input;
   }
 
-  static toFindOneOutputDto(output: EstadoFindOneOutputDto): EstadoFindOneOutputGraphQlDto {
+  static toFindOneOutputDto(output: EstadoFindOneQueryResult): EstadoFindOneOutputGraphQlDto {
     const dto = new EstadoFindOneOutputGraphQlDto();
     dto.id = output.id;
     dto.nome = output.nome;

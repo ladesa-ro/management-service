@@ -5,9 +5,8 @@ import {
   IUsuarioEnsinoQueryHandler,
 } from "@/modules/acesso/usuario/domain/queries/usuario-ensino.query.handler.interface";
 import { Usuario } from "@/modules/acesso/usuario/domain/usuario.domain";
+import type { UsuarioEnsinoQueryResult } from "../../domain/queries";
 import { IUsuarioRepository } from "../../domain/repositories";
-import type { UsuarioEnsinoOutput } from "../dtos";
-
 @DeclareImplementation()
 export class UsuarioEnsinoQueryHandlerImpl implements IUsuarioEnsinoQueryHandler {
   constructor(
@@ -19,7 +18,7 @@ export class UsuarioEnsinoQueryHandlerImpl implements IUsuarioEnsinoQueryHandler
     accessContext,
     dto,
     selection,
-  }: IUsuarioEnsinoQuery): Promise<UsuarioEnsinoOutput> {
+  }: IUsuarioEnsinoQuery): Promise<UsuarioEnsinoQueryResult> {
     const usuario = await this.repository.findById(accessContext, dto, selection);
 
     ensureExists(usuario, Usuario.entityName, dto.id);

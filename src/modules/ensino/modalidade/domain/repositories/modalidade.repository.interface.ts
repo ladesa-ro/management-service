@@ -1,8 +1,8 @@
 import type { IBaseCrudRepository } from "@/modules/@shared";
 import {
   type IModalidade,
-  ModalidadeFindOneOutputDto,
-  ModalidadeListOutputDto,
+  ModalidadeFindOneQueryResult,
+  ModalidadeListQueryResult,
 } from "@/modules/ensino/modalidade";
 
 export const IModalidadeRepository = Symbol("IModalidadeRepository");
@@ -12,4 +12,8 @@ export const IModalidadeRepository = Symbol("IModalidadeRepository");
  * Estende a interface base de CRUD com operações padrão
  */
 export interface IModalidadeRepository
-  extends IBaseCrudRepository<IModalidade, ModalidadeListOutputDto, ModalidadeFindOneOutputDto> {}
+  extends IBaseCrudRepository<
+    IModalidade,
+    ModalidadeListQueryResult,
+    ModalidadeFindOneQueryResult
+  > {}

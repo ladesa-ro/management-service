@@ -1,19 +1,16 @@
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import type { IQueryHandler } from "@/modules/@shared/domain/abstractions";
-import type {
-  OfertaFormacaoNivelFormacaoFindOneInputDto,
-  OfertaFormacaoNivelFormacaoFindOneOutputDto,
-} from "../../application/dtos";
-
+import type { OfertaFormacaoNivelFormacaoFindOneQuery } from "./oferta-formacao-nivel-formacao-find-one.query";
+import type { OfertaFormacaoNivelFormacaoFindOneQueryResult } from "./oferta-formacao-nivel-formacao-find-one.query.result";
 export type IOfertaFormacaoNivelFormacaoFindOneQuery = {
   accessContext: AccessContext | null;
-  dto: OfertaFormacaoNivelFormacaoFindOneInputDto;
+  dto: OfertaFormacaoNivelFormacaoFindOneQuery;
   selection?: string[] | boolean;
 };
 
 export type IOfertaFormacaoNivelFormacaoFindOneQueryHandler = IQueryHandler<
   IOfertaFormacaoNivelFormacaoFindOneQuery,
-  OfertaFormacaoNivelFormacaoFindOneOutputDto | null
+  OfertaFormacaoNivelFormacaoFindOneQueryResult | null
 >;
 export const IOfertaFormacaoNivelFormacaoFindOneQueryHandler = Symbol(
   "IOfertaFormacaoNivelFormacaoFindOneQueryHandler",

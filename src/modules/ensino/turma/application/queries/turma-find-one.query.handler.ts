@@ -3,9 +3,8 @@ import {
   type ITurmaFindOneQuery,
   ITurmaFindOneQueryHandler,
 } from "@/modules/ensino/turma/domain/queries/turma-find-one.query.handler.interface";
+import type { TurmaFindOneQueryResult } from "../../domain/queries";
 import { ITurmaRepository } from "../../domain/repositories";
-import type { TurmaFindOneOutputDto } from "../dtos";
-
 @DeclareImplementation()
 export class TurmaFindOneQueryHandlerImpl implements ITurmaFindOneQueryHandler {
   constructor(
@@ -17,7 +16,7 @@ export class TurmaFindOneQueryHandlerImpl implements ITurmaFindOneQueryHandler {
     accessContext,
     dto,
     selection,
-  }: ITurmaFindOneQuery): Promise<TurmaFindOneOutputDto | null> {
+  }: ITurmaFindOneQuery): Promise<TurmaFindOneQueryResult | null> {
     return this.repository.findById(accessContext, dto, selection);
   }
 }

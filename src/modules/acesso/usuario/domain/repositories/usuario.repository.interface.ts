@@ -1,12 +1,11 @@
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import type { IPersistRepository } from "@/modules/@shared";
 import type {
-  UsuarioFindOneInputDto,
-  UsuarioFindOneOutputDto,
-  UsuarioListInputDto,
-  UsuarioListOutputDto,
-} from "../../application/dtos";
-
+  UsuarioFindOneQuery,
+  UsuarioFindOneQueryResult,
+  UsuarioListQuery,
+  UsuarioListQueryResult,
+} from "../queries";
 /**
  * Token de injeção para o repositório de Usuario
  */
@@ -22,18 +21,18 @@ export interface IUsuarioRepository extends IPersistRepository<Record<string, an
    */
   findAll(
     accessContext: AccessContext,
-    dto: UsuarioListInputDto | null,
+    dto: UsuarioListQuery | null,
     selection?: string[] | boolean,
-  ): Promise<UsuarioListOutputDto>;
+  ): Promise<UsuarioListQueryResult>;
 
   /**
    * Busca um usuário por ID
    */
   findById(
     accessContext: AccessContext | null,
-    dto: UsuarioFindOneInputDto,
+    dto: UsuarioFindOneQuery,
     selection?: string[] | boolean,
-  ): Promise<UsuarioFindOneOutputDto | null>;
+  ): Promise<UsuarioFindOneQueryResult | null>;
 
   /**
    * Busca um usuário por ID (formato simples)
@@ -42,7 +41,7 @@ export interface IUsuarioRepository extends IPersistRepository<Record<string, an
     accessContext: AccessContext,
     id: string,
     selection?: string[],
-  ): Promise<UsuarioFindOneOutputDto | null>;
+  ): Promise<UsuarioFindOneQueryResult | null>;
 
   /**
    * Busca um usuário pela matrícula (sem filtro de acesso)
@@ -50,7 +49,7 @@ export interface IUsuarioRepository extends IPersistRepository<Record<string, an
   findByMatricula(
     matricula: string,
     selection?: string[] | boolean,
-  ): Promise<UsuarioFindOneOutputDto | null>;
+  ): Promise<UsuarioFindOneQueryResult | null>;
 
   /**
    * Verifica se uma matrícula está disponível

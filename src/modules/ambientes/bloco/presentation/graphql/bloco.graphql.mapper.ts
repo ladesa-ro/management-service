@@ -1,10 +1,10 @@
 import { createListOutputMapper, mapDatedFields } from "@/modules/@shared/application/mappers";
 import {
-  BlocoCreateInputDto,
-  BlocoFindOneInputDto,
-  BlocoFindOneOutputDto,
-  BlocoListInputDto,
-  BlocoUpdateInputDto,
+  BlocoCreateCommand,
+  BlocoFindOneQuery,
+  BlocoFindOneQueryResult,
+  BlocoListQuery,
+  BlocoUpdateCommand,
 } from "@/modules/ambientes/bloco";
 import { CampusGraphqlMapper } from "@/modules/ambientes/campus/presentation/graphql/campus.graphql.mapper";
 import {
@@ -48,12 +48,12 @@ function mapImagemOutput(imagem: any): any {
 }
 
 export class BlocoGraphqlMapper {
-  static toListInput(dto: BlocoListInputGraphQlDto | null): BlocoListInputDto | null {
+  static toListInput(dto: BlocoListInputGraphQlDto | null): BlocoListQuery | null {
     if (!dto) {
       return null;
     }
 
-    const input = new BlocoListInputDto();
+    const input = new BlocoListQuery();
     input.page = dto.page;
     input.limit = dto.limit;
     input.search = dto.search;
@@ -63,15 +63,15 @@ export class BlocoGraphqlMapper {
     return input;
   }
 
-  static toFindOneInput(id: string, selection?: string[]): BlocoFindOneInputDto {
-    const input = new BlocoFindOneInputDto();
+  static toFindOneInput(id: string, selection?: string[]): BlocoFindOneQuery {
+    const input = new BlocoFindOneQuery();
     input.id = id;
     input.selection = selection;
     return input;
   }
 
-  static toCreateInput(dto: BlocoCreateInputGraphQlDto): BlocoCreateInputDto {
-    const input = new BlocoCreateInputDto();
+  static toCreateInput(dto: BlocoCreateInputGraphQlDto): BlocoCreateCommand {
+    const input = new BlocoCreateCommand();
     input.nome = dto.nome;
     input.codigo = dto.codigo;
     input.campus = { id: dto.campus.id };
@@ -81,8 +81,8 @@ export class BlocoGraphqlMapper {
   static toUpdateInput(
     params: { id: string },
     dto: BlocoUpdateInputGraphQlDto,
-  ): BlocoFindOneInputDto & BlocoUpdateInputDto {
-    const input = new BlocoFindOneInputDto() as BlocoFindOneInputDto & BlocoUpdateInputDto;
+  ): BlocoFindOneQuery & BlocoUpdateCommand {
+    const input = new BlocoFindOneQuery() as BlocoFindOneQuery & BlocoUpdateCommand;
     input.id = params.id;
     if (dto.nome !== undefined) input.nome = dto.nome;
     if (dto.codigo !== undefined) input.codigo = dto.codigo;
@@ -90,7 +90,7 @@ export class BlocoGraphqlMapper {
     return input;
   }
 
-  static toFindOneOutputDto(output: BlocoFindOneOutputDto): BlocoFindOneOutputGraphQlDto {
+  static toFindOneOutputDto(output: BlocoFindOneQueryResult): BlocoFindOneOutputGraphQlDto {
     const dto = new BlocoFindOneOutputGraphQlDto();
     dto.id = output.id;
     dto.nome = output.nome;

@@ -1,7 +1,6 @@
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import type { IQueryHandler } from "@/modules/@shared/domain/abstractions";
-import type { PerfilFindOneOutputDto } from "../../application/dtos";
-
+import type { PerfilFindOneQueryResult } from "./perfil-find-one.query.result";
 export type IPerfilFindAllActiveQuery = {
   accessContext: AccessContext | null;
   usuarioId: string;
@@ -9,6 +8,6 @@ export type IPerfilFindAllActiveQuery = {
 
 export type IPerfilFindAllActiveQueryHandler = IQueryHandler<
   IPerfilFindAllActiveQuery,
-  PerfilFindOneOutputDto[]
+  PerfilFindOneQueryResult[]
 >;
 export const IPerfilFindAllActiveQueryHandler = Symbol("IPerfilFindAllActiveQueryHandler");

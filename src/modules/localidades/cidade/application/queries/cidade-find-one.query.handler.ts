@@ -3,9 +3,8 @@ import {
   type ICidadeFindOneQuery,
   ICidadeFindOneQueryHandler,
 } from "@/modules/localidades/cidade/domain/queries/cidade-find-one.query.handler.interface";
+import type { CidadeFindOneQueryResult } from "../../domain/queries";
 import { ICidadeRepository } from "../../domain/repositories";
-import type { CidadeFindOneOutputDto } from "../dtos";
-
 @DeclareImplementation()
 export class CidadeFindOneQueryHandlerImpl implements ICidadeFindOneQueryHandler {
   constructor(
@@ -16,7 +15,7 @@ export class CidadeFindOneQueryHandlerImpl implements ICidadeFindOneQueryHandler
   async execute({
     accessContext,
     dto,
-  }: ICidadeFindOneQuery): Promise<CidadeFindOneOutputDto | null> {
+  }: ICidadeFindOneQuery): Promise<CidadeFindOneQueryResult | null> {
     return this.repository.findById(accessContext, dto);
   }
 }

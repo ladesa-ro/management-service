@@ -8,10 +8,10 @@ import {
   NestJsPaginateAdapter,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
-  AmbienteFindOneInputDto as AmbienteFindOneInputDto,
-  AmbienteFindOneOutputDto as AmbienteFindOneOutputDto,
-  AmbienteListInputDto as AmbienteListInputDto,
-  AmbienteListOutputDto as AmbienteListOutputDto,
+  AmbienteFindOneQuery as AmbienteFindOneQuery,
+  AmbienteFindOneQueryResult as AmbienteFindOneQueryResult,
+  AmbienteListQuery as AmbienteListQuery,
+  AmbienteListQueryResult as AmbienteListQueryResult,
 } from "@/modules/ambientes/ambiente";
 import type { IAmbienteRepository } from "@/modules/ambientes/ambiente/domain/repositories";
 import type { AmbienteEntity } from "./ambiente.entity";
@@ -25,15 +25,15 @@ import { createAmbienteRepository } from "./ambiente.repository";
 export class AmbienteTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     AmbienteEntity,
-    AmbienteListInputDto,
-    AmbienteListOutputDto,
-    AmbienteFindOneInputDto,
-    AmbienteFindOneOutputDto
+    AmbienteListQuery,
+    AmbienteListQueryResult,
+    AmbienteFindOneQuery,
+    AmbienteFindOneQueryResult
   >
   implements IAmbienteRepository
 {
   protected readonly alias = "ambiente";
-  protected readonly outputDtoName = "AmbienteFindOneOutputDto";
+  protected readonly outputDtoName = "AmbienteFindOneQueryResult";
 
   constructor(
     @DeclareDependency(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,

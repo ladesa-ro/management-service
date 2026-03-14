@@ -16,9 +16,8 @@ import { Turma } from "@/modules/ensino/turma/domain/turma.domain";
 import { CalendarioLetivo } from "@/modules/horarios/calendario-letivo/domain/calendario-letivo.domain";
 import { ICalendarioLetivoFindOneQueryHandler } from "@/modules/horarios/calendario-letivo/domain/queries/calendario-letivo-find-one.query.handler.interface";
 import { IDiarioPermissionChecker } from "../../domain/authorization";
+import type { DiarioFindOneQueryResult } from "../../domain/queries";
 import { IDiarioRepository } from "../../domain/repositories";
-import type { DiarioFindOneOutputDto } from "../dtos";
-
 @DeclareImplementation()
 export class DiarioUpdateCommandHandlerImpl implements IDiarioUpdateCommandHandler {
   constructor(
@@ -36,7 +35,7 @@ export class DiarioUpdateCommandHandlerImpl implements IDiarioUpdateCommandHandl
     private readonly ambienteFindOneHandler: IAmbienteFindOneQueryHandler,
   ) {}
 
-  async execute({ accessContext, dto }: IDiarioUpdateCommand): Promise<DiarioFindOneOutputDto> {
+  async execute({ accessContext, dto }: IDiarioUpdateCommand): Promise<DiarioFindOneQueryResult> {
     const current = await this.repository.findById(accessContext, { id: dto.id });
 
     ensureExists(current, Diario.entityName, dto.id);

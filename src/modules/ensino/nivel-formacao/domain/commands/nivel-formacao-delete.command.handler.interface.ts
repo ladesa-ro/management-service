@@ -1,10 +1,9 @@
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import type { ICommandHandler } from "@/modules/@shared/domain/abstractions";
-import type { NivelFormacaoFindOneInputDto } from "../../application/dtos";
-
+import type { NivelFormacaoFindOneQuery } from "../queries";
 export type INivelFormacaoDeleteCommand = {
   accessContext: AccessContext;
-  dto: NivelFormacaoFindOneInputDto;
+  dto: NivelFormacaoFindOneQuery;
 };
 
 export type INivelFormacaoDeleteCommandHandler = ICommandHandler<

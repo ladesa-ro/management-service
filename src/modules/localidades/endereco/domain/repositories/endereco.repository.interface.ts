@@ -1,7 +1,7 @@
 import type { IBaseCrudRepository } from "@/modules/@shared";
 import type {
-  EnderecoFindOneOutputDto,
-  EnderecoListOutputDto,
+  EnderecoFindOneQueryResult,
+  EnderecoListQueryResult,
   IEndereco,
 } from "@/modules/localidades/endereco";
 
@@ -12,11 +12,11 @@ export const IEnderecoRepository = Symbol("IEnderecoRepository");
  * Estende a interface base de CRUD com operações padrão
  */
 export interface IEnderecoRepository
-  extends IBaseCrudRepository<IEndereco, EnderecoListOutputDto, EnderecoFindOneOutputDto> {
+  extends IBaseCrudRepository<IEndereco, EnderecoListQueryResult, EnderecoFindOneQueryResult> {
   /**
    * Busca um endereço por ID (versão simplificada sem contexto de acesso)
    */
-  findOneById(id: string): Promise<EnderecoFindOneOutputDto | null>;
+  findOneById(id: string): Promise<EnderecoFindOneQueryResult | null>;
 
   /**
    * Verifica se um endereço existe

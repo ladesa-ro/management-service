@@ -3,9 +3,8 @@ import {
   type IUsuarioListQuery,
   IUsuarioListQueryHandler,
 } from "@/modules/acesso/usuario/domain/queries/usuario-list.query.handler.interface";
+import type { UsuarioListQueryResult } from "../../domain/queries";
 import { IUsuarioRepository } from "../../domain/repositories";
-import type { UsuarioListOutputDto } from "../dtos";
-
 @DeclareImplementation()
 export class UsuarioListQueryHandlerImpl implements IUsuarioListQueryHandler {
   constructor(
@@ -17,7 +16,7 @@ export class UsuarioListQueryHandlerImpl implements IUsuarioListQueryHandler {
     accessContext,
     dto,
     selection,
-  }: IUsuarioListQuery): Promise<UsuarioListOutputDto> {
+  }: IUsuarioListQuery): Promise<UsuarioListQueryResult> {
     return this.repository.findAll(accessContext, dto, selection);
   }
 }

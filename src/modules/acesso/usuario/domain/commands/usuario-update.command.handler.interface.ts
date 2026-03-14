@@ -1,18 +1,14 @@
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import type { ICommandHandler } from "@/modules/@shared/domain/abstractions";
-import type {
-  UsuarioFindOneInputDto,
-  UsuarioFindOneOutputDto,
-  UsuarioUpdateInputDto,
-} from "../../application/dtos";
-
+import type { UsuarioFindOneQuery, UsuarioFindOneQueryResult } from "../queries";
+import type { UsuarioUpdateCommand } from "./usuario-update.command";
 export type IUsuarioUpdateCommand = {
   accessContext: AccessContext;
-  dto: UsuarioFindOneInputDto & UsuarioUpdateInputDto;
+  dto: UsuarioFindOneQuery & UsuarioUpdateCommand;
 };
 
 export type IUsuarioUpdateCommandHandler = ICommandHandler<
   IUsuarioUpdateCommand,
-  UsuarioFindOneOutputDto
+  UsuarioFindOneQueryResult
 >;
 export const IUsuarioUpdateCommandHandler = Symbol("IUsuarioUpdateCommandHandler");

@@ -9,11 +9,11 @@ import {
   paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
-  TurmaFindOneInputDto,
-  TurmaFindOneOutputDto,
-  TurmaListInputDto,
-  TurmaListOutputDto,
-} from "@/modules/ensino/turma/application/dtos";
+  TurmaFindOneQuery,
+  TurmaFindOneQueryResult,
+  TurmaListQuery,
+  TurmaListQueryResult,
+} from "@/modules/ensino/turma/domain/queries";
 import type { ITurmaRepository } from "@/modules/ensino/turma/domain/repositories";
 import type { TurmaEntity } from "./turma.entity";
 import { createTurmaRepository } from "./turma.repository";
@@ -22,15 +22,15 @@ import { createTurmaRepository } from "./turma.repository";
 export class TurmaTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     TurmaEntity,
-    TurmaListInputDto,
-    TurmaListOutputDto,
-    TurmaFindOneInputDto,
-    TurmaFindOneOutputDto
+    TurmaListQuery,
+    TurmaListQueryResult,
+    TurmaFindOneQuery,
+    TurmaFindOneQueryResult
   >
   implements ITurmaRepository
 {
   protected readonly alias = "turma";
-  protected readonly outputDtoName = "TurmaFindOneOutputDto";
+  protected readonly outputDtoName = "TurmaFindOneQueryResult";
 
   constructor(
     @DeclareDependency(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,

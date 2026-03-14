@@ -12,9 +12,8 @@ import {
 import { Turma } from "@/modules/ensino/turma/domain/turma.domain";
 import type { ITurma } from "@/modules/ensino/turma/domain/turma.types";
 import { ITurmaPermissionChecker } from "../../domain/authorization";
+import type { TurmaFindOneQueryResult } from "../../domain/queries";
 import { ITurmaRepository } from "../../domain/repositories";
-import type { TurmaFindOneOutputDto } from "../dtos";
-
 @DeclareImplementation()
 export class TurmaUpdateCommandHandlerImpl implements ITurmaUpdateCommandHandler {
   constructor(
@@ -28,7 +27,7 @@ export class TurmaUpdateCommandHandlerImpl implements ITurmaUpdateCommandHandler
     private readonly cursoFindOneHandler: ICursoFindOneQueryHandler,
   ) {}
 
-  async execute({ accessContext, dto }: ITurmaUpdateCommand): Promise<TurmaFindOneOutputDto> {
+  async execute({ accessContext, dto }: ITurmaUpdateCommand): Promise<TurmaFindOneQueryResult> {
     const current = await this.repository.findById(accessContext, { id: dto.id });
 
     ensureExists(current, Turma.entityName, dto.id);

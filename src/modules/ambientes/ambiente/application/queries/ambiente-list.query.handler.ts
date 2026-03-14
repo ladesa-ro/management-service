@@ -3,9 +3,8 @@ import {
   type IAmbienteListQuery,
   IAmbienteListQueryHandler,
 } from "@/modules/ambientes/ambiente/domain/queries/ambiente-list.query.handler.interface";
+import type { AmbienteListQueryResult } from "../../domain/queries";
 import { IAmbienteRepository } from "../../domain/repositories";
-import type { AmbienteListOutputDto } from "../dtos";
-
 @DeclareImplementation()
 export class AmbienteListQueryHandlerImpl implements IAmbienteListQueryHandler {
   constructor(
@@ -17,7 +16,7 @@ export class AmbienteListQueryHandlerImpl implements IAmbienteListQueryHandler {
     accessContext,
     dto,
     selection,
-  }: IAmbienteListQuery): Promise<AmbienteListOutputDto> {
+  }: IAmbienteListQuery): Promise<AmbienteListQueryResult> {
     return this.repository.findAll(accessContext, dto, selection);
   }
 }

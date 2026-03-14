@@ -1,14 +1,14 @@
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import type { ICommandHandler } from "@/modules/@shared/domain/abstractions";
-import type { AuthLoginInputDto, AuthSessionCredentialsDto } from "../../application/dtos";
-
+import type { AuthSessionCredentials } from "../shared";
+import type { AuthLoginCommand } from "./auth-login.command";
 export type IAutenticacaoLoginCommand = {
   accessContext: AccessContext;
-  dto: AuthLoginInputDto;
+  dto: AuthLoginCommand;
 };
 
 export type IAutenticacaoLoginCommandHandler = ICommandHandler<
   IAutenticacaoLoginCommand,
-  AuthSessionCredentialsDto
+  AuthSessionCredentials
 >;
 export const IAutenticacaoLoginCommandHandler = Symbol("IAutenticacaoLoginCommandHandler");

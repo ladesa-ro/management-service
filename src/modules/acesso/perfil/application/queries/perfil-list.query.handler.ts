@@ -3,9 +3,8 @@ import {
   type IPerfilListQuery,
   IPerfilListQueryHandler,
 } from "@/modules/acesso/perfil/domain/queries/perfil-list.query.handler.interface";
+import type { PerfilListQueryResult } from "../../domain/queries";
 import { IPerfilRepository } from "../../domain/repositories";
-import type { PerfilListOutputDto } from "../dtos";
-
 @DeclareImplementation()
 export class PerfilListQueryHandlerImpl implements IPerfilListQueryHandler {
   constructor(
@@ -13,7 +12,7 @@ export class PerfilListQueryHandlerImpl implements IPerfilListQueryHandler {
     private readonly repository: IPerfilRepository,
   ) {}
 
-  async execute({ accessContext, dto }: IPerfilListQuery): Promise<PerfilListOutputDto> {
+  async execute({ accessContext, dto }: IPerfilListQuery): Promise<PerfilListQueryResult> {
     return this.repository.findAll(accessContext, dto);
   }
 }

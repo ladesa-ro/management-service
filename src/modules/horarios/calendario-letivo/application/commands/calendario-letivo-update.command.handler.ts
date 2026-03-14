@@ -12,9 +12,8 @@ import {
   ICalendarioLetivoUpdateCommandHandler,
 } from "@/modules/horarios/calendario-letivo/domain/commands/calendario-letivo-update.command.handler.interface";
 import { ICalendarioLetivoPermissionChecker } from "../../domain/authorization";
+import type { CalendarioLetivoFindOneQueryResult } from "../../domain/queries";
 import { ICalendarioLetivoRepository } from "../../domain/repositories";
-import type { CalendarioLetivoFindOneOutputDto } from "../dtos";
-
 @DeclareImplementation()
 export class CalendarioLetivoUpdateCommandHandlerImpl
   implements ICalendarioLetivoUpdateCommandHandler
@@ -33,7 +32,7 @@ export class CalendarioLetivoUpdateCommandHandlerImpl
   async execute({
     accessContext,
     dto,
-  }: ICalendarioLetivoUpdateCommand): Promise<CalendarioLetivoFindOneOutputDto> {
+  }: ICalendarioLetivoUpdateCommand): Promise<CalendarioLetivoFindOneQueryResult> {
     const current = await this.repository.findById(accessContext, { id: dto.id });
 
     ensureExists(current, CalendarioLetivo.entityName, dto.id);

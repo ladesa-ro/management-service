@@ -4,3 +4,4 @@ export * from "./diario-preferencia-agrupamento.types";
 export * from "./queries";
 
 export * from "./repositories";
+export * from "./shared";

@@ -1,10 +1,9 @@
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import type { ICommandHandler } from "@/modules/@shared/domain/abstractions";
-import type { OfertaFormacaoNivelFormacaoFindOneInputDto } from "../../application/dtos";
-
+import type { OfertaFormacaoNivelFormacaoFindOneQuery } from "../queries";
 export type IOfertaFormacaoNivelFormacaoDeleteCommand = {
   accessContext: AccessContext;
-  dto: OfertaFormacaoNivelFormacaoFindOneInputDto;
+  dto: OfertaFormacaoNivelFormacaoFindOneQuery;
 };
 
 export type IOfertaFormacaoNivelFormacaoDeleteCommandHandler = ICommandHandler<

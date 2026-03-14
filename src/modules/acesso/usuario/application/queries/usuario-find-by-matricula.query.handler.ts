@@ -3,9 +3,8 @@ import {
   type IUsuarioFindByMatriculaQuery,
   IUsuarioFindByMatriculaQueryHandler,
 } from "@/modules/acesso/usuario/domain/queries/usuario-find-by-matricula.query.handler.interface";
+import type { UsuarioFindOneQueryResult } from "../../domain/queries";
 import { IUsuarioRepository } from "../../domain/repositories";
-import type { UsuarioFindOneOutputDto } from "../dtos";
-
 @DeclareImplementation()
 export class UsuarioFindByMatriculaQueryHandlerImpl implements IUsuarioFindByMatriculaQueryHandler {
   constructor(
@@ -16,7 +15,7 @@ export class UsuarioFindByMatriculaQueryHandlerImpl implements IUsuarioFindByMat
   async execute({
     matricula,
     selection,
-  }: IUsuarioFindByMatriculaQuery): Promise<UsuarioFindOneOutputDto | null> {
+  }: IUsuarioFindByMatriculaQuery): Promise<UsuarioFindOneQueryResult | null> {
     return this.repository.findByMatricula(matricula, selection);
   }
 }

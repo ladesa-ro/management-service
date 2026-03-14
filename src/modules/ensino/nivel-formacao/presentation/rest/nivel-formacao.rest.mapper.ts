@@ -5,11 +5,11 @@ import {
   mapDatedFields,
 } from "@/modules/@shared/application/mappers";
 import {
-  NivelFormacaoCreateInputDto,
-  NivelFormacaoFindOneInputDto,
-  NivelFormacaoFindOneOutputDto,
-  NivelFormacaoListInputDto,
-  NivelFormacaoUpdateInputDto,
+  NivelFormacaoCreateCommand,
+  NivelFormacaoFindOneQuery,
+  NivelFormacaoFindOneQueryResult,
+  NivelFormacaoListQuery,
+  NivelFormacaoUpdateCommand,
 } from "@/modules/ensino/nivel-formacao";
 import {
   NivelFormacaoCreateInputRestDto,
@@ -23,18 +23,18 @@ export class NivelFormacaoRestMapper {
   // Input: Server DTO -> Core DTO
   // ============================================================================
 
-  static toFindOneInput = createFindOneInputMapper(NivelFormacaoFindOneInputDto);
+  static toFindOneInput = createFindOneInputMapper(NivelFormacaoFindOneQuery);
 
-  static toListInput = createListInputMapper(NivelFormacaoListInputDto, ["filter.id"]);
+  static toListInput = createListInputMapper(NivelFormacaoListQuery, ["filter.id"]);
 
-  static toCreateInput(dto: NivelFormacaoCreateInputRestDto): NivelFormacaoCreateInputDto {
-    const input = new NivelFormacaoCreateInputDto();
+  static toCreateInput(dto: NivelFormacaoCreateInputRestDto): NivelFormacaoCreateCommand {
+    const input = new NivelFormacaoCreateCommand();
     input.slug = dto.slug;
     return input;
   }
 
-  static toUpdateInput(dto: NivelFormacaoUpdateInputRestDto): NivelFormacaoUpdateInputDto {
-    const input = new NivelFormacaoUpdateInputDto();
+  static toUpdateInput(dto: NivelFormacaoUpdateInputRestDto): NivelFormacaoUpdateCommand {
+    const input = new NivelFormacaoUpdateCommand();
     if (dto.slug !== undefined) {
       input.slug = dto.slug;
     }
@@ -46,7 +46,7 @@ export class NivelFormacaoRestMapper {
   // ============================================================================
 
   static toFindOneOutputDto(
-    output: NivelFormacaoFindOneOutputDto,
+    output: NivelFormacaoFindOneQueryResult,
   ): NivelFormacaoFindOneOutputRestDto {
     const dto = new NivelFormacaoFindOneOutputRestDto();
     dto.id = output.id;

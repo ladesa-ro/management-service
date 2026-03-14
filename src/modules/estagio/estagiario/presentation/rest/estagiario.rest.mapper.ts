@@ -1,11 +1,13 @@
 import type {
-  EstagiarioCreateInputDto,
-  EstagiarioFindOneInputDto,
-  EstagiarioFindOneOutputDto,
-  EstagiarioListInputDto,
-  EstagiarioListOutputDto,
-  EstagiarioUpdateInputDto,
-} from "@/modules/estagio/estagiario/application/dtos";
+  EstagiarioCreateCommand,
+  EstagiarioUpdateCommand,
+} from "@/modules/estagio/estagiario/domain/commands";
+import type {
+  EstagiarioFindOneQuery,
+  EstagiarioFindOneQueryResult,
+  EstagiarioListQuery,
+  EstagiarioListQueryResult,
+} from "@/modules/estagio/estagiario/domain/queries";
 import {
   EstagiarioCreateInputRestDto,
   EstagiarioFindOneInputRestDto,
@@ -19,7 +21,7 @@ import {
  * Mapeador de DTOs REST para aplicação
  */
 export class EstagiarioRestMapper {
-  static toCreateInput(dto: EstagiarioCreateInputRestDto): EstagiarioCreateInputDto {
+  static toCreateInput(dto: EstagiarioCreateInputRestDto): EstagiarioCreateCommand {
     return {
       idPerfilFk: dto.idPerfilFk,
       idCursoFk: dto.idCursoFk,
@@ -30,7 +32,7 @@ export class EstagiarioRestMapper {
     };
   }
 
-  static toUpdateInput(dto: EstagiarioUpdateInputRestDto): EstagiarioUpdateInputDto {
+  static toUpdateInput(dto: EstagiarioUpdateInputRestDto): EstagiarioUpdateCommand {
     return {
       idPerfilFk: dto.idPerfilFk,
       idCursoFk: dto.idCursoFk,
@@ -41,13 +43,13 @@ export class EstagiarioRestMapper {
     };
   }
 
-  static toFindOneInput(dto: EstagiarioFindOneInputRestDto): EstagiarioFindOneInputDto {
+  static toFindOneInput(dto: EstagiarioFindOneInputRestDto): EstagiarioFindOneQuery {
     return {
       id: dto.id,
     };
   }
 
-  static toListInput(dto: EstagiarioListInputRestDto): EstagiarioListInputDto {
+  static toListInput(dto: EstagiarioListInputRestDto): EstagiarioListQuery {
     const normalizeIdArray = (value: string | string[] | undefined): string[] | undefined => {
       if (!value) return undefined;
       const arr = Array.isArray(value) ? value : [value];
@@ -65,7 +67,7 @@ export class EstagiarioRestMapper {
     };
   }
 
-  static toFindOneOutputDto(data: EstagiarioFindOneOutputDto): EstagiarioFindOneOutputRestDto {
+  static toFindOneOutputDto(data: EstagiarioFindOneQueryResult): EstagiarioFindOneOutputRestDto {
     return {
       id: data.id,
       idPerfilFk: data.idPerfilFk,
@@ -80,7 +82,7 @@ export class EstagiarioRestMapper {
     };
   }
 
-  static toListOutputDto(data: EstagiarioListOutputDto): EstagiarioListOutputRestDto {
+  static toListOutputDto(data: EstagiarioListQueryResult): EstagiarioListOutputRestDto {
     return {
       data: data.data.map((item) => this.toFindOneOutputDto(item)),
       total: data.total,

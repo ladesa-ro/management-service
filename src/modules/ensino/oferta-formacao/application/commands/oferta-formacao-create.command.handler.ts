@@ -8,9 +8,8 @@ import {
 } from "@/modules/ensino/oferta-formacao/domain/commands/oferta-formacao-create.command.handler.interface";
 import { OfertaFormacao } from "@/modules/ensino/oferta-formacao/domain/oferta-formacao.domain";
 import { IOfertaFormacaoPermissionChecker } from "../../domain/authorization";
+import type { OfertaFormacaoFindOneQueryResult } from "../../domain/queries";
 import { IOfertaFormacaoRepository } from "../../domain/repositories";
-import type { OfertaFormacaoFindOneOutputDto } from "../dtos";
-
 @DeclareImplementation()
 export class OfertaFormacaoCreateCommandHandlerImpl implements IOfertaFormacaoCreateCommandHandler {
   constructor(
@@ -25,7 +24,7 @@ export class OfertaFormacaoCreateCommandHandlerImpl implements IOfertaFormacaoCr
   async execute({
     accessContext,
     dto,
-  }: IOfertaFormacaoCreateCommand): Promise<OfertaFormacaoFindOneOutputDto> {
+  }: IOfertaFormacaoCreateCommand): Promise<OfertaFormacaoFindOneQueryResult> {
     await this.permissionChecker.ensureCanCreate(accessContext, { dto });
 
     let modalidadeRef: { id: string } | undefined;

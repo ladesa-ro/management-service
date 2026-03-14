@@ -3,9 +3,8 @@ import {
   type IDiarioProfessorFindOneQuery,
   IDiarioProfessorFindOneQueryHandler,
 } from "@/modules/ensino/diario-professor/domain/queries/diario-professor-find-one.query.handler.interface";
+import type { DiarioProfessorFindOneQueryResult } from "../../domain/queries";
 import { IDiarioProfessorRepository } from "../../domain/repositories";
-import type { DiarioProfessorFindOneOutputDto } from "../dtos";
-
 @DeclareImplementation()
 export class DiarioProfessorFindOneQueryHandlerImpl implements IDiarioProfessorFindOneQueryHandler {
   constructor(
@@ -17,7 +16,7 @@ export class DiarioProfessorFindOneQueryHandlerImpl implements IDiarioProfessorF
     accessContext,
     dto,
     selection,
-  }: IDiarioProfessorFindOneQuery): Promise<DiarioProfessorFindOneOutputDto | null> {
+  }: IDiarioProfessorFindOneQuery): Promise<DiarioProfessorFindOneQueryResult | null> {
     return this.repository.findById(accessContext, dto, selection);
   }
 }

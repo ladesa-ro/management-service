@@ -5,8 +5,7 @@ import {
 } from "@/modules/acesso/autenticacao/domain/queries/autenticacao-who-am-i.query.handler.interface";
 import { IPerfilFindAllActiveQueryHandler } from "@/modules/acesso/perfil/domain/queries/perfil-find-all-active.query.handler.interface";
 import { IUsuarioFindOneQueryHandler } from "@/modules/acesso/usuario/domain/queries/usuario-find-one.query.handler.interface";
-import type { AuthWhoAmIOutputDto } from "../dtos";
-
+import type { AuthWhoAmIQueryResult } from "../../domain/queries";
 @DeclareImplementation()
 export class AutenticacaoWhoAmIQueryHandlerImpl implements IAutenticacaoWhoAmIQueryHandler {
   constructor(
@@ -16,7 +15,7 @@ export class AutenticacaoWhoAmIQueryHandlerImpl implements IAutenticacaoWhoAmIQu
     private readonly perfilFindAllActiveHandler: IPerfilFindAllActiveQueryHandler,
   ) {}
 
-  async execute({ accessContext }: IAutenticacaoWhoAmIQuery): Promise<AuthWhoAmIOutputDto> {
+  async execute({ accessContext }: IAutenticacaoWhoAmIQuery): Promise<AuthWhoAmIQueryResult> {
     const usuario = accessContext.requestActor
       ? await this.usuarioFindOneHandler.execute({
           accessContext,
@@ -33,7 +32,7 @@ export class AutenticacaoWhoAmIQueryHandlerImpl implements IAutenticacaoWhoAmIQu
       return {
         usuario,
         perfisAtivos: perfisAtivos,
-      } as unknown as AuthWhoAmIOutputDto;
+      } as unknown as AuthWhoAmIQueryResult;
     }
 
     return {

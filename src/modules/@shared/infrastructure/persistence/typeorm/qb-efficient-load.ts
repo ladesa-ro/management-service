@@ -95,7 +95,7 @@ export const QbEfficientLoadCore = (
  * Efficiently load entity relations based on model schema definition.
  * Uses static model metadata registry instead of runtime TypeSpec compilation.
  *
- * @param entityDefRef - The model definition name (e.g., "ModalidadeFindOneOutputDto")
+ * @param entityDefRef - The model definition name (e.g., "ModalidadeFindOneQueryResult")
  * @param qb - TypeORM SelectQueryBuilder
  * @param alias - The query alias for the root entity
  * @param selection - Fields to select (true = all, string[] = specific fields)

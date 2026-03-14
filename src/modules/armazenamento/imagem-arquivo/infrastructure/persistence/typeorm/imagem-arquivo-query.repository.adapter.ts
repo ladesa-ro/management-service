@@ -9,11 +9,11 @@ import {
   paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
-  ImagemArquivoFindOneInputDto,
-  ImagemArquivoFindOneOutputDto,
-  ImagemArquivoListInputDto,
-  ImagemArquivoListOutputDto,
-} from "@/modules/armazenamento/imagem-arquivo/application/dtos";
+  ImagemArquivoFindOneQuery,
+  ImagemArquivoFindOneQueryResult,
+  ImagemArquivoListQuery,
+  ImagemArquivoListQueryResult,
+} from "@/modules/armazenamento/imagem-arquivo/domain/queries";
 import type { IImagemArquivoQueryRepository } from "@/modules/armazenamento/imagem-arquivo/domain/repositories";
 import type { ImagemArquivoEntity } from "./imagem-arquivo.entity";
 import { createImagemArquivoRepository } from "./imagem-arquivo.repository";
@@ -26,15 +26,15 @@ import { createImagemArquivoRepository } from "./imagem-arquivo.repository";
 export class ImagemArquivoQueryTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     ImagemArquivoEntity,
-    ImagemArquivoListInputDto,
-    ImagemArquivoListOutputDto,
-    ImagemArquivoFindOneInputDto,
-    ImagemArquivoFindOneOutputDto
+    ImagemArquivoListQuery,
+    ImagemArquivoListQueryResult,
+    ImagemArquivoFindOneQuery,
+    ImagemArquivoFindOneQueryResult
   >
   implements IImagemArquivoQueryRepository
 {
   protected readonly alias = "imagem_arquivo";
-  protected readonly outputDtoName = "ImagemArquivoFindOneOutputDto";
+  protected readonly outputDtoName = "ImagemArquivoFindOneQueryResult";
 
   constructor(
     @DeclareDependency(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,

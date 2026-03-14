@@ -1,18 +1,15 @@
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import type { IQueryHandler } from "@/modules/@shared/domain/abstractions";
-import type {
-  OfertaFormacaoListInputDto,
-  OfertaFormacaoListOutputDto,
-} from "../../application/dtos";
-
+import type { OfertaFormacaoListQuery } from "./oferta-formacao-list.query";
+import type { OfertaFormacaoListQueryResult } from "./oferta-formacao-list.query.result";
 export type IOfertaFormacaoListQuery = {
   accessContext: AccessContext;
-  dto: OfertaFormacaoListInputDto | null;
+  dto: OfertaFormacaoListQuery | null;
   selection?: string[] | boolean;
 };
 
 export type IOfertaFormacaoListQueryHandler = IQueryHandler<
   IOfertaFormacaoListQuery,
-  OfertaFormacaoListOutputDto
+  OfertaFormacaoListQueryResult
 >;
 export const IOfertaFormacaoListQueryHandler = Symbol("IOfertaFormacaoListQueryHandler");

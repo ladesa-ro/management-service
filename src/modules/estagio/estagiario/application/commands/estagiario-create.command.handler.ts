@@ -5,9 +5,8 @@ import {
   type IEstagiarioCreateCommand,
   IEstagiarioCreateCommandHandler,
 } from "@/modules/estagio/estagiario/domain/commands/estagiario-create.command.handler.interface";
+import type { EstagiarioFindOneQueryResult } from "../../domain/queries";
 import { IEstagiarioRepository } from "../../domain/repositories";
-import type { EstagiarioFindOneOutputDto } from "../dtos";
-
 @DeclareImplementation()
 export class EstagiarioCreateCommandHandlerImpl implements IEstagiarioCreateCommandHandler {
   constructor(
@@ -18,7 +17,7 @@ export class EstagiarioCreateCommandHandlerImpl implements IEstagiarioCreateComm
   async execute({
     accessContext,
     dto,
-  }: IEstagiarioCreateCommand): Promise<EstagiarioFindOneOutputDto> {
+  }: IEstagiarioCreateCommand): Promise<EstagiarioFindOneQueryResult> {
     try {
       return await this.repository.create(accessContext, dto);
     } catch (error) {

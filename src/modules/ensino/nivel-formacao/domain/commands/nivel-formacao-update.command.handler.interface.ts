@@ -1,18 +1,14 @@
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import type { ICommandHandler } from "@/modules/@shared/domain/abstractions";
-import type {
-  NivelFormacaoFindOneInputDto,
-  NivelFormacaoFindOneOutputDto,
-  NivelFormacaoUpdateInputDto,
-} from "../../application/dtos";
-
+import type { NivelFormacaoFindOneQuery, NivelFormacaoFindOneQueryResult } from "../queries";
+import type { NivelFormacaoUpdateCommand } from "./nivel-formacao-update.command";
 export type INivelFormacaoUpdateCommand = {
   accessContext: AccessContext;
-  dto: NivelFormacaoFindOneInputDto & NivelFormacaoUpdateInputDto;
+  dto: NivelFormacaoFindOneQuery & NivelFormacaoUpdateCommand;
 };
 
 export type INivelFormacaoUpdateCommandHandler = ICommandHandler<
   INivelFormacaoUpdateCommand,
-  NivelFormacaoFindOneOutputDto
+  NivelFormacaoFindOneQueryResult
 >;
 export const INivelFormacaoUpdateCommandHandler = Symbol("INivelFormacaoUpdateCommandHandler");

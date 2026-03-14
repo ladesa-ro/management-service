@@ -6,9 +6,8 @@ import {
 } from "@/modules/ensino/disciplina/domain/commands/disciplina-update.command.handler.interface";
 import { Disciplina } from "@/modules/ensino/disciplina/domain/disciplina.domain";
 import { IDisciplinaPermissionChecker } from "../../domain/authorization";
+import type { DisciplinaFindOneQueryResult } from "../../domain/queries";
 import { IDisciplinaRepository } from "../../domain/repositories";
-import type { DisciplinaFindOneOutputDto } from "../dtos";
-
 @DeclareImplementation()
 export class DisciplinaUpdateCommandHandlerImpl implements IDisciplinaUpdateCommandHandler {
   constructor(
@@ -21,7 +20,7 @@ export class DisciplinaUpdateCommandHandlerImpl implements IDisciplinaUpdateComm
   async execute({
     accessContext,
     dto,
-  }: IDisciplinaUpdateCommand): Promise<DisciplinaFindOneOutputDto> {
+  }: IDisciplinaUpdateCommand): Promise<DisciplinaFindOneQueryResult> {
     const current = await this.repository.findById(accessContext, { id: dto.id });
 
     ensureExists(current, Disciplina.entityName, dto.id);

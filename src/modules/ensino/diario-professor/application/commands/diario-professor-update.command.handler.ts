@@ -12,9 +12,8 @@ import {
 import { DiarioProfessor } from "@/modules/ensino/diario-professor/domain/diario-professor.domain";
 import type { IDiarioProfessor } from "@/modules/ensino/diario-professor/domain/diario-professor.types";
 import { IDiarioProfessorPermissionChecker } from "../../domain/authorization";
+import type { DiarioProfessorFindOneQueryResult } from "../../domain/queries";
 import { IDiarioProfessorRepository } from "../../domain/repositories";
-import type { DiarioProfessorFindOneOutputDto } from "../dtos";
-
 @DeclareImplementation()
 export class DiarioProfessorUpdateCommandHandlerImpl
   implements IDiarioProfessorUpdateCommandHandler
@@ -33,7 +32,7 @@ export class DiarioProfessorUpdateCommandHandlerImpl
   async execute({
     accessContext,
     dto,
-  }: IDiarioProfessorUpdateCommand): Promise<DiarioProfessorFindOneOutputDto> {
+  }: IDiarioProfessorUpdateCommand): Promise<DiarioProfessorFindOneQueryResult> {
     const current = await this.repository.findById(accessContext, { id: dto.id });
 
     ensureExists(current, DiarioProfessor.entityName, dto.id);

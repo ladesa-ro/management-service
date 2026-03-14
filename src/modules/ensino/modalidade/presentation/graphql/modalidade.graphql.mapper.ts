@@ -1,10 +1,10 @@
 import { createListOutputMapper, mapDatedFields } from "@/modules/@shared/application/mappers";
 import {
-  ModalidadeCreateInputDto,
-  ModalidadeFindOneInputDto,
-  ModalidadeFindOneOutputDto,
-  ModalidadeListInputDto,
-  ModalidadeUpdateInputDto,
+  ModalidadeCreateCommand,
+  ModalidadeFindOneQuery,
+  ModalidadeFindOneQueryResult,
+  ModalidadeListQuery,
+  ModalidadeUpdateCommand,
 } from "@/modules/ensino/modalidade";
 import {
   ModalidadeCreateInputGraphQlDto,
@@ -15,12 +15,12 @@ import {
 } from "./modalidade.graphql.dto";
 
 export class ModalidadeGraphqlMapper {
-  static toListInput(dto: ModalidadeListInputGraphQlDto | null): ModalidadeListInputDto | null {
+  static toListInput(dto: ModalidadeListInputGraphQlDto | null): ModalidadeListQuery | null {
     if (!dto) {
       return null;
     }
 
-    const input = new ModalidadeListInputDto();
+    const input = new ModalidadeListQuery();
     input.page = dto.page;
     input.limit = dto.limit;
     input.search = dto.search;
@@ -29,15 +29,15 @@ export class ModalidadeGraphqlMapper {
     return input;
   }
 
-  static toFindOneInput(id: string, selection?: string[]): ModalidadeFindOneInputDto {
-    const input = new ModalidadeFindOneInputDto();
+  static toFindOneInput(id: string, selection?: string[]): ModalidadeFindOneQuery {
+    const input = new ModalidadeFindOneQuery();
     input.id = id;
     input.selection = selection;
     return input;
   }
 
-  static toCreateInput(dto: ModalidadeCreateInputGraphQlDto): ModalidadeCreateInputDto {
-    const input = new ModalidadeCreateInputDto();
+  static toCreateInput(dto: ModalidadeCreateInputGraphQlDto): ModalidadeCreateCommand {
+    const input = new ModalidadeCreateCommand();
     input.nome = dto.nome;
     input.slug = dto.slug;
     return input;
@@ -46,9 +46,8 @@ export class ModalidadeGraphqlMapper {
   static toUpdateInput(
     params: { id: string },
     dto: ModalidadeUpdateInputGraphQlDto,
-  ): ModalidadeFindOneInputDto & ModalidadeUpdateInputDto {
-    const input = new ModalidadeFindOneInputDto() as ModalidadeFindOneInputDto &
-      ModalidadeUpdateInputDto;
+  ): ModalidadeFindOneQuery & ModalidadeUpdateCommand {
+    const input = new ModalidadeFindOneQuery() as ModalidadeFindOneQuery & ModalidadeUpdateCommand;
     input.id = params.id;
     if (dto.nome !== undefined) {
       input.nome = dto.nome;
@@ -59,7 +58,9 @@ export class ModalidadeGraphqlMapper {
     return input;
   }
 
-  static toFindOneOutputDto(output: ModalidadeFindOneOutputDto): ModalidadeFindOneOutputGraphQlDto {
+  static toFindOneOutputDto(
+    output: ModalidadeFindOneQueryResult,
+  ): ModalidadeFindOneOutputGraphQlDto {
     const dto = new ModalidadeFindOneOutputGraphQlDto();
     dto.id = output.id;
     dto.nome = output.nome;

@@ -3,9 +3,8 @@ import {
   type ICursoFindOneQuery,
   ICursoFindOneQueryHandler,
 } from "@/modules/ensino/curso/domain/queries/curso-find-one.query.handler.interface";
+import type { CursoFindOneQueryResult } from "../../domain/queries";
 import { ICursoRepository } from "../../domain/repositories";
-import type { CursoFindOneOutputDto } from "../dtos";
-
 @DeclareImplementation()
 export class CursoFindOneQueryHandlerImpl implements ICursoFindOneQueryHandler {
   constructor(
@@ -17,7 +16,7 @@ export class CursoFindOneQueryHandlerImpl implements ICursoFindOneQueryHandler {
     accessContext,
     dto,
     selection,
-  }: ICursoFindOneQuery): Promise<CursoFindOneOutputDto | null> {
+  }: ICursoFindOneQuery): Promise<CursoFindOneQueryResult | null> {
     return this.repository.findById(accessContext, dto, selection);
   }
 }

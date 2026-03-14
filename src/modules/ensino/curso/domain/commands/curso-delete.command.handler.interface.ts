@@ -1,10 +1,9 @@
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import type { ICommandHandler } from "@/modules/@shared/domain/abstractions";
-import type { CursoFindOneInputDto } from "../../application/dtos";
-
+import type { CursoFindOneQuery } from "../queries";
 export type ICursoDeleteCommand = {
   accessContext: AccessContext;
-  dto: CursoFindOneInputDto;
+  dto: CursoFindOneQuery;
 };
 
 export type ICursoDeleteCommandHandler = ICommandHandler<ICursoDeleteCommand, boolean>;

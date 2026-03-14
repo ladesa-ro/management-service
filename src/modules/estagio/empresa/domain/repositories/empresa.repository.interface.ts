@@ -1,13 +1,11 @@
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
+import type { EmpresaCreateCommand, EmpresaUpdateCommand } from "../commands";
 import type {
-  EmpresaCreateInputDto,
-  EmpresaFindOneInputDto,
-  EmpresaFindOneOutputDto,
-  EmpresaListInputDto,
-  EmpresaListOutputDto,
-  EmpresaUpdateInputDto,
-} from "@/modules/estagio/empresa/application/dtos";
-
+  EmpresaFindOneQuery,
+  EmpresaFindOneQueryResult,
+  EmpresaListQuery,
+  EmpresaListQueryResult,
+} from "../queries";
 /**
  * Symbol para injetar a porta de repositório
  */
@@ -19,26 +17,26 @@ export const IEmpresaRepository = Symbol("IEmpresaRepository");
 export interface IEmpresaRepository {
   findAll(
     accessContext: AccessContext,
-    dto: EmpresaListInputDto | null,
+    dto: EmpresaListQuery | null,
     selection?: string[] | boolean,
-  ): Promise<EmpresaListOutputDto>;
+  ): Promise<EmpresaListQueryResult>;
 
   findById(
     accessContext: AccessContext | null,
-    dto: EmpresaFindOneInputDto,
+    dto: EmpresaFindOneQuery,
     selection?: string[] | boolean,
-  ): Promise<EmpresaFindOneOutputDto | null>;
+  ): Promise<EmpresaFindOneQueryResult | null>;
 
   create(
     accessContext: AccessContext,
-    dto: EmpresaCreateInputDto,
-  ): Promise<EmpresaFindOneOutputDto>;
+    dto: EmpresaCreateCommand,
+  ): Promise<EmpresaFindOneQueryResult>;
 
   update(
     accessContext: AccessContext,
     id: string,
-    dto: EmpresaUpdateInputDto,
-  ): Promise<EmpresaFindOneOutputDto>;
+    dto: EmpresaUpdateCommand,
+  ): Promise<EmpresaFindOneQueryResult>;
 
   delete(accessContext: AccessContext, id: string): Promise<void>;
 }

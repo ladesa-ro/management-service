@@ -3,9 +3,8 @@ import {
   type IDiarioProfessorListQuery,
   IDiarioProfessorListQueryHandler,
 } from "@/modules/ensino/diario-professor/domain/queries/diario-professor-list.query.handler.interface";
+import type { DiarioProfessorListQueryResult } from "../../domain/queries";
 import { IDiarioProfessorRepository } from "../../domain/repositories";
-import type { DiarioProfessorListOutputDto } from "../dtos";
-
 @DeclareImplementation()
 export class DiarioProfessorListQueryHandlerImpl implements IDiarioProfessorListQueryHandler {
   constructor(
@@ -17,7 +16,7 @@ export class DiarioProfessorListQueryHandlerImpl implements IDiarioProfessorList
     accessContext,
     dto,
     selection,
-  }: IDiarioProfessorListQuery): Promise<DiarioProfessorListOutputDto> {
+  }: IDiarioProfessorListQuery): Promise<DiarioProfessorListQueryResult> {
     return this.repository.findAll(accessContext, dto, selection);
   }
 }

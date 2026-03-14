@@ -8,11 +8,11 @@ import {
   paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
-  EstadoFindOneInputDto,
-  EstadoFindOneOutputDto,
-  EstadoListInputDto,
-  EstadoListOutputDto,
-} from "@/modules/localidades/estado/application/dtos";
+  EstadoFindOneQuery,
+  EstadoFindOneQueryResult,
+  EstadoListQuery,
+  EstadoListQueryResult,
+} from "@/modules/localidades/estado/domain/queries";
 import type { IEstadoRepository } from "@/modules/localidades/estado/domain/repositories";
 import type { EstadoEntity } from "./estado.entity";
 import { createEstadoRepository } from "./estado.repository";
@@ -26,16 +26,16 @@ import { createEstadoRepository } from "./estado.repository";
 export class EstadoTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     EstadoEntity,
-    EstadoListInputDto,
-    EstadoListOutputDto,
-    EstadoFindOneInputDto,
-    EstadoFindOneOutputDto
+    EstadoListQuery,
+    EstadoListQueryResult,
+    EstadoFindOneQuery,
+    EstadoFindOneQueryResult
   >
   implements IEstadoRepository
 {
   protected readonly alias = "estado";
   protected readonly hasSoftDelete = false;
-  protected readonly outputDtoName = "EstadoFindOneOutputDto";
+  protected readonly outputDtoName = "EstadoFindOneQueryResult";
 
   constructor(
     @DeclareDependency(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,

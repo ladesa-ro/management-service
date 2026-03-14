@@ -1,10 +1,9 @@
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import type { ICommandHandler } from "@/modules/@shared/domain/abstractions";
-import type { DiarioPreferenciaAgrupamentoFindOneInputDto } from "../../application/dtos";
-
+import type { DiarioPreferenciaAgrupamentoFindOneQuery } from "../queries";
 export type IDiarioPreferenciaAgrupamentoDeleteCommand = {
   accessContext: AccessContext;
-  dto: DiarioPreferenciaAgrupamentoFindOneInputDto;
+  dto: DiarioPreferenciaAgrupamentoFindOneQuery;
 };
 
 export type IDiarioPreferenciaAgrupamentoDeleteCommandHandler = ICommandHandler<

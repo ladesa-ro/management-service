@@ -3,9 +3,8 @@ import {
   type IEstagiarioListQuery,
   IEstagiarioListQueryHandler,
 } from "@/modules/estagio/estagiario/domain/queries/estagiario-list.query.handler.interface";
+import type { EstagiarioListQueryResult } from "../../domain/queries";
 import { IEstagiarioRepository } from "../../domain/repositories";
-import type { EstagiarioListOutputDto } from "../dtos";
-
 @DeclareImplementation()
 export class EstagiarioListQueryHandlerImpl implements IEstagiarioListQueryHandler {
   constructor(
@@ -17,7 +16,7 @@ export class EstagiarioListQueryHandlerImpl implements IEstagiarioListQueryHandl
     accessContext,
     dto,
     selection,
-  }: IEstagiarioListQuery): Promise<EstagiarioListOutputDto> {
+  }: IEstagiarioListQuery): Promise<EstagiarioListQueryResult> {
     return this.repository.findAll(accessContext, dto, selection);
   }
 }

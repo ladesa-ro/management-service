@@ -4,10 +4,9 @@ import type { IBaseCrudRepository } from "@/modules/@shared";
 import type { IDiarioPreferenciaAgrupamento } from "@/modules/ensino/diario-preferencia-agrupamento";
 import type { DiarioPreferenciaAgrupamentoEntity } from "@/modules/ensino/diario-preferencia-agrupamento/infrastructure/persistence/typeorm";
 import type {
-  DiarioPreferenciaAgrupamentoFindOneOutputDto,
-  DiarioPreferenciaAgrupamentoListOutputDto,
-} from "../../application/dtos";
-
+  DiarioPreferenciaAgrupamentoFindOneQueryResult,
+  DiarioPreferenciaAgrupamentoListQueryResult,
+} from "../queries";
 /**
  * Token de injeção para o repositório de DiarioPreferenciaAgrupamento
  */
@@ -22,8 +21,8 @@ export const IDiarioPreferenciaAgrupamentoRepository = Symbol(
 export interface IDiarioPreferenciaAgrupamentoRepository
   extends IBaseCrudRepository<
     IDiarioPreferenciaAgrupamento,
-    DiarioPreferenciaAgrupamentoListOutputDto,
-    DiarioPreferenciaAgrupamentoFindOneOutputDto
+    DiarioPreferenciaAgrupamentoListQueryResult,
+    DiarioPreferenciaAgrupamentoFindOneQueryResult
   > {
   /**
    * Busca simplificada por ID - método obrigatório
@@ -32,7 +31,7 @@ export interface IDiarioPreferenciaAgrupamentoRepository
     accessContext: AccessContext,
     id: string,
     selection?: string[],
-  ): Promise<DiarioPreferenciaAgrupamentoFindOneOutputDto | null>;
+  ): Promise<DiarioPreferenciaAgrupamentoFindOneQueryResult | null>;
 
   /**
    * Cria um QueryBuilder para a entidade.

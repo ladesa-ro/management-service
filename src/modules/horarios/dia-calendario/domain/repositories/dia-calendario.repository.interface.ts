@@ -1,11 +1,7 @@
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import type { IBaseCrudRepository } from "@/modules/@shared";
 import type { IDiaCalendario } from "@/modules/horarios/dia-calendario";
-import type {
-  DiaCalendarioFindOneOutputDto,
-  DiaCalendarioListOutputDto,
-} from "../../application/dtos";
-
+import type { DiaCalendarioFindOneQueryResult, DiaCalendarioListQueryResult } from "../queries";
 export const IDiaCalendarioRepository = Symbol("IDiaCalendarioRepository");
 
 /**
@@ -15,8 +11,8 @@ export const IDiaCalendarioRepository = Symbol("IDiaCalendarioRepository");
 export interface IDiaCalendarioRepository
   extends IBaseCrudRepository<
     IDiaCalendario,
-    DiaCalendarioListOutputDto,
-    DiaCalendarioFindOneOutputDto
+    DiaCalendarioListQueryResult,
+    DiaCalendarioFindOneQueryResult
   > {
   /**
    * Busca um dia do calendário por ID (formato simples) - método obrigatório
@@ -25,5 +21,5 @@ export interface IDiaCalendarioRepository
     accessContext: AccessContext,
     id: string,
     selection?: string[],
-  ): Promise<DiaCalendarioFindOneOutputDto | null>;
+  ): Promise<DiaCalendarioFindOneQueryResult | null>;
 }

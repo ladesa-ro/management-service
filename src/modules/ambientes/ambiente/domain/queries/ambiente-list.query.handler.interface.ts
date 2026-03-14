@@ -1,12 +1,12 @@
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import type { IQueryHandler } from "@/modules/@shared/domain/abstractions";
-import type { AmbienteListInputDto, AmbienteListOutputDto } from "../../application/dtos";
-
+import type { AmbienteListQuery } from "./ambiente-list.query";
+import type { AmbienteListQueryResult } from "./ambiente-list.query.result";
 export type IAmbienteListQuery = {
   accessContext: AccessContext;
-  dto: AmbienteListInputDto | null;
+  dto: AmbienteListQuery | null;
   selection?: string[] | boolean;
 };
 
-export type IAmbienteListQueryHandler = IQueryHandler<IAmbienteListQuery, AmbienteListOutputDto>;
+export type IAmbienteListQueryHandler = IQueryHandler<IAmbienteListQuery, AmbienteListQueryResult>;
 export const IAmbienteListQueryHandler = Symbol("IAmbienteListQueryHandler");

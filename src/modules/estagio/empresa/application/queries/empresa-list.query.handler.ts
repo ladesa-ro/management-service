@@ -3,9 +3,8 @@ import {
   type IEmpresaListQuery,
   IEmpresaListQueryHandler,
 } from "@/modules/estagio/empresa/domain/queries/empresa-list.query.handler.interface";
+import type { EmpresaListQueryResult } from "../../domain/queries";
 import { IEmpresaRepository } from "../../domain/repositories";
-import type { EmpresaListOutputDto } from "../dtos";
-
 @DeclareImplementation()
 export class EmpresaListQueryHandlerImpl implements IEmpresaListQueryHandler {
   constructor(
@@ -17,7 +16,7 @@ export class EmpresaListQueryHandlerImpl implements IEmpresaListQueryHandler {
     accessContext,
     dto,
     selection,
-  }: IEmpresaListQuery): Promise<EmpresaListOutputDto> {
+  }: IEmpresaListQuery): Promise<EmpresaListQueryResult> {
     return this.repository.findAll(accessContext, dto, selection);
   }
 }

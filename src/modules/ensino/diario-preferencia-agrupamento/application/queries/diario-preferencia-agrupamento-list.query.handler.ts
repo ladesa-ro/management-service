@@ -3,9 +3,8 @@ import {
   type IDiarioPreferenciaAgrupamentoListQuery,
   IDiarioPreferenciaAgrupamentoListQueryHandler,
 } from "@/modules/ensino/diario-preferencia-agrupamento/domain/queries/diario-preferencia-agrupamento-list.query.handler.interface";
+import type { DiarioPreferenciaAgrupamentoListQueryResult } from "../../domain/queries";
 import { IDiarioPreferenciaAgrupamentoRepository } from "../../domain/repositories";
-import type { DiarioPreferenciaAgrupamentoListOutputDto } from "../dtos";
-
 @DeclareImplementation()
 export class DiarioPreferenciaAgrupamentoListQueryHandlerImpl
   implements IDiarioPreferenciaAgrupamentoListQueryHandler
@@ -19,7 +18,7 @@ export class DiarioPreferenciaAgrupamentoListQueryHandlerImpl
     accessContext,
     dto,
     selection,
-  }: IDiarioPreferenciaAgrupamentoListQuery): Promise<DiarioPreferenciaAgrupamentoListOutputDto> {
+  }: IDiarioPreferenciaAgrupamentoListQuery): Promise<DiarioPreferenciaAgrupamentoListQueryResult> {
     return this.repository.findAll(accessContext, dto, selection);
   }
 }

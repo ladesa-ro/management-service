@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
-import type { EstagiarioFindOneOutputDto } from "@/modules/estagio/estagiario/application/dtos";
 import { Estagiario } from "@/modules/estagio/estagiario/domain/estagiario.domain";
+import type { EstagiarioFindOneQueryResult } from "@/modules/estagio/estagiario/domain/queries";
 import { EstagiarioTypeormEntity } from "./estagiario.typeorm.entity";
 
 /**
@@ -65,7 +65,7 @@ export class EstagiarioMapper {
   /**
    * Converte TypeORM para DTO output
    */
-  static toOutputDto(entity: EstagiarioTypeormEntity): EstagiarioFindOneOutputDto {
+  static toOutputDto(entity: EstagiarioTypeormEntity): EstagiarioFindOneQueryResult {
     const formatDateToISOString = (date: Date | string | null | undefined): string => {
       if (!date) return new Date().toISOString();
       if (typeof date === "string") return date;
@@ -94,7 +94,7 @@ export class EstagiarioMapper {
   /**
    * Converte domínio para DTO output
    */
-  static domainToOutputDto(estagiario: Estagiario): EstagiarioFindOneOutputDto {
+  static domainToOutputDto(estagiario: Estagiario): EstagiarioFindOneQueryResult {
     return {
       id: estagiario.id!,
       idPerfilFk: estagiario.idPerfilFk,

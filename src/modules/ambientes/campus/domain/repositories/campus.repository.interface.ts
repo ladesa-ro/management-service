@@ -1,8 +1,7 @@
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import type { IBaseCrudRepository } from "@/modules/@shared";
 import type { ICampus } from "@/modules/ambientes/campus";
-import type { CampusFindOneOutputDto, CampusListOutputDto } from "../../application/dtos";
-
+import type { CampusFindOneQueryResult, CampusListQueryResult } from "../queries";
 /**
  * Token de injeção para o repositório de Campus
  */
@@ -13,7 +12,7 @@ export const ICampusRepository = Symbol("ICampusRepository");
  * Estende a interface base de CRUD com operações padrão
  */
 export interface ICampusRepository
-  extends IBaseCrudRepository<ICampus, CampusListOutputDto, CampusFindOneOutputDto> {
+  extends IBaseCrudRepository<ICampus, CampusListQueryResult, CampusFindOneQueryResult> {
   /**
    * Busca um campus por ID (formato simples) - método obrigatório
    */
@@ -21,5 +20,5 @@ export interface ICampusRepository
     accessContext: AccessContext,
     id: string,
     selection?: string[] | boolean,
-  ): Promise<CampusFindOneOutputDto | null>;
+  ): Promise<CampusFindOneQueryResult | null>;
 }

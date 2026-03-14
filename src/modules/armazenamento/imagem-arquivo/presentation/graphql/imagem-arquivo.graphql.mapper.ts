@@ -4,9 +4,9 @@ import {
   mapDatedFields,
 } from "@/modules/@shared/application/mappers";
 import {
-  ImagemArquivoFindOneInputDto,
-  ImagemArquivoFindOneOutputDto,
-  ImagemArquivoListInputDto,
+  ImagemArquivoFindOneQuery,
+  ImagemArquivoFindOneQueryResult,
+  ImagemArquivoListQuery,
 } from "@/modules/armazenamento/imagem-arquivo";
 import {
   ArquivoFindOneOutputGraphQlDto,
@@ -17,14 +17,12 @@ import {
 } from "./imagem-arquivo.graphql.dto";
 
 export class ImagemArquivoGraphqlMapper {
-  static toListInput(
-    dto: ImagemArquivoListInputGraphQlDto | null,
-  ): ImagemArquivoListInputDto | null {
+  static toListInput(dto: ImagemArquivoListInputGraphQlDto | null): ImagemArquivoListQuery | null {
     if (!dto) {
       return null;
     }
 
-    const input = new ImagemArquivoListInputDto();
+    const input = new ImagemArquivoListQuery();
     input.page = dto.page;
     input.limit = dto.limit;
     input.search = dto.search;
@@ -33,10 +31,10 @@ export class ImagemArquivoGraphqlMapper {
     return input;
   }
 
-  static toFindOneInput = createFindOneInputMapper(ImagemArquivoFindOneInputDto);
+  static toFindOneInput = createFindOneInputMapper(ImagemArquivoFindOneQuery);
 
   static toFindOneOutputDto(
-    output: ImagemArquivoFindOneOutputDto,
+    output: ImagemArquivoFindOneQueryResult,
   ): ImagemArquivoFindOneOutputGraphQlDto {
     const dto = new ImagemArquivoFindOneOutputGraphQlDto();
     dto.id = output.id;

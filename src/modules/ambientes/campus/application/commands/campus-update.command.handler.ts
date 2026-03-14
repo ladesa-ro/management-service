@@ -9,9 +9,8 @@ import {
 } from "@/modules/ambientes/campus/domain/commands/campus-update.command.handler.interface";
 import { IEnderecoCreateOrUpdateCommandHandler } from "@/modules/localidades/endereco/domain/commands/endereco-create-or-update.command.handler.interface";
 import { ICampusPermissionChecker } from "../../domain/authorization";
+import type { CampusFindOneQueryResult } from "../../domain/queries";
 import { ICampusRepository } from "../../domain/repositories";
-import type { CampusFindOneOutputDto } from "../dtos";
-
 @DeclareImplementation()
 export class CampusUpdateCommandHandlerImpl implements ICampusUpdateCommandHandler {
   constructor(
@@ -23,7 +22,7 @@ export class CampusUpdateCommandHandlerImpl implements ICampusUpdateCommandHandl
     private readonly enderecoCreateOrUpdateHandler: IEnderecoCreateOrUpdateCommandHandler,
   ) {}
 
-  async execute({ accessContext, dto }: ICampusUpdateCommand): Promise<CampusFindOneOutputDto> {
+  async execute({ accessContext, dto }: ICampusUpdateCommand): Promise<CampusFindOneQueryResult> {
     const current = await this.repository.findById(accessContext, { id: dto.id });
 
     ensureExists(current, Campus.entityName, dto.id);

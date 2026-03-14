@@ -3,9 +3,8 @@ import {
   type INivelFormacaoListQuery,
   INivelFormacaoListQueryHandler,
 } from "@/modules/ensino/nivel-formacao/domain/queries/nivel-formacao-list.query.handler.interface";
+import type { NivelFormacaoListQueryResult } from "../../domain/queries";
 import { INivelFormacaoRepository } from "../../domain/repositories";
-import type { NivelFormacaoListOutputDto } from "../dtos";
-
 @DeclareImplementation()
 export class NivelFormacaoListQueryHandlerImpl implements INivelFormacaoListQueryHandler {
   constructor(
@@ -17,7 +16,7 @@ export class NivelFormacaoListQueryHandlerImpl implements INivelFormacaoListQuer
     accessContext,
     dto,
     selection,
-  }: INivelFormacaoListQuery): Promise<NivelFormacaoListOutputDto> {
+  }: INivelFormacaoListQuery): Promise<NivelFormacaoListQueryResult> {
     return this.repository.findAll(accessContext, dto, selection);
   }
 }

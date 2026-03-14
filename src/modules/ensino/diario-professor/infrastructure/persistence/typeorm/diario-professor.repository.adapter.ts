@@ -9,11 +9,11 @@ import {
   paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
-  DiarioProfessorFindOneInputDto,
-  DiarioProfessorFindOneOutputDto,
-  DiarioProfessorListInputDto,
-  DiarioProfessorListOutputDto,
-} from "@/modules/ensino/diario-professor/application/dtos";
+  DiarioProfessorFindOneQuery,
+  DiarioProfessorFindOneQueryResult,
+  DiarioProfessorListQuery,
+  DiarioProfessorListQueryResult,
+} from "@/modules/ensino/diario-professor/domain/queries";
 import type { IDiarioProfessorRepository } from "@/modules/ensino/diario-professor/domain/repositories";
 import type { DiarioProfessorEntity } from "./diario-professor.entity";
 import { createDiarioProfessorRepository } from "./diario-professor.repository";
@@ -22,15 +22,15 @@ import { createDiarioProfessorRepository } from "./diario-professor.repository";
 export class DiarioProfessorTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     DiarioProfessorEntity,
-    DiarioProfessorListInputDto,
-    DiarioProfessorListOutputDto,
-    DiarioProfessorFindOneInputDto,
-    DiarioProfessorFindOneOutputDto
+    DiarioProfessorListQuery,
+    DiarioProfessorListQueryResult,
+    DiarioProfessorFindOneQuery,
+    DiarioProfessorFindOneQueryResult
   >
   implements IDiarioProfessorRepository
 {
   protected readonly alias = "diario_professor";
-  protected readonly outputDtoName = "DiarioProfessorFindOneOutputDto";
+  protected readonly outputDtoName = "DiarioProfessorFindOneQueryResult";
 
   constructor(
     @DeclareDependency(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,

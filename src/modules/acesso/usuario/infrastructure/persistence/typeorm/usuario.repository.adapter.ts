@@ -10,10 +10,10 @@ import {
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
   IUsuarioRepository,
-  UsuarioFindOneInputDto,
-  UsuarioFindOneOutputDto,
-  UsuarioListInputDto,
-  UsuarioListOutputDto,
+  UsuarioFindOneQuery,
+  UsuarioFindOneQueryResult,
+  UsuarioListQuery,
+  UsuarioListQueryResult,
 } from "@/modules/acesso/usuario";
 import { createCursoRepository } from "../../../../../ensino/curso/infrastructure/persistence/typeorm/curso.repository";
 import { createDisciplinaRepository } from "../../../../../ensino/disciplina/infrastructure/persistence/typeorm/disciplina.repository";
@@ -25,15 +25,15 @@ import { createUsuarioRepository } from "./usuario.repository";
 export class UsuarioTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     UsuarioEntity,
-    UsuarioListInputDto,
-    UsuarioListOutputDto,
-    UsuarioFindOneInputDto,
-    UsuarioFindOneOutputDto
+    UsuarioListQuery,
+    UsuarioListQueryResult,
+    UsuarioFindOneQuery,
+    UsuarioFindOneQueryResult
   >
   implements IUsuarioRepository
 {
   protected readonly alias = "usuario";
-  protected readonly outputDtoName = "UsuarioFindOneOutputDto";
+  protected readonly outputDtoName = "UsuarioFindOneQueryResult";
 
   constructor(
     @DeclareDependency(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
@@ -49,7 +49,7 @@ export class UsuarioTypeOrmRepositoryAdapter
   async findByMatricula(
     matricula: string,
     selection?: string[] | boolean,
-  ): Promise<UsuarioFindOneOutputDto | null> {
+  ): Promise<UsuarioFindOneQueryResult | null> {
     const qb = this.repository.createQueryBuilder(this.alias);
 
     qb.andWhere(`${this.alias}.matricula = :matricula`, {
@@ -61,7 +61,7 @@ export class UsuarioTypeOrmRepositoryAdapter
 
     const usuario = await qb.getOne();
 
-    return usuario as UsuarioFindOneOutputDto | null;
+    return usuario as UsuarioFindOneQueryResult | null;
   }
 
   // Métodos específicos do Usuario que não estão na classe base

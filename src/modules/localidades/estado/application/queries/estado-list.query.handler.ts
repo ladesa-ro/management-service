@@ -3,9 +3,8 @@ import {
   type IEstadoListQuery,
   IEstadoListQueryHandler,
 } from "@/modules/localidades/estado/domain/queries/estado-list.query.handler.interface";
+import type { EstadoListQueryResult } from "../../domain/queries";
 import { IEstadoRepository } from "../../domain/repositories";
-import type { EstadoListOutputDto } from "../dtos";
-
 @DeclareImplementation()
 export class EstadoListQueryHandlerImpl implements IEstadoListQueryHandler {
   constructor(
@@ -13,7 +12,7 @@ export class EstadoListQueryHandlerImpl implements IEstadoListQueryHandler {
     private readonly repository: IEstadoRepository,
   ) {}
 
-  async execute({ accessContext, dto }: IEstadoListQuery): Promise<EstadoListOutputDto> {
+  async execute({ accessContext, dto }: IEstadoListQuery): Promise<EstadoListQueryResult> {
     return this.repository.findAll(accessContext, dto);
   }
 }

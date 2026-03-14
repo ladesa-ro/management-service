@@ -6,9 +6,8 @@ import {
   IAmbienteUpdateCommandHandler,
 } from "@/modules/ambientes/ambiente/domain/commands/ambiente-update.command.handler.interface";
 import { IAmbientePermissionChecker } from "../../domain/authorization";
+import type { AmbienteFindOneQueryResult } from "../../domain/queries";
 import { IAmbienteRepository } from "../../domain/repositories";
-import type { AmbienteFindOneOutputDto } from "../dtos";
-
 @DeclareImplementation()
 export class AmbienteUpdateCommandHandlerImpl implements IAmbienteUpdateCommandHandler {
   constructor(
@@ -18,7 +17,10 @@ export class AmbienteUpdateCommandHandlerImpl implements IAmbienteUpdateCommandH
     private readonly permissionChecker: IAmbientePermissionChecker,
   ) {}
 
-  async execute({ accessContext, dto }: IAmbienteUpdateCommand): Promise<AmbienteFindOneOutputDto> {
+  async execute({
+    accessContext,
+    dto,
+  }: IAmbienteUpdateCommand): Promise<AmbienteFindOneQueryResult> {
     const current = await this.repository.findById(accessContext, { id: dto.id });
 
     ensureExists(current, Ambiente.entityName, dto.id);

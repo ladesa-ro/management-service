@@ -3,9 +3,8 @@ import {
   type IBlocoFindOneQuery,
   IBlocoFindOneQueryHandler,
 } from "@/modules/ambientes/bloco/domain/queries/bloco-find-one.query.handler.interface";
+import type { BlocoFindOneQueryResult } from "../../domain/queries";
 import { IBlocoRepository } from "../../domain/repositories";
-import type { BlocoFindOneOutputDto } from "../dtos";
-
 @DeclareImplementation()
 export class BlocoFindOneQueryHandlerImpl implements IBlocoFindOneQueryHandler {
   constructor(
@@ -17,7 +16,7 @@ export class BlocoFindOneQueryHandlerImpl implements IBlocoFindOneQueryHandler {
     accessContext,
     dto,
     selection,
-  }: IBlocoFindOneQuery): Promise<BlocoFindOneOutputDto | null> {
+  }: IBlocoFindOneQuery): Promise<BlocoFindOneQueryResult | null> {
     return this.repository.findById(accessContext, dto, selection);
   }
 }

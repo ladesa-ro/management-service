@@ -3,9 +3,8 @@ import {
   type IImagemArquivoFindOneQuery,
   IImagemArquivoFindOneQueryHandler,
 } from "@/modules/armazenamento/imagem-arquivo/domain/queries/imagem-arquivo-find-one.query.handler.interface";
+import type { ImagemArquivoFindOneQueryResult } from "../../domain/queries";
 import { IImagemArquivoQueryRepository } from "../../domain/repositories";
-import type { ImagemArquivoFindOneOutputDto } from "../dtos";
-
 @DeclareImplementation()
 export class ImagemArquivoFindOneQueryHandlerImpl implements IImagemArquivoFindOneQueryHandler {
   constructor(
@@ -16,7 +15,7 @@ export class ImagemArquivoFindOneQueryHandlerImpl implements IImagemArquivoFindO
   async execute({
     accessContext,
     dto,
-  }: IImagemArquivoFindOneQuery): Promise<ImagemArquivoFindOneOutputDto | null> {
+  }: IImagemArquivoFindOneQuery): Promise<ImagemArquivoFindOneQueryResult | null> {
     return this.repository.findById(accessContext, dto);
   }
 }

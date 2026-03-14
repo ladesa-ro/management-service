@@ -3,9 +3,8 @@ import {
   type IEstagiarioFindOneQuery,
   IEstagiarioFindOneQueryHandler,
 } from "@/modules/estagio/estagiario/domain/queries/estagiario-find-one.query.handler.interface";
+import type { EstagiarioFindOneQueryResult } from "../../domain/queries";
 import { IEstagiarioRepository } from "../../domain/repositories";
-import type { EstagiarioFindOneOutputDto } from "../dtos";
-
 @DeclareImplementation()
 export class EstagiarioFindOneQueryHandlerImpl implements IEstagiarioFindOneQueryHandler {
   constructor(
@@ -17,7 +16,7 @@ export class EstagiarioFindOneQueryHandlerImpl implements IEstagiarioFindOneQuer
     accessContext,
     dto,
     selection,
-  }: IEstagiarioFindOneQuery): Promise<EstagiarioFindOneOutputDto | null> {
+  }: IEstagiarioFindOneQuery): Promise<EstagiarioFindOneQueryResult | null> {
     return this.repository.findById(accessContext, dto, selection);
   }
 }

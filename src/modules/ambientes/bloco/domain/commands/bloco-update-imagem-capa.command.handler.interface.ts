@@ -1,10 +1,9 @@
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import type { ICommandHandler } from "@/modules/@shared/domain/abstractions";
-import type { BlocoFindOneInputDto } from "../../application/dtos";
-
+import type { BlocoFindOneQuery } from "../queries";
 export type IBlocoUpdateImagemCapaCommand = {
   accessContext: AccessContext;
-  dto: BlocoFindOneInputDto;
+  dto: BlocoFindOneQuery;
   file: Express.Multer.File;
 };
 

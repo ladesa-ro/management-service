@@ -1,8 +1,8 @@
 import type { IBaseCrudRepository } from "@/modules/@shared";
 import {
   type IOfertaFormacao,
-  OfertaFormacaoFindOneOutputDto,
-  OfertaFormacaoListOutputDto,
+  OfertaFormacaoFindOneQueryResult,
+  OfertaFormacaoListQueryResult,
 } from "@/modules/ensino/oferta-formacao";
 
 export const IOfertaFormacaoRepository = Symbol("IOfertaFormacaoRepository");
@@ -14,6 +14,6 @@ export const IOfertaFormacaoRepository = Symbol("IOfertaFormacaoRepository");
 export interface IOfertaFormacaoRepository
   extends IBaseCrudRepository<
     IOfertaFormacao,
-    OfertaFormacaoListOutputDto,
-    OfertaFormacaoFindOneOutputDto
+    OfertaFormacaoListQueryResult,
+    OfertaFormacaoFindOneQueryResult
   > {}

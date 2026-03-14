@@ -5,8 +5,7 @@ import {
   type IAutenticacaoRefreshCommand,
   IAutenticacaoRefreshCommandHandler,
 } from "@/modules/acesso/autenticacao/domain/commands/autenticacao-refresh.command.handler.interface";
-import type { AuthSessionCredentialsDto } from "../dtos";
-
+import type { AuthSessionCredentials } from "../../domain/shared";
 @DeclareImplementation()
 export class AutenticacaoRefreshCommandHandlerImpl implements IAutenticacaoRefreshCommandHandler {
   constructor(
@@ -14,13 +13,13 @@ export class AutenticacaoRefreshCommandHandlerImpl implements IAutenticacaoRefre
     private readonly idpTokenService: IIdpTokenService,
   ) {}
 
-  async execute({ dto }: IAutenticacaoRefreshCommand): Promise<AuthSessionCredentialsDto> {
+  async execute({ dto }: IAutenticacaoRefreshCommand): Promise<AuthSessionCredentials> {
     try {
       const refreshToken = dto.refreshToken;
 
       if (refreshToken) {
         const tokenset = await this.idpTokenService.refreshGrant(refreshToken);
-        return tokenset as AuthSessionCredentialsDto;
+        return tokenset as AuthSessionCredentials;
       }
     } catch (_error) {}
 

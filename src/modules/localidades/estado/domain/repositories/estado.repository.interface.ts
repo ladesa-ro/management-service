@@ -1,9 +1,9 @@
 import type { IReadOnlyRepository } from "@/modules/@shared";
 import {
-  EstadoFindOneInputDto,
-  EstadoFindOneOutputDto,
-  EstadoListInputDto,
-  EstadoListOutputDto,
+  EstadoFindOneQuery,
+  EstadoFindOneQueryResult,
+  EstadoListQuery,
+  EstadoListQueryResult,
 } from "@/modules/localidades/estado";
 
 /**
@@ -17,8 +17,8 @@ export const IEstadoRepository = Symbol("IEstadoRepository");
  */
 export interface IEstadoRepository
   extends IReadOnlyRepository<
-    EstadoListInputDto,
-    EstadoListOutputDto,
-    EstadoFindOneInputDto,
-    EstadoFindOneOutputDto
+    EstadoListQuery,
+    EstadoListQueryResult,
+    EstadoFindOneQuery,
+    EstadoFindOneQueryResult
   > {}

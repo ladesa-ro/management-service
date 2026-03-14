@@ -4,11 +4,11 @@ import {
   mapDatedFields,
 } from "@/modules/@shared/application/mappers";
 import {
-  AmbienteCreateInputDto,
-  AmbienteFindOneInputDto,
-  AmbienteFindOneOutputDto,
-  AmbienteListInputDto,
-  AmbienteUpdateInputDto,
+  AmbienteCreateCommand,
+  AmbienteFindOneQuery,
+  AmbienteFindOneQueryResult,
+  AmbienteListQuery,
+  AmbienteUpdateCommand,
 } from "@/modules/ambientes/ambiente";
 import { BlocoGraphqlMapper } from "@/modules/ambientes/bloco/presentation/graphql/bloco.graphql.mapper";
 import {
@@ -52,12 +52,12 @@ function mapImagemOutput(imagem: any): any {
 }
 
 export class AmbienteGraphqlMapper {
-  static toListInput(dto: AmbienteListInputGraphQlDto | null): AmbienteListInputDto | null {
+  static toListInput(dto: AmbienteListInputGraphQlDto | null): AmbienteListQuery | null {
     if (!dto) {
       return null;
     }
 
-    const input = new AmbienteListInputDto();
+    const input = new AmbienteListQuery();
     input.page = dto.page;
     input.limit = dto.limit;
     input.search = dto.search;
@@ -68,10 +68,10 @@ export class AmbienteGraphqlMapper {
     return input;
   }
 
-  static toFindOneInput = createFindOneInputMapper(AmbienteFindOneInputDto);
+  static toFindOneInput = createFindOneInputMapper(AmbienteFindOneQuery);
 
-  static toCreateInput(dto: AmbienteCreateInputGraphQlDto): AmbienteCreateInputDto {
-    const input = new AmbienteCreateInputDto();
+  static toCreateInput(dto: AmbienteCreateInputGraphQlDto): AmbienteCreateCommand {
+    const input = new AmbienteCreateCommand();
     input.nome = dto.nome;
     input.descricao = dto.descricao ?? null;
     input.codigo = dto.codigo;
@@ -84,8 +84,8 @@ export class AmbienteGraphqlMapper {
   static toUpdateInput(
     params: { id: string },
     dto: AmbienteUpdateInputGraphQlDto,
-  ): AmbienteFindOneInputDto & AmbienteUpdateInputDto {
-    const input = new AmbienteFindOneInputDto() as AmbienteFindOneInputDto & AmbienteUpdateInputDto;
+  ): AmbienteFindOneQuery & AmbienteUpdateCommand {
+    const input = new AmbienteFindOneQuery() as AmbienteFindOneQuery & AmbienteUpdateCommand;
     input.id = params.id;
     if (dto.nome !== undefined) input.nome = dto.nome;
     if (dto.descricao !== undefined) input.descricao = dto.descricao ?? null;
@@ -96,7 +96,7 @@ export class AmbienteGraphqlMapper {
     return input;
   }
 
-  static toFindOneOutputDto(output: AmbienteFindOneOutputDto): AmbienteFindOneOutputGraphQlDto {
+  static toFindOneOutputDto(output: AmbienteFindOneQueryResult): AmbienteFindOneOutputGraphQlDto {
     const dto = new AmbienteFindOneOutputGraphQlDto();
     dto.id = output.id;
     dto.nome = output.nome;

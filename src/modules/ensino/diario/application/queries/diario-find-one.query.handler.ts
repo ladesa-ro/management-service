@@ -3,9 +3,8 @@ import {
   type IDiarioFindOneQuery,
   IDiarioFindOneQueryHandler,
 } from "@/modules/ensino/diario/domain/queries/diario-find-one.query.handler.interface";
+import type { DiarioFindOneQueryResult } from "../../domain/queries";
 import { IDiarioRepository } from "../../domain/repositories";
-import type { DiarioFindOneOutputDto } from "../dtos";
-
 @DeclareImplementation()
 export class DiarioFindOneQueryHandlerImpl implements IDiarioFindOneQueryHandler {
   constructor(
@@ -17,7 +16,7 @@ export class DiarioFindOneQueryHandlerImpl implements IDiarioFindOneQueryHandler
     accessContext,
     dto,
     selection,
-  }: IDiarioFindOneQuery): Promise<DiarioFindOneOutputDto | null> {
+  }: IDiarioFindOneQuery): Promise<DiarioFindOneQueryResult | null> {
     return this.repository.findById(accessContext, dto, selection);
   }
 }

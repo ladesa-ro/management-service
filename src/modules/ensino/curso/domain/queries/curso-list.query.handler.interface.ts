@@ -1,12 +1,12 @@
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import type { IQueryHandler } from "@/modules/@shared/domain/abstractions";
-import type { CursoListInputDto, CursoListOutputDto } from "../../application/dtos";
-
+import type { CursoListQuery } from "./curso-list.query";
+import type { CursoListQueryResult } from "./curso-list.query.result";
 export type ICursoListQuery = {
   accessContext: AccessContext;
-  dto: CursoListInputDto | null;
+  dto: CursoListQuery | null;
   selection?: string[] | boolean;
 };
 
-export type ICursoListQueryHandler = IQueryHandler<ICursoListQuery, CursoListOutputDto>;
+export type ICursoListQueryHandler = IQueryHandler<ICursoListQuery, CursoListQueryResult>;
 export const ICursoListQueryHandler = Symbol("ICursoListQueryHandler");

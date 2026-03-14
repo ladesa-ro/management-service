@@ -5,3 +5,4 @@ export * from "./disciplina.types";
 export * from "./queries";
 
 export * from "./repositories";
+export * from "./shared";

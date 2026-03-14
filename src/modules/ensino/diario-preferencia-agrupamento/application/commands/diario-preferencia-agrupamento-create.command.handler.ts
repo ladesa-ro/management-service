@@ -8,9 +8,8 @@ import {
 } from "@/modules/ensino/diario-preferencia-agrupamento/domain/commands/diario-preferencia-agrupamento-create.command.handler.interface";
 import { DiarioPreferenciaAgrupamento } from "@/modules/ensino/diario-preferencia-agrupamento/domain/diario-preferencia-agrupamento.domain";
 import { IDiarioPreferenciaAgrupamentoPermissionChecker } from "../../domain/authorization";
+import type { DiarioPreferenciaAgrupamentoFindOneQueryResult } from "../../domain/queries";
 import { IDiarioPreferenciaAgrupamentoRepository } from "../../domain/repositories";
-import type { DiarioPreferenciaAgrupamentoFindOneOutputDto } from "../dtos";
-
 @DeclareImplementation()
 export class DiarioPreferenciaAgrupamentoCreateCommandHandlerImpl
   implements IDiarioPreferenciaAgrupamentoCreateCommandHandler
@@ -27,7 +26,7 @@ export class DiarioPreferenciaAgrupamentoCreateCommandHandlerImpl
   async execute({
     accessContext,
     dto,
-  }: IDiarioPreferenciaAgrupamentoCreateCommand): Promise<DiarioPreferenciaAgrupamentoFindOneOutputDto> {
+  }: IDiarioPreferenciaAgrupamentoCreateCommand): Promise<DiarioPreferenciaAgrupamentoFindOneQueryResult> {
     await this.permissionChecker.ensureCanCreate(accessContext, { dto });
 
     let diarioRef: { id: string } | undefined;

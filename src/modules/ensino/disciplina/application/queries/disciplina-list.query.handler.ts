@@ -3,9 +3,8 @@ import {
   type IDisciplinaListQuery,
   IDisciplinaListQueryHandler,
 } from "@/modules/ensino/disciplina/domain/queries/disciplina-list.query.handler.interface";
+import type { DisciplinaListQueryResult } from "../../domain/queries";
 import { IDisciplinaRepository } from "../../domain/repositories";
-import type { DisciplinaListOutputDto } from "../dtos";
-
 @DeclareImplementation()
 export class DisciplinaListQueryHandlerImpl implements IDisciplinaListQueryHandler {
   constructor(
@@ -17,7 +16,7 @@ export class DisciplinaListQueryHandlerImpl implements IDisciplinaListQueryHandl
     accessContext,
     dto,
     selection,
-  }: IDisciplinaListQuery): Promise<DisciplinaListOutputDto> {
+  }: IDisciplinaListQuery): Promise<DisciplinaListQueryResult> {
     return this.repository.findAll(accessContext, dto, selection);
   }
 }

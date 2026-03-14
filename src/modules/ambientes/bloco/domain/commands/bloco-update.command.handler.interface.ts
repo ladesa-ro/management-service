@@ -1,18 +1,14 @@
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import type { ICommandHandler } from "@/modules/@shared/domain/abstractions";
-import type {
-  BlocoFindOneInputDto,
-  BlocoFindOneOutputDto,
-  BlocoUpdateInputDto,
-} from "../../application/dtos";
-
+import type { BlocoFindOneQuery, BlocoFindOneQueryResult } from "../queries";
+import type { BlocoUpdateCommand } from "./bloco-update.command";
 export type IBlocoUpdateCommand = {
   accessContext: AccessContext;
-  dto: BlocoFindOneInputDto & BlocoUpdateInputDto;
+  dto: BlocoFindOneQuery & BlocoUpdateCommand;
 };
 
 export type IBlocoUpdateCommandHandler = ICommandHandler<
   IBlocoUpdateCommand,
-  BlocoFindOneOutputDto
+  BlocoFindOneQueryResult
 >;
 export const IBlocoUpdateCommandHandler = Symbol("IBlocoUpdateCommandHandler");

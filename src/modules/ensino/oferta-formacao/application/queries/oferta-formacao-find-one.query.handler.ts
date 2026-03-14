@@ -3,9 +3,8 @@ import {
   type IOfertaFormacaoFindOneQuery,
   IOfertaFormacaoFindOneQueryHandler,
 } from "@/modules/ensino/oferta-formacao/domain/queries/oferta-formacao-find-one.query.handler.interface";
+import type { OfertaFormacaoFindOneQueryResult } from "../../domain/queries";
 import { IOfertaFormacaoRepository } from "../../domain/repositories";
-import type { OfertaFormacaoFindOneOutputDto } from "../dtos";
-
 @DeclareImplementation()
 export class OfertaFormacaoFindOneQueryHandlerImpl implements IOfertaFormacaoFindOneQueryHandler {
   constructor(
@@ -17,7 +16,7 @@ export class OfertaFormacaoFindOneQueryHandlerImpl implements IOfertaFormacaoFin
     accessContext,
     dto,
     selection,
-  }: IOfertaFormacaoFindOneQuery): Promise<OfertaFormacaoFindOneOutputDto | null> {
+  }: IOfertaFormacaoFindOneQuery): Promise<OfertaFormacaoFindOneQueryResult | null> {
     return this.repository.findById(accessContext, dto, selection);
   }
 }

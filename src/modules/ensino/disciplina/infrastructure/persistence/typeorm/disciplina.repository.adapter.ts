@@ -9,11 +9,11 @@ import {
   paginateConfig,
 } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
-  DisciplinaFindOneInputDto,
-  DisciplinaFindOneOutputDto,
-  DisciplinaListInputDto,
-  DisciplinaListOutputDto,
-} from "@/modules/ensino/disciplina/application/dtos";
+  DisciplinaFindOneQuery,
+  DisciplinaFindOneQueryResult,
+  DisciplinaListQuery,
+  DisciplinaListQueryResult,
+} from "@/modules/ensino/disciplina/domain/queries";
 import type { IDisciplinaRepository } from "@/modules/ensino/disciplina/domain/repositories";
 import type { DisciplinaEntity } from "./disciplina.entity";
 import { createDisciplinaRepository } from "./disciplina.repository";
@@ -22,15 +22,15 @@ import { createDisciplinaRepository } from "./disciplina.repository";
 export class DisciplinaTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<
     DisciplinaEntity,
-    DisciplinaListInputDto,
-    DisciplinaListOutputDto,
-    DisciplinaFindOneInputDto,
-    DisciplinaFindOneOutputDto
+    DisciplinaListQuery,
+    DisciplinaListQueryResult,
+    DisciplinaFindOneQuery,
+    DisciplinaFindOneQueryResult
   >
   implements IDisciplinaRepository
 {
   protected readonly alias = "disciplina";
-  protected readonly outputDtoName = "DisciplinaFindOneOutputDto";
+  protected readonly outputDtoName = "DisciplinaFindOneQueryResult";
 
   constructor(
     @DeclareDependency(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,

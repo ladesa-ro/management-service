@@ -5,10 +5,10 @@ import {
   mapDatedFields,
 } from "@/modules/@shared/application/mappers";
 import {
-  PerfilFindOneInputDto,
-  PerfilFindOneOutputDto,
-  PerfilListInputDto,
-  PerfilSetVinculosInputDto,
+  PerfilFindOneQuery,
+  PerfilFindOneQueryResult,
+  PerfilListQuery,
+  PerfilSetVinculosCommand,
 } from "@/modules/acesso/perfil";
 import { UsuarioRestMapper } from "@/modules/acesso/usuario/presentation/rest";
 import { CampusRestMapper } from "@/modules/ambientes/campus/presentation/rest";
@@ -23,9 +23,9 @@ export class PerfilRestMapper {
   // Input: Server DTO -> Core DTO
   // ============================================================================
 
-  static toFindOneInput = createFindOneInputMapper(PerfilFindOneInputDto);
+  static toFindOneInput = createFindOneInputMapper(PerfilFindOneQuery);
 
-  static toListInput = createListInputMapper(PerfilListInputDto, [
+  static toListInput = createListInputMapper(PerfilListQuery, [
     "filter.id",
     "filter.ativo",
     "filter.cargo",
@@ -33,8 +33,8 @@ export class PerfilRestMapper {
     "filter.usuario.id",
   ]);
 
-  static toSetVinculosInput(dto: PerfilSetVinculosInputRestDto): PerfilSetVinculosInputDto {
-    const input = new PerfilSetVinculosInputDto();
+  static toSetVinculosInput(dto: PerfilSetVinculosInputRestDto): PerfilSetVinculosCommand {
+    const input = new PerfilSetVinculosCommand();
     input.cargos = dto.cargos;
     input.campus = { id: dto.campus.id };
     input.usuario = { id: dto.usuario.id };
@@ -45,7 +45,7 @@ export class PerfilRestMapper {
   // Output: Core DTO -> Server DTO
   // ============================================================================
 
-  static toFindOneOutputDto(output: PerfilFindOneOutputDto): PerfilFindOneOutputRestDto {
+  static toFindOneOutputDto(output: PerfilFindOneQueryResult): PerfilFindOneOutputRestDto {
     const dto = new PerfilFindOneOutputRestDto();
     dto.id = output.id;
     dto.ativo = output.ativo;

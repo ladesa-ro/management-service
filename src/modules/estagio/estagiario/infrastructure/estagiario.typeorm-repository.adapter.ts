@@ -10,14 +10,16 @@ import { createCursoRepository } from "@/modules/ensino/curso/infrastructure/per
 import { Turma } from "@/modules/ensino/turma/domain/turma.domain";
 import { createTurmaRepository } from "@/modules/ensino/turma/infrastructure/persistence/typeorm/turma.repository";
 import type {
-  EstagiarioCreateInputDto,
-  EstagiarioFindOneInputDto,
-  EstagiarioFindOneOutputDto,
-  EstagiarioListInputDto,
-  EstagiarioListOutputDto,
-  EstagiarioUpdateInputDto,
-} from "@/modules/estagio/estagiario/application/dtos";
+  EstagiarioCreateCommand,
+  EstagiarioUpdateCommand,
+} from "@/modules/estagio/estagiario/domain/commands";
 import { Estagiario } from "@/modules/estagio/estagiario/domain/estagiario.domain";
+import type {
+  EstagiarioFindOneQuery,
+  EstagiarioFindOneQueryResult,
+  EstagiarioListQuery,
+  EstagiarioListQueryResult,
+} from "@/modules/estagio/estagiario/domain/queries";
 import type { IEstagiarioRepository } from "@/modules/estagio/estagiario/domain/repositories";
 import { createEstagiarioRepository, EstagiarioMapper } from "./persistence";
 
@@ -43,9 +45,9 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
 
   async findAll(
     accessContext: AccessContext,
-    dto: EstagiarioListInputDto | null = null,
+    dto: EstagiarioListQuery | null = null,
     selection?: string[] | boolean,
-  ): Promise<EstagiarioListOutputDto> {
+  ): Promise<EstagiarioListQueryResult> {
     const page = dto?.page || 1;
     const limit = dto?.limit || 10;
     const skip = (page - 1) * limit;
@@ -114,9 +116,9 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
 
   async findById(
     accessContext: AccessContext | null,
-    dto: EstagiarioFindOneInputDto,
+    dto: EstagiarioFindOneQuery,
     selection?: string[] | boolean,
-  ): Promise<EstagiarioFindOneOutputDto | null> {
+  ): Promise<EstagiarioFindOneQueryResult | null> {
     const entity = await this.repository.findOne({
       where: { id: dto.id, dateDeleted: null as any },
     });
@@ -130,8 +132,8 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
 
   async create(
     accessContext: AccessContext,
-    dto: EstagiarioCreateInputDto,
-  ): Promise<EstagiarioFindOneOutputDto> {
+    dto: EstagiarioCreateCommand,
+  ): Promise<EstagiarioFindOneQueryResult> {
     const perfil = await this.perfilRepository.findOne({
       where: { id: dto.idPerfilFk, dateDeleted: null as any },
     });
@@ -161,8 +163,8 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
   async update(
     accessContext: AccessContext,
     id: string,
-    dto: EstagiarioUpdateInputDto,
-  ): Promise<EstagiarioFindOneOutputDto> {
+    dto: EstagiarioUpdateCommand,
+  ): Promise<EstagiarioFindOneQueryResult> {
     const entity = await this.repository.findOne({
       where: { id, dateDeleted: null as any },
     });
