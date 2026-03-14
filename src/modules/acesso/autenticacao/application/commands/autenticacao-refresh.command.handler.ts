@@ -1,7 +1,6 @@
-import { ForbiddenException, ServiceUnavailableException } from "@nestjs/common";
-import * as client from "openid-client";
-import { DeclareImplementation } from "@/domain/dependency-injection";
-import { OpenidConnectService } from "@/modules/@seguranca/provedor-identidade";
+import { ForbiddenException } from "@nestjs/common";
+import { IIdpTokenService } from "@/domain/abstractions/identity-provider";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
   type IAutenticacaoRefreshCommand,
   IAutenticacaoRefreshCommandHandler,
@@ -10,42 +9,21 @@ import type { AuthSessionCredentialsDto } from "../dtos";
 
 @DeclareImplementation()
 export class AutenticacaoRefreshCommandHandlerImpl implements IAutenticacaoRefreshCommandHandler {
-  constructor(private readonly openidConnectService: OpenidConnectService) {}
+  constructor(
+    @DeclareDependency(IIdpTokenService)
+    private readonly idpTokenService: IIdpTokenService,
+  ) {}
 
   async execute({ dto }: IAutenticacaoRefreshCommand): Promise<AuthSessionCredentialsDto> {
-    let config: client.Configuration;
-
-    try {
-      config = await this.openidConnectService.getClientConfig();
-    } catch (_error) {
-      throw new ServiceUnavailableException();
-    }
-
     try {
       const refreshToken = dto.refreshToken;
 
       if (refreshToken) {
-        const tokenset = await client.refreshTokenGrant(config, refreshToken);
-        const formattedTokenSet = this.formatTokenSet(tokenset);
-        return formattedTokenSet;
+        const tokenset = await this.idpTokenService.refreshGrant(refreshToken);
+        return tokenset as AuthSessionCredentialsDto;
       }
     } catch (_error) {}
 
     throw new ForbiddenException("Credenciais inválidas ou expiradas.");
-  }
-
-  private formatTokenSet(
-    tokenset: client.TokenEndpointResponse & client.TokenEndpointResponseHelpers,
-  ) {
-    return <AuthSessionCredentialsDto>{
-      access_token: tokenset.access_token ?? null,
-      token_type: tokenset.token_type ?? null,
-      id_token: tokenset.id_token ?? null,
-      refresh_token: tokenset.refresh_token ?? null,
-      expires_in: tokenset.expires_in ?? null,
-      expires_at: tokenset.expires_in ? new Date(Date.now() + tokenset.expires_in).getTime() : null,
-      session_state: tokenset.session_state ?? null,
-      scope: tokenset.scope ?? null,
-    };
   }
 }

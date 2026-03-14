@@ -1,11 +1,6 @@
-import {
-  BadRequestException,
-  ForbiddenException,
-  ServiceUnavailableException,
-} from "@nestjs/common";
-import * as client from "openid-client";
+import { BadRequestException, ForbiddenException } from "@nestjs/common";
+import { IIdpTokenService, IIdpUserService } from "@/domain/abstractions/identity-provider";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import { KeycloakService, OpenidConnectService } from "@/modules/@seguranca/provedor-identidade";
 import {
   type IAutenticacaoLoginCommand,
   IAutenticacaoLoginCommandHandler,
@@ -18,8 +13,10 @@ export class AutenticacaoLoginCommandHandlerImpl implements IAutenticacaoLoginCo
   constructor(
     @DeclareDependency(IUsuarioFindByMatriculaQueryHandler)
     private readonly usuarioFindByMatriculaHandler: IUsuarioFindByMatriculaQueryHandler,
-    private readonly keycloakService: KeycloakService,
-    private readonly openidConnectService: OpenidConnectService,
+    @DeclareDependency(IIdpUserService)
+    private readonly idpUserService: IIdpUserService,
+    @DeclareDependency(IIdpTokenService)
+    private readonly idpTokenService: IIdpTokenService,
   ) {}
 
   async execute({
@@ -30,55 +27,17 @@ export class AutenticacaoLoginCommandHandlerImpl implements IAutenticacaoLoginCo
       throw new BadRequestException("Você não pode usar a rota de login caso já esteja logado.");
     }
 
-    let config: client.Configuration;
+    const usuario = await this.usuarioFindByMatriculaHandler.execute({ matricula: dto.matricula });
+    const username = await this.idpUserService.resolveUsernameByMatricula(dto.matricula);
 
     try {
-      config = await this.openidConnectService.getClientConfig();
-    } catch (_error) {
-      throw new ServiceUnavailableException();
-    }
+      if (usuario && username) {
+        const tokenset = await this.idpTokenService.passwordGrant(username, dto.senha);
 
-    const { usuario, userRepresentation } = await this.findByMatricula(dto.matricula);
-
-    try {
-      if (usuario && userRepresentation?.username) {
-        const tokenset = await client.genericGrantRequest(config, "password", {
-          username: userRepresentation.username,
-          password: dto.senha,
-          scope: "openid profile",
-        });
-
-        const formattedTokenSet = this.formatTokenSet(tokenset);
-
-        return formattedTokenSet;
+        return tokenset as AuthSessionCredentialsDto;
       }
     } catch (_error) {}
 
     throw new ForbiddenException("Credenciais inválidas.");
-  }
-
-  private formatTokenSet(
-    tokenset: client.TokenEndpointResponse & client.TokenEndpointResponseHelpers,
-  ) {
-    return <AuthSessionCredentialsDto>{
-      access_token: tokenset.access_token ?? null,
-      token_type: tokenset.token_type ?? null,
-      id_token: tokenset.id_token ?? null,
-      refresh_token: tokenset.refresh_token ?? null,
-      expires_in: tokenset.expires_in ?? null,
-      expires_at: tokenset.expires_in ? new Date(Date.now() + tokenset.expires_in).getTime() : null,
-      session_state: tokenset.session_state ?? null,
-      scope: tokenset.scope ?? null,
-    };
-  }
-
-  private async findByMatricula(matricula: string) {
-    const usuario = await this.usuarioFindByMatriculaHandler.execute({ matricula });
-    const userRepresentation = await this.keycloakService.findUserByMatricula(matricula);
-
-    return {
-      usuario,
-      userRepresentation,
-    };
   }
 }

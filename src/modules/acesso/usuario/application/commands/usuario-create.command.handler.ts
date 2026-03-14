@@ -1,6 +1,6 @@
 import { InternalServerErrorException } from "@nestjs/common";
+import { IIdpUserService } from "@/domain/abstractions/identity-provider";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import { KeycloakService } from "@/modules/@seguranca/provedor-identidade";
 import { ensureExists, ValidationFailedException } from "@/modules/@shared";
 import {
   type IUsuarioCreateCommand,
@@ -16,7 +16,8 @@ export class UsuarioCreateCommandHandlerImpl implements IUsuarioCreateCommandHan
   constructor(
     @DeclareDependency(IUsuarioRepository)
     private readonly repository: IUsuarioRepository,
-    private readonly keycloakService: KeycloakService,
+    @DeclareDependency(IIdpUserService)
+    private readonly idpUserService: IIdpUserService,
     @DeclareDependency(IUsuarioPermissionChecker)
     private readonly permissionChecker: IUsuarioPermissionChecker,
   ) {}
@@ -38,19 +39,9 @@ export class UsuarioCreateCommandHandlerImpl implements IUsuarioCreateCommandHan
         isSuperUser: false,
       });
 
-      const kcAdminClient = await this.keycloakService.getAdminClient();
-
-      await kcAdminClient.users.create({
-        enabled: true,
-
-        username: input.matricula ?? undefined,
-        email: input.email ?? undefined,
-
-        requiredActions: ["UPDATE_PASSWORD"],
-
-        attributes: {
-          "usuario.matricula": input.matricula,
-        },
+      await this.idpUserService.provisionUser({
+        matricula: input.matricula,
+        email: input.email,
       });
 
       const result = await this.repository.findById(accessContext, { id: id as string });

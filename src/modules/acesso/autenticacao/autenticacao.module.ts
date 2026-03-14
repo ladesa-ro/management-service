@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { KeycloakModule, OpenidConnectModule } from "@/modules/@seguranca/provedor-identidade";
+import { IdentityProviderModule } from "@/infrastructure.identity-provider/identity-provider.module";
 import {
   AutenticacaoDefinirSenhaCommandHandlerImpl,
   AutenticacaoLoginCommandHandlerImpl,
@@ -18,16 +18,8 @@ import { AutenticacaoRestController } from "@/modules/acesso/autenticacao/presen
 import { PerfilModule } from "@/modules/acesso/perfil/perfil.module";
 import { UsuarioModule } from "@/modules/acesso/usuario/usuario.module";
 
-/**
- * Módulo NestJS para Autenticacao
- *
- * Responsável por:
- * - Configurar injeção de dependência
- * - Fazer o binding entre ports e adapters
- * - Registrar controller e handlers
- */
 @Module({
-  imports: [UsuarioModule, PerfilModule, OpenidConnectModule, KeycloakModule],
+  imports: [UsuarioModule, PerfilModule, IdentityProviderModule],
   controllers: [AutenticacaoRestController],
   providers: [
     // Commands

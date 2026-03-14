@@ -1,4 +1,4 @@
-import { RequestActorGraphQL } from "@/modules/@seguranca/ator-requisicao";
+import { RequestActorGraphQL } from "@/server/nest/auth";
 import { ResolveAccessContextPipe } from "../pipes/resolve-access-context.pipe";
 
 /**

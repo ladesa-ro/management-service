@@ -1,4 +1,4 @@
-import { RequestActorHttp } from "@/modules/@seguranca/ator-requisicao";
+import { RequestActorHttp } from "@/server/nest/auth";
 import { ResolveAccessContextPipe } from "../pipes/resolve-access-context.pipe";
 
 /**

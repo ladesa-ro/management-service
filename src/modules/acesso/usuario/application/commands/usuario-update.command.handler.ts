@@ -1,7 +1,7 @@
 import { ServiceUnavailableException } from "@nestjs/common";
 import { has } from "lodash";
+import { IIdpUserService } from "@/domain/abstractions/identity-provider";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import { KeycloakService } from "@/modules/@seguranca/provedor-identidade";
 import { ensureExists, ValidationFailedException } from "@/modules/@shared";
 import {
   type IUsuarioUpdateCommand,
@@ -17,7 +17,8 @@ export class UsuarioUpdateCommandHandlerImpl implements IUsuarioUpdateCommandHan
   constructor(
     @DeclareDependency(IUsuarioRepository)
     private readonly repository: IUsuarioRepository,
-    private readonly keycloakService: KeycloakService,
+    @DeclareDependency(IIdpUserService)
+    private readonly idpUserService: IIdpUserService,
     @DeclareDependency(IUsuarioPermissionChecker)
     private readonly permissionChecker: IUsuarioPermissionChecker,
   ) {}
@@ -31,10 +32,13 @@ export class UsuarioUpdateCommandHandlerImpl implements IUsuarioUpdateCommandHan
       currentUsuario.matricula ??
       (await this.repository.resolveProperty(currentUsuario.id, "matricula"));
 
-    const kcUser =
-      currentMatricula && (await this.keycloakService.findUserByMatricula(currentMatricula));
+    if (!currentMatricula) {
+      throw new ServiceUnavailableException();
+    }
 
-    if (!kcUser) {
+    const exists = await this.idpUserService.existsByMatricula(currentMatricula);
+
+    if (!exists) {
       throw new ServiceUnavailableException();
     }
 
@@ -54,28 +58,10 @@ export class UsuarioUpdateCommandHandlerImpl implements IUsuarioUpdateCommandHan
     const changedMatricula = has(dto, "matricula");
 
     if (changedEmail || changedMatricula) {
-      const kcAdminClient = await this.keycloakService.getAdminClient();
-
-      if (changedMatricula) {
-        await kcAdminClient.users.update(
-          { id: kcUser.id! },
-          {
-            username: input.matricula ?? undefined,
-            attributes: {
-              "usuario.matricula": input.matricula,
-            },
-          },
-        );
-      }
-
-      if (changedEmail) {
-        await kcAdminClient.users.update(
-          { id: kcUser.id! },
-          {
-            email: dto.email ?? undefined,
-          },
-        );
-      }
+      await this.idpUserService.syncUser(currentMatricula, {
+        matricula: input.matricula,
+        email: dto.email,
+      });
     }
 
     const result = await this.repository.findById(accessContext, { id: currentUsuario.id });

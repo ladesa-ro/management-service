@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { KeycloakModule } from "@/modules/@seguranca/provedor-identidade";
+import { IdentityProviderModule } from "@/infrastructure.identity-provider/identity-provider.module";
 import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import { UsuarioPermissionCheckerImpl } from "@/modules/acesso/usuario/application/authorization";
 import {
@@ -46,7 +46,7 @@ import { ArquivoModule } from "@/modules/armazenamento/arquivo/arquivo.module";
 import { ImagemModule } from "@/modules/armazenamento/imagem/imagem.module";
 
 @Module({
-  imports: [KeycloakModule, ImagemModule, ArquivoModule],
+  imports: [IdentityProviderModule, ImagemModule, ArquivoModule],
   controllers: [UsuarioRestController],
   providers: [
     NestJsPaginateAdapter,

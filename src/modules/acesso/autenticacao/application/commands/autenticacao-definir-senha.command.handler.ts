@@ -1,6 +1,6 @@
 import { ForbiddenException, HttpException, ServiceUnavailableException } from "@nestjs/common";
+import { IIdpUserService } from "@/domain/abstractions/identity-provider";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import { KeycloakService } from "@/modules/@seguranca/provedor-identidade";
 import {
   type IAutenticacaoDefinirSenhaCommand,
   IAutenticacaoDefinirSenhaCommandHandler,
@@ -14,48 +14,30 @@ export class AutenticacaoDefinirSenhaCommandHandlerImpl
   constructor(
     @DeclareDependency(IUsuarioFindByMatriculaQueryHandler)
     private readonly usuarioFindByMatriculaHandler: IUsuarioFindByMatriculaQueryHandler,
-    private readonly keycloakService: KeycloakService,
+    @DeclareDependency(IIdpUserService)
+    private readonly idpUserService: IIdpUserService,
   ) {}
 
   async execute({ dto }: IAutenticacaoDefinirSenhaCommand): Promise<boolean> {
     try {
-      const kcAdminClient = await this.keycloakService.getAdminClient();
+      const usuario = await this.usuarioFindByMatriculaHandler.execute({
+        matricula: dto.matricula,
+      });
+      const exists = await this.idpUserService.existsByMatricula(dto.matricula);
 
-      const { usuario, userRepresentation } = await this.findByMatricula(dto.matricula);
-
-      if (!usuario || !userRepresentation) {
+      if (!usuario || !exists) {
         throw new ForbiddenException("Usuário indisponível.");
       }
 
-      const userCredentials = await kcAdminClient.users.getCredentials({
-        id: userRepresentation.id!,
-      });
+      const canSet = await this.idpUserService.canSetInitialPassword(dto.matricula);
 
-      if (
-        userRepresentation.requiredActions?.includes("UPDATE_PASSWORD") &&
-        userCredentials.length === 0
-      ) {
-        await kcAdminClient.users.resetPassword({
-          id: userRepresentation.id!,
-          credential: {
-            type: "password",
-            temporary: false,
-            value: dto.senha,
-          },
-        });
-        await kcAdminClient.users.update(
-          {
-            id: userRepresentation.id!,
-          },
-          {
-            enabled: true,
-          },
-        );
-
-        return true;
-      } else {
+      if (!canSet) {
         throw new ForbiddenException("A senha do usuário já foi definida.");
       }
+
+      await this.idpUserService.setInitialPassword(dto.matricula, dto.senha);
+
+      return true;
     } catch (error) {
       if (error instanceof HttpException) {
         throw error;
@@ -65,15 +47,5 @@ export class AutenticacaoDefinirSenhaCommandHandlerImpl
 
       throw new ServiceUnavailableException();
     }
-  }
-
-  private async findByMatricula(matricula: string) {
-    const usuario = await this.usuarioFindByMatriculaHandler.execute({ matricula });
-    const userRepresentation = await this.keycloakService.findUserByMatricula(matricula);
-
-    return {
-      usuario,
-      userRepresentation,
-    };
   }
 }

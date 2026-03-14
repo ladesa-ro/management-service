@@ -1,5 +1,5 @@
 import type { SelectQueryBuilder } from "typeorm";
-import type { IRequestActor } from "@/modules/@seguranca/ator-requisicao";
+import type { IRequestActor } from "@/domain/abstractions/request-actor";
 import type { IAuthzPayload } from "./authz-payload.types";
 
 /**

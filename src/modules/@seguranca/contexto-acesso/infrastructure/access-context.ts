@@ -1,6 +1,6 @@
 import { castArray } from "lodash";
 import { Brackets, type DataSource, type SelectQueryBuilder } from "typeorm";
-import type { IRequestActor } from "@/modules/@seguranca/ator-requisicao";
+import type { IRequestActor } from "@/domain/abstractions/request-actor";
 import {
   AuthzPolicyPublic,
   type IAuthzPolicy,
