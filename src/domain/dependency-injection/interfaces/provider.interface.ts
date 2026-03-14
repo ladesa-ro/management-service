@@ -1,4 +1,4 @@
-import { Scope } from "@/abstractions.di/scope";
+import { Scope } from "@/domain/dependency-injection/scope";
 
 export type IProvider = {
   provides: any;
