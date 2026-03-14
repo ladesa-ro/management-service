@@ -1,9 +1,9 @@
 import { Provider } from "@nestjs/common";
+import type { IAuthOptions } from "@/infrastructure.identity-provider/options/auth-options.interface";
+import { IAuthOptions as IAuthOptionsToken } from "@/infrastructure.identity-provider/options/auth-options.interface";
 import type { IConfigService } from "../../config-service/config-service.interface";
 import { IConfigService as IConfigServiceToken } from "../../config-service/config-service.interface";
 import { ConfigTokens } from "../../config-tokens";
-import type { IAuthOptions } from "./auth-options.interface";
-import { IAuthOptions as IAuthOptionsToken } from "./auth-options.interface";
 
 export const AuthOptionsProvider: Provider = {
   provide: IAuthOptionsToken,
