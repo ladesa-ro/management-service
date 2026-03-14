@@ -13,6 +13,7 @@ import { DiarioProfessor } from "@/modules/ensino/diario-professor/domain/diario
 import { IDiarioProfessorPermissionChecker } from "../../domain/authorization";
 import type { DiarioProfessorFindOneQueryResult } from "../../domain/queries";
 import { IDiarioProfessorRepository } from "../../domain/repositories";
+
 @DeclareImplementation()
 export class DiarioProfessorCreateCommandHandlerImpl
   implements IDiarioProfessorCreateCommandHandler

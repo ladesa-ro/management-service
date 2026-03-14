@@ -18,6 +18,7 @@ import { ICalendarioLetivoFindOneQueryHandler } from "@/modules/horarios/calenda
 import { IDiarioPermissionChecker } from "../../domain/authorization";
 import type { DiarioFindOneQueryResult } from "../../domain/queries";
 import { IDiarioRepository } from "../../domain/repositories";
+
 @DeclareImplementation()
 export class DiarioUpdateCommandHandlerImpl implements IDiarioUpdateCommandHandler {
   constructor(

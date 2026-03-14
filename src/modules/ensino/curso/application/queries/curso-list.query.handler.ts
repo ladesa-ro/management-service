@@ -5,6 +5,7 @@ import {
 } from "@/modules/ensino/curso/domain/queries/curso-list.query.handler.interface";
 import type { CursoListQueryResult } from "../../domain/queries";
 import { ICursoRepository } from "../../domain/repositories";
+
 @DeclareImplementation()
 export class CursoListQueryHandlerImpl implements ICursoListQueryHandler {
   constructor(

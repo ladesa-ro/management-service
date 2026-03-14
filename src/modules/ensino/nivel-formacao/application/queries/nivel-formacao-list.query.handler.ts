@@ -5,6 +5,7 @@ import {
 } from "@/modules/ensino/nivel-formacao/domain/queries/nivel-formacao-list.query.handler.interface";
 import type { NivelFormacaoListQueryResult } from "../../domain/queries";
 import { INivelFormacaoRepository } from "../../domain/repositories";
+
 @DeclareImplementation()
 export class NivelFormacaoListQueryHandlerImpl implements INivelFormacaoListQueryHandler {
   constructor(

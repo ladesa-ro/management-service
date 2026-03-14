@@ -5,6 +5,7 @@ import {
 } from "@/modules/horarios/calendario-letivo/domain/queries/calendario-letivo-find-one.query.handler.interface";
 import type { CalendarioLetivoFindOneQueryResult } from "../../domain/queries";
 import { ICalendarioLetivoRepository } from "../../domain/repositories";
+
 @DeclareImplementation()
 export class CalendarioLetivoFindOneQueryHandlerImpl
   implements ICalendarioLetivoFindOneQueryHandler

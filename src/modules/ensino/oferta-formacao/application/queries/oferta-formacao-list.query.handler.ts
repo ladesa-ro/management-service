@@ -5,6 +5,7 @@ import {
 } from "@/modules/ensino/oferta-formacao/domain/queries/oferta-formacao-list.query.handler.interface";
 import type { OfertaFormacaoListQueryResult } from "../../domain/queries";
 import { IOfertaFormacaoRepository } from "../../domain/repositories";
+
 @DeclareImplementation()
 export class OfertaFormacaoListQueryHandlerImpl implements IOfertaFormacaoListQueryHandler {
   constructor(

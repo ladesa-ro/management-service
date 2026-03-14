@@ -12,6 +12,7 @@ import { Campus } from "@/modules/ambientes/campus/domain/campus.domain";
 import { ICampusFindOneQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-find-one.query.handler.interface";
 import type { PerfilListQuery, PerfilListQueryResult } from "../../domain/queries";
 import { IPerfilRepository } from "../../domain/repositories";
+
 @DeclareImplementation()
 export class PerfilSetVinculosCommandHandlerImpl implements IPerfilSetVinculosCommandHandler {
   constructor(

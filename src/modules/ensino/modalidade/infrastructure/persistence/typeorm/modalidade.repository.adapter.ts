@@ -21,6 +21,7 @@ import { createModalidadeRepository } from "./modalidade.repository";
  * Adapter TypeORM que implementa o port de repositório de Modalidade.
  * Estende BaseTypeOrmRepositoryAdapter para reutilizar operações CRUD comuns.
  */
+
 @DeclareImplementation()
 export class ModalidadeTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<

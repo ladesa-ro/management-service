@@ -5,6 +5,7 @@ import {
 } from "@/modules/ensino/diario/domain/queries/diario-list.query.handler.interface";
 import type { DiarioListQueryResult } from "../../domain/queries";
 import { IDiarioRepository } from "../../domain/repositories";
+
 @DeclareImplementation()
 export class DiarioListQueryHandlerImpl implements IDiarioListQueryHandler {
   constructor(

@@ -5,6 +5,7 @@ import {
 } from "@/modules/ensino/disciplina/domain/queries/disciplina-list.query.handler.interface";
 import type { DisciplinaListQueryResult } from "../../domain/queries";
 import { IDisciplinaRepository } from "../../domain/repositories";
+
 @DeclareImplementation()
 export class DisciplinaListQueryHandlerImpl implements IDisciplinaListQueryHandler {
   constructor(

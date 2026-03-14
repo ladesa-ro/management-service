@@ -5,6 +5,7 @@ import {
 } from "@/modules/acesso/usuario/domain/queries/usuario-list.query.handler.interface";
 import type { UsuarioListQueryResult } from "../../domain/queries";
 import { IUsuarioRepository } from "../../domain/repositories";
+
 @DeclareImplementation()
 export class UsuarioListQueryHandlerImpl implements IUsuarioListQueryHandler {
   constructor(

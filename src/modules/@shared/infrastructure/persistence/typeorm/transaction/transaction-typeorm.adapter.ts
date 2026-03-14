@@ -8,6 +8,7 @@ import { APP_DATA_SOURCE_TOKEN } from "../providers/app-data-source.provider";
  *
  * Utiliza o DataSource diretamente para gerenciar transações.
  */
+
 @DeclareImplementation()
 export class TransactionTypeOrmAdapter implements ITransaction {
   constructor(

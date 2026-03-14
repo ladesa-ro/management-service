@@ -5,6 +5,7 @@ import {
 } from "@/modules/ensino/disciplina/domain/queries/disciplina-find-one.query.handler.interface";
 import type { DisciplinaFindOneQueryResult } from "../../domain/queries";
 import { IDisciplinaRepository } from "../../domain/repositories";
+
 @DeclareImplementation()
 export class DisciplinaFindOneQueryHandlerImpl implements IDisciplinaFindOneQueryHandler {
   constructor(

@@ -5,6 +5,7 @@ import {
 } from "@/modules/acesso/perfil/domain/queries/perfil-list.query.handler.interface";
 import type { PerfilListQueryResult } from "../../domain/queries";
 import { IPerfilRepository } from "../../domain/repositories";
+
 @DeclareImplementation()
 export class PerfilListQueryHandlerImpl implements IPerfilListQueryHandler {
   constructor(

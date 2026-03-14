@@ -6,6 +6,7 @@ import {
 import { IPerfilFindAllActiveQueryHandler } from "@/modules/acesso/perfil/domain/queries/perfil-find-all-active.query.handler.interface";
 import { IUsuarioFindOneQueryHandler } from "@/modules/acesso/usuario/domain/queries/usuario-find-one.query.handler.interface";
 import type { AuthWhoAmIQueryResult } from "../../domain/queries";
+
 @DeclareImplementation()
 export class AutenticacaoWhoAmIQueryHandlerImpl implements IAutenticacaoWhoAmIQueryHandler {
   constructor(

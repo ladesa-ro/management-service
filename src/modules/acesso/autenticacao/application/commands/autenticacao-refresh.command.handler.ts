@@ -6,6 +6,7 @@ import {
   IAutenticacaoRefreshCommandHandler,
 } from "@/modules/acesso/autenticacao/domain/commands/autenticacao-refresh.command.handler.interface";
 import type { AuthSessionCredentials } from "../../domain/shared";
+
 @DeclareImplementation()
 export class AutenticacaoRefreshCommandHandlerImpl implements IAutenticacaoRefreshCommandHandler {
   constructor(

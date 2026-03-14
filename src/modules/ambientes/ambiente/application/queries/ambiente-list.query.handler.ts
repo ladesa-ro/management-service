@@ -5,6 +5,7 @@ import {
 } from "@/modules/ambientes/ambiente/domain/queries/ambiente-list.query.handler.interface";
 import type { AmbienteListQueryResult } from "../../domain/queries";
 import { IAmbienteRepository } from "../../domain/repositories";
+
 @DeclareImplementation()
 export class AmbienteListQueryHandlerImpl implements IAmbienteListQueryHandler {
   constructor(

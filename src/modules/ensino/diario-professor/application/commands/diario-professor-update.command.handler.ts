@@ -14,6 +14,7 @@ import type { IDiarioProfessor } from "@/modules/ensino/diario-professor/domain/
 import { IDiarioProfessorPermissionChecker } from "../../domain/authorization";
 import type { DiarioProfessorFindOneQueryResult } from "../../domain/queries";
 import { IDiarioProfessorRepository } from "../../domain/repositories";
+
 @DeclareImplementation()
 export class DiarioProfessorUpdateCommandHandlerImpl
   implements IDiarioProfessorUpdateCommandHandler

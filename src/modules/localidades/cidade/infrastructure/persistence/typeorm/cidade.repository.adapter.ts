@@ -23,6 +23,7 @@ import { createCidadeRepository } from "./cidade.repository";
  * Estende BaseTypeOrmRepositoryAdapter para reutilizar operações de leitura.
  * Cidade é um recurso somente leitura (dados do IBGE).
  */
+
 @DeclareImplementation()
 export class CidadeTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<

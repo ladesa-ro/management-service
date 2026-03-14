@@ -5,6 +5,7 @@ import {
 } from "@/modules/ambientes/campus/domain/queries/campus-list.query.handler.interface";
 import type { CampusListQueryResult } from "../../domain/queries";
 import { ICampusRepository } from "../../domain/repositories";
+
 @DeclareImplementation()
 export class CampusListQueryHandlerImpl implements ICampusListQueryHandler {
   constructor(

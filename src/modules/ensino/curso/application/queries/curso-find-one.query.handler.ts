@@ -5,6 +5,7 @@ import {
 } from "@/modules/ensino/curso/domain/queries/curso-find-one.query.handler.interface";
 import type { CursoFindOneQueryResult } from "../../domain/queries";
 import { ICursoRepository } from "../../domain/repositories";
+
 @DeclareImplementation()
 export class CursoFindOneQueryHandlerImpl implements ICursoFindOneQueryHandler {
   constructor(

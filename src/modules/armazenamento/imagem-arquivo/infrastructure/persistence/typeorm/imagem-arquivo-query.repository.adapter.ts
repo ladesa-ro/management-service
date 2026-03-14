@@ -22,6 +22,7 @@ import { createImagemArquivoRepository } from "./imagem-arquivo.repository";
  * Adapter TypeORM que implementa o port de repositório de consulta de ImagemArquivo.
  * Estende BaseTypeOrmRepositoryAdapter para reutilizar operações de leitura.
  */
+
 @DeclareImplementation()
 export class ImagemArquivoQueryTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<

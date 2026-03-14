@@ -5,6 +5,7 @@ import {
 } from "@/modules/armazenamento/imagem-arquivo/domain/queries/imagem-arquivo-list.query.handler.interface";
 import type { ImagemArquivoListQueryResult } from "../../domain/queries";
 import { IImagemArquivoQueryRepository } from "../../domain/repositories";
+
 @DeclareImplementation()
 export class ImagemArquivoListQueryHandlerImpl implements IImagemArquivoListQueryHandler {
   constructor(

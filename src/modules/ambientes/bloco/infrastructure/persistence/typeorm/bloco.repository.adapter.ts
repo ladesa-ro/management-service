@@ -22,6 +22,7 @@ import { createBlocoRepository } from "./bloco.repository";
  * Adapter TypeORM que implementa o port de repositório de Bloco.
  * Estende BaseTypeOrmRepositoryAdapter para reutilizar operações CRUD comuns.
  */
+
 @DeclareImplementation()
 export class BlocoTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<

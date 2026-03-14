@@ -5,6 +5,7 @@ import {
 } from "@/modules/ensino/modalidade/domain/queries/modalidade-list.query.handler.interface";
 import type { ModalidadeListQueryResult } from "../../domain/queries";
 import { IModalidadeRepository } from "../../domain/repositories";
+
 @DeclareImplementation()
 export class ModalidadeListQueryHandlerImpl implements IModalidadeListQueryHandler {
   constructor(

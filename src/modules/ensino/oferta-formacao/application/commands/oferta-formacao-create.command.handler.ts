@@ -10,6 +10,7 @@ import { OfertaFormacao } from "@/modules/ensino/oferta-formacao/domain/oferta-f
 import { IOfertaFormacaoPermissionChecker } from "../../domain/authorization";
 import type { OfertaFormacaoFindOneQueryResult } from "../../domain/queries";
 import { IOfertaFormacaoRepository } from "../../domain/repositories";
+
 @DeclareImplementation()
 export class OfertaFormacaoCreateCommandHandlerImpl implements IOfertaFormacaoCreateCommandHandler {
   constructor(

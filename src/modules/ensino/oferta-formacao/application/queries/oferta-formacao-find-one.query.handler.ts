@@ -5,6 +5,7 @@ import {
 } from "@/modules/ensino/oferta-formacao/domain/queries/oferta-formacao-find-one.query.handler.interface";
 import type { OfertaFormacaoFindOneQueryResult } from "../../domain/queries";
 import { IOfertaFormacaoRepository } from "../../domain/repositories";
+
 @DeclareImplementation()
 export class OfertaFormacaoFindOneQueryHandlerImpl implements IOfertaFormacaoFindOneQueryHandler {
   constructor(

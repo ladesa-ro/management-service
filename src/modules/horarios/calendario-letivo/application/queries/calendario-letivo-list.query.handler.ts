@@ -5,6 +5,7 @@ import {
 } from "@/modules/horarios/calendario-letivo/domain/queries/calendario-letivo-list.query.handler.interface";
 import type { CalendarioLetivoListQueryResult } from "../../domain/queries";
 import { ICalendarioLetivoRepository } from "../../domain/repositories";
+
 @DeclareImplementation()
 export class CalendarioLetivoListQueryHandlerImpl implements ICalendarioLetivoListQueryHandler {
   constructor(

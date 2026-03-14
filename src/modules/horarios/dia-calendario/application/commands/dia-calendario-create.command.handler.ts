@@ -13,6 +13,7 @@ import { DiaCalendario } from "@/modules/horarios/dia-calendario/domain/dia-cale
 import { IDiaCalendarioPermissionChecker } from "../../domain/authorization";
 import type { DiaCalendarioFindOneQueryResult } from "../../domain/queries";
 import { IDiaCalendarioRepository } from "../../domain/repositories";
+
 @DeclareImplementation()
 export class DiaCalendarioCreateCommandHandlerImpl implements IDiaCalendarioCreateCommandHandler {
   constructor(

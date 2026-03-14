@@ -5,6 +5,7 @@ import {
 } from "@/modules/localidades/estado/domain/queries/estado-find-one.query.handler.interface";
 import type { EstadoFindOneQueryResult } from "../../domain/queries";
 import { IEstadoRepository } from "../../domain/repositories";
+
 @DeclareImplementation()
 export class EstadoFindOneQueryHandlerImpl implements IEstadoFindOneQueryHandler {
   constructor(

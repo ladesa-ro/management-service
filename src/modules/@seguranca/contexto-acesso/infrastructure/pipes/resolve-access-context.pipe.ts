@@ -9,6 +9,7 @@ import { AccessContext } from "../access-context";
  * Pipe que transforma IRequestActor em AccessContext.
  * Usado pelos decorators AccessContextHttp e AccessContextGraphQL.
  */
+
 @DeclareImplementation()
 export class ResolveAccessContextPipe implements PipeTransform {
   constructor(

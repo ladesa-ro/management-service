@@ -5,6 +5,7 @@ import {
 } from "@/modules/horarios/dia-calendario/domain/queries/dia-calendario-find-one.query.handler.interface";
 import type { DiaCalendarioFindOneQueryResult } from "../../domain/queries";
 import { IDiaCalendarioRepository } from "../../domain/repositories";
+
 @DeclareImplementation()
 export class DiaCalendarioFindOneQueryHandlerImpl implements IDiaCalendarioFindOneQueryHandler {
   constructor(

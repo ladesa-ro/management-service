@@ -5,6 +5,7 @@ import {
 } from "@/modules/ensino/nivel-formacao/domain/queries/nivel-formacao-find-one.query.handler.interface";
 import type { NivelFormacaoFindOneQueryResult } from "../../domain/queries";
 import { INivelFormacaoRepository } from "../../domain/repositories";
+
 @DeclareImplementation()
 export class NivelFormacaoFindOneQueryHandlerImpl implements INivelFormacaoFindOneQueryHandler {
   constructor(

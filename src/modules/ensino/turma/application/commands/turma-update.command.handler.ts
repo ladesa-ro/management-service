@@ -14,6 +14,7 @@ import type { ITurma } from "@/modules/ensino/turma/domain/turma.types";
 import { ITurmaPermissionChecker } from "../../domain/authorization";
 import type { TurmaFindOneQueryResult } from "../../domain/queries";
 import { ITurmaRepository } from "../../domain/repositories";
+
 @DeclareImplementation()
 export class TurmaUpdateCommandHandlerImpl implements ITurmaUpdateCommandHandler {
   constructor(

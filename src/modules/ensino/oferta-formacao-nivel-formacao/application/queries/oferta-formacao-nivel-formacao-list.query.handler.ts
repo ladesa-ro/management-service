@@ -5,6 +5,7 @@ import {
 } from "@/modules/ensino/oferta-formacao-nivel-formacao/domain/queries/oferta-formacao-nivel-formacao-list.query.handler.interface";
 import type { OfertaFormacaoNivelFormacaoListQueryResult } from "../../domain/queries";
 import { IOfertaFormacaoNivelFormacaoRepository } from "../../domain/repositories";
+
 @DeclareImplementation()
 export class OfertaFormacaoNivelFormacaoListQueryHandlerImpl
   implements IOfertaFormacaoNivelFormacaoListQueryHandler

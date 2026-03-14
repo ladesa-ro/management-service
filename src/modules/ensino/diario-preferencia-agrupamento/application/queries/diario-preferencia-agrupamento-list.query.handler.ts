@@ -5,6 +5,7 @@ import {
 } from "@/modules/ensino/diario-preferencia-agrupamento/domain/queries/diario-preferencia-agrupamento-list.query.handler.interface";
 import type { DiarioPreferenciaAgrupamentoListQueryResult } from "../../domain/queries";
 import { IDiarioPreferenciaAgrupamentoRepository } from "../../domain/repositories";
+
 @DeclareImplementation()
 export class DiarioPreferenciaAgrupamentoListQueryHandlerImpl
   implements IDiarioPreferenciaAgrupamentoListQueryHandler

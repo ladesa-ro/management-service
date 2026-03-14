@@ -12,6 +12,7 @@ import { IOfertaFormacaoFindOneQueryHandler } from "@/modules/ensino/oferta-form
 import { ICursoPermissionChecker } from "../../domain/authorization";
 import type { CursoFindOneQueryResult } from "../../domain/queries";
 import { ICursoRepository } from "../../domain/repositories";
+
 @DeclareImplementation()
 export class CursoCreateCommandHandlerImpl implements ICursoCreateCommandHandler {
   constructor(

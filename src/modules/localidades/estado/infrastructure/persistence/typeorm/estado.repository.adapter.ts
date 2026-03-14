@@ -22,6 +22,7 @@ import { createEstadoRepository } from "./estado.repository";
  * Estende BaseTypeOrmRepositoryAdapter para reutilizar operações de leitura.
  * Estado é um recurso somente leitura (dados do IBGE).
  */
+
 @DeclareImplementation()
 export class EstadoTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<

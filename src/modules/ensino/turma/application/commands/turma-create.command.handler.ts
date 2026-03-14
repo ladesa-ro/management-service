@@ -12,6 +12,7 @@ import { Turma } from "@/modules/ensino/turma/domain/turma.domain";
 import { ITurmaPermissionChecker } from "../../domain/authorization";
 import type { TurmaFindOneQueryResult } from "../../domain/queries";
 import { ITurmaRepository } from "../../domain/repositories";
+
 @DeclareImplementation()
 export class TurmaCreateCommandHandlerImpl implements ITurmaCreateCommandHandler {
   constructor(

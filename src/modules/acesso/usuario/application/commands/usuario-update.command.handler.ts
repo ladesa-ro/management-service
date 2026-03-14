@@ -11,6 +11,7 @@ import { Usuario } from "@/modules/acesso/usuario/domain/usuario.domain";
 import { IUsuarioPermissionChecker } from "../../domain/authorization";
 import type { UsuarioFindOneQueryResult } from "../../domain/queries";
 import { IUsuarioRepository } from "../../domain/repositories";
+
 @DeclareImplementation()
 export class UsuarioUpdateCommandHandlerImpl implements IUsuarioUpdateCommandHandler {
   constructor(

@@ -5,6 +5,7 @@ import {
 } from "@/modules/acesso/usuario/domain/queries/usuario-find-one.query.handler.interface";
 import type { UsuarioFindOneQueryResult } from "../../domain/queries";
 import { IUsuarioRepository } from "../../domain/repositories";
+
 @DeclareImplementation()
 export class UsuarioFindOneQueryHandlerImpl implements IUsuarioFindOneQueryHandler {
   constructor(

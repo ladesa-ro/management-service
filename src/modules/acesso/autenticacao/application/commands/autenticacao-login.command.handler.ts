@@ -7,6 +7,7 @@ import {
 } from "@/modules/acesso/autenticacao/domain/commands/autenticacao-login.command.handler.interface";
 import { IUsuarioFindByMatriculaQueryHandler } from "@/modules/acesso/usuario/domain/queries/usuario-find-by-matricula.query.handler.interface";
 import type { AuthSessionCredentials } from "../../domain/shared";
+
 @DeclareImplementation()
 export class AutenticacaoLoginCommandHandlerImpl implements IAutenticacaoLoginCommandHandler {
   constructor(

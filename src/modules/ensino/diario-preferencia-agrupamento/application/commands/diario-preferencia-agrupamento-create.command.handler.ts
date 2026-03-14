@@ -10,6 +10,7 @@ import { DiarioPreferenciaAgrupamento } from "@/modules/ensino/diario-preferenci
 import { IDiarioPreferenciaAgrupamentoPermissionChecker } from "../../domain/authorization";
 import type { DiarioPreferenciaAgrupamentoFindOneQueryResult } from "../../domain/queries";
 import { IDiarioPreferenciaAgrupamentoRepository } from "../../domain/repositories";
+
 @DeclareImplementation()
 export class DiarioPreferenciaAgrupamentoCreateCommandHandlerImpl
   implements IDiarioPreferenciaAgrupamentoCreateCommandHandler

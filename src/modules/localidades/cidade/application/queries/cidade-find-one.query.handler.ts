@@ -5,6 +5,7 @@ import {
 } from "@/modules/localidades/cidade/domain/queries/cidade-find-one.query.handler.interface";
 import type { CidadeFindOneQueryResult } from "../../domain/queries";
 import { ICidadeRepository } from "../../domain/repositories";
+
 @DeclareImplementation()
 export class CidadeFindOneQueryHandlerImpl implements ICidadeFindOneQueryHandler {
   constructor(

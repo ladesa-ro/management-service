@@ -5,6 +5,7 @@ import {
 } from "@/modules/ensino/turma/domain/queries/turma-find-one.query.handler.interface";
 import type { TurmaFindOneQueryResult } from "../../domain/queries";
 import { ITurmaRepository } from "../../domain/repositories";
+
 @DeclareImplementation()
 export class TurmaFindOneQueryHandlerImpl implements ITurmaFindOneQueryHandler {
   constructor(

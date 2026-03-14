@@ -21,6 +21,7 @@ import { createAmbienteRepository } from "./ambiente.repository";
  * Adapter TypeORM que implementa o port de repositório de Ambiente.
  * Estende BaseTypeOrmRepositoryAdapter para reutilizar operações CRUD comuns.
  */
+
 @DeclareImplementation()
 export class AmbienteTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<

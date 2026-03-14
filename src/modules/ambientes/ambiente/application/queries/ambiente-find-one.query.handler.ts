@@ -5,6 +5,7 @@ import {
 } from "@/modules/ambientes/ambiente/domain/queries/ambiente-find-one.query.handler.interface";
 import type { AmbienteFindOneQueryResult } from "../../domain/queries";
 import { IAmbienteRepository } from "../../domain/repositories";
+
 @DeclareImplementation()
 export class AmbienteFindOneQueryHandlerImpl implements IAmbienteFindOneQueryHandler {
   constructor(

@@ -8,6 +8,7 @@ import { NivelFormacao } from "@/modules/ensino/nivel-formacao/domain/nivel-form
 import { INivelFormacaoPermissionChecker } from "../../domain/authorization";
 import type { NivelFormacaoFindOneQueryResult } from "../../domain/queries";
 import { INivelFormacaoRepository } from "../../domain/repositories";
+
 @DeclareImplementation()
 export class NivelFormacaoCreateCommandHandlerImpl implements INivelFormacaoCreateCommandHandler {
   constructor(

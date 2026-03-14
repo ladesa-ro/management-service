@@ -5,6 +5,7 @@ import {
 } from "@/modules/ensino/diario-professor/domain/queries/diario-professor-find-one.query.handler.interface";
 import type { DiarioProfessorFindOneQueryResult } from "../../domain/queries";
 import { IDiarioProfessorRepository } from "../../domain/repositories";
+
 @DeclareImplementation()
 export class DiarioProfessorFindOneQueryHandlerImpl implements IDiarioProfessorFindOneQueryHandler {
   constructor(

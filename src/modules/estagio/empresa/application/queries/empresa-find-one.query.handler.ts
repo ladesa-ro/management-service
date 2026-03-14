@@ -5,6 +5,7 @@ import {
 } from "@/modules/estagio/empresa/domain/queries/empresa-find-one.query.handler.interface";
 import type { EmpresaFindOneQueryResult } from "../../domain/queries";
 import { IEmpresaRepository } from "../../domain/repositories";
+
 @DeclareImplementation()
 export class EmpresaFindOneQueryHandlerImpl implements IEmpresaFindOneQueryHandler {
   constructor(

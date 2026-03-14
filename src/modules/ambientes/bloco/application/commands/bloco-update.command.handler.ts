@@ -8,6 +8,7 @@ import {
 import { IBlocoPermissionChecker } from "../../domain/authorization";
 import type { BlocoFindOneQueryResult } from "../../domain/queries";
 import { IBlocoRepository } from "../../domain/repositories";
+
 @DeclareImplementation()
 export class BlocoUpdateCommandHandlerImpl implements IBlocoUpdateCommandHandler {
   constructor(

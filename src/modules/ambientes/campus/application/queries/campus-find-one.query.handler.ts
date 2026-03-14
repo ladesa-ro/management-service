@@ -5,6 +5,7 @@ import {
 } from "@/modules/ambientes/campus/domain/queries/campus-find-one.query.handler.interface";
 import type { CampusFindOneQueryResult } from "../../domain/queries";
 import { ICampusRepository } from "../../domain/repositories";
+
 @DeclareImplementation()
 export class CampusFindOneQueryHandlerImpl implements ICampusFindOneQueryHandler {
   constructor(

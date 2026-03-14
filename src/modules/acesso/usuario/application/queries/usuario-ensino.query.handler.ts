@@ -7,6 +7,7 @@ import {
 import { Usuario } from "@/modules/acesso/usuario/domain/usuario.domain";
 import type { UsuarioEnsinoQueryResult } from "../../domain/queries";
 import { IUsuarioRepository } from "../../domain/repositories";
+
 @DeclareImplementation()
 export class UsuarioEnsinoQueryHandlerImpl implements IUsuarioEnsinoQueryHandler {
   constructor(

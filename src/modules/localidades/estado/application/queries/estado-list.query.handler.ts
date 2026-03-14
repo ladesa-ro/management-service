@@ -5,6 +5,7 @@ import {
 } from "@/modules/localidades/estado/domain/queries/estado-list.query.handler.interface";
 import type { EstadoListQueryResult } from "../../domain/queries";
 import { IEstadoRepository } from "../../domain/repositories";
+
 @DeclareImplementation()
 export class EstadoListQueryHandlerImpl implements IEstadoListQueryHandler {
   constructor(

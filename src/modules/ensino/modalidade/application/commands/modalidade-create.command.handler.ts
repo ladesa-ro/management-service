@@ -8,6 +8,7 @@ import { Modalidade } from "@/modules/ensino/modalidade/domain/modalidade.domain
 import { IModalidadePermissionChecker } from "../../domain/authorization";
 import type { ModalidadeFindOneQueryResult } from "../../domain/queries";
 import { IModalidadeRepository } from "../../domain/repositories";
+
 @DeclareImplementation()
 export class ModalidadeCreateCommandHandlerImpl implements IModalidadeCreateCommandHandler {
   constructor(

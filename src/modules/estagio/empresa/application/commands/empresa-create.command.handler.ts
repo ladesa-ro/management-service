@@ -7,6 +7,7 @@ import {
 } from "@/modules/estagio/empresa/domain/commands/empresa-create.command.handler.interface";
 import type { EmpresaFindOneQueryResult } from "../../domain/queries";
 import { IEmpresaRepository } from "../../domain/repositories";
+
 @DeclareImplementation()
 export class EmpresaCreateCommandHandlerImpl implements IEmpresaCreateCommandHandler {
   constructor(

@@ -5,6 +5,7 @@ import {
 } from "@/modules/estagio/empresa/domain/queries/empresa-list.query.handler.interface";
 import type { EmpresaListQueryResult } from "../../domain/queries";
 import { IEmpresaRepository } from "../../domain/repositories";
+
 @DeclareImplementation()
 export class EmpresaListQueryHandlerImpl implements IEmpresaListQueryHandler {
   constructor(

@@ -14,6 +14,7 @@ import {
 import { ICalendarioLetivoPermissionChecker } from "../../domain/authorization";
 import type { CalendarioLetivoFindOneQueryResult } from "../../domain/queries";
 import { ICalendarioLetivoRepository } from "../../domain/repositories";
+
 @DeclareImplementation()
 export class CalendarioLetivoUpdateCommandHandlerImpl
   implements ICalendarioLetivoUpdateCommandHandler

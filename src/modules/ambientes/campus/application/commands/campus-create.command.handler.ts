@@ -9,6 +9,7 @@ import { IEnderecoCreateOrUpdateCommandHandler } from "@/modules/localidades/end
 import { ICampusPermissionChecker } from "../../domain/authorization";
 import type { CampusFindOneQueryResult } from "../../domain/queries";
 import { ICampusRepository } from "../../domain/repositories";
+
 @DeclareImplementation()
 export class CampusCreateCommandHandlerImpl implements ICampusCreateCommandHandler {
   constructor(

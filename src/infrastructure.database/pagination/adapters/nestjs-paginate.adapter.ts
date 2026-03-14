@@ -10,6 +10,7 @@ import type { ITypeOrmPaginationConfig } from "../interfaces/pagination-config.t
  * Adapter que implementa paginação usando nestjs-paginate
  * Encapsula toda a lógica do nestjs-paginate, mantendo o domínio limpo
  */
+
 @DeclareImplementation()
 export class NestJsPaginateAdapter {
   async paginate<T extends ObjectLiteral>(

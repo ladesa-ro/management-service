@@ -8,6 +8,7 @@ import {
 import { IAmbientePermissionChecker } from "../../domain/authorization";
 import type { AmbienteFindOneQueryResult } from "../../domain/queries";
 import { IAmbienteRepository } from "../../domain/repositories";
+
 @DeclareImplementation()
 export class AmbienteUpdateCommandHandlerImpl implements IAmbienteUpdateCommandHandler {
   constructor(

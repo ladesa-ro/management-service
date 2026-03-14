@@ -7,6 +7,7 @@ import {
 } from "@/modules/estagio/estagiario/domain/commands/estagiario-create.command.handler.interface";
 import type { EstagiarioFindOneQueryResult } from "../../domain/queries";
 import { IEstagiarioRepository } from "../../domain/repositories";
+
 @DeclareImplementation()
 export class EstagiarioCreateCommandHandlerImpl implements IEstagiarioCreateCommandHandler {
   constructor(

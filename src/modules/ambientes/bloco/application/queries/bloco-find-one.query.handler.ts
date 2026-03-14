@@ -5,6 +5,7 @@ import {
 } from "@/modules/ambientes/bloco/domain/queries/bloco-find-one.query.handler.interface";
 import type { BlocoFindOneQueryResult } from "../../domain/queries";
 import { IBlocoRepository } from "../../domain/repositories";
+
 @DeclareImplementation()
 export class BlocoFindOneQueryHandlerImpl implements IBlocoFindOneQueryHandler {
   constructor(

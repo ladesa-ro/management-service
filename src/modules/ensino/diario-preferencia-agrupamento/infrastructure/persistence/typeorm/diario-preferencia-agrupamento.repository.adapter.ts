@@ -23,6 +23,7 @@ import { createDiarioPreferenciaAgrupamentoRepository } from "./diario-preferenc
  * Adapter TypeORM que implementa o port de repositório de DiarioPreferenciaAgrupamento.
  * Estende BaseTypeOrmRepositoryAdapter para reutilizar operações CRUD comuns.
  */
+
 @DeclareImplementation()
 export class DiarioPreferenciaAgrupamentoTypeOrmRepositoryAdapter
   extends BaseTypeOrmRepositoryAdapter<

@@ -8,6 +8,7 @@ import { Disciplina } from "@/modules/ensino/disciplina/domain/disciplina.domain
 import { IDisciplinaPermissionChecker } from "../../domain/authorization";
 import type { DisciplinaFindOneQueryResult } from "../../domain/queries";
 import { IDisciplinaRepository } from "../../domain/repositories";
+
 @DeclareImplementation()
 export class DisciplinaCreateCommandHandlerImpl implements IDisciplinaCreateCommandHandler {
   constructor(

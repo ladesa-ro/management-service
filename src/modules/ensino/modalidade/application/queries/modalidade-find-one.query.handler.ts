@@ -5,6 +5,7 @@ import {
 } from "@/modules/ensino/modalidade/domain/queries/modalidade-find-one.query.handler.interface";
 import type { ModalidadeFindOneQueryResult } from "../../domain/queries";
 import { IModalidadeRepository } from "../../domain/repositories";
+
 @DeclareImplementation()
 export class ModalidadeFindOneQueryHandlerImpl implements IModalidadeFindOneQueryHandler {
   constructor(

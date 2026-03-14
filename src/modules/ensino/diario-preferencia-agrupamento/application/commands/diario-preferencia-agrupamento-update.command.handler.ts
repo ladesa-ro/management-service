@@ -12,6 +12,7 @@ import type { IDiarioPreferenciaAgrupamento } from "@/modules/ensino/diario-pref
 import { IDiarioPreferenciaAgrupamentoPermissionChecker } from "../../domain/authorization";
 import type { DiarioPreferenciaAgrupamentoFindOneQueryResult } from "../../domain/queries";
 import { IDiarioPreferenciaAgrupamentoRepository } from "../../domain/repositories";
+
 @DeclareImplementation()
 export class DiarioPreferenciaAgrupamentoUpdateCommandHandlerImpl
   implements IDiarioPreferenciaAgrupamentoUpdateCommandHandler

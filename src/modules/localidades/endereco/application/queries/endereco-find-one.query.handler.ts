@@ -5,6 +5,7 @@ import {
 } from "@/modules/localidades/endereco/domain/queries/endereco-find-one.query.handler.interface";
 import type { EnderecoFindOneQueryResult } from "../../domain/queries";
 import { IEnderecoRepository } from "../../domain/repositories";
+
 @DeclareImplementation()
 export class EnderecoFindOneQueryHandlerImpl implements IEnderecoFindOneQueryHandler {
   constructor(

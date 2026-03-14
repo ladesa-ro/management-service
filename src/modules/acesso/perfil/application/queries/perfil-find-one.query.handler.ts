@@ -5,6 +5,7 @@ import {
 } from "@/modules/acesso/perfil/domain/queries/perfil-find-one.query.handler.interface";
 import type { PerfilFindOneQueryResult } from "../../domain/queries";
 import { IPerfilRepository } from "../../domain/repositories";
+
 @DeclareImplementation()
 export class PerfilFindOneQueryHandlerImpl implements IPerfilFindOneQueryHandler {
   constructor(

@@ -10,6 +10,7 @@ import { ICampusFindOneQueryHandler } from "@/modules/ambientes/campus/domain/qu
 import { IBlocoPermissionChecker } from "../../domain/authorization";
 import type { BlocoFindOneQueryResult } from "../../domain/queries";
 import { IBlocoRepository } from "../../domain/repositories";
+
 @DeclareImplementation()
 export class BlocoCreateCommandHandlerImpl implements IBlocoCreateCommandHandler {
   constructor(

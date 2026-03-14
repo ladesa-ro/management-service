@@ -10,6 +10,7 @@ import { IBlocoFindOneQueryHandler } from "@/modules/ambientes/bloco/domain/quer
 import { IAmbientePermissionChecker } from "../../domain/authorization";
 import type { AmbienteFindOneQueryResult } from "../../domain/queries";
 import { IAmbienteRepository } from "../../domain/repositories";
+
 @DeclareImplementation()
 export class AmbienteCreateCommandHandlerImpl implements IAmbienteCreateCommandHandler {
   constructor(

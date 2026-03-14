@@ -5,6 +5,7 @@ import {
 } from "@/modules/acesso/usuario/domain/queries/usuario-find-by-matricula.query.handler.interface";
 import type { UsuarioFindOneQueryResult } from "../../domain/queries";
 import { IUsuarioRepository } from "../../domain/repositories";
+
 @DeclareImplementation()
 export class UsuarioFindByMatriculaQueryHandlerImpl implements IUsuarioFindByMatriculaQueryHandler {
   constructor(

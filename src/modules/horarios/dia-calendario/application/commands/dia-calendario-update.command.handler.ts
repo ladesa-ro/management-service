@@ -15,6 +15,7 @@ import type { IDiaCalendario } from "@/modules/horarios/dia-calendario/domain/di
 import { IDiaCalendarioPermissionChecker } from "../../domain/authorization";
 import type { DiaCalendarioFindOneQueryResult } from "../../domain/queries";
 import { IDiaCalendarioRepository } from "../../domain/repositories";
+
 @DeclareImplementation()
 export class DiaCalendarioUpdateCommandHandlerImpl implements IDiaCalendarioUpdateCommandHandler {
   constructor(
