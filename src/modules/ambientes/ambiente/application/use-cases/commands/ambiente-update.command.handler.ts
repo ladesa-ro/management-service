@@ -9,8 +9,11 @@ import {
   type IAmbienteUpdateCommand,
   IAmbienteUpdateCommandHandler,
 } from "@/modules/ambientes/ambiente/domain/commands/ambiente-update.command.handler.interface";
+import {
+  AMBIENTE_REPOSITORY_PORT,
+  type IAmbienteRepositoryPort,
+} from "../../../domain/repositories";
 import type { AmbienteFindOneOutputDto } from "../../dtos";
-import { AMBIENTE_REPOSITORY_PORT, type IAmbienteRepositoryPort } from "../../ports";
 
 @Injectable()
 export class AmbienteUpdateCommandHandlerImpl implements IAmbienteUpdateCommandHandler {

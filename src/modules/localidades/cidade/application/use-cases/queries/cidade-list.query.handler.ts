@@ -3,8 +3,8 @@ import {
   type ICidadeListQuery,
   ICidadeListQueryHandler,
 } from "@/modules/localidades/cidade/domain/queries/cidade-list.query.handler.interface";
+import { CIDADE_REPOSITORY_PORT, type ICidadeRepositoryPort } from "../../../domain/repositories";
 import type { CidadeListOutputDto } from "../../dtos";
-import { CIDADE_REPOSITORY_PORT, type ICidadeRepositoryPort } from "../../ports";
 
 @Injectable()
 export class CidadeListQueryHandlerImpl implements ICidadeListQueryHandler {

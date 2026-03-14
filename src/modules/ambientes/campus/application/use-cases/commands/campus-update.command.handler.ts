@@ -12,9 +12,9 @@ import {
   type ICampusUpdateCommand,
   ICampusUpdateCommandHandler,
 } from "@/modules/ambientes/campus/domain/commands/campus-update.command.handler.interface";
-import { EnderecoService } from "@/modules/localidades/endereco";
+import { IEnderecoCreateOrUpdateCommandHandler } from "@/modules/localidades/endereco/domain/commands/endereco-create-or-update.command.handler.interface";
+import { CAMPUS_REPOSITORY_PORT, type ICampusRepositoryPort } from "../../../domain/repositories";
 import type { CampusFindOneOutputDto } from "../../dtos";
-import { CAMPUS_REPOSITORY_PORT, type ICampusRepositoryPort } from "../../ports";
 
 @Injectable()
 export class CampusUpdateCommandHandlerImpl implements ICampusUpdateCommandHandler {
@@ -23,7 +23,8 @@ export class CampusUpdateCommandHandlerImpl implements ICampusUpdateCommandHandl
     private readonly repository: ICampusRepositoryPort,
     @Inject(AUTHORIZATION_SERVICE_PORT)
     private readonly authorizationService: IAuthorizationServicePort,
-    private readonly enderecoService: EnderecoService,
+    @Inject(IEnderecoCreateOrUpdateCommandHandler)
+    private readonly enderecoCreateOrUpdateHandler: IEnderecoCreateOrUpdateCommandHandler,
   ) {}
 
   async execute({ accessContext, dto }: ICampusUpdateCommand): Promise<CampusFindOneOutputDto> {
@@ -50,10 +51,10 @@ export class CampusUpdateCommandHandlerImpl implements ICampusUpdateCommandHandl
     };
     const dtoEndereco = get(dto, "endereco");
     if (dtoEndereco) {
-      const endereco = await this.enderecoService.internalEnderecoCreateOrUpdate(
-        current.endereco.id,
-        dtoEndereco as any,
-      );
+      const endereco = await this.enderecoCreateOrUpdateHandler.execute({
+        id: current.endereco.id,
+        dto: dtoEndereco as any,
+      });
       updateData.endereco = { id: endereco.id as string };
     }
     await this.repository.updateFromDomain(current.id, updateData);

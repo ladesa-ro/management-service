@@ -1,8 +1,14 @@
+import { Inject } from "@nestjs/common";
 import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
 import { AccessContext, AccessContextGraphQL } from "@/modules/@seguranca/contexto-acesso";
+import { ResourceNotFoundError } from "@/modules/@shared";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
-import { DisciplinaService } from "@/modules/ensino/disciplina/application/use-cases/disciplina.service";
+import { IDisciplinaCreateCommandHandler } from "@/modules/ensino/disciplina/domain/commands/disciplina-create.command.handler.interface";
+import { IDisciplinaDeleteCommandHandler } from "@/modules/ensino/disciplina/domain/commands/disciplina-delete.command.handler.interface";
+import { IDisciplinaUpdateCommandHandler } from "@/modules/ensino/disciplina/domain/commands/disciplina-update.command.handler.interface";
+import { IDisciplinaFindOneQueryHandler } from "@/modules/ensino/disciplina/domain/queries/disciplina-find-one.query.handler.interface";
+import { IDisciplinaListQueryHandler } from "@/modules/ensino/disciplina/domain/queries/disciplina-list.query.handler.interface";
 import {
   DisciplinaCreateInputGraphQlDto,
   DisciplinaFindOneOutputGraphQlDto,
@@ -14,7 +20,17 @@ import { DisciplinaGraphqlMapper } from "./disciplina.graphql.mapper";
 
 @Resolver(() => DisciplinaFindOneOutputGraphQlDto)
 export class DisciplinaGraphqlResolver {
-  constructor(private readonly disciplinaService: DisciplinaService) {}
+  constructor(
+    @Inject(IDisciplinaListQueryHandler) private readonly listHandler: IDisciplinaListQueryHandler,
+    @Inject(IDisciplinaFindOneQueryHandler)
+    private readonly findOneHandler: IDisciplinaFindOneQueryHandler,
+    @Inject(IDisciplinaCreateCommandHandler)
+    private readonly createHandler: IDisciplinaCreateCommandHandler,
+    @Inject(IDisciplinaUpdateCommandHandler)
+    private readonly updateHandler: IDisciplinaUpdateCommandHandler,
+    @Inject(IDisciplinaDeleteCommandHandler)
+    private readonly deleteHandler: IDisciplinaDeleteCommandHandler,
+  ) {}
 
   @Query(() => DisciplinaListOutputGraphQlDto, { name: "disciplinaFindAll" })
   async findAll(
@@ -28,7 +44,7 @@ export class DisciplinaGraphqlResolver {
       input.selection = graphqlExtractSelection(info, "paginated");
     }
 
-    const result = await this.disciplinaService.findAll(accessContext, input);
+    const result = await this.listHandler.execute({ accessContext, dto: input });
     return DisciplinaGraphqlMapper.toListOutputDto(result);
   }
 
@@ -39,7 +55,10 @@ export class DisciplinaGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<DisciplinaFindOneOutputGraphQlDto> {
     const selection = graphqlExtractSelection(info);
-    const result = await this.disciplinaService.findByIdStrict(accessContext, { id, selection });
+    const result = await this.findOneHandler.execute({ accessContext, dto: { id, selection } });
+    if (!result) {
+      throw new ResourceNotFoundError("Disciplina", id);
+    }
     return DisciplinaGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -50,7 +69,7 @@ export class DisciplinaGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<DisciplinaFindOneOutputGraphQlDto> {
     const input = DisciplinaGraphqlMapper.toCreateInput(dto);
-    const result = await this.disciplinaService.create(accessContext, input);
+    const result = await this.createHandler.execute({ accessContext, dto: input });
     return DisciplinaGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -62,7 +81,7 @@ export class DisciplinaGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<DisciplinaFindOneOutputGraphQlDto> {
     const input = DisciplinaGraphqlMapper.toUpdateInput({ id }, dto);
-    const result = await this.disciplinaService.update(accessContext, input);
+    const result = await this.updateHandler.execute({ accessContext, dto: input });
     return DisciplinaGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -71,6 +90,6 @@ export class DisciplinaGraphqlResolver {
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
   ): Promise<boolean> {
-    return this.disciplinaService.deleteOneById(accessContext, { id });
+    return this.deleteHandler.execute({ accessContext, dto: { id } });
   }
 }

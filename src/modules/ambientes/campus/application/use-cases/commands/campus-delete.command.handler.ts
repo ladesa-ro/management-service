@@ -8,7 +8,7 @@ import {
   type ICampusDeleteCommand,
   ICampusDeleteCommandHandler,
 } from "@/modules/ambientes/campus/domain/commands/campus-delete.command.handler.interface";
-import { CAMPUS_REPOSITORY_PORT, type ICampusRepositoryPort } from "../../ports";
+import { CAMPUS_REPOSITORY_PORT, type ICampusRepositoryPort } from "../../../domain/repositories";
 
 @Injectable()
 export class CampusDeleteCommandHandlerImpl implements ICampusDeleteCommandHandler {

@@ -1,1 +1,2 @@
-export * from "./ambiente.service";
+export * from "./commands";
+export * from "./queries";

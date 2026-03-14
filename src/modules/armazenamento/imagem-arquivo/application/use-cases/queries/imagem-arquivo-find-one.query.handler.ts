@@ -3,11 +3,11 @@ import {
   type IImagemArquivoFindOneQuery,
   IImagemArquivoFindOneQueryHandler,
 } from "@/modules/armazenamento/imagem-arquivo/domain/queries/imagem-arquivo-find-one.query.handler.interface";
-import type { ImagemArquivoFindOneOutputDto } from "../../dtos";
 import {
   type IImagemArquivoQueryRepositoryPort,
   IMAGEM_ARQUIVO_QUERY_REPOSITORY_PORT,
-} from "../../ports";
+} from "../../../domain/repositories";
+import type { ImagemArquivoFindOneOutputDto } from "../../dtos";
 
 @Injectable()
 export class ImagemArquivoFindOneQueryHandlerImpl implements IImagemArquivoFindOneQueryHandler {

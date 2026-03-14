@@ -3,8 +3,8 @@ import {
   type IBlocoFindOneQuery,
   IBlocoFindOneQueryHandler,
 } from "@/modules/ambientes/bloco/domain/queries/bloco-find-one.query.handler.interface";
+import { BLOCO_REPOSITORY_PORT, type IBlocoRepositoryPort } from "../../../domain/repositories";
 import type { BlocoFindOneOutputDto } from "../../dtos";
-import { BLOCO_REPOSITORY_PORT, type IBlocoRepositoryPort } from "../../ports";
 
 @Injectable()
 export class BlocoFindOneQueryHandlerImpl implements IBlocoFindOneQueryHandler {

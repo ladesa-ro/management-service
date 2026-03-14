@@ -6,16 +6,19 @@ import {
   type PersistInput,
   ResourceNotFoundError,
 } from "@/modules/@shared";
-import { PerfilService } from "@/modules/acesso/perfil";
-import { DiarioService } from "@/modules/ensino/diario/application/use-cases/diario.service";
+import { IPerfilFindOneQueryHandler } from "@/modules/acesso/perfil/domain/queries/perfil-find-one.query.handler.interface";
+import { IDiarioFindOneQueryHandler } from "@/modules/ensino/diario/domain/queries/diario-find-one.query.handler.interface";
 import {
   type IDiarioProfessorUpdateCommand,
   IDiarioProfessorUpdateCommandHandler,
 } from "@/modules/ensino/diario-professor/domain/commands/diario-professor-update.command.handler.interface";
 import { DiarioProfessor } from "@/modules/ensino/diario-professor/domain/diario-professor.domain";
 import type { IDiarioProfessor } from "@/modules/ensino/diario-professor/domain/diario-professor.types";
+import {
+  DIARIO_PROFESSOR_REPOSITORY_PORT,
+  type IDiarioProfessorRepositoryPort,
+} from "../../../domain/repositories";
 import type { DiarioProfessorFindOneOutputDto } from "../../dtos";
-import { DIARIO_PROFESSOR_REPOSITORY_PORT, type IDiarioProfessorRepositoryPort } from "../../ports";
 
 @Injectable()
 export class DiarioProfessorUpdateCommandHandlerImpl
@@ -26,8 +29,10 @@ export class DiarioProfessorUpdateCommandHandlerImpl
     private readonly repository: IDiarioProfessorRepositoryPort,
     @Inject(AUTHORIZATION_SERVICE_PORT)
     private readonly authorizationService: IAuthorizationServicePort,
-    private readonly diarioService: DiarioService,
-    private readonly perfilService: PerfilService,
+    @Inject(IDiarioFindOneQueryHandler)
+    private readonly diarioFindOneHandler: IDiarioFindOneQueryHandler,
+    @Inject(IPerfilFindOneQueryHandler)
+    private readonly perfilFindOneHandler: IPerfilFindOneQueryHandler,
   ) {}
 
   async execute({
@@ -46,11 +51,23 @@ export class DiarioProfessorUpdateCommandHandlerImpl
     domain.atualizar({ situacao: dto.situacao });
     const updateData: Partial<PersistInput<IDiarioProfessor>> = { situacao: domain.situacao };
     if (has(dto, "diario") && dto.diario !== undefined && dto.diario !== null) {
-      const diario = await this.diarioService.findByIdStrict(accessContext, { id: dto.diario.id });
+      const diario = await this.diarioFindOneHandler.execute({
+        accessContext,
+        dto: { id: dto.diario.id },
+      });
+      if (!diario) {
+        throw new ResourceNotFoundError("Diario", dto.diario.id);
+      }
       updateData.diario = { id: diario.id };
     }
     if (has(dto, "perfil") && dto.perfil !== undefined && dto.perfil !== null) {
-      const perfil = await this.perfilService.findByIdStrict(accessContext, { id: dto.perfil.id });
+      const perfil = await this.perfilFindOneHandler.execute({
+        accessContext,
+        dto: { id: dto.perfil.id },
+      });
+      if (!perfil) {
+        throw new ResourceNotFoundError("Perfil", dto.perfil.id);
+      }
       updateData.perfil = { id: perfil.id };
     }
     await this.repository.updateFromDomain(current.id, updateData);

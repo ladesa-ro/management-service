@@ -1,8 +1,14 @@
+import { Inject } from "@nestjs/common";
 import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
 import { AccessContext, AccessContextGraphQL } from "@/modules/@seguranca/contexto-acesso";
+import { ResourceNotFoundError } from "@/modules/@shared";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
-import { AmbienteService } from "@/modules/ambientes/ambiente/application/use-cases/ambiente.service";
+import { IAmbienteCreateCommandHandler } from "@/modules/ambientes/ambiente/domain/commands/ambiente-create.command.handler.interface";
+import { IAmbienteDeleteCommandHandler } from "@/modules/ambientes/ambiente/domain/commands/ambiente-delete.command.handler.interface";
+import { IAmbienteUpdateCommandHandler } from "@/modules/ambientes/ambiente/domain/commands/ambiente-update.command.handler.interface";
+import { IAmbienteFindOneQueryHandler } from "@/modules/ambientes/ambiente/domain/queries/ambiente-find-one.query.handler.interface";
+import { IAmbienteListQueryHandler } from "@/modules/ambientes/ambiente/domain/queries/ambiente-list.query.handler.interface";
 import {
   AmbienteCreateInputGraphQlDto,
   AmbienteFindOneOutputGraphQlDto,
@@ -14,7 +20,17 @@ import { AmbienteGraphqlMapper } from "./ambiente.graphql.mapper";
 
 @Resolver(() => AmbienteFindOneOutputGraphQlDto)
 export class AmbienteGraphqlResolver {
-  constructor(private readonly ambienteService: AmbienteService) {}
+  constructor(
+    @Inject(IAmbienteListQueryHandler) private readonly listHandler: IAmbienteListQueryHandler,
+    @Inject(IAmbienteFindOneQueryHandler)
+    private readonly findOneHandler: IAmbienteFindOneQueryHandler,
+    @Inject(IAmbienteCreateCommandHandler)
+    private readonly createHandler: IAmbienteCreateCommandHandler,
+    @Inject(IAmbienteUpdateCommandHandler)
+    private readonly updateHandler: IAmbienteUpdateCommandHandler,
+    @Inject(IAmbienteDeleteCommandHandler)
+    private readonly deleteHandler: IAmbienteDeleteCommandHandler,
+  ) {}
 
   @Query(() => AmbienteListOutputGraphQlDto, { name: "ambienteFindAll" })
   async findAll(
@@ -28,7 +44,7 @@ export class AmbienteGraphqlResolver {
       input.selection = graphqlExtractSelection(info, "paginated");
     }
 
-    const result = await this.ambienteService.findAll(accessContext, input);
+    const result = await this.listHandler.execute({ accessContext, dto: input });
     return AmbienteGraphqlMapper.toListOutputDto(result);
   }
 
@@ -39,7 +55,10 @@ export class AmbienteGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<AmbienteFindOneOutputGraphQlDto> {
     const selection = graphqlExtractSelection(info);
-    const result = await this.ambienteService.findByIdStrict(accessContext, { id, selection });
+    const result = await this.findOneHandler.execute({ accessContext, dto: { id, selection } });
+    if (!result) {
+      throw new ResourceNotFoundError("Ambiente", id);
+    }
     return AmbienteGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -50,7 +69,7 @@ export class AmbienteGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<AmbienteFindOneOutputGraphQlDto> {
     const input = AmbienteGraphqlMapper.toCreateInput(dto);
-    const result = await this.ambienteService.create(accessContext, input);
+    const result = await this.createHandler.execute({ accessContext, dto: input });
     return AmbienteGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -62,7 +81,7 @@ export class AmbienteGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<AmbienteFindOneOutputGraphQlDto> {
     const input = AmbienteGraphqlMapper.toUpdateInput({ id }, dto);
-    const result = await this.ambienteService.update(accessContext, input);
+    const result = await this.updateHandler.execute({ accessContext, dto: input });
     return AmbienteGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -71,6 +90,6 @@ export class AmbienteGraphqlResolver {
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
   ): Promise<boolean> {
-    return this.ambienteService.deleteOneById(accessContext, { id });
+    return this.deleteHandler.execute({ accessContext, dto: { id } });
   }
 }

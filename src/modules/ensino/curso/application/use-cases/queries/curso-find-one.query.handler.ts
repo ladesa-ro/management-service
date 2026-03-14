@@ -3,8 +3,8 @@ import {
   type ICursoFindOneQuery,
   ICursoFindOneQueryHandler,
 } from "@/modules/ensino/curso/domain/queries/curso-find-one.query.handler.interface";
+import { CURSO_REPOSITORY_PORT, type ICursoRepositoryPort } from "../../../domain/repositories";
 import type { CursoFindOneOutputDto } from "../../dtos";
-import { CURSO_REPOSITORY_PORT, type ICursoRepositoryPort } from "../../ports";
 
 @Injectable()
 export class CursoFindOneQueryHandlerImpl implements ICursoFindOneQueryHandler {

@@ -13,7 +13,7 @@ import type {
   EstadoListInputDto,
   EstadoListOutputDto,
 } from "@/modules/localidades/estado/application/dtos";
-import type { IEstadoRepositoryPort } from "@/modules/localidades/estado/application/ports";
+import type { IEstadoRepositoryPort } from "@/modules/localidades/estado/domain/repositories";
 import type { EstadoEntity } from "./estado.entity";
 import { createEstadoRepository } from "./estado.repository";
 

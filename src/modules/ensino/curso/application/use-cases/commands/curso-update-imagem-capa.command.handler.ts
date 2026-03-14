@@ -5,12 +5,15 @@ import {
   ResourceNotFoundError,
   saveEntityImagemField,
 } from "@/modules/@shared";
-import { ImagemService } from "@/modules/armazenamento/imagem/application/use-cases/imagem.service";
+import {
+  IImagemSaveImagemCapaCommandHandler,
+  type IImagemSaveImagemCapaCommandHandler as IImagemSaveImagemCapaCommandHandlerType,
+} from "@/modules/armazenamento/imagem/domain/commands";
 import {
   type ICursoUpdateImagemCapaCommand,
   ICursoUpdateImagemCapaCommandHandler,
 } from "@/modules/ensino/curso/domain/commands/curso-update-imagem-capa.command.handler.interface";
-import { CURSO_REPOSITORY_PORT, type ICursoRepositoryPort } from "../../ports";
+import { CURSO_REPOSITORY_PORT, type ICursoRepositoryPort } from "../../../domain/repositories";
 
 @Injectable()
 export class CursoUpdateImagemCapaCommandHandlerImpl
@@ -21,7 +24,8 @@ export class CursoUpdateImagemCapaCommandHandlerImpl
     private readonly repository: ICursoRepositoryPort,
     @Inject(AUTHORIZATION_SERVICE_PORT)
     private readonly authorizationService: IAuthorizationServicePort,
-    private readonly imagemService: ImagemService,
+    @Inject(IImagemSaveImagemCapaCommandHandler)
+    private readonly saveImagemCapaHandler: IImagemSaveImagemCapaCommandHandlerType,
   ) {}
 
   async execute({ accessContext, dto, file }: ICursoUpdateImagemCapaCommand): Promise<boolean> {
@@ -41,7 +45,7 @@ export class CursoUpdateImagemCapaCommandHandlerImpl
       current.id,
       file,
       "imagemCapa",
-      this.imagemService,
+      this.saveImagemCapaHandler,
       this.repository,
     );
   }

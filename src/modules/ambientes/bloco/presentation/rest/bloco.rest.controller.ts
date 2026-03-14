@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Inject,
   Param,
   Patch,
   Post,
@@ -23,7 +24,14 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
-import { BlocoService } from "@/modules/ambientes/bloco/application/use-cases/bloco.service";
+import { ResourceNotFoundError } from "@/modules/@shared";
+import { IBlocoCreateCommandHandler } from "@/modules/ambientes/bloco/domain/commands/bloco-create.command.handler.interface";
+import { IBlocoDeleteCommandHandler } from "@/modules/ambientes/bloco/domain/commands/bloco-delete.command.handler.interface";
+import { IBlocoUpdateCommandHandler } from "@/modules/ambientes/bloco/domain/commands/bloco-update.command.handler.interface";
+import { IBlocoUpdateImagemCapaCommandHandler } from "@/modules/ambientes/bloco/domain/commands/bloco-update-imagem-capa.command.handler.interface";
+import { IBlocoFindOneQueryHandler } from "@/modules/ambientes/bloco/domain/queries/bloco-find-one.query.handler.interface";
+import { IBlocoGetImagemCapaQueryHandler } from "@/modules/ambientes/bloco/domain/queries/bloco-get-imagem-capa.query.handler.interface";
+import { IBlocoListQueryHandler } from "@/modules/ambientes/bloco/domain/queries/bloco-list.query.handler.interface";
 import {
   BlocoCreateInputRestDto,
   BlocoFindOneInputRestDto,
@@ -37,7 +45,17 @@ import { BlocoRestMapper } from "./bloco.rest.mapper";
 @ApiTags("blocos")
 @Controller("/blocos")
 export class BlocoRestController {
-  constructor(private blocoService: BlocoService) {}
+  constructor(
+    @Inject(IBlocoListQueryHandler) private readonly listHandler: IBlocoListQueryHandler,
+    @Inject(IBlocoFindOneQueryHandler) private readonly findOneHandler: IBlocoFindOneQueryHandler,
+    @Inject(IBlocoCreateCommandHandler) private readonly createHandler: IBlocoCreateCommandHandler,
+    @Inject(IBlocoUpdateCommandHandler) private readonly updateHandler: IBlocoUpdateCommandHandler,
+    @Inject(IBlocoDeleteCommandHandler) private readonly deleteHandler: IBlocoDeleteCommandHandler,
+    @Inject(IBlocoUpdateImagemCapaCommandHandler)
+    private readonly updateImagemCapaHandler: IBlocoUpdateImagemCapaCommandHandler,
+    @Inject(IBlocoGetImagemCapaQueryHandler)
+    private readonly getImagemCapaHandler: IBlocoGetImagemCapaQueryHandler,
+  ) {}
 
   @Get("/")
   @ApiOperation({ summary: "Lista blocos", operationId: "blocoFindAll" })
@@ -48,7 +66,7 @@ export class BlocoRestController {
     @Query() dto: BlocoListInputRestDto,
   ): Promise<BlocoListOutputRestDto> {
     const input = BlocoRestMapper.toListInput(dto);
-    const result = await this.blocoService.findAll(accessContext, input);
+    const result = await this.listHandler.execute({ accessContext, dto: input });
     return BlocoRestMapper.toListOutputDto(result);
   }
 
@@ -62,7 +80,10 @@ export class BlocoRestController {
     @Param() params: BlocoFindOneInputRestDto,
   ): Promise<BlocoFindOneOutputRestDto> {
     const input = BlocoRestMapper.toFindOneInput(params);
-    const result = await this.blocoService.findByIdStrict(accessContext, input);
+    const result = await this.findOneHandler.execute({ accessContext, dto: input });
+    if (!result) {
+      throw new ResourceNotFoundError("Bloco", input.id);
+    }
     return BlocoRestMapper.toFindOneOutputDto(result);
   }
 
@@ -75,7 +96,7 @@ export class BlocoRestController {
     @Body() dto: BlocoCreateInputRestDto,
   ): Promise<BlocoFindOneOutputRestDto> {
     const input = BlocoRestMapper.toCreateInput(dto);
-    const result = await this.blocoService.create(accessContext, input);
+    const result = await this.createHandler.execute({ accessContext, dto: input });
     return BlocoRestMapper.toFindOneOutputDto(result);
   }
 
@@ -90,7 +111,7 @@ export class BlocoRestController {
     @Body() dto: BlocoUpdateInputRestDto,
   ): Promise<BlocoFindOneOutputRestDto> {
     const input = BlocoRestMapper.toUpdateInput(params, dto);
-    const result = await this.blocoService.update(accessContext, input);
+    const result = await this.updateHandler.execute({ accessContext, dto: input });
     return BlocoRestMapper.toFindOneOutputDto(result);
   }
 
@@ -106,7 +127,7 @@ export class BlocoRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: BlocoFindOneInputRestDto,
   ) {
-    return this.blocoService.getImagemCapa(accessContext, params.id);
+    return this.getImagemCapaHandler.execute({ accessContext, id: params.id });
   }
 
   @Put("/:id/imagem/capa")
@@ -133,7 +154,7 @@ export class BlocoRestController {
     @Param() params: BlocoFindOneInputRestDto,
     @UploadedFile() file: Express.Multer.File,
   ): Promise<boolean> {
-    return this.blocoService.updateImagemCapa(accessContext, params, file);
+    return this.updateImagemCapaHandler.execute({ accessContext, dto: params, file });
   }
 
   @Delete("/:id")
@@ -146,6 +167,6 @@ export class BlocoRestController {
     @Param() params: BlocoFindOneInputRestDto,
   ): Promise<boolean> {
     const input = BlocoRestMapper.toFindOneInput(params);
-    return this.blocoService.deleteOneById(accessContext, input);
+    return this.deleteHandler.execute({ accessContext, dto: input });
   }
 }

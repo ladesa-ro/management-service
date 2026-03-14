@@ -1,6 +1,5 @@
 import { Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
-import { CAMPUS_REPOSITORY_PORT, CampusService } from "@/modules/ambientes/campus";
 import {
   CampusCreateCommandHandlerImpl,
   CampusDeleteCommandHandlerImpl,
@@ -19,6 +18,7 @@ import {
   ICampusFindOneQueryHandler,
   ICampusListQueryHandler,
 } from "@/modules/ambientes/campus/domain/queries";
+import { CAMPUS_REPOSITORY_PORT } from "@/modules/ambientes/campus/domain/repositories";
 import {
   CampusAuthzRegistrySetup,
   CampusTypeOrmRepositoryAdapter,
@@ -32,7 +32,6 @@ import { EnderecoModule } from "@/modules/localidades/endereco/endereco.module";
   controllers: [CampusRestController],
   providers: [
     NestJsPaginateAdapter,
-    CampusService,
     CampusGraphqlResolver,
     CampusAuthzRegistrySetup,
     {
@@ -48,6 +47,6 @@ import { EnderecoModule } from "@/modules/localidades/endereco/endereco.module";
     { provide: ICampusListQueryHandler, useClass: CampusListQueryHandlerImpl },
     { provide: ICampusFindOneQueryHandler, useClass: CampusFindOneQueryHandlerImpl },
   ],
-  exports: [CampusService],
+  exports: [ICampusFindOneQueryHandler],
 })
 export class CampusModule {}

@@ -1,20 +1,28 @@
 import { Inject, Injectable, type StreamableFile } from "@nestjs/common";
 import { getEntityImagemStreamableFile, ResourceNotFoundError } from "@/modules/@shared";
-import { ArquivoService } from "@/modules/armazenamento/arquivo/application/use-cases/arquivo.service";
-import { ImagemService } from "@/modules/armazenamento/imagem/application/use-cases/imagem.service";
+import {
+  IArquivoGetStreamableFileQueryHandler,
+  type IArquivoGetStreamableFileQueryHandler as IArquivoGetStreamableFileQueryHandlerType,
+} from "@/modules/armazenamento/arquivo/domain/queries";
+import {
+  IImagemGetLatestArquivoIdQueryHandler,
+  type IImagemGetLatestArquivoIdQueryHandler as IImagemGetLatestArquivoIdQueryHandlerType,
+} from "@/modules/armazenamento/imagem/domain/queries";
 import {
   type ICursoGetImagemCapaQuery,
   ICursoGetImagemCapaQueryHandler,
 } from "@/modules/ensino/curso/domain/queries/curso-get-imagem-capa.query.handler.interface";
-import { CURSO_REPOSITORY_PORT, type ICursoRepositoryPort } from "../../ports";
+import { CURSO_REPOSITORY_PORT, type ICursoRepositoryPort } from "../../../domain/repositories";
 
 @Injectable()
 export class CursoGetImagemCapaQueryHandlerImpl implements ICursoGetImagemCapaQueryHandler {
   constructor(
     @Inject(CURSO_REPOSITORY_PORT)
     private readonly repository: ICursoRepositoryPort,
-    private readonly imagemService: ImagemService,
-    private readonly arquivoService: ArquivoService,
+    @Inject(IImagemGetLatestArquivoIdQueryHandler)
+    private readonly getLatestArquivoIdHandler: IImagemGetLatestArquivoIdQueryHandlerType,
+    @Inject(IArquivoGetStreamableFileQueryHandler)
+    private readonly getStreamableFileHandler: IArquivoGetStreamableFileQueryHandlerType,
   ) {}
 
   async execute({ accessContext, id }: ICursoGetImagemCapaQuery): Promise<StreamableFile> {
@@ -29,8 +37,8 @@ export class CursoGetImagemCapaQueryHandlerImpl implements ICursoGetImagemCapaQu
       "imagemCapa",
       "Imagem de capa do Curso",
       id,
-      this.imagemService,
-      this.arquivoService,
+      this.getLatestArquivoIdHandler,
+      this.getStreamableFileHandler,
     );
   }
 }

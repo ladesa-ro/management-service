@@ -3,8 +3,8 @@ import {
   type ICursoListQuery,
   ICursoListQueryHandler,
 } from "@/modules/ensino/curso/domain/queries/curso-list.query.handler.interface";
+import { CURSO_REPOSITORY_PORT, type ICursoRepositoryPort } from "../../../domain/repositories";
 import type { CursoListOutputDto } from "../../dtos";
-import { CURSO_REPOSITORY_PORT, type ICursoRepositoryPort } from "../../ports";
 
 @Injectable()
 export class CursoListQueryHandlerImpl implements ICursoListQueryHandler {

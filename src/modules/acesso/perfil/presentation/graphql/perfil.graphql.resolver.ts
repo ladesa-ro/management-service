@@ -1,8 +1,11 @@
+import { Inject } from "@nestjs/common";
 import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
 import { AccessContext, AccessContextGraphQL } from "@/modules/@seguranca/contexto-acesso";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
-import { PerfilService } from "@/modules/acesso/perfil";
+import { IPerfilSetVinculosCommandHandler } from "@/modules/acesso/perfil/domain/commands/perfil-set-vinculos.command.handler.interface";
+import { IPerfilFindOneQueryHandler } from "@/modules/acesso/perfil/domain/queries/perfil-find-one.query.handler.interface";
+import { IPerfilListQueryHandler } from "@/modules/acesso/perfil/domain/queries/perfil-list.query.handler.interface";
 import {
   PerfilFindOneOutputGraphQlDto,
   PerfilListInputGraphQlDto,
@@ -13,7 +16,12 @@ import { PerfilGraphqlMapper } from "./perfil.graphql.mapper";
 
 @Resolver(() => PerfilFindOneOutputGraphQlDto)
 export class PerfilGraphqlResolver {
-  constructor(private readonly perfilService: PerfilService) {}
+  constructor(
+    @Inject(IPerfilListQueryHandler) private readonly listHandler: IPerfilListQueryHandler,
+    @Inject(IPerfilFindOneQueryHandler) private readonly findOneHandler: IPerfilFindOneQueryHandler,
+    @Inject(IPerfilSetVinculosCommandHandler)
+    private readonly setVinculosHandler: IPerfilSetVinculosCommandHandler,
+  ) {}
 
   @Query(() => PerfilListOutputGraphQlDto, { name: "perfilFindAll" })
   async findAll(
@@ -27,7 +35,7 @@ export class PerfilGraphqlResolver {
       input.selection = graphqlExtractSelection(info, "paginated");
     }
 
-    const result = await this.perfilService.findAll(accessContext, input);
+    const result = await this.listHandler.execute({ accessContext, dto: input });
     return PerfilGraphqlMapper.toListOutputDto(result);
   }
 
@@ -38,7 +46,7 @@ export class PerfilGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<PerfilFindOneOutputGraphQlDto | null> {
     const selection = graphqlExtractSelection(info);
-    const result = await this.perfilService.findById(accessContext, { id, selection });
+    const result = await this.findOneHandler.execute({ accessContext, dto: { id, selection } });
     if (!result) {
       return null;
     }
@@ -52,7 +60,7 @@ export class PerfilGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<PerfilListOutputGraphQlDto> {
     const input = PerfilGraphqlMapper.toSetVinculosInput(dto);
-    const result = await this.perfilService.setVinculos(accessContext, input);
+    const result = await this.setVinculosHandler.execute({ accessContext, dto: input });
     return PerfilGraphqlMapper.toListOutputDto(result);
   }
 }

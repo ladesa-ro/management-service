@@ -1,6 +1,10 @@
 import { Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
-import { ENDERECO_REPOSITORY_PORT, EnderecoService } from "@/modules/localidades/endereco";
+import { EnderecoCreateOrUpdateCommandHandlerImpl } from "@/modules/localidades/endereco/application/use-cases/commands";
+import { EnderecoFindOneQueryHandlerImpl } from "@/modules/localidades/endereco/application/use-cases/queries";
+import { IEnderecoCreateOrUpdateCommandHandler } from "@/modules/localidades/endereco/domain/commands";
+import { IEnderecoFindOneQueryHandler } from "@/modules/localidades/endereco/domain/queries";
+import { ENDERECO_REPOSITORY_PORT } from "@/modules/localidades/endereco/domain/repositories";
 import {
   EnderecoAuthzRegistrySetup,
   EnderecoTypeOrmRepositoryAdapter,
@@ -12,14 +16,21 @@ import { EnderecoGraphqlResolver } from "@/modules/localidades/endereco/presenta
   controllers: [],
   providers: [
     NestJsPaginateAdapter,
-    EnderecoService,
     EnderecoGraphqlResolver,
     EnderecoAuthzRegistrySetup,
     {
       provide: ENDERECO_REPOSITORY_PORT,
       useClass: EnderecoTypeOrmRepositoryAdapter,
     },
+
+    // Commands
+    {
+      provide: IEnderecoCreateOrUpdateCommandHandler,
+      useClass: EnderecoCreateOrUpdateCommandHandlerImpl,
+    },
+    // Queries
+    { provide: IEnderecoFindOneQueryHandler, useClass: EnderecoFindOneQueryHandlerImpl },
   ],
-  exports: [EnderecoService],
+  exports: [IEnderecoCreateOrUpdateCommandHandler, IEnderecoFindOneQueryHandler],
 })
 export class EnderecoModule {}

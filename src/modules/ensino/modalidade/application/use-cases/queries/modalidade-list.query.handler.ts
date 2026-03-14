@@ -3,8 +3,11 @@ import {
   type IModalidadeListQuery,
   IModalidadeListQueryHandler,
 } from "@/modules/ensino/modalidade/domain/queries/modalidade-list.query.handler.interface";
+import {
+  type IModalidadeRepositoryPort,
+  MODALIDADE_REPOSITORY_PORT,
+} from "../../../domain/repositories";
 import type { ModalidadeListOutputDto } from "../../dtos";
-import { type IModalidadeRepositoryPort, MODALIDADE_REPOSITORY_PORT } from "../../ports";
 
 @Injectable()
 export class ModalidadeListQueryHandlerImpl implements IModalidadeListQueryHandler {

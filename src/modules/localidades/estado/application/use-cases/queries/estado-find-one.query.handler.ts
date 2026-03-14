@@ -3,8 +3,8 @@ import {
   type IEstadoFindOneQuery,
   IEstadoFindOneQueryHandler,
 } from "@/modules/localidades/estado/domain/queries/estado-find-one.query.handler.interface";
+import { ESTADO_REPOSITORY_PORT, type IEstadoRepositoryPort } from "../../../domain/repositories";
 import type { EstadoFindOneOutputDto } from "../../dtos";
-import { ESTADO_REPOSITORY_PORT, type IEstadoRepositoryPort } from "../../ports";
 
 @Injectable()
 export class EstadoFindOneQueryHandlerImpl implements IEstadoFindOneQueryHandler {

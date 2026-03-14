@@ -2,13 +2,11 @@ import { Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import { PerfilModule } from "@/modules/acesso/perfil/perfil.module";
 import { DiarioModule } from "@/modules/ensino/diario/diario.module";
-import { DIARIO_PROFESSOR_REPOSITORY_PORT } from "@/modules/ensino/diario-professor/application/ports";
 import {
   DiarioProfessorCreateCommandHandlerImpl,
   DiarioProfessorDeleteCommandHandlerImpl,
   DiarioProfessorUpdateCommandHandlerImpl,
 } from "@/modules/ensino/diario-professor/application/use-cases/commands";
-import { DiarioProfessorService } from "@/modules/ensino/diario-professor/application/use-cases/diario-professor.service";
 import {
   DiarioProfessorFindOneQueryHandlerImpl,
   DiarioProfessorListQueryHandlerImpl,
@@ -22,6 +20,7 @@ import {
   IDiarioProfessorFindOneQueryHandler,
   IDiarioProfessorListQueryHandler,
 } from "@/modules/ensino/diario-professor/domain/queries";
+import { DIARIO_PROFESSOR_REPOSITORY_PORT } from "@/modules/ensino/diario-professor/domain/repositories";
 import { DiarioProfessorAuthzRegistrySetup } from "@/modules/ensino/diario-professor/infrastructure";
 import { DiarioProfessorTypeOrmRepositoryAdapter } from "@/modules/ensino/diario-professor/infrastructure/persistence/typeorm";
 import { DiarioProfessorGraphqlResolver } from "@/modules/ensino/diario-professor/presentation/graphql/diario-professor.graphql.resolver";
@@ -36,7 +35,6 @@ import { DiarioProfessorController } from "@/modules/ensino/diario-professor/pre
       provide: DIARIO_PROFESSOR_REPOSITORY_PORT,
       useClass: DiarioProfessorTypeOrmRepositoryAdapter,
     },
-    DiarioProfessorService,
     DiarioProfessorGraphqlResolver,
     DiarioProfessorAuthzRegistrySetup,
 
@@ -60,6 +58,6 @@ import { DiarioProfessorController } from "@/modules/ensino/diario-professor/pre
       useClass: DiarioProfessorFindOneQueryHandlerImpl,
     },
   ],
-  exports: [DiarioProfessorService],
+  exports: [],
 })
 export class DiarioProfessorModule {}

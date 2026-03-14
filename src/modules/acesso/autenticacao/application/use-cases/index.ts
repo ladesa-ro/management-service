@@ -1,1 +1,2 @@
-export * from "./autenticacao.service";
+export * from "./commands";
+export * from "./queries";

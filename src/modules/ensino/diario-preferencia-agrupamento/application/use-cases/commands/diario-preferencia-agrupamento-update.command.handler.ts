@@ -6,18 +6,18 @@ import {
   type PersistInput,
   ResourceNotFoundError,
 } from "@/modules/@shared";
-import { DiarioService } from "@/modules/ensino/diario/application/use-cases/diario.service";
+import { IDiarioFindOneQueryHandler } from "@/modules/ensino/diario/domain/queries/diario-find-one.query.handler.interface";
 import {
   type IDiarioPreferenciaAgrupamentoUpdateCommand,
   IDiarioPreferenciaAgrupamentoUpdateCommandHandler,
 } from "@/modules/ensino/diario-preferencia-agrupamento/domain/commands/diario-preferencia-agrupamento-update.command.handler.interface";
 import { DiarioPreferenciaAgrupamento } from "@/modules/ensino/diario-preferencia-agrupamento/domain/diario-preferencia-agrupamento.domain";
 import type { IDiarioPreferenciaAgrupamento } from "@/modules/ensino/diario-preferencia-agrupamento/domain/diario-preferencia-agrupamento.types";
-import type { DiarioPreferenciaAgrupamentoFindOneOutputDto } from "../../dtos";
 import {
   DIARIO_PREFERENCIA_AGRUPAMENTO_REPOSITORY_PORT,
   type IDiarioPreferenciaAgrupamentoRepositoryPort,
-} from "../../ports";
+} from "../../../domain/repositories";
+import type { DiarioPreferenciaAgrupamentoFindOneOutputDto } from "../../dtos";
 
 @Injectable()
 export class DiarioPreferenciaAgrupamentoUpdateCommandHandlerImpl
@@ -28,7 +28,8 @@ export class DiarioPreferenciaAgrupamentoUpdateCommandHandlerImpl
     private readonly repository: IDiarioPreferenciaAgrupamentoRepositoryPort,
     @Inject(AUTHORIZATION_SERVICE_PORT)
     private readonly authorizationService: IAuthorizationServicePort,
-    private readonly diarioService: DiarioService,
+    @Inject(IDiarioFindOneQueryHandler)
+    private readonly diarioFindOneHandler: IDiarioFindOneQueryHandler,
   ) {}
 
   async execute({
@@ -61,7 +62,13 @@ export class DiarioPreferenciaAgrupamentoUpdateCommandHandlerImpl
       dataFim: domain.dataFim,
     };
     if (has(dto, "diario") && dto.diario !== undefined) {
-      const diario = await this.diarioService.findByIdStrict(accessContext, dto.diario);
+      const diario = await this.diarioFindOneHandler.execute({
+        accessContext,
+        dto: dto.diario,
+      });
+      if (!diario) {
+        throw new ResourceNotFoundError("Diario", dto.diario.id);
+      }
       updateData.diario = { id: diario.id };
     }
     await this.repository.updateFromDomain(current.id, updateData);

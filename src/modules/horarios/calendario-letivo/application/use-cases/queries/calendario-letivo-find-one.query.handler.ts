@@ -3,11 +3,11 @@ import {
   type ICalendarioLetivoFindOneQuery,
   ICalendarioLetivoFindOneQueryHandler,
 } from "@/modules/horarios/calendario-letivo/domain/queries/calendario-letivo-find-one.query.handler.interface";
-import type { CalendarioLetivoFindOneOutputDto } from "../../dtos";
 import {
   CALENDARIO_LETIVO_REPOSITORY_PORT,
   type ICalendarioLetivoRepositoryPort,
-} from "../../ports";
+} from "../../../domain/repositories";
+import type { CalendarioLetivoFindOneOutputDto } from "../../dtos";
 
 @Injectable()
 export class CalendarioLetivoFindOneQueryHandlerImpl

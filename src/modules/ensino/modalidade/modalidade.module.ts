@@ -1,12 +1,10 @@
 import { Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
-import { MODALIDADE_REPOSITORY_PORT } from "@/modules/ensino/modalidade/application/ports";
 import {
   ModalidadeCreateCommandHandlerImpl,
   ModalidadeDeleteCommandHandlerImpl,
   ModalidadeUpdateCommandHandlerImpl,
 } from "@/modules/ensino/modalidade/application/use-cases/commands";
-import { ModalidadeService } from "@/modules/ensino/modalidade/application/use-cases/modalidade.service";
 import {
   ModalidadeFindOneQueryHandlerImpl,
   ModalidadeListQueryHandlerImpl,
@@ -20,6 +18,7 @@ import {
   IModalidadeFindOneQueryHandler,
   IModalidadeListQueryHandler,
 } from "@/modules/ensino/modalidade/domain/queries";
+import { MODALIDADE_REPOSITORY_PORT } from "@/modules/ensino/modalidade/domain/repositories";
 import {
   ModalidadeAuthzRegistrySetup,
   ModalidadeTypeOrmRepositoryAdapter,
@@ -32,7 +31,6 @@ import { ModalidadeRestController } from "@/modules/ensino/modalidade/presentati
   controllers: [ModalidadeRestController],
   providers: [
     NestJsPaginateAdapter,
-    ModalidadeService,
     ModalidadeGraphqlResolver,
     ModalidadeAuthzRegistrySetup,
     {
@@ -48,6 +46,6 @@ import { ModalidadeRestController } from "@/modules/ensino/modalidade/presentati
     { provide: IModalidadeListQueryHandler, useClass: ModalidadeListQueryHandlerImpl },
     { provide: IModalidadeFindOneQueryHandler, useClass: ModalidadeFindOneQueryHandlerImpl },
   ],
-  exports: [ModalidadeService],
+  exports: [IModalidadeFindOneQueryHandler],
 })
 export class ModalidadeModule {}

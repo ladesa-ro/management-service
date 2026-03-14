@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Inject, Param, Patch, Post, Query } from "@nestjs/common";
 import {
   ApiCreatedResponse,
   ApiForbiddenResponse,
@@ -8,7 +8,12 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
-import { CampusService } from "@/modules/ambientes/campus";
+import { ResourceNotFoundError } from "@/modules/@shared";
+import { ICampusCreateCommandHandler } from "@/modules/ambientes/campus/domain/commands/campus-create.command.handler.interface";
+import { ICampusDeleteCommandHandler } from "@/modules/ambientes/campus/domain/commands/campus-delete.command.handler.interface";
+import { ICampusUpdateCommandHandler } from "@/modules/ambientes/campus/domain/commands/campus-update.command.handler.interface";
+import { ICampusFindOneQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-find-one.query.handler.interface";
+import { ICampusListQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-list.query.handler.interface";
 import {
   CampusCreateInputRestDto,
   CampusFindOneInputRestDto,
@@ -22,7 +27,16 @@ import { CampusRestMapper } from "./campus.rest.mapper";
 @ApiTags("campi")
 @Controller("/campi")
 export class CampusRestController {
-  constructor(private campusService: CampusService) {}
+  constructor(
+    @Inject(ICampusListQueryHandler) private readonly listHandler: ICampusListQueryHandler,
+    @Inject(ICampusFindOneQueryHandler) private readonly findOneHandler: ICampusFindOneQueryHandler,
+    @Inject(ICampusCreateCommandHandler)
+    private readonly createHandler: ICampusCreateCommandHandler,
+    @Inject(ICampusUpdateCommandHandler)
+    private readonly updateHandler: ICampusUpdateCommandHandler,
+    @Inject(ICampusDeleteCommandHandler)
+    private readonly deleteHandler: ICampusDeleteCommandHandler,
+  ) {}
 
   @Get("/")
   @ApiOperation({ summary: "Lista campi", operationId: "campusFindAll" })
@@ -33,7 +47,7 @@ export class CampusRestController {
     @Query() dto: CampusListInputRestDto,
   ): Promise<CampusListOutputRestDto> {
     const input = CampusRestMapper.toListInput(dto);
-    const result = await this.campusService.findAll(accessContext, input);
+    const result = await this.listHandler.execute({ accessContext, dto: input });
     return CampusRestMapper.toListOutputDto(result);
   }
 
@@ -47,7 +61,10 @@ export class CampusRestController {
     @Param() params: CampusFindOneInputRestDto,
   ): Promise<CampusFindOneOutputRestDto> {
     const input = CampusRestMapper.toFindOneInput(params);
-    const result = await this.campusService.findByIdStrict(accessContext, input);
+    const result = await this.findOneHandler.execute({ accessContext, dto: input });
+    if (!result) {
+      throw new ResourceNotFoundError("Campus", input.id);
+    }
     return CampusRestMapper.toFindOneOutputDto(result);
   }
 
@@ -60,7 +77,7 @@ export class CampusRestController {
     @Body() dto: CampusCreateInputRestDto,
   ): Promise<CampusFindOneOutputRestDto> {
     const input = CampusRestMapper.toCreateInput(dto);
-    const result = await this.campusService.create(accessContext, input);
+    const result = await this.createHandler.execute({ accessContext, dto: input });
     return CampusRestMapper.toFindOneOutputDto(result);
   }
 
@@ -75,7 +92,7 @@ export class CampusRestController {
     @Body() dto: CampusUpdateInputRestDto,
   ): Promise<CampusFindOneOutputRestDto> {
     const input = CampusRestMapper.toUpdateInput(params, dto);
-    const result = await this.campusService.update(accessContext, input);
+    const result = await this.updateHandler.execute({ accessContext, dto: input });
     return CampusRestMapper.toFindOneOutputDto(result);
   }
 
@@ -89,6 +106,6 @@ export class CampusRestController {
     @Param() params: CampusFindOneInputRestDto,
   ): Promise<boolean> {
     const input = CampusRestMapper.toFindOneInput(params);
-    return this.campusService.deleteOneById(accessContext, input);
+    return this.deleteHandler.execute({ accessContext, dto: input });
   }
 }

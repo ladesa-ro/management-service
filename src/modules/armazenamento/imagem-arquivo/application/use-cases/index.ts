@@ -1,1 +1,1 @@
-export * from "./imagem-arquivo.service";
+export * from "./queries";

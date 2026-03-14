@@ -3,11 +3,11 @@ import {
   type IOfertaFormacaoNivelFormacaoFindOneQuery,
   IOfertaFormacaoNivelFormacaoFindOneQueryHandler,
 } from "@/modules/ensino/oferta-formacao-nivel-formacao/domain/queries/oferta-formacao-nivel-formacao-find-one.query.handler.interface";
-import type { OfertaFormacaoNivelFormacaoFindOneOutputDto } from "../../dtos";
 import {
   type IOfertaFormacaoNivelFormacaoRepositoryPort,
   OFERTA_FORMACAO_NIVEL_FORMACAO_REPOSITORY_PORT,
-} from "../../ports";
+} from "../../../domain/repositories";
+import type { OfertaFormacaoNivelFormacaoFindOneOutputDto } from "../../dtos";
 
 @Injectable()
 export class OfertaFormacaoNivelFormacaoFindOneQueryHandlerImpl

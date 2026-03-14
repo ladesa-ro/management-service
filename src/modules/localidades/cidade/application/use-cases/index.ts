@@ -1,1 +1,1 @@
-export * from "./cidade.service";
+export * from "./queries";

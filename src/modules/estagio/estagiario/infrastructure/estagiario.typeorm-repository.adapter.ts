@@ -14,8 +14,8 @@ import type {
   EstagiarioListOutputDto,
   EstagiarioUpdateInputDto,
 } from "@/modules/estagio/estagiario/application/dtos";
-import type { IEstagiarioRepositoryPort } from "@/modules/estagio/estagiario/application/ports";
 import { Estagiario } from "@/modules/estagio/estagiario/domain/estagiario.domain";
+import type { IEstagiarioRepositoryPort } from "@/modules/estagio/estagiario/domain/repositories";
 import { createEstagiarioRepository, EstagiarioMapper } from "./persistence";
 
 @Injectable()

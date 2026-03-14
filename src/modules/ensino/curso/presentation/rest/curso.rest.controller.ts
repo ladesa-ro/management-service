@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Inject,
   Param,
   Patch,
   Post,
@@ -23,7 +24,14 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
-import { CursoService } from "@/modules/ensino/curso";
+import { ResourceNotFoundError } from "@/modules/@shared";
+import { ICursoCreateCommandHandler } from "@/modules/ensino/curso/domain/commands/curso-create.command.handler.interface";
+import { ICursoDeleteCommandHandler } from "@/modules/ensino/curso/domain/commands/curso-delete.command.handler.interface";
+import { ICursoUpdateCommandHandler } from "@/modules/ensino/curso/domain/commands/curso-update.command.handler.interface";
+import { ICursoUpdateImagemCapaCommandHandler } from "@/modules/ensino/curso/domain/commands/curso-update-imagem-capa.command.handler.interface";
+import { ICursoFindOneQueryHandler } from "@/modules/ensino/curso/domain/queries/curso-find-one.query.handler.interface";
+import { ICursoGetImagemCapaQueryHandler } from "@/modules/ensino/curso/domain/queries/curso-get-imagem-capa.query.handler.interface";
+import { ICursoListQueryHandler } from "@/modules/ensino/curso/domain/queries/curso-list.query.handler.interface";
 import {
   CursoCreateInputRestDto,
   CursoFindOneInputRestDto,
@@ -37,7 +45,17 @@ import { CursoRestMapper } from "./curso.rest.mapper";
 @ApiTags("cursos")
 @Controller("/cursos")
 export class CursoRestController {
-  constructor(private cursoService: CursoService) {}
+  constructor(
+    @Inject(ICursoListQueryHandler) private readonly listHandler: ICursoListQueryHandler,
+    @Inject(ICursoFindOneQueryHandler) private readonly findOneHandler: ICursoFindOneQueryHandler,
+    @Inject(ICursoCreateCommandHandler) private readonly createHandler: ICursoCreateCommandHandler,
+    @Inject(ICursoUpdateCommandHandler) private readonly updateHandler: ICursoUpdateCommandHandler,
+    @Inject(ICursoDeleteCommandHandler) private readonly deleteHandler: ICursoDeleteCommandHandler,
+    @Inject(ICursoUpdateImagemCapaCommandHandler)
+    private readonly updateImagemCapaHandler: ICursoUpdateImagemCapaCommandHandler,
+    @Inject(ICursoGetImagemCapaQueryHandler)
+    private readonly getImagemCapaHandler: ICursoGetImagemCapaQueryHandler,
+  ) {}
 
   @Get("/")
   @ApiOperation({ summary: "Lista cursos", operationId: "cursoFindAll" })
@@ -48,7 +66,7 @@ export class CursoRestController {
     @Query() dto: CursoListInputRestDto,
   ): Promise<CursoListOutputRestDto> {
     const input = CursoRestMapper.toListInput(dto);
-    const result = await this.cursoService.findAll(accessContext, input as any);
+    const result = await this.listHandler.execute({ accessContext, dto: input });
     return CursoRestMapper.toListOutputDto(result as any);
   }
 
@@ -62,7 +80,10 @@ export class CursoRestController {
     @Param() params: CursoFindOneInputRestDto,
   ): Promise<CursoFindOneOutputRestDto> {
     const input = CursoRestMapper.toFindOneInput(params);
-    const result = await this.cursoService.findByIdStrict(accessContext, input as any);
+    const result = await this.findOneHandler.execute({ accessContext, dto: input });
+    if (!result) {
+      throw new ResourceNotFoundError("Curso", input.id);
+    }
     return CursoRestMapper.toFindOneOutputDto(result as any);
   }
 
@@ -75,7 +96,7 @@ export class CursoRestController {
     @Body() dto: CursoCreateInputRestDto,
   ): Promise<CursoFindOneOutputRestDto> {
     const input = CursoRestMapper.toCreateInput(dto);
-    const result = await this.cursoService.create(accessContext, input as any);
+    const result = await this.createHandler.execute({ accessContext, dto: input });
     return CursoRestMapper.toFindOneOutputDto(result as any);
   }
 
@@ -90,7 +111,7 @@ export class CursoRestController {
     @Body() dto: CursoUpdateInputRestDto,
   ): Promise<CursoFindOneOutputRestDto> {
     const input = CursoRestMapper.toUpdateInput(params, dto);
-    const result = await this.cursoService.update(accessContext, input as any);
+    const result = await this.updateHandler.execute({ accessContext, dto: input });
     return CursoRestMapper.toFindOneOutputDto(result as any);
   }
 
@@ -103,7 +124,7 @@ export class CursoRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: CursoFindOneInputRestDto,
   ) {
-    return this.cursoService.getImagemCapa(accessContext, params.id);
+    return this.getImagemCapaHandler.execute({ accessContext, id: params.id });
   }
 
   @Put("/:id/imagem/capa")
@@ -130,7 +151,7 @@ export class CursoRestController {
     @Param() params: CursoFindOneInputRestDto,
     @UploadedFile() file: Express.Multer.File,
   ): Promise<boolean> {
-    return this.cursoService.updateImagemCapa(accessContext, params, file);
+    return this.updateImagemCapaHandler.execute({ accessContext, dto: params, file });
   }
 
   @Delete("/:id")
@@ -143,6 +164,6 @@ export class CursoRestController {
     @Param() params: CursoFindOneInputRestDto,
   ): Promise<boolean> {
     const input = CursoRestMapper.toFindOneInput(params);
-    return this.cursoService.deleteOneById(accessContext, input);
+    return this.deleteHandler.execute({ accessContext, dto: input });
   }
 }

@@ -8,7 +8,10 @@ import {
   type IAmbienteDeleteCommand,
   IAmbienteDeleteCommandHandler,
 } from "@/modules/ambientes/ambiente/domain/commands/ambiente-delete.command.handler.interface";
-import { AMBIENTE_REPOSITORY_PORT, type IAmbienteRepositoryPort } from "../../ports";
+import {
+  AMBIENTE_REPOSITORY_PORT,
+  type IAmbienteRepositoryPort,
+} from "../../../domain/repositories";
 
 @Injectable()
 export class AmbienteDeleteCommandHandlerImpl implements IAmbienteDeleteCommandHandler {

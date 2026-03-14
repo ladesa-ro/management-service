@@ -4,17 +4,17 @@ import {
   type IAuthorizationServicePort,
   ResourceNotFoundError,
 } from "@/modules/@shared";
-import { DiarioService } from "@/modules/ensino/diario/application/use-cases/diario.service";
+import { IDiarioFindOneQueryHandler } from "@/modules/ensino/diario/domain/queries/diario-find-one.query.handler.interface";
 import {
   type IDiarioPreferenciaAgrupamentoCreateCommand,
   IDiarioPreferenciaAgrupamentoCreateCommandHandler,
 } from "@/modules/ensino/diario-preferencia-agrupamento/domain/commands/diario-preferencia-agrupamento-create.command.handler.interface";
 import { DiarioPreferenciaAgrupamento } from "@/modules/ensino/diario-preferencia-agrupamento/domain/diario-preferencia-agrupamento.domain";
-import type { DiarioPreferenciaAgrupamentoFindOneOutputDto } from "../../dtos";
 import {
   DIARIO_PREFERENCIA_AGRUPAMENTO_REPOSITORY_PORT,
   type IDiarioPreferenciaAgrupamentoRepositoryPort,
-} from "../../ports";
+} from "../../../domain/repositories";
+import type { DiarioPreferenciaAgrupamentoFindOneOutputDto } from "../../dtos";
 
 @Injectable()
 export class DiarioPreferenciaAgrupamentoCreateCommandHandlerImpl
@@ -25,7 +25,8 @@ export class DiarioPreferenciaAgrupamentoCreateCommandHandlerImpl
     private readonly repository: IDiarioPreferenciaAgrupamentoRepositoryPort,
     @Inject(AUTHORIZATION_SERVICE_PORT)
     private readonly authorizationService: IAuthorizationServicePort,
-    private readonly diarioService: DiarioService,
+    @Inject(IDiarioFindOneQueryHandler)
+    private readonly diarioFindOneHandler: IDiarioFindOneQueryHandler,
   ) {}
 
   async execute({
@@ -38,7 +39,13 @@ export class DiarioPreferenciaAgrupamentoCreateCommandHandlerImpl
 
     let diarioRef: { id: string } | undefined;
     if (dto.diario) {
-      const diario = await this.diarioService.findByIdStrict(accessContext, dto.diario);
+      const diario = await this.diarioFindOneHandler.execute({
+        accessContext,
+        dto: dto.diario,
+      });
+      if (!diario) {
+        throw new ResourceNotFoundError("Diario", dto.diario.id);
+      }
       diarioRef = { id: diario.id };
     }
     const domain = DiarioPreferenciaAgrupamento.criar({

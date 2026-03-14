@@ -14,7 +14,7 @@ import type {
   DisciplinaListInputDto,
   DisciplinaListOutputDto,
 } from "@/modules/ensino/disciplina/application/dtos";
-import type { IDisciplinaRepositoryPort } from "@/modules/ensino/disciplina/application/ports";
+import type { IDisciplinaRepositoryPort } from "@/modules/ensino/disciplina/domain/repositories";
 import type { DisciplinaEntity } from "./disciplina.entity";
 import { createDisciplinaRepository } from "./disciplina.repository";
 

@@ -4,17 +4,25 @@ import {
   type IBlocoGetImagemCapaQuery,
   IBlocoGetImagemCapaQueryHandler,
 } from "@/modules/ambientes/bloco/domain/queries/bloco-get-imagem-capa.query.handler.interface";
-import { ArquivoService } from "@/modules/armazenamento/arquivo/application/use-cases/arquivo.service";
-import { ImagemService } from "@/modules/armazenamento/imagem/application/use-cases/imagem.service";
-import { BLOCO_REPOSITORY_PORT, type IBlocoRepositoryPort } from "../../ports";
+import {
+  IArquivoGetStreamableFileQueryHandler,
+  type IArquivoGetStreamableFileQueryHandler as IArquivoGetStreamableFileQueryHandlerType,
+} from "@/modules/armazenamento/arquivo/domain/queries";
+import {
+  IImagemGetLatestArquivoIdQueryHandler,
+  type IImagemGetLatestArquivoIdQueryHandler as IImagemGetLatestArquivoIdQueryHandlerType,
+} from "@/modules/armazenamento/imagem/domain/queries";
+import { BLOCO_REPOSITORY_PORT, type IBlocoRepositoryPort } from "../../../domain/repositories";
 
 @Injectable()
 export class BlocoGetImagemCapaQueryHandlerImpl implements IBlocoGetImagemCapaQueryHandler {
   constructor(
     @Inject(BLOCO_REPOSITORY_PORT)
     private readonly repository: IBlocoRepositoryPort,
-    private readonly imagemService: ImagemService,
-    private readonly arquivoService: ArquivoService,
+    @Inject(IImagemGetLatestArquivoIdQueryHandler)
+    private readonly getLatestArquivoIdHandler: IImagemGetLatestArquivoIdQueryHandlerType,
+    @Inject(IArquivoGetStreamableFileQueryHandler)
+    private readonly getStreamableFileHandler: IArquivoGetStreamableFileQueryHandlerType,
   ) {}
 
   async execute({ accessContext, id }: IBlocoGetImagemCapaQuery): Promise<StreamableFile> {
@@ -29,8 +37,8 @@ export class BlocoGetImagemCapaQueryHandlerImpl implements IBlocoGetImagemCapaQu
       "imagemCapa",
       "Imagem de capa do Bloco",
       id,
-      this.imagemService,
-      this.arquivoService,
+      this.getLatestArquivoIdHandler,
+      this.getStreamableFileHandler,
     );
   }
 }

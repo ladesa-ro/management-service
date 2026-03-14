@@ -11,7 +11,7 @@ import {
 import {
   DIARIO_PREFERENCIA_AGRUPAMENTO_REPOSITORY_PORT,
   type IDiarioPreferenciaAgrupamentoRepositoryPort,
-} from "../../ports";
+} from "../../../domain/repositories";
 
 @Injectable()
 export class DiarioPreferenciaAgrupamentoDeleteCommandHandlerImpl

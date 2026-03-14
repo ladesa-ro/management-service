@@ -1,1 +1,2 @@
-export * from "./nivel-formacao.service";
+export * from "./commands";
+export * from "./queries";

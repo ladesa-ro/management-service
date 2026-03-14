@@ -1,10 +1,7 @@
 import { Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import { DiarioModule } from "@/modules/ensino/diario/diario.module";
-import {
-  DIARIO_PREFERENCIA_AGRUPAMENTO_REPOSITORY_PORT,
-  DiarioPreferenciaAgrupamentoService,
-} from "@/modules/ensino/diario-preferencia-agrupamento";
+import { DIARIO_PREFERENCIA_AGRUPAMENTO_REPOSITORY_PORT } from "@/modules/ensino/diario-preferencia-agrupamento";
 import {
   DiarioPreferenciaAgrupamentoCreateCommandHandlerImpl,
   DiarioPreferenciaAgrupamentoDeleteCommandHandlerImpl,
@@ -31,7 +28,6 @@ import { DiarioPreferenciaAgrupamentoController } from "@/modules/ensino/diario-
   imports: [DiarioModule],
   providers: [
     NestJsPaginateAdapter,
-    DiarioPreferenciaAgrupamentoService,
     DiarioPreferenciaAgrupamentoGraphqlResolver,
     DiarioPreferenciaAgrupamentoAuthzRegistrySetup,
     {
@@ -63,6 +59,6 @@ import { DiarioPreferenciaAgrupamentoController } from "@/modules/ensino/diario-
     },
   ],
   controllers: [DiarioPreferenciaAgrupamentoController],
-  exports: [DiarioPreferenciaAgrupamentoService],
+  exports: [],
 })
 export class DiarioPreferenciaAgrupamentoModule {}

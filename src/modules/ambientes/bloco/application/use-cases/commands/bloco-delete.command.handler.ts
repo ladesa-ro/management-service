@@ -8,7 +8,7 @@ import {
   type IBlocoDeleteCommand,
   IBlocoDeleteCommandHandler,
 } from "@/modules/ambientes/bloco/domain/commands/bloco-delete.command.handler.interface";
-import { BLOCO_REPOSITORY_PORT, type IBlocoRepositoryPort } from "../../ports";
+import { BLOCO_REPOSITORY_PORT, type IBlocoRepositoryPort } from "../../../domain/repositories";
 
 @Injectable()
 export class BlocoDeleteCommandHandlerImpl implements IBlocoDeleteCommandHandler {

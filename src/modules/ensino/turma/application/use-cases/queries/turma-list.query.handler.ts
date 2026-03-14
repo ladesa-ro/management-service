@@ -3,8 +3,8 @@ import {
   type ITurmaListQuery,
   ITurmaListQueryHandler,
 } from "@/modules/ensino/turma/domain/queries/turma-list.query.handler.interface";
+import { type ITurmaRepositoryPort, TURMA_REPOSITORY_PORT } from "../../../domain/repositories";
 import type { TurmaListOutputDto } from "../../dtos";
-import { type ITurmaRepositoryPort, TURMA_REPOSITORY_PORT } from "../../ports";
 
 @Injectable()
 export class TurmaListQueryHandlerImpl implements ITurmaListQueryHandler {

@@ -4,14 +4,17 @@ import {
   type IAuthorizationServicePort,
   ResourceNotFoundError,
 } from "@/modules/@shared";
-import { ModalidadeService } from "@/modules/ensino/modalidade";
+import { IModalidadeFindOneQueryHandler } from "@/modules/ensino/modalidade/domain/queries/modalidade-find-one.query.handler.interface";
 import {
   type IOfertaFormacaoCreateCommand,
   IOfertaFormacaoCreateCommandHandler,
 } from "@/modules/ensino/oferta-formacao/domain/commands/oferta-formacao-create.command.handler.interface";
 import { OfertaFormacao } from "@/modules/ensino/oferta-formacao/domain/oferta-formacao.domain";
+import {
+  type IOfertaFormacaoRepositoryPort,
+  OFERTA_FORMACAO_REPOSITORY_PORT,
+} from "../../../domain/repositories";
 import type { OfertaFormacaoFindOneOutputDto } from "../../dtos";
-import { type IOfertaFormacaoRepositoryPort, OFERTA_FORMACAO_REPOSITORY_PORT } from "../../ports";
 
 @Injectable()
 export class OfertaFormacaoCreateCommandHandlerImpl implements IOfertaFormacaoCreateCommandHandler {
@@ -20,7 +23,8 @@ export class OfertaFormacaoCreateCommandHandlerImpl implements IOfertaFormacaoCr
     private readonly repository: IOfertaFormacaoRepositoryPort,
     @Inject(AUTHORIZATION_SERVICE_PORT)
     private readonly authorizationService: IAuthorizationServicePort,
-    private readonly modalidadeService: ModalidadeService,
+    @Inject(IModalidadeFindOneQueryHandler)
+    private readonly modalidadeFindOneHandler: IModalidadeFindOneQueryHandler,
   ) {}
 
   async execute({
@@ -31,10 +35,13 @@ export class OfertaFormacaoCreateCommandHandlerImpl implements IOfertaFormacaoCr
 
     let modalidadeRef: { id: string } | undefined;
     if (dto.modalidade) {
-      const modalidade = await this.modalidadeService.findByIdSimpleStrict(
+      const modalidade = await this.modalidadeFindOneHandler.execute({
         accessContext,
-        dto.modalidade.id,
-      );
+        dto: { id: dto.modalidade.id },
+      });
+      if (!modalidade) {
+        throw new ResourceNotFoundError("Modalidade", dto.modalidade.id);
+      }
       modalidadeRef = { id: modalidade.id };
     }
     const domain = OfertaFormacao.criar({

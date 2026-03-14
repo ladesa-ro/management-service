@@ -3,8 +3,11 @@ import {
   type IOfertaFormacaoFindOneQuery,
   IOfertaFormacaoFindOneQueryHandler,
 } from "@/modules/ensino/oferta-formacao/domain/queries/oferta-formacao-find-one.query.handler.interface";
+import {
+  type IOfertaFormacaoRepositoryPort,
+  OFERTA_FORMACAO_REPOSITORY_PORT,
+} from "../../../domain/repositories";
 import type { OfertaFormacaoFindOneOutputDto } from "../../dtos";
-import { type IOfertaFormacaoRepositoryPort, OFERTA_FORMACAO_REPOSITORY_PORT } from "../../ports";
 
 @Injectable()
 export class OfertaFormacaoFindOneQueryHandlerImpl implements IOfertaFormacaoFindOneQueryHandler {

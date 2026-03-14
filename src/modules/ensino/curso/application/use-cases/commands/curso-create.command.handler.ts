@@ -4,15 +4,15 @@ import {
   type IAuthorizationServicePort,
   ResourceNotFoundError,
 } from "@/modules/@shared";
-import { CampusService } from "@/modules/ambientes/campus";
+import { ICampusFindOneQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-find-one.query.handler.interface";
 import {
   type ICursoCreateCommand,
   ICursoCreateCommandHandler,
 } from "@/modules/ensino/curso/domain/commands/curso-create.command.handler.interface";
 import { Curso } from "@/modules/ensino/curso/domain/curso.domain";
-import { OfertaFormacaoService } from "@/modules/ensino/oferta-formacao";
+import { IOfertaFormacaoFindOneQueryHandler } from "@/modules/ensino/oferta-formacao/domain/queries/oferta-formacao-find-one.query.handler.interface";
+import { CURSO_REPOSITORY_PORT, type ICursoRepositoryPort } from "../../../domain/repositories";
 import type { CursoFindOneOutputDto } from "../../dtos";
-import { CURSO_REPOSITORY_PORT, type ICursoRepositoryPort } from "../../ports";
 
 @Injectable()
 export class CursoCreateCommandHandlerImpl implements ICursoCreateCommandHandler {
@@ -21,18 +21,29 @@ export class CursoCreateCommandHandlerImpl implements ICursoCreateCommandHandler
     private readonly repository: ICursoRepositoryPort,
     @Inject(AUTHORIZATION_SERVICE_PORT)
     private readonly authorizationService: IAuthorizationServicePort,
-    private readonly campusService: CampusService,
-    private readonly ofertaFormacaoService: OfertaFormacaoService,
+    @Inject(ICampusFindOneQueryHandler)
+    private readonly campusFindOneHandler: ICampusFindOneQueryHandler,
+    @Inject(IOfertaFormacaoFindOneQueryHandler)
+    private readonly ofertaFormacaoFindOneHandler: IOfertaFormacaoFindOneQueryHandler,
   ) {}
 
   async execute({ accessContext, dto }: ICursoCreateCommand): Promise<CursoFindOneOutputDto> {
     await this.authorizationService.ensurePermission("curso:create", { dto });
 
-    const campus = await this.campusService.findByIdSimpleStrict(accessContext, dto.campus.id);
-    const ofertaFormacao = await this.ofertaFormacaoService.findByIdSimpleStrict(
+    const campus = await this.campusFindOneHandler.execute({
       accessContext,
-      dto.ofertaFormacao.id,
-    );
+      dto: { id: dto.campus.id },
+    });
+    if (!campus) {
+      throw new ResourceNotFoundError("Campus", dto.campus.id);
+    }
+    const ofertaFormacao = await this.ofertaFormacaoFindOneHandler.execute({
+      accessContext,
+      dto: { id: dto.ofertaFormacao.id },
+    });
+    if (!ofertaFormacao) {
+      throw new ResourceNotFoundError("OfertaFormacao", dto.ofertaFormacao.id);
+    }
     const domain = Curso.criar({
       nome: dto.nome,
       nomeAbreviado: dto.nomeAbreviado,

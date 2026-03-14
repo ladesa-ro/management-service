@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Inject, Param, Patch, Post, Query } from "@nestjs/common";
 import {
   ApiCreatedResponse,
   ApiForbiddenResponse,
@@ -8,7 +8,12 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
-import { DiarioService } from "@/modules/ensino/diario/application/use-cases/diario.service";
+import { ResourceNotFoundError } from "@/modules/@shared";
+import { IDiarioCreateCommandHandler } from "@/modules/ensino/diario/domain/commands/diario-create.command.handler.interface";
+import { IDiarioDeleteCommandHandler } from "@/modules/ensino/diario/domain/commands/diario-delete.command.handler.interface";
+import { IDiarioUpdateCommandHandler } from "@/modules/ensino/diario/domain/commands/diario-update.command.handler.interface";
+import { IDiarioFindOneQueryHandler } from "@/modules/ensino/diario/domain/queries/diario-find-one.query.handler.interface";
+import { IDiarioListQueryHandler } from "@/modules/ensino/diario/domain/queries/diario-list.query.handler.interface";
 import {
   DiarioCreateInputRestDto,
   DiarioFindOneInputRestDto,
@@ -22,7 +27,16 @@ import { DiarioRestMapper } from "./diario.rest.mapper";
 @ApiTags("diarios")
 @Controller("/diarios")
 export class DiarioRestController {
-  constructor(private diarioService: DiarioService) {}
+  constructor(
+    @Inject(IDiarioListQueryHandler) private readonly listHandler: IDiarioListQueryHandler,
+    @Inject(IDiarioFindOneQueryHandler) private readonly findOneHandler: IDiarioFindOneQueryHandler,
+    @Inject(IDiarioCreateCommandHandler)
+    private readonly createHandler: IDiarioCreateCommandHandler,
+    @Inject(IDiarioUpdateCommandHandler)
+    private readonly updateHandler: IDiarioUpdateCommandHandler,
+    @Inject(IDiarioDeleteCommandHandler)
+    private readonly deleteHandler: IDiarioDeleteCommandHandler,
+  ) {}
 
   @Get("/")
   @ApiOperation({ summary: "Lista diarios", operationId: "diarioFindAll" })
@@ -33,7 +47,7 @@ export class DiarioRestController {
     @Query() dto: DiarioListInputRestDto,
   ): Promise<DiarioListOutputRestDto> {
     const input = DiarioRestMapper.toListInput(dto);
-    const result = await this.diarioService.findAll(accessContext, input);
+    const result = await this.listHandler.execute({ accessContext, dto: input });
     return DiarioRestMapper.toListOutputDto(result);
   }
 
@@ -47,7 +61,10 @@ export class DiarioRestController {
     @Param() params: DiarioFindOneInputRestDto,
   ): Promise<DiarioFindOneOutputRestDto> {
     const input = DiarioRestMapper.toFindOneInput(params);
-    const result = await this.diarioService.findByIdStrict(accessContext, input);
+    const result = await this.findOneHandler.execute({ accessContext, dto: input });
+    if (!result) {
+      throw new ResourceNotFoundError("Diario", input.id);
+    }
     return DiarioRestMapper.toFindOneOutputDto(result);
   }
 
@@ -60,7 +77,7 @@ export class DiarioRestController {
     @Body() dto: DiarioCreateInputRestDto,
   ): Promise<DiarioFindOneOutputRestDto> {
     const input = DiarioRestMapper.toCreateInput(dto);
-    const result = await this.diarioService.create(accessContext, input);
+    const result = await this.createHandler.execute({ accessContext, dto: input });
     return DiarioRestMapper.toFindOneOutputDto(result);
   }
 
@@ -75,7 +92,7 @@ export class DiarioRestController {
     @Body() dto: DiarioUpdateInputRestDto,
   ): Promise<DiarioFindOneOutputRestDto> {
     const input = DiarioRestMapper.toUpdateInput(params, dto);
-    const result = await this.diarioService.update(accessContext, input);
+    const result = await this.updateHandler.execute({ accessContext, dto: input });
     return DiarioRestMapper.toFindOneOutputDto(result);
   }
 
@@ -89,6 +106,6 @@ export class DiarioRestController {
     @Param() params: DiarioFindOneInputRestDto,
   ): Promise<boolean> {
     const input = DiarioRestMapper.toFindOneInput(params);
-    return this.diarioService.deleteOneById(accessContext, input);
+    return this.deleteHandler.execute({ accessContext, dto: input });
   }
 }

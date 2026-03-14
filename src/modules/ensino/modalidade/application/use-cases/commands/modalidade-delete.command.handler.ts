@@ -8,7 +8,10 @@ import {
   type IModalidadeDeleteCommand,
   IModalidadeDeleteCommandHandler,
 } from "@/modules/ensino/modalidade/domain/commands/modalidade-delete.command.handler.interface";
-import { type IModalidadeRepositoryPort, MODALIDADE_REPOSITORY_PORT } from "../../ports";
+import {
+  type IModalidadeRepositoryPort,
+  MODALIDADE_REPOSITORY_PORT,
+} from "../../../domain/repositories";
 
 @Injectable()
 export class ModalidadeDeleteCommandHandlerImpl implements IModalidadeDeleteCommandHandler {

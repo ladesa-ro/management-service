@@ -1,1 +1,2 @@
-export * from "./estagiario.service";
+export * from "./commands";
+export * from "./queries";

@@ -6,18 +6,18 @@ import {
   type PersistInput,
   ResourceNotFoundError,
 } from "@/modules/@shared";
-import { NivelFormacaoService } from "@/modules/ensino/nivel-formacao/application/use-cases/nivel-formacao.service";
-import { OfertaFormacaoService } from "@/modules/ensino/oferta-formacao";
+import { INivelFormacaoFindOneQueryHandler } from "@/modules/ensino/nivel-formacao/domain/queries/nivel-formacao-find-one.query.handler.interface";
+import { IOfertaFormacaoFindOneQueryHandler } from "@/modules/ensino/oferta-formacao/domain/queries/oferta-formacao-find-one.query.handler.interface";
 import {
   type IOfertaFormacaoNivelFormacaoUpdateCommand,
   IOfertaFormacaoNivelFormacaoUpdateCommandHandler,
 } from "@/modules/ensino/oferta-formacao-nivel-formacao/domain/commands/oferta-formacao-nivel-formacao-update.command.handler.interface";
 import type { IOfertaFormacaoNivelFormacao } from "@/modules/ensino/oferta-formacao-nivel-formacao/domain/oferta-formacao-nivel-formacao.types";
-import type { OfertaFormacaoNivelFormacaoFindOneOutputDto } from "../../dtos";
 import {
   type IOfertaFormacaoNivelFormacaoRepositoryPort,
   OFERTA_FORMACAO_NIVEL_FORMACAO_REPOSITORY_PORT,
-} from "../../ports";
+} from "../../../domain/repositories";
+import type { OfertaFormacaoNivelFormacaoFindOneOutputDto } from "../../dtos";
 
 @Injectable()
 export class OfertaFormacaoNivelFormacaoUpdateCommandHandlerImpl
@@ -28,8 +28,10 @@ export class OfertaFormacaoNivelFormacaoUpdateCommandHandlerImpl
     private readonly repository: IOfertaFormacaoNivelFormacaoRepositoryPort,
     @Inject(AUTHORIZATION_SERVICE_PORT)
     private readonly authorizationService: IAuthorizationServicePort,
-    private readonly ofertaFormacaoService: OfertaFormacaoService,
-    private readonly nivelFormacaoService: NivelFormacaoService,
+    @Inject(IOfertaFormacaoFindOneQueryHandler)
+    private readonly ofertaFormacaoFindOneHandler: IOfertaFormacaoFindOneQueryHandler,
+    @Inject(INivelFormacaoFindOneQueryHandler)
+    private readonly nivelFormacaoFindOneHandler: INivelFormacaoFindOneQueryHandler,
   ) {}
 
   async execute({
@@ -52,18 +54,26 @@ export class OfertaFormacaoNivelFormacaoUpdateCommandHandlerImpl
     if (has(dto, "ofertaFormacao") && dto.ofertaFormacao !== undefined) {
       const ofertaFormacao =
         dto.ofertaFormacao &&
-        (await this.ofertaFormacaoService.findByIdStrict(accessContext, {
-          id: dto.ofertaFormacao.id,
+        (await this.ofertaFormacaoFindOneHandler.execute({
+          accessContext,
+          dto: { id: dto.ofertaFormacao.id },
         }));
-      updateData.ofertaFormacao = ofertaFormacao && { id: ofertaFormacao.id };
+      if (dto.ofertaFormacao && !ofertaFormacao) {
+        throw new ResourceNotFoundError("OfertaFormacao", dto.ofertaFormacao.id);
+      }
+      updateData.ofertaFormacao = ofertaFormacao ? { id: ofertaFormacao.id } : undefined;
     }
     if (has(dto, "nivelFormacao") && dto.nivelFormacao !== undefined) {
       const nivelFormacao =
         dto.nivelFormacao &&
-        (await this.nivelFormacaoService.findByIdStrict(accessContext, {
-          id: dto.nivelFormacao.id,
+        (await this.nivelFormacaoFindOneHandler.execute({
+          accessContext,
+          dto: { id: dto.nivelFormacao.id },
         }));
-      updateData.nivelFormacao = nivelFormacao && { id: nivelFormacao.id };
+      if (dto.nivelFormacao && !nivelFormacao) {
+        throw new ResourceNotFoundError("NivelFormacao", dto.nivelFormacao.id);
+      }
+      updateData.nivelFormacao = nivelFormacao ? { id: nivelFormacao.id } : undefined;
     }
     await this.repository.updateFromDomain(current.id, updateData);
 

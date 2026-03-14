@@ -1,8 +1,39 @@
 import { Module } from "@nestjs/common";
 import { KeycloakModule } from "@/modules/@seguranca/provedor-identidade";
 import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
-import { USUARIO_REPOSITORY_PORT } from "@/modules/acesso/usuario/application/ports";
-import { UsuarioService } from "@/modules/acesso/usuario/application/use-cases/usuario.service";
+import {
+  UsuarioCreateCommandHandlerImpl,
+  UsuarioDeleteCommandHandlerImpl,
+  UsuarioUpdateCommandHandlerImpl,
+  UsuarioUpdateImagemCapaCommandHandlerImpl,
+  UsuarioUpdateImagemPerfilCommandHandlerImpl,
+} from "@/modules/acesso/usuario/application/use-cases/commands";
+import {
+  UsuarioEnsinoQueryHandlerImpl,
+  UsuarioFindByIdSimpleQueryHandlerImpl,
+  UsuarioFindByMatriculaQueryHandlerImpl,
+  UsuarioFindOneQueryHandlerImpl,
+  UsuarioGetImagemCapaQueryHandlerImpl,
+  UsuarioGetImagemPerfilQueryHandlerImpl,
+  UsuarioListQueryHandlerImpl,
+} from "@/modules/acesso/usuario/application/use-cases/queries";
+import {
+  IUsuarioCreateCommandHandler,
+  IUsuarioDeleteCommandHandler,
+  IUsuarioUpdateCommandHandler,
+  IUsuarioUpdateImagemCapaCommandHandler,
+  IUsuarioUpdateImagemPerfilCommandHandler,
+} from "@/modules/acesso/usuario/domain/commands";
+import {
+  IUsuarioEnsinoQueryHandler,
+  IUsuarioFindByIdSimpleQueryHandler,
+  IUsuarioFindByMatriculaQueryHandler,
+  IUsuarioFindOneQueryHandler,
+  IUsuarioGetImagemCapaQueryHandler,
+  IUsuarioGetImagemPerfilQueryHandler,
+  IUsuarioListQueryHandler,
+} from "@/modules/acesso/usuario/domain/queries";
+import { USUARIO_REPOSITORY_PORT } from "@/modules/acesso/usuario/domain/repositories";
 import {
   UsuarioAuthzRegistrySetup,
   UsuarioTypeOrmRepositoryAdapter,
@@ -17,14 +48,48 @@ import { ImagemModule } from "@/modules/armazenamento/imagem/imagem.module";
   controllers: [UsuarioRestController],
   providers: [
     NestJsPaginateAdapter,
-    UsuarioService,
     UsuarioGraphqlResolver,
     UsuarioAuthzRegistrySetup,
     {
       provide: USUARIO_REPOSITORY_PORT,
       useClass: UsuarioTypeOrmRepositoryAdapter,
     },
+
+    // Commands
+    { provide: IUsuarioCreateCommandHandler, useClass: UsuarioCreateCommandHandlerImpl },
+    { provide: IUsuarioUpdateCommandHandler, useClass: UsuarioUpdateCommandHandlerImpl },
+    { provide: IUsuarioDeleteCommandHandler, useClass: UsuarioDeleteCommandHandlerImpl },
+    {
+      provide: IUsuarioUpdateImagemCapaCommandHandler,
+      useClass: UsuarioUpdateImagemCapaCommandHandlerImpl,
+    },
+    {
+      provide: IUsuarioUpdateImagemPerfilCommandHandler,
+      useClass: UsuarioUpdateImagemPerfilCommandHandlerImpl,
+    },
+    // Queries
+    { provide: IUsuarioListQueryHandler, useClass: UsuarioListQueryHandlerImpl },
+    { provide: IUsuarioFindOneQueryHandler, useClass: UsuarioFindOneQueryHandlerImpl },
+    {
+      provide: IUsuarioFindByIdSimpleQueryHandler,
+      useClass: UsuarioFindByIdSimpleQueryHandlerImpl,
+    },
+    {
+      provide: IUsuarioFindByMatriculaQueryHandler,
+      useClass: UsuarioFindByMatriculaQueryHandlerImpl,
+    },
+    { provide: IUsuarioGetImagemCapaQueryHandler, useClass: UsuarioGetImagemCapaQueryHandlerImpl },
+    {
+      provide: IUsuarioGetImagemPerfilQueryHandler,
+      useClass: UsuarioGetImagemPerfilQueryHandlerImpl,
+    },
+    { provide: IUsuarioEnsinoQueryHandler, useClass: UsuarioEnsinoQueryHandlerImpl },
   ],
-  exports: [UsuarioService],
+  exports: [
+    IUsuarioFindOneQueryHandler,
+    IUsuarioFindByIdSimpleQueryHandler,
+    IUsuarioFindByMatriculaQueryHandler,
+    IUsuarioEnsinoQueryHandler,
+  ],
 })
 export class UsuarioModule {}

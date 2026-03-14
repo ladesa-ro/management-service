@@ -6,16 +6,16 @@ import {
   type PersistInput,
   ResourceNotFoundError,
 } from "@/modules/@shared";
-import { CampusService } from "@/modules/ambientes/campus";
+import { ICampusFindOneQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-find-one.query.handler.interface";
 import {
   type ICursoUpdateCommand,
   ICursoUpdateCommandHandler,
 } from "@/modules/ensino/curso/domain/commands/curso-update.command.handler.interface";
 import { Curso } from "@/modules/ensino/curso/domain/curso.domain";
 import type { ICurso } from "@/modules/ensino/curso/domain/curso.types";
-import { OfertaFormacaoService } from "@/modules/ensino/oferta-formacao";
+import { IOfertaFormacaoFindOneQueryHandler } from "@/modules/ensino/oferta-formacao/domain/queries/oferta-formacao-find-one.query.handler.interface";
+import { CURSO_REPOSITORY_PORT, type ICursoRepositoryPort } from "../../../domain/repositories";
 import type { CursoFindOneOutputDto } from "../../dtos";
-import { CURSO_REPOSITORY_PORT, type ICursoRepositoryPort } from "../../ports";
 
 @Injectable()
 export class CursoUpdateCommandHandlerImpl implements ICursoUpdateCommandHandler {
@@ -24,8 +24,10 @@ export class CursoUpdateCommandHandlerImpl implements ICursoUpdateCommandHandler
     private readonly repository: ICursoRepositoryPort,
     @Inject(AUTHORIZATION_SERVICE_PORT)
     private readonly authorizationService: IAuthorizationServicePort,
-    private readonly campusService: CampusService,
-    private readonly ofertaFormacaoService: OfertaFormacaoService,
+    @Inject(ICampusFindOneQueryHandler)
+    private readonly campusFindOneHandler: ICampusFindOneQueryHandler,
+    @Inject(IOfertaFormacaoFindOneQueryHandler)
+    private readonly ofertaFormacaoFindOneHandler: IOfertaFormacaoFindOneQueryHandler,
   ) {}
 
   async execute({ accessContext, dto }: ICursoUpdateCommand): Promise<CursoFindOneOutputDto> {
@@ -44,14 +46,23 @@ export class CursoUpdateCommandHandlerImpl implements ICursoUpdateCommandHandler
       nomeAbreviado: domain.nomeAbreviado,
     };
     if (has(dto, "campus") && dto.campus !== undefined) {
-      const campus = await this.campusService.findByIdSimpleStrict(accessContext, dto.campus.id);
+      const campus = await this.campusFindOneHandler.execute({
+        accessContext,
+        dto: { id: dto.campus.id },
+      });
+      if (!campus) {
+        throw new ResourceNotFoundError("Campus", dto.campus.id);
+      }
       updateData.campus = { id: campus.id };
     }
     if (has(dto, "ofertaFormacao") && dto.ofertaFormacao !== undefined) {
-      const ofertaFormacao = await this.ofertaFormacaoService.findByIdSimpleStrict(
+      const ofertaFormacao = await this.ofertaFormacaoFindOneHandler.execute({
         accessContext,
-        dto.ofertaFormacao.id,
-      );
+        dto: { id: dto.ofertaFormacao.id },
+      });
+      if (!ofertaFormacao) {
+        throw new ResourceNotFoundError("OfertaFormacao", dto.ofertaFormacao.id);
+      }
       updateData.ofertaFormacao = { id: ofertaFormacao.id };
     }
     await this.repository.updateFromDomain(current.id, updateData);

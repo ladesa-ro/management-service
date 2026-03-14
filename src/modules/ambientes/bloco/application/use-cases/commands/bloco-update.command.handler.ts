@@ -9,8 +9,8 @@ import {
   type IBlocoUpdateCommand,
   IBlocoUpdateCommandHandler,
 } from "@/modules/ambientes/bloco/domain/commands/bloco-update.command.handler.interface";
+import { BLOCO_REPOSITORY_PORT, type IBlocoRepositoryPort } from "../../../domain/repositories";
 import type { BlocoFindOneOutputDto } from "../../dtos";
-import { BLOCO_REPOSITORY_PORT, type IBlocoRepositoryPort } from "../../ports";
 
 @Injectable()
 export class BlocoUpdateCommandHandlerImpl implements IBlocoUpdateCommandHandler {

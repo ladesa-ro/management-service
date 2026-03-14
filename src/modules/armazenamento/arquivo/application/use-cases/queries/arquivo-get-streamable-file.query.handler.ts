@@ -1,0 +1,159 @@
+import type { Readable } from "node:stream";
+import {
+  ForbiddenException,
+  Inject,
+  Injectable,
+  ServiceUnavailableException,
+  StreamableFile,
+} from "@nestjs/common";
+import jetpack, { createReadStream } from "fs-jetpack";
+import {
+  IRuntimeOptions,
+  IRuntimeOptions as IRuntimeOptionsToken,
+} from "@/infrastructure.config/options/runtime/runtime-options.interface";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
+import { isValidUuid, ResourceNotFoundError } from "@/modules/@shared";
+import { UsuarioEntity } from "@/modules/acesso/usuario/infrastructure/persistence/typeorm";
+import type { ArquivoGetFileInputDto } from "@/modules/armazenamento/arquivo/application/dtos";
+import type { IArquivoGetStreamableFileQueryHandler } from "@/modules/armazenamento/arquivo/domain/queries";
+import {
+  ARQUIVO_REPOSITORY_PORT,
+  type IArquivoRepositoryPort,
+} from "@/modules/armazenamento/arquivo/domain/repositories";
+
+@Injectable()
+export class ArquivoGetStreamableFileQueryHandlerImpl
+  implements IArquivoGetStreamableFileQueryHandler
+{
+  constructor(
+    @Inject(ARQUIVO_REPOSITORY_PORT)
+    private arquivoRepository: IArquivoRepositoryPort,
+    @Inject(IRuntimeOptionsToken)
+    private runtimeOptions: IRuntimeOptions,
+  ) {}
+
+  private get storagePath() {
+    return this.runtimeOptions.storagePath;
+  }
+
+  async execute({
+    accessContext,
+    input,
+  }: {
+    accessContext: AccessContext | null;
+    input: ArquivoGetFileInputDto;
+  }): Promise<StreamableFile> {
+    const file = await this.getFile(accessContext, input);
+
+    if (!file.stream) {
+      throw new ServiceUnavailableException();
+    }
+
+    return new StreamableFile(file.stream, {
+      type: file.mimeType ?? undefined,
+      disposition: `attachment; filename="${encodeURIComponent(file.nome ?? file.id)}"`,
+    });
+  }
+
+  private async getFile(
+    accessContext: AccessContext | null,
+    input: ArquivoGetFileInputDto,
+  ): Promise<{
+    id: string;
+    nome: string | null;
+    mimeType: string | null;
+    stream: Readable | null;
+  }> {
+    const { id, acesso } = input;
+    const qb = this.arquivoRepository.createQueryBuilder("arquivo");
+
+    qb.where("arquivo.id = :arquivoId", { arquivoId: id });
+
+    const exists = await qb.getExists();
+
+    if (!exists) {
+      throw new ResourceNotFoundError("Arquivo", id);
+    }
+
+    if (acesso) {
+      if (acesso.nome === "bloco" && isValidUuid(acesso.id)) {
+        qb.innerJoin("arquivo.versao", "versao")
+          .innerJoin("versao.imagem", "imagem")
+          .innerJoin("imagem.blocoCapa", "blocoCapa");
+
+        if (accessContext) {
+          await accessContext.applyFilter("bloco:find", qb, "blocoCapa", null);
+        }
+
+        qb.andWhere("blocoCapa.id = :blocoId", { blocoId: acesso.id });
+      } else if (acesso.nome === "ambiente" && isValidUuid(acesso.id)) {
+        qb.innerJoin("arquivo.versao", "versao")
+          .innerJoin("versao.imagem", "imagem")
+          .innerJoin("imagem.ambienteCapa", "ambienteCapa");
+
+        if (accessContext) {
+          await accessContext.applyFilter("ambiente:find", qb, "ambienteCapa", null);
+        }
+
+        qb.andWhere("ambienteCapa.id = :ambienteId", { ambienteId: acesso.id });
+      } else if (acesso.nome === "usuario" && isValidUuid(acesso.id)) {
+        qb.innerJoin("arquivo.versao", "versao")
+          .innerJoin("versao.imagem", "imagem")
+          .leftJoin(
+            UsuarioEntity,
+            "usuario",
+            "(usuario.id_imagem_capa_fk = imagem.id OR usuario.id_imagem_perfil_fk = imagem.id)",
+          );
+
+        if (accessContext) {
+          await accessContext.applyFilter("usuario:find", qb, "usuario", null);
+        }
+
+        qb.andWhere("usuario.id = :usuarioId", { usuarioId: acesso.id });
+      } else {
+        qb.andWhere("FALSE");
+      }
+    }
+
+    qb.andWhere("arquivo.id = :arquivoId", { arquivoId: id });
+
+    const arquivo = await qb.getOne();
+
+    if (!arquivo) {
+      throw new ForbiddenException();
+    }
+
+    if (!(await this.dataExists(id))) {
+      throw new ServiceUnavailableException();
+    }
+
+    const stream = await this.dataReadAsStream(id);
+
+    return {
+      id: arquivo.id,
+      nome: arquivo.name,
+      mimeType: arquivo.mimeType,
+      stream,
+    };
+  }
+
+  private async dataExists(id: string): Promise<false | "dir" | "file" | "other"> {
+    const fileFullPath = this.datGetFilePath(id);
+    return jetpack.exists(fileFullPath);
+  }
+
+  private async dataReadAsStream(id: string): Promise<Readable | null> {
+    if (await this.dataExists(id)) {
+      const fileFullPath = this.datGetFilePath(id);
+      const fileReadStream = createReadStream(fileFullPath);
+      return fileReadStream;
+    }
+
+    return null;
+  }
+
+  private datGetFilePath(id: string): string {
+    jetpack.dir(this.storagePath);
+    return `${this.storagePath}/${id}`;
+  }
+}

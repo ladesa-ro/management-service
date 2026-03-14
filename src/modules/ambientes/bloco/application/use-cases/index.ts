@@ -1,1 +1,2 @@
-export * from "./bloco.service";
+export * from "./commands";
+export * from "./queries";

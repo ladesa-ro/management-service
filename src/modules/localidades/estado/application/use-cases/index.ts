@@ -1,1 +1,1 @@
-export * from "./estado.service";
+export * from "./queries";

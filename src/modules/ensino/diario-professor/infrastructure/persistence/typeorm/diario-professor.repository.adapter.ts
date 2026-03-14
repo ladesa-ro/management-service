@@ -14,7 +14,7 @@ import type {
   DiarioProfessorListInputDto,
   DiarioProfessorListOutputDto,
 } from "@/modules/ensino/diario-professor/application/dtos";
-import type { IDiarioProfessorRepositoryPort } from "@/modules/ensino/diario-professor/application/ports";
+import type { IDiarioProfessorRepositoryPort } from "@/modules/ensino/diario-professor/domain/repositories";
 import type { DiarioProfessorEntity } from "./diario-professor.entity";
 import { createDiarioProfessorRepository } from "./diario-professor.repository";
 

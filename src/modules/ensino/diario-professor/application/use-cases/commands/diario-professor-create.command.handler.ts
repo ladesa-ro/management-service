@@ -5,15 +5,18 @@ import {
   type IAuthorizationServicePort,
   ResourceNotFoundError,
 } from "@/modules/@shared";
-import { PerfilService } from "@/modules/acesso/perfil";
-import { DiarioService } from "@/modules/ensino/diario/application/use-cases/diario.service";
+import { IPerfilFindOneQueryHandler } from "@/modules/acesso/perfil/domain/queries/perfil-find-one.query.handler.interface";
+import { IDiarioFindOneQueryHandler } from "@/modules/ensino/diario/domain/queries/diario-find-one.query.handler.interface";
 import {
   type IDiarioProfessorCreateCommand,
   IDiarioProfessorCreateCommandHandler,
 } from "@/modules/ensino/diario-professor/domain/commands/diario-professor-create.command.handler.interface";
 import { DiarioProfessor } from "@/modules/ensino/diario-professor/domain/diario-professor.domain";
+import {
+  DIARIO_PROFESSOR_REPOSITORY_PORT,
+  type IDiarioProfessorRepositoryPort,
+} from "../../../domain/repositories";
 import type { DiarioProfessorFindOneOutputDto } from "../../dtos";
-import { DIARIO_PROFESSOR_REPOSITORY_PORT, type IDiarioProfessorRepositoryPort } from "../../ports";
 
 @Injectable()
 export class DiarioProfessorCreateCommandHandlerImpl
@@ -24,8 +27,10 @@ export class DiarioProfessorCreateCommandHandlerImpl
     private readonly repository: IDiarioProfessorRepositoryPort,
     @Inject(AUTHORIZATION_SERVICE_PORT)
     private readonly authorizationService: IAuthorizationServicePort,
-    private readonly diarioService: DiarioService,
-    private readonly perfilService: PerfilService,
+    @Inject(IDiarioFindOneQueryHandler)
+    private readonly diarioFindOneHandler: IDiarioFindOneQueryHandler,
+    @Inject(IPerfilFindOneQueryHandler)
+    private readonly perfilFindOneHandler: IPerfilFindOneQueryHandler,
   ) {}
 
   async execute({
@@ -36,12 +41,24 @@ export class DiarioProfessorCreateCommandHandlerImpl
 
     let diarioRef: { id: string } | undefined;
     if (has(dto, "diario") && dto.diario) {
-      const diario = await this.diarioService.findByIdStrict(accessContext, { id: dto.diario.id });
+      const diario = await this.diarioFindOneHandler.execute({
+        accessContext,
+        dto: { id: dto.diario.id },
+      });
+      if (!diario) {
+        throw new ResourceNotFoundError("Diario", dto.diario.id);
+      }
       diarioRef = { id: diario.id };
     }
     let perfilRef: { id: string } | undefined;
     if (has(dto, "perfil") && dto.perfil) {
-      const perfil = await this.perfilService.findByIdStrict(accessContext, { id: dto.perfil.id });
+      const perfil = await this.perfilFindOneHandler.execute({
+        accessContext,
+        dto: { id: dto.perfil.id },
+      });
+      if (!perfil) {
+        throw new ResourceNotFoundError("Perfil", dto.perfil.id);
+      }
       perfilRef = { id: perfil.id };
     }
     const domain = DiarioProfessor.criar({

@@ -1,1 +1,2 @@
-export * from "./modalidade.service";
+export * from "./commands";
+export * from "./queries";

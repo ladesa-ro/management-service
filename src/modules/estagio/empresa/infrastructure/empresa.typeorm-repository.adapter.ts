@@ -11,8 +11,8 @@ import type {
   EmpresaListOutputDto,
   EmpresaUpdateInputDto,
 } from "@/modules/estagio/empresa/application/dtos";
-import type { IEmpresaRepositoryPort } from "@/modules/estagio/empresa/application/ports";
 import { Empresa } from "@/modules/estagio/empresa/domain/empresa.domain";
+import type { IEmpresaRepositoryPort } from "@/modules/estagio/empresa/domain/repositories";
 import { createEnderecoRepository } from "@/modules/localidades/endereco/infrastructure/persistence/typeorm/endereco.repository";
 import { createEmpresaRepository, EmpresaMapper } from "./persistence";
 

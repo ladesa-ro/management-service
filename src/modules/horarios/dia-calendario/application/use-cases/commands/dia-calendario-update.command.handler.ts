@@ -6,15 +6,21 @@ import {
   type PersistInput,
   ResourceNotFoundError,
 } from "@/modules/@shared";
-import { CalendarioLetivoService } from "@/modules/horarios/calendario-letivo";
+import {
+  type ICalendarioLetivoFindOneQueryHandler,
+  ICalendarioLetivoFindOneQueryHandler as ICalendarioLetivoFindOneQueryHandlerToken,
+} from "@/modules/horarios/calendario-letivo/domain/queries/calendario-letivo-find-one.query.handler.interface";
 import {
   type IDiaCalendarioUpdateCommand,
   IDiaCalendarioUpdateCommandHandler,
 } from "@/modules/horarios/dia-calendario/domain/commands/dia-calendario-update.command.handler.interface";
 import { DiaCalendario } from "@/modules/horarios/dia-calendario/domain/dia-calendario.domain";
 import type { IDiaCalendario } from "@/modules/horarios/dia-calendario/domain/dia-calendario.types";
+import {
+  DIA_CALENDARIO_REPOSITORY_PORT,
+  type IDiaCalendarioRepositoryPort,
+} from "../../../domain/repositories";
 import type { DiaCalendarioFindOneOutputDto } from "../../dtos";
-import { DIA_CALENDARIO_REPOSITORY_PORT, type IDiaCalendarioRepositoryPort } from "../../ports";
 
 @Injectable()
 export class DiaCalendarioUpdateCommandHandlerImpl implements IDiaCalendarioUpdateCommandHandler {
@@ -23,7 +29,8 @@ export class DiaCalendarioUpdateCommandHandlerImpl implements IDiaCalendarioUpda
     private readonly repository: IDiaCalendarioRepositoryPort,
     @Inject(AUTHORIZATION_SERVICE_PORT)
     private readonly authorizationService: IAuthorizationServicePort,
-    private readonly calendarioLetivoService: CalendarioLetivoService,
+    @Inject(ICalendarioLetivoFindOneQueryHandlerToken)
+    private readonly calendarioLetivoFindOneHandler: ICalendarioLetivoFindOneQueryHandler,
   ) {}
 
   async execute({
@@ -46,10 +53,13 @@ export class DiaCalendarioUpdateCommandHandlerImpl implements IDiaCalendarioUpda
       feriado: domain.feriado,
     };
     if (has(dto, "calendario") && dto.calendario !== undefined) {
-      const calendario = await this.calendarioLetivoService.findByIdSimpleStrict(
+      const calendario = await this.calendarioLetivoFindOneHandler.execute({
         accessContext,
-        dto.calendario!.id,
-      );
+        dto: { id: dto.calendario!.id },
+      });
+      if (!calendario) {
+        throw new ResourceNotFoundError("CalendarioLetivo", dto.calendario!.id);
+      }
       updateData.calendario = { id: calendario.id };
     }
     await this.repository.updateFromDomain(current.id, updateData);

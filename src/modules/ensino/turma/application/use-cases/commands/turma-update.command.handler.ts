@@ -6,16 +6,16 @@ import {
   type PersistInput,
   ResourceNotFoundError,
 } from "@/modules/@shared";
-import { AmbienteService } from "@/modules/ambientes/ambiente/application/use-cases/ambiente.service";
-import { CursoService } from "@/modules/ensino/curso";
+import { IAmbienteFindOneQueryHandler } from "@/modules/ambientes/ambiente/domain/queries/ambiente-find-one.query.handler.interface";
+import { ICursoFindOneQueryHandler } from "@/modules/ensino/curso/domain/queries/curso-find-one.query.handler.interface";
 import {
   type ITurmaUpdateCommand,
   ITurmaUpdateCommandHandler,
 } from "@/modules/ensino/turma/domain/commands/turma-update.command.handler.interface";
 import { Turma } from "@/modules/ensino/turma/domain/turma.domain";
 import type { ITurma } from "@/modules/ensino/turma/domain/turma.types";
+import { type ITurmaRepositoryPort, TURMA_REPOSITORY_PORT } from "../../../domain/repositories";
 import type { TurmaFindOneOutputDto } from "../../dtos";
-import { type ITurmaRepositoryPort, TURMA_REPOSITORY_PORT } from "../../ports";
 
 @Injectable()
 export class TurmaUpdateCommandHandlerImpl implements ITurmaUpdateCommandHandler {
@@ -24,8 +24,10 @@ export class TurmaUpdateCommandHandlerImpl implements ITurmaUpdateCommandHandler
     private readonly repository: ITurmaRepositoryPort,
     @Inject(AUTHORIZATION_SERVICE_PORT)
     private readonly authorizationService: IAuthorizationServicePort,
-    private readonly ambienteService: AmbienteService,
-    private readonly cursoService: CursoService,
+    @Inject(IAmbienteFindOneQueryHandler)
+    private readonly ambienteFindOneHandler: IAmbienteFindOneQueryHandler,
+    @Inject(ICursoFindOneQueryHandler)
+    private readonly cursoFindOneHandler: ICursoFindOneQueryHandler,
   ) {}
 
   async execute({ accessContext, dto }: ITurmaUpdateCommand): Promise<TurmaFindOneOutputDto> {
@@ -42,16 +44,26 @@ export class TurmaUpdateCommandHandlerImpl implements ITurmaUpdateCommandHandler
     const updateData: Partial<PersistInput<ITurma>> = { periodo: domain.periodo };
     if (has(dto, "ambientePadraoAula") && dto.ambientePadraoAula !== undefined) {
       if (dto.ambientePadraoAula !== null) {
-        const ambientePadraoAula = await this.ambienteService.findByIdStrict(accessContext, {
-          id: dto.ambientePadraoAula.id,
+        const ambientePadraoAula = await this.ambienteFindOneHandler.execute({
+          accessContext,
+          dto: { id: dto.ambientePadraoAula.id },
         });
+        if (!ambientePadraoAula) {
+          throw new ResourceNotFoundError("Ambiente", dto.ambientePadraoAula.id);
+        }
         updateData.ambientePadraoAula = { id: ambientePadraoAula.id };
       } else {
         updateData.ambientePadraoAula = null;
       }
     }
     if (has(dto, "curso") && dto.curso !== undefined) {
-      const curso = await this.cursoService.findByIdSimpleStrict(accessContext, dto.curso.id);
+      const curso = await this.cursoFindOneHandler.execute({
+        accessContext,
+        dto: { id: dto.curso.id },
+      });
+      if (!curso) {
+        throw new ResourceNotFoundError("Curso", dto.curso.id);
+      }
       updateData.curso = { id: curso.id };
     }
     await this.repository.updateFromDomain(current.id, updateData);

@@ -3,11 +3,11 @@ import {
   type IDiarioPreferenciaAgrupamentoListQuery,
   IDiarioPreferenciaAgrupamentoListQueryHandler,
 } from "@/modules/ensino/diario-preferencia-agrupamento/domain/queries/diario-preferencia-agrupamento-list.query.handler.interface";
-import type { DiarioPreferenciaAgrupamentoListOutputDto } from "../../dtos";
 import {
   DIARIO_PREFERENCIA_AGRUPAMENTO_REPOSITORY_PORT,
   type IDiarioPreferenciaAgrupamentoRepositoryPort,
-} from "../../ports";
+} from "../../../domain/repositories";
+import type { DiarioPreferenciaAgrupamentoListOutputDto } from "../../dtos";
 
 @Injectable()
 export class DiarioPreferenciaAgrupamentoListQueryHandlerImpl

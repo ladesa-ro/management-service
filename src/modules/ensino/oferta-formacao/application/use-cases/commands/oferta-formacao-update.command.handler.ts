@@ -6,15 +6,18 @@ import {
   type PersistInput,
   ResourceNotFoundError,
 } from "@/modules/@shared";
-import { ModalidadeService } from "@/modules/ensino/modalidade";
+import { IModalidadeFindOneQueryHandler } from "@/modules/ensino/modalidade/domain/queries/modalidade-find-one.query.handler.interface";
 import {
   type IOfertaFormacaoUpdateCommand,
   IOfertaFormacaoUpdateCommandHandler,
 } from "@/modules/ensino/oferta-formacao/domain/commands/oferta-formacao-update.command.handler.interface";
 import { OfertaFormacao } from "@/modules/ensino/oferta-formacao/domain/oferta-formacao.domain";
 import type { IOfertaFormacao } from "@/modules/ensino/oferta-formacao/domain/oferta-formacao.types";
+import {
+  type IOfertaFormacaoRepositoryPort,
+  OFERTA_FORMACAO_REPOSITORY_PORT,
+} from "../../../domain/repositories";
 import type { OfertaFormacaoFindOneOutputDto } from "../../dtos";
-import { type IOfertaFormacaoRepositoryPort, OFERTA_FORMACAO_REPOSITORY_PORT } from "../../ports";
 
 @Injectable()
 export class OfertaFormacaoUpdateCommandHandlerImpl implements IOfertaFormacaoUpdateCommandHandler {
@@ -23,7 +26,8 @@ export class OfertaFormacaoUpdateCommandHandlerImpl implements IOfertaFormacaoUp
     private readonly repository: IOfertaFormacaoRepositoryPort,
     @Inject(AUTHORIZATION_SERVICE_PORT)
     private readonly authorizationService: IAuthorizationServicePort,
-    private readonly modalidadeService: ModalidadeService,
+    @Inject(IModalidadeFindOneQueryHandler)
+    private readonly modalidadeFindOneHandler: IModalidadeFindOneQueryHandler,
   ) {}
 
   async execute({
@@ -46,10 +50,13 @@ export class OfertaFormacaoUpdateCommandHandlerImpl implements IOfertaFormacaoUp
     };
     if (has(dto, "modalidade") && dto.modalidade !== undefined) {
       if (dto.modalidade) {
-        const modalidade = await this.modalidadeService.findByIdSimpleStrict(
+        const modalidade = await this.modalidadeFindOneHandler.execute({
           accessContext,
-          dto.modalidade.id,
-        );
+          dto: { id: dto.modalidade.id },
+        });
+        if (!modalidade) {
+          throw new ResourceNotFoundError("Modalidade", dto.modalidade.id);
+        }
         updateData.modalidade = { id: modalidade.id };
       } else {
         updateData.modalidade = null;

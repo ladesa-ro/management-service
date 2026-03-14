@@ -3,8 +3,11 @@ import {
   type INivelFormacaoListQuery,
   INivelFormacaoListQueryHandler,
 } from "@/modules/ensino/nivel-formacao/domain/queries/nivel-formacao-list.query.handler.interface";
+import {
+  type INivelFormacaoRepositoryPort,
+  NIVEL_FORMACAO_REPOSITORY_PORT,
+} from "../../../domain/repositories";
 import type { NivelFormacaoListOutputDto } from "../../dtos";
-import { type INivelFormacaoRepositoryPort, NIVEL_FORMACAO_REPOSITORY_PORT } from "../../ports";
 
 @Injectable()
 export class NivelFormacaoListQueryHandlerImpl implements INivelFormacaoListQueryHandler {

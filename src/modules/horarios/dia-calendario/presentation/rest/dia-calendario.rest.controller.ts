@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Inject, Param, Patch, Post, Query } from "@nestjs/common";
 import {
   ApiCreatedResponse,
   ApiForbiddenResponse,
@@ -8,7 +8,12 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
-import { DiaCalendarioService } from "@/modules/horarios/dia-calendario/application/use-cases/dia-calendario.service";
+import { ResourceNotFoundError } from "@/modules/@shared";
+import { IDiaCalendarioCreateCommandHandler } from "@/modules/horarios/dia-calendario/domain/commands/dia-calendario-create.command.handler.interface";
+import { IDiaCalendarioDeleteCommandHandler } from "@/modules/horarios/dia-calendario/domain/commands/dia-calendario-delete.command.handler.interface";
+import { IDiaCalendarioUpdateCommandHandler } from "@/modules/horarios/dia-calendario/domain/commands/dia-calendario-update.command.handler.interface";
+import { IDiaCalendarioFindOneQueryHandler } from "@/modules/horarios/dia-calendario/domain/queries/dia-calendario-find-one.query.handler.interface";
+import { IDiaCalendarioListQueryHandler } from "@/modules/horarios/dia-calendario/domain/queries/dia-calendario-list.query.handler.interface";
 import {
   DiaCalendarioCreateInputRestDto,
   DiaCalendarioFindOneInputRestDto,
@@ -22,7 +27,18 @@ import { DiaCalendarioRestMapper } from "./dia-calendario.rest.mapper";
 @ApiTags("dias-calendarios")
 @Controller("/dias-calendario")
 export class DiaCalendarioRestController {
-  constructor(private diaCalendarioService: DiaCalendarioService) {}
+  constructor(
+    @Inject(IDiaCalendarioListQueryHandler)
+    private readonly listHandler: IDiaCalendarioListQueryHandler,
+    @Inject(IDiaCalendarioFindOneQueryHandler)
+    private readonly findOneHandler: IDiaCalendarioFindOneQueryHandler,
+    @Inject(IDiaCalendarioCreateCommandHandler)
+    private readonly createHandler: IDiaCalendarioCreateCommandHandler,
+    @Inject(IDiaCalendarioUpdateCommandHandler)
+    private readonly updateHandler: IDiaCalendarioUpdateCommandHandler,
+    @Inject(IDiaCalendarioDeleteCommandHandler)
+    private readonly deleteHandler: IDiaCalendarioDeleteCommandHandler,
+  ) {}
 
   @Get("/")
   @ApiOperation({ summary: "Lista dias de calendario", operationId: "diaCalendarioFindAll" })
@@ -33,7 +49,7 @@ export class DiaCalendarioRestController {
     @Query() dto: DiaCalendarioListInputRestDto,
   ): Promise<DiaCalendarioListOutputRestDto> {
     const input = DiaCalendarioRestMapper.toListInput(dto);
-    const result = await this.diaCalendarioService.findAll(accessContext, input as any);
+    const result = await this.listHandler.execute({ accessContext, dto: input as any });
     return DiaCalendarioRestMapper.toListOutputDto(result as any);
   }
 
@@ -50,7 +66,10 @@ export class DiaCalendarioRestController {
     @Param() params: DiaCalendarioFindOneInputRestDto,
   ): Promise<DiaCalendarioFindOneOutputRestDto> {
     const input = DiaCalendarioRestMapper.toFindOneInput(params);
-    const result = await this.diaCalendarioService.findByIdStrict(accessContext, input as any);
+    const result = await this.findOneHandler.execute({ accessContext, dto: input as any });
+    if (!result) {
+      throw new ResourceNotFoundError("DiaCalendario", (input as any).id);
+    }
     return DiaCalendarioRestMapper.toFindOneOutputDto(result as any);
   }
 
@@ -63,7 +82,7 @@ export class DiaCalendarioRestController {
     @Body() dto: DiaCalendarioCreateInputRestDto,
   ): Promise<DiaCalendarioFindOneOutputRestDto> {
     const input = DiaCalendarioRestMapper.toCreateInput(dto);
-    const result = await this.diaCalendarioService.create(accessContext, input as any);
+    const result = await this.createHandler.execute({ accessContext, dto: input as any });
     return DiaCalendarioRestMapper.toFindOneOutputDto(result as any);
   }
 
@@ -78,7 +97,7 @@ export class DiaCalendarioRestController {
     @Body() dto: DiaCalendarioUpdateInputRestDto,
   ): Promise<DiaCalendarioFindOneOutputRestDto> {
     const input = DiaCalendarioRestMapper.toUpdateInput(params, dto);
-    const result = await this.diaCalendarioService.update(accessContext, input as any);
+    const result = await this.updateHandler.execute({ accessContext, dto: input as any });
     return DiaCalendarioRestMapper.toFindOneOutputDto(result as any);
   }
 
@@ -95,6 +114,6 @@ export class DiaCalendarioRestController {
     @Param() params: DiaCalendarioFindOneInputRestDto,
   ): Promise<boolean> {
     const input = DiaCalendarioRestMapper.toFindOneInput(params);
-    return this.diaCalendarioService.deleteOneById(accessContext, input as any);
+    return this.deleteHandler.execute({ accessContext, dto: input as any });
   }
 }

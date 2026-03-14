@@ -5,12 +5,15 @@ import {
   ResourceNotFoundError,
   saveEntityImagemField,
 } from "@/modules/@shared";
-import { ImagemService } from "@/modules/armazenamento/imagem/application/use-cases/imagem.service";
+import {
+  IImagemSaveImagemCapaCommandHandler,
+  type IImagemSaveImagemCapaCommandHandler as IImagemSaveImagemCapaCommandHandlerType,
+} from "@/modules/armazenamento/imagem/domain/commands";
 import {
   type ITurmaUpdateImagemCapaCommand,
   ITurmaUpdateImagemCapaCommandHandler,
 } from "@/modules/ensino/turma/domain/commands/turma-update-imagem-capa.command.handler.interface";
-import { type ITurmaRepositoryPort, TURMA_REPOSITORY_PORT } from "../../ports";
+import { type ITurmaRepositoryPort, TURMA_REPOSITORY_PORT } from "../../../domain/repositories";
 
 @Injectable()
 export class TurmaUpdateImagemCapaCommandHandlerImpl
@@ -21,7 +24,8 @@ export class TurmaUpdateImagemCapaCommandHandlerImpl
     private readonly repository: ITurmaRepositoryPort,
     @Inject(AUTHORIZATION_SERVICE_PORT)
     private readonly authorizationService: IAuthorizationServicePort,
-    private readonly imagemService: ImagemService,
+    @Inject(IImagemSaveImagemCapaCommandHandler)
+    private readonly saveImagemCapaHandler: IImagemSaveImagemCapaCommandHandlerType,
   ) {}
 
   async execute({ accessContext, dto, file }: ITurmaUpdateImagemCapaCommand): Promise<boolean> {
@@ -41,7 +45,7 @@ export class TurmaUpdateImagemCapaCommandHandlerImpl
       current.id,
       file,
       "imagemCapa",
-      this.imagemService,
+      this.saveImagemCapaHandler,
       this.repository,
     );
   }

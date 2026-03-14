@@ -1,8 +1,11 @@
+import { Inject } from "@nestjs/common";
 import { Args, Info, Int, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
 import { AccessContext, AccessContextGraphQL } from "@/modules/@seguranca/contexto-acesso";
+import { ResourceNotFoundError } from "@/modules/@shared";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
-import { EstadoService } from "@/modules/localidades/estado/application/use-cases/estado.service";
+import { IEstadoFindOneQueryHandler } from "@/modules/localidades/estado/domain/queries/estado-find-one.query.handler.interface";
+import { IEstadoListQueryHandler } from "@/modules/localidades/estado/domain/queries/estado-list.query.handler.interface";
 import {
   EstadoFindOneOutputGraphQlDto,
   EstadoListInputGraphQlDto,
@@ -12,7 +15,12 @@ import { EstadoGraphqlMapper } from "./estado.graphql.mapper";
 
 @Resolver(() => EstadoFindOneOutputGraphQlDto)
 export class EstadoGraphqlResolver {
-  constructor(private readonly estadoService: EstadoService) {}
+  constructor(
+    @Inject(IEstadoListQueryHandler)
+    private readonly listHandler: IEstadoListQueryHandler,
+    @Inject(IEstadoFindOneQueryHandler)
+    private readonly findOneHandler: IEstadoFindOneQueryHandler,
+  ) {}
 
   @Query(() => EstadoListOutputGraphQlDto, { name: "estadoFindAll" })
   async findAll(
@@ -26,7 +34,7 @@ export class EstadoGraphqlResolver {
       input.selection = graphqlExtractSelection(info, "paginated");
     }
 
-    const result = await this.estadoService.findAll(accessContext, input);
+    const result = await this.listHandler.execute({ accessContext, dto: input });
     return EstadoGraphqlMapper.toListOutputDto(result);
   }
 
@@ -37,7 +45,10 @@ export class EstadoGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<EstadoFindOneOutputGraphQlDto> {
     const selection = graphqlExtractSelection(info);
-    const result = await this.estadoService.findByIdStrict(accessContext, { id, selection });
+    const result = await this.findOneHandler.execute({ accessContext, dto: { id, selection } });
+    if (!result) {
+      throw new ResourceNotFoundError("Estado", id);
+    }
     return EstadoGraphqlMapper.toFindOneOutputDto(result);
   }
 }

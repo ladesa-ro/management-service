@@ -1,1 +1,2 @@
-export * from "./arquivo.service";
+export * from "./commands";
+export * from "./queries";

@@ -9,9 +9,12 @@ import {
   type IAmbienteCreateCommand,
   IAmbienteCreateCommandHandler,
 } from "@/modules/ambientes/ambiente/domain/commands/ambiente-create.command.handler.interface";
-import { BlocoService } from "@/modules/ambientes/bloco/application/use-cases/bloco.service";
+import { IBlocoFindOneQueryHandler } from "@/modules/ambientes/bloco/domain/queries/bloco-find-one.query.handler.interface";
+import {
+  AMBIENTE_REPOSITORY_PORT,
+  type IAmbienteRepositoryPort,
+} from "../../../domain/repositories";
 import type { AmbienteFindOneOutputDto } from "../../dtos";
-import { AMBIENTE_REPOSITORY_PORT, type IAmbienteRepositoryPort } from "../../ports";
 
 @Injectable()
 export class AmbienteCreateCommandHandlerImpl implements IAmbienteCreateCommandHandler {
@@ -20,13 +23,20 @@ export class AmbienteCreateCommandHandlerImpl implements IAmbienteCreateCommandH
     private readonly repository: IAmbienteRepositoryPort,
     @Inject(AUTHORIZATION_SERVICE_PORT)
     private readonly authorizationService: IAuthorizationServicePort,
-    private readonly blocoService: BlocoService,
+    @Inject(IBlocoFindOneQueryHandler)
+    private readonly blocoFindOneHandler: IBlocoFindOneQueryHandler,
   ) {}
 
   async execute({ accessContext, dto }: IAmbienteCreateCommand): Promise<AmbienteFindOneOutputDto> {
     await this.authorizationService.ensurePermission("ambiente:create", { dto });
 
-    const bloco = await this.blocoService.findByIdSimpleStrict(accessContext, dto.bloco.id);
+    const bloco = await this.blocoFindOneHandler.execute({
+      accessContext,
+      dto: { id: dto.bloco.id },
+    });
+    if (!bloco) {
+      throw new ResourceNotFoundError("Bloco", dto.bloco.id);
+    }
 
     const domain = Ambiente.criar({
       nome: dto.nome,

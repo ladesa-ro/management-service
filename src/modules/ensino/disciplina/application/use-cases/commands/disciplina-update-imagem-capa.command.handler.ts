@@ -5,12 +5,18 @@ import {
   ResourceNotFoundError,
   saveEntityImagemField,
 } from "@/modules/@shared";
-import { ImagemService } from "@/modules/armazenamento/imagem/application/use-cases/imagem.service";
+import {
+  IImagemSaveImagemCapaCommandHandler,
+  type IImagemSaveImagemCapaCommandHandler as IImagemSaveImagemCapaCommandHandlerType,
+} from "@/modules/armazenamento/imagem/domain/commands";
 import {
   type IDisciplinaUpdateImagemCapaCommand,
   IDisciplinaUpdateImagemCapaCommandHandler,
 } from "@/modules/ensino/disciplina/domain/commands/disciplina-update-imagem-capa.command.handler.interface";
-import { DISCIPLINA_REPOSITORY_PORT, type IDisciplinaRepositoryPort } from "../../ports";
+import {
+  DISCIPLINA_REPOSITORY_PORT,
+  type IDisciplinaRepositoryPort,
+} from "../../../domain/repositories";
 
 @Injectable()
 export class DisciplinaUpdateImagemCapaCommandHandlerImpl
@@ -21,7 +27,8 @@ export class DisciplinaUpdateImagemCapaCommandHandlerImpl
     private readonly repository: IDisciplinaRepositoryPort,
     @Inject(AUTHORIZATION_SERVICE_PORT)
     private readonly authorizationService: IAuthorizationServicePort,
-    private readonly imagemService: ImagemService,
+    @Inject(IImagemSaveImagemCapaCommandHandler)
+    private readonly saveImagemCapaHandler: IImagemSaveImagemCapaCommandHandlerType,
   ) {}
 
   async execute({
@@ -45,7 +52,7 @@ export class DisciplinaUpdateImagemCapaCommandHandlerImpl
       current.id,
       file,
       "imagemCapa",
-      this.imagemService,
+      this.saveImagemCapaHandler,
       this.repository,
     );
   }

@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query } from "@nestjs/common";
+import { Controller, Get, Inject, Param, Query } from "@nestjs/common";
 import {
   ApiForbiddenResponse,
   ApiNotFoundResponse,
@@ -7,7 +7,9 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
-import { CidadeService } from "@/modules/localidades/cidade/application/use-cases/cidade.service";
+import { ResourceNotFoundError } from "@/modules/@shared";
+import { ICidadeFindOneQueryHandler } from "@/modules/localidades/cidade/domain/queries/cidade-find-one.query.handler.interface";
+import { ICidadeListQueryHandler } from "@/modules/localidades/cidade/domain/queries/cidade-list.query.handler.interface";
 import {
   CidadeFindOneInputRestDto,
   CidadeFindOneOutputRestDto,
@@ -19,7 +21,12 @@ import { CidadeRestMapper } from "./cidade.rest.mapper";
 @ApiTags("cidades")
 @Controller("/base/cidades")
 export class CidadeRestController {
-  constructor(private cidadeService: CidadeService) {}
+  constructor(
+    @Inject(ICidadeListQueryHandler)
+    private readonly listHandler: ICidadeListQueryHandler,
+    @Inject(ICidadeFindOneQueryHandler)
+    private readonly findOneHandler: ICidadeFindOneQueryHandler,
+  ) {}
 
   @Get("/")
   @ApiOperation({ summary: "Lista cidades", operationId: "cidadeFindAll" })
@@ -30,7 +37,7 @@ export class CidadeRestController {
     @Query() dto: CidadeListInputRestDto,
   ): Promise<CidadeListOutputRestDto> {
     const input = CidadeRestMapper.toListInput(dto);
-    const result = await this.cidadeService.findAll(accessContext, input);
+    const result = await this.listHandler.execute({ accessContext, dto: input });
     return CidadeRestMapper.toListOutputDto(result);
   }
 
@@ -44,7 +51,10 @@ export class CidadeRestController {
     @Param() params: CidadeFindOneInputRestDto,
   ): Promise<CidadeFindOneOutputRestDto> {
     const input = CidadeRestMapper.toFindOneInput(params);
-    const result = await this.cidadeService.findByIdStrict(accessContext, input);
+    const result = await this.findOneHandler.execute({ accessContext, dto: input });
+    if (!result) {
+      throw new ResourceNotFoundError("Cidade", input.id);
+    }
     return CidadeRestMapper.toFindOneOutputDto(result);
   }
 }

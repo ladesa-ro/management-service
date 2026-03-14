@@ -1,13 +1,11 @@
 import { Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import { CalendarioLetivoModule } from "@/modules/horarios/calendario-letivo/calendario-letivo.module";
-import { DIA_CALENDARIO_REPOSITORY_PORT } from "@/modules/horarios/dia-calendario/application/ports";
 import {
   DiaCalendarioCreateCommandHandlerImpl,
   DiaCalendarioDeleteCommandHandlerImpl,
   DiaCalendarioUpdateCommandHandlerImpl,
 } from "@/modules/horarios/dia-calendario/application/use-cases/commands";
-import { DiaCalendarioService } from "@/modules/horarios/dia-calendario/application/use-cases/dia-calendario.service";
 import {
   DiaCalendarioFindOneQueryHandlerImpl,
   DiaCalendarioListQueryHandlerImpl,
@@ -21,6 +19,7 @@ import {
   IDiaCalendarioFindOneQueryHandler,
   IDiaCalendarioListQueryHandler,
 } from "@/modules/horarios/dia-calendario/domain/queries";
+import { DIA_CALENDARIO_REPOSITORY_PORT } from "@/modules/horarios/dia-calendario/domain/repositories";
 import { DiaCalendarioAuthzRegistrySetup } from "@/modules/horarios/dia-calendario/infrastructure";
 import { DiaCalendarioTypeOrmRepositoryAdapter } from "@/modules/horarios/dia-calendario/infrastructure/persistence/typeorm";
 import { DiaCalendarioGraphqlResolver } from "@/modules/horarios/dia-calendario/presentation/graphql/dia-calendario.graphql.resolver";
@@ -34,7 +33,6 @@ import { DiaCalendarioRestController } from "@/modules/horarios/dia-calendario/p
       provide: DIA_CALENDARIO_REPOSITORY_PORT,
       useClass: DiaCalendarioTypeOrmRepositoryAdapter,
     },
-    DiaCalendarioService,
     DiaCalendarioGraphqlResolver,
     DiaCalendarioAuthzRegistrySetup,
 
@@ -56,6 +54,6 @@ import { DiaCalendarioRestController } from "@/modules/horarios/dia-calendario/p
     { provide: IDiaCalendarioFindOneQueryHandler, useClass: DiaCalendarioFindOneQueryHandlerImpl },
   ],
   controllers: [DiaCalendarioRestController],
-  exports: [DiaCalendarioService],
+  exports: [],
 })
 export class DiaCalendarioModule {}

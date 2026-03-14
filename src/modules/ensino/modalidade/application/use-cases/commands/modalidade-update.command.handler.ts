@@ -9,8 +9,11 @@ import {
   IModalidadeUpdateCommandHandler,
 } from "@/modules/ensino/modalidade/domain/commands/modalidade-update.command.handler.interface";
 import { Modalidade } from "@/modules/ensino/modalidade/domain/modalidade.domain";
+import {
+  type IModalidadeRepositoryPort,
+  MODALIDADE_REPOSITORY_PORT,
+} from "../../../domain/repositories";
 import type { ModalidadeFindOneOutputDto } from "../../dtos";
-import { type IModalidadeRepositoryPort, MODALIDADE_REPOSITORY_PORT } from "../../ports";
 
 @Injectable()
 export class ModalidadeUpdateCommandHandlerImpl implements IModalidadeUpdateCommandHandler {

@@ -8,7 +8,10 @@ import {
   type IOfertaFormacaoDeleteCommand,
   IOfertaFormacaoDeleteCommandHandler,
 } from "@/modules/ensino/oferta-formacao/domain/commands/oferta-formacao-delete.command.handler.interface";
-import { type IOfertaFormacaoRepositoryPort, OFERTA_FORMACAO_REPOSITORY_PORT } from "../../ports";
+import {
+  type IOfertaFormacaoRepositoryPort,
+  OFERTA_FORMACAO_REPOSITORY_PORT,
+} from "../../../domain/repositories";
 
 @Injectable()
 export class OfertaFormacaoDeleteCommandHandlerImpl implements IOfertaFormacaoDeleteCommandHandler {

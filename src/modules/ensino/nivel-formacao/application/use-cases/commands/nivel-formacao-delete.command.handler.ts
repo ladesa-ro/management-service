@@ -8,7 +8,10 @@ import {
   type INivelFormacaoDeleteCommand,
   INivelFormacaoDeleteCommandHandler,
 } from "@/modules/ensino/nivel-formacao/domain/commands/nivel-formacao-delete.command.handler.interface";
-import { type INivelFormacaoRepositoryPort, NIVEL_FORMACAO_REPOSITORY_PORT } from "../../ports";
+import {
+  type INivelFormacaoRepositoryPort,
+  NIVEL_FORMACAO_REPOSITORY_PORT,
+} from "../../../domain/repositories";
 
 @Injectable()
 export class NivelFormacaoDeleteCommandHandlerImpl implements INivelFormacaoDeleteCommandHandler {

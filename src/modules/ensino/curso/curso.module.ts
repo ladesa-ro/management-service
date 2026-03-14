@@ -3,7 +3,7 @@ import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persiste
 import { CampusModule } from "@/modules/ambientes/campus/campus.module";
 import { ArquivoModule } from "@/modules/armazenamento/arquivo/arquivo.module";
 import { ImagemModule } from "@/modules/armazenamento/imagem/imagem.module";
-import { CURSO_REPOSITORY_PORT, CursoService } from "@/modules/ensino/curso";
+import { CURSO_REPOSITORY_PORT } from "@/modules/ensino/curso";
 import {
   CursoCreateCommandHandlerImpl,
   CursoDeleteCommandHandlerImpl,
@@ -39,7 +39,6 @@ import { OfertaFormacaoModule } from "@/modules/ensino/oferta-formacao/oferta-fo
   controllers: [CursoRestController],
   providers: [
     NestJsPaginateAdapter,
-    CursoService,
     CursoGraphqlResolver,
     CursoAuthzRegistrySetup,
     {
@@ -60,6 +59,6 @@ import { OfertaFormacaoModule } from "@/modules/ensino/oferta-formacao/oferta-fo
     { provide: ICursoFindOneQueryHandler, useClass: CursoFindOneQueryHandlerImpl },
     { provide: ICursoGetImagemCapaQueryHandler, useClass: CursoGetImagemCapaQueryHandlerImpl },
   ],
-  exports: [CursoService],
+  exports: [ICursoFindOneQueryHandler],
 })
 export class CursoModule {}

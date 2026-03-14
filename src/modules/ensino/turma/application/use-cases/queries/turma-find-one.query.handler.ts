@@ -3,8 +3,8 @@ import {
   type ITurmaFindOneQuery,
   ITurmaFindOneQueryHandler,
 } from "@/modules/ensino/turma/domain/queries/turma-find-one.query.handler.interface";
+import { type ITurmaRepositoryPort, TURMA_REPOSITORY_PORT } from "../../../domain/repositories";
 import type { TurmaFindOneOutputDto } from "../../dtos";
-import { type ITurmaRepositoryPort, TURMA_REPOSITORY_PORT } from "../../ports";
 
 @Injectable()
 export class TurmaFindOneQueryHandlerImpl implements ITurmaFindOneQueryHandler {

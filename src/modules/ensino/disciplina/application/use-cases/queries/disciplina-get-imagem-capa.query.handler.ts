@@ -1,12 +1,21 @@
 import { Inject, Injectable, type StreamableFile } from "@nestjs/common";
 import { getEntityImagemStreamableFile, ResourceNotFoundError } from "@/modules/@shared";
-import { ArquivoService } from "@/modules/armazenamento/arquivo/application/use-cases/arquivo.service";
-import { ImagemService } from "@/modules/armazenamento/imagem/application/use-cases/imagem.service";
+import {
+  IArquivoGetStreamableFileQueryHandler,
+  type IArquivoGetStreamableFileQueryHandler as IArquivoGetStreamableFileQueryHandlerType,
+} from "@/modules/armazenamento/arquivo/domain/queries";
+import {
+  IImagemGetLatestArquivoIdQueryHandler,
+  type IImagemGetLatestArquivoIdQueryHandler as IImagemGetLatestArquivoIdQueryHandlerType,
+} from "@/modules/armazenamento/imagem/domain/queries";
 import {
   type IDisciplinaGetImagemCapaQuery,
   IDisciplinaGetImagemCapaQueryHandler,
 } from "@/modules/ensino/disciplina/domain/queries/disciplina-get-imagem-capa.query.handler.interface";
-import { DISCIPLINA_REPOSITORY_PORT, type IDisciplinaRepositoryPort } from "../../ports";
+import {
+  DISCIPLINA_REPOSITORY_PORT,
+  type IDisciplinaRepositoryPort,
+} from "../../../domain/repositories";
 
 @Injectable()
 export class DisciplinaGetImagemCapaQueryHandlerImpl
@@ -15,8 +24,10 @@ export class DisciplinaGetImagemCapaQueryHandlerImpl
   constructor(
     @Inject(DISCIPLINA_REPOSITORY_PORT)
     private readonly repository: IDisciplinaRepositoryPort,
-    private readonly imagemService: ImagemService,
-    private readonly arquivoService: ArquivoService,
+    @Inject(IImagemGetLatestArquivoIdQueryHandler)
+    private readonly getLatestArquivoIdHandler: IImagemGetLatestArquivoIdQueryHandlerType,
+    @Inject(IArquivoGetStreamableFileQueryHandler)
+    private readonly getStreamableFileHandler: IArquivoGetStreamableFileQueryHandlerType,
   ) {}
 
   async execute({ accessContext, id }: IDisciplinaGetImagemCapaQuery): Promise<StreamableFile> {
@@ -31,8 +42,8 @@ export class DisciplinaGetImagemCapaQueryHandlerImpl
       "imagemCapa",
       "Imagem de capa do Disciplina",
       id,
-      this.imagemService,
-      this.arquivoService,
+      this.getLatestArquivoIdHandler,
+      this.getStreamableFileHandler,
     );
   }
 }

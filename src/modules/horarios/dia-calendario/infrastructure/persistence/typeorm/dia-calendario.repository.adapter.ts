@@ -14,7 +14,7 @@ import type {
   DiaCalendarioListInputDto as DiaCalendarioListInputDto,
   DiaCalendarioListOutputDto as DiaCalendarioListOutputDto,
 } from "@/modules/horarios/dia-calendario";
-import type { IDiaCalendarioRepositoryPort } from "@/modules/horarios/dia-calendario/application/ports";
+import type { IDiaCalendarioRepositoryPort } from "@/modules/horarios/dia-calendario/domain/repositories";
 import type { DiaCalendarioEntity } from "./dia-calendario.entity";
 import { createDiaCalendarioRepository } from "./dia-calendario.repository";
 

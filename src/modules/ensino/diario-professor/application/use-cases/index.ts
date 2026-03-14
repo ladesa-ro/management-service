@@ -1,1 +1,2 @@
-export * from "./diario-professor.service";
+export * from "./commands";
+export * from "./queries";

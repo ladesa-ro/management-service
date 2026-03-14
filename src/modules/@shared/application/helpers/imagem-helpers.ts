@@ -4,25 +4,27 @@ import { ResourceNotFoundError } from "../errors";
 /**
  * Obtém o StreamableFile de um campo de imagem de uma entidade.
  *
- * Reutilizável por qualquer service que possua campos de imagem.
+ * Reutilizável por qualquer handler que possua campos de imagem.
  */
 export async function getEntityImagemStreamableFile(
   entity: Record<string, any>,
   fieldName: string,
   resourceLabel: string,
   entityId: string | number,
-  imagemService: { getLatestArquivoIdForImagem(imagemId: string): Promise<string | null> },
-  arquivoService: {
-    getStreamableFile(accessContext: null, dto: { id: string }): Promise<StreamableFile>;
+  getLatestArquivoIdHandler: {
+    execute(query: { imagemId: string }): Promise<string | null>;
+  },
+  getStreamableFileHandler: {
+    execute(query: { accessContext: null; input: { id: string } }): Promise<StreamableFile>;
   },
 ): Promise<StreamableFile> {
   const imagem = entity[fieldName];
 
   if (imagem?.id) {
-    const arquivoId = await imagemService.getLatestArquivoIdForImagem(imagem.id);
+    const arquivoId = await getLatestArquivoIdHandler.execute({ imagemId: imagem.id });
 
     if (arquivoId) {
-      return arquivoService.getStreamableFile(null, { id: arquivoId });
+      return getStreamableFileHandler.execute({ accessContext: null, input: { id: arquivoId } });
     }
   }
 
@@ -32,16 +34,18 @@ export async function getEntityImagemStreamableFile(
 /**
  * Salva uma nova imagem e associa ao campo de imagem de uma entidade.
  *
- * Reutilizável por qualquer service que possua campos de imagem.
+ * Reutilizável por qualquer handler que possua campos de imagem.
  */
 export async function saveEntityImagemField(
   currentId: string | number,
   file: Express.Multer.File,
   fieldName: string,
-  imagemService: { saveImagemCapa(file: Express.Multer.File): Promise<{ imagem: { id: string } }> },
+  saveImagemCapaHandler: {
+    execute(command: { file: Express.Multer.File }): Promise<{ imagem: { id: string } }>;
+  },
   repository: { updateFromDomain(id: string | number, data: Record<string, any>): Promise<void> },
 ): Promise<boolean> {
-  const { imagem } = await imagemService.saveImagemCapa(file);
+  const { imagem } = await saveImagemCapaHandler.execute({ file });
 
   await repository.updateFromDomain(currentId, { [fieldName]: { id: imagem.id } });
 

@@ -1,7 +1,5 @@
 import { Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
-import { AMBIENTE_REPOSITORY_PORT } from "@/modules/ambientes/ambiente/application/ports";
-import { AmbienteService } from "@/modules/ambientes/ambiente/application/use-cases/ambiente.service";
 import {
   AmbienteCreateCommandHandlerImpl,
   AmbienteDeleteCommandHandlerImpl,
@@ -24,6 +22,7 @@ import {
   IAmbienteGetImagemCapaQueryHandler,
   IAmbienteListQueryHandler,
 } from "@/modules/ambientes/ambiente/domain/queries";
+import { AMBIENTE_REPOSITORY_PORT } from "@/modules/ambientes/ambiente/domain/repositories";
 import {
   AmbienteAuthzRegistrySetup,
   AmbienteTypeOrmRepositoryAdapter,
@@ -39,7 +38,6 @@ import { ImagemModule } from "@/modules/armazenamento/imagem/imagem.module";
   controllers: [AmbienteRestController],
   providers: [
     NestJsPaginateAdapter,
-    AmbienteService,
     AmbienteGraphqlResolver,
     AmbienteAuthzRegistrySetup,
     { provide: AMBIENTE_REPOSITORY_PORT, useClass: AmbienteTypeOrmRepositoryAdapter },
@@ -59,6 +57,6 @@ import { ImagemModule } from "@/modules/armazenamento/imagem/imagem.module";
       useClass: AmbienteGetImagemCapaQueryHandlerImpl,
     },
   ],
-  exports: [AmbienteService],
+  exports: [IAmbienteFindOneQueryHandler],
 })
 export class AmbienteModule {}

@@ -11,7 +11,7 @@ import {
 import {
   CALENDARIO_LETIVO_REPOSITORY_PORT,
   type ICalendarioLetivoRepositoryPort,
-} from "../../ports";
+} from "../../../domain/repositories";
 
 @Injectable()
 export class CalendarioLetivoDeleteCommandHandlerImpl

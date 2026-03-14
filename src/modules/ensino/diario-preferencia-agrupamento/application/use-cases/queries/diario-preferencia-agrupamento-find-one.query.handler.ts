@@ -3,11 +3,11 @@ import {
   type IDiarioPreferenciaAgrupamentoFindOneQuery,
   IDiarioPreferenciaAgrupamentoFindOneQueryHandler,
 } from "@/modules/ensino/diario-preferencia-agrupamento/domain/queries/diario-preferencia-agrupamento-find-one.query.handler.interface";
-import type { DiarioPreferenciaAgrupamentoFindOneOutputDto } from "../../dtos";
 import {
   DIARIO_PREFERENCIA_AGRUPAMENTO_REPOSITORY_PORT,
   type IDiarioPreferenciaAgrupamentoRepositoryPort,
-} from "../../ports";
+} from "../../../domain/repositories";
+import type { DiarioPreferenciaAgrupamentoFindOneOutputDto } from "../../dtos";
 
 @Injectable()
 export class DiarioPreferenciaAgrupamentoFindOneQueryHandlerImpl

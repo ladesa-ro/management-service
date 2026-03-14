@@ -1,6 +1,23 @@
 import { Module } from "@nestjs/common";
-import { EMPRESA_REPOSITORY_PORT } from "@/modules/estagio/empresa/application/ports";
-import { EmpresaService } from "@/modules/estagio/empresa/application/use-cases/empresa.service";
+import {
+  EmpresaCreateCommandHandlerImpl,
+  EmpresaDeleteCommandHandlerImpl,
+  EmpresaUpdateCommandHandlerImpl,
+} from "@/modules/estagio/empresa/application/use-cases/commands";
+import {
+  EmpresaFindOneQueryHandlerImpl,
+  EmpresaListQueryHandlerImpl,
+} from "@/modules/estagio/empresa/application/use-cases/queries";
+import {
+  IEmpresaCreateCommandHandler,
+  IEmpresaDeleteCommandHandler,
+  IEmpresaUpdateCommandHandler,
+} from "@/modules/estagio/empresa/domain/commands";
+import {
+  IEmpresaFindOneQueryHandler,
+  IEmpresaListQueryHandler,
+} from "@/modules/estagio/empresa/domain/queries";
+import { EMPRESA_REPOSITORY_PORT } from "@/modules/estagio/empresa/domain/repositories";
 import { EmpresaTypeOrmRepositoryAdapter } from "@/modules/estagio/empresa/infrastructure";
 import { EmpresaRestController } from "@/modules/estagio/empresa/presentation/rest/empresa.rest.controller";
 
@@ -8,12 +25,19 @@ import { EmpresaRestController } from "@/modules/estagio/empresa/presentation/re
   imports: [],
   controllers: [EmpresaRestController],
   providers: [
-    EmpresaService,
     {
       provide: EMPRESA_REPOSITORY_PORT,
       useClass: EmpresaTypeOrmRepositoryAdapter,
     },
+
+    // Commands
+    { provide: IEmpresaCreateCommandHandler, useClass: EmpresaCreateCommandHandlerImpl },
+    { provide: IEmpresaUpdateCommandHandler, useClass: EmpresaUpdateCommandHandlerImpl },
+    { provide: IEmpresaDeleteCommandHandler, useClass: EmpresaDeleteCommandHandlerImpl },
+    // Queries
+    { provide: IEmpresaListQueryHandler, useClass: EmpresaListQueryHandlerImpl },
+    { provide: IEmpresaFindOneQueryHandler, useClass: EmpresaFindOneQueryHandlerImpl },
   ],
-  exports: [EmpresaService],
+  exports: [IEmpresaFindOneQueryHandler],
 })
 export class EmpresaModule {}

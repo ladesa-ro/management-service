@@ -1,8 +1,11 @@
+import { Inject } from "@nestjs/common";
 import { Args, Info, Int, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
 import { AccessContext, AccessContextGraphQL } from "@/modules/@seguranca/contexto-acesso";
+import { ResourceNotFoundError } from "@/modules/@shared";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
-import { CidadeService } from "@/modules/localidades/cidade/application/use-cases/cidade.service";
+import { ICidadeFindOneQueryHandler } from "@/modules/localidades/cidade/domain/queries/cidade-find-one.query.handler.interface";
+import { ICidadeListQueryHandler } from "@/modules/localidades/cidade/domain/queries/cidade-list.query.handler.interface";
 import {
   CidadeFindOneOutputGraphQlDto,
   CidadeListInputGraphQlDto,
@@ -12,7 +15,12 @@ import { CidadeGraphqlMapper } from "./cidade.graphql.mapper";
 
 @Resolver(() => CidadeFindOneOutputGraphQlDto)
 export class CidadeGraphqlResolver {
-  constructor(private readonly cidadeService: CidadeService) {}
+  constructor(
+    @Inject(ICidadeListQueryHandler)
+    private readonly listHandler: ICidadeListQueryHandler,
+    @Inject(ICidadeFindOneQueryHandler)
+    private readonly findOneHandler: ICidadeFindOneQueryHandler,
+  ) {}
 
   @Query(() => CidadeListOutputGraphQlDto, { name: "cidadeFindAll" })
   async findAll(
@@ -26,7 +34,7 @@ export class CidadeGraphqlResolver {
       input.selection = graphqlExtractSelection(info, "paginated");
     }
 
-    const result = await this.cidadeService.findAll(accessContext, input);
+    const result = await this.listHandler.execute({ accessContext, dto: input });
     return CidadeGraphqlMapper.toListOutputDto(result);
   }
 
@@ -37,7 +45,10 @@ export class CidadeGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<CidadeFindOneOutputGraphQlDto> {
     const selection = graphqlExtractSelection(info);
-    const result = await this.cidadeService.findByIdStrict(accessContext, { id, selection });
+    const result = await this.findOneHandler.execute({ accessContext, dto: { id, selection } });
+    if (!result) {
+      throw new ResourceNotFoundError("Cidade", id);
+    }
     return CidadeGraphqlMapper.toFindOneOutputDto(result);
   }
 }

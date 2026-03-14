@@ -9,8 +9,14 @@ import {
   type IAmbienteUpdateImagemCapaCommand,
   IAmbienteUpdateImagemCapaCommandHandler,
 } from "@/modules/ambientes/ambiente/domain/commands/ambiente-update-imagem-capa.command.handler.interface";
-import { ImagemService } from "@/modules/armazenamento/imagem/application/use-cases/imagem.service";
-import { AMBIENTE_REPOSITORY_PORT, type IAmbienteRepositoryPort } from "../../ports";
+import {
+  IImagemSaveImagemCapaCommandHandler,
+  type IImagemSaveImagemCapaCommandHandler as IImagemSaveImagemCapaCommandHandlerType,
+} from "@/modules/armazenamento/imagem/domain/commands";
+import {
+  AMBIENTE_REPOSITORY_PORT,
+  type IAmbienteRepositoryPort,
+} from "../../../domain/repositories";
 
 @Injectable()
 export class AmbienteUpdateImagemCapaCommandHandlerImpl
@@ -21,7 +27,8 @@ export class AmbienteUpdateImagemCapaCommandHandlerImpl
     private readonly repository: IAmbienteRepositoryPort,
     @Inject(AUTHORIZATION_SERVICE_PORT)
     private readonly authorizationService: IAuthorizationServicePort,
-    private readonly imagemService: ImagemService,
+    @Inject(IImagemSaveImagemCapaCommandHandler)
+    private readonly saveImagemCapaHandler: IImagemSaveImagemCapaCommandHandlerType,
   ) {}
 
   async execute({ accessContext, dto, file }: IAmbienteUpdateImagemCapaCommand): Promise<boolean> {
@@ -41,7 +48,7 @@ export class AmbienteUpdateImagemCapaCommandHandlerImpl
       current.id,
       file,
       "imagemCapa",
-      this.imagemService,
+      this.saveImagemCapaHandler,
       this.repository,
     );
   }

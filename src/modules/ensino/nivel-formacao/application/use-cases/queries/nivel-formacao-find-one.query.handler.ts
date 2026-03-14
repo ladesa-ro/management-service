@@ -3,8 +3,11 @@ import {
   type INivelFormacaoFindOneQuery,
   INivelFormacaoFindOneQueryHandler,
 } from "@/modules/ensino/nivel-formacao/domain/queries/nivel-formacao-find-one.query.handler.interface";
+import {
+  type INivelFormacaoRepositoryPort,
+  NIVEL_FORMACAO_REPOSITORY_PORT,
+} from "../../../domain/repositories";
 import type { NivelFormacaoFindOneOutputDto } from "../../dtos";
-import { type INivelFormacaoRepositoryPort, NIVEL_FORMACAO_REPOSITORY_PORT } from "../../ports";
 
 @Injectable()
 export class NivelFormacaoFindOneQueryHandlerImpl implements INivelFormacaoFindOneQueryHandler {

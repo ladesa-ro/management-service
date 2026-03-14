@@ -1,8 +1,14 @@
+import { Inject } from "@nestjs/common";
 import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
 import { AccessContext, AccessContextGraphQL } from "@/modules/@seguranca/contexto-acesso";
+import { ResourceNotFoundError } from "@/modules/@shared";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
-import { TurmaService } from "@/modules/ensino/turma/application/use-cases/turma.service";
+import { ITurmaCreateCommandHandler } from "@/modules/ensino/turma/domain/commands/turma-create.command.handler.interface";
+import { ITurmaDeleteCommandHandler } from "@/modules/ensino/turma/domain/commands/turma-delete.command.handler.interface";
+import { ITurmaUpdateCommandHandler } from "@/modules/ensino/turma/domain/commands/turma-update.command.handler.interface";
+import { ITurmaFindOneQueryHandler } from "@/modules/ensino/turma/domain/queries/turma-find-one.query.handler.interface";
+import { ITurmaListQueryHandler } from "@/modules/ensino/turma/domain/queries/turma-list.query.handler.interface";
 import {
   TurmaCreateInputGraphQlDto,
   TurmaFindOneOutputGraphQlDto,
@@ -14,7 +20,13 @@ import { TurmaGraphqlMapper } from "./turma.graphql.mapper";
 
 @Resolver(() => TurmaFindOneOutputGraphQlDto)
 export class TurmaGraphqlResolver {
-  constructor(private readonly turmaService: TurmaService) {}
+  constructor(
+    @Inject(ITurmaListQueryHandler) private readonly listHandler: ITurmaListQueryHandler,
+    @Inject(ITurmaFindOneQueryHandler) private readonly findOneHandler: ITurmaFindOneQueryHandler,
+    @Inject(ITurmaCreateCommandHandler) private readonly createHandler: ITurmaCreateCommandHandler,
+    @Inject(ITurmaUpdateCommandHandler) private readonly updateHandler: ITurmaUpdateCommandHandler,
+    @Inject(ITurmaDeleteCommandHandler) private readonly deleteHandler: ITurmaDeleteCommandHandler,
+  ) {}
 
   @Query(() => TurmaListOutputGraphQlDto, { name: "turmaFindAll" })
   async findAll(
@@ -28,7 +40,7 @@ export class TurmaGraphqlResolver {
       input.selection = graphqlExtractSelection(info, "paginated");
     }
 
-    const result = await this.turmaService.findAll(accessContext, input);
+    const result = await this.listHandler.execute({ accessContext, dto: input });
     return TurmaGraphqlMapper.toListOutputDto(result);
   }
 
@@ -39,7 +51,10 @@ export class TurmaGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<TurmaFindOneOutputGraphQlDto> {
     const selection = graphqlExtractSelection(info);
-    const result = await this.turmaService.findByIdStrict(accessContext, { id, selection });
+    const result = await this.findOneHandler.execute({ accessContext, dto: { id, selection } });
+    if (!result) {
+      throw new ResourceNotFoundError("Turma", id);
+    }
     return TurmaGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -50,7 +65,7 @@ export class TurmaGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<TurmaFindOneOutputGraphQlDto> {
     const input = TurmaGraphqlMapper.toCreateInput(dto);
-    const result = await this.turmaService.create(accessContext, input);
+    const result = await this.createHandler.execute({ accessContext, dto: input });
     return TurmaGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -62,7 +77,7 @@ export class TurmaGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<TurmaFindOneOutputGraphQlDto> {
     const input = TurmaGraphqlMapper.toUpdateInput({ id }, dto);
-    const result = await this.turmaService.update(accessContext, input);
+    const result = await this.updateHandler.execute({ accessContext, dto: input });
     return TurmaGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -71,6 +86,6 @@ export class TurmaGraphqlResolver {
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
   ): Promise<boolean> {
-    return this.turmaService.deleteOneById(accessContext, { id });
+    return this.deleteHandler.execute({ accessContext, dto: { id } });
   }
 }

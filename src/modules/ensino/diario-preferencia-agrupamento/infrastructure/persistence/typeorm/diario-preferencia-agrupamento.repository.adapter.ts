@@ -15,7 +15,7 @@ import type {
   DiarioPreferenciaAgrupamentoListInputDto,
   DiarioPreferenciaAgrupamentoListOutputDto,
 } from "@/modules/ensino/diario-preferencia-agrupamento";
-import type { IDiarioPreferenciaAgrupamentoRepositoryPort } from "@/modules/ensino/diario-preferencia-agrupamento/application/ports/out";
+import type { IDiarioPreferenciaAgrupamentoRepositoryPort } from "@/modules/ensino/diario-preferencia-agrupamento/domain/repositories";
 import type { DiarioPreferenciaAgrupamentoEntity } from "./diario-preferencia-agrupamento.entity";
 import { createDiarioPreferenciaAgrupamentoRepository } from "./diario-preferencia-agrupamento.repository";
 

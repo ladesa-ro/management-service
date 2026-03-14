@@ -1,1 +1,2 @@
-export * from "./endereco.service";
+export * from "./commands";
+export * from "./queries";

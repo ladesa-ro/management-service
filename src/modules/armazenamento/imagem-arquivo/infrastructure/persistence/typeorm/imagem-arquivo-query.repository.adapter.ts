@@ -14,7 +14,7 @@ import type {
   ImagemArquivoListInputDto,
   ImagemArquivoListOutputDto,
 } from "@/modules/armazenamento/imagem-arquivo/application/dtos";
-import type { IImagemArquivoQueryRepositoryPort } from "@/modules/armazenamento/imagem-arquivo/application/ports";
+import type { IImagemArquivoQueryRepositoryPort } from "@/modules/armazenamento/imagem-arquivo/domain/repositories";
 import type { ImagemArquivoEntity } from "./imagem-arquivo.entity";
 import { createImagemArquivoRepository } from "./imagem-arquivo.repository";
 

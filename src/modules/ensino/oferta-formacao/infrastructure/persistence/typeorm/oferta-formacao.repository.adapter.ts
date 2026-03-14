@@ -14,7 +14,7 @@ import type {
   OfertaFormacaoListInputDto,
   OfertaFormacaoListOutputDto,
 } from "@/modules/ensino/oferta-formacao";
-import type { IOfertaFormacaoRepositoryPort } from "@/modules/ensino/oferta-formacao/application/ports";
+import type { IOfertaFormacaoRepositoryPort } from "@/modules/ensino/oferta-formacao/domain/repositories";
 import type { OfertaFormacaoEntity } from "./oferta-formacao.entity";
 import { createOfertaFormacaoRepository } from "./oferta-formacao.repository";
 

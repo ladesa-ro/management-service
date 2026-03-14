@@ -1,1 +1,1 @@
-export * from "./gerar-horario.service";
+export * from "./commands";

@@ -3,8 +3,11 @@ import {
   type IAmbienteFindOneQuery,
   IAmbienteFindOneQueryHandler,
 } from "@/modules/ambientes/ambiente/domain/queries/ambiente-find-one.query.handler.interface";
+import {
+  AMBIENTE_REPOSITORY_PORT,
+  type IAmbienteRepositoryPort,
+} from "../../../domain/repositories";
 import type { AmbienteFindOneOutputDto } from "../../dtos";
-import { AMBIENTE_REPOSITORY_PORT, type IAmbienteRepositoryPort } from "../../ports";
 
 @Injectable()
 export class AmbienteFindOneQueryHandlerImpl implements IAmbienteFindOneQueryHandler {

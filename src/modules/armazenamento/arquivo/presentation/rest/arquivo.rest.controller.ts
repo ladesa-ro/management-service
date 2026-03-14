@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query, type StreamableFile } from "@nestjs/common";
+import { Controller, Get, Inject, Param, Query, type StreamableFile } from "@nestjs/common";
 import {
   ApiForbiddenResponse,
   ApiNotFoundResponse,
@@ -7,14 +7,20 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
-import { ArquivoService } from "@/modules/armazenamento/arquivo/application/use-cases/arquivo.service";
+import {
+  IArquivoGetStreamableFileQueryHandler,
+  type IArquivoGetStreamableFileQueryHandler as IArquivoGetStreamableFileQueryHandlerType,
+} from "@/modules/armazenamento/arquivo/domain/queries";
 import { ArquivoFindOneInputRestDto, ArquivoGetFileQueryInputRestDto } from "./arquivo.rest.dto";
 import { ArquivoRestMapper } from "./arquivo.rest.mapper";
 
 @ApiTags("arquivos")
 @Controller("/arquivos")
 export class ArquivoRestController {
-  constructor(private arquivoService: ArquivoService) {}
+  constructor(
+    @Inject(IArquivoGetStreamableFileQueryHandler)
+    private readonly getStreamableFileHandler: IArquivoGetStreamableFileQueryHandlerType,
+  ) {}
 
   @Get(":id")
   @ApiOperation({ summary: "Busca um arquivo por ID", operationId: "arquivoFindById" })
@@ -27,6 +33,6 @@ export class ArquivoRestController {
     @Query() query: ArquivoGetFileQueryInputRestDto,
   ): Promise<StreamableFile> {
     const input = ArquivoRestMapper.toGetFileInput(params, query);
-    return this.arquivoService.getStreamableFile(accessContext, input);
+    return this.getStreamableFileHandler.execute({ accessContext, input });
   }
 }

@@ -3,8 +3,11 @@ import {
   type IDiaCalendarioListQuery,
   IDiaCalendarioListQueryHandler,
 } from "@/modules/horarios/dia-calendario/domain/queries/dia-calendario-list.query.handler.interface";
+import {
+  DIA_CALENDARIO_REPOSITORY_PORT,
+  type IDiaCalendarioRepositoryPort,
+} from "../../../domain/repositories";
 import type { DiaCalendarioListOutputDto } from "../../dtos";
-import { DIA_CALENDARIO_REPOSITORY_PORT, type IDiaCalendarioRepositoryPort } from "../../ports";
 
 @Injectable()
 export class DiaCalendarioListQueryHandlerImpl implements IDiaCalendarioListQueryHandler {

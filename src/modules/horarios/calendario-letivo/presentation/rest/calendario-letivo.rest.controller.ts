@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Inject, Param, Patch, Post, Query } from "@nestjs/common";
 import {
   ApiCreatedResponse,
   ApiForbiddenResponse,
@@ -8,7 +8,12 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
-import { CalendarioLetivoService } from "@/modules/horarios/calendario-letivo";
+import { ResourceNotFoundError } from "@/modules/@shared";
+import { ICalendarioLetivoCreateCommandHandler } from "@/modules/horarios/calendario-letivo/domain/commands/calendario-letivo-create.command.handler.interface";
+import { ICalendarioLetivoDeleteCommandHandler } from "@/modules/horarios/calendario-letivo/domain/commands/calendario-letivo-delete.command.handler.interface";
+import { ICalendarioLetivoUpdateCommandHandler } from "@/modules/horarios/calendario-letivo/domain/commands/calendario-letivo-update.command.handler.interface";
+import { ICalendarioLetivoFindOneQueryHandler } from "@/modules/horarios/calendario-letivo/domain/queries/calendario-letivo-find-one.query.handler.interface";
+import { ICalendarioLetivoListQueryHandler } from "@/modules/horarios/calendario-letivo/domain/queries/calendario-letivo-list.query.handler.interface";
 import {
   CalendarioLetivoCreateInputRestDto,
   CalendarioLetivoFindOneInputRestDto,
@@ -22,7 +27,18 @@ import { CalendarioLetivoRestMapper } from "./calendario-letivo.rest.mapper";
 @ApiTags("calendarios-letivos")
 @Controller("/calendarios-letivos")
 export class CalendarioLetivoRestController {
-  constructor(private calendarioLetivoService: CalendarioLetivoService) {}
+  constructor(
+    @Inject(ICalendarioLetivoListQueryHandler)
+    private readonly listHandler: ICalendarioLetivoListQueryHandler,
+    @Inject(ICalendarioLetivoFindOneQueryHandler)
+    private readonly findOneHandler: ICalendarioLetivoFindOneQueryHandler,
+    @Inject(ICalendarioLetivoCreateCommandHandler)
+    private readonly createHandler: ICalendarioLetivoCreateCommandHandler,
+    @Inject(ICalendarioLetivoUpdateCommandHandler)
+    private readonly updateHandler: ICalendarioLetivoUpdateCommandHandler,
+    @Inject(ICalendarioLetivoDeleteCommandHandler)
+    private readonly deleteHandler: ICalendarioLetivoDeleteCommandHandler,
+  ) {}
 
   @Get("/")
   @ApiOperation({ summary: "Lista calendarios letivos", operationId: "calendarioLetivoFindAll" })
@@ -33,7 +49,7 @@ export class CalendarioLetivoRestController {
     @Query() dto: CalendarioLetivoListInputRestDto,
   ): Promise<CalendarioLetivoListOutputRestDto> {
     const input = CalendarioLetivoRestMapper.toListInput(dto);
-    const result = await this.calendarioLetivoService.findAll(accessContext, input);
+    const result = await this.listHandler.execute({ accessContext, dto: input });
     return CalendarioLetivoRestMapper.toListOutputDto(result);
   }
 
@@ -50,7 +66,10 @@ export class CalendarioLetivoRestController {
     @Param() params: CalendarioLetivoFindOneInputRestDto,
   ): Promise<CalendarioLetivoFindOneOutputRestDto> {
     const input = CalendarioLetivoRestMapper.toFindOneInput(params);
-    const result = await this.calendarioLetivoService.findByIdStrict(accessContext, input);
+    const result = await this.findOneHandler.execute({ accessContext, dto: input });
+    if (!result) {
+      throw new ResourceNotFoundError("CalendarioLetivo", input.id);
+    }
     return CalendarioLetivoRestMapper.toFindOneOutputDto(result);
   }
 
@@ -63,7 +82,7 @@ export class CalendarioLetivoRestController {
     @Body() dto: CalendarioLetivoCreateInputRestDto,
   ): Promise<CalendarioLetivoFindOneOutputRestDto> {
     const input = CalendarioLetivoRestMapper.toCreateInput(dto);
-    const result = await this.calendarioLetivoService.create(accessContext, input);
+    const result = await this.createHandler.execute({ accessContext, dto: input });
     return CalendarioLetivoRestMapper.toFindOneOutputDto(result);
   }
 
@@ -78,7 +97,7 @@ export class CalendarioLetivoRestController {
     @Body() dto: CalendarioLetivoUpdateInputRestDto,
   ): Promise<CalendarioLetivoFindOneOutputRestDto> {
     const input = CalendarioLetivoRestMapper.toUpdateInput(params, dto);
-    const result = await this.calendarioLetivoService.update(accessContext, input);
+    const result = await this.updateHandler.execute({ accessContext, dto: input });
     return CalendarioLetivoRestMapper.toFindOneOutputDto(result);
   }
 
@@ -95,6 +114,6 @@ export class CalendarioLetivoRestController {
     @Param() params: CalendarioLetivoFindOneInputRestDto,
   ): Promise<boolean> {
     const input = CalendarioLetivoRestMapper.toFindOneInput(params);
-    return this.calendarioLetivoService.deleteOneById(accessContext, input);
+    return this.deleteHandler.execute({ accessContext, dto: input });
   }
 }

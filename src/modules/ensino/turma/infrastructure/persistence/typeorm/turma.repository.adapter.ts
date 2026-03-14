@@ -14,7 +14,7 @@ import type {
   TurmaListInputDto,
   TurmaListOutputDto,
 } from "@/modules/ensino/turma/application/dtos";
-import type { ITurmaRepositoryPort } from "@/modules/ensino/turma/application/ports";
+import type { ITurmaRepositoryPort } from "@/modules/ensino/turma/domain/repositories";
 import type { TurmaEntity } from "./turma.entity";
 import { createTurmaRepository } from "./turma.repository";
 

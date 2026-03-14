@@ -2,10 +2,7 @@ import { Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import { CampusModule } from "@/modules/ambientes/campus/campus.module";
 import { OfertaFormacaoModule } from "@/modules/ensino/oferta-formacao/oferta-formacao.module";
-import {
-  CALENDARIO_LETIVO_REPOSITORY_PORT,
-  CalendarioLetivoService,
-} from "@/modules/horarios/calendario-letivo";
+import { CALENDARIO_LETIVO_REPOSITORY_PORT } from "@/modules/horarios/calendario-letivo";
 import {
   CalendarioLetivoCreateCommandHandlerImpl,
   CalendarioLetivoDeleteCommandHandlerImpl,
@@ -34,7 +31,6 @@ import { CalendarioLetivoRestController } from "@/modules/horarios/calendario-le
   controllers: [CalendarioLetivoRestController],
   providers: [
     NestJsPaginateAdapter,
-    CalendarioLetivoService,
     CalendarioLetivoGraphqlResolver,
     CalendarioLetivoAuthzRegistrySetup,
     {
@@ -62,6 +58,6 @@ import { CalendarioLetivoRestController } from "@/modules/horarios/calendario-le
       useClass: CalendarioLetivoFindOneQueryHandlerImpl,
     },
   ],
-  exports: [CalendarioLetivoService],
+  exports: [ICalendarioLetivoFindOneQueryHandler],
 })
 export class CalendarioLetivoModule {}

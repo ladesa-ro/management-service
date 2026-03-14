@@ -3,8 +3,11 @@ import {
   type IDiarioProfessorFindOneQuery,
   IDiarioProfessorFindOneQueryHandler,
 } from "@/modules/ensino/diario-professor/domain/queries/diario-professor-find-one.query.handler.interface";
+import {
+  DIARIO_PROFESSOR_REPOSITORY_PORT,
+  type IDiarioProfessorRepositoryPort,
+} from "../../../domain/repositories";
 import type { DiarioProfessorFindOneOutputDto } from "../../dtos";
-import { DIARIO_PROFESSOR_REPOSITORY_PORT, type IDiarioProfessorRepositoryPort } from "../../ports";
 
 @Injectable()
 export class DiarioProfessorFindOneQueryHandlerImpl implements IDiarioProfessorFindOneQueryHandler {

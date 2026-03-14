@@ -8,7 +8,7 @@ import {
   type ITurmaDeleteCommand,
   ITurmaDeleteCommandHandler,
 } from "@/modules/ensino/turma/domain/commands/turma-delete.command.handler.interface";
-import { type ITurmaRepositoryPort, TURMA_REPOSITORY_PORT } from "../../ports";
+import { type ITurmaRepositoryPort, TURMA_REPOSITORY_PORT } from "../../../domain/repositories";
 
 @Injectable()
 export class TurmaDeleteCommandHandlerImpl implements ITurmaDeleteCommandHandler {

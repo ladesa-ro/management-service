@@ -3,11 +3,11 @@ import {
   type IImagemArquivoListQuery,
   IImagemArquivoListQueryHandler,
 } from "@/modules/armazenamento/imagem-arquivo/domain/queries/imagem-arquivo-list.query.handler.interface";
-import type { ImagemArquivoListOutputDto } from "../../dtos";
 import {
   type IImagemArquivoQueryRepositoryPort,
   IMAGEM_ARQUIVO_QUERY_REPOSITORY_PORT,
-} from "../../ports";
+} from "../../../domain/repositories";
+import type { ImagemArquivoListOutputDto } from "../../dtos";
 
 @Injectable()
 export class ImagemArquivoListQueryHandlerImpl implements IImagemArquivoListQueryHandler {

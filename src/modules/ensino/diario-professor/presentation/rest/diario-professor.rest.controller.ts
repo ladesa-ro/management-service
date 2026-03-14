@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Inject, Param, Patch, Post, Query } from "@nestjs/common";
 import {
   ApiCreatedResponse,
   ApiForbiddenResponse,
@@ -8,7 +8,12 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
-import { DiarioProfessorService } from "@/modules/ensino/diario-professor/application/use-cases/diario-professor.service";
+import { ResourceNotFoundError } from "@/modules/@shared";
+import { IDiarioProfessorCreateCommandHandler } from "@/modules/ensino/diario-professor/domain/commands/diario-professor-create.command.handler.interface";
+import { IDiarioProfessorDeleteCommandHandler } from "@/modules/ensino/diario-professor/domain/commands/diario-professor-delete.command.handler.interface";
+import { IDiarioProfessorUpdateCommandHandler } from "@/modules/ensino/diario-professor/domain/commands/diario-professor-update.command.handler.interface";
+import { IDiarioProfessorFindOneQueryHandler } from "@/modules/ensino/diario-professor/domain/queries/diario-professor-find-one.query.handler.interface";
+import { IDiarioProfessorListQueryHandler } from "@/modules/ensino/diario-professor/domain/queries/diario-professor-list.query.handler.interface";
 import {
   DiarioProfessorCreateInputRestDto,
   DiarioProfessorFindOneInputRestDto,
@@ -22,7 +27,18 @@ import { DiarioProfessorRestMapper } from "./diario-professor.rest.mapper";
 @ApiTags("diarios-professores")
 @Controller("/diarios-professores")
 export class DiarioProfessorController {
-  constructor(private diarioProfessorService: DiarioProfessorService) {}
+  constructor(
+    @Inject(IDiarioProfessorListQueryHandler)
+    private readonly listHandler: IDiarioProfessorListQueryHandler,
+    @Inject(IDiarioProfessorFindOneQueryHandler)
+    private readonly findOneHandler: IDiarioProfessorFindOneQueryHandler,
+    @Inject(IDiarioProfessorCreateCommandHandler)
+    private readonly createHandler: IDiarioProfessorCreateCommandHandler,
+    @Inject(IDiarioProfessorUpdateCommandHandler)
+    private readonly updateHandler: IDiarioProfessorUpdateCommandHandler,
+    @Inject(IDiarioProfessorDeleteCommandHandler)
+    private readonly deleteHandler: IDiarioProfessorDeleteCommandHandler,
+  ) {}
 
   @Get("/")
   @ApiOperation({ summary: "Lista diarios professores", operationId: "diarioProfessorFindAll" })
@@ -33,7 +49,7 @@ export class DiarioProfessorController {
     @Query() dto: DiarioProfessorListInputRestDto,
   ): Promise<DiarioProfessorListOutputRestDto> {
     const input = DiarioProfessorRestMapper.toListInput(dto);
-    const result = await this.diarioProfessorService.findAll(accessContext, input);
+    const result = await this.listHandler.execute({ accessContext, dto: input });
     return DiarioProfessorRestMapper.toListOutputDto(result);
   }
 
@@ -50,7 +66,10 @@ export class DiarioProfessorController {
     @Param() params: DiarioProfessorFindOneInputRestDto,
   ): Promise<DiarioProfessorFindOneOutputRestDto> {
     const input = DiarioProfessorRestMapper.toFindOneInput(params);
-    const result = await this.diarioProfessorService.findByIdStrict(accessContext, input);
+    const result = await this.findOneHandler.execute({ accessContext, dto: input });
+    if (!result) {
+      throw new ResourceNotFoundError("DiarioProfessor", input.id);
+    }
     return DiarioProfessorRestMapper.toFindOneOutputDto(result);
   }
 
@@ -63,7 +82,7 @@ export class DiarioProfessorController {
     @Body() dto: DiarioProfessorCreateInputRestDto,
   ): Promise<DiarioProfessorFindOneOutputRestDto> {
     const input = DiarioProfessorRestMapper.toCreateInput(dto);
-    const result = await this.diarioProfessorService.create(accessContext, input);
+    const result = await this.createHandler.execute({ accessContext, dto: input });
     return DiarioProfessorRestMapper.toFindOneOutputDto(result);
   }
 
@@ -78,7 +97,7 @@ export class DiarioProfessorController {
     @Body() dto: DiarioProfessorUpdateInputRestDto,
   ): Promise<DiarioProfessorFindOneOutputRestDto> {
     const input = DiarioProfessorRestMapper.toUpdateInput(params, dto);
-    const result = await this.diarioProfessorService.update(accessContext, input);
+    const result = await this.updateHandler.execute({ accessContext, dto: input });
     return DiarioProfessorRestMapper.toFindOneOutputDto(result);
   }
 
@@ -95,6 +114,6 @@ export class DiarioProfessorController {
     @Param() params: DiarioProfessorFindOneInputRestDto,
   ): Promise<boolean> {
     const input = DiarioProfessorRestMapper.toFindOneInput(params);
-    return this.diarioProfessorService.deleteOneById(accessContext, input);
+    return this.deleteHandler.execute({ accessContext, dto: input });
   }
 }

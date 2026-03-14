@@ -8,7 +8,7 @@ import {
   type ICursoDeleteCommand,
   ICursoDeleteCommandHandler,
 } from "@/modules/ensino/curso/domain/commands/curso-delete.command.handler.interface";
-import { CURSO_REPOSITORY_PORT, type ICursoRepositoryPort } from "../../ports";
+import { CURSO_REPOSITORY_PORT, type ICursoRepositoryPort } from "../../../domain/repositories";
 
 @Injectable()
 export class CursoDeleteCommandHandlerImpl implements ICursoDeleteCommandHandler {

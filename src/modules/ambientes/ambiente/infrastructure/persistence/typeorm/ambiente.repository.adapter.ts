@@ -13,7 +13,7 @@ import type {
   AmbienteListInputDto as AmbienteListInputDto,
   AmbienteListOutputDto as AmbienteListOutputDto,
 } from "@/modules/ambientes/ambiente";
-import type { IAmbienteRepositoryPort } from "@/modules/ambientes/ambiente/application/ports";
+import type { IAmbienteRepositoryPort } from "@/modules/ambientes/ambiente/domain/repositories";
 import type { AmbienteEntity } from "./ambiente.entity";
 import { createAmbienteRepository } from "./ambiente.repository";
 

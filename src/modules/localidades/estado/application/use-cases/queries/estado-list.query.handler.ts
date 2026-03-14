@@ -3,8 +3,8 @@ import {
   type IEstadoListQuery,
   IEstadoListQueryHandler,
 } from "@/modules/localidades/estado/domain/queries/estado-list.query.handler.interface";
+import { ESTADO_REPOSITORY_PORT, type IEstadoRepositoryPort } from "../../../domain/repositories";
 import type { EstadoListOutputDto } from "../../dtos";
-import { ESTADO_REPOSITORY_PORT, type IEstadoRepositoryPort } from "../../ports";
 
 @Injectable()
 export class EstadoListQueryHandlerImpl implements IEstadoListQueryHandler {

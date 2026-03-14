@@ -3,8 +3,11 @@ import {
   type IDisciplinaListQuery,
   IDisciplinaListQueryHandler,
 } from "@/modules/ensino/disciplina/domain/queries/disciplina-list.query.handler.interface";
+import {
+  DISCIPLINA_REPOSITORY_PORT,
+  type IDisciplinaRepositoryPort,
+} from "../../../domain/repositories";
 import type { DisciplinaListOutputDto } from "../../dtos";
-import { DISCIPLINA_REPOSITORY_PORT, type IDisciplinaRepositoryPort } from "../../ports";
 
 @Injectable()
 export class DisciplinaListQueryHandlerImpl implements IDisciplinaListQueryHandler {

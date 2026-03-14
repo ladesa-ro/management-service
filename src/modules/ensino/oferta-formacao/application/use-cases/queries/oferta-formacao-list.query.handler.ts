@@ -3,8 +3,11 @@ import {
   type IOfertaFormacaoListQuery,
   IOfertaFormacaoListQueryHandler,
 } from "@/modules/ensino/oferta-formacao/domain/queries/oferta-formacao-list.query.handler.interface";
+import {
+  type IOfertaFormacaoRepositoryPort,
+  OFERTA_FORMACAO_REPOSITORY_PORT,
+} from "../../../domain/repositories";
 import type { OfertaFormacaoListOutputDto } from "../../dtos";
-import { type IOfertaFormacaoRepositoryPort, OFERTA_FORMACAO_REPOSITORY_PORT } from "../../ports";
 
 @Injectable()
 export class OfertaFormacaoListQueryHandlerImpl implements IOfertaFormacaoListQueryHandler {

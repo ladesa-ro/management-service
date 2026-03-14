@@ -3,8 +3,11 @@ import {
   type IModalidadeFindOneQuery,
   IModalidadeFindOneQueryHandler,
 } from "@/modules/ensino/modalidade/domain/queries/modalidade-find-one.query.handler.interface";
+import {
+  type IModalidadeRepositoryPort,
+  MODALIDADE_REPOSITORY_PORT,
+} from "../../../domain/repositories";
 import type { ModalidadeFindOneOutputDto } from "../../dtos";
-import { type IModalidadeRepositoryPort, MODALIDADE_REPOSITORY_PORT } from "../../ports";
 
 @Injectable()
 export class ModalidadeFindOneQueryHandlerImpl implements IModalidadeFindOneQueryHandler {

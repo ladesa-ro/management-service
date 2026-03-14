@@ -1,15 +1,18 @@
-import { Controller, Get } from "@nestjs/common";
+import { Controller, Get, Inject } from "@nestjs/common";
 import { ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 import {
   type GenerateRequest,
   type ServiceGenerateResponse,
 } from "@/infrastructure.messages.timetable-generator/schemas";
-import { GerarHorarioService } from "@/modules/horarios/gerar-horario";
+import { IGerarHorarioPublishTimetableRequestCommandHandler } from "@/modules/horarios/gerar-horario/domain/commands/gerar-horario-publish-timetable-request.command.handler.interface";
 
 @ApiTags("gerar-horario")
 @Controller("/gerar-horario")
 export class GerarHorarioRestController {
-  constructor(private gerarHorarioService: GerarHorarioService) {}
+  constructor(
+    @Inject(IGerarHorarioPublishTimetableRequestCommandHandler)
+    private readonly publishTimetableRequestHandler: IGerarHorarioPublishTimetableRequestCommandHandler,
+  ) {}
 
   @Get("/poc")
   @ApiOperation({
@@ -77,9 +80,8 @@ export class GerarHorarioRestController {
       previous_timetable_grid: null,
     };
 
-    return this.gerarHorarioService.publishTimetableRequest<
-      GenerateRequest,
-      ServiceGenerateResponse
-    >(request);
+    return this.publishTimetableRequestHandler.execute({
+      request,
+    }) as Promise<ServiceGenerateResponse>;
   }
 }

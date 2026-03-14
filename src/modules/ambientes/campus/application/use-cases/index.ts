@@ -1,1 +1,2 @@
-export * from "./campus.service";
+export * from "./commands";
+export * from "./queries";

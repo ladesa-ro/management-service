@@ -3,8 +3,11 @@ import {
   type IAmbienteListQuery,
   IAmbienteListQueryHandler,
 } from "@/modules/ambientes/ambiente/domain/queries/ambiente-list.query.handler.interface";
+import {
+  AMBIENTE_REPOSITORY_PORT,
+  type IAmbienteRepositoryPort,
+} from "../../../domain/repositories";
 import type { AmbienteListOutputDto } from "../../dtos";
-import { AMBIENTE_REPOSITORY_PORT, type IAmbienteRepositoryPort } from "../../ports";
 
 @Injectable()
 export class AmbienteListQueryHandlerImpl implements IAmbienteListQueryHandler {

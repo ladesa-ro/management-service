@@ -11,7 +11,7 @@ import {
 import {
   type IOfertaFormacaoNivelFormacaoRepositoryPort,
   OFERTA_FORMACAO_NIVEL_FORMACAO_REPOSITORY_PORT,
-} from "../../ports";
+} from "../../../domain/repositories";
 
 @Injectable()
 export class OfertaFormacaoNivelFormacaoDeleteCommandHandlerImpl

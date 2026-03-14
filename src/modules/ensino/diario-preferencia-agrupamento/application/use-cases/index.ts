@@ -1,1 +1,2 @@
-export * from "./diario-preferencia-agrupamento.service";
+export * from "./commands";
+export * from "./queries";

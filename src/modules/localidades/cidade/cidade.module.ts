@@ -1,7 +1,5 @@
 import { Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
-import { CIDADE_REPOSITORY_PORT } from "@/modules/localidades/cidade/application/ports";
-import { CidadeService } from "@/modules/localidades/cidade/application/use-cases/cidade.service";
 import {
   CidadeFindOneQueryHandlerImpl,
   CidadeListQueryHandlerImpl,
@@ -10,6 +8,7 @@ import {
   ICidadeFindOneQueryHandler,
   ICidadeListQueryHandler,
 } from "@/modules/localidades/cidade/domain/queries";
+import { CIDADE_REPOSITORY_PORT } from "@/modules/localidades/cidade/domain/repositories";
 import {
   CidadeAuthzRegistrySetup,
   CidadeTypeOrmRepositoryAdapter,
@@ -22,7 +21,6 @@ import { CidadeRestController } from "@/modules/localidades/cidade/presentation/
   controllers: [CidadeRestController],
   providers: [
     NestJsPaginateAdapter,
-    CidadeService,
     CidadeGraphqlResolver,
     CidadeAuthzRegistrySetup,
     {
@@ -33,6 +31,6 @@ import { CidadeRestController } from "@/modules/localidades/cidade/presentation/
     { provide: ICidadeListQueryHandler, useClass: CidadeListQueryHandlerImpl },
     { provide: ICidadeFindOneQueryHandler, useClass: CidadeFindOneQueryHandlerImpl },
   ],
-  exports: [CidadeService],
+  exports: [],
 })
 export class CidadeModule {}

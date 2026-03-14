@@ -14,7 +14,7 @@ import type {
   BlocoListInputDto,
   BlocoListOutputDto,
 } from "@/modules/ambientes/bloco";
-import type { IBlocoRepositoryPort } from "@/modules/ambientes/bloco/application/ports";
+import type { IBlocoRepositoryPort } from "@/modules/ambientes/bloco/domain/repositories";
 import type { BlocoEntity } from "./bloco.entity";
 import { createBlocoRepository } from "./bloco.repository";
 

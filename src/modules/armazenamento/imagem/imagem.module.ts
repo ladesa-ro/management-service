@@ -1,19 +1,22 @@
 import { Global, Module } from "@nestjs/common";
 import { ArquivoModule } from "@/modules/armazenamento/arquivo/arquivo.module";
 import {
+  ImagemSaveImageCommandHandlerImpl,
+  ImagemSaveImagemCapaCommandHandlerImpl,
+} from "@/modules/armazenamento/imagem/application/use-cases/commands";
+import { ImagemGetLatestArquivoIdQueryHandlerImpl } from "@/modules/armazenamento/imagem/application/use-cases/queries";
+import {
+  IImagemSaveImageCommandHandler,
+  IImagemSaveImagemCapaCommandHandler,
+} from "@/modules/armazenamento/imagem/domain/commands";
+import { IImagemGetLatestArquivoIdQueryHandler } from "@/modules/armazenamento/imagem/domain/queries";
+import {
   IMAGEM_ARQUIVO_REPOSITORY_PORT,
   IMAGEM_TRANSACTION_PORT,
-} from "@/modules/armazenamento/imagem/application/ports";
-import { ImagemService } from "@/modules/armazenamento/imagem/application/use-cases/imagem.service";
+} from "@/modules/armazenamento/imagem/domain/repositories";
 import { ImagemTypeOrmRepositoryAdapter } from "@/modules/armazenamento/imagem/infrastructure/persistence/typeorm";
 import { ImagemArquivoTypeOrmRepositoryAdapter } from "@/modules/armazenamento/imagem-arquivo/infrastructure/persistence/typeorm";
 
-/**
- * Modulo Imagem configurado com Arquitetura Hexagonal
- * - ImagemService: Implementa casos de uso (porta de entrada)
- * - ImagemTypeOrmRepositoryAdapter: Implementa IImagemTransactionPort (porta de saida)
- * - ImagemArquivoTypeOrmRepositoryAdapter: Implementa IImagemArquivoRepositoryPort (porta de saida)
- */
 @Global()
 @Module({
   imports: [ArquivoModule],
@@ -27,8 +30,23 @@ import { ImagemArquivoTypeOrmRepositoryAdapter } from "@/modules/armazenamento/i
       provide: IMAGEM_ARQUIVO_REPOSITORY_PORT,
       useClass: ImagemArquivoTypeOrmRepositoryAdapter,
     },
-    ImagemService,
+    {
+      provide: IImagemSaveImageCommandHandler,
+      useClass: ImagemSaveImageCommandHandlerImpl,
+    },
+    {
+      provide: IImagemSaveImagemCapaCommandHandler,
+      useClass: ImagemSaveImagemCapaCommandHandlerImpl,
+    },
+    {
+      provide: IImagemGetLatestArquivoIdQueryHandler,
+      useClass: ImagemGetLatestArquivoIdQueryHandlerImpl,
+    },
   ],
-  exports: [ImagemService],
+  exports: [
+    IImagemSaveImageCommandHandler,
+    IImagemSaveImagemCapaCommandHandler,
+    IImagemGetLatestArquivoIdQueryHandler,
+  ],
 })
 export class ImagemModule {}

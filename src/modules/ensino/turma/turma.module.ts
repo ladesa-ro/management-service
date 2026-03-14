@@ -4,7 +4,6 @@ import { AmbienteModule } from "@/modules/ambientes/ambiente/ambiente.module";
 import { ArquivoModule } from "@/modules/armazenamento/arquivo/arquivo.module";
 import { ImagemModule } from "@/modules/armazenamento/imagem/imagem.module";
 import { CursoModule } from "@/modules/ensino/curso/curso.module";
-import { TURMA_REPOSITORY_PORT } from "@/modules/ensino/turma/application/ports";
 import {
   TurmaCreateCommandHandlerImpl,
   TurmaDeleteCommandHandlerImpl,
@@ -16,7 +15,6 @@ import {
   TurmaGetImagemCapaQueryHandlerImpl,
   TurmaListQueryHandlerImpl,
 } from "@/modules/ensino/turma/application/use-cases/queries";
-import { TurmaService } from "@/modules/ensino/turma/application/use-cases/turma.service";
 import {
   ITurmaCreateCommandHandler,
   ITurmaDeleteCommandHandler,
@@ -28,6 +26,7 @@ import {
   ITurmaGetImagemCapaQueryHandler,
   ITurmaListQueryHandler,
 } from "@/modules/ensino/turma/domain/queries";
+import { TURMA_REPOSITORY_PORT } from "@/modules/ensino/turma/domain/repositories";
 import {
   TurmaAuthzRegistrySetup,
   TurmaTypeOrmRepositoryAdapter,
@@ -40,7 +39,6 @@ import { TurmaRestController } from "@/modules/ensino/turma/presentation/rest/tu
   controllers: [TurmaRestController],
   providers: [
     NestJsPaginateAdapter,
-    TurmaService,
     TurmaGraphqlResolver,
     TurmaAuthzRegistrySetup,
     {
@@ -61,6 +59,6 @@ import { TurmaRestController } from "@/modules/ensino/turma/presentation/rest/tu
     { provide: ITurmaFindOneQueryHandler, useClass: TurmaFindOneQueryHandlerImpl },
     { provide: ITurmaGetImagemCapaQueryHandler, useClass: TurmaGetImagemCapaQueryHandlerImpl },
   ],
-  exports: [TurmaService],
+  exports: [ITurmaFindOneQueryHandler],
 })
 export class TurmaModule {}

@@ -4,14 +4,20 @@ import {
   type IAuthorizationServicePort,
   ResourceNotFoundError,
 } from "@/modules/@shared";
-import { CalendarioLetivoService } from "@/modules/horarios/calendario-letivo";
+import {
+  type ICalendarioLetivoFindOneQueryHandler,
+  ICalendarioLetivoFindOneQueryHandler as ICalendarioLetivoFindOneQueryHandlerToken,
+} from "@/modules/horarios/calendario-letivo/domain/queries/calendario-letivo-find-one.query.handler.interface";
 import {
   type IDiaCalendarioCreateCommand,
   IDiaCalendarioCreateCommandHandler,
 } from "@/modules/horarios/dia-calendario/domain/commands/dia-calendario-create.command.handler.interface";
 import { DiaCalendario } from "@/modules/horarios/dia-calendario/domain/dia-calendario.domain";
+import {
+  DIA_CALENDARIO_REPOSITORY_PORT,
+  type IDiaCalendarioRepositoryPort,
+} from "../../../domain/repositories";
 import type { DiaCalendarioFindOneOutputDto } from "../../dtos";
-import { DIA_CALENDARIO_REPOSITORY_PORT, type IDiaCalendarioRepositoryPort } from "../../ports";
 
 @Injectable()
 export class DiaCalendarioCreateCommandHandlerImpl implements IDiaCalendarioCreateCommandHandler {
@@ -20,7 +26,8 @@ export class DiaCalendarioCreateCommandHandlerImpl implements IDiaCalendarioCrea
     private readonly repository: IDiaCalendarioRepositoryPort,
     @Inject(AUTHORIZATION_SERVICE_PORT)
     private readonly authorizationService: IAuthorizationServicePort,
-    private readonly calendarioLetivoService: CalendarioLetivoService,
+    @Inject(ICalendarioLetivoFindOneQueryHandlerToken)
+    private readonly calendarioLetivoFindOneHandler: ICalendarioLetivoFindOneQueryHandler,
   ) {}
 
   async execute({
@@ -31,10 +38,13 @@ export class DiaCalendarioCreateCommandHandlerImpl implements IDiaCalendarioCrea
 
     let calendarioRef: { id: string } | undefined;
     if (dto.calendario) {
-      const calendario = await this.calendarioLetivoService.findByIdSimpleStrict(
+      const calendario = await this.calendarioLetivoFindOneHandler.execute({
         accessContext,
-        dto.calendario.id,
-      );
+        dto: { id: dto.calendario.id },
+      });
+      if (!calendario) {
+        throw new ResourceNotFoundError("CalendarioLetivo", dto.calendario.id);
+      }
       calendarioRef = { id: calendario.id };
     }
     const domain = DiaCalendario.criar({

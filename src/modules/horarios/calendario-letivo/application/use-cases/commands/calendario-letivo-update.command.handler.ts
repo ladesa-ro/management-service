@@ -6,19 +6,19 @@ import {
   type PersistInput,
   ResourceNotFoundError,
 } from "@/modules/@shared";
-import { CampusService } from "@/modules/ambientes/campus";
-import { OfertaFormacaoService } from "@/modules/ensino/oferta-formacao";
+import { ICampusFindOneQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-find-one.query.handler.interface";
+import { IOfertaFormacaoFindOneQueryHandler } from "@/modules/ensino/oferta-formacao/domain/queries/oferta-formacao-find-one.query.handler.interface";
 import { CalendarioLetivo } from "@/modules/horarios/calendario-letivo/domain/calendario-letivo.domain";
 import type { ICalendarioLetivo } from "@/modules/horarios/calendario-letivo/domain/calendario-letivo.types";
 import {
   type ICalendarioLetivoUpdateCommand,
   ICalendarioLetivoUpdateCommandHandler,
 } from "@/modules/horarios/calendario-letivo/domain/commands/calendario-letivo-update.command.handler.interface";
-import type { CalendarioLetivoFindOneOutputDto } from "../../dtos";
 import {
   CALENDARIO_LETIVO_REPOSITORY_PORT,
   type ICalendarioLetivoRepositoryPort,
-} from "../../ports";
+} from "../../../domain/repositories";
+import type { CalendarioLetivoFindOneOutputDto } from "../../dtos";
 
 @Injectable()
 export class CalendarioLetivoUpdateCommandHandlerImpl
@@ -29,8 +29,10 @@ export class CalendarioLetivoUpdateCommandHandlerImpl
     private readonly repository: ICalendarioLetivoRepositoryPort,
     @Inject(AUTHORIZATION_SERVICE_PORT)
     private readonly authorizationService: IAuthorizationServicePort,
-    private readonly campusService: CampusService,
-    private readonly ofertaFormacaoService: OfertaFormacaoService,
+    @Inject(ICampusFindOneQueryHandler)
+    private readonly campusFindOneHandler: ICampusFindOneQueryHandler,
+    @Inject(IOfertaFormacaoFindOneQueryHandler)
+    private readonly ofertaFormacaoFindOneHandler: IOfertaFormacaoFindOneQueryHandler,
   ) {}
 
   async execute({
@@ -52,15 +54,24 @@ export class CalendarioLetivoUpdateCommandHandlerImpl
       ano: domain.ano,
     };
     if (has(dto, "campus") && dto.campus !== undefined) {
-      const campus = await this.campusService.findByIdSimpleStrict(accessContext, dto.campus.id);
+      const campus = await this.campusFindOneHandler.execute({
+        accessContext,
+        dto: { id: dto.campus.id },
+      });
+      if (!campus) {
+        throw new ResourceNotFoundError("Campus", dto.campus.id);
+      }
       updateData.campus = { id: campus.id };
     }
     if (has(dto, "ofertaFormacao") && dto.ofertaFormacao !== undefined) {
       if (dto.ofertaFormacao) {
-        const ofertaFormacao = await this.ofertaFormacaoService.findByIdSimpleStrict(
+        const ofertaFormacao = await this.ofertaFormacaoFindOneHandler.execute({
           accessContext,
-          dto.ofertaFormacao.id,
-        );
+          dto: { id: dto.ofertaFormacao.id },
+        });
+        if (!ofertaFormacao) {
+          throw new ResourceNotFoundError("OfertaFormacao", dto.ofertaFormacao.id);
+        }
         updateData.ofertaFormacao = { id: ofertaFormacao.id };
       } else {
         updateData.ofertaFormacao = null;

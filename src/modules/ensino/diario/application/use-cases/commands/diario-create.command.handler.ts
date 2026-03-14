@@ -4,17 +4,17 @@ import {
   type IAuthorizationServicePort,
   ResourceNotFoundError,
 } from "@/modules/@shared";
-import { AmbienteService } from "@/modules/ambientes/ambiente/application/use-cases/ambiente.service";
+import { IAmbienteFindOneQueryHandler } from "@/modules/ambientes/ambiente/domain/queries/ambiente-find-one.query.handler.interface";
 import {
   type IDiarioCreateCommand,
   IDiarioCreateCommandHandler,
 } from "@/modules/ensino/diario/domain/commands/diario-create.command.handler.interface";
 import { Diario } from "@/modules/ensino/diario/domain/diario.domain";
-import { DisciplinaService } from "@/modules/ensino/disciplina/application/use-cases/disciplina.service";
-import { TurmaService } from "@/modules/ensino/turma/application/use-cases/turma.service";
-import { CalendarioLetivoService } from "@/modules/horarios/calendario-letivo";
+import { IDisciplinaFindOneQueryHandler } from "@/modules/ensino/disciplina/domain/queries/disciplina-find-one.query.handler.interface";
+import { ITurmaFindOneQueryHandler } from "@/modules/ensino/turma/domain/queries/turma-find-one.query.handler.interface";
+import { ICalendarioLetivoFindOneQueryHandler } from "@/modules/horarios/calendario-letivo/domain/queries/calendario-letivo-find-one.query.handler.interface";
+import { DIARIO_REPOSITORY_PORT, type IDiarioRepositoryPort } from "../../../domain/repositories";
 import type { DiarioFindOneOutputDto } from "../../dtos";
-import { DIARIO_REPOSITORY_PORT, type IDiarioRepositoryPort } from "../../ports";
 
 @Injectable()
 export class DiarioCreateCommandHandlerImpl implements IDiarioCreateCommandHandler {
@@ -23,10 +23,14 @@ export class DiarioCreateCommandHandlerImpl implements IDiarioCreateCommandHandl
     private readonly repository: IDiarioRepositoryPort,
     @Inject(AUTHORIZATION_SERVICE_PORT)
     private readonly authorizationService: IAuthorizationServicePort,
-    private readonly calendarioLetivoService: CalendarioLetivoService,
-    private readonly turmaService: TurmaService,
-    private readonly disciplinaService: DisciplinaService,
-    private readonly ambienteService: AmbienteService,
+    @Inject(ICalendarioLetivoFindOneQueryHandler)
+    private readonly calendarioLetivoFindOneHandler: ICalendarioLetivoFindOneQueryHandler,
+    @Inject(ITurmaFindOneQueryHandler)
+    private readonly turmaFindOneHandler: ITurmaFindOneQueryHandler,
+    @Inject(IDisciplinaFindOneQueryHandler)
+    private readonly disciplinaFindOneHandler: IDisciplinaFindOneQueryHandler,
+    @Inject(IAmbienteFindOneQueryHandler)
+    private readonly ambienteFindOneHandler: IAmbienteFindOneQueryHandler,
   ) {}
 
   async execute({ accessContext, dto }: IDiarioCreateCommand): Promise<DiarioFindOneOutputDto> {
@@ -34,20 +38,40 @@ export class DiarioCreateCommandHandlerImpl implements IDiarioCreateCommandHandl
 
     let ambientePadraoRef: { id: string } | null = null;
     if (dto.ambientePadrao != null) {
-      const ambientePadrao = await this.ambienteService.findByIdStrict(accessContext, {
-        id: dto.ambientePadrao.id,
+      const ambientePadrao = await this.ambienteFindOneHandler.execute({
+        accessContext,
+        dto: { id: dto.ambientePadrao.id },
       });
+      if (!ambientePadrao) {
+        throw new ResourceNotFoundError("Ambiente", dto.ambientePadrao.id);
+      }
       ambientePadraoRef = { id: ambientePadrao.id };
     }
-    const calendarioLetivo = await this.calendarioLetivoService.findByIdSimpleStrict(
+
+    const calendarioLetivo = await this.calendarioLetivoFindOneHandler.execute({
       accessContext,
-      dto.calendarioLetivo.id,
-    );
-    const disciplina = await this.disciplinaService.findByIdSimpleStrict(
+      dto: { id: dto.calendarioLetivo.id },
+    });
+    if (!calendarioLetivo) {
+      throw new ResourceNotFoundError("CalendarioLetivo", dto.calendarioLetivo.id);
+    }
+
+    const disciplina = await this.disciplinaFindOneHandler.execute({
       accessContext,
-      dto.disciplina.id,
-    );
-    const turma = await this.turmaService.findByIdSimpleStrict(accessContext, dto.turma.id);
+      dto: { id: dto.disciplina.id },
+    });
+    if (!disciplina) {
+      throw new ResourceNotFoundError("Disciplina", dto.disciplina.id);
+    }
+
+    const turma = await this.turmaFindOneHandler.execute({
+      accessContext,
+      dto: { id: dto.turma.id },
+    });
+    if (!turma) {
+      throw new ResourceNotFoundError("Turma", dto.turma.id);
+    }
+
     const domain = Diario.criar({
       ativo: dto.ativo,
       calendarioLetivo: { id: calendarioLetivo.id },

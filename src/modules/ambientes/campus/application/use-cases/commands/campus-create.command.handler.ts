@@ -9,9 +9,9 @@ import {
   type ICampusCreateCommand,
   ICampusCreateCommandHandler,
 } from "@/modules/ambientes/campus/domain/commands/campus-create.command.handler.interface";
-import { EnderecoService } from "@/modules/localidades/endereco";
+import { IEnderecoCreateOrUpdateCommandHandler } from "@/modules/localidades/endereco/domain/commands/endereco-create-or-update.command.handler.interface";
+import { CAMPUS_REPOSITORY_PORT, type ICampusRepositoryPort } from "../../../domain/repositories";
 import type { CampusFindOneOutputDto } from "../../dtos";
-import { CAMPUS_REPOSITORY_PORT, type ICampusRepositoryPort } from "../../ports";
 
 @Injectable()
 export class CampusCreateCommandHandlerImpl implements ICampusCreateCommandHandler {
@@ -20,13 +20,17 @@ export class CampusCreateCommandHandlerImpl implements ICampusCreateCommandHandl
     private readonly repository: ICampusRepositoryPort,
     @Inject(AUTHORIZATION_SERVICE_PORT)
     private readonly authorizationService: IAuthorizationServicePort,
-    private readonly enderecoService: EnderecoService,
+    @Inject(IEnderecoCreateOrUpdateCommandHandler)
+    private readonly enderecoCreateOrUpdateHandler: IEnderecoCreateOrUpdateCommandHandler,
   ) {}
 
   async execute({ accessContext, dto }: ICampusCreateCommand): Promise<CampusFindOneOutputDto> {
     await this.authorizationService.ensurePermission("campus:create", { dto });
 
-    const endereco = await this.enderecoService.internalEnderecoCreateOrUpdate(null, dto.endereco);
+    const endereco = await this.enderecoCreateOrUpdateHandler.execute({
+      id: null,
+      dto: dto.endereco,
+    });
     const domain = Campus.criar({
       nomeFantasia: dto.nomeFantasia,
       razaoSocial: dto.razaoSocial,

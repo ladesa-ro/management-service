@@ -8,7 +8,10 @@ import {
   type IDiaCalendarioDeleteCommand,
   IDiaCalendarioDeleteCommandHandler,
 } from "@/modules/horarios/dia-calendario/domain/commands/dia-calendario-delete.command.handler.interface";
-import { DIA_CALENDARIO_REPOSITORY_PORT, type IDiaCalendarioRepositoryPort } from "../../ports";
+import {
+  DIA_CALENDARIO_REPOSITORY_PORT,
+  type IDiaCalendarioRepositoryPort,
+} from "../../../domain/repositories";
 
 @Injectable()
 export class DiaCalendarioDeleteCommandHandlerImpl implements IDiaCalendarioDeleteCommandHandler {

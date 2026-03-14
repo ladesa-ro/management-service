@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query } from "@nestjs/common";
+import { Controller, Get, Inject, Param, Query } from "@nestjs/common";
 import {
   ApiForbiddenResponse,
   ApiNotFoundResponse,
@@ -7,7 +7,9 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
-import { EstadoService } from "@/modules/localidades/estado/application/use-cases/estado.service";
+import { ResourceNotFoundError } from "@/modules/@shared";
+import { IEstadoFindOneQueryHandler } from "@/modules/localidades/estado/domain/queries/estado-find-one.query.handler.interface";
+import { IEstadoListQueryHandler } from "@/modules/localidades/estado/domain/queries/estado-list.query.handler.interface";
 import {
   EstadoFindOneInputRestDto,
   EstadoFindOneOutputRestDto,
@@ -19,7 +21,12 @@ import { EstadoRestMapper } from "./estado.rest.mapper";
 @ApiTags("estados")
 @Controller("/base/estados")
 export class EstadoRestController {
-  constructor(private estadoService: EstadoService) {}
+  constructor(
+    @Inject(IEstadoListQueryHandler)
+    private readonly listHandler: IEstadoListQueryHandler,
+    @Inject(IEstadoFindOneQueryHandler)
+    private readonly findOneHandler: IEstadoFindOneQueryHandler,
+  ) {}
 
   @Get("/")
   @ApiOperation({ summary: "Lista estados", operationId: "estadoFindAll" })
@@ -30,7 +37,7 @@ export class EstadoRestController {
     @Query() dto: EstadoListInputRestDto,
   ): Promise<EstadoListOutputRestDto> {
     const input = EstadoRestMapper.toListInput(dto);
-    const result = await this.estadoService.findAll(accessContext, input);
+    const result = await this.listHandler.execute({ accessContext, dto: input });
     return EstadoRestMapper.toListOutputDto(result);
   }
 
@@ -44,7 +51,10 @@ export class EstadoRestController {
     @Param() params: EstadoFindOneInputRestDto,
   ): Promise<EstadoFindOneOutputRestDto> {
     const input = EstadoRestMapper.toFindOneInput(params);
-    const result = await this.estadoService.findByIdStrict(accessContext, input);
+    const result = await this.findOneHandler.execute({ accessContext, dto: input });
+    if (!result) {
+      throw new ResourceNotFoundError("Estado", input.id);
+    }
     return EstadoRestMapper.toFindOneOutputDto(result);
   }
 }

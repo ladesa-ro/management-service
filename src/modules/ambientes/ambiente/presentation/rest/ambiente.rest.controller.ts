@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Inject,
   Param,
   Patch,
   Post,
@@ -23,7 +24,14 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
-import { AmbienteService } from "@/modules/ambientes/ambiente/application/use-cases/ambiente.service";
+import { ResourceNotFoundError } from "@/modules/@shared";
+import { IAmbienteCreateCommandHandler } from "@/modules/ambientes/ambiente/domain/commands/ambiente-create.command.handler.interface";
+import { IAmbienteDeleteCommandHandler } from "@/modules/ambientes/ambiente/domain/commands/ambiente-delete.command.handler.interface";
+import { IAmbienteUpdateCommandHandler } from "@/modules/ambientes/ambiente/domain/commands/ambiente-update.command.handler.interface";
+import { IAmbienteUpdateImagemCapaCommandHandler } from "@/modules/ambientes/ambiente/domain/commands/ambiente-update-imagem-capa.command.handler.interface";
+import { IAmbienteFindOneQueryHandler } from "@/modules/ambientes/ambiente/domain/queries/ambiente-find-one.query.handler.interface";
+import { IAmbienteGetImagemCapaQueryHandler } from "@/modules/ambientes/ambiente/domain/queries/ambiente-get-imagem-capa.query.handler.interface";
+import { IAmbienteListQueryHandler } from "@/modules/ambientes/ambiente/domain/queries/ambiente-list.query.handler.interface";
 import {
   AmbienteCreateInputRestDto,
   AmbienteFindOneInputRestDto,
@@ -37,7 +45,21 @@ import { AmbienteRestMapper } from "./ambiente.rest.mapper";
 @ApiTags("ambientes")
 @Controller("/ambientes")
 export class AmbienteRestController {
-  constructor(private ambienteService: AmbienteService) {}
+  constructor(
+    @Inject(IAmbienteListQueryHandler) private readonly listHandler: IAmbienteListQueryHandler,
+    @Inject(IAmbienteFindOneQueryHandler)
+    private readonly findOneHandler: IAmbienteFindOneQueryHandler,
+    @Inject(IAmbienteCreateCommandHandler)
+    private readonly createHandler: IAmbienteCreateCommandHandler,
+    @Inject(IAmbienteUpdateCommandHandler)
+    private readonly updateHandler: IAmbienteUpdateCommandHandler,
+    @Inject(IAmbienteDeleteCommandHandler)
+    private readonly deleteHandler: IAmbienteDeleteCommandHandler,
+    @Inject(IAmbienteUpdateImagemCapaCommandHandler)
+    private readonly updateImagemCapaHandler: IAmbienteUpdateImagemCapaCommandHandler,
+    @Inject(IAmbienteGetImagemCapaQueryHandler)
+    private readonly getImagemCapaHandler: IAmbienteGetImagemCapaQueryHandler,
+  ) {}
 
   @Get("/")
   @ApiOperation({ summary: "Lista ambientes", operationId: "ambienteFindAll" })
@@ -48,7 +70,7 @@ export class AmbienteRestController {
     @Query() dto: AmbienteListInputRestDto,
   ): Promise<AmbienteListOutputRestDto> {
     const input = AmbienteRestMapper.toListInput(dto);
-    const result = await this.ambienteService.findAll(accessContext, input as any);
+    const result = await this.listHandler.execute({ accessContext, dto: input as any });
     return AmbienteRestMapper.toListOutputDto(result as any);
   }
 
@@ -62,7 +84,10 @@ export class AmbienteRestController {
     @Param() params: AmbienteFindOneInputRestDto,
   ): Promise<AmbienteFindOneOutputRestDto> {
     const input = AmbienteRestMapper.toFindOneInput(params);
-    const result = await this.ambienteService.findByIdStrict(accessContext, input as any);
+    const result = await this.findOneHandler.execute({ accessContext, dto: input as any });
+    if (!result) {
+      throw new ResourceNotFoundError("Ambiente", input.id);
+    }
     return AmbienteRestMapper.toFindOneOutputDto(result as any);
   }
 
@@ -75,7 +100,7 @@ export class AmbienteRestController {
     @Body() dto: AmbienteCreateInputRestDto,
   ): Promise<AmbienteFindOneOutputRestDto> {
     const input = AmbienteRestMapper.toCreateInput(dto);
-    const result = await this.ambienteService.create(accessContext, input as any);
+    const result = await this.createHandler.execute({ accessContext, dto: input as any });
     return AmbienteRestMapper.toFindOneOutputDto(result as any);
   }
 
@@ -90,7 +115,7 @@ export class AmbienteRestController {
     @Body() dto: AmbienteUpdateInputRestDto,
   ): Promise<AmbienteFindOneOutputRestDto> {
     const input = AmbienteRestMapper.toUpdateInput(params, dto);
-    const result = await this.ambienteService.update(accessContext, input as any);
+    const result = await this.updateHandler.execute({ accessContext, dto: input as any });
     return AmbienteRestMapper.toFindOneOutputDto(result as any);
   }
 
@@ -106,7 +131,7 @@ export class AmbienteRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: AmbienteFindOneInputRestDto,
   ) {
-    return this.ambienteService.getImagemCapa(accessContext, params.id);
+    return this.getImagemCapaHandler.execute({ accessContext, id: params.id });
   }
 
   @Put("/:id/imagem/capa")
@@ -133,7 +158,7 @@ export class AmbienteRestController {
     @Param() params: AmbienteFindOneInputRestDto,
     @UploadedFile() file: Express.Multer.File,
   ): Promise<boolean> {
-    return this.ambienteService.updateImagemCapa(accessContext, params, file);
+    return this.updateImagemCapaHandler.execute({ accessContext, dto: params, file });
   }
 
   @Delete("/:id")
@@ -146,6 +171,6 @@ export class AmbienteRestController {
     @Param() params: AmbienteFindOneInputRestDto,
   ): Promise<boolean> {
     const input = AmbienteRestMapper.toFindOneInput(params);
-    return this.ambienteService.deleteOneById(accessContext, input as any);
+    return this.deleteHandler.execute({ accessContext, dto: input as any });
   }
 }

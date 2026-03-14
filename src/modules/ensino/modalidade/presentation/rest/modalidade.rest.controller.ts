@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Inject, Param, Patch, Post, Query } from "@nestjs/common";
 import {
   ApiCreatedResponse,
   ApiForbiddenResponse,
@@ -8,7 +8,12 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
-import { ModalidadeService } from "@/modules/ensino/modalidade/application/use-cases/modalidade.service";
+import { ResourceNotFoundError } from "@/modules/@shared";
+import { IModalidadeCreateCommandHandler } from "@/modules/ensino/modalidade/domain/commands/modalidade-create.command.handler.interface";
+import { IModalidadeDeleteCommandHandler } from "@/modules/ensino/modalidade/domain/commands/modalidade-delete.command.handler.interface";
+import { IModalidadeUpdateCommandHandler } from "@/modules/ensino/modalidade/domain/commands/modalidade-update.command.handler.interface";
+import { IModalidadeFindOneQueryHandler } from "@/modules/ensino/modalidade/domain/queries/modalidade-find-one.query.handler.interface";
+import { IModalidadeListQueryHandler } from "@/modules/ensino/modalidade/domain/queries/modalidade-list.query.handler.interface";
 import {
   ModalidadeCreateInputRestDto,
   ModalidadeFindOneInputRestDto,
@@ -22,7 +27,17 @@ import { ModalidadeRestMapper } from "./modalidade.rest.mapper";
 @ApiTags("modalidades")
 @Controller("/modalidades")
 export class ModalidadeRestController {
-  constructor(private modalidadeService: ModalidadeService) {}
+  constructor(
+    @Inject(IModalidadeListQueryHandler) private readonly listHandler: IModalidadeListQueryHandler,
+    @Inject(IModalidadeFindOneQueryHandler)
+    private readonly findOneHandler: IModalidadeFindOneQueryHandler,
+    @Inject(IModalidadeCreateCommandHandler)
+    private readonly createHandler: IModalidadeCreateCommandHandler,
+    @Inject(IModalidadeUpdateCommandHandler)
+    private readonly updateHandler: IModalidadeUpdateCommandHandler,
+    @Inject(IModalidadeDeleteCommandHandler)
+    private readonly deleteHandler: IModalidadeDeleteCommandHandler,
+  ) {}
 
   @Get("/")
   @ApiOperation({ summary: "Lista modalidades", operationId: "modalidadeFindAll" })
@@ -33,7 +48,7 @@ export class ModalidadeRestController {
     @Query() dto: ModalidadeListInputRestDto,
   ): Promise<ModalidadeListOutputRestDto> {
     const input = ModalidadeRestMapper.toListInput(dto);
-    const result = await this.modalidadeService.findAll(accessContext, input);
+    const result = await this.listHandler.execute({ accessContext, dto: input });
     return ModalidadeRestMapper.toListOutputDto(result);
   }
 
@@ -47,7 +62,10 @@ export class ModalidadeRestController {
     @Param() params: ModalidadeFindOneInputRestDto,
   ): Promise<ModalidadeFindOneOutputRestDto> {
     const input = ModalidadeRestMapper.toFindOneInput(params);
-    const result = await this.modalidadeService.findByIdStrict(accessContext, input);
+    const result = await this.findOneHandler.execute({ accessContext, dto: input });
+    if (!result) {
+      throw new ResourceNotFoundError("Modalidade", input.id);
+    }
     return ModalidadeRestMapper.toFindOneOutputDto(result);
   }
 
@@ -60,7 +78,7 @@ export class ModalidadeRestController {
     @Body() dto: ModalidadeCreateInputRestDto,
   ): Promise<ModalidadeFindOneOutputRestDto> {
     const input = ModalidadeRestMapper.toCreateInput(dto);
-    const result = await this.modalidadeService.create(accessContext, input);
+    const result = await this.createHandler.execute({ accessContext, dto: input });
     return ModalidadeRestMapper.toFindOneOutputDto(result);
   }
 
@@ -75,7 +93,7 @@ export class ModalidadeRestController {
     @Body() dto: ModalidadeUpdateInputRestDto,
   ): Promise<ModalidadeFindOneOutputRestDto> {
     const input = ModalidadeRestMapper.toUpdateInput(params, dto);
-    const result = await this.modalidadeService.update(accessContext, input);
+    const result = await this.updateHandler.execute({ accessContext, dto: input });
     return ModalidadeRestMapper.toFindOneOutputDto(result);
   }
 
@@ -89,6 +107,6 @@ export class ModalidadeRestController {
     @Param() params: ModalidadeFindOneInputRestDto,
   ): Promise<boolean> {
     const input = ModalidadeRestMapper.toFindOneInput(params);
-    return this.modalidadeService.deleteOneById(accessContext, input);
+    return this.deleteHandler.execute({ accessContext, dto: input });
   }
 }

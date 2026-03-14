@@ -1,8 +1,14 @@
+import { Inject } from "@nestjs/common";
 import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
 import { AccessContext, AccessContextGraphQL } from "@/modules/@seguranca/contexto-acesso";
+import { ResourceNotFoundError } from "@/modules/@shared";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
-import { CalendarioLetivoService } from "@/modules/horarios/calendario-letivo";
+import { ICalendarioLetivoCreateCommandHandler } from "@/modules/horarios/calendario-letivo/domain/commands/calendario-letivo-create.command.handler.interface";
+import { ICalendarioLetivoDeleteCommandHandler } from "@/modules/horarios/calendario-letivo/domain/commands/calendario-letivo-delete.command.handler.interface";
+import { ICalendarioLetivoUpdateCommandHandler } from "@/modules/horarios/calendario-letivo/domain/commands/calendario-letivo-update.command.handler.interface";
+import { ICalendarioLetivoFindOneQueryHandler } from "@/modules/horarios/calendario-letivo/domain/queries/calendario-letivo-find-one.query.handler.interface";
+import { ICalendarioLetivoListQueryHandler } from "@/modules/horarios/calendario-letivo/domain/queries/calendario-letivo-list.query.handler.interface";
 import {
   CalendarioLetivoCreateInputGraphQlDto,
   CalendarioLetivoFindOneOutputGraphQlDto,
@@ -14,7 +20,18 @@ import { CalendarioLetivoGraphqlMapper } from "./calendario-letivo.graphql.mappe
 
 @Resolver(() => CalendarioLetivoFindOneOutputGraphQlDto)
 export class CalendarioLetivoGraphqlResolver {
-  constructor(private readonly calendarioLetivoService: CalendarioLetivoService) {}
+  constructor(
+    @Inject(ICalendarioLetivoListQueryHandler)
+    private readonly listHandler: ICalendarioLetivoListQueryHandler,
+    @Inject(ICalendarioLetivoFindOneQueryHandler)
+    private readonly findOneHandler: ICalendarioLetivoFindOneQueryHandler,
+    @Inject(ICalendarioLetivoCreateCommandHandler)
+    private readonly createHandler: ICalendarioLetivoCreateCommandHandler,
+    @Inject(ICalendarioLetivoUpdateCommandHandler)
+    private readonly updateHandler: ICalendarioLetivoUpdateCommandHandler,
+    @Inject(ICalendarioLetivoDeleteCommandHandler)
+    private readonly deleteHandler: ICalendarioLetivoDeleteCommandHandler,
+  ) {}
 
   @Query(() => CalendarioLetivoListOutputGraphQlDto, { name: "calendarioLetivoFindAll" })
   async findAll(
@@ -28,7 +45,7 @@ export class CalendarioLetivoGraphqlResolver {
       input.selection = graphqlExtractSelection(info, "paginated");
     }
 
-    const result = await this.calendarioLetivoService.findAll(accessContext, input);
+    const result = await this.listHandler.execute({ accessContext, dto: input });
     return CalendarioLetivoGraphqlMapper.toListOutputDto(result);
   }
 
@@ -39,10 +56,10 @@ export class CalendarioLetivoGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<CalendarioLetivoFindOneOutputGraphQlDto> {
     const selection = graphqlExtractSelection(info);
-    const result = await this.calendarioLetivoService.findByIdStrict(accessContext, {
-      id,
-      selection,
-    });
+    const result = await this.findOneHandler.execute({ accessContext, dto: { id, selection } });
+    if (!result) {
+      throw new ResourceNotFoundError("CalendarioLetivo", id);
+    }
     return CalendarioLetivoGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -53,7 +70,7 @@ export class CalendarioLetivoGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<CalendarioLetivoFindOneOutputGraphQlDto> {
     const input = CalendarioLetivoGraphqlMapper.toCreateInput(dto);
-    const result = await this.calendarioLetivoService.create(accessContext, input);
+    const result = await this.createHandler.execute({ accessContext, dto: input });
     return CalendarioLetivoGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -65,7 +82,7 @@ export class CalendarioLetivoGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<CalendarioLetivoFindOneOutputGraphQlDto> {
     const input = CalendarioLetivoGraphqlMapper.toUpdateInput({ id }, dto);
-    const result = await this.calendarioLetivoService.update(accessContext, input);
+    const result = await this.updateHandler.execute({ accessContext, dto: input });
     return CalendarioLetivoGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -74,6 +91,6 @@ export class CalendarioLetivoGraphqlResolver {
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
   ): Promise<boolean> {
-    return this.calendarioLetivoService.deleteOneById(accessContext, { id });
+    return this.deleteHandler.execute({ accessContext, dto: { id } });
   }
 }

@@ -1,1 +1,2 @@
-export * from "./imagem.service";
+export * from "./commands";
+export * from "./queries";

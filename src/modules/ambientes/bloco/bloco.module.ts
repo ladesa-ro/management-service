@@ -1,7 +1,5 @@
 import { Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
-import { BLOCO_REPOSITORY_PORT } from "@/modules/ambientes/bloco/application/ports";
-import { BlocoService } from "@/modules/ambientes/bloco/application/use-cases/bloco.service";
 import {
   BlocoCreateCommandHandlerImpl,
   BlocoDeleteCommandHandlerImpl,
@@ -24,6 +22,7 @@ import {
   IBlocoGetImagemCapaQueryHandler,
   IBlocoListQueryHandler,
 } from "@/modules/ambientes/bloco/domain/queries";
+import { BLOCO_REPOSITORY_PORT } from "@/modules/ambientes/bloco/domain/repositories";
 import {
   BlocoAuthzRegistrySetup,
   BlocoTypeOrmRepositoryAdapter,
@@ -39,7 +38,6 @@ import { ImagemModule } from "@/modules/armazenamento/imagem/imagem.module";
   controllers: [BlocoRestController],
   providers: [
     NestJsPaginateAdapter,
-    BlocoService,
     BlocoGraphqlResolver,
     BlocoAuthzRegistrySetup,
     {
@@ -59,6 +57,6 @@ import { ImagemModule } from "@/modules/armazenamento/imagem/imagem.module";
     { provide: IBlocoFindOneQueryHandler, useClass: BlocoFindOneQueryHandlerImpl },
     { provide: IBlocoGetImagemCapaQueryHandler, useClass: BlocoGetImagemCapaQueryHandlerImpl },
   ],
-  exports: [BlocoService],
+  exports: [IBlocoFindOneQueryHandler],
 })
 export class BlocoModule {}

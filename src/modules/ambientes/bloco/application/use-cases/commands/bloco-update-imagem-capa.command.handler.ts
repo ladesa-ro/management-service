@@ -9,8 +9,11 @@ import {
   type IBlocoUpdateImagemCapaCommand,
   IBlocoUpdateImagemCapaCommandHandler,
 } from "@/modules/ambientes/bloco/domain/commands/bloco-update-imagem-capa.command.handler.interface";
-import { ImagemService } from "@/modules/armazenamento/imagem/application/use-cases/imagem.service";
-import { BLOCO_REPOSITORY_PORT, type IBlocoRepositoryPort } from "../../ports";
+import {
+  IImagemSaveImagemCapaCommandHandler,
+  type IImagemSaveImagemCapaCommandHandler as IImagemSaveImagemCapaCommandHandlerType,
+} from "@/modules/armazenamento/imagem/domain/commands";
+import { BLOCO_REPOSITORY_PORT, type IBlocoRepositoryPort } from "../../../domain/repositories";
 
 @Injectable()
 export class BlocoUpdateImagemCapaCommandHandlerImpl
@@ -21,7 +24,8 @@ export class BlocoUpdateImagemCapaCommandHandlerImpl
     private readonly repository: IBlocoRepositoryPort,
     @Inject(AUTHORIZATION_SERVICE_PORT)
     private readonly authorizationService: IAuthorizationServicePort,
-    private readonly imagemService: ImagemService,
+    @Inject(IImagemSaveImagemCapaCommandHandler)
+    private readonly saveImagemCapaHandler: IImagemSaveImagemCapaCommandHandlerType,
   ) {}
 
   async execute({ accessContext, dto, file }: IBlocoUpdateImagemCapaCommand): Promise<boolean> {
@@ -41,7 +45,7 @@ export class BlocoUpdateImagemCapaCommandHandlerImpl
       current.id,
       file,
       "imagemCapa",
-      this.imagemService,
+      this.saveImagemCapaHandler,
       this.repository,
     );
   }

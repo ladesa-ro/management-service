@@ -8,7 +8,10 @@ import {
   type IDiarioProfessorDeleteCommand,
   IDiarioProfessorDeleteCommandHandler,
 } from "@/modules/ensino/diario-professor/domain/commands/diario-professor-delete.command.handler.interface";
-import { DIARIO_PROFESSOR_REPOSITORY_PORT, type IDiarioProfessorRepositoryPort } from "../../ports";
+import {
+  DIARIO_PROFESSOR_REPOSITORY_PORT,
+  type IDiarioProfessorRepositoryPort,
+} from "../../../domain/repositories";
 
 @Injectable()
 export class DiarioProfessorDeleteCommandHandlerImpl

@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Inject,
   Param,
   Patch,
   Post,
@@ -23,7 +24,14 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
-import { DisciplinaService } from "@/modules/ensino/disciplina/application/use-cases/disciplina.service";
+import { ResourceNotFoundError } from "@/modules/@shared";
+import { IDisciplinaCreateCommandHandler } from "@/modules/ensino/disciplina/domain/commands/disciplina-create.command.handler.interface";
+import { IDisciplinaDeleteCommandHandler } from "@/modules/ensino/disciplina/domain/commands/disciplina-delete.command.handler.interface";
+import { IDisciplinaUpdateCommandHandler } from "@/modules/ensino/disciplina/domain/commands/disciplina-update.command.handler.interface";
+import { IDisciplinaUpdateImagemCapaCommandHandler } from "@/modules/ensino/disciplina/domain/commands/disciplina-update-imagem-capa.command.handler.interface";
+import { IDisciplinaFindOneQueryHandler } from "@/modules/ensino/disciplina/domain/queries/disciplina-find-one.query.handler.interface";
+import { IDisciplinaGetImagemCapaQueryHandler } from "@/modules/ensino/disciplina/domain/queries/disciplina-get-imagem-capa.query.handler.interface";
+import { IDisciplinaListQueryHandler } from "@/modules/ensino/disciplina/domain/queries/disciplina-list.query.handler.interface";
 import {
   DisciplinaCreateInputRestDto,
   DisciplinaFindOneInputRestDto,
@@ -37,7 +45,21 @@ import { DisciplinaRestMapper } from "./disciplina.rest.mapper";
 @ApiTags("disciplinas")
 @Controller("/disciplinas")
 export class DisciplinaRestController {
-  constructor(private disciplinaService: DisciplinaService) {}
+  constructor(
+    @Inject(IDisciplinaListQueryHandler) private readonly listHandler: IDisciplinaListQueryHandler,
+    @Inject(IDisciplinaFindOneQueryHandler)
+    private readonly findOneHandler: IDisciplinaFindOneQueryHandler,
+    @Inject(IDisciplinaCreateCommandHandler)
+    private readonly createHandler: IDisciplinaCreateCommandHandler,
+    @Inject(IDisciplinaUpdateCommandHandler)
+    private readonly updateHandler: IDisciplinaUpdateCommandHandler,
+    @Inject(IDisciplinaDeleteCommandHandler)
+    private readonly deleteHandler: IDisciplinaDeleteCommandHandler,
+    @Inject(IDisciplinaUpdateImagemCapaCommandHandler)
+    private readonly updateImagemCapaHandler: IDisciplinaUpdateImagemCapaCommandHandler,
+    @Inject(IDisciplinaGetImagemCapaQueryHandler)
+    private readonly getImagemCapaHandler: IDisciplinaGetImagemCapaQueryHandler,
+  ) {}
 
   @Get("/")
   @ApiOperation({ summary: "Lista disciplinas", operationId: "disciplinaFindAll" })
@@ -48,7 +70,7 @@ export class DisciplinaRestController {
     @Query() dto: DisciplinaListInputRestDto,
   ): Promise<DisciplinaListOutputRestDto> {
     const input = DisciplinaRestMapper.toListInput(dto);
-    const result = await this.disciplinaService.findAll(accessContext, input);
+    const result = await this.listHandler.execute({ accessContext, dto: input });
     return DisciplinaRestMapper.toListOutputDto(result);
   }
 
@@ -62,7 +84,10 @@ export class DisciplinaRestController {
     @Param() params: DisciplinaFindOneInputRestDto,
   ): Promise<DisciplinaFindOneOutputRestDto> {
     const input = DisciplinaRestMapper.toFindOneInput(params);
-    const result = await this.disciplinaService.findByIdStrict(accessContext, input);
+    const result = await this.findOneHandler.execute({ accessContext, dto: input });
+    if (!result) {
+      throw new ResourceNotFoundError("Disciplina", input.id);
+    }
     return DisciplinaRestMapper.toFindOneOutputDto(result);
   }
 
@@ -75,7 +100,7 @@ export class DisciplinaRestController {
     @Body() dto: DisciplinaCreateInputRestDto,
   ): Promise<DisciplinaFindOneOutputRestDto> {
     const input = DisciplinaRestMapper.toCreateInput(dto);
-    const result = await this.disciplinaService.create(accessContext, input);
+    const result = await this.createHandler.execute({ accessContext, dto: input });
     return DisciplinaRestMapper.toFindOneOutputDto(result);
   }
 
@@ -90,7 +115,7 @@ export class DisciplinaRestController {
     @Body() dto: DisciplinaUpdateInputRestDto,
   ): Promise<DisciplinaFindOneOutputRestDto> {
     const input = DisciplinaRestMapper.toUpdateInput(params, dto);
-    const result = await this.disciplinaService.update(accessContext, input);
+    const result = await this.updateHandler.execute({ accessContext, dto: input });
     return DisciplinaRestMapper.toFindOneOutputDto(result);
   }
 
@@ -106,7 +131,7 @@ export class DisciplinaRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: DisciplinaFindOneInputRestDto,
   ) {
-    return this.disciplinaService.getImagemCapa(accessContext, params.id);
+    return this.getImagemCapaHandler.execute({ accessContext, id: params.id });
   }
 
   @Put("/:id/imagem/capa")
@@ -133,7 +158,7 @@ export class DisciplinaRestController {
     @Param() params: DisciplinaFindOneInputRestDto,
     @UploadedFile() file: Express.Multer.File,
   ): Promise<boolean> {
-    return this.disciplinaService.updateImagemCapa(accessContext, params, file);
+    return this.updateImagemCapaHandler.execute({ accessContext, dto: params, file });
   }
 
   @Delete("/:id")
@@ -146,6 +171,6 @@ export class DisciplinaRestController {
     @Param() params: DisciplinaFindOneInputRestDto,
   ): Promise<boolean> {
     const input = DisciplinaRestMapper.toFindOneInput(params);
-    return this.disciplinaService.deleteOneById(accessContext, input);
+    return this.deleteHandler.execute({ accessContext, dto: input });
   }
 }

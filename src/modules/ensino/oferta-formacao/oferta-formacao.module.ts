@@ -1,10 +1,7 @@
 import { Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import { ModalidadeModule } from "@/modules/ensino/modalidade/modalidade.module";
-import {
-  OFERTA_FORMACAO_REPOSITORY_PORT,
-  OfertaFormacaoService,
-} from "@/modules/ensino/oferta-formacao";
+import { OFERTA_FORMACAO_REPOSITORY_PORT } from "@/modules/ensino/oferta-formacao";
 import {
   OfertaFormacaoCreateCommandHandlerImpl,
   OfertaFormacaoDeleteCommandHandlerImpl,
@@ -33,7 +30,6 @@ import { OfertaFormacaoRestController } from "@/modules/ensino/oferta-formacao/p
   controllers: [OfertaFormacaoRestController],
   providers: [
     NestJsPaginateAdapter,
-    OfertaFormacaoService,
     OfertaFormacaoAuthzRegistrySetup,
     OfertaFormacaoGraphqlResolver,
     {
@@ -61,6 +57,6 @@ import { OfertaFormacaoRestController } from "@/modules/ensino/oferta-formacao/p
       useClass: OfertaFormacaoFindOneQueryHandlerImpl,
     },
   ],
-  exports: [OfertaFormacaoService],
+  exports: [IOfertaFormacaoFindOneQueryHandler],
 })
 export class OfertaFormacaoModule {}

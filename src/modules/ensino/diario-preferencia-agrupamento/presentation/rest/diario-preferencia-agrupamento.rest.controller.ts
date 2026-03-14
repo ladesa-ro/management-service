@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Inject, Param, Patch, Post, Query } from "@nestjs/common";
 import {
   ApiCreatedResponse,
   ApiForbiddenResponse,
@@ -8,7 +8,12 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
-import { DiarioPreferenciaAgrupamentoService } from "@/modules/ensino/diario-preferencia-agrupamento/application/use-cases/diario-preferencia-agrupamento.service";
+import { ResourceNotFoundError } from "@/modules/@shared";
+import { IDiarioPreferenciaAgrupamentoCreateCommandHandler } from "@/modules/ensino/diario-preferencia-agrupamento/domain/commands/diario-preferencia-agrupamento-create.command.handler.interface";
+import { IDiarioPreferenciaAgrupamentoDeleteCommandHandler } from "@/modules/ensino/diario-preferencia-agrupamento/domain/commands/diario-preferencia-agrupamento-delete.command.handler.interface";
+import { IDiarioPreferenciaAgrupamentoUpdateCommandHandler } from "@/modules/ensino/diario-preferencia-agrupamento/domain/commands/diario-preferencia-agrupamento-update.command.handler.interface";
+import { IDiarioPreferenciaAgrupamentoFindOneQueryHandler } from "@/modules/ensino/diario-preferencia-agrupamento/domain/queries/diario-preferencia-agrupamento-find-one.query.handler.interface";
+import { IDiarioPreferenciaAgrupamentoListQueryHandler } from "@/modules/ensino/diario-preferencia-agrupamento/domain/queries/diario-preferencia-agrupamento-list.query.handler.interface";
 import {
   DiarioPreferenciaAgrupamentoCreateInputRestDto,
   DiarioPreferenciaAgrupamentoFindOneInputRestDto,
@@ -22,7 +27,18 @@ import { DiarioPreferenciaAgrupamentoRestMapper } from "./diario-preferencia-agr
 @ApiTags("diarios-preferencia-agrupamento")
 @Controller("/diarios-preferencia-agrupamento")
 export class DiarioPreferenciaAgrupamentoController {
-  constructor(private diarioPreferenciaAgrupamentoService: DiarioPreferenciaAgrupamentoService) {}
+  constructor(
+    @Inject(IDiarioPreferenciaAgrupamentoListQueryHandler)
+    private readonly listHandler: IDiarioPreferenciaAgrupamentoListQueryHandler,
+    @Inject(IDiarioPreferenciaAgrupamentoFindOneQueryHandler)
+    private readonly findOneHandler: IDiarioPreferenciaAgrupamentoFindOneQueryHandler,
+    @Inject(IDiarioPreferenciaAgrupamentoCreateCommandHandler)
+    private readonly createHandler: IDiarioPreferenciaAgrupamentoCreateCommandHandler,
+    @Inject(IDiarioPreferenciaAgrupamentoUpdateCommandHandler)
+    private readonly updateHandler: IDiarioPreferenciaAgrupamentoUpdateCommandHandler,
+    @Inject(IDiarioPreferenciaAgrupamentoDeleteCommandHandler)
+    private readonly deleteHandler: IDiarioPreferenciaAgrupamentoDeleteCommandHandler,
+  ) {}
 
   @Get("/")
   @ApiOperation({
@@ -36,7 +52,7 @@ export class DiarioPreferenciaAgrupamentoController {
     @Query() dto: DiarioPreferenciaAgrupamentoListInputRestDto,
   ): Promise<DiarioPreferenciaAgrupamentoListOutputRestDto> {
     const input = DiarioPreferenciaAgrupamentoRestMapper.toListInput(dto);
-    const result = await this.diarioPreferenciaAgrupamentoService.findAll(accessContext, input);
+    const result = await this.listHandler.execute({ accessContext, dto: input });
     return DiarioPreferenciaAgrupamentoRestMapper.toListOutputDto(result);
   }
 
@@ -53,10 +69,10 @@ export class DiarioPreferenciaAgrupamentoController {
     @Param() params: DiarioPreferenciaAgrupamentoFindOneInputRestDto,
   ): Promise<DiarioPreferenciaAgrupamentoFindOneOutputRestDto> {
     const input = DiarioPreferenciaAgrupamentoRestMapper.toFindOneInput(params);
-    const result = await this.diarioPreferenciaAgrupamentoService.findByIdStrict(
-      accessContext,
-      input,
-    );
+    const result = await this.findOneHandler.execute({ accessContext, dto: input });
+    if (!result) {
+      throw new ResourceNotFoundError("DiarioPreferenciaAgrupamento", input.id);
+    }
     return DiarioPreferenciaAgrupamentoRestMapper.toFindOneOutputDto(result);
   }
 
@@ -72,7 +88,7 @@ export class DiarioPreferenciaAgrupamentoController {
     @Body() dto: DiarioPreferenciaAgrupamentoCreateInputRestDto,
   ): Promise<DiarioPreferenciaAgrupamentoFindOneOutputRestDto> {
     const input = DiarioPreferenciaAgrupamentoRestMapper.toCreateInput(dto);
-    const result = await this.diarioPreferenciaAgrupamentoService.create(accessContext, input);
+    const result = await this.createHandler.execute({ accessContext, dto: input });
     return DiarioPreferenciaAgrupamentoRestMapper.toFindOneOutputDto(result);
   }
 
@@ -90,7 +106,7 @@ export class DiarioPreferenciaAgrupamentoController {
     @Body() dto: DiarioPreferenciaAgrupamentoUpdateInputRestDto,
   ): Promise<DiarioPreferenciaAgrupamentoFindOneOutputRestDto> {
     const input = DiarioPreferenciaAgrupamentoRestMapper.toUpdateInput(params, dto);
-    const result = await this.diarioPreferenciaAgrupamentoService.update(accessContext, input);
+    const result = await this.updateHandler.execute({ accessContext, dto: input });
     return DiarioPreferenciaAgrupamentoRestMapper.toFindOneOutputDto(result);
   }
 
@@ -107,6 +123,6 @@ export class DiarioPreferenciaAgrupamentoController {
     @Param() params: DiarioPreferenciaAgrupamentoFindOneInputRestDto,
   ): Promise<boolean> {
     const input = DiarioPreferenciaAgrupamentoRestMapper.toFindOneInput(params);
-    return this.diarioPreferenciaAgrupamentoService.deleteOneById(accessContext, input);
+    return this.deleteHandler.execute({ accessContext, dto: input });
   }
 }

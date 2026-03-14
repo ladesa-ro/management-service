@@ -9,8 +9,11 @@ import {
   IDisciplinaUpdateCommandHandler,
 } from "@/modules/ensino/disciplina/domain/commands/disciplina-update.command.handler.interface";
 import { Disciplina } from "@/modules/ensino/disciplina/domain/disciplina.domain";
+import {
+  DISCIPLINA_REPOSITORY_PORT,
+  type IDisciplinaRepositoryPort,
+} from "../../../domain/repositories";
 import type { DisciplinaFindOneOutputDto } from "../../dtos";
-import { DISCIPLINA_REPOSITORY_PORT, type IDisciplinaRepositoryPort } from "../../ports";
 
 @Injectable()
 export class DisciplinaUpdateCommandHandlerImpl implements IDisciplinaUpdateCommandHandler {

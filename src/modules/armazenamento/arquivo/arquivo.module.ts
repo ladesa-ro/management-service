@@ -1,6 +1,9 @@
 import { Global, Module } from "@nestjs/common";
-import { ARQUIVO_REPOSITORY_PORT } from "@/modules/armazenamento/arquivo/application/ports";
-import { ArquivoService } from "@/modules/armazenamento/arquivo/application/use-cases/arquivo.service";
+import { ArquivoCreateCommandHandlerImpl } from "@/modules/armazenamento/arquivo/application/use-cases/commands";
+import { ArquivoGetStreamableFileQueryHandlerImpl } from "@/modules/armazenamento/arquivo/application/use-cases/queries";
+import { IArquivoCreateCommandHandler } from "@/modules/armazenamento/arquivo/domain/commands";
+import { IArquivoGetStreamableFileQueryHandler } from "@/modules/armazenamento/arquivo/domain/queries";
+import { ARQUIVO_REPOSITORY_PORT } from "@/modules/armazenamento/arquivo/domain/repositories";
 import { ArquivoTypeOrmRepositoryAdapter } from "@/modules/armazenamento/arquivo/infrastructure/persistence/typeorm";
 import { ArquivoRestController } from "@/modules/armazenamento/arquivo/presentation/rest/arquivo.rest.controller";
 
@@ -13,8 +16,15 @@ import { ArquivoRestController } from "@/modules/armazenamento/arquivo/presentat
       provide: ARQUIVO_REPOSITORY_PORT,
       useClass: ArquivoTypeOrmRepositoryAdapter,
     },
-    ArquivoService,
+    {
+      provide: IArquivoGetStreamableFileQueryHandler,
+      useClass: ArquivoGetStreamableFileQueryHandlerImpl,
+    },
+    {
+      provide: IArquivoCreateCommandHandler,
+      useClass: ArquivoCreateCommandHandlerImpl,
+    },
   ],
-  exports: [ArquivoService],
+  exports: [IArquivoGetStreamableFileQueryHandler, IArquivoCreateCommandHandler],
 })
 export class ArquivoModule {}

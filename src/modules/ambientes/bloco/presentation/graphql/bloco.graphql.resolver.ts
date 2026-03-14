@@ -1,8 +1,14 @@
+import { Inject } from "@nestjs/common";
 import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
 import { AccessContext, AccessContextGraphQL } from "@/modules/@seguranca/contexto-acesso";
+import { ResourceNotFoundError } from "@/modules/@shared";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
-import { BlocoService } from "@/modules/ambientes/bloco/application/use-cases/bloco.service";
+import { IBlocoCreateCommandHandler } from "@/modules/ambientes/bloco/domain/commands/bloco-create.command.handler.interface";
+import { IBlocoDeleteCommandHandler } from "@/modules/ambientes/bloco/domain/commands/bloco-delete.command.handler.interface";
+import { IBlocoUpdateCommandHandler } from "@/modules/ambientes/bloco/domain/commands/bloco-update.command.handler.interface";
+import { IBlocoFindOneQueryHandler } from "@/modules/ambientes/bloco/domain/queries/bloco-find-one.query.handler.interface";
+import { IBlocoListQueryHandler } from "@/modules/ambientes/bloco/domain/queries/bloco-list.query.handler.interface";
 import {
   BlocoCreateInputGraphQlDto,
   BlocoFindOneOutputGraphQlDto,
@@ -14,7 +20,13 @@ import { BlocoGraphqlMapper } from "./bloco.graphql.mapper";
 
 @Resolver(() => BlocoFindOneOutputGraphQlDto)
 export class BlocoGraphqlResolver {
-  constructor(private readonly blocoService: BlocoService) {}
+  constructor(
+    @Inject(IBlocoListQueryHandler) private readonly listHandler: IBlocoListQueryHandler,
+    @Inject(IBlocoFindOneQueryHandler) private readonly findOneHandler: IBlocoFindOneQueryHandler,
+    @Inject(IBlocoCreateCommandHandler) private readonly createHandler: IBlocoCreateCommandHandler,
+    @Inject(IBlocoUpdateCommandHandler) private readonly updateHandler: IBlocoUpdateCommandHandler,
+    @Inject(IBlocoDeleteCommandHandler) private readonly deleteHandler: IBlocoDeleteCommandHandler,
+  ) {}
 
   @Query(() => BlocoListOutputGraphQlDto, { name: "blocoFindAll" })
   async findAll(
@@ -28,7 +40,7 @@ export class BlocoGraphqlResolver {
       input.selection = graphqlExtractSelection(info, "paginated");
     }
 
-    const result = await this.blocoService.findAll(accessContext, input);
+    const result = await this.listHandler.execute({ accessContext, dto: input });
     return BlocoGraphqlMapper.toListOutputDto(result);
   }
 
@@ -39,7 +51,10 @@ export class BlocoGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<BlocoFindOneOutputGraphQlDto> {
     const selection = graphqlExtractSelection(info);
-    const result = await this.blocoService.findByIdStrict(accessContext, { id, selection });
+    const result = await this.findOneHandler.execute({ accessContext, dto: { id, selection } });
+    if (!result) {
+      throw new ResourceNotFoundError("Bloco", id);
+    }
     return BlocoGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -50,7 +65,7 @@ export class BlocoGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<BlocoFindOneOutputGraphQlDto> {
     const input = BlocoGraphqlMapper.toCreateInput(dto);
-    const result = await this.blocoService.create(accessContext, input);
+    const result = await this.createHandler.execute({ accessContext, dto: input });
     return BlocoGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -62,7 +77,7 @@ export class BlocoGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<BlocoFindOneOutputGraphQlDto> {
     const input = BlocoGraphqlMapper.toUpdateInput({ id }, dto);
-    const result = await this.blocoService.update(accessContext, input);
+    const result = await this.updateHandler.execute({ accessContext, dto: input });
     return BlocoGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -71,6 +86,6 @@ export class BlocoGraphqlResolver {
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
   ): Promise<boolean> {
-    return this.blocoService.deleteOneById(accessContext, { id });
+    return this.deleteHandler.execute({ accessContext, dto: { id } });
   }
 }

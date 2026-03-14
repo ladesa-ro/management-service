@@ -8,7 +8,10 @@ import {
   type IDisciplinaDeleteCommand,
   IDisciplinaDeleteCommandHandler,
 } from "@/modules/ensino/disciplina/domain/commands/disciplina-delete.command.handler.interface";
-import { DISCIPLINA_REPOSITORY_PORT, type IDisciplinaRepositoryPort } from "../../ports";
+import {
+  DISCIPLINA_REPOSITORY_PORT,
+  type IDisciplinaRepositoryPort,
+} from "../../../domain/repositories";
 
 @Injectable()
 export class DisciplinaDeleteCommandHandlerImpl implements IDisciplinaDeleteCommandHandler {

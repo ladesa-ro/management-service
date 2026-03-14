@@ -14,7 +14,7 @@ import type {
   CursoListInputDto,
   CursoListOutputDto,
 } from "@/modules/ensino/curso/application/dtos";
-import type { ICursoRepositoryPort } from "@/modules/ensino/curso/application/ports";
+import type { ICursoRepositoryPort } from "@/modules/ensino/curso/domain/repositories";
 import type { CursoEntity } from "./curso.entity";
 import { createCursoRepository } from "./curso.repository";
 

@@ -4,17 +4,28 @@ import {
   type IAmbienteGetImagemCapaQuery,
   IAmbienteGetImagemCapaQueryHandler,
 } from "@/modules/ambientes/ambiente/domain/queries/ambiente-get-imagem-capa.query.handler.interface";
-import { ArquivoService } from "@/modules/armazenamento/arquivo/application/use-cases/arquivo.service";
-import { ImagemService } from "@/modules/armazenamento/imagem/application/use-cases/imagem.service";
-import { AMBIENTE_REPOSITORY_PORT, type IAmbienteRepositoryPort } from "../../ports";
+import {
+  IArquivoGetStreamableFileQueryHandler,
+  type IArquivoGetStreamableFileQueryHandler as IArquivoGetStreamableFileQueryHandlerType,
+} from "@/modules/armazenamento/arquivo/domain/queries";
+import {
+  IImagemGetLatestArquivoIdQueryHandler,
+  type IImagemGetLatestArquivoIdQueryHandler as IImagemGetLatestArquivoIdQueryHandlerType,
+} from "@/modules/armazenamento/imagem/domain/queries";
+import {
+  AMBIENTE_REPOSITORY_PORT,
+  type IAmbienteRepositoryPort,
+} from "../../../domain/repositories";
 
 @Injectable()
 export class AmbienteGetImagemCapaQueryHandlerImpl implements IAmbienteGetImagemCapaQueryHandler {
   constructor(
     @Inject(AMBIENTE_REPOSITORY_PORT)
     private readonly repository: IAmbienteRepositoryPort,
-    private readonly imagemService: ImagemService,
-    private readonly arquivoService: ArquivoService,
+    @Inject(IImagemGetLatestArquivoIdQueryHandler)
+    private readonly getLatestArquivoIdHandler: IImagemGetLatestArquivoIdQueryHandlerType,
+    @Inject(IArquivoGetStreamableFileQueryHandler)
+    private readonly getStreamableFileHandler: IArquivoGetStreamableFileQueryHandlerType,
   ) {}
 
   async execute({ accessContext, id }: IAmbienteGetImagemCapaQuery): Promise<StreamableFile> {
@@ -29,8 +40,8 @@ export class AmbienteGetImagemCapaQueryHandlerImpl implements IAmbienteGetImagem
       "imagemCapa",
       "Imagem de capa do Ambiente",
       id,
-      this.imagemService,
-      this.arquivoService,
+      this.getLatestArquivoIdHandler,
+      this.getStreamableFileHandler,
     );
   }
 }

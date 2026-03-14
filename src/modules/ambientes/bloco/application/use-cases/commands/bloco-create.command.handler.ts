@@ -9,9 +9,9 @@ import {
   type IBlocoCreateCommand,
   IBlocoCreateCommandHandler,
 } from "@/modules/ambientes/bloco/domain/commands/bloco-create.command.handler.interface";
-import { CampusService } from "@/modules/ambientes/campus";
+import { ICampusFindOneQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-find-one.query.handler.interface";
+import { BLOCO_REPOSITORY_PORT, type IBlocoRepositoryPort } from "../../../domain/repositories";
 import type { BlocoFindOneOutputDto } from "../../dtos";
-import { BLOCO_REPOSITORY_PORT, type IBlocoRepositoryPort } from "../../ports";
 
 @Injectable()
 export class BlocoCreateCommandHandlerImpl implements IBlocoCreateCommandHandler {
@@ -20,13 +20,20 @@ export class BlocoCreateCommandHandlerImpl implements IBlocoCreateCommandHandler
     private readonly repository: IBlocoRepositoryPort,
     @Inject(AUTHORIZATION_SERVICE_PORT)
     private readonly authorizationService: IAuthorizationServicePort,
-    private readonly campusService: CampusService,
+    @Inject(ICampusFindOneQueryHandler)
+    private readonly campusFindOneHandler: ICampusFindOneQueryHandler,
   ) {}
 
   async execute({ accessContext, dto }: IBlocoCreateCommand): Promise<BlocoFindOneOutputDto> {
     await this.authorizationService.ensurePermission("bloco:create", { dto });
 
-    const campus = await this.campusService.findByIdSimpleStrict(accessContext, dto.campus.id);
+    const campus = await this.campusFindOneHandler.execute({
+      accessContext,
+      dto: { id: dto.campus.id },
+    });
+    if (!campus) {
+      throw new ResourceNotFoundError("Campus", dto.campus.id);
+    }
     const domain = Bloco.criar({
       nome: dto.nome,
       codigo: dto.codigo,
