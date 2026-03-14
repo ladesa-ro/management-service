@@ -22,7 +22,7 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { DeclareDependency, IContainer } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { IUsuarioCreateCommandHandler } from "@/modules/acesso/usuario/domain/commands/usuario-create.command.handler.interface";
@@ -50,28 +50,7 @@ import { UsuarioRestMapper } from "./usuario.rest.mapper";
 @ApiTags("usuarios")
 @Controller("/usuarios")
 export class UsuarioRestController {
-  constructor(
-    @DeclareDependency(IUsuarioListQueryHandler)
-    private readonly listHandler: IUsuarioListQueryHandler,
-    @DeclareDependency(IUsuarioFindOneQueryHandler)
-    private readonly findOneHandler: IUsuarioFindOneQueryHandler,
-    @DeclareDependency(IUsuarioEnsinoQueryHandler)
-    private readonly ensinoHandler: IUsuarioEnsinoQueryHandler,
-    @DeclareDependency(IUsuarioGetImagemCapaQueryHandler)
-    private readonly getImagemCapaHandler: IUsuarioGetImagemCapaQueryHandler,
-    @DeclareDependency(IUsuarioGetImagemPerfilQueryHandler)
-    private readonly getImagemPerfilHandler: IUsuarioGetImagemPerfilQueryHandler,
-    @DeclareDependency(IUsuarioCreateCommandHandler)
-    private readonly createHandler: IUsuarioCreateCommandHandler,
-    @DeclareDependency(IUsuarioUpdateCommandHandler)
-    private readonly updateHandler: IUsuarioUpdateCommandHandler,
-    @DeclareDependency(IUsuarioDeleteCommandHandler)
-    private readonly deleteHandler: IUsuarioDeleteCommandHandler,
-    @DeclareDependency(IUsuarioUpdateImagemCapaCommandHandler)
-    private readonly updateImagemCapaHandler: IUsuarioUpdateImagemCapaCommandHandler,
-    @DeclareDependency(IUsuarioUpdateImagemPerfilCommandHandler)
-    private readonly updateImagemPerfilHandler: IUsuarioUpdateImagemPerfilCommandHandler,
-  ) {}
+  constructor(@DeclareDependency(IContainer) private readonly container: IContainer) {}
 
   @Get("/")
   @ApiOperation({ summary: "Lista usuarios", operationId: "usuarioFindAll" })
@@ -81,8 +60,9 @@ export class UsuarioRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Query() dto: UsuarioListInputRestDto,
   ): Promise<UsuarioListOutputRestDto> {
+    const listHandler = this.container.get<IUsuarioListQueryHandler>(IUsuarioListQueryHandler);
     const input = UsuarioRestMapper.toListInput(dto);
-    const result = await this.listHandler.execute({ accessContext, dto: input });
+    const result = await listHandler.execute({ accessContext, dto: input });
     return UsuarioRestMapper.toListOutputDto(result);
   }
 
@@ -95,8 +75,11 @@ export class UsuarioRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: UsuarioFindOneInputRestDto,
   ): Promise<UsuarioFindOneOutputRestDto> {
+    const findOneHandler = this.container.get<IUsuarioFindOneQueryHandler>(
+      IUsuarioFindOneQueryHandler,
+    );
     const input = UsuarioRestMapper.toFindOneInput(params);
-    const result = await this.findOneHandler.execute({ accessContext, dto: input });
+    const result = await findOneHandler.execute({ accessContext, dto: input });
     ensureExists(result, Usuario.entityName, input.id);
     return UsuarioRestMapper.toFindOneOutputDto(result);
   }
@@ -113,8 +96,11 @@ export class UsuarioRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: UsuarioFindOneInputRestDto,
   ): Promise<UsuarioEnsinoOutputRestDto> {
+    const ensinoHandler = this.container.get<IUsuarioEnsinoQueryHandler>(
+      IUsuarioEnsinoQueryHandler,
+    );
     const input = UsuarioRestMapper.toFindOneInput(params);
-    const result = await this.ensinoHandler.execute({ accessContext, dto: input });
+    const result = await ensinoHandler.execute({ accessContext, dto: input });
     return UsuarioRestMapper.toEnsinoOutputDto(result);
   }
 
@@ -126,8 +112,11 @@ export class UsuarioRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Body() dto: UsuarioCreateInputRestDto,
   ): Promise<UsuarioFindOneOutputRestDto> {
+    const createHandler = this.container.get<IUsuarioCreateCommandHandler>(
+      IUsuarioCreateCommandHandler,
+    );
     const input = UsuarioRestMapper.toCreateInput(dto);
-    const result = await this.createHandler.execute({ accessContext, dto: input });
+    const result = await createHandler.execute({ accessContext, dto: input });
     return UsuarioRestMapper.toFindOneOutputDto(result);
   }
 
@@ -141,8 +130,11 @@ export class UsuarioRestController {
     @Param() params: UsuarioFindOneInputRestDto,
     @Body() dto: UsuarioUpdateInputRestDto,
   ): Promise<UsuarioFindOneOutputRestDto> {
+    const updateHandler = this.container.get<IUsuarioUpdateCommandHandler>(
+      IUsuarioUpdateCommandHandler,
+    );
     const input = UsuarioRestMapper.toUpdateInput(params, dto);
-    const result = await this.updateHandler.execute({ accessContext, dto: input });
+    const result = await updateHandler.execute({ accessContext, dto: input });
     return UsuarioRestMapper.toFindOneOutputDto(result);
   }
 
@@ -158,7 +150,10 @@ export class UsuarioRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: UsuarioFindOneInputRestDto,
   ) {
-    return this.getImagemCapaHandler.execute({ accessContext, id: params.id });
+    const getImagemCapaHandler = this.container.get<IUsuarioGetImagemCapaQueryHandler>(
+      IUsuarioGetImagemCapaQueryHandler,
+    );
+    return getImagemCapaHandler.execute({ accessContext, id: params.id });
   }
 
   @Put("/:id/imagem/capa")
@@ -185,7 +180,10 @@ export class UsuarioRestController {
     @Param() params: UsuarioFindOneInputRestDto,
     @UploadedFile() file: Express.Multer.File,
   ): Promise<boolean> {
-    return this.updateImagemCapaHandler.execute({ accessContext, dto: params, file });
+    const updateImagemCapaHandler = this.container.get<IUsuarioUpdateImagemCapaCommandHandler>(
+      IUsuarioUpdateImagemCapaCommandHandler,
+    );
+    return updateImagemCapaHandler.execute({ accessContext, dto: params, file });
   }
 
   @Get("/:id/imagem/perfil")
@@ -200,7 +198,10 @@ export class UsuarioRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: UsuarioFindOneInputRestDto,
   ) {
-    return this.getImagemPerfilHandler.execute({ accessContext, id: params.id });
+    const getImagemPerfilHandler = this.container.get<IUsuarioGetImagemPerfilQueryHandler>(
+      IUsuarioGetImagemPerfilQueryHandler,
+    );
+    return getImagemPerfilHandler.execute({ accessContext, id: params.id });
   }
 
   @Put("/:id/imagem/perfil")
@@ -227,7 +228,10 @@ export class UsuarioRestController {
     @Param() params: UsuarioFindOneInputRestDto,
     @UploadedFile() file: Express.Multer.File,
   ): Promise<boolean> {
-    return this.updateImagemPerfilHandler.execute({ accessContext, dto: params, file });
+    const updateImagemPerfilHandler = this.container.get<IUsuarioUpdateImagemPerfilCommandHandler>(
+      IUsuarioUpdateImagemPerfilCommandHandler,
+    );
+    return updateImagemPerfilHandler.execute({ accessContext, dto: params, file });
   }
 
   @Delete("/:id")
@@ -239,7 +243,10 @@ export class UsuarioRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: UsuarioFindOneInputRestDto,
   ): Promise<boolean> {
+    const deleteHandler = this.container.get<IUsuarioDeleteCommandHandler>(
+      IUsuarioDeleteCommandHandler,
+    );
     const input = UsuarioRestMapper.toFindOneInput(params);
-    return this.deleteHandler.execute({ accessContext, dto: input });
+    return deleteHandler.execute({ accessContext, dto: input });
   }
 }

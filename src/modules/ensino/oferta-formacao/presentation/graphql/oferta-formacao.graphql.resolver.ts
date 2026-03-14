@@ -1,6 +1,6 @@
 import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { DeclareDependency, IContainer } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextGraphQL } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
@@ -22,16 +22,8 @@ import { OfertaFormacaoGraphqlMapper } from "./oferta-formacao.graphql.mapper";
 @Resolver(() => OfertaFormacaoFindOneOutputGraphQlDto)
 export class OfertaFormacaoGraphqlResolver {
   constructor(
-    @DeclareDependency(IOfertaFormacaoListQueryHandler)
-    private readonly listHandler: IOfertaFormacaoListQueryHandler,
-    @DeclareDependency(IOfertaFormacaoFindOneQueryHandler)
-    private readonly findOneHandler: IOfertaFormacaoFindOneQueryHandler,
-    @DeclareDependency(IOfertaFormacaoCreateCommandHandler)
-    private readonly createHandler: IOfertaFormacaoCreateCommandHandler,
-    @DeclareDependency(IOfertaFormacaoUpdateCommandHandler)
-    private readonly updateHandler: IOfertaFormacaoUpdateCommandHandler,
-    @DeclareDependency(IOfertaFormacaoDeleteCommandHandler)
-    private readonly deleteHandler: IOfertaFormacaoDeleteCommandHandler,
+    @DeclareDependency(IContainer)
+    private readonly container: IContainer,
   ) {}
 
   @Query(() => OfertaFormacaoListOutputGraphQlDto, { name: "ofertaFormacaoFindAll" })
@@ -46,7 +38,10 @@ export class OfertaFormacaoGraphqlResolver {
       input.selection = graphqlExtractSelection(info, "paginated");
     }
 
-    const result = await this.listHandler.execute({ accessContext, dto: input });
+    const listHandler = this.container.get<IOfertaFormacaoListQueryHandler>(
+      IOfertaFormacaoListQueryHandler,
+    );
+    const result = await listHandler.execute({ accessContext, dto: input });
     return OfertaFormacaoGraphqlMapper.toListOutputDto(result);
   }
 
@@ -57,7 +52,10 @@ export class OfertaFormacaoGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<OfertaFormacaoFindOneOutputGraphQlDto> {
     const selection = graphqlExtractSelection(info);
-    const result = await this.findOneHandler.execute({ accessContext, dto: { id, selection } });
+    const findOneHandler = this.container.get<IOfertaFormacaoFindOneQueryHandler>(
+      IOfertaFormacaoFindOneQueryHandler,
+    );
+    const result = await findOneHandler.execute({ accessContext, dto: { id, selection } });
     ensureExists(result, OfertaFormacao.entityName, id);
     return OfertaFormacaoGraphqlMapper.toFindOneOutputDto(result);
   }
@@ -69,7 +67,10 @@ export class OfertaFormacaoGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<OfertaFormacaoFindOneOutputGraphQlDto> {
     const input = OfertaFormacaoGraphqlMapper.toCreateInput(dto);
-    const result = await this.createHandler.execute({ accessContext, dto: input });
+    const createHandler = this.container.get<IOfertaFormacaoCreateCommandHandler>(
+      IOfertaFormacaoCreateCommandHandler,
+    );
+    const result = await createHandler.execute({ accessContext, dto: input });
     return OfertaFormacaoGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -81,7 +82,10 @@ export class OfertaFormacaoGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<OfertaFormacaoFindOneOutputGraphQlDto> {
     const input = OfertaFormacaoGraphqlMapper.toUpdateInput({ id }, dto);
-    const result = await this.updateHandler.execute({ accessContext, dto: input });
+    const updateHandler = this.container.get<IOfertaFormacaoUpdateCommandHandler>(
+      IOfertaFormacaoUpdateCommandHandler,
+    );
+    const result = await updateHandler.execute({ accessContext, dto: input });
     return OfertaFormacaoGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -90,6 +94,9 @@ export class OfertaFormacaoGraphqlResolver {
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
   ): Promise<boolean> {
-    return this.deleteHandler.execute({ accessContext, dto: { id } });
+    const deleteHandler = this.container.get<IOfertaFormacaoDeleteCommandHandler>(
+      IOfertaFormacaoDeleteCommandHandler,
+    );
+    return deleteHandler.execute({ accessContext, dto: { id } });
   }
 }

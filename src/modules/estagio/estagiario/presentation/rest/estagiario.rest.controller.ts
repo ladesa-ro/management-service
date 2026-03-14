@@ -8,7 +8,7 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { DeclareDependency, IContainer } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { IEstagiarioCreateCommandHandler } from "@/modules/estagio/estagiario/domain/commands/estagiario-create.command.handler.interface";
@@ -30,18 +30,7 @@ import { EstagiarioRestMapper } from "./estagiario.rest.mapper";
 @ApiTags("estagiarios")
 @Controller("/estagiarios")
 export class EstagiarioRestController {
-  constructor(
-    @DeclareDependency(IEstagiarioListQueryHandler)
-    private readonly listHandler: IEstagiarioListQueryHandler,
-    @DeclareDependency(IEstagiarioFindOneQueryHandler)
-    private readonly findOneHandler: IEstagiarioFindOneQueryHandler,
-    @DeclareDependency(IEstagiarioCreateCommandHandler)
-    private readonly createHandler: IEstagiarioCreateCommandHandler,
-    @DeclareDependency(IEstagiarioUpdateCommandHandler)
-    private readonly updateHandler: IEstagiarioUpdateCommandHandler,
-    @DeclareDependency(IEstagiarioDeleteCommandHandler)
-    private readonly deleteHandler: IEstagiarioDeleteCommandHandler,
-  ) {}
+  constructor(@DeclareDependency(IContainer) private readonly container: IContainer) {}
 
   @Get("/")
   @ApiOperation({ summary: "Lista estagiários", operationId: "estagiarioFindAll" })
@@ -51,8 +40,11 @@ export class EstagiarioRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Query() dto: EstagiarioListInputRestDto,
   ): Promise<EstagiarioListOutputRestDto> {
+    const listHandler = this.container.get<IEstagiarioListQueryHandler>(
+      IEstagiarioListQueryHandler,
+    );
     const input = EstagiarioRestMapper.toListInput(dto);
-    const result = await this.listHandler.execute({ accessContext, dto: input });
+    const result = await listHandler.execute({ accessContext, dto: input });
     return EstagiarioRestMapper.toListOutputDto(result);
   }
 
@@ -65,8 +57,11 @@ export class EstagiarioRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: EstagiarioFindOneInputRestDto,
   ): Promise<EstagiarioFindOneOutputRestDto> {
+    const findOneHandler = this.container.get<IEstagiarioFindOneQueryHandler>(
+      IEstagiarioFindOneQueryHandler,
+    );
     const input = EstagiarioRestMapper.toFindOneInput(params);
-    const result = await this.findOneHandler.execute({ accessContext, dto: input });
+    const result = await findOneHandler.execute({ accessContext, dto: input });
     ensureExists(result, Estagiario.entityName, input.id);
     return EstagiarioRestMapper.toFindOneOutputDto(result);
   }
@@ -80,8 +75,11 @@ export class EstagiarioRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Body() dto: EstagiarioCreateInputRestDto,
   ): Promise<EstagiarioFindOneOutputRestDto> {
+    const createHandler = this.container.get<IEstagiarioCreateCommandHandler>(
+      IEstagiarioCreateCommandHandler,
+    );
     const input = EstagiarioRestMapper.toCreateInput(dto);
-    const result = await this.createHandler.execute({ accessContext, dto: input });
+    const result = await createHandler.execute({ accessContext, dto: input });
     return EstagiarioRestMapper.toFindOneOutputDto(result);
   }
 
@@ -96,8 +94,11 @@ export class EstagiarioRestController {
     @Param() params: EstagiarioFindOneInputRestDto,
     @Body() dto: EstagiarioUpdateInputRestDto,
   ): Promise<EstagiarioFindOneOutputRestDto> {
+    const updateHandler = this.container.get<IEstagiarioUpdateCommandHandler>(
+      IEstagiarioUpdateCommandHandler,
+    );
     const input = EstagiarioRestMapper.toUpdateInput(dto);
-    const result = await this.updateHandler.execute({ accessContext, id: params.id, dto: input });
+    const result = await updateHandler.execute({ accessContext, id: params.id, dto: input });
     return EstagiarioRestMapper.toFindOneOutputDto(result);
   }
 
@@ -110,7 +111,10 @@ export class EstagiarioRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: EstagiarioFindOneInputRestDto,
   ): Promise<{ message: string }> {
-    await this.deleteHandler.execute({ accessContext, id: params.id });
+    const deleteHandler = this.container.get<IEstagiarioDeleteCommandHandler>(
+      IEstagiarioDeleteCommandHandler,
+    );
+    await deleteHandler.execute({ accessContext, id: params.id });
     return { message: "Estagiário deletado com sucesso" };
   }
 }

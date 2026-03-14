@@ -7,7 +7,7 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { DeclareDependency, IContainer } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { IDiarioPreferenciaAgrupamentoCreateCommandHandler } from "@/modules/ensino/diario-preferencia-agrupamento/domain/commands/diario-preferencia-agrupamento-create.command.handler.interface";
@@ -29,18 +29,7 @@ import { DiarioPreferenciaAgrupamentoRestMapper } from "./diario-preferencia-agr
 @ApiTags("diarios-preferencia-agrupamento")
 @Controller("/diarios-preferencia-agrupamento")
 export class DiarioPreferenciaAgrupamentoController {
-  constructor(
-    @DeclareDependency(IDiarioPreferenciaAgrupamentoListQueryHandler)
-    private readonly listHandler: IDiarioPreferenciaAgrupamentoListQueryHandler,
-    @DeclareDependency(IDiarioPreferenciaAgrupamentoFindOneQueryHandler)
-    private readonly findOneHandler: IDiarioPreferenciaAgrupamentoFindOneQueryHandler,
-    @DeclareDependency(IDiarioPreferenciaAgrupamentoCreateCommandHandler)
-    private readonly createHandler: IDiarioPreferenciaAgrupamentoCreateCommandHandler,
-    @DeclareDependency(IDiarioPreferenciaAgrupamentoUpdateCommandHandler)
-    private readonly updateHandler: IDiarioPreferenciaAgrupamentoUpdateCommandHandler,
-    @DeclareDependency(IDiarioPreferenciaAgrupamentoDeleteCommandHandler)
-    private readonly deleteHandler: IDiarioPreferenciaAgrupamentoDeleteCommandHandler,
-  ) {}
+  constructor(@DeclareDependency(IContainer) private readonly container: IContainer) {}
 
   @Get("/")
   @ApiOperation({
@@ -54,7 +43,10 @@ export class DiarioPreferenciaAgrupamentoController {
     @Query() dto: DiarioPreferenciaAgrupamentoListInputRestDto,
   ): Promise<DiarioPreferenciaAgrupamentoListOutputRestDto> {
     const input = DiarioPreferenciaAgrupamentoRestMapper.toListInput(dto);
-    const result = await this.listHandler.execute({ accessContext, dto: input });
+    const listHandler = this.container.get<IDiarioPreferenciaAgrupamentoListQueryHandler>(
+      IDiarioPreferenciaAgrupamentoListQueryHandler,
+    );
+    const result = await listHandler.execute({ accessContext, dto: input });
     return DiarioPreferenciaAgrupamentoRestMapper.toListOutputDto(result);
   }
 
@@ -71,7 +63,10 @@ export class DiarioPreferenciaAgrupamentoController {
     @Param() params: DiarioPreferenciaAgrupamentoFindOneInputRestDto,
   ): Promise<DiarioPreferenciaAgrupamentoFindOneOutputRestDto> {
     const input = DiarioPreferenciaAgrupamentoRestMapper.toFindOneInput(params);
-    const result = await this.findOneHandler.execute({ accessContext, dto: input });
+    const findOneHandler = this.container.get<IDiarioPreferenciaAgrupamentoFindOneQueryHandler>(
+      IDiarioPreferenciaAgrupamentoFindOneQueryHandler,
+    );
+    const result = await findOneHandler.execute({ accessContext, dto: input });
     ensureExists(result, DiarioPreferenciaAgrupamento.entityName, input.id);
     return DiarioPreferenciaAgrupamentoRestMapper.toFindOneOutputDto(result);
   }
@@ -88,7 +83,10 @@ export class DiarioPreferenciaAgrupamentoController {
     @Body() dto: DiarioPreferenciaAgrupamentoCreateInputRestDto,
   ): Promise<DiarioPreferenciaAgrupamentoFindOneOutputRestDto> {
     const input = DiarioPreferenciaAgrupamentoRestMapper.toCreateInput(dto);
-    const result = await this.createHandler.execute({ accessContext, dto: input });
+    const createHandler = this.container.get<IDiarioPreferenciaAgrupamentoCreateCommandHandler>(
+      IDiarioPreferenciaAgrupamentoCreateCommandHandler,
+    );
+    const result = await createHandler.execute({ accessContext, dto: input });
     return DiarioPreferenciaAgrupamentoRestMapper.toFindOneOutputDto(result);
   }
 
@@ -106,7 +104,10 @@ export class DiarioPreferenciaAgrupamentoController {
     @Body() dto: DiarioPreferenciaAgrupamentoUpdateInputRestDto,
   ): Promise<DiarioPreferenciaAgrupamentoFindOneOutputRestDto> {
     const input = DiarioPreferenciaAgrupamentoRestMapper.toUpdateInput(params, dto);
-    const result = await this.updateHandler.execute({ accessContext, dto: input });
+    const updateHandler = this.container.get<IDiarioPreferenciaAgrupamentoUpdateCommandHandler>(
+      IDiarioPreferenciaAgrupamentoUpdateCommandHandler,
+    );
+    const result = await updateHandler.execute({ accessContext, dto: input });
     return DiarioPreferenciaAgrupamentoRestMapper.toFindOneOutputDto(result);
   }
 
@@ -123,6 +124,9 @@ export class DiarioPreferenciaAgrupamentoController {
     @Param() params: DiarioPreferenciaAgrupamentoFindOneInputRestDto,
   ): Promise<boolean> {
     const input = DiarioPreferenciaAgrupamentoRestMapper.toFindOneInput(params);
-    return this.deleteHandler.execute({ accessContext, dto: input });
+    const deleteHandler = this.container.get<IDiarioPreferenciaAgrupamentoDeleteCommandHandler>(
+      IDiarioPreferenciaAgrupamentoDeleteCommandHandler,
+    );
+    return deleteHandler.execute({ accessContext, dto: input });
   }
 }

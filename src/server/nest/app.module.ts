@@ -14,7 +14,13 @@ import {
 import { ModulesModule } from "@/server/nest/modules/modules.module";
 
 @Module({
-  imports: [ModulesModule, InfrastructureModule, AccessContextCoreModule, TransactionModule, ContainerModule],
+  imports: [
+    ModulesModule,
+    InfrastructureModule,
+    AccessContextCoreModule,
+    TransactionModule,
+    ContainerModule,
+  ],
   controllers: [AppController],
   providers: [
     AppService,

@@ -1,6 +1,6 @@
 import { Args, Info, Int, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { DeclareDependency, IContainer } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextGraphQL } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
@@ -16,12 +16,7 @@ import { CidadeGraphqlMapper } from "./cidade.graphql.mapper";
 
 @Resolver(() => CidadeFindOneOutputGraphQlDto)
 export class CidadeGraphqlResolver {
-  constructor(
-    @DeclareDependency(ICidadeListQueryHandler)
-    private readonly listHandler: ICidadeListQueryHandler,
-    @DeclareDependency(ICidadeFindOneQueryHandler)
-    private readonly findOneHandler: ICidadeFindOneQueryHandler,
-  ) {}
+  constructor(@DeclareDependency(IContainer) private readonly container: IContainer) {}
 
   @Query(() => CidadeListOutputGraphQlDto, { name: "cidadeFindAll" })
   async findAll(
@@ -35,7 +30,8 @@ export class CidadeGraphqlResolver {
       input.selection = graphqlExtractSelection(info, "paginated");
     }
 
-    const result = await this.listHandler.execute({ accessContext, dto: input });
+    const listHandler = this.container.get<ICidadeListQueryHandler>(ICidadeListQueryHandler);
+    const result = await listHandler.execute({ accessContext, dto: input });
     return CidadeGraphqlMapper.toListOutputDto(result);
   }
 
@@ -46,7 +42,10 @@ export class CidadeGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<CidadeFindOneOutputGraphQlDto> {
     const selection = graphqlExtractSelection(info);
-    const result = await this.findOneHandler.execute({ accessContext, dto: { id, selection } });
+    const findOneHandler = this.container.get<ICidadeFindOneQueryHandler>(
+      ICidadeFindOneQueryHandler,
+    );
+    const result = await findOneHandler.execute({ accessContext, dto: { id, selection } });
     ensureExists(result, Cidade.entityName, id);
     return CidadeGraphqlMapper.toFindOneOutputDto(result);
   }

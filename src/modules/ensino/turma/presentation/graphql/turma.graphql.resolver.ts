@@ -1,6 +1,6 @@
 import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { DeclareDependency, IContainer } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextGraphQL } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
@@ -21,17 +21,7 @@ import { TurmaGraphqlMapper } from "./turma.graphql.mapper";
 
 @Resolver(() => TurmaFindOneOutputGraphQlDto)
 export class TurmaGraphqlResolver {
-  constructor(
-    @DeclareDependency(ITurmaListQueryHandler) private readonly listHandler: ITurmaListQueryHandler,
-    @DeclareDependency(ITurmaFindOneQueryHandler)
-    private readonly findOneHandler: ITurmaFindOneQueryHandler,
-    @DeclareDependency(ITurmaCreateCommandHandler)
-    private readonly createHandler: ITurmaCreateCommandHandler,
-    @DeclareDependency(ITurmaUpdateCommandHandler)
-    private readonly updateHandler: ITurmaUpdateCommandHandler,
-    @DeclareDependency(ITurmaDeleteCommandHandler)
-    private readonly deleteHandler: ITurmaDeleteCommandHandler,
-  ) {}
+  constructor(@DeclareDependency(IContainer) private readonly container: IContainer) {}
 
   @Query(() => TurmaListOutputGraphQlDto, { name: "turmaFindAll" })
   async findAll(
@@ -45,7 +35,8 @@ export class TurmaGraphqlResolver {
       input.selection = graphqlExtractSelection(info, "paginated");
     }
 
-    const result = await this.listHandler.execute({ accessContext, dto: input });
+    const listHandler = this.container.get<ITurmaListQueryHandler>(ITurmaListQueryHandler);
+    const result = await listHandler.execute({ accessContext, dto: input });
     return TurmaGraphqlMapper.toListOutputDto(result);
   }
 
@@ -56,7 +47,8 @@ export class TurmaGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<TurmaFindOneOutputGraphQlDto> {
     const selection = graphqlExtractSelection(info);
-    const result = await this.findOneHandler.execute({ accessContext, dto: { id, selection } });
+    const findOneHandler = this.container.get<ITurmaFindOneQueryHandler>(ITurmaFindOneQueryHandler);
+    const result = await findOneHandler.execute({ accessContext, dto: { id, selection } });
     ensureExists(result, Turma.entityName, id);
     return TurmaGraphqlMapper.toFindOneOutputDto(result);
   }
@@ -68,7 +60,10 @@ export class TurmaGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<TurmaFindOneOutputGraphQlDto> {
     const input = TurmaGraphqlMapper.toCreateInput(dto);
-    const result = await this.createHandler.execute({ accessContext, dto: input });
+    const createHandler = this.container.get<ITurmaCreateCommandHandler>(
+      ITurmaCreateCommandHandler,
+    );
+    const result = await createHandler.execute({ accessContext, dto: input });
     return TurmaGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -80,7 +75,10 @@ export class TurmaGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<TurmaFindOneOutputGraphQlDto> {
     const input = TurmaGraphqlMapper.toUpdateInput({ id }, dto);
-    const result = await this.updateHandler.execute({ accessContext, dto: input });
+    const updateHandler = this.container.get<ITurmaUpdateCommandHandler>(
+      ITurmaUpdateCommandHandler,
+    );
+    const result = await updateHandler.execute({ accessContext, dto: input });
     return TurmaGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -89,6 +87,9 @@ export class TurmaGraphqlResolver {
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
   ): Promise<boolean> {
-    return this.deleteHandler.execute({ accessContext, dto: { id } });
+    const deleteHandler = this.container.get<ITurmaDeleteCommandHandler>(
+      ITurmaDeleteCommandHandler,
+    );
+    return deleteHandler.execute({ accessContext, dto: { id } });
   }
 }

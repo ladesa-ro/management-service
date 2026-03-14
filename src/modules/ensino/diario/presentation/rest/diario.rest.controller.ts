@@ -7,7 +7,7 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { DeclareDependency, IContainer } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { IDiarioCreateCommandHandler } from "@/modules/ensino/diario/domain/commands/diario-create.command.handler.interface";
@@ -29,18 +29,7 @@ import { DiarioRestMapper } from "./diario.rest.mapper";
 @ApiTags("diarios")
 @Controller("/diarios")
 export class DiarioRestController {
-  constructor(
-    @DeclareDependency(IDiarioListQueryHandler)
-    private readonly listHandler: IDiarioListQueryHandler,
-    @DeclareDependency(IDiarioFindOneQueryHandler)
-    private readonly findOneHandler: IDiarioFindOneQueryHandler,
-    @DeclareDependency(IDiarioCreateCommandHandler)
-    private readonly createHandler: IDiarioCreateCommandHandler,
-    @DeclareDependency(IDiarioUpdateCommandHandler)
-    private readonly updateHandler: IDiarioUpdateCommandHandler,
-    @DeclareDependency(IDiarioDeleteCommandHandler)
-    private readonly deleteHandler: IDiarioDeleteCommandHandler,
-  ) {}
+  constructor(@DeclareDependency(IContainer) private readonly container: IContainer) {}
 
   @Get("/")
   @ApiOperation({ summary: "Lista diarios", operationId: "diarioFindAll" })
@@ -51,7 +40,8 @@ export class DiarioRestController {
     @Query() dto: DiarioListInputRestDto,
   ): Promise<DiarioListOutputRestDto> {
     const input = DiarioRestMapper.toListInput(dto);
-    const result = await this.listHandler.execute({ accessContext, dto: input });
+    const listHandler = this.container.get<IDiarioListQueryHandler>(IDiarioListQueryHandler);
+    const result = await listHandler.execute({ accessContext, dto: input });
     return DiarioRestMapper.toListOutputDto(result);
   }
 
@@ -65,7 +55,10 @@ export class DiarioRestController {
     @Param() params: DiarioFindOneInputRestDto,
   ): Promise<DiarioFindOneOutputRestDto> {
     const input = DiarioRestMapper.toFindOneInput(params);
-    const result = await this.findOneHandler.execute({ accessContext, dto: input });
+    const findOneHandler = this.container.get<IDiarioFindOneQueryHandler>(
+      IDiarioFindOneQueryHandler,
+    );
+    const result = await findOneHandler.execute({ accessContext, dto: input });
     ensureExists(result, Diario.entityName, input.id);
     return DiarioRestMapper.toFindOneOutputDto(result);
   }
@@ -79,7 +72,10 @@ export class DiarioRestController {
     @Body() dto: DiarioCreateInputRestDto,
   ): Promise<DiarioFindOneOutputRestDto> {
     const input = DiarioRestMapper.toCreateInput(dto);
-    const result = await this.createHandler.execute({ accessContext, dto: input });
+    const createHandler = this.container.get<IDiarioCreateCommandHandler>(
+      IDiarioCreateCommandHandler,
+    );
+    const result = await createHandler.execute({ accessContext, dto: input });
     return DiarioRestMapper.toFindOneOutputDto(result);
   }
 
@@ -94,7 +90,10 @@ export class DiarioRestController {
     @Body() dto: DiarioUpdateInputRestDto,
   ): Promise<DiarioFindOneOutputRestDto> {
     const input = DiarioRestMapper.toUpdateInput(params, dto);
-    const result = await this.updateHandler.execute({ accessContext, dto: input });
+    const updateHandler = this.container.get<IDiarioUpdateCommandHandler>(
+      IDiarioUpdateCommandHandler,
+    );
+    const result = await updateHandler.execute({ accessContext, dto: input });
     return DiarioRestMapper.toFindOneOutputDto(result);
   }
 
@@ -108,6 +107,9 @@ export class DiarioRestController {
     @Param() params: DiarioFindOneInputRestDto,
   ): Promise<boolean> {
     const input = DiarioRestMapper.toFindOneInput(params);
-    return this.deleteHandler.execute({ accessContext, dto: input });
+    const deleteHandler = this.container.get<IDiarioDeleteCommandHandler>(
+      IDiarioDeleteCommandHandler,
+    );
+    return deleteHandler.execute({ accessContext, dto: input });
   }
 }

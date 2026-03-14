@@ -7,7 +7,7 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { DeclareDependency, IContainer } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { IOfertaFormacaoNivelFormacaoCreateCommandHandler } from "@/modules/ensino/oferta-formacao-nivel-formacao/domain/commands/oferta-formacao-nivel-formacao-create.command.handler.interface";
@@ -29,18 +29,7 @@ import { OfertaFormacaoNivelFormacaoRestMapper } from "./oferta-formacao-nivel-f
 @ApiTags("ofertas-formacoes-niveis-formacoes")
 @Controller("/ofertas-formacoes-niveis-formacoes")
 export class OfertaFormacaoNivelFormacaoRestController {
-  constructor(
-    @DeclareDependency(IOfertaFormacaoNivelFormacaoListQueryHandler)
-    private readonly listHandler: IOfertaFormacaoNivelFormacaoListQueryHandler,
-    @DeclareDependency(IOfertaFormacaoNivelFormacaoFindOneQueryHandler)
-    private readonly findOneHandler: IOfertaFormacaoNivelFormacaoFindOneQueryHandler,
-    @DeclareDependency(IOfertaFormacaoNivelFormacaoCreateCommandHandler)
-    private readonly createHandler: IOfertaFormacaoNivelFormacaoCreateCommandHandler,
-    @DeclareDependency(IOfertaFormacaoNivelFormacaoUpdateCommandHandler)
-    private readonly updateHandler: IOfertaFormacaoNivelFormacaoUpdateCommandHandler,
-    @DeclareDependency(IOfertaFormacaoNivelFormacaoDeleteCommandHandler)
-    private readonly deleteHandler: IOfertaFormacaoNivelFormacaoDeleteCommandHandler,
-  ) {}
+  constructor(@DeclareDependency(IContainer) private readonly container: IContainer) {}
 
   @Get("/")
   @ApiOperation({
@@ -54,7 +43,10 @@ export class OfertaFormacaoNivelFormacaoRestController {
     @Query() dto: OfertaFormacaoNivelFormacaoListInputRestDto,
   ): Promise<OfertaFormacaoNivelFormacaoListOutputRestDto> {
     const input = OfertaFormacaoNivelFormacaoRestMapper.toListInput(dto);
-    const result = await this.listHandler.execute({ accessContext, dto: input });
+    const listHandler = this.container.get<IOfertaFormacaoNivelFormacaoListQueryHandler>(
+      IOfertaFormacaoNivelFormacaoListQueryHandler,
+    );
+    const result = await listHandler.execute({ accessContext, dto: input });
     return OfertaFormacaoNivelFormacaoRestMapper.toListOutputDto(result);
   }
 
@@ -71,7 +63,10 @@ export class OfertaFormacaoNivelFormacaoRestController {
     @Param() params: OfertaFormacaoNivelFormacaoFindOneInputRestDto,
   ): Promise<OfertaFormacaoNivelFormacaoFindOneOutputRestDto> {
     const input = OfertaFormacaoNivelFormacaoRestMapper.toFindOneInput(params);
-    const result = await this.findOneHandler.execute({ accessContext, dto: input });
+    const findOneHandler = this.container.get<IOfertaFormacaoNivelFormacaoFindOneQueryHandler>(
+      IOfertaFormacaoNivelFormacaoFindOneQueryHandler,
+    );
+    const result = await findOneHandler.execute({ accessContext, dto: input });
     ensureExists(result, OfertaFormacaoNivelFormacao.entityName, input.id);
     return OfertaFormacaoNivelFormacaoRestMapper.toFindOneOutputDto(result);
   }
@@ -88,7 +83,10 @@ export class OfertaFormacaoNivelFormacaoRestController {
     @Body() dto: OfertaFormacaoNivelFormacaoCreateInputRestDto,
   ): Promise<OfertaFormacaoNivelFormacaoFindOneOutputRestDto> {
     const input = OfertaFormacaoNivelFormacaoRestMapper.toCreateInput(dto);
-    const result = await this.createHandler.execute({ accessContext, dto: input });
+    const createHandler = this.container.get<IOfertaFormacaoNivelFormacaoCreateCommandHandler>(
+      IOfertaFormacaoNivelFormacaoCreateCommandHandler,
+    );
+    const result = await createHandler.execute({ accessContext, dto: input });
     return OfertaFormacaoNivelFormacaoRestMapper.toFindOneOutputDto(result);
   }
 
@@ -106,7 +104,10 @@ export class OfertaFormacaoNivelFormacaoRestController {
     @Body() dto: OfertaFormacaoNivelFormacaoUpdateInputRestDto,
   ): Promise<OfertaFormacaoNivelFormacaoFindOneOutputRestDto> {
     const input = OfertaFormacaoNivelFormacaoRestMapper.toUpdateInput(params, dto);
-    const result = await this.updateHandler.execute({ accessContext, dto: input });
+    const updateHandler = this.container.get<IOfertaFormacaoNivelFormacaoUpdateCommandHandler>(
+      IOfertaFormacaoNivelFormacaoUpdateCommandHandler,
+    );
+    const result = await updateHandler.execute({ accessContext, dto: input });
     return OfertaFormacaoNivelFormacaoRestMapper.toFindOneOutputDto(result);
   }
 
@@ -123,6 +124,9 @@ export class OfertaFormacaoNivelFormacaoRestController {
     @Param() params: OfertaFormacaoNivelFormacaoFindOneInputRestDto,
   ): Promise<boolean> {
     const input = OfertaFormacaoNivelFormacaoRestMapper.toFindOneInput(params);
-    return this.deleteHandler.execute({ accessContext, dto: input });
+    const deleteHandler = this.container.get<IOfertaFormacaoNivelFormacaoDeleteCommandHandler>(
+      IOfertaFormacaoNivelFormacaoDeleteCommandHandler,
+    );
+    return deleteHandler.execute({ accessContext, dto: input });
   }
 }

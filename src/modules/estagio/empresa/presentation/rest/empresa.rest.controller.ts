@@ -8,7 +8,7 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { DeclareDependency, IContainer } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { IEmpresaCreateCommandHandler } from "@/modules/estagio/empresa/domain/commands/empresa-create.command.handler.interface";
@@ -30,18 +30,7 @@ import { EmpresaRestMapper } from "./empresa.rest.mapper";
 @ApiTags("empresas")
 @Controller("/empresas")
 export class EmpresaRestController {
-  constructor(
-    @DeclareDependency(IEmpresaListQueryHandler)
-    private readonly listHandler: IEmpresaListQueryHandler,
-    @DeclareDependency(IEmpresaFindOneQueryHandler)
-    private readonly findOneHandler: IEmpresaFindOneQueryHandler,
-    @DeclareDependency(IEmpresaCreateCommandHandler)
-    private readonly createHandler: IEmpresaCreateCommandHandler,
-    @DeclareDependency(IEmpresaUpdateCommandHandler)
-    private readonly updateHandler: IEmpresaUpdateCommandHandler,
-    @DeclareDependency(IEmpresaDeleteCommandHandler)
-    private readonly deleteHandler: IEmpresaDeleteCommandHandler,
-  ) {}
+  constructor(@DeclareDependency(IContainer) private readonly container: IContainer) {}
 
   @Get("/")
   @ApiOperation({ summary: "Lista empresas", operationId: "empresaFindAll" })
@@ -51,8 +40,9 @@ export class EmpresaRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Query() dto: EmpresaListInputRestDto,
   ): Promise<EmpresaListOutputRestDto> {
+    const listHandler = this.container.get<IEmpresaListQueryHandler>(IEmpresaListQueryHandler);
     const input = EmpresaRestMapper.toListInput(dto);
-    const result = await this.listHandler.execute({ accessContext, dto: input });
+    const result = await listHandler.execute({ accessContext, dto: input });
     return EmpresaRestMapper.toListOutputDto(result);
   }
 
@@ -65,8 +55,11 @@ export class EmpresaRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: EmpresaFindOneInputRestDto,
   ): Promise<EmpresaFindOneOutputRestDto> {
+    const findOneHandler = this.container.get<IEmpresaFindOneQueryHandler>(
+      IEmpresaFindOneQueryHandler,
+    );
     const input = EmpresaRestMapper.toFindOneInput(params);
-    const result = await this.findOneHandler.execute({ accessContext, dto: input });
+    const result = await findOneHandler.execute({ accessContext, dto: input });
     ensureExists(result, Empresa.entityName, input.id);
     return EmpresaRestMapper.toFindOneOutputDto(result);
   }
@@ -80,8 +73,11 @@ export class EmpresaRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Body() dto: EmpresaCreateInputRestDto,
   ): Promise<EmpresaFindOneOutputRestDto> {
+    const createHandler = this.container.get<IEmpresaCreateCommandHandler>(
+      IEmpresaCreateCommandHandler,
+    );
     const input = EmpresaRestMapper.toCreateInput(dto);
-    const result = await this.createHandler.execute({ accessContext, dto: input });
+    const result = await createHandler.execute({ accessContext, dto: input });
     return EmpresaRestMapper.toFindOneOutputDto(result);
   }
 
@@ -96,8 +92,11 @@ export class EmpresaRestController {
     @Param() params: EmpresaFindOneInputRestDto,
     @Body() dto: EmpresaUpdateInputRestDto,
   ): Promise<EmpresaFindOneOutputRestDto> {
+    const updateHandler = this.container.get<IEmpresaUpdateCommandHandler>(
+      IEmpresaUpdateCommandHandler,
+    );
     const input = EmpresaRestMapper.toUpdateInput(dto);
-    const result = await this.updateHandler.execute({ accessContext, id: params.id, dto: input });
+    const result = await updateHandler.execute({ accessContext, id: params.id, dto: input });
     return EmpresaRestMapper.toFindOneOutputDto(result);
   }
 
@@ -110,7 +109,10 @@ export class EmpresaRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: EmpresaFindOneInputRestDto,
   ): Promise<{ message: string }> {
-    await this.deleteHandler.execute({ accessContext, id: params.id });
+    const deleteHandler = this.container.get<IEmpresaDeleteCommandHandler>(
+      IEmpresaDeleteCommandHandler,
+    );
+    await deleteHandler.execute({ accessContext, id: params.id });
     return { message: "Empresa deletada com sucesso" };
   }
 }

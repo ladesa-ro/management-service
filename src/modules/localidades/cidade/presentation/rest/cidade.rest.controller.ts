@@ -6,7 +6,7 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { DeclareDependency, IContainer } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { Cidade } from "@/modules/localidades/cidade/domain/cidade.domain";
@@ -23,12 +23,7 @@ import { CidadeRestMapper } from "./cidade.rest.mapper";
 @ApiTags("cidades")
 @Controller("/base/cidades")
 export class CidadeRestController {
-  constructor(
-    @DeclareDependency(ICidadeListQueryHandler)
-    private readonly listHandler: ICidadeListQueryHandler,
-    @DeclareDependency(ICidadeFindOneQueryHandler)
-    private readonly findOneHandler: ICidadeFindOneQueryHandler,
-  ) {}
+  constructor(@DeclareDependency(IContainer) private readonly container: IContainer) {}
 
   @Get("/")
   @ApiOperation({ summary: "Lista cidades", operationId: "cidadeFindAll" })
@@ -38,8 +33,9 @@ export class CidadeRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Query() dto: CidadeListInputRestDto,
   ): Promise<CidadeListOutputRestDto> {
+    const listHandler = this.container.get<ICidadeListQueryHandler>(ICidadeListQueryHandler);
     const input = CidadeRestMapper.toListInput(dto);
-    const result = await this.listHandler.execute({ accessContext, dto: input });
+    const result = await listHandler.execute({ accessContext, dto: input });
     return CidadeRestMapper.toListOutputDto(result);
   }
 
@@ -52,8 +48,11 @@ export class CidadeRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: CidadeFindOneInputRestDto,
   ): Promise<CidadeFindOneOutputRestDto> {
+    const findOneHandler = this.container.get<ICidadeFindOneQueryHandler>(
+      ICidadeFindOneQueryHandler,
+    );
     const input = CidadeRestMapper.toFindOneInput(params);
-    const result = await this.findOneHandler.execute({ accessContext, dto: input });
+    const result = await findOneHandler.execute({ accessContext, dto: input });
     ensureExists(result, Cidade.entityName, input.id);
     return CidadeRestMapper.toFindOneOutputDto(result);
   }

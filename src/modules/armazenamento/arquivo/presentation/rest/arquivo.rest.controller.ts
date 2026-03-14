@@ -6,7 +6,7 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { DeclareDependency, IContainer } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
 import {
   IArquivoGetStreamableFileQueryHandler,
@@ -18,10 +18,7 @@ import { ArquivoRestMapper } from "./arquivo.rest.mapper";
 @ApiTags("arquivos")
 @Controller("/arquivos")
 export class ArquivoRestController {
-  constructor(
-    @DeclareDependency(IArquivoGetStreamableFileQueryHandler)
-    private readonly getStreamableFileHandler: IArquivoGetStreamableFileQueryHandlerType,
-  ) {}
+  constructor(@DeclareDependency(IContainer) private readonly container: IContainer) {}
 
   @Get(":id")
   @ApiOperation({ summary: "Busca um arquivo por ID", operationId: "arquivoFindById" })
@@ -33,7 +30,10 @@ export class ArquivoRestController {
     @Param() params: ArquivoFindOneInputRestDto,
     @Query() query: ArquivoGetFileQueryInputRestDto,
   ): Promise<StreamableFile> {
+    const getStreamableFileHandler = this.container.get<IArquivoGetStreamableFileQueryHandlerType>(
+      IArquivoGetStreamableFileQueryHandler,
+    );
     const input = ArquivoRestMapper.toGetFileInput(params, query);
-    return this.getStreamableFileHandler.execute({ accessContext, input });
+    return getStreamableFileHandler.execute({ accessContext, input });
   }
 }

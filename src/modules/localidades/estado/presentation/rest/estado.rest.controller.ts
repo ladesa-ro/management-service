@@ -6,7 +6,7 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { DeclareDependency, IContainer } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { Estado } from "@/modules/localidades/estado/domain/estado.domain";
@@ -23,12 +23,7 @@ import { EstadoRestMapper } from "./estado.rest.mapper";
 @ApiTags("estados")
 @Controller("/base/estados")
 export class EstadoRestController {
-  constructor(
-    @DeclareDependency(IEstadoListQueryHandler)
-    private readonly listHandler: IEstadoListQueryHandler,
-    @DeclareDependency(IEstadoFindOneQueryHandler)
-    private readonly findOneHandler: IEstadoFindOneQueryHandler,
-  ) {}
+  constructor(@DeclareDependency(IContainer) private readonly container: IContainer) {}
 
   @Get("/")
   @ApiOperation({ summary: "Lista estados", operationId: "estadoFindAll" })
@@ -38,8 +33,9 @@ export class EstadoRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Query() dto: EstadoListInputRestDto,
   ): Promise<EstadoListOutputRestDto> {
+    const listHandler = this.container.get<IEstadoListQueryHandler>(IEstadoListQueryHandler);
     const input = EstadoRestMapper.toListInput(dto);
-    const result = await this.listHandler.execute({ accessContext, dto: input });
+    const result = await listHandler.execute({ accessContext, dto: input });
     return EstadoRestMapper.toListOutputDto(result);
   }
 
@@ -52,8 +48,11 @@ export class EstadoRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: EstadoFindOneInputRestDto,
   ): Promise<EstadoFindOneOutputRestDto> {
+    const findOneHandler = this.container.get<IEstadoFindOneQueryHandler>(
+      IEstadoFindOneQueryHandler,
+    );
     const input = EstadoRestMapper.toFindOneInput(params);
-    const result = await this.findOneHandler.execute({ accessContext, dto: input });
+    const result = await findOneHandler.execute({ accessContext, dto: input });
     ensureExists(result, Estado.entityName, input.id);
     return EstadoRestMapper.toFindOneOutputDto(result);
   }

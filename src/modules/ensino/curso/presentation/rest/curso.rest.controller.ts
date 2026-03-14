@@ -22,7 +22,7 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { DeclareDependency, IContainer } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { ICursoCreateCommandHandler } from "@/modules/ensino/curso/domain/commands/curso-create.command.handler.interface";
@@ -46,21 +46,7 @@ import { CursoRestMapper } from "./curso.rest.mapper";
 @ApiTags("cursos")
 @Controller("/cursos")
 export class CursoRestController {
-  constructor(
-    @DeclareDependency(ICursoListQueryHandler) private readonly listHandler: ICursoListQueryHandler,
-    @DeclareDependency(ICursoFindOneQueryHandler)
-    private readonly findOneHandler: ICursoFindOneQueryHandler,
-    @DeclareDependency(ICursoCreateCommandHandler)
-    private readonly createHandler: ICursoCreateCommandHandler,
-    @DeclareDependency(ICursoUpdateCommandHandler)
-    private readonly updateHandler: ICursoUpdateCommandHandler,
-    @DeclareDependency(ICursoDeleteCommandHandler)
-    private readonly deleteHandler: ICursoDeleteCommandHandler,
-    @DeclareDependency(ICursoUpdateImagemCapaCommandHandler)
-    private readonly updateImagemCapaHandler: ICursoUpdateImagemCapaCommandHandler,
-    @DeclareDependency(ICursoGetImagemCapaQueryHandler)
-    private readonly getImagemCapaHandler: ICursoGetImagemCapaQueryHandler,
-  ) {}
+  constructor(@DeclareDependency(IContainer) private readonly container: IContainer) {}
 
   @Get("/")
   @ApiOperation({ summary: "Lista cursos", operationId: "cursoFindAll" })
@@ -71,7 +57,8 @@ export class CursoRestController {
     @Query() dto: CursoListInputRestDto,
   ): Promise<CursoListOutputRestDto> {
     const input = CursoRestMapper.toListInput(dto);
-    const result = await this.listHandler.execute({ accessContext, dto: input });
+    const listHandler = this.container.get<ICursoListQueryHandler>(ICursoListQueryHandler);
+    const result = await listHandler.execute({ accessContext, dto: input });
     return CursoRestMapper.toListOutputDto(result as any);
   }
 
@@ -85,7 +72,8 @@ export class CursoRestController {
     @Param() params: CursoFindOneInputRestDto,
   ): Promise<CursoFindOneOutputRestDto> {
     const input = CursoRestMapper.toFindOneInput(params);
-    const result = await this.findOneHandler.execute({ accessContext, dto: input });
+    const findOneHandler = this.container.get<ICursoFindOneQueryHandler>(ICursoFindOneQueryHandler);
+    const result = await findOneHandler.execute({ accessContext, dto: input });
     ensureExists(result, Curso.entityName, input.id);
     return CursoRestMapper.toFindOneOutputDto(result as any);
   }
@@ -99,7 +87,10 @@ export class CursoRestController {
     @Body() dto: CursoCreateInputRestDto,
   ): Promise<CursoFindOneOutputRestDto> {
     const input = CursoRestMapper.toCreateInput(dto);
-    const result = await this.createHandler.execute({ accessContext, dto: input });
+    const createHandler = this.container.get<ICursoCreateCommandHandler>(
+      ICursoCreateCommandHandler,
+    );
+    const result = await createHandler.execute({ accessContext, dto: input });
     return CursoRestMapper.toFindOneOutputDto(result as any);
   }
 
@@ -114,7 +105,10 @@ export class CursoRestController {
     @Body() dto: CursoUpdateInputRestDto,
   ): Promise<CursoFindOneOutputRestDto> {
     const input = CursoRestMapper.toUpdateInput(params, dto);
-    const result = await this.updateHandler.execute({ accessContext, dto: input });
+    const updateHandler = this.container.get<ICursoUpdateCommandHandler>(
+      ICursoUpdateCommandHandler,
+    );
+    const result = await updateHandler.execute({ accessContext, dto: input });
     return CursoRestMapper.toFindOneOutputDto(result as any);
   }
 
@@ -127,7 +121,10 @@ export class CursoRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: CursoFindOneInputRestDto,
   ) {
-    return this.getImagemCapaHandler.execute({ accessContext, id: params.id });
+    const getImagemCapaHandler = this.container.get<ICursoGetImagemCapaQueryHandler>(
+      ICursoGetImagemCapaQueryHandler,
+    );
+    return getImagemCapaHandler.execute({ accessContext, id: params.id });
   }
 
   @Put("/:id/imagem/capa")
@@ -154,7 +151,10 @@ export class CursoRestController {
     @Param() params: CursoFindOneInputRestDto,
     @UploadedFile() file: Express.Multer.File,
   ): Promise<boolean> {
-    return this.updateImagemCapaHandler.execute({ accessContext, dto: params, file });
+    const updateImagemCapaHandler = this.container.get<ICursoUpdateImagemCapaCommandHandler>(
+      ICursoUpdateImagemCapaCommandHandler,
+    );
+    return updateImagemCapaHandler.execute({ accessContext, dto: params, file });
   }
 
   @Delete("/:id")
@@ -167,6 +167,9 @@ export class CursoRestController {
     @Param() params: CursoFindOneInputRestDto,
   ): Promise<boolean> {
     const input = CursoRestMapper.toFindOneInput(params);
-    return this.deleteHandler.execute({ accessContext, dto: input });
+    const deleteHandler = this.container.get<ICursoDeleteCommandHandler>(
+      ICursoDeleteCommandHandler,
+    );
+    return deleteHandler.execute({ accessContext, dto: input });
   }
 }

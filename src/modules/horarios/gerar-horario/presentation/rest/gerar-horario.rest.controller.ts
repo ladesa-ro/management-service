@@ -1,6 +1,6 @@
 import { Controller, Get } from "@nestjs/common";
 import { ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { DeclareDependency, IContainer } from "@/domain/dependency-injection";
 import {
   type GenerateRequest,
   type ServiceGenerateResponse,
@@ -10,10 +10,7 @@ import { IGerarHorarioPublishTimetableRequestCommandHandler } from "@/modules/ho
 @ApiTags("gerar-horario")
 @Controller("/gerar-horario")
 export class GerarHorarioRestController {
-  constructor(
-    @DeclareDependency(IGerarHorarioPublishTimetableRequestCommandHandler)
-    private readonly publishTimetableRequestHandler: IGerarHorarioPublishTimetableRequestCommandHandler,
-  ) {}
+  constructor(@DeclareDependency(IContainer) private readonly container: IContainer) {}
 
   @Get("/poc")
   @ApiOperation({
@@ -81,7 +78,11 @@ export class GerarHorarioRestController {
       previous_timetable_grid: null,
     };
 
-    return this.publishTimetableRequestHandler.execute({
+    const publishTimetableRequestHandler =
+      this.container.get<IGerarHorarioPublishTimetableRequestCommandHandler>(
+        IGerarHorarioPublishTimetableRequestCommandHandler,
+      );
+    return publishTimetableRequestHandler.execute({
       request,
     }) as Promise<ServiceGenerateResponse>;
   }

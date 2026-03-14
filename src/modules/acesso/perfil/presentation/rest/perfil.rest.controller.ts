@@ -7,7 +7,7 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { DeclareDependency, IContainer } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
 import { IPerfilSetVinculosCommandHandler } from "@/modules/acesso/perfil/domain/commands/perfil-set-vinculos.command.handler.interface";
 import { IPerfilFindOneQueryHandler } from "@/modules/acesso/perfil/domain/queries/perfil-find-one.query.handler.interface";
@@ -24,14 +24,7 @@ import { PerfilRestMapper } from "./perfil.rest.mapper";
 @ApiTags("perfis")
 @Controller("/perfis")
 export class PerfilRestController {
-  constructor(
-    @DeclareDependency(IPerfilListQueryHandler)
-    private readonly listHandler: IPerfilListQueryHandler,
-    @DeclareDependency(IPerfilFindOneQueryHandler)
-    private readonly findOneHandler: IPerfilFindOneQueryHandler,
-    @DeclareDependency(IPerfilSetVinculosCommandHandler)
-    private readonly setVinculosHandler: IPerfilSetVinculosCommandHandler,
-  ) {}
+  constructor(@DeclareDependency(IContainer) private readonly container: IContainer) {}
 
   @Get("/")
   @ApiOperation({ summary: "Lista perfis", operationId: "perfilFindAll" })
@@ -41,8 +34,9 @@ export class PerfilRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Query() dto: PerfilListInputRestDto,
   ): Promise<PerfilListOutputRestDto> {
+    const listHandler = this.container.get<IPerfilListQueryHandler>(IPerfilListQueryHandler);
     const input = PerfilRestMapper.toListInput(dto);
-    const result = await this.listHandler.execute({ accessContext, dto: input });
+    const result = await listHandler.execute({ accessContext, dto: input });
     return PerfilRestMapper.toListOutputDto(result);
   }
 
@@ -55,8 +49,11 @@ export class PerfilRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: PerfilFindOneInputRestDto,
   ): Promise<PerfilFindOneOutputRestDto | null> {
+    const findOneHandler = this.container.get<IPerfilFindOneQueryHandler>(
+      IPerfilFindOneQueryHandler,
+    );
     const input = PerfilRestMapper.toFindOneInput(params);
-    const result = await this.findOneHandler.execute({ accessContext, dto: input });
+    const result = await findOneHandler.execute({ accessContext, dto: input });
     return result ? PerfilRestMapper.toFindOneOutputDto(result) : null;
   }
 
@@ -69,8 +66,11 @@ export class PerfilRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: PerfilFindOneInputRestDto,
   ): Promise<PerfilFindOneOutputRestDto | null> {
+    const findOneHandler = this.container.get<IPerfilFindOneQueryHandler>(
+      IPerfilFindOneQueryHandler,
+    );
     const input = PerfilRestMapper.toFindOneInput(params);
-    const result = await this.findOneHandler.execute({ accessContext, dto: input });
+    const result = await findOneHandler.execute({ accessContext, dto: input });
     return result ? PerfilRestMapper.toFindOneOutputDto(result) : null;
   }
 
@@ -92,8 +92,11 @@ export class PerfilRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Body() dto: PerfilSetVinculosInputRestDto,
   ): Promise<PerfilListOutputRestDto> {
+    const setVinculosHandler = this.container.get<IPerfilSetVinculosCommandHandler>(
+      IPerfilSetVinculosCommandHandler,
+    );
     const input = PerfilRestMapper.toSetVinculosInput(dto);
-    const result = await this.setVinculosHandler.execute({ accessContext, dto: input });
+    const result = await setVinculosHandler.execute({ accessContext, dto: input });
     return PerfilRestMapper.toListOutputDto(result);
   }
 }

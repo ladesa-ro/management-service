@@ -23,7 +23,7 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import type { Express } from "express";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { DeclareDependency, IContainer } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { ITurmaCreateCommandHandler } from "@/modules/ensino/turma/domain/commands/turma-create.command.handler.interface";
@@ -47,21 +47,7 @@ import { TurmaRestMapper } from "./turma.rest.mapper";
 @ApiTags("turmas")
 @Controller("/turmas")
 export class TurmaRestController {
-  constructor(
-    @DeclareDependency(ITurmaListQueryHandler) private readonly listHandler: ITurmaListQueryHandler,
-    @DeclareDependency(ITurmaFindOneQueryHandler)
-    private readonly findOneHandler: ITurmaFindOneQueryHandler,
-    @DeclareDependency(ITurmaCreateCommandHandler)
-    private readonly createHandler: ITurmaCreateCommandHandler,
-    @DeclareDependency(ITurmaUpdateCommandHandler)
-    private readonly updateHandler: ITurmaUpdateCommandHandler,
-    @DeclareDependency(ITurmaDeleteCommandHandler)
-    private readonly deleteHandler: ITurmaDeleteCommandHandler,
-    @DeclareDependency(ITurmaUpdateImagemCapaCommandHandler)
-    private readonly updateImagemCapaHandler: ITurmaUpdateImagemCapaCommandHandler,
-    @DeclareDependency(ITurmaGetImagemCapaQueryHandler)
-    private readonly getImagemCapaHandler: ITurmaGetImagemCapaQueryHandler,
-  ) {}
+  constructor(@DeclareDependency(IContainer) private readonly container: IContainer) {}
 
   @Get("/")
   @ApiOperation({ summary: "Lista turmas", operationId: "turmaFindAll" })
@@ -71,8 +57,9 @@ export class TurmaRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Query() dto: TurmaListInputRestDto,
   ): Promise<TurmaListOutputRestDto> {
+    const listHandler = this.container.get<ITurmaListQueryHandler>(ITurmaListQueryHandler);
     const input = TurmaRestMapper.toListInput(dto);
-    const result = await this.listHandler.execute({ accessContext, dto: input });
+    const result = await listHandler.execute({ accessContext, dto: input });
     return TurmaRestMapper.toListOutputDto(result);
   }
 
@@ -85,8 +72,9 @@ export class TurmaRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: TurmaFindOneInputRestDto,
   ): Promise<TurmaFindOneOutputRestDto> {
+    const findOneHandler = this.container.get<ITurmaFindOneQueryHandler>(ITurmaFindOneQueryHandler);
     const input = TurmaRestMapper.toFindOneInput(params);
-    const result = await this.findOneHandler.execute({ accessContext, dto: input });
+    const result = await findOneHandler.execute({ accessContext, dto: input });
     ensureExists(result, Turma.entityName, input.id);
     return TurmaRestMapper.toFindOneOutputDto(result);
   }
@@ -99,8 +87,11 @@ export class TurmaRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Body() dto: TurmaCreateInputRestDto,
   ): Promise<TurmaFindOneOutputRestDto> {
+    const createHandler = this.container.get<ITurmaCreateCommandHandler>(
+      ITurmaCreateCommandHandler,
+    );
     const input = TurmaRestMapper.toCreateInput(dto);
-    const result = await this.createHandler.execute({ accessContext, dto: input });
+    const result = await createHandler.execute({ accessContext, dto: input });
     return TurmaRestMapper.toFindOneOutputDto(result);
   }
 
@@ -114,8 +105,11 @@ export class TurmaRestController {
     @Param() params: TurmaFindOneInputRestDto,
     @Body() dto: TurmaUpdateInputRestDto,
   ): Promise<TurmaFindOneOutputRestDto> {
+    const updateHandler = this.container.get<ITurmaUpdateCommandHandler>(
+      ITurmaUpdateCommandHandler,
+    );
     const input = TurmaRestMapper.toUpdateInput(params, dto);
-    const result = await this.updateHandler.execute({ accessContext, dto: input });
+    const result = await updateHandler.execute({ accessContext, dto: input });
     return TurmaRestMapper.toFindOneOutputDto(result);
   }
 
@@ -131,7 +125,10 @@ export class TurmaRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: TurmaFindOneInputRestDto,
   ) {
-    return this.getImagemCapaHandler.execute({ accessContext, id: params.id });
+    const getImagemCapaHandler = this.container.get<ITurmaGetImagemCapaQueryHandler>(
+      ITurmaGetImagemCapaQueryHandler,
+    );
+    return getImagemCapaHandler.execute({ accessContext, id: params.id });
   }
 
   @Put("/:id/imagem/capa")
@@ -158,7 +155,10 @@ export class TurmaRestController {
     @Param() params: TurmaFindOneInputRestDto,
     @UploadedFile() file: Express.Multer.File,
   ): Promise<boolean> {
-    return this.updateImagemCapaHandler.execute({ accessContext, dto: params, file });
+    const updateImagemCapaHandler = this.container.get<ITurmaUpdateImagemCapaCommandHandler>(
+      ITurmaUpdateImagemCapaCommandHandler,
+    );
+    return updateImagemCapaHandler.execute({ accessContext, dto: params, file });
   }
 
   @Delete("/:id")
@@ -170,7 +170,10 @@ export class TurmaRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: TurmaFindOneInputRestDto,
   ): Promise<boolean> {
+    const deleteHandler = this.container.get<ITurmaDeleteCommandHandler>(
+      ITurmaDeleteCommandHandler,
+    );
     const input = TurmaRestMapper.toFindOneInput(params);
-    return this.deleteHandler.execute({ accessContext, dto: input });
+    return deleteHandler.execute({ accessContext, dto: input });
   }
 }

@@ -1,6 +1,6 @@
 import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { DeclareDependency, IContainer } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextGraphQL } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
@@ -22,15 +22,8 @@ import { BlocoGraphqlMapper } from "./bloco.graphql.mapper";
 @Resolver(() => BlocoFindOneOutputGraphQlDto)
 export class BlocoGraphqlResolver {
   constructor(
-    @DeclareDependency(IBlocoListQueryHandler) private readonly listHandler: IBlocoListQueryHandler,
-    @DeclareDependency(IBlocoFindOneQueryHandler)
-    private readonly findOneHandler: IBlocoFindOneQueryHandler,
-    @DeclareDependency(IBlocoCreateCommandHandler)
-    private readonly createHandler: IBlocoCreateCommandHandler,
-    @DeclareDependency(IBlocoUpdateCommandHandler)
-    private readonly updateHandler: IBlocoUpdateCommandHandler,
-    @DeclareDependency(IBlocoDeleteCommandHandler)
-    private readonly deleteHandler: IBlocoDeleteCommandHandler,
+    @DeclareDependency(IContainer)
+    private readonly container: IContainer,
   ) {}
 
   @Query(() => BlocoListOutputGraphQlDto, { name: "blocoFindAll" })
@@ -45,7 +38,8 @@ export class BlocoGraphqlResolver {
       input.selection = graphqlExtractSelection(info, "paginated");
     }
 
-    const result = await this.listHandler.execute({ accessContext, dto: input });
+    const listHandler = this.container.get<IBlocoListQueryHandler>(IBlocoListQueryHandler);
+    const result = await listHandler.execute({ accessContext, dto: input });
     return BlocoGraphqlMapper.toListOutputDto(result);
   }
 
@@ -56,7 +50,8 @@ export class BlocoGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<BlocoFindOneOutputGraphQlDto> {
     const selection = graphqlExtractSelection(info);
-    const result = await this.findOneHandler.execute({ accessContext, dto: { id, selection } });
+    const findOneHandler = this.container.get<IBlocoFindOneQueryHandler>(IBlocoFindOneQueryHandler);
+    const result = await findOneHandler.execute({ accessContext, dto: { id, selection } });
     ensureExists(result, Bloco.entityName, id);
     return BlocoGraphqlMapper.toFindOneOutputDto(result);
   }
@@ -68,7 +63,10 @@ export class BlocoGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<BlocoFindOneOutputGraphQlDto> {
     const input = BlocoGraphqlMapper.toCreateInput(dto);
-    const result = await this.createHandler.execute({ accessContext, dto: input });
+    const createHandler = this.container.get<IBlocoCreateCommandHandler>(
+      IBlocoCreateCommandHandler,
+    );
+    const result = await createHandler.execute({ accessContext, dto: input });
     return BlocoGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -80,7 +78,10 @@ export class BlocoGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<BlocoFindOneOutputGraphQlDto> {
     const input = BlocoGraphqlMapper.toUpdateInput({ id }, dto);
-    const result = await this.updateHandler.execute({ accessContext, dto: input });
+    const updateHandler = this.container.get<IBlocoUpdateCommandHandler>(
+      IBlocoUpdateCommandHandler,
+    );
+    const result = await updateHandler.execute({ accessContext, dto: input });
     return BlocoGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -89,6 +90,9 @@ export class BlocoGraphqlResolver {
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
   ): Promise<boolean> {
-    return this.deleteHandler.execute({ accessContext, dto: { id } });
+    const deleteHandler = this.container.get<IBlocoDeleteCommandHandler>(
+      IBlocoDeleteCommandHandler,
+    );
+    return deleteHandler.execute({ accessContext, dto: { id } });
   }
 }

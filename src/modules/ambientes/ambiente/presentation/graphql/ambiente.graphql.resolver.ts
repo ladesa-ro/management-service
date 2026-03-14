@@ -1,6 +1,6 @@
 import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { DeclareDependency, IContainer } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextGraphQL } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
@@ -22,16 +22,8 @@ import { AmbienteGraphqlMapper } from "./ambiente.graphql.mapper";
 @Resolver(() => AmbienteFindOneOutputGraphQlDto)
 export class AmbienteGraphqlResolver {
   constructor(
-    @DeclareDependency(IAmbienteListQueryHandler)
-    private readonly listHandler: IAmbienteListQueryHandler,
-    @DeclareDependency(IAmbienteFindOneQueryHandler)
-    private readonly findOneHandler: IAmbienteFindOneQueryHandler,
-    @DeclareDependency(IAmbienteCreateCommandHandler)
-    private readonly createHandler: IAmbienteCreateCommandHandler,
-    @DeclareDependency(IAmbienteUpdateCommandHandler)
-    private readonly updateHandler: IAmbienteUpdateCommandHandler,
-    @DeclareDependency(IAmbienteDeleteCommandHandler)
-    private readonly deleteHandler: IAmbienteDeleteCommandHandler,
+    @DeclareDependency(IContainer)
+    private readonly container: IContainer,
   ) {}
 
   @Query(() => AmbienteListOutputGraphQlDto, { name: "ambienteFindAll" })
@@ -46,7 +38,8 @@ export class AmbienteGraphqlResolver {
       input.selection = graphqlExtractSelection(info, "paginated");
     }
 
-    const result = await this.listHandler.execute({ accessContext, dto: input });
+    const listHandler = this.container.get<IAmbienteListQueryHandler>(IAmbienteListQueryHandler);
+    const result = await listHandler.execute({ accessContext, dto: input });
     return AmbienteGraphqlMapper.toListOutputDto(result);
   }
 
@@ -57,7 +50,10 @@ export class AmbienteGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<AmbienteFindOneOutputGraphQlDto> {
     const selection = graphqlExtractSelection(info);
-    const result = await this.findOneHandler.execute({ accessContext, dto: { id, selection } });
+    const findOneHandler = this.container.get<IAmbienteFindOneQueryHandler>(
+      IAmbienteFindOneQueryHandler,
+    );
+    const result = await findOneHandler.execute({ accessContext, dto: { id, selection } });
     ensureExists(result, Ambiente.entityName, id);
     return AmbienteGraphqlMapper.toFindOneOutputDto(result);
   }
@@ -69,7 +65,10 @@ export class AmbienteGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<AmbienteFindOneOutputGraphQlDto> {
     const input = AmbienteGraphqlMapper.toCreateInput(dto);
-    const result = await this.createHandler.execute({ accessContext, dto: input });
+    const createHandler = this.container.get<IAmbienteCreateCommandHandler>(
+      IAmbienteCreateCommandHandler,
+    );
+    const result = await createHandler.execute({ accessContext, dto: input });
     return AmbienteGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -81,7 +80,10 @@ export class AmbienteGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<AmbienteFindOneOutputGraphQlDto> {
     const input = AmbienteGraphqlMapper.toUpdateInput({ id }, dto);
-    const result = await this.updateHandler.execute({ accessContext, dto: input });
+    const updateHandler = this.container.get<IAmbienteUpdateCommandHandler>(
+      IAmbienteUpdateCommandHandler,
+    );
+    const result = await updateHandler.execute({ accessContext, dto: input });
     return AmbienteGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -90,6 +92,9 @@ export class AmbienteGraphqlResolver {
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
   ): Promise<boolean> {
-    return this.deleteHandler.execute({ accessContext, dto: { id } });
+    const deleteHandler = this.container.get<IAmbienteDeleteCommandHandler>(
+      IAmbienteDeleteCommandHandler,
+    );
+    return deleteHandler.execute({ accessContext, dto: { id } });
   }
 }

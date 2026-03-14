@@ -1,6 +1,6 @@
 import { Args, ID, Info, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { DeclareDependency, IContainer } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextGraphQL } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
@@ -22,16 +22,8 @@ import { CampusGraphqlMapper } from "./campus.graphql.mapper";
 @Resolver(() => CampusFindOneOutputGraphQlDto)
 export class CampusGraphqlResolver {
   constructor(
-    @DeclareDependency(ICampusListQueryHandler)
-    private readonly listHandler: ICampusListQueryHandler,
-    @DeclareDependency(ICampusFindOneQueryHandler)
-    private readonly findOneHandler: ICampusFindOneQueryHandler,
-    @DeclareDependency(ICampusCreateCommandHandler)
-    private readonly createHandler: ICampusCreateCommandHandler,
-    @DeclareDependency(ICampusUpdateCommandHandler)
-    private readonly updateHandler: ICampusUpdateCommandHandler,
-    @DeclareDependency(ICampusDeleteCommandHandler)
-    private readonly deleteHandler: ICampusDeleteCommandHandler,
+    @DeclareDependency(IContainer)
+    private readonly container: IContainer,
   ) {}
 
   @Query(() => CampusListOutputGraphQlDto, { name: "campusFindAll" })
@@ -46,7 +38,8 @@ export class CampusGraphqlResolver {
       input.selection = graphqlExtractSelection(info, "paginated");
     }
 
-    const result = await this.listHandler.execute({ accessContext, dto: input });
+    const listHandler = this.container.get<ICampusListQueryHandler>(ICampusListQueryHandler);
+    const result = await listHandler.execute({ accessContext, dto: input });
     return CampusGraphqlMapper.toListOutputDto(result);
   }
 
@@ -57,7 +50,10 @@ export class CampusGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<CampusFindOneOutputGraphQlDto> {
     const selection = graphqlExtractSelection(info);
-    const result = await this.findOneHandler.execute({ accessContext, dto: { id, selection } });
+    const findOneHandler = this.container.get<ICampusFindOneQueryHandler>(
+      ICampusFindOneQueryHandler,
+    );
+    const result = await findOneHandler.execute({ accessContext, dto: { id, selection } });
     ensureExists(result, Campus.entityName, id);
     return CampusGraphqlMapper.toFindOneOutputDto(result);
   }
@@ -69,7 +65,10 @@ export class CampusGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<CampusFindOneOutputGraphQlDto> {
     const input = CampusGraphqlMapper.toCreateInput(dto);
-    const result = await this.createHandler.execute({ accessContext, dto: input });
+    const createHandler = this.container.get<ICampusCreateCommandHandler>(
+      ICampusCreateCommandHandler,
+    );
+    const result = await createHandler.execute({ accessContext, dto: input });
     return CampusGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -81,7 +80,10 @@ export class CampusGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<CampusFindOneOutputGraphQlDto> {
     const input = CampusGraphqlMapper.toUpdateInput({ id }, dto);
-    const result = await this.updateHandler.execute({ accessContext, dto: input });
+    const updateHandler = this.container.get<ICampusUpdateCommandHandler>(
+      ICampusUpdateCommandHandler,
+    );
+    const result = await updateHandler.execute({ accessContext, dto: input });
     return CampusGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -90,6 +92,9 @@ export class CampusGraphqlResolver {
     @AccessContextGraphQL() accessContext: AccessContext,
     @Args("id", { type: () => ID }) id: string,
   ): Promise<boolean> {
-    return this.deleteHandler.execute({ accessContext, dto: { id } });
+    const deleteHandler = this.container.get<ICampusDeleteCommandHandler>(
+      ICampusDeleteCommandHandler,
+    );
+    return deleteHandler.execute({ accessContext, dto: { id } });
   }
 }

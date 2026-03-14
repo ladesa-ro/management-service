@@ -1,6 +1,6 @@
 import { Args, Info, Int, Query, Resolver } from "@nestjs/graphql";
 import { type GraphQLResolveInfo } from "graphql";
-import { DeclareDependency } from "@/domain/dependency-injection";
+import { DeclareDependency, IContainer } from "@/domain/dependency-injection";
 import { AccessContext, AccessContextGraphQL } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphql";
@@ -16,12 +16,7 @@ import { EstadoGraphqlMapper } from "./estado.graphql.mapper";
 
 @Resolver(() => EstadoFindOneOutputGraphQlDto)
 export class EstadoGraphqlResolver {
-  constructor(
-    @DeclareDependency(IEstadoListQueryHandler)
-    private readonly listHandler: IEstadoListQueryHandler,
-    @DeclareDependency(IEstadoFindOneQueryHandler)
-    private readonly findOneHandler: IEstadoFindOneQueryHandler,
-  ) {}
+  constructor(@DeclareDependency(IContainer) private readonly container: IContainer) {}
 
   @Query(() => EstadoListOutputGraphQlDto, { name: "estadoFindAll" })
   async findAll(
@@ -35,7 +30,8 @@ export class EstadoGraphqlResolver {
       input.selection = graphqlExtractSelection(info, "paginated");
     }
 
-    const result = await this.listHandler.execute({ accessContext, dto: input });
+    const listHandler = this.container.get<IEstadoListQueryHandler>(IEstadoListQueryHandler);
+    const result = await listHandler.execute({ accessContext, dto: input });
     return EstadoGraphqlMapper.toListOutputDto(result);
   }
 
@@ -46,7 +42,10 @@ export class EstadoGraphqlResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<EstadoFindOneOutputGraphQlDto> {
     const selection = graphqlExtractSelection(info);
-    const result = await this.findOneHandler.execute({ accessContext, dto: { id, selection } });
+    const findOneHandler = this.container.get<IEstadoFindOneQueryHandler>(
+      IEstadoFindOneQueryHandler,
+    );
+    const result = await findOneHandler.execute({ accessContext, dto: { id, selection } });
     ensureExists(result, Estado.entityName, id);
     return EstadoGraphqlMapper.toFindOneOutputDto(result);
   }
