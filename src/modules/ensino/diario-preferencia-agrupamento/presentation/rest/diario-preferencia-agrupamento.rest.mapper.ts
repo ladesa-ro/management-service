@@ -12,7 +12,6 @@ import {
   DiarioPreferenciaAgrupamentoListInputDto,
   DiarioPreferenciaAgrupamentoUpdateInputDto,
 } from "@/modules/ensino/diario-preferencia-agrupamento";
-import { IntervaloDeTempoRestMapper } from "@/modules/horarios/intervalo-de-tempo/presentation/rest";
 import {
   DiarioPreferenciaAgrupamentoCreateInputRestDto,
   DiarioPreferenciaAgrupamentoFindOneInputRestDto,
@@ -41,7 +40,6 @@ export class DiarioPreferenciaAgrupamentoRestMapper {
     input.dataFim = dto.dataFim ?? null;
     input.diaSemanaIso = dto.diaSemanaIso;
     input.aulasSeguidas = dto.aulasSeguidas;
-    input.intervaloDeTempo = { id: dto.intervaloDeTempo.id };
     input.diario = { id: dto.diario.id };
     return input;
   }
@@ -66,9 +64,6 @@ export class DiarioPreferenciaAgrupamentoRestMapper {
     if (dto.aulasSeguidas !== undefined) {
       input.aulasSeguidas = dto.aulasSeguidas;
     }
-    if (dto.intervaloDeTempo !== undefined) {
-      input.intervaloDeTempo = { id: dto.intervaloDeTempo.id };
-    }
     if (dto.diario !== undefined) {
       input.diario = { id: dto.diario.id };
     }
@@ -88,7 +83,6 @@ export class DiarioPreferenciaAgrupamentoRestMapper {
     dto.dataFim = output.dataFim;
     dto.diaSemanaIso = output.diaSemanaIso;
     dto.aulasSeguidas = output.aulasSeguidas;
-    dto.intervaloDeTempo = IntervaloDeTempoRestMapper.toFindOneOutputDto(output.intervaloDeTempo);
     dto.diario = DiarioRestMapper.toFindOneOutputDto(output.diario);
     mapDatedFields(dto, output);
     return dto;

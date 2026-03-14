@@ -27,10 +27,8 @@ import { DiarioPreferenciaAgrupamentoAuthzRegistrySetup } from "@/modules/ensino
 import { DiarioPreferenciaAgrupamentoTypeOrmRepositoryAdapter } from "@/modules/ensino/diario-preferencia-agrupamento/infrastructure/persistence/typeorm";
 import { DiarioPreferenciaAgrupamentoGraphqlResolver } from "@/modules/ensino/diario-preferencia-agrupamento/presentation/graphql/diario-preferencia-agrupamento.graphql.resolver";
 import { DiarioPreferenciaAgrupamentoController } from "@/modules/ensino/diario-preferencia-agrupamento/presentation/rest";
-import { IntervaloDeTempoModule } from "@/modules/horarios/intervalo-de-tempo/intervalo-de-tempo.module";
-
 @Module({
-  imports: [DiarioModule, IntervaloDeTempoModule],
+  imports: [DiarioModule],
   providers: [
     NestJsPaginateAdapter,
     DiarioPreferenciaAgrupamentoService,

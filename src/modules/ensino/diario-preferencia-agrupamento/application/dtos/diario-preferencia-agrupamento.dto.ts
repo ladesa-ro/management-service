@@ -11,10 +11,6 @@ import {
   DiarioFindOneOutputDto,
   DiarioInputRefDto,
 } from "@/modules/ensino/diario/application/dtos";
-import {
-  IntervaloDeTempoFindOneOutputDto,
-  IntervaloDeTempoInputRefDto,
-} from "@/modules/horarios/intervalo-de-tempo";
 
 // ============================================================================
 // FindOne Input/Output
@@ -27,7 +23,6 @@ export class DiarioPreferenciaAgrupamentoFindOneOutputDto extends EntityOutputDt
   dataFim!: ScalarDate | null;
   diaSemanaIso!: number;
   aulasSeguidas!: number;
-  intervaloDeTempo!: IntervaloDeTempoFindOneOutputDto;
   diario!: DiarioFindOneOutputDto;
 }
 
@@ -51,7 +46,6 @@ export class DiarioPreferenciaAgrupamentoCreateInputDto {
   dataFim?: ScalarDate | null;
   diaSemanaIso!: number;
   aulasSeguidas!: number;
-  intervaloDeTempo!: IntervaloDeTempoInputRefDto;
   diario!: DiarioInputRefDto;
 }
 
@@ -60,7 +54,6 @@ export class DiarioPreferenciaAgrupamentoUpdateInputDto {
   dataFim?: ScalarDate | null;
   diaSemanaIso?: number;
   aulasSeguidas?: number;
-  intervaloDeTempo?: IntervaloDeTempoInputRefDto;
   diario?: DiarioInputRefDto;
 }
 

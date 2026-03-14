@@ -13,7 +13,6 @@ import {
 } from "@/modules/ensino/diario-preferencia-agrupamento/domain/commands/diario-preferencia-agrupamento-update.command.handler.interface";
 import { DiarioPreferenciaAgrupamento } from "@/modules/ensino/diario-preferencia-agrupamento/domain/diario-preferencia-agrupamento.domain";
 import type { IDiarioPreferenciaAgrupamento } from "@/modules/ensino/diario-preferencia-agrupamento/domain/diario-preferencia-agrupamento.types";
-import { IntervaloDeTempoService } from "@/modules/horarios/intervalo-de-tempo/application/use-cases/intervalo-de-tempo.service";
 import type { DiarioPreferenciaAgrupamentoFindOneOutputDto } from "../../dtos";
 import {
   DIARIO_PREFERENCIA_AGRUPAMENTO_REPOSITORY_PORT,
@@ -30,7 +29,6 @@ export class DiarioPreferenciaAgrupamentoUpdateCommandHandlerImpl
     @Inject(AUTHORIZATION_SERVICE_PORT)
     private readonly authorizationService: IAuthorizationServicePort,
     private readonly diarioService: DiarioService,
-    private readonly intervaloDeTempoService: IntervaloDeTempoService,
   ) {}
 
   async execute({
@@ -65,13 +63,6 @@ export class DiarioPreferenciaAgrupamentoUpdateCommandHandlerImpl
     if (has(dto, "diario") && dto.diario !== undefined) {
       const diario = await this.diarioService.findByIdStrict(accessContext, dto.diario);
       updateData.diario = { id: diario.id };
-    }
-    if (has(dto, "intervaloDeTempo") && dto.intervaloDeTempo !== undefined) {
-      const intervaloDeTempo = await this.intervaloDeTempoService.intervaloCreateOrUpdate(
-        accessContext,
-        dto.intervaloDeTempo!,
-      );
-      updateData.intervaloDeTempo = { id: intervaloDeTempo!.id };
     }
     await this.repository.updateFromDomain(current.id, updateData);
 

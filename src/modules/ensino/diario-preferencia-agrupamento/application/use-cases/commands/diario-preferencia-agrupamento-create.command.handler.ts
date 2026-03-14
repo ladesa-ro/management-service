@@ -10,7 +10,6 @@ import {
   IDiarioPreferenciaAgrupamentoCreateCommandHandler,
 } from "@/modules/ensino/diario-preferencia-agrupamento/domain/commands/diario-preferencia-agrupamento-create.command.handler.interface";
 import { DiarioPreferenciaAgrupamento } from "@/modules/ensino/diario-preferencia-agrupamento/domain/diario-preferencia-agrupamento.domain";
-import { IntervaloDeTempoService } from "@/modules/horarios/intervalo-de-tempo/application/use-cases/intervalo-de-tempo.service";
 import type { DiarioPreferenciaAgrupamentoFindOneOutputDto } from "../../dtos";
 import {
   DIARIO_PREFERENCIA_AGRUPAMENTO_REPOSITORY_PORT,
@@ -27,7 +26,6 @@ export class DiarioPreferenciaAgrupamentoCreateCommandHandlerImpl
     @Inject(AUTHORIZATION_SERVICE_PORT)
     private readonly authorizationService: IAuthorizationServicePort,
     private readonly diarioService: DiarioService,
-    private readonly intervaloDeTempoService: IntervaloDeTempoService,
   ) {}
 
   async execute({
@@ -43,26 +41,16 @@ export class DiarioPreferenciaAgrupamentoCreateCommandHandlerImpl
       const diario = await this.diarioService.findByIdStrict(accessContext, dto.diario);
       diarioRef = { id: diario.id };
     }
-    let intervaloRef: { id: string } | undefined;
-    if (dto.intervaloDeTempo) {
-      const intervalo = await this.intervaloDeTempoService.intervaloCreateOrUpdate(
-        accessContext,
-        dto.intervaloDeTempo,
-      );
-      intervaloRef = { id: intervalo!.id };
-    }
     const domain = DiarioPreferenciaAgrupamento.criar({
       diaSemanaIso: dto.diaSemanaIso,
       aulasSeguidas: dto.aulasSeguidas,
       dataInicio: dto.dataInicio,
       dataFim: dto.dataFim,
       diario: diarioRef!,
-      intervaloDeTempo: intervaloRef!,
     });
     const { id } = await this.repository.createFromDomain({
       ...domain,
       ...(diarioRef ? { diario: diarioRef } : {}),
-      ...(intervaloRef ? { intervaloDeTempo: intervaloRef } : {}),
     });
 
     const result = await this.repository.findById(accessContext, { id });

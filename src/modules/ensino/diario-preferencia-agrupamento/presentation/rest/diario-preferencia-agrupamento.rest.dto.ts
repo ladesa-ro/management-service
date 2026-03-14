@@ -19,10 +19,6 @@ import {
   DiarioFindOneOutputRestDto,
 } from "@/modules/ensino/diario/presentation/rest";
 import { DiarioPreferenciaAgrupamentoFieldsMixin } from "@/modules/ensino/diario-preferencia-agrupamento/presentation/diario-preferencia-agrupamento.validation-mixin";
-import {
-  IntervaloDeTempoFindOneInputRestDto,
-  IntervaloDeTempoFindOneOutputRestDto,
-} from "@/modules/horarios/intervalo-de-tempo/presentation/rest";
 
 // ============================================================================
 // FindOne Output
@@ -38,7 +34,6 @@ import {
       simpleProperty("dataFim", { nullable: true }),
       simpleProperty("diaSemanaIso"),
       simpleProperty("aulasSeguidas"),
-      referenceProperty("intervaloDeTempo", "IntervaloDeTempoFindOneOutputDto"),
       referenceProperty("diario", "DiarioFindOneOutputDto"),
       ...commonProperties.dated,
     ],
@@ -79,16 +74,6 @@ export class DiarioPreferenciaAgrupamentoFindOneOutputRestDto extends Mixin(
     ApiProperty({ type: "integer", description: "Quantidade de aulas seguidas", minimum: 1 }),
   )
   declare aulasSeguidas: number;
-
-  @decorate(
-    ApiProperty({
-      type: () => IntervaloDeTempoFindOneOutputRestDto,
-      description: "Intervalo de tempo",
-    }),
-  )
-  @decorate(ValidateNested())
-  @decorate(Type(() => IntervaloDeTempoFindOneOutputRestDto))
-  intervaloDeTempo: IntervaloDeTempoFindOneOutputRestDto;
 
   @decorate(
     ApiProperty({ type: () => DiarioFindOneOutputRestDto, description: "Diario vinculado" }),
@@ -169,16 +154,6 @@ export class DiarioPreferenciaAgrupamentoCreateInputRestDto extends DiarioPrefer
     ApiProperty({ type: "integer", description: "Quantidade de aulas seguidas", minimum: 1 }),
   )
   declare aulasSeguidas: number;
-
-  @decorate(
-    ApiProperty({
-      type: () => IntervaloDeTempoFindOneInputRestDto,
-      description: "Intervalo de tempo",
-    }),
-  )
-  @decorate(ValidateNested())
-  @decorate(Type(() => IntervaloDeTempoFindOneInputRestDto))
-  intervaloDeTempo: IntervaloDeTempoFindOneInputRestDto;
 
   @decorate(ApiProperty({ type: () => DiarioFindOneInputRestDto, description: "Diario vinculado" }))
   @decorate(ValidateNested())

@@ -1,6 +1,5 @@
 import { BaseDatedEntity, type ScalarDate } from "@/modules/@shared";
 import type { Diario } from "@/modules/ensino/diario/domain/diario.domain";
-import type { IntervaloDeTempo } from "@/modules/horarios/intervalo-de-tempo/domain/intervalo-de-tempo.domain";
 import type {
   IDiarioPreferenciaAgrupamento,
   IDiarioPreferenciaAgrupamentoCreate,
@@ -19,7 +18,6 @@ export class DiarioPreferenciaAgrupamento
   dataFim!: ScalarDate | null;
   diaSemanaIso!: number;
   aulasSeguidas!: number;
-  intervaloDeTempo!: IntervaloDeTempo;
   diario!: Diario;
 
   protected static get entityName(): string {
