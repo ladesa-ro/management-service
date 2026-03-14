@@ -1,8 +1,4 @@
-import {
-  Inject,
-  Injectable,
-  InternalServerErrorException,
-} from "@nestjs/common";
+import { Inject, Injectable, InternalServerErrorException } from "@nestjs/common";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ResourceNotFoundError } from "@/modules/@shared";
 import type {
@@ -14,9 +10,9 @@ import type {
   EstagiarioUpdateInputDto,
 } from "@/modules/estagio/estagiario/application/dtos";
 import {
+  ESTAGIARIO_REPOSITORY_PORT,
   type IEstagiarioRepositoryPort,
   type IEstagiarioUseCasePort,
-  ESTAGIARIO_REPOSITORY_PORT,
 } from "@/modules/estagio/estagiario/application/ports";
 
 @Injectable()

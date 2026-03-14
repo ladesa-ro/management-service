@@ -1,9 +1,21 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { has } from "lodash";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
-import { BaseCrudService, type PersistInput } from "@/modules/@shared";
-import { CalendarioLetivoService } from "@/modules/horarios/calendario-letivo";
-import { HorarioGerado, type IHorarioGerado } from "@/modules/horarios/horario-gerado";
+import { ResourceNotFoundError } from "@/modules/@shared";
+import {
+  type IHorarioGeradoCreateCommand,
+  IHorarioGeradoCreateCommandHandler,
+} from "@/modules/horarios/horario-gerado/domain/commands/horario-gerado-create.command.handler.interface";
+import {
+  type IHorarioGeradoDeleteCommand,
+  IHorarioGeradoDeleteCommandHandler,
+} from "@/modules/horarios/horario-gerado/domain/commands/horario-gerado-delete.command.handler.interface";
+import {
+  type IHorarioGeradoUpdateCommand,
+  IHorarioGeradoUpdateCommandHandler,
+} from "@/modules/horarios/horario-gerado/domain/commands/horario-gerado-update.command.handler.interface";
+
+import { IHorarioGeradoFindOneQueryHandler } from "@/modules/horarios/horario-gerado/domain/queries/horario-gerado-find-one.query.handler.interface";
+import { IHorarioGeradoListQueryHandler } from "@/modules/horarios/horario-gerado/domain/queries/horario-gerado-list.query.handler.interface";
 import type {
   HorarioGeradoCreateInputDto,
   HorarioGeradoFindOneInputDto,
@@ -12,87 +24,84 @@ import type {
   HorarioGeradoListOutputDto,
   HorarioGeradoUpdateInputDto,
 } from "../dtos";
-import { HORARIO_GERADO_REPOSITORY_PORT, type IHorarioGeradoRepositoryPort } from "../ports";
 
 @Injectable()
-export class HorarioGeradoService extends BaseCrudService<
-  IHorarioGerado,
-  HorarioGeradoListInputDto,
-  HorarioGeradoListOutputDto,
-  HorarioGeradoFindOneInputDto,
-  HorarioGeradoFindOneOutputDto,
-  HorarioGeradoCreateInputDto,
-  HorarioGeradoUpdateInputDto
-> {
-  protected readonly resourceName = "HorarioGerado";
-  protected readonly createAction = "horario_gerado:create";
-  protected readonly updateAction = "horario_gerado:update";
-  protected readonly deleteAction = "horario_gerado:delete";
-
+export class HorarioGeradoService {
   constructor(
-    @Inject(HORARIO_GERADO_REPOSITORY_PORT)
-    protected readonly repository: IHorarioGeradoRepositoryPort,
-    private readonly calendarioLetivoService: CalendarioLetivoService,
-  ) {
-    super();
+    @Inject(IHorarioGeradoCreateCommandHandler)
+    private readonly createHandler: IHorarioGeradoCreateCommandHandler,
+    @Inject(IHorarioGeradoUpdateCommandHandler)
+    private readonly updateHandler: IHorarioGeradoUpdateCommandHandler,
+    @Inject(IHorarioGeradoDeleteCommandHandler)
+    private readonly deleteHandler: IHorarioGeradoDeleteCommandHandler,
+
+    @Inject(IHorarioGeradoListQueryHandler)
+    private readonly listHandler: IHorarioGeradoListQueryHandler,
+    @Inject(IHorarioGeradoFindOneQueryHandler)
+    private readonly findOneHandler: IHorarioGeradoFindOneQueryHandler,
+  ) {}
+
+  findAll(
+    accessContext: AccessContext,
+    dto: HorarioGeradoListInputDto | null = null,
+    selection?: string[] | boolean,
+  ): Promise<HorarioGeradoListOutputDto> {
+    return this.listHandler.execute({ accessContext, dto, selection });
   }
 
-  protected async buildCreateData(
+  findById(
+    accessContext: AccessContext | null,
+    dto: HorarioGeradoFindOneInputDto,
+    selection?: string[] | boolean,
+  ): Promise<HorarioGeradoFindOneOutputDto | null> {
+    return this.findOneHandler.execute({ accessContext, dto, selection });
+  }
+
+  async findByIdStrict(
+    accessContext: AccessContext | null,
+    dto: HorarioGeradoFindOneInputDto,
+    selection?: string[] | boolean,
+  ): Promise<HorarioGeradoFindOneOutputDto> {
+    const entity = await this.findById(accessContext, dto, selection);
+
+    if (!entity) {
+      throw new ResourceNotFoundError("HorarioGerado", dto.id);
+    }
+
+    return entity;
+  }
+
+  findByIdSimple(
+    accessContext: AccessContext,
+    id: string,
+    selection?: string[] | boolean,
+  ): Promise<HorarioGeradoFindOneOutputDto | null> {
+    return this.findById(accessContext, { id } as HorarioGeradoFindOneInputDto, selection);
+  }
+
+  findByIdSimpleStrict(
+    accessContext: AccessContext,
+    id: string,
+    selection?: string[] | boolean,
+  ): Promise<HorarioGeradoFindOneOutputDto> {
+    return this.findByIdStrict(accessContext, { id } as HorarioGeradoFindOneInputDto, selection);
+  }
+
+  create(
     accessContext: AccessContext,
     dto: HorarioGeradoCreateInputDto,
-  ): Promise<Partial<PersistInput<IHorarioGerado>>> {
-    let calendarioRef: { id: string } | undefined;
-    if (dto.calendario) {
-      const calendario = await this.calendarioLetivoService.findByIdSimpleStrict(
-        accessContext,
-        dto.calendario.id,
-      );
-      calendarioRef = { id: calendario.id };
-    }
-
-    const domain = HorarioGerado.criar({
-      status: dto.status,
-      tipo: dto.tipo,
-      dataGeracao: dto.dataGeracao,
-      vigenciaInicio: dto.vigenciaInicio,
-      vigenciaFim: dto.vigenciaFim,
-      calendario: calendarioRef!,
-    });
-    return {
-      ...domain,
-      ...(calendarioRef ? { calendario: calendarioRef } : {}),
-    };
+  ): Promise<HorarioGeradoFindOneOutputDto> {
+    return this.createHandler.execute({ accessContext, dto } satisfies IHorarioGeradoCreateCommand);
   }
 
-  protected async buildUpdateData(
+  update(
     accessContext: AccessContext,
     dto: HorarioGeradoFindOneInputDto & HorarioGeradoUpdateInputDto,
-    current: HorarioGeradoFindOneOutputDto,
-  ): Promise<Partial<PersistInput<IHorarioGerado>>> {
-    const domain = HorarioGerado.fromData(current);
-    domain.atualizar({
-      status: dto.status,
-      tipo: dto.tipo,
-      dataGeracao: dto.dataGeracao,
-      vigenciaInicio: dto.vigenciaInicio,
-      vigenciaFim: dto.vigenciaFim,
-    });
-    const result: Partial<PersistInput<IHorarioGerado>> = {
-      status: domain.status,
-      tipo: domain.tipo,
-      dataGeracao: domain.dataGeracao,
-      vigenciaInicio: domain.vigenciaInicio,
-      vigenciaFim: domain.vigenciaFim,
-    };
+  ): Promise<HorarioGeradoFindOneOutputDto> {
+    return this.updateHandler.execute({ accessContext, dto } satisfies IHorarioGeradoUpdateCommand);
+  }
 
-    if (has(dto, "calendario") && dto.calendario !== undefined) {
-      const calendario = await this.calendarioLetivoService.findByIdSimpleStrict(
-        accessContext,
-        dto.calendario.id,
-      );
-      result.calendario = { id: calendario.id };
-    }
-
-    return result;
+  deleteOneById(accessContext: AccessContext, dto: HorarioGeradoFindOneInputDto): Promise<boolean> {
+    return this.deleteHandler.execute({ accessContext, dto } satisfies IHorarioGeradoDeleteCommand);
   }
 }

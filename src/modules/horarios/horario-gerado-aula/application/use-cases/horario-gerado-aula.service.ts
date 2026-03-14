@@ -1,11 +1,21 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { has } from "lodash";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
-import { BaseCrudService, type PersistInput } from "@/modules/@shared";
-import { DiarioProfessorService } from "@/modules/ensino/diario-professor/application/use-cases/diario-professor.service";
-import { HorarioGeradoService } from "@/modules/horarios/horario-gerado";
-import { HorarioGeradoAula, type IHorarioGeradoAula } from "@/modules/horarios/horario-gerado-aula";
-import { IntervaloDeTempoService } from "@/modules/horarios/intervalo-de-tempo/application/use-cases/intervalo-de-tempo.service";
+import { ResourceNotFoundError } from "@/modules/@shared";
+import {
+  type IHorarioGeradoAulaCreateCommand,
+  IHorarioGeradoAulaCreateCommandHandler,
+} from "@/modules/horarios/horario-gerado-aula/domain/commands/horario-gerado-aula-create.command.handler.interface";
+import {
+  type IHorarioGeradoAulaDeleteCommand,
+  IHorarioGeradoAulaDeleteCommandHandler,
+} from "@/modules/horarios/horario-gerado-aula/domain/commands/horario-gerado-aula-delete.command.handler.interface";
+import {
+  type IHorarioGeradoAulaUpdateCommand,
+  IHorarioGeradoAulaUpdateCommandHandler,
+} from "@/modules/horarios/horario-gerado-aula/domain/commands/horario-gerado-aula-update.command.handler.interface";
+
+import { IHorarioGeradoAulaFindOneQueryHandler } from "@/modules/horarios/horario-gerado-aula/domain/queries/horario-gerado-aula-find-one.query.handler.interface";
+import { IHorarioGeradoAulaListQueryHandler } from "@/modules/horarios/horario-gerado-aula/domain/queries/horario-gerado-aula-list.query.handler.interface";
 import type {
   HorarioGeradoAulaCreateInputDto,
   HorarioGeradoAulaFindOneInputDto,
@@ -14,102 +24,100 @@ import type {
   HorarioGeradoAulaListOutputDto,
   HorarioGeradoAulaUpdateInputDto,
 } from "../dtos";
-import {
-  HORARIO_GERADO_AULA_REPOSITORY_PORT,
-  type IHorarioGeradoAulaRepositoryPort,
-} from "../ports";
 
 @Injectable()
-export class HorarioGeradoAulaService extends BaseCrudService<
-  IHorarioGeradoAula,
-  HorarioGeradoAulaListInputDto,
-  HorarioGeradoAulaListOutputDto,
-  HorarioGeradoAulaFindOneInputDto,
-  HorarioGeradoAulaFindOneOutputDto,
-  HorarioGeradoAulaCreateInputDto,
-  HorarioGeradoAulaUpdateInputDto
-> {
-  protected readonly resourceName = "HorarioGeradoAula";
-  protected readonly createAction = "horario_gerado_aula:create";
-  protected readonly updateAction = "horario_gerado_aula:update";
-  protected readonly deleteAction = "horario_gerado_aula:delete";
-
+export class HorarioGeradoAulaService {
   constructor(
-    @Inject(HORARIO_GERADO_AULA_REPOSITORY_PORT)
-    protected readonly repository: IHorarioGeradoAulaRepositoryPort,
-    private readonly diarioProfessorService: DiarioProfessorService,
-    private readonly horarioGeradoService: HorarioGeradoService,
-    private readonly intervaloDeTempoService: IntervaloDeTempoService,
-  ) {
-    super();
+    @Inject(IHorarioGeradoAulaCreateCommandHandler)
+    private readonly createHandler: IHorarioGeradoAulaCreateCommandHandler,
+    @Inject(IHorarioGeradoAulaUpdateCommandHandler)
+    private readonly updateHandler: IHorarioGeradoAulaUpdateCommandHandler,
+    @Inject(IHorarioGeradoAulaDeleteCommandHandler)
+    private readonly deleteHandler: IHorarioGeradoAulaDeleteCommandHandler,
+
+    @Inject(IHorarioGeradoAulaListQueryHandler)
+    private readonly listHandler: IHorarioGeradoAulaListQueryHandler,
+    @Inject(IHorarioGeradoAulaFindOneQueryHandler)
+    private readonly findOneHandler: IHorarioGeradoAulaFindOneQueryHandler,
+  ) {}
+
+  findAll(
+    accessContext: AccessContext,
+    dto: HorarioGeradoAulaListInputDto | null = null,
+    selection?: string[] | boolean,
+  ): Promise<HorarioGeradoAulaListOutputDto> {
+    return this.listHandler.execute({ accessContext, dto, selection });
   }
 
-  protected async buildCreateData(
+  findById(
+    accessContext: AccessContext | null,
+    dto: HorarioGeradoAulaFindOneInputDto,
+    selection?: string[] | boolean,
+  ): Promise<HorarioGeradoAulaFindOneOutputDto | null> {
+    return this.findOneHandler.execute({ accessContext, dto, selection });
+  }
+
+  async findByIdStrict(
+    accessContext: AccessContext | null,
+    dto: HorarioGeradoAulaFindOneInputDto,
+    selection?: string[] | boolean,
+  ): Promise<HorarioGeradoAulaFindOneOutputDto> {
+    const entity = await this.findById(accessContext, dto, selection);
+
+    if (!entity) {
+      throw new ResourceNotFoundError("HorarioGeradoAula", dto.id);
+    }
+
+    return entity;
+  }
+
+  findByIdSimple(
+    accessContext: AccessContext,
+    id: string,
+    selection?: string[] | boolean,
+  ): Promise<HorarioGeradoAulaFindOneOutputDto | null> {
+    return this.findById(accessContext, { id } as HorarioGeradoAulaFindOneInputDto, selection);
+  }
+
+  findByIdSimpleStrict(
+    accessContext: AccessContext,
+    id: string,
+    selection?: string[] | boolean,
+  ): Promise<HorarioGeradoAulaFindOneOutputDto> {
+    return this.findByIdStrict(
+      accessContext,
+      { id } as HorarioGeradoAulaFindOneInputDto,
+      selection,
+    );
+  }
+
+  create(
     accessContext: AccessContext,
     dto: HorarioGeradoAulaCreateInputDto,
-  ): Promise<Partial<PersistInput<IHorarioGeradoAula>>> {
-    const result: Record<string, any> = { data: dto.data };
-
-    if (dto.diarioProfessor) {
-      const diarioProfessor = await this.diarioProfessorService.findByIdStrict(
-        accessContext,
-        dto.diarioProfessor,
-      );
-      result.diarioProfessor = { id: diarioProfessor.id };
-    }
-
-    if (dto.horarioGerado) {
-      const horarioGerado = await this.horarioGeradoService.findByIdStrict(
-        accessContext,
-        dto.horarioGerado,
-      );
-      result.horarioGerado = { id: horarioGerado.id };
-    }
-
-    if (dto.intervaloDeTempo) {
-      const intervalo = await this.intervaloDeTempoService.intervaloCreateOrUpdate(
-        accessContext,
-        dto.intervaloDeTempo,
-      );
-      result.intervaloDeTempo = { id: intervalo!.id };
-    }
-
-    return result as IHorarioGeradoAula;
+  ): Promise<HorarioGeradoAulaFindOneOutputDto> {
+    return this.createHandler.execute({
+      accessContext,
+      dto,
+    } satisfies IHorarioGeradoAulaCreateCommand);
   }
 
-  protected async buildUpdateData(
+  update(
     accessContext: AccessContext,
     dto: HorarioGeradoAulaFindOneInputDto & HorarioGeradoAulaUpdateInputDto,
-    current: HorarioGeradoAulaFindOneOutputDto,
-  ): Promise<Partial<PersistInput<IHorarioGeradoAula>>> {
-    const domain = HorarioGeradoAula.fromData(current);
-    domain.atualizar({ data: dto.data });
-    const result: Partial<PersistInput<IHorarioGeradoAula>> = { data: domain.data };
+  ): Promise<HorarioGeradoAulaFindOneOutputDto> {
+    return this.updateHandler.execute({
+      accessContext,
+      dto,
+    } satisfies IHorarioGeradoAulaUpdateCommand);
+  }
 
-    if (has(dto, "diarioProfessor") && dto.diarioProfessor !== undefined) {
-      const diarioProfessor = await this.diarioProfessorService.findByIdStrict(
-        accessContext,
-        dto.diarioProfessor!,
-      );
-      result.diarioProfessor = { id: diarioProfessor.id };
-    }
-
-    if (has(dto, "horarioGerado") && dto.horarioGerado !== undefined) {
-      const horarioGerado = await this.horarioGeradoService.findByIdStrict(
-        accessContext,
-        dto.horarioGerado,
-      );
-      result.horarioGerado = { id: horarioGerado.id };
-    }
-
-    if (has(dto, "intervaloDeTempo") && dto.intervaloDeTempo !== undefined) {
-      const intervaloDeTempo = await this.intervaloDeTempoService.intervaloCreateOrUpdate(
-        accessContext,
-        dto.intervaloDeTempo!,
-      );
-      result.intervaloDeTempo = { id: intervaloDeTempo!.id };
-    }
-
-    return result;
+  deleteOneById(
+    accessContext: AccessContext,
+    dto: HorarioGeradoAulaFindOneInputDto,
+  ): Promise<boolean> {
+    return this.deleteHandler.execute({
+      accessContext,
+      dto,
+    } satisfies IHorarioGeradoAulaDeleteCommand);
   }
 }

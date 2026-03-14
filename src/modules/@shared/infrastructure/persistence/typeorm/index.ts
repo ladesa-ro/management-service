@@ -7,13 +7,12 @@ export { APP_DATA_SOURCE_TOKEN } from "./providers/app-data-source.provider";
 // NOTE: entities.ts is NOT re-exported here to avoid loading all 35 entities
 // when importing unrelated utilities. Import directly from entities.ts if needed.
 
-// Metadata registry for QbEfficientLoad
-export * from "./metadata";
-
 // Pagination adapter and config
 export * from "../../../../../infrastructure.database/pagination";
 // Pagination types
 export * from "../../../../../infrastructure.database/pagination/interfaces/pagination-config.types";
+// Metadata registry for QbEfficientLoad
+export * from "./metadata";
 // Query builder utilities
 export * from "./qb-efficient-load";
 // Transaction module

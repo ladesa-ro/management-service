@@ -1,10 +1,21 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { has } from "lodash";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
-import { BaseCrudService, type PersistInput } from "@/modules/@shared";
-import { DisponibilidadeService } from "@/modules/ensino/disponibilidade/application/use-cases/disponibilidade.service";
-import { TurmaService } from "@/modules/ensino/turma/application/use-cases/turma.service";
-import type { ITurmaDisponibilidade } from "@/modules/ensino/turma-disponibilidade";
+import { ResourceNotFoundError } from "@/modules/@shared";
+import {
+  type ITurmaDisponibilidadeCreateCommand,
+  ITurmaDisponibilidadeCreateCommandHandler,
+} from "@/modules/ensino/turma-disponibilidade/domain/commands/turma-disponibilidade-create.command.handler.interface";
+import {
+  type ITurmaDisponibilidadeDeleteCommand,
+  ITurmaDisponibilidadeDeleteCommandHandler,
+} from "@/modules/ensino/turma-disponibilidade/domain/commands/turma-disponibilidade-delete.command.handler.interface";
+import {
+  type ITurmaDisponibilidadeUpdateCommand,
+  ITurmaDisponibilidadeUpdateCommandHandler,
+} from "@/modules/ensino/turma-disponibilidade/domain/commands/turma-disponibilidade-update.command.handler.interface";
+
+import { ITurmaDisponibilidadeFindOneQueryHandler } from "@/modules/ensino/turma-disponibilidade/domain/queries/turma-disponibilidade-find-one.query.handler.interface";
+import { ITurmaDisponibilidadeListQueryHandler } from "@/modules/ensino/turma-disponibilidade/domain/queries/turma-disponibilidade-list.query.handler.interface";
 import type {
   TurmaDisponibilidadeCreateInputDto,
   TurmaDisponibilidadeFindOneInputDto,
@@ -13,85 +24,100 @@ import type {
   TurmaDisponibilidadeListOutputDto,
   TurmaDisponibilidadeUpdateInputDto,
 } from "../dtos";
-import {
-  type ITurmaDisponibilidadeRepositoryPort,
-  TURMA_DISPONIBILIDADE_REPOSITORY_PORT,
-} from "../ports/out";
 
 @Injectable()
-export class TurmaDisponibilidadeService extends BaseCrudService<
-  ITurmaDisponibilidade,
-  TurmaDisponibilidadeListInputDto,
-  TurmaDisponibilidadeListOutputDto,
-  TurmaDisponibilidadeFindOneInputDto,
-  TurmaDisponibilidadeFindOneOutputDto,
-  TurmaDisponibilidadeCreateInputDto,
-  TurmaDisponibilidadeUpdateInputDto
-> {
-  protected readonly resourceName = "TurmaDisponibilidade";
-  protected readonly createAction = "turma_disponibilidade:create";
-  protected readonly updateAction = "turma_disponibilidade:update";
-  protected readonly deleteAction = "turma_disponibilidade:delete";
-
+export class TurmaDisponibilidadeService {
   constructor(
-    @Inject(TURMA_DISPONIBILIDADE_REPOSITORY_PORT)
-    protected readonly repository: ITurmaDisponibilidadeRepositoryPort,
-    private readonly turmaService: TurmaService,
-    private readonly disponibilidadeService: DisponibilidadeService,
-  ) {
-    super();
+    @Inject(ITurmaDisponibilidadeCreateCommandHandler)
+    private readonly createHandler: ITurmaDisponibilidadeCreateCommandHandler,
+    @Inject(ITurmaDisponibilidadeUpdateCommandHandler)
+    private readonly updateHandler: ITurmaDisponibilidadeUpdateCommandHandler,
+    @Inject(ITurmaDisponibilidadeDeleteCommandHandler)
+    private readonly deleteHandler: ITurmaDisponibilidadeDeleteCommandHandler,
+
+    @Inject(ITurmaDisponibilidadeListQueryHandler)
+    private readonly listHandler: ITurmaDisponibilidadeListQueryHandler,
+    @Inject(ITurmaDisponibilidadeFindOneQueryHandler)
+    private readonly findOneHandler: ITurmaDisponibilidadeFindOneQueryHandler,
+  ) {}
+
+  findAll(
+    accessContext: AccessContext,
+    dto: TurmaDisponibilidadeListInputDto | null = null,
+    selection?: string[] | boolean,
+  ): Promise<TurmaDisponibilidadeListOutputDto> {
+    return this.listHandler.execute({ accessContext, dto, selection });
   }
 
-  protected async buildCreateData(
+  findById(
+    accessContext: AccessContext | null,
+    dto: TurmaDisponibilidadeFindOneInputDto,
+    selection?: string[] | boolean,
+  ): Promise<TurmaDisponibilidadeFindOneOutputDto | null> {
+    return this.findOneHandler.execute({ accessContext, dto, selection });
+  }
+
+  async findByIdStrict(
+    accessContext: AccessContext | null,
+    dto: TurmaDisponibilidadeFindOneInputDto,
+    selection?: string[] | boolean,
+  ): Promise<TurmaDisponibilidadeFindOneOutputDto> {
+    const entity = await this.findById(accessContext, dto, selection);
+
+    if (!entity) {
+      throw new ResourceNotFoundError("TurmaDisponibilidade", dto.id);
+    }
+
+    return entity;
+  }
+
+  findByIdSimple(
+    accessContext: AccessContext,
+    id: string,
+    selection?: string[] | boolean,
+  ): Promise<TurmaDisponibilidadeFindOneOutputDto | null> {
+    return this.findById(accessContext, { id } as TurmaDisponibilidadeFindOneInputDto, selection);
+  }
+
+  findByIdSimpleStrict(
+    accessContext: AccessContext,
+    id: string,
+    selection?: string[] | boolean,
+  ): Promise<TurmaDisponibilidadeFindOneOutputDto> {
+    return this.findByIdStrict(
+      accessContext,
+      { id } as TurmaDisponibilidadeFindOneInputDto,
+      selection,
+    );
+  }
+
+  create(
     accessContext: AccessContext,
     dto: TurmaDisponibilidadeCreateInputDto,
-  ): Promise<Partial<PersistInput<ITurmaDisponibilidade>>> {
-    const result: Record<string, any> = {};
-
-    if (dto.turma) {
-      const turma = await this.turmaService.findByIdSimpleStrict(accessContext, dto.turma.id);
-      result.turma = { id: turma.id };
-    }
-
-    if (dto.disponibilidade) {
-      const disponibilidade = await this.disponibilidadeService.findByIdSimpleStrict(
-        accessContext,
-        dto.disponibilidade.id,
-      );
-      result.disponibilidade = { id: disponibilidade.id };
-    }
-
-    return result as ITurmaDisponibilidade;
+  ): Promise<TurmaDisponibilidadeFindOneOutputDto> {
+    return this.createHandler.execute({
+      accessContext,
+      dto,
+    } satisfies ITurmaDisponibilidadeCreateCommand);
   }
 
-  protected async buildUpdateData(
+  update(
     accessContext: AccessContext,
     dto: TurmaDisponibilidadeFindOneInputDto & TurmaDisponibilidadeUpdateInputDto,
-    _current: TurmaDisponibilidadeFindOneOutputDto,
-  ): Promise<Partial<PersistInput<ITurmaDisponibilidade>>> {
-    const result: Partial<PersistInput<ITurmaDisponibilidade>> = {};
+  ): Promise<TurmaDisponibilidadeFindOneOutputDto> {
+    return this.updateHandler.execute({
+      accessContext,
+      dto,
+    } satisfies ITurmaDisponibilidadeUpdateCommand);
+  }
 
-    if (has(dto, "turma") && dto.turma !== undefined) {
-      if (dto.turma) {
-        const turma = await this.turmaService.findByIdSimpleStrict(accessContext, dto.turma.id);
-        result.turma = { id: turma.id };
-      } else {
-        result.turma = null;
-      }
-    }
-
-    if (has(dto, "disponibilidade") && dto.disponibilidade !== undefined) {
-      if (dto.disponibilidade) {
-        const disponibilidade = await this.disponibilidadeService.findByIdSimpleStrict(
-          accessContext,
-          dto.disponibilidade.id,
-        );
-        result.disponibilidade = { id: disponibilidade.id };
-      } else {
-        result.disponibilidade = null;
-      }
-    }
-
-    return result;
+  deleteOneById(
+    accessContext: AccessContext,
+    dto: TurmaDisponibilidadeFindOneInputDto,
+  ): Promise<boolean> {
+    return this.deleteHandler.execute({
+      accessContext,
+      dto,
+    } satisfies ITurmaDisponibilidadeDeleteCommand);
   }
 }

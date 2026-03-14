@@ -3,7 +3,10 @@ import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { apiReference } from "@scalar/nestjs-api-reference";
 import type express from "express";
 import swaggerUi from "swagger-ui-express";
-import { IRuntimeOptions, IRuntimeOptions as IRuntimeOptionsToken } from "@/infrastructure.config/options/runtime/runtime-options.interface";
+import {
+  IRuntimeOptions,
+  IRuntimeOptions as IRuntimeOptionsToken,
+} from "@/infrastructure.config/options/runtime/runtime-options.interface";
 import { detectHostAndProtocolFromRequest } from "./detect-host-and-protocol-from-request";
 
 export const useDocs = (app: INestApplication) => {

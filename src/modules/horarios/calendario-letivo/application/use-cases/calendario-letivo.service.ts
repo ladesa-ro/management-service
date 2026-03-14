@@ -1,10 +1,21 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { has } from "lodash";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
-import { BaseCrudService, type PersistInput } from "@/modules/@shared";
-import { CampusService } from "@/modules/ambientes/campus";
-import { OfertaFormacaoService } from "@/modules/ensino/oferta-formacao";
-import { CalendarioLetivo, type ICalendarioLetivo } from "@/modules/horarios/calendario-letivo";
+import { ResourceNotFoundError } from "@/modules/@shared";
+import {
+  type ICalendarioLetivoCreateCommand,
+  ICalendarioLetivoCreateCommandHandler,
+} from "@/modules/horarios/calendario-letivo/domain/commands/calendario-letivo-create.command.handler.interface";
+import {
+  type ICalendarioLetivoDeleteCommand,
+  ICalendarioLetivoDeleteCommandHandler,
+} from "@/modules/horarios/calendario-letivo/domain/commands/calendario-letivo-delete.command.handler.interface";
+import {
+  type ICalendarioLetivoUpdateCommand,
+  ICalendarioLetivoUpdateCommandHandler,
+} from "@/modules/horarios/calendario-letivo/domain/commands/calendario-letivo-update.command.handler.interface";
+
+import { ICalendarioLetivoFindOneQueryHandler } from "@/modules/horarios/calendario-letivo/domain/queries/calendario-letivo-find-one.query.handler.interface";
+import { ICalendarioLetivoListQueryHandler } from "@/modules/horarios/calendario-letivo/domain/queries/calendario-letivo-list.query.handler.interface";
 import type {
   CalendarioLetivoCreateInputDto,
   CalendarioLetivoFindOneInputDto,
@@ -12,94 +23,98 @@ import type {
   CalendarioLetivoListInputDto,
   CalendarioLetivoListOutputDto,
   CalendarioLetivoUpdateInputDto,
-} from "@/modules/horarios/calendario-letivo/application/dtos";
-import {
-  CALENDARIO_LETIVO_REPOSITORY_PORT,
-  type ICalendarioLetivoRepositoryPort,
-  type ICalendarioLetivoUseCasePort,
-} from "@/modules/horarios/calendario-letivo/application/ports";
+} from "../dtos";
+import type { ICalendarioLetivoUseCasePort } from "../ports";
 
 @Injectable()
-export class CalendarioLetivoService
-  extends BaseCrudService<
-    ICalendarioLetivo,
-    CalendarioLetivoListInputDto,
-    CalendarioLetivoListOutputDto,
-    CalendarioLetivoFindOneInputDto,
-    CalendarioLetivoFindOneOutputDto,
-    CalendarioLetivoCreateInputDto,
-    CalendarioLetivoUpdateInputDto
-  >
-  implements ICalendarioLetivoUseCasePort
-{
-  protected readonly resourceName = "CalendarioLetivo";
-  protected readonly createAction = "calendario_letivo:create";
-  protected readonly updateAction = "calendario_letivo:update";
-  protected readonly deleteAction = "calendario_letivo:delete";
-
+export class CalendarioLetivoService implements ICalendarioLetivoUseCasePort {
   constructor(
-    @Inject(CALENDARIO_LETIVO_REPOSITORY_PORT)
-    protected readonly repository: ICalendarioLetivoRepositoryPort,
-    private readonly campusService: CampusService,
-    private readonly ofertaFormacaoService: OfertaFormacaoService,
-  ) {
-    super();
+    @Inject(ICalendarioLetivoCreateCommandHandler)
+    private readonly createHandler: ICalendarioLetivoCreateCommandHandler,
+    @Inject(ICalendarioLetivoUpdateCommandHandler)
+    private readonly updateHandler: ICalendarioLetivoUpdateCommandHandler,
+    @Inject(ICalendarioLetivoDeleteCommandHandler)
+    private readonly deleteHandler: ICalendarioLetivoDeleteCommandHandler,
+
+    @Inject(ICalendarioLetivoListQueryHandler)
+    private readonly listHandler: ICalendarioLetivoListQueryHandler,
+    @Inject(ICalendarioLetivoFindOneQueryHandler)
+    private readonly findOneHandler: ICalendarioLetivoFindOneQueryHandler,
+  ) {}
+
+  findAll(
+    accessContext: AccessContext,
+    dto: CalendarioLetivoListInputDto | null = null,
+    selection?: string[] | boolean,
+  ): Promise<CalendarioLetivoListOutputDto> {
+    return this.listHandler.execute({ accessContext, dto, selection });
   }
 
-  protected async buildCreateData(
+  findById(
+    accessContext: AccessContext | null,
+    dto: CalendarioLetivoFindOneInputDto,
+    selection?: string[] | boolean,
+  ): Promise<CalendarioLetivoFindOneOutputDto | null> {
+    return this.findOneHandler.execute({ accessContext, dto, selection });
+  }
+
+  async findByIdStrict(
+    accessContext: AccessContext | null,
+    dto: CalendarioLetivoFindOneInputDto,
+    selection?: string[] | boolean,
+  ): Promise<CalendarioLetivoFindOneOutputDto> {
+    const entity = await this.findById(accessContext, dto, selection);
+
+    if (!entity) {
+      throw new ResourceNotFoundError("CalendarioLetivo", dto.id);
+    }
+
+    return entity;
+  }
+
+  findByIdSimple(
+    accessContext: AccessContext,
+    id: string,
+    selection?: string[] | boolean,
+  ): Promise<CalendarioLetivoFindOneOutputDto | null> {
+    return this.findById(accessContext, { id } as CalendarioLetivoFindOneInputDto, selection);
+  }
+
+  findByIdSimpleStrict(
+    accessContext: AccessContext,
+    id: string,
+    selection?: string[] | boolean,
+  ): Promise<CalendarioLetivoFindOneOutputDto> {
+    return this.findByIdStrict(accessContext, { id } as CalendarioLetivoFindOneInputDto, selection);
+  }
+
+  create(
     accessContext: AccessContext,
     dto: CalendarioLetivoCreateInputDto,
-  ): Promise<Partial<PersistInput<ICalendarioLetivo>>> {
-    const campus = await this.campusService.findByIdSimpleStrict(accessContext, dto.campus.id);
-
-    let ofertaFormacaoRef: { id: string } | undefined;
-    if (dto.ofertaFormacao) {
-      const ofertaFormacao = await this.ofertaFormacaoService.findByIdSimpleStrict(
-        accessContext,
-        dto.ofertaFormacao.id,
-      );
-      ofertaFormacaoRef = { id: ofertaFormacao.id };
-    }
-
-    const domain = CalendarioLetivo.criar({
-      nome: dto.nome,
-      ano: dto.ano,
-      campus: { id: campus.id },
-      ofertaFormacao: ofertaFormacaoRef,
-    });
-    return {
-      ...domain,
-      campus: { id: campus.id },
-      ...(ofertaFormacaoRef ? { ofertaFormacao: ofertaFormacaoRef } : {}),
-    };
+  ): Promise<CalendarioLetivoFindOneOutputDto> {
+    return this.createHandler.execute({
+      accessContext,
+      dto,
+    } satisfies ICalendarioLetivoCreateCommand);
   }
 
-  protected async buildUpdateData(
+  update(
     accessContext: AccessContext,
     dto: CalendarioLetivoFindOneInputDto & CalendarioLetivoUpdateInputDto,
-    current: CalendarioLetivoFindOneOutputDto,
-  ): Promise<Partial<PersistInput<ICalendarioLetivo>>> {
-    const domain = CalendarioLetivo.fromData(current);
-    domain.atualizar({ nome: dto.nome, ano: dto.ano });
-    const result: Partial<PersistInput<ICalendarioLetivo>> = { nome: domain.nome, ano: domain.ano };
+  ): Promise<CalendarioLetivoFindOneOutputDto> {
+    return this.updateHandler.execute({
+      accessContext,
+      dto,
+    } satisfies ICalendarioLetivoUpdateCommand);
+  }
 
-    if (has(dto, "campus") && dto.campus !== undefined) {
-      const campus = await this.campusService.findByIdSimpleStrict(accessContext, dto.campus.id);
-      result.campus = { id: campus.id };
-    }
-
-    if (has(dto, "ofertaFormacao") && dto.ofertaFormacao !== undefined) {
-      if (dto.ofertaFormacao) {
-        const ofertaFormacao = await this.ofertaFormacaoService.findByIdSimpleStrict(
-          accessContext,
-          dto.ofertaFormacao.id,
-        );
-        result.ofertaFormacao = { id: ofertaFormacao.id };
-      } else {
-        result.ofertaFormacao = null;
-      }
-    }
-
-    return result;
+  deleteOneById(
+    accessContext: AccessContext,
+    dto: CalendarioLetivoFindOneInputDto,
+  ): Promise<boolean> {
+    return this.deleteHandler.execute({
+      accessContext,
+      dto,
+    } satisfies ICalendarioLetivoDeleteCommand);
   }
 }

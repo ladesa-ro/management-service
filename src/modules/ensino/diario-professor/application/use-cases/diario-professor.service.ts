@@ -1,10 +1,21 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { has } from "lodash";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
-import { BaseCrudService, type PersistInput } from "@/modules/@shared";
-import { PerfilService } from "@/modules/acesso/perfil";
-import { DiarioService } from "@/modules/ensino/diario/application/use-cases/diario.service";
-import { DiarioProfessor, type IDiarioProfessor } from "@/modules/ensino/diario-professor";
+import { ResourceNotFoundError } from "@/modules/@shared";
+import {
+  type IDiarioProfessorCreateCommand,
+  IDiarioProfessorCreateCommandHandler,
+} from "@/modules/ensino/diario-professor/domain/commands/diario-professor-create.command.handler.interface";
+import {
+  type IDiarioProfessorDeleteCommand,
+  IDiarioProfessorDeleteCommandHandler,
+} from "@/modules/ensino/diario-professor/domain/commands/diario-professor-delete.command.handler.interface";
+import {
+  type IDiarioProfessorUpdateCommand,
+  IDiarioProfessorUpdateCommandHandler,
+} from "@/modules/ensino/diario-professor/domain/commands/diario-professor-update.command.handler.interface";
+
+import { IDiarioProfessorFindOneQueryHandler } from "@/modules/ensino/diario-professor/domain/queries/diario-professor-find-one.query.handler.interface";
+import { IDiarioProfessorListQueryHandler } from "@/modules/ensino/diario-professor/domain/queries/diario-professor-list.query.handler.interface";
 import type {
   DiarioProfessorCreateInputDto,
   DiarioProfessorFindOneInputDto,
@@ -13,79 +24,96 @@ import type {
   DiarioProfessorListOutputDto,
   DiarioProfessorUpdateInputDto,
 } from "../dtos";
-import { DIARIO_PROFESSOR_REPOSITORY_PORT, type IDiarioProfessorRepositoryPort } from "../ports";
 
 @Injectable()
-export class DiarioProfessorService extends BaseCrudService<
-  IDiarioProfessor,
-  DiarioProfessorListInputDto,
-  DiarioProfessorListOutputDto,
-  DiarioProfessorFindOneInputDto,
-  DiarioProfessorFindOneOutputDto,
-  DiarioProfessorCreateInputDto,
-  DiarioProfessorUpdateInputDto
-> {
-  protected readonly resourceName = "DiarioProfessor";
-  protected readonly createAction = "diario_professor:create";
-  protected readonly updateAction = "diario_professor:update";
-  protected readonly deleteAction = "diario_professor:delete";
-
+export class DiarioProfessorService {
   constructor(
-    @Inject(DIARIO_PROFESSOR_REPOSITORY_PORT)
-    protected readonly repository: IDiarioProfessorRepositoryPort,
-    private readonly diarioService: DiarioService,
-    private readonly perfilService: PerfilService,
-  ) {
-    super();
+    @Inject(IDiarioProfessorCreateCommandHandler)
+    private readonly createHandler: IDiarioProfessorCreateCommandHandler,
+    @Inject(IDiarioProfessorUpdateCommandHandler)
+    private readonly updateHandler: IDiarioProfessorUpdateCommandHandler,
+    @Inject(IDiarioProfessorDeleteCommandHandler)
+    private readonly deleteHandler: IDiarioProfessorDeleteCommandHandler,
+
+    @Inject(IDiarioProfessorListQueryHandler)
+    private readonly listHandler: IDiarioProfessorListQueryHandler,
+    @Inject(IDiarioProfessorFindOneQueryHandler)
+    private readonly findOneHandler: IDiarioProfessorFindOneQueryHandler,
+  ) {}
+
+  findAll(
+    accessContext: AccessContext,
+    dto: DiarioProfessorListInputDto | null = null,
+    selection?: string[] | boolean,
+  ): Promise<DiarioProfessorListOutputDto> {
+    return this.listHandler.execute({ accessContext, dto, selection });
   }
 
-  protected async buildCreateData(
+  findById(
+    accessContext: AccessContext | null,
+    dto: DiarioProfessorFindOneInputDto,
+    selection?: string[] | boolean,
+  ): Promise<DiarioProfessorFindOneOutputDto | null> {
+    return this.findOneHandler.execute({ accessContext, dto, selection });
+  }
+
+  async findByIdStrict(
+    accessContext: AccessContext | null,
+    dto: DiarioProfessorFindOneInputDto,
+    selection?: string[] | boolean,
+  ): Promise<DiarioProfessorFindOneOutputDto> {
+    const entity = await this.findById(accessContext, dto, selection);
+
+    if (!entity) {
+      throw new ResourceNotFoundError("DiarioProfessor", dto.id);
+    }
+
+    return entity;
+  }
+
+  findByIdSimple(
+    accessContext: AccessContext,
+    id: string,
+    selection?: string[] | boolean,
+  ): Promise<DiarioProfessorFindOneOutputDto | null> {
+    return this.findById(accessContext, { id } as DiarioProfessorFindOneInputDto, selection);
+  }
+
+  findByIdSimpleStrict(
+    accessContext: AccessContext,
+    id: string,
+    selection?: string[] | boolean,
+  ): Promise<DiarioProfessorFindOneOutputDto> {
+    return this.findByIdStrict(accessContext, { id } as DiarioProfessorFindOneInputDto, selection);
+  }
+
+  create(
     accessContext: AccessContext,
     dto: DiarioProfessorCreateInputDto,
-  ): Promise<Partial<PersistInput<IDiarioProfessor>>> {
-    let diarioRef: { id: string } | undefined;
-    if (has(dto, "diario") && dto.diario) {
-      const diario = await this.diarioService.findByIdStrict(accessContext, { id: dto.diario.id });
-      diarioRef = { id: diario.id };
-    }
-
-    let perfilRef: { id: string } | undefined;
-    if (has(dto, "perfil") && dto.perfil) {
-      const perfil = await this.perfilService.findByIdStrict(accessContext, { id: dto.perfil.id });
-      perfilRef = { id: perfil.id };
-    }
-
-    const domain = DiarioProfessor.criar({
-      situacao: dto.situacao,
-      diario: diarioRef!,
-      perfil: perfilRef!,
-    });
-    return {
-      ...domain,
-      ...(diarioRef ? { diario: diarioRef } : {}),
-      ...(perfilRef ? { perfil: perfilRef } : {}),
-    };
+  ): Promise<DiarioProfessorFindOneOutputDto> {
+    return this.createHandler.execute({
+      accessContext,
+      dto,
+    } satisfies IDiarioProfessorCreateCommand);
   }
 
-  protected async buildUpdateData(
+  update(
     accessContext: AccessContext,
     dto: DiarioProfessorFindOneInputDto & DiarioProfessorUpdateInputDto,
-    current: DiarioProfessorFindOneOutputDto,
-  ): Promise<Partial<PersistInput<IDiarioProfessor>>> {
-    const domain = DiarioProfessor.fromData(current);
-    domain.atualizar({ situacao: dto.situacao });
-    const result: Partial<PersistInput<IDiarioProfessor>> = { situacao: domain.situacao };
+  ): Promise<DiarioProfessorFindOneOutputDto> {
+    return this.updateHandler.execute({
+      accessContext,
+      dto,
+    } satisfies IDiarioProfessorUpdateCommand);
+  }
 
-    if (has(dto, "diario") && dto.diario !== undefined && dto.diario !== null) {
-      const diario = await this.diarioService.findByIdStrict(accessContext, { id: dto.diario.id });
-      result.diario = { id: diario.id };
-    }
-
-    if (has(dto, "perfil") && dto.perfil !== undefined && dto.perfil !== null) {
-      const perfil = await this.perfilService.findByIdStrict(accessContext, { id: dto.perfil.id });
-      result.perfil = { id: perfil.id };
-    }
-
-    return result;
+  deleteOneById(
+    accessContext: AccessContext,
+    dto: DiarioProfessorFindOneInputDto,
+  ): Promise<boolean> {
+    return this.deleteHandler.execute({
+      accessContext,
+      dto,
+    } satisfies IDiarioProfessorDeleteCommand);
   }
 }

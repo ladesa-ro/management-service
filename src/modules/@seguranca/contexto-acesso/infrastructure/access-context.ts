@@ -13,9 +13,9 @@ import { createForbiddenExceptionForAction } from "@/modules/@shared/application
 import type { IAccessContext, IAuthzPayload } from "../domain";
 import type { ResourceAuthzRegistry } from "./resource-authz-registry";
 
+export type { IAuthzPolicy };
 // Re-export para compatibilidade
 export { AuthzPolicyPublic };
-export type { IAuthzPolicy };
 
 /**
  * Contexto de acesso para autorização.

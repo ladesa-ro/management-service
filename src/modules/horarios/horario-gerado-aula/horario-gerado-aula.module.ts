@@ -6,6 +6,24 @@ import {
   HORARIO_GERADO_AULA_REPOSITORY_PORT,
   HorarioGeradoAulaService,
 } from "@/modules/horarios/horario-gerado-aula";
+import {
+  HorarioGeradoAulaCreateCommandHandlerImpl,
+  HorarioGeradoAulaDeleteCommandHandlerImpl,
+  HorarioGeradoAulaUpdateCommandHandlerImpl,
+} from "@/modules/horarios/horario-gerado-aula/application/use-cases/commands";
+import {
+  HorarioGeradoAulaFindOneQueryHandlerImpl,
+  HorarioGeradoAulaListQueryHandlerImpl,
+} from "@/modules/horarios/horario-gerado-aula/application/use-cases/queries";
+import {
+  IHorarioGeradoAulaCreateCommandHandler,
+  IHorarioGeradoAulaDeleteCommandHandler,
+  IHorarioGeradoAulaUpdateCommandHandler,
+} from "@/modules/horarios/horario-gerado-aula/domain/commands";
+import {
+  IHorarioGeradoAulaFindOneQueryHandler,
+  IHorarioGeradoAulaListQueryHandler,
+} from "@/modules/horarios/horario-gerado-aula/domain/queries";
 import { HorarioGeradoAulaAuthzRegistrySetup } from "@/modules/horarios/horario-gerado-aula/infrastructure";
 import { HorarioGeradoAulaTypeOrmRepositoryAdapter } from "@/modules/horarios/horario-gerado-aula/infrastructure/persistence/typeorm";
 import { HorarioGeradoAulaGraphqlResolver } from "@/modules/horarios/horario-gerado-aula/presentation/graphql/horario-gerado-aula.graphql.resolver";
@@ -23,6 +41,29 @@ import { IntervaloDeTempoModule } from "@/modules/horarios/intervalo-de-tempo/in
     {
       provide: HORARIO_GERADO_AULA_REPOSITORY_PORT,
       useClass: HorarioGeradoAulaTypeOrmRepositoryAdapter,
+    },
+
+    // Commands
+    {
+      provide: IHorarioGeradoAulaCreateCommandHandler,
+      useClass: HorarioGeradoAulaCreateCommandHandlerImpl,
+    },
+    {
+      provide: IHorarioGeradoAulaUpdateCommandHandler,
+      useClass: HorarioGeradoAulaUpdateCommandHandlerImpl,
+    },
+    {
+      provide: IHorarioGeradoAulaDeleteCommandHandler,
+      useClass: HorarioGeradoAulaDeleteCommandHandlerImpl,
+    },
+    // Queries
+    {
+      provide: IHorarioGeradoAulaListQueryHandler,
+      useClass: HorarioGeradoAulaListQueryHandlerImpl,
+    },
+    {
+      provide: IHorarioGeradoAulaFindOneQueryHandler,
+      useClass: HorarioGeradoAulaFindOneQueryHandlerImpl,
     },
   ],
   exports: [HorarioGeradoAulaService],

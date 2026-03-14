@@ -1,11 +1,21 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { has } from "lodash";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
-import { BaseCrudService, type PersistInput } from "@/modules/@shared";
-import { AmbienteService } from "@/modules/ambientes/ambiente/application/use-cases/ambiente.service";
-import { DiarioService } from "@/modules/ensino/diario/application/use-cases/diario.service";
-import { Aula, type IAula } from "@/modules/horarios/aula";
-import { IntervaloDeTempoService } from "@/modules/horarios/intervalo-de-tempo/application/use-cases/intervalo-de-tempo.service";
+import { ResourceNotFoundError } from "@/modules/@shared";
+import {
+  type IAulaCreateCommand,
+  IAulaCreateCommandHandler,
+} from "@/modules/horarios/aula/domain/commands/aula-create.command.handler.interface";
+import {
+  type IAulaDeleteCommand,
+  IAulaDeleteCommandHandler,
+} from "@/modules/horarios/aula/domain/commands/aula-delete.command.handler.interface";
+import {
+  type IAulaUpdateCommand,
+  IAulaUpdateCommandHandler,
+} from "@/modules/horarios/aula/domain/commands/aula-update.command.handler.interface";
+
+import { IAulaFindOneQueryHandler } from "@/modules/horarios/aula/domain/queries/aula-find-one.query.handler.interface";
+import { IAulaListQueryHandler } from "@/modules/horarios/aula/domain/queries/aula-list.query.handler.interface";
 import type {
   AulaCreateInputDto,
   AulaFindOneInputDto,
@@ -14,106 +24,82 @@ import type {
   AulaListOutputDto,
   AulaUpdateInputDto,
 } from "../dtos";
-import { AULA_REPOSITORY_PORT, type IAulaRepositoryPort } from "../ports";
-import type { IAulaUseCasePort } from "../ports/in/aula.use-case.port";
+import type { IAulaUseCasePort } from "../ports";
 
 @Injectable()
-export class AulaService
-  extends BaseCrudService<
-    IAula,
-    AulaListInputDto,
-    AulaListOutputDto,
-    AulaFindOneInputDto,
-    AulaFindOneOutputDto,
-    AulaCreateInputDto,
-    AulaUpdateInputDto
-  >
-  implements IAulaUseCasePort
-{
-  protected readonly resourceName = "Aula";
-  protected readonly createAction = "aula:create";
-  protected readonly updateAction = "aula:update";
-  protected readonly deleteAction = "aula:delete";
-
+export class AulaService implements IAulaUseCasePort {
   constructor(
-    @Inject(AULA_REPOSITORY_PORT)
-    protected readonly repository: IAulaRepositoryPort,
-    private readonly diarioService: DiarioService,
-    private readonly intervaloService: IntervaloDeTempoService,
-    private readonly ambienteService: AmbienteService,
-  ) {
-    super();
+    @Inject(IAulaCreateCommandHandler)
+    private readonly createHandler: IAulaCreateCommandHandler,
+    @Inject(IAulaUpdateCommandHandler)
+    private readonly updateHandler: IAulaUpdateCommandHandler,
+    @Inject(IAulaDeleteCommandHandler)
+    private readonly deleteHandler: IAulaDeleteCommandHandler,
+
+    @Inject(IAulaListQueryHandler)
+    private readonly listHandler: IAulaListQueryHandler,
+    @Inject(IAulaFindOneQueryHandler)
+    private readonly findOneHandler: IAulaFindOneQueryHandler,
+  ) {}
+
+  findAll(
+    accessContext: AccessContext,
+    dto: AulaListInputDto | null = null,
+    selection?: string[] | boolean,
+  ): Promise<AulaListOutputDto> {
+    return this.listHandler.execute({ accessContext, dto, selection });
   }
 
-  protected async buildCreateData(
-    accessContext: AccessContext,
-    dto: AulaCreateInputDto,
-  ): Promise<Partial<PersistInput<IAula>>> {
-    let ambienteRef: { id: string } | null = null;
-    if (dto.ambiente && dto.ambiente !== null) {
-      const ambiente = await this.ambienteService.findByIdStrict(accessContext, {
-        id: dto.ambiente.id,
-      });
-      ambienteRef = { id: ambiente.id };
+  findById(
+    accessContext: AccessContext | null,
+    dto: AulaFindOneInputDto,
+    selection?: string[] | boolean,
+  ): Promise<AulaFindOneOutputDto | null> {
+    return this.findOneHandler.execute({ accessContext, dto, selection });
+  }
+
+  async findByIdStrict(
+    accessContext: AccessContext | null,
+    dto: AulaFindOneInputDto,
+    selection?: string[] | boolean,
+  ): Promise<AulaFindOneOutputDto> {
+    const entity = await this.findById(accessContext, dto, selection);
+
+    if (!entity) {
+      throw new ResourceNotFoundError("Aula", dto.id);
     }
 
-    const diario = await this.diarioService.findByIdSimpleStrict(accessContext, dto.diario.id);
-    const intervalo = await this.intervaloService.intervaloCreateOrUpdate(
-      accessContext,
-      dto.intervaloDeTempo,
-    );
-
-    const domain = Aula.criar({
-      data: dto.data,
-      modalidade: dto.modalidade,
-      intervaloDeTempo: { id: intervalo!.id },
-      diario: { id: diario.id },
-      ambiente: ambienteRef,
-    });
-    return {
-      ...domain,
-      diario: { id: diario.id },
-      intervaloDeTempo: { id: intervalo!.id },
-      ambiente: ambienteRef,
-    };
+    return entity;
   }
 
-  protected async buildUpdateData(
+  findByIdSimple(
+    accessContext: AccessContext,
+    id: string,
+    selection?: string[] | boolean,
+  ): Promise<AulaFindOneOutputDto | null> {
+    return this.findById(accessContext, { id } as AulaFindOneInputDto, selection);
+  }
+
+  findByIdSimpleStrict(
+    accessContext: AccessContext,
+    id: string,
+    selection?: string[] | boolean,
+  ): Promise<AulaFindOneOutputDto> {
+    return this.findByIdStrict(accessContext, { id } as AulaFindOneInputDto, selection);
+  }
+
+  create(accessContext: AccessContext, dto: AulaCreateInputDto): Promise<AulaFindOneOutputDto> {
+    return this.createHandler.execute({ accessContext, dto } satisfies IAulaCreateCommand);
+  }
+
+  update(
     accessContext: AccessContext,
     dto: AulaFindOneInputDto & AulaUpdateInputDto,
-    current: AulaFindOneOutputDto,
-  ): Promise<Partial<PersistInput<IAula>>> {
-    const domain = Aula.fromData(current);
-    domain.atualizar({ data: dto.data, modalidade: dto.modalidade });
-    const result: Partial<PersistInput<IAula>> = {
-      data: domain.data,
-      modalidade: domain.modalidade,
-    };
+  ): Promise<AulaFindOneOutputDto> {
+    return this.updateHandler.execute({ accessContext, dto } satisfies IAulaUpdateCommand);
+  }
 
-    if (has(dto, "ambiente") && dto.ambiente !== undefined) {
-      if (dto.ambiente !== null) {
-        const ambiente = await this.ambienteService.findByIdStrict(accessContext, {
-          id: dto.ambiente.id,
-        });
-        result.ambiente = { id: ambiente.id };
-      } else {
-        result.ambiente = null;
-      }
-    }
-
-    if (has(dto, "diario") && dto.diario !== undefined) {
-      const diario = await this.diarioService.findByIdSimpleStrict(accessContext, dto.diario.id);
-      result.diario = { id: diario.id };
-    }
-
-    if (has(dto, "intervaloDeTempo") && dto.intervaloDeTempo !== undefined) {
-      const intervaloDeTempo = await this.intervaloService.intervaloCreateOrUpdate(
-        accessContext,
-        dto.intervaloDeTempo,
-      );
-      result.intervaloDeTempo = { id: intervaloDeTempo!.id };
-    }
-
-    return result;
+  deleteOneById(accessContext: AccessContext, dto: AulaFindOneInputDto): Promise<boolean> {
+    return this.deleteHandler.execute({ accessContext, dto } satisfies IAulaDeleteCommand);
   }
 }

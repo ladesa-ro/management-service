@@ -1,5 +1,6 @@
 import type { SelectQueryBuilder } from "typeorm";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
+import type { PersistInput } from "@/modules/@shared";
 import type { IEvento } from "@/modules/horarios/evento";
 import type { EventoEntity } from "@/modules/horarios/evento/infrastructure/persistence/typeorm";
 import type {
@@ -32,7 +33,7 @@ export interface IEventoRepositoryPort {
    * Busca um evento por ID
    */
   findById(
-    accessContext: AccessContext,
+    accessContext: AccessContext | null,
     dto: EventoFindOneInputDto,
     selection?: string[] | boolean,
   ): Promise<EventoFindOneOutputDto | null>;
@@ -49,12 +50,12 @@ export interface IEventoRepositoryPort {
   /**
    * Cria uma entidade a partir de dados de domínio
    */
-  createFromDomain(data: IEvento): Promise<{ id: string | number }>;
+  createFromDomain(data: Partial<PersistInput<IEvento>>): Promise<{ id: string | number }>;
 
   /**
    * Atualiza uma entidade a partir de dados de domínio parciais
    */
-  updateFromDomain(id: string | number, data: Partial<IEvento>): Promise<void>;
+  updateFromDomain(id: string | number, data: Partial<PersistInput<IEvento>>): Promise<void>;
 
   /**
    * Executa soft delete por ID

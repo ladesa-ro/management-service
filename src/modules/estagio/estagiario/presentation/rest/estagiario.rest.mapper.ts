@@ -1,11 +1,3 @@
-import {
-  EstagiarioCreateInputRestDto,
-  EstagiarioFindOneInputRestDto,
-  EstagiarioFindOneOutputRestDto,
-  EstagiarioListInputRestDto,
-  EstagiarioListOutputRestDto,
-  EstagiarioUpdateInputRestDto,
-} from "./estagiario.rest.dto";
 import type {
   EstagiarioCreateInputDto,
   EstagiarioFindOneInputDto,
@@ -14,6 +6,14 @@ import type {
   EstagiarioListOutputDto,
   EstagiarioUpdateInputDto,
 } from "@/modules/estagio/estagiario/application/dtos";
+import {
+  EstagiarioCreateInputRestDto,
+  EstagiarioFindOneInputRestDto,
+  EstagiarioFindOneOutputRestDto,
+  EstagiarioListInputRestDto,
+  EstagiarioListOutputRestDto,
+  EstagiarioUpdateInputRestDto,
+} from "./estagiario.rest.dto";
 
 /**
  * Mapeador de DTOs REST para aplicação
@@ -65,9 +65,7 @@ export class EstagiarioRestMapper {
     };
   }
 
-  static toFindOneOutputDto(
-    data: EstagiarioFindOneOutputDto,
-  ): EstagiarioFindOneOutputRestDto {
+  static toFindOneOutputDto(data: EstagiarioFindOneOutputDto): EstagiarioFindOneOutputRestDto {
     return {
       id: data.id,
       idPerfilFk: data.idPerfilFk,

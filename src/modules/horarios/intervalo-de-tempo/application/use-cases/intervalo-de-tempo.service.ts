@@ -1,46 +1,51 @@
 import { Inject, Injectable } from "@nestjs/common";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ResourceNotFoundError } from "@/modules/@shared";
-import type { IIntervaloDeTempo } from "@/modules/horarios/intervalo-de-tempo";
 import {
+  type IIntervaloDeTempoCreateOrUpdateCommand,
+  IIntervaloDeTempoCreateOrUpdateCommandHandler,
+} from "@/modules/horarios/intervalo-de-tempo/domain/commands/intervalo-de-tempo-create-or-update.command.handler.interface";
+import { IIntervaloDeTempoFindOneQueryHandler } from "@/modules/horarios/intervalo-de-tempo/domain/queries/intervalo-de-tempo-find-one.query.handler.interface";
+import { IIntervaloDeTempoListQueryHandler } from "@/modules/horarios/intervalo-de-tempo/domain/queries/intervalo-de-tempo-list.query.handler.interface";
+import type {
   IntervaloDeTempoFindOneInputDto,
   IntervaloDeTempoFindOneOutputDto,
   IntervaloDeTempoInputDto,
   IntervaloDeTempoListInputDto,
   IntervaloDeTempoListOutputDto,
-} from "@/modules/horarios/intervalo-de-tempo/application/dtos";
-import {
-  type IIntervaloDeTempoRepositoryPort,
-  type IIntervaloDeTempoUseCasePort,
-  INTERVALO_DE_TEMPO_REPOSITORY_PORT,
-} from "@/modules/horarios/intervalo-de-tempo/application/ports";
+} from "../dtos";
+import type { IIntervaloDeTempoUseCasePort } from "../ports";
 
 @Injectable()
 export class IntervaloDeTempoService implements IIntervaloDeTempoUseCasePort {
   constructor(
-    @Inject(INTERVALO_DE_TEMPO_REPOSITORY_PORT)
-    private readonly intervaloDeTempoRepository: IIntervaloDeTempoRepositoryPort,
+    @Inject(IIntervaloDeTempoCreateOrUpdateCommandHandler)
+    private readonly createOrUpdateHandler: IIntervaloDeTempoCreateOrUpdateCommandHandler,
+    @Inject(IIntervaloDeTempoListQueryHandler)
+    private readonly listHandler: IIntervaloDeTempoListQueryHandler,
+    @Inject(IIntervaloDeTempoFindOneQueryHandler)
+    private readonly findOneHandler: IIntervaloDeTempoFindOneQueryHandler,
   ) {}
 
-  async findAll(
+  findAll(
     accessContext: AccessContext,
     dto: IntervaloDeTempoListInputDto | null = null,
   ): Promise<IntervaloDeTempoListOutputDto> {
-    return this.intervaloDeTempoRepository.findAll(accessContext, dto);
+    return this.listHandler.execute({ accessContext, dto });
   }
 
-  async findById(
+  findById(
     accessContext: AccessContext | null,
     dto: IntervaloDeTempoFindOneInputDto,
   ): Promise<IntervaloDeTempoFindOneOutputDto | null> {
-    return this.intervaloDeTempoRepository.findById(accessContext, dto);
+    return this.findOneHandler.execute({ accessContext, dto });
   }
 
   async findByIdStrict(
     accessContext: AccessContext | null,
     dto: IntervaloDeTempoFindOneInputDto,
   ): Promise<IntervaloDeTempoFindOneOutputDto> {
-    const intervaloDeTempo = await this.intervaloDeTempoRepository.findById(accessContext, dto);
+    const intervaloDeTempo = await this.findById(accessContext, dto);
 
     if (!intervaloDeTempo) {
       throw new ResourceNotFoundError("IntervaloDeTempo", dto.id);
@@ -49,19 +54,13 @@ export class IntervaloDeTempoService implements IIntervaloDeTempoUseCasePort {
     return intervaloDeTempo;
   }
 
-  async intervaloCreateOrUpdate(
+  intervaloCreateOrUpdate(
     accessContext: AccessContext | null,
     dto: IntervaloDeTempoInputDto,
   ): Promise<IntervaloDeTempoFindOneOutputDto> {
-    const intervalExisting = await this.intervaloDeTempoRepository.findOne(dto);
-
-    if (intervalExisting) return intervalExisting;
-
-    const { id } = await this.intervaloDeTempoRepository.createFromDomain({
-      periodoInicio: dto.periodoInicio,
-      periodoFim: dto.periodoFim,
-    } as IIntervaloDeTempo);
-
-    return this.intervaloDeTempoRepository.findOneByIdOrFail(id as string);
+    return this.createOrUpdateHandler.execute({
+      accessContext,
+      dto,
+    } satisfies IIntervaloDeTempoCreateOrUpdateCommand);
   }
 }

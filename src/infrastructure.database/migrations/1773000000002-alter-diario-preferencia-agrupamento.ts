@@ -12,10 +12,16 @@ export class AlterDiarioPreferenciaAgrupamento1773000000002 implements Migration
     await queryRunner.dropColumn(tableName, "date_updated");
     await queryRunner.dropColumn(tableName, "date_deleted");
 
-    await queryRunner.query(`DROP TRIGGER IF EXISTS change_date_updated_table_${tableName} ON ${tableName}`);
+    await queryRunner.query(
+      `DROP TRIGGER IF EXISTS change_date_updated_table_${tableName} ON ${tableName}`,
+    );
 
-    await queryRunner.query(`ALTER TABLE ${tableName} ALTER COLUMN data_inicio TYPE date USING data_inicio::date`);
-    await queryRunner.query(`ALTER TABLE ${tableName} ALTER COLUMN data_fim TYPE date USING data_fim::date`);
+    await queryRunner.query(
+      `ALTER TABLE ${tableName} ALTER COLUMN data_inicio TYPE date USING data_inicio::date`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE ${tableName} ALTER COLUMN data_fim TYPE date USING data_fim::date`,
+    );
 
     await queryRunner.addColumn(
       tableName,
@@ -31,13 +37,27 @@ export class AlterDiarioPreferenciaAgrupamento1773000000002 implements Migration
   public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.dropColumn(tableName, "ativo");
 
-    await queryRunner.query(`ALTER TABLE ${tableName} ALTER COLUMN data_fim TYPE timestamptz USING data_fim::timestamptz`);
-    await queryRunner.query(`ALTER TABLE ${tableName} ALTER COLUMN data_inicio TYPE timestamptz USING data_inicio::timestamptz`);
+    await queryRunner.query(
+      `ALTER TABLE ${tableName} ALTER COLUMN data_fim TYPE timestamptz USING data_fim::timestamptz`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE ${tableName} ALTER COLUMN data_inicio TYPE timestamptz USING data_inicio::timestamptz`,
+    );
 
     await queryRunner.addColumns(tableName, [
       new TableColumn({ name: "date_deleted", type: "timestamptz", isNullable: true }),
-      new TableColumn({ name: "date_updated", type: "timestamptz", isNullable: false, default: "NOW()" }),
-      new TableColumn({ name: "date_created", type: "timestamptz", isNullable: false, default: "NOW()" }),
+      new TableColumn({
+        name: "date_updated",
+        type: "timestamptz",
+        isNullable: false,
+        default: "NOW()",
+      }),
+      new TableColumn({
+        name: "date_created",
+        type: "timestamptz",
+        isNullable: false,
+        default: "NOW()",
+      }),
       new TableColumn({ name: "aulas_seguidas", type: "int", isNullable: false }),
       new TableColumn({ name: "dia_semana_iso", type: "int", isNullable: false }),
       new TableColumn({ name: "id_intervalo_de_tempo_fk", type: "uuid", isNullable: true }),

@@ -16,12 +16,21 @@ export const ConfigTokensMap = new Map<symbol, string>([
   [ConfigTokens.RuntimeOptions.ApiVersion, EnvKeys.LADESA_API_VERSION],
   [ConfigTokens.AuthOptions.Oidc.Issuer, EnvKeys.OAUTH2_CLIENT_PROVIDER_OIDC_ISSUER],
   [ConfigTokens.AuthOptions.Oidc.ClientId, EnvKeys.OAUTH2_CLIENT_REGISTRATION_LOGIN_CLIENT_ID],
-  [ConfigTokens.AuthOptions.Oidc.ClientSecret, EnvKeys.OAUTH2_CLIENT_REGISTRATION_LOGIN_CLIENT_SECRET],
+  [
+    ConfigTokens.AuthOptions.Oidc.ClientSecret,
+    EnvKeys.OAUTH2_CLIENT_REGISTRATION_LOGIN_CLIENT_SECRET,
+  ],
   [ConfigTokens.AuthOptions.Keycloak.BaseUrl, EnvKeys.KC_BASE_URL],
   [ConfigTokens.AuthOptions.Keycloak.Realm, EnvKeys.KC_REALM],
   [ConfigTokens.AuthOptions.Keycloak.ClientId, EnvKeys.KC_CLIENT_ID],
   [ConfigTokens.AuthOptions.Keycloak.ClientSecret, EnvKeys.KC_CLIENT_SECRET],
   [ConfigTokens.MessageBrokerOptions.Url, EnvKeys.MESSAGE_BROKER_URL],
-  [ConfigTokens.MessageBrokerOptions.QueueTimetableRequest, EnvKeys.MESSAGE_BROKER_QUEUE_TIMETABLE_REQUEST],
-  [ConfigTokens.MessageBrokerOptions.QueueTimetableResponse, EnvKeys.MESSAGE_BROKER_QUEUE_TIMETABLE_RESPONSE],
+  [
+    ConfigTokens.MessageBrokerOptions.QueueTimetableRequest,
+    EnvKeys.MESSAGE_BROKER_QUEUE_TIMETABLE_REQUEST,
+  ],
+  [
+    ConfigTokens.MessageBrokerOptions.QueueTimetableResponse,
+    EnvKeys.MESSAGE_BROKER_QUEUE_TIMETABLE_RESPONSE,
+  ],
 ]);

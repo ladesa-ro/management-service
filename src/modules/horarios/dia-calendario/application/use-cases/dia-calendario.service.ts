@@ -1,9 +1,21 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { has } from "lodash";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
-import { BaseCrudService, type PersistInput } from "@/modules/@shared";
-import { CalendarioLetivoService } from "@/modules/horarios/calendario-letivo";
-import { DiaCalendario, type IDiaCalendario } from "@/modules/horarios/dia-calendario";
+import { ResourceNotFoundError } from "@/modules/@shared";
+import {
+  type IDiaCalendarioCreateCommand,
+  IDiaCalendarioCreateCommandHandler,
+} from "@/modules/horarios/dia-calendario/domain/commands/dia-calendario-create.command.handler.interface";
+import {
+  type IDiaCalendarioDeleteCommand,
+  IDiaCalendarioDeleteCommandHandler,
+} from "@/modules/horarios/dia-calendario/domain/commands/dia-calendario-delete.command.handler.interface";
+import {
+  type IDiaCalendarioUpdateCommand,
+  IDiaCalendarioUpdateCommandHandler,
+} from "@/modules/horarios/dia-calendario/domain/commands/dia-calendario-update.command.handler.interface";
+
+import { IDiaCalendarioFindOneQueryHandler } from "@/modules/horarios/dia-calendario/domain/queries/dia-calendario-find-one.query.handler.interface";
+import { IDiaCalendarioListQueryHandler } from "@/modules/horarios/dia-calendario/domain/queries/dia-calendario-list.query.handler.interface";
 import type {
   DiaCalendarioCreateInputDto,
   DiaCalendarioFindOneInputDto,
@@ -12,80 +24,84 @@ import type {
   DiaCalendarioListOutputDto,
   DiaCalendarioUpdateInputDto,
 } from "../dtos";
-import { DIA_CALENDARIO_REPOSITORY_PORT, type IDiaCalendarioRepositoryPort } from "../ports";
 
 @Injectable()
-export class DiaCalendarioService extends BaseCrudService<
-  IDiaCalendario,
-  DiaCalendarioListInputDto,
-  DiaCalendarioListOutputDto,
-  DiaCalendarioFindOneInputDto,
-  DiaCalendarioFindOneOutputDto,
-  DiaCalendarioCreateInputDto,
-  DiaCalendarioUpdateInputDto
-> {
-  protected readonly resourceName = "DiaCalendario";
-  protected readonly createAction = "dia_calendario:create";
-  protected readonly updateAction = "dia_calendario:update";
-  protected readonly deleteAction = "dia_calendario:delete";
-
+export class DiaCalendarioService {
   constructor(
-    @Inject(DIA_CALENDARIO_REPOSITORY_PORT)
-    protected readonly repository: IDiaCalendarioRepositoryPort,
-    private readonly calendarioLetivoService: CalendarioLetivoService,
-  ) {
-    super();
+    @Inject(IDiaCalendarioCreateCommandHandler)
+    private readonly createHandler: IDiaCalendarioCreateCommandHandler,
+    @Inject(IDiaCalendarioUpdateCommandHandler)
+    private readonly updateHandler: IDiaCalendarioUpdateCommandHandler,
+    @Inject(IDiaCalendarioDeleteCommandHandler)
+    private readonly deleteHandler: IDiaCalendarioDeleteCommandHandler,
+
+    @Inject(IDiaCalendarioListQueryHandler)
+    private readonly listHandler: IDiaCalendarioListQueryHandler,
+    @Inject(IDiaCalendarioFindOneQueryHandler)
+    private readonly findOneHandler: IDiaCalendarioFindOneQueryHandler,
+  ) {}
+
+  findAll(
+    accessContext: AccessContext,
+    dto: DiaCalendarioListInputDto | null = null,
+    selection?: string[] | boolean,
+  ): Promise<DiaCalendarioListOutputDto> {
+    return this.listHandler.execute({ accessContext, dto, selection });
   }
 
-  protected async buildCreateData(
+  findById(
+    accessContext: AccessContext | null,
+    dto: DiaCalendarioFindOneInputDto,
+    selection?: string[] | boolean,
+  ): Promise<DiaCalendarioFindOneOutputDto | null> {
+    return this.findOneHandler.execute({ accessContext, dto, selection });
+  }
+
+  async findByIdStrict(
+    accessContext: AccessContext | null,
+    dto: DiaCalendarioFindOneInputDto,
+    selection?: string[] | boolean,
+  ): Promise<DiaCalendarioFindOneOutputDto> {
+    const entity = await this.findById(accessContext, dto, selection);
+
+    if (!entity) {
+      throw new ResourceNotFoundError("DiaCalendario", dto.id);
+    }
+
+    return entity;
+  }
+
+  findByIdSimple(
+    accessContext: AccessContext,
+    id: string,
+    selection?: string[] | boolean,
+  ): Promise<DiaCalendarioFindOneOutputDto | null> {
+    return this.findById(accessContext, { id } as DiaCalendarioFindOneInputDto, selection);
+  }
+
+  findByIdSimpleStrict(
+    accessContext: AccessContext,
+    id: string,
+    selection?: string[] | boolean,
+  ): Promise<DiaCalendarioFindOneOutputDto> {
+    return this.findByIdStrict(accessContext, { id } as DiaCalendarioFindOneInputDto, selection);
+  }
+
+  create(
     accessContext: AccessContext,
     dto: DiaCalendarioCreateInputDto,
-  ): Promise<Partial<PersistInput<IDiaCalendario>>> {
-    let calendarioRef: { id: string } | undefined;
-    if (dto.calendario) {
-      const calendario = await this.calendarioLetivoService.findByIdSimpleStrict(
-        accessContext,
-        dto.calendario.id,
-      );
-      calendarioRef = { id: calendario.id };
-    }
-
-    const domain = DiaCalendario.criar({
-      data: dto.data,
-      diaLetivo: dto.diaLetivo,
-      feriado: dto.feriado,
-      tipo: dto.tipo,
-      diaPresencial: dto.diaPresencial,
-      extraCurricular: dto.extraCurricular,
-      calendario: calendarioRef!,
-    });
-    return {
-      ...domain,
-      ...(calendarioRef ? { calendario: calendarioRef } : {}),
-    };
+  ): Promise<DiaCalendarioFindOneOutputDto> {
+    return this.createHandler.execute({ accessContext, dto } satisfies IDiaCalendarioCreateCommand);
   }
 
-  protected async buildUpdateData(
+  update(
     accessContext: AccessContext,
     dto: DiaCalendarioFindOneInputDto & DiaCalendarioUpdateInputDto,
-    current: DiaCalendarioFindOneOutputDto,
-  ): Promise<Partial<PersistInput<IDiaCalendario>>> {
-    const domain = DiaCalendario.fromData(current);
-    domain.atualizar({ data: dto.data, diaLetivo: dto.diaLetivo, feriado: dto.feriado });
-    const result: Partial<PersistInput<IDiaCalendario>> = {
-      data: domain.data,
-      diaLetivo: domain.diaLetivo,
-      feriado: domain.feriado,
-    };
+  ): Promise<DiaCalendarioFindOneOutputDto> {
+    return this.updateHandler.execute({ accessContext, dto } satisfies IDiaCalendarioUpdateCommand);
+  }
 
-    if (has(dto, "calendario") && dto.calendario !== undefined) {
-      const calendario = await this.calendarioLetivoService.findByIdSimpleStrict(
-        accessContext,
-        dto.calendario!.id,
-      );
-      result.calendario = { id: calendario.id };
-    }
-
-    return result;
+  deleteOneById(accessContext: AccessContext, dto: DiaCalendarioFindOneInputDto): Promise<boolean> {
+    return this.deleteHandler.execute({ accessContext, dto } satisfies IDiaCalendarioDeleteCommand);
   }
 }

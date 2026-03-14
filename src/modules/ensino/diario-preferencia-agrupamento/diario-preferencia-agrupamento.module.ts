@@ -5,6 +5,24 @@ import {
   DIARIO_PREFERENCIA_AGRUPAMENTO_REPOSITORY_PORT,
   DiarioPreferenciaAgrupamentoService,
 } from "@/modules/ensino/diario-preferencia-agrupamento";
+import {
+  DiarioPreferenciaAgrupamentoCreateCommandHandlerImpl,
+  DiarioPreferenciaAgrupamentoDeleteCommandHandlerImpl,
+  DiarioPreferenciaAgrupamentoUpdateCommandHandlerImpl,
+} from "@/modules/ensino/diario-preferencia-agrupamento/application/use-cases/commands";
+import {
+  DiarioPreferenciaAgrupamentoFindOneQueryHandlerImpl,
+  DiarioPreferenciaAgrupamentoListQueryHandlerImpl,
+} from "@/modules/ensino/diario-preferencia-agrupamento/application/use-cases/queries";
+import {
+  IDiarioPreferenciaAgrupamentoCreateCommandHandler,
+  IDiarioPreferenciaAgrupamentoDeleteCommandHandler,
+  IDiarioPreferenciaAgrupamentoUpdateCommandHandler,
+} from "@/modules/ensino/diario-preferencia-agrupamento/domain/commands";
+import {
+  IDiarioPreferenciaAgrupamentoFindOneQueryHandler,
+  IDiarioPreferenciaAgrupamentoListQueryHandler,
+} from "@/modules/ensino/diario-preferencia-agrupamento/domain/queries";
 import { DiarioPreferenciaAgrupamentoAuthzRegistrySetup } from "@/modules/ensino/diario-preferencia-agrupamento/infrastructure";
 import { DiarioPreferenciaAgrupamentoTypeOrmRepositoryAdapter } from "@/modules/ensino/diario-preferencia-agrupamento/infrastructure/persistence/typeorm";
 import { DiarioPreferenciaAgrupamentoGraphqlResolver } from "@/modules/ensino/diario-preferencia-agrupamento/presentation/graphql/diario-preferencia-agrupamento.graphql.resolver";
@@ -21,6 +39,29 @@ import { IntervaloDeTempoModule } from "@/modules/horarios/intervalo-de-tempo/in
     {
       provide: DIARIO_PREFERENCIA_AGRUPAMENTO_REPOSITORY_PORT,
       useClass: DiarioPreferenciaAgrupamentoTypeOrmRepositoryAdapter,
+    },
+
+    // Commands
+    {
+      provide: IDiarioPreferenciaAgrupamentoCreateCommandHandler,
+      useClass: DiarioPreferenciaAgrupamentoCreateCommandHandlerImpl,
+    },
+    {
+      provide: IDiarioPreferenciaAgrupamentoUpdateCommandHandler,
+      useClass: DiarioPreferenciaAgrupamentoUpdateCommandHandlerImpl,
+    },
+    {
+      provide: IDiarioPreferenciaAgrupamentoDeleteCommandHandler,
+      useClass: DiarioPreferenciaAgrupamentoDeleteCommandHandlerImpl,
+    },
+    // Queries
+    {
+      provide: IDiarioPreferenciaAgrupamentoListQueryHandler,
+      useClass: DiarioPreferenciaAgrupamentoListQueryHandlerImpl,
+    },
+    {
+      provide: IDiarioPreferenciaAgrupamentoFindOneQueryHandler,
+      useClass: DiarioPreferenciaAgrupamentoFindOneQueryHandlerImpl,
     },
   ],
   controllers: [DiarioPreferenciaAgrupamentoController],

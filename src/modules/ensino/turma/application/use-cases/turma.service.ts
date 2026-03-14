@@ -1,12 +1,25 @@
 import { Inject, Injectable, type StreamableFile } from "@nestjs/common";
-import { has } from "lodash";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
-import { BaseCrudService, type PersistInput } from "@/modules/@shared";
-import { AmbienteService } from "@/modules/ambientes/ambiente/application/use-cases/ambiente.service";
-import { ArquivoService } from "@/modules/armazenamento/arquivo/application/use-cases/arquivo.service";
-import { ImagemService } from "@/modules/armazenamento/imagem/application/use-cases/imagem.service";
-import { CursoService } from "@/modules/ensino/curso";
-import { type ITurma, Turma } from "@/modules/ensino/turma";
+import { ResourceNotFoundError } from "@/modules/@shared";
+import {
+  type ITurmaCreateCommand,
+  ITurmaCreateCommandHandler,
+} from "@/modules/ensino/turma/domain/commands/turma-create.command.handler.interface";
+import {
+  type ITurmaDeleteCommand,
+  ITurmaDeleteCommandHandler,
+} from "@/modules/ensino/turma/domain/commands/turma-delete.command.handler.interface";
+import {
+  type ITurmaUpdateCommand,
+  ITurmaUpdateCommandHandler,
+} from "@/modules/ensino/turma/domain/commands/turma-update.command.handler.interface";
+import {
+  type ITurmaUpdateImagemCapaCommand,
+  ITurmaUpdateImagemCapaCommandHandler,
+} from "@/modules/ensino/turma/domain/commands/turma-update-imagem-capa.command.handler.interface";
+import { ITurmaFindOneQueryHandler } from "@/modules/ensino/turma/domain/queries/turma-find-one.query.handler.interface";
+import { ITurmaGetImagemCapaQueryHandler } from "@/modules/ensino/turma/domain/queries/turma-get-imagem-capa.query.handler.interface";
+import { ITurmaListQueryHandler } from "@/modules/ensino/turma/domain/queries/turma-list.query.handler.interface";
 import type {
   TurmaCreateInputDto,
   TurmaFindOneInputDto,
@@ -15,104 +28,100 @@ import type {
   TurmaListOutputDto,
   TurmaUpdateInputDto,
 } from "../dtos";
-import { type ITurmaRepositoryPort, TURMA_REPOSITORY_PORT } from "../ports";
 
 @Injectable()
-export class TurmaService extends BaseCrudService<
-  ITurma,
-  TurmaListInputDto,
-  TurmaListOutputDto,
-  TurmaFindOneInputDto,
-  TurmaFindOneOutputDto,
-  TurmaCreateInputDto,
-  TurmaUpdateInputDto
-> {
-  protected readonly resourceName = "Turma";
-  protected readonly createAction = "turma:create";
-  protected readonly updateAction = "turma:update";
-  protected readonly deleteAction = "turma:delete";
-
+export class TurmaService {
   constructor(
-    @Inject(TURMA_REPOSITORY_PORT)
-    protected readonly repository: ITurmaRepositoryPort,
-    private readonly ambienteService: AmbienteService,
-    private readonly cursoService: CursoService,
-    private readonly imagemService: ImagemService,
-    private readonly arquivoService: ArquivoService,
-  ) {
-    super();
+    @Inject(ITurmaCreateCommandHandler)
+    private readonly createHandler: ITurmaCreateCommandHandler,
+    @Inject(ITurmaUpdateCommandHandler)
+    private readonly updateHandler: ITurmaUpdateCommandHandler,
+    @Inject(ITurmaDeleteCommandHandler)
+    private readonly deleteHandler: ITurmaDeleteCommandHandler,
+    @Inject(ITurmaUpdateImagemCapaCommandHandler)
+    private readonly updateImagemCapaHandler: ITurmaUpdateImagemCapaCommandHandler,
+    @Inject(ITurmaGetImagemCapaQueryHandler)
+    private readonly getImagemCapaHandler: ITurmaGetImagemCapaQueryHandler,
+    @Inject(ITurmaListQueryHandler)
+    private readonly listHandler: ITurmaListQueryHandler,
+    @Inject(ITurmaFindOneQueryHandler)
+    private readonly findOneHandler: ITurmaFindOneQueryHandler,
+  ) {}
+
+  findAll(
+    accessContext: AccessContext,
+    dto: TurmaListInputDto | null = null,
+    selection?: string[] | boolean,
+  ): Promise<TurmaListOutputDto> {
+    return this.listHandler.execute({ accessContext, dto, selection });
   }
 
-  async getImagemCapa(accessContext: AccessContext | null, id: string): Promise<StreamableFile> {
-    return this.getImagemField(
-      accessContext,
-      id,
-      "imagemCapa",
-      "Imagem de capa da Turma",
-      this.imagemService,
-      this.arquivoService,
-    );
+  findById(
+    accessContext: AccessContext | null,
+    dto: TurmaFindOneInputDto,
+    selection?: string[] | boolean,
+  ): Promise<TurmaFindOneOutputDto | null> {
+    return this.findOneHandler.execute({ accessContext, dto, selection });
   }
 
-  async updateImagemCapa(
+  async findByIdStrict(
+    accessContext: AccessContext | null,
+    dto: TurmaFindOneInputDto,
+    selection?: string[] | boolean,
+  ): Promise<TurmaFindOneOutputDto> {
+    const entity = await this.findById(accessContext, dto, selection);
+
+    if (!entity) {
+      throw new ResourceNotFoundError("Turma", dto.id);
+    }
+
+    return entity;
+  }
+
+  findByIdSimple(
+    accessContext: AccessContext,
+    id: string,
+    selection?: string[] | boolean,
+  ): Promise<TurmaFindOneOutputDto | null> {
+    return this.findById(accessContext, { id } as TurmaFindOneInputDto, selection);
+  }
+
+  findByIdSimpleStrict(
+    accessContext: AccessContext,
+    id: string,
+    selection?: string[] | boolean,
+  ): Promise<TurmaFindOneOutputDto> {
+    return this.findByIdStrict(accessContext, { id } as TurmaFindOneInputDto, selection);
+  }
+
+  create(accessContext: AccessContext, dto: TurmaCreateInputDto): Promise<TurmaFindOneOutputDto> {
+    return this.createHandler.execute({ accessContext, dto } satisfies ITurmaCreateCommand);
+  }
+
+  update(
+    accessContext: AccessContext,
+    dto: TurmaFindOneInputDto & TurmaUpdateInputDto,
+  ): Promise<TurmaFindOneOutputDto> {
+    return this.updateHandler.execute({ accessContext, dto } satisfies ITurmaUpdateCommand);
+  }
+
+  deleteOneById(accessContext: AccessContext, dto: TurmaFindOneInputDto): Promise<boolean> {
+    return this.deleteHandler.execute({ accessContext, dto } satisfies ITurmaDeleteCommand);
+  }
+
+  getImagemCapa(accessContext: AccessContext | null, id: string): Promise<StreamableFile> {
+    return this.getImagemCapaHandler.execute({ accessContext, id });
+  }
+
+  updateImagemCapa(
     accessContext: AccessContext,
     dto: TurmaFindOneInputDto,
     file: Express.Multer.File,
   ): Promise<boolean> {
-    return this.updateImagemField(accessContext, dto.id, file, "imagemCapa", this.imagemService);
-  }
-
-  protected async buildCreateData(
-    accessContext: AccessContext,
-    dto: TurmaCreateInputDto,
-  ): Promise<Partial<PersistInput<ITurma>>> {
-    const curso = await this.cursoService.findByIdSimpleStrict(accessContext, dto.curso.id);
-
-    let ambientePadraoAulaRef: { id: string } | null = null;
-    if (dto.ambientePadraoAula) {
-      const ambientePadraoAula = await this.ambienteService.findByIdStrict(accessContext, {
-        id: dto.ambientePadraoAula.id,
-      });
-      ambientePadraoAulaRef = { id: ambientePadraoAula.id };
-    }
-
-    const domain = Turma.criar({
-      periodo: dto.periodo,
-      curso: { id: curso.id },
-      ambientePadraoAula: ambientePadraoAulaRef,
-    });
-    return {
-      ...domain,
-      curso: { id: curso.id },
-      ambientePadraoAula: ambientePadraoAulaRef,
-    };
-  }
-
-  protected async buildUpdateData(
-    accessContext: AccessContext,
-    dto: TurmaFindOneInputDto & TurmaUpdateInputDto,
-    current: TurmaFindOneOutputDto,
-  ): Promise<Partial<PersistInput<ITurma>>> {
-    const domain = Turma.fromData(current);
-    domain.atualizar({ periodo: dto.periodo });
-    const result: Partial<PersistInput<ITurma>> = { periodo: domain.periodo };
-
-    if (has(dto, "ambientePadraoAula") && dto.ambientePadraoAula !== undefined) {
-      if (dto.ambientePadraoAula !== null) {
-        const ambientePadraoAula = await this.ambienteService.findByIdStrict(accessContext, {
-          id: dto.ambientePadraoAula.id,
-        });
-        result.ambientePadraoAula = { id: ambientePadraoAula.id };
-      } else {
-        result.ambientePadraoAula = null;
-      }
-    }
-
-    if (has(dto, "curso") && dto.curso !== undefined) {
-      const curso = await this.cursoService.findByIdSimpleStrict(accessContext, dto.curso.id);
-      result.curso = { id: curso.id };
-    }
-
-    return result;
+    return this.updateImagemCapaHandler.execute({
+      accessContext,
+      dto,
+      file,
+    } satisfies ITurmaUpdateImagemCapaCommand);
   }
 }

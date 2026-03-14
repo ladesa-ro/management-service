@@ -1,9 +1,21 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { has } from "lodash";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
-import { BaseCrudService, type PersistInput } from "@/modules/@shared";
-import { ModalidadeService } from "@/modules/ensino/modalidade";
-import { type IOfertaFormacao, OfertaFormacao } from "@/modules/ensino/oferta-formacao";
+import { ResourceNotFoundError } from "@/modules/@shared";
+import {
+  type IOfertaFormacaoCreateCommand,
+  IOfertaFormacaoCreateCommandHandler,
+} from "@/modules/ensino/oferta-formacao/domain/commands/oferta-formacao-create.command.handler.interface";
+import {
+  type IOfertaFormacaoDeleteCommand,
+  IOfertaFormacaoDeleteCommandHandler,
+} from "@/modules/ensino/oferta-formacao/domain/commands/oferta-formacao-delete.command.handler.interface";
+import {
+  type IOfertaFormacaoUpdateCommand,
+  IOfertaFormacaoUpdateCommandHandler,
+} from "@/modules/ensino/oferta-formacao/domain/commands/oferta-formacao-update.command.handler.interface";
+
+import { IOfertaFormacaoFindOneQueryHandler } from "@/modules/ensino/oferta-formacao/domain/queries/oferta-formacao-find-one.query.handler.interface";
+import { IOfertaFormacaoListQueryHandler } from "@/modules/ensino/oferta-formacao/domain/queries/oferta-formacao-list.query.handler.interface";
 import type {
   OfertaFormacaoCreateInputDto,
   OfertaFormacaoFindOneInputDto,
@@ -11,84 +23,98 @@ import type {
   OfertaFormacaoListInputDto,
   OfertaFormacaoListOutputDto,
   OfertaFormacaoUpdateInputDto,
-} from "@/modules/ensino/oferta-formacao/application/dtos";
-import {
-  type IOfertaFormacaoRepositoryPort,
-  type IOfertaFormacaoUseCasePort,
-  OFERTA_FORMACAO_REPOSITORY_PORT,
-} from "@/modules/ensino/oferta-formacao/application/ports";
+} from "../dtos";
+import type { IOfertaFormacaoUseCasePort } from "../ports";
 
 @Injectable()
-export class OfertaFormacaoService
-  extends BaseCrudService<
-    IOfertaFormacao,
-    OfertaFormacaoListInputDto,
-    OfertaFormacaoListOutputDto,
-    OfertaFormacaoFindOneInputDto,
-    OfertaFormacaoFindOneOutputDto,
-    OfertaFormacaoCreateInputDto,
-    OfertaFormacaoUpdateInputDto
-  >
-  implements IOfertaFormacaoUseCasePort
-{
-  protected readonly resourceName = "OfertaFormacao";
-  protected readonly createAction = "oferta_formacao:create";
-  protected readonly updateAction = "oferta_formacao:update";
-  protected readonly deleteAction = "oferta_formacao:delete";
-
+export class OfertaFormacaoService implements IOfertaFormacaoUseCasePort {
   constructor(
-    @Inject(OFERTA_FORMACAO_REPOSITORY_PORT)
-    protected readonly repository: IOfertaFormacaoRepositoryPort,
-    private readonly modalidadeService: ModalidadeService,
-  ) {
-    super();
+    @Inject(IOfertaFormacaoCreateCommandHandler)
+    private readonly createHandler: IOfertaFormacaoCreateCommandHandler,
+    @Inject(IOfertaFormacaoUpdateCommandHandler)
+    private readonly updateHandler: IOfertaFormacaoUpdateCommandHandler,
+    @Inject(IOfertaFormacaoDeleteCommandHandler)
+    private readonly deleteHandler: IOfertaFormacaoDeleteCommandHandler,
+
+    @Inject(IOfertaFormacaoListQueryHandler)
+    private readonly listHandler: IOfertaFormacaoListQueryHandler,
+    @Inject(IOfertaFormacaoFindOneQueryHandler)
+    private readonly findOneHandler: IOfertaFormacaoFindOneQueryHandler,
+  ) {}
+
+  findAll(
+    accessContext: AccessContext,
+    dto: OfertaFormacaoListInputDto | null = null,
+    selection?: string[] | boolean,
+  ): Promise<OfertaFormacaoListOutputDto> {
+    return this.listHandler.execute({ accessContext, dto, selection });
   }
 
-  protected async buildCreateData(
+  findById(
+    accessContext: AccessContext | null,
+    dto: OfertaFormacaoFindOneInputDto,
+    selection?: string[] | boolean,
+  ): Promise<OfertaFormacaoFindOneOutputDto | null> {
+    return this.findOneHandler.execute({ accessContext, dto, selection });
+  }
+
+  async findByIdStrict(
+    accessContext: AccessContext | null,
+    dto: OfertaFormacaoFindOneInputDto,
+    selection?: string[] | boolean,
+  ): Promise<OfertaFormacaoFindOneOutputDto> {
+    const entity = await this.findById(accessContext, dto, selection);
+
+    if (!entity) {
+      throw new ResourceNotFoundError("OfertaFormacao", dto.id);
+    }
+
+    return entity;
+  }
+
+  findByIdSimple(
+    accessContext: AccessContext,
+    id: string,
+    selection?: string[] | boolean,
+  ): Promise<OfertaFormacaoFindOneOutputDto | null> {
+    return this.findById(accessContext, { id } as OfertaFormacaoFindOneInputDto, selection);
+  }
+
+  findByIdSimpleStrict(
+    accessContext: AccessContext,
+    id: string,
+    selection?: string[] | boolean,
+  ): Promise<OfertaFormacaoFindOneOutputDto> {
+    return this.findByIdStrict(accessContext, { id } as OfertaFormacaoFindOneInputDto, selection);
+  }
+
+  create(
     accessContext: AccessContext,
     dto: OfertaFormacaoCreateInputDto,
-  ): Promise<Partial<PersistInput<IOfertaFormacao>>> {
-    let modalidadeRef: { id: string } | undefined;
-    if (dto.modalidade) {
-      const modalidade = await this.modalidadeService.findByIdSimpleStrict(
-        accessContext,
-        dto.modalidade.id,
-      );
-      modalidadeRef = { id: modalidade.id };
-    }
-
-    const domain = OfertaFormacao.criar({
-      nome: dto.nome,
-      slug: dto.slug,
-      modalidade: modalidadeRef,
-    });
-    return {
-      ...domain,
-      ...(modalidadeRef ? { modalidade: modalidadeRef } : {}),
-    };
+  ): Promise<OfertaFormacaoFindOneOutputDto> {
+    return this.createHandler.execute({
+      accessContext,
+      dto,
+    } satisfies IOfertaFormacaoCreateCommand);
   }
 
-  protected async buildUpdateData(
+  update(
     accessContext: AccessContext,
     dto: OfertaFormacaoFindOneInputDto & OfertaFormacaoUpdateInputDto,
-    current: OfertaFormacaoFindOneOutputDto,
-  ): Promise<Partial<PersistInput<IOfertaFormacao>>> {
-    const domain = OfertaFormacao.fromData(current);
-    domain.atualizar({ nome: dto.nome, slug: dto.slug });
-    const result: Partial<PersistInput<IOfertaFormacao>> = { nome: domain.nome, slug: domain.slug };
+  ): Promise<OfertaFormacaoFindOneOutputDto> {
+    return this.updateHandler.execute({
+      accessContext,
+      dto,
+    } satisfies IOfertaFormacaoUpdateCommand);
+  }
 
-    if (has(dto, "modalidade") && dto.modalidade !== undefined) {
-      if (dto.modalidade) {
-        const modalidade = await this.modalidadeService.findByIdSimpleStrict(
-          accessContext,
-          dto.modalidade.id,
-        );
-        result.modalidade = { id: modalidade.id };
-      } else {
-        result.modalidade = null;
-      }
-    }
-
-    return result;
+  deleteOneById(
+    accessContext: AccessContext,
+    dto: OfertaFormacaoFindOneInputDto,
+  ): Promise<boolean> {
+    return this.deleteHandler.execute({
+      accessContext,
+      dto,
+    } satisfies IOfertaFormacaoDeleteCommand);
   }
 }

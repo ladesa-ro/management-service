@@ -1,9 +1,21 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { has } from "lodash";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
-import { BaseCrudService, type PersistInput } from "@/modules/@shared";
-import { CalendarioLetivoService } from "@/modules/horarios/calendario-letivo";
-import { Evento, type IEvento } from "@/modules/horarios/evento";
+import { ResourceNotFoundError } from "@/modules/@shared";
+import {
+  type IEventoCreateCommand,
+  IEventoCreateCommandHandler,
+} from "@/modules/horarios/evento/domain/commands/evento-create.command.handler.interface";
+import {
+  type IEventoDeleteCommand,
+  IEventoDeleteCommandHandler,
+} from "@/modules/horarios/evento/domain/commands/evento-delete.command.handler.interface";
+import {
+  type IEventoUpdateCommand,
+  IEventoUpdateCommandHandler,
+} from "@/modules/horarios/evento/domain/commands/evento-update.command.handler.interface";
+
+import { IEventoFindOneQueryHandler } from "@/modules/horarios/evento/domain/queries/evento-find-one.query.handler.interface";
+import { IEventoListQueryHandler } from "@/modules/horarios/evento/domain/queries/evento-list.query.handler.interface";
 import type {
   EventoCreateInputDto,
   EventoFindOneInputDto,
@@ -12,89 +24,81 @@ import type {
   EventoListOutputDto,
   EventoUpdateInputDto,
 } from "../dtos";
-import { EVENTO_REPOSITORY_PORT, type IEventoRepositoryPort } from "../ports/out";
 
 @Injectable()
-export class EventoService extends BaseCrudService<
-  IEvento,
-  EventoListInputDto,
-  EventoListOutputDto,
-  EventoFindOneInputDto,
-  EventoFindOneOutputDto,
-  EventoCreateInputDto,
-  EventoUpdateInputDto
-> {
-  protected readonly resourceName = "Evento";
-  protected readonly createAction = "evento:create";
-  protected readonly updateAction = "evento:update";
-  protected readonly deleteAction = "evento:delete";
-
+export class EventoService {
   constructor(
-    @Inject(EVENTO_REPOSITORY_PORT)
-    protected readonly repository: IEventoRepositoryPort,
-    private readonly calendarioLetivoService: CalendarioLetivoService,
-  ) {
-    super();
+    @Inject(IEventoCreateCommandHandler)
+    private readonly createHandler: IEventoCreateCommandHandler,
+    @Inject(IEventoUpdateCommandHandler)
+    private readonly updateHandler: IEventoUpdateCommandHandler,
+    @Inject(IEventoDeleteCommandHandler)
+    private readonly deleteHandler: IEventoDeleteCommandHandler,
+
+    @Inject(IEventoListQueryHandler)
+    private readonly listHandler: IEventoListQueryHandler,
+    @Inject(IEventoFindOneQueryHandler)
+    private readonly findOneHandler: IEventoFindOneQueryHandler,
+  ) {}
+
+  findAll(
+    accessContext: AccessContext,
+    dto: EventoListInputDto | null = null,
+    selection?: string[] | boolean,
+  ): Promise<EventoListOutputDto> {
+    return this.listHandler.execute({ accessContext, dto, selection });
   }
 
-  protected async buildCreateData(
-    accessContext: AccessContext,
-    dto: EventoCreateInputDto,
-  ): Promise<Partial<PersistInput<IEvento>>> {
-    let calendarioRef: { id: string } | undefined;
-    if (dto.calendario) {
-      const calendario = await this.calendarioLetivoService.findByIdSimpleStrict(
-        accessContext,
-        dto.calendario.id,
-      );
-      calendarioRef = { id: calendario.id };
+  findById(
+    accessContext: AccessContext | null,
+    dto: EventoFindOneInputDto,
+    selection?: string[] | boolean,
+  ): Promise<EventoFindOneOutputDto | null> {
+    return this.findOneHandler.execute({ accessContext, dto, selection });
+  }
+
+  async findByIdStrict(
+    accessContext: AccessContext | null,
+    dto: EventoFindOneInputDto,
+    selection?: string[] | boolean,
+  ): Promise<EventoFindOneOutputDto> {
+    const entity = await this.findById(accessContext, dto, selection);
+
+    if (!entity) {
+      throw new ResourceNotFoundError("Evento", dto.id);
     }
 
-    const domain = Evento.criar({
-      nome: dto.nome,
-      cor: dto.cor,
-      rrule: dto.rrule,
-      dataInicio: dto.dataInicio,
-      dataFim: dto.dataFim,
-      calendario: calendarioRef!,
-      ambiente: dto.ambiente,
-    });
-    return {
-      ...domain,
-      ...(calendarioRef ? { calendario: calendarioRef } : {}),
-      ambiente: dto.ambiente ?? null,
-    };
+    return entity;
   }
 
-  protected async buildUpdateData(
+  findByIdSimple(
+    accessContext: AccessContext,
+    id: string,
+    selection?: string[] | boolean,
+  ): Promise<EventoFindOneOutputDto | null> {
+    return this.findById(accessContext, { id } as EventoFindOneInputDto, selection);
+  }
+
+  findByIdSimpleStrict(
+    accessContext: AccessContext,
+    id: string,
+    selection?: string[] | boolean,
+  ): Promise<EventoFindOneOutputDto> {
+    return this.findByIdStrict(accessContext, { id } as EventoFindOneInputDto, selection);
+  }
+
+  create(accessContext: AccessContext, dto: EventoCreateInputDto): Promise<EventoFindOneOutputDto> {
+    return this.createHandler.execute({ accessContext, dto } satisfies IEventoCreateCommand);
+  }
+
+  update(
     accessContext: AccessContext,
     dto: EventoFindOneInputDto & EventoUpdateInputDto,
-    current: EventoFindOneOutputDto,
-  ): Promise<Partial<PersistInput<IEvento>>> {
-    const domain = Evento.fromData(current);
-    domain.atualizar({
-      nome: dto.nome,
-      cor: dto.cor,
-      rrule: dto.rrule,
-      dataInicio: dto.dataInicio,
-      dataFim: dto.dataFim,
-    });
-    const result: Partial<PersistInput<IEvento>> = {
-      nome: domain.nome,
-      cor: domain.cor,
-      rrule: domain.rrule,
-      dataInicio: domain.dataInicio,
-      dataFim: domain.dataFim,
-    };
+  ): Promise<EventoFindOneOutputDto> {
+    return this.updateHandler.execute({ accessContext, dto } satisfies IEventoUpdateCommand);
+  }
 
-    if (has(dto, "calendario") && dto.calendario !== undefined) {
-      const calendario = await this.calendarioLetivoService.findByIdSimpleStrict(
-        accessContext,
-        dto.calendario!.id,
-      );
-      result.calendario = { id: calendario.id };
-    }
-
-    return result;
+  deleteOneById(accessContext: AccessContext, dto: EventoFindOneInputDto): Promise<boolean> {
+    return this.deleteHandler.execute({ accessContext, dto } satisfies IEventoDeleteCommand);
   }
 }

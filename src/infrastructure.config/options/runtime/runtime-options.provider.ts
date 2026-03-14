@@ -1,15 +1,17 @@
 import { Provider } from "@nestjs/common";
-import type { IRuntimeOptions } from "./runtime-options.interface";
-import { IRuntimeOptions as IRuntimeOptionsToken } from "./runtime-options.interface";
+import pkg from "../../../package.json";
 import type { IConfigService } from "../../config-service/config-service.interface";
 import { IConfigService as IConfigServiceToken } from "../../config-service/config-service.interface";
-import pkg from "../../../package.json";
 import { ConfigTokens } from "../../config-tokens";
+import type { IRuntimeOptions } from "./runtime-options.interface";
+import { IRuntimeOptions as IRuntimeOptionsToken } from "./runtime-options.interface";
 
 export const RuntimeOptionsProvider: Provider = {
   provide: IRuntimeOptionsToken,
   useFactory: (configService: IConfigService): IRuntimeOptions => {
-    const nodeEnv = (configService.get<string>(ConfigTokens.RuntimeOptions.NodeEnv) ?? "production").trim().toLocaleLowerCase();
+    const nodeEnv = (configService.get<string>(ConfigTokens.RuntimeOptions.NodeEnv) ?? "production")
+      .trim()
+      .toLocaleLowerCase();
     const isProduction = nodeEnv === "production";
 
     const rawPort = configService.get<number | string>(ConfigTokens.RuntimeOptions.Port) ?? null;
@@ -27,7 +29,8 @@ export const RuntimeOptionsProvider: Provider = {
     const buildTimeRaw = configService.get<string>(ConfigTokens.RuntimeOptions.BuildTime);
     const buildTime = buildTimeRaw ? new Date(buildTimeRaw) : null;
 
-    const gitCommitHash = configService.get<string>(ConfigTokens.RuntimeOptions.GitCommitHash) ?? null;
+    const gitCommitHash =
+      configService.get<string>(ConfigTokens.RuntimeOptions.GitCommitHash) ?? null;
 
     const swaggerServersRaw = configService.get<string>(ConfigTokens.RuntimeOptions.SwaggerServers);
     const swaggerServers =

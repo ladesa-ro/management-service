@@ -1,10 +1,21 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { has } from "lodash";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
-import { BaseCrudService, type PersistInput } from "@/modules/@shared";
-import { UsuarioService } from "@/modules/acesso/usuario/application/use-cases/usuario.service";
-import { AmbienteService } from "@/modules/ambientes/ambiente/application/use-cases/ambiente.service";
-import { type IReserva, Reserva } from "@/modules/ambientes/reserva";
+import { ResourceNotFoundError } from "@/modules/@shared";
+import {
+  type IReservaCreateCommand,
+  IReservaCreateCommandHandler,
+} from "@/modules/ambientes/reserva/domain/commands/reserva-create.command.handler.interface";
+import {
+  type IReservaDeleteCommand,
+  IReservaDeleteCommandHandler,
+} from "@/modules/ambientes/reserva/domain/commands/reserva-delete.command.handler.interface";
+import {
+  type IReservaUpdateCommand,
+  IReservaUpdateCommandHandler,
+} from "@/modules/ambientes/reserva/domain/commands/reserva-update.command.handler.interface";
+
+import { IReservaFindOneQueryHandler } from "@/modules/ambientes/reserva/domain/queries/reserva-find-one.query.handler.interface";
+import { IReservaListQueryHandler } from "@/modules/ambientes/reserva/domain/queries/reserva-list.query.handler.interface";
 import type {
   ReservaCreateInputDto,
   ReservaFindOneInputDto,
@@ -13,86 +24,85 @@ import type {
   ReservaListOutputDto,
   ReservaUpdateInputDto,
 } from "../dtos";
-import type { IReservaRepositoryPort, IReservaUseCasePort } from "../ports";
-import { RESERVA_REPOSITORY_PORT } from "../ports";
+import type { IReservaUseCasePort } from "../ports";
 
 @Injectable()
-export class ReservaService
-  extends BaseCrudService<
-    IReserva,
-    ReservaListInputDto,
-    ReservaListOutputDto,
-    ReservaFindOneInputDto,
-    ReservaFindOneOutputDto,
-    ReservaCreateInputDto,
-    ReservaUpdateInputDto
-  >
-  implements IReservaUseCasePort
-{
-  protected readonly resourceName = "Reserva";
-  protected readonly createAction = "reserva:create";
-  protected readonly updateAction = "reserva:update";
-  protected readonly deleteAction = "reserva:delete";
-
+export class ReservaService implements IReservaUseCasePort {
   constructor(
-    @Inject(RESERVA_REPOSITORY_PORT)
-    protected readonly repository: IReservaRepositoryPort,
-    private readonly usuarioService: UsuarioService,
-    private readonly ambienteService: AmbienteService,
-  ) {
-    super();
+    @Inject(IReservaCreateCommandHandler)
+    private readonly createHandler: IReservaCreateCommandHandler,
+    @Inject(IReservaUpdateCommandHandler)
+    private readonly updateHandler: IReservaUpdateCommandHandler,
+    @Inject(IReservaDeleteCommandHandler)
+    private readonly deleteHandler: IReservaDeleteCommandHandler,
+
+    @Inject(IReservaListQueryHandler)
+    private readonly listHandler: IReservaListQueryHandler,
+    @Inject(IReservaFindOneQueryHandler)
+    private readonly findOneHandler: IReservaFindOneQueryHandler,
+  ) {}
+
+  findAll(
+    accessContext: AccessContext,
+    dto: ReservaListInputDto | null = null,
+    selection?: string[] | boolean,
+  ): Promise<ReservaListOutputDto> {
+    return this.listHandler.execute({ accessContext, dto, selection });
   }
 
-  protected async buildCreateData(
+  findById(
+    accessContext: AccessContext | null,
+    dto: ReservaFindOneInputDto,
+    selection?: string[] | boolean,
+  ): Promise<ReservaFindOneOutputDto | null> {
+    return this.findOneHandler.execute({ accessContext, dto, selection });
+  }
+
+  async findByIdStrict(
+    accessContext: AccessContext | null,
+    dto: ReservaFindOneInputDto,
+    selection?: string[] | boolean,
+  ): Promise<ReservaFindOneOutputDto> {
+    const entity = await this.findById(accessContext, dto, selection);
+
+    if (!entity) {
+      throw new ResourceNotFoundError("Reserva", dto.id);
+    }
+
+    return entity;
+  }
+
+  findByIdSimple(
+    accessContext: AccessContext,
+    id: string,
+    selection?: string[] | boolean,
+  ): Promise<ReservaFindOneOutputDto | null> {
+    return this.findById(accessContext, { id } as ReservaFindOneInputDto, selection);
+  }
+
+  findByIdSimpleStrict(
+    accessContext: AccessContext,
+    id: string,
+    selection?: string[] | boolean,
+  ): Promise<ReservaFindOneOutputDto> {
+    return this.findByIdStrict(accessContext, { id } as ReservaFindOneInputDto, selection);
+  }
+
+  create(
     accessContext: AccessContext,
     dto: ReservaCreateInputDto,
-  ): Promise<Partial<PersistInput<IReserva>>> {
-    const ambiente = await this.ambienteService.findByIdStrict(accessContext, {
-      id: dto.ambiente.id,
-    });
-    const usuario = await this.usuarioService.findByIdStrict(accessContext, { id: dto.usuario.id });
-    const domain = Reserva.criar({
-      situacao: dto.situacao,
-      rrule: dto.rrule,
-      motivo: dto.motivo,
-      tipo: dto.tipo,
-      ambiente: { id: ambiente.id },
-      usuario: { id: usuario.id },
-    });
-    return { ...domain, ambiente: { id: ambiente.id }, usuario: { id: usuario.id } };
+  ): Promise<ReservaFindOneOutputDto> {
+    return this.createHandler.execute({ accessContext, dto } satisfies IReservaCreateCommand);
   }
 
-  protected async buildUpdateData(
+  update(
     accessContext: AccessContext,
     dto: ReservaFindOneInputDto & ReservaUpdateInputDto,
-    current: ReservaFindOneOutputDto,
-  ): Promise<Partial<PersistInput<IReserva>>> {
-    const domain = Reserva.fromData(current);
-    domain.atualizar({
-      situacao: dto.situacao,
-      rrule: dto.rrule,
-      motivo: dto.motivo,
-      tipo: dto.tipo,
-    });
-    const result: Partial<PersistInput<IReserva>> = {
-      situacao: domain.situacao,
-      rrule: domain.rrule,
-      motivo: domain.motivo,
-      tipo: domain.tipo,
-    };
+  ): Promise<ReservaFindOneOutputDto> {
+    return this.updateHandler.execute({ accessContext, dto } satisfies IReservaUpdateCommand);
+  }
 
-    if (has(dto, "ambiente") && dto.ambiente !== undefined) {
-      const ambiente = await this.ambienteService.findByIdStrict(accessContext, {
-        id: dto.ambiente.id,
-      });
-      result.ambiente = { id: ambiente.id };
-    }
-
-    if (has(dto, "usuario") && dto.usuario !== undefined) {
-      const usuario = await this.usuarioService.findByIdSimpleStrict(accessContext, dto.usuario.id);
-      result.usuario = { id: usuario.id };
-    }
-
-    return result;
+  deleteOneById(accessContext: AccessContext, dto: ReservaFindOneInputDto): Promise<boolean> {
+    return this.deleteHandler.execute({ accessContext, dto } satisfies IReservaDeleteCommand);
   }
 }

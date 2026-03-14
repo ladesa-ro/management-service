@@ -1,10 +1,21 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { has } from "lodash";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
-import { BaseCrudService, type PersistInput } from "@/modules/@shared";
-import { GradeHorarioOfertaFormacaoService } from "@/modules/horarios/grade-horario-oferta-formacao";
-import type { IGradeHorarioOfertaFormacaoIntervaloDeTempo } from "@/modules/horarios/grade-horario-oferta-formacao-intervalo-de-tempo";
-import { IntervaloDeTempoService } from "@/modules/horarios/intervalo-de-tempo";
+import { ResourceNotFoundError } from "@/modules/@shared";
+import {
+  type IGradeHorarioOfertaFormacaoIntervaloDeTempoCreateCommand,
+  IGradeHorarioOfertaFormacaoIntervaloDeTempoCreateCommandHandler,
+} from "@/modules/horarios/grade-horario-oferta-formacao-intervalo-de-tempo/domain/commands/grade-horario-oferta-formacao-intervalo-de-tempo-create.command.handler.interface";
+import {
+  type IGradeHorarioOfertaFormacaoIntervaloDeTempoDeleteCommand,
+  IGradeHorarioOfertaFormacaoIntervaloDeTempoDeleteCommandHandler,
+} from "@/modules/horarios/grade-horario-oferta-formacao-intervalo-de-tempo/domain/commands/grade-horario-oferta-formacao-intervalo-de-tempo-delete.command.handler.interface";
+import {
+  type IGradeHorarioOfertaFormacaoIntervaloDeTempoUpdateCommand,
+  IGradeHorarioOfertaFormacaoIntervaloDeTempoUpdateCommandHandler,
+} from "@/modules/horarios/grade-horario-oferta-formacao-intervalo-de-tempo/domain/commands/grade-horario-oferta-formacao-intervalo-de-tempo-update.command.handler.interface";
+
+import { IGradeHorarioOfertaFormacaoIntervaloDeTempoFindOneQueryHandler } from "@/modules/horarios/grade-horario-oferta-formacao-intervalo-de-tempo/domain/queries/grade-horario-oferta-formacao-intervalo-de-tempo-find-one.query.handler.interface";
+import { IGradeHorarioOfertaFormacaoIntervaloDeTempoListQueryHandler } from "@/modules/horarios/grade-horario-oferta-formacao-intervalo-de-tempo/domain/queries/grade-horario-oferta-formacao-intervalo-de-tempo-list.query.handler.interface";
 import type {
   GradeHorarioOfertaFormacaoIntervaloDeTempoCreateInputDto,
   GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInputDto,
@@ -13,92 +24,105 @@ import type {
   GradeHorarioOfertaFormacaoIntervaloDeTempoListOutputDto,
   GradeHorarioOfertaFormacaoIntervaloDeTempoUpdateInputDto,
 } from "../dtos";
-import {
-  GRADE_HORARIO_OFERTA_FORMACAO_INTERVALO_DE_TEMPO_REPOSITORY_PORT,
-  type IGradeHorarioOfertaFormacaoIntervaloDeTempoRepositoryPort,
-} from "../ports/out";
 
 @Injectable()
-export class GradeHorarioOfertaFormacaoIntervaloDeTempoService extends BaseCrudService<
-  IGradeHorarioOfertaFormacaoIntervaloDeTempo,
-  GradeHorarioOfertaFormacaoIntervaloDeTempoListInputDto,
-  GradeHorarioOfertaFormacaoIntervaloDeTempoListOutputDto,
-  GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInputDto,
-  GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputDto,
-  GradeHorarioOfertaFormacaoIntervaloDeTempoCreateInputDto,
-  GradeHorarioOfertaFormacaoIntervaloDeTempoUpdateInputDto
-> {
-  protected readonly resourceName = "GradeHorarioOfertaFormacaoIntervaloDeTempo";
-  protected readonly createAction = "grade_horario_oferta_formacao_intervalo_de_tempo:create";
-  protected readonly updateAction = "grade_horario_oferta_formacao_intervalo_de_tempo:update";
-  protected readonly deleteAction = "grade_horario_oferta_formacao_intervalo_de_tempo:delete";
-
+export class GradeHorarioOfertaFormacaoIntervaloDeTempoService {
   constructor(
-    @Inject(GRADE_HORARIO_OFERTA_FORMACAO_INTERVALO_DE_TEMPO_REPOSITORY_PORT)
-    protected readonly repository: IGradeHorarioOfertaFormacaoIntervaloDeTempoRepositoryPort,
-    private readonly intervaloDeTempoService: IntervaloDeTempoService,
-    private readonly gradeHorarioOfertaFormacaoService: GradeHorarioOfertaFormacaoService,
-  ) {
-    super();
+    @Inject(IGradeHorarioOfertaFormacaoIntervaloDeTempoCreateCommandHandler)
+    private readonly createHandler: IGradeHorarioOfertaFormacaoIntervaloDeTempoCreateCommandHandler,
+    @Inject(IGradeHorarioOfertaFormacaoIntervaloDeTempoUpdateCommandHandler)
+    private readonly updateHandler: IGradeHorarioOfertaFormacaoIntervaloDeTempoUpdateCommandHandler,
+    @Inject(IGradeHorarioOfertaFormacaoIntervaloDeTempoDeleteCommandHandler)
+    private readonly deleteHandler: IGradeHorarioOfertaFormacaoIntervaloDeTempoDeleteCommandHandler,
+
+    @Inject(IGradeHorarioOfertaFormacaoIntervaloDeTempoListQueryHandler)
+    private readonly listHandler: IGradeHorarioOfertaFormacaoIntervaloDeTempoListQueryHandler,
+    @Inject(IGradeHorarioOfertaFormacaoIntervaloDeTempoFindOneQueryHandler)
+    private readonly findOneHandler: IGradeHorarioOfertaFormacaoIntervaloDeTempoFindOneQueryHandler,
+  ) {}
+
+  findAll(
+    accessContext: AccessContext,
+    dto: GradeHorarioOfertaFormacaoIntervaloDeTempoListInputDto | null = null,
+    selection?: string[] | boolean,
+  ): Promise<GradeHorarioOfertaFormacaoIntervaloDeTempoListOutputDto> {
+    return this.listHandler.execute({ accessContext, dto, selection });
   }
 
-  protected async buildCreateData(
+  findById(
+    accessContext: AccessContext | null,
+    dto: GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInputDto,
+    selection?: string[] | boolean,
+  ): Promise<GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputDto | null> {
+    return this.findOneHandler.execute({ accessContext, dto, selection });
+  }
+
+  async findByIdStrict(
+    accessContext: AccessContext | null,
+    dto: GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInputDto,
+    selection?: string[] | boolean,
+  ): Promise<GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputDto> {
+    const entity = await this.findById(accessContext, dto, selection);
+
+    if (!entity) {
+      throw new ResourceNotFoundError("GradeHorarioOfertaFormacaoIntervaloDeTempo", dto.id);
+    }
+
+    return entity;
+  }
+
+  findByIdSimple(
+    accessContext: AccessContext,
+    id: string,
+    selection?: string[] | boolean,
+  ): Promise<GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputDto | null> {
+    return this.findById(
+      accessContext,
+      { id } as GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInputDto,
+      selection,
+    );
+  }
+
+  findByIdSimpleStrict(
+    accessContext: AccessContext,
+    id: string,
+    selection?: string[] | boolean,
+  ): Promise<GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputDto> {
+    return this.findByIdStrict(
+      accessContext,
+      { id } as GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInputDto,
+      selection,
+    );
+  }
+
+  create(
     accessContext: AccessContext,
     dto: GradeHorarioOfertaFormacaoIntervaloDeTempoCreateInputDto,
-  ): Promise<Partial<PersistInput<IGradeHorarioOfertaFormacaoIntervaloDeTempo>>> {
-    const result: Record<string, any> = {};
-
-    if (dto.gradeHorarioOfertaFormacao) {
-      const gradeHorarioOfertaFormacao =
-        await this.gradeHorarioOfertaFormacaoService.findByIdStrict(accessContext, {
-          id: dto.gradeHorarioOfertaFormacao.id,
-        });
-      result.gradeHorarioOfertaFormacao = { id: gradeHorarioOfertaFormacao.id };
-    }
-
-    if (dto.intervaloDeTempo) {
-      const intervaloDeTempo = await this.intervaloDeTempoService.intervaloCreateOrUpdate(
-        accessContext,
-        dto.intervaloDeTempo,
-      );
-      result.intervaloDeTempo = { id: intervaloDeTempo.id };
-    }
-
-    return result as IGradeHorarioOfertaFormacaoIntervaloDeTempo;
+  ): Promise<GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputDto> {
+    return this.createHandler.execute({
+      accessContext,
+      dto,
+    } satisfies IGradeHorarioOfertaFormacaoIntervaloDeTempoCreateCommand);
   }
 
-  protected async buildUpdateData(
+  update(
     accessContext: AccessContext,
     dto: GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInputDto &
       GradeHorarioOfertaFormacaoIntervaloDeTempoUpdateInputDto,
-    _current: GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputDto,
-  ): Promise<Partial<PersistInput<IGradeHorarioOfertaFormacaoIntervaloDeTempo>>> {
-    const result: Partial<PersistInput<IGradeHorarioOfertaFormacaoIntervaloDeTempo>> = {};
+  ): Promise<GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneOutputDto> {
+    return this.updateHandler.execute({
+      accessContext,
+      dto,
+    } satisfies IGradeHorarioOfertaFormacaoIntervaloDeTempoUpdateCommand);
+  }
 
-    if (has(dto, "gradeHorarioOfertaFormacao") && dto.gradeHorarioOfertaFormacao !== undefined) {
-      if (dto.gradeHorarioOfertaFormacao) {
-        const gradeHorarioOfertaFormacao =
-          await this.gradeHorarioOfertaFormacaoService.findByIdStrict(accessContext, {
-            id: dto.gradeHorarioOfertaFormacao.id,
-          });
-        result.gradeHorarioOfertaFormacao = { id: gradeHorarioOfertaFormacao.id };
-      } else {
-        result.gradeHorarioOfertaFormacao = null;
-      }
-    }
-
-    if (has(dto, "intervaloDeTempo") && dto.intervaloDeTempo !== undefined) {
-      if (dto.intervaloDeTempo) {
-        const intervaloDeTempo = await this.intervaloDeTempoService.intervaloCreateOrUpdate(
-          accessContext,
-          dto.intervaloDeTempo,
-        );
-        result.intervaloDeTempo = { id: intervaloDeTempo.id };
-      } else {
-        result.intervaloDeTempo = null;
-      }
-    }
-
-    return result;
+  deleteOneById(
+    accessContext: AccessContext,
+    dto: GradeHorarioOfertaFormacaoIntervaloDeTempoFindOneInputDto,
+  ): Promise<boolean> {
+    return this.deleteHandler.execute({
+      accessContext,
+      dto,
+    } satisfies IGradeHorarioOfertaFormacaoIntervaloDeTempoDeleteCommand);
   }
 }

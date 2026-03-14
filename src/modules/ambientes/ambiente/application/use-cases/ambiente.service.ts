@@ -1,15 +1,25 @@
 import { Inject, Injectable, type StreamableFile } from "@nestjs/common";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
+import { ResourceNotFoundError } from "@/modules/@shared";
 import {
-  AUTHORIZATION_SERVICE_PORT,
-  BaseCrudService,
-  type IAuthorizationServicePort,
-  type PersistInput,
-} from "@/modules/@shared";
-import { Ambiente, type IAmbiente } from "@/modules/ambientes/ambiente";
-import { BlocoService } from "@/modules/ambientes/bloco/application/use-cases/bloco.service";
-import { ArquivoService } from "@/modules/armazenamento/arquivo/application/use-cases/arquivo.service";
-import { ImagemService } from "@/modules/armazenamento/imagem/application/use-cases/imagem.service";
+  type IAmbienteCreateCommand,
+  IAmbienteCreateCommandHandler,
+} from "@/modules/ambientes/ambiente/domain/commands/ambiente-create.command.handler.interface";
+import {
+  type IAmbienteDeleteCommand,
+  IAmbienteDeleteCommandHandler,
+} from "@/modules/ambientes/ambiente/domain/commands/ambiente-delete.command.handler.interface";
+import {
+  type IAmbienteUpdateCommand,
+  IAmbienteUpdateCommandHandler,
+} from "@/modules/ambientes/ambiente/domain/commands/ambiente-update.command.handler.interface";
+import {
+  type IAmbienteUpdateImagemCapaCommand,
+  IAmbienteUpdateImagemCapaCommandHandler,
+} from "@/modules/ambientes/ambiente/domain/commands/ambiente-update-imagem-capa.command.handler.interface";
+import { IAmbienteFindOneQueryHandler } from "@/modules/ambientes/ambiente/domain/queries/ambiente-find-one.query.handler.interface";
+import { IAmbienteGetImagemCapaQueryHandler } from "@/modules/ambientes/ambiente/domain/queries/ambiente-get-imagem-capa.query.handler.interface";
+import { IAmbienteListQueryHandler } from "@/modules/ambientes/ambiente/domain/queries/ambiente-list.query.handler.interface";
 import type {
   AmbienteCreateInputDto,
   AmbienteFindOneInputDto,
@@ -18,96 +28,104 @@ import type {
   AmbienteListOutputDto,
   AmbienteUpdateInputDto,
 } from "../dtos";
-import {
-  AMBIENTE_REPOSITORY_PORT,
-  type IAmbienteRepositoryPort,
-  type IAmbienteUseCasePort,
-} from "../ports";
+import type { IAmbienteUseCasePort } from "../ports";
 
 @Injectable()
-export class AmbienteService
-  extends BaseCrudService<
-    IAmbiente,
-    AmbienteListInputDto,
-    AmbienteListOutputDto,
-    AmbienteFindOneInputDto,
-    AmbienteFindOneOutputDto,
-    AmbienteCreateInputDto,
-    AmbienteUpdateInputDto
-  >
-  implements IAmbienteUseCasePort
-{
-  protected readonly resourceName = "Ambiente";
-  protected readonly createAction = "ambiente:create";
-  protected readonly updateAction = "ambiente:update";
-  protected readonly deleteAction = "ambiente:delete";
-
+export class AmbienteService implements IAmbienteUseCasePort {
   constructor(
-    @Inject(AMBIENTE_REPOSITORY_PORT)
-    protected readonly repository: IAmbienteRepositoryPort,
-    @Inject(AUTHORIZATION_SERVICE_PORT)
-    protected readonly authorizationService: IAuthorizationServicePort,
-    private readonly blocoService: BlocoService,
-    private readonly imagemService: ImagemService,
-    private readonly arquivoService: ArquivoService,
-  ) {
-    super();
+    @Inject(IAmbienteCreateCommandHandler)
+    private readonly createHandler: IAmbienteCreateCommandHandler,
+    @Inject(IAmbienteUpdateCommandHandler)
+    private readonly updateHandler: IAmbienteUpdateCommandHandler,
+    @Inject(IAmbienteDeleteCommandHandler)
+    private readonly deleteHandler: IAmbienteDeleteCommandHandler,
+    @Inject(IAmbienteUpdateImagemCapaCommandHandler)
+    private readonly updateImagemCapaHandler: IAmbienteUpdateImagemCapaCommandHandler,
+    @Inject(IAmbienteListQueryHandler)
+    private readonly listHandler: IAmbienteListQueryHandler,
+    @Inject(IAmbienteFindOneQueryHandler)
+    private readonly findOneHandler: IAmbienteFindOneQueryHandler,
+    @Inject(IAmbienteGetImagemCapaQueryHandler)
+    private readonly getImagemCapaHandler: IAmbienteGetImagemCapaQueryHandler,
+  ) {}
+
+  findAll(
+    accessContext: AccessContext,
+    dto: AmbienteListInputDto | null = null,
+    selection?: string[] | boolean,
+  ): Promise<AmbienteListOutputDto> {
+    return this.listHandler.execute({ accessContext, dto, selection });
   }
 
-  async getImagemCapa(accessContext: AccessContext | null, id: string): Promise<StreamableFile> {
-    return this.getImagemField(
-      accessContext,
-      id,
-      "imagemCapa",
-      "Imagem de capa do Ambiente",
-      this.imagemService,
-      this.arquivoService,
-    );
+  findById(
+    accessContext: AccessContext | null,
+    dto: AmbienteFindOneInputDto,
+    selection?: string[] | boolean,
+  ): Promise<AmbienteFindOneOutputDto | null> {
+    return this.findOneHandler.execute({ accessContext, dto, selection });
   }
 
-  async updateImagemCapa(
+  async findByIdStrict(
+    accessContext: AccessContext | null,
+    dto: AmbienteFindOneInputDto,
+    selection?: string[] | boolean,
+  ): Promise<AmbienteFindOneOutputDto> {
+    const entity = await this.findById(accessContext, dto, selection);
+
+    if (!entity) {
+      throw new ResourceNotFoundError("Ambiente", dto.id);
+    }
+
+    return entity;
+  }
+
+  findByIdSimple(
+    accessContext: AccessContext,
+    id: string,
+    selection?: string[] | boolean,
+  ): Promise<AmbienteFindOneOutputDto | null> {
+    return this.findById(accessContext, { id }, selection);
+  }
+
+  findByIdSimpleStrict(
+    accessContext: AccessContext,
+    id: string,
+    selection?: string[] | boolean,
+  ): Promise<AmbienteFindOneOutputDto> {
+    return this.findByIdStrict(accessContext, { id }, selection);
+  }
+
+  create(
+    accessContext: AccessContext,
+    dto: AmbienteCreateInputDto,
+  ): Promise<AmbienteFindOneOutputDto> {
+    return this.createHandler.execute({ accessContext, dto } satisfies IAmbienteCreateCommand);
+  }
+
+  update(
+    accessContext: AccessContext,
+    dto: AmbienteFindOneInputDto & AmbienteUpdateInputDto,
+  ): Promise<AmbienteFindOneOutputDto> {
+    return this.updateHandler.execute({ accessContext, dto } satisfies IAmbienteUpdateCommand);
+  }
+
+  deleteOneById(accessContext: AccessContext, dto: AmbienteFindOneInputDto): Promise<boolean> {
+    return this.deleteHandler.execute({ accessContext, dto } satisfies IAmbienteDeleteCommand);
+  }
+
+  getImagemCapa(accessContext: AccessContext | null, id: string): Promise<StreamableFile> {
+    return this.getImagemCapaHandler.execute({ accessContext, id });
+  }
+
+  updateImagemCapa(
     accessContext: AccessContext,
     dto: AmbienteFindOneInputDto,
     file: Express.Multer.File,
   ): Promise<boolean> {
-    return this.updateImagemField(accessContext, dto.id, file, "imagemCapa", this.imagemService);
-  }
-
-  protected async buildCreateData(
-    accessContext: AccessContext,
-    dto: AmbienteCreateInputDto,
-  ): Promise<Partial<PersistInput<IAmbiente>>> {
-    const bloco = await this.blocoService.findByIdSimpleStrict(accessContext, dto.bloco.id);
-    const domain = Ambiente.criar({
-      nome: dto.nome,
-      descricao: dto.descricao,
-      codigo: dto.codigo,
-      capacidade: dto.capacidade,
-      tipo: dto.tipo,
-      bloco: { id: bloco.id },
-    });
-    return { ...domain, bloco: { id: bloco.id } };
-  }
-
-  protected async buildUpdateData(
-    _ac: AccessContext,
-    dto: AmbienteFindOneInputDto & AmbienteUpdateInputDto,
-    current: AmbienteFindOneOutputDto,
-  ): Promise<Partial<PersistInput<IAmbiente>>> {
-    const domain = Ambiente.fromData(current);
-    domain.atualizar({
-      nome: dto.nome,
-      descricao: dto.descricao,
-      codigo: dto.codigo,
-      capacidade: dto.capacidade,
-      tipo: dto.tipo,
-    });
-    return {
-      nome: domain.nome,
-      descricao: domain.descricao,
-      codigo: domain.codigo,
-      capacidade: domain.capacidade,
-      tipo: domain.tipo,
-    };
+    return this.updateImagemCapaHandler.execute({
+      accessContext,
+      dto,
+      file,
+    } satisfies IAmbienteUpdateImagemCapaCommand);
   }
 }

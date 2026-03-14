@@ -1,9 +1,25 @@
 import { Inject, Injectable, type StreamableFile } from "@nestjs/common";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
-import { BaseCrudService, type PersistInput } from "@/modules/@shared";
-import { ArquivoService } from "@/modules/armazenamento/arquivo/application/use-cases/arquivo.service";
-import { ImagemService } from "@/modules/armazenamento/imagem/application/use-cases/imagem.service";
-import { Disciplina, type IDisciplina } from "@/modules/ensino/disciplina";
+import { ResourceNotFoundError } from "@/modules/@shared";
+import {
+  type IDisciplinaCreateCommand,
+  IDisciplinaCreateCommandHandler,
+} from "@/modules/ensino/disciplina/domain/commands/disciplina-create.command.handler.interface";
+import {
+  type IDisciplinaDeleteCommand,
+  IDisciplinaDeleteCommandHandler,
+} from "@/modules/ensino/disciplina/domain/commands/disciplina-delete.command.handler.interface";
+import {
+  type IDisciplinaUpdateCommand,
+  IDisciplinaUpdateCommandHandler,
+} from "@/modules/ensino/disciplina/domain/commands/disciplina-update.command.handler.interface";
+import {
+  type IDisciplinaUpdateImagemCapaCommand,
+  IDisciplinaUpdateImagemCapaCommandHandler,
+} from "@/modules/ensino/disciplina/domain/commands/disciplina-update-imagem-capa.command.handler.interface";
+import { IDisciplinaFindOneQueryHandler } from "@/modules/ensino/disciplina/domain/queries/disciplina-find-one.query.handler.interface";
+import { IDisciplinaGetImagemCapaQueryHandler } from "@/modules/ensino/disciplina/domain/queries/disciplina-get-imagem-capa.query.handler.interface";
+import { IDisciplinaListQueryHandler } from "@/modules/ensino/disciplina/domain/queries/disciplina-list.query.handler.interface";
 import type {
   DisciplinaCreateInputDto,
   DisciplinaFindOneInputDto,
@@ -11,82 +27,104 @@ import type {
   DisciplinaListInputDto,
   DisciplinaListOutputDto,
   DisciplinaUpdateInputDto,
-} from "@/modules/ensino/disciplina/application/dtos";
-import {
-  DISCIPLINA_REPOSITORY_PORT,
-  type IDisciplinaRepositoryPort,
-} from "@/modules/ensino/disciplina/application/ports";
+} from "../dtos";
 
 @Injectable()
-export class DisciplinaService extends BaseCrudService<
-  IDisciplina,
-  DisciplinaListInputDto,
-  DisciplinaListOutputDto,
-  DisciplinaFindOneInputDto,
-  DisciplinaFindOneOutputDto,
-  DisciplinaCreateInputDto,
-  DisciplinaUpdateInputDto
-> {
-  protected readonly resourceName = "Disciplina";
-  protected readonly createAction = "disciplina:create";
-  protected readonly updateAction = "disciplina:update";
-  protected readonly deleteAction = "disciplina:delete";
-
+export class DisciplinaService {
   constructor(
-    @Inject(DISCIPLINA_REPOSITORY_PORT)
-    protected readonly repository: IDisciplinaRepositoryPort,
-    private readonly imagemService: ImagemService,
-    private readonly arquivoService: ArquivoService,
-  ) {
-    super();
+    @Inject(IDisciplinaCreateCommandHandler)
+    private readonly createHandler: IDisciplinaCreateCommandHandler,
+    @Inject(IDisciplinaUpdateCommandHandler)
+    private readonly updateHandler: IDisciplinaUpdateCommandHandler,
+    @Inject(IDisciplinaDeleteCommandHandler)
+    private readonly deleteHandler: IDisciplinaDeleteCommandHandler,
+    @Inject(IDisciplinaUpdateImagemCapaCommandHandler)
+    private readonly updateImagemCapaHandler: IDisciplinaUpdateImagemCapaCommandHandler,
+    @Inject(IDisciplinaGetImagemCapaQueryHandler)
+    private readonly getImagemCapaHandler: IDisciplinaGetImagemCapaQueryHandler,
+    @Inject(IDisciplinaListQueryHandler)
+    private readonly listHandler: IDisciplinaListQueryHandler,
+    @Inject(IDisciplinaFindOneQueryHandler)
+    private readonly findOneHandler: IDisciplinaFindOneQueryHandler,
+  ) {}
+
+  findAll(
+    accessContext: AccessContext,
+    dto: DisciplinaListInputDto | null = null,
+    selection?: string[] | boolean,
+  ): Promise<DisciplinaListOutputDto> {
+    return this.listHandler.execute({ accessContext, dto, selection });
   }
 
-  async getImagemCapa(accessContext: AccessContext | null, id: string): Promise<StreamableFile> {
-    return this.getImagemField(
-      accessContext,
-      id,
-      "imagemCapa",
-      "Imagem de capa da Disciplina",
-      this.imagemService,
-      this.arquivoService,
-    );
+  findById(
+    accessContext: AccessContext | null,
+    dto: DisciplinaFindOneInputDto,
+    selection?: string[] | boolean,
+  ): Promise<DisciplinaFindOneOutputDto | null> {
+    return this.findOneHandler.execute({ accessContext, dto, selection });
   }
 
-  async updateImagemCapa(
+  async findByIdStrict(
+    accessContext: AccessContext | null,
+    dto: DisciplinaFindOneInputDto,
+    selection?: string[] | boolean,
+  ): Promise<DisciplinaFindOneOutputDto> {
+    const entity = await this.findById(accessContext, dto, selection);
+
+    if (!entity) {
+      throw new ResourceNotFoundError("Disciplina", dto.id);
+    }
+
+    return entity;
+  }
+
+  findByIdSimple(
+    accessContext: AccessContext,
+    id: string,
+    selection?: string[] | boolean,
+  ): Promise<DisciplinaFindOneOutputDto | null> {
+    return this.findById(accessContext, { id } as DisciplinaFindOneInputDto, selection);
+  }
+
+  findByIdSimpleStrict(
+    accessContext: AccessContext,
+    id: string,
+    selection?: string[] | boolean,
+  ): Promise<DisciplinaFindOneOutputDto> {
+    return this.findByIdStrict(accessContext, { id } as DisciplinaFindOneInputDto, selection);
+  }
+
+  create(
+    accessContext: AccessContext,
+    dto: DisciplinaCreateInputDto,
+  ): Promise<DisciplinaFindOneOutputDto> {
+    return this.createHandler.execute({ accessContext, dto } satisfies IDisciplinaCreateCommand);
+  }
+
+  update(
+    accessContext: AccessContext,
+    dto: DisciplinaFindOneInputDto & DisciplinaUpdateInputDto,
+  ): Promise<DisciplinaFindOneOutputDto> {
+    return this.updateHandler.execute({ accessContext, dto } satisfies IDisciplinaUpdateCommand);
+  }
+
+  deleteOneById(accessContext: AccessContext, dto: DisciplinaFindOneInputDto): Promise<boolean> {
+    return this.deleteHandler.execute({ accessContext, dto } satisfies IDisciplinaDeleteCommand);
+  }
+
+  getImagemCapa(accessContext: AccessContext | null, id: string): Promise<StreamableFile> {
+    return this.getImagemCapaHandler.execute({ accessContext, id });
+  }
+
+  updateImagemCapa(
     accessContext: AccessContext,
     dto: DisciplinaFindOneInputDto,
     file: Express.Multer.File,
   ): Promise<boolean> {
-    return this.updateImagemField(accessContext, dto.id, file, "imagemCapa", this.imagemService);
-  }
-
-  protected async buildCreateData(
-    _ac: AccessContext,
-    dto: DisciplinaCreateInputDto,
-  ): Promise<Partial<PersistInput<IDisciplina>>> {
-    const domain = Disciplina.criar({
-      nome: dto.nome,
-      nomeAbreviado: dto.nomeAbreviado,
-      cargaHoraria: dto.cargaHoraria,
-    });
-    return { ...domain };
-  }
-
-  protected async buildUpdateData(
-    _ac: AccessContext,
-    dto: DisciplinaFindOneInputDto & DisciplinaUpdateInputDto,
-    current: DisciplinaFindOneOutputDto,
-  ): Promise<Partial<PersistInput<IDisciplina>>> {
-    const domain = Disciplina.fromData(current);
-    domain.atualizar({
-      nome: dto.nome,
-      nomeAbreviado: dto.nomeAbreviado,
-      cargaHoraria: dto.cargaHoraria,
-    });
-    return {
-      nome: domain.nome,
-      nomeAbreviado: domain.nomeAbreviado,
-      cargaHoraria: domain.cargaHoraria,
-    };
+    return this.updateImagemCapaHandler.execute({
+      accessContext,
+      dto,
+      file,
+    } satisfies IDisciplinaUpdateImagemCapaCommand);
   }
 }

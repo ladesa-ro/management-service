@@ -1,10 +1,21 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { has } from "lodash";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
-import { BaseCrudService, type PersistInput } from "@/modules/@shared";
-import { NivelFormacaoService } from "@/modules/ensino/nivel-formacao/application/use-cases/nivel-formacao.service";
-import { OfertaFormacaoService } from "@/modules/ensino/oferta-formacao";
-import type { IOfertaFormacaoNivelFormacao } from "@/modules/ensino/oferta-formacao-nivel-formacao";
+import { ResourceNotFoundError } from "@/modules/@shared";
+import {
+  type IOfertaFormacaoNivelFormacaoCreateCommand,
+  IOfertaFormacaoNivelFormacaoCreateCommandHandler,
+} from "@/modules/ensino/oferta-formacao-nivel-formacao/domain/commands/oferta-formacao-nivel-formacao-create.command.handler.interface";
+import {
+  type IOfertaFormacaoNivelFormacaoDeleteCommand,
+  IOfertaFormacaoNivelFormacaoDeleteCommandHandler,
+} from "@/modules/ensino/oferta-formacao-nivel-formacao/domain/commands/oferta-formacao-nivel-formacao-delete.command.handler.interface";
+import {
+  type IOfertaFormacaoNivelFormacaoUpdateCommand,
+  IOfertaFormacaoNivelFormacaoUpdateCommandHandler,
+} from "@/modules/ensino/oferta-formacao-nivel-formacao/domain/commands/oferta-formacao-nivel-formacao-update.command.handler.interface";
+
+import { IOfertaFormacaoNivelFormacaoFindOneQueryHandler } from "@/modules/ensino/oferta-formacao-nivel-formacao/domain/queries/oferta-formacao-nivel-formacao-find-one.query.handler.interface";
+import { IOfertaFormacaoNivelFormacaoListQueryHandler } from "@/modules/ensino/oferta-formacao-nivel-formacao/domain/queries/oferta-formacao-nivel-formacao-list.query.handler.interface";
 import type {
   OfertaFormacaoNivelFormacaoCreateInputDto,
   OfertaFormacaoNivelFormacaoFindOneInputDto,
@@ -12,88 +23,106 @@ import type {
   OfertaFormacaoNivelFormacaoListInputDto,
   OfertaFormacaoNivelFormacaoListOutputDto,
   OfertaFormacaoNivelFormacaoUpdateInputDto,
-} from "@/modules/ensino/oferta-formacao-nivel-formacao/application/dtos";
-import {
-  type IOfertaFormacaoNivelFormacaoRepositoryPort,
-  type IOfertaFormacaoNivelFormacaoUseCasePort,
-  OFERTA_FORMACAO_NIVEL_FORMACAO_REPOSITORY_PORT,
-} from "@/modules/ensino/oferta-formacao-nivel-formacao/application/ports";
+} from "../dtos";
+import type { IOfertaFormacaoNivelFormacaoUseCasePort } from "../ports";
 
 @Injectable()
-export class OfertaFormacaoNivelFormacaoService
-  extends BaseCrudService<
-    IOfertaFormacaoNivelFormacao,
-    OfertaFormacaoNivelFormacaoListInputDto,
-    OfertaFormacaoNivelFormacaoListOutputDto,
-    OfertaFormacaoNivelFormacaoFindOneInputDto,
-    OfertaFormacaoNivelFormacaoFindOneOutputDto,
-    OfertaFormacaoNivelFormacaoCreateInputDto,
-    OfertaFormacaoNivelFormacaoUpdateInputDto
-  >
-  implements IOfertaFormacaoNivelFormacaoUseCasePort
-{
-  protected readonly resourceName = "OfertaFormacaoNivelFormacao";
-  protected readonly createAction = "oferta_formacao_nivel_formacao:create";
-  protected readonly updateAction = "oferta_formacao_nivel_formacao:update";
-  protected readonly deleteAction = "oferta_formacao_nivel_formacao:delete";
-
+export class OfertaFormacaoNivelFormacaoService implements IOfertaFormacaoNivelFormacaoUseCasePort {
   constructor(
-    @Inject(OFERTA_FORMACAO_NIVEL_FORMACAO_REPOSITORY_PORT)
-    protected readonly repository: IOfertaFormacaoNivelFormacaoRepositoryPort,
-    private readonly ofertaFormacaoService: OfertaFormacaoService,
-    private readonly nivelFormacaoService: NivelFormacaoService,
-  ) {
-    super();
+    @Inject(IOfertaFormacaoNivelFormacaoCreateCommandHandler)
+    private readonly createHandler: IOfertaFormacaoNivelFormacaoCreateCommandHandler,
+    @Inject(IOfertaFormacaoNivelFormacaoUpdateCommandHandler)
+    private readonly updateHandler: IOfertaFormacaoNivelFormacaoUpdateCommandHandler,
+    @Inject(IOfertaFormacaoNivelFormacaoDeleteCommandHandler)
+    private readonly deleteHandler: IOfertaFormacaoNivelFormacaoDeleteCommandHandler,
+
+    @Inject(IOfertaFormacaoNivelFormacaoListQueryHandler)
+    private readonly listHandler: IOfertaFormacaoNivelFormacaoListQueryHandler,
+    @Inject(IOfertaFormacaoNivelFormacaoFindOneQueryHandler)
+    private readonly findOneHandler: IOfertaFormacaoNivelFormacaoFindOneQueryHandler,
+  ) {}
+
+  findAll(
+    accessContext: AccessContext,
+    dto: OfertaFormacaoNivelFormacaoListInputDto | null = null,
+    selection?: string[] | boolean,
+  ): Promise<OfertaFormacaoNivelFormacaoListOutputDto> {
+    return this.listHandler.execute({ accessContext, dto, selection });
   }
 
-  protected async buildCreateData(
+  findById(
+    accessContext: AccessContext | null,
+    dto: OfertaFormacaoNivelFormacaoFindOneInputDto,
+    selection?: string[] | boolean,
+  ): Promise<OfertaFormacaoNivelFormacaoFindOneOutputDto | null> {
+    return this.findOneHandler.execute({ accessContext, dto, selection });
+  }
+
+  async findByIdStrict(
+    accessContext: AccessContext | null,
+    dto: OfertaFormacaoNivelFormacaoFindOneInputDto,
+    selection?: string[] | boolean,
+  ): Promise<OfertaFormacaoNivelFormacaoFindOneOutputDto> {
+    const entity = await this.findById(accessContext, dto, selection);
+
+    if (!entity) {
+      throw new ResourceNotFoundError("OfertaFormacaoNivelFormacao", dto.id);
+    }
+
+    return entity;
+  }
+
+  findByIdSimple(
+    accessContext: AccessContext,
+    id: string,
+    selection?: string[] | boolean,
+  ): Promise<OfertaFormacaoNivelFormacaoFindOneOutputDto | null> {
+    return this.findById(
+      accessContext,
+      { id } as OfertaFormacaoNivelFormacaoFindOneInputDto,
+      selection,
+    );
+  }
+
+  findByIdSimpleStrict(
+    accessContext: AccessContext,
+    id: string,
+    selection?: string[] | boolean,
+  ): Promise<OfertaFormacaoNivelFormacaoFindOneOutputDto> {
+    return this.findByIdStrict(
+      accessContext,
+      { id } as OfertaFormacaoNivelFormacaoFindOneInputDto,
+      selection,
+    );
+  }
+
+  create(
     accessContext: AccessContext,
     dto: OfertaFormacaoNivelFormacaoCreateInputDto,
-  ): Promise<Partial<PersistInput<IOfertaFormacaoNivelFormacao>>> {
-    const result: Record<string, any> = {};
-
-    if (dto.ofertaFormacao) {
-      const ofertaFormacao = await this.ofertaFormacaoService.findByIdStrict(accessContext, {
-        id: dto.ofertaFormacao.id,
-      });
-      result.ofertaFormacao = { id: ofertaFormacao.id };
-    }
-
-    if (dto.nivelFormacao) {
-      const nivelFormacao = await this.nivelFormacaoService.findByIdStrict(accessContext, {
-        id: dto.nivelFormacao.id,
-      });
-      result.nivelFormacao = { id: nivelFormacao.id };
-    }
-
-    return result as IOfertaFormacaoNivelFormacao;
+  ): Promise<OfertaFormacaoNivelFormacaoFindOneOutputDto> {
+    return this.createHandler.execute({
+      accessContext,
+      dto,
+    } satisfies IOfertaFormacaoNivelFormacaoCreateCommand);
   }
 
-  protected async buildUpdateData(
+  update(
     accessContext: AccessContext,
     dto: OfertaFormacaoNivelFormacaoFindOneInputDto & OfertaFormacaoNivelFormacaoUpdateInputDto,
-    _current: OfertaFormacaoNivelFormacaoFindOneOutputDto,
-  ): Promise<Partial<PersistInput<IOfertaFormacaoNivelFormacao>>> {
-    const result: Partial<PersistInput<IOfertaFormacaoNivelFormacao>> = {};
+  ): Promise<OfertaFormacaoNivelFormacaoFindOneOutputDto> {
+    return this.updateHandler.execute({
+      accessContext,
+      dto,
+    } satisfies IOfertaFormacaoNivelFormacaoUpdateCommand);
+  }
 
-    if (has(dto, "ofertaFormacao") && dto.ofertaFormacao !== undefined) {
-      const ofertaFormacao =
-        dto.ofertaFormacao &&
-        (await this.ofertaFormacaoService.findByIdStrict(accessContext, {
-          id: dto.ofertaFormacao.id,
-        }));
-      result.ofertaFormacao = ofertaFormacao && { id: ofertaFormacao.id };
-    }
-
-    if (has(dto, "nivelFormacao") && dto.nivelFormacao !== undefined) {
-      const nivelFormacao =
-        dto.nivelFormacao &&
-        (await this.nivelFormacaoService.findByIdStrict(accessContext, {
-          id: dto.nivelFormacao.id,
-        }));
-      result.nivelFormacao = nivelFormacao && { id: nivelFormacao.id };
-    }
-
-    return result;
+  deleteOneById(
+    accessContext: AccessContext,
+    dto: OfertaFormacaoNivelFormacaoFindOneInputDto,
+  ): Promise<boolean> {
+    return this.deleteHandler.execute({
+      accessContext,
+      dto,
+    } satisfies IOfertaFormacaoNivelFormacaoDeleteCommand);
   }
 }

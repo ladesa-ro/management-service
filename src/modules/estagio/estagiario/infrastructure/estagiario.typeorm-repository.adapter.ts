@@ -1,10 +1,11 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { DataSource } from "typeorm";
-import {
-  APP_DATA_SOURCE_TOKEN,
-} from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ResourceNotFoundError } from "@/modules/@shared";
+import { APP_DATA_SOURCE_TOKEN } from "@/modules/@shared/infrastructure/persistence/typeorm";
+import { createPerfilRepository } from "@/modules/acesso/perfil/infrastructure/persistence/typeorm/perfil.repository";
+import { createCursoRepository } from "@/modules/ensino/curso/infrastructure/persistence/typeorm/curso.repository";
+import { createTurmaRepository } from "@/modules/ensino/turma/infrastructure/persistence/typeorm/turma.repository";
 import type {
   EstagiarioCreateInputDto,
   EstagiarioFindOneInputDto,
@@ -15,20 +16,11 @@ import type {
 } from "@/modules/estagio/estagiario/application/dtos";
 import type { IEstagiarioRepositoryPort } from "@/modules/estagio/estagiario/application/ports";
 import { Estagiario } from "@/modules/estagio/estagiario/domain/estagiario.domain";
-import { createPerfilRepository } from "@/modules/acesso/perfil/infrastructure/persistence/typeorm/perfil.repository";
-import { createCursoRepository } from "@/modules/ensino/curso/infrastructure/persistence/typeorm/curso.repository";
-import { createTurmaRepository } from "@/modules/ensino/turma/infrastructure/persistence/typeorm/turma.repository";
-import {
-  EstagiarioTypeormEntity,
-  EstagiarioMapper,
-  createEstagiarioRepository,
-} from "./persistence";
+import { createEstagiarioRepository, EstagiarioMapper } from "./persistence";
 
 @Injectable()
 export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepositoryPort {
-  constructor(
-    @Inject(APP_DATA_SOURCE_TOKEN) private readonly dataSource: DataSource,
-  ) {}
+  constructor(@Inject(APP_DATA_SOURCE_TOKEN) private readonly dataSource: DataSource) {}
 
   private get repository() {
     return createEstagiarioRepository(this.dataSource);
@@ -68,7 +60,11 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
       );
     }
 
-    if (dto?.filterIdPerfilFk && Array.isArray(dto.filterIdPerfilFk) && dto.filterIdPerfilFk.length > 0) {
+    if (
+      dto?.filterIdPerfilFk &&
+      Array.isArray(dto.filterIdPerfilFk) &&
+      dto.filterIdPerfilFk.length > 0
+    ) {
       const validIds = dto.filterIdPerfilFk.filter((id) => id && id.trim());
       if (validIds.length > 0) {
         query.andWhere("estagiario.idPerfilFk IN (:...idPerfis)", {
@@ -77,7 +73,11 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
       }
     }
 
-    if (dto?.filterIdCursoFk && Array.isArray(dto.filterIdCursoFk) && dto.filterIdCursoFk.length > 0) {
+    if (
+      dto?.filterIdCursoFk &&
+      Array.isArray(dto.filterIdCursoFk) &&
+      dto.filterIdCursoFk.length > 0
+    ) {
       const validIds = dto.filterIdCursoFk.filter((id) => id && id.trim());
       if (validIds.length > 0) {
         query.andWhere("estagiario.idCursoFk IN (:...idCursos)", {
@@ -86,7 +86,11 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
       }
     }
 
-    if (dto?.filterIdTurmaFk && Array.isArray(dto.filterIdTurmaFk) && dto.filterIdTurmaFk.length > 0) {
+    if (
+      dto?.filterIdTurmaFk &&
+      Array.isArray(dto.filterIdTurmaFk) &&
+      dto.filterIdTurmaFk.length > 0
+    ) {
       const validIds = dto.filterIdTurmaFk.filter((id) => id && id.trim());
       if (validIds.length > 0) {
         query.andWhere("estagiario.idTurmaFk IN (:...idTurmas)", {
@@ -95,10 +99,7 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
       }
     }
 
-    const [data, total] = await query
-      .skip(skip)
-      .take(limit)
-      .getManyAndCount();
+    const [data, total] = await query.skip(skip).take(limit).getManyAndCount();
 
     return {
       data: data.map((entity) => EstagiarioMapper.toOutputDto(entity)),

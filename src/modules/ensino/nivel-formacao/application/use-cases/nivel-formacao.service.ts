@@ -1,7 +1,21 @@
 import { Inject, Injectable } from "@nestjs/common";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
-import { BaseCrudService, type PersistInput } from "@/modules/@shared";
-import { type INivelFormacao, NivelFormacao } from "@/modules/ensino/nivel-formacao";
+import { ResourceNotFoundError } from "@/modules/@shared";
+import {
+  type INivelFormacaoCreateCommand,
+  INivelFormacaoCreateCommandHandler,
+} from "@/modules/ensino/nivel-formacao/domain/commands/nivel-formacao-create.command.handler.interface";
+import {
+  type INivelFormacaoDeleteCommand,
+  INivelFormacaoDeleteCommandHandler,
+} from "@/modules/ensino/nivel-formacao/domain/commands/nivel-formacao-delete.command.handler.interface";
+import {
+  type INivelFormacaoUpdateCommand,
+  INivelFormacaoUpdateCommandHandler,
+} from "@/modules/ensino/nivel-formacao/domain/commands/nivel-formacao-update.command.handler.interface";
+
+import { INivelFormacaoFindOneQueryHandler } from "@/modules/ensino/nivel-formacao/domain/queries/nivel-formacao-find-one.query.handler.interface";
+import { INivelFormacaoListQueryHandler } from "@/modules/ensino/nivel-formacao/domain/queries/nivel-formacao-list.query.handler.interface";
 import type {
   NivelFormacaoCreateInputDto,
   NivelFormacaoFindOneInputDto,
@@ -9,53 +23,86 @@ import type {
   NivelFormacaoListInputDto,
   NivelFormacaoListOutputDto,
   NivelFormacaoUpdateInputDto,
-} from "@/modules/ensino/nivel-formacao/application/dtos";
-import {
-  type INivelFormacaoRepositoryPort,
-  type INivelFormacaoUseCasePort,
-  NIVEL_FORMACAO_REPOSITORY_PORT,
-} from "@/modules/ensino/nivel-formacao/application/ports";
+} from "../dtos";
+import type { INivelFormacaoUseCasePort } from "../ports";
 
 @Injectable()
-export class NivelFormacaoService
-  extends BaseCrudService<
-    INivelFormacao,
-    NivelFormacaoListInputDto,
-    NivelFormacaoListOutputDto,
-    NivelFormacaoFindOneInputDto,
-    NivelFormacaoFindOneOutputDto,
-    NivelFormacaoCreateInputDto,
-    NivelFormacaoUpdateInputDto
-  >
-  implements INivelFormacaoUseCasePort
-{
-  protected readonly resourceName = "NivelFormacao";
-  protected readonly createAction = "nivel_formacao:create";
-  protected readonly updateAction = "nivel_formacao:update";
-  protected readonly deleteAction = "nivel_formacao:delete";
-
+export class NivelFormacaoService implements INivelFormacaoUseCasePort {
   constructor(
-    @Inject(NIVEL_FORMACAO_REPOSITORY_PORT)
-    protected readonly repository: INivelFormacaoRepositoryPort,
-  ) {
-    super();
+    @Inject(INivelFormacaoCreateCommandHandler)
+    private readonly createHandler: INivelFormacaoCreateCommandHandler,
+    @Inject(INivelFormacaoUpdateCommandHandler)
+    private readonly updateHandler: INivelFormacaoUpdateCommandHandler,
+    @Inject(INivelFormacaoDeleteCommandHandler)
+    private readonly deleteHandler: INivelFormacaoDeleteCommandHandler,
+
+    @Inject(INivelFormacaoListQueryHandler)
+    private readonly listHandler: INivelFormacaoListQueryHandler,
+    @Inject(INivelFormacaoFindOneQueryHandler)
+    private readonly findOneHandler: INivelFormacaoFindOneQueryHandler,
+  ) {}
+
+  findAll(
+    accessContext: AccessContext,
+    dto: NivelFormacaoListInputDto | null = null,
+    selection?: string[] | boolean,
+  ): Promise<NivelFormacaoListOutputDto> {
+    return this.listHandler.execute({ accessContext, dto, selection });
   }
 
-  protected async buildCreateData(
-    _ac: AccessContext,
+  findById(
+    accessContext: AccessContext | null,
+    dto: NivelFormacaoFindOneInputDto,
+    selection?: string[] | boolean,
+  ): Promise<NivelFormacaoFindOneOutputDto | null> {
+    return this.findOneHandler.execute({ accessContext, dto, selection });
+  }
+
+  async findByIdStrict(
+    accessContext: AccessContext | null,
+    dto: NivelFormacaoFindOneInputDto,
+    selection?: string[] | boolean,
+  ): Promise<NivelFormacaoFindOneOutputDto> {
+    const entity = await this.findById(accessContext, dto, selection);
+
+    if (!entity) {
+      throw new ResourceNotFoundError("NivelFormacao", dto.id);
+    }
+
+    return entity;
+  }
+
+  findByIdSimple(
+    accessContext: AccessContext,
+    id: string,
+    selection?: string[] | boolean,
+  ): Promise<NivelFormacaoFindOneOutputDto | null> {
+    return this.findById(accessContext, { id } as NivelFormacaoFindOneInputDto, selection);
+  }
+
+  findByIdSimpleStrict(
+    accessContext: AccessContext,
+    id: string,
+    selection?: string[] | boolean,
+  ): Promise<NivelFormacaoFindOneOutputDto> {
+    return this.findByIdStrict(accessContext, { id } as NivelFormacaoFindOneInputDto, selection);
+  }
+
+  create(
+    accessContext: AccessContext,
     dto: NivelFormacaoCreateInputDto,
-  ): Promise<Partial<PersistInput<INivelFormacao>>> {
-    const domain = NivelFormacao.criar({ slug: dto.slug });
-    return { ...domain };
+  ): Promise<NivelFormacaoFindOneOutputDto> {
+    return this.createHandler.execute({ accessContext, dto } satisfies INivelFormacaoCreateCommand);
   }
 
-  protected async buildUpdateData(
-    _ac: AccessContext,
+  update(
+    accessContext: AccessContext,
     dto: NivelFormacaoFindOneInputDto & NivelFormacaoUpdateInputDto,
-    current: NivelFormacaoFindOneOutputDto,
-  ): Promise<Partial<PersistInput<INivelFormacao>>> {
-    const domain = NivelFormacao.fromData(current);
-    domain.atualizar({ slug: dto.slug });
-    return { slug: domain.slug };
+  ): Promise<NivelFormacaoFindOneOutputDto> {
+    return this.updateHandler.execute({ accessContext, dto } satisfies INivelFormacaoUpdateCommand);
+  }
+
+  deleteOneById(accessContext: AccessContext, dto: NivelFormacaoFindOneInputDto): Promise<boolean> {
+    return this.deleteHandler.execute({ accessContext, dto } satisfies INivelFormacaoDeleteCommand);
   }
 }
