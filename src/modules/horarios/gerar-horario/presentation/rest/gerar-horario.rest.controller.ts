@@ -3,7 +3,7 @@ import { ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 import {
   type GenerateRequest,
   type ServiceGenerateResponse,
-} from "@/infrastructure.messages.timetable-generator/schemas";
+} from "@/infrastructure.timetable-generator/messages/schemas";
 import { IGerarHorarioPublishTimetableRequestCommandHandler } from "@/modules/horarios/gerar-horario/domain/commands/gerar-horario-publish-timetable-request.command.handler.interface";
 
 @ApiTags("gerar-horario")

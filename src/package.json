@@ -145,14 +145,14 @@
         "executor": "nx:run-commands",
         "cache": true,
         "inputs": [
-          "{projectRoot}/infrastructure.messages.timetable-generator/commands/generate"
+          "{projectRoot}/infrastructure.timetable-generator/messages/commands/generate"
         ],
         "outputs": [
-          "{projectRoot}/infrastructure.messages.timetable-generator/schemas.ts"
+          "{projectRoot}/infrastructure.timetable-generator/messages/schemas.ts"
         ],
         "options": {
           "command": "bash commands/generate",
-          "cwd": "{projectRoot}/infrastructure.messages.timetable-generator"
+          "cwd": "{projectRoot}/infrastructure.timetable-generator/messages"
         }
       }
     }
