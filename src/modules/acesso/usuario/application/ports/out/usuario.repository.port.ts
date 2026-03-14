@@ -55,10 +55,7 @@ export interface IUsuarioRepositoryPort extends IPersistRepositoryPort<Record<st
   /**
    * Verifica se uma matrícula está disponível
    */
-  isMatriculaAvailable(
-    matricula: string,
-    excludeUsuarioId?: string | null,
-  ): Promise<boolean>;
+  isMatriculaAvailable(matricula: string, excludeUsuarioId?: string | null): Promise<boolean>;
 
   /**
    * Verifica se um e-mail está disponível

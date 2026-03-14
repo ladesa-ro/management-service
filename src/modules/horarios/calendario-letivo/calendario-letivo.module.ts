@@ -6,6 +6,24 @@ import {
   CALENDARIO_LETIVO_REPOSITORY_PORT,
   CalendarioLetivoService,
 } from "@/modules/horarios/calendario-letivo";
+import {
+  CalendarioLetivoCreateCommandHandlerImpl,
+  CalendarioLetivoDeleteCommandHandlerImpl,
+  CalendarioLetivoUpdateCommandHandlerImpl,
+} from "@/modules/horarios/calendario-letivo/application/use-cases/commands";
+import {
+  CalendarioLetivoFindOneQueryHandlerImpl,
+  CalendarioLetivoListQueryHandlerImpl,
+} from "@/modules/horarios/calendario-letivo/application/use-cases/queries";
+import {
+  ICalendarioLetivoCreateCommandHandler,
+  ICalendarioLetivoDeleteCommandHandler,
+  ICalendarioLetivoUpdateCommandHandler,
+} from "@/modules/horarios/calendario-letivo/domain/commands";
+import {
+  ICalendarioLetivoFindOneQueryHandler,
+  ICalendarioLetivoListQueryHandler,
+} from "@/modules/horarios/calendario-letivo/domain/queries";
 import { CalendarioLetivoAuthzRegistrySetup } from "@/modules/horarios/calendario-letivo/infrastructure";
 import { CalendarioLetivoTypeOrmRepositoryAdapter } from "@/modules/horarios/calendario-letivo/infrastructure/persistence/typeorm";
 import { CalendarioLetivoGraphqlResolver } from "@/modules/horarios/calendario-letivo/presentation/graphql/calendario-letivo.graphql.resolver";
@@ -22,6 +40,26 @@ import { CalendarioLetivoRestController } from "@/modules/horarios/calendario-le
     {
       provide: CALENDARIO_LETIVO_REPOSITORY_PORT,
       useClass: CalendarioLetivoTypeOrmRepositoryAdapter,
+    },
+
+    // Commands
+    {
+      provide: ICalendarioLetivoCreateCommandHandler,
+      useClass: CalendarioLetivoCreateCommandHandlerImpl,
+    },
+    {
+      provide: ICalendarioLetivoUpdateCommandHandler,
+      useClass: CalendarioLetivoUpdateCommandHandlerImpl,
+    },
+    {
+      provide: ICalendarioLetivoDeleteCommandHandler,
+      useClass: CalendarioLetivoDeleteCommandHandlerImpl,
+    },
+    // Queries
+    { provide: ICalendarioLetivoListQueryHandler, useClass: CalendarioLetivoListQueryHandlerImpl },
+    {
+      provide: ICalendarioLetivoFindOneQueryHandler,
+      useClass: CalendarioLetivoFindOneQueryHandlerImpl,
     },
   ],
   exports: [CalendarioLetivoService],

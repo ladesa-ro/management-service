@@ -232,8 +232,7 @@ export class UsuarioService implements IUsuarioUseCasePort {
       (await this.usuarioRepository.resolveProperty(currentUsuario.id, "matricula"));
 
     const kcUser =
-      currentMatricula &&
-      (await this.keycloakService.findUserByMatricula(currentMatricula));
+      currentMatricula && (await this.keycloakService.findUserByMatricula(currentMatricula));
 
     if (!kcUser) {
       throw new ServiceUnavailableException();

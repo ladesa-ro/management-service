@@ -3,7 +3,25 @@ import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persiste
 import { PerfilModule } from "@/modules/acesso/perfil/perfil.module";
 import { DiarioModule } from "@/modules/ensino/diario/diario.module";
 import { DIARIO_PROFESSOR_REPOSITORY_PORT } from "@/modules/ensino/diario-professor/application/ports";
+import {
+  DiarioProfessorCreateCommandHandlerImpl,
+  DiarioProfessorDeleteCommandHandlerImpl,
+  DiarioProfessorUpdateCommandHandlerImpl,
+} from "@/modules/ensino/diario-professor/application/use-cases/commands";
 import { DiarioProfessorService } from "@/modules/ensino/diario-professor/application/use-cases/diario-professor.service";
+import {
+  DiarioProfessorFindOneQueryHandlerImpl,
+  DiarioProfessorListQueryHandlerImpl,
+} from "@/modules/ensino/diario-professor/application/use-cases/queries";
+import {
+  IDiarioProfessorCreateCommandHandler,
+  IDiarioProfessorDeleteCommandHandler,
+  IDiarioProfessorUpdateCommandHandler,
+} from "@/modules/ensino/diario-professor/domain/commands";
+import {
+  IDiarioProfessorFindOneQueryHandler,
+  IDiarioProfessorListQueryHandler,
+} from "@/modules/ensino/diario-professor/domain/queries";
 import { DiarioProfessorAuthzRegistrySetup } from "@/modules/ensino/diario-professor/infrastructure";
 import { DiarioProfessorTypeOrmRepositoryAdapter } from "@/modules/ensino/diario-professor/infrastructure/persistence/typeorm";
 import { DiarioProfessorGraphqlResolver } from "@/modules/ensino/diario-professor/presentation/graphql/diario-professor.graphql.resolver";
@@ -21,6 +39,26 @@ import { DiarioProfessorController } from "@/modules/ensino/diario-professor/pre
     DiarioProfessorService,
     DiarioProfessorGraphqlResolver,
     DiarioProfessorAuthzRegistrySetup,
+
+    // Commands
+    {
+      provide: IDiarioProfessorCreateCommandHandler,
+      useClass: DiarioProfessorCreateCommandHandlerImpl,
+    },
+    {
+      provide: IDiarioProfessorUpdateCommandHandler,
+      useClass: DiarioProfessorUpdateCommandHandlerImpl,
+    },
+    {
+      provide: IDiarioProfessorDeleteCommandHandler,
+      useClass: DiarioProfessorDeleteCommandHandlerImpl,
+    },
+    // Queries
+    { provide: IDiarioProfessorListQueryHandler, useClass: DiarioProfessorListQueryHandlerImpl },
+    {
+      provide: IDiarioProfessorFindOneQueryHandler,
+      useClass: DiarioProfessorFindOneQueryHandlerImpl,
+    },
   ],
   exports: [DiarioProfessorService],
 })

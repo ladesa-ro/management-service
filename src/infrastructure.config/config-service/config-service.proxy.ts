@@ -9,7 +9,9 @@ export class ConfigServiceProxy implements IConfigService {
     if (typeof propertyPath === "symbol") {
       const resolved = ConfigTokensMap.get(propertyPath);
       if (resolved === undefined) {
-        throw new Error(`ConfigServiceProxy: unknown config token ${String(propertyPath)}. Add it to ConfigTokensMap.`);
+        throw new Error(
+          `ConfigServiceProxy: unknown config token ${String(propertyPath)}. Add it to ConfigTokensMap.`,
+        );
       }
       return this.inner.get<T>(resolved);
     }

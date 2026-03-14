@@ -1,9 +1,9 @@
 import { Provider } from "@nestjs/common";
-import type { IAuthOptions } from "./auth-options.interface";
-import { IAuthOptions as IAuthOptionsToken } from "./auth-options.interface";
 import type { IConfigService } from "../../config-service/config-service.interface";
 import { IConfigService as IConfigServiceToken } from "../../config-service/config-service.interface";
 import { ConfigTokens } from "../../config-tokens";
+import type { IAuthOptions } from "./auth-options.interface";
+import { IAuthOptions as IAuthOptionsToken } from "./auth-options.interface";
 
 export const AuthOptionsProvider: Provider = {
   provide: IAuthOptionsToken,
@@ -19,7 +19,9 @@ export const AuthOptionsProvider: Provider = {
     const keycloakBaseUrl = configService.get<string>(ConfigTokens.AuthOptions.Keycloak.BaseUrl);
     const keycloakRealm = configService.get<string>(ConfigTokens.AuthOptions.Keycloak.Realm);
     const keycloakClientId = configService.get<string>(ConfigTokens.AuthOptions.Keycloak.ClientId);
-    const keycloakClientSecret = configService.get<string>(ConfigTokens.AuthOptions.Keycloak.ClientSecret);
+    const keycloakClientSecret = configService.get<string>(
+      ConfigTokens.AuthOptions.Keycloak.ClientSecret,
+    );
 
     if (!keycloakBaseUrl) {
       throw new Error("KeyCloak baseUrl config not provided.");

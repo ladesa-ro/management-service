@@ -3,6 +3,14 @@ import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persiste
 import { ESTADO_REPOSITORY_PORT } from "@/modules/localidades/estado/application/ports";
 import { EstadoService } from "@/modules/localidades/estado/application/use-cases/estado.service";
 import {
+  EstadoFindOneQueryHandlerImpl,
+  EstadoListQueryHandlerImpl,
+} from "@/modules/localidades/estado/application/use-cases/queries";
+import {
+  IEstadoFindOneQueryHandler,
+  IEstadoListQueryHandler,
+} from "@/modules/localidades/estado/domain/queries";
+import {
   EstadoAuthzRegistrySetup,
   EstadoTypeOrmRepositoryAdapter,
 } from "@/modules/localidades/estado/infrastructure";
@@ -21,6 +29,9 @@ import { EstadoRestController } from "@/modules/localidades/estado/presentation/
       provide: ESTADO_REPOSITORY_PORT,
       useClass: EstadoTypeOrmRepositoryAdapter,
     },
+    // Queries
+    { provide: IEstadoListQueryHandler, useClass: EstadoListQueryHandlerImpl },
+    { provide: IEstadoFindOneQueryHandler, useClass: EstadoFindOneQueryHandlerImpl },
   ],
   exports: [EstadoService],
 })

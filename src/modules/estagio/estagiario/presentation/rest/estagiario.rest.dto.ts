@@ -1,5 +1,13 @@
 import { ApiProperty, ApiPropertyOptional, ApiSchema } from "@nestjs/swagger";
-import { IsDateString, IsEmail, IsNotEmpty, IsOptional, IsString, IsUUID, Length } from "class-validator";
+import {
+  IsDateString,
+  IsEmail,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  IsUUID,
+  Length,
+} from "class-validator";
 import {
   PaginationInputRestDto,
   UuidParamRestDto,
@@ -31,7 +39,12 @@ export class EstagiarioCreateInputRestDto {
   @IsUUID("4")
   idTurmaFk!: string;
 
-  @ApiProperty({ type: "string", description: "Telefone do estagiário", minLength: 1, maxLength: 15 })
+  @ApiProperty({
+    type: "string",
+    description: "Telefone do estagiário",
+    minLength: 1,
+    maxLength: 15,
+  })
   @IsString()
   @Length(1, 15)
   telefone!: string;
@@ -79,7 +92,12 @@ export class EstagiarioUpdateInputRestDto {
   @IsOptional()
   idTurmaFk?: string;
 
-  @ApiPropertyOptional({ type: "string", description: "Telefone do estagiário", minLength: 1, maxLength: 15 })
+  @ApiPropertyOptional({
+    type: "string",
+    description: "Telefone do estagiário",
+    minLength: 1,
+    maxLength: 15,
+  })
   @IsString()
   @Length(1, 15)
   @IsOptional()
@@ -94,7 +112,11 @@ export class EstagiarioUpdateInputRestDto {
   @IsNotEmpty()
   emailInstitucional!: string;
 
-  @ApiPropertyOptional({ type: "string", format: "date", description: "Data de nascimento do estagiário" })
+  @ApiPropertyOptional({
+    type: "string",
+    format: "date",
+    description: "Data de nascimento do estagiário",
+  })
   @IsDateString()
   @IsOptional()
   dataNascimento?: string;

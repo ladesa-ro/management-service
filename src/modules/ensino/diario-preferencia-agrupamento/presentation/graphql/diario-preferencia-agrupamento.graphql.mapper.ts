@@ -6,7 +6,6 @@ import {
   DiarioPreferenciaAgrupamentoListInputDto,
   DiarioPreferenciaAgrupamentoUpdateInputDto,
 } from "@/modules/ensino/diario-preferencia-agrupamento";
-import { IntervaloDeTempoGraphqlMapper } from "@/modules/horarios/intervalo-de-tempo/presentation/graphql/intervalo-de-tempo.graphql.mapper";
 import {
   DiarioPreferenciaAgrupamentoCreateInputGraphQlDto,
   DiarioPreferenciaAgrupamentoDiarioOutputGraphQlDto,
@@ -52,7 +51,6 @@ export class DiarioPreferenciaAgrupamentoGraphqlMapper {
     input.dataFim = dto.dataFim as unknown as string | null;
     input.diaSemanaIso = dto.diaSemanaIso;
     input.aulasSeguidas = dto.aulasSeguidas;
-    input.intervaloDeTempo = { id: dto.intervaloDeTempo.id };
     input.diario = { id: dto.diario.id };
     return input;
   }
@@ -77,9 +75,6 @@ export class DiarioPreferenciaAgrupamentoGraphqlMapper {
     if (dto.aulasSeguidas !== undefined) {
       input.aulasSeguidas = dto.aulasSeguidas;
     }
-    if (dto.intervaloDeTempo !== undefined) {
-      input.intervaloDeTempo = { id: dto.intervaloDeTempo.id };
-    }
     if (dto.diario !== undefined) {
       input.diario = { id: dto.diario.id };
     }
@@ -95,9 +90,6 @@ export class DiarioPreferenciaAgrupamentoGraphqlMapper {
     dto.dataFim = output.dataFim as unknown as Date | null;
     dto.diaSemanaIso = output.diaSemanaIso;
     dto.aulasSeguidas = output.aulasSeguidas;
-    dto.intervaloDeTempo = IntervaloDeTempoGraphqlMapper.toFindOneOutputDto(
-      output.intervaloDeTempo,
-    );
     dto.diario = output.diario as unknown as DiarioPreferenciaAgrupamentoDiarioOutputGraphQlDto;
     mapDatedFields(dto, output);
     return dto;

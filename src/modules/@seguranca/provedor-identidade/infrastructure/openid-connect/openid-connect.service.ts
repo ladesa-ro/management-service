@@ -1,6 +1,9 @@
 import { Inject, Injectable } from "@nestjs/common";
 import * as client from "openid-client";
-import { IAuthOptions, IAuthOptions as IAuthOptionsToken } from "@/infrastructure.config/options/auth/auth-options.interface";
+import {
+  IAuthOptions,
+  IAuthOptions as IAuthOptionsToken,
+} from "@/infrastructure.config/options/auth/auth-options.interface";
 
 /**
  * Serviço para conexão OpenID Connect.

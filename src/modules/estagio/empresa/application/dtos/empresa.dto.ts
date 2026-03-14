@@ -1,4 +1,4 @@
-import { IsEmail, IsOptional, IsString, Length, MinLength, IsUUID } from "class-validator";
+import { IsEmail, IsOptional, IsString, IsUUID, Length, MinLength } from "class-validator";
 
 /**
  * DTO para criar empresa

@@ -1,11 +1,16 @@
-import { MigrationInterface, QueryRunner, Table, TableForeignKey } from "typeorm";
+import { MigrationInterface, QueryRunner, Table } from "typeorm";
 
 export class DropObsoleteTables1773000000001 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.dropTable("horario_gerado_aula", true, true, true);
     await queryRunner.dropTable("disponibilidade_dia", true, true, true);
     await queryRunner.dropTable("turma_disponibilidade", true, true, true);
-    await queryRunner.dropTable("grade_horario_oferta_formacao_intervalo_de_tempo", true, true, true);
+    await queryRunner.dropTable(
+      "grade_horario_oferta_formacao_intervalo_de_tempo",
+      true,
+      true,
+      true,
+    );
     await queryRunner.dropTable("aula", true, true, true);
     await queryRunner.dropTable("reserva", true, true, true);
     await queryRunner.dropTable("etapa", true, true, true);

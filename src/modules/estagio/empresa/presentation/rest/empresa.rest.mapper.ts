@@ -1,11 +1,3 @@
-import {
-  EmpresaCreateInputRestDto,
-  EmpresaFindOneInputRestDto,
-  EmpresaFindOneOutputRestDto,
-  EmpresaListInputRestDto,
-  EmpresaListOutputRestDto,
-  EmpresaUpdateInputRestDto,
-} from "./empresa.rest.dto";
 import type {
   EmpresaCreateInputDto,
   EmpresaFindOneInputDto,
@@ -14,6 +6,14 @@ import type {
   EmpresaListOutputDto,
   EmpresaUpdateInputDto,
 } from "@/modules/estagio/empresa/application/dtos";
+import {
+  EmpresaCreateInputRestDto,
+  EmpresaFindOneInputRestDto,
+  EmpresaFindOneOutputRestDto,
+  EmpresaListInputRestDto,
+  EmpresaListOutputRestDto,
+  EmpresaUpdateInputRestDto,
+} from "./empresa.rest.dto";
 
 /**
  * Mapeador de DTOs REST para aplicação
@@ -79,9 +79,7 @@ export class EmpresaRestMapper {
     };
   }
 
-  static toFindOneOutputDto(
-    data: EmpresaFindOneOutputDto,
-  ): EmpresaFindOneOutputRestDto {
+  static toFindOneOutputDto(data: EmpresaFindOneOutputDto): EmpresaFindOneOutputRestDto {
     return {
       id: data.id,
       razaoSocial: data.razaoSocial,

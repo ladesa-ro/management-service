@@ -1,13 +1,21 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { get } from "lodash";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
+import { ResourceNotFoundError } from "@/modules/@shared";
 import {
-  AUTHORIZATION_SERVICE_PORT,
-  BaseCrudService,
-  type IAuthorizationServicePort,
-  type PersistInput,
-} from "@/modules/@shared";
-import { Campus, type ICampus } from "@/modules/ambientes/campus";
+  type ICampusCreateCommand,
+  ICampusCreateCommandHandler,
+} from "@/modules/ambientes/campus/domain/commands/campus-create.command.handler.interface";
+import {
+  type ICampusDeleteCommand,
+  ICampusDeleteCommandHandler,
+} from "@/modules/ambientes/campus/domain/commands/campus-delete.command.handler.interface";
+import {
+  type ICampusUpdateCommand,
+  ICampusUpdateCommandHandler,
+} from "@/modules/ambientes/campus/domain/commands/campus-update.command.handler.interface";
+
+import { ICampusFindOneQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-find-one.query.handler.interface";
+import { ICampusListQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-list.query.handler.interface";
 import type {
   CampusCreateInputDto,
   CampusFindOneInputDto,
@@ -15,86 +23,83 @@ import type {
   CampusListInputDto,
   CampusListOutputDto,
   CampusUpdateInputDto,
-} from "@/modules/ambientes/campus/application/dtos";
-import {
-  CAMPUS_REPOSITORY_PORT,
-  type ICampusRepositoryPort,
-  type ICampusUseCasePort,
-} from "@/modules/ambientes/campus/application/ports";
-import { type EnderecoInputDto, EnderecoService } from "@/modules/localidades/endereco";
+} from "../dtos";
+import type { ICampusUseCasePort } from "../ports";
 
 @Injectable()
-export class CampusService
-  extends BaseCrudService<
-    ICampus,
-    CampusListInputDto,
-    CampusListOutputDto,
-    CampusFindOneInputDto,
-    CampusFindOneOutputDto,
-    CampusCreateInputDto,
-    CampusUpdateInputDto
-  >
-  implements ICampusUseCasePort
-{
-  protected readonly resourceName = "Campus";
-  protected readonly createAction = "campus:create";
-  protected readonly updateAction = "campus:update";
-  protected readonly deleteAction = "campus:delete";
-
+export class CampusService implements ICampusUseCasePort {
   constructor(
-    @Inject(CAMPUS_REPOSITORY_PORT)
-    protected readonly repository: ICampusRepositoryPort,
-    @Inject(AUTHORIZATION_SERVICE_PORT)
-    protected readonly authorizationService: IAuthorizationServicePort,
-    private readonly enderecoService: EnderecoService,
-  ) {
-    super();
+    @Inject(ICampusCreateCommandHandler)
+    private readonly createHandler: ICampusCreateCommandHandler,
+    @Inject(ICampusUpdateCommandHandler)
+    private readonly updateHandler: ICampusUpdateCommandHandler,
+    @Inject(ICampusDeleteCommandHandler)
+    private readonly deleteHandler: ICampusDeleteCommandHandler,
+
+    @Inject(ICampusListQueryHandler)
+    private readonly listHandler: ICampusListQueryHandler,
+    @Inject(ICampusFindOneQueryHandler)
+    private readonly findOneHandler: ICampusFindOneQueryHandler,
+  ) {}
+
+  findAll(
+    accessContext: AccessContext,
+    dto: CampusListInputDto | null = null,
+    selection?: string[] | boolean,
+  ): Promise<CampusListOutputDto> {
+    return this.listHandler.execute({ accessContext, dto, selection });
   }
 
-  protected async buildCreateData(
-    _ac: AccessContext,
-    dto: CampusCreateInputDto,
-  ): Promise<Partial<PersistInput<ICampus>>> {
-    const endereco = await this.enderecoService.internalEnderecoCreateOrUpdate(null, dto.endereco);
-    const domain = Campus.criar({
-      nomeFantasia: dto.nomeFantasia,
-      razaoSocial: dto.razaoSocial,
-      apelido: dto.apelido,
-      cnpj: dto.cnpj,
-      endereco: dto.endereco,
-    });
-    return { ...domain, endereco: { id: endereco.id as string } };
+  findById(
+    accessContext: AccessContext | null,
+    dto: CampusFindOneInputDto,
+    selection?: string[] | boolean,
+  ): Promise<CampusFindOneOutputDto | null> {
+    return this.findOneHandler.execute({ accessContext, dto, selection });
   }
 
-  protected async buildUpdateData(
-    _ac: AccessContext,
-    dto: CampusFindOneInputDto & CampusUpdateInputDto,
-    current: CampusFindOneOutputDto,
-  ): Promise<Partial<PersistInput<ICampus>>> {
-    const domain = Campus.fromData(current);
-    domain.atualizar({
-      nomeFantasia: dto.nomeFantasia,
-      razaoSocial: dto.razaoSocial,
-      apelido: dto.apelido,
-      cnpj: dto.cnpj,
-    });
+  async findByIdStrict(
+    accessContext: AccessContext | null,
+    dto: CampusFindOneInputDto,
+    selection?: string[] | boolean,
+  ): Promise<CampusFindOneOutputDto> {
+    const entity = await this.findById(accessContext, dto, selection);
 
-    const result: Partial<PersistInput<ICampus>> = {
-      nomeFantasia: domain.nomeFantasia,
-      razaoSocial: domain.razaoSocial,
-      apelido: domain.apelido,
-      cnpj: domain.cnpj,
-    };
-
-    const dtoEndereco = get(dto, "endereco");
-    if (dtoEndereco) {
-      const endereco = await this.enderecoService.internalEnderecoCreateOrUpdate(
-        current.endereco.id,
-        dtoEndereco as EnderecoInputDto,
-      );
-      result.endereco = { id: endereco.id as string };
+    if (!entity) {
+      throw new ResourceNotFoundError("Campus", dto.id);
     }
 
-    return result;
+    return entity;
+  }
+
+  findByIdSimple(
+    accessContext: AccessContext,
+    id: string,
+    selection?: string[] | boolean,
+  ): Promise<CampusFindOneOutputDto | null> {
+    return this.findById(accessContext, { id } as CampusFindOneInputDto, selection);
+  }
+
+  findByIdSimpleStrict(
+    accessContext: AccessContext,
+    id: string,
+    selection?: string[] | boolean,
+  ): Promise<CampusFindOneOutputDto> {
+    return this.findByIdStrict(accessContext, { id } as CampusFindOneInputDto, selection);
+  }
+
+  create(accessContext: AccessContext, dto: CampusCreateInputDto): Promise<CampusFindOneOutputDto> {
+    return this.createHandler.execute({ accessContext, dto } satisfies ICampusCreateCommand);
+  }
+
+  update(
+    accessContext: AccessContext,
+    dto: CampusFindOneInputDto & CampusUpdateInputDto,
+  ): Promise<CampusFindOneOutputDto> {
+    return this.updateHandler.execute({ accessContext, dto } satisfies ICampusUpdateCommand);
+  }
+
+  deleteOneById(accessContext: AccessContext, dto: CampusFindOneInputDto): Promise<boolean> {
+    return this.deleteHandler.execute({ accessContext, dto } satisfies ICampusDeleteCommand);
   }
 }

@@ -1,3 +1,4 @@
+export * from "./abstractions";
 export * from "./base-dated-entity";
 export * from "./base-entity";
 export * from "./base-read-only-entity";

@@ -5,7 +5,29 @@ import { ArquivoModule } from "@/modules/armazenamento/arquivo/arquivo.module";
 import { ImagemModule } from "@/modules/armazenamento/imagem/imagem.module";
 import { CursoModule } from "@/modules/ensino/curso/curso.module";
 import { TURMA_REPOSITORY_PORT } from "@/modules/ensino/turma/application/ports";
+import {
+  TurmaCreateCommandHandlerImpl,
+  TurmaDeleteCommandHandlerImpl,
+  TurmaUpdateCommandHandlerImpl,
+  TurmaUpdateImagemCapaCommandHandlerImpl,
+} from "@/modules/ensino/turma/application/use-cases/commands";
+import {
+  TurmaFindOneQueryHandlerImpl,
+  TurmaGetImagemCapaQueryHandlerImpl,
+  TurmaListQueryHandlerImpl,
+} from "@/modules/ensino/turma/application/use-cases/queries";
 import { TurmaService } from "@/modules/ensino/turma/application/use-cases/turma.service";
+import {
+  ITurmaCreateCommandHandler,
+  ITurmaDeleteCommandHandler,
+  ITurmaUpdateCommandHandler,
+  ITurmaUpdateImagemCapaCommandHandler,
+} from "@/modules/ensino/turma/domain/commands";
+import {
+  ITurmaFindOneQueryHandler,
+  ITurmaGetImagemCapaQueryHandler,
+  ITurmaListQueryHandler,
+} from "@/modules/ensino/turma/domain/queries";
 import {
   TurmaAuthzRegistrySetup,
   TurmaTypeOrmRepositoryAdapter,
@@ -25,6 +47,19 @@ import { TurmaRestController } from "@/modules/ensino/turma/presentation/rest/tu
       provide: TURMA_REPOSITORY_PORT,
       useClass: TurmaTypeOrmRepositoryAdapter,
     },
+
+    // Commands
+    { provide: ITurmaCreateCommandHandler, useClass: TurmaCreateCommandHandlerImpl },
+    { provide: ITurmaUpdateCommandHandler, useClass: TurmaUpdateCommandHandlerImpl },
+    { provide: ITurmaDeleteCommandHandler, useClass: TurmaDeleteCommandHandlerImpl },
+    {
+      provide: ITurmaUpdateImagemCapaCommandHandler,
+      useClass: TurmaUpdateImagemCapaCommandHandlerImpl,
+    },
+    // Queries
+    { provide: ITurmaListQueryHandler, useClass: TurmaListQueryHandlerImpl },
+    { provide: ITurmaFindOneQueryHandler, useClass: TurmaFindOneQueryHandlerImpl },
+    { provide: ITurmaGetImagemCapaQueryHandler, useClass: TurmaGetImagemCapaQueryHandlerImpl },
   ],
   exports: [TurmaService],
 })

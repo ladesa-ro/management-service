@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
-import { Empresa } from "@/modules/estagio/empresa/domain/empresa.domain";
 import type { EmpresaFindOneOutputDto } from "@/modules/estagio/empresa/application/dtos";
+import { Empresa } from "@/modules/estagio/empresa/domain/empresa.domain";
 import { EmpresaTypeormEntity } from "./empresa.typeorm.entity";
 
 /**

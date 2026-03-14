@@ -3,6 +3,28 @@ import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persiste
 import { BLOCO_REPOSITORY_PORT } from "@/modules/ambientes/bloco/application/ports";
 import { BlocoService } from "@/modules/ambientes/bloco/application/use-cases/bloco.service";
 import {
+  BlocoCreateCommandHandlerImpl,
+  BlocoDeleteCommandHandlerImpl,
+  BlocoUpdateCommandHandlerImpl,
+  BlocoUpdateImagemCapaCommandHandlerImpl,
+} from "@/modules/ambientes/bloco/application/use-cases/commands";
+import {
+  BlocoFindOneQueryHandlerImpl,
+  BlocoGetImagemCapaQueryHandlerImpl,
+  BlocoListQueryHandlerImpl,
+} from "@/modules/ambientes/bloco/application/use-cases/queries";
+import {
+  IBlocoCreateCommandHandler,
+  IBlocoDeleteCommandHandler,
+  IBlocoUpdateCommandHandler,
+  IBlocoUpdateImagemCapaCommandHandler,
+} from "@/modules/ambientes/bloco/domain/commands";
+import {
+  IBlocoFindOneQueryHandler,
+  IBlocoGetImagemCapaQueryHandler,
+  IBlocoListQueryHandler,
+} from "@/modules/ambientes/bloco/domain/queries";
+import {
   BlocoAuthzRegistrySetup,
   BlocoTypeOrmRepositoryAdapter,
 } from "@/modules/ambientes/bloco/infrastructure";
@@ -24,6 +46,18 @@ import { ImagemModule } from "@/modules/armazenamento/imagem/imagem.module";
       provide: BLOCO_REPOSITORY_PORT,
       useClass: BlocoTypeOrmRepositoryAdapter,
     },
+    // Commands
+    { provide: IBlocoCreateCommandHandler, useClass: BlocoCreateCommandHandlerImpl },
+    { provide: IBlocoUpdateCommandHandler, useClass: BlocoUpdateCommandHandlerImpl },
+    { provide: IBlocoDeleteCommandHandler, useClass: BlocoDeleteCommandHandlerImpl },
+    {
+      provide: IBlocoUpdateImagemCapaCommandHandler,
+      useClass: BlocoUpdateImagemCapaCommandHandlerImpl,
+    },
+    // Queries
+    { provide: IBlocoListQueryHandler, useClass: BlocoListQueryHandlerImpl },
+    { provide: IBlocoFindOneQueryHandler, useClass: BlocoFindOneQueryHandlerImpl },
+    { provide: IBlocoGetImagemCapaQueryHandler, useClass: BlocoGetImagemCapaQueryHandlerImpl },
   ],
   exports: [BlocoService],
 })

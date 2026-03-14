@@ -1,9 +1,9 @@
 import { Provider } from "@nestjs/common";
-import type { IMessageBrokerOptions } from "./message-broker-options.interface";
-import { IMessageBrokerOptions as IMessageBrokerOptionsToken } from "./message-broker-options.interface";
 import type { IConfigService } from "../../config-service/config-service.interface";
 import { IConfigService as IConfigServiceToken } from "../../config-service/config-service.interface";
 import { ConfigTokens } from "../../config-tokens";
+import type { IMessageBrokerOptions } from "./message-broker-options.interface";
+import { IMessageBrokerOptions as IMessageBrokerOptionsToken } from "./message-broker-options.interface";
 
 export const MessageBrokerOptionsProvider: Provider = {
   provide: IMessageBrokerOptionsToken,

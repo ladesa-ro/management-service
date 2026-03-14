@@ -1,10 +1,8 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { DataSource } from "typeorm";
-import {
-  APP_DATA_SOURCE_TOKEN,
-} from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ResourceNotFoundError } from "@/modules/@shared";
+import { APP_DATA_SOURCE_TOKEN } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import type {
   EmpresaCreateInputDto,
   EmpresaFindOneInputDto,
@@ -16,17 +14,11 @@ import type {
 import type { IEmpresaRepositoryPort } from "@/modules/estagio/empresa/application/ports";
 import { Empresa } from "@/modules/estagio/empresa/domain/empresa.domain";
 import { createEnderecoRepository } from "@/modules/localidades/endereco/infrastructure/persistence/typeorm/endereco.repository";
-import {
-  EmpresaTypeormEntity,
-  EmpresaMapper,
-  createEmpresaRepository,
-} from "./persistence";
+import { createEmpresaRepository, EmpresaMapper } from "./persistence";
 
 @Injectable()
 export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepositoryPort {
-  constructor(
-    @Inject(APP_DATA_SOURCE_TOKEN) private readonly dataSource: DataSource,
-  ) {}
+  constructor(@Inject(APP_DATA_SOURCE_TOKEN) private readonly dataSource: DataSource) {}
 
   private get repository() {
     return createEmpresaRepository(this.dataSource);
@@ -93,10 +85,7 @@ export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepositoryPort {
       }
     }
 
-    const [data, total] = await query
-      .skip(skip)
-      .take(limit)
-      .getManyAndCount();
+    const [data, total] = await query.skip(skip).take(limit).getManyAndCount();
 
     return {
       data: data.map((entity) => EmpresaMapper.toOutputDto(entity)),

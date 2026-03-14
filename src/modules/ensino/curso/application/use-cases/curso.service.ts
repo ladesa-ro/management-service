@@ -1,11 +1,25 @@
 import { Inject, Injectable, type StreamableFile } from "@nestjs/common";
-import { has } from "lodash";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
-import { BaseCrudService, type PersistInput } from "@/modules/@shared";
-import { CampusService } from "@/modules/ambientes/campus";
-import { ArquivoService } from "@/modules/armazenamento/arquivo/application/use-cases/arquivo.service";
-import { ImagemService } from "@/modules/armazenamento/imagem/application/use-cases/imagem.service";
-import { Curso, type ICurso } from "@/modules/ensino/curso";
+import { ResourceNotFoundError } from "@/modules/@shared";
+import {
+  type ICursoCreateCommand,
+  ICursoCreateCommandHandler,
+} from "@/modules/ensino/curso/domain/commands/curso-create.command.handler.interface";
+import {
+  type ICursoDeleteCommand,
+  ICursoDeleteCommandHandler,
+} from "@/modules/ensino/curso/domain/commands/curso-delete.command.handler.interface";
+import {
+  type ICursoUpdateCommand,
+  ICursoUpdateCommandHandler,
+} from "@/modules/ensino/curso/domain/commands/curso-update.command.handler.interface";
+import {
+  type ICursoUpdateImagemCapaCommand,
+  ICursoUpdateImagemCapaCommandHandler,
+} from "@/modules/ensino/curso/domain/commands/curso-update-imagem-capa.command.handler.interface";
+import { ICursoFindOneQueryHandler } from "@/modules/ensino/curso/domain/queries/curso-find-one.query.handler.interface";
+import { ICursoGetImagemCapaQueryHandler } from "@/modules/ensino/curso/domain/queries/curso-get-imagem-capa.query.handler.interface";
+import { ICursoListQueryHandler } from "@/modules/ensino/curso/domain/queries/curso-list.query.handler.interface";
 import type {
   CursoCreateInputDto,
   CursoFindOneInputDto,
@@ -13,109 +27,102 @@ import type {
   CursoListInputDto,
   CursoListOutputDto,
   CursoUpdateInputDto,
-} from "@/modules/ensino/curso/application/dtos";
-import {
-  CURSO_REPOSITORY_PORT,
-  type ICursoRepositoryPort,
-  type ICursoUseCasePort,
-} from "@/modules/ensino/curso/application/ports";
-import { OfertaFormacaoService } from "@/modules/ensino/oferta-formacao";
+} from "../dtos";
+import type { ICursoUseCasePort } from "../ports";
 
 @Injectable()
-export class CursoService
-  extends BaseCrudService<
-    ICurso,
-    CursoListInputDto,
-    CursoListOutputDto,
-    CursoFindOneInputDto,
-    CursoFindOneOutputDto,
-    CursoCreateInputDto,
-    CursoUpdateInputDto
-  >
-  implements ICursoUseCasePort
-{
-  protected readonly resourceName = "Curso";
-  protected readonly createAction = "curso:create";
-  protected readonly updateAction = "curso:update";
-  protected readonly deleteAction = "curso:delete";
-
+export class CursoService implements ICursoUseCasePort {
   constructor(
-    @Inject(CURSO_REPOSITORY_PORT)
-    protected readonly repository: ICursoRepositoryPort,
-    private readonly campusService: CampusService,
-    private readonly ofertaFormacaoService: OfertaFormacaoService,
-    private readonly imagemService: ImagemService,
-    private readonly arquivoService: ArquivoService,
-  ) {
-    super();
+    @Inject(ICursoCreateCommandHandler)
+    private readonly createHandler: ICursoCreateCommandHandler,
+    @Inject(ICursoUpdateCommandHandler)
+    private readonly updateHandler: ICursoUpdateCommandHandler,
+    @Inject(ICursoDeleteCommandHandler)
+    private readonly deleteHandler: ICursoDeleteCommandHandler,
+    @Inject(ICursoUpdateImagemCapaCommandHandler)
+    private readonly updateImagemCapaHandler: ICursoUpdateImagemCapaCommandHandler,
+    @Inject(ICursoGetImagemCapaQueryHandler)
+    private readonly getImagemCapaHandler: ICursoGetImagemCapaQueryHandler,
+    @Inject(ICursoListQueryHandler)
+    private readonly listHandler: ICursoListQueryHandler,
+    @Inject(ICursoFindOneQueryHandler)
+    private readonly findOneHandler: ICursoFindOneQueryHandler,
+  ) {}
+
+  findAll(
+    accessContext: AccessContext,
+    dto: CursoListInputDto | null = null,
+    selection?: string[] | boolean,
+  ): Promise<CursoListOutputDto> {
+    return this.listHandler.execute({ accessContext, dto, selection });
   }
 
-  async getImagemCapa(accessContext: AccessContext | null, id: string): Promise<StreamableFile> {
-    return this.getImagemField(
-      accessContext,
-      id,
-      "imagemCapa",
-      "Imagem de capa do Curso",
-      this.imagemService,
-      this.arquivoService,
-    );
+  findById(
+    accessContext: AccessContext | null,
+    dto: CursoFindOneInputDto,
+    selection?: string[] | boolean,
+  ): Promise<CursoFindOneOutputDto | null> {
+    return this.findOneHandler.execute({ accessContext, dto, selection });
   }
 
-  async updateImagemCapa(
+  async findByIdStrict(
+    accessContext: AccessContext | null,
+    dto: CursoFindOneInputDto,
+    selection?: string[] | boolean,
+  ): Promise<CursoFindOneOutputDto> {
+    const entity = await this.findById(accessContext, dto, selection);
+
+    if (!entity) {
+      throw new ResourceNotFoundError("Curso", dto.id);
+    }
+
+    return entity;
+  }
+
+  findByIdSimple(
+    accessContext: AccessContext,
+    id: string,
+    selection?: string[] | boolean,
+  ): Promise<CursoFindOneOutputDto | null> {
+    return this.findById(accessContext, { id } as CursoFindOneInputDto, selection);
+  }
+
+  findByIdSimpleStrict(
+    accessContext: AccessContext,
+    id: string,
+    selection?: string[] | boolean,
+  ): Promise<CursoFindOneOutputDto> {
+    return this.findByIdStrict(accessContext, { id } as CursoFindOneInputDto, selection);
+  }
+
+  create(accessContext: AccessContext, dto: CursoCreateInputDto): Promise<CursoFindOneOutputDto> {
+    return this.createHandler.execute({ accessContext, dto } satisfies ICursoCreateCommand);
+  }
+
+  update(
+    accessContext: AccessContext,
+    dto: CursoFindOneInputDto & CursoUpdateInputDto,
+  ): Promise<CursoFindOneOutputDto> {
+    return this.updateHandler.execute({ accessContext, dto } satisfies ICursoUpdateCommand);
+  }
+
+  deleteOneById(accessContext: AccessContext, dto: CursoFindOneInputDto): Promise<boolean> {
+    return this.deleteHandler.execute({ accessContext, dto } satisfies ICursoDeleteCommand);
+  }
+
+  getImagemCapa(accessContext: AccessContext | null, id: string): Promise<StreamableFile> {
+    return this.getImagemCapaHandler.execute({ accessContext, id });
+  }
+
+  updateImagemCapa(
     accessContext: AccessContext,
     dto: CursoFindOneInputDto,
     file: Express.Multer.File,
   ): Promise<boolean> {
-    return this.updateImagemField(accessContext, dto.id, file, "imagemCapa", this.imagemService);
-  }
-
-  protected async buildCreateData(
-    accessContext: AccessContext,
-    dto: CursoCreateInputDto,
-  ): Promise<Partial<PersistInput<ICurso>>> {
-    const campus = await this.campusService.findByIdSimpleStrict(accessContext, dto.campus.id);
-    const ofertaFormacao = await this.ofertaFormacaoService.findByIdSimpleStrict(
+    return this.updateImagemCapaHandler.execute({
       accessContext,
-      dto.ofertaFormacao.id,
-    );
-    const domain = Curso.criar({
-      nome: dto.nome,
-      nomeAbreviado: dto.nomeAbreviado,
-      campus: { id: campus.id },
-      ofertaFormacao: { id: ofertaFormacao.id },
-    });
-    return {
-      ...domain,
-      campus: { id: campus.id },
-      ofertaFormacao: { id: ofertaFormacao.id },
-    };
-  }
-
-  protected async buildUpdateData(
-    accessContext: AccessContext,
-    dto: CursoFindOneInputDto & CursoUpdateInputDto,
-    current: CursoFindOneOutputDto,
-  ): Promise<Partial<PersistInput<ICurso>>> {
-    const domain = Curso.fromData(current);
-    domain.atualizar({ nome: dto.nome, nomeAbreviado: dto.nomeAbreviado });
-    const result: Partial<PersistInput<ICurso>> = {
-      nome: domain.nome,
-      nomeAbreviado: domain.nomeAbreviado,
-    };
-
-    if (has(dto, "campus") && dto.campus !== undefined) {
-      const campus = await this.campusService.findByIdSimpleStrict(accessContext, dto.campus.id);
-      result.campus = { id: campus.id };
-    }
-
-    if (has(dto, "ofertaFormacao") && dto.ofertaFormacao !== undefined) {
-      const ofertaFormacao = await this.ofertaFormacaoService.findByIdSimpleStrict(
-        accessContext,
-        dto.ofertaFormacao.id,
-      );
-      result.ofertaFormacao = { id: ofertaFormacao.id };
-    }
-
-    return result;
+      dto,
+      file,
+    } satisfies ICursoUpdateImagemCapaCommand);
   }
 }

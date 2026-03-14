@@ -1,5 +1,8 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { IRuntimeOptions, IRuntimeOptions as IRuntimeOptionsToken } from "@/infrastructure.config/options/runtime/runtime-options.interface";
+import {
+  IRuntimeOptions,
+  IRuntimeOptions as IRuntimeOptionsToken,
+} from "@/infrastructure.config/options/runtime/runtime-options.interface";
 
 export interface ServiceInfo {
   status: string;

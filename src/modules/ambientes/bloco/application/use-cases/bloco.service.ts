@@ -1,12 +1,25 @@
 import { Inject, Injectable, type StreamableFile } from "@nestjs/common";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
+import { ResourceNotFoundError } from "@/modules/@shared";
 import {
-  AUTHORIZATION_SERVICE_PORT,
-  BaseCrudService,
-  type IAuthorizationServicePort,
-  type PersistInput,
-} from "@/modules/@shared";
-import { Bloco, type IBloco } from "@/modules/ambientes/bloco";
+  type IBlocoCreateCommand,
+  IBlocoCreateCommandHandler,
+} from "@/modules/ambientes/bloco/domain/commands/bloco-create.command.handler.interface";
+import {
+  type IBlocoDeleteCommand,
+  IBlocoDeleteCommandHandler,
+} from "@/modules/ambientes/bloco/domain/commands/bloco-delete.command.handler.interface";
+import {
+  type IBlocoUpdateCommand,
+  IBlocoUpdateCommandHandler,
+} from "@/modules/ambientes/bloco/domain/commands/bloco-update.command.handler.interface";
+import {
+  type IBlocoUpdateImagemCapaCommand,
+  IBlocoUpdateImagemCapaCommandHandler,
+} from "@/modules/ambientes/bloco/domain/commands/bloco-update-imagem-capa.command.handler.interface";
+import { IBlocoFindOneQueryHandler } from "@/modules/ambientes/bloco/domain/queries/bloco-find-one.query.handler.interface";
+import { IBlocoGetImagemCapaQueryHandler } from "@/modules/ambientes/bloco/domain/queries/bloco-get-imagem-capa.query.handler.interface";
+import { IBlocoListQueryHandler } from "@/modules/ambientes/bloco/domain/queries/bloco-list.query.handler.interface";
 import type {
   BlocoCreateInputDto,
   BlocoFindOneInputDto,
@@ -14,85 +27,102 @@ import type {
   BlocoListInputDto,
   BlocoListOutputDto,
   BlocoUpdateInputDto,
-} from "@/modules/ambientes/bloco/application/dtos";
-import {
-  BLOCO_REPOSITORY_PORT,
-  type IBlocoRepositoryPort,
-  type IBlocoUseCasePort,
-} from "@/modules/ambientes/bloco/application/ports";
-import { CampusService } from "@/modules/ambientes/campus";
-import { ArquivoService } from "@/modules/armazenamento/arquivo/application/use-cases/arquivo.service";
-import { ImagemService } from "@/modules/armazenamento/imagem/application/use-cases/imagem.service";
+} from "../dtos";
+import type { IBlocoUseCasePort } from "../ports";
 
 @Injectable()
-export class BlocoService
-  extends BaseCrudService<
-    IBloco,
-    BlocoListInputDto,
-    BlocoListOutputDto,
-    BlocoFindOneInputDto,
-    BlocoFindOneOutputDto,
-    BlocoCreateInputDto,
-    BlocoUpdateInputDto
-  >
-  implements IBlocoUseCasePort
-{
-  protected readonly resourceName = "Bloco";
-  protected readonly createAction = "bloco:create";
-  protected readonly updateAction = "bloco:update";
-  protected readonly deleteAction = "bloco:delete";
-
+export class BlocoService implements IBlocoUseCasePort {
   constructor(
-    @Inject(BLOCO_REPOSITORY_PORT)
-    protected readonly repository: IBlocoRepositoryPort,
-    @Inject(AUTHORIZATION_SERVICE_PORT)
-    protected readonly authorizationService: IAuthorizationServicePort,
-    private readonly campusService: CampusService,
-    private readonly imagemService: ImagemService,
-    private readonly arquivoService: ArquivoService,
-  ) {
-    super();
+    @Inject(IBlocoCreateCommandHandler)
+    private readonly createHandler: IBlocoCreateCommandHandler,
+    @Inject(IBlocoUpdateCommandHandler)
+    private readonly updateHandler: IBlocoUpdateCommandHandler,
+    @Inject(IBlocoDeleteCommandHandler)
+    private readonly deleteHandler: IBlocoDeleteCommandHandler,
+    @Inject(IBlocoUpdateImagemCapaCommandHandler)
+    private readonly updateImagemCapaHandler: IBlocoUpdateImagemCapaCommandHandler,
+    @Inject(IBlocoGetImagemCapaQueryHandler)
+    private readonly getImagemCapaHandler: IBlocoGetImagemCapaQueryHandler,
+    @Inject(IBlocoListQueryHandler)
+    private readonly listHandler: IBlocoListQueryHandler,
+    @Inject(IBlocoFindOneQueryHandler)
+    private readonly findOneHandler: IBlocoFindOneQueryHandler,
+  ) {}
+
+  findAll(
+    accessContext: AccessContext,
+    dto: BlocoListInputDto | null = null,
+    selection?: string[] | boolean,
+  ): Promise<BlocoListOutputDto> {
+    return this.listHandler.execute({ accessContext, dto, selection });
   }
 
-  async getImagemCapa(accessContext: AccessContext | null, id: string): Promise<StreamableFile> {
-    return this.getImagemField(
-      accessContext,
-      id,
-      "imagemCapa",
-      "Imagem de capa do Bloco",
-      this.imagemService,
-      this.arquivoService,
-    );
+  findById(
+    accessContext: AccessContext | null,
+    dto: BlocoFindOneInputDto,
+    selection?: string[] | boolean,
+  ): Promise<BlocoFindOneOutputDto | null> {
+    return this.findOneHandler.execute({ accessContext, dto, selection });
   }
 
-  async updateImagemCapa(
+  async findByIdStrict(
+    accessContext: AccessContext | null,
+    dto: BlocoFindOneInputDto,
+    selection?: string[] | boolean,
+  ): Promise<BlocoFindOneOutputDto> {
+    const entity = await this.findById(accessContext, dto, selection);
+
+    if (!entity) {
+      throw new ResourceNotFoundError("Bloco", dto.id);
+    }
+
+    return entity;
+  }
+
+  findByIdSimple(
+    accessContext: AccessContext,
+    id: string,
+    selection?: string[] | boolean,
+  ): Promise<BlocoFindOneOutputDto | null> {
+    return this.findById(accessContext, { id } as BlocoFindOneInputDto, selection);
+  }
+
+  findByIdSimpleStrict(
+    accessContext: AccessContext,
+    id: string,
+    selection?: string[] | boolean,
+  ): Promise<BlocoFindOneOutputDto> {
+    return this.findByIdStrict(accessContext, { id } as BlocoFindOneInputDto, selection);
+  }
+
+  create(accessContext: AccessContext, dto: BlocoCreateInputDto): Promise<BlocoFindOneOutputDto> {
+    return this.createHandler.execute({ accessContext, dto } satisfies IBlocoCreateCommand);
+  }
+
+  update(
+    accessContext: AccessContext,
+    dto: BlocoFindOneInputDto & BlocoUpdateInputDto,
+  ): Promise<BlocoFindOneOutputDto> {
+    return this.updateHandler.execute({ accessContext, dto } satisfies IBlocoUpdateCommand);
+  }
+
+  deleteOneById(accessContext: AccessContext, dto: BlocoFindOneInputDto): Promise<boolean> {
+    return this.deleteHandler.execute({ accessContext, dto } satisfies IBlocoDeleteCommand);
+  }
+
+  getImagemCapa(accessContext: AccessContext | null, id: string): Promise<StreamableFile> {
+    return this.getImagemCapaHandler.execute({ accessContext, id });
+  }
+
+  updateImagemCapa(
     accessContext: AccessContext,
     dto: BlocoFindOneInputDto,
     file: Express.Multer.File,
   ): Promise<boolean> {
-    return this.updateImagemField(accessContext, dto.id, file, "imagemCapa", this.imagemService);
-  }
-
-  protected async buildCreateData(
-    accessContext: AccessContext,
-    dto: BlocoCreateInputDto,
-  ): Promise<Partial<PersistInput<IBloco>>> {
-    const campus = await this.campusService.findByIdSimpleStrict(accessContext, dto.campus.id);
-    const domain = Bloco.criar({
-      nome: dto.nome,
-      codigo: dto.codigo,
-      campus: { id: campus.id },
-    });
-    return { ...domain, campus: { id: campus.id } };
-  }
-
-  protected async buildUpdateData(
-    _ac: AccessContext,
-    dto: BlocoFindOneInputDto & BlocoUpdateInputDto,
-    current: BlocoFindOneOutputDto,
-  ): Promise<Partial<PersistInput<IBloco>>> {
-    const domain = Bloco.fromData(current);
-    domain.atualizar({ nome: dto.nome, codigo: dto.codigo });
-    return { nome: domain.nome, codigo: domain.codigo };
+    return this.updateImagemCapaHandler.execute({
+      accessContext,
+      dto,
+      file,
+    } satisfies IBlocoUpdateImagemCapaCommand);
   }
 }

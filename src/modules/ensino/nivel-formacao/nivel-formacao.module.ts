@@ -1,7 +1,25 @@
 import { Module } from "@nestjs/common";
 import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persistence/typeorm";
 import { NIVEL_FORMACAO_REPOSITORY_PORT } from "@/modules/ensino/nivel-formacao/application/ports";
+import {
+  NivelFormacaoCreateCommandHandlerImpl,
+  NivelFormacaoDeleteCommandHandlerImpl,
+  NivelFormacaoUpdateCommandHandlerImpl,
+} from "@/modules/ensino/nivel-formacao/application/use-cases/commands";
 import { NivelFormacaoService } from "@/modules/ensino/nivel-formacao/application/use-cases/nivel-formacao.service";
+import {
+  NivelFormacaoFindOneQueryHandlerImpl,
+  NivelFormacaoListQueryHandlerImpl,
+} from "@/modules/ensino/nivel-formacao/application/use-cases/queries";
+import {
+  INivelFormacaoCreateCommandHandler,
+  INivelFormacaoDeleteCommandHandler,
+  INivelFormacaoUpdateCommandHandler,
+} from "@/modules/ensino/nivel-formacao/domain/commands";
+import {
+  INivelFormacaoFindOneQueryHandler,
+  INivelFormacaoListQueryHandler,
+} from "@/modules/ensino/nivel-formacao/domain/queries";
 import { NivelFormacaoAuthzRegistrySetup } from "@/modules/ensino/nivel-formacao/infrastructure";
 import { NivelFormacaoTypeOrmRepositoryAdapter } from "@/modules/ensino/nivel-formacao/infrastructure/persistence/typeorm";
 import { NivelFormacaoGraphqlResolver } from "@/modules/ensino/nivel-formacao/presentation/graphql/nivel-formacao.graphql.resolver";
@@ -19,6 +37,23 @@ import { NivelFormacaoRestController } from "@/modules/ensino/nivel-formacao/pre
       provide: NIVEL_FORMACAO_REPOSITORY_PORT,
       useClass: NivelFormacaoTypeOrmRepositoryAdapter,
     },
+
+    // Commands
+    {
+      provide: INivelFormacaoCreateCommandHandler,
+      useClass: NivelFormacaoCreateCommandHandlerImpl,
+    },
+    {
+      provide: INivelFormacaoUpdateCommandHandler,
+      useClass: NivelFormacaoUpdateCommandHandlerImpl,
+    },
+    {
+      provide: INivelFormacaoDeleteCommandHandler,
+      useClass: NivelFormacaoDeleteCommandHandlerImpl,
+    },
+    // Queries
+    { provide: INivelFormacaoListQueryHandler, useClass: NivelFormacaoListQueryHandlerImpl },
+    { provide: INivelFormacaoFindOneQueryHandler, useClass: NivelFormacaoFindOneQueryHandlerImpl },
   ],
   exports: [NivelFormacaoService],
 })

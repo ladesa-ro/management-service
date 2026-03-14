@@ -3,6 +3,28 @@ import { NestJsPaginateAdapter } from "@/modules/@shared/infrastructure/persiste
 import { AMBIENTE_REPOSITORY_PORT } from "@/modules/ambientes/ambiente/application/ports";
 import { AmbienteService } from "@/modules/ambientes/ambiente/application/use-cases/ambiente.service";
 import {
+  AmbienteCreateCommandHandlerImpl,
+  AmbienteDeleteCommandHandlerImpl,
+  AmbienteUpdateCommandHandlerImpl,
+  AmbienteUpdateImagemCapaCommandHandlerImpl,
+} from "@/modules/ambientes/ambiente/application/use-cases/commands";
+import {
+  AmbienteFindOneQueryHandlerImpl,
+  AmbienteGetImagemCapaQueryHandlerImpl,
+  AmbienteListQueryHandlerImpl,
+} from "@/modules/ambientes/ambiente/application/use-cases/queries";
+import {
+  IAmbienteCreateCommandHandler,
+  IAmbienteDeleteCommandHandler,
+  IAmbienteUpdateCommandHandler,
+  IAmbienteUpdateImagemCapaCommandHandler,
+} from "@/modules/ambientes/ambiente/domain/commands";
+import {
+  IAmbienteFindOneQueryHandler,
+  IAmbienteGetImagemCapaQueryHandler,
+  IAmbienteListQueryHandler,
+} from "@/modules/ambientes/ambiente/domain/queries";
+import {
   AmbienteAuthzRegistrySetup,
   AmbienteTypeOrmRepositoryAdapter,
 } from "@/modules/ambientes/ambiente/infrastructure";
@@ -20,9 +42,21 @@ import { ImagemModule } from "@/modules/armazenamento/imagem/imagem.module";
     AmbienteService,
     AmbienteGraphqlResolver,
     AmbienteAuthzRegistrySetup,
+    { provide: AMBIENTE_REPOSITORY_PORT, useClass: AmbienteTypeOrmRepositoryAdapter },
+    // Commands
+    { provide: IAmbienteCreateCommandHandler, useClass: AmbienteCreateCommandHandlerImpl },
+    { provide: IAmbienteUpdateCommandHandler, useClass: AmbienteUpdateCommandHandlerImpl },
+    { provide: IAmbienteDeleteCommandHandler, useClass: AmbienteDeleteCommandHandlerImpl },
     {
-      provide: AMBIENTE_REPOSITORY_PORT,
-      useClass: AmbienteTypeOrmRepositoryAdapter,
+      provide: IAmbienteUpdateImagemCapaCommandHandler,
+      useClass: AmbienteUpdateImagemCapaCommandHandlerImpl,
+    },
+    // Queries
+    { provide: IAmbienteListQueryHandler, useClass: AmbienteListQueryHandlerImpl },
+    { provide: IAmbienteFindOneQueryHandler, useClass: AmbienteFindOneQueryHandlerImpl },
+    {
+      provide: IAmbienteGetImagemCapaQueryHandler,
+      useClass: AmbienteGetImagemCapaQueryHandlerImpl,
     },
   ],
   exports: [AmbienteService],

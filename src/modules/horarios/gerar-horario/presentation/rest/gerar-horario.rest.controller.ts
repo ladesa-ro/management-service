@@ -1,9 +1,9 @@
+import { Controller, Get } from "@nestjs/common";
+import { ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 import {
   type GenerateRequest,
   type ServiceGenerateResponse,
 } from "@/infrastructure.messages.timetable-generator/schemas";
-import { Controller, Get } from "@nestjs/common";
-import { ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { GerarHorarioService } from "@/modules/horarios/gerar-horario";
 
 @ApiTags("gerar-horario")
