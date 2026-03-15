@@ -41,7 +41,7 @@ export class NivelFormacaoGraphqlResolver {
     const listHandler = this.container.get<INivelFormacaoListQueryHandler>(
       INivelFormacaoListQueryHandler,
     );
-    const result = await listHandler.execute({ accessContext, dto: input });
+    const result = await listHandler.execute(accessContext, input);
     return NivelFormacaoGraphqlMapper.toListOutputDto(result);
   }
 
@@ -55,7 +55,7 @@ export class NivelFormacaoGraphqlResolver {
     const findOneHandler = this.container.get<INivelFormacaoFindOneQueryHandler>(
       INivelFormacaoFindOneQueryHandler,
     );
-    const result = await findOneHandler.execute({ accessContext, dto: { id, selection } });
+    const result = await findOneHandler.execute(accessContext, { id, selection });
     ensureExists(result, NivelFormacao.entityName, id);
     return NivelFormacaoGraphqlMapper.toFindOneOutputDto(result);
   }
@@ -70,7 +70,7 @@ export class NivelFormacaoGraphqlResolver {
     const createHandler = this.container.get<INivelFormacaoCreateCommandHandler>(
       INivelFormacaoCreateCommandHandler,
     );
-    const result = await createHandler.execute({ accessContext, dto: input });
+    const result = await createHandler.execute(accessContext, input);
     return NivelFormacaoGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -85,7 +85,7 @@ export class NivelFormacaoGraphqlResolver {
     const updateHandler = this.container.get<INivelFormacaoUpdateCommandHandler>(
       INivelFormacaoUpdateCommandHandler,
     );
-    const result = await updateHandler.execute({ accessContext, dto: input });
+    const result = await updateHandler.execute(accessContext, input);
     return NivelFormacaoGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -97,6 +97,6 @@ export class NivelFormacaoGraphqlResolver {
     const deleteHandler = this.container.get<INivelFormacaoDeleteCommandHandler>(
       INivelFormacaoDeleteCommandHandler,
     );
-    return deleteHandler.execute({ accessContext, dto: { id } });
+    return deleteHandler.execute(accessContext, { id });
   }
 }

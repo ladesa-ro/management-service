@@ -1,14 +1,6 @@
 import type { StreamableFile } from "@nestjs/common";
-import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import type { IQueryHandler } from "@/modules/@shared/domain/abstractions";
+import type { CursoFindOneQuery } from "./curso-find-one.query";
 
-export type ICursoGetImagemCapaQuery = {
-  accessContext: AccessContext | null;
-  id: string;
-};
-
-export type ICursoGetImagemCapaQueryHandler = IQueryHandler<
-  ICursoGetImagemCapaQuery,
-  StreamableFile
->;
+export type ICursoGetImagemCapaQueryHandler = IQueryHandler<CursoFindOneQuery, StreamableFile>;
 export const ICursoGetImagemCapaQueryHandler = Symbol("ICursoGetImagemCapaQueryHandler");

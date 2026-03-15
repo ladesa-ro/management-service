@@ -1,10 +1,9 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
-import {
-  type INivelFormacaoDeleteCommand,
-  INivelFormacaoDeleteCommandHandler,
-} from "@/modules/ensino/nivel-formacao/domain/commands/nivel-formacao-delete.command.handler.interface";
+import { INivelFormacaoDeleteCommandHandler } from "@/modules/ensino/nivel-formacao/domain/commands/nivel-formacao-delete.command.handler.interface";
 import { NivelFormacao } from "@/modules/ensino/nivel-formacao/domain/nivel-formacao.domain";
+import type { NivelFormacaoFindOneQuery } from "@/modules/ensino/nivel-formacao/domain/queries";
 import { INivelFormacaoPermissionChecker } from "../../domain/authorization";
 import { INivelFormacaoRepository } from "../../domain/repositories";
 
@@ -17,7 +16,10 @@ export class NivelFormacaoDeleteCommandHandlerImpl implements INivelFormacaoDele
     private readonly permissionChecker: INivelFormacaoPermissionChecker,
   ) {}
 
-  async execute({ accessContext, dto }: INivelFormacaoDeleteCommand): Promise<boolean> {
+  async execute(
+    accessContext: AccessContext | null,
+    dto: NivelFormacaoFindOneQuery,
+  ): Promise<boolean> {
     await this.permissionChecker.ensureCanDelete(accessContext, { dto }, dto.id);
 
     const entity = await this.repository.findById(accessContext, dto);

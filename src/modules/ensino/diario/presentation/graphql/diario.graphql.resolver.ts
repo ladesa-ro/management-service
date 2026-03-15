@@ -39,7 +39,7 @@ export class DiarioGraphqlResolver {
     }
 
     const listHandler = this.container.get<IDiarioListQueryHandler>(IDiarioListQueryHandler);
-    const result = await listHandler.execute({ accessContext, dto: input });
+    const result = await listHandler.execute(accessContext, input);
     return DiarioGraphqlMapper.toListOutputDto(result);
   }
 
@@ -53,7 +53,7 @@ export class DiarioGraphqlResolver {
     const findOneHandler = this.container.get<IDiarioFindOneQueryHandler>(
       IDiarioFindOneQueryHandler,
     );
-    const result = await findOneHandler.execute({ accessContext, dto: { id, selection } });
+    const result = await findOneHandler.execute(accessContext, { id, selection });
     ensureExists(result, Diario.entityName, id);
     return DiarioGraphqlMapper.toFindOneOutputDto(result);
   }
@@ -68,7 +68,7 @@ export class DiarioGraphqlResolver {
     const createHandler = this.container.get<IDiarioCreateCommandHandler>(
       IDiarioCreateCommandHandler,
     );
-    const result = await createHandler.execute({ accessContext, dto: input });
+    const result = await createHandler.execute(accessContext, input);
     return DiarioGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -83,7 +83,7 @@ export class DiarioGraphqlResolver {
     const updateHandler = this.container.get<IDiarioUpdateCommandHandler>(
       IDiarioUpdateCommandHandler,
     );
-    const result = await updateHandler.execute({ accessContext, dto: input });
+    const result = await updateHandler.execute(accessContext, input);
     return DiarioGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -95,6 +95,6 @@ export class DiarioGraphqlResolver {
     const deleteHandler = this.container.get<IDiarioDeleteCommandHandler>(
       IDiarioDeleteCommandHandler,
     );
-    return deleteHandler.execute({ accessContext, dto: { id } });
+    return deleteHandler.execute(accessContext, { id });
   }
 }

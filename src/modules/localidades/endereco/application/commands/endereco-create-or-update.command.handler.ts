@@ -1,4 +1,5 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import {
   type IEnderecoCreateOrUpdateCommand,
   IEnderecoCreateOrUpdateCommandHandler,
@@ -14,7 +15,10 @@ export class EnderecoCreateOrUpdateCommandHandlerImpl
     private readonly repository: IEnderecoRepository,
   ) {}
 
-  async execute({ id, dto }: IEnderecoCreateOrUpdateCommand): Promise<{ id: string | number }> {
+  async execute(
+    _accessContext: AccessContext | null,
+    { id, dto }: IEnderecoCreateOrUpdateCommand,
+  ): Promise<{ id: string | number }> {
     const data = {
       cep: dto.cep,
       logradouro: dto.logradouro,

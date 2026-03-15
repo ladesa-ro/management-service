@@ -82,7 +82,7 @@ export class GerarHorarioRestController {
       this.container.get<IGerarHorarioPublishTimetableRequestCommandHandler>(
         IGerarHorarioPublishTimetableRequestCommandHandler,
       );
-    return publishTimetableRequestHandler.execute({
+    return publishTimetableRequestHandler.execute(null, {
       request,
     }) as Promise<ServiceGenerateResponse>;
   }

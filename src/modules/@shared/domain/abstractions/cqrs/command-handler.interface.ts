@@ -1,3 +1,5 @@
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
+
 export interface ICommandHandler<TCommand, TResult = void> {
-  execute(command: TCommand): Promise<TResult>;
+  execute(accessContext: AccessContext | null, command: TCommand): Promise<TResult>;
 }

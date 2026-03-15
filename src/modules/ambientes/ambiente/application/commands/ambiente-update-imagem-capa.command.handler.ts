@@ -1,8 +1,9 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists, saveEntityImagemField } from "@/modules/@shared";
 import { Ambiente } from "@/modules/ambientes/ambiente/domain/ambiente.domain";
 import {
-  type IAmbienteUpdateImagemCapaCommand,
+  type AmbienteUpdateImagemCapaCommand,
   IAmbienteUpdateImagemCapaCommandHandler,
 } from "@/modules/ambientes/ambiente/domain/commands/ambiente-update-imagem-capa.command.handler.interface";
 import {
@@ -25,7 +26,10 @@ export class AmbienteUpdateImagemCapaCommandHandlerImpl
     private readonly saveImagemCapaHandler: IImagemSaveImagemCapaCommandHandlerType,
   ) {}
 
-  async execute({ accessContext, dto, file }: IAmbienteUpdateImagemCapaCommand): Promise<boolean> {
+  async execute(
+    accessContext: AccessContext | null,
+    { dto, file }: AmbienteUpdateImagemCapaCommand,
+  ): Promise<boolean> {
     const current = await this.repository.findById(accessContext, dto);
 
     ensureExists(current, Ambiente.entityName, dto.id);

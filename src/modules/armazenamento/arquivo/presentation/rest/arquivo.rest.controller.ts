@@ -34,6 +34,6 @@ export class ArquivoRestController {
       IArquivoGetStreamableFileQueryHandler,
     );
     const input = ArquivoRestMapper.toGetFileInput(params, query);
-    return getStreamableFileHandler.execute({ accessContext, input });
+    return getStreamableFileHandler.execute(accessContext, input);
   }
 }

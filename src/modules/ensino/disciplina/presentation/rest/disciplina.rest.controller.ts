@@ -60,7 +60,7 @@ export class DisciplinaRestController {
     const listHandler = this.container.get<IDisciplinaListQueryHandler>(
       IDisciplinaListQueryHandler,
     );
-    const result = await listHandler.execute({ accessContext, dto: input });
+    const result = await listHandler.execute(accessContext, input);
     return DisciplinaRestMapper.toListOutputDto(result);
   }
 
@@ -77,7 +77,7 @@ export class DisciplinaRestController {
     const findOneHandler = this.container.get<IDisciplinaFindOneQueryHandler>(
       IDisciplinaFindOneQueryHandler,
     );
-    const result = await findOneHandler.execute({ accessContext, dto: input });
+    const result = await findOneHandler.execute(accessContext, input);
     ensureExists(result, Disciplina.entityName, input.id);
     return DisciplinaRestMapper.toFindOneOutputDto(result);
   }
@@ -94,7 +94,7 @@ export class DisciplinaRestController {
     const createHandler = this.container.get<IDisciplinaCreateCommandHandler>(
       IDisciplinaCreateCommandHandler,
     );
-    const result = await createHandler.execute({ accessContext, dto: input });
+    const result = await createHandler.execute(accessContext, input);
     return DisciplinaRestMapper.toFindOneOutputDto(result);
   }
 
@@ -112,7 +112,7 @@ export class DisciplinaRestController {
     const updateHandler = this.container.get<IDisciplinaUpdateCommandHandler>(
       IDisciplinaUpdateCommandHandler,
     );
-    const result = await updateHandler.execute({ accessContext, dto: input });
+    const result = await updateHandler.execute(accessContext, input);
     return DisciplinaRestMapper.toFindOneOutputDto(result);
   }
 
@@ -131,7 +131,7 @@ export class DisciplinaRestController {
     const getImagemCapaHandler = this.container.get<IDisciplinaGetImagemCapaQueryHandler>(
       IDisciplinaGetImagemCapaQueryHandler,
     );
-    return getImagemCapaHandler.execute({ accessContext, id: params.id });
+    return getImagemCapaHandler.execute(accessContext, { id: params.id });
   }
 
   @Put("/:id/imagem/capa")
@@ -161,7 +161,7 @@ export class DisciplinaRestController {
     const updateImagemCapaHandler = this.container.get<IDisciplinaUpdateImagemCapaCommandHandler>(
       IDisciplinaUpdateImagemCapaCommandHandler,
     );
-    return updateImagemCapaHandler.execute({ accessContext, dto: params, file });
+    return updateImagemCapaHandler.execute(accessContext, { dto: params, file });
   }
 
   @Delete("/:id")
@@ -177,6 +177,6 @@ export class DisciplinaRestController {
     const deleteHandler = this.container.get<IDisciplinaDeleteCommandHandler>(
       IDisciplinaDeleteCommandHandler,
     );
-    return deleteHandler.execute({ accessContext, dto: input });
+    return deleteHandler.execute(accessContext, input);
   }
 }

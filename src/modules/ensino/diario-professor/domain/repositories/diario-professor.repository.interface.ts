@@ -18,8 +18,8 @@ export interface IDiarioProfessorRepository
    * Busca um diário de professor por ID (formato simples) - método obrigatório
    */
   findByIdSimple(
-    accessContext: AccessContext,
+    accessContext: AccessContext | null,
     id: string,
-    selection?: string[] | boolean,
+    selection?: string[] | boolean | null,
   ): Promise<DiarioProfessorFindOneQueryResult | null>;
 }

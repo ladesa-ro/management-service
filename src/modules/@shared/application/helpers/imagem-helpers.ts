@@ -1,4 +1,5 @@
 import type { StreamableFile } from "@nestjs/common";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ResourceNotFoundError } from "../errors";
 
 /**
@@ -12,19 +13,22 @@ export async function getEntityImagemStreamableFile(
   resourceLabel: string,
   entityId: string | number,
   getLatestArquivoIdHandler: {
-    execute(query: { imagemId: string }): Promise<string | null>;
+    execute(
+      accessContext: AccessContext | null,
+      query: { imagemId: string },
+    ): Promise<string | null>;
   },
   getStreamableFileHandler: {
-    execute(query: { accessContext: null; input: { id: string } }): Promise<StreamableFile>;
+    execute(accessContext: AccessContext | null, query: { id: string }): Promise<StreamableFile>;
   },
 ): Promise<StreamableFile> {
   const imagem = entity[fieldName];
 
   if (imagem?.id) {
-    const arquivoId = await getLatestArquivoIdHandler.execute({ imagemId: imagem.id });
+    const arquivoId = await getLatestArquivoIdHandler.execute(null, { imagemId: imagem.id });
 
     if (arquivoId) {
-      return getStreamableFileHandler.execute({ accessContext: null, input: { id: arquivoId } });
+      return getStreamableFileHandler.execute(null, { id: arquivoId });
     }
   }
 
@@ -41,11 +45,14 @@ export async function saveEntityImagemField(
   file: Express.Multer.File,
   fieldName: string,
   saveImagemCapaHandler: {
-    execute(command: { file: Express.Multer.File }): Promise<{ imagem: { id: string } }>;
+    execute(
+      accessContext: AccessContext | null,
+      command: { file: Express.Multer.File },
+    ): Promise<{ imagem: { id: string } }>;
   },
   repository: { updateFromDomain(id: string | number, data: Record<string, any>): Promise<void> },
 ): Promise<boolean> {
-  const { imagem } = await saveImagemCapaHandler.execute({ file });
+  const { imagem } = await saveImagemCapaHandler.execute(null, { file });
 
   await repository.updateFromDomain(currentId, { [fieldName]: { id: imagem.id } });
 

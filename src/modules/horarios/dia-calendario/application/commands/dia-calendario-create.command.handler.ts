@@ -1,14 +1,13 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { CalendarioLetivo } from "@/modules/horarios/calendario-letivo/domain/calendario-letivo.domain";
 import {
   type ICalendarioLetivoFindOneQueryHandler,
   ICalendarioLetivoFindOneQueryHandler as ICalendarioLetivoFindOneQueryHandlerToken,
 } from "@/modules/horarios/calendario-letivo/domain/queries/calendario-letivo-find-one.query.handler.interface";
-import {
-  type IDiaCalendarioCreateCommand,
-  IDiaCalendarioCreateCommandHandler,
-} from "@/modules/horarios/dia-calendario/domain/commands/dia-calendario-create.command.handler.interface";
+import type { DiaCalendarioCreateCommand } from "@/modules/horarios/dia-calendario/domain/commands/dia-calendario-create.command";
+import { IDiaCalendarioCreateCommandHandler } from "@/modules/horarios/dia-calendario/domain/commands/dia-calendario-create.command.handler.interface";
 import { DiaCalendario } from "@/modules/horarios/dia-calendario/domain/dia-calendario.domain";
 import { IDiaCalendarioPermissionChecker } from "../../domain/authorization";
 import type { DiaCalendarioFindOneQueryResult } from "../../domain/queries";
@@ -25,17 +24,16 @@ export class DiaCalendarioCreateCommandHandlerImpl implements IDiaCalendarioCrea
     private readonly calendarioLetivoFindOneHandler: ICalendarioLetivoFindOneQueryHandler,
   ) {}
 
-  async execute({
-    accessContext,
-    dto,
-  }: IDiaCalendarioCreateCommand): Promise<DiaCalendarioFindOneQueryResult> {
+  async execute(
+    accessContext: AccessContext | null,
+    dto: DiaCalendarioCreateCommand,
+  ): Promise<DiaCalendarioFindOneQueryResult> {
     await this.permissionChecker.ensureCanCreate(accessContext, { dto });
 
     let calendarioRef: { id: string } | undefined;
     if (dto.calendario) {
-      const calendario = await this.calendarioLetivoFindOneHandler.execute({
-        accessContext,
-        dto: { id: dto.calendario.id },
+      const calendario = await this.calendarioLetivoFindOneHandler.execute(accessContext, {
+        id: dto.calendario.id,
       });
       ensureExists(calendario, CalendarioLetivo.entityName, dto.calendario.id);
       calendarioRef = { id: calendario.id };

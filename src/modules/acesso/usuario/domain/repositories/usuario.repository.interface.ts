@@ -20,9 +20,9 @@ export interface IUsuarioRepository extends IPersistRepository<Record<string, an
    * Lista usuários com paginação
    */
   findAll(
-    accessContext: AccessContext,
+    accessContext: AccessContext | null,
     dto: UsuarioListQuery | null,
-    selection?: string[] | boolean,
+    selection?: string[] | boolean | null,
   ): Promise<UsuarioListQueryResult>;
 
   /**
@@ -31,16 +31,16 @@ export interface IUsuarioRepository extends IPersistRepository<Record<string, an
   findById(
     accessContext: AccessContext | null,
     dto: UsuarioFindOneQuery,
-    selection?: string[] | boolean,
+    selection?: string[] | boolean | null,
   ): Promise<UsuarioFindOneQueryResult | null>;
 
   /**
    * Busca um usuário por ID (formato simples)
    */
   findByIdSimple(
-    accessContext: AccessContext,
+    accessContext: AccessContext | null,
     id: string,
-    selection?: string[],
+    selection?: string[] | boolean | null,
   ): Promise<UsuarioFindOneQueryResult | null>;
 
   /**
@@ -48,7 +48,7 @@ export interface IUsuarioRepository extends IPersistRepository<Record<string, an
    */
   findByMatricula(
     matricula: string,
-    selection?: string[] | boolean,
+    selection?: string[] | boolean | null,
   ): Promise<UsuarioFindOneQueryResult | null>;
 
   /**

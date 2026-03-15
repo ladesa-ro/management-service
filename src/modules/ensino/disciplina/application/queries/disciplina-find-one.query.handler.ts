@@ -1,9 +1,7 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import {
-  type IDisciplinaFindOneQuery,
-  IDisciplinaFindOneQueryHandler,
-} from "@/modules/ensino/disciplina/domain/queries/disciplina-find-one.query.handler.interface";
-import type { DisciplinaFindOneQueryResult } from "../../domain/queries";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
+import { IDisciplinaFindOneQueryHandler } from "@/modules/ensino/disciplina/domain/queries/disciplina-find-one.query.handler.interface";
+import type { DisciplinaFindOneQuery, DisciplinaFindOneQueryResult } from "../../domain/queries";
 import { IDisciplinaRepository } from "../../domain/repositories";
 
 @DeclareImplementation()
@@ -13,11 +11,10 @@ export class DisciplinaFindOneQueryHandlerImpl implements IDisciplinaFindOneQuer
     private readonly repository: IDisciplinaRepository,
   ) {}
 
-  async execute({
-    accessContext,
-    dto,
-    selection,
-  }: IDisciplinaFindOneQuery): Promise<DisciplinaFindOneQueryResult | null> {
-    return this.repository.findById(accessContext, dto, selection);
+  async execute(
+    accessContext: AccessContext | null,
+    dto: DisciplinaFindOneQuery,
+  ): Promise<DisciplinaFindOneQueryResult | null> {
+    return this.repository.findById(accessContext, dto, dto?.selection);
   }
 }

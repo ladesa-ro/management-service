@@ -1,10 +1,10 @@
 import { InternalServerErrorException } from "@nestjs/common";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ResourceNotFoundError } from "@/modules/@shared";
-import {
-  type IEmpresaUpdateCommand,
-  IEmpresaUpdateCommandHandler,
-} from "@/modules/estagio/empresa/domain/commands/empresa-update.command.handler.interface";
+import type { EmpresaUpdateCommand } from "@/modules/estagio/empresa/domain/commands/empresa-update.command";
+import { IEmpresaUpdateCommandHandler } from "@/modules/estagio/empresa/domain/commands/empresa-update.command.handler.interface";
+import type { EmpresaFindOneQuery } from "@/modules/estagio/empresa/domain/queries";
 import type { EmpresaFindOneQueryResult } from "../../domain/queries";
 import { IEmpresaRepository } from "../../domain/repositories";
 
@@ -15,11 +15,11 @@ export class EmpresaUpdateCommandHandlerImpl implements IEmpresaUpdateCommandHan
     private readonly repository: IEmpresaRepository,
   ) {}
 
-  async execute({
-    accessContext,
-    id,
-    dto,
-  }: IEmpresaUpdateCommand): Promise<EmpresaFindOneQueryResult> {
+  async execute(
+    accessContext: AccessContext | null,
+    command: EmpresaFindOneQuery & EmpresaUpdateCommand,
+  ): Promise<EmpresaFindOneQueryResult> {
+    const { id, ...dto } = command;
     try {
       return await this.repository.update(accessContext, id, dto);
     } catch (error) {

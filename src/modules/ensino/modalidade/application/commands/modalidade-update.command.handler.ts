@@ -1,10 +1,10 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
-import {
-  type IModalidadeUpdateCommand,
-  IModalidadeUpdateCommandHandler,
-} from "@/modules/ensino/modalidade/domain/commands/modalidade-update.command.handler.interface";
+import type { ModalidadeUpdateCommand } from "@/modules/ensino/modalidade/domain/commands/modalidade-update.command";
+import { IModalidadeUpdateCommandHandler } from "@/modules/ensino/modalidade/domain/commands/modalidade-update.command.handler.interface";
 import { Modalidade } from "@/modules/ensino/modalidade/domain/modalidade.domain";
+import type { ModalidadeFindOneQuery } from "@/modules/ensino/modalidade/domain/queries";
 import { IModalidadePermissionChecker } from "../../domain/authorization";
 import type { ModalidadeFindOneQueryResult } from "../../domain/queries";
 import { IModalidadeRepository } from "../../domain/repositories";
@@ -18,10 +18,10 @@ export class ModalidadeUpdateCommandHandlerImpl implements IModalidadeUpdateComm
     private readonly permissionChecker: IModalidadePermissionChecker,
   ) {}
 
-  async execute({
-    accessContext,
-    dto,
-  }: IModalidadeUpdateCommand): Promise<ModalidadeFindOneQueryResult> {
+  async execute(
+    accessContext: AccessContext | null,
+    dto: ModalidadeFindOneQuery & ModalidadeUpdateCommand,
+  ): Promise<ModalidadeFindOneQueryResult> {
     const current = await this.repository.findById(accessContext, { id: dto.id });
 
     ensureExists(current, Modalidade.entityName, dto.id);

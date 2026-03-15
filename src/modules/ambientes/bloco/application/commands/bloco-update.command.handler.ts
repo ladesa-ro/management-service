@@ -1,10 +1,10 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { Bloco } from "@/modules/ambientes/bloco/domain/bloco.domain";
-import {
-  type IBlocoUpdateCommand,
-  IBlocoUpdateCommandHandler,
-} from "@/modules/ambientes/bloco/domain/commands/bloco-update.command.handler.interface";
+import type { BlocoUpdateCommand } from "@/modules/ambientes/bloco/domain/commands/bloco-update.command";
+import { IBlocoUpdateCommandHandler } from "@/modules/ambientes/bloco/domain/commands/bloco-update.command.handler.interface";
+import type { BlocoFindOneQuery } from "@/modules/ambientes/bloco/domain/queries";
 import { IBlocoPermissionChecker } from "../../domain/authorization";
 import type { BlocoFindOneQueryResult } from "../../domain/queries";
 import { IBlocoRepository } from "../../domain/repositories";
@@ -18,7 +18,10 @@ export class BlocoUpdateCommandHandlerImpl implements IBlocoUpdateCommandHandler
     private readonly permissionChecker: IBlocoPermissionChecker,
   ) {}
 
-  async execute({ accessContext, dto }: IBlocoUpdateCommand): Promise<BlocoFindOneQueryResult> {
+  async execute(
+    accessContext: AccessContext | null,
+    dto: BlocoFindOneQuery & BlocoUpdateCommand,
+  ): Promise<BlocoFindOneQueryResult> {
     const current = await this.repository.findById(accessContext, { id: dto.id });
 
     ensureExists(current, Bloco.entityName, dto.id);

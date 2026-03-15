@@ -1,5 +1,9 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import type { IImagemGetLatestArquivoIdQueryHandler } from "@/modules/armazenamento/imagem/domain/queries";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
+import type {
+  IImagemGetLatestArquivoIdQuery,
+  IImagemGetLatestArquivoIdQueryHandler,
+} from "@/modules/armazenamento/imagem/domain/queries";
 import { IImagemArquivoRepository } from "@/modules/armazenamento/imagem/domain/repositories";
 
 @DeclareImplementation()
@@ -11,7 +15,10 @@ export class ImagemGetLatestArquivoIdQueryHandlerImpl
     private readonly imagemArquivoRepository: IImagemArquivoRepository,
   ) {}
 
-  async execute({ imagemId }: { imagemId: string }): Promise<string | null> {
+  async execute(
+    _accessContext: AccessContext | null,
+    { imagemId }: IImagemGetLatestArquivoIdQuery,
+  ): Promise<string | null> {
     return this.imagemArquivoRepository.findLatestArquivoIdForImagem(imagemId);
   }
 }

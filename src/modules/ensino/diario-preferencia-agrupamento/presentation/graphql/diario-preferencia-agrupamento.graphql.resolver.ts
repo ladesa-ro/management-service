@@ -43,7 +43,7 @@ export class DiarioPreferenciaAgrupamentoGraphqlResolver {
     const listHandler = this.container.get<IDiarioPreferenciaAgrupamentoListQueryHandler>(
       IDiarioPreferenciaAgrupamentoListQueryHandler,
     );
-    const result = await listHandler.execute({ accessContext, dto: input });
+    const result = await listHandler.execute(accessContext, input);
     return DiarioPreferenciaAgrupamentoGraphqlMapper.toListOutputDto(result);
   }
 
@@ -59,7 +59,7 @@ export class DiarioPreferenciaAgrupamentoGraphqlResolver {
     const findOneHandler = this.container.get<IDiarioPreferenciaAgrupamentoFindOneQueryHandler>(
       IDiarioPreferenciaAgrupamentoFindOneQueryHandler,
     );
-    const result = await findOneHandler.execute({ accessContext, dto: { id, selection } });
+    const result = await findOneHandler.execute(accessContext, { id, selection });
     ensureExists(result, DiarioPreferenciaAgrupamento.entityName, id);
     return DiarioPreferenciaAgrupamentoGraphqlMapper.toFindOneOutputDto(result);
   }
@@ -76,7 +76,7 @@ export class DiarioPreferenciaAgrupamentoGraphqlResolver {
     const createHandler = this.container.get<IDiarioPreferenciaAgrupamentoCreateCommandHandler>(
       IDiarioPreferenciaAgrupamentoCreateCommandHandler,
     );
-    const result = await createHandler.execute({ accessContext, dto: input });
+    const result = await createHandler.execute(accessContext, input);
     return DiarioPreferenciaAgrupamentoGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -93,7 +93,7 @@ export class DiarioPreferenciaAgrupamentoGraphqlResolver {
     const updateHandler = this.container.get<IDiarioPreferenciaAgrupamentoUpdateCommandHandler>(
       IDiarioPreferenciaAgrupamentoUpdateCommandHandler,
     );
-    const result = await updateHandler.execute({ accessContext, dto: input });
+    const result = await updateHandler.execute(accessContext, input);
     return DiarioPreferenciaAgrupamentoGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -105,6 +105,6 @@ export class DiarioPreferenciaAgrupamentoGraphqlResolver {
     const deleteHandler = this.container.get<IDiarioPreferenciaAgrupamentoDeleteCommandHandler>(
       IDiarioPreferenciaAgrupamentoDeleteCommandHandler,
     );
-    return deleteHandler.execute({ accessContext, dto: { id } });
+    return deleteHandler.execute(accessContext, { id });
   }
 }

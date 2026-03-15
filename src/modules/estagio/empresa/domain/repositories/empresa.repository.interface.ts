@@ -16,27 +16,27 @@ export const IEmpresaRepository = Symbol("IEmpresaRepository");
  */
 export interface IEmpresaRepository {
   findAll(
-    accessContext: AccessContext,
+    accessContext: AccessContext | null,
     dto: EmpresaListQuery | null,
-    selection?: string[] | boolean,
+    selection?: string[] | boolean | null,
   ): Promise<EmpresaListQueryResult>;
 
   findById(
     accessContext: AccessContext | null,
     dto: EmpresaFindOneQuery,
-    selection?: string[] | boolean,
+    selection?: string[] | boolean | null,
   ): Promise<EmpresaFindOneQueryResult | null>;
 
   create(
-    accessContext: AccessContext,
+    accessContext: AccessContext | null,
     dto: EmpresaCreateCommand,
   ): Promise<EmpresaFindOneQueryResult>;
 
   update(
-    accessContext: AccessContext,
+    accessContext: AccessContext | null,
     id: string,
     dto: EmpresaUpdateCommand,
   ): Promise<EmpresaFindOneQueryResult>;
 
-  delete(accessContext: AccessContext, id: string): Promise<void>;
+  delete(accessContext: AccessContext | null, id: string): Promise<void>;
 }

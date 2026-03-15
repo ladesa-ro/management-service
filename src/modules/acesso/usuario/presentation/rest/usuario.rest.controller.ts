@@ -62,7 +62,7 @@ export class UsuarioRestController {
   ): Promise<UsuarioListOutputRestDto> {
     const listHandler = this.container.get<IUsuarioListQueryHandler>(IUsuarioListQueryHandler);
     const input = UsuarioRestMapper.toListInput(dto);
-    const result = await listHandler.execute({ accessContext, dto: input });
+    const result = await listHandler.execute(accessContext, input);
     return UsuarioRestMapper.toListOutputDto(result);
   }
 
@@ -79,7 +79,7 @@ export class UsuarioRestController {
       IUsuarioFindOneQueryHandler,
     );
     const input = UsuarioRestMapper.toFindOneInput(params);
-    const result = await findOneHandler.execute({ accessContext, dto: input });
+    const result = await findOneHandler.execute(accessContext, input);
     ensureExists(result, Usuario.entityName, input.id);
     return UsuarioRestMapper.toFindOneOutputDto(result);
   }
@@ -100,7 +100,7 @@ export class UsuarioRestController {
       IUsuarioEnsinoQueryHandler,
     );
     const input = UsuarioRestMapper.toFindOneInput(params);
-    const result = await ensinoHandler.execute({ accessContext, dto: input });
+    const result = await ensinoHandler.execute(accessContext, input);
     return UsuarioRestMapper.toEnsinoOutputDto(result);
   }
 
@@ -116,7 +116,7 @@ export class UsuarioRestController {
       IUsuarioCreateCommandHandler,
     );
     const input = UsuarioRestMapper.toCreateInput(dto);
-    const result = await createHandler.execute({ accessContext, dto: input });
+    const result = await createHandler.execute(accessContext, input);
     return UsuarioRestMapper.toFindOneOutputDto(result);
   }
 
@@ -134,7 +134,7 @@ export class UsuarioRestController {
       IUsuarioUpdateCommandHandler,
     );
     const input = UsuarioRestMapper.toUpdateInput(params, dto);
-    const result = await updateHandler.execute({ accessContext, dto: input });
+    const result = await updateHandler.execute(accessContext, input);
     return UsuarioRestMapper.toFindOneOutputDto(result);
   }
 
@@ -153,7 +153,7 @@ export class UsuarioRestController {
     const getImagemCapaHandler = this.container.get<IUsuarioGetImagemCapaQueryHandler>(
       IUsuarioGetImagemCapaQueryHandler,
     );
-    return getImagemCapaHandler.execute({ accessContext, id: params.id });
+    return getImagemCapaHandler.execute(accessContext, { id: params.id });
   }
 
   @Put("/:id/imagem/capa")
@@ -183,7 +183,7 @@ export class UsuarioRestController {
     const updateImagemCapaHandler = this.container.get<IUsuarioUpdateImagemCapaCommandHandler>(
       IUsuarioUpdateImagemCapaCommandHandler,
     );
-    return updateImagemCapaHandler.execute({ accessContext, dto: params, file });
+    return updateImagemCapaHandler.execute(accessContext, { dto: params, file });
   }
 
   @Get("/:id/imagem/perfil")
@@ -201,7 +201,7 @@ export class UsuarioRestController {
     const getImagemPerfilHandler = this.container.get<IUsuarioGetImagemPerfilQueryHandler>(
       IUsuarioGetImagemPerfilQueryHandler,
     );
-    return getImagemPerfilHandler.execute({ accessContext, id: params.id });
+    return getImagemPerfilHandler.execute(accessContext, { id: params.id });
   }
 
   @Put("/:id/imagem/perfil")
@@ -231,7 +231,7 @@ export class UsuarioRestController {
     const updateImagemPerfilHandler = this.container.get<IUsuarioUpdateImagemPerfilCommandHandler>(
       IUsuarioUpdateImagemPerfilCommandHandler,
     );
-    return updateImagemPerfilHandler.execute({ accessContext, dto: params, file });
+    return updateImagemPerfilHandler.execute(accessContext, { dto: params, file });
   }
 
   @Delete("/:id")
@@ -247,6 +247,6 @@ export class UsuarioRestController {
       IUsuarioDeleteCommandHandler,
     );
     const input = UsuarioRestMapper.toFindOneInput(params);
-    return deleteHandler.execute({ accessContext, dto: input });
+    return deleteHandler.execute(accessContext, input);
   }
 }

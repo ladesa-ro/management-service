@@ -1,9 +1,10 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import {
-  type INivelFormacaoFindOneQuery,
-  INivelFormacaoFindOneQueryHandler,
-} from "@/modules/ensino/nivel-formacao/domain/queries/nivel-formacao-find-one.query.handler.interface";
-import type { NivelFormacaoFindOneQueryResult } from "../../domain/queries";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
+import { INivelFormacaoFindOneQueryHandler } from "@/modules/ensino/nivel-formacao/domain/queries/nivel-formacao-find-one.query.handler.interface";
+import type {
+  NivelFormacaoFindOneQuery,
+  NivelFormacaoFindOneQueryResult,
+} from "../../domain/queries";
 import { INivelFormacaoRepository } from "../../domain/repositories";
 
 @DeclareImplementation()
@@ -13,11 +14,10 @@ export class NivelFormacaoFindOneQueryHandlerImpl implements INivelFormacaoFindO
     private readonly repository: INivelFormacaoRepository,
   ) {}
 
-  async execute({
-    accessContext,
-    dto,
-    selection,
-  }: INivelFormacaoFindOneQuery): Promise<NivelFormacaoFindOneQueryResult | null> {
-    return this.repository.findById(accessContext, dto, selection);
+  async execute(
+    accessContext: AccessContext | null,
+    dto: NivelFormacaoFindOneQuery,
+  ): Promise<NivelFormacaoFindOneQueryResult | null> {
+    return this.repository.findById(accessContext, dto, dto?.selection);
   }
 }

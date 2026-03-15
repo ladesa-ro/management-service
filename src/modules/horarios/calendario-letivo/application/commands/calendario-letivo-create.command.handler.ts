@@ -1,14 +1,13 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { Campus } from "@/modules/ambientes/campus/domain/campus.domain";
 import { ICampusFindOneQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-find-one.query.handler.interface";
 import { OfertaFormacao } from "@/modules/ensino/oferta-formacao/domain/oferta-formacao.domain";
 import { IOfertaFormacaoFindOneQueryHandler } from "@/modules/ensino/oferta-formacao/domain/queries/oferta-formacao-find-one.query.handler.interface";
 import { CalendarioLetivo } from "@/modules/horarios/calendario-letivo/domain/calendario-letivo.domain";
-import {
-  type ICalendarioLetivoCreateCommand,
-  ICalendarioLetivoCreateCommandHandler,
-} from "@/modules/horarios/calendario-letivo/domain/commands/calendario-letivo-create.command.handler.interface";
+import type { CalendarioLetivoCreateCommand } from "@/modules/horarios/calendario-letivo/domain/commands/calendario-letivo-create.command";
+import { ICalendarioLetivoCreateCommandHandler } from "@/modules/horarios/calendario-letivo/domain/commands/calendario-letivo-create.command.handler.interface";
 import { ICalendarioLetivoPermissionChecker } from "../../domain/authorization";
 import type { CalendarioLetivoFindOneQueryResult } from "../../domain/queries";
 import { ICalendarioLetivoRepository } from "../../domain/repositories";
@@ -28,22 +27,18 @@ export class CalendarioLetivoCreateCommandHandlerImpl
     private readonly ofertaFormacaoFindOneHandler: IOfertaFormacaoFindOneQueryHandler,
   ) {}
 
-  async execute({
-    accessContext,
-    dto,
-  }: ICalendarioLetivoCreateCommand): Promise<CalendarioLetivoFindOneQueryResult> {
+  async execute(
+    accessContext: AccessContext | null,
+    dto: CalendarioLetivoCreateCommand,
+  ): Promise<CalendarioLetivoFindOneQueryResult> {
     await this.permissionChecker.ensureCanCreate(accessContext, { dto });
 
-    const campus = await this.campusFindOneHandler.execute({
-      accessContext,
-      dto: { id: dto.campus.id },
-    });
+    const campus = await this.campusFindOneHandler.execute(accessContext, { id: dto.campus.id });
     ensureExists(campus, Campus.entityName, dto.campus.id);
     let ofertaFormacaoRef: { id: string } | undefined;
     if (dto.ofertaFormacao) {
-      const ofertaFormacao = await this.ofertaFormacaoFindOneHandler.execute({
-        accessContext,
-        dto: { id: dto.ofertaFormacao.id },
+      const ofertaFormacao = await this.ofertaFormacaoFindOneHandler.execute(accessContext, {
+        id: dto.ofertaFormacao.id,
       });
       ensureExists(ofertaFormacao, OfertaFormacao.entityName, dto.ofertaFormacao.id);
       ofertaFormacaoRef = { id: ofertaFormacao.id };

@@ -1,10 +1,9 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { Ambiente } from "@/modules/ambientes/ambiente/domain/ambiente.domain";
-import {
-  type IAmbienteDeleteCommand,
-  IAmbienteDeleteCommandHandler,
-} from "@/modules/ambientes/ambiente/domain/commands/ambiente-delete.command.handler.interface";
+import { IAmbienteDeleteCommandHandler } from "@/modules/ambientes/ambiente/domain/commands/ambiente-delete.command.handler.interface";
+import type { AmbienteFindOneQuery } from "@/modules/ambientes/ambiente/domain/queries";
 import { IAmbientePermissionChecker } from "../../domain/authorization";
 import { IAmbienteRepository } from "../../domain/repositories";
 
@@ -17,7 +16,7 @@ export class AmbienteDeleteCommandHandlerImpl implements IAmbienteDeleteCommandH
     private readonly permissionChecker: IAmbientePermissionChecker,
   ) {}
 
-  async execute({ accessContext, dto }: IAmbienteDeleteCommand): Promise<boolean> {
+  async execute(accessContext: AccessContext | null, dto: AmbienteFindOneQuery): Promise<boolean> {
     await this.permissionChecker.ensureCanDelete(accessContext, { dto }, dto.id);
 
     const entity = await this.repository.findById(accessContext, dto);

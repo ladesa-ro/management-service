@@ -1,14 +1,14 @@
 import { has } from "lodash";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists, type PersistInput } from "@/modules/@shared";
 import { Campus } from "@/modules/ambientes/campus/domain/campus.domain";
 import { ICampusFindOneQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-find-one.query.handler.interface";
-import {
-  type ICursoUpdateCommand,
-  ICursoUpdateCommandHandler,
-} from "@/modules/ensino/curso/domain/commands/curso-update.command.handler.interface";
+import type { CursoUpdateCommand } from "@/modules/ensino/curso/domain/commands/curso-update.command";
+import { ICursoUpdateCommandHandler } from "@/modules/ensino/curso/domain/commands/curso-update.command.handler.interface";
 import { Curso } from "@/modules/ensino/curso/domain/curso.domain";
 import type { ICurso } from "@/modules/ensino/curso/domain/curso.types";
+import type { CursoFindOneQuery } from "@/modules/ensino/curso/domain/queries";
 import { OfertaFormacao } from "@/modules/ensino/oferta-formacao/domain/oferta-formacao.domain";
 import { IOfertaFormacaoFindOneQueryHandler } from "@/modules/ensino/oferta-formacao/domain/queries/oferta-formacao-find-one.query.handler.interface";
 import { ICursoPermissionChecker } from "../../domain/authorization";
@@ -28,7 +28,10 @@ export class CursoUpdateCommandHandlerImpl implements ICursoUpdateCommandHandler
     private readonly ofertaFormacaoFindOneHandler: IOfertaFormacaoFindOneQueryHandler,
   ) {}
 
-  async execute({ accessContext, dto }: ICursoUpdateCommand): Promise<CursoFindOneQueryResult> {
+  async execute(
+    accessContext: AccessContext | null,
+    dto: CursoFindOneQuery & CursoUpdateCommand,
+  ): Promise<CursoFindOneQueryResult> {
     const current = await this.repository.findById(accessContext, { id: dto.id });
 
     ensureExists(current, Curso.entityName, dto.id);
@@ -42,17 +45,13 @@ export class CursoUpdateCommandHandlerImpl implements ICursoUpdateCommandHandler
       nomeAbreviado: domain.nomeAbreviado,
     };
     if (has(dto, "campus") && dto.campus !== undefined) {
-      const campus = await this.campusFindOneHandler.execute({
-        accessContext,
-        dto: { id: dto.campus.id },
-      });
+      const campus = await this.campusFindOneHandler.execute(accessContext, { id: dto.campus.id });
       ensureExists(campus, Campus.entityName, dto.campus.id);
       updateData.campus = { id: campus.id };
     }
     if (has(dto, "ofertaFormacao") && dto.ofertaFormacao !== undefined) {
-      const ofertaFormacao = await this.ofertaFormacaoFindOneHandler.execute({
-        accessContext,
-        dto: { id: dto.ofertaFormacao.id },
+      const ofertaFormacao = await this.ofertaFormacaoFindOneHandler.execute(accessContext, {
+        id: dto.ofertaFormacao.id,
       });
       ensureExists(ofertaFormacao, OfertaFormacao.entityName, dto.ofertaFormacao.id);
       updateData.ofertaFormacao = { id: ofertaFormacao.id };

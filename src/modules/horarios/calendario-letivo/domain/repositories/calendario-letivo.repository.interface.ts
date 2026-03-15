@@ -24,8 +24,8 @@ export interface ICalendarioLetivoRepository
    * Busca um calendário letivo por ID (formato simples) - método obrigatório
    */
   findByIdSimple(
-    accessContext: AccessContext,
+    accessContext: AccessContext | null,
     id: string,
-    selection?: string[] | boolean,
+    selection?: string[] | boolean | null,
   ): Promise<CalendarioLetivoFindOneQueryResult | null>;
 }

@@ -1,11 +1,10 @@
 import { InternalServerErrorException } from "@nestjs/common";
 import { IIdpUserService } from "@/domain/abstractions/identity-provider";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists, ValidationFailedException } from "@/modules/@shared";
-import {
-  type IUsuarioCreateCommand,
-  IUsuarioCreateCommandHandler,
-} from "@/modules/acesso/usuario/domain/commands/usuario-create.command.handler.interface";
+import type { UsuarioCreateCommand } from "@/modules/acesso/usuario/domain/commands/usuario-create.command";
+import { IUsuarioCreateCommandHandler } from "@/modules/acesso/usuario/domain/commands/usuario-create.command.handler.interface";
 import { Usuario } from "@/modules/acesso/usuario/domain/usuario.domain";
 import { IUsuarioPermissionChecker } from "../../domain/authorization";
 import type { UsuarioFindOneQueryResult } from "../../domain/queries";
@@ -22,7 +21,10 @@ export class UsuarioCreateCommandHandlerImpl implements IUsuarioCreateCommandHan
     private readonly permissionChecker: IUsuarioPermissionChecker,
   ) {}
 
-  async execute({ accessContext, dto }: IUsuarioCreateCommand): Promise<UsuarioFindOneQueryResult> {
+  async execute(
+    accessContext: AccessContext | null,
+    dto: UsuarioCreateCommand,
+  ): Promise<UsuarioFindOneQueryResult> {
     await this.permissionChecker.ensureCanCreate(accessContext, { dto });
 
     const input = {

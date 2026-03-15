@@ -40,7 +40,7 @@ export class OfertaFormacaoNivelFormacaoGraphqlResolver {
     const listHandler = this.container.get<IOfertaFormacaoNivelFormacaoListQueryHandler>(
       IOfertaFormacaoNivelFormacaoListQueryHandler,
     );
-    const result = await listHandler.execute({ accessContext, dto: input });
+    const result = await listHandler.execute(accessContext, input);
     return OfertaFormacaoNivelFormacaoGraphqlMapper.toListOutputDto(result);
   }
 
@@ -56,7 +56,7 @@ export class OfertaFormacaoNivelFormacaoGraphqlResolver {
     const findOneHandler = this.container.get<IOfertaFormacaoNivelFormacaoFindOneQueryHandler>(
       IOfertaFormacaoNivelFormacaoFindOneQueryHandler,
     );
-    const result = await findOneHandler.execute({ accessContext, dto: { id, selection } });
+    const result = await findOneHandler.execute(accessContext, { id, selection });
     ensureExists(result, OfertaFormacaoNivelFormacao.entityName, id);
     return OfertaFormacaoNivelFormacaoGraphqlMapper.toFindOneOutputDto(result);
   }
@@ -73,7 +73,7 @@ export class OfertaFormacaoNivelFormacaoGraphqlResolver {
     const createHandler = this.container.get<IOfertaFormacaoNivelFormacaoCreateCommandHandler>(
       IOfertaFormacaoNivelFormacaoCreateCommandHandler,
     );
-    const result = await createHandler.execute({ accessContext, dto: input });
+    const result = await createHandler.execute(accessContext, input);
     return OfertaFormacaoNivelFormacaoGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -90,7 +90,7 @@ export class OfertaFormacaoNivelFormacaoGraphqlResolver {
     const updateHandler = this.container.get<IOfertaFormacaoNivelFormacaoUpdateCommandHandler>(
       IOfertaFormacaoNivelFormacaoUpdateCommandHandler,
     );
-    const result = await updateHandler.execute({ accessContext, dto: input });
+    const result = await updateHandler.execute(accessContext, input);
     return OfertaFormacaoNivelFormacaoGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -102,6 +102,6 @@ export class OfertaFormacaoNivelFormacaoGraphqlResolver {
     const deleteHandler = this.container.get<IOfertaFormacaoNivelFormacaoDeleteCommandHandler>(
       IOfertaFormacaoNivelFormacaoDeleteCommandHandler,
     );
-    return deleteHandler.execute({ accessContext, dto: { id } });
+    return deleteHandler.execute(accessContext, { id });
   }
 }

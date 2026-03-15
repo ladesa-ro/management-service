@@ -43,7 +43,7 @@ export class NivelFormacaoRestController {
     const listHandler = this.container.get<INivelFormacaoListQueryHandler>(
       INivelFormacaoListQueryHandler,
     );
-    const result = await listHandler.execute({ accessContext, dto: input });
+    const result = await listHandler.execute(accessContext, input);
     return NivelFormacaoRestMapper.toListOutputDto(result);
   }
 
@@ -63,7 +63,7 @@ export class NivelFormacaoRestController {
     const findOneHandler = this.container.get<INivelFormacaoFindOneQueryHandler>(
       INivelFormacaoFindOneQueryHandler,
     );
-    const result = await findOneHandler.execute({ accessContext, dto: input });
+    const result = await findOneHandler.execute(accessContext, input);
     ensureExists(result, NivelFormacao.entityName, input.id);
     return NivelFormacaoRestMapper.toFindOneOutputDto(result);
   }
@@ -80,7 +80,7 @@ export class NivelFormacaoRestController {
     const createHandler = this.container.get<INivelFormacaoCreateCommandHandler>(
       INivelFormacaoCreateCommandHandler,
     );
-    const result = await createHandler.execute({ accessContext, dto: input });
+    const result = await createHandler.execute(accessContext, input);
     return NivelFormacaoRestMapper.toFindOneOutputDto(result);
   }
 
@@ -99,10 +99,7 @@ export class NivelFormacaoRestController {
     const updateHandler = this.container.get<INivelFormacaoUpdateCommandHandler>(
       INivelFormacaoUpdateCommandHandler,
     );
-    const result = await updateHandler.execute({
-      accessContext,
-      dto: { ...findOneInput, ...updateInput },
-    });
+    const result = await updateHandler.execute(accessContext, { ...findOneInput, ...updateInput });
     return NivelFormacaoRestMapper.toFindOneOutputDto(result);
   }
 
@@ -122,6 +119,6 @@ export class NivelFormacaoRestController {
     const deleteHandler = this.container.get<INivelFormacaoDeleteCommandHandler>(
       INivelFormacaoDeleteCommandHandler,
     );
-    return deleteHandler.execute({ accessContext, dto: input });
+    return deleteHandler.execute(accessContext, input);
   }
 }

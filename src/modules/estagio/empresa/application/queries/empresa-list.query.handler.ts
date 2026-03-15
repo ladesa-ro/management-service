@@ -1,9 +1,7 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import {
-  type IEmpresaListQuery,
-  IEmpresaListQueryHandler,
-} from "@/modules/estagio/empresa/domain/queries/empresa-list.query.handler.interface";
-import type { EmpresaListQueryResult } from "../../domain/queries";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
+import { IEmpresaListQueryHandler } from "@/modules/estagio/empresa/domain/queries/empresa-list.query.handler.interface";
+import type { EmpresaListQuery, EmpresaListQueryResult } from "../../domain/queries";
 import { IEmpresaRepository } from "../../domain/repositories";
 
 @DeclareImplementation()
@@ -13,11 +11,10 @@ export class EmpresaListQueryHandlerImpl implements IEmpresaListQueryHandler {
     private readonly repository: IEmpresaRepository,
   ) {}
 
-  async execute({
-    accessContext,
-    dto,
-    selection,
-  }: IEmpresaListQuery): Promise<EmpresaListQueryResult> {
-    return this.repository.findAll(accessContext, dto, selection);
+  async execute(
+    accessContext: AccessContext | null,
+    dto: EmpresaListQuery | null,
+  ): Promise<EmpresaListQueryResult> {
+    return this.repository.findAll(accessContext, dto, dto?.selection);
   }
 }

@@ -1,10 +1,10 @@
 import { InternalServerErrorException } from "@nestjs/common";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ResourceNotFoundError } from "@/modules/@shared";
-import {
-  type IEstagiarioUpdateCommand,
-  IEstagiarioUpdateCommandHandler,
-} from "@/modules/estagio/estagiario/domain/commands/estagiario-update.command.handler.interface";
+import type { EstagiarioUpdateCommand } from "@/modules/estagio/estagiario/domain/commands/estagiario-update.command";
+import { IEstagiarioUpdateCommandHandler } from "@/modules/estagio/estagiario/domain/commands/estagiario-update.command.handler.interface";
+import type { EstagiarioFindOneQuery } from "@/modules/estagio/estagiario/domain/queries";
 import type { EstagiarioFindOneQueryResult } from "../../domain/queries";
 import { IEstagiarioRepository } from "../../domain/repositories";
 
@@ -15,11 +15,11 @@ export class EstagiarioUpdateCommandHandlerImpl implements IEstagiarioUpdateComm
     private readonly repository: IEstagiarioRepository,
   ) {}
 
-  async execute({
-    accessContext,
-    id,
-    dto,
-  }: IEstagiarioUpdateCommand): Promise<EstagiarioFindOneQueryResult> {
+  async execute(
+    accessContext: AccessContext | null,
+    command: EstagiarioFindOneQuery & EstagiarioUpdateCommand,
+  ): Promise<EstagiarioFindOneQueryResult> {
+    const { id, ...dto } = command;
     try {
       return await this.repository.update(accessContext, id, dto);
     } catch (error) {

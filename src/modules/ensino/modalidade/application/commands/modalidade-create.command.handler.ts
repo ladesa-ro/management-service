@@ -1,9 +1,8 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
-import {
-  type IModalidadeCreateCommand,
-  IModalidadeCreateCommandHandler,
-} from "@/modules/ensino/modalidade/domain/commands/modalidade-create.command.handler.interface";
+import type { ModalidadeCreateCommand } from "@/modules/ensino/modalidade/domain/commands/modalidade-create.command";
+import { IModalidadeCreateCommandHandler } from "@/modules/ensino/modalidade/domain/commands/modalidade-create.command.handler.interface";
 import { Modalidade } from "@/modules/ensino/modalidade/domain/modalidade.domain";
 import { IModalidadePermissionChecker } from "../../domain/authorization";
 import type { ModalidadeFindOneQueryResult } from "../../domain/queries";
@@ -18,10 +17,10 @@ export class ModalidadeCreateCommandHandlerImpl implements IModalidadeCreateComm
     private readonly permissionChecker: IModalidadePermissionChecker,
   ) {}
 
-  async execute({
-    accessContext,
-    dto,
-  }: IModalidadeCreateCommand): Promise<ModalidadeFindOneQueryResult> {
+  async execute(
+    accessContext: AccessContext | null,
+    dto: ModalidadeCreateCommand,
+  ): Promise<ModalidadeFindOneQueryResult> {
     await this.permissionChecker.ensureCanCreate(accessContext, { dto });
 
     const domain = Modalidade.criar({ nome: dto.nome, slug: dto.slug });

@@ -36,7 +36,7 @@ export class PerfilRestController {
   ): Promise<PerfilListOutputRestDto> {
     const listHandler = this.container.get<IPerfilListQueryHandler>(IPerfilListQueryHandler);
     const input = PerfilRestMapper.toListInput(dto);
-    const result = await listHandler.execute({ accessContext, dto: input });
+    const result = await listHandler.execute(accessContext, input);
     return PerfilRestMapper.toListOutputDto(result);
   }
 
@@ -53,7 +53,7 @@ export class PerfilRestController {
       IPerfilFindOneQueryHandler,
     );
     const input = PerfilRestMapper.toFindOneInput(params);
-    const result = await findOneHandler.execute({ accessContext, dto: input });
+    const result = await findOneHandler.execute(accessContext, input);
     return result ? PerfilRestMapper.toFindOneOutputDto(result) : null;
   }
 
@@ -70,7 +70,7 @@ export class PerfilRestController {
       IPerfilFindOneQueryHandler,
     );
     const input = PerfilRestMapper.toFindOneInput(params);
-    const result = await findOneHandler.execute({ accessContext, dto: input });
+    const result = await findOneHandler.execute(accessContext, input);
     return result ? PerfilRestMapper.toFindOneOutputDto(result) : null;
   }
 
@@ -96,7 +96,7 @@ export class PerfilRestController {
       IPerfilSetVinculosCommandHandler,
     );
     const input = PerfilRestMapper.toSetVinculosInput(dto);
-    const result = await setVinculosHandler.execute({ accessContext, dto: input });
+    const result = await setVinculosHandler.execute(accessContext, input);
     return PerfilRestMapper.toListOutputDto(result);
   }
 }

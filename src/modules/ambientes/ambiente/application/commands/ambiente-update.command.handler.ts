@@ -1,10 +1,10 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { Ambiente } from "@/modules/ambientes/ambiente/domain/ambiente.domain";
-import {
-  type IAmbienteUpdateCommand,
-  IAmbienteUpdateCommandHandler,
-} from "@/modules/ambientes/ambiente/domain/commands/ambiente-update.command.handler.interface";
+import type { AmbienteUpdateCommand } from "@/modules/ambientes/ambiente/domain/commands/ambiente-update.command";
+import { IAmbienteUpdateCommandHandler } from "@/modules/ambientes/ambiente/domain/commands/ambiente-update.command.handler.interface";
+import type { AmbienteFindOneQuery } from "@/modules/ambientes/ambiente/domain/queries";
 import { IAmbientePermissionChecker } from "../../domain/authorization";
 import type { AmbienteFindOneQueryResult } from "../../domain/queries";
 import { IAmbienteRepository } from "../../domain/repositories";
@@ -18,10 +18,10 @@ export class AmbienteUpdateCommandHandlerImpl implements IAmbienteUpdateCommandH
     private readonly permissionChecker: IAmbientePermissionChecker,
   ) {}
 
-  async execute({
-    accessContext,
-    dto,
-  }: IAmbienteUpdateCommand): Promise<AmbienteFindOneQueryResult> {
+  async execute(
+    accessContext: AccessContext | null,
+    dto: AmbienteFindOneQuery & AmbienteUpdateCommand,
+  ): Promise<AmbienteFindOneQueryResult> {
     const current = await this.repository.findById(accessContext, { id: dto.id });
 
     ensureExists(current, Ambiente.entityName, dto.id);

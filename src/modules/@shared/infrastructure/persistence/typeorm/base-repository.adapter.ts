@@ -83,7 +83,7 @@ export abstract class BaseTypeOrmRepositoryAdapter<
   async findAll(
     _accessContext: unknown,
     dto: ListInputDto | null = null,
-    selection?: string[] | boolean,
+    selection?: string[] | boolean | null,
   ): Promise<ListOutputDto> {
     if (!this.paginationAdapter) {
       throw new Error(`${this.constructor.name}: paginationAdapter is required for findAll`);
@@ -118,7 +118,7 @@ export abstract class BaseTypeOrmRepositoryAdapter<
   async findById(
     _accessContext: unknown,
     dto: FindOneQuery,
-    selection?: string[] | boolean,
+    selection?: string[] | boolean | null,
   ): Promise<FindOneOutputDto | null> {
     const qb = this.repository.createQueryBuilder(this.alias);
 
@@ -139,7 +139,7 @@ export abstract class BaseTypeOrmRepositoryAdapter<
   async findByIdSimple(
     accessContext: unknown,
     id: string,
-    selection?: string[] | boolean,
+    selection?: string[] | boolean | null,
   ): Promise<FindOneOutputDto | null> {
     return this.findById(accessContext, { id } as FindOneQuery, selection);
   }

@@ -1,11 +1,10 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { Diario } from "@/modules/ensino/diario/domain/diario.domain";
 import { IDiarioFindOneQueryHandler } from "@/modules/ensino/diario/domain/queries/diario-find-one.query.handler.interface";
-import {
-  type IDiarioPreferenciaAgrupamentoCreateCommand,
-  IDiarioPreferenciaAgrupamentoCreateCommandHandler,
-} from "@/modules/ensino/diario-preferencia-agrupamento/domain/commands/diario-preferencia-agrupamento-create.command.handler.interface";
+import type { DiarioPreferenciaAgrupamentoCreateCommand } from "@/modules/ensino/diario-preferencia-agrupamento/domain/commands/diario-preferencia-agrupamento-create.command";
+import { IDiarioPreferenciaAgrupamentoCreateCommandHandler } from "@/modules/ensino/diario-preferencia-agrupamento/domain/commands/diario-preferencia-agrupamento-create.command.handler.interface";
 import { DiarioPreferenciaAgrupamento } from "@/modules/ensino/diario-preferencia-agrupamento/domain/diario-preferencia-agrupamento.domain";
 import { IDiarioPreferenciaAgrupamentoPermissionChecker } from "../../domain/authorization";
 import type { DiarioPreferenciaAgrupamentoFindOneQueryResult } from "../../domain/queries";
@@ -24,18 +23,15 @@ export class DiarioPreferenciaAgrupamentoCreateCommandHandlerImpl
     private readonly diarioFindOneHandler: IDiarioFindOneQueryHandler,
   ) {}
 
-  async execute({
-    accessContext,
-    dto,
-  }: IDiarioPreferenciaAgrupamentoCreateCommand): Promise<DiarioPreferenciaAgrupamentoFindOneQueryResult> {
+  async execute(
+    accessContext: AccessContext | null,
+    dto: DiarioPreferenciaAgrupamentoCreateCommand,
+  ): Promise<DiarioPreferenciaAgrupamentoFindOneQueryResult> {
     await this.permissionChecker.ensureCanCreate(accessContext, { dto });
 
     let diarioRef: { id: string } | undefined;
     if (dto.diario) {
-      const diario = await this.diarioFindOneHandler.execute({
-        accessContext,
-        dto: dto.diario,
-      });
+      const diario = await this.diarioFindOneHandler.execute(accessContext, dto.diario);
       ensureExists(diario, Diario.entityName, dto.diario.id);
       diarioRef = { id: diario.id };
     }

@@ -2,6 +2,7 @@ import { ServiceUnavailableException, UnprocessableEntityException } from "@nest
 import sharp from "sharp";
 import { v4 } from "uuid";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { IArquivoCreateCommandHandler } from "@/modules/armazenamento/arquivo/domain/commands";
 import type {
   IImagemSaveImageCommand,
@@ -21,7 +22,10 @@ export class ImagemSaveImageCommandHandlerImpl implements IImagemSaveImageComman
     private readonly imagemTransactionPort: IImagemTransactionPort,
   ) {}
 
-  async execute({ file, options }: IImagemSaveImageCommand): Promise<{ imagem: { id: string } }> {
+  async execute(
+    _accessContext: AccessContext | null,
+    { file, options }: IImagemSaveImageCommand,
+  ): Promise<{ imagem: { id: string } }> {
     const name = file.originalname;
 
     // ===============================================
@@ -69,7 +73,7 @@ export class ImagemSaveImageCommandHandlerImpl implements IImagemSaveImageComman
             resolveWithObject: true,
           });
 
-          const arquivo = await this.arquivoCreateHandler.execute({
+          const arquivo = await this.arquivoCreateHandler.execute(null, {
             dto: { name, mimeType },
             data: transformedOutput.data,
           });

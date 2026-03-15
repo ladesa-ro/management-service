@@ -20,7 +20,7 @@ export class OfertaFormacaoEntity {
   @Column({ name: "nome", type: "text", nullable: false })
   nome!: string;
 
-  @Column({ name: "slug", type: "text", nullable: false })
+  @Column({ name: "apelido", type: "text", nullable: false })
   slug!: string;
 
   @ManyToOne(() => ModalidadeEntity)

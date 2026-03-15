@@ -18,11 +18,14 @@ export interface IReadOnlyRepository<
   /**
    * Lista entidades com paginação e filtros
    */
-  findAll(accessContext: AccessContext, dto: ListInputDto | null): Promise<ListOutputDto>;
+  findAll(accessContext: AccessContext | null, dto: ListInputDto | null): Promise<ListOutputDto>;
 
   /**
    * Busca uma entidade por ID
    * @returns A entidade ou null se não encontrada
    */
-  findById(accessContext: AccessContext, dto: FindOneQuery): Promise<FindOneOutputDto | null>;
+  findById(
+    accessContext: AccessContext | null,
+    dto: FindOneQuery,
+  ): Promise<FindOneOutputDto | null>;
 }

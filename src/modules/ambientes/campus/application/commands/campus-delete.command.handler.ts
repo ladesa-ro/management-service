@@ -1,10 +1,9 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { Campus } from "@/modules/ambientes/campus/domain/campus.domain";
-import {
-  type ICampusDeleteCommand,
-  ICampusDeleteCommandHandler,
-} from "@/modules/ambientes/campus/domain/commands/campus-delete.command.handler.interface";
+import { ICampusDeleteCommandHandler } from "@/modules/ambientes/campus/domain/commands/campus-delete.command.handler.interface";
+import type { CampusFindOneQuery } from "@/modules/ambientes/campus/domain/queries";
 import { ICampusPermissionChecker } from "../../domain/authorization";
 import { ICampusRepository } from "../../domain/repositories";
 
@@ -17,7 +16,7 @@ export class CampusDeleteCommandHandlerImpl implements ICampusDeleteCommandHandl
     private readonly permissionChecker: ICampusPermissionChecker,
   ) {}
 
-  async execute({ accessContext, dto }: ICampusDeleteCommand): Promise<boolean> {
+  async execute(accessContext: AccessContext | null, dto: CampusFindOneQuery): Promise<boolean> {
     await this.permissionChecker.ensureCanDelete(accessContext, { dto }, dto.id);
 
     const entity = await this.repository.findById(accessContext, dto);

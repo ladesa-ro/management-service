@@ -39,7 +39,7 @@ export class CampusGraphqlResolver {
     }
 
     const listHandler = this.container.get<ICampusListQueryHandler>(ICampusListQueryHandler);
-    const result = await listHandler.execute({ accessContext, dto: input });
+    const result = await listHandler.execute(accessContext, input);
     return CampusGraphqlMapper.toListOutputDto(result);
   }
 
@@ -53,7 +53,7 @@ export class CampusGraphqlResolver {
     const findOneHandler = this.container.get<ICampusFindOneQueryHandler>(
       ICampusFindOneQueryHandler,
     );
-    const result = await findOneHandler.execute({ accessContext, dto: { id, selection } });
+    const result = await findOneHandler.execute(accessContext, { id, selection });
     ensureExists(result, Campus.entityName, id);
     return CampusGraphqlMapper.toFindOneOutputDto(result);
   }
@@ -68,7 +68,7 @@ export class CampusGraphqlResolver {
     const createHandler = this.container.get<ICampusCreateCommandHandler>(
       ICampusCreateCommandHandler,
     );
-    const result = await createHandler.execute({ accessContext, dto: input });
+    const result = await createHandler.execute(accessContext, input);
     return CampusGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -83,7 +83,7 @@ export class CampusGraphqlResolver {
     const updateHandler = this.container.get<ICampusUpdateCommandHandler>(
       ICampusUpdateCommandHandler,
     );
-    const result = await updateHandler.execute({ accessContext, dto: input });
+    const result = await updateHandler.execute(accessContext, input);
     return CampusGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -95,6 +95,6 @@ export class CampusGraphqlResolver {
     const deleteHandler = this.container.get<ICampusDeleteCommandHandler>(
       ICampusDeleteCommandHandler,
     );
-    return deleteHandler.execute({ accessContext, dto: { id } });
+    return deleteHandler.execute(accessContext, { id });
   }
 }

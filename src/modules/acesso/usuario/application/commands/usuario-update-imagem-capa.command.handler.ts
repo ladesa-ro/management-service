@@ -1,8 +1,9 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists, saveEntityImagemField } from "@/modules/@shared";
 import {
-  type IUsuarioUpdateImagemCapaCommand,
   IUsuarioUpdateImagemCapaCommandHandler,
+  type UsuarioUpdateImagemCapaCommand,
 } from "@/modules/acesso/usuario/domain/commands/usuario-update-imagem-capa.command.handler.interface";
 import { Usuario } from "@/modules/acesso/usuario/domain/usuario.domain";
 import {
@@ -25,7 +26,10 @@ export class UsuarioUpdateImagemCapaCommandHandlerImpl
     private readonly permissionChecker: IUsuarioPermissionChecker,
   ) {}
 
-  async execute({ accessContext, dto, file }: IUsuarioUpdateImagemCapaCommand): Promise<boolean> {
+  async execute(
+    accessContext: AccessContext | null,
+    { dto, file }: UsuarioUpdateImagemCapaCommand,
+  ): Promise<boolean> {
     const currentUsuario = await this.repository.findById(accessContext, { id: dto.id });
 
     ensureExists(currentUsuario, Usuario.entityName, dto.id);

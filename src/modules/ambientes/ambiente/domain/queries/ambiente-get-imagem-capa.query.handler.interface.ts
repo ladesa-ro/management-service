@@ -1,14 +1,9 @@
 import type { StreamableFile } from "@nestjs/common";
-import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import type { IQueryHandler } from "@/modules/@shared/domain/abstractions";
-
-export type IAmbienteGetImagemCapaQuery = {
-  accessContext: AccessContext | null;
-  id: string;
-};
+import type { AmbienteFindOneQuery } from "./ambiente-find-one.query";
 
 export type IAmbienteGetImagemCapaQueryHandler = IQueryHandler<
-  IAmbienteGetImagemCapaQuery,
+  AmbienteFindOneQuery,
   StreamableFile
 >;
 export const IAmbienteGetImagemCapaQueryHandler = Symbol("IAmbienteGetImagemCapaQueryHandler");

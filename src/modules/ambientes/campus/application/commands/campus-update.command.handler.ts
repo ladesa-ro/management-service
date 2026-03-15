@@ -1,12 +1,12 @@
 import { get } from "lodash";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists, type PersistInput } from "@/modules/@shared";
 import { Campus } from "@/modules/ambientes/campus/domain/campus.domain";
 import type { ICampus } from "@/modules/ambientes/campus/domain/campus.types";
-import {
-  type ICampusUpdateCommand,
-  ICampusUpdateCommandHandler,
-} from "@/modules/ambientes/campus/domain/commands/campus-update.command.handler.interface";
+import type { CampusUpdateCommand } from "@/modules/ambientes/campus/domain/commands/campus-update.command";
+import { ICampusUpdateCommandHandler } from "@/modules/ambientes/campus/domain/commands/campus-update.command.handler.interface";
+import type { CampusFindOneQuery } from "@/modules/ambientes/campus/domain/queries";
 import { IEnderecoCreateOrUpdateCommandHandler } from "@/modules/localidades/endereco/domain/commands/endereco-create-or-update.command.handler.interface";
 import { ICampusPermissionChecker } from "../../domain/authorization";
 import type { CampusFindOneQueryResult } from "../../domain/queries";
@@ -23,7 +23,10 @@ export class CampusUpdateCommandHandlerImpl implements ICampusUpdateCommandHandl
     private readonly enderecoCreateOrUpdateHandler: IEnderecoCreateOrUpdateCommandHandler,
   ) {}
 
-  async execute({ accessContext, dto }: ICampusUpdateCommand): Promise<CampusFindOneQueryResult> {
+  async execute(
+    accessContext: AccessContext | null,
+    dto: CampusFindOneQuery & CampusUpdateCommand,
+  ): Promise<CampusFindOneQueryResult> {
     const current = await this.repository.findById(accessContext, { id: dto.id });
 
     ensureExists(current, Campus.entityName, dto.id);
@@ -45,7 +48,7 @@ export class CampusUpdateCommandHandlerImpl implements ICampusUpdateCommandHandl
     };
     const dtoEndereco = get(dto, "endereco");
     if (dtoEndereco) {
-      const endereco = await this.enderecoCreateOrUpdateHandler.execute({
+      const endereco = await this.enderecoCreateOrUpdateHandler.execute(null, {
         id: current.endereco.id,
         dto: dtoEndereco as any,
       });

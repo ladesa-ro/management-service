@@ -44,7 +44,7 @@ export class EstagiarioRestController {
       IEstagiarioListQueryHandler,
     );
     const input = EstagiarioRestMapper.toListInput(dto);
-    const result = await listHandler.execute({ accessContext, dto: input });
+    const result = await listHandler.execute(accessContext, input);
     return EstagiarioRestMapper.toListOutputDto(result);
   }
 
@@ -61,7 +61,7 @@ export class EstagiarioRestController {
       IEstagiarioFindOneQueryHandler,
     );
     const input = EstagiarioRestMapper.toFindOneInput(params);
-    const result = await findOneHandler.execute({ accessContext, dto: input });
+    const result = await findOneHandler.execute(accessContext, input);
     ensureExists(result, Estagiario.entityName, input.id);
     return EstagiarioRestMapper.toFindOneOutputDto(result);
   }
@@ -79,7 +79,7 @@ export class EstagiarioRestController {
       IEstagiarioCreateCommandHandler,
     );
     const input = EstagiarioRestMapper.toCreateInput(dto);
-    const result = await createHandler.execute({ accessContext, dto: input });
+    const result = await createHandler.execute(accessContext, input);
     return EstagiarioRestMapper.toFindOneOutputDto(result);
   }
 
@@ -98,7 +98,7 @@ export class EstagiarioRestController {
       IEstagiarioUpdateCommandHandler,
     );
     const input = EstagiarioRestMapper.toUpdateInput(dto);
-    const result = await updateHandler.execute({ accessContext, id: params.id, dto: input });
+    const result = await updateHandler.execute(accessContext, { id: params.id, ...input });
     return EstagiarioRestMapper.toFindOneOutputDto(result);
   }
 
@@ -114,7 +114,7 @@ export class EstagiarioRestController {
     const deleteHandler = this.container.get<IEstagiarioDeleteCommandHandler>(
       IEstagiarioDeleteCommandHandler,
     );
-    await deleteHandler.execute({ accessContext, id: params.id });
+    await deleteHandler.execute(accessContext, { id: params.id });
     return { message: "Estagiário deletado com sucesso" };
   }
 }

@@ -43,7 +43,7 @@ export class CalendarioLetivoRestController {
       ICalendarioLetivoListQueryHandler,
     );
     const input = CalendarioLetivoRestMapper.toListInput(dto);
-    const result = await listHandler.execute({ accessContext, dto: input });
+    const result = await listHandler.execute(accessContext, input);
     return CalendarioLetivoRestMapper.toListOutputDto(result);
   }
 
@@ -63,7 +63,7 @@ export class CalendarioLetivoRestController {
       ICalendarioLetivoFindOneQueryHandler,
     );
     const input = CalendarioLetivoRestMapper.toFindOneInput(params);
-    const result = await findOneHandler.execute({ accessContext, dto: input });
+    const result = await findOneHandler.execute(accessContext, input);
     ensureExists(result, CalendarioLetivo.entityName, input.id);
     return CalendarioLetivoRestMapper.toFindOneOutputDto(result);
   }
@@ -80,7 +80,7 @@ export class CalendarioLetivoRestController {
       ICalendarioLetivoCreateCommandHandler,
     );
     const input = CalendarioLetivoRestMapper.toCreateInput(dto);
-    const result = await createHandler.execute({ accessContext, dto: input });
+    const result = await createHandler.execute(accessContext, input);
     return CalendarioLetivoRestMapper.toFindOneOutputDto(result);
   }
 
@@ -98,7 +98,7 @@ export class CalendarioLetivoRestController {
       ICalendarioLetivoUpdateCommandHandler,
     );
     const input = CalendarioLetivoRestMapper.toUpdateInput(params, dto);
-    const result = await updateHandler.execute({ accessContext, dto: input });
+    const result = await updateHandler.execute(accessContext, input);
     return CalendarioLetivoRestMapper.toFindOneOutputDto(result);
   }
 
@@ -118,6 +118,6 @@ export class CalendarioLetivoRestController {
       ICalendarioLetivoDeleteCommandHandler,
     );
     const input = CalendarioLetivoRestMapper.toFindOneInput(params);
-    return deleteHandler.execute({ accessContext, dto: input });
+    return deleteHandler.execute(accessContext, input);
   }
 }

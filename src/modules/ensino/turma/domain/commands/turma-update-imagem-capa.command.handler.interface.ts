@@ -1,14 +1,13 @@
-import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import type { ICommandHandler } from "@/modules/@shared/domain/abstractions";
 import type { TurmaFindOneQuery } from "../queries";
-export type ITurmaUpdateImagemCapaCommand = {
-  accessContext: AccessContext;
+
+export type TurmaUpdateImagemCapaCommand = {
   dto: TurmaFindOneQuery;
   file: Express.Multer.File;
 };
 
 export type ITurmaUpdateImagemCapaCommandHandler = ICommandHandler<
-  ITurmaUpdateImagemCapaCommand,
+  TurmaUpdateImagemCapaCommand,
   boolean
 >;
 export const ITurmaUpdateImagemCapaCommandHandler = Symbol("ITurmaUpdateImagemCapaCommandHandler");

@@ -1,10 +1,10 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
-import {
-  type IDisciplinaUpdateCommand,
-  IDisciplinaUpdateCommandHandler,
-} from "@/modules/ensino/disciplina/domain/commands/disciplina-update.command.handler.interface";
+import type { DisciplinaUpdateCommand } from "@/modules/ensino/disciplina/domain/commands/disciplina-update.command";
+import { IDisciplinaUpdateCommandHandler } from "@/modules/ensino/disciplina/domain/commands/disciplina-update.command.handler.interface";
 import { Disciplina } from "@/modules/ensino/disciplina/domain/disciplina.domain";
+import type { DisciplinaFindOneQuery } from "@/modules/ensino/disciplina/domain/queries";
 import { IDisciplinaPermissionChecker } from "../../domain/authorization";
 import type { DisciplinaFindOneQueryResult } from "../../domain/queries";
 import { IDisciplinaRepository } from "../../domain/repositories";
@@ -18,10 +18,10 @@ export class DisciplinaUpdateCommandHandlerImpl implements IDisciplinaUpdateComm
     private readonly permissionChecker: IDisciplinaPermissionChecker,
   ) {}
 
-  async execute({
-    accessContext,
-    dto,
-  }: IDisciplinaUpdateCommand): Promise<DisciplinaFindOneQueryResult> {
+  async execute(
+    accessContext: AccessContext | null,
+    dto: DisciplinaFindOneQuery & DisciplinaUpdateCommand,
+  ): Promise<DisciplinaFindOneQueryResult> {
     const current = await this.repository.findById(accessContext, { id: dto.id });
 
     ensureExists(current, Disciplina.entityName, dto.id);

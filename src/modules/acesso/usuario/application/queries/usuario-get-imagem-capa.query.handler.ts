@@ -1,10 +1,8 @@
 import { type StreamableFile } from "@nestjs/common";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists, getEntityImagemStreamableFile } from "@/modules/@shared";
-import {
-  type IUsuarioGetImagemCapaQuery,
-  IUsuarioGetImagemCapaQueryHandler,
-} from "@/modules/acesso/usuario/domain/queries/usuario-get-imagem-capa.query.handler.interface";
+import { IUsuarioGetImagemCapaQueryHandler } from "@/modules/acesso/usuario/domain/queries/usuario-get-imagem-capa.query.handler.interface";
 import { Usuario } from "@/modules/acesso/usuario/domain/usuario.domain";
 import {
   IArquivoGetStreamableFileQueryHandler,
@@ -14,6 +12,7 @@ import {
   IImagemGetLatestArquivoIdQueryHandler,
   type IImagemGetLatestArquivoIdQueryHandler as IImagemGetLatestArquivoIdQueryHandlerType,
 } from "@/modules/armazenamento/imagem/domain/queries";
+import type { UsuarioFindOneQuery } from "../../domain/queries";
 import { IUsuarioRepository } from "../../domain/repositories";
 
 @DeclareImplementation()
@@ -27,7 +26,10 @@ export class UsuarioGetImagemCapaQueryHandlerImpl implements IUsuarioGetImagemCa
     private readonly getStreamableFileHandler: IArquivoGetStreamableFileQueryHandlerType,
   ) {}
 
-  async execute({ accessContext, id }: IUsuarioGetImagemCapaQuery): Promise<StreamableFile> {
+  async execute(
+    accessContext: AccessContext | null,
+    { id }: UsuarioFindOneQuery,
+  ): Promise<StreamableFile> {
     const usuario = await this.repository.findById(accessContext, { id });
 
     ensureExists(usuario, Usuario.entityName, id);

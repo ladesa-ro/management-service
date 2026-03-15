@@ -48,7 +48,7 @@ export class UsuarioTypeOrmRepositoryAdapter
 
   async findByMatricula(
     matricula: string,
-    selection?: string[] | boolean,
+    selection?: string[] | boolean | null,
   ): Promise<UsuarioFindOneQueryResult | null> {
     const qb = this.repository.createQueryBuilder(this.alias);
 

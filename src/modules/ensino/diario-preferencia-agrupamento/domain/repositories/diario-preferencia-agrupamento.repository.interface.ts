@@ -28,7 +28,7 @@ export interface IDiarioPreferenciaAgrupamentoRepository
    * Busca simplificada por ID - método obrigatório
    */
   findByIdSimple(
-    accessContext: AccessContext,
+    accessContext: AccessContext | null,
     id: string,
     selection?: string[],
   ): Promise<DiarioPreferenciaAgrupamentoFindOneQueryResult | null>;

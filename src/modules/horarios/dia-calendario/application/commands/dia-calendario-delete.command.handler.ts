@@ -1,10 +1,9 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
-import {
-  type IDiaCalendarioDeleteCommand,
-  IDiaCalendarioDeleteCommandHandler,
-} from "@/modules/horarios/dia-calendario/domain/commands/dia-calendario-delete.command.handler.interface";
+import { IDiaCalendarioDeleteCommandHandler } from "@/modules/horarios/dia-calendario/domain/commands/dia-calendario-delete.command.handler.interface";
 import { DiaCalendario } from "@/modules/horarios/dia-calendario/domain/dia-calendario.domain";
+import type { DiaCalendarioFindOneQuery } from "@/modules/horarios/dia-calendario/domain/queries";
 import { IDiaCalendarioPermissionChecker } from "../../domain/authorization";
 import { IDiaCalendarioRepository } from "../../domain/repositories";
 
@@ -17,7 +16,10 @@ export class DiaCalendarioDeleteCommandHandlerImpl implements IDiaCalendarioDele
     private readonly permissionChecker: IDiaCalendarioPermissionChecker,
   ) {}
 
-  async execute({ accessContext, dto }: IDiaCalendarioDeleteCommand): Promise<boolean> {
+  async execute(
+    accessContext: AccessContext | null,
+    dto: DiaCalendarioFindOneQuery,
+  ): Promise<boolean> {
     await this.permissionChecker.ensureCanDelete(accessContext, { dto }, dto.id);
 
     const entity = await this.repository.findById(accessContext, dto);

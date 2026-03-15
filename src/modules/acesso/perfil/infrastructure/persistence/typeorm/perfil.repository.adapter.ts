@@ -74,7 +74,7 @@ export class PerfilTypeOrmRepositoryAdapter
     _accessContext: unknown,
     criteria: IPaginationCriteria | null,
     config: ITypeOrmPaginationConfig<PerfilFindOneQueryResult>,
-    selection?: string[] | boolean,
+    selection?: string[] | boolean | null,
   ): Promise<IPaginationResult<PerfilFindOneQueryResult>> {
     const qb = this.repository.createQueryBuilder(this.alias);
 

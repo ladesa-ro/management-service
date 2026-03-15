@@ -1,5 +1,6 @@
 import { type StreamableFile } from "@nestjs/common";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists, getEntityImagemStreamableFile } from "@/modules/@shared";
 import {
   IArquivoGetStreamableFileQueryHandler,
@@ -10,10 +11,8 @@ import {
   type IImagemGetLatestArquivoIdQueryHandler as IImagemGetLatestArquivoIdQueryHandlerType,
 } from "@/modules/armazenamento/imagem/domain/queries";
 import { Curso } from "@/modules/ensino/curso/domain/curso.domain";
-import {
-  type ICursoGetImagemCapaQuery,
-  ICursoGetImagemCapaQueryHandler,
-} from "@/modules/ensino/curso/domain/queries/curso-get-imagem-capa.query.handler.interface";
+import { ICursoGetImagemCapaQueryHandler } from "@/modules/ensino/curso/domain/queries/curso-get-imagem-capa.query.handler.interface";
+import type { CursoFindOneQuery } from "../../domain/queries";
 import { ICursoRepository } from "../../domain/repositories";
 
 @DeclareImplementation()
@@ -27,7 +26,10 @@ export class CursoGetImagemCapaQueryHandlerImpl implements ICursoGetImagemCapaQu
     private readonly getStreamableFileHandler: IArquivoGetStreamableFileQueryHandlerType,
   ) {}
 
-  async execute({ accessContext, id }: ICursoGetImagemCapaQuery): Promise<StreamableFile> {
+  async execute(
+    accessContext: AccessContext | null,
+    { id }: CursoFindOneQuery,
+  ): Promise<StreamableFile> {
     const entity = await this.repository.findById(accessContext, { id });
 
     ensureExists(entity, Curso.entityName, id);

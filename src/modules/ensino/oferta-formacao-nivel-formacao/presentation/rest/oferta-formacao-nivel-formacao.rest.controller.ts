@@ -46,7 +46,7 @@ export class OfertaFormacaoNivelFormacaoRestController {
     const listHandler = this.container.get<IOfertaFormacaoNivelFormacaoListQueryHandler>(
       IOfertaFormacaoNivelFormacaoListQueryHandler,
     );
-    const result = await listHandler.execute({ accessContext, dto: input });
+    const result = await listHandler.execute(accessContext, input);
     return OfertaFormacaoNivelFormacaoRestMapper.toListOutputDto(result);
   }
 
@@ -66,7 +66,7 @@ export class OfertaFormacaoNivelFormacaoRestController {
     const findOneHandler = this.container.get<IOfertaFormacaoNivelFormacaoFindOneQueryHandler>(
       IOfertaFormacaoNivelFormacaoFindOneQueryHandler,
     );
-    const result = await findOneHandler.execute({ accessContext, dto: input });
+    const result = await findOneHandler.execute(accessContext, input);
     ensureExists(result, OfertaFormacaoNivelFormacao.entityName, input.id);
     return OfertaFormacaoNivelFormacaoRestMapper.toFindOneOutputDto(result);
   }
@@ -86,7 +86,7 @@ export class OfertaFormacaoNivelFormacaoRestController {
     const createHandler = this.container.get<IOfertaFormacaoNivelFormacaoCreateCommandHandler>(
       IOfertaFormacaoNivelFormacaoCreateCommandHandler,
     );
-    const result = await createHandler.execute({ accessContext, dto: input });
+    const result = await createHandler.execute(accessContext, input);
     return OfertaFormacaoNivelFormacaoRestMapper.toFindOneOutputDto(result);
   }
 
@@ -107,7 +107,7 @@ export class OfertaFormacaoNivelFormacaoRestController {
     const updateHandler = this.container.get<IOfertaFormacaoNivelFormacaoUpdateCommandHandler>(
       IOfertaFormacaoNivelFormacaoUpdateCommandHandler,
     );
-    const result = await updateHandler.execute({ accessContext, dto: input });
+    const result = await updateHandler.execute(accessContext, input);
     return OfertaFormacaoNivelFormacaoRestMapper.toFindOneOutputDto(result);
   }
 
@@ -127,6 +127,6 @@ export class OfertaFormacaoNivelFormacaoRestController {
     const deleteHandler = this.container.get<IOfertaFormacaoNivelFormacaoDeleteCommandHandler>(
       IOfertaFormacaoNivelFormacaoDeleteCommandHandler,
     );
-    return deleteHandler.execute({ accessContext, dto: input });
+    return deleteHandler.execute(accessContext, input);
   }
 }

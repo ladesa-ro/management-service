@@ -1,11 +1,12 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists, saveEntityImagemField } from "@/modules/@shared";
 import {
   IImagemSaveImagemCapaCommandHandler,
   type IImagemSaveImagemCapaCommandHandler as IImagemSaveImagemCapaCommandHandlerType,
 } from "@/modules/armazenamento/imagem/domain/commands";
 import {
-  type ICursoUpdateImagemCapaCommand,
+  type CursoUpdateImagemCapaCommand,
   ICursoUpdateImagemCapaCommandHandler,
 } from "@/modules/ensino/curso/domain/commands/curso-update-imagem-capa.command.handler.interface";
 import { Curso } from "@/modules/ensino/curso/domain/curso.domain";
@@ -25,7 +26,10 @@ export class CursoUpdateImagemCapaCommandHandlerImpl
     private readonly saveImagemCapaHandler: IImagemSaveImagemCapaCommandHandlerType,
   ) {}
 
-  async execute({ accessContext, dto, file }: ICursoUpdateImagemCapaCommand): Promise<boolean> {
+  async execute(
+    accessContext: AccessContext | null,
+    { dto, file }: CursoUpdateImagemCapaCommand,
+  ): Promise<boolean> {
     const current = await this.repository.findById(accessContext, dto);
 
     ensureExists(current, Curso.entityName, dto.id);

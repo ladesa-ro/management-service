@@ -38,7 +38,7 @@ export class DiaCalendarioGraphqlResolver {
     const listHandler = this.container.get<IDiaCalendarioListQueryHandler>(
       IDiaCalendarioListQueryHandler,
     );
-    const result = await listHandler.execute({ accessContext, dto: input });
+    const result = await listHandler.execute(accessContext, input);
     return DiaCalendarioGraphqlMapper.toListOutputDto(result);
   }
 
@@ -52,7 +52,7 @@ export class DiaCalendarioGraphqlResolver {
     const findOneHandler = this.container.get<IDiaCalendarioFindOneQueryHandler>(
       IDiaCalendarioFindOneQueryHandler,
     );
-    const result = await findOneHandler.execute({ accessContext, dto: { id, selection } });
+    const result = await findOneHandler.execute(accessContext, { id, selection });
     ensureExists(result, DiaCalendario.entityName, id);
     return DiaCalendarioGraphqlMapper.toFindOneOutputDto(result);
   }
@@ -67,7 +67,7 @@ export class DiaCalendarioGraphqlResolver {
     const createHandler = this.container.get<IDiaCalendarioCreateCommandHandler>(
       IDiaCalendarioCreateCommandHandler,
     );
-    const result = await createHandler.execute({ accessContext, dto: input });
+    const result = await createHandler.execute(accessContext, input);
     return DiaCalendarioGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -82,7 +82,7 @@ export class DiaCalendarioGraphqlResolver {
     const updateHandler = this.container.get<IDiaCalendarioUpdateCommandHandler>(
       IDiaCalendarioUpdateCommandHandler,
     );
-    const result = await updateHandler.execute({ accessContext, dto: input });
+    const result = await updateHandler.execute(accessContext, input);
     return DiaCalendarioGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -94,6 +94,6 @@ export class DiaCalendarioGraphqlResolver {
     const deleteHandler = this.container.get<IDiaCalendarioDeleteCommandHandler>(
       IDiaCalendarioDeleteCommandHandler,
     );
-    return deleteHandler.execute({ accessContext, dto: { id } });
+    return deleteHandler.execute(accessContext, { id });
   }
 }

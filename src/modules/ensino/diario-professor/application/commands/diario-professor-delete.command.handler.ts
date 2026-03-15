@@ -1,10 +1,9 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
-import {
-  type IDiarioProfessorDeleteCommand,
-  IDiarioProfessorDeleteCommandHandler,
-} from "@/modules/ensino/diario-professor/domain/commands/diario-professor-delete.command.handler.interface";
+import { IDiarioProfessorDeleteCommandHandler } from "@/modules/ensino/diario-professor/domain/commands/diario-professor-delete.command.handler.interface";
 import { DiarioProfessor } from "@/modules/ensino/diario-professor/domain/diario-professor.domain";
+import type { DiarioProfessorFindOneQuery } from "@/modules/ensino/diario-professor/domain/queries";
 import { IDiarioProfessorPermissionChecker } from "../../domain/authorization";
 import { IDiarioProfessorRepository } from "../../domain/repositories";
 
@@ -19,7 +18,10 @@ export class DiarioProfessorDeleteCommandHandlerImpl
     private readonly permissionChecker: IDiarioProfessorPermissionChecker,
   ) {}
 
-  async execute({ accessContext, dto }: IDiarioProfessorDeleteCommand): Promise<boolean> {
+  async execute(
+    accessContext: AccessContext | null,
+    dto: DiarioProfessorFindOneQuery,
+  ): Promise<boolean> {
     await this.permissionChecker.ensureCanDelete(accessContext, { dto }, dto.id);
 
     const entity = await this.repository.findById(accessContext, dto);

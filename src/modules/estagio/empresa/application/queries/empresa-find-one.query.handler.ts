@@ -1,9 +1,7 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import {
-  type IEmpresaFindOneQuery,
-  IEmpresaFindOneQueryHandler,
-} from "@/modules/estagio/empresa/domain/queries/empresa-find-one.query.handler.interface";
-import type { EmpresaFindOneQueryResult } from "../../domain/queries";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
+import { IEmpresaFindOneQueryHandler } from "@/modules/estagio/empresa/domain/queries/empresa-find-one.query.handler.interface";
+import type { EmpresaFindOneQuery, EmpresaFindOneQueryResult } from "../../domain/queries";
 import { IEmpresaRepository } from "../../domain/repositories";
 
 @DeclareImplementation()
@@ -13,11 +11,10 @@ export class EmpresaFindOneQueryHandlerImpl implements IEmpresaFindOneQueryHandl
     private readonly repository: IEmpresaRepository,
   ) {}
 
-  async execute({
-    accessContext,
-    dto,
-    selection,
-  }: IEmpresaFindOneQuery): Promise<EmpresaFindOneQueryResult | null> {
-    return this.repository.findById(accessContext, dto, selection);
+  async execute(
+    accessContext: AccessContext | null,
+    dto: EmpresaFindOneQuery,
+  ): Promise<EmpresaFindOneQueryResult | null> {
+    return this.repository.findById(accessContext, dto, dto?.selection);
   }
 }

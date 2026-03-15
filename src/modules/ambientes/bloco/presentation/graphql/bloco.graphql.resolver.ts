@@ -39,7 +39,7 @@ export class BlocoGraphqlResolver {
     }
 
     const listHandler = this.container.get<IBlocoListQueryHandler>(IBlocoListQueryHandler);
-    const result = await listHandler.execute({ accessContext, dto: input });
+    const result = await listHandler.execute(accessContext, input);
     return BlocoGraphqlMapper.toListOutputDto(result);
   }
 
@@ -51,7 +51,7 @@ export class BlocoGraphqlResolver {
   ): Promise<BlocoFindOneOutputGraphQlDto> {
     const selection = graphqlExtractSelection(info);
     const findOneHandler = this.container.get<IBlocoFindOneQueryHandler>(IBlocoFindOneQueryHandler);
-    const result = await findOneHandler.execute({ accessContext, dto: { id, selection } });
+    const result = await findOneHandler.execute(accessContext, { id, selection });
     ensureExists(result, Bloco.entityName, id);
     return BlocoGraphqlMapper.toFindOneOutputDto(result);
   }
@@ -66,7 +66,7 @@ export class BlocoGraphqlResolver {
     const createHandler = this.container.get<IBlocoCreateCommandHandler>(
       IBlocoCreateCommandHandler,
     );
-    const result = await createHandler.execute({ accessContext, dto: input });
+    const result = await createHandler.execute(accessContext, input);
     return BlocoGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -81,7 +81,7 @@ export class BlocoGraphqlResolver {
     const updateHandler = this.container.get<IBlocoUpdateCommandHandler>(
       IBlocoUpdateCommandHandler,
     );
-    const result = await updateHandler.execute({ accessContext, dto: input });
+    const result = await updateHandler.execute(accessContext, input);
     return BlocoGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -93,6 +93,6 @@ export class BlocoGraphqlResolver {
     const deleteHandler = this.container.get<IBlocoDeleteCommandHandler>(
       IBlocoDeleteCommandHandler,
     );
-    return deleteHandler.execute({ accessContext, dto: { id } });
+    return deleteHandler.execute(accessContext, { id });
   }
 }

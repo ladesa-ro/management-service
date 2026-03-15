@@ -31,7 +31,7 @@ export class PerfilGraphqlResolver {
     }
 
     const listHandler = this.container.get<IPerfilListQueryHandler>(IPerfilListQueryHandler);
-    const result = await listHandler.execute({ accessContext, dto: input });
+    const result = await listHandler.execute(accessContext, input);
     return PerfilGraphqlMapper.toListOutputDto(result);
   }
 
@@ -45,7 +45,7 @@ export class PerfilGraphqlResolver {
     const findOneHandler = this.container.get<IPerfilFindOneQueryHandler>(
       IPerfilFindOneQueryHandler,
     );
-    const result = await findOneHandler.execute({ accessContext, dto: { id, selection } });
+    const result = await findOneHandler.execute(accessContext, { id, selection });
     if (!result) {
       return null;
     }
@@ -62,7 +62,7 @@ export class PerfilGraphqlResolver {
     const setVinculosHandler = this.container.get<IPerfilSetVinculosCommandHandler>(
       IPerfilSetVinculosCommandHandler,
     );
-    const result = await setVinculosHandler.execute({ accessContext, dto: input });
+    const result = await setVinculosHandler.execute(accessContext, input);
     return PerfilGraphqlMapper.toListOutputDto(result);
   }
 }

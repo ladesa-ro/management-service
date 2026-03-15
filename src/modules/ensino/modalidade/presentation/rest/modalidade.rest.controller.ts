@@ -43,7 +43,7 @@ export class ModalidadeRestController {
     const listHandler = this.container.get<IModalidadeListQueryHandler>(
       IModalidadeListQueryHandler,
     );
-    const result = await listHandler.execute({ accessContext, dto: input });
+    const result = await listHandler.execute(accessContext, input);
     return ModalidadeRestMapper.toListOutputDto(result);
   }
 
@@ -60,7 +60,7 @@ export class ModalidadeRestController {
     const findOneHandler = this.container.get<IModalidadeFindOneQueryHandler>(
       IModalidadeFindOneQueryHandler,
     );
-    const result = await findOneHandler.execute({ accessContext, dto: input });
+    const result = await findOneHandler.execute(accessContext, input);
     ensureExists(result, Modalidade.entityName, input.id);
     return ModalidadeRestMapper.toFindOneOutputDto(result);
   }
@@ -77,7 +77,7 @@ export class ModalidadeRestController {
     const createHandler = this.container.get<IModalidadeCreateCommandHandler>(
       IModalidadeCreateCommandHandler,
     );
-    const result = await createHandler.execute({ accessContext, dto: input });
+    const result = await createHandler.execute(accessContext, input);
     return ModalidadeRestMapper.toFindOneOutputDto(result);
   }
 
@@ -95,7 +95,7 @@ export class ModalidadeRestController {
     const updateHandler = this.container.get<IModalidadeUpdateCommandHandler>(
       IModalidadeUpdateCommandHandler,
     );
-    const result = await updateHandler.execute({ accessContext, dto: input });
+    const result = await updateHandler.execute(accessContext, input);
     return ModalidadeRestMapper.toFindOneOutputDto(result);
   }
 
@@ -112,6 +112,6 @@ export class ModalidadeRestController {
     const deleteHandler = this.container.get<IModalidadeDeleteCommandHandler>(
       IModalidadeDeleteCommandHandler,
     );
-    return deleteHandler.execute({ accessContext, dto: input });
+    return deleteHandler.execute(accessContext, input);
   }
 }

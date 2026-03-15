@@ -1,9 +1,8 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
-import {
-  type IDisciplinaCreateCommand,
-  IDisciplinaCreateCommandHandler,
-} from "@/modules/ensino/disciplina/domain/commands/disciplina-create.command.handler.interface";
+import type { DisciplinaCreateCommand } from "@/modules/ensino/disciplina/domain/commands/disciplina-create.command";
+import { IDisciplinaCreateCommandHandler } from "@/modules/ensino/disciplina/domain/commands/disciplina-create.command.handler.interface";
 import { Disciplina } from "@/modules/ensino/disciplina/domain/disciplina.domain";
 import { IDisciplinaPermissionChecker } from "../../domain/authorization";
 import type { DisciplinaFindOneQueryResult } from "../../domain/queries";
@@ -18,10 +17,10 @@ export class DisciplinaCreateCommandHandlerImpl implements IDisciplinaCreateComm
     private readonly permissionChecker: IDisciplinaPermissionChecker,
   ) {}
 
-  async execute({
-    accessContext,
-    dto,
-  }: IDisciplinaCreateCommand): Promise<DisciplinaFindOneQueryResult> {
+  async execute(
+    accessContext: AccessContext | null,
+    dto: DisciplinaCreateCommand,
+  ): Promise<DisciplinaFindOneQueryResult> {
     await this.permissionChecker.ensureCanCreate(accessContext, { dto });
 
     const domain = Disciplina.criar({

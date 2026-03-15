@@ -13,15 +13,15 @@ export interface IFindOneRepository<FindOneOutputDto> {
   findById(
     accessContext: AccessContext | null,
     dto: { id: string | number },
-    selection?: string[] | boolean,
+    selection?: string[] | boolean | null,
   ): Promise<FindOneOutputDto | null>;
 
   /**
    * Busca simplificada por ID (opcional)
    */
   findByIdSimple?(
-    accessContext: AccessContext,
+    accessContext: AccessContext | null,
     id: string | number,
-    selection?: string[] | boolean,
+    selection?: string[] | boolean | null,
   ): Promise<FindOneOutputDto | null>;
 }

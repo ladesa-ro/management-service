@@ -31,7 +31,7 @@ export class EstadoGraphqlResolver {
     }
 
     const listHandler = this.container.get<IEstadoListQueryHandler>(IEstadoListQueryHandler);
-    const result = await listHandler.execute({ accessContext, dto: input });
+    const result = await listHandler.execute(accessContext, input);
     return EstadoGraphqlMapper.toListOutputDto(result);
   }
 
@@ -45,7 +45,7 @@ export class EstadoGraphqlResolver {
     const findOneHandler = this.container.get<IEstadoFindOneQueryHandler>(
       IEstadoFindOneQueryHandler,
     );
-    const result = await findOneHandler.execute({ accessContext, dto: { id, selection } });
+    const result = await findOneHandler.execute(accessContext, { id, selection });
     ensureExists(result, Estado.entityName, id);
     return EstadoGraphqlMapper.toFindOneOutputDto(result);
   }

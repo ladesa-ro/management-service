@@ -39,7 +39,7 @@ export class CursoGraphqlResolver {
     }
 
     const listHandler = this.container.get<ICursoListQueryHandler>(ICursoListQueryHandler);
-    const result = await listHandler.execute({ accessContext, dto: input });
+    const result = await listHandler.execute(accessContext, input);
     return CursoGraphqlMapper.toListOutputDto(result);
   }
 
@@ -51,7 +51,7 @@ export class CursoGraphqlResolver {
   ): Promise<CursoFindOneOutputGraphQlDto> {
     const selection = graphqlExtractSelection(info);
     const findOneHandler = this.container.get<ICursoFindOneQueryHandler>(ICursoFindOneQueryHandler);
-    const result = await findOneHandler.execute({ accessContext, dto: { id, selection } });
+    const result = await findOneHandler.execute(accessContext, { id, selection });
     ensureExists(result, Curso.entityName, id);
     return CursoGraphqlMapper.toFindOneOutputDto(result);
   }
@@ -66,7 +66,7 @@ export class CursoGraphqlResolver {
     const createHandler = this.container.get<ICursoCreateCommandHandler>(
       ICursoCreateCommandHandler,
     );
-    const result = await createHandler.execute({ accessContext, dto: input });
+    const result = await createHandler.execute(accessContext, input);
     return CursoGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -81,7 +81,7 @@ export class CursoGraphqlResolver {
     const updateHandler = this.container.get<ICursoUpdateCommandHandler>(
       ICursoUpdateCommandHandler,
     );
-    const result = await updateHandler.execute({ accessContext, dto: input });
+    const result = await updateHandler.execute(accessContext, input);
     return CursoGraphqlMapper.toFindOneOutputDto(result);
   }
 
@@ -93,6 +93,6 @@ export class CursoGraphqlResolver {
     const deleteHandler = this.container.get<ICursoDeleteCommandHandler>(
       ICursoDeleteCommandHandler,
     );
-    return deleteHandler.execute({ accessContext, dto: { id } });
+    return deleteHandler.execute(accessContext, { id });
   }
 }

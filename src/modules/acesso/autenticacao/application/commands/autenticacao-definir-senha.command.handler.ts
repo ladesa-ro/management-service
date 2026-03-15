@@ -1,10 +1,9 @@
 import { ForbiddenException, HttpException, ServiceUnavailableException } from "@nestjs/common";
 import { IIdpUserService } from "@/domain/abstractions/identity-provider";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import {
-  type IAutenticacaoDefinirSenhaCommand,
-  IAutenticacaoDefinirSenhaCommandHandler,
-} from "@/modules/acesso/autenticacao/domain/commands/autenticacao-definir-senha.command.handler.interface";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
+import { IAutenticacaoDefinirSenhaCommandHandler } from "@/modules/acesso/autenticacao/domain/commands/autenticacao-definir-senha.command.handler.interface";
+import type { AuthCredentialsSetInitialPasswordCommand } from "@/modules/acesso/autenticacao/domain/commands/auth-credentials-set-initial-password.command";
 import { IUsuarioFindByMatriculaQueryHandler } from "@/modules/acesso/usuario/domain/queries/usuario-find-by-matricula.query.handler.interface";
 
 @DeclareImplementation()
@@ -18,9 +17,12 @@ export class AutenticacaoDefinirSenhaCommandHandlerImpl
     private readonly idpUserService: IIdpUserService,
   ) {}
 
-  async execute({ dto }: IAutenticacaoDefinirSenhaCommand): Promise<boolean> {
+  async execute(
+    _accessContext: AccessContext | null,
+    dto: AuthCredentialsSetInitialPasswordCommand,
+  ): Promise<boolean> {
     try {
-      const usuario = await this.usuarioFindByMatriculaHandler.execute({
+      const usuario = await this.usuarioFindByMatriculaHandler.execute(null, {
         matricula: dto.matricula,
       });
       const exists = await this.idpUserService.existsByMatricula(dto.matricula);

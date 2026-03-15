@@ -5,5 +5,5 @@ import type { IdUuid } from "@/modules/@shared";
  */
 export class FindOneQuery {
   id!: IdUuid;
-  selection?: string[];
+  selection?: string[] | boolean;
 }

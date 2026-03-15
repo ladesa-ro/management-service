@@ -1,13 +1,12 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { Ambiente } from "@/modules/ambientes/ambiente/domain/ambiente.domain";
 import { IAmbienteFindOneQueryHandler } from "@/modules/ambientes/ambiente/domain/queries/ambiente-find-one.query.handler.interface";
 import { Curso } from "@/modules/ensino/curso/domain/curso.domain";
 import { ICursoFindOneQueryHandler } from "@/modules/ensino/curso/domain/queries/curso-find-one.query.handler.interface";
-import {
-  type ITurmaCreateCommand,
-  ITurmaCreateCommandHandler,
-} from "@/modules/ensino/turma/domain/commands/turma-create.command.handler.interface";
+import type { TurmaCreateCommand } from "@/modules/ensino/turma/domain/commands/turma-create.command";
+import { ITurmaCreateCommandHandler } from "@/modules/ensino/turma/domain/commands/turma-create.command.handler.interface";
 import { Turma } from "@/modules/ensino/turma/domain/turma.domain";
 import { ITurmaPermissionChecker } from "../../domain/authorization";
 import type { TurmaFindOneQueryResult } from "../../domain/queries";
@@ -26,19 +25,18 @@ export class TurmaCreateCommandHandlerImpl implements ITurmaCreateCommandHandler
     private readonly cursoFindOneHandler: ICursoFindOneQueryHandler,
   ) {}
 
-  async execute({ accessContext, dto }: ITurmaCreateCommand): Promise<TurmaFindOneQueryResult> {
+  async execute(
+    accessContext: AccessContext | null,
+    dto: TurmaCreateCommand,
+  ): Promise<TurmaFindOneQueryResult> {
     await this.permissionChecker.ensureCanCreate(accessContext, { dto });
 
-    const curso = await this.cursoFindOneHandler.execute({
-      accessContext,
-      dto: { id: dto.curso.id },
-    });
+    const curso = await this.cursoFindOneHandler.execute(accessContext, { id: dto.curso.id });
     ensureExists(curso, Curso.entityName, dto.curso.id);
     let ambientePadraoAulaRef: { id: string } | null = null;
     if (dto.ambientePadraoAula) {
-      const ambientePadraoAula = await this.ambienteFindOneHandler.execute({
-        accessContext,
-        dto: { id: dto.ambientePadraoAula.id },
+      const ambientePadraoAula = await this.ambienteFindOneHandler.execute(accessContext, {
+        id: dto.ambientePadraoAula.id,
       });
       ensureExists(ambientePadraoAula, Ambiente.entityName, dto.ambientePadraoAula.id);
       ambientePadraoAulaRef = { id: ambientePadraoAula.id };

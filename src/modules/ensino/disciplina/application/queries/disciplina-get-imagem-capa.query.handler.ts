@@ -1,5 +1,6 @@
 import { type StreamableFile } from "@nestjs/common";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists, getEntityImagemStreamableFile } from "@/modules/@shared";
 import {
   IArquivoGetStreamableFileQueryHandler,
@@ -10,10 +11,8 @@ import {
   type IImagemGetLatestArquivoIdQueryHandler as IImagemGetLatestArquivoIdQueryHandlerType,
 } from "@/modules/armazenamento/imagem/domain/queries";
 import { Disciplina } from "@/modules/ensino/disciplina/domain/disciplina.domain";
-import {
-  type IDisciplinaGetImagemCapaQuery,
-  IDisciplinaGetImagemCapaQueryHandler,
-} from "@/modules/ensino/disciplina/domain/queries/disciplina-get-imagem-capa.query.handler.interface";
+import { IDisciplinaGetImagemCapaQueryHandler } from "@/modules/ensino/disciplina/domain/queries/disciplina-get-imagem-capa.query.handler.interface";
+import type { DisciplinaFindOneQuery } from "../../domain/queries";
 import { IDisciplinaRepository } from "../../domain/repositories";
 
 @DeclareImplementation()
@@ -29,7 +28,10 @@ export class DisciplinaGetImagemCapaQueryHandlerImpl
     private readonly getStreamableFileHandler: IArquivoGetStreamableFileQueryHandlerType,
   ) {}
 
-  async execute({ accessContext, id }: IDisciplinaGetImagemCapaQuery): Promise<StreamableFile> {
+  async execute(
+    accessContext: AccessContext | null,
+    { id }: DisciplinaFindOneQuery,
+  ): Promise<StreamableFile> {
     const entity = await this.repository.findById(accessContext, { id });
 
     ensureExists(entity, Disciplina.entityName, id);
