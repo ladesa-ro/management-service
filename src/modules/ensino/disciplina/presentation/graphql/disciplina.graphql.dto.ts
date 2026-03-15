@@ -12,8 +12,10 @@ import {
 } from "@/modules/@shared/presentation/graphql";
 import {
   IsInt,
+  IsArray,
   IsOptional,
   IsString,
+  IsUUID,
   Min,
   MinLength,
   ValidateNested,
@@ -86,7 +88,13 @@ export class DisciplinaUpdateInputGraphQlDto {
 // ============================================================================
 
 @ArgsType()
-export class DisciplinaListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {}
+export class DisciplinaListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {
+  @Field(() => [String], { nullable: true, description: "Filtro por ID dos Diários" })
+  @IsOptional()
+  @IsArray()
+  @IsUUID(undefined, { each: true })
+  filterDiariosId?: string[];
+}
 
 // ============================================================================
 // List Output

@@ -186,6 +186,12 @@ export class DiarioListInputGraphQlDto extends PaginatedFilterByIdGraphQlDto {
   @IsArray()
   @IsUUID(undefined, { each: true })
   filterCalendarioLetivoId?: string[];
+
+  @Field(() => [String], { nullable: true, description: "Filtro por ID do Ambiente Padrão" })
+  @IsOptional()
+  @IsArray()
+  @IsUUID(undefined, { each: true })
+  filterAmbientePadraoId?: string[];
 }
 
 // ============================================================================

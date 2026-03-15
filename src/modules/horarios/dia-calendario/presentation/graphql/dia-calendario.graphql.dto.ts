@@ -103,6 +103,18 @@ export class DiaCalendarioListInputGraphQlDto extends PaginatedFilterByIdGraphQl
   @IsArray()
   @IsUUID(undefined, { each: true })
   filterCalendarioId?: string[];
+
+  @Field(() => [String], { nullable: true, description: "Filtro por Nome do Calendário" })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  filterCalendarioNome?: string[];
+
+  @Field(() => [String], { nullable: true, description: "Filtro por Ano do Calendário" })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  filterCalendarioAno?: string[];
 }
 
 // ============================================================================

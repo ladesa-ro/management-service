@@ -28,6 +28,8 @@ export class DiaCalendarioGraphqlMapper {
     input.sortBy = dto.sortBy;
     input["filter.id"] = dto.filterId;
     input["filter.calendario.id"] = dto.filterCalendarioId;
+    input["filter.calendario.nome"] = dto.filterCalendarioNome;
+    input["filter.calendario.ano"] = dto.filterCalendarioAno;
     return input;
   }
 

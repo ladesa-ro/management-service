@@ -64,6 +64,7 @@ export class DiarioGraphqlMapper {
     input["filter.turma.id"] = dto.filterTurmaId;
     input["filter.disciplina.id"] = dto.filterDisciplinaId;
     input["filter.calendarioLetivo.id"] = dto.filterCalendarioLetivoId;
+    input["filter.ambientePadrao.id"] = dto.filterAmbientePadraoId;
     return input;
   }
 

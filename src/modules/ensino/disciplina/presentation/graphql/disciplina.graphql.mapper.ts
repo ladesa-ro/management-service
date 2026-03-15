@@ -57,6 +57,7 @@ export class DisciplinaGraphqlMapper {
     input.search = dto.search;
     input.sortBy = dto.sortBy;
     input["filter.id"] = dto.filterId;
+    input["filter.diarios.id"] = dto.filterDiariosId;
     return input;
   }
 

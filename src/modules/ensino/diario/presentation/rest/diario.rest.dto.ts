@@ -154,6 +154,17 @@ export class DiarioListInputRestDto extends PaginatedFilterByIdRestDto {
   @IsArray()
   @IsUUID(undefined, { each: true })
   "filter.ambientePadrao.id"?: string[];
+
+  @ApiPropertyOptional({
+    type: "string",
+    isArray: true,
+    description: "Filtro por ID do Calendario Letivo",
+  })
+  @TransformToArray()
+  @IsOptional()
+  @IsArray()
+  @IsUUID(undefined, { each: true })
+  "filter.calendarioLetivo.id"?: string[];
 }
 
 @ApiSchema({ name: "DiarioListOutputDto" })

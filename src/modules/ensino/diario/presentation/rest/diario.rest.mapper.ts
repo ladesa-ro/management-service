@@ -35,6 +35,7 @@ export class DiarioRestMapper {
     "filter.id",
     "filter.turma.id",
     "filter.disciplina.id",
+    "filter.ambientePadrao.id",
     "filter.calendarioLetivo.id",
   ]);
 

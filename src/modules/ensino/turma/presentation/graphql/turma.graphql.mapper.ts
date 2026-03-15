@@ -60,6 +60,17 @@ export class TurmaGraphqlMapper {
     input.search = dto.search;
     input.sortBy = dto.sortBy;
     input["filter.id"] = dto.filterId;
+    input["filter.ambientePadraoAula.nome"] = dto.filterAmbientePadraoAulaNome;
+    input["filter.ambientePadraoAula.codigo"] = dto.filterAmbientePadraoAulaCodigo;
+    input["filter.ambientePadraoAula.capacidade"] = dto.filterAmbientePadraoAulaCapacidade;
+    input["filter.ambientePadraoAula.tipo"] = dto.filterAmbientePadraoAulaTipo;
+    input["filter.curso.id"] = dto.filterCursoId;
+    input["filter.curso.nome"] = dto.filterCursoNome;
+    input["filter.curso.nomeAbreviado"] = dto.filterCursoNomeAbreviado;
+    input["filter.curso.campus.id"] = dto.filterCursoCampusId;
+    input["filter.curso.ofertaFormacao.id"] = dto.filterCursoOfertaFormacaoId;
+    input["filter.curso.ofertaFormacao.nome"] = dto.filterCursoOfertaFormacaoNome;
+    input["filter.curso.ofertaFormacao.slug"] = dto.filterCursoOfertaFormacaoSlug;
     return input;
   }
 
