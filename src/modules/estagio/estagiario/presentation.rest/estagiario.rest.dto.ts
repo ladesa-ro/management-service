@@ -16,8 +16,6 @@ import {
 } from "@/modules/@shared/presentation/rest";
 import {
   IsArray,
-  IsEmail,
-  IsNotEmpty,
   IsOptional,
   IsUUID,
 } from "@/modules/@shared/presentation/shared";
@@ -182,9 +180,7 @@ export class EstagiarioCreateInputRestDto extends EstagiarioFieldsMixin {
     format: "email",
     description: "Email institucional do estagiário",
   })
-  @IsEmail()
-  @IsNotEmpty()
-  emailInstitucional: string;
+  declare emailInstitucional: string;
 
   @ApiProperty({ type: "string", format: "date", description: "Data de nascimento do estagiário" })
   declare dataNascimento: string;
