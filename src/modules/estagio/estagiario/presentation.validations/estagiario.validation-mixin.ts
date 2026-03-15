@@ -23,7 +23,7 @@ export class EstagiarioFieldsMixin {
 
   @IsEmail()
   @IsNotEmpty()
-  emailInstitucional: string;
+  emailInstitucional: string | null;
 
   @IsDateString()
   dataNascimento: string;

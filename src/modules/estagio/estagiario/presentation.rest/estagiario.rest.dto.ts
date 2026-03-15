@@ -75,7 +75,7 @@ export class EstagiarioFindOneOutputRestDto extends Mixin(
     nullable: true,
     description: "Email institucional do estagiário",
   })
-  emailInstitucional: string | null;
+  emailInstitucional: string | null = null;
 
   @ApiProperty({ type: "string", format: "date", description: "Data de nascimento do estagiário" })
   declare dataNascimento: string;
