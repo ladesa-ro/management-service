@@ -165,7 +165,9 @@ export class CreateTablesEstagio1700000000009 implements MigrationInterface {
       }),
     );
     await queryRunner.query(`CALL ensure_change_date_trigger('horario_estagio')`);
-    await queryRunner.query(`CREATE INDEX "IDX_78889e4079ad24a287ae4f8ba8" ON "horario_estagio" ("id_estagio_fk")`);
+    await queryRunner.query(
+      `CREATE INDEX "IDX_78889e4079ad24a287ae4f8ba8" ON "horario_estagio" ("id_estagio_fk")`,
+    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {

@@ -13,7 +13,9 @@ export class CreateTablesInfraestrutura1700000000004 implements MigrationInterfa
         ],
       }),
     );
-    await queryRunner.query(`COMMENT ON TABLE "base_estado" IS 'ID e predefinido com base na numeracao IBGE dos Estados Brasileiros'`);
+    await queryRunner.query(
+      `COMMENT ON TABLE "base_estado" IS 'ID e predefinido com base na numeracao IBGE dos Estados Brasileiros'`,
+    );
 
     // base_cidade
     await queryRunner.createTable(

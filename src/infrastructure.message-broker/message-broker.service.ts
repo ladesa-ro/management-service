@@ -1,4 +1,5 @@
 import { Logger } from "@nestjs/common";
+import { IMessageBrokerService } from "@/domain/abstractions/message-broker";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import {
   IMessageBrokerOptions,
@@ -7,7 +8,7 @@ import {
 import { MessageBrokerContainerService } from "./message-broker-container.service";
 
 @DeclareImplementation()
-export class MessageBrokerService {
+export class MessageBrokerService implements IMessageBrokerService {
   private readonly logger = new Logger(MessageBrokerService.name);
 
   constructor(
