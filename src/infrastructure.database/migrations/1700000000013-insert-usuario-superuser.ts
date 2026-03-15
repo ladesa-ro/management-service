@@ -1,10 +1,10 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class InsertUsuarioSuperuser0_1710184021390 implements MigrationInterface {
+export class InsertUsuarioSuperuser1700000000013 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`
         INSERT INTO "usuario"
-            ("id", "nome", "matricula_siape", "email", "is_super_user")
+            ("id", "nome", "matricula", "email", "is_super_user")
         VALUES ('17ed5d7e-79d4-4cfd-811c-263247dc4511', 'Administrador', '0', 'admin@sisgha.com.br', TRUE);
     `);
   }

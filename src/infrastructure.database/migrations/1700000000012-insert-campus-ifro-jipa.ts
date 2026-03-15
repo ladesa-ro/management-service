@@ -1,18 +1,20 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class InsertCampusIfroJipa1710183866989 implements MigrationInterface {
+export class InsertCampusIfroJipa1700000000012 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`
         INSERT INTO "endereco"
-        ("id", "cep", "logradouro", "numero", "bairro", "complemento", "ponto_referencia", "id_cidade_fk")
+        ("id", "cep", "logradouro", "numero", "bairro", "complemento", "ponto_referencia", "id_cidade_fk", "date_created", "date_updated")
         VALUES ('f4a4c263-7499-42a5-94a7-09d436ed5110',
                 '76900-730',
                 'Av. Monte Castelo',
-                151,
+                '151',
                 'Jardim dos Migrantes',
                 NULL,
                 NULL,
-                1100122);
+                1100122,
+                '2024-02-12T15:21:07.801Z',
+                '2024-02-12T15:21:07.801Z');
     `);
 
     await queryRunner.query(`

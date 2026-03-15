@@ -1,6 +1,6 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class ProcedureEnsureChangeDateTrigger1710003412087 implements MigrationInterface {
+export class ProcedureEnsureChangeDateTrigger1700000000002 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`
       CREATE OR REPLACE PROCEDURE ensure_change_date_trigger(table_name text)

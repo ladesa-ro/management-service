@@ -30,11 +30,9 @@ const allEstados = [
   { id: 53, sigla: "DF", nome: "Distrito Federal" },
 ];
 
-const remainingEstados = allEstados;
-
-export class InsertEstadosBrasil1710183631224 implements MigrationInterface {
+export class InsertEstadosBrasil1700000000010 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
-    for (const estado of remainingEstados) {
+    for (const estado of allEstados) {
       await queryRunner.query(
         `INSERT INTO "base_estado" ("id", "sigla", "nome")
          VALUES ($1, $2, $3);`,
@@ -44,7 +42,7 @@ export class InsertEstadosBrasil1710183631224 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    for (const estado of remainingEstados) {
+    for (const estado of allEstados) {
       await queryRunner.query(
         `DELETE
          FROM "base_estado"

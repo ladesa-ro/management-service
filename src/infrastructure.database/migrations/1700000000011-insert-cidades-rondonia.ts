@@ -55,11 +55,9 @@ const allCidades = [
   { id: 1101807, nome: "Vale do Paraíso", estado: { id: 11 } },
 ];
 
-const remainingCidades = allCidades;
-
-export class InsertCidadesRondonia1710183669681 implements MigrationInterface {
+export class InsertCidadesRondonia1700000000011 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
-    for (const cidade of remainingCidades) {
+    for (const cidade of allCidades) {
       await queryRunner.query(
         `INSERT INTO "base_cidade" ("id", "nome", "id_estado_fk")
          VALUES ($1, $2, $3);`,
@@ -69,7 +67,7 @@ export class InsertCidadesRondonia1710183669681 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    for (const cidade of remainingCidades) {
+    for (const cidade of allCidades) {
       await queryRunner.query(
         `DELETE
          FROM "base_cidade"
