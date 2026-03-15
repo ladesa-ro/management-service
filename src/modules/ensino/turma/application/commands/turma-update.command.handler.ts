@@ -2,15 +2,15 @@ import { has } from "lodash";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists, type PersistInput } from "@/modules/@shared";
-import { Ambiente } from "@/modules/ambientes/ambiente/domain/ambiente.domain";
+import { Ambiente } from "@/modules/ambientes/ambiente/domain/ambiente";
 import { IAmbienteFindOneQueryHandler } from "@/modules/ambientes/ambiente/domain/queries/ambiente-find-one.query.handler.interface";
-import { Curso } from "@/modules/ensino/curso/domain/curso.domain";
+import { Curso } from "@/modules/ensino/curso/domain/curso";
 import { ICursoFindOneQueryHandler } from "@/modules/ensino/curso/domain/queries/curso-find-one.query.handler.interface";
 import type { TurmaUpdateCommand } from "@/modules/ensino/turma/domain/commands/turma-update.command";
 import { ITurmaUpdateCommandHandler } from "@/modules/ensino/turma/domain/commands/turma-update.command.handler.interface";
 import type { TurmaFindOneQuery } from "@/modules/ensino/turma/domain/queries";
-import { Turma } from "@/modules/ensino/turma/domain/turma.domain";
-import type { ITurma } from "@/modules/ensino/turma/domain/turma.types";
+import type { ITurma } from "@/modules/ensino/turma/domain/turma";
+import { Turma } from "@/modules/ensino/turma/domain/turma";
 import { ITurmaPermissionChecker } from "../../domain/authorization";
 import type { TurmaFindOneQueryResult } from "../../domain/queries";
 import { ITurmaRepository } from "../../domain/repositories";
@@ -38,9 +38,9 @@ export class TurmaUpdateCommandHandlerImpl implements ITurmaUpdateCommandHandler
 
     await this.permissionChecker.ensureCanUpdate(accessContext, { dto }, dto.id);
 
-    const domain = Turma.fromData(current);
-    domain.atualizar({ periodo: dto.periodo });
-    const updateData: Partial<PersistInput<ITurma>> = { periodo: domain.periodo };
+    const domain = Turma.load(current);
+    domain.update({ periodo: dto.periodo });
+    const updateData: Partial<PersistInput<ITurma>> = { ...domain };
     if (has(dto, "ambientePadraoAula") && dto.ambientePadraoAula !== undefined) {
       if (dto.ambientePadraoAula !== null) {
         const ambientePadraoAula = await this.ambienteFindOneHandler.execute(accessContext, {
@@ -57,7 +57,7 @@ export class TurmaUpdateCommandHandlerImpl implements ITurmaUpdateCommandHandler
       ensureExists(curso, Curso.entityName, dto.curso.id);
       updateData.curso = { id: curso.id };
     }
-    await this.repository.updateFromDomain(current.id, updateData);
+    await this.repository.update(current.id, updateData);
 
     const result = await this.repository.findById(accessContext, { id: dto.id });
 

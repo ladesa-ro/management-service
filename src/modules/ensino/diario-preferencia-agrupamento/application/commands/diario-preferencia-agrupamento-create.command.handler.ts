@@ -1,11 +1,11 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
-import { Diario } from "@/modules/ensino/diario/domain/diario.domain";
+import { Diario } from "@/modules/ensino/diario/domain/diario";
 import { IDiarioFindOneQueryHandler } from "@/modules/ensino/diario/domain/queries/diario-find-one.query.handler.interface";
 import type { DiarioPreferenciaAgrupamentoCreateCommand } from "@/modules/ensino/diario-preferencia-agrupamento/domain/commands/diario-preferencia-agrupamento-create.command";
 import { IDiarioPreferenciaAgrupamentoCreateCommandHandler } from "@/modules/ensino/diario-preferencia-agrupamento/domain/commands/diario-preferencia-agrupamento-create.command.handler.interface";
-import { DiarioPreferenciaAgrupamento } from "@/modules/ensino/diario-preferencia-agrupamento/domain/diario-preferencia-agrupamento.domain";
+import { DiarioPreferenciaAgrupamento } from "@/modules/ensino/diario-preferencia-agrupamento/domain/diario-preferencia-agrupamento";
 import { IDiarioPreferenciaAgrupamentoPermissionChecker } from "../../domain/authorization";
 import type { DiarioPreferenciaAgrupamentoFindOneQueryResult } from "../../domain/queries";
 import { IDiarioPreferenciaAgrupamentoRepository } from "../../domain/repositories";
@@ -35,14 +35,14 @@ export class DiarioPreferenciaAgrupamentoCreateCommandHandlerImpl
       ensureExists(diario, Diario.entityName, dto.diario.id);
       diarioRef = { id: diario.id };
     }
-    const domain = DiarioPreferenciaAgrupamento.criar({
+    const domain = DiarioPreferenciaAgrupamento.create({
       diaSemanaIso: dto.diaSemanaIso,
       aulasSeguidas: dto.aulasSeguidas,
       dataInicio: dto.dataInicio,
       dataFim: dto.dataFim,
       diario: diarioRef!,
     });
-    const { id } = await this.repository.createFromDomain({
+    const { id } = await this.repository.create({
       ...domain,
       ...(diarioRef ? { diario: diarioRef } : {}),
     });

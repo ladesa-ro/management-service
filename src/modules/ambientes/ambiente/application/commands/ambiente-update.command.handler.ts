@@ -1,7 +1,7 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
-import { Ambiente } from "@/modules/ambientes/ambiente/domain/ambiente.domain";
+import { Ambiente } from "@/modules/ambientes/ambiente/domain/ambiente";
 import type { AmbienteUpdateCommand } from "@/modules/ambientes/ambiente/domain/commands/ambiente-update.command";
 import { IAmbienteUpdateCommandHandler } from "@/modules/ambientes/ambiente/domain/commands/ambiente-update.command.handler.interface";
 import type { AmbienteFindOneQuery } from "@/modules/ambientes/ambiente/domain/queries";
@@ -28,8 +28,8 @@ export class AmbienteUpdateCommandHandlerImpl implements IAmbienteUpdateCommandH
 
     await this.permissionChecker.ensureCanUpdate(accessContext, { dto }, dto.id);
 
-    const domain = Ambiente.fromData(current);
-    domain.atualizar({
+    const domain = Ambiente.load(current);
+    domain.update({
       nome: dto.nome,
       descricao: dto.descricao,
       codigo: dto.codigo,
@@ -37,13 +37,7 @@ export class AmbienteUpdateCommandHandlerImpl implements IAmbienteUpdateCommandH
       tipo: dto.tipo,
     });
 
-    await this.repository.updateFromDomain(current.id, {
-      nome: domain.nome,
-      descricao: domain.descricao,
-      codigo: domain.codigo,
-      capacidade: domain.capacidade,
-      tipo: domain.tipo,
-    });
+    await this.repository.update(current.id, domain);
 
     const result = await this.repository.findById(accessContext, { id: dto.id });
 

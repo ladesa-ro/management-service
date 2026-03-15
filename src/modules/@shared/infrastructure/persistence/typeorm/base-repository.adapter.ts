@@ -31,8 +31,8 @@ type DtoWithFilters = Record<string, unknown>;
  * - findAll: listagem paginada com filtros de autorização
  * - findById: busca por ID com filtros de autorização
  * - findByIdSimple: busca simplificada por ID
- * - createFromDomain: criar entidade a partir de dados de domínio
- * - updateFromDomain: atualizar entidade a partir de dados de domínio
+ * - create: criar entidade a partir de dados de domínio
+ * - update: atualizar entidade a partir de dados de domínio
  * - softDeleteById: exclusão lógica
  *
  * @template Entity - Tipo da entidade TypeORM
@@ -147,7 +147,7 @@ export abstract class BaseTypeOrmRepositoryAdapter<
   /**
    * Cria uma nova entidade a partir de dados de domínio
    */
-  async createFromDomain(data: Record<string, any>): Promise<{ id: string | number }> {
+  async create(data: Record<string, any>): Promise<{ id: string | number }> {
     const entity = this.repository.create(data as DeepPartial<Entity>);
     const saved = await this.repository.save(entity);
     return { id: saved.id };
@@ -156,7 +156,7 @@ export abstract class BaseTypeOrmRepositoryAdapter<
   /**
    * Atualiza uma entidade existente a partir de dados parciais de domínio
    */
-  async updateFromDomain(id: string | number, data: Record<string, any>): Promise<void> {
+  async update(id: string | number, data: Record<string, any>): Promise<void> {
     const entity = this.repository.create({ id, ...data } as DeepPartial<Entity>);
     await this.repository.save(entity);
   }

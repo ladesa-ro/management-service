@@ -11,7 +11,7 @@ import {
   type IImagemGetLatestArquivoIdQueryHandler as IImagemGetLatestArquivoIdQueryHandlerType,
 } from "@/modules/armazenamento/imagem/domain/queries";
 import { ITurmaGetImagemCapaQueryHandler } from "@/modules/ensino/turma/domain/queries/turma-get-imagem-capa.query.handler.interface";
-import { Turma } from "@/modules/ensino/turma/domain/turma.domain";
+import { Turma } from "@/modules/ensino/turma/domain/turma";
 import type { TurmaFindOneQuery } from "../../domain/queries";
 import { ITurmaRepository } from "../../domain/repositories";
 

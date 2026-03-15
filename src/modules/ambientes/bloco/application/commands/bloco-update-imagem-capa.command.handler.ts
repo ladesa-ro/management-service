@@ -1,7 +1,7 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists, saveEntityImagemField } from "@/modules/@shared";
-import { Bloco } from "@/modules/ambientes/bloco/domain/bloco.domain";
+import { Bloco } from "@/modules/ambientes/bloco/domain/bloco";
 import {
   type BlocoUpdateImagemCapaCommand,
   IBlocoUpdateImagemCapaCommandHandler,

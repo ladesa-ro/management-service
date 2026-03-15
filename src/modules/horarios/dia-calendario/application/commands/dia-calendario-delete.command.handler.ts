@@ -2,7 +2,7 @@ import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-in
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { IDiaCalendarioDeleteCommandHandler } from "@/modules/horarios/dia-calendario/domain/commands/dia-calendario-delete.command.handler.interface";
-import { DiaCalendario } from "@/modules/horarios/dia-calendario/domain/dia-calendario.domain";
+import { DiaCalendario } from "@/modules/horarios/dia-calendario/domain/dia-calendario";
 import type { DiaCalendarioFindOneQuery } from "@/modules/horarios/dia-calendario/domain/queries";
 import { IDiaCalendarioPermissionChecker } from "../../domain/authorization";
 import { IDiaCalendarioRepository } from "../../domain/repositories";

@@ -10,7 +10,7 @@ import {
   IImagemGetLatestArquivoIdQueryHandler,
   type IImagemGetLatestArquivoIdQueryHandler as IImagemGetLatestArquivoIdQueryHandlerType,
 } from "@/modules/armazenamento/imagem/domain/queries";
-import { Disciplina } from "@/modules/ensino/disciplina/domain/disciplina.domain";
+import { Disciplina } from "@/modules/ensino/disciplina/domain/disciplina";
 import { IDisciplinaGetImagemCapaQueryHandler } from "@/modules/ensino/disciplina/domain/queries/disciplina-get-imagem-capa.query.handler.interface";
 import type { DisciplinaFindOneQuery } from "../../domain/queries";
 import { IDisciplinaRepository } from "../../domain/repositories";

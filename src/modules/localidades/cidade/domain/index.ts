@@ -1,5 +1,4 @@
-export * from "./cidade.domain";
-export * from "./cidade.types";
+export * from "./cidade";
 export * from "./queries";
 
 export * from "./repositories";

@@ -1,14 +1,14 @@
 import { DataSource } from "typeorm";
+import type { PartialEntity } from "@/domain/abstractions/entities";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import type { PartialEntity } from "@/modules/@shared";
 import { APP_DATA_SOURCE_TOKEN } from "@/modules/@shared/infrastructure/persistence/typeorm";
-import type { Imagem } from "@/modules/armazenamento/imagem/domain/imagem.domain";
+import type { Imagem } from "@/modules/armazenamento/imagem/domain/imagem";
 import type {
   IImagemArquivoRepository,
   IImagemRepository,
   IImagemTransactionPort,
 } from "@/modules/armazenamento/imagem/domain/repositories";
-import type { ImagemArquivo } from "@/modules/armazenamento/imagem-arquivo/domain/imagem-arquivo.domain";
+import type { ImagemArquivo } from "@/modules/armazenamento/imagem-arquivo/domain/imagem-arquivo";
 import { createImagemArquivoRepository } from "../../../../imagem-arquivo/infrastructure/persistence/typeorm/imagem-arquivo.repository";
 import { createImagemRepository } from "./imagem.repository";
 

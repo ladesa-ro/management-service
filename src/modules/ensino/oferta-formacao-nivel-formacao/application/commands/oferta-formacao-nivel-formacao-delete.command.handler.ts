@@ -2,7 +2,7 @@ import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-in
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { IOfertaFormacaoNivelFormacaoDeleteCommandHandler } from "@/modules/ensino/oferta-formacao-nivel-formacao/domain/commands/oferta-formacao-nivel-formacao-delete.command.handler.interface";
-import { OfertaFormacaoNivelFormacao } from "@/modules/ensino/oferta-formacao-nivel-formacao/domain/oferta-formacao-nivel-formacao.domain";
+import { OfertaFormacaoNivelFormacao } from "@/modules/ensino/oferta-formacao-nivel-formacao/domain/oferta-formacao-nivel-formacao";
 import type { OfertaFormacaoNivelFormacaoFindOneQuery } from "@/modules/ensino/oferta-formacao-nivel-formacao/domain/queries";
 import { IOfertaFormacaoNivelFormacaoPermissionChecker } from "../../domain/authorization";
 import { IOfertaFormacaoNivelFormacaoRepository } from "../../domain/repositories";

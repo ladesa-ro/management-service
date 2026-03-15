@@ -1,4 +1,4 @@
-import { IdNumeric, IdUuid } from "@/modules/@shared";
+import type { IdNumeric, IdUuid } from "@/domain/abstractions/scalars";
 
 /**
  * Referência a objeto por UUID

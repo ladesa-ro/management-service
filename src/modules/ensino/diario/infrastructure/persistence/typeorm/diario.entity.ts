@@ -4,7 +4,7 @@ import {
   JoinColumn,
   ManyToOne,
   OneToMany,
-  PrimaryGeneratedColumn,
+  PrimaryColumn,
   type Relation,
 } from "typeorm";
 import { AmbienteEntity } from "@/modules/ambientes/ambiente/infrastructure/persistence/typeorm/ambiente.entity";
@@ -16,7 +16,7 @@ import { CalendarioLetivoEntity } from "@/modules/horarios/calendario-letivo/inf
 
 @Entity("diario")
 export class DiarioEntity {
-  @PrimaryGeneratedColumn("uuid")
+  @PrimaryColumn("uuid")
   id!: string;
 
   @Column({ name: "ativo", type: "boolean", nullable: false })

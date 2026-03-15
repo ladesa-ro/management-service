@@ -1,4 +1,4 @@
-import type { ScalarDate } from "@/modules/@shared";
+import type { ScalarDate } from "@/domain/abstractions/scalars";
 import { CalendarioLetivoInputRef } from "@/modules/horarios/calendario-letivo";
 
 export class DiaCalendarioUpdateCommand {

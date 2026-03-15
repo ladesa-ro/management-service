@@ -2,18 +2,18 @@ import { has } from "lodash";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists, type PersistInput } from "@/modules/@shared";
-import { Ambiente } from "@/modules/ambientes/ambiente/domain/ambiente.domain";
+import { Ambiente } from "@/modules/ambientes/ambiente/domain/ambiente";
 import { IAmbienteFindOneQueryHandler } from "@/modules/ambientes/ambiente/domain/queries/ambiente-find-one.query.handler.interface";
 import type { DiarioUpdateCommand } from "@/modules/ensino/diario/domain/commands/diario-update.command";
 import { IDiarioUpdateCommandHandler } from "@/modules/ensino/diario/domain/commands/diario-update.command.handler.interface";
-import { Diario } from "@/modules/ensino/diario/domain/diario.domain";
-import type { IDiario } from "@/modules/ensino/diario/domain/diario.types";
+import type { IDiario } from "@/modules/ensino/diario/domain/diario";
+import { Diario } from "@/modules/ensino/diario/domain/diario";
 import type { DiarioFindOneQuery } from "@/modules/ensino/diario/domain/queries";
-import { Disciplina } from "@/modules/ensino/disciplina/domain/disciplina.domain";
+import { Disciplina } from "@/modules/ensino/disciplina/domain/disciplina";
 import { IDisciplinaFindOneQueryHandler } from "@/modules/ensino/disciplina/domain/queries/disciplina-find-one.query.handler.interface";
 import { ITurmaFindOneQueryHandler } from "@/modules/ensino/turma/domain/queries/turma-find-one.query.handler.interface";
-import { Turma } from "@/modules/ensino/turma/domain/turma.domain";
-import { CalendarioLetivo } from "@/modules/horarios/calendario-letivo/domain/calendario-letivo.domain";
+import { Turma } from "@/modules/ensino/turma/domain/turma";
+import { CalendarioLetivo } from "@/modules/horarios/calendario-letivo/domain/calendario-letivo";
 import { ICalendarioLetivoFindOneQueryHandler } from "@/modules/horarios/calendario-letivo/domain/queries/calendario-letivo-find-one.query.handler.interface";
 import { IDiarioPermissionChecker } from "../../domain/authorization";
 import type { DiarioFindOneQueryResult } from "../../domain/queries";
@@ -46,9 +46,9 @@ export class DiarioUpdateCommandHandlerImpl implements IDiarioUpdateCommandHandl
 
     await this.permissionChecker.ensureCanUpdate(accessContext, { dto }, dto.id);
 
-    const domain = Diario.fromData(current);
-    domain.atualizar({ ativo: dto.ativo });
-    const updateData: Partial<PersistInput<IDiario>> = { ativo: domain.ativo };
+    const domain = Diario.load(current);
+    domain.update({ ativo: dto.ativo });
+    const updateData: Partial<PersistInput<IDiario>> = { ...domain };
     if (has(dto, "ambientePadrao") && dto.ambientePadrao !== undefined) {
       if (dto.ambientePadrao !== null) {
         const ambientePadrao = await this.ambienteFindOneHandler.execute(accessContext, {
@@ -79,7 +79,7 @@ export class DiarioUpdateCommandHandlerImpl implements IDiarioUpdateCommandHandl
       ensureExists(calendarioLetivo, CalendarioLetivo.entityName, dto.calendarioLetivo.id);
       updateData.calendarioLetivo = { id: calendarioLetivo.id };
     }
-    await this.repository.updateFromDomain(current.id, updateData);
+    await this.repository.update(current.id, updateData);
 
     const result = await this.repository.findById(accessContext, { id: dto.id });
 

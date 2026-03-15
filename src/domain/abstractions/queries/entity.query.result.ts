@@ -1,4 +1,4 @@
-import type { IdUuid } from "@/modules/@shared/domain/abstractions/scalars.types";
+import type { IdUuid } from "@/domain/abstractions/scalars/id-uuid";
 import { DatedQueryResult } from "./dated.query.result";
 
 /**

@@ -35,7 +35,7 @@ import { IUsuarioFindOneQueryHandler } from "@/modules/acesso/usuario/domain/que
 import { IUsuarioGetImagemCapaQueryHandler } from "@/modules/acesso/usuario/domain/queries/usuario-get-imagem-capa.query.handler.interface";
 import { IUsuarioGetImagemPerfilQueryHandler } from "@/modules/acesso/usuario/domain/queries/usuario-get-imagem-perfil.query.handler.interface";
 import { IUsuarioListQueryHandler } from "@/modules/acesso/usuario/domain/queries/usuario-list.query.handler.interface";
-import { Usuario } from "@/modules/acesso/usuario/domain/usuario.domain";
+import { Usuario } from "@/modules/acesso/usuario/domain/usuario";
 import {
   UsuarioCreateInputRestDto,
   UsuarioEnsinoOutputRestDto,

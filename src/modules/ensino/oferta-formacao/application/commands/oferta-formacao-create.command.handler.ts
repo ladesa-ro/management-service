@@ -1,11 +1,11 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
-import { Modalidade } from "@/modules/ensino/modalidade/domain/modalidade.domain";
+import { Modalidade } from "@/modules/ensino/modalidade/domain/modalidade";
 import { IModalidadeFindOneQueryHandler } from "@/modules/ensino/modalidade/domain/queries/modalidade-find-one.query.handler.interface";
 import type { OfertaFormacaoCreateCommand } from "@/modules/ensino/oferta-formacao/domain/commands/oferta-formacao-create.command";
 import { IOfertaFormacaoCreateCommandHandler } from "@/modules/ensino/oferta-formacao/domain/commands/oferta-formacao-create.command.handler.interface";
-import { OfertaFormacao } from "@/modules/ensino/oferta-formacao/domain/oferta-formacao.domain";
+import { OfertaFormacao } from "@/modules/ensino/oferta-formacao/domain/oferta-formacao";
 import { IOfertaFormacaoPermissionChecker } from "../../domain/authorization";
 import type { OfertaFormacaoFindOneQueryResult } from "../../domain/queries";
 import { IOfertaFormacaoRepository } from "../../domain/repositories";
@@ -35,12 +35,12 @@ export class OfertaFormacaoCreateCommandHandlerImpl implements IOfertaFormacaoCr
       ensureExists(modalidade, Modalidade.entityName, dto.modalidade.id);
       modalidadeRef = { id: modalidade.id };
     }
-    const domain = OfertaFormacao.criar({
+    const domain = OfertaFormacao.create({
       nome: dto.nome,
       slug: dto.slug,
       modalidade: modalidadeRef,
     });
-    const { id } = await this.repository.createFromDomain({
+    const { id } = await this.repository.create({
       ...domain,
       ...(modalidadeRef ? { modalidade: modalidadeRef } : {}),
     });

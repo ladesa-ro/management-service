@@ -1,7 +1,7 @@
 import KeycloakAdminClient from "@keycloak/keycloak-admin-client";
 import type { Credentials } from "@keycloak/keycloak-admin-client/lib/utils/auth";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
-import { wait } from "@/modules/@shared";
+import { wait } from "@/utils/wait";
 import type { IAuthOptions } from "../options/auth-options.interface";
 import { IAuthOptions as IAuthOptionsToken } from "../options/auth-options.interface";
 

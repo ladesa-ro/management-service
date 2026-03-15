@@ -1,5 +1,4 @@
-export * from "./estado.domain";
-export * from "./estado.types";
+export * from "./estado";
 export * from "./queries";
 
 export * from "./repositories";

@@ -4,6 +4,7 @@ import {
   type IEnderecoCreateOrUpdateCommand,
   IEnderecoCreateOrUpdateCommandHandler,
 } from "@/modules/localidades/endereco/domain/commands/endereco-create-or-update.command.handler.interface";
+import { Endereco } from "../../domain/endereco";
 import { IEnderecoRepository } from "../../domain/repositories";
 
 @DeclareImplementation()
@@ -19,7 +20,25 @@ export class EnderecoCreateOrUpdateCommandHandlerImpl
     _accessContext: AccessContext | null,
     { id, dto }: IEnderecoCreateOrUpdateCommand,
   ): Promise<{ id: string | number }> {
-    const data = {
+    if (id) {
+      const current = await this.repository.findOneById(id);
+
+      if (current) {
+        const domain = Endereco.load(current);
+        domain.update({
+          cep: dto.cep,
+          logradouro: dto.logradouro,
+          numero: dto.numero,
+          bairro: dto.bairro,
+          complemento: dto.complemento,
+          pontoReferencia: dto.pontoReferencia,
+        });
+        await this.repository.update(id, { ...domain, cidade: { id: dto.cidade.id } });
+        return { id };
+      }
+    }
+
+    const domain = Endereco.create({
       cep: dto.cep,
       logradouro: dto.logradouro,
       numero: dto.numero,
@@ -27,17 +46,8 @@ export class EnderecoCreateOrUpdateCommandHandlerImpl
       complemento: dto.complemento,
       pontoReferencia: dto.pontoReferencia,
       cidade: { id: dto.cidade.id },
-    };
+    });
 
-    if (id) {
-      const exists = await this.repository.exists(id);
-
-      if (exists) {
-        await this.repository.updateFromDomain(id, data);
-        return { id };
-      }
-    }
-
-    return this.repository.createFromDomain(data);
+    return this.repository.create({ ...domain, cidade: { id: dto.cidade.id } });
   }
 }

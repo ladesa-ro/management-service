@@ -1,10 +1,10 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
-import { Bloco } from "@/modules/ambientes/bloco/domain/bloco.domain";
+import { Bloco } from "@/modules/ambientes/bloco/domain/bloco";
 import type { BlocoCreateCommand } from "@/modules/ambientes/bloco/domain/commands/bloco-create.command";
 import { IBlocoCreateCommandHandler } from "@/modules/ambientes/bloco/domain/commands/bloco-create.command.handler.interface";
-import { Campus } from "@/modules/ambientes/campus/domain/campus.domain";
+import { Campus } from "@/modules/ambientes/campus/domain/campus";
 import { ICampusFindOneQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-find-one.query.handler.interface";
 import { IBlocoPermissionChecker } from "../../domain/authorization";
 import type { BlocoFindOneQueryResult } from "../../domain/queries";
@@ -29,12 +29,12 @@ export class BlocoCreateCommandHandlerImpl implements IBlocoCreateCommandHandler
 
     const campus = await this.campusFindOneHandler.execute(accessContext, { id: dto.campus.id });
     ensureExists(campus, Campus.entityName, dto.campus.id);
-    const domain = Bloco.criar({
+    const domain = Bloco.create({
       nome: dto.nome,
       codigo: dto.codigo,
       campus: { id: campus.id },
     });
-    const { id } = await this.repository.createFromDomain({ ...domain, campus: { id: campus.id } });
+    const { id } = await this.repository.create({ ...domain, campus: { id: campus.id } });
 
     const result = await this.repository.findById(accessContext, { id });
 

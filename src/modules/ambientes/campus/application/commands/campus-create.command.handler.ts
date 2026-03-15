@@ -1,7 +1,7 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
-import { Campus } from "@/modules/ambientes/campus/domain/campus.domain";
+import { Campus } from "@/modules/ambientes/campus/domain/campus";
 import type { CampusCreateCommand } from "@/modules/ambientes/campus/domain/commands/campus-create.command";
 import { ICampusCreateCommandHandler } from "@/modules/ambientes/campus/domain/commands/campus-create.command.handler.interface";
 import { IEnderecoCreateOrUpdateCommandHandler } from "@/modules/localidades/endereco/domain/commands/endereco-create-or-update.command.handler.interface";
@@ -30,14 +30,14 @@ export class CampusCreateCommandHandlerImpl implements ICampusCreateCommandHandl
       id: null,
       dto: dto.endereco,
     });
-    const domain = Campus.criar({
+    const domain = Campus.create({
       nomeFantasia: dto.nomeFantasia,
       razaoSocial: dto.razaoSocial,
       apelido: dto.apelido,
       cnpj: dto.cnpj,
       endereco: dto.endereco,
     });
-    const { id } = await this.repository.createFromDomain({
+    const { id } = await this.repository.create({
       ...domain,
       endereco: { id: endereco.id as string },
     });

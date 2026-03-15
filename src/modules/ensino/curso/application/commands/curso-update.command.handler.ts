@@ -2,14 +2,14 @@ import { has } from "lodash";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists, type PersistInput } from "@/modules/@shared";
-import { Campus } from "@/modules/ambientes/campus/domain/campus.domain";
+import { Campus } from "@/modules/ambientes/campus/domain/campus";
 import { ICampusFindOneQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-find-one.query.handler.interface";
 import type { CursoUpdateCommand } from "@/modules/ensino/curso/domain/commands/curso-update.command";
 import { ICursoUpdateCommandHandler } from "@/modules/ensino/curso/domain/commands/curso-update.command.handler.interface";
-import { Curso } from "@/modules/ensino/curso/domain/curso.domain";
-import type { ICurso } from "@/modules/ensino/curso/domain/curso.types";
+import type { ICurso } from "@/modules/ensino/curso/domain/curso";
+import { Curso } from "@/modules/ensino/curso/domain/curso";
 import type { CursoFindOneQuery } from "@/modules/ensino/curso/domain/queries";
-import { OfertaFormacao } from "@/modules/ensino/oferta-formacao/domain/oferta-formacao.domain";
+import { OfertaFormacao } from "@/modules/ensino/oferta-formacao/domain/oferta-formacao";
 import { IOfertaFormacaoFindOneQueryHandler } from "@/modules/ensino/oferta-formacao/domain/queries/oferta-formacao-find-one.query.handler.interface";
 import { ICursoPermissionChecker } from "../../domain/authorization";
 import type { CursoFindOneQueryResult } from "../../domain/queries";
@@ -38,12 +38,9 @@ export class CursoUpdateCommandHandlerImpl implements ICursoUpdateCommandHandler
 
     await this.permissionChecker.ensureCanUpdate(accessContext, { dto }, dto.id);
 
-    const domain = Curso.fromData(current);
-    domain.atualizar({ nome: dto.nome, nomeAbreviado: dto.nomeAbreviado });
-    const updateData: Partial<PersistInput<ICurso>> = {
-      nome: domain.nome,
-      nomeAbreviado: domain.nomeAbreviado,
-    };
+    const domain = Curso.load(current);
+    domain.update({ nome: dto.nome, nomeAbreviado: dto.nomeAbreviado });
+    const updateData: Partial<PersistInput<ICurso>> = { ...domain };
     if (has(dto, "campus") && dto.campus !== undefined) {
       const campus = await this.campusFindOneHandler.execute(accessContext, { id: dto.campus.id });
       ensureExists(campus, Campus.entityName, dto.campus.id);
@@ -56,7 +53,7 @@ export class CursoUpdateCommandHandlerImpl implements ICursoUpdateCommandHandler
       ensureExists(ofertaFormacao, OfertaFormacao.entityName, dto.ofertaFormacao.id);
       updateData.ofertaFormacao = { id: ofertaFormacao.id };
     }
-    await this.repository.updateFromDomain(current.id, updateData);
+    await this.repository.update(current.id, updateData);
 
     const result = await this.repository.findById(accessContext, { id: dto.id });
 

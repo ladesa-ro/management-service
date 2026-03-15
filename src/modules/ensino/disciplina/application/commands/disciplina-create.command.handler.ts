@@ -3,7 +3,7 @@ import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import type { DisciplinaCreateCommand } from "@/modules/ensino/disciplina/domain/commands/disciplina-create.command";
 import { IDisciplinaCreateCommandHandler } from "@/modules/ensino/disciplina/domain/commands/disciplina-create.command.handler.interface";
-import { Disciplina } from "@/modules/ensino/disciplina/domain/disciplina.domain";
+import { Disciplina } from "@/modules/ensino/disciplina/domain/disciplina";
 import { IDisciplinaPermissionChecker } from "../../domain/authorization";
 import type { DisciplinaFindOneQueryResult } from "../../domain/queries";
 import { IDisciplinaRepository } from "../../domain/repositories";
@@ -23,12 +23,12 @@ export class DisciplinaCreateCommandHandlerImpl implements IDisciplinaCreateComm
   ): Promise<DisciplinaFindOneQueryResult> {
     await this.permissionChecker.ensureCanCreate(accessContext, { dto });
 
-    const domain = Disciplina.criar({
+    const domain = Disciplina.create({
       nome: dto.nome,
       nomeAbreviado: dto.nomeAbreviado,
       cargaHoraria: dto.cargaHoraria,
     });
-    const { id } = await this.repository.createFromDomain({ ...domain });
+    const { id } = await this.repository.create({ ...domain });
 
     const result = await this.repository.findById(accessContext, { id });
 

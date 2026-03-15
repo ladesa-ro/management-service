@@ -1,5 +1,5 @@
 import { EntityQueryResult } from "@/domain/abstractions";
-import type { ScalarDate } from "@/modules/@shared";
+import type { ScalarDate } from "@/domain/abstractions/scalars";
 import { DiarioFindOneQueryResult } from "@/modules/ensino/diario";
 
 export class DiarioPreferenciaAgrupamentoFindOneQueryResult extends EntityQueryResult {

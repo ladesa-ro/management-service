@@ -7,7 +7,7 @@ import { ensureExists, ValidationFailedException } from "@/modules/@shared";
 import type { UsuarioUpdateCommand } from "@/modules/acesso/usuario/domain/commands/usuario-update.command";
 import { IUsuarioUpdateCommandHandler } from "@/modules/acesso/usuario/domain/commands/usuario-update.command.handler.interface";
 import type { UsuarioFindOneQuery } from "@/modules/acesso/usuario/domain/queries";
-import { Usuario } from "@/modules/acesso/usuario/domain/usuario.domain";
+import { Usuario } from "@/modules/acesso/usuario/domain/usuario";
 import { IUsuarioPermissionChecker } from "../../domain/authorization";
 import type { UsuarioFindOneQueryResult } from "../../domain/queries";
 import { IUsuarioRepository } from "../../domain/repositories";
@@ -55,15 +55,18 @@ export class UsuarioUpdateCommandHandlerImpl implements IUsuarioUpdateCommandHan
 
     await this.ensureDtoAvailability(input, dto.id);
 
-    await this.repository.updateFromDomain(currentUsuario.id, input);
+    const domain = Usuario.load(currentUsuario);
+    domain.update(input);
+
+    await this.repository.update(currentUsuario.id, domain);
 
     const changedEmail = has(dto, "email");
     const changedMatricula = has(dto, "matricula");
 
     if (changedEmail || changedMatricula) {
       await this.idpUserService.syncUser(currentMatricula, {
-        matricula: input.matricula,
-        email: dto.email,
+        matricula: domain.matricula,
+        email: domain.email,
       });
     }
 

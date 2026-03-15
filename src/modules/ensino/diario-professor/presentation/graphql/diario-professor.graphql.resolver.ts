@@ -7,7 +7,7 @@ import { graphqlExtractSelection } from "@/modules/@shared/infrastructure/graphq
 import { IDiarioProfessorCreateCommandHandler } from "@/modules/ensino/diario-professor/domain/commands/diario-professor-create.command.handler.interface";
 import { IDiarioProfessorDeleteCommandHandler } from "@/modules/ensino/diario-professor/domain/commands/diario-professor-delete.command.handler.interface";
 import { IDiarioProfessorUpdateCommandHandler } from "@/modules/ensino/diario-professor/domain/commands/diario-professor-update.command.handler.interface";
-import { DiarioProfessor } from "@/modules/ensino/diario-professor/domain/diario-professor.domain";
+import { DiarioProfessor } from "@/modules/ensino/diario-professor/domain/diario-professor";
 import { IDiarioProfessorFindOneQueryHandler } from "@/modules/ensino/diario-professor/domain/queries/diario-professor-find-one.query.handler.interface";
 import { IDiarioProfessorListQueryHandler } from "@/modules/ensino/diario-professor/domain/queries/diario-professor-list.query.handler.interface";
 import {

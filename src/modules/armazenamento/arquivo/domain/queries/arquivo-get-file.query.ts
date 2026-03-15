@@ -1,4 +1,4 @@
-import type { IdUuid } from "@/modules/@shared";
+import type { IdUuid } from "@/domain/abstractions/scalars";
 
 export class ArquivoGetFileQuery {
   id!: IdUuid;

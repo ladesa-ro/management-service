@@ -3,7 +3,7 @@ import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import type { ModalidadeUpdateCommand } from "@/modules/ensino/modalidade/domain/commands/modalidade-update.command";
 import { IModalidadeUpdateCommandHandler } from "@/modules/ensino/modalidade/domain/commands/modalidade-update.command.handler.interface";
-import { Modalidade } from "@/modules/ensino/modalidade/domain/modalidade.domain";
+import { Modalidade } from "@/modules/ensino/modalidade/domain/modalidade";
 import type { ModalidadeFindOneQuery } from "@/modules/ensino/modalidade/domain/queries";
 import { IModalidadePermissionChecker } from "../../domain/authorization";
 import type { ModalidadeFindOneQueryResult } from "../../domain/queries";
@@ -28,9 +28,9 @@ export class ModalidadeUpdateCommandHandlerImpl implements IModalidadeUpdateComm
 
     await this.permissionChecker.ensureCanUpdate(accessContext, { dto }, dto.id);
 
-    const domain = Modalidade.fromData(current);
-    domain.atualizar({ nome: dto.nome, slug: dto.slug });
-    await this.repository.updateFromDomain(current.id, { nome: domain.nome, slug: domain.slug });
+    const domain = Modalidade.load(current);
+    domain.update({ nome: dto.nome, slug: dto.slug });
+    await this.repository.update(current.id, domain);
 
     const result = await this.repository.findById(accessContext, { id: dto.id });
 

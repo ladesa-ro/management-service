@@ -1,10 +1,10 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
-import { Ambiente } from "@/modules/ambientes/ambiente/domain/ambiente.domain";
+import { Ambiente } from "@/modules/ambientes/ambiente/domain/ambiente";
 import type { AmbienteCreateCommand } from "@/modules/ambientes/ambiente/domain/commands/ambiente-create.command";
 import { IAmbienteCreateCommandHandler } from "@/modules/ambientes/ambiente/domain/commands/ambiente-create.command.handler.interface";
-import { Bloco } from "@/modules/ambientes/bloco/domain/bloco.domain";
+import { Bloco } from "@/modules/ambientes/bloco/domain/bloco";
 import { IBlocoFindOneQueryHandler } from "@/modules/ambientes/bloco/domain/queries/bloco-find-one.query.handler.interface";
 import { IAmbientePermissionChecker } from "../../domain/authorization";
 import type { AmbienteFindOneQueryResult } from "../../domain/queries";
@@ -30,7 +30,7 @@ export class AmbienteCreateCommandHandlerImpl implements IAmbienteCreateCommandH
     const bloco = await this.blocoFindOneHandler.execute(accessContext, { id: dto.bloco.id });
     ensureExists(bloco, Bloco.entityName, dto.bloco.id);
 
-    const domain = Ambiente.criar({
+    const domain = Ambiente.create({
       nome: dto.nome,
       descricao: dto.descricao,
       codigo: dto.codigo,
@@ -39,7 +39,7 @@ export class AmbienteCreateCommandHandlerImpl implements IAmbienteCreateCommandH
       bloco: { id: bloco.id },
     });
 
-    const { id } = await this.repository.createFromDomain({ ...domain, bloco: { id: bloco.id } });
+    const { id } = await this.repository.create({ ...domain, bloco: { id: bloco.id } });
 
     const result = await this.repository.findById(accessContext, { id });
 

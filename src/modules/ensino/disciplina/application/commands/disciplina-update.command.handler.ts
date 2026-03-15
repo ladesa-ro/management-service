@@ -3,7 +3,7 @@ import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import type { DisciplinaUpdateCommand } from "@/modules/ensino/disciplina/domain/commands/disciplina-update.command";
 import { IDisciplinaUpdateCommandHandler } from "@/modules/ensino/disciplina/domain/commands/disciplina-update.command.handler.interface";
-import { Disciplina } from "@/modules/ensino/disciplina/domain/disciplina.domain";
+import { Disciplina } from "@/modules/ensino/disciplina/domain/disciplina";
 import type { DisciplinaFindOneQuery } from "@/modules/ensino/disciplina/domain/queries";
 import { IDisciplinaPermissionChecker } from "../../domain/authorization";
 import type { DisciplinaFindOneQueryResult } from "../../domain/queries";
@@ -28,17 +28,13 @@ export class DisciplinaUpdateCommandHandlerImpl implements IDisciplinaUpdateComm
 
     await this.permissionChecker.ensureCanUpdate(accessContext, { dto }, dto.id);
 
-    const domain = Disciplina.fromData(current);
-    domain.atualizar({
+    const domain = Disciplina.load(current);
+    domain.update({
       nome: dto.nome,
       nomeAbreviado: dto.nomeAbreviado,
       cargaHoraria: dto.cargaHoraria,
     });
-    await this.repository.updateFromDomain(current.id, {
-      nome: domain.nome,
-      nomeAbreviado: domain.nomeAbreviado,
-      cargaHoraria: domain.cargaHoraria,
-    });
+    await this.repository.update(current.id, domain);
 
     const result = await this.repository.findById(accessContext, { id: dto.id });
 

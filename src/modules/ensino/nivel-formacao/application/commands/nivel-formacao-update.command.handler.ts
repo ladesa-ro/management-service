@@ -3,7 +3,7 @@ import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import type { NivelFormacaoUpdateCommand } from "@/modules/ensino/nivel-formacao/domain/commands/nivel-formacao-update.command";
 import { INivelFormacaoUpdateCommandHandler } from "@/modules/ensino/nivel-formacao/domain/commands/nivel-formacao-update.command.handler.interface";
-import { NivelFormacao } from "@/modules/ensino/nivel-formacao/domain/nivel-formacao.domain";
+import { NivelFormacao } from "@/modules/ensino/nivel-formacao/domain/nivel-formacao";
 import type { NivelFormacaoFindOneQuery } from "@/modules/ensino/nivel-formacao/domain/queries";
 import { INivelFormacaoPermissionChecker } from "../../domain/authorization";
 import type { NivelFormacaoFindOneQueryResult } from "../../domain/queries";
@@ -28,9 +28,9 @@ export class NivelFormacaoUpdateCommandHandlerImpl implements INivelFormacaoUpda
 
     await this.permissionChecker.ensureCanUpdate(accessContext, { dto }, dto.id);
 
-    const domain = NivelFormacao.fromData(current);
-    domain.atualizar({ slug: dto.slug });
-    await this.repository.updateFromDomain(current.id, { slug: domain.slug });
+    const domain = NivelFormacao.load(current);
+    domain.update({ slug: dto.slug });
+    await this.repository.update(current.id, domain);
 
     const result = await this.repository.findById(accessContext, { id: dto.id });
 

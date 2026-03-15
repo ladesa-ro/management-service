@@ -1,5 +1,5 @@
-import { v4 as uuidv4 } from "uuid";
-import { Estagiario } from "@/modules/estagio/estagiario/domain/estagiario.domain";
+import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7.js";
+import { Estagiario } from "@/modules/estagio/estagiario/domain/estagiario";
 import type { EstagiarioFindOneQueryResult } from "@/modules/estagio/estagiario/domain/queries";
 import { EstagiarioTypeormEntity } from "./estagiario.typeorm.entity";
 
@@ -23,7 +23,7 @@ export class EstagiarioMapper {
       return (date as Date).toISOString();
     };
 
-    const estagiario = Estagiario.fromData({
+    const estagiario = Estagiario.load({
       id: entity.id,
       idPerfilFk: entity.idPerfilFk,
       idCursoFk: entity.idCursoFk,
@@ -46,7 +46,7 @@ export class EstagiarioMapper {
    */
   static toPersistence(estagiario: Estagiario): EstagiarioTypeormEntity {
     const entity = new EstagiarioTypeormEntity();
-    entity.id = estagiario.id || uuidv4();
+    entity.id = estagiario.id || generateUuidV7();
     entity.idPerfilFk = estagiario.idPerfilFk;
     entity.idCursoFk = estagiario.idCursoFk;
     entity.idTurmaFk = estagiario.idTurmaFk;
@@ -103,7 +103,7 @@ export class EstagiarioMapper {
       telefone: estagiario.telefone,
       emailInstitucional: estagiario.emailInstitucional || null,
       dataNascimento: estagiario.dataNascimento,
-      ativo: estagiario.isAtivo(),
+      ativo: estagiario.ativo,
       dateCreated: estagiario.dateCreated,
       dateUpdated: estagiario.dateUpdated,
     };

@@ -2,12 +2,14 @@ import { has } from "lodash";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists, type PersistInput } from "@/modules/@shared";
-import { Campus } from "@/modules/ambientes/campus/domain/campus.domain";
+import { Campus } from "@/modules/ambientes/campus/domain/campus";
 import { ICampusFindOneQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-find-one.query.handler.interface";
-import { OfertaFormacao } from "@/modules/ensino/oferta-formacao/domain/oferta-formacao.domain";
+import { OfertaFormacao } from "@/modules/ensino/oferta-formacao/domain/oferta-formacao";
 import { IOfertaFormacaoFindOneQueryHandler } from "@/modules/ensino/oferta-formacao/domain/queries/oferta-formacao-find-one.query.handler.interface";
-import { CalendarioLetivo } from "@/modules/horarios/calendario-letivo/domain/calendario-letivo.domain";
-import type { ICalendarioLetivo } from "@/modules/horarios/calendario-letivo/domain/calendario-letivo.types";
+import {
+  CalendarioLetivo,
+  type ICalendarioLetivo,
+} from "@/modules/horarios/calendario-letivo/domain/calendario-letivo";
 import type { CalendarioLetivoUpdateCommand } from "@/modules/horarios/calendario-letivo/domain/commands/calendario-letivo-update.command";
 import { ICalendarioLetivoUpdateCommandHandler } from "@/modules/horarios/calendario-letivo/domain/commands/calendario-letivo-update.command.handler.interface";
 import type { CalendarioLetivoFindOneQuery } from "@/modules/horarios/calendario-letivo/domain/queries";
@@ -40,12 +42,9 @@ export class CalendarioLetivoUpdateCommandHandlerImpl
 
     await this.permissionChecker.ensureCanUpdate(accessContext, { dto }, dto.id);
 
-    const domain = CalendarioLetivo.fromData(current);
-    domain.atualizar({ nome: dto.nome, ano: dto.ano });
-    const updateData: Partial<PersistInput<ICalendarioLetivo>> = {
-      nome: domain.nome,
-      ano: domain.ano,
-    };
+    const domain = CalendarioLetivo.load(current);
+    domain.update({ nome: dto.nome, ano: dto.ano });
+    const updateData: Partial<PersistInput<ICalendarioLetivo>> = { ...domain };
     if (has(dto, "campus") && dto.campus !== undefined) {
       const campus = await this.campusFindOneHandler.execute(accessContext, { id: dto.campus.id });
       ensureExists(campus, Campus.entityName, dto.campus.id);
@@ -62,7 +61,7 @@ export class CalendarioLetivoUpdateCommandHandlerImpl
         updateData.ofertaFormacao = null;
       }
     }
-    await this.repository.updateFromDomain(current.id, updateData);
+    await this.repository.update(current.id, updateData);
 
     const result = await this.repository.findById(accessContext, { id: dto.id });
 

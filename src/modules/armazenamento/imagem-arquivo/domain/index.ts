@@ -1,5 +1,4 @@
-export * from "./imagem-arquivo.domain";
-export * from "./imagem-arquivo.types";
+export * from "./imagem-arquivo";
 export * from "./queries";
 
 export * from "./repositories";

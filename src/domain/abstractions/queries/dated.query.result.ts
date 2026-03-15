@@ -1,4 +1,4 @@
-import { ScalarDateTimeString } from "@/modules/@shared";
+import type { ScalarDateTimeString } from "@/domain/abstractions/scalars";
 
 /**
  * Campos de data comuns para query results

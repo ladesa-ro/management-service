@@ -1,4 +1,4 @@
-import type { IdNumeric } from "@/modules/@shared";
+import type { IdNumeric } from "@/domain/abstractions/scalars";
 
 export class EstadoFindOneQueryResult {
   id!: IdNumeric;

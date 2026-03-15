@@ -7,7 +7,7 @@ import type {
   EmpresaCreateCommand,
   EmpresaUpdateCommand,
 } from "@/modules/estagio/empresa/domain/commands";
-import { Empresa } from "@/modules/estagio/empresa/domain/empresa.domain";
+import { Empresa } from "@/modules/estagio/empresa/domain/empresa";
 import type {
   EmpresaFindOneQuery,
   EmpresaFindOneQueryResult,
@@ -15,7 +15,7 @@ import type {
   EmpresaListQueryResult,
 } from "@/modules/estagio/empresa/domain/queries";
 import type { IEmpresaRepository } from "@/modules/estagio/empresa/domain/repositories";
-import { Endereco } from "@/modules/localidades/endereco/domain/endereco.domain";
+import { Endereco } from "@/modules/localidades/endereco/domain/endereco";
 import { createEnderecoRepository } from "@/modules/localidades/endereco/infrastructure/persistence/typeorm/endereco.repository";
 import { createEmpresaRepository, EmpresaMapper } from "./persistence";
 
@@ -124,7 +124,7 @@ export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepository {
 
     ensureExists(endereco, Endereco.entityName, dto.idEnderecoFk);
 
-    const empresa = Empresa.criar(dto);
+    const empresa = Empresa.create(dto);
 
     const entity = EmpresaMapper.toPersistence(empresa);
     const saved = await this.repository.save(entity);
@@ -153,7 +153,7 @@ export class EmpresaTypeOrmRepositoryAdapter implements IEmpresaRepository {
       ensureExists(endereco, Endereco.entityName, dto.idEnderecoFk);
     }
 
-    empresa.atualizar(dto);
+    empresa.update(dto);
 
     const updated = EmpresaMapper.toPersistence(empresa);
     const saved = await this.repository.save(updated);

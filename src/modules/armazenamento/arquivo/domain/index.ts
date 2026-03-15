@@ -1,5 +1,4 @@
-export * from "./arquivo.domain";
-export * from "./arquivo.types";
+export * from "./arquivo";
 
 export * from "./commands";
 export * from "./queries";

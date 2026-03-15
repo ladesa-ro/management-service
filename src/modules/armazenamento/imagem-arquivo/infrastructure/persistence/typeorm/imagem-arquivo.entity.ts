@@ -1,18 +1,11 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-  type Relation,
-} from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, type Relation } from "typeorm";
 
 import { ArquivoEntity } from "@/modules/armazenamento/arquivo/infrastructure/persistence/typeorm/arquivo.entity";
 import { ImagemEntity } from "@/modules/armazenamento/imagem/infrastructure/persistence/typeorm/imagem.entity";
 
 @Entity("imagem_arquivo")
 export class ImagemArquivoEntity {
-  @PrimaryGeneratedColumn("uuid")
+  @PrimaryColumn("uuid")
   id!: string;
 
   @Column({ name: "largura", type: "int", nullable: false })

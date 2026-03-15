@@ -1,5 +1,5 @@
-import { v4 as uuidv4 } from "uuid";
-import { Empresa } from "@/modules/estagio/empresa/domain/empresa.domain";
+import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7.js";
+import { Empresa } from "@/modules/estagio/empresa/domain/empresa";
 import type { EmpresaFindOneQueryResult } from "@/modules/estagio/empresa/domain/queries";
 import { EmpresaTypeormEntity } from "./empresa.typeorm.entity";
 
@@ -11,7 +11,7 @@ export class EmpresaMapper {
    * Converte entidade TypeORM para domínio
    */
   static toDomain(entity: EmpresaTypeormEntity): Empresa {
-    const empresa = Empresa.fromData({
+    const empresa = Empresa.load({
       id: entity.id,
       razaoSocial: entity.razaoSocial,
       nomeFantasia: entity.nomeFantasia,
@@ -31,7 +31,7 @@ export class EmpresaMapper {
    */
   static toPersistence(empresa: Empresa): EmpresaTypeormEntity {
     const entity = new EmpresaTypeormEntity();
-    entity.id = empresa.id || uuidv4();
+    entity.id = empresa.id || generateUuidV7();
     entity.razaoSocial = empresa.razaoSocial;
     entity.nomeFantasia = empresa.nomeFantasia;
     entity.cnpj = empresa.cnpj;
@@ -75,7 +75,7 @@ export class EmpresaMapper {
       telefone: empresa.telefone,
       email: empresa.email,
       idEnderecoFk: empresa.idEnderecoFk,
-      ativo: empresa.isAtivo(),
+      ativo: empresa.ativo,
       dateCreated: empresa.dateCreated,
       dateUpdated: empresa.dateUpdated,
     };

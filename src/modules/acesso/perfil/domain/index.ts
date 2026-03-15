@@ -1,6 +1,5 @@
 export * from "./commands";
-export * from "./perfil.domain";
-export * from "./perfil.types";
+export * from "./perfil";
 export * from "./queries";
 
 export * from "./repositories";

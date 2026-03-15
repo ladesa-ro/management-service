@@ -5,7 +5,7 @@ import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists, ValidationFailedException } from "@/modules/@shared";
 import type { UsuarioCreateCommand } from "@/modules/acesso/usuario/domain/commands/usuario-create.command";
 import { IUsuarioCreateCommandHandler } from "@/modules/acesso/usuario/domain/commands/usuario-create.command.handler.interface";
-import { Usuario } from "@/modules/acesso/usuario/domain/usuario.domain";
+import { Usuario } from "@/modules/acesso/usuario/domain/usuario";
 import { IUsuarioPermissionChecker } from "../../domain/authorization";
 import type { UsuarioFindOneQueryResult } from "../../domain/queries";
 import { IUsuarioRepository } from "../../domain/repositories";
@@ -36,7 +36,7 @@ export class UsuarioCreateCommandHandlerImpl implements IUsuarioCreateCommandHan
     await this.ensureDtoAvailability(input, null);
 
     try {
-      const { id } = await this.repository.createFromDomain({
+      const { id } = await this.repository.create({
         ...input,
         isSuperUser: false,
       });
