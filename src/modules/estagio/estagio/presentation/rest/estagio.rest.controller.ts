@@ -1,0 +1,118 @@
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from "@nestjs/common";
+import {
+  ApiBody,
+  ApiCreatedResponse,
+  ApiForbiddenResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from "@nestjs/swagger";
+import { DeclareDependency, IContainer } from "@/domain/dependency-injection";
+import { AccessContext, AccessContextHttp } from "@/modules/@seguranca/contexto-acesso";
+import { ensureExists } from "@/modules/@shared";
+import { IEstagioCreateCommandHandler } from "@/modules/estagio/estagio/domain/commands/estagio-create.command.handler.interface";
+import { IEstagioDeleteCommandHandler } from "@/modules/estagio/estagio/domain/commands/estagio-delete.command.handler.interface";
+import { IEstagioUpdateCommandHandler } from "@/modules/estagio/estagio/domain/commands/estagio-update.command.handler.interface";
+import { Estagio } from "@/modules/estagio/estagio/domain/estagio";
+import { IEstagioFindOneQueryHandler } from "@/modules/estagio/estagio/domain/queries/estagio-find-one.query.handler.interface";
+import { IEstagioListQueryHandler } from "@/modules/estagio/estagio/domain/queries/estagio-list.query.handler.interface";
+import {
+  EstagioCreateInputRestDto,
+  EstagioFindOneInputRestDto,
+  EstagioFindOneOutputRestDto,
+  EstagioListInputRestDto,
+  EstagioListOutputRestDto,
+  EstagioUpdateInputRestDto,
+} from "./estagio.rest.dto";
+import { EstagioRestMapper } from "./estagio.rest.mapper";
+
+@ApiTags("estagios")
+@Controller("/estagios")
+export class EstagioRestController {
+  constructor(@DeclareDependency(IContainer) private readonly container: IContainer) {}
+
+  @Get("/")
+  @ApiOperation({ summary: "Lista estágios", operationId: "estagioFindAll" })
+  @ApiOkResponse({ type: EstagioListOutputRestDto })
+  @ApiForbiddenResponse()
+  async findAll(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Query() dto: EstagioListInputRestDto,
+  ): Promise<EstagioListOutputRestDto> {
+    const listHandler = this.container.get<IEstagioListQueryHandler>(IEstagioListQueryHandler);
+    const input = EstagioRestMapper.toListInput(dto);
+    const result = await listHandler.execute(accessContext, input);
+    return EstagioRestMapper.toListOutputDto(result);
+  }
+
+  @Get("/:id")
+  @ApiOperation({ summary: "Busca um estágio por ID", operationId: "estagioFindById" })
+  @ApiOkResponse({ type: EstagioFindOneOutputRestDto })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async findById(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: EstagioFindOneInputRestDto,
+  ): Promise<EstagioFindOneOutputRestDto> {
+    const findOneHandler = this.container.get<IEstagioFindOneQueryHandler>(
+      IEstagioFindOneQueryHandler,
+    );
+    const input = EstagioRestMapper.toFindOneInput(params);
+    const result = await findOneHandler.execute(accessContext, input);
+    ensureExists(result, Estagio.entityName, input.id);
+    return EstagioRestMapper.toFindOneOutputDto(result);
+  }
+
+  @Post("/")
+  @ApiOperation({ summary: "Cria um estágio", operationId: "estagioCreate" })
+  @ApiBody({ type: EstagioCreateInputRestDto })
+  @ApiCreatedResponse({ type: EstagioFindOneOutputRestDto })
+  @ApiForbiddenResponse()
+  async create(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Body() dto: EstagioCreateInputRestDto,
+  ): Promise<EstagioFindOneOutputRestDto> {
+    const createHandler = this.container.get<IEstagioCreateCommandHandler>(
+      IEstagioCreateCommandHandler,
+    );
+    const input = EstagioRestMapper.toCreateInput(dto);
+    const result = await createHandler.execute(accessContext, input);
+    return EstagioRestMapper.toFindOneOutputDto(result);
+  }
+
+  @Patch("/:id")
+  @ApiOperation({ summary: "Atualiza um estágio", operationId: "estagioUpdate" })
+  @ApiBody({ type: EstagioUpdateInputRestDto })
+  @ApiOkResponse({ type: EstagioFindOneOutputRestDto })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async update(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: EstagioFindOneInputRestDto,
+    @Body() dto: EstagioUpdateInputRestDto,
+  ): Promise<EstagioFindOneOutputRestDto> {
+    const updateHandler = this.container.get<IEstagioUpdateCommandHandler>(
+      IEstagioUpdateCommandHandler,
+    );
+    const input = EstagioRestMapper.toUpdateInput(dto);
+    const result = await updateHandler.execute(accessContext, { id: params.id, ...input });
+    return EstagioRestMapper.toFindOneOutputDto(result);
+  }
+
+  @Delete("/:id")
+  @ApiOperation({ summary: "Deleta um estágio", operationId: "estagioDelete" })
+  @ApiOkResponse({ description: "Estágio deletado com sucesso" })
+  @ApiForbiddenResponse()
+  @ApiNotFoundResponse()
+  async delete(
+    @AccessContextHttp() accessContext: AccessContext,
+    @Param() params: EstagioFindOneInputRestDto,
+  ): Promise<{ message: string }> {
+    const deleteHandler = this.container.get<IEstagioDeleteCommandHandler>(
+      IEstagioDeleteCommandHandler,
+    );
+    await deleteHandler.execute(accessContext, { id: params.id });
+    return { message: "Estágio deletado com sucesso" };
+  }
+}
