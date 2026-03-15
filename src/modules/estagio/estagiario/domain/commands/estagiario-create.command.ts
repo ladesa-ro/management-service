@@ -1,13 +1,13 @@
 import { IsDateString, IsEmail, IsNotEmpty, IsString, IsUUID, Length } from "class-validator";
 
 export class EstagiarioCreateCommand {
-  @IsUUID("4")
+  @IsUUID("all")
   idPerfilFk!: string;
 
-  @IsUUID("4")
+  @IsUUID("all")
   idCursoFk!: string;
 
-  @IsUUID("4")
+  @IsUUID("all")
   idTurmaFk!: string;
 
   @IsString()

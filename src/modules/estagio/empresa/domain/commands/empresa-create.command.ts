@@ -20,6 +20,6 @@ export class EmpresaCreateCommand {
   @IsEmail()
   email!: string;
 
-  @IsUUID("4")
+  @IsUUID("all")
   idEnderecoFk!: string;
 }

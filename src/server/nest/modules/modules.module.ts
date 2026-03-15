@@ -20,6 +20,7 @@ import { OfertaFormacaoModule } from "@/modules/ensino/oferta-formacao/oferta-fo
 import { OfertaFormacaoNivelFormacaoModule } from "@/modules/ensino/oferta-formacao-nivel-formacao/oferta-formacao-nivel-formacao.module";
 import { TurmaModule } from "@/modules/ensino/turma/turma.module";
 import { EmpresaModule } from "@/modules/estagio/empresa/empresa.module";
+import { EstagioModule } from "@/modules/estagio/estagio/estagio.module";
 import { EstagiarioModule } from "@/modules/estagio/estagiario/estagiario.module";
 import { CalendarioLetivoModule } from "@/modules/horarios/calendario-letivo/calendario-letivo.module";
 import { DiaCalendarioModule } from "@/modules/horarios/dia-calendario/dia-calendario.module";
@@ -56,6 +57,7 @@ import { EstadoModule } from "@/modules/localidades/estado/estado.module";
     EnderecoModule,
     EstadoModule,
     EmpresaModule,
+    EstagioModule,
     EstagiarioModule,
     DiarioProfessorModule,
   ],
