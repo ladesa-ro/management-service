@@ -21,12 +21,8 @@ import {
   EstagioCreateInputRestDto,
   EstagioFindOneInputRestDto,
   EstagioFindOneOutputRestDto,
-  EstagioHorarioInputRestDto,
-  EstagioHorarioListOutputRestDto,
-  EstagioHorarioParamRestDto,
   EstagioListInputRestDto,
   EstagioListOutputRestDto,
-  HorarioEstagioOutputRestDto,
   EstagioUpdateInputRestDto,
 } from "./estagio.rest.dto";
 import { EstagioRestMapper } from "./estagio.rest.mapper";
@@ -35,18 +31,6 @@ import { EstagioRestMapper } from "./estagio.rest.mapper";
 @Controller("/estagios")
 export class EstagioRestController {
   constructor(@DeclareDependency(IContainer) private readonly container: IContainer) {}
-
-  private async loadEstagioOrThrow(
-    accessContext: AccessContext,
-    id: string,
-  ): Promise<EstagioFindOneOutputRestDto> {
-    const findOneHandler = this.container.get<IEstagioFindOneQueryHandler>(
-      IEstagioFindOneQueryHandler,
-    );
-    const estagio = await findOneHandler.execute(accessContext, { id });
-    ensureExists(estagio, Estagio.entityName, id);
-    return EstagioRestMapper.toFindOneOutputDto(estagio);
-  }
 
   @Get("/")
   @ApiOperation({ summary: "Lista estágios", operationId: "estagioFindAll" })
@@ -71,120 +55,13 @@ export class EstagioRestController {
     @AccessContextHttp() accessContext: AccessContext,
     @Param() params: EstagioFindOneInputRestDto,
   ): Promise<EstagioFindOneOutputRestDto> {
-    return this.loadEstagioOrThrow(accessContext, params.id);
-  }
-
-  @Get("/:id/horarios")
-  @ApiOperation({ summary: "Lista horários do estágio", operationId: "estagioHorarioFindAll" })
-  @ApiOkResponse({ type: EstagioHorarioListOutputRestDto })
-  @ApiForbiddenResponse()
-  @ApiNotFoundResponse()
-  async findAllHorarios(
-    @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: EstagioFindOneInputRestDto,
-  ): Promise<EstagioHorarioListOutputRestDto> {
-    const estagio = await this.loadEstagioOrThrow(accessContext, params.id);
-    return { data: estagio.horariosEstagio };
-  }
-
-  @Post("/:id/horarios")
-  @ApiOperation({ summary: "Adiciona horário ao estágio", operationId: "estagioHorarioCreate" })
-  @ApiBody({ type: EstagioHorarioInputRestDto })
-  @ApiCreatedResponse({ type: HorarioEstagioOutputRestDto })
-  @ApiForbiddenResponse()
-  @ApiNotFoundResponse()
-  async createHorario(
-    @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: EstagioFindOneInputRestDto,
-    @Body() dto: EstagioHorarioInputRestDto,
-  ): Promise<HorarioEstagioOutputRestDto> {
-    const updateHandler = this.container.get<IEstagioUpdateCommandHandler>(
-      IEstagioUpdateCommandHandler,
+    const findOneHandler = this.container.get<IEstagioFindOneQueryHandler>(
+      IEstagioFindOneQueryHandler,
     );
-    const estagio = await this.loadEstagioOrThrow(accessContext, params.id);
-    const beforeIds = new Set(estagio.horariosEstagio.map((item) => item.id));
-
-    const result = await updateHandler.execute(accessContext, {
-      id: params.id,
-      horariosEstagio: [...estagio.horariosEstagio, dto],
-    });
-
-    const created =
-      result.horariosEstagio.find((item) => !beforeIds.has(item.id)) ??
-      result.horariosEstagio[result.horariosEstagio.length - 1];
-
-    ensureExists(created, "HorarioEstagio");
-
-    return created;
-  }
-
-  @Patch("/:id/horarios/:horarioId")
-  @ApiOperation({ summary: "Atualiza horário do estágio", operationId: "estagioHorarioUpdate" })
-  @ApiBody({ type: EstagioHorarioInputRestDto })
-  @ApiOkResponse({ type: HorarioEstagioOutputRestDto })
-  @ApiForbiddenResponse()
-  @ApiNotFoundResponse()
-  async updateHorario(
-    @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: EstagioHorarioParamRestDto,
-    @Body() dto: EstagioHorarioInputRestDto,
-  ): Promise<HorarioEstagioOutputRestDto> {
-    const updateHandler = this.container.get<IEstagioUpdateCommandHandler>(
-      IEstagioUpdateCommandHandler,
-    );
-    const estagio = await this.loadEstagioOrThrow(accessContext, params.id);
-
-    const exists = estagio.horariosEstagio.some((item) => item.id === params.horarioId);
-    ensureExists(exists ? true : null, "HorarioEstagio", params.horarioId);
-
-    const horariosEstagio = estagio.horariosEstagio.map((item) => {
-      if (item.id !== params.horarioId) return item;
-      return {
-        id: item.id,
-        diaSemana: dto.diaSemana,
-        horaInicio: dto.horaInicio,
-        horaFim: dto.horaFim,
-      };
-    });
-
-    const result = await updateHandler.execute(accessContext, {
-      id: params.id,
-      horariosEstagio,
-    });
-
-    const updated = result.horariosEstagio.find((item) => item.id === params.horarioId);
-    ensureExists(updated, "HorarioEstagio", params.horarioId);
-
-    return updated;
-  }
-
-  @Delete("/:id/horarios/:horarioId")
-  @ApiOperation({ summary: "Remove horário do estágio", operationId: "estagioHorarioDelete" })
-  @ApiOkResponse({ description: "Horário removido com sucesso" })
-  @ApiForbiddenResponse()
-  @ApiNotFoundResponse()
-  async deleteHorario(
-    @AccessContextHttp() accessContext: AccessContext,
-    @Param() params: EstagioHorarioParamRestDto,
-  ): Promise<{ message: string }> {
-    const updateHandler = this.container.get<IEstagioUpdateCommandHandler>(
-      IEstagioUpdateCommandHandler,
-    );
-    const estagio = await this.loadEstagioOrThrow(accessContext, params.id);
-    const horariosEstagio = estagio.horariosEstagio.filter((item) => item.id !== params.horarioId);
-
-    ensureExists(
-      horariosEstagio.length !== estagio.horariosEstagio.length ? true : null,
-      "HorarioEstagio",
-      params.horarioId,
-    );
-
-    await updateHandler.execute(accessContext, {
-      id: params.id,
-      horariosEstagio,
-    });
-
-    return { message: "Horário removido com sucesso" };
+    const input = EstagioRestMapper.toFindOneInput(params);
+    const result = await findOneHandler.execute(accessContext, input);
+    ensureExists(result, Estagio.entityName, input.id);
+    return EstagioRestMapper.toFindOneOutputDto(result);
   }
 
   @Post("/")

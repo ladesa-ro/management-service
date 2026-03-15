@@ -41,22 +41,6 @@ export class HorarioEstagioOutputRestDto extends HorarioEstagioInputRestDto {
   id!: string;
 }
 
-@ApiSchema({ name: "EstagioHorarioInputDto" })
-export class EstagioHorarioInputRestDto extends HorarioEstagioInputRestDto {}
-
-@ApiSchema({ name: "EstagioHorarioParamsInputDto" })
-export class EstagioHorarioParamRestDto extends UuidParamRestDto {
-  @ApiProperty({ type: "string", format: "uuid", description: "ID do horário do estágio" })
-  @IsUUID("all")
-  horarioId!: string;
-}
-
-@ApiSchema({ name: "EstagioHorarioListOutputDto" })
-export class EstagioHorarioListOutputRestDto {
-  @ApiProperty({ type: () => [HorarioEstagioOutputRestDto] })
-  data!: HorarioEstagioOutputRestDto[];
-}
-
 @ApiSchema({ name: "EstagioCreateInputDto" })
 export class EstagioCreateInputRestDto {
   @ApiProperty({ type: "string", format: "uuid", description: "ID da empresa" })
@@ -82,10 +66,10 @@ export class EstagioCreateInputRestDto {
   @IsOptional()
   dataInicio?: string;
 
-  @ApiPropertyOptional({ type: "string", format: "date" })
+  @ApiPropertyOptional({ type: "string", format: "date", nullable: true })
   @IsDateString()
   @IsOptional()
-  dataFim?: string;
+  dataFim?: string | null;
 
   @ApiPropertyOptional({ enum: EstagioStatus, enumName: "EstagioStatus" })
   @IsEnum(EstagioStatus)
@@ -129,10 +113,10 @@ export class EstagioUpdateInputRestDto {
   @IsOptional()
   dataInicio?: string;
 
-  @ApiPropertyOptional({ type: "string", format: "date" })
+  @ApiPropertyOptional({ type: "string", format: "date", nullable: true })
   @IsDateString()
   @IsOptional()
-  dataFim?: string;
+  dataFim?: string | null;
 
   @ApiPropertyOptional({ enum: EstagioStatus, enumName: "EstagioStatus" })
   @IsEnum(EstagioStatus)

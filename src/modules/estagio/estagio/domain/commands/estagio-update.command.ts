@@ -46,7 +46,7 @@ export class EstagioUpdateCommand {
 
   @IsDateString()
   @IsOptional()
-  dataFim?: string;
+  dataFim?: string | null;
 
   @IsEnum(EstagioStatus)
   @IsOptional()
