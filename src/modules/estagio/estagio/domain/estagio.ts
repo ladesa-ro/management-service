@@ -31,7 +31,7 @@ export interface IEstagioCreate {
   idEstagiarioFk?: string;
   cargaHoraria: number;
   dataInicio?: string;
-  dataFim?: string;
+  dataFim?: string | null;
   status?: EstagioStatus;
   horariosEstagio?: IHorarioEstagio[];
 }
