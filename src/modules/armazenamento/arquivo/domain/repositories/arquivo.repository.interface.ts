@@ -1,5 +1,5 @@
 import type { SelectQueryBuilder } from "typeorm";
-import type { ArquivoEntity } from "@/modules/armazenamento/arquivo/infrastructure/persistence/typeorm";
+import type { ArquivoEntity } from "@/modules/armazenamento/arquivo/infrastructure.database";
 
 /**
  * Token de injeção para o repositório de Arquivo

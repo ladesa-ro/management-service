@@ -23,7 +23,7 @@ import {
   ICalendarioLetivoFindOneQueryHandler,
   ICalendarioLetivoListQueryHandler,
 } from "@/modules/horarios/calendario-letivo/domain/queries";
-import { CalendarioLetivoTypeOrmRepositoryAdapter } from "@/modules/horarios/calendario-letivo/infrastructure/persistence/typeorm";
+import { CalendarioLetivoTypeOrmRepositoryAdapter } from "@/modules/horarios/calendario-letivo/infrastructure.database";
 import { CalendarioLetivoGraphqlResolver } from "@/modules/horarios/calendario-letivo/presentation/graphql/calendario-letivo.graphql.resolver";
 import { CalendarioLetivoRestController } from "@/modules/horarios/calendario-letivo/presentation/rest/calendario-letivo.rest.controller";
 

@@ -6,7 +6,7 @@ import { ArquivoGetStreamableFileQueryHandlerImpl } from "@/modules/armazenament
 import { IArquivoCreateCommandHandler } from "@/modules/armazenamento/arquivo/domain/commands";
 import { IArquivoGetStreamableFileQueryHandler } from "@/modules/armazenamento/arquivo/domain/queries";
 import { IArquivoRepository } from "@/modules/armazenamento/arquivo/domain/repositories";
-import { ArquivoTypeOrmRepositoryAdapter } from "@/modules/armazenamento/arquivo/infrastructure/persistence/typeorm";
+import { ArquivoTypeOrmRepositoryAdapter } from "@/modules/armazenamento/arquivo/infrastructure.database";
 import { ArquivoRestController } from "@/modules/armazenamento/arquivo/presentation/rest/arquivo.rest.controller";
 
 @Global()

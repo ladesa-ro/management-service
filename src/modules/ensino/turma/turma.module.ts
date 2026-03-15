@@ -29,7 +29,7 @@ import {
   ITurmaListQueryHandler,
 } from "@/modules/ensino/turma/domain/queries";
 import { ITurmaRepository } from "@/modules/ensino/turma/domain/repositories";
-import { TurmaTypeOrmRepositoryAdapter } from "@/modules/ensino/turma/infrastructure";
+import { TurmaTypeOrmRepositoryAdapter } from "@/modules/ensino/turma/infrastructure.database";
 import { TurmaGraphqlResolver } from "@/modules/ensino/turma/presentation/graphql/turma.graphql.resolver";
 import { TurmaRestController } from "@/modules/ensino/turma/presentation/rest/turma.rest.controller";
 

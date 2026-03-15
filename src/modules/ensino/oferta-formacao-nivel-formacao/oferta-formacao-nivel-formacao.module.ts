@@ -23,7 +23,7 @@ import {
   IOfertaFormacaoNivelFormacaoFindOneQueryHandler,
   IOfertaFormacaoNivelFormacaoListQueryHandler,
 } from "@/modules/ensino/oferta-formacao-nivel-formacao/domain/queries";
-import { OfertaFormacaoNivelFormacaoTypeOrmRepositoryAdapter } from "@/modules/ensino/oferta-formacao-nivel-formacao/infrastructure/persistence/typeorm";
+import { OfertaFormacaoNivelFormacaoTypeOrmRepositoryAdapter } from "@/modules/ensino/oferta-formacao-nivel-formacao/infrastructure.database";
 import { OfertaFormacaoNivelFormacaoGraphqlResolver } from "@/modules/ensino/oferta-formacao-nivel-formacao/presentation/graphql/oferta-formacao-nivel-formacao.graphql.resolver";
 import { OfertaFormacaoNivelFormacaoRestController } from "@/modules/ensino/oferta-formacao-nivel-formacao/presentation/rest/oferta-formacao-nivel-formacao.rest.controller";
 

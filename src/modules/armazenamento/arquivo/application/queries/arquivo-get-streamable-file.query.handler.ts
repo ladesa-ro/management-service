@@ -4,7 +4,7 @@ import { IStorageService } from "@/domain/abstractions/storage";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists, isValidUuid } from "@/modules/@shared";
-import { UsuarioEntity } from "@/modules/acesso/usuario/infrastructure/persistence/typeorm";
+import { UsuarioEntity } from "@/modules/acesso/usuario/infrastructure.database";
 import { Arquivo } from "@/modules/armazenamento/arquivo/domain/arquivo";
 import type {
   ArquivoGetFileQuery,

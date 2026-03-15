@@ -22,7 +22,7 @@ import {
   IDiarioPreferenciaAgrupamentoFindOneQueryHandler,
   IDiarioPreferenciaAgrupamentoListQueryHandler,
 } from "@/modules/ensino/diario-preferencia-agrupamento/domain/queries";
-import { DiarioPreferenciaAgrupamentoTypeOrmRepositoryAdapter } from "@/modules/ensino/diario-preferencia-agrupamento/infrastructure/persistence/typeorm";
+import { DiarioPreferenciaAgrupamentoTypeOrmRepositoryAdapter } from "@/modules/ensino/diario-preferencia-agrupamento/infrastructure.database";
 import { DiarioPreferenciaAgrupamentoGraphqlResolver } from "@/modules/ensino/diario-preferencia-agrupamento/presentation/graphql/diario-preferencia-agrupamento.graphql.resolver";
 import { DiarioPreferenciaAgrupamentoController } from "@/modules/ensino/diario-preferencia-agrupamento/presentation/rest";
 @Module({

@@ -36,7 +36,7 @@ import {
   IUsuarioListQueryHandler,
 } from "@/modules/acesso/usuario/domain/queries";
 import { IUsuarioRepository } from "@/modules/acesso/usuario/domain/repositories";
-import { UsuarioTypeOrmRepositoryAdapter } from "@/modules/acesso/usuario/infrastructure";
+import { UsuarioTypeOrmRepositoryAdapter } from "@/modules/acesso/usuario/infrastructure.database";
 import { UsuarioGraphqlResolver } from "@/modules/acesso/usuario/presentation/graphql/usuario.graphql.resolver";
 import { UsuarioRestController } from "@/modules/acesso/usuario/presentation/rest/usuario.rest.controller";
 import { ArquivoModule } from "@/modules/armazenamento/arquivo/arquivo.module";

@@ -22,7 +22,7 @@ import {
   IOfertaFormacaoFindOneQueryHandler,
   IOfertaFormacaoListQueryHandler,
 } from "@/modules/ensino/oferta-formacao/domain/queries";
-import { OfertaFormacaoTypeOrmRepositoryAdapter } from "@/modules/ensino/oferta-formacao/infrastructure/persistence/typeorm";
+import { OfertaFormacaoTypeOrmRepositoryAdapter } from "@/modules/ensino/oferta-formacao/infrastructure.database";
 import { OfertaFormacaoGraphqlResolver } from "@/modules/ensino/oferta-formacao/presentation/graphql/oferta-formacao.graphql.resolver";
 import { OfertaFormacaoRestController } from "@/modules/ensino/oferta-formacao/presentation/rest/oferta-formacao.rest.controller";
 

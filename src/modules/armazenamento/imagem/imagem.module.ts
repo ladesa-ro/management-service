@@ -14,8 +14,8 @@ import {
   IImagemArquivoRepository,
   IMAGEM_ITransaction,
 } from "@/modules/armazenamento/imagem/domain/repositories";
-import { ImagemTypeOrmRepositoryAdapter } from "@/modules/armazenamento/imagem/infrastructure/persistence/typeorm";
-import { ImagemArquivoTypeOrmRepositoryAdapter } from "@/modules/armazenamento/imagem-arquivo/infrastructure/persistence/typeorm";
+import { ImagemTypeOrmRepositoryAdapter } from "@/modules/armazenamento/imagem/infrastructure.database";
+import { ImagemArquivoTypeOrmRepositoryAdapter } from "@/modules/armazenamento/imagem-arquivo/infrastructure.database";
 
 @Global()
 @Module({

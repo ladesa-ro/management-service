@@ -5,7 +5,7 @@ import { IIdentityProvider } from "@/domain/abstractions/identity-provider";
 import type { IRequestActor, IRequestActorResolver } from "@/domain/abstractions/request-actor";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import { APP_DATA_SOURCE_TOKEN } from "@/modules/@shared/infrastructure/persistence/typeorm";
-import { createUsuarioRepository } from "@/modules/acesso/usuario/infrastructure/persistence/typeorm/usuario.repository";
+import { createUsuarioRepository } from "@/modules/acesso/usuario/infrastructure.database/typeorm/usuario.typeorm.repository";
 
 @DeclareImplementation()
 export class RequestActorResolverAdapter implements IRequestActorResolver {
