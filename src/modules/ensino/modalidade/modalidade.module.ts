@@ -21,7 +21,7 @@ import {
   IModalidadeListQueryHandler,
 } from "@/modules/ensino/modalidade/domain/queries";
 import { IModalidadeRepository } from "@/modules/ensino/modalidade/domain/repositories";
-import { ModalidadeTypeOrmRepositoryAdapter } from "@/modules/ensino/modalidade/infrastructure";
+import { ModalidadeTypeOrmRepositoryAdapter } from "@/modules/ensino/modalidade/infrastructure.database";
 import { ModalidadeGraphqlResolver } from "@/modules/ensino/modalidade/presentation/graphql/modalidade.graphql.resolver";
 import { ModalidadeRestController } from "@/modules/ensino/modalidade/presentation/rest/modalidade.rest.controller";
 

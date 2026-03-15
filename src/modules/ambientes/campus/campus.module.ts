@@ -21,7 +21,7 @@ import {
   ICampusListQueryHandler,
 } from "@/modules/ambientes/campus/domain/queries";
 import { ICampusRepository } from "@/modules/ambientes/campus/domain/repositories";
-import { CampusTypeOrmRepositoryAdapter } from "@/modules/ambientes/campus/infrastructure";
+import { CampusTypeOrmRepositoryAdapter } from "@/modules/ambientes/campus/infrastructure.database";
 import { CampusGraphqlResolver } from "@/modules/ambientes/campus/presentation/graphql/campus.graphql.resolver";
 import { CampusRestController } from "@/modules/ambientes/campus/presentation/rest/campus.rest.controller";
 import { EnderecoModule } from "@/modules/localidades/endereco/endereco.module";

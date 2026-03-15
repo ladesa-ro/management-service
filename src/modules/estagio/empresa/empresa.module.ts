@@ -18,7 +18,7 @@ import {
   IEmpresaListQueryHandler,
 } from "@/modules/estagio/empresa/domain/queries";
 import { IEmpresaRepository } from "@/modules/estagio/empresa/domain/repositories";
-import { EmpresaTypeOrmRepositoryAdapter } from "@/modules/estagio/empresa/infrastructure";
+import { EmpresaTypeOrmRepositoryAdapter } from "@/modules/estagio/empresa/infrastructure.database";
 import { EmpresaRestController } from "@/modules/estagio/empresa/presentation/rest/empresa.rest.controller";
 
 @Module({

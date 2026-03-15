@@ -9,7 +9,7 @@ import {
   IImagemArquivoListQueryHandler,
 } from "@/modules/armazenamento/imagem-arquivo/domain/queries";
 import { IImagemArquivoQueryRepository } from "@/modules/armazenamento/imagem-arquivo/domain/repositories";
-import { ImagemArquivoQueryTypeOrmRepositoryAdapter } from "@/modules/armazenamento/imagem-arquivo/infrastructure/persistence/typeorm";
+import { ImagemArquivoQueryTypeOrmRepositoryAdapter } from "@/modules/armazenamento/imagem-arquivo/infrastructure.database";
 import { ImagemArquivoGraphqlResolver } from "@/modules/armazenamento/imagem-arquivo/presentation/graphql/imagem-arquivo.graphql.resolver";
 
 @Global()

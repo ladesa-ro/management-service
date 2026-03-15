@@ -1,0 +1,107 @@
+import { FilterOperator } from "nestjs-paginate";
+import { DataSource } from "typeorm";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import {
+  APP_DATA_SOURCE_TOKEN,
+  BaseTypeOrmRepositoryAdapter,
+  type ITypeOrmPaginationConfig,
+  NestJsPaginateAdapter,
+  paginateConfig,
+} from "@/modules/@shared/infrastructure/persistence/typeorm";
+import type {
+  CampusFindOneQuery,
+  CampusFindOneQueryResult,
+  CampusListQuery,
+  CampusListQueryResult,
+  ICampusRepository,
+} from "@/modules/ambientes/campus";
+import type { CampusEntity } from "./typeorm/campus.typeorm.entity";
+import { createCampusRepository } from "./typeorm/campus.typeorm.repository";
+
+@DeclareImplementation()
+export class CampusTypeOrmRepositoryAdapter
+  extends BaseTypeOrmRepositoryAdapter<
+    CampusEntity,
+    CampusListQuery,
+    CampusListQueryResult,
+    CampusFindOneQuery,
+    CampusFindOneQueryResult
+  >
+  implements ICampusRepository
+{
+  protected readonly alias = "campus";
+  protected readonly outputDtoName = "CampusFindOneQueryResult";
+
+  constructor(
+    @DeclareDependency(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
+    protected readonly paginationAdapter: NestJsPaginateAdapter,
+  ) {
+    super();
+  }
+
+  protected get repository() {
+    return createCampusRepository(this.dataSource);
+  }
+
+  protected getPaginateConfig(): ITypeOrmPaginationConfig<CampusEntity> {
+    return {
+      ...paginateConfig,
+      select: [
+        "id",
+        "nomeFantasia",
+        "razaoSocial",
+        "apelido",
+        "cnpj",
+        "dateCreated",
+        "endereco.cidade.id",
+        "endereco.cidade.nome",
+        "endereco.cidade.estado.id",
+        "endereco.cidade.estado.nome",
+        "endereco.cidade.estado.sigla",
+      ],
+      relations: {
+        endereco: {
+          cidade: {
+            estado: true,
+          },
+        },
+      },
+      sortableColumns: [
+        "id",
+        "nomeFantasia",
+        "razaoSocial",
+        "apelido",
+        "cnpj",
+        "dateCreated",
+        "endereco.cidade.id",
+        "endereco.cidade.nome",
+        "endereco.cidade.estado.id",
+        "endereco.cidade.estado.nome",
+        "endereco.cidade.estado.sigla",
+      ],
+      searchableColumns: [
+        "id",
+        "nomeFantasia",
+        "razaoSocial",
+        "apelido",
+        "cnpj",
+        "dateCreated",
+        "endereco.cidade.nome",
+        "endereco.cidade.estado.nome",
+        "endereco.cidade.estado.sigla",
+      ],
+      defaultSortBy: [
+        ["nomeFantasia", "ASC"],
+        ["endereco.cidade.estado.nome", "ASC"],
+        ["dateCreated", "ASC"],
+      ],
+      filterableColumns: {
+        "endereco.cidade.id": [FilterOperator.EQ],
+        "endereco.cidade.nome": [FilterOperator.EQ],
+        "endereco.cidade.estado.id": [FilterOperator.EQ],
+        "endereco.cidade.estado.nome": [FilterOperator.EQ],
+        "endereco.cidade.estado.sigla": [FilterOperator.EQ],
+      },
+    };
+  }
+}

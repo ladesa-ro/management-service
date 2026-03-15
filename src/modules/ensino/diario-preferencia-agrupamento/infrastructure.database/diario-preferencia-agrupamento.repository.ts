@@ -1,0 +1,93 @@
+import { FilterOperator } from "nestjs-paginate";
+import type { SelectQueryBuilder } from "typeorm";
+import { DataSource } from "typeorm";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import {
+  APP_DATA_SOURCE_TOKEN,
+  BaseTypeOrmRepositoryAdapter,
+  type ITypeOrmPaginationConfig,
+  NestJsPaginateAdapter,
+  paginateConfig,
+} from "@/modules/@shared/infrastructure/persistence/typeorm";
+import type {
+  DiarioPreferenciaAgrupamentoFindOneQuery,
+  DiarioPreferenciaAgrupamentoFindOneQueryResult,
+  DiarioPreferenciaAgrupamentoListQuery,
+  DiarioPreferenciaAgrupamentoListQueryResult,
+} from "@/modules/ensino/diario-preferencia-agrupamento";
+import type { IDiarioPreferenciaAgrupamentoRepository } from "@/modules/ensino/diario-preferencia-agrupamento/domain/repositories";
+import type { DiarioPreferenciaAgrupamentoEntity } from "./typeorm/diario-preferencia-agrupamento.typeorm.entity";
+import { createDiarioPreferenciaAgrupamentoRepository } from "./typeorm/diario-preferencia-agrupamento.typeorm.repository";
+
+/**
+ * Adapter TypeORM que implementa o port de repositório de DiarioPreferenciaAgrupamento.
+ * Estende BaseTypeOrmRepositoryAdapter para reutilizar operações CRUD comuns.
+ */
+
+@DeclareImplementation()
+export class DiarioPreferenciaAgrupamentoTypeOrmRepositoryAdapter
+  extends BaseTypeOrmRepositoryAdapter<
+    DiarioPreferenciaAgrupamentoEntity,
+    DiarioPreferenciaAgrupamentoListQuery,
+    DiarioPreferenciaAgrupamentoListQueryResult,
+    DiarioPreferenciaAgrupamentoFindOneQuery,
+    DiarioPreferenciaAgrupamentoFindOneQueryResult
+  >
+  implements IDiarioPreferenciaAgrupamentoRepository
+{
+  protected readonly alias = "diario_preferencia_agrupamento";
+  protected readonly outputDtoName = "DiarioPreferenciaAgrupamentoFindOneQueryResult";
+
+  constructor(
+    @DeclareDependency(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
+    protected readonly paginationAdapter: NestJsPaginateAdapter,
+  ) {
+    super();
+  }
+
+  protected get repository() {
+    return createDiarioPreferenciaAgrupamentoRepository(this.dataSource);
+  }
+
+  /**
+   * @deprecated Usado para verificações de permissão. Será removido em fases futuras.
+   */
+  createQueryBuilder(alias: string): SelectQueryBuilder<DiarioPreferenciaAgrupamentoEntity> {
+    return this.repository.createQueryBuilder(alias);
+  }
+
+  protected getPaginateConfig(): ITypeOrmPaginationConfig<DiarioPreferenciaAgrupamentoEntity> {
+    return {
+      ...paginateConfig,
+      relations: {
+        diario: true,
+        intervaloDeTempo: true,
+      },
+      select: [
+        "id",
+        "diaSemanaIso",
+        "aulasSeguidas",
+        "dataInicio",
+        "dataFim",
+        "diario.id",
+        "diario.ativo",
+        "intervaloDeTempo.id",
+        "intervaloDeTempo.periodoInicio",
+        "intervaloDeTempo.periodoFim",
+      ],
+      sortableColumns: [
+        "diaSemanaIso",
+        "aulasSeguidas",
+        "dataInicio",
+        "dataFim",
+        "diario.id",
+        "intervaloDeTempo.id",
+      ],
+      searchableColumns: ["id", "diaSemanaIso", "aulasSeguidas", "dataInicio", "dataFim"],
+      defaultSortBy: [],
+      filterableColumns: {
+        "diario.id": [FilterOperator.EQ],
+      },
+    };
+  }
+}

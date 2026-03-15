@@ -2,7 +2,7 @@ import type { SelectQueryBuilder } from "typeorm";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import type { IBaseCrudRepository } from "@/modules/@shared";
 import type { IDiarioPreferenciaAgrupamento } from "@/modules/ensino/diario-preferencia-agrupamento";
-import type { DiarioPreferenciaAgrupamentoEntity } from "@/modules/ensino/diario-preferencia-agrupamento/infrastructure/persistence/typeorm";
+import type { DiarioPreferenciaAgrupamentoEntity } from "@/modules/ensino/diario-preferencia-agrupamento/infrastructure.database";
 import type {
   DiarioPreferenciaAgrupamentoFindOneQueryResult,
   DiarioPreferenciaAgrupamentoListQueryResult,

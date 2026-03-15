@@ -13,7 +13,7 @@ import {
   IPerfilListQueryHandler,
 } from "@/modules/acesso/perfil/domain/queries";
 import { IPerfilRepository } from "@/modules/acesso/perfil/domain/repositories";
-import { PerfilTypeOrmRepositoryAdapter } from "@/modules/acesso/perfil/infrastructure";
+import { PerfilTypeOrmRepositoryAdapter } from "@/modules/acesso/perfil/infrastructure.database";
 import { PerfilGraphqlResolver } from "@/modules/acesso/perfil/presentation/graphql/perfil.graphql.resolver";
 import { PerfilRestController } from "@/modules/acesso/perfil/presentation/rest/perfil.rest.controller";
 import { UsuarioModule } from "@/modules/acesso/usuario/usuario.module";

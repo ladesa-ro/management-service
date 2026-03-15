@@ -22,7 +22,7 @@ import {
   IDiarioListQueryHandler,
 } from "@/modules/ensino/diario/domain/queries";
 import { IDiarioRepository } from "@/modules/ensino/diario/domain/repositories";
-import { DiarioTypeOrmRepositoryAdapter } from "@/modules/ensino/diario/infrastructure/persistence/typeorm";
+import { DiarioTypeOrmRepositoryAdapter } from "@/modules/ensino/diario/infrastructure.database";
 import { DiarioGraphqlResolver } from "@/modules/ensino/diario/presentation/graphql/diario.graphql.resolver";
 import { DiarioRestController } from "@/modules/ensino/diario/presentation/rest/diario.rest.controller";
 import { DisciplinaModule } from "@/modules/ensino/disciplina/disciplina.module";

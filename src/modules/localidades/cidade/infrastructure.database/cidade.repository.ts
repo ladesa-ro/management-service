@@ -1,0 +1,73 @@
+import { FilterOperator } from "nestjs-paginate";
+import { DataSource } from "typeorm";
+import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import {
+  APP_DATA_SOURCE_TOKEN,
+  BaseTypeOrmRepositoryAdapter,
+  type ITypeOrmPaginationConfig,
+  NestJsPaginateAdapter,
+  paginateConfig,
+} from "@/modules/@shared/infrastructure/persistence/typeorm";
+import type {
+  CidadeFindOneQuery,
+  CidadeFindOneQueryResult,
+  CidadeListQuery,
+  CidadeListQueryResult,
+  ICidadeRepository,
+} from "@/modules/localidades/cidade";
+import type { CidadeEntity } from "./typeorm/cidade.typeorm.entity";
+import { createCidadeRepository } from "./typeorm/cidade.typeorm.repository";
+
+/**
+ * Adapter TypeORM que implementa o port de repositório de Cidade.
+ * Estende BaseTypeOrmRepositoryAdapter para reutilizar operações de leitura.
+ * Cidade é um recurso somente leitura (dados do IBGE).
+ */
+
+@DeclareImplementation()
+export class CidadeTypeOrmRepositoryAdapter
+  extends BaseTypeOrmRepositoryAdapter<
+    CidadeEntity,
+    CidadeListQuery,
+    CidadeListQueryResult,
+    CidadeFindOneQuery,
+    CidadeFindOneQueryResult
+  >
+  implements ICidadeRepository
+{
+  protected readonly alias = "cidade";
+  protected readonly hasSoftDelete = false;
+  protected readonly outputDtoName = "CidadeFindOneQueryResult";
+
+  constructor(
+    @DeclareDependency(APP_DATA_SOURCE_TOKEN) protected readonly dataSource: DataSource,
+    protected readonly paginationAdapter: NestJsPaginateAdapter,
+  ) {
+    super();
+  }
+
+  protected get repository() {
+    return createCidadeRepository(this.dataSource);
+  }
+
+  protected getPaginateConfig(): ITypeOrmPaginationConfig<CidadeEntity> {
+    return {
+      ...paginateConfig,
+      select: ["id", "nome", "estado.id", "estado.sigla", "estado.nome"],
+      relations: {
+        estado: true,
+      },
+      sortableColumns: ["id", "nome", "estado.nome", "estado.sigla"],
+      searchableColumns: ["nome", "estado.nome", "estado.sigla"],
+      defaultSortBy: [
+        ["nome", "ASC"],
+        ["estado.nome", "ASC"],
+      ],
+      filterableColumns: {
+        "estado.id": [FilterOperator.EQ],
+        "estado.nome": [FilterOperator.EQ],
+        "estado.sigla": [FilterOperator.EQ],
+      },
+    };
+  }
+}

@@ -1,0 +1,34 @@
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, type Relation } from "typeorm";
+import { CampusEntity } from "@/modules/ambientes/campus/infrastructure.database/typeorm/campus.typeorm.entity";
+import { OfertaFormacaoEntity } from "@/modules/ensino/oferta-formacao/infrastructure.database/typeorm/oferta-formacao.typeorm.entity";
+
+@Entity("calendario_letivo")
+export class CalendarioLetivoEntity {
+  @PrimaryColumn("uuid")
+  id!: string;
+
+  @Column({ name: "nome", type: "text" })
+  nome!: string;
+
+  @Column({ name: "ano_letivo", type: "integer" })
+  ano!: number;
+
+  //Chaves Estrangeiras
+
+  @ManyToOne(() => CampusEntity)
+  @JoinColumn({ name: "id_campus_fk" })
+  campus!: Relation<CampusEntity>;
+
+  @ManyToOne(() => OfertaFormacaoEntity)
+  @JoinColumn({ name: "id_oferta_formacao_fk" })
+  ofertaFormacao!: Relation<OfertaFormacaoEntity>;
+
+  @Column({ name: "date_created", type: "timestamptz", nullable: false })
+  dateCreated!: Date;
+
+  @Column({ name: "date_updated", type: "timestamptz", nullable: false })
+  dateUpdated!: Date;
+
+  @Column({ name: "date_deleted", type: "timestamptz", nullable: true })
+  dateDeleted!: Date | null;
+}

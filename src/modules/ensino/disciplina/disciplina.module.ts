@@ -27,7 +27,7 @@ import {
   IDisciplinaListQueryHandler,
 } from "@/modules/ensino/disciplina/domain/queries";
 import { IDisciplinaRepository } from "@/modules/ensino/disciplina/domain/repositories";
-import { DisciplinaTypeOrmRepositoryAdapter } from "@/modules/ensino/disciplina/infrastructure";
+import { DisciplinaTypeOrmRepositoryAdapter } from "@/modules/ensino/disciplina/infrastructure.database";
 import { DisciplinaGraphqlResolver } from "@/modules/ensino/disciplina/presentation/graphql/disciplina.graphql.resolver";
 import { DisciplinaRestController } from "@/modules/ensino/disciplina/presentation/rest/disciplina.rest.controller";
 

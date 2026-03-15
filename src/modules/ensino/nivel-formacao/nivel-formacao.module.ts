@@ -21,7 +21,7 @@ import {
   INivelFormacaoListQueryHandler,
 } from "@/modules/ensino/nivel-formacao/domain/queries";
 import { INivelFormacaoRepository } from "@/modules/ensino/nivel-formacao/domain/repositories";
-import { NivelFormacaoTypeOrmRepositoryAdapter } from "@/modules/ensino/nivel-formacao/infrastructure/persistence/typeorm";
+import { NivelFormacaoTypeOrmRepositoryAdapter } from "@/modules/ensino/nivel-formacao/infrastructure.database";
 import { NivelFormacaoGraphqlResolver } from "@/modules/ensino/nivel-formacao/presentation/graphql/nivel-formacao.graphql.resolver";
 import { NivelFormacaoRestController } from "@/modules/ensino/nivel-formacao/presentation/rest/nivel-formacao.rest.controller";
 

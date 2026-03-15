@@ -5,7 +5,7 @@ import { EnderecoFindOneQueryHandlerImpl } from "@/modules/localidades/endereco/
 import { IEnderecoCreateOrUpdateCommandHandler } from "@/modules/localidades/endereco/domain/commands";
 import { IEnderecoFindOneQueryHandler } from "@/modules/localidades/endereco/domain/queries";
 import { IEnderecoRepository } from "@/modules/localidades/endereco/domain/repositories";
-import { EnderecoTypeOrmRepositoryAdapter } from "@/modules/localidades/endereco/infrastructure";
+import { EnderecoTypeOrmRepositoryAdapter } from "@/modules/localidades/endereco/infrastructure.database";
 import { EnderecoGraphqlResolver } from "@/modules/localidades/endereco/presentation/graphql/endereco.graphql.resolver";
 
 @Module({

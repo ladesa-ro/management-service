@@ -1,11 +1,4 @@
-import { DataSource, EntityManager } from "typeorm";
-
-export const createRepositoryFactory = <
-  Repository,
-  Factory extends (ds: DataSource | EntityManager) => Repository,
->(
-  factory: Factory,
-) => factory;
-
-export type IRepositoryFactoryOutput<Factory extends (ds: DataSource | EntityManager) => any> =
-  ReturnType<Factory>;
+export {
+  createRepositoryFactory,
+  type IRepositoryFactoryOutput,
+} from "@/infrastructure.database/typeorm/repositories/create-repository-factory";
