@@ -9,15 +9,15 @@ import {
 } from "class-validator";
 
 export class EstagiarioUpdateCommand {
-  @IsUUID("4")
+  @IsUUID("all")
   @IsOptional()
   idPerfilFk?: string;
 
-  @IsUUID("4")
+  @IsUUID("all")
   @IsOptional()
   idCursoFk?: string;
 
-  @IsUUID("4")
+  @IsUUID("all")
   @IsOptional()
   idTurmaFk?: string;
 

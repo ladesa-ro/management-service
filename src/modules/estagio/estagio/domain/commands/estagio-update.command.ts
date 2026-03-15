@@ -27,11 +27,11 @@ export class HorarioEstagioUpdateCommand {
 }
 
 export class EstagioUpdateCommand {
-  @IsUUID("4")
+  @IsUUID("all")
   @IsOptional()
   idEmpresaFk?: string;
 
-  @IsUUID("4")
+  @IsUUID("all")
   @IsOptional()
   idEstagiarioFk?: string;
 

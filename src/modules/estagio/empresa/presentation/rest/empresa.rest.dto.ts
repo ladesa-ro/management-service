@@ -36,7 +36,7 @@ export class EmpresaCreateInputRestDto {
     format: "uuid",
     description: "ID do endereço vinculado à empresa",
   })
-  @IsUUID("4")
+  @IsUUID("all")
   idEnderecoFk!: string;
 }
 

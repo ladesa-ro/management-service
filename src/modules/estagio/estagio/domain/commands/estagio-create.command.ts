@@ -27,10 +27,10 @@ export class HorarioEstagioInputCommand {
 }
 
 export class EstagioCreateCommand {
-  @IsUUID("4")
+  @IsUUID("all")
   idEmpresaFk!: string;
 
-  @IsUUID("4")
+  @IsUUID("all")
   @IsOptional()
   idEstagiarioFk?: string;
 

@@ -47,7 +47,7 @@ export class EstagioHorarioInputRestDto extends HorarioEstagioInputRestDto {}
 @ApiSchema({ name: "EstagioHorarioParamsInputDto" })
 export class EstagioHorarioParamRestDto extends UuidParamRestDto {
   @ApiProperty({ type: "string", format: "uuid", description: "ID do horário do estágio" })
-  @IsUUID("4")
+  @IsUUID("all")
   horarioId!: string;
 }
 
@@ -60,7 +60,7 @@ export class EstagioHorarioListOutputRestDto {
 @ApiSchema({ name: "EstagioCreateInputDto" })
 export class EstagioCreateInputRestDto {
   @ApiProperty({ type: "string", format: "uuid", description: "ID da empresa" })
-  @IsUUID("4")
+  @IsUUID("all")
   idEmpresaFk!: string;
 
   @ApiPropertyOptional({
@@ -68,7 +68,7 @@ export class EstagioCreateInputRestDto {
     format: "uuid",
     description: "ID do estagiário (opcional enquanto a vaga estiver aberta)",
   })
-  @IsUUID("4")
+  @IsUUID("all")
   @IsOptional()
   idEstagiarioFk?: string;
 
@@ -109,12 +109,12 @@ export class EstagioCreateInputRestDto {
 @ApiSchema({ name: "EstagioUpdateInputDto" })
 export class EstagioUpdateInputRestDto {
   @ApiPropertyOptional({ type: "string", format: "uuid" })
-  @IsUUID("4")
+  @IsUUID("all")
   @IsOptional()
   idEmpresaFk?: string;
 
   @ApiPropertyOptional({ type: "string", format: "uuid" })
-  @IsUUID("4")
+  @IsUUID("all")
   @IsOptional()
   idEstagiarioFk?: string;
 

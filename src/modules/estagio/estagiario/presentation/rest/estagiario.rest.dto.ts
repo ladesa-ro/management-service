@@ -20,7 +20,7 @@ export class EstagiarioCreateInputRestDto {
     format: "uuid",
     description: "ID do perfil vinculado ao estagiário",
   })
-  @IsUUID("4")
+  @IsUUID("all")
   idPerfilFk!: string;
 
   @ApiProperty({
@@ -28,7 +28,7 @@ export class EstagiarioCreateInputRestDto {
     format: "uuid",
     description: "ID do curso vinculado ao estagiário",
   })
-  @IsUUID("4")
+  @IsUUID("all")
   idCursoFk!: string;
 
   @ApiProperty({
@@ -36,7 +36,7 @@ export class EstagiarioCreateInputRestDto {
     format: "uuid",
     description: "ID da turma vinculada ao estagiário",
   })
-  @IsUUID("4")
+  @IsUUID("all")
   idTurmaFk!: string;
 
   @ApiProperty({
@@ -70,7 +70,7 @@ export class EstagiarioUpdateInputRestDto {
     format: "uuid",
     description: "ID do perfil vinculado ao estagiário",
   })
-  @IsUUID("4")
+  @IsUUID("all")
   @IsOptional()
   idPerfilFk?: string;
 
@@ -79,7 +79,7 @@ export class EstagiarioUpdateInputRestDto {
     format: "uuid",
     description: "ID do curso vinculado ao estagiário",
   })
-  @IsUUID("4")
+  @IsUUID("all")
   @IsOptional()
   idCursoFk?: string;
 
@@ -88,7 +88,7 @@ export class EstagiarioUpdateInputRestDto {
     format: "uuid",
     description: "ID da turma vinculada ao estagiário",
   })
-  @IsUUID("4")
+  @IsUUID("all")
   @IsOptional()
   idTurmaFk?: string;
 

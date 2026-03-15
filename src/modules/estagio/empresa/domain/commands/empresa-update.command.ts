@@ -25,7 +25,7 @@ export class EmpresaUpdateCommand {
   @IsOptional()
   email?: string;
 
-  @IsUUID("4")
+  @IsUUID("all")
   @IsOptional()
   idEnderecoFk?: string;
 }
