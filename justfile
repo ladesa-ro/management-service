@@ -32,7 +32,7 @@ build:
         echo "[BUILD] Imagem já está atualizada ✅"
     else
         echo "[BUILD] Baixando e construindo imagens... ☕"
-        {{COMMAND_COMPOSE_SERVICE}} build -q
+        {{COMMAND_COMPOSE_SERVICE}} build
         echo "$HASH" > "$HASH_FILE"
         echo "[BUILD] Imagens atualizadas ✅"
     fi
@@ -40,7 +40,7 @@ build:
 # Força rebuild das imagens
 rebuild:
     @echo "[BUILD] Forçando rebuild... ☕"
-    {{COMMAND_COMPOSE_SERVICE}} build -q
+    {{COMMAND_COMPOSE_SERVICE}} build
     @rm -f .docker/.build-hash
     @echo "[BUILD] Imagens atualizadas ✅"
 
