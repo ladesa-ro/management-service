@@ -2,7 +2,7 @@ import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-in
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { IDiarioProfessorDeleteCommandHandler } from "@/modules/ensino/diario-professor/domain/commands/diario-professor-delete.command.handler.interface";
-import { DiarioProfessor } from "@/modules/ensino/diario-professor/domain/diario-professor.domain";
+import { DiarioProfessor } from "@/modules/ensino/diario-professor/domain/diario-professor";
 import type { DiarioProfessorFindOneQuery } from "@/modules/ensino/diario-professor/domain/queries";
 import { IDiarioProfessorPermissionChecker } from "../../domain/authorization";
 import { IDiarioProfessorRepository } from "../../domain/repositories";

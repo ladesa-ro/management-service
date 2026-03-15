@@ -4,7 +4,7 @@ import {
   JoinColumn,
   ManyToOne,
   OneToMany,
-  PrimaryGeneratedColumn,
+  PrimaryColumn,
   type Relation,
 } from "typeorm";
 import { AmbienteEntity } from "@/modules/ambientes/ambiente/infrastructure/persistence/typeorm/ambiente.entity";
@@ -14,7 +14,7 @@ import { DiarioEntity } from "@/modules/ensino/diario/infrastructure/persistence
 
 @Entity("turma")
 export class TurmaEntity {
-  @PrimaryGeneratedColumn("uuid")
+  @PrimaryColumn("uuid")
   id!: string;
 
   @Column({ name: "periodo", type: "text", nullable: false })

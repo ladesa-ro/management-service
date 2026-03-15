@@ -1,11 +1,4 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-  type Relation,
-} from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, type Relation } from "typeorm";
 import { PerfilEntity } from "@/modules/acesso/perfil/infrastructure/persistence/typeorm/perfil.entity";
 import { CursoEntity } from "@/modules/ensino/curso/infrastructure/persistence/typeorm/curso.entity";
 import { TurmaEntity } from "@/modules/ensino/turma/infrastructure/persistence/typeorm/turma.entity";
@@ -15,7 +8,7 @@ import { TurmaEntity } from "@/modules/ensino/turma/infrastructure/persistence/t
  */
 @Entity("estagiario")
 export class EstagiarioTypeormEntity {
-  @PrimaryGeneratedColumn("uuid")
+  @PrimaryColumn("uuid")
   id!: string;
 
   @Column({ name: "id_perfil_fk", type: "uuid", nullable: false })

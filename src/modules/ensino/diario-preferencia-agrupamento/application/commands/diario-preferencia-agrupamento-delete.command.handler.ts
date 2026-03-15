@@ -2,7 +2,7 @@ import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-in
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { IDiarioPreferenciaAgrupamentoDeleteCommandHandler } from "@/modules/ensino/diario-preferencia-agrupamento/domain/commands/diario-preferencia-agrupamento-delete.command.handler.interface";
-import { DiarioPreferenciaAgrupamento } from "@/modules/ensino/diario-preferencia-agrupamento/domain/diario-preferencia-agrupamento.domain";
+import { DiarioPreferenciaAgrupamento } from "@/modules/ensino/diario-preferencia-agrupamento/domain/diario-preferencia-agrupamento";
 import type { DiarioPreferenciaAgrupamentoFindOneQuery } from "@/modules/ensino/diario-preferencia-agrupamento/domain/queries";
 import { IDiarioPreferenciaAgrupamentoPermissionChecker } from "../../domain/authorization";
 import { IDiarioPreferenciaAgrupamentoRepository } from "../../domain/repositories";

@@ -1,16 +1,16 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
-import { Ambiente } from "@/modules/ambientes/ambiente/domain/ambiente.domain";
+import { Ambiente } from "@/modules/ambientes/ambiente/domain/ambiente";
 import { IAmbienteFindOneQueryHandler } from "@/modules/ambientes/ambiente/domain/queries/ambiente-find-one.query.handler.interface";
 import type { DiarioCreateCommand } from "@/modules/ensino/diario/domain/commands/diario-create.command";
 import { IDiarioCreateCommandHandler } from "@/modules/ensino/diario/domain/commands/diario-create.command.handler.interface";
-import { Diario } from "@/modules/ensino/diario/domain/diario.domain";
-import { Disciplina } from "@/modules/ensino/disciplina/domain/disciplina.domain";
+import { Diario } from "@/modules/ensino/diario/domain/diario";
+import { Disciplina } from "@/modules/ensino/disciplina/domain/disciplina";
 import { IDisciplinaFindOneQueryHandler } from "@/modules/ensino/disciplina/domain/queries/disciplina-find-one.query.handler.interface";
 import { ITurmaFindOneQueryHandler } from "@/modules/ensino/turma/domain/queries/turma-find-one.query.handler.interface";
-import { Turma } from "@/modules/ensino/turma/domain/turma.domain";
-import { CalendarioLetivo } from "@/modules/horarios/calendario-letivo/domain/calendario-letivo.domain";
+import { Turma } from "@/modules/ensino/turma/domain/turma";
+import { CalendarioLetivo } from "@/modules/horarios/calendario-letivo/domain/calendario-letivo";
 import { ICalendarioLetivoFindOneQueryHandler } from "@/modules/horarios/calendario-letivo/domain/queries/calendario-letivo-find-one.query.handler.interface";
 import { IDiarioPermissionChecker } from "../../domain/authorization";
 import type { DiarioFindOneQueryResult } from "../../domain/queries";
@@ -61,14 +61,14 @@ export class DiarioCreateCommandHandlerImpl implements IDiarioCreateCommandHandl
     const turma = await this.turmaFindOneHandler.execute(accessContext, { id: dto.turma.id });
     ensureExists(turma, Turma.entityName, dto.turma.id);
 
-    const domain = Diario.criar({
+    const domain = Diario.create({
       ativo: dto.ativo,
       calendarioLetivo: { id: calendarioLetivo.id },
       turma: { id: turma.id },
       disciplina: { id: disciplina.id },
       ambientePadrao: ambientePadraoRef,
     });
-    const { id } = await this.repository.createFromDomain({
+    const { id } = await this.repository.create({
       ...domain,
       calendarioLetivo: { id: calendarioLetivo.id },
       turma: { id: turma.id },

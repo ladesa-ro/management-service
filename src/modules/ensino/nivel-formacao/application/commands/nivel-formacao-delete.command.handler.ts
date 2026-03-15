@@ -2,7 +2,7 @@ import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-in
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { INivelFormacaoDeleteCommandHandler } from "@/modules/ensino/nivel-formacao/domain/commands/nivel-formacao-delete.command.handler.interface";
-import { NivelFormacao } from "@/modules/ensino/nivel-formacao/domain/nivel-formacao.domain";
+import { NivelFormacao } from "@/modules/ensino/nivel-formacao/domain/nivel-formacao";
 import type { NivelFormacaoFindOneQuery } from "@/modules/ensino/nivel-formacao/domain/queries";
 import { INivelFormacaoPermissionChecker } from "../../domain/authorization";
 import { INivelFormacaoRepository } from "../../domain/repositories";

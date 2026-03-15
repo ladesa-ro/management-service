@@ -1,11 +1,4 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-  type Relation,
-} from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, type Relation } from "typeorm";
 import { EnderecoEntity } from "@/modules/localidades/endereco/infrastructure/persistence/typeorm/endereco.entity";
 
 /**
@@ -13,7 +6,7 @@ import { EnderecoEntity } from "@/modules/localidades/endereco/infrastructure/pe
  */
 @Entity("empresa")
 export class EmpresaTypeormEntity {
-  @PrimaryGeneratedColumn("uuid")
+  @PrimaryColumn("uuid")
   id!: string;
 
   @Column({ name: "razao_social", type: "text", nullable: false })

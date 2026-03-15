@@ -1,5 +1,4 @@
-export * from "./ambiente.domain";
-export * from "./ambiente.types";
+export * from "./ambiente";
 export * from "./authorization";
 export * from "./commands";
 export * from "./queries";

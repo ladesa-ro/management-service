@@ -4,7 +4,7 @@ import {
   JoinColumn,
   ManyToOne,
   OneToMany,
-  PrimaryGeneratedColumn,
+  PrimaryColumn,
   type Relation,
 } from "typeorm";
 import { PerfilEntity } from "@/modules/acesso/perfil/infrastructure/persistence/typeorm/perfil.entity";
@@ -13,7 +13,7 @@ import { EnderecoEntity } from "@/modules/localidades/endereco/infrastructure/pe
 
 @Entity("campus")
 export class CampusEntity {
-  @PrimaryGeneratedColumn("uuid")
+  @PrimaryColumn("uuid")
   id!: string;
 
   @Column({ name: "nome_fantasia", type: "text", nullable: false })

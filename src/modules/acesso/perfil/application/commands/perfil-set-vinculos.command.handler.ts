@@ -1,13 +1,13 @@
-import { v4 as uuid } from "uuid";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7.js";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import type { PerfilSetVinculosCommand } from "@/modules/acesso/perfil/domain/commands/perfil-set-vinculos.command";
 import { IPerfilSetVinculosCommandHandler } from "@/modules/acesso/perfil/domain/commands/perfil-set-vinculos.command.handler.interface";
 import { IPerfilListQueryHandler } from "@/modules/acesso/perfil/domain/queries/perfil-list.query.handler.interface";
 import { IUsuarioFindByIdSimpleQueryHandler } from "@/modules/acesso/usuario/domain/queries/usuario-find-by-id-simple.query.handler.interface";
-import { Usuario } from "@/modules/acesso/usuario/domain/usuario.domain";
-import { Campus } from "@/modules/ambientes/campus/domain/campus.domain";
+import { Usuario } from "@/modules/acesso/usuario/domain/usuario";
+import { Campus } from "@/modules/ambientes/campus/domain/campus";
 import { ICampusFindOneQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-find-one.query.handler.interface";
 import type { PerfilListQuery, PerfilListQueryResult } from "../../domain/queries";
 import { IPerfilRepository } from "../../domain/repositories";
@@ -67,7 +67,7 @@ export class PerfilSetVinculosCommandHandlerImpl implements IPerfilSetVinculosCo
 
       // Cria ou reativa vínculo usando o port de repositório
       const data = {
-        id: vinculoExistente?.id ?? uuid(),
+        id: vinculoExistente?.id ?? generateUuidV7(),
         ativo: true,
         cargo,
         dateDeleted: null,
@@ -76,9 +76,9 @@ export class PerfilSetVinculosCommandHandlerImpl implements IPerfilSetVinculosCo
       };
 
       if (vinculoExistente) {
-        await this.perfilRepository.updateFromDomain(vinculoExistente.id, data);
+        await this.perfilRepository.update(vinculoExistente.id, data);
       } else {
-        await this.perfilRepository.createFromDomain(data);
+        await this.perfilRepository.create(data);
       }
     }
 

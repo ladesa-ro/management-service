@@ -1,13 +1,13 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
-import { Ambiente } from "@/modules/ambientes/ambiente/domain/ambiente.domain";
+import { Ambiente } from "@/modules/ambientes/ambiente/domain/ambiente";
 import { IAmbienteFindOneQueryHandler } from "@/modules/ambientes/ambiente/domain/queries/ambiente-find-one.query.handler.interface";
-import { Curso } from "@/modules/ensino/curso/domain/curso.domain";
+import { Curso } from "@/modules/ensino/curso/domain/curso";
 import { ICursoFindOneQueryHandler } from "@/modules/ensino/curso/domain/queries/curso-find-one.query.handler.interface";
 import type { TurmaCreateCommand } from "@/modules/ensino/turma/domain/commands/turma-create.command";
 import { ITurmaCreateCommandHandler } from "@/modules/ensino/turma/domain/commands/turma-create.command.handler.interface";
-import { Turma } from "@/modules/ensino/turma/domain/turma.domain";
+import { Turma } from "@/modules/ensino/turma/domain/turma";
 import { ITurmaPermissionChecker } from "../../domain/authorization";
 import type { TurmaFindOneQueryResult } from "../../domain/queries";
 import { ITurmaRepository } from "../../domain/repositories";
@@ -41,12 +41,12 @@ export class TurmaCreateCommandHandlerImpl implements ITurmaCreateCommandHandler
       ensureExists(ambientePadraoAula, Ambiente.entityName, dto.ambientePadraoAula.id);
       ambientePadraoAulaRef = { id: ambientePadraoAula.id };
     }
-    const domain = Turma.criar({
+    const domain = Turma.create({
       periodo: dto.periodo,
       curso: { id: curso.id },
       ambientePadraoAula: ambientePadraoAulaRef,
     });
-    const { id } = await this.repository.createFromDomain({
+    const { id } = await this.repository.create({
       ...domain,
       curso: { id: curso.id },
       ambientePadraoAula: ambientePadraoAulaRef,

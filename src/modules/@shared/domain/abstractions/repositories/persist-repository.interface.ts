@@ -10,7 +10,7 @@
  *
  * @example
  * ```ts
- * interface IAmbiente extends IEntityBase {
+ * interface IAmbiente extends IEntityBaseUuid {
  *   nome: string;
  *   bloco: IBloco;
  *   imagemCapa: { id: IdUuid } | null;
@@ -42,10 +42,10 @@ export interface IPersistRepository<DomainData> {
   /**
    * Cria uma nova entidade a partir de dados de domínio
    */
-  createFromDomain(data: Partial<PersistInput<DomainData>>): Promise<{ id: string | number }>;
+  create(data: Partial<PersistInput<DomainData>>): Promise<{ id: string | number }>;
 
   /**
    * Atualiza uma entidade existente a partir de dados parciais de domínio
    */
-  updateFromDomain(id: string | number, data: Partial<PersistInput<DomainData>>): Promise<void>;
+  update(id: string | number, data: Partial<PersistInput<DomainData>>): Promise<void>;
 }

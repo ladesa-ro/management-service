@@ -2,7 +2,7 @@ import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-in
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { IUsuarioEnsinoQueryHandler } from "@/modules/acesso/usuario/domain/queries/usuario-ensino.query.handler.interface";
-import { Usuario } from "@/modules/acesso/usuario/domain/usuario.domain";
+import { Usuario } from "@/modules/acesso/usuario/domain/usuario";
 import type { UsuarioEnsinoQueryResult, UsuarioFindOneQuery } from "../../domain/queries";
 import { IUsuarioRepository } from "../../domain/repositories";
 

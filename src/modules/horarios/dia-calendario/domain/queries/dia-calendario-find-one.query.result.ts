@@ -1,5 +1,5 @@
 import { EntityQueryResult } from "@/domain/abstractions";
-import type { ScalarDate } from "@/modules/@shared";
+import type { ScalarDate } from "@/domain/abstractions/scalars";
 import { CalendarioLetivoFindOneQueryResult } from "@/modules/horarios/calendario-letivo";
 
 export class DiaCalendarioFindOneQueryResult extends EntityQueryResult {

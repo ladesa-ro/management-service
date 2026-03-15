@@ -4,7 +4,7 @@ import {
   JoinColumn,
   ManyToOne,
   OneToMany,
-  PrimaryGeneratedColumn,
+  PrimaryColumn,
   type Relation,
 } from "typeorm";
 import { PerfilEntity } from "@/modules/acesso/perfil/infrastructure/persistence/typeorm/perfil.entity";
@@ -12,7 +12,7 @@ import { ImagemEntity } from "@/modules/armazenamento/imagem/infrastructure/pers
 
 @Entity("usuario")
 export class UsuarioEntity {
-  @PrimaryGeneratedColumn("uuid")
+  @PrimaryColumn("uuid")
   id!: string;
 
   @Column({ name: "nome", type: "text", nullable: true })

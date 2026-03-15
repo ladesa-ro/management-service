@@ -4,7 +4,7 @@ import {
   JoinColumn,
   ManyToOne,
   OneToMany,
-  PrimaryGeneratedColumn,
+  PrimaryColumn,
   type Relation,
 } from "typeorm";
 import { AmbienteEntity } from "@/modules/ambientes/ambiente/infrastructure/persistence/typeorm/ambiente.entity";
@@ -13,7 +13,7 @@ import { ImagemEntity } from "@/modules/armazenamento/imagem/infrastructure/pers
 
 @Entity("bloco")
 export class BlocoEntity {
-  @PrimaryGeneratedColumn("uuid")
+  @PrimaryColumn("uuid")
   id!: string;
 
   @Column({ name: "nome", type: "text", nullable: false })

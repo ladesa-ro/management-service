@@ -3,17 +3,17 @@ import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-in
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { APP_DATA_SOURCE_TOKEN } from "@/modules/@shared/infrastructure/persistence/typeorm";
-import { Perfil } from "@/modules/acesso/perfil/domain/perfil.domain";
+import { Perfil } from "@/modules/acesso/perfil/domain/perfil";
 import { createPerfilRepository } from "@/modules/acesso/perfil/infrastructure/persistence/typeorm/perfil.repository";
-import { Curso } from "@/modules/ensino/curso/domain/curso.domain";
+import { Curso } from "@/modules/ensino/curso/domain/curso";
 import { createCursoRepository } from "@/modules/ensino/curso/infrastructure/persistence/typeorm/curso.repository";
-import { Turma } from "@/modules/ensino/turma/domain/turma.domain";
+import { Turma } from "@/modules/ensino/turma/domain/turma";
 import { createTurmaRepository } from "@/modules/ensino/turma/infrastructure/persistence/typeorm/turma.repository";
 import type {
   EstagiarioCreateCommand,
   EstagiarioUpdateCommand,
 } from "@/modules/estagio/estagiario/domain/commands";
-import { Estagiario } from "@/modules/estagio/estagiario/domain/estagiario.domain";
+import { Estagiario } from "@/modules/estagio/estagiario/domain/estagiario";
 import type {
   EstagiarioFindOneQuery,
   EstagiarioFindOneQueryResult,
@@ -152,7 +152,7 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
 
     ensureExists(turma, Turma.entityName, dto.idTurmaFk);
 
-    const estagiario = Estagiario.criar(dto);
+    const estagiario = Estagiario.create(dto);
 
     const entity = EstagiarioMapper.toPersistence(estagiario);
     const saved = await this.repository.save(entity);
@@ -197,7 +197,7 @@ export class EstagiarioTypeOrmRepositoryAdapter implements IEstagiarioRepository
       ensureExists(turma, Turma.entityName, dto.idTurmaFk);
     }
 
-    estagiario.atualizar(dto);
+    estagiario.update(dto);
 
     const updated = EstagiarioMapper.toPersistence(estagiario);
     const saved = await this.repository.save(updated);

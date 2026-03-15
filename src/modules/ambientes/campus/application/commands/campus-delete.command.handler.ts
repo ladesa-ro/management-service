@@ -1,7 +1,7 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
-import { Campus } from "@/modules/ambientes/campus/domain/campus.domain";
+import { Campus } from "@/modules/ambientes/campus/domain/campus";
 import { ICampusDeleteCommandHandler } from "@/modules/ambientes/campus/domain/commands/campus-delete.command.handler.interface";
 import type { CampusFindOneQuery } from "@/modules/ambientes/campus/domain/queries";
 import { ICampusPermissionChecker } from "../../domain/authorization";

@@ -1,17 +1,10 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-  type Relation,
-} from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, type Relation } from "typeorm";
 import { CalendarioLetivoEntity } from "@/modules/horarios/calendario-letivo/infrastructure/persistence/typeorm/calendario-letivo.entity";
-import { type TipoDiaCalendario } from "@/modules/horarios/dia-calendario/domain/dia-calendario.types";
+import { type TipoDiaCalendario } from "@/modules/horarios/dia-calendario/domain/dia-calendario";
 
 @Entity("dia_calendario")
 export class DiaCalendarioEntity {
-  @PrimaryGeneratedColumn("uuid")
+  @PrimaryColumn("uuid")
   id!: string;
 
   @Column({ name: "data", type: "date", nullable: false })

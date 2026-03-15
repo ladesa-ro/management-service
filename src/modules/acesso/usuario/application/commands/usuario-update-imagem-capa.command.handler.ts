@@ -5,7 +5,7 @@ import {
   IUsuarioUpdateImagemCapaCommandHandler,
   type UsuarioUpdateImagemCapaCommand,
 } from "@/modules/acesso/usuario/domain/commands/usuario-update-imagem-capa.command.handler.interface";
-import { Usuario } from "@/modules/acesso/usuario/domain/usuario.domain";
+import { Usuario } from "@/modules/acesso/usuario/domain/usuario";
 import {
   IImagemSaveImagemCapaCommandHandler,
   type IImagemSaveImagemCapaCommandHandler as IImagemSaveImagemCapaCommandHandlerType,

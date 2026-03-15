@@ -6,8 +6,8 @@ import { INivelFormacaoFindOneQueryHandler } from "@/modules/ensino/nivel-formac
 import { IOfertaFormacaoFindOneQueryHandler } from "@/modules/ensino/oferta-formacao/domain/queries/oferta-formacao-find-one.query.handler.interface";
 import type { OfertaFormacaoNivelFormacaoUpdateCommand } from "@/modules/ensino/oferta-formacao-nivel-formacao/domain/commands/oferta-formacao-nivel-formacao-update.command";
 import { IOfertaFormacaoNivelFormacaoUpdateCommandHandler } from "@/modules/ensino/oferta-formacao-nivel-formacao/domain/commands/oferta-formacao-nivel-formacao-update.command.handler.interface";
-import { OfertaFormacaoNivelFormacao } from "@/modules/ensino/oferta-formacao-nivel-formacao/domain/oferta-formacao-nivel-formacao.domain";
-import type { IOfertaFormacaoNivelFormacao } from "@/modules/ensino/oferta-formacao-nivel-formacao/domain/oferta-formacao-nivel-formacao.types";
+import type { IOfertaFormacaoNivelFormacao } from "@/modules/ensino/oferta-formacao-nivel-formacao/domain/oferta-formacao-nivel-formacao";
+import { OfertaFormacaoNivelFormacao } from "@/modules/ensino/oferta-formacao-nivel-formacao/domain/oferta-formacao-nivel-formacao";
 import type { OfertaFormacaoNivelFormacaoFindOneQuery } from "@/modules/ensino/oferta-formacao-nivel-formacao/domain/queries";
 import { IOfertaFormacaoNivelFormacaoPermissionChecker } from "../../domain/authorization";
 import type { OfertaFormacaoNivelFormacaoFindOneQueryResult } from "../../domain/queries";
@@ -61,7 +61,7 @@ export class OfertaFormacaoNivelFormacaoUpdateCommandHandlerImpl
       }
       updateData.nivelFormacao = nivelFormacao ? { id: nivelFormacao.id } : undefined;
     }
-    await this.repository.updateFromDomain(current.id, updateData);
+    await this.repository.update(current.id, updateData);
 
     const result = await this.repository.findById(accessContext, { id: dto.id });
 

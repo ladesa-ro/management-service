@@ -9,7 +9,7 @@ import {
   ITurmaUpdateImagemCapaCommandHandler,
   type TurmaUpdateImagemCapaCommand,
 } from "@/modules/ensino/turma/domain/commands/turma-update-imagem-capa.command.handler.interface";
-import { Turma } from "@/modules/ensino/turma/domain/turma.domain";
+import { Turma } from "@/modules/ensino/turma/domain/turma";
 import { ITurmaPermissionChecker } from "../../domain/authorization";
 import { ITurmaRepository } from "../../domain/repositories";
 

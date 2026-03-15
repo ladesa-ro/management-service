@@ -4,5 +4,4 @@ export * from "./queries";
 
 export * from "./repositories";
 export * from "./shared";
-export * from "./usuario.domain";
-export * from "./usuario.types";
+export * from "./usuario";

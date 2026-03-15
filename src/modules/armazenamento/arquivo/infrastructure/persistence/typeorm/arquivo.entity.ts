@@ -1,10 +1,10 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn, type Relation } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryColumn, type Relation } from "typeorm";
 
 import { ImagemArquivoEntity } from "@/modules/armazenamento/imagem-arquivo/infrastructure/persistence/typeorm/imagem-arquivo.entity";
 
 @Entity("arquivo")
 export class ArquivoEntity {
-  @PrimaryGeneratedColumn("uuid")
+  @PrimaryColumn("uuid")
   id!: string;
 
   @Column({ name: "name", type: "text", nullable: true })

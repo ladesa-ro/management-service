@@ -5,7 +5,7 @@ import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-in
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists, isValidUuid } from "@/modules/@shared";
 import { UsuarioEntity } from "@/modules/acesso/usuario/infrastructure/persistence/typeorm";
-import { Arquivo } from "@/modules/armazenamento/arquivo/domain/arquivo.domain";
+import { Arquivo } from "@/modules/armazenamento/arquivo/domain/arquivo";
 import type {
   ArquivoGetFileQuery,
   IArquivoGetStreamableFileQueryHandler,

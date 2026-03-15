@@ -3,7 +3,7 @@ import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-in
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists, getEntityImagemStreamableFile } from "@/modules/@shared";
 import { IUsuarioGetImagemPerfilQueryHandler } from "@/modules/acesso/usuario/domain/queries/usuario-get-imagem-perfil.query.handler.interface";
-import { Usuario } from "@/modules/acesso/usuario/domain/usuario.domain";
+import { Usuario } from "@/modules/acesso/usuario/domain/usuario";
 import {
   IArquivoGetStreamableFileQueryHandler,
   type IArquivoGetStreamableFileQueryHandler as IArquivoGetStreamableFileQueryHandlerType,

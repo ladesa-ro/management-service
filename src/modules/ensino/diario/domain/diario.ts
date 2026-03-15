@@ -1,0 +1,105 @@
+import type { IEntityBaseUuid } from "@/domain/abstractions/entities";
+import type { IdUuid, ScalarDateTimeString } from "@/domain/abstractions/scalars";
+import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7.js";
+import type { IAmbiente } from "@/modules/ambientes/ambiente";
+import type { IImagem } from "@/modules/armazenamento/imagem/domain/imagem";
+import type { IDisciplina } from "@/modules/ensino/disciplina/domain/disciplina";
+import type { ITurma } from "@/modules/ensino/turma/domain/turma";
+import type { ICalendarioLetivo } from "@/modules/horarios/calendario-letivo";
+import { createValidator, throwIfInvalid, touchUpdated } from "@/utils/validation-utils.js";
+
+export interface IDiario extends IEntityBaseUuid {
+  ativo: boolean;
+  calendarioLetivo: ICalendarioLetivo;
+  turma: ITurma;
+  disciplina: IDisciplina;
+  ambientePadrao: IAmbiente | null;
+  imagemCapa: IImagem | null;
+}
+
+export interface IDiarioCreate {
+  ativo?: boolean;
+  calendarioLetivo: { id: IdUuid };
+  turma: { id: IdUuid };
+  disciplina: { id: IdUuid };
+  ambientePadrao?: { id: IdUuid } | null;
+}
+
+export interface IDiarioUpdate {
+  ativo?: boolean;
+  calendarioLetivo?: { id: IdUuid };
+  turma?: { id: IdUuid };
+  disciplina?: { id: IdUuid };
+  ambientePadrao?: { id: IdUuid } | null;
+}
+
+export class Diario implements IEntityBaseUuid {
+  static readonly entityName = "Diario";
+
+  id!: IdUuid;
+  ativo!: boolean;
+  calendarioLetivo!: ICalendarioLetivo;
+  turma!: ITurma;
+  disciplina!: IDisciplina;
+  ambientePadrao!: IAmbiente | null;
+  imagemCapa!: IImagem | null;
+  dateCreated!: ScalarDateTimeString;
+  dateUpdated!: ScalarDateTimeString;
+  dateDeleted!: ScalarDateTimeString | null;
+
+  constructor(dados: { ativo?: boolean }) {
+    this.id = generateUuidV7();
+    this.ativo = dados.ativo ?? true;
+    this.ambientePadrao = null;
+    this.imagemCapa = null;
+    this.dateCreated = new Date().toISOString();
+    this.dateUpdated = new Date().toISOString();
+    this.dateDeleted = null;
+  }
+
+  validate(): void {
+    const { result } = createValidator("Diario");
+    throwIfInvalid("Diario", result);
+  }
+
+  static create(dados: IDiarioCreate, validar: boolean = true): Diario {
+    const instance = new Diario(dados);
+    if (validar) instance.validate();
+    return instance;
+  }
+
+  static load(dados: Record<string, any>): Diario {
+    const instance = Object.create(Diario.prototype) as Diario;
+    if (dados.id !== undefined) instance.id = dados.id;
+    if (dados.ativo !== undefined) instance.ativo = dados.ativo;
+    if (dados.calendarioLetivo !== undefined) instance.calendarioLetivo = dados.calendarioLetivo;
+    if (dados.turma !== undefined) instance.turma = dados.turma;
+    if (dados.disciplina !== undefined) instance.disciplina = dados.disciplina;
+    if (dados.ambientePadrao !== undefined) instance.ambientePadrao = dados.ambientePadrao;
+    if (dados.imagemCapa !== undefined) instance.imagemCapa = dados.imagemCapa;
+    if (dados.dateCreated !== undefined) instance.dateCreated = dados.dateCreated;
+    if (dados.dateUpdated !== undefined) instance.dateUpdated = dados.dateUpdated;
+    if (dados.dateDeleted !== undefined) instance.dateDeleted = dados.dateDeleted;
+    return instance;
+  }
+
+  update(dados: IDiarioUpdate): void {
+    if (dados.ativo !== undefined) this.ativo = dados.ativo;
+    touchUpdated(this);
+    this.validate();
+  }
+
+  isAtivo(): boolean {
+    return this.ativo && this.dateDeleted === null;
+  }
+
+  ativar(): void {
+    this.ativo = true;
+    touchUpdated(this);
+  }
+
+  desativar(): void {
+    this.ativo = false;
+    touchUpdated(this);
+  }
+}

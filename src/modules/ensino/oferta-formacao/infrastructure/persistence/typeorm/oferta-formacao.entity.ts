@@ -5,7 +5,7 @@ import {
   JoinColumn,
   ManyToOne,
   OneToMany,
-  PrimaryGeneratedColumn,
+  PrimaryColumn,
   type Relation,
 } from "typeorm";
 import { ModalidadeEntity } from "@/modules/ensino/modalidade/infrastructure/persistence/typeorm/modalidade.entity";
@@ -14,7 +14,7 @@ import { OfertaFormacaoNivelFormacaoEntity } from "@/modules/ensino/oferta-forma
 
 @Entity("oferta_formacao")
 export class OfertaFormacaoEntity {
-  @PrimaryGeneratedColumn("uuid")
+  @PrimaryColumn("uuid")
   id!: string;
 
   @Column({ name: "nome", type: "text", nullable: false })

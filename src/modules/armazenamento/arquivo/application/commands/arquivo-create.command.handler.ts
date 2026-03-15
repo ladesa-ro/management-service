@@ -1,6 +1,6 @@
-import { v4 } from "uuid";
 import { IStorageService } from "@/domain/abstractions/storage";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7.js";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import type {
   IArquivoCreateCommand,
@@ -24,7 +24,7 @@ export class ArquivoCreateCommandHandlerImpl implements IArquivoCreateCommandHan
     let id: string;
 
     do {
-      id = v4();
+      id = generateUuidV7();
     } while (await this.storageService.exists(id));
 
     await this.storageService.save(id, data);

@@ -2,7 +2,7 @@ import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-in
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { ICursoDeleteCommandHandler } from "@/modules/ensino/curso/domain/commands/curso-delete.command.handler.interface";
-import { Curso } from "@/modules/ensino/curso/domain/curso.domain";
+import { Curso } from "@/modules/ensino/curso/domain/curso";
 import type { CursoFindOneQuery } from "@/modules/ensino/curso/domain/queries";
 import { ICursoPermissionChecker } from "../../domain/authorization";
 import { ICursoRepository } from "../../domain/repositories";

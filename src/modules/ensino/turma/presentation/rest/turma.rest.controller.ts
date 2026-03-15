@@ -33,7 +33,7 @@ import { ITurmaUpdateImagemCapaCommandHandler } from "@/modules/ensino/turma/dom
 import { ITurmaFindOneQueryHandler } from "@/modules/ensino/turma/domain/queries/turma-find-one.query.handler.interface";
 import { ITurmaGetImagemCapaQueryHandler } from "@/modules/ensino/turma/domain/queries/turma-get-imagem-capa.query.handler.interface";
 import { ITurmaListQueryHandler } from "@/modules/ensino/turma/domain/queries/turma-list.query.handler.interface";
-import { Turma } from "@/modules/ensino/turma/domain/turma.domain";
+import { Turma } from "@/modules/ensino/turma/domain/turma";
 import {
   TurmaCreateInputRestDto,
   TurmaFindOneInputRestDto,

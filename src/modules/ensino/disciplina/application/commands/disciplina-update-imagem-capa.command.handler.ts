@@ -9,7 +9,7 @@ import {
   type DisciplinaUpdateImagemCapaCommand,
   IDisciplinaUpdateImagemCapaCommandHandler,
 } from "@/modules/ensino/disciplina/domain/commands/disciplina-update-imagem-capa.command.handler.interface";
-import { Disciplina } from "@/modules/ensino/disciplina/domain/disciplina.domain";
+import { Disciplina } from "@/modules/ensino/disciplina/domain/disciplina";
 import { IDisciplinaPermissionChecker } from "../../domain/authorization";
 import { IDisciplinaRepository } from "../../domain/repositories";
 

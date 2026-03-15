@@ -1,4 +1,4 @@
-import type { ScalarDate } from "@/modules/@shared";
+import type { ScalarDate } from "@/domain/abstractions/scalars";
 import { DiarioInputRef } from "@/modules/ensino/diario";
 
 export class DiarioPreferenciaAgrupamentoUpdateCommand {

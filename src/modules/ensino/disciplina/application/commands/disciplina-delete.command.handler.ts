@@ -2,7 +2,7 @@ import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-in
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import { IDisciplinaDeleteCommandHandler } from "@/modules/ensino/disciplina/domain/commands/disciplina-delete.command.handler.interface";
-import { Disciplina } from "@/modules/ensino/disciplina/domain/disciplina.domain";
+import { Disciplina } from "@/modules/ensino/disciplina/domain/disciplina";
 import type { DisciplinaFindOneQuery } from "@/modules/ensino/disciplina/domain/queries";
 import { IDisciplinaPermissionChecker } from "../../domain/authorization";
 import { IDisciplinaRepository } from "../../domain/repositories";

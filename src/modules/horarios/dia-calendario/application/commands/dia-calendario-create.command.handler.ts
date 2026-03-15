@@ -1,14 +1,14 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
-import { CalendarioLetivo } from "@/modules/horarios/calendario-letivo/domain/calendario-letivo.domain";
+import { CalendarioLetivo } from "@/modules/horarios/calendario-letivo/domain/calendario-letivo";
 import {
   type ICalendarioLetivoFindOneQueryHandler,
   ICalendarioLetivoFindOneQueryHandler as ICalendarioLetivoFindOneQueryHandlerToken,
 } from "@/modules/horarios/calendario-letivo/domain/queries/calendario-letivo-find-one.query.handler.interface";
 import type { DiaCalendarioCreateCommand } from "@/modules/horarios/dia-calendario/domain/commands/dia-calendario-create.command";
 import { IDiaCalendarioCreateCommandHandler } from "@/modules/horarios/dia-calendario/domain/commands/dia-calendario-create.command.handler.interface";
-import { DiaCalendario } from "@/modules/horarios/dia-calendario/domain/dia-calendario.domain";
+import { DiaCalendario } from "@/modules/horarios/dia-calendario/domain/dia-calendario";
 import { IDiaCalendarioPermissionChecker } from "../../domain/authorization";
 import type { DiaCalendarioFindOneQueryResult } from "../../domain/queries";
 import { IDiaCalendarioRepository } from "../../domain/repositories";
@@ -38,7 +38,7 @@ export class DiaCalendarioCreateCommandHandlerImpl implements IDiaCalendarioCrea
       ensureExists(calendario, CalendarioLetivo.entityName, dto.calendario.id);
       calendarioRef = { id: calendario.id };
     }
-    const domain = DiaCalendario.criar({
+    const domain = DiaCalendario.create({
       data: dto.data,
       diaLetivo: dto.diaLetivo,
       feriado: dto.feriado,
@@ -47,7 +47,7 @@ export class DiaCalendarioCreateCommandHandlerImpl implements IDiaCalendarioCrea
       extraCurricular: dto.extraCurricular,
       calendario: calendarioRef!,
     });
-    const { id } = await this.repository.createFromDomain({
+    const { id } = await this.repository.create({
       ...domain,
       ...(calendarioRef ? { calendario: calendarioRef } : {}),
     });

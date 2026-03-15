@@ -50,11 +50,11 @@ export async function saveEntityImagemField(
       command: { file: Express.Multer.File },
     ): Promise<{ imagem: { id: string } }>;
   },
-  repository: { updateFromDomain(id: string | number, data: Record<string, any>): Promise<void> },
+  repository: { update(id: string | number, data: Record<string, any>): Promise<void> },
 ): Promise<boolean> {
   const { imagem } = await saveImagemCapaHandler.execute(null, { file });
 
-  await repository.updateFromDomain(currentId, { [fieldName]: { id: imagem.id } });
+  await repository.update(currentId, { [fieldName]: { id: imagem.id } });
 
   return true;
 }

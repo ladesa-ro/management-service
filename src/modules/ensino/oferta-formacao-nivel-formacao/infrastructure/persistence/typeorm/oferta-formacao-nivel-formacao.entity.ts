@@ -1,17 +1,10 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-  type Relation,
-} from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, type Relation } from "typeorm";
 import { NivelFormacaoEntity } from "@/modules/ensino/nivel-formacao/infrastructure/persistence/typeorm/nivel-formacao.entity";
 import { OfertaFormacaoEntity } from "@/modules/ensino/oferta-formacao/infrastructure/persistence/typeorm/oferta-formacao.entity";
 
 @Entity("oferta_formacao_nivel_formacao")
 export class OfertaFormacaoNivelFormacaoEntity {
-  @PrimaryGeneratedColumn("uuid")
+  @PrimaryColumn("uuid")
   id!: string;
 
   @ManyToOne(() => NivelFormacaoEntity)

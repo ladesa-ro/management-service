@@ -3,7 +3,7 @@ import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
 import type { ModalidadeCreateCommand } from "@/modules/ensino/modalidade/domain/commands/modalidade-create.command";
 import { IModalidadeCreateCommandHandler } from "@/modules/ensino/modalidade/domain/commands/modalidade-create.command.handler.interface";
-import { Modalidade } from "@/modules/ensino/modalidade/domain/modalidade.domain";
+import { Modalidade } from "@/modules/ensino/modalidade/domain/modalidade";
 import { IModalidadePermissionChecker } from "../../domain/authorization";
 import type { ModalidadeFindOneQueryResult } from "../../domain/queries";
 import { IModalidadeRepository } from "../../domain/repositories";
@@ -23,8 +23,8 @@ export class ModalidadeCreateCommandHandlerImpl implements IModalidadeCreateComm
   ): Promise<ModalidadeFindOneQueryResult> {
     await this.permissionChecker.ensureCanCreate(accessContext, { dto });
 
-    const domain = Modalidade.criar({ nome: dto.nome, slug: dto.slug });
-    const { id } = await this.repository.createFromDomain({ ...domain });
+    const domain = Modalidade.create({ nome: dto.nome, slug: dto.slug });
+    const { id } = await this.repository.create({ ...domain });
 
     const result = await this.repository.findById(accessContext, { id });
 

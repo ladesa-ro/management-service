@@ -1,7 +1,7 @@
 import { ServiceUnavailableException, UnprocessableEntityException } from "@nestjs/common";
 import sharp from "sharp";
-import { v4 } from "uuid";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
+import { generateUuidV7 } from "@/domain/entities/utils/generate-uuid-v7.js";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { IArquivoCreateCommandHandler } from "@/modules/armazenamento/arquivo/domain/commands";
 import type {
@@ -54,7 +54,7 @@ export class ImagemSaveImageCommandHandlerImpl implements IImagemSaveImageComman
         const imagem = imagemRepository.create();
 
         imagemRepository.merge(imagem, {
-          id: v4(),
+          id: generateUuidV7(),
           versoes: [],
         });
 

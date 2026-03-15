@@ -1,7 +1,7 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
-import { Bloco } from "@/modules/ambientes/bloco/domain/bloco.domain";
+import { Bloco } from "@/modules/ambientes/bloco/domain/bloco";
 import type { BlocoUpdateCommand } from "@/modules/ambientes/bloco/domain/commands/bloco-update.command";
 import { IBlocoUpdateCommandHandler } from "@/modules/ambientes/bloco/domain/commands/bloco-update.command.handler.interface";
 import type { BlocoFindOneQuery } from "@/modules/ambientes/bloco/domain/queries";
@@ -28,12 +28,9 @@ export class BlocoUpdateCommandHandlerImpl implements IBlocoUpdateCommandHandler
 
     await this.permissionChecker.ensureCanUpdate(accessContext, { dto }, dto.id);
 
-    const domain = Bloco.fromData(current);
-    domain.atualizar({ nome: dto.nome, codigo: dto.codigo });
-    await this.repository.updateFromDomain(current.id, {
-      nome: domain.nome,
-      codigo: domain.codigo,
-    });
+    const domain = Bloco.load(current);
+    domain.update({ nome: dto.nome, codigo: dto.codigo });
+    await this.repository.update(current.id, domain);
 
     const result = await this.repository.findById(accessContext, { id: dto.id });
 

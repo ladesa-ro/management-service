@@ -9,7 +9,7 @@ import {
   type CursoUpdateImagemCapaCommand,
   ICursoUpdateImagemCapaCommandHandler,
 } from "@/modules/ensino/curso/domain/commands/curso-update-imagem-capa.command.handler.interface";
-import { Curso } from "@/modules/ensino/curso/domain/curso.domain";
+import { Curso } from "@/modules/ensino/curso/domain/curso";
 import { ICursoPermissionChecker } from "../../domain/authorization";
 import { ICursoRepository } from "../../domain/repositories";
 

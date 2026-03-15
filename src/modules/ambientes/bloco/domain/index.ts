@@ -1,6 +1,5 @@
 export * from "./authorization";
-export * from "./bloco.domain";
-export * from "./bloco.types";
+export * from "./bloco";
 export * from "./commands";
 export * from "./queries";
 

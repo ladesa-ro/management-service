@@ -1,11 +1,11 @@
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists } from "@/modules/@shared";
-import { Campus } from "@/modules/ambientes/campus/domain/campus.domain";
+import { Campus } from "@/modules/ambientes/campus/domain/campus";
 import { ICampusFindOneQueryHandler } from "@/modules/ambientes/campus/domain/queries/campus-find-one.query.handler.interface";
-import { OfertaFormacao } from "@/modules/ensino/oferta-formacao/domain/oferta-formacao.domain";
+import { OfertaFormacao } from "@/modules/ensino/oferta-formacao/domain/oferta-formacao";
 import { IOfertaFormacaoFindOneQueryHandler } from "@/modules/ensino/oferta-formacao/domain/queries/oferta-formacao-find-one.query.handler.interface";
-import { CalendarioLetivo } from "@/modules/horarios/calendario-letivo/domain/calendario-letivo.domain";
+import { CalendarioLetivo } from "@/modules/horarios/calendario-letivo/domain/calendario-letivo";
 import type { CalendarioLetivoCreateCommand } from "@/modules/horarios/calendario-letivo/domain/commands/calendario-letivo-create.command";
 import { ICalendarioLetivoCreateCommandHandler } from "@/modules/horarios/calendario-letivo/domain/commands/calendario-letivo-create.command.handler.interface";
 import { ICalendarioLetivoPermissionChecker } from "../../domain/authorization";
@@ -43,13 +43,13 @@ export class CalendarioLetivoCreateCommandHandlerImpl
       ensureExists(ofertaFormacao, OfertaFormacao.entityName, dto.ofertaFormacao.id);
       ofertaFormacaoRef = { id: ofertaFormacao.id };
     }
-    const domain = CalendarioLetivo.criar({
+    const domain = CalendarioLetivo.create({
       nome: dto.nome,
       ano: dto.ano,
       campus: { id: campus.id },
       ofertaFormacao: ofertaFormacaoRef,
     });
-    const { id } = await this.repository.createFromDomain({
+    const { id } = await this.repository.create({
       ...domain,
       campus: { id: campus.id },
       ...(ofertaFormacaoRef ? { ofertaFormacao: ofertaFormacaoRef } : {}),

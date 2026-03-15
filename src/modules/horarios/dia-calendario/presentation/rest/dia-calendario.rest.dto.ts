@@ -31,7 +31,7 @@ import {
 import {
   TIPO_DIA_CALENDARIO_VALUES,
   type TipoDiaCalendario,
-} from "@/modules/horarios/dia-calendario/domain/dia-calendario.types";
+} from "@/modules/horarios/dia-calendario/domain/dia-calendario";
 import { DiaCalendarioFieldsMixin } from "../dia-calendario.validation-mixin";
 
 export { TIPO_DIA_CALENDARIO_VALUES, type TipoDiaCalendario };

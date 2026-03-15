@@ -29,7 +29,7 @@ import { IDisciplinaCreateCommandHandler } from "@/modules/ensino/disciplina/dom
 import { IDisciplinaDeleteCommandHandler } from "@/modules/ensino/disciplina/domain/commands/disciplina-delete.command.handler.interface";
 import { IDisciplinaUpdateCommandHandler } from "@/modules/ensino/disciplina/domain/commands/disciplina-update.command.handler.interface";
 import { IDisciplinaUpdateImagemCapaCommandHandler } from "@/modules/ensino/disciplina/domain/commands/disciplina-update-imagem-capa.command.handler.interface";
-import { Disciplina } from "@/modules/ensino/disciplina/domain/disciplina.domain";
+import { Disciplina } from "@/modules/ensino/disciplina/domain/disciplina";
 import { IDisciplinaFindOneQueryHandler } from "@/modules/ensino/disciplina/domain/queries/disciplina-find-one.query.handler.interface";
 import { IDisciplinaGetImagemCapaQueryHandler } from "@/modules/ensino/disciplina/domain/queries/disciplina-get-imagem-capa.query.handler.interface";
 import { IDisciplinaListQueryHandler } from "@/modules/ensino/disciplina/domain/queries/disciplina-list.query.handler.interface";

@@ -2,14 +2,14 @@ import { has } from "lodash";
 import { DeclareDependency, DeclareImplementation } from "@/domain/dependency-injection";
 import type { AccessContext } from "@/modules/@seguranca/contexto-acesso";
 import { ensureExists, type PersistInput } from "@/modules/@shared";
-import { Perfil } from "@/modules/acesso/perfil/domain/perfil.domain";
+import { Perfil } from "@/modules/acesso/perfil/domain/perfil";
 import { IPerfilFindOneQueryHandler } from "@/modules/acesso/perfil/domain/queries/perfil-find-one.query.handler.interface";
-import { Diario } from "@/modules/ensino/diario/domain/diario.domain";
+import { Diario } from "@/modules/ensino/diario/domain/diario";
 import { IDiarioFindOneQueryHandler } from "@/modules/ensino/diario/domain/queries/diario-find-one.query.handler.interface";
 import type { DiarioProfessorUpdateCommand } from "@/modules/ensino/diario-professor/domain/commands/diario-professor-update.command";
 import { IDiarioProfessorUpdateCommandHandler } from "@/modules/ensino/diario-professor/domain/commands/diario-professor-update.command.handler.interface";
-import { DiarioProfessor } from "@/modules/ensino/diario-professor/domain/diario-professor.domain";
-import type { IDiarioProfessor } from "@/modules/ensino/diario-professor/domain/diario-professor.types";
+import type { IDiarioProfessor } from "@/modules/ensino/diario-professor/domain/diario-professor";
+import { DiarioProfessor } from "@/modules/ensino/diario-professor/domain/diario-professor";
 import type { DiarioProfessorFindOneQuery } from "@/modules/ensino/diario-professor/domain/queries";
 import { IDiarioProfessorPermissionChecker } from "../../domain/authorization";
 import type { DiarioProfessorFindOneQueryResult } from "../../domain/queries";
@@ -40,9 +40,9 @@ export class DiarioProfessorUpdateCommandHandlerImpl
 
     await this.permissionChecker.ensureCanUpdate(accessContext, { dto }, dto.id);
 
-    const domain = DiarioProfessor.fromData(current);
-    domain.atualizar({ situacao: dto.situacao });
-    const updateData: Partial<PersistInput<IDiarioProfessor>> = { situacao: domain.situacao };
+    const domain = DiarioProfessor.load(current);
+    domain.update({ situacao: dto.situacao });
+    const updateData: Partial<PersistInput<IDiarioProfessor>> = { ...domain };
     if (has(dto, "diario") && dto.diario !== undefined && dto.diario !== null) {
       const diario = await this.diarioFindOneHandler.execute(accessContext, { id: dto.diario.id });
       ensureExists(diario, Diario.entityName, dto.diario.id);
@@ -53,7 +53,7 @@ export class DiarioProfessorUpdateCommandHandlerImpl
       ensureExists(perfil, Perfil.entityName, dto.perfil.id);
       updateData.perfil = { id: perfil.id };
     }
-    await this.repository.updateFromDomain(current.id, updateData);
+    await this.repository.update(current.id, updateData);
 
     const result = await this.repository.findById(accessContext, { id: dto.id });
 
